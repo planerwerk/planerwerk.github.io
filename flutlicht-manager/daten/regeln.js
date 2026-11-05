@@ -1,0 +1,186 @@
+// Flutlicht Manager – alle Stellschrauben (Konzept K33).
+//
+// Ändern: Wert anpassen, Datei speichern, Spiel neu laden. Das gilt sofort, auch für laufende Karrieren.
+// Einheiten: Geld in Euro, Wahrscheinlichkeiten von 0 bis 1, Zeiten stehen jeweils dabei.
+// Schreibweise [a, b] heißt: zufällig ganzzahlig von a bis b.
+// Stärke 1–99, Form 0–10 (Mitte 5), Fitness 0–100 %, Ansehen eines Vereins 0–99.
+const REGELN={
+
+  spielstand:{
+    version:1,                       // Version des Spielstands
+    schluessel:'flutlicht-manager-v1', // Speicherplatz im Browser
+    nachrichtenMax:80                // so viele Nachrichten bleiben im Posteingang
+  },
+
+  kalender:{
+    pokalNachSpieltag:{2:0,8:1,15:2,21:3,27:4,31:5}, // Pokalrunde nach dem Spieltag mit diesem Index (0 = 1. Spieltag)
+    vertragsWarnungWoche:28,         // in dieser Woche warnt das Büro vor auslaufenden Verträgen
+    hinweisVertraegeAbWoche:20       // ab dieser Woche zeigt das Büro auslaufende Verträge
+  },
+
+  welt:{
+    startSaison:2026,
+    startVertrauen:60,               // Vertrauen des Vorstands zu Beginn, 0–100
+    startTraining:1,                 // 0 locker, 1 normal, 2 hart
+    startZiel:9,                     // Platzhalter, wird sofort aus dem Ansehen berechnet
+    startJugend:2,                   // Stufe der Jugendarbeit (1–5)
+    startFormationen:['4-4-2','4-3-3','4-2-3-1','3-5-2'], // daraus wählt jeder Verein zufällig
+    konto:{basis:5e5,jeAnsehen2:2500},   // Startkonto = basis + Ansehen² × jeAnsehen2
+    ticket:{basis:15,jeAnsehen:0.25},    // Startpreis = basis + Ansehen × jeAnsehen (€)
+    grund:{basis:48,jeAnsehen:0.4},      // Grundstärke erfundener Spieler = basis + Ansehen × jeAnsehen
+    kaderVollAb:20,                  // ab so vielen echten Spielern gilt das Soll „voll“
+    sollVoll:{TW:3,AB:6,MF:6,ST:3},  // Mindestzahl je Position, aufgefüllt mit erfundenen Spielern
+    sollDuenn:{TW:3,AB:8,MF:8,ST:5},
+    stammplaetze:{TW:1,AB:4,MF:4,ST:2}, // so viele aufgefüllte Spieler sind Stammspieler-Niveau
+    stammStreuung:[-3,3],            // Stammspieler: Grundstärke + Streuung
+    ersatzAbschlag:5,                // Ersatz: Grundstärke − Abschlag + Streuung
+    ersatzStreuung:[-5,3],
+    ersatzAlter:[19,32],
+    jungeEchte:{bisAlter:23,talent:[3,9]}, // echte junge Spieler: Talent = Stärke + Zufall
+    nachwuchs:{wennUnter:22,anzahl:2,positionen:['AB','MF','ST'],alter:[17,19],abschlag:15,streuung:[-3,3],talent:[-4,8]},
+    vereinslose:{anzahl:45,positionen:['TW','AB','AB','MF','MF','ST','ST'],alter:[21,33],staerke:[56,72]},
+    amateurStaerke:[56,65]           // Stärke der Amateurklubs im Pokal, jede Saison neu
+  },
+
+  spieler:{
+    talent:[[20,[4,14]],[23,[2,9]]], // erfundene Spieler: Talent = Stärke + Zufall, bis Alter 20 bzw. 23
+    talentSonst:[0,2],
+    startForm:5,
+    startFitness:[90,100],
+    vertrag:[1,4],                   // Restlaufzeit in Jahren
+    gehalt:{basis:1e6,steigung:0.1,mitte:75,runden:1000}, // Gehalt/Jahr = basis × e^(steigung × (Stärke − mitte))
+    marktwert:{basis:8e6,steigung:0.1,mitte:75,jungUnter:24,staerkeAnteil:0.6,talentAnteil:0.4,
+      alter:[[21,1.5],[24,1.25],[28,1],[30,0.7],[32,0.45]],alterSonst:0.22,minimum:25000,runden:25000},
+    sterne:[12,8,4],                 // Talent − Stärke ab diesem Wert: 4, 3 oder 2 Sterne
+    niveauSpieler:14,                // Kaderstärke = Schnitt der besten 14
+    niveauLeer:50                    // Kaderstärke ohne Spieler
+  },
+
+  finanzen:{
+    spieltage:34,                    // Jahresbeträge (Gehälter, Zinsen) werden durch diese Zahl geteilt, je Ligaspieltag gebucht
+    tv:{liga1:{basis:120000,jeAnsehen:2500},liga2:{basis:50000,jeAnsehen:900}}, // je Ligaspieltag
+    betrieb:{jePlatz:1,jeLoge:300},  // Stadion und Betrieb je Ligaspieltag
+    jugendKosten:[0,20000,40000,70000,110000,160000], // je Ligaspieltag, Index = Stufe
+    kreditZins:0.08,                 // pro Saison
+    kreditRahmen:{basis:2e6,jeAnsehen:250000},
+    pokalPraemien:[2e5,4e5,8e5,1.6e6,3.2e6,4.5e6], // je gespielter Runde
+    pokalSieg:3e6,
+    fremdeEinnahmen:{liga:30,pokal:10}, // Computer-Vereine: Ansehen² × Wert je Spieltag bzw. Pokalrunde
+    fanartikel:[0,1.5,3,5],          // € je Zuschauer, Index = Fanshop-Stufe
+    loge:3000,                       // € je Loge und Heimspiel
+    zuschauer:{refBasis:15,refJeAnsehen:0.25, // Richtpreis = refBasis + Ansehen × refJeAnsehen
+      preisExponent:1.2,preisMin:0.2,preisMax:1.4, // Preiswirkung = (Richtpreis / Preis)^Exponent, begrenzt
+      formBasis:0.86,formJePunkt:0.06, // Form = Punkte der letzten 5 Spiele im Schnitt
+      gegnerBasis:0.88,gegnerFaktor:0.3,gegnerOhne:40, // Gegner = basis + Ansehen/100 × faktor
+      liga2:0.82,pokal:1.05,zufallBasis:0.95,zufallSpanne:0.1},
+    ticketPreis:{min:5,max:150,standard:20},
+    sponsor:{liga1:45,liga2:18,      // Grundbetrag je Spieltag = Ansehen² × Wert
+      angebote:[
+        {fix:1,sieg:0,jahre:1,info:'Festes Geld pro Spieltag, 1 Saison'},
+        {fix:0.65,sieg:1.3,jahre:1,info:'Weniger Fixum, dafür Prämie pro Sieg, 1 Saison'},
+        {fix:0.92,sieg:0,jahre:3,info:'Langfristig: 3 Saisons feste Summe'}]},
+    abfindung:0.5,                   // Abfindung = Gehalt × Restlaufzeit × Wert
+    handgeld:0.5,                    // Handgeld für Vereinslose = Gehalt × Wert
+    handgeldAnzeige:0.6              // Schätzung im Spielerfenster
+  },
+
+  markt:{
+    kaderMax:36,                     // dein Kader höchstens
+    listeVoll:{kaderAb:26,chance:0.3}, // Computer-Verein mit großem Kader setzt einen Ersatzspieler auf die Liste
+    listeZufall:{chance:0.06,aufschlag:1.1},
+    wechsel:{eins:0.5,zwei:0.5},     // Transfers unter Computer-Vereinen pro Woche: 1 mit 50 %, sonst 2 mit 50 %
+    kaeufer:{niveauPlus:2,kaderMax:30},
+    neuerVertrag:[2,4],
+    forderung:{stammspieler:1.6,sonst:1.25}, // Ablöseforderung = Marktwert × Faktor
+    runden:25000,
+    angebote:{preis:[[1,0.4],[1.3,0.2],[1.7,0.06]],preisSonst:0.01, // Chance je Woche nach Forderung/Marktwert
+      kontoAnteil:0.8,betragBasis:0.85,betragSpanne:0.2,laufzeitWochen:3},
+    ueberraschung:{niveauPlus:2,chance:0.012,betragBasis:1.1,betragSpanne:0.4},
+    interesse:{basis:18,liga1:5,liga2:-8,altAb:31,altPlus:8,niveauFaktor:1.5,zufall:20,vereinslosAbstand:5},
+    ernstAb:0.7,                     // darunter: „Kein ernsthaftes Angebot“
+    gehalt:{basis:1.05,zufall:0.2,altAb:31,altFaktor:0.85} // Gehaltsforderung = Gehalt × (basis + Zufall), ältere günstiger bei Verlängerung
+  },
+
+  training:{
+    entwicklung:[0.7,1,1.35],        // Faktor auf die Entwicklung je Stufe: locker, normal, hart
+    fitnessGrenze:[100,95,85],       // höchste Fitness je Stufe
+    erholung:12,                     // Fitness pro Woche
+    abbau:4,                         // pro Woche, wenn über der Grenze
+    wachstum:[[20,0.25],[23,0.16],[26,0.06],[29,0],[31,-0.06],[33,-0.12]], // Stärke pro Woche bis zu diesem Alter
+    wachstumSonst:-0.22,
+    einsatz:{mit:1.3,ohne:0.75},     // Faktor auf Wachstum mit und ohne Einsatz in der Woche
+    zufall:0.12,                     // Schwankung der Stärke pro Woche
+    staerkeMin:25,staerkeMax:99,
+    formMitte:5,formAusgleich:0.08,  // Form wandert pro Woche um diesen Anteil zur Mitte
+    computerStufe:1,
+    verletzung:{stufe:2,chance:0.004,wochen:[1,3]} // nur eigener Verein, nur bei hartem Training
+  },
+
+  engine:{
+    formationen:{'4-4-2':[4,4,2],'4-3-3':[4,3,3],'4-2-3-1':[4,5,1],'3-5-2':[3,5,2],'5-3-2':[5,3,2],'3-4-3':[3,4,3]},
+    staerke:{fitBasis:0.72,fitAnteil:0.28,formBasis:0.95,formJePunkt:0.01, // Wirkung = Stärke × Fitness-Faktor × Form-Faktor
+      fremdTorwart:0.45,fremdPosition:0.82,leererPlatz:25},
+    reihen:{abwehr:[0.85,0.05],mittelfeld:[0.85,0.04],angriff:[0.85,0.08]}, // Faktor = a + b × Spieler in der Reihe
+    angriff:{sturm:0.55,mittelfeld:0.33,abwehr:0.12},
+    abwehr:{abwehr:0.45,mittelfeld:0.25,torwart:0.30},
+    ausrichtung:{O:{A:1.06,D:0.95},D:{A:0.94,D:1.06},K:{A:0.98,D:1.03}},
+    einsatz:{H:{A:1.02,D:1.02},F:{A:0.985,D:0.985}},
+    heim:{angriff:1.04,abwehr:1.03,amateure:1.03},
+    tore:{basis:1.3,exponent:4,min:0.12,max:4.8,rotAngriff:0.12,rotAngriffMin:0.5,rotAbwehr:0.1,rotAbwehrMin:0.55}, // erwartete Tore je Spiel
+    chancen:2.4,                     // Chance ohne Tor, wenn der Wurf unter Torwahrscheinlichkeit × Wert liegt
+    schuetzen:{gewicht:{TW:0.03,AB:1,MF:2.4,ST:5},mitte:75,exponent:3},
+    karten:{gelb:0.019,rot:0.0007,hart:1.7,fair:0.5}, // je Minute und Mannschaft
+    verletzung:{chance:0.0012,gegnerHart:1.5,wochen:[1,6]},
+    verlaengerung:0.8,               // Torwahrscheinlichkeit in der Verlängerung relativ
+    elfmeter:0.76,
+    fitnessVerlust:[7,13],fitnessMin:20,
+    note:{basis:3.6,ergebnis:0.55,tor:0.9,staerkeMitte:72,staerkeTeiler:25,zufall:1.6,platzverweis:1.5,min:1,max:6},
+    form:{mitte:3.5,faktor:0.5,min:0,max:10}, // neue Form = Form + (mitte − Note) × faktor
+    gelbSperreAb:5,rotSperre:[1,3]   // Sperren in Spielen
+  },
+
+  vorstand:{
+    staerkerAb:5,                    // Gegner gilt als stärker/schwächer ab diesem Unterschied im Ansehen
+    sieg:{staerker:4,sonst:2.5},
+    remis:{staerker:1,schwaecher:-1,sonst:0},
+    niederlage:{staerker:-1,schwaecher:-3.5,sonst:-2.5},
+    platzAbSpieltag:5,               // ab diesem Spieltag-Index zählt der Tabellenplatz
+    platz:{weitAb:3,weit:-2,drunter:-0.6,drueber:0.6},
+    kontoMinus:-2,kontoMinusMeldung:0.3,
+    entlassenUnter:12,schonfristWochen:6,
+    pokalAus:-6,pokalWeiter:1.5,pokalSieg:10,
+    saisonErreicht:20,saisonWeitAb:3,saisonWeit:-25,saisonVerfehlt:-8,entlassenSaisonUnter:15,
+    neuerJob:55,
+    jobs:{ansehenAbschlag:4,kandidaten:8,angebote:4},
+    ziel:{spitzeBis:3,spitzePlus:1,plus:2,schlechtester:15,liga2Mindestens:2} // Saisonziel aus dem erwarteten Platz
+  },
+
+  saison:{
+    ansehen:{faktor:0.6,maxAenderung:5,aufstieg:4,abstieg:-5,min:30,max:99},
+    fans:{faktor:0.015,min:3000,maxJePlatz:1.4},
+    karriereende:{abAlter:34,nullAlter:33,jeJahr:0.25,spaetestens:38},
+    vertrag:{verlaengern:0.7,jahre:[1,3]}, // Computer-Vereine verlängern auslaufende Verträge
+    neuFitness:100,neuForm:5,
+    nachwuchs:{anzahl:2,positionen:['TW','AB','AB','MF','MF','ST','ST'],alter:17,abschlag:17,streuung:[-3,3],
+      talentAbschlag:3,talentStreuung:[-5,8],talentJeStufe:2,gehalt:0.3,vertrag:3,computerStufe:2},
+    kaderSoll:{TW:3,AB:7,MF:7,ST:5},vereinslosBis:4,vereinslosChance:0.6,
+    auffuellAlter:[19,30],auffuellAbschlag:3,auffuellStreuung:[-5,4],
+    kaderMax:28,vereinsloseMax:90,
+    relegationLos:0.5
+  },
+
+  stadion:{
+    tribuene:{plaetze:3000,kosten:4.5e6,wochen:6,max:90000},
+    logen:{anzahl:10,kosten:2.5e6,wochen:4,max:120},
+    fanshop:{kosten:[1.5e6,3e6,5e6],wochen:3,max:3}
+  },
+
+  ui:{
+    transferTreffer:80               // so viele Treffer zeigt die Transfersuche
+  }
+};
+
+// Schreibschutz: Zur Laufzeit darf kein Code eine Regel ändern.
+(function frieren(o){Object.freeze(o);Object.values(o).forEach(v=>{if(v&&typeof v==='object'&&!Object.isFrozen(v))frieren(v);});})(REGELN);
+// Kurzformen für den Code
+const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui;

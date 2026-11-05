@@ -30,7 +30,7 @@ pg.on('pageerror',e=>errs.push(e.message));
 await pg.goto('file://'+path.resolve(__dirname,'..','index.html'));await pg.evaluate(INJECT);
 const res=await pg.evaluate(()=>{const out=[];const rnd=a=>a[Math.floor(Math.random()*a.length)];
  const clubs=[0,6,15,16,17,18,19,20,23,34,35];
- for(const cid of clubs){const log={club:CLUBS[cid][0],seasons:[],errors:[],ms:0,changes:0};
+ for(const cid of clubs){const log={club:VEREINE[cid].name,seasons:[],errors:[],ms:0,changes:0};
   try{buildWorld();S.my=cid;S.mgr='Fuzz';setTarget();sponsOffers();S.lineup=bestXI(cid,myT().form);
    const t0=performance.now();let weeks=0;
    while(S.season<2028&&weeks<220){weeks++;
@@ -40,7 +40,7 @@ const res=await pg.evaluate(()=>{const out=[];const rnd=a=>a[Math.floor(Math.ran
      else if(r<0.22){if(S.offers.length)acceptOffer(0);}
      else if(r<0.25){loan(rnd([1,5,-1,-99]));}
      else if(r<0.28){startBuild(rnd(['cap','logen','shop']));}
-     else if(r<0.32){setForm(rnd(Object.keys(FORMS)));setTac(rnd(['N','O','D','K']));setEin(rnd(['F','N','H']));}
+     else if(r<0.32){setForm(rnd(Object.keys(RE.formationen)));setTac(rnd(['N','O','D','K']));setEin(rnd(['F','N','H']));}
      else if(r<0.35){S.train=Math.floor(Math.random()*3);myT().youth=1+Math.floor(Math.random()*5);setPrice(5+Math.random()*80);}
      else if(r<0.38){const e=squad(S.my).filter(p=>p.ct<=1);if(e.length){openP(e[0].id);extend(e[0].id);closeOv();}}
      else if(r<0.40){const sq=squad(S.my).sort((a,b)=>a.str-b.str);if(sq.length>18){openP(sq[0].id);release(sq[0].id);}}
