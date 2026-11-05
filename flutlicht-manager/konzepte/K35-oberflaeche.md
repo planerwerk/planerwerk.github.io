@@ -245,4 +245,4 @@ Ereigniskarten (K30) erscheinen als eigene **Karte** mit Bild, Text und 1–3 Kn
 2. **Wie viele Mini-Regler** in der Kadertabelle? Vorschlag: Stärke, Form, Frische und Stimmung als Standard, der Rest wählbar.
 3. **Spielfeld der Aufstellung:** freies Positionieren wie bei Anstoss 3 (pixelgenau, mit Aktionsradius) oder feste Positionen?
 4. **Look (K35b):** eher Anzeigetafel und Flutlicht (dunkel, LED-Balken) oder hell im Stil eines alten Notizblocks? Oder beides als Thema zum Umschalten?
-5. **Klickbares Muster:** Soll ich eine kleine Musterseite bauen, auf der man die Regler-Arten ausprobieren kann, bevor wir sie in U1 einbauen?
+5. **Klickbares Muster:** steht in `muster/regler.html`. Rückmeldung dazu gehört hierher.

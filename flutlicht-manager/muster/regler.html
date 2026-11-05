@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Flutlicht Regler-Baukasten</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Saira+Condensed:wght@600;700&family=VT323&display=swap">
+<style>
+/* Layout: eine Spalte mit Abschnitten wie Stationen am Spielfeldrand; Anzeigen als LED-Balken einer Anzeigetafel, Eingaben als Mischpult-Fader. Bewusst nur ein Nachtthema (Flutlicht). */
+:root{
+  --night:#0c1b16; --turf:#13281f; --turf2:#1a372a; --chalk:#eef4ef; --mist:#9fb6a9; --rule:#2c4b3d;
+  --led:#ffb627; --led-dim:#5c4512; --ink:#1d1400; --good:#4fc98d; --warn:#e9c349; --bad:#ef5b5b; --you:#7cc4ff;
+  --f-disp:"Saira Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-body:"Barlow",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-led:"VT323","Courier New",ui-monospace,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{background:var(--night);color:var(--chalk)}
+body{margin:0;font-family:var(--f-body);font-size:15px;line-height:1.45;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:18px 56px}
+.wrap{max-width:920px;margin:0 auto;display:grid;gap:22px}
+.wrap>*{min-width:0}
+h1,h2,h3{font-family:var(--f-disp);font-weight:700;letter-spacing:.02em;margin:0;text-wrap:balance;line-height:1.1}
+h1{font-size:clamp(30px,6vw,46px)} h2{font-size:24px} h3{font-size:18px}
+p{margin:0}
+.lead{color:var(--mist);max-width:62ch}
+.sec{background:var(--turf);border:1px solid var(--rule);border-radius:10px;padding:16px;display:grid;gap:16px}
+.sec>header{display:grid;gap:4px}
+.sec>header p{color:var(--mist);font-size:14px;max-width:62ch}
+.row{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center}
+.dim{color:var(--mist);font-size:13px}
+label.pick{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--mist)}
+select,button{font:inherit;color:var(--chalk);background:var(--night);border:1px solid var(--rule);border-radius:6px;padding:5px 8px}
+select:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--led);outline-offset:2px}
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:6px;overflow:hidden}
+.seg button{border:0;border-radius:0;background:transparent;color:var(--mist);padding:5px 10px}
+.seg button[aria-pressed="true"]{background:var(--turf2);color:var(--chalk)}
+
+/* ---------- Anzeige-Regler ---------- */
+.rg{display:grid;grid-template-columns:minmax(92px,150px) minmax(0,1fr) auto;gap:4px 12px;align-items:center}
+.rg .lbl{font-size:14px;color:var(--chalk)}
+.rg .lbl small{display:block;color:var(--mist);font-size:12px}
+.rg .val{font-family:var(--f-led);font-size:26px;line-height:1;color:var(--led);font-variant-numeric:tabular-nums;text-align:right;min-width:3.2ch;text-shadow:0 0 10px rgba(255,182,39,.35)}
+.rg .val small{font-size:16px;color:var(--mist);text-shadow:none}
+.track{position:relative;height:16px;border-radius:3px;background:repeating-linear-gradient(90deg,#0a1612 0 6px,#0f1f19 6px 7px);border:1px solid var(--rule);overflow:visible}
+.fill{position:absolute;left:0;top:0;bottom:0;border-radius:2px 0 0 2px;background:repeating-linear-gradient(90deg,var(--led) 0 6px,#c98a14 6px 7px);box-shadow:0 0 8px rgba(255,182,39,.3)}
+.fill.you{background:repeating-linear-gradient(90deg,var(--you) 0 6px,#4d8fc4 6px 7px);box-shadow:0 0 8px rgba(124,196,255,.3)}
+.pot{position:absolute;top:0;bottom:0;background:repeating-linear-gradient(135deg,rgba(255,182,39,.45) 0 3px,transparent 3px 7px);border-left:1px dashed var(--led);border-right:1px dashed var(--led)}
+.zone{position:absolute;bottom:-5px;height:3px;border-radius:2px}
+.zone.bad{background:var(--bad)} .zone.warn{background:var(--warn)} .zone.good{background:var(--good)}
+.mk{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--chalk);border-radius:1px}
+.scale{grid-column:2;display:flex;justify-content:space-between;font-size:11px;color:var(--mist);position:relative;min-height:15px}
+.scale .mkl{position:absolute;transform:translateX(-50%);white-space:nowrap;color:var(--chalk)}
+.spark{grid-column:2;height:22px;width:min(160px,100%)}
+.band{position:absolute;top:0;bottom:0;background:repeating-linear-gradient(90deg,rgba(159,182,169,.55) 0 6px,rgba(159,182,169,.25) 6px 7px);border:1px solid var(--mist);border-radius:2px}
+.unknown{position:absolute;inset:0;display:flex;align-items:center;justify-content:space-around;color:var(--mist);font-family:var(--f-led);font-size:16px;letter-spacing:.2em}
+.traits{display:flex;flex-wrap:wrap;gap:8px}
+.tr{font-size:13px;padding:2px 8px;border-radius:999px;border:1px solid var(--rule)}
+.tr.sure{border-color:var(--good)} .tr.sure::before{content:"● ";color:var(--good)}
+.tr.likely{border-style:dashed} .tr.likely::before{content:"◐ ";color:var(--warn)}
+.tr.rumor{border-style:dotted;color:var(--mist)} .tr.rumor::before{content:"◌ "}
+
+/* ---------- Fader ---------- */
+.fader{display:grid;grid-template-columns:minmax(92px,150px) minmax(0,1fr) auto;gap:4px 12px;align-items:center}
+.fwrap{position:relative;height:34px;display:flex;align-items:center}
+.fwrap .rec{position:absolute;top:9px;height:16px;border-radius:3px;background:rgba(79,201,141,.18);border:1px dashed var(--good)}
+.fwrap .rec.fuzzy{background:linear-gradient(90deg,rgba(79,201,141,0),rgba(79,201,141,.35) 35%,rgba(79,201,141,.35) 65%,rgba(79,201,141,0));border:0}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:34px;background:transparent;position:relative;margin:0}
+input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:3px;background:linear-gradient(90deg,#071310,#21423a);border:1px solid var(--rule)}
+input[type=range]::-moz-range-track{height:6px;border-radius:3px;background:linear-gradient(90deg,#071310,#21423a);border:1px solid var(--rule)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:32px;margin-top:-14px;border-radius:4px;background:linear-gradient(180deg,#e9eee9 0 44%,#1d1400 44% 56%,#c9d1ca 56%);border:1px solid #0a1612;box-shadow:0 2px 6px rgba(0,0,0,.5);cursor:grab}
+input[type=range]::-moz-range-thumb{width:22px;height:32px;border-radius:4px;background:linear-gradient(180deg,#e9eee9 0 44%,#1d1400 44% 56%,#c9d1ca 56%);border:1px solid #0a1612;box-shadow:0 2px 6px rgba(0,0,0,.5);cursor:grab}
+.fends{grid-column:2;display:flex;justify-content:space-between;font-size:11px;color:var(--mist)}
+.verdict{font-size:14px;padding:6px 10px;border-radius:6px;background:var(--night);border:1px solid var(--rule)}
+.verdict b{font-family:var(--f-disp);font-size:16px;letter-spacing:.02em}
+.v-good b{color:var(--good)} .v-warn b{color:var(--warn)} .v-bad b{color:var(--bad)}
+
+/* ---------- Chart ---------- */
+.chart{width:100%;height:auto;display:block}
+.chart text{fill:var(--mist);font-size:11px;font-family:var(--f-body)}
+.chart .axis{stroke:var(--rule);stroke-width:1}
+.chart .grid{stroke:var(--rule);stroke-width:1;stroke-dasharray:2 4}
+.chart .curve{fill:none;stroke:var(--led);stroke-width:2.5}
+.chart .area{fill:rgba(255,182,39,.10)}
+.chart .est{fill:rgba(79,201,141,.18);stroke:var(--good);stroke-dasharray:4 3}
+.chart .you{stroke:var(--you);stroke-width:2}
+.chart .youdot{fill:var(--you)}
+.chart .truth{stroke:var(--chalk);stroke-width:1.5;stroke-dasharray:6 4}
+.chart .lab{fill:var(--chalk);font-size:12px}
+
+/* ---------- Tauziehen ---------- */
+.tug{display:grid;gap:8px}
+.tug .head{display:grid;grid-template-columns:minmax(78px,120px) minmax(0,1fr) auto;gap:10px;font-family:var(--f-disp);font-size:17px}
+.tug .head span:nth-child(2){display:flex;justify-content:space-between}
+.tug .r{display:grid;grid-template-columns:minmax(78px,120px) minmax(0,1fr) auto;gap:10px;align-items:center}
+.tug .bar{position:relative;height:16px;display:flex;border:1px solid var(--rule);border-radius:3px;overflow:hidden}
+.tug .a{background:repeating-linear-gradient(90deg,var(--you) 0 6px,#4d8fc4 6px 7px)}
+.tug .b{background:repeating-linear-gradient(90deg,var(--bad) 0 6px,#b44242 6px 7px)}
+.tug .mid{position:absolute;left:50%;top:-3px;bottom:-3px;width:2px;background:var(--chalk)}
+.tug .num{font-family:var(--f-led);font-size:22px;color:var(--led);min-width:6ch;text-align:right;font-variant-numeric:tabular-nums}
+.cycle{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:14px}
+.chip{padding:2px 9px;border-radius:999px;border:1px solid var(--rule);background:var(--night)}
+.chip.on{border-color:var(--good);color:var(--good)}
+
+/* ---------- Spielerkarte & Tabelle ---------- */
+.card{border:1px solid var(--rule);border-radius:10px;background:var(--night);padding:14px;display:grid;gap:12px}
+.card .top{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px 14px;align-items:baseline}
+.card .top b{font-family:var(--f-disp);font-size:22px}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeric:tabular-nums}
+th{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mist);text-align:left;font-weight:600;padding:6px;border-bottom:1px solid var(--rule);white-space:nowrap}
+td{padding:6px;border-bottom:1px solid var(--rule);white-space:nowrap}
+.mini{display:flex;align-items:center;gap:8px}
+.mini .track{width:90px;height:10px}
+.mini .n{font-family:var(--f-led);font-size:19px;color:var(--led);min-width:2.4ch;text-align:right}
+.pos{font-family:var(--f-disp);font-size:12px;padding:1px 6px;border-radius:4px;background:var(--turf2)}
+.rules{display:grid;gap:6px;padding-left:18px;margin:0;color:var(--mist);font-size:14px}
+@media (max-width:560px){
+  .rg,.fader{grid-template-columns:minmax(0,1fr) auto}
+  .rg .lbl,.fader .lbl{grid-column:1 / -1}
+  .rg .track,.fader .fwrap{grid-column:1}
+  .scale,.spark,.fends{grid-column:1}
+  .tug .head,.tug .r{grid-template-columns:72px minmax(0,1fr) auto}
+}
+@media (prefers-reduced-motion:no-preference){.fill,.band,.pot{transition:width .25s ease,left .25s ease}}
+</style>
+
+<div class="wrap">
+  <header style="display:grid;gap:8px">
+    <h1>Regler-Baukasten</h1>
+    <p class="lead">Muster für die Oberfläche des Flutlicht Managers (Konzept K35a). Anzeigen sehen aus wie die LED-Balken einer Anzeigetafel, Eingaben wie Mischpult-Regler. Alle Werte und Spieler auf dieser Seite sind erfundene Beispiele.</p>
+  </header>
+
+  <section class="sec" aria-labelledby="h-anz">
+    <header><h2 id="h-anz">1 · Anzeige-Regler</h2><p>Wert zwischen Minimum und Maximum. Die Schraffur zeigt das erreichbare Maximum, also das Talent. Markierungen zeigen Vergleichswerte, die farbige Linie darunter Warnzonen.</p></header>
+    <div id="anz"></div>
+  </section>
+
+  <section class="sec" aria-labelledby="h-un">
+    <header><h2 id="h-un">2 · Unscharfe Regler</h2><p>So sieht ein fremder Spieler aus. Je besser das Scouting, desto schmaler die Spanne. Was niemand weiß, bleibt ein Fragezeichen.</p></header>
+    <div class="row"><span class="dim">Scouting-Stand:</span><div class="seg" id="scout" role="group" aria-label="Scouting-Stand"></div></div>
+    <div id="un" style="display:grid;gap:14px"></div>
+    <div class="traits" id="traits"></div>
+  </section>
+
+  <section class="sec" aria-labelledby="h-ticket">
+    <header><h2 id="h-ticket">3 · Stell-Regler: Ticketpreis</h2><p>Unter dem Regler steht die Vorhersage. Das grüne Band ist die Schätzung deines Marketingleiters, wo die Einnahmen am höchsten sind. Je besser er ist, desto schmaler das Band.</p></header>
+    <div class="fader">
+      <label class="lbl" for="preis">Ticketpreis<small class="dim" style="display:block">Ø pro Platz</small></label>
+      <div class="fwrap"><div class="rec" id="preisRec"></div><input type="range" id="preis" min="5" max="80" step="1" value="30"></div>
+      <output class="val rgval" id="preisOut" for="preis" aria-live="polite"></output>
+      <div class="fends"><span>5 €</span><span>80 €</span></div>
+    </div>
+    <div id="zus"></div>
+    <svg class="chart" id="erlChart" viewBox="0 0 640 230" role="img" aria-label="Einnahmen pro Heimspiel abhängig vom Ticketpreis"></svg>
+    <div class="row">
+      <label class="pick" for="mkt">Marketingleiter <select id="mkt"><option value="0">schwach</option><option value="1" selected>mittel</option><option value="2">stark</option></select></label>
+      <label class="pick"><input type="checkbox" id="truth"> echtes Optimum zeigen (Entwickler-Ansicht)</label>
+    </div>
+    <p class="verdict" id="preisVerdict" aria-live="polite"></p>
+  </section>
+
+  <section class="sec" aria-labelledby="h-train">
+    <header><h2 id="h-train">4 · Stell-Regler: Trainingsintensität</h2><p>Mehr Intensität bringt schnellere Entwicklung, kostet aber Frische und erhöht das Verletzungsrisiko. Das grüne Feld ist die Empfehlung deines Co-Trainers.</p></header>
+    <div class="fader">
+      <label class="lbl" for="int">Intensität<small class="dim" style="display:block">diese Woche</small></label>
+      <div class="fwrap"><div class="rec" id="intRec"></div><input type="range" id="int" min="0" max="100" step="1" value="55"></div>
+      <output class="val rgval" id="intOut" for="int"></output>
+      <div class="fends"><span>locker</span><span>hart</span></div>
+    </div>
+    <div id="trainOut" style="display:grid;gap:12px"></div>
+  </section>
+
+  <section class="sec" aria-labelledby="h-geh">
+    <header><h2 id="h-geh">5 · Stell-Regler: Gehaltsangebot</h2><p>Das grüne Feld ist deine Einschätzung, ab wann der Spieler zusagt. Wie scharf sie ist, hängt davon ab, wie viel du vom Berater erfahren hast.</p></header>
+    <div class="row"><span class="dim">Wissen über den Spieler:</span><div class="seg" id="info" role="group" aria-label="Wissen über den Spieler"></div></div>
+    <div class="fader">
+      <label class="lbl" for="geh">Gehalt<small class="dim" style="display:block">pro Jahr</small></label>
+      <div class="fwrap"><div class="rec fuzzy" id="gehRec"></div><input type="range" id="geh" min="0.5" max="3" step="0.05" value="1.1"></div>
+      <output class="val rgval" id="gehOut" for="geh"></output>
+      <div class="fends"><span>0,5 Mio €</span><span>3,0 Mio €</span></div>
+    </div>
+    <p class="verdict" id="gehVerdict" aria-live="polite"></p>
+    <div id="gehRang"></div>
+  </section>
+
+  <section class="sec" aria-labelledby="h-tug">
+    <header><h2 id="h-tug">6 · Tauziehen</h2><p>Zwei Seiten auf einer Achse, hier die Vorschau vor dem Spiel. Die Mitte ist Gleichstand. Je weiter ein Balken über die Mitte reicht, desto deutlicher der Vorteil.</p></header>
+    <div class="tug" id="tug"></div>
+    <div class="cycle" id="cycle"></div>
+  </section>
+
+  <section class="sec" aria-labelledby="h-karte">
+    <header><h2 id="h-karte">7 · Zusammengesetzt: Spielerkarte und Kader</h2><p>Dieselben Bausteine, einmal groß auf der Spielerkarte und einmal klein in der Kadertabelle.</p></header>
+    <div class="card" id="karte"></div>
+    <div class="tw"><table id="kader" aria-label="Kader mit Mini-Reglern"></table></div>
+  </section>
+
+  <section class="sec" aria-labelledby="h-reg">
+    <header><h2 id="h-reg">Regeln für alle Regler</h2></header>
+    <ul class="rules">
+      <li>Die Zahl steht immer daneben. Der Balken gibt die Übersicht, die Zahl die Genauigkeit.</li>
+      <li>Gleiche Werte haben im ganzen Spiel die gleiche Skala.</li>
+      <li>Minimum und Maximum sind immer sichtbar, das erreichbare Maximum, wo es eins gibt.</li>
+      <li>Farben haben feste Bedeutungen: grün gut, gelb Achtung, rot kritisch, blau du. Dazu immer ein Text oder Symbol.</li>
+      <li>Schätzungen sind Bänder, nie Punkte. Ihre Breite hängt an der Qualität deines Stabs.</li>
+    </ul>
+  </section>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const pct=(v,min,max)=>Math.max(0,Math.min(100,(v-min)/(max-min)*100));
+const de=(n,d=0)=>n.toLocaleString('de-DE',{minimumFractionDigits:d,maximumFractionDigits:d});
+
+/* ---------- Baustein: Anzeige-Regler ---------- */
+function anzeige(o){
+  const {label,sub='',min,max,wert,einheit='',talent,marker=[],zonen=[],trend,you=false,dez=0}=o;
+  const z=zonen.map(q=>`<div class="zone ${q.art}" style="left:${pct(q.von,min,max)}%;width:${pct(q.bis,min,max)-pct(q.von,min,max)}%"></div>`).join('');
+  const pot=talent?`<div class="pot" style="left:${pct(talent[0],min,max)}%;width:${pct(talent[1],min,max)-pct(talent[0],min,max)}%" title="erreichbares Maximum"></div>`:'';
+  const mk=marker.map(m=>`<div class="mk" style="left:calc(${pct(m.v,min,max)}% - 1px)" title="${m.t}"></div>`).join('');
+  const mkl=marker.map(m=>`<span class="mkl" style="left:${pct(m.v,min,max)}%">${m.t}</span>`).join('');
+  const sp=trend?spark(trend):'';
+  return `<div class="rg"><div class="lbl">${label}${sub?`<small>${sub}</small>`:''}</div>
+    <div class="track" role="meter" aria-label="${label}" aria-valuemin="${min}" aria-valuemax="${max}" aria-valuenow="${wert}">${pot}<div class="fill${you?' you':''}" style="width:${pct(wert,min,max)}%"></div>${z}${mk}</div>
+    <div class="val">${de(wert,dez)}${einheit?`<small>${einheit}</small>`:''}</div>
+    <div class="scale"><span>${min}</span>${mkl}<span>${max}</span></div>${sp}</div>`;
+}
+function spark(vals){
+  const w=160,h=22,step=w/(vals.length-1),min=Math.min(...vals)-1,max=Math.max(...vals)+1;
+  const pts=vals.map((v,i)=>`${(i*step).toFixed(1)},${(h-3-(v-min)/(max-min)*(h-6)).toFixed(1)}`);
+  const last=pts[pts.length-1].split(',');
+  return `<svg class="spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true"><polyline points="${pts.join(' ')}" fill="none" stroke="var(--mist)" stroke-width="1.5" vector-effect="non-scaling-stroke"/><circle cx="${last[0]}" cy="${last[1]}" r="3" fill="var(--led)"/></svg>`;
+}
+/* ---------- Baustein: Unscharfer Regler ---------- */
+function unscharf(o){
+  const {label,sub='',min,max,spanne}=o;
+  const inner=spanne?`<div class="band" style="left:${pct(spanne[0],min,max)}%;width:${Math.max(1.2,pct(spanne[1],min,max)-pct(spanne[0],min,max))}%"></div>`:`<div class="unknown">? ? ? ? ? ?</div>`;
+  const val=spanne?(spanne[0]===spanne[1]?de(spanne[0]):`<small>ca.</small> ${spanne[0]}–${spanne[1]}`):'?';
+  return `<div class="rg"><div class="lbl">${label}${sub?`<small>${sub}</small>`:''}</div><div class="track" aria-label="${label}">${inner}</div><div class="val" style="font-size:22px">${val}</div><div class="scale"><span>${min}</span><span>${max}</span></div></div>`;
+}
+
+/* ---------- 1 Anzeige ---------- */
+$('anz').innerHTML=[
+  anzeige({label:'Stärke',sub:'1–99',min:1,max:99,wert:72,talent:[80,86],marker:[{v:68,t:'Ø Liga 68'}],trend:[66,67,69,70,70,71,72]}),
+  anzeige({label:'Frische',sub:'Gefahr unter 60 %',min:0,max:100,wert:88,einheit:'%',zonen:[{von:0,bis:60,art:'bad'},{von:60,bis:75,art:'warn'},{von:75,bis:100,art:'good'}]}),
+  anzeige({label:'Form',sub:'0–20, Mitte 10',min:0,max:20,wert:9,marker:[{v:10,t:'Mitte'}],trend:[14,13,12,11,10,9,9]}),
+  anzeige({label:'Stimmung',min:0,max:100,wert:63,marker:[{v:50,t:'kritisch ab 50'}],zonen:[{von:0,bis:50,art:'bad'},{von:50,bis:65,art:'warn'},{von:65,bis:100,art:'good'}]})
+].join('');
+
+/* ---------- 2 Unscharf ---------- */
+const SC=[
+  {t:'kein Bericht',st:null,te:null,ta:null,tr:[]},
+  {t:'1 Bericht',st:[64,80],te:[55,75],ta:null,tr:[['Dribbler','rumor'],['Hitzkopf','rumor']]},
+  {t:'3 Berichte',st:[70,77],te:[62,70],ta:[78,90],tr:[['Dribbler','likely'],['Hitzkopf','rumor'],['Weitschütze','likely']]},
+  {t:'live beobachtet',st:[73,75],te:[65,67],ta:[82,88],tr:[['Dribbler','sure'],['Weitschütze','sure'],['Hitzkopf','likely']]}];
+let scoutLvl=1;
+function drawScout(){
+  const s=SC[scoutLvl];
+  $('scout').innerHTML=SC.map((q,i)=>`<button type="button" id="sc${i}" aria-pressed="${i===scoutLvl}">${q.t}</button>`).join('');
+  SC.forEach((q,i)=>$('sc'+i).onclick=()=>{scoutLvl=i;drawScout();});
+  $('un').innerHTML=[unscharf({label:'Stärke',min:1,max:99,spanne:s.st}),unscharf({label:'Technik',sub:'Beispiel-Fähigkeit',min:1,max:99,spanne:s.te}),unscharf({label:'Talent',sub:'Obergrenze',min:1,max:99,spanne:s.ta})].join('');
+  $('traits').innerHTML=s.tr.length?s.tr.map(([n,a])=>`<span class="tr ${a}">${n}${a==='rumor'?' (Gerücht)':a==='likely'?' (vermutet)':''}</span>`).join(''):'<span class="dim">Noch keine Merkmale bekannt.</span>';
+}
+drawScout();
+
+/* ---------- 3 Ticketpreis ---------- */
+const CAP=34700, FANS=48000, REF=30, EL=1.25;
+const att=p=>Math.round(Math.min(CAP,FANS*Math.pow(REF/p,EL)));
+const rev=p=>p*att(p);
+let OPT=5;for(let p=5;p<=80;p+=0.5){if(rev(p)>rev(OPT))OPT=p;}
+const MKT=[{bias:6,half:11,name:'schwach'},{bias:-2,half:5,name:'mittel'},{bias:0.5,half:1.5,name:'stark'}];
+function drawTicket(){
+  const p=+$('preis').value,m=MKT[+$('mkt').value],lo=Math.max(5,OPT+m.bias-m.half),hi=Math.min(80,OPT+m.bias+m.half);
+  $('preisOut').innerHTML=`${p}<small> €</small>`;
+  $('preisRec').style.left=`calc(${pct(lo,5,80)}% )`;$('preisRec').style.width=`${pct(hi,5,80)-pct(lo,5,80)}%`;
+  const a=att(p);
+  $('zus').innerHTML=anzeige({label:'Zuschauer',sub:`Kapazität ${de(CAP)}`,min:0,max:CAP,wert:a,you:true,zonen:[{von:CAP*0.95,bis:CAP,art:'good'}]});
+  // Chart
+  const W=640,H=230,L=52,R=16,T=14,B=34,xs=v=>L+(v-5)/(80-5)*(W-L-R),maxR=rev(OPT)*1.12,ys=v=>T+(1-v/maxR)*(H-T-B);
+  let d='',ar='';for(let q=5;q<=80;q+=0.5){d+=(q===5?'M':'L')+xs(q).toFixed(1)+','+ys(rev(q)).toFixed(1);}
+  ar=d+`L${xs(80)},${ys(0)}L${xs(5)},${ys(0)}Z`;
+  const yt=[0,0.25,0.5,0.75,1].map(f=>Math.round(maxR*f/100000)*100000);
+  let g=yt.map(v=>`<line class="grid" x1="${L}" x2="${W-R}" y1="${ys(v)}" y2="${ys(v)}"/><text x="${L-6}" y="${ys(v)+4}" text-anchor="end">${v>=1e6?de(v/1e6,1)+' Mio':de(v/1e3)+' T'}</text>`).join('');
+  g+=[10,20,30,40,50,60,70,80].map(v=>`<text x="${xs(v)}" y="${H-12}" text-anchor="middle">${v} €</text>`).join('');
+  const truth=$('truth').checked?`<line class="truth" x1="${xs(OPT)}" x2="${xs(OPT)}" y1="${T}" y2="${H-B}"/><text class="lab" x="${xs(OPT)+5}" y="${T+12}">echtes Optimum ${de(OPT,0)} €</text>`:'';
+  $('erlChart').innerHTML=`${g}<rect class="est" x="${xs(lo)}" y="${T}" width="${xs(hi)-xs(lo)}" height="${H-T-B}"/>
+    <path class="area" d="${ar}"/><path class="curve" d="${d}"/>
+    <line class="axis" x1="${L}" x2="${W-R}" y1="${ys(0)}" y2="${ys(0)}"/>
+    <line class="you" x1="${xs(p)}" x2="${xs(p)}" y1="${ys(rev(p))}" y2="${ys(0)}"/><circle class="youdot" cx="${xs(p)}" cy="${ys(rev(p))}" r="5"/>
+    <text class="lab" x="${Math.min(xs(p)+8,W-150)}" y="${Math.max(ys(rev(p))-8,T+26)}">du: ${de(rev(p)/1e6,2)} Mio € pro Spiel</text>${truth}
+    <text x="${L}" y="${T-2}">Einnahmen pro Heimspiel</text>`;
+  const inBand=p>=lo&&p<=hi;
+  $('preisVerdict').className='verdict '+(inBand?'v-good':'v-warn');
+  $('preisVerdict').innerHTML=`<b>${inBand?'Im empfohlenen Bereich':'Außerhalb der Empfehlung'}</b> · Schätzung Marketing (${m.name}): Optimum etwa ${de(lo)}–${de(hi)} €. ${a>=CAP?'Ausverkauft: Ein höherer Preis kostet kaum Zuschauer.':'Noch Plätze frei: Ein niedrigerer Preis füllt das Stadion.'}`;
+}
+['preis','mkt','truth'].forEach(i=>$(i).addEventListener('input',drawTicket));
+drawTicket();
+
+/* ---------- 4 Training ---------- */
+const REC=[45,65];
+$('intRec').style.left=`${REC[0]}%`;$('intRec').style.width=`${REC[1]-REC[0]}%`;
+function drawTrain(){
+  const t=+$('int').value,ent=Math.round(100*(1-Math.exp(-t/42))),fr=Math.round(100-t*0.24),risk=+(1.5+Math.pow(t/100,2)*16).toFixed(1);
+  $('intOut').innerHTML=`${t}<small>/100</small>`;
+  const st=t>80?'sinkt':t<25?'steigt leicht':'gleichbleibend';
+  $('trainOut').innerHTML=[
+    anzeige({label:'Entwicklung',sub:'Tempo, relativ',min:0,max:100,wert:ent,marker:[{v:80,t:'ab hier kaum mehr'}]}),
+    anzeige({label:'Frische',sub:'Ende der Woche',min:0,max:100,wert:fr,einheit:'%',zonen:[{von:0,bis:60,art:'bad'},{von:60,bis:75,art:'warn'},{von:75,bis:100,art:'good'}]}),
+    anzeige({label:'Verletzungsrisiko',sub:'pro Spieler und Woche',min:0,max:20,wert:risk,einheit:'%',dez:1,zonen:[{von:0,bis:4,art:'good'},{von:4,bis:8,art:'warn'},{von:8,bis:20,art:'bad'}]})
+  ].join('')+`<p class="verdict ${t>=REC[0]&&t<=REC[1]?'v-good':'v-warn'}"><b>Stimmung: ${st}</b> · Empfehlung Co-Trainer: ${REC[0]}–${REC[1]}</p>`;
+}
+$('int').addEventListener('input',drawTrain);drawTrain();
+
+/* ---------- 5 Gehalt ---------- */
+const RES=1.45;
+const INF=[{t:'kaum etwas',bias:0.3,half:0.55},{t:'ein Gespräch',bias:-0.08,half:0.25},{t:'Berater kennt dich gut',bias:0.02,half:0.08}];
+let infoLvl=1;
+function drawInfoSeg(){$('info').innerHTML=INF.map((q,i)=>`<button type="button" id="if${i}" aria-pressed="${i===infoLvl}">${q.t}</button>`).join('');INF.forEach((q,i)=>$('if'+i).onclick=()=>{infoLvl=i;drawInfoSeg();drawGeh();});}
+function drawGeh(){
+  const s=+$('geh').value,f=INF[infoLvl],c=RES+f.bias,lo=Math.max(0.5,c-f.half),hi=Math.min(3,c+f.half);
+  $('gehOut').innerHTML=`${de(s,2)}<small> Mio</small>`;
+  $('gehRec').style.left=`${pct(lo,0.5,3)}%`;$('gehRec').style.width=`${pct(hi,0.5,3)-pct(lo,0.5,3)}%`;
+  const v=s<lo?['v-bad','eher Nein']:s<=hi?['v-warn','offen, kann klappen']:['v-good','wahrscheinlich Ja'];
+  $('gehVerdict').className='verdict '+v[0];
+  $('gehVerdict').innerHTML=`<b>${v[1]}</b> · Deine Einschätzung, ab wann er zusagt: etwa ${de(lo,2)}–${de(hi,2)} Mio € (${f.t}).`;
+  const team=[2.4,1.9,1.6,1.3,1.1,0.9,0.8,0.6],rang=team.filter(x=>x>s).length+1;
+  $('gehRang').innerHTML=anzeige({label:'Gehaltsgefüge',sub:`wäre Platz ${rang} im Kader`,min:0.5,max:3,wert:s,dez:2,einheit:' Mio',you:true,marker:[{v:2.4,t:'Topverdiener'},{v:1.1,t:'Ø Kader'}]});
+}
+drawInfoSeg();$('geh').addEventListener('input',drawGeh);drawGeh();
+
+/* ---------- 6 Tauziehen ---------- */
+const TUG=[['Abwehr',74,86],['Mittelfeld',76,85],['Angriff',73,88],['Frische',96,88]];
+$('tug').innerHTML=`<div class="head"><span></span><span><span>Dein Verein</span><span>Tabellenführer</span></span><span></span></div>`+TUG.map(([n,a,b])=>`<div class="r"><span>${n}</span><div class="bar" role="img" aria-label="${n} ${a} zu ${b}"><div class="a" style="width:${a/(a+b)*100}%"></div><div class="b" style="width:${b/(a+b)*100}%"></div><div class="mid"></div></div><span class="num">${a}:${b}</span></div>`).join('');
+$('cycle').innerHTML=`<span class="dim">Spielstil:</span><span class="chip on">Konter (du)</span><span>⟳ schlägt</span><span class="chip">Pressing (Gegner)</span><span class="dim">→ Vorteil für dich, solange die Frische hält</span>`;
+
+/* ---------- 7 Karte & Kader ---------- */
+$('karte').innerHTML=`<div class="top"><b>Jonas Beispiel</b><span class="dim">MF · 20 Jahre · Vertrag bis 2029 · erfundener Beispielspieler</span></div>`+[
+  anzeige({label:'Stärke',min:1,max:99,wert:79,talent:[84,90],marker:[{v:74,t:'Ø Kader'}]}),
+  anzeige({label:'Kondition',min:1,max:99,wert:72}),
+  anzeige({label:'Frische',min:0,max:100,wert:95,einheit:'%',zonen:[{von:0,bis:60,art:'bad'},{von:60,bis:75,art:'warn'},{von:75,bis:100,art:'good'}]}),
+  anzeige({label:'Form',min:0,max:20,wert:13,marker:[{v:10,t:'Mitte'}],trend:[8,9,11,12,12,13,13]}),
+  anzeige({label:'Selbstvertrauen',sub:'−3 bis +3',min:-3,max:3,wert:2,marker:[{v:0,t:'0'}]}),
+  anzeige({label:'Spielpraxis',min:0,max:100,wert:90,einheit:'%'})
+].join('')+`<div class="traits"><span class="tr sure">Dribbler</span><span class="tr likely">Weitschütze (lernt, 60 %)</span><span class="tr rumor">nervenschwach (vermutet)</span></div>`;
+const K=[['TW','Lukas Probe',31,76,11,92,70],['AB','Malte Muster',27,73,9,64,58],['AB','Kerem Test',23,70,14,88,81],['MF','Jonas Beispiel',20,79,13,95,71],['MF','Filip Vorlage',29,74,7,71,44],['ST','Noah Entwurf',25,77,16,83,77]];
+const mini=(v,min,max,cls='')=>`<div class="mini"><div class="track"><div class="fill${cls}" style="width:${pct(v,min,max)}%"></div></div><span class="n">${v}</span></div>`;
+$('kader').innerHTML=`<thead><tr><th>Pos</th><th>Name</th><th>Alter</th><th>Stärke</th><th>Form</th><th>Frische</th><th>Stimmung</th></tr></thead><tbody>`+K.map(([p,n,a,s,f,fr,st])=>`<tr><td><span class="pos">${p}</span></td><td>${n}</td><td>${a}</td><td>${mini(s,1,99)}</td><td>${mini(f,0,20)}</td><td>${mini(fr,0,100)}</td><td>${mini(st,0,100)}</td></tr>`).join('')+`</tbody>`;
+</script>
+
+</html>
