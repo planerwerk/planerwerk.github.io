@@ -1,0 +1,99 @@
+# Konsistenzprüfung der Pläne
+
+Stand: 5. November 2026.
+
+Geprüft habe ich:
+- `PLAN.md`
+- `konzepte/_rohmaterial-logik-v1.md` (im Folgenden „Rohmaterial“)
+- `konzepte/_recherche-genre.md`
+- `konzepte/K29-medien-presse.md`
+- `konzepte/_vorlage.md`
+- zum Vergleich das laufende Spiel `index.html`
+
+**Status je Befund:**
+- ✅ = in diesem Schritt korrigiert
+- 🔶 = Vorschlag, braucht deine Entscheidung
+- 📌 = Hinweis für das jeweilige Konzept
+
+## Ergebnis in Kürze
+
+- **5 echte Widersprüche** zwischen dem Rohmaterial und späteren Entscheidungen. Der wichtigste: Es gibt drei verschiedene Fähigkeiten-Modelle.
+- **6 Abhängigkeitsfehler:** Konzepte stehen in einer früheren Welle als das, worauf sie aufbauen.
+- **6 Überschneidungen,** bei denen unklar ist, welches Konzept zuständig ist.
+- **5 Lücken,** die in keinem Konzept stehen. Die wichtigsten: ein Gesamt-Budget für Unterbrechungen und Automatik- bzw. Delegationsmodi.
+- **Formale Fehler:** Zählung der Konzepte, veraltete Formulierungen, zwei Nummerierungen für die Schritte.
+
+**Der größte Engpass ist K03.** Solange das Fähigkeiten-Modell offen ist, hängen die Engine (K04), die Taktik (K06), das Training (K07) und das Scouting (K18) in der Luft.
+
+---
+
+## A. Widersprüche
+
+| # | Thema | Wo | Konflikt | Lösung |
+|---|---|---|---|---|
+| A1 | **Fähigkeiten-Modell** | Rohmaterial 4.1 · PLAN K03 Variante B · PLAN K03 Vorschlag | **Drei verschiedene Modelle:** 5 Zahlenwerte (Technik, Tempo, Zweikampf, Abschluss, Spielintelligenz), 8 Zahlenwerte, und „Stärke + erlernbare Merkmale“ (Anstoss-Stil). Das Rohmaterial baut darauf auf: Spielstil-Kreislauf (11), Training (10), Scouting-Spannen (4.5, „Technik 70–80“), Mittelfeld-Duell (5.1). | 🔶 **Entscheidung K03.** Wird es der Anstoss-Stil, müssen die Voraussetzungen des Kreislaufs, die Trainingseinheiten und die Scouting-Spannen neu formuliert werden, über Stärke, Merkmale und Kondition. Die Abhängigkeiten stehen in Abschnitt C. |
+| A2 | **Skala der Form** | Rohmaterial 4.3: −3 bis +3 · PLAN K03: 0–20 · Spiel heute: 0–10 | drei Skalen | 🔶 Vorschlag: **0–20** wie bei Anstoss 3, mit 10 als Mitte. Selbstvertrauen bekommt eine eigene Skala, zum Beispiel −3 bis +3. |
+| A3 | **Entwicklung der Stärke** | Rohmaterial 10: kleine Schritte pro Trainingseinheit · PLAN K03: Auf- und Abwertungsrunden | zwei Mechaniken | 🔶 Vorschlag: **Stärke** über Würfelrunden, monatlich. **Merkmale** über Lernfortschritt. **Training** verändert beides, also die Chancen in den Runden und das Lerntempo, plus Kondition. Gehört in K03 und K07. |
+| A4 | **Strafe fürs Abwerben** | Rohmaterial 12.3 und 12.6: Beschwerde beim Verband und Geldstrafe | PLAN §2: **keine festen Strafen**, stattdessen Beziehung und Klatsch | ✅ Im Rohmaterial als überholt markiert. K20 folgt PLAN §2. |
+| A5 | **Zeitsprung** | Rohmaterial 3: „Weiter“ wahlweise bis zum Ereignis, Tag für Tag oder bis zum Spiel | PLAN §2: „Tag beenden“, **höchstens 7 Tage** | ✅ Im Rohmaterial als überholt markiert. K01 folgt PLAN §2. |
+
+## B. Lücken (in keinem Konzept)
+
+| # | Lücke | Warum wichtig | Vorschlag |
+|---|---|---|---|
+| B1 | **Gesamt-Budget für Unterbrechungen** | Pro Saison kämen zusammen: Ereigniskarten (etwa 40 kleine und 10 große), 12–20 Pressekonferenzen, Interviews nach jedem Spiel, Gerüchte, Angebote, Erinnerungen und Sportgericht. Mit 7-Tage-Sprüngen hält das Spiel dann fast jeden Tag an. Das widerspricht deinem „nicht zu viel“ und der Lehre aus CM 01/02, dass Tempo eine Qualität ist. | 🔶 Unterscheiden zwischen **„hält an“** (Entscheidung nötig) und **„landet im Posteingang“** (nur Info). Dazu ein Ziel für die Unterbrechungen pro Woche, etwa 2–4, als Stellschraube in K01 und K02. |
+| B2 | **Automatik und Delegieren** | Die Recherche sagt deutlich: „Tiefe bei hohem Tempo“, sonst zu zeitaufwendig wie FM. Das steht bisher nur verstreut in den Plänen: Co-Trainer zur Pressekonferenz, Automatik beim Training. | 🔶 Grundsatz: **Jeder Bereich hat einen Automatik-Modus über eine Person aus dem Stab,** zum Beispiel Co-Trainer für Training und Aufstellung, Sportdirektor für Verträge und Kader, Pressesprecher für Medien. Ihre Qualität und ihr Charakter bestimmen das Ergebnis. Zuständig: K16, das dafür von klein auf mittel wächst und in Welle 2 rückt. |
+| B3 | **Gerüchteküche** | PLAN K29 verspricht „Gerüchte (wahr, halb wahr, falsch)“, der Entwurf K29 behandelt aber nur Pressekonferenzen. Das Rohmaterial 12.5 hat Ansätze. | 📌 In K29 ein eigenes Kapitel „Gerüchte“ ergänzen, oder ein eigenes Konzept K29b. |
+| B4 | **Datenmodell in K29** | Der Vorlage nach gehört ein Abschnitt „Begriffe und Daten“ dazu: Journalist, Medium, Gedächtnis der Aussagen, Sprüche-Chronik. Er fehlt, an seiner Stelle steht die Auswertung. | 📌 Bei der Überarbeitung von K29 nachtragen. |
+| B5 | **Übergang vom laufenden Spiel** | Das heutige Spiel hat Sponsorwahl, einfachen Stadionbau, Kredit, Gelbsperren, Verträge und anderes. Lehre aus FM26: **nichts wegnehmen, bevor der Ersatz fertig ist.** | 🔶 Grundsatz: Eine bestehende Funktion bleibt, bis ihr Nachfolger umgesetzt ist. U1 baut nur um und streicht nichts, außer dem Bearbeiten im Spiel, das du so wolltest. |
+
+## C. Abhängigkeiten
+
+| # | Konzept (Welle) | braucht | in Welle | Problem | Vorschlag |
+|---|---|---|---|---|---|
+| C1 | K08 Jugend (2) | K14 Stimmung (3), K18 Scouting (3), K19 Leihe (3), K29 Presse abschirmen (4) | später | Wesentliche Teile fehlen in Welle 2 | 🔶 **K08 in Welle 3 verschieben,** oder in Welle 2 nur den Kern bauen: Volatilität und Prägung, Leihe und Presse später. |
+| C2 | K11 Testspiele (2) | K17 Beziehungen (3) | später | „Gegner anfragen je nach Beziehung“ | 📌 In Welle 2 ohne Beziehungen umsetzen, nach Vereinsniveau und Kalender. Beziehungen kommen in Welle 3 dazu. |
+| C3 | K05 Live-Spiel (2) | K14 und K15 für die Halbzeitansprache (3) | später | Die Ansprache wirkt auf Stimmung und Glaubwürdigkeit | 📌 In Welle 2 wirkt die Ansprache nur auf das Selbstvertrauen (aus K03). Stimmung und Glaubwürdigkeit folgen in Welle 3. |
+| C4 | K18 Scouting (3) | K32 Auslandsspieler (4) | später | Laut §2 sind besonders Spieler aus dem Ausland unbekannt, aber ausländische Ligen gibt es erst mit K32 | 🔶 **Den Auslandspool aus K32 in Welle 3 vorziehen** (nur Spieler, keine Ligen). |
+| C5 | K04, K06, K07, K18 (1 bis 3) | K03 Fähigkeiten (1) | gleich | siehe A1 | 📌 K03 als erstes großes Konzept fertig machen. |
+| C6 | K12 Saisonvorbereitung (4) | K19 (3), K24 (4), K28 (3) | passt | Die Saisonvorbereitung ist der Rahmen für Transfers und Ziele | 📌 Keine Änderung. Aber K19 und K28 sollten die Vorbereitung als Haupt-Zeitraum schon mitdenken. |
+
+## D. Überschneidungen (wer ist zuständig?)
+
+| # | Thema | taucht auf in | Vorschlag: zuständig |
+|---|---|---|---|
+| D1 | Glaubwürdigkeit, Versprechen, Abnutzung | K15 und K29 | **K15** führt die Werte, K29 nutzt sie |
+| D2 | Halbzeitansprache | K05 und K15 | **K05** für Ablauf und Zeitpunkt, **K15** für die Wirkung |
+| D3 | Saisonziel-Gespräch | K12 und K28 | **K28** für das Gespräch, **K12** legt nur den Termin fest |
+| D4 | Nachwuchs-Jahrgang | K08 und K32 („neue Talente“) | **K08** für den eigenen Nachwuchs, **K32** für neue Spieler in der übrigen Welt |
+| D5 | Verfahren wegen Äußerungen, etwa Schiedsrichterkritik | K29 und K09 | **K09** für Verfahren und Strafmaß. Die Zeile von K09 in PLAN.md um „Äußerungen außerhalb des Spiels“ ergänzen ✅ |
+| D6 | Sprüche-Chronik | K29 und K34 | **K34** für die Speicherung, **K29** für den Inhalt. Im Kopf von K29 als Abhängigkeit vermerken 📌 |
+
+## E. Formales
+
+| # | Befund | Status |
+|---|---|---|
+| E1 | PLAN §6 nennt „34 Konzepte, 8 klein, 20 mittel, 6 groß“. Tatsächlich sind es **35** (K01–K35): **7 klein, 22 mittel, 6 groß**. | ✅ korrigiert |
+| E2 | PLAN §7 sagt „idealerweise mit deinem Material zu BMH und Anstoss, falls vorhanden“. Das Anstoss-Material liegt aber schon vor. | ✅ korrigiert |
+| E3 | Das Rohmaterial nummeriert die Stufen **L0–L11**, PLAN die Schritte **U1–U19**. Das verwechselt man leicht. | ✅ Im Rohmaterial als überholt markiert |
+| E4 | In den Umsetzungsschritten der Welle 3 fehlen K22 (Berater) und K28 (Vorstand). | ✅ ergänzt |
+| E5 | Skala der Stärke nicht festgelegt. Das Spiel nutzt heute 1–99, und so sind auch die Wikipedia-Daten geschätzt. Anstoss 3 hatte etwa 5–13 mit Nachkommastelle. | 🔶 Vorschlag: **1–99 behalten**, damit die vorhandenen Daten weiter passen |
+
+## F. Querverweise, die stimmen (zur Kontrolle)
+
+- Seed-Zufall, `regeln.js` und Testskripte stehen überall gleich.
+- Torwart-Deckel von ±15 % passt zum Recherche-Wert von 0,1–0,3 verhinderten Toren pro Spiel und zum Akzeptanztest (+4–6 Punkte).
+- Transferfenster für alle, verhandeln jederzeit, wirksam im Fenster: PLAN und Rohmaterial stimmen überein.
+- Verkaufsregel der Computer-Vereine (erst kaufen, dann verkaufen) gleich in PLAN K31, Rohmaterial 13.3 und Recherche.
+- Live-Spiel nur für das eigene Spiel, die Konferenz vorab berechnet: gleich in Rohmaterial 8 und PLAN K05.
+- Neu als Prüfpunkt aus der Recherche (FM-Arena): Tempo steckt in zwei Spielstilen des Kreislaufs (Pressing, Konter). Der Sensitivitätstest muss gezielt prüfen, dass Tempo nicht zur Allzweckwaffe wird. 📌 K04, K06
+
+## G. Was ich von dir brauche
+
+1. **K03:** Spielermodell im Anstoss-Stil (Stärke + erlernbare Merkmale + Charakter) oder Zahlenwerte? Mein Vorschlag ist der Anstoss-Stil.
+2. **Skalen:** Stärke 1–99 und Form 0–20, einverstanden?
+3. **Unterbrechungs-Budget:** „hält an“ gegenüber „Posteingang“, mit etwa 2–4 Unterbrechungen pro Woche?
+4. **Automatik und Delegieren** als Grundsatz für alle Bereiche, über Personen im Trainerstab?
+5. **Wellen umstellen:** K08 nach Welle 3, den Auslandspool aus K32 nach Welle 3, K16 nach Welle 2?
+6. **„Nichts wegnehmen, bevor der Ersatz fertig ist“** als Grundsatz?
+7. **Europapokal:** ja oder nein? Davon hängen Kalender, englische Wochen und Finanzen ab (K13).

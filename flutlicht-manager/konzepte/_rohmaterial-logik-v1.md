@@ -1,5 +1,11 @@
 # Flutlicht Manager – Logik-Plan (ausführlich)
 
+> **⚠ Teilweise überholt** (siehe `_konsistenzpruefung.md`):
+> - Strafe fürs Abwerben (12.3, 12.6): ersetzt durch Beziehung und Klatsch (PLAN §2).
+> - „Weiter“-Varianten (3): ersetzt durch „Tag beenden“ mit höchstens 7 Tagen.
+> - Fähigkeiten (4.1) und Form-Skala (4.3): offen in K03.
+> - Stufen L0–L11 (16): ersetzt durch Wellen und U-Schritte in PLAN.md.
+
 Stand: 5. November 2026. Dieser Plan beschreibt nur die Spiellogik. Oberfläche und Look kommen später.
 Jede Stufe ist ein eigener Arbeitsschritt, am besten jeweils in einer neuen Session mit dem Auftrag „Stufe X aus PLAN.md“.
 

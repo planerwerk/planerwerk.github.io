@@ -12,6 +12,7 @@ Stand: 5. November 2026. Das Projekt ist ein Nebenprojekt, das langsam und grün
 4. **Session-Regel zum Token-Sparen:** pro Session ein bis vier Konzepte oder ein Umsetzungsschritt, immer in einer neuen Session. Startsatz zum Beispiel: „Konzept K03 aus PLAN.md“ oder „Umsetzung U2“.
 5. Alle Stellschrauben, also Zahlen, Wahrscheinlichkeiten und Preise, kommen in `daten/regeln.js`. Spielerdaten liegen in `daten/spieler.js`. Bearbeitet werden sie nur dort, nicht im Spiel.
 6. Rohmaterial aus der ersten Planung steht in `konzepte/_rohmaterial-logik-v1.md`: Engine, Sportgericht, Transfers, Computer-Vereine. Daraus speisen sich die Konzepte.
+8. Die Konsistenzprüfung steht in `konzepte/_konsistenzpruefung.md`: Widersprüche, Lücken, Abhängigkeiten, Zuständigkeiten und offene Entscheidungen. Bei jedem neuen Konzept fortschreiben.
 7. Die Genre-Recherche steht in `konzepte/_recherche-genre.md`: was BMH, Anstoss 3, Football Manager, We Are Football und Hattrick enthalten, was die Community kritisiert und was wir übernehmen. Vor jedem Konzept lesen.
 
 ## 2. Bereits entschieden (aus deinen Antworten)
@@ -49,7 +50,7 @@ Spalte „Welle“: wann das Konzept spätestens fertig sein muss. Umfang des Ko
 | K06 | Taktik | Grundordnungen, Spielstil-Kreislauf, Voraussetzungen, Vertrautheit, Gegneranalyse, Standards | M | 2 |
 | K07 | Training | Wochenplan, Einheitstypen, Intensität, Einzeltraining, Umschulung, Belastung und Regeneration, Trainingswirkung je Alter | M | 2 |
 | K08 | Jugend und Talententwicklung | Nachwuchsleistungszentrum, Sichtung, Aufrücken, Volatilität, Prägungsereignisse (Schub oder Knacks), Belastungssteuerung, Leihe für Spielpraxis, Verheizen | M | 2 |
-| K09 | Disziplin und Sportgericht | Foularten, Karten, Verfahren über mehrere Tage, Strafmaß mit Zufall, Widerspruch, Wiederholungstäter, Zuschauer-Vergehen | M | 2 |
+| K09 | Disziplin und Sportgericht | Foularten, Karten, Verfahren über mehrere Tage, Strafmaß mit Zufall, Widerspruch, Wiederholungstäter, Zuschauer-Vergehen, Verfahren wegen Äußerungen außerhalb des Spiels (zum Beispiel Schiedsrichterkritik, siehe K29) | M | 2 |
 | K10 | Medizin und Verletzungen | Verletzungsarten und Dauer, Diagnose als Spanne, Reha, Rückfall, fit spritzen, medizinische Abteilung | S | 2 |
 | K11 | Freundschaftsspiele und Trainingslager | Gegner anfragen (je nach Beziehung), Einnahmen, Spielpraxis, Risiko, Turniere, Trainingslager-Orte | S | 2 |
 | K13 | Wettbewerbe und Spielplan | Liga, Pokal, Relegation, eventuell Europapokal, Länderspiele mit Abstellungen, Spieltage verlegen, englische Wochen | M | 2 |
@@ -90,7 +91,7 @@ Spalte „Welle“: wann das Konzept spätestens fertig sein muss. Umfang des Ko
 
 | ID | Konzept | Kernfragen | Umfang | Welle |
 |---|---|---|---|---|
-| K29 | Medien und Presse (**Entwurf**: `konzepte/K29-medien-presse.md`) | erfundene Zeitungen und Portale mit Ruf, Pressekonferenzen, Interviews, Gerüchteküche (wahr, halb wahr, falsch), Wirkung auf Stimmung, Preise und Fans | M | 4 |
+| K29 | Medien und Presse (**Entwurf**: `konzepte/K29-medien-presse.md`, Gerüchteküche und Datenmodell fehlen noch) | erfundene Zeitungen und Portale mit Ruf, Pressekonferenzen, Interviews, Gerüchteküche (wahr, halb wahr, falsch), Wirkung auf Stimmung, Preise und Fans | M | 4 |
 | K30 | Ereigniskarten und Story-Playbook | Aufbau eines Ereignisses (Auslöser, Bedingungen, Häufigkeit, Sperrzeit, Beteiligte, Texte, Entscheidungen, Folgen, Ketten), Dosierung, Katalog | L, wächst laufend | Gerüst 3, Inhalte fortlaufend |
 | K32 | Spielwelt und Saisonwechsel | Stammdaten, Auslandsspieler als Transferpool, Karriereenden, neue Talente, Aufstieg und Abstieg, Datenpflege | M | 4 |
 | K34 | Statistik und Historie | Spieler- und Vereinsstatistik, Rekorde, Ehrungen, Saisonarchiv | S | 4 |
@@ -219,13 +220,13 @@ Für BMH habe ich keine verlässliche Quelle gefunden. Anstoss 2022 nutzt laut e
 |---|---|---|---|
 | 1 Fundament | K01, K02, K03, K04, K33 | U1: Aufteilung in Dateien, `regeln.js`, Zufall mit Seed, Tageskalender, Tests. U2: neues Spielermodell mit Startwerten aus den Wikipedia-Kadern. U3: Engine v2 mit Kalibrierung, Torwart-Test bestanden | ein spielbarer Stand mit glaubwürdigen Ergebnissen und dem Kalender-Ablauf |
 | 2 Sport | K05–K11, K13 | U4: Live-Spiel. U5: Taktik. U6: Training und Jugend. U7: Disziplin, Medizin, Testspiele, Spielplan | Spieltage mit Eingreifen, Training mit Wirkung, Sportgericht |
-| 3 Menschen und Markt | K14, K15, K17–K19, K21, K22, K28, K31, Gerüst von K30 | U8: Stimmung und Gespräche. U9: Scouting. U10: Transfers I und Verträge. U11: Computer-Vereine. U12: Beziehungen und Ereignis-Gerüst | Transfers als Prozess, sinnvolle Computer-Vereine, erste Ereigniskarten |
+| 3 Menschen und Markt | K14, K15, K17–K19, K21, K22, K28, K31, Gerüst von K30 | U8: Stimmung und Gespräche. U9: Scouting. U10: Transfers I, Verträge und Berater. U11: Computer-Vereine. U12: Beziehungen, Vorstand und Ereignis-Gerüst | Transfers als Prozess, sinnvolle Computer-Vereine, erste Ereigniskarten |
 | 4 Verein und Welt | K12, K16, K20, K23–K27, K29, K32, K34 | U13 bis U18 nach Bedarf | Saisonvorbereitung, Sponsoren, Marketing, Stadion, Fans, Presse, Abwerben |
 | 5 Oberfläche | K35 | U19 und folgende | eigener Retro-Look |
 
 ## 6. Aufwand (grob, ehrlich)
 
-- **Konzepte:** 34 Stück. Davon sind etwa 8 klein, 20 mittel und 6 groß. Das sind grob 12–15 Konzept-Sessions, das Ereignis-Playbook wächst danach weiter.
+- **Konzepte:** 35 Stück (K01–K35). Davon sind 7 klein, 22 mittel und 6 groß. Das sind grob 12–15 Konzept-Sessions, das Ereignis-Playbook wächst danach weiter.
 - **Umsetzung:** etwa 19 oder mehr Schritte, große eventuell doppelt, also grob 20–30 Sessions.
 - **Tokenkosten** kann ich vorher nicht verlässlich beziffern. Nach der ersten Konzept-Session und nach U1 sieht man den Verbrauch in der Nutzungsanzeige und kann hochrechnen.
 - **Sparen:**
@@ -236,4 +237,9 @@ Für BMH habe ich keine verlässliche Quelle gefunden. Anstoss 2022 nutzt laut e
 
 ## 7. Nächster Schritt
 
-Vorschlag: eine Session für **K01 (Kalender) und K33 (Daten/regeln.js)**, beide eher klein. Danach eine Session nur für **K03 (Spielermodell)**, idealerweise mit deinem Material zu BMH und Anstoss, falls vorhanden.
+Vorschlag:
+1. Zuerst die offenen Entscheidungen aus `konzepte/_konsistenzpruefung.md`, Abschnitt G, vor allem das Spielermodell.
+2. Dann eine Session für **K01 (Kalender) und K33 (Daten/regeln.js)**, beide eher klein.
+3. Danach eine Session nur für **K03 (Spielermodell)**. Das Anstoss-3-Material liegt schon vor (siehe Notizen zu K03).
+
+K03 ist der Engpass: Engine, Taktik, Training und Scouting bauen darauf auf.
