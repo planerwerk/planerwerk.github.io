@@ -15,8 +15,7 @@ const myT=()=>S.teams[S.my];
 const squad=tid=>S.pl.filter(p=>p.team===tid);
 const tn=id=>id>=1000?S.am[id-1000].name:S.teams[id].name;
 const last=n=>n.split(' ').slice(-1)[0];
-function wkLabel(){const w=S.cal&&S.cal[S.wk];return w?(w.t==='L'?(w.md+1)+'. ST':'Pokal'):'Sommer';}
-function news(t,c=''){S.news.unshift({t,c,w:wkLabel()});if(S.news.length>REGELN.spielstand.nachrichtenMax)S.news.length=REGELN.spielstand.nachrichtenMax;}
+function news(t,c=''){S.news.unshift({t,c,w:datumKurz(S.tag)});if(S.news.length>REGELN.spielstand.nachrichtenMax)S.news.length=REGELN.spielstand.nachrichtenMax;}
 function money(k,v){myT().cash+=v;S.fin[k]=(S.fin[k]||0)+v;}
 function toast(m){const t=document.getElementById('toast');t.textContent=m;t.hidden=false;clearTimeout(toast.h);toast.h=setTimeout(()=>t.hidden=true,3200);}
 function save(){try{localStorage.setItem(REGELN.spielstand.schluessel,JSON.stringify(S));}catch(e){}}

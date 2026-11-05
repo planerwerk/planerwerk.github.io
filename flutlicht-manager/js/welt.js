@@ -14,7 +14,8 @@ function mkPlayer(o){const age=o.age,str=o.str,T=RP.talent;const p={id:S.pid++,n
 const lgIds=lg=>S.teams.filter(t=>t.lg===lg).map(t=>t.id);
 const grundStaerke=rep=>RW.grund.basis+rep*RW.grund.jeAnsehen;
 function buildWorld(seed){const W=RW;
-  S={v:REGELN.spielstand.version,seed:seed>>>0,zufall:zufallStart(seed),pid:1,season:W.startSaison,wk:0,my:0,mgr:'',teams:[],pl:[],am:[],news:[],offers:[],fin:{},loan:0,trust:W.startVertrauen,train:W.startTraining,target:W.startZiel,hist:[],phase:'play',lineup:[],spons:null,sponsOffers:null,constr:null,res:{1:[],2:[]},att:[0,0],fired:0};
+  S={v:REGELN.spielstand.version,seed:seed>>>0,zufall:zufallStart(seed),pid:1,season:W.startSaison,tag:0,gespielt:-1,plan:null,relSp:[],einst:{aus:{}},my:0,mgr:'',teams:[],pl:[],am:[],news:[],offers:[],fin:{},loan:0,trust:W.startVertrauen,train:W.startTraining,target:W.startZiel,hist:[],phase:'play',lineup:[],spons:null,sponsOffers:null,constr:null,res:{1:[],2:[]},att:[0,0],fired:0};
+  S.plan=planFuer(S.season);S.tag=S.plan.start;
   S.am=AMATEURE.map(n=>({name:n,str:riA(W.amateurStaerke)}));
   PIX=new Map();
   VEREINE.forEach((c,i)=>{
@@ -26,14 +27,14 @@ function buildWorld(seed){const W=RW;
     const N=W.nachwuchs;if(real.length<N.wennUnter)for(let k=0;k<N.anzahl;k++){const p=mkPlayer({pos:pick(N.positionen),age:riA(N.alter),str:Math.round(base-N.abschlag+riA(N.streuung)),team:i});p.pot=Math.round(base+riA(N.talent));addP(p);}
   });
   const V=W.vereinslose;for(let k=0;k<V.anzahl;k++)addP(mkPlayer({pos:pick(V.positionen),age:riA(V.alter),str:riA(V.staerke),team:-1}));
-  S.fx={1:roundRobin(lgIds(1)),2:roundRobin(lgIds(2))};S.cal=mkCal();initCup();
+  S.fx={1:roundRobin(lgIds(1)),2:roundRobin(lgIds(2))};initCup();
 }
 function roundRobin(ids){const n=ids.length,arr=shuffle(ids.slice()),rounds=[];for(let r=0;r<n-1;r++){const md=[];for(let i=0;i<n/2;i++){let h=arr[i],a=arr[n-1-i];if((r+i)%2===1)[h,a]=[a,h];md.push([h,a]);}rounds.push(md);arr.splice(1,0,arr.pop());}return rounds.concat(rounds.map(md=>md.map(([h,a])=>[a,h])));}
-function mkCal(){const c=[],cup=RK.pokalNachSpieltag;for(let md=0;md<34;md++){c.push({t:'L',md});if(cup[md]!==undefined)c.push({t:'P',r:cup[md]});}return c;}
 function initCup(){S.cup={alive:[...S.teams.map(t=>t.id),...S.am.map((a,i)=>1000+i)],hist:[]};}
 function targetFor(r){const z=RV.ziel;return r===1?1:r<=z.spitzeBis?r+z.spitzePlus:Math.min(z.schlechtester,r+z.plus);}
 function targetText(lg,t){if(lg===1)return t===1?'Deutsche Meisterschaft':t<=4?'Platz '+t+' oder besser (Champions League)':t<=7?'Platz '+t+' oder besser (Europapokal)':t<=12?'Platz '+t+' oder besser (Mittelfeld)':'Klassenerhalt (Platz '+t+' oder besser)';return t<=2?'Aufstieg (Platz '+t+' oder besser)':t===3?'Relegationsplatz (Platz 3)':'Platz '+t+' oder besser';}
 function setTarget(){[1,2].forEach(lg=>S.teams.filter(t=>t.lg===lg).sort((a,b)=>b.rep-a.rep).forEach((t,i)=>t.expPos=i+1));const r=targetFor(myT().expPos);S.target=myT().lg===2?Math.max(RV.ziel.liga2Mindestens,r):r;}
 function sponsOffers(){const t=myT(),SP=RF.sponsor;const b=t.rep*t.rep*(t.lg===1?SP.liga1:SP.liga2);const ns=shuffle(SPONSOREN.slice());const r=v=>Math.round(v/1000)*1000;
   S.sponsOffers=SP.angebote.map((a,i)=>({name:ns[i],base:r(b*a.fix),win:a.sieg?r(b*a.sieg):0,yrs:a.jahre,info:a.info}));}
-function pickSponsor(i){S.spons={...S.sponsOffers[i]};S.sponsOffers=null;news(`Sponsorvertrag unterschrieben: ${S.spons.name}.`,'good');save();render();}
+function sponsorWaehlen(i){S.spons={...S.sponsOffers[i]};S.sponsOffers=null;news(`Sponsorvertrag unterschrieben: ${S.spons.name}.`,'good');}
+function pickSponsor(i){sponsorWaehlen(i);save();render();}

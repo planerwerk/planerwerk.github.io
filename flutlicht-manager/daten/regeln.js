@@ -7,15 +7,20 @@
 const REGELN={
 
   spielstand:{
-    version:1,                       // Version des Spielstands
-    schluessel:'flutlicht-manager-v1', // Speicherplatz im Browser
+    version:2,                       // Version des Spielstands (2 = Tageskalender, ab U1)
+    schluessel:'flutlicht-manager-v2', // Speicherplatz im Browser
+    alterSchluessel:'flutlicht-manager-v1', // Spielstand der Version 1 (Wochenkalender), wird nicht mehr geladen
     nachrichtenMax:80                // so viele Nachrichten bleiben im Posteingang
   },
 
   kalender:{
-    pokalNachSpieltag:{2:0,8:1,15:2,21:3,27:4,31:5}, // Pokalrunde nach dem Spieltag mit diesem Index (0 = 1. Spieltag)
-    vertragsWarnungWoche:28,         // in dieser Woche warnt das Büro vor auslaufenden Verträgen
-    hinweisVertraegeAbWoche:20       // ab dieser Woche zeigt das Büro auslaufende Verträge
+    maxSprung:7,                     // „Tag beenden“ springt höchstens so viele Tage weit
+    wochenTag:1,                     // an diesem Wochentag laufen die Wochenwerte (0 = Sonntag, 1 = Montag)
+    angebotTage:14,                  // so viele Tage gilt ein Angebot für einen deiner Spieler
+    vertragsWarnungNachSpieltag:25,  // nach diesem Ligaspieltag warnt das Büro vor auslaufenden Verträgen
+    hinweisVertraegeAbSpieltag:18,   // ab so vielen gespielten Ligaspieltagen zeigt das Büro auslaufende Verträge
+    erinnerungVertragTage:7,         // so viele Tage vor Saisonende erinnert „Tag beenden“ an auslaufende Verträge
+    erinnerungen:{frist:'Angebot läuft heute ab',aufstellung:'Startelf hat Ausfälle',sponsor:'Kein Sponsor gewählt',vertrag:'Verträge laufen aus'} // abschaltbar im Menü
   },
 
   welt:{
@@ -104,8 +109,8 @@ const REGELN={
   training:{
     entwicklung:[0.7,1,1.35],        // Faktor auf die Entwicklung je Stufe: locker, normal, hart
     fitnessGrenze:[100,95,85],       // höchste Fitness je Stufe
-    erholung:12,                     // Fitness pro Woche
-    abbau:4,                         // pro Woche, wenn über der Grenze
+    erholung:12,                     // Fitness pro Woche, verteilt auf die Tage
+    abbau:4,                         // pro Woche, wenn über der Grenze, verteilt auf die Tage
     wachstum:[[20,0.25],[23,0.16],[26,0.06],[29,0],[31,-0.06],[33,-0.12]], // Stärke pro Woche bis zu diesem Alter
     wachstumSonst:-0.22,
     einsatz:{mit:1.3,ohne:0.75},     // Faktor auf Wachstum mit und ohne Einsatz in der Woche
@@ -130,7 +135,7 @@ const REGELN={
     chancen:2.4,                     // Chance ohne Tor, wenn der Wurf unter Torwahrscheinlichkeit × Wert liegt
     schuetzen:{gewicht:{TW:0.03,AB:1,MF:2.4,ST:5},mitte:75,exponent:3},
     karten:{gelb:0.019,rot:0.0007,hart:1.7,fair:0.5}, // je Minute und Mannschaft
-    verletzung:{chance:0.0012,gegnerHart:1.5,wochen:[1,6]},
+    verletzung:{chance:0.0012,gegnerHart:1.5,wochen:[1,6]}, // Ausfall: 7 Tage je Woche nach dem Spieltag
     verlaengerung:0.8,               // Torwahrscheinlichkeit in der Verlängerung relativ
     elfmeter:0.76,
     fitnessVerlust:[7,13],fitnessMin:20,
@@ -147,7 +152,7 @@ const REGELN={
     platzAbSpieltag:5,               // ab diesem Spieltag-Index zählt der Tabellenplatz
     platz:{weitAb:3,weit:-2,drunter:-0.6,drueber:0.6},
     kontoMinus:-2,kontoMinusMeldung:0.3,
-    entlassenUnter:12,schonfristWochen:6,
+    entlassenUnter:12,schonfristSpieltage:6, // entlassen erst nach mehr als so vielen eigenen Ligaspieltagen
     pokalAus:-6,pokalWeiter:1.5,pokalSieg:10,
     saisonErreicht:20,saisonWeitAb:3,saisonWeit:-25,saisonVerfehlt:-8,entlassenSaisonUnter:15,
     neuerJob:55,

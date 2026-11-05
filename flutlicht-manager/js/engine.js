@@ -44,9 +44,10 @@ const winner=r=>r.hg>r.ag?r.h:r.hg<r.ag?r.a:(r.pen&&r.pen[0]>r.pen[1]?r.h:r.a);
 function applyMatch(r,cup){const N=RE.note,F=RE.form;
   [0,1].forEach(s=>{const tid=s?r.a:r.h;if(tid>=1000)return;const gf=s?r.ag:r.hg,ga=s?r.hg:r.ag,res=gf>ga?1:gf<ga?-1:0;
     r.xi[s].forEach(id=>{const p=PIX.get(id);if(!p)return;p.apps++;p.fit=clamp(p.fit-riA(RE.fitnessVerlust),RE.fitnessMin,100);
-      const goals=r.ev.filter(e=>e.t==='G'&&e.p===id).length;if(cup)p.pg=(p.pg||0)+goals;else p.g+=goals;
+      const goals=r.ev.filter(e=>e.t==='G'&&e.p===id).length;if(cup)p.pg=(p.pg||0)+goals;else if(!r.rel)p.g+=goals;
       let gr=N.basis-res*N.ergebnis-goals*N.tor-(p.str-N.staerkeMitte)/N.staerkeTeiler+(R()-0.5)*N.zufall;if(r.off.includes(id))gr+=N.platzverweis;gr=clamp(Math.round(gr*2)/2,N.min,N.max);
       p.lastG=gr;p.form=clamp(p.form+(F.mitte-gr)*F.faktor,F.min,F.max);p.played=1;if(tid===S.my)(r.grades=r.grades||{})[id]=gr;});});
   r.yel.forEach(id=>{const p=PIX.get(id);if(!p)return;p.yc++;if(p.yc>=RE.gelbSperreAb){p.yc=0;p.sus=Math.max(p.sus,1);if(p.team===S.my)news(`${p.n} sieht die ${RE.gelbSperreAb}. Gelbe Karte und ist für ein Spiel gesperrt.`,'bad');}});
   r.off.forEach(id=>{const p=PIX.get(id);if(!p)return;p.sus=riA(RE.rotSperre);if(p.team===S.my)news(`Platzverweis: ${p.n} fehlt ${p.sus} Spiel(e).`,'bad');});
-  r.inj.forEach(x=>{const p=PIX.get(x.id);if(!p)return;p.inj=Math.max(p.inj,x.w);if(p.team===S.my)news(`Verletzung: ${p.n} fällt ${x.w} Woche(n) aus.`,'bad');});}
+  // Ausfall in Tagen: w Wochen = die nächsten 7·w Tage (der Zähler läuft ab morgen jeden Tag um 1 herunter)
+  r.inj.forEach(x=>{const p=PIX.get(x.id);if(!p)return;p.inj=Math.max(p.inj,x.w*7+1);if(p.team===S.my)news(`Verletzung: ${p.n} fällt ${x.w} Woche(n) aus.`,'bad');});}

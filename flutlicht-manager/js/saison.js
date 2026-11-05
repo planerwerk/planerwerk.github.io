@@ -9,7 +9,8 @@ const topScorers=lg=>S.pl.filter(p=>p.team>=0&&S.teams[p.team].lg===lg&&p.g>0).s
 function seasonEnd(){
   const t1=table(1),t2=table(2),me=myT(),pos=rank(me.lg,S.my),B=RV;
   S.teams.forEach(t=>{t.lastPos=rank(t.lg,t.id);t.lastLg=t.lg;});
-  const rel=[t1[15].id,t2[2].id],a=sim(rel[1],rel[0]),b=sim(rel[0],rel[1]),g0=a.ag+b.hg,g1=a.hg+b.ag;
+  // Relegation: Hin- und Rückspiel laufen als Termine im Kalender; fehlt eines (alter Stand), wird es hier nachgeholt
+  const rel=[t1[15].id,t2[2].id],a=S.relSp[0]||sim(rel[1],rel[0]),b=S.relSp[1]||sim(rel[0],rel[1]),g0=a.ag+b.hg,g1=a.hg+b.ag;
   const rw=g0>g1?rel[0]:g1>g0?rel[1]:(R()<RS.relegationLos?rel[0]:rel[1]);
   const ts=topScorers(1)[0];
   const sm={season:S.season,lg:me.lg,pos,target:S.target,champ:t1[0].id,champ2:t2[0].id,down:[t1[16].id,t1[17].id],up:[t2[0].id,t2[1].id],rel,relRes:`Hinspiel ${tn(a.h)} – ${tn(a.a)} ${a.hg}:${a.ag}, Rückspiel ${tn(b.h)} – ${tn(b.a)} ${b.hg}:${b.ag}${g0===g1?', Entscheidung im Elfmeterschießen':''}`,rw,cup:S.cup.alive.length===1?S.cup.alive[0]:null,ts:ts?`${ts.n} (${tn(ts.team)}), ${ts.g} Tore`:'–',ok:pos<=S.target,fin:Object.values(S.fin).reduce((x,y)=>x+y,0)};
@@ -39,7 +40,7 @@ function newSeason(){const sm=S.summary,Z=RS;
     const sq=squad(t.id);if(sq.length>Z.kaderMax)sq.sort((a,b)=>a.str-b.str).slice(0,sq.length-Z.kaderMax).forEach(p=>{p.team=-1;p.list=0;});});
   const fa=S.pl.filter(p=>p.team===-1);if(fa.length>Z.vereinsloseMax){fa.sort((a,b)=>a.str-b.str).slice(0,fa.length-Z.vereinsloseMax).forEach(p=>p.team=-2);S.pl=S.pl.filter(p=>p.team!==-2);reindex();}
   S.am.forEach(a=>a.str=riA(RW.amateurStaerke));
-  S.season++;S.wk=0;S.res={1:[],2:[]};S.fx={1:roundRobin(lgIds(1)),2:roundRobin(lgIds(2))};S.cal=mkCal();initCup();
+  S.season++;S.plan=planFuer(S.season);S.tag=S.plan.start;S.gespielt=-1;S.relSp=[];S.res={1:[],2:[]};S.fx={1:roundRobin(lgIds(1)),2:roundRobin(lgIds(2))};initCup();
   S.fin={};S.att=[0,0];S.offers=[];S.phase='play';S.summary=null;TDAY=null;TLG=0;LAST=null;
   setTarget();if(S.spons){S.spons.yrs--;if(S.spons.yrs<=0)S.spons=null;}if(!S.spons)sponsOffers();
   S.lineup=bestXI(S.my,myT().form);
