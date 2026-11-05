@@ -73,7 +73,7 @@ Zuschauer          |████████████████████
 Einnahmen/Spiel            ╭──────╮
                        ╭───╯ ▓▓▓▓ ╰───╮         Schätzung Marketing:
                    ────╯      ▲       ╰────      Optimum etwa 36–42 €
-                            du sind hier         (Genauigkeit: mittel)
+                            du bist hier         (Genauigkeit: mittel)
 ```
 
 **Trainingsintensität** (K07):
@@ -175,7 +175,7 @@ Der Gegner ist ebenfalls unscharf, solange er nicht analysiert wurde (K06).
 ### 4.3 Beispiel: Spielerkarte
 
 ```
-┌ Said El Mala · MF · 20 · 1. FC Köln ──────────────── [Vergleichen ⇄] ┐
+┌ Jonas Beispiel · MF · 20 · Beispielverein ─────────── [Vergleichen ⇄] ┐
 │ Stärke       |█████████████████████▌░░▒▒▒▒▒▒░░░░░░░░|  79  Talent 84–90 │
 │ Kondition    |██████████████████████████▌░░░░░░░░░░░|  72               │
 │ Frische      |████████████████████████████████████▌░|  95 %             │
@@ -189,7 +189,7 @@ Der Gegner ist ebenfalls unscharf, solange er nicht analysiert wurde (K06).
 └───────────────────────────────────────────────────────────────────────────┘
 ```
 
-Die Werte sind Beispiele für die Darstellung, keine echten Daten.
+Erfundener Beispielspieler, nur zur Darstellung.
 
 ## 5. Abläufe (Bedienung)
 
