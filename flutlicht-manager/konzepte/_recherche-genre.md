@@ -186,6 +186,19 @@ Details stehen in PLAN.md unter K03. Kurz:
 - **Taktik in Anstoss 3:** Manndeckung (zum Beispiel zwei Verteidiger auf einen Starstürmer), Spieler pixelgenau positionieren, Aktionsradius pro Spieler.
 - **Aufstellungsbildschirm** laut Screenshot, also ohne Gewähr: Spalten unter anderem Position, Nebenpositionen, Stärke mit Nachkommastelle (etwa 10,40 oder 11,23), Fähigkeiten als Symbole, Kondition, Nation, Alter.
 
+## 4c. Weitere Foren: FM-Arena, Meistertrainerforum, Anstoss-Community
+
+- **FM-Arena** testet systematisch, wie sich einzelne Spielerwerte auf die Punktausbeute auswirken:
+  - **Tempo und Antritt** entscheiden extrem viel. Teamwork oder Laufwege ohne Ball bewegen fast nichts. Laut einem Ratgeber gibt es sogar eine **Schwelle nach dem Alles-oder-nichts-Prinzip**, ab der man eine Liga dominiert.
+  - Kritiker wenden ein, das gelte nur für die Test-Taktik. Mit anderer Taktik sei der Effekt kleiner.
+  - **Lehre:** Bei uns darf keine Fähigkeit allein dominieren, auch Tempo nicht. Jede Fähigkeit braucht eine spürbare Rolle (K03, K04). Ein **Sensitivitätstest** prüft, wie viele Punkte ±5 bei einer einzelnen Fähigkeit bringen. Keine Fähigkeit darf ein Vielfaches der anderen bewirken, und es gibt keine harten Schwellen.
+- **Meistertrainerforum:** die größte deutschsprachige FM-Community, empfohlen für schnelle Hilfe auf Deutsch. Zu FM26 laut PC Games ein heftiger Shitstorm mit zeitweise nur 23 % positiven Steam-Bewertungen („ein Football Manager mit minimalen Funktionen“).
+- **Anstoss-Community:**
+  - **Noch sehr aktiv:** Es gibt Fans, die Anstoss 3 heute noch mit aktuellen Datenbanken spielen.
+  - **Was Fans schätzen:** Wirtschaftstiefe (stärker als beim Football Manager), Übersicht, Aufstellung per Ziehen und Ablegen, Atmosphäre und Humor.
+  - **Bewusster Unterschied:** Anstoss war absichtlich weniger komplex als der Football Manager.
+  - **Lehre:** Unsere Zielgruppe will **Tiefe, die beherrschbar bleibt.**
+
 ## 5. Was wir daraus übernehmen
 
 | Konzept | Übernehmen |
@@ -222,4 +235,7 @@ Details stehen in PLAN.md unter K03. Kurz:
 - Steam, direkt ausgewertet: [FM26 entfernte Funktionen](https://steamcommunity.com/app/3551340/discussions/0/603044859897855932/), [FM26 fehlende Funktionen](https://steamcommunity.com/app/3551340/discussions/0/603045243320021568/), [FM26 „Engine ist reiner Zufall“](https://steamcommunity.com/app/3551340/discussions/0/844005093415131352/)
 - Steam, über die Suche: [FM24 „zu leicht“](https://steamcommunity.com/app/2252570/discussions/0/3957036254251708145/), [FM24 „zu leicht, also unrealistisch“](https://steamcommunity.com/app/2252570/discussions/0/4847651360126413903/), [FM26 KI-Kaderplanung](https://steamcommunity.com/app/3551340/discussions/0/690867325684978680/), [FM2019 KI-Kaderplanung](https://steamcommunity.com/app/872790/discussions/0/1644292444644563593/), [FM26 Verletzungen](https://steamcommunity.com/app/3551340/discussions/0/603045243320039748/), [FM24 Verletzungshäufigkeit](https://steamcommunity.com/app/2252570/discussions/0/3879346999816702537/), [FM2020 zu leichter Aufstieg](https://steamcommunity.com/app/1100600/discussions/0/2524779067039711014/), [FM2020 Finanzen unterklassig](https://steamcommunity.com/app/1100600/discussions/0/2252308752475400898/)
 - FM Scout, direkt ausgewertet: [FM26 Features](https://www.fmscout.com/a-football-manager-2026-new-features.html), [Wunschliste 2021](https://www.fmscout.com/a-football-manager-2021-new-features-requested.html), [Wunschliste 2020](https://www.fmscout.com/a-football-manager-2020-new-features-suggested.html), [Wunschliste 2017](https://www.fmscout.com/a-football-manager-2017-features-wishlist.html), [Wunschliste FM24](https://www.fmscout.com/a-fm24-features-we-want-to-see.html)
+- FM-Arena: [Attributtest FM2024](https://fm-arena.com/find-tactic-result/26/7525/), [Attributtest FM2021](https://fm-arena.com/find-tactic-result/9/852/), [Kritik an der Methode](https://fm-arena.com/profile/2218-rhobium/find-posts/)
+- [PC Games: FM26-Shitstorm](https://www.pcgames.de/Football-Manager-26-Spiel-75386/News/Vernichtende-Kritiken-der-Fans-1485786/), [Meistertrainerforum](https://www.meistertrainerforum.de/index.php/topic,30334.0.html)
+- Anstoss: [GameStar: Anstoss 2022 nimmt sich den besten Teil zum Vorbild](https://www.gamestar.de/artikel/anstoss-2022-nimmt-sich-den-besten-serienteil-als-vorbild,3359406.html), [Vodafone-Rückblick](https://www.vodafone.de/featured/article/die-anstoss-reihe-ein-rueckblick-auf-den-beliebten-fussball-manager-104259), [Steam FM2021 zu Anstoss 3](https://steamcommunity.com/app/1263850/discussions/0/2838914020266929522)
 - GameStar 4/2001: [Anstoss-Action-Vorschau (PDF)](https://download.gamestar.de/public/31900/31985/04_2001_anstossaction.pdf)
