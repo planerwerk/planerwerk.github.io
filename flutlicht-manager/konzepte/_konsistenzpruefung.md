@@ -97,3 +97,12 @@ Geprüft habe ich:
 5. **Wellen umstellen:** K08 nach Welle 3, den Auslandspool aus K32 nach Welle 3, K16 nach Welle 2?
 6. **„Nichts wegnehmen, bevor der Ersatz fertig ist“** als Grundsatz?
 7. **Europapokal:** ja oder nein? Davon hängen Kalender, englische Wochen und Finanzen ab (K13).
+
+**Entschieden am 5. November 2026:**
+- Zu 1: Anstoss-Stil.
+- Zu 2: Form 0–20, Stärke bleibt 1–99.
+- Zu 3: 2–4 Stopps pro Woche.
+- Zu 7: Europapokal später.
+- Punkte 4–6 sind vorläufig übernommen (siehe PLAN §2).
+
+Damit sind A1 bis A3 und E5 aufgelöst: K03 setzt den Anstoss-Stil um, und der Kreislauf, das Training und die Scouting-Spannen werden darauf umgestellt.

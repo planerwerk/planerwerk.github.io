@@ -26,7 +26,10 @@ Stand: 5. November 2026. Das Projekt ist ein Nebenprojekt, das langsam und grün
 | **Ereigniskarten** | Ein Story-Playbook mit Zufallsereignissen, dosiert, damit es nicht zu viel wird. Beispiel: Zwei Vereine streiten um einen Spieler, über einen entfernten Verwandten kennst du den Berater. Stellst du dich geschickt an, unterschreibt er bei dir, und die beiden Verlierer sind aufeinander sauer, nicht auf dich. |
 | **Wissen über Spieler** | Jeder Spieler hat echte Werte. Was du siehst, hängt vom Scouting ab: manche Werte ungenau, manche unbekannt, besonders bei Jugendspielern und bei Spielern aus dem Ausland. |
 | **Junge Spieler** | Sie verändern sich am schnellsten, in beide Richtungen, und können „verheizt“ werden. Beispiel: Das Debüt im Topspiel kann einen Schub geben, aber auch einen Knacks. |
-| **Fähigkeiten** | noch offen, siehe K03 |
+| **Spielermodell** (5.11.) | Anstoss-Stil: Stärke 1–99 als Hauptzahl, erlernbare Merkmale mit Lernfortschritt, Charakter-Eigenschaften, Beziehungen im Kader. Form 0–20 mit Mitte 10. |
+| **Meldungsdichte** (5.11.) | 2–4 Stopps pro Woche mit Entscheidung, alles andere landet im Posteingang. Dazu ein Regler in den Einstellungen. |
+| **Europapokal** (5.11.) | später als Erweiterung. Zuerst 1. und 2. Liga und Pokal. |
+| **Vorläufig übernommen** (Vorschläge aus der Konsistenzprüfung, gelten, solange du nichts anderes sagst) | Automatik und Delegieren in jedem Bereich über den Stab. Nichts wegnehmen, bevor der Ersatz fertig ist. K08 und der Auslandspool nach Welle 3, K16 nach Welle 2. |
 
 ## 3. Konzeptliste
 
@@ -49,11 +52,11 @@ Spalte „Welle“: wann das Konzept spätestens fertig sein muss. Umfang des Ko
 | K05 | Live-Spiel | Pause, Halbzeit mit Ansprache, Wechselregeln, Taktik im Spiel, Computer-Trainer, automatisches Anhalten | M | 2 |
 | K06 | Taktik | Grundordnungen, Spielstil-Kreislauf, Voraussetzungen, Vertrautheit, Gegneranalyse, Standards | M | 2 |
 | K07 | Training | Wochenplan, Einheitstypen, Intensität, Einzeltraining, Umschulung, Belastung und Regeneration, Trainingswirkung je Alter | M | 2 |
-| K08 | Jugend und Talententwicklung | Nachwuchsleistungszentrum, Sichtung, Aufrücken, Volatilität, Prägungsereignisse (Schub oder Knacks), Belastungssteuerung, Leihe für Spielpraxis, Verheizen | M | 2 |
+| K08 | Jugend und Talententwicklung | Nachwuchsleistungszentrum, Sichtung, Aufrücken, Volatilität, Prägungsereignisse (Schub oder Knacks), Belastungssteuerung, Leihe für Spielpraxis, Verheizen | M | 3 |
 | K09 | Disziplin und Sportgericht | Foularten, Karten, Verfahren über mehrere Tage, Strafmaß mit Zufall, Widerspruch, Wiederholungstäter, Zuschauer-Vergehen, Verfahren wegen Äußerungen außerhalb des Spiels (zum Beispiel Schiedsrichterkritik, siehe K29) | M | 2 |
 | K10 | Medizin und Verletzungen | Verletzungsarten und Dauer, Diagnose als Spanne, Reha, Rückfall, fit spritzen, medizinische Abteilung | S | 2 |
 | K11 | Freundschaftsspiele und Trainingslager | Gegner anfragen (je nach Beziehung), Einnahmen, Spielpraxis, Risiko, Turniere, Trainingslager-Orte | S | 2 |
-| K13 | Wettbewerbe und Spielplan | Liga, Pokal, Relegation, eventuell Europapokal, Länderspiele mit Abstellungen, Spieltage verlegen, englische Wochen | M | 2 |
+| K13 | Wettbewerbe und Spielplan | Liga, Pokal, Relegation, Europapokal später, Länderspiele mit Abstellungen, Spieltage verlegen, englische Wochen | M | 2 |
 
 ### C – Menschen
 
@@ -61,7 +64,7 @@ Spalte „Welle“: wann das Konzept spätestens fertig sein muss. Umfang des Ko
 |---|---|---|---|---|
 | K14 | Stimmung, Selbstvertrauen, Kabine | Woraus sich die Stimmung zusammensetzt, Trägheit, Folgen, Führungsspieler, Ansteckung, Grüppchen. Dazu Beziehungen im Kader: Freundschaft, Rivalität um den Stammplatz, Landsleute und Sprache, Zimmerbelegung im Trainingslager | M | 3 |
 | K15 | Gespräche und Ansprachen | Dialogsystem (Spieler, Kabine, Presse, Vorstand), Versprechen und ihre Überwachung, Glaubwürdigkeit, Abnutzung | M | 3 |
-| K16 | Trainerstab und Mitarbeiter | Co-Trainer, Torwart-, Athletik- und Jugendtrainer, Scouts, Ärzte, Physios: Qualität, Gehalt, Verträge, eigene Persönlichkeit | S | 4 |
+| K16 | Trainerstab und Mitarbeiter | Co-Trainer, Torwart-, Athletik- und Jugendtrainer, Scouts, Ärzte, Physios: Qualität, Gehalt, Verträge, eigene Persönlichkeit. Dazu **Automatik und Delegieren** für jeden Bereich, Genauigkeit der Vorhersagen in den Reglern | M | 2 |
 | K17 | Beziehungsnetz | Beziehungswerte zwischen dir, Vereinen, Spielern, Beratern, Journalisten, Vorstand und Fans; was sie verändert; wofür sie zählen (Preise, Testspiele, Gerüchte, Hilfe) | M | 3 |
 
 ### D – Markt
@@ -93,7 +96,7 @@ Spalte „Welle“: wann das Konzept spätestens fertig sein muss. Umfang des Ko
 |---|---|---|---|---|
 | K29 | Medien und Presse (**Entwurf**: `konzepte/K29-medien-presse.md`, Gerüchteküche und Datenmodell fehlen noch) | erfundene Zeitungen und Portale mit Ruf, Pressekonferenzen, Interviews, Gerüchteküche (wahr, halb wahr, falsch), Wirkung auf Stimmung, Preise und Fans | M | 4 |
 | K30 | Ereigniskarten und Story-Playbook | Aufbau eines Ereignisses (Auslöser, Bedingungen, Häufigkeit, Sperrzeit, Beteiligte, Texte, Entscheidungen, Folgen, Ketten), Dosierung, Katalog | L, wächst laufend | Gerüst 3, Inhalte fortlaufend |
-| K32 | Spielwelt und Saisonwechsel | Stammdaten, Auslandsspieler als Transferpool, Karriereenden, neue Talente, Aufstieg und Abstieg, Datenpflege | M | 4 |
+| K32 | Spielwelt und Saisonwechsel | Stammdaten, Auslandsspieler als Transferpool, Karriereenden, neue Talente, Aufstieg und Abstieg, Datenpflege | M | Auslandspool 3, Rest 4 |
 | K34 | Statistik und Historie | Spieler- und Vereinsstatistik, Rekorde, Ehrungen, Saisonarchiv | S | 4 |
 
 ### G – Später
@@ -220,9 +223,9 @@ Für BMH habe ich keine verlässliche Quelle gefunden. Anstoss 2022 nutzt laut e
 | Welle | Konzepte | Umsetzungsschritte | Ergebnis |
 |---|---|---|---|
 | 1 Fundament | K01, K02, K03, K04, K33, K35a | U1: Aufteilung in Dateien, `regeln.js`, Zufall mit Seed, Tageskalender, Regler-Bausteine, Tests. U2: neues Spielermodell mit Startwerten aus den Wikipedia-Kadern. U3: Engine v2 mit Kalibrierung, Torwart-Test bestanden | ein spielbarer Stand mit glaubwürdigen Ergebnissen und dem Kalender-Ablauf |
-| 2 Sport | K05–K11, K13 | U4: Live-Spiel. U5: Taktik. U6: Training und Jugend. U7: Disziplin, Medizin, Testspiele, Spielplan | Spieltage mit Eingreifen, Training mit Wirkung, Sportgericht |
-| 3 Menschen und Markt | K14, K15, K17–K19, K21, K22, K28, K31, Gerüst von K30 | U8: Stimmung und Gespräche. U9: Scouting. U10: Transfers I, Verträge und Berater. U11: Computer-Vereine. U12: Beziehungen, Vorstand und Ereignis-Gerüst | Transfers als Prozess, sinnvolle Computer-Vereine, erste Ereigniskarten |
-| 4 Verein und Welt | K12, K16, K20, K23–K27, K29, K32, K34 | U13 bis U18 nach Bedarf | Saisonvorbereitung, Sponsoren, Marketing, Stadion, Fans, Presse, Abwerben |
+| 2 Sport | K05–K07, K09–K11, K13, K16 | U4: Live-Spiel. U5: Taktik. U6: Training und Trainerstab mit Automatik. U7: Disziplin, Medizin, Testspiele, Spielplan | Spieltage mit Eingreifen, Training mit Wirkung, Sportgericht |
+| 3 Menschen und Markt | K08, K14, K15, K17–K19, K21, K22, K28, K31, Gerüst von K30, Auslandspool aus K32 | U8: Stimmung und Gespräche. U9: Scouting, Auslandspool und Jugend. U10: Transfers I, Verträge und Berater. U11: Computer-Vereine. U12: Beziehungen, Vorstand und Ereignis-Gerüst | Transfers als Prozess, sinnvolle Computer-Vereine, erste Ereigniskarten |
+| 4 Verein und Welt | K12, K20, K23–K27, K29, K32 (Rest), K34 | U13 bis U18 nach Bedarf | Saisonvorbereitung, Sponsoren, Marketing, Stadion, Fans, Presse, Abwerben |
 | 5 Oberfläche | K35b | U19 und folgende | eigener Retro-Look |
 
 ## 6. Aufwand (grob, ehrlich)
@@ -238,9 +241,8 @@ Für BMH habe ich keine verlässliche Quelle gefunden. Anstoss 2022 nutzt laut e
 
 ## 7. Nächster Schritt
 
-Vorschlag:
-1. Zuerst die offenen Entscheidungen aus `konzepte/_konsistenzpruefung.md`, Abschnitt G, vor allem das Spielermodell.
-2. Dann eine Session für **K01 (Kalender) und K33 (Daten/regeln.js)**, beide eher klein.
-3. Danach eine Session nur für **K03 (Spielermodell)**. Das Anstoss-3-Material liegt schon vor (siehe Notizen zu K03).
+Die Grundsatzentscheidungen sind getroffen (siehe §2).
+1. **Nächste Session:** Konzepte **K01 (Kalender) und K33 (Daten/regeln.js)** knapp nach Vorlage schreiben, dann **U1** umsetzen. Die Tests liegen in `tests/`.
+2. **Danach:** eine Session nur für **K03 (Spielermodell)** im Anstoss-Stil. Das Anstoss-3-Material liegt schon vor (siehe Notizen zu K03).
 
 K03 ist der Engpass: Engine, Taktik, Training und Scouting bauen darauf auf.
