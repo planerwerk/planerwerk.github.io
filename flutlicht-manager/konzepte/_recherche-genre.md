@@ -199,6 +199,21 @@ Details stehen in PLAN.md unter K03. Kurz:
   - **Bewusster Unterschied:** Anstoss war absichtlich weniger komplex als der Football Manager.
   - **Lehre:** Unsere Zielgruppe will **Tiefe, die beherrschbar bleibt.**
 
+## 4d. England, Italien, Frankreich
+
+- **England, Championship Manager 01/02:**
+  - Wird 25 Jahre später noch gespielt. Es ist Freeware, und die Community pflegt die Datenbanken bis heute.
+  - Fans mögen es wegen des **schlichten Aufbaus**, der **schnellen, eingängigen Bedienung** und des **Fokus auf die Kaderführung**. Der heutige Football Manager sei „viel zeitaufwendiger“ und enthalte „zu viel unnötigen Kram“.
+  - Lehre: **Tempo und Fokus sind ein Qualitätsmerkmal.** Jede neue Funktion muss sich den Platz verdienen, und vieles braucht einen Automatik-Modus.
+- **Italien:**
+  - Championship Manager hieß dort **„Scudetto“**.
+  - **PC Calcio**, die italienische Fassung des spanischen PC Fútbol, hatte seine goldenen Jahre Ende der 90er und wurde am Kiosk verkauft. Gelobt wurden der ausgewogene Spielablauf und der starke Manager-Teil. Später kam der Niedergang mit der Kritik „zu langsam“. Danach setzte sich der Football Manager durch.
+  - Community: Die italienische FM-Community trifft sich unter anderem in der Steam-Gruppe FMIF. Ein eigenes Forum mit verwertbaren Inhalten habe ich nicht gefunden.
+- **Frankreich:**
+  - Kein eigenes Manager-Forum mit verwertbaren Inhalten gefunden.
+  - Im Bugtracker von Sports Interactive klagt ein französischer Spieler über Spottangebote der KI: **9,75 Mio. für einen Spieler mit 37 Mio. Marktwert.** Das bestätigt die unfaire Bewertung durch die KI.
+  - FM27 zeigt Angebote von Beratern laut Hersteller künftig während des ganzen Transferfensters, nicht erst am letzten Tag.
+
 ## 5. Was wir daraus übernehmen
 
 | Konzept | Übernehmen |
@@ -238,4 +253,5 @@ Details stehen in PLAN.md unter K03. Kurz:
 - FM-Arena: [Attributtest FM2024](https://fm-arena.com/find-tactic-result/26/7525/), [Attributtest FM2021](https://fm-arena.com/find-tactic-result/9/852/), [Kritik an der Methode](https://fm-arena.com/profile/2218-rhobium/find-posts/)
 - [PC Games: FM26-Shitstorm](https://www.pcgames.de/Football-Manager-26-Spiel-75386/News/Vernichtende-Kritiken-der-Fans-1485786/), [Meistertrainerforum](https://www.meistertrainerforum.de/index.php/topic,30334.0.html)
 - Anstoss: [GameStar: Anstoss 2022 nimmt sich den besten Teil zum Vorbild](https://www.gamestar.de/artikel/anstoss-2022-nimmt-sich-den-besten-serienteil-als-vorbild,3359406.html), [Vodafone-Rückblick](https://www.vodafone.de/featured/article/die-anstoss-reihe-ein-rueckblick-auf-den-beliebten-fussball-manager-104259), [Steam FM2021 zu Anstoss 3](https://steamcommunity.com/app/1263850/discussions/0/2838914020266929522)
+- England, Italien, Frankreich: [TechRadar zu CM 01/02](https://www.techradar.com/features/championship-manager-season-01-02), [Wikipedia CM 01/02](https://en.wikipedia.org/wiki/Championship_Manager:_Season_01/02), [FM Projects zu CM 01/02](https://fmprojects.substack.com/p/championship-manager-0102), [Calcio e Finanza zu Manager-Spielen](https://www.calcioefinanza.it/2020/01/30/calcio-giochi-online-footbol-menager/), [Multiplayer.it zu CM 03](https://multiplayer.it/recensioni/championship-manager-103.html), [Everyeye zu PC Calcio 2007](https://www.everyeye.it/articoli/recensione-pc-calcio-2007-5049.html), [Steam-Gruppe FMIF](https://steamcommunity.com/groups/FootballManagerItalianForum), [SI-Bugtracker: KI-Spottangebote](https://community.sports-interactive.com/bugtracker/football-manager-2024-early-access-bugs-tracker/transfers-scouting-contracts-and-agentsintermediaries/ai-offers-small-amounts-for-transfers-compare-to-player-value-r22196), [FM27 Transferfenster (fr)](https://www.footballmanager.com/fr/fm27/features/monde-de-football-enrichi-immersion-augmentee-dans-fm27)
 - GameStar 4/2001: [Anstoss-Action-Vorschau (PDF)](https://download.gamestar.de/public/31900/31985/04_2001_anstossaction.pdf)

@@ -39,6 +39,19 @@ Pressekonferenzen sind **kleine Bühnen mit echten Folgen**, keine Pflichtübung
 | 13 | **Keane, Ipswich** | Handy eines Journalisten klingelt | kurze Zündschnur | Anekdote | **Strenge oder Humor im Kleinen** |
 | 14 | **Bayern-Bosse** (Hoeneß, Rummenigge, Salihamidžić) | Pressekonferenz | Rundumschlag gegen Medien und Experten | laut kicker „legendär“ | **Vereinsführung gegen Medien**: Imagerisiko |
 
+### 3.1b International: England, Italien, Frankreich
+
+| Moment | Muster |
+|---|---|
+| **Wenger** fragt einen Journalisten: „Warum schauen Sie mich an?“ Antwort: „Weil es Ihre Pressekonferenz ist.“ | **Trockener Humor, Verwirrung** als Kultmoment |
+| **Ferguson** beendet die Pressekonferenz, als ein Reporter fragt, ob das Niveau der Premier League sinkt (nach einem 2:2 gegen Benfica) | **Abbruch bei unbequemen Fragen**: Machtdemonstration, Medienklima sinkt |
+| **Klopp** verlässt nach einer Niederlage bei United eine Pressekonferenz, nach einem Wortwechsel mit einem skandinavischen Reporter. Ein anderes Mal hält er nach einem 1:1 in Brighton eine leidenschaftliche Rede über den Spielplan. | **Abgang** und **Systemkritik**, hier am Spielplan |
+| **Allegri** und die Pferde-Anspielung: Pferde, die lange gewinnen, schickt man auf die Weide zum Ausruhen | **Bildhafte Ausrede** mit Humor |
+| **Spalletti** ist bekannt für eigenwillige, nie banale Pressekonferenzen. **Scopigno** gilt als „Philosoph“ unter den Trainern. | **Trainer-Philosoph**: Rätselhaftes wird zur Marke |
+| **Galtier** (PSG) zu den Medien: „Sie reden nie über Fußball“ | **Medienschelte** wegen Nebenthemen |
+| **Satire:** Il Foglio veröffentlichte 2022 einen „automatischen Pressekonferenz-Generator“, und eine Auswertung von 394 WM-Pressekonferenzen hat die **Floskelquote** der Nationaltrainer gemessen | **Floskeln sind messbar und Stoff für Witze.** Daraus könnte eine eigene Floskelquote mit Zeitungsspott werden. |
+| **Belgien:** Pressekonferenzen nach dem Spiel sind Pflicht, es gibt dafür Regeln und Geldstrafen (laut DH, ohne Details) | Eine **Pflicht mit Strafe** könnte als Regel der Liga für Nichterscheinen dienen. Delegieren wäre dann der legale Ausweg. |
+
 ### 3.2 Echte Folgen für Kritik an Schiedsrichtern
 
 Das ist der Maßstab für die Verbindung zu K09.
@@ -214,4 +227,5 @@ Das ist der Maßstab für die Verbindung zu K09.
 - [Planet Football: seltsamste Pressekonferenzen](https://www.planetfootball.com/quick-reads/strangest-football-press-conferences-quotes)
 - [GiveMeSport: Top-10-Wutreden](https://www.givemesport.com/1473002-the-top-10-football-manager-rants-of-alltime/)
 - Strafen: [Goal (Nagelsmann)](https://www.goal.com/de/meldungen/dfb-sportgericht-50-000-euro-geldstrafe-bayern-julian-nagelsmann-bundesliga/bltc0bcb48d1b8233a5), [echo24 (Walter)](https://www.echo24.de/sport/fussball/vfb-stuttgart-erzgebirge-aue-kritik-tim-walter-geldstrafe-akzeptiert-12935056.html), [web.de (Bellingham)](https://web.de/magazine/sport/fussball/bundesliga/kritik-zwayer-40000-euro-geldstrafe-jude-bellingham-36412336), [DFB (Baumgart)](https://www.dfb.de/news/ein-spiel-innenraumverbot-und-geldstrafe-fuer-union-trainer-baumgart)
+- International: [Bleacher Report zu Wenger und Ferguson](https://bleacherreport.com/articles/2302746-the-10-strangest-football-press-conferences-ever), [Sports Mole zu Klopp](https://www.sportsmole.co.uk/football/brighton-and-hove-albion/feature/a-look-at-famous-managerial-outbursts-following-jurgen-klopp-rant_424223.html), [TUTTOmercatoWEB zu Allegri](https://www.tuttomercatoweb.com/serie-a/i-te-ne-intendi-di-ippica-i-dal-gabbione-al-corto-muso-le-frasi-cult-di-allegri-fuori-dal-campo-1969311), [Il Post zu Spalletti](https://www.ilpost.it/2025/10/31/luciano-spalletti-frasi-risposte-aforismi/), [Sky Sport zu Mourinho](https://sport.sky.it/calcio/mourinho-frasi), [Sky Sport zu Trainer-Philosophen](https://sport.sky.it/calcio/2020/11/19/allenatori-frasi-giornata-della-filosofia), [Il Foglio: Pressekonferenz-Generator](https://www.ilfoglio.it/sport/2022/02/05/news/un-generatore-automatico-di-conferenze-stampa--147932), [Journal du Net: Floskeln der Nationaltrainer](https://www.journaldunet.com/martech/1553011-ce-que-les-cliches-des-selectionneurs-de-football-nous-apprennent-sur-la-communication-de-crise-et-le-leadership/), [ozap zu Galtier](https://www.ozap.com/actu/-vous-ne-parlez-jamais-football-la-replique-cinglante-du-coach-du-psg-christophe-galtier-contre-les-medias/622553), [DH: Pressekonferenzen in Belgien](https://www.dhnet.be/sports/football/division-1a/standard/2024/01/05/dans-les-coulisses-des-rencontres-35-les-cp-dapres-match-des-entraineurs-cest-quoi-mode-demploi-amendes-et-specificite-belge-WHR72XHTDVAZJCYD4OFUBBSUFI/)
 - Community-Kritik an FM-Pressekonferenzen: siehe `_recherche-genre.md`
