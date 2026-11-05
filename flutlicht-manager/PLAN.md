@@ -12,8 +12,8 @@ Stand: 5. November 2026. Das Projekt ist ein Nebenprojekt, das langsam und grün
 4. **Session-Regel zum Token-Sparen:** pro Session ein bis vier Konzepte oder ein Umsetzungsschritt, immer in einer neuen Session. Startsatz zum Beispiel: „Konzept K03 aus PLAN.md“ oder „Umsetzung U2“.
 5. Alle Stellschrauben, also Zahlen, Wahrscheinlichkeiten und Preise, kommen in `daten/regeln.js`. Spielerdaten liegen in `daten/spieler.js`. Bearbeitet werden sie nur dort, nicht im Spiel.
 6. Rohmaterial aus der ersten Planung steht in `konzepte/_rohmaterial-logik-v1.md`: Engine, Sportgericht, Transfers, Computer-Vereine. Daraus speisen sich die Konzepte.
-8. Die Konsistenzprüfung steht in `konzepte/_konsistenzpruefung.md`: Widersprüche, Lücken, Abhängigkeiten, Zuständigkeiten und offene Entscheidungen. Bei jedem neuen Konzept fortschreiben.
 7. Die Genre-Recherche steht in `konzepte/_recherche-genre.md`: was BMH, Anstoss 3, Football Manager, We Are Football und Hattrick enthalten, was die Community kritisiert und was wir übernehmen. Vor jedem Konzept lesen.
+8. Die Konsistenzprüfung steht in `konzepte/_konsistenzpruefung.md`: Widersprüche, Lücken, Abhängigkeiten, Zuständigkeiten und offene Entscheidungen. Bei jedem neuen Konzept fortschreiben.
 
 ## 2. Bereits entschieden (aus deinen Antworten)
 
