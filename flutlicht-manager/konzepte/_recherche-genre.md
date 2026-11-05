@@ -2,7 +2,12 @@
 
 Stand: 5. November 2026. Quellen stehen am Ende.
 
-> **Einschränkung:** Reddit, Steam-Foren, das Sports-Interactive-Forum und FM Scout sind in dieser Umgebung gesperrt. Die Community-Stimmen stammen deshalb aus Suchergebnissen, also aus Zusammenfassungen von Foren- und Steam-Beiträgen. Das sind Meinungen, keine offiziellen Angaben. Wenn Domains wie `reddit.com` oder `steamcommunity.com` freigegeben werden, lässt sich das vertiefen.
+> **Quellenlage:**
+> - **Reddit** sperrt automatische Abrufe und auch die Suchmaschine. Inhalte von dort sind deshalb nicht drin.
+> - **Das offizielle Sports-Interactive-Forum** blockt Bots mit einer 403-Antwort.
+> - **Direkt ausgewertet:** Steam-Diskussionen, FM-Scout-Wunschlisten und Artikel, zwei GameStar-PDFs.
+> - **Über die Suche ausgewertet:** weitere Steam-Threads.
+> - Alles sind Meinungen von Spielern, keine offiziellen Angaben.
 
 ## 1. Marktüberblick (Herbst 2026)
 
@@ -92,6 +97,95 @@ Details stehen in PLAN.md unter K03. Kurz:
 | **Karten (We Are Football 1)** | „zu viele Karten“ | Kartenhäufigkeit an echter Statistik kalibrieren (K09). |
 | **Jugend** | Persönlichkeit entscheidet, Mentoring hilft, junge Spieler brauchen erst Training, dann Spiele. | Bestätigt unsere Ideen zu Prägung und Verheizen (K08). |
 
+## 4b. Vertiefung: Steam-Community und FM-Scout-Wunschlisten
+
+### Dauerbrenner-Kritik über viele Jahrgänge
+
+| Thema | Was Spieler berichten | Folgerung |
+|---|---|---|
+| **Nach ein paar Saisons zu leicht** | „In ein paar Jahren gewinnst du jede Liga mit einem mittelmäßigen Team“ (FM24). Ursachen laut Spielern: schwache Kaderplanung der KI, übermächtige Taktiken (genannt werden 4-2-2-2 und Gegenpressing), die KI passt sich nicht an. Erfahrene Spieler legen sich selbst Beschränkungen auf, etwa nur Eigengewächse oder die KI macht die Transfers. Gewünscht wird ein „Simulationsmodus“ mit mehr Herausforderung. | Die **Langzeit-Spannung** ist das Hauptziel. KI-Kaderplanung (K31). Kein Spielstil darf dauerhaft dominieren, dazu ein Test im Kreislauf (K06). Die KI passt sich an den Spieler an, zum Beispiel als Gegneranalyse. Optional Herausforderungen und Schwierigkeitsmodi (K02). |
+| **KI-Kaderplanung** | Die KI kauft 3–4 Spieler für dieselbe Position, während anderswo Grundrollen fehlen (FM26). Spieler, die nicht gemeldet werden können. Ungenutzte Budgets. Topvereine kaufen jahrelang nur Durchschnitt. Die KI bietet zu wenig für deine Spieler und verlangt das Vierfache für ihre eigenen. Ein Teil der Spieler hält dagegen: „Die KI drückt eben den Preis, so wie ich“. | **Planstellen** mit Bedarf, Budget-Nutzung, Qualitätsziel und symmetrischer Bewertung, also gleiche Maßstäbe für Kauf und Verkauf (K31, K19). Akzeptanztest: Nach 10 Saisons sind die Topvereine noch stark, die Kader sind ausgewogen. |
+| **Verletzungen** | Klagen in fast jedem Jahrgang von FM11 bis FM26, etwa „Verletzungskrise schon in der Vorbereitung“. Laut Spielerberichten erklärt SI, die Verletzungsrate im Spiel liege unter der echten. Spieler nennen als Ursachen Intensität, Taktik, Trainingslast, Kondition und dichten Spielplan. | Hier geht es vor allem um die **Wahrnehmung**. Ursachen sichtbar machen: Belastungsanzeige, Verletzungsbericht mit Grund, Vorbeugung, die spürbar wirkt. An echter Statistik kalibrieren (K10, K07). |
+| **Unterklassig starten** | Aufstiege gehen zu schnell („in echt gewinnst du nicht zwei Ligen in zwei Saisons mit einem Durchschnittsteam“). Finanzen nach dem Aufstieg: trotz Budgetdisziplin 2 Mio. Schulden. Unrealistische Ziele vom Vorstand. Andererseits gilt „unten anfangen und hocharbeiten“ als der realistischste Karriereweg. | Ein Aufstieg muss schwer sein (K04, K31). Die Wirtschaft nach einem Aufstieg muss stimmig sein (K23). Faire, verhandelbare Saisonziele (K28, wie bei Anstoss 3). |
+| **„Ergebnis steht vorher fest“** | Steam-Thread zu FM26: Die Engine lege das Spiel beim Anpfiff fest und rechne nur bei Wechseln neu. Gegenstimmen: Jede Engine muss vorausrechnen, entscheidend ist das Verhalten. GameStar 2001 beschreibt dieselbe Frustration schon für die Anstoss-Ära: die Spitzenmannschaft ist bereit für den Aufstieg, und das Programm lässt sie trotzdem verlieren. | Unsere Live-Engine rechnet **Minute für Minute**. Dazu ein **Spielbericht mit Begründungen** (Chancen, Großchancen, xG, Schlüsselszenen), damit Niederlagen nachvollziehbar sind (K04, K05). |
+
+### In FM26 vermisst (Steam-Listen, direkt ausgewertet)
+
+- Zurufe von der Seitenlinie: einzelne Spieler im Spiel loben oder kritisieren
+- Schnellansicht eines Spielers per Mausklick, statt Seite für Seite zu blättern
+- Entwicklungszentrum und Entwicklungslisten
+- Mitarbeiterwerte und Vergleich von Mitarbeitern
+- Heatmaps, Passkarten und Durchschnittspositionen
+- frei belegbare Anzeigen im Spiel
+- gespeicherte Aufstellungen
+- Taktikseite anderer Vereine, um zu sehen, ob ein Leihspieler ins System passt
+- historische Daten
+- „Elf des Jahres“
+- Ex-Spieler, die nach der Karriere Trainer werden
+- kleine Lebensereignisse, zum Beispiel „du bekommst ein Kind“
+- Bedienung: Skalierung, Fenstermodus, Ultrawide
+
+### Wünsche der Community (FM-Scout-Listen 2017, 2020, 2021)
+
+- **Taktik:**
+  - eigene Ordnung mit und ohne Ball (in FM26 umgesetzt)
+  - Flügelspieler, die nach hinten mitarbeiten
+  - Positionen sinnvoll umlernen, verwandte Rollen leicht, fremde kaum
+- **Medien:**
+  - viel mehr unterschiedliche Fragen
+  - nicht jede Frage muss die Stimmung beeinflussen
+  - „Skandale“ um dein Wunderkind
+  - Psychospielchen mit anderen Trainern
+  - Fans über soziale Medien
+- **Finanzen und Vorstand:**
+  - Stadionausbau mit Optionen und schrittweise, statt „1.000 Plätze und das Geld ist weg“
+  - mehr Kontrolle über Sponsoren, begrenzte Werbeflächen auf Trikot und im Stadion („43 Sponsoren in einer Saison ist unrealistisch“)
+  - angesparte Transfermittel nicht vom Vorstand „einkassieren“ lassen
+  - bessere Finanzübersicht für kleine Vereine
+- **Transfers und Verträge:**
+  - **Abwerben über Berater und Spieler**, bevor man mit dem Verein redet. Loyale Spieler petzen bei ihrem Verein, das deckt sich mit unserem Konzept.
+  - realistische Tauschgeschäfte
+  - konsistente Gehaltsforderungen zwischen ähnlichen Vereinen
+  - Vorverträge
+  - individuelle Zielvorgaben im Vertrag, etwa Tore oder Einsätze
+  - unerwünschte Spieler leichter loswerden
+- **Kommunikation:**
+  - Spieler, die mit Taktik oder Position hadern
+  - Gespräche, die nach Streit nicht komplett blockiert sind
+  - weniger Gejammer von Reservisten
+  - Fans nach Niederlagen oder zum Saisonende ansprechen
+  - Beziehungen zu Beratern aufbauen, die dann helfen, Spieler zu überzeugen
+- **Jugend und Privatleben:**
+  - „nachts in der Disco erwischt“: Geldstrafe, am nächsten Tag 20 % weniger Kondition. Das passt zu den Ereigniskarten.
+  - Spätzünder, die mit guter Förderung doch noch Stars werden
+- **Mitarbeiter:**
+  - Standardtrainer, Ernährungsberater, Psychologe, Arzt
+  - ein Trainerteam, das mit dir den Verein wechselt
+  - ein Leihmanager mit Regeln, etwa „nur in hohe Ligen“ oder „nur mit Spielzeit“
+- **Training:** internes Trainingsspiel der ersten Mannschaft
+- **Spielplan:**
+  - mindestens 72 Stunden zwischen zwei Spielen
+  - Spielverlegung beantragen, wenn viele Nationalspieler fehlen
+- **Scouting:**
+  - Berichte, die verlässlicher sind
+  - Suchaufträge mit Kriterien, die die Scouts selbstständig pflegen
+- **Spieltag:**
+  - realistischere Chancenverwertung („35 Schüsse, ein Tor“)
+  - eigene Anzeigen und xG im Spiel
+- **Stimmung und Kleinigkeiten:**
+  - Gegner in Topform und ein volles Auswärtsstadion drücken die Stimmung
+  - Platzsturm nach dem Aufstieg
+  - Trikotwechsel jedes Jahr mit Fan-Reaktion
+  - Verlauf des Marktwerts als Grafik
+- **Karriere:**
+  - als Jugendtrainer anfangen
+  - mit dem eigenen Trainergehalt etwas anfangen können, zum Beispiel in den Verein investieren
+
+### Zusatz aus GameStar 4/2001 (Anstoss Action)
+
+- **Taktik in Anstoss 3:** Manndeckung (zum Beispiel zwei Verteidiger auf einen Starstürmer), Spieler pixelgenau positionieren, Aktionsradius pro Spieler.
+- **Aufstellungsbildschirm** laut Screenshot, also ohne Gewähr: Spalten unter anderem Position, Nebenpositionen, Stärke mit Nachkommastelle (etwa 10,40 oder 11,23), Fähigkeiten als Symbole, Kondition, Nation, Alter.
+
 ## 5. Was wir daraus übernehmen
 
 | Konzept | Übernehmen |
@@ -125,3 +219,7 @@ Details stehen in PLAN.md unter K03. Kurz:
 - Anstoss Early Access: [PC Games](https://www.pcgames.de/Anstoss-2022-Spiel-72844/News/Early-Access-Check-1407055/3/), [GameStar „aufgegeben“](https://www.gamestar.de/artikel/anstoss-deutscher-fussballmanager-aufgegeben,3429779.html)
 - Klassiker: [PC Games Retrospektive](https://www.pcgames.de/Retrospektive-Thema-214694/Specials/Pixel-Taktik-Datenwahnsinn-Eine-Zeitreise-durch-die-Geschichte-der-Fussballmanager-1488124/3/), [Retro-Replay zu Football Limited/BMH](https://retro-replay.com/db/dos/football-limited), [MobyGames](https://www.mobygames.com/game/24231/football-limited/), [Der Standard zu Anstoss 3](https://www.derstandard.at/1371172225821/anstoss-der-leichtfuessige-fussball-manager-im-rueckblick), GameStar 4/2000 Anstoss-3-Tipps (PDF, von dir hochgeladen)
 - Hattrick: [Spielgrundlagen](https://hattrick.org/Help/Rules/MatchBasics.aspx), [Psychologie](https://en-us.hattrick.org/Help/Rules/Psychology.aspx)
+- Steam, direkt ausgewertet: [FM26 entfernte Funktionen](https://steamcommunity.com/app/3551340/discussions/0/603044859897855932/), [FM26 fehlende Funktionen](https://steamcommunity.com/app/3551340/discussions/0/603045243320021568/), [FM26 „Engine ist reiner Zufall“](https://steamcommunity.com/app/3551340/discussions/0/844005093415131352/)
+- Steam, über die Suche: [FM24 „zu leicht“](https://steamcommunity.com/app/2252570/discussions/0/3957036254251708145/), [FM24 „zu leicht, also unrealistisch“](https://steamcommunity.com/app/2252570/discussions/0/4847651360126413903/), [FM26 KI-Kaderplanung](https://steamcommunity.com/app/3551340/discussions/0/690867325684978680/), [FM2019 KI-Kaderplanung](https://steamcommunity.com/app/872790/discussions/0/1644292444644563593/), [FM26 Verletzungen](https://steamcommunity.com/app/3551340/discussions/0/603045243320039748/), [FM24 Verletzungshäufigkeit](https://steamcommunity.com/app/2252570/discussions/0/3879346999816702537/), [FM2020 zu leichter Aufstieg](https://steamcommunity.com/app/1100600/discussions/0/2524779067039711014/), [FM2020 Finanzen unterklassig](https://steamcommunity.com/app/1100600/discussions/0/2252308752475400898/)
+- FM Scout, direkt ausgewertet: [FM26 Features](https://www.fmscout.com/a-football-manager-2026-new-features.html), [Wunschliste 2021](https://www.fmscout.com/a-football-manager-2021-new-features-requested.html), [Wunschliste 2020](https://www.fmscout.com/a-football-manager-2020-new-features-suggested.html), [Wunschliste 2017](https://www.fmscout.com/a-football-manager-2017-features-wishlist.html), [Wunschliste FM24](https://www.fmscout.com/a-fm24-features-we-want-to-see.html)
+- GameStar 4/2001: [Anstoss-Action-Vorschau (PDF)](https://download.gamestar.de/public/31900/31985/04_2001_anstossaction.pdf)
