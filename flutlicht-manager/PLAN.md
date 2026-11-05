@@ -57,7 +57,7 @@ Spalte „Welle“: wann das Konzept spätestens fertig sein muss. Umfang des Ko
 
 | ID | Konzept | Kernfragen | Umfang | Welle |
 |---|---|---|---|---|
-| K14 | Stimmung, Selbstvertrauen, Kabine | Woraus sich die Stimmung zusammensetzt, Trägheit, Folgen, Führungsspieler, Ansteckung, Grüppchen | M | 3 |
+| K14 | Stimmung, Selbstvertrauen, Kabine | Woraus sich die Stimmung zusammensetzt, Trägheit, Folgen, Führungsspieler, Ansteckung, Grüppchen. Dazu Beziehungen im Kader: Freundschaft, Rivalität um den Stammplatz, Landsleute und Sprache, Zimmerbelegung im Trainingslager | M | 3 |
 | K15 | Gespräche und Ansprachen | Dialogsystem (Spieler, Kabine, Presse, Vorstand), Versprechen und ihre Überwachung, Glaubwürdigkeit, Abnutzung | M | 3 |
 | K16 | Trainerstab und Mitarbeiter | Co-Trainer, Torwart-, Athletik- und Jugendtrainer, Scouts, Ärzte, Physios: Qualität, Gehalt, Verträge, eigene Persönlichkeit | S | 4 |
 | K17 | Beziehungsnetz | Beziehungswerte zwischen dir, Vereinen, Spielern, Beratern, Journalisten, Vorstand und Fans; was sie verändert; wofür sie zählen (Preise, Testspiele, Gerüchte, Hilfe) | M | 3 |
@@ -126,15 +126,57 @@ Das sind Notizen, keine fertigen Konzepte.
 
 ### K03 – Fähigkeiten (Recherche-Stand)
 
-- **Was ich gefunden habe:**
-  - Für BMH und Anstoss 3 fand ich keine verlässliche Fähigkeitenliste. Die Wikipedia-Artikel enthalten keine, und das GameStar-Tipps-PDF zu Anstoss 3 (April 2000) ist in dieser Umgebung gesperrt.
-  - Gesichert ist nur: Anstoss 3 trennte „Eigenschaften“ und „Fähigkeiten“. Fähigkeiten wurden über Wochen erlernt, Verletzung, Urlaub und fehlendes Training bremsten das. Kondition und Frische gab es als eigene Werte.
-  - Anstoss 2022 nutzt laut einem Test nur eine Handvoll Fähigkeiten, etwa Zweikampf, Pressing und Flanken. Spieler gelten dort jeweils als gut, schlecht oder neutral begabt.
-- **Vorschlag als Mischung aus „einfach lesbar“ und „genug Tiefe“:**
-  - **Gesamtstärke** als Hauptzahl, wie in den Klassikern.
-  - **Acht Fähigkeiten:** Torwartspiel, Zweikampf, Kopfball, Tempo, Technik, Passspiel, Flanken, Abschluss. Dazu Kondition als eigener Wert.
-  - **Spezialitäten** als gut/schlecht-Merkmale, 0–3 pro Spieler. Beispiele: Standardspezialist, Elfmeterschütze, Elfmetertöter (Torwart), Weitschütze, Kopfballungeheuer, Dribbler, Joker, Laufwunder, Führungsspieler. Negative: Hitzkopf, Diva, verletzungsanfällig, nervenschwach, lauffaul.
-  - **Wenn du das GameStar-PDF oder Handbuch-Seiten hast:** hochladen, oder `download.gamestar.de` in den Netzwerkeinstellungen freigeben. Dann gleiche ich den Vorschlag damit ab.
+**Quelle: GameStar 4/2000, Entwickler-Tipps zu Anstoss 3 von Gerald Köhler (von dir hochgeladen).** Daraus geht hervor:
+
+- **Stärke ist eine einzelne Zahl.**
+  - Sie verändert sich in **zwei Auf- oder Abwertungsrunden pro Saison**. Die Chance hängt vom Alter ab: jung nur aufwärts, ab etwa 30 vor allem abwärts. Torhüter und Liberos bauen langsamer ab.
+  - Talent wirkt mit. Den stärksten Einfluss hat die **Durchschnittsform**: Sehr gute Form vervielfacht die Chance auf +1, schlechte die auf −1.
+- **Form** ist ein eigener Wert. Die Schwellen im Artikel liegen bei 6, 8, 12, 14 und 16, die Skala reicht also offenbar etwa bis 20.
+- **Kondition und Frische** sind getrennte Werte. Konditionstraining kurz vor dem Spiel lässt die Mannschaft früher müde werden.
+- **Fähigkeiten** sind erlernbare Merkmale mit Lernfortschritt pro Woche:
+  - Je nach Schwierigkeit „leicht“, „mittel“ oder „schwer“.
+  - Bremsen: Verletzung, gleichzeitiges Lernen einer anderen Fähigkeit, Urlaub, fehlendes Training.
+- **Eigenschaften** beschreiben den Charakter, zum Beispiel „Integrationsfigur“ oder „Teenie-Star“ (mehr Trikotverkäufe, aber nur bei guter Form).
+- **Beziehungen zwischen Spielern:**
+  - Freundschaften und Konkurrenz um einen Stammplatz.
+  - Ausländer lernen Deutsch langsamer, wenn sie mit Landsleuten zusammenstecken.
+  - Das wirkt sich sogar auf die Zimmerbelegung im Trainingslager aus.
+- **Weitere Ideen aus dem Artikel:**
+  - Saisonziel mit dem Präsidium verhandeln.
+  - Spieler mit auslaufendem Vertrag gehen unter Umständen ohne Vorwarnung.
+  - Testspiel-Gegner sind erst ab der 3. Vorbereitungswoche verfügbar. Das Zuschauerinteresse an Testspielen lässt nach.
+  - Fanwerbung lohnt sich langfristig. Ein Sponsorentag pro Saison bringt bessere Angebote.
+  - Fanartikel-Sortiment, Platzwart (Haltbarkeit des Rasens), Spitzel (erfährt Beziehungen im Kader).
+  - Bewusst weggelassen: Doping.
+
+Für BMH habe ich keine verlässliche Quelle gefunden. Anstoss 2022 nutzt laut einem Test nur eine Handvoll Fähigkeiten (etwa Zweikampf, Pressing, Flanken) mit gut, neutral oder schlecht.
+
+**Daraus zwei Varianten:**
+
+| | A: klassisch (Anstoss-artig) | B: modern (viele Zahlenwerte) |
+|---|---|---|
+| Hauptwert | eine Stärke-Zahl | Gesamtstärke berechnet aus 8 Fähigkeiten (Torwartspiel, Zweikampf, Kopfball, Tempo, Technik, Passspiel, Flanken, Abschluss) |
+| Besonderheiten | erlernbare Fähigkeiten als Merkmale mit Lernfortschritt | Spezialitäten zusätzlich möglich |
+| Entwicklung | Auf- und Abwertungsrunden mit Würfel (Alter, Talent, Form) | kleine Schritte pro Trainingseinheit |
+| Lesbarkeit | sehr hoch | mittel |
+| Tiefe für Taktik | über Fähigkeiten wie „kopfballstark“ oder „schnell“ | direkt über die Zahlen |
+| Balancing | leichter | schwerer |
+
+**Mein Vorschlag: A mit einem Schuss B.**
+- **Stärke** als Hauptzahl. Dazu **Form** (0–20), **Kondition**, **Frische**, **Selbstvertrauen** und **Stimmung**.
+- **Erlernbare Fähigkeiten** mit Schwierigkeitsgrad und Lernfortschritt. Sie wirken gezielt in der Engine, zum Beispiel:
+  - kopfballstark: Standards und Flanken
+  - schnell: Konter
+  - zweikampfstark: Mauern und Pressing
+  - Spielmacher, Flankengeber, Torjäger, Weitschütze, Freistoß- und Elfmeterspezialist
+  - Torwart: Reflexe, Strafraumbeherrscher, Elfmetertöter
+  - „beidfüßig“
+  - Joker
+- **Eigenschaften** (Charakter, fest oder selten wechselnd):
+  - positiv: Führungsspieler, Integrationsfigur, Publikumsliebling, Trainingsweltmeister, Kämpfer
+  - negativ: Hitzkopf, Diva, verletzungsanfällig, nervenschwach, Partylöwe
+- **Beziehungen im Kader:** Freundschaft, Rivalität, Landsleute und Sprache.
+- **Entwicklung der Stärke** über Auf- und Abwertungsrunden, häufiger als zweimal pro Saison, zum Beispiel monatlich mit kleineren Chancen. Die Wahrscheinlichkeit hängt ab von Alter, Talent, Durchschnittsform, Training und Spielpraxis. Bei jungen Spielern ist die Schwankung nach oben und unten größer (K08).
 
 ### K08 – Jugend und Verheizen
 
