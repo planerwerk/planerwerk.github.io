@@ -100,7 +100,8 @@ Spalte „Welle“: wann das Konzept spätestens fertig sein muss. Umfang des Ko
 
 | ID | Konzept | Kernfragen | Umfang | Welle |
 |---|---|---|---|---|
-| K35 | Oberfläche und Look | Bildschirmaufbau, Retro-Stil (eigenes Design), Bedienung auf dem Handy | M | 5 |
+| K35a | Bedienkonzept und Regler (**Entwurf**: `konzepte/K35-oberflaeche.md`) | Bildschirmliste, Regler-Baukasten (Anzeige, Trend, unscharf, Stell-Regler mit Vorhersage, Tauziehen), Schnellansicht, Meldungsdichte, Automatik-Stufen | M | **1** (Bausteine ab U1) |
+| K35b | Look und Stil | Retro-Stil (eigenes Design: Anzeigetafel, Flutlicht, Mischpult), Themen, Bedienung auf dem Handy | M | 5 |
 
 ## 4. Erste Gedanken zu den neuen Punkten
 
@@ -218,15 +219,15 @@ Für BMH habe ich keine verlässliche Quelle gefunden. Anstoss 2022 nutzt laut e
 
 | Welle | Konzepte | Umsetzungsschritte | Ergebnis |
 |---|---|---|---|
-| 1 Fundament | K01, K02, K03, K04, K33 | U1: Aufteilung in Dateien, `regeln.js`, Zufall mit Seed, Tageskalender, Tests. U2: neues Spielermodell mit Startwerten aus den Wikipedia-Kadern. U3: Engine v2 mit Kalibrierung, Torwart-Test bestanden | ein spielbarer Stand mit glaubwürdigen Ergebnissen und dem Kalender-Ablauf |
+| 1 Fundament | K01, K02, K03, K04, K33, K35a | U1: Aufteilung in Dateien, `regeln.js`, Zufall mit Seed, Tageskalender, Regler-Bausteine, Tests. U2: neues Spielermodell mit Startwerten aus den Wikipedia-Kadern. U3: Engine v2 mit Kalibrierung, Torwart-Test bestanden | ein spielbarer Stand mit glaubwürdigen Ergebnissen und dem Kalender-Ablauf |
 | 2 Sport | K05–K11, K13 | U4: Live-Spiel. U5: Taktik. U6: Training und Jugend. U7: Disziplin, Medizin, Testspiele, Spielplan | Spieltage mit Eingreifen, Training mit Wirkung, Sportgericht |
 | 3 Menschen und Markt | K14, K15, K17–K19, K21, K22, K28, K31, Gerüst von K30 | U8: Stimmung und Gespräche. U9: Scouting. U10: Transfers I, Verträge und Berater. U11: Computer-Vereine. U12: Beziehungen, Vorstand und Ereignis-Gerüst | Transfers als Prozess, sinnvolle Computer-Vereine, erste Ereigniskarten |
 | 4 Verein und Welt | K12, K16, K20, K23–K27, K29, K32, K34 | U13 bis U18 nach Bedarf | Saisonvorbereitung, Sponsoren, Marketing, Stadion, Fans, Presse, Abwerben |
-| 5 Oberfläche | K35 | U19 und folgende | eigener Retro-Look |
+| 5 Oberfläche | K35b | U19 und folgende | eigener Retro-Look |
 
 ## 6. Aufwand (grob, ehrlich)
 
-- **Konzepte:** 35 Stück (K01–K35). Davon sind 7 klein, 22 mittel und 6 groß. Das sind grob 12–15 Konzept-Sessions, das Ereignis-Playbook wächst danach weiter.
+- **Konzepte:** 36 Stück (K01–K35, K35 geteilt in K35a und K35b). Davon sind 7 klein, 23 mittel und 6 groß. Das sind grob 12–15 Konzept-Sessions, das Ereignis-Playbook wächst danach weiter.
 - **Umsetzung:** etwa 19 oder mehr Schritte, große eventuell doppelt, also grob 20–30 Sessions.
 - **Tokenkosten** kann ich vorher nicht verlässlich beziffern. Nach der ersten Konzept-Session und nach U1 sieht man den Verbrauch in der Nutzungsanzeige und kann hochrechnen.
 - **Sparen:**
