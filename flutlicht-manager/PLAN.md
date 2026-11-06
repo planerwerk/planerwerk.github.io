@@ -1,6 +1,6 @@
 # Flutlicht Manager – Gesamtplan
 
-Stand: 5. November 2026. Das Projekt ist ein Nebenprojekt, das langsam und gründlich wachsen soll, ohne Schnellschüsse.
+Stand: 6. November 2026 (U1 umgesetzt). Das Projekt ist ein Nebenprojekt, das langsam und gründlich wachsen soll, ohne Schnellschüsse.
 
 ## 1. Arbeitsweise
 
@@ -39,11 +39,11 @@ Spalte „Welle“: wann das Konzept spätestens fertig sein muss. Umfang des Ko
 
 | ID | Konzept | Kernfragen | Umfang | Welle |
 |---|---|---|---|---|
-| K01 | Kalender und Tagesablauf | Tagesansicht, „Tag beenden“, Ereignisarten, Fristen, Erinnerungsregeln, spielfreie Tage, Länderspielpausen, englische Wochen | M | 1 |
+| K01 | Kalender und Tagesablauf (**Entwurf**, Grundgerüst umgesetzt: `konzepte/K01-kalender.md`) | Tagesansicht, „Tag beenden“, Ereignisarten, Fristen, Erinnerungsregeln, spielfreie Tage, Länderspielpausen, englische Wochen | M | 1 |
 | K02 | Zufall, Kalibrierung, Schwierigkeit | Zufall mit Seed, wie viel Zufall wo, Restwahrscheinlichkeit für Überraschungen, Zielwerte aus echter Statistik, Testskripte, Schwierigkeitsgrade ohne Schummeln | M | 1 |
 | K03 | Spielermodell | Fähigkeiten, Spezialitäten (gut/schlecht), versteckte Werte, Zustände (Frische, Kondition, Form, Selbstvertrauen, Stimmung, Integration, Spielpraxis), Alterskurven | L | 1 |
 | K04 | Match-Engine | Minutenablauf, Chancentypen, Teamwerte mit abnehmendem Ertrag, Deckel für Einzelspieler (Torwart-Problem), Tagesform, Spielverlauf-Effekte, Ermüdung, Zielverteilungen | L | 1 |
-| K33 | Daten, Spielstand, `regeln.js` | Dateiaufbau, Stammdaten, Versionen des Spielstands, wie man an Werten schraubt, Daten-Update für neue Saisons | S | 1 |
+| K33 | Daten, Spielstand, `regeln.js` (**Entwurf**, umgesetzt: `konzepte/K33-daten.md`) | Dateiaufbau, Stammdaten, Versionen des Spielstands, wie man an Werten schraubt, Daten-Update für neue Saisons | S | 1 |
 
 ### B – Sport
 
@@ -103,7 +103,7 @@ Spalte „Welle“: wann das Konzept spätestens fertig sein muss. Umfang des Ko
 
 | ID | Konzept | Kernfragen | Umfang | Welle |
 |---|---|---|---|---|
-| K35a | Bedienkonzept und Regler (**Entwurf**: `konzepte/K35-oberflaeche.md`) | Bildschirmliste, Regler-Baukasten (Anzeige, Trend, unscharf, Stell-Regler mit Vorhersage, Tauziehen), Schnellansicht, Meldungsdichte, Automatik-Stufen | M | **1** (Bausteine ab U1) |
+| K35a | Bedienkonzept und Regler (**Entwurf**: `konzepte/K35-oberflaeche.md`, Bausteine umgesetzt in `js/regler.js`) | Bildschirmliste, Regler-Baukasten (Anzeige, Trend, unscharf, Stell-Regler mit Vorhersage, Tauziehen), Schnellansicht, Meldungsdichte, Automatik-Stufen | M | **1** (Bausteine ab U1) |
 | K35b | Look und Stil | Retro-Stil (eigenes Design: Anzeigetafel, Flutlicht, Mischpult), Themen, Bedienung auf dem Handy | M | 5 |
 
 ## 4. Erste Gedanken zu den neuen Punkten
@@ -222,7 +222,7 @@ Für BMH habe ich keine verlässliche Quelle gefunden. Anstoss 2022 nutzt laut e
 
 | Welle | Konzepte | Umsetzungsschritte | Ergebnis |
 |---|---|---|---|
-| 1 Fundament | K01, K02, K03, K04, K33, K35a | U1: Aufteilung in Dateien, `regeln.js`, Zufall mit Seed, Tageskalender, Regler-Bausteine, Tests. U2: neues Spielermodell mit Startwerten aus den Wikipedia-Kadern. U3: Engine v2 mit Kalibrierung, Torwart-Test bestanden | ein spielbarer Stand mit glaubwürdigen Ergebnissen und dem Kalender-Ablauf |
+| 1 Fundament | K01, K02, K03, K04, K33, K35a | ✅ U1 (6.11.): Aufteilung in Dateien, `regeln.js`, Zufall mit Seed, Tageskalender, Regler-Bausteine, Tests. U2: neues Spielermodell mit Startwerten aus den Wikipedia-Kadern. U3: Engine v2 mit Kalibrierung, Torwart-Test bestanden | ein spielbarer Stand mit glaubwürdigen Ergebnissen und dem Kalender-Ablauf |
 | 2 Sport | K05–K07, K09–K11, K13, K16 | U4: Live-Spiel. U5: Taktik. U6: Training und Trainerstab mit Automatik. U7: Disziplin, Medizin, Testspiele, Spielplan | Spieltage mit Eingreifen, Training mit Wirkung, Sportgericht |
 | 3 Menschen und Markt | K08, K14, K15, K17–K19, K21, K22, K28, K31, Gerüst von K30, Auslandspool aus K32 | U8: Stimmung und Gespräche. U9: Scouting, Auslandspool und Jugend. U10: Transfers I, Verträge und Berater. U11: Computer-Vereine. U12: Beziehungen, Vorstand und Ereignis-Gerüst | Transfers als Prozess, sinnvolle Computer-Vereine, erste Ereigniskarten |
 | 4 Verein und Welt | K12, K20, K23–K27, K29, K32 (Rest), K34 | U13 bis U18 nach Bedarf | Saisonvorbereitung, Sponsoren, Marketing, Stadion, Fans, Presse, Abwerben |
@@ -241,8 +241,10 @@ Für BMH habe ich keine verlässliche Quelle gefunden. Anstoss 2022 nutzt laut e
 
 ## 7. Nächster Schritt
 
-Die Grundsatzentscheidungen sind getroffen (siehe §2).
-1. **Nächste Session:** Konzepte **K01 (Kalender) und K33 (Daten/regeln.js)** knapp nach Vorlage schreiben, dann **U1** umsetzen. Die Tests liegen in `tests/`.
-2. **Danach:** eine Session nur für **K03 (Spielermodell)** im Anstoss-Stil. Das Anstoss-3-Material liegt schon vor (siehe Notizen zu K03).
+**U1 ist umgesetzt** (6. November 2026): Das Spiel ist in Dateien aufgeteilt, alle Stellschrauben stehen in `daten/regeln.js`, der Zufall läuft mit Seed, der Kalender in Tagen mit „Tag beenden“ und Erinnerungen, die Regler-Bausteine sind im Spiel, und das Bearbeiten im Spiel ist entfernt. Alle drei Testskripte in `tests/` sind grün. Offene Fragen dazu stehen am Ende von K01 und K33.
+
+1. **Nächste Session:** Konzept **K03 (Spielermodell)** im Anstoss-Stil. Das Anstoss-3-Material liegt schon vor (siehe Notizen zu K03). Startsatz: „Projekt Flutlicht Manager im Ordner flutlicht-manager/. Lies PLAN.md und konzepte/_konsistenzpruefung.md. Schreib Konzept K03 nach konzepte/_vorlage.md.“
+2. **Danach:** U2, das neue Spielermodell mit Startwerten aus `daten/spieler.js`.
+3. **Dann:** K04 (Engine) und U3. Danach ist Welle 1 fertig.
 
 K03 ist der Engpass: Engine, Taktik, Training und Scouting bauen darauf auf.

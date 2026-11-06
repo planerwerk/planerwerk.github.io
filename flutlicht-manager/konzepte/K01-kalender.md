@@ -26,7 +26,7 @@ Hängt ab von: K33 (Daten), K35a (Bedienung) · Wird gebraucht von: K05, K07, K0
 | Halt | Tag, an dem „Tag beenden“ anhält | berechnet |
 | Info | Meldung ohne Halt | Posteingang `S.news`, mit Datum |
 | Frist | Ablauftag an einem Objekt, zum Beispiel „Angebot gilt bis“ | Feld `bis` |
-| Erinnerung | Prüfung vor „Tag beenden“ | `js/kalender.js`, an/aus in `S.einst.erinnern` |
+| Erinnerung | Prüfung vor „Tag beenden“ | `js/kalender.js`, abgeschaltete Arten in `S.einst.aus` |
 
 **Ereignisarten** (✓ in U1, ○ später):
 
@@ -45,6 +45,14 @@ Hängt ab von: K33 (Daten), K35a (Bedienung) · Wird gebraucht von: K05, K07, K0
 4. Sprung: Tag für Tag weiter, jeder übersprungene Tag wird voll verarbeitet. Halt am ersten Tag mit Halt-Grund, spätestens nach 7 Tagen.
 
 **Halt-Gründe:** eigenes Pflichtspiel, eine Frist läuft heute ab, Saisonende, Entlassung. Dazu die 7-Tage-Grenze.
+
+**Erinnerungen in U1** (in dieser Reihenfolge, jede im Menü abschaltbar):
+1. Frist: Ein Angebot für einen deiner Spieler gilt nur noch heute.
+2. Aufstellung: Am Spieltag stehen in deiner gespeicherten Startelf Gesperrte oder Verletzte, und du hast die Aufstellung seitdem nicht angesehen.
+3. Sponsor: Am Spieltag ist noch kein Trikotsponsor gewählt.
+4. Verträge: In der letzten Woche vor Saisonende laufen Verträge von Stammspielern aus.
+
+Die Erinnerungen „kein Trainingsplan“ und „spielfreie Woche ohne Testspiel“ kommen mit K07 und K11.
 
 **Tagesverarbeitung**, in dieser Reihenfolge:
 1. Tagesbeginn: Ausfalltage zählen herunter, die Frische erholt sich um ein Siebtel der Wochenrate, abgelaufene Angebote fallen weg, ein fertiger Bau wird gemeldet.
@@ -114,8 +122,11 @@ In `daten/regeln.js`, Abschnitt `kalender`:
 | `maxSprung` | 7 | höchstens so viele Tage pro „Tag beenden“ |
 | `wochenTag` | 1 | Wochentag der Wochenwerte (1 = Montag) |
 | `angebotTage` | 14 | so lange gilt ein Angebot für deine Spieler |
-| `schonfristTage` | 42 | so lange nach Saisonstart entlässt der Vorstand nicht |
-| `erinnerungen` | alle an | Grundeinstellung der Erinnerungen |
+| `vertragsWarnungNachSpieltag` | 25 | danach warnt eine Nachricht vor auslaufenden Verträgen |
+| `hinweisVertraegeAbSpieltag` | 18 | ab dann zeigt das Büro auslaufende Verträge |
+| `erinnerungVertragTage` | 7 | so viele Tage vor Saisonende erinnert „Tag beenden“ an auslaufende Verträge |
+| `vorstand.schonfristSpieltage` | 6 | entlassen erst nach mehr als so vielen eigenen Ligaspieltagen |
+| `erinnerungen` | alle an | Arten der Erinnerungen, abschaltbar im Menü |
 
 ## 12. Offene Fragen
 

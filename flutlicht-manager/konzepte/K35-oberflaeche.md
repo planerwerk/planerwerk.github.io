@@ -2,6 +2,8 @@
 
 Status: **Entwurf**. Hängt ab von: allen Konzepten, weil jedes Bildschirme braucht. Grundlage für die Umsetzung ab U1.
 
+**Stand U1 (6.11.):** Die Bausteine aus `muster/regler.html` stehen jetzt in `js/regler.js` und `css/regler.css` und sind im Spiel eingebaut: Kopfzeile, Büro, Kader, Spielerkarte, Finanzen (Ticketpreis als Stell-Regler mit Zuschauer-Spanne), Stadion, Aufstellung und Vorbericht (Tauziehen). Die Musterseite bleibt die Referenz für Aussehen und neue Bausteine. Ohne Trainerstab (K16) hat die Vorhersage noch eine feste Genauigkeit: Die Spanne reicht vom schwächsten bis zum stärksten Gegner.
+
 **Vorschlag zur Aufteilung:**
 - **K35a Bedienkonzept und Regler-Bausteine:** schon in **Welle 1**, weil jede Stufe danach Bildschirme baut.
 - **K35b Look und Stil:** in **Welle 5**, wie bisher geplant.

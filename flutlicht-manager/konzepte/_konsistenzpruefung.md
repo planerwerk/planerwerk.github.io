@@ -106,3 +106,25 @@ Geprüft habe ich:
 - Punkte 4–6 sind vorläufig übernommen (siehe PLAN §2).
 
 Damit sind A1 bis A3 und E5 aufgelöst: K03 setzt den Anstoss-Stil um, und der Kreislauf, das Training und die Scouting-Spannen werden darauf umgestellt.
+
+---
+
+## H. Nachtrag nach U1 (6. November 2026)
+
+Geprüft: K01, K33 und die Umsetzung U1 gegen PLAN.md, K35 und die übrigen Konzepte.
+
+| # | Befund | Status |
+|---|---|---|
+| H1 | **Spielplan-Daten:** Die Rahmentermine stehen jetzt in `daten/termine.js` (K01). K13 behandelt laut PLAN ebenfalls den Spielplan. | 📌 Vorschlag zur Zuständigkeit: **K13** pflegt die Termin-Daten (echte Spieltage, Verlegungen, Anstoßzeiten), **K01** den Tagesablauf. |
+| H2 | **Geschätzte Termine:** Gesichert sind nur die Eckdaten. Die übrigen Spieltage der 2. Liga und die englischen Wochen der 1. Liga habe ich passend geschätzt. | 📌 K13: offiziellen Spielplan nachtragen. |
+| H3 | **Ausfälle in Tagen:** Verletzungen zählen jetzt Tage, Sperren weiter Spiele der eigenen Mannschaft, über alle Wettbewerbe zusammen. | 📌 K09 trennt Sperren nach Wettbewerb, K10 baut Reha auf den Tagen auf. |
+| H4 | **43 statt 40 Wochenschritte** pro Saison: Entwicklung, Alterung und Transfermarkt laufen dadurch etwa 7 % öfter. | 📌 K02 und U3 berücksichtigen das bei der Kalibrierung. |
+| H5 | **Relegation als echte Spiele:** Sie haben jetzt Folgen für Fitness, Karten, Verletzungen und Noten. Ihre Tore zählen nicht zur Torjägerliste. Bei Gleichstand in der Summe entscheidet weiter ein Los, angezeigt als Elfmeterschießen. | 📌 K13: Verlängerung und Elfmeterschießen im Rückspiel richtig abbilden. |
+| H6 | **Transferfenster** stehen in K01 nur als Ereignisart. Wechsel gehen weiter jederzeit, nach dem Grundsatz „nichts wegnehmen, bevor der Ersatz fertig ist“. | 📌 K19 führt die Fenster ein. |
+| H7 | **Finanzen** buchen weiter je Ligaspieltag, nicht monatlich. | 📌 K23 (Monatsabrechnung). |
+| H8 | **Vorhersage-Bänder** (Ticketpreis) haben noch eine feste Genauigkeit, weil es keinen Stab gibt. | 📌 K16 macht die Breite vom Stab abhängig, wie in K35 vorgesehen. |
+| H9 | **Erinnerungen** „kein Trainingsplan“ und „spielfreie Woche ohne Testspiel“ fehlen, weil Trainingsplan und Testspiele noch nicht existieren. | ✅ bewusst, kommen mit K07 und K11 |
+| H10 | **Alte Spielstände** (Version 1, Wochenkalender) lehnt das Spiel ab, weil die Ligen jetzt an verschiedenen Tagen spielen. Sie bleiben im Browser gespeichert. | 🔶 Entscheidung K33, Frage 1 |
+| H11 | **Sommerpause:** Juni und Juli werden übersprungen, jede Saison beginnt in der Woche vor dem 1. Spieltag der 2. Liga. | 🔶 Entscheidung K01, Frage 1. K12 füllt die Vorbereitung später. |
+
+**Was ich von dir brauche (neu):** die offenen Fragen am Ende von K01 (Sommer, ein Tag je Spieltag, geschätzte Termine, Erinnerungen ab Werk) und K33 (alte Spielstände, eigene Datensätze, Durchsicht der Stärkewerte).
