@@ -23,7 +23,7 @@ const res=await pg.evaluate(()=>{const out=[];
      else if(r<0.35){S.train=Math.floor(T()*3);myT().youth=1+Math.floor(T()*5);setPrice(5+T()*80);}
      else if(r<0.38){const e=squad(S.my).filter(p=>p.ct<=1);if(e.length){openP(e[0].id);extend(e[0].id);closeOv();}}
      else if(r<0.40){const sq=squad(S.my).sort((a,b)=>a.str-b.str);if(sq.length>18){openP(sq[0].id);release(sq[0].id);}}
-     else if(r<0.42){const p=rnd(S.pl);openP(p.id);document.getElementById('e_s').value=String(40+Math.floor(T()*55));saveEdit(p.id);closeOv();}
+     else if(r<0.42){const p=rnd(S.pl);openP(p.id);if(document.getElementById('e_s')||typeof saveEdit!=='undefined')log.errors.push('Bearbeiten im Spiel ist noch vorhanden');closeOv();}
      else if(r<0.44){tab('aufst');}
      if(S.sponsOffers&&T()<0.5)pickSponsor(Math.floor(T()*3));
      for(const k in V){const h=V[k]().replace(/<[^>]+>/g,' ');const m=h.match(/.{0,50}(undefined|NaN|\[object|Infinity|\bnull\b).{0,30}/);if(m)log.errors.push('Text '+k+': '+m[0]);}

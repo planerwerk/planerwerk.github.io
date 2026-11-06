@@ -9,6 +9,12 @@ const extDemand=p=>{const g=RM.gehalt;return Math.round(salaryFor(p.str)*(g.basi
 const kreditRahmen=t=>RF.kreditRahmen.basis+t.rep*RF.kreditRahmen.jeAnsehen;
 const tvGeld=t=>t.lg===1?RF.tv.liga1.basis+t.rep*RF.tv.liga1.jeAnsehen:RF.tv.liga2.basis+t.rep*RF.tv.liga2.jeAnsehen;
 const richtPreis=t=>RF.zuschauer.refBasis+t.rep*RF.zuschauer.refJeAnsehen;
+// Talent als Band aus der Sterne-Stufe: zeigt dieselbe Auskunft wie die Sterne, nur als Regler
+function talentBand(p){const s=Math.round(p.str),st=RP.sterne,d=p.pot-p.str;const[a,b]=d>=st[0]?[st[0],99]:d>=st[1]?[st[1],st[0]]:d>=st[2]?[st[2],st[1]]:[0,st[2]];return[Math.min(99,s+a),Math.min(99,s+b)];}
+// Vorhersage für den Ticketpreis-Regler: Zuschauer je Ligaheimspiel als Spanne (schwächster bis stärkster Gegner, mit Tageszufall). Würfelt nicht.
+function zuschauerSpanne(t,preis){const Z=RF.zuschauer,ref=Z.refBasis+t.rep*Z.refJeAnsehen,pf=clamp(Math.pow(ref/preis,Z.preisExponent),Z.preisMin,Z.preisMax),ff=Z.formBasis+Z.formJePunkt*formPts(t.id),lf=t.lg===1?1:Z.liga2;
+  const reps=S.teams.filter(x=>x.lg===t.lg&&x.id!==t.id).map(x=>x.rep),f=rep=>t.fans*pf*ff*(Z.gegnerBasis+rep/100*Z.gegnerFaktor)*lf;
+  return[Math.round(Math.min(t.cap,f(Math.min(...reps))*Z.zufallBasis)),Math.round(Math.min(t.cap,f(Math.max(...reps))*(Z.zufallBasis+Z.zufallSpanne)))];}
 
 function mkPlayer(o){const age=o.age,str=o.str,T=RP.talent;const p={id:S.pid++,n:o.n||rname(),pos:o.pos,age,str,pot:o.pot||Math.round(str+(age<=T[0][0]?riA(T[0][1]):age<=T[1][0]?riA(T[1][1]):riA(RP.talentSonst))),form:RP.startForm,fit:riA(RP.startFitness),team:o.team,inj:0,sus:0,yc:0,g:0,pg:0,apps:0,ct:o.ct||riA(RP.vertrag),list:0,ask:0,seed:R()};p.sal=salaryFor(p.str);return p;}
 const lgIds=lg=>S.teams.filter(t=>t.lg===lg).map(t=>t.id);

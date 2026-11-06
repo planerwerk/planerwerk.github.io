@@ -55,8 +55,10 @@ async function actions(s,tag){const wk=s.wk,yr=s.season,K=yr+':'+wk+':';
  if(wk===16&&once(K+'shop')){await tabClick('Stadion');const f=await pg.$('.opt:has(b:has-text("Fanshop"))');if(f){await f.click();actlog.push(tag+' Fanshop');}}
  if(wk===20&&once(K+'tilgen')){await tabClick('Finanzen');await pg.click('button:text-is("Alles tilgen")');}
  if(wk===24&&once(K+'vertrag')){const ids=await pg.evaluate(()=>squad(S.my).filter(p=>p.ct<=1).map(p=>p.id));for(const id of ids.slice(0,8)){await pg.evaluate(i=>openP(i),id);await pg.selectOption('#ext','2');await pg.click('button:text-is("Verlängern")');await closeModal();}actlog.push(tag+` ${Math.min(8,ids.length)} Verträge verlängert`);}
- if(wk===26&&once(K+'edit')){const id=await pg.evaluate(()=>squad(S.my)[0].id);await pg.evaluate(i=>openP(i),id);await pg.click('summary:text-is("Spielerdaten bearbeiten")');
-   await pg.fill('#e_n','Test Spieler');await pg.fill('#e_s','81');await pg.click('button:text-is("Übernehmen")');const ok=await pg.evaluate(i=>PIX.get(i).n==='Test Spieler'&&Math.round(PIX.get(i).str)===81,id);if(!ok)note(tag,'Bearbeiten hat nicht gegriffen');await closeModal();}
+ if(wk===26&&once(K+'edit')){const id=await pg.evaluate(()=>squad(S.my)[0].id);await pg.evaluate(i=>openP(i),id);
+   if(await pg.$('summary:text-is("Spielerdaten bearbeiten")')||await pg.$('#e_s'))note(tag,'Bearbeiten im Spiel ist noch vorhanden');
+   if(await pg.evaluate(()=>typeof saveEdit!=='undefined'))note(tag,'saveEdit gibt es noch');
+   const rg=await pg.$$eval('.ovb .rg',x=>x.length);if(rg<3)note(tag,`Spielerkarte: ${rg} statt 3 Regler`);await closeModal();actlog.push(tag+' Spielerkarte ohne Bearbeiten, mit Reglern geprüft');}
  if(wk===30&&once(K+'frei')){const id=await pg.evaluate(()=>squad(S.my).sort((a,b)=>a.str-b.str)[0].id);await pg.evaluate(i=>openP(i),id);await pg.click('button:has-text("Vertrag auflösen")');actlog.push(tag+' Spieler freigestellt');}
  if(yr===2027&&wk===2&&once(K+'normal')){await tabClick('Training & Jugend');await pg.click('.opt:has(b:text-is("Normal"))');await tabClick('Aufstellung');await pg.selectOption('#formsel','3-5-2');}
  if(yr===2027&&wk===9&&once(K+'vertrauen')){await pg.evaluate(()=>{S.trust=5;});actlog.push(tag+' Vertrauen künstlich auf 5 gesetzt (Entlassung testen)');}

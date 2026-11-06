@@ -1,0 +1,69 @@
+/* Regler-Bausteine (K35a), übernommen aus muster/regler.html. Alle Klassen beginnen mit rg-, damit sie nicht mit dem Spiel kollidieren. */
+:root{--led:var(--amber);--you:#7cc4ff;--f-led:"VT323","Courier New",ui-monospace,monospace}
+.rgs{display:grid;gap:12px;container-type:inline-size}
+/* Anzeige-Regler */
+.rg{display:grid;grid-template-columns:minmax(92px,150px) minmax(0,1fr) auto;gap:4px 12px;align-items:center}
+.rg-lbl{font-size:14px;color:var(--chalk)}
+.rg-lbl small{display:block;color:var(--mist);font-size:12px}
+.rg-val{font-family:var(--f-led);font-size:26px;line-height:1;color:var(--led);font-variant-numeric:tabular-nums;text-align:right;min-width:3.2ch;text-shadow:0 0 10px rgba(255,182,39,.35)}
+.rg-val small{font-size:16px;color:var(--mist);text-shadow:none}
+.rg-val.rg-klein{font-size:22px}
+.rg-track{position:relative;height:16px;border-radius:3px;background:repeating-linear-gradient(90deg,#0a1612 0 6px,#0f1f19 6px 7px);border:1px solid var(--rule)}
+.rg-fill{position:absolute;left:0;top:0;bottom:0;border-radius:2px 0 0 2px;background:repeating-linear-gradient(90deg,var(--led) 0 6px,#c98a14 6px 7px);box-shadow:0 0 8px rgba(255,182,39,.3)}
+.rg-fill.you{background:repeating-linear-gradient(90deg,var(--you) 0 6px,#4d8fc4 6px 7px);box-shadow:0 0 8px rgba(124,196,255,.3)}
+.rg-fill.good{background:repeating-linear-gradient(90deg,var(--good) 0 6px,#36a070 6px 7px);box-shadow:none}
+.rg-fill.warn{background:repeating-linear-gradient(90deg,var(--warn) 0 6px,#b8982f 6px 7px);box-shadow:none}
+.rg-fill.bad{background:repeating-linear-gradient(90deg,var(--bad) 0 6px,#b44242 6px 7px);box-shadow:none}
+.rg-pot{position:absolute;top:0;bottom:0;background:repeating-linear-gradient(135deg,rgba(255,182,39,.45) 0 3px,transparent 3px 7px);border-left:1px dashed var(--led);border-right:1px dashed var(--led)}
+.rg-zone{position:absolute;bottom:-5px;height:3px;border-radius:2px}
+.rg-zone.bad{background:var(--bad)} .rg-zone.warn{background:var(--warn)} .rg-zone.good{background:var(--good)}
+.rg-mk{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--chalk);border-radius:1px}
+.rg-scale{grid-column:2;display:flex;justify-content:space-between;font-size:11px;color:var(--mist);position:relative;min-height:15px}
+.rg-mkl{position:absolute;transform:translateX(-50%);white-space:nowrap;color:var(--chalk)}
+.rg-note{grid-column:2;font-size:12px;color:var(--mist)}
+.rg-spark{grid-column:2;height:22px;width:min(160px,100%)}
+.rg-band{position:absolute;top:0;bottom:0;background:repeating-linear-gradient(90deg,rgba(159,182,169,.55) 0 6px,rgba(159,182,169,.25) 6px 7px);border:1px solid var(--mist);border-radius:2px}
+.rg-unknown{position:absolute;inset:0;display:flex;align-items:center;justify-content:space-around;color:var(--mist);font-family:var(--f-led);font-size:16px;letter-spacing:.2em}
+/* Mini-Regler in Tabellen */
+.rg-mini{display:flex;align-items:center;gap:8px}
+.rg-mini .rg-track{width:70px;height:10px}
+.rg-n{font-family:var(--f-led);font-size:19px;line-height:1;color:var(--led);min-width:2.4ch;text-align:right;font-variant-numeric:tabular-nums}
+/* Fader (Stell-Regler) */
+.rg-fader{display:grid;grid-template-columns:minmax(92px,150px) minmax(0,1fr) auto;gap:4px 12px;align-items:center}
+.rg-fwrap{position:relative;height:34px;display:flex;align-items:center}
+.rg-rec{position:absolute;top:9px;height:16px;border-radius:3px;background:rgba(79,201,141,.18);border:1px dashed var(--good)}
+.rg-rec.fuzzy{background:linear-gradient(90deg,rgba(79,201,141,0),rgba(79,201,141,.35) 35%,rgba(79,201,141,.35) 65%,rgba(79,201,141,0));border:0}
+.rg-fader input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:34px;background:transparent;position:relative;margin:0;padding:0;border:0}
+.rg-fader input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:3px;background:linear-gradient(90deg,#071310,#21423a);border:1px solid var(--rule)}
+.rg-fader input[type=range]::-moz-range-track{height:6px;border-radius:3px;background:linear-gradient(90deg,#071310,#21423a);border:1px solid var(--rule)}
+.rg-fader input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:32px;margin-top:-14px;border-radius:4px;background:linear-gradient(180deg,#e9eee9 0 44%,#1d1400 44% 56%,#c9d1ca 56%);border:1px solid #0a1612;box-shadow:0 2px 6px rgba(0,0,0,.5);cursor:grab}
+.rg-fader input[type=range]::-moz-range-thumb{width:22px;height:32px;border-radius:4px;background:linear-gradient(180deg,#e9eee9 0 44%,#1d1400 44% 56%,#c9d1ca 56%);border:1px solid #0a1612;box-shadow:0 2px 6px rgba(0,0,0,.5);cursor:grab}
+.rg-fends{grid-column:2;display:flex;justify-content:space-between;font-size:11px;color:var(--mist)}
+.rg-verdict{font-size:14px;padding:6px 10px;border-radius:6px;background:var(--night);border:1px solid var(--rule);margin:0}
+.rg-verdict b{font-family:var(--f-disp);font-size:16px;letter-spacing:.02em}
+.v-good b{color:var(--good)} .v-warn b{color:var(--warn)} .v-bad b{color:var(--bad)}
+/* Tauziehen */
+.rg-tug{display:grid;gap:8px}
+.rg-tug-kopf,.rg-tug-r{display:grid;grid-template-columns:minmax(78px,120px) minmax(0,1fr) auto;gap:10px;align-items:center}
+.rg-tug-kopf{font-family:var(--f-disp);font-size:16px}
+.rg-tug-kopf>span:nth-child(2){display:flex;justify-content:space-between;gap:8px}
+.rg-tug-bar{position:relative;height:16px;display:flex;border:1px solid var(--rule);border-radius:3px;overflow:hidden}
+.rg-tug-bar .a{background:repeating-linear-gradient(90deg,var(--you) 0 6px,#4d8fc4 6px 7px)}
+.rg-tug-bar .b{background:repeating-linear-gradient(90deg,var(--bad) 0 6px,#b44242 6px 7px)}
+.rg-tug-bar .mid{position:absolute;left:50%;top:-3px;bottom:-3px;width:2px;background:var(--chalk)}
+.rg-tug .rg-n{min-width:6ch}
+@media (max-width:560px){
+  .rg,.rg-fader{grid-template-columns:minmax(0,1fr) auto}
+  .rg-lbl{grid-column:1 / -1}
+  .rg-track,.rg-fwrap{grid-column:1}
+  .rg-scale,.rg-spark,.rg-fends,.rg-note{grid-column:1}
+  .rg-tug-kopf,.rg-tug-r{grid-template-columns:72px minmax(0,1fr) auto}
+}
+@media (prefers-reduced-motion:no-preference){.rg-fill,.rg-band,.rg-pot{transition:width .25s ease,left .25s ease}}
+/* In schmalen Karten steht die Beschriftung über dem Regler */
+@container (max-width:460px){
+  .rg,.rg-fader{grid-template-columns:minmax(0,1fr) auto}
+  .rg-lbl{grid-column:1 / -1}
+  .rg-track,.rg-fwrap{grid-column:1}
+  .rg-scale,.rg-spark,.rg-fends,.rg-note{grid-column:1}
+}

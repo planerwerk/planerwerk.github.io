@@ -34,4 +34,3 @@ function offer(id){const p=PIX.get(id),t=myT(),msg=document.getElementById('msg'
   else{const hg=Math.round(sal*RF.handgeld/1000)*1000;if(t.cash<hg){msg.textContent='Nicht genug Geld für das Handgeld.';return;}money('Handgelder',-hg);}
   p.team=S.my;p.list=0;p.ct=yrs;p.sal=sal;S.offers=S.offers.filter(o=>o.pid!==id);
   news(`Neuzugang: ${p.n} kommt ${from?`für ${fmt(fee)} von ${from.name}`:'ablösefrei'} (Gehalt ${fmt(sal)}/Jahr, bis ${S.season+yrs}).`,'good');save();closeOv();render();toast(`${p.n} unterschreibt!`);}
-function saveEdit(id){const p=PIX.get(id);const n=document.getElementById('e_n').value.trim();if(n)p.n=n.slice(0,40);p.pos=document.getElementById('e_p').value;p.age=clamp(+document.getElementById('e_a').value||p.age,15,45);p.str=clamp(+document.getElementById('e_s').value||p.str,20,99);p.pot=Math.max(p.pot,Math.round(p.str));p.sal=p.team===S.my?p.sal:salaryFor(p.str);save();openP(id);render();toast('Spielerdaten gespeichert.');}

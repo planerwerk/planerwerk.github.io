@@ -181,7 +181,13 @@ const REGELN={
   },
 
   ui:{
-    transferTreffer:80               // so viele Treffer zeigt die Transfersuche
+    transferTreffer:80,              // so viele Treffer zeigt die Transfersuche
+    // Zonen der Regler (K35a). Texte beschreiben nur, was das Spiel wirklich rechnet.
+    zonenFitness:[{von:0,bis:70,art:'bad',text:'deutlich geschwächt (Fitness senkt die Stärke im Spiel)'},
+      {von:70,bis:85,art:'warn',text:'etwas geschwächt'},{von:85,bis:100,art:'good',text:'fit'}],
+    zonenVertrauen:[{von:0,bis:12,art:'bad',text:'Entlassung droht'},{von:12,bis:30,art:'warn',text:'Der Vorstand ist unzufrieden'},
+      {von:55,bis:100,art:'good',text:'Der Vorstand ist zufrieden'}],
+    ausverkauftAb:0.95               // ab diesem Anteil der Plätze gilt ein Heimspiel als (fast) ausverkauft
   }
 };
 

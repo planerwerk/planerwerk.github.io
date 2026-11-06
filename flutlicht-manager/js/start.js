@@ -9,7 +9,7 @@ function renderStart(){
   <details><summary>Erweitert</summary><label style="margin-top:8px">Startwert für den Zufall (Seed, leer = zufällig) <input id="seed" inputmode="numeric" placeholder="zum Beispiel 12345"></label></details>
   <button class="go" onclick="newGame()">Anpfiff zur Karriere</button></div></div>
   <details class="card"><summary>Spielstand-Code laden</summary><textarea id="imp" placeholder="Code hier einfügen" style="margin-top:8px"></textarea><div class="row" style="margin-top:8px"><button onclick="importSave()">Laden</button></div></details>
-  <p class="dim">Kader aller 36 Vereine: deutsche Wikipedia, Stand Ende August bis Ende Oktober 2026. Die Stärkewerte sind geschätzt und lassen sich im Spiel über „Spielerdaten bearbeiten“ ändern. Nachwuchsspieler, Vereinslose und die Amateurklubs im Pokal sind erfunden.</p></div>`;}
+  <p class="dim">Kader aller 36 Vereine: deutsche Wikipedia, Stand Ende August bis Ende Oktober 2026. Die Stärkewerte sind geschätzt. Korrekturen gehören in die Datei daten/spieler.js, nicht ins Spiel. Nachwuchsspieler, Vereinslose und die Amateurklubs im Pokal sind erfunden.</p></div>`;}
 function alterStand(){try{return !!localStorage.getItem(REGELN.spielstand.alterSchluessel);}catch(e){return false;}}
 function loadLocal(){try{const s=localStorage.getItem(REGELN.spielstand.schluessel);if(s){const d=JSON.parse(s);if(d.v!==REGELN.spielstand.version){toast('Der gespeicherte Spielstand passt nicht zu dieser Version.');return;}S=d;reindex();TAB='buero';render();}}catch(e){toast('Spielstand konnte nicht geladen werden.');}}
 function newGame(){const id=+document.getElementById('club').value,name=(document.getElementById('mgr').value||'Trainer').trim().slice(0,30)||'Trainer';
