@@ -1,6 +1,6 @@
 # K03 – Spielermodell
 
-Status: **Entwurf** (7. November 2026). Grundlage sind deine Entscheidungen vom 5.11.: Anstoss-Stil, Stärke 1–99, Form 0–20 mit Mitte 10.
+Status: **Entwurf** (7. November 2026). Grundlage sind deine Entscheidungen vom 5.11.: Anstoss-Stil, Stärke 1–99, Form 0–20 mit Mitte 10. Deine Antworten vom 7.11. sind eingearbeitet (Abschnitt 12).
 Hängt ab von: K33 (Daten), K01 (Kalender) · Wird gebraucht von: K04, K06, K07, K08, K10, K12a, K14, K15, K16, K18, K19, K21, K27, K29, K31, K32, K34, K35a.
 
 ## 1. Ziel und Spielgefühl
@@ -27,15 +27,45 @@ Hängt ab von: K33 (Daten), K01 (Kalender) · Wird gebraucht von: K04, K06, K07,
 
 | Wert | Bereich | Sichtbar | Startwert | Ändert sich | Feld |
 |---|---|---|---|---|---|
-| Position | TW, AB, MF, ST | ja | `spieler.js` | Umschulung (K07) | `pos` |
-| Nebenposition | eine der vier oder keine | ja | keine, Zufall 15 % | Umschulung (K07) | `pos2` |
+| Position | 14 Positionen, siehe 3.1a | ja | `spieler.js` (feine Position neu) | Umschulung (K07) | `pos` |
+| Positionsgruppe | TW, AB, MF, ST | ja | aus der Position | mit der Position | berechnet |
+| Nebenpositionen | bis zu 2, je mit Eignung 85–95 % | ja | Daten, sonst Zufall | Umschulung (K07) | `pos2` |
+| Starker Fuß | rechts, links, beide | ja | Daten, sonst Zufall | Merkmal „beidfüßig“ | `fuss` |
 | Alter | Jahre | ja | `spieler.js` (am 1.7.) | am 1. Juli +1 | `age` |
-| Nationalität | Länderkürzel | ja | `spieler.js` (neu, Frage 3) | nie | `nat` |
+| Nationalität | Länderkürzel | ja | `spieler.js` (neu, entschieden 7.11.) | nie | `nat` |
 | **Stärke** | 1–99, ganzzahlig | eigene genau, fremde als Spanne (K18) | `spieler.js` | Auf- und Abwertungsrunden (5.1) | `str` |
 | **Talent** | 1–99, Obergrenze der Stärke | nein, nur als Sterne-Schätzung | wie heute aus Alter und Stärke | nur durch Prägung (K08) | `pot` |
 | Merkmale | Katalog 3.4 | ja, fremde nur gescoutet | Zufall nach Position und Stärke | Lernen, Altersverlust (5.6) | `mk` |
 | Persönlichkeit | 8 Werte, je 1–20 | nein, nur über Eigenschaften | Zufall je Karriere | selten (5.7) | `ch` |
 | Eigenschaften | Katalog 3.5 | ja, sobald bekannt | aus der Persönlichkeit | wenn sich die Persönlichkeit ändert | berechnet, bekannte in `ek` |
+
+### 3.1a Positionen (entschieden 7.11.)
+
+| Gruppe | Position | Kürzel |
+|---|---|---|
+| Tor | Torwart | TW |
+| Abwehr | Innenverteidiger | IV |
+| | linker und rechter Außenverteidiger | LV, RV |
+| Mittelfeld | defensives Mittelfeld (Sechser) | DM |
+| | zentrales Mittelfeld (Achter) | ZM |
+| | Spielmacher | SM |
+| | offensives Mittelfeld (Zehner) | OM |
+| | linkes und rechtes Mittelfeld (Flügel) | LM, RM |
+| Sturm | Mittelstürmer | MS |
+| | hängende Spitze | HS |
+| | Linksaußen und Rechtsaußen (Flügel) | LA, RA |
+
+- **Ergänzt** gegenüber deiner Liste: zentrales Mittelfeld, hängende Spitze und die Seiten links und rechts. Die Außenverteidiger heißen LV und RV, weil LA und RA im Fußball meist für Linksaußen und Rechtsaußen stehen.
+- **Keine eigene Position:**
+  - Schienenspieler (in Dreier- und Fünferkette) ist ein Platz in der Grundordnung. Er nutzt die bessere Eignung aus Außenverteidiger und Flügel im Mittelfeld (K06).
+  - Libero gibt es im heutigen Fußball kaum noch. Er kann in K06 als Rolle zurückkommen.
+- **Eignung auf anderen Positionen:**
+  - Hauptposition 100 %, Nebenpositionen 85–95 %.
+  - Verwandte Positionen 75–90 %, zum Beispiel IV→DM 85, DM↔ZM 90, ZM↔OM 90, OM↔SM 90, OM→HS 85, HS↔MS 85, LV→LM 85, LM↔LA 85. Die ganze Tabelle steht in `regeln.js`.
+  - Übrige Positionen derselben Gruppe 70 %, andere Gruppe 55 %, Torwart und Feld 45 % (wie heute).
+  - **Falsche Seite:** −8 % für Außenverteidiger und Flügel im Mittelfeld, die mit dem schwachen Fuß auf der anderen Seite spielen. Bei Linksaußen und Rechtsaußen gibt es keine Strafe, denn „invertierte“ Flügelstürmer (Rechtsfuß links, zieht nach innen) sind üblich. Beidfüßige trifft es nie.
+- **Bis K04 und K06** rechnet die Engine weiter mit den vier Gruppen. Die feine Position zeigt aber schon, wer wohin passt. K06 baut die Grundordnungen auf die 14 Positionen um.
+- **Daten:** Die Wikipedia-Kader kennen nur die vier Gruppen. Für feine Position und Fuß braucht es eine zweite Quelle (Frage 3).
 
 ### 3.2 Zustände
 
@@ -70,7 +100,7 @@ Hängt ab von: K33 (Daten), K01 (Kalender) · Wird gebraucht von: K04, K06, K07,
 | Führung | Ausstrahlung in der Kabine | Gewicht in der Kabine (K14), Mentor (K08) |
 | Robustheit | selten verletzt | Verletzungsrisiko und Rückfälle (K10) |
 
-Ausgewürfelt je Karriere: Schnitt 10, Streuung 3,5, begrenzt auf 1–20. **Für echte Spieler steht in den Daten kein Charakter** (Frage 2). So bekommt kein realer Profi fest den Stempel „Partylöwe“, und jede Karriere ist ein wenig anders.
+Bei echten Spielern wird zum Start abgeleitet, was sich aus öffentlichen Fakten belegen lässt (Kapitänsamt, Jahre im Verein, Karten, Verletzungstage), der Rest wird ausgewürfelt (5.9). Ausgewürfelt heißt: Schnitt 10, Streuung 3,5, begrenzt auf 1–20. Spieler, die das Spiel später selbst erzeugt, bekommen alles per Zufall. Nach einigen Saisons sind das fast alle.
 
 ### 3.4 Merkmale (erlernbar)
 
@@ -78,7 +108,7 @@ Ein Merkmal ist eine **Stärke** oder eine **Schwäche** in bestimmten Spielsitu
 
 **Stärken der Feldspieler**
 
-| Merkmal | Positionen | Schwierigkeit | Wirkt bei | Altersverlust |
+| Merkmal | Gruppen | Schwierigkeit | Wirkt bei | Altersverlust |
 |---|---|---|---|---|
 | kopfballstark | AB, MF, ST | mittel | Flanken und Standards, vorne und hinten | – |
 | schnell | alle Feldspieler | schwer, lernbar bis 23 | Konter, Laufduelle | ja |
@@ -86,15 +116,14 @@ Ein Merkmal ist eine **Stärke** oder eine **Schwäche** in bestimmten Spielsitu
 | zweikampfstark | AB, MF | mittel | Ballgewinne, Mauern, Pressing | – |
 | stellungssicher | AB, MF | mittel | verhindert Chancen, gleicht fehlendes Tempo teilweise aus | – |
 | ballsicher | AB, MF | mittel | weniger Ballverluste, Spielaufbau gegen Pressing | – |
-| Spielmacher | MF | schwer | Chancenerzeugung aus dem Mittelfeld, Ballbesitz | – |
 | Flankengeber | AB, MF | mittel | Flügelspiel, Ecken | – |
 | Dribbler | MF, ST | schwer | Chancen aus Einzelaktionen, holt Fouls heraus | – |
 | Torjäger | MF, ST | schwer | Verwertung im Strafraum | – |
 | Weitschütze | MF, ST | mittel | Chancen aus der Distanz, gegen Mauern | – |
 | Freistoßspezialist | alle Feldspieler | mittel | direkte Freistöße | – |
 | Elfmeterschütze | alle Feldspieler | leicht | Elfmeter, Elfmeterschießen | – |
-| beidfüßig | alle Feldspieler | schwer, lernbar bis 25 | etwas besserer Abschluss und Flanken, später keine Seitenstrafe (K06) | – |
-| vielseitig | alle Feldspieler | mittel | Nebenposition mit 95 % statt 82 % Eignung | – |
+| beidfüßig | alle Feldspieler | schwer, lernbar bis 25 | keine Strafe auf der falschen Seite (3.1a), etwas besserer Abschluss und Flanken. Setzt den Fuß auf „beide“. | – |
+| vielseitig | alle Feldspieler | mittel | Nebenpositionen und verwandte Positionen +5, höchstens 95 % | – |
 | Joker | MF, ST | mittel | stärker in den ersten 20 Minuten nach der Einwechslung, Bankplatz kostet weniger Stimmung (K14) | – |
 
 **Stärken der Torhüter**
@@ -108,7 +137,7 @@ Ein Merkmal ist eine **Stärke** oder eine **Schwäche** in bestimmten Spielsitu
 
 **Schwächen** (lassen sich abtrainieren wie ein Merkmal lernen)
 
-| Schwäche | Positionen | Abtrainieren | Wirkt bei |
+| Schwäche | Gruppen | Abtrainieren | Wirkt bei |
 |---|---|---|---|
 | kopfballschwach | Feldspieler | mittel | Gegenteil von kopfballstark |
 | abschlussschwach | MF, ST | mittel | schlechtere Verwertung |
@@ -118,6 +147,8 @@ Ein Merkmal ist eine **Stärke** oder eine **Schwäche** in bestimmten Spielsitu
 | langsam | Feldspieler | schwer | Gegenteil von schnell. Entsteht vor allem im Alter (5.6). |
 
 **Grenzen:** höchstens **4 Stärken** je Spieler. Ein Spieler lernt **ein Merkmal**. Zwei gleichzeitig gehen, aber dann lernt er jedes nur halb so schnell (Anstoss-Bremse). Stärke und passende Schwäche schließen sich aus.
+
+**Erst zeigen, wenn es wirkt:** Merkmale werden von Anfang an vergeben und gespeichert, aber erst angezeigt, wenn ihre Wirkung gebaut ist. Texte beschreiben nur, was das Spiel wirklich rechnet (K35). Mit U2 kommen „ausdauernd“, „Elfmeterschütze“ und „Elfmetertöter“, mit den feinen Positionen „vielseitig“ und „beidfüßig“, mit U3 (Engine) die übrigen.
 
 ### 3.5 Eigenschaften (sichtbar, aus der Persönlichkeit)
 
@@ -129,7 +160,7 @@ Ein Merkmal ist eine **Stärke** oder eine **Schwäche** in bestimmten Spielsitu
 | Mentor | + | Alter ≥ 29, Professionalität ≥ 14, Führung ≥ 12 | junge Spieler an seiner Seite entwickeln sich besser (K08) |
 | Kämpfer | + | Ehrgeiz ≥ 16, Druckresistenz ≥ 12 | stärker bei Rückstand (K04), verträgt Kritik (K15, K29) |
 | vereinstreu | + | Loyalität ≥ 17 | günstiger bei Verlängerung, schwer abzuwerben (K20, K21) |
-| Trainingsweltmeister | ± | Professionalität ≥ 15, Druckresistenz ≤ 7 | lernt schnell, bringt es im Spiel aber nicht: in wichtigen Spielen schwächer (Frage 5) |
+| Trainingsweltmeister | ± | Professionalität ≥ 15, Druckresistenz ≤ 7 | lernt schnell, bringt es im Spiel aber nicht: in wichtigen Spielen schwächer (Bedeutung bestätigt 7.11.) |
 | Teenie-Star | ± | Alter ≤ 23, Stärke ≥ 75, Zufall | mehr Trikotverkäufe, aber nur bei Form ≥ 12 (K25, K27), mehr Medienrummel (K29) |
 | Publikumsliebling | + | erworben: 2 Saisons im Verein, gute Noten, Tore oder Einsatz | Fanstimmung, Trikots, Pfiffe bei seinem Verkauf (K27) |
 | Hitzkopf | − | Temperament ≥ 17 | Karten ×1,5 (K09), Streit (K14) |
@@ -141,6 +172,8 @@ Ein Merkmal ist eine **Stärke** oder eine **Schwäche** in bestimmten Spielsitu
 | Heimweh-Typ | − | Anpassungsfähigkeit ≤ 4 | nach einem Wechsel ins Ausland langsame Integration, Heimweh-Karte |
 
 Bei Schnitt 10 und Streuung 3,5 hat etwa jeder Dritte mindestens eine Eigenschaft. Das hält die Liste besonders.
+
+Auch hier gilt „erst zeigen, wenn es wirkt“. Mit U2 kommen Vorbildprofi, Partylöwe und Trainingsweltmeister (Lernen und Entwicklung), Hitzkopf (Karten gibt es schon), verletzungsanfällig (Verletzungen gibt es schon) und nervenschwach (Elfmeterschießen). Die übrigen kommen mit dem Konzept, das ihre Wirkung baut (K04, K08, K14, K15, K21, K27).
 
 **Wann du sie siehst:**
 - Eigene Spieler: nach 2–8 Wochen im Verein meldet der Co-Trainer die Eigenschaft (mit gutem Stab schneller, K16).
@@ -258,12 +291,27 @@ Deckel: pAuf ≤ 0,70 · pAb ≤ 0,60 · pAuf + pAb ≤ 0,90
 
 Form, Frische, Selbstvertrauen, Spielpraxis, Integration und Stimmung wirken zusammen als ein Faktor auf die Stärke im Spiel. **Dieser Faktor bleibt zwischen 0,80 und 1,08.** Die Stärke bleibt so immer der Hauptwert (Rohmaterial, Grundsatz 2).
 
-### 5.9 Startwerte für eine neue Karriere (U2)
+### 5.9 Startwerte für eine neue Karriere
 
-- Stärke, Position und Alter aus `spieler.js`, Talent wie heute.
-- **Merkmale per Zufall:** im Schnitt 0,5 Stärken bei Stärke 55, 1 bei 65, 1,6 bei 75, 2,3 bei 85 und 3 ab 90. Gewichtet nach Position, zum Beispiel Stürmer oft Torjäger, Torhüter oft Reflexe. Schwächen im Schnitt 0,6 bei Stärke 60 und 0,3 bei 85.
-- Optional eine Spalte in `spieler.js` mit festen Merkmalen für bekannte Spezialisten. Sie ersetzt dann den Zufall (Frage 2).
-- Persönlichkeit per Zufall, Kondition 75–85, Frische 100, Form 10, Selbstvertrauen 0, Stimmung 60–75, Integration 100, Spielpraxis 70.
+**Echte Spieler zum Start (entschieden 7.11.):** Was sich aus öffentlichen, nachprüfbaren Fakten ableiten lässt, wird abgeleitet. Der Rest wird ausgewürfelt. Nie aus Klatsch oder Meinungen in der Presse.
+
+| Wert | abgeleitet aus | sonst |
+|---|---|---|
+| Position, Nebenpositionen, Fuß | Daten | Zufall nach Gruppe |
+| Nationalität | Daten | – |
+| Führung | Kapitän oder Vizekapitän im Verein oder in der Nationalmannschaft → 15–18 | Zufall |
+| Loyalität | Jahre im aktuellen Verein, eigener Nachwuchs. Ab 6 Jahren → 14–17. | Zufall |
+| Temperament | Karten pro 90 Minuten der letzten zwei Saisons, Rote Karten zählen dreifach. Obere 10 % → 15–18, untere 25 % → 4–8. | Zufall |
+| Robustheit | Ausfalltage durch Verletzungen der letzten drei Saisons. Viele → 3–6, kaum welche → 13–16. | Zufall |
+| Anpassungsfähigkeit | Stationen im Ausland. Ab zwei → 12–16. | Zufall |
+| Professionalität, Ehrgeiz, Druckresistenz | keine verlässlichen Fakten | Zufall |
+| Merkmale | Elfmeterschütze (hat in den letzten zwei Saisons Elfmeter geschossen), Freistoßspezialist (direkte Freistoßtore), Torjäger (Tore je 90 Minuten deutlich über dem Schnitt seiner Position), Elfmetertöter (gehaltene Elfmeter) | Zufall nach Position und Stärke |
+
+- Abgeleitet wird nicht im Spiel, sondern einmal per Skript aus zusätzlichen Spalten in `spieler.js`. Das Spiel liest nur das Ergebnis. Bearbeiten kannst du die Werte dort wie die Stärke.
+- Abgeleitete Werte bekommen ±2 Zufall, damit nicht jede Karriere gleich beginnt.
+- **Merkmale per Zufall:** im Schnitt 0,5 Stärken bei Stärke 55, 1 bei 65, 1,6 bei 75, 2,3 bei 85 und 3 ab 90, abgeleitete mitgezählt. Gewichtet nach Position, zum Beispiel Mittelstürmer oft Torjäger, Torhüter oft Reflexe. Schwächen im Schnitt 0,6 bei Stärke 60 und 0,3 bei 85.
+- **Später erzeugte Spieler** (Nachwuchs K08, neue Talente K32): alles per Zufall, mit denselben Verteilungen.
+- Kondition 75–85, Frische 100, Form 10, Selbstvertrauen 0, Stimmung 60–75, Integration 100, Spielpraxis 70.
 
 ## 6. Hebel des Spielers
 
@@ -311,7 +359,7 @@ Dosierung nach dem Gesamtbudget (Konsistenzprüfung B1): höchstens eine Karte a
 | Konzept | Was es von K03 braucht oder liefert |
 |---|---|
 | K04 Engine | Stärke, Zustandsfaktor (5.8), Merkmal-Haken, Selbstvertrauen in Schlüsselszenen. **Muss liefern:** erwartete Note je Spieler, Noten relativ zur Erwartung. |
-| K06 Taktik | **Neue Voraussetzungen des Spielstil-Kreislaufs** (ersetzt die Zahlenwerte aus Rohmaterial 11): Pressing braucht Kondition, Frische, „schnell“, „ausdauernd“, „zweikampfstark“. Ballbesitz braucht Stärke im Mittelfeld, „Spielmacher“, „ballsicher“. Mauern braucht „zweikampfstark“, „stellungssicher“, „kopfballstark“. Konter braucht „schnell“, „Torjäger“. Flügelspiel braucht „Flankengeber“, „kopfballstark“. Kein Stil hängt an nur einem Merkmal. |
+| K06 Taktik | Grundordnungen mit den 14 Positionen aus 3.1a, Schienenspieler als Platz. **Neue Voraussetzungen des Spielstil-Kreislaufs** (ersetzt die Zahlenwerte aus Rohmaterial 11): Pressing braucht Kondition, Frische, „schnell“, „ausdauernd“, „zweikampfstark“. Ballbesitz braucht Stärke im Mittelfeld, einen starken Spieler auf der Position Spielmacher, „ballsicher“. Mauern braucht „zweikampfstark“, „stellungssicher“, „kopfballstark“. Konter braucht „schnell“, „Torjäger“. Flügelspiel braucht „Flankengeber“, „kopfballstark“. Kein Stil hängt an nur einem Merkmal. |
 | K07 Training | ersetzt die Trainingsstufe in 5.1 und 5.3 durch Einheiten. Lernziele als Einzeltraining. Kondition und Frische als Belastungssteuerung. |
 | K08 Jugend | Volatilität (5.1), Prägung verschiebt Talent und Persönlichkeit, Mentor |
 | K10 Medizin | Robustheit, Frische unter 80 %, Ausfalltage |
@@ -378,6 +426,14 @@ spieler:{
     profi:[0.7,0.03],zufall:[0.7,1.3],zweiZiele:0.5,frischeUnter:[70,0.8],stimmungUnter:[30,0.7],maxStaerken:4,
     verlustAb:31,verlust:0.025,langsamAb:33,langsam:0.02},
   zustand:{min:0.80,max:1.08},                    // Deckel für alle Zustände zusammen (5.8)
+  positionen:{gruppe:{TW:'TW',IV:'AB',LV:'AB',RV:'AB',DM:'MF',ZM:'MF',SM:'MF',OM:'MF',LM:'MF',RM:'MF',MS:'ST',HS:'ST',LA:'ST',RA:'ST'},
+    // Eignung von → nach in %, rechte Seite spiegelbildlich (RV wie LV usw.)
+    nah:{IV:{DM:85,LV:75,RV:75},LV:{LM:85,RV:80,IV:75},DM:{ZM:90,IV:80,SM:80},ZM:{DM:90,OM:90,SM:85,LM:75,RM:75},
+         SM:{OM:90,ZM:85,DM:75},OM:{SM:90,ZM:85,HS:85,LA:75,RA:75},LM:{LA:85,RM:80,LV:75,ZM:75},
+         MS:{HS:85,LA:70,RA:70},HS:{MS:85,OM:85,LA:75,RA:75},LA:{LM:85,RA:85,HS:75,MS:75}},
+    gleicheGruppe:70,andereGruppe:55,torwartFeld:45,neben:[85,95],vielseitig:5,
+    falscheSeite:{faktor:0.92,positionen:['LV','RV','LM','RM']}},
+  fuss:{rechts:0.75,links:0.2,beide:0.05},       // Zufall, wenn die Daten nichts sagen (Verteilung prüfen)
   persoenlichkeit:{mitte:10,streuung:3.5,min:1,max:20},
   eigenschaftEntdecken:[2,8],                     // Wochen bis zur Meldung
   merkmale:{ /* Katalog aus 3.4: Kürzel, Name, Art, Positionen, Schwierigkeit, bisAlter, altersverlust, Engine-Haken */ },
@@ -391,13 +447,19 @@ Die bisherigen Einträge `training.wachstum`, `training.zufall`, `training.fitne
 
 ## 12. Offene Fragen
 
-1. **Monatliche Runden:** Stärke ganzzahlig, Veränderung nur in 11 Monatsrunden statt kleiner Wochenschritte. Dafür gibt es den Monatsbericht. Einverstanden?
-2. **Echte Spieler:** Charakter nur per Zufall, je Karriere neu, nichts davon in `spieler.js`. Merkmale per Zufall, aber optional als Spalte für bekannte Spezialisten (zum Beispiel Elfmeterschützen). Einverstanden, und willst du die Merkmal-Spalte überhaupt?
-3. **Nationalität in `spieler.js`:** schon in U2 für etwa 1000 Spieler aus den Wikipedia-Kadern nachtragen, oder erst mit K14? Ohne sie gibt es keine Landsleute, kein Deutsch und keine Herkunft bei der Integration. Vorschlag: in U2, weil die Datenpflege dann in einem Zug passiert.
-4. **Positionen:** Bis K06 bei TW, AB, MF und ST bleiben, mit einer Nebenposition? Oder schon jetzt Rollen wie Innen- und Außenverteidiger, defensives und offensives Mittelfeld, Flügel? Vorschlag: vier Gruppen bis K06, dann entscheiden.
-5. **„Trainingsweltmeister“:** Im Fußball-Deutsch meint das meist spöttisch einen, der im Training glänzt und im Spiel nicht. PLAN §4 führt es als positive Eigenschaft. Ich habe es nach der umgangssprachlichen Bedeutung gebaut (lernt schnell, schwächer in wichtigen Spielen) und für den reinen Profi „Vorbildprofi“ ergänzt. Passt das?
-6. **Katalog:** 20 Stärken, 6 Schwächen, 16 Eigenschaften, höchstens 4 Stärken je Spieler. Zu viel, zu wenig, etwas vermisst?
-7. **Talent der eigenen Spieler:** Heute zeigen die Sterne das Talent genau. Vorschlag: In U2 bekommen sie eine feste Unschärfe von ±1 Stern, ab K16 hängt sie vom Co-Trainer ab. Einverstanden?
+**Entschieden am 7. November 2026:**
+- **Charakter:** Bei echten Spielern wird abgeleitet, was sich aus Fakten belegen lässt, sonst Zufall. Später erzeugte Spieler bekommen nur Zufall (5.9).
+- **Nationalität** wird festgelegt (Feld `nat`). Wann die Daten nachgetragen werden, ist egal.
+- **Positionen:** 14 feine Positionen in vier Gruppen, ergänzt um zentrales Mittelfeld, hängende Spitze und die Seiten (3.1a). Dazu der starke Fuß.
+- **„Trainingsweltmeister“** in der umgangssprachlichen Bedeutung.
+- **Katalog:** Die Größe bleibt. Ein Spieler zeigt nur 0–4 Merkmale und meist 0–2 Eigenschaften, das bleibt lesbar, und die Breite sorgt für Abwechslung. Das Merkmal „Spielmacher“ entfällt, weil es jetzt eine Position ist. Neu gilt: erst zeigen, wenn es wirkt (3.4, 3.5).
+
+**Noch offen:**
+
+1. **Monatliche Runden** (am 7.11. erklärt): Die Stärke ändert sich einmal im Monat um +1, 0 oder −1, statt jede Woche unsichtbar um Bruchteile. Dazu kommt der Monatsbericht. Einverstanden?
+2. **Talentsterne der eigenen Spieler** (am 7.11. erklärt): Die Sterne verraten heute das versteckte Talent exakt. Vorschlag: Sie dürfen um einen Stern danebenliegen, ab K16 je nach Co-Trainer mehr oder weniger. Einverstanden?
+3. **Datenquelle** für feine Positionen, Fuß, Kapitänsamt, Karten, Verletzungstage und Elfmeter. Die Wikipedia-Kader haben das nicht vollständig. Recherche, wenn die Datenpflege ansteht.
+4. **Fuß-Verteilung** für den Zufall (Startwert 75 % rechts, 20 % links, 5 % beide) mit echten Zahlen prüfen.
 
 ## Quellen
 
