@@ -358,3 +358,14 @@ Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `
 | X3 | **Startstärke des Jahrgangs** zunächst zu niedrig angesetzt (Talent −30 bis −40), passte nicht zur Wachstumsrate aus K03. Korrigiert auf Talent −15 bis −25. | ✅ |
 | X4 | **Leihmanager** als neue Rolle im Stab vorgeschlagen. | 📌 K16 in Welle 3 ergänzen |
 | X5 | **Belastung junger Spieler** ist ein weiterer Wert neben Frische, Saisonbelastung und Belastungssprung (K07). Vier Belastungsbegriffe können verwirren. | 📌 K35a: auf der Spielerkarte zu einer Anzeige „Belastung“ mit Unterpunkten bündeln |
+
+---
+
+## Y. Nachtrag zu K18 (7. November 2026)
+
+| # | Befund | Status |
+|---|---|---|
+| Y1 | **A1-Folge erledigt:** Scouting-Spannen über Stärke, Talentsterne, Merkmale und Eigenschaften statt „Technik 70–80“ (K03 §9). | ✅ K18 §3.2 |
+| Y2 | **C4:** Der Auslandspool aus K32 ist für Welle 3 vorgezogen (PLAN §2). K18 rechnet mit Grundkenntnis 5 für Auslandsspieler. | 📌 K32 |
+| Y3 | **Ehrlichkeit der Spannen** (K35a §10) gilt auch für Scouts: Der Fehler steckt in der Breite. | ✅ |
+| Y4 | **Computer-Vereine bewerten unscharf** und können sich irren. Das ist wichtig gegen die Community-Kritik an unfairer KI-Bewertung (Recherche 4) und muss in K31 so umgesetzt werden, dass die Fehler beidseitig sind. | 📌 K31 |
