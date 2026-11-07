@@ -429,3 +429,16 @@ Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `
 | AD2 | **Katalog:** etwa 100 Karten aus 20 Konzepten, dazu 8 Ideen aus PLAN §4. Drei davon gehören zu Konzepten der Welle 4 (K24, K26, K27). | ✅ Übersicht in K30 §8 |
 | AD3 | **Erlaubte Wirkungen** sind festgelegt. Ein Prüfskript soll jede Karte dagegen prüfen. | 📌 Umsetzung (U12) |
 | AD4 | **Lachender Dritter** als Beispiel einer Kette ausgearbeitet (K17, K22, K30). Braucht das Abwerben aus K20 (Welle 4) für die Variante „Treffen“. | 📌 bis K20 ohne Treffen-Option |
+
+---
+
+## AE. Nachtrag zu K32 und Abschluss Welle 3 (7. November 2026)
+
+| # | Befund | Status |
+|---|---|---|
+| AE1 | **C4, T4, Y2 aufgelöst:** Auslandspool mit Vereinsgruppen je Land, vereinfacht handelnd nach K31. | ✅ K32 §3.1 |
+| AE2 | **U4, Z5 aufgelöst:** Ehemalige Spieler werden Mitarbeiter oder Trainer, Trainerpool für Computer-Vereine. | ✅ K32 §3.3, §4.1 |
+| AE3 | **Gleichgewicht der Welt** wird nur über Tests kalibriert, nicht im Spiel nachgeregelt (passt zu K02 §5.3). | ✅ |
+| AE4 | **Echte Auslandsvereine oder Vereinsgruppen** ist eine Entscheidung mit viel Datenaufwand. | 🔶 deine Entscheidung (K32 §12, Frage 1) |
+| AE5 | **Neue Stammdaten-Dateien** aus den Konzepten: `daten/nationen.js` (K13, K32), `daten/ausland.js` (K32), `daten/karten.js` (K30), Ergänzungen in `daten/vereine.js` (Derbys K17, Profile K31) und `daten/spieler.js` (Nationalität, feine Position, Fuß, Fakten für Charakter, K03). | 📌 K33 bei der jeweiligen Umsetzung fortschreiben |
+| AE6 | **Übersicht:** Alle vorläufigen Entscheidungen stehen gesammelt in `konzepte/_offene-entscheidungen.md`. | ✅ |
