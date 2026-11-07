@@ -418,3 +418,14 @@ Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `
 | AC4 | **Profile als Stammdaten** brauchen eine Ergänzung in `daten/vereine.js` (je Verein ein bis zwei Profile, Lieblingsstil). | 📌 Umsetzung (U11) |
 | AC5 | **Neues Testskript** `tests/welt.js` für die Langzeit-Spannung. | 📌 Umsetzung |
 | AC6 | **Vorgabe „Note über 10 oder mehr Einsätze schlechter als die Schwelle“** ist im Rohmaterial ohne Zahl. Vorläufig Notenschnitt 4,5 über die letzten 10 Einsätze. | 🔶 bitte bestätigen |
+
+---
+
+## AD. Nachtrag zu K30 (7. November 2026)
+
+| # | Befund | Status |
+|---|---|---|
+| AD1 | **B1 umgesetzt:** Halte-Budget, Grenzen für Entscheidungskarten je Woche, Monat und Bereich, Regler Meldungsdichte. | ✅ K30 §5.1 |
+| AD2 | **Katalog:** etwa 100 Karten aus 20 Konzepten, dazu 8 Ideen aus PLAN §4. Drei davon gehören zu Konzepten der Welle 4 (K24, K26, K27). | ✅ Übersicht in K30 §8 |
+| AD3 | **Erlaubte Wirkungen** sind festgelegt. Ein Prüfskript soll jede Karte dagegen prüfen. | 📌 Umsetzung (U12) |
+| AD4 | **Lachender Dritter** als Beispiel einer Kette ausgearbeitet (K17, K22, K30). Braucht das Abwerben aus K20 (Welle 4) für die Variante „Treffen“. | 📌 bis K20 ohne Treffen-Option |
