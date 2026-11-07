@@ -334,3 +334,15 @@ Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `
 | V4 | **Ruf des Trainers** braucht K28. Bis dahin aus dem Ansehen des Vereins und der Zahl der Trainerjahre. | 📌 K28 |
 | V5 | **Kaderrollen** braucht auch K21 (Rolle im Vertrag versprochen). | 📌 K21 |
 | V6 | **Stimmung im Zustandsfaktor** (K03 §5.8) bleibt im Deckel 0,80–1,08 zusammen mit Form, Frische und anderen. | ✅ |
+
+---
+
+## W. Nachtrag zu K15 (7. November 2026)
+
+| # | Befund | Status |
+|---|---|---|
+| W1 | **D1 und D2 umgesetzt:** Glaubwürdigkeit gehört K15, K29 nutzt sie. Halbzeitansprache: Ablauf in K05, Wirkung in K15 §5.5. | ✅ |
+| W2 | **Q4 aufgelöst:** Reaktionstabelle nach Charakter für Zurufe, Lob, Kritik und Haltung (K15 §5.2). | ✅ |
+| W3 | **M5 aufgelöst:** „Spieler hadert mit Position“ wird zum Gespräch mit Umschulung oder Rückkehr auf seine Position. | ✅ |
+| W4 | **Versprechen „kein Konkurrent“** schränkt Transfers ein und muss in K19 geprüft werden, bevor ein Angebot rausgeht. | 📌 K19 |
+| W5 | **Gespräche mit dem Vorstand** sollen dieselbe Mechanik nutzen. | 📌 K28 |
