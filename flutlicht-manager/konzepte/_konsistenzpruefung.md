@@ -321,3 +321,16 @@ Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `
 | U4 | **Ex-Spieler als Mitarbeiter** brauchen Karriereenden aus K32. | 📌 K32 |
 | U5 | **Budget für den Stab** kommt mit K28 (Vorstand) und K23 (Finanzen). | 📌 |
 | U6 | **K03 abgestimmt:** Alle Fragen sind beantwortet, offen ist nur die Recherche nach einer Datenquelle. Status in PLAN und K03 auf „abgestimmt“ gesetzt. | ✅ |
+
+---
+
+## V. Nachtrag zu K14 (7. November 2026)
+
+| # | Befund | Status |
+|---|---|---|
+| V1 | **Zusammenhalt** (Mannschaftsgefüge aus Rohmaterial 4.4) ist ein eigener Teamwert. Er war in K11 als Platzhalter (Selbstvertrauen) und in K03 nicht enthalten. | ✅ K14 §5.6. K11 und K06 verweisen darauf. |
+| V2 | **Beziehungen:** K03 legt die Daten fest, K14 Entstehung und Wirkung (J5). | ✅ |
+| V3 | **Urlaubslänge** wirkt jetzt auch über die Stimmung (K12a, I8). | ✅ K14 §5.1 |
+| V4 | **Ruf des Trainers** braucht K28. Bis dahin aus dem Ansehen des Vereins und der Zahl der Trainerjahre. | 📌 K28 |
+| V5 | **Kaderrollen** braucht auch K21 (Rolle im Vertrag versprochen). | 📌 K21 |
+| V6 | **Stimmung im Zustandsfaktor** (K03 §5.8) bleibt im Deckel 0,80–1,08 zusammen mit Form, Frische und anderen. | ✅ |
