@@ -80,6 +80,7 @@ Hängt ab von: K33 (Daten), K01 (Kalender) · Wird gebraucht von: K04, K06, K07,
 | Integration | 0–100 % | 100 im Startkader, Neuzugänge nach 5.5 | wie gut er im Verein angekommen ist | `int` |
 | Deutsch | 0–100 | Deutsche 100, andere nach Herkunft | Sprache, nur für Integration und Beziehungen | `de` |
 | Spielpraxis | 0–100 % | 70 | Einsatzminuten der letzten Wochen | `sp` |
+| Saisonbelastung | 0–100, verdeckt | 30 | wie viel die Saison abverlangt hat, sinkt nur im Urlaub (K12a §3.1) | `sb` |
 | Lernziele | höchstens 2 Merkmale mit Fortschritt 0–100 % | keine | was er gerade lernt | `ls` |
 | Verletzung, Sperre | Tage bzw. Spiele | 0 | wie heute, K09 und K10 bauen aus | `inj`, `sus` |
 | Verlauf | Stärke und Form je Monat, 3 Saisons | leer | für Verläufe auf der Spielerkarte (K34, K35a) | `hist` |

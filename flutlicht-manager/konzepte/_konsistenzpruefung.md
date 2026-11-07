@@ -232,3 +232,15 @@ Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `
 | N4 | **Verletzungen** entstehen künftig aus Belastungssprung, Frische und Robustheit. Arten und Dauer fehlen noch. | 📌 K10 |
 | N5 | **Plan nach Abstand zum Spiel** braucht den Spielplan mit allen Wettbewerben, auch Pokal und Testspiele. | ✅ gibt es seit U1 (K01, `daten/spielplan-2026.js`). Testspiele kommen mit K11. |
 | N6 | **Anteil der Trainingsverletzungen** ist geschätzt (30–50 %). | 📌 vor der Kalibrierung recherchieren |
+
+---
+
+## O. Nachtrag zu K12a (7. November 2026)
+
+| # | Befund | Status |
+|---|---|---|
+| O1 | **I3 und I8 aufgelöst:** Die Urlaubslänge wirkt über Kondition und die neue Saisonbelastung, der Sommer bekommt weniger leere Halte. | ✅ K12a |
+| O2 | **7-Tage-Regel:** K12a schlägt vor, im Urlaub und Laufplan ohne Grenze bis zum nächsten Halt zu springen. Das berührt PLAN §2 („höchstens 7 Tage weit“). | 🔶 **deine Entscheidung** (K12a §12, Frage 1) |
+| O3 | **Saisonbelastung** ist ein neuer verdeckter Wert. In K03 §3.2 nachgetragen. | ✅ |
+| O4 | **Heutiger Urlaub** dauert vom Saisonende bis zum Trainingsauftakt (etwa fünf Wochen) und senkt die „Fitness“. K12a teilt in Urlaub (2–4 Wochen) und Laufplan. | 📌 Umsetzung mit U6 (Training, Sommer). `training.urlaubAbbau` und `urlaubMin` fallen dann weg. |
+| O5 | **Turnierteilnehmer** brauchen Länderspiele und Nominierungen. | 📌 K13 |
