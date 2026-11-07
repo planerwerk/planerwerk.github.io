@@ -346,3 +346,15 @@ Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `
 | W3 | **M5 aufgelöst:** „Spieler hadert mit Position“ wird zum Gespräch mit Umschulung oder Rückkehr auf seine Position. | ✅ |
 | W4 | **Versprechen „kein Konkurrent“** schränkt Transfers ein und muss in K19 geprüft werden, bevor ein Angebot rausgeht. | 📌 K19 |
 | W5 | **Gespräche mit dem Vorstand** sollen dieselbe Mechanik nutzen. | 📌 K28 |
+
+---
+
+## X. Nachtrag zu K08 (7. November 2026)
+
+| # | Befund | Status |
+|---|---|---|
+| X1 | **C1 erledigt:** K08 liegt in Welle 3 zusammen mit K14, K18, K19. Prägung, Verheizen und Leihe sind vollständig beschrieben. | ✅ |
+| X2 | **D4 eingehalten:** K08 für den eigenen Nachwuchs, K32 für neue Spieler in der übrigen Welt. | ✅ |
+| X3 | **Startstärke des Jahrgangs** zunächst zu niedrig angesetzt (Talent −30 bis −40), passte nicht zur Wachstumsrate aus K03. Korrigiert auf Talent −15 bis −25. | ✅ |
+| X4 | **Leihmanager** als neue Rolle im Stab vorgeschlagen. | 📌 K16 in Welle 3 ergänzen |
+| X5 | **Belastung junger Spieler** ist ein weiterer Wert neben Frische, Saisonbelastung und Belastungssprung (K07). Vier Belastungsbegriffe können verwirren. | 📌 K35a: auf der Spielerkarte zu einer Anzeige „Belastung“ mit Unterpunkten bündeln |
