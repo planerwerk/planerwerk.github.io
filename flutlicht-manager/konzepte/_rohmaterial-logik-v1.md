@@ -3,7 +3,7 @@
 > **⚠ Teilweise überholt** (siehe `_konsistenzpruefung.md`):
 > - Strafe fürs Abwerben (12.3, 12.6): ersetzt durch Beziehung und Klatsch (PLAN §2).
 > - „Weiter“-Varianten (3): ersetzt durch „Tag beenden“ mit höchstens 7 Tagen.
-> - Fähigkeiten (4.1) und Form-Skala (4.3): offen in K03.
+> - Spielermodell (4.1 bis 4.5) und Training je Fähigkeit (10): ersetzt durch `K03-spielermodell.md`. Die Voraussetzungen des Spielstil-Kreislaufs (11) und die Scouting-Spannen (4.5) stehen neu in K03 §9.
 > - Stufen L0–L11 (16): ersetzt durch Wellen und U-Schritte in PLAN.md.
 
 Stand: 5. November 2026. Dieser Plan beschreibt nur die Spiellogik. Oberfläche und Look kommen später.

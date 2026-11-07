@@ -1,6 +1,6 @@
 # Flutlicht Manager – Gesamtplan
 
-Stand: 7. November 2026 (U1 umgesetzt, dazu Sommer, Anstoßzeiten und 3. Liga). Das Projekt ist ein Nebenprojekt, das langsam und gründlich wachsen soll, ohne Schnellschüsse.
+Stand: 7. November 2026 (U1 umgesetzt, dazu Sommer, Anstoßzeiten und 3. Liga; Konzept K03 als Entwurf). Das Projekt ist ein Nebenprojekt, das langsam und gründlich wachsen soll, ohne Schnellschüsse.
 
 ## 1. Arbeitsweise
 
@@ -45,7 +45,7 @@ Spalte „Welle“: wann das Konzept spätestens fertig sein muss. Umfang des Ko
 |---|---|---|---|---|
 | K01 | Kalender und Tagesablauf (**Entwurf**, Grundgerüst umgesetzt: `konzepte/K01-kalender.md`) | Tagesansicht, „Tag beenden“, Ereignisarten, Fristen, Erinnerungsregeln, spielfreie Tage, Länderspielpausen, englische Wochen | M | 1 |
 | K02 | Zufall, Kalibrierung, Schwierigkeit | Zufall mit Seed, wie viel Zufall wo, Restwahrscheinlichkeit für Überraschungen, Zielwerte aus echter Statistik, Testskripte, Schwierigkeitsgrade ohne Schummeln | M | 1 |
-| K03 | Spielermodell | Fähigkeiten, Spezialitäten (gut/schlecht), versteckte Werte, Zustände (Frische, Kondition, Form, Selbstvertrauen, Stimmung, Integration, Spielpraxis), Alterskurven | L | 1 |
+| K03 | Spielermodell (**Entwurf**: `konzepte/K03-spielermodell.md`) | Fähigkeiten, Spezialitäten (gut/schlecht), versteckte Werte, Zustände (Frische, Kondition, Form, Selbstvertrauen, Stimmung, Integration, Spielpraxis), Alterskurven | L | 1 |
 | K04 | Match-Engine | Minutenablauf, Chancentypen, Teamwerte mit abnehmendem Ertrag, Deckel für Einzelspieler (Torwart-Problem), Tagesform, Spielverlauf-Effekte, Ermüdung, Zielverteilungen | L | 1 |
 | K33 | Daten, Spielstand, `regeln.js` (**Entwurf**, umgesetzt: `konzepte/K33-daten.md`) | Dateiaufbau, Stammdaten, Versionen des Spielstands, wie man an Werten schraubt, Daten-Update für neue Saisons | S | 1 |
 
@@ -137,6 +137,8 @@ Das sind Notizen, keine fertigen Konzepte.
 - **Länderspielpause:** Nationalspieler fehlen. Sie kommen müde zurück, manchmal verletzt, manchmal mit Selbstvertrauen. Die Pause ist Zeit für Testspiele und Training.
 
 ### K03 – Fähigkeiten (Recherche-Stand)
+
+> Ausgearbeitet in `konzepte/K03-spielermodell.md` (7.11.). Die Notizen hier bleiben als Herleitung stehen.
 
 **Quelle: GameStar 4/2000, Entwickler-Tipps zu Anstoss 3 von Gerald Köhler (von dir hochgeladen).** Daraus geht hervor:
 
@@ -249,8 +251,9 @@ Für BMH habe ich keine verlässliche Quelle gefunden. Anstoss 2022 nutzt laut e
 
 **U1 ist umgesetzt** (6. November 2026), dazu am 6./7. November nach deinen Entscheidungen: Der Sommer wird gespielt, die Spieltage folgen dem offiziellen Spielplan 2026/27 mit Anstoßzeiten, die 3. Liga ist eine echte Liga, und aus der Regionalliga steigen Vereine mit etwas Zufall auf (K32a). Alle Testskripte in `tests/` sind grün. Offene Fragen stehen am Ende von K01, K32a und K33.
 
-1. **Nächste Session:** Konzept **K03 (Spielermodell)** im Anstoss-Stil. Startsatz: „Projekt Flutlicht Manager im Ordner flutlicht-manager/. Lies PLAN.md und konzepte/_konsistenzpruefung.md. Schreib Konzept K03 nach konzepte/_vorlage.md.“
-2. **Danach:** U2 (Spielermodell), dann K04 und U3 (Engine). Damit ist Welle 1 fertig.
-3. Der Sommerteil von K12 ist als **K12a** in Welle 2 gerückt, zu Training (K07) und Testspielen/Trainingslager (K11).
+1. **K03 steht als Entwurf** (7.11.): `konzepte/K03-spielermodell.md`. Bitte die 7 offenen Fragen am Ende beantworten, dann ist es abgestimmt.
+2. **Nächste Session:** U2 (Spielermodell umsetzen) oder zuerst K04 (Engine), weil K04 die erwartete Note liefern muss, auf der die Form aufbaut. Vorschlag: K04 als Konzept vor U2, dann U2 und U3 zusammen planen. Startsatz: „Projekt Flutlicht Manager im Ordner flutlicht-manager/. Lies PLAN.md, konzepte/_konsistenzpruefung.md und konzepte/K03-spielermodell.md. Schreib Konzept K04 nach konzepte/_vorlage.md.“
+3. **Danach:** U2 (Spielermodell), U3 (Engine). Damit ist Welle 1 fertig.
+4. Der Sommerteil von K12 ist als **K12a** in Welle 2 gerückt, zu Training (K07) und Testspielen/Trainingslager (K11).
 
-K03 ist der Engpass: Engine, Taktik, Training und Scouting bauen darauf auf.
+Mit K03 ist der größte Engpass gelöst. Engine, Taktik, Training und Scouting haben jetzt eine Grundlage (K03 §9).
