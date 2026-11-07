@@ -219,3 +219,16 @@ Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `
 | M5 | **Spieler hadert mit Position** braucht Gespräche (K15) und Stimmung (K14), beides Welle 3. | 📌 Bis dahin nur als Info ohne Entscheidung. |
 | M6 | **Taktiktraining:** K06 rechnet bis K07 mit +5 Vertrautheit pro Woche aus dem normalen Training. | 📌 K07 ersetzt das durch Taktik-Einheiten. |
 | M7 | **KI reagiert auf den Spieler** (Kontern des Lieblingsstils) hängt an der Klugheitsstufe aus K02. | ✅ passt zu K02 §5.4 |
+
+---
+
+## N. Nachtrag zu K07 (7. November 2026)
+
+| # | Befund | Status |
+|---|---|---|
+| N1 | **Trainingsstufe** (locker, normal, hart) steckt heute in K03 (Entwicklung, Kondition, Frische) und K06 (Vertrautheit). K07 ersetzt sie durch Einheiten. | ✅ K07 §5.1–5.3 nennt die Ersatzformeln. K03 und K06 verweisen „bis K07“ auf die Stufe. |
+| N2 | **Vertrautheit:** K06 hatte mit „etwa +6 je Taktik-Einheit“ gerechnet, K07 legt +2/+3 fest. | ✅ K06 angepasst, Zeitbedarf einheitlich 6–8 Wochen |
+| N3 | **Erinnerung „kein Trainingsplan“** aus K01 (H9) ist mit Vorlagen nie fällig. | ✅ K07 ersetzt sie durch „Plan passt nicht“. K01 bei Umsetzung anpassen. |
+| N4 | **Verletzungen** entstehen künftig aus Belastungssprung, Frische und Robustheit. Arten und Dauer fehlen noch. | 📌 K10 |
+| N5 | **Plan nach Abstand zum Spiel** braucht den Spielplan mit allen Wettbewerben, auch Pokal und Testspiele. | ✅ gibt es seit U1 (K01, `daten/spielplan-2026.js`). Testspiele kommen mit K11. |
+| N6 | **Anteil der Trainingsverletzungen** ist geschätzt (30–50 %). | 📌 vor der Kalibrierung recherchieren |

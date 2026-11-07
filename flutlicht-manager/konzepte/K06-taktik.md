@@ -127,12 +127,12 @@ Merkmale zählen mit abnehmendem Ertrag (100 %, 60 %, 30 %). Fehlende Merkmale l
 
 ### 5.4 Vertrautheit
 
-- **Bis K07:** Der gewählte Stil und die gewählte Ordnung bekommen +5 pro Woche aus dem normalen Training. Mit K07 kommt das aus Taktik-Einheiten (etwa +6 je Einheit).
+- **Bis K07:** Der gewählte Stil und die gewählte Ordnung bekommen +5 pro Woche aus dem normalen Training. Mit K07 kommt das aus Taktik-Einheiten (+2 je normaler, +3 je harter Einheit, +1 aus der Spielvorbereitung, K07 §5.3).
 - **Spiele:** +3 je Pflichtspiel für den gespielten Stil und die gespielte Ordnung (anteilig nach Minuten).
 - **Vergessen:** −2 pro Woche für alles, was nicht genutzt wird, nicht unter 30.
 - **Neuzugänge:** Jeder neue Stammspieler senkt alle Werte um 4. Das passt zur Integration (K03 §5.5).
 - **Wirkung der Ordnung:** unter 60 Vertrautheit Teamwerte ×(0,97 + 0,03 × Vertrautheit/60). Eine neue Ordnung kostet anfangs bis zu 3 %.
-- **Zeitbedarf:** Von 30 auf 80 dauert es mit Training und Spielen etwa sechs Wochen. Das passt zum Rohmaterial („3–6 Wochen“).
+- **Zeitbedarf:** Von 30 auf 80 dauert es mit Training und Spielen sechs bis acht Wochen. Das liegt etwas über dem Rohmaterial („3–6 Wochen“), weil dort nur vom vollen Wirken die Rede ist, hier vom Weg von ganz unten.
 
 ### 5.5 Ausrichtung
 
@@ -231,7 +231,7 @@ Testskript: Teil von `tests/akzeptanz.js` (K02), mit gemeinsamen Zufallszahlen.
 | Keine Wunder-Ordnung | Keine Grundordnung bringt bei passendem Kader mehr als 3 Punkte gegenüber dem Schnitt der anderen. Das 4-2-2-2 wird ausdrücklich geprüft (Community-Kritik). |
 | Falsche Positionen kosten | Eine Elf mit lauter Spielern auf fremder Position verliert spürbar (mindestens 8 Punkte pro Saison) |
 | Spiel der Saison | Dauernd genutzt: über eine Saison weniger Punkte als nie genutzt. Gezielt drei- bis viermal genutzt: im Schnitt leicht positiv in diesen Spielen. |
-| Vertrautheit | Von 30 auf 80 in 5–7 Wochen bei normalem Training und wöchentlichen Spielen |
+| Vertrautheit | Von 30 auf 80 in 6–8 Wochen bei normalem Training und wöchentlichen Spielen (K07 §10) |
 | Seiten | Ein deutlich schwächerer Rechtsverteidiger zieht mindestens 55 % der gegnerischen Außenangriffe auf seine Seite |
 | Ballbesitz | Ballbesitz-Teams kommen über die Saison auf 55–65 %, Mauer-Teams auf 35–45 % |
 
