@@ -392,3 +392,16 @@ Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `
 | AA2 | **I4 teilweise:** Gehaltsforderungen hängen jetzt an der Liga des neuen Vereins (2. Liga ×0,45, 3. Liga ×0,2). Das entschärft die Verluste kleiner Drittligisten. | 📌 mit K23 kalibrieren, danach 3. Liga als Startverein freigeben (K32a Frage 1) |
 | AA3 | **Vorvertrag nach sechs Monaten** ist nicht am FIFA-Text geprüft, und die FIFA plant ab 2027 Änderungen. | 📌 vor der Umsetzung prüfen |
 | AA4 | **Felder:** `ct` und `sal` gehen in `vertrag` auf. Betrifft viele Stellen im Code (Gehälter, Marktwert, Ansichten). | 📌 Umsetzung mit U10 |
+
+---
+
+## AB. Nachtrag zu K17, K19, K22 (7. November 2026)
+
+| # | Befund | Status |
+|---|---|---|
+| AB1 | **H6 aufgelöst:** Transferfenster gelten mit K19, verhandeln geht immer, wirksam nur im Fenster, Vereinslose jederzeit. | ✅ K19 §5.6 |
+| AB2 | **W4 aufgelöst:** Das Versprechen „kein Konkurrent“ (K15) wird vor einem Angebot geprüft. | ✅ K19 §9 |
+| AB3 | **C2 schließt sich:** Testspiel-Zusagen nach Beziehung (K17 §5.2), wie in K11 vorgesehen. | ✅ |
+| AB4 | **Faire KI-Bewertung:** gleiche Formel beim Kaufen und Verkaufen (K19 §5.1), Ausreißer nur aus Schätzfehlern (K18). Passt zu Y4. | ✅, Umsetzung in K31 |
+| AB5 | **Derby-Paare** brauchen eine neue Liste in `daten/vereine.js` (K17). | 📌 Umsetzung |
+| AB6 | **A4 eingehalten:** keine festen Strafen fürs Abwerben, nur Beziehung und Klatsch (K17). Das Abwerben selbst folgt in K20. | ✅ |
