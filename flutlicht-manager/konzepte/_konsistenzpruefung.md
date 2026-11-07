@@ -173,3 +173,21 @@ Geprüft: `K03-spielermodell.md` gegen PLAN.md, Rohmaterial, Recherche, K01, K29
 | J16 | **Lernen im Spiel braucht Szenen aus der Engine:** Ecken, Flanken, Kopfballduelle, Freistöße, Elfmeter, Distanzschüsse, Großchancen, Paraden, Patzer, jeweils mit beteiligtem Spieler. Die heutige Engine kennt nur Tor, Chance, Karte und Verletzung. | 📌 **K04** muss Chancentypen mit Beteiligten liefern. **K06** führt Standardschützen ein. |
 | J17 | **Serienbonus und Rückkopplung:** Eine Siegesserie hebt die Form und damit das Wachstum. Ohne Bezug auf die Erwartung würden die Großen immer schneller wachsen. | ✅ K03 §5.2 misst Serien gegen die erwartete Punktzahl aus K04. Test „Serien der Großen“ in K03 §10. |
 | J18 | **Paraden und Noten für Torhüter:** Die Form des Torwarts soll an Paraden hängen. Heute bekommt der Torwart eine Note wie jeder andere, ohne Paraden. | 📌 K04: Torwart-Note aus Paraden und verhinderten Toren gegenüber der Erwartung. |
+
+---
+
+## K. Nachtrag zu K04 (7. November 2026)
+
+Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `js/engine.js`.
+
+| # | Befund | Status |
+|---|---|---|
+| K1 | **J1, J16, J18 aufgelöst:** K04 misst die Note gegen eine erwartete Note, liefert Szenen mit Beteiligten und gibt dem Torwart eine Note aus verhinderten Toren. | ✅ K04 §5.9, §3.4 |
+| K2 | **Torwart-Deckel:** Rohmaterial 5.1 nennt ±15 %, F nennt den Akzeptanztest +4–6 Punkte. K04 übernimmt ±15 % und legt den Test auf 0,08–0,25 Gegentore und +2 bis +6 Punkte. Die Untergrenze ist neu: Ein besserer Torwart muss auch etwas bringen. | ✅ K04 §10 |
+| K3 | **Heimvorteil:** Rohmaterial 5.4 erwartet 43–46 % Heimsiege. 2024/25 waren es 38,6 % (118 Heim-, 111 Auswärtssiege in 306 Spielen). Der Heimvorteil ist gesunken. | ✅ K04 setzt das Ziel auf 40–46 % und den Heimfaktor niedriger. Endwert in K02. |
+| K4 | **Positionen in der Engine:** K04 rechnet mit den 14 Positionen aus K03 über Anteile an sechs Teamwerten. Die Grundordnungen in `regeln.js` kennen nur AB, MF, ST. | 📌 K06 stellt die Grundordnungen um. Bis dahin Mischanteile (K04 §3.2). |
+| K5 | **Seiten:** K03 hat Fuß und Seitenstrafe, K04 nur einen gemeinsamen Bereich „außen“. | 🔶 vorläufig: gemeinsamer Bereich, K06 entscheidet über getrennte Seiten (K04 §12, Punkt 1) |
+| K6 | **Standardschützen** braucht K04 (Ecken, Freistöße, Elfmeter), K03 (Lernen im Spiel) und K06 (Einteilung). | 📌 K06 führt die Einteilung ein. Bis dahin wählt die Engine den Besten. |
+| K7 | **Erwartung vor dem Spiel** (Poisson-Näherung) wird von drei Stellen genutzt: Tauziehen (K35a), Serien (K03), Spielbericht (K04). | ✅ eine Funktion, eine Quelle (K04 §5.8) |
+| K8 | **Noch unbelegte Zielwerte:** Elfmeter, Fouls, Rote Karten, Torschüsse pro Spiel, Anteil der Tore in der zweiten Halbzeit, Torschnitt 2. und 3. Liga. | 📌 K02 recherchiert vor der Kalibrierung. |
+| K9 | **Rote Karte und Sportgericht:** K04 erzeugt Fouls mit Ort und Schwere, die Kartenregeln und Sperren bleiben bis K09 wie heute (Sperre über alle Wettbewerbe, H3). | 📌 K09 |
