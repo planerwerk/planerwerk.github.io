@@ -283,3 +283,15 @@ Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `
 | R4 | **D5 eingehalten:** Verfahren wegen Äußerungen liegen bei K09, der Inhalt bei K29. | ✅ |
 | R5 | **Halte-Budget:** Einspruch-Entscheidungen sind Fristen, etwa eine alle zwei Monate pro Team. | ✅ passt zu PLAN §2 |
 | R6 | **Noch zu prüfen:** Liga-Rot im Pokal, Karten in der Relegation, aktuelle Trainer-Kartenregel, echte Geldstrafen. | 📌 vor der Umsetzung (U7) |
+
+---
+
+## S. Nachtrag zu K11 (7. November 2026)
+
+| # | Befund | Status |
+|---|---|---|
+| S1 | **C2 eingehalten:** Zusagen in Welle 2 nur nach Niveau, Kalender, Region und Phase. K17 ergänzt Beziehungen. | ✅ |
+| S2 | **I3 weiter aufgelöst:** Testspiele und Lager füllen den Sommer, ohne viele Halte (Testspiele standardmäßig ohne Halt). | ✅ |
+| S3 | **Erinnerung „spielfreie Woche ohne Testspiel“** (H9) wird mit K11 aktiv. | 📌 K01 bei Umsetzung |
+| S4 | **Zusammenhalt und Zimmerbelegung** brauchen K14. Bis dahin wirken nur Selbstvertrauen und Deutsch. | 📌 K14 |
+| S5 | **Geldbeträge** sind Spielwerte. | 📌 K23 kalibriert |
