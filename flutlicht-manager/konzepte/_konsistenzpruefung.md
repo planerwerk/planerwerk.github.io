@@ -381,3 +381,14 @@ Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `
 | Z3 | **D3 eingehalten:** K28 führt das Zielgespräch, K12b legt nur den Termin fest. | ✅ |
 | Z4 | **L3 passt:** Ultimatum-Grenze und Schonfrist kommen aus der Schwierigkeitsstufe (K02). | ✅ |
 | Z5 | **Trainerpool** für Computer-Vereine braucht K31 und K32. | 📌 |
+
+---
+
+## AA. Nachtrag zu K21 (7. November 2026)
+
+| # | Befund | Status |
+|---|---|---|
+| AA1 | **V5 aufgelöst:** versprochene Rolle als Vertragsklausel, gekoppelt an K14 und K15. | ✅ |
+| AA2 | **I4 teilweise:** Gehaltsforderungen hängen jetzt an der Liga des neuen Vereins (2. Liga ×0,45, 3. Liga ×0,2). Das entschärft die Verluste kleiner Drittligisten. | 📌 mit K23 kalibrieren, danach 3. Liga als Startverein freigeben (K32a Frage 1) |
+| AA3 | **Vorvertrag nach sechs Monaten** ist nicht am FIFA-Text geprüft, und die FIFA plant ab 2027 Änderungen. | 📌 vor der Umsetzung prüfen |
+| AA4 | **Felder:** `ct` und `sal` gehen in `vertrag` auf. Betrifft viele Stellen im Code (Gehälter, Marktwert, Ansichten). | 📌 Umsetzung mit U10 |
