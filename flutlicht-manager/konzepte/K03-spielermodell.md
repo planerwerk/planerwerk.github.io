@@ -1,6 +1,6 @@
 # K03 – Spielermodell
 
-Status: **Entwurf** (7. November 2026). Grundlage sind deine Entscheidungen vom 5.11.: Anstoss-Stil, Stärke 1–99, Form 0–20 mit Mitte 10. Deine Antworten vom 7.11. sind eingearbeitet (Abschnitt 12).
+Status: **abgestimmt** (7. November 2026, alle Fragen beantwortet). Grundlage sind deine Entscheidungen vom 5.11.: Anstoss-Stil, Stärke 1–99, Form 0–20 mit Mitte 10. Deine Antworten vom 7.11. sind eingearbeitet (Abschnitt 12).
 Hängt ab von: K33 (Daten), K01 (Kalender) · Wird gebraucht von: K04, K06, K07, K08, K10, K12a, K14, K15, K16, K18, K19, K21, K27, K29, K31, K32, K34, K35a.
 
 ## 1. Ziel und Spielgefühl

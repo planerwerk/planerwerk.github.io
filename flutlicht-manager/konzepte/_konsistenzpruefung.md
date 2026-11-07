@@ -308,3 +308,16 @@ Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `
 | T4 | **Nominierungen ausländischer Spieler** brauchen den Auslandspool (K32), sonst werden kleine Nationen nur aus unserer Welt besetzt. | 📌 K32 in Welle 3 |
 | T5 | **Supercup** ist neu. Termin vor dem 1. Spieltag kollidiert nicht mit der 1. Pokalrunde (22.8.2026, 1. Spieltag 28.8.2026), wenn er am 22. oder 23.8. nicht liegt. | 📌 bei Umsetzung Termin prüfen |
 | T6 | **Spielverlegung** wird eine neue Frist-Entscheidung. Selten, belastet das Halte-Budget kaum. | ✅ |
+
+---
+
+## U. Nachtrag zu K16 (7. November 2026)
+
+| # | Befund | Status |
+|---|---|---|
+| U1 | **B2 umgesetzt:** Automatik und Delegieren je Bereich über eine Person im Stab, Qualität und Haltung bestimmen das Ergebnis. | ✅ K16 §3.3, §5.1 |
+| U2 | **H8 aufgelöst:** Breite der Vorhersage-Bänder hängt an der Qualität des zuständigen Mitarbeiters, zusätzlich an der Schwierigkeit (K02). | ✅ K16 §5.2 |
+| U3 | **Verweise geprüft:** K07 (Faktor 0,85–1,15, Einzelplätze 5 bei Qualität 10, Athletiktrainer bis −20 %), K10 (Physiotherapeut bis −20 %, mit Reha-Zentrum höchstens −25 %), K03 (Talentsterne), K05 (Halbzeit-Einschätzung) passen zu den Formeln in K16 §5.3. | ✅ |
+| U4 | **Ex-Spieler als Mitarbeiter** brauchen Karriereenden aus K32. | 📌 K32 |
+| U5 | **Budget für den Stab** kommt mit K28 (Vorstand) und K23 (Finanzen). | 📌 |
+| U6 | **K03 abgestimmt:** Alle Fragen sind beantwortet, offen ist nur die Recherche nach einer Datenquelle. Status in PLAN und K03 auf „abgestimmt“ gesetzt. | ✅ |
