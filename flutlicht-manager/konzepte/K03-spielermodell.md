@@ -6,7 +6,7 @@ Hängt ab von: K33 (Daten), K01 (Kalender) · Wird gebraucht von: K04, K06, K07,
 ## 1. Ziel und Spielgefühl
 
 - **Auf einen Blick lesbar:** Eine Zahl sagt, wie gut ein Spieler ist (Stärke). Ein paar Wörter sagen, was ihn besonders macht (Merkmale) und wie er tickt (Eigenschaften).
-- **Geschichten statt Tabellen:** Ein Spieler lernt in einer Halbserie das Flanken. Der Altstar ist plötzlich nicht mehr schnell. Der Hitzkopf fliegt im Derby vom Platz. Das 19-jährige Talent springt in einem Monat zwei Punkte nach oben.
+- **Geschichten statt Tabellen:** Ein Spieler lernt in einer Halbserie das Flanken. Der Altstar ist plötzlich nicht mehr schnell. Der Hitzkopf fliegt im Derby vom Platz. Der Stürmer trifft vier Spiele hintereinander, ist in Topform und legt in wenigen Wochen spürbar zu. Nach den Ecken desselben Spielers fallen immer wieder Tore, bis er als Flankengeber gilt.
 - **Entscheidungen mit Preis:** Spielen lassen oder schonen? Langer Urlaub oder Kondition? Das Talent jetzt bringen oder verleihen? Welches Merkmal lernt wer?
 - **Kein Wert entscheidet allein.** Die Stärke ist der Hauptwert. Zustände wie Form und Frische verschieben die Leistung nur in einem engen, gedeckelten Rahmen.
 
@@ -17,7 +17,8 @@ Hängt ab von: K33 (Daten), K01 (Kalender) · Wird gebraucht von: K04, K06, K07,
 - **Hattrick:** Selbstvertrauen wirkt auf den Abschluss. Das übernehmen wir.
 - **Bewusst anders:**
   - Keine 30 Einzelwerte wie im FM. Merkmale wirken gezielt in bestimmten Spielsituationen und ersetzen die Zahlenwerte (Konsistenzprüfung A1).
-  - Auf- und Abwertungsrunden **monatlich** mit kleineren Chancen statt zweimal pro Saison. Das gibt mehr Rückmeldung und weniger Glücksspiel.
+  - Keine Auf- und Abwertungsrunden wie bei Anstoss, sondern **kleine Schritte an jedem Spieltag** (entschieden 7.11.). Die Anstoss-Idee bleibt: Die Form bestimmt das Tempo.
+  - Merkmale lernt man nicht nur im Training, sondern auch **im Spiel**: Was in seinen Szenen klappt, zahlt auf eine Stärke ein, was schiefgeht, auf eine Schwäche.
   - Eigenschaften entstehen aus verdeckten Werten. Es gibt also eine einzige Quelle und keine zwei Systeme nebeneinander.
   - Eigene Merkmal- und Eigenschaftslisten, keine Kopie der Anstoss-Listen.
 
@@ -30,11 +31,11 @@ Hängt ab von: K33 (Daten), K01 (Kalender) · Wird gebraucht von: K04, K06, K07,
 | Position | 14 Positionen, siehe 3.1a | ja | `spieler.js` (feine Position neu) | Umschulung (K07) | `pos` |
 | Positionsgruppe | TW, AB, MF, ST | ja | aus der Position | mit der Position | berechnet |
 | Nebenpositionen | bis zu 2, je mit Eignung 85–95 % | ja | Daten, sonst Zufall | Umschulung (K07) | `pos2` |
-| Starker Fuß | rechts, links, beide | ja | Daten, sonst Zufall | Merkmal „beidfüßig“ | `fuss` |
+| Starker Fuß | rechts, links | ja | Daten, sonst Zufall (77 % rechts) | nie. „beidfüßig“ ist ein Merkmal. | `fuss` |
 | Alter | Jahre | ja | `spieler.js` (am 1.7.) | am 1. Juli +1 | `age` |
 | Nationalität | Länderkürzel | ja | `spieler.js` (neu, entschieden 7.11.) | nie | `nat` |
-| **Stärke** | 1–99, ganzzahlig | eigene genau, fremde als Spanne (K18) | `spieler.js` | Auf- und Abwertungsrunden (5.1) | `str` |
-| **Talent** | 1–99, Obergrenze der Stärke | nein, nur als Sterne-Schätzung | wie heute aus Alter und Stärke | nur durch Prägung (K08) | `pot` |
+| **Stärke** | 1–99, intern mit Nachkommastellen | eigene als ganze Zahl mit Balken zum nächsten Punkt, fremde als Spanne (K18) | `spieler.js` | kleine Schritte an jedem Spieltag (5.1) | `str` |
+| **Talent** | 1–99, Obergrenze der Stärke | nein, nur als Sterne-Schätzung, die um einen Stern danebenliegen kann (entschieden 7.11.) | wie heute aus Alter und Stärke | nur durch Prägung (K08) | `pot` |
 | Merkmale | Katalog 3.4 | ja, fremde nur gescoutet | Zufall nach Position und Stärke | Lernen, Altersverlust (5.6) | `mk` |
 | Persönlichkeit | 8 Werte, je 1–20 | nein, nur über Eigenschaften | Zufall je Karriere | selten (5.7) | `ch` |
 | Eigenschaften | Katalog 3.5 | ja, sobald bekannt | aus der Persönlichkeit | wenn sich die Persönlichkeit ändert | berechnet, bekannte in `ek` |
@@ -122,7 +123,7 @@ Ein Merkmal ist eine **Stärke** oder eine **Schwäche** in bestimmten Spielsitu
 | Weitschütze | MF, ST | mittel | Chancen aus der Distanz, gegen Mauern | – |
 | Freistoßspezialist | alle Feldspieler | mittel | direkte Freistöße | – |
 | Elfmeterschütze | alle Feldspieler | leicht | Elfmeter, Elfmeterschießen | – |
-| beidfüßig | alle Feldspieler | schwer, lernbar bis 25 | keine Strafe auf der falschen Seite (3.1a), etwas besserer Abschluss und Flanken. Setzt den Fuß auf „beide“. | – |
+| beidfüßig | alle Feldspieler | schwer, lernbar bis 25 | keine Strafe auf der falschen Seite (3.1a), etwas besserer Abschluss und Flanken | – |
 | vielseitig | alle Feldspieler | mittel | Nebenpositionen und verwandte Positionen +5, höchstens 95 % | – |
 | Joker | MF, ST | mittel | stärker in den ersten 20 Minuten nach der Einwechslung, Bankplatz kostet weniger Stimmung (K14) | – |
 
@@ -192,9 +193,9 @@ Auch hier gilt „erst zeigen, wenn es wirkt“. Mit U2 kommen Vorbildprofi, Par
 | Wann | Was passiert | Halt? |
 |---|---|---|
 | **täglich** (auch an übersprungenen Tagen) | Frische: Erholung minus Trainingslast. Spielpraxis zerfällt. Ausfalltage zählen herunter. Im Urlaub sinkt die Kondition. | nein |
-| **nach jedem Spiel** | Frische sinkt nach Minuten und Kondition. Spielpraxis steigt. Die Note verschiebt die Form. Tore und Patzer verschieben das Selbstvertrauen. | nein |
-| **wöchentlich** (Montag, `kalender.wochenTag`) | Lernfortschritt. Kondition wandert zum Trainingsziel. Form und Selbstvertrauen ziehen leicht zur Mitte. Integration und Deutsch. Stimmung (K14). Formwert für den Monatsschnitt merken. | nein |
-| **monatlich** (am 1., August bis Juni = 11 Runden) | Auf- und Abwertungsrunde (5.1). Altersverlust von Merkmalen. Eigenschaften werden entdeckt. Verlauf speichern. **Monatsbericht des Co-Trainers** im Posteingang: wer besser, wer schlechter wurde, wer ein Merkmal gelernt hat. | nein, nur Info |
+| **nach jedem Spiel** | Frische sinkt nach Minuten und Kondition. Spielpraxis steigt. Die Note verschiebt die Form, Serien der Mannschaft auch. Tore und Patzer verschieben das Selbstvertrauen. Szenen zahlen auf Merkmale ein (5.6). Danach wird die **Entwicklung der Stärke** für den ganzen Kader verbucht (5.1). | nein |
+| **wöchentlich** (Montag, `kalender.wochenTag`) | Lernfortschritt. Kondition wandert zum Trainingsziel. Form und Selbstvertrauen ziehen leicht zur Mitte. Integration und Deutsch. Stimmung (K14). In Wochen ohne Pflichtspiel: Entwicklung verbuchen. Altersverlust von Merkmalen. Eigenschaften werden entdeckt. **Wochenbericht des Co-Trainers** im Posteingang: wer einen ganzen Punkt gewonnen oder verloren hat, wer ein Merkmal gelernt hat, wo sich eine Schwäche zeigt. | nein, nur Info |
+| **monatlich** | Verlauf speichern (eigene Spieler wöchentlich). | nein |
 | **jährlich** (1. Juli) | Alter +1. Persönlichkeit reift (5.7). Eigenschaften neu berechnen. Karriereende (K32), Nachwuchs (K08). | nein |
 | Merkmal gelernt | Nachricht. Erinnerung „Lernplatz frei“ vor „Tag beenden“, abschaltbar (K01). | Erinnerung |
 
@@ -204,40 +205,49 @@ K03 erzeugt also **keine eigenen Halte**. Das schont das Budget von 2–4 Stopps
 
 Alle Zahlen sind Startwerte für `regeln.js`. Kalibriert wird nach Abschnitt 10.
 
-### 5.1 Auf- und Abwertungsrunde (monatlich)
+### 5.1 Entwicklung der Stärke (an jedem Spieltag, entschieden 7.11.)
 
-Für jeden Spieler werden zwei Chancen berechnet und **einmal gewürfelt**: unter `pAuf` → Stärke +1, über `1 − pAb` → Stärke −1, sonst bleibt sie.
+Die Stärke hat intern Nachkommastellen und wächst oder schrumpft **in kleinen Schritten an jedem Spieltag**. Angezeigt wird die ganze Zahl, dazu ein Balken zum nächsten Punkt und ein Trendpfeil.
+
+- **Wann verbucht wird:** nach jedem Pflichtspiel seines Vereins, für den ganzen Kader, ob einer gespielt hat oder nicht. Berechnet wird für die Tage seit der letzten Verbuchung. In Zeiten ohne Pflichtspiel (Vorbereitung, Winter, Länderspielpause) wird jeden Montag verbucht. Im Urlaub ruht die Entwicklung.
+- Weil die Tage zählen und nicht die Spiele, wächst ein Spieler nicht schneller, nur weil sein Verein mehr Spiele hat (Konsistenzprüfung H4). Mehr Spiele wirken über Spielpraxis und Form.
 
 ```
-pAuf = Basis_auf(Alter) × Talentrest × Form_auf × Praxis_auf × Training × Profi_auf
-pAb  = Basis_ab(Positionsalter) × Form_ab × Praxis_ab × Profi_ab × Positionsfaktor
-Deckel: pAuf ≤ 0,70 · pAb ≤ 0,60 · pAuf + pAb ≤ 0,90
+Schritt = ( Wachstum(Alter)        × Talentrest × Form_auf × Praxis_auf × Training × Profi_auf
+          − Abbau(Positionsalter)  × Form_ab × Praxis_ab × Profi_ab × Positionsfaktor )
+          × Tage / 320  +  Zufall
 ```
 
-**Alterstabelle** (neutrale Bedingungen, 11 Runden pro Saison):
+320 sind die Entwicklungstage einer Saison (365 Tage ohne etwa sechs Wochen Urlaub).
 
-| Alter | Basis_auf | Basis_ab | erwartet pro Saison |
+**Alterstabelle** (pro Saison, bei Form 10 und neutralen Bedingungen):
+
+| Alter | Wachstum | Abbau | netto pro Saison |
 |---|---|---|---|
-| bis 19 | 0,45 | 0,07 | +4 |
-| 20–22 | 0,32 | 0,08 | +2,5 |
-| 23–25 | 0,18 | 0,09 | +1 |
-| 26–28 | 0,10 | 0,10 | ±0 |
-| 29–30 | 0,07 | 0,12 | −0,5 |
-| 31–32 | 0,05 | 0,18 | −1,5 |
-| 33–34 | 0,04 | 0,26 | −2,5 |
-| ab 35 | 0,03 | 0,34 | −3,5 |
+| bis 19 | 4,9 | 0,7 | +4,2 |
+| 20–22 | 3,5 | 0,9 | +2,6 |
+| 23–25 | 2,0 | 1,0 | +1,0 |
+| 26–28 | 1,1 | 1,1 | ±0 |
+| 29–30 | 0,8 | 1,3 | −0,5 |
+| 31–32 | 0,6 | 2,0 | −1,4 |
+| 33–34 | 0,4 | 2,9 | −2,5 |
+| ab 35 | 0,3 | 3,7 | −3,4 |
 
-- **Positionsalter** (nur für Basis_ab): Alter − 3 bei Torhütern, − 1 bei Abwehrspielern, ± 0 im Mittelfeld, + 1 im Sturm. **Positionsfaktor** auf pAb: TW 0,7, AB 0,85, MF und ST 1. Das folgt den Studien: Stürmer erreichen den Höhepunkt früh und bauen am schnellsten ab, Torhüter und Verteidiger spät und langsam (Quellen).
-- **Talentrest:** `min(1, (Talent − Stärke) / 6)`. Am Talent ist Schluss: pAuf = 0. Nur eine Prägung (K08) hebt das Talent.
-- **Form** (Monatsschnitt der Wochenwerte, Mitte 10): `Form_auf = 1,15^(Ø − 10)`, `Form_ab = 1,15^(10 − Ø)`. Ø 15 verdoppelt die Chance auf +1, Ø 5 die auf −1. Das ist die Anstoss-Regel „Durchschnittsform zählt am meisten“.
-- **Spielpraxis** (Anteil der möglichen Pflichtspielminuten im Monat): ab 60 % → Praxis_auf 1,2. Unter 20 % → Praxis_auf 0,7, ab 29 Jahren zusätzlich Praxis_ab 1,3. Bis 18 Jahre zählt die Praxis nur halb, denn junge Spieler entwickeln sich zuerst im Training (Faustregel aus der FM-Community).
+- **Form** (der aktuelle Wert, Mitte 10): `Form_auf = 1,2^(Form − 10)`, `Form_ab = 1,2^(10 − Form)`. Bei Form 15 wächst ein Spieler 2,5-mal so schnell und baut nur 0,4-mal so schnell ab. Bei Form 5 ist es umgekehrt. Das ist die Anstoss-Regel „die Form zählt am meisten“, nur in kleinen Schritten.
+- **Beispiel:** Ein 22-jähriger Stürmer trifft in vier Spielen hintereinander und steht danach bei Form 15. Statt etwa 0,06 legt er jetzt etwa 0,18 Punkte pro Woche zu. Hält die Form zwei Monate, ist das ein ganzer Punkt mehr, als er sonst gewonnen hätte. Läuft es umgekehrt, baut er in dieser Zeit ab.
+- **Positionsalter** (nur für den Abbau): Alter − 3 bei Torhütern, − 1 bei Abwehrspielern, ± 0 im Mittelfeld, + 1 im Sturm. **Positionsfaktor** auf den Abbau: TW 0,7, AB 0,85, MF und ST 1. Das folgt den Studien: Stürmer erreichen den Höhepunkt früh und bauen am schnellsten ab, Torhüter und Verteidiger spät und langsam (Quellen).
+- **Talentrest:** `min(1, (Talent − Stärke) / 6)`. Am Talent ist Schluss, das Wachstum ist dann 0. Nur eine Prägung (K08) hebt das Talent.
+- **Spielpraxis** (Wert aus 5.4): ab 60 % → Praxis_auf 1,2. Unter 20 % → Praxis_auf 0,7, ab 29 Jahren zusätzlich Praxis_ab 1,3. Bis 18 Jahre zählt die Praxis nur halb, denn junge Spieler entwickeln sich zuerst im Training (Faustregel aus der FM-Community).
 - **Training** bis K07: locker 0,8, normal 1, hart 1,2.
 - **Professionalität:** `Profi_auf = 0,8 + 0,02 × P`, `Profi_ab = 1,2 − 0,02 × P` (P = 1–20).
-- **Junge Spieler schwanken stärker:** Bis 21 wird aus +1 mit 15 % ein +2 und aus −1 mit 15 % ein −2 (Ausbau in K08).
+- **Zufall:** je Verbuchung ±0,05 × Tage/7, bis 21 Jahre doppelt so viel. Große Sprünge kommen nicht aus dem Würfel, sondern aus Prägungsereignissen (K08).
+- **Meldung:** Der Wochenbericht nennt nur, wer am Montag eine andere ganze Zahl hat als am Montag davor. So flackert nichts, wenn der Wert um eine Grenze pendelt.
 
 ### 5.2 Form
 
 - **Nach jedem Spiel:** `Form += 1,5 × (erwartete Note − Note)`, begrenzt auf 0–20. Die **erwartete Note** hängt von Stärke, Position und Gegner ab und kommt aus K04.
+- **Was die Form bewegt:** alles, was in die Note eingeht, gemessen an der Erwartung: Tore und Vorlagen, beim Torwart Paraden und Spiele zu null, gewonnene Zweikämpfe, Patzer, Platzverweise. Wer vier Spiele hintereinander trifft, steht danach bei Form 14–16.
+- **Serien der Mannschaft:** Holt die Mannschaft in den letzten fünf Pflichtspielen mindestens 4 Punkte mehr als erwartet, bekommt jeder, der im Spiel stand, +0,5 Form. Bei 4 Punkten weniger als erwartet −0,5. Die Erwartung kommt aus dem Stärkeverhältnis vor dem Spiel (K04). Eine Siegesserie des Favoriten bringt deshalb wenig, die eines Außenseiters viel. So wachsen die Großen nicht automatisch immer schneller.
 - **Wöchentlich:** Form wandert um 10 % zur Mitte 10.
 - **Wirkung im Spiel:** ±0,5 % je Punkt Abstand von 10, also höchstens ±5 %.
 - **Wichtig gegen Rückkopplung** (Rohmaterial 1.1): Die Note misst die Leistung **gegenüber der Erwartung**. Heute bekommen starke Spieler allein wegen ihrer Stärke bessere Noten und damit bessere Form. Das muss K04 ändern (Konsistenzprüfung J1).
@@ -278,7 +288,30 @@ Deckel: pAuf ≤ 0,70 · pAb ≤ 0,60 · pAuf + pAb ≤ 0,90
   - × Zufall 0,7–1,3 pro Woche
   - **Bremsen:** verletzt, im Urlaub oder in einer Woche ohne Training 0. Zwei Lernziele je 0,5. Frische unter 70 % 0,8. Stimmung unter 30 0,7 (K14).
 - **Voraussetzungen:** passende Position, Altersgrenze („schnell“ bis 23, „beidfüßig“ bis 25), höchstens 4 Stärken.
-- **Altersverlust:** Ab Positionsalter 31 verliert ein Spieler „schnell“ oder „ausdauernd“ in jeder Monatsrunde mit 2,5 % (Professionalität mindert), etwa jeder Vierte pro Saison. Ab 33 kann „langsam“ mit 2 % pro Runde dazukommen. Tempo geht zuerst (Rohmaterial 10).
+- **Altersverlust:** Ab Positionsalter 31 verliert ein Spieler „schnell“ oder „ausdauernd“ pro Woche mit 0,6 % (Professionalität mindert), etwa jeder Vierte pro Saison. Ab 33 kann „langsam“ mit 0,5 % pro Woche dazukommen. Tempo geht zuerst (Rohmaterial 10).
+
+**Lernen im Spiel** (entschieden 7.11.): Szenen im Spiel zahlen auf Merkmale ein, auch ohne Lernziel. Was klappt, bringt Fortschritt zur Stärke, was schiefgeht, Fortschritt zur passenden Schwäche. Die Szenen liefert die Engine (K04).
+
+| Szene | Stärke ↔ Schwäche | klappt | geht schief |
+|---|---|---|---|
+| Ecke oder Flanke führt zum Tor | Flankengeber | +8 % | – |
+| Kopfballtor, gewonnenes Kopfballduell im Strafraum | kopfballstark ↔ kopfballschwach | +6 % bzw. +1 % | verlorenes Kopfballduell vor einem Gegentor: Schwäche +4 % |
+| direktes Freistoßtor | Freistoßspezialist | +15 % | – |
+| Elfmeter | Elfmeterschütze | verwandelt +6 % | verschossen: −10 % auf den Fortschritt |
+| gehaltener Elfmeter | Elfmetertöter | +20 % | – |
+| Tor aus der Distanz | Weitschütze | +10 % | – |
+| Großchance | Torjäger ↔ abschlussschwach | Tor +3 % | vergeben: Schwäche +2 % |
+| Dribbling führt zur Chance | Dribbler | +3 % | – |
+| Flanke oder Ecke (Torwart) | Strafraumbeherrscher ↔ Fliegenfänger | abgefangen +3 % | Fehlgriff vor einem Gegentor: Schwäche +10 % |
+| Parade aus kurzer Distanz | Reflexe | +2 % | – |
+| Patzer vor einem Gegentor | ↔ unkonzentriert | – | Schwäche +8 % |
+| Foul mit Karte | ↔ ungestüm | – | Gelb +3 %, Rot +10 % |
+
+- Bei 100 % ist die Stärke **gelernt** oder die Schwäche **entstanden**. Beides steht im Wochenbericht.
+- **Höchstens 25 % pro Spiel** je Merkmal. Ein einzelnes Spiel macht also keinen Spezialisten. Training und Spiel zählen zusammen.
+- Lernen im Spiel hängt **nicht** vom Alter ab, denn Erfahrung sammeln auch Ältere. Die Altersgrenzen („schnell“ bis 23) und die Höchstzahl von 4 Stärken gelten trotzdem.
+- **Verlernen durch Misserfolg:** Jede gelernte Stärke hat ein Fehlerkonto, das bei 100 beginnt. Ein Fehlschlag in ihrer Szene kostet 25, ein Erfolg bringt 10, jede Woche kommen 2 dazu. Bei 0 ist die Stärke weg. Ein Elfmeterschütze verliert sein Merkmal also etwa nach vier Fehlschüssen ohne Treffer dazwischen.
+- **Wer die Szenen bekommt, entscheidest du:** Wer bei dir Ecken, Freistöße und Elfmeter schießt (Standardschützen, K06), sammelt dort die Erfahrung. Damit wird die Wahl der Schützen eine echte Entscheidung.
 - **Wirkung in der Engine** (Vorgabe für K04): Ein Merkmal verbessert seine Situation um 10–25 %. Über eine Saison soll es einem Stammspieler etwa so viel bringen wie 2–4 Stärkepunkte, aber nur in seinen Szenen. Hat eine Reihe dasselbe Merkmal mehrfach, zählt der zweite Spieler 60 %, der dritte 30 % (abnehmender Ertrag).
 
 ### 5.7 Persönlichkeit im Laufe der Zeit
@@ -309,7 +342,7 @@ Form, Frische, Selbstvertrauen, Spielpraxis, Integration und Stimmung wirken zus
 
 - Abgeleitet wird nicht im Spiel, sondern einmal per Skript aus zusätzlichen Spalten in `spieler.js`. Das Spiel liest nur das Ergebnis. Bearbeiten kannst du die Werte dort wie die Stärke.
 - Abgeleitete Werte bekommen ±2 Zufall, damit nicht jede Karriere gleich beginnt.
-- **Merkmale per Zufall:** im Schnitt 0,5 Stärken bei Stärke 55, 1 bei 65, 1,6 bei 75, 2,3 bei 85 und 3 ab 90, abgeleitete mitgezählt. Gewichtet nach Position, zum Beispiel Mittelstürmer oft Torjäger, Torhüter oft Reflexe. Schwächen im Schnitt 0,6 bei Stärke 60 und 0,3 bei 85.
+- **Merkmale per Zufall:** im Schnitt 0,5 Stärken bei Stärke 55, 1 bei 65, 1,6 bei 75, 2,3 bei 85 und 3 ab 90, abgeleitete mitgezählt. „beidfüßig“ bekommen etwa 10 % der Feldspieler (Studien nennen bis zu 18 % in den Topligen, zu kalibrieren). Gewichtet nach Position, zum Beispiel Mittelstürmer oft Torjäger, Torhüter oft Reflexe. Schwächen im Schnitt 0,6 bei Stärke 60 und 0,3 bei 85.
 - **Später erzeugte Spieler** (Nachwuchs K08, neue Talente K32): alles per Zufall, mit denselben Verteilungen.
 - Kondition 75–85, Frische 100, Form 10, Selbstvertrauen 0, Stimmung 60–75, Integration 100, Spielpraxis 70.
 
@@ -341,7 +374,7 @@ Ereigniskarten nach K30. Die meisten landen nur im Posteingang. Entscheidungen s
 
 | Karte | Auslöser | Folgen |
 |---|---|---|
-| Durchbruch | Spieler bis 21 springt in einer Runde +2 | Info, Selbstvertrauen +1, Medien (K29) |
+| Durchbruch | Spieler bis 21 legt in vier Wochen 2 Punkte oder mehr zu | Info, Selbstvertrauen +1, Medien (K29) |
 | Formkrise (Entscheidung) | Form ≤ 4 über 3 Wochen | Gespräch, Pause oder Durchziehen: wirkt auf Selbstvertrauen und Form |
 | Formhoch | Form ≥ 16 über 3 Wochen | Info, Gerüchte (K29), Interesse anderer Vereine (K19) |
 | Merkmal gelernt | Lernfortschritt 100 % | Info, Erinnerung „Lernplatz frei“ |
@@ -394,6 +427,10 @@ Neues Testskript `tests/spielermodell.js`, jeweils mit vielen Seeds:
 | Kondition | 4 Wochen Urlaub: −15 bis −20. 5 Wochen Vorbereitung bei hartem Training: zurück auf mindestens 80. |
 | Merkmale je Liga | Stammspieler der 1. Liga im Schnitt 1,6–2,4 Stärken, 3. Liga 0,8–1,2, über 10 Saisons stabil |
 | Lerndauer | Medianer Lernweg „mittel“ bei 25-Jährigen mit Training: 14–20 Wochen |
+| Formserie | Ein Stürmer, der viermal in Folge trifft, steht danach bei Form 14–16 und wächst in den Wochen danach 2- bis 3-mal so schnell wie bei Form 10 |
+| Serien der Großen | Der Meister bekommt über die Saison höchstens halb so viel Serienbonus wie das Team, das seine Erwartung am stärksten übertrifft |
+| Lernen im Spiel | Ein Stammspieler, der alle Ecken tritt, wird allein aus dem Spiel in 1–2 Saisons Flankengeber. Ein Elfmeterschütze verliert das Merkmal frühestens nach vier Fehlschüssen in Folge. |
+| Fuß | 75–80 % Rechtsfüße unter den Feldspielern |
 
 **Akzeptanztests gegen Ausnutzung:**
 - **Merkmal-Sensitivität** (nach U3, mit der neuen Engine): Ein Merkmal bei einem Stammspieler bringt 0,3–2 Punkte pro Saison. Kein Merkmal bringt mehr als das Dreifache des Medians. „schnell“ wird gesondert geprüft, damit Tempo keine Allzweckwaffe wird (Recherche 4c).
@@ -407,14 +444,13 @@ Neuer Aufbau des Abschnitts `spieler` in `daten/regeln.js` (Skizze, Namen in U2 
 
 ```js
 spieler:{
-  runden:{monate:[8,9,10,11,12,1,2,3,4,5,6],      // Monatsrunde am 1. dieser Monate
-    alter:[[19,0.45,0.07],[22,0.32,0.08],[25,0.18,0.09],[28,0.10,0.10],
-           [30,0.07,0.12],[32,0.05,0.18],[34,0.04,0.26]],sonst:[0.03,0.34],
+  entwicklung:{tageProSaison:320,               // verbucht nach jedem Pflichtspiel, sonst montags (5.1)
+    alter:[[19,4.9,0.7],[22,3.5,0.9],[25,2.0,1.0],[28,1.1,1.1],   // [bis Alter, Wachstum, Abbau] pro Saison
+           [30,0.8,1.3],[32,0.6,2.0],[34,0.4,2.9]],sonst:[0.3,3.7],
     positionsAlter:{TW:-3,AB:-1,MF:0,ST:1},abbau:{TW:0.7,AB:0.85,MF:1,ST:1},
-    talentWeich:6,formBasis:1.15,praxis:{hoch:0.6,auf:1.2,tief:0.2,aufTief:0.7,abTief:1.3,abTiefAb:29,halbBis:18},
-    training:[0.8,1,1.2],profi:{auf:[0.8,0.02],ab:[1.2,-0.02]},
-    deckel:{auf:0.7,ab:0.6,summe:0.9},jung:{bisAlter:21,doppelt:0.15}},
-  form:{mitte:10,min:0,max:20,jeNote:1.5,ausgleich:0.10,wirkung:0.005},
+    talentWeich:6,formBasis:1.2,praxis:{hoch:60,auf:1.2,tief:20,aufTief:0.7,abTief:1.3,abTiefAb:29,halbBis:18},
+    training:[0.8,1,1.2],profi:{auf:[0.8,0.02],ab:[1.2,-0.02]},zufall:0.05,jung:{bisAlter:21,zufall:2}},
+  form:{mitte:10,min:0,max:20,jeNote:1.5,ausgleich:0.10,wirkung:0.005,serie:{spiele:5,abPunkte:4,bonus:0.5}},
   frische:{spiel:15,ko:[1.5,-0.007],ausdauernd:0.75,erholung:[3,0.1],alter:[[23,1.1],[29,1],[32,0.9]],alterSonst:0.8,
     koErholung:[0.8,0.004],training:[1,2,3],risikoUnter:80},
   kondition:{ziel:[70,80,90],tempo:0.20,altAb:30,altJeJahr:1,partyloewe:8,urlaub:0.6,verletzt:0.5,spiel:1,start:[75,85]},
@@ -424,7 +460,9 @@ spieler:{
   integration:{start:{liga:70,land:55,ausland:35,anpassung:15},woche:[3,8],wirkung:0.08,deutschWoche:[1,3],landsleute:0.5},
   lernen:{woche:{leicht:12,mittel:6,schwer:3},alter:[[21,1.3],[25,1.1],[29,1],[32,0.8]],alterSonst:0.6,
     profi:[0.7,0.03],zufall:[0.7,1.3],zweiZiele:0.5,frischeUnter:[70,0.8],stimmungUnter:[30,0.7],maxStaerken:4,
-    verlustAb:31,verlust:0.025,langsamAb:33,langsam:0.02},
+    verlustAb:31,verlust:0.006,langsamAb:33,langsam:0.005,  // je Woche
+    spiel:{/* Szene → Merkmal, Fortschritt bei Erfolg und Fehlschlag, Tabelle 5.6 */},spielMax:25,
+    fehlerkonto:{start:100,fehler:25,erfolg:10,woche:2}},
   zustand:{min:0.80,max:1.08},                    // Deckel für alle Zustände zusammen (5.8)
   positionen:{gruppe:{TW:'TW',IV:'AB',LV:'AB',RV:'AB',DM:'MF',ZM:'MF',SM:'MF',OM:'MF',LM:'MF',RM:'MF',MS:'ST',HS:'ST',LA:'ST',RA:'ST'},
     // Eignung von → nach in %, rechte Seite spiegelbildlich (RV wie LV usw.)
@@ -433,12 +471,13 @@ spieler:{
          MS:{HS:85,LA:70,RA:70},HS:{MS:85,OM:85,LA:75,RA:75},LA:{LM:85,RA:85,HS:75,MS:75}},
     gleicheGruppe:70,andereGruppe:55,torwartFeld:45,neben:[85,95],vielseitig:5,
     falscheSeite:{faktor:0.92,positionen:['LV','RV','LM','RM']}},
-  fuss:{rechts:0.75,links:0.2,beide:0.05},       // Zufall, wenn die Daten nichts sagen (Verteilung prüfen)
+  fuss:{rechts:0.77,links:0.23},                 // Zufall, wenn die Daten nichts sagen. Studien: 20–30 % Linksfüße unter Profis
   persoenlichkeit:{mitte:10,streuung:3.5,min:1,max:20},
   eigenschaftEntdecken:[2,8],                     // Wochen bis zur Meldung
   merkmale:{ /* Katalog aus 3.4: Kürzel, Name, Art, Positionen, Schwierigkeit, bisAlter, altersverlust, Engine-Haken */ },
   eigenschaften:{ /* Katalog aus 3.5: Kürzel, Name, Art, Bedingung, Wirkung */ },
-  start:{merkmale:[[55,0.5],[65,1],[75,1.6],[85,2.3],[90,3]],schwaechen:[[60,0.6],[85,0.3]],nebenposition:0.15,stimmung:[60,75]},
+  start:{merkmale:[[55,0.5],[65,1],[75,1.6],[85,2.3],[90,3]],schwaechen:[[60,0.6],[85,0.3]],beidfuessig:0.1,nebenposition:0.15,stimmung:[60,75]},
+  talentSchaetzung:{fehler:1,genauNachJahren:2},  // Sterne bis zu 1 daneben, nach 2 Jahren im Verein meist genau (ab K16 vom Co-Trainer)
   // bleiben wie heute: talent, talentSonst, vertrag, gehalt, marktwert, sterne, niveauSpieler, niveauLeer
 }
 ```
@@ -448,22 +487,23 @@ Die bisherigen Einträge `training.wachstum`, `training.zufall`, `training.fitne
 ## 12. Offene Fragen
 
 **Entschieden am 7. November 2026:**
+- **Entwicklung der Stärke** in kleinen Schritten an jedem Spieltag. Die Form beschleunigt oder bremst sie: Tore in Serie, Paraden, Siegesserien gegen die Erwartung, und genauso umgekehrt (5.1, 5.2).
+- **Lernen im Spiel:** Szenen wie Ecken mit Torfolge zahlen auf Merkmale ein, Fehlschläge auf Schwächen (5.6).
 - **Charakter:** Bei echten Spielern wird abgeleitet, was sich aus Fakten belegen lässt, sonst Zufall. Später erzeugte Spieler bekommen nur Zufall (5.9).
 - **Nationalität** wird festgelegt (Feld `nat`). Wann die Daten nachgetragen werden, ist egal.
-- **Positionen:** 14 feine Positionen in vier Gruppen, ergänzt um zentrales Mittelfeld, hängende Spitze und die Seiten (3.1a). Dazu der starke Fuß.
+- **Positionen:** 14 feine Positionen in vier Gruppen, ergänzt um zentrales Mittelfeld, hängende Spitze und die Seiten (3.1a). Kein Libero.
+- **Fuß:** rechts oder links, deutlich mehr Rechtsfüße (77 %). „beidfüßig“ ist ein Merkmal.
 - **„Trainingsweltmeister“** in der umgangssprachlichen Bedeutung.
 - **Katalog:** Die Größe bleibt. Ein Spieler zeigt nur 0–4 Merkmale und meist 0–2 Eigenschaften, das bleibt lesbar, und die Breite sorgt für Abwechslung. Das Merkmal „Spielmacher“ entfällt, weil es jetzt eine Position ist. Neu gilt: erst zeigen, wenn es wirkt (3.4, 3.5).
+- **Talentsterne** der eigenen Spieler dürfen um einen Stern danebenliegen. Nach zwei Jahren im Verein stimmen sie meist, ab K16 hängt die Genauigkeit vom Co-Trainer ab.
 
-**Noch offen:**
-
-1. **Monatliche Runden** (am 7.11. erklärt): Die Stärke ändert sich einmal im Monat um +1, 0 oder −1, statt jede Woche unsichtbar um Bruchteile. Dazu kommt der Monatsbericht. Einverstanden?
-2. **Talentsterne der eigenen Spieler** (am 7.11. erklärt): Die Sterne verraten heute das versteckte Talent exakt. Vorschlag: Sie dürfen um einen Stern danebenliegen, ab K16 je nach Co-Trainer mehr oder weniger. Einverstanden?
-3. **Datenquelle** für feine Positionen, Fuß, Kapitänsamt, Karten, Verletzungstage und Elfmeter. Die Wikipedia-Kader haben das nicht vollständig. Recherche, wenn die Datenpflege ansteht.
-4. **Fuß-Verteilung** für den Zufall (Startwert 75 % rechts, 20 % links, 5 % beide) mit echten Zahlen prüfen.
+**Noch offen (nur Recherche, keine Entscheidung):**
+1. **Datenquelle** für feine Positionen, Fuß, Kapitänsamt, Karten, Verletzungstage und Elfmeter. Die Wikipedia-Kader haben das nicht vollständig. Klären, wenn die Datenpflege ansteht.
 
 ## Quellen
 
 - Anstoss 3: GameStar 4/2000, Entwickler-Tipps von Gerald Köhler (von dir hochgeladen, ausgewertet in PLAN §4)
 - Alterskurven nach Position: [Linköping University, Studie zu schwedischen Ligen (PDF)](https://www.ida.liu.se/~nikca89/papers/isace24.pdf), [ESPN: Soccer age curves show goalkeepers, central defenders peak latest](https://global.espn.com/football/story/_/id/37467220/soccer-age-curves-show-goalkeepers-central-defenders-peak-latest), [BMC Sports Science, Medicine and Rehabilitation (2025)](https://www.link.springer.com/article/10.1186/s13102-025-01312-1), [Frontiers in Psychology (2021, PDF)](https://frontiersin.org/articles/10.3389/fpsyg.2021.661523/pdf)
+- Linksfüße unter Profis 20–30 %, beidfüßig bis 18 %: [Scientific Reports (2020)](https://dx.doi.org/10.1038/s41598-020-71478-w), [StatsBomb: Footedness](https://blogarchive.statsbomb.com/articles/soccer/footedness-and-why-erik-lamela-is-worth-30m/), [Psychology Today zu Linksfüßigkeit im Profifußball](https://psychologytoday.com/sg/blog/the-asymmetric-brain/202212/messi-magic-left-footedness-in-professional-soccer-players)
 - Karriereende im Schnitt mit 33: SoccHealth-Studie laut [Ärzte Zeitung](https://www.aerztezeitung.de/Panorama/Studie-erforscht-langfristige-Gesundheitsfolgen-ehemaliger-Fussballprofis-453354.html)
 - FM-Faustregel „erst Training, dann Spiele“, Tempo als Allzweckwaffe: `konzepte/_recherche-genre.md`, Abschnitte 3.1 und 4c
