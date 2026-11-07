@@ -380,7 +380,7 @@ engine:{
 
 **Vorläufig entschieden** (von mir, ohne Rücksprache, bitte bei Gelegenheit bestätigen oder ändern):
 
-1. **Links und rechts** sind in der Engine noch ein gemeinsamer Bereich „außen“. Getrennte Seiten (unser linker Flügel gegen ihren rechten Verteidiger) wären tiefer, aber teurer im Balancing. Vorschlag: K06 entscheidet, wenn die Grundordnungen stehen.
+1. **Links und rechts** (geändert durch K06 §5.7: Seiten getrennt, ohne zusätzliche Regler). Ursprünglich: ein gemeinsamer Bereich „außen“. Getrennte Seiten (unser linker Flügel gegen ihren rechten Verteidiger) wären tiefer, aber teurer im Balancing. Vorschlag: K06 entscheidet, wenn die Grundordnungen stehen.
 2. **Schiedsrichter** bekommen vorläufig nur einen Strengefaktor je Spiel. Echte Profile mit Namen und Ruf kommen mit K09, wenn das Sportgericht gebaut wird.
 3. **Videobeweis** nur als seltenes Ereignis „Tor aberkannt“ (etwa 3 % der Tore, Zahl prüfen). Keine eigene Mechanik.
 4. **Wetter und Rasen** später mit K26 (Rasenqualität, Platzwart). Bis dahin kein Wetter.

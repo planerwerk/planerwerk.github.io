@@ -205,3 +205,17 @@ Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `
 | L5 | **Talentsterne:** K03 legt „bis 1 Stern daneben“ fest. K02 übernimmt das für „Normal“, „Leicht“ zeigt sie genau. | ✅ passt zu deiner Entscheidung vom 7.11. |
 | L6 | **Simulation ohne Browser:** Die Spiellogik ist fast frei von Oberfläche. `welt.js`, `saison.js` und `hilfen.js` rufen an wenigen Stellen `render()` oder `document` auf, `aktionen.js` häufig. | 📌 U2: `tests/sim.js` mit kleinen Attrappen für `render()` und `document`. Aktionen bleiben im Browser-Test. |
 | L7 | **Rangkorrelation** Stärke gegen Abschlusstabelle als Maß für die Dosis Zufall ist geschätzt (0,6–0,8). | 📌 vor der Kalibrierung mit echten Daten prüfen |
+
+---
+
+## M. Nachtrag zu K06 (7. November 2026)
+
+| # | Befund | Status |
+|---|---|---|
+| M1 | **K4 und K5 aufgelöst:** Grundordnungen auf den 14 Positionen mit wählbaren Rollen (K06 §3.1), Seiten getrennt (K06 §5.7). K04 §12 Punkt 1 ist entsprechend geändert. | ✅ |
+| M2 | **K6 aufgelöst:** Standardschützen je Art und Reihenfolge im Elfmeterschießen (K06 §5.8). | ✅ |
+| M3 | **Konter** ist heute eine Ausrichtung (`tac:'K'`), künftig ein Spielstil. Die Ausrichtung bekommt fünf Stufen. | 📌 U3 baut um. Alte Spielstände müssen nicht umgewandelt werden. |
+| M4 | **Tempo als Allzweckwaffe:** „schnell“ ist Voraussetzung für Pressing und Konter. | 📌 Sensitivitätstest in K03 §10 und K04 §10 prüft „schnell“ gesondert. Gegenmittel sind eingebaut: „stellungssicher“ halbiert den Vorteil, Mauern schlägt Konter. |
+| M5 | **Spieler hadert mit Position** braucht Gespräche (K15) und Stimmung (K14), beides Welle 3. | 📌 Bis dahin nur als Info ohne Entscheidung. |
+| M6 | **Taktiktraining:** K06 rechnet bis K07 mit +5 Vertrautheit pro Woche aus dem normalen Training. | 📌 K07 ersetzt das durch Taktik-Einheiten. |
+| M7 | **KI reagiert auf den Spieler** (Kontern des Lieblingsstils) hängt an der Klugheitsstufe aus K02. | ✅ passt zu K02 §5.4 |

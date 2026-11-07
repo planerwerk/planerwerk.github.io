@@ -55,7 +55,7 @@ Spalte „Welle“: wann das Konzept spätestens fertig sein muss. Umfang des Ko
 | ID | Konzept | Kernfragen | Umfang | Welle |
 |---|---|---|---|---|
 | K05 | Live-Spiel | Pause, Halbzeit mit Ansprache, Wechselregeln, Taktik im Spiel, Computer-Trainer, automatisches Anhalten | M | 2 |
-| K06 | Taktik | Grundordnungen, Spielstil-Kreislauf, Voraussetzungen, Vertrautheit, Gegneranalyse, Standards | M | 2 |
+| K06 | Taktik (**Entwurf**: `konzepte/K06-taktik.md`) | Grundordnungen, Spielstil-Kreislauf, Voraussetzungen, Vertrautheit, Gegneranalyse, Standards | M | 2 |
 | K07 | Training | Wochenplan, Einheitstypen, Intensität, Einzeltraining, Umschulung, Belastung und Regeneration, Trainingswirkung je Alter | M | 2 |
 | K08 | Jugend und Talententwicklung | Nachwuchsleistungszentrum, Sichtung, Aufrücken, Volatilität, Prägungsereignisse (Schub oder Knacks), Belastungssteuerung, Leihe für Spielpraxis, Verheizen | M | 3 |
 | K09 | Disziplin und Sportgericht | Foularten, Karten, Verfahren über mehrere Tage, Strafmaß mit Zufall, Widerspruch, Wiederholungstäter, Zuschauer-Vergehen, Verfahren wegen Äußerungen außerhalb des Spiels (zum Beispiel Schiedsrichterkritik, siehe K29) | M | 2 |
@@ -259,6 +259,7 @@ Für BMH habe ich keine verlässliche Quelle gefunden. Anstoss 2022 nutzt laut e
    - **U2 Spielermodell** (K03, Teile von K02): Zufallsströme und Node-Simulator `tests/sim.js` zuerst, dann neue Spielerfelder, Positionen und Fuß (bis die Daten da sind, per Zufall aus der Gruppe), Frische und Kondition getrennt, Entwicklung an jedem Spieltag, Merkmale und Persönlichkeit mit Startverteilung, Talentsterne unscharf, Spielerkarte mit den neuen Reglern, `tests/spielermodell.js`. Die heutige Engine bleibt, bekommt nur Frische statt Fitness und Form 0–20.
    - **U3 Engine v2** (K04, Rest von K02): Szenen-Modell, Teamwerte aus Positionsanteilen, Chancentypen, Standards, Merkmal-Haken, Noten gegen die Erwartung, Spielbericht, Lernen im Spiel, Schwierigkeitsstufen, `tests/kalibrierung.js` und `tests/akzeptanz.js`, Kalibrierung bis alles grün ist.
    - Startsatz: „Projekt Flutlicht Manager im Ordner flutlicht-manager/. Lies PLAN.md, konzepte/_konsistenzpruefung.md, konzepte/K02-zufall-kalibrierung.md und konzepte/K03-spielermodell.md. Setze U2 um.“
+5. **Vorgezogen aus Welle 2:** K06 (Taktik) steht als Entwurf, weil es offene Punkte aus K03 und K04 klärt (Grundordnungen auf 14 Positionen, Seiten, Standardschützen). U3 kann die Grundordnungen und Seiten gleich mitbauen.
 4. Der Sommerteil von K12 ist als **K12a** in Welle 2 gerückt, zu Training (K07) und Testspielen/Trainingslager (K11).
 
 Mit K03 ist der größte Engpass gelöst. Engine, Taktik, Training und Scouting haben jetzt eine Grundlage (K03 §9).
