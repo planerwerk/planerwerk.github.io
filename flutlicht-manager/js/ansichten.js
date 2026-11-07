@@ -11,7 +11,7 @@ function status(p){if(p.inj>0||p.sus>0)return`<span class="tag bad">${ausfallTex
 // Hauptknopf: Text und Zeile darunter
 function knopf(){if(S.phase==='end')return['Saisonbilanz ▶','die Saison ist zu Ende'];if(S.fired)return['Jobangebote ▶','du wurdest entlassen'];
   if(heuteMeinSpiel())return['Tag beenden ▶','heute: '+spielName(meinSpiel(S.tag))];return['Tag beenden ▶','weiter bis '+datumKurz(naechsterHalt())];}
-function hdr(){const t=myT(),tr=S.trust,[k1,k2]=knopf(),dt=datumVon(S.tag);return`<header class="top"><div class="club"><span class="chip" style="--c:${t.col}"></span><div><div class="cn">${esc(t.name)}</div><div class="sub">${esc(S.mgr)} · Saison ${S.season}/${(S.season+1)%100} · ${t.lg}. Bundesliga · Platz ${rank(t.lg,S.my)}</div></div></div>
+function hdr(){const t=myT(),tr=S.trust,[k1,k2]=knopf(),dt=datumVon(S.tag);return`<header class="top"><div class="club"><span class="chip" style="--c:${t.col}"></span><div><div class="cn">${esc(t.name)}</div><div class="sub">${esc(S.mgr)} · Saison ${S.season}/${(S.season+1)%100} · ${ligaName(t.lg)} · Platz ${rank(t.lg,S.my)}</div></div></div>
   <div class="kal" title="${datumLang(S.tag)}"><span>${WTL[dt.getUTCDay()]}</span><b>${dt.getUTCDate()}. ${MON[dt.getUTCMonth()]}</b><span>${dt.getUTCFullYear()}</span></div>
   <div class="stats"><div><span class="lbl">Kontostand</span><b class="${t.cash<0?'neg':''}">${fmt(t.cash)}</b></div><div title="Vertrauen des Vorstands ${Math.round(tr)} von 100"><span class="lbl">Vorstand</span>${rgMini(Math.round(tr),0,100,tr<30?'bad':tr<55?'warn':'good')}</div></div>
   <button class="go" onclick="tagBeenden()">${k1}<small>${k2}</small></button></header>`;}
@@ -21,29 +21,32 @@ function render(){if(RENDERING){RERENDER=1;return;}RENDERING=1;try{if(!S){render
   finally{RENDERING=0;if(RERENDER){RERENDER=0;setTimeout(render,0);}}}
 const V={};
 // Karte für ein Spiel deines Vereins (heute oder demnächst)
-function spielKarte(e,heute){const f=paarung(e),wann=heute?'Heute':datumKurz(e.tag);
+function spielKarte(e,heute){const f=paarung(e),wann=(heute?'Heute':datumKurz(e.tag))+(e.min!=null?', '+uhr(e.min)+' Uhr':'');
   if(!f)return`<div class="vs"><span>${wann} · ${spielName(e)}</span><b>Gegner wird ausgelost</b><span>K.-o.-Spiel mit Verlängerung und Elfmeterschießen</span></div>`;
   const home=f[0]===S.my,o=S.teams[home?f[1]:f[0]];
   return`<div class="vs"><span>${wann} · ${spielName(e)} · ${home?'Heimspiel':'Auswärtsspiel'}</span><b>${chip(o.id)}${esc(o.name)}</b><span>Tabellenplatz ${rank(o.lg,o.id)} (${o.lg}. Liga) · Kaderstärke ${teamLevel(o.id).toFixed(1)} (deine: ${teamLevel(S.my).toFixed(1)})</span></div>`;}
 // Termin eines Kalendertags aus Sicht deines Vereins, auch für vergangene Tage
-function kalTermin(d){const t=myT(),r={kurz:'',cls:'',titel:''};
+function kalTermin(d){const r={kurz:'',cls:'',titel:''},l=meineLigaspiele().find(e=>e.tag===d);
+  if(l){const f=S.fx[l.lg][l.md][l.i],home=f[0]===S.my,o=home?f[1]:f[0],x=S.res[l.lg].find(y=>y[4]===l.md&&y[0]===f[0]&&y[1]===f[1]);
+    r.kurz=`${home?'H':'A'} ${S.teams[o].sh}`;r.titel=`${l.md+1}. Spieltag, ${uhr(l.min)} Uhr: ${home?'gegen':'bei'} ${S.teams[o].name}`;r.cls='sp';if(x){const gf=home?x[2]:x[3],ga=home?x[3]:x[2];r.erg=`${x[2]}:${x[3]}`;r.cls+=gf>ga?' win':gf<ga?' loss':' draw';}return r;}
   for(const e of termineAm(d)){
-    if(e.art==='liga'&&e.lg===t.lg){const f=S.fx[e.lg][e.md].find(x=>x.includes(S.my)),home=f[0]===S.my,o=home?f[1]:f[0],x=S.res[e.lg].find(y=>y[4]===e.md&&y[0]===f[0]&&y[1]===f[1]);
-      r.kurz=`${home?'H':'A'} ${S.teams[o].sh}`;r.titel=`${e.md+1}. Spieltag: ${home?'gegen':'bei'} ${S.teams[o].name}`;r.cls='sp';if(x){const gf=home?x[2]:x[3],ga=home?x[3]:x[2];r.erg=`${x[2]}:${x[3]}`;r.cls+=gf>ga?' win':gf<ga?' loss':' draw';}return r;}
     if(e.art==='pokal'){const h=S.cup.hist[e.r],m=h&&h.find(y=>y[0]===S.my||y[1]===S.my);
       if(m){const home=m[0]===S.my,o=home?m[1]:m[0];r.kurz=`Pokal ${o>=1000?'Amat.':S.teams[o].sh}`;r.erg=`${m[2]}:${m[3]}${m[4]?' i.E.':''}`;r.cls='sp pk'+(winner({h:m[0],a:m[1],hg:m[2],ag:m[3],pen:m[4]})===S.my?' win':' loss');r.titel=`DFB-Pokal, ${POKAL_RUNDEN[e.r]}`;return r;}
       if(!h&&S.cup.alive.includes(S.my)){r.kurz='Pokal';r.cls='sp pk';r.titel=`DFB-Pokal, ${POKAL_RUNDEN[e.r]}`;return r;}
       r.kurz='Pokal';r.cls='fremd';r.titel=`DFB-Pokal, ${POKAL_RUNDEN[e.r]} (ohne dich)`;}
-    if(e.art==='rel'){const x=S.relSp[e.leg],mine=x?(x.h===S.my||x.a===S.my):(ligenFertig()&&relTeams().includes(S.my));r.kurz='Relegation';r.cls=mine?'sp':'fremd';r.titel=`Relegation, ${e.leg?'Rückspiel':'Hinspiel'}`;if(x)r.erg=`${x.hg}:${x.ag}`;if(mine)return r;}
+    if(e.art==='rel'||e.art==='rel2'){const x=S[e.art==='rel'?'relSp':'relSp2'][e.leg],mine=x?(x.h===S.my||x.a===S.my):(relBereit(e.art)&&relTeams(e.art).includes(S.my));
+      if(mine){r.kurz='Relegation';r.cls='sp';r.titel=spielName(e);if(x)r.erg=`${x.hg}:${x.ag}`;return r;}if(!r.kurz){r.kurz='Relegation';r.cls='fremd';r.titel=spielName(e);}}
     if(e.art==='ende'){r.kurz='Saisonende';r.cls='ende';r.titel='Saisonende';return r;}}
+  if(d===S.plan.trainingsauftakt&&!r.kurz){r.kurz='Training';r.cls='ende';r.titel='Trainingsauftakt';}
   return r;}
-function wochenLeiste(){let h='';for(let d=S.tag;d<S.tag+7;d++){const dt=datumVon(d),k=kalTermin(d),p=pauseAm(d,myT().lg);
+function wochenLeiste(){let h='';for(let d=S.tag;d<S.tag+7;d++){const dt=datumVon(d),k=kalTermin(d),u=S.phase==='sommer'||d<S.plan.trainingsauftakt,p=u?{name:d>=tageDerSaison()?'Neue Saison':'Urlaub'}:pauseAm(d,myT().lg);
     h+=`<div class="wt ${d===S.tag?'heute':''} ${p&&!k.kurz?'pause':''} ${k.cls}" title="${esc(datumLang(d)+(k.titel?': '+k.titel:p?': '+p.name:''))}"><span>${WT[dt.getUTCDay()]}</span><b>${dt.getUTCDate()}.${dt.getUTCMonth()+1}.</b><i>${esc(k.kurz||(p?p.name.replace('Länderspielpause','Länderspiele'):''))}</i></div>`;}
   return`<div class="woche" aria-label="Die nächsten 7 Tage">${h}</div>`;}
 V.buero=()=>{const t=myT(),d=S.tag;let heute='';
   if(S.fired)heute=`<p><b>Du wurdest entlassen.</b> Oben auf „Jobangebote“ klicken.</p>`;
   else if(S.phase==='end')heute=`<p>Die Saison ist vorbei. Oben geht es zur Saisonbilanz.</p>`;
   else if(heuteMeinSpiel())heute=spielKarte(meinSpiel(d),true)+`<p class="dim" style="margin-top:8px">„Tag beenden“ führt zum Vorbericht und zum Anpfiff.</p>`;
+  else if(S.phase==='sommer')heute=`<p><b>${esc(tagesText(d))}</b></p><p class="dim">Am ${datumMittel(tageDerSaison())} beginnt die neue Saison: Spielplan, Verträge, Sponsorangebote. Danach Trainingsauftakt und Vorbereitung.</p>`;
   else{const n=naechstesSpiel(d+1);heute=`<p><b>${esc(tagesText(d))}</b></p>${n?spielKarte(n,false):'<p class="dim">Keine Spiele mehr in dieser Saison.</p>'}`;}
   const warn=[];const sq=squad(S.my);
   if(sq.length<18)warn.push(`Nur ${sq.length} Spieler im Kader – verpflichte Verstärkung.`);
@@ -69,7 +72,7 @@ const fitArt=f=>{const z=RU.zonenFitness.find(q=>f>=q.von&&f<=q.bis);return z&&z
 function tauziehenNaechstes(){const e=heuteMeinSpiel()?meinSpiel(S.tag):naechstesSpiel(S.tag+1),f=e&&paarung(e);if(!f)return'';
   const home=f[0]===S.my,o=home?f[1]:f[0],me=side(S.my,home,false),op=side(o,!home,false);
   return`<h3 style="margin-top:14px">Vergleich mit ${esc(tn(o))}</h3><p class="dim">${esc(spielName(e))}, ${datumKurz(e.tag)}, ${home?'zu Hause':'auswärts'} (mit Heimvorteil)</p>${rgTauziehen('Dein Verein',tn(o),[['Dein Angriff gegen ihre Abwehr',+me.A.toFixed(1),+op.D.toFixed(1)],['Deine Abwehr gegen ihren Angriff',+me.D.toFixed(1),+op.A.toFixed(1)]])}`;}
-V.aufst=()=>{const t=myT(),sl=slots(t.form),xi=myXI();S.lineup=xi.slice();const sq=squad(S.my).sort(SORTS.pos),sd=side(S.my,false,true);
+V.aufst=()=>{const t=myT(),sl=slots(t.form),xi=myXI();const sq=squad(S.my).sort(SORTS.pos),sd=side(S.my,false,true);
   const row=pos=>`<div class="prow">${sl.map((s,i)=>s===pos?i:-1).filter(i=>i>=0).map(i=>{const p=PIX.get(xi[i]);return`<div class="tok"><b>${p?Math.round(p.str):'–'}</b><span>${p?esc(last(p.n)):'frei'}</span></div>`;}).join('')}</div>`;
   return`<div class="grid"><div class="card"><h2>Aufstellung ${t.form}</h2><div class="pitch">${row('ST')}${row('MF')}${row('AB')}${row('TW')}</div><p class="dim" style="margin-top:8px">Angriffswert ${sd.A.toFixed(1)} · Abwehrwert ${sd.D.toFixed(1)} (ohne Heimvorteil)</p>${tauziehenNaechstes()}</div>
   <div class="card"><h3>Taktik</h3><div class="form"><label>System <select id="formsel" onchange="setForm(this.value)">${Object.keys(RE.formationen).map(f=>`<option ${f===t.form?'selected':''}>${f}</option>`).join('')}</select></label>
@@ -78,18 +81,20 @@ V.aufst=()=>{const t=myT(),sl=slots(t.form),xi=myXI();S.lineup=xi.slice();const 
   <button onclick="autoXI()">Beste Elf automatisch aufstellen</button></div><hr>
   <h3>Startelf</h3><div class="slots">${sl.map((pos,i)=>`<label class="slot"><span class="pos ${pos}">${pos}</span><select id="slot${i}" onchange="setSlot(${i},this.value)">${xi[i]==null?'<option>– niemand verfügbar –</option>':''}${sq.map(p=>`<option value="${p.id}" ${xi[i]===p.id?'selected':''} ${avail(p)?'':'disabled'}>${esc(p.n)} · ${p.pos} · ${Math.round(p.str)} · ${Math.round(p.fit)}%${p.inj>0?' · verletzt':p.sus>0?' · gesperrt':''}</option>`).join('')}</select></label>`).join('')}</div>
   <p class="dim" style="margin-top:8px">Offensiv: mehr Tore, mehr Gegentore. Hart: etwas stärker, aber mehr Karten und Verletzungen. Spieler auf fremder Position verlieren deutlich an Stärke.</p></div></div>`;};
-V.tabelle=()=>{const lg=TLG||myT().lg,tb=table(lg),ts=topScorers(lg),z=i=>lg===1?(i<4?'z1':i<6?'z2':i===15?'z3':i>=16?'z4':''):(i<2?'z1':i===2?'z3':'');
-  return`<div class="grid wide"><div class="card"><div class="row between"><h2>${lg}. Bundesliga</h2><div class="row">${[1,2].map(l=>`<button class="${l===lg?'go':''}" onclick="TLG=${l};render()">${l}. Liga</button>`).join('')}</div></div>
+V.tabelle=()=>{const lg=TLG||myT().lg,tb=table(lg),ts=topScorers(lg),reihe=lg===3?aufstiegsReihe3():[];
+  const z=(i,id)=>lg===1?(i<4?'z1':i<6?'z2':i===15?'z3':i>=16?'z4':''):lg===2?(i<2?'z1':i===2||i===15?'z3':i>=16?'z4':''):(id===reihe[0]||id===reihe[1]?'z1':id===reihe[2]?'z3':i>=tb.length-RS.abstieg3?'z4':'');
+  const leg=lg===1?'Grün: Champions League · Blau: Europa League · Gelb: Relegation · Rot: Abstieg':lg===2?'Grün: Aufstieg · Gelb: Relegation (Platz 3 gegen den 16. der 1. Liga, Platz 16 gegen den 3. der 3. Liga) · Rot: Abstieg':'Grün: Aufstieg · Gelb: Relegation gegen den 16. der 2. Liga · Rot: Abstieg in die Regionalliga · (II) = Zweitmannschaft, darf nicht aufsteigen';
+  return`<div class="grid wide"><div class="card"><div class="row between"><h2>${ligaName(lg)}</h2><div class="row">${LIGEN.map(l=>`<button class="${l===lg?'go':''}" onclick="TLG=${l};render()">${l}. Liga</button>`).join('')}</div></div>
   <div class="tw"><table><thead><tr><th class="num">#</th><th>Verein</th><th class="num">Sp</th><th class="num">S</th><th class="num">U</th><th class="num">N</th><th class="num">Tore</th><th class="num">Diff</th><th class="num">Pkt</th></tr></thead><tbody>
-  ${tb.map((r,i)=>`<tr class="${r.id===S.my?'me':''}"><td class="num ${z(i)}">${i+1}</td><td>${chip(r.id)}${esc(S.teams[r.id].name)}</td><td class="num">${r.sp}</td><td class="num">${r.s}</td><td class="num">${r.u}</td><td class="num">${r.n}</td><td class="num">${r.tf}:${r.ta}</td><td class="num">${r.tf-r.ta}</td><td class="num"><b>${r.p}</b></td></tr>`).join('')}</tbody></table></div>
-  <p class="dim">${lg===1?'Grün: Champions League · Blau: Europa League · Gelb: Relegation · Rot: Abstieg':'Grün: Aufstieg · Gelb: Relegation gegen den 16. der 1. Liga'}</p></div>
+  ${tb.map((r,i)=>`<tr class="${r.id===S.my?'me':''}"><td class="num ${z(i,r.id)}">${i+1}</td><td>${chip(r.id)}${esc(S.teams[r.id].name)}${S.teams[r.id].zweite>=0?' <span class="dim">(II)</span>':''}</td><td class="num">${r.sp}</td><td class="num">${r.s}</td><td class="num">${r.u}</td><td class="num">${r.n}</td><td class="num">${r.tf}:${r.ta}</td><td class="num">${r.tf-r.ta}</td><td class="num"><b>${r.p}</b></td></tr>`).join('')}</tbody></table></div>
+  <p class="dim">${leg}</p></div>
   <div class="card"><h3>Torjäger</h3>${ts.length?`<table><tbody>${ts.map((p,i)=>`<tr class="click ${p.team===S.my?'me':''}" onclick="openP(${p.id})"><td class="num">${i+1}.</td><td>${esc(p.n)}<br><span class="dim">${esc(S.teams[p.team].name)}</span></td><td class="num"><b>${p.g}</b></td></tr>`).join('')}</tbody></table>`:'<p class="dim">Noch keine Tore.</p>'}</div></div>`;};
-V.spielplan=()=>{const t=myT(),lg=t.lg,lastMd=S.res[lg].reduce((a,r)=>Math.max(a,r[4]),0),md=TDAY!=null?TDAY:lastMd;
-  const rows=S.fx[lg].map((d,i)=>{const f=d.find(x=>x.includes(S.my)),home=f[0]===S.my,o=home?f[1]:f[0],r=S.res[lg].find(x=>x[4]===i&&x[0]===f[0]&&x[1]===f[1]);let cls='';if(r){const gf=home?r[2]:r[3],ga=home?r[3]:r[2];cls=gf>ga?'win':gf<ga?'loss':'draw';}
-    const dd=S.plan.liga[lg][i];return`<tr class="${dd===S.tag?'me':''}"><td class="num">${i+1}.</td><td>${datumKurz(dd)}</td><td>${home?'Heim':'Ausw.'}</td><td>${chip(o)}${esc(S.teams[o].name)}</td><td class="num"><span class="res ${cls}">${r?r[2]+':'+r[3]:'–'}</span></td></tr>`;}).join('');
-  const day=S.fx[lg][md].map(([h,a])=>{const r=S.res[lg].find(x=>x[4]===md&&x[0]===h&&x[1]===a);return`<tr class="${h===S.my||a===S.my?'me':''}"><td>${esc(S.teams[h].name)}</td><td class="num"><b>${r?r[2]+':'+r[3]:'–:–'}</b></td><td>${esc(S.teams[a].name)}</td></tr>`;}).join('');
-  return`<div class="grid"><div class="card"><h2>Spielplan</h2><div class="tw"><table><tbody>${rows}</tbody></table></div></div>
-  <div class="card"><div class="row between"><h3>Spieltag ansehen</h3><select id="daysel" onchange="TDAY=+this.value;render()">${S.fx[lg].map((_,i)=>`<option value="${i}" ${i===md?'selected':''}>${i+1}. Spieltag · ${datumKurz(S.plan.liga[lg][i])}</option>`).join('')}</select></div><div class="tw"><table><tbody>${day}</tbody></table></div></div></div>`;};
+V.spielplan=()=>{const t=myT(),lg=t.lg,Z=S.plan.zeit[lg],lastMd=S.res[lg].reduce((a,r)=>Math.max(a,r[4]),0),md=TDAY!=null&&TDAY<S.fx[lg].length?TDAY:lastMd;
+  const rows=meineLigaspiele().map(e=>{const f=S.fx[lg][e.md][e.i],home=f[0]===S.my,o=home?f[1]:f[0],r=S.res[lg].find(x=>x[4]===e.md&&x[0]===f[0]&&x[1]===f[1]);let cls='';if(r){const gf=home?r[2]:r[3],ga=home?r[3]:r[2];cls=gf>ga?'win':gf<ga?'loss':'draw';}
+    return`<tr class="${e.tag===S.tag?'me':''}"><td class="num">${e.md+1}.</td><td>${datumKurz(e.tag)} ${uhr(e.min)}</td><td>${home?'Heim':'Ausw.'}</td><td>${chip(o)}${esc(S.teams[o].name)}</td><td class="num"><span class="res ${cls}">${r?r[2]+':'+r[3]:'–'}</span></td></tr>`;}).join('');
+  const day=S.fx[lg][md].map(([h,a],i)=>({h,a,z:Z[md][i]})).sort((x,y)=>x.z[0]-y.z[0]||x.z[1]-y.z[1]).map(({h,a,z})=>{const r=S.res[lg].find(x=>x[4]===md&&x[0]===h&&x[1]===a);return`<tr class="${h===S.my||a===S.my?'me':''}"><td class="dim">${datumKurz(z[0])} ${uhr(z[1])}</td><td>${esc(S.teams[h].name)}</td><td class="num"><b>${r?r[2]+':'+r[3]:'–:–'}</b></td><td>${esc(S.teams[a].name)}</td></tr>`;}).join('');
+  return`<div class="grid"><div class="card"><h2>Spielplan ${ligaName(lg)}</h2><div class="tw"><table><tbody>${rows}</tbody></table></div><p class="dim">${S.season===2026?'Offizieller Spielplan 2026/27. Wo DFL und DFB noch keine Anstoßzeit festgelegt haben, verteilt das Spiel die Partien nach dem üblichen Raster.':'Spielplan ausgelost, Anstoßzeiten nach dem üblichen Raster.'}</p></div>
+  <div class="card"><div class="row between"><h3>Spieltag ansehen</h3><select id="daysel" onchange="TDAY=+this.value;render()">${S.fx[lg].map((_,i)=>`<option value="${i}" ${i===md?'selected':''}>${i+1}. Spieltag · ${datumKurz(Math.min(...Z[i].map(z=>z[0])))}</option>`).join('')}</select></div><div class="tw"><table><tbody>${day}</tbody></table></div></div></div>`;};
 // Kalender: Monatsansicht mit deinen Spielen, Pokal, Pausen. KMON = Verschiebung in Monaten gegenüber heute.
 let KMON=0;
 V.kalender=()=>{const h=datumVon(S.tag),y=h.getUTCFullYear(),m=h.getUTCMonth()+KMON,erster=new Date(Date.UTC(y,m,1)),jahr=erster.getUTCFullYear(),mon=erster.getUTCMonth(),
@@ -103,9 +108,9 @@ V.kalender=()=>{const h=datumVon(S.tag),y=h.getUTCFullYear(),m=h.getUTCMonth()+K
   <p class="dim" style="margin-top:8px">H = Heimspiel, A = Auswärtsspiel, dazu das Kürzel des Gegners. Gestrichelt: Länderspiel- oder Winterpause. Termine 2026/27 nach dem Rahmenterminkalender, einzelne Spieltage geschätzt.</p></div>
   <div class="card"><h3>Nächste Termine</h3>${komm.length?`<table><tbody>${komm.map(([d,e])=>{const f=e.art==='ende'?null:paarung(e),o=f?(f[0]===S.my?f[1]:f[0]):null;return`<tr><td>${datumKurz(d)}</td><td>${esc(spielName(e))}${f?`<br><span class="dim">${f[0]===S.my?'gegen':'bei'} ${esc(tn(o))}</span>`:e.art==='pokal'?'<br><span class="dim">Gegner wird ausgelost</span>':''}</td></tr>`;}).join('')}</tbody></table>`:'<p class="dim">Keine Termine mehr.</p>'}</div></div>`;};
 V.pokal=()=>{const done=S.cup.hist.length>=6,alive=S.cup.alive.includes(S.my);
-  return`<div class="card"><h2>DFB-Pokal ${S.season}/${(S.season+1)%100}</h2><p>${done?`Pokalsieger: <b>${esc(tn(S.cup.alive[0]))}</b>`:alive?'Dein Verein ist noch im Wettbewerb.':'Dein Verein ist ausgeschieden.'} <span class="dim">64 Teams: 36 Profivereine und 28 Amateurklubs. K.-o.-Modus mit Verlängerung und Elfmeterschießen.</span></p>
-  <p class="dim">Termine: ${POKAL_RUNDEN.map((n,i)=>`${n} ${datumKurz(S.plan.pokal[i])}`).join(' · ')}</p>
-  ${S.cup.hist.map((rd,i)=>`<h3 style="margin-top:14px">${POKAL_RUNDEN[i]} · ${datumKurz(S.plan.pokal[i])}</h3><div class="tw"><table><tbody>${rd.map(([h,a,hg,ag,pen])=>`<tr class="${h===S.my||a===S.my?'me':''}"><td>${esc(tn(h))}</td><td class="num"><b>${hg}:${ag}</b>${pen?` <span class="dim">(${pen[0]}:${pen[1]} i.E.)</span>`:''}</td><td>${esc(tn(a))}</td></tr>`).join('')}</tbody></table></div>`).reverse().join('')||`<p class="dim">Die 1. Runde wird am ${datumMittel(S.plan.pokal[0])} gespielt.</p>`}</div>`;};
+  return`<div class="card"><h2>DFB-Pokal ${S.season}/${(S.season+1)%100}</h2><p>${done?`Pokalsieger: <b>${esc(tn(S.cup.alive[0]))}</b>`:alive?'Dein Verein ist noch im Wettbewerb.':'Dein Verein ist ausgeschieden.'} <span class="dim">64 Teams: 36 aus der 1. und 2. Liga, ${RF.pokal.drittligisten} aus der 3. Liga und ${RF.pokal.amateure} Amateurklubs. K.-o.-Modus mit Verlängerung und Elfmeterschießen.</span></p>
+  <p class="dim">Termine: ${POKAL_RUNDEN.map((n,i)=>`${n} ${datumKurz(S.plan.pokal[i][0])}`).join(' · ')}</p>
+  ${S.cup.hist.map((rd,i)=>`<h3 style="margin-top:14px">${POKAL_RUNDEN[i]} · ${datumKurz(S.plan.pokal[i][0])}</h3><div class="tw"><table><tbody>${rd.map(([h,a,hg,ag,pen])=>`<tr class="${h===S.my||a===S.my?'me':''}"><td>${esc(tn(h))}</td><td class="num"><b>${hg}:${ag}</b>${pen?` <span class="dim">(${pen[0]}:${pen[1]} i.E.)</span>`:''}</td><td>${esc(tn(a))}</td></tr>`).join('')}</tbody></table></div>`).reverse().join('')||`<p class="dim">Die 1. Runde wird am ${datumMittel(S.plan.pokal[0][0])} gespielt.</p>`}</div>`;};
 V.transfer=()=>{const t=myT(),XI=new Set();S.teams.forEach(x=>bestXI(x.id,x.form).forEach(id=>XI.add(id)));
   let L=S.pl.filter(p=>p.team!==S.my&&p.team>=-1);
   if(TF.pos)L=L.filter(p=>p.pos===TF.pos);if(TF.lg==='f')L=L.filter(p=>p.team===-1);else if(TF.lg)L=L.filter(p=>p.team>=0&&S.teams[p.team].lg===+TF.lg);
@@ -117,7 +122,7 @@ V.transfer=()=>{const t=myT(),XI=new Set();S.teams.forEach(x=>bestXI(x.id,x.form
   return`<div class="card"><h2>Transfermarkt</h2><p class="dim">Kontostand ${fmt(t.cash)} · Kader ${squad(S.my).length}/${RM.kaderMax} · Jeder Spieler ist anfragbar. Spieler auf der Transferliste sind günstiger, Stammspieler teurer.</p>
   <div class="row" style="margin-bottom:10px">
   <label>Position <select id="tf_pos" onchange="TF.pos=this.value;render()"><option value="">alle</option>${['TW','AB','MF','ST'].map(x=>`<option ${TF.pos===x?'selected':''}>${x}</option>`).join('')}</select></label>
-  <label>Liga <select id="tf_lg" onchange="TF.lg=this.value;render()"><option value="">alle</option><option value="1" ${TF.lg==='1'?'selected':''}>1. Liga</option><option value="2" ${TF.lg==='2'?'selected':''}>2. Liga</option><option value="f" ${TF.lg==='f'?'selected':''}>vereinslos</option></select></label>
+  <label>Liga <select id="tf_lg" onchange="TF.lg=this.value;render()"><option value="">alle</option><option value="1" ${TF.lg==='1'?'selected':''}>1. Liga</option><option value="2" ${TF.lg==='2'?'selected':''}>2. Liga</option><option value="3" ${TF.lg==='3'?'selected':''}>3. Liga</option><option value="f" ${TF.lg==='f'?'selected':''}>vereinslos</option></select></label>
   <label>Max. Ablöse <select id="tf_max" onchange="TF.max=+this.value||'';render()"><option value="">egal</option>${[1,2,5,10,20,40].map(v=>`<option value="${v}" ${TF.max===v?'selected':''}>${v} Mio €</option>`).join('')}</select></label>
   <label>Name / Verein <input id="tf_q" value="${esc(TF.q)}" onchange="TF.q=this.value;render()" placeholder="Enter zum Suchen"></label>
   <label style="grid-auto-flow:column;align-items:center;gap:6px"><input id="tf_list" type="checkbox" ${TF.list?'checked':''} onchange="TF.list=this.checked?1:0;render()"> nur Transferliste &amp; vereinslos</label></div>

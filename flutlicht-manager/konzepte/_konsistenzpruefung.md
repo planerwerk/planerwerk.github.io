@@ -128,3 +128,19 @@ Geprüft: K01, K33 und die Umsetzung U1 gegen PLAN.md, K35 und die übrigen Konz
 | H11 | **Sommerpause:** Juni und Juli werden übersprungen, jede Saison beginnt in der Woche vor dem 1. Spieltag der 2. Liga. | 🔶 Entscheidung K01, Frage 1. K12 füllt die Vorbereitung später. |
 
 **Was ich von dir brauche (neu):** die offenen Fragen am Ende von K01 (Sommer, ein Tag je Spieltag, geschätzte Termine, Erinnerungen ab Werk) und K33 (alte Spielstände, eigene Datensätze, Durchsicht der Stärkewerte).
+
+---
+
+## I. Nachtrag nach deinen Entscheidungen (6./7. November 2026)
+
+| # | Befund | Status |
+|---|---|---|
+| I1 | H1/H2 erledigt: Der offizielle Spielplan 2026/27 steht in `daten/spielplan-2026.js`. K13 pflegt ihn künftig, K01 regelt den Ablauf. | ✅ |
+| I2 | H10 erledigt: Alte Spielstände werden gelöscht. H11 erledigt: Der Sommer wird gespielt. | ✅ |
+| I3 | **Leerer Sommer:** Bis K11 und K12 umgesetzt sind, besteht der Sommer aus Urlaub, Transfermarkt und Sponsorwahl, etwa zehn Halte ohne viel Inhalt. | 🔶 Vorschlag: K11 und den Sommerteil von K12 in Welle 2 ziehen (PLAN §7). |
+| I4 | **Finanzen der 3. Liga** sind grob: Gehälter richten sich nur nach der Stärke, kleine Drittligisten machen dadurch Verlust. Deshalb ist die 3. Liga zum Start noch nicht wählbar. | 📌 K21 und K23. Offene Frage K32a/1. |
+| I5 | **Zweitmannschaften:** Kein Aufstieg in die 2. Liga, kein Pokal. Noch nicht geregelt: Erste und Zweite Mannschaft in derselben Liga (wäre nur nach zwei Abstiegen möglich). | 📌 K13 |
+| I6 | **Konferenz:** Spiele mit anderer Anstoßzeit am selben Tag laufen in der Konferenz parallel mit. | 📌 K05 (Live-Spiel) |
+| I7 | **Regionalliga:** Wechsel des direkten Aufstiegsplatzes abgeleitet, Kapazitäten der Pool-Vereine aus dem Gedächtnis. | 📌 K32a, Fragen 3 und 4 |
+| I8 | **Urlaubslänge 2–4 Wochen** ist noch fest, weil es ohne Frische und Stimmung keinen Grund für einen langen Urlaub gibt. | 📌 K03, K12, K14 |
+| I9 | **Fehler gefunden und behoben:** Die Aufstellungsansicht änderte beim Anzeigen die gespeicherte Startelf, ohne zu speichern. Nach dem Neuladen wich der Spielstand ab. | ✅ |

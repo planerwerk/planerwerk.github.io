@@ -1,5 +1,6 @@
 // Aktionen des Spielers.
-function tab(k){TAB=k;render();window.scrollTo(0,0);}
+// Beim Öffnen der Aufstellung wird die Startelf mit den Ausfällen abgeglichen und gespeichert (Erinnerung „Aufstellung“ erledigt)
+function tab(k){TAB=k;if(k==='aufst'&&S){S.lineup=myXI();save();}render();window.scrollTo(0,0);}
 function setSlot(i,id){id=+id;const xi=myXI(),j=xi.indexOf(id);if(j>=0)xi[j]=xi[i];xi[i]=id;S.lineup=xi;save();render();}
 function setForm(f){myT().form=f;S.lineup=bestXI(S.my,f);save();render();}
 function setTac(v){myT().tac=v;save();render();}
@@ -23,7 +24,7 @@ function declineOffer(i){S.offers.splice(i,1);save();render();}
 function offer(id){const p=PIX.get(id),t=myT(),msg=document.getElementById('msg'),yrs=+document.getElementById('yrs').value,M=RM,I=M.interesse;
   if(squad(S.my).length>=M.kaderMax){msg.textContent=`Dein Kader ist voll (höchstens ${M.kaderMax} Spieler).`;return;}
   const from=p.team>=0?S.teams[p.team]:null,lvl=teamLevel(S.my);
-  const interest=(t.rep-(from?from.rep:t.rep-I.vereinslosAbstand))+(lvl-p.str)*I.niveauFaktor+I.basis+(t.lg===1?I.liga1:I.liga2)+(p.age>=I.altAb?I.altPlus:0)+(p.seed-0.5)*I.zufall;
+  const interest=(t.rep-(from?from.rep:t.rep-I.vereinslosAbstand))+(lvl-p.str)*I.niveauFaktor+I.basis+(t.lg===1?I.liga1:t.lg===2?I.liga2:I.liga3)+(p.age>=I.altAb?I.altPlus:0)+(p.seed-0.5)*I.zufall;
   if(interest<0){msg.textContent=`${p.n} hat kein Interesse an einem Wechsel zu ${t.name}.`;return;}
   const sal=Math.round(salaryFor(p.str)*(M.gehalt.basis+p.seed*M.gehalt.zufall)/1000)*1000;let fee=0;
   if(from){fee=Math.round((+document.getElementById('fee').value||0)*1e6);const ask=askPrice(p);

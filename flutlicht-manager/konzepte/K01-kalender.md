@@ -1,6 +1,6 @@
 # K01 – Kalender und Tagesablauf
 
-Status: **Entwurf**, Grundgerüst umgesetzt in U1.
+Status: **Entwurf**, umgesetzt in U1 und im Nachtrag vom 6.11. (Sommer, Anstoßzeiten, offizieller Spielplan). Deine Entscheidungen vom 6.11. sind eingearbeitet.
 Hängt ab von: K33 (Daten), K35a (Bedienung) · Wird gebraucht von: K05, K07, K09–K13, K19–K21, K23, K29, K30.
 
 ## 1. Ziel und Spielgefühl
@@ -30,8 +30,9 @@ Hängt ab von: K33 (Daten), K35a (Bedienung) · Wird gebraucht von: K05, K07, K0
 
 **Ereignisarten** (✓ in U1, ○ später):
 
-- ✓ Ligaspiel, 1. und 2. Liga mit getrennten Terminen
-- ✓ Pokalrunde, ✓ Relegation mit Hin- und Rückspiel, ✓ Saisonende
+- ✓ Ligaspiel in 1., 2. und 3. Liga, jedes Spiel mit eigenem Tag und Anstoßzeit
+- ✓ Pokalrunde, ✓ Relegation 1./2. und 2./3. Liga mit Hin- und Rückspiel, ✓ Saisonende
+- ✓ Saisonwechsel am 1. Juli, ✓ Trainingsauftakt nach dem Sommerurlaub
 - ✓ Frist: Angebot für einen deiner Spieler läuft ab
 - ✓ Bau fertig (nur Info)
 - ○ Transferfenster (K19), Sportgericht (K09), Gespräch angefragt (K15), Ereigniskarte (K30), Trainingslager (K11, K12), Monatsabrechnung (K23), Abstellung zu Länderspielen (K13)
@@ -59,27 +60,27 @@ Die Erinnerungen „kein Trainingsplan“ und „spielfreie Woche ohne Testspiel
 2. Montags die Wochenwerte: Training und Entwicklung, Formausgleich, Transfermarkt, Vorstand bei Minus auf dem Konto.
 3. Spiele des Tages in allen Wettbewerben, danach Finanzen und Vorstand je Spiel.
 
-**Saison:**
-- Spielbeginn 2026/27 ist Montag, 3. August 2026, die Woche vor dem 1. Spieltag der 2. Liga.
-- Saisonende ist der Tag nach dem Relegations-Rückspiel (1. Juni 2027). Dann folgen Saisonbilanz und neue Saison.
-- Juni und Juli werden übersprungen, bis K12 (Saisonvorbereitung) sie mit Inhalt füllt.
+**Saison und Sommer** (Entscheidung 6.11.: der Sommer wird nicht übersprungen):
+1. Die Karriere beginnt am 1. Juli 2026. Die Mannschaft ist bis zum Trainingsauftakt am Montag, 6. Juli, im Urlaub.
+2. Saisonende ist der Tag nach dem letzten Relegationsspiel (2. Juni 2027). Dann kommt die Saisonbilanz.
+3. Danach Sommerpause: Die Mannschaft ist im Urlaub, das Training ruht, die Fitness sinkt langsam. Der Transfermarkt läuft weiter.
+4. Am 1. Juli wechselt die Saison: Auf- und Abstieg, Alter, Verträge, Nachwuchs, neuer Spielplan, Sponsorangebote. Das ist ein Halt.
+5. Trainingsauftakt (Halt), danach Vorbereitung bis zum ersten Pflichtspiel.
+6. Im Sommer gehören dazu: Urlaub von 2 bis 4 Wochen (wählbar), Testspiele, Trainingslager und neue Sponsorverträge. In diesem Stand gibt es nur den festen Urlaub und die Sponsorangebote. Wahl der Urlaubslänge, Testspiele und Trainingslager kommen mit K11 und K12.
 
 ## 5. Regeln und Formeln
 
-**Termine 2026/27.** Gesicherte Eckdaten aus dem Rahmenterminkalender von DFB und DFL, wie ihn die Quellen unten wiedergeben. ⚠ = von mir passend zu den Eckdaten geschätzt.
+**Spielplan 2026/27:** offizieller Spielplan aller drei Ligen aus OpenLigaDB (`daten/spielplan-2026.js`, Stand 7.11.2026): Paarungen, Tage und Anstoßzeiten. Die Spieltage 1–18 (1. und 2. Liga) und 1–15 (3. Liga) sind zeitgenau angesetzt. Für die späteren steht nur das Wochenende fest.
 
-| Was | Termin |
-|---|---|
-| 1. Liga | 1. Spieltag 28.–30.8.2026, 14 Spieltage bis 18.–20.12., Rückrunde ab 8.–10.1.2027, 27. Spieltag 19.–21.3., 34. Spieltag 22.5.2027 |
-| 1. Liga, englische Wochen | ⚠ 13.1. und 20.1.2027 (nötig, weil nur 14 Spieltage vor der Winterpause liegen) |
-| 2. Liga | 1. Spieltag 7.–9.8.2026, 17. Spieltag 15.–17.1.2027, 34. Spieltag 23.5.2027. ⚠ alle Termine dazwischen |
-| DFB-Pokal | 1. Runde 21.–24.8., 2. Runde 27./28.10., Achtelfinale 1./2.12.2026, Viertelfinale 2./3.2.2027, Halbfinale 20./21.4., Finale 29.5.2027 in Berlin |
-| Relegation | 27./28.5. und 31.5./1.6.2027 |
-| Länderspielpausen | 21.9.–6.10.2026 (zwei Fenster zusammengelegt), 9.–17.11.2026, 22.–30.3.2027 |
-| Sonst | 1.5.2027 (Samstag) spielfrei |
+**Spieltage über das Wochenende verteilt** (Entscheidung 6.11., von dir an mich delegiert):
+- Football Manager setzt die echten Termine und Anstoßzeiten an (eigene Kenntnis, nicht eigens nachgeprüft). Die Klassiker BMH und Anstoss spielten den Spieltag, soweit ich weiß, an einem Tag mit großer Konferenz. Dafür habe ich keinen Beleg gefunden.
+- Wir folgen der Wirklichkeit. Gründe: Der offizielle Spielplan ist so, der Tageskalender macht Ruhetage spürbar (Freitag- oder Sonntagsspiel vor einem Pokalspiel am Dienstag), und die Konferenz bleibt erhalten: Samstag 15:30 laufen in der 1. Liga fünf Spiele gleichzeitig.
+- Dein Spiel ist ein Halt, die übrigen Spiele laufen im Hintergrund. In der Konferenz stehen alle Spiele des Tages, mit Anstoßzeit, wenn sie abweicht.
+- **Raster** für Spieltage ohne feste Anstoßzeit und für alle späteren Saisons (in `regeln.js`): 1. Liga Fr 20:30, Sa 15:30 (5×), Sa 18:30, So 15:30, So 17:30. 2. Liga Fr 18:30 (2×), Sa 13:00 (3×), Sa 20:30, So 13:30 (3×). 3. Liga Fr 19:00, Sa 14:00 (5×), Sa 16:30, So 13:30, 16:30, 19:30. Unter der Woche Di und Mi. Attraktive Paarungen bekommen die besten Plätze, mit etwas Zufall.
+- **Der letzte Spieltag** wird zeitgleich angepfiffen, wie im offiziellen Plan.
+- Pokal: weiter eine Runde an einem Tag (1. Runde Sa 22.8., Finale Sa 29.5.). Relegationen: 27. und 31.5. (1./2. Liga), 28.5. und 1.6. (2./3. Liga).
+- **Folgejahre:** Paarungen neu ausgelost, die Spieltage um volle Wochen verschoben, Anstoßzeiten im Raster.
 
-- **Im Spiel liegt ein Spieltag an einem Tag:** 1. Liga samstags, 2. Liga sonntags, englische Wochen mittwochs, Pokal dienstags (1. Runde und Finale samstags), Relegation donnerstags und montags.
-- **Folgejahre:** Die Termine von 2026/27 werden um volle Wochen verschoben, damit die Wochentage gleich bleiben. Echte Daten kommen später als eigene Datei dazu (K33).
 - **Ausfälle in Tagen:** Eine Verletzung von w Wochen bedeutet 7·w Ausfalltage nach dem Spieltag. Wer am Samstag eine Woche Pause bekommt, fehlt also auch am nächsten Samstag, wie bisher. In englischen Wochen verpasst er dadurch mehr Spiele. Sperren zählen weiter Spiele der eigenen Mannschaft.
 - **Was bisher pro Woche galt** (Training, Markt, Formausgleich), läuft montags. **Was pro Spieltag galt** (Finanzen, Vorstand), läuft beim Spiel. Eine Saison hat dadurch etwa 43 statt 40 Wochenschritte. Das gleicht U3 bei der Kalibrierung mit aus.
 
@@ -127,15 +128,20 @@ In `daten/regeln.js`, Abschnitt `kalender`:
 | `erinnerungVertragTage` | 7 | so viele Tage vor Saisonende erinnert „Tag beenden“ an auslaufende Verträge |
 | `vorstand.schonfristSpieltage` | 6 | entlassen erst nach mehr als so vielen eigenen Ligaspieltagen |
 | `erinnerungen` | alle an | Arten der Erinnerungen, abschaltbar im Menü |
+| `anstoss`, `attraktivZufall` | siehe oben | Raster der Anstoßzeiten je Liga |
+| `training.urlaubAbbau`, `urlaubMin` | 0,6 / 70 | Fitnessverlust pro Urlaubstag und Untergrenze |
 
 ## 12. Offene Fragen
 
-1. **Sommer:** bis K12 überspringen (so umgesetzt) oder Tag für Tag?
-2. **Spieltag an einem Tag** (so umgesetzt) oder verteilt auf Freitag bis Montag wie in echt?
-3. **Geschätzte Termine** (2. Liga, englische Wochen der 1. Liga): den offiziellen Spielplan nachtragen, wenn du ihn möchtest.
-4. **Erinnerungen ab Werk:** alle an (so umgesetzt)?
+Entschieden am 6.11.: Der Sommer wird gespielt, Spieltage sind über das Wochenende verteilt, der offizielle Spielplan wird genutzt, alte Spielstände werden gelöscht.
+
+1. **Erinnerungen ab Werk:** alle an (so umgesetzt)?
+2. **Urlaubslänge 2–4 Wochen:** Sie wird erst eine echte Wahl, wenn Frische und Stimmung (K03, K14) wirken. Bis dahin gilt ein fester Urlaub bis zum Trainingsauftakt. Einverstanden?
+3. **Sommer füllen:** Testspiele und Trainingslager (K11) sowie Urlaub und Vorbereitung (K12) früher bauen? Vorschlag: beide in Welle 2.
 
 ## Quellen
+
+- Offizieller Spielplan 2026/27: [OpenLigaDB](https://api.openligadb.de/getmatchdata/bl1/2026), ebenso `bl2` und `bl3`
 
 - Bundesliga-Eckdaten: [flashscore.de](https://www.flashscore.de/news/fu-ball-bundesliga-bundesliga-start-2026-wegen-wm-erst-am-28-august-nur-14-spiele-vor-winterpause/fwAdiTuJ/), [fcbayern.com](https://fcbayern.com/de/news/2025/11/bundesliga-pokal-supercup-rahmenterminkalender-der-saison-2026-27-vorgestellt), [stuttgarter-zeitung.de](https://www.stuttgarter-zeitung.de/sport/sport-mix/wann-geht-die-bundesliga-weiter-alle-termine-nach-der-laenderspielpause-79532225.html)
 - 2. Liga: [stuttgarter-zeitung.de](https://www.stuttgarter-zeitung.de/sport/sport-mix/2-bundesliga-start-202627-saisonstart-spielplan-termine-tv-uebertragung-das-muessen-fans-wissen-79320599.html), [sport.sky.de](https://sport.sky.de/fussball/artikel/2-bundesliga-spieltag-1-und-2-2026-27-veroeffentlicht-alle-spiele-termine-und-uhrzeiten/13561240/34150), [anstosszeiten.de](https://anstosszeiten.de/2-bundesliga/)

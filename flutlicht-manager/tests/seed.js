@@ -8,7 +8,7 @@ const LAUF=({seed,bis,von})=>{if(!von){buildWorld(seed);S.my=6;S.mgr='Seed';setT
     if(h===4){setForm('4-3-3');setTac('O');S.train=2;loan(5);startBuild('cap');}
     if(h===9){const fa=S.pl.filter(p=>p.team===-1).sort((a,b)=>b.str-a.str||a.id-b.id)[0];if(fa){openP(fa.id);offer(fa.id);closeOv();}}
     if(h===14&&S.offers.length)acceptOffer(0);
-    if(S.phase==='end'){if(S.fired)takeJob(S.jobs[0]);newSeason();continue;}
+    if(S.phase==='end'){if(S.fired)takeJob(S.jobs[0]);sommerpause();continue;}
     if(S.fired)takeJob(S.jobs[0]);
     if(heuteMeinSpiel())tagesSpiele(S.tag);
     weiter();}

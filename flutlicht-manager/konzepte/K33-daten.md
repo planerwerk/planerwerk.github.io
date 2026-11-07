@@ -23,10 +23,11 @@ index.html          Gerüst, lädt Stile und Skripte in fester Reihenfolge
 css/spiel.css       Aussehen des Spiels
 css/regler.css      Regler-Bausteine (aus muster/regler.html übernommen)
 daten/regeln.js     alle Stellschrauben (REGELN)
-daten/vereine.js    36 Vereine, Amateurklubs im Pokal, Sponsoren
+daten/vereine.js    56 Vereine der 1. bis 3. Liga, Regionalliga-Pool, Amateurklubs, Sponsoren
 daten/spieler.js    Kader 2026/27 nach Wikipedia, eine Zeile pro Spieler
 daten/namen.js      Vor- und Nachnamen für erfundene Spieler
 daten/termine.js    Rahmentermine 2026/27 (K01)
+daten/spielplan-2026.js  offizieller Spielplan 2026/27, 1. bis 3. Liga (K01)
 daten/texte.js      Ticker-Texte und feste Beschreibungen
 js/zufall.js        Zufall mit Seed
 js/hilfen.js        Formatierung und kleine Helfer
@@ -53,8 +54,8 @@ tests/              Testskripte
 
 **Spielstand:**
 - Felder: `v` (Version), `seed` (Startwert), `zufall` (Zustand des Generators), `saison`, `tag`, `plan`, Vereine, Spieler, Ergebnisse, Nachrichten, Einstellungen (`einst`).
-- Gespeichert im Browser (Schlüssel `flutlicht-manager-v2`), dazu Export und Import als Code im Menü.
-- **Version 2 ab U1.** Spielstände der Version 1 (Wochenkalender) lehnt das Spiel mit Hinweis ab. Der Spielplan lässt sich nicht sauber auf Tage umrechnen, weil die beiden Ligen jetzt an verschiedenen Tagen spielen. Der alte Spielstand bleibt im Browser liegen und wird nicht gelöscht.
+- Gespeichert im Browser (Schlüssel `flutlicht-manager-v3`), dazu Export und Import als Code im Menü.
+- **Version 3** seit 6.11. (3. Liga, Anstoßzeiten, Sommer). Spielstände älterer Testversionen sind laut deiner Entscheidung Müll: Das Spiel löscht sie beim Start.
 
 ## 4. Abläufe
 
@@ -103,6 +104,6 @@ Aufbau von `regeln.js`, ein Abschnitt pro Bereich: `spielstand`, `kalender`, `we
 
 ## 12. Offene Fragen
 
-1. **Alte Spielstände** ablehnen statt umrechnen (so umgesetzt): einverstanden?
+1. ~~Alte Spielstände~~: entschieden am 6.11., sie werden gelöscht.
 2. **Eigene Datensätze:** Soll man später eine eigene `spieler.js` ins Spiel laden können, ohne die Datei im Projekt zu tauschen?
 3. **Pflege der Stärkewerte:** Die Wikipedia-Kader haben geschätzte Stärken. U2 leitet daraus das neue Spielermodell ab. Willst du die Schätzungen vorher selbst durchsehen?

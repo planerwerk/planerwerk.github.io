@@ -7,9 +7,9 @@
 const REGELN={
 
   spielstand:{
-    version:2,                       // Version des Spielstands (2 = Tageskalender, ab U1)
-    schluessel:'flutlicht-manager-v2', // Speicherplatz im Browser
-    alterSchluessel:'flutlicht-manager-v1', // Spielstand der Version 1 (Wochenkalender), wird nicht mehr geladen
+    version:3,                       // Version des Spielstands (3 = 3. Liga, Anstoßzeiten, Sommer)
+    schluessel:'flutlicht-manager-v3', // Speicherplatz im Browser
+    alteSchluessel:['flutlicht-manager-v1','flutlicht-manager-v2'], // Spielstände älterer Testversionen, werden beim Start gelöscht
     nachrichtenMax:80                // so viele Nachrichten bleiben im Posteingang
   },
 
@@ -20,6 +20,14 @@ const REGELN={
     vertragsWarnungNachSpieltag:25,  // nach diesem Ligaspieltag warnt das Büro vor auslaufenden Verträgen
     hinweisVertraegeAbSpieltag:18,   // ab so vielen gespielten Ligaspieltagen zeigt das Büro auslaufende Verträge
     erinnerungVertragTage:7,         // so viele Tage vor Saisonende erinnert „Tag beenden“ an auslaufende Verträge
+    // Anstoßzeiten für Spieltage ohne feste Ansetzung (und alle Spieltage späterer Saisons), je Liga.
+    // [Tag, Uhrzeit, Anzahl Spiele], in der Reihenfolge, in der die attraktivsten Spiele verteilt werden.
+    // Wochenende: Fr/Sa/So rund um den Samstag. Wochenmitte: Di/Mi. Der letzte Spieltag läuft zeitgleich.
+    anstoss:{
+      1:{wochenende:[['Sa','18:30',1],['So','17:30',1],['Fr','20:30',1],['So','15:30',1],['Sa','15:30',5]],mitte:[['Mi','20:30',4],['Di','20:30',3],['Mi','18:30',1],['Di','18:30',1]],letzter:'15:30'},
+      2:{wochenende:[['Sa','20:30',1],['Fr','18:30',2],['So','13:30',3],['Sa','13:00',3]],mitte:[['Di','18:30',4],['Mi','18:30',5]],letzter:'15:30'},
+      3:{wochenende:[['Sa','16:30',1],['Fr','19:00',1],['So','16:30',1],['So','19:30',1],['So','13:30',1],['Sa','14:00',5]],mitte:[['Di','19:00',5],['Mi','19:00',5]],letzter:'13:30'}},
+    attraktivZufall:15,              // Zufall bei der Verteilung auf die Anstoßzeiten (in Ansehen-Punkten)
     erinnerungen:{frist:'Angebot läuft heute ab',aufstellung:'Startelf hat Ausfälle',sponsor:'Kein Sponsor gewählt',vertrag:'Verträge laufen aus'} // abschaltbar im Menü
   },
 
@@ -62,14 +70,14 @@ const REGELN={
   },
 
   finanzen:{
-    spieltage:34,                    // Jahresbeträge (Gehälter, Zinsen) werden durch diese Zahl geteilt, je Ligaspieltag gebucht
-    tv:{liga1:{basis:120000,jeAnsehen:2500},liga2:{basis:50000,jeAnsehen:900}}, // je Ligaspieltag
+    tv:{liga1:{basis:120000,jeAnsehen:2500},liga2:{basis:50000,jeAnsehen:900},liga3:{basis:20000,jeAnsehen:400}}, // je Ligaspieltag
     betrieb:{jePlatz:1,jeLoge:300},  // Stadion und Betrieb je Ligaspieltag
     jugendKosten:[0,20000,40000,70000,110000,160000], // je Ligaspieltag, Index = Stufe
     kreditZins:0.08,                 // pro Saison
     kreditRahmen:{basis:2e6,jeAnsehen:250000},
     pokalPraemien:[2e5,4e5,8e5,1.6e6,3.2e6,4.5e6], // je gespielter Runde
     pokalSieg:3e6,
+    pokal:{drittligisten:4,amateure:24}, // DFB-Pokal: 36 aus 1. und 2. Liga, dazu die besten Drittligisten (ohne Zweitmannschaften) und Amateure
     fremdeEinnahmen:{liga:30,pokal:10}, // Computer-Vereine: Ansehen² × Wert je Spieltag bzw. Pokalrunde
     fanartikel:[0,1.5,3,5],          // € je Zuschauer, Index = Fanshop-Stufe
     loge:3000,                       // € je Loge und Heimspiel
@@ -77,9 +85,9 @@ const REGELN={
       preisExponent:1.2,preisMin:0.2,preisMax:1.4, // Preiswirkung = (Richtpreis / Preis)^Exponent, begrenzt
       formBasis:0.86,formJePunkt:0.06, // Form = Punkte der letzten 5 Spiele im Schnitt
       gegnerBasis:0.88,gegnerFaktor:0.3,gegnerOhne:40, // Gegner = basis + Ansehen/100 × faktor
-      liga2:0.82,pokal:1.05,zufallBasis:0.95,zufallSpanne:0.1},
+      liga2:0.82,liga3:0.7,pokal:1.05,zufallBasis:0.95,zufallSpanne:0.1},
     ticketPreis:{min:5,max:150,standard:20},
-    sponsor:{liga1:45,liga2:18,      // Grundbetrag je Spieltag = Ansehen² × Wert
+    sponsor:{liga1:45,liga2:18,liga3:8,      // Grundbetrag je Spieltag = Ansehen² × Wert
       angebote:[
         {fix:1,sieg:0,jahre:1,info:'Festes Geld pro Spieltag, 1 Saison'},
         {fix:0.65,sieg:1.3,jahre:1,info:'Weniger Fixum, dafür Prämie pro Sieg, 1 Saison'},
@@ -101,7 +109,7 @@ const REGELN={
     angebote:{preis:[[1,0.4],[1.3,0.2],[1.7,0.06]],preisSonst:0.01, // Chance je Woche nach Forderung/Marktwert
       kontoAnteil:0.8,betragBasis:0.85,betragSpanne:0.2,laufzeitWochen:3},
     ueberraschung:{niveauPlus:2,chance:0.012,betragBasis:1.1,betragSpanne:0.4},
-    interesse:{basis:18,liga1:5,liga2:-8,altAb:31,altPlus:8,niveauFaktor:1.5,zufall:20,vereinslosAbstand:5},
+    interesse:{basis:18,liga1:5,liga2:-8,liga3:-16,altAb:31,altPlus:8,niveauFaktor:1.5,zufall:20,vereinslosAbstand:5},
     ernstAb:0.7,                     // darunter: „Kein ernsthaftes Angebot“
     gehalt:{basis:1.05,zufall:0.2,altAb:31,altFaktor:0.85} // Gehaltsforderung = Gehalt × (basis + Zufall), ältere günstiger bei Verlängerung
   },
@@ -115,6 +123,7 @@ const REGELN={
     wachstumSonst:-0.22,
     einsatz:{mit:1.3,ohne:0.75},     // Faktor auf Wachstum mit und ohne Einsatz in der Woche
     zufall:0.12,                     // Schwankung der Stärke pro Woche
+    urlaubAbbau:0.6,urlaubMin:70,    // im Sommerurlaub sinkt die Fitness pro Tag bis zu dieser Grenze, Training ruht
     staerkeMin:25,staerkeMax:99,
     formMitte:5,formAusgleich:0.08,  // Form wandert pro Woche um diesen Anteil zur Mitte
     computerStufe:1,
@@ -157,7 +166,7 @@ const REGELN={
     saisonErreicht:20,saisonWeitAb:3,saisonWeit:-25,saisonVerfehlt:-8,entlassenSaisonUnter:15,
     neuerJob:55,
     jobs:{ansehenAbschlag:4,kandidaten:8,angebote:4},
-    ziel:{spitzeBis:3,spitzePlus:1,plus:2,schlechtester:15,liga2Mindestens:2} // Saisonziel aus dem erwarteten Platz
+    ziel:{spitzeBis:3,spitzePlus:1,plus:2,schlechtester:{1:15,2:15,3:16},unterhalbMindestens:2} // Saisonziel aus dem erwarteten Platz; 2. und 3. Liga: bestes Ziel Platz 2
   },
 
   saison:{
@@ -171,7 +180,12 @@ const REGELN={
     kaderSoll:{TW:3,AB:7,MF:7,ST:5},vereinslosBis:4,vereinslosChance:0.6,
     auffuellAlter:[19,30],auffuellAbschlag:3,auffuellStreuung:[-5,4],
     kaderMax:28,vereinsloseMax:90,
-    relegationLos:0.5
+    relegationLos:0.5,
+    abstieg3:4,                      // so viele Vereine steigen aus der 3. Liga in die Regionalliga ab
+    // Regionalliga (K32a): je Staffel wird ein Meister gelost, gewichtet mit (Ansehen − basis)². West und Südwest steigen direkt auf,
+    // von Nord, Nordost und Bayern eine Staffel im Wechsel direkt, die anderen beiden spielen Aufstiegsspiele.
+    regionalliga:{staffeln:['Nord','Nordost','West','Südwest','Bayern'],direkt:['West','Südwest'],wechsel:['Bayern','Nord','Nordost'],wechselStart:2025,basis:15,
+      spielStaerke:{basis:50,jeAnsehen:0.4},tore:1.35,heim:1.1}
   },
 
   stadion:{

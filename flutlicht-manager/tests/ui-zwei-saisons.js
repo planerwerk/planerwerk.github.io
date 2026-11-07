@@ -9,9 +9,9 @@ const TABS=['Büro','Kalender','Kader','Aufstellung','Tabelle','Spielplan','Poka
 const b=await chromium.launch();const ctx=await b.newContext({viewport:{width:1280,height:900}});const pg=await ctx.newPage();
 pg.on('pageerror',e=>note('JS','PAGEERR '+e.message+' | '+(e.stack||'').split('\n').slice(1,3).join(' ')));
 pg.on('console',m=>{if(m.type()==='error')note('JS','CONSOLE '+m.text());});
-// alter Spielstand (Version 1) im Browser: Hinweis statt „Weiterspielen“
-await pg.goto(FILE);await pg.evaluate(()=>{localStorage.clear();localStorage.setItem('flutlicht-manager-v1','{"v":1,"teams":[],"pl":[]}');});await pg.reload();
-if(!(await pg.evaluate(()=>document.body.innerText.includes('alten Version'))))note('Start','kein Hinweis auf alten Spielstand');
+// Spielstände älterer Testversionen werden beim Start gelöscht
+await pg.goto(FILE);await pg.evaluate(()=>{localStorage.clear();localStorage.setItem('flutlicht-manager-v1','{"v":1}');localStorage.setItem('flutlicht-manager-v2','{"v":2}');});await pg.reload();
+if(await pg.evaluate(()=>!!(localStorage.getItem('flutlicht-manager-v1')||localStorage.getItem('flutlicht-manager-v2'))))note('Start','alte Spielstände nicht gelöscht');
 if(await pg.$('button:text-is("Weiterspielen")'))note('Start','alter Spielstand wird zum Weiterspielen angeboten');
 await pg.selectOption('#club',{label:'SC Freiburg'});await pg.fill('#mgr','Testtrainer');await pg.click('summary:text-is("Erweitert")');await pg.fill('#seed','4711');await pg.click('text=Anpfiff zur Karriere');
 await pg.evaluate(PRUEFUNGEN);
@@ -63,7 +63,7 @@ async function actions(s,tag){const wk=s.wk,yr=s.season,K=yr+':'+wk+':';
  if(yr===2027&&wk===2&&once(K+'normal')){await tabClick('Training & Jugend');await pg.click('.opt:has(b:text-is("Normal"))');await tabClick('Aufstellung');await pg.selectOption('#formsel','3-5-2');}
  if(yr===2027&&wk===9&&once(K+'vertrauen')){await pg.evaluate(()=>{S.trust=5;});actlog.push(tag+' Vertrauen künstlich auf 5 gesetzt (Entlassung testen)');}
  const rid=await pg.evaluate(()=>S.pl[Math.floor(Math.random()*S.pl.length)].id);await pg.evaluate(i=>openP(i),rid);const sc=await pg.evaluate(()=>__scan());if(sc)note(tag,'Spielerfenster: '+sc);await closeModal();
- if(wk%5===0&&once(K+'plan')){await tabClick('Spielplan');await pg.selectOption('#daysel',String(wk%34));await tabClick('Tabelle');await pg.click('button:text-is("2. Liga")');}
+ if(wk%5===0&&once(K+'plan')){await tabClick('Spielplan');await pg.selectOption('#daysel',String(wk%34));await tabClick('Tabelle');await pg.click('button:text-is("2. Liga")');await pg.click('button:text-is("3. Liga")');const sc=await pg.evaluate(()=>__scan());if(sc)note(tag,'Tabelle 3. Liga: '+sc);}
 }
 async function advance(tag){await tabClick('Büro');const t0=await pg.evaluate(()=>S.tag);await pg.click('header .go');
  for(let k=0;k<10;k++){await pg.waitForTimeout(30);const ov=(await pg.evaluate(()=>document.getElementById('ov').innerText)).trim();if(!ov)break;
@@ -87,12 +87,12 @@ async function advance(tag){await tabClick('Büro');const t0=await pg.evaluate((
  const wo=s.season+':'+Math.floor((s.tag-s.start)/7);proWoche[wo]=(proWoche[wo]||0)+1;
  if(s.tag-t0>7)note(tag,`Sprung über ${s.tag-t0} Tage`);}
 let guard=0;const t0=Date.now();
-while(guard++<260){const s=await st();if(s.season>=2028)break;const tag=`${s.season}/${String(s.season+1).slice(2)} ${s.datum} W${s.wk}`;
+while(guard++<330){const s=await st();if(s.season>=2028)break;const tag=`${s.season}/${String(s.season+1).slice(2)} ${s.datum} W${s.wk}`;
  try{const tabs=s.wk%4===0?TABS:[TABS[s.wk%11],TABS[(s.wk*3+1)%11]];for(const t of tabs){await tabClick(t);const sc=await pg.evaluate(()=>__scan());if(sc)note(tag,`Text in ${t}: ${sc}`);}
   if(s.phase==='play'&&!s.fired)await actions(s,tag);
   (await pg.evaluate(()=>__check())).forEach(m=>note(tag,m));
   await advance(tag);stops++;}catch(e){note(tag,'TESTFEHLER '+e.message.split('\n')[0]);await pg.evaluate(()=>{if(CONF){confEnd();closeConf();}else closeOv();}).catch(()=>{});}}
-if(guard>=260)note('Ende','Zwei Saisons nicht in 260 Halten geschafft');
+if(guard>=330)note('Ende','Zwei Saisons nicht in 330 Halten geschafft');
 // Handy-Breite: Überlauf prüfen
 await pg.setViewportSize({width:390,height:844});const ovf=[];
 for(const t of TABS){await tabClick(t);const w=await pg.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth);if(w>1)ovf.push(t+' +'+w+'px');}

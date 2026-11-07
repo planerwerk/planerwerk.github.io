@@ -2,15 +2,16 @@
 function renderStart(){
   const opt=lg=>VEREINE.map((c,i)=>[c,i]).filter(([c])=>c.liga===lg).map(([c,i])=>`<option value="${i}" ${c.kurz==='SCF'?'selected':''}>${c.name}</option>`).join('');
   app.innerHTML=`<div class="start"><div><h1 class="logo">Flutlicht<span>Manager</span></h1><div class="beams" style="margin-top:14px"></div></div>
-  <p class="tagline">Fußballmanager für die Saison 2026/27 · 1. und 2. Bundesliga · DFB-Pokal · Transfers, Stadion, Finanzen, Vorstand.</p>
-  ${hasSave()?`<button class="go" onclick="loadLocal()">Weiterspielen</button>`:alterStand()?`<p class="dim card">Im Browser liegt noch ein Spielstand der alten Version mit Wochenkalender. Er passt nicht zum neuen Tageskalender und lässt sich nicht weiterspielen. Er bleibt aber gespeichert und wird nicht gelöscht.</p>`:''}
+  <p class="tagline">Fußballmanager für die Saison 2026/27 · 1. bis 3. Liga · DFB-Pokal · Transfers, Stadion, Finanzen, Vorstand.</p>
+  ${hasSave()?`<button class="go" onclick="loadLocal()">Weiterspielen</button>`:''}
   <div class="card"><h2>Neues Spiel</h2><div class="form"><label>Dein Name <input id="mgr" value="Trainer" maxlength="30"></label>
   <label>Verein <select id="club"><optgroup label="1. Bundesliga 2026/27">${opt(1)}</optgroup><optgroup label="2. Bundesliga 2026/27">${opt(2)}</optgroup></select></label>
   <details><summary>Erweitert</summary><label style="margin-top:8px">Startwert für den Zufall (Seed, leer = zufällig) <input id="seed" inputmode="numeric" placeholder="zum Beispiel 12345"></label></details>
   <button class="go" onclick="newGame()">Anpfiff zur Karriere</button></div></div>
   <details class="card"><summary>Spielstand-Code laden</summary><textarea id="imp" placeholder="Code hier einfügen" style="margin-top:8px"></textarea><div class="row" style="margin-top:8px"><button onclick="importSave()">Laden</button></div></details>
-  <p class="dim">Kader aller 36 Vereine: deutsche Wikipedia, Stand Ende August bis Ende Oktober 2026. Die Stärkewerte sind geschätzt. Korrekturen gehören in die Datei daten/spieler.js, nicht ins Spiel. Nachwuchsspieler, Vereinslose und die Amateurklubs im Pokal sind erfunden.</p></div>`;}
-function alterStand(){try{return !!localStorage.getItem(REGELN.spielstand.alterSchluessel);}catch(e){return false;}}
+  <p class="dim">Kader aller 36 Vereine: deutsche Wikipedia, Stand Ende August bis Ende Oktober 2026. Die Stärkewerte sind geschätzt. Korrekturen gehören in die Datei daten/spieler.js, nicht ins Spiel. Nachwuchsspieler, Vereinslose, die Kader der 3. Liga und die Amateurklubs im Pokal sind erfunden. Die 3. Liga erreichst du per Abstieg oder Jobwechsel.</p></div>`;}
+// Spielstände älterer Testversionen passen nicht mehr und werden gelöscht
+try{REGELN.spielstand.alteSchluessel.forEach(k=>localStorage.removeItem(k));}catch(e){}
 function loadLocal(){try{const s=localStorage.getItem(REGELN.spielstand.schluessel);if(s){const d=JSON.parse(s);if(d.v!==REGELN.spielstand.version){toast('Der gespeicherte Spielstand passt nicht zu dieser Version.');return;}S=d;reindex();TAB='buero';render();}}catch(e){toast('Spielstand konnte nicht geladen werden.');}}
 function newGame(){const id=+document.getElementById('club').value,name=(document.getElementById('mgr').value||'Trainer').trim().slice(0,30)||'Trainer';
   const se=(document.getElementById('seed')||{}).value,seed=se&&/^\d+$/.test(se.trim())?(+se.trim())>>>0:neuerSeed();
@@ -20,7 +21,7 @@ function newGame(){const id=+document.getElementById('club').value,name=(documen
   save();TAB='buero';render();}
 
 // Test- und Fehlersuch-Zugang
-window.FM={get S(){return S;},buildWorld,weiter,tagesSpiele,meinSpiel,heuteMeinSpiel,seasonEnd,newSeason,takeJob,render,V,tab,table};
+window.FM={get S(){return S;},buildWorld,weiter,sommerpause,tagesSpiele,meinSpiel,heuteMeinSpiel,seasonEnd,newSeason,takeJob,render,V,tab,table};
 // Start, mit Erhalt des Spielstands bei Live-Updates
 try{window.claude?.hot?.snapshot?.(()=>({S,TAB}));}catch(e){}
 function start(d){if(d&&d.S&&d.S.v===REGELN.spielstand.version){S=d.S;TAB=d.TAB||'buero';reindex();}render();}

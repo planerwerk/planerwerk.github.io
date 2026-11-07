@@ -7,12 +7,12 @@ await pg.goto('file://'+path.resolve(__dirname,'..','index.html'));await pg.eval
 const res=await pg.evaluate(()=>{const out=[];
  // Prüfung jedes Spieltags: kein gesperrter oder verletzter Spieler darf spielen
  let bad=0;const orig=window.tagesSpiele;window.tagesSpiele=function(d){const unav=new Set(S.pl.filter(p=>!avail(p)).map(p=>p.id));const o=orig(d);bad+=o.list.flatMap(r=>r.xi.flat()).filter(id=>unav.has(id)).length;return o;};
- const clubs=[0,6,15,16,17,18,19,20,23,34,35];
+ const clubs=[0,6,15,16,17,18,19,20,23,34,35,36,50];
  for(const cid of clubs){const log={club:VEREINE[cid].name,seed:1000+cid,seasons:[],errors:[],ms:0,changes:0,stops:0};
   let x=(cid*2654435761)>>>0;const T=()=>{x=(Math.imul(x,1664525)+1013904223)>>>0;return x/4294967296;},rnd=a=>a[Math.floor(T()*a.length)];
-  try{buildWorld(log.seed);S.my=cid;S.mgr='Fuzz';setTarget();sponsOffers();S.lineup=bestXI(cid,myT().form);bad=0;
+  let lgVor=0;try{buildWorld(log.seed);S.my=cid;S.mgr='Fuzz';setTarget();sponsOffers();S.lineup=bestXI(cid,myT().form);bad=0;
    const t0=performance.now();let steps=0;
-   while(S.season<2028&&steps<400){steps++;
+   lgVor=myT().lg;while(S.season<2028&&steps<500){steps++;
     try{const r=T();
      if(r<0.12){const c=S.pl.filter(p=>p.team!==S.my&&p.team>=-1);const p=rnd(c);openP(p.id);const f=document.getElementById('fee');if(f)f.value=(askPrice(p)/1e6*(0.6+T()*0.8)).toFixed(1);document.getElementById('yrs').value=String(1+Math.floor(T()*5));offer(p.id);closeOv();}
      else if(r<0.17){const p=rnd(squad(S.my));if(p){openP(p.id);const a=document.getElementById('ask');if(a){a.value=(value(p)/1e6*(0.7+T())).toFixed(1);setListed(p.id,1);}closeOv();}}
@@ -31,14 +31,14 @@ const res=await pg.evaluate(()=>{const out=[];
      erinnerungen().forEach(e=>{if(/undefined|NaN/.test(e.text))log.errors.push('Erinnerung: '+e.text);});
     }catch(e){log.errors.push('Aktion: '+e.message+' @'+(e.stack||'').split('\n')[1]);}
     if(S.phase==='end'){const sm=S.summary;log.seasons.push(`${sm.season}: Platz ${sm.pos} (${sm.lg}. Liga), Ziel ${sm.target} ${sm.ok?'erreicht':'verfehlt'}${S.fired?', entlassen':''}, Ende ${datumKurz(S.tag)}`);
-     if(S.fired){if(!S.jobs)mkJobs();takeJob(S.jobs[0]);log.changes++;}const lgOld=myT().lg;newSeason();log.seasons.push(`  → ${S.season}: ${myT().name} in Liga ${myT().lg}${lgOld!==myT().lg?(myT().lg===1?' (AUFGESTIEGEN)':' (ABGESTIEGEN)'):''}, Kader ${squad(S.my).length}, Konto ${fmt(myT().cash)}, Start ${datumKurz(S.tag)}`);
-     const ce=__check();if(ce.length)log.errors.push('nach Saisonwechsel: '+[...new Set(ce)].slice(0,4).join('; '));continue;}
+     if(S.fired){if(!S.jobs)mkJobs();takeJob(S.jobs[0]);log.changes++;}sommerpause();lgVor=myT().lg;continue;}
     if(S.fired){if(!S.jobs)mkJobs();takeJob(S.jobs[0]);log.changes++;}
     if(heuteMeinSpiel()){LAST=tagesSpiele(S.tag);}
-    const t1=S.tag,n=weiter();log.stops++;if(n>7||(S.phase!=='end'&&S.tag-t1>7))log.errors.push(`Sprung über ${S.tag-t1} Tage`);
+    const s0=S.season,t1=S.tag,n=weiter();log.stops++;
+    if(S.season!==s0){log.seasons.push(`  → ${S.season}: ${myT().name} in Liga ${myT().lg}${lgVor!==myT().lg?(myT().lg<lgVor?' (AUFGESTIEGEN)':' (ABGESTIEGEN)'):''}, Kader ${squad(S.my).length}, Konto ${fmt(myT().cash)}, Start ${datumKurz(S.tag)}`);const ce=__check();if(ce.length)log.errors.push('nach Saisonwechsel: '+[...new Set(ce)].slice(0,4).join('; '));continue;}if(n>7||(S.season===s0&&S.tag-t1>7))log.errors.push(`Sprung über ${S.tag-t1} Tage`);
     const ce=__check();if(ce.length)log.errors.push(`S${S.season} ${datumKurz(S.tag)}: `+[...new Set(ce)].slice(0,4).join('; '));}
    if(bad)log.errors.push(bad+'× gesperrter/verletzter Spieler eingesetzt');
-   if(steps>=400)log.errors.push('Zwei Saisons nicht in 400 Schritten geschafft');
+   if(steps>=500)log.errors.push('Zwei Saisons nicht in 500 Schritten geschafft');
    log.ms=+((performance.now()-t0)/log.stops).toFixed(1);
   }catch(e){log.errors.push('FATAL '+e.message+' @'+(e.stack||'').split('\n').slice(1,3).join(' '));}
   log.errors=[...new Set(log.errors)].slice(0,8);out.push(log);}

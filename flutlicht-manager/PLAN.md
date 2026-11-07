@@ -1,6 +1,6 @@
 # Flutlicht Manager – Gesamtplan
 
-Stand: 6. November 2026 (U1 umgesetzt). Das Projekt ist ein Nebenprojekt, das langsam und gründlich wachsen soll, ohne Schnellschüsse.
+Stand: 7. November 2026 (U1 umgesetzt, dazu Sommer, Anstoßzeiten und 3. Liga). Das Projekt ist ein Nebenprojekt, das langsam und gründlich wachsen soll, ohne Schnellschüsse.
 
 ## 1. Arbeitsweise
 
@@ -19,7 +19,7 @@ Stand: 6. November 2026 (U1 umgesetzt). Das Projekt ist ein Nebenprojekt, das la
 
 | Thema | Entscheidung |
 |---|---|
-| **Zeit** | Kalender in Tagen. Der Knopf „Tag beenden“ springt zum nächsten Tag mit einem Ereignis, höchstens 7 Tage weit. Gibt es kein Pflichtspiel, ist spielfrei, zum Beispiel in der Länderspielpause, und man kann Freundschaftsspiele ansetzen. |
+| **Zeit** | Kalender in Tagen, der **Sommer wird nicht übersprungen** (6.11.): Urlaub (2–4 Wochen), Testspiele, Trainingslager, neue Sponsorverträge. Saisonwechsel am 1. Juli. Der Knopf „Tag beenden“ springt zum nächsten Tag mit einem Ereignis, höchstens 7 Tage weit. Gibt es kein Pflichtspiel, ist spielfrei, zum Beispiel in der Länderspielpause, und man kann Freundschaftsspiele ansetzen. |
 | **Erinnerung vor „Tag beenden“** | „Sicher? Du kannst noch …“ erscheint nur, wenn wirklich etwas Sinnvolles offen ist. Beispiele: Aufstellung seit dem letzten Spiel nicht angesehen, aber Spieler fehlen; kein Training geplant; spielfreie Woche ohne Testspiel; eine Frist läuft heute ab. Jede Erinnerungsart lässt sich abschalten. |
 | **Transferfenster** | gelten für alle. Die Saisonvorbereitung ist eine eigene Phase mit Schwerpunkt auf Transfers, Sponsoren, Marketing und Trainingslager. |
 | **Abwerben** | Keine festen Strafen. Stattdessen verschlechtert sich die Beziehung zum anderen Verein. Das bringt mehr Klatsch und Tratsch, und das wirkt auf Spieler, manchmal positiv, öfter negativ. |
@@ -28,6 +28,9 @@ Stand: 6. November 2026 (U1 umgesetzt). Das Projekt ist ein Nebenprojekt, das la
 | **Junge Spieler** | Sie verändern sich am schnellsten, in beide Richtungen, und können „verheizt“ werden. Beispiel: Das Debüt im Topspiel kann einen Schub geben, aber auch einen Knacks. |
 | **Spielermodell** (5.11.) | Anstoss-Stil: Stärke 1–99 als Hauptzahl, erlernbare Merkmale mit Lernfortschritt, Charakter-Eigenschaften, Beziehungen im Kader. Form 0–20 mit Mitte 10. |
 | **Meldungsdichte** (5.11.) | 2–4 Stopps pro Woche mit Entscheidung, alles andere landet im Posteingang. Dazu ein Regler in den Einstellungen. |
+| **Spieltage** (6.11.) | über das Wochenende verteilt wie in echt, nach dem offiziellen Spielplan 2026/27 (OpenLigaDB) mit Anstoßzeiten. Samstag 15:30 bleibt die Konferenz, der letzte Spieltag läuft zeitgleich. |
+| **Unterbau** (6.11.) | 3. Liga mit 20 echten Vereinen als vollständige Liga, Regionalliga als Pool mit gelosten Meistern und Aufstiegsspielen („etwas Zufall“). Konzept K32a. |
+| **Alte Spielstände** (6.11.) | aus Testversionen sind Müll und werden gelöscht. |
 | **Europapokal** (5.11.) | später als Erweiterung. Zuerst 1. und 2. Liga und Pokal. |
 | **Vorläufig übernommen** (Vorschläge aus der Konsistenzprüfung, gelten, solange du nichts anderes sagst) | Automatik und Delegieren in jedem Bereich über den Stab. Nichts wegnehmen, bevor der Ersatz fertig ist. K08 und der Auslandspool nach Welle 3, K16 nach Welle 2. |
 
@@ -97,6 +100,7 @@ Spalte „Welle“: wann das Konzept spätestens fertig sein muss. Umfang des Ko
 | K29 | Medien und Presse (**Entwurf**: `konzepte/K29-medien-presse.md`, Gerüchteküche und Datenmodell fehlen noch) | erfundene Zeitungen und Portale mit Ruf, Pressekonferenzen, Interviews, Gerüchteküche (wahr, halb wahr, falsch), Wirkung auf Stimmung, Preise und Fans | M | 4 |
 | K30 | Ereigniskarten und Story-Playbook | Aufbau eines Ereignisses (Auslöser, Bedingungen, Häufigkeit, Sperrzeit, Beteiligte, Texte, Entscheidungen, Folgen, Ketten), Dosierung, Katalog | L, wächst laufend | Gerüst 3, Inhalte fortlaufend |
 | K32 | Spielwelt und Saisonwechsel | Stammdaten, Auslandsspieler als Transferpool, Karriereenden, neue Talente, Aufstieg und Abstieg, Datenpflege | M | Auslandspool 3, Rest 4 |
+| K32a | Unterbau: 3. Liga und Regionalliga (**Entwurf**, umgesetzt: `konzepte/K32a-unterbau.md`) | 3. Liga als echte Liga, Regionalliga-Aufstieg per Los und Aufstiegsspielen, Relegation 2./3. Liga, Zweitmannschaften | S | ✅ vorgezogen |
 | K34 | Statistik und Historie | Spieler- und Vereinsstatistik, Rekorde, Ehrungen, Saisonarchiv | S | 4 |
 
 ### G – Später
@@ -241,10 +245,10 @@ Für BMH habe ich keine verlässliche Quelle gefunden. Anstoss 2022 nutzt laut e
 
 ## 7. Nächster Schritt
 
-**U1 ist umgesetzt** (6. November 2026): Das Spiel ist in Dateien aufgeteilt, alle Stellschrauben stehen in `daten/regeln.js`, der Zufall läuft mit Seed, der Kalender in Tagen mit „Tag beenden“ und Erinnerungen, die Regler-Bausteine sind im Spiel, und das Bearbeiten im Spiel ist entfernt. Alle drei Testskripte in `tests/` sind grün. Offene Fragen dazu stehen am Ende von K01 und K33.
+**U1 ist umgesetzt** (6. November 2026), dazu am 6./7. November nach deinen Entscheidungen: Der Sommer wird gespielt, die Spieltage folgen dem offiziellen Spielplan 2026/27 mit Anstoßzeiten, die 3. Liga ist eine echte Liga, und aus der Regionalliga steigen Vereine mit etwas Zufall auf (K32a). Alle Testskripte in `tests/` sind grün. Offene Fragen stehen am Ende von K01, K32a und K33.
 
-1. **Nächste Session:** Konzept **K03 (Spielermodell)** im Anstoss-Stil. Das Anstoss-3-Material liegt schon vor (siehe Notizen zu K03). Startsatz: „Projekt Flutlicht Manager im Ordner flutlicht-manager/. Lies PLAN.md und konzepte/_konsistenzpruefung.md. Schreib Konzept K03 nach konzepte/_vorlage.md.“
-2. **Danach:** U2, das neue Spielermodell mit Startwerten aus `daten/spieler.js`.
-3. **Dann:** K04 (Engine) und U3. Danach ist Welle 1 fertig.
+1. **Nächste Session:** Konzept **K03 (Spielermodell)** im Anstoss-Stil. Startsatz: „Projekt Flutlicht Manager im Ordner flutlicht-manager/. Lies PLAN.md und konzepte/_konsistenzpruefung.md. Schreib Konzept K03 nach konzepte/_vorlage.md.“
+2. **Danach:** U2 (Spielermodell), dann K04 und U3 (Engine). Damit ist Welle 1 fertig.
+3. **Vorschlag:** K11 (Testspiele, Trainingslager) und den Sommerteil von K12 (Urlaub, Vorbereitung) in Welle 2 ziehen. Seit der Sommer gespielt wird, sind sonst etwa zehn Wochen ohne Inhalt.
 
 K03 ist der Engpass: Engine, Taktik, Training und Scouting bauen darauf auf.

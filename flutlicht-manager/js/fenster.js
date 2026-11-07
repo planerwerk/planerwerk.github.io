@@ -25,7 +25,7 @@ function zeigeErinnerungen(E){ov(`<h2>Sicher? Du kannst noch …</h2><div class=
   <div class="row" style="margin-top:12px"><button class="go" id="trotzdem" onclick="closeOv();tagBeenden(1)">Trotzdem Tag beenden</button><button onclick="closeOv()">Abbrechen</button></div>`);}
 function erinnerungAus(art,aus){S.einst=S.einst||{aus:{}};S.einst.aus=S.einst.aus||{};if(aus)S.einst.aus[art]=1;else delete S.einst.aus[art];save();}
 function showPre(e){const t=myT(),f=paarung(e),out=squad(S.my).filter(p=>!avail(p));
-  ov(`<h2>${esc(spielName(e))}</h2>${f?`<div class="board"><div class="t">${esc(tn(f[0]))}</div><div class="score">–:–</div><div class="t">${esc(tn(f[1]))}</div></div>${tauziehenNaechstes()}`:'<p>Der Gegner wird jetzt ausgelost.</p>'}
+  ov(`<h2>${esc(spielName(e))} · ${spielZeit(e)} Uhr</h2>${f?`<div class="board"><div class="t">${esc(tn(f[0]))}</div><div class="score">–:–</div><div class="t">${esc(tn(f[1]))}</div></div>${tauziehenNaechstes()}`:'<p>Der Gegner wird jetzt ausgelost.</p>'}
     <p>Deine Elf: ${t.form}, ${AUSRICHTUNG[t.tac]}, Einsatz ${EINSATZ[t.ein]}.${out.length?` <span class="dim">Fehlen: ${out.map(p=>esc(p.n)).join(', ')} – werden automatisch ersetzt.</span>`:''}</p>
     <div class="row"><button onclick="closeOv();tab('aufst')">Aufstellung ändern</button><button class="go" id="kick" onclick="kickoff()">Anpfiff</button></div>`);}
 function kickoff(){if(BUSY||CONF)return;BUSY=true;let out=null;try{out=tagesSpiele(S.tag);LAST=out;save();}catch(e){console.error(e);toast('Fehler: '+e.message);}finally{BUSY=false;}if(out&&out.list.length)showConf(out);else weiterUI();}
@@ -42,27 +42,28 @@ function evText(e,r){const tm=esc(tn(e.s?r.a:r.h)),k=e.m*7+e.s*3;
   if(e.t==='R')return`<b>${e.gy?'Gelb-Rot':'Rote Karte'}</b> für ${esc(e.n)} <span class="dim">${tm}</span>`;
   if(e.t==='I')return`${esc(e.n)} verletzt sich und muss raus. <span class="dim">${tm}</span>`;
   if(e.t==='P')return`<b>Elfmeterschießen: ${e.pen[0]}:${e.pen[1]}</b>`;return esc(e.x||'');}
-function om(r,mn,done){const s=scoreAt(r,mn),hot=r.ev.some(e=>e.t==='G'&&e.m<=mn&&e.m>mn-4);return`<div class="om ${hot&&!done?'hot':''}"><span>${esc(tn(r.h))}</span><span class="s">${s[0]}:${s[1]}${done&&r.pen?'<small> i.E.</small>':''}</span><span>${esc(tn(r.a))}</span></div>`;}
+function om(r,mn,done,zeit){const s=scoreAt(r,mn),hot=r.ev.some(e=>e.t==='G'&&e.m<=mn&&e.m>mn-4);return`<div class="om ${hot&&!done?'hot':''}"><span>${zeit&&r.min!=null?`<small class="dim">${uhr(r.min)}</small> `:''}${esc(tn(r.h))}</span><span class="s">${s[0]}:${s[1]}${done&&r.pen?'<small> i.E.</small>':''}</span><span>${esc(tn(r.a))}</span></div>`;}
 function renderConf(){const c=CONF;if(!c)return;if(!document.getElementById('cf-body'))confFrame();const o=c.out,mn=Math.floor(c.min);let mine='';
   if(o.mine){const r=o.mine,sc=scoreAt(r,mn);const et=!!r.pen||r.ev.some(e=>e.m>90),end=et?120:90;
     const L=r.ev.filter(e=>e.m<=mn&&(e.t!=='P'||c.done)).map(e=>({m:e.m,h:evText(e,r),t:e.t,o:e.t==='P'?2:0}));
     L.push({m:0,h:'Anpfiff.',t:'K',o:1});if(mn>=45)L.push({m:45,h:'Halbzeit.',t:'K',o:1});if(et&&mn>=90)L.push({m:90,h:'Verlängerung.',t:'K',o:1});if(mn>=end)L.push({m:end,h:r.pen?'Ende der Verlängerung.':'Abpfiff.',t:'K',o:1});
     L.sort((a,b)=>b.m-a.m||b.o-a.o);
     mine=`<div><div class="board"><div class="t">${esc(tn(r.h))}</div><div class="score">${sc[0]}:${sc[1]}</div><div class="t">${esc(tn(r.a))}</div></div>${c.done&&r.pen?`<p class="dim" style="margin-top:6px;text-align:center">Elfmeterschießen ${r.pen[0]}:${r.pen[1]}</p>`:''}<div class="tick">${L.map(e=>`<div><span>${e.m}'</span><i class="ic ${e.t}"></i><span>${e.h}</span></div>`).join('')}</div></div>`;}
-  const grp=o.gruppen.map(g=>{const oth=g.list.filter(r=>r!==o.mine);return oth.length?`<h3>${g.list.includes(o.mine)?(g.art==='pokal'?'Weitere Pokalspiele':g.art==='liga'?`${g.e.lg}. Bundesliga, weitere Spiele`:esc(g.titel)):esc(g.titel)}</h3><div class="others">${oth.map(r=>om(r,mn,c.done)).join('')}</div>`:'';}).join('');
+  const grp=o.gruppen.map(g=>{const oth=g.list.filter(r=>r!==o.mine).sort((a,b)=>(a.min||0)-(b.min||0)),zeit=new Set(g.list.map(r=>r.min)).size>1;return oth.length?`<h3>${g.list.includes(o.mine)?(g.art==='pokal'?'Weitere Pokalspiele':g.art==='liga'?`${ligaName(g.e.lg)}, weitere Spiele des Tages`:esc(g.titel)):esc(g.titel)}</h3><div class="others">${oth.map(r=>om(r,mn,c.done,zeit)).join('')}</div>`:'';}).join('');
   document.getElementById('cf-body').innerHTML=`${mine||'<div><p class="dim">Dein Verein spielt heute nicht.</p></div>'}<div>${grp}</div>`;
   document.getElementById('cf-clock').textContent=c.done?'Ende':mn+"'";
   if(c.done&&!c.btn){c.btn=1;document.getElementById('cf-btns').innerHTML='<button class="go" id="cf-next" onclick="closeConf()">Weiter</button>';const n=document.getElementById('cf-next');if(n)n.focus();}}
 // Nach der Konferenz endet der Spieltag: weiter bis zum nächsten Halt
 function closeConf(){if(CONF)clearInterval(CONF.timer);CONF=null;BUSY=false;weiterUI();}
-function showSummary(){const sm=S.summary;if(!sm)return;
+function showSummary(){const sm=S.summary;if(!sm)return;const L=ids=>ids.map(id=>esc(tn(id))).join(', ');
   ov(`<h2>Saisonbilanz ${sm.season}/${(sm.season+1)%100}</h2>
   <div class="facts">${fact('Dein Platz',sm.pos+'. ('+sm.lg+'. Liga)')}${fact('Ziel',sm.ok?'erreicht':'verfehlt')}${fact('Finanzsaldo',fmt(sm.fin))}${fact('Vorstand',Math.round(S.trust)+' %')}</div>
-  <p>Deutscher Meister: <b>${esc(tn(sm.champ))}</b> · Meister 2. Liga: <b>${esc(tn(sm.champ2))}</b></p>
-  <p>Absteiger: ${sm.down.map(id=>esc(tn(id))).join(', ')} · Aufsteiger: ${sm.up.map(id=>esc(tn(id))).join(', ')}</p>
-  <p>Relegation: ${esc(sm.relRes)} → <b>${esc(tn(sm.rw))}</b> spielt in der 1. Liga.</p>
+  <p>Deutscher Meister: <b>${esc(tn(sm.champ))}</b> · Meister 2. Liga: <b>${esc(tn(sm.champ2))}</b> · Meister 3. Liga: <b>${esc(tn(sm.champ3))}</b></p>
+  <p><b>1./2. Liga:</b> Absteiger ${L(sm.down)} · Aufsteiger ${L(sm.up)} · Relegation: ${esc(sm.relRes)} → <b>${esc(tn(sm.rw))}</b> spielt in der 1. Liga.</p>
+  <p><b>2./3. Liga:</b> Absteiger ${L(sm.down2)} · Aufsteiger ${L(sm.up3)} · Relegation: ${esc(sm.rel2Res)} → <b>${esc(tn(sm.rw2))}</b> spielt in der 2. Liga.</p>
+  <p><b>3. Liga/Regionalliga:</b> Absteiger ${L(sm.down3)} · Aufsteiger ${L(sm.up4)}${sm.rlText?` <span class="dim">(${esc(sm.rlText)})</span>`:''}</p>
   <p>DFB-Pokalsieger: <b>${sm.cup!=null?esc(tn(sm.cup)):'–'}</b> · Torschützenkönig: ${esc(sm.ts)}</p>
-  ${S.fired?'<p class="neg"><b>Der Vorstand hat dich entlassen.</b></p><div class="row"><button class="go" onclick="showFired()">Jobangebote ansehen</button></div>':`<div class="row"><button class="go" onclick="newSeason();closeOv();TAB='buero';render()">Saison ${sm.season+1}/${(sm.season+2)%100} starten</button><button onclick="closeOv()">Später</button></div>`}`);}
+  ${S.fired?'<p class="neg"><b>Du musst gehen: Der Verein trennt sich von dir.</b></p><div class="row"><button class="go" onclick="showFired()">Jobangebote ansehen</button></div>':`<p class="dim">Jetzt beginnt die Sommerpause: Urlaub bis zum Trainingsauftakt, am 1. Juli der Saisonwechsel mit neuen Verträgen und Sponsorangeboten.</p><div class="row"><button class="go" onclick="sommerpause();closeOv();TAB='buero';render()">Weiter in die Sommerpause</button><button onclick="closeOv()">Später</button></div>`}`);}
 function showFired(){if(!S.jobs)mkJobs();ov(`<h2>Entlassen!</h2><p>Der Vorstand von ${esc(myT().name)} hat dir das Vertrauen entzogen. Diese Vereine bieten dir einen Job an:</p>
   <div class="opts">${S.jobs.map(id=>{const t=S.teams[id];return`<button class="opt" onclick="takeJob(${id})"><b>${chip(id)}${esc(t.name)}</b><span>${t.lg}. Liga · Platz ${rank(t.lg,id)} · Kontostand ${fmt(t.cash)}</span></button>`;}).join('')}</div>
   <div class="row"><button onclick="confirmNew()">Stattdessen neues Spiel</button></div>`);}
