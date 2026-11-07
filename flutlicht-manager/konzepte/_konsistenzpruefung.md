@@ -257,3 +257,16 @@ Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `
 | P4 | **Quellen:** Die Verletzungszahlen stammen aus Zusammenfassungen. Die Zuordnung einzelner Zahlen zu Links ist nicht am Volltext geprüft. | 📌 vor der Kalibrierung (K02) prüfen |
 | P5 | **Verletzungsverlauf** `vh` dient später auch der Ableitung der Robustheit bei echten Spielern (K03 §5.9). | ✅ passt zusammen |
 | P6 | **Schwere des Fouls** erhöht das Verletzungsrisiko und umgekehrt die Verletzung das Strafmaß. | 📌 K09 |
+
+---
+
+## Q. Nachtrag zu K05 (7. November 2026)
+
+| # | Befund | Status |
+|---|---|---|
+| Q1 | **I6 aufgelöst:** Konferenz nur für Spiele derselben Anstoßzeit, frühere Spiele optional vorher als Zuschauer. | ✅ K05 §4.1 |
+| Q2 | **P3 teilweise:** Gehirnerschütterungs-Wechsel in der Bundesliga nicht belegt (2021 abgelehnt, IFAB erlaubt seit 2024). | ✅ vorläufig aus, Stellschraube vorhanden |
+| Q3 | **C3 und D2 eingehalten:** Halbzeitansprache wirkt in Welle 2 nur auf Selbstvertrauen und Leistung, K15 übernimmt später die Wirkung, K05 behält Ablauf und Zeitpunkt. | ✅ |
+| Q4 | **Zurufe an Spieler** brauchen die Reaktionstabelle nach Charakter aus K15. | 📌 K05 nutzt bis dahin eine vereinfachte Form |
+| Q5 | **Weiterspielen nach Neuladen** setzt die festen Würfe je Minute aus K02 voraus. | ✅ passt zu K02 §3.1 |
+| Q6 | **Noch zu prüfen:** Bankgröße, Zusatzwechsel in der Verlängerung im Pokal, durchschnittliche Zahl der Wechsel. | 📌 vor der Umsetzung (U4) |
