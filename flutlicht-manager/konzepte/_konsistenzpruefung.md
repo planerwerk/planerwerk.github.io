@@ -405,3 +405,16 @@ Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `
 | AB4 | **Faire KI-Bewertung:** gleiche Formel beim Kaufen und Verkaufen (K19 §5.1), Ausreißer nur aus Schätzfehlern (K18). Passt zu Y4. | ✅, Umsetzung in K31 |
 | AB5 | **Derby-Paare** brauchen eine neue Liste in `daten/vereine.js` (K17). | 📌 Umsetzung |
 | AB6 | **A4 eingehalten:** keine festen Strafen fürs Abwerben, nur Beziehung und Klatsch (K17). Das Abwerben selbst folgt in K20. | ✅ |
+
+---
+
+## AC. Nachtrag zu K31 (7. November 2026)
+
+| # | Befund | Status |
+|---|---|---|
+| AC1 | **Verkaufsregeln** (Rohmaterial 13.3, deine Vorgaben) unverändert übernommen, Planstellen auf die 14 Positionen umgestellt. | ✅ |
+| AC2 | **Y4 und AB4 umgesetzt:** Computer-Vereine bewerten mit derselben Formel und eigener Schätzung. | ✅ |
+| AC3 | **L4 umgesetzt:** Klugheitsstufen mit konkreten Entscheidungsregeln. | ✅ K31 §5.4 |
+| AC4 | **Profile als Stammdaten** brauchen eine Ergänzung in `daten/vereine.js` (je Verein ein bis zwei Profile, Lieblingsstil). | 📌 Umsetzung (U11) |
+| AC5 | **Neues Testskript** `tests/welt.js` für die Langzeit-Spannung. | 📌 Umsetzung |
+| AC6 | **Vorgabe „Note über 10 oder mehr Einsätze schlechter als die Schwelle“** ist im Rohmaterial ohne Zahl. Vorläufig Notenschnitt 4,5 über die letzten 10 Einsätze. | 🔶 bitte bestätigen |
