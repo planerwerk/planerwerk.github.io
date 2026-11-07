@@ -369,3 +369,15 @@ Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `
 | Y2 | **C4:** Der Auslandspool aus K32 ist für Welle 3 vorgezogen (PLAN §2). K18 rechnet mit Grundkenntnis 5 für Auslandsspieler. | 📌 K32 |
 | Y3 | **Ehrlichkeit der Spannen** (K35a §10) gilt auch für Scouts: Der Fehler steckt in der Breite. | ✅ |
 | Y4 | **Computer-Vereine bewerten unscharf** und können sich irren. Das ist wichtig gegen die Community-Kritik an unfairer KI-Bewertung (Recherche 4) und muss in K31 so umgesetzt werden, dass die Fehler beidseitig sind. | 📌 K31 |
+
+---
+
+## Z. Nachtrag zu K28 (7. November 2026)
+
+| # | Befund | Status |
+|---|---|---|
+| Z1 | **V4 aufgelöst:** Ruf des Trainers als eigener Wert (K28 §5.4) für das Ruf-Gefälle in K14. | ✅ |
+| Z2 | **W5 aufgelöst:** Vorstandsgespräche nutzen die Mechanik aus K15. | ✅ |
+| Z3 | **D3 eingehalten:** K28 führt das Zielgespräch, K12b legt nur den Termin fest. | ✅ |
+| Z4 | **L3 passt:** Ultimatum-Grenze und Schonfrist kommen aus der Schwierigkeitsstufe (K02). | ✅ |
+| Z5 | **Trainerpool** für Computer-Vereine braucht K31 und K32. | 📌 |
