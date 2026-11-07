@@ -182,9 +182,11 @@ const REGELN={
     kaderMax:28,vereinsloseMax:90,
     relegationLos:0.5,
     abstieg3:4,                      // so viele Vereine steigen aus der 3. Liga in die Regionalliga ab
-    // Regionalliga (K32a): je Staffel wird ein Meister gelost, gewichtet mit (Ansehen − basis)². West und Südwest steigen direkt auf,
+    // Regionalliga (K32a): je Staffel wird ein Meister gelost. Gewicht = (grund + ewigFaktor × Anteil an den meisten Punkten der ewigen Tabelle der 3. Liga)
+    // × Absteiger-Faktor (frisch aus der 3. Liga abgestiegen: 1, 2 oder 3 Saisons her). West und Südwest steigen direkt auf,
     // von Nord, Nordost und Bayern eine Staffel im Wechsel direkt, die anderen beiden spielen Aufstiegsspiele.
-    regionalliga:{staffeln:['Nord','Nordost','West','Südwest','Bayern'],direkt:['West','Südwest'],wechsel:['Bayern','Nord','Nordost'],wechselStart:2025,basis:15,
+    regionalliga:{staffeln:['Nord','Nordost','West','Südwest','Bayern'],direkt:['West','Südwest'],wechsel:['Bayern','Nord','Nordost'],wechselStart:2025,
+      gewicht:{grund:1,ewigFaktor:2,absteiger:[2.5,1.8,1.3]},
       spielStaerke:{basis:50,jeAnsehen:0.4},tore:1.35,heim:1.1}
   },
 

@@ -144,3 +144,5 @@ Geprüft: K01, K33 und die Umsetzung U1 gegen PLAN.md, K35 und die übrigen Konz
 | I7 | **Regionalliga:** Wechsel des direkten Aufstiegsplatzes abgeleitet, Kapazitäten der Pool-Vereine aus dem Gedächtnis. | 📌 K32a, Fragen 3 und 4 |
 | I8 | **Urlaubslänge 2–4 Wochen** ist noch fest, weil es ohne Frische und Stimmung keinen Grund für einen langen Urlaub gibt. | 📌 K03, K12, K14 |
 | I9 | **Fehler gefunden und behoben:** Die Aufstellungsansicht änderte beim Anzeigen die gespeicherte Startelf, ohne zu speichern. Nach dem Neuladen wich der Spielstand ab. | ✅ |
+| I10 | Entschieden 7.11.: Plan-Reihenfolge nur ändern, wenn es den Bau einfacher oder stimmiger macht. Daher K12a (Sommer) nach Welle 2. Urlaubswahl kommt mit K12a, sobald Frische und Kondition (K03) wirken. Erledigt sind damit I3 und I8. | ✅ |
+| I11 | Regionalliga-Aufstieg nach deiner Vorgabe gewichtet: ewige Tabelle der 3. Liga und frische Absteiger. Zwei Fehlzuordnungen aus Wikipedia korrigiert (Bayern-Amateure und Werder II zählten für die ersten Mannschaften). | ✅ |

@@ -14,6 +14,7 @@ Stand: 7. November 2026 (U1 umgesetzt, dazu Sommer, Anstoßzeiten und 3. Liga). 
 6. Rohmaterial aus der ersten Planung steht in `konzepte/_rohmaterial-logik-v1.md`: Engine, Sportgericht, Transfers, Computer-Vereine. Daraus speisen sich die Konzepte.
 7. Die Genre-Recherche steht in `konzepte/_recherche-genre.md`: was BMH, Anstoss 3, Football Manager, We Are Football und Hattrick enthalten, was die Community kritisiert und was wir übernehmen. Vor jedem Konzept lesen.
 8. Die Konsistenzprüfung steht in `konzepte/_konsistenzpruefung.md`: Widersprüche, Lücken, Abhängigkeiten, Zuständigkeiten und offene Entscheidungen. Bei jedem neuen Konzept fortschreiben.
+9. **Gespielt wird erst die fertige Alpha** (7.11.). Bis dahin müssen Spielstände nicht zwischen Versionen umgewandelt werden, und die Reihenfolge im Plan darf sich ändern, wenn das den Bau einfacher oder stimmiger macht.
 
 ## 2. Bereits entschieden (aus deinen Antworten)
 
@@ -58,6 +59,7 @@ Spalte „Welle“: wann das Konzept spätestens fertig sein muss. Umfang des Ko
 | K08 | Jugend und Talententwicklung | Nachwuchsleistungszentrum, Sichtung, Aufrücken, Volatilität, Prägungsereignisse (Schub oder Knacks), Belastungssteuerung, Leihe für Spielpraxis, Verheizen | M | 3 |
 | K09 | Disziplin und Sportgericht | Foularten, Karten, Verfahren über mehrere Tage, Strafmaß mit Zufall, Widerspruch, Wiederholungstäter, Zuschauer-Vergehen, Verfahren wegen Äußerungen außerhalb des Spiels (zum Beispiel Schiedsrichterkritik, siehe K29) | M | 2 |
 | K10 | Medizin und Verletzungen | Verletzungsarten und Dauer, Diagnose als Spanne, Reha, Rückfall, fit spritzen, medizinische Abteilung | S | 2 |
+| K12a | Sommerpause und Vorbereitung (aus K12 vorgezogen, 7.11.) | Urlaub mit wählbarer Länge (2–4 Wochen), Trainingsauftakt, Leistungstests, Vorbereitungsplan; Wirkung über Frische und Kondition aus K03 | S | 2 |
 | K11 | Freundschaftsspiele und Trainingslager | Gegner anfragen (je nach Beziehung), Einnahmen, Spielpraxis, Risiko, Turniere, Trainingslager-Orte | S | 2 |
 | K13 | Wettbewerbe und Spielplan | Liga, Pokal, Relegation, Europapokal später, Länderspiele mit Abstellungen, Spieltage verlegen, englische Wochen | M | 2 |
 
@@ -85,7 +87,7 @@ Spalte „Welle“: wann das Konzept spätestens fertig sein muss. Umfang des Ko
 
 | ID | Konzept | Kernfragen | Umfang | Welle |
 |---|---|---|---|---|
-| K12 | Saisonvorbereitung und Sommerpause | Ablauf vom 1. Juli bis zum Saisonstart, Urlaub und Trainingsauftakt, Leistungstests, Transferhauptphase, Sponsoren, Kampagnen, Saisonziel-Gespräch, Mannschaftsfoto/Saisoneröffnung | M | 4 |
+| K12b | Saisonvorbereitung, Rahmen | Transferhauptphase, Sponsoren, Kampagnen, Termin fürs Saisonziel-Gespräch, Mannschaftsfoto/Saisoneröffnung | S | 4 |
 | K23 | Finanzen und Budget | Einnahmen- und Ausgabenarten, Ratenzahlungen, Kredite, Budget vom Vorstand, Lizenzierung, Pleite-Szenario | M | 4 |
 | K24 | Sponsoren | Trikot, Ausrüster, Bande, Stadionname: Angebote, Verhandlung, Prämien, Laufzeiten, Sponsor-Ereignisse | M | 4 |
 | K25 | Marketing und Merchandising | Kampagnen (Dauerkarten, Trikot, Fanaktionen), Kosten und Wirkung, Fanshop, Rückwirkung auf Fans und Einnahmen | M | 4 |
@@ -227,9 +229,9 @@ Für BMH habe ich keine verlässliche Quelle gefunden. Anstoss 2022 nutzt laut e
 | Welle | Konzepte | Umsetzungsschritte | Ergebnis |
 |---|---|---|---|
 | 1 Fundament | K01, K02, K03, K04, K33, K35a | ✅ U1 (6.11.): Aufteilung in Dateien, `regeln.js`, Zufall mit Seed, Tageskalender, Regler-Bausteine, Tests. U2: neues Spielermodell mit Startwerten aus den Wikipedia-Kadern. U3: Engine v2 mit Kalibrierung, Torwart-Test bestanden | ein spielbarer Stand mit glaubwürdigen Ergebnissen und dem Kalender-Ablauf |
-| 2 Sport | K05–K07, K09–K11, K13, K16 | U4: Live-Spiel. U5: Taktik. U6: Training und Trainerstab mit Automatik. U7: Disziplin, Medizin, Testspiele, Spielplan | Spieltage mit Eingreifen, Training mit Wirkung, Sportgericht |
+| 2 Sport | K05–K07, K09–K11, K12a, K13, K16 | U4: Live-Spiel. U5: Taktik. U6: Training, Sommer und Vorbereitung, Trainerstab mit Automatik. U7: Disziplin, Medizin, Testspiele, Spielplan | Spieltage mit Eingreifen, Training mit Wirkung, Sportgericht |
 | 3 Menschen und Markt | K08, K14, K15, K17–K19, K21, K22, K28, K31, Gerüst von K30, Auslandspool aus K32 | U8: Stimmung und Gespräche. U9: Scouting, Auslandspool und Jugend. U10: Transfers I, Verträge und Berater. U11: Computer-Vereine. U12: Beziehungen, Vorstand und Ereignis-Gerüst | Transfers als Prozess, sinnvolle Computer-Vereine, erste Ereigniskarten |
-| 4 Verein und Welt | K12, K20, K23–K27, K29, K32 (Rest), K34 | U13 bis U18 nach Bedarf | Saisonvorbereitung, Sponsoren, Marketing, Stadion, Fans, Presse, Abwerben |
+| 4 Verein und Welt | K12b, K20, K23–K27, K29, K32 (Rest), K34 | U13 bis U18 nach Bedarf | Saisonvorbereitung, Sponsoren, Marketing, Stadion, Fans, Presse, Abwerben |
 | 5 Oberfläche | K35b | U19 und folgende | eigener Retro-Look |
 
 ## 6. Aufwand (grob, ehrlich)
@@ -249,6 +251,6 @@ Für BMH habe ich keine verlässliche Quelle gefunden. Anstoss 2022 nutzt laut e
 
 1. **Nächste Session:** Konzept **K03 (Spielermodell)** im Anstoss-Stil. Startsatz: „Projekt Flutlicht Manager im Ordner flutlicht-manager/. Lies PLAN.md und konzepte/_konsistenzpruefung.md. Schreib Konzept K03 nach konzepte/_vorlage.md.“
 2. **Danach:** U2 (Spielermodell), dann K04 und U3 (Engine). Damit ist Welle 1 fertig.
-3. **Vorschlag:** K11 (Testspiele, Trainingslager) und den Sommerteil von K12 (Urlaub, Vorbereitung) in Welle 2 ziehen. Seit der Sommer gespielt wird, sind sonst etwa zehn Wochen ohne Inhalt.
+3. Der Sommerteil von K12 ist als **K12a** in Welle 2 gerückt, zu Training (K07) und Testspielen/Trainingslager (K11).
 
 K03 ist der Engpass: Engine, Taktik, Training und Scouting bauen darauf auf.

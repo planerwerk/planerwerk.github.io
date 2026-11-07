@@ -25,7 +25,7 @@ function buildWorld(seed){const W=RW;
   S.am=AMATEURE.map(n=>({name:n,str:riA(W.amateurStaerke)}));
   PIX=new Map();
   VEREINE.forEach((c,i)=>{
-    const t={id:i,name:c.name,sh:c.kurz,lg:c.liga,region:c.region,zweite:c.zweite?VEREINE.findIndex(v=>v.kurz===c.zweite):-1,rep:c.ansehen,cap:c.plaetze,fans:c.fans,col:c.farbe,cash:Math.round(W.konto.basis+c.ansehen*c.ansehen*W.konto.jeAnsehen2),form:pick(W.startFormationen),tac:'N',ein:'N',price:Math.round(W.ticket.basis+c.ansehen*W.ticket.jeAnsehen),logen:0,shop:0,youth:W.startJugend,expPos:W.startZiel,lastPos:W.startZiel};
+    const t={id:i,name:c.name,sh:c.kurz,lg:c.liga,region:c.region,zweite:c.zweite?VEREINE.findIndex(v=>v.kurz===c.zweite):-1,ewig3:c.ewig3||0,abstieg3:c.abstieg3||0,rep:c.ansehen,cap:c.plaetze,fans:c.fans,col:c.farbe,cash:Math.round(W.konto.basis+c.ansehen*c.ansehen*W.konto.jeAnsehen2),form:pick(W.startFormationen),tac:'N',ein:'N',price:Math.round(W.ticket.basis+c.ansehen*W.ticket.jeAnsehen),logen:0,shop:0,youth:W.startJugend,expPos:W.startZiel,lastPos:W.startZiel};
     S.teams.push(t);if(c.liga>3)return;
     const real=KADER[c.kurz]||[], base=grundStaerke(c.ansehen), quota=real.length>=W.kaderVollAb?W.sollVoll:W.sollDuenn, st=W.stammplaetze, have={TW:0,AB:0,MF:0,ST:0};
     real.forEach(([n,pos,age,str])=>{const p=mkPlayer({n,pos,age,str,team:i});if(age<=W.jungeEchte.bisAlter)p.pot=str+riA(W.jungeEchte.talent);addP(p);have[pos]++;});

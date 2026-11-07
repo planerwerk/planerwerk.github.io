@@ -22,6 +22,7 @@ Abgespalten von K32 (Spielwelt und Saisonwechsel). Hängt ab von: K01, K33 · Wi
 | Zweitmannschaft | Feld `zweite` (Hoffenheim II, Stuttgart II): kein Aufstieg in die 2. Liga, kein DFB-Pokal | `daten/vereine.js` |
 | Regionalliga-Pool | 29 Vereine aus den fünf Staffeln, ohne Kader, mit Region | `daten/vereine.js`, `liga:4` |
 | Region | Staffel, in die ein Verein bei Abstieg aus der 3. Liga fällt | alle Vereine, Feld `region` |
+| Ewige Tabelle | Punkte in der ewigen Tabelle der 3. Liga (`ewig3`), Saison des letzten Abstiegs aus der 3. Liga (`abstieg3`) | `daten/vereine.js`, im Spielstand fortgeschrieben |
 
 ## 4. Abläufe
 
@@ -29,7 +30,8 @@ Abgespalten von K32 (Spielwelt und Saisonwechsel). Hängt ab von: K01, K33 · Wi
 2. **Auf- und Abstieg 2./3. Liga:** Platz 17 und 18 der 2. Liga steigen ab, die beiden besten Aufstiegsberechtigten der 3. Liga steigen auf. Zweitmannschaften werden übersprungen.
 3. **Abstieg aus der 3. Liga:** Die letzten vier gehen in die Regionalliga ihrer Region. Ihre Spieler werden vereinslos.
 4. **Aufstieg aus der Regionalliga:**
-   - Je Staffel wird ein Meister gelost, gewichtet mit (Ansehen − 15)². Der Favorit hat die besten Chancen, sicher ist es nicht.
+   - Je Staffel wird ein Meister gelost (deine Vorgabe vom 7.11.: etwas besser als Zufall). Gewicht = 1 + 2 × Anteil an den meisten Punkten der ewigen Tabelle der 3. Liga, mal 2,5 für einen Absteiger der letzten Saison (1,8 nach zwei, 1,3 nach drei Saisons). Die ewige Tabelle (Wikipedia, Stand 6.11.2026) schreibt das Spiel mit jeder Saison fort.
+   - Ergebnis über 2000 Auslosungen der ersten Saison: Aue 33 %, 1860 30 %, Ulm 27 % (frische Absteiger), Traditionsvereine wie Halle oder Erfurt vor Neulingen.
    - Die Meister von West und Südwest steigen direkt auf. Von Nord, Nordost und Bayern steigt eine Staffel im Wechsel direkt auf (2027 Nordost, 2028 Bayern, 2029 Nord …).
    - Die beiden anderen Meister spielen zwei Aufstiegsspiele, ein kleines Torspiel nach Stärke, bei Gleichstand Elfmeterschießen.
 5. **Aufsteiger** bekommen einen neuen, erfundenen Kader.
@@ -74,7 +76,6 @@ Später möglich (K30): ein Traditionsverein will zurück, ein Lizenzentzug, ein
 
 ## 12. Offene Fragen
 
-1. **Start in der 3. Liga:** Erst nach K21 und K23, wenn die Gehälter der 3. Liga stimmen. Bis dahin erreichst du sie nur über Abstieg oder Jobwechsel. Einverstanden?
-2. **Echte Kader der 3. Liga** wie für 1. und 2. Liga aus Wikipedia nachtragen?
+1. Entschieden am 7.11.: 3. Liga und darunter werden später ausgebaut (echte Kader, Start in der 3. Liga nach K21 und K23). Was steht, bleibt.
 3. **Regionalliga-Wechsel:** Die Reihenfolge Nord, Nordost, Bayern habe ich aus den Aufstiegsspielen 2025 und 2026 abgeleitet. Bitte bei Gelegenheit gegen die DFB-Regel prüfen.
 4. **Kapazitäten der Regionalligisten** sind gerundet und aus dem Gedächtnis. Nachprüfen, wenn sie wichtig werden.

@@ -9,6 +9,7 @@ const topScorers=lg=>S.pl.filter(p=>p.team>=0&&S.teams[p.team].lg===lg&&p.g>0).s
 function seasonEnd(){
   const T={1:table(1),2:table(2),3:table(3)},me=myT(),pos=rank(me.lg,S.my),B=RV;
   S.teams.forEach(t=>{if(aktiv(t))t.lastPos=rank(t.lg,t.id);t.lastLg=t.lg;});
+  T[3].forEach(r=>{S.teams[r.id].ewig3=(S.teams[r.id].ewig3||0)+r.p;});
   const ergebnis=(sp,paar)=>{const a=sp[0]||sim(paar[1],paar[0]),b=sp[1]||sim(paar[0],paar[1]),g0=a.ag+b.hg,g1=a.hg+b.ag;
     return{sieger:g0>g1?paar[0]:g1>g0?paar[1]:(R()<RS.relegationLos?paar[0]:paar[1]),text:`Hinspiel ${tn(a.h)} – ${tn(a.a)} ${a.hg}:${a.ag}, Rückspiel ${tn(b.h)} – ${tn(b.a)} ${b.hg}:${b.ag}${g0===g1?', Entscheidung im Elfmeterschießen':''}`};};
   // Relegation 1./2. Liga und 2./3. Liga (Zweitmannschaften der 3. Liga dürfen nicht aufsteigen)
@@ -33,7 +34,8 @@ function seasonEnd(){
 function poisson(l){const L=Math.exp(-l);let k=0,p=1;do{k++;p*=R();}while(p>L&&k<12);return k-1;}
 function kleinesSpiel(h,a){const G=RS.regionalliga,st=id=>G.spielStaerke.basis+S.teams[id].rep*G.spielStaerke.jeAnsehen,q=st(h)/st(a);return[poisson(G.tore*G.heim*q*q),poisson(G.tore/G.heim/(q*q))];}
 function regionalligaAufsteiger(){const G=RS.regionalliga,meister={},ids=[],txt=[];
-  G.staffeln.forEach(r=>{const c=S.teams.filter(t=>t.lg===4&&t.region===r);if(!c.length)return;const w=c.map(t=>Math.pow(Math.max(1,t.rep-G.basis),2));let x=R()*w.reduce((a,b)=>a+b,0),k=0;while(k<c.length-1&&(x-=w[k])>0)k++;meister[r]=c[k].id;});
+  const W=G.gewicht,maxEwig=Math.max(1,...S.teams.map(t=>t.ewig3||0)),gew=t=>{const n=S.season-(t.abstieg3||-99)-1;return(W.grund+W.ewigFaktor*(t.ewig3||0)/maxEwig)*(n>=0&&n<W.absteiger.length?W.absteiger[n]:1);};
+  G.staffeln.forEach(r=>{const c=S.teams.filter(t=>t.lg===4&&t.region===r);if(!c.length)return;const w=c.map(gew);let x=R()*w.reduce((a,b)=>a+b,0),k=0;while(k<c.length-1&&(x-=w[k])>0)k++;meister[r]=c[k].id;});
   const wechsel=G.wechsel[((S.season+1-G.wechselStart)%3+3)%3];
   G.direkt.concat([wechsel]).forEach(r=>{if(meister[r]!=null){ids.push(meister[r]);txt.push(`${tn(meister[r])} (Meister ${r})`);}});
   const spiel=G.wechsel.filter(r=>r!==wechsel&&meister[r]!=null).map(r=>meister[r]);
@@ -47,7 +49,7 @@ function regionalligaAufsteiger(){const G=RS.regionalliga,meister={},ids=[],txt=
 function newSeason(){const sm=S.summary,Z=RS,setze=(ids,lg)=>ids.forEach(id=>S.teams[id].lg=lg);
   setze(sm.down,2);setze(sm.up,1);if(sm.rw===sm.rel[1]){S.teams[sm.rel[1]].lg=1;S.teams[sm.rel[0]].lg=2;}
   setze(sm.down2,3);setze(sm.up3,2);if(sm.rw2===sm.rel2[1]){S.teams[sm.rel2[1]].lg=2;S.teams[sm.rel2[0]].lg=3;}
-  setze(sm.down3,4);setze(sm.up4,3);
+  setze(sm.down3,4);setze(sm.up4,3);sm.down3.forEach(id=>S.teams[id].abstieg3=sm.season);
   S.teams.forEach(t=>{if(t.lastLg>3&&t.lg>3)return;const A=Z.ansehen;let d=t.lastLg<=3?clamp((t.expPos-t.lastPos)*A.faktor,-A.maxAenderung,A.maxAenderung):0;
     if(t.lg<t.lastLg)d+=A.aufstieg;if(t.lg>t.lastLg)d+=A.abstieg;t.rep=clamp(Math.round(t.rep+d),A.min,A.max);t.fans=Math.round(clamp(t.fans*(1+d*Z.fans.faktor),Z.fans.min,t.cap*Z.fans.maxJePlatz));});
   const K=Z.karriereende;
