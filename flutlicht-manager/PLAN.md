@@ -1,6 +1,6 @@
 # Flutlicht Manager – Gesamtplan
 
-Stand: 7. November 2026 (U1 umgesetzt, dazu Sommer, Anstoßzeiten und 3. Liga; Konzepte K03 und K04 als Entwurf). Das Projekt ist ein Nebenprojekt, das langsam und gründlich wachsen soll, ohne Schnellschüsse.
+Stand: 7. November 2026 (U1 umgesetzt, dazu Sommer, Anstoßzeiten und 3. Liga; Konzepte K02, K03 und K04 als Entwurf, damit stehen alle Konzepte der Welle 1). Das Projekt ist ein Nebenprojekt, das langsam und gründlich wachsen soll, ohne Schnellschüsse.
 
 ## 1. Arbeitsweise
 
@@ -45,7 +45,7 @@ Spalte „Welle“: wann das Konzept spätestens fertig sein muss. Umfang des Ko
 | ID | Konzept | Kernfragen | Umfang | Welle |
 |---|---|---|---|---|
 | K01 | Kalender und Tagesablauf (**Entwurf**, Grundgerüst umgesetzt: `konzepte/K01-kalender.md`) | Tagesansicht, „Tag beenden“, Ereignisarten, Fristen, Erinnerungsregeln, spielfreie Tage, Länderspielpausen, englische Wochen | M | 1 |
-| K02 | Zufall, Kalibrierung, Schwierigkeit | Zufall mit Seed, wie viel Zufall wo, Restwahrscheinlichkeit für Überraschungen, Zielwerte aus echter Statistik, Testskripte, Schwierigkeitsgrade ohne Schummeln | M | 1 |
+| K02 | Zufall, Kalibrierung, Schwierigkeit (**Entwurf**: `konzepte/K02-zufall-kalibrierung.md`) | Zufall mit Seed, wie viel Zufall wo, Restwahrscheinlichkeit für Überraschungen, Zielwerte aus echter Statistik, Testskripte, Schwierigkeitsgrade ohne Schummeln | M | 1 |
 | K03 | Spielermodell (**Entwurf**: `konzepte/K03-spielermodell.md`) | Fähigkeiten, Spezialitäten (gut/schlecht), versteckte Werte, Zustände (Frische, Kondition, Form, Selbstvertrauen, Stimmung, Integration, Spielpraxis), Alterskurven | L | 1 |
 | K04 | Match-Engine (**Entwurf**: `konzepte/K04-engine.md`) | Minutenablauf, Chancentypen, Teamwerte mit abnehmendem Ertrag, Deckel für Einzelspieler (Torwart-Problem), Tagesform, Spielverlauf-Effekte, Ermüdung, Zielverteilungen | L | 1 |
 | K33 | Daten, Spielstand, `regeln.js` (**Entwurf**, umgesetzt: `konzepte/K33-daten.md`) | Dateiaufbau, Stammdaten, Versionen des Spielstands, wie man an Werten schraubt, Daten-Update für neue Saisons | S | 1 |
@@ -254,7 +254,11 @@ Für BMH habe ich keine verlässliche Quelle gefunden. Anstoss 2022 nutzt laut e
 
 1. **K03 steht als Entwurf** (7.11.): `konzepte/K03-spielermodell.md`. Alle Fragen sind entschieden (7.11.). Offen ist nur die Recherche nach einer Datenquelle für feine Positionen, Fuß und Charakter-Fakten.
 2. **K04 steht als Entwurf** (7.11., ohne Rücksprache geschrieben): `konzepte/K04-engine.md`. Sechs vorläufige Entscheidungen in Abschnitt 12 bitte bestätigen oder ändern.
-3. **Danach:** K02 (Zufall, Kalibrierung, Schwierigkeit) als letztes Konzept der Welle 1, dann U2 (Spielermodell) und U3 (Engine). Damit ist Welle 1 fertig.
+3. **K02 steht als Entwurf** (7.11., ohne Rücksprache): `konzepte/K02-zufall-kalibrierung.md`. Vier vorläufige Entscheidungen in Abschnitt 12, die wichtigste: Zufall getrennt nach Spiel, Tag und Bereich, damit Neuladen kein neues Glück bringt.
+4. **Alle Konzepte der Welle 1 stehen.** Nächster Schritt ist die Umsetzung, jeweils in einer neuen Session:
+   - **U2 Spielermodell** (K03, Teile von K02): Zufallsströme und Node-Simulator `tests/sim.js` zuerst, dann neue Spielerfelder, Positionen und Fuß (bis die Daten da sind, per Zufall aus der Gruppe), Frische und Kondition getrennt, Entwicklung an jedem Spieltag, Merkmale und Persönlichkeit mit Startverteilung, Talentsterne unscharf, Spielerkarte mit den neuen Reglern, `tests/spielermodell.js`. Die heutige Engine bleibt, bekommt nur Frische statt Fitness und Form 0–20.
+   - **U3 Engine v2** (K04, Rest von K02): Szenen-Modell, Teamwerte aus Positionsanteilen, Chancentypen, Standards, Merkmal-Haken, Noten gegen die Erwartung, Spielbericht, Lernen im Spiel, Schwierigkeitsstufen, `tests/kalibrierung.js` und `tests/akzeptanz.js`, Kalibrierung bis alles grün ist.
+   - Startsatz: „Projekt Flutlicht Manager im Ordner flutlicht-manager/. Lies PLAN.md, konzepte/_konsistenzpruefung.md, konzepte/K02-zufall-kalibrierung.md und konzepte/K03-spielermodell.md. Setze U2 um.“
 4. Der Sommerteil von K12 ist als **K12a** in Welle 2 gerückt, zu Training (K07) und Testspielen/Trainingslager (K11).
 
 Mit K03 ist der größte Engpass gelöst. Engine, Taktik, Training und Scouting haben jetzt eine Grundlage (K03 §9).

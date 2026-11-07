@@ -191,3 +191,17 @@ Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `
 | K7 | **Erwartung vor dem Spiel** (Poisson-Näherung) wird von drei Stellen genutzt: Tauziehen (K35a), Serien (K03), Spielbericht (K04). | ✅ eine Funktion, eine Quelle (K04 §5.8) |
 | K8 | **Noch unbelegte Zielwerte:** Elfmeter, Fouls, Rote Karten, Torschüsse pro Spiel, Anteil der Tore in der zweiten Halbzeit, Torschnitt 2. und 3. Liga. | 📌 K02 recherchiert vor der Kalibrierung. |
 | K9 | **Rote Karte und Sportgericht:** K04 erzeugt Fouls mit Ort und Schwere, die Kartenregeln und Sperren bleiben bis K09 wie heute (Sperre über alle Wettbewerbe, H3). | 📌 K09 |
+
+---
+
+## L. Nachtrag zu K02 (7. November 2026)
+
+| # | Befund | Status |
+|---|---|---|
+| L1 | **Spielstand:** K02 ersetzt den einen Zufallsstrom `S.zufall` durch Ströme nach Spiel, Tag und Bereich mit Zählern `S.zz`. K33 beschreibt noch `S.zufall`. | 📌 K33 bei U2 anpassen. Alte Spielstände müssen nicht umgewandelt werden (PLAN §1, Punkt 9). |
+| L2 | **Seed-Test** prüft heute nur gleichen Verlauf und Speichern/Laden. | 📌 U2 erweitert ihn um „Neuladen bringt nichts“ und „Bereiche unabhängig“ (K02 §10.3). |
+| L3 | **Geduld des Vorstands** (`entlassenUnter`, `schonfristSpieltage`) hängt künftig an der Schwierigkeitsstufe. | ✅ K02 §5.4. K28 baut darauf auf. |
+| L4 | **Klugheit der Computer-Vereine** als Stufe braucht Entscheidungsregeln mit Qualität. | 📌 K31 |
+| L5 | **Talentsterne:** K03 legt „bis 1 Stern daneben“ fest. K02 übernimmt das für „Normal“, „Leicht“ zeigt sie genau. | ✅ passt zu deiner Entscheidung vom 7.11. |
+| L6 | **Simulation ohne Browser:** Die Spiellogik ist fast frei von Oberfläche. `welt.js`, `saison.js` und `hilfen.js` rufen an wenigen Stellen `render()` oder `document` auf, `aktionen.js` häufig. | 📌 U2: `tests/sim.js` mit kleinen Attrappen für `render()` und `document`. Aktionen bleiben im Browser-Test. |
+| L7 | **Rangkorrelation** Stärke gegen Abschlusstabelle als Maß für die Dosis Zufall ist geschätzt (0,6–0,8). | 📌 vor der Kalibrierung mit echten Daten prüfen |

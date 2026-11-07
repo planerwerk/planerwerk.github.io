@@ -306,27 +306,33 @@ Die Engine löst selbst keine Ereigniskarten aus, sondern meldet Anlässe:
 - **Standards:** Laut bundesliga.com fällt mehr als ein Viertel aller Tore nach Ecken oder Freistößen.
 - **Ecken:** etwa 9,7 pro Spiel im Fünf-Jahres-Schnitt (Spreadex), 2026/27 bisher etwa 10,9 (APWin).
 - **Torhüter:** Die besten verhindern in einer Saison etwa 5 Tore mehr als erwartet, die schwächsten lassen etwa 5 mehr zu (Premier League 2024/25, FBref-Daten laut Football365).
-- **Unsicher, noch prüfen:** Elfmeter pro Spiel, Fouls pro Spiel, Rote Karten, Tore der zweiten Halbzeit, Werte für 2. und 3. Liga.
+- **Elfmeter 2024/25:** 83 Strafstöße, davon 58 verwandelt (bundesliga.com). Das sind 0,27 pro Spiel und eine Quote von 70 %, die als ungewöhnlich niedrig galt. Das DFB-Datencenter nennt 58, vermutlich nur die verwandelten.
+- **Platzverweise 2024/25:** 30 Rote und 28 Gelb-Rote Karten (DFB-Datencenter), zusammen 0,19 pro Spiel.
+- **2. Liga:** nach dem 10. Spieltag 2024/25 3,4 Tore pro Spiel (Zwischenstand, bundesliga.com).
+- **Tore nach Halbzeit:** Die Studien widersprechen sich. 2008–2011 fielen in vier großen Ligen 55 % der Tore nach der Pause, eine Auswertung der Top-5-Ligen 2018–2021 fand mehr Tore vor der Pause.
+- **Unsicher, noch prüfen:** Fouls und Torschüsse pro Spiel, Endwerte für 2. und 3. Liga.
 
 **Testskript `tests/engine.js`** (viele Seeds, ganze Saisons):
 
 | Prüfung | Ziel |
 |---|---|
 | Tore pro Spiel, 1. Liga | 2,9–3,3 |
-| Tore pro Spiel, 2. und 3. Liga | ähnlich, 2,7–3,2 (prüfen) |
+| Tore pro Spiel, 2. und 3. Liga | ähnlich wie die 1. Liga, 2,8–3,4 |
 | Heim / Remis / Auswärts | 40–46 % / 23–27 % / 30–36 % |
 | Torschüsse pro Spiel | 22–28 (prüfen) |
 | Torquote je Schuss | 10–13 % |
 | Ecken pro Spiel | 9–11 |
 | Tore nach Ecken und Freistößen | 22–30 % aller Tore, dazu Elfmeter 5–8 % |
 | Gelbe Karten pro Team und Spiel | 1,5–2,2 |
+| Platzverweise pro Spiel (Rot und Gelb-Rot) | 0,12–0,25 |
+| Elfmeter pro Spiel | 0,2–0,3, verwandelt 70–80 % |
 | Punkte | Meister 70–85, Letzter 15–30 |
 | Favoriten | Stärkeunterschied wie Top 3 gegen Abstiegskandidat: 65–75 % Sieg, 12–20 % Remis, 8–15 % Niederlage. Gleich stark mit Heimvorteil: 40–46 % Sieg. |
 | Pokal gegen Amateure | Bundesligist kommt in 88–94 % weiter |
 | Überraschungen | Jedes Spitzenteam verliert mindestens zweimal pro Saison gegen eine Mannschaft aus der unteren Hälfte, im Schnitt über viele Saisons |
 | Ballbesitz | Spanne der Saisonwerte etwa 40–62 % je Team |
 | Rote Karte | eigene Torchance etwa −25 %, gegnerische etwa +20 % |
-| Spielverlauf | mehr Tore in der zweiten Halbzeit als in der ersten (Anteil 52–58 %, prüfen) |
+| Spielverlauf | Anteil der Tore nach der Pause 47–58 % (Studien uneinig, daher weites Band) |
 
 **Akzeptanztests:**
 - **Torwart-Test** (Rohmaterial 5.6): Ein Zweitliga-Mittelfeldteam bekommt einen Torwart aus der 1. Liga. Über 200 Saisons: 0,08–0,25 Gegentore weniger pro Spiel, +2 bis +6 Punkte. Es muss also etwas bringen, aber nicht alles.
@@ -381,11 +387,14 @@ engine:{
 5. **Abseits** zählt nur als Statistik und als „Tor aberkannt“, ohne Taktik (Abseitsfalle vielleicht in K06).
 6. **Heimvorteil** niedriger als heute (×1,03 statt ×1,04/1,03), weil er in den letzten Jahren gesunken ist. Kalibrierung in K02 entscheidet den Endwert.
 
-**Noch zu recherchieren:** Elfmeter, Fouls und Rote Karten pro Spiel, Torschüsse, Anteil der Tore in der zweiten Halbzeit, Torschnitt der 2. und 3. Liga.
+**Noch zu recherchieren:** Fouls und Torschüsse pro Spiel, Endwerte für den Torschnitt der 2. und 3. Liga.
 
 ## Quellen
 
-- Tore und Ergebnisse 2024/25: [bundesliga.com, Trends der Saison 2024/25](https://www.bundesliga.com/de/bundesliga/news/trends-saison-2024-25-tore-joker-zuschauer-elfmeter-killer-32319)
+- Tore, Ergebnisse und Elfmeter 2024/25: [bundesliga.com, Trends der Saison 2024/25](https://www.bundesliga.com/de/bundesliga/news/trends-saison-2024-25-tore-joker-zuschauer-elfmeter-killer-32319)
+- Platzverweise 2024/25: [DFB-Datencenter, Ranglisten Bundesliga 2024/25](https://datencenter.dfb.de/ranglisten/bundesliga/2024-25)
+- 2. Liga, Zwischenstand: [bundesliga.com, Rekord verpasst](https://www.bundesliga.com/de/2bundesliga/news/2bl-rekord-verpasst-45-tore-spieltag-treffer-29493)
+- Tore nach Halbzeit (Studien mit widersprüchlichen Ergebnissen, nur Zusammenfassungen gelesen): [Studie auf PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC5843336), [Heliyon (2024)](https://doaj.org/article/33e83dc64a3a4c1ca05c8fe81ac3ca5a)
 - Standards: [bundesliga.com, Standardschützen und Standardtore](https://www.bundesliga.com/de/bundesliga/news/standard-schutzen-freistosse-elfmeter-ecken-clubs-ubersicht-13683), [bundesliga.com, Match Facts Standard-Gefahr](https://www.bundesliga.com/de/bundesliga/news/match-facts-powered-by-aws-standard-gefahr-beste-teams-ecken-freistosse-19171)
 - Ecken: [Spreadex, Bundesliga im Ligenvergleich](https://www1.spreadex.com/sports/blog/features/bundesliga-most-exciting-europe-league), [APWin, Eckstatistik](https://www.apwin.com/league/germany/bundesliga/corners/)
 - Torhüter, verhinderte Tore: [Football365, Premier-League-Torhüter 2024/25 nach PSxG](https://www.football365.com/news/feature-premier-league-keepers-ranked-2024-25-psxg), [Driblab: Goals Prevented](https://www.driblab.com/blog/goals-prevented-the-real-way-to-know-if-your-goalkeeper-is-winning-games)
