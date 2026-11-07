@@ -295,3 +295,16 @@ Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `
 | S3 | **Erinnerung „spielfreie Woche ohne Testspiel“** (H9) wird mit K11 aktiv. | 📌 K01 bei Umsetzung |
 | S4 | **Zusammenhalt und Zimmerbelegung** brauchen K14. Bis dahin wirken nur Selbstvertrauen und Deutsch. | 📌 K14 |
 | S5 | **Geldbeträge** sind Spielwerte. | 📌 K23 kalibriert |
+
+---
+
+## T. Nachtrag zu K13 (7. November 2026)
+
+| # | Befund | Status |
+|---|---|---|
+| T1 | **H5 aufgelöst:** Relegation ohne Auswärtstorregel, mit Verlängerung und Elfmeterschießen aus der Engine statt Los. | ✅ K13 §3.3 |
+| T2 | **I5 vorläufig gelöst:** Zweitmannschaft muss eine Liga tiefer als die erste, echte Regel noch zu prüfen. | 🔶 K13 §12, Punkt 4 |
+| T3 | **O5 aufgelöst:** Länderspiele, Nominierung über Nationalität und Schwelle, Turniere im Sommer. | ✅ K13 §3.4. Braucht die Nationalität aus K03 und eine neue Datei `daten/nationen.js`. |
+| T4 | **Nominierungen ausländischer Spieler** brauchen den Auslandspool (K32), sonst werden kleine Nationen nur aus unserer Welt besetzt. | 📌 K32 in Welle 3 |
+| T5 | **Supercup** ist neu. Termin vor dem 1. Spieltag kollidiert nicht mit der 1. Pokalrunde (22.8.2026, 1. Spieltag 28.8.2026), wenn er am 22. oder 23.8. nicht liegt. | 📌 bei Umsetzung Termin prüfen |
+| T6 | **Spielverlegung** wird eine neue Frist-Entscheidung. Selten, belastet das Halte-Budget kaum. | ✅ |

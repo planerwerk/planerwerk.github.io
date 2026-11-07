@@ -62,7 +62,7 @@ Spalte „Welle“: wann das Konzept spätestens fertig sein muss. Umfang des Ko
 | K10 | Medizin und Verletzungen (**Entwurf**: `konzepte/K10-medizin.md`) | Verletzungsarten und Dauer, Diagnose als Spanne, Reha, Rückfall, fit spritzen, medizinische Abteilung | S | 2 |
 | K12a | Sommerpause und Vorbereitung (aus K12 vorgezogen, 7.11.; **Entwurf**: `konzepte/K12a-sommer.md`) | Urlaub mit wählbarer Länge (2–4 Wochen), Trainingsauftakt, Leistungstests, Vorbereitungsplan; Wirkung über Frische und Kondition aus K03 | S | 2 |
 | K11 | Freundschaftsspiele und Trainingslager (**Entwurf**: `konzepte/K11-testspiele.md`) | Gegner anfragen (je nach Beziehung), Einnahmen, Spielpraxis, Risiko, Turniere, Trainingslager-Orte | S | 2 |
-| K13 | Wettbewerbe und Spielplan | Liga, Pokal, Relegation, Europapokal später, Länderspiele mit Abstellungen, Spieltage verlegen, englische Wochen | M | 2 |
+| K13 | Wettbewerbe und Spielplan (**Entwurf**: `konzepte/K13-wettbewerbe.md`) | Liga, Pokal, Relegation, Europapokal später, Länderspiele mit Abstellungen, Spieltage verlegen, englische Wochen | M | 2 |
 
 ### C – Menschen
 
@@ -259,7 +259,7 @@ Für BMH habe ich keine verlässliche Quelle gefunden. Anstoss 2022 nutzt laut e
    - **U2 Spielermodell** (K03, Teile von K02): Zufallsströme und Node-Simulator `tests/sim.js` zuerst, dann neue Spielerfelder, Positionen und Fuß (bis die Daten da sind, per Zufall aus der Gruppe), Frische und Kondition getrennt, Entwicklung an jedem Spieltag, Merkmale und Persönlichkeit mit Startverteilung, Talentsterne unscharf, Spielerkarte mit den neuen Reglern, `tests/spielermodell.js`. Die heutige Engine bleibt, bekommt nur Frische statt Fitness und Form 0–20.
    - **U3 Engine v2** (K04, Rest von K02): Szenen-Modell, Teamwerte aus Positionsanteilen, Chancentypen, Standards, Merkmal-Haken, Noten gegen die Erwartung, Spielbericht, Lernen im Spiel, Schwierigkeitsstufen, `tests/kalibrierung.js` und `tests/akzeptanz.js`, Kalibrierung bis alles grün ist.
    - Startsatz: „Projekt Flutlicht Manager im Ordner flutlicht-manager/. Lies PLAN.md, konzepte/_konsistenzpruefung.md, konzepte/K02-zufall-kalibrierung.md und konzepte/K03-spielermodell.md. Setze U2 um.“
-5. **Vorgezogen aus Welle 2:** K05 (Live-Spiel), K06 (Taktik), K07 (Training), K09 (Sportgericht), K10 (Medizin), K11 (Testspiele) und K12a (Sommer) stehen als Entwurf. Offen in Welle 2 sind noch K13 und K16. **K12a braucht deine Bestätigung** für eine Ausnahme von der 7-Tage-Regel im Urlaub (K12a §12, Frage 1). K06 weil es offene Punkte aus K03 und K04 klärt (Grundordnungen auf 14 Positionen, Seiten, Standardschützen). U3 kann die Grundordnungen und Seiten gleich mitbauen. K07 ersetzt die Trainingsstufen durch Wochenpläne nach Abstand zum Spiel und kommt mit U6.
+5. **Vorgezogen aus Welle 2:** K05 (Live-Spiel), K06 (Taktik), K07 (Training), K09 (Sportgericht), K10 (Medizin), K11 (Testspiele), K12a (Sommer) und K13 (Wettbewerbe) stehen als Entwurf. Offen in Welle 2 ist noch K16. **K12a braucht deine Bestätigung** für eine Ausnahme von der 7-Tage-Regel im Urlaub (K12a §12, Frage 1). K06 weil es offene Punkte aus K03 und K04 klärt (Grundordnungen auf 14 Positionen, Seiten, Standardschützen). U3 kann die Grundordnungen und Seiten gleich mitbauen. K07 ersetzt die Trainingsstufen durch Wochenpläne nach Abstand zum Spiel und kommt mit U6.
 4. Der Sommerteil von K12 ist als **K12a** in Welle 2 gerückt, zu Training (K07) und Testspielen/Trainingslager (K11).
 
 Mit K03 ist der größte Engpass gelöst. Engine, Taktik, Training und Scouting haben jetzt eine Grundlage (K03 §9).
