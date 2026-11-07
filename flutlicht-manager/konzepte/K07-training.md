@@ -184,7 +184,7 @@ Testskript: Teil von `tests/spielermodell.js` und `tests/akzeptanz.js`.
 | Kondition | Standardwoche hält sie bei 78–82, Aufbauwoche hebt sie Richtung 90 (K03 §10) |
 | Vertrautheit | 30 → 80 in 6–8 Wochen mit zwei Taktik-Einheiten pro Woche |
 | Umschulung | verwandte Position von 75 auf 90 % in etwa vier Wochen, fremde von 60 auf 90 % in etwa 15 Wochen |
-| Verletzungen im Training | Anteil an allen Verletzungen 30–50 % (prüfen) |
+| Verletzungen im Training | Anteil an allen Verletzungen 40–55 % (abgeleitet in K10 §10, prüfen) |
 
 ## 11. Stellschrauben
 

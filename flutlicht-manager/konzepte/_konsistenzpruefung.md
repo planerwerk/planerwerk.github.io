@@ -244,3 +244,16 @@ Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `
 | O3 | **Saisonbelastung** ist ein neuer verdeckter Wert. In K03 §3.2 nachgetragen. | ✅ |
 | O4 | **Heutiger Urlaub** dauert vom Saisonende bis zum Trainingsauftakt (etwa fünf Wochen) und senkt die „Fitness“. K12a teilt in Urlaub (2–4 Wochen) und Laufplan. | 📌 Umsetzung mit U6 (Training, Sommer). `training.urlaubAbbau` und `urlaubMin` fallen dann weg. |
 | O5 | **Turnierteilnehmer** brauchen Länderspiele und Nominierungen. | 📌 K13 |
+
+---
+
+## P. Nachtrag zu K10 (7. November 2026)
+
+| # | Befund | Status |
+|---|---|---|
+| P1 | **N4 aufgelöst:** Arten, Dauer, Diagnose, Reha, Rückfall und fit spritzen stehen in K10. | ✅ |
+| P2 | **Anteil Trainingsverletzungen:** K07 nannte 30–50 %, K10 leitet 40–55 % aus den UEFA-Raten ab. | ✅ K07 angepasst, bleibt „prüfen“ |
+| P3 | **Gehirnerschütterungs-Wechsel:** Ob es in Bundesliga und Pokal einen zusätzlichen Wechsel gibt, ist nicht geprüft. | 📌 K05, vor der Umsetzung nachschlagen |
+| P4 | **Quellen:** Die Verletzungszahlen stammen aus Zusammenfassungen. Die Zuordnung einzelner Zahlen zu Links ist nicht am Volltext geprüft. | 📌 vor der Kalibrierung (K02) prüfen |
+| P5 | **Verletzungsverlauf** `vh` dient später auch der Ableitung der Robustheit bei echten Spielern (K03 §5.9). | ✅ passt zusammen |
+| P6 | **Schwere des Fouls** erhöht das Verletzungsrisiko und umgekehrt die Verletzung das Strafmaß. | 📌 K09 |
