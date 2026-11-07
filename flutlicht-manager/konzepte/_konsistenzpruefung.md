@@ -270,3 +270,16 @@ Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `
 | Q4 | **Zurufe an Spieler** brauchen die Reaktionstabelle nach Charakter aus K15. | 📌 K05 nutzt bis dahin eine vereinfachte Form |
 | Q5 | **Weiterspielen nach Neuladen** setzt die festen Würfe je Minute aus K02 voraus. | ✅ passt zu K02 §3.1 |
 | Q6 | **Noch zu prüfen:** Bankgröße, Zusatzwechsel in der Verlängerung im Pokal, durchschnittliche Zahl der Wechsel. | 📌 vor der Umsetzung (U4) |
+
+---
+
+## R. Nachtrag zu K09 (7. November 2026)
+
+| # | Befund | Status |
+|---|---|---|
+| R1 | **H3 aufgelöst:** Sperren je Wettbewerb (Liga, Pokal), Gelbsperren nach der 5., 10. und 15. Karte in der Liga, nach der 5. im Pokal, Gelb-Rot ein Spiel, Rot per Verfahren. | ✅ K09 §3.2 |
+| R2 | **K9 aufgelöst:** Fouls mit Art und Schwere, Schiedsrichter-Pool ersetzt den vorläufigen Strengefaktor aus K04. | ✅ |
+| R3 | **P6 aufgelöst:** Verletzungsfolge erhöht das Strafmaß um ein Spiel. | ✅ K09 §5.2 |
+| R4 | **D5 eingehalten:** Verfahren wegen Äußerungen liegen bei K09, der Inhalt bei K29. | ✅ |
+| R5 | **Halte-Budget:** Einspruch-Entscheidungen sind Fristen, etwa eine alle zwei Monate pro Team. | ✅ passt zu PLAN §2 |
+| R6 | **Noch zu prüfen:** Liga-Rot im Pokal, Karten in der Relegation, aktuelle Trainer-Kartenregel, echte Geldstrafen. | 📌 vor der Umsetzung (U7) |
