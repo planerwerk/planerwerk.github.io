@@ -85,35 +85,47 @@ const REGELN={
       trainingsweltmeister:{name:'Trainingsweltmeister',art:'±',wenn:{pro:[15,20],dru:[1,7]},text:'lernt 25 % schneller, bringt es im Spiel aber nicht immer'},
       hitzkopf:{name:'Hitzkopf',art:'−',wenn:{tem:[17,20]},text:'sieht 50 % öfter Karten'},
       verletzungsanfaellig:{name:'verletzungsanfällig',art:'−',wenn:{rob:[1,4]},text:'verletzt sich 60 % öfter'},
-      nervenschwach:{name:'nervenschwach',art:'−',wenn:{dru:[1,4]},text:'schwächer im Elfmeterschießen'},
-      fuehrungsspieler:{name:'Führungsspieler',art:'+',wenn:{fue:[16,20]},abAlter:24},
+      nervenschwach:{name:'nervenschwach',art:'−',wenn:{dru:[1,4]},text:'schwächer in engen und wichtigen Spielen und vom Punkt'},
+      fuehrungsspieler:{name:'Führungsspieler',art:'+',wenn:{fue:[16,20]},abAlter:24,text:'reißt bei Rückstand die Mannschaft mit'},
       integrationsfigur:{name:'Integrationsfigur',art:'+',wenn:{fue:[13,20],anp:[15,20]}},
       mentor:{name:'Mentor',art:'+',wenn:{pro:[14,20],fue:[12,20]},abAlter:29},
-      kaempfer:{name:'Kämpfer',art:'+',wenn:{ehr:[16,20],dru:[12,20]}},
+      kaempfer:{name:'Kämpfer',art:'+',wenn:{ehr:[16,20],dru:[12,20]},text:'legt bei Rückstand zu'},
       vereinstreu:{name:'vereinstreu',art:'+',wenn:{loy:[17,20]}},
       diva:{name:'Diva',art:'−',wenn:{ehr:[15,20],anp:[1,6]}},
       soeldner:{name:'Söldner',art:'−',wenn:{loy:[1,4]}},
       heimweh:{name:'Heimweh-Typ',art:'−',wenn:{anp:[1,4]}}},
-    eigenschaftenWirksam:['vorbildprofi','partyloewe','trainingsweltmeister','hitzkopf','verletzungsanfaellig','nervenschwach'],
+    eigenschaftenWirksam:['vorbildprofi','partyloewe','trainingsweltmeister','hitzkopf','verletzungsanfaellig','nervenschwach','kaempfer','fuehrungsspieler'],
     entdeckenWochen:[2,8],          // so lange dauert es, bis der Co-Trainer eine Eigenschaft eines neuen Spielers meldet
     // Merkmale (K03 §3.4): Stärken und Schwächen. Schwierigkeit: Lernfortschritt pro Woche leicht 12 %, mittel 6 %, schwer 3 %.
     merkmale:{
-      kopfballstark:{name:'kopfballstark',g:['AB','MF','ST'],s:'mittel',gegen:'kopfballschwach'},schnell:{name:'schnell',g:['AB','MF','ST'],s:'schwer',bis:23,alt:true,gegen:'langsam'},
+      kopfballstark:{name:'kopfballstark',g:['AB','MF','ST'],s:'mittel',gegen:'kopfballschwach',text:'gefährlicher bei Kopfbällen, wird bei Flanken öfter gesucht, verteidigt hohe Bälle besser'},schnell:{name:'schnell',g:['AB','MF','ST'],s:'schwer',bis:23,alt:true,gegen:'langsam',text:'eigene Konter gefährlicher, gegnerische Konter seltener'},
       ausdauernd:{name:'ausdauernd',g:['AB','MF','ST'],s:'leicht',alt:true,text:'verliert im Spiel ein Viertel weniger Frische'},
-      zweikampfstark:{name:'zweikampfstark',g:['AB','MF'],s:'mittel'},stellungssicher:{name:'stellungssicher',g:['AB','MF'],s:'mittel'},ballsicher:{name:'ballsicher',g:['AB','MF'],s:'mittel'},
-      flankengeber:{name:'Flankengeber',g:['AB','MF'],s:'mittel'},dribbler:{name:'Dribbler',g:['MF','ST'],s:'schwer'},torjaeger:{name:'Torjäger',g:['MF','ST'],s:'schwer',gegen:'abschlussschwach'},
-      weitschuetze:{name:'Weitschütze',g:['MF','ST'],s:'mittel'},freistoss:{name:'Freistoßspezialist',g:['AB','MF','ST'],s:'mittel'},
-      elfmeter:{name:'Elfmeterschütze',g:['AB','MF','ST'],s:'leicht',text:'trifft im Elfmeterschießen öfter'},beidfuessig:{name:'beidfüßig',g:['AB','MF','ST'],s:'schwer',bis:25},
-      vielseitig:{name:'vielseitig',g:['AB','MF','ST'],s:'mittel'},joker:{name:'Joker',g:['MF','ST'],s:'mittel'},
-      reflexe:{name:'Reflexe',g:['TW'],s:'mittel'},strafraum:{name:'Strafraumbeherrscher',g:['TW'],s:'mittel',gegen:'fliegenfaenger'},
-      elfmetertoeter:{name:'Elfmetertöter',g:['TW'],s:'leicht',text:'hält im Elfmeterschießen öfter'},mitspielend:{name:'mitspielend',g:['TW'],s:'mittel'},
-      kopfballschwach:{name:'kopfballschwach',g:['AB','MF','ST'],s:'mittel',schwaeche:true},abschlussschwach:{name:'abschlussschwach',g:['MF','ST'],s:'mittel',schwaeche:true},
-      unkonzentriert:{name:'unkonzentriert',g:['TW','AB','MF','ST'],s:'leicht',schwaeche:true},ungestuem:{name:'ungestüm',g:['AB','MF','ST'],s:'mittel',schwaeche:true},
-      fliegenfaenger:{name:'Fliegenfänger',g:['TW'],s:'mittel',schwaeche:true},langsam:{name:'langsam',g:['AB','MF','ST'],s:'schwer',schwaeche:true}},
-    merkmaleWirksam:['ausdauernd','elfmeter','elfmetertoeter'],
-    lernen:{woche:{leicht:12,mittel:6,schwer:3},alter:[[21,1.3],[25,1.1],[29,1],[32,0.8]],alterSonst:0.6,profi:[0.7,0.03],zufall:[0.7,1.3],
-      frischeUnter:[70,0.8],eigenschaft:{vorbildprofi:1.25,trainingsweltmeister:1.25,partyloewe:0.75},maxStaerken:4,automatik:true},
-    startMerkmale:{staerken:[[55,0.5],[65,1],[75,1.6],[85,2.3],[90,3]],schwaechen:[[60,0.6],[85,0.3]],beidfuessig:0.1,
+      zweikampfstark:{name:'zweikampfstark',g:['AB','MF'],s:'mittel',text:'stärker in der Abwehr'},stellungssicher:{name:'stellungssicher',g:['AB','MF'],s:'mittel',text:'der Gegner kommt seltener zu Großchancen'},ballsicher:{name:'ballsicher',g:['AB','MF'],s:'mittel',text:'seltener Konter nach Ballverlust'},
+      flankengeber:{name:'Flankengeber',g:['AB','MF'],s:'mittel',text:'mehr Kopfballchancen über außen, gefährlichere Ecken'},dribbler:{name:'Dribbler',g:['MF','ST'],s:'schwer',text:'macht aus Halbchancen öfter Großchancen'},torjaeger:{name:'Torjäger',g:['MF','ST'],s:'schwer',gegen:'abschlussschwach',text:'kommt öfter zum Abschluss und trifft besser'},
+      weitschuetze:{name:'Weitschütze',g:['MF','ST'],s:'mittel',text:'schießt öfter aus der Distanz und trifft dabei besser'},freistoss:{name:'Freistoßspezialist',g:['AB','MF','ST'],s:'mittel',text:'direkte Freistöße gehen öfter rein'},
+      elfmeter:{name:'Elfmeterschütze',g:['AB','MF','ST'],s:'leicht',text:'trifft vom Punkt öfter'},beidfuessig:{name:'beidfüßig',g:['AB','MF','ST'],s:'schwer',bis:25,text:'trifft etwas besser, keine Einbuße auf der „falschen“ Seite'},
+      vielseitig:{name:'vielseitig',g:['AB','MF','ST'],s:'mittel',text:'auf fremden Positionen besser geeignet'},joker:{name:'Joker',g:['MF','ST'],s:'mittel'},
+      reflexe:{name:'Reflexe',g:['TW'],s:'mittel',text:'hält Schüsse aus kurzer Distanz besser'},strafraum:{name:'Strafraumbeherrscher',g:['TW'],s:'mittel',gegen:'fliegenfaenger',text:'fängt Flanken ab, weniger Kopfballtore'},
+      elfmetertoeter:{name:'Elfmetertöter',g:['TW'],s:'leicht',text:'hält Elfmeter öfter'},mitspielend:{name:'mitspielend',g:['TW'],s:'mittel'},
+      kopfballschwach:{name:'kopfballschwach',g:['AB','MF','ST'],s:'mittel',schwaeche:true,text:'schwächer bei Kopfbällen'},abschlussschwach:{name:'abschlussschwach',g:['MF','ST'],s:'mittel',schwaeche:true,text:'vergibt öfter'},
+      unkonzentriert:{name:'unkonzentriert',g:['TW','AB','MF','ST'],s:'leicht',schwaeche:true,text:'patzt deutlich öfter'},ungestuem:{name:'ungestüm',g:['AB','MF','ST'],s:'mittel',schwaeche:true,text:'foult öfter, mehr Karten und Elfmeter'},
+      fliegenfaenger:{name:'Fliegenfänger',g:['TW'],s:'mittel',schwaeche:true,text:'lässt Flanken fallen, mehr Kopfballtore'},langsam:{name:'langsam',g:['AB','MF','ST'],s:'schwer',schwaeche:true,text:'gegnerische Konter gefährlicher'}},
+    // In der Engine wirksam und damit sichtbar (Joker und mitspielend erst mit Einwechslungen und Spielaufbau, K05/K06)
+    merkmaleWirksam:['kopfballstark','schnell','ausdauernd','zweikampfstark','stellungssicher','ballsicher','flankengeber','dribbler','torjaeger','weitschuetze','freistoss','elfmeter','beidfuessig','vielseitig',
+      'reflexe','strafraum','elfmetertoeter','kopfballschwach','abschlussschwach','unkonzentriert','ungestuem','fliegenfaenger','langsam'],
+    lernen:{woche:{leicht:6,mittel:3,schwer:1.5},alter:[[21,1.3],[25,1.1],[29,1],[32,0.8]],alterSonst:0.6,profi:[0.7,0.03],zufall:[0.7,1.3],
+      frischeUnter:[70,0.8],eigenschaft:{vorbildprofi:1.25,trainingsweltmeister:1.25,partyloewe:0.75},maxStaerken:4,platz:[[64,1],[74,2],[84,3]],automatik:true,plaetze:5, // plaetze: Lernplätze je Verein bis K16 (K07 §12 Nr. 4)
+      
+      // Altersverlust (K03 §5.6): ab Positionsalter 31 je Woche 0,6 % für „schnell“ und „ausdauernd“, ab 33 kommt „langsam“ mit 0,5 % dazu. Faktor Professionalität: 1,5 − 0,05 × P (P 20: 0,5; P 10: 1)
+      altersverlust:{ab:31,merkmale:['schnell','ausdauernd'],woche:0.006,langsamAb:33,langsam:0.005,profi:[1.5,0.05],profiMin:0.4}},
+    // Lernen im Spiel (K03 §5.6). k: Stärke, w: Schwäche, ja: Fortschritt bei Erfolg (und Abbau der Schwäche), nein: Fortschritt zur Stärke bei Misserfolg (negativ = Rückschritt),
+    // minus: Fortschritt zur Schwäche bei Misserfolg, kosten: Fehlerkonto bei Misserfolg, zufall: Anteil der Misserfolge, die zählen
+    lernenSpiel:{faktor:1,maxProSpiel:25,konto:{erfolg:10,woche:2},schwaecheVerjaehrt:1, // Fortschritt zu einer Schwäche sinkt jede Woche um 1 (Ausrutscher verjähren)
+      szenen:{ecke_tor:{k:'flankengeber',ja:8},kopf:{k:'kopfballstark',w:'kopfballschwach',ja:6,nein:1},ecke:{k:'kopfballstark',w:'kopfballschwach',ja:6,nein:1},freistossFlanke:{k:'kopfballstark',w:'kopfballschwach',ja:6,nein:1},
+        kopfballduell:{k:'kopfballstark',w:'kopfballschwach',minus:4,kosten:10},freistoss:{k:'freistoss',ja:15},elfmeter:{k:'elfmeter',ja:6,nein:-10,kosten:25},elfmeter_gehalten:{k:'elfmetertoeter',ja:20},
+        fern:{k:'weitschuetze',ja:10},gross:{k:'torjaeger',w:'abschlussschwach',ja:3,minus:2,kosten:5},dribbling:{k:'dribbler',ja:3},
+        flanke_tw:{k:'strafraum',w:'fliegenfaenger',ja:3,minus:10,kosten:25,zufall:0.3},parade_nah:{k:'reflexe',ja:2},patzer:{w:'unkonzentriert',minus:8},gelb:{w:'ungestuem',minus:3},rot:{w:'ungestuem',minus:10}}},
+    startMerkmale:{staerken:[[0,0.85],[55,1],[65,1.9],[75,2.85],[85,3.6]],schwaechen:[[60,0.6],[85,0.3]],beidfuessig:0.1,
       gewichte:{TW:{reflexe:3,strafraum:2,elfmetertoeter:1,mitspielend:2},AB:{kopfballstark:3,zweikampfstark:3,stellungssicher:3,ballsicher:2,flankengeber:1,ausdauernd:1,schnell:1},
         MF:{ballsicher:2,flankengeber:2,dribbler:1,weitschuetze:2,freistoss:1,ausdauernd:2,zweikampfstark:1,schnell:1,elfmeter:1,vielseitig:1},ST:{torjaeger:3,kopfballstark:2,schnell:2,dribbler:2,elfmeter:2,joker:1,weitschuetze:1}}},
     // Feine Positionen (K03 §3.1a) und Fuß. Bis die Daten da sind, per Zufall aus der Gruppe.
@@ -200,8 +212,8 @@ const REGELN={
       gleicheGruppe:70,andereGruppe:55,torwartFeld:45,vielseitig:5,vielseitigMax:95,falscheSeite:0.92,seitenPositionen:['LV','RV','LM','RM','LS','RS']},
     staerke:{fitBasis:0.72,fitAnteil:0.28,leererPlatz:25}, // Wirkung = Stärke × Zustand (K03 §5.8) × Eignung
     team:{schwaechstes:0.2,mindestAnteil:0.3,anzahl:[0.85,0.05],anzahlMax:1.15},
-    besitz:{exponent:3},
-    angriff:{proMinute:0.50,chance:0.38,exponent:2.0,min:0.10,max:0.80,konter:0.12},
+    besitz:{exponent:3.5},
+    angriff:{proMinute:0.50,chance:0.41,exponent:2.0,min:0.10,max:0.80,konter:0.12},
     mix:{mitte:{gross:0.20,halb:0.45,fern:0.35},aussen:{kopf:0.45,halb:0.25,gross:0.10,fern:0.20},konter:{gross:0.6,halb:0.4}},
     tor:{gross:0.28,halb:0.085,fern:0.03,kopf:0.095,ecke:0.045,freistossFlanke:0.055,freistoss:0.06,elfmeter:0.76}, // kalibriert mit tests/kalibrierung.js
     aufsTor:0.35,geblockt:0.25,ecken:{aussenAbgewehrt:0.55,parade:0.30,geblockt:0.35},eckeSchuss:0.3,
@@ -222,6 +234,7 @@ const REGELN={
     ausrichtung:{O:{A:1.06,D:0.95},D:{A:0.94,D:1.06},K:{A:0.98,D:1.03}},
     einsatz:{H:{A:1.02,D:1.02},F:{A:0.985,D:0.985}},
     heim:{alle:1.04,amateure:1.05},
+    eigenschaften:{kaempfer:1.03,fuehrungsspieler:1.01,nervenschwach:0.96,trainingsweltmeister:0.97,engAb:80,nervenschwachElfmeter:0.06}, // Wirkung im Spiel (K03 §3.3), eng: ab Minute 80 mit höchstens einem Tor Abstand
     amateure:{wirkungJeStaerke:1}, // Amateurklubs im Pokal: alle Teamwerte = ihre Stärke
     ermuedung:{proMinute:0.17,ko:[1.5,-0.007],hart:1.15,schwelle:60,abfall:0.005},
     karten:{gelb:0.019,rot:0.0007,hart:1.7,fair:0.5}, // nur noch für Amateurklubs

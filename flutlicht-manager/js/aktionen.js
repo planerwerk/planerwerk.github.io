@@ -37,4 +37,10 @@ function offer(id){const p=PIX.get(id),t=myT(),msg=document.getElementById('msg'
   news(`Neuzugang: ${p.n} kommt ${from?`für ${fmt(fee)} von ${from.name}`:'ablösefrei'} (Gehalt ${fmt(sal)}/Jahr, bis ${S.season+yrs}).`,'good');save();closeOv();render();toast(`${p.n} unterschreibt!`);}
 
 // Lernziel eines eigenen Spielers (K03 §5.6). Leer = der Co-Trainer entscheidet.
-function setLernziel(id,k){const p=PIX.get(id);if(!p||p.team!==S.my)return;if(!k){p.ls=null;}else if(lernbar(p,k)&&(!p.ls||p.ls.k!==k))p.ls={k,f:0,selbst:1};save();openP(id);}
+// Lernziel setzen (K03 §5.6, K07): Sind alle Lernplätze belegt, gibt der Spieler mit dem geringsten Fortschritt unter den vom Co-Trainer gewählten seinen Platz ab.
+function setLernziel(id,k){const p=PIX.get(id);if(!p||p.team!==S.my)return;
+  if(!k){p.ls=null;}else if(lernbar(p,k)&&(!p.ls||p.ls.k!==k)){
+    if(!p.ls){const mit=squad(S.my).filter(x=>x.ls&&x.id!==id);if(mit.length>=lernPlaetze(S.my)){const frei=mit.filter(x=>!x.ls.selbst).sort((a,b)=>a.ls.f-b.ls.f)[0];
+      if(!frei){toast(`Alle ${lernPlaetze(S.my)} Lernplätze sind mit deinen eigenen Zielen belegt.`);openP(id);return;}frei.ls=null;toast(`${frei.n} gibt seinen Lernplatz ab.`);}}
+    p.ls={k,f:0,selbst:1};}
+  save();openP(id);}

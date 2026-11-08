@@ -3,6 +3,8 @@
 Status: **abgestimmt** (7. November 2026, alle Fragen beantwortet). **Teilweise umgesetzt** in U2b (8.11.): Frische, Kondition, Form 0–20 mit Note gegen die Erwartung, Serien, Selbstvertrauen, Spielpraxis, Entwicklung an jedem Spieltag, Zustandsfaktor. In U2c (8.11.) dazu: Persönlichkeit, Eigenschaften (14 aus der Persönlichkeit; angezeigt und wirksam sind Vorbildprofi, Partylöwe, Trainingsweltmeister, Hitzkopf, verletzungsanfällig, nervenschwach), Merkmale mit Startverteilung und Lernen (angezeigt und lernbar: ausdauernd, Elfmeterschütze, Elfmetertöter, die übrigen gespeichert für U3), feine Position und Fuß per Zufall aus der Gruppe, Talentsterne mit Schätzfehler. Offen: Ableitung aus Fakten bei echten Spielern (Datenquelle), Teenie-Star und Publikumsliebling (K25, K27), Lernen im Spiel und Altersverlust (U3), Persönlichkeit reift (5.7).
 
 **Umsetzungshinweise (U2b):** `pos` bleibt vorerst die Gruppe (TW, AB, MF, ST), `fit` heißt im Code weiter so und bedeutet Frische. Kalibriert mit `tests/spielermodell.js`: Form je Notenpunkt 2,5 statt 1,5 (sonst zu wenig Streuung), Wachstum 20–28 Jahre etwas höher und Talent nach erwarteter Restentwicklung verteilt (sonst bremst die Talentgrenze zu früh), Trainingsformen geben 5 Spielpraxis pro Woche (bis K07), weil die Engine noch keine Einwechslungen kennt. Grundlage sind deine Entscheidungen vom 5.11.: Anstoss-Stil, Stärke 1–99, Form 0–20 mit Mitte 10. Deine Antworten vom 7.11. sind eingearbeitet (Abschnitt 12).
+
+**Umsetzungshinweise (U3):** Lernen im Spiel aus den Szenen der Engine (`r.sz`, Tabelle in 5.6) mit Fehlerkonto (`p.fk`) und Fortschritt ohne Lernziel (`p.lf`), Altersverlust, fünf Lernplätze je Verein und Platz für Stärken nach Klasse. Alle Merkmale außer „Joker“ und „mitspielend“ wirken jetzt in der Engine und sind sichtbar, dazu die Eigenschaften „Kämpfer“ und „Führungsspieler“. Abweichungen in §12 unter U3.
 Hängt ab von: K33 (Daten), K01 (Kalender) · Wird gebraucht von: K04, K06, K07, K08, K10, K12a, K14, K15, K16, K18, K19, K21, K27, K29, K31, K32, K34, K35a.
 
 ## 1. Ziel und Spielgefühl
@@ -285,12 +287,12 @@ Schritt = ( Wachstum(Alter)        × Talentrest × Form_auf × Praxis_auf × Tr
 
 ### 5.6 Merkmale lernen und verlieren
 
-- **Lernfortschritt pro Woche:** leicht 12 %, mittel 6 %, schwer 3 %. Das sind etwa 8, 17 und 33 Wochen.
+- **Lernfortschritt pro Woche:** leicht 12 %, mittel 6 %, schwer 3 %. Das sind etwa 8, 17 und 33 Wochen. *Bei der Umsetzung halbiert (§12, U3 Nr. 3).*
   - × Alter: bis 21 1,3; bis 25 1,1; bis 29 1; bis 32 0,8; danach 0,6
   - × Professionalität: `0,7 + 0,03 × P`
   - × Zufall 0,7–1,3 pro Woche
   - **Bremsen:** verletzt, im Urlaub oder in einer Woche ohne Training 0. Zwei Lernziele je 0,5. Frische unter 70 % 0,8. Stimmung unter 30 0,7 (K14).
-- **Voraussetzungen:** passende Position, Altersgrenze („schnell“ bis 23, „beidfüßig“ bis 25), höchstens 4 Stärken.
+- **Voraussetzungen:** passende Position, Altersgrenze („schnell“ bis 23, „beidfüßig“ bis 25), höchstens 4 Stärken. *Seit U3 zusätzlich Platz nach Klasse (§12, U3 Nr. 1).*
 - **Altersverlust:** Ab Positionsalter 31 verliert ein Spieler „schnell“ oder „ausdauernd“ pro Woche mit 0,6 % (Professionalität mindert), etwa jeder Vierte pro Saison. Ab 33 kann „langsam“ mit 0,5 % pro Woche dazukommen. Tempo geht zuerst (Rohmaterial 10).
 
 **Lernen im Spiel** (entschieden 7.11.): Szenen im Spiel zahlen auf Merkmale ein, auch ohne Lernziel. Was klappt, bringt Fortschritt zur Stärke, was schiefgeht, Fortschritt zur passenden Schwäche. Die Szenen liefert die Engine (K04).
@@ -499,6 +501,16 @@ Die bisherigen Einträge `training.wachstum`, `training.zufall`, `training.fitne
 - **„Trainingsweltmeister“** in der umgangssprachlichen Bedeutung.
 - **Katalog:** Die Größe bleibt. Ein Spieler zeigt nur 0–4 Merkmale und meist 0–2 Eigenschaften, das bleibt lesbar, und die Breite sorgt für Abwechslung. Das Merkmal „Spielmacher“ entfällt, weil es jetzt eine Position ist. Neu gilt: erst zeigen, wenn es wirkt (3.4, 3.5).
 - **Talentsterne** der eigenen Spieler dürfen um einen Stern danebenliegen. Nach zwei Jahren im Verein stimmen sie meist, ab K16 hängt die Genauigkeit vom Co-Trainer ab.
+
+**Vorläufig entschieden bei der Umsetzung (U3, 8. November 2026):**
+1. **Platz für Stärken nach Klasse:** Ein Spieler hat bis Stärke 64 Platz für 1 Stärke, bis 74 für 2, bis 84 für 3, darüber für 4 (`lernen.platz`). Ohne diese Grenze stieg die Zahl der Stärken in sechs Saisons von 0,9 auf 3,2 pro Spieler, weil alle Vereine lernen und niemand verlernt. Mit der Grenze pendelt sie sich bei etwa 1,8 ein.
+2. **Startverteilung im Gleichgewicht:** Neue Spieler bekommen gleich so viele Stärken, wie sich auf Dauer einstellen (etwa 1 bis Stärke 64, 2 bis 74, 3 bis 84, sonst 3–4). Sonst würde die Welt in den ersten Saisons merklich „besser“.
+3. **Lerntempo halbiert:** leicht 6 %, mittel 3 %, schwer 1,5 % pro Woche (etwa 17, 33 und 67 Wochen). So haben aufstrebende Spieler länger etwas zu lernen und das Lernziel bleibt eine echte Entscheidung.
+4. **Fünf Lernplätze je Verein** (K07 §12 Nr. 4) auch für Computer-Vereine. Der Co-Trainer gibt freie Plätze den jüngsten Spielern. Wählst du selbst ein Ziel und alle Plätze sind belegt, gibt der Spieler mit dem geringsten Fortschritt unter den vom Co-Trainer gewählten seinen Platz ab.
+5. **Lernen im Spiel:** Ein Erfolg baut auch den Fortschritt zur passenden Schwäche ab. Fortschritt zu einer Schwäche verjährt um 1 % pro Woche. Sonst wurde fast jeder Spieler mit vielen Karten über die Jahre „ungestüm“.
+6. **Fehlerkonto nur dort, wo Fehlschläge selten sind:** Es sinkt bei verschossenen Elfmetern (−25), verlorenen Kopfballduellen vor einem Gegentor (−10), Fehlgriffen des Torwarts (−25) und vergebenen Großchancen (−5). Bei Freistößen und Fernschüssen geht der Großteil daneben, dort kostet ein Fehlschuss nichts.
+7. **Kopfballduell vor einem Gegentor** verliert der schwächste Verteidiger auf dem Platz. Einen Fehlgriff des Torwarts gibt es bei 30 % der Kopfballgegentore.
+8. **Altersverlust:** Professionalität wirkt mit dem Faktor 1,5 − 0,05 × P (P 20: halb so oft, P 10: wie beschrieben). „langsam“ kommt ab 33 nur bei Feldspielern ohne „schnell“.
 
 **Noch offen (nur Recherche, keine Entscheidung):**
 1. **Datenquelle** für feine Positionen, Fuß, Kapitänsamt, Karten, Verletzungstage und Elfmeter. Die Wikipedia-Kader haben das nicht vollständig. Klären, wenn die Datenpflege ansteht.

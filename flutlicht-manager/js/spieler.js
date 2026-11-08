@@ -74,8 +74,8 @@ function spielerStart(p){const P=RP.persoenlichkeit;p.ch={};P.werte.forEach(k=>p
   // Mit Seite: Linke Positionen eher Linksfüße, rechte eher Rechtsfüße (ohne harte Regel)
   if(/^L/.test(p.fp)&&R()<0.35)p.fuss='L';if(/^R/.test(p.fp)&&R()<0.35)p.fuss='R';
   p.mk={};const M=RP.startMerkmale,ziel=stufenWert(M.staerken,p.str),anz=Math.floor(ziel)+(R()<ziel%1?1:0),gw=Object.assign({},M.gewichte[p.pos]);
-  for(let i=0;i<Math.min(anz,RP.lernen.maxStaerken);i++){const k=waehleGewichtet(gw);if(!k||gw[k]==null)break;p.mk[k]=1;delete gw[k];if(!Object.keys(gw).length)break;}
-  if(p.pos!=='TW'&&R()<M.beidfuessig&&Object.keys(p.mk).length<RP.lernen.maxStaerken)p.mk.beidfuessig=1;
+  for(let i=0;i<Math.min(anz,platzStaerken(p));i++){const k=waehleGewichtet(gw);if(!k||gw[k]==null)break;p.mk[k]=1;delete gw[k];if(!Object.keys(gw).length)break;}
+  if(p.pos!=='TW'&&R()<M.beidfuessig&&Object.keys(p.mk).length<platzStaerken(p))p.mk.beidfuessig=1;
   const sw=stufenWert(M.schwaechen,p.str),opts=Object.entries(RP.merkmale).filter(([k,m])=>m.schwaeche&&m.g.includes(p.pos)&&!Object.entries(RP.merkmale).some(([k2,m2])=>m2.gegen===k&&p.mk[k2])).map(([k])=>k);
   if(opts.length&&R()<sw)p.mk[pick(opts)]=1;
   p.ls=null;p.wiv=0;p.vt=p.team;p.ekw=riA(RP.entdeckenWochen);p.tf=ri(-RP.talentSchaetzung.fehler,RP.talentSchaetzung.fehler);eigenschaftenNeu(p);}
@@ -90,17 +90,55 @@ const sichtbareMerkmale=p=>Object.keys(p.mk||{}).filter(k=>RP.merkmaleWirksam.in
 const hatMk=(p,k)=>!!(p.mk&&p.mk[k]);
 // Lernen (K03 §5.6): ein Lernziel, Fortschritt pro Woche
 function lernbar(p,k){const m=RP.merkmale[k];if(!m||m.schwaeche||hatMk(p,k)||!m.g.includes(p.pos))return false;if(m.bis&&p.age>m.bis)return false;
-  if(Object.keys(p.mk||{}).filter(x=>!RP.merkmale[x].schwaeche).length>=RP.lernen.maxStaerken)return false;return true;}
+  if(Object.keys(p.mk||{}).filter(x=>!RP.merkmale[x].schwaeche).length>=platzStaerken(p))return false;return true;}
+// Platz für Stärken: mit der Klasse wächst das Repertoire (bis 64: 1, bis 74: 2, bis 84: 3, sonst 4)
+const platzStaerken=p=>{const t=RP.lernen.platz.find(x=>p.str<=x[0]);return Math.min(RP.lernen.maxStaerken,t?t[1]:RP.lernen.maxStaerken);};
 const lernOptionen=p=>RP.merkmaleWirksam.filter(k=>lernbar(p,k));
 function lernWoche(p){const L=RP.lernen;if(!p.ls||p.inj>0||p.team<0)return;const m=RP.merkmale[p.ls.k];if(!m||!lernbar(p,p.ls.k)){p.ls=null;return;}
   const a=L.alter.find(x=>p.age<=x[0]);let f=L.woche[m.s]*(a?a[1]:L.alterSonst)*(L.profi[0]+L.profi[1]*profi(p))*(L.zufall[0]+R()*(L.zufall[1]-L.zufall[0]));
   if(p.fit<L.frischeUnter[0])f*=L.frischeUnter[1];eigenschaften(p).forEach(e=>{if(L.eigenschaft[e])f*=L.eigenschaft[e];});
   p.ls.f=Math.min(100,p.ls.f+f);
-  if(p.ls.f>=100){p.mk[p.ls.k]=1;if(p.team===S.my)news(`${p.n} hat ein neues Merkmal gelernt: ${m.name}.`,'good');p.ls=null;}}
-// Automatik (Co-Trainer, K16): wer kein Lernziel hat, bekommt eins, das zu ihm passt
-function lernAutomatik(p){if(p.ls||p.team<0)return;const o=lernOptionen(p);if(o.length)p.ls={k:pick(o),f:0};}
+  if(p.ls.f>=100)merkmalNeu(p,p.ls.k);}
+// Ein Merkmal kommt dazu (gelernt oder als Schwäche entstanden). Eine gelernte Stärke verdrängt ihre Schwäche und beginnt mit vollem Fehlerkonto.
+function merkmalNeu(p,k){const m=RP.merkmale[k];p.mk[k]=1;if(p.lf)delete p.lf[k];if(p.ls&&p.ls.k===k)p.ls=null;
+  if(!m.schwaeche){if(m.gegen)delete p.mk[m.gegen];(p.fk=p.fk||{})[k]=100;}
+  if(p.team===S.my)news(m.schwaeche?`${p.n} hat eine neue Schwäche: ${m.name}.`:`${p.n} hat ein neues Merkmal gelernt: ${m.name}.`,m.schwaeche?'bad':'good');}
+function merkmalWeg(p,k,grund){delete p.mk[k];if(p.fk)delete p.fk[k];if(p.team===S.my)news(`${p.n} hat das Merkmal „${RP.merkmale[k].name}“ verloren${grund?' ('+grund+')':''}.`,'bad');}
+// Lernen im Spiel (K03 §5.6): Szenen aus der Engine zahlen auf Merkmale ein, ohne Altersfaktor, höchstens 25 % je Merkmal und Spiel.
+// Erfolg: Fortschritt zur Stärke und weg von der passenden Schwäche, bei vorhandener Stärke Fehlerkonto auffüllen. Misserfolg: Fortschritt zur Schwäche oder Fehlerkonto belasten.
+function lernenImSpiel(r){const L=RP.lernenSpiel,sum=new Map();
+  (r.sz||[]).forEach(([id,typ,ok])=>{const z=L.szenen[typ],p=z&&PIX.get(id);if(!p||p.team<0)return;
+    if(!sum.has(id))sum.set(id,{p,st:{},sw:{},fk:{}});const e=sum.get(id),add=(o,k,v)=>{o[k]=(o[k]||0)+v*L.faktor;};
+    if(ok){if(z.k){if(hatMk(p,z.k))e.fk[z.k]=(e.fk[z.k]||0)+L.konto.erfolg;else add(e.st,z.k,z.ja);}if(z.w&&z.ja)add(e.sw,z.w,-z.ja);return;}
+    if(z.zufall&&R()>=z.zufall)return;
+    if(z.k&&hatMk(p,z.k)){if(z.kosten)e.fk[z.k]=(e.fk[z.k]||0)-z.kosten;return;}
+    if(z.k&&z.nein)add(e.st,z.k,z.nein);if(z.w&&z.minus)add(e.sw,z.w,z.minus);});
+  const cap=v=>clamp(v,-L.maxProSpiel,L.maxProSpiel);
+  sum.forEach(({p,st,sw,fk})=>{
+    for(const k in st){if(!lernbar(p,k))continue;const v=cap(st[k]);if(p.ls&&p.ls.k===k){p.ls.f=clamp(p.ls.f+v,0,100);if(p.ls.f>=100)merkmalNeu(p,k);continue;}
+      const f=clamp(((p.lf=p.lf||{})[k]||0)+v,0,100);if(f>0)p.lf[k]=f;else delete p.lf[k];if(f>=100)merkmalNeu(p,k);}
+    for(const k in sw){const m=RP.merkmale[k];if(hatMk(p,k)||!m.g.includes(p.pos)||Object.keys(p.mk).some(x=>RP.merkmale[x].gegen===k))continue;
+      const f=clamp(((p.lf=p.lf||{})[k]||0)+cap(sw[k]),0,100);if(f>0)p.lf[k]=f;else delete p.lf[k];if(f>=100)merkmalNeu(p,k);}
+    for(const k in fk){if(!hatMk(p,k))continue;const f=clamp(((p.fk=p.fk||{})[k]??100)+fk[k],0,100);p.fk[k]=f;if(f<=0)merkmalWeg(p,k,'zu viele Fehlschläge');}
+    if(p.lf&&!Object.keys(p.lf).length)delete p.lf;});}
+// Woche: Fehlerkonto erholt sich, Altersverlust von Tempo und Ausdauer, ab 33 kann „langsam“ dazukommen (K03 §5.6)
+function merkmaleWoche(p){const L=RP.lernenSpiel,A=RP.lernen.altersverlust;
+  if(p.lf)for(const k in p.lf){if(RP.merkmale[k].schwaeche){p.lf[k]-=L.schwaecheVerjaehrt;if(p.lf[k]<=0)delete p.lf[k];}}
+  if(p.fk)for(const k in p.fk){if(!hatMk(p,k)){delete p.fk[k];continue;}p.fk[k]=Math.min(100,p.fk[k]+L.konto.woche);}
+  const pa=p.age+RP.entwicklung.positionsAlter[p.pos],pf=Math.max(A.profiMin,A.profi[0]-A.profi[1]*profi(p));
+  if(pa>=A.ab)A.merkmale.forEach(k=>{if(hatMk(p,k)&&R()<A.woche*pf)merkmalWeg(p,k,'Alter');});
+  if(pa>=A.langsamAb&&p.pos!=='TW'&&!hatMk(p,'langsam')&&!hatMk(p,'schnell')&&R()<A.langsam*pf)merkmalNeu(p,'langsam');}
+// Lernplätze (K07 §12 Nr. 4): je Verein höchstens 5 Spieler mit Lernziel. Freie Plätze vergibt der Co-Trainer (K16), bei dir nur, wenn die Automatik an ist.
+// Er nimmt die jüngsten Spieler zuerst (sie lernen schneller) und wählt ein Merkmal, das zur Position passt.
+function lernAutomatik(p){const o=lernOptionen(p);if(!o.length)return false;const g=RP.startMerkmale.gewichte[p.pos]||{},w={};o.forEach(k=>w[k]=(g[k]||0.3));p.ls={k:waehleGewichtet(w),f:0};return true;}
+const lernPlaetze=tid=>RP.lernen.plaetze;
+function lernplaetzeVergeben(){const nach=new Map();S.pl.forEach(p=>{if(p.team>=0){if(!nach.has(p.team))nach.set(p.team,[]);nach.get(p.team).push(p);}});
+  nach.forEach((sq,tid)=>{const n=lernPlaetze(tid),mit=sq.filter(p=>p.ls);
+    if(mit.length>n)mit.sort((a,b)=>(b.ls.selbst?1:0)-(a.ls.selbst?1:0)||b.ls.f-a.ls.f).slice(n).forEach(p=>p.ls=null);
+    if(tid===S.my&&!RP.lernen.automatik)return;let frei=n-Math.min(n,mit.length);if(frei<=0)return;
+    for(const p of sq.filter(p=>!p.ls&&p.inj<=0).sort((a,b)=>a.age-b.age||b.str-a.str)){if(frei<=0)break;if(lernAutomatik(p))frei--;}});}
 // Woche: Zeit im Verein, neue Spieler (Talentschätzung neu), Lernen
 function wocheVerein(p){if(p.team!==p.vt){p.vt=p.team;p.wiv=0;p.ekw=riA(RP.entdeckenWochen);p.tf=ri(-RP.talentSchaetzung.fehler,RP.talentSchaetzung.fehler);}else p.wiv=(p.wiv||0)+1;
-  lernAutomatik(p);lernWoche(p);}
+  lernWoche(p);merkmaleWoche(p);}
 // Talentsterne mit Schätzfehler (K03, K02): bis zu einem Stern daneben, nach zwei Jahren im Verein genau
 const sternFehler=p=>p.team===S.my&&p.wiv>=RP.talentSchaetzung.genauNachWochen?0:(p.tf||0);

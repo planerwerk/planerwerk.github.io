@@ -405,7 +405,9 @@ engine:{
 5. **Ballbesitz** mit Exponent 3 auf den Kontrollwert, sonst lagen alle Teams bei 46–55 %.
 6. **Ausreißer:** In einer von drei Welten gewannen die drei stärksten Kader nur 59 % gegen die drei schwächsten (Ziel 65–75 %). Das liegt an der Welt (kleiner Abstand der Kader), nicht an der Engine. Beobachten, wenn K32 die Welt erzeugt.
 
-**Noch offen in U3:** Akzeptanztests (Torwart, Sensitivität, ein Star allein, Positions-Exploit) in `tests/akzeptanz.js`, Lernen im Spiel aus `r.sz`, weitere Merkmale in der Engine sichtbar machen, Schwierigkeitsgrade (K02 §5.4).
+**Nachtrag Merkmale:** „zweikampfstark“ wirkt jetzt in der Abwehr (×1,03 auf den Abwehrbeitrag). Die Szenen für das Lernen (`r.sz`) enthalten zusätzlich Paraden aus kurzer Distanz, Flanken des Torwarts, verlorene Kopfballduelle, Dribblings und Karten. Die Wirkung von Kämpfer, Führungsspieler, nervenschwach und Trainingsweltmeister steht in `REGELN.engine.eigenschaften`. Weil Spieler seit U3 mehr Stärken haben (K03 §12), ist nachkalibriert: Chance je Angriff 0,41, Ballbesitz-Exponent 3,5. Danach 3,0–3,1 Tore in der 1. Liga.
+
+**Noch offen in U3:** Akzeptanztests (Torwart, Sensitivität, ein Star allein, Positions-Exploit) in `tests/akzeptanz.js`, Schwierigkeitsgrade (K02 §5.4).
 
 ## Quellen
 

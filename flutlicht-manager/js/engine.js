@@ -32,10 +32,10 @@ function myXI(){const t=myT(),sl=slots(t.form),pool=squad(S.my).filter(avail),us
 // Teamwerte (K04 §3.2): Kontrolle, Angriff Mitte, Angriff links und rechts, Abwehr Mitte, Abwehr links und rechts, Torwart
 function teamWerte(sd,fr,off,lage){const T=RE.team,k=RE.staerke,acc={K:[],AM:[],AL:[],AR:[],DM:[],DL:[],DR:[]};let tw=k.leererPlatz;
   sd.xp.forEach(x=>{if(off&&off.has(x.p.id))return;const w=eff(x.p,x.pos,fr?fr[x.p.id]:null,lage?lage(x.p):1);
-    if(x.pos==='TW'){tw=w;return;}const a=RE.anteile[linksForm(x.pos)]||[0,0,0,0,0],s=seite(x.pos);
-    acc.K.push([a[0],w]);acc.AM.push([a[1],w]);acc.DM.push([a[3],w]);
-    if(s==='L'){acc.AL.push([a[2],w]);acc.DL.push([a[4],w]);}else if(s==='R'){acc.AR.push([a[2],w]);acc.DR.push([a[4],w]);}
-    else{acc.AL.push([a[2]/2,w]);acc.AR.push([a[2]/2,w]);acc.DL.push([a[4]/2,w]);acc.DR.push([a[4]/2,w]);}});
+    if(x.pos==='TW'){tw=w;return;}const a=RE.anteile[linksForm(x.pos)]||[0,0,0,0,0],s=seite(x.pos),wd=w*(hatMk(x.p,'zweikampfstark')?RE.mk.zweikampfstark.abwehr:1);
+    acc.K.push([a[0],w]);acc.AM.push([a[1],w]);acc.DM.push([a[3],wd]);
+    if(s==='L'){acc.AL.push([a[2],w]);acc.DL.push([a[4],wd]);}else if(s==='R'){acc.AR.push([a[2],w]);acc.DR.push([a[4],wd]);}
+    else{acc.AL.push([a[2]/2,w]);acc.AR.push([a[2]/2,w]);acc.DL.push([a[4]/2,wd]);acc.DR.push([a[4]/2,wd]);}});
   const wert=l=>{const sa=l.reduce((s,x)=>s+x[0],0);if(sa<=0)return k.leererPlatz;const m=l.reduce((s,x)=>s+x[0]*x[1],0)/sa,st=l.filter(x=>x[0]>=T.mindestAnteil).map(x=>x[1]);
     const v=st.length?(1-T.schwaechstes)*m+T.schwaechstes*Math.min(...st):m;return v*Math.min(T.anzahlMax,T.anzahl[0]+T.anzahl[1]*sa);};
   const w={TW:tw};for(const key in acc)w[key]=wert(acc[key]);
@@ -81,8 +81,8 @@ function simLauf(hid,aid,o){const H=side(hid,true,o.neutral),A=side(aid,false,o.
   const fr={};Ss.forEach(sd=>sd.xp.forEach(x=>fr[x.p.id]=x.p.fit));
   const E=RE.ermuedung,ermueden=min=>Ss.forEach(sd=>sd.xp.forEach(x=>{const p=x.p;fr[p.id]=Math.max(RE.fitnessMin,fr[p.id]-E.proMinute*min*(E.ko[0]+E.ko[1]*p.ko)*(hatMk(p,'ausdauernd')?0.75:1)*(sd.ein==='H'?E.hart:1));}));
   // Lage: Kämpfer und Führungsspieler bei Rückstand, Nervenschwache und Trainingsweltmeister in wichtigen Spielen und knapper Schlussphase
-  const lageFn=(s,m)=>{const hinten=sc[s]<sc[1-s],eng=m>=80&&Math.abs(sc[0]-sc[1])<=1,wichtig=o.wichtig||eng,fue=hinten&&Ss[s].xp.some(x=>hatEig(x.p,'fuehrungsspieler'))?1.01:1;
-    return p=>(hinten&&hatEig(p,'kaempfer')?1.03:1)*(wichtig&&hatEig(p,'nervenschwach')?0.96:1)*(wichtig&&hatEig(p,'trainingsweltmeister')?0.97:1)*fue;};
+  const EG=RE.eigenschaften,lageFn=(s,m)=>{const hinten=sc[s]<sc[1-s],eng=m>=EG.engAb&&Math.abs(sc[0]-sc[1])<=1,wichtig=o.wichtig||eng,fue=hinten&&Ss[s].xp.some(x=>hatEig(x.p,'fuehrungsspieler'))?EG.fuehrungsspieler:1;
+    return p=>(hinten&&hatEig(p,'kaempfer')?EG.kaempfer:1)*(wichtig&&hatEig(p,'nervenschwach')?EG.nervenschwach:1)*(wichtig&&hatEig(p,'trainingsweltmeister')?EG.trainingsweltmeister:1)*fue;};
   const werte=m=>Ss.map((sd,s)=>sd.am?sd.w:teamWerte(sd,fr,off,lageFn(s,m)));
   let W=werte(0);
   const torEv=(m,s,p,art)=>{sc[s]++;ev.push({m,s,t:'G',p:p?p.id:null,n:p?p.n:'Eigentor',sc:[...sc],art});W=werte(m);};
@@ -102,9 +102,13 @@ function simLauf(hid,aid,o){const H=side(hid,true,o.neutral),A=side(aid,false,o.
     if(typ==='fern'&&hatMk(schuetze,'weitschuetze'))p*=Mk.weitschuetze.tor;
     if(hatMk(schuetze,'beidfuessig'))p*=Mk.beidfuessig;
     p=clamp(p,0.005,0.9);
-    if(R()<p){torEv(m,s,schuetze,basisArt||typ);sz.push([schuetze.id,typ,1]);return'tor';}
+    const flanke=typ==='kopf'||typ==='ecke'||typ==='freistossFlanke';
+    if(R()<p){torEv(m,s,schuetze,basisArt||typ);sz.push([schuetze.id,typ,1]);
+      // Lernen (K03 §5.6): Gegentor nach Flanke. Das Kopfballduell verliert der schwächste Verteidiger, ob der Torwart danebengegriffen hat, entscheidet die Auswertung.
+      if(flanke){if(kp)sz.push([kp.id,'flanke_tw',0]);const ab=imSpiel(1-s).filter(x=>posGruppe(x.pos)==='AB');if(ab.length)sz.push([ab.reduce((a,b)=>b.p.str<a.p.str?b:a).p.id,'kopfballduell',0]);}
+      return'tor';}
     sz.push([schuetze.id,typ,0]);
-    if(R()<Math.max(0,RE.aufsTor-p)/(1-p)){st.aufsTor[s]++;if(kp)sz.push([kp.id,'parade',1]);ev.push({m,s,t:'C',n:schuetze.n,gk:keeperName(s),art:typ});return'parade';}
+    if(R()<Math.max(0,RE.aufsTor-p)/(1-p)){st.aufsTor[s]++;if(kp)sz.push([kp.id,flanke?'flanke_tw':(typ==='gross'||typ==='halb')?'parade_nah':'parade',1]);ev.push({m,s,t:'C',n:schuetze.n,gk:keeperName(s),art:typ});return'parade';}
     ev.push({m,s,t:'C',n:schuetze.n,gk:keeperName(s),art:typ,vorbei:1});return R()<RE.geblockt/(1-RE.aufsTor)?'geblockt':'vorbei';};
   const ecke=(m,s)=>{st.ecken[s]++;const c=imSpiel(s);if(!c.length)return;const nehmer=c.find(x=>hatMk(x.p,'flankengeber'))||null;
     // Ecke: mit Anteil eckeSchuss folgt ein Kopfball oder Abpraller. Die Torquote je Ecke (tor.ecke) gilt über alle Ecken.
@@ -112,7 +116,7 @@ function simLauf(hid,aid,o){const H=side(hid,true,o.neutral),A=side(aid,false,o.
   // Standard nach Foul des Gegners an Mannschaft s
   const standard=(m,s)=>{const O=RE.fouls.ort,r=R(),c=imSpiel(s);if(!c.length)return;
     if(r<O.elfmeter){const sch=c.map(x=>x.p).sort((x,y)=>(hatMk(y,'elfmeter')-hatMk(x,'elfmeter'))||(({ST:3,MF:2,AB:1,TW:0})[y.pos]-({ST:3,MF:2,AB:1,TW:0})[x.pos])||(y.str-x.str))[0],kp=torwart(s);
-      st.schuesse[s]++;const q=clamp(RE.tor.elfmeter+(hatMk(sch,'elfmeter')?RE.mk.elfmeter-RE.tor.elfmeter:0)-(hatEig(sch,'nervenschwach')?0.06:0)-(kp&&hatMk(kp,'elfmetertoeter')?RE.tor.elfmeter-RE.mk.elfmetertoeter:0),0.4,0.95);
+      st.schuesse[s]++;const q=clamp(RE.tor.elfmeter+(hatMk(sch,'elfmeter')?RE.mk.elfmeter-RE.tor.elfmeter:0)-(hatEig(sch,'nervenschwach')?RE.eigenschaften.nervenschwachElfmeter:0)-(kp&&hatMk(kp,'elfmetertoeter')?RE.tor.elfmeter-RE.mk.elfmetertoeter:0),0.4,0.95);
       if(R()<q){torEv(m,s,sch,'elfmeter');sz.push([sch.id,'elfmeter',1]);}else{sz.push([sch.id,'elfmeter',0]);if(kp)sz.push([kp.id,'elfmeter_gehalten',1]);ev.push({m,s,t:'C',n:sch.n,gk:keeperName(s),art:'elfmeter',x:`${sch.n} vergibt den Elfmeter!`});}}
     else if(r<O.elfmeter+O.direkt){const sch=c.map(x=>x.p).filter(p=>p.pos!=='TW').sort((x,y)=>(hatMk(y,'freistoss')-hatMk(x,'freistoss'))||(y.str-x.str))[0];if(!sch)return;
       st.schuesse[s]++;const p=(hatMk(sch,'freistoss')?RE.mk.freistoss:RE.tor.freistoss)*torwartFaktor(W[1-s].TW);if(R()<p){torEv(m,s,sch,'freistoss');sz.push([sch.id,'freistoss',1]);}else{sz.push([sch.id,'freistoss',0]);ev.push({m,s,t:'C',n:sch.n,gk:keeperName(s),art:'freistoss'});}}
@@ -123,8 +127,9 @@ function simLauf(hid,aid,o){const H=side(hid,true,o.neutral),A=side(aid,false,o.
       const nf=mkZahl(xs,'flankengeber');if(weg!=='M'&&nf)mix.kopf*=Math.pow(Mk.flankengeber.kopf,abnehmend(nf));
       const nw=mkZahl(xs,'weitschuetze');if(nw)mix.fern*=Math.pow(Mk.weitschuetze.anteil,abnehmend(nw)*0.5);
       let typ=waehle(Object.keys(mix),k=>mix[k]);
-      if(typ==='halb'){const nd=mkZahl(xs,'dribbler');if(nd&&R()<Mk.dribbler.upgrade*abnehmend(nd))typ='gross';}
-      const res=abschluss(m,s,typ,schuetzeWahl(s,typ));
+      let drib=false;if(typ==='halb'){const nd=mkZahl(xs,'dribbler');if(nd&&R()<Mk.dribbler.upgrade*abnehmend(nd)){typ='gross';drib=true;}}
+      const sch=schuetzeWahl(s,typ);if(drib&&sch)sz.push([sch.id,'dribbling',1]);
+      const res=abschluss(m,s,typ,sch);
       if(res==='parade'&&R()<RE.ecken.parade)ecke(m,s);else if(res==='geblockt'&&R()<RE.ecken.geblockt)ecke(m,s);}
     else{if(weg!=='M'&&R()<RE.ecken.aussenAbgewehrt){ecke(m,s);return;}
       // Konter des Gegners (schnell erhöht, ballsicher beim Angreifer und stellungssicher mindern)
@@ -134,8 +139,8 @@ function simLauf(hid,aid,o){const H=side(hid,true,o.neutral),A=side(aid,false,o.
   const foul=(m,s)=>{const F=RE.fouls,sd=Ss[s];if(sd.am)return;const c=imSpiel(s).filter(x=>x.pos!=='TW');if(!c.length)return;
     const nU=mkZahl(c,'ungestuem'),f=F.proMinute*(sd.ein==='H'?F.hart:sd.ein==='F'?F.fair:1)*(1+(F.ungestuem-1)*nU/c.length*3);
     if(R()>=f)return;st.fouls[s]++;const t=waehle(c,x=>(F.gewicht[linksForm(x.pos)]||1)*(hatMk(x.p,'ungestuem')?F.ungestuem:1)*(yel[x.p.id]&&!hatEig(x.p,'hitzkopf')?F.mitGelb.foul:1)).p,hk=(hatEig(t,'hitzkopf')?1.5:1)*(yel[t.id]?F.mitGelb.karte:1);
-    if(R()<F.rot*hk){off.add(t.id);sd.red++;ev.push({m,s,t:'R',p:t.id,n:t.n});W=werte(m);}
-    else if(R()<F.gelb*hk){if(yel[t.id]){off.add(t.id);sd.red++;ev.push({m,s,t:'R',p:t.id,n:t.n,gy:1});W=werte(m);}else{yel[t.id]=1;ev.push({m,s,t:'Y',p:t.id,n:t.n});}}
+    if(R()<F.rot*hk){off.add(t.id);sd.red++;ev.push({m,s,t:'R',p:t.id,n:t.n});sz.push([t.id,'rot',0]);W=werte(m);}
+    else if(R()<F.gelb*hk){sz.push([t.id,'gelb',0]);if(yel[t.id]){off.add(t.id);sd.red++;ev.push({m,s,t:'R',p:t.id,n:t.n,gy:1});W=werte(m);}else{yel[t.id]=1;ev.push({m,s,t:'Y',p:t.id,n:t.n});}}
     standard(m,1-s);};
   const amateurKarten=(m,s)=>{const K=RE.karten;if(R()<K.gelb){ev.push({m,s,t:'Y',p:null,n:'ein Amateur'});}};
   const verletzung=(m,s)=>{const V=RE.verletzung,op=Ss[1-s];if(Ss[s].am)return;
@@ -190,6 +195,7 @@ function applyMatchLauf(r,cup){const N=RE.note,V=RP.selbstvertrauen;
       p.lastG=gr;formNachNote(p,gr,erw);if(goals)svAendern(p,goals*V.tor);if(gr<=2)svAendern(p,V.guteNote);else if(gr>=5)svAendern(p,V.schlechteNote);
       p.played=1;if(tid===S.my)(r.grades=r.grades||{})[id]=gr;});
     serieBuchen(S.teams[tid],res>0?3:res===0?1:0,E.punkte,r.xi[s]);});
+  lernenImSpiel(r);
   r.yel.forEach(id=>{const p=PIX.get(id);if(!p)return;p.yc++;if(p.yc>=RE.gelbSperreAb){p.yc=0;p.sus=Math.max(p.sus,1);if(p.team===S.my)news(`${p.n} sieht die ${RE.gelbSperreAb}. Gelbe Karte und ist für ein Spiel gesperrt.`,'bad');}});
   r.off.forEach(id=>{const p=PIX.get(id);if(!p)return;p.sus=riA(RE.rotSperre);if(p.team===S.my)news(`Platzverweis: ${p.n} fehlt ${p.sus} Spiel(e).`,'bad');});
   // Ausfall in Tagen: w Wochen = die nächsten 7·w Tage (der Zähler läuft ab morgen jeden Tag um 1 herunter)

@@ -1,6 +1,6 @@
 # Offene und vorläufige Entscheidungen
 
-Stand: 7. November 2026. Automatisch aus Abschnitt 12 aller Konzepte zusammengestellt.
+Stand: 8. November 2026. Automatisch aus Abschnitt 12 aller Konzepte zusammengestellt.
 
 **Alle Punkte gelten, bis du widersprichst** (PLAN §1, Punkt 9). Keiner blockiert die Arbeit.
 
@@ -22,6 +22,17 @@ Datei: `konzepte/K02-zufall-kalibrierung.md`
 2. **Drei Stufen** (Leicht, Normal, Schwer). Eine vierte („Legende“, ohne Erinnerungen und mit sehr ungeduldigem Vorstand) kann später dazukommen.
 3. **Seed eingeben** beim Start als Option für Fortgeschrittene, versteckt im Startbildschirm.
 4. **Rangkorrelation 0,6–0,8** als Maß für „Glück gleicht sich aus“ ist ein geschätzter Startwert. Er sollte mit echten Daten geprüft werden (Marktwert-Rang vor der Saison gegen Abschlusstabelle).
+
+## K03 – Spielermodell (Umsetzung U3)
+
+1. **Platz für Stärken nach Klasse:** Ein Spieler hat bis Stärke 64 Platz für 1 Stärke, bis 74 für 2, bis 84 für 3, darüber für 4 (`lernen.platz`). Ohne diese Grenze stieg die Zahl der Stärken in sechs Saisons von 0,9 auf 3,2 pro Spieler, weil alle Vereine lernen und niemand verlernt. Mit der Grenze pendelt sie sich bei etwa 1,8 ein.
+2. **Startverteilung im Gleichgewicht:** Neue Spieler bekommen gleich so viele Stärken, wie sich auf Dauer einstellen (etwa 1 bis Stärke 64, 2 bis 74, 3 bis 84, sonst 3–4). Sonst würde die Welt in den ersten Saisons merklich „besser“.
+3. **Lerntempo halbiert:** leicht 6 %, mittel 3 %, schwer 1,5 % pro Woche (etwa 17, 33 und 67 Wochen). So haben aufstrebende Spieler länger etwas zu lernen und das Lernziel bleibt eine echte Entscheidung.
+4. **Fünf Lernplätze je Verein** (K07 §12 Nr. 4) auch für Computer-Vereine. Der Co-Trainer gibt freie Plätze den jüngsten Spielern. Wählst du selbst ein Ziel und alle Plätze sind belegt, gibt der Spieler mit dem geringsten Fortschritt unter den vom Co-Trainer gewählten seinen Platz ab.
+5. **Lernen im Spiel:** Ein Erfolg baut auch den Fortschritt zur passenden Schwäche ab. Fortschritt zu einer Schwäche verjährt um 1 % pro Woche. Sonst wurde fast jeder Spieler mit vielen Karten über die Jahre „ungestüm“.
+6. **Fehlerkonto nur dort, wo Fehlschläge selten sind:** Es sinkt bei verschossenen Elfmetern (−25), verlorenen Kopfballduellen vor einem Gegentor (−10), Fehlgriffen des Torwarts (−25) und vergebenen Großchancen (−5). Bei Freistößen und Fernschüssen geht der Großteil daneben, dort kostet ein Fehlschuss nichts.
+7. **Kopfballduell vor einem Gegentor** verliert der schwächste Verteidiger auf dem Platz. Einen Fehlgriff des Torwarts gibt es bei 30 % der Kopfballgegentore.
+8. **Altersverlust:** Professionalität wirkt mit dem Faktor 1,5 − 0,05 × P (P 20: halb so oft, P 10: wie beschrieben). „langsam“ kommt ab 33 nur bei Feldspielern ohne „schnell“.
 
 ## K04 – Match-Engine
 Datei: `konzepte/K04-engine.md`
