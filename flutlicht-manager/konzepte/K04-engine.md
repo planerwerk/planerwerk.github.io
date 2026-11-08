@@ -427,6 +427,8 @@ Dafür neu oder geändert:
 
 **U3 ist abgeschlossen** (Schwierigkeitsgrade siehe K02).
 
+**Nachtrag U4a (Live-Spiel):** Mit Wechseln und Taktik im Spiel ist nachkalibriert: Chance je Angriff 0,41, Angriffsexponent 1,55, Ballbesitz-Exponent 3,2, Abwehrdruck 2,2 % je Punkt (±22 %), Innenverteidiger mit Anteil 0,85 an der Abwehr Mitte, zentrales Mittelfeld [0,38; 0,27; 0,05; 0,25; 0,05], Amateurklubs 46–56. Ergebnis: 1. Liga 3,1–3,2 Tore, Remis 24–26 %, Akzeptanztests in zwei Welten bestanden. Die Ausrichtung hat fünf Stufen wie in K06 §5.5 und ändert zusätzlich, wie oft angegriffen wird (K05 §12 Nr. 7). Tempo: etwa 3 ms je Spiel.
+
 ## Quellen
 
 - Tore, Ergebnisse und Elfmeter 2024/25: [bundesliga.com, Trends der Saison 2024/25](https://www.bundesliga.com/de/bundesliga/news/trends-saison-2024-25-tore-joker-zuschauer-elfmeter-killer-32319)

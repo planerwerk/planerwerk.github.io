@@ -8,7 +8,7 @@ const res=await pg.evaluate(()=>{const out=[];
  // Speichern ersetzt: Der Test läuft ohne Pause, und jedes Speichern (fast 1 MB) staut sich sonst im Browser. Speichern und Laden prüft tests/seed.js.
  let saves=0;window.save=function(){saves++;};
  // Prüfung jedes Spieltags: kein gesperrter oder verletzter Spieler darf spielen
- let bad=0;const orig=window.tagesSpiele;window.tagesSpiele=function(d){const unav=new Set(S.pl.filter(p=>!avail(p)).map(p=>p.id));const o=orig(d);bad+=o.list.flatMap(r=>r.xi.flat()).filter(id=>unav.has(id)).length;return o;};
+ let bad=0;const orig=window.tagesSpiele;window.tagesSpiele=function(d){const unav=new Set(S.pl.filter(p=>!avail(p)).map(p=>p.id));const o=orig(d);bad+=o.list.flatMap(r=>[...r.xi.flat(),...(r.ein||[]).flat()]).filter(id=>unav.has(id)).length;return o;};
  const clubs=[0,6,15,16,17,18,19,20,23,34,35,36,50];
  for(const cid of clubs){const log={club:VEREINE[cid].name,seed:1000+cid,seasons:[],errors:[],ms:0,changes:0,stops:0};
   let x=(cid*2654435761)>>>0;const T=()=>{x=(Math.imul(x,1664525)+1013904223)>>>0;return x/4294967296;},rnd=a=>a[Math.floor(T()*a.length)];

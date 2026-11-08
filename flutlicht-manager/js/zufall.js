@@ -11,6 +11,9 @@ function zufallZahl(s){const s0=s[0],s1=s[1],s2=s[2]^s0,s3=s[3]^s1,m=Math.imul(s
 let ZS=null;
 function hash32(str){let h=0x811c9dc5;for(let i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,0x01000193);}return h>>>0;}
 const strom=(...k)=>zufallStart((S.seed^hash32(k.join('|')))>>>0);
+// Schneller Unterstrom für viele Ströme mit gleichem Schlüssel und laufender Nummer (Spielminuten): Schlüssel einmal hashen, dann nur noch mischen
+function mix32(h,n){h=Math.imul(h^(n+0x9e3779b9),0x85ebca6b);h^=h>>>13;h=Math.imul(h,0xc2b2ae35);h^=h>>>16;return h>>>0;}
+const stromNr=(h,n)=>zufallStart((S.seed^mix32(h,n))>>>0);
 function mitStrom(z,fn){const alt=ZS;ZS=z;try{return fn();}finally{ZS=alt;}}
 // Zufallszahl von 0 bis unter 1 für die Spiellogik
 function R(){return zufallZahl(ZS||S.zufall);}

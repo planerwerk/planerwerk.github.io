@@ -499,3 +499,14 @@ Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `
 | AI10 | **K04 §12 Nr. 6:** Heimvorteil nach den Akzeptanztests wieder ×1,03, also wie ursprünglich vorgeschlagen. AI3 ist damit überholt. | ✅ |
 | AI11 | **K02 §5.4 und K18, K31, K35a:** Schwierigkeit gebaut. Vorhersage-Bänder, Scouting-Spannen und Klugheit der Computer-Vereine greifen erst, wenn K35a, K18 und K31 gebaut sind. Die Werte stehen dann in `REGELN.schwierigkeit.stufen`. | 📌 bei U-Schritten zu K18, K31, K35a ergänzen |
 
+---
+
+## AJ. Nachtrag zur Umsetzung U4a (8. November 2026)
+
+| # | Befund | Status |
+|---|---|---|
+| AJ1 | **K06 §5.5 und K04:** Die Ausrichtung hat jetzt die fünf Stufen aus K06 (sehr defensiv bis sehr offensiv). Die alte Stufe „Konter“ ist entfallen, sie gehört als Spielstil zu K06 §5.1 (U5). Alte Spielstände mit „Konter“ spielen „ausgewogen“. | ✅ |
+| AJ2 | **K03 und K05:** Eingewechselte bekommen Spielpraxis nach Minuten. Die 5 Spielpraxis pro Trainingswoche aus U2b (Ersatz, weil die Engine keine Wechsel kannte) bleiben, bis K07 das Training neu regelt. | 📌 bei U6 (K07) prüfen |
+| AJ3 | **K16:** Der Co-Trainer entscheidet beim Sofort-Berechnen nach denselben Regeln wie die Computer-Trainer, noch ohne Qualität. | 📌 bei U6 (K16) |
+| AJ4 | **K15:** Zurufe an Spieler und Halbzeitansprache wirken in vereinfachter Form (K05 §12 Nr. 10). Glaubwürdigkeit und Stimmung fehlen noch. | 📌 bei U8 (K14, K15) |
+

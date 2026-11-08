@@ -3,6 +3,8 @@
 Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12.
 Hängt ab von: K04 (Engine), K06 (Taktik), K02 (Zufallsströme) · Wird gebraucht von: K14, K15, K16, K29, K35b.
 
+**Umsetzungshinweise (U4a, 8. November 2026):** Die Engine ist ein Zustand, der Minute für Minute läuft (`spielAnlegen` in `js/engine.js`, `sim()` spielt ihn ohne Eingriffe durch). Gebaut sind Bank (9), Wechselregeln, Taktik im Spiel mit Umstellungszeit, Zurufe an Mannschaft und Spieler, Halbzeitansprache und der Computer-Trainer aus 5.5, alle Werte in `REGELN.live`. Getestet mit `tests/live.js` (Abschnitt 10). Die Ansicht folgt in U4b, Konferenz nach Anstoßzeit und Fortsetzen nach Neuladen in U4c. Abweichungen in §12 unter U4a.
+
 ## 1. Ziel und Spielgefühl
 
 - **Der Spieltag ist der Höhepunkt der Woche.** Dein Spiel läuft live, Minute für Minute, mit Anzeigetafel, Ticker und Konferenz.
@@ -200,10 +202,20 @@ live:{
 3. **Augenzwinkernde Ansprache** als eigene Tonlage mit halber Wirkung, aber besserer Stimmung (We-Are-Football-Idee, eigene Texte).
 4. **Live-Stand wird bei jeder Pause gespeichert.**
 
-**Noch zu recherchieren:** Größe der Ersatzbank in der Bundesliga, zusätzlicher Wechsel in der Verlängerung im DFB-Pokal, Zahl und Zeitpunkt der Wechsel im Schnitt.
+**Vorläufig entschieden bei der Umsetzung (U4a):**
+5. **Keine Nachspielzeit** als eigene Minuten. Die Anzeige kann sie später zeigen, gespielt werden 90 (bzw. 120) Minuten. „Zeit schinden“ wirkt deshalb nur über weniger Angriffe und Gelbe Karten.
+6. **In der Halbzeit** wirken Ausrichtung und Einsatz sofort, die Grundordnung nach 5 Minuten, mit „Taktik betonen“ ebenfalls sofort.
+7. **„Sehr offensiv“ und „offensiv“ greifen auch öfter an** (×1,10 bzw. ×1,05, defensiv entsprechend seltener), nicht nur gefährlicher. Sonst brachte „alles nach vorn“ bei 0:1 in der 70. Minute nur 2 Prozentpunkte mehr Punktchance (Ziel 3–8), jetzt etwa 5.
+8. **Computer-Trainer** wechselt im Fenster 55.–86. Minute mit 13 % je Minute bis zu zwei Spieler je Gelegenheit: zuerst Verletzte (sofort), dann Müde (Frische unter 65 %), Spieler mit Gelb, und frische Beine (Frische unter 93 %), aber nur, wenn der Ersatz höchstens 6 Punkte schlechter ist als der müde Spieler auf dem Platz. Ergebnis: 4,3–4,5 Wechsel je Team, 98 % zwischen der 55. und 85. Minute. Die Bundesliga lag 2023/24 bei etwa 9,1 Wechseln je Spiel, also gut 4,5 je Team (The Analyst, Stand März 2024).
+9. **Verletzte humpeln** bis zum Wechsel weiter (Frische höchstens 30 %). Ohne freien Wechsel spielen sie verletzt zu Ende.
+10. **Zuruf an einen Spieler** (bis K15): Lob +2 % für 10 Minuten und Selbstvertrauen +0,3. Kritik: Kämpfer +3 %, Diva oder nervenschwach −2 % und Selbstvertrauen −0,3, Hitzkopf +1 % und 50 % mehr Fouls, alle anderen +1 % und Selbstvertrauen −0,15.
+11. **Kurzeinsätze unter 20 Minuten** bekommen keine Note und ändern die Form nicht, zählen aber als Einsatz und für die Spielpraxis.
+
+**Noch zu recherchieren:** Größe der Ersatzbank in der Bundesliga, zusätzlicher Wechsel in der Verlängerung im DFB-Pokal.
 
 ## Quellen
 
 - Fünf Wechsel in drei Gelegenheiten plus Halbzeit, dauerhaft: [bundesliga.com, Neu in der Saison 2022/23](https://www.bundesliga.com/de/bundesliga/news/neu-saison-2022-23-regeln-auswechslungen-spielabsetzungen-transferperiode-20452), [ligainsider.de](https://www.ligainsider.de/bundesliga_1008/ohne-zeitliche-begrenzung-dfl-haelt-an-fuenf-wechseln-fest-321433/)
+- Wechsel je Spiel: [The Analyst, Substitute trends across Europe's top five leagues (März 2024)](https://theanalyst.com/articles/how-substitute-trends-compare-across-europe-top-five-leagues)
 - Gehirnerschütterungs-Wechsel: [IFAB, Concussion Substitutes](https://theifab.com/trials/concussion-substitutes), [Last Word on Sports, Bundesliga 2021](https://lastwordonsports.com/football/2021/02/25/bundesliga-concussion-substitutes-will-not-be-allowed-whilst-clubs-can-have-five-replacements/)
 - Ticker, Konferenz, Halbzeitansprache, Zurufe: `konzepte/_recherche-genre.md`, Abschnitte 2.2, 3.2, 4b; `konzepte/_rohmaterial-logik-v1.md`, Kapitel 8

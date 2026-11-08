@@ -93,6 +93,7 @@ label input,label select{color:var(--chalk)}
 .ic.G{background:var(--amber);box-shadow:0 0 8px var(--amber)} .ic.C{background:var(--mist)}
 .ic.Y{border-radius:1px;width:8px;height:11px;background:var(--warn)} .ic.R{border-radius:1px;width:8px;height:11px;background:var(--bad)}
 .ic.I{background:var(--bad);border-radius:2px;width:10px;height:4px}
+.ic.S{background:none;border:2px solid var(--mist);border-radius:2px;width:9px;height:9px}
 .others{display:grid;gap:2px;margin-bottom:12px}
 .om{display:grid;grid-template-columns:minmax(0,1fr) 62px minmax(0,1fr);gap:8px;font-size:14px;padding:3px 6px;border-radius:4px}
 .om span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}

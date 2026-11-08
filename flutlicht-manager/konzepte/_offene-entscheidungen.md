@@ -52,6 +52,15 @@ Datei: `konzepte/K05-live-spiel.md`
 3. **Augenzwinkernde Ansprache** als eigene Tonlage mit halber Wirkung, aber besserer Stimmung (We-Are-Football-Idee, eigene Texte).
 4. **Live-Stand wird bei jeder Pause gespeichert.**
 
+Bei der Umsetzung (U4a):
+5. **Keine Nachspielzeit** als eigene Minuten. Die Anzeige kann sie später zeigen, gespielt werden 90 (bzw. 120) Minuten. „Zeit schinden“ wirkt deshalb nur über weniger Angriffe und Gelbe Karten.
+6. **In der Halbzeit** wirken Ausrichtung und Einsatz sofort, die Grundordnung nach 5 Minuten, mit „Taktik betonen“ ebenfalls sofort.
+7. **„Sehr offensiv“ und „offensiv“ greifen auch öfter an** (×1,10 bzw. ×1,05, defensiv entsprechend seltener), nicht nur gefährlicher. Sonst brachte „alles nach vorn“ bei 0:1 in der 70. Minute nur 2 Prozentpunkte mehr Punktchance (Ziel 3–8), jetzt etwa 5.
+8. **Computer-Trainer** wechselt im Fenster 55.–86. Minute mit 13 % je Minute bis zu zwei Spieler je Gelegenheit: zuerst Verletzte (sofort), dann Müde (Frische unter 65 %), Spieler mit Gelb, und frische Beine (Frische unter 93 %), aber nur, wenn der Ersatz höchstens 6 Punkte schlechter ist als der müde Spieler auf dem Platz. Ergebnis: 4,3–4,5 Wechsel je Team, 98 % zwischen der 55. und 85. Minute. Die Bundesliga lag 2023/24 bei etwa 9,1 Wechseln je Spiel, also gut 4,5 je Team (The Analyst, Stand März 2024).
+9. **Verletzte humpeln** bis zum Wechsel weiter (Frische höchstens 30 %). Ohne freien Wechsel spielen sie verletzt zu Ende.
+10. **Zuruf an einen Spieler** (bis K15): Lob +2 % für 10 Minuten und Selbstvertrauen +0,3. Kritik: Kämpfer +3 %, Diva oder nervenschwach −2 % und Selbstvertrauen −0,3, Hitzkopf +1 % und 50 % mehr Fouls, alle anderen +1 % und Selbstvertrauen −0,15.
+11. **Kurzeinsätze unter 20 Minuten** bekommen keine Note und ändern die Form nicht, zählen aber als Einsatz und für die Spielpraxis.
+
 ## K06 – Taktik
 Datei: `konzepte/K06-taktik.md`
 

@@ -8,7 +8,7 @@ const TICKER_ARTEN={kopf:['TOR! {n} köpft nach einer Flanke ein. {sc}','TOR! Fl
   konter:['TOR! Blitzkonter, {n} vollendet eiskalt. {sc}','TOR! Konter über das ganze Feld, {n} schiebt ein. {sc}'],fern:['TOR! {n} zieht aus 20 Metern ab – drin! {sc}','TOR! Fernschuss {n}, der Ball schlägt im Winkel ein! {sc}'],
   patzer:['TOR! Ein Patzer in der Abwehr, {n} sagt danke. {sc}'],gross:['TOR! {n} bleibt allein vor dem Tor cool. {sc}','TOR! {n} schiebt eiskalt ein. {sc}'],halb:['TOR! {n} trifft aus spitzem Winkel. {sc}','TOR! {n} trifft zum {sc}!']};
 const POKAL_RUNDEN=['1. Runde','2. Runde','Achtelfinale','Viertelfinale','Halbfinale','Finale'];
-const AUSRICHTUNG={N:'Normal',O:'Offensiv',D:'Defensiv',K:'Konter'};
+const AUSRICHTUNG={SD:'Sehr defensiv',D:'Defensiv',N:'Ausgewogen',O:'Offensiv',SO:'Sehr offensiv'};
 const EINSATZ={F:'Fair',N:'Normal',H:'Hart'};
 const TRAINING_STUFEN=['Locker','Normal','Hart'];
 const TRAINING_TEXT=['Wenig Belastung: frischer, Kondition sinkt Richtung 70, Entwicklung langsamer (×0,8)','Ausgewogen: Kondition Richtung 80, normale Entwicklung','Viel Belastung: Kondition Richtung 90, Entwicklung schneller (×1,2), weniger frisch, Verletzungsrisiko'];

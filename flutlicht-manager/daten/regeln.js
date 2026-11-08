@@ -52,7 +52,7 @@ const REGELN={
     jungeEchte:{bisAlter:0,talent:[0,0]}, // ersetzt durch spieler.talent (gilt jetzt für echte und erfundene Spieler)
     nachwuchs:{wennUnter:22,anzahl:2,positionen:['AB','MF','ST'],alter:[17,19],abschlag:15,streuung:[-3,3],talent:[-4,8]},
     vereinslose:{anzahl:45,positionen:['TW','AB','AB','MF','MF','ST','ST'],alter:[21,33],staerke:[56,72]},
-    amateurStaerke:[47,57]           // Stärke der Amateurklubs im Pokal (4. bis 6. Liga), jede Saison neu
+    amateurStaerke:[46,56]           // Stärke der Amateurklubs im Pokal (4. bis 6. Liga), jede Saison neu
   },
 
   spieler:{
@@ -203,7 +203,7 @@ const REGELN={
       '3-5-2':['TW','IV','IV','IV','LS','DM','ZM','ZM','RS','MS','MS'],'3-4-3':['TW','IV','IV','IV','LS','ZM','ZM','RS','LA','MS','RA'],
       '3-4-2-1':['TW','IV','IV','IV','LS','ZM','ZM','RS','OM','OM','MS'],'5-3-2':['TW','LV','IV','IV','IV','RV','DM','ZM','ZM','MS','MS']},
     // Anteile je Position an [Kontrolle, Angriff Mitte, Angriff außen, Abwehr Mitte, Abwehr außen] (K04 §3.2). Rechts wie links, Schiene = Mittel aus LV und LM.
-    anteile:{TW:[0,0,0,0,0],IV:[0.10,0,0,0.80,0.10],LV:[0.15,0,0.25,0.10,0.50],DM:[0.40,0.05,0,0.45,0.10],ZM:[0.35,0.30,0.05,0.25,0.05],
+    anteile:{TW:[0,0,0,0,0],IV:[0.05,0,0,0.85,0.10],LV:[0.15,0,0.25,0.10,0.50],DM:[0.40,0.05,0,0.45,0.10],ZM:[0.38,0.27,0.05,0.25,0.05],
       SM:[0.55,0.35,0.05,0.05,0],OM:[0.35,0.55,0.05,0.05,0],LM:[0.25,0.05,0.45,0.05,0.20],HS:[0.20,0.70,0.10,0,0],MS:[0.10,0.85,0.05,0,0],LA:[0.10,0.25,0.65,0,0],LS:[0.20,0.025,0.35,0.075,0.35]},
     gruppe:{TW:'TW',IV:'AB',LV:'AB',RV:'AB',LS:'AB',RS:'AB',DM:'MF',ZM:'MF',SM:'MF',OM:'MF',LM:'MF',RM:'MF',HS:'ST',MS:'ST',LA:'ST',RA:'ST'},
     // Eignung auf fremden Positionen (K03 §3.1a), von → nach in Prozent, rechts spiegelbildlich
@@ -212,8 +212,8 @@ const REGELN={
       gleicheGruppe:70,andereGruppe:55,torwartFeld:45,vielseitig:5,vielseitigMax:95,falscheSeite:0.92,seitenPositionen:['LV','RV','LM','RM','LS','RS']},
     staerke:{fitBasis:0.72,fitAnteil:0.28,leererPlatz:25}, // Wirkung = Stärke × Zustand (K03 §5.8) × Eignung
     team:{schwaechstes:0.2,mindestAnteil:0.3,anzahl:[0.85,0.05],anzahlMax:1.15,ueberragend:{ab:11,anteil:0.05}}, // überragend: was mehr als 11 über dem Schnitt der anderen im Bereich liegt, zählt nur zu 5 %
-    besitz:{exponent:3.5},
-    angriff:{proMinute:0.50,chance:0.42,exponent:1.7,min:0.10,max:0.80,konter:0.12},
+    besitz:{exponent:3.2},
+    angriff:{proMinute:0.50,chance:0.41,exponent:1.55,min:0.10,max:0.80,konter:0.12},
     mix:{mitte:{gross:0.20,halb:0.45,fern:0.35},aussen:{kopf:0.45,halb:0.25,gross:0.10,fern:0.20},konter:{gross:0.6,halb:0.4}},
     tor:{gross:0.28,halb:0.085,fern:0.03,kopf:0.095,ecke:0.045,freistossFlanke:0.055,freistoss:0.06,elfmeter:0.76}, // kalibriert mit tests/kalibrierung.js
     aufsTor:0.35,geblockt:0.25,ecken:{aussenAbgewehrt:0.55,parade:0.30,geblockt:0.35},eckeSchuss:0.3,
@@ -222,7 +222,7 @@ const REGELN={
       fern:{OM:3,SM:3,ZM:2.5,DM:1.5,LM:2,LA:2,HS:2,MS:1,IV:0.4,LV:0.6,LS:0.7},kopf:{MS:5,HS:2,LA:1,LM:1,OM:1,ZM:1,IV:1.5,DM:0.8,LV:0.4,LS:0.5},
       ecke:{IV:4,MS:4,DM:1.5,HS:1.5,ZM:1,OM:0.7,LA:0.7,LM:0.5,LV:0.4,LS:0.5},mitte:75,exponent:1.5},
     schuetze:{mitte:70,jePunkt:0.008,min:0.8,max:1.2},
-    abwehr:{versatz:3,jePunkt:0.014,min:0.8,max:1.2}, // Druck der Abwehr auf den Abschluss: 1 − jePunkt × (Abwehr − Angriff − versatz). Abwehrwerte liegen im Schnitt etwa 3 über den Angriffswerten.
+    abwehr:{versatz:3,jePunkt:0.022,min:0.78,max:1.22}, // Druck der Abwehr auf den Abschluss: 1 − jePunkt × (Abwehr − Angriff − versatz). Abwehrwerte liegen im Schnitt etwa 3 über den Angriffswerten.
     torwart:{mitte:70,jePunkt:0.011,min:0.80,max:1.20,patzer:0.02,unkonzentriert:4},
     fouls:{proMinute:0.12,ort:{flanke:0.20,direkt:0.035,elfmeter:0.011},gelb:0.17,rot:0.0036,hart:1.3,fair:0.7,mitGelb:{foul:0.35,karte:0.5}, // verwarnte Spieler foulen vorsichtiger (K09)
       gewicht:{IV:2,LV:1.5,DM:2,ZM:1.3,LS:1.5,LM:1,SM:0.8,OM:0.8,HS:0.8,MS:1,LA:0.8},ungestuem:1.4},
@@ -232,7 +232,7 @@ const REGELN={
     mk:{torjaeger:{wahl:1.3,tor:1.15},kopfballstark:{wahl:1.5,tor:1.15,abwehr:0.92},weitschuetze:{anteil:1.5,tor:1.25},flankengeber:{kopf:1.15,ecke:1.2},
       dribbler:{upgrade:0.15},schnell:{konter:1.15,abwehr:0.92},stellungssicher:{gross:0.92},zweikampfstark:{abwehr:1.03},ballsicher:{konter:0.85},
       freistoss:0.10,elfmeter:0.84,beidfuessig:1.03,reflexe:0.93,strafraum:0.85,elfmetertoeter:0.70,abschlussschwach:0.88,kopfballschwach:0.87,fliegenfaenger:1.15,langsam:1.08,abnehmend:[1,0.6,0.3]},
-    ausrichtung:{O:{A:1.06,D:0.95},D:{A:0.94,D:1.06},K:{A:0.98,D:1.03}},
+    ausrichtung:{SD:{A:0.90,D:1.08,T:0.90},D:{A:0.95,D:1.04,T:0.95},N:{A:1,D:1,T:1},O:{A:1.05,D:0.96,T:1.05},SO:{A:1.10,D:0.92,T:1.10}}, // K06 §5.5, T: wie oft angegriffen wird (mehr Spieler vorn)
     einsatz:{H:{A:1.02,D:1.02},F:{A:0.985,D:0.985}},
     heim:{alle:1.03,amateure:1.05},
     eigenschaften:{kaempfer:1.03,fuehrungsspieler:1.01,nervenschwach:0.96,trainingsweltmeister:0.97,engAb:80,nervenschwachElfmeter:0.06}, // Wirkung im Spiel (K03 §3.3), eng: ab Minute 80 mit höchstens einem Tor Abstand
@@ -243,10 +243,21 @@ const REGELN={
     verlaengerung:0.8,               // Chancen in der Verlängerung relativ
     elfmeter:0.76,
     fitnessMin:20,
-    note:{basis:3.6,ergebnis:0.55,tor:0.9,staerkeMitte:72,staerkeTeiler:25,zufall:1.6,platzverweis:1.5,min:1,max:6},
+    note:{mindestMinuten:20,basis:3.6,ergebnis:0.55,tor:0.9,staerkeMitte:72,staerkeTeiler:25,zufall:1.6,platzverweis:1.5,min:1,max:6},
     gelbSperreAb:5,rotSperre:[1,3]   // Sperren in Spielen
   },
 
+  // Live-Spiel (K05 §11): Tempo, Halte, Wechsel, Umstellungszeit, Zurufe, Halbzeitansprache, Computer-Trainer, Druckleiste
+  live:{tempo:{langsam:2000,normal:1000,schnell:300},
+    anhalten:{tor:true,rot:true,verletzung:true,elfmeter:true,gelbRotGefahr:true,frischeUnter:55},
+    wechsel:{anzahl:5,gelegenheiten:3,verlaengerung:1,bank:9},
+    umstellung:{ordnung:5,ausrichtung:2},
+    verletztFrische:30,              // ein verletzter Spieler humpelt bis zum Wechsel (Frische höchstens 30)
+    zurufe:{dauer:10,abnutzungMinuten:15,druck:{angriff:1.08,abwehr:0.97,frische:1.2},ruhe:{abwehr:1.03,angriff:0.95,fouls:0.85},konzentration:{patzer:0.7},
+      zeit:{angriffe:0.8,gelb:3,gelbJeMinute:0.002},spieler:{sv:0.3,wirkung:0.02,hitzkopfFouls:1.5}},
+    ansprache:{loben:{sv:0.3},motivieren:{wirkung:0.02},fordern:{kaempfer:0.03,empfindlich:-0.02},beruhigen:{fouls:0.8,patzer:0.8},augenzwinkernd:{wirkung:0.01},unpassend:-0.5,abnutzungSpiele:3},
+    ki:{muedeUnter:65,wechselVon:55,wechselBis:86,chanceJeMinute:0.13,frischAb:58,frischUnter:93,toleranz:6,gelbAb:60,jeGelegenheit:2,rueckstandAb:60,alleNachVorn:80,fuehrungAb:75},
+    druckleiste:{minuten:5,gross:3,halb:1,ecke:0.5}},
   // Schwierigkeit (K02 §5.4): ändert nur Bedingungen, Information und Hilfen. Werte und Würfel im Spiel sind auf allen Stufen gleich.
   // ziel: Saisonziel um so viele Plätze leichter (+) oder strenger (−). sterneGenau: Talentsterne eigener Spieler sofort genau. sterneWochen: Faktor auf die Zeit, bis sie genau sind.
   schwierigkeit:{standard:'normal',
@@ -311,4 +322,4 @@ const REGELN={
 // Schreibschutz: Zur Laufzeit darf kein Code eine Regel ändern.
 (function frieren(o){Object.freeze(o);Object.values(o).forEach(v=>{if(v&&typeof v==='object'&&!Object.isFrozen(v))frieren(v);});})(REGELN);
 // Kurzformen für den Code
-const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui;
+const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui,RL=REGELN.live;

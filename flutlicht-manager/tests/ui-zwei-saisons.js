@@ -71,7 +71,7 @@ async function advance(tag){await tabClick('Büro');const t0=await pg.evaluate((
   if(await pg.$('#kick')){const unav=await pg.evaluate(()=>S.pl.filter(p=>!avail(p)).map(p=>p.id));await pg.click('#kick');
    if(Math.random()<0.08){await pg.waitForTimeout(800);await pg.click('#cf-speed');await pg.waitForTimeout(700);}await pg.click('.ovb button:text-is("Zum Abpfiff")',{timeout:4000});
    await pg.waitForSelector('#cf-next',{timeout:6000});const sc=await pg.evaluate(()=>__scan());if(sc)note(tag,'Konferenz: '+sc);
-   const bad=await pg.evaluate(u=>{const s=new Set(u);return LAST.list.flatMap(r=>r.xi.flat()).filter(id=>s.has(id)).length;},unav);if(bad)note(tag,bad+' gesperrte/verletzte Spieler eingesetzt');
+   const bad=await pg.evaluate(u=>{const s=new Set(u);return LAST.list.flatMap(r=>[...r.xi.flat(),...(r.ein||[]).flat()]).filter(id=>s.has(id)).length;},unav);if(bad)note(tag,bad+' gesperrte/verletzte Spieler eingesetzt');
    await pg.click('#cf-next');continue;}
   if(ov.includes('Entlassen!')){actlog.push(tag+' ENTLASSEN – nehme Job');await pg.click('.ovb .opt');continue;}
   if(ov.includes('Saisonbilanz')){const sc=await pg.evaluate(()=>__scan());if(sc)note(tag,'Bilanz: '+sc);
