@@ -311,6 +311,7 @@ function applyMatchLauf(r,cup){const N=RE.note,V=RP.selbstvertrauen;
   if(r.taktik)r.taktik.forEach((tk,s)=>{const tid=s?r.a:r.h;if(!tk||tid>=1000)return;const t=S.teams[tid],V=RTA.vertrautheit,ES=RTA.einstellung.saison;
     vertrautSetzen(t,'stil',tk.stil,vertraut(t,'stil',tk.stil)+V.jeSpiel);vertrautSetzen(t,'ordnung',tk.form,vertraut(t,'ordnung',tk.form)+V.jeSpiel);
     if(tk.einst==='saison'){t.kater=S.tag+ES.katerTage;r.xi[s].forEach(id=>{const p=PIX.get(id);if(p)p.fit=Math.max(RE.fitnessMin,p.fit-ES.frische);});}
+    t.stile=[...(t.stile||[]),tk.stil].slice(-3); // zuletzt gespielte Stile (Gegneranalyse vor dem Spiel, K06 §4)
     if(tid===S.my){t.einstellung='normal';S.stilVerlauf=[...(S.stilVerlauf||[]),tk.stil].slice(-RTA.ki.rueckblick);}});
   lernenImSpiel(r);if(r.sv)Object.entries(r.sv).forEach(([id,v])=>{const p=PIX.get(+id);if(p)svAendern(p,v);});
   r.yel.forEach(id=>{const p=PIX.get(id);if(!p)return;p.yc++;if(p.yc>=RE.gelbSperreAb){p.yc=0;p.sus=Math.max(p.sus,1);if(p.team===S.my)news(`${p.n} sieht die ${RE.gelbSperreAb}. Gelbe Karte und ist für ein Spiel gesperrt.`,'bad');}});

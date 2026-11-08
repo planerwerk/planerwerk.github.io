@@ -523,4 +523,5 @@ Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `
 | AK3 | **K31 und K06 §7:** Lieblingsstil per Zufall, „Spiel der Saison“ ohne Derbys. Vereinsprofile und Derbys kommen mit K31. | 📌 bei U11 |
 | AK4 | **K02 §5.4 und K06 §7:** Die Reaktion auf deinen Lieblingsstil nutzt fest die Stufe „normal“ (25 %). Mit der Klugheit der Computer-Vereine (K31) hängt sie an der Schwierigkeit. | 📌 bei U11 |
 | AK5 | **K04 §10:** Ballbesitz-Spanne mit Stilen 36–62 %, ein Seed bis 33–60 %. Ziel 15–25 Punkte, also am oberen Rand. | beobachten |
+| AK6 | **K13 und Pokal-Auslosung:** In der 1. Runde wurden zwei Bundesligisten gegeneinander gelost (beobachtet: SC Freiburg gegen Borussia Dortmund). Im echten DFB-Pokal treffen in Runde 1 die Profis auf Amateure und Unterklassige. | 📌 bei U7 (K13) |
 

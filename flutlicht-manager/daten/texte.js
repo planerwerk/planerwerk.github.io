@@ -10,5 +10,10 @@ const TICKER_ARTEN={kopf:['TOR! {n} köpft nach einer Flanke ein. {sc}','TOR! Fl
 const POKAL_RUNDEN=['1. Runde','2. Runde','Achtelfinale','Viertelfinale','Halbfinale','Finale'];
 const AUSRICHTUNG={SD:'Sehr defensiv',D:'Defensiv',N:'Ausgewogen',O:'Offensiv',SO:'Sehr offensiv'};
 const EINSATZ={F:'Fair',N:'Normal',H:'Hart'};
+const STIL_NAME={ausgewogen:'Ausgewogen',pressing:'Pressing',ballbesitz:'Ballbesitz',mauern:'Mauern',konter:'Konter',fluegel:'Flügelspiel'};
+const STIL_TEXT={ausgewogen:'kein Schwerpunkt',pressing:'früh angreifen, Ball hoch gewinnen. Braucht Kondition, schnelle und zweikampfstarke Spieler. Kostet Kraft, anfällig für Konter.',
+  ballbesitz:'Ball laufen lassen, geduldig aufbauen. Braucht einen Spielmacher und ballsichere Spieler.',mauern:'tief stehen, Räume eng machen. Braucht eine starke Abwehrmitte.',
+  konter:'Ball holen, schnell umschalten. Braucht schnelle Spieler vorn und einen Torjäger.',fluegel:'über außen und Flanken. Braucht Flankengeber und einen kopfballstarken Stürmer.'};
+const EINSTELLUNG_NAME={locker:'Locker angehen',normal:'Normal',saison:'Spiel der Saison'};
 const TRAINING_STUFEN=['Locker','Normal','Hart'];
 const TRAINING_TEXT=['Wenig Belastung: frischer, Kondition sinkt Richtung 70, Entwicklung langsamer (×0,8)','Ausgewogen: Kondition Richtung 80, normale Entwicklung','Viel Belastung: Kondition Richtung 90, Entwicklung schneller (×1,2), weniger frisch, Verletzungsrisiko'];

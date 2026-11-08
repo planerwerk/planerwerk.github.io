@@ -4,6 +4,14 @@ function tab(k){TAB=k;if(k==='aufst'&&S){S.lineup=myXI();save();}render();window
 function setSlot(i,id){id=+id;const xi=myXI(),j=xi.indexOf(id);if(j>=0)xi[j]=xi[i];xi[i]=id;S.lineup=xi;save();render();}
 function setForm(f){myT().form=f;S.lineup=bestXI(S.my,f);save();render();}
 function setTac(v){myT().tac=v;save();render();}
+// Taktik (K06): Spielstil, Einstellung zum Spiel (nur für das nächste Spiel), Rollen je Grundordnung, Standardschützen
+function setStil(k){if(!STILE.includes(k))return;myT().stil=k;save();render();}
+function setEinstellung(k){if(!RTA.einstellung[k]&&k!=='normal')return;myT().einstellung=k;save();render();}
+function setRolle(i,pos){const t=myT(),f=t.form,sl=slots(f),g=rolleWaehlbar(sl[i]);if(!g||!RTA.rollen[g].includes(pos))return;
+  const r=Object.assign({},(t.rollen&&t.rollen[f])||{});if(pos==='SM'){const akt=slotsVerein(t);akt.forEach((p,j)=>{if(p==='SM'&&j!==i)r[j]=slots(f)[j]==='SM'?'ZM':slots(f)[j];});}
+  r[i]=pos;t.rollen=Object.assign({},t.rollen||{});t.rollen[f]=r;save();render();}
+function setSchuetze(art,i,id){const t=myT();t.schuetzen=t.schuetzen||{};id=id?+id:null;
+  if(art==='elfmeter'){const l=(t.schuetzen.elfmeter||[]).slice();l[i]=id;t.schuetzen.elfmeter=l.filter((x,j,a)=>x&&a.indexOf(x)===j);}else t.schuetzen[art]=id;save();render();}
 function setEin(v){myT().ein=v;save();render();}
 function autoXI(){S.lineup=bestXI(S.my,myT().form);save();render();toast('Beste verfügbare Elf aufgestellt.');}
 function setPrice(v){const P=RF.ticketPreis;myT().price=clamp(Math.round(+v||P.standard),P.min,P.max);save();render();}

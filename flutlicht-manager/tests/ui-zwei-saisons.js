@@ -28,7 +28,11 @@ async function actions(s,tag){const wk=s.wk,yr=s.season,K=yr+':'+wk+':';
  const acc=await pg.$$('button:text-is("Annehmen")');if(acc.length&&once(K+'angebot')){if(wk%3){await acc[0].click();actlog.push(tag+' Angebot angenommen');}else{await (await pg.$('button:text-is("Ablehnen")')).click();actlog.push(tag+' Angebot abgelehnt');}}
  if(yr===2026&&wk===1&&once(K+'taktik')){await tabClick('Aufstellung');await pg.selectOption('#formsel','4-3-3');await pg.selectOption('#tacsel','O');await pg.selectOption('#einsel','H');
    const opts=await pg.$$eval('#slot5 option:not([disabled])',o=>o.map(x=>x.value));if(opts.length>3)await pg.selectOption('#slot5',opts[3]);
-   await pg.click('button:text-is("Beste Elf automatisch aufstellen")');actlog.push(tag+' Taktik geändert');}
+   await pg.click('button:text-is("Beste Elf automatisch aufstellen")');
+   // Taktik (K06): Spielstil, Rolle, Einstellung, Elfmeterschütze
+   await pg.selectOption('#stilsel','pressing');const rs=await pg.$$('.rollesel');if(rs.length)await rs[0].selectOption({index:1});await pg.selectOption('#einstsel','saison');
+   const el=await pg.$$('.schuetzen select');if(el.length){const v=await el[0].evaluate(x=>x.options[1]&&x.options[1].value);if(v)await el[0].selectOption(v);}
+   const sc=await pg.evaluate(()=>__scan());if(sc)note(tag,'Aufstellung: '+sc);actlog.push(tag+' Taktik geändert (System, Stil, Rolle, Einstellung, Schütze)');}
  if(yr===2026&&wk===2&&once(K+'verein')){await tabClick('Training & Jugend');await pg.click('.opt:has(b:text-is("Hart"))');await pg.click('.opt:has(b:text-is("Stufe 4"))');
    await tabClick('Finanzen');await pg.fill('#price','38');await pg.locator('#price').dispatchEvent('change');await pg.click('button:text-is("+5 Mio leihen")');
    await tabClick('Stadion');await pg.click('.opt:has(b:text-is("Tribüne ausbauen"))');actlog.push(tag+' Training hart, Jugend 4, Preis 38, Kredit, Tribüne');}
@@ -60,7 +64,7 @@ async function actions(s,tag){const wk=s.wk,yr=s.season,K=yr+':'+wk+':';
    if(await pg.evaluate(()=>typeof saveEdit!=='undefined'))note(tag,'saveEdit gibt es noch');
    const rg=await pg.$$eval('.ovb .rg',x=>x.length);if(rg<3)note(tag,`Spielerkarte: ${rg} statt 3 Regler`);await closeModal();actlog.push(tag+' Spielerkarte ohne Bearbeiten, mit Reglern geprüft');}
  if(wk===30&&once(K+'frei')){const id=await pg.evaluate(()=>squad(S.my).sort((a,b)=>a.str-b.str)[0].id);await pg.evaluate(i=>openP(i),id);await pg.click('button:has-text("Vertrag auflösen")');actlog.push(tag+' Spieler freigestellt');}
- if(yr===2027&&wk===2&&once(K+'normal')){await tabClick('Training & Jugend');await pg.click('.opt:has(b:text-is("Normal"))');await tabClick('Aufstellung');await pg.selectOption('#formsel','3-5-2');}
+ if(yr===2027&&wk===2&&once(K+'normal')){await tabClick('Training & Jugend');await pg.click('.opt:has(b:text-is("Normal"))');await tabClick('Aufstellung');await pg.selectOption('#formsel','3-5-2');await pg.selectOption('#stilsel','konter');}
  if(yr===2027&&wk===9&&once(K+'vertrauen')){await pg.evaluate(()=>{S.trust=5;});actlog.push(tag+' Vertrauen künstlich auf 5 gesetzt (Entlassung testen)');}
  const rid=await pg.evaluate(()=>S.pl[Math.floor(Math.random()*S.pl.length)].id);await pg.evaluate(i=>openP(i),rid);const sc=await pg.evaluate(()=>__scan());if(sc)note(tag,'Spielerfenster: '+sc);await closeModal();
  if(wk%5===0&&once(K+'plan')){await tabClick('Spielplan');await pg.selectOption('#daysel',String(wk%34));await tabClick('Tabelle');await pg.click('button:text-is("2. Liga")');await pg.click('button:text-is("3. Liga")');const sc=await pg.evaluate(()=>__scan());if(sc)note(tag,'Tabelle 3. Liga: '+sc);}

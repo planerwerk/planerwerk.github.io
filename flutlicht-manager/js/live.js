@@ -127,13 +127,16 @@ function liveElf(){const L=LIVE,G=L.G,s=L.s,sd=G.Ss[s],fw=G.wechselFrei(s),max=R
     <div class="lv-elf">${bank.map(p=>`<div class="lv-sp"><span class="pos ${p.pos}">${p.fp||p.pos}</span><span class="lv-n">${esc(p.n)} <span class="dim">${Math.round(p.str)}</span></span><span class="meter"><i style="width:${Math.round(p.fit)}%"></i></span><span class="lv-f">${Math.round(p.fit)} %</span><span class="lv-akt"><button onclick="liveRein(${p.id})" ${L.raus?'':'disabled'}>rein</button></span></div>`).join('')||'<p class="dim">Niemand mehr auf der Bank.</p>'}</div></div>`;}
 function liveTaktikAnsicht(){const L=LIVE,G=L.G,s=L.s,sd=G.Ss[s],plan=G.plan[s];
   const sel=(k,opts,akt)=>`<select onchange="liveTaktik('${k}',this.value)" ${L.ende?'disabled':''}>${opts.map(([v,l])=>`<option value="${v}" ${v===akt?'selected':''}>${l}</option>`).join('')}</select>`;
-  const geplant=plan.length?`<p class="dim">Geplant: ${plan.map(x=>`${{form:'Grundordnung',tac:'Ausrichtung',ein:'Einsatz'}[x.art]} → ${x.art==='tac'?AUSRICHTUNG[x.wert]:x.art==='ein'?EINSATZ[x.wert]:x.wert} ab der ${x.ab}. Minute`).join(', ')}</p>`:'';
+  const geplant=plan.length?`<p class="dim">Geplant: ${plan.map(x=>`${{form:'Grundordnung',tac:'Ausrichtung',ein:'Einsatz',stil:'Spielstil'}[x.art]} → ${x.art==='tac'?AUSRICHTUNG[x.wert]:x.art==='ein'?EINSATZ[x.wert]:x.art==='stil'?STIL_NAME[x.wert]:x.wert} ab der ${x.ab}. Minute`).join(', ')}</p>`:'';
+  const op=G.Ss[1-s],kr=!op.am&&RTA.kreislauf[sd.stil]===op.stil?'Dein Stil schlägt seinen.':!op.am&&RTA.kreislauf[op.stil]===sd.stil?'Sein Stil schlägt deinen.':'';
   const aktiv=G.rufe[s].filter(r=>G.m>=r.m&&G.m<r.m+RL.zurufe.dauer&&r.w).map(r=>`${ZURUF_TEXT[r.art]} (bis zur ${r.m+RL.zurufe.dauer}. Minute)`);
   return`<div class="card"><h3>Taktik</h3><div class="form">
     <label>Grundordnung ${sel('form',Object.keys(RE.formationen).map(f=>[f,f]),sd.form)}</label>
     <label>Ausrichtung ${sel('tac',Object.entries(AUSRICHTUNG),sd.tac)}</label>
-    <label>Einsatz ${sel('ein',Object.entries(EINSATZ),sd.ein)}</label></div>
-    <p class="dim">Grundordnung wirkt nach ${RL.umstellung.ordnung} Minuten, Ausrichtung und Einsatz nach ${RL.umstellung.ausrichtung}. In der Halbzeit gelten Ausrichtung und Einsatz sofort.</p>${geplant}</div>
+    <label>Einsatz ${sel('ein',Object.entries(EINSATZ),sd.ein)}</label>
+    <label>Spielstil ${sel('stil',STILE.map(k=>[k,STIL_NAME[k]]),sd.stil)}</label></div>
+    <p class="dim">Gegner: ${op.am?'Amateurklub':`${STIL_NAME[op.stil]||'–'}, ${op.form||''}`}. ${kr} Umsetzung deines Stils ${Math.round((sd.u||1)*100)} %.</p>
+    <p class="dim">Grundordnung und Spielstil wirken nach ${RL.umstellung.ordnung} Minuten, Ausrichtung und Einsatz nach ${RL.umstellung.ausrichtung}. In der Halbzeit gelten Ausrichtung und Einsatz sofort.</p>${geplant}</div>
   <div class="card"><h3>Zurufe</h3><div class="row">${ZURUFE.map(a=>`<button onclick="liveZuruf('${a}')" ${L.ende?'disabled':''}>${ZURUF_TEXT[a]}</button>`).join('')}</div>
     <p class="dim">Wirken ${RL.zurufe.dauer} Minuten. Derselbe Zuruf innerhalb von ${RL.zurufe.abnutzungMinuten} Minuten wirkt nur halb, ein drittes Mal gar nicht. „Zeit schinden“ nur bei Führung, kostet Gelbe Karten.</p>
     ${aktiv.length?`<p>Aktiv: ${aktiv.map(esc).join(', ')}</p>`:''}</div>`;}

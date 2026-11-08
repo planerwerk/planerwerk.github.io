@@ -3,7 +3,9 @@
 Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12.
 Hängt ab von: K03 (Positionen, Merkmale, Fuß), K04 (Engine) · Wird gebraucht von: K05, K07, K14, K16, K18, K31, K35a.
 
-**Umsetzungshinweise (U5a, 8. November 2026):** Spielstile mit Umsetzung und Kreislauf, Vertrautheit, Einstellung zum Spiel mit Kater, Rollen, Standardschützen und die Computer-Trainer aus §7 sind in der Engine (`js/taktik.js`, Werte in `REGELN.taktik`). Alle Prüfungen aus §10 laufen in `tests/taktik.js` und sind grün. Die Oberfläche folgt in U5b. Abweichungen in §12 unter U5a.
+**Umsetzungshinweise (U5a, 8. November 2026):** Spielstile mit Umsetzung und Kreislauf, Vertrautheit, Einstellung zum Spiel mit Kater, Rollen, Standardschützen und die Computer-Trainer aus §7 sind in der Engine (`js/taktik.js`, Werte in `REGELN.taktik`). Alle Prüfungen aus §10 laufen in `tests/taktik.js` und sind grün. Abweichungen in §12 unter U5a.
+
+**Umsetzungshinweise (U5b):** Aufstellung mit Spielstil, Einstellung zum nächsten Spiel, Rollen am Platz, Standardschützen (Elfmeter 1–5, Freistöße, Ecken), Umsetzung und Vertrautheit als Anzeige, dazu wen der Stil schlägt und gegen wen er verliert. Im Vorbericht stehen die zuletzt gespielten Stile des Gegners, im Live-Spiel lässt sich der Stil ändern, mit Hinweis auf den Kreislauf. **U5 ist damit fertig.** Noch nicht gebaut: Ziehen und Ablegen auf dem Spielfeld (K35a), Kapitän (ohne Wirkung), Ereignisse aus §8.
 
 ## 1. Ziel und Spielgefühl
 

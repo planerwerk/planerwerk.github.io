@@ -72,15 +72,36 @@ const fitArt=f=>{const z=RU.zonenFitness.find(q=>f>=q.von&&f<=q.bis);return z&&z
 function tauziehenNaechstes(){const e=heuteMeinSpiel()?meinSpiel(S.tag):naechstesSpiel(S.tag+1),f=e&&paarung(e);if(!f)return'';
   const home=f[0]===S.my,o=home?f[1]:f[0],me=side(S.my,home,false),op=side(o,!home,false);
   return`<h3 style="margin-top:14px">Vergleich mit ${esc(tn(o))}</h3><p class="dim">${esc(spielName(e))}, ${datumKurz(e.tag)}, ${home?'zu Hause':'auswärts'} (mit Heimvorteil)</p>${rgTauziehen('Dein Verein',tn(o),[['Dein Angriff gegen ihre Abwehr',+me.A.toFixed(1),+op.D.toFixed(1)],['Deine Abwehr gegen ihren Angriff',+me.D.toFixed(1),+op.A.toFixed(1)]])}`;}
-V.aufst=()=>{const t=myT(),sl=slots(t.form),xi=myXI();const sq=squad(S.my).sort(SORTS.pos),sd=side(S.my,false,true);
+V.aufst=()=>{const t=myT(),sl=slotsVerein(t),xi=myXI();const sq=squad(S.my).sort(SORTS.pos),sd=side(S.my,false,true),stil=STILE.includes(t.stil)?t.stil:'ausgewogen';
   const row=pos=>`<div class="prow">${sl.map((s,i)=>posGruppe(s)===pos?i:-1).filter(i=>i>=0).map(i=>{const p=PIX.get(xi[i]);return`<div class="tok"><b>${p?Math.round(p.str):'–'}</b><span>${p?esc(last(p.n)):'frei'}</span></div>`;}).join('')}</div>`;
   return`<div class="grid"><div class="card"><h2>Aufstellung ${t.form}</h2><div class="pitch">${row('ST')}${row('MF')}${row('AB')}${row('TW')}</div><p class="dim" style="margin-top:8px">Angriffswert ${sd.A.toFixed(1)} · Abwehrwert ${sd.D.toFixed(1)} (ohne Heimvorteil)</p>${tauziehenNaechstes()}</div>
   <div class="card"><h3>Taktik</h3><div class="form"><label>System <select id="formsel" onchange="setForm(this.value)">${Object.keys(RE.formationen).map(f=>`<option ${f===t.form?'selected':''}>${f}</option>`).join('')}</select></label>
   <label>Ausrichtung <select id="tacsel" onchange="setTac(this.value)">${Object.entries(AUSRICHTUNG).map(([k,l])=>`<option value="${k}" ${k===t.tac?'selected':''}>${l}</option>`).join('')}</select></label>
   <label>Einsatz <select id="einsel" onchange="setEin(this.value)">${Object.entries(EINSATZ).map(([k,l])=>`<option value="${k}" ${k===t.ein?'selected':''}>${l}</option>`).join('')}</select></label>
-  <button onclick="autoXI()">Beste Elf automatisch aufstellen</button></div><hr>
-  <h3>Startelf</h3><div class="slots">${sl.map((pos,i)=>`<label class="slot"><span class="pos ${posGruppe(pos)}">${pos}</span><select id="slot${i}" onchange="setSlot(${i},this.value)">${xi[i]==null?'<option>– niemand verfügbar –</option>':''}${sq.map(p=>`<option value="${p.id}" ${xi[i]===p.id?'selected':''} ${avail(p)?'':'disabled'}>${esc(p.n)} · ${p.fp||p.pos} · ${Math.round(eff(p,pos)*10)/10} · ${Math.round(p.fit)}%${p.inj>0?' · verletzt':p.sus>0?' · gesperrt':''}</option>`).join('')}</select></label>`).join('')}</div>
-  <p class="dim" style="margin-top:8px">Offensiv: mehr Tore, mehr Gegentore. Hart: etwas stärker, aber mehr Karten und Verletzungen. Spieler auf fremder Position verlieren deutlich an Stärke.</p></div></div>`;};
+  <label>Spielstil <select id="stilsel" onchange="setStil(this.value)">${STILE.map(k=>`<option value="${k}" ${k===stil?'selected':''}>${STIL_NAME[k]}</option>`).join('')}</select></label>
+  <label>Einstellung zum nächsten Spiel <select id="einstsel" onchange="setEinstellung(this.value)">${Object.entries(EINSTELLUNG_NAME).map(([k,l])=>`<option value="${k}" ${k===(t.einstellung||'normal')?'selected':''}>${l}</option>`).join('')}</select></label>
+  <button onclick="autoXI()">Beste Elf automatisch aufstellen</button></div>
+  ${taktikInfo(t,sd,stil)}<hr>
+  <h3>Startelf</h3><div class="slots">${sl.map((pos,i)=>`<label class="slot ${rolleWaehlbar(slots(t.form)[i])?'rolle':''}"><span class="pos ${posGruppe(pos)}">${pos}</span>${rolleWahl(t,i)}<select id="slot${i}" onchange="setSlot(${i},this.value)">${xi[i]==null?'<option>– niemand verfügbar –</option>':''}${sq.map(p=>`<option value="${p.id}" ${xi[i]===p.id?'selected':''} ${avail(p)?'':'disabled'}>${esc(p.n)} · ${p.fp||p.pos} · ${Math.round(eff(p,pos)*10)/10} · ${Math.round(p.fit)}%${p.inj>0?' · verletzt':p.sus>0?' · gesperrt':''}</option>`).join('')}</select></label>`).join('')}</div>
+  <p class="dim" style="margin-top:8px">Offensiv: mehr Tore, mehr Gegentore. Hart: etwas stärker, aber mehr Karten und Verletzungen. Spieler auf fremder Position verlieren deutlich an Stärke. Rollen im Mittelfeld und Sturm (DM, ZM, SM, OM, MS, HS) wählst du links am Platz, höchstens ein Spielmacher.</p>
+  ${schuetzenKarte(t,xi)}</div></div>`;};
+// Umsetzung, Vertrautheit und Kreislauf (K06 §5.2–5.4)
+function taktikInfo(t,sd,stil){const u=stil==='ausgewogen'?1:umsetzung(sd,stil),vs=vertraut(t,'stil',stil),vo=vertraut(t,'ordnung',t.form),K=RTA.kreislauf,schlaegt=K[stil],verliert=Object.keys(K).find(k=>K[k]===stil);
+  return`<div class="rgs">${rgAnzeige({label:'Umsetzung',sub:stil==='ausgewogen'?'ausgewogen braucht keine Umsetzung':'Voraussetzungen im Kader und Vertrautheit. Vorteile wirken nur zu diesem Anteil, Nachteile immer voll.',min:0,max:100,wert:Math.round(u*100),einheit:' %',zonen:[{von:0,bis:40,art:'bad',text:'kaum umsetzbar: nur die Nachteile wirken'},{von:40,bis:70,art:'warn',text:'halbherzig'},{von:70,bis:100,art:'good',text:'passt zum Kader'}]})}
+    ${rgAnzeige({label:'Vertrautheit Spielstil',sub:'+5 pro Trainingswoche, +3 je Spiel, ungenutzt −2',min:0,max:100,wert:Math.round(vs)})}
+    ${rgAnzeige({label:'Vertrautheit Grundordnung',sub:vo<RTA.vertrautheit.ordnungUnter?`unter ${RTA.vertrautheit.ordnungUnter}: Teamwerte bis zu 3 % schwächer`:'eingespielt',min:0,max:100,wert:Math.round(vo)})}</div>
+    <p class="dim">${esc(STIL_TEXT[stil])}${schlaegt?` <b>Schlägt</b> ${STIL_NAME[schlaegt]}, <b>verliert gegen</b> ${STIL_NAME[verliert]}.`:''}${(t.einstellung||'normal')==='saison'?' „Spiel der Saison“: heute 4 % stärker, danach zehn Tage Kater.':(t.einstellung==='locker')?' „Locker angehen“: 4 % schwächer, aber weniger müde.':''}</p>`;}
+// Rolle eines Platzes wählen (K06 §3.1)
+function rolleWahl(t,i){const grund=slots(t.form)[i],g=rolleWaehlbar(grund);if(!g)return'';const akt=slotsVerein(t)[i];
+  return`<select class="rollesel" aria-label="Rolle auf Platz ${i+1}" onchange="setRolle(${i},this.value)">${RTA.rollen[g].map(r=>`<option ${r===akt?'selected':''}>${r}</option>`).join('')}</select>`;}
+// Standardschützen (K06 §5.8): ohne Wahl schießt der Beste nach Merkmal und Stärke
+function schuetzenKarte(t,xi){const el=xi.map(id=>PIX.get(id)).filter(Boolean),sch=t.schuetzen||{},opt=(sel)=>`<option value="">automatisch</option>${el.map(p=>`<option value="${p.id}" ${p.id===sel?'selected':''}>${esc(p.n)}${hatMk(p,'elfmeter')?' (Elfmeter)':''}${hatMk(p,'freistoss')?' (Freistoß)':''}${hatMk(p,'flankengeber')?' (Flanken)':''}</option>`).join('')}`;
+  const elf=sch.elfmeter||[];
+  return`<hr><h3>Standardschützen</h3><div class="form schuetzen">
+    ${[0,1,2,3,4].map(i=>`<label>Elfmeter ${i+1} <select onchange="setSchuetze('elfmeter',${i},this.value)">${opt(elf[i])}</select></label>`).join('')}
+    <label>Direkte Freistöße <select onchange="setSchuetze('freistoss',0,this.value)">${opt(sch.freistoss)}</select></label>
+    <label>Ecken <select onchange="setSchuetze('ecke',0,this.value)">${opt(sch.ecke)}</select></label></div>
+    <p class="dim">Wer Standards schießt, sammelt dort Erfahrung (Lernen im Spiel). Fällt ein Schütze aus, übernimmt der nächste der Liste, sonst der Beste auf dem Platz.</p>`;}
 V.tabelle=()=>{const lg=TLG||myT().lg,tb=table(lg),ts=topScorers(lg),reihe=lg===3?aufstiegsReihe3():[];
   const z=(i,id)=>lg===1?(i<4?'z1':i<6?'z2':i===15?'z3':i>=16?'z4':''):lg===2?(i<2?'z1':i===2||i===15?'z3':i>=16?'z4':''):(id===reihe[0]||id===reihe[1]?'z1':id===reihe[2]?'z3':i>=tb.length-RS.abstieg3?'z4':'');
   const leg=lg===1?'Grün: Champions League · Blau: Europa League · Gelb: Relegation · Rot: Abstieg':lg===2?'Grün: Aufstieg · Gelb: Relegation (Platz 3 gegen den 16. der 1. Liga, Platz 16 gegen den 3. der 3. Liga) · Rot: Abstieg':'Grün: Aufstieg · Gelb: Relegation gegen den 16. der 2. Liga · Rot: Abstieg in die Regionalliga · (II) = Zweitmannschaft, darf nicht aufsteigen';
