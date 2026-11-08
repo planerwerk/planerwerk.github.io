@@ -8,10 +8,12 @@ function openP(id){const p=PIX.get(id);if(!p)return;const mine=p.team===S.my,t=p
     <label>Vertragslaufzeit <select id="yrs">${[1,2,3,4,5].map(y=>`<option value="${y}" ${y===3?'selected':''}>${y} Jahr(e)</option>`).join('')}</select></label><button class="go" onclick="offer(${id})">${t?'Angebot abgeben':'Verpflichten'}</button></div><p id="msg" class="msg" aria-live="polite"></p></div>`;
   const kad=p.team>=0?teamLevel(p.team):null,jung=p.age<=23;
   const werte=`<div class="card rgs">${rgAnzeige({label:'Stärke',sub:jung?'1–99, Schraffur: Talent':'1–99',min:1,max:99,wert:Math.round(p.str),talent:jung?talentBand(p):null,marker:kad?[{v:kad,t:'Ø Kader '+Math.round(kad)}]:[]})}
-    ${rgAnzeige({label:'Form',sub:'0–10, Mitte 5',min:0,max:10,wert:p.form,dez:1,marker:[{v:RT.formMitte,t:'Mitte'}]})}
-    ${rgAnzeige({label:'Fitness',sub:'wirkt auf die Stärke im Spiel',min:0,max:100,wert:Math.round(p.fit),einheit:' %',zonen:RU.zonenFitness})}</div>`;
+    ${rgAnzeige({label:'Form',sub:'0–20, Mitte 10: Leistung gegenüber der Erwartung, beschleunigt die Entwicklung',min:0,max:20,wert:p.form,dez:1,marker:[{v:RP.form.mitte,t:'Mitte'}]})}
+    ${rgAnzeige({label:'Frische',sub:'wirkt auf die Stärke im Spiel',min:0,max:100,wert:Math.round(p.fit),einheit:' %',zonen:RU.zonenFitness})}
+    ${rgAnzeige({label:'Kondition',sub:'Trainingszustand: wie schnell die Frische sinkt und zurückkommt',min:0,max:100,wert:Math.round(p.ko)})}
+    ${rgAnzeige({label:'Spielpraxis',sub:'Einsatzminuten der letzten Wochen',min:0,max:100,wert:Math.round(p.sp),einheit:' %',zonen:RU.zonenSpielpraxis})}</div>`;
   ov(`<div class="phead"><span class="pos ${p.pos}">${p.pos}</span><h2>${esc(p.n)}</h2><button class="x" onclick="closeOv()" aria-label="Schließen">✕</button></div>
-  <div class="facts">${fact('Verein',t?esc(t.name):'vereinslos')}${fact('Alter',p.age)}${jung?fact('Talent',stars(p)):''}${fact('Marktwert',fmt(v))}${fact('Gehalt',fmt(p.sal))}${p.team>=0?fact('Vertrag bis',S.season+p.ct):''}${fact('Ligatore',p.g)}${fact('Einsätze',p.apps)}${p.lastG?fact('Letzte Note',p.lastG.toFixed(1).replace('.',',')):''}${p.inj>0?fact('Verletzt',p.inj+(p.inj===1?' Tag':' Tage')):''}${p.sus>0?fact('Gesperrt',p.sus+(p.sus===1?' Spiel':' Spiele')):''}</div>
+  <div class="facts">${fact('Verein',t?esc(t.name):'vereinslos')}${fact('Alter',p.age)}${jung?fact('Talent',stars(p)):''}${fact('Marktwert',fmt(v))}${fact('Gehalt',fmt(p.sal))}${p.team>=0?fact('Vertrag bis',S.season+p.ct):''}${fact('Selbstvertrauen',svWort(p.sv))}${fact('Ligatore',p.g)}${fact('Einsätze',p.apps)}${p.lastG?fact('Letzte Note',p.lastG.toFixed(1).replace('.',',')):''}${p.inj>0?fact('Verletzt',p.inj+(p.inj===1?' Tag':' Tage')):''}${p.sus>0?fact('Gesperrt',p.sus+(p.sus===1?' Spiel':' Spiele')):''}</div>
   ${werte}<div class="grid">${act}</div>`);}
 // „Tag beenden“ (K01): erst Erinnerungen, dann dein Spiel (Vorbericht, Anpfiff, Konferenz), dann weiter bis zum nächsten Halt.
 function tagBeenden(ohneErinnerung){if(CONF){confFrame();renderConf();return;}if(BUSY)return;

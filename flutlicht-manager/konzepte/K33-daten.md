@@ -32,6 +32,7 @@ daten/texte.js      Ticker-Texte und feste Beschreibungen
 js/zufall.js        Zufall mit Seed
 js/hilfen.js        Formatierung und kleine Helfer
 js/welt.js          Welt bauen, Spieler erzeugen, Ziele, Sponsoren
+js/spieler.js       Spielermodell (K03): Zustand, Frische, Kondition, Form, Selbstvertrauen, Spielpraxis, Entwicklung
 js/kalender.js      Datum, Spielplan der Saison, „Tag beenden“, Erinnerungen
 js/engine.js        Spiel-Engine
 js/ablauf.js        Tagesverarbeitung: Spiele, Finanzen, Training, Markt, Vorstand, Bau
@@ -41,7 +42,7 @@ js/regler.js        Regler-Bausteine
 js/ansichten.js     Bildschirme
 js/fenster.js       Fenster: Spielerkarte, Vorbericht, Konferenz, Menü
 js/start.js         Startbildschirm, Laden, Speichern, Start
-tests/              Testskripte
+tests/              Testskripte, darunter sim.js (Simulator ohne Browser)
 ```
 
 **Drei Arten von Daten:**
@@ -54,8 +55,8 @@ tests/              Testskripte
 
 **Spielstand:**
 - Felder: `v` (Version), `seed` (Startwert), `zufall` (Zustand des Generators), `saison`, `tag`, `plan`, Vereine, Spieler, Ergebnisse, Nachrichten, Einstellungen (`einst`).
-- Gespeichert im Browser (Schlüssel `flutlicht-manager-v3`), dazu Export und Import als Code im Menü.
-- **Version 3** seit 6.11. (3. Liga, Anstoßzeiten, Sommer). Spielstände älterer Testversionen sind laut deiner Entscheidung Müll: Das Spiel löscht sie beim Start.
+- Gespeichert im Browser (Schlüssel `flutlicht-manager-v4`), dazu Export und Import als Code im Menü.
+- **Version 4** seit 8.11. (Spielermodell K03, U2). Version 3 seit 6.11. (3. Liga, Anstoßzeiten, Sommer). Spielstände älterer Testversionen sind laut deiner Entscheidung Müll: Das Spiel löscht sie beim Start.
 
 ## 4. Abläufe
 

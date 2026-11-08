@@ -14,6 +14,7 @@ function tagesSpieleLauf(d){const out={tag:d,gruppen:[],list:[],mine:null};S.ges
   const spielten=new Set();out.list.forEach(r=>{spielten.add(r.h);spielten.add(r.a);});
   S.pl.forEach(p=>{if(p.sus>0&&spielten.has(p.team))p.sus--;});
   out.list.forEach(r=>applyMatch(r,!!r.cup));
+  S.pl.forEach(p=>{if(spielten.has(p.team))entwicklungBuchen(p,d);});
   out.mine=out.list.find(r=>r.h===S.my||r.a===S.my)||null;
   const t=myT(),m=out.mine;
   for(const g of out.gruppen){const e=g.e,mg=g.list.includes(m)?m:null;
@@ -35,8 +36,8 @@ function tagesSpieleLauf(d){const out={tag:d,gruppen:[],list:[],mine:null};S.ges
 // Werte pro Tag: Ausfalltage zählen herunter, Frische erholt sich, Fristen laufen ab, Bau wird fertig.
 function taeglich(d){return mitStrom(strom('tag',S.season,d),()=>taeglichLauf(d));}
 function taeglichLauf(d){const T=RT;
-  const urlaub=imUrlaub();
-  S.pl.forEach(p=>{if(p.inj>0)p.inj--;if(p.team<0)return;if(urlaub){p.fit=Math.max(Math.min(p.fit,T.urlaubMin),p.fit-T.urlaubAbbau);return;}const cap=T.fitnessGrenze[p.team===S.my?S.train:T.computerStufe];p.fit=p.fit>cap?Math.max(cap,p.fit-T.abbau/7):Math.min(cap,p.fit+T.erholung/7);});
+  const urlaub=imUrlaub(),heute=spielendeAm(d),gestern=spielendeAm(d-1);
+  S.pl.forEach(p=>{if(p.inj>0)p.inj--;if(p.team<-1)return;tagesWerte(p,urlaub,p.team>=0&&(heute.has(p.team)||gestern.has(p.team)));});
   S.offers=S.offers.filter(o=>o.bis>=d&&PIX.get(o.pid)&&PIX.get(o.pid).team===S.my);
   const c=S.constr;if(c&&d>=c.bis){const t=myT();if(c.k==='cap')t.cap+=RB.tribuene.plaetze;if(c.k==='logen')t.logen+=RB.logen.anzahl;if(c.k==='shop')t.shop++;news(`Bau abgeschlossen: ${c.label}.`,'good');S.constr=null;}}
 // Werte pro Woche (montags): Training und Entwicklung, Transfermarkt, Vorstand bei Minus auf dem Konto.
@@ -54,12 +55,14 @@ function finanzenLiga(m){const t=myT();if(m.h===S.my)heimspielEinnahmen(m,false)
   const n=S.fx[t.lg].length;money('Gehälter',-Math.round(squad(S.my).reduce((s,p)=>s+p.sal,0)/n));
   money('Stadion & Betrieb',-Math.round(t.cap*RF.betrieb.jePlatz+t.logen*RF.betrieb.jeLoge));money('Jugendarbeit',-RF.jugendKosten[t.youth]);
   if(S.loan>0)money('Kreditzinsen',-Math.round(S.loan*RF.kreditZins/n));}
-function training(){const T=RT;
-  S.pl.forEach(p=>{if(p.team<0){p.played=0;return;}const mine=p.team===S.my,l=mine?S.train:T.computerStufe;
-    const a=p.age,wg=T.wachstum.find(x=>a<=x[0]);let g=wg?wg[1]:T.wachstumSonst;
-    if(g>0){g*=T.entwicklung[l]*(p.played?T.einsatz.mit:T.einsatz.ohne);if(p.str>=p.pot)g=0;}
-    p.str=clamp(p.str+g+(R()-0.5)*T.zufall,T.staerkeMin,T.staerkeMax);p.form+=(T.formMitte-p.form)*T.formAusgleich;p.played=0;
-    if(mine&&l===T.verletzung.stufe&&p.inj<=0&&R()<T.verletzung.chance){const w=riA(T.verletzung.wochen);p.inj=w*7+1;news(`Trainingsverletzung: ${p.n} fällt ${w} Woche(n) aus.`,'bad');}});}
+// Woche (K03 §4): Kondition, Form, Selbstvertrauen, Entwicklung für Spieler ohne Pflichtspiel seit 7 Tagen, Wochenbericht des Co-Trainers
+function training(){const T=RT,d=S.tag,bericht=[];
+  S.pl.forEach(p=>{if(p.team<-1)return;wochenWerte(p);if(p.ent==null||d-p.ent>=7)entwicklungBuchen(p,d);p.played=0;
+    const mine=p.team===S.my;
+    if(mine){const n=Math.round(p.str);if(p.sw!=null&&n!==p.sw)bericht.push([p,p.sw,n]);p.sw=n;}
+    if(mine&&S.train===T.verletzung.stufe&&p.inj<=0&&R()<T.verletzung.chance){const w=riA(T.verletzung.wochen);p.inj=w*7+1;news(`Trainingsverletzung: ${p.n} fällt ${w} Woche(n) aus.`,'bad');}});
+  if(bericht.length){const auf=bericht.filter(x=>x[2]>x[1]),ab=bericht.filter(x=>x[2]<x[1]),txt=l=>l.map(([p,a,b])=>`${p.n} (${a} → ${b})`).join(', ');
+    news(`Wochenbericht des Co-Trainers: ${auf.length?'verbessert '+txt(auf):''}${auf.length&&ab.length?' · ':''}${ab.length?'nachgelassen '+txt(ab):''}.`,auf.length>=ab.length?'good':'');}}
 function market(){const M=RM;
   S.teams.forEach(t=>{if(t.id===S.my||!aktiv(t))return;const xi=new Set(bestXI(t.id,t.form));const sq=squad(t.id).filter(x=>!x.list&&!xi.has(x.id));if(!sq.length)return;
     if(sq.length>M.listeVoll.kaderAb&&R()<M.listeVoll.chance){const p=pick(sq);p.list=1;p.ask=value(p);}else if(R()<M.listeZufall.chance){const p=pick(sq);p.list=1;p.ask=Math.round(value(p)*M.listeZufall.aufschlag/M.runden)*M.runden;}});

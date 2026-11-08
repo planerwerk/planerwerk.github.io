@@ -5,10 +5,10 @@ module.exports=()=>{
   const gr=[1,2,3,4].map(l=>S.teams.filter(t=>t.lg===l).length);if(gr[0]!==18||gr[1]!==18||gr[2]!==20)e.push(`Ligagrößen ${gr.join('/')}`);
   const ids=new Set();
   S.pl.forEach(p=>{if(ids.has(p.id))e.push('doppelte ID '+p.id);ids.add(p.id);
-   for(const k of ['str','pot','form','fit','sal','age','ct','inj','sus','g','apps','yc'])if(typeof p[k]!=='number'||!isFinite(p[k]))e.push(`Spieler ${p.n} ${k}=${p[k]}`);
+   for(const k of ['str','pot','form','fit','ko','sp','sv','sal','age','ct','inj','sus','g','apps','yc'])if(typeof p[k]!=='number'||!isFinite(p[k]))e.push(`Spieler ${p.n} ${k}=${p[k]}`);
    if(p.team>=S.teams.length||p.team<-1)e.push(`Spieler ${p.n} team=${p.team}`);
    if(!['TW','AB','MF','ST'].includes(p.pos))e.push('Pos '+p.pos);
-   if(p.fit<0||p.fit>100)e.push('Fitness außerhalb '+p.fit);if(p.form<0||p.form>10)e.push('Form außerhalb '+p.form);if(p.str<20||p.str>99)e.push('Stärke außerhalb '+p.str);
+   if(p.fit<0||p.fit>100)e.push('Frische außerhalb '+p.fit);if(p.form<0||p.form>20)e.push('Form außerhalb '+p.form);if(p.ko<0||p.ko>100)e.push('Kondition außerhalb '+p.ko);if(p.sp<0||p.sp>100)e.push('Spielpraxis außerhalb '+p.sp);if(p.sv<-3||p.sv>3)e.push('Selbstvertrauen außerhalb '+p.sv);if(p.str<20||p.str>99)e.push('Stärke außerhalb '+p.str);
    if(p.inj<0||p.sus<0)e.push(`negative Ausfallzeit ${p.n}`);});
   if(PIX.size!==S.pl.length)e.push(`PIX ${PIX.size} vs ${S.pl.length}`);
   S.pl.forEach(p=>{if(PIX.get(p.id)!==p)e.push('PIX veraltet '+p.id);});

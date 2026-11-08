@@ -1,6 +1,8 @@
 # K03 – Spielermodell
 
-Status: **abgestimmt** (7. November 2026, alle Fragen beantwortet). Grundlage sind deine Entscheidungen vom 5.11.: Anstoss-Stil, Stärke 1–99, Form 0–20 mit Mitte 10. Deine Antworten vom 7.11. sind eingearbeitet (Abschnitt 12).
+Status: **abgestimmt** (7. November 2026, alle Fragen beantwortet). **Teilweise umgesetzt** in U2b (8.11.): Frische, Kondition, Form 0–20 mit Note gegen die Erwartung, Serien, Selbstvertrauen, Spielpraxis, Entwicklung an jedem Spieltag, Zustandsfaktor. Offen: Persönlichkeit, Eigenschaften, Merkmale, Positionen, Fuß, unscharfe Talentsterne (U2c).
+
+**Umsetzungshinweise (U2b):** `pos` bleibt vorerst die Gruppe (TW, AB, MF, ST), `fit` heißt im Code weiter so und bedeutet Frische. Kalibriert mit `tests/spielermodell.js`: Form je Notenpunkt 2,5 statt 1,5 (sonst zu wenig Streuung), Wachstum 20–28 Jahre etwas höher und Talent nach erwarteter Restentwicklung verteilt (sonst bremst die Talentgrenze zu früh), Trainingsformen geben 5 Spielpraxis pro Woche (bis K07), weil die Engine noch keine Einwechslungen kennt. Grundlage sind deine Entscheidungen vom 5.11.: Anstoss-Stil, Stärke 1–99, Form 0–20 mit Mitte 10. Deine Antworten vom 7.11. sind eingearbeitet (Abschnitt 12).
 Hängt ab von: K33 (Daten), K01 (Kalender) · Wird gebraucht von: K04, K06, K07, K08, K10, K12a, K14, K15, K16, K18, K19, K21, K27, K29, K31, K32, K34, K35a.
 
 ## 1. Ziel und Spielgefühl
@@ -423,7 +425,7 @@ Neues Testskript `tests/spielermodell.js`, jeweils mit vielen Seeds:
 | Streuung bei Jungen | Von den 17–19-Jährigen legen 5–15 % in einer Saison +7 oder mehr zu, 3–10 % stagnieren oder fallen |
 | Gleichgewicht der Welt | Durchschnittsstärke der besten 14 je Liga über 10 Saisons stabil, ±1,5. Zahl der Spieler ab 85 in der 1. Liga ±30 %. |
 | Formverteilung | 60–85 % der Werte zwischen 7 und 13, höchstens 5 % bei ≤ 4 oder ≥ 16 |
-| Keine Formspirale | Der Meister hat am Saisonende keine höhere Durchschnittsform als 11,5 |
+| Keine Formspirale | Die vier stärksten Kader der 1. Liga haben im Schnitt höchstens 1,5 mehr Form als die vier schwächsten. (Der Meister taugt nicht als Maß, weil er meist die Mannschaft ist, die über ihrer Erwartung gespielt hat.) |
 | Frische | 1 Spiel pro Woche: zum nächsten Spiel wieder 100 %. 3 Spiele in 8 Tagen: danach 72–82 %. Nach 3 Ruhetagen wieder mindestens 90 %. |
 | Kondition | 4 Wochen Urlaub: −15 bis −20. 5 Wochen Vorbereitung bei hartem Training: zurück auf mindestens 80. |
 | Merkmale je Liga | Stammspieler der 1. Liga im Schnitt 1,6–2,4 Stärken, 3. Liga 0,8–1,2, über 10 Saisons stabil |

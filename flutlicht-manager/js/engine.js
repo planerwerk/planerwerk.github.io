@@ -1,7 +1,7 @@
 // Spiel-Engine: Aufstellung, Teamwerte, Simulation eines Spiels, Auswirkungen auf die Spieler.
 const slots=f=>{const[d,m,a]=RE.formationen[f];return['TW',...Array(d).fill('AB'),...Array(m).fill('MF'),...Array(a).fill('ST')];};
 const avail=p=>p.inj<=0&&p.sus<=0;
-function eff(p,pos){const k=RE.staerke;let e=p.str*(k.fitBasis+k.fitAnteil*p.fit/100)*(k.formBasis+p.form*k.formJePunkt);if(p.pos!==pos)e*=(p.pos==='TW'||pos==='TW')?k.fremdTorwart:k.fremdPosition;return e;}
+function eff(p,pos){const k=RE.staerke;let e=p.str*zustand(p);if(p.pos!==pos)e*=(p.pos==='TW'||pos==='TW')?k.fremdTorwart:k.fremdPosition;return e;}
 function fillXI(sl,pool,xi,used){sl.forEach((pos,i)=>{if(xi[i]!=null)return;let best=null,bv=-1;for(const p of pool){if(used.has(p.id))continue;const v=eff(p,pos);if(v>bv){bv=v;best=p;}}xi[i]=best?best.id:null;if(best)used.add(best.id);});return xi;}
 function bestXI(tid,form){const sl=slots(form),pool=squad(tid).filter(avail),used=new Set(),xi=Array(11).fill(null);
   sl.forEach((pos,i)=>{let best=null,bv=-1;for(const p of pool){if(used.has(p.id)||p.pos!==pos)continue;const v=eff(p,pos);if(v>bv){bv=v;best=p;}}if(best){xi[i]=best.id;used.add(best.id);}});
@@ -28,7 +28,7 @@ function shootout(){const q=RE.elfmeter;let a=0,b=0;for(let i=0;i<5;i++){if(R()<
 function sim(hid,aid,o={}){return mitStrom(strom('spiel',S.season,S.tag,hid,aid),()=>simLauf(hid,aid,o));}
 function simLauf(hid,aid,o){
   const H=side(hid,true,o.neutral),A=side(aid,false,o.neutral),Ss=[H,A],ev=[],sc=[0,0],yel={},off=new Set(),inj=[],K=RE.karten,V=RE.verletzung;
-  let xg=[xgf(H,A),xgf(A,H)];
+  let xg=[xgf(H,A),xgf(A,H)];const xg0=[...xg];
   const goal=(m,s,f)=>{sc[s]++;const p=scorer(Ss[s],off);ev.push({m,s,t:'G',p:p?p.id:null,n:p?p.n:rname(),sc:[...sc]});};
   for(let m=1;m<=90;m++)for(let s=0;s<2;s++){const me=Ss[s],op=Ss[1-s],pg=xg[s]/90,r=R();
     if(r<pg)goal(m,s);else if(r<pg*RE.chancen){const p=scorer(me,off);ev.push({m,s,t:'C',n:p?p.n:rname(),gk:keeper(op)});}
@@ -40,15 +40,22 @@ function simLauf(hid,aid,o){
   let pen=null;
   if(o.ko&&sc[0]===sc[1]){for(let m=91;m<=120;m++)for(let s=0;s<2;s++)if(R()<xg[s]/90*RE.verlaengerung)goal(m,s);
     if(sc[0]===sc[1]){pen=shootout();ev.push({m:120,s:pen[0]>pen[1]?0:1,t:'P',pen});}}
-  return{h:hid,a:aid,hg:sc[0],ag:sc[1],ev,pen,yel:Object.keys(yel).map(Number),off:[...off],inj,xi:[H.xi,A.xi]};}
+  return{h:hid,a:aid,hg:sc[0],ag:sc[1],ev,pen,yel:Object.keys(yel).map(Number),off:[...off],inj,xi:[H.xi,A.xi],xg0,xpo:[H.xp.map(x=>[x.p.id,x.pos]),A.xp.map(x=>[x.p.id,x.pos])]};}
 const winner=r=>r.hg>r.ag?r.h:r.hg<r.ag?r.a:(r.pen&&r.pen[0]>r.pen[1]?r.h:r.a);
 function applyMatch(r,cup){return mitStrom(strom('nachspiel',S.season,S.tag,r.h,r.a),()=>applyMatchLauf(r,cup));}
-function applyMatchLauf(r,cup){const N=RE.note,F=RE.form;
+// Nach dem Spiel (K03, K04 §5.9): Frische, Spielpraxis, Note, Form gegenüber der erwarteten Note, Selbstvertrauen, Serie gegenüber der Erwartung
+function applyMatchLauf(r,cup){const N=RE.note,V=RP.selbstvertrauen,W=RE.schuetzen;
   [0,1].forEach(s=>{const tid=s?r.a:r.h;if(tid>=1000)return;const gf=s?r.ag:r.hg,ga=s?r.hg:r.ag,res=gf>ga?1:gf<ga?-1:0;
-    r.xi[s].forEach(id=>{const p=PIX.get(id);if(!p)return;p.apps++;p.fit=clamp(p.fit-riA(RE.fitnessVerlust),RE.fitnessMin,100);
+    const xgF=r.xg0[s],E=erwartung(xgF,r.xg0[1-s]),eres=E.sieg-E.niederlage,xp=r.xpo[s];
+    let tot=0;const gew=xp.map(([id,pos])=>{const p=PIX.get(id),v=p?W.gewicht[pos]*Math.pow(p.str/W.mitte,W.exponent):0;tot+=v;return v;});
+    xp.forEach(([id],k)=>{const p=PIX.get(id);if(!p)return;p.apps++;nachSpiel(p,90);
       const goals=r.ev.filter(e=>e.t==='G'&&e.p===id).length;if(cup)p.pg=(p.pg||0)+goals;else if(!r.rel)p.g+=goals;
-      let gr=N.basis-res*N.ergebnis-goals*N.tor-(p.str-N.staerkeMitte)/N.staerkeTeiler+(R()-0.5)*N.zufall;if(r.off.includes(id))gr+=N.platzverweis;gr=clamp(Math.round(gr*2)/2,N.min,N.max);
-      p.lastG=gr;p.form=clamp(p.form+(F.mitte-gr)*F.faktor,F.min,F.max);p.played=1;if(tid===S.my)(r.grades=r.grades||{})[id]=gr;});});
+      const fest=N.basis-(p.str-N.staerkeMitte)/N.staerkeTeiler;
+      let gr=fest-res*N.ergebnis-goals*N.tor+(R()-0.5)*N.zufall;if(r.off.includes(id))gr+=N.platzverweis;gr=clamp(Math.round(gr*2)/2,N.min,N.max);
+      const erw=clamp(fest-eres*N.ergebnis-(tot?xgF*gew[k]/tot:0)*N.tor,N.min,N.max);
+      p.lastG=gr;formNachNote(p,gr,erw);if(goals)svAendern(p,goals*V.tor);if(gr<=2)svAendern(p,V.guteNote);else if(gr>=5)svAendern(p,V.schlechteNote);
+      p.played=1;if(tid===S.my)(r.grades=r.grades||{})[id]=gr;});
+    serieBuchen(S.teams[tid],res>0?3:res===0?1:0,E.punkte,r.xi[s]);});
   r.yel.forEach(id=>{const p=PIX.get(id);if(!p)return;p.yc++;if(p.yc>=RE.gelbSperreAb){p.yc=0;p.sus=Math.max(p.sus,1);if(p.team===S.my)news(`${p.n} sieht die ${RE.gelbSperreAb}. Gelbe Karte und ist für ein Spiel gesperrt.`,'bad');}});
   r.off.forEach(id=>{const p=PIX.get(id);if(!p)return;p.sus=riA(RE.rotSperre);if(p.team===S.my)news(`Platzverweis: ${p.n} fehlt ${p.sus} Spiel(e).`,'bad');});
   // Ausfall in Tagen: w Wochen = die nächsten 7·w Tage (der Zähler läuft ab morgen jeden Tag um 1 herunter)

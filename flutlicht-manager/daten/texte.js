@@ -6,4 +6,4 @@ const POKAL_RUNDEN=['1. Runde','2. Runde','Achtelfinale','Viertelfinale','Halbfi
 const AUSRICHTUNG={N:'Normal',O:'Offensiv',D:'Defensiv',K:'Konter'};
 const EINSATZ={F:'Fair',N:'Normal',H:'Hart'};
 const TRAINING_STUFEN=['Locker','Normal','Hart'];
-const TRAINING_TEXT=['Volle Fitness (bis 100 %), langsamere Entwicklung','Ausgewogen (Fitness bis 95 %)','Schnellere Entwicklung, Fitness nur bis 85 %, Verletzungsrisiko'];
+const TRAINING_TEXT=['Wenig Belastung: frischer, Kondition sinkt Richtung 70, Entwicklung langsamer (×0,8)','Ausgewogen: Kondition Richtung 80, normale Entwicklung','Viel Belastung: Kondition Richtung 90, Entwicklung schneller (×1,2), weniger frisch, Verletzungsrisiko'];

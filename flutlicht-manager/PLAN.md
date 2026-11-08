@@ -233,7 +233,7 @@ Für BMH habe ich keine verlässliche Quelle gefunden. Anstoss 2022 nutzt laut e
 
 | Welle | Konzepte | Umsetzungsschritte | Ergebnis |
 |---|---|---|---|
-| 1 Fundament | K01, K02, K03, K04, K33, K35a | ✅ U1 (6.11.): Aufteilung in Dateien, `regeln.js`, Zufall mit Seed, Tageskalender, Regler-Bausteine, Tests. U2: neues Spielermodell mit Startwerten aus den Wikipedia-Kadern. U3: Engine v2 mit Kalibrierung, Torwart-Test bestanden | ein spielbarer Stand mit glaubwürdigen Ergebnissen und dem Kalender-Ablauf |
+| 1 Fundament | K01, K02, K03, K04, K33, K35a | ✅ U1 (6.11.): Aufteilung in Dateien, `regeln.js`, Zufall mit Seed, Tageskalender, Regler-Bausteine, Tests. U2 (8.11., läuft): ✅ U2a Zufallsströme und Simulator, ✅ U2b Frische, Kondition, Form, Spielpraxis, Entwicklung je Spieltag, ○ U2c Persönlichkeit, Merkmale, Positionen, Fuß, Talentsterne. U3: Engine v2 mit Kalibrierung, Torwart-Test bestanden | ein spielbarer Stand mit glaubwürdigen Ergebnissen und dem Kalender-Ablauf |
 | 2 Sport | K05–K07, K09–K11, K12a, K13, K16 | U4: Live-Spiel. U5: Taktik. U6: Training, Sommer und Vorbereitung, Trainerstab mit Automatik. U7: Disziplin, Medizin, Testspiele, Spielplan | Spieltage mit Eingreifen, Training mit Wirkung, Sportgericht |
 | 3 Menschen und Markt | K08, K14, K15, K17–K19, K21, K22, K28, K31, Gerüst von K30, Auslandspool aus K32 | U8: Stimmung und Gespräche. U9: Scouting, Auslandspool und Jugend. U10: Transfers I, Verträge und Berater. U11: Computer-Vereine. U12: Beziehungen, Vorstand und Ereignis-Gerüst | Transfers als Prozess, sinnvolle Computer-Vereine, erste Ereigniskarten |
 | 4 Verein und Welt | K12b, K20, K23–K27, K29, K32 (Rest), K34 | U13 bis U18 nach Bedarf | Saisonvorbereitung, Sponsoren, Marketing, Stadion, Fans, Presse, Abwerben |
