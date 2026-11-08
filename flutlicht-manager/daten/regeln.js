@@ -247,6 +247,12 @@ const REGELN={
     gelbSperreAb:5,rotSperre:[1,3]   // Sperren in Spielen
   },
 
+  // Schwierigkeit (K02 §5.4): ändert nur Bedingungen, Information und Hilfen. Werte und Würfel im Spiel sind auf allen Stufen gleich.
+  // ziel: Saisonziel um so viele Plätze leichter (+) oder strenger (−). sterneGenau: Talentsterne eigener Spieler sofort genau. sterneWochen: Faktor auf die Zeit, bis sie genau sind.
+  schwierigkeit:{standard:'normal',
+    stufen:{leicht:{name:'Leicht',text:'mehr Geld, geduldiger Vorstand, genaue Talentsterne',konto:1.5,kredit:1.5,entlassenUnter:5,schonfrist:10,ziel:1,sterneGenau:true,sterneWochen:1,erinnerungen:true},
+      normal:{name:'Normal',text:'so, wie das Spiel gedacht ist',konto:1,kredit:1,entlassenUnter:12,schonfrist:6,ziel:0,sterneGenau:false,sterneWochen:1,erinnerungen:true},
+      schwer:{name:'Schwer',text:'weniger Geld, ungeduldiger Vorstand, strengeres Ziel, keine Erinnerungen',konto:0.7,kredit:0.6,entlassenUnter:18,schonfrist:4,ziel:-1,sterneGenau:false,sterneWochen:1.5,erinnerungen:false}}},
   vorstand:{
     staerkerAb:5,                    // Gegner gilt als stärker/schwächer ab diesem Unterschied im Ansehen
     sieg:{staerker:4,sonst:2.5},
@@ -255,7 +261,7 @@ const REGELN={
     platzAbSpieltag:5,               // ab diesem Spieltag-Index zählt der Tabellenplatz
     platz:{weitAb:3,weit:-2,drunter:-0.6,drueber:0.6},
     kontoMinus:-2,kontoMinusMeldung:0.3,
-    entlassenUnter:12,schonfristSpieltage:6, // entlassen erst nach mehr als so vielen eigenen Ligaspieltagen
+    entlassenUnter:12,schonfristSpieltage:6, // entlassen erst nach mehr als so vielen eigenen Ligaspieltagen. Die Schwierigkeit ersetzt beide Werte.
     pokalAus:-6,pokalWeiter:1.5,pokalSieg:10,
     saisonErreicht:20,saisonWeitAb:3,saisonWeit:-25,saisonVerfehlt:-8,entlassenSaisonUnter:15,
     neuerJob:55,

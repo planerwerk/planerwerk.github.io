@@ -497,4 +497,5 @@ Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `
 | AI8 | **K08 und K32:** Die 2. Liga startet etwa einen Punkt unter ihrem Gleichgewicht und steigt in den ersten Saisons. Spanne im Test vorläufig 2,0 statt 1,5. | 📌 bei K32 (Weltaufbau) und K08 (Nachwuchs) prüfen |
 | AI9 | **Rohmaterial 5.6 und K04 §10:** Torwart-Test bestanden (Spitzentorwart 72 → 84: 0,17 Gegentore weniger, +3,9 Punkte). Rohmaterial verlangte höchstens +4 bis +6 Punkte und höchstens 0,25 Gegentore weniger. | ✅ |
 | AI10 | **K04 §12 Nr. 6:** Heimvorteil nach den Akzeptanztests wieder ×1,03, also wie ursprünglich vorgeschlagen. AI3 ist damit überholt. | ✅ |
+| AI11 | **K02 §5.4 und K18, K31, K35a:** Schwierigkeit gebaut. Vorhersage-Bänder, Scouting-Spannen und Klugheit der Computer-Vereine greifen erst, wenn K35a, K18 und K31 gebaut sind. Die Werte stehen dann in `REGELN.schwierigkeit.stufen`. | 📌 bei U-Schritten zu K18, K31, K35a ergänzen |
 

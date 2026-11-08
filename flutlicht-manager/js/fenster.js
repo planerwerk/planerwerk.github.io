@@ -83,7 +83,7 @@ function menu(){let size='';try{size=Math.round(JSON.stringify(S).length/1024)+'
   <div class="card"><h3>Spielstand-Code laden</h3><textarea id="imp" placeholder="Code hier einfügen"></textarea><div class="row" style="margin-top:8px"><button onclick="importSave()">Laden</button></div></div>
   <div class="card"><h3>Erinnerungen vor „Tag beenden“</h3><p class="dim">Sie erscheinen nur, wenn wirklich etwas offen ist.</p><div class="form">${Object.entries(RK.erinnerungen).map(([k,l])=>`<label class="pick"><input type="checkbox" ${erinnerungAn(k)?'checked':''} onchange="erinnerungAus('${k}',!this.checked)"> ${l}</label>`).join('')}</div></div>
   ${S.hist.length?`<div class="card"><h3>Deine Karriere</h3>${S.hist.map(h=>`<p>${h.s}/${(h.s+1)%100}: ${esc(h.team)}, ${h.lg}. Liga, Platz ${h.pos} ${h.ok?'✓':''}</p>`).join('')}</div>`:''}
-  <p class="dim">Startwert für den Zufall (Seed): ${S.seed} · Spielstand-Version ${S.v}</p>
+  <p class="dim">Schwierigkeit: ${stufe().name} · Startwert für den Zufall (Seed): ${S.seed} · Spielstand-Version ${S.v}</p>
   <div class="row"><button onclick="confirmNew()">Neues Spiel beginnen</button></div>`);}
 function copyExp(){const ta=document.getElementById('exp');const done=()=>toast('Code kopiert.');try{navigator.clipboard.writeText(ta.value).then(done,()=>{ta.select();toast('Text ist markiert – bitte manuell kopieren.');});}catch(e){ta.select();toast('Text ist markiert – bitte manuell kopieren.');}}
 function importSave(){let d=null;try{d=JSON.parse(document.getElementById('imp').value);}catch(e){}

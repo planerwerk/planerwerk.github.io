@@ -1,6 +1,8 @@
 # K02 – Zufall, Kalibrierung, Schwierigkeit
 
 Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12.
+
+**Umsetzungshinweise (U2a, U3):** Zufallsströme und Node-Simulator sind gebaut (U2a), Kalibrierung und Akzeptanztests in `tests/kalibrierung.js` und `tests/akzeptanz.js` (U3). Schwierigkeit (5.4) gebaut mit Startkonto, Kreditrahmen, Entlassungsgrenze, Schonfrist, Saisonziel, Talentsternen und Erinnerungen; Auswahl im Startbildschirm, Werte in `REGELN.schwierigkeit`, Test `tests/schwierigkeit.js` (auch: gleiche Ergebnisse auf Leicht und Schwer). Noch nicht wirksam, weil die Teile fehlen: Vorhersage-Bänder (K35a), Scouting-Spannen (K18), Klugheit der Computer-Vereine (K31). Die Stufe gilt für den ganzen Spielstand und lässt sich nicht wechseln.
 Hängt ab von: K33 (Daten, Seed), K03, K04 · Wird gebraucht von: allen Konzepten mit Zufall, besonders K04, K09, K10, K19, K30.
 
 ## 1. Ziel und Spielgefühl

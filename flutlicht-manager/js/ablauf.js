@@ -81,4 +81,4 @@ function market(){const M=RM;
 function vorstandLiga(e,m){const t=myT(),B=RV,home=m.h===S.my,gf=home?m.hg:m.ag,ga=home?m.ag:m.hg,o=S.teams[home?m.a:m.h],str=o.rep>t.rep+B.staerkerAb,wk=o.rep<t.rep-B.staerkerAb;
   S.trust+=gf>ga?(str?B.sieg.staerker:B.sieg.sonst):gf===ga?(str?B.remis.staerker:wk?B.remis.schwaecher:B.remis.sonst):(str?B.niederlage.staerker:wk?B.niederlage.schwaecher:B.niederlage.sonst);
   if(e.md>=B.platzAbSpieltag){const pos=rank(t.lg,S.my);S.trust+=pos>S.target+B.platz.weitAb?B.platz.weit:pos>S.target?B.platz.drunter:B.platz.drueber;}}
-function vorstandPruefen(){if(S.trust<RV.entlassenUnter&&meineSpieltage()>RV.schonfristSpieltage&&!S.fired&&S.phase!=='end'){S.fired=1;mkJobs();}}
+function vorstandPruefen(){const St=stufe();if(S.trust<St.entlassenUnter&&meineSpieltage()>St.schonfrist&&!S.fired&&S.phase!=='end'){S.fired=1;mkJobs();}}

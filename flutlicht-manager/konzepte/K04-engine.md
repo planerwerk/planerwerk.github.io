@@ -425,7 +425,7 @@ Dafür neu oder geändert:
 10. **Zentrales Mittelfeld** mit mehr Anteil an Angriff und Abwehr (Kontrolle 0,35, Angriff Mitte 0,30, Abwehr Mitte 0,25). Vorher brachte ein besserer Sechser oder Achter am wenigsten.
 11. **Remis spät:** Faktor 0,78 statt 0,85. Ballbesitz-Exponent 3,5, Angriffsexponent 1,7, Chance je Angriff 0,42.
 
-**Noch offen in U3:** Schwierigkeitsgrade (K02 §5.4).
+**U3 ist abgeschlossen** (Schwierigkeitsgrade siehe K02).
 
 ## Quellen
 

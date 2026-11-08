@@ -141,4 +141,4 @@ function lernplaetzeVergeben(){const nach=new Map();S.pl.forEach(p=>{if(p.team>=
 function wocheVerein(p){if(p.team!==p.vt){p.vt=p.team;p.wiv=0;p.ekw=riA(RP.entdeckenWochen);p.tf=ri(-RP.talentSchaetzung.fehler,RP.talentSchaetzung.fehler);}else p.wiv=(p.wiv||0)+1;
   lernWoche(p);merkmaleWoche(p);}
 // Talentsterne mit Schätzfehler (K03, K02): bis zu einem Stern daneben, nach zwei Jahren im Verein genau
-const sternFehler=p=>p.team===S.my&&p.wiv>=RP.talentSchaetzung.genauNachWochen?0:(p.tf||0);
+const sternFehler=p=>p.team===S.my&&(stufe().sterneGenau||p.wiv>=RP.talentSchaetzung.genauNachWochen*stufe().sterneWochen)?0:(p.tf||0);

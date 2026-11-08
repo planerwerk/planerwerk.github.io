@@ -8,7 +8,11 @@ function stars(p){const n=clamp(sternZahl(p)+sternFehler(p),1,4);return '★★�
 const teamLevel=tid=>{const s=squad(tid).map(p=>p.str).sort((a,b)=>b-a).slice(0,RP.niveauSpieler);return s.length?s.reduce((a,b)=>a+b,0)/s.length:RP.niveauLeer;};
 function askPrice(p,xiSet){const v=value(p);if(p.team<0)return 0;if(p.list)return p.ask||v;const t=S.teams[p.team];const inXI=xiSet?xiSet.has(p.id):bestXI(t.id,t.form).includes(p.id);return Math.round(v*(inXI?RM.forderung.stammspieler:RM.forderung.sonst)/RM.runden)*RM.runden;}
 const extDemand=p=>{const g=RM.gehalt;return Math.round(salaryFor(p.str)*(g.basis+p.seed*g.zufall)*(p.age>=g.altAb?g.altFaktor:1)/1000)*1000;};
-const kreditRahmen=t=>RF.kreditRahmen.basis+t.rep*RF.kreditRahmen.jeAnsehen;
+const kreditRahmen=t=>(RF.kreditRahmen.basis+t.rep*RF.kreditRahmen.jeAnsehen)*(t.id===S.my?stufe().kredit:1);
+// Schwierigkeit (K02 §5.4): Spielstände ohne Angabe gelten als „Normal“
+const stufe=()=>REGELN.schwierigkeit.stufen[S.stufe]||REGELN.schwierigkeit.stufen[REGELN.schwierigkeit.standard];
+function stufeAnwenden(k){S.stufe=REGELN.schwierigkeit.stufen[k]?k:REGELN.schwierigkeit.standard;const St=stufe(),t=myT();t.cash=Math.round(t.cash*St.konto);
+  if(!St.erinnerungen){S.einst=S.einst||{aus:{}};S.einst.aus=S.einst.aus||{};Object.keys(RK.erinnerungen).forEach(e=>S.einst.aus[e]=1);}setTarget();}
 const tvGeld=t=>{const v=RF.tv['liga'+t.lg]||RF.tv.liga3;return v.basis+t.rep*v.jeAnsehen;};
 const richtPreis=t=>RF.zuschauer.refBasis+t.rep*RF.zuschauer.refJeAnsehen;
 // Talent als Band aus der Sterne-Stufe: zeigt dieselbe Auskunft wie die Sterne, nur als Regler
@@ -46,7 +50,9 @@ function initCup(){const P=RF.pokal,dritt=S.teams.filter(t=>t.lg===3&&t.zweite<0
   S.cup={alive:[...S.teams.filter(t=>t.lg<=2).map(t=>t.id),...dritt.map(t=>t.id),...S.am.slice(0,P.amateure).map((a,i)=>1000+i)],hist:[]};}
 function targetFor(r,lg){const z=RV.ziel;return r===1?1:r<=z.spitzeBis?r+z.spitzePlus:Math.min(z.schlechtester[lg],r+z.plus);}
 function targetText(lg,t){if(lg===1)return t===1?'Deutsche Meisterschaft':t<=4?'Platz '+t+' oder besser (Champions League)':t<=7?'Platz '+t+' oder besser (Europapokal)':t<=12?'Platz '+t+' oder besser (Mittelfeld)':'Klassenerhalt (Platz '+t+' oder besser)';return t<=2?'Aufstieg (Platz '+t+' oder besser)':t===3?'Relegationsplatz (Platz 3)':t>=RV.ziel.schlechtester[lg]?'Klassenerhalt (Platz '+t+' oder besser)':'Platz '+t+' oder besser';}
-function setTarget(){LIGEN.forEach(lg=>S.teams.filter(t=>t.lg===lg).sort((a,b)=>b.rep-a.rep).forEach((t,i)=>t.expPos=i+1));const lg=myT().lg,r=targetFor(myT().expPos,lg);S.target=lg>=2?Math.max(RV.ziel.unterhalbMindestens,r):r;}
+function setTarget(){LIGEN.forEach(lg=>S.teams.filter(t=>t.lg===lg).sort((a,b)=>b.rep-a.rep).forEach((t,i)=>t.expPos=i+1));const lg=myT().lg,r=targetFor(myT().expPos,lg);let z=lg>=2?Math.max(RV.ziel.unterhalbMindestens,r):r;
+  // Schwierigkeit: Ziel einen Platz leichter oder strenger, nie schlechter als das schlechteste Ziel der Liga und nie besser als das beste (1. Liga Platz 1, sonst Platz 2)
+  if(stufe().ziel)z=clamp(z+stufe().ziel,lg>=2?Math.min(z,RV.ziel.unterhalbMindestens):1,Math.max(z,RV.ziel.schlechtester[lg]));S.target=z;}
 function sponsOffers(){const t=myT(),SP=RF.sponsor;const b=t.rep*t.rep*(SP['liga'+t.lg]||SP.liga3);const ns=shuffle(SPONSOREN.slice());const r=v=>Math.round(v/1000)*1000;
   S.sponsOffers=SP.angebote.map((a,i)=>({name:ns[i],base:r(b*a.fix),win:a.sieg?r(b*a.sieg):0,yrs:a.jahre,info:a.info}));}
 function sponsorWaehlen(i){S.spons={...S.sponsOffers[i]};S.sponsOffers=null;news(`Sponsorvertrag unterschrieben: ${S.spons.name}.`,'good');}
