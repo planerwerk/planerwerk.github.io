@@ -68,11 +68,18 @@ async function actions(s,tag){const wk=s.wk,yr=s.season,K=yr+':'+wk+':';
 async function advance(tag){await tabClick('Büro');const t0=await pg.evaluate(()=>S.tag);await pg.click('header .go');
  for(let k=0;k<10;k++){await pg.waitForTimeout(30);const ov=(await pg.evaluate(()=>document.getElementById('ov').innerText)).trim();if(!ov)break;
   if(ov.startsWith('Sicher?')){rem++;const sc=await pg.evaluate(()=>__scan());if(sc)note(tag,'Erinnerung: '+sc);await pg.click('#trotzdem');continue;}
-  if(await pg.$('#kick')){const unav=await pg.evaluate(()=>S.pl.filter(p=>!avail(p)).map(p=>p.id));await pg.click('#kick');
-   if(Math.random()<0.08){await pg.waitForTimeout(800);await pg.click('#cf-speed');await pg.waitForTimeout(700);}await pg.click('.ovb button:text-is("Zum Abpfiff")',{timeout:4000});
-   await pg.waitForSelector('#cf-next',{timeout:6000});const sc=await pg.evaluate(()=>__scan());if(sc)note(tag,'Konferenz: '+sc);
+  if(await pg.$('#kick')){const unav=await pg.evaluate(()=>S.pl.filter(p=>!avail(p)).map(p=>p.id)),z=Math.random();
+   // Meist live mit Vorspulen, manchmal mit Eingriffen zur Halbzeit, manchmal „Sofort berechnen“ (alte Konferenz)
+   if(z<0.15){await pg.click('#sofort');await pg.click('.ovb button:text-is("Zum Abpfiff")',{timeout:4000});}
+   else{await pg.click('#kick');
+     if(z<0.4){await pg.click('.ovb button:text-is("Bis zur Halbzeit")',{timeout:4000});await pg.click('#lv-tab-elf');const sc=await pg.evaluate(()=>__scan());if(sc)note(tag,'Halbzeit: '+sc);
+       await pg.click('.lv-ansp button >> nth=1');const raus=await pg.$('.lv-akt button:text-is("raus")');if(raus){await raus.click();const rein=await pg.$('.lv-akt button:text-is("rein"):not([disabled])');if(rein)await rein.click();}
+       await pg.click('#lv-tab-taktik');await pg.click('.ovb button:text-is("Ruhe bewahren!")');}
+     await pg.click('.ovb button:text-is("Zum Abpfiff")',{timeout:4000});}
+   await pg.waitForSelector('#cf-next, #lv-weiter',{timeout:6000});const sc=await pg.evaluate(()=>__scan());if(sc)note(tag,'Spiel: '+sc);
+   if(await pg.$('#lv-weiter'))await pg.click('#lv-weiter');
    const bad=await pg.evaluate(u=>{const s=new Set(u);return LAST.list.flatMap(r=>[...r.xi.flat(),...(r.ein||[]).flat()]).filter(id=>s.has(id)).length;},unav);if(bad)note(tag,bad+' gesperrte/verletzte Spieler eingesetzt');
-   await pg.click('#cf-next');continue;}
+   if(await pg.$('#cf-next'))await pg.click('#cf-next');continue;}
   if(ov.includes('Entlassen!')){actlog.push(tag+' ENTLASSEN – nehme Job');await pg.click('.ovb .opt');continue;}
   if(ov.includes('Saisonbilanz')){const sc=await pg.evaluate(()=>__scan());if(sc)note(tag,'Bilanz: '+sc);
    seasons.push(await pg.evaluate(()=>{const S=FM.S,R=S.res[1].concat(S.res[2]),t1=table(1),t2=table(2),lv=S.teams.filter(t=>t.lg===1).map(t=>teamLevel(t.id)),me=myT();
@@ -91,14 +98,15 @@ while(guard++<330){const s=await st();if(s.season>=2028)break;const tag=`${s.sea
  try{const tabs=s.wk%4===0?TABS:[TABS[s.wk%11],TABS[(s.wk*3+1)%11]];for(const t of tabs){await tabClick(t);const sc=await pg.evaluate(()=>__scan());if(sc)note(tag,`Text in ${t}: ${sc}`);}
   if(s.phase==='play'&&!s.fired)await actions(s,tag);
   (await pg.evaluate(()=>__check())).forEach(m=>note(tag,m));
-  await advance(tag);stops++;}catch(e){note(tag,'TESTFEHLER '+e.message.split('\n')[0]);await pg.evaluate(()=>{if(CONF){confEnd();closeConf();}else closeOv();}).catch(()=>{});}}
+  await advance(tag);stops++;}catch(e){note(tag,'TESTFEHLER '+e.message.split('\n')[0]);await pg.evaluate(()=>{if(LIVE){liveBisEnde();liveWeiter();}else if(CONF){confEnd();closeConf();}else closeOv();}).catch(()=>{});}}
 if(guard>=330)note('Ende','Zwei Saisons nicht in 330 Halten geschafft');
 // Handy-Breite: Überlauf prüfen
 await pg.setViewportSize({width:390,height:844});const ovf=[];
 for(const t of TABS){await tabClick(t);const w=await pg.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth);if(w>1)ovf.push(t+' +'+w+'px');}
 await pg.evaluate(()=>openP(squad(S.my)[0].id));let w=await pg.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth);if(w>1)ovf.push('Spielerfenster +'+w);await closeModal();
 await tabClick('Büro');for(let i=0;i<10&&!(await pg.$('#kick'));i++){await pg.click('header .go');await pg.waitForTimeout(50);if(await pg.$('#trotzdem'))await pg.click('#trotzdem');}
-if(await pg.$('#kick')){await pg.click('#kick');await pg.waitForTimeout(2600);w=await pg.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth);if(w>1)ovf.push('Konferenz +'+w);await pg.screenshot({path:require('os').tmpdir()+'/fm-mobile-conf.png'});}
+if(await pg.$('#kick')){await pg.click('#kick');await pg.waitForTimeout(2600);w=await pg.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth);if(w>1)ovf.push('Live-Spiel +'+w);
+  await pg.click('#lv-tab-elf');w=await pg.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth);if(w>1)ovf.push('Live-Spiel Aufstellung +'+w);await pg.screenshot({path:require('os').tmpdir()+'/fm-mobile-conf.png'});}
 else ovf.push('kein Spiel für die Konferenz-Prüfung gefunden');
 const pw=Object.values(proWoche);
 console.log('DAUER',Math.round((Date.now()-t0)/1000)+'s','Halte',stops,'Erinnerungen',rem,'Halte pro Woche: Schnitt',(pw.reduce((a,b)=>a+b,0)/pw.length).toFixed(2),'höchstens',Math.max(...pw));

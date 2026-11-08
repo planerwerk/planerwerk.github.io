@@ -1,14 +1,22 @@
 // Tagesablauf (K01): Spiele eines Tages, Werte pro Tag und pro Woche, Finanzen, Training, Transfermarkt, Vorstand, Bau.
 
 // Alle Spiele eines Tages in allen Wettbewerben. Ergebnis: {tag, gruppen:[{titel,art,e,list}], list, mine}
-function tagesSpiele(d){return mitStrom(strom('spieltag',S.season,d),()=>tagesSpieleLauf(d));}
-function tagesSpieleLauf(d){const out={tag:d,gruppen:[],list:[],mine:null};S.gespielt=d;
+// Zwei Schritte (K05): vorbereiten lost aus und rechnet alle Spiele, abschließen trägt sie ein (Tabellen, Finanzen, Vorstand).
+// Beim Live-Spiel bleibt dein Spiel dazwischen offen und läuft Minute für Minute in der Ansicht (js/live.js).
+function tagesSpiele(d){const v=tagesSpieleVorbereiten(d,false);return tagesSpieleAbschliessen(v.out);}
+function tagesSpieleVorbereiten(d,live){return mitStrom(strom('spieltag',S.season,d),()=>{const out={tag:d,gruppen:[],list:[],mine:null};let G=null,platz=null;S.gespielt=d;
   if(S.sponsOffers&&meinSpiel(d))sponsorWaehlen(0);
+  const spiel=(h,a,o,meta,g)=>{const i=g.list.length;if(live&&(h===S.my||a===S.my)){G=spielAnlegen(h,a,Object.assign({},o,{auto:[h!==S.my,a!==S.my]}));platz={meta,g,i};g.list.push(null);return;}g.list.push(Object.assign(sim(h,a,o),meta));};
   for(const e of termineAm(d)){
-    if(e.art==='liga'){const list=e.idx.map(i=>{const[h,a]=S.fx[e.lg][e.md][i];const r=sim(h,a);r.lg=e.lg;r.min=S.plan.zeit[e.lg][e.md][i][1];return r;});out.gruppen.push({titel:`${ligaName(e.lg)} · ${e.md+1}. Spieltag`,art:'liga',e,list});}
-    else if(e.art==='pokal'){if(S.cup.hist.length!==e.r)continue;const al=shuffle(S.cup.alive.slice()),fin=e.r===5,list=[];for(let i=0;i<al.length;i+=2){let h=al[i],a=al[i+1];if(h<1000&&a>=1000)[h,a]=[a,h];const r=sim(h,a,{ko:1,neutral:fin});r.cup=1;r.min=e.min;list.push(r);}out.gruppen.push({titel:`DFB-Pokal · ${POKAL_RUNDEN[e.r]}`,art:'pokal',e,list});}
-    else if(e.art==='rel'||e.art==='rel2'){const sp=S[e.art==='rel'?'relSp':'relSp2'];if(!relBereit(e.art)||sp[e.leg])continue;const[h,a]=e.leg===0?relTeams(e.art).reverse():relTeams(e.art);const r=sim(h,a);r.rel=1;r.min=e.min;out.gruppen.push({titel:`Relegation${e.art==='rel2'?' 2./3. Liga':''} · ${e.leg?'Rückspiel':'Hinspiel'}`,art:e.art,e,list:[r]});}
+    if(e.art==='liga'){const g={titel:`${ligaName(e.lg)} · ${e.md+1}. Spieltag`,art:'liga',e,list:[]};e.idx.forEach(i=>{const[h,a]=S.fx[e.lg][e.md][i];spiel(h,a,{},{lg:e.lg,min:S.plan.zeit[e.lg][e.md][i][1]},g);});out.gruppen.push(g);}
+    else if(e.art==='pokal'){if(S.cup.hist.length!==e.r)continue;const al=shuffle(S.cup.alive.slice()),fin=e.r===5,g={titel:`DFB-Pokal · ${POKAL_RUNDEN[e.r]}`,art:'pokal',e,list:[]};for(let i=0;i<al.length;i+=2){let h=al[i],a=al[i+1];if(h<1000&&a>=1000)[h,a]=[a,h];spiel(h,a,{ko:1,neutral:fin},{cup:1,min:e.min},g);}out.gruppen.push(g);}
+    else if(e.art==='rel'||e.art==='rel2'){const sp=S[e.art==='rel'?'relSp':'relSp2'];if(!relBereit(e.art)||sp[e.leg])continue;const[h,a]=e.leg===0?relTeams(e.art).reverse():relTeams(e.art);const g={titel:`Relegation${e.art==='rel2'?' 2./3. Liga':''} · ${e.leg?'Rückspiel':'Hinspiel'}`,art:e.art,e,list:[]};spiel(h,a,{},{rel:1,min:e.min},g);out.gruppen.push(g);}
   }
+  return{out,G,platz};});}
+// Das live gespielte Spiel an seinen Platz eintragen
+function liveEintragen(v){const r=Object.assign(v.G.ergebnis(),v.platz.meta);v.platz.g.list[v.platz.i]=r;return r;}
+function tagesSpieleAbschliessen(out){return mitStrom(strom('spieltagEnde',S.season,out.tag),()=>tagesSpieleAbschliessenLauf(out));}
+function tagesSpieleAbschliessenLauf(out){const d=out.tag;
   out.list=out.gruppen.flatMap(g=>g.list);if(!out.list.length)return out;
   // Sperren zählen die Spiele der eigenen Mannschaft
   const spielten=new Set();out.list.forEach(r=>{spielten.add(r.h);spielten.add(r.a);});
@@ -64,10 +72,10 @@ function training(){const T=RT,d=S.tag,bericht=[];lernplaetzeVergeben();
   if(bericht.length){const auf=bericht.filter(x=>x[2]>x[1]),ab=bericht.filter(x=>x[2]<x[1]),txt=l=>l.map(([p,a,b])=>`${p.n} (${a} → ${b})`).join(', ');
     news(`Wochenbericht des Co-Trainers: ${auf.length?'verbessert '+txt(auf):''}${auf.length&&ab.length?' · ':''}${ab.length?'nachgelassen '+txt(ab):''}.`,auf.length>=ab.length?'good':'');}}
 function market(){const M=RM;
-  S.teams.forEach(t=>{if(t.id===S.my||!aktiv(t))return;const xi=new Set(bestXI(t.id,t.form));const sq=squad(t.id).filter(x=>!x.list&&!xi.has(x.id));if(!sq.length)return;
+  S.teams.forEach(t=>{if(t.id===S.my||!aktiv(t))return;const alle=squad(t.id);if(alle.length<=M.verkaeufer.kaderMin)return;const xi=new Set(bestXI(t.id,t.form));const sq=alle.filter(x=>!x.list&&!xi.has(x.id));if(!sq.length)return;
     if(sq.length>M.listeVoll.kaderAb&&R()<M.listeVoll.chance){const p=pick(sq);p.list=1;p.ask=value(p);}else if(R()<M.listeZufall.chance){const p=pick(sq);p.list=1;p.ask=Math.round(value(p)*M.listeZufall.aufschlag/M.runden)*M.runden;}});
   const n=R()<M.wechsel.eins?1:R()<M.wechsel.zwei?2:0;
-  for(let k=0;k<n;k++){const L=S.pl.filter(p=>p.list&&p.team>=0&&p.team!==S.my);if(!L.length)break;const p=pick(L);
+  for(let k=0;k<n;k++){const L=S.pl.filter(p=>p.list&&p.team>=0&&p.team!==S.my&&squad(p.team).length>M.verkaeufer.kaderMin);if(!L.length)break;const p=pick(L);
     const B=S.teams.filter(t=>t.id!==S.my&&aktiv(t)&&t.id!==p.team&&t.cash>p.ask&&teamLevel(t.id)<p.str+M.kaeufer.niveauPlus&&squad(t.id).length<M.kaeufer.kaderMax);if(!B.length)continue;
     const b=pick(B),from=S.teams[p.team];b.cash-=p.ask;from.cash+=p.ask;news(`Wechsel perfekt: ${p.n} geht für ${fmt(p.ask)} von ${from.name} zu ${b.name}.`,'tr');
     p.team=b.id;p.list=0;p.ct=riA(M.neuerVertrag);p.sal=salaryFor(p.str);}

@@ -23,7 +23,7 @@ function openP(id){const p=PIX.get(id);if(!p)return;const mine=p.team===S.my,t=p
   <div class="facts">${fact('Verein',t?esc(t.name):'vereinslos')}${fact('Alter',p.age)}${jung?fact('Talent',stars(p)):''}${fact('Marktwert',fmt(v))}${fact('Gehalt',fmt(p.sal))}${p.team>=0?fact('Vertrag bis',S.season+p.ct):''}${fact('Selbstvertrauen',svWort(p.sv))}${fact('Ligatore',p.g)}${fact('Einsätze',p.apps)}${p.lastG?fact('Letzte Note',p.lastG.toFixed(1).replace('.',',')):''}${p.inj>0?fact('Verletzt',p.inj+(p.inj===1?' Tag':' Tage')):''}${p.sus>0?fact('Gesperrt',p.sus+(p.sus===1?' Spiel':' Spiele')):''}</div>
   ${werte}<div class="grid">${profil}${act}</div>`);}
 // „Tag beenden“ (K01): erst Erinnerungen, dann dein Spiel (Vorbericht, Anpfiff, Konferenz), dann weiter bis zum nächsten Halt.
-function tagBeenden(ohneErinnerung){if(CONF){confFrame();renderConf();return;}if(BUSY)return;
+function tagBeenden(ohneErinnerung){if(LIVE){liveFrame();liveRender();return;}if(CONF){confFrame();renderConf();return;}if(BUSY)return;
   if(S.phase==='end'){showSummary();return;}if(S.fired){showFired();return;}
   if(!ohneErinnerung){const e=erinnerungen();if(e.length){zeigeErinnerungen(e);return;}}
   if(heuteMeinSpiel()){showPre(meinSpiel(S.tag));return;}
@@ -36,7 +36,7 @@ function erinnerungAus(art,aus){S.einst=S.einst||{aus:{}};S.einst.aus=S.einst.au
 function showPre(e){const t=myT(),f=paarung(e),out=squad(S.my).filter(p=>!avail(p));
   ov(`<h2>${esc(spielName(e))} · ${spielZeit(e)} Uhr</h2>${f?`<div class="board"><div class="t">${esc(tn(f[0]))}</div><div class="score">–:–</div><div class="t">${esc(tn(f[1]))}</div></div>${tauziehenNaechstes()}`:'<p>Der Gegner wird jetzt ausgelost.</p>'}
     <p>Deine Elf: ${t.form}, ${AUSRICHTUNG[t.tac]}, Einsatz ${EINSATZ[t.ein]}.${out.length?` <span class="dim">Fehlen: ${out.map(p=>esc(p.n)).join(', ')} – werden automatisch ersetzt.</span>`:''}</p>
-    <div class="row"><button onclick="closeOv();tab('aufst')">Aufstellung ändern</button><button class="go" id="kick" onclick="kickoff()">Anpfiff</button></div>`);}
+    <div class="row"><button onclick="closeOv();tab('aufst')">Aufstellung ändern</button><button id="sofort" onclick="kickoff()" title="Der Co-Trainer entscheidet im Spiel">Sofort berechnen</button><button class="go" id="kick" onclick="kickoffLive()">Live anpfeifen</button></div>`);}
 function kickoff(){if(BUSY||CONF)return;BUSY=true;let out=null;try{out=tagesSpiele(S.tag);LAST=out;save();}catch(e){console.error(e);toast('Fehler: '+e.message);}finally{BUSY=false;}if(out&&out.list.length)showConf(out);else weiterUI();}
 function showConf(out){const maxM=out.list.some(r=>r.ev.some(e=>e.m>90))?120:90;CONF={out,min:0,speed:1,maxM,done:false};confFrame();renderConf();CONF.timer=setInterval(tickConf,110);}
 function confFrame(){const g=CONF.out.gruppen,mg=g.find(x=>x.list.includes(CONF.out.mine))||g[0];CONF.btn=0;ov(`<div class="row between"><h2 style="margin:0">${esc(mg.titel)}${mg.art==='liga'?' · Konferenz':''}</h2><span class="clock" id="cf-clock"></span></div><div class="conf" id="cf-body"></div><div class="row" id="cf-btns"><button id="cf-speed" onclick="confSpeed()">Schneller</button><button onclick="confEnd()">Zum Abpfiff</button></div>`);}

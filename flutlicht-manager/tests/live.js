@@ -5,7 +5,7 @@ const N=+(process.argv[2]||150),SEED=+(process.argv[3]||5),probleme=[],t0=Date.n
 const pruef=(ok,text,wert)=>{console.log(`${ok?'✓':'✗'} ${text}${wert!=null?': '+wert:''}`);if(!ok)probleme.push(text+(wert!=null?' ('+wert+')':''));};
 const pc=x=>(x*100).toFixed(1)+' %',f2=x=>x.toFixed(2),vz=x=>(x>=0?'+':'')+x.toFixed(2);
 const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=-9;
-const spielAnlegen=W.ev('spielAnlegen');
+const spielAnlegen=W.ev('spielAnlegen');W.__setLive=v=>W.ev('(v=>{LIVE=v;})')(v);
 const kader=id=>S.pl.filter(p=>p.team===id);
 const niveau=id=>{const s=kader(id).map(p=>p.str).sort((a,b)=>b-a).slice(0,14);return s.reduce((a,b)=>a+b,0)/s.length;};
 const L1=S.teams.filter(t=>t.lg===1).map(t=>t.id).sort((a,b)=>niveau(b)-niveau(a));
@@ -56,6 +56,11 @@ const punkte=(G,s)=>{const d=G.sc[s]-G.sc[1-s];return d>0?3:d===0?1:0;};
   while(G.m<60)G.minute();const r2=G.wechseln(0,xs()[2],G.bank[0][1]).ok;while(G.m<70)G.minute();const r3=G.wechseln(0,xs()[3],G.bank[0][1]).ok;
   while(G.m<80)G.minute();const r4=G.wechseln(0,xs()[4],G.bank[0][1]).ok;const r5=G.wechseln(0,xs()[5],G.bank[0][1]);
   pruef(r1&&r2&&r3&&r4&&!r5.ok,'Wechselregeln: zwei in der Halbzeit plus drei Gelegenheiten erlaubt, ein sechster Wechsel nicht',r5.grund);}
+
+// 7. Automatische Halte (K05 §10): im Schnitt 3–6 pro Spiel bei Standardeinstellung (ohne Halbzeit), mit der Halte-Logik der Ansicht (js/live.js)
+{let n=0,h=0;const halte=W.ev('liveHalte');for(let r=0;r<Math.ceil(N/3);r++)for(const g of gegner){S.season=7000+r;S.tag=3;const G=spielAnlegen(X,g,{auto:[true,true]});
+    W.__setLive({G,s:0,evN:0,gewarnt:new Set()});while(!G.ende){G.minute();if(halte())h++;}n++;}
+  pruef(h/n>=3&&h/n<=6,'Automatische Halte: im Schnitt 3–6 pro Spiel',f2(h/n));W.__setLive(null);}
 
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

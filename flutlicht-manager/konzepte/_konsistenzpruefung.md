@@ -509,4 +509,6 @@ Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `
 | AJ2 | **K03 und K05:** Eingewechselte bekommen Spielpraxis nach Minuten. Die 5 Spielpraxis pro Trainingswoche aus U2b (Ersatz, weil die Engine keine Wechsel kannte) bleiben, bis K07 das Training neu regelt. | 📌 bei U6 (K07) prüfen |
 | AJ3 | **K16:** Der Co-Trainer entscheidet beim Sofort-Berechnen nach denselben Regeln wie die Computer-Trainer, noch ohne Qualität. | 📌 bei U6 (K16) |
 | AJ4 | **K15:** Zurufe an Spieler und Halbzeitansprache wirken in vereinfachter Form (K05 §12 Nr. 10). Glaubwürdigkeit und Stimmung fehlen noch. | 📌 bei U8 (K14, K15) |
+| AJ5 | **K19/K31 und Markt:** Computer-Vereine gaben im Sommer Spieler ab, bis der Kader unter 15 fiel (Datenprüfung im UI-Test, FC Augsburg mit 12). Neu: Verkäufer behalten mindestens 20 Spieler (`markt.verkaeufer.kaderMin`). | ✅ vorläufig, K31 regelt Kaderplanung später |
+| AJ6 | **K06 und K05:** Elfmeter-Halt vor der Ausführung und Schützenwahl im Spiel brauchen die Schützenliste aus K06. | 📌 bei U5 |
 

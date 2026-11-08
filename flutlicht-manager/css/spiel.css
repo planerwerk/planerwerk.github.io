@@ -143,3 +143,23 @@ hr{border:0;border-top:1px solid var(--rule);margin:12px 0}
 .pick{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--mist)}
 .pick input{width:auto}
 @media (max-width:560px){.kt{min-height:50px;padding:4px 2px}.wt i,.kt i{font-size:10px}}
+/* Live-Spiel (K05) */
+.lv-druck-bar{height:10px;border-radius:5px;background:var(--blue);overflow:hidden;border:1px solid var(--rule)}
+.lv-druck-bar i{display:block;height:100%;background:var(--amber);transition:width .4s ease}
+.lv-druck-lbl{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:var(--mist);margin-top:3px}
+.lv-druck-lbl span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lv-meldung{min-height:1.4em;margin:0;color:var(--amber);font-weight:600}
+.lv-tabs{flex-wrap:wrap}.lv-tabs button.on{color:var(--chalk);border-color:var(--rule);background:var(--turf2)}
+.lv-elf{display:grid;gap:4px}
+.lv-sp{display:grid;grid-template-columns:38px minmax(0,1fr) 70px 42px auto;gap:8px;align-items:center;padding:4px 6px;border-radius:6px;border:1px solid transparent}
+.lv-sp.sel{border-color:var(--amber)}
+.lv-sp .meter{height:8px;width:auto;margin-top:0}
+.lv-n{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lv-f{font-size:12px;color:var(--mist);font-variant-numeric:tabular-nums;text-align:right}
+.lv-akt{display:flex;gap:4px}.lv-akt button{padding:3px 7px;font-size:12px}
+.lv-st{display:grid;grid-template-columns:60px minmax(0,1fr) 60px;gap:8px;padding:4px 0;border-bottom:1px dashed var(--rule);text-align:center}
+.lv-st span:first-child{text-align:left}.lv-st span:last-child{text-align:right}
+.lv-rot{color:var(--bad);font-size:14px;letter-spacing:2px}
+.lv-hz{border-color:var(--amber)}.lv-ansp button{font-size:13px}
+.lv-n .ic{display:inline-block;vertical-align:middle;margin-left:4px}
+@media (max-width:560px){.lv-sp{grid-template-columns:34px minmax(0,1fr) 40px}.lv-sp .meter{display:none}.lv-akt{grid-column:1/-1;justify-content:flex-end}}

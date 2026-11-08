@@ -176,6 +176,7 @@ const REGELN={
     listeZufall:{chance:0.06,aufschlag:1.1},
     wechsel:{eins:0.5,zwei:0.5},     // Transfers unter Computer-Vereinen pro Woche: 1 mit 50 %, sonst 2 mit 50 %
     kaeufer:{niveauPlus:2,kaderMax:30},
+    verkaeufer:{kaderMin:20},        // Computer-Vereine geben nur ab, solange danach mindestens so viele Spieler bleiben
     neuerVertrag:[2,4],
     forderung:{stammspieler:1.6,sonst:1.25}, // Ablöseforderung = Marktwert × Faktor
     runden:25000,

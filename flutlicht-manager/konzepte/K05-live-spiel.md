@@ -3,7 +3,9 @@
 Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12.
 Hängt ab von: K04 (Engine), K06 (Taktik), K02 (Zufallsströme) · Wird gebraucht von: K14, K15, K16, K29, K35b.
 
-**Umsetzungshinweise (U4a, 8. November 2026):** Die Engine ist ein Zustand, der Minute für Minute läuft (`spielAnlegen` in `js/engine.js`, `sim()` spielt ihn ohne Eingriffe durch). Gebaut sind Bank (9), Wechselregeln, Taktik im Spiel mit Umstellungszeit, Zurufe an Mannschaft und Spieler, Halbzeitansprache und der Computer-Trainer aus 5.5, alle Werte in `REGELN.live`. Getestet mit `tests/live.js` (Abschnitt 10). Die Ansicht folgt in U4b, Konferenz nach Anstoßzeit und Fortsetzen nach Neuladen in U4c. Abweichungen in §12 unter U4a.
+**Umsetzungshinweise (U4a, 8. November 2026):** Die Engine ist ein Zustand, der Minute für Minute läuft (`spielAnlegen` in `js/engine.js`, `sim()` spielt ihn ohne Eingriffe durch). Gebaut sind Bank (9), Wechselregeln, Taktik im Spiel mit Umstellungszeit, Zurufe an Mannschaft und Spieler, Halbzeitansprache und der Computer-Trainer aus 5.5, alle Werte in `REGELN.live`. Getestet mit `tests/live.js` (Abschnitt 10). Abweichungen in §12 unter U4a.
+
+**Umsetzungshinweise (U4b):** Live-Ansicht in `js/live.js`: Anzeigetafel, Druckleiste, Ticker, Aufstellung mit Frische und Wechseln, Taktik und Zurufe, Statistik, Konferenz, Halbzeit mit Ansprache und Einschätzung des Co-Trainers, automatisches Anhalten (abschaltbar, Tempo wählbar, gespeichert in `S.einst.live`). Der Spieltag ist geteilt in `tagesSpieleVorbereiten` und `tagesSpieleAbschliessen` (`js/ablauf.js`), dazwischen läuft dein Spiel. Vor dem Anpfiff: „Live anpfeifen“ oder „Sofort berechnen“. Fortsetzen nach Neuladen und Konferenz nur nach Anstoßzeit folgen in U4c.
 
 ## 1. Ziel und Spielgefühl
 
@@ -210,6 +212,10 @@ live:{
 9. **Verletzte humpeln** bis zum Wechsel weiter (Frische höchstens 30 %). Ohne freien Wechsel spielen sie verletzt zu Ende.
 10. **Zuruf an einen Spieler** (bis K15): Lob +2 % für 10 Minuten und Selbstvertrauen +0,3. Kritik: Kämpfer +3 %, Diva oder nervenschwach −2 % und Selbstvertrauen −0,3, Hitzkopf +1 % und 50 % mehr Fouls, alle anderen +1 % und Selbstvertrauen −0,15.
 11. **Kurzeinsätze unter 20 Minuten** bekommen keine Note und ändern die Form nicht, zählen aber als Einsatz und für die Spielpraxis.
+12. **Vorspulen** („bis zur Halbzeit“, „zum Abpfiff“) übergibt deine Entscheidungen für diese Zeit an den Co-Trainer. Er wechselt dann auch Verletzte und Müde.
+13. **Elfmeter halten erst nach der Ausführung an** (Treffer über „Tor“, Fehlschuss über „Elfmeter“). Den Schützen vorher zu ändern, braucht die Schützenliste aus K06 (U5).
+14. **Gelb-Rot-Gefahr** hält nur bei verwarnten Abwehrspielern, Sechsern, Ungestümen und Hitzköpfen an. Mit jeder Gelben Karte wären es im Schnitt 6 Halte pro Spiel, jetzt etwa 5,5 (Ziel 3–6).
+15. **Halbzeit-Einschätzung des Co-Trainers:** schwächster und stärkster Bereich im Vergleich zum Gegner und wer schon platt ist, immer zutreffend, bis K16 die Genauigkeit an seine Qualität bindet.
 
 **Noch zu recherchieren:** Größe der Ersatzbank in der Bundesliga, zusätzlicher Wechsel in der Verlängerung im DFB-Pokal.
 

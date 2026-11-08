@@ -60,6 +60,10 @@ Bei der Umsetzung (U4a):
 9. **Verletzte humpeln** bis zum Wechsel weiter (Frische höchstens 30 %). Ohne freien Wechsel spielen sie verletzt zu Ende.
 10. **Zuruf an einen Spieler** (bis K15): Lob +2 % für 10 Minuten und Selbstvertrauen +0,3. Kritik: Kämpfer +3 %, Diva oder nervenschwach −2 % und Selbstvertrauen −0,3, Hitzkopf +1 % und 50 % mehr Fouls, alle anderen +1 % und Selbstvertrauen −0,15.
 11. **Kurzeinsätze unter 20 Minuten** bekommen keine Note und ändern die Form nicht, zählen aber als Einsatz und für die Spielpraxis.
+12. **Vorspulen** („bis zur Halbzeit“, „zum Abpfiff“) übergibt deine Entscheidungen für diese Zeit an den Co-Trainer. Er wechselt dann auch Verletzte und Müde.
+13. **Elfmeter halten erst nach der Ausführung an** (Treffer über „Tor“, Fehlschuss über „Elfmeter“). Den Schützen vorher zu ändern, braucht die Schützenliste aus K06 (U5).
+14. **Gelb-Rot-Gefahr** hält nur bei verwarnten Abwehrspielern, Sechsern, Ungestümen und Hitzköpfen an. Mit jeder Gelben Karte wären es im Schnitt 6 Halte pro Spiel, jetzt etwa 5,5 (Ziel 3–6).
+15. **Halbzeit-Einschätzung des Co-Trainers:** schwächster und stärkster Bereich im Vergleich zum Gegner und wer schon platt ist, immer zutreffend, bis K16 die Genauigkeit an seine Qualität bindet.
 
 ## K06 – Taktik
 Datei: `konzepte/K06-taktik.md`
