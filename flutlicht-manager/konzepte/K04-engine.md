@@ -387,7 +387,7 @@ engine:{
 3. **Videobeweis** nur als seltenes Ereignis „Tor aberkannt“ (etwa 3 % der Tore, Zahl prüfen). Keine eigene Mechanik.
 4. **Wetter und Rasen** später mit K26 (Rasenqualität, Platzwart). Bis dahin kein Wetter.
 5. **Abseits** zählt nur als Statistik und als „Tor aberkannt“, ohne Taktik (Abseitsfalle vielleicht in K06).
-6. **Heimvorteil** niedriger als heute (×1,03 statt ×1,04/1,03), weil er in den letzten Jahren gesunken ist. Kalibrierung in K02 entscheidet den Endwert. *Nach Kalibrierung (U3): ×1,04, siehe §13.*
+6. **Heimvorteil** niedriger als heute (×1,03 statt ×1,04/1,03), weil er in den letzten Jahren gesunken ist. Kalibrierung in K02 entscheidet den Endwert. *Nach Kalibrierung und Akzeptanztests (U3): ×1,03, siehe §13.*
 
 **Noch zu recherchieren:** Fouls und Torschüsse pro Spiel, Endwerte für den Torschnitt der 2. und 3. Liga.
 
@@ -400,14 +400,32 @@ engine:{
 **Abweichungen vom Entwurf:**
 1. **Remis spät:** Ohne Zusatz kamen nur 21 % Remis heraus, obwohl die Tore stimmten. Neu: Steht es nach der 75. Minute unentschieden, greifen beide Teams seltener an (×0,85, `verlauf.gleich`). Damit 23–24 %.
 2. **Verwarnte Spieler** foulen seltener (×0,35) und sehen seltener eine Karte (×0,5), Hitzköpfe ausgenommen. Sonst gab es zu viele Gelb-Rote Karten (0,55 Platzverweise pro Spiel).
-3. **Heimvorteil** ×1,04, nicht ×1,03 (§12 Nr. 6). Mit ×1,03 lagen gleich starke Teams zu Hause bei 38 %.
-4. **Amateurklubs im Pokal** mit Stärke 45–55 statt 56–65 (entspricht 4. bis 6. Liga). Sie spielen vereinfacht: nur Angriffe durch die Mitte, keine Standards.
+3. **Heimvorteil** zuerst ×1,04, nach den Akzeptanztests wieder ×1,03 wie in §12 Nr. 6 vorgeschlagen (der Abwehrdruck verstärkt den Heimvorteil, siehe unten).
+4. **Amateurklubs im Pokal** mit Stärke 47–57 statt 56–65 (entspricht 4. bis 6. Liga). Sie spielen vereinfacht: nur Angriffe durch die Mitte, keine Standards.
 5. **Ballbesitz** mit Exponent 3 auf den Kontrollwert, sonst lagen alle Teams bei 46–55 %.
 6. **Ausreißer:** In einer von drei Welten gewannen die drei stärksten Kader nur 59 % gegen die drei schwächsten (Ziel 65–75 %). Das liegt an der Welt (kleiner Abstand der Kader), nicht an der Engine. Beobachten, wenn K32 die Welt erzeugt.
 
 **Nachtrag Merkmale:** „zweikampfstark“ wirkt jetzt in der Abwehr (×1,03 auf den Abwehrbeitrag). Die Szenen für das Lernen (`r.sz`) enthalten zusätzlich Paraden aus kurzer Distanz, Flanken des Torwarts, verlorene Kopfballduelle, Dribblings und Karten. Die Wirkung von Kämpfer, Führungsspieler, nervenschwach und Trainingsweltmeister steht in `REGELN.engine.eigenschaften`. Weil Spieler seit U3 mehr Stärken haben (K03 §12), ist nachkalibriert: Chance je Angriff 0,41, Ballbesitz-Exponent 3,5. Danach 3,0–3,1 Tore in der 1. Liga.
 
-**Noch offen in U3:** Akzeptanztests (Torwart, Sensitivität, ein Star allein, Positions-Exploit) in `tests/akzeptanz.js`, Schwierigkeitsgrade (K02 §5.4).
+**Akzeptanztests** (`tests/akzeptanz.js`, 200 Durchgänge, beide Varianten mit denselben Zufallsströmen), alle bestanden:
+
+| Prüfung | Ziel | Ergebnis |
+|---|---|---|
+| Torwart-Test: Mittelfeldteam der 2. Liga bekommt einen Spitzentorwart der 1. Liga (72 → 84) | 0,08–0,25 Gegentore weniger, +2 bis +6 Punkte | 0,17 weniger, +3,9 Punkte |
+| Ein Spieler +5 (Mittel aus den beiden Innenverteidigern, zentralen Mittelfeldspielern, Mittelstürmern) | 1–3 Punkte, kein Bereich mehr als das Doppelte | Abwehr +1,2–1,4, Mittelfeld +1,7–1,8, Angriff +1,2–1,8 |
+| Ganze Elf +2, +4, +6 | jeder Schritt bringt etwas, keine Schwelle | je etwa +5,5 bis +6,9 |
+| Ein 95er in einem 65er-Team | höchstens +6 Punkte | +4,9 bis +5,9 |
+| Fünf Stürmer statt ausgewogener Elf | weniger Punkte | 26 statt 52 |
+| Tempo | unter 2 s je Saison im Browser | 1,8 ms je Spiel in Node |
+
+Dafür neu oder geändert:
+7. **Abwehrdruck auf den Abschluss:** Die Torquote sinkt, je stärker die Abwehr im Verhältnis zum Angriff ist (Mitte gegen Mitte, bei Kopfbällen Außen gegen Flügel), 1,4 % je Punkt, gedeckelt auf ±20 % (`REGELN.engine.abwehr`). Vorher brachte ein Stürmer über Teamwert und Abschluss doppelt, ein Verteidiger nur einfach.
+8. **Ein Einzelner kann nicht alles allein:** Liegt ein Spieler mehr als 11 Punkte über dem Schnitt der anderen in einem Bereich, zählt der Rest nur zu 5 % (`team.ueberragend`).
+9. **Schützenwahl flacher** (Exponent 1,5 statt 3) und Schützenfaktor 0,8 % je Punkt statt 1,4 %. Sonst übernahm ein Star fast alle Abschlüsse.
+10. **Zentrales Mittelfeld** mit mehr Anteil an Angriff und Abwehr (Kontrolle 0,35, Angriff Mitte 0,30, Abwehr Mitte 0,25). Vorher brachte ein besserer Sechser oder Achter am wenigsten.
+11. **Remis spät:** Faktor 0,78 statt 0,85. Ballbesitz-Exponent 3,5, Angriffsexponent 1,7, Chance je Angriff 0,42.
+
+**Noch offen in U3:** Schwierigkeitsgrade (K02 §5.4).
 
 ## Quellen
 

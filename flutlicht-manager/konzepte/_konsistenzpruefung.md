@@ -495,4 +495,6 @@ Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `
 | AI6 | **K03 und K07:** Die fünf Lernplätze aus K07 §12 Nr. 4 sind gebaut, für alle Vereine. K16 ändert später die Zahl über den Co-Trainer (`lernPlaetze`). | ✅ |
 | AI7 | **K03 §5.6:** Ohne Grenze wuchsen die Merkmale ungebremst. Neu: Platz für Stärken nach Klasse, Startverteilung im Gleichgewicht, Lerntempo halbiert. Test „Merkmale stabil“ in `tests/spielermodell.js`. | ✅ vorläufig, K03 §12 |
 | AI8 | **K08 und K32:** Die 2. Liga startet etwa einen Punkt unter ihrem Gleichgewicht und steigt in den ersten Saisons. Spanne im Test vorläufig 2,0 statt 1,5. | 📌 bei K32 (Weltaufbau) und K08 (Nachwuchs) prüfen |
+| AI9 | **Rohmaterial 5.6 und K04 §10:** Torwart-Test bestanden (Spitzentorwart 72 → 84: 0,17 Gegentore weniger, +3,9 Punkte). Rohmaterial verlangte höchstens +4 bis +6 Punkte und höchstens 0,25 Gegentore weniger. | ✅ |
+| AI10 | **K04 §12 Nr. 6:** Heimvorteil nach den Akzeptanztests wieder ×1,03, also wie ursprünglich vorgeschlagen. AI3 ist damit überholt. | ✅ |
 

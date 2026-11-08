@@ -36,7 +36,9 @@ function teamWerte(sd,fr,off,lage){const T=RE.team,k=RE.staerke,acc={K:[],AM:[],
     acc.K.push([a[0],w]);acc.AM.push([a[1],w]);acc.DM.push([a[3],wd]);
     if(s==='L'){acc.AL.push([a[2],w]);acc.DL.push([a[4],wd]);}else if(s==='R'){acc.AR.push([a[2],w]);acc.DR.push([a[4],wd]);}
     else{acc.AL.push([a[2]/2,w]);acc.AR.push([a[2]/2,w]);acc.DL.push([a[4]/2,wd]);acc.DR.push([a[4]/2,wd]);}});
-  const wert=l=>{const sa=l.reduce((s,x)=>s+x[0],0);if(sa<=0)return k.leererPlatz;const m=l.reduce((s,x)=>s+x[0]*x[1],0)/sa,st=l.filter(x=>x[0]>=T.mindestAnteil).map(x=>x[1]);
+  // Ein Einzelner kann nicht alles allein (K04 §10, „ein Star allein“): Was weit über dem Schnitt der anderen im Bereich liegt, zählt nur zum Teil.
+  const daempfen=l=>{const sa=l.reduce((s,x)=>s+x[0],0),sw=l.reduce((s,x)=>s+x[0]*x[1],0);return l.map(([a,w])=>{if(sa-a<=0)return[a,w];const g=(sw-a*w)/(sa-a)+T.ueberragend.ab;return[a,w>g?g+(w-g)*T.ueberragend.anteil:w];});};
+  const wert=l0=>{const l=daempfen(l0),sa=l.reduce((s,x)=>s+x[0],0);if(sa<=0)return k.leererPlatz;const m=l.reduce((s,x)=>s+x[0]*x[1],0)/sa,st=l.filter(x=>x[0]>=T.mindestAnteil).map(x=>x[1]);
     const v=st.length?(1-T.schwaechstes)*m+T.schwaechstes*Math.min(...st):m;return v*Math.min(T.anzahlMax,T.anzahl[0]+T.anzahl[1]*sa);};
   const w={TW:tw};for(const key in acc)w[key]=wert(acc[key]);
   const ta=RE.ausrichtung[sd.tac],ei=RE.einsatz[sd.ein],hm=sd.heim?RE.heim.alle:1;
@@ -57,6 +59,9 @@ const abnehmend=n=>RE.mk.abnehmend.slice(0,n).reduce((a,b)=>a+b,0);
 const routeChance=(a,d)=>{const A=RE.angriff;return clamp(A.chance*Math.pow(a/d,A.exponent),A.min,A.max);};
 const schuetzenFaktor=w=>{const S2=RE.schuetze;return clamp(1+S2.jePunkt*(w-S2.mitte),S2.min,S2.max);};
 const torwartFaktor=w=>{const T=RE.torwart;return clamp(1-T.jePunkt*(w-T.mitte),T.min,T.max);};
+// Druck der Abwehr auf den Abschluss, gemessen am Angriff: Kopfbälle Außenverteidigung gegen Flügel, alles andere Mitte gegen Mitte (K04 §10: Abwehr soll so viel bringen wie Angriff).
+// Relativ statt gegen einen festen Wert, damit sich das Torniveau der Ligen nicht verschiebt.
+const abwehrFaktor=(op,typ,me)=>{const A=RE.abwehr,k=typ==='kopf'||typ==='freistossFlanke',w=k?(op.DL+op.DR)/2:op.DM,a=k?(me.AL+me.AR)/2:me.AM;return clamp(1-A.jePunkt*(w-a-A.versatz),A.min,A.max);};
 // Anteile der Angriffswege: dort, wo der Gegner schwächer ist, öfter
 function wege(me,op){const wM=0.55*Math.pow(me.AM/op.DM,2),wL=0.225*Math.pow(me.AL/op.DR,2),wR=0.225*Math.pow(me.AR/op.DL,2),s=wM+wL+wR;return{M:wM/s,L:wL/s,R:wR/s};}
 const umsatz=mix=>Object.entries(mix).reduce((a,[k,v])=>a+v*RE.tor[k],0);
@@ -70,7 +75,7 @@ function erwarteteTore(H,A){const Rr=RE.angriff,M=RE.mix,F=RE.fouls,T=RE.tor,eh=
   const h=teil(H,A,pH),a=teil(A,H,1-pH),k=Rr.konter*umsatz(M.konter);
   const lam=(x,y,me,op)=>{const ecken=x.aussenFehl*RE.ecken.aussenAbgewehrt+x.ch*(RE.aufsTor*RE.ecken.parade+RE.geblockt*RE.ecken.geblockt);
     const std=ecken*T.ecke+90*F.proMinute*(F.ort.flanke*T.freistossFlanke+F.ort.direkt*T.freistoss+F.ort.elfmeter*T.elfmeter);
-    return(x.offen+y.fehl*k+std)*schuetzenFaktor(me.w.AM)*torwartFaktor(op.w.TW);};
+    return(x.offen+y.fehl*k+std)*schuetzenFaktor(me.w.AM)*torwartFaktor(op.w.TW)*abwehrFaktor(op.w,'gross',me.w);};
   return[lam(h,a,H,A),lam(a,h,A,H)];}
 
 // ---------- Das Spiel ----------
@@ -94,7 +99,7 @@ function simLauf(hid,aid,o){const H=side(hid,true,o.neutral),A=side(aid,false,o.
   const torwart=s=>{const k=Ss[1-s].xp.find(x=>x.pos==='TW'&&!off.has(x.p.id));return k?k.p:null;};
   // Abschluss: Tor, Parade, vorbei oder geblockt. Ergebnis 'tor', 'parade', 'vorbei'
   const abschluss=(m,s,typ,schuetze,basisArt,extra=1)=>{if(!schuetze)return'vorbei';const Mk=RE.mk,kp=torwart(s),opW=W[1-s];st.schuesse[s]++;if(typ==='gross')st.gross[s]++;
-    let p=RE.tor[typ]*extra*schuetzenFaktor(schuetze.str*zustandMit(schuetze,fr[schuetze.id]==null?schuetze.fit:fr[schuetze.id]))*torwartFaktor(opW.TW)*(1+0.01*(schuetze.sv||0));
+    let p=RE.tor[typ]*extra*schuetzenFaktor(schuetze.str*zustandMit(schuetze,fr[schuetze.id]==null?schuetze.fit:fr[schuetze.id]))*torwartFaktor(opW.TW)*(basisArt==='patzer'?1:abwehrFaktor(opW,typ,W[s]))*(1+0.01*(schuetze.sv||0));
     if(typ==='gross'||typ==='halb'){if(hatMk(schuetze,'torjaeger'))p*=Mk.torjaeger.tor;if(hatMk(schuetze,'abschlussschwach'))p*=Mk.abschlussschwach;if(kp&&hatMk(kp,'reflexe'))p*=Mk.reflexe;
       if(typ==='gross'){const n=mkZahl(imSpiel(1-s),'stellungssicher');if(n)p*=Math.pow(Mk.stellungssicher.gross,abnehmend(n));}}
     if(typ==='kopf'||typ==='ecke'||typ==='freistossFlanke'){if(hatMk(schuetze,'kopfballstark'))p*=Mk.kopfballstark.tor;if(hatMk(schuetze,'kopfballschwach'))p*=Mk.kopfballschwach;
