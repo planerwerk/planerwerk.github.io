@@ -9,12 +9,13 @@ Teile: **Auslandspool** in Welle 3 (vorgezogen, PLAN §2), der Rest in Welle 4. 
 - **Eine Welt, die über viele Saisons lebt:** Stars werden älter und hören auf, neue Talente kommen, Spieler gehen ins Ausland und kommen zurück.
 - **Im Gleichgewicht:** Die Ligen werden über die Jahre weder immer stärker noch immer schwächer (K03 §10).
 - **Ausland ohne Riesenaufwand:** Spieler aus dem Ausland sind kaufbar und unsicher (PLAN §2), aber wir simulieren keine fremden Ligen (Konsistenzprüfung C4).
+- **Echte Vereinsnamen, erzeugte Spieler** (entschieden 8.11.): Gepflegt werden nur die Namen der Auslandsvereine. Kader, Stärken und Spieler erzeugt das Spiel.
 
 ## 2. Vorbilder und Abgrenzung
 
 - **Football Manager:** komplette Datenbank mit vielen Ligen. Zu viel für uns.
 - **Anstoss, CM 01/02:** Fans pflegen Datenbanken bis heute (Recherche 4c, 4d). Bei uns: einfache Dateien (K33).
-- **Bewusst anders:** Das Ausland ist ein **Pool von Spielern** in Vereinsgruppen je Land, ohne Spielplan.
+- **Bewusst anders:** Das Ausland ist ein **Pool von Spielern** bei echten Auslandsvereinen, aber ohne Spielplan und ohne echte Kader.
 
 ## 3. Begriffe und Daten
 
@@ -23,13 +24,16 @@ Teile: **Auslandspool** in Welle 3 (vorgezogen, PLAN §2), der Rest in Welle 4. 
 | Begriff | Bedeutung |
 |---|---|
 | Land | etwa 12 Länder: England, Spanien, Italien, Frankreich, Niederlande, Portugal, Belgien, Österreich, Schweiz, Türkei, Skandinavien, Osteuropa |
-| **Vereinsgruppe** | je Land 2–3 Stufen, zum Beispiel „England – Spitze“, „England – Mitte“, „England – unten“, mit Ansehen und Finanzkraft |
-| Poolspieler | Spieler mit allen Werten aus K03, Land, Vereinsgruppe, Vertrag, aber ohne Spiele |
-| Größe | 600–1000 Spieler zu Beginn, über die Saisons stabil |
+| **Auslandsverein** | echter Name, Land, Stufe (Spitze, Mitte, unten), geschätztes Ansehen und Finanzkraft. Nur Name und Land werden gepflegt, der Rest ist eine grobe Schätzung in derselben Datei |
+| Poolspieler | erzeugter Spieler mit allen Werten aus K03, Auslandsverein, Vertrag, aber ohne Spiele |
+| Kern | je Auslandsverein 6–10 erzeugte Spieler, die für Transfers zählen. Der übrige Kader ist nur eine Teamstärke |
+| Größe | etwa 12 Länder × 12–20 Vereine, also rund 1.500–2.500 Poolspieler |
 
 - Poolspieler entwickeln sich nach K03 mit angenommener Spielpraxis nach ihrer Rolle in der Gruppe. Form wandert zufällig um 10.
-- **Vereinsgruppen kaufen und verkaufen** wie Computer-Vereine (K31), vereinfacht: Bedarf nach Abgängen, Budget nach Finanzkraft. Reiche Gruppen kaufen auch Stars aus der Bundesliga.
-- Gespeichert in `S.pl` mit `team` gleich einer Gruppen-Kennung, die Gruppen in `daten/ausland.js` (neu).
+- **Auslandsvereine kaufen und verkaufen** wie Computer-Vereine (K31), vereinfacht: Bedarf nach Abgängen aus dem Kern, Budget nach Finanzkraft. Reiche Vereine kaufen auch Stars aus der Bundesliga.
+- Gespeichert in `S.pl` mit `team` gleich der Kennung des Auslandsvereins, die Vereine in `daten/ausland.js` (neu): `[Name, Land, Stufe, Ansehen, Finanzkraft]`.
+- **Speicher:** etwa 2.000 zusätzliche Spieler. K33 prüft, ob der Spielstand im Browser-Speicher bleibt (Ziel unter 3 MB). Sonst wird der Kern auf 6 verkleinert.
+- **Europapokal** bleibt eine spätere Erweiterung (PLAN §2), wird mit den echten Auslandsvereinen aber möglich: Ihre Teamstärke reicht für simulierte Spiele.
 
 ### 3.2 Nationen
 
@@ -147,7 +151,7 @@ welt:{
 
 **Vorläufig entschieden** (von mir, ohne Rücksprache):
 
-1. **Ausland als Vereinsgruppen ohne echte Vereinsnamen** („England – Spitze“). Echte Auslandsvereine wären stimmungsvoller, kosten aber viel Datenpflege. Kann später kommen. **Das solltest du entscheiden.**
+1. ~~Vereinsgruppen~~ **Entschieden am 8.11.:** echte Auslandsvereinsnamen, erzeugte Spieler, nur die Namen werden gepflegt.
 2. **Keine automatische Nachregelung** der Weltstärke im Spiel. Das Gleichgewicht wird über Tests kalibriert (K02: kein Gummiband).
 3. **Zwölf Länder** im Pool, Nationen-Tabelle für alle Länder der Welt (für Nationalitäten der Spieler).
 

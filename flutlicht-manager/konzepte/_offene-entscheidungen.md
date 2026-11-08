@@ -9,7 +9,7 @@ Am 7.11. habe ich viele Konzepte ohne Rücksprache geschrieben. Wo eine Entschei
 **Am wichtigsten, weil sie deine eigenen Regeln oder viel Datenarbeit berühren:**
 
 1. **K12a, Frage 1:** Im Urlaub ohne 7-Tage-Grenze springen (Ausnahme von deiner Regel in PLAN §2).
-2. **K32, Frage 1:** Ausland als Vereinsgruppen („England – Spitze“) statt echter Auslandsvereine.
+2. ~~K32, Frage 1~~ **entschieden 8.11.:** echte Auslandsvereinsnamen, Spieler erzeugt.
 3. **K02, Frage 1:** Zufall getrennt nach Spiel, Tag und Bereich, damit Neuladen kein neues Glück bringt.
 4. **K06, Frage 1:** Seiten links und rechts in der Engine getrennt.
 5. **K31, Frage 4:** Schwelle „lange schwach“ für deine Verkaufsregel: Notenschnitt 4,5 über die letzten 10 Einsätze.
