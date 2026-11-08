@@ -95,7 +95,7 @@ Spalte „Welle“: wann das Konzept spätestens fertig sein muss. Umfang des Ko
 | K24 | Sponsoren (**Entwurf**: `konzepte/K24-sponsoren.md`) | Trikot, Ausrüster, Bande, Stadionname: Angebote, Verhandlung, Prämien, Laufzeiten, Sponsor-Ereignisse | M | 4 |
 | K25 | Marketing und Merchandising | Kampagnen (Dauerkarten, Trikot, Fanaktionen), Kosten und Wirkung, Fanshop, Rückwirkung auf Fans und Einnahmen | M | 4 |
 | K26 | Stadion und Infrastruktur | Ausbau mit Planung, Genehmigung, Bauzeit und Bauverzögerung; Trainingsgelände, Nachwuchsleistungszentrum, Rasen, Flutlicht, Logen | M | 4 |
-| K27 | Fans und Zuschauer | Nachfrage, Ticketpreise, Dauerkarten, Fanstimmung, Fangruppen, Choreografien, Pyrotechnik, Proteste | M | 4 |
+| K27 | Fans und Zuschauer (**Entwurf**: `konzepte/K27-fans.md`) | Nachfrage, Ticketpreise, Dauerkarten, Fanstimmung, Fangruppen, Choreografien, Pyrotechnik, Proteste | M | 4 |
 | K28 | Vorstand, Ziele, Karriere (**Entwurf**: `konzepte/K28-vorstand.md`) | Saisonziel verhandeln, Vertrauen, Entlassung, Jobangebote, eigener Ruf als Trainer | S | 3 |
 
 ### F – Welt
