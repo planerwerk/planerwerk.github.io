@@ -24,8 +24,10 @@ function neueWelt(){
 // Spielt N Saisons mit einem Verein, der alles automatisch macht (Aufstellung, Sponsor, Sommerpause, Jobwechsel).
 // beiSaisonende(S,F) wird am Ende jeder Saison aufgerufen, solange Tabellen und Ergebnisse noch vollständig sind.
 // beiSaisonstart(S,F) direkt nach dem Welt-Aufbau und nach jedem Saisonwechsel (1. Juli).
-function saisons({n=1,seed=1,verein=6,beiSaisonende=null,beiSaisonstart=null}={}){
+// beiSpielen(liste,S) bekommt nach jedem Spieltag alle Ergebnisse mit Ereignissen und Statistik.
+function saisons({n=1,seed=1,verein=6,beiSaisonende=null,beiSaisonstart=null,beiSpielen=null}={}){
   const {W,F}=neueWelt();
+  if(beiSpielen){const orig=F.tagesSpiele;F.tagesSpiele=function(d){const o=orig(d);if(o&&o.list.length)beiSpielen(o.list,W.S,o);return o;};}
   F.buildWorld(seed);let S=W.S;S.my=verein;S.mgr='Simulator';F.setTarget();F.sponsOffers();S.lineup=F.bestXI(verein,W.ev('myT()').form);
   const job=()=>{const S=W.S;if(!S.fired)return;if(!S.jobs||!S.jobs.length)F.mkJobs();const id=S.jobs[0];
     S.my=id;S.fired=0;S.trust=W.ev('RV').neuerJob;S.offers=[];S.constr=null;S.loan=0;S.fin={};S.att=[0,0];F.setTarget();S.spons=null;F.sponsOffers();S.lineup=F.bestXI(id,W.ev('myT()').form);};

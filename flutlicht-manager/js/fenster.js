@@ -44,8 +44,8 @@ function confEnd(){if(!CONF)return;CONF.min=CONF.maxM;tickConf();}
 function tickConf(){if(!CONF)return;CONF.min=Math.min(CONF.maxM,CONF.min+CONF.speed);if(CONF.min>=CONF.maxM&&!CONF.done){CONF.done=true;clearInterval(CONF.timer);}renderConf();}
 function scoreAt(r,mn){const s=[0,0];r.ev.forEach(e=>{if(e.t==='G'&&e.m<=mn)s[e.s]++;});return s;}
 function evText(e,r){const tm=esc(tn(e.s?r.a:r.h)),k=e.m*7+e.s*3;
-  if(e.t==='G')return`<b>${esc(TICKER_TOR[k%TICKER_TOR.length].replace('{n}',e.n).replace('{sc}',e.sc.join(':')))}</b> <span class="dim">${tm}</span>`;
-  if(e.t==='C')return esc(TICKER_CHANCE[k%TICKER_CHANCE.length].replace('{n}',e.n).replace('{gk}',e.gk));
+  if(e.t==='G'){const L=(e.art&&TICKER_ARTEN[e.art])||TICKER_TOR;return`<b>${esc(L[k%L.length].replace('{n}',e.n).replace('{sc}',e.sc.join(':')))}</b> <span class="dim">${tm}</span>`;}
+  if(e.t==='C')return esc(e.x||TICKER_CHANCE[k%TICKER_CHANCE.length].replace('{n}',e.n).replace('{gk}',e.gk));
   if(e.t==='Y')return`Gelbe Karte für ${esc(e.n)} <span class="dim">${tm}</span>`;
   if(e.t==='R')return`<b>${e.gy?'Gelb-Rot':'Rote Karte'}</b> für ${esc(e.n)} <span class="dim">${tm}</span>`;
   if(e.t==='I')return`${esc(e.n)} verletzt sich und muss raus. <span class="dim">${tm}</span>`;

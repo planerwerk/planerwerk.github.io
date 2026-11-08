@@ -52,7 +52,7 @@ const REGELN={
     jungeEchte:{bisAlter:0,talent:[0,0]}, // ersetzt durch spieler.talent (gilt jetzt für echte und erfundene Spieler)
     nachwuchs:{wennUnter:22,anzahl:2,positionen:['AB','MF','ST'],alter:[17,19],abschlag:15,streuung:[-3,3],talent:[-4,8]},
     vereinslose:{anzahl:45,positionen:['TW','AB','AB','MF','MF','ST','ST'],alter:[21,33],staerke:[56,72]},
-    amateurStaerke:[56,65]           // Stärke der Amateurklubs im Pokal, jede Saison neu
+    amateurStaerke:[45,55]           // Stärke der Amateurklubs im Pokal (4. bis 6. Liga), jede Saison neu
   },
 
   spieler:{
@@ -182,24 +182,53 @@ const REGELN={
     verletzung:{stufe:2,chance:0.004,wochen:[1,3]} // nur eigener Verein, nur bei hartem Training
   },
 
+  // Match-Engine v2 (K04): Szenen-Modell pro Minute. Grundordnungen auf den 14 Positionen (K06), Seiten links und rechts getrennt.
   engine:{
-    formationen:{'4-4-2':[4,4,2],'4-3-3':[4,3,3],'4-2-3-1':[4,5,1],'3-5-2':[3,5,2],'5-3-2':[5,3,2],'3-4-3':[3,4,3]},
-    staerke:{fitBasis:0.72,fitAnteil:0.28, // Wirkung = Stärke × Zustand (Frische, Form, Spielpraxis, K03 §5.8) × Positionsfaktor
-      fremdTorwart:0.45,fremdPosition:0.82,leererPlatz:25},
-    reihen:{abwehr:[0.85,0.05],mittelfeld:[0.85,0.04],angriff:[0.85,0.08]}, // Faktor = a + b × Spieler in der Reihe
-    angriff:{sturm:0.55,mittelfeld:0.33,abwehr:0.12},
-    abwehr:{abwehr:0.45,mittelfeld:0.25,torwart:0.30},
+    formationen:{ // Plätze von hinten nach vorn
+      '4-4-2':['TW','LV','IV','IV','RV','LM','ZM','ZM','RM','MS','MS'],'4-4-2 Raute':['TW','LV','IV','IV','RV','DM','ZM','ZM','OM','MS','MS'],
+      '4-2-3-1':['TW','LV','IV','IV','RV','DM','DM','LA','OM','RA','MS'],'4-3-3':['TW','LV','IV','IV','RV','DM','ZM','ZM','LA','MS','RA'],
+      '4-1-4-1':['TW','LV','IV','IV','RV','DM','LM','ZM','ZM','RM','MS'],'4-2-2-2':['TW','LV','IV','IV','RV','DM','DM','OM','OM','MS','MS'],
+      '3-5-2':['TW','IV','IV','IV','LS','DM','ZM','ZM','RS','MS','MS'],'3-4-3':['TW','IV','IV','IV','LS','ZM','ZM','RS','LA','MS','RA'],
+      '3-4-2-1':['TW','IV','IV','IV','LS','ZM','ZM','RS','OM','OM','MS'],'5-3-2':['TW','LV','IV','IV','IV','RV','DM','ZM','ZM','MS','MS']},
+    // Anteile je Position an [Kontrolle, Angriff Mitte, Angriff außen, Abwehr Mitte, Abwehr außen] (K04 §3.2). Rechts wie links, Schiene = Mittel aus LV und LM.
+    anteile:{TW:[0,0,0,0,0],IV:[0.10,0,0,0.80,0.10],LV:[0.15,0,0.25,0.10,0.50],DM:[0.40,0.05,0,0.45,0.10],ZM:[0.50,0.20,0.05,0.20,0.05],
+      SM:[0.55,0.35,0.05,0.05,0],OM:[0.35,0.55,0.05,0.05,0],LM:[0.25,0.05,0.45,0.05,0.20],HS:[0.20,0.70,0.10,0,0],MS:[0.10,0.85,0.05,0,0],LA:[0.10,0.25,0.65,0,0],LS:[0.20,0.025,0.35,0.075,0.35]},
+    gruppe:{TW:'TW',IV:'AB',LV:'AB',RV:'AB',LS:'AB',RS:'AB',DM:'MF',ZM:'MF',SM:'MF',OM:'MF',LM:'MF',RM:'MF',HS:'ST',MS:'ST',LA:'ST',RA:'ST'},
+    // Eignung auf fremden Positionen (K03 §3.1a), von → nach in Prozent, rechts spiegelbildlich
+    eignung:{nah:{IV:{DM:85,LV:75,RV:75,LS:70,RS:70},LV:{LM:85,RV:80,IV:75,LS:92},DM:{ZM:90,IV:80,SM:80},ZM:{DM:90,OM:90,SM:85,LM:75,RM:75},SM:{OM:90,ZM:85,DM:75},
+      OM:{SM:90,ZM:85,HS:85,LA:75,RA:75},LM:{LA:85,RM:80,LV:75,ZM:75,LS:92},MS:{HS:85,LA:70,RA:70},HS:{MS:85,OM:85,LA:75,RA:75},LA:{LM:85,RA:85,HS:75,MS:75}},
+      gleicheGruppe:70,andereGruppe:55,torwartFeld:45,vielseitig:5,vielseitigMax:95,falscheSeite:0.92,seitenPositionen:['LV','RV','LM','RM','LS','RS']},
+    staerke:{fitBasis:0.72,fitAnteil:0.28,leererPlatz:25}, // Wirkung = Stärke × Zustand (K03 §5.8) × Eignung
+    team:{schwaechstes:0.2,mindestAnteil:0.3,anzahl:[0.85,0.05],anzahlMax:1.15},
+    besitz:{exponent:3},
+    angriff:{proMinute:0.50,chance:0.38,exponent:2.0,min:0.10,max:0.80,konter:0.12},
+    mix:{mitte:{gross:0.20,halb:0.45,fern:0.35},aussen:{kopf:0.45,halb:0.25,gross:0.10,fern:0.20},konter:{gross:0.6,halb:0.4}},
+    tor:{gross:0.28,halb:0.085,fern:0.03,kopf:0.095,ecke:0.045,freistossFlanke:0.055,freistoss:0.06,elfmeter:0.76}, // kalibriert mit tests/kalibrierung.js
+    aufsTor:0.35,geblockt:0.25,ecken:{aussenAbgewehrt:0.55,parade:0.30,geblockt:0.35},eckeSchuss:0.3,
+    // Wer schießt: Gewicht je Position und Chancentyp
+    schuetzen:{gross:{MS:5,HS:4,OM:3,LA:3,SM:2,ZM:1.5,LM:1.5,DM:0.5,IV:0.2,LV:0.3,LS:0.4},halb:{MS:3,HS:3,OM:2.5,LA:2.5,LM:1.5,ZM:1.5,SM:1.5,DM:0.7,IV:0.3,LV:0.4,LS:0.5},
+      fern:{OM:3,SM:3,ZM:2.5,DM:1.5,LM:2,LA:2,HS:2,MS:1,IV:0.4,LV:0.6,LS:0.7},kopf:{MS:5,HS:2,LA:1,LM:1,OM:1,ZM:1,IV:1.5,DM:0.8,LV:0.4,LS:0.5},
+      ecke:{IV:4,MS:4,DM:1.5,HS:1.5,ZM:1,OM:0.7,LA:0.7,LM:0.5,LV:0.4,LS:0.5},mitte:75,exponent:3},
+    schuetze:{mitte:70,jePunkt:0.014,min:0.75,max:1.25},
+    torwart:{mitte:70,jePunkt:0.011,min:0.80,max:1.20,patzer:0.02,unkonzentriert:4},
+    fouls:{proMinute:0.12,ort:{flanke:0.20,direkt:0.035,elfmeter:0.011},gelb:0.17,rot:0.0036,hart:1.3,fair:0.7,mitGelb:{foul:0.35,karte:0.5}, // verwarnte Spieler foulen vorsichtiger (K09)
+      gewicht:{IV:2,LV:1.5,DM:2,ZM:1.3,LS:1.5,LM:1,SM:0.8,OM:0.8,HS:0.8,MS:1,LA:0.8},ungestuem:1.4},
+    verlauf:{fuehrung:{A:0.92,D:1.05},rueckstand:{A:1.08,D:0.96},gleich:{A:0.85},abMinute:75, // gleich: bei Unentschieden gehen spät beide weniger Risiko ein
+      rot:{A:0.90,D:0.95}},
+    // Merkmale in der Engine (K04 §5.5)
+    mk:{torjaeger:{wahl:1.3,tor:1.15},kopfballstark:{wahl:1.5,tor:1.15,abwehr:0.92},weitschuetze:{anteil:1.5,tor:1.25},flankengeber:{kopf:1.15,ecke:1.2},
+      dribbler:{upgrade:0.15},schnell:{konter:1.15,abwehr:0.92},stellungssicher:{gross:0.92},zweikampfstark:{abwehr:1.03},ballsicher:{konter:0.85},
+      freistoss:0.10,elfmeter:0.84,beidfuessig:1.03,reflexe:0.93,strafraum:0.85,elfmetertoeter:0.70,abschlussschwach:0.88,kopfballschwach:0.87,fliegenfaenger:1.15,langsam:1.08,abnehmend:[1,0.6,0.3]},
     ausrichtung:{O:{A:1.06,D:0.95},D:{A:0.94,D:1.06},K:{A:0.98,D:1.03}},
     einsatz:{H:{A:1.02,D:1.02},F:{A:0.985,D:0.985}},
-    heim:{angriff:1.04,abwehr:1.03,amateure:1.03},
-    tore:{basis:1.3,exponent:4,min:0.12,max:4.8,rotAngriff:0.12,rotAngriffMin:0.5,rotAbwehr:0.1,rotAbwehrMin:0.55}, // erwartete Tore je Spiel
-    chancen:2.4,                     // Chance ohne Tor, wenn der Wurf unter Torwahrscheinlichkeit × Wert liegt
-    schuetzen:{gewicht:{TW:0.03,AB:1,MF:2.4,ST:5},mitte:75,exponent:3},
-    karten:{gelb:0.019,rot:0.0007,hart:1.7,fair:0.5}, // je Minute und Mannschaft
-    verletzung:{chance:0.0012,gegnerHart:1.5,wochen:[1,6]}, // Ausfall: 7 Tage je Woche nach dem Spieltag
-    verlaengerung:0.8,               // Torwahrscheinlichkeit in der Verlängerung relativ
+    heim:{alle:1.04,amateure:1.05},
+    amateure:{wirkungJeStaerke:1}, // Amateurklubs im Pokal: alle Teamwerte = ihre Stärke
+    ermuedung:{proMinute:0.17,ko:[1.5,-0.007],hart:1.15,schwelle:60,abfall:0.005},
+    karten:{gelb:0.019,rot:0.0007,hart:1.7,fair:0.5}, // nur noch für Amateurklubs
+    verletzung:{chance:0.0012,gegnerHart:1.5,wochen:[1,6]}, // je Minute und Mannschaft. Ausfall: 7 Tage je Woche
+    verlaengerung:0.8,               // Chancen in der Verlängerung relativ
     elfmeter:0.76,
-    fitnessVerlust:[7,13],fitnessMin:20,
+    fitnessMin:20,
     note:{basis:3.6,ergebnis:0.55,tor:0.9,staerkeMitte:72,staerkeTeiler:25,zufall:1.6,platzverweis:1.5,min:1,max:6},
     gelbSperreAb:5,rotSperre:[1,3]   // Sperren in Spielen
   },

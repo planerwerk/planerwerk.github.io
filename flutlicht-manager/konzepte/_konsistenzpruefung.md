@@ -480,3 +480,16 @@ Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `
 | AH4 | **D3 eingehalten:** K12b legt nur Termine fest, das Zielgespräch bleibt bei K28. | ✅ |
 | AH5 | **Alle Konzepte K01–K35b stehen.** PLAN §7 neu geordnet: nächster Schritt ist U2. | ✅ |
 | AH6 | **Speicher:** K32 (rund 2.000 Poolspieler) und K34 (Statistik bis 1 MB) zusammen könnten den Browser-Speicher belasten. | 📌 K33: Größe des Spielstands bei U2 und später messen, Ziel unter 3–4 MB |
+
+---
+
+## AI. Nachtrag zur Umsetzung U2 und U3 (8. November 2026)
+
+| # | Befund | Status |
+|---|---|---|
+| AI1 | **AH6 gemessen:** Spielstand nach drei Saisons rund 0,9 MB, davon 0,83 MB Spieler. Er wächst von Saison zu Saison nicht. | ✅ unter dem Ziel von 3–4 MB, mit K32 und K34 erneut messen |
+| AI2 | **K04 §10 und K02:** Die Kalibrierung liegt in `tests/kalibrierung.js`, nicht in `tests/engine.js`. K04 ist angepasst. | ✅ |
+| AI3 | **K04 §12 Nr. 6:** Heimvorteil nach Kalibrierung ×1,04. | ✅ in K04 §13 |
+| AI4 | **K09 und K04:** Verwarnte Spieler foulen vorsichtiger. Das gehört fachlich zu K09 (Sportgericht, Karten) und steht als Regel in `REGELN.engine.fouls.mitGelb`. | 📌 K09 bei U7 übernehmen |
+| AI5 | **K32 und K04:** Wie stark die Favoriten gewinnen, hängt auch am Abstand der Kader in der Welt. In einer Testwelt war er zu klein. | 📌 bei K32 (Weltaufbau) prüfen |
+

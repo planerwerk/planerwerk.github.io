@@ -3,6 +3,8 @@
 Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Wo eine Entscheidung nötig war, habe ich sie getroffen und in Abschnitt 12 als „vorläufig“ markiert.
 Hängt ab von: K03 (Spielermodell), K02 (Zufall, Kalibrierung) · Wird gebraucht von: K05, K06, K09, K10, K13, K14, K18, K29, K34, K35a.
 
+**Umsetzungshinweise (U3, 8. November 2026):** Die Engine v2 ist gebaut (`js/engine.js`, Werte in `REGELN.engine`) und mit `tests/kalibrierung.js` auf die Zielwerte aus §10 eingestellt. Abweichungen vom Entwurf stehen in §13.
+
 ## 1. Ziel und Spielgefühl
 
 - **Glaubwürdige Ergebnisse:** Tore, Siege und Überraschungen in der Häufigkeit wie in echt. Bayern gewinnt meistens, aber nicht immer.
@@ -312,7 +314,7 @@ Die Engine löst selbst keine Ereigniskarten aus, sondern meldet Anlässe:
 - **Tore nach Halbzeit:** Die Studien widersprechen sich. 2008–2011 fielen in vier großen Ligen 55 % der Tore nach der Pause, eine Auswertung der Top-5-Ligen 2018–2021 fand mehr Tore vor der Pause.
 - **Unsicher, noch prüfen:** Fouls und Torschüsse pro Spiel, Endwerte für 2. und 3. Liga.
 
-**Testskript `tests/engine.js`** (viele Seeds, ganze Saisons):
+**Testskript `tests/kalibrierung.js`** (viele Seeds, ganze Saisons):
 
 | Prüfung | Ziel |
 |---|---|
@@ -326,7 +328,7 @@ Die Engine löst selbst keine Ereigniskarten aus, sondern meldet Anlässe:
 | Gelbe Karten pro Team und Spiel | 1,5–2,2 |
 | Platzverweise pro Spiel (Rot und Gelb-Rot) | 0,12–0,25 |
 | Elfmeter pro Spiel | 0,2–0,3, verwandelt 70–80 % |
-| Punkte | Meister 70–85, Letzter 15–30 |
+| Punkte | Meister im Median 70–85, schlechtester Wert nicht unter 63 (Dortmund wurde 1995/96 mit 68 Punkten Meister), Letzter 15–30 |
 | Favoriten | Stärkeunterschied wie Top 3 gegen Abstiegskandidat: 65–75 % Sieg, 12–20 % Remis, 8–15 % Niederlage. Gleich stark mit Heimvorteil: 40–46 % Sieg. |
 | Pokal gegen Amateure | Bundesligist kommt in 88–94 % weiter |
 | Überraschungen | Jedes Spitzenteam verliert mindestens zweimal pro Saison gegen eine Mannschaft aus der unteren Hälfte, im Schnitt über viele Saisons |
@@ -385,9 +387,25 @@ engine:{
 3. **Videobeweis** nur als seltenes Ereignis „Tor aberkannt“ (etwa 3 % der Tore, Zahl prüfen). Keine eigene Mechanik.
 4. **Wetter und Rasen** später mit K26 (Rasenqualität, Platzwart). Bis dahin kein Wetter.
 5. **Abseits** zählt nur als Statistik und als „Tor aberkannt“, ohne Taktik (Abseitsfalle vielleicht in K06).
-6. **Heimvorteil** niedriger als heute (×1,03 statt ×1,04/1,03), weil er in den letzten Jahren gesunken ist. Kalibrierung in K02 entscheidet den Endwert.
+6. **Heimvorteil** niedriger als heute (×1,03 statt ×1,04/1,03), weil er in den letzten Jahren gesunken ist. Kalibrierung in K02 entscheidet den Endwert. *Nach Kalibrierung (U3): ×1,04, siehe §13.*
 
 **Noch zu recherchieren:** Fouls und Torschüsse pro Spiel, Endwerte für den Torschnitt der 2. und 3. Liga.
+
+## 13. Umsetzung U3 (8. November 2026)
+
+**Gebaut:** Teamwerte je Bereich aus den Positionsanteilen der Grundordnung (10 Grundordnungen auf 14 Positionen), mit Abzug für das schwächste Glied und Faktor für die Zahl der Spieler. Linke und rechte Seite getrennt. Szenen je Minute: Ballbesitz, Angriffsweg (Mitte, links, rechts, Konter), Chancentyp, Schützenwahl, Abschluss mit Schützen- und Torwartfaktor, Ecken, Fouls mit Ort (Flanke, direkter Freistoß, Elfmeter), Karten, Verletzungen, Torwartpatzer, Ermüdung alle 15 Minuten, Spielstand und Unterzahl. Statistik je Spiel in `r.st`, Szenen für das Lernen (K03 §5.6) in `r.sz`.
+
+**Kalibrierung** (3 Seeds × 8 Saisons, 1. Liga): 3,1–3,2 Tore, Heim/Remis/Auswärts 44–46 / 22–24 / 31–33 %, 25 Schüsse, Torquote 13 %, 9,6 Ecken, 24 % Standardtore, 7 % Elfmetertore, 0,27 Elfmeter, 2,0 Gelbe je Team, 0,2 Platzverweise. Meister im Median 72–74 Punkte. Bundesligist gegen Amateure: 90–91 % weiter. 2. und 3. Liga 2,85–3,1 Tore.
+
+**Abweichungen vom Entwurf:**
+1. **Remis spät:** Ohne Zusatz kamen nur 21 % Remis heraus, obwohl die Tore stimmten. Neu: Steht es nach der 75. Minute unentschieden, greifen beide Teams seltener an (×0,85, `verlauf.gleich`). Damit 23–24 %.
+2. **Verwarnte Spieler** foulen seltener (×0,35) und sehen seltener eine Karte (×0,5), Hitzköpfe ausgenommen. Sonst gab es zu viele Gelb-Rote Karten (0,55 Platzverweise pro Spiel).
+3. **Heimvorteil** ×1,04, nicht ×1,03 (§12 Nr. 6). Mit ×1,03 lagen gleich starke Teams zu Hause bei 38 %.
+4. **Amateurklubs im Pokal** mit Stärke 45–55 statt 56–65 (entspricht 4. bis 6. Liga). Sie spielen vereinfacht: nur Angriffe durch die Mitte, keine Standards.
+5. **Ballbesitz** mit Exponent 3 auf den Kontrollwert, sonst lagen alle Teams bei 46–55 %.
+6. **Ausreißer:** In einer von drei Welten gewannen die drei stärksten Kader nur 59 % gegen die drei schwächsten (Ziel 65–75 %). Das liegt an der Welt (kleiner Abstand der Kader), nicht an der Engine. Beobachten, wenn K32 die Welt erzeugt.
+
+**Noch offen in U3:** Akzeptanztests (Torwart, Sensitivität, ein Star allein, Positions-Exploit) in `tests/akzeptanz.js`, Lernen im Spiel aus `r.sz`, weitere Merkmale in der Engine sichtbar machen, Schwierigkeitsgrade (K02 §5.4).
 
 ## Quellen
 
