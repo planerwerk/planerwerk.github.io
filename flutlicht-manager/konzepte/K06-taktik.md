@@ -3,6 +3,8 @@
 Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12.
 Hängt ab von: K03 (Positionen, Merkmale, Fuß), K04 (Engine) · Wird gebraucht von: K05, K07, K14, K16, K18, K31, K35a.
 
+**Umsetzungshinweise (U5a, 8. November 2026):** Spielstile mit Umsetzung und Kreislauf, Vertrautheit, Einstellung zum Spiel mit Kater, Rollen, Standardschützen und die Computer-Trainer aus §7 sind in der Engine (`js/taktik.js`, Werte in `REGELN.taktik`). Alle Prüfungen aus §10 laufen in `tests/taktik.js` und sind grün. Die Oberfläche folgt in U5b. Abweichungen in §12 unter U5a.
+
 ## 1. Ziel und Spielgefühl
 
 - **Taktik ist eine Entscheidung gegen diesen Gegner,** keine Einstellung, die man einmal richtig setzt und nie wieder anfasst.
@@ -221,7 +223,7 @@ Es gibt keine Höchstzahl. Wer „Spiel der Saison“ ständig nutzt, spielt in 
 
 ## 10. Zielwerte und Tests
 
-Testskript: Teil von `tests/akzeptanz.js` (K02), mit gemeinsamen Zufallszahlen.
+Testskript: `tests/taktik.js`, mit gemeinsamen Zufallszahlen.
 
 | Prüfung | Ziel |
 |---|---|
@@ -268,6 +270,19 @@ taktik:{
 4. **Fünf Stufen der Ausrichtung** statt drei. „Konter“ wandert von der Ausrichtung zum Spielstil.
 5. **„Spiel der Saison“ ohne Höchstzahl,** gebremst durch den Kater.
 6. **Weggelassen:** Raum- oder Manndeckung, Abseitsfalle, Standardvarianten. Kann später kommen, wenn es sich den Platz verdient.
+
+**Vorläufig entschieden bei der Umsetzung (U5a, 8. November 2026):**
+7. **Felder im Spielstand:** `form`, `tac`, `ein` bleiben, dazu am Verein `stil`, `vt` (Vertrautheit), `rollen` (je Grundordnung), `einstellung`, `schuetzen`, `kater`, im Spielstand `stilVerlauf`. Ein gemeinsames Objekt `t.taktik` wie in 3.5 hätte nur umbenannt.
+8. **Stile ausbalanciert** mit einer Stil-Matrix (gleich starke Teams, volle Umsetzung): Ballbesitz Kontrolle 1,13 und Angriffe 0,90, Pressing Angriffe 1,07 und Konter gegen sich 1,35, Mauern Kontrolle 0,88, Angriffe 0,85, eigene Konter 1,0, Abwehr 1,10, Konter mit eigenen Kontern 2,1 und Angriffen 0,88, Flügelspiel +15 statt +25 Prozentpunkte außen. Mit den Startwerten war Ballbesitz klar am stärksten, Konter schlug Pressing nicht.
+9. **Kreislauf mit Dämpfung:** Wer im Kreislauf verliert, verliert zusätzlich 80 % seiner Stil-Vorteile (× Umsetzung des Siegers). Mit nur +6 % Chancen für den Sieger gewann Pressing gegen Ballbesitz nicht öfter als gegen Pressing.
+10. **Kreislauf-Test** als Mittel über die vier Paare (Ziel 3–8 Prozentpunkte, jedes Paar positiv), weil die Stile verschieden stark sind und ein einzelnes Paar die Grundstärke mitmisst. Ergebnis etwa +7.
+11. **Kater:** 10 Tage und ×0,955, damit er das nächste Wochenendspiel trifft. Mit 7 Tagen und ×0,97 hätte „Spiel der Saison“ jede Woche nichts gekostet.
+12. **Computer-Trainer** wählen zwischen den Stilen ihrer Lage nach Umsetzung und Kreislauf gegen den Stil des Gegners (Gewicht 0,3). Ohne das mauerten Außenseiter gegen Ballbesitz und verloren den Kreislauf, die Favoriten gewannen 80 % gegen die Letzten. Ihre Grundordnung prüfen sie alle vier Wochen, nicht jede Woche (Rechenzeit). „Spiel der Saison“ im Pokal ab dem Viertelfinale und in der Relegation, Derbys folgen mit K31.
+13. **Lieblingsstil** jedes Vereins per Zufall (ausgewogen dreifach gewichtet), bis K31 Vereinsprofile bringt. Dein Verein startet mit seinem Lieblingsstil (Vertrautheit 70).
+14. **Neuzugang** senkt die Vertrautheit nur, wenn er mindestens Teamniveau − 2 hat (also wahrscheinlich Stammspieler wird).
+15. **Einstellung zum Spiel** gilt nur für das nächste Spiel und springt danach auf „normal“ zurück.
+16. **Wunder-Ordnung-Test** mit Kunst-Elf: je Grundordnung elf gleich starke Spieler auf ihren Stammpositionen mit passendem Fuß. Mit dem echten Kader gewinnt sonst die Ordnung, die zu den vorhandenen Positionen passt.
+
 
 ## Quellen
 

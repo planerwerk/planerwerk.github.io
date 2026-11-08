@@ -33,7 +33,7 @@ function offer(id){const p=PIX.get(id),t=myT(),msg=document.getElementById('msg'
     if(t.cash<fee){msg.textContent='Dafür reicht dein Kontostand nicht.';return;}
     money('Transfers',-fee);from.cash+=fee;}
   else{const hg=Math.round(sal*RF.handgeld/1000)*1000;if(t.cash<hg){msg.textContent='Nicht genug Geld für das Handgeld.';return;}money('Handgelder',-hg);}
-  p.team=S.my;p.list=0;p.ct=yrs;p.sal=sal;S.offers=S.offers.filter(o=>o.pid!==id);
+  p.team=S.my;p.list=0;p.ct=yrs;p.sal=sal;S.offers=S.offers.filter(o=>o.pid!==id);neuzugang(p,S.my);
   news(`Neuzugang: ${p.n} kommt ${from?`für ${fmt(fee)} von ${from.name}`:'ablösefrei'} (Gehalt ${fmt(sal)}/Jahr, bis ${S.season+yrs}).`,'good');save();closeOv();render();toast(`${p.n} unterschreibt!`);}
 
 // Lernziel eines eigenen Spielers (K03 §5.6). Leer = der Co-Trainer entscheidet.

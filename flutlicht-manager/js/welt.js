@@ -40,6 +40,7 @@ function buildWorld(seed){const W=RW;
   });
   const V=W.vereinslose;for(let k=0;k<V.anzahl;k++)addP(mkPlayer({pos:pick(V.positionen),age:riA(V.alter),str:riA(V.staerke),team:-1}));
   const sp=spielplanFuer(S.season);S.fx=sp.fx;S.plan.zeit=sp.zeit;initCup();
+  mitStrom(strom('profil'),()=>S.teams.forEach(t=>{t.stil=profilStil();})); // Lieblingsstil jedes Vereins (K06 §7, bis K31)
 }
 // Neuer Kader für einen Verein, der aus der Regionalliga aufsteigt (alles erfundene Spieler)
 function kaderErzeugen(t){const W=RW,base=grundStaerke(t.rep),st=W.stammplaetze;

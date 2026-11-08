@@ -9,8 +9,8 @@ function tagesSpieleVorbereiten(d,live){return mitStrom(strom('spieltag',S.seaso
   const spiel=(h,a,o,meta,g)=>{const i=g.list.length;if(live&&(h===S.my||a===S.my)){G=spielAnlegen(h,a,Object.assign({},o,{auto:[h!==S.my,a!==S.my]}));platz={meta,g,i};g.list.push(null);return;}g.list.push(Object.assign(sim(h,a,o),meta));};
   for(const e of termineAm(d)){
     if(e.art==='liga'){const g={titel:`${ligaName(e.lg)} · ${e.md+1}. Spieltag`,art:'liga',e,list:[]};e.idx.forEach(i=>{const[h,a]=S.fx[e.lg][e.md][i];spiel(h,a,{},{lg:e.lg,min:S.plan.zeit[e.lg][e.md][i][1]},g);});out.gruppen.push(g);}
-    else if(e.art==='pokal'){if(S.cup.hist.length!==e.r)continue;const al=shuffle(S.cup.alive.slice()),fin=e.r===5,g={titel:`DFB-Pokal · ${POKAL_RUNDEN[e.r]}`,art:'pokal',e,list:[]};for(let i=0;i<al.length;i+=2){let h=al[i],a=al[i+1];if(h<1000&&a>=1000)[h,a]=[a,h];spiel(h,a,{ko:1,neutral:fin},{cup:1,min:e.min},g);}out.gruppen.push(g);}
-    else if(e.art==='rel'||e.art==='rel2'){const sp=S[e.art==='rel'?'relSp':'relSp2'];if(!relBereit(e.art)||sp[e.leg])continue;const[h,a]=e.leg===0?relTeams(e.art).reverse():relTeams(e.art);const g={titel:`Relegation${e.art==='rel2'?' 2./3. Liga':''} · ${e.leg?'Rückspiel':'Hinspiel'}`,art:e.art,e,list:[]};spiel(h,a,{},{rel:1,min:e.min},g);out.gruppen.push(g);}
+    else if(e.art==='pokal'){if(S.cup.hist.length!==e.r)continue;const al=shuffle(S.cup.alive.slice()),fin=e.r===5,g={titel:`DFB-Pokal · ${POKAL_RUNDEN[e.r]}`,art:'pokal',e,list:[]};for(let i=0;i<al.length;i+=2){let h=al[i],a=al[i+1];if(h<1000&&a>=1000)[h,a]=[a,h];spiel(h,a,{ko:1,neutral:fin,wichtig:e.r>=RTA.ki.wichtigAbRunde},{cup:1,min:e.min},g);}out.gruppen.push(g);}
+    else if(e.art==='rel'||e.art==='rel2'){const sp=S[e.art==='rel'?'relSp':'relSp2'];if(!relBereit(e.art)||sp[e.leg])continue;const[h,a]=e.leg===0?relTeams(e.art).reverse():relTeams(e.art);const g={titel:`Relegation${e.art==='rel2'?' 2./3. Liga':''} · ${e.leg?'Rückspiel':'Hinspiel'}`,art:e.art,e,list:[]};spiel(h,a,{wichtig:true},{rel:1,min:e.min},g);out.gruppen.push(g);}
   }
   if(G)S.gespielt=vorher; // erst nach dem Abpfiff gilt der Tag als gespielt (Neuladen mitten im Spiel)
   return{out,G,platz};});}
@@ -65,7 +65,7 @@ function finanzenLiga(m){const t=myT();if(m.h===S.my)heimspielEinnahmen(m,false)
   money('Stadion & Betrieb',-Math.round(t.cap*RF.betrieb.jePlatz+t.logen*RF.betrieb.jeLoge));money('Jugendarbeit',-RF.jugendKosten[t.youth]);
   if(S.loan>0)money('Kreditzinsen',-Math.round(S.loan*RF.kreditZins/n));}
 // Woche (K03 §4): Kondition, Form, Selbstvertrauen, Entwicklung für Spieler ohne Pflichtspiel seit 7 Tagen, Wochenbericht des Co-Trainers
-function training(){const T=RT,d=S.tag,bericht=[];lernplaetzeVergeben();
+function training(){const T=RT,d=S.tag,bericht=[];lernplaetzeVergeben();const monat=Math.floor(S.tag/7)%RTA.ki.ordnungAlleWochen===0;S.teams.forEach(t=>{if(!aktiv(t))return;if(t.id!==S.my&&monat)kiOrdnung(t);vertrautheitWoche(t);});
   S.pl.forEach(p=>{if(p.team<-1)return;wochenWerte(p);wocheVerein(p);if(p.ent==null||d-p.ent>=7)entwicklungBuchen(p,d);p.played=0;
     const mine=p.team===S.my;
     if(mine){const n=Math.round(p.str);if(p.sw!=null&&n!==p.sw)bericht.push([p,p.sw,n]);p.sw=n;}
@@ -79,7 +79,7 @@ function market(){const M=RM;
   for(let k=0;k<n;k++){const L=S.pl.filter(p=>p.list&&p.team>=0&&p.team!==S.my&&squad(p.team).length>M.verkaeufer.kaderMin);if(!L.length)break;const p=pick(L);
     const B=S.teams.filter(t=>t.id!==S.my&&aktiv(t)&&t.id!==p.team&&t.cash>p.ask&&teamLevel(t.id)<p.str+M.kaeufer.niveauPlus&&squad(t.id).length<M.kaeufer.kaderMax);if(!B.length)continue;
     const b=pick(B),from=S.teams[p.team];b.cash-=p.ask;from.cash+=p.ask;news(`Wechsel perfekt: ${p.n} geht für ${fmt(p.ask)} von ${from.name} zu ${b.name}.`,'tr');
-    p.team=b.id;p.list=0;p.ct=riA(M.neuerVertrag);p.sal=salaryFor(p.str);}
+    p.team=b.id;p.list=0;p.ct=riA(M.neuerVertrag);p.sal=salaryFor(p.str);neuzugang(p,b.id);}
   const lvl=teamLevel(S.my),A=M.angebote,U=M.ueberraschung,bis=S.tag+RK.angebotTage;
   squad(S.my).forEach(p=>{if(S.offers.some(o=>o.pid===p.id))return;
     if(p.list){const ratio=p.ask/value(p),st=A.preis.find(x=>ratio<=x[0]),pr=st?st[1]:A.preisSonst;

@@ -65,6 +65,8 @@ console.log(`Basis: ${f1(basis.pkt)} Punkte pro Saison, ${f2(basis.gf)}:${f2(bas
   S.my=-9;S.lineup=null;}
 
 // 6. Tempo: Ziel unter 2 Sekunden für eine Saison der 1. Liga (306 Spiele) im Browser. Node ist etwas schneller, darum hier höchstens 4 ms pro Spiel.
-{const ms=(Date.now()-t0)/spiele;pruef(ms<=4,'Tempo: höchstens 4 ms pro Spiel (306 Spiele unter 1,3 s)',f2(ms)+' ms');}
+//    Gemessen wie im Spiel: alle 306 Paarungen der 1. Liga, je Spieltag ein Tag (der Ligaschnitt für die Taktik wird einmal pro Tag gerechnet).
+{const L=liga(1),t1=Date.now();let n=0;S.season=9000;L.forEach((h,i)=>L.forEach(a=>{if(h===a)return;S.tag=i;F.sim(h,a);n++;}));const ms=(Date.now()-t1)/n;
+  pruef(ms<=4,'Tempo: höchstens 4 ms pro Spiel (306 Spiele unter 1,3 s)',f2(ms)+' ms');}
 console.log(`\n${spiele} Spiele in ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

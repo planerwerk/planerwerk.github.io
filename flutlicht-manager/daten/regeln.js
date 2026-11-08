@@ -52,7 +52,7 @@ const REGELN={
     jungeEchte:{bisAlter:0,talent:[0,0]}, // ersetzt durch spieler.talent (gilt jetzt für echte und erfundene Spieler)
     nachwuchs:{wennUnter:22,anzahl:2,positionen:['AB','MF','ST'],alter:[17,19],abschlag:15,streuung:[-3,3],talent:[-4,8]},
     vereinslose:{anzahl:45,positionen:['TW','AB','AB','MF','MF','ST','ST'],alter:[21,33],staerke:[56,72]},
-    amateurStaerke:[46,56]           // Stärke der Amateurklubs im Pokal (4. bis 6. Liga), jede Saison neu
+    amateurStaerke:[45,55]           // Stärke der Amateurklubs im Pokal (4. bis 6. Liga), jede Saison neu
   },
 
   spieler:{
@@ -213,8 +213,8 @@ const REGELN={
       gleicheGruppe:70,andereGruppe:55,torwartFeld:45,vielseitig:5,vielseitigMax:95,falscheSeite:0.92,seitenPositionen:['LV','RV','LM','RM','LS','RS']},
     staerke:{fitBasis:0.72,fitAnteil:0.28,leererPlatz:25}, // Wirkung = Stärke × Zustand (K03 §5.8) × Eignung
     team:{schwaechstes:0.2,mindestAnteil:0.3,anzahl:[0.85,0.05],anzahlMax:1.15,ueberragend:{ab:11,anteil:0.05}}, // überragend: was mehr als 11 über dem Schnitt der anderen im Bereich liegt, zählt nur zu 5 %
-    besitz:{exponent:3.2},
-    angriff:{proMinute:0.50,chance:0.41,exponent:1.55,min:0.10,max:0.80,konter:0.12},
+    besitz:{exponent:2.3},
+    angriff:{proMinute:0.50,chance:0.395,exponent:1.55,min:0.10,max:0.80,konter:0.12},
     mix:{mitte:{gross:0.20,halb:0.45,fern:0.35},aussen:{kopf:0.45,halb:0.25,gross:0.10,fern:0.20},konter:{gross:0.6,halb:0.4}},
     tor:{gross:0.28,halb:0.085,fern:0.03,kopf:0.095,ecke:0.045,freistossFlanke:0.055,freistoss:0.06,elfmeter:0.76}, // kalibriert mit tests/kalibrierung.js
     aufsTor:0.35,geblockt:0.25,ecken:{aussenAbgewehrt:0.55,parade:0.30,geblockt:0.35},eckeSchuss:0.3,
@@ -225,7 +225,7 @@ const REGELN={
     schuetze:{mitte:70,jePunkt:0.008,min:0.8,max:1.2},
     abwehr:{versatz:3,jePunkt:0.022,min:0.78,max:1.22}, // Druck der Abwehr auf den Abschluss: 1 − jePunkt × (Abwehr − Angriff − versatz). Abwehrwerte liegen im Schnitt etwa 3 über den Angriffswerten.
     torwart:{mitte:70,jePunkt:0.011,min:0.80,max:1.20,patzer:0.02,unkonzentriert:4},
-    fouls:{proMinute:0.12,ort:{flanke:0.20,direkt:0.035,elfmeter:0.011},gelb:0.17,rot:0.0036,hart:1.3,fair:0.7,mitGelb:{foul:0.35,karte:0.5}, // verwarnte Spieler foulen vorsichtiger (K09)
+    fouls:{proMinute:0.12,ort:{flanke:0.20,direkt:0.035,elfmeter:0.011},gelb:0.155,rot:0.0036,hart:1.3,fair:0.7,mitGelb:{foul:0.35,karte:0.5}, // verwarnte Spieler foulen vorsichtiger (K09)
       gewicht:{IV:2,LV:1.5,DM:2,ZM:1.3,LS:1.5,LM:1,SM:0.8,OM:0.8,HS:0.8,MS:1,LA:0.8},ungestuem:1.4},
     verlauf:{fuehrung:{A:0.92,D:1.05},rueckstand:{A:1.08,D:0.96},gleich:{A:0.78},abMinute:75, // gleich: bei Unentschieden gehen spät beide weniger Risiko ein
       rot:{A:0.90,D:0.95}},
@@ -248,6 +248,22 @@ const REGELN={
     gelbSperreAb:5,rotSperre:[1,3]   // Sperren in Spielen
   },
 
+  // Taktik (K06 §11): Spielstile mit Kreislauf, Umsetzung, Vertrautheit, Einstellung zum Spiel, Rollen, Computer-Trainer
+  taktik:{
+    rollen:{mitte:['DM','ZM','SM','OM'],sturm:['MS','HS']},spielmacherMax:1,
+    // Startwerte aus K06 §5.1, mit der Stil-Matrix in tests/taktik.js ausbalanciert (vorläufig, K06 §12)
+    stile:{pressing:{kontrolle:1.05,angriffe:1.07,konterEigen:1.30,konterGegen:1.35,frische:1.30,fouls:1.20,mix:{gross:1.15}},
+      ballbesitz:{kontrolle:1.13,angriffe:0.90,konterEigen:0.70,konterGegen:1.10,frische:0.95,fouls:0.90,mix:{halb:1.08,fern:0.80}},
+      mauern:{kontrolle:0.88,angriffe:0.85,konterEigen:1.00,konterGegen:0.60,frische:0.90,fouls:1.10,abwehr:1.10},
+      konter:{kontrolle:0.90,angriffe:0.88,konterEigen:2.10,konterGegen:0.90,frische:1.05,konterMix:{gross:1.30}},
+      fluegel:{aussen:0.15,mix:{kopf:1.20}},ausgewogen:{}},
+    kreislauf:{pressing:'ballbesitz',ballbesitz:'mauern',mauern:'konter',konter:'pressing',vorteil:0.06,daempfung:0.8}, // daempfung: wer im Kreislauf verliert, verliert diesen Anteil seiner Stil-Vorteile (× Umsetzung des Siegers)
+    // Umsetzung = 0,5 × Voraussetzungen + 0,5 × Vertrautheit/100. Grundwert: Bereich gegen Ligaschnitt, ±grundSpanne/2 Punkte = 0 bis 1. Frische und Kondition: von 60 (0) bis 90 (1).
+    umsetzung:{voraussetzungen:0.5,vertrautheit:0.5,merkmalErtrag:[1,0.6,0.3],grundSpanne:12,frische:[60,90]},
+    vertrautheit:{start:[70,30],trainingWoche:5,jeSpiel:3,vergessen:2,min:30,neuzugang:4,ordnungUnter:60,ordnungMalus:0.03},
+    einstellung:{locker:{wirkung:0.96,frische:0.7},saison:{wirkung:1.04,katerTage:10,kater:0.955,frische:5}}, // Kater 10 Tage: trifft auch das nächste Wochenendspiel (K06 §12)
+    // Computer-Trainer (K06 §7): Außenseiter mauern oder kontern, Favoriten pressen oder haben den Ball, Reaktion auf deinen Lieblingsstil (Stufe „normal“)
+    ki:{aussenseiter:0.95,favorit:1.05,reaktion:0.25,rueckblick:5,profil:{ausgewogen:3,pressing:1,ballbesitz:1,konter:1,mauern:1,fluegel:1},ordnungTreue:1.02,ordnungAlleWochen:4,wichtigAbRunde:3,kreislaufGewicht:0.3}},
   // Live-Spiel (K05 §11): Tempo, Halte, Wechsel, Umstellungszeit, Zurufe, Halbzeitansprache, Computer-Trainer, Druckleiste
   live:{tempo:{langsam:2000,normal:1000,schnell:300},
     anhalten:{tor:true,rot:true,verletzung:true,elfmeter:true,gelbRotGefahr:true,frischeUnter:55},
@@ -323,4 +339,4 @@ const REGELN={
 // Schreibschutz: Zur Laufzeit darf kein Code eine Regel ändern.
 (function frieren(o){Object.freeze(o);Object.values(o).forEach(v=>{if(v&&typeof v==='object'&&!Object.isFrozen(v))frieren(v);});})(REGELN);
 // Kurzformen für den Code
-const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui,RL=REGELN.live;
+const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui,RL=REGELN.live,RTA=REGELN.taktik;
