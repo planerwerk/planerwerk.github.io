@@ -467,3 +467,16 @@ Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `
 | AG4 | **Jugendarbeit** (Stufe 1–5, heute laufende Kosten) wird mit K26 zum Bauwerk „Nachwuchsleistungszentrum“. K08 rechnet mit derselben Stufe. | ✅ |
 | AG5 | **Neue Stammdaten:** Ultra-Szene und Tradition (K27), Stadion eigen oder gepachtet und Stehplatzanteil (K26). | 📌 K33 bei Umsetzung |
 | AG6 | **Alle Geldbeträge** in K24–K26 sind Spielwerte und werden mit K23 auf echte Größenordnung kalibriert. | 📌 U13 |
+
+---
+
+## AH. Nachtrag zu K12b, K20, K29, K34, K35b (8. November 2026)
+
+| # | Befund | Status |
+|---|---|---|
+| AH1 | **B3 und B4 erledigt:** K29 hat jetzt Datenmodell (3.4) und Gerüchteküche (4.3). Offene Fragen in K29 vorläufig entschieden. | ✅ |
+| AH2 | **A4 eingehalten:** Abwerben in K20 ohne Geldstrafen und Verfahren, nur Beziehung, Klatsch, Vorstand, Fans. | ✅ |
+| AH3 | **D6 eingehalten:** K34 speichert die Sprüche-Chronik, K29 liefert sie. | ✅ |
+| AH4 | **D3 eingehalten:** K12b legt nur Termine fest, das Zielgespräch bleibt bei K28. | ✅ |
+| AH5 | **Alle Konzepte K01–K35b stehen.** PLAN §7 neu geordnet: nächster Schritt ist U2. | ✅ |
+| AH6 | **Speicher:** K32 (rund 2.000 Poolspieler) und K34 (Statistik bis 1 MB) zusammen könnten den Browser-Speicher belasten. | 📌 K33: Größe des Spielstands bei U2 und später messen, Ziel unter 3–4 MB |

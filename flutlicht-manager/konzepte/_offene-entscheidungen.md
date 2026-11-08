@@ -15,7 +15,6 @@ Am 7.11. habe ich viele Konzepte ohne Rücksprache geschrieben. Wo eine Entschei
 5. **K31, Frage 4:** Schwelle „lange schwach“ für deine Verkaufsregel: Notenschnitt 4,5 über die letzten 10 Einsätze.
 6. **K09, Frage 1:** Kein „bewusst Gelb abholen“ als Spieleroption.
 
-
 ## K02 – Zufall, Kalibrierung, Schwierigkeit
 Datei: `konzepte/K02-zufall-kalibrierung.md`
 
@@ -101,6 +100,11 @@ Datei: `konzepte/K12a-sommer.md`
 3. **Urlaub für die ganze Mannschaft,** nicht je Spieler. Ausnahme: Turnierteilnehmer.
 4. **Laufplan** passiert automatisch und hängt an der Professionalität. Keine eigene Planung.
 
+## K12b – Saisonvorbereitung (Rahmen)
+Datei: `konzepte/K12b-saisonvorbereitung.md`
+
+Liste statt Pflichtschritte, Automatik für Unerledigtes, Saisoneröffnung als kleines Fest.
+
 ## K13 – Wettbewerbe und Spielplan
 Datei: `konzepte/K13-wettbewerbe.md`
 
@@ -158,6 +162,11 @@ Datei: `konzepte/K19-transfers.md`
 3. **Fenster** nach den echten Terminen 2026/27, danach verschoben wie die übrigen Termine.
 4. **Abwerben, Bieterwettstreit im Detail und Deadline Day** bleiben in K20 (Welle 4).
 
+## K20 – Transfers II: Abwerben, Bieterwettstreit, Deadline Day
+Datei: `konzepte/K20-transfers-2.md`
+
+**Noch zu recherchieren:** Anteil der Wechsel in den letzten Tagen eines Fensters.
+
 ## K21 – Verträge und Gehälter
 Datei: `konzepte/K21-vertraege.md`
 
@@ -172,6 +181,34 @@ Datei: `konzepte/K22-berater.md`
 1. **Fünf Profile,** darunter Strippenzieher und Familienberater als eigene Typen.
 2. **Provisionen als Spielwerte.** Die echten Regeln (FIFA-Beraterreglement, Rechtsstreit um Obergrenzen) sind nicht geprüft und für das Spiel nicht nötig.
 
+## K23 – Finanzen und Budget
+Datei: `konzepte/K23-finanzen.md`
+
+1. **Monatsabrechnung** statt Buchung je Spieltag.
+2. **Echte Größenordnungen** für alle Geldwerte, umgestellt in einem Schritt mit Gehältern und Ablösen (U13).
+3. **Gehaltsrahmen 50 %** der erwarteten Einnahmen ohne Transfers (Spielwert).
+4. **Insolvenz mit 9 Punkten Abzug** (vorläufig, prüfen).
+
+## K24 – Sponsoren
+Datei: `konzepte/K24-sponsoren.md`
+
+**Noch zu recherchieren:** Ärmel- und Namensrechte-Erlöse in der Bundesliga, Sponsoring in 2. und 3. Liga.
+
+## K25 – Marketing und Merchandising
+Datei: `konzepte/K25-marketing.md`
+
+sechs Kampagnen, drei Trikotdesigns je Saison, Sortiment in drei Stufen, Online-Shop ohne eigene Steuerung. Alle Beträge sind Spielwerte (Kalibrierung mit K23).
+
+## K26 – Stadion und Infrastruktur
+Datei: `konzepte/K26-stadion.md`
+
+**Noch zu recherchieren:** echte Baukosten je Platz, Stehplatzanteile der Bundesliga-Stadien, Eigentumsverhältnisse der Stadien.
+
+## K27 – Fans und Zuschauer
+Datei: `konzepte/K27-fans.md`
+
+**Noch zu recherchieren:** Dauerkartenanteile, Zuschauerschnitt der 1. und 3. Liga als Vollsaison, Zahl der Pyro-Verfahren.
+
 ## K28 – Vorstand, Ziele, Karriere
 Datei: `konzepte/K28-vorstand.md`
 
@@ -179,6 +216,16 @@ Datei: `konzepte/K28-vorstand.md`
 2. **Vertrauen mit Bausteinen und Trägheit,** die Werte je Spiel bleiben mit halbem Gewicht.
 3. **Nach dem Aufstieg immer Klassenerhalt** als Standardziel.
 4. **Trainergehalt nur als Statistik.**
+
+## K29 – Medien und Pressekonferenzen
+Datei: `konzepte/K29-medien-presse.md`
+
+1. **Nur den Ton zeigen,** nicht die erwartete Wirkung. Das Zeitungsecho zeigt die Wirkung danach.
+2. **Humor bleibt eine Spielart von ○**, im Text erkennbar markiert. Keine vierte Kategorie.
+3. **Keine wörtlichen Zitate echter Kultsprüche** und keine Namen echter Personen. Erlaubt sind eigene Sprüche, die an den Ton berühmter Momente erinnern.
+4. **Interviews von Spielern** kommen mit K14 und K15 (Welle 3): Führungsspieler und Diven sprechen, mit Wirkung auf Stimmung und Glaubwürdigkeit.
+5. **Weitere Recherche** bei der Umsetzung (U17), nicht jetzt.
+6. **Gerüchteküche und Datenmodell** ergänzt (3.4, 4.3), damit sind B3 und B4 erledigt.
 
 ## K30 – Ereigniskarten und Story-Playbook (Gerüst)
 Datei: `konzepte/K30-ereigniskarten.md`
@@ -198,7 +245,17 @@ Datei: `konzepte/K31-computer-vereine.md`
 ## K32 – Spielwelt und Saisonwechsel
 Datei: `konzepte/K32-spielwelt.md`
 
-1. **Ausland als Vereinsgruppen ohne echte Vereinsnamen** („England – Spitze“). Echte Auslandsvereine wären stimmungsvoller, kosten aber viel Datenpflege. Kann später kommen. **Das solltest du entscheiden.**
+1. ~~Vereinsgruppen~~ **Entschieden am 8.11.:** echte Auslandsvereinsnamen, erzeugte Spieler, nur die Namen werden gepflegt.
 2. **Keine automatische Nachregelung** der Weltstärke im Spiel. Das Gleichgewicht wird über Tests kalibriert (K02: kein Gummiband).
 3. **Zwölf Länder** im Pool, Nationen-Tabelle für alle Länder der Welt (für Nationalitäten der Spieler).
+
+## K34 – Statistik und Historie
+Datei: `konzepte/K34-statistik.md`
+
+Elf des Jahres in 4-3-3, volle Details drei Saisons lang, Sprüche-Chronik bis 100 Einträge.
+
+## K35b – Look und Stil
+Datei: `konzepte/K35b-look.md`
+
+dunkles Flutlicht-Thema als Standard, Systemschriften, keine Vereinslogos, Bewegung sparsam und abschaltbar.
 

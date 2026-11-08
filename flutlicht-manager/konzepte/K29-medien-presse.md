@@ -1,6 +1,6 @@
 # K29 – Medien und Pressekonferenzen
 
-Status: **Entwurf**. Hängt ab von: K14 Stimmung, K15 Gespräche, K17 Beziehungen, K09 Sportgericht. Wird gebraucht von: K30 Ereigniskarten, K25 Merchandising, K28 Vorstand.
+Status: **Entwurf**, überarbeitet am 8. November 2026 nach „weiter, entscheide du“: Datenmodell (3.4) und Gerüchteküche (4.3) ergänzt, offene Fragen vorläufig entschieden. Hängt ab von: K14 Stimmung, K15 Gespräche, K17 Beziehungen, K09 Sportgericht. Wird gebraucht von: K30 Ereigniskarten, K25 Merchandising, K28 Vorstand.
 
 ## 1. Ziel und Spielgefühl
 
@@ -75,6 +75,18 @@ Das ist der Maßstab für die Verbindung zu K09.
 6. **Kritik am Schiedsrichter freut die Fans und kostet Geld.** Eine Entschuldigung hilft.
 7. **Auch Spieler sprechen,** wie Kahn. Führungsspieler geben Interviews, das bringt Chancen und Risiken (K14).
 
+### 3.4 Begriffe und Daten (Konsistenzprüfung B4)
+
+| Begriff | Werte | Ort |
+|---|---|---|
+| **Medium** | Name (erfunden), Art (Boulevard, Fachblatt, Lokalzeitung, TV, Portal), Reichweite 1–5, **Ruf** (Treffsicherheit 0–100) | `daten/presse.js` |
+| **Journalist** | Name, Medium, Haltung zu dir (Beziehung aus K17), Lieblingsthemen | `daten/presse.js`, Beziehung in `S.bez` |
+| **Aussage** | Datum, Anlass, Ton, Ziel, Ankündigung ja oder nein, geprüft ja oder nein | `S.aussagen` (Gedächtnis, 2 Saisons) |
+| **Sprüche-Chronik** | ausgewählte Aussagen mit Schlagzeile | gespeichert in K34 (D6), Inhalt aus K29 |
+| **Gerücht** | Thema, Beteiligte, Wahrheitsgehalt (wahr, halb wahr, falsch), Quelle (Medium), Datum, Folgen | `S.geruechte` |
+| Glaubwürdigkeit | aus K15 (D1) | `t.glaub` |
+
+
 ## 4. Abläufe
 
 ### 4.1 Anlässe (statt jeder Woche)
@@ -103,6 +115,30 @@ Das ist der Maßstab für die Verbindung zu K09.
    - **Selten eine vierte Option „Ausraster“.** Nur in schwerer Krise oder nach einem Skandal. Die Folgen streuen stark, Kultpotenzial (Muster 1 und 2).
 4. **Zeitungsecho am nächsten Tag:** Schlagzeilen und Zitate. Hier wird sichtbar, wie deine Antwort gewirkt hat. Gute oder schräge Aussagen landen in der **Sprüche-Chronik**.
 5. **Folgen** werden sofort oder verzögert gebucht (Kapitel 5). Ankündigungen werden geprüft, sobald die Ergebnisse da sind.
+
+### 4.3 Gerüchteküche (Konsistenzprüfung B3)
+
+**Woher Gerüchte kommen:**
+
+| Quelle | Wahrheitsgehalt | Beispiel |
+|---|---|---|
+| echte Verhandlungen (K19, K20) | wahr oder halb wahr | „X verhandelt mit Y“ |
+| aufgeflogene Treffen (K20) | wahr | „Geheimtreffen im Hotel“ |
+| gierige Berater (K22) | halb wahr, gezielt | „Mehrere Vereine sind interessiert“ |
+| schlechte Beziehungen (K17) | oft falsch | „Ärger hinter den Kulissen“ |
+| Stimmung, Wechselwunsch (K14) | wahr | „X ist unzufrieden“ |
+| reine Erfindung | falsch | Boulevard ohne Grundlage |
+
+**Wie oft:** etwa 1–3 Gerüchte pro Woche über die ganze Liga im Posteingang („Gerüchteküche“), mit Bezug zu deinem Verein höchstens eins pro Woche. Kein Halt, außer ein Gerücht erzwingt eine Reaktion.
+
+**Wirkung:**
+- **Betroffene Spieler:** Stimmung ±3 (K14, Umfeld), bei Wechselgerüchten Unruhe.
+- **Preise:** Ein bekanntes Interesse anderer Vereine hebt die Ablöse (Markt ×1,1–1,3, K21) und die Gehaltsforderung.
+- **Fans und Vorstand:** Trainergerüchte senken das Vertrauen leicht (K28), Abgangsgerüchte eines Lieblings die Fanstimmung (K27).
+- **Reaktion:** In der nächsten Pressekonferenz kann eine Frage dazu kommen (dementieren, bestätigen, ausweichen). Ein Dementi, das sich später als falsch herausstellt, kostet Glaubwürdigkeit (K15).
+
+**Medien mit Ruf:** Ein Medium, dessen Gerüchte oft stimmen, hat einen hohen Ruf. Du kannst lernen, welchem Blatt du glauben kannst. Der Ruf ändert sich, wenn sich Gerüchte bewahrheiten oder nicht.
+
 
 ## 5. Regeln für die Wirkung
 
@@ -204,11 +240,14 @@ Das ist der Maßstab für die Verbindung zu K09.
 
 ## 12. Offene Fragen
 
-1. Sollen die Antworten die **erwartete Wirkung** andeuten (zum Beispiel „Mannschaft ↑, Medien ↓“), oder nur den Ton? Vorschlag: nur den Ton, das Zeitungsecho zeigt die Wirkung danach.
-2. Soll es eine vierte Option **Humor** als eigene Kategorie geben, oder bleibt Humor eine Spielart von ○?
-3. Soll es **Anspielungen auf echte Kultsprüche** geben, etwa als seltene Easter Eggs in der Zeitung, oder bleibt alles komplett eigen?
-4. **Interviews von Spielern:** gleich mit einbauen oder später?
-5. Weitere Recherche, zum Beispiel Klopp, Guardiola, Ferguson, Wenger, Bundesliga-Pressekonferenzen der letzten Jahre: jetzt oder bei der Umsetzung?
+**Vorläufig entschieden am 8.11.** (nach „weiter, entscheide du“):
+
+1. **Nur den Ton zeigen,** nicht die erwartete Wirkung. Das Zeitungsecho zeigt die Wirkung danach.
+2. **Humor bleibt eine Spielart von ○**, im Text erkennbar markiert. Keine vierte Kategorie.
+3. **Keine wörtlichen Zitate echter Kultsprüche** und keine Namen echter Personen. Erlaubt sind eigene Sprüche, die an den Ton berühmter Momente erinnern.
+4. **Interviews von Spielern** kommen mit K14 und K15 (Welle 3): Führungsspieler und Diven sprechen, mit Wirkung auf Stimmung und Glaubwürdigkeit.
+5. **Weitere Recherche** bei der Umsetzung (U17), nicht jetzt.
+6. **Gerüchteküche und Datenmodell** ergänzt (3.4, 4.3), damit sind B3 und B4 erledigt.
 
 ## Quellen
 

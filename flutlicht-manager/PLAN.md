@@ -81,7 +81,7 @@ Spalte „Welle“: wann das Konzept spätestens fertig sein muss. Umfang des Ko
 |---|---|---|---|---|
 | K18 | Scouting und Informationsnebel (**Entwurf**: `konzepte/K18-scouting.md`) | Scout-Qualität und Spezialgebiete (Region, Jugend), Berichte mit Spanne oder „unbekannt“, Fehleinschätzungen, Kosten, Dauer | M | 3 |
 | K19 | Transfers I (**Entwurf**: `konzepte/K19-transfers.md`) | Transferliste, Anfrage, Angebot mit Runden, Konkurrenz, Spielergespräch, Medizincheck, Fenster, Leihen, Ausstiegsklauseln | L | 3 |
-| K20 | Transfers II | Abwerben in Treffen über Wochen, Risiko des Auffliegens, Folgen über Beziehungen und Gerüchte, Bieterwettstreit, Deadline Day | L | 4 |
+| K20 | Transfers II (**Entwurf**: `konzepte/K20-transfers-2.md`) | Abwerben in Treffen über Wochen, Risiko des Auffliegens, Folgen über Beziehungen und Gerüchte, Bieterwettstreit, Deadline Day | L | 4 |
 | K21 | Verträge und Gehälter (**Entwurf**: `konzepte/K21-vertraege.md`) | Laufzeit, Prämien, Klauseln, Gehaltsgefüge im Kader, Verlängerung, auslaufende Verträge, ablösefreie Wechsel | M | 3 |
 | K22 | Berater (**Entwurf**: `konzepte/K22-berater.md`) | Profile (gierig, seriös, verschwiegen), Provision, Einfluss auf Verhandlung und Gerüchte, Beziehungen | S | 3 |
 | K31 | Computer-Vereine (**Entwurf**: `konzepte/K31-computer-vereine.md`) | Kaderplan mit Planstellen, Bedarfsanalyse, Verkauf nur mit Grund und Ersatz (erst kaufen, dann verkaufen), Budget, Vereinsprofile, Trainerwechsel | L | 3 |
@@ -90,7 +90,7 @@ Spalte „Welle“: wann das Konzept spätestens fertig sein muss. Umfang des Ko
 
 | ID | Konzept | Kernfragen | Umfang | Welle |
 |---|---|---|---|---|
-| K12b | Saisonvorbereitung, Rahmen | Transferhauptphase, Sponsoren, Kampagnen, Termin fürs Saisonziel-Gespräch, Mannschaftsfoto/Saisoneröffnung | S | 4 |
+| K12b | Saisonvorbereitung, Rahmen (**Entwurf**: `konzepte/K12b-saisonvorbereitung.md`) | Transferhauptphase, Sponsoren, Kampagnen, Termin fürs Saisonziel-Gespräch, Mannschaftsfoto/Saisoneröffnung | S | 4 |
 | K23 | Finanzen und Budget (**Entwurf**: `konzepte/K23-finanzen.md`) | Einnahmen- und Ausgabenarten, Ratenzahlungen, Kredite, Budget vom Vorstand, Lizenzierung, Pleite-Szenario | M | 4 |
 | K24 | Sponsoren (**Entwurf**: `konzepte/K24-sponsoren.md`) | Trikot, Ausrüster, Bande, Stadionname: Angebote, Verhandlung, Prämien, Laufzeiten, Sponsor-Ereignisse | M | 4 |
 | K25 | Marketing und Merchandising (**Entwurf**: `konzepte/K25-marketing.md`) | Kampagnen (Dauerkarten, Trikot, Fanaktionen), Kosten und Wirkung, Fanshop, Rückwirkung auf Fans und Einnahmen | M | 4 |
@@ -102,18 +102,18 @@ Spalte „Welle“: wann das Konzept spätestens fertig sein muss. Umfang des Ko
 
 | ID | Konzept | Kernfragen | Umfang | Welle |
 |---|---|---|---|---|
-| K29 | Medien und Presse (**Entwurf**: `konzepte/K29-medien-presse.md`, Gerüchteküche und Datenmodell fehlen noch) | erfundene Zeitungen und Portale mit Ruf, Pressekonferenzen, Interviews, Gerüchteküche (wahr, halb wahr, falsch), Wirkung auf Stimmung, Preise und Fans | M | 4 |
+| K29 | Medien und Presse (**Entwurf**, mit Gerüchteküche und Datenmodell seit 8.11.: `konzepte/K29-medien-presse.md`) | erfundene Zeitungen und Portale mit Ruf, Pressekonferenzen, Interviews, Gerüchteküche (wahr, halb wahr, falsch), Wirkung auf Stimmung, Preise und Fans | M | 4 |
 | K30 | Ereigniskarten und Story-Playbook (**Gerüst als Entwurf**: `konzepte/K30-ereigniskarten.md`) | Aufbau eines Ereignisses (Auslöser, Bedingungen, Häufigkeit, Sperrzeit, Beteiligte, Texte, Entscheidungen, Folgen, Ketten), Dosierung, Katalog | L, wächst laufend | Gerüst 3, Inhalte fortlaufend |
 | K32 | Spielwelt und Saisonwechsel (**Entwurf**: `konzepte/K32-spielwelt.md`, mit Auslandspool) | Stammdaten, Auslandsspieler als Transferpool, Karriereenden, neue Talente, Aufstieg und Abstieg, Datenpflege | M | Auslandspool 3, Rest 4 |
 | K32a | Unterbau: 3. Liga und Regionalliga (**Entwurf**, umgesetzt: `konzepte/K32a-unterbau.md`) | 3. Liga als echte Liga, Regionalliga-Aufstieg per Los und Aufstiegsspielen, Relegation 2./3. Liga, Zweitmannschaften | S | ✅ vorgezogen |
-| K34 | Statistik und Historie | Spieler- und Vereinsstatistik, Rekorde, Ehrungen, Saisonarchiv | S | 4 |
+| K34 | Statistik und Historie (**Entwurf**: `konzepte/K34-statistik.md`) | Spieler- und Vereinsstatistik, Rekorde, Ehrungen, Saisonarchiv | S | 4 |
 
 ### G – Später
 
 | ID | Konzept | Kernfragen | Umfang | Welle |
 |---|---|---|---|---|
 | K35a | Bedienkonzept und Regler (**Entwurf**: `konzepte/K35-oberflaeche.md`, Bausteine umgesetzt in `js/regler.js`) | Bildschirmliste, Regler-Baukasten (Anzeige, Trend, unscharf, Stell-Regler mit Vorhersage, Tauziehen), Schnellansicht, Meldungsdichte, Automatik-Stufen | M | **1** (Bausteine ab U1) |
-| K35b | Look und Stil | Retro-Stil (eigenes Design: Anzeigetafel, Flutlicht, Mischpult), Themen, Bedienung auf dem Handy | M | 5 |
+| K35b | Look und Stil (**Entwurf**: `konzepte/K35b-look.md`) | Retro-Stil (eigenes Design: Anzeigetafel, Flutlicht, Mischpult), Themen, Bedienung auf dem Handy | M | 5 |
 
 ## 4. Erste Gedanken zu den neuen Punkten
 
@@ -252,18 +252,9 @@ Für BMH habe ich keine verlässliche Quelle gefunden. Anstoss 2022 nutzt laut e
 
 ## 7. Nächster Schritt
 
-**U1 ist umgesetzt** (6. November 2026), dazu am 6./7. November nach deinen Entscheidungen: Der Sommer wird gespielt, die Spieltage folgen dem offiziellen Spielplan 2026/27 mit Anstoßzeiten, die 3. Liga ist eine echte Liga, und aus der Regionalliga steigen Vereine mit etwas Zufall auf (K32a). Alle Testskripte in `tests/` sind grün. Offene Fragen stehen am Ende von K01, K32a und K33.
+Stand 8. November 2026:
 
-1. **K03 steht als Entwurf** (7.11.): `konzepte/K03-spielermodell.md`. Alle Fragen sind entschieden (7.11.). Offen ist nur die Recherche nach einer Datenquelle für feine Positionen, Fuß und Charakter-Fakten.
-2. **K04 steht als Entwurf** (7.11., ohne Rücksprache geschrieben): `konzepte/K04-engine.md`. Sechs vorläufige Entscheidungen in Abschnitt 12 bitte bestätigen oder ändern.
-3. **K02 steht als Entwurf** (7.11., ohne Rücksprache): `konzepte/K02-zufall-kalibrierung.md`. Vier vorläufige Entscheidungen in Abschnitt 12, die wichtigste: Zufall getrennt nach Spiel, Tag und Bereich, damit Neuladen kein neues Glück bringt.
-4. **Alle Konzepte der Welle 1 stehen.** Nächster Schritt ist die Umsetzung, jeweils in einer neuen Session:
-   - **U2 Spielermodell** (K03, Teile von K02): Zufallsströme und Node-Simulator `tests/sim.js` zuerst, dann neue Spielerfelder, Positionen und Fuß (bis die Daten da sind, per Zufall aus der Gruppe), Frische und Kondition getrennt, Entwicklung an jedem Spieltag, Merkmale und Persönlichkeit mit Startverteilung, Talentsterne unscharf, Spielerkarte mit den neuen Reglern, `tests/spielermodell.js`. Die heutige Engine bleibt, bekommt nur Frische statt Fitness und Form 0–20.
-   - **U3 Engine v2** (K04, Rest von K02): Szenen-Modell, Teamwerte aus Positionsanteilen, Chancentypen, Standards, Merkmal-Haken, Noten gegen die Erwartung, Spielbericht, Lernen im Spiel, Schwierigkeitsstufen, `tests/kalibrierung.js` und `tests/akzeptanz.js`, Kalibrierung bis alles grün ist.
-   - Startsatz: „Projekt Flutlicht Manager im Ordner flutlicht-manager/. Lies PLAN.md, konzepte/_konsistenzpruefung.md, konzepte/K02-zufall-kalibrierung.md und konzepte/K03-spielermodell.md. Setze U2 um.“
-5. **Vorgezogen aus Welle 2:** K05 (Live-Spiel), K06 (Taktik), K07 (Training), K09 (Sportgericht), K10 (Medizin), K11 (Testspiele), K12a (Sommer), K13 (Wettbewerbe) und K16 (Stab) stehen als Entwurf. **Damit sind alle Konzepte der Wellen 1 und 2 geschrieben.** Aus Welle 3 sind K08 (Jugend), K14 (Kabine), K15 (Gespräche), K17 (Beziehungen), K19 (Transfers I), K18 (Scouting), K21 (Verträge), K22 (Berater) und K28 (Vorstand) und K31 (Computer-Vereine) dazugekommen. Dazu das Gerüst von K30 (Ereigniskarten) und K32 (Spielwelt mit Auslandspool). **Damit stehen auch alle Konzepte der Welle 3.**
-6. **Zum Durchsehen:** `konzepte/_offene-entscheidungen.md` sammelt alle vorläufigen Entscheidungen aus Abschnitt 12 der Konzepte, die sechs wichtigsten oben. Ein „passt“ oder eine Änderung je Punkt reicht, dann werden die Konzepte auf „abgestimmt“ gesetzt.
-7. **Noch offen sind nur Konzepte der Wellen 4 und 5:** K12b, K20, K23–K27, Überarbeitung von K29, K34, K35b. Was du davon bestätigen oder ändern solltest, steht jeweils in Abschnitt 12 unter „Vorläufig entschieden“. **K12a braucht deine Bestätigung** für eine Ausnahme von der 7-Tage-Regel im Urlaub (K12a §12, Frage 1). K06 weil es offene Punkte aus K03 und K04 klärt (Grundordnungen auf 14 Positionen, Seiten, Standardschützen). U3 kann die Grundordnungen und Seiten gleich mitbauen. K07 ersetzt die Trainingsstufen durch Wochenpläne nach Abstand zum Spiel und kommt mit U6.
-4. Der Sommerteil von K12 ist als **K12a** in Welle 2 gerückt, zu Training (K07) und Testspielen/Trainingslager (K11).
-
-Mit K03 ist der größte Engpass gelöst. Engine, Taktik, Training und Scouting haben jetzt eine Grundlage (K03 §9).
+1. **Alle Konzepte sind geschrieben** (K01–K35b). K03 ist abgestimmt, die übrigen sind Entwürfe. Ihre vorläufigen Entscheidungen gelten, bis du widersprichst (§1, Punkt 9). Gesammelt in `konzepte/_offene-entscheidungen.md`.
+2. **Umsetzung** in der Reihenfolge der Wellen (§5), beginnend mit **U2 Spielermodell** (K03, dazu die Zufallsströme und der Node-Simulator aus K02), dann **U3 Engine v2** (K04, K06-Grundordnungen und Seiten, Rest von K02).
+3. **Startsatz** für eine neue Session: „Projekt Flutlicht Manager im Ordner flutlicht-manager/. Lies PLAN.md. Weiter, entscheide du.“ Dann geht es beim nächsten offenen Umsetzungsschritt weiter.
+4. **Vor der Kalibrierung zu recherchieren** (aus den Konzepten gesammelt): Datenquelle für feine Positionen, Fuß und Charakter-Fakten (K03), Fouls und Torschüsse pro Spiel (K04), Regeln zu Liga-Rot im Pokal, Relegation und Trainer-Karten (K09), Verletzungsraten der Männer (K10), Heimrecht in späteren Pokalrunden, Supercup, Zweitmannschaften (K13), Vorvertragsregel und FIFA-Änderungen 2027 (K21), Personalkostenquote, 3.-Liga-Medientopf, Insolvenz-Punktabzug (K23).
