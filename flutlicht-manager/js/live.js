@@ -11,9 +11,23 @@ function liveEinstSetzen(k,v){S.einst=S.einst||{aus:{}};S.einst.live=S.einst.liv
 function kickoffLive(){if(BUSY||CONF||LIVE)return;BUSY=true;let v=null;
   try{v=tagesSpieleVorbereiten(S.tag,true);}catch(e){console.error(e);toast('Fehler: '+e.message);}finally{BUSY=false;}
   if(!v)return;if(!v.G){LAST=tagesSpieleAbschliessen(v.out);save();if(LAST.list.length)showConf(LAST);else weiterUI();return;}
-  const G=v.G,s=G.hid===S.my?0:1;
-  LIVE={v,G,s,lauf:false,timer:null,evN:0,gewarnt:new Set(),hz:false,verl:false,ende:false,raus:null,meldung:'',ansprache:null,tab:'spiel'};
-  liveFrame();liveRender();liveStart();}
+  S.live={tag:S.tag,eing:[],m:0,k:0};liveAufbauen(v,'');liveStart();}
+function liveAufbauen(v,meldung){const G=v.G,s=G.hid===S.my?0:1;
+  LIVE={v,G,s,lauf:false,timer:null,evN:G.ev.length,gewarnt:new Set(),hz:G.m>=45,verl:G.m>=90,ende:G.ende,raus:null,meldung,ansprache:(S.live&&S.live.ansprache)||null,tab:'spiel'};
+  liveFrame();liveRender();}
+// Fortsetzen nach Neuladen (K05 §3.3): Das Spiel wird mit denselben Eingriffen bis zur gespeicherten Minute nachgespielt. Die Würfe jeder Minute sind fest (K02), also kommt dasselbe heraus.
+function liveFortsetzen(){if(!S.live||LIVE)return;if(S.live.tag!==S.tag||S.phase!=='play'){S.live=null;return;}
+  let v=null;try{v=tagesSpieleVorbereiten(S.live.tag,true);}catch(e){console.error(e);}if(!v||!v.G){S.live=null;return;}
+  const G=v.G,s=G.hid===S.my?0:1,E=S.live.eing;let i=0,spulenBis=-1;
+  const anwenden=()=>{while(i<E.length&&E[i].m===G.m&&(!G.elf||E[i].k==null||E[i].k===G.elf.k))liveEingriffAnwenden(G,s,E[i++],b=>{spulenBis=b;});};
+  while(!G.ende&&(G.m<S.live.m||(G.elf&&G.elf.k<S.live.k))){anwenden();G.auto[s]=G.m<spulenBis;G.minute();}
+  G.auto[s]=false;anwenden();liveAufbauen(v,'Fortgesetzt: Das Spiel steht wieder da, wo du aufgehört hast.');if(G.ende)liveAbpfiff();}
+function liveEingriffAnwenden(G,s,e,spulen){const x=e.x||[];
+  if(e.a==='zuruf')G.zuruf(s,x[0]);else if(e.a==='spieler')G.spielerZuruf(s,x[0],x[1]);else if(e.a==='taktik')G.taktik(s,x[0]);
+  else if(e.a==='wechsel')G.wechseln(s,x[0],x[1]);else if(e.a==='ansprache')G.ansprache(s,x[0],x[1]);else if(e.a==='reihe')G.elfmeterReihe[s]=x[0].slice();else if(e.a==='spulen')spulen(x[0]);}
+// Eingriff merken und sichern
+function liveMerken(a,x){const L=LIVE;if(!L||!S.live)return;S.live.eing.push({m:L.G.m,k:L.G.elf?L.G.elf.k:null,a,x});liveSichern();}
+function liveSichern(){const L=LIVE;if(!L||!S.live)return;S.live.m=L.G.m;S.live.k=L.G.elf?L.G.elf.k:0;S.live.ansprache=L.ansprache;try{save();}catch(e){console.error(e);}}
 // Rahmen einmal aufbauen, danach nur Teile neu zeichnen
 function liveFrame(){const L=LIVE,E=liveEinst();
   ov(`<div class="row between"><h2 style="margin:0" id="lv-titel"></h2><span class="clock" id="lv-uhr"></span></div>
@@ -30,12 +44,14 @@ function liveFrame(){const L=LIVE,E=liveEinst();
 function liveTitel(){const g=LIVE.v.platz.g;return g.titel;}
 function liveTab(k){if(!LIVE)return;LIVE.tab=k;liveRender();}
 function liveStart(){const L=LIVE;if(!L||L.lauf||L.ende)return;L.lauf=true;L.timer=setInterval(liveTick,RL.tempo[liveEinst().tempo]||1000);liveSteuer();}
-function liveStop(){const L=LIVE;if(!L)return;L.lauf=false;clearInterval(L.timer);L.timer=null;liveSteuer();}
+function liveStop(){const L=LIVE;if(!L)return;L.lauf=false;clearInterval(L.timer);L.timer=null;liveSichern();liveSteuer();}
 // Eine Minute weiter, danach prüfen, ob angehalten wird
 function liveTick(){const L=LIVE;if(!L)return;const G=L.G;if(G.ende){liveAbpfiff();return;}
   G.minute();const halt=liveHalte();liveRender();
   if(G.ende){liveAbpfiff();return;}
-  const p=G.pause();if(p==='halbzeit'&&!L.hz){L.hz=true;liveStop();L.meldung='Halbzeit. Ansprache, Wechsel und Umstellungen sind jetzt möglich.';liveRender();return;}
+  if(G.m%10===0&&!G.elf)liveSichern();
+  const p=G.pause();
+  if(p==='elfmeter'){liveStop();L.meldung='Auch nach 120 Minuten unentschieden: Elfmeterschießen! Lege die Reihenfolge deiner Schützen fest.';liveRender();return;}if(p==='halbzeit'&&!L.hz){L.hz=true;liveStop();L.meldung='Halbzeit. Ansprache, Wechsel und Umstellungen sind jetzt möglich.';liveRender();return;}
   if(p==='verlaengerung'&&!L.verl){L.verl=true;liveStop();L.meldung='Unentschieden nach 90 Minuten: Es gibt Verlängerung. In der Verlängerung ist ein weiterer Wechsel erlaubt.';liveRender();return;}
   if(halt){liveStop();L.meldung=halt;liveRender();}}
 function liveHalte(){const L=LIVE,G=L.G,A=liveEinst().anhalten,neu=G.ev.slice(L.evN);L.evN=G.ev.length;let t=null;
@@ -51,44 +67,44 @@ function liveHalte(){const L=LIVE,G=L.G,A=liveEinst().anhalten,neu=G.ev.slice(L.
 // Gelb-Rot-Gefahr (K05 §4.3): verwarnte Abwehrspieler und Sechser, Ungestüme und Hitzköpfe foulen am meisten
 function gelbRotGefahr(G,s,id){const x=G.Ss[s].xp.find(y=>y.p.id===id);if(!x)return false;return posGruppe(x.pos)==='AB'||x.pos==='DM'||hatMk(x.p,'ungestuem')||hatEig(x.p,'hitzkopf');}
 // Vorspulen: der Co-Trainer übernimmt bis zur Halbzeit oder bis zum Ende
-function liveSpulen(bis){const L=LIVE;if(!L||L.ende)return;liveStop();const G=L.G,alt=G.auto[L.s];G.auto[L.s]=true;
+function liveSpulen(bis){const L=LIVE;if(!L||L.ende)return;liveStop();const G=L.G,alt=G.auto[L.s],m0=G.m,k0=G.elf?G.elf.k:null;G.auto[L.s]=true;
   while(!G.ende&&!(bis==='hz'&&G.m>=45)){G.minute();}
-  G.auto[L.s]=alt;L.evN=G.ev.length;if(bis==='hz'&&G.m===45){L.hz=true;L.meldung='Halbzeit. Der Co-Trainer hat bis hierher entschieden.';}
-  liveRender();if(G.ende)liveAbpfiff();}
+  G.auto[L.s]=alt;if(S.live){S.live.eing.push({m:m0,k:k0,a:'spulen',x:[G.m]});}L.evN=G.ev.length;if(bis==='hz'&&G.m===45){L.hz=true;L.meldung='Halbzeit. Der Co-Trainer hat bis hierher entschieden.';}
+  liveSichern();liveRender();if(G.ende)liveAbpfiff();}
 function liveBisEnde(){liveSpulen('ende');}
 function liveSteuer(){const L=LIVE,el=document.getElementById('lv-steuer');if(!el||!L)return;
   if(L.ende){el.innerHTML=`<button class="go" id="lv-weiter" onclick="liveWeiter()">Weiter</button>`;const b=document.getElementById('lv-weiter');if(b)b.focus();return;}
   el.innerHTML=`${L.lauf?`<button id="lv-pause-btn" onclick="liveStop()">Pause</button>`:`<button class="go" id="lv-los" onclick="LIVE.meldung='';liveStart()">${L.G.m===0?'Anpfiff':L.G.m===45?'2. Halbzeit':'Weiter'}</button>`}
-    ${L.G.m<45?`<button onclick="liveSpulen('hz')">Bis zur Halbzeit</button>`:''}<button onclick="liveBisEnde()">Zum Abpfiff</button>`;}
+    ${L.G.m<45?`<button onclick="liveSpulen('hz')">Bis zur Halbzeit</button>`:''}<button onclick="liveBisEnde()">${L.G.elf?'Alle Elfmeter':'Zum Abpfiff'}</button>`;}
 function liveAbpfiff(){const L=LIVE;if(!L||L.ende)return;liveStop();L.ende=true;const G=L.G;L.meldung=G.pen?`Elfmeterschießen ${G.pen[0]}:${G.pen[1]}.`:'Abpfiff.';liveRender();liveSteuer();}
 // Ergebnis eintragen und den Tag abschließen
 function liveWeiter(){const L=LIVE;if(!L||!L.ende)return;BUSY=true;let out=null;
-  try{liveEintragen(L.v);out=tagesSpieleAbschliessen(L.v.out);LAST=out;
+  try{liveEintragen(L.v);S.live=null;out=tagesSpieleAbschliessen(L.v.out);LAST=out;
     if(L.ansprache){const T=myT();T.ansp=[...(T.ansp||[]),L.ansprache].slice(-RL.ansprache.abnutzungSpiele);}save();}
   catch(e){console.error(e);toast('Fehler: '+e.message);}finally{BUSY=false;}
   LIVE=null;closeOv();weiterUI();}
 
 // ---------- Eingriffe ----------
-function liveZuruf(art){const L=LIVE;if(!L||L.ende)return;const r=L.G.zuruf(L.s,art);
+function liveZuruf(art){const L=LIVE;if(!L||L.ende)return;const r=L.G.zuruf(L.s,art);if(r.ok)liveMerken('zuruf',[art]);
   L.meldung=r.ok?(r.w===1?`„${ZURUF_TEXT[art]}“ – die Mannschaft reagiert.`:r.w>0?`„${ZURUF_TEXT[art]}“ – schon wieder? Wirkt nur noch halb.`:`„${ZURUF_TEXT[art]}“ – keiner hört mehr hin.`):r.grund;liveRender();}
-function liveSpielerZuruf(id,art){const L=LIVE;if(!L||L.ende)return;const p=PIX.get(id),r=L.G.spielerZuruf(L.s,id,art);if(r.ok)L.meldung=`${art==='loben'?'Lob':'Kritik'} für ${p.n}: ${r.text}.`;liveRender();}
-function liveTaktik(k,v){const L=LIVE;if(!L||L.ende)return;const o={};o[k]=v;L.G.taktik(L.s,o);const pl=L.G.plan[L.s].filter(x=>x.art===k).pop();
+function liveSpielerZuruf(id,art){const L=LIVE;if(!L||L.ende)return;const p=PIX.get(id),r=L.G.spielerZuruf(L.s,id,art);if(r.ok)liveMerken('spieler',[id,art]);if(r.ok)L.meldung=`${art==='loben'?'Lob':'Kritik'} für ${p.n}: ${r.text}.`;liveRender();}
+function liveTaktik(k,v){const L=LIVE;if(!L||L.ende)return;const o={};o[k]=v;L.G.taktik(L.s,o);liveMerken('taktik',[o]);const pl=L.G.plan[L.s].filter(x=>x.art===k).pop();
   L.meldung=pl?(pl.ab<=L.G.m+1?'Die Umstellung gilt ab sofort.':`Die Umstellung greift ab der ${pl.ab}. Minute.`):'Unverändert.';liveRender();}
 function liveRaus(id){const L=LIVE;if(!L)return;L.raus=L.raus===id?null:id;liveRender();}
-function liveRein(id){const L=LIVE;if(!L||!L.raus)return;const aus=PIX.get(L.raus),ein=PIX.get(id),r=L.G.wechseln(L.s,L.raus,id);
+function liveRein(id){const L=LIVE;if(!L||!L.raus)return;const aus=PIX.get(L.raus),ein=PIX.get(id),ausId=L.raus,r=L.G.wechseln(L.s,L.raus,id);if(r.ok)liveMerken('wechsel',[ausId,id]);
   L.meldung=r.ok?`Wechsel: ${ein.n} kommt für ${aus.n}.`:r.grund;L.raus=null;L.evN=L.G.ev.length;liveRender();}
 function liveAnsprache(art){const L=LIVE;if(!L||L.G.m!==45||L.ansprache)return;const T=myT(),alt=(T.ansp||[]).slice(-(RL.ansprache.abnutzungSpiele-1));
-  const abn=alt.length===RL.ansprache.abnutzungSpiele-1&&alt.every(a=>a===art)&&art!=='schweigen'?0.5:1,r=L.G.ansprache(L.s,art,abn);L.ansprache=art;
+  const abn=alt.length===RL.ansprache.abnutzungSpiele-1&&alt.every(a=>a===art)&&art!=='schweigen'?0.5:1,r=L.G.ansprache(L.s,art,abn);L.ansprache=art;liveMerken('ansprache',[art,abn]);
   L.meldung=`Ansprache „${ANSPRACHE_TEXT[art]}“${r.passt?'':' – passt nicht zur Lage, die Spieler sind irritiert'}${abn<1?' (kennen sie schon, wirkt nur halb)':''}.`;liveRender();}
 
 // ---------- Anzeige ----------
 function liveRender(){const L=LIVE;if(!L)return;if(!document.getElementById('lv-inhalt'))liveFrame();const G=L.G,r={h:G.hid,a:G.aid};
-  document.getElementById('lv-uhr').textContent=L.ende?'Ende':G.m===0?'0′':G.m+'′';
+  document.getElementById('lv-uhr').textContent=L.ende?'Ende':G.elf?'i.E.':G.m===0?'0′':G.m+'′';
   const karten=s=>{const n=G.ev.filter(e=>e.s===s&&e.t==='R').length;return n?` <span class="lv-rot" title="Platzverweise">${'▮'.repeat(n)}</span>`:'';};
   document.getElementById('lv-tafel').innerHTML=`<div class="board"><div class="t">${esc(tn(G.hid))}${karten(0)}</div><div class="score">${G.sc[0]}:${G.sc[1]}</div><div class="t">${karten(1)}${esc(tn(G.aid))}</div></div>${G.pen?`<p class="dim" style="text-align:center;margin-top:6px">Elfmeterschießen ${G.pen[0]}:${G.pen[1]}</p>`:''}`;
   document.getElementById('lv-druck').innerHTML=liveDruck();
   document.getElementById('lv-meldung').textContent=L.meldung||'';
-  document.getElementById('lv-pause').innerHTML=G.m===45&&!L.ende&&!L.lauf?liveHalbzeit():'';
+  document.getElementById('lv-pause').innerHTML=G.pause()==='elfmeter'&&!L.lauf?liveElfmeter():G.m===45&&!L.ende&&!L.lauf?liveHalbzeit():'';
   ['spiel','elf','taktik','stat','konf'].forEach(k=>{const b=document.getElementById('lv-tab-'+k);if(b)b.classList.toggle('on',L.tab===k);});
   const inh=document.getElementById('lv-inhalt');
   inh.innerHTML=L.tab==='elf'?liveElf():L.tab==='taktik'?liveTaktikAnsicht():L.tab==='stat'?liveStat():L.tab==='konf'?liveKonf():liveTicker(r);
@@ -97,9 +113,9 @@ function liveRender(){const L=LIVE;if(!L)return;if(!document.getElementById('lv-
 function liveDruck(){const L=LIVE,G=L.G,D=RL.druckleiste,von=G.m-D.minuten;let w=[0,0];
   G.verlauf.filter(x=>x[0]>von).forEach(x=>w[x[1]]+=1);G.ev.filter(e=>e.m>von&&(e.t==='C'||e.t==='G')).forEach(e=>w[e.s]+=e.art==='gross'||e.t==='G'?D.gross:D.halb);
   const sum=w[0]+w[1],h=sum?Math.round(100*w[0]/sum):50;return`<div class="lv-druck-bar"><i style="width:${h}%"></i></div><div class="lv-druck-lbl"><span>${esc(tn(G.hid))} ${h} %</span><span>Druck, letzte ${D.minuten} Minuten</span><span>${100-h} % ${esc(tn(G.aid))}</span></div>`;}
-function liveTicker(r){const G=LIVE.G,l=G.ev.filter(e=>e.t!=='P'||LIVE.ende).map(e=>({m:e.m,h:evText(e,r),t:e.t,o:0}));l.push({m:0,h:'Anpfiff.',t:'K',o:1});
+function liveTicker(r){const G=LIVE.G,l=G.ev.filter(e=>e.t!=='P'||LIVE.ende).map((e,i)=>({m:e.m,h:evText(e,r),t:e.t,o:0,i}));l.push({m:0,h:'Anpfiff.',t:'K',o:1});
   if(G.m>=45)l.push({m:45,h:'Halbzeit.',t:'K',o:1});if(G.m>90)l.push({m:90,h:'Verlängerung.',t:'K',o:1});if(LIVE.ende)l.push({m:G.m,h:'Abpfiff.',t:'K',o:1});
-  l.sort((a,b)=>b.m-a.m||b.o-a.o);return`<div class="tick">${l.map(e=>`<div><span>${e.m}'</span><i class="ic ${e.t}"></i><span>${e.h}</span></div>`).join('')}</div>`;}
+  l.sort((a,b)=>b.m-a.m||b.o-a.o||(b.i||0)-(a.i||0));return`<div class="tick">${l.map(e=>`<div><span>${e.m}'</span><i class="ic ${e.t}"></i><span>${e.h}</span></div>`).join('')}</div>`;}
 function liveElf(){const L=LIVE,G=L.G,s=L.s,sd=G.Ss[s],fw=G.wechselFrei(s),max=RL.wechsel.anzahl+(G.m>=90&&G.o.ko?RL.wechsel.verlaengerung:0);
   const zeile=x=>{const p=x.p,f=Math.round(G.fr[p.id]),rot=G.off.has(p.id),verl=G.inj.some(i=>i.id===p.id),gelb=G.yel[p.id];
     return`<div class="lv-sp ${L.raus===p.id?'sel':''}"><span class="pos ${posGruppe(x.pos)}">${x.pos}</span><span class="lv-n">${esc(p.n)}${gelb?' <i class="ic Y"></i>':''}${verl?' <i class="ic I"></i>':''}${rot?' <i class="ic R"></i>':''}</span>
@@ -127,6 +143,11 @@ function liveStat(){const G=LIVE.G,st=G.st,b=st.besitz[0]+st.besitz[1],z=(l,a,c)
 function liveKonf(){const L=LIVE,G=L.G,mn=G.m,done=L.ende;
   const grp=L.v.out.gruppen.map(g=>{const oth=g.list.filter(r=>r);return oth.length?`<h3>${esc(g.titel)}</h3><div class="others">${oth.map(r=>om(r,mn,done&&mn>=90,false)).join('')}</div>`:'';}).join('');
   return`<div class="card">${grp||'<p class="dim">Heute keine weiteren Spiele.</p>'}<p class="dim">Die anderen Spiele laufen zeitgleich mit, Stand nach ${mn} Minuten.</p></div>`;}
+// Elfmeterschießen (K05 §4.6): Reihenfolge der Schützen vor dem ersten Schuss
+function liveElfmeter(){const L=LIVE,G=L.G,s=L.s,reihe=G.elfmeterReihe[s].filter(id=>G.Ss[s].xp.some(x=>x.p.id===id&&!G.off.has(id)));
+  return`<div class="card lv-hz"><h3>Elfmeterschießen</h3><p class="dim">Die ersten fünf schießen zuerst, danach geht es der Reihe nach weiter. ▲ schiebt einen Schützen nach vorn.</p>
+  <ol class="lv-reihe">${reihe.map((id,i)=>{const p=PIX.get(id);return`<li><span>${esc(p.n)}${hatMk(p,'elfmeter')?' <span class="dim">(Elfmeterschütze)</span>':''}${hatEig(p,'nervenschwach')&&bekannteEigenschaften(p).includes('nervenschwach')?' <span class="dim">(nervenschwach)</span>':''}</span>${i?`<button onclick="liveReihe(${id})" aria-label="${esc(p.n)} nach vorn">▲</button>`:''}</li>`;}).join('')}</ol></div>`;}
+function liveReihe(id){const L=LIVE;if(!L||!L.G.elf||L.G.elf.k)return;const r=L.G.elfmeterReihe[L.s],i=r.indexOf(id);if(i>0){[r[i-1],r[i]]=[r[i],r[i-1]];liveMerken('reihe',[r.slice()]);}liveRender();}
 // Halbzeit (K05 §4.4): Statistik, Einschätzung des Co-Trainers, Ansprache
 function liveHalbzeit(){const L=LIVE,G=L.G;return`<div class="card lv-hz"><h3>Halbzeit</h3><p>${esc(coEinschaetzung(G,L.s))}</p>
   ${L.ansprache?`<p class="dim">Ansprache gehalten: ${ANSPRACHE_TEXT[L.ansprache]}.</p>`:`<p class="dim">Ansprache in der Kabine:</p><div class="row lv-ansp">${ANSPRACHEN.map(a=>`<button onclick="liveAnsprache('${a}')" title="${ANSPRACHE_HILFE[a]}">${ANSPRACHE_TEXT[a]}${G.passt(L.s,a)&&a!=='schweigen'&&a!=='taktik'&&a!=='augenzwinkernd'?' ✓':''}</button>`).join('')}</div><p class="dim">✓ passt zur Lage. Unpassende Ansprachen schaden.</p>`}</div>`;}

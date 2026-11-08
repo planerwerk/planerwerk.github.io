@@ -86,7 +86,7 @@ function sim(hid,aid,o={}){const G=spielAnlegen(hid,aid,o);while(!G.ende)G.minut
 function spielAnlegen(hid,aid,o={}){const saison=S.season,tag=S.tag;return mitStrom(strom('spiel',saison,tag,hid,aid),()=>spielAufbau(hid,aid,o,saison,tag));}
 function spielAufbau(hid,aid,o,saison,tag){const Z=RL.zurufe,hs=hash32(['spiel',saison,tag,hid,aid].join('|')),hk=hash32(['ki',saison,tag,hid,aid].join('|'));
   const G={hid,aid,o,saison,tag,m:0,mNow:0,ende:false,verl:false,auto:[!(o.auto&&o.auto[0]===false),!(o.auto&&o.auto[1]===false)],
-    rufe:[[],[],],spielerRuf:{},ansp:[null,null],plan:[[],[]],effektBis:0,verlauf:[],wz:[0,0],gel:[[],[]],ein:[[],[]],wechsel:[],minuten:{},raus:new Set()};
+    rufe:[[],[],],spielerRuf:{},sv:{},ansp:[null,null],plan:[[],[]],effektBis:0,verlauf:[],wz:[0,0],gel:[[],[]],ein:[[],[]],wechsel:[],minuten:{},raus:new Set()};
   // Zurufe und Ansprache als Faktoren (K05 §5.2, §5.4). w: Stärke nach Abnutzung, passt: Ansprache passt zur Lage (sonst halb umgekehrt)
   const aktiv=(r,m)=>m>r.m&&m<=r.m+Z.dauer;
   G.zf=(t,k)=>{const m=G.mNow;let f=1;const mit=(basis,w)=>{f*=1+(basis-1)*w;};
@@ -196,14 +196,21 @@ const H=side(hid,true,o.neutral),A=side(aid,false,o.neutral),Ss=[H,A];
   G.bank=[bankWaehlen(H),bankWaehlen(A)];
   G.werte=()=>W;
   // Eine Minute spielen. Nach der 90. Minute ist Schluss, im K.-o.-Spiel bei Gleichstand Verlängerung und Elfmeterschießen.
-  G.minute=()=>{if(G.ende)return;const m=G.m+1;G.verl=m>90;G.mNow=m;
+  G.minute=()=>{if(G.ende)return;if(G.elf){G.elfmeterSchuss();return;}const m=G.m+1;G.verl=m>90;G.mNow=m;
     G.plan.forEach((pl,s)=>{const f=pl.filter(x=>x.ab<=m);if(f.length){f.forEach(x=>umstellen(s,x));G.plan[s]=pl.filter(x=>x.ab>m);W=werte(m);}});
     [0,1].forEach(s=>{if(G.auto[s]&&!Ss[s].am)kiTrainer(s,m);});
     if(m<=G.effektBis+1||m===46)W=werte(m);
     mitStrom(stromNr(hs,m),()=>minute(m,G.verl));G.m=m;
-    if((m===90&&!(o.ko&&sc[0]===sc[1]))||m===120){if(m===120&&sc[0]===sc[1])mitStrom(strom('spiel',saison,tag,hid,aid,'elfmeter'),()=>{G.pen=shootout(H,A);ev.push({m:120,s:G.pen[0]>G.pen[1]?0:1,t:'P',pen:G.pen});});
-      G.ende=true;}};
-  G.pause=()=>G.m===45?'halbzeit':G.m===90&&!G.ende?'verlaengerung':G.m===105?'halbzeitVerlaengerung':null;
+    if((m===90&&!(o.ko&&sc[0]===sc[1]))||m===120){if(m===120&&sc[0]===sc[1])G.elf=elfmeterAnlegen();else G.ende=true;}};
+  // Elfmeterschießen (K05 §4.6): Schuss für Schuss in der Reihenfolge der Mannschaften, beendet, sobald es entschieden ist
+  const elfmeterAnlegen=()=>({z:strom('spiel',saison,tag,hid,aid,'elfmeter'),k:0,t:[0,0],n:[0,0]});
+  G.elfmeterReihe=[0,1].map(s=>elfmeterReihe(Ss[s]).map(p=>p.id));
+  G.elfmeterSchuss=()=>{const E=G.elf;if(!E||G.ende)return;const s=E.k%2,reihe=G.elfmeterReihe[s].filter(id=>Ss[s].xp.some(x=>x.p.id===id&&!off.has(id))),
+      sch=PIX.get(reihe[E.n[s]%Math.max(1,reihe.length)]),kp=torwart(s),tor=mitStrom(E.z,()=>R()<elfmeterQuote(sch,kp));
+    E.n[s]++;if(tor)E.t[s]++;E.k++;ev.push({m:120,s,t:'E',p:sch?sch.id:null,n:sch?sch.n:'ein Spieler',tor,st:[...E.t],nr:E.n[s]});
+    const rest=s0=>Math.max(0,5-E.n[s0]),fertig=E.n[0]>=5&&E.n[1]>=5?(E.n[0]===E.n[1]&&E.t[0]!==E.t[1]):(E.t[0]+rest(0)<E.t[1]||E.t[1]+rest(1)<E.t[0]);
+    if(fertig){G.pen=[...E.t];ev.push({m:120,s:G.pen[0]>G.pen[1]?0:1,t:'P',pen:G.pen});G.ende=true;}};
+  G.pause=()=>G.elf&&!G.ende?(G.elf.k===0?'elfmeter':null):G.m===45?'halbzeit':G.m===90&&!G.ende?'verlaengerung':G.m===105?'halbzeitVerlaengerung':null;
   // Wechsel (K05 §3.2): 5 Wechsel in 3 Gelegenheiten, Pausen zählen nicht, in der Verlängerung einer mehr
   G.wechselFrei=s=>{const W5=RL.wechsel,max=W5.anzahl+(G.m>=90&&o.ko?W5.verlaengerung:0),gel=W5.gelegenheiten+(G.m>=90&&o.ko?W5.verlaengerung:0);
     if(G.wz[s]>=max)return{ok:false,grund:`alle ${max} Wechsel verbraucht`};if(G.pause()||G.gel[s].includes(G.m))return{ok:true};
@@ -233,11 +240,11 @@ const H=side(hid,true,o.neutral),A=side(aid,false,o.neutral),Ss=[H,A];
     else if(hatEig(p,'diva')||hatEig(p,'nervenschwach')){f=-SZ.wirkung;sv=-SZ.sv;text='lässt den Kopf hängen';}
     else if(hatEig(p,'hitzkopf')){f=SZ.wirkung/2;sv=-SZ.sv/2;fouls=SZ.hitzkopfFouls;text='geht jetzt härter rein';}
     else{f=SZ.wirkung/2;sv=-SZ.sv/2;text='nickt';}
-    G.spielerRuf[id]={m:G.m,f,fouls};svAendern(p,sv);G.effektBis=Math.max(G.effektBis,G.m+Z.dauer);W=werte(G.m);return{ok:true,text};};
+    G.spielerRuf[id]={m:G.m,f,fouls};G.sv[id]=(G.sv[id]||0)+sv;G.effektBis=Math.max(G.effektBis,G.m+Z.dauer);W=werte(G.m);return{ok:true,text};};
   // Halbzeitansprache (K05 §5.4): passt sie nicht zur Lage, kehrt sich die Wirkung halb um. Abnutzung über drei Spiele (in G.ansprache übergeben).
   G.passt=(s,art)=>{const d=sc[s]-sc[1-s];return art==='loben'?d>0:art==='motivieren'?d<=0&&d>=-1:art==='fordern'?d<0:art==='beruhigen'?d>0:true;};
   G.ansprache=(s,art,abnutzung=1)=>{const A=RL.ansprache;if(!ANSPRACHEN.includes(art))return{ok:false};const f=(G.passt(s,art)?1:A.unpassend)*abnutzung;G.ansp[s]={art,f};
-    if(art==='loben')Ss[s].xp.forEach(x=>svAendern(x.p,A.loben.sv*f));if(art==='taktik')G.plan[s].forEach(x=>x.ab=Math.min(x.ab,G.m+1));W=werte(G.m);return{ok:true,passt:G.passt(s,art)};};
+    if(art==='loben')Ss[s].xp.forEach(x=>{G.sv[x.p.id]=(G.sv[x.p.id]||0)+A.loben.sv*f;});if(art==='taktik')G.plan[s].forEach(x=>x.ab=Math.min(x.ab,G.m+1));W=werte(G.m);return{ok:true,passt:G.passt(s,art)};};
   // Computer-Trainer (K05 §5.5): verletzte sofort, müde zwischen der 55. und 80. Minute, Taktik nach Spielstand
   const kiTrainer=(s,m)=>{const K=RL.ki,sd=Ss[s],d=sc[s]-sc[1-s],bank=G.bank[s];
     const ersatz=x=>{const gr=posGruppe(x.pos);let b=null,bv=-1;
@@ -260,7 +267,7 @@ const H=side(hid,true,o.neutral),A=side(aid,false,o.neutral),Ss=[H,A];
       const l=ids.map(([id,[a,b]])=>{const p=PIX.get(+id),ps=pos[id]||(p?STD_POS[p.pos]:'ZM'),min=Math.max(1,(b==null?ende:b)-a);
         const g=ps==='TW'?0.01:(RE.schuetzen.halb[linksForm(ps)]||0.3)*Math.pow((p?p.str:60)/RE.schuetzen.mitte,RE.schuetzen.exponent)*Math.min(90,min)/90;return[+id,ps,g,min];});
       const tot=l.reduce((a,x)=>a+x[2],0);return l.map(x=>[x[0],x[1],tot?x[2]/tot:0,x[3]]);};
-    return{h:hid,a:aid,hg:sc[0],ag:sc[1],ev,pen:G.pen,yel:Object.keys(yel).map(Number),off:[...off],inj,xi:[H.xi,A.xi],ein:G.ein,xg0,xpo:[H.am?[]:teil(H,0),A.am?[]:teil(A,1)],st,sz};};
+    return{h:hid,a:aid,hg:sc[0],ag:sc[1],ev,pen:G.pen,yel:Object.keys(yel).map(Number),off:[...off],inj,xi:[H.xi,A.xi],ein:G.ein,xg0,xpo:[H.am?[]:teil(H,0),A.am?[]:teil(A,1)],st,sz,sv:G.sv};};
   return G;}
 // Bank (K05 §3.2): 9 Spieler, darunter ein Torwart, sonst die stärksten verfügbaren aus jeder Gruppe
 const ZURUFE=['druck','ruhe','konzentration','zeit'],ANSPRACHEN=['loben','motivieren','fordern','beruhigen','taktik','schweigen','augenzwinkernd'];
@@ -275,13 +282,11 @@ function cardPick(me,off,gew){const c=me.xp.filter(x=>!off.has(x.p.id)&&x.pos!==
 const verletzGew=p=>hatEig(p,'verletzungsanfaellig')?1.6:1;
 const teamGew=(me,off,gew)=>{const c=me.xp.filter(x=>!off.has(x.p.id)&&x.pos!=='TW');return c.length?c.reduce((a,x)=>a+gew(x.p),0)/c.length:1;};
 // Elfmeterschießen: mit Mannschaften nach Schützen und Torwart (Elfmeterschütze, Elfmetertöter, nervenschwach), ohne nur mit Grundquote
-function shootout(H,A){const q0=RE.elfmeter;
-  if(!H||!A||!H.xp||!H.xp.length||!A.xp||!A.xp.length){let a=0,b=0;for(let i=0;i<5;i++){if(R()<q0)a++;if(R()<q0)b++;}while(a===b){if(R()<q0)a++;if(R()<q0)b++;}return[a,b];}
-  const rang={ST:3,MF:2,AB:1,TW:0},reihe=t=>t.xp.map(x=>x.p).sort((x,y)=>(hatMk(y,'elfmeter')-hatMk(x,'elfmeter'))||(rang[y.pos]-rang[x.pos])||(y.str-x.str)),
-    tw=t=>{const k=t.xp.find(x=>x.pos==='TW');return k?k.p:null;},q=(s,k)=>clamp(q0+(hatMk(s,'elfmeter')?0.08:0)-(hatEig(s,'nervenschwach')?0.06:0)-(k&&hatMk(k,'elfmetertoeter')?0.06:0),0.5,0.95);
-  const rh=reihe(H),ra=reihe(A),kh=tw(H),ka=tw(A);let a=0,b=0,i=0;
-  for(;i<5;i++){if(R()<q(rh[i%rh.length],ka))a++;if(R()<q(ra[i%ra.length],kh))b++;}
-  while(a===b){if(R()<q(rh[i%rh.length],ka))a++;if(R()<q(ra[i%ra.length],kh))b++;i++;}return[a,b];}
+// Elfmeterschießen ohne Mannschaften (Regionalliga-Aufstieg): nur Grundquote
+function shootout(){const q0=RE.elfmeter;let a=0,b=0;for(let i=0;i<5;i++){if(R()<q0)a++;if(R()<q0)b++;}while(a===b){if(R()<q0)a++;if(R()<q0)b++;}return[a,b];}
+// Schützen-Reihenfolge: Elfmeterschützen zuerst, dann Stürmer, Mittelfeld, Abwehr, Torwart, jeweils nach Stärke (bis K06 eigene Listen bringt)
+function elfmeterReihe(sd){const rang={ST:3,MF:2,AB:1,TW:0};return sd.xp.map(x=>x.p).sort((x,y)=>(hatMk(y,'elfmeter')-hatMk(x,'elfmeter'))||(rang[y.pos]-rang[x.pos])||(y.str-x.str));}
+function elfmeterQuote(s,k){const q0=RE.elfmeter;if(!s)return q0;return clamp(q0+(hatMk(s,'elfmeter')?0.08:0)-(hatEig(s,'nervenschwach')?0.06:0)-(k&&hatMk(k,'elfmetertoeter')?0.06:0),0.5,0.95);}
 const winner=r=>r.hg>r.ag?r.h:r.hg<r.ag?r.a:(r.pen&&r.pen[0]>r.pen[1]?r.h:r.a);
 function applyMatch(r,cup){return mitStrom(strom('nachspiel',S.season,S.tag,r.h,r.a),()=>applyMatchLauf(r,cup));}
 // Nach dem Spiel (K03, K04 §5.9): Frische, Spielpraxis, Note, Form gegenüber der erwarteten Note, Selbstvertrauen, Serie gegenüber der Erwartung
@@ -296,7 +301,7 @@ function applyMatchLauf(r,cup){const N=RE.note,V=RP.selbstvertrauen;
       p.lastG=gr;formNachNote(p,gr,erw);if(goals)svAendern(p,goals*V.tor);if(gr<=2)svAendern(p,V.guteNote);else if(gr>=5)svAendern(p,V.schlechteNote);
       p.played=1;if(tid===S.my)(r.grades=r.grades||{})[id]=gr;});
     serieBuchen(S.teams[tid],res>0?3:res===0?1:0,E.punkte,r.xi[s]);});
-  lernenImSpiel(r);
+  lernenImSpiel(r);if(r.sv)Object.entries(r.sv).forEach(([id,v])=>{const p=PIX.get(+id);if(p)svAendern(p,v);});
   r.yel.forEach(id=>{const p=PIX.get(id);if(!p)return;p.yc++;if(p.yc>=RE.gelbSperreAb){p.yc=0;p.sus=Math.max(p.sus,1);if(p.team===S.my)news(`${p.n} sieht die ${RE.gelbSperreAb}. Gelbe Karte und ist für ein Spiel gesperrt.`,'bad');}});
   r.off.forEach(id=>{const p=PIX.get(id);if(!p)return;p.sus=riA(RE.rotSperre);if(p.team===S.my)news(`Platzverweis: ${p.n} fehlt ${p.sus} Spiel(e).`,'bad');});
   // Ausfall in Tagen: w Wochen = die nächsten 7·w Tage (der Zähler läuft ab morgen jeden Tag um 1 herunter)

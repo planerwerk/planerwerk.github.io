@@ -5,7 +5,9 @@ Hängt ab von: K04 (Engine), K06 (Taktik), K02 (Zufallsströme) · Wird gebrauch
 
 **Umsetzungshinweise (U4a, 8. November 2026):** Die Engine ist ein Zustand, der Minute für Minute läuft (`spielAnlegen` in `js/engine.js`, `sim()` spielt ihn ohne Eingriffe durch). Gebaut sind Bank (9), Wechselregeln, Taktik im Spiel mit Umstellungszeit, Zurufe an Mannschaft und Spieler, Halbzeitansprache und der Computer-Trainer aus 5.5, alle Werte in `REGELN.live`. Getestet mit `tests/live.js` (Abschnitt 10). Abweichungen in §12 unter U4a.
 
-**Umsetzungshinweise (U4b):** Live-Ansicht in `js/live.js`: Anzeigetafel, Druckleiste, Ticker, Aufstellung mit Frische und Wechseln, Taktik und Zurufe, Statistik, Konferenz, Halbzeit mit Ansprache und Einschätzung des Co-Trainers, automatisches Anhalten (abschaltbar, Tempo wählbar, gespeichert in `S.einst.live`). Der Spieltag ist geteilt in `tagesSpieleVorbereiten` und `tagesSpieleAbschliessen` (`js/ablauf.js`), dazwischen läuft dein Spiel. Vor dem Anpfiff: „Live anpfeifen“ oder „Sofort berechnen“. Fortsetzen nach Neuladen und Konferenz nur nach Anstoßzeit folgen in U4c.
+**Umsetzungshinweise (U4b):** Live-Ansicht in `js/live.js`: Anzeigetafel, Druckleiste, Ticker, Aufstellung mit Frische und Wechseln, Taktik und Zurufe, Statistik, Konferenz, Halbzeit mit Ansprache und Einschätzung des Co-Trainers, automatisches Anhalten (abschaltbar, Tempo wählbar, gespeichert in `S.einst.live`). Der Spieltag ist geteilt in `tagesSpieleVorbereiten` und `tagesSpieleAbschliessen` (`js/ablauf.js`), dazwischen läuft dein Spiel. Vor dem Anpfiff: „Live anpfeifen“ oder „Sofort berechnen“. 
+
+**Umsetzungshinweise (U4c):** Fortsetzen nach Neuladen: `S.live` hält Tag, Eingriffe (mit Minute) und die gespeicherte Minute. Gespeichert wird bei jeder Pause, nach jedem Eingriff und alle 10 Minuten. Beim Laden spielt `liveFortsetzen` das Spiel mit denselben Eingriffen nach, das Ergebnis ist dasselbe (`tests/live-neuladen.js`). Damit nichts doppelt zählt, bucht die Engine Selbstvertrauen aus Zurufen und Ansprache erst nach dem Spiel. Konferenz: live nur Spiele derselben Anstoßzeit, frühere stehen als Endstand, spätere als „noch nicht angepfiffen“. Elfmeterschießen Schuss für Schuss mit wählbarer Reihenfolge, beendet, sobald es entschieden ist. **U4 ist damit fertig.**
 
 ## 1. Ziel und Spielgefühl
 
@@ -216,6 +218,8 @@ live:{
 13. **Elfmeter halten erst nach der Ausführung an** (Treffer über „Tor“, Fehlschuss über „Elfmeter“). Den Schützen vorher zu ändern, braucht die Schützenliste aus K06 (U5).
 14. **Gelb-Rot-Gefahr** hält nur bei verwarnten Abwehrspielern, Sechsern, Ungestümen und Hitzköpfen an. Mit jeder Gelben Karte wären es im Schnitt 6 Halte pro Spiel, jetzt etwa 5,5 (Ziel 3–6).
 15. **Halbzeit-Einschätzung des Co-Trainers:** schwächster und stärkster Bereich im Vergleich zum Gegner und wer schon platt ist, immer zutreffend, bis K16 die Genauigkeit an seine Qualität bindet.
+16. **Frühere Spiele des Tages als Zuschauer** (4.1) sind noch nicht gebaut. Sie erscheinen in der Konferenz mit Endstand.
+17. **Elfmeterschießen** endet, sobald eine Mannschaft uneinholbar führt (wie im echten Spiel). Vorher wurden immer fünf Schüsse je Seite gerechnet.
 
 **Noch zu recherchieren:** Größe der Ersatzbank in der Bundesliga, zusätzlicher Wechsel in der Verlängerung im DFB-Pokal.
 

@@ -64,6 +64,8 @@ Bei der Umsetzung (U4a):
 13. **Elfmeter halten erst nach der Ausführung an** (Treffer über „Tor“, Fehlschuss über „Elfmeter“). Den Schützen vorher zu ändern, braucht die Schützenliste aus K06 (U5).
 14. **Gelb-Rot-Gefahr** hält nur bei verwarnten Abwehrspielern, Sechsern, Ungestümen und Hitzköpfen an. Mit jeder Gelben Karte wären es im Schnitt 6 Halte pro Spiel, jetzt etwa 5,5 (Ziel 3–6).
 15. **Halbzeit-Einschätzung des Co-Trainers:** schwächster und stärkster Bereich im Vergleich zum Gegner und wer schon platt ist, immer zutreffend, bis K16 die Genauigkeit an seine Qualität bindet.
+16. **Frühere Spiele des Tages als Zuschauer** (4.1) sind noch nicht gebaut. Sie erscheinen in der Konferenz mit Endstand.
+17. **Elfmeterschießen** endet, sobald eine Mannschaft uneinholbar führt (wie im echten Spiel). Vorher wurden immer fünf Schüsse je Seite gerechnet.
 
 ## K06 – Taktik
 Datei: `konzepte/K06-taktik.md`

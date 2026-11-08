@@ -57,6 +57,16 @@ const punkte=(G,s)=>{const d=G.sc[s]-G.sc[1-s];return d>0?3:d===0?1:0;};
   while(G.m<80)G.minute();const r4=G.wechseln(0,xs()[4],G.bank[0][1]).ok;const r5=G.wechseln(0,xs()[5],G.bank[0][1]);
   pruef(r1&&r2&&r3&&r4&&!r5.ok,'Wechselregeln: zwei in der Halbzeit plus drei Gelegenheiten erlaubt, ein sechster Wechsel nicht',r5.grund);}
 
+// 6b. Elfmeterschießen (K05 §4.6): abwechselnd, die gewählte Reihenfolge gilt, Ende sobald entschieden
+{let geprueft=0,ok=true,grund='';for(let r=0;r<400&&geprueft<20;r++){S.season=8000+r;S.tag=3;const G=spielAnlegen(X,gegner[r%gegner.length],{ko:1,auto:[false,true]});
+    while(!G.ende&&!G.elf)G.minute();if(!G.elf)continue;geprueft++;const wunsch=G.elfmeterReihe[0].slice().reverse().filter(id=>G.Ss[0].xp.some(x=>x.p.id===id&&!G.off.has(id)));G.elfmeterReihe[0]=wunsch;
+    while(!G.ende)G.minute();const E=G.ev.filter(e=>e.t==='E');
+    if(E[0].p!==wunsch[0]){ok=false;grund='erster Schütze nicht der gewählte';}
+    if(E.some((e,i)=>e.s!==i%2)){ok=false;grund='nicht abwechselnd';}
+    const t=[0,0],n=[0,0];for(let i=0;i<E.length-1;i++){const e=E[i];n[e.s]++;if(e.tor)t[e.s]++;const rest=s0=>Math.max(0,5-n[s0]);if(n[0]<=5&&n[1]<=5&&(t[0]+rest(0)<t[1]||t[1]+rest(1)<t[0])){ok=false;grund='nicht abgebrochen, obwohl entschieden';}}
+    if(!G.pen||G.pen[0]===G.pen[1]){ok=false;grund='ohne Sieger';}}
+  pruef(ok&&geprueft>=10,`Elfmeterschießen: abwechselnd, gewählte Reihenfolge, Ende sobald entschieden (${geprueft} geprüft)`,grund||null);}
+
 // 7. Automatische Halte (K05 §10): im Schnitt 3–6 pro Spiel bei Standardeinstellung (ohne Halbzeit), mit der Halte-Logik der Ansicht (js/live.js)
 {let n=0,h=0;const halte=W.ev('liveHalte');for(let r=0;r<Math.ceil(N/3);r++)for(const g of gegner){S.season=7000+r;S.tag=3;const G=spielAnlegen(X,g,{auto:[true,true]});
     W.__setLive({G,s:0,evN:0,gewarnt:new Set()});while(!G.ende){G.minute();if(halte())h++;}n++;}

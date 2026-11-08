@@ -23,7 +23,7 @@ function openP(id){const p=PIX.get(id);if(!p)return;const mine=p.team===S.my,t=p
   <div class="facts">${fact('Verein',t?esc(t.name):'vereinslos')}${fact('Alter',p.age)}${jung?fact('Talent',stars(p)):''}${fact('Marktwert',fmt(v))}${fact('Gehalt',fmt(p.sal))}${p.team>=0?fact('Vertrag bis',S.season+p.ct):''}${fact('Selbstvertrauen',svWort(p.sv))}${fact('Ligatore',p.g)}${fact('Einsätze',p.apps)}${p.lastG?fact('Letzte Note',p.lastG.toFixed(1).replace('.',',')):''}${p.inj>0?fact('Verletzt',p.inj+(p.inj===1?' Tag':' Tage')):''}${p.sus>0?fact('Gesperrt',p.sus+(p.sus===1?' Spiel':' Spiele')):''}</div>
   ${werte}<div class="grid">${profil}${act}</div>`);}
 // „Tag beenden“ (K01): erst Erinnerungen, dann dein Spiel (Vorbericht, Anpfiff, Konferenz), dann weiter bis zum nächsten Halt.
-function tagBeenden(ohneErinnerung){if(LIVE){liveFrame();liveRender();return;}if(CONF){confFrame();renderConf();return;}if(BUSY)return;
+function tagBeenden(ohneErinnerung){if(LIVE){liveFrame();liveRender();return;}if(S.live){liveFortsetzen();if(LIVE)return;}if(CONF){confFrame();renderConf();return;}if(BUSY)return;
   if(S.phase==='end'){showSummary();return;}if(S.fired){showFired();return;}
   if(!ohneErinnerung){const e=erinnerungen();if(e.length){zeigeErinnerungen(e);return;}}
   if(heuteMeinSpiel()){showPre(meinSpiel(S.tag));return;}
@@ -51,15 +51,19 @@ function evText(e,r){const tm=esc(tn(e.s?r.a:r.h)),k=e.m*7+e.s*3;
   if(e.t==='R')return`<b>${e.gy?'Gelb-Rot':'Rote Karte'}</b> für ${esc(e.n)} <span class="dim">${tm}</span>`;
   if(e.t==='I')return`${esc(e.n)} verletzt sich. <span class="dim">${tm}</span>`;
   if(e.t==='S')return`Wechsel: ${esc(e.n)} kommt für ${esc(e.aus)}. <span class="dim">${tm}</span>`;
+  if(e.t==='E')return`Elfmeter ${e.nr}: ${esc(e.n)} ${e.tor?'trifft':'<b>verschießt</b>'} (${e.st.join(':')}) <span class="dim">${tm}</span>`;
   if(e.t==='P')return`<b>Elfmeterschießen: ${e.pen[0]}:${e.pen[1]}</b>`;return esc(e.x||'');}
+// Konferenz nach Anstoßzeit (K05 §4.1): live nur Spiele mit derselben Anstoßzeit, frühere schon beendet, spätere noch nicht angepfiffen
+function omKonf(r,meinAnstoss,mn,fertig){if(fertig||r.min==null||meinAnstoss==null||r.min===meinAnstoss)return om(r,fertig?999:mn,fertig,r.min!==meinAnstoss);
+  if(r.min<meinAnstoss)return om(r,999,true,true);return`<div class="om"><span><small class="dim">${uhr(r.min)}</small> ${esc(tn(r.h))}</span><span class="s">–:–</span><span>${esc(tn(r.a))}</span></div>`;}
 function om(r,mn,done,zeit){const s=scoreAt(r,mn),hot=r.ev.some(e=>e.t==='G'&&e.m<=mn&&e.m>mn-4);return`<div class="om ${hot&&!done?'hot':''}"><span>${zeit&&r.min!=null?`<small class="dim">${uhr(r.min)}</small> `:''}${esc(tn(r.h))}</span><span class="s">${s[0]}:${s[1]}${done&&r.pen?'<small> i.E.</small>':''}</span><span>${esc(tn(r.a))}</span></div>`;}
 function renderConf(){const c=CONF;if(!c)return;if(!document.getElementById('cf-body'))confFrame();const o=c.out,mn=Math.floor(c.min);let mine='';
   if(o.mine){const r=o.mine,sc=scoreAt(r,mn);const et=!!r.pen||r.ev.some(e=>e.m>90),end=et?120:90;
-    const L=r.ev.filter(e=>e.m<=mn&&(e.t!=='P'||c.done)).map(e=>({m:e.m,h:evText(e,r),t:e.t,o:e.t==='P'?2:0}));
+    const L=r.ev.filter(e=>e.m<=mn&&(e.t!=='P'||c.done)&&(e.t!=='E'||c.done)).map((e,i)=>({m:e.m,h:evText(e,r),t:e.t,o:e.t==='P'?2:0,i}));
     L.push({m:0,h:'Anpfiff.',t:'K',o:1});if(mn>=45)L.push({m:45,h:'Halbzeit.',t:'K',o:1});if(et&&mn>=90)L.push({m:90,h:'Verlängerung.',t:'K',o:1});if(mn>=end)L.push({m:end,h:r.pen?'Ende der Verlängerung.':'Abpfiff.',t:'K',o:1});
-    L.sort((a,b)=>b.m-a.m||b.o-a.o);
+    L.sort((a,b)=>b.m-a.m||b.o-a.o||(b.i||0)-(a.i||0));
     mine=`<div><div class="board"><div class="t">${esc(tn(r.h))}</div><div class="score">${sc[0]}:${sc[1]}</div><div class="t">${esc(tn(r.a))}</div></div>${c.done&&r.pen?`<p class="dim" style="margin-top:6px;text-align:center">Elfmeterschießen ${r.pen[0]}:${r.pen[1]}</p>`:''}<div class="tick">${L.map(e=>`<div><span>${e.m}'</span><i class="ic ${e.t}"></i><span>${e.h}</span></div>`).join('')}</div></div>`;}
-  const grp=o.gruppen.map(g=>{const oth=g.list.filter(r=>r!==o.mine).sort((a,b)=>(a.min||0)-(b.min||0)),zeit=new Set(g.list.map(r=>r.min)).size>1;return oth.length?`<h3>${g.list.includes(o.mine)?(g.art==='pokal'?'Weitere Pokalspiele':g.art==='liga'?`${ligaName(g.e.lg)}, weitere Spiele des Tages`:esc(g.titel)):esc(g.titel)}</h3><div class="others">${oth.map(r=>om(r,mn,c.done,zeit)).join('')}</div>`:'';}).join('');
+  const ma=o.mine?o.mine.min:null,grp=o.gruppen.map(g=>{const oth=g.list.filter(r=>r!==o.mine).sort((a,b)=>(a.min||0)-(b.min||0));return oth.length?`<h3>${g.list.includes(o.mine)?(g.art==='pokal'?'Weitere Pokalspiele':g.art==='liga'?`${ligaName(g.e.lg)}, weitere Spiele des Tages`:esc(g.titel)):esc(g.titel)}</h3><div class="others">${oth.map(r=>omKonf(r,ma,mn,c.done)).join('')}</div>`:'';}).join('');
   document.getElementById('cf-body').innerHTML=`${mine||'<div><p class="dim">Dein Verein spielt heute nicht.</p></div>'}<div>${grp}</div>`;
   document.getElementById('cf-clock').textContent=c.done?'Ende':mn+"'";
   if(c.done&&!c.btn){c.btn=1;document.getElementById('cf-btns').innerHTML='<button class="go" id="cf-next" onclick="closeConf()">Weiter</button>';const n=document.getElementById('cf-next');if(n)n.focus();}}
@@ -90,5 +94,5 @@ function copyExp(){const ta=document.getElementById('exp');const done=()=>toast(
 function importSave(){let d=null;try{d=JSON.parse(document.getElementById('imp').value);}catch(e){}
   if(!d||!d.teams||!d.pl){toast('Der Code ist ungültig.');return;}
   if(d.v!==REGELN.spielstand.version){toast('Dieser Code stammt aus einer älteren Version (Wochenkalender) und passt nicht mehr.');return;}
-  S=d;reindex();save();closeOv();TAB='buero';render();toast('Spielstand geladen.');}
+  if(LIVE){clearInterval(LIVE.timer);LIVE=null;}S=d;reindex();save();closeOv();TAB='buero';render();toast('Spielstand geladen.');if(S.live)liveFortsetzen();}
 function confirmNew(){ov(`<h2>Neues Spiel?</h2><p>Der aktuelle Spielstand wird überschrieben, wenn du im neuen Spiel den ersten Schritt machst. Sichere ihn vorher über „Menü“, falls du ihn behalten willst.</p><div class="row"><button class="go" onclick="closeOv();S=null;render()">Ja, neues Spiel</button><button onclick="closeOv()">Abbrechen</button></div>`);}

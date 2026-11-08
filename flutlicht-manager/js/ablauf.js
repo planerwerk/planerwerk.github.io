@@ -4,7 +4,7 @@
 // Zwei Schritte (K05): vorbereiten lost aus und rechnet alle Spiele, abschließen trägt sie ein (Tabellen, Finanzen, Vorstand).
 // Beim Live-Spiel bleibt dein Spiel dazwischen offen und läuft Minute für Minute in der Ansicht (js/live.js).
 function tagesSpiele(d){const v=tagesSpieleVorbereiten(d,false);return tagesSpieleAbschliessen(v.out);}
-function tagesSpieleVorbereiten(d,live){return mitStrom(strom('spieltag',S.season,d),()=>{const out={tag:d,gruppen:[],list:[],mine:null};let G=null,platz=null;S.gespielt=d;
+function tagesSpieleVorbereiten(d,live){return mitStrom(strom('spieltag',S.season,d),()=>{const out={tag:d,gruppen:[],list:[],mine:null},vorher=S.gespielt;let G=null,platz=null;S.gespielt=d;
   if(S.sponsOffers&&meinSpiel(d))sponsorWaehlen(0);
   const spiel=(h,a,o,meta,g)=>{const i=g.list.length;if(live&&(h===S.my||a===S.my)){G=spielAnlegen(h,a,Object.assign({},o,{auto:[h!==S.my,a!==S.my]}));platz={meta,g,i};g.list.push(null);return;}g.list.push(Object.assign(sim(h,a,o),meta));};
   for(const e of termineAm(d)){
@@ -12,11 +12,12 @@ function tagesSpieleVorbereiten(d,live){return mitStrom(strom('spieltag',S.seaso
     else if(e.art==='pokal'){if(S.cup.hist.length!==e.r)continue;const al=shuffle(S.cup.alive.slice()),fin=e.r===5,g={titel:`DFB-Pokal · ${POKAL_RUNDEN[e.r]}`,art:'pokal',e,list:[]};for(let i=0;i<al.length;i+=2){let h=al[i],a=al[i+1];if(h<1000&&a>=1000)[h,a]=[a,h];spiel(h,a,{ko:1,neutral:fin},{cup:1,min:e.min},g);}out.gruppen.push(g);}
     else if(e.art==='rel'||e.art==='rel2'){const sp=S[e.art==='rel'?'relSp':'relSp2'];if(!relBereit(e.art)||sp[e.leg])continue;const[h,a]=e.leg===0?relTeams(e.art).reverse():relTeams(e.art);const g={titel:`Relegation${e.art==='rel2'?' 2./3. Liga':''} · ${e.leg?'Rückspiel':'Hinspiel'}`,art:e.art,e,list:[]};spiel(h,a,{},{rel:1,min:e.min},g);out.gruppen.push(g);}
   }
+  if(G)S.gespielt=vorher; // erst nach dem Abpfiff gilt der Tag als gespielt (Neuladen mitten im Spiel)
   return{out,G,platz};});}
 // Das live gespielte Spiel an seinen Platz eintragen
 function liveEintragen(v){const r=Object.assign(v.G.ergebnis(),v.platz.meta);v.platz.g.list[v.platz.i]=r;return r;}
 function tagesSpieleAbschliessen(out){return mitStrom(strom('spieltagEnde',S.season,out.tag),()=>tagesSpieleAbschliessenLauf(out));}
-function tagesSpieleAbschliessenLauf(out){const d=out.tag;
+function tagesSpieleAbschliessenLauf(out){const d=out.tag;S.gespielt=d;
   out.list=out.gruppen.flatMap(g=>g.list);if(!out.list.length)return out;
   // Sperren zählen die Spiele der eigenen Mannschaft
   const spielten=new Set();out.list.forEach(r=>{spielten.add(r.h);spielten.add(r.a);});
