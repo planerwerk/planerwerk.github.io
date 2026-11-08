@@ -2,6 +2,8 @@
 
 Stand: 7. November 2026. Automatisch aus Abschnitt 12 aller Konzepte zusammengestellt.
 
+**Alle Punkte gelten, bis du widersprichst** (PLAN §1, Punkt 9). Keiner blockiert die Arbeit.
+
 Am 7.11. habe ich viele Konzepte ohne Rücksprache geschrieben. Wo eine Entscheidung nötig war, habe ich sie getroffen und als „vorläufig“ markiert. Hier stehen alle an einem Ort. Ein kurzes „passt“ oder eine Änderung je Punkt reicht.
 
 **Am wichtigsten, weil sie deine eigenen Regeln oder viel Datenarbeit berühren:**

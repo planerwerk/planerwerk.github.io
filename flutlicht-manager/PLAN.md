@@ -14,7 +14,8 @@ Stand: 7. November 2026 (U1 umgesetzt, dazu Sommer, Anstoßzeiten und 3. Liga; K
 6. Rohmaterial aus der ersten Planung steht in `konzepte/_rohmaterial-logik-v1.md`: Engine, Sportgericht, Transfers, Computer-Vereine. Daraus speisen sich die Konzepte.
 7. Die Genre-Recherche steht in `konzepte/_recherche-genre.md`: was BMH, Anstoss 3, Football Manager, We Are Football und Hattrick enthalten, was die Community kritisiert und was wir übernehmen. Vor jedem Konzept lesen.
 8. Die Konsistenzprüfung steht in `konzepte/_konsistenzpruefung.md`: Widersprüche, Lücken, Abhängigkeiten, Zuständigkeiten und offene Entscheidungen. Bei jedem neuen Konzept fortschreiben. Alle vorläufigen Entscheidungen zum Abhaken stehen in `konzepte/_offene-entscheidungen.md`.
-9. **Gespielt wird erst die fertige Alpha** (7.11.). Bis dahin müssen Spielstände nicht zwischen Versionen umgewandelt werden, und die Reihenfolge im Plan darf sich ändern, wenn das den Bau einfacher oder stimmiger macht.
+9. **„Weiter, entscheide du“** (8.11.): Sagst du das, trifft Claude offene Fragen selbst (beste Antwort, im Zweifel recherchiert), markiert sie als vorläufig und arbeitet ohne Anhalten weiter, bis die Aufgabe oder das Budget erschöpft ist. Vorläufige Entscheidungen gelten, bis du widersprichst.
+10. **Gespielt wird erst die fertige Alpha** (7.11.). Bis dahin müssen Spielstände nicht zwischen Versionen umgewandelt werden, und die Reihenfolge im Plan darf sich ändern, wenn das den Bau einfacher oder stimmiger macht.
 
 ## 2. Bereits entschieden (aus deinen Antworten)
 
