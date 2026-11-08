@@ -45,8 +45,9 @@ function tagesSpieleAbschliessenLauf(out){const d=out.tag;S.gespielt=d;
 // Werte pro Tag: Ausfalltage zählen herunter, Frische erholt sich, Fristen laufen ab, Bau wird fertig.
 function taeglich(d){return mitStrom(strom('tag',S.season,d),()=>taeglichLauf(d));}
 function taeglichLauf(d){const T=RT;
-  const urlaub=imUrlaub(),heute=spielendeAm(d),gestern=spielendeAm(d-1);
-  S.pl.forEach(p=>{if(p.inj>0)p.inj--;if(p.team<-1)return;tagesWerte(p,urlaub,p.team>=0&&(heute.has(p.team)||gestern.has(p.team)));});
+  const urlaub=imUrlaub(),ab=urlaub?null:spielAbstand(d);
+  if(ab)S.teams.forEach(t=>{if(aktiv(t))trainingVerein(t,ab.get(t.id),d);});
+  S.pl.forEach(p=>{if(p.inj>0)p.inj--;if(p.team<-1)return;const tr=!urlaub&&p.team>=0&&p.inj<=0?trainingTag(p,S.teams[p.team],ab.get(p.team),d):0;tagesWerte(p,urlaub,tr);});
   S.offers=S.offers.filter(o=>o.bis>=d&&PIX.get(o.pid)&&PIX.get(o.pid).team===S.my);
   const c=S.constr;if(c&&d>=c.bis){const t=myT();if(c.k==='cap')t.cap+=RB.tribuene.plaetze;if(c.k==='logen')t.logen+=RB.logen.anzahl;if(c.k==='shop')t.shop++;news(`Bau abgeschlossen: ${c.label}.`,'good');S.constr=null;}}
 // Werte pro Woche (montags): Training und Entwicklung, Transfermarkt, Vorstand bei Minus auf dem Konto.
@@ -69,7 +70,7 @@ function training(){const T=RT,d=S.tag,bericht=[];lernplaetzeVergeben();const mo
   S.pl.forEach(p=>{if(p.team<-1)return;wochenWerte(p);wocheVerein(p);if(p.ent==null||d-p.ent>=7)entwicklungBuchen(p,d);p.played=0;
     const mine=p.team===S.my;
     if(mine){const n=Math.round(p.str);if(p.sw!=null&&n!==p.sw)bericht.push([p,p.sw,n]);p.sw=n;}
-    if(mine&&S.train===T.verletzung.stufe&&p.inj<=0&&R()<T.verletzung.chance*(hatEig(p,'verletzungsanfaellig')?1.6:1)){const w=riA(T.verletzung.wochen);p.inj=w*7+1;news(`Trainingsverletzung: ${p.n} fällt ${w} Woche(n) aus.`,'bad');}});
+});
   if(bericht.length){const auf=bericht.filter(x=>x[2]>x[1]),ab=bericht.filter(x=>x[2]<x[1]),txt=l=>l.map(([p,a,b])=>`${p.n} (${a} → ${b})`).join(', ');
     news(`Wochenbericht des Co-Trainers: ${auf.length?'verbessert '+txt(auf):''}${auf.length&&ab.length?' · ':''}${ab.length?'nachgelassen '+txt(ab):''}.`,auf.length>=ab.length?'good':'');}}
 function market(){const M=RM;

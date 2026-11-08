@@ -5,25 +5,24 @@
 function zustand(p){const Z=RP.zustand,F=RP.form,P=RP.spielpraxis,k=RE.staerke;
   const fr=k.fitBasis+k.fitAnteil*p.fit/100,fo=1+(p.form-F.mitte)*F.wirkung,pr=p.sp<P.wirkungUnter?1-P.wirkungMax*(P.wirkungUnter-p.sp)/P.wirkungUnter:1;
   return clamp(fr*fo*pr,Z.min,Z.max);}
-// Trainingsstufe (bis K07): eigener Verein nach Einstellung, Computer-Vereine normal, Vereinslose locker
-const trainingsStufe=p=>p.team===S.my?S.train:p.team>=0?RT.computerStufe:0;
 
 // Frische-Erholung pro Tag (K03 §5.3): Wer müde ist, erholt sich anfangs schneller
 function erholung(p){const F=RP.frische,a=F.alter.find(x=>p.age<=x[0]);return(F.erholung[0]+F.erholung[1]*(100-p.fit))*(a?a[1]:F.alterSonst)*(F.koErholung[0]+F.koErholung[1]*p.ko);}
 // Werte pro Tag: Spielpraxis zerfällt, Frische erholt sich minus Trainingslast, Kondition sinkt im Urlaub und bei Verletzung
-function tagesWerte(p,urlaub,spieltOderRuhetag){const F=RP.frische,K=RP.kondition;
+// training: Frische-Änderung aus der Einheit des Tages (K07), negativ = Belastung
+function tagesWerte(p,urlaub,training){const K=RP.kondition;
   p.sp*=RP.spielpraxis.zerfall;
-  if(urlaub){p.ko=Math.max(0,p.ko-K.urlaub);p.fit=Math.min(100,p.fit+erholung(p));return;}
+  if(urlaub){p.ko=Math.max(0,p.ko-K.urlaub);p.fit=Math.min(100,p.fit+erholung(p));lastBuchen(p,0);return;}
   if(p.inj>0)p.ko=Math.max(0,p.ko-K.verletzt);
-  const last=spieltOderRuhetag||p.inj>0||p.team<0?0:F.training[trainingsStufe(p)];
-  p.fit=clamp(p.fit+erholung(p)-last,0,100);}
+  p.fit=clamp(p.fit+erholung(p)+(training||0),0,100);}
 // Werte pro Woche: Kondition wandert zum Trainingsziel, Form und Selbstvertrauen ziehen zur Mitte
 function wochenWerte(p){const K=RP.kondition,F=RP.form,V=RP.selbstvertrauen;
-  if(!imUrlaub()){const ziel=(p.team<0?K.vereinslos:K.ziel[trainingsStufe(p)])-Math.max(0,p.age-K.altAb)*K.altJeJahr-(hatEig(p,'partyloewe')?8:0);p.ko=clamp(p.ko+(ziel-p.ko)*K.tempo,0,100);
-    if(p.team>=0&&p.inj<=0)p.sp=Math.min(100,p.sp+RP.spielpraxis.training);}
+  if(!imUrlaub()&&p.team<0){const ziel=K.vereinslos-Math.max(0,p.age-K.altAb)*K.altJeJahr;p.ko=clamp(p.ko+(ziel-p.ko)*K.tempo,0,100);}
+  trainingWoche(p);
   p.form+=(F.mitte-p.form)*F.ausgleich;p.sv-=p.sv*V.ausgleich;}
 // Frische und Spielpraxis nach einem Pflichtspiel
-function nachSpiel(p,min){const F=RP.frische;p.fit=clamp(p.fit-F.spiel*min/90*(F.ko[0]+F.ko[1]*p.ko)*(hatMk(p,'ausdauernd')?0.75:1),RE.fitnessMin,100);p.sp=Math.min(100,p.sp+RP.spielpraxis.jeSpiel*min/90);}
+function nachSpiel(p,min){const F=RP.frische;p.fit=clamp(p.fit-F.spiel*min/90*(F.ko[0]+F.ko[1]*p.ko)*(hatMk(p,'ausdauernd')?0.75:1),RE.fitnessMin,100);p.sp=Math.min(100,p.sp+RP.spielpraxis.jeSpiel*min/90);
+  lastBuchen(p,RT.spielLast*min/90);p.wk=(p.wk||0)+RT.spielKondition*min/90;p.ltag=S.tag;p.lmin=min;}
 
 // Entwicklung der Stärke für die Tage seit der letzten Buchung (K03 §5.1)
 function entwickeln(p,tage){if(tage<=0)return;const E=RP.entwicklung,P=E.praxis;
@@ -32,7 +31,7 @@ function entwickeln(p,tage){if(tage<=0)return;const E=RP.entwicklung,P=E.praxis;
   const rest=clamp((p.pot-p.str)/E.talentWeich,0,1),fa=Math.pow(E.formBasis,p.form-RP.form.mitte),fb=1/fa;
   let pa=p.sp>=P.hoch?P.auf:p.sp<P.tief?P.aufTief:1,pb=p.sp<P.tief&&p.age>=P.abTiefAb?P.abTief:1;
   if(p.age<=P.halbBis){pa=1+(pa-1)/2;pb=1+(pb-1)/2;}
-  const prof=profi(p),tr=E.training[trainingsStufe(p)];
+  const prof=profi(p),tr=p.trf||1;
   const schritt=(wachs*rest*fa*pa*tr*(E.profi.auf[0]+E.profi.auf[1]*prof)-abb*fb*pb*(E.profi.ab[0]+E.profi.ab[1]*prof))*tage/E.tageProSaison
     +(R()-0.5)*2*E.zufall*tage/7*(p.age<=E.jung.bisAlter?E.jung.zufall:1);
   p.str=clamp(Math.min(p.str+schritt,Math.max(p.pot,p.str)),RT.staerkeMin,RT.staerkeMax);}
@@ -94,9 +93,9 @@ function lernbar(p,k){const m=RP.merkmale[k];if(!m||m.schwaeche||hatMk(p,k)||!m.
 // Platz für Stärken: mit der Klasse wächst das Repertoire (bis 64: 1, bis 74: 2, bis 84: 3, sonst 4)
 const platzStaerken=p=>{const t=RP.lernen.platz.find(x=>p.str<=x[0]);return Math.min(RP.lernen.maxStaerken,t?t[1]:RP.lernen.maxStaerken);};
 const lernOptionen=p=>RP.merkmaleWirksam.filter(k=>lernbar(p,k));
-function lernWoche(p){const L=RP.lernen;if(!p.ls||p.inj>0||p.team<0)return;const m=RP.merkmale[p.ls.k];if(!m||!lernbar(p,p.ls.k)){p.ls=null;return;}
+function lernWoche(p){const L=RP.lernen;if(!p.ls||p.inj>0||p.team<0||!genugTraining(p))return;const m=RP.merkmale[p.ls.k];if(!m||!lernbar(p,p.ls.k)){p.ls=null;return;}
   const a=L.alter.find(x=>p.age<=x[0]);let f=L.woche[m.s]*(a?a[1]:L.alterSonst)*(L.profi[0]+L.profi[1]*profi(p))*(L.zufall[0]+R()*(L.zufall[1]-L.zufall[0]));
-  if(p.fit<L.frischeUnter[0])f*=L.frischeUnter[1];eigenschaften(p).forEach(e=>{if(L.eigenschaft[e])f*=L.eigenschaft[e];});
+  if(p.fit<L.frischeUnter[0])f*=L.frischeUnter[1];eigenschaften(p).forEach(e=>{if(L.eigenschaft[e])f*=L.eigenschaft[e];});if(p.wl)f*=1+RT.lernen.einheit;f*=stabFaktor(p.team,'co');
   p.ls.f=Math.min(100,p.ls.f+f);
   if(p.ls.f>=100)merkmalNeu(p,p.ls.k);}
 // Ein Merkmal kommt dazu (gelernt oder als Schwäche entstanden). Eine gelernte Stärke verdrängt ihre Schwäche und beginnt mit vollem Fehlerkonto.
@@ -133,12 +132,12 @@ function merkmaleWoche(p){const L=RP.lernenSpiel,A=RP.lernen.altersverlust;
 function lernAutomatik(p){const o=lernOptionen(p);if(!o.length)return false;const g=RP.startMerkmale.gewichte[p.pos]||{},w={};o.forEach(k=>w[k]=(g[k]||0.3));p.ls={k:waehleGewichtet(w),f:0};return true;}
 const lernPlaetze=tid=>RP.lernen.plaetze;
 function lernplaetzeVergeben(){const nach=new Map();S.pl.forEach(p=>{if(p.team>=0){if(!nach.has(p.team))nach.set(p.team,[]);nach.get(p.team).push(p);}});
-  nach.forEach((sq,tid)=>{const n=lernPlaetze(tid),mit=sq.filter(p=>p.ls);
+  nach.forEach((sq,tid)=>{const n=lernPlaetze(tid),mit=sq.filter(p=>p.ls),um=sq.filter(p=>p.um&&!p.ls).length;
     if(mit.length>n)mit.sort((a,b)=>(b.ls.selbst?1:0)-(a.ls.selbst?1:0)||b.ls.f-a.ls.f).slice(n).forEach(p=>p.ls=null);
-    if(tid===S.my&&!RP.lernen.automatik)return;let frei=n-Math.min(n,mit.length);if(frei<=0)return;
+    if(tid===S.my&&!RP.lernen.automatik)return;let frei=n-Math.min(n,mit.length+um);if(frei<=0)return;
     for(const p of sq.filter(p=>!p.ls&&p.inj<=0).sort((a,b)=>a.age-b.age||b.str-a.str)){if(frei<=0)break;if(lernAutomatik(p))frei--;}});}
 // Woche: Zeit im Verein, neue Spieler (Talentschätzung neu), Lernen
 function wocheVerein(p){if(p.team!==p.vt){p.vt=p.team;p.wiv=0;p.ekw=riA(RP.entdeckenWochen);p.tf=ri(-RP.talentSchaetzung.fehler,RP.talentSchaetzung.fehler);}else p.wiv=(p.wiv||0)+1;
-  lernWoche(p);merkmaleWoche(p);}
+  lernWoche(p);umschulungWoche(p);merkmaleWoche(p);p.wt=0;p.wl=0;}
 // Talentsterne mit Schätzfehler (K03, K02): bis zu einem Stern daneben, nach zwei Jahren im Verein genau
 const sternFehler=p=>p.team===S.my&&(stufe().sterneGenau||p.wiv>=RP.talentSchaetzung.genauNachWochen*stufe().sterneWochen)?0:(p.tf||0);

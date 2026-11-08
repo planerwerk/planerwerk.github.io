@@ -525,3 +525,16 @@ Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `
 | AK5 | **K04 §10:** Ballbesitz-Spanne mit Stilen 36–62 %, ein Seed bis 33–60 %. Ziel 15–25 Punkte, also am oberen Rand. | beobachten |
 | AK6 | **K13 und Pokal-Auslosung:** In der 1. Runde wurden zwei Bundesligisten gegeneinander gelost (beobachtet: SC Freiburg gegen Borussia Dortmund). Im echten DFB-Pokal treffen in Runde 1 die Profis auf Amateure und Unterklassige. | 📌 bei U7 (K13) |
 
+---
+
+## AL. Nachtrag zur Umsetzung U6a (8. November 2026)
+
+| # | Befund | Status |
+|---|---|---|
+| AL1 | **AJ2 erledigt:** Die pauschalen +5 Spielpraxis pro Woche sind weg. Reservisten bekommen Spielpraxis aus dem Trainingsspiel am Tag nach dem Spiel. | ✅ |
+| AL2 | **AK2 erledigt:** Vertrautheit wächst aus Taktik-Einheiten und Spielvorbereitung (K07 §5.3), das Vergessen bleibt wöchentlich. | ✅ |
+| AL3 | **K03 §5.3 und K07:** Die Trainingsstufe ist entfallen. Frischekosten und Konditionsziel kommen aus den Einheiten. Grunderholung 2,1 statt 3 (K07 §12 Nr. 7). | ✅ |
+| AL4 | **K10:** Trainingsverletzungen nutzen bis K10 die alten Ausfallzeiten (1–3 Wochen). | 📌 bei U7 (K10) |
+| AL5 | **K16:** `stabFaktor` ist vorbereitet (Co-Trainer für Lernen, Umschulung, Vertrautheit; Athletiktrainer für das Verletzungsrisiko), liefert aber noch 1. | 📌 bei U6c |
+| AL6 | **K33:** Neue Felder am Verein `vorlage`, `vbTag`, `stdTag`, am Spieler `la`, `lc` (Last), `wk`, `we`, `wt`, `wl` (Wochenreize), `trf` (Trainingsfaktor), `eig` und `um` (Umschulung), `ltag`, `lmin` (letztes Spiel), `tinj` (Trainingsverletzungen der Saison). | ✅ in K33 |
+

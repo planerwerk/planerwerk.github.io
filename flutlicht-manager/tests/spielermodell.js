@@ -5,19 +5,25 @@ const N=+(process.argv[2]||6),SEED=+(process.argv[3]||11),probleme=[],t0=Date.no
 const pruef=(ok,text,wert)=>{console.log(`${ok?'✓':'✗'} ${text}${wert!=null?': '+wert:''}`);if(!ok)probleme.push(text+(wert!=null?' ('+wert+')':''));};
 const f1=x=>x.toFixed(1),f2=x=>x.toFixed(2);
 
-// 1. Frische und Kondition als Einzelrechnung mit den echten Funktionen (K03 §5.3)
-{const {W,F}=neueWelt();F.buildWorld(1);const S=W.S;S.my=0;S.train=1;S.phase='play';S.tag=S.plan.trainingsauftakt+10;
-  const p={age:26,fit:100,ko:80,sp:70,inj:0,team:5,form:10,sv:0};
-  const spiel=()=>F.nachSpiel(p,90),tag=(ruhe)=>F.tagesWerte(p,false,ruhe);
-  // ein Spiel pro Woche: Spieltag, Ruhetag, 5 Trainingstage
-  for(let w=0;w<3;w++){spiel();tag(true);for(let i=0;i<5;i++)tag(false);}
-  pruef(p.fit>=99,'Frische: ein Spiel pro Woche, zum nächsten Spiel wieder bei 100 %',f1(p.fit));
-  p.fit=100;spiel();tag(true);tag(false);spiel();tag(true);tag(false);tag(false);spiel();const nach3=p.fit;
-  pruef(nach3>=72&&nach3<=82,'Frische: drei Spiele in acht Tagen, danach 72–82 %',f1(nach3));
-  tag(true);tag(true);tag(true);pruef(p.fit>=90,'Frische: nach drei Ruhetagen mindestens 90 %',f1(p.fit));
-  p.ko=80;for(let i=0;i<28;i++)F.tagesWerte(p,true,false);const ab=80-p.ko;
+// 1. Frische und Kondition als Einzelrechnung mit den echten Funktionen (K03 §5.3, K07 §5.1): Einheiten aus den Vorlagen der Trainingswoche
+{const {W,F}=neueWelt();F.buildWorld(1);const S=W.S;S.my=0;S.phase='play';S.tag=S.plan.trainingsauftakt+10;const RT=W.ev('RT');
+  const p={age:26,fit:100,ko:80,sp:70,inj:0,team:5,form:10,sv:0,la:10,lc:10};
+  const reiz=(u,i)=>{const E=RT.einheiten[u],I=RT.intensitaet[i];p.wk=(p.wk||0)+(E.kondition||0)*I.wirkung;p.we=(p.we||0)+(E.entwicklung||0)*I.wirkung;return E.frische>0?E.frische*I.wirkung:(E.frische||0)*I.frische;};
+  const tag=e=>F.tagesWerte(p,false,e?reiz(e[0],e[1]):0),spiel=()=>{tag(null);F.nachSpiel(p,90);};
+  // Standardwoche (Samstag bis Samstag): Spiel, Tag danach, zwei Tage danach, zwei mittlere Tage, zwei Tage und ein Tag vorher
+  const V=RT.vorlagen.standard,woche=()=>{spiel();tag(V.p1);tag(V.p2);tag(V.mitte[0]);tag(V.mitte[1]);tag(V.m2);tag(V.m1);};
+  for(let w=0;w<3;w++)woche();
+  pruef(p.fit>=96,'Frische: Standardwoche mit einem Spiel, zum nächsten Spiel praktisch ausgeruht (mindestens 96 %)',f1(p.fit));
+  const E=RT.vorlagen.englisch;p.fit=100;spiel();tag(E.p1);tag(E.m1);spiel();tag(E.p1);tag(E.p2);tag(E.m1);spiel();const nach3=p.fit;
+  pruef(nach3>=72&&nach3<=82,'Frische: drei Spiele in acht Tagen (englische Woche), danach 72–82 %',f1(nach3));
+  tag(['frei','normal']);tag(['frei','normal']);tag(['frei','normal']);pruef(p.fit>=90,'Frische: nach drei freien Tagen mindestens 90 %',f1(p.fit));
+  p.ko=80;for(let i=0;i<28;i++)F.tagesWerte(p,true,0);const ab=80-p.ko;
   pruef(ab>=15&&ab<=20,'Kondition: vier Wochen Urlaub kosten 15–20',f1(ab));
-  S.train=2;p.team=S.my;for(let w=0;w<5;w++)F.wochenWerte(p);pruef(p.ko>=80,'Kondition: fünf Wochen hartes Training danach mindestens 80',f1(p.ko));}
+  p.ko=70;p.wk=0;for(let w=0;w<8;w++){woche();F.wochenWerte(p);}pruef(p.ko>=78&&p.ko<=82,'Kondition: acht Standardwochen halten sie bei 78–82',f1(p.ko));
+  const A=RT.vorlagen.aufbau;p.ko=60;p.wk=0;for(let w=0;w<5;w++){for(let i=0;i<7;i++)tag(A.mitte[i%A.mitte.length]);F.wochenWerte(p);}pruef(p.ko>=80,'Kondition: fünf Aufbauwochen heben sie über 80 (Richtung 90)',f1(p.ko));
+  // Englische Wochen: Entwicklungsreiz mindestens 30 % kleiner als in der Standardwoche (K07 §10)
+  p.we=0;woche();const fS=p.we;p.we=0;spiel();tag(E.p1);tag(E.m1);spiel();tag(E.p1);tag(E.p2);tag(E.m1);const fE=p.we;
+  pruef(fE<=0.7*fS,'Entwicklung: Reiz in der englischen Woche mindestens 30 % kleiner als in der Standardwoche',`${fS.toFixed(2)} → ${fE.toFixed(2)}`);}
 
 // 1b. Lernen im Spiel (K03 §5.6) mit erfundenen Szenen
 {const {W,F}=neueWelt();F.buildWorld(2);const S=W.S,PIX=W.ev('PIX');S.my=0;

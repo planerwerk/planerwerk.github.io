@@ -68,13 +68,12 @@ const REGELN={
       positionsAlter:{TW:-3,AB:-1,MF:0,ST:1},abbau:{TW:0.7,AB:0.85,MF:1,ST:1}, // Torhüter und Abwehr bauen später und langsamer ab
       talentWeich:3,formBasis:1.2,   // Wachstum × 1,2^(Form−10), Abbau × 1,2^(10−Form)
       praxis:{hoch:60,auf:1.2,tief:20,aufTief:0.7,abTief:1.3,abTiefAb:29,halbBis:18},
-      training:[0.8,1,1.2],          // je Trainingsstufe locker, normal, hart (bis K07)
       profi:{auf:[0.8,0.02],ab:[1.2,-0.02]},zufall:0.05,jung:{bisAlter:21,zufall:2}},
     form:{mitte:10,min:0,max:20,jeNote:2.5,ausgleich:0.10,wirkung:0.005,serie:{spiele:5,abPunkte:4,bonus:0.5}}, // Form += 1,5 × (erwartete Note − Note)
-    frische:{spiel:15,ko:[1.5,-0.007],erholung:[3,0.1],alter:[[23,1.1],[29,1],[32,0.9]],alterSonst:0.8,koErholung:[0.8,0.004],training:[1,2,3]},
-    kondition:{ziel:[70,80,90],vereinslos:65,tempo:0.20,altAb:30,altJeJahr:1,urlaub:0.6,verletzt:0.5},
+    frische:{spiel:15,ko:[2.0,-0.0125],erholung:[2.1,0.1],alter:[[23,1.1],[29,1],[32,0.9]],alterSonst:0.8,koErholung:[0.8,0.004]},
+    kondition:{vereinslos:65,tempo:0.20,altAb:30,altJeJahr:1,urlaub:0.6,verletzt:0.5},
     selbstvertrauen:{min:-3,max:3,tor:0.5,guteNote:0.3,schlechteNote:-0.3,ausgleich:0.15},
-    spielpraxis:{zerfall:0.97,jeSpiel:25,training:5,wirkungUnter:50,wirkungMax:0.04}, // training: Spielformen im Training je Woche (bis K07)
+    spielpraxis:{zerfall:0.97,jeSpiel:25,wirkungUnter:50,wirkungMax:0.04}, // Trainingsspiele geben zusätzlich Spielpraxis (K07)
     zustand:{min:0.80,max:1.08},    // Deckel für Form, Frische und Spielpraxis zusammen (K03 §5.8)
     // Persönlichkeit (K03 §3.3): 8 verdeckte Werte 1–20, ausgewürfelt je Karriere
     persoenlichkeit:{mitte:10,streuung:3.5,min:1,max:20,werte:['pro','ehr','loy','tem','dru','anp','fue','rob']},
@@ -188,12 +187,35 @@ const REGELN={
     gehalt:{basis:1.05,zufall:0.2,altAb:31,altFaktor:0.85} // Gehaltsforderung = Gehalt × (basis + Zufall), ältere günstiger bei Verlängerung
   },
 
+  // Training (K07 §11): Einheiten, Intensität, Vorlagen nach Abstand zum Spiel, Kondition und Entwicklung aus dem Wochenreiz, Belastung, Verletzungen, Umschulung
   training:{
-    // Trainingsstufe 0 locker, 1 normal, 2 hart: wirkt auf Entwicklung, Kondition und Frische (Werte unter spieler, bis K07 die Wochenpläne bringt)
     staerkeMin:25,staerkeMax:99,
-    computerStufe:1,
-    verletzung:{stufe:2,chance:0.004,wochen:[1,3]} // nur eigener Verein, nur bei hartem Training
+    einheiten:{regeneration:{frische:1},kondition:{frische:-4,kondition:2,entwicklung:0.3},technik:{frische:-2,kondition:1,entwicklung:1,lernen:0.2},
+      taktik:{frische:-2,kondition:1.2,vertrautheit:2,entwicklung:0.6},standards:{frische:-1,kondition:0.5,lernen:0.2},
+      vorbereitung:{frische:-1,kondition:0.5,vertrautheit:1},spiel:{frische:-5,kondition:1,praxis:1/3,entwicklung:0.5,risiko:1.5},frei:{}},
+    intensitaet:{leicht:{wirkung:0.5,frische:0.5,risiko:0.5},normal:{wirkung:1,frische:1,risiko:1},hoch:{wirkung:1.3,frische:1.5,risiko:2}},
+    // Vorlagen (K07 §3.2): p1 = Tag nach dem Spiel (Startspieler), p1rest = übrige, p2 = zwei Tage danach, mitte = mittlere Tage der Reihe nach, m2/m1 = zwei Tage / ein Tag vor dem Spiel
+    vorlagen:{
+      standard:{name:'Standardwoche',p1:['regeneration','normal'],p1rest:['spiel','leicht'],p2:['frei','normal'],mitte:[['taktik','normal'],['kondition','normal'],['technik','normal']],m2:['taktik','normal'],m1:['vorbereitung','leicht']},
+      englisch:{name:'Englische Woche',p1:['regeneration','normal'],p1rest:['technik','leicht'],p2:['taktik','leicht'],mitte:[['technik','leicht']],m2:['taktik','leicht'],m1:['vorbereitung','leicht']},
+      aufbau:{name:'Aufbau',p1:['frei','normal'],p1rest:['frei','normal'],p2:['kondition','normal'],mitte:[['kondition','hoch'],['technik','normal'],['spiel','normal']],m2:['taktik','normal'],m1:['vorbereitung','leicht']},
+      schonen:{name:'Schonen',p1:['regeneration','normal'],p1rest:['regeneration','leicht'],p2:['frei','normal'],mitte:[['technik','leicht'],['taktik','leicht']],m2:['taktik','leicht'],m1:['vorbereitung','leicht']},
+      // Vorbereitung (K07 §3.2, K12a): Woche 1 Kondition normal, Wochen 2–3 hoch, Wochen 4–5 Taktik und Spielformen. Langsam steigern schützt vor Belastungssprüngen.
+      vorbereitung:{name:'Vorbereitung',m1:['vorbereitung','leicht'],wochen:[[['kondition','normal'],['technik','normal'],['frei','normal'],['kondition','normal'],['technik','leicht'],['taktik','leicht'],['frei','normal']],
+        [['kondition','hoch'],['technik','normal'],['kondition','hoch'],['spiel','normal'],['taktik','normal'],['kondition','normal'],['frei','normal']],
+        [['kondition','hoch'],['technik','normal'],['taktik','normal'],['spiel','normal'],['kondition','normal'],['technik','normal'],['frei','normal']],
+        [['taktik','normal'],['technik','normal'],['spiel','normal'],['standards','normal'],['taktik','normal'],['kondition','normal'],['frei','normal']]]}},
+    startVorlage:'auto',blick:14,englischBis:4,pauseAb:9,vorbereitungTage:42,startspielerAb:60,
+    kondition:{basis:58,jeReiz:4,max:95},
+    // Trainingsfaktor der Entwicklung: 0,6 (kaum Training) bis 1,25, Standardwoche (Reiz 2,5) = 1. Wer platt ist (Frische unter 70), lernt schlechter.
+    entwicklung:{min:0.5,max:1.25,normalReiz:1.5,frischeUnter:70,frischeFaktor:0.8}, // normalReiz: Standardwoche mit sieben Tagen Abstand (Taktik, Kondition, Taktik)
+    lernen:{mindestTage:3,einheit:0.2},
+    umschulung:{verwandt:4,fremd:2,verwandtAb:75,max:90,maxVielseitig:95},
+    verletzung:{basis:0.00026,sprungAb:1.3,sprungJe01:1.5,frischeAb:80,frischeJePunkt:0.05,anfaellig:1.6,wochen:[1,3]},
+    last:{akut:7,chronisch:28,grund:2}, // grund: gewohnte Last mindestens 2 pro Tag
+    spielLast:15,spielKondition:1 // Last und Konditionsreiz eines ganzen Pflichtspiels
   },
+
 
   // Match-Engine v2 (K04): Szenen-Modell pro Minute. Grundordnungen auf den 14 Positionen (K06), Seiten links und rechts getrennt.
   engine:{
@@ -238,7 +260,7 @@ const REGELN={
     heim:{alle:1.03,amateure:1.05},
     eigenschaften:{kaempfer:1.03,fuehrungsspieler:1.01,nervenschwach:0.96,trainingsweltmeister:0.97,engAb:80,nervenschwachElfmeter:0.06}, // Wirkung im Spiel (K03 §3.3), eng: ab Minute 80 mit höchstens einem Tor Abstand
     amateure:{wirkungJeStaerke:1}, // Amateurklubs im Pokal: alle Teamwerte = ihre Stärke
-    ermuedung:{proMinute:0.17,ko:[1.5,-0.007],hart:1.15,schwelle:60,abfall:0.005},
+    ermuedung:{proMinute:0.17,ko:[2.0,-0.0125],hart:1.15,schwelle:60,abfall:0.005},
     karten:{gelb:0.019,rot:0.0007,hart:1.7,fair:0.5}, // nur noch für Amateurklubs
     verletzung:{chance:0.0012,gegnerHart:1.5,wochen:[1,6]}, // je Minute und Mannschaft. Ausfall: 7 Tage je Woche
     verlaengerung:0.8,               // Chancen in der Verlängerung relativ
@@ -261,6 +283,7 @@ const REGELN={
     // Umsetzung = 0,5 × Voraussetzungen + 0,5 × Vertrautheit/100. Grundwert: Bereich gegen Ligaschnitt, ±grundSpanne/2 Punkte = 0 bis 1. Frische und Kondition: von 60 (0) bis 90 (1).
     umsetzung:{voraussetzungen:0.5,vertrautheit:0.5,merkmalErtrag:[1,0.6,0.3],grundSpanne:12,frische:[60,90]},
     vertrautheit:{start:[70,30],trainingWoche:5,jeSpiel:3,vergessen:2,min:30,neuzugang:4,ordnungUnter:60,ordnungMalus:0.03},
+    vorbereitungBonus:0.01,standardsBonus:1.05, // Spielvorbereitung MD-1/MD-2: Teamwerte +1 %, Standard-Einheit in den letzten 7 Tagen: Tore nach Ecken und Freistoßflanken ×1,05 (K07 §5.3)
     einstellung:{locker:{wirkung:0.96,frische:0.7},saison:{wirkung:1.04,katerTage:10,kater:0.955,frische:5}}, // Kater 10 Tage: trifft auch das nächste Wochenendspiel (K06 §12)
     // Computer-Trainer (K06 §7): Außenseiter mauern oder kontern, Favoriten pressen oder haben den Ball, Reaktion auf deinen Lieblingsstil (Stufe „normal“)
     ki:{aussenseiter:0.95,favorit:1.05,reaktion:0.25,rueckblick:5,profil:{ausgewogen:3,pressing:1,ballbesitz:1,konter:1,mauern:1,fluegel:1},ordnungTreue:1.02,ordnungAlleWochen:4,wichtigAbRunde:3,kreislaufGewicht:0.3}},

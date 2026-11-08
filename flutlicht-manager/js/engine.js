@@ -8,12 +8,12 @@ const seite=pos=>/^(LV|LM|LA|LS)$/.test(pos)?'L':/^(RV|RM|RA|RS)$/.test(pos)?'R'
 const linksForm=pos=>seite(pos)==='R'?TAUSCH[pos]:pos;
 const STD_POS={TW:'TW',AB:'IV',MF:'ZM',ST:'MS'};
 // Eignung eines Spielers für einen Platz (K03 §3.1a): eigene Position 100 %, verwandte 75–92 %, Gruppe 70 %, sonst 55 %, Torwart und Feld 45 %
-function eignung(p,pos){const E=RE.eignung,fp=p.fp||STD_POS[p.pos];if(fp===pos)return 1;
+function eignung(p,pos){const E=RE.eignung,fp=p.fp||STD_POS[p.pos];if(fp===pos)return 1;const tr=p.eig&&p.eig[pos]?p.eig[pos]/100:0;
   const gA=posGruppe(fp),gB=posGruppe(pos);let w;
   if(gA==='TW'||gB==='TW')w=E.torwartFeld;
   else{let a=fp,b=pos;if(seite(a)==='R'){a=TAUSCH[a];b=TAUSCH[b]||b;}w=(E.nah[a]&&E.nah[a][b])||(E.nah[b]&&E.nah[b][a])||(gA===gB?E.gleicheGruppe:E.andereGruppe);
     if(hatMk(p,'vielseitig'))w=Math.min(E.vielseitigMax,w+E.vielseitig);}
-  let f=w/100;const s=seite(pos);
+  let f=Math.max(w,tr*100)/100;const s=seite(pos);
   if(s&&E.seitenPositionen.includes(pos)&&!hatMk(p,'beidfuessig')&&((s==='L'&&p.fuss==='R')||(s==='R'&&p.fuss==='L')))f*=E.falscheSeite;
   return f;}
 // Wirkung eines Spielers auf einem Platz. fr: Frische im Spiel (sonst die gespeicherte), extra: Faktor aus der Lage (Kämpfer, wichtige Spiele)
@@ -133,7 +133,7 @@ const H=side(hid,true,o.neutral),A=side(aid,false,o.neutral),Ss=[H,A];taktikAnle
     if(typ==='kopf'||typ==='ecke'||typ==='freistossFlanke'){if(hatMk(schuetze,'kopfballstark'))p*=Mk.kopfballstark.tor;if(hatMk(schuetze,'kopfballschwach'))p*=Mk.kopfballschwach;
       const n=mkZahl(imSpiel(1-s),'kopfballstark');if(n)p*=Math.pow(Mk.kopfballstark.abwehr,abnehmend(n));if(kp&&hatMk(kp,'strafraum'))p*=Mk.strafraum;if(kp&&hatMk(kp,'fliegenfaenger'))p*=Mk.fliegenfaenger;}
     if(typ==='fern'&&hatMk(schuetze,'weitschuetze'))p*=Mk.weitschuetze.tor;
-    if(hatMk(schuetze,'beidfuessig'))p*=Mk.beidfuessig;
+    if(hatMk(schuetze,'beidfuessig'))p*=Mk.beidfuessig;if((typ==='ecke'||typ==='freistossFlanke')&&Ss[s].stdF)p*=Ss[s].stdF;
     p=clamp(p,0.005,0.9);
     const flanke=typ==='kopf'||typ==='ecke'||typ==='freistossFlanke';
     if(R()<p){torEv(m,s,schuetze,basisArt||typ);sz.push([schuetze.id,typ,1]);

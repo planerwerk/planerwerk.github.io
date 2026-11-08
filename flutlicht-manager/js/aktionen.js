@@ -4,6 +4,12 @@ function tab(k){TAB=k;if(k==='aufst'&&S){S.lineup=myXI();save();}render();window
 function setSlot(i,id){id=+id;const xi=myXI(),j=xi.indexOf(id);if(j>=0)xi[j]=xi[i];xi[i]=id;S.lineup=xi;save();render();}
 function setForm(f){myT().form=f;S.lineup=bestXI(S.my,f);save();render();}
 function setTac(v){myT().tac=v;save();render();}
+// Training (K07): Vorlage des Wochenplans, Umschulung auf eine neue Position (belegt einen Einzeltrainingsplatz)
+function setVorlage(k){myT().vorlage=k==='auto'||!RT.vorlagen[k]?'auto':k;save();render();}
+function setUmschulung(id,pos){const p=PIX.get(id);if(!p||p.team!==S.my)return;if(!pos){p.um=null;save();openP(id);return;}
+  if(!p.ls&&!p.um&&squad(S.my).filter(x=>x.ls||x.um).length>=lernPlaetze(S.my)){const frei=squad(S.my).filter(x=>x.ls&&!x.ls.selbst&&!x.um).sort((a,b)=>a.ls.f-b.ls.f)[0];
+    if(!frei){toast(`Alle ${lernPlaetze(S.my)} Einzeltrainingsplätze sind mit deinen eigenen Zielen belegt.`);openP(id);return;}frei.ls=null;toast(`${frei.n} gibt seinen Platz im Einzeltraining ab.`);}
+  p.um=pos;save();openP(id);}
 // Taktik (K06): Spielstil, Einstellung zum Spiel (nur für das nächste Spiel), Rollen je Grundordnung, Standardschützen
 function setStil(k){if(!STILE.includes(k))return;myT().stil=k;save();render();}
 function setEinstellung(k){if(!RTA.einstellung[k]&&k!=='normal')return;myT().einstellung=k;save();render();}

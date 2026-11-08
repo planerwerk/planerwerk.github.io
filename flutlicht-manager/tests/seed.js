@@ -5,7 +5,7 @@ const FILE='file://'+path.resolve(__dirname,'..','index.html');
 const LAUF=({seed,bis,von})=>{if(!von){buildWorld(seed);S.my=6;S.mgr='Seed';setTarget();sponsOffers();S.lineup=bestXI(6,myT().form);S.__halt=0;}
   while(S.__halt<bis){const h=S.__halt++;
     if(h===2&&S.sponsOffers)pickSponsor(1);
-    if(h===4){setForm('4-3-3');setTac('O');S.train=2;loan(5);startBuild('cap');}
+    if(h===4){setForm('4-3-3');setTac('O');setVorlage('aufbau');loan(5);startBuild('cap');}
     if(h===9){const fa=S.pl.filter(p=>p.team===-1).sort((a,b)=>b.str-a.str||a.id-b.id)[0];if(fa){openP(fa.id);offer(fa.id);closeOv();}}
     if(h===14&&S.offers.length)acceptOffer(0);
     if(S.phase==='end'){if(S.fired)takeJob(S.jobs[0]);sommerpause();continue;}

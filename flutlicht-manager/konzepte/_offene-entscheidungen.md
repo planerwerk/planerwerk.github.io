@@ -98,6 +98,17 @@ Datei: `konzepte/K07-training.md`
 4. **Fünf Einzeltrainingsplätze** bis zum Trainerstab (K16).
 5. **Trainingsspiel** als eigene Einheit, weil es Reservisten Spielpraxis gibt und in der Community gewünscht wird.
 
+Bei der Umsetzung (U6a):
+6. **Belastung als gleitendes Mittel** über 7 und 28 Tage (zwei Zahlen je Spieler) statt 28 einzelner Tageswerte. Gewohnte Last mindestens 2 pro Tag, sonst wäre nach dem Urlaub jeder erste Trainingstag ein riesiger Sprung (Risiko ×35).
+7. **Regeneration** bringt netto +1 Frische. „+4 statt Verlust“ ist als Unterschied zu einer normalen Einheit gelesen. Dazu Grunderholung 2,1 statt 3 pro Tag: Sonst waren Spieler nach drei Spielen in acht Tagen wieder bei 86 % statt 72–82 %. Die Standardwoche endet dadurch bei etwa 97 % Frische vor dem Spiel (statt 100 %), das kostet unter 1 % Stärke für alle gleich.
+8. **Standardwoche** mit den mittleren Tagen Taktik, Kondition, Technik (in dieser Reihenfolge). Bei sieben Tagen Abstand bleiben zwei mittlere Tage, so gibt es zwei Taktik-Einheiten wie in 5.3 vorgesehen. Der Entwicklungsreiz dieser Woche (1,5) ist der Normalwert (Faktor 1), die Spanne 0,5 bis 1,25.
+9. **Kondition wirkt stärker auf die Ermüdung** (im Spiel und nach dem Spiel): Kondition 68 ermüdet etwa 25 % schneller als 84. Vorher brachte Training gegenüber „Schonen“ kaum etwas.
+10. **Trainingsverletzungen:** Grundrate 0,00026 je Einheit, damit 40–55 % aller Verletzungen im Training passieren. Das passt zur UEFA-Studie (Spiel 27,5, Training 4,1 Verletzungen je 1000 Stunden) bei üblichen Trainings- und Spielstunden.
+11. **„Training wirkt“ wird über die Wirkung geprüft** (Startelf stärker, Kondition höher, nicht mehr Ausfälle), nicht über Punkte: Punkte schwanken über wenige Saisons um ±7 je Saison. Gemessen: Startelf +0,4 bis +0,5 stärker als mit „Schonen“, also etwa +1 Punkt im ersten Jahr und mehr danach.
+12. **Vorbereitung** als Vorlage mit vier Wochen (normal, hart, hart, Taktik). Der Co-Trainer nutzt sie bis zum ersten Pflichtspiel. Doppeleinheiten, Leistungstests und Testspiele kommen mit K11 und K12a.
+13. **Umschulung** belegt einen der fünf Einzeltrainingsplätze. Verwandt heißt: Eignung ohne Fußabzug mindestens 75 %. Der Fuß bleibt nach der Umschulung ein Nachteil (außer bei beidfüßigen).
+14. **Noch nicht gebaut:** eigene Vorlagen speichern, Erinnerung „Plan passt nicht“, Ereignisse aus §8, eigenes Torwarttraining (K16), Bonus +2 % mit Gegneranalyse (K18).
+
 ## K08 – Jugend und Talententwicklung
 Datei: `konzepte/K08-jugend.md`
 

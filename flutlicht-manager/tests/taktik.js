@@ -55,8 +55,10 @@ function bilanz(tid,geg,n,vor){let p=0,gf=0,ga=0,sp=0,bes=[0,0];for(let r=0;r<n;
   pruef(dauernd.p<nie.p,'Spiel der Saison dauernd genutzt bringt weniger Punkte als nie',`${f1(nie.p)} → ${f1(dauernd.p)} (Hinrunde, nur Heimspiele)`);
   pruef(gezielt.pz>nie.pz,'Spiel der Saison gezielt genutzt: in diesen Spielen im Schnitt mehr Punkte',`${nie.pz.toFixed(2)} → ${gezielt.pz.toFixed(2)} je Spiel`);}
 // 7. Vertrautheit: von 30 auf 80 in 6–8 Wochen mit Training und einem Spiel pro Woche
-{const t={id:999,stil:'pressing',form:'4-4-2',vt:{stil:{pressing:30},ordnung:{}}};let w=0;const V=W.ev('RTA').vertrautheit;
-  while(W.ev('vertraut')(t,'stil','pressing')<80&&w<30){W.ev('vertrautheitWoche')(t);W.ev('vertrautSetzen')(t,'stil','pressing',W.ev('vertraut')(t,'stil','pressing')+V.jeSpiel);w++;}
+//    Seit K07 kommt der Zuwachs aus den Einheiten der Standardwoche (zwei Taktik-Einheiten, Spielvorbereitung), dazu +3 je Spiel
+{const t={id:999,stil:'pressing',form:'4-4-2',vorlage:'standard',vt:{stil:{pressing:30},ordnung:{}}};let w=0;const V=W.ev('RTA').vertrautheit;
+  while(W.ev('vertraut')(t,'stil','pressing')<80&&w<30){const b=200+w*7;for(let k=1;k<7;k++)W.ev('trainingVerein')(t,{last:b,next:b+7},b+k);
+    W.ev('vertrautheitWoche')(t);W.ev('vertrautSetzen')(t,'stil','pressing',W.ev('vertraut')(t,'stil','pressing')+V.jeSpiel);w++;}
   pruef(w>=6&&w<=8,'Vertrautheit: von 30 auf 80 in 6–8 Wochen',w+' Wochen');}
 // 8. Seiten: ein deutlich schwächerer Rechtsverteidiger zieht mindestens 55 % der gegnerischen Außenangriffe auf seine Seite
 {TX.form='4-4-2';const xi=F.bestXI(X,'4-4-2'),rv=W.ev('PIX').get(xi[W.ev('slots')('4-4-2').indexOf('RV')]),alt=rv.str;rv.str=alt-15;let l=0,r=0;

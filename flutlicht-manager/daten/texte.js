@@ -15,5 +15,9 @@ const STIL_TEXT={ausgewogen:'kein Schwerpunkt',pressing:'früh angreifen, Ball h
   ballbesitz:'Ball laufen lassen, geduldig aufbauen. Braucht einen Spielmacher und ballsichere Spieler.',mauern:'tief stehen, Räume eng machen. Braucht eine starke Abwehrmitte.',
   konter:'Ball holen, schnell umschalten. Braucht schnelle Spieler vorn und einen Torjäger.',fluegel:'über außen und Flanken. Braucht Flankengeber und einen kopfballstarken Stürmer.'};
 const EINSTELLUNG_NAME={locker:'Locker angehen',normal:'Normal',saison:'Spiel der Saison'};
-const TRAINING_STUFEN=['Locker','Normal','Hart'];
-const TRAINING_TEXT=['Wenig Belastung: frischer, Kondition sinkt Richtung 70, Entwicklung langsamer (×0,8)','Ausgewogen: Kondition Richtung 80, normale Entwicklung','Viel Belastung: Kondition Richtung 90, Entwicklung schneller (×1,2), weniger frisch, Verletzungsrisiko'];
+const VORLAGE_TEXT={auto:'Der Co-Trainer wählt je nach Spielplan: Standardwoche, englische Woche, Aufbau in Pausen, Vorbereitung vor dem ersten Pflichtspiel.',
+  standard:'Regeneration nach dem Spiel, Kondition, Technik und Taktik in der Wochenmitte, locker vor dem Spiel.',
+  englisch:'Für zwei Spiele pro Woche: viel Regeneration, wenig Belastung. Die Entwicklung ruht fast.',
+  aufbau:'Für Pausen ohne Spiel: viel Kondition, Technik und Trainingsspiele. Fordert die Spieler, höheres Verletzungsrisiko.',
+  schonen:'Wenig Belastung: frischer, aber die Kondition sinkt und die Entwicklung ist langsamer.',
+  vorbereitung:'Nach dem Urlaub langsam steigern: erst normal, dann hart, zuletzt Taktik. Schützt vor Verletzungen durch Belastungssprünge.'};

@@ -5,9 +5,10 @@ const STILE=['ausgewogen','pressing','ballbesitz','mauern','konter','fluegel'];
 function vertraut(t,art,k){const V=RTA.vertrautheit,v=t.vt&&t.vt[art]&&t.vt[art][k];if(v!=null)return v;return(art==='stil'?(t.stil||'ausgewogen'):t.form)===k?V.start[0]:V.start[1];}
 function vertrautSetzen(t,art,k,w){t.vt=t.vt||{stil:{},ordnung:{}};t.vt[art]=t.vt[art]||{};t.vt[art][k]=Math.round(clamp(w,RTA.vertrautheit.min,100)*10)/10;}
 // Woche (K06 §5.4, bis K07): gewählter Stil und gewählte Ordnung +5, alles andere −2, nicht unter 30
+// Seit K07 kommt der Zuwachs aus Taktik-Einheiten und Spielvorbereitung (trainingVerein), hier nur das Vergessen
 function vertrautheitWoche(t){const V=RTA.vertrautheit,stil=t.stil||'ausgewogen';
-  STILE.forEach(k=>vertrautSetzen(t,'stil',k,vertraut(t,'stil',k)+(k===stil?V.trainingWoche:-V.vergessen)));
-  Object.keys(RE.formationen).forEach(f=>vertrautSetzen(t,'ordnung',f,vertraut(t,'ordnung',f)+(f===t.form?V.trainingWoche:-V.vergessen)));}
+  STILE.forEach(k=>{if(k!==stil)vertrautSetzen(t,'stil',k,vertraut(t,'stil',k)-V.vergessen);});
+  Object.keys(RE.formationen).forEach(f=>{if(f!==t.form)vertrautSetzen(t,'ordnung',f,vertraut(t,'ordnung',f)-V.vergessen);});}
 // Neuzugang (K06 §5.4): Ein neuer Stammspieler senkt alle Vertrautheitswerte um 4
 function neuzugang(p,tid){const t=S.teams[tid];if(!t||p.str<teamLevel(tid)-2)return;const V=RTA.vertrautheit;
   STILE.forEach(k=>vertrautSetzen(t,'stil',k,vertraut(t,'stil',k)-V.neuzugang));Object.keys(RE.formationen).forEach(f=>vertrautSetzen(t,'ordnung',f,vertraut(t,'ordnung',f)-V.neuzugang));}
@@ -56,7 +57,7 @@ function taktikWirkung(Ss){const E=RTA.einstellung;
     sd.kreis=sieg?1+K.vorteil*sd.u:1;sd.uWirk=nieder?sd.u*(1-K.daempfung*op.u):sd.u;});
   Ss.forEach(sd=>{if(sd.am)return;const t=S.teams[sd.id];sd.stilF=stilWirkung(sd.stil,sd.uWirk);
     let mult=ordnungFaktor(t,sd.form);if(sd.einst==='locker')mult*=E.locker.wirkung;else if(sd.einst==='saison')mult*=E.saison.wirkung;
-    if(t.kater&&S.tag<t.kater)mult*=E.saison.kater;sd.mult=mult;sd.frischeF=sd.einst==='locker'?E.locker.frische:1;});
+    if(t.kater&&S.tag<t.kater)mult*=E.saison.kater;if(t.vbTag!=null&&S.tag-t.vbTag<=2&&S.tag>t.vbTag)mult*=1+RTA.vorbereitungBonus;sd.mult=mult;sd.stdF=t.stdTag!=null&&S.tag-t.stdTag<=7?RTA.standardsBonus:1;sd.frischeF=sd.einst==='locker'?E.locker.frische:1;});
   Ss.forEach(sd=>{if(sd.am)return;sd.w=teamWerte(sd);sd.A=0.5*sd.w.AM+0.25*(sd.w.AL+sd.w.AR);sd.D=0.4*sd.w.DM+0.2*(sd.w.DL+sd.w.DR)+0.2*sd.w.TW;});}
 // Computer-Trainer (K06 §7): Außenseiter mauern oder kontern, Favoriten pressen oder haben den Ball, sonst ihr Profil. Gegen dich kontern sie mit Wahrscheinlichkeit 25 % deinen Lieblingsstil.
 function kiStil(sd,op){const K=RTA.ki,t=S.teams[sd.id],q=op.am?2:(sd.A+sd.D)/Math.max(1,op.A+op.D);

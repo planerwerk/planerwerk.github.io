@@ -55,7 +55,7 @@ tests/              Testskripte, darunter sim.js (Simulator ohne Browser)
 
 **Spielstand:**
 - Felder: `v` (Version), `seed` (Startwert), `zufall` (Zustand des Generators), `saison`, `tag`, `plan`, Vereine, Spieler, Ergebnisse, Nachrichten, Einstellungen (`einst`, darin `live` für Tempo und Halte).
-- Seit U3/U4: `stufe` (Schwierigkeit), `live` (laufendes Live-Spiel: Tag, Eingriffe mit Minute, gespeicherte Minute und Zahl der Elfmeter; nach dem Abpfiff leer), am Verein `ansp` (die letzten Halbzeitansprachen), `stil`, `vt` (Vertrautheit mit Stilen und Ordnungen), `rollen`, `einstellung`, `schuetzen`, `kater` (K06), im Spielstand `stilVerlauf`, am Spieler `lf` (Lernfortschritt aus Spielen), `fk` (Fehlerkonto gelernter Stärken).
+- Seit U3/U4: `stufe` (Schwierigkeit), `live` (laufendes Live-Spiel: Tag, Eingriffe mit Minute, gespeicherte Minute und Zahl der Elfmeter; nach dem Abpfiff leer), am Verein `ansp` (die letzten Halbzeitansprachen), `stil`, `vt` (Vertrautheit mit Stilen und Ordnungen), `rollen`, `einstellung`, `schuetzen`, `kater` (K06), im Spielstand `stilVerlauf`, am Verein `vorlage`, `vbTag`, `stdTag` und am Spieler `la`, `lc`, `wk`, `we`, `wt`, `wl`, `trf`, `eig`, `um`, `ltag`, `lmin`, `tinj` (K07), am Spieler `lf` (Lernfortschritt aus Spielen), `fk` (Fehlerkonto gelernter Stärken).
 - Gespeichert im Browser (Schlüssel `flutlicht-manager-v4`), dazu Export und Import als Code im Menü.
 - **Version 4** seit 8.11. (Spielermodell K03, U2). Version 3 seit 6.11. (3. Liga, Anstoßzeiten, Sommer). Spielstände älterer Testversionen sind laut deiner Entscheidung Müll: Das Spiel löscht sie beim Start.
 
@@ -102,7 +102,7 @@ Später bekommen die Ereigniskarten (K30) eine eigene Datei `daten/karten.js` mi
 
 ## 11. Stellschrauben
 
-Aufbau von `regeln.js`, ein Abschnitt pro Bereich: `spielstand`, `kalender`, `welt`, `spieler`, `finanzen`, `markt`, `training`, `engine`, `taktik`, `live`, `schwierigkeit`, `vorstand`, `saison`, `stadion`, `ui`. Jeder Eintrag hat einen Kommentar mit Einheit und Bedeutung.
+Aufbau von `regeln.js`, ein Abschnitt pro Bereich: `spielstand`, `kalender`, `welt`, `spieler`, `finanzen`, `markt`, `training`, `engine`, `taktik`, `training`, `live`, `schwierigkeit`, `vorstand`, `saison`, `stadion`, `ui`. Jeder Eintrag hat einen Kommentar mit Einheit und Bedeutung.
 
 ## 12. Offene Fragen
 

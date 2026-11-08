@@ -3,6 +3,8 @@
 Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12.
 Hängt ab von: K03 (Spielermodell), K06 (Taktik), K01 (Kalender) · Wird gebraucht von: K08, K10, K11, K12a, K16, K31.
 
+**Umsetzungshinweise (U6a, 8. November 2026):** Training nach Abstand zum Spiel mit fünf Vorlagen (`js/training.js`, Werte in `REGELN.training`), Belastung und Belastungssprung, Kondition und Entwicklung aus dem Wochenreiz, Vertrautheit aus Taktik-Einheiten, Spielvorbereitung und Standards wirken im nächsten Spiel, Trainingsverletzungen für alle Vereine, Trainingsspiel für Reservisten, Umschulung. Die Trainingsstufe (locker, normal, hart) ist entfallen. Tests: `tests/training.js` und die Einzelrechnungen in `tests/spielermodell.js`. Abweichungen in §12 unter U6a.
+
 ## 1. Ziel und Spielgefühl
 
 - **Training wirkt spürbar, aber kalibriert.** Die Lehre aus dem frühen Anstoss 2022: Training und Werte waren schlecht ausbalanciert, Tester ließen den Co-Trainer machen und ignorierten Fitness und Frische, weil es nichts bewirkte (Recherche 4). Bei uns muss man den Unterschied sehen: in Frische, Kondition, Lernfortschritt, Vertrautheit und Verletzungen.
@@ -219,7 +221,18 @@ training:{
 4. **Fünf Einzeltrainingsplätze** bis zum Trainerstab (K16).
 5. **Trainingsspiel** als eigene Einheit, weil es Reservisten Spielpraxis gibt und in der Community gewünscht wird.
 
-**Noch zu recherchieren:** Anteil der Trainingsverletzungen an allen Verletzungen im Profifußball.
+**Vorläufig entschieden bei der Umsetzung (U6a, 8. November 2026):**
+6. **Belastung als gleitendes Mittel** über 7 und 28 Tage (zwei Zahlen je Spieler) statt 28 einzelner Tageswerte. Gewohnte Last mindestens 2 pro Tag, sonst wäre nach dem Urlaub jeder erste Trainingstag ein riesiger Sprung (Risiko ×35).
+7. **Regeneration** bringt netto +1 Frische. „+4 statt Verlust“ ist als Unterschied zu einer normalen Einheit gelesen. Dazu Grunderholung 2,1 statt 3 pro Tag: Sonst waren Spieler nach drei Spielen in acht Tagen wieder bei 86 % statt 72–82 %. Die Standardwoche endet dadurch bei etwa 97 % Frische vor dem Spiel (statt 100 %), das kostet unter 1 % Stärke für alle gleich.
+8. **Standardwoche** mit den mittleren Tagen Taktik, Kondition, Technik (in dieser Reihenfolge). Bei sieben Tagen Abstand bleiben zwei mittlere Tage, so gibt es zwei Taktik-Einheiten wie in 5.3 vorgesehen. Der Entwicklungsreiz dieser Woche (1,5) ist der Normalwert (Faktor 1), die Spanne 0,5 bis 1,25.
+9. **Kondition wirkt stärker auf die Ermüdung** (im Spiel und nach dem Spiel): Kondition 68 ermüdet etwa 25 % schneller als 84. Vorher brachte Training gegenüber „Schonen“ kaum etwas.
+10. **Trainingsverletzungen:** Grundrate 0,00026 je Einheit, damit 40–55 % aller Verletzungen im Training passieren. Das passt zur UEFA-Studie (Spiel 27,5, Training 4,1 Verletzungen je 1000 Stunden) bei üblichen Trainings- und Spielstunden.
+11. **„Training wirkt“ wird über die Wirkung geprüft** (Startelf stärker, Kondition höher, nicht mehr Ausfälle), nicht über Punkte: Punkte schwanken über wenige Saisons um ±7 je Saison. Gemessen: Startelf +0,4 bis +0,5 stärker als mit „Schonen“, also etwa +1 Punkt im ersten Jahr und mehr danach.
+12. **Vorbereitung** als Vorlage mit vier Wochen (normal, hart, hart, Taktik). Der Co-Trainer nutzt sie bis zum ersten Pflichtspiel. Doppeleinheiten, Leistungstests und Testspiele kommen mit K11 und K12a.
+13. **Umschulung** belegt einen der fünf Einzeltrainingsplätze. Verwandt heißt: Eignung ohne Fußabzug mindestens 75 %. Der Fuß bleibt nach der Umschulung ein Nachteil (außer bei beidfüßigen).
+14. **Noch nicht gebaut:** eigene Vorlagen speichern, Erinnerung „Plan passt nicht“, Ereignisse aus §8, eigenes Torwarttraining (K16), Bonus +2 % mit Gegneranalyse (K18).
+
+**Recherchiert:** Anteil der Trainingsverletzungen siehe Nr. 10.
 
 ## Quellen
 
@@ -227,3 +240,4 @@ training:{
 - Belastungsverhältnis und Verletzungen: [Frontiers in Physiology, Editorial: Acute:Chronic Workload Ratio – Is There Scientific Evidence? (2021)](https://pmc.ncbi.nlm.nih.gov/articles/PMC8138569/), [Frontiers in Physiology, Sedeaud et al. (2020)](https://www.frontiersin.org/article/10.3389/fphys.2020.01034/full)
 - Training in FM und Anstoss, Verletzungskrise in der Vorbereitung: `konzepte/_recherche-genre.md`, Abschnitte 3.1, 4, 4b
 - Lernbremsen, Konditionstraining vor dem Spiel: PLAN §4 (GameStar 4/2000)
+- Verletzungsraten in Spiel und Training: [Ekstrand u. a., UEFA Elite Club Injury Study (PMC)](https://pmc.ncbi.nlm.nih.gov/articles/PMC8458074)
