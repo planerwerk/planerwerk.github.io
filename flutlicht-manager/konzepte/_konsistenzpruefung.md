@@ -454,3 +454,16 @@ Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `
 | AF3 | **I4, AA2:** Mit gleichem Einnahmenmodell für alle und Gehältern nach Liga (K21) sollte die 3. Liga wirtschaftlich tragfähig werden. | 📌 Kalibrierung, dann 3. Liga als Startverein freigeben |
 | AF4 | **Computer-Vereine:** Pauschaleinnahmen (`fremdeEinnahmen`) entfallen zugunsten des gleichen Modells. | ✅ passt zu K02 §5.3 und K31 |
 | AF5 | **Säulengewichtung, 3.-Liga-Topf, Insolvenz-Punktabzug** nicht abschließend belegt. | 📌 vor U13 prüfen |
+
+---
+
+## AG. Nachtrag zu K24–K27 (8. November 2026)
+
+| # | Befund | Status |
+|---|---|---|
+| AG1 | **Sponsoren** jetzt mit begrenzten Flächen, die heutige Wahl aus drei Angeboten bleibt als Grundform für die Brust. | ✅ K24 |
+| AG2 | **Reichweite der Sponsoren:** Exponent 2 ergab eine viel zu enge Spanne (1 zu 5), korrigiert auf 4 (etwa 1 zu 23, wie die echten Hauptsponsoren). | ✅ |
+| AG3 | **Fanstimmung** ist ein neuer Teamwert neben den Fans. Sie wirkt auf Nachfrage, Heimvorteil, Vorstand (K28 Umfeld), Sponsoren und Spieler. | ✅ K27 |
+| AG4 | **Jugendarbeit** (Stufe 1–5, heute laufende Kosten) wird mit K26 zum Bauwerk „Nachwuchsleistungszentrum“. K08 rechnet mit derselben Stufe. | ✅ |
+| AG5 | **Neue Stammdaten:** Ultra-Szene und Tradition (K27), Stadion eigen oder gepachtet und Stehplatzanteil (K26). | 📌 K33 bei Umsetzung |
+| AG6 | **Alle Geldbeträge** in K24–K26 sind Spielwerte und werden mit K23 auf echte Größenordnung kalibriert. | 📌 U13 |
