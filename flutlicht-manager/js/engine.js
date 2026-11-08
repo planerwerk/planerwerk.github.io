@@ -25,7 +25,8 @@ function scorer(me,off){const c=me.xp.filter(x=>!off.has(x.p.id));if(!c.length)r
 function cardPick(me,off){const c=me.xp.filter(x=>!off.has(x.p.id)&&x.pos!=='TW');return c.length?pick(c).p:null;}
 const keeper=op=>{const k=op.xp.find(x=>x.pos==='TW');return k?k.p.n:'der Torwart';};
 function shootout(){const q=RE.elfmeter;let a=0,b=0;for(let i=0;i<5;i++){if(R()<q)a++;if(R()<q)b++;}while(a===b){if(R()<q)a++;if(R()<q)b++;}return[a,b];}
-function sim(hid,aid,o={}){
+function sim(hid,aid,o={}){return mitStrom(strom('spiel',S.season,S.tag,hid,aid),()=>simLauf(hid,aid,o));}
+function simLauf(hid,aid,o){
   const H=side(hid,true,o.neutral),A=side(aid,false,o.neutral),Ss=[H,A],ev=[],sc=[0,0],yel={},off=new Set(),inj=[],K=RE.karten,V=RE.verletzung;
   let xg=[xgf(H,A),xgf(A,H)];
   const goal=(m,s,f)=>{sc[s]++;const p=scorer(Ss[s],off);ev.push({m,s,t:'G',p:p?p.id:null,n:p?p.n:rname(),sc:[...sc]});};
@@ -41,7 +42,8 @@ function sim(hid,aid,o={}){
     if(sc[0]===sc[1]){pen=shootout();ev.push({m:120,s:pen[0]>pen[1]?0:1,t:'P',pen});}}
   return{h:hid,a:aid,hg:sc[0],ag:sc[1],ev,pen,yel:Object.keys(yel).map(Number),off:[...off],inj,xi:[H.xi,A.xi]};}
 const winner=r=>r.hg>r.ag?r.h:r.hg<r.ag?r.a:(r.pen&&r.pen[0]>r.pen[1]?r.h:r.a);
-function applyMatch(r,cup){const N=RE.note,F=RE.form;
+function applyMatch(r,cup){return mitStrom(strom('nachspiel',S.season,S.tag,r.h,r.a),()=>applyMatchLauf(r,cup));}
+function applyMatchLauf(r,cup){const N=RE.note,F=RE.form;
   [0,1].forEach(s=>{const tid=s?r.a:r.h;if(tid>=1000)return;const gf=s?r.ag:r.hg,ga=s?r.hg:r.ag,res=gf>ga?1:gf<ga?-1:0;
     r.xi[s].forEach(id=>{const p=PIX.get(id);if(!p)return;p.apps++;p.fit=clamp(p.fit-riA(RE.fitnessVerlust),RE.fitnessMin,100);
       const goals=r.ev.filter(e=>e.t==='G'&&e.p===id).length;if(cup)p.pg=(p.pg||0)+goals;else if(!r.rel)p.g+=goals;

@@ -32,7 +32,8 @@ function rasterZeiten(lg,paare,basis,mitte){const A=RK.anstoss[lg],slots=[];
   const off={Fr:-1,Sa:0,So:1,Di:0,Mi:1},ord=paare.map((p,i)=>[i,S.teams[p[0]].rep+S.teams[p[1]].rep+R()*RK.attraktivZufall]).sort((a,b)=>b[1]-a[1]),z=Array(paare.length);
   ord.forEach(([i],k)=>{const s=slots[Math.min(k,slots.length-1)];z[i]=[basis+off[s[0]],minute(s[1])];});return z;}
 // Paarungen und Termine aller Ligaspiele einer Saison. 2026/27: offizieller Spielplan. Später: neu ausgelost, Termine im Raster.
-function spielplanFuer(saison){const fx={},zeit={},sh=schiebung(saison),ix={};S.teams.forEach(t=>ix[t.sh]=t.id);
+function spielplanFuer(saison){return mitStrom(strom('plan',saison),()=>spielplanLauf(saison));}
+function spielplanLauf(saison){const fx={},zeit={},sh=schiebung(saison),ix={};S.teams.forEach(t=>ix[t.sh]=t.id);
   LIGEN.forEach(lg=>{const P=SPIELPLAN_2026[lg],offen=new Set(P.offen),n=P.spieltage.length;
     if(saison===TERMINE_2026.saison&&P.spieltage.every(md=>md.every(([h,a])=>S.teams[ix[h]]&&S.teams[ix[h]].lg===lg&&S.teams[ix[a]].lg===lg))){
       fx[lg]=P.spieltage.map(md=>md.map(([h,a])=>[ix[h],ix[a]]));

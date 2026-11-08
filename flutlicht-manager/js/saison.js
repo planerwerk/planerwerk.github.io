@@ -6,7 +6,8 @@ function table(lg){const T={};S.teams.filter(t=>t.lg===lg).forEach(t=>T[t.id]={i
 const rank=(lg,id)=>table(lg).findIndex(r=>r.id===id)+1;
 function formPts(id){const r=table(S.teams[id].lg).find(x=>x.id===id);if(!r||!r.last.length)return 1.4;const l=r.last.slice(-5);return l.reduce((a,b)=>a+b,0)/l.length;}
 const topScorers=lg=>S.pl.filter(p=>p.team>=0&&S.teams[p.team].lg===lg&&p.g>0).sort((a,b)=>b.g-a.g).slice(0,15);
-function seasonEnd(){
+function seasonEnd(){return mitStrom(strom('saisonende',S.season),seasonEndLauf);}
+function seasonEndLauf(){
   const T={1:table(1),2:table(2),3:table(3)},me=myT(),pos=rank(me.lg,S.my),B=RV;
   S.teams.forEach(t=>{if(aktiv(t))t.lastPos=rank(t.lg,t.id);t.lastLg=t.lg;});
   T[3].forEach(r=>{S.teams[r.id].ewig3=(S.teams[r.id].ewig3||0)+r.p;});
@@ -46,7 +47,8 @@ function regionalligaAufsteiger(){const G=RS.regionalliga,meister={},ids=[],txt=
   while(ids.length<RS.abstieg3){const c=S.teams.filter(t=>t.lg===4&&!ids.includes(t.id)).sort((a,b)=>b.rep-a.rep)[0];if(!c)break;ids.push(c.id);}
   return{ids:ids.slice(0,RS.abstieg3),text:txt.join(' · ')};}
 // Saisonwechsel am 1. Juli: Auf- und Abstieg, Alter, Verträge, Nachwuchs, neuer Spielplan
-function newSeason(){const sm=S.summary,Z=RS,setze=(ids,lg)=>ids.forEach(id=>S.teams[id].lg=lg);
+function newSeason(){return mitStrom(strom('saison',S.season),newSeasonLauf);}
+function newSeasonLauf(){const sm=S.summary,Z=RS,setze=(ids,lg)=>ids.forEach(id=>S.teams[id].lg=lg);
   setze(sm.down,2);setze(sm.up,1);if(sm.rw===sm.rel[1]){S.teams[sm.rel[1]].lg=1;S.teams[sm.rel[0]].lg=2;}
   setze(sm.down2,3);setze(sm.up3,2);if(sm.rw2===sm.rel2[1]){S.teams[sm.rel2[1]].lg=2;S.teams[sm.rel2[0]].lg=3;}
   setze(sm.down3,4);setze(sm.up4,3);sm.down3.forEach(id=>S.teams[id].abstieg3=sm.season);

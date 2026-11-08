@@ -1,7 +1,8 @@
 // Tagesablauf (K01): Spiele eines Tages, Werte pro Tag und pro Woche, Finanzen, Training, Transfermarkt, Vorstand, Bau.
 
 // Alle Spiele eines Tages in allen Wettbewerben. Ergebnis: {tag, gruppen:[{titel,art,e,list}], list, mine}
-function tagesSpiele(d){const out={tag:d,gruppen:[],list:[],mine:null};S.gespielt=d;
+function tagesSpiele(d){return mitStrom(strom('spieltag',S.season,d),()=>tagesSpieleLauf(d));}
+function tagesSpieleLauf(d){const out={tag:d,gruppen:[],list:[],mine:null};S.gespielt=d;
   if(S.sponsOffers&&meinSpiel(d))sponsorWaehlen(0);
   for(const e of termineAm(d)){
     if(e.art==='liga'){const list=e.idx.map(i=>{const[h,a]=S.fx[e.lg][e.md][i];const r=sim(h,a);r.lg=e.lg;r.min=S.plan.zeit[e.lg][e.md][i][1];return r;});out.gruppen.push({titel:`${ligaName(e.lg)} · ${e.md+1}. Spieltag`,art:'liga',e,list});}
@@ -32,13 +33,15 @@ function tagesSpiele(d){const out={tag:d,gruppen:[],list:[],mine:null};S.gespiel
   return out;}
 
 // Werte pro Tag: Ausfalltage zählen herunter, Frische erholt sich, Fristen laufen ab, Bau wird fertig.
-function taeglich(d){const T=RT;
+function taeglich(d){return mitStrom(strom('tag',S.season,d),()=>taeglichLauf(d));}
+function taeglichLauf(d){const T=RT;
   const urlaub=imUrlaub();
   S.pl.forEach(p=>{if(p.inj>0)p.inj--;if(p.team<0)return;if(urlaub){p.fit=Math.max(Math.min(p.fit,T.urlaubMin),p.fit-T.urlaubAbbau);return;}const cap=T.fitnessGrenze[p.team===S.my?S.train:T.computerStufe];p.fit=p.fit>cap?Math.max(cap,p.fit-T.abbau/7):Math.min(cap,p.fit+T.erholung/7);});
   S.offers=S.offers.filter(o=>o.bis>=d&&PIX.get(o.pid)&&PIX.get(o.pid).team===S.my);
   const c=S.constr;if(c&&d>=c.bis){const t=myT();if(c.k==='cap')t.cap+=RB.tribuene.plaetze;if(c.k==='logen')t.logen+=RB.logen.anzahl;if(c.k==='shop')t.shop++;news(`Bau abgeschlossen: ${c.label}.`,'good');S.constr=null;}}
 // Werte pro Woche (montags): Training und Entwicklung, Transfermarkt, Vorstand bei Minus auf dem Konto.
-function woechentlich(d){if(!imUrlaub())training();market();
+function woechentlich(d){return mitStrom(strom('woche',S.season,d),()=>woechentlichLauf(d));}
+function woechentlichLauf(d){if(!imUrlaub())mitStrom(strom('training',S.season,d),training);mitStrom(strom('markt',S.season,d),market);
   if(myT().cash<0){S.trust+=RV.kontoMinus;if(R()<RV.kontoMinusMeldung)news('Der Vorstand ist alarmiert: Das Vereinskonto ist im Minus!','bad');}
   S.trust=clamp(S.trust,0,100);vorstandPruefen();}
 
