@@ -442,3 +442,15 @@ Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `
 | AE4 | **Echte Auslandsvereine oder Vereinsgruppen** ist eine Entscheidung mit viel Datenaufwand. | 🔶 deine Entscheidung (K32 §12, Frage 1) |
 | AE5 | **Neue Stammdaten-Dateien** aus den Konzepten: `daten/nationen.js` (K13, K32), `daten/ausland.js` (K32), `daten/karten.js` (K30), Ergänzungen in `daten/vereine.js` (Derbys K17, Profile K31) und `daten/spieler.js` (Nationalität, feine Position, Fuß, Fakten für Charakter, K03). | 📌 K33 bei der jeweiligen Umsetzung fortschreiben |
 | AE6 | **Übersicht:** Alle vorläufigen Entscheidungen stehen gesammelt in `konzepte/_offene-entscheidungen.md`. | ✅ |
+
+---
+
+## AF. Nachtrag zu K23 (8. November 2026)
+
+| # | Befund | Status |
+|---|---|---|
+| AF1 | **H7 aufgelöst:** Monatsabrechnung mit Monatsbericht statt Buchung je Ligaspieltag. | ✅ K23 §4 |
+| AF2 | **Größenordnung:** Die Geldwerte im Spiel sind heute deutlich kleiner als echte (TV etwa 10 Mio. € pro Saison statt etwa 50 Mio. € im Schnitt der 1. Liga). Alle Geldwerte (Medien, Gehälter, Ablösen, Sponsoren, Bau) müssen gemeinsam umgestellt werden. | 📌 U13 in einem Schritt |
+| AF3 | **I4, AA2:** Mit gleichem Einnahmenmodell für alle und Gehältern nach Liga (K21) sollte die 3. Liga wirtschaftlich tragfähig werden. | 📌 Kalibrierung, dann 3. Liga als Startverein freigeben |
+| AF4 | **Computer-Vereine:** Pauschaleinnahmen (`fremdeEinnahmen`) entfallen zugunsten des gleichen Modells. | ✅ passt zu K02 §5.3 und K31 |
+| AF5 | **Säulengewichtung, 3.-Liga-Topf, Insolvenz-Punktabzug** nicht abschließend belegt. | 📌 vor U13 prüfen |
