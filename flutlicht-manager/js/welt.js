@@ -2,7 +2,9 @@
 const rname=()=>pick(VORNAMEN)+' '+pick(NACHNAMEN);
 const salaryFor=s=>{const g=RP.gehalt;return Math.round(g.basis*Math.exp(g.steigung*(s-g.mitte))/g.runden)*g.runden;};
 function value(p){const m=RP.marktwert,s=p.age<m.jungUnter?p.str*m.staerkeAnteil+Math.max(p.str,p.pot)*m.talentAnteil:p.str;let v=m.basis*Math.exp(m.steigung*(s-m.mitte));const a=p.age,f=m.alter.find(x=>a<=x[0]);v*=f?f[1]:m.alterSonst;return Math.max(m.minimum,Math.round(v/m.runden)*m.runden);}
-function stars(p){const d=p.pot-p.str,st=RP.sterne;const n=d>=st[0]?4:d>=st[1]?3:d>=st[2]?2:1;return '★★★★'.slice(0,n)+'☆☆☆☆'.slice(n);}
+function sternZahl(p){const d=p.pot-p.str,st=RP.sterne;return d>=st[0]?4:d>=st[1]?3:d>=st[2]?2:1;}
+// Angezeigte Sterne mit Schätzfehler (K03): Das wahre Talent kennt niemand genau
+function stars(p){const n=clamp(sternZahl(p)+sternFehler(p),1,4);return '★★★★'.slice(0,n)+'☆☆☆☆'.slice(n);}
 const teamLevel=tid=>{const s=squad(tid).map(p=>p.str).sort((a,b)=>b-a).slice(0,RP.niveauSpieler);return s.length?s.reduce((a,b)=>a+b,0)/s.length:RP.niveauLeer;};
 function askPrice(p,xiSet){const v=value(p);if(p.team<0)return 0;if(p.list)return p.ask||v;const t=S.teams[p.team];const inXI=xiSet?xiSet.has(p.id):bestXI(t.id,t.form).includes(p.id);return Math.round(v*(inXI?RM.forderung.stammspieler:RM.forderung.sonst)/RM.runden)*RM.runden;}
 const extDemand=p=>{const g=RM.gehalt;return Math.round(salaryFor(p.str)*(g.basis+p.seed*g.zufall)*(p.age>=g.altAb?g.altFaktor:1)/1000)*1000;};
@@ -10,13 +12,13 @@ const kreditRahmen=t=>RF.kreditRahmen.basis+t.rep*RF.kreditRahmen.jeAnsehen;
 const tvGeld=t=>{const v=RF.tv['liga'+t.lg]||RF.tv.liga3;return v.basis+t.rep*v.jeAnsehen;};
 const richtPreis=t=>RF.zuschauer.refBasis+t.rep*RF.zuschauer.refJeAnsehen;
 // Talent als Band aus der Sterne-Stufe: zeigt dieselbe Auskunft wie die Sterne, nur als Regler
-function talentBand(p){const s=Math.round(p.str),st=RP.sterne,d=p.pot-p.str;const[a,b]=d>=st[0]?[st[0],99]:d>=st[1]?[st[1],st[0]]:d>=st[2]?[st[2],st[1]]:[0,st[2]];return[Math.min(99,s+a),Math.min(99,s+b)];}
+function talentBand(p){const s=Math.round(p.str),st=RP.sterne,n=clamp(sternZahl(p)+sternFehler(p),1,4);const[a,b]=n===4?[st[0],99]:n===3?[st[1],st[0]]:n===2?[st[2],st[1]]:[0,st[2]];return[Math.min(99,s+a),Math.min(99,s+b)];}
 // Vorhersage für den Ticketpreis-Regler: Zuschauer je Ligaheimspiel als Spanne (schwächster bis stärkster Gegner, mit Tageszufall). Würfelt nicht.
 function zuschauerSpanne(t,preis){const Z=RF.zuschauer,ref=Z.refBasis+t.rep*Z.refJeAnsehen,pf=clamp(Math.pow(ref/preis,Z.preisExponent),Z.preisMin,Z.preisMax),ff=Z.formBasis+Z.formJePunkt*formPts(t.id),lf=t.lg===1?1:Z.liga2;
   const reps=S.teams.filter(x=>x.lg===t.lg&&x.id!==t.id).map(x=>x.rep),f=rep=>t.fans*pf*ff*(Z.gegnerBasis+rep/100*Z.gegnerFaktor)*lf;
   return[Math.round(Math.min(t.cap,f(Math.min(...reps))*Z.zufallBasis)),Math.round(Math.min(t.cap,f(Math.max(...reps))*(Z.zufallBasis+Z.zufallSpanne)))];}
 
-function mkPlayer(o){const age=o.age,str=o.str,T=RP.talent;const p={id:S.pid++,n:o.n||rname(),pos:o.pos,age,str,pot:o.pot||Math.round(str+riA((T.find(x=>age<=x[0])||[0,RP.talentSonst])[1])),form:RP.startForm,fit:riA(RP.startFitness),ko:riA(RP.startKondition),sv:0,sp:RP.startSpielpraxis,ent:S.tag,sw:Math.round(str),team:o.team,inj:0,sus:0,yc:0,g:0,pg:0,apps:0,ct:o.ct||riA(RP.vertrag),list:0,ask:0,seed:R()};p.sal=salaryFor(p.str);return p;}
+function mkPlayer(o){const age=o.age,str=o.str,T=RP.talent;const p={id:S.pid++,n:o.n||rname(),pos:o.pos,age,str,pot:o.pot||Math.round(str+riA((T.find(x=>age<=x[0])||[0,RP.talentSonst])[1])),form:RP.startForm,fit:riA(RP.startFitness),ko:riA(RP.startKondition),sv:0,sp:RP.startSpielpraxis,ent:S.tag,sw:Math.round(str),team:o.team,inj:0,sus:0,yc:0,g:0,pg:0,apps:0,ct:o.ct||riA(RP.vertrag),list:0,ask:0,seed:R()};p.sal=salaryFor(p.str);spielerStart(p);return p;}
 const lgIds=lg=>S.teams.filter(t=>t.lg===lg).map(t=>t.id);
 const grundStaerke=rep=>RW.grund.basis+rep*RW.grund.jeAnsehen;
 function buildWorld(seed){const W=RW;

@@ -76,6 +76,51 @@ const REGELN={
     selbstvertrauen:{min:-3,max:3,tor:0.5,guteNote:0.3,schlechteNote:-0.3,ausgleich:0.15},
     spielpraxis:{zerfall:0.97,jeSpiel:25,training:5,wirkungUnter:50,wirkungMax:0.04}, // training: Spielformen im Training je Woche (bis K07)
     zustand:{min:0.80,max:1.08},    // Deckel für Form, Frische und Spielpraxis zusammen (K03 §5.8)
+    // Persönlichkeit (K03 §3.3): 8 verdeckte Werte 1–20, ausgewürfelt je Karriere
+    persoenlichkeit:{mitte:10,streuung:3.5,min:1,max:20,werte:['pro','ehr','loy','tem','dru','anp','fue','rob']},
+    // Eigenschaften (K03 §3.5) entstehen aus der Persönlichkeit. Angezeigt nur, wenn ihre Wirkung im Spiel gebaut ist (wirksam).
+    eigenschaften:{
+      vorbildprofi:{name:'Vorbildprofi',art:'+',wenn:{pro:[17,20]},text:'lernt 25 % schneller, baut im Alter langsamer ab'},
+      partyloewe:{name:'Partylöwe',art:'−',wenn:{pro:[1,4]},text:'Kondition 8 niedriger, lernt 25 % langsamer'},
+      trainingsweltmeister:{name:'Trainingsweltmeister',art:'±',wenn:{pro:[15,20],dru:[1,7]},text:'lernt 25 % schneller, bringt es im Spiel aber nicht immer'},
+      hitzkopf:{name:'Hitzkopf',art:'−',wenn:{tem:[17,20]},text:'sieht 50 % öfter Karten'},
+      verletzungsanfaellig:{name:'verletzungsanfällig',art:'−',wenn:{rob:[1,4]},text:'verletzt sich 60 % öfter'},
+      nervenschwach:{name:'nervenschwach',art:'−',wenn:{dru:[1,4]},text:'schwächer im Elfmeterschießen'},
+      fuehrungsspieler:{name:'Führungsspieler',art:'+',wenn:{fue:[16,20]},abAlter:24},
+      integrationsfigur:{name:'Integrationsfigur',art:'+',wenn:{fue:[13,20],anp:[15,20]}},
+      mentor:{name:'Mentor',art:'+',wenn:{pro:[14,20],fue:[12,20]},abAlter:29},
+      kaempfer:{name:'Kämpfer',art:'+',wenn:{ehr:[16,20],dru:[12,20]}},
+      vereinstreu:{name:'vereinstreu',art:'+',wenn:{loy:[17,20]}},
+      diva:{name:'Diva',art:'−',wenn:{ehr:[15,20],anp:[1,6]}},
+      soeldner:{name:'Söldner',art:'−',wenn:{loy:[1,4]}},
+      heimweh:{name:'Heimweh-Typ',art:'−',wenn:{anp:[1,4]}}},
+    eigenschaftenWirksam:['vorbildprofi','partyloewe','trainingsweltmeister','hitzkopf','verletzungsanfaellig','nervenschwach'],
+    entdeckenWochen:[2,8],          // so lange dauert es, bis der Co-Trainer eine Eigenschaft eines neuen Spielers meldet
+    // Merkmale (K03 §3.4): Stärken und Schwächen. Schwierigkeit: Lernfortschritt pro Woche leicht 12 %, mittel 6 %, schwer 3 %.
+    merkmale:{
+      kopfballstark:{name:'kopfballstark',g:['AB','MF','ST'],s:'mittel',gegen:'kopfballschwach'},schnell:{name:'schnell',g:['AB','MF','ST'],s:'schwer',bis:23,alt:true,gegen:'langsam'},
+      ausdauernd:{name:'ausdauernd',g:['AB','MF','ST'],s:'leicht',alt:true,text:'verliert im Spiel ein Viertel weniger Frische'},
+      zweikampfstark:{name:'zweikampfstark',g:['AB','MF'],s:'mittel'},stellungssicher:{name:'stellungssicher',g:['AB','MF'],s:'mittel'},ballsicher:{name:'ballsicher',g:['AB','MF'],s:'mittel'},
+      flankengeber:{name:'Flankengeber',g:['AB','MF'],s:'mittel'},dribbler:{name:'Dribbler',g:['MF','ST'],s:'schwer'},torjaeger:{name:'Torjäger',g:['MF','ST'],s:'schwer',gegen:'abschlussschwach'},
+      weitschuetze:{name:'Weitschütze',g:['MF','ST'],s:'mittel'},freistoss:{name:'Freistoßspezialist',g:['AB','MF','ST'],s:'mittel'},
+      elfmeter:{name:'Elfmeterschütze',g:['AB','MF','ST'],s:'leicht',text:'trifft im Elfmeterschießen öfter'},beidfuessig:{name:'beidfüßig',g:['AB','MF','ST'],s:'schwer',bis:25},
+      vielseitig:{name:'vielseitig',g:['AB','MF','ST'],s:'mittel'},joker:{name:'Joker',g:['MF','ST'],s:'mittel'},
+      reflexe:{name:'Reflexe',g:['TW'],s:'mittel'},strafraum:{name:'Strafraumbeherrscher',g:['TW'],s:'mittel',gegen:'fliegenfaenger'},
+      elfmetertoeter:{name:'Elfmetertöter',g:['TW'],s:'leicht',text:'hält im Elfmeterschießen öfter'},mitspielend:{name:'mitspielend',g:['TW'],s:'mittel'},
+      kopfballschwach:{name:'kopfballschwach',g:['AB','MF','ST'],s:'mittel',schwaeche:true},abschlussschwach:{name:'abschlussschwach',g:['MF','ST'],s:'mittel',schwaeche:true},
+      unkonzentriert:{name:'unkonzentriert',g:['TW','AB','MF','ST'],s:'leicht',schwaeche:true},ungestuem:{name:'ungestüm',g:['AB','MF','ST'],s:'mittel',schwaeche:true},
+      fliegenfaenger:{name:'Fliegenfänger',g:['TW'],s:'mittel',schwaeche:true},langsam:{name:'langsam',g:['AB','MF','ST'],s:'schwer',schwaeche:true}},
+    merkmaleWirksam:['ausdauernd','elfmeter','elfmetertoeter'],
+    lernen:{woche:{leicht:12,mittel:6,schwer:3},alter:[[21,1.3],[25,1.1],[29,1],[32,0.8]],alterSonst:0.6,profi:[0.7,0.03],zufall:[0.7,1.3],
+      frischeUnter:[70,0.8],eigenschaft:{vorbildprofi:1.25,trainingsweltmeister:1.25,partyloewe:0.75},maxStaerken:4,automatik:true},
+    startMerkmale:{staerken:[[55,0.5],[65,1],[75,1.6],[85,2.3],[90,3]],schwaechen:[[60,0.6],[85,0.3]],beidfuessig:0.1,
+      gewichte:{TW:{reflexe:3,strafraum:2,elfmetertoeter:1,mitspielend:2},AB:{kopfballstark:3,zweikampfstark:3,stellungssicher:3,ballsicher:2,flankengeber:1,ausdauernd:1,schnell:1},
+        MF:{ballsicher:2,flankengeber:2,dribbler:1,weitschuetze:2,freistoss:1,ausdauernd:2,zweikampfstark:1,schnell:1,elfmeter:1,vielseitig:1},ST:{torjaeger:3,kopfballstark:2,schnell:2,dribbler:2,elfmeter:2,joker:1,weitschuetze:1}}},
+    // Feine Positionen (K03 §3.1a) und Fuß. Bis die Daten da sind, per Zufall aus der Gruppe.
+    positionen:{TW:{TW:1},AB:{IV:0.5,LV:0.25,RV:0.25},MF:{DM:0.2,ZM:0.25,SM:0.05,OM:0.15,LM:0.175,RM:0.175},ST:{MS:0.5,HS:0.1,LA:0.2,RA:0.2}},
+    positionsNamen:{TW:'Torwart',IV:'Innenverteidiger',LV:'linker Außenverteidiger',RV:'rechter Außenverteidiger',DM:'defensives Mittelfeld',ZM:'zentrales Mittelfeld',SM:'Spielmacher',OM:'offensives Mittelfeld',LM:'linkes Mittelfeld',RM:'rechtes Mittelfeld',MS:'Mittelstürmer',HS:'hängende Spitze',LA:'Linksaußen',RA:'Rechtsaußen'},
+    fuss:{rechts:0.77},
+    talentSchaetzung:{fehler:1,genauNachWochen:104}, // Talentsterne bis 1 daneben, nach 2 Jahren im Verein genau (K03, Normal)
     vertrag:[1,4],                   // Restlaufzeit in Jahren
     gehalt:{basis:1e6,steigung:0.1,mitte:75,runden:1000}, // Gehalt/Jahr = basis × e^(steigung × (Stärke − mitte))
     marktwert:{basis:8e6,steigung:0.1,mitte:75,jungUnter:24,staerkeAnteil:0.6,talentAnteil:0.4,

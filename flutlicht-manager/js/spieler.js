@@ -19,11 +19,11 @@ function tagesWerte(p,urlaub,spieltOderRuhetag){const F=RP.frische,K=RP.konditio
   p.fit=clamp(p.fit+erholung(p)-last,0,100);}
 // Werte pro Woche: Kondition wandert zum Trainingsziel, Form und Selbstvertrauen ziehen zur Mitte
 function wochenWerte(p){const K=RP.kondition,F=RP.form,V=RP.selbstvertrauen;
-  if(!imUrlaub()){const ziel=(p.team<0?K.vereinslos:K.ziel[trainingsStufe(p)])-Math.max(0,p.age-K.altAb)*K.altJeJahr;p.ko=clamp(p.ko+(ziel-p.ko)*K.tempo,0,100);
+  if(!imUrlaub()){const ziel=(p.team<0?K.vereinslos:K.ziel[trainingsStufe(p)])-Math.max(0,p.age-K.altAb)*K.altJeJahr-(hatEig(p,'partyloewe')?8:0);p.ko=clamp(p.ko+(ziel-p.ko)*K.tempo,0,100);
     if(p.team>=0&&p.inj<=0)p.sp=Math.min(100,p.sp+RP.spielpraxis.training);}
   p.form+=(F.mitte-p.form)*F.ausgleich;p.sv-=p.sv*V.ausgleich;}
 // Frische und Spielpraxis nach einem Pflichtspiel
-function nachSpiel(p,min){const F=RP.frische;p.fit=clamp(p.fit-F.spiel*min/90*(F.ko[0]+F.ko[1]*p.ko),RE.fitnessMin,100);p.sp=Math.min(100,p.sp+RP.spielpraxis.jeSpiel*min/90);}
+function nachSpiel(p,min){const F=RP.frische;p.fit=clamp(p.fit-F.spiel*min/90*(F.ko[0]+F.ko[1]*p.ko)*(hatMk(p,'ausdauernd')?0.75:1),RE.fitnessMin,100);p.sp=Math.min(100,p.sp+RP.spielpraxis.jeSpiel*min/90);}
 
 // Entwicklung der Stärke für die Tage seit der letzten Buchung (K03 §5.1)
 function entwickeln(p,tage){if(tage<=0)return;const E=RP.entwicklung,P=E.praxis;
@@ -62,3 +62,45 @@ function spielendeAm(d){const s=new Set();for(const e of termineAm(d)){
     else if(e.art==='pokal'&&S.cup.hist.length===e.r)S.cup.alive.forEach(id=>{if(id<1000)s.add(id);});
     else if((e.art==='rel'||e.art==='rel2')&&relBereit(e.art))relTeams(e.art).forEach(id=>s.add(id));}
   return s;}
+
+// ---------- U2c: Persönlichkeit, Eigenschaften, Merkmale, Position, Fuß, Talentschätzung ----------
+// Normalverteilt näherungsweise (Summe dreier Zufallszahlen), gerundet und begrenzt
+const normal=(m,s,a,b)=>clamp(Math.round(m+(R()+R()+R()-1.5)*2*s),a,b);
+function waehleGewichtet(obj){const e=Object.entries(obj);let x=R()*e.reduce((a,[,w])=>a+w,0);for(const[k,w]of e){if((x-=w)<=0)return k;}return e[e.length-1][0];}
+const stufenWert=(tab,x)=>{let v=tab[0][1];for(const[ab,w]of tab)if(x>=ab)v=w;return v;};
+// Startwerte eines neuen Spielers (K03 §5.9): Persönlichkeit, feine Position, Fuß, Merkmale. Echte Spieler: alles per Zufall, bis Fakten-Daten da sind.
+function spielerStart(p){const P=RP.persoenlichkeit;p.ch={};P.werte.forEach(k=>p.ch[k]=normal(P.mitte,P.streuung,P.min,P.max));
+  p.fp=waehleGewichtet(RP.positionen[p.pos]);p.fuss=R()<RP.fuss.rechts?'R':'L';
+  // Mit Seite: Linke Positionen eher Linksfüße, rechte eher Rechtsfüße (ohne harte Regel)
+  if(/^L/.test(p.fp)&&R()<0.35)p.fuss='L';if(/^R/.test(p.fp)&&R()<0.35)p.fuss='R';
+  p.mk={};const M=RP.startMerkmale,ziel=stufenWert(M.staerken,p.str),anz=Math.floor(ziel)+(R()<ziel%1?1:0),gw=Object.assign({},M.gewichte[p.pos]);
+  for(let i=0;i<Math.min(anz,RP.lernen.maxStaerken);i++){const k=waehleGewichtet(gw);if(!k||gw[k]==null)break;p.mk[k]=1;delete gw[k];if(!Object.keys(gw).length)break;}
+  if(p.pos!=='TW'&&R()<M.beidfuessig&&Object.keys(p.mk).length<RP.lernen.maxStaerken)p.mk.beidfuessig=1;
+  const sw=stufenWert(M.schwaechen,p.str),opts=Object.entries(RP.merkmale).filter(([k,m])=>m.schwaeche&&m.g.includes(p.pos)&&!Object.entries(RP.merkmale).some(([k2,m2])=>m2.gegen===k&&p.mk[k2])).map(([k])=>k);
+  if(opts.length&&R()<sw)p.mk[pick(opts)]=1;
+  p.ls=null;p.wiv=0;p.vt=p.team;p.ekw=riA(RP.entdeckenWochen);p.tf=ri(-RP.talentSchaetzung.fehler,RP.talentSchaetzung.fehler);eigenschaftenNeu(p);}
+// Eigenschaften aus der Persönlichkeit. Gespeichert in p.eig (Liste), neu berechnet beim Start und am 1. Juli (Alter, Persönlichkeit).
+function eigenschaftenNeu(p){p.eig=eigenschaftenBerechnen(p);}
+const eigenschaften=p=>p.eig||(p.eig=eigenschaftenBerechnen(p));
+function eigenschaftenBerechnen(p){if(!p.ch)return[];return Object.entries(RP.eigenschaften).filter(([k,e])=>Object.entries(e.wenn).every(([w,[a,b]])=>p.ch[w]>=a&&p.ch[w]<=b)&&(!e.abAlter||p.age>=e.abAlter)).map(([k])=>k);}
+const hatEig=(p,k)=>eigenschaften(p).includes(k);
+// Was du über einen Spieler weißt: Eigenschaften eigener Spieler nach einigen Wochen, nur solche, die im Spiel wirken
+function bekannteEigenschaften(p){if(p.team!==S.my||p.wiv<p.ekw)return[];return eigenschaften(p).filter(k=>RP.eigenschaftenWirksam.includes(k));}
+const sichtbareMerkmale=p=>Object.keys(p.mk||{}).filter(k=>RP.merkmaleWirksam.includes(k));
+const hatMk=(p,k)=>!!(p.mk&&p.mk[k]);
+// Lernen (K03 §5.6): ein Lernziel, Fortschritt pro Woche
+function lernbar(p,k){const m=RP.merkmale[k];if(!m||m.schwaeche||hatMk(p,k)||!m.g.includes(p.pos))return false;if(m.bis&&p.age>m.bis)return false;
+  if(Object.keys(p.mk||{}).filter(x=>!RP.merkmale[x].schwaeche).length>=RP.lernen.maxStaerken)return false;return true;}
+const lernOptionen=p=>RP.merkmaleWirksam.filter(k=>lernbar(p,k));
+function lernWoche(p){const L=RP.lernen;if(!p.ls||p.inj>0||p.team<0)return;const m=RP.merkmale[p.ls.k];if(!m||!lernbar(p,p.ls.k)){p.ls=null;return;}
+  const a=L.alter.find(x=>p.age<=x[0]);let f=L.woche[m.s]*(a?a[1]:L.alterSonst)*(L.profi[0]+L.profi[1]*profi(p))*(L.zufall[0]+R()*(L.zufall[1]-L.zufall[0]));
+  if(p.fit<L.frischeUnter[0])f*=L.frischeUnter[1];eigenschaften(p).forEach(e=>{if(L.eigenschaft[e])f*=L.eigenschaft[e];});
+  p.ls.f=Math.min(100,p.ls.f+f);
+  if(p.ls.f>=100){p.mk[p.ls.k]=1;if(p.team===S.my)news(`${p.n} hat ein neues Merkmal gelernt: ${m.name}.`,'good');p.ls=null;}}
+// Automatik (Co-Trainer, K16): wer kein Lernziel hat, bekommt eins, das zu ihm passt
+function lernAutomatik(p){if(p.ls||p.team<0)return;const o=lernOptionen(p);if(o.length)p.ls={k:pick(o),f:0};}
+// Woche: Zeit im Verein, neue Spieler (Talentschätzung neu), Lernen
+function wocheVerein(p){if(p.team!==p.vt){p.vt=p.team;p.wiv=0;p.ekw=riA(RP.entdeckenWochen);p.tf=ri(-RP.talentSchaetzung.fehler,RP.talentSchaetzung.fehler);}else p.wiv=(p.wiv||0)+1;
+  lernAutomatik(p);lernWoche(p);}
+// Talentsterne mit Schätzfehler (K03, K02): bis zu einem Stern daneben, nach zwei Jahren im Verein genau
+const sternFehler=p=>p.team===S.my&&p.wiv>=RP.talentSchaetzung.genauNachWochen?0:(p.tf||0);

@@ -22,9 +22,20 @@ function side(tid,home,neutral){const k=RE.staerke;
   return{id:tid,A,D,red:0,xp,xi:xi.filter(x=>x!=null),ein:t.ein};}
 const xgf=(me,op)=>{const T=RE.tore;return clamp(T.basis*Math.pow(me.A*Math.max(T.rotAngriffMin,1-T.rotAngriff*me.red)/(op.D*Math.max(T.rotAbwehrMin,1-T.rotAbwehr*op.red)),T.exponent),T.min,T.max);};
 function scorer(me,off){const c=me.xp.filter(x=>!off.has(x.p.id));if(!c.length)return null;const W=RE.schuetzen;let tot=0;const w=c.map(x=>{const v=W.gewicht[x.pos]*Math.pow(x.p.str/W.mitte,W.exponent);tot+=v;return v;});let r=R()*tot;for(let i=0;i<c.length;i++){r-=w[i];if(r<=0)return c[i].p;}return c[c.length-1].p;}
-function cardPick(me,off){const c=me.xp.filter(x=>!off.has(x.p.id)&&x.pos!=='TW');return c.length?pick(c).p:null;}
+function cardPick(me,off,gew){const c=me.xp.filter(x=>!off.has(x.p.id)&&x.pos!=='TW');if(!c.length)return null;if(!gew)return pick(c).p;
+  const w=c.map(x=>gew(x.p));let r=R()*w.reduce((a,b)=>a+b,0);for(let i=0;i<c.length;i++){if((r-=w[i])<=0)return c[i].p;}return c[c.length-1].p;}
+// Eigenschaften im Spiel (K03 §3.5): Hitzköpfe sehen öfter Karten, Verletzungsanfällige verletzen sich öfter
+const kartenGew=p=>hatEig(p,'hitzkopf')?1.5:1,verletzGew=p=>hatEig(p,'verletzungsanfaellig')?1.6:1;
+const teamGew=(me,off,gew)=>{const c=me.xp.filter(x=>!off.has(x.p.id)&&x.pos!=='TW');return c.length?c.reduce((a,x)=>a+gew(x.p),0)/c.length:1;};
 const keeper=op=>{const k=op.xp.find(x=>x.pos==='TW');return k?k.p.n:'der Torwart';};
-function shootout(){const q=RE.elfmeter;let a=0,b=0;for(let i=0;i<5;i++){if(R()<q)a++;if(R()<q)b++;}while(a===b){if(R()<q)a++;if(R()<q)b++;}return[a,b];}
+// Elfmeterschießen: mit Mannschaften nach Schützen und Torwart (Elfmeterschütze, Elfmetertöter, nervenschwach), ohne nur mit Grundquote
+function shootout(H,A){const q0=RE.elfmeter;
+  if(!H||!A||!H.xp||!H.xp.length||!A.xp||!A.xp.length){let a=0,b=0;for(let i=0;i<5;i++){if(R()<q0)a++;if(R()<q0)b++;}while(a===b){if(R()<q0)a++;if(R()<q0)b++;}return[a,b];}
+  const rang={ST:3,MF:2,AB:1,TW:0},reihe=t=>t.xp.map(x=>x.p).sort((x,y)=>(hatMk(y,'elfmeter')-hatMk(x,'elfmeter'))||(rang[y.pos]-rang[x.pos])||(y.str-x.str)),
+    tw=t=>{const k=t.xp.find(x=>x.pos==='TW');return k?k.p:null;},q=(s,k)=>clamp(q0+(hatMk(s,'elfmeter')?0.08:0)-(hatEig(s,'nervenschwach')?0.06:0)-(k&&hatMk(k,'elfmetertoeter')?0.06:0),0.5,0.95);
+  const rh=reihe(H),ra=reihe(A),kh=tw(H),ka=tw(A);let a=0,b=0,i=0;
+  for(;i<5;i++){if(R()<q(rh[i%rh.length],ka))a++;if(R()<q(ra[i%ra.length],kh))b++;}
+  while(a===b){if(R()<q(rh[i%rh.length],ka))a++;if(R()<q(ra[i%ra.length],kh))b++;i++;}return[a,b];}
 function sim(hid,aid,o={}){return mitStrom(strom('spiel',S.season,S.tag,hid,aid),()=>simLauf(hid,aid,o));}
 function simLauf(hid,aid,o){
   const H=side(hid,true,o.neutral),A=side(aid,false,o.neutral),Ss=[H,A],ev=[],sc=[0,0],yel={},off=new Set(),inj=[],K=RE.karten,V=RE.verletzung;
@@ -33,13 +44,13 @@ function simLauf(hid,aid,o){
   for(let m=1;m<=90;m++)for(let s=0;s<2;s++){const me=Ss[s],op=Ss[1-s],pg=xg[s]/90,r=R();
     if(r<pg)goal(m,s);else if(r<pg*RE.chancen){const p=scorer(me,off);ev.push({m,s,t:'C',n:p?p.n:rname(),gk:keeper(op)});}
     const ef=me.ein==='H'?K.hart:me.ein==='F'?K.fair:1;
-    if(R()<K.gelb*ef){const p=cardPick(me,off);if(p){if(yel[p.id]){off.add(p.id);me.red++;ev.push({m,s,t:'R',p:p.id,n:p.n,gy:1});xg=[xgf(H,A),xgf(A,H)];}else{yel[p.id]=1;ev.push({m,s,t:'Y',p:p.id,n:p.n});}}}
-    if(R()<K.rot*ef){const p=cardPick(me,off);if(p){off.add(p.id);me.red++;ev.push({m,s,t:'R',p:p.id,n:p.n});xg=[xgf(H,A),xgf(A,H)];}}
-    if(R()<V.chance*(op.ein==='H'?V.gegnerHart:1)){const p=cardPick(me,off);if(p&&!inj.find(x=>x.id===p.id)){inj.push({id:p.id,w:riA(V.wochen)});ev.push({m,s,t:'I',p:p.id,n:p.n});}}
+    if(R()<K.gelb*ef*teamGew(me,off,kartenGew)){const p=cardPick(me,off,kartenGew);if(p){if(yel[p.id]){off.add(p.id);me.red++;ev.push({m,s,t:'R',p:p.id,n:p.n,gy:1});xg=[xgf(H,A),xgf(A,H)];}else{yel[p.id]=1;ev.push({m,s,t:'Y',p:p.id,n:p.n});}}}
+    if(R()<K.rot*ef*teamGew(me,off,kartenGew)){const p=cardPick(me,off,kartenGew);if(p){off.add(p.id);me.red++;ev.push({m,s,t:'R',p:p.id,n:p.n});xg=[xgf(H,A),xgf(A,H)];}}
+    if(R()<V.chance*(op.ein==='H'?V.gegnerHart:1)*teamGew(me,off,verletzGew)){const p=cardPick(me,off,verletzGew);if(p&&!inj.find(x=>x.id===p.id)){inj.push({id:p.id,w:riA(V.wochen)});ev.push({m,s,t:'I',p:p.id,n:p.n});}}
   }
   let pen=null;
   if(o.ko&&sc[0]===sc[1]){for(let m=91;m<=120;m++)for(let s=0;s<2;s++)if(R()<xg[s]/90*RE.verlaengerung)goal(m,s);
-    if(sc[0]===sc[1]){pen=shootout();ev.push({m:120,s:pen[0]>pen[1]?0:1,t:'P',pen});}}
+    if(sc[0]===sc[1]){pen=shootout(H,A);ev.push({m:120,s:pen[0]>pen[1]?0:1,t:'P',pen});}}
   return{h:hid,a:aid,hg:sc[0],ag:sc[1],ev,pen,yel:Object.keys(yel).map(Number),off:[...off],inj,xi:[H.xi,A.xi],xg0,xpo:[H.xp.map(x=>[x.p.id,x.pos]),A.xp.map(x=>[x.p.id,x.pos])]};}
 const winner=r=>r.hg>r.ag?r.h:r.hg<r.ag?r.a:(r.pen&&r.pen[0]>r.pen[1]?r.h:r.a);
 function applyMatch(r,cup){return mitStrom(strom('nachspiel',S.season,S.tag,r.h,r.a),()=>applyMatchLauf(r,cup));}

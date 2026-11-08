@@ -57,10 +57,10 @@ function finanzenLiga(m){const t=myT();if(m.h===S.my)heimspielEinnahmen(m,false)
   if(S.loan>0)money('Kreditzinsen',-Math.round(S.loan*RF.kreditZins/n));}
 // Woche (K03 §4): Kondition, Form, Selbstvertrauen, Entwicklung für Spieler ohne Pflichtspiel seit 7 Tagen, Wochenbericht des Co-Trainers
 function training(){const T=RT,d=S.tag,bericht=[];
-  S.pl.forEach(p=>{if(p.team<-1)return;wochenWerte(p);if(p.ent==null||d-p.ent>=7)entwicklungBuchen(p,d);p.played=0;
+  S.pl.forEach(p=>{if(p.team<-1)return;wochenWerte(p);wocheVerein(p);if(p.ent==null||d-p.ent>=7)entwicklungBuchen(p,d);p.played=0;
     const mine=p.team===S.my;
     if(mine){const n=Math.round(p.str);if(p.sw!=null&&n!==p.sw)bericht.push([p,p.sw,n]);p.sw=n;}
-    if(mine&&S.train===T.verletzung.stufe&&p.inj<=0&&R()<T.verletzung.chance){const w=riA(T.verletzung.wochen);p.inj=w*7+1;news(`Trainingsverletzung: ${p.n} fällt ${w} Woche(n) aus.`,'bad');}});
+    if(mine&&S.train===T.verletzung.stufe&&p.inj<=0&&R()<T.verletzung.chance*(hatEig(p,'verletzungsanfaellig')?1.6:1)){const w=riA(T.verletzung.wochen);p.inj=w*7+1;news(`Trainingsverletzung: ${p.n} fällt ${w} Woche(n) aus.`,'bad');}});
   if(bericht.length){const auf=bericht.filter(x=>x[2]>x[1]),ab=bericht.filter(x=>x[2]<x[1]),txt=l=>l.map(([p,a,b])=>`${p.n} (${a} → ${b})`).join(', ');
     news(`Wochenbericht des Co-Trainers: ${auf.length?'verbessert '+txt(auf):''}${auf.length&&ab.length?' · ':''}${ab.length?'nachgelassen '+txt(ab):''}.`,auf.length>=ab.length?'good':'');}}
 function market(){const M=RM;
