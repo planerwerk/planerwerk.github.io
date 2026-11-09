@@ -49,7 +49,7 @@ function regionalligaAufsteiger(){const G=RS.regionalliga,meister={},ids=[],txt=
   return{ids:ids.slice(0,RS.abstieg3),text:txt.join(' · ')};}
 // Saisonwechsel am 1. Juli: Auf- und Abstieg, Alter, Verträge, Nachwuchs, neuer Spielplan
 function newSeason(){return mitStrom(strom('saison',S.season),newSeasonLauf);}
-function newSeasonLauf(){S.vstat={};S.testspiele=[];const sm=S.summary,Z=RS,setze=(ids,lg)=>ids.forEach(id=>S.teams[id].lg=lg);sommerNeueSaison();if(S.stab)stabSaison();
+function newSeasonLauf(){S.vstat={};S.testspiele=[];kabineSaison();const sm=S.summary,Z=RS,setze=(ids,lg)=>ids.forEach(id=>S.teams[id].lg=lg);sommerNeueSaison();if(S.stab)stabSaison();
   setze(sm.down,2);setze(sm.up,1);if(sm.rw===sm.rel[1]){S.teams[sm.rel[1]].lg=1;S.teams[sm.rel[0]].lg=2;}
   setze(sm.down2,3);setze(sm.up3,2);if(sm.rw2===sm.rel2[1]){S.teams[sm.rel2[1]].lg=2;S.teams[sm.rel2[0]].lg=3;}
   setze(sm.down3,4);setze(sm.up4,3);sm.down3.forEach(id=>S.teams[id].abstieg3=sm.season);
@@ -79,8 +79,8 @@ function newSeasonLauf(){S.vstat={};S.testspiele=[];const sm=S.summary,Z=RS,setz
   const sp=spielplanFuer(S.season);S.fx=sp.fx;S.plan.zeit=sp.zeit;initCup();supercupAnlegen(sm);
   S.fin={};S.att=[0,0];S.offers=S.offers.filter(o=>PIX.get(o.pid)&&PIX.get(o.pid).team===S.my);S.phase='play';S.summary=null;TDAY=null;TLG=0;LAST=null;
   setTarget();if(S.spons){S.spons.yrs--;if(S.spons.yrs<=0)S.spons=null;}if(!S.spons)sponsOffers();
-  S.lineup=bestXI(S.my,myT().form);
+  S.lineup=bestXI(S.my,myT().form);kabineNachSaisonwechsel();
   news(`Neue Saison ${S.season}/${(S.season+1)%100} in der ${ligaName(myT().lg)}: Ziel des Vorstands – ${targetText(myT().lg,S.target)}. Trainingsauftakt am ${datumMittel(auftaktTag(myT()))}.`,'good');save();}
 function mkJobs(){const J=RV.jobs,r=myT().rep-J.ansehenAbschlag,weg=S.summary?S.summary.down3:[];const c=S.teams.filter(t=>t.id!==S.my&&aktiv(t)&&!weg.includes(t.id)).sort((a,b)=>Math.abs(a.rep-r)-Math.abs(b.rep-r)).slice(0,J.kandidaten);S.jobs=shuffle(c).slice(0,J.angebote).map(t=>t.id);}
-function takeJob(id){const old=myT().name;LAST=null;S.my=id;S.fired=0;S.trust=RV.neuerJob;S.offers=[];S.constr=null;S.loan=0;S.fin={};S.att=[0,0];setTarget();if(!S.spons||S.sponsOffers===null){S.spons=null;sponsOffers();}S.lineup=bestXI(id,myT().form);
+function takeJob(id){const old=myT().name;LAST=null;versprechenJobwechsel();S.my=id;S.kapFrei={s:S.season,bis:S.tag+14};S.fired=0;S.trust=RV.neuerJob;S.offers=[];S.constr=null;S.loan=0;S.fin={};S.att=[0,0];setTarget();if(!S.spons||S.sponsOffers===null){S.spons=null;sponsOffers();}S.lineup=bestXI(id,myT().form);
   news(`Neuer Job: ${S.mgr} übernimmt ${myT().name} (vorher ${old}). Ziel: ${targetText(myT().lg,S.target)}.`,'good');save();closeOv();TAB='buero';render();if(S.phase==='end')showSummary();}

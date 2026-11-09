@@ -23,6 +23,7 @@ function tagesSpieleAbschliessen(out){return mitStrom(strom('spieltagEnde',S.sea
 function tagesSpieleAbschliessenLauf(out){const d=out.tag;S.gespielt=d;
   out.gruppen.filter(g=>g.art==='test').forEach(g=>g.list.forEach(r=>testspielNach(r,g.x)));out.gruppen=out.gruppen.filter(g=>g.art!=='test');
   out.list=out.gruppen.flatMap(g=>g.list);if(!out.list.length)return out;
+  einsatzBuchen(out.list);versprechenNachSpiel(out.list); // Einsatzzeit, Startelf und Siege (K14), Versprechen (K15), solange Gesperrte noch als gesperrt gelten
   // Sperren zählen die Spiele der eigenen Mannschaft im selben Wettbewerb (K09)
   const spielten=new Set(),wbs=new Set();out.list.forEach(r=>{spielten.add(r.h);spielten.add(r.a);const w=wbVon(r);wbs.add(r.h+':'+w);wbs.add(r.a+':'+w);});
   sperrenAbsitzen(wbs);
@@ -58,12 +59,13 @@ function taeglichLauf(d){const T=RT;if(S.phase==='play')testspieleTag(d);
     if(!status.get(t.id))trainingVerein(t,ab.get(t.id),d);});
   S.pl.forEach(p=>{if(p.inj>0)p.inj--;if(p.team<-1)return;const st=p.team>=0?status.get(p.team)||'':'',urlaub=st==='urlaub'?true:st==='laufplan'?'laufplan':false;
     const tr=!urlaub&&p.team>=0&&p.inj<=0&&S.phase==='play'?trainingTag(p,S.teams[p.team],ab.get(p.team),d):0;tagesWerte(p,urlaub,tr);});
+  S.offers.filter(o=>o.bis<d).forEach(o=>versprechenAngebot(o.pid,o.amt)); // abgelaufenes Angebot zählt wie abgelehnt (Versprechen „Wechsel“, K15)
   S.offers=S.offers.filter(o=>o.bis>=d&&PIX.get(o.pid)&&PIX.get(o.pid).team===S.my&&S.teams[o.tid]&&aktiv(S.teams[o.tid]));
-  medizinTag(d);sportgerichtTag(d);pokalAuslosungTag(d);
+  medizinTag(d);sportgerichtTag(d);pokalAuslosungTag(d);versprechenTag();
   const c=S.constr;if(c&&d>=c.bis){const t=myT();if(c.k==='cap')t.cap+=RB.tribuene.plaetze;if(c.k==='logen')t.logen+=RB.logen.anzahl;if(c.k==='shop')t.shop++;news(`Bau abgeschlossen: ${c.label}.`,'good');S.constr=null;}}
 // Werte pro Woche (montags): Training und Entwicklung, Transfermarkt, Vorstand bei Minus auf dem Konto.
 function woechentlich(d){return mitStrom(strom('woche',S.season,d),()=>woechentlichLauf(d));}
-function woechentlichLauf(d){if(!imUrlaub())mitStrom(strom('training',S.season,d),training);mitStrom(strom('markt',S.season,d),market);
+function woechentlichLauf(d){if(!imUrlaub())mitStrom(strom('training',S.season,d),training);mitStrom(strom('kabine',S.season,d),()=>kabineWoche(d));mitStrom(strom('markt',S.season,d),market);
   if(myT().cash<0){S.trust+=RV.kontoMinus;if(R()<RV.kontoMinusMeldung)news('Der Vorstand ist alarmiert: Das Vereinskonto ist im Minus!','bad');}
   S.trust=clamp(S.trust,0,100);vorstandPruefen();}
 
@@ -90,7 +92,7 @@ function market(){const M=RM;
   const n=R()<M.wechsel.eins?1:R()<M.wechsel.zwei?2:0;
   for(let k=0;k<n;k++){const L=S.pl.filter(p=>p.list&&p.team>=0&&p.team!==S.my&&squad(p.team).length>M.verkaeufer.kaderMin);if(!L.length)break;const p=pick(L);
     const B=S.teams.filter(t=>t.id!==S.my&&aktiv(t)&&t.id!==p.team&&t.cash>p.ask&&teamLevel(t.id)<p.str+M.kaeufer.niveauPlus&&squad(t.id).length<M.kaeufer.kaderMax);if(!B.length)continue;
-    const b=pick(B),from=S.teams[p.team];b.cash-=p.ask;from.cash+=p.ask;news(`Wechsel perfekt: ${p.n} geht für ${fmt(p.ask)} von ${from.name} zu ${b.name}.`,'tr');
+    const b=pick(B),from=S.teams[p.team];b.cash-=p.ask;from.cash+=p.ask;kabineAbgang(p,from.id);news(`Wechsel perfekt: ${p.n} geht für ${fmt(p.ask)} von ${from.name} zu ${b.name}.`,'tr');
     p.team=b.id;p.list=0;p.ct=riA(M.neuerVertrag);p.sal=salaryFor(p.str);neuzugang(p,b.id);}
   const lvl=teamLevel(S.my),A=M.angebote,U=M.ueberraschung,bis=S.tag+RK.angebotTage;
   squad(S.my).forEach(p=>{if(S.offers.some(o=>o.pid===p.id))return;

@@ -65,7 +65,7 @@ function lagerFaktor(tid,d){if(tid!==S.my)return{training:1,kondition:1,vertraut
 function lagerTag(d){const l=lagerAktiv(d);if(!l)return;const O=RLA.orte[l.ort],sq=squad(S.my).filter(p=>p.inj<=0);l.tag=d-l.von+1;
   if(l.tag===1)news(`Trainingslager in ${O.name} beginnt (${l.bis-l.von+1} Tage).`);
   if(O.wetter&&R()<O.wetter){l.ausfall=d;news(`Trainingslager: Wegen des Wetters fällt das Training heute aus.`);}
-  if(l.tag<=RLA.zusammenhaltBis)sq.forEach(p=>svAendern(p,RLA.zusammenhalt)); // Zusammenhalt (bis K14: Selbstvertrauen)
+  if(l.tag<=RLA.zusammenhaltBis)zusammenhaltAendern(myT(),RLA.zusammenhalt); // Zusammenhalt +1 pro Tag bis zum 7. Tag (K14 §5.6)
   if(l.tag>=RLA.kollerAb&&R()<RLA.koller){l.koller++;const n=Math.min(sq.length,ri(3,5));shuffle(sq.slice()).slice(0,n).forEach(p=>svAendern(p,RLA.kollerSv));news('Lagerkoller: Die Stimmung im Lager kippt, einige Spieler wollen nach Hause.','bad');}
   if(O.ablenkung)sq.filter(p=>hatEig(p,'partyloewe')).forEach(p=>{if(R()<RLA.ablenkung/(l.bis-l.von+1)){svAendern(p,RLA.ablenkungSv);news(`Trainingslager: ${p.n} wurde nachts in der Stadt gesehen.`,'bad');}});
   if(d===l.bis)news(`Trainingslager in ${O.name} beendet. Der Co-Trainer ist zufrieden mit Kondition und Abläufen.`,'good');}

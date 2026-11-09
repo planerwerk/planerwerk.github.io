@@ -10,7 +10,7 @@ function vertrautheitWoche(t){const V=RTA.vertrautheit,stil=t.stil||'ausgewogen'
   STILE.forEach(k=>{if(k!==stil)vertrautSetzen(t,'stil',k,vertraut(t,'stil',k)-V.vergessen);});
   Object.keys(RE.formationen).forEach(f=>{if(f!==t.form)vertrautSetzen(t,'ordnung',f,vertraut(t,'ordnung',f)-V.vergessen);});}
 // Neuzugang (K06 §5.4): Ein neuer Stammspieler senkt alle Vertrautheitswerte um 4
-function neuzugang(p,tid){const t=S.teams[tid];if(!t||p.str<teamLevel(tid)-2)return;const V=RTA.vertrautheit;
+function neuzugang(p,tid){neuAnfang(p,tid);const t=S.teams[tid];if(!t||p.str<teamLevel(tid)-2)return;const V=RTA.vertrautheit;
   STILE.forEach(k=>vertrautSetzen(t,'stil',k,vertraut(t,'stil',k)-V.neuzugang));Object.keys(RE.formationen).forEach(f=>vertrautSetzen(t,'ordnung',f,vertraut(t,'ordnung',f)-V.neuzugang));}
 const ordnungFaktor=(t,f)=>{const V=RTA.vertrautheit,v=vertraut(t,'ordnung',f);return v<V.ordnungUnter?(1-V.ordnungMalus)+V.ordnungMalus*v/V.ordnungUnter:1;};
 

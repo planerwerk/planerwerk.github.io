@@ -95,7 +95,7 @@ const meineSpieltage=()=>meineLigaspiele().filter(e=>e.tag<S.tag||(e.tag===S.tag
 const heuteMeinSpiel=()=>S.phase==='play'&&S.gespielt!==S.tag&&!!meinSpiel(S.tag);
 
 // Halt-Regeln: Hier hält „Tag beenden“ an.
-function haltGrund(d){if(S.phase==='end')return'Saisonende';if(S.fired)return'Entlassen';if(S.phase==='play'&&meinSpiel(d))return'Spiel';if(pokalLosHeute(d))return'Auslosung';if(S.offers.some(o=>o.bis===d)||meineVerfahren().some(v=>v.stand==='antrag'&&v.frist===d))return'Frist';if(S.phase==='play'&&d===auftaktTag(myT()))return'Trainingsauftakt';return'';}
+function haltGrund(d){if(S.phase==='end')return'Saisonende';if(S.fired)return'Entlassen';if(S.phase==='play'&&meinSpiel(d))return'Spiel';if(pokalLosHeute(d))return'Auslosung';if(S.offers.some(o=>o.bis===d)||meineVerfahren().some(v=>v.stand==='antrag'&&v.frist===d))return'Frist';if((S.gw||[]).some(g=>g.tag===d&&g.s===S.season))return'Gesprächswunsch';if(S.phase==='play'&&d===auftaktTag(myT()))return'Trainingsauftakt';return'';}
 function naechsterHalt(){const ende=S.phase==='sommer'?tageDerSaison():S.plan.ende;
   for(let d=S.tag+1;d<=S.tag+RK.maxSprung;d++){if(d>=ende||haltGrund(d)||(S.phase==='play'&&d===auftaktTag(myT())))return Math.min(d,ende);}return S.tag+RK.maxSprung;}
 
@@ -118,6 +118,7 @@ function erinnerungen(){const E=[],d=S.tag,m=heuteMeinSpiel()?meinSpiel(d):null;
   if(erinnerungAn('frist'))meineVerfahren().filter(v=>v.stand==='antrag'&&v.frist===d).forEach(v=>{const p=PIX.get(v.pid);E.push({art:'frist',text:`Sportgericht: Die Frist für ${esc(p.n)} (Antrag ${v.antrag} Spiel${v.antrag===1?'':'e'}) endet heute. Ohne Antwort gilt der Antrag als angenommen.`,tab:'buero',knopf:'Zum Sportgericht'});});
   if(m&&erinnerungAn('aufstellung')){const aus=(S.lineup||[]).map(id=>PIX.get(id)).filter(p=>p&&p.team===S.my&&!avail(p));
     if(aus.length)E.push({art:'aufstellung',text:`In deiner Startelf fehlen ${aus.map(p=>esc(p.n)).join(', ')}. Ohne Änderung stellt das Spiel automatisch Ersatz auf.`,tab:'aufst',knopf:'Zur Aufstellung'});}
+  if(m&&erinnerungAn('versprechen'))versprechenKippen().forEach(v=>{const p=PIX.get(v.pid);if(p&&!myXI().includes(p.id))E.push({art:'versprechen',text:`Du hast ${esc(p.n)} Einsatzzeit versprochen (${versprechenText(v)}), aber er steht nicht in der Startelf. Das Versprechen droht zu kippen.`,tab:'aufst',knopf:'Zur Aufstellung'});});
   if(m&&erinnerungAn('sponsor')&&S.sponsOffers)E.push({art:'sponsor',text:'Du hast noch keinen Trikotsponsor gewählt. Sonst nimmt der Vorstand das erste Angebot.',tab:'buero',knopf:'Zu den Angeboten'});
   if(erinnerungAn('vertrag')&&tageDerSaison()-d<=RK.erinnerungVertragTage){const xi=new Set(myXI()),e=squad(S.my).filter(p=>p.ct<=1&&xi.has(p.id));
     if(e.length)E.push({art:'vertrag',text:`Die Verträge von ${e.map(p=>esc(p.n)).join(', ')} enden am 30. Juni. Danach sind sie weg.`,tab:'kader',knopf:'Zum Kader'});}

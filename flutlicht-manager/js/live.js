@@ -13,7 +13,7 @@ function kickoffLive(){if(BUSY||CONF||LIVE)return;BUSY=true;let v=null;
   if(!v)return;if(!v.G){LAST=tagesSpieleAbschliessen(v.out);save();if(LAST.list.length)showConf(LAST);else weiterUI();return;}
   S.live={tag:S.tag,eing:[],m:0,k:0};liveAufbauen(v,'');liveStart();}
 function liveAufbauen(v,meldung){const G=v.G,s=G.hid===S.my?0:1;
-  LIVE={v,G,s,lauf:false,timer:null,evN:G.ev.length,gewarnt:new Set(),hz:G.m>=45,verl:G.m>=90,ende:G.ende,raus:null,meldung,ansprache:(S.live&&S.live.ansprache)||null,tab:'spiel'};
+  LIVE={v,G,s,lauf:false,timer:null,evN:G.ev.length,gewarnt:new Set(),hz:G.m>=45,verl:G.m>=90,ende:G.ende,raus:null,meldung,ansprache:(S.live&&S.live.ansprache)||null,anspPasst:S.live?S.live.anspPasst:null,tab:'spiel'};
   liveFrame();liveRender();}
 // Fortsetzen nach Neuladen (K05 §3.3): Das Spiel wird mit denselben Eingriffen bis zur gespeicherten Minute nachgespielt. Die Würfe jeder Minute sind fest (K02), also kommt dasselbe heraus.
 function liveFortsetzen(){if(!S.live||LIVE)return;if(S.live.tag!==S.tag||S.phase!=='play'){S.live=null;return;}
@@ -27,7 +27,7 @@ function liveEingriffAnwenden(G,s,e,spulen){const x=e.x||[];
   else if(e.a==='wechsel')G.wechseln(s,x[0],x[1]);else if(e.a==='ansprache')G.ansprache(s,x[0],x[1]);else if(e.a==='reihe')G.elfmeterReihe[s]=x[0].slice();else if(e.a==='spulen')spulen(x[0]);}
 // Eingriff merken und sichern
 function liveMerken(a,x){const L=LIVE;if(!L||!S.live)return;S.live.eing.push({m:L.G.m,k:L.G.elf?L.G.elf.k:null,a,x});liveSichern();}
-function liveSichern(){const L=LIVE;if(!L||!S.live)return;S.live.m=L.G.m;S.live.k=L.G.elf?L.G.elf.k:0;S.live.ansprache=L.ansprache;try{save();}catch(e){console.error(e);}}
+function liveSichern(){const L=LIVE;if(!L||!S.live)return;S.live.m=L.G.m;S.live.k=L.G.elf?L.G.elf.k:0;S.live.ansprache=L.ansprache;S.live.anspPasst=L.anspPasst;try{save();}catch(e){console.error(e);}}
 // Rahmen einmal aufbauen, danach nur Teile neu zeichnen
 function liveFrame(){const L=LIVE,E=liveEinst();
   ov(`<div class="row between"><h2 style="margin:0" id="lv-titel"></h2><span class="clock" id="lv-uhr"></span></div>
@@ -80,7 +80,7 @@ function liveAbpfiff(){const L=LIVE;if(!L||L.ende)return;liveStop();L.ende=true;
 // Ergebnis eintragen und den Tag abschließen
 function liveWeiter(){const L=LIVE;if(!L||!L.ende)return;BUSY=true;let out=null;
   try{liveEintragen(L.v);S.live=null;out=tagesSpieleAbschliessen(L.v.out);LAST=out;
-    if(L.ansprache){const T=myT();T.ansp=[...(T.ansp||[]),L.ansprache].slice(-RL.ansprache.abnutzungSpiele);}save();}
+    if(L.ansprache){const T=myT();T.ansp=[...(T.ansp||[]),L.ansprache].slice(-RL.ansprache.abnutzungSpiele);if(L.anspPasst!=null)halbzeitGlaub(L.anspPasst);}save();}
   catch(e){console.error(e);toast('Fehler: '+e.message);}finally{BUSY=false;}
   LIVE=null;closeOv();weiterUI();}
 
@@ -94,8 +94,9 @@ function liveRaus(id){const L=LIVE;if(!L)return;L.raus=L.raus===id?null:id;liveR
 function liveRein(id){const L=LIVE;if(!L||!L.raus)return;const aus=PIX.get(L.raus),ein=PIX.get(id),ausId=L.raus,r=L.G.wechseln(L.s,L.raus,id);if(r.ok)liveMerken('wechsel',[ausId,id]);
   L.meldung=r.ok?`Wechsel: ${ein.n} kommt für ${aus.n}.`:r.grund;L.raus=null;L.evN=L.G.ev.length;liveRender();}
 function liveAnsprache(art){const L=LIVE;if(!L||L.G.m!==45||L.ansprache)return;const T=myT(),alt=(T.ansp||[]).slice(-(RL.ansprache.abnutzungSpiele-1));
-  const abn=alt.length===RL.ansprache.abnutzungSpiele-1&&alt.every(a=>a===art)&&art!=='schweigen'?0.5:1,r=L.G.ansprache(L.s,art,abn);L.ansprache=art;liveMerken('ansprache',[art,abn]);
-  L.meldung=`Ansprache „${ANSPRACHE_TEXT[art]}“${r.passt?'':' – passt nicht zur Lage, die Spieler sind irritiert'}${abn<1?' (kennen sie schon, wirkt nur halb)':''}.`;liveRender();}
+  // Glaubwürdigkeit (K15 §5.5): Die Wirkung hängt davon ab, wie sehr die Mannschaft dir glaubt. Nur Ansprachen mit Anlass verändern danach die Glaubwürdigkeit.
+  const abn=(alt.length===RL.ansprache.abnutzungSpiele-1&&alt.every(a=>a===art)&&art!=='schweigen'?0.5:1)*glaubFaktor(),r=L.G.ansprache(L.s,art,abn);L.ansprache=art;L.anspPasst=['loben','motivieren','fordern','beruhigen'].includes(art)?(r.passt&&abn>=glaubFaktor()?true:r.passt?null:false):null;liveMerken('ansprache',[art,abn]);
+  L.meldung=`Ansprache „${ANSPRACHE_TEXT[art]}“${r.passt?'':' – passt nicht zur Lage, die Spieler sind irritiert'}${abn<glaubFaktor()?' (kennen sie schon, wirkt nur halb)':''}.`;liveRender();}
 
 // ---------- Anzeige ----------
 function liveRender(){const L=LIVE;if(!L)return;if(!document.getElementById('lv-inhalt'))liveFrame();const G=L.G,r={h:G.hid,a:G.aid};

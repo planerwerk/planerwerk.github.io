@@ -39,12 +39,12 @@ const bauVoll=(k,t)=>k==='cap'?t.cap>=RB.tribuene.max:k==='logen'?t.logen>=RB.lo
 function startBuild(k){const t=myT();if(S.constr||bauVoll(k,t))return;
   const cost=bauKosten(k,t),label=bauLabel(k,t);if(t.cash<cost){toast('Dafür reicht der Kontostand nicht.');return;}
   const bis=S.tag+bauWochen(k)*7;money('Stadionbau',-cost);S.constr={k,bis,label};news(`Baubeginn: ${label}, fertig am ${datumKurz(bis)}.`);save();render();}
-function setListed(id,on){const p=PIX.get(id);if(on){const v=+document.getElementById('ask').value;p.list=1;p.ask=Math.max(RM.runden,Math.round(v*1e6/RM.runden)*RM.runden);news(`${p.n} steht für ${fmt(p.ask)} auf der Transferliste.`);}else{p.list=0;S.offers=S.offers.filter(o=>o.pid!==id);}save();openP(id);render();}
-function extend(id){const p=PIX.get(id),y=+document.getElementById('ext').value;p.ct=y;p.sal=extDemand(p);news(`Vertrag verlängert: ${p.n} bis ${S.season+y}, ${fmt(p.sal)} pro Jahr.`,'good');save();openP(id);render();}
+function setListed(id,on){const p=PIX.get(id);if(on){const v=+document.getElementById('ask').value;p.list=1;p.ask=Math.max(RM.runden,Math.round(v*1e6/RM.runden)*RM.runden);news(`${p.n} steht für ${fmt(p.ask)} auf der Transferliste.`);}else{p.list=0;S.offers=S.offers.filter(o=>o.pid!==id);versprechenAngebot(id,null);}save();openP(id);render();}
+function extend(id){const p=PIX.get(id),y=+document.getElementById('ext').value;if(verlaengertNicht(p)){toast(`${p.n} will nicht verlängern. Erst muss seine Stimmung besser werden.`);return;}p.ct=y;p.sal=Math.round(extDemand(p)*vertragsAufschlag(p)/1000)*1000;news(`Vertrag verlängert: ${p.n} bis ${S.season+y}, ${fmt(p.sal)} pro Jahr.`,'good');save();openP(id);render();}
 const abfindung=p=>Math.round(p.sal*p.ct*RF.abfindung);
-function release(id){const p=PIX.get(id),c=abfindung(p);money('Abfindungen',-c);p.team=-1;p.list=0;S.offers=S.offers.filter(o=>o.pid!==id);news(`${p.n} wurde freigestellt (Abfindung ${fmt(c)}).`);save();closeOv();render();}
-function acceptOffer(i){const o=S.offers[i],p=o&&PIX.get(o.pid),b=o&&S.teams[o.tid];if(!p||p.team!==S.my)return;if(!aktiv(b)){S.offers.splice(i,1);toast(`${b.name} spielt nicht mehr in den Profiligen, das Angebot ist hinfällig.`);save();render();return;}money('Transfers',o.amt);b.cash-=o.amt;p.team=b.id;p.list=0;p.ct=riA(RM.neuerVertrag);S.offers=S.offers.filter(x=>x.pid!==o.pid);news(`Verkauft: ${p.n} wechselt für ${fmt(o.amt)} zu ${b.name}.`,'good');save();render();}
-function declineOffer(i){S.offers.splice(i,1);save();render();}
+function release(id){const p=PIX.get(id),c=abfindung(p);money('Abfindungen',-c);kabineAbgang(p,S.my);p.team=-1;p.list=0;S.offers=S.offers.filter(o=>o.pid!==id);news(`${p.n} wurde freigestellt (Abfindung ${fmt(c)}).`);save();closeOv();render();}
+function acceptOffer(i){const o=S.offers[i],p=o&&PIX.get(o.pid),b=o&&S.teams[o.tid];if(!p||p.team!==S.my)return;if(!aktiv(b)){S.offers.splice(i,1);toast(`${b.name} spielt nicht mehr in den Profiligen, das Angebot ist hinfällig.`);save();render();return;}money('Transfers',o.amt);b.cash-=o.amt;kabineAbgang(p,S.my);p.team=b.id;p.list=0;p.ct=riA(RM.neuerVertrag);S.offers=S.offers.filter(x=>x.pid!==o.pid);news(`Verkauft: ${p.n} wechselt für ${fmt(o.amt)} zu ${b.name}.`,'good');save();render();}
+function declineOffer(i){const o=S.offers[i];if(o)versprechenAngebot(o.pid,o.amt);S.offers.splice(i,1);save();render();}
 function offer(id){const p=PIX.get(id),t=myT(),msg=document.getElementById('msg'),yrs=+document.getElementById('yrs').value,M=RM,I=M.interesse;
   if(squad(S.my).length>=M.kaderMax){msg.textContent=`Dein Kader ist voll (höchstens ${M.kaderMax} Spieler).`;return;}
   const from=p.team>=0?S.teams[p.team]:null,lvl=teamLevel(S.my);
@@ -57,7 +57,7 @@ function offer(id){const p=PIX.get(id),t=myT(),msg=document.getElementById('msg'
     if(t.cash<fee){msg.textContent='Dafür reicht dein Kontostand nicht.';return;}
     money('Transfers',-fee);from.cash+=fee;}
   else{const hg=Math.round(sal*RF.handgeld/1000)*1000;if(t.cash<hg){msg.textContent='Nicht genug Geld für das Handgeld.';return;}money('Handgelder',-hg);}
-  p.team=S.my;p.list=0;p.ct=yrs;p.sal=sal;S.offers=S.offers.filter(o=>o.pid!==id);neuzugang(p,S.my);
+  if(from)kabineAbgang(p,from.id);p.team=S.my;p.list=0;p.ct=yrs;p.sal=sal;S.offers=S.offers.filter(o=>o.pid!==id);neuzugang(p,S.my);versprechenKauf(p);
   news(`Neuzugang: ${p.n} kommt ${from?`für ${fmt(fee)} von ${from.name}`:'ablösefrei'} (Gehalt ${fmt(sal)}/Jahr, bis ${S.season+yrs}).`,'good');save();closeOv();render();toast(`${p.n} unterschreibt!`);}
 
 // Lernziel eines eigenen Spielers (K03 §5.6). Leer = der Co-Trainer entscheidet.
@@ -81,4 +81,13 @@ function tsAnfragen(){const d=+document.getElementById('ts_tag').value,g=+docume
   news(`Testspiel am ${datumKurz(d)} bei ${tn(g)} angefragt. Antwort bis ${datumKurz(x.antwortAm)}.`);save();render();}
 function lagerBuchen(){const o=document.getElementById('la_ort').value,v=+document.getElementById('la_von').value,n=+document.getElementById('la_tage').value,f=lagerMoeglich(o,v,n);if(f){toast(f);return;}
   const k=lagerBuchenLauf(o,v,n);news(`Trainingslager gebucht: ${RLA.orte[o].name}, ${datumKurz(v)} bis ${datumKurz(v+n-1)}, Kosten ${fmt(k)}.`);save();render();}
-
+// Kabine und Gespräche (K14, K15): Kaderrolle, Kapitän, Einzelgespräch, Mannschaftsansprache, Teamevent
+function setKaderrolle(id,k){const p=PIX.get(id);if(!p||p.team!==S.my)return;if(k&&KR_STUFE[k])p.kr=k;else delete p.kr;save();openP(id);render();}
+function setKapitaen(v){const t=myT(),id=+v,neu=PIX.get(id);if(!neu||neu.team!==S.my||id===t.kap)return;const alt=PIX.get(t.kap),K=RKA.kapitaen,f=S.kapFrei;
+  const frei=f?(f.s===S.season&&S.tag<=f.bis):(S.season===RW.startSaison&&S.tag<=14);
+  if(alt&&alt.team===S.my&&!frei){stimmungAendern(alt,K.absetzen);freundeVon(alt).forEach(q=>{if(q.team===S.my)stimmungAendern(q,K.absetzenFreunde);});news(`${alt.n} ist nicht mehr Kapitän und enttäuscht. Neuer Kapitän: ${neu.n}.`,'bad');}
+  else news(`Neuer Kapitän: ${neu.n}.`);t.kap=id;t.kapAuto=0;kapitaenPruefen(t);save();render();}
+function gespraechUI(id){const th=document.getElementById('gthema'),ha=document.getElementById('ghaltung');if(!th||!ha)return;const r=gespraechFuehren(id,th.value,ha.value);save();
+  if(!r.ok){const m=document.getElementById('gmsg');if(m)m.textContent=r.text;return;}openP(id);render();const m=document.getElementById('gmsg');if(m)m.textContent=r.text;}
+function mansAnsprache(art){const r=mannschaftsAnsprache(art);save();render();toast(r.text);}
+function teameventUI(){teameventLauf();save();render();}

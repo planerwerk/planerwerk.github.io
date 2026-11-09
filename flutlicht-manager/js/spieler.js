@@ -4,7 +4,7 @@
 // Zustandsfaktor (K03 §5.8): Frische, Form und Spielpraxis zusammen, gedeckelt. Die Stärke bleibt der Hauptwert.
 function zustand(p){const Z=RP.zustand,F=RP.form,P=RP.spielpraxis,k=RE.staerke;
   const fr=k.fitBasis+k.fitAnteil*p.fit/100,fo=1+(p.form-F.mitte)*F.wirkung,pr=p.sp<P.wirkungUnter?1-P.wirkungMax*(P.wirkungUnter-p.sp)/P.wirkungUnter:1;
-  return clamp(fr*fo*pr,Z.min,Z.max);}
+  return clamp(fr*fo*pr*stimmungFaktor(p),Z.min,Z.max);} // Stimmung (K14 §5.3): unter 20 bis −3 %, über 85 bis +2 %
 
 // Frische-Erholung pro Tag (K03 §5.3): Wer müde ist, erholt sich anfangs schneller
 function erholung(p){const F=RP.frische,a=F.alter.find(x=>p.age<=x[0]);return(F.erholung[0]+F.erholung[1]*(100-p.fit))*(a?a[1]:F.alterSonst)*(F.koErholung[0]+F.koErholung[1]*p.ko)*belastungErholung(p);}
@@ -47,7 +47,7 @@ function erwartung(xgF,xgA){const pk=(l,k)=>{let p=Math.exp(-l);for(let i=1;i<=k
   for(let a=0;a<=10;a++){const pa=pk(xgF,a);for(let b=0;b<=10;b++){const q=pa*pk(xgA,b);if(a>b)w+=q;else if(a===b)u+=q;else n+=q;}}
   const s=w+u+n;return{sieg:w/s,remis:u/s,niederlage:n/s,punkte:(3*w+u)/s};}
 // Form nach dem Spiel aus Note gegenüber erwarteter Note (K03 §5.2). Note: 1 sehr gut bis 6 sehr schlecht.
-function formNachNote(p,note,erwNote){const F=RP.form;p.form=clamp(p.form+F.jeNote*(erwNote-note),F.min,F.max);}
+function formNachNote(p,note,erwNote,k=1){const F=RP.form;p.form=clamp(p.form+F.jeNote*(erwNote-note)*k,F.min,F.max);} // k: Weckruf (K15 §5.4)
 // Serie der Mannschaft gegenüber der Erwartung: Punkte der letzten 5 Pflichtspiele minus erwartete Punkte
 function serieBuchen(t,punkte,erwPunkte,ids){const F=RP.form.serie;t.erw=(t.erw||[]).concat([[punkte,erwPunkte]]).slice(-F.spiele);if(t.erw.length<F.spiele)return;
   const d=t.erw.reduce((a,x)=>a+x[0]-x[1],0),b=d>=F.abPunkte?F.bonus:d<=-F.abPunkte?-F.bonus:0;
@@ -98,7 +98,7 @@ const platzStaerken=p=>{const t=RP.lernen.platz.find(x=>p.str<=x[0]);return Math
 const lernOptionen=p=>RP.merkmaleWirksam.filter(k=>lernbar(p,k));
 function lernWoche(p){const L=RP.lernen;if(!p.ls||p.inj>0||p.team<0||!genugTraining(p))return;const m=RP.merkmale[p.ls.k];if(!m||!lernbar(p,p.ls.k)){p.ls=null;return;}
   const a=L.alter.find(x=>p.age<=x[0]);let f=L.woche[m.s]*(a?a[1]:L.alterSonst)*(L.profi[0]+L.profi[1]*profi(p))*(L.zufall[0]+R()*(L.zufall[1]-L.zufall[0]));
-  if(p.fit<L.frischeUnter[0])f*=L.frischeUnter[1];eigenschaften(p).forEach(e=>{if(L.eigenschaft[e])f*=L.eigenschaft[e];});if(p.wl)f*=1+RT.lernen.einheit;f*=stabFaktor(p.team,'co')*(p.pos==='TW'?stabFaktor(p.team,'torwart'):1);
+  if(p.fit<L.frischeUnter[0])f*=L.frischeUnter[1];eigenschaften(p).forEach(e=>{if(L.eigenschaft[e])f*=L.eigenschaft[e];});if(p.wl)f*=1+RT.lernen.einheit;f*=lernStimmung(p);f*=stabFaktor(p.team,'co')*(p.pos==='TW'?stabFaktor(p.team,'torwart'):1);
   p.ls.f=Math.min(100,p.ls.f+f);
   if(p.ls.f>=100)merkmalNeu(p,p.ls.k);}
 // Ein Merkmal kommt dazu (gelernt oder als Schwäche entstanden). Eine gelernte Stärke verdrängt ihre Schwäche und beginnt mit vollem Fehlerkonto.

@@ -89,7 +89,7 @@ function sim(hid,aid,o={}){const G=spielAnlegen(hid,aid,o);while(!G.ende)G.minut
 function spielAnlegen(hid,aid,o={}){const saison=S.season,tag=S.tag;return mitStrom(strom('spiel',saison,tag,hid,aid),()=>spielAufbau(hid,aid,o,saison,tag));}
 function spielAufbau(hid,aid,o,saison,tag){const Z=RL.zurufe,hs=hash32(['spiel',saison,tag,hid,aid].join('|')),hk=hash32(['ki',saison,tag,hid,aid].join('|'));
   const G={hid,aid,o,saison,tag,m:0,mNow:0,ende:false,verl:false,auto:[!(o.auto&&o.auto[0]===false),!(o.auto&&o.auto[1]===false)],
-    rufe:[[],[],],spielerRuf:{},sv:{},ansp:[null,null],plan:[[],[]],effektBis:0,verlauf:[],wz:[0,0],gel:[[],[]],ein:[[],[]],wechsel:[],minuten:{},raus:new Set()};
+    rufe:[[],[],],spielerRuf:{},sv:{},ansp:[null,null],kf:[kabineFaktor(hid),kabineFaktor(aid)],plan:[[],[]],effektBis:0,verlauf:[],wz:[0,0],gel:[[],[]],ein:[[],[]],wechsel:[],minuten:{},raus:new Set()};
   // Zurufe und Ansprache als Faktoren (K05 §5.2, §5.4). w: Stärke nach Abnutzung, passt: Ansprache passt zur Lage (sonst halb umgekehrt)
   const aktiv=(r,m)=>m>r.m&&m<=r.m+Z.dauer;
   G.zf=(t,k)=>{const m=G.mNow;let f=1;const mit=(basis,w)=>{f*=1+(basis-1)*w;};
@@ -101,7 +101,8 @@ function spielAufbau(hid,aid,o,saison,tag){const Z=RL.zurufe,hs=hash32(['spiel',
     if(k==='angriff')[0,1].forEach(u=>G.rufe[u].forEach(r=>{if(r.art==='zeit'&&aktiv(r,m)&&r.w)mit(Z.zeit.angriffe,r.w);}));
     const a=G.ansp[t];if(a&&m>45&&a.art==='beruhigen'&&(k==='fouls'||k==='patzer'))mit(RL.ansprache.beruhigen[k],a.f);
     return f;};
-  G.bonus=(s,p,m)=>{let f=1;const a=G.ansp[s],A=RL.ansprache;
+  // Zusammenhalt und Endspiel-Rede (K14 §5.6, K15 §5.4)
+  G.bonus=(s,p,m)=>{const k=G.kf[s],E=RGS.mannschaft.endspiel;let f=k.f*(k.end?1+(hatEig(p,'nervenschwach')?E.nervenschwach:E.wirkung)*k.end:1);const a=G.ansp[s],A=RL.ansprache;
     if(a&&m>45){if(a.art==='motivieren')f*=1+A.motivieren.wirkung*a.f;else if(a.art==='augenzwinkernd')f*=1+A.augenzwinkernd.wirkung*a.f;
       else if(a.art==='fordern')f*=1+(hatEig(p,'kaempfer')?A.fordern.kaempfer:(hatEig(p,'nervenschwach')||hatEig(p,'diva'))?A.fordern.empfindlich:0)*a.f;}
     const r=G.spielerRuf[p.id];if(r&&m>r.m&&m<=r.m+Z.dauer)f*=1+r.f;return f;};
@@ -332,9 +333,9 @@ function applyMatchLauf(r,cup){const N=RE.note,V=RP.selbstvertrauen;
       const fest=N.basis-(p.str-N.staerkeMitte)/N.staerkeTeiler;
       let gr=fest-res*N.ergebnis-goals*N.tor+(R()-0.5)*N.zufall;if(r.off.includes(id))gr+=N.platzverweis;gr=clamp(Math.round(gr*2)/2,N.min,N.max);
       const erw=clamp(fest-eres*N.ergebnis-xgF*anteil*N.tor,N.min,N.max);
-      p.lastG=gr;formNachNote(p,gr,erw);if(goals)svAendern(p,goals*V.tor);if(gr<=2)svAendern(p,V.guteNote);else if(gr>=5)svAendern(p,V.schlechteNote);
+      p.lastG=gr;formNachNote(p,gr,erw,weckFaktor(tid));if(goals)svAendern(p,goals*V.tor);if(gr<=2)svAendern(p,V.guteNote);else if(gr>=5)svAendern(p,V.schlechteNote);
       p.played=1;if(tid===S.my)(r.grades=r.grades||{})[id]=gr;});
-    serieBuchen(S.teams[tid],res>0?3:res===0?1:0,E.punkte,r.xi[s]);});
+    serieBuchen(S.teams[tid],res>0?3:res===0?1:0,E.punkte,r.xi[s]);weckNachSpiel(tid);});
   if(r.taktik)r.taktik.forEach((tk,s)=>{const tid=s?r.a:r.h;if(!tk||tid>=1000)return;const t=S.teams[tid],V=RTA.vertrautheit,ES=RTA.einstellung.saison;
     vertrautSetzen(t,'stil',tk.stil,vertraut(t,'stil',tk.stil)+V.jeSpiel);vertrautSetzen(t,'ordnung',tk.form,vertraut(t,'ordnung',tk.form)+V.jeSpiel);
     if(tk.einst==='saison'){t.kater=S.tag+ES.katerTage;r.xi[s].forEach(id=>{const p=PIX.get(id);if(p)p.fit=Math.max(RE.fitnessMin,p.fit-ES.frische);});}

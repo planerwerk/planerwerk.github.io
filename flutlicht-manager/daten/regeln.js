@@ -28,7 +28,7 @@ const REGELN={
       2:{wochenende:[['Sa','20:30',1],['Fr','18:30',2],['So','13:30',3],['Sa','13:00',3]],mitte:[['Di','18:30',4],['Mi','18:30',5]],letzter:'15:30'},
       3:{wochenende:[['Sa','16:30',1],['Fr','19:00',1],['So','16:30',1],['So','19:30',1],['So','13:30',1],['Sa','14:00',5]],mitte:[['Di','19:00',5],['Mi','19:00',5]],letzter:'13:30'}},
     attraktivZufall:15,              // Zufall bei der Verteilung auf die Anstoßzeiten (in Ansehen-Punkten)
-    erinnerungen:{frist:'Angebot läuft heute ab',aufstellung:'Startelf hat Ausfälle',sponsor:'Kein Sponsor gewählt',vertrag:'Verträge laufen aus'} // abschaltbar im Menü
+    erinnerungen:{frist:'Angebot läuft heute ab',aufstellung:'Startelf hat Ausfälle',sponsor:'Kein Sponsor gewählt',vertrag:'Verträge laufen aus',versprechen:'Versprechen droht zu kippen'} // abschaltbar im Menü
   },
 
   welt:{
@@ -85,15 +85,15 @@ const REGELN={
       hitzkopf:{name:'Hitzkopf',art:'−',wenn:{tem:[17,20]},text:'sieht 50 % öfter Karten'},
       verletzungsanfaellig:{name:'verletzungsanfällig',art:'−',wenn:{rob:[1,4]},text:'verletzt sich 60 % öfter'},
       nervenschwach:{name:'nervenschwach',art:'−',wenn:{dru:[1,4]},text:'schwächer in engen und wichtigen Spielen und vom Punkt'},
-      fuehrungsspieler:{name:'Führungsspieler',art:'+',wenn:{fue:[16,20]},abAlter:24,text:'reißt bei Rückstand die Mannschaft mit'},
+      fuehrungsspieler:{name:'Führungsspieler',art:'+',wenn:{fue:[16,20]},abAlter:24,text:'reißt bei Rückstand die Mannschaft mit, zählt in der Kabine doppelt und steckt andere an'},
       integrationsfigur:{name:'Integrationsfigur',art:'+',wenn:{fue:[13,20],anp:[15,20]}},
       mentor:{name:'Mentor',art:'+',wenn:{pro:[14,20],fue:[12,20]},abAlter:29},
-      kaempfer:{name:'Kämpfer',art:'+',wenn:{ehr:[16,20],dru:[12,20]},text:'legt bei Rückstand zu'},
+      kaempfer:{name:'Kämpfer',art:'+',wenn:{ehr:[16,20],dru:[12,20]},text:'legt bei Rückstand zu, Kritik spornt ihn an'},
       vereinstreu:{name:'vereinstreu',art:'+',wenn:{loy:[17,20]}},
-      diva:{name:'Diva',art:'−',wenn:{ehr:[15,20],anp:[1,6]}},
-      soeldner:{name:'Söldner',art:'−',wenn:{loy:[1,4]}},
+      diva:{name:'Diva',art:'−',wenn:{ehr:[15,20],anp:[1,6]},text:'eine zu niedrige Rolle kostet doppelt Stimmung, mag keine Kritik und keinen harten Ton'},
+      soeldner:{name:'Söldner',art:'−',wenn:{loy:[1,4]},text:'schaut aufs Gehalt, Gespräche wirken schwächer'},
       heimweh:{name:'Heimweh-Typ',art:'−',wenn:{anp:[1,4]}}},
-    eigenschaftenWirksam:['vorbildprofi','partyloewe','trainingsweltmeister','hitzkopf','verletzungsanfaellig','nervenschwach','kaempfer','fuehrungsspieler'],
+    eigenschaftenWirksam:['vorbildprofi','partyloewe','trainingsweltmeister','hitzkopf','verletzungsanfaellig','nervenschwach','kaempfer','fuehrungsspieler','diva','soeldner'],
     entdeckenWochen:[2,8],          // so lange dauert es, bis der Co-Trainer eine Eigenschaft eines neuen Spielers meldet
     // Merkmale (K03 §3.4): Stärken und Schwächen. Schwierigkeit: Lernfortschritt pro Woche leicht 12 %, mittel 6 %, schwer 3 %.
     merkmale:{
@@ -355,7 +355,49 @@ const REGELN={
       algarve:{name:'Algarve',saison:'winter',kosten:50000,text:'mildes Wetter'},andalusien:{name:'Andalusien',saison:'winter',kosten:55000,text:'warm, gute Plätze'},
       riviera:{name:'Türkische Riviera',saison:'winter',kosten:30000,ablenkung:true,text:'günstig, aber mehr Ablenkung'},golf:{name:'Golfregion',saison:'winter',kosten:90000,text:'sehr warm, lange Reise'},
       heimat:{name:'Heimat',saison:'beide',kosten:0,wetter:0.2,text:'kein Ortswechsel, im Winter fällt öfter Training aus'}},
-    ligaFaktor:{1:1,2:0.6,3:0.35},tage:[5,10],training:1.15,vertrautheit:1.25,zusammenhalt:0.1,zusammenhaltBis:7,kollerAb:8,koller:0.13,kollerSv:-0.5,ablenkung:0.15,ablenkungSv:-1},
+    ligaFaktor:{1:1,2:0.6,3:0.35},tage:[5,10],training:1.15,vertrautheit:1.25,zusammenhalt:1,zusammenhaltBis:7,kollerAb:8,koller:0.13,kollerSv:-0.5,ablenkung:0.15,ablenkungSv:-1},
+  // Stimmung, Kaderrollen, Wechselwunsch, Kabine, Zusammenhalt, Beziehungen, Kapitän (K14 §11, U8). Spielwerte, kalibriert mit tests/kabine.js
+  kabine:{start:[60,75],                // Stimmung zu Beginn (0–100)
+    rollen:{schluessel:0.85,stamm:0.65,rotation:0.40,ergaenzung:0.15,talent:0.15}, // erwartete Einsatzzeit je Kaderrolle (Anteil der Minuten)
+    einsatzTempo:0.2,                   // gleitender Schnitt der Einsatzzeit je Pflichtspiel (wirkt wie etwa sechs Wochen)
+    schluesselAnzahl:3,rotationAnteil:0.5,talentBis:21,ehrgeizigAb:15, // Rollen nach Rang in der Gruppe: Stammplätze, dazu halb so viele Rotationsplätze
+    ziel:{basis:60,einsatz:[-28,10],erfolg:[-10,10],leistung:[-5,5],vertrag:[-15,5],trainer:[-15,10],umfeld:[-10,5]},
+    einsatz:{skala:40,ehrgeiz:[0.5,0.05],rivale:1.5},    // (Anteil − Erwartung) × 40 × (0,5 + 0,05 × Ehrgeiz), negativ verstärkt durch Ehrgeiz
+    erfolg:{abSpiele:3,platz:25,platzMax:7,serie:1,serieMax:3,zerfall:0.9},
+    leistung:0.5,                        // (Form − 10) × 0,5
+    vertrag:{unter:0.8,minus:12,ueber:1.15,plus:3,auslaufend:-3,soeldner:1.5,max:-8}, // vorläufig höchstens −8, bis K21 das Gehaltsgefüge baut
+    rolle:{zuNiedrig:-4,diva:2,hoeher:1,hoeherMax:2},           // deine Rolle unter seiner Einschätzung: −4 je Stufe (Diva doppelt)
+    trainerZerfall:0.1,                  // Wirkung von Gesprächen im Baustein „Trainer“ verblasst um 10 % pro Woche
+    traegheit:0.2,wocheMax:8,sofortMax:10,
+    rufGefaelle:{ab:15,lob:0.5,kritik:2,einsatz:1.5,trainer:[50,0.3,3,95]}, // Ruf des Trainers bis K28: 50 + 0,3 × Ansehen + 3 je Trainerjahr, höchstens 95
+    folgen:{leistung:{unter:20,minus:0.03,ueber:85,plus:0.02},lernenUnter:30,lernen:0.7,vertragUnter:[40,25],vertragAufschlag:0.25},
+    wechsel:{grummeln:[45,2],gespraech:[40,2],offiziell:4,oeffentlich:4,oeffentlichChance:0.1,oeffentlichDiva:0.3,abloese:0.9,teamMinus:3,zurueckAb:50},
+    ansteckung:{fuehrerUnter:35,freunde:-2,fuehrerUeber:70,alleUnter:50,alle:1},
+    gruppe:{min:3,unter:35,zh:-2},
+    zusammenhalt:{start:50,stammelf:1,stammelfGleich:9,sieg:1,lager:1,neuer:-5,neuerWochen:8,streit:-3,ausgleich:0.04,wirkung:[0.97,0.0006]},
+    beziehungen:{freundChance:0.25,freundAlter:4,maxFreunde:3,rivaleChance:0.3,rivaleStaerke:3,rivaleEhrgeiz:13,rivaleEnde:8,rangelei:0.02,
+      verkauf:-8,lernen:1.05},
+    kapitaen:{fuehrungAb:14,wochen:52,bonus:[1,2],gewicht:2.5,fuehrer:2,absetzen:-10,absetzenFreunde:-3},
+    teamevent:{stimmung:5,zh:5,kosten:{1:50000,2:25000,3:10000},wochen:4},
+    urlaub:{lang:3,kurz:-3,wochen:8},
+    ki:{gelingt:0.55,stimmung:5}},      // Computer-Trainer: Gespräch bei Gesprächswunsch gelingt zu 55 % (K15 §7, Klugheit „normal“, bis K02 Klugheitsstufen hat)
+  // Gespräche und Ansprachen (K15 §11, U8): Glaubwürdigkeit, Wirkung, Abnutzung, Versprechen, Mannschaftsansprache
+  gespraeche:{proWoche:3,
+    glaubwuerdigkeit:{start:60,faktor:[0.5,0.7],erholungBis:60,erholung:1,gehalten:3,gebrochen:-10,offenAb:4,offenMinus:2,krise:25,krisenVorstand:-3},
+    wirkung:{rolle:3,einsatz:10,geduld:5,wechsel:8,konkurrent:6,lob:4,kritik:-4,unpassend:-0.5,nachStreit:0.5,nachStreitTage:28,trainerAnteil:0.5},
+    lage:{lobBis:3,kritikAb:4},           // Lob passt bei einer Note bis 3,0, Kritik ab 4,0 (letztes Spiel)
+    abnutzung:{wochen:4,zweites:0.5,danach:0.2},
+    loesen:{basis:0.15,jePunkt:0.04,min:0.05,max:0.9}, // Gesprächswunsch gelöst mit 15 % + 4 % je Punkt Wirkung
+    streit:{stimmung:-5},
+    versprechen:{gehalten:5,gebrochen:-15,stufe:1,
+      einsatz:{spiele:5,anteil:0.6},geduld:{tage:42},wechsel:{tage:120},konkurrent:{tage:120,staerke:2}},
+    reaktion:{   // K15 §5.2: Faktor je Haltung (verständnisvoll, sachlich, bestimmt), Lob, Kritik (negativ = Kritik schadet, positiv = Kritik hilft)
+      kaempfer:{v:0.8,s:1,b:1.3,lob:1,kritik:3},diva:{v:1.4,s:0.8,b:0.4,lob:1.5,kritik:-8,streitB:0.3,lobAbnutzung:2},
+      nervenschwach:{v:1.3,s:1,b:0.5,lob:1.2,kritik:-8,sv:-0.5},hitzkopf:{v:1,s:1,b:0.7,lob:1,kritik:-4,streitB:0.2,streitKritik:0.2},
+      vorbildprofi:{v:1,s:1.2,b:1,lob:0.7,kritik:-2},fuehrungsspieler:{v:1,s:1.2,b:1,lob:1,kritik:-2},soeldner:{v:0.7,s:1,b:1,lob:0.7,kritik:-4}},
+    persoenlichkeit:0.02,                 // Anpassungsfähigkeit verschiebt die Wirkung um ±2 % je Punkt Abstand von 10
+    mannschaft:{proWoche:1,rueckendeckung:{sv:0.3,stimmung:3},weckruf:{note:1.2,spiele:2,kaempfer:2,diva:-2},ziel:{stimmung:2},endspiel:{wirkung:0.02,nervenschwach:-0.02}},
+    halbzeit:{passend:1,unpassend:-2}}, // Glaubwürdigkeit nach einer passenden oder unpassenden Halbzeitansprache
   // Live-Spiel (K05 §11): Tempo, Halte, Wechsel, Umstellungszeit, Zurufe, Halbzeitansprache, Computer-Trainer, Druckleiste
   live:{tempo:{langsam:2000,normal:1000,schnell:300},
     anhalten:{tor:true,rot:true,verletzung:true,elfmeter:true,gelbRotGefahr:true,frischeUnter:55},
@@ -419,6 +461,9 @@ const REGELN={
   ui:{
     transferTreffer:80,              // so viele Treffer zeigt die Transfersuche
     // Zonen der Regler (K35a). Texte beschreiben nur, was das Spiel wirklich rechnet.
+    zonenStimmung:[{von:0,bis:40,art:'bad',text:'unzufrieden'},{von:40,bis:50,art:'warn',text:'grummelt'},{von:65,bis:100,art:'good',text:'zufrieden'}], // K14
+    zonenZusammenhalt:[{von:0,bis:35,art:'bad',text:'Teamstärke spürbar schwächer'},{von:65,bis:100,art:'good',text:'Teamstärke etwas stärker'}],
+    zonenGlaub:[{von:0,bis:25,art:'bad',text:'Die Kabine glaubt dir nicht mehr'},{von:25,bis:45,art:'warn',text:'Worte wirken schwächer'},{von:70,bis:100,art:'good',text:'Worte wirken stärker'}], // K15
     zonenFitness:[{von:0,bis:70,art:'bad',text:'deutlich geschwächt (Frische senkt die Stärke im Spiel)'},
       {von:70,bis:85,art:'warn',text:'etwas geschwächt'},{von:85,bis:100,art:'good',text:'fit'}],
     zonenSpielpraxis:[{von:0,bis:50,art:'warn',text:'fehlt: kostet bis zu 4 % Stärke im Spiel und bremst die Entwicklung'},{von:50,bis:100,art:'good',text:'ausreichend'}],
@@ -431,4 +476,4 @@ const REGELN={
 // Schreibschutz: Zur Laufzeit darf kein Code eine Regel ändern.
 (function frieren(o){Object.freeze(o);Object.values(o).forEach(v=>{if(v&&typeof v==='object'&&!Object.isFrozen(v))frieren(v);});})(REGELN);
 // Kurzformen für den Code
-const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui,RL=REGELN.live,RTA=REGELN.taktik,RSO=REGELN.sommer,RST=REGELN.stab,RD=REGELN.disziplin,RMD=REGELN.medizin,RWB=REGELN.wettbewerbe,RTS=REGELN.testspiele,RLA=REGELN.lager;
+const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui,RL=REGELN.live,RTA=REGELN.taktik,RSO=REGELN.sommer,RST=REGELN.stab,RD=REGELN.disziplin,RMD=REGELN.medizin,RWB=REGELN.wettbewerbe,RTS=REGELN.testspiele,RLA=REGELN.lager,RKA=REGELN.kabine,RGS=REGELN.gespraeche;

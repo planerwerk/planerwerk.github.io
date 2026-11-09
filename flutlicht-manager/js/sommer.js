@@ -13,7 +13,7 @@ function sommerStatus(t){if(!t)return'';if(t.urlaub>0)return'urlaub';if(t.urlaub
 function sommerTag(t,a,d){if(t.urlaub>0){t.urlaub--;if(t.urlaub===0)t.urlaubFertig=true;return;}
   if(!t.urlaubFertig&&t.urlaubAb==null&&(S.phase==='sommer'||saisonFertig(t,a,d))){t.urlaubAb=S.phase==='sommer'?d:d+RSO.urlaubBeginnNach;}
   if(t.urlaubAb!=null&&!(t.urlaub>0)&&!t.urlaubFertig&&(S.phase!=='play'||d>=t.urlaubAb)){t.urlaub=urlaubWochen(t)*7;t.urlaubGesamt=t.urlaub;
-    squad(t.id).forEach(p=>{p.koVor=p.ko;});if(t.id===S.my)news(`Die Mannschaft geht in den Urlaub (${urlaubWochen(t)} Wochen).`);}}
+    squad(t.id).forEach(p=>{p.koVor=p.ko;});kabineUrlaub(t,urlaubWochen(t));if(t.id===S.my)news(`Die Mannschaft geht in den Urlaub (${urlaubWochen(t)} Wochen).`);}}
 // Keine Pflichtspiele mehr in dieser Saison: nur in den letzten Wochen der Saison, ohne Spiel in Sicht und nach dem letzten bekannten Spieltag (Pokal und Relegation eingeschlossen)
 let LETZTER={key:null,m:null};
 function letzterSpieltag(d){const key=S.season+'/'+d;if(LETZTER.key===key)return LETZTER.m;const m=new Map();for(let x=S.plan.ende;x>=S.plan.ende-RSO.endphase;x--)spielendeAm(x).forEach(id=>{if(!m.has(id))m.set(id,x);});LETZTER={key,m};return m;}
