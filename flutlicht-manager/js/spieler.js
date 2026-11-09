@@ -7,22 +7,23 @@ function zustand(p){const Z=RP.zustand,F=RP.form,P=RP.spielpraxis,k=RE.staerke;
   return clamp(fr*fo*pr,Z.min,Z.max);}
 
 // Frische-Erholung pro Tag (K03 §5.3): Wer müde ist, erholt sich anfangs schneller
-function erholung(p){const F=RP.frische,a=F.alter.find(x=>p.age<=x[0]);return(F.erholung[0]+F.erholung[1]*(100-p.fit))*(a?a[1]:F.alterSonst)*(F.koErholung[0]+F.koErholung[1]*p.ko);}
+function erholung(p){const F=RP.frische,a=F.alter.find(x=>p.age<=x[0]);return(F.erholung[0]+F.erholung[1]*(100-p.fit))*(a?a[1]:F.alterSonst)*(F.koErholung[0]+F.koErholung[1]*p.ko)*belastungErholung(p);}
 // Werte pro Tag: Spielpraxis zerfällt, Frische erholt sich minus Trainingslast, Kondition sinkt im Urlaub und bei Verletzung
 // training: Frische-Änderung aus der Einheit des Tages (K07), negativ = Belastung
 function tagesWerte(p,urlaub,training){const K=RP.kondition;
   p.sp*=RP.spielpraxis.zerfall;
-  if(urlaub){p.ko=Math.max(0,p.ko-K.urlaub);p.fit=Math.min(100,p.fit+erholung(p));lastBuchen(p,0);return;}
+  if(urlaub==='laufplan'){laufplanTag(p);p.fit=Math.min(100,p.fit+erholung(p));lastBuchen(p,0);return;}
+  if(urlaub){p.ko=Math.max(0,p.ko-K.urlaub);p.fit=Math.min(100,p.fit+erholung(p));p.sb=Math.max(0,(p.sb||0)-RSO.belastung.urlaub);lastBuchen(p,0);return;}
   if(p.inj>0)p.ko=Math.max(0,p.ko-K.verletzt);
   p.fit=clamp(p.fit+erholung(p)+(training||0),0,100);}
 // Werte pro Woche: Kondition wandert zum Trainingsziel, Form und Selbstvertrauen ziehen zur Mitte
 function wochenWerte(p){const K=RP.kondition,F=RP.form,V=RP.selbstvertrauen;
-  if(!imUrlaub()&&p.team<0){const ziel=K.vereinslos-Math.max(0,p.age-K.altAb)*K.altJeJahr;p.ko=clamp(p.ko+(ziel-p.ko)*K.tempo,0,100);}
+  if(p.team<0){const ziel=K.vereinslos-Math.max(0,p.age-K.altAb)*K.altJeJahr;p.ko=clamp(p.ko+(ziel-p.ko)*K.tempo,0,100);}
   trainingWoche(p);
   p.form+=(F.mitte-p.form)*F.ausgleich;p.sv-=p.sv*V.ausgleich;}
 // Frische und Spielpraxis nach einem Pflichtspiel
 function nachSpiel(p,min){const F=RP.frische;p.fit=clamp(p.fit-F.spiel*min/90*(F.ko[0]+F.ko[1]*p.ko)*(hatMk(p,'ausdauernd')?0.75:1),RE.fitnessMin,100);p.sp=Math.min(100,p.sp+RP.spielpraxis.jeSpiel*min/90);
-  lastBuchen(p,RT.spielLast*min/90);p.wk=(p.wk||0)+RT.spielKondition*min/90;p.ltag=S.tag;p.lmin=min;}
+  lastBuchen(p,RT.spielLast*min/90);p.wk=(p.wk||0)+RT.spielKondition*min/90;p.ltag=S.tag;p.lmin=min;p.sb=Math.min(100,(p.sb||0)+min/RSO.belastung.jeMinuten);}
 
 // Entwicklung der Stärke für die Tage seit der letzten Buchung (K03 §5.1)
 function entwickeln(p,tage){if(tage<=0)return;const E=RP.entwicklung,P=E.praxis;

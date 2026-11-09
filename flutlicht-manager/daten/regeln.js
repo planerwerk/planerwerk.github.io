@@ -69,7 +69,7 @@ const REGELN={
       talentWeich:3,formBasis:1.2,   // Wachstum × 1,2^(Form−10), Abbau × 1,2^(10−Form)
       praxis:{hoch:60,auf:1.2,tief:20,aufTief:0.7,abTief:1.3,abTiefAb:29,halbBis:18},
       profi:{auf:[0.8,0.02],ab:[1.2,-0.02]},zufall:0.05,jung:{bisAlter:21,zufall:2}},
-    form:{mitte:10,min:0,max:20,jeNote:2.5,ausgleich:0.10,wirkung:0.005,serie:{spiele:5,abPunkte:4,bonus:0.5}}, // Form += 1,5 × (erwartete Note − Note)
+    form:{mitte:10,min:0,max:20,jeNote:2.3,ausgleich:0.11,wirkung:0.005,serie:{spiele:5,abPunkte:4,bonus:0.5}}, // Form += 2,3 × (erwartete Note − Note), jede Woche 11 % zurück zur Mitte
     frische:{spiel:15,ko:[2.0,-0.0125],erholung:[2.1,0.1],alter:[[23,1.1],[29,1],[32,0.9]],alterSonst:0.8,koErholung:[0.8,0.004]},
     kondition:{vereinslos:65,tempo:0.20,altAb:30,altJeJahr:1,urlaub:0.6,verletzt:0.5},
     selbstvertrauen:{min:-3,max:3,tor:0.5,guteNote:0.3,schlechteNote:-0.3,ausgleich:0.15},
@@ -211,7 +211,7 @@ const REGELN={
     entwicklung:{min:0.5,max:1.25,normalReiz:1.5,frischeUnter:70,frischeFaktor:0.8}, // normalReiz: Standardwoche mit sieben Tagen Abstand (Taktik, Kondition, Taktik)
     lernen:{mindestTage:3,einheit:0.2},
     umschulung:{verwandt:4,fremd:2,verwandtAb:75,max:90,maxVielseitig:95},
-    verletzung:{basis:0.00026,sprungAb:1.3,sprungJe01:1.5,frischeAb:80,frischeJePunkt:0.05,anfaellig:1.6,wochen:[1,3]},
+    verletzung:{basis:0.00029,sprungAb:1.3,sprungJe01:1.5,frischeAb:80,frischeJePunkt:0.05,anfaellig:1.6,wochen:[1,3]},
     last:{akut:7,chronisch:28,grund:2}, // grund: gewohnte Last mindestens 2 pro Tag
     spielLast:15,spielKondition:1 // Last und Konditionsreiz eines ganzen Pflichtspiels
   },
@@ -287,6 +287,12 @@ const REGELN={
     einstellung:{locker:{wirkung:0.96,frische:0.7},saison:{wirkung:1.04,katerTage:10,kater:0.955,frische:5}}, // Kater 10 Tage: trifft auch das nächste Wochenendspiel (K06 §12)
     // Computer-Trainer (K06 §7): Außenseiter mauern oder kontern, Favoriten pressen oder haben den Ball, Reaktion auf deinen Lieblingsstil (Stufe „normal“)
     ki:{aussenseiter:0.95,favorit:1.05,reaktion:0.25,rueckblick:5,profil:{ausgewogen:3,pressing:1,ballbesitz:1,konter:1,mauern:1,fluegel:1},ordnungTreue:1.02,ordnungAlleWochen:4,wichtigAbRunde:3,kreislaufGewicht:0.3}},
+  // Sommerpause (K12a §11): Urlaub 2–4 Wochen ab zwei Tage nach dem letzten eigenen Pflichtspiel, Laufplan bis zum Auftakt, Saisonbelastung, Leistungstest
+  sommer:{urlaubWochen:[2,3,4],urlaubStandard:3,urlaubBeginnNach:2,endphase:60,auftaktVersatz:[-7,0,7],
+    laufplan:{proTag:0.3,profiTeiler:10,partyloewe:-0.3},
+    leistungstest:{tag:1,uebergewichtAb:12,meldungenMax:2},
+    vorschlag:[45,70], // Co-Trainer: ab Saisonbelastung 45 der Stammspieler drei Wochen, ab 70 vier
+    belastung:{jeMinuten:45,urlaub:4,ab:50,erholung:0.004,risiko:0.01}},
   // Live-Spiel (K05 §11): Tempo, Halte, Wechsel, Umstellungszeit, Zurufe, Halbzeitansprache, Computer-Trainer, Druckleiste
   live:{tempo:{langsam:2000,normal:1000,schnell:300},
     anhalten:{tor:true,rot:true,verletzung:true,elfmeter:true,gelbRotGefahr:true,frischeUnter:55},
@@ -362,4 +368,4 @@ const REGELN={
 // Schreibschutz: Zur Laufzeit darf kein Code eine Regel ändern.
 (function frieren(o){Object.freeze(o);Object.values(o).forEach(v=>{if(v&&typeof v==='object'&&!Object.isFrozen(v))frieren(v);});})(REGELN);
 // Kurzformen für den Code
-const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui,RL=REGELN.live,RTA=REGELN.taktik;
+const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui,RL=REGELN.live,RTA=REGELN.taktik,RSO=REGELN.sommer;

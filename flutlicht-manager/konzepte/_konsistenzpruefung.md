@@ -537,4 +537,7 @@ Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `
 | AL4 | **K10:** Trainingsverletzungen nutzen bis K10 die alten Ausfallzeiten (1–3 Wochen). | 📌 bei U7 (K10) |
 | AL5 | **K16:** `stabFaktor` ist vorbereitet (Co-Trainer für Lernen, Umschulung, Vertrautheit; Athletiktrainer für das Verletzungsrisiko), liefert aber noch 1. | 📌 bei U6c |
 | AL6 | **K33:** Neue Felder am Verein `vorlage`, `vbTag`, `stdTag`, am Spieler `la`, `lc` (Last), `wk`, `we`, `wt`, `wl` (Wochenreize), `trf` (Trainingsfaktor), `eig` und `um` (Umschulung), `ltag`, `lmin` (letztes Spiel), `tinj` (Trainingsverletzungen der Saison). | ✅ in K33 |
+| AL7 | **K12a und K03:** Neuer verdeckter Wert Saisonbelastung `sb` am Spieler, dazu `koVor` (Kondition vor dem Urlaub). Am Verein `urlaub`, `urlaubGesamt`, `urlaubAb`, `urlaubFertig`, im Spielstand `sommer` (Urlaubswochen, Versatz des Auftakts). | ✅ in K33 |
+| AL8 | **PLAN §2 (höchstens 7 Tage je „Tag beenden“) und K12a §12 Nr. 1:** Im Urlaub und Laufplan springt der Kalender bis zum nächsten echten Halt. Im Test sind es zwei Halte vom Saisonende bis zum Auftakt. | ✅ vorläufig, bitte bestätigen |
+| AL9 | **K03 §10 Form:** Form je Notenpunkt 2,3, Ausgleich 11 % pro Woche (K12a §12 Nr. 9). | ✅ |
 

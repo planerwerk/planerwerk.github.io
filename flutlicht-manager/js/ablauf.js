@@ -45,9 +45,13 @@ function tagesSpieleAbschliessenLauf(out){const d=out.tag;S.gespielt=d;
 // Werte pro Tag: Ausfalltage zählen herunter, Frische erholt sich, Fristen laufen ab, Bau wird fertig.
 function taeglich(d){return mitStrom(strom('tag',S.season,d),()=>taeglichLauf(d));}
 function taeglichLauf(d){const T=RT;
-  const urlaub=imUrlaub(),ab=urlaub?null:spielAbstand(d);
-  if(ab)S.teams.forEach(t=>{if(aktiv(t))trainingVerein(t,ab.get(t.id),d);});
-  S.pl.forEach(p=>{if(p.inj>0)p.inj--;if(p.team<-1)return;const tr=!urlaub&&p.team>=0&&p.inj<=0?trainingTag(p,S.teams[p.team],ab.get(p.team),d):0;tagesWerte(p,urlaub,tr);});
+  const ab=S.phase==='play'?spielAbstand(d):new Map(),status=new Map();
+  S.teams.forEach(t=>{if(!aktiv(t))return;sommerTag(t,ab.get(t.id),d);const st=sommerStatus(t);status.set(t.id,st);
+    if(S.phase==='play'&&d===auftaktTag(t)&&st!=='urlaub'){sommerAuftakt(t);status.set(t.id,'');if(t.id===S.my)news('Trainingsauftakt: Die Mannschaft ist zurück. Morgen ist Leistungstest.');}
+    if(S.phase==='play'&&d===auftaktTag(t)+RSO.leistungstest.tag&&t.id===S.my)leistungstest();
+    if(!status.get(t.id))trainingVerein(t,ab.get(t.id),d);});
+  S.pl.forEach(p=>{if(p.inj>0)p.inj--;if(p.team<-1)return;const st=p.team>=0?status.get(p.team)||'':'',urlaub=st==='urlaub'?true:st==='laufplan'?'laufplan':false;
+    const tr=!urlaub&&p.team>=0&&p.inj<=0&&S.phase==='play'?trainingTag(p,S.teams[p.team],ab.get(p.team),d):0;tagesWerte(p,urlaub,tr);});
   S.offers=S.offers.filter(o=>o.bis>=d&&PIX.get(o.pid)&&PIX.get(o.pid).team===S.my);
   const c=S.constr;if(c&&d>=c.bis){const t=myT();if(c.k==='cap')t.cap+=RB.tribuene.plaetze;if(c.k==='logen')t.logen+=RB.logen.anzahl;if(c.k==='shop')t.shop++;news(`Bau abgeschlossen: ${c.label}.`,'good');S.constr=null;}}
 // Werte pro Woche (montags): Training und Entwicklung, Transfermarkt, Vorstand bei Minus auf dem Konto.

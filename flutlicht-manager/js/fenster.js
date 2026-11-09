@@ -80,6 +80,7 @@ function showSummary(){const sm=S.summary;if(!sm)return;const L=ids=>ids.map(id=
   <p><b>1./2. Liga:</b> Absteiger ${L(sm.down)} · Aufsteiger ${L(sm.up)} · Relegation: ${esc(sm.relRes)} → <b>${esc(tn(sm.rw))}</b> spielt in der 1. Liga.</p>
   <p><b>2./3. Liga:</b> Absteiger ${L(sm.down2)} · Aufsteiger ${L(sm.up3)} · Relegation: ${esc(sm.rel2Res)} → <b>${esc(tn(sm.rw2))}</b> spielt in der 2. Liga.</p>
   <p><b>3. Liga/Regionalliga:</b> Absteiger ${L(sm.down3)} · Aufsteiger ${L(sm.up4)}${sm.rlText?` <span class="dim">(${esc(sm.rlText)})</span>`:''}</p>
+  ${S.fired?"":sommerKarte()}
   <p>DFB-Pokalsieger: <b>${sm.cup!=null?esc(tn(sm.cup)):'–'}</b> · Torschützenkönig: ${esc(sm.ts)}</p>
   ${S.fired?'<p class="neg"><b>Du musst gehen: Der Verein trennt sich von dir.</b></p><div class="row"><button class="go" onclick="showFired()">Jobangebote ansehen</button></div>':`<p class="dim">Jetzt beginnt die Sommerpause: Urlaub bis zum Trainingsauftakt, am 1. Juli der Saisonwechsel mit neuen Verträgen und Sponsorangeboten.</p><div class="row"><button class="go" onclick="sommerpause();closeOv();TAB='buero';render()">Weiter in die Sommerpause</button><button onclick="closeOv()">Später</button></div>`}`);}
 function showFired(){if(!S.jobs)mkJobs();ov(`<h2>Entlassen!</h2><p>Der Vorstand von ${esc(myT().name)} hat dir das Vertrauen entzogen. Diese Vereine bieten dir einen Job an:</p>

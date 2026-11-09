@@ -286,7 +286,7 @@ function amateurErwartung(H,A){const q=(H.am?H.w.AM:H.A)/(A.am?A.w.DM:A.D);retur
 function cardPick(me,off,gew){const c=me.xp.filter(x=>!off.has(x.p.id)&&x.pos!=='TW');if(!c.length)return null;if(!gew)return pick(c).p;
   const w=c.map(x=>gew(x.p));let r=R()*w.reduce((a,b)=>a+b,0);for(let i=0;i<c.length;i++){if((r-=w[i])<=0)return c[i].p;}return c[c.length-1].p;}
 // Eigenschaften im Spiel (K03 §3.5): Verletzungsanfällige verletzen sich öfter
-const verletzGew=p=>hatEig(p,'verletzungsanfaellig')?1.6:1;
+const verletzGew=p=>(hatEig(p,'verletzungsanfaellig')?1.6:1)*belastungRisiko(p);
 const teamGew=(me,off,gew)=>{const c=me.xp.filter(x=>!off.has(x.p.id)&&x.pos!=='TW');return c.length?c.reduce((a,x)=>a+gew(x.p),0)/c.length:1;};
 // Elfmeterschießen: mit Mannschaften nach Schützen und Torwart (Elfmeterschütze, Elfmetertöter, nervenschwach), ohne nur mit Grundquote
 // Elfmeterschießen ohne Mannschaften (Regionalliga-Aufstieg): nur Grundquote

@@ -73,18 +73,18 @@ function naechstesSpiel(ab){for(let d=ab;d<=S.plan.ende;d++){const e=meinSpiel(d
 // Deine Ligaspiele der Saison mit Tag (auch vergangene)
 function meineLigaspiele(){const lg=myT().lg;return(S.fx[lg]||[]).map((md,k)=>{const i=md.findIndex(f=>f[0]===S.my||f[1]===S.my);return i<0?null:{art:'liga',lg,md:k,i,tag:S.plan.zeit[lg][k][i][0],min:S.plan.zeit[lg][k][i][1]};}).filter(Boolean);}
 const pauseAm=(d,lg)=>S.plan.pausen.find(p=>d>=p.von&&d<=p.bis&&p.ligen.includes(lg));
-const imUrlaub=()=>S.phase==='sommer'||S.tag<S.plan.trainingsauftakt;
+const imUrlaub=()=>S.phase==='sommer'||!!sommerStatus(myT())||S.tag<auftaktTag(myT());
 function ersterPflichttermin(){const l=meineLigaspiele();let d=l.length?l[0].tag:S.plan.ende;if(S.cup.alive.includes(S.my)&&!S.cup.hist.length)d=Math.min(d,S.plan.pokal[0][0]);return d;}
 function tagesText(d){if(S.phase==='sommer')return'Sommerpause – die Mannschaft ist im Urlaub';const e=meinSpiel(d);if(e)return spielName(e);
-  if(d<S.plan.trainingsauftakt)return`Sommerurlaub bis ${datumKurz(S.plan.trainingsauftakt-1)}`;if(d===S.plan.trainingsauftakt)return'Trainingsauftakt – die Mannschaft ist zurück';
+  if(d<auftaktTag(myT()))return`Sommerurlaub bis ${datumKurz(auftaktTag(myT())-1)}`;if(d===auftaktTag(myT()))return'Trainingsauftakt – die Mannschaft ist zurück';
   const p=pauseAm(d,myT().lg);if(p)return p.name+' – spielfrei';if(d<ersterPflichttermin())return'Saisonvorbereitung';const l=meineLigaspiele();if(l.length&&d>l[l.length-1].tag)return'Saisonende naht';return'spielfrei';}
 const meineSpieltage=()=>meineLigaspiele().filter(e=>e.tag<S.tag||(e.tag===S.tag&&S.gespielt===e.tag)).length;
 const heuteMeinSpiel=()=>S.phase==='play'&&S.gespielt!==S.tag&&!!meinSpiel(S.tag);
 
 // Halt-Regeln: Hier hält „Tag beenden“ an.
-function haltGrund(d){if(S.phase==='end')return'Saisonende';if(S.fired)return'Entlassen';if(S.phase==='play'&&meinSpiel(d))return'Spiel';if(S.offers.some(o=>o.bis===d))return'Frist';if(S.phase==='play'&&d===S.plan.trainingsauftakt)return'Trainingsauftakt';return'';}
+function haltGrund(d){if(S.phase==='end')return'Saisonende';if(S.fired)return'Entlassen';if(S.phase==='play'&&meinSpiel(d))return'Spiel';if(S.offers.some(o=>o.bis===d))return'Frist';if(S.phase==='play'&&d===auftaktTag(myT()))return'Trainingsauftakt';return'';}
 function naechsterHalt(){const ende=S.phase==='sommer'?tageDerSaison():S.plan.ende;
-  for(let d=S.tag+1;d<=S.tag+RK.maxSprung;d++){if(d>=ende||haltGrund(d)||(S.phase==='play'&&d===S.plan.trainingsauftakt))return Math.min(d,ende);}return S.tag+RK.maxSprung;}
+  for(let d=S.tag+1;d<=S.tag+RK.maxSprung;d++){if(d>=ende||haltGrund(d)||(S.phase==='play'&&d===auftaktTag(myT())))return Math.min(d,ende);}return S.tag+RK.maxSprung;}
 
 // Tageswechsel
 function tagBeginn(d){taeglich(d);if(wochentag(d)===RK.wochenTag)woechentlich(d);if(S.phase==='play'&&d>=S.plan.ende)seasonEnd();}
@@ -93,7 +93,7 @@ function tagEnde(d){if(S.phase==='play'&&S.gespielt!==d)tagesSpiele(d);}
 function weiter(){let n=0;tagEnde(S.tag);
   while(S.phase!=='end'&&!S.fired){S.tag++;n++;S.gespielt=-1;
     if(S.tag>=tageDerSaison()){newSeason();break;}
-    tagBeginn(S.tag);if(haltGrund(S.tag)||n>=RK.maxSprung)break;tagEnde(S.tag);}
+    tagBeginn(S.tag);if(haltGrund(S.tag)||(n>=RK.maxSprung&&!sommerSprung()))break;tagEnde(S.tag);}
   save();return n;}
 // Nach der Saisonbilanz: weiter in die Sommerpause (Urlaub bis zum Trainingsauftakt der neuen Saison)
 function sommerpause(){if(S.phase==='end'&&!S.fired){S.phase='sommer';save();}}

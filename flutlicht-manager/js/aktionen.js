@@ -4,6 +4,10 @@ function tab(k){TAB=k;if(k==='aufst'&&S){S.lineup=myXI();save();}render();window
 function setSlot(i,id){id=+id;const xi=myXI(),j=xi.indexOf(id);if(j>=0)xi[j]=xi[i];xi[i]=id;S.lineup=xi;save();render();}
 function setForm(f){myT().form=f;S.lineup=bestXI(S.my,f);save();render();}
 function setTac(v){myT().tac=v;save();render();}
+// Sommerpause (K12a): Urlaubslänge (auch im laufenden Urlaub änderbar) und Trainingsauftakt früher oder später
+function setUrlaub(w){if(!RSO.urlaubWochen.includes(w))return;S.sommer=Object.assign({},S.sommer||{},{urlaub:w});const t=myT();
+  if(t.urlaub>0){const vorbei=(t.urlaubGesamt||t.urlaub)-t.urlaub;t.urlaub=Math.max(1,w*7-vorbei);t.urlaubGesamt=w*7;}save();if(S.phase==='end')showSummary();else render();}
+function setAuftakt(v){if(!RSO.auftaktVersatz.includes(v))return;S.sommer=Object.assign({},S.sommer||{},{versatz:v});save();if(S.phase==='end')showSummary();else render();}
 // Training (K07): Vorlage des Wochenplans, Umschulung auf eine neue Position (belegt einen Einzeltrainingsplatz)
 function setVorlage(k){myT().vorlage=k==='auto'||!RT.vorlagen[k]?'auto':k;save();render();}
 function setUmschulung(id,pos){const p=PIX.get(id);if(!p||p.team!==S.my)return;if(!pos){p.um=null;save();openP(id);return;}

@@ -37,9 +37,9 @@ function kalTermin(d){const r={kurz:'',cls:'',titel:''},l=meineLigaspiele().find
     if(e.art==='rel'||e.art==='rel2'){const x=S[e.art==='rel'?'relSp':'relSp2'][e.leg],mine=x?(x.h===S.my||x.a===S.my):(relBereit(e.art)&&relTeams(e.art).includes(S.my));
       if(mine){r.kurz='Relegation';r.cls='sp';r.titel=spielName(e);if(x)r.erg=`${x.hg}:${x.ag}`;return r;}if(!r.kurz){r.kurz='Relegation';r.cls='fremd';r.titel=spielName(e);}}
     if(e.art==='ende'){r.kurz='Saisonende';r.cls='ende';r.titel='Saisonende';return r;}}
-  if(d===S.plan.trainingsauftakt&&!r.kurz){r.kurz='Training';r.cls='ende';r.titel='Trainingsauftakt';}
+  if(d===auftaktTag(myT())&&!r.kurz){r.kurz='Training';r.cls='ende';r.titel='Trainingsauftakt';}
   return r;}
-function wochenLeiste(){let h='';for(let d=S.tag;d<S.tag+7;d++){const dt=datumVon(d),k=kalTermin(d),u=S.phase==='sommer'||d<S.plan.trainingsauftakt,p=u?{name:d>=tageDerSaison()?'Neue Saison':'Urlaub'}:pauseAm(d,myT().lg);
+function wochenLeiste(){let h='';for(let d=S.tag;d<S.tag+7;d++){const dt=datumVon(d),k=kalTermin(d),u=S.phase==='sommer'||d<auftaktTag(myT()),p=u?{name:d>=tageDerSaison()?'Neue Saison':'Urlaub'}:pauseAm(d,myT().lg);
     h+=`<div class="wt ${d===S.tag?'heute':''} ${p&&!k.kurz?'pause':''} ${k.cls}" title="${esc(datumLang(d)+(k.titel?': '+k.titel:p?': '+p.name:''))}"><span>${WT[dt.getUTCDay()]}</span><b>${dt.getUTCDate()}.${dt.getUTCMonth()+1}.</b><i>${esc(k.kurz||(p?p.name.replace('Länderspielpause','Länderspiele'):''))}</i></div>`;}
   return`<div class="woche" aria-label="Die nächsten 7 Tage">${h}</div>`;}
 V.buero=()=>{const t=myT(),d=S.tag;let heute='';
@@ -176,8 +176,8 @@ V.stadion=()=>{const t=myT(),c=S.constr,T=RB.tribuene,L=RB.logen,F=RB.fanshop,sc
   <p class="dim" style="margin-top:8px">Mehr Plätze lohnen sich nur, wenn das Stadion regelmäßig ausverkauft ist.</p></div></div>`;};
 V.training=()=>{const t=myT(),tal=squad(S.my).filter(p=>p.age<=21).sort((a,b)=>b.pot-a.pot),akt=t.vorlage&&RT.vorlagen[t.vorlage]?t.vorlage:'auto';
   // Vorschau: die nächsten sieben Tage mit Einheit nach Abstand zum Spiel (K07 §3.2)
-  const tage=[];for(let d=S.tag;d<S.tag+7&&d<=S.plan.ende;d++){const a=spielAbstand(d).get(S.my)||{},e=imUrlaub()&&d<S.plan.trainingsauftakt?null:einheitVerein(t,a,d);
-    tage.push(`<tr><td>${esc(datumKurz(d))}</td><td>${a.heute?'<b>Spiel</b>':d<S.plan.trainingsauftakt?'Urlaub':e?`${EINHEIT_NAME[e[0]]}${e[0]!=='frei'?' · '+INTENSITAET_NAME[e[1]]:''}`:'–'}</td></tr>`);}
+  const tage=[];for(let d=S.tag;d<S.tag+7&&d<=S.plan.ende;d++){const a=spielAbstand(d).get(S.my)||{},e=imUrlaub()&&d<auftaktTag(myT())?null:einheitVerein(t,a,d);
+    tage.push(`<tr><td>${esc(datumKurz(d))}</td><td>${a.heute?'<b>Spiel</b>':d<auftaktTag(myT())?'Urlaub':e?`${EINHEIT_NAME[e[0]]}${e[0]!=='frei'?' · '+INTENSITAET_NAME[e[1]]:''}`:'–'}</td></tr>`);}
   const heute=(RT.vorlagen[vorlageVon(t,spielAbstand(S.tag).get(S.my)||{},S.tag)]||{}).name;
   const sq=squad(S.my),belastet=sq.filter(p=>p.inj<=0&&lastQuote(p)>RT.verletzung.sprungAb).sort((a,b)=>lastQuote(b)-lastQuote(a)),einzel=sq.filter(p=>p.ls||p.um);
   return`<div class="grid"><div class="card"><h2>Trainingsplan</h2><div class="opts">${['auto',...Object.keys(RT.vorlagen)].map(k=>`<button class="opt ${akt===k?'on':''}" onclick="setVorlage('${k}')"><b>${k==='auto'?'Co-Trainer entscheidet':RT.vorlagen[k].name}</b><span>${VORLAGE_TEXT[k]}</span></button>`).join('')}</div>
@@ -185,5 +185,6 @@ V.training=()=>{const t=myT(),tal=squad(S.my).filter(p=>p.age<=21).sort((a,b)=>b
     <p class="dim" style="margin-top:8px">Der Plan richtet sich nach dem Abstand zum Spiel, nicht nach dem Wochentag. Startspieler regenerieren am Tag nach dem Spiel, die übrigen bekommen ein Trainingsspiel für die Spielpraxis.</p></div>
   <div class="card"><h2>Belastung</h2>${belastet.length?`<p>Belastungssprung (akute Last deutlich über der gewohnten, erhöhtes Verletzungsrisiko):</p><table><tbody>${belastet.slice(0,10).map(p=>`<tr class="click" onclick="openP(${p.id})"><td>${esc(p.n)}</td><td class="num">${lastQuote(p).toFixed(2)}</td><td class="num">${Math.round(p.fit)} %</td></tr>`).join('')}</tbody></table>`:'<p class="dim">Niemand mit Belastungssprung. Gefährlich wird es ab etwa 1,3, deutlich ab 1,5.</p>'}
     <h3 style="margin-top:12px">Einzeltraining</h3><p class="dim">${einzel.length} von ${lernPlaetze(S.my)} Plätzen belegt (Lernziele und Umschulungen). Ändern in der Spielerkarte.</p>${einzel.length?`<table><tbody>${einzel.map(p=>`<tr class="click" onclick="openP(${p.id})"><td>${esc(p.n)}</td><td>${p.ls?`lernt ${esc(RP.merkmale[p.ls.k].name)} (${Math.round(p.ls.f)} %)`:''}${p.um?`${p.ls?' · ':''}Umschulung ${esc(p.um)} (${Math.round((p.eig&&p.eig[p.um])||eignung(Object.assign({},p,{eig:null}),p.um)*100)} %)`:''}</td></tr>`).join('')}</tbody></table>`:''}</div>
+  ${sommerKarte()}
   <div class="card"><h2>Jugendarbeit</h2><p>Jedes Jahr rücken ${RS.nachwuchs.anzahl} Talente auf. Mehr Investition bringt bessere Talente.</p><div class="opts">${[1,2,3,4,5].map(l=>`<button class="opt ${t.youth===l?'on':''}" onclick="myT().youth=${l};save();render()"><b>Stufe ${l}</b><span>${fmt(RF.jugendKosten[l])} pro Spieltag</span></button>`).join('')}</div></div>
   <div class="card"><h3>Talente bis 21 Jahre</h3>${tal.length?`<table><tbody>${tal.map(p=>`<tr class="click" onclick="openP(${p.id})"><td><span class="pos ${p.pos}">${p.pos}</span></td><td>${esc(p.n)}</td><td class="num">${p.age}</td><td class="num str">${Math.round(p.str)}</td><td>${stars(p)}</td></tr>`).join('')}</tbody></table>`:'<p class="dim">Keine Spieler bis 21 Jahre.</p>'}</div></div>`;};

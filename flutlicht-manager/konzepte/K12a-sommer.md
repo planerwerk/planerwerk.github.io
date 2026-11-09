@@ -3,6 +3,8 @@
 Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12.
 Hängt ab von: K01 (Kalender), K03 (Frische, Kondition), K07 (Training) · Wird gebraucht von: K11, K12b, K13, K14.
 
+**Umsetzungshinweise (U6b, 9. November 2026):** Urlaub je Verein nach dem letzten eigenen Pflichtspiel (2, 3 oder 4 Wochen), Laufplan bis zum Trainingsauftakt, Trainingsauftakt früher oder später, Saisonbelastung (verdeckt, wirkt auf Erholung und Verletzungsrisiko), Leistungstest am Tag nach dem Auftakt, Springen ohne 7-Tage-Grenze im Urlaub und Laufplan. Code in `js/sommer.js`, Werte in `REGELN.sommer`, Wahl in Training und Saisonbilanz. Test: `tests/sommer.js`. Abweichungen in §12 unter U6b.
+
 ## 1. Ziel und Spielgefühl
 
 - **Der Sommer ist eine Phase mit eigenen Entscheidungen,** kein leerer Durchlauf. Du entscheidest dich am 6.11. dafür, ihn nicht zu überspringen (PLAN §2). Bis K11 und K12b umgesetzt sind, ist er noch dünn (Konsistenzprüfung I3).
@@ -158,6 +160,15 @@ spieler:{ saisonbelastung:{jeMinuten:45,laenderspiel:2,urlaub:4,pause:1,ab:50,er
 2. **Saisonbelastung** als neuer verdeckter Wert in K03. Ohne ihn hat die Urlaubslänge vor K14 kaum Folgen.
 3. **Urlaub für die ganze Mannschaft,** nicht je Spieler. Ausnahme: Turnierteilnehmer.
 4. **Laufplan** passiert automatisch und hängt an der Professionalität. Keine eigene Planung.
+
+**Vorläufig entschieden bei der Umsetzung (U6b, 9. November 2026):**
+5. **Urlaub je Verein:** Er beginnt zwei Tage nach dem letzten eigenen Pflichtspiel (Liga, Pokal, Relegation), also für viele Vereine schon im Mai. Computer-Vereine nehmen immer drei Wochen.
+6. **Trainingsauftakt** eine Woche früher, Standard oder eine Woche später (statt eines freien Datums im Fenster). Das deckt die Wahl ab und bleibt in jeder Saison gültig.
+7. **Saisonbelastung wird mitgenommen:** Sie sinkt nur im Urlaub (4 pro Tag) und steigt mit jeder Spielminute. Nach zwei Wochen Urlaub startet ein Stammspieler mit Belastung 90 in die neue Saison mit etwa 26 statt 0 und liegt damit schon im Herbst über 50 (langsamere Erholung, mehr Verletzungen). Die Rechnung in 5.1 („Wirkung im Herbst nur bei Belastung über 74“) ging von einer Wirkung direkt nach dem Urlaub aus, die es mit der Schwelle 50 nie gäbe.
+8. **Urlaubslänge auch im laufenden Urlaub änderbar** (Training und Saisonbilanz). Bereits vergangene Urlaubstage zählen.
+9. **Formänderung je Notenpunkt 2,3 statt 2,5** und 11 % statt 10 % pro Woche zurück zur Mitte. Mit dem neuen Saisonablauf lagen sonst 6,5 % der Spieler bei Form ≤ 4 oder ≥ 16 (Ziel höchstens 5 %).
+10. **Noch nicht gebaut:** Nationalspieler mit Turnier (K13), Ereignisse aus §8, Stimmung aus der Urlaubslänge (K14), Testspiele und Trainingslager (K11).
+
 
 ## Quellen
 

@@ -149,6 +149,14 @@ Datei: `konzepte/K12a-sommer.md`
 3. **Urlaub für die ganze Mannschaft,** nicht je Spieler. Ausnahme: Turnierteilnehmer.
 4. **Laufplan** passiert automatisch und hängt an der Professionalität. Keine eigene Planung.
 
+Bei der Umsetzung (U6b):
+5. **Urlaub je Verein:** Er beginnt zwei Tage nach dem letzten eigenen Pflichtspiel (Liga, Pokal, Relegation), also für viele Vereine schon im Mai. Computer-Vereine nehmen immer drei Wochen.
+6. **Trainingsauftakt** eine Woche früher, Standard oder eine Woche später (statt eines freien Datums im Fenster). Das deckt die Wahl ab und bleibt in jeder Saison gültig.
+7. **Saisonbelastung wird mitgenommen:** Sie sinkt nur im Urlaub (4 pro Tag) und steigt mit jeder Spielminute. Nach zwei Wochen Urlaub startet ein Stammspieler mit Belastung 90 in die neue Saison mit etwa 26 statt 0 und liegt damit schon im Herbst über 50 (langsamere Erholung, mehr Verletzungen). Die Rechnung in 5.1 („Wirkung im Herbst nur bei Belastung über 74“) ging von einer Wirkung direkt nach dem Urlaub aus, die es mit der Schwelle 50 nie gäbe.
+8. **Urlaubslänge auch im laufenden Urlaub änderbar** (Training und Saisonbilanz). Bereits vergangene Urlaubstage zählen.
+9. **Formänderung je Notenpunkt 2,3 statt 2,5** und 11 % statt 10 % pro Woche zurück zur Mitte. Mit dem neuen Saisonablauf lagen sonst 6,5 % der Spieler bei Form ≤ 4 oder ≥ 16 (Ziel höchstens 5 %).
+10. **Noch nicht gebaut:** Nationalspieler mit Turnier (K13), Ereignisse aus §8, Stimmung aus der Urlaubslänge (K14), Testspiele und Trainingslager (K11).
+
 ## K12b – Saisonvorbereitung (Rahmen)
 Datei: `konzepte/K12b-saisonvorbereitung.md`
 
