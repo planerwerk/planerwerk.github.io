@@ -35,6 +35,7 @@ Stand: 7. November 2026 (U1 umgesetzt, dazu Sommer, Anstoßzeiten und 3. Liga; K
 | **Spieltage** (6.11.) | über das Wochenende verteilt wie in echt, nach dem offiziellen Spielplan 2026/27 (OpenLigaDB) mit Anstoßzeiten. Samstag 15:30 bleibt die Konferenz, der letzte Spieltag läuft zeitgleich. |
 | **Unterbau** (6.11.) | 3. Liga mit 20 echten Vereinen als vollständige Liga, Regionalliga als Pool mit gelosten Meistern und Aufstiegsspielen („etwas Zufall“). Konzept K32a. |
 | **Alte Spielstände** (6.11.) | aus Testversionen sind Müll und werden gelöscht. |
+| **Einstieg mit Lernstufen** (9.11.) | Die erste Saison lässt sich mit einem Teil der Funktionen spielen. Wer etwas verstanden hat, steigt eine Stufe auf, und neue Möglichkeiten kommen dazu. Beispiele: Aufstellung gibt es ab Stufe 1, Taktik zuerst einfach und später ausführlicher, das Sportgericht erst auf einer höheren Stufe. Die Stufen lassen sich abschalten, dann ist sofort alles frei. Muss gut durchdacht sein: Konzept K36, erste Gedanken in §4. |
 | **Europapokal** (5.11.) | später als Erweiterung. Zuerst 1. und 2. Liga und Pokal. |
 | **Vorläufig übernommen** (Vorschläge aus der Konsistenzprüfung, gelten, solange du nichts anderes sagst) | Automatik und Delegieren in jedem Bereich über den Stab. Nichts wegnehmen, bevor der Ersatz fertig ist. K08 und der Auslandspool nach Welle 3, K16 nach Welle 2. |
 
@@ -51,6 +52,7 @@ Spalte „Welle“: wann das Konzept spätestens fertig sein muss. Umfang des Ko
 | K03 | Spielermodell (**abgestimmt** 7.11., alle Fragen beantwortet: `konzepte/K03-spielermodell.md`) | Fähigkeiten, Spezialitäten (gut/schlecht), versteckte Werte, Zustände (Frische, Kondition, Form, Selbstvertrauen, Stimmung, Integration, Spielpraxis), Alterskurven | L | 1 |
 | K04 | Match-Engine (**Entwurf**: `konzepte/K04-engine.md`) | Minutenablauf, Chancentypen, Teamwerte mit abnehmendem Ertrag, Deckel für Einzelspieler (Torwart-Problem), Tagesform, Spielverlauf-Effekte, Ermüdung, Zielverteilungen | L | 1 |
 | K33 | Daten, Spielstand, `regeln.js` (**Entwurf**, umgesetzt: `konzepte/K33-daten.md`) | Dateiaufbau, Stammdaten, Versionen des Spielstands, wie man an Werten schraubt, Daten-Update für neue Saisons | S | 1 |
+| K36 | Einstieg mit Lernstufen (**noch nicht geschrieben**, Gedanken in §4) | Stufenleiter, was auf welcher Stufe frei ist, Aufstieg nach Verständnis statt nach Zeit, Automatik für gesperrte Bereiche, Aufstiegsmoment mit Erklärung, Aus-Schalter, „jetzt freischalten“ | M | 2b |
 
 ### B – Sport
 
@@ -229,19 +231,42 @@ Für BMH habe ich keine verlässliche Quelle gefunden. Anstoss 2022 nutzt laut e
   - Der Sponsor gerät in einen Skandal.
   - Fan-Choreo zum Jubiläum.
 
+### K36 – Einstieg mit Lernstufen (9.11.)
+
+Ich halte die Idee für richtig. Das Spiel hat schon jetzt viele Stellschrauben (Stil, Rollen, Schützen, Einstellung, Trainingsvorlagen, Stab, Sportgericht), und es werden mehr. Grundsätze für das Konzept:
+
+1. **Gesperrt heißt automatisch, nicht abgeschaltet.** Was du noch nicht steuern kannst, erledigt der Stab nach denselben Regeln wie bei den Computer-Vereinen: Der Co-Trainer wählt die Trainingsvorlage, der Verein nimmt Strafanträge an, der Computer-Trainer wechselt im Spiel. Die Simulation ist mit und ohne Lernstufen gleich, es wächst nur, was du selbst entscheidest. So entsteht kein Nachteil gegenüber den Computer-Vereinen und kein zweites Regelwerk. Das passt zu „Automatik und Delegieren in jedem Bereich über den Stab“ (§2) und zu „Schwierigkeit ohne Schummeln“ (K02).
+2. **Aufstieg nach Verständnis, nicht nur nach Zeit:** eine Mindestzeit (zum Beispiel einige Spieltage) plus Nutzung. Beispiel: Du hast die Aufstellung selbst geändert, ein Spiel live verfolgt und einmal gewechselt. Wer schneller will, schaltet die nächste Stufe sofort frei.
+3. **Aufstiegsmoment:** eine kurze Karte. Sie sagt, was neu ist, wo es steht und was der Stab bisher dafür gemacht hat. Dazu auf Wunsch eine kleine Aufgabe.
+4. **Abschalten:** beim Spielstart wählbar und jederzeit in den Einstellungen, dann ist sofort alles frei. Wieder einschalten nur bei einem neuen Spiel, weil es Möglichkeiten wegnehmen würde.
+5. **Bereiche werden zuerst einfach, dann ausführlicher.** Beispiel Taktik: Stufe 1 Formation und Ausrichtung in drei Stufen, Stufe 2 Spielstile, Stufe 3 Rollen, Standardschützen, fünf Stufen der Ausrichtung und Einstellung.
+6. **Grobe Leiter (Vorschlag, im Konzept zu prüfen):**
+   - Stufe 1: Aufstellung, Formation, einfache Ausrichtung, Spiel live mit Wechseln, Kader, Tabelle.
+   - Stufe 2: Spielstile, Zurufe und Ansprache, Trainingsvorlagen, Transfers.
+   - Stufe 3: Rollen und Schützen, Einzeltraining und Umschulung, Trainerstab, Verträge, Sommer und Testspiele.
+   - Stufe 4: Sportgericht, Medizin (fit spritzen), Stadion, Sponsoren, Scouting im Detail.
+   - Stufe 5: Presse, Beziehungen, Entscheidungen aus Ereigniskarten, alles Übrige.
+
+   Die Namen könnten den DFB-Trainerlizenzen folgen (Teamleiter, C, B, A, Pro), das ist nur eine Idee.
+7. **Halte und Meldungen:** Gesperrte Bereiche erzeugen keine Halte. Im Posteingang steht nur eine Zeile, zum Beispiel „Der Verein hat die Strafe angenommen“.
+8. **Technik:** Jede Funktion bekommt in `regeln.js` die Stufe, ab der sie frei ist. Die Oberfläche fragt nur `frei(bereich)` ab. Die Tests laufen mit Lernstufen an und aus. Ab sofort notiere ich bei jedem Umsetzungsschritt, ab welcher Stufe die neue Funktion frei sein soll.
+
+**Offen für dich (wenn das Konzept steht):** Stufennamen. Wie viele Stufen in der ersten Saison realistisch erreichbar sind (mein Vorschlag: Stufe 2–3, alles frei nach zwei bis drei Saisons). Ob der Aufstieg auf Stufe 2 ohne jede Nutzung allein nach Zeit kommt.
+
 ## 5. Umsetzung in Wellen
 
 | Welle | Konzepte | Umsetzungsschritte | Ergebnis |
 |---|---|---|---|
 | 1 Fundament | K01, K02, K03, K04, K33, K35a | ✅ U1 (6.11.): Aufteilung in Dateien, `regeln.js`, Zufall mit Seed, Tageskalender, Regler-Bausteine, Tests. U2 (8.11., läuft): ✅ U2a Zufallsströme und Simulator, ✅ U2b Frische, Kondition, Form, Spielpraxis, Entwicklung je Spieltag, ✅ U2c Persönlichkeit, Eigenschaften, Merkmale mit Lernen, feine Positionen, Fuß, unscharfe Talentsterne. U3 (8.11., läuft): ✅ Engine v2 mit Szenen, Seiten, Standards und Kalibrierung (`tests/kalibrierung.js`), ✅ Lernen im Spiel, Altersverlust, Lernplätze, alle wirksamen Merkmale sichtbar, ✅ Akzeptanztests mit Torwart-Test (`tests/akzeptanz.js`), ✅ Schwierigkeitsgrade. **U3 fertig.** | ein spielbarer Stand mit glaubwürdigen Ergebnissen und dem Kalender-Ablauf |
 | 2 Sport | K05–K07, K09–K11, K12a, K13, K16 | U4 (8.11.): ✅ U4a Engine als Minuten-Zustand mit Bank, Wechseln, Taktik, Zurufen, Ansprache und Computer-Trainer (`tests/live.js`), ✅ U4b Live-Ansicht mit Eingriffen, Halbzeit, automatischen Halten, ✅ U4c Konferenz nach Anstoßzeit, Fortsetzen nach Neuladen, Elfmeterschießen Schuss für Schuss. **U4 fertig.** U5 (8.11.): ✅ U5a Spielstile mit Kreislauf und Umsetzung, Vertrautheit, Einstellung, Rollen, Schützen, Computer-Trainer (`tests/taktik.js`), ✅ U5b Oberfläche (Stil, Einstellung, Rollen, Schützen, Umsetzung, Vertrautheit, Gegneranalyse, Stil im Live-Spiel). **U5 fertig.** U5: Taktik. U6 (8.11.–9.11.): ✅ U6a Training nach Abstand zum Spiel mit Vorlagen, Belastung, Wochenreizen, Trainingsverletzungen, Umschulung (tests/training.js), ✅ U6b Sommer: Urlaub je Verein, Laufplan, Trainingsauftakt, Saisonbelastung, Leistungstest (tests/sommer.js), ✅ U6c Trainerstab mit acht Rollen, Wirkungen, Gehältern, Verträgen und Stab-Ansicht (tests/stab.js). **U6 fertig.** U7 (9.11., läuft): ✅ U7a Disziplin und Sportgericht mit Foularten, Schiedsrichtern, Sperren je Wettbewerb, Verfahren und Einspruch (tests/disziplin.js); offen U7b Medizin (K10), U7c Spielplan (K13), U7d Testspiele (K11) | Spieltage mit Eingreifen, Training mit Wirkung, Sportgericht |
+| 2b Einstieg | K36 | UL: Lernstufen mit Stufenleiter, Automatik für gesperrte Bereiche, Aufstiegskarte, Aus-Schalter (nach U7, vor U8) | die erste Saison als Einstieg mit wachsenden Möglichkeiten |
 | 3 Menschen und Markt | K08, K14, K15, K17–K19, K21, K22, K28, K31, Gerüst von K30, Auslandspool aus K32 | U8: Stimmung und Gespräche. U9: Scouting, Auslandspool und Jugend. U10: Transfers I, Verträge und Berater. U11: Computer-Vereine. U12: Beziehungen, Vorstand und Ereignis-Gerüst | Transfers als Prozess, sinnvolle Computer-Vereine, erste Ereigniskarten |
 | 4 Verein und Welt | K12b, K20, K23–K27, K29, K32 (Rest), K34 | U13 bis U18 nach Bedarf | Saisonvorbereitung, Sponsoren, Marketing, Stadion, Fans, Presse, Abwerben |
 | 5 Oberfläche | K35b | U19 und folgende | eigener Retro-Look |
 
 ## 6. Aufwand (grob, ehrlich)
 
-- **Konzepte:** 36 Stück (K01–K35, K35 geteilt in K35a und K35b). Davon sind 7 klein, 23 mittel und 6 groß. Das sind grob 12–15 Konzept-Sessions, das Ereignis-Playbook wächst danach weiter.
+- **Konzepte:** 37 Stück (K01–K36, K35 geteilt in K35a und K35b; K36 Lernstufen kam am 9.11. dazu). Davon sind 7 klein, 23 mittel und 6 groß. Das sind grob 12–15 Konzept-Sessions, das Ereignis-Playbook wächst danach weiter.
 - **Umsetzung:** etwa 19 oder mehr Schritte, große eventuell doppelt, also grob 20–30 Sessions.
 - **Tokenkosten** kann ich vorher nicht verlässlich beziffern. Nach der ersten Konzept-Session und nach U1 sieht man den Verbrauch in der Nutzungsanzeige und kann hochrechnen.
 - **Sparen:**
@@ -255,6 +280,6 @@ Für BMH habe ich keine verlässliche Quelle gefunden. Anstoss 2022 nutzt laut e
 Stand 8. November 2026:
 
 1. **Alle Konzepte sind geschrieben** (K01–K35b). K03 ist abgestimmt, die übrigen sind Entwürfe. Ihre vorläufigen Entscheidungen gelten, bis du widersprichst (§1, Punkt 9). Gesammelt in `konzepte/_offene-entscheidungen.md`.
-2. **Umsetzung** in der Reihenfolge der Wellen (§5). U1 bis U6 sind fertig (Fundament, Live-Spiel, Taktik, Training, Sommer, Trainerstab). Als Nächstes **U7 Disziplin, Medizin, Testspiele, Spielplan** (K09, K10, K11, K13).
+2. **Umsetzung** in der Reihenfolge der Wellen (§5). U1 bis U6 sind fertig (Fundament, Live-Spiel, Taktik, Training, Sommer, Trainerstab). U7a Disziplin ist fertig. Als Nächstes **U7b Medizin, U7c Spielplan, U7d Testspiele** (K10, K13, K11), dann **K36 Lernstufen** schreiben (mit dir abstimmen) und als UL umsetzen, danach Welle 3.
 3. **Startsatz** für eine neue Session: „Projekt Flutlicht Manager im Ordner flutlicht-manager/. Lies PLAN.md. Weiter, entscheide du.“ Dann geht es beim nächsten offenen Umsetzungsschritt weiter.
 4. **Vor der Kalibrierung zu recherchieren** (aus den Konzepten gesammelt): Datenquelle für feine Positionen, Fuß und Charakter-Fakten (K03), Fouls und Torschüsse pro Spiel (K04), Regeln zu Liga-Rot im Pokal, Relegation und Trainer-Karten (K09), Verletzungsraten der Männer (K10), Heimrecht in späteren Pokalrunden, Supercup, Zweitmannschaften (K13), Vorvertragsregel und FIFA-Änderungen 2027 (K21), Personalkostenquote, 3.-Liga-Medientopf, Insolvenz-Punktabzug (K23).
