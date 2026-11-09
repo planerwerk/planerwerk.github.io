@@ -3,6 +3,8 @@
 Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12.
 Hängt ab von: K03 (Frische, Robustheit, Saisonbelastung), K04 (Fouls, Ermüdung), K07 (Belastung) · Wird gebraucht von: K05, K14, K16, K26, K29.
 
+**Umsetzungshinweise (U7b, 9. November 2026):** Gebaut sind elf Verletzungsarten und Krankheit mit Dauer, die Ursachen Foul, Zweikampf, Überlastung, Training und Krankheit, Verdacht und Diagnose als Spanne mit Mannschaftsarzt, Behandlung und Aufbautraining, Rückkehr mit Frische und Rückfallfenster, fit spritzen, früher zurückholen und die Verletzungsfolge im Strafmaß (K09). Code in `js/medizin.js`, Werte in `REGELN.medizin`. Die Verletztenliste mit Bilanz steht im Kader. Test: `tests/medizin.js`. Abweichungen in §12 unter U7b.
+
 ## 1. Ziel und Spielgefühl
 
 - **Verletzungen gehören dazu, aber sie sind nicht willkürlich.** Jede Verletzung hat einen sichtbaren Grund: Foul, Überlastung oder einfach Pech.
@@ -191,6 +193,20 @@ medizin:{
 2. **Fit spritzen** nur bei wenigen Arten, mit Verschlimmerungsrisiko statt festem Verbot.
 3. **Verletzungsverlauf** wird zwei Jahre gespeichert. Das reicht für Rückfälle und Hinweise, ohne den Spielstand aufzublähen.
 
+**Vorläufig entschieden bei der Umsetzung (U7b, 9. November 2026):**
+4. **Häufigkeit nach der UEFA-Studie:** Laut einer Aspetar-Zusammenfassung der UEFA Elite Club Injury Study hat ein 25er-Kader etwa 50 Verletzungen mit Ausfall pro Saison, etwa 15 davon im Muskel (Ø 16 Tage), und im Schnitt fehlen 12–14 % des Kaders. Kalibriert auf etwa 40 Verletzungen pro Team und Saison (Ziel 30–50) und 8 % fehlende Spieler an Spieltagen. Vorher waren es etwa 7 Verletzungen und ein halber fehlender Spieler je Team. Verletzungen sind damit deutlich häufiger, im Schnitt aber kürzer (Zerrung Ø 15 Tage, viele Prellungen von 1–7 Tagen).
+5. **Quellen im Spiel:** Foul (je erlittenem Foul 1,2 % nach Schwere der Foulart: taktisch ×0,5, rücksichtslos ×4, brutal ×10, harter Einsatz ×1,5), Zweikampf ohne Foul (je Minute und Team 0,16 %) und Überlastung (je Minute und Team 0,22 %, nach Frische, Alter ab 30, Pressing und Konter, Rückfallfenster). Dazu kommt das Training (Grundrate 0,0016 statt 0,00032). Die Werte aus 5.1 (je Spieler und Minute 0,0003) hätten etwa zehnmal zu viele Verletzungen ergeben.
+6. **Art nach Quelle:** Jede Art hat einen Kontaktanteil k. Kontakt zieht anteil × k, Überlastung anteil × (1 − k), das Training alle Arten nach anteil (Trainingsspiel, Zweikämpfe). Ergebnis: 35 % Muskel, 25 % Zerrung, 44 % im Training.
+7. **Spiel gegen Training je Stunde:** etwa 20-mal statt 3- bis 6-mal (UEFA-Studie etwa 7-mal). Beides zugleich geht mit unserer Trainingszeit (jeder Spieler fast täglich 1,5 Stunden) nicht: Bei einem Training-Anteil von 40–55 % wird das Verhältnis groß. Der Test prüft nur „mindestens dreimal“. Prüfen, wenn K11 und die Trainingsdauer genauer sind.
+8. **Zerrung 8–30 Tage** statt 7–28, weil der Physiotherapeut (K16) die Dauer zusätzlich verkürzt. Rückfall: Im Fenster von acht Wochen ist das Risiko ×(1 + 7 × Rückfallwert), und 35 % der Verletzungen in dieser Zeit sind dieselbe Art. Das ergibt etwa 14 % Rückfälle nach einer Zerrung.
+9. **Diagnose:** Verdacht nur als Gruppe (Muskel-, Band-, Knieverletzung …) mit Spanne ±60 %, nach der Untersuchung die genaue Art mit ±25 %. Mit Mannschaftsarzt (K16) geht es schneller und genauer: Qualität 10 entspricht dem Durchschnitt, ohne Arzt ist die Spanne doppelt so breit und die Untersuchung dauert 3 Tage. Die Spanne enthält immer die wahre Dauer. Eine Fehldiagnose ist noch nicht gebaut.
+10. **Krankheiten:** 0,06 % je Spieler und Tag statt 0,15 %, Ansteckung ×2 für 5 Tage statt ×3 für 7 Tage. Mit den Werten aus dem Entwurf schaukelte sich die Ansteckung auf 35 Krankheiten pro Team und Saison hoch, jetzt sind es etwa 7. Das ist ein Spielwert, nicht recherchiert.
+11. **Verletzungen laufen über den Saisonwechsel weiter** (vorher wurden sie am 1. Juli gelöscht). Ein Kreuzbandriss im April kostet also auch die Vorbereitung.
+12. **Fit spritzen** geht nur am Spieltag. Computer-Vereine spritzen nur in wichtigen Spielen (Pokal ab Runde 3, Relegation) und nur Stammspieler mit höchstens 10 Tagen Ausfall. Verschlimmerung: Prellung → Faserriss, Bänderdehnung → Bänderriss, Rücken/Leiste → Zerrung, Bruch (Nase) bekommt 7 Tage mehr.
+13. **Robustheit und „verletzungsanfällig“** wirken beide (1,6 − 0,06 × Robustheit und ×1,6), wie in 5.1. Ein Anfälliger (Robustheit 1–4) verletzt sich damit gut doppelt so oft wie der Durchschnitt, nicht nur 60 % öfter, wie der Merkmalstext sagt. Prüfen.
+14. **Lernstufen (K36):** Verletztenliste und Diagnose ab Stufe 1 (nur Information), fit spritzen und früher zurückholen ab Stufe 4. Davor entscheidet der Arzt nach den Regeln der Computer-Vereine.
+15. **Noch nicht gebaut:** zweite Meinung, Fehldiagnose, Pflichtwechsel und Zusatzwechsel bei Gehirnerschütterung, Ereignisse aus §8, Saisonbilanz der Ausfalltage in der Saisonzusammenfassung (die Bilanz steht in der Verletztenliste im Kader), Reha-Zentrum (K26), Rotation der Computer-Vereine nach Saisonbelastung.
+
 **Noch zu recherchieren:** aktuelle Gesamtrate für Männer-Profis (je 1000 Stunden und pro Team und Saison), Anteil der Trainingsverletzungen, Regel zu zusätzlichen Wechseln bei Gehirnerschütterung in Bundesliga und Pokal.
 
 ## Quellen
@@ -201,5 +217,6 @@ medizin:{
 - England, 18 Tage je Zerrung, 12 % Rückfall: [PMC1724733](https://pmc.ncbi.nlm.nih.gov/articles/PMC1724733)
 - Kreuzbandrisse: [Serie A, PubMed 31800358](https://pubmed.ncbi.nlm.nih.gov/31800358/), [Deutschland, Szymski et al. 2021 (PDF)](https://epub.uni-regensburg.de/49315/1/Szymski2021_Article_HigherRiskOfACLRuptureInAmateu.pdf)
 - Arten, Diagnose, Reha, fit spritzen: `konzepte/_rohmaterial-logik-v1.md`, Kapitel 7
+- UEFA-Studie Männer, 50 Verletzungen je 25er-Kader und 12–14 % fehlend: [Aspetar: Lessons learned from two decades of injury surveillance](https://journal.aspetar.com/en/journals/volume-8-targeted-topic-hamstring-injuries-aspetar-experience/lessons-learned-from-two-decades-of-injury-surveillance-in-elite-football), 15 Muskelverletzungen und Ø 16 Tage: [Aspetar, Ekstrand](https://www.aspetar.com/Journal/viewarticle.aspx?id=449) (U7b, Zusammenfassungen der Suchergebnisse)
 - **Hinweis:** Die Zahlen stammen aus den Zusammenfassungen der Suchergebnisse, die Volltexte habe ich nicht gelesen. Welche Zahl genau zu welchem Link gehört, sollte vor der Kalibrierung geprüft werden.
 - Wahrnehmung von Verletzungen in der Community: `konzepte/_recherche-genre.md`, Abschnitt 4b

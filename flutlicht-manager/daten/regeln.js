@@ -211,7 +211,7 @@ const REGELN={
     entwicklung:{min:0.5,max:1.25,normalReiz:1.5,frischeUnter:70,frischeFaktor:0.8}, // normalReiz: Standardwoche mit sieben Tagen Abstand (Taktik, Kondition, Taktik)
     lernen:{mindestTage:3,einheit:0.2},
     umschulung:{verwandt:4,fremd:2,verwandtAb:75,max:90,maxVielseitig:95},
-    verletzung:{basis:0.00032,sprungAb:1.3,sprungJe01:1.5,frischeAb:80,frischeJePunkt:0.05,anfaellig:1.6,wochen:[1,3]},
+    verletzung:{basis:0.0016,sprungAb:1.3,sprungJe01:1.5,frischeAb:80,frischeJePunkt:0.05}, // Art und Dauer aus REGELN.medizin (K10)
     last:{akut:7,chronisch:28,grund:2}, // grund: gewohnte Last mindestens 2 pro Tag
     spielLast:15,spielKondition:1 // Last und Konditionsreiz eines ganzen Pflichtspiels
   },
@@ -262,7 +262,6 @@ const REGELN={
     amateure:{wirkungJeStaerke:1}, // Amateurklubs im Pokal: alle Teamwerte = ihre Stärke
     ermuedung:{proMinute:0.17,ko:[2.0,-0.0125],hart:1.15,schwelle:60,abfall:0.005},
     karten:{gelb:0.019,rot:0.0007,hart:1.7,fair:0.5}, // nur noch für Amateurklubs
-    verletzung:{chance:0.0012,gegnerHart:1.5,wochen:[1,6]}, // je Minute und Mannschaft. Ausfall: 7 Tage je Woche
     verlaengerung:0.8,               // Chancen in der Verlängerung relativ
     elfmeter:0.76,
     fitnessMin:20,
@@ -313,11 +312,38 @@ const REGELN={
     faktoren:{hart:1.3,fair:0.7,hitzkopf:1.5,hitzkopfMeckern:2,hitzkopfTaetlichkeit:3,muedeUnter:60,muede:1.2,rueckstand:1.0,rueckstandAb:75, // Rückstand ×1,2 aus K09 §5.1 vorläufig aus (K09 §12 Nr. 9)
       mitGelb:{foul:0.35,karte:0.5}}, // verwarnte Spieler foulen vorsichtiger, außer Hitzköpfen (Konsistenzprüfung AI4)
     gelbsperre:{liga:[5,10,15],pokal:[5],spiele:1},gelbRot:1, // nach der letzten Schwelle zählt es neu
-    rot:{notbremse:[1,1,2],grob:[2,1,4],unsportlich:[2,1,5],taetlichkeit:[4,3,6],schwer:[8,6,12],wiederholung:1,wiederholungTage:365,zufall:1},
+    rot:{notbremse:[1,1,2],grob:[2,1,4],unsportlich:[2,1,5],taetlichkeit:[4,3,6],schwer:[8,6,12],wiederholung:1,wiederholungTage:365,zufall:1,verletzung:1,verletzungAbTagen:28},
     verfahren:{antragTage:[1,2],frist:2,urteilTage:[2,5],urteilSpaetestens:10,archiv:60},
     einspruch:{kosten:[10000,30000],gemindert:0.25,erhoeht:0.10,hart:{gemindert:0.35,erhoeht:0.05},eindeutig:{gemindert:0.10,erhoeht:0.15}},
     ki:{einspruchWichtig:0.6,einspruchSonst:0.1},
     schiri:{proLiga:24,strenge:[0.85,1.15],elfmeter:[0.9,1.1]}},
+  // Medizin (K10 §11, Welle 2). Häufigkeit nach echten Ankern (UEFA-Studie: etwa 50 Verletzungen je 25er-Kader und Saison, 12–14 % des Kaders fehlen im Schnitt).
+  // k: Anteil Kontakt (Foul, Zweikampf). Überlastung im Spiel zieht Arten mit Gewicht anteil × (1 − k), Kontakt anteil × k, Training anteil.
+  medizin:{
+    arten:{prellung:{name:'Prellung',g:'prellung',anteil:0.20,tage:[1,7],k:1,spritzen:true},
+      zerrung:{name:'Zerrung im Oberschenkel',g:'muskel',anteil:0.25,tage:[8,30],k:0,rueckfall:0.12},
+      faserriss:{name:'Muskelfaserriss',g:'muskel',anteil:0.12,tage:[21,49],k:0,rueckfall:0.15},
+      baenderdehnung:{name:'Bänderdehnung im Sprunggelenk',g:'band',anteil:0.12,tage:[4,21],k:0.6,rueckfall:0.10,spritzen:true},
+      baenderriss:{name:'Bänderriss im Sprunggelenk',g:'band',anteil:0.05,tage:[28,63],k:0.8,rueckfall:0.08},
+      innenband:{name:'Innenbandverletzung im Knie',g:'knie',anteil:0.04,tage:[21,56],k:0.8,rueckfall:0.05},
+      meniskus:{name:'Meniskusverletzung',g:'knie',anteil:0.02,tage:[42,100],k:0.4,rueckfall:0.10},
+      kreuzband:{name:'Kreuzbandriss',g:'knie',anteil:0.01,tage:[180,300],k:0.3,rueckfall:0.10},
+      bruch:{name:'Knochenbruch',g:'bruch',anteil:0.03,tage:[28,84],k:1},
+      kopf:{name:'Gehirnerschütterung',g:'kopf',anteil:0.02,tage:[7,14],k:1,pflicht:true},
+      sonstiges:{name:'Rücken- oder Leistenprobleme',g:'sonstiges',anteil:0.04,tage:[3,21],k:0.2,rueckfall:0.10,spritzen:true},
+      krankheit:{name:'Infekt',g:'krankheit',anteil:0,tage:[2,10],k:0}},
+    gruppen:{prellung:'Prellung',muskel:'Muskelverletzung',band:'Bandverletzung',knie:'Knieverletzung',bruch:'Verdacht auf Bruch',kopf:'Kopfverletzung',sonstiges:'Beschwerden',krankheit:'Infekt'},
+    schiefe:1.7, // Dauer = min + (max − min) × Zufall^1,7: die meisten kurz, einige lang
+    verschlimmerung:{prellung:'faserriss',baenderdehnung:'baenderriss',sonstiges:'zerrung'},
+    risiko:{foul:0.012,schwere:{normal:1,taktisch:0.5,ruecksichtslos:4,brutal:10,notbremse:1.5},hartGegner:1.5, // je erlittenem Foul
+      kollision:0.0016,ueberlastung:0.0022, // je Minute und Mannschaft
+      frischeAb:80,frischeJePunkt:0.05,frischeKritisch:60,kritisch:2,stil:1.2,altAb:30,alt:1.3},
+    robustheit:[1.6,-0.06],anfaellig:1.6,
+    krankheit:{proTag:0.0006,winter:2,winterMonate:[11,0,1],ansteckung:2,ansteckungTage:5}, // Spielwerte, nicht recherchiert
+    diagnose:{tage:[3,1],verdacht:0.6,genau:0.25,arzt:{ohne:2,jeQualitaet:-0.1,min:0.5}}, // Breite ±60 % und ±25 % bei Arzt-Qualität 10
+    reha:{behandlung:0.7,rueckkehrFrische:[70,80],abTagen:7,fenster:56,rueckfallMal:7,gleicheArt:0.35},
+    spritzen:{wirkung:0.95,verschlimmerung:0.15},frueher:{frische:65,rueckfall:2},
+    verlaufTage:730},
   // Live-Spiel (K05 §11): Tempo, Halte, Wechsel, Umstellungszeit, Zurufe, Halbzeitansprache, Computer-Trainer, Druckleiste
   live:{tempo:{langsam:2000,normal:1000,schnell:300},
     anhalten:{tor:true,rot:true,verletzung:true,elfmeter:true,gelbRotGefahr:true,frischeUnter:55},
@@ -393,4 +419,4 @@ const REGELN={
 // Schreibschutz: Zur Laufzeit darf kein Code eine Regel ändern.
 (function frieren(o){Object.freeze(o);Object.values(o).forEach(v=>{if(v&&typeof v==='object'&&!Object.isFrozen(v))frieren(v);});})(REGELN);
 // Kurzformen für den Code
-const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui,RL=REGELN.live,RTA=REGELN.taktik,RSO=REGELN.sommer,RST=REGELN.stab,RD=REGELN.disziplin;
+const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui,RL=REGELN.live,RTA=REGELN.taktik,RSO=REGELN.sommer,RST=REGELN.stab,RD=REGELN.disziplin,RMD=REGELN.medizin;

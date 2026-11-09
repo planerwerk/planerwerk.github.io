@@ -2,7 +2,7 @@
 // Chancentypen, Standards, Fouls mit Ort, Merkmale (K03), Ermüdung im Spiel, Erwartung vor dem Spiel, Noten gegen die Erwartung.
 const slots=f=>RE.formationen[f]||RE.formationen['4-4-2'];
 const posGruppe=pos=>RE.gruppe[pos]||pos;
-const avail=p=>p.inj<=0&&!gesperrt(p); // Sperren gelten je Wettbewerb (K09, js/disziplin.js)
+const avail=p=>(p.inj<=0||gespritzt(p))&&!gesperrt(p); // Sperren gelten je Wettbewerb (K09, js/disziplin.js)
 const TAUSCH={LV:'RV',RV:'LV',LM:'RM',RM:'LM',LA:'RA',RA:'LA',LS:'RS',RS:'LS'};
 const seite=pos=>/^(LV|LM|LA|LS)$/.test(pos)?'L':/^(RV|RM|RA|RS)$/.test(pos)?'R':null;
 const linksForm=pos=>seite(pos)==='R'?TAUSCH[pos]:pos;
@@ -17,7 +17,7 @@ function eignung(p,pos){const E=RE.eignung,fp=p.fp||STD_POS[p.pos];if(fp===pos)r
   if(s&&E.seitenPositionen.includes(pos)&&!hatMk(p,'beidfuessig')&&((s==='L'&&p.fuss==='R')||(s==='R'&&p.fuss==='L')))f*=E.falscheSeite;
   return f;}
 // Wirkung eines Spielers auf einem Platz. fr: Frische im Spiel (sonst die gespeicherte), extra: Faktor aus der Lage (Kämpfer, wichtige Spiele)
-function eff(p,pos,fr,extra){const f=fr==null?p.fit:fr;let z=zustandMit(p,f);if(f<RE.ermuedung.schwelle)z*=1-RE.ermuedung.abfall*(RE.ermuedung.schwelle-f);return p.str*z*eignung(p,pos)*(extra||1);}
+function eff(p,pos,fr,extra){const f=fr==null?p.fit:fr;let z=zustandMit(p,f)*(gespritzt(p)?RMD.spritzen.wirkung:1);if(f<RE.ermuedung.schwelle)z*=1-RE.ermuedung.abfall*(RE.ermuedung.schwelle-f);return p.str*z*eignung(p,pos)*(extra||1);}
 function zustandMit(p,fr){if(fr===p.fit)return zustand(p);const a=p.fit;p.fit=fr;const z=zustand(p);p.fit=a;return z;}
 // Aufstellung: erst Spieler auf ihrer eigenen Position, dann aus derselben Gruppe, dann nach Wirkung
 function fillXI(sl,pool,xi,used){sl.forEach((pos,i)=>{if(xi[i]!=null)return;let best=null,bv=-1;for(const p of pool){if(used.has(p.id))continue;const v=eff(p,pos);if(v>bv){bv=v;best=p;}}xi[i]=best?best.id:null;if(best)used.add(best.id);});return xi;}
@@ -172,14 +172,17 @@ const wb=o.wb||'liga',H=mitWettbewerb(wb,()=>side(hid,true,o.neutral)),A=mitWett
   // Fouls und Karten (K09 §5.1): Foulart würfeln, Kartenwahrscheinlichkeit mit Strenge, Einsatz, Hitzkopf, Müdigkeit, Rückstand in der Schlussphase
   const kartenFaktor=(s,p,m)=>{const K=RD.faktoren,sd=Ss[s],d=sc[s]-sc[1-s];return G.schiri.st*(sd.ein==='H'?K.hart:sd.ein==='F'?K.fair:1)*(hatEig(p,'hitzkopf')?K.hitzkopf:1)
     *((fr[p.id]!=null?fr[p.id]:p.fit)<K.muedeUnter?K.muede:1)*(d<0&&m>=K.rueckstandAb?K.rueckstand:1)*(yel[p.id]?K.mitGelb.karte:1);};
-  const platzverweis=(m,s,p,art,x)=>{off.add(p.id);Ss[s].red++;ev.push({m,s,t:'R',p:p.id,n:p.n,art,x});sz.push([p.id,'rot',0]);W=werte(m);};
+  const platzverweis=(m,s,p,art,x,opfer)=>{off.add(p.id);Ss[s].red++;ev.push({m,s,t:'R',p:p.id,n:p.n,art,x,opfer});sz.push([p.id,'rot',0]);W=werte(m);};
   const gelbeKarte=(m,s,p,x)=>{sz.push([p.id,'gelb',0]);if(yel[p.id]){off.add(p.id);Ss[s].red++;ev.push({m,s,t:'R',p:p.id,n:p.n,gy:1});W=werte(m);}else{yel[p.id]=1;ev.push({m,s,t:'Y',p:p.id,n:p.n,x});}};
   const FOULARTEN=Object.keys(RD.foulArten);
   const foul=(m,s)=>{const F=RE.fouls,K=RD.faktoren,sd=Ss[s];if(sd.am)return;const c=imSpiel(s).filter(x=>x.pos!=='TW');if(!c.length)return;
     const nU=mkZahl(c,'ungestuem'),f=F.proMinute*(sd.ein==='H'?F.hart:sd.ein==='F'?F.fair:1)*(1+(F.ungestuem-1)*nU/c.length*3)*G.zf(s,'fouls')*(sd.stilF?sd.stilF.fouls:1);
     if(R()>=f)return;st.fouls[s]++;const t=waehle(c,x=>(F.gewicht[linksForm(x.pos)]||1)*(hatMk(x.p,'ungestuem')?F.ungestuem:1)*(yel[x.p.id]&&!hatEig(x.p,'hitzkopf')?K.mitGelb.foul:1)*G.foulSpieler(x.p.id)).p;
-    const A=RD.foulArten[waehle(FOULARTEN,k=>RD.foulArten[k].anteil)],k=kartenFaktor(s,t,m),r=R();
-    if(A.rot&&r<A.rot*k)platzverweis(m,s,t,A.art,A.art==='notbremse'?`Notbremse! Rot für ${t.n}`:null);
+    const ak=waehle(FOULARTEN,k=>RD.foulArten[k].anteil),A=RD.foulArten[ak],Q=RMD.risiko,o=Ss[1-s];
+    // Verletzung durch das Foul (K10 §5.1): je erlittenem Foul nach Schwere, harter Einsatz des Foulenden ×1,5
+    const opfer=R()<Q.foul*(Q.schwere[ak]||1)*(sd.ein==='H'?Q.hartGegner:1)*teamGew(o,off,vgw)?cardPick(o,off,vgw):null;if(opfer)verletzt(m,1-s,opfer,'foul');
+    const k=kartenFaktor(s,t,m),r=R();
+    if(A.rot&&r<A.rot*k)platzverweis(m,s,t,A.art,A.art==='notbremse'?`Notbremse! Rot für ${t.n}`:null,opfer?opfer.id:null);
     else if(A.gelb&&r<(A.rot?A.rot*k:0)+A.gelb*k)gelbeKarte(m,s,t);
     standard(m,1-s);};
   // Meckern, Unsportlichkeit, Tätlichkeit (K09 §3.1): ohne Foul, ein Zufallswert je Minute und Mannschaft
@@ -190,8 +193,15 @@ const wb=o.wb||'liga',H=mitWettbewerb(wb,()=>side(hid,true,o.neutral)),A=mitWett
     else{const p=waehle(c,x=>hatEig(x.p,'hitzkopf')?K.hitzkopfTaetlichkeit:1).p,schwer=R()<D.taetlichkeit.schwer;
       platzverweis(m,s,p,schwer?'schwer':'taetlichkeit',`Tätlichkeit! Rot für ${p.n}`);}};
   const amateurKarten=(m,s)=>{const K=RE.karten;if(R()<K.gelb){ev.push({m,s,t:'Y',p:null,n:'ein Amateur'});}};
-  const verletzung=(m,s)=>{const V=RE.verletzung,op=Ss[1-s];if(Ss[s].am)return;
-    if(R()<V.chance*(op.ein==='H'?V.gegnerHart:1)*teamGew(Ss[s],off,verletzGew)){const p=cardPick(Ss[s],off,verletzGew);if(p&&!inj.find(x=>x.id===p.id)){inj.push({id:p.id,w:riA(V.wochen)});ev.push({m,s,t:'I',p:p.id,n:p.n});fr[p.id]=Math.min(fr[p.id],RL.verletztFrische);W=werte(m);}}};
+  // Verletzungen ohne Foul (K10 §5.1): Zweikampf (Kontakt) und Überlastung (Muskel, nach Frische, Alter, Spielstil, Rückfallfenster)
+  // Risiko je Spieler: der feste Teil (Robustheit, anfällig, Belastung, Alter, Rückfall, Athletiktrainer) einmal pro Spiel, die Frische jede Minute
+  const vgC=new Map(),ueC=new Map(),vgw=p=>{let x=vgC.get(p.id);if(x==null){x=verletzGew(p);vgC.set(p.id,x);}return x;};
+  const ueFest=p=>{let x=ueC.get(p.id);if(x==null){const Q=RMD.risiko;x=(p.age>=Q.altAb?Q.alt:1)*rueckfallFaktor(p)*stabFaktor(p.team,'athletik');ueC.set(p.id,x);}return x;};
+  const ueW=p=>{const Q=RMD.risiko,f=fr[p.id];let x=f<Q.frischeAb?1+Q.frischeJePunkt*(Q.frischeAb-f):1;if(f<Q.frischeKritisch)x*=Q.kritisch;return vgw(p)*ueFest(p)*x;};
+  const verletzt=(m,s,p,q)=>{if(!p||inj.find(x=>x.id===p.id))return;inj.push({id:p.id,q});ev.push({m,s,t:'I',p:p.id,n:p.n,q});fr[p.id]=Math.min(fr[p.id],RL.verletztFrische);W=werte(m);};
+  const verletzung=(m,s)=>{const sd=Ss[s];if(sd.am)return;const Q=RMD.risiko,r=R(),
+      pK=Q.kollision*teamGew(sd,off,vgw),pU=Q.ueberlastung*teamGew(sd,off,ueW)*(sd.stil==='pressing'||sd.stil==='konter'?Q.stil:1);
+    if(r<pK)verletzt(m,s,cardPick(sd,off,vgw),'kollision');else if(r<pK+pU)verletzt(m,s,cardPick(sd,off,ueW),'ueberlastung');};
   const patzer=(m,s)=>{const T=RE.torwart,kp=Ss[s].xp.find(x=>x.pos==='TW'&&!off.has(x.p.id));if(!kp)return;
     if(R()<T.patzer/90*(hatMk(kp.p,'unkonzentriert')?T.unkonzentriert:1)*G.zf(s,'patzer')){sz.push([kp.p.id,'patzer',1]);abschluss(m,1-s,'gross',schuetzeWahl(1-s,'gross'),'patzer');}};
   const minute=(m,verl)=>{
@@ -300,7 +310,7 @@ function amateurErwartung(H,A){const q=(H.am?H.w.AM:H.A)/(A.am?A.w.DM:A.D);retur
 function cardPick(me,off,gew){const c=me.xp.filter(x=>!off.has(x.p.id)&&x.pos!=='TW');if(!c.length)return null;if(!gew)return pick(c).p;
   const w=c.map(x=>gew(x.p));let r=R()*w.reduce((a,b)=>a+b,0);for(let i=0;i<c.length;i++){if((r-=w[i])<=0)return c[i].p;}return c[c.length-1].p;}
 // Eigenschaften im Spiel (K03 §3.5): Verletzungsanfällige verletzen sich öfter
-const verletzGew=p=>(hatEig(p,'verletzungsanfaellig')?1.6:1)*belastungRisiko(p);
+const verletzGew=p=>verletzRisiko(p); // Robustheit, verletzungsanfällig, Saisonbelastung (K10 §5.1)
 const teamGew=(me,off,gew)=>{const c=me.xp.filter(x=>!off.has(x.p.id)&&x.pos!=='TW');return c.length?c.reduce((a,x)=>a+gew(x.p),0)/c.length:1;};
 // Elfmeterschießen: mit Mannschaften nach Schützen und Torwart (Elfmeterschütze, Elfmetertöter, nervenschwach), ohne nur mit Grundquote
 // Elfmeterschießen ohne Mannschaften (Regionalliga-Aufstieg): nur Grundquote
@@ -328,6 +338,6 @@ function applyMatchLauf(r,cup){const N=RE.note,V=RP.selbstvertrauen;
     t.stile=[...(t.stile||[]),tk.stil].slice(-3); // zuletzt gespielte Stile (Gegneranalyse vor dem Spiel, K06 §4)
     if(tid===S.my){t.einstellung='normal';S.stilVerlauf=[...(S.stilVerlauf||[]),tk.stil].slice(-RTA.ki.rueckblick);}});
   lernenImSpiel(r);if(r.sv)Object.entries(r.sv).forEach(([id,v])=>{const p=PIX.get(+id);if(p)svAendern(p,v);});
-  disziplinNachSpiel(r); // Karten, Sperren und Verfahren (K09)
-  // Ausfall in Tagen: w Wochen = die nächsten 7·w Tage (der Zähler läuft ab morgen jeden Tag um 1 herunter)
-  r.inj.forEach(x=>{const p=PIX.get(x.id);if(!p)return;p.inj=Math.max(p.inj,ausfallTage(p.team,x.w));if(p.team===S.my)news(`Verletzung: ${p.n} fällt ${x.w} Woche(n) aus.`,'bad');});}
+  r.inj.forEach(x=>verletzen(PIX.get(x.id),x.q||'kollision')); // Verletzungen mit Art und Dauer (K10)
+  r.xpo.forEach(l=>l.forEach(([id])=>nachSpritze(PIX.get(id)))); // fit gespritzt: Verschlimmerung möglich
+  disziplinNachSpiel(r);} // Karten, Sperren und Verfahren (K09), nach den Verletzungen wegen der Verletzungsfolge

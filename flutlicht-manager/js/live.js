@@ -58,7 +58,7 @@ function liveHalte(){const L=LIVE,G=L.G,A=liveEinst().anhalten,neu=G.ev.slice(L.
   for(const e of neu){const mein=e.s===L.s;
     if(e.t==='G'&&A.tor)t=`Tor! ${e.n} trifft zum ${e.sc.join(':')}.`;
     else if(e.t==='R'&&A.rot)t=`${e.x||`${e.gy?'Gelb-Rot':'Rot'} für ${e.n}`}${mein?' – du bist in Unterzahl.':'.'}`;
-    else if(e.t==='I'&&mein&&A.verletzung)t=`${e.n} ist verletzt und humpelt nur noch. Wechseln?`;
+    else if(e.t==='I'&&mein&&A.verletzung)t=`${e.n} ist verletzt (${URSACHE[e.q]||'Verletzung'}) und humpelt nur noch. Wechseln?`;
     else if(e.t==='C'&&e.art==='elfmeter'&&A.elfmeter)t=e.x||'Elfmeter vergeben.';
     else if(e.t==='Y'&&mein&&A.gelbRotGefahr&&e.p&&gelbRotGefahr(G,L.s,e.p))t=`Gelb für ${e.n}. Er foult viel, beim nächsten Foul droht Gelb-Rot.`;}
   if(!t&&A.frischeUnter){const x=G.Ss[L.s].xp.find(y=>!G.off.has(y.p.id)&&!G.raus.has(y.p.id)&&G.fr[y.p.id]<A.frischeUnter&&!L.gewarnt.has(y.p.id));

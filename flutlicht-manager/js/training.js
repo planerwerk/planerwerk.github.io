@@ -34,8 +34,8 @@ function trainingTag(p,t,a,d){const T=RT,e=einheitFuer(p,t,a,d);if(!e)return 0;c
   if(u!=='frei'&&u!=='regeneration')p.wt=(p.wt||0)+1;if(E.lernen)p.wl=1;
   if(E.praxis)p.sp=Math.min(100,p.sp+RP.spielpraxis.jeSpiel*E.praxis*I.wirkung);
   lastBuchen(p,Math.max(0,-df));
-  if(E.risiko!==0&&u!=='frei'&&u!=='regeneration'){const V=T.verletzung,r=V.basis*I.risiko*(E.risiko||1)*sprungFaktor(lastQuote(p))*(p.fit<V.frischeAb?1+V.frischeJePunkt*(V.frischeAb-p.fit):1)*(hatEig(p,'verletzungsanfaellig')?V.anfaellig:1)*belastungRisiko(p)*stabFaktor(p.team,'athletik');
-    if(R()<r){const w=riA(V.wochen);p.inj=ausfallTage(p.team,w);p.tinj=(p.tinj||0)+1;if(p.team===S.my)news(`Trainingsverletzung: ${p.n} fällt ${w} Woche(n) aus (${EINHEIT_NAME[u]}).`,'bad');}}
+  if(E.risiko!==0&&u!=='frei'&&u!=='regeneration'){const V=T.verletzung,r=V.basis*I.risiko*(E.risiko||1)*sprungFaktor(lastQuote(p))*(p.fit<V.frischeAb?1+V.frischeJePunkt*(V.frischeAb-p.fit):1)*verletzRisiko(p)*rueckfallFaktor(p)*stabFaktor(p.team,'athletik');
+    if(R()<r&&verletzen(p,'training'))p.tinj=(p.tinj||0)+1;}
   return df;}
 // Verein am Tag d: Vertrautheit aus Taktik-Einheiten und Spielvorbereitung (K07 §5.3), Merker für Spielvorbereitung und Standards
 function trainingVerein(t,a,d){const e=einheitVerein(t,a,d);if(!e)return;const[u,iz]=e,E=RT.einheiten[u]||{},I=RT.intensitaet[iz]||RT.intensitaet.normal;

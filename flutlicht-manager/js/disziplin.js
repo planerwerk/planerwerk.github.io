@@ -40,7 +40,8 @@ function disziplinNachSpiel(r){const wb=wbVon(r),D=RD,G=D.gelbsperre[wb],mein=id
     const offen=verfahrenVon(p,wb);if(offen){offen.art=schwerer(offen.art,e.art);return;} // zweite Rote vor dem Urteil: ein Verfahren
     s.rot+=1;const tag=S.tag,vor=(p.vg||[]).filter(t=>absTag(tag)-t<=D.rot.wiederholungTage).length;
     p.vg=[...(p.vg||[]).filter(t=>absTag(tag)-t<=D.rot.wiederholungTage),absTag(tag)];
-    S.verfahrenId=(S.verfahrenId||0)+1;(S.verfahren=S.verfahren||[]).push({id:S.verfahrenId,pid:p.id,team:p.team,wb,art:e.art||'grob',tag,antragAm:tag+riA(D.verfahren.antragTage),stand:'offen',gesessen:0,vor});
+    const o=e.opfer!=null?PIX.get(e.opfer):null,folge=!!(o&&o.vl&&o.vl.t>=D.rot.verletzungAbTagen); // Verletzungsfolge beim Gegner (K09 §5.2, K10)
+    S.verfahrenId=(S.verfahrenId||0)+1;(S.verfahren=S.verfahren||[]).push({id:S.verfahrenId,pid:p.id,team:p.team,wb,art:e.art||'grob',tag,antragAm:tag+riA(D.verfahren.antragTage),stand:'offen',gesessen:0,vor,folge});
     if(mein(e.p))news(`Rote Karte für ${p.n} (${VERGEHEN[e.art||'grob']}): vorläufig gesperrt. Der Kontrollausschuss beantragt in ein bis zwei Tagen eine Strafe.`,'bad');});}
 const schwerer=(a,b)=>{const o=['notbremse','grob','unsportlich','taetlichkeit','schwer'];return o.indexOf(b)>o.indexOf(a)?b:a;};
 
@@ -51,7 +52,7 @@ function sperrenAbsitzen(wbs){S.pl.forEach(p=>{if(p.team<0||(!p.sperre&&!(p.sus>
     if(s.rot>0)s.rot--;else s.gelb--;});});}
 
 // Strafmaß (K09 §5.2): Grundstrafe + Wiederholungstäter + Zufall (−1 bis +1), in der Spanne des Vergehens
-function antragFuer(v){const[g,a,b]=RD.rot[v.art]||RD.rot.grob;return clamp(g+v.vor*RD.rot.wiederholung+ri(-1,1)*RD.rot.zufall,a,b);}
+function antragFuer(v){const[g,a,b]=RD.rot[v.art]||RD.rot.grob;return clamp(g+v.vor*RD.rot.wiederholung+(v.folge?RD.rot.verletzung:0)+ri(-1,1)*RD.rot.zufall,a,b);}
 const einspruchLage=v=>v.art==='taetlichkeit'||v.art==='schwer'?'eindeutig':v.vor===0?'hart':'normal';
 function sgUrteil(v,n,ausgang,d){const p=PIX.get(v.pid);if(p){const s=sperren(p)[v.wb];s.rot=Math.max(0,s.rot-1)+Math.max(0,n-v.gesessen);}
   v.urteil=n;v.ausgang=ausgang;v.am=d;v.stand='erledigt';

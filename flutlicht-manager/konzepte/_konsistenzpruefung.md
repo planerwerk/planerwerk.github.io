@@ -568,3 +568,16 @@ Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `
 | AN6 | **Tests mit kleiner Stichprobe schwanken:** In `kalibrierung.js` (Favoritensiege bei n=72, Heimsieg bei Gleichstarken bei n=226), `taktik.js` (Kreislauf-Mittel) und `training.js` (Verletzungen „dauerhaft hart“) reißen einzelne Seeds, im alten wie im neuen Stand. Über fünf Seeds liegen die Mittel im Ziel (Favoritensiege 71 %, Heimsieg 43 %). Diese Tests sollten über mehrere Seeds mitteln. | 📌 bei der nächsten Testpflege |
 | AN7 | **K33:** Neue Felder `schiri`, `verfahren`, `verfahrenId`, `sgArchiv`, am Spieler `sperre`, `kt`, `vg`. Alte Spielstände werden beim ersten Zugriff übernommen (`sus` wird zu `sperre.liga.rot`, `yc` zu `kt.liga`). | ✅ in K33 |
 
+---
+
+## AO. Nachtrag zur Umsetzung U7b (9. November 2026)
+
+| # | Befund | Status |
+|---|---|---|
+| AO1 | **AM4 und AN4 erledigt:** Der Mannschaftsarzt wirkt auf Diagnose und Spanne. Die Verletzungsfolge (Gegner fällt mindestens 28 Tage aus) erhöht den Strafantrag um ein Spiel. | ✅ |
+| AO2 | **K07 und K10:** `engine.verletzung` ist in `REGELN.medizin` aufgegangen. `training.verletzung` behält Grundrate, Belastungssprung und Frische, Art und Dauer kommen aus K10. Die Grundrate im Training ist fünfmal so hoch (0,0016). | ✅ |
+| AO3 | **Spielgefühl:** Verletzungen sind etwa fünfmal so häufig wie vorher, aber kürzer. Im Schnitt fehlen 8 % des Kaders statt etwa 2 %. Kaderbreite zählt damit mehr, auch für die Computer-Vereine (K31: Kaderplan). | 📌 beim Spielen beobachten |
+| AO4 | **K03:** Der Text von „verletzungsanfällig“ („60 % öfter“) passt nicht mehr, weil dazu die niedrige Robustheit wirkt. | 📌 Text prüfen |
+| AO5 | **K10 §10:** Das Verhältnis Spiel zu Training je Stunde (Ziel 3–6) passt nicht zu einem Training-Anteil von 40–55 % bei fast täglichem Training (K10 §12 Nr. 7). | 📌 bei K11 und der Trainingsdauer klären |
+| AO6 | **K33:** Neue Felder `vstat`, `krankBis`, am Spieler `vl`, `vh`, `rf`, `spritze`. Alte Verletzungen ohne `vl` laufen als reine Ausfalltage weiter. | ✅ in K33 |
+| AO7 | **Akzeptanztest:** Das Tempo (höchstens 4 ms pro Spiel) reißt auf dieser Maschine im Moment auch der Stand vor U7b (5,35 ms). Der direkte Vergleich gibt alt und neu gleich schnell (4,3–4,4 ms). Die Sensitivität der Abwehr (+0,8 bis +1,4) schwankt je Seed wie vorher, im Mittel ist sie etwa 0,1 Punkte kleiner, weil Spieler im Spiel öfter verletzt ausfallen. | 📌 wie AN6: über mehrere Seeds mitteln, Tempo-Grenze an die Maschine binden |

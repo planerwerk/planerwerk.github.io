@@ -6,7 +6,8 @@
 function tagesSpiele(d){const v=tagesSpieleVorbereiten(d,false);return tagesSpieleAbschliessen(v.out);}
 function tagesSpieleVorbereiten(d,live){return mitStrom(strom('spieltag',S.season,d),()=>{const out={tag:d,gruppen:[],list:[],mine:null},vorher=S.gespielt;let G=null,platz=null;S.gespielt=d;
   if(S.sponsOffers&&meinSpiel(d))sponsorWaehlen(0);
-  const spiel=(h,a,o,meta,g)=>{const i=g.list.length;if(live&&(h===S.my||a===S.my)){G=spielAnlegen(h,a,Object.assign({},o,{auto:[h!==S.my,a!==S.my]}));platz={meta,g,i};g.list.push(null);return;}g.list.push(Object.assign(sim(h,a,o),meta));};
+  const spiel=(h,a,o,meta,g)=>{const i=g.list.length;if(o.wichtig){kiSpritzen(h);kiSpritzen(a);} // fit spritzen nur in wichtigen Spielen (K10 §7)
+    if(live&&(h===S.my||a===S.my)){G=spielAnlegen(h,a,Object.assign({},o,{auto:[h!==S.my,a!==S.my]}));platz={meta,g,i};g.list.push(null);return;}g.list.push(Object.assign(sim(h,a,o),meta));};
   for(const e of termineAm(d)){
     if(e.art==='liga'){const g={titel:`${ligaName(e.lg)} · ${e.md+1}. Spieltag`,art:'liga',e,list:[]};e.idx.forEach(i=>{const[h,a]=S.fx[e.lg][e.md][i];spiel(h,a,{},{lg:e.lg,min:S.plan.zeit[e.lg][e.md][i][1]},g);});out.gruppen.push(g);}
     else if(e.art==='pokal'){if(S.cup.hist.length!==e.r)continue;const al=shuffle(S.cup.alive.slice()),fin=e.r===5,g={titel:`DFB-Pokal · ${POKAL_RUNDEN[e.r]}`,art:'pokal',e,list:[]};for(let i=0;i<al.length;i+=2){let h=al[i],a=al[i+1];if(h<1000&&a>=1000)[h,a]=[a,h];spiel(h,a,{wb:'pokal',ko:1,neutral:fin,wichtig:e.r>=RTA.ki.wichtigAbRunde},{cup:1,min:e.min},g);}out.gruppen.push(g);}
@@ -53,7 +54,7 @@ function taeglichLauf(d){const T=RT;
   S.pl.forEach(p=>{if(p.inj>0)p.inj--;if(p.team<-1)return;const st=p.team>=0?status.get(p.team)||'':'',urlaub=st==='urlaub'?true:st==='laufplan'?'laufplan':false;
     const tr=!urlaub&&p.team>=0&&p.inj<=0&&S.phase==='play'?trainingTag(p,S.teams[p.team],ab.get(p.team),d):0;tagesWerte(p,urlaub,tr);});
   S.offers=S.offers.filter(o=>o.bis>=d&&PIX.get(o.pid)&&PIX.get(o.pid).team===S.my&&S.teams[o.tid]&&aktiv(S.teams[o.tid]));
-  sportgerichtTag(d);
+  medizinTag(d);sportgerichtTag(d);
   const c=S.constr;if(c&&d>=c.bis){const t=myT();if(c.k==='cap')t.cap+=RB.tribuene.plaetze;if(c.k==='logen')t.logen+=RB.logen.anzahl;if(c.k==='shop')t.shop++;news(`Bau abgeschlossen: ${c.label}.`,'good');S.constr=null;}}
 // Werte pro Woche (montags): Training und Entwicklung, Transfermarkt, Vorstand bei Minus auf dem Konto.
 function woechentlich(d){return mitStrom(strom('woche',S.season,d),()=>woechentlichLauf(d));}
