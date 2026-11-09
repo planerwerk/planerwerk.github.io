@@ -94,9 +94,9 @@ async function advance(tag){await tabClick('Büro');const t0=await pg.evaluate((
     konto:fmt(me.cash),kredit:fmt(S.loan),zuschauer:avgAtt()+' / '+me.cap,bilanz:Object.fromEntries(Object.entries(S.fin).sort((a,b)=>b[1]-a[1]).map(([k,v])=>[k,fmt(v)]))};}));
    const j=await pg.$('.ovb button.go:text-is("Jobangebote ansehen")');if(j){await j.click();continue;}await pg.click('.ovb button.go');continue;}
   note(tag,'Unbekanntes Fenster: '+ov.slice(0,80));await pg.evaluate(()=>closeOv());break;}
- const s=await pg.evaluate(()=>({tag:S.tag,start:S.plan.start,season:S.season}));
+ const s=await pg.evaluate(()=>({tag:S.tag,start:S.plan.start,season:S.season,sp:sommerSprung()||S.phase==='end'||myT().urlaub>0||!!myT().urlaubFertig}));
  const wo=s.season+':'+Math.floor((s.tag-s.start)/7);proWoche[wo]=(proWoche[wo]||0)+1;
- if(s.tag-t0>7)note(tag,`Sprung über ${s.tag-t0} Tage`);}
+ if(s.tag-t0>7&&!s.sp)note(tag,`Sprung über ${s.tag-t0} Tage`);}
 let guard=0;const t0=Date.now();
 while(guard++<330){const s=await st();if(s.season>=2028)break;const tag=`${s.season}/${String(s.season+1).slice(2)} ${s.datum} W${s.wk}`;
  try{const tabs=s.wk%4===0?TABS:[TABS[s.wk%11],TABS[(s.wk*3+1)%11]];for(const t of tabs){await tabClick(t);const sc=await pg.evaluate(()=>__scan());if(sc)note(tag,`Text in ${t}: ${sc}`);}

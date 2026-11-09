@@ -37,7 +37,7 @@ function setListed(id,on){const p=PIX.get(id);if(on){const v=+document.getElemen
 function extend(id){const p=PIX.get(id),y=+document.getElementById('ext').value;p.ct=y;p.sal=extDemand(p);news(`Vertrag verlängert: ${p.n} bis ${S.season+y}, ${fmt(p.sal)} pro Jahr.`,'good');save();openP(id);render();}
 const abfindung=p=>Math.round(p.sal*p.ct*RF.abfindung);
 function release(id){const p=PIX.get(id),c=abfindung(p);money('Abfindungen',-c);p.team=-1;p.list=0;S.offers=S.offers.filter(o=>o.pid!==id);news(`${p.n} wurde freigestellt (Abfindung ${fmt(c)}).`);save();closeOv();render();}
-function acceptOffer(i){const o=S.offers[i],p=PIX.get(o.pid),b=S.teams[o.tid];if(!p||p.team!==S.my)return;money('Transfers',o.amt);b.cash-=o.amt;p.team=b.id;p.list=0;p.ct=riA(RM.neuerVertrag);S.offers=S.offers.filter(x=>x.pid!==o.pid);news(`Verkauft: ${p.n} wechselt für ${fmt(o.amt)} zu ${b.name}.`,'good');save();render();}
+function acceptOffer(i){const o=S.offers[i],p=o&&PIX.get(o.pid),b=o&&S.teams[o.tid];if(!p||p.team!==S.my)return;if(!aktiv(b)){S.offers.splice(i,1);toast(`${b.name} spielt nicht mehr in den Profiligen, das Angebot ist hinfällig.`);save();render();return;}money('Transfers',o.amt);b.cash-=o.amt;p.team=b.id;p.list=0;p.ct=riA(RM.neuerVertrag);S.offers=S.offers.filter(x=>x.pid!==o.pid);news(`Verkauft: ${p.n} wechselt für ${fmt(o.amt)} zu ${b.name}.`,'good');save();render();}
 function declineOffer(i){S.offers.splice(i,1);save();render();}
 function offer(id){const p=PIX.get(id),t=myT(),msg=document.getElementById('msg'),yrs=+document.getElementById('yrs').value,M=RM,I=M.interesse;
   if(squad(S.my).length>=M.kaderMax){msg.textContent=`Dein Kader ist voll (höchstens ${M.kaderMax} Spieler).`;return;}

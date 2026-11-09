@@ -52,7 +52,7 @@ function taeglichLauf(d){const T=RT;
     if(!status.get(t.id))trainingVerein(t,ab.get(t.id),d);});
   S.pl.forEach(p=>{if(p.inj>0)p.inj--;if(p.team<-1)return;const st=p.team>=0?status.get(p.team)||'':'',urlaub=st==='urlaub'?true:st==='laufplan'?'laufplan':false;
     const tr=!urlaub&&p.team>=0&&p.inj<=0&&S.phase==='play'?trainingTag(p,S.teams[p.team],ab.get(p.team),d):0;tagesWerte(p,urlaub,tr);});
-  S.offers=S.offers.filter(o=>o.bis>=d&&PIX.get(o.pid)&&PIX.get(o.pid).team===S.my);
+  S.offers=S.offers.filter(o=>o.bis>=d&&PIX.get(o.pid)&&PIX.get(o.pid).team===S.my&&S.teams[o.tid]&&aktiv(S.teams[o.tid]));
   const c=S.constr;if(c&&d>=c.bis){const t=myT();if(c.k==='cap')t.cap+=RB.tribuene.plaetze;if(c.k==='logen')t.logen+=RB.logen.anzahl;if(c.k==='shop')t.shop++;news(`Bau abgeschlossen: ${c.label}.`,'good');S.constr=null;}}
 // Werte pro Woche (montags): Training und Entwicklung, Transfermarkt, Vorstand bei Minus auf dem Konto.
 function woechentlich(d){return mitStrom(strom('woche',S.season,d),()=>woechentlichLauf(d));}

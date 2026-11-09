@@ -36,8 +36,8 @@ const res=await pg.evaluate(()=>{const out=[];
      if(S.fired){if(!S.jobs)mkJobs();takeJob(S.jobs[0]);log.changes++;}sommerpause();lgVor=myT().lg;continue;}
     if(S.fired){if(!S.jobs)mkJobs();takeJob(S.jobs[0]);log.changes++;}
     if(heuteMeinSpiel()){LAST=tagesSpiele(S.tag);}
-    const s0=S.season,t1=S.tag,n=weiter();log.stops++;
-    if(S.season!==s0){log.seasons.push(`  → ${S.season}: ${myT().name} in Liga ${myT().lg}${lgVor!==myT().lg?(myT().lg<lgVor?' (AUFGESTIEGEN)':' (ABGESTIEGEN)'):''}, Kader ${squad(S.my).length}, Konto ${fmt(myT().cash)}, Start ${datumKurz(S.tag)}`);const ce=__check();if(ce.length)log.errors.push('nach Saisonwechsel: '+[...new Set(ce)].slice(0,4).join('; '));continue;}if(n>7||(S.season===s0&&S.tag-t1>7))log.errors.push(`Sprung über ${S.tag-t1} Tage`);
+    const s0=S.season,t1=S.tag,sp0=sommerSprung(),n=weiter(),sp=sp0||sommerSprung()||S.phase==='end'||myT().urlaub>0||!!myT().urlaubFertig;/* im Urlaub und Laufplan darf der Kalender weiter springen (K12a) */log.stops++;
+    if(S.season!==s0){log.seasons.push(`  → ${S.season}: ${myT().name} in Liga ${myT().lg}${lgVor!==myT().lg?(myT().lg<lgVor?' (AUFGESTIEGEN)':' (ABGESTIEGEN)'):''}, Kader ${squad(S.my).length}, Konto ${fmt(myT().cash)}, Start ${datumKurz(S.tag)}`);const ce=__check();if(ce.length)log.errors.push('nach Saisonwechsel: '+[...new Set(ce)].slice(0,4).join('; '));continue;}if(!sp&&(n>7||(S.season===s0&&S.tag-t1>7)))log.errors.push(`Sprung über ${S.tag-t1} Tage`);
     const ce=__check();if(ce.length)log.errors.push(`S${S.season} ${datumKurz(S.tag)}: `+[...new Set(ce)].slice(0,4).join('; '));}
    if(bad)log.errors.push(bad+'× gesperrter/verletzter Spieler eingesetzt');
    if(steps>=500)log.errors.push('Zwei Saisons nicht in 500 Schritten geschafft');
