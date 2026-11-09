@@ -28,9 +28,10 @@ const lastQuote=p=>(p.la||0)/Math.max(p.lc||0,RT.last.grund);
 function sprungFaktor(q){const V=RT.verletzung;return q<=V.sprungAb?1:1+V.sprungJe01*(q-V.sprungAb)/0.1;}
 
 // Ein Trainingstag eines Spielers: gibt den Frischeverlust (negativ) oder -gewinn zurück und bucht Reize, Last, Spielpraxis und Verletzungsrisiko
-function trainingTag(p,t,a,d){const T=RT,e=einheitFuer(p,t,a,d);if(!e)return 0;const[u,iz]=e,E=T.einheiten[u]||{},I=T.intensitaet[iz]||T.intensitaet.normal;
+function trainingTag(p,t,a,d){const T=RT,e=einheitFuer(p,t,a,d);if(!e)return 0;const lf=lagerFaktor(p.team,d);if(!lf.training)return 0; // Wetter im Lager: Einheit fällt aus
+  const[u,iz]=e,E=T.einheiten[u]||{},I=T.intensitaet[iz]||T.intensitaet.normal;
   const df=(E.frische||0)>0?E.frische*I.wirkung:(E.frische||0)*I.frische;
-  p.wk=(p.wk||0)+(E.kondition||0)*I.wirkung*stabFaktor(p.team,'kondition');p.we=(p.we||0)+(E.entwicklung||0)*I.wirkung*(p.fit<T.entwicklung.frischeUnter?T.entwicklung.frischeFaktor:1);
+  p.wk=(p.wk||0)+(E.kondition||0)*I.wirkung*stabFaktor(p.team,'kondition')*lf.kondition;p.we=(p.we||0)+(E.entwicklung||0)*I.wirkung*lf.training*(p.fit<T.entwicklung.frischeUnter?T.entwicklung.frischeFaktor:1);
   if(u!=='frei'&&u!=='regeneration')p.wt=(p.wt||0)+1;if(E.lernen)p.wl=1;
   if(E.praxis)p.sp=Math.min(100,p.sp+RP.spielpraxis.jeSpiel*E.praxis*I.wirkung);
   lastBuchen(p,Math.max(0,-df));
@@ -39,7 +40,7 @@ function trainingTag(p,t,a,d){const T=RT,e=einheitFuer(p,t,a,d);if(!e)return 0;c
   return df;}
 // Verein am Tag d: Vertrautheit aus Taktik-Einheiten und Spielvorbereitung (K07 §5.3), Merker für Spielvorbereitung und Standards
 function trainingVerein(t,a,d){const e=einheitVerein(t,a,d);if(!e)return;const[u,iz]=e,E=RT.einheiten[u]||{},I=RT.intensitaet[iz]||RT.intensitaet.normal;
-  if(E.vertrautheit){const w=u==='taktik'?E.vertrautheit*(iz==='hoch'?1.5:iz==='leicht'?0.5:1):E.vertrautheit,f=stabFaktor(t.id,'co');
+  if(E.vertrautheit){const w=u==='taktik'?E.vertrautheit*(iz==='hoch'?1.5:iz==='leicht'?0.5:1):E.vertrautheit,f=stabFaktor(t.id,'co')*lagerFaktor(t.id,d).vertrautheit;
     vertrautSetzen(t,'stil',t.stil||'ausgewogen',vertraut(t,'stil',t.stil||'ausgewogen')+w*f);vertrautSetzen(t,'ordnung',t.form,vertraut(t,'ordnung',t.form)+w*f);}
   if(u==='vorbereitung')t.vbTag=d;if(u==='standards')t.stdTag=d;}
 // Woche (K07 §5.1, §5.2): Konditionsziel aus dem Wochenreiz, Trainingsfaktor der Entwicklung, Lernen nur mit mindestens drei Trainingstagen

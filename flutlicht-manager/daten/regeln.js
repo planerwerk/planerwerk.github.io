@@ -346,6 +346,16 @@ const REGELN={
     verlaufTage:730},
   // Wettbewerbe und Spielplan (K13 §11, Welle 2): Pokal-Auslosung, Heimrecht der Amateure (3. Liga und darunter) bis zum Halbfinale (Runde 4), Supercup, 72 Stunden
   wettbewerbe:{pokal:{auslosungTage:14,profitopfZweite:14,heimrechtBisRunde:4},supercup:{vorSpieltag:6,anstoss:'20:30'},spielplan:{mindestTage:3}},
+  // Testspiele und Trainingslager (K11 §11, Welle 2). Geldbeträge und Zusagen sind Spielwerte (K11 §12 Nr. 4).
+  testspiele:{abWoche:3,wechsel:11,frische:0.7,risiko:0.6,praxis:0.6,vertrautheit:2,form:0.3,
+    zusage:{grund:0.6,staerker:0.4,schwaecher:1.3,staerkerAb:4,schwaecherAb:4,kalender:0.2,region:1.2,vorbereitung:1.2,saison:0.7,min:0.05,max:0.95},
+    antwortTage:[1,3],abstandPflichtspiel:2,vorlaufTage:4,planTage:42,maxProWoche:2,vorschlaege:8,
+    nachfrage:{start:0.12,jeWoche:-0.015,min:0.04,grosserName:2,grossAb:80},gageAmateur:[10000,80000]},
+  lager:{orte:{alpen:{name:'Alpen',saison:'sommer',kosten:40000,kondition:1.15,text:'Höhenlage: Kondition wirkt stärker'},schwarzwald:{name:'Schwarzwald',saison:'sommer',kosten:25000,text:'günstig und ruhig'},
+      algarve:{name:'Algarve',saison:'winter',kosten:50000,text:'mildes Wetter'},andalusien:{name:'Andalusien',saison:'winter',kosten:55000,text:'warm, gute Plätze'},
+      riviera:{name:'Türkische Riviera',saison:'winter',kosten:30000,ablenkung:true,text:'günstig, aber mehr Ablenkung'},golf:{name:'Golfregion',saison:'winter',kosten:90000,text:'sehr warm, lange Reise'},
+      heimat:{name:'Heimat',saison:'beide',kosten:0,wetter:0.2,text:'kein Ortswechsel, im Winter fällt öfter Training aus'}},
+    ligaFaktor:{1:1,2:0.6,3:0.35},tage:[5,10],training:1.15,vertrautheit:1.25,zusammenhalt:0.1,zusammenhaltBis:7,kollerAb:8,koller:0.13,kollerSv:-0.5,ablenkung:0.15,ablenkungSv:-1},
   // Live-Spiel (K05 §11): Tempo, Halte, Wechsel, Umstellungszeit, Zurufe, Halbzeitansprache, Computer-Trainer, Druckleiste
   live:{tempo:{langsam:2000,normal:1000,schnell:300},
     anhalten:{tor:true,rot:true,verletzung:true,elfmeter:true,gelbRotGefahr:true,frischeUnter:55},
@@ -421,4 +431,4 @@ const REGELN={
 // Schreibschutz: Zur Laufzeit darf kein Code eine Regel ändern.
 (function frieren(o){Object.freeze(o);Object.values(o).forEach(v=>{if(v&&typeof v==='object'&&!Object.isFrozen(v))frieren(v);});})(REGELN);
 // Kurzformen für den Code
-const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui,RL=REGELN.live,RTA=REGELN.taktik,RSO=REGELN.sommer,RST=REGELN.stab,RD=REGELN.disziplin,RMD=REGELN.medizin,RWB=REGELN.wettbewerbe;
+const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui,RL=REGELN.live,RTA=REGELN.taktik,RSO=REGELN.sommer,RST=REGELN.stab,RD=REGELN.disziplin,RMD=REGELN.medizin,RWB=REGELN.wettbewerbe,RTS=REGELN.testspiele,RLA=REGELN.lager;

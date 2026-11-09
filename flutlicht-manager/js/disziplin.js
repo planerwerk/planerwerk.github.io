@@ -11,7 +11,7 @@ const absTag=d=>Math.round(saisonNull(S.season)/TAG_MS)+d;
 // Alte Spielstände hatten p.sus (alle Wettbewerbe zusammen) und p.yc: beim ersten Zugriff übernommen.
 function sperren(p){if(!p.sperre){p.sperre={liga:{rot:p.sus||0,gelb:0},pokal:{rot:0,gelb:0}};delete p.sus;}return p.sperre;}
 function gelbe(p){if(!p.kt){p.kt={liga:p.yc||0,pokal:0};delete p.yc;}return p.kt;}
-const sperreIn=(p,wb)=>p.sperre?p.sperre[wb].rot+p.sperre[wb].gelb:(wb==='liga'?p.sus||0:0);
+const sperreIn=(p,wb)=>{const s=p.sperre&&p.sperre[wb];return s?s.rot+s.gelb:p.sperre||wb!=='liga'?0:p.sus||0;}; // im Testspiel (wb 'test') gibt es keine Sperren
 const verfahrenVon=(p,wb)=>(S.verfahren||[]).find(v=>v.pid===p.id&&(!wb||v.wb===wb));
 
 // Für welchen Wettbewerb gerade aufgestellt wird. In der Engine gesetzt, sonst gilt das nächste eigene Spiel (Ansichten, Aufstellung).

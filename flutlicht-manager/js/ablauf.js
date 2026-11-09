@@ -7,7 +7,8 @@ function tagesSpiele(d){const v=tagesSpieleVorbereiten(d,false);return tagesSpie
 function tagesSpieleVorbereiten(d,live){return mitStrom(strom('spieltag',S.season,d),()=>{const out={tag:d,gruppen:[],list:[],mine:null},vorher=S.gespielt;let G=null,platz=null;S.gespielt=d;
   if(S.sponsOffers&&meinSpiel(d))sponsorWaehlen(0);
   const spiel=(h,a,o,meta,g)=>{const i=g.list.length;if(o.wichtig){kiSpritzen(h);kiSpritzen(a);} // fit spritzen nur in wichtigen Spielen (K10 §7)
-    if(live&&(h===S.my||a===S.my)){G=spielAnlegen(h,a,Object.assign({},o,{auto:[h!==S.my,a!==S.my]}));platz={meta,g,i};g.list.push(null);return;}g.list.push(Object.assign(sim(h,a,o),meta));};
+    if(live&&!o.test&&(h===S.my||a===S.my)){G=spielAnlegen(h,a,Object.assign({},o,{auto:[h!==S.my,a!==S.my]}));platz={meta,g,i};g.list.push(null);return;}g.list.push(Object.assign(sim(h,a,o),meta));};
+  testspielHeute(d).forEach(x=>{const g={titel:'Testspiel',art:'test',e:{art:'test'},x,list:[]},hg=x.heim?[S.my,x.gegner]:[x.gegner,S.my];spiel(hg[0],hg[1],{test:1,wb:'test'},{test:1},g);out.gruppen.push(g);}); // Testspiele ohne Halt (K11)
   for(const e of termineAm(d)){
     if(e.art==='liga'){const g={titel:`${ligaName(e.lg)} · ${e.md+1}. Spieltag`,art:'liga',e,list:[]};e.idx.forEach(i=>{const[h,a]=S.fx[e.lg][e.md][i];spiel(h,a,{},{lg:e.lg,min:S.plan.zeit[e.lg][e.md][i][1]},g);});out.gruppen.push(g);}
     else if(e.art==='pokal'){if(S.cup.hist.length!==e.r)continue;const fin=e.r===5,g={titel:`DFB-Pokal · ${POKAL_RUNDEN[e.r]}`,art:'pokal',e,list:[]};pokalPaare(e.r).forEach(([h,a])=>spiel(h,a,{wb:'pokal',ko:1,neutral:fin,wichtig:e.r>=RTA.ki.wichtigAbRunde},{cup:1,min:e.min},g));out.gruppen.push(g);}
@@ -20,6 +21,7 @@ function tagesSpieleVorbereiten(d,live){return mitStrom(strom('spieltag',S.seaso
 function liveEintragen(v){const r=Object.assign(v.G.ergebnis(),v.platz.meta);v.platz.g.list[v.platz.i]=r;return r;}
 function tagesSpieleAbschliessen(out){return mitStrom(strom('spieltagEnde',S.season,out.tag),()=>tagesSpieleAbschliessenLauf(out));}
 function tagesSpieleAbschliessenLauf(out){const d=out.tag;S.gespielt=d;
+  out.gruppen.filter(g=>g.art==='test').forEach(g=>g.list.forEach(r=>testspielNach(r,g.x)));out.gruppen=out.gruppen.filter(g=>g.art!=='test');
   out.list=out.gruppen.flatMap(g=>g.list);if(!out.list.length)return out;
   // Sperren zählen die Spiele der eigenen Mannschaft im selben Wettbewerb (K09)
   const spielten=new Set(),wbs=new Set();out.list.forEach(r=>{spielten.add(r.h);spielten.add(r.a);const w=wbVon(r);wbs.add(r.h+':'+w);wbs.add(r.a+':'+w);});
@@ -48,7 +50,7 @@ function tagesSpieleAbschliessenLauf(out){const d=out.tag;S.gespielt=d;
 
 // Werte pro Tag: Ausfalltage zählen herunter, Frische erholt sich, Fristen laufen ab, Bau wird fertig.
 function taeglich(d){return mitStrom(strom('tag',S.season,d),()=>taeglichLauf(d));}
-function taeglichLauf(d){const T=RT;
+function taeglichLauf(d){const T=RT;if(S.phase==='play')testspieleTag(d);
   const ab=S.phase==='play'?spielAbstand(d):new Map(),status=new Map();
   S.teams.forEach(t=>{if(!aktiv(t))return;sommerTag(t,ab.get(t.id),d);const st=sommerStatus(t);status.set(t.id,st);
     if(S.phase==='play'&&d===auftaktTag(t)&&st!=='urlaub'){sommerAuftakt(t);status.set(t.id,'');if(t.id===S.my)news('Trainingsauftakt: Die Mannschaft ist zurück. Morgen ist Leistungstest.');}

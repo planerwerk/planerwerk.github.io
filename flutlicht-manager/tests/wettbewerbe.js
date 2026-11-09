@@ -8,8 +8,10 @@ const tage={},runde1=[],heimFehler=[],losZuSpaet=[],zweiteFehler=[],supercups=[]
 const {W,F}=saisons({n:N,seed:SEED,verein:6,
   beiSaisonstart:S=>{S.teams.forEach(t=>{if(t.zweite>=0&&S.teams[t.zweite]&&S.teams[t.zweite].lg===t.lg&&t.lg<=3)zweiteFehler.push(`${S.season}: ${t.name}`);});},
   beiSpielen:(liste,S,o)=>{const am=id=>id>=1000||S.teams[id].lg>=3;
-    liste.forEach(r=>{[r.h,r.a].forEach(id=>{if(id<1000)(tage[id]=tage[id]||[]).push(S.season*400+o.tag);});
-      if(r.supercup)supercups.push({s:S.season,h:r.h,a:r.a,hg:r.hg,ag:r.ag,pen:r.pen,verl:r.ev.some(e=>e.m>90),tag:o.tag});});
+    // Relegation und Pokalfinale liegen im echten Kalender (Donnerstag, Samstag, Montag) so dicht, dass ein Verein in beiden dreimal in fünf Tagen spielt: ausgenommen
+    const relFinale=new Set();o.gruppen.forEach(g=>{if(g.art==='rel'||g.art==='rel2'||(g.art==='pokal'&&g.e.r===5))g.list.forEach(r=>{relFinale.add(r.h);relFinale.add(r.a);});});
+    liste.forEach(r=>{[r.h,r.a].forEach(id=>{if(id<1000&&!relFinale.has(id))(tage[id]=tage[id]||[]).push(S.season*400+o.tag);});
+      if(r.supercup)supercups.push({s:S.season,h:r.h,a:r.a,hg:r.hg,ag:r.ag,pen:r.pen,verl:r.ev.some(e=>e.m>90&&e.t!=='E'&&e.t!=='P'),tag:o.tag});});
     o.gruppen.filter(g=>g.art==='pokal').forEach(g=>{const rr=g.e.r,L=S.cup.los;losGeprueft++;if(!L||L.am>=S.plan.pokal[rr][0]-1)losZuSpaet.push(`${S.season} Runde ${rr+1}`);
       g.list.forEach(r=>{if(rr===0)runde1.push({h:r.h,a:r.a,hProfi:!am(r.h),aProfi:!am(r.a),aLg:r.a<1000?S.teams[r.a].lg:9,hLg:r.h<1000?S.teams[r.h].lg:9,sieger:r.hg>r.ag?r.h:r.hg<r.ag?r.a:(r.pen[0]>r.pen[1]?r.h:r.a)});
         if(rr<=4&&am(r.h)!==am(r.a)&&!am(r.h))heimFehler.push(`${S.season} Runde ${rr+1}: ${r.h} – ${r.a}`);});});}});

@@ -76,4 +76,9 @@ function sgEinspruch(id){const v=sgVerfahren(id);if(!v||v.antrag<2)return;mitStr
 // Medizin (K10 §5.4): fit spritzen am Spieltag, früher zurückholen aus dem Aufbautraining
 function medSpritzen(id){const p=PIX.get(id),i=p&&p.team===S.my?verletzungInfo(p):null;if(!i||!i.spritzbar||!heuteMeinSpiel())return;p.spritze=S.tag;p.spritzeAm=S.tag;news(`${p.n} wird für heute fit gespritzt.`);save();render();}
 function medFrueher(id){const p=PIX.get(id),i=p&&p.team===S.my?verletzungInfo(p):null;if(!i||i.phase!=='aufbau'||i.pflicht)return;p.inj=0;medizinRueckkehr(p,RMD.frueher.frische);news(`${p.n} ist früher zurück, aber noch nicht bei voller Frische.`);save();render();}
+// Testspiele und Trainingslager (K11)
+function tsAnfragen(){const d=+document.getElementById('ts_tag').value,g=+document.getElementById('ts_geg').value;const x=testspielAnfragen(g,d);if(!x){toast('Dieser Tag geht nicht.');return;}
+  news(`Testspiel am ${datumKurz(d)} bei ${tn(g)} angefragt. Antwort bis ${datumKurz(x.antwortAm)}.`);save();render();}
+function lagerBuchen(){const o=document.getElementById('la_ort').value,v=+document.getElementById('la_von').value,n=+document.getElementById('la_tage').value,f=lagerMoeglich(o,v,n);if(f){toast(f);return;}
+  const k=lagerBuchenLauf(o,v,n);news(`Trainingslager gebucht: ${RLA.orte[o].name}, ${datumKurz(v)} bis ${datumKurz(v+n-1)}, Kosten ${fmt(k)}.`);save();render();}
 

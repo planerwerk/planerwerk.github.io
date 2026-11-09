@@ -1,7 +1,6 @@
 // Testspiele und Trainingslager (K11, Welle 2): Gegner anfragen (Zusage nach Niveau, Kalender, Region, Phase), Antwort nach 1–3 Tagen,
 // Testspiel ohne Halt mit vielen Wechseln, ohne Sperren, mit weniger Belastung und Wirkung; Einnahmen; Trainingslager mit Ort, Kosten,
 // stärkerem Training, Zusammenhalt, Lagerkoller, Ablenkung und Wetter. Computer-Vereine spielen noch keine Testspiele und fahren in kein Lager.
-const RTS_ORT=()=>RLA.orte;
 
 // Phase und Vorbereitungswoche des eigenen Vereins an Tag d
 const vorbereitungsWoche=d=>Math.floor((d-auftaktTag(myT()))/7)+1;
@@ -15,13 +14,13 @@ function testspielTage(){const T=RTS,l=[],von=S.tag+T.vorlaufTage,bis=Math.min(S
     const w=Math.floor(d/7),n=(S.testspiele||[]).filter(x=>x.stand!=='abgesagt'&&Math.floor(x.tag/7)===w).length;if(n>=T.maxProWoche)continue;l.push(d);}return l;}
 // Vorgeschlagene Gegner: zwei Amateurvereine aus der Region, Profis aus der 1. bis 3. Liga nach Niveau (näher zuerst)
 function testspielGegner(d){const me=teamLevel(S.my),t=myT(),pro=S.teams.filter(x=>aktiv(x)&&x.id!==S.my).map(x=>({id:x.id,d:teamLevel(x.id)-me,reg:x.region===t.region}))
-    .sort((a,b)=>Math.abs(a.d)-Math.abs(b.d)-(a.reg-b.reg)*2).slice(0,RTS.vorschlaege);
+    .sort((a,b)=>Math.abs(a.d)-Math.abs(b.d)-(a.reg-b.reg)*2).slice(0,inVorbereitung(d)&&vorbereitungsWoche(d)<RTS.abWoche?0:RTS.vorschlaege);
   const am=[0,1].map(k=>1000+(hash32(S.season+'/'+d+'/'+k)%S.am.length));return[...am.map(id=>({id,am:true})),...pro.map(x=>({id:x.id,d:x.d}))];}
 // Zusage (K11 §5.1): Grundwert × Niveau × Kalender × Region × Phase, begrenzt
 function zusageChance(tid,d){const Z=RTS.zusage;if(tid>=1000)return Z.max;const o=S.teams[tid],diff=teamLevel(tid)-teamLevel(S.my);
   let p=Z.grund*(diff>=Z.staerkerAb?Z.staerker:diff<=-Z.schwaecherAb?Z.schwaecher:1)*(pflichtspielNah(tid,d,RTS.abstandPflichtspiel)?Z.kalender:1)
     *(o.region===myT().region?Z.region:1)*(inVorbereitung(d)?Z.vorbereitung:Z.saison);
-  if(inVorbereitung(d)&&vorbereitungsWoche(d)<RTS.abWoche)p*=Z.frueh; // Profis erst ab der 3. Vorbereitungswoche (Anstoss-Idee)
+  if(inVorbereitung(d)&&vorbereitungsWoche(d)<RTS.abWoche)return 0; // Profis erst ab der 3. Vorbereitungswoche, davor nur Amateure (Anstoss-Idee)
   return clamp(p,Z.min,Z.max);}
 function testspielAnfragen(tid,d){if(!testspielTage().includes(d))return null;(S.testspiele=S.testspiele||[]);S.testId=(S.testId||0)+1;
   const x={id:S.testId,tag:d,gegner:tid,heim:tid<1000,stand:'angefragt',antwortAm:S.tag+riA(RTS.antwortTage)};S.testspiele.push(x);return x;}

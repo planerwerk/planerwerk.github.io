@@ -106,7 +106,9 @@ while(guard++<330){const s=await st();if(s.season>=2028)break;const tag=`${s.sea
 if(guard>=330)note('Ende','Zwei Saisons nicht in 330 Halten geschafft');
 // Handy-Breite: Überlauf prüfen
 await pg.setViewportSize({width:390,height:844});const ovf=[];
-for(const t of TABS){await tabClick(t);const w=await pg.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth);if(w>1)ovf.push(t+' +'+w+'px');}
+// Bei Überlauf das breiteste Element nennen, damit die Ursache ohne Nachstellen sichtbar ist
+const zuBreit=()=>pg.evaluate(()=>{const W=window.innerWidth;let b=null;document.querySelectorAll('main *, .ovb *').forEach(e=>{if(e.closest('nav'))return;const r=e.getBoundingClientRect();if(r.right>W+1&&(!b||r.right>b.r))b={r:r.right,t:`${e.tagName.toLowerCase()}.${(e.className||'').toString().slice(0,20)} „${(e.textContent||'').trim().slice(0,50)}“`};});return b?b.t:'';});
+for(const t of TABS){await tabClick(t);const w=await pg.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth);if(w>1)ovf.push(t+' +'+w+'px ('+await zuBreit()+')');}
 await pg.evaluate(()=>openP(squad(S.my)[0].id));let w=await pg.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth);if(w>1)ovf.push('Spielerfenster +'+w);await closeModal();
 await tabClick('Büro');for(let i=0;i<10&&!(await pg.$('#kick'));i++){await pg.click('header .go');await pg.waitForTimeout(50);if(await pg.$('#trotzdem'))await pg.click('#trotzdem');}
 if(await pg.$('#kick')){await pg.click('#kick');await pg.waitForTimeout(2600);w=await pg.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth);if(w>1)ovf.push('Live-Spiel +'+w);

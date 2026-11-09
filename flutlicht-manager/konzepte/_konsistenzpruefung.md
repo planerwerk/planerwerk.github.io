@@ -597,3 +597,18 @@ Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `
 | AP7 | **UI-Test:** Der Knopf „Annehmen“ beim Sportgericht (U7a) wurde mit dem eines Transferangebots verwechselt. Er heißt jetzt „Strafe annehmen“. | ✅ |
 | AP8 | **K33:** Neue Felder `supercup`, `cup.los`, `relSp[].pen`, am Spieler `spritzeAm` (Tag der letzten Spritze, für die Prüfung der Einsätze). | ✅ in K33 |
 
+---
+
+## AQ. Nachtrag zur Umsetzung U7d (9. November 2026)
+
+| # | Befund | Status |
+|---|---|---|
+| AQ1 | **K11 §10 und §5.3:** Das Ziel „eine Woche Vorsprung“ passt nicht zur Vertrautheit ×1,25 im Lager. Gebaut ist ×1,25 (K11 §12 Nr. 10). | 📌 bei Bedarf Wert erhöhen |
+| AQ2 | **K11 §10:** Lagerkoller 10 % pro Tag ergibt bei zehn Tagen nur 27 % statt „mindestens ein Drittel“. Jetzt 13 %. | ✅ |
+| AQ3 | **Computer-Vereine** spielen noch keine Testspiele und fahren in kein Lager. Ihre Spieler haben im Sommer daher weniger Spielpraxis als deine. | 📌 bei K31 (Computer-Vereine) oder UL |
+| AQ4 | **K32:** Auslandsvereine als Gegner im Trainingslager kommen mit den echten Vereinsnamen (PLAN §2, 8.11.). | 📌 bei K32 |
+| AQ5 | **K33:** Neue Felder `testspiele`, `testId`, `lager`. | ✅ in K33 |
+| AQ6 | **K07:** In der Vorbereitung plant die Automatik meist „Aufbau“ ohne Taktik-Einheiten. Die Vertrautheit wächst dort nur über Spiele, und der Lager-Bonus für Vertrautheit greift nur mit einer Vorlage mit Taktik (zum Beispiel „Standard“). Die Vorlage „Vorbereitung“ mit Taktik-Einheiten kommt selten zum Zug. | 📌 bei K07 prüfen |
+| AQ7 | **Kalibrierung nach Welle 2:** Über neun Seeds liegen die Favoritensiege (Top 3 gegen Letzte 3) bei 75,6 % (vor U7b 73,0 %, Ziel 65–75 %), der Heimsieg bei gleich Starken bei 43,8 %, Remis bei 23,9 %. Mehr Verletzungen (U7b) treffen vermutlich die schwächeren Kader stärker. Der Unterschied liegt im Rauschen, aber beide Werte sitzen am oberen Rand. | 📌 einmal gesamt nachkalibrieren (mit AN6, über mehrere Seeds) |
+| AQ8 | **Kalender:** Relegation (Donnerstag, Montag) und Pokalfinale (Samstag dazwischen) liegen wie im echten Plan so dicht, dass ein Verein in beidem dreimal in fünf Tagen spielt. Die 72-Stunden-Prüfung nimmt diesen Fall aus. | 📌 echte Regel bei einem solchen Zusammentreffen prüfen |
+

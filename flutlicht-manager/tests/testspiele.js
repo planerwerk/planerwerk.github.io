@@ -17,18 +17,20 @@ const tage=(F,S,n)=>{for(let i=0;i<n;i++){F.tagEnde(S.tag);S.tag++;S.gespielt=-1
 // 2. Testspiele ohne Halt, Regeln im Testspiel: keine Sperren, keine Karten in der Zählung, 60 % Spielpraxis, 70 % Belastung
 {const {S,F,ev}=welt();S.tag=ev('auftaktTag(myT())')+21;const l=ev('testspielTage')(),d=l[0],x=ev('testspielAnfragen')(1000,d);x.stand='zugesagt';
   pruef(!ev('haltGrund')(d)||ev('haltGrund')(d)!=='Spiel','Ein Testspiel erzeugt keinen Halt',`Halt am Testspieltag: „${ev('haltGrund')(d)||'keiner'}“`);
-  const p=F.squad(S.my).find(q=>q.inj<=0&&q.pos!=='TW'),sp=ev('sperren')(p);sp.liga.rot=1;
+  const p=ev('squad')(S.my).find(q=>q.inj<=0&&q.pos!=='TW'),sp=ev('sperren')(p);sp.liga.rot=1;
   pruef(ev('mitWettbewerb')('test',()=>ev('avail')(p)),'Ein in der Liga gesperrter Spieler darf im Testspiel spielen','');sp.liga.rot=0;
   const vorher={kt:JSON.stringify(ev('gelbe')(p)),sp:p.sp,fit:p.fit,v:(S.verfahren||[]).length};p.sp=40;p.fit=95;
-  const r=F.sim(S.my,1000,{test:1,wb:'test'});r.ev.push({t:'R',p:p.id,n:p.n,art:'grob'});r.yel.push(p.id);
-  const min=(r.xpo[0].find(z=>z[0]===p.id)||[])[3];F.testspielNach(r,x);
+  const r=F.sim(1000,S.my,{test:1,wb:'test'});r.ev.push({t:'R',p:p.id,n:p.n,art:'grob'});r.yel.push(p.id);
+  const min=(r.xpo[1].find(z=>z[0]===p.id)||[])[3];F.testspielNach(r,x);
   const N=ev('RP').spielpraxis.jeSpiel*(min||0)/90*ev('RTS').praxis;
   pruef(JSON.stringify(ev('gelbe')(p))===vorher.kt&&(S.verfahren||[]).length===vorher.v,'Karten im Testspiel zählen nicht und führen zu keinem Verfahren','');
   pruef(min>0&&Math.abs((p.sp-40)-N)<0.01,'Testspiel: 60 % der Spielpraxis eines Pflichtspiels',`${f2(p.sp-40)} statt ${f2(N/ev('RTS').praxis)} (${min} Minuten)`);
   pruef(x.stand==='gespielt'&&x.erg&&x.erg.geld>0,'Testspiel beim Amateurverein bringt eine Gage',x.erg?ev('fmt')(x.erg.geld):'-');}
 // 3. Lager lohnt (K11 §10): sieben Tage Lager im Sommer, Vertrautheit wächst um etwa ein Viertel schneller (×1,25), Konditionsreiz ×1,15
-{const run=lager=>{const {S,F,ev}=welt();const a=ev('auftaktTag(myT())');tage(F,S,a+1-S.tag);if(lager){const f=ev('lagerMoeglich')('schwarzwald',S.tag+1,7);if(f)return{fehler:f};ev('lagerBuchenLauf')('schwarzwald',S.tag+1,7);}
-    const t=ev('myT()'),st=t.stil||'ausgewogen',v0=ev('vertraut')(t,'stil',st);tage(F,S,8);return{dv:ev('vertraut')(t,'stil',st)-v0,kosten:(S.fin['Trainingslager']||0)};};
+{const run=lager=>{const {S,F,ev}=welt();const a=ev('auftaktTag(myT())');tage(F,S,a+7-S.tag); // zweite Vorbereitungswoche: erst dann gibt es Taktik-Einheiten
+if(lager){const f=ev('lagerMoeglich')('schwarzwald',S.tag+1,7);if(f)return{fehler:f};ev('lagerBuchenLauf')('schwarzwald',S.tag+1,7);}
+    const t=ev('myT()'),st=t.stil||'ausgewogen';t.vorlage='standard'; // mit Taktik-Einheiten (die Automatik plant in der Vorbereitung „Aufbau“ ohne Taktik, Konsistenzprüfung AQ6)
+    ev('vertrautSetzen')(t,'stil',st,20);const v0=ev('vertraut')(t,'stil',st);tage(F,S,8);return{dv:ev('vertraut')(t,'stil',st)-v0,kosten:(S.fin['Trainingslager']||0)};};
   const A=run(true),B=run(false);
   pruef(!A.fehler&&A.dv/B.dv>=1.15&&A.dv/B.dv<=1.35,'Lager: Vertrautheit wächst im Lager um 15–35 % schneller als zu Hause',A.fehler||`${f2(A.dv)} gegen ${f2(B.dv)} (×${f2(A.dv/B.dv)}), Kosten ${Math.round(-A.kosten).toLocaleString('de-DE')} €`);}
 // 4. Lagerkoller (K11 §10): bei zehn Tagen in mindestens einem Drittel der Fälle

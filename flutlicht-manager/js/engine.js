@@ -110,7 +110,7 @@ const wb=o.wb||'liga',H=mitWettbewerb(wb,()=>side(hid,true,o.neutral)),A=mitWett
   const xg0=(H.am||A.am)?amateurErwartung(H,A):erwarteteTore(H,A);
   const ev=[],sc=[0,0],yel={},off=new Set(),inj=[],st={besitz:[0,0],schuesse:[0,0],aufsTor:[0,0],ecken:[0,0],fouls:[0,0],gross:[0,0],wege:[[0,0,0],[0,0,0]]},sz=[];
   const fr={};Ss.forEach(sd=>sd.xp.forEach(x=>fr[x.p.id]=x.p.fit));
-  const E=RE.ermuedung,ermueden=min=>Ss.forEach((sd,s)=>{const zf=G.zf(s,'frische');sd.xp.forEach(x=>{const p=x.p;fr[p.id]=Math.max(RE.fitnessMin,fr[p.id]-E.proMinute*min*(E.ko[0]+E.ko[1]*p.ko)*(hatMk(p,'ausdauernd')?0.75:1)*(sd.ein==='H'?E.hart:1)*zf*(sd.stilF?sd.stilF.frische:1)*(sd.frischeF||1));});});
+  const E=RE.ermuedung,ermueden=min=>Ss.forEach((sd,s)=>{const zf=G.zf(s,'frische');sd.xp.forEach(x=>{const p=x.p;fr[p.id]=Math.max(RE.fitnessMin,fr[p.id]-(o.test?RTS.frische:1)*E.proMinute*min*(E.ko[0]+E.ko[1]*p.ko)*(hatMk(p,'ausdauernd')?0.75:1)*(sd.ein==='H'?E.hart:1)*zf*(sd.stilF?sd.stilF.frische:1)*(sd.frischeF||1));});});
   // Lage: Kämpfer und Führungsspieler bei Rückstand, Nervenschwache und Trainingsweltmeister in wichtigen Spielen und knapper Schlussphase
   const EG=RE.eigenschaften,lageFn=(s,m)=>{const hinten=sc[s]<sc[1-s],eng=m>=EG.engAb&&Math.abs(sc[0]-sc[1])<=1,wichtig=o.wichtig||eng,fue=hinten&&Ss[s].xp.some(x=>hatEig(x.p,'fuehrungsspieler'))?EG.fuehrungsspieler:1;
     return p=>(hinten&&hatEig(p,'kaempfer')?EG.kaempfer:1)*(wichtig&&hatEig(p,'nervenschwach')?1-(1-EG.nervenschwach)*Math.max(0,1+RST.wirkung.psycho.nervenschwach*stabFaktor(Ss[s].id,'psycho')):1)*(wichtig&&hatEig(p,'trainingsweltmeister')?EG.trainingsweltmeister:1)*fue*G.bonus(s,p,m);};
@@ -180,7 +180,7 @@ const wb=o.wb||'liga',H=mitWettbewerb(wb,()=>side(hid,true,o.neutral)),A=mitWett
     if(R()>=f)return;st.fouls[s]++;const t=waehle(c,x=>(F.gewicht[linksForm(x.pos)]||1)*(hatMk(x.p,'ungestuem')?F.ungestuem:1)*(yel[x.p.id]&&!hatEig(x.p,'hitzkopf')?K.mitGelb.foul:1)*G.foulSpieler(x.p.id)).p;
     const ak=waehle(FOULARTEN,k=>RD.foulArten[k].anteil),A=RD.foulArten[ak],Q=RMD.risiko,o=Ss[1-s];
     // Verletzung durch das Foul (K10 §5.1): je erlittenem Foul nach Schwere, harter Einsatz des Foulenden ×1,5
-    const opfer=R()<Q.foul*(Q.schwere[ak]||1)*(sd.ein==='H'?Q.hartGegner:1)*teamGew(o,off,vgw)?cardPick(o,off,vgw):null;if(opfer)verletzt(m,1-s,opfer,'foul');
+    const opfer=R()<Q.foul*(o.test?RTS.risiko:1)*(Q.schwere[ak]||1)*(sd.ein==='H'?Q.hartGegner:1)*teamGew(o,off,vgw)?cardPick(o,off,vgw):null;if(opfer)verletzt(m,1-s,opfer,'foul');
     const k=kartenFaktor(s,t,m),r=R();
     if(A.rot&&r<A.rot*k)platzverweis(m,s,t,A.art,A.art==='notbremse'?`Notbremse! Rot für ${t.n}`:null,opfer?opfer.id:null);
     else if(A.gelb&&r<(A.rot?A.rot*k:0)+A.gelb*k)gelbeKarte(m,s,t);
@@ -200,7 +200,7 @@ const wb=o.wb||'liga',H=mitWettbewerb(wb,()=>side(hid,true,o.neutral)),A=mitWett
   const ueW=p=>{const Q=RMD.risiko,f=fr[p.id];let x=f<Q.frischeAb?1+Q.frischeJePunkt*(Q.frischeAb-f):1;if(f<Q.frischeKritisch)x*=Q.kritisch;return vgw(p)*ueFest(p)*x;};
   const verletzt=(m,s,p,q)=>{if(!p||inj.find(x=>x.id===p.id))return;inj.push({id:p.id,q});ev.push({m,s,t:'I',p:p.id,n:p.n,q});fr[p.id]=Math.min(fr[p.id],RL.verletztFrische);W=werte(m);};
   const verletzung=(m,s)=>{const sd=Ss[s];if(sd.am)return;const Q=RMD.risiko,r=R(),
-      pK=Q.kollision*teamGew(sd,off,vgw),pU=Q.ueberlastung*teamGew(sd,off,ueW)*(sd.stil==='pressing'||sd.stil==='konter'?Q.stil:1);
+      pK=Q.kollision*(o.test?RTS.risiko:1)*teamGew(sd,off,vgw),pU=Q.ueberlastung*(o.test?RTS.risiko:1)*teamGew(sd,off,ueW)*(sd.stil==='pressing'||sd.stil==='konter'?Q.stil:1);
     if(r<pK)verletzt(m,s,cardPick(sd,off,vgw),'kollision');else if(r<pK+pU)verletzt(m,s,cardPick(sd,off,ueW),'ueberlastung');};
   const patzer=(m,s)=>{const T=RE.torwart,kp=Ss[s].xp.find(x=>x.pos==='TW'&&!off.has(x.p.id));if(!kp)return;
     if(R()<T.patzer/90*(hatMk(kp.p,'unkonzentriert')?T.unkonzentriert:1)*G.zf(s,'patzer')){sz.push([kp.p.id,'patzer',1]);abschluss(m,1-s,'gross',schuetzeWahl(1-s,'gross'),'patzer');}};
@@ -244,7 +244,7 @@ const wb=o.wb||'liga',H=mitWettbewerb(wb,()=>side(hid,true,o.neutral)),A=mitWett
     if(fertig){G.pen=[...E.t];ev.push({m:120,s:G.pen[0]>G.pen[1]?0:1,t:'P',pen:G.pen});G.ende=true;}};
   G.pause=()=>G.elf&&!G.ende?(G.elf.k===0?'elfmeter':null):G.m===45?'halbzeit':G.m===90&&!G.ende?'verlaengerung':G.m===105?'halbzeitVerlaengerung':null;
   // Wechsel (K05 §3.2): 5 Wechsel in 3 Gelegenheiten, Pausen zählen nicht, in der Verlängerung einer mehr
-  G.wechselFrei=s=>{const W5=RL.wechsel,max=W5.anzahl+(G.m>=90&&o.ko?W5.verlaengerung:0),gel=W5.gelegenheiten+(G.m>=90&&o.ko?W5.verlaengerung:0);
+  G.wechselFrei=s=>{const W5=RL.wechsel,max=o.test?RTS.wechsel:W5.anzahl+(G.m>=90&&o.ko?W5.verlaengerung:0),gel=o.test?99:W5.gelegenheiten+(G.m>=90&&o.ko?W5.verlaengerung:0);
     if(G.wz[s]>=max)return{ok:false,grund:`alle ${max} Wechsel verbraucht`};if(G.pause()||G.gel[s].includes(G.m))return{ok:true};
     if(G.gel[s].length>=gel)return{ok:false,grund:`alle ${gel} Wechsel-Gelegenheiten verbraucht`};return{ok:true};};
   G.wechseln=(s,ausId,einId)=>{if(G.ende)return{ok:false,grund:'Das Spiel ist vorbei.'};const fw=G.wechselFrei(s);if(!fw.ok)return fw;

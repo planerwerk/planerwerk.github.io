@@ -3,6 +3,8 @@
 Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12.
 Hängt ab von: K01 (Kalender), K04 (Engine), K07 (Training), K12a (Sommer) · Wird gebraucht von: K12b, K14, K17, K23, K25.
 
+**Umsetzungshinweise (U7d, 9. November 2026):** Gebaut sind Anfragen für Testspiele mit Antwort nach 1–3 Tagen, Testspiele ohne Halt mit eigenen Regeln (Wechsel, keine Sperren, weniger Belastung und Wirkung) und Einnahmen sowie das Trainingslager mit sieben Orten, Kosten, stärkerem Training, Zusammenhalt, Lagerkoller, Ablenkung und Wetter. Alles steht in der Trainingsansicht. Code in `js/testspiele.js`, Werte in `REGELN.testspiele` und `REGELN.lager`. Test: `tests/testspiele.js`. Abweichungen in §12 unter U7d.
+
 ## 1. Ziel und Spielgefühl
 
 - **Der Sommer und die Pausen bekommen Inhalt:** Testspiele, ein Trainingslager, ein kleines Turnier.
@@ -200,6 +202,16 @@ lager:{
 2. **Erfundene Gegner** für Amateure, Auslandsvereine und Turniere. Echte Profivereine aus 1. bis 3. Liga als Testspielgegner, weil sie ohnehin im Spiel sind.
 3. **Reale Regionen** als Lager-Orte (Alpen, Algarve und so weiter), aber keine echten Hotels oder Marken.
 4. **Alle Geldbeträge sind Spielwerte,** nicht recherchiert. Kalibrierung mit K23.
+
+**Vorläufig entschieden bei der Umsetzung (U7d, 9. November 2026):**
+5. **Testspiele anfragen** in der Trainingsansicht: Tag (frühestens in vier Tagen, bis sechs Wochen voraus, zwei Tage Abstand zu eigenen Pflichtspielen, höchstens zwei pro Woche) und Gegner. Vorgeschlagen werden zwei Amateurvereine und die acht Profivereine aus der 1. bis 3. Liga, die im Niveau am nächsten sind (gleiche Region zuerst). Gegen Amateure spielst du auswärts, gegen Profis zu Hause. Die Antwort kommt nach 1–3 Tagen als Nachricht.
+6. **Zusage:** Grundwert 0,6 × Niveau (stärker ab 4 Punkten Kaderstärke ×0,4, schwächer ×1,3) × Kalender (Pflichtspiel des Gegners in zwei Tagen ×0,2) × Region (gleiche ×1,2) × Phase (Vorbereitung ×1,2, Saison ×0,7), begrenzt auf 5–95 %. Amateure sagen zu 95 % zu. „Weit weg ×0,8“ ist noch nicht gebaut, weil die Regionen grob sind. Profis sagen in der Vorbereitung vor der 3. Woche nie zu.
+7. **Im Testspiel:** bis zu 11 Wechsel ohne Grenze der Gelegenheiten, keine Sperren und keine Karten in der Zählung (auch gesperrte Spieler dürfen spielen), Ermüdung, Belastung und Saisonbelastung ×0,7, Verletzungsrisiko ×0,6, Spielpraxis 60 %, Form zu 30 %, Vertrautheit +2, Lernen im Spiel zur Hälfte (jede zweite Szene). Testspiele zählen nicht als Einsatz, ihre Tore nicht zur Torjägerliste. Sie laufen immer ohne Halt und ohne Live-Ansicht.
+8. **Geld:** Als Gastgeber kommen in der 3. Vorbereitungswoche 12 % der Ligaspiel-Nachfrage (Entwurf: 25 %), danach je Woche 1,5 Prozentpunkte weniger, mindestens 4 %, gegen einen großen Namen (Ansehen ab 80) doppelt so viele. Beim Amateurverein gibt es eine Gage von 10.000 bis 80.000 € nach Ansehen. Auswärts bei Profis gibt es nichts. Die Lagerkosten sind um 60 % höher als im Entwurf (Alpen 40.000 €, Schwarzwald 25.000 € pro Tag in der 1. Liga). Mit den Entwurfswerten brachten drei Heim-Testspiele einem Zweitligisten das Siebenfache der Lagerkosten, jetzt etwa das Doppelte. Alles Spielwerte.
+9. **Trainingslager** in der Trainingsansicht: Ort, Beginn (in der Vorbereitung oder bis eine Woche vor und während der Winterpause der eigenen Liga), 5–10 Tage, Kosten sofort. Im Lager wirkt das Training ×1,15 (Alpen: Kondition ×1,15 mehr), die Vertrautheit ×1,25. Bis zum 7. Tag bekommen alle +0,1 Selbstvertrauen pro Tag (bis K14 statt Zusammenhalt). Ab dem 8. Tag gibt es mit 13 % pro Tag Lagerkoller (−0,5 Selbstvertrauen für 3–5 Spieler), damit es bei zehn Tagen in etwa einem Drittel der Fälle passiert (mit 10 % wären es nur 27 %). Riviera: Partylöwen fallen nachts auf. Heimat im Winter: 20 % pro Tag fällt das Training aus. Ein Lager pro Pause.
+10. **Widerspruch in §10:** „Sieben Tage Lager bringen etwa eine Woche Vorsprung in der Vertrautheit“ passt nicht zu ×1,25 aus 5.3. Gebaut ist ×1,25, der Test prüft 15–35 % mehr Vertrautheitsgewinn. Soll das Lager stärker wirken, muss der Wert hoch.
+11. **Noch nicht gebaut:** Testspiele der Computer-Vereine und deren Anfragen an dich, Turniere, Auslandsvereine als Gegner im Lager (kommen mit K32 und den echten Vereinsnamen), Zimmerbelegung (K14), Lager-Ereignisse mit Entscheidung, Marketing der Golfregion (K25), Erinnerung „spielfreie Woche ohne Testspiel“ (K01 H9), Testspiel live ansehen.
+12. **Lernstufen (K36):** Testspiele ab Stufe 3 (davor plant der Co-Trainer zwei Testspiele gegen Amateure), Trainingslager ab Stufe 3 (davor fährt der Verein nicht ins Lager). Die Automatik dafür kommt mit UL.
 
 ## Quellen
 
