@@ -3,6 +3,8 @@
 Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12.
 Hängt ab von: K03, K07, K10 (wo der Stab wirkt), K35a (Bänder) · Wird gebraucht von: K02, K04–K08, K10, K12a, K18, K19, K21, K29, K31.
 
+**Umsetzungshinweise (U6c, 9. November 2026):** Trainerstab mit den acht Rollen aus Welle 2 (`js/stab.js`, Werte in `REGELN.stab`), eigene Ansicht „Stab“ mit Einstellen, Verlängern und Entlassen, Qualität als Spanne bis sechs Wochen nach der Einstellung. Test: `tests/stab.js`. Abweichungen in §12 unter U6c.
+
 ## 1. Ziel und Spielgefühl
 
 - **Der Stab macht dich besser, aber nicht allmächtig.** Ein guter Arzt verkürzt Ausfälle, ein guter Co-Trainer liest das Spiel genauer, ein guter Athletiktrainer verhindert Verletzungen.
@@ -196,6 +198,15 @@ stab:{
 3. **Co-Trainer ist Pflicht.** Ohne ihn gäbe es keine Automatik und keine Halbzeit-Einschätzung.
 4. **Trainerteam mitnehmen** bis zu zwei Personen.
 5. **Gehälter sind Spielwerte,** Kalibrierung mit K23.
+
+**Vorläufig entschieden bei der Umsetzung (U6c, 9. November 2026):**
+6. **Gebaut sind die acht Rollen aus Welle 2** mit Qualität 1–20, Gehalt und Vertrag, Start nach Ansehen (Qualität ≈ Ansehen × 0,2 ± 3; Videoanalyst, Standardtrainer und Psychologe erst ab Ansehen 55–65, zweiter Co-Trainer ab 70) und 40 vereinslosen Mitarbeitern.
+7. **Wirkungen nach 5.3:** Co-Trainer (Lernen, Umschulung, Vertrautheit, Einzeltrainingsplätze, Talentsterne genauer), Athletiktrainer (Trainingsrisiko, Konditionsreiz), Torwarttrainer (Entwicklung und Lernen der Torhüter), Physiotherapeut (Ausfallzeit, höchstens −25 %), Videoanalyst (Spielvorbereitung doppelt ab Qualität 10), Standardtrainer (Standard-Einheiten stärker), Psychologe (Selbstvertrauen unter 0 erholt sich schneller, nervenschwach wirkt schwächer). Der Arzt wirkt erst mit K10.
+8. **Einstellen geht sofort** (Vertrag zwei Jahre), nicht nach 1–3 Tagen Bedenkzeit. Verlängern: zwei Jahre, 10 % mehr Gehalt. Entlassen: halbes Restgehalt als Abfindung. Ein Co-Trainer ist Pflicht.
+9. **Gehälter** werden wie die Spielergehälter je Ligaspiel gebucht. Ein Erstligist wie Freiburg zahlt so etwa 3 Mio. € pro Jahr, ein kleiner Drittligist mit nur einem Co-Trainer etwa 35.000 €. Spielwerte, Abgleich mit K23 und dem Stab-Budget aus K28.
+10. **Computer-Vereine** besetzen einen fehlenden Co-Trainer wöchentlich aus dem Pool nach und verlängern auslaufende Verträge zu 70 %.
+11. **Noch nicht gebaut:** Automatik mit Rauschen, Haltung und Spezialgebiet (5.1), Modus „Vorschlag“, Bänder für Vorhersagen außer der Qualität selbst, Abwerbung, Mitnehmen beim Vereinswechsel, Ex-Spieler als Mitarbeiter (K32), Ereignisse aus §8.
+
 
 ## Quellen
 

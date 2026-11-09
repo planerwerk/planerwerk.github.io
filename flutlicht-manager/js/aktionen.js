@@ -4,6 +4,12 @@ function tab(k){TAB=k;if(k==='aufst'&&S){S.lineup=myXI();save();}render();window
 function setSlot(i,id){id=+id;const xi=myXI(),j=xi.indexOf(id);if(j>=0)xi[j]=xi[i];xi[i]=id;S.lineup=xi;save();render();}
 function setForm(f){myT().form=f;S.lineup=bestXI(S.my,f);save();render();}
 function setTac(v){myT().tac=v;save();render();}
+// Trainerstab (K16): einstellen (sofort, Vertrag zwei Jahre), verlängern (zwei Jahre, 10 % mehr Gehalt), entlassen (Abfindung: halbes Restgehalt). Ein Co-Trainer ist Pflicht.
+function stabEinstellen(id){const x=S.stab.find(y=>y.id===id),t=myT();if(!x||x.team>=0)return;const R0=RST.rollen[x.r];if(stabVon(S.my,x.r).length>=R0.plaetze){toast(`Für die Rolle ${R0.name} sind alle Plätze besetzt.`);return;}
+  x.team=S.my;x.sal=stabGehalt(x.r,x.q,t.lg);x.ct=2;x.wiv=0;stabGeaendert();news(`${R0.name} ${x.n} kommt (${fmt(x.sal)} pro Jahr).`,'good');save();render();}
+function stabVerlaengern(id){const x=S.stab.find(y=>y.id===id);if(!x||x.team!==S.my)return;x.ct+=2;x.sal=Math.round(x.sal*1.1/RST.gehalt.runden)*RST.gehalt.runden;news(`${RST.rollen[x.r].name} ${x.n} verlängert bis ${S.season+x.ct} (${fmt(x.sal)} pro Jahr).`);save();render();}
+function stabEntlassen(id){const x=S.stab.find(y=>y.id===id);if(!x||x.team!==S.my)return;if(x.r==='co'&&stabVon(S.my,'co').length<=1){toast('Ein Co-Trainer ist Pflicht. Stell erst einen neuen ein.');return;}
+  const ab=Math.round(x.sal*x.ct*RST.abfindung);money('Abfindungen',-ab);x.team=-1;stabGeaendert();news(`${RST.rollen[x.r].name} ${x.n} entlassen, Abfindung ${fmt(ab)}.`);save();render();}
 // Sommerpause (K12a): Urlaubslänge (auch im laufenden Urlaub änderbar) und Trainingsauftakt früher oder später
 function setUrlaub(w){if(!RSO.urlaubWochen.includes(w))return;S.sommer=Object.assign({},S.sommer||{},{urlaub:w});const t=myT();
   if(t.urlaub>0){const vorbei=(t.urlaubGesamt||t.urlaub)-t.urlaub;t.urlaub=Math.max(1,w*7-vorbei);t.urlaubGesamt=w*7;}save();if(S.phase==='end')showSummary();else render();}

@@ -48,7 +48,7 @@ function regionalligaAufsteiger(){const G=RS.regionalliga,meister={},ids=[],txt=
   return{ids:ids.slice(0,RS.abstieg3),text:txt.join(' · ')};}
 // Saisonwechsel am 1. Juli: Auf- und Abstieg, Alter, Verträge, Nachwuchs, neuer Spielplan
 function newSeason(){return mitStrom(strom('saison',S.season),newSeasonLauf);}
-function newSeasonLauf(){const sm=S.summary,Z=RS,setze=(ids,lg)=>ids.forEach(id=>S.teams[id].lg=lg);sommerNeueSaison();
+function newSeasonLauf(){const sm=S.summary,Z=RS,setze=(ids,lg)=>ids.forEach(id=>S.teams[id].lg=lg);sommerNeueSaison();if(S.stab)stabSaison();
   setze(sm.down,2);setze(sm.up,1);if(sm.rw===sm.rel[1]){S.teams[sm.rel[1]].lg=1;S.teams[sm.rel[0]].lg=2;}
   setze(sm.down2,3);setze(sm.up3,2);if(sm.rw2===sm.rel2[1]){S.teams[sm.rel2[1]].lg=2;S.teams[sm.rel2[0]].lg=3;}
   setze(sm.down3,4);setze(sm.up4,3);sm.down3.forEach(id=>S.teams[id].abstieg3=sm.season);

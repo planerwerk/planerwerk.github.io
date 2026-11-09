@@ -66,11 +66,11 @@ function heimspielEinnahmen(m,cup){const t=myT(),att=attendance(t,m.a>=1000?null
 function finanzenLiga(m){const t=myT();if(m.h===S.my)heimspielEinnahmen(m,false);
   money('TV-Gelder',tvGeld(t));
   if(S.spons){money('Sponsor',S.spons.base);if(S.spons.win&&winner(m)===S.my&&m.hg!==m.ag)money('Sponsor',S.spons.win);}
-  const n=S.fx[t.lg].length;money('Gehälter',-Math.round(squad(S.my).reduce((s,p)=>s+p.sal,0)/n));
+  const n=S.fx[t.lg].length;money('Gehälter',-Math.round(squad(S.my).reduce((s,p)=>s+p.sal,0)/n));if(S.stab)money('Trainerstab',-Math.round(stabGehaelter(S.my)/n));
   money('Stadion & Betrieb',-Math.round(t.cap*RF.betrieb.jePlatz+t.logen*RF.betrieb.jeLoge));money('Jugendarbeit',-RF.jugendKosten[t.youth]);
   if(S.loan>0)money('Kreditzinsen',-Math.round(S.loan*RF.kreditZins/n));}
 // Woche (K03 §4): Kondition, Form, Selbstvertrauen, Entwicklung für Spieler ohne Pflichtspiel seit 7 Tagen, Wochenbericht des Co-Trainers
-function training(){const T=RT,d=S.tag,bericht=[];lernplaetzeVergeben();const monat=Math.floor(S.tag/7)%RTA.ki.ordnungAlleWochen===0;S.teams.forEach(t=>{if(!aktiv(t))return;if(t.id!==S.my&&monat)kiOrdnung(t);vertrautheitWoche(t);});
+function training(){const T=RT,d=S.tag,bericht=[];lernplaetzeVergeben();if(S.stab)stabWoche();const monat=Math.floor(S.tag/7)%RTA.ki.ordnungAlleWochen===0;S.teams.forEach(t=>{if(!aktiv(t))return;if(t.id!==S.my&&monat)kiOrdnung(t);vertrautheitWoche(t);});
   S.pl.forEach(p=>{if(p.team<-1)return;wochenWerte(p);wocheVerein(p);if(p.ent==null||d-p.ent>=7)entwicklungBuchen(p,d);p.played=0;
     const mine=p.team===S.my;
     if(mine){const n=Math.round(p.str);if(p.sw!=null&&n!==p.sw)bericht.push([p,p.sw,n]);p.sw=n;}

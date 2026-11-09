@@ -20,7 +20,8 @@ function tagesWerte(p,urlaub,training){const K=RP.kondition;
 function wochenWerte(p){const K=RP.kondition,F=RP.form,V=RP.selbstvertrauen;
   if(p.team<0){const ziel=K.vereinslos-Math.max(0,p.age-K.altAb)*K.altJeJahr;p.ko=clamp(p.ko+(ziel-p.ko)*K.tempo,0,100);}
   trainingWoche(p);
-  p.form+=(F.mitte-p.form)*F.ausgleich;p.sv-=p.sv*V.ausgleich;}
+  // Sportpsychologe (K16): Selbstvertrauen unter 0 erholt sich schneller
+  const ps=p.sv<0&&p.team>=0?Math.min(1/V.ausgleich,1+RST.wirkung.psycho.erholung*stabFaktor(p.team,'psycho')):1;p.form+=(F.mitte-p.form)*F.ausgleich;p.sv-=p.sv*V.ausgleich*ps;}
 // Frische und Spielpraxis nach einem Pflichtspiel
 function nachSpiel(p,min){const F=RP.frische;p.fit=clamp(p.fit-F.spiel*min/90*(F.ko[0]+F.ko[1]*p.ko)*(hatMk(p,'ausdauernd')?0.75:1),RE.fitnessMin,100);p.sp=Math.min(100,p.sp+RP.spielpraxis.jeSpiel*min/90);
   lastBuchen(p,RT.spielLast*min/90);p.wk=(p.wk||0)+RT.spielKondition*min/90;p.ltag=S.tag;p.lmin=min;p.sb=Math.min(100,(p.sb||0)+min/RSO.belastung.jeMinuten);}
@@ -96,7 +97,7 @@ const platzStaerken=p=>{const t=RP.lernen.platz.find(x=>p.str<=x[0]);return Math
 const lernOptionen=p=>RP.merkmaleWirksam.filter(k=>lernbar(p,k));
 function lernWoche(p){const L=RP.lernen;if(!p.ls||p.inj>0||p.team<0||!genugTraining(p))return;const m=RP.merkmale[p.ls.k];if(!m||!lernbar(p,p.ls.k)){p.ls=null;return;}
   const a=L.alter.find(x=>p.age<=x[0]);let f=L.woche[m.s]*(a?a[1]:L.alterSonst)*(L.profi[0]+L.profi[1]*profi(p))*(L.zufall[0]+R()*(L.zufall[1]-L.zufall[0]));
-  if(p.fit<L.frischeUnter[0])f*=L.frischeUnter[1];eigenschaften(p).forEach(e=>{if(L.eigenschaft[e])f*=L.eigenschaft[e];});if(p.wl)f*=1+RT.lernen.einheit;f*=stabFaktor(p.team,'co');
+  if(p.fit<L.frischeUnter[0])f*=L.frischeUnter[1];eigenschaften(p).forEach(e=>{if(L.eigenschaft[e])f*=L.eigenschaft[e];});if(p.wl)f*=1+RT.lernen.einheit;f*=stabFaktor(p.team,'co')*(p.pos==='TW'?stabFaktor(p.team,'torwart'):1);
   p.ls.f=Math.min(100,p.ls.f+f);
   if(p.ls.f>=100)merkmalNeu(p,p.ls.k);}
 // Ein Merkmal kommt dazu (gelernt oder als Schwäche entstanden). Eine gelernte Stärke verdrängt ihre Schwäche und beginnt mit vollem Fehlerkonto.
@@ -131,7 +132,7 @@ function merkmaleWoche(p){const L=RP.lernenSpiel,A=RP.lernen.altersverlust;
 // Lernplätze (K07 §12 Nr. 4): je Verein höchstens 5 Spieler mit Lernziel. Freie Plätze vergibt der Co-Trainer (K16), bei dir nur, wenn die Automatik an ist.
 // Er nimmt die jüngsten Spieler zuerst (sie lernen schneller) und wählt ein Merkmal, das zur Position passt.
 function lernAutomatik(p){const o=lernOptionen(p);if(!o.length)return false;const g=RP.startMerkmale.gewichte[p.pos]||{},w={};o.forEach(k=>w[k]=(g[k]||0.3));p.ls={k:waehleGewichtet(w),f:0};return true;}
-const lernPlaetze=tid=>RP.lernen.plaetze;
+const lernPlaetze=tid=>stabPlaetze(tid);
 function lernplaetzeVergeben(){const nach=new Map();S.pl.forEach(p=>{if(p.team>=0){if(!nach.has(p.team))nach.set(p.team,[]);nach.get(p.team).push(p);}});
   nach.forEach((sq,tid)=>{const n=lernPlaetze(tid),mit=sq.filter(p=>p.ls),um=sq.filter(p=>p.um&&!p.ls).length;
     if(mit.length>n)mit.sort((a,b)=>(b.ls.selbst?1:0)-(a.ls.selbst?1:0)||b.ls.f-a.ls.f).slice(n).forEach(p=>p.ls=null);
@@ -141,4 +142,5 @@ function lernplaetzeVergeben(){const nach=new Map();S.pl.forEach(p=>{if(p.team>=
 function wocheVerein(p){if(p.team!==p.vt){p.vt=p.team;p.wiv=0;p.ekw=riA(RP.entdeckenWochen);p.tf=ri(-RP.talentSchaetzung.fehler,RP.talentSchaetzung.fehler);}else p.wiv=(p.wiv||0)+1;
   lernWoche(p);umschulungWoche(p);merkmaleWoche(p);p.wt=0;p.wl=0;}
 // Talentsterne mit Schätzfehler (K03, K02): bis zu einem Stern daneben, nach zwei Jahren im Verein genau
-const sternFehler=p=>p.team===S.my&&(stufe().sterneGenau||p.wiv>=RP.talentSchaetzung.genauNachWochen*stufe().sterneWochen)?0:(p.tf||0);
+// Talentsterne: genau nach zwei Jahren, mit gutem Co-Trainer früher (K16 §5.2: Faktor 1,5 − 0,05 × Qualität)
+const sternFehler=p=>p.team===S.my&&(stufe().sterneGenau||p.wiv>=RP.talentSchaetzung.genauNachWochen*stufe().sterneWochen*(S.stab?1.5-0.05*stabQ(S.my,'co'):1))?0:(p.tf||0);

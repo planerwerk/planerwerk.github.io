@@ -52,7 +52,7 @@ const REGELN={
     jungeEchte:{bisAlter:0,talent:[0,0]}, // ersetzt durch spieler.talent (gilt jetzt für echte und erfundene Spieler)
     nachwuchs:{wennUnter:22,anzahl:2,positionen:['AB','MF','ST'],alter:[17,19],abschlag:15,streuung:[-3,3],talent:[-4,8]},
     vereinslose:{anzahl:45,positionen:['TW','AB','AB','MF','MF','ST','ST'],alter:[21,33],staerke:[56,72]},
-    amateurStaerke:[45,55]           // Stärke der Amateurklubs im Pokal (4. bis 6. Liga), jede Saison neu
+    amateurStaerke:[46,56]           // Stärke der Amateurklubs im Pokal (4. bis 6. Liga), jede Saison neu
   },
 
   spieler:{
@@ -211,7 +211,7 @@ const REGELN={
     entwicklung:{min:0.5,max:1.25,normalReiz:1.5,frischeUnter:70,frischeFaktor:0.8}, // normalReiz: Standardwoche mit sieben Tagen Abstand (Taktik, Kondition, Taktik)
     lernen:{mindestTage:3,einheit:0.2},
     umschulung:{verwandt:4,fremd:2,verwandtAb:75,max:90,maxVielseitig:95},
-    verletzung:{basis:0.00029,sprungAb:1.3,sprungJe01:1.5,frischeAb:80,frischeJePunkt:0.05,anfaellig:1.6,wochen:[1,3]},
+    verletzung:{basis:0.00032,sprungAb:1.3,sprungJe01:1.5,frischeAb:80,frischeJePunkt:0.05,anfaellig:1.6,wochen:[1,3]},
     last:{akut:7,chronisch:28,grund:2}, // grund: gewohnte Last mindestens 2 pro Tag
     spielLast:15,spielKondition:1 // Last und Konditionsreiz eines ganzen Pflichtspiels
   },
@@ -293,6 +293,17 @@ const REGELN={
     leistungstest:{tag:1,uebergewichtAb:12,meldungenMax:2},
     vorschlag:[45,70], // Co-Trainer: ab Saisonbelastung 45 der Stammspieler drei Wochen, ab 70 vier
     belastung:{jeMinuten:45,urlaub:4,ab:50,erholung:0.004,risiko:0.01}},
+  // Trainerstab (K16 §11, Welle 2): Rollen, Wirkungen, Gehälter, Start nach Ansehen. Gehälter sind Spielwerte (K16 §12 Nr. 5).
+  stab:{rollen:{co:{name:'Co-Trainer',plaetze:2,pflicht:true,gehalt:1,text:'Automatik, Lernen, Umschulung, Vertrautheit, Einzeltrainingsplätze, Einschätzungen'},
+      torwart:{name:'Torwarttrainer',plaetze:1,gehalt:0.5,text:'Entwicklung und Lernen der Torhüter'},athletik:{name:'Athletiktrainer',plaetze:1,gehalt:0.6,text:'weniger Trainingsverletzungen, mehr Kondition'},
+      arzt:{name:'Mannschaftsarzt',plaetze:1,gehalt:0.6,text:'Diagnosen (mit K10)'},physio:{name:'Physiotherapeut',plaetze:2,gehalt:0.4,text:'kürzere Ausfallzeiten'},
+      video:{name:'Videoanalyst',plaetze:1,gehalt:0.5,text:'Spielvorbereitung wirkt doppelt (ab Qualität 10)'},standard:{name:'Standardtrainer',plaetze:1,gehalt:0.4,text:'Standard-Einheiten wirken stärker'},
+      psycho:{name:'Sportpsychologe',plaetze:1,gehalt:0.5,text:'Selbstvertrauen erholt sich schneller, Nervenschwache leiden weniger'}},
+    wirkung:{co:[0.85,0.015],coPlaetze:{basis:3,jeQualitaet:0.2,max:10},athletik:{risiko:-0.01,kondition:0.005},torwart:[0.85,0.015],physio:{ausfall:-0.01,max:0.25},
+      video:{ab:10,bonus:1},standard:0.015,psycho:{erholung:0.05,nervenschwach:-0.025}},
+    ohne:3,gehalt:{basis:{1:300000,2:120000,3:50000},steigung:0.15,runden:5000},
+    start:{qualitaetJeAnsehen:0.2,streuung:[-3,3],zweiterCoAb:70,vereinslosQ:[3,16],rolleAbAnsehen:{arzt:30,physio:30,torwart:35,athletik:40,video:55,standard:60,psycho:65}},
+    vereinslos:40,vertrag:[1,3],alter:[32,58],rente:68,verlaengern:0.7,abfindung:0.5,unschaerfe:3,genauNachWochen:6},
   // Live-Spiel (K05 §11): Tempo, Halte, Wechsel, Umstellungszeit, Zurufe, Halbzeitansprache, Computer-Trainer, Druckleiste
   live:{tempo:{langsam:2000,normal:1000,schnell:300},
     anhalten:{tor:true,rot:true,verletzung:true,elfmeter:true,gelbRotGefahr:true,frischeUnter:55},
@@ -368,4 +379,4 @@ const REGELN={
 // Schreibschutz: Zur Laufzeit darf kein Code eine Regel ändern.
 (function frieren(o){Object.freeze(o);Object.values(o).forEach(v=>{if(v&&typeof v==='object'&&!Object.isFrozen(v))frieren(v);});})(REGELN);
 // Kurzformen für den Code
-const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui,RL=REGELN.live,RTA=REGELN.taktik,RSO=REGELN.sommer;
+const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui,RL=REGELN.live,RTA=REGELN.taktik,RSO=REGELN.sommer,RST=REGELN.stab;

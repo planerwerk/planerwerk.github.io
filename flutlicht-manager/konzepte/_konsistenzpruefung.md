@@ -541,3 +541,16 @@ Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `
 | AL8 | **PLAN §2 (höchstens 7 Tage je „Tag beenden“) und K12a §12 Nr. 1:** Im Urlaub und Laufplan springt der Kalender bis zum nächsten echten Halt. Im Test sind es zwei Halte vom Saisonende bis zum Auftakt. | ✅ vorläufig, bitte bestätigen |
 | AL9 | **K03 §10 Form:** Form je Notenpunkt 2,3, Ausgleich 11 % pro Woche (K12a §12 Nr. 9). | ✅ |
 
+---
+
+## AM. Nachtrag zur Umsetzung U6c (9. November 2026)
+
+| # | Befund | Status |
+|---|---|---|
+| AM1 | **AL5 erledigt:** `stabFaktor` liefert jetzt die Wirkungen des Stabs (Co-Trainer, Athletik-, Torwart-, Standardtrainer, Physiotherapeut, Videoanalyst, Psychologe). | ✅ |
+| AM2 | **K07 §12 Nr. 4:** Einzeltrainingsplätze kommen vom Co-Trainer (3 + Qualität/5 je Co-Trainer, höchstens 10), nicht mehr fest 5. | ✅ |
+| AM3 | **K23 und K28:** Stabsgehälter sind neue Kosten (Erstligist etwa 3 Mio. € pro Jahr). Ein Budget für den Stab und der Abgleich mit den Einnahmen fehlen noch. | 📌 bei K23 und K28 (Welle 3/4) |
+| AM4 | **K10:** Der Mannschaftsarzt hat noch keine Wirkung, der Physiotherapeut verkürzt die alten Ausfallzeiten. | 📌 bei U7 (K10) |
+| AM5 | **K33:** Neue Felder im Spielstand `stab` (alle Mitarbeiter), `stabId`, `stabVersion`. | ✅ in K33 |
+| AM6 | **K07:** Trainingsverletzungen mit Athletiktrainer nachgestellt (Grundrate 0,00032), Anteil weiter 40–45 %. | ✅ |
+

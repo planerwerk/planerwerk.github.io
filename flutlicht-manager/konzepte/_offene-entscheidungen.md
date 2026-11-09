@@ -196,6 +196,14 @@ Datei: `konzepte/K16-stab.md`
 4. **Trainerteam mitnehmen** bis zu zwei Personen.
 5. **Gehälter sind Spielwerte,** Kalibrierung mit K23.
 
+Bei der Umsetzung (U6c):
+6. **Gebaut sind die acht Rollen aus Welle 2** mit Qualität 1–20, Gehalt und Vertrag, Start nach Ansehen (Qualität ≈ Ansehen × 0,2 ± 3; Videoanalyst, Standardtrainer und Psychologe erst ab Ansehen 55–65, zweiter Co-Trainer ab 70) und 40 vereinslosen Mitarbeitern.
+7. **Wirkungen nach 5.3:** Co-Trainer (Lernen, Umschulung, Vertrautheit, Einzeltrainingsplätze, Talentsterne genauer), Athletiktrainer (Trainingsrisiko, Konditionsreiz), Torwarttrainer (Entwicklung und Lernen der Torhüter), Physiotherapeut (Ausfallzeit, höchstens −25 %), Videoanalyst (Spielvorbereitung doppelt ab Qualität 10), Standardtrainer (Standard-Einheiten stärker), Psychologe (Selbstvertrauen unter 0 erholt sich schneller, nervenschwach wirkt schwächer). Der Arzt wirkt erst mit K10.
+8. **Einstellen geht sofort** (Vertrag zwei Jahre), nicht nach 1–3 Tagen Bedenkzeit. Verlängern: zwei Jahre, 10 % mehr Gehalt. Entlassen: halbes Restgehalt als Abfindung. Ein Co-Trainer ist Pflicht.
+9. **Gehälter** werden wie die Spielergehälter je Ligaspiel gebucht. Ein Erstligist wie Freiburg zahlt so etwa 3 Mio. € pro Jahr, ein kleiner Drittligist mit nur einem Co-Trainer etwa 35.000 €. Spielwerte, Abgleich mit K23 und dem Stab-Budget aus K28.
+10. **Computer-Vereine** besetzen einen fehlenden Co-Trainer wöchentlich aus dem Pool nach und verlängern auslaufende Verträge zu 70 %.
+11. **Noch nicht gebaut:** Automatik mit Rauschen, Haltung und Spezialgebiet (5.1), Modus „Vorschlag“, Bänder für Vorhersagen außer der Qualität selbst, Abwerbung, Mitnehmen beim Vereinswechsel, Ex-Spieler als Mitarbeiter (K32), Ereignisse aus §8.
+
 ## K17 – Beziehungsnetz
 Datei: `konzepte/K17-beziehungen.md`
 

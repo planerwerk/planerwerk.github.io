@@ -57,7 +57,7 @@ function taktikWirkung(Ss){const E=RTA.einstellung;
     sd.kreis=sieg?1+K.vorteil*sd.u:1;sd.uWirk=nieder?sd.u*(1-K.daempfung*op.u):sd.u;});
   Ss.forEach(sd=>{if(sd.am)return;const t=S.teams[sd.id];sd.stilF=stilWirkung(sd.stil,sd.uWirk);
     let mult=ordnungFaktor(t,sd.form);if(sd.einst==='locker')mult*=E.locker.wirkung;else if(sd.einst==='saison')mult*=E.saison.wirkung;
-    if(t.kater&&S.tag<t.kater)mult*=E.saison.kater;if(t.vbTag!=null&&S.tag-t.vbTag<=2&&S.tag>t.vbTag)mult*=1+RTA.vorbereitungBonus;sd.mult=mult;sd.stdF=t.stdTag!=null&&S.tag-t.stdTag<=7?RTA.standardsBonus:1;sd.frischeF=sd.einst==='locker'?E.locker.frische:1;});
+    if(t.kater&&S.tag<t.kater)mult*=E.saison.kater;if(t.vbTag!=null&&S.tag-t.vbTag<=2&&S.tag>t.vbTag)mult*=1+RTA.vorbereitungBonus*(stabFaktor(sd.id,'video')>1?2:1);sd.mult=mult;sd.stdF=t.stdTag!=null&&S.tag-t.stdTag<=7?1+(RTA.standardsBonus-1)*stabFaktor(sd.id,'standard'):1;sd.frischeF=sd.einst==='locker'?E.locker.frische:1;});
   Ss.forEach(sd=>{if(sd.am)return;sd.w=teamWerte(sd);sd.A=0.5*sd.w.AM+0.25*(sd.w.AL+sd.w.AR);sd.D=0.4*sd.w.DM+0.2*(sd.w.DL+sd.w.DR)+0.2*sd.w.TW;});}
 // Computer-Trainer (K06 §7): Außenseiter mauern oder kontern, Favoriten pressen oder haben den Ball, sonst ihr Profil. Gegen dich kontern sie mit Wahrscheinlichkeit 25 % deinen Lieblingsstil.
 function kiStil(sd,op){const K=RTA.ki,t=S.teams[sd.id],q=op.am?2:(sd.A+sd.D)/Math.max(1,op.A+op.D);

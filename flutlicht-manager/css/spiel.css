@@ -168,3 +168,4 @@ hr{border:0;border-top:1px solid var(--rule);margin:12px 0}
 .slot.rolle{grid-template-columns:36px 64px minmax(0,1fr)}.rollesel{padding:4px 2px;font-size:12px}
 .schuetzen{grid-template-columns:repeat(auto-fill,minmax(180px,1fr));display:grid;gap:8px}
 button.wahl.on{border-color:var(--amber);color:var(--amber);font-weight:700}
+.stapel{display:grid;gap:14px;min-width:0}

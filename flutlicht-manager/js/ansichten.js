@@ -2,7 +2,7 @@
 const POSO={TW:0,AB:1,MF:2,ST:3};
 const SORTS={pos:(a,b)=>POSO[a.pos]-POSO[b.pos]||b.str-a.str,str:(a,b)=>b.str-a.str,age:(a,b)=>a.age-b.age,val:(a,b)=>value(b)-value(a)};
 const SORTL={pos:'Position',str:'Stärke',age:'Alter',val:'Marktwert'};
-const TABS=[['buero','Büro'],['kalender','Kalender'],['kader','Kader'],['aufst','Aufstellung'],['tabelle','Tabelle'],['spielplan','Spielplan'],['pokal','Pokal'],['transfer','Transfers'],['finanzen','Finanzen'],['stadion','Stadion'],['training','Training & Jugend']];
+const TABS=[['buero','Büro'],['kalender','Kalender'],['kader','Kader'],['aufst','Aufstellung'],['tabelle','Tabelle'],['spielplan','Spielplan'],['pokal','Pokal'],['transfer','Transfers'],['finanzen','Finanzen'],['stadion','Stadion'],['training','Training & Jugend'],['stab','Stab']];
 const fact=(k,v)=>`<div><span class="lbl">${k}</span><b>${v}</b></div>`;
 const chip=id=>`<span class="dot" style="background:${S.teams[id].col}"></span>`;
 const avgAtt=()=>S.att[1]?Math.round(S.att[0]/S.att[1]).toLocaleString('de-DE'):'–';
@@ -188,3 +188,14 @@ V.training=()=>{const t=myT(),tal=squad(S.my).filter(p=>p.age<=21).sort((a,b)=>b
   ${sommerKarte()}
   <div class="card"><h2>Jugendarbeit</h2><p>Jedes Jahr rücken ${RS.nachwuchs.anzahl} Talente auf. Mehr Investition bringt bessere Talente.</p><div class="opts">${[1,2,3,4,5].map(l=>`<button class="opt ${t.youth===l?'on':''}" onclick="myT().youth=${l};save();render()"><b>Stufe ${l}</b><span>${fmt(RF.jugendKosten[l])} pro Spieltag</span></button>`).join('')}</div></div>
   <div class="card"><h3>Talente bis 21 Jahre</h3>${tal.length?`<table><tbody>${tal.map(p=>`<tr class="click" onclick="openP(${p.id})"><td><span class="pos ${p.pos}">${p.pos}</span></td><td>${esc(p.n)}</td><td class="num">${p.age}</td><td class="num str">${Math.round(p.str)}</td><td>${stars(p)}</td></tr>`).join('')}</tbody></table>`:'<p class="dim">Keine Spieler bis 21 Jahre.</p>'}</div></div>`;};
+// Trainerstab (K16): eigene Mitarbeiter, vereinslose zum Einstellen, Wirkung der Rollen
+V.stab=()=>{if(!S.stab)return'<div class="card"><p>Dieser Spielstand hat noch keinen Trainerstab.</p></div>';const t=myT(),eig=S.stab.filter(x=>x.team===S.my),rollen=STAB_ROLLEN(),ord=x=>rollen.indexOf(x.r)*100-x.q;
+  const fehlt=rollen.filter(r=>!eig.some(x=>x.r===r)),frei=S.stab.filter(x=>x.team<0).sort((a,b)=>ord(a)-ord(b));
+  const zeile=x=>`<tr><td>${esc(RST.rollen[x.r].name)}</td><td>${esc(x.n)}</td><td class="num">${stabQText(x)}</td><td class="num">${fmt(x.sal)}</td><td class="num">${x.ct} J.</td><td>${x.ct<=1?`<button onclick="stabVerlaengern(${x.id})">Verlängern</button> `:''}<button onclick="stabEntlassen(${x.id})">Entlassen</button></td></tr>`;
+  const zeileFrei=x=>{const voll=stabVon(S.my,x.r).length>=RST.rollen[x.r].plaetze;return`<tr><td>${esc(RST.rollen[x.r].name)}</td><td>${esc(x.n)}, ${x.age}</td><td class="num">${stabQText(x)}</td><td class="num">${fmt(stabGehalt(x.r,x.q,t.lg))}</td><td><button onclick="stabEinstellen(${x.id})" ${voll?'disabled title="alle Plätze dieser Rolle besetzt"':''}>Einstellen</button></td></tr>`;};
+  return`<div class="grid wide"><div class="stapel"><div class="card"><h2>Dein Trainerstab</h2><div class="tw"><table><thead><tr><th>Rolle</th><th>Name</th><th class="num">Qualität</th><th class="num">Gehalt/Jahr</th><th class="num">Vertrag</th><th></th></tr></thead><tbody>${eig.sort((a,b)=>ord(a)-ord(b)).map(zeile).join('')}</tbody></table></div>
+    ${fehlt.length?`<p class="dim">Nicht besetzt (wirkt wie Qualität ${RST.ohne}): ${fehlt.map(r=>esc(RST.rollen[r].name)).join(', ')}.</p>`:''}
+    <p class="dim">Einzeltrainingsplätze: ${stabPlaetze(S.my)}. Die Qualität eigener Mitarbeiter kennst du nach ${RST.genauNachWochen} Wochen genau, sonst als Spanne. Gehälter: ${fmt(stabGehaelter(S.my))} pro Jahr, anteilig je Ligaspiel.</p></div>
+  <div class="card"><h2>Vereinslose Mitarbeiter</h2><div class="tw"><table><thead><tr><th>Rolle</th><th>Name</th><th class="num">Qualität</th><th class="num">Gehalt/Jahr</th><th></th></tr></thead><tbody>${frei.map(zeileFrei).join('')}</tbody></table></div></div></div>
+  <div class="card"><h2>Was die Rollen bewirken</h2>${rollen.map(r=>`<p><b>${esc(RST.rollen[r].name)}</b> <span class="dim">(${RST.rollen[r].plaetze} ${RST.rollen[r].plaetze>1?'Plätze':'Platz'}${RST.rollen[r].pflicht?', Pflicht':''})</span>: ${esc(RST.rollen[r].text)}</p>`).join('')}</div></div>`;};
+

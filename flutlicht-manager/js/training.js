@@ -30,12 +30,12 @@ function sprungFaktor(q){const V=RT.verletzung;return q<=V.sprungAb?1:1+V.sprung
 // Ein Trainingstag eines Spielers: gibt den Frischeverlust (negativ) oder -gewinn zurück und bucht Reize, Last, Spielpraxis und Verletzungsrisiko
 function trainingTag(p,t,a,d){const T=RT,e=einheitFuer(p,t,a,d);if(!e)return 0;const[u,iz]=e,E=T.einheiten[u]||{},I=T.intensitaet[iz]||T.intensitaet.normal;
   const df=(E.frische||0)>0?E.frische*I.wirkung:(E.frische||0)*I.frische;
-  p.wk=(p.wk||0)+(E.kondition||0)*I.wirkung;p.we=(p.we||0)+(E.entwicklung||0)*I.wirkung*(p.fit<T.entwicklung.frischeUnter?T.entwicklung.frischeFaktor:1);
+  p.wk=(p.wk||0)+(E.kondition||0)*I.wirkung*stabFaktor(p.team,'kondition');p.we=(p.we||0)+(E.entwicklung||0)*I.wirkung*(p.fit<T.entwicklung.frischeUnter?T.entwicklung.frischeFaktor:1);
   if(u!=='frei'&&u!=='regeneration')p.wt=(p.wt||0)+1;if(E.lernen)p.wl=1;
   if(E.praxis)p.sp=Math.min(100,p.sp+RP.spielpraxis.jeSpiel*E.praxis*I.wirkung);
   lastBuchen(p,Math.max(0,-df));
   if(E.risiko!==0&&u!=='frei'&&u!=='regeneration'){const V=T.verletzung,r=V.basis*I.risiko*(E.risiko||1)*sprungFaktor(lastQuote(p))*(p.fit<V.frischeAb?1+V.frischeJePunkt*(V.frischeAb-p.fit):1)*(hatEig(p,'verletzungsanfaellig')?V.anfaellig:1)*belastungRisiko(p)*stabFaktor(p.team,'athletik');
-    if(R()<r){const w=riA(V.wochen);p.inj=w*7+1;p.tinj=(p.tinj||0)+1;if(p.team===S.my)news(`Trainingsverletzung: ${p.n} fällt ${w} Woche(n) aus (${EINHEIT_NAME[u]}).`,'bad');}}
+    if(R()<r){const w=riA(V.wochen);p.inj=ausfallTage(p.team,w);p.tinj=(p.tinj||0)+1;if(p.team===S.my)news(`Trainingsverletzung: ${p.n} fällt ${w} Woche(n) aus (${EINHEIT_NAME[u]}).`,'bad');}}
   return df;}
 // Verein am Tag d: Vertrautheit aus Taktik-Einheiten und Spielvorbereitung (K07 §5.3), Merker für Spielvorbereitung und Standards
 function trainingVerein(t,a,d){const e=einheitVerein(t,a,d);if(!e)return;const[u,iz]=e,E=RT.einheiten[u]||{},I=RT.intensitaet[iz]||RT.intensitaet.normal;
@@ -46,7 +46,7 @@ function trainingVerein(t,a,d){const e=einheitVerein(t,a,d);if(!e)return;const[u
 function trainingWoche(p){const T=RT,K=T.kondition;
   if(p.team>=0&&!sommerStatus(S.teams[p.team])){const ziel=Math.min(K.max,K.basis+K.jeReiz*(p.wk||0))-Math.max(0,p.age-RP.kondition.altAb)*RP.kondition.altJeJahr-(hatEig(p,'partyloewe')?8:0);
     p.ko=clamp(p.ko+(ziel-p.ko)*RP.kondition.tempo,0,100);
-    const E=T.entwicklung;p.trf=clamp(E.min+(1-E.min)*(p.we||0)/E.normalReiz,E.min,E.max);}
+    const E=T.entwicklung;p.trf=clamp((E.min+(1-E.min)*(p.we||0)/E.normalReiz)*(p.pos==='TW'?stabFaktor(p.team,'torwart'):1),E.min,E.max);}
   p.wk=0;p.we=0;}
 const genugTraining=p=>(p.wt||0)>=RT.lernen.mindestTage;
 // Umschulung (K07 §3.3): Eignung auf der neuen Position steigt pro Woche, verwandte Positionen schneller
@@ -54,5 +54,3 @@ function umschulungWoche(p){if(!p.um||p.team<0||p.inj>0)return;const U=RT.umschu
   const basis=Math.round(eignung(Object.assign({},p,{eig:null,fuss:'B'}),pos)*100), // ohne Fußabzug: verwandt ist, was nah beieinander liegt
    akt=Math.max(p.eig[pos]||0,basis),plus=(basis>=U.verwandtAb?U.verwandt:U.fremd)*stabFaktor(p.team,'co')*(genugTraining(p)?1:0.5);
   p.eig[pos]=Math.min(max,akt+plus);if(p.eig[pos]>=max){if(p.team===S.my)news(`Umschulung abgeschlossen: ${p.n} kann jetzt ${RP.positionsNamen[pos]||pos} (${max} %).`,'good');p.um=null;}}
-// Qualität des Trainerstabs (K16). Bis der Stab gebaut ist: Standard-Co-Trainer (1), kein Athletiktrainer (1).
-function stabFaktor(tid,art){return 1;}

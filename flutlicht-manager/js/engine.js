@@ -113,7 +113,7 @@ const H=side(hid,true,o.neutral),A=side(aid,false,o.neutral),Ss=[H,A];taktikAnle
   const E=RE.ermuedung,ermueden=min=>Ss.forEach((sd,s)=>{const zf=G.zf(s,'frische');sd.xp.forEach(x=>{const p=x.p;fr[p.id]=Math.max(RE.fitnessMin,fr[p.id]-E.proMinute*min*(E.ko[0]+E.ko[1]*p.ko)*(hatMk(p,'ausdauernd')?0.75:1)*(sd.ein==='H'?E.hart:1)*zf*(sd.stilF?sd.stilF.frische:1)*(sd.frischeF||1));});});
   // Lage: Kämpfer und Führungsspieler bei Rückstand, Nervenschwache und Trainingsweltmeister in wichtigen Spielen und knapper Schlussphase
   const EG=RE.eigenschaften,lageFn=(s,m)=>{const hinten=sc[s]<sc[1-s],eng=m>=EG.engAb&&Math.abs(sc[0]-sc[1])<=1,wichtig=o.wichtig||eng,fue=hinten&&Ss[s].xp.some(x=>hatEig(x.p,'fuehrungsspieler'))?EG.fuehrungsspieler:1;
-    return p=>(hinten&&hatEig(p,'kaempfer')?EG.kaempfer:1)*(wichtig&&hatEig(p,'nervenschwach')?EG.nervenschwach:1)*(wichtig&&hatEig(p,'trainingsweltmeister')?EG.trainingsweltmeister:1)*fue*G.bonus(s,p,m);};
+    return p=>(hinten&&hatEig(p,'kaempfer')?EG.kaempfer:1)*(wichtig&&hatEig(p,'nervenschwach')?1-(1-EG.nervenschwach)*Math.max(0,1+RST.wirkung.psycho.nervenschwach*stabFaktor(Ss[s].id,'psycho')):1)*(wichtig&&hatEig(p,'trainingsweltmeister')?EG.trainingsweltmeister:1)*fue*G.bonus(s,p,m);};
   const werte=m=>Ss.map((sd,s)=>sd.am?sd.w:teamWerte(sd,fr,off,lageFn(s,m)));
   let W=werte(0);
   const torEv=(m,s,p,art)=>{sc[s]++;ev.push({m,s,t:'G',p:p?p.id:null,n:p?p.n:'Eigentor',sc:[...sc],art});W=werte(m);};
@@ -317,4 +317,4 @@ function applyMatchLauf(r,cup){const N=RE.note,V=RP.selbstvertrauen;
   r.yel.forEach(id=>{const p=PIX.get(id);if(!p)return;p.yc++;if(p.yc>=RE.gelbSperreAb){p.yc=0;p.sus=Math.max(p.sus,1);if(p.team===S.my)news(`${p.n} sieht die ${RE.gelbSperreAb}. Gelbe Karte und ist für ein Spiel gesperrt.`,'bad');}});
   r.off.forEach(id=>{const p=PIX.get(id);if(!p)return;p.sus=riA(RE.rotSperre);if(p.team===S.my)news(`Platzverweis: ${p.n} fehlt ${p.sus} Spiel(e).`,'bad');});
   // Ausfall in Tagen: w Wochen = die nächsten 7·w Tage (der Zähler läuft ab morgen jeden Tag um 1 herunter)
-  r.inj.forEach(x=>{const p=PIX.get(x.id);if(!p)return;p.inj=Math.max(p.inj,x.w*7+1);if(p.team===S.my)news(`Verletzung: ${p.n} fällt ${x.w} Woche(n) aus.`,'bad');});}
+  r.inj.forEach(x=>{const p=PIX.get(x.id);if(!p)return;p.inj=Math.max(p.inj,ausfallTage(p.team,x.w));if(p.team===S.my)news(`Verletzung: ${p.n} fällt ${x.w} Woche(n) aus.`,'bad');});}
