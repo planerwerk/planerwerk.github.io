@@ -6,8 +6,11 @@ const TABS=[['buero','Büro'],['kalender','Kalender'],['kader','Kader'],['aufst'
 const fact=(k,v)=>`<div><span class="lbl">${k}</span><b>${v}</b></div>`;
 const chip=id=>`<span class="dot" style="background:${S.teams[id].col}"></span>`;
 const avgAtt=()=>S.att[1]?Math.round(S.att[0]/S.att[1]).toLocaleString('de-DE'):'–';
-const ausfallText=p=>p.inj>0?`verletzt (${p.inj} ${p.inj===1?'Tag':'Tage'})`:p.sus>0?`gesperrt (${p.sus} ${p.sus===1?'Spiel':'Spiele'})`:'';
-function status(p){if(p.inj>0||p.sus>0)return`<span class="tag bad">${ausfallText(p)}</span>`;if(p.list)return`<span class="tag offer">Transferliste</span>`;if(p.ct<=1)return`<span class="tag warn">Vertrag endet</span>`;return'';}
+// Sperren je Wettbewerb (K09): „gesperrt (Liga 2, Pokal 1)“, mit Hinweis auf ein laufendes Verfahren
+const sperrText=p=>{const l=sperreIn(p,'liga'),k=sperreIn(p,'pokal');if(!l&&!k)return'';const v=verfahrenVon(p);return`gesperrt (${[l?`Liga ${l}`:'',k?`Pokal ${k}`:''].filter(Boolean).join(', ')}${v?', Verfahren läuft':''})`;};
+const ausfallText=p=>p.inj>0?`verletzt (${p.inj} ${p.inj===1?'Tag':'Tage'})`:sperrText(p);
+const gelbWarnung=p=>{const k=p.kt&&p.kt.liga;return k&&RD.gelbsperre.liga.includes(k+1)?`${k} Gelbe`:'';};
+function status(p){if(p.inj>0||gesperrt(p))return`<span class="tag bad">${ausfallText(p)}</span>`;const sp=sperrText(p);if(sp)return`<span class="tag warn">${sp}</span>`;const g=gelbWarnung(p);if(g)return`<span class="tag warn" title="Bei der nächsten Gelben Karte ein Ligaspiel gesperrt">${g}</span>`;if(p.list)return`<span class="tag offer">Transferliste</span>`;if(p.ct<=1)return`<span class="tag warn">Vertrag endet</span>`;return'';}
 // Hauptknopf: Text und Zeile darunter
 function knopf(){if(S.phase==='end')return['Saisonbilanz ▶','die Saison ist zu Ende'];if(S.fired)return['Jobangebote ▶','du wurdest entlassen'];
   if(heuteMeinSpiel())return['Tag beenden ▶','heute: '+spielName(meinSpiel(S.tag))];return['Tag beenden ▶','weiter bis '+datumKurz(naechsterHalt())];}
@@ -42,6 +45,14 @@ function kalTermin(d){const r={kurz:'',cls:'',titel:''},l=meineLigaspiele().find
 function wochenLeiste(){let h='';for(let d=S.tag;d<S.tag+7;d++){const dt=datumVon(d),k=kalTermin(d),u=S.phase==='sommer'||d<auftaktTag(myT()),p=u?{name:d>=tageDerSaison()?'Neue Saison':'Urlaub'}:pauseAm(d,myT().lg);
     h+=`<div class="wt ${d===S.tag?'heute':''} ${p&&!k.kurz?'pause':''} ${k.cls}" title="${esc(datumLang(d)+(k.titel?': '+k.titel:p?': '+p.name:''))}"><span>${WT[dt.getUTCDay()]}</span><b>${dt.getUTCDate()}.${dt.getUTCMonth()+1}.</b><i>${esc(k.kurz||(p?p.name.replace('Länderspielpause','Länderspiele'):''))}</i></div>`;}
   return`<div class="woche" aria-label="Die nächsten 7 Tage">${h}</div>`;}
+// Sportgericht (K09 §4.1): Anträge mit Frist (annehmen oder Einspruch), laufende Einsprüche, letzte Urteile gegen eigene Spieler
+function sportgerichtKarte(){const V=meineVerfahren(),A=(S.sgArchiv||[]).filter(u=>u.team===S.my).slice(0,3);if(!V.length&&!A.length)return'';const E=RD.einspruch;
+  const zeile=v=>{const p=PIX.get(v.pid),kopf=`<b>${esc(p.n)}</b> · ${VERGEHEN[v.art]} am ${datumKurz(v.tag)} (${WB_NAME[v.wb]})`;
+    if(v.stand==='offen')return`<p>${kopf}: vorläufig gesperrt, der Antrag kommt bis ${datumKurz(v.antragAm)}.</p>`;
+    if(v.stand==='einspruch')return`<p>${kopf}: Einspruch gegen ${v.antrag} Spiel${v.antrag===1?'':'e'} läuft, Urteil am ${datumKurz(v.urteilAm)}. Bis dahin bleibt er gesperrt.</p>`;
+    const rest=v.frist-S.tag;return`<div class="row between" style="padding:6px 0;border-bottom:1px solid var(--rule)"><span>${kopf}: Antrag <b>${v.antrag} Spiel${v.antrag===1?'':'e'}</b>${v.vor?` (Wiederholungstäter)`:''} <span class="tag ${rest<=0?'warn':''}">${rest<=0?'Frist endet heute':'Frist bis '+datumKurz(v.frist)}</span></span>
+      <span class="row"><button onclick="sgAnnehmen(${v.id})">Annehmen</button><button onclick="sgEinspruch(${v.id})" ${v.antrag<2?'disabled title="Weniger als ein Spiel geht nicht"':`title="Anwalt ${fmt(E.kosten[0])} bis ${fmt(E.kosten[1])}. Meist bestätigt, manchmal ein Spiel weniger, selten eins mehr."`}>Einspruch</button></span></div>`;};
+  return`<div class="card"><h3>Sportgericht</h3>${V.map(zeile).join('')}${A.length?`<p class="dim" style="margin-top:8px">Zuletzt: ${A.map(u=>`${esc(u.n)} ${u.urteil} Spiel${u.urteil===1?'':'e'} (${AUSGANG[u.ausgang]})`).join(' · ')}</p>`:''}<p class="dim">Ohne Antwort bis zur Frist gilt der Antrag als angenommen.</p></div>`;}
 V.buero=()=>{const t=myT(),d=S.tag;let heute='';
   if(S.fired)heute=`<p><b>Du wurdest entlassen.</b> Oben auf „Jobangebote“ klicken.</p>`;
   else if(S.phase==='end')heute=`<p>Die Saison ist vorbei. Oben geht es zur Saisonbilanz.</p>`;
@@ -60,7 +71,7 @@ V.buero=()=>{const t=myT(),d=S.tag;let heute='';
   return`<div class="grid">
     <div class="card"><h2>Heute · ${datumLang(d)}</h2>${heute}${S.phase!=='end'?wochenLeiste():''}</div>
     <div class="card"><h2>Saisonziel</h2><p>${targetText(t.lg,S.target)}</p><p class="dim">Aktuell Platz ${rank(t.lg,S.my)}</p><div class="rgs" style="margin:10px 0">${rgAnzeige({label:'Vorstand',sub:'Vertrauen 0–100',min:0,max:100,wert:Math.round(S.trust),zonen:RU.zonenVertrauen})}</div><p class="dim">Sponsor: ${S.spons?esc(S.spons.name):'noch keiner'} · Training: ${(RT.vorlagen[myT().vorlage]||{name:'Co-Trainer entscheidet'}).name}</p></div>
-    ${sp}${of}${warn.length?`<div class="card"><h3>Hinweise</h3>${warn.map(x=>`<p>${x}</p>`).join('')}</div>`:''}${lm}
+    ${sp}${of}${sportgerichtKarte()}${warn.length?`<div class="card"><h3>Hinweise</h3>${warn.map(x=>`<p>${x}</p>`).join('')}</div>`:''}${lm}
     <div class="card"><h2>Nachrichten</h2><div class="news">${S.news.map(n=>`<div class="${n.c}"><small>${n.w}</small>${esc(n.t)}</div>`).join('')}</div></div></div>`;};
 V.kader=()=>{const sq=squad(S.my).sort(SORTS[SORT]),xi=new Set(myXI()),pay=sq.reduce((s,p)=>s+p.sal,0);
   return`<div class="card"><div class="row between"><h2>Kader (${sq.length} Spieler)</h2><label>Sortieren <select id="sortsel" onchange="SORT=this.value;render()">${Object.keys(SORTS).map(k=>`<option value="${k}" ${k===SORT?'selected':''}>${SORTL[k]}</option>`).join('')}</select></label></div>

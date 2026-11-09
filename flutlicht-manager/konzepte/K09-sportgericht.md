@@ -3,6 +3,8 @@
 Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12.
 Hängt ab von: K04 (Fouls), K01 (Kalender, Fristen) · Wird gebraucht von: K05, K10, K13, K27, K29, K34.
 
+**Umsetzungshinweise (U7a, 9. November 2026):** Gebaut sind Foularten mit Kartenquoten, Meckern und Tätlichkeiten in der Engine, ein Schiedsrichter-Pool mit Strenge und Elfmeterneigung, Sperren getrennt nach Liga und Pokal sowie das Sportgericht nach Roter Karte (Antrag, Frist, Einspruch, Urteil) mit Wiederholungstätern. Code in `js/disziplin.js`, Werte in `REGELN.disziplin`. Das Sportgericht steht im Büro, die Frist ist ein Halt. Test: `tests/disziplin.js`. Abweichungen in §12 unter U7a.
+
 ## 1. Ziel und Spielgefühl
 
 - **Karten in echter Häufigkeit** (We Are Football 1 hatte „zu viele Karten“, Recherche 4).
@@ -219,6 +221,17 @@ disziplin:{
 3. **Relegation** zählt vorläufig zur Liga: Gelbe Karten und Sperren aus der Liga gelten dort (prüfen).
 4. **Trainer-Karten** mit Sperre nach der 4. Gelben (Zahl prüfen) und Tribüne als Folge.
 5. **Einspruch-Ausgänge** sind Spielwerte, nicht recherchiert.
+
+**Vorläufig entschieden bei der Umsetzung (U7a, 9. November 2026):**
+6. **Rote Karten in Liga und Pokal getrennt** (Nr. 2 bestätigt): Laut 90min.de werden Platzverweise in Bundesliga und DFB-Pokal getrennt behandelt und nur im eigenen Wettbewerb abgesessen. Das ist ein Fachartikel, das DFB-Regelwerk selbst habe ich nicht eingesehen.
+7. **Die Gelbe vor einer Gelb-Roten Karte zählt nicht** für die Gelbsperre. Nicht belegt, prüfen.
+8. **Gelbsperren verfallen am Saisonende,** Rot- und Gelb-Rot-Sperren laufen in die nächste Saison weiter, in Liga und Pokal. Belegt nur über Forenbeiträge, die die DFL-Spielordnung zitieren („Eine Übertragung auf das neue Spieljahr ist ausgeschlossen“). Den Originaltext habe ich nicht gefunden.
+9. **„Rückstand in der Schlussphase ×1,2“ (5.1) ist vorläufig aus** (Stellschraube `faktoren.rueckstand` = 1,0). In der Simulation verschob der Faktor die Form zugunsten der schwachen Kader (Test „Keine Formspirale“ auf drei Seeds um etwa 0,6 Punkte). Die Ursache ist noch nicht geklärt.
+10. **Foularten kalibriert:** Mit den Rohwerten aus 3.1 gäbe es etwa doppelt so viele Rote Karten. Gebaut sind normal 80 % (Gelb 2,2 %), taktisch 12 % (Gelb 56 %), rücksichtslos 7,7 % (Gelb 80 %, Rot 2,2 %), brutal 0,06 %, Notbremse 0,12 %. Dazu kommen Meckern (0,15 Gelb je Spiel und Team, 2 % davon Rot wegen Beleidigung) und Tätlichkeiten (0,0016 je Spiel und Team, 5 % davon schwer). Die Notbremse ist eine Foulart, keine eigene Konter-Szene.
+11. **Strafmaß ohne Verletzungsfolge:** Verletzungen aus der Engine sind noch nicht mit dem Foul verknüpft. Kommt mit K10.
+12. **Einspruch:** Ausgang nach Lage. Eine harte Entscheidung (erste Rote Karte, kein Tätlichkeitsfall) wird zu 35 % gemindert und zu 5 % erhöht, eine eindeutige (Tätlichkeit) zu 10 % gemindert und zu 15 % erhöht, sonst 25 % und 10 %. Im Mittel sind es so etwa 30 % gemindert. Bei einem Antrag von nur einem Spiel ist kein Einspruch möglich. Computer-Vereine legen Einspruch ein, wenn ein Stammspieler hart bestraft wurde (60 %), sonst nur selten (10 %).
+13. **Zweite Rote Karte vor dem Urteil:** Es bleibt ein Verfahren, gewertet wird das schwerere Vergehen.
+14. **Noch nicht gebaut:** Äußerungen und Kontrollausschuss (K29), Zuschauer-Vergehen (K27), Trainer-Karten und Tribüne, Videobeweis, Derby-Faktor, Rudelbildung, Geldstrafen für Spieler (K14), Erinnerung „Gelbsperre droht“ vor wichtigen Spielen. Die Kader-Ansicht zeigt nur einen Hinweis bei 4, 9 oder 14 Gelben.
 
 **Noch zu recherchieren:** Geltung von Liga-Rotsperren im Pokal, Kartenregeln in der Relegation, aktuelle Trainer-Kartenregel, Höhe echter DFB-Geldstrafen für Pyrotechnik.
 

@@ -68,3 +68,9 @@ function setLernziel(id,k){const p=PIX.get(id);if(!p||p.team!==S.my)return;
       if(!frei){toast(`Alle ${lernPlaetze(S.my)} Lernplätze sind mit deinen eigenen Zielen belegt.`);openP(id);return;}frei.ls=null;toast(`${frei.n} gibt seinen Lernplatz ab.`);}}
     p.ls={k,f:0,selbst:1};}
   save();openP(id);}
+// Sportgericht (K09 §4.1): Antrag annehmen oder Einspruch einlegen
+function sgVerfahren(id){return meineVerfahren().find(v=>v.id===id&&v.stand==='antrag');}
+function sgAnnehmen(id){const v=sgVerfahren(id);if(!v)return;sgAnnehmenLauf(v,S.tag);save();render();}
+function sgEinspruch(id){const v=sgVerfahren(id);if(!v||v.antrag<2)return;mitStrom(strom('sportgericht',S.season,S.tag,id),()=>sgEinspruchLauf(v,S.tag));
+  news(`Einspruch für ${PIX.get(v.pid).n} eingelegt (Anwalt ${fmt(v.kosten)}). Urteil am ${datumKurz(v.urteilAm)}.`);save();render();}
+

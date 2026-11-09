@@ -9,7 +9,7 @@ module.exports=()=>{
    if(p.team>=S.teams.length||p.team<-1)e.push(`Spieler ${p.n} team=${p.team}`);
    if(!['TW','AB','MF','ST'].includes(p.pos))e.push('Pos '+p.pos);
    if(p.fit<0||p.fit>100)e.push('Frische außerhalb '+p.fit);if(p.form<0||p.form>20)e.push('Form außerhalb '+p.form);if(p.ko<0||p.ko>100)e.push('Kondition außerhalb '+p.ko);if(p.sp<0||p.sp>100)e.push('Spielpraxis außerhalb '+p.sp);if(p.sv<-3||p.sv>3)e.push('Selbstvertrauen außerhalb '+p.sv);if(p.str<20||p.str>99)e.push('Stärke außerhalb '+p.str);
-   if(p.inj<0||p.sus<0)e.push(`negative Ausfallzeit ${p.n}`);});
+   if(p.inj<0||(p.sperre&&['liga','pokal'].some(w=>p.sperre[w].rot<0||p.sperre[w].gelb<0)))e.push(`negative Ausfallzeit ${p.n}`);});
   if(PIX.size!==S.pl.length)e.push(`PIX ${PIX.size} vs ${S.pl.length}`);
   S.pl.forEach(p=>{if(PIX.get(p.id)!==p)e.push('PIX veraltet '+p.id);});
   S.teams.forEach(t=>{for(const k of ['cash','rep','cap','fans','price','logen','shop','youth'])if(!isFinite(t[k]))e.push(`Team ${t.name} ${k}=${t[k]}`);

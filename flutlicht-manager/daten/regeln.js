@@ -247,7 +247,7 @@ const REGELN={
     schuetze:{mitte:70,jePunkt:0.008,min:0.8,max:1.2},
     abwehr:{versatz:3,jePunkt:0.022,min:0.78,max:1.22}, // Druck der Abwehr auf den Abschluss: 1 − jePunkt × (Abwehr − Angriff − versatz). Abwehrwerte liegen im Schnitt etwa 3 über den Angriffswerten.
     torwart:{mitte:70,jePunkt:0.011,min:0.80,max:1.20,patzer:0.02,unkonzentriert:4},
-    fouls:{proMinute:0.12,ort:{flanke:0.20,direkt:0.035,elfmeter:0.011},gelb:0.155,rot:0.0036,hart:1.3,fair:0.7,mitGelb:{foul:0.35,karte:0.5}, // verwarnte Spieler foulen vorsichtiger (K09)
+    fouls:{proMinute:0.12,ort:{flanke:0.20,direkt:0.035,elfmeter:0.011},hart:1.3,fair:0.7, // Häufigkeit der Fouls; Foulart, Karten und Sperren stehen unter disziplin (K09)
       gewicht:{IV:2,LV:1.5,DM:2,ZM:1.3,LS:1.5,LM:1,SM:0.8,OM:0.8,HS:0.8,MS:1,LA:0.8},ungestuem:1.4},
     verlauf:{fuehrung:{A:0.92,D:1.05},rueckstand:{A:1.08,D:0.96},gleich:{A:0.78},abMinute:75, // gleich: bei Unentschieden gehen spät beide weniger Risiko ein
       rot:{A:0.90,D:0.95}},
@@ -266,8 +266,7 @@ const REGELN={
     verlaengerung:0.8,               // Chancen in der Verlängerung relativ
     elfmeter:0.76,
     fitnessMin:20,
-    note:{mindestMinuten:20,basis:3.6,ergebnis:0.55,tor:0.9,staerkeMitte:72,staerkeTeiler:25,zufall:1.6,platzverweis:1.5,min:1,max:6},
-    gelbSperreAb:5,rotSperre:[1,3]   // Sperren in Spielen
+    note:{mindestMinuten:20,basis:3.6,ergebnis:0.55,tor:0.9,staerkeMitte:72,staerkeTeiler:25,zufall:1.6,platzverweis:1.5,min:1,max:6}
   },
 
   // Taktik (K06 §11): Spielstile mit Kreislauf, Umsetzung, Vertrautheit, Einstellung zum Spiel, Rollen, Computer-Trainer
@@ -304,6 +303,21 @@ const REGELN={
     ohne:3,gehalt:{basis:{1:300000,2:120000,3:50000},steigung:0.15,runden:5000},
     start:{qualitaetJeAnsehen:0.2,streuung:[-3,3],zweiterCoAb:70,vereinslosQ:[3,16],rolleAbAnsehen:{arzt:30,physio:30,torwart:35,athletik:40,video:55,standard:60,psycho:65}},
     vereinslos:40,vertrag:[1,3],alter:[32,58],rente:68,verlaengern:0.7,abfindung:0.5,unschaerfe:3,genauNachWochen:6},
+  // Disziplin und Sportgericht (K09 §11, Welle 2). Anteile und Kartenquoten der Foularten sind auf die echten Häufigkeiten kalibriert (K09 §10),
+  // nicht die Rohwerte aus §3.1: sonst gäbe es doppelt so viele Rote Karten. art: Vergehen vor dem Sportgericht.
+  disziplin:{
+    foulArten:{normal:{anteil:0.80,gelb:0.022},taktisch:{anteil:0.12,gelb:0.56},ruecksichtslos:{anteil:0.077,gelb:0.80,rot:0.022,art:'grob'},
+      brutal:{anteil:0.0006,rot:1,art:'grob'},notbremse:{anteil:0.0012,rot:1,art:'notbremse'}},
+    meckern:{jeSpiel:0.15,rot:0.02},       // Unsportlichkeit und Meckern: Gelb je Spiel und Mannschaft, ein kleiner Teil wird Rot (Beleidigung)
+    taetlichkeit:{jeSpiel:0.0016,schwer:0.05}, // etwa eine Tätlichkeit je Liga und Saison (306 Spiele)
+    faktoren:{hart:1.3,fair:0.7,hitzkopf:1.5,hitzkopfMeckern:2,hitzkopfTaetlichkeit:3,muedeUnter:60,muede:1.2,rueckstand:1.0,rueckstandAb:75, // Rückstand ×1,2 aus K09 §5.1 vorläufig aus (K09 §12 Nr. 9)
+      mitGelb:{foul:0.35,karte:0.5}}, // verwarnte Spieler foulen vorsichtiger, außer Hitzköpfen (Konsistenzprüfung AI4)
+    gelbsperre:{liga:[5,10,15],pokal:[5],spiele:1},gelbRot:1, // nach der letzten Schwelle zählt es neu
+    rot:{notbremse:[1,1,2],grob:[2,1,4],unsportlich:[2,1,5],taetlichkeit:[4,3,6],schwer:[8,6,12],wiederholung:1,wiederholungTage:365,zufall:1},
+    verfahren:{antragTage:[1,2],frist:2,urteilTage:[2,5],urteilSpaetestens:10,archiv:60},
+    einspruch:{kosten:[10000,30000],gemindert:0.25,erhoeht:0.10,hart:{gemindert:0.35,erhoeht:0.05},eindeutig:{gemindert:0.10,erhoeht:0.15}},
+    ki:{einspruchWichtig:0.6,einspruchSonst:0.1},
+    schiri:{proLiga:24,strenge:[0.85,1.15],elfmeter:[0.9,1.1]}},
   // Live-Spiel (K05 §11): Tempo, Halte, Wechsel, Umstellungszeit, Zurufe, Halbzeitansprache, Computer-Trainer, Druckleiste
   live:{tempo:{langsam:2000,normal:1000,schnell:300},
     anhalten:{tor:true,rot:true,verletzung:true,elfmeter:true,gelbRotGefahr:true,frischeUnter:55},
@@ -379,4 +393,4 @@ const REGELN={
 // Schreibschutz: Zur Laufzeit darf kein Code eine Regel ändern.
 (function frieren(o){Object.freeze(o);Object.values(o).forEach(v=>{if(v&&typeof v==='object'&&!Object.isFrozen(v))frieren(v);});})(REGELN);
 // Kurzformen für den Code
-const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui,RL=REGELN.live,RTA=REGELN.taktik,RSO=REGELN.sommer,RST=REGELN.stab;
+const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui,RL=REGELN.live,RTA=REGELN.taktik,RSO=REGELN.sommer,RST=REGELN.stab,RD=REGELN.disziplin;

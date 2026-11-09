@@ -554,3 +554,17 @@ Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `
 | AM5 | **K33:** Neue Felder im Spielstand `stab` (alle Mitarbeiter), `stabId`, `stabVersion`. | ✅ in K33 |
 | AM6 | **K07:** Trainingsverletzungen mit Athletiktrainer nachgestellt (Grundrate 0,00032), Anteil weiter 40–45 %. | ✅ |
 
+---
+
+## AN. Nachtrag zur Umsetzung U7a (9. November 2026)
+
+| # | Befund | Status |
+|---|---|---|
+| AN1 | **H3 und K9 erledigt:** Sperren gelten je Wettbewerb (Liga mit Relegation, Pokal), Rot läuft über das Sportgericht. `engine.gelbSperreAb`, `engine.rotSperre` und die Kartenquoten in `engine.fouls` gehen in `REGELN.disziplin` auf. `engine.karten` bleibt nur für Amateurklubs. | ✅ |
+| AN2 | **AI4 erledigt:** Die Regel für verwarnte Spieler steht jetzt in `REGELN.disziplin.faktoren.mitGelb`. | ✅ |
+| AN3 | **K04 §5.11:** Die vorläufige Strenge je Spiel ist durch den Schiedsrichter-Pool ersetzt (Strenge 0,85–1,15, Elfmeterneigung 0,9–1,1). | ✅ |
+| AN4 | **K10:** Verletzungsfolge im Strafmaß (+1 bei vier Wochen Ausfall des Gegners) braucht Verletzungen, die mit dem Foul verknüpft sind. | 📌 bei U7b (K10) |
+| AN5 | **K09 §5.1:** Der Faktor „Rückstand in der Schlussphase“ verschob die Form zugunsten schwacher Kader und ist vorläufig aus (K09 §12 Nr. 9). Die Ursache ist zu klären, bevor er wieder an geht. | 📌 offen |
+| AN6 | **Tests mit kleiner Stichprobe schwanken:** In `kalibrierung.js` (Favoritensiege bei n=72, Heimsieg bei Gleichstarken bei n=226), `taktik.js` (Kreislauf-Mittel) und `training.js` (Verletzungen „dauerhaft hart“) reißen einzelne Seeds, im alten wie im neuen Stand. Über fünf Seeds liegen die Mittel im Ziel (Favoritensiege 71 %, Heimsieg 43 %). Diese Tests sollten über mehrere Seeds mitteln. | 📌 bei der nächsten Testpflege |
+| AN7 | **K33:** Neue Felder `schiri`, `verfahren`, `verfahrenId`, `sgArchiv`, am Spieler `sperre`, `kt`, `vg`. Alte Spielstände werden beim ersten Zugriff übernommen (`sus` wird zu `sperre.liga.rot`, `yc` zu `kt.liga`). | ✅ in K33 |
+

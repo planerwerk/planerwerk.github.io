@@ -57,7 +57,7 @@ function liveTick(){const L=LIVE;if(!L)return;const G=L.G;if(G.ende){liveAbpfiff
 function liveHalte(){const L=LIVE,G=L.G,A=liveEinst().anhalten,neu=G.ev.slice(L.evN);L.evN=G.ev.length;let t=null;
   for(const e of neu){const mein=e.s===L.s;
     if(e.t==='G'&&A.tor)t=`Tor! ${e.n} trifft zum ${e.sc.join(':')}.`;
-    else if(e.t==='R'&&A.rot)t=`${e.gy?'Gelb-Rot':'Rot'} für ${e.n}${mein?' – du bist in Unterzahl.':'.'}`;
+    else if(e.t==='R'&&A.rot)t=`${e.x||`${e.gy?'Gelb-Rot':'Rot'} für ${e.n}`}${mein?' – du bist in Unterzahl.':'.'}`;
     else if(e.t==='I'&&mein&&A.verletzung)t=`${e.n} ist verletzt und humpelt nur noch. Wechseln?`;
     else if(e.t==='C'&&e.art==='elfmeter'&&A.elfmeter)t=e.x||'Elfmeter vergeben.';
     else if(e.t==='Y'&&mein&&A.gelbRotGefahr&&e.p&&gelbRotGefahr(G,L.s,e.p))t=`Gelb für ${e.n}. Er foult viel, beim nächsten Foul droht Gelb-Rot.`;}

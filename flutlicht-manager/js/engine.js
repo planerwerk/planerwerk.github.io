@@ -2,7 +2,7 @@
 // Chancentypen, Standards, Fouls mit Ort, Merkmale (K03), Ermüdung im Spiel, Erwartung vor dem Spiel, Noten gegen die Erwartung.
 const slots=f=>RE.formationen[f]||RE.formationen['4-4-2'];
 const posGruppe=pos=>RE.gruppe[pos]||pos;
-const avail=p=>p.inj<=0&&p.sus<=0;
+const avail=p=>p.inj<=0&&!gesperrt(p); // Sperren gelten je Wettbewerb (K09, js/disziplin.js)
 const TAUSCH={LV:'RV',RV:'LV',LM:'RM',RM:'LM',LA:'RA',RA:'LA',LS:'RS',RS:'LS'};
 const seite=pos=>/^(LV|LM|LA|LS)$/.test(pos)?'L':/^(RV|RM|RA|RS)$/.test(pos)?'R':null;
 const linksForm=pos=>seite(pos)==='R'?TAUSCH[pos]:pos;
@@ -106,7 +106,7 @@ function spielAufbau(hid,aid,o,saison,tag){const Z=RL.zurufe,hs=hash32(['spiel',
       else if(a.art==='fordern')f*=1+(hatEig(p,'kaempfer')?A.fordern.kaempfer:(hatEig(p,'nervenschwach')||hatEig(p,'diva'))?A.fordern.empfindlich:0)*a.f;}
     const r=G.spielerRuf[p.id];if(r&&m>r.m&&m<=r.m+Z.dauer)f*=1+r.f;return f;};
   G.foulSpieler=id=>{const r=G.spielerRuf[id];return r&&r.fouls&&G.mNow>r.m&&G.mNow<=r.m+Z.dauer?r.fouls:1;};
-const H=side(hid,true,o.neutral),A=side(aid,false,o.neutral),Ss=[H,A];taktikAnlegen(Ss,o);
+const wb=o.wb||'liga',H=mitWettbewerb(wb,()=>side(hid,true,o.neutral)),A=mitWettbewerb(wb,()=>side(aid,false,o.neutral)),Ss=[H,A];G.schiri=schiriFuer(hid,aid,hs);taktikAnlegen(Ss,o);
   const xg0=(H.am||A.am)?amateurErwartung(H,A):erwarteteTore(H,A);
   const ev=[],sc=[0,0],yel={},off=new Set(),inj=[],st={besitz:[0,0],schuesse:[0,0],aufsTor:[0,0],ecken:[0,0],fouls:[0,0],gross:[0,0],wege:[[0,0,0],[0,0,0]]},sz=[];
   const fr={};Ss.forEach(sd=>sd.xp.forEach(x=>fr[x.p.id]=x.p.fit));
@@ -147,13 +147,13 @@ const H=side(hid,true,o.neutral),A=side(aid,false,o.neutral),Ss=[H,A];taktikAnle
     // Ecke: mit Anteil eckeSchuss folgt ein Kopfball oder Abpraller. Die Torquote je Ecke (tor.ecke) gilt über alle Ecken.
     if(R()<RE.eckeSchuss){const sch=schuetzeWahl(s,'ecke');const r=abschluss(m,s,'ecke',sch,'ecke',(nehmer&&hatMk(nehmer.p,'flankengeber')?RE.mk.flankengeber.ecke:1)/RE.eckeSchuss);if(r==='tor'&&nehmer)sz.push([nehmer.p.id,'ecke_tor',1]);}};
   // Standard nach Foul des Gegners an Mannschaft s
-  const standard=(m,s)=>{const O=RE.fouls.ort,r=R(),c=imSpiel(s);if(!c.length)return;
-    if(r<O.elfmeter){const sch=schuetzeFuer(s,'elfmeter')||c.map(x=>x.p).sort((x,y)=>(hatMk(y,'elfmeter')-hatMk(x,'elfmeter'))||(({ST:3,MF:2,AB:1,TW:0})[y.pos]-({ST:3,MF:2,AB:1,TW:0})[x.pos])||(y.str-x.str))[0],kp=torwart(s);
+  const standard=(m,s)=>{const O=RE.fouls.ort,r=R(),c=imSpiel(s),pe=O.elfmeter*G.schiri.el;if(!c.length)return;
+    if(r<pe){const sch=schuetzeFuer(s,'elfmeter')||c.map(x=>x.p).sort((x,y)=>(hatMk(y,'elfmeter')-hatMk(x,'elfmeter'))||(({ST:3,MF:2,AB:1,TW:0})[y.pos]-({ST:3,MF:2,AB:1,TW:0})[x.pos])||(y.str-x.str))[0],kp=torwart(s);
       st.schuesse[s]++;const q=clamp(RE.tor.elfmeter+(hatMk(sch,'elfmeter')?RE.mk.elfmeter-RE.tor.elfmeter:0)-(hatEig(sch,'nervenschwach')?RE.eigenschaften.nervenschwachElfmeter:0)-(kp&&hatMk(kp,'elfmetertoeter')?RE.tor.elfmeter-RE.mk.elfmetertoeter:0),0.4,0.95);
       if(R()<q){torEv(m,s,sch,'elfmeter');sz.push([sch.id,'elfmeter',1]);}else{sz.push([sch.id,'elfmeter',0]);if(kp)sz.push([kp.id,'elfmeter_gehalten',1]);ev.push({m,s,t:'C',n:sch.n,gk:keeperName(s),art:'elfmeter',x:`${sch.n} vergibt den Elfmeter!`});}}
-    else if(r<O.elfmeter+O.direkt){const sch=schuetzeFuer(s,'freistoss')||c.map(x=>x.p).filter(p=>p.pos!=='TW').sort((x,y)=>(hatMk(y,'freistoss')-hatMk(x,'freistoss'))||(y.str-x.str))[0];if(!sch)return;
+    else if(r<pe+O.direkt){const sch=schuetzeFuer(s,'freistoss')||c.map(x=>x.p).filter(p=>p.pos!=='TW').sort((x,y)=>(hatMk(y,'freistoss')-hatMk(x,'freistoss'))||(y.str-x.str))[0];if(!sch)return;
       st.schuesse[s]++;const p=(hatMk(sch,'freistoss')?RE.mk.freistoss:RE.tor.freistoss)*torwartFaktor(W[1-s].TW);if(R()<p){torEv(m,s,sch,'freistoss');sz.push([sch.id,'freistoss',1]);}else{sz.push([sch.id,'freistoss',0]);ev.push({m,s,t:'C',n:sch.n,gk:keeperName(s),art:'freistoss'});}}
-    else if(r<O.elfmeter+O.direkt+O.flanke){if(R()<RE.eckeSchuss){const sch=schuetzeWahl(s,'ecke');abschluss(m,s,'freistossFlanke',sch,'freistossFlanke',1/RE.eckeSchuss);}}};
+    else if(r<pe+O.direkt+O.flanke){if(R()<RE.eckeSchuss){const sch=schuetzeWahl(s,'ecke');abschluss(m,s,'freistossFlanke',sch,'freistossFlanke',1/RE.eckeSchuss);}}};
   const angriff=(m,s,faktor)=>{const me=W[s],op=W[1-s],g=wegeStil(wege(me,op),Ss[s]),r=R(),weg=r<g.M?'M':r<g.M+g.L?'L':'R';
     const a=weg==='M'?me.AM:weg==='L'?me.AL:me.AR,d=weg==='M'?op.DM:weg==='L'?op.DR:op.DL;st.wege[s][weg==='M'?0:weg==='L'?1:2]++;
     if(R()<routeChance(a,d)*faktor*(Ss[s].kreis||1)){const M=RE.mix,Mk=RE.mk,xs=imSpiel(s);let mix=Object.assign({},weg==='M'?M.mitte:M.aussen);const sf=Ss[s].stilF;if(sf)for(const q in sf.mix)if(mix[q]!=null)mix[q]*=sf.mix[q];
@@ -169,12 +169,26 @@ const H=side(hid,true,o.neutral),A=side(aid,false,o.neutral),Ss=[H,A];taktikAnle
       const Mk=RE.mk,ns=mkZahl(imSpiel(1-s),'schnell'),nb=mkZahl(imSpiel(s),'ballsicher'),nl=mkZahl(imSpiel(1-s),'langsam'),nsA=mkZahl(imSpiel(s),'schnell');
       let k=RE.angriff.konter*Math.pow(Mk.schnell.konter,abnehmend(ns))*Math.pow(Mk.ballsicher.konter,abnehmend(nb))/Math.pow(Mk.langsam,abnehmend(nl))*Math.pow(Mk.schnell.abwehr,abnehmend(nsA))*(Ss[1-s].stilF?Ss[1-s].stilF.konterEigen:1)*(Ss[s].stilF?Ss[s].stilF.konterGegen:1);
       if(R()<k*faktor){const typ=waehle(Object.keys(RE.mix.konter),q=>RE.mix.konter[q]*((Ss[1-s].stilF&&Ss[1-s].stilF.konterMix[q])||1));const r2=abschluss(m,1-s,typ,schuetzeWahl(1-s,typ),'konter');if(r2==='parade'&&R()<RE.ecken.parade)ecke(m,1-s);}}};
-  const foul=(m,s)=>{const F=RE.fouls,sd=Ss[s];if(sd.am)return;const c=imSpiel(s).filter(x=>x.pos!=='TW');if(!c.length)return;
+  // Fouls und Karten (K09 §5.1): Foulart würfeln, Kartenwahrscheinlichkeit mit Strenge, Einsatz, Hitzkopf, Müdigkeit, Rückstand in der Schlussphase
+  const kartenFaktor=(s,p,m)=>{const K=RD.faktoren,sd=Ss[s],d=sc[s]-sc[1-s];return G.schiri.st*(sd.ein==='H'?K.hart:sd.ein==='F'?K.fair:1)*(hatEig(p,'hitzkopf')?K.hitzkopf:1)
+    *((fr[p.id]!=null?fr[p.id]:p.fit)<K.muedeUnter?K.muede:1)*(d<0&&m>=K.rueckstandAb?K.rueckstand:1)*(yel[p.id]?K.mitGelb.karte:1);};
+  const platzverweis=(m,s,p,art,x)=>{off.add(p.id);Ss[s].red++;ev.push({m,s,t:'R',p:p.id,n:p.n,art,x});sz.push([p.id,'rot',0]);W=werte(m);};
+  const gelbeKarte=(m,s,p,x)=>{sz.push([p.id,'gelb',0]);if(yel[p.id]){off.add(p.id);Ss[s].red++;ev.push({m,s,t:'R',p:p.id,n:p.n,gy:1});W=werte(m);}else{yel[p.id]=1;ev.push({m,s,t:'Y',p:p.id,n:p.n,x});}};
+  const FOULARTEN=Object.keys(RD.foulArten);
+  const foul=(m,s)=>{const F=RE.fouls,K=RD.faktoren,sd=Ss[s];if(sd.am)return;const c=imSpiel(s).filter(x=>x.pos!=='TW');if(!c.length)return;
     const nU=mkZahl(c,'ungestuem'),f=F.proMinute*(sd.ein==='H'?F.hart:sd.ein==='F'?F.fair:1)*(1+(F.ungestuem-1)*nU/c.length*3)*G.zf(s,'fouls')*(sd.stilF?sd.stilF.fouls:1);
-    if(R()>=f)return;st.fouls[s]++;const t=waehle(c,x=>(F.gewicht[linksForm(x.pos)]||1)*(hatMk(x.p,'ungestuem')?F.ungestuem:1)*(yel[x.p.id]&&!hatEig(x.p,'hitzkopf')?F.mitGelb.foul:1)*G.foulSpieler(x.p.id)).p,hk=(hatEig(t,'hitzkopf')?1.5:1)*(yel[t.id]?F.mitGelb.karte:1);
-    if(R()<F.rot*hk){off.add(t.id);sd.red++;ev.push({m,s,t:'R',p:t.id,n:t.n});sz.push([t.id,'rot',0]);W=werte(m);}
-    else if(R()<F.gelb*hk){sz.push([t.id,'gelb',0]);if(yel[t.id]){off.add(t.id);sd.red++;ev.push({m,s,t:'R',p:t.id,n:t.n,gy:1});W=werte(m);}else{yel[t.id]=1;ev.push({m,s,t:'Y',p:t.id,n:t.n});}}
+    if(R()>=f)return;st.fouls[s]++;const t=waehle(c,x=>(F.gewicht[linksForm(x.pos)]||1)*(hatMk(x.p,'ungestuem')?F.ungestuem:1)*(yel[x.p.id]&&!hatEig(x.p,'hitzkopf')?K.mitGelb.foul:1)*G.foulSpieler(x.p.id)).p;
+    const A=RD.foulArten[waehle(FOULARTEN,k=>RD.foulArten[k].anteil)],k=kartenFaktor(s,t,m),r=R();
+    if(A.rot&&r<A.rot*k)platzverweis(m,s,t,A.art,A.art==='notbremse'?`Notbremse! Rot für ${t.n}`:null);
+    else if(A.gelb&&r<(A.rot?A.rot*k:0)+A.gelb*k)gelbeKarte(m,s,t);
     standard(m,1-s);};
+  // Meckern, Unsportlichkeit, Tätlichkeit (K09 §3.1): ohne Foul, ein Zufallswert je Minute und Mannschaft
+  const unsportlich=(m,s)=>{const D=RD,K=D.faktoren,pm=D.meckern.jeSpiel/90*G.schiri.st,pt=D.taetlichkeit.jeSpiel/90,r=R();if(r>=pm+pt)return;
+    const c=imSpiel(s);if(!c.length)return;
+    if(r<pm){const p=waehle(c,x=>(hatEig(x.p,'hitzkopf')?K.hitzkopfMeckern:1)*(yel[x.p.id]&&!hatEig(x.p,'hitzkopf')?K.mitGelb.karte:1)).p;
+      if(R()<D.meckern.rot)platzverweis(m,s,p,'unsportlich',`Rot für ${p.n} nach einer Beleidigung des Schiedsrichters`);else gelbeKarte(m,s,p,`Gelb wegen Meckerns für ${p.n}`);}
+    else{const p=waehle(c,x=>hatEig(x.p,'hitzkopf')?K.hitzkopfTaetlichkeit:1).p,schwer=R()<D.taetlichkeit.schwer;
+      platzverweis(m,s,p,schwer?'schwer':'taetlichkeit',`Tätlichkeit! Rot für ${p.n}`);}};
   const amateurKarten=(m,s)=>{const K=RE.karten;if(R()<K.gelb){ev.push({m,s,t:'Y',p:null,n:'ein Amateur'});}};
   const verletzung=(m,s)=>{const V=RE.verletzung,op=Ss[1-s];if(Ss[s].am)return;
     if(R()<V.chance*(op.ein==='H'?V.gegnerHart:1)*teamGew(Ss[s],off,verletzGew)){const p=cardPick(Ss[s],off,verletzGew);if(p&&!inj.find(x=>x.id===p.id)){inj.push({id:p.id,w:riA(V.wochen)});ev.push({m,s,t:'I',p:p.id,n:p.n});fr[p.id]=Math.min(fr[p.id],RL.verletztFrische);W=werte(m);}}};
@@ -189,7 +203,7 @@ const H=side(hid,true,o.neutral),A=side(aid,false,o.neutral),Ss=[H,A];taktikAnle
     const angriffsChance=RE.angriff.proMinute*fakt(s)/dfak(1-s)*(verl?RE.verlaengerung:1)*((RE.ausrichtung[Ss[s].tac]||{T:1}).T||1)*(Ss[s].stilF?Ss[s].stilF.angriffe:1);
     if(Ss[s].am||Ss[1-s].am){if(R()<angriffsChance)amateurAngriff(m,s,verl);}
     else if(R()<angriffsChance)angriff(m,s,verl?RE.verlaengerung:1);
-    [0,1].forEach(t=>{if(Ss[t].am)amateurKarten(m,t);else foul(m,t);verletzung(m,t);if(!Ss[t].am)patzer(m,t);if(!Ss[t].am&&G.zf(t,'zeitspiel')>0)zeitspiel(m,t);});
+    [0,1].forEach(t=>{if(Ss[t].am)amateurKarten(m,t);else{foul(m,t);unsportlich(m,t);}verletzung(m,t);if(!Ss[t].am)patzer(m,t);if(!Ss[t].am&&G.zf(t,'zeitspiel')>0)zeitspiel(m,t);});
     G.verlauf.push([m,s]);};
   // Zeitspiel (Zuruf „Zeit schinden“): Gelbe Karten für Zeitspiel
   const zeitspiel=(m,t)=>{if(R()<RL.zurufe.zeit.gelbJeMinute*G.zf(t,'zeitspiel')){const c=imSpiel(t).filter(x=>!yel[x.p.id]);if(!c.length)return;const p=waehle(c,()=>1).p;yel[p.id]=1;ev.push({m,s:t,t:'Y',p:p.id,n:p.n,x:`Gelb wegen Zeitspiel für ${p.n}`});sz.push([p.id,'gelb',0]);}};
@@ -198,7 +212,7 @@ const H=side(hid,true,o.neutral),A=side(aid,false,o.neutral),Ss=[H,A];taktikAnle
       if(Ss[s].am){st.schuesse[s]++;if(R()<RE.tor[typ]*torwartFaktor(op.TW)){sc[s]++;ev.push({m,s,t:'G',p:null,n:rname(),sc:[...sc],art:typ});}}else abschluss(m,s,typ,schuetzeWahl(s,typ));}};
   [H,A].forEach(sd=>sd.xp.forEach(x=>G.minuten[x.p.id]=[0,null]));
   G.Ss=Ss;G.H=H;G.A=A;G.xg0=xg0;G.ev=ev;G.sc=sc;G.st=st;G.fr=fr;G.yel=yel;G.off=off;G.inj=inj;G.sz=sz;G.pen=null;
-  G.bank=[bankWaehlen(H),bankWaehlen(A)];
+  G.bank=mitWettbewerb(wb,()=>[bankWaehlen(H),bankWaehlen(A)]);
   G.werte=()=>W;
   // Eine Minute spielen. Nach der 90. Minute ist Schluss, im K.-o.-Spiel bei Gleichstand Verlängerung und Elfmeterschießen.
   G.minute=()=>{if(G.ende)return;if(G.elf){G.elfmeterSchuss();return;}const m=G.m+1;G.verl=m>90;G.mNow=m;
@@ -274,7 +288,7 @@ const H=side(hid,true,o.neutral),A=side(aid,false,o.neutral),Ss=[H,A];taktikAnle
       const l=ids.map(([id,[a,b]])=>{const p=PIX.get(+id),ps=pos[id]||(p?STD_POS[p.pos]:'ZM'),min=Math.max(1,(b==null?ende:b)-a);
         const g=ps==='TW'?0.01:(RE.schuetzen.halb[linksForm(ps)]||0.3)*Math.pow((p?p.str:60)/RE.schuetzen.mitte,RE.schuetzen.exponent)*Math.min(90,min)/90;return[+id,ps,g,min];});
       const tot=l.reduce((a,x)=>a+x[2],0);return l.map(x=>[x[0],x[1],tot?x[2]/tot:0,x[3]]);};
-    return{h:hid,a:aid,hg:sc[0],ag:sc[1],ev,pen:G.pen,yel:Object.keys(yel).map(Number),off:[...off],inj,xi:[H.xi,A.xi],ein:G.ein,xg0,xpo:[H.am?[]:teil(H,0),A.am?[]:teil(A,1)],st,sz,sv:G.sv,taktik:[H,A].map(sd=>sd.am?null:{stil:sd.stil,form:sd.form,einst:sd.einst,u:Math.round(sd.u*100)/100})};};
+    return{h:hid,a:aid,hg:sc[0],ag:sc[1],ev,pen:G.pen,sr:G.schiri.n,yel:Object.keys(yel).map(Number),off:[...off],inj,xi:[H.xi,A.xi],ein:G.ein,xg0,xpo:[H.am?[]:teil(H,0),A.am?[]:teil(A,1)],st,sz,sv:G.sv,taktik:[H,A].map(sd=>sd.am?null:{stil:sd.stil,form:sd.form,einst:sd.einst,u:Math.round(sd.u*100)/100})};};
   return G;}
 // Bank (K05 §3.2): 9 Spieler, darunter ein Torwart, sonst die stärksten verfügbaren aus jeder Gruppe
 const ZURUFE=['druck','ruhe','konzentration','zeit'],ANSPRACHEN=['loben','motivieren','fordern','beruhigen','taktik','schweigen','augenzwinkernd'];
@@ -314,7 +328,6 @@ function applyMatchLauf(r,cup){const N=RE.note,V=RP.selbstvertrauen;
     t.stile=[...(t.stile||[]),tk.stil].slice(-3); // zuletzt gespielte Stile (Gegneranalyse vor dem Spiel, K06 §4)
     if(tid===S.my){t.einstellung='normal';S.stilVerlauf=[...(S.stilVerlauf||[]),tk.stil].slice(-RTA.ki.rueckblick);}});
   lernenImSpiel(r);if(r.sv)Object.entries(r.sv).forEach(([id,v])=>{const p=PIX.get(+id);if(p)svAendern(p,v);});
-  r.yel.forEach(id=>{const p=PIX.get(id);if(!p)return;p.yc++;if(p.yc>=RE.gelbSperreAb){p.yc=0;p.sus=Math.max(p.sus,1);if(p.team===S.my)news(`${p.n} sieht die ${RE.gelbSperreAb}. Gelbe Karte und ist für ein Spiel gesperrt.`,'bad');}});
-  r.off.forEach(id=>{const p=PIX.get(id);if(!p)return;p.sus=riA(RE.rotSperre);if(p.team===S.my)news(`Platzverweis: ${p.n} fehlt ${p.sus} Spiel(e).`,'bad');});
+  disziplinNachSpiel(r); // Karten, Sperren und Verfahren (K09)
   // Ausfall in Tagen: w Wochen = die nächsten 7·w Tage (der Zähler läuft ab morgen jeden Tag um 1 herunter)
   r.inj.forEach(x=>{const p=PIX.get(x.id);if(!p)return;p.inj=Math.max(p.inj,ausfallTage(p.team,x.w));if(p.team===S.my)news(`Verletzung: ${p.n} fällt ${x.w} Woche(n) aus.`,'bad');});}
