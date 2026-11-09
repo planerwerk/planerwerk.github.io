@@ -36,6 +36,12 @@ module.exports=()=>{
    const cupSoll=S.plan.pokal.filter(([d])=>vorbei(d)).length;if(S.cup.hist.length!==cupSoll)e.push(`Pokal: ${S.cup.hist.length} Runden, laut Kalender ${cupSoll}`);}
   S.offers.forEach(o=>{if(!PIX.get(o.pid))e.push('Angebot ohne Spieler');if(!(o.bis>=S.tag))e.push('abgelaufenes Angebot liegt noch vor');});
   if(S.constr&&!(S.constr.bis>S.tag))e.push('Bau hätte fertig sein müssen');
+  // Kabine und Gespräche (K14, K15): Wertebereiche, Gesprächswünsche, Zusagen, Beziehungen
+  S.pl.forEach(p=>{if(p.st!=null&&!(p.st>=0&&p.st<=100))e.push(`Stimmung außerhalb 0–100: ${p.n}`);if(p.ww!=null&&!(p.ww>=0&&p.ww<=4))e.push(`Wechselwunsch außerhalb 0–4: ${p.n}`);});
+  S.teams.forEach(t=>{if(t.zh!=null&&!(t.zh>=0&&t.zh<=100))e.push(`Zusammenhalt außerhalb 0–100: ${t.name}`);if(t.glaub!=null&&!(t.glaub>=0&&t.glaub<=100))e.push(`Glaubwürdigkeit außerhalb 0–100: ${t.name}`);});
+  (S.gw||[]).forEach(g=>{const p=PIX.get(g.pid);if(!p||p.team!==S.my||p.ww!==2)e.push('Gesprächswunsch ohne passenden Spieler');});
+  (S.vs||[]).forEach(v=>{if(!PIX.get(v.pid))e.push('Zusage ohne Spieler');if(!['offen','gehalten','gebrochen','hinfaellig'].includes(v.stand))e.push('Zusage mit unbekanntem Stand');});
+  (S.bz||[]).forEach(b=>{if(!PIX.get(b[0])||!PIX.get(b[1])||b[0]===b[1])e.push('Beziehung ohne zwei Spieler');});
   return e;};
  window.__scan=function(){const t=document.getElementById('app').innerText+' || '+document.getElementById('ov').innerText;const re=/undefined|NaN|\[object|\bnull\b|Infinity/;const i=t.search(re);return i<0?'':t.slice(Math.max(0,i-70),i+40).replace(/\s+/g,' ');};
 };

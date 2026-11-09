@@ -624,4 +624,26 @@ Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `
 | AR4 | **Automatik braucht Regeln der Computer-Vereine** für Testspiele (AQ3), Vertragsverlängerungen eigener Spieler und Kredit. Ohne sie wäre die Automatik für dich ein zweites Regelwerk. | 📌 UL |
 | AR5 | **K16 §5.1 (Automatik mit Rauschen nach Qualität)** ist noch nicht gebaut. Bis dahin nutzt die Automatik die Klugheit „normal“. | 📌 K16 / UL |
 | AR6 | **K01 Erinnerungen:** Erinnerungen zu gesperrten Bereichen (zum Beispiel „Kein Sponsor gewählt“ vor der A-Lizenz) müssen entfallen. | 📌 UL |
-| AR7 | **U8 schon mit Lizenz je Funktion:** Stimmung sehen ab Teamleiter, Gespräche, Mannschaftsansprache und Kapitän ab C, Kaderrollen, Versprechen und Teamevent ab B (K36 §5.2). | 📌 U8, in K14 und K15 §12 eintragen |
+| AR7 | **U8 schon mit Lizenz je Funktion:** Stimmung sehen ab Teamleiter, Gespräche, Mannschaftsansprache und Kapitän ab C, Kaderrollen, Versprechen und Teamevent ab B (K36 §5.2). | ✅ K14 §12 Nr. 20, K15 §12 Nr. 19 |
+
+---
+
+## AS. Nachtrag zur Umsetzung U8 (9. November 2026)
+
+| # | Befund | Status |
+|---|---|---|
+| AS1 | **K14 §5.1 gegen §10:** Mit der relativen Einsatz-Lücke (Anteil gegen Erwartung in Prozent der Erwartung) bekam jeder Ergänzungsspieler ohne Minuten die vollen −25, es gab etwa fünf offizielle Wechselwünsche je Kader und Saison (Ziel höchstens einer). Gebaut ist die absolute Lücke mit Spanne −28 bis +10 (K14 §12 Nr. 5). | ✅ |
+| AS2 | **K14 §3.1:** „Rang nach Stärke auf seiner Position“ passt nicht zur Aufstellung, die nach Feinposition und Eignung wählt. Stammspieler sind jetzt die Spieler der besten Elf ohne Ausfälle (K14 §12 Nr. 6). | ✅ |
+| AS3 | **K14 §10 Bankplatz:** „nach sechs Wochen“ ist mit 20 % Trägheit nicht erreichbar. Test auf zwölf Wochen (K14 §12 Nr. 10). | ✅ vorläufig |
+| AS4 | **K11 und K14:** Der Platzhalter „Selbstvertrauen im Lager“ ist durch den Zusammenhalt ersetzt (+1 pro Tag bis zum 7. Tag). | ✅ |
+| AS5 | **K15 §5.1 und §5.3:** Ein Einsatz-Versprechen an einen Stammspieler, der ohnehin spielt, wäre leicht zu halten und brächte Glaubwürdigkeit. Jedes Thema braucht deshalb einen Anlass (K15 §12 Nr. 6), der Test prüft das. | ✅ |
+| AS6 | **K15 §5.5:** „Passende Halbzeitansprache +1“ hätte mit der immer passenden Ansprache „Taktik“ Glaubwürdigkeit verschenkt. Nur Ansprachen mit Anlass zählen (K15 §12 Nr. 15). | ✅ |
+| AS7 | **K28:** Ruf des Trainers für das Ruf-Gefälle und die Glaubwürdigkeitskrise beim Vorstand sind Platzhalter (K14 §12 Nr. 11, K15 §12 Nr. 16). | 📌 K28 |
+| AS8 | **K21:** Der Baustein „Vertrag“ ist vorläufig auf −8 begrenzt, weil Gehälter nur beim Verlängern steigen. Wer sich stark verbessert, ist sonst dauerhaft unzufrieden. | 📌 K21 |
+| AS9 | **K32:** Landsleute, Sprache und „Nationalspieler sieht sich mindestens als Stammspieler“ brauchen Nationalitäten. | 📌 K32 |
+| AS10 | **K02:** Computer-Trainer lösen Gesprächswünsche mit 55 % (Klugheit „normal“), bis es Klugheitsstufen gibt. | 📌 K02 |
+| AS11 | **Engine:** Zusammenhalt (±3 %) und Endspiel-Rede (+2 % für ein Spiel) wirken über den Faktor je Spieler in der Minute (`G.bonus`), nicht über die erwarteten Tore vor dem Spiel. Die Note gegen die Erwartung (Form) misst so auch den Zusammenhalt mit. Vergleich vor und nach U8 über vier Seeds (je drei Saisons): Heimsiege 42,75 % gegen 42,75 %, gleich Starke 43,25 % gegen 42,75 %, Favoritensiege 73 % gegen 75 % (n = 54 je Seed, im Rauschen, aber weiter am oberen Rand, AQ7). `tests/kalibrierung.js` zeigt schon vor U8 in jedem Seed rote Werte. | 📌 bei der Gesamtkalibrierung prüfen |
+| AS13 | **`tests/sommer.js`, Kondition zum ersten Ligaspiel (Ziel 80–88):** Der Wert schwankt je Seed um mehrere Punkte. Seed 5: vor U8 82,6, danach 79,5; Seed 8: vor U8 76,9, danach 81,2; Mittel über vier Seeds vor U8 80,95, danach 80,85. Kein Effekt von U8, aber der Test ist mit einem Seed zu knapp. | 📌 Test über mehrere Seeds mitteln oder Spanne prüfen |
+| AS14 | **`tests/medizin.js`, Rückfall nach einer Zerrung (Ziel 10–15 %):** nach U8 je Seed 16 % (Seed 4), 14 % (5), 13 % (6), 17 % (7), vor U8 mit Seed 4 14 %. U8 berührt Verletzungen nicht, der Wert liegt im Mittel an der oberen Grenze. | 📌 mit K10 nachkalibrieren oder über mehrere Seeds prüfen |
+| AS15 | **`tests/akzeptanz.js`, Sensitivität der Abwehr (+0,8 statt 1–3 Punkte):** wie schon in AO7 vor U8. Der Test spielt nur Einzelspiele mit Startwerten, in denen Stimmung und Zusammenhalt noch nicht wirken. | 📌 wie AO7 |
+| AS12 | **K33:** Neue Felder für Stimmung, Rollen, Wechselwunsch, Beziehungen, Versprechen, Glaubwürdigkeit und Zusammenhalt (K33 §3). Version bleibt 4, Felder entstehen beim ersten Gebrauch. | ✅ in K33 |

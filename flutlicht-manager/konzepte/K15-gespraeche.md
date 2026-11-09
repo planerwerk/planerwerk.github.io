@@ -1,6 +1,6 @@
 # K15 – Gespräche und Ansprachen
 
-Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12.
+Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12. **Umgesetzt in U8** (9. November 2026, `js/gespraeche.js`, Test `tests/kabine.js`): Einzelgespräche mit sieben Themen und drei Haltungen, Reaktion nach Charakter, Glaubwürdigkeit, Abnutzung, vier Arten von Versprechen mit Überwachung, Mannschaftsansprache, Halbzeitansprache mit Glaubwürdigkeit, Computer-Vereine vereinfacht. Abweichungen und Lücken in Abschnitt 12.
 Hängt ab von: K14 (Stimmung, Rollen), K03 (Charakter) · Wird gebraucht von: K05, K06, K08, K19, K21, K28, K29.
 
 ## 1. Ziel und Spielgefühl
@@ -183,6 +183,24 @@ gespraeche:{
 2. **Drei Einzelgespräche pro Woche** als Grenze gegen Dauerklicken.
 3. **Glaubwürdigkeit je Mannschaft,** nicht je Spieler. Gebrochene Versprechen sprechen sich herum.
 4. **Computer-Vereine** nur vereinfacht.
+
+**Vorläufig entschieden bei der Umsetzung (U8, 9. November 2026):**
+5. **Gebaut sind sieben Themen:** Rolle erklären, Einsatz versprechen, Geduld erbitten, Wechsel in Aussicht stellen, keine Konkurrenz, Lob, Kritik. Nicht gebaut: „Stimmung erfragen“ (die Gründe stehen immer auf der Spielerkarte, Informationen sind nie gesperrt, K36), „Position erklären“ (Hadern mit der Position fehlt in K06), „Verlängerung anbieten“ (läuft über den Vertrag auf der Spielerkarte), „Persönliches“ (Heimweh fehlt).
+6. **Ohne Anlass keine Wirkung und keine Zusage:** Rolle erklären nur, wenn er sich höher sieht; Einsatz versprechen nur bei weniger als 60 % Einsatz oder Wechselwunsch; Geduld nur für Rotation, Ergänzung, Talente, Neuzugänge oder bei Wechselwunsch; Wechsel nur bei Wechselwunsch oder Stimmung unter 50; keine Konkurrenz nur für Stammspieler mit Rivalen oder einem neuen, ähnlich starken Mitspieler auf seiner Position. Sonst ließe sich Glaubwürdigkeit mit leichten Zusagen sammeln. Auch ein Gespräch ohne Anlass kostet Gesprächszeit.
+7. **Zusagen konkret:** Einsatz = mindestens 60 % der Minuten in den nächsten fünf Pflichtspielen, in denen er verfügbar ist. Geduld = ein Startelf-Einsatz innerhalb von sechs Wochen (hinfällig, wenn er die halbe Zeit verletzt war). Wechsel = er kommt zum Marktwert auf die Transferliste; gebrochen, wenn du ein Angebot ab diesem Preis ablehnst oder verfallen lässt oder ihn von der Liste nimmst, gehalten bei einem Verkauf, hinfällig nach vier Monaten ohne Angebot. Keine Konkurrenz = vier Monate kein Kauf auf seiner Position, der höchstens 2 Punkte schwächer ist als er. Grundwirkung „keine Konkurrenz“ +6 (im Entwurf ohne Zahl).
+8. **Haltung bei schädlichen Gesprächen:** Ist die Wirkung negativ (Kritik), wirkt der Haltungsfaktor umgekehrt: Schaden × (2 − Faktor), begrenzt auf 0,4–1,6. Eine passende Haltung mildert, eine unpassende verstärkt.
+9. **Mehrere Eigenschaften:** Haltungs- und Lobfaktoren werden multipliziert, für Kritik gilt die erste Eigenschaft in der Reihenfolge Diva, nervenschwach, Hitzkopf, Söldner, Vorbildprofi, Führungsspieler, Kämpfer. Kritik: Kämpfer +3, Diva −8, nervenschwach −8 und Selbstvertrauen −0,5, Hitzkopf −4, Vorbildprofi −2, Führungsspieler −2 (unter vier Augen), Söldner −4. Streit: Diva bei bestimmter Haltung 30 %, Hitzkopf bei bestimmter Haltung oder Kritik 20 %; Folgen −5 Stimmung, Zusammenhalt −3, das nächste Gespräch wirkt vier Wochen lang halb. „Hitzkopf: Karten im nächsten Spiel ×1,2“ und „Söldner: Verlängerung ×1,5“ sind nicht gebaut.
+10. **Persönlichkeit:** Die Anpassungsfähigkeit verschiebt die Wirkung um ±2 % je Punkt Abstand von 10.
+11. **Wirkung sofort und als Baustein:** Die Wirkung geht sofort auf die Stimmung (höchstens ±10, K14 §4.2) und zur Hälfte in den Baustein „Trainer“ (verblasst um 10 % pro Woche). Ein gebrochenes Versprechen kostet −10 sofort und −5 über den Baustein.
+12. **Gesprächswunsch:** gelöst mit 15 % + 4 % je Punkt Wirkung (5–90 %), eine Einsatz-Zusage löst so etwa die Hälfte. Gescheitert (Streit oder keine positive Wirkung): sofort offizieller Wechselwunsch. Sonst bleibt Stufe 2 ohne neuen Halt. Ein gebrochenes Versprechen hebt den Wechselwunsch um eine Stufe, Stufe 2 wird dabei wieder zum Gesprächswunsch.
+13. **Lob und Kritik nach der letzten Note:** Lob ab 4,5 und Kritik bis 2,5 sind unpassend (halb umgekehrt).
+14. **Mannschaftsansprache, wann sie passt:** Rückendeckung nach zwei Niederlagen in den letzten drei Pflichtspielen. Weckruf, wenn die letzten drei Spiele 1,5 Punkte unter der Erwartung lagen und der Platz höchstens zwei schlechter ist als erwartet. Ziel neu setzen vor dem dritten Ligaspiel, ab dem 15. Dezember und im Januar. Endspiel-Rede, wenn das nächste Pflichtspiel in den nächsten sieben Tagen ein Pokalfinale, ein Relegationsspiel oder der letzte Spieltag ist. Abnutzung je Ansprache über vier Wochen.
+15. **Halbzeitansprache:** Die Wirkung aus K05 wird mit dem Glaubwürdigkeitsfaktor multipliziert. Die Glaubwürdigkeit ändert sich danach nur bei Ansprachen mit Anlass (Loben, Motivieren, Fordern, Beruhigen) und ohne Abnutzung: passend +1, unpassend −2. Sonst brächte jede Ansprache „Taktik“ einen Punkt. Die Reaktion einzelner Spieler nach Charakter ist nicht gebaut, „Fordern“ berücksichtigt Kämpfer und Diven schon in K05.
+16. **Glaubwürdigkeitskrise** unter 25: einmal −3 Vertrauen beim Vorstand (bis K28), wieder möglich nach einer Erholung über 35. Ein Bonus aus Erfolg ist nicht gebaut.
+17. **Erinnerung** „Versprechen droht zu kippen“ am Spieltag (abschaltbar), wenn der Spieler nicht in der Startelf steht und die restlichen Spiele kaum noch reichen.
+18. **Vereinswechsel:** Offene Zusagen beim alten Verein sind hinfällig, ohne Folgen.
+19. **Lernstufen (K36):** Einzelgespräche ohne Zusagen und Mannschaftsansprache ab der C-Lizenz, Zusagen (Versprechen) ab der B-Lizenz. Bis dahin führt der Co-Trainer das Gespräch beim Gesprächswunsch nach der Regel der Computer-Vereine (kommt mit UL).
+20. **Noch nicht gebaut:** Gespräche mit dem Vorstand (K28), öffentliche Kritik und Presse (K29), Karten aus §8 als eigene Ereignisse (gebrochene Versprechen und Glaubwürdigkeitskrise kommen als Nachricht).
 
 ## Quellen
 

@@ -1,6 +1,6 @@
 # Offene und vorläufige Entscheidungen
 
-Stand: 8. November 2026. Automatisch aus Abschnitt 12 aller Konzepte zusammengestellt.
+Stand: 9. November 2026. Automatisch aus Abschnitt 12 aller Konzepte zusammengestellt.
 
 **Alle Punkte gelten, bis du widersprichst** (PLAN §1, Punkt 9). Keiner blockiert die Arbeit.
 
@@ -225,6 +225,25 @@ Datei: `konzepte/K14-kabine.md`
 3. **Stimmung wirkt wenig auf die Leistung** (−3 % bis +2 %), aber stark auf Training, Verträge und Wechselwünsche.
 4. **Teamevent** als einfacher Hebel mit Abnutzung.
 
+Bei der Umsetzung (U8):
+5. **Einsatz als absolute Lücke** ((Anteil − Erwartung) × 40, Ehrgeiz verstärkt), Spanne −28 bis +10 statt −25.
+6. **Rollen nach der besten Elf ohne Ausfälle**, nicht nach dem Rang der Stärke. Ehrgeiz ab 15: Einschätzung eine Stufe höher.
+7. **Erwartung bei zu niedriger Rolle:** Mitte der beiden Anteile. Rolle unter der Einschätzung kostet nur, wenn du sie selbst vergeben hast.
+8. **Schwellen:** Grummeln unter 45 seit zwei Wochen, Gesprächswunsch unter 40 seit zwei Wochen, offiziell nach vier Wochen auf Stufe 2, öffentlich mit 10 % pro Woche (Diva, Söldner 30 %). Trägheit 20 %, höchstens ±8 pro Woche.
+9. **Bausteine:** Erfolg aus Platz und Serie, Leistung aus der Form, Vertrag aus dem Gehalt (vorläufig höchstens −8 bis K21), Trainer aus Gesprächen und Rolle, Umfeld aus Kapitän und Urlaub.
+10. **Bankplatz-Test auf zwölf Wochen** statt sechs.
+11. **Ruf-Gefälle** nur bei deinen Spielern, Ruf des Trainers bis K28 aus Ansehen und Trainerjahren.
+12. **Zusammenhalt:** neuer Stammspieler −5, Zug zur Mitte 4 % pro Woche, Lager +1 pro Tag statt Selbstvertrauen.
+13. **Beziehungen:** Freundschaften und Rivalitäten nach festen Wahrscheinlichkeiten, Rangeleien der Hitzköpfe. Landsleute, Sprache und Zimmer fehlen bis K32.
+14. **Kapitän** wählst du, sonst der Co-Trainer nach Führung, Vereinsjahren und Stärke. Absetzen kostet, außer in den ersten 14 Tagen bei einem Verein.
+15. **Folgen:** Lernen ×0,7 unter 30, Verlängern unter 40 teurer, unter 25 gar nicht, offizieller Wechselwunsch −10 % Marktwert.
+16. **Computer-Vereine:** Gespräch beim Gesprächswunsch gelingt zu 55 %.
+17. **Teamevent:** +5 Stimmung, +5 Zusammenhalt, 50.000/25.000/10.000 € je Liga.
+18. **Neuanfang beim Vereinswechsel:** Wechselwunsch null, Stimmung mindestens Startwert.
+19. **Diva und Söldner** sichtbar und wirksam.
+20. **Lernstufen (K36):** Stimmung sehen ab Teamleiter, Kapitän ab C, Kaderrollen und Teamevent ab B.
+21. **Noch nicht gebaut:** Ereignisse aus §8 außer dem Gesprächswunsch, Geldstrafen erlassen, Prämien, Integration und Heimweh, Integrationsfigur und Mentor.
+
 ## K15 – Gespräche und Ansprachen
 Datei: `konzepte/K15-gespraeche.md`
 
@@ -232,6 +251,24 @@ Datei: `konzepte/K15-gespraeche.md`
 2. **Drei Einzelgespräche pro Woche** als Grenze gegen Dauerklicken.
 3. **Glaubwürdigkeit je Mannschaft,** nicht je Spieler. Gebrochene Versprechen sprechen sich herum.
 4. **Computer-Vereine** nur vereinfacht.
+
+Bei der Umsetzung (U8):
+5. **Sieben Themen** gebaut, ohne „Stimmung erfragen“ (Gründe stehen auf der Spielerkarte), „Position erklären“, „Verlängerung anbieten“ und „Persönliches“.
+6. **Ohne Anlass keine Wirkung und keine Zusage**, damit sich Glaubwürdigkeit nicht mit leichten Versprechen sammeln lässt.
+7. **Zusagen konkret:** Einsatz 60 % der Minuten in fünf Pflichtspielen, Geduld ein Startelfeinsatz in sechs Wochen, Wechsel zum Marktwert auf die Transferliste (vier Monate), keine Konkurrenz vier Monate. Grundwirkung „keine Konkurrenz“ +6.
+8. **Schädliche Gespräche:** Haltungsfaktor umgekehrt (Schaden × (2 − Faktor), 0,4–1,6).
+9. **Mehrere Eigenschaften:** Faktoren multipliziert, für Kritik zählt die erste nach Vorrang. Streit bei Diva (bestimmt 30 %) und Hitzkopf (bestimmt oder Kritik 20 %).
+10. **Persönlichkeit:** Anpassungsfähigkeit ±2 % je Punkt.
+11. **Wirkung** sofort (±10) und zur Hälfte im Baustein „Trainer“.
+12. **Gesprächswunsch gelöst** mit 15 % + 4 % je Punkt Wirkung, gescheitert heißt sofort offizieller Wechselwunsch.
+13. **Lob ab Note 4,5 und Kritik bis 2,5 unpassend.**
+14. **Mannschaftsansprache** mit festen Bedingungen je Art, Abnutzung je Art über vier Wochen.
+15. **Halbzeitansprache:** Wirkung × Glaubwürdigkeit, Glaubwürdigkeit ändert sich nur bei Ansprachen mit Anlass.
+16. **Glaubwürdigkeitskrise** unter 25: einmal −3 beim Vorstand.
+17. **Erinnerung** „Versprechen droht zu kippen“ am Spieltag, abschaltbar.
+18. **Vereinswechsel:** offene Zusagen hinfällig.
+19. **Lernstufen (K36):** Gespräche und Mannschaftsansprache ab C, Versprechen ab B.
+20. **Noch nicht gebaut:** Gespräche mit dem Vorstand, öffentliche Kritik und Presse, Karten aus §8.
 
 ## K16 – Trainerstab und Mitarbeiter
 Datei: `konzepte/K16-stab.md`

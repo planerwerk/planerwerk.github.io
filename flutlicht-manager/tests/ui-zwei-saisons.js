@@ -1,10 +1,10 @@
 // Zwei Saisons über die echte Oberfläche spielen: „Tag beenden“, Erinnerungen, Konferenz, Transfers, Verträge,
-// Speichern und Laden, Entlassung, Handy-Breite. Nach jedem Halt werden die Spieldaten geprüft.
+// Speichern und Laden, Entlassung, Handy-Breite, Kabine mit Kapitän, Ansprache, Teamevent, Rolle und Gesprächen (K14, K15). Nach jedem Halt werden die Spieldaten geprüft.
 const {chromium}=require('playwright');const path=require('path');const PRUEFUNGEN=require('./pruefungen.js');
 const FILE='file://'+path.resolve(__dirname,'..','index.html');
 const problems=[];const note=(w,m)=>{problems.push(`[${w}] ${m}`);};
 const seasons=[];const actlog=[];const done=new Set();let rem=0,stops=0;const proWoche={};
-const TABS=['Büro','Kalender','Kader','Aufstellung','Tabelle','Spielplan','Pokal','Transfers','Finanzen','Stadion','Training & Jugend'];
+const TABS=['Büro','Kalender','Kader','Kabine','Aufstellung','Tabelle','Spielplan','Pokal','Transfers','Finanzen','Stadion','Training & Jugend'];
 (async()=>{
 const b=await chromium.launch();const ctx=await b.newContext({viewport:{width:1280,height:900}});const pg=await ctx.newPage();
 pg.on('pageerror',e=>note('JS','PAGEERR '+e.message+' | '+(e.stack||'').split('\n').slice(1,3).join(' ')));
@@ -40,7 +40,7 @@ async function actions(s,tag){const wk=s.wk,yr=s.season,K=yr+':'+wk+':';
    if(id!=null){await pg.evaluate(i=>openP(i),id);await pg.click('button:text-is("Angebot abgeben")');actlog.push(tag+' Kauf Listenspieler: '+await msgOrClosed());}else actlog.push(tag+' kein passender Listenspieler');
    const star=await pg.evaluate(()=>{const c=S.pl.filter(p=>p.team===0&&!p.list).sort((a,b)=>b.str-a.str);return c[0].id;});
    await pg.evaluate(i=>openP(i),star);await pg.fill('#fee','0.5');await pg.click('button:text-is("Angebot abgeben")');actlog.push(tag+' Billigangebot für Bayern-Star: '+await msgOrClosed());}
- if(wk===4&&yr===2026&&once(K+'menue')){await tabClick('Menü');const cb=await pg.$$('.ovb .pick input');if(cb.length!==4)note(tag,`Menü: ${cb.length} statt 4 Erinnerungs-Schalter`);
+ if(wk===4&&yr===2026&&once(K+'menue')){await tabClick('Menü');const cb=await pg.$$('.ovb .pick input');if(cb.length!==5)note(tag,`Menü: ${cb.length} statt 5 Erinnerungs-Schalter`);
    await cb[1].click();const aus=await pg.evaluate(()=>!erinnerungAn('aufstellung'));await cb[1].click();const an=await pg.evaluate(()=>erinnerungAn('aufstellung'));if(!aus||!an)note(tag,'Erinnerung lässt sich nicht ab- und wieder anschalten');await closeModal();
    await tabClick('Kalender');await pg.click('button[aria-label="Monat vor"]');await pg.click('button[aria-label="Monat vor"]');const sc=await pg.evaluate(()=>__scan());if(sc)note(tag,'Kalender: '+sc);await pg.click('button:text-is("Heute")');actlog.push(tag+' Menü-Schalter und Kalender geprüft');}
  if(wk===5&&once(K+'frei')){await tabClick('Transfers');await pg.selectOption('#tf_lg','f');const row=await pg.$('tbody tr.click');if(row){await row.click();await pg.click('button:text-is("Verpflichten")');actlog.push(tag+' Vereinsloser: '+await msgOrClosed());}
@@ -55,6 +55,19 @@ async function actions(s,tag){const wk=s.wk,yr=s.season,K=yr+':'+wk+':';
    await closeModal();actlog.push(tag+' Export/Import geprüft');}
  if(yr===2026&&wk===12&&once(K+'reload')){const before=await pg.evaluate(()=>JSON.stringify(S));await pg.reload();await pg.click('button:text-is("Weiterspielen")');await pg.evaluate(PRUEFUNGEN);const after=await pg.evaluate(()=>JSON.stringify(S));
    if(before!==after)note(tag,'Nach Neuladen anderer Stand');actlog.push(tag+' Neu geladen, weitergespielt');}
+ // Kabine (K14, K15): Kapitän, Mannschaftsansprache, Teamevent, Kaderrolle und Gespräch mit einem Bankspieler
+ if(yr===2026&&wk===7&&once(K+'kabine')){await tabClick('Kabine');const opts=await pg.$$eval('#kapsel option',o=>o.map(x=>x.value));if(opts.length>1)await pg.selectOption('#kapsel',opts[1]);
+   const kap=await pg.evaluate(()=>myT().kap);if(String(kap)!==opts[1])note(tag,'Kapitän nicht gesetzt');
+   const vor=await pg.evaluate(()=>(myT().mans||[]).length);await pg.click('.card:has(h3:text-is("Mannschaftsansprache")) .opt >> nth=0');if(await pg.evaluate(()=>(myT().mans||[]).length)!==vor+1)note(tag,'Mannschaftsansprache nicht gehalten');
+   const kosten=await pg.evaluate(()=>myT().cash);await pg.click('button:has-text("Teamevent")');if(await pg.evaluate(()=>myT().cash)>=kosten)note(tag,'Teamevent ohne Kosten');
+   const sc=await pg.evaluate(()=>__scan());if(sc)note(tag,'Kabine: '+sc);
+   const id=await pg.evaluate(()=>squad(S.my).filter(p=>p.inj<=0).sort((a,b)=>(a.ea||0)-(b.ea||0))[0].id);await pg.evaluate(i=>openP(i),id);
+   await pg.selectOption('#krsel','rotation');if(await pg.evaluate(i=>PIX.get(i).kr,id)!=='rotation')note(tag,'Kaderrolle nicht gesetzt');
+   await pg.selectOption('#gthema','rolle');await pg.selectOption('#ghaltung','v');await pg.click('button:text-is("Gespräch führen")');const m=(await pg.$eval('#gmsg',e=>e.textContent)).trim();if(!m)note(tag,'Gespräch ohne Antwort');
+   const sc2=await pg.evaluate(()=>__scan());if(sc2)note(tag,'Spielerkarte mit Gespräch: '+sc2);await closeModal();actlog.push(tag+' Kabine: Kapitän, Ansprache, Teamevent, Rolle, Gespräch („'+m.slice(0,60)+'“)');}
+ // Gesprächswunsch (K14 §5.4): über das Büro zum Gespräch, Einsatz versprechen
+ const gw=await pg.$('button:text-is("Zum Gespräch")');if(gw&&once(K+'gw')){await gw.click();await pg.selectOption('#gthema','einsatz');await pg.click('button:text-is("Gespräch führen")');
+   const m=(await pg.$eval('#gmsg',e=>e.textContent)).trim();await closeModal();actlog.push(tag+' Gesprächswunsch: '+m.slice(0,90));}
  if(wk===10&&once(K+'logen')){await tabClick('Stadion');const l=await pg.$('.opt:has(b:text-is("10 VIP-Logen"))');if(l){await l.click();actlog.push(tag+' Logen gebaut (falls Geld)');}}
  if(wk===16&&once(K+'shop')){await tabClick('Stadion');const f=await pg.$('.opt:has(b:has-text("Fanshop"))');if(f){await f.click();actlog.push(tag+' Fanshop');}}
  if(wk===20&&once(K+'tilgen')){await tabClick('Finanzen');await pg.click('button:text-is("Alles tilgen")');}
@@ -99,7 +112,7 @@ async function advance(tag){await tabClick('Büro');const t0=await pg.evaluate((
  if(s.tag-t0>7&&!s.sp)note(tag,`Sprung über ${s.tag-t0} Tage`);}
 let guard=0;const t0=Date.now();
 while(guard++<330){const s=await st();if(s.season>=2028)break;const tag=`${s.season}/${String(s.season+1).slice(2)} ${s.datum} W${s.wk}`;
- try{const tabs=s.wk%4===0?TABS:[TABS[s.wk%11],TABS[(s.wk*3+1)%11]];for(const t of tabs){await tabClick(t);const sc=await pg.evaluate(()=>__scan());if(sc)note(tag,`Text in ${t}: ${sc}`);}
+ try{const tabs=s.wk%4===0?TABS:[TABS[s.wk%TABS.length],TABS[(s.wk*3+1)%TABS.length]];for(const t of tabs){await tabClick(t);const sc=await pg.evaluate(()=>__scan());if(sc)note(tag,`Text in ${t}: ${sc}`);}
   if(s.phase==='play'&&!s.fired)await actions(s,tag);
   (await pg.evaluate(()=>__check())).forEach(m=>note(tag,m));
   await advance(tag);stops++;}catch(e){note(tag,'TESTFEHLER '+e.message.split('\n')[0]);await pg.evaluate(()=>{if(LIVE){liveBisEnde();liveWeiter();}else if(CONF){confEnd();closeConf();}else closeOv();}).catch(()=>{});}}
