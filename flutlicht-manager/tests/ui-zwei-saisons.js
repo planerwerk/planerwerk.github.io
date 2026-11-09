@@ -72,7 +72,7 @@ async function actions(s,tag){const wk=s.wk,yr=s.season,K=yr+':'+wk+':';
 async function advance(tag){await tabClick('Büro');const t0=await pg.evaluate(()=>S.tag);await pg.click('header .go');
  for(let k=0;k<10;k++){await pg.waitForTimeout(30);const ov=(await pg.evaluate(()=>document.getElementById('ov').innerText)).trim();if(!ov)break;
   if(ov.startsWith('Sicher?')){rem++;const sc=await pg.evaluate(()=>__scan());if(sc)note(tag,'Erinnerung: '+sc);await pg.click('#trotzdem');continue;}
-  if(await pg.$('#kick')){const unav=await pg.evaluate(()=>S.pl.filter(p=>!avail(p)).map(p=>p.id)),z=Math.random();
+  if(await pg.$('#kick')){const unav=await pg.evaluate(()=>S.pl.filter(p=>p.inj>0||sperreIn(p,'liga')>0||sperreIn(p,'pokal')>0).map(p=>[p.id,p.inj>0,sperreIn(p,'liga')>0,sperreIn(p,'pokal')>0])),z=Math.random();
    // Meist live mit Vorspulen, manchmal mit Eingriffen zur Halbzeit, manchmal „Sofort berechnen“ (alte Konferenz)
    if(z<0.15){await pg.click('#sofort');await pg.click('.ovb button:text-is("Zum Abpfiff")',{timeout:4000});}
    else{await pg.click('#kick');
@@ -82,7 +82,7 @@ async function advance(tag){await tabClick('Büro');const t0=await pg.evaluate((
      await pg.click('.ovb button:text-is("Zum Abpfiff")',{timeout:4000});}
    await pg.waitForSelector('#cf-next, #lv-weiter',{timeout:6000});const sc=await pg.evaluate(()=>__scan());if(sc)note(tag,'Spiel: '+sc);
    if(await pg.$('#lv-weiter'))await pg.click('#lv-weiter');
-   const bad=await pg.evaluate(u=>{const s=new Set(u);return LAST.list.flatMap(r=>[...r.xi.flat(),...(r.ein||[]).flat()]).filter(id=>s.has(id)).length;},unav);if(bad)note(tag,bad+' gesperrte/verletzte Spieler eingesetzt');
+   const bad=await pg.evaluate(u=>{const m=new Map(u.map(x=>[x[0],x]));return LAST.list.flatMap(r=>{const w=wbVon(r);return[...r.xi.flat(),...(r.ein||[]).flat()].filter(id=>{const x=m.get(id);return x&&(x[1]||(w==='liga'?x[2]:x[3]));});}).length;},unav);if(bad)note(tag,bad+' gesperrte/verletzte Spieler eingesetzt');
    if(await pg.$('#cf-next'))await pg.click('#cf-next');continue;}
   if(ov.includes('Entlassen!')){actlog.push(tag+' ENTLASSEN – nehme Job');await pg.click('.ovb .opt');continue;}
   if(ov.includes('Saisonbilanz')){const sc=await pg.evaluate(()=>__scan());if(sc)note(tag,'Bilanz: '+sc);
