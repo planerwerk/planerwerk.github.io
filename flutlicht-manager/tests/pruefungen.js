@@ -5,7 +5,10 @@ module.exports=()=>{
   const gr=[1,2,3,4].map(l=>S.teams.filter(t=>t.lg===l).length);if(gr[0]!==18||gr[1]!==18||gr[2]!==20)e.push(`Ligagrößen ${gr.join('/')}`);
   const ids=new Set();
   S.pl.forEach(p=>{if(ids.has(p.id))e.push('doppelte ID '+p.id);ids.add(p.id);
-   for(const k of ['str','pot','form','fit','ko','sp','sv','sal','age','ct','inj','sus','g','apps','yc'])if(typeof p[k]!=='number'||!isFinite(p[k]))e.push(`Spieler ${p.n} ${k}=${p[k]}`);
+   for(const k of ['str','pot','form','fit','ko','sp','sv','sal','age','ct','inj','g','apps'])if(typeof p[k]!=='number'||!isFinite(p[k]))e.push(`Spieler ${p.n} ${k}=${p[k]}`);
+   // Sperren und Gelbe Karten je Wettbewerb (K09); alte Spielstände haben noch sus und yc
+   if(p.sperre||p.kt){for(const w of ['liga','pokal']){const s=p.sperre&&p.sperre[w],k=p.kt&&p.kt[w];if(p.sperre&&!(s&&[s.rot,s.gelb].every(x=>typeof x==='number'&&isFinite(x))))e.push(`Spieler ${p.n} sperre.${w}=${JSON.stringify(s)}`);if(p.kt&&!(typeof k==='number'&&isFinite(k)))e.push(`Spieler ${p.n} kt.${w}=${k}`);}}
+   else if(typeof p.sus!=='number'||typeof p.yc!=='number')e.push(`Spieler ${p.n} ohne Sperren und Karten`);
    if(p.team>=S.teams.length||p.team<-1)e.push(`Spieler ${p.n} team=${p.team}`);
    if(!['TW','AB','MF','ST'].includes(p.pos))e.push('Pos '+p.pos);
    if(p.fit<0||p.fit>100)e.push('Frische außerhalb '+p.fit);if(p.form<0||p.form>20)e.push('Form außerhalb '+p.form);if(p.ko<0||p.ko>100)e.push('Kondition außerhalb '+p.ko);if(p.sp<0||p.sp>100)e.push('Spielpraxis außerhalb '+p.sp);if(p.sv<-3||p.sv>3)e.push('Selbstvertrauen außerhalb '+p.sv);if(p.str<20||p.str>99)e.push('Stärke außerhalb '+p.str);
