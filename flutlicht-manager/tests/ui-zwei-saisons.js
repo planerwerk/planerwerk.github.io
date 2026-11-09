@@ -92,7 +92,7 @@ async function advance(tag){await tabClick('Büro');const t0=await pg.evaluate((
     pokal:S.summary.cup!=null?tn(S.summary.cup):'-',torjaeger:S.summary.ts,toreProSpiel:+(R.reduce((a,r)=>a+r[2]+r[3],0)/R.length).toFixed(2),heimsieg:+(R.filter(r=>r[2]>r[3]).length/R.length).toFixed(2),remis:+(R.filter(r=>r[2]===r[3]).length/R.length).toFixed(2),
     niveauBL:+(lv.reduce((a,b)=>a+b,0)/18).toFixed(1)+' ('+Math.min(...lv).toFixed(1)+'–'+Math.max(...lv).toFixed(1)+')',vereinslose:S.pl.filter(p=>p.team===-1).length,spieler:S.pl.length,kader:my.length,
     konto:fmt(me.cash),kredit:fmt(S.loan),zuschauer:avgAtt()+' / '+me.cap,bilanz:Object.fromEntries(Object.entries(S.fin).sort((a,b)=>b[1]-a[1]).map(([k,v])=>[k,fmt(v)]))};}));
-   const j=await pg.$('.ovb button.go:text-is("Jobangebote ansehen")');if(j){await j.click();continue;}await pg.click('.ovb button.go');continue;}
+   const j=await pg.$('.ovb button.go:text-is("Jobangebote ansehen")');if(j){await j.click();continue;}await pg.click('.ovb button.go:text-is("Weiter in die Sommerpause")');continue;}
   note(tag,'Unbekanntes Fenster: '+ov.slice(0,80));await pg.evaluate(()=>closeOv());break;}
  const s=await pg.evaluate(()=>({tag:S.tag,start:S.plan.start,season:S.season,sp:sommerSprung()||S.phase==='end'||myT().urlaub>0||!!myT().urlaubFertig}));
  const wo=s.season+':'+Math.floor((s.tag-s.start)/7);proWoche[wo]=(proWoche[wo]||0)+1;

@@ -33,9 +33,9 @@ function leistungstest(){const sq=squad(S.my).filter(p=>p.inj<=0);if(!sq.length)
 function sommerKarte(){const t=myT(),st=sommerStatus(t),v=urlaubVorschlag(S.my),w=urlaubWochen(t),vs=(S.sommer&&S.sommer.versatz)||0;
   const lage=st==='urlaub'?`Die Mannschaft ist im Urlaub, noch ${t.urlaub} Tage.`:st==='laufplan'?`Urlaub vorbei. Die Spieler halten sich selbst fit (Laufplan) bis zum Trainingsauftakt.`:'Der Urlaub beginnt zwei Tage nach dem letzten Pflichtspiel der Saison.';
   return`<div class="card"><h2>Sommerpause</h2><p>${lage}</p><p class="dim">Co-Trainer: ${v.wochen} Wochen (Saisonbelastung der Stammspieler ${v.belastung}). Langer Urlaub baut die Belastung ab, kostet aber Kondition. Viel eingesetzte Spieler brauchen ihn.</p>
-    <div class="row">${RSO.urlaubWochen.map(x=>`<button class="${x===w?'go':''}" onclick="setUrlaub(${x})">${x} Wochen Urlaub</button>`).join('')}</div>
+    <div class="row">${RSO.urlaubWochen.map(x=>`<button class="wahl ${x===w?'on':''}" aria-pressed="${x===w}" onclick="setUrlaub(${x})">${x} Wochen Urlaub</button>`).join('')}</div>
     <p class="dim" style="margin-top:8px">Trainingsauftakt: früher heißt längere Vorbereitung, später mehr Zeit für den Laufplan.</p>
-    <div class="row">${RSO.auftaktVersatz.map(x=>`<button class="${x===vs?'go':''}" onclick="setAuftakt(${x})">${x<0?'eine Woche früher':x>0?'eine Woche später':'Standard'}</button>`).join('')}</div></div>`;}
+    <div class="row">${RSO.auftaktVersatz.map(x=>`<button class="wahl ${x===vs?'on':''}" aria-pressed="${x===vs}" onclick="setAuftakt(${x})">${x<0?'eine Woche früher':x>0?'eine Woche später':'Standard'}</button>`).join('')}</div></div>`;}
 // Saisonbelastung (K12a §3.1): bremst ab 50 die Erholung und erhöht das Verletzungsrisiko
 const belastungErholung=p=>1-RSO.belastung.erholung*Math.max(0,(p.sb||0)-RSO.belastung.ab);
 const belastungRisiko=p=>1+RSO.belastung.risiko*Math.max(0,(p.sb||0)-RSO.belastung.ab);
