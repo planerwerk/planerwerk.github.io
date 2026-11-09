@@ -4,7 +4,7 @@
 const VERGEHEN={notbremse:'Notbremse',grob:'grobes Foulspiel',unsportlich:'Unsportlichkeit gegen den Schiedsrichter',taetlichkeit:'Tätlichkeit',schwer:'schwere Tätlichkeit'};
 const WETTBEWERBE=['liga','pokal'],WB_NAME={liga:'Liga',pokal:'Pokal'},WB_SPIEL={liga:'Ligaspiel',pokal:'Pokalspiel'};
 const AUSGANG={bestaetigt:'bestätigt',gemindert:'gemindert',erhoeht:'erhöht',angenommen:'angenommen'};
-const wbVon=r=>r&&r.cup?'pokal':'liga'; // Relegation zählt zur Liga (K09 §12 Nr. 3)
+const wbVon=r=>r&&(r.cup||r.supercup)?'pokal':'liga'; // Relegation zählt zur Liga (K09 §12 Nr. 3), der Supercup zum Pokal (K13)
 const absTag=d=>Math.round(saisonNull(S.season)/TAG_MS)+d;
 
 // Sperren je Wettbewerb: rot (Rot und Gelb-Rot, läuft in die nächste Saison weiter) und gelb (Gelbsperre, verfällt am Saisonende).

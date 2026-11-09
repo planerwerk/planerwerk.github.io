@@ -11,12 +11,13 @@ function seasonEndLauf(){
   const T={1:table(1),2:table(2),3:table(3)},me=myT(),pos=rank(me.lg,S.my),B=RV;
   S.teams.forEach(t=>{if(aktiv(t))t.lastPos=rank(t.lg,t.id);t.lastLg=t.lg;});
   T[3].forEach(r=>{S.teams[r.id].ewig3=(S.teams[r.id].ewig3||0)+r.p;});
-  const ergebnis=(sp,paar)=>{const a=sp[0]||sim(paar[1],paar[0]),b=sp[1]||sim(paar[0],paar[1]),g0=a.ag+b.hg,g1=a.hg+b.ag;
-    return{sieger:g0>g1?paar[0]:g1>g0?paar[1]:(R()<RS.relegationLos?paar[0]:paar[1]),text:`Hinspiel ${tn(a.h)} – ${tn(a.a)} ${a.hg}:${a.ag}, Rückspiel ${tn(b.h)} – ${tn(b.a)} ${b.hg}:${b.ag}${g0===g1?', Entscheidung im Elfmeterschießen':''}`};};
+  // Relegation (K13 §3.3): fehlt ein Spiel, wird es nachgerechnet, das Rückspiel mit Verlängerung und Elfmeterschießen. Ein Los gibt es nur noch für alte Spielstände.
+  const ergebnis=(sp,paar)=>{const a=sp[0]||sim(paar[1],paar[0]),b=sp[1]||sim(paar[0],paar[1],{ko:1,agg:[a.ag,a.hg]}),g0=a.ag+b.hg,g1=a.hg+b.ag,s=relegationSieger([a,b],paar);
+    return{sieger:s!=null?s:(R()<RS.relegationLos?paar[0]:paar[1]),text:`Hinspiel ${tn(a.h)} – ${tn(a.a)} ${a.hg}:${a.ag}, Rückspiel ${tn(b.h)} – ${tn(b.a)} ${b.hg}:${b.ag}${b.pen?`, Elfmeterschießen ${b.pen[0]}:${b.pen[1]}`:''}`};};
   // Relegation 1./2. Liga und 2./3. Liga (Zweitmannschaften der 3. Liga dürfen nicht aufsteigen)
   const reihe=aufstiegsReihe3(),rel=[T[1][15].id,T[2][2].id],rel2=[T[2][15].id,reihe[2]],e1=ergebnis(S.relSp,rel),e2=ergebnis(S.relSp2,rel2);
   const rl=regionalligaAufsteiger(),ts=topScorers(1)[0];
-  const sm={season:S.season,lg:me.lg,pos,target:S.target,champ:T[1][0].id,champ2:T[2][0].id,champ3:T[3][0].id,
+  const sm={season:S.season,lg:me.lg,pos,target:S.target,champ:T[1][0].id,vize:T[1][1].id,champ2:T[2][0].id,champ3:T[3][0].id,
     down:[T[1][16].id,T[1][17].id],up:[T[2][0].id,T[2][1].id],rel,relRes:e1.text,rw:e1.sieger,
     down2:[T[2][16].id,T[2][17].id],up3:[reihe[0],reihe[1]],rel2,rel2Res:e2.text,rw2:e2.sieger,
     down3:T[3].slice(-RS.abstieg3).map(r=>r.id),up4:rl.ids,rlText:rl.text,
@@ -52,6 +53,7 @@ function newSeasonLauf(){S.vstat={};const sm=S.summary,Z=RS,setze=(ids,lg)=>ids.
   setze(sm.down,2);setze(sm.up,1);if(sm.rw===sm.rel[1]){S.teams[sm.rel[1]].lg=1;S.teams[sm.rel[0]].lg=2;}
   setze(sm.down2,3);setze(sm.up3,2);if(sm.rw2===sm.rel2[1]){S.teams[sm.rel2[1]].lg=2;S.teams[sm.rel2[0]].lg=3;}
   setze(sm.down3,4);setze(sm.up4,3);sm.down3.forEach(id=>S.teams[id].abstieg3=sm.season);
+  zweiteRegeln(); // Zweitmannschaften nie in der Liga der ersten Mannschaft (K13 §3.7)
   S.teams.forEach(t=>{if(t.lastLg>3&&t.lg>3)return;const A=Z.ansehen;let d=t.lastLg<=3?clamp((t.expPos-t.lastPos)*A.faktor,-A.maxAenderung,A.maxAenderung):0;
     if(t.lg<t.lastLg)d+=A.aufstieg;if(t.lg>t.lastLg)d+=A.abstieg;t.rep=clamp(Math.round(t.rep+d),A.min,A.max);t.fans=Math.round(clamp(t.fans*(1+d*Z.fans.faktor),Z.fans.min,t.cap*Z.fans.maxJePlatz));});
   const K=Z.karriereende;
@@ -74,7 +76,7 @@ function newSeasonLauf(){S.vstat={};const sm=S.summary,Z=RS,setze=(ids,lg)=>ids.
   const fa=S.pl.filter(p=>p.team===-1);if(fa.length>Z.vereinsloseMax){fa.sort((a,b)=>a.str-b.str).slice(0,fa.length-Z.vereinsloseMax).forEach(p=>p.team=-2);S.pl=S.pl.filter(p=>p.team!==-2);reindex();}
   S.am.forEach(a=>a.str=riA(RW.amateurStaerke));
   S.season++;S.plan=planFuer(S.season);S.tag=S.plan.start;S.gespielt=-1;S.relSp=[];S.relSp2=[];S.res={1:[],2:[],3:[]};
-  const sp=spielplanFuer(S.season);S.fx=sp.fx;S.plan.zeit=sp.zeit;initCup();
+  const sp=spielplanFuer(S.season);S.fx=sp.fx;S.plan.zeit=sp.zeit;initCup();supercupAnlegen(sm);
   S.fin={};S.att=[0,0];S.offers=S.offers.filter(o=>PIX.get(o.pid)&&PIX.get(o.pid).team===S.my);S.phase='play';S.summary=null;TDAY=null;TLG=0;LAST=null;
   setTarget();if(S.spons){S.spons.yrs--;if(S.spons.yrs<=0)S.spons=null;}if(!S.spons)sponsOffers();
   S.lineup=bestXI(S.my,myT().form);

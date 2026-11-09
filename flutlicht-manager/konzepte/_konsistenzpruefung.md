@@ -581,3 +581,19 @@ Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `
 | AO5 | **K10 §10:** Das Verhältnis Spiel zu Training je Stunde (Ziel 3–6) passt nicht zu einem Training-Anteil von 40–55 % bei fast täglichem Training (K10 §12 Nr. 7). | 📌 bei K11 und der Trainingsdauer klären |
 | AO6 | **K33:** Neue Felder `vstat`, `krankBis`, am Spieler `vl`, `vh`, `rf`, `spritze`. Alte Verletzungen ohne `vl` laufen als reine Ausfalltage weiter. | ✅ in K33 |
 | AO7 | **Akzeptanztest:** Das Tempo (höchstens 4 ms pro Spiel) reißt auf dieser Maschine im Moment auch der Stand vor U7b (5,35 ms). Der direkte Vergleich gibt alt und neu gleich schnell (4,3–4,4 ms). Die Sensitivität der Abwehr (+0,8 bis +1,4) schwankt je Seed wie vorher, im Mittel ist sie etwa 0,1 Punkte kleiner, weil Spieler im Spiel öfter verletzt ausfallen. | 📌 wie AN6: über mehrere Seeds mitteln, Tempo-Grenze an die Maschine binden |
+
+---
+
+## AP. Nachtrag zur Umsetzung U7c (9. November 2026)
+
+| # | Befund | Status |
+|---|---|---|
+| AP1 | **AK6 erledigt:** Runde 1 wird aus Profitopf und Amateurtopf gelost, zwei Erstligisten treffen dort nie aufeinander. | ✅ |
+| AP2 | **H5, T1 erledigt:** Die Relegation hat Verlängerung und Elfmeterschießen im Rückspiel, kein Los mehr. | ✅ |
+| AP3 | **T2:** Die Regel für Zweitmannschaften ist gebaut (eine Liga tiefer, der beste Absteiger bleibt), die echte Regel ist weiter nicht geprüft. | 🔶 K13 §12 Nr. 11 |
+| AP4 | **72 Stunden:** Der feste Pokaltag je Runde ergab bis zu 124 Spiele mit weniger als drei Tagen Abstand in drei Saisons, der Spielplan-Generator in den Folgesaisons weitere 50. Behoben durch Spielverlegungen nach der Auslosung und `planReparieren`. | ✅ |
+| AP5 | **AI5 und K13 §10:** In der Relegation setzt sich der Erstligist im Spiel nur in etwa 50 % durch, echt sind es etwa 80 %. Grund ist der zu kleine Abstand der Kader zwischen dem Ende der 1. und der Spitze der 2. Liga. | 📌 bei K32 (Weltaufbau) |
+| AP6 | **K03, K32:** Länderspiele brauchen Nationalitäten. | 📌 bei K32 und dem Auslandspool |
+| AP7 | **UI-Test:** Der Knopf „Annehmen“ beim Sportgericht (U7a) wurde mit dem eines Transferangebots verwechselt. Er heißt jetzt „Strafe annehmen“. | ✅ |
+| AP8 | **K33:** Neue Felder `supercup`, `cup.los`, `relSp[].pen`, am Spieler `spritzeAm` (Tag der letzten Spritze, für die Prüfung der Einsätze). | ✅ in K33 |
+

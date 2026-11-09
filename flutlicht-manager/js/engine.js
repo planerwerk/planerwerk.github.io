@@ -230,7 +230,10 @@ const wb=o.wb||'liga',H=mitWettbewerb(wb,()=>side(hid,true,o.neutral)),A=mitWett
     [0,1].forEach(s=>{if(G.auto[s]&&!Ss[s].am)kiTrainer(s,m);});
     if(m<=G.effektBis+1||m===46)W=werte(m);
     mitStrom(stromNr(hs,m),()=>minute(m,G.verl));G.m=m;
-    if((m===90&&!(o.ko&&sc[0]===sc[1]))||m===120){if(m===120&&sc[0]===sc[1])G.elf=elfmeterAnlegen();else G.ende=true;}};
+    // Gleichstand: im K.-o.-Spiel, mit Hinspiel nach beiden Spielen (Relegation). Supercup ohne Verlängerung direkt ins Elfmeterschießen (K13).
+    const gleich=o.agg?sc[0]+o.agg[0]===sc[1]+o.agg[1]:sc[0]===sc[1];
+    if(m===90&&o.ko&&o.elfDirekt&&gleich)G.elf=elfmeterAnlegen();
+    else if((m===90&&!(o.ko&&gleich))||m===120){if(m===120&&gleich)G.elf=elfmeterAnlegen();else G.ende=true;}};
   // Elfmeterschießen (K05 §4.6): Schuss für Schuss in der Reihenfolge der Mannschaften, beendet, sobald es entschieden ist
   const elfmeterAnlegen=()=>({z:strom('spiel',saison,tag,hid,aid,'elfmeter'),k:0,t:[0,0],n:[0,0]});
   G.elfmeterReihe=[0,1].map(s=>{const l=elfmeterReihe(Ss[s]).map(p=>p.id),t=!Ss[s].am&&S.teams[Ss[s].id],w=((t&&t.schuetzen&&t.schuetzen.elfmeter)||[]).filter(id=>l.includes(id));return[...w,...l.filter(id=>!w.includes(id))];});
@@ -325,7 +328,7 @@ function applyMatchLauf(r,cup){const N=RE.note,V=RP.selbstvertrauen;
   [0,1].forEach(s=>{const tid=s?r.a:r.h;if(tid>=1000)return;const gf=s?r.ag:r.hg,ga=s?r.hg:r.ag,res=gf>ga?1:gf<ga?-1:0;
     const xgF=r.xg0[s],E=erwartung(xgF,r.xg0[1-s]),eres=E.sieg-E.niederlage;
     r.xpo[s].forEach(([id,,anteil,min=90])=>{const p=PIX.get(id);if(!p)return;p.apps++;nachSpiel(p,min);
-      const goals=r.ev.filter(e=>e.t==='G'&&e.p===id).length;if(cup)p.pg=(p.pg||0)+goals;else if(!r.rel)p.g+=goals;if(min<N.mindestMinuten){p.played=1;return;} // Kurzeinsatz: keine Note
+      const goals=r.ev.filter(e=>e.t==='G'&&e.p===id).length;if(cup)p.pg=(p.pg||0)+goals;else if(!r.rel&&!r.supercup)p.g+=goals;if(min<N.mindestMinuten){p.played=1;return;} // Kurzeinsatz: keine Note
       const fest=N.basis-(p.str-N.staerkeMitte)/N.staerkeTeiler;
       let gr=fest-res*N.ergebnis-goals*N.tor+(R()-0.5)*N.zufall;if(r.off.includes(id))gr+=N.platzverweis;gr=clamp(Math.round(gr*2)/2,N.min,N.max);
       const erw=clamp(fest-eres*N.ergebnis-xgF*anteil*N.tor,N.min,N.max);

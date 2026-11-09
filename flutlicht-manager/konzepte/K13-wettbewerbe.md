@@ -3,6 +3,8 @@
 Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12.
 Hängt ab von: K01 (Kalender), K32a (Unterbau), K04/K05 (Verlängerung, Elfmeterschießen) · Wird gebraucht von: K07, K09, K10, K11, K12a, K23, K28.
 
+**Umsetzungshinweise (U7c, 9. November 2026):** Gebaut sind die Pokal-Auslosung mit Töpfen und Heimrecht als Halt zwei Wochen vor der Runde, Spielverlegungen nach der Auslosung und ein Reparaturdurchlauf im Spielplan für 72 Stunden, die Relegation mit Verlängerung und Elfmeterschießen, der Supercup und die Regel für Zweitmannschaften. Code in `js/wettbewerbe.js` und `js/kalender.js` (planReparieren), Werte in `REGELN.wettbewerbe`. Test: `tests/wettbewerbe.js`. Abweichungen in §12 unter U7c.
+
 ## 1. Ziel und Spielgefühl
 
 - **Echte Strukturen:** drei Profiligen, DFB-Pokal, Relegation, Regionalliga-Aufstieg, Supercup, Länderspiele mit Abstellungen.
@@ -183,6 +185,16 @@ wettbewerbe:{
 4. **Zweitmannschaft muss absteigen,** wenn die erste in ihre Liga fällt (echte Regel prüfen).
 5. **Nationen-Tabelle** als neue Datei, grob nach Weltrangliste, gepflegt wie die anderen Stammdaten.
 
+**Vorläufig entschieden bei der Umsetzung (U7c, 9. November 2026):**
+6. **Pokal-Auslosung nach den echten Töpfen:** In Runde 1 kommen die 18 Erstligisten und die 14 besten Zweitligisten der Vorsaison in den Profitopf, alle anderen in den Amateurtopf mit Heimrecht. Ab Runde 2 bis zum Halbfinale werden zuerst Amateure (3. Liga und darunter) gegen Profis gelost, die Amateure spielen zu Hause, die übrigen Paarungen kommen aus einem Topf. Für Runde 1 und 2 ist das belegt (diefalsche9.de), für Achtelfinale bis Halbfinale nicht: Die Quellen sagen „ein Topf, der Erstgezogene hat Heimrecht“. Das Heimrecht der Amateure bis zum Halbfinale bleibt also eine Annahme (Nr. 2).
+7. **Auslosung als Halt:** 14 Tage vor der Runde, frühestens am Tag nach der Vorrunde. Im Büro steht eine Karte mit allen Paarungen, deine hervorgehoben, dazu eine Nachricht. Gezogene Kugeln als Animation gibt es noch nicht.
+8. **72 Stunden:** Nach der Auslosung verlegt die Liga Spiele der Pokalteilnehmer, die weniger als drei Tage vor oder nach der Runde liegen (Sonntag → Samstag davor), mit Nachricht an dich. Der Pokal spielt vorläufig an einem Tag je Runde, nicht an Dienstag und Mittwoch. In den erzeugten Folgesaisons repariert der Spielplan-Generator englische Wochen (Dienstag → Mittwoch, Freitag → Samstag, sonst das Spiel davor nach vorn). Ergebnis: kein Verein spielt zweimal innerhalb von drei Tagen.
+9. **Relegation:** Das Rückspiel hat bei Gleichstand in der Summe Verlängerung und Elfmeterschießen aus der Engine, auch live. Das Los bleibt nur für alte Spielstände. Echt setzt sich der Bundesligist seit 2009 in etwa 80 % durch (13 von 16 bis 2024, Sky), im Spiel sind es etwa 50 %, weil der 16. der 1. Liga und der 3. der 2. Liga in unserer Welt fast gleich stark sind (Konsistenzprüfung AI5).
+10. **Supercup** ab der zweiten Saison (für die erste fehlt die Vorsaison im Spiel): Meister gegen Pokalsieger am Samstag vor dem 1. Spieltag beim Meister, sonst gegen den Vizemeister, wie 2024 Leverkusen gegen Stuttgart. Bei Gleichstand direkt Elfmeterschießen, seit 2010 gibt es keine Verlängerung. Karten und Sperren zählen wie im Pokal, Tore nicht zur Torjägerliste. Noch ohne Prämie (K23).
+11. **Zweitmannschaften:** Spielt die erste Mannschaft in derselben Liga, muss die Zweite eine Liga tiefer, und der beste Absteiger dieser Liga bleibt drin. Die echte Regel ist weiter nicht geprüft (Nr. 4).
+12. **Länderspiele noch nicht gebaut:** Spieler haben noch keine Nationalität (kommt mit K32 und dem Auslandspool, K03). Ohne sie gibt es keine Nominierung. Ebenfalls offen: Spielverlegung auf Antrag, Rotation der Favoriten in Runde 1 und 2, Pokal an Dienstag und Mittwoch, Prämien für den Supercup.
+13. **Lernstufen (K36):** Pokal, Relegation und Supercup laufen ab Stufe 1 (nur Termine und Ergebnisse). Die Auslosung ist ab Stufe 1 ein Moment. Spielverlegung beantragen kommt später auf Stufe 4, wenn es sie gibt.
+
 **Noch zu recherchieren:** Heimrecht in späteren Pokalrunden, Supercup-Regeln, Regel für Zweitmannschaften, Schwelle für Spielverlegungen, echte Pokalprämien 2026/27.
 
 ## Quellen
@@ -190,4 +202,7 @@ wettbewerbe:{
 - Pokal-Heimrecht für die 3. Liga und darunter, kein Tausch: [DFB: Modus DFB-Pokal](https://www.dfb.de/dfb-pokal/modus/?m=1%2F), [DFB: Drittligisten im Pokal](https://www.dfb.de/news/drittligisten-im-pokalviertelfinale-acht-kamen-durch), [90min.de: Heimrechttausch](https://www.90min.de/posts/bremer-sv-fc-bayern-dfb-pokal-heimrechttausch-allianz-arena)
 - Relegation ohne Auswärtstorregel, Verlängerung und Elfmeterschießen: [90min.de: Auf- und Abstieg, Relegation](https://www.90min.de/posts/wie-funktioniert-auf-und-abstieg-bundesliga-kompletter-guide-relegation), [goal.com](https://www.goal.com/de/meldungen/auswaertstorregel-relegation-bundesliga/blt953aebc755051094)
 - Spielverlegungen in der 3. Liga nach § 34 der Spielordnung: [DFB: Zwei Spiele in der 3. Liga verlegt](https://www.dfb.de/news/detail/zwei-spiele-in-der-3-liga-verlegt-255515/)
+- Töpfe und Heimrecht in Runde 1 und 2: [diefalsche9.de: Die Töpfe für die DFB-Pokal-Auslosung](https://www.diefalsche9.de/das-sind-die-toepfe-fuer-die-dfb-pokal-auslosung/), ab dem Achtelfinale ein Topf: [90min.de: Auslosung ab dem Achtelfinale](https://www.90min.de/dfb-pokal-auslosung-termine-und-was-sich-ab-dem-achtelfinale-andert) (U7c)
+- Supercup ohne Verlängerung seit 2010, 2024 Double-Sieger gegen Vizemeister: [bundesliga.com: Supercup-Historie](https://www.bundesliga.com/de/bundesliga/news/supercup-historie-rekorde-alle-spiele-tore-meister-pokalsieger-5786), [zdfheute: Leverkusen gegen Stuttgart](https://www.zdfheute.de/sport/fussball-dfl-supercup-bayer-leverkusen-vfb-stuttgart-100.html)
+- Relegation, Bundesligist 13 von 16 seit 2009: [Sky](https://sport.sky.de/fussball/artikel/relegation-zur-bundesliga-statistik-spricht-gegen-die-sv-elversberg/13370848/33895)
 - Pokal-Auslosung, 72 Stunden, Spielverlegung bei Abstellungen: `konzepte/_recherche-genre.md`, Abschnitte 4 und 4b

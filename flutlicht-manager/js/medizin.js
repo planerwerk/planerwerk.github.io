@@ -64,7 +64,7 @@ function nachSpritze(p){if(!gespritzt(p))return;p.spritze=null;const neu=RMD.ver
     else p.inj+=7;if(p.team===S.my)news(`Die Spritze hat nicht gehalten: Bei ${p.n} ist aus der ${alt} mehr geworden (${verletzungText(p)||'länger verletzt'}).`,'bad');}}
 // Computer-Vereine spritzen nur in wichtigen Spielen, und nur Stammspieler mit kurzer Verletzung (K10 §7)
 function kiSpritzen(tid){if(tid>=1000||tid===S.my)return;const sq=squad(tid),elfter=(sq.map(p=>p.str).sort((a,b)=>b-a)[10])||0;
-  sq.forEach(p=>{if(p.inj>0&&p.inj<=10&&p.vl&&RMD.arten[p.vl.art].spritzen&&p.str>=elfter)p.spritze=S.tag;});}
+  sq.forEach(p=>{if(p.inj>0&&p.inj<=10&&p.vl&&RMD.arten[p.vl.art].spritzen&&p.str>=elfter){p.spritze=S.tag;p.spritzeAm=S.tag;}});}
 
 // Saisonbilanz je Verein und Ligaschnitt (K10 §4)
 function verletzungsBilanz(tid){const s=(S.vstat||{})[tid]||{n:0,tage:0},t=S.teams[tid],l=S.teams.filter(x=>x.lg===t.lg).map(x=>(S.vstat||{})[x.id]||{n:0,tage:0});

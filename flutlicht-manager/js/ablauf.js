@@ -10,8 +10,9 @@ function tagesSpieleVorbereiten(d,live){return mitStrom(strom('spieltag',S.seaso
     if(live&&(h===S.my||a===S.my)){G=spielAnlegen(h,a,Object.assign({},o,{auto:[h!==S.my,a!==S.my]}));platz={meta,g,i};g.list.push(null);return;}g.list.push(Object.assign(sim(h,a,o),meta));};
   for(const e of termineAm(d)){
     if(e.art==='liga'){const g={titel:`${ligaName(e.lg)} · ${e.md+1}. Spieltag`,art:'liga',e,list:[]};e.idx.forEach(i=>{const[h,a]=S.fx[e.lg][e.md][i];spiel(h,a,{},{lg:e.lg,min:S.plan.zeit[e.lg][e.md][i][1]},g);});out.gruppen.push(g);}
-    else if(e.art==='pokal'){if(S.cup.hist.length!==e.r)continue;const al=shuffle(S.cup.alive.slice()),fin=e.r===5,g={titel:`DFB-Pokal · ${POKAL_RUNDEN[e.r]}`,art:'pokal',e,list:[]};for(let i=0;i<al.length;i+=2){let h=al[i],a=al[i+1];if(h<1000&&a>=1000)[h,a]=[a,h];spiel(h,a,{wb:'pokal',ko:1,neutral:fin,wichtig:e.r>=RTA.ki.wichtigAbRunde},{cup:1,min:e.min},g);}out.gruppen.push(g);}
-    else if(e.art==='rel'||e.art==='rel2'){const sp=S[e.art==='rel'?'relSp':'relSp2'];if(!relBereit(e.art)||sp[e.leg])continue;const[h,a]=e.leg===0?relTeams(e.art).reverse():relTeams(e.art);const g={titel:`Relegation${e.art==='rel2'?' 2./3. Liga':''} · ${e.leg?'Rückspiel':'Hinspiel'}`,art:e.art,e,list:[]};spiel(h,a,{wichtig:true},{rel:1,min:e.min},g);out.gruppen.push(g);}
+    else if(e.art==='pokal'){if(S.cup.hist.length!==e.r)continue;const fin=e.r===5,g={titel:`DFB-Pokal · ${POKAL_RUNDEN[e.r]}`,art:'pokal',e,list:[]};pokalPaare(e.r).forEach(([h,a])=>spiel(h,a,{wb:'pokal',ko:1,neutral:fin,wichtig:e.r>=RTA.ki.wichtigAbRunde},{cup:1,min:e.min},g));out.gruppen.push(g);}
+    else if(e.art==='supercup'){const x=S.supercup,g={titel:'Supercup',art:'supercup',e,list:[]};spiel(x.h,x.a,{wb:'pokal',ko:1,elfDirekt:1,wichtig:true},{supercup:1,min:e.min},g);out.gruppen.push(g);}
+    else if(e.art==='rel'||e.art==='rel2'){const sp=S[e.art==='rel'?'relSp':'relSp2'];if(!relBereit(e.art)||sp[e.leg])continue;const[h,a]=e.leg===0?relTeams(e.art).reverse():relTeams(e.art);const g={titel:`Relegation${e.art==='rel2'?' 2./3. Liga':''} · ${e.leg?'Rückspiel':'Hinspiel'}`,art:e.art,e,list:[]};spiel(h,a,e.leg===1&&sp[0]?{wichtig:true,ko:1,agg:[sp[0].ag,sp[0].hg]}:{wichtig:true},{rel:1,min:e.min},g);out.gruppen.push(g);}
   }
   if(G)S.gespielt=vorher; // erst nach dem Abpfiff gilt der Tag als gespielt (Neuladen mitten im Spiel)
   return{out,G,platz};});}
@@ -38,8 +39,10 @@ function tagesSpieleAbschliessenLauf(out){const d=out.tag;S.gespielt=d;
         if(mg.h===S.my&&e.r!==5)heimspielEinnahmen(mg,true);money('Pokalprämien',RF.pokalPraemien[e.r]);}
       if(e.r===5){const cw=S.cup.alive[0];news(`${tn(cw)} gewinnt den DFB-Pokal!`,'good');if(cw===S.my){money('Pokalprämien',RF.pokalSieg);S.trust+=RV.pokalSieg;}}
       S.teams.forEach(x=>{if(x.id!==S.my&&aktiv(x))x.cash+=x.rep*x.rep*RF.fremdeEinnahmen.pokal;});}
-    else if(g.art==='rel'||g.art==='rel2'){const r=g.list[0];S[g.art==='rel'?'relSp':'relSp2'][e.leg]={h:r.h,a:r.a,hg:r.hg,ag:r.ag};
-      if(mg)news(`${spielName(e)}: ${tn(r.h)} – ${tn(r.a)} ${r.hg}:${r.ag}`,(r.h===S.my?r.hg>r.ag:r.ag>r.hg)?'good':(r.hg===r.ag?'':'bad'));}}
+    else if(g.art==='rel'||g.art==='rel2'){const r=g.list[0];S[g.art==='rel'?'relSp':'relSp2'][e.leg]={h:r.h,a:r.a,hg:r.hg,ag:r.ag,pen:r.pen||null};
+      if(mg)news(`${spielName(e)}: ${tn(r.h)} – ${tn(r.a)} ${r.hg}:${r.ag}${r.pen?` (i.E. ${r.pen[0]}:${r.pen[1]})`:''}`,(r.h===S.my?r.hg>r.ag:r.ag>r.hg)?'good':(r.hg===r.ag?'':'bad'));}
+    else if(g.art==='supercup'){const r=g.list[0],w=winner(r);S.supercup.r={hg:r.hg,ag:r.ag,pen:r.pen||null,sieger:w};
+      news(`Supercup: ${tn(r.h)} – ${tn(r.a)} ${r.hg}:${r.ag}${r.pen?` (i.E. ${r.pen[0]}:${r.pen[1]})`:''}. ${tn(w)} holt den Supercup.`,mg?(w===S.my?'good':'bad'):'');}}
   S.trust=clamp(S.trust,0,100);vorstandPruefen();
   return out;}
 
@@ -54,7 +57,7 @@ function taeglichLauf(d){const T=RT;
   S.pl.forEach(p=>{if(p.inj>0)p.inj--;if(p.team<-1)return;const st=p.team>=0?status.get(p.team)||'':'',urlaub=st==='urlaub'?true:st==='laufplan'?'laufplan':false;
     const tr=!urlaub&&p.team>=0&&p.inj<=0&&S.phase==='play'?trainingTag(p,S.teams[p.team],ab.get(p.team),d):0;tagesWerte(p,urlaub,tr);});
   S.offers=S.offers.filter(o=>o.bis>=d&&PIX.get(o.pid)&&PIX.get(o.pid).team===S.my&&S.teams[o.tid]&&aktiv(S.teams[o.tid]));
-  medizinTag(d);sportgerichtTag(d);
+  medizinTag(d);sportgerichtTag(d);pokalAuslosungTag(d);
   const c=S.constr;if(c&&d>=c.bis){const t=myT();if(c.k==='cap')t.cap+=RB.tribuene.plaetze;if(c.k==='logen')t.logen+=RB.logen.anzahl;if(c.k==='shop')t.shop++;news(`Bau abgeschlossen: ${c.label}.`,'good');S.constr=null;}}
 // Werte pro Woche (montags): Training und Entwicklung, Transfermarkt, Vorstand bei Minus auf dem Konto.
 function woechentlich(d){return mitStrom(strom('woche',S.season,d),()=>woechentlichLauf(d));}

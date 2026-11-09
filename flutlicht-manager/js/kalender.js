@@ -42,7 +42,17 @@ function spielplanLauf(saison){const fx={},zeit={},sh=schiebung(saison),ix={};S.
       zeit[lg]=P.spieltage.map((md,k)=>{const g=grundtag(md);
         if(k===n-1){const d=tagAusDatum(md[0][2],TERMINE_2026.saison,sh)+Math.round((saisonNull(TERMINE_2026.saison)-saisonNull(saison))/TAG_MS);return fx[lg][k].map(()=>[d,minute(RK.anstoss[lg].letzter)]);}
         return rasterZeiten(lg,fx[lg][k],g.tag+sh+Math.round((saisonNull(TERMINE_2026.saison)-saisonNull(saison))/TAG_MS),g.mitte);});}});
-  return{fx,zeit};}
+  planReparieren(fx,zeit);return{fx,zeit};}
+// 72 Stunden (K13 §3.5): Spielt ein Verein weniger als drei Tage nach seinem letzten Ligaspiel, rückt die Partie im Fenster nach hinten
+// (Dienstag → Mittwoch, Freitag → Samstag), sonst das vorige Spiel nach vorn (Sonntag → Samstag). Der letzte Spieltag bleibt zeitgleich.
+function planReparieren(fx,zeit){const M=RWB.spielplan.mindestTage,tagVon=(lg,k,id)=>{const j=fx[lg][k].findIndex(q=>q[0]===id||q[1]===id);return j<0?null:zeit[lg][k][j];};
+  for(let pass=0;pass<4;pass++){let n=0;
+    LIGEN.forEach(lg=>{const F=fx[lg],Z=zeit[lg],letzter=F.length-1;if(!F)return;
+      F.forEach((md,k)=>{if(k===0)return;md.forEach(([h,a],i)=>{const z=Z[k][i],vor=[h,a].map(id=>tagVon(lg,k-1,id)),p=Math.max(...vor.map(x=>x?x[0]:-99));if(z[0]-p>=M)return;
+        const nach=k<letzter?Math.min(...[h,a].map(id=>{const x=tagVon(lg,k+1,id);return x?x[0]:1e9;})):1e9,ziel=p+M;
+        if(k<letzter&&ziel-z[0]<=2&&ziel<=nach-M){z[0]=ziel;n++;return;}
+        vor.forEach(x=>{if(x&&z[0]-x[0]<M&&x[0]-(z[0]-M)<=2&&k-1<letzter){x[0]=z[0]-M;n++;}});});});});
+    if(!n)break;}}
 
 // Welche Ligaspiele finden an welchem Tag statt? (Index, nicht gespeichert)
 let TAGINDEX={plan:null,map:null};
@@ -52,6 +62,7 @@ function termineAm(d){const P=S.plan,L=[],g={};
   spieleAm(d).forEach(x=>{const k=x.lg+':'+x.md;if(!g[k]){g[k]={art:'liga',lg:x.lg,md:x.md,idx:[],tag:d};L.push(g[k]);}g[k].idx.push(x.i);});
   const r=P.pokal.findIndex(x=>x[0]===d);if(r>=0)L.push({art:'pokal',r,tag:d,min:P.pokal[r][1]});
   [['rel',P.rel],['rel2',P.rel2]].forEach(([art,a])=>{const k=a.findIndex(x=>x[0]===d);if(k>=0)L.push({art,leg:k,tag:d,min:a[k][1]});});
+  const sc=supercupAm(d);if(sc)L.push({art:'supercup',tag:d,min:sc.min});
   if(d===P.ende)L.push({art:'ende',tag:d});return L;}
 // Relegationen: rel = 16. der 1. Liga gegen 3. der 2. Liga, rel2 = 16. der 2. Liga gegen den drittbesten Aufstiegsberechtigten der 3. Liga
 const aufstiegsReihe3=()=>table(3).filter(r=>S.teams[r.id].zweite<0).map(r=>r.id);
@@ -63,11 +74,13 @@ function meinSpiel(d){const t=myT();
   for(const e of termineAm(d)){
     if(e.art==='liga'&&e.lg===t.lg){const i=e.idx.find(j=>{const f=S.fx[e.lg][e.md][j];return f[0]===S.my||f[1]===S.my;});if(i!=null)return{...e,i,min:S.plan.zeit[e.lg][e.md][i][1]};}
     if(e.art==='pokal'&&S.cup.hist.length===e.r&&S.cup.alive.includes(S.my))return e;
-    if((e.art==='rel'||e.art==='rel2')&&relBereit(e.art)&&relTeams(e.art).includes(S.my))return e;}
+    if((e.art==='rel'||e.art==='rel2')&&relBereit(e.art)&&relTeams(e.art).includes(S.my))return e;
+    if(e.art==='supercup'&&[S.supercup.h,S.supercup.a].includes(S.my))return e;}
   return null;}
 // Heim- und Gastverein deines Spiels (Pokal: wird erst beim Anpfiff gelost)
-function paarung(e){if(e.art==='liga')return S.fx[e.lg][e.md][e.i];if(e.art==='rel'||e.art==='rel2'){const[a,b]=relTeams(e.art);return e.leg===0?[b,a]:[a,b];}return null;}
-function spielName(e){return e.art==='liga'?`${e.md+1}. Spieltag`:e.art==='pokal'?`DFB-Pokal, ${POKAL_RUNDEN[e.r]}`:e.art==='rel'||e.art==='rel2'?`Relegation${e.art==='rel2'?' 2./3. Liga':''}, ${e.leg?'Rückspiel':'Hinspiel'}`:'Saisonende';}
+function paarung(e){if(e.art==='liga')return S.fx[e.lg][e.md][e.i];if(e.art==='supercup')return[S.supercup.h,S.supercup.a];
+  if(e.art==='pokal'){const l=S.cup.los&&S.cup.los.r===e.r?S.cup.los.paare.find(x=>x.includes(S.my)):null;return l||null;}if(e.art==='rel'||e.art==='rel2'){const[a,b]=relTeams(e.art);return e.leg===0?[b,a]:[a,b];}return null;}
+function spielName(e){return e.art==='supercup'?'Supercup':e.art==='liga'?`${e.md+1}. Spieltag`:e.art==='pokal'?`DFB-Pokal, ${POKAL_RUNDEN[e.r]}`:e.art==='rel'||e.art==='rel2'?`Relegation${e.art==='rel2'?' 2./3. Liga':''}, ${e.leg?'Rückspiel':'Hinspiel'}`:'Saisonende';}
 const spielZeit=e=>e.min!=null?`${WT[wochentag(e.tag)]} ${uhr(e.min)}`:datumKurz(e.tag);
 function naechstesSpiel(ab){for(let d=ab;d<=S.plan.ende;d++){const e=meinSpiel(d);if(e)return e;}return null;}
 // Deine Ligaspiele der Saison mit Tag (auch vergangene)
@@ -82,7 +95,7 @@ const meineSpieltage=()=>meineLigaspiele().filter(e=>e.tag<S.tag||(e.tag===S.tag
 const heuteMeinSpiel=()=>S.phase==='play'&&S.gespielt!==S.tag&&!!meinSpiel(S.tag);
 
 // Halt-Regeln: Hier hält „Tag beenden“ an.
-function haltGrund(d){if(S.phase==='end')return'Saisonende';if(S.fired)return'Entlassen';if(S.phase==='play'&&meinSpiel(d))return'Spiel';if(S.offers.some(o=>o.bis===d)||meineVerfahren().some(v=>v.stand==='antrag'&&v.frist===d))return'Frist';if(S.phase==='play'&&d===auftaktTag(myT()))return'Trainingsauftakt';return'';}
+function haltGrund(d){if(S.phase==='end')return'Saisonende';if(S.fired)return'Entlassen';if(S.phase==='play'&&meinSpiel(d))return'Spiel';if(pokalLosHeute(d))return'Auslosung';if(S.offers.some(o=>o.bis===d)||meineVerfahren().some(v=>v.stand==='antrag'&&v.frist===d))return'Frist';if(S.phase==='play'&&d===auftaktTag(myT()))return'Trainingsauftakt';return'';}
 function naechsterHalt(){const ende=S.phase==='sommer'?tageDerSaison():S.plan.ende;
   for(let d=S.tag+1;d<=S.tag+RK.maxSprung;d++){if(d>=ende||haltGrund(d)||(S.phase==='play'&&d===auftaktTag(myT())))return Math.min(d,ende);}return S.tag+RK.maxSprung;}
 

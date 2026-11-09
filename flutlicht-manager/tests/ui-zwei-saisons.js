@@ -82,7 +82,7 @@ async function advance(tag){await tabClick('Büro');const t0=await pg.evaluate((
      await pg.click('.ovb button:text-is("Zum Abpfiff")',{timeout:4000});}
    await pg.waitForSelector('#cf-next, #lv-weiter',{timeout:6000});const sc=await pg.evaluate(()=>__scan());if(sc)note(tag,'Spiel: '+sc);
    if(await pg.$('#lv-weiter'))await pg.click('#lv-weiter');
-   const bad=await pg.evaluate(u=>{const m=new Map(u.map(x=>[x[0],x]));return LAST.list.flatMap(r=>{const w=wbVon(r);return[...r.xi.flat(),...(r.ein||[]).flat()].filter(id=>{const x=m.get(id);return x&&(x[1]||(w==='liga'?x[2]:x[3]));});}).length;},unav);if(bad)note(tag,bad+' gesperrte/verletzte Spieler eingesetzt');
+   const bad=await pg.evaluate(u=>{const m=new Map(u.map(x=>[x[0],x]));return LAST.list.flatMap(r=>{const w=wbVon(r);return[...r.xi.flat(),...(r.ein||[]).flat()].filter(id=>{const x=m.get(id),p=PIX.get(id);return x&&((x[1]&&!(p&&p.spritzeAm===LAST.tag))||(w==='liga'?x[2]:x[3]));});}).length;},unav);if(bad)note(tag,bad+' gesperrte/verletzte Spieler eingesetzt');
    if(await pg.$('#cf-next'))await pg.click('#cf-next');continue;}
   if(ov.includes('Entlassen!')){actlog.push(tag+' ENTLASSEN – nehme Job');await pg.click('.ovb .opt');continue;}
   if(ov.includes('Saisonbilanz')){const sc=await pg.evaluate(()=>__scan());if(sc)note(tag,'Bilanz: '+sc);

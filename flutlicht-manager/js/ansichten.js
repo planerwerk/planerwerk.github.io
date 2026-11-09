@@ -33,7 +33,9 @@ const V={};
 // Karte für ein Spiel deines Vereins (heute oder demnächst)
 function spielKarte(e,heute){const f=paarung(e),wann=(heute?'Heute':datumKurz(e.tag))+(e.min!=null?', '+uhr(e.min)+' Uhr':'');
   if(!f)return`<div class="vs"><span>${wann} · ${spielName(e)}</span><b>Gegner wird ausgelost</b><span>K.-o.-Spiel mit Verlängerung und Elfmeterschießen</span></div>`;
-  const home=f[0]===S.my,o=S.teams[home?f[1]:f[0]];
+  const home=f[0]===S.my,oid=home?f[1]:f[0],o=S.teams[oid],ort=e.art==='pokal'&&e.r===5?'Finale in Berlin':home?'Heimspiel':'Auswärtsspiel';
+  if(!o)return`<div class="vs"><span>${wann} · ${spielName(e)} · ${ort}</span><b>${esc(tn(oid))}</b><span>Amateurverein · K.-o.-Spiel mit Verlängerung und Elfmeterschießen</span></div>`;
+  if(e.art==='pokal'||e.art==='supercup')return`<div class="vs"><span>${wann} · ${spielName(e)} · ${ort}</span><b>${chip(o.id)}${esc(o.name)}</b><span>${o.lg}. Liga · Kaderstärke ${teamLevel(o.id).toFixed(1)} (deine: ${teamLevel(S.my).toFixed(1)}) · ${e.art==='supercup'?'bei Gleichstand direkt Elfmeterschießen':'K.-o.-Spiel'}</span></div>`;
   return`<div class="vs"><span>${wann} · ${spielName(e)} · ${home?'Heimspiel':'Auswärtsspiel'}</span><b>${chip(o.id)}${esc(o.name)}</b><span>Tabellenplatz ${rank(o.lg,o.id)} (${o.lg}. Liga) · Kaderstärke ${teamLevel(o.id).toFixed(1)} (deine: ${teamLevel(S.my).toFixed(1)})</span></div>`;}
 // Termin eines Kalendertags aus Sicht deines Vereins, auch für vergangene Tage
 function kalTermin(d){const r={kurz:'',cls:'',titel:''},l=meineLigaspiele().find(e=>e.tag===d);
@@ -58,8 +60,12 @@ function sportgerichtKarte(){const V=meineVerfahren(),A=(S.sgArchiv||[]).filter(
     if(v.stand==='offen')return`<p>${kopf}: vorläufig gesperrt, der Antrag kommt bis ${datumKurz(v.antragAm)}.</p>`;
     if(v.stand==='einspruch')return`<p>${kopf}: Einspruch gegen ${v.antrag} Spiel${v.antrag===1?'':'e'} läuft, Urteil am ${datumKurz(v.urteilAm)}. Bis dahin bleibt er gesperrt.</p>`;
     const rest=v.frist-S.tag;return`<div class="row between" style="padding:6px 0;border-bottom:1px solid var(--rule)"><span>${kopf}: Antrag <b>${v.antrag} Spiel${v.antrag===1?'':'e'}</b>${v.vor?` (Wiederholungstäter)`:''} <span class="tag ${rest<=0?'warn':''}">${rest<=0?'Frist endet heute':'Frist bis '+datumKurz(v.frist)}</span></span>
-      <span class="row"><button onclick="sgAnnehmen(${v.id})">Annehmen</button><button onclick="sgEinspruch(${v.id})" ${v.antrag<2?'disabled title="Weniger als ein Spiel geht nicht"':`title="Anwalt ${fmt(E.kosten[0])} bis ${fmt(E.kosten[1])}. Meist bestätigt, manchmal ein Spiel weniger, selten eins mehr."`}>Einspruch</button></span></div>`;};
+      <span class="row"><button onclick="sgAnnehmen(${v.id})">Strafe annehmen</button><button onclick="sgEinspruch(${v.id})" ${v.antrag<2?'disabled title="Weniger als ein Spiel geht nicht"':`title="Anwalt ${fmt(E.kosten[0])} bis ${fmt(E.kosten[1])}. Meist bestätigt, manchmal ein Spiel weniger, selten eins mehr."`}>Einspruch</button></span></div>`;};
   return`<div class="card"><h3>Sportgericht</h3>${V.map(zeile).join('')}${A.length?`<p class="dim" style="margin-top:8px">Zuletzt: ${A.map(u=>`${esc(u.n)} ${u.urteil} Spiel${u.urteil===1?'':'e'} (${AUSGANG[u.ausgang]})`).join(' · ')}</p>`:''}<p class="dim">Ohne Antwort bis zur Frist gilt der Antrag als angenommen.</p></div>`;}
+// Pokal-Auslosung (K13 §3.2): am Tag der Auslosung alle Paarungen, dein Los hervorgehoben
+function pokalLosKarte(){const L=S.cup&&S.cup.los;if(!L||L.am!==S.tag||S.phase!=='play')return'';
+  return`<div class="card"><h3>Auslosung DFB-Pokal, ${POKAL_RUNDEN[L.r]}</h3><p class="dim">Gespielt am ${datumKurz(S.plan.pokal[L.r][0])}.${L.r===0?' Die Amateure aus Topf 2 haben Heimrecht.':L.r<=RWB.pokal.heimrechtBisRunde?' Amateure (3. Liga und darunter) haben gegen Profis Heimrecht.':''}</p>
+    <div class="tw"><table><tbody>${L.paare.map(([h,a])=>{const m=h===S.my||a===S.my;return`<tr${m?' class="me"':''}><td>${m?'<b>':''}${esc(tn(h))}${m?'</b>':''}</td><td>–</td><td>${m?'<b>':''}${esc(tn(a))}${m?'</b>':''}</td></tr>`;}).join('')}</tbody></table></div></div>`;}
 V.buero=()=>{const t=myT(),d=S.tag;let heute='';
   if(S.fired)heute=`<p><b>Du wurdest entlassen.</b> Oben auf „Jobangebote“ klicken.</p>`;
   else if(S.phase==='end')heute=`<p>Die Saison ist vorbei. Oben geht es zur Saisonbilanz.</p>`;
@@ -78,7 +84,7 @@ V.buero=()=>{const t=myT(),d=S.tag;let heute='';
   return`<div class="grid">
     <div class="card"><h2>Heute · ${datumLang(d)}</h2>${heute}${S.phase!=='end'?wochenLeiste():''}</div>
     <div class="card"><h2>Saisonziel</h2><p>${targetText(t.lg,S.target)}</p><p class="dim">Aktuell Platz ${rank(t.lg,S.my)}</p><div class="rgs" style="margin:10px 0">${rgAnzeige({label:'Vorstand',sub:'Vertrauen 0–100',min:0,max:100,wert:Math.round(S.trust),zonen:RU.zonenVertrauen})}</div><p class="dim">Sponsor: ${S.spons?esc(S.spons.name):'noch keiner'} · Training: ${(RT.vorlagen[myT().vorlage]||{name:'Co-Trainer entscheidet'}).name}</p></div>
-    ${sp}${of}${sportgerichtKarte()}${warn.length?`<div class="card"><h3>Hinweise</h3>${warn.map(x=>`<p>${x}</p>`).join('')}</div>`:''}${lm}
+    ${sp}${of}${pokalLosKarte()}${sportgerichtKarte()}${warn.length?`<div class="card"><h3>Hinweise</h3>${warn.map(x=>`<p>${x}</p>`).join('')}</div>`:''}${lm}
     <div class="card"><h2>Nachrichten</h2><div class="news">${S.news.map(n=>`<div class="${n.c}"><small>${n.w}</small>${esc(n.t)}</div>`).join('')}</div></div></div>`;};
 V.kader=()=>{const sq=squad(S.my).sort(SORTS[SORT]),xi=new Set(myXI()),pay=sq.reduce((s,p)=>s+p.sal,0);
   return`<div class="card"><div class="row between"><h2>Kader (${sq.length} Spieler)</h2><label>Sortieren <select id="sortsel" onchange="SORT=this.value;render()">${Object.keys(SORTS).map(k=>`<option value="${k}" ${k===SORT?'selected':''}>${SORTL[k]}</option>`).join('')}</select></label></div>

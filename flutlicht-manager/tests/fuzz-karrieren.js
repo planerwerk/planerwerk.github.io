@@ -10,7 +10,7 @@ const res=await pg.evaluate(()=>{const out=[];
  // Prüfung jedes Spieltags: kein gesperrter oder verletzter Spieler darf spielen
  // Sperren gelten je Wettbewerb (K09): ein in der Liga gesperrter Spieler darf im Pokal spielen
  let bad=0;const orig=window.tagesSpiele;window.tagesSpiele=function(d){const vor=new Map(S.pl.map(p=>[p.id,{inj:p.inj>0,liga:sperreIn(p,'liga')>0,pokal:sperreIn(p,'pokal')>0}]));const o=orig(d);
-   bad+=o.list.flatMap(r=>{const w=wbVon(r);return[...r.xi.flat(),...(r.ein||[]).flat()].filter(id=>{const x=vor.get(id);return x&&(x.inj||x[w]);});}).length;return o;};
+   bad+=o.list.flatMap(r=>{const w=wbVon(r);return[...r.xi.flat(),...(r.ein||[]).flat()].filter(id=>{const x=vor.get(id),p=PIX.get(id);return x&&((x.inj&&!(p&&p.spritzeAm===d))||x[w]);});}).length;return o;}; // fit gespritzt (K10) darf spielen
  const clubs=[0,6,15,16,17,18,19,20,23,34,35,36,50];
  for(const cid of clubs){const log={club:VEREINE[cid].name,seed:1000+cid,seasons:[],errors:[],ms:0,changes:0,stops:0};
   let x=(cid*2654435761)>>>0;const T=()=>{x=(Math.imul(x,1664525)+1013904223)>>>0;return x/4294967296;},rnd=a=>a[Math.floor(T()*a.length)];

@@ -74,6 +74,6 @@ function sgAnnehmen(id){const v=sgVerfahren(id);if(!v)return;sgAnnehmenLauf(v,S.
 function sgEinspruch(id){const v=sgVerfahren(id);if(!v||v.antrag<2)return;mitStrom(strom('sportgericht',S.season,S.tag,id),()=>sgEinspruchLauf(v,S.tag));
   news(`Einspruch für ${PIX.get(v.pid).n} eingelegt (Anwalt ${fmt(v.kosten)}). Urteil am ${datumKurz(v.urteilAm)}.`);save();render();}
 // Medizin (K10 §5.4): fit spritzen am Spieltag, früher zurückholen aus dem Aufbautraining
-function medSpritzen(id){const p=PIX.get(id),i=p&&p.team===S.my?verletzungInfo(p):null;if(!i||!i.spritzbar||!heuteMeinSpiel())return;p.spritze=S.tag;news(`${p.n} wird für heute fit gespritzt.`);save();render();}
+function medSpritzen(id){const p=PIX.get(id),i=p&&p.team===S.my?verletzungInfo(p):null;if(!i||!i.spritzbar||!heuteMeinSpiel())return;p.spritze=S.tag;p.spritzeAm=S.tag;news(`${p.n} wird für heute fit gespritzt.`);save();render();}
 function medFrueher(id){const p=PIX.get(id),i=p&&p.team===S.my?verletzungInfo(p):null;if(!i||i.phase!=='aufbau'||i.pflicht)return;p.inj=0;medizinRueckkehr(p,RMD.frueher.frische);news(`${p.n} ist früher zurück, aber noch nicht bei voller Frische.`);save();render();}
 
