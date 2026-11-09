@@ -35,6 +35,7 @@ Stand: 7. November 2026 (U1 umgesetzt, dazu Sommer, Anstoßzeiten und 3. Liga; K
 | **Spieltage** (6.11.) | über das Wochenende verteilt wie in echt, nach dem offiziellen Spielplan 2026/27 (OpenLigaDB) mit Anstoßzeiten. Samstag 15:30 bleibt die Konferenz, der letzte Spieltag läuft zeitgleich. |
 | **Unterbau** (6.11.) | 3. Liga mit 20 echten Vereinen als vollständige Liga, Regionalliga als Pool mit gelosten Meistern und Aufstiegsspielen („etwas Zufall“). Konzept K32a. |
 | **Alte Spielstände** (6.11.) | aus Testversionen sind Müll und werden gelöscht. |
+| **Verletzungen** (9.11.) | Die realistische Häufigkeit seit U7b bleibt (etwa 40 je Team und Saison, im Schnitt fehlen 8 % des Kaders). Stab (Physiotherapeut, Arzt, Athletiktrainer) und später das Reha-Zentrum sollen sie spürbar drücken können. |
 | **Einstieg mit Lernstufen** (9.11.) | Die erste Saison lässt sich mit einem Teil der Funktionen spielen. Wer etwas verstanden hat, steigt eine Stufe auf, und neue Möglichkeiten kommen dazu. Beispiele: Aufstellung gibt es ab Stufe 1, Taktik zuerst einfach und später ausführlicher, das Sportgericht erst auf einer höheren Stufe. Die Stufen lassen sich abschalten, dann ist sofort alles frei. Muss gut durchdacht sein: Konzept K36, erste Gedanken in §4. |
 | **Europapokal** (5.11.) | später als Erweiterung. Zuerst 1. und 2. Liga und Pokal. |
 | **Vorläufig übernommen** (Vorschläge aus der Konsistenzprüfung, gelten, solange du nichts anderes sagst) | Automatik und Delegieren in jedem Bereich über den Stab. Nichts wegnehmen, bevor der Ersatz fertig ist. K08 und der Auslandspool nach Welle 3, K16 nach Welle 2. |
@@ -251,7 +252,7 @@ Ich halte die Idee für richtig. Das Spiel hat schon jetzt viele Stellschrauben 
 7. **Halte und Meldungen:** Gesperrte Bereiche erzeugen keine Halte. Im Posteingang steht nur eine Zeile, zum Beispiel „Der Verein hat die Strafe angenommen“.
 8. **Technik:** Jede Funktion bekommt in `regeln.js` die Stufe, ab der sie frei ist. Die Oberfläche fragt nur `frei(bereich)` ab. Die Tests laufen mit Lernstufen an und aus. Ab sofort notiere ich bei jedem Umsetzungsschritt, ab welcher Stufe die neue Funktion frei sein soll.
 
-**Offen für dich (wenn das Konzept steht):** Stufennamen. Wie viele Stufen in der ersten Saison realistisch erreichbar sind (mein Vorschlag: Stufe 2–3, alles frei nach zwei bis drei Saisons). Ob der Aufstieg auf Stufe 2 ohne jede Nutzung allein nach Zeit kommt.
+**Mit dir entschieden (9.11. mittags):** Die Stufen heißen wie die Trainerlizenzen (Teamleiter, C-Lizenz, B-Lizenz, A-Lizenz, Pro-Lizenz). In der ersten Saison sind 2–3 Stufen erreichbar, alles ist nach zwei bis drei Saisons frei. Überspringen und Abschalten gehen jederzeit. Noch offen: Kommt Stufe 2 auch ohne jede Nutzung allein nach Zeit? Das entscheide ich im Konzept vorläufig.
 
 ## 5. Umsetzung in Wellen
 
@@ -280,6 +281,6 @@ Ich halte die Idee für richtig. Das Spiel hat schon jetzt viele Stellschrauben 
 Stand 8. November 2026:
 
 1. **Alle Konzepte sind geschrieben** (K01–K35b). K03 ist abgestimmt, die übrigen sind Entwürfe. Ihre vorläufigen Entscheidungen gelten, bis du widersprichst (§1, Punkt 9). Gesammelt in `konzepte/_offene-entscheidungen.md`.
-2. **Umsetzung** in der Reihenfolge der Wellen (§5). U1 bis U6 sind fertig (Fundament, Live-Spiel, Taktik, Training, Sommer, Trainerstab). U7 ist fertig (Disziplin, Medizin, Wettbewerbe, Testspiele), damit ist Welle 2 umgesetzt. Als Nächstes **K36 Lernstufen** schreiben (mit dir abstimmen) und als UL umsetzen, danach Welle 3.
+2. **Umsetzung** in der Reihenfolge der Wellen (§5). U1 bis U6 sind fertig (Fundament, Live-Spiel, Taktik, Training, Sommer, Trainerstab). U7 ist fertig (Disziplin, Medizin, Wettbewerbe, Testspiele), damit ist Welle 2 umgesetzt. Als Nächstes **K36 Lernstufen** als Entwurf schreiben und **U8 Stimmung und Gespräche** (K14, K15) umsetzen (Auftrag für den 9.11. um 23 Uhr). Die Umsetzung UL folgt, wenn du K36 abgestimmt hast.
 3. **Startsatz** für eine neue Session: „Projekt Flutlicht Manager im Ordner flutlicht-manager/. Lies PLAN.md. Weiter, entscheide du.“ Dann geht es beim nächsten offenen Umsetzungsschritt weiter.
 4. **Vor der Kalibrierung zu recherchieren** (aus den Konzepten gesammelt): Datenquelle für feine Positionen, Fuß und Charakter-Fakten (K03), Fouls und Torschüsse pro Spiel (K04), Regeln zu Liga-Rot im Pokal, Relegation und Trainer-Karten (K09), Verletzungsraten der Männer (K10), Heimrecht in späteren Pokalrunden, Supercup, Zweitmannschaften (K13), Vorvertragsregel und FIFA-Änderungen 2027 (K21), Personalkostenquote, 3.-Liga-Medientopf, Insolvenz-Punktabzug (K23).
