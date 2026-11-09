@@ -136,6 +136,7 @@ Bei der Umsetzung (U7a):
 12. **Einspruch:** Ausgang nach Lage. Eine harte Entscheidung (erste Rote Karte, kein Tätlichkeitsfall) wird zu 35 % gemindert und zu 5 % erhöht, eine eindeutige (Tätlichkeit) zu 10 % gemindert und zu 15 % erhöht, sonst 25 % und 10 %. Im Mittel sind es so etwa 30 % gemindert. Bei einem Antrag von nur einem Spiel ist kein Einspruch möglich. Computer-Vereine legen Einspruch ein, wenn ein Stammspieler hart bestraft wurde (60 %), sonst nur selten (10 %).
 13. **Zweite Rote Karte vor dem Urteil:** Es bleibt ein Verfahren, gewertet wird das schwerere Vergehen.
 14. **Noch nicht gebaut:** Äußerungen und Kontrollausschuss (K29), Zuschauer-Vergehen (K27), Trainer-Karten und Tribüne, Videobeweis, Derby-Faktor, Rudelbildung, Geldstrafen für Spieler (K14), Erinnerung „Gelbsperre droht“ vor wichtigen Spielen. Die Kader-Ansicht zeigt nur einen Hinweis bei 4, 9 oder 14 Gelben.
+15. **Lernstufen (K36):** Information ab Teamleiter, Strafe annehmen oder Einspruch ab der A-Lizenz. Davor entscheidet der Verein nach `kiEinspruch`.
 
 ## K10 – Medizin und Verletzungen
 Datei: `konzepte/K10-medizin.md`
@@ -369,3 +370,21 @@ Datei: `konzepte/K35b-look.md`
 
 dunkles Flutlicht-Thema als Standard, Systemschriften, keine Vereinslogos, Bewegung sparsam und abschaltbar.
 
+## K36 – Einstieg mit Lernstufen
+Datei: `konzepte/K36-lernstufen.md`
+
+Mit dir entschieden (9.11.): Namen nach den Trainerlizenzen, 2–3 Stufen in der ersten Saison, alles frei nach 2–3 Saisons, Überspringen und Abschalten jederzeit, Gesperrtes über den Stab.
+
+1. **Die C-Lizenz kommt auch ohne jede Nutzung,** spätestens nach 12 Pflichtspielen. Alle späteren Lizenzen haben ebenfalls eine späteste Zeit.
+2. **Mindestzeit plus Aufgaben,** eine Aufgabe heißt nur „einmal selbst gemacht“.
+3. **A-Lizenz frühestens in der zweiten Saison, Pro-Lizenz frühestens nach der zweiten Saison.**
+4. **Pro bringt heute Stadion und Kredit,** damit die Stufe bis Welle 4 nicht leer ist.
+5. **Gesperrte Bereiche sind sichtbar** mit Hinweis „Macht der Co-Trainer · frei ab …“.
+6. **Neu freie Bereiche bleiben zuerst in der Automatik,** bis du eingreifst.
+7. **Informationen sind nie gesperrt,** nur Entscheidungen.
+8. **Die Lizenz gehört dir** und bleibt beim Vereinswechsel.
+9. **Keine Wirkung auf Jobangebote,** obwohl echt die Pro-Lizenz für die 1. bis 3. Liga Pflicht ist.
+10. **Ausrichtung zuerst mit drei Stufen,** fünf ab der B-Lizenz.
+11. **Zurufe an einzelne Spieler ab B,** an die Mannschaft ab C.
+12. **Automatik mit Klugheit „normal“,** bis K16 §5.1 gebaut ist.
+13. **Der Aufstieg zählt nicht in das Halte-Budget.**

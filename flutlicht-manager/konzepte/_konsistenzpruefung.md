@@ -612,3 +612,16 @@ Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `
 | AQ7 | **Kalibrierung nach Welle 2:** Über neun Seeds liegen die Favoritensiege (Top 3 gegen Letzte 3) bei 75,6 % (vor U7b 73,0 %, Ziel 65–75 %), der Heimsieg bei gleich Starken bei 43,8 %, Remis bei 23,9 %. Mehr Verletzungen (U7b) treffen vermutlich die schwächeren Kader stärker. Der Unterschied liegt im Rauschen, aber beide Werte sitzen am oberen Rand. | 📌 einmal gesamt nachkalibrieren (mit AN6, über mehrere Seeds) |
 | AQ8 | **Kalender:** Relegation (Donnerstag, Montag) und Pokalfinale (Samstag dazwischen) liegen wie im echten Plan so dicht, dass ein Verein in beidem dreimal in fünf Tagen spielt. Die 72-Stunden-Prüfung nimmt diesen Fall aus. | 📌 echte Regel bei einem solchen Zusammentreffen prüfen |
 
+---
+
+## AR. Nachtrag zu K36 (9. November 2026)
+
+| # | Befund | Status |
+|---|---|---|
+| AR1 | **Wort „Stufe“ dreifach belegt:** Schwierigkeit (K02, im Code `stufe()`), Wechselwunsch (K14) und Lernstufen. Die Lernstufen heißen deshalb im Spiel und im Code „Lizenz“ (`S.lizenz`, `REGELN.lizenz`, `frei()`). | ✅ K36 §3 |
+| AR2 | **K09 hatte keine Lernstufen-Notiz.** Nachgetragen als K09 §12 Nr. 15 (Sportgericht ab A-Lizenz, nach PLAN §4). | ✅ |
+| AR3 | **PLAN §4 gegen K36:** Stadion steht in PLAN §4 bei Stufe 4, in K36 bei Pro (5), dazu der Kredit. Grund: Die Pro-Lizenz wäre bis Welle 4 sonst leer (K36 §12 Nr. 4). | ✅ vorläufig |
+| AR4 | **Automatik braucht Regeln der Computer-Vereine** für Testspiele (AQ3), Vertragsverlängerungen eigener Spieler und Kredit. Ohne sie wäre die Automatik für dich ein zweites Regelwerk. | 📌 UL |
+| AR5 | **K16 §5.1 (Automatik mit Rauschen nach Qualität)** ist noch nicht gebaut. Bis dahin nutzt die Automatik die Klugheit „normal“. | 📌 K16 / UL |
+| AR6 | **K01 Erinnerungen:** Erinnerungen zu gesperrten Bereichen (zum Beispiel „Kein Sponsor gewählt“ vor der A-Lizenz) müssen entfallen. | 📌 UL |
+| AR7 | **U8 schon mit Lizenz je Funktion:** Stimmung sehen ab Teamleiter, Gespräche, Mannschaftsansprache und Kapitän ab C, Kaderrollen, Versprechen und Teamevent ab B (K36 §5.2). | 📌 U8, in K14 und K15 §12 eintragen |

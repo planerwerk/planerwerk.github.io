@@ -53,7 +53,7 @@ Spalte „Welle“: wann das Konzept spätestens fertig sein muss. Umfang des Ko
 | K03 | Spielermodell (**abgestimmt** 7.11., alle Fragen beantwortet: `konzepte/K03-spielermodell.md`) | Fähigkeiten, Spezialitäten (gut/schlecht), versteckte Werte, Zustände (Frische, Kondition, Form, Selbstvertrauen, Stimmung, Integration, Spielpraxis), Alterskurven | L | 1 |
 | K04 | Match-Engine (**Entwurf**: `konzepte/K04-engine.md`) | Minutenablauf, Chancentypen, Teamwerte mit abnehmendem Ertrag, Deckel für Einzelspieler (Torwart-Problem), Tagesform, Spielverlauf-Effekte, Ermüdung, Zielverteilungen | L | 1 |
 | K33 | Daten, Spielstand, `regeln.js` (**Entwurf**, umgesetzt: `konzepte/K33-daten.md`) | Dateiaufbau, Stammdaten, Versionen des Spielstands, wie man an Werten schraubt, Daten-Update für neue Saisons | S | 1 |
-| K36 | Einstieg mit Lernstufen (**noch nicht geschrieben**, Gedanken in §4) | Stufenleiter, was auf welcher Stufe frei ist, Aufstieg nach Verständnis statt nach Zeit, Automatik für gesperrte Bereiche, Aufstiegsmoment mit Erklärung, Aus-Schalter, „jetzt freischalten“ | M | 2b |
+| K36 | Einstieg mit Lernstufen (**Entwurf** 9.11.: `konzepte/K36-lernstufen.md`, Gedanken in §4) | Stufenleiter, was auf welcher Stufe frei ist, Aufstieg nach Verständnis statt nach Zeit, Automatik für gesperrte Bereiche, Aufstiegsmoment mit Erklärung, Aus-Schalter, „jetzt freischalten“ | M | 2b |
 
 ### B – Sport
 
@@ -252,7 +252,9 @@ Ich halte die Idee für richtig. Das Spiel hat schon jetzt viele Stellschrauben 
 7. **Halte und Meldungen:** Gesperrte Bereiche erzeugen keine Halte. Im Posteingang steht nur eine Zeile, zum Beispiel „Der Verein hat die Strafe angenommen“.
 8. **Technik:** Jede Funktion bekommt in `regeln.js` die Stufe, ab der sie frei ist. Die Oberfläche fragt nur `frei(bereich)` ab. Die Tests laufen mit Lernstufen an und aus. Ab sofort notiere ich bei jedem Umsetzungsschritt, ab welcher Stufe die neue Funktion frei sein soll.
 
-**Mit dir entschieden (9.11. mittags):** Die Stufen heißen wie die Trainerlizenzen (Teamleiter, C-Lizenz, B-Lizenz, A-Lizenz, Pro-Lizenz). In der ersten Saison sind 2–3 Stufen erreichbar, alles ist nach zwei bis drei Saisons frei. Überspringen und Abschalten gehen jederzeit. Noch offen: Kommt Stufe 2 auch ohne jede Nutzung allein nach Zeit? Das entscheide ich im Konzept vorläufig.
+**Mit dir entschieden (9.11. mittags):** Die Stufen heißen wie die Trainerlizenzen (Teamleiter, C-Lizenz, B-Lizenz, A-Lizenz, Pro-Lizenz). In der ersten Saison sind 2–3 Stufen erreichbar, alles ist nach zwei bis drei Saisons frei. Überspringen und Abschalten gehen jederzeit. Noch offen: Kommt Stufe 2 auch ohne jede Nutzung allein nach Zeit? **Vorläufig ja, spätestens nach 12 Pflichtspielen** (K36 §12 Nr. 1).
+
+> Ausgearbeitet in `konzepte/K36-lernstufen.md` (Entwurf, 9.11.): Lizenz je Funktion (§5.2), Aufstieg mit Mindestzeit, Aufgaben und spätester Zeit (§5.3), A frühestens in der zweiten, Pro frühestens nach der zweiten Saison. Abweichung von der Leiter oben: Stadion und Kredit kommen mit der Pro-Lizenz, damit sie bis Welle 4 nicht leer ist. Im Spiel heißen die Stufen „Lizenz“, weil „Stufe“ schon für Schwierigkeit und Wechselwunsch steht.
 
 ## 5. Umsetzung in Wellen
 
@@ -278,9 +280,9 @@ Ich halte die Idee für richtig. Das Spiel hat schon jetzt viele Stellschrauben 
 
 ## 7. Nächster Schritt
 
-Stand 8. November 2026:
+Stand 9. November 2026:
 
 1. **Alle Konzepte sind geschrieben** (K01–K35b). K03 ist abgestimmt, die übrigen sind Entwürfe. Ihre vorläufigen Entscheidungen gelten, bis du widersprichst (§1, Punkt 9). Gesammelt in `konzepte/_offene-entscheidungen.md`.
-2. **Umsetzung** in der Reihenfolge der Wellen (§5). U1 bis U6 sind fertig (Fundament, Live-Spiel, Taktik, Training, Sommer, Trainerstab). U7 ist fertig (Disziplin, Medizin, Wettbewerbe, Testspiele), damit ist Welle 2 umgesetzt. Als Nächstes **K36 Lernstufen** als Entwurf schreiben und **U8 Stimmung und Gespräche** (K14, K15) umsetzen (Auftrag für den 9.11. um 23 Uhr). Die Umsetzung UL folgt, wenn du K36 abgestimmt hast.
+2. **Umsetzung** in der Reihenfolge der Wellen (§5). U1 bis U6 sind fertig (Fundament, Live-Spiel, Taktik, Training, Sommer, Trainerstab). U7 ist fertig (Disziplin, Medizin, Wettbewerbe, Testspiele), damit ist Welle 2 umgesetzt. **K36 Lernstufen** ist als Entwurf geschrieben (9.11., `konzepte/K36-lernstufen.md`) und wartet auf deine Abstimmung, danach folgt die Umsetzung UL. Als Nächstes **U8 Stimmung und Gespräche** (K14, K15) umsetzen (Auftrag für den 9.11. um 23 Uhr).
 3. **Startsatz** für eine neue Session: „Projekt Flutlicht Manager im Ordner flutlicht-manager/. Lies PLAN.md. Weiter, entscheide du.“ Dann geht es beim nächsten offenen Umsetzungsschritt weiter.
 4. **Vor der Kalibrierung zu recherchieren** (aus den Konzepten gesammelt): Datenquelle für feine Positionen, Fuß und Charakter-Fakten (K03), Fouls und Torschüsse pro Spiel (K04), Regeln zu Liga-Rot im Pokal, Relegation und Trainer-Karten (K09), Verletzungsraten der Männer (K10), Heimrecht in späteren Pokalrunden, Supercup, Zweitmannschaften (K13), Vorvertragsregel und FIFA-Änderungen 2027 (K21), Personalkostenquote, 3.-Liga-Medientopf, Insolvenz-Punktabzug (K23).

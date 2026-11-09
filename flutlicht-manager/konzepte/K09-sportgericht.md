@@ -233,6 +233,8 @@ disziplin:{
 13. **Zweite Rote Karte vor dem Urteil:** Es bleibt ein Verfahren, gewertet wird das schwerere Vergehen.
 14. **Noch nicht gebaut:** Äußerungen und Kontrollausschuss (K29), Zuschauer-Vergehen (K27), Trainer-Karten und Tribüne, Videobeweis, Derby-Faktor, Rudelbildung, Geldstrafen für Spieler (K14), Erinnerung „Gelbsperre droht“ vor wichtigen Spielen. Die Kader-Ansicht zeigt nur einen Hinweis bei 4, 9 oder 14 Gelben.
 
+15. **Lernstufen (K36, nachgetragen 9.11.):** Karten, Sperren und Verfahren sind ab der ersten Lizenz (Teamleiter) als Information sichtbar. Strafe annehmen oder Einspruch einlegen ab der A-Lizenz (Stufe 4). Davor entscheidet der Verein nach der Regel der Computer-Vereine (`kiEinspruch`), im Posteingang steht nur eine Zeile.
+
 **Noch zu recherchieren:** Geltung von Liga-Rotsperren im Pokal, Kartenregeln in der Relegation, aktuelle Trainer-Kartenregel, Höhe echter DFB-Geldstrafen für Pyrotechnik.
 
 ## Quellen
