@@ -23,7 +23,7 @@ Hängt ab von: K13 (Wettbewerbe, Prämien), K19 (Transfers), K21 (Gehälter), K2
 | Art | Wie berechnet | Anteil in der 1. Liga (Ziel) |
 |---|---|---|
 | **Medien national** | Säulenmodell (5.1) | 30–38 % |
-| Medien international | später mit dem Europapokal, bis dahin klein nach Ansehen | – |
+| Medien international | mit dem Europapokal (K37, fest eingeplant), bis dahin eine Pauschale für die Plätze 1–4, 5–6 und 7 der Bundesliga in der folgenden Saison (seit 10.11., K02 §5.3a) | – |
 | **Werbung, Sponsoren** | Verträge aus K24 | 22–28 % |
 | **Spieltag** | Zuschauer × Preis, Logen, Catering (heute Zuschauer und Logen) | 10–14 % |
 | **Merchandising** | Fanartikel (heute je Zuschauer), mit K25 nach Fans und Stars | 4–7 % |

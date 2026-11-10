@@ -661,3 +661,20 @@ Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `
 | AT5 | **K21 und K23:** Prämien müssen je Spieltag und am Saisonende gebucht werden. Die Ligaklausel senkt beim Abstieg die Gehaltssumme. Ohne sie bleibt das volle Gehalt, das größte Abstiegsrisiko (K23). | 📌 U10 |
 | AT6 | **K21 und K14:** Prämien hängen am Einsatz. Bankplätze kosten Prämien und damit Stimmung (Söldner doppelt). Das gehört in den Baustein „Vertrag“, sobald es Prämien gibt. | 📌 U10 |
 | AT7 | **K36:** Prämien und Klauseln ab der A-Lizenz, Verlängern mit Laufzeit und Grundgehalt ab B (K36 §5.2, „später dazu“). | ✅ |
+
+---
+
+## AU. Nachtrag zu deinen Anregungen vom 10. November 2026 (Bankzeit, Personal, Reiche werden reicher)
+
+| # | Befund | Status |
+|---|---|---|
+| AU1 | **K14 Bankzeit nach Grund** ist auf 25 Fälle erweitert. Einige brauchen andere Konzepte: „Position erklären“ (K15, war ausgelassen) mit dem Fall „passt nicht ins System“ (K06), teurer Neuzugang und Vertragsjahr (K19, K21), Mentor (K08), Leihwunsch (K08, K19), neuer Trainer (K28), Länderspiele (K13, K32). | 📌 U8d und die jeweiligen Konzepte |
+| AU2 | **Neue Kaderrolle „Pokal“** (Pokaltorwart, Pokalelf) ergänzt die fünf Rollen aus K14 §3.1. | 📌 U8d |
+| AU3 | **K16 Nr. 2 geändert:** Der Platzwart ist jetzt als Greenkeeper eine Rolle im Stab, nicht mehr nur Teil von K26. | ✅ K16, K26 |
+| AU4 | **Verhandlungsboni stapeln sich** (Sportdirektor, Berater-Beziehung, Klauseln, Marketingleiter beim Sponsor): Deckel −15 % auf Forderungen, +18 % auf Sponsorangebote. | ✅ K16 §12 Nr. 14, 16 |
+| AU5 | **K02 §5.3 bleibt gültig:** Der Vorsprung der Großen entsteht nur aus Regeln (Geld, Anziehung, Personal, Kontakte, Infrastruktur, Talente, Ansehen), nicht aus Zuschlägen. | ✅ K02 §5.3a |
+| AU6 | **Kalibrierung:** Heute wird Bayern in neun simulierten Saisons viermal Meister (häufigster Meister). Ziel nach deiner Entscheidung: etwa zwei Drittel (55–75 % über 20 Saisons), nicht 13 von 14 wie zuletzt in echt. Ohne Markt (U10, U11), Geld in echter Größenordnung (U13) und Europapokal (K37) lässt sich das nicht sinnvoll einstellen. | 📌 Test nach U11 |
+| AU7 | **Europapokal-Pauschale** (K23) bis zum echten Europapokal: nur Geld, keine zusätzlichen Spiele. Die Belastung durch englische Wochen fehlt damit den Großen, das macht sie etwas stärker als in echt. | 📌 bei der Kalibrierung beachten |
+| AU8 | **K26 Logen** bekommen eine zweite Aufgabe: Einladungen für Berater (K22). | ✅ K22 §12 Nr. 3 |
+| AU9 | **Machtwechsel über Jahrzehnte:** Ansehen muss sinken können, Computer-Vereine müssen Fehler machen dürfen (Schulden, falsche Käufe, Trainerwechsel), Talent-Jahrgänge müssen schwanken. Sonst bleibt die Rangfolge über 30 Saisons starr. Betrifft K08, K23, K28, K31, K32. | 📌 Langzeittest über 30 Saisons nach U11 |
+| AU10 | **Europapokal** ist jetzt fest eingeplant (K37, Welle 4b), nicht mehr nur „später“. Er braucht die Auslandsvereine aus K32, eine eigene Kalibrierung ihrer Stärke, mehr Termine im Kalender (K01, K13) und die Belastung (K07, K12a). Die Pauschale aus K23 fällt dann weg. | 📌 K37 |

@@ -223,33 +223,57 @@ kabine:{
 18. **Neuanfang beim Vereinswechsel:** Wechselwunsch auf null, Stimmung mindestens so hoch wie ein Startwert (60–75).
 19. **Diva und Söldner** sind jetzt sichtbar und wirksam (K03 §3.5).
 20. **Lernstufen (K36):** Stimmung, Wechselwunsch und Kabinenbericht ab Teamleiter (nur Information), Kapitän ab der C-Lizenz, Kaderrollen und Teamevent ab der B-Lizenz. Bis dahin wählt der Co-Trainer Kapitän und Rollen.
-**Mit dir entschieden (10. November 2026): Bankzeit nach Grund.** Vorgemerkt als U8d, noch nicht gebaut. Bis dahin gilt die Einsatz-Lücke aus Nr. 5.
-
-Nicht die Minuten allein zählen, sondern warum ein Spieler auf der Bank sitzt und was er aus seiner Zeit macht:
-
-| Lage | Wirkung |
-|---|---|
-| **Rotation:** ein guter Spieler sitzt, weil Frische oder Kondition unten sind, und spielt zum Beispiel nur 30 Minuten | keine Abwertung, er versteht es |
-| **Kurzeinsatz mit Wirkung:** Joker-Tor oder besonders gute Leistung in kurzer Zeit | nicht sauer, eher positiv |
-| **Rivale spielt:** ein guter Spieler sitzt, und sein direkter Rivale um den Platz spielt | auf Dauer Abwertung. Am Anfang je nach Typ auch ein Motivationsschub, auf lange Sicht aber negativ |
-| **Unerfahrene Spieler,** die sonst nicht einmal im Spieltagskader stehen | Bank ist positiv, schon 10 Minuten Einsatz können sehr positiv sein |
-| **Ersatztorwart** | Nichtspielen ist normal, keine Abwertung |
-| **Ersatztorwart, genauso stark wie die Nummer 1** | Reibereien |
-
-Wie ich das bauen würde (vorläufig, Zahlen sind Spielwerte):
-
-- **Grund je Pflichtspiel**, für jeden verfügbaren Spieler, der nicht in der Startelf steht:
-  - *Schonung:* Er stünde in der besten Elf ohne Ausfälle (Nr. 6), sitzt aber wegen niedriger Frische (unter 85 %) oder nach einem Spiel vor höchstens drei Tagen. Das Spiel zählt für die Einsatzzeit nicht, wie bei Verletzten.
-  - *Rivale spielt:* Sein Rivale (gleiche Feinposition, höchstens 3 Punkte Abstand, Nr. 13) steht in der Startelf, er nicht. Das zählt doppelt und füllt einen Rivalen-Zähler.
-  - *Sonst:* wie heute gegen seine Erwartung.
-- **Kurzeinsatz mit Wirkung:** Ein Einwechselspieler mit Tor oder Note bis 2,5 bekommt sofort +3 Stimmung, und das Spiel zählt für ihn als erfüllte Erwartung.
-- **Rivalen-Zähler:** In den ersten drei Spielen hinter dem Rivalen bekommen Kämpfer und Spieler mit hoher Entschlossenheit einen Schub (Lernen ×1,1, keine Abwertung). Diven und Nervenschwache verlieren sofort. Danach wird es für alle von Spiel zu Spiel teurer (−1, −2, −3 … bis −10 im Baustein „Einsatz“). Der Zähler sinkt, sobald er wieder spielt.
-- **Unerfahren** heißt: Talent oder Ergänzung mit weniger als zehn Pflichtspielen für Profis. Für ihn gibt es keine Erwartung an Einsatzzeit. Ein Platz im Spieltagskader bringt +1, ein Einsatz ab 10 Minuten +3, das Debüt +5. Die Prägungsereignisse aus K08 bauen später darauf auf.
-- **Torhüter:** Die Nummer 2 hat keine Erwartung an Einsatzzeit. Liegt sie höchstens 2 Punkte hinter der Nummer 1 (oder davor), entsteht eine Rivalität im Tor: beide −1 pro Woche, solange die Rangfolge nicht geklärt ist (geklärt heißt: Kaderrolle von dir vergeben oder fünf Spiele in Folge derselbe im Tor).
-- **Neue Daten:** Spieltagskader je Pflichtspiel (die Bank gibt es in der Engine schon), Grund des Bankplatzes, Rivalen-Zähler, Profi-Pflichtspiele über die Karriere.
-- **Tests:** Ein Stammspieler, der wegen Frische rotiert, verliert nicht an Stimmung. Ein Joker mit Tor ist nach dem Spiel zufriedener als vorher. Ein Talent mit 10 Minuten Einsatz gewinnt Stimmung. Die Nummer 2 im Tor bleibt über eine Saison ohne Einsatz zufrieden. Ein gleich starker Ersatztorwart sorgt für Reibereien. Wer zehn Spiele hinter seinem Rivalen sitzt, erreicht den Gesprächswunsch.
-
 21. **Noch nicht gebaut:** Ereignisse aus §8 außer dem Gesprächswunsch (Kabinenparty, Führungsspieler meutert, Neuzugang drängt auf Einsatz, Heimweh), Geldstrafen erlassen (K09), Prämien (K21), Integration und Heimweh, Integrationsfigur und Mentor, Wochen-Stammelf für Computer-Vereine mit Rotation nach Rollen.
+
+### Bankzeit nach Grund (mit dir entschieden am 10. November 2026, noch nicht gebaut)
+
+Vorgemerkt als U8d. Bis dahin gilt die Einsatz-Lücke aus Nr. 5. Deine Fälle sind gesetzt, die übrigen Fälle, Zahlen und der Aufbau sind meine Vorschläge (vorläufig).
+
+**Grundsätze**
+
+1. **Der Grund zählt, nicht nur die Minuten.** Ein Spieler fragt sich, ob er geschätzt wird. Dieselben 20 Minuten sind für einen Stammspieler eine Abwertung und für ein Talent ein Geschenk.
+2. **Kurzfristig verständnisvoll, auf Dauer zählt die Summe.** Ein einzelnes Spiel auf der Bank kostet fast nie etwas. Eine Serie hinter demselben Konkurrenten kostet immer mehr.
+3. **Der Typ entscheidet über die Richtung:** Vorbildprofis und Mentoren nehmen es hin, Kämpfer beißen sich rein, Diven sind gekränkt, Nervenschwache verunsichert (Selbstvertrauen), Söldner rechnen in Prämien (K21), Ehrgeizige fordern.
+4. **Leistung schafft Anspruch.** Wer als Joker liefert, ist erst zufrieden. Liefert er immer wieder und startet trotzdem nie, wächst der Frust („Ich liefere doch!“).
+5. **Erklären hilft.** Eine angekündigte Rotation oder eine erklärte Rolle kostet weniger als ein stiller Bankplatz (K15).
+6. **Erfolg macht genügsam.** In einer Siegesserie wird die Bank eher akzeptiert, in der Krise fragt jeder: „Warum nicht ich?“
+
+**Fälle**
+
+| Fall | Woran das Spiel es erkennt | Wirkung | Typ |
+|---|---|---|---|
+| **Rotation, Schonung** (deiner) | stünde in der besten Elf ohne Ausfälle, sitzt aber mit Frische unter 85 %, in einer englischen Woche oder nach einer Länderspielreise | keine Abwertung, das Spiel zählt nicht für die Einsatzzeit. Angekündigt sogar +1 („wir brauchen dich frisch“) | – |
+| **Joker mit Wirkung** (deiner) | eingewechselt, Tor, Vorlage (sobald es sie gibt) oder Note bis 2,5 | sofort +3, das Spiel zählt als erfüllt | Ehrgeizige: nach drei starken Kurzeinsätzen in fünf Spielen steigt die Einschätzung um eine Stufe |
+| **Rivale spielt** (deiner) | sein Rivale (gleiche Feinposition, höchstens 3 Punkte Abstand) steht in der Startelf, er nicht | Rivalen-Zähler: die ersten drei Spiele je nach Typ, danach −1, −2, −3 … bis −10 im Baustein „Einsatz“, bis er wieder spielt | Kämpfer, Entschlossene: erst Schub (Lernen ×1,1), Diven und Nervenschwache: sofort negativ |
+| **Unerfahrene** (deiner) | Talent oder Ergänzung mit weniger als 10 Pflichtspielen für Profis | keine Erwartung an Einsatzzeit. Spieltagskader +1, Einsatz ab 10 Minuten +3, Debüt +5 (Prägung in K08) | – |
+| **Ersatztorwart** (deiner) | Nummer 2 im Tor | keine Erwartung an Einsatzzeit | – |
+| **Torwart-Duell** (deiner) | Nummer 2 höchstens 2 Punkte hinter der Nummer 1 oder davor | beide −1 pro Woche, bis die Rangfolge geklärt ist (Rolle von dir vergeben oder fünf Spiele in Folge derselbe) | Diven doppelt |
+| **Pokaltorwart, Pokalelf** | du gibst ihm die Rolle „spielt im Pokal“ (neue Kaderrolle) | Erwartung erfüllt, wenn er alle Pokalspiele spielt | – |
+| **Aufbau nach Verletzung** | die ersten drei Wochen nach der Rückkehr | keine Erwartung, er weiß, dass er Zeit braucht | – |
+| **Platz verloren während der Verletzung** | sein Ersatz hatte in der Zeit einen Notenschnitt bis 3,0 und spielt weiter | wird nach dem Aufbau zum Rivalen-Fall | Diven sofort |
+| **Nach einer Sperre** | Bank im ersten Spiel nach der Sperre | kein Anspruch, er hat es selbst verschuldet | Hitzköpfe trotzig: −1 |
+| **Formkrise** | Notenschnitt der letzten fünf Einsätze ab 4,0 | Abwertung nur halb, er sieht es ein | Nervenschwache: Entlastung, Selbstvertrauen erholt sich schneller. Diven: voll |
+| **Passt nicht ins System** | deine Ordnung hat keinen Platz für seine Position | Abwertung voll, mit Gespräch „Position erklären“ (K15, kommt mit diesem Fall) halb, Umschulung (K07) als Ausweg | – |
+| **Teurer Neuzugang** | Ablöse oder Gehalt im oberen Viertel des Kaders, weniger als ein Jahr im Verein | Abwertung ×1,5, die Presse fragt nach (K29) | – |
+| **Kapitän, Führungsspieler, Altstar auf der Bank** | Kapitän oder Führungsspieler, oder ab 31 Jahren mit vielen Einsätzen | er selbst wie üblich, dazu −1 für seine Freunde. Ein Altstar mit der Rolle „Ergänzung“ und Gespräch nimmt es hin | Mentoren: kein Abzug, wenn er Talente betreut (K08) |
+| **Vertragsjahr** | Vertrag läuft zum Saisonende aus | Abwertung ×1,5, er will sich zeigen. Hat er woanders unterschrieben, erwartet er nichts mehr | Söldner ×2 |
+| **Tribüne statt Bank** | gesund, aber nicht im Spieltagskader | für Etablierte (Rolle ab Rotation) −2 je Spiel, für Unerfahrene normal | Diven doppelt |
+| **Früh ausgewechselt** | vor der 46. Minute ohne Verletzung oder Platzverweis | Bloßstellung −3 | Diven und Führungsspieler doppelt, Nervenschwache Selbstvertrauen −0,5 |
+| **Einwechslung in der Nachspielzeit** | nach der 88. Minute | für Etablierte −1 (Zeitspiel-Wechsel), für Unerfahrene +1 | – |
+| **Spielpraxis fehlt** | jung, sechs Wochen unter 10 % Einsatz | statt Wechselwunsch der Wunsch nach einer Leihe (K08, K19) | – |
+| **Bedeutungslose Spiele** | Saisonziel sicher erreicht oder verfehlt, letzte fünf Spieltage | Reservisten und Talente erwarten Chancen: wer sie bekommt +2, wer nicht −2 | – |
+| **Mannschaftserfolg** | Serie der letzten fünf Spiele (wie im Baustein „Erfolg“) | Siegesserie: Abwertung halb, Krise: ×1,5 | – |
+| **Chance genutzt** | er vertritt einen verletzten oder gesperrten Stammspieler mit Notenschnitt bis 3,0 | Einschätzung steigt eine Stufe, kehrt der andere zurück, entsteht ein Rivalen-Fall | – |
+| **Neuer Trainer** | du übernimmst einen Verein | vier Wochen Neubeginn: Reservisten hoffen (+2), keine Abwertung für niemanden | – |
+| **Wechselwunsch und Bank** | offizieller Wechselwunsch (Stufe 3) | Bank versteht er, kein weiterer Abzug, die Kabine auch | – |
+| **Länderspiele** (später, K13) | Nationalspieler vor einem Turnier | Abwertung ×1,5, er fürchtet um seine Nominierung | – |
+
+**Stufen beim Bau:** U8d bringt Rotation, Joker, Rivale, Unerfahrene, Torwart, Aufbau nach Verletzung, Formkrise, Tribüne, frühe Auswechslung, Nachspielzeit, Mannschaftserfolg und Chance genutzt. Die übrigen Fälle kommen mit ihren Konzepten: System (K06, Gespräch „Position erklären“), teurer Neuzugang und Vertragsjahr (K19, K21), Altstar und Mentor (K08), Leihwunsch (K08, K19), Neuer Trainer (K28), Länderspiele (K13, K32). „Rotation ankündigen“ kommt als vierte Mannschaftsansprache dazu (K15 §5.4).
+
+**Neue Daten:** Spieltagskader je Pflichtspiel (die Bank gibt es in der Engine schon), Grund des Bankplatzes je Spiel, Rivalen-Zähler, Profi-Pflichtspiele über die Karriere (heute zählt `apps` nur die Saison), die letzten fünf Noten, starke Kurzeinsätze, Kaderrolle „Pokal“.
+
+**Tests (für U8d):** Ein Stammspieler, der wegen Frische rotiert, verliert keine Stimmung. Ein Joker mit Tor ist nach dem Spiel zufriedener als vorher. Ein Talent mit 10 Minuten gewinnt Stimmung. Die Nummer 2 im Tor bleibt eine Saison ohne Einsatz zufrieden, ein gleich starker Ersatztorwart sorgt für Reibereien. Wer zehn Spiele hinter seinem Rivalen sitzt, erreicht den Gesprächswunsch. Ein Kämpfer bleibt in den ersten drei Spielen hinter dem Rivalen stabil, eine Diva nicht. Über eine Saison bleibt es bei höchstens einem offiziellen Wechselwunsch je Kader.
+
 
 ## Quellen
 

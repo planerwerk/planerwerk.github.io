@@ -119,6 +119,27 @@ berater:{
 1. **Fünf Profile,** darunter Strippenzieher und Familienberater als eigene Typen.
 2. **Provisionen als Spielwerte.** Die echten Regeln (FIFA-Beraterreglement, Rechtsstreit um Obergrenzen) sind nicht geprüft und für das Spiel nicht nötig.
 
+**Mit dir entschieden (10. November 2026): Kontakte zu Beratern bringen bessere Deals.** Wie man sie aufbaut, war offen („irgendwie umgarnen“). Mein Vorschlag (vorläufig):
+
+3. **Womit du Beziehung aufbaust** (Beziehung −100 bis +100, K17):
+
+| Handlung | Beziehung | Preis, Grenze |
+|---|---|---|
+| fairer, zügiger Abschluss (höchstens zwei Runden, Provision pünktlich) | +5 | – |
+| seinen Mandanten gut behandeln: gehaltene Zusagen, Einsatzzeit nach Rolle, Entwicklung (+3 Stärke in einer Saison) | +3 je Saison und Mandant | hängt an K14, K15 |
+| einen Mandanten zu einem guten Preis ziehen lassen, wenn er weg will | +8 | Ablöse niedriger |
+| einem jungen Mandanten eine Chance geben (Probetraining, Leihe, Debüt) | +4 | Kaderplatz |
+| **Einladung in die VIP-Loge oder zum Essen** | +3 | Geld (Logen aus K26 werden so auch für Kontakte nützlich), höchstens einmal im Monat je Berater wirksam, nutzt sich ab wie Gespräche (K15) |
+| Provision großzügiger als gefordert | +1 je Prozentpunkt | Geld, höchstens +5 |
+| ein Sportdirektor mit Netzwerk (K16 §12 Nr. 12) | +20 bis +40 für seine Kontakte | Gehalt, Kontakte gehen mit ihm |
+
+4. **Womit du sie beschädigst:** harte Verhandlung über drei Runden (−5), gebrochene Zusage an seinen Mandanten (−10, K15), ein Mandant sitzt gegen seine Rolle dauerhaft auf der Bank (−3 je Monat, K14 Bankzeit nach Grund), Verkauf gegen den Willen des Spielers (−8), Abwerben über ihn fliegt auf (−15, K20), Gerüchte aus deinem Verein (K29). Ohne Kontakt verblasst die Beziehung jede Saison um ein Viertel Richtung null.
+5. **Was eine gute Beziehung bringt:** Forderungen −2 % je 20 Punkte (wie bisher, höchstens −10 %), ehrliche Tipps zu wechselwilligen Spielern ab +40 (wie bisher), **Erstzugriff** ab +60 (er bietet dir einen Mandanten an, bevor andere Vereine davon hören), ab +60 rät er seinem Spieler zu dir (Interesse +10 % in K19) und warnt dich, bevor ein Mandant aus deinem Kader woanders einen Vorvertrag unterschreibt (K21).
+6. **Deckel:** Zusammen mit dem Sportdirektor sinkt eine Forderung höchstens um 15 % (K16 §12 Nr. 16).
+7. **Risiko großer Nähe:** Hat ein Berater fünf und mehr Mandanten in deinem Kader, entsteht ein Berater-Klüngel. Er drängt dir Pakete auf (Strippenzieher), seine Mandanten halten zusammen (Grüppchen, K14), die Presse spricht vom „Beraterverein“ (K29).
+8. **Bewusst weggelassen:** Bestechung, Schwarzgeld und Ähnliches, wie Doping beim Spielermodell.
+9. **Computer-Vereine** bauen Beziehungen nach denselben Regeln auf. Große Vereine machen viele Geschäfte und haben so von selbst die besten Kontakte zu den großen Beratern (K02 §5.3a).
+
 ## Quellen
 
 - Berater, Provision, Angebote während des Fensters: `konzepte/_recherche-genre.md`, Abschnitte 3.1, 4b, 4d

@@ -45,7 +45,7 @@ Gespeichert als `S.sponsoren` je Fläche (heute nur `S.spons` für die Brust).
 
 1. **Saisonwechsel:** Für jede freie Fläche kommen 2–4 Angebote (für die Brust wie heute).
 2. **Verhandeln:** Stell-Regler für Fixum, Prämienanteil und Laufzeit, unscharfe Annahmezone (K35a). Höchstens drei Runden. Konkurrenzangebote heben den Preis.
-3. **Sponsorentag** (K12b, einmal pro Saison in der Vorbereitung): kostet 50.000 € und einen Tag, danach sind die nächsten Angebote 10 % besser.
+3. **Sponsorentag** (K12b, einmal pro Saison in der Vorbereitung): kostet 50.000 € und einen Tag, danach sind die nächsten Angebote 10 % besser. Ein guter **Marketingleiter** (K16 §12 Nr. 14, seit 10.11.) bringt bis zu 10 % mehr, beides zusammen höchstens 18 %.
 4. **Laufend:** Prämien bei Erfüllung, Monatsrate des Fixums (K23).
 5. **Vertragsende:** Verlängerungsangebot des Sponsors nach Zufriedenheit (5.3).
 

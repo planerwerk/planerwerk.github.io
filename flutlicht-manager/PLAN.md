@@ -37,9 +37,11 @@ Stand: 7. November 2026 (U1 umgesetzt, dazu Sommer, Anstoßzeiten und 3. Liga; K
 | **Alte Spielstände** (6.11.) | aus Testversionen sind Müll und werden gelöscht. |
 | **Verletzungen** (9.11.) | Die realistische Häufigkeit seit U7b bleibt (etwa 40 je Team und Saison, im Schnitt fehlen 8 % des Kaders). Stab (Physiotherapeut, Arzt, Athletiktrainer) und später das Reha-Zentrum sollen sie spürbar drücken können. |
 | **Einstieg mit Lernstufen** (9.11.) | Die erste Saison lässt sich mit einem Teil der Funktionen spielen. Wer etwas verstanden hat, steigt eine Stufe auf, und neue Möglichkeiten kommen dazu. Beispiele: Aufstellung gibt es ab Stufe 1, Taktik zuerst einfach und später ausführlicher, das Sportgericht erst auf einer höheren Stufe. Die Stufen lassen sich abschalten, dann ist sofort alles frei. Muss gut durchdacht sein: Konzept K36, erste Gedanken in §4. |
-| **Bankzeit nach Grund** (10.11.) | Nicht die Minuten allein zählen, sondern der Grund: Rotation wegen Frische ist keine Abwertung, ein Joker-Tor oder ein starker Kurzeinsatz macht zufrieden. Spielt der direkte Rivale, führt das auf Dauer zur Abwertung (anfangs je nach Typ auch ein Motivationsschub). Für unerfahrene Spieler ist schon die Bank positiv, 10 Minuten Einsatz sehr positiv. Der Ersatztorwart wird nicht abgewertet, außer er ist so stark wie die Nummer 1. Erst in den Plan, noch nicht bauen: K14 §12, vorgemerkt als U8d. |
+| **Bankzeit nach Grund** (10.11.) | Nicht die Minuten allein zählen, sondern der Grund: Rotation wegen Frische ist keine Abwertung, ein Joker-Tor oder ein starker Kurzeinsatz macht zufrieden. Spielt der direkte Rivale, führt das auf Dauer zur Abwertung (anfangs je nach Typ auch ein Motivationsschub). Für unerfahrene Spieler ist schon die Bank positiv, 10 Minuten Einsatz sehr positiv. Der Ersatztorwart wird nicht abgewertet, außer er ist so stark wie die Nummer 1. Dazu habe ich weitere Fälle durchdacht (Aufbau nach Verletzung, Formkrise, Tribüne, frühe Auswechslung, Vertragsjahr, teurer Neuzugang und andere). Erst in den Plan, noch nicht bauen: K14 §12 „Bankzeit nach Grund“, vorgemerkt als U8d. |
+| **Gutes Personal in jedem Bereich** (10.11.) | Für alles lohnt es sich, gute Leute einzustellen, auch für Verhandlungen: Sportdirektor mit Verhandlungsgeschick und Netzwerk, Kaderplaner, Marketingleiter, Greenkeeper. Kontakte zu Beratern bringen bessere Deals, so wie der Sponsorentag bessere Sponsoren. Konzepte K16 §12, K22 §12, K24, K26 (ergänzt). |
+| **Die Reichen werden reicher** (10.11.) | Wie in der echten Liga: Bayern holt man praktisch nie ein, mithalten geht manchmal. Die besten Spieler und Mitarbeiter wollen zu den großen Vereinen. Als Folge der Regeln, ohne Zuschlag (kein Gummiband). **Mit Maß:** Der Größte holt etwa zwei Drittel der Titel, nicht 13 von 14. Nach 30 und mehr Jahren dürfen sich die Verhältnisse verschieben, wie bei Gladbach, dem HSV und Dortmund. K02 §5.3a mit Kalibrierziel. |
 | **Vertragsverhandlungen** (10.11.) | Echte Verhandlungen mit Prämien: Auflauf-, Punkt-, Tor- und Zu-Null-Prämie, Aufstiegs-, Klassenerhalts- und Titelprämie, Ligaklausel für Ab- und Aufstieg, Handgeld, Klauseln. Konzept K21 (ergänzt), gebaut mit U10. |
-| **Europapokal** (5.11.) | später als Erweiterung. Zuerst 1. und 2. Liga und Pokal. |
+| **Europapokal** (5.11., ergänzt 10.11.) | später als Erweiterung, zuerst 1. und 2. Liga und Pokal. **Langfristig fest eingeplant:** Champions League, Europa League und Conference League, weil die internationalen Einnahmen den Vorsprung der Großen erst erklären. Konzept K37, bis dahin eine Pauschale für die Europapokal-Plätze (K23). |
 | **Vorläufig übernommen** (Vorschläge aus der Konsistenzprüfung, gelten, solange du nichts anderes sagst) | Automatik und Delegieren in jedem Bereich über den Stab. Nichts wegnehmen, bevor der Ersatz fertig ist. K08 und der Auslandspool nach Welle 3, K16 nach Welle 2. |
 
 ## 3. Konzeptliste
@@ -56,6 +58,7 @@ Spalte „Welle“: wann das Konzept spätestens fertig sein muss. Umfang des Ko
 | K04 | Match-Engine (**Entwurf**: `konzepte/K04-engine.md`) | Minutenablauf, Chancentypen, Teamwerte mit abnehmendem Ertrag, Deckel für Einzelspieler (Torwart-Problem), Tagesform, Spielverlauf-Effekte, Ermüdung, Zielverteilungen | L | 1 |
 | K33 | Daten, Spielstand, `regeln.js` (**Entwurf**, umgesetzt: `konzepte/K33-daten.md`) | Dateiaufbau, Stammdaten, Versionen des Spielstands, wie man an Werten schraubt, Daten-Update für neue Saisons | S | 1 |
 | K36 | Einstieg mit Lernstufen (**Entwurf** 9.11.: `konzepte/K36-lernstufen.md`, Gedanken in §4) | Stufenleiter, was auf welcher Stufe frei ist, Aufstieg nach Verständnis statt nach Zeit, Automatik für gesperrte Bereiche, Aufstiegsmoment mit Erklärung, Aus-Schalter, „jetzt freischalten“ | M | 2b |
+| K37 | Europapokal: Champions League, Europa League, Conference League (**Idee** 10.11., erste Gedanken in §4) | Qualifikation über Liga und Pokal, Ligaphase und K.-o.-Runden, Auslandsgegner aus K32, Prämien und Marktpool als Geld, Belastung durch englische Wochen, Ansehen, UEFA-Koeffizient | L | 4b |
 
 ### B – Sport
 
@@ -258,6 +261,17 @@ Ich halte die Idee für richtig. Das Spiel hat schon jetzt viele Stellschrauben 
 
 > Ausgearbeitet in `konzepte/K36-lernstufen.md` (Entwurf, 9.11.): Lizenz je Funktion (§5.2), Aufstieg mit Mindestzeit, Aufgaben und spätester Zeit (§5.3), A frühestens in der zweiten, Pro frühestens nach der zweiten Saison. Abweichung von der Leiter oben: Stadion und Kredit kommen mit der Pro-Lizenz, damit sie bis Welle 4 nicht leer ist. Im Spiel heißen die Stufen „Lizenz“, weil „Stufe“ schon für Schwierigkeit und Wechselwunsch steht.
 
+### K37 – Europapokal (10.11.)
+
+Erste Gedanken, kein Konzept:
+
+- **Warum er kommen muss:** Ohne internationale Einnahmen passt das Geld nicht. In der Champions League bekommt jeder Teilnehmer 2025/26 18,62 Mio. € Startgeld und 2,1 Mio. € je Sieg in der Ligaphase, ein Sieger weit über 100 Mio. €. Das ist der größte Treiber des Vorsprungs der Großen (K02 §5.3a).
+- **Drei Wettbewerbe** mit Ligaphase und K.-o.-Runden nach dem echten Modus seit 2024/25. Die Startplätze ergeben sich aus Bundesliga-Platz und Pokalsieg, nach den UEFA-Regeln der jeweiligen Saison (im Konzept prüfen, auch die zusätzlichen Plätze über die Fünfjahreswertung).
+- **Gegner:** Auslandsvereine mit echten Namen und erzeugten Kadern aus K32. Ihre Stärke braucht eine eigene Kalibrierung, sonst wird die Bundesliga zu stark oder zu schwach.
+- **Folgen:** Geld (K23), Ansehen (K28, K32), mehr Spiele und englische Wochen (K01, K07, K12a: Belastung, Rotation, Verletzungen), Anziehung für Spieler (K19), Auslosungen als Moment (wie der Pokal, K13), ein UEFA-Koeffizient für Deutschland.
+- **Lernstufen (K36):** Spiele und Auslosungen sind ab Teamleiter dabei, Entscheidungen wie überall nach ihrer Lizenz.
+- **Bis dahin:** Pauschale für die Europapokal-Plätze (K23), ohne zusätzliche Spiele.
+
 ## 5. Umsetzung in Wellen
 
 | Welle | Konzepte | Umsetzungsschritte | Ergebnis |
@@ -267,11 +281,12 @@ Ich halte die Idee für richtig. Das Spiel hat schon jetzt viele Stellschrauben 
 | 2b Einstieg | K36 | UL: Lernstufen mit Stufenleiter, Automatik für gesperrte Bereiche, Aufstiegskarte, Aus-Schalter (nach U7, vor U8) | die erste Saison als Einstieg mit wachsenden Möglichkeiten |
 | 3 Menschen und Markt | K08, K14, K15, K17–K19, K21, K22, K28, K31, Gerüst von K30, Auslandspool aus K32 | ✅ U8 (9.11.): Stimmung mit Kaderrollen und eigener Einschätzung, Wechselwunsch in vier Stufen mit Gesprächswunsch als Halt, Mannschaftsstimmung, Ansteckung, Zusammenhalt mit Wirkung im Spiel, Freundschaften, Rivalitäten, Grüppchen, Kapitän, Teamevent, Gespräche mit Haltung, Versprechen und Glaubwürdigkeit, Mannschaftsansprache, neue Ansicht Kabine (tests/kabine.js). U8d (vorgemerkt, 10.11.): Bankzeit nach Grund (K14 §12). U9: Scouting, Auslandspool und Jugend. U10: Transfers I, Verträge mit Verhandlung und Prämien (K21, ergänzt 10.11.) und Berater. U11: Computer-Vereine. U12: Beziehungen, Vorstand und Ereignis-Gerüst | Transfers als Prozess, sinnvolle Computer-Vereine, erste Ereigniskarten |
 | 4 Verein und Welt | K12b, K20, K23–K27, K29, K32 (Rest), K34 | U13 bis U18 nach Bedarf | Saisonvorbereitung, Sponsoren, Marketing, Stadion, Fans, Presse, Abwerben |
+| 4b Europa | K37 | U19: Europapokal mit drei Wettbewerben, internationalen Einnahmen und Belastung | die Bundesliga im europäischen Wettbewerb, der Vorsprung der Großen hat seinen echten Grund |
 | 5 Oberfläche | K35b | U19 und folgende | eigener Retro-Look |
 
 ## 6. Aufwand (grob, ehrlich)
 
-- **Konzepte:** 37 Stück (K01–K36, K35 geteilt in K35a und K35b; K36 Lernstufen kam am 9.11. dazu). Davon sind 7 klein, 23 mittel und 6 groß. Das sind grob 12–15 Konzept-Sessions, das Ereignis-Playbook wächst danach weiter.
+- **Konzepte:** 38 Stück (K01–K37, K35 geteilt in K35a und K35b; K36 Lernstufen kam am 9.11. dazu, K37 Europapokal am 10.11.). Davon sind 7 klein, 23 mittel und 6 groß. Das sind grob 12–15 Konzept-Sessions, das Ereignis-Playbook wächst danach weiter.
 - **Umsetzung:** etwa 19 oder mehr Schritte, große eventuell doppelt, also grob 20–30 Sessions.
 - **Tokenkosten** kann ich vorher nicht verlässlich beziffern. Nach der ersten Konzept-Session und nach U1 sieht man den Verbrauch in der Nutzungsanzeige und kann hochrechnen.
 - **Sparen:**
@@ -285,6 +300,6 @@ Ich halte die Idee für richtig. Das Spiel hat schon jetzt viele Stellschrauben 
 Stand 9. November 2026:
 
 1. **Alle Konzepte sind geschrieben** (K01–K35b). K03 ist abgestimmt, die übrigen sind Entwürfe. Ihre vorläufigen Entscheidungen gelten, bis du widersprichst (§1, Punkt 9). Gesammelt in `konzepte/_offene-entscheidungen.md`.
-2. **Umsetzung** in der Reihenfolge der Wellen (§5). U1 bis U6 sind fertig (Fundament, Live-Spiel, Taktik, Training, Sommer, Trainerstab). U7 ist fertig (Disziplin, Medizin, Wettbewerbe, Testspiele), damit ist Welle 2 umgesetzt. **K36 Lernstufen** ist als Entwurf geschrieben (9.11., `konzepte/K36-lernstufen.md`) und wartet auf deine Abstimmung, danach folgt die Umsetzung UL. **U8 Stimmung und Gespräche** (K14, K15) ist umgesetzt (9.11. abends), mit der Lizenz je neuer Funktion nach K36. Als Nächstes UL, sobald du K36 abgestimmt hast, sonst U9 (Scouting, Auslandspool, Jugend). Vorgemerkt seit 10.11.: U8d Bankzeit nach Grund (K14 §12, kleiner Schritt, wann du willst) und Vertragsverhandlungen mit Prämien in U10 (K21).
+2. **Umsetzung** in der Reihenfolge der Wellen (§5). U1 bis U6 sind fertig (Fundament, Live-Spiel, Taktik, Training, Sommer, Trainerstab). U7 ist fertig (Disziplin, Medizin, Wettbewerbe, Testspiele), damit ist Welle 2 umgesetzt. **K36 Lernstufen** ist als Entwurf geschrieben (9.11., `konzepte/K36-lernstufen.md`) und wartet auf deine Abstimmung, danach folgt die Umsetzung UL. **U8 Stimmung und Gespräche** (K14, K15) ist umgesetzt (9.11. abends), mit der Lizenz je neuer Funktion nach K36. Als Nächstes UL, sobald du K36 abgestimmt hast, sonst U9 (Scouting, Auslandspool, Jugend). Vorgemerkt seit 10.11.: U8d Bankzeit nach Grund (K14 §12, kleiner Schritt, wann du willst), Vertragsverhandlungen mit Prämien, Sportdirektor und Berater-Kontakten in U10 (K21, K16, K22), Dominanz der großen Vereine mit etwa zwei Dritteln der Titel als Kalibrierziel nach U11 (K02 §5.3a), Europapokal als Konzept K37 und Welle 4b.
 3. **Startsatz** für eine neue Session: „Projekt Flutlicht Manager im Ordner flutlicht-manager/. Lies PLAN.md. Weiter, entscheide du.“ Dann geht es beim nächsten offenen Umsetzungsschritt weiter.
 4. **Vor der Kalibrierung zu recherchieren** (aus den Konzepten gesammelt): Datenquelle für feine Positionen, Fuß und Charakter-Fakten (K03), Fouls und Torschüsse pro Spiel (K04), Regeln zu Liga-Rot im Pokal, Relegation und Trainer-Karten (K09), Verletzungsraten der Männer (K10), Heimrecht in späteren Pokalrunden, Supercup, Zweitmannschaften (K13), Vorvertragsregel und FIFA-Änderungen 2027 (K21), Personalkostenquote, 3.-Liga-Medientopf, Insolvenz-Punktabzug (K23).

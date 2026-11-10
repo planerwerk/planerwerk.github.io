@@ -34,8 +34,11 @@ Hängt ab von: K03, K07, K10 (wo der Stab wirkt), K35a (Bänder) · Wird gebrauc
 | **Sportpsychologe** | 1 | Selbstvertrauen erholt sich schneller nach unten, „nervenschwach“ wirkt halb so stark, Prägung (K08) weniger riskant | Welle 2 |
 | Scouts | 1–6 | Beobachtung, Spannen (K18) | Welle 3 |
 | Jugendleiter, Jugendtrainer | 1–3 | Nachwuchs (K08) | Welle 3 |
-| Sportdirektor | 1 | Automatik für Verträge und Transfers (K19, K21) | Welle 3 |
+| Sportdirektor | 1 | Führt Verhandlungen (K19, K21): **Verhandlungsgeschick** senkt Forderungen und verbessert Ablösen, **Netzwerk** bringt Kontakte zu Beratern mit (K22). Automatik für Verträge und Transfers | Welle 3 |
+| Kaderplaner | 1 | Zuarbeit für den Sportdirektor: Fristen, Gehaltsgefüge, genauere Kostenvorschau, Vorschläge für Verlängerungen und Abgänge | Welle 3 |
 | Pressesprecher | 1 | Automatik für Presse (K29) | Welle 4 |
+| Marketingleiter | 1 | bessere Sponsorangebote, Kampagnen wirken stärker (K24, K25) | Welle 4 |
+| Greenkeeper (Platzwart) | 1 | Rasenqualität im Stadion und auf dem Trainingsgelände (K26) | Welle 4 |
 
 ### 3.2 Werte eines Mitarbeiters
 
@@ -194,7 +197,7 @@ stab:{
 **Vorläufig entschieden** (von mir, ohne Rücksprache):
 
 1. **Acht Rollen in Welle 2** (Co-Trainer, Torwart-, Athletik-, Standardtrainer, Arzt, Physiotherapeut, Videoanalyst, Psychologe). Scouts, Jugend, Sportdirektor und Pressesprecher kommen mit ihren Konzepten.
-2. **Kein Ernährungsberater, kein Platzwart** als eigene Rolle. Der Platzwart gehört zu K26 (Rasen), Ernährung steckt im Athletiktrainer.
+2. **Kein Ernährungsberater** als eigene Rolle, Ernährung steckt im Athletiktrainer. ~~Kein Platzwart~~: Seit 10.11. ist der Greenkeeper (Platzwart) eine Rolle im Stab (Nr. 15).
 3. **Co-Trainer ist Pflicht.** Ohne ihn gäbe es keine Automatik und keine Halbzeit-Einschätzung.
 4. **Trainerteam mitnehmen** bis zu zwei Personen.
 5. **Gehälter sind Spielwerte,** Kalibrierung mit K23.
@@ -209,8 +212,23 @@ stab:{
 11. **Noch nicht gebaut:** Automatik mit Rauschen, Haltung und Spezialgebiet (5.1), Modus „Vorschlag“, Bänder für Vorhersagen außer der Qualität selbst, Abwerbung, Mitnehmen beim Vereinswechsel, Ex-Spieler als Mitarbeiter (K32), Ereignisse aus §8.
 
 
+
+**Mit dir entschieden (10. November 2026): Für jeden Bereich lohnt sich gutes Personal**, auch für Verhandlungen. Wer gute Leute hat, bekommt bessere Deals, so wie der Sponsorentag bessere Sponsorangebote bringt (K24). Ausgearbeitet, vorläufig:
+
+12. **Der „Vertragsverhandler“ ist der Sportdirektor.** So heißt die Rolle in deutschen Vereinen (auch Sportvorstand oder sportlicher Leiter), Kaderplaner arbeiten ihm zu. Er bekommt zwei Werte:
+    - **Verhandlungsgeschick** (Qualität 1–20): Forderungen von Spielern und Beratern −0 bis −8 % (Qualität 20), Ablösen beim Kauf −0 bis −5 % und beim Verkauf +0 bis +5 %, geplatzte Runden kosten nur halb so viel Stimmung (K21 §4), die Annahmezone ist schmaler, also genauer (K35a).
+    - **Netzwerk:** Er bringt Kontakte zu zwei bis sechs Beratern mit (Beziehung +20 bis +40, K22) und kennt einen Markt besonders gut (zum Beispiel Skandinavien oder die 2. Liga). Geht er, gehen die Kontakte mit, die er mitgebracht hat. Was der Verein selbst aufgebaut hat, bleibt.
+    - **Ohne Sportdirektor** verhandelst du selbst ohne Bonus (Qualität 3). Die Automatik für Verträge und Transfers gibt es nur mit ihm.
+13. **Kaderplaner:** genauere Kostenvorschau für Prämien (K21 §5.1a), Hinweise auf auslaufende Verträge und Schieflagen im Gehaltsgefüge, Vorschläge für Abgänge. Ohne ihn macht der Sportdirektor das mit, ungenauer.
+14. **Marketingleiter:** Sponsorangebote bis +10 % (zusammen mit dem Sponsorentag höchstens +18 %), Kampagnen bis ×1,2 (K25).
+15. **Greenkeeper (Platzwart):** pflegt Stadionrasen und Trainingsplätze. Qualität entscheidet über die Rasenqualität (K26). Er kommt aus K26 in den Stab, damit er wie alle Mitarbeiter eingestellt, bezahlt und abgeworben werden kann.
+16. **Deckel gegen Ausnutzung:** Alle Boni für Verhandlungen zusammen (Sportdirektor, Berater-Beziehung, Klauseln) senken eine Forderung höchstens um 15 %. Gute Leute verlangen viel Gehalt, und sie altern.
+17. **Die Besten wollen zu den Besten:** Mitarbeiter wählen ihren Verein wie Spieler (K19): nach Ansehen, Gehalt, Erfolg und Infrastruktur. Größere Vereine werben gute Leute ab (die Abwerbung aus Nr. 11 kommt damit). Reiche Vereine haben so den besten Stab, ohne dass das Spiel nachhilft (K02 §5.3a).
+18. **Computer-Vereine** stellen nach Budget und Profil ein, mit denselben Regeln.
+
 ## Quellen
 
 - Community-Wünsche zum Stab: `konzepte/_recherche-genre.md`, Abschnitt 4b
 - Grundsatz Automatik und Delegieren: `konzepte/_konsistenzpruefung.md`, B2, PLAN §2
+- Sportdirektor, Sportvorstand oder sportlicher Leiter als Gesamtverantwortlicher, Kaderplaner als Zuarbeiter: [bundesliga.com: What is a sporting director?](https://bundesliga.com/en/bundesliga/news/what-is-a-sporting-director-bayern-munich-borussia-dortmund-rb-leipzig-schalke-3321-2323), [DFB: Kompetenzprofil sportlicher Leiter](https://assets.dfb.de/uploads/000/232/047/original_Kompetenzprofil_sportlicher_Leiter.pdf), [inFranken: „Schatten-Männer“ in der Bundesliga](https://www.infranken.de/sport/schatten-maenner-in-erster-reihe-der-bundesliga-art-4197513) (10.11., Zusammenfassungen der Suchergebnisse)
 - Personal bei Anstoss 3: PLAN §4 (GameStar 4/2000)

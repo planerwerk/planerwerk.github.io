@@ -36,7 +36,15 @@ Hängt ab von: K23 (Finanzen), K27 (Fans) · Wird gebraucht von: K07, K08, K10, 
 | Trainingsgelände | 1–5 | Trainingsfaktor ×(0,9 + 0,05 × Stufe), Verletzungsrisiko im Training ×(1,1 − 0,04 × Stufe) (K07) |
 | Nachwuchsleistungszentrum | 1–5 | ersetzt „Jugendarbeit“ (gibt es, K08) als Bauwerk mit laufenden Kosten |
 | Reha-Zentrum | 0–3 | Ausfallzeit −3 % je Stufe, mit Physiotherapeut zusammen höchstens −25 % (K10, K16) |
-| Platzwart | Mitarbeiter (Anstoss-Idee) | Rasenqualität, weniger Ausfälle bei Frost, kleine Heimstärke bei gutem Rasen |
+| Platzwart | seit 10.11. als Greenkeeper im Stab (K16 §12 Nr. 15) | Rasenqualität, weniger Ausfälle bei Frost, kleine Heimstärke bei gutem Rasen (3.2a) |
+
+### 3.2a Rasenqualität (ergänzt 10. November 2026, vorläufig)
+
+- **Je Platz ein Wert 0–100:** Stadion und Trainingsgelände getrennt.
+- **Sinkt:** je Heimspiel −3, je Frosttag ohne Rasenheizung −1, später Konzerte und andere Veranstaltungen.
+- **Steigt:** jede Woche um 0,5 bis 3 nach der Qualität des Greenkeepers. In der Sommerpause lässt sich der Rasen neu verlegen (Geld, danach 100).
+- **Wirkung, klein und für beide Mannschaften gleich:** Unter 40 leiden Stile mit kurzen Pässen und viel Ballbesitz (Umsetzung −5 %, K06), unter 30 steigt das Verletzungsrisiko leicht (×1,1, K10). Über 80 kennt die Heimmannschaft ihren Platz besonders gut (Heimvorteil +0,3 %). Der Trainingsplatz wirkt auf den Trainingsfaktor (K07).
+- Alle Werte sind Spielwerte, Studien habe ich dazu nicht geprüft.
 
 ### 3.3 Eigentum
 
@@ -114,6 +122,8 @@ stadion:{
 ## 12. Offene Fragen
 
 **Vorläufig entschieden:** Bauteile statt Editor, eigene oder gepachtete Stadien als Stammdaten, Nachwuchszentrum ersetzt die Stufe „Jugendarbeit“ als Bauwerk, Platzwart als Mitarbeiter. Kosten sind Spielwerte.
+
+**Ergänzt am 10. November 2026:** Der Platzwart heißt jetzt Greenkeeper und gehört zum Stab (K16 §12 Nr. 15), damit er wie alle Mitarbeiter eingestellt, bezahlt und abgeworben wird. Die Rasenqualität hat eigene Regeln (3.2a).
 
 **Noch zu recherchieren:** echte Baukosten je Platz, Stehplatzanteile der Bundesliga-Stadien, Eigentumsverhältnisse der Stadien.
 

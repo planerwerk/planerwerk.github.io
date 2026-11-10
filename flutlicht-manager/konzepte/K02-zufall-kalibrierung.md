@@ -104,6 +104,39 @@ Verboten sind, für dich wie für alle Computer-Vereine:
 
 **Erlaubt** ist, was sich aus den Regeln ergibt: Ein Spitzenteam bekommt mehr Angebote für seine Spieler, ein Absteiger verliert Ansehen. Das ist Folge, nicht Steuerung.
 
+### 5.3a Die Reichen werden reicher (mit dir entschieden am 10. November 2026)
+
+So ist es auch in der echten Liga: Bayern holt man praktisch nie ein. Man kann in einzelnen Jahren mithalten, aber die besten Spieler wollen dorthin, und dort arbeiten die besten Trainer, Ärzte und Greenkeeper. Das Spiel soll das abbilden, **als Folge der Regeln, nicht als Zuschlag** (5.3 gilt weiter).
+
+**Echte Zahlen:**
+- Bayern war von 2012/13 bis 2022/23 elfmal in Folge Meister. 2023/24 wurde Leverkusen erstmals Meister, ohne Niederlage. 2024/25 und 2025/26 holte Bayern den Titel wieder, 2025/26 vier Spieltage vor Schluss. Das sind 13 Titel in 14 Jahren.
+- Personalaufwand 2024/25 laut DFL-Bericht und Berichten darüber: Bayern etwa 443 Mio. €, Dortmund etwa 268 Mio. €, im Schnitt etwa 96 Mio. € je Erstligist. Ob die Bayern-Zahl nur das Personal im Spielbetrieb meint, ist in den Quellen nicht einheitlich.
+
+**Woher der Vorsprung kommt** (jeweils im zuständigen Konzept, gleiche Regeln für alle):
+
+| Kanal | Wirkung | Konzept |
+|---|---|---|
+| Geld | Medienerlöse nach Säulen (Leistung zählt mit), Zuschauer, Sponsoren nach Ansehen, Europapokal | K23, K24, K27 |
+| Anziehung | Stars wechseln fast nur zu Vereinen mit hohem Ansehen, Titelchancen und hohem Gehalt | K19 („Stars wählerisch“), K21 |
+| Personal | die besten Mitarbeiter wollen zu den besten Vereinen, große Vereine werben ab | K16 §12 Nr. 17 |
+| Kontakte | wer viele Geschäfte macht, hat die besten Kontakte zu Beratern | K22 §12 Nr. 9 |
+| Infrastruktur | Trainingsgelände, Nachwuchszentrum, Reha-Zentrum, Rasen | K26 |
+| Talente | die besten Jugendspieler zieht es zu den großen Vereinen | K08, K32 |
+| Ansehen | wächst mit Erfolg und hält lange | K28, K32 |
+
+**Wie man trotzdem manchmal mithält:** Zufall im Spiel, Verletzungen und Stimmung beim Großen, gute Arbeit beim Kleinen (Scouting, Talente früh holen, Taktik, Zusammenhalt). Das Spiel bremst niemanden.
+
+**Machtwechsel über Jahrzehnte** (deine Ergänzung vom 10.11.): Auch Gladbach (fünf Titel, zuletzt 1976/77), der HSV (drei, zuletzt 1982/83) und Dortmund (fünf, zuletzt 2011/12) hatten ihre Hochphasen. Nach 30 und mehr Jahren dürfen sich die Verhältnisse auch im Spiel verschieben, wieder nur als Folge der Regeln:
+- **Ansehen ist nicht fest:** Es wächst mit Titeln und internationalen Spielen und sinkt langsam in Jahren ohne Erfolg (K28, K32).
+- **Fehler der Computer-Vereine:** Profile mit Risiko machen Schulden, kaufen teuer und falsch, wechseln oft den Trainer (K31, K23 bis zur Insolvenz). So kann auch ein großer Verein abstürzen, wie der HSV.
+- **Generationen:** Stars altern, Talent-Jahrgänge sind unterschiedlich stark (K08, K32). Ein Verein mit gutem Nachwuchszentrum und Scouting kann eine Generation lang oben mitspielen.
+- **Stab und Kontakte** wandern mit den Leuten (K16, K22).
+- **Später denkbar:** Investoren und Aufsteiger mit neuem Geld als Ereigniskarte (K30), im Rahmen der 50+1-Regel. Erst prüfen.
+
+**Europapokal fehlt noch** und ist in Wirklichkeit einer der größten Treiber des Vorsprungs: In der Champions League bekommt jeder Teilnehmer 2025/26 18,62 Mio. € Startgeld, dazu 2,1 Mio. € je Sieg in der Ligaphase, ein Sieger kann auf weit über 100 Mio. € kommen. **Champions League, Europa League und Conference League gehören deshalb langfristig fest ins Spiel** (deine Entscheidung vom 10.11., Konzept K37, PLAN §3). Bis dahin bekommen die Plätze 1–4, 5–6 und 7 der Bundesliga in der folgenden Saison eine Pauschale für internationale Einnahmen (K23, vorläufig, Höhe bei der Umstellung auf echte Geldwerte in U13).
+
+**Kalibrierziel (mit dir entschieden am 10.11.):** Der Verein mit dem höchsten Ansehen wird in **etwa zwei Dritteln** der Jahre Meister (über 20 Saisons 55–75 %), nicht in 13 von 14 wie zuletzt in echt. Er landet selten (unter 15 %) außerhalb der ersten drei. Ein Verein aus der unteren Hälfte des Ansehens wird in 20 Saisons höchstens einmal Meister. Über 30 Saisons gibt es mindestens drei verschiedene Meister, und mindestens einmal verliert ein Verein aus den ersten drei des Ansehens dauerhaft seinen Platz. **Heute** wird Bayern in drei Seeds je drei Saisons 4-mal von 9 Meister. Das ist schon der häufigste Meister (Frankfurt, Leipzig und Leverkusen teilen sich die übrigen fünf), aber weniger als zwei Drittel. Ohne Markt (U10, U11), echte Geldwerte (U13) und Europapokal (K37) lässt sich das noch nicht sinnvoll einstellen. Geprüft wird nach U11 mit einem neuen Test über viele Saisons.
+
 ### 5.4 Schwierigkeitsstufen
 
 Schwierigkeit ändert nur **Bedingungen, Information und Hilfen**:
@@ -206,8 +239,14 @@ schwierigkeit:{
 3. **Seed eingeben** beim Start als Option für Fortgeschrittene, versteckt im Startbildschirm.
 4. **Rangkorrelation 0,6–0,8** als Maß für „Glück gleicht sich aus“ ist ein geschätzter Startwert. Er sollte mit echten Daten geprüft werden (Marktwert-Rang vor der Saison gegen Abschlusstabelle).
 
+**Mit dir entschieden (10. November 2026):** Die Reichen werden reicher, wie in der echten Liga (5.3a), aber mit Maß: Der Größte holt etwa zwei Drittel der Titel. Über Jahrzehnte dürfen sich die Verhältnisse verschieben. Champions League, Europa League und Conference League kommen langfristig ins Spiel (K37). Vorläufig dazu: die Kanäle und Gründe für Machtwechsel in 5.3a, eine Europapokal-Pauschale bis zum echten Europapokal.
+
 ## Quellen
 
 - Kritik „Ergebnis steht vorher fest“: `konzepte/_recherche-genre.md`, Abschnitt 4
 - Generator und Seed: `js/zufall.js`, `konzepte/K33-daten.md`
 - Zielwerte: `konzepte/K03-spielermodell.md` §10, `konzepte/K04-engine.md` §10 mit ihren Quellen
+- Bayern elfmal in Folge Meister bis 2023, Leverkusen 2024 ohne Niederlage: [bundesliga.com: Leverkusen erster Titel](https://www.bundesliga.com/de/bundesliga/news/bayer-04-leverkusen-deutscher-meister-2024-erster-titel-26960), [FC Bayern gratuliert Leverkusen](https://fcbayern.com/de/news/2024/04/fc-bayern-gratuliert-bayer-04-leverkusen-zur-meisterschaft); Meister 2025/26 vier Spieltage vor Schluss, 35. Titel: [zdfheute](https://www.zdfheute.de/sport/bundesliga-bayern-muenchen-deutscher-meister-saison-bilanz-100.html), [FC Bayern: 8 Meilensteine zur 35. Meisterschaft](https://fcbayern.com/de/news/2026/04/8-meilensteine-zur-35-deutschen-meisterschaft-des-fc-bayern)
+- Personalaufwand 2024/25: [DFL Economic Report 24/25](https://report.bundesliga.de/2425/en/economic-report/economic-figures/bundesliga/groups-by-payroll-costs-for-match-operations.html), [buli-tipphilfe.de: Gehälter](https://www.buli-tipphilfe.de/blog/bundesliga-gehaelter-2026-2027), [heidelberg24: Gehaltsranking](https://www.heidelberg24.de/sport/fussball/bundesliga-gehaltsranking-finanzmeister-bayern-dominiert-das-zr-93203342.html) (10.11., Zusammenfassungen der Suchergebnisse)
+- Meistertitel Gladbach (fünf, zuletzt 1976/77), HSV (drei, zuletzt 1982/83), Dortmund (fünf, zuletzt 2011/12): [Flashscore: alle Meister seit 1963](https://www.flashscore.de/news/ubersicht-alle-meister-seit-der-bundesliga-einfuhrung-1963/xCfSQik3/), [bundesliga.com: Liste deutscher Meister](https://www.bundesliga.com/de/bundesliga/news/liste-deutscher-meister-bundesliga-koln-bayern-nurnberg-dortmund-bremen-kaiserslautern-23908)
+- Champions League 2025/26: 18,62 Mio. € Startgeld, 2,1 Mio. € je Sieg, 0,7 Mio. € je Remis in der Ligaphase, Ausschüttung aller drei Wettbewerbe brutto 4,4 Mrd. €: [UEFA-Rundschreiben 2025/32](https://editorial.uefa.com/resources/029a-1e0b55357e10-4e4ca5094458-1000/20250616_circular_2025_32_de.pdf), [Abendzeitung München](https://www.abendzeitung-muenchen.de/sport/fussball/nach-der-reform-champions-league-noch-groessere-goldgrube-art-1006993,PRINT), [SI: Prize money 2025/26](https://www.si.com/soccer/2025-26-champions-league-prize-money-full-list-earnings-every-club) (10.11., Zusammenfassungen; Beträge für Europa League und Conference League noch nicht geprüft)

@@ -23,6 +23,8 @@ Datei: `konzepte/K02-zufall-kalibrierung.md`
 3. **Seed eingeben** beim Start als Option für Fortgeschrittene, versteckt im Startbildschirm.
 4. **Rangkorrelation 0,6–0,8** als Maß für „Glück gleicht sich aus“ ist ein geschätzter Startwert. Er sollte mit echten Daten geprüft werden (Marktwert-Rang vor der Saison gegen Abschlusstabelle).
 
+**Mit dir entschieden (10.11.): Die Reichen werden reicher, aber mit Maß** (K02 §5.3a), als Folge der Regeln ohne Zuschlag. Der Größte holt etwa zwei Drittel der Titel. Über Jahrzehnte dürfen sich die Verhältnisse verschieben. Champions League, Europa League und Conference League kommen langfristig ins Spiel (K37). Vorläufig: Europapokal-Pauschale bis dahin, Gründe für Machtwechsel (Ansehen sinkt ohne Erfolg, Fehler der Computer-Vereine, Talent-Jahrgänge), Langzeitziel mindestens drei verschiedene Meister in 30 Saisons.
+
 ## K03 – Spielermodell (Umsetzung U3)
 
 1. **Platz für Stärken nach Klasse:** Ein Spieler hat bis Stärke 64 Platz für 1 Stärke, bis 74 für 2, bis 84 für 3, darüber für 4 (`lernen.platz`). Ohne diese Grenze stieg die Zahl der Stärken in sechs Saisons von 0,9 auf 3,2 pro Spieler, weil alle Vereine lernen und niemand verlernt. Mit der Grenze pendelt sie sich bei etwa 1,8 ein.
@@ -244,7 +246,7 @@ Bei der Umsetzung (U8):
 20. **Lernstufen (K36):** Stimmung sehen ab Teamleiter, Kapitän ab C, Kaderrollen und Teamevent ab B.
 21. **Noch nicht gebaut:** Ereignisse aus §8 außer dem Gesprächswunsch, Geldstrafen erlassen, Prämien, Integration und Heimweh, Integrationsfigur und Mentor.
 
-**Mit dir entschieden (10.11.): Bankzeit nach Grund** (K14 §12, vorgemerkt als U8d). Rotation wegen Frische keine Abwertung, Kurzeinsatz mit Tor oder guter Note positiv, Rivale spielt auf Dauer negativ (anfangs je nach Typ Schub), Unerfahrene freuen sich über Bank und Kurzeinsatz, Ersatztorwart neutral, außer er ist so stark wie die Nummer 1. Meine Vorschläge dazu (vorläufig): Schonung zählt wie Verletzung, Joker mit Tor oder Note bis 2,5 +3, Rivalen-Zähler ab dem vierten Spiel −1 bis −10, Unerfahrene (unter zehn Profi-Pflichtspielen) +1 für den Kader, +3 für 10 Minuten, +5 für das Debüt, Torwart-Rivalität ab 2 Punkten Abstand.
+**Mit dir entschieden (10.11.): Bankzeit nach Grund** (K14 §12, vorgemerkt als U8d). Rotation wegen Frische keine Abwertung, Kurzeinsatz mit Tor oder guter Note positiv, Rivale spielt auf Dauer negativ (anfangs je nach Typ Schub), Unerfahrene freuen sich über Bank und Kurzeinsatz, Ersatztorwart neutral, außer er ist so stark wie die Nummer 1. Meine Vorschläge dazu (vorläufig): Schonung zählt wie Verletzung, Joker mit Tor oder Note bis 2,5 +3, Rivalen-Zähler ab dem vierten Spiel −1 bis −10, Unerfahrene (unter zehn Profi-Pflichtspielen) +1 für den Kader, +3 für 10 Minuten, +5 für das Debüt, Torwart-Rivalität ab 2 Punkten Abstand. Weitere Fälle von mir (vorläufig, K14 §12): Pokaltorwart und Pokalelf als Rolle, Aufbau nach Verletzung, Platz verloren während der Verletzung, nach einer Sperre, Formkrise, passt nicht ins System, teurer Neuzugang, Kapitän und Altstar auf der Bank, Vertragsjahr, Tribüne statt Bank, früh ausgewechselt, Einwechslung in der Nachspielzeit, Wunsch nach Leihe, bedeutungslose Spiele, Mannschaftserfolg, Chance genutzt, neuer Trainer, Wechselwunsch und Bank, Länderspiele. Dazu sechs Grundsätze (Grund vor Minuten, kurz verständnisvoll und auf Dauer die Summe, der Typ bestimmt die Richtung, Leistung schafft Anspruch, Erklären hilft, Erfolg macht genügsam).
 
 ## K15 – Gespräche und Ansprachen
 Datei: `konzepte/K15-gespraeche.md`
@@ -288,6 +290,15 @@ Bei der Umsetzung (U6c):
 9. **Gehälter** werden wie die Spielergehälter je Ligaspiel gebucht. Ein Erstligist wie Freiburg zahlt so etwa 3 Mio. € pro Jahr, ein kleiner Drittligist mit nur einem Co-Trainer etwa 35.000 €. Spielwerte, Abgleich mit K23 und dem Stab-Budget aus K28.
 10. **Computer-Vereine** besetzen einen fehlenden Co-Trainer wöchentlich aus dem Pool nach und verlängern auslaufende Verträge zu 70 %.
 11. **Noch nicht gebaut:** Automatik mit Rauschen, Haltung und Spezialgebiet (5.1), Modus „Vorschlag“, Bänder für Vorhersagen außer der Qualität selbst, Abwerbung, Mitnehmen beim Vereinswechsel, Ex-Spieler als Mitarbeiter (K32), Ereignisse aus §8.
+
+**Mit dir entschieden (10.11.): Für jeden Bereich lohnt sich gutes Personal**, auch für Verhandlungen.
+12. **Der Verhandler ist der Sportdirektor:** Verhandlungsgeschick (Forderungen bis −8 %, Ablösen ±5 %) und Netzwerk (Kontakte zu zwei bis sechs Beratern).
+13. **Kaderplaner** als Zuarbeiter (Kostenvorschau, Fristen, Gehaltsgefüge).
+14. **Marketingleiter:** Sponsorangebote bis +10 %, mit Sponsorentag höchstens +18 %.
+15. **Greenkeeper (Platzwart)** als Rolle im Stab (vorher in K26).
+16. **Deckel:** Alle Verhandlungsboni zusammen höchstens −15 %.
+17. **Die Besten wollen zu den Besten:** Mitarbeiter wählen ihren Verein wie Spieler, große Vereine werben ab.
+18. **Computer-Vereine** stellen nach denselben Regeln ein.
 
 ## K17 – Beziehungsnetz
 Datei: `konzepte/K17-beziehungen.md`
@@ -338,6 +349,15 @@ Datei: `konzepte/K22-berater.md`
 1. **Fünf Profile,** darunter Strippenzieher und Familienberater als eigene Typen.
 2. **Provisionen als Spielwerte.** Die echten Regeln (FIFA-Beraterreglement, Rechtsstreit um Obergrenzen) sind nicht geprüft und für das Spiel nicht nötig.
 
+**Mit dir entschieden (10.11.): Kontakte zu Beratern bringen bessere Deals.** Vorläufig:
+3. **Beziehung aufbauen:** faire Abschlüsse, Mandanten gut behandeln und entwickeln, einen wechselwilligen Mandanten zu einem guten Preis gehen lassen, jungen Mandanten Chancen geben, Einladung in die Loge oder zum Essen (einmal im Monat, nutzt sich ab), großzügigere Provision, Sportdirektor mit Netzwerk.
+4. **Beschädigen:** harte Verhandlungen, gebrochene Zusagen an Mandanten, Mandant dauerhaft gegen seine Rolle auf der Bank, Verkauf gegen seinen Willen, aufgeflogenes Abwerben. Ohne Kontakt verblasst die Beziehung.
+5. **Nutzen:** Forderungen bis −10 %, Tipps, Erstzugriff ab +60, Fürsprache beim Spieler, Warnung vor Vorverträgen.
+6. **Deckel** zusammen mit dem Sportdirektor −15 %.
+7. **Berater-Klüngel** ab fünf Mandanten im Kader.
+8. **Bestechung und Schwarzgeld** bewusst weggelassen.
+9. **Computer-Vereine** nach denselben Regeln.
+
 ## K23 – Finanzen und Budget
 Datei: `konzepte/K23-finanzen.md`
 
@@ -351,6 +371,8 @@ Datei: `konzepte/K24-sponsoren.md`
 
 **Noch zu recherchieren:** Ärmel- und Namensrechte-Erlöse in der Bundesliga, Sponsoring in 2. und 3. Liga.
 
+**Ergänzt 10.11.:** Ein guter Marketingleiter bringt bis zu 10 % bessere Angebote, zusammen mit dem Sponsorentag höchstens 18 %.
+
 ## K25 – Marketing und Merchandising
 Datei: `konzepte/K25-marketing.md`
 
@@ -360,6 +382,8 @@ sechs Kampagnen, drei Trikotdesigns je Saison, Sortiment in drei Stufen, Online-
 Datei: `konzepte/K26-stadion.md`
 
 **Noch zu recherchieren:** echte Baukosten je Platz, Stehplatzanteile der Bundesliga-Stadien, Eigentumsverhältnisse der Stadien.
+
+**Ergänzt 10.11.:** Greenkeeper (Platzwart) im Stab (K16), Rasenqualität 0–100 je Platz mit kleiner Wirkung auf Ballbesitzstile, Verletzungsrisiko und Heimvorteil (K26 3.2a, Spielwerte).
 
 ## K27 – Fans und Zuschauer
 Datei: `konzepte/K27-fans.md`

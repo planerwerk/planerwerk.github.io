@@ -31,7 +31,7 @@ Hängt ab von: K01 (Kalender), K32a (Unterbau), K04/K05 (Verlängerung, Elfmeter
 | DFB-Pokal | 64 Teams | K.-o., eine Partie, Verlängerung, Elfmeterschießen, Finale neutral | ✅, Heimrecht und Auslosung neu (3.2) |
 | **Supercup** | Meister gegen Pokalsieger | ein Spiel vor dem 1. Spieltag beim Meister | neu |
 | **Länderspiele** | Nationalspieler aller Vereine | Abstellung in den Länderspielpausen, Turniere im Sommer | neu (3.4) |
-| Europapokal | – | später | – |
+| Europapokal | – | später, fest eingeplant als K37 (Champions League, Europa League, Conference League, 10.11.) | – |
 
 ### 3.2 DFB-Pokal
 
