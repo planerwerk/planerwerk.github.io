@@ -87,6 +87,32 @@ Karten dürfen nur Werte ändern, die es im Spiel gibt (K35a: Texte beschreiben 
 - Sperrzeit je Karte und Beteiligtem (Standard 120 Tage).
 - Textvarianten werden reihum genutzt, damit sich nichts wöchentlich wiederholt (Lehre aus den Pressekonferenzen, Recherche 4).
 
+### 5.4 Seltenheit und Größe des Katalogs (mit dir entschieden am 10. November 2026)
+
+Es darf sehr viele Karten geben, gern 1000, aber viele davon so selten, dass erst nach etwa 2000 Saisons alle einmal vorgekommen sind. So bleibt auch eine lange Karriere voller Überraschungen. Ausgearbeitet, vorläufig:
+
+**Drei Ebenen:**
+1. **Kategorie** mit eigener Rate, zum Beispiel „Kabine“, „Transfermarkt“, „Fans“, „Skandal“. Die Kategorie legt fest, wie oft überhaupt etwas aus ihr kommt. Beispiel: ein Skandal etwa einmal in zehn Saisons (8.4).
+2. **Szenario** innerhalb der Kategorie, mit Seltenheitsstufe und Bedingungen (zum Beispiel nur in der 1. Liga, nur mit einem Spieler, der heiratet).
+3. **Varianten** je Szenario: Texte, Beteiligte aus der Spielwelt, kleine Abweichungen bei den Folgen.
+
+**Seltenheitsstufen** (je Szenario, wenn seine Bedingungen erfüllt sind):
+
+| Stufe | etwa einmal in | Anteil am Katalog bei 1000 Szenarien | Karten pro Saison |
+|---|---|---|---|
+| häufig | 3 Saisons | 150 | 50 |
+| gelegentlich | 20 Saisons | 300 | 15 |
+| selten | 100 Saisons | 350 | 3,5 |
+| sehr selten | 400 Saisons | 200 | 0,5 |
+
+Nachgerechnet mit einem kleinen Simulationsskript: Mit diesen Stufen sind nach 10 Saisons etwa 30 % der Szenarien vorgekommen, nach 30 Saisons etwa die Hälfte, nach 100 Saisons gut 70 %. **Bis alle einmal da waren, dauert es im Mittel etwa 2.200 Saisons** (in neun von zehn Läufen zwischen 1.800 und 3.000). Das passt zu deinem Wunsch. Die meisten Karten sind Infos im Posteingang, Halte und Entscheidungen bleiben im Budget aus 5.1.
+
+**Regeln dazu:**
+- Ein **sehr seltenes Szenario** kommt in einer Karriere höchstens einmal.
+- Zufall aus dem eigenen Strom „ereignisse“ (K02), Neuladen bringt keine andere Karte.
+- **Inhalte wachsen nach und nach** als Daten (`daten/ereignisse.js`): Vorlagen mit Platzhaltern für Beteiligte, Varianten und Folgen. 1000 Szenarien sind ein Ziel über viele Schritte, kein Startumfang.
+- **Sammlung (Idee, vorläufig):** Das Spiel merkt sich über alle Karrieren im Browser, welche Szenarien du schon erlebt hast („Chronik: 137 von 1000“), getrennt vom Spielstand. Seltene Funde sind so eine kleine Belohnung.
+
 ## 6. Hebel des Spielers
 
 - Entscheidungen in den Karten.
@@ -141,6 +167,23 @@ Zusammen etwa 100 Karten, viele davon Infos.
 | Der Sponsor gerät in einen Skandal | Sponsoren | K24 |
 | Fan-Choreo zum Jubiläum | Fans | K27 |
 
+### 8.4 Skandale: Spielmanipulation, Wettbetrug, Schiedsrichter (mit dir entschieden am 10. November 2026)
+
+Sehr selten, als Weltereignis: **etwa einmal in zehn Saisons** kommt ein Szenario aus dieser Kategorie, die schweren noch viel seltener. Vorbilder sind echte Fälle: der Bundesliga-Skandal 1971 (53 Spieler, zwei Trainer, sechs Funktionäre bestraft, Bielefeld und Offenbach verloren die Lizenz), Schiedsrichter Hoyzer 2005 (Spiele in 2. Liga, Pokal und Regionalliga manipuliert, lebenslang gesperrt) und Calciopoli in Italien 2006 (Juventus verlor zwei Titel und musste absteigen).
+
+| Szenario (Beispiele) | Stufe | Folge |
+|---|---|---|
+| Wettbetrug in der Regionalliga oder 3. Liga fliegt auf | selten | Spieler gesperrt, ein Verein Punktabzug, Presse |
+| Spieler eines Computer-Vereins wettet auf eigene Spiele | selten | Sperre, sein Verein verkauft ihn billig |
+| Ein Wettpate spricht einen deiner Spieler an, er meldet es | selten | Lob in der Presse, Stimmung des Spielers + |
+| Schiedsrichter hat Spiele manipuliert und fliegt raus | sehr selten | lebenslange Sperre, betroffene Spiele werden wiederholt oder annulliert (Sportgericht, K09), Termine im Kalender (K13) |
+| Ein Spiel deines Vereins wird deshalb wiederholt | sehr selten | neuer Termin, Ergebnis gestrichen, Tabelle ändert sich |
+| Großer Skandal mit mehreren Vereinen wie 1971 | sehr selten | Lizenzentzug oder Zwangsabstieg, viele Sperren, Ansehen der Liga sinkt für eine Saison |
+
+- **Nur als Weltereignis, ohne eigene Entscheidung zum Mitmachen** (vorläufig). Die Idee einer Versuchung (ein Mittelsmann bietet dir an, ein Spiel „zu regeln“) bleibt draußen, solange du sie nicht willst.
+- **Doping kommt nicht ins Spiel** (deine Entscheidung vom 10.11.). „Fit spritzen“ mit Schmerzmitteln bleibt, das ist erlaubt (K10).
+- Sichtbar ab der ersten Lizenz (nur Information, K36).
+
 ### 8.3 Beispiel einer Kette: „Der lachende Dritte“
 
 1. **Auslöser:** Zwei Computer-Vereine verhandeln um denselben Spieler (K19), dein Bedarf passt, du kennst seinen Berater oder hast mit Glück einen entfernten Verwandten (Zufall 5 %).
@@ -160,6 +203,8 @@ Alle Konzepte mit Abschnitt 8 liefern Karten. K30 regelt nur Aufbau, Auswahl und
 | Entscheidungskarten | 15–30 pro Saison bei Meldungsdichte „normal“ |
 | Vielfalt | keine Karte mehr als dreimal pro Saison, keine Textvariante zweimal hintereinander |
 | Prüfskript | jede Karte nutzt nur erlaubte Wirkungen (3.2), alle Platzhalter werden gefüllt, jede Folgekarte existiert |
+| Seltenheit | ein Kartenlabor zieht Karten über 2000 Saisons mit Zuständen aus simulierten Saisons: jede Stufe trifft ihre Rate (±20 %), jedes Szenario ist erreichbar (Bedingungen erfüllbar), sehr seltene höchstens einmal je Karriere |
+| Skandale | etwa eine Skandal-Karte in zehn Saisons, schwere unter einmal in 100 Saisons |
 
 ## 11. Stellschrauben
 
@@ -167,7 +212,10 @@ Alle Konzepte mit Abschnitt 8 liefern Karten. K30 regelt nur Aufbau, Auswahl und
 karten:{
   halteProWoche:[2,4],entscheidung:{kleinProWoche:1,grossProMonat:1,jeBereichProWoche:1},infoProWoche:5,
   dichte:{wenig:0.5,normal:1,viel:2},gueltigTage:14,sperrTage:120,
-  prioritaet:['frist','kette','wichtig','sonst']
+  prioritaet:['frist','kette','wichtig','sonst'],
+  seltenheit:{haeufig:3,gelegentlich:20,selten:100,sehrSelten:400}, // etwa einmal in so vielen Saisons je Szenario
+  kategorien:{skandal:10},                                         // etwa einmal in so vielen Saisons je Kategorie (Beispiel)
+  sehrSeltenJeKarriere:1
 }
 ```
 
@@ -179,8 +227,14 @@ karten:{
 2. **Entscheidungskarten über dem Budget** kommen als Info, der Mitarbeiter entscheidet (Automatik).
 3. **Katalog wächst mit den Konzepten,** K30 hält nur die Übersicht.
 
+**Mit dir entschieden (10. November 2026):** Sehr viele Szenarien (Ziel 1000), viele davon so selten, dass alle erst nach etwa 2000 Saisons einmal vorgekommen sind. Manipulation und Wettbetrug als sehr seltene Weltereignisse (etwa einmal in zehn Saisons). Doping kommt nicht ins Spiel.
+
+**Vorläufig dazu:** Kategorie, Szenario und Varianten als drei Ebenen, vier Seltenheitsstufen (5.4), sehr seltene Szenarien höchstens einmal je Karriere, keine eigene Entscheidung zum Mitmachen bei Manipulation, eine Sammlung erlebter Szenarien über alle Karrieren.
+
 ## Quellen
 
 - Aufbau, Dosierung, erste Ideen: PLAN §2 und §4
 - Kritik „zu viele Karten“, Pressefragen ohne Folgen: `konzepte/_recherche-genre.md`, Abschnitte 3.2 und 4
 - Budget für Unterbrechungen: `konzepte/_konsistenzpruefung.md`, B1
+- Bundesliga-Skandal 1971, Hoyzer 2005, Calciopoli 2006: [bpb: Bundesliga-Skandal 1970/71](https://WWW.BPB.DE/system/files/dokument_pdf/PuF_S_18_Bundesliga-Skandal%201970_1971_0.pdf?download=1), [Wikipedia: Hoyzer-Skandal 2005](https://Wikipedia.com/wiki/Robert_Hoyzer), [90min: Juventus in der Serie B](https://www.90min.com/posts/the-last-time-juventus-were-relegated-to-serie-b) (10.11.)
+

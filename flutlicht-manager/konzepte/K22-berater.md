@@ -137,7 +137,7 @@ berater:{
 5. **Was eine gute Beziehung bringt:** Forderungen −2 % je 20 Punkte (wie bisher, höchstens −10 %), ehrliche Tipps zu wechselwilligen Spielern ab +40 (wie bisher), **Erstzugriff** ab +60 (er bietet dir einen Mandanten an, bevor andere Vereine davon hören), ab +60 rät er seinem Spieler zu dir (Interesse +10 % in K19) und warnt dich, bevor ein Mandant aus deinem Kader woanders einen Vorvertrag unterschreibt (K21).
 6. **Deckel:** Zusammen mit dem Sportdirektor sinkt eine Forderung höchstens um 15 % (K16 §12 Nr. 16).
 7. **Risiko großer Nähe:** Hat ein Berater fünf und mehr Mandanten in deinem Kader, entsteht ein Berater-Klüngel. Er drängt dir Pakete auf (Strippenzieher), seine Mandanten halten zusammen (Grüppchen, K14), die Presse spricht vom „Beraterverein“ (K29).
-8. **Bestechung und Schwarzgeld** sind kein Werkzeug für Beziehungen. Seit 10.11. als Überlegung in K38 (Integrität): höchstens als seltene Ereigniskarte mit hohem Entdeckungsrisiko.
+8. **Bestechung und Schwarzgeld** sind kein Werkzeug für Beziehungen. Manipulation und Wettbetrug gibt es nur als sehr seltene Weltereignisse (K30 §8.4, entschieden 10.11.).
 9. **Computer-Vereine** bauen Beziehungen nach denselben Regeln auf. Große Vereine machen viele Geschäfte und haben so von selbst die besten Kontakte zu den großen Beratern (K02 §5.3a).
 
 ## Quellen

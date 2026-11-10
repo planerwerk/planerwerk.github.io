@@ -415,6 +415,9 @@ Datei: `konzepte/K30-ereigniskarten.md`
 2. **Entscheidungskarten über dem Budget** kommen als Info, der Mitarbeiter entscheidet (Automatik).
 3. **Katalog wächst mit den Konzepten,** K30 hält nur die Übersicht.
 
+**Mit dir entschieden (10.11.):** Ziel 1000 Szenarien, viele so selten, dass alle erst nach etwa 2000 Saisons vorgekommen sind. Manipulation und Wettbetrug als sehr seltene Weltereignisse (etwa einmal in zehn Saisons). Doping kommt nicht ins Spiel.
+Vorläufig: Kategorie, Szenario und Varianten; vier Stufen (etwa einmal in 3, 20, 100 und 400 Saisons je Szenario, nachgerechnet: alle gesehen nach etwa 2.200 Saisons); sehr seltene höchstens einmal je Karriere; keine eigene Entscheidung zum Mitmachen bei Manipulation; Sammlung erlebter Szenarien über alle Karrieren.
+
 ## K31 – Computer-Vereine
 Datei: `konzepte/K31-computer-vereine.md`
 
@@ -458,13 +461,3 @@ Mit dir entschieden (9.11.): Namen nach den Trainerlizenzen, 2–3 Stufen in der
 11. **Zurufe an einzelne Spieler ab B,** an die Mannschaft ab C.
 12. **Automatik mit Klugheit „normal“,** bis K16 §5.1 gebaut ist.
 13. **Der Aufstieg zählt nicht in das Halte-Budget.**
-
-## K38 – Integrität: Doping, Spielmanipulation, Bestechung (Idee)
-Gedanken in `PLAN.md` §4, noch kein Konzept.
-
-1. **Kontrollen laufen mit** (Auslosung nach dem Spiel, Trainingskontrollen), meist ohne Folgen.
-2. **Positive Fälle selten und ohne dein Zutun,** mit Ursache (Nahrungsergänzung, Medikament, Partydrogen, verpasste Meldungen).
-3. **Kein Doping-Knopf für dich,** stattdessen Geschichten mit Entscheidung (melden, intern regeln, vertuschen).
-4. **Bestechung und Wettbetrug als seltene Ereigniskarten** mit Akte, Entdeckung über Jahre und harten Strafen.
-5. **Entscheidungen ab der Pro-Lizenz** (K36).
-
