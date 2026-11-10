@@ -282,7 +282,7 @@ Erste Gedanken, kein Konzept:
 | 3 Menschen und Markt | K08, K14, K15, K17–K19, K21, K22, K28, K31, Gerüst von K30, Auslandspool aus K32 | ✅ U8 (9.11.): Stimmung mit Kaderrollen und eigener Einschätzung, Wechselwunsch in vier Stufen mit Gesprächswunsch als Halt, Mannschaftsstimmung, Ansteckung, Zusammenhalt mit Wirkung im Spiel, Freundschaften, Rivalitäten, Grüppchen, Kapitän, Teamevent, Gespräche mit Haltung, Versprechen und Glaubwürdigkeit, Mannschaftsansprache, neue Ansicht Kabine (tests/kabine.js). U8d (vorgemerkt, 10.11.): Bankzeit nach Grund (K14 §12). U9: Scouting, Auslandspool und Jugend. U10: Transfers I, Verträge mit Verhandlung und Prämien (K21, ergänzt 10.11.) und Berater. U11: Computer-Vereine. U12: Beziehungen, Vorstand und Ereignis-Gerüst | Transfers als Prozess, sinnvolle Computer-Vereine, erste Ereigniskarten |
 | 4 Verein und Welt | K12b, K20, K23–K27, K29, K32 (Rest), K34 | U13 bis U18 nach Bedarf | Saisonvorbereitung, Sponsoren, Marketing, Stadion, Fans, Presse, Abwerben |
 | 4b Europa | K37 | U19: Europapokal mit drei Wettbewerben, internationalen Einnahmen und Belastung | die Bundesliga im europäischen Wettbewerb, der Vorsprung der Großen hat seinen echten Grund |
-| 5 Oberfläche | K35b | U19 und folgende | eigener Retro-Look |
+| 5 Oberfläche | K35b | U20 und folgende | eigener Retro-Look |
 
 ## 6. Aufwand (grob, ehrlich)
 
