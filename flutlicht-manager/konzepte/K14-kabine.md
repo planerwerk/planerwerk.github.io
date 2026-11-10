@@ -1,6 +1,6 @@
 # K14 – Stimmung, Selbstvertrauen, Kabine
 
-Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12. **Umgesetzt in U8** (9. November 2026, `js/kabine.js`, Test `tests/kabine.js`): Stimmung mit sechs Bausteinen und Trägheit, Kaderrollen mit eigener Einschätzung, Wechselwunsch in vier Stufen mit Gesprächswunsch als Halt, Mannschaftsstimmung, Ansteckung, Zusammenhalt mit Wirkung im Spiel, Freundschaften, Rivalitäten, Grüppchen, Kapitän, Teamevent, Folgen für Leistung, Lernen und Verlängerung. Abweichungen und Lücken in Abschnitt 12.
+Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12. **Umgesetzt in U8** (9. November 2026, `js/kabine.js`, Test `tests/kabine.js`): Stimmung mit sechs Bausteinen und Trägheit, Kaderrollen mit eigener Einschätzung, Wechselwunsch in vier Stufen mit Gesprächswunsch als Halt, Mannschaftsstimmung, Ansteckung, Zusammenhalt mit Wirkung im Spiel, Freundschaften, Rivalitäten, Grüppchen, Kapitän, Teamevent, Folgen für Leistung, Lernen und Verlängerung. Abweichungen und Lücken in Abschnitt 12. **Die Bankzeit wird nach deiner Entscheidung vom 10.11. umgebaut** (§12, „Bankzeit nach Grund“, vorgemerkt als U8d, noch nicht gebaut).
 Hängt ab von: K03 (Werte, Beziehungsdaten), K15 (Gespräche) · Wird gebraucht von: K05, K08, K11, K12a, K19, K21, K29.
 
 ## 1. Ziel und Spielgefühl
@@ -223,6 +223,32 @@ kabine:{
 18. **Neuanfang beim Vereinswechsel:** Wechselwunsch auf null, Stimmung mindestens so hoch wie ein Startwert (60–75).
 19. **Diva und Söldner** sind jetzt sichtbar und wirksam (K03 §3.5).
 20. **Lernstufen (K36):** Stimmung, Wechselwunsch und Kabinenbericht ab Teamleiter (nur Information), Kapitän ab der C-Lizenz, Kaderrollen und Teamevent ab der B-Lizenz. Bis dahin wählt der Co-Trainer Kapitän und Rollen.
+**Mit dir entschieden (10. November 2026): Bankzeit nach Grund.** Vorgemerkt als U8d, noch nicht gebaut. Bis dahin gilt die Einsatz-Lücke aus Nr. 5.
+
+Nicht die Minuten allein zählen, sondern warum ein Spieler auf der Bank sitzt und was er aus seiner Zeit macht:
+
+| Lage | Wirkung |
+|---|---|
+| **Rotation:** ein guter Spieler sitzt, weil Frische oder Kondition unten sind, und spielt zum Beispiel nur 30 Minuten | keine Abwertung, er versteht es |
+| **Kurzeinsatz mit Wirkung:** Joker-Tor oder besonders gute Leistung in kurzer Zeit | nicht sauer, eher positiv |
+| **Rivale spielt:** ein guter Spieler sitzt, und sein direkter Rivale um den Platz spielt | auf Dauer Abwertung. Am Anfang je nach Typ auch ein Motivationsschub, auf lange Sicht aber negativ |
+| **Unerfahrene Spieler,** die sonst nicht einmal im Spieltagskader stehen | Bank ist positiv, schon 10 Minuten Einsatz können sehr positiv sein |
+| **Ersatztorwart** | Nichtspielen ist normal, keine Abwertung |
+| **Ersatztorwart, genauso stark wie die Nummer 1** | Reibereien |
+
+Wie ich das bauen würde (vorläufig, Zahlen sind Spielwerte):
+
+- **Grund je Pflichtspiel**, für jeden verfügbaren Spieler, der nicht in der Startelf steht:
+  - *Schonung:* Er stünde in der besten Elf ohne Ausfälle (Nr. 6), sitzt aber wegen niedriger Frische (unter 85 %) oder nach einem Spiel vor höchstens drei Tagen. Das Spiel zählt für die Einsatzzeit nicht, wie bei Verletzten.
+  - *Rivale spielt:* Sein Rivale (gleiche Feinposition, höchstens 3 Punkte Abstand, Nr. 13) steht in der Startelf, er nicht. Das zählt doppelt und füllt einen Rivalen-Zähler.
+  - *Sonst:* wie heute gegen seine Erwartung.
+- **Kurzeinsatz mit Wirkung:** Ein Einwechselspieler mit Tor oder Note bis 2,5 bekommt sofort +3 Stimmung, und das Spiel zählt für ihn als erfüllte Erwartung.
+- **Rivalen-Zähler:** In den ersten drei Spielen hinter dem Rivalen bekommen Kämpfer und Spieler mit hoher Entschlossenheit einen Schub (Lernen ×1,1, keine Abwertung). Diven und Nervenschwache verlieren sofort. Danach wird es für alle von Spiel zu Spiel teurer (−1, −2, −3 … bis −10 im Baustein „Einsatz“). Der Zähler sinkt, sobald er wieder spielt.
+- **Unerfahren** heißt: Talent oder Ergänzung mit weniger als zehn Pflichtspielen für Profis. Für ihn gibt es keine Erwartung an Einsatzzeit. Ein Platz im Spieltagskader bringt +1, ein Einsatz ab 10 Minuten +3, das Debüt +5. Die Prägungsereignisse aus K08 bauen später darauf auf.
+- **Torhüter:** Die Nummer 2 hat keine Erwartung an Einsatzzeit. Liegt sie höchstens 2 Punkte hinter der Nummer 1 (oder davor), entsteht eine Rivalität im Tor: beide −1 pro Woche, solange die Rangfolge nicht geklärt ist (geklärt heißt: Kaderrolle von dir vergeben oder fünf Spiele in Folge derselbe im Tor).
+- **Neue Daten:** Spieltagskader je Pflichtspiel (die Bank gibt es in der Engine schon), Grund des Bankplatzes, Rivalen-Zähler, Profi-Pflichtspiele über die Karriere.
+- **Tests:** Ein Stammspieler, der wegen Frische rotiert, verliert nicht an Stimmung. Ein Joker mit Tor ist nach dem Spiel zufriedener als vorher. Ein Talent mit 10 Minuten Einsatz gewinnt Stimmung. Die Nummer 2 im Tor bleibt über eine Saison ohne Einsatz zufrieden. Ein gleich starker Ersatztorwart sorgt für Reibereien. Wer zehn Spiele hinter seinem Rivalen sitzt, erreicht den Gesprächswunsch.
+
 21. **Noch nicht gebaut:** Ereignisse aus §8 außer dem Gesprächswunsch (Kabinenparty, Führungsspieler meutert, Neuzugang drängt auf Einsatz, Heimweh), Geldstrafen erlassen (K09), Prämien (K21), Integration und Heimweh, Integrationsfigur und Mentor, Wochen-Stammelf für Computer-Vereine mit Rotation nach Rollen.
 
 ## Quellen

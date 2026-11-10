@@ -647,3 +647,17 @@ Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `
 | AS14 | **`tests/medizin.js`, Rückfall nach einer Zerrung (Ziel 10–15 %):** nach U8 je Seed 16 % (Seed 4), 14 % (5), 13 % (6), 17 % (7), vor U8 mit Seed 4 14 %. U8 berührt Verletzungen nicht, der Wert liegt im Mittel an der oberen Grenze. | 📌 mit K10 nachkalibrieren oder über mehrere Seeds prüfen |
 | AS15 | **`tests/akzeptanz.js`, Sensitivität der Abwehr (+0,8 statt 1–3 Punkte):** wie schon in AO7 vor U8. Der Test spielt nur Einzelspiele mit Startwerten, in denen Stimmung und Zusammenhalt noch nicht wirken. | 📌 wie AO7 |
 | AS12 | **K33:** Neue Felder für Stimmung, Rollen, Wechselwunsch, Beziehungen, Versprechen, Glaubwürdigkeit und Zusammenhalt (K33 §3). Version bleibt 4, Felder entstehen beim ersten Gebrauch. | ✅ in K33 |
+
+---
+
+## AT. Nachtrag zu deinen Entscheidungen vom 10. November 2026 (Bankzeit, Verträge)
+
+| # | Befund | Status |
+|---|---|---|
+| AT1 | **K14 Bankzeit nach Grund ersetzt die Einsatz-Lücke aus U8** (K14 §12 Nr. 5): Heute zählt Rotation wegen Frische als fehlende Einsatzzeit, die Nummer 2 im Tor und Talente haben eine kleine Erwartung (15 %) und verlieren leicht, Joker-Tore zählen nicht. | 📌 U8d |
+| AT2 | **Neue Daten für U8d:** Spieltagskader je Pflichtspiel (die Bank gibt es in der Engine), Grund des Bankplatzes, Rivalen-Zähler, Profi-Pflichtspiele über die Karriere (heute zählt `apps` nur die Saison). | 📌 U8d, K33 |
+| AT3 | **K08 Prägungsereignisse** (Debüt, erstes Topspiel) bauen auf „Unerfahrene freuen sich über Kurzeinsätze“ auf. Beides muss zusammenpassen. | 📌 K08 / U9 |
+| AT4 | **K21 Vorlagenprämie** braucht Torvorlagen in der Engine, die es noch nicht gibt. | 📌 U10 oder K34 (Statistik) |
+| AT5 | **K21 und K23:** Prämien müssen je Spieltag und am Saisonende gebucht werden. Die Ligaklausel senkt beim Abstieg die Gehaltssumme. Ohne sie bleibt das volle Gehalt, das größte Abstiegsrisiko (K23). | 📌 U10 |
+| AT6 | **K21 und K14:** Prämien hängen am Einsatz. Bankplätze kosten Prämien und damit Stimmung (Söldner doppelt). Das gehört in den Baustein „Vertrag“, sobald es Prämien gibt. | 📌 U10 |
+| AT7 | **K36:** Prämien und Klauseln ab der A-Lizenz, Verlängern mit Laufzeit und Grundgehalt ab B (K36 §5.2, „später dazu“). | ✅ |

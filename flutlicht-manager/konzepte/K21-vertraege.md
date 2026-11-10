@@ -1,6 +1,7 @@
 # K21 – Verträge und Gehälter
 
-Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12.
+Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache, **ergänzt am 10. November 2026** um Punkt-, Auflauf-, Aufstiegs- und Klassenerhaltsprämien, Ligaklausel und Verhandlung nach Charakter (deine Entscheidung: echte Vertragsverhandlungen mit Prämien). Vorläufige Entscheidungen stehen in Abschnitt 12.
+**Stand im Spiel (10.11.):** noch keine Verhandlung. Es gibt nur Laufzeit und Grundgehalt, eine feste Forderung mit dem Knopf „Verlängern“ (seit U8 teurer bei schlechter Stimmung, unter 25 gar nicht) und Handgeld für Vereinslose. Gebaut wird das Konzept mit U10.
 Hängt ab von: K14 (Stimmung, Rollen), K15 (Gespräche), K28 (Gehaltsrahmen) · Wird gebraucht von: K19, K20, K22, K23, K31.
 
 ## 1. Ziel und Spielgefühl
@@ -14,6 +15,8 @@ Hängt ab von: K14 (Stimmung, Rollen), K15 (Gespräche), K28 (Gehaltsrahmen) · 
 
 - **Football Manager:** Klauseln (Ausstiegsklausel, Mindestablöse), Berater, Prämien. Community-Wünsche: konsistente Gehaltsforderungen zwischen ähnlichen Vereinen, Vorverträge, individuelle Zielvorgaben im Vertrag, unerwünschte Spieler leichter loswerden (Recherche 3.1, 4b).
 - **Echte Regeln:** Verträge höchstens fünf Jahre, für Spieler unter 18 höchstens drei (FIFA, Artikel 18, Quellen). Mit einem Vertrag, der in höchstens sechs Monaten ausläuft, darf ein Spieler mit anderen Vereinen abschließen (nach meinem Wissen, mit der Suche nicht bestätigt). Ab 2027 plant die FIFA Änderungen am Transfersystem.
+- **Echte Prämien in deutschen Profiverträgen** (Beispiele aus Urteilen und Berichten): Punkteinsatzprämie (Geld je Punkt der Mannschaft, nur bei Startelf oder mindestens 45 Minuten als Einwechselspieler, in einem Zweitligafall 2.500 € je Punkt, mit Nachzahlung bei einem Platz unter den ersten sechs), Auflaufprämie (voll bei Einsatz von Beginn an oder ab der Halbzeit, halb bei späterer Einwechslung), Prämien nur bei Klassenerhalt, Aufstiegsprämien nach Zahl der Einsätze (HSV). Gehälter gelten oft je Liga: Für die 2. Liga liefen Verträge in Köln mit 40–50 % weniger Gehalt weiter, die Beispiele streuen von etwa 20 bis 50 %.
+- **Genre:** In den Komplettlösungen zum Fussball Manager 06/07 wird geraten, einem Spieler mit hoher Forderung ein niedrigeres Grundgehalt plus Prämien für Meisterschaft oder Europapokal anzubieten. Wie ran Trainer Verträge gelöst hat, konnte ich nicht belegen.
 - **Bewusst anders:** Verhandlung mit einem Stell-Regler und unscharfer Annahmezone (K35a) statt Zahlenraten.
 
 ## 3. Begriffe und Daten
@@ -24,11 +27,18 @@ Hängt ab von: K14 (Stimmung, Rollen), K15 (Gespräche), K28 (Gehaltsrahmen) · 
 |---|---|---|
 | Laufzeit | bis 30. Juni eines Jahres, 1–5 Jahre (unter 18 höchstens 3) | Restlaufzeit `ct` in Jahren |
 | Grundgehalt | € pro Jahr | `sal` |
-| Handgeld | einmalig bei Unterschrift | gibt es für Vereinslose |
-| Einsatzprämie | € je Pflichtspiel mit mindestens 45 Minuten | neu |
-| Torprämie / Zu-Null-Prämie | € je Tor oder je Spiel ohne Gegentor (Torhüter) | neu |
+| Handgeld (Unterschriftsprämie) | einmalig bei Unterschrift, auch bei Verlängerung und Wechsel | gibt es nur für Vereinslose |
+| Auflaufprämie | € je Pflichtspiel: voll bei Startelf oder Einwechslung bis zur Halbzeit, halb bei späterer Einwechslung | neu (ersetzt die Einsatzprämie aus dem ersten Entwurf) |
+| Punktprämie | € je Punkt der Mannschaft, nur bei Startelf oder mindestens 45 Minuten Einsatz | neu |
+| Torprämie / Zu-Null-Prämie | € je Tor oder je Spiel ohne Gegentor (Torhüter, Abwehr ab 60 Minuten) | neu |
+| Vorlagenprämie | € je Torvorlage | neu, braucht Vorlagen in der Engine (gibt es noch nicht) |
+| Aufstiegsprämie | einmalig beim Aufstieg, gestaffelt nach Einsätzen der Saison (ab 10, ab 20) | neu |
+| Klassenerhaltsprämie | einmalig beim Klassenerhalt, gestaffelt wie oben | neu |
+| Titelprämie | einmalig für Meisterschaft, Pokalsieg (später Europapokal) | neu |
+| Ligaklausel | Gehalt je Liga: bei Abstieg −20 bis −50 %, bei Aufstieg +20 bis +100 % | neu (die Abstiegsklausel mit Kürzung geht darin auf) |
+| Treueprämie | einmalig, wenn er den Vertrag bis zum Ende erfüllt | neu |
 | Ausstiegsklausel | Betrag, ab einem Datum | neu |
-| Abstiegsklausel | bei Abstieg Gehalt −30 % oder Recht zu gehen | neu |
+| Abstiegsklausel | bei Abstieg Recht zu gehen (die Gehaltskürzung steht seit 10.11. in der Ligaklausel) | neu |
 | Verlängerungsoption | Verein darf um ein Jahr verlängern | neu |
 | versprochene Rolle | Kaderrolle aus K14 bis Vertragsende | neu |
 | Zielvorgabe | zum Beispiel „ab 25 Einsätzen Gehalt +10 %“ oder „ab 20 Einsätzen ein Jahr länger“ | neu |
@@ -65,6 +75,15 @@ Forderung = Grundwert(Stärke, Alter) × Liga × Ruf × Markt × Berater × Stim
 - **Stimmung:** unter 40 ×1,2, unter 25 verlängert er nicht (K14 §5.3).
 - **Loyalität:** vereinstreu ×0,9, Söldner ×1,2 (K03).
 - Eine **unscharfe Annahmezone** (K35a) zeigt, wo die Zusage wahrscheinlich ist. Breite nach Kenntnis und Sportdirektor (K16).
+
+### 5.1a Prämien in der Verhandlung (ergänzt 10.11.)
+
+- **Der Spieler rechnet mit dem Erwartungswert,** mit Abschlag nach Sicherheitsbedürfnis: Er schätzt Einsätze, Punkte und Tore aus seiner Rolle und Form der letzten Saison. Eine Prämie ist ihm so viel wert wie ihr Erwartungswert × (0,6 bis 1,0). Mutige (hohe Druckresistenz, Ehrgeiz) nehmen eher Prämien statt Grundgehalt, vorsichtige wollen Grundgehalt.
+- **Was ihm wichtig ist, hängt vom Charakter ab:** Söldner Grundgehalt und Handgeld, Ehrgeizige Rolle und Titelprämien, Vereinstreue Laufzeit und Treueprämie, Ältere lange Laufzeit, Junge Einsatzzeit und kurze Laufzeit, Diven Rolle und Rang im Gehaltsgefüge.
+- **Kostenvorschau für dich:** Zu jedem Angebot zeigt das Spiel, was die Prämien bei einer erwarteten Saison kosten und was im besten Fall (alle Spiele, Aufstieg oder Titel). Die Vorschau ist so unscharf wie die Einschätzung des Sportdirektors (K16).
+- **Ligaklausel:** Wer bei Abstieg auf Gehalt verzichtet, verlangt dafür etwas: höheres Grundgehalt (+5 %), Ausstiegsrecht oder höhere Aufstiegsprämie. Ohne Klausel läuft das volle Gehalt in der tieferen Liga weiter (K23: größtes Risiko beim Abstieg).
+- **Prämien hängen am Einsatz:** Wer auf der Bank sitzt, bekommt keine Auflauf- und Punktprämie. Das macht den Bankplatz teurer für die Stimmung (K14, Baustein „Vertrag“, Söldner doppelt) und passt zur Bankzeit nach Grund (K14 §12): Bei Schonung zahlt der Verein die Punktprämie trotzdem (Klausel, die der Spieler fordern kann).
+- **Teamprämien** (Sieg, Klassenerhalt, Aufstieg, Pokal, §3.2) legt der Verein vor der Saison fest. Individuelle Prämien im Vertrag kommen obendrauf.
 
 ### 5.2 Klauseln als Tausch
 
@@ -155,6 +174,8 @@ vertraege:{
     berater:{gierig:1.15,serioes:1,verschwiegen:1.05},stimmung:[[40,1.2],[25,null]],treu:0.9,soeldner:1.2},
   klauseln:{ausstieg:-0.10,rolle:-0.10,ziel:-0.05,option:0.05,abstiegKuerzung:0.05,abstiegAusstieg:-0.05,kuerzung:0.3},
   gefuege:{spanne:3,unter:0.25,minus:-10,grossverdiener:2,ansteckung:1.05},
+  praemien:{auflauf:{halbAbMinute:46,halb:0.5},punkt:{startelfOderMinuten:45},zuNull:{abwehrAbMinuten:60},aufstieg:{staffel:[10,20]},klasse:{staffel:[10,20]},
+    erwartung:{abschlag:[0.6,1.0]},liga:{abstieg:[-0.5,-0.2],aufstieg:[0.2,1.0]},schonungPunktpraemie:true},
   bereitschaft:[[60,'gern'],[40,'besser'],[25,'deutlich'],[0,'nein']]
 }
 ```
@@ -170,6 +191,15 @@ vertraege:{
 3. **Abstiegsklausel** in zwei Formen (Kürzung oder Ausstiegsrecht).
 4. **Weiterverkaufsbeteiligung** kommt mit K19.
 
+**Mit dir entschieden (10. November 2026):** Es gibt echte Vertragsverhandlungen mit Prämien, unter anderem für Auf- und Abstieg und für Tore. Gebaut wird das mit U10.
+
+**Vorläufig entschieden bei der Ergänzung (10.11.):**
+5. **Auflaufprämie statt Einsatzprämie,** dazu Punktprämie, Torprämie, Zu-Null-Prämie, Aufstiegs-, Klassenerhalts- und Titelprämie, Handgeld bei jeder Unterschrift, Treueprämie. Die Vorlagenprämie kommt erst, wenn die Engine Vorlagen zählt.
+6. **Ligaklausel statt Abstiegsklausel mit Kürzung:** Gehalt je Liga, Abstieg −20 bis −50 %, Aufstieg +20 bis +100 %. Die Spanne ist aus wenigen Beispielen geschätzt.
+7. **Prämien nach Erwartungswert mit Abschlag nach Sicherheitsbedürfnis,** Wichtigkeit der Vertragsteile nach Charakter (5.1a).
+8. **Bei Schonung zahlt der Verein die Punktprämie** nur, wenn das im Vertrag steht. Der Spieler kann es fordern.
+9. **Lernstufen (K36):** Verlängern mit Laufzeit und Grundgehalt ab der B-Lizenz, Prämien und Klauseln ab der A-Lizenz. Bis dahin verhandelt der Verein nach den Regeln der Computer-Vereine.
+
 **Noch zu recherchieren:** Vorvertrags-Regel sechs Monate (FIFA-Text), mögliche FIFA-Änderungen ab 2027, Zahl ablösefreier Wechsel je Liga.
 
 ## Quellen
@@ -177,3 +207,7 @@ vertraege:{
 - Höchstlaufzeit fünf Jahre, unter 18 drei Jahre, Änderungen ab 2027: [Kaufman & Canoles: FIFA's 2027 transfer system overhaul](https://www.kaufcan.com/newsroom/news/sports-entertainment-client-alert-fifas-2027-transfer-system-overhaul), [Cuatrecasas: FIFA revoluciona el sistema de traspasos](https://www.cuatrecasas.com/es/spain/deporte/art/fifa-revoluciona-sistema-traspasos)
 - Auslaufende Verträge ohne Vorwarnung: PLAN §4 (GameStar 4/2000)
 - Klauseln, Vorverträge, Zielvorgaben, Konsistenz der Forderungen: `konzepte/_recherche-genre.md`, Abschnitte 3.1 und 4b
+- Punkteinsatzprämie nur bei Startelf oder 45 Minuten, Nachzahlung nach Tabellenplatz, Auflaufprämie halb bei später Einwechslung, Prämie nur bei Klassenerhalt: [Heuking: Individuelle Punkt-Einsatzprämie](https://www.heuking.de/de/news-events/newsletter-fachbeitraege/artikel/individuelle-punkt-einsatzpraemie-fuer-bundesligaspiele.html), [otto-schmidt.de: Punktprämie nur bei Spieleinsatz](https://www.otto-schmidt.de/news/arbeits-und-sozialrecht/profifussballer-punktpramie-nur-bei-spieleinsatz-2026-06-26.html), [betriebsrat.de: Punktprämie trotz Ersatzbank?](https://www.betriebsrat.de/rechtsprechung/br/urteil/profifussball-punktpraemie-trotz-ersatzbank) (10.11., Zusammenfassungen der Suchergebnisse)
+- Aufstiegsprämien nach Einsätzen beim HSV: [ran.de](https://ran.joyn.de/sports/fussball/2-bundesliga/2-bundesliga-hsv-spieler-kassieren-offenbar-ordentlich-ab-auch-ex-funktionaere-wuerden-von-aufstieg-profitieren-76801)
+- Gehalt in der 2. Liga 40–50 % niedriger beim 1. FC Köln, rechtliche Grenzen von Abstiegsklauseln: [Ligainsider: Klauseln für den Abstiegsfall](https://www.ligainsider.de/1-fc-koeln/15/1-fc-koeln-diverse-spieler-mit-klauseln-fuer-den-abstiegsfall-302583/), [Bird & Bird: Abstiegsklauseln im Profisport](https://cm.twobirds.com/en/insights/2025/zwischen-bestimmtheit-und-transparenz-die-rechtlichen-fallstricke-von-abstiegsklauseln-im-profisport)
+- Grundgehalt plus Prämien als Verhandlungstipp im Genre: [Gameswelt: Fussball Manager 07, Grundlagentipps](https://www.gameswelt.de/fussball-manager-2007/komplettloesung/fussball-manager-07-grundlagentipps-1729/12)

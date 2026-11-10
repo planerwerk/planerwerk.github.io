@@ -1,6 +1,6 @@
 # Offene und vorläufige Entscheidungen
 
-Stand: 9. November 2026. Automatisch aus Abschnitt 12 aller Konzepte zusammengestellt.
+Stand: 10. November 2026. Automatisch aus Abschnitt 12 aller Konzepte zusammengestellt.
 
 **Alle Punkte gelten, bis du widersprichst** (PLAN §1, Punkt 9). Keiner blockiert die Arbeit.
 
@@ -244,6 +244,8 @@ Bei der Umsetzung (U8):
 20. **Lernstufen (K36):** Stimmung sehen ab Teamleiter, Kapitän ab C, Kaderrollen und Teamevent ab B.
 21. **Noch nicht gebaut:** Ereignisse aus §8 außer dem Gesprächswunsch, Geldstrafen erlassen, Prämien, Integration und Heimweh, Integrationsfigur und Mentor.
 
+**Mit dir entschieden (10.11.): Bankzeit nach Grund** (K14 §12, vorgemerkt als U8d). Rotation wegen Frische keine Abwertung, Kurzeinsatz mit Tor oder guter Note positiv, Rivale spielt auf Dauer negativ (anfangs je nach Typ Schub), Unerfahrene freuen sich über Bank und Kurzeinsatz, Ersatztorwart neutral, außer er ist so stark wie die Nummer 1. Meine Vorschläge dazu (vorläufig): Schonung zählt wie Verletzung, Joker mit Tor oder Note bis 2,5 +3, Rivalen-Zähler ab dem vierten Spiel −1 bis −10, Unerfahrene (unter zehn Profi-Pflichtspielen) +1 für den Kader, +3 für 10 Minuten, +5 für das Debüt, Torwart-Rivalität ab 2 Punkten Abstand.
+
 ## K15 – Gespräche und Ansprachen
 Datei: `konzepte/K15-gespraeche.md`
 
@@ -322,6 +324,13 @@ Datei: `konzepte/K21-vertraege.md`
 2. **Teamprämien** legt der Verein für alle fest, individuelle Prämien stehen im Vertrag.
 3. **Abstiegsklausel** in zwei Formen (Kürzung oder Ausstiegsrecht).
 4. **Weiterverkaufsbeteiligung** kommt mit K19.
+
+**Mit dir entschieden (10.11.):** echte Vertragsverhandlungen mit Prämien, gebaut mit U10.
+5. **Auflaufprämie statt Einsatzprämie,** dazu Punkt-, Tor-, Zu-Null-, Aufstiegs-, Klassenerhalts- und Titelprämie, Handgeld bei jeder Unterschrift, Treueprämie. Vorlagenprämie erst mit Vorlagen in der Engine.
+6. **Ligaklausel:** Gehalt je Liga, Abstieg −20 bis −50 %, Aufstieg +20 bis +100 %.
+7. **Prämien nach Erwartungswert mit Abschlag nach Sicherheitsbedürfnis,** Wichtigkeit der Vertragsteile nach Charakter.
+8. **Punktprämie bei Schonung** nur, wenn sie im Vertrag steht.
+9. **Lernstufen (K36):** Laufzeit und Grundgehalt ab B, Prämien und Klauseln ab A.
 
 ## K22 – Berater
 Datei: `konzepte/K22-berater.md`
