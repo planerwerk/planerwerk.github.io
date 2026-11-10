@@ -23,7 +23,7 @@ Datei: `konzepte/K02-zufall-kalibrierung.md`
 3. **Seed eingeben** beim Start als Option für Fortgeschrittene, versteckt im Startbildschirm.
 4. **Rangkorrelation 0,6–0,8** als Maß für „Glück gleicht sich aus“ ist ein geschätzter Startwert. Er sollte mit echten Daten geprüft werden (Marktwert-Rang vor der Saison gegen Abschlusstabelle).
 
-**Mit dir entschieden (10.11.): Die Reichen werden reicher, aber mit Maß** (K02 §5.3a), als Folge der Regeln ohne Zuschlag. Der Größte holt etwa zwei Drittel der Titel. Über Jahrzehnte dürfen sich die Verhältnisse verschieben. Champions League, Europa League und Conference League kommen langfristig ins Spiel (K37). Vorläufig: Europapokal-Pauschale bis dahin, Gründe für Machtwechsel (Ansehen sinkt ohne Erfolg, Fehler der Computer-Vereine, Talent-Jahrgänge), Langzeitziel mindestens drei verschiedene Meister in 30 Saisons.
+**Mit dir entschieden (10.11.): Die Reichen werden reicher, aber mit Maß** (K02 §5.3a), als Folge der Regeln ohne Zuschlag. Die Titel folgen dem Vereinswert (Kader, Finanzkraft, Ansehen, Infrastruktur, Stab): mindestens 85 % an die drei wertvollsten, ein einzelner weit vorn etwa zwei Drittel. Über Jahrzehnte dürfen sich die Verhältnisse verschieben. Champions League, Europa League und Conference League kommen langfristig ins Spiel (K37). Vorläufig: Europapokal-Pauschale bis dahin, Gründe für Machtwechsel (Ansehen sinkt ohne Erfolg, Fehler der Computer-Vereine, Talent-Jahrgänge), Langzeitziel mindestens drei verschiedene Meister in 30 Saisons.
 
 ## K03 – Spielermodell (Umsetzung U3)
 
@@ -458,3 +458,13 @@ Mit dir entschieden (9.11.): Namen nach den Trainerlizenzen, 2–3 Stufen in der
 11. **Zurufe an einzelne Spieler ab B,** an die Mannschaft ab C.
 12. **Automatik mit Klugheit „normal“,** bis K16 §5.1 gebaut ist.
 13. **Der Aufstieg zählt nicht in das Halte-Budget.**
+
+## K38 – Integrität: Doping, Spielmanipulation, Bestechung (Idee)
+Gedanken in `PLAN.md` §4, noch kein Konzept.
+
+1. **Kontrollen laufen mit** (Auslosung nach dem Spiel, Trainingskontrollen), meist ohne Folgen.
+2. **Positive Fälle selten und ohne dein Zutun,** mit Ursache (Nahrungsergänzung, Medikament, Partydrogen, verpasste Meldungen).
+3. **Kein Doping-Knopf für dich,** stattdessen Geschichten mit Entscheidung (melden, intern regeln, vertuschen).
+4. **Bestechung und Wettbetrug als seltene Ereigniskarten** mit Akte, Entdeckung über Jahre und harten Strafen.
+5. **Entscheidungen ab der Pro-Lizenz** (K36).
+
