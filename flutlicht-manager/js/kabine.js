@@ -177,7 +177,7 @@ function kabinenBericht(vorher,gr){const un=[],auf=[];squad(S.my).forEach(p=>{co
 // Am 1. Juli: Freundschaften werden fester, Zähler der Saison auf null
 function kabineSaison(){(S.bz||[]).forEach(b=>{if(b[2]==='F')b[3]=Math.min(3,b[3]+1);});S.teams.forEach(t=>{t.kst={ww3:0};delete t.endspiel;delete t.weck;});}
 // Nach dem Saisonwechsel (neue Kader der Aufsteiger, neue Talente): Rollen sofort, Einsatzzeit nur für Spieler ohne Wert
-function kabineNachSaisonwechsel(){S.bz=(S.bz||[]).filter(b=>PIX.get(b[0])&&PIX.get(b[1]));S.vs=(S.vs||[]).filter(v=>PIX.get(v.pid));S.gw=(S.gw||[]).filter(g=>PIX.get(g.pid));
+function kabineNachSaisonwechsel(){S.bz=(S.bz||[]).filter(b=>PIX.get(b[0])&&PIX.get(b[1]));S.vs=(S.vs||[]).filter(v=>PIX.get(v.pid));S.gw=(S.gw||[]).filter(g=>{const p=PIX.get(g.pid);return p&&p.team===S.my&&p.ww===2;}); // ausgelaufene Verträge: Gesprächswunsch erledigt
   S.teams.forEach(t=>{if(!aktiv(t))return;rollenBerechnen(t.id);kapitaenPruefen(t);squad(t.id).forEach(p=>{kabineInit(p);if(p.ea==null)p.ea=erwartungEinsatz(p);});});}
 // Urlaubslänge (K12a, K14 §5.1 Umfeld): vier Wochen +3, zwei Wochen −3 für Spieler mit hoher Saisonbelastung, wirkt acht Wochen
 function kabineUrlaub(t,wochen){const U=RKA.urlaub;squad(t.id).forEach(p=>{const v=wochen>=4?U.lang:wochen<=2&&(p.sb||0)>=RSO.belastung.ab?U.kurz:0;if(v){p.ub=v;p.ubW=U.wochen+wochen;}else{delete p.ub;delete p.ubW;}});}

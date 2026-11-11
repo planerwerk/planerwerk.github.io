@@ -65,6 +65,14 @@ async function actions(s,tag){const wk=s.wk,yr=s.season,K=yr+':'+wk+':';
    await pg.selectOption('#krsel','rotation');if(await pg.evaluate(i=>PIX.get(i).kr,id)!=='rotation')note(tag,'Kaderrolle nicht gesetzt');
    await pg.selectOption('#gthema','rolle');await pg.selectOption('#ghaltung','v');await pg.click('button:text-is("Gespräch führen")');const m=(await pg.$eval('#gmsg',e=>e.textContent)).trim();if(!m)note(tag,'Gespräch ohne Antwort');
    const sc2=await pg.evaluate(()=>__scan());if(sc2)note(tag,'Spielerkarte mit Gespräch: '+sc2);await closeModal();actlog.push(tag+' Kabine: Kapitän, Ansprache, Teamevent, Rolle, Gespräch („'+m.slice(0,60)+'“)');}
+ // Scouting (K18): Stärke fremder Spieler als Spanne, Beobachtung über die Spielerkarte, Suchauftrag im Transfermarkt
+ if(yr===2026&&wk===9&&once(K+'scout')){await tabClick('Transfers');const sp=await pg.$$eval('td.str',x=>x.slice(0,20).map(e=>e.textContent));if(!sp.some(t=>t.includes('–')))note(tag,'Transfermarkt zeigt keine Spannen');
+   const id=await pg.evaluate(()=>S.pl.find(p=>p.team>=0&&p.team!==S.my&&S.teams[p.team].lg===2).id);await pg.evaluate(i=>openP(i),id);
+   const b=await pg.$('button:text-is("Beobachten lassen")');if(b){await b.click();if(!(await pg.evaluate(i=>(S.auftraege||[]).some(a=>a.pid===i),id)))note(tag,'Beobachtung nicht angelegt');}else note(tag,'Kein Knopf zum Beobachten');
+   const sc=await pg.evaluate(()=>__scan());if(sc)note(tag,'Spielerkarte fremd: '+sc);await closeModal();
+   await tabClick('Transfers');const s2=await pg.$('button:text-is("Suchauftrag starten")');if(s2){await pg.selectOption('#su_pos','ST');await s2.click();if(!(await pg.evaluate(()=>(S.auftraege||[]).some(a=>a.art==='suche'))))note(tag,'Suchauftrag nicht angelegt');}
+   actlog.push(tag+' Scouting: Beobachtung und Suchauftrag');}
+ if(yr===2026&&wk===14&&once(K+'scout2')){const n=await pg.evaluate(()=>{const a=(S.auftraege||[]).find(x=>x.art==='suche');return a?a.kand.length:-1;});if(n>=0&&n<3)note(tag,`Suchauftrag hat nach fünf Wochen nur ${n} Kandidaten`);actlog.push(tag+` Suchauftrag: ${n} Kandidaten`);}
  // Gesprächswunsch (K14 §5.4): über das Büro zum Gespräch, Einsatz versprechen
  const gw=await pg.$('button:text-is("Zum Gespräch")');if(gw&&once(K+'gw')){await gw.click();await pg.selectOption('#gthema','einsatz');await pg.click('button:text-is("Gespräch führen")');
    const m=(await pg.$eval('#gmsg',e=>e.textContent)).trim();await closeModal();actlog.push(tag+' Gesprächswunsch: '+m.slice(0,90));}

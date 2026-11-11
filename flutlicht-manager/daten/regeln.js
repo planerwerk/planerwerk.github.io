@@ -296,7 +296,8 @@ const REGELN={
       torwart:{name:'Torwarttrainer',plaetze:1,gehalt:0.5,text:'Entwicklung und Lernen der Torhüter'},athletik:{name:'Athletiktrainer',plaetze:1,gehalt:0.6,text:'weniger Trainingsverletzungen, mehr Kondition'},
       arzt:{name:'Mannschaftsarzt',plaetze:1,gehalt:0.6,text:'Diagnosen (mit K10)'},physio:{name:'Physiotherapeut',plaetze:2,gehalt:0.4,text:'kürzere Ausfallzeiten'},
       video:{name:'Videoanalyst',plaetze:1,gehalt:0.5,text:'Spielvorbereitung wirkt doppelt (ab Qualität 10)'},standard:{name:'Standardtrainer',plaetze:1,gehalt:0.4,text:'Standard-Einheiten wirken stärker'},
-      psycho:{name:'Sportpsychologe',plaetze:1,gehalt:0.5,text:'Selbstvertrauen erholt sich schneller, Nervenschwache leiden weniger'}},
+      psycho:{name:'Sportpsychologe',plaetze:1,gehalt:0.5,text:'Selbstvertrauen erholt sich schneller, Nervenschwache leiden weniger'},
+      scout:{name:'Scout',plaetze:4,gehalt:0.35,text:'beobachtet Spieler und sucht Kandidaten (K18): schmalere Spannen, weniger Fehlkäufe'}},
     wirkung:{co:[0.85,0.015],coPlaetze:{basis:3,jeQualitaet:0.2,max:10},athletik:{risiko:-0.01,kondition:0.005},torwart:[0.85,0.015],physio:{ausfall:-0.01,max:0.25},
       video:{ab:10,bonus:1},standard:0.015,psycho:{erholung:0.05,nervenschwach:-0.025}},
     ohne:3,gehalt:{basis:{1:300000,2:120000,3:50000},steigung:0.15,runden:5000},
@@ -381,6 +382,16 @@ const REGELN={
     teamevent:{stimmung:5,zh:5,kosten:{1:50000,2:25000,3:10000},wochen:4},
     urlaub:{lang:3,kurz:-3,wochen:8},
     ki:{gelingt:0.55,stimmung:5}},      // Computer-Trainer: Gespräch bei Gesprächswunsch gelingt zu 55 % (K15 §7, Klugheit „normal“, bis K02 Klugheitsstufen hat)
+  // Scouting und Informationsnebel (K18 §11, U9a). Spannen sind ehrlich: der wahre Wert liegt in mindestens 80 % der Fälle darin (z = 1,4 ergibt etwa 84 %)
+  scouting:{grund:{eigen:100,liga:40,jeSpiel:5,deutsch:25,unten:15,ausland:5,jugend:0},
+    sicht:[[10,10],[20,7],[30,4.8],[45,3.5],[60,2.5],[80,2],[101,1]], // [bis Kenntnis, Spanne ± Stärke ohne Scout-Fehler], kalibriert auf die Fehlkäufe in tests/scouting.js
+    z:1.4,proWoche:{basis:12,q:[0.6,0.03],gebiet:1.3,fremd:0.8},
+    fehler:{je:0.15,lieblingstyp:[1,3],lieblingsChance:0.3},   // Grundfehler eines Scouts: Streuung 0,15 × (21 − Qualität)
+    verblassen:2,                                             // je Monat ohne Beobachtung, nicht unter die Grundkenntnis
+    kosten:{inland:3000,ausland:15000},                       // je Beobachtungswoche (Spielwerte, K23)
+    suche:{kandidaten:[3,8],jeWoche:4,anteil:0.5},             // Suchauftrag: je Woche vier neue Namen, Beobachtung mit halber Wirkung
+    empfehlung:{verpflichten:1,beobachten:-3},                 // Mitte gegen deinen Stammspieler auf der Position
+    start:{scouts:[[0,1],[60,2],[80,3]],vereinslos:8}},        // Scouts je Verein nach Ansehen, dazu vereinslose
   // Gespräche und Ansprachen (K15 §11, U8): Glaubwürdigkeit, Wirkung, Abnutzung, Versprechen, Mannschaftsansprache
   gespraeche:{proWoche:3,
     glaubwuerdigkeit:{start:60,faktor:[0.5,0.7],erholungBis:60,erholung:1,gehalten:3,gebrochen:-10,offenAb:4,offenMinus:2,krise:25,krisenVorstand:-3},
@@ -476,4 +487,4 @@ const REGELN={
 // Schreibschutz: Zur Laufzeit darf kein Code eine Regel ändern.
 (function frieren(o){Object.freeze(o);Object.values(o).forEach(v=>{if(v&&typeof v==='object'&&!Object.isFrozen(v))frieren(v);});})(REGELN);
 // Kurzformen für den Code
-const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui,RL=REGELN.live,RTA=REGELN.taktik,RSO=REGELN.sommer,RST=REGELN.stab,RD=REGELN.disziplin,RMD=REGELN.medizin,RWB=REGELN.wettbewerbe,RTS=REGELN.testspiele,RLA=REGELN.lager,RKA=REGELN.kabine,RGS=REGELN.gespraeche;
+const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui,RL=REGELN.live,RTA=REGELN.taktik,RSO=REGELN.sommer,RST=REGELN.stab,RD=REGELN.disziplin,RMD=REGELN.medizin,RWB=REGELN.wettbewerbe,RTS=REGELN.testspiele,RLA=REGELN.lager,RKA=REGELN.kabine,RGS=REGELN.gespraeche,RSC=REGELN.scouting;

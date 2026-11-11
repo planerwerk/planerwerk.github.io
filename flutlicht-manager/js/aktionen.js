@@ -9,7 +9,7 @@ function stabEinstellen(id){const x=S.stab.find(y=>y.id===id),t=myT();if(!x||x.t
   x.team=S.my;x.sal=stabGehalt(x.r,x.q,t.lg);x.ct=2;x.wiv=0;stabGeaendert();news(`${R0.name} ${x.n} kommt (${fmt(x.sal)} pro Jahr).`,'good');save();render();}
 function stabVerlaengern(id){const x=S.stab.find(y=>y.id===id);if(!x||x.team!==S.my)return;x.ct+=2;x.sal=Math.round(x.sal*1.1/RST.gehalt.runden)*RST.gehalt.runden;news(`${RST.rollen[x.r].name} ${x.n} verlängert bis ${S.season+x.ct} (${fmt(x.sal)} pro Jahr).`);save();render();}
 function stabEntlassen(id){const x=S.stab.find(y=>y.id===id);if(!x||x.team!==S.my)return;if(x.r==='co'&&stabVon(S.my,'co').length<=1){toast('Ein Co-Trainer ist Pflicht. Stell erst einen neuen ein.');return;}
-  const ab=Math.round(x.sal*x.ct*RST.abfindung);money('Abfindungen',-ab);x.team=-1;stabGeaendert();news(`${RST.rollen[x.r].name} ${x.n} entlassen, Abfindung ${fmt(ab)}.`);save();render();}
+  const ab=Math.round(x.sal*x.ct*RST.abfindung);money('Abfindungen',-ab);x.team=-1;stabGeaendert();auftraegeAufraeumen();news(`${RST.rollen[x.r].name} ${x.n} entlassen, Abfindung ${fmt(ab)}.`);save();render();}
 // Sommerpause (K12a): Urlaubslänge (auch im laufenden Urlaub änderbar) und Trainingsauftakt früher oder später
 function setUrlaub(w){if(!RSO.urlaubWochen.includes(w))return;S.sommer=Object.assign({},S.sommer||{},{urlaub:w});const t=myT();
   if(t.urlaub>0){const vorbei=(t.urlaubGesamt||t.urlaub)-t.urlaub;t.urlaub=Math.max(1,w*7-vorbei);t.urlaubGesamt=w*7;}save();if(S.phase==='end')showSummary();else render();}
@@ -91,3 +91,8 @@ function gespraechUI(id){const th=document.getElementById('gthema'),ha=document.
   if(!r.ok){const m=document.getElementById('gmsg');if(m)m.textContent=r.text;return;}openP(id);render();const m=document.getElementById('gmsg');if(m)m.textContent=r.text;}
 function mansAnsprache(art){const r=mannschaftsAnsprache(art);save();render();toast(r.text);}
 function teameventUI(){teameventLauf();save();render();}
+// Scouting (K18): Spieler beobachten lassen, Suchauftrag starten und beenden
+function beobachten(pid){const sc=document.getElementById('scsel'),wo=document.getElementById('scwo');if(!sc)return;const f=beobachtenLauf(pid,+sc.value,+(wo?wo.value:2));save();if(f){toast(f);return;}openP(pid);render();}
+function sucheStarten(){const g=id=>document.getElementById(id);const f=sucheLauf(+g('su_scout').value,{pos:g('su_pos').value,alterBis:g('su_alter').value,abloeseBis:g('su_abl').value});save();if(f)toast(f);render();}
+function sucheBeenden(id){auftragEnde(id);save();render();}
+

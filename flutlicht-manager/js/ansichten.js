@@ -113,6 +113,29 @@ function stimmungKarte(p){const B=bausteine(p),z=zielStimmung(p),e=erwartungEins
     <label>Haltung <select id="ghaltung">${Object.entries(HALTUNGEN).map(([k,l])=>`<option value="${k}" ${k==='s'?'selected':''}>${l}</option>`).join('')}</select></label>
     <button onclick="gespraechUI(${p.id})" ${frei?'':'disabled'}>Gespräch führen</button></div>
     <p class="dim">Gespräche diese Woche: ${RGS.proWoche-frei} von ${RGS.proWoche} · Glaubwürdigkeit ${Math.round(glaub())} · Zusagen musst du halten, sonst leidet die Glaubwürdigkeit.</p><p id="gmsg" class="msg" aria-live="polite"></p></div>`;}
+// Scouting auf der Spielerkarte (K18): Stärke als Spanne, Kenntnis, Auftrag
+function scoutWerte(p,kad){const s=staerkeSicht(p),jung=p.age<=23;
+  return`<div class="card rgs">${rgUnscharf({label:'Stärke',sub:`Kenntnis ${s.k} von 100${jung?` · Talent ${stars(p)}`:''}`,min:1,max:99,spanne:[s.lo,s.hi]})}
+    <p class="dim">${kad?`Ø Kader ${Math.round(kad)} · `:''}Form, Frische und Kondition kennst du nur bei eigenen Spielern. Die Spanne ist ehrlich: Der wahre Wert liegt fast immer darin. Bessere und mehr Scouts machen sie schmaler.</p></div>`;}
+function scoutKarte(p){const sc=meineScouts(),a=auftragFuer(p.id),frei=sc.filter(scoutFrei),x=a&&scoutVon(a.scout);
+  const kopf=`<div class="card"><h3>Scouting</h3><p>Kenntnis ${kenntnis(p)} von 100 · Empfehlung: <b>${esc(empfehlung(p))}</b></p>`;
+  if(a)return kopf+`<p class="dim">${esc(x?x.n:'Ein Scout')} beobachtet ihn noch ${a.rest} Woche${a.rest>1?'n':''}. Der Bericht kommt in den Posteingang.</p></div>`;
+  if(!sc.length)return kopf+'<p class="dim">Du hast keinen Scout. Im Stab kannst du einen einstellen.</p></div>';
+  if(!frei.length)return kopf+'<p class="dim">Alle deine Scouts haben gerade einen Auftrag.</p></div>';
+  return kopf+`<div class="form"><label>Scout <select id="scsel">${frei.map(y=>`<option value="${y.id}">${esc(y.n)} (Qualität ${stabQText(y)}, ${GEBIET_NAME[scoutGebiet(y)]})</option>`).join('')}</select></label>
+    <label>Dauer <select id="scwo">${[1,2,3].map(w=>`<option value="${w}" ${w===2?'selected':''}>${w} Woche${w>1?'n':''}</option>`).join('')}</select></label>
+    <button onclick="beobachten(${p.id})">Beobachten lassen</button></div><p class="dim">${fmt(RSC.kosten.inland)} Reisekosten je Woche.</p></div>`;}
+// Suchaufträge im Transfermarkt (K18 §4.2): Kriterien, Kandidaten pflegt der Scout selbst
+function suchKarte(){const sc=meineScouts(),su=(S.auftraege||[]).filter(a=>a.art==='suche'),frei=sc.filter(scoutFrei);
+  const liste=a=>{const x=scoutVon(a.scout),k=a.krit;return`<div style="margin-top:10px"><div class="row between"><b>${esc(x?x.n:'Scout')}: ${k.pos||'alle Positionen'}, bis ${k.alterBis} Jahre${k.abloeseBis?`, Ablöse bis ${k.abloeseBis} Mio €`:''}</b><button onclick="sucheBeenden(${a.scout})">Beenden</button></div>
+    ${a.kand.length?`<div class="tw"><table><tbody>${a.kand.map(id=>PIX.get(id)).filter(Boolean).map(p=>`<tr class="click" onclick="openP(${p.id})"><td><span class="pos ${p.pos}">${p.pos}</span> ${esc(p.n)}</td><td>${p.team>=0?esc(S.teams[p.team].name):'vereinslos'}</td><td class="num">${p.age}</td><td class="num">${staerkeText(p)}</td><td>${esc(empfehlung(p))}</td></tr>`).join('')}</tbody></table></div>`:'<p class="dim">Noch keine Kandidaten, der Scout meldet sich montags.</p>'}</div>`;};
+  return`<div class="card" style="margin-top:14px"><h3>Suchaufträge</h3>${sc.length?'':'<p class="dim">Du hast keinen Scout. Im Stab kannst du einen einstellen.</p>'}${su.map(liste).join('')}
+    ${frei.length?`<div class="row" style="margin-top:10px"><label>Scout <select id="su_scout">${frei.map(y=>`<option value="${y.id}">${esc(y.n)} (${stabQText(y)})</option>`).join('')}</select></label>
+      <label>Position <select id="su_pos"><option value="">alle</option>${['TW','AB','MF','ST'].map(x=>`<option>${x}</option>`).join('')}</select></label>
+      <label>Alter bis <select id="su_alter">${[21,23,26,29,40].map(a=>`<option value="${a}" ${a===26?'selected':''}>${a===40?'egal':a}</option>`).join('')}</select></label>
+      <label>Ablöse bis <select id="su_abl"><option value="">egal</option>${[1,2,5,10,20].map(v=>`<option value="${v}">${v} Mio €</option>`).join('')}</select></label>
+      <button onclick="sucheStarten()">Suchauftrag starten</button></div>`:sc.length?'<p class="dim">Alle Scouts sind beschäftigt.</p>':''}
+    <p class="dim">Der Scout sieht sich jede Woche vier neue Namen an und hält die besten acht nach seiner Einschätzung auf der Liste. ${fmt(RSC.kosten.inland)} je Woche.</p></div>`;}
 const fitArt=f=>{const z=RU.zonenFitness.find(q=>f>=q.von&&f<=q.bis);return z&&z.art!=='good'?z.art:'';};
 // Tauziehen gegen den Gegner deines nächsten Spiels (nur wenn er feststeht)
 function tauziehenNaechstes(){const e=heuteMeinSpiel()?meinSpiel(S.tag):naechstesSpiel(S.tag+1),f=e&&paarung(e);if(!f)return'';
@@ -184,7 +207,7 @@ V.transfer=()=>{const t=myT(),XI=new Set();S.teams.forEach(x=>bestXI(x.id,x.form
   if(TF.list)L=L.filter(p=>p.list||p.team===-1);
   if(TF.q){const q=TF.q.toLowerCase();L=L.filter(p=>p.n.toLowerCase().includes(q)||(p.team>=0&&S.teams[p.team].name.toLowerCase().includes(q)));}
   if(TF.max)L=L.filter(p=>askPrice(p,XI)<=TF.max*1e6);
-  L.sort((a,b)=>b.str-a.str);const n=L.length,lim=RU.transferTreffer;L=L.slice(0,lim);
+  const SM=new Map(L.map(p=>[p.id,staerkeSicht(p)]));L.sort((a,b)=>SM.get(b.id).mitte-SM.get(a.id).mitte);const n=L.length,lim=RU.transferTreffer;L=L.slice(0,lim); // nach Einschätzung (K18), nicht nach dem wahren Wert
   const mine=squad(S.my).filter(p=>p.list);
   return`<div class="card"><h2>Transfermarkt</h2><p class="dim">Kontostand ${fmt(t.cash)} · Kader ${squad(S.my).length}/${RM.kaderMax} · Jeder Spieler ist anfragbar. Spieler auf der Transferliste sind günstiger, Stammspieler teurer.</p>
   <div class="row" style="margin-bottom:10px">
@@ -194,9 +217,9 @@ V.transfer=()=>{const t=myT(),XI=new Set();S.teams.forEach(x=>bestXI(x.id,x.form
   <label>Name / Verein <input id="tf_q" value="${esc(TF.q)}" onchange="TF.q=this.value;render()" placeholder="Enter zum Suchen"></label>
   <label style="grid-auto-flow:column;align-items:center;gap:6px"><input id="tf_list" type="checkbox" ${TF.list?'checked':''} onchange="TF.list=this.checked?1:0;render()"> nur Transferliste &amp; vereinslos</label></div>
   <div class="tw"><table><thead><tr><th>Pos</th><th>Name</th><th class="num">Alter</th><th class="num">Stärke</th><th>Verein</th><th class="num">Marktwert</th><th class="num">Ablöse ca.</th></tr></thead><tbody>
-  ${L.map(p=>`<tr class="click" onclick="openP(${p.id})"><td><span class="pos ${p.pos}">${p.pos}</span></td><td>${esc(p.n)}${p.list?' <span class="tag offer">Liste</span>':''}</td><td class="num">${p.age}</td><td class="num str">${Math.round(p.str)}</td><td>${p.team>=0?esc(S.teams[p.team].name):'<span class="dim">vereinslos</span>'}</td><td class="num">${fmt(value(p))}</td><td class="num">${p.team>=0?fmt(askPrice(p,XI)):'ablösefrei'}</td></tr>`).join('')}</tbody></table></div>
-  <p class="dim">${n>lim?`${lim} von ${n} Treffern (stärkste zuerst) – Filter nutzen.`:`${n} Treffer.`}</p></div>
-  ${mine.length?`<div class="card" style="margin-top:14px"><h3>Deine Transferliste</h3>${mine.map(p=>`<p><a href="#" onclick="openP(${p.id});return false" style="color:var(--chalk)">${esc(p.n)}</a> – Forderung ${fmt(p.ask)} (Marktwert ${fmt(value(p))})</p>`).join('')}</div>`:''}`;};
+  ${L.map(p=>`<tr class="click" onclick="openP(${p.id})"><td><span class="pos ${p.pos}">${p.pos}</span></td><td>${esc(p.n)}${p.list?' <span class="tag offer">Liste</span>':''}</td><td class="num">${p.age}</td><td class="num str">${staerkeText(p)}</td><td>${p.team>=0?esc(S.teams[p.team].name):'<span class="dim">vereinslos</span>'}</td><td class="num">${fmt(wertSicht(p))}</td><td class="num">${p.team>=0?fmt(askPrice(p,XI)):'ablösefrei'}</td></tr>`).join('')}</tbody></table></div>
+  <p class="dim">${n>lim?`${lim} von ${n} Treffern (stärkste nach deiner Einschätzung zuerst) – Filter nutzen.`:`${n} Treffer.`} Stärke als Spanne: Was du über fremde Spieler weißt, hängt von deinen Scouts ab. Marktwert: öffentliche Schätzung.</p></div>
+  ${mine.length?`<div class="card" style="margin-top:14px"><h3>Deine Transferliste</h3>${mine.map(p=>`<p><a href="#" onclick="openP(${p.id});return false" style="color:var(--chalk)">${esc(p.n)}</a> – Forderung ${fmt(p.ask)} (Marktwert ${fmt(value(p))})</p>`).join('')}</div>`:''}${suchKarte()}`;};
 V.finanzen=()=>{const t=myT(),ent=Object.entries(S.fin),inc=ent.filter(e=>e[1]>0).sort((a,b)=>b[1]-a[1]),ex=ent.filter(e=>e[1]<0).sort((a,b)=>a[1]-b[1]),sum=ent.reduce((s,e)=>s+e[1],0),pay=squad(S.my).reduce((s,p)=>s+p.sal,0),maxL=kreditRahmen(t),P=RF.ticketPreis;
   return`<div class="grid"><div class="card"><h2>Saisonbilanz ${S.season}/${(S.season+1)%100}</h2><table><tbody>${inc.map(([k,v])=>`<tr><td>${k}</td><td class="num posv">${fmt(v)}</td></tr>`).join('')}${ex.map(([k,v])=>`<tr><td>${k}</td><td class="num neg">${fmt(v)}</td></tr>`).join('')}<tr><td><b>Saldo</b></td><td class="num"><b class="${sum<0?'neg':'posv'}">${fmt(sum)}</b></td></tr></tbody></table>${ent.length?'':'<p class="dim">Noch keine Buchungen in dieser Saison.</p>'}</div>
   <div class="card"><h3>Konto & Kredit</h3><div class="facts">${fact('Kontostand',`<span class="${t.cash<0?'neg':''}">${fmt(t.cash)}</span>`)}${fact('Kredit',fmt(S.loan))}${fact('Kreditrahmen',fmt(maxL))}${fact('Gehälter/Saison',fmt(pay))}</div>

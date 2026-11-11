@@ -42,6 +42,9 @@ module.exports=()=>{
   (S.gw||[]).forEach(g=>{const p=PIX.get(g.pid);if(!p||p.team!==S.my||p.ww!==2)e.push('Gesprächswunsch ohne passenden Spieler');});
   (S.vs||[]).forEach(v=>{if(!PIX.get(v.pid))e.push('Zusage ohne Spieler');if(!['offen','gehalten','gebrochen','hinfaellig'].includes(v.stand))e.push('Zusage mit unbekanntem Stand');});
   (S.bz||[]).forEach(b=>{if(!PIX.get(b[0])||!PIX.get(b[1])||b[0]===b[1])e.push('Beziehung ohne zwei Spieler');});
+  // Scouting (K18): Kenntnis 0–100, Aufträge nur mit eigenen Scouts
+  for(const id in (S.kenntnis||{})){const k=S.kenntnis[id].k;if(!(k>=0&&k<=100))e.push('Kenntnis außerhalb 0–100');}
+  (S.auftraege||[]).forEach(a=>{const x=(S.stab||[]).find(y=>y.id===a.scout);if(!x||x.team!==S.my||x.r!=='scout')e.push('Auftrag ohne eigenen Scout');});
   return e;};
  window.__scan=function(){const t=document.getElementById('app').innerText+' || '+document.getElementById('ov').innerText;const re=/undefined|NaN|\[object|\bnull\b|Infinity/;const i=t.search(re);return i<0?'':t.slice(Math.max(0,i-70),i+40).replace(/\s+/g,' ');};
 };

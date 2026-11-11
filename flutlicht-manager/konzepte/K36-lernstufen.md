@@ -94,6 +94,7 @@ Grundlage sind die Notizen in K10 §12 Nr. 14, K11 §12 Nr. 12, K13 §12 Nr. 13 
 | `einstellung` | Einstellung zum nächsten Spiel, Härte im Zweikampf | 3 B-Lizenz | normal | PLAN §4, K06 |
 | `rollen` | Rollen am Platz | 3 B-Lizenz | Co-Trainer nach `slotsVerein` | PLAN §4, K06 |
 | `schuetzen` | Standardschützen, Reihenfolge im Elfmeterschießen, Zurufe an einzelne Spieler | 3 B-Lizenz | Co-Trainer nach Merkmalen und Stärke | PLAN §4, K05, K06 |
+| `beobachten` | Spieler von einem Scout beobachten lassen (U9a) | 2 C-Lizenz | kein Auftrag, nur Grundkenntnis | K18 |
 | `lernziel` | Lernziele und Einzeltraining | 3 B-Lizenz | Co-Trainer vergibt die Lernplätze (`lernAutomatik`) | PLAN §4, K07 |
 | `umschulung` | Umschulung auf eine neue Position | 3 B-Lizenz | keine Umschulung | PLAN §4, K07 |
 | `sommer` | Urlaubslänge und Trainingsauftakt | 3 B-Lizenz | Co-Trainer nach `urlaubVorschlag` | PLAN §4, K12a |
@@ -103,6 +104,7 @@ Grundlage sind die Notizen in K10 §12 Nr. 14, K11 §12 Nr. 12, K13 §12 Nr. 13 
 | `vertraege` | Verträge verlängern, Spieler freistellen | 3 B-Lizenz | Verein verlängert nach den Regeln der Computer-Vereine | PLAN §4, K21 |
 | `kaderrollen` | Kaderrollen festlegen (U8) | 3 B-Lizenz | Co-Trainer verteilt die Rollen nach Stärke (K14 §7) | K14 §3.1 |
 | `versprechen` | Zusagen im Gespräch, Teamevent (U8) | 3 B-Lizenz | keine Zusagen, kein Teamevent | K15 §5.3, K14 §6 |
+| `suchauftrag` | Suchauftrag für Scouts (U9a) | 4 A-Lizenz | kein Suchauftrag | K18 |
 | `sportgericht` | Strafe annehmen oder Einspruch | 4 A-Lizenz | Verein nach `kiEinspruch` | PLAN §4, K09 |
 | `medizin` | fit spritzen, früher zurückholen | 4 A-Lizenz | Arzt nach `kiSpritzen` | K10 Nr. 14 |
 | `sponsor` | Trikotsponsor wählen | 4 A-Lizenz | Verein nimmt das Angebot mit dem höchsten Grundbetrag | PLAN §4, K24 |
@@ -201,9 +203,9 @@ lizenz:{
   start:true,                                   // Voreinstellung beim Spielstart: mit Lernstufen
   namen:['Teamleiter','C-Lizenz','B-Lizenz','A-Lizenz','Pro-Lizenz'],
   frei:{aufstellung:1,formation:1,ausrichtung3:1,live:1,wechsel:1,verletzte:1,pokal:1,stimmung:1,
-    stil:2,zurufe:2,vorlage:2,transfers:2,gespraeche:2,ansprache:2,kapitaen:2,
+    stil:2,zurufe:2,vorlage:2,transfers:2,gespraeche:2,ansprache:2,kapitaen:2,beobachten:2,
     ausrichtung5:3,einstellung:3,rollen:3,schuetzen:3,lernziel:3,umschulung:3,sommer:3,testspiele:3,lager:3,stab:3,vertraege:3,kaderrollen:3,versprechen:3,
-    sportgericht:4,medizin:4,sponsor:4,preise:4,
+    sportgericht:4,medizin:4,sponsor:4,preise:4,suchauftrag:4,
     stadion:5,kredit:5},
   aufstieg:[
     null,

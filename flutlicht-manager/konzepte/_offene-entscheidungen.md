@@ -315,6 +315,19 @@ Datei: `konzepte/K18-scouting.md`
 3. **Lieblingstyp der Scouts** als kleine Persönlichkeit.
 4. **Kosten sind Spielwerte,** Kalibrierung mit K23.
 
+Bei der Umsetzung (U9a):
+5. **Spannen kalibriert** (andere deutsche Liga ohne Scouting etwa ±5, mit gutem Scout etwa ±2), Grundfehler eines Scouts 0,15 × (21 − Qualität), Lieblingstyp +1 bis +3.
+6. **Fehler aus dem Seed,** fest je Spieler und Scout, Spanne 1,4-mal die Streuung.
+7. **Grundkenntnis:** eigene Liga 40, andere deutsche Profiliga 25, Regionalliga und vereinslos 15, je Spiel gegen dich +5.
+8. **Fremde Spieler:** Stärke als Spanne, Merkmale nach Kenntnis, Form, Frische und Kondition nur bei eigenen Spielern.
+9. **Marktwert fremder Spieler** als öffentliche Schätzung.
+10. **Transfermarkt nach Einschätzung sortiert.**
+11. **Beobachten** 1–3 Wochen, **Suchauftrag** mit vier neuen Namen je Woche und bis zu acht Kandidaten, 3.000 € je Woche.
+12. **Scouts im Stab:** vier Plätze, Start nach Ansehen (1, ab 60 zwei, ab 80 drei).
+13. **Kenntnis gehört dem Verein,** beim Jobwechsel beginnst du neu.
+14. **Lernstufen:** Beobachten ab C, Scouts ab B, Suchauftrag ab A.
+15. **Noch nicht gebaut:** Unsicherheit der Computer-Vereine, Gegnerbeobachtung, Ereignisse, Ausland, Jugend.
+
 ## K19 – Transfers I
 Datei: `konzepte/K19-transfers.md`
 

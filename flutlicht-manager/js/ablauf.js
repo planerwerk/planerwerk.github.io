@@ -23,7 +23,7 @@ function tagesSpieleAbschliessen(out){return mitStrom(strom('spieltagEnde',S.sea
 function tagesSpieleAbschliessenLauf(out){const d=out.tag;S.gespielt=d;
   out.gruppen.filter(g=>g.art==='test').forEach(g=>g.list.forEach(r=>testspielNach(r,g.x)));out.gruppen=out.gruppen.filter(g=>g.art!=='test');
   out.list=out.gruppen.flatMap(g=>g.list);if(!out.list.length)return out;
-  einsatzBuchen(out.list);versprechenNachSpiel(out.list); // Einsatzzeit, Startelf und Siege (K14), Versprechen (K15), solange Gesperrte noch als gesperrt gelten
+  einsatzBuchen(out.list);versprechenNachSpiel(out.list);scoutingNachSpiel(out.list); // Einsatzzeit, Startelf und Siege (K14), Versprechen (K15), solange Gesperrte noch als gesperrt gelten
   // Sperren zählen die Spiele der eigenen Mannschaft im selben Wettbewerb (K09)
   const spielten=new Set(),wbs=new Set();out.list.forEach(r=>{spielten.add(r.h);spielten.add(r.a);const w=wbVon(r);wbs.add(r.h+':'+w);wbs.add(r.a+':'+w);});
   sperrenAbsitzen(wbs);
@@ -65,7 +65,7 @@ function taeglichLauf(d){const T=RT;if(S.phase==='play')testspieleTag(d);
   const c=S.constr;if(c&&d>=c.bis){const t=myT();if(c.k==='cap')t.cap+=RB.tribuene.plaetze;if(c.k==='logen')t.logen+=RB.logen.anzahl;if(c.k==='shop')t.shop++;news(`Bau abgeschlossen: ${c.label}.`,'good');S.constr=null;}}
 // Werte pro Woche (montags): Training und Entwicklung, Transfermarkt, Vorstand bei Minus auf dem Konto.
 function woechentlich(d){return mitStrom(strom('woche',S.season,d),()=>woechentlichLauf(d));}
-function woechentlichLauf(d){if(!imUrlaub())mitStrom(strom('training',S.season,d),training);mitStrom(strom('kabine',S.season,d),()=>kabineWoche(d));mitStrom(strom('markt',S.season,d),market);
+function woechentlichLauf(d){if(!imUrlaub())mitStrom(strom('training',S.season,d),training);mitStrom(strom('kabine',S.season,d),()=>kabineWoche(d));scoutingWoche();mitStrom(strom('markt',S.season,d),market);
   if(myT().cash<0){S.trust+=RV.kontoMinus;if(R()<RV.kontoMinusMeldung)news('Der Vorstand ist alarmiert: Das Vereinskonto ist im Minus!','bad');}
   S.trust=clamp(S.trust,0,100);vorstandPruefen();}
 

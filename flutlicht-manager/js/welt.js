@@ -42,7 +42,7 @@ function buildWorld(seed){const W=RW;
   const sp=spielplanFuer(S.season);S.fx=sp.fx;S.plan.zeit=sp.zeit;initCup();
   mitStrom(strom('profil'),()=>S.teams.forEach(t=>{t.stil=profilStil();})); // Lieblingsstil jedes Vereins (K06 §7, bis K31)
   S.teams.forEach(t=>{t.urlaubFertig=true;});S.pl.forEach(p=>{p.koVor=p.ko;});
-  mitStrom(strom('stab'),stabAufbau);kabineStart(); // Trainerstab nach Ansehen (K16), Kabine mit Rollen, Kapitän und Startstimmung (K14) // Start Anfang Juli: Urlaub vorbei, Laufplan bis zum Trainingsauftakt (K12a)
+  mitStrom(strom('stab'),stabAufbau);mitStrom(strom('scouts'),scoutsAufbau);kabineStart(); // Trainerstab nach Ansehen (K16), Kabine mit Rollen, Kapitän und Startstimmung (K14) // Start Anfang Juli: Urlaub vorbei, Laufplan bis zum Trainingsauftakt (K12a)
 }
 // Neuer Kader für einen Verein, der aus der Regionalliga aufsteigt (alles erfundene Spieler)
 function kaderErzeugen(t){const W=RW,base=grundStaerke(t.rep),st=W.stammplaetze;

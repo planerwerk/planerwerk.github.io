@@ -682,3 +682,19 @@ Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `
 | AU12 | **Doping weggelassen, Manipulation als sehr seltene Ereigniskarte** (entschieden 10.11.): K30 §8.4 braucht vom Sportgericht (K09) Wiederholungsspiele und Annullierungen, vom Kalender (K13) Nachholtermine und eine Tabelle, die gestrichene Ergebnisse verträgt. Das ehemalige Ideen-Konzept K38 ist darin aufgegangen. | 📌 K09, K13, K30 |
 | AU13 | **K30 Seltenheitsstufen:** Mit 1000 Szenarien in vier Stufen kommen etwa 69 Karten pro Saison, die meisten als Info. Das Budget für Halte und Entscheidungen (K30 §5.1) bleibt die Grenze. Ein Kartenlabor muss die Raten prüfen, weil Bedingungen die echte Häufigkeit senken. | 📌 Gerüst K30 (U12) |
 
+---
+
+## AV. Nachtrag zur Umsetzung U9a (11. November 2026)
+
+| # | Befund | Status |
+|---|---|---|
+| AV1 | **K18 §3.2 und §5.2 gegen §10:** Mit ±8 bei Kenntnis 20–39 und einem Scout-Fehler von 0,3 × (21 − Qualität) wäre jeder Kauf eines „Besten aus zehn“ in der Mehrzahl der Fälle ein Fehlkauf gewesen, und ein durchschnittlicher Scout hätte die Spanne verbreitert. Kalibriert (K18 §12 Nr. 5). | ✅ |
+| AV2 | **K31, K19:** Computer-Vereine kennen noch alle wahren Werte. K18 §7 verlangt, dass auch sie mit Unsicherheit bewerten (glaubwürdige Fehlkäufe und Schnäppchen). | 📌 U11 |
+| AV3 | **K32, K08:** Grundkenntnis für Ausland (5) und Jugendspieler (0) ist vorbereitet, aber ohne Auslandspool und Jugendkader noch ohne Spieler. | 📌 U9b, U9c |
+| AV4 | **K36:** Neue Bereiche `beobachten` (C) und `suchauftrag` (A) in §5.2 eingetragen. | ✅ |
+| AV5 | **Kaderstärke der Gegner** (Vorbericht, Spielkarte) bleibt ein genauer öffentlicher Wert. Wer will, kann daraus grob auf einzelne Spieler schließen. | 📌 mit der Gegnerbeobachtung prüfen |
+| AV6 | **Talent fremder Spieler:** Die Sterne haben ihren Schätzfehler wie bisher, aber die Kenntnis macht sie noch nicht genauer (K18 §3.2 sieht das vor). | 📌 U9c (Jugend) |
+| AV7 | **K33:** neue Felder `kenntnis`, `auftraege`, Rolle `scout`. | ✅ in K33 |
+| AV8 | **Tempo der Engine** (`tests/akzeptanz.js`, höchstens 4 ms je Spiel): diesmal 4,79 ms. U9a ändert die Engine nicht, eine direkte Messung vor und nach U9a auf derselben Maschine ergibt beide Male etwa 6 ms (andere Messart). Die Maschine schwankt (wie AO7). | 📌 wie AO7 |
+| AV9 | **Fehler aus U8, gefunden vom Zufallstest:** Nach dem Saisonwechsel blieb ein Gesprächswunsch stehen, wenn der Vertrag des Spielers ausgelaufen war. Behoben (`kabineNachSaisonwechsel`). | ✅ |
+

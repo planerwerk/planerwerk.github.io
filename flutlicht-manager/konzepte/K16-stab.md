@@ -32,7 +32,7 @@ Hängt ab von: K03, K07, K10 (wo der Stab wirkt), K35a (Bänder) · Wird gebrauc
 | **Videoanalyst** | 1 | Gegneranalyse genauer (K06), Spielvorbereitung +1 % zusätzlich (K07) | Welle 2 |
 | **Standardtrainer** | 1 | Standard-Einheiten wirken ×1,0–1,3 (K07), Lernen der Standard-Merkmale (K03) | Welle 2 |
 | **Sportpsychologe** | 1 | Selbstvertrauen erholt sich schneller nach unten, „nervenschwach“ wirkt halb so stark, Prägung (K08) weniger riskant | Welle 2 |
-| Scouts | 1–6 | Beobachtung, Spannen (K18) | Welle 3 |
+| Scouts | 1–4 | Beobachtung, Suchauftrag, schmalere Spannen (K18), gebaut in U9a | Welle 3 |
 | Jugendleiter, Jugendtrainer | 1–3 | Nachwuchs (K08) | Welle 3 |
 | Sportdirektor | 1 | Führt Verhandlungen (K19, K21): **Verhandlungsgeschick** senkt Forderungen und verbessert Ablösen, **Netzwerk** bringt Kontakte zu Beratern mit (K22). Automatik für Verträge und Transfers | Welle 3 |
 | Kaderplaner | 1 | Zuarbeit für den Sportdirektor: Fristen, Gehaltsgefüge, genauere Kostenvorschau, Vorschläge für Verlängerungen und Abgänge | Welle 3 |

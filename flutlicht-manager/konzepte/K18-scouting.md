@@ -1,6 +1,6 @@
 # K18 – Scouting und Informationsnebel
 
-Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12.
+Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12. **Umgesetzt in U9a** (11. November 2026, `js/scouting.js`, Test `tests/scouting.js`): Kenntnis je Spieler, ehrliche Spannen für fremde Spieler, Merkmale nach Kenntnis, Scouts als Rolle im Stab mit Qualität, Gebiet und Lieblingstyp, Beobachtung mit Bericht, Suchauftrag, Verblassen, Kenntnis aus Spielen, öffentlicher Marktwert. Computer-Vereine bewerten noch mit wahren Werten (kommt mit U11). Abweichungen in Abschnitt 12.
 Hängt ab von: K03 (Werte, Sichtbarkeit), K16 (Scouts als Mitarbeiter), K35a (unscharfe Regler) · Wird gebraucht von: K06, K08, K19, K20, K31, K32.
 
 ## 1. Ziel und Spielgefühl
@@ -157,6 +157,20 @@ scouting:{
 2. **Ehrliche Spannen** auch bei schlechten Scouts: breiter statt falsch.
 3. **Lieblingstyp der Scouts** als kleine Persönlichkeit.
 4. **Kosten sind Spielwerte,** Kalibrierung mit K23.
+
+**Vorläufig entschieden bei der Umsetzung (U9a, 11. November 2026):**
+5. **Spannen kalibriert:** Halbe Breite je Kenntnis ±10 (unter 10), ±7 (unter 20), ±4,8 (unter 30), ±3,5 (unter 45), ±2,5 (unter 60), ±2 (unter 80), ±1 (darüber), Grundfehler eines Scouts 0,15 × (21 − Qualität), Lieblingstyp +1 bis +3. Mit den Werten aus 3.2 und 5.2 (±12/8/5/3/1,5, Fehler 0,3 × (21 − Qualität)) lag der Test „Fehlkäufe“ weit über dem Ziel, und ein durchschnittlicher Scout hätte die Spanne breiter statt schmaler gemacht. Jetzt: andere deutsche Liga ohne Scouting etwa ±5, mit einem guten Scout nach drei Wochen etwa ±2.
+6. **Fehler kommen aus dem Seed:** je Spieler und je Scout ein fester, normalverteilter Fehler aus einer Hash-Zahl, kein Zufallsstrom. Neuladen ändert nichts, mehr Kenntnis rückt die Mitte zur Wahrheit. Die Spanne ist 1,4-mal die Streuung (etwa 84 % Treffer), eine Vorliebe des Scouts verbreitert sie, damit sie ehrlich bleibt. Beim Bau fiel auf, dass eine einfache Hash-Zahl leicht schiefe Werte gibt, sie wird deshalb nachgemischt.
+7. **Grundkenntnis:** eigene Liga 40, andere deutsche Profiliga 25, Regionalliga und vereinslos 15, jedes Spiel gegen dich +5. Ausland (5) und Jugend (0) kommen mit U9b und U9c.
+8. **Was du von fremden Spielern siehst:** Stärke als Spanne, Merkmale nach Kenntnis (unter 20 nichts, bis 39 das Auffälligste, bis 59 die Stärken, ab 60 auch die Schwächen), Talent wie bisher als Sterne mit Schätzfehler. Eigenschaften fremder Spieler bleiben unbekannt (wie vorher), Form, Frische, Kondition und Spielpraxis zeigt die Karte nur bei eigenen Spielern.
+9. **Marktwert fremder Spieler** ist eine öffentliche Schätzung aus der Grundkenntnis, damit er die wahre Stärke nicht verrät. Die geforderte Ablöse kommt weiter vom Verein, der seinen Spieler kennt.
+10. **Transfermarkt nach Einschätzung sortiert,** nicht nach dem wahren Wert.
+11. **Aufträge:** Beobachten 1–3 Wochen mit Bericht im Posteingang. Suchauftrag mit Position, Höchstalter und Ablöse, je Woche vier neue Namen mit halber Wirkung, bis zu acht Kandidaten nach Einschätzung, läuft, bis du ihn beendest. Ein Auftrag je Scout, 3.000 € je Woche.
+12. **Scouts im Stab:** neue Rolle mit vier Plätzen. Zum Start hat jeder Verein einen Scout, ab Ansehen 60 zwei, ab 80 drei, dazu acht vereinslose. Sie entstehen in einem eigenen Zufallsstrom, damit der übrige Stab gleich bleibt. Gebiet (Inland, Jugend, Ausland) und Lieblingstyp ergeben sich aus der Nummer des Scouts. „Ausland“ bringt erst mit dem Auslandspool etwas.
+13. **Kenntnis gehört dem Verein:** Beim Jobwechsel beginnst du neu.
+14. **Lernstufen (K36):** Informationen sind frei. Beobachten ab der C-Lizenz (mit den Transfers), Scouts einstellen ab B (Stab), Suchauftrag ab A (Scouting im Detail).
+15. **Noch nicht gebaut:** Unsicherheit der Computer-Vereine (U11), Gegnerbeobachtung, Konkurrenz am Tisch und die übrigen Ereignisse aus §8, Ausland (U9b), Jugend (U9c), Auslandsreisekosten. Die Kaderstärke ganzer Gegner bleibt als öffentlicher Wert genau.
+16. **Test „Fehlkäufe“ genauer gefasst:** Der Beste aus zehn Kandidaten aus verschiedenen Vereinen der 2. und 3. Liga nach Einschätzung, dazu „Einzelkauf ohne Auswahl unter 15 %“.
 
 ## Quellen
 
