@@ -71,7 +71,7 @@ In der ersten Saison erreicht man also zwei oder drei Lizenzen, frei ist alles n
 
 Grundlage sind die Notizen in K10 §12 Nr. 14, K11 §12 Nr. 12, K13 §12 Nr. 13 und die grobe Leiter in PLAN §4. K09 hatte noch keine Notiz, dort gilt die Leiter aus PLAN §4 (Sportgericht auf Stufe 4), die Notiz ist jetzt in K09 §12 Nr. 15 nachgetragen.
 
-**Immer frei, ohne Lizenz:** Büro und Posteingang, Kalender, „Tag beenden“, Tabelle, Spielplan, Pokal-Ansicht, Kader und Spielerkarten (nur ansehen), Finanzen und Stadion (nur ansehen), Menü mit Speichern, Laden, Erinnerungen, Einstellungen des Live-Spiels, Jobangebote nach einer Entlassung.
+**Immer frei, ohne Lizenz:** Büro und Posteingang, Kalender, „Tag beenden“, Tabelle, Spielplan, Pokal-Ansicht, Kader und Spielerkarten (nur ansehen, mit Nationalität), Transfermarkt mit dem Filter Ausland (nur ansehen, U9b), Finanzen und Stadion (nur ansehen), Menü mit Speichern, Laden, Erinnerungen, Einstellungen des Live-Spiels, Jobangebote nach einer Entlassung.
 
 | Bereich (Schlüssel) | Funktion | Lizenz | Bis dahin macht es | Quelle |
 |---|---|---|---|---|
@@ -86,7 +86,7 @@ Grundlage sind die Notizen in K10 §12 Nr. 14, K11 §12 Nr. 12, K13 §12 Nr. 13 
 | `stil` | Spielstil wählen, auch im Live-Spiel, Gegneranalyse | 2 C-Lizenz | Co-Trainer nach `kiStil` | PLAN §4, K06 |
 | `zurufe` | Zurufe an die Mannschaft und Halbzeitansprache | 2 C-Lizenz | keine Ansprache (neutral) | PLAN §4, K05 |
 | `vorlage` | Trainingsvorlage wählen | 2 C-Lizenz | Co-Trainer nach `vorlageAuto` | PLAN §4, K07 |
-| `transfers` | Transferliste, Angebote annehmen und ablehnen, Spieler kaufen | 2 C-Lizenz | Verein nach den Regeln der Computer-Vereine (`market`) | PLAN §4, K19 |
+| `transfers` | Transferliste, Angebote annehmen und ablehnen (seit U9b auch von Auslandsvereinen), Spieler kaufen | 2 C-Lizenz | Verein nach den Regeln der Computer-Vereine (`market`) | PLAN §4, K19 |
 | `gespraeche` | Einzelgespräche ohne Versprechen, Gesprächswunsch als Halt (U8) | 2 C-Lizenz | Co-Trainer führt das Gespräch nach der Regel der Computer-Vereine (K15 §7) | K15 |
 | `ansprache` | Mannschaftsansprache außerhalb des Spiels (U8) | 2 C-Lizenz | keine Ansprache | K15 §5.4 |
 | `kapitaen` | Kapitän bestimmen (U8) | 2 C-Lizenz | Co-Trainer wählt nach Führung und Vereinsjahren | K14 §5.8 |
@@ -102,9 +102,10 @@ Grundlage sind die Notizen in K10 §12 Nr. 14, K11 §12 Nr. 12, K13 §12 Nr. 13 
 | `lager` | Trainingslager buchen | 3 B-Lizenz | kein Lager (wie die Computer-Vereine heute) | K11 Nr. 12 |
 | `stab` | Mitarbeiter einstellen, verlängern, entlassen | 3 B-Lizenz | Verein besetzt fehlende Rollen und verlängert wie die Computer-Vereine (`stabSaison`) | PLAN §4, K16 |
 | `vertraege` | Verträge verlängern, Spieler freistellen | 3 B-Lizenz | Verein verlängert nach den Regeln der Computer-Vereine | PLAN §4, K21 |
+| `ausland` | Spieler im Ausland beobachten und kaufen (U9b) | 3 B-Lizenz | Verein kauft nur im Inland (wie die Computer-Vereine bis U11), der Auslandsmarkt ist als Information frei | K32 §6, K18 |
 | `kaderrollen` | Kaderrollen festlegen (U8) | 3 B-Lizenz | Co-Trainer verteilt die Rollen nach Stärke (K14 §7) | K14 §3.1 |
 | `versprechen` | Zusagen im Gespräch, Teamevent (U8) | 3 B-Lizenz | keine Zusagen, kein Teamevent | K15 §5.3, K14 §6 |
-| `suchauftrag` | Suchauftrag für Scouts (U9a) | 4 A-Lizenz | kein Suchauftrag | K18 |
+| `suchauftrag` | Suchauftrag für Scouts (U9a), auch mit der Region Ausland (U9b) | 4 A-Lizenz | kein Suchauftrag | K18 |
 | `sportgericht` | Strafe annehmen oder Einspruch | 4 A-Lizenz | Verein nach `kiEinspruch` | PLAN §4, K09 |
 | `medizin` | fit spritzen, früher zurückholen | 4 A-Lizenz | Arzt nach `kiSpritzen` | K10 Nr. 14 |
 | `sponsor` | Trikotsponsor wählen | 4 A-Lizenz | Verein nimmt das Angebot mit dem höchsten Grundbetrag | PLAN §4, K24 |

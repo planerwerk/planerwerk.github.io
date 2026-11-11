@@ -60,12 +60,12 @@ function taeglichLauf(d){const T=RT;if(S.phase==='play')testspieleTag(d);
   S.pl.forEach(p=>{if(p.inj>0)p.inj--;if(p.team<-1)return;const st=p.team>=0?status.get(p.team)||'':'',urlaub=st==='urlaub'?true:st==='laufplan'?'laufplan':false;
     const tr=!urlaub&&p.team>=0&&p.inj<=0&&S.phase==='play'?trainingTag(p,S.teams[p.team],ab.get(p.team),d):0;tagesWerte(p,urlaub,tr);});
   S.offers.filter(o=>o.bis<d).forEach(o=>versprechenAngebot(o.pid,o.amt)); // abgelaufenes Angebot zählt wie abgelehnt (Versprechen „Wechsel“, K15)
-  S.offers=S.offers.filter(o=>o.bis>=d&&PIX.get(o.pid)&&PIX.get(o.pid).team===S.my&&S.teams[o.tid]&&aktiv(S.teams[o.tid]));
+  S.offers=S.offers.filter(o=>o.bis>=d&&PIX.get(o.pid)&&PIX.get(o.pid).team===S.my&&(o.tid>=AV0?!!avVon(o.tid):S.teams[o.tid]&&aktiv(S.teams[o.tid])));
   medizinTag(d);sportgerichtTag(d);pokalAuslosungTag(d);versprechenTag();
   const c=S.constr;if(c&&d>=c.bis){const t=myT();if(c.k==='cap')t.cap+=RB.tribuene.plaetze;if(c.k==='logen')t.logen+=RB.logen.anzahl;if(c.k==='shop')t.shop++;news(`Bau abgeschlossen: ${c.label}.`,'good');S.constr=null;}}
 // Werte pro Woche (montags): Training und Entwicklung, Transfermarkt, Vorstand bei Minus auf dem Konto.
 function woechentlich(d){return mitStrom(strom('woche',S.season,d),()=>woechentlichLauf(d));}
-function woechentlichLauf(d){if(!imUrlaub())mitStrom(strom('training',S.season,d),training);mitStrom(strom('kabine',S.season,d),()=>kabineWoche(d));scoutingWoche();mitStrom(strom('markt',S.season,d),market);
+function woechentlichLauf(d){if(!imUrlaub())mitStrom(strom('training',S.season,d),training);mitStrom(strom('kabine',S.season,d),()=>kabineWoche(d));scoutingWoche();mitStrom(strom('ausland',S.season,d),auslandWoche);mitStrom(strom('markt',S.season,d),market);
   if(myT().cash<0){S.trust+=RV.kontoMinus;if(R()<RV.kontoMinusMeldung)news('Der Vorstand ist alarmiert: Das Vereinskonto ist im Minus!','bad');}
   S.trust=clamp(S.trust,0,100);vorstandPruefen();}
 
@@ -86,6 +86,8 @@ function training(){const T=RT,d=S.tag,bericht=[];lernplaetzeVergeben();if(S.sta
 });
   if(bericht.length){const auf=bericht.filter(x=>x[2]>x[1]),ab=bericht.filter(x=>x[2]<x[1]),txt=l=>l.map(([p,a,b])=>`${p.n} (${a} → ${b})`).join(', ');
     news(`Wochenbericht des Co-Trainers: ${auf.length?'verbessert '+txt(auf):''}${auf.length&&ab.length?' · ':''}${ab.length?'nachgelassen '+txt(ab):''}.`,auf.length>=ab.length?'good':'');}}
+// Bieter für einen deiner Spieler: deutsche Vereine oder, mit dem Anteil aus REGELN.welt.ausland.angebote, Auslandsvereine mit passender Stärke und genug Budget (K32 §3.1)
+function bieter(inland,p,preis,abAnsehen){const aus=auslandKaeufer(p,preis).filter(v=>abAnsehen==null||v.rep>=abAnsehen);if(!aus.length)return inland;return !inland.length||R()<RW.ausland.angebote.anteil?aus:inland;}
 function market(){const M=RM;
   S.teams.forEach(t=>{if(t.id===S.my||!aktiv(t))return;const alle=squad(t.id);if(alle.length<=M.verkaeufer.kaderMin)return;const xi=new Set(bestXI(t.id,t.form));const sq=alle.filter(x=>!x.list&&!xi.has(x.id));if(!sq.length)return;
     if(sq.length>M.listeVoll.kaderAb&&R()<M.listeVoll.chance){const p=pick(sq);p.list=1;p.ask=value(p);}else if(R()<M.listeZufall.chance){const p=pick(sq);p.list=1;p.ask=Math.round(value(p)*M.listeZufall.aufschlag/M.runden)*M.runden;}});
@@ -97,8 +99,8 @@ function market(){const M=RM;
   const lvl=teamLevel(S.my),A=M.angebote,U=M.ueberraschung,bis=S.tag+RK.angebotTage;
   squad(S.my).forEach(p=>{if(S.offers.some(o=>o.pid===p.id))return;
     if(p.list){const ratio=p.ask/value(p),st=A.preis.find(x=>ratio<=x[0]),pr=st?st[1]:A.preisSonst;
-      if(R()<pr){const B=S.teams.filter(t=>t.id!==S.my&&aktiv(t)&&t.cash>p.ask*A.kontoAnteil);if(B.length){const b=pick(B),amt=Math.round(p.ask*(A.betragBasis+R()*A.betragSpanne)/M.runden)*M.runden;S.offers.push({pid:p.id,tid:b.id,amt,bis});news(`Angebot: ${b.name} bietet ${fmt(amt)} für ${p.n} (gilt bis ${datumKurz(bis)}).`,'offer');}}}
-    else if(p.str>=lvl+U.niveauPlus&&R()<U.chance){const B=S.teams.filter(t=>t.id!==S.my&&aktiv(t)&&t.rep>=myT().rep&&t.cash>value(p));if(B.length){const b=pick(B),amt=Math.round(value(p)*(U.betragBasis+R()*U.betragSpanne)/M.runden)*M.runden;S.offers.push({pid:p.id,tid:b.id,amt,bis});news(`Überraschung: ${b.name} will ${p.n} und bietet ${fmt(amt)} (gilt bis ${datumKurz(bis)}).`,'offer');}}});
+      if(R()<pr){const B=bieter(S.teams.filter(t=>t.id!==S.my&&aktiv(t)&&t.cash>p.ask*A.kontoAnteil),p,p.ask);if(B.length){const b=pick(B),amt=Math.round(p.ask*(A.betragBasis+R()*A.betragSpanne)/M.runden)*M.runden;S.offers.push({pid:p.id,tid:b.id,amt,bis});news(`Angebot: ${b.name} bietet ${fmt(amt)} für ${p.n} (gilt bis ${datumKurz(bis)}).`,'offer');}}}
+    else if(p.str>=lvl+U.niveauPlus&&R()<U.chance){const B=bieter(S.teams.filter(t=>t.id!==S.my&&aktiv(t)&&t.rep>=myT().rep&&t.cash>value(p)),p,value(p),myT().rep);if(B.length){const b=pick(B),amt=Math.round(value(p)*(U.betragBasis+R()*U.betragSpanne)/M.runden)*M.runden;S.offers.push({pid:p.id,tid:b.id,amt,bis});news(`Überraschung: ${b.name} will ${p.n} und bietet ${fmt(amt)} (gilt bis ${datumKurz(bis)}).`,'offer');}}});
   S.offers=S.offers.filter(o=>PIX.get(o.pid)&&PIX.get(o.pid).team===S.my);}
 // Vorstand: Ergebnis im Ligaspiel und Tabellenplatz
 function vorstandLiga(e,m){const t=myT(),B=RV,home=m.h===S.my,gf=home?m.hg:m.ag,ga=home?m.ag:m.hg,o=S.teams[home?m.a:m.h],str=o.rep>t.rep+B.staerkerAb,wk=o.rep<t.rep-B.staerkerAb;

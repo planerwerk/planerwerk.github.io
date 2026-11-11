@@ -62,7 +62,7 @@ function newSeasonLauf(){S.vstat={};S.testspiele=[];kabineSaison();const sm=S.su
     if((p.age>=K.abAlter&&R()<(p.age-K.nullAlter)*K.jeJahr)||p.age>=K.spaetestens){if(p.team===S.my)news(`${p.n} beendet seine Karriere.`);p.team=-2;return;}
     if(p.team>=0){p.ct--;if(p.ct<=0){if(p.team===S.my){news(`Vertrag ausgelaufen: ${p.n} verlässt den Verein.`,'bad');p.team=-1;p.list=0;}else if(R()<Z.vertrag.verlaengern){p.ct=riA(Z.vertrag.jahre);p.sal=salaryFor(p.str);}else{p.team=-1;p.list=0;}}}
     if(p.team!==S.my)p.list=0;});
-  S.pl=S.pl.filter(p=>p.team!==-2);reindex();
+  S.pl=S.pl.filter(p=>p.team!==-2);reindex();mitStrom(strom('auslandSaison',S.season),auslandSaison); // Auslandspool: Alter, Karriereende, neue Talente (K32 §4.1)
   sm.up4.forEach(id=>{if(!squad(id).length)kaderErzeugen(S.teams[id]);});
   const N=Z.nachwuchs;
   S.teams.forEach(t=>{if(!aktiv(t))return;const base=grundStaerke(t.rep),yl=t.id===S.my?t.youth:N.computerStufe;

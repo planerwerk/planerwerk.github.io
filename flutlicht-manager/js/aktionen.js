@@ -43,22 +43,26 @@ function setListed(id,on){const p=PIX.get(id);if(on){const v=+document.getElemen
 function extend(id){const p=PIX.get(id),y=+document.getElementById('ext').value;if(verlaengertNicht(p)){toast(`${p.n} will nicht verlängern. Erst muss seine Stimmung besser werden.`);return;}p.ct=y;p.sal=Math.round(extDemand(p)*vertragsAufschlag(p)/1000)*1000;news(`Vertrag verlängert: ${p.n} bis ${S.season+y}, ${fmt(p.sal)} pro Jahr.`,'good');save();openP(id);render();}
 const abfindung=p=>Math.round(p.sal*p.ct*RF.abfindung);
 function release(id){const p=PIX.get(id),c=abfindung(p);money('Abfindungen',-c);kabineAbgang(p,S.my);p.team=-1;p.list=0;S.offers=S.offers.filter(o=>o.pid!==id);news(`${p.n} wurde freigestellt (Abfindung ${fmt(c)}).`);save();closeOv();render();}
-function acceptOffer(i){const o=S.offers[i],p=o&&PIX.get(o.pid),b=o&&S.teams[o.tid];if(!p||p.team!==S.my)return;if(!aktiv(b)){S.offers.splice(i,1);toast(`${b.name} spielt nicht mehr in den Profiligen, das Angebot ist hinfällig.`);save();render();return;}money('Transfers',o.amt);b.cash-=o.amt;kabineAbgang(p,S.my);p.team=b.id;p.list=0;p.ct=riA(RM.neuerVertrag);S.offers=S.offers.filter(x=>x.pid!==o.pid);news(`Verkauft: ${p.n} wechselt für ${fmt(o.amt)} zu ${b.name}.`,'good');save();render();}
+function acceptOffer(i){const o=S.offers[i],p=o&&PIX.get(o.pid);if(!p||p.team!==S.my)return;
+  if(o.tid>=AV0){const v=avVon(o.tid);if(!v){S.offers.splice(i,1);save();render();return;} // Verkauf ins Ausland (K32): Der Spieler zieht in den Pool um
+    money('Transfers',o.amt);kabineAbgang(p,S.my);insAusland(p,v.id);S.offers=S.offers.filter(x=>x.pid!==o.pid);news(`Verkauft: ${p.n} wechselt für ${fmt(o.amt)} zu ${v.name} (${gruppenName(avGruppe(v))}).`,'good');save();render();return;}
+  const b=S.teams[o.tid];if(!aktiv(b)){S.offers.splice(i,1);toast(`${b.name} spielt nicht mehr in den Profiligen, das Angebot ist hinfällig.`);save();render();return;}money('Transfers',o.amt);b.cash-=o.amt;kabineAbgang(p,S.my);p.team=b.id;p.list=0;p.ct=riA(RM.neuerVertrag);S.offers=S.offers.filter(x=>x.pid!==o.pid);news(`Verkauft: ${p.n} wechselt für ${fmt(o.amt)} zu ${b.name}.`,'good');save();render();}
 function declineOffer(i){const o=S.offers[i];if(o)versprechenAngebot(o.pid,o.amt);S.offers.splice(i,1);save();render();}
 function offer(id){const p=PIX.get(id),t=myT(),msg=document.getElementById('msg'),yrs=+document.getElementById('yrs').value,M=RM,I=M.interesse;
   if(squad(S.my).length>=M.kaderMax){msg.textContent=`Dein Kader ist voll (höchstens ${M.kaderMax} Spieler).`;return;}
-  const from=p.team>=0?S.teams[p.team]:null,lvl=teamLevel(S.my);
-  const interest=(t.rep-(from?from.rep:t.rep-I.vereinslosAbstand))+(lvl-p.str)*I.niveauFaktor+I.basis+(t.lg===1?I.liga1:t.lg===2?I.liga2:I.liga3)+(p.age>=I.altAb?I.altPlus:0)+(p.seed-0.5)*I.zufall;
+  const aus=istAusland(p),from=aus?avVon(p.team):p.team>=0?S.teams[p.team]:null,lvl=teamLevel(S.my),IA=RW.ausland.interesse;
+  const interest=(t.rep-(from?from.rep:t.rep-I.vereinslosAbstand))+(lvl-p.str)*I.niveauFaktor+I.basis+(t.lg===1?I.liga1:t.lg===2?I.liga2:I.liga3)+(p.age>=I.altAb?I.altPlus:0)+(p.seed-0.5)*I.zufall
+    +(aus?(p.nat===RW.nation.heimat?IA.heimkehr:IA.fremd):0); // aus dem Ausland etwas schwerer zu holen, Deutsche kommen gern zurück (K32 §8)
   if(interest<0){msg.textContent=`${p.n} hat kein Interesse an einem Wechsel zu ${t.name}.`;return;}
   const sal=Math.round(salaryFor(p.str)*(M.gehalt.basis+p.seed*M.gehalt.zufall)/1000)*1000;let fee=0;
   if(from){fee=Math.round((+document.getElementById('fee').value||0)*1e6);const ask=askPrice(p);
     if(fee<ask*M.ernstAb){msg.textContent=`${from.name}: „Kein ernsthaftes Angebot.“ Gefordert sind etwa ${fmt(ask)}.`;return;}
     if(fee<ask){msg.textContent=`${from.name} will mindestens ${fmt(ask)}.`;return;}
     if(t.cash<fee){msg.textContent='Dafür reicht dein Kontostand nicht.';return;}
-    money('Transfers',-fee);from.cash+=fee;}
+    money('Transfers',-fee);if(!aus)from.cash+=fee;}
   else{const hg=Math.round(sal*RF.handgeld/1000)*1000;if(t.cash<hg){msg.textContent='Nicht genug Geld für das Handgeld.';return;}money('Handgelder',-hg);}
-  if(from)kabineAbgang(p,from.id);p.team=S.my;p.list=0;p.ct=yrs;p.sal=sal;S.offers=S.offers.filter(o=>o.pid!==id);neuzugang(p,S.my);versprechenKauf(p);
-  news(`Neuzugang: ${p.n} kommt ${from?`für ${fmt(fee)} von ${from.name}`:'ablösefrei'} (Gehalt ${fmt(sal)}/Jahr, bis ${S.season+yrs}).`,'good');save();closeOv();render();toast(`${p.n} unterschreibt!`);}
+  if(aus)ausDemAusland(p,S.my);else if(from)kabineAbgang(p,from.id);p.team=S.my;p.list=0;p.ct=yrs;p.sal=sal;S.offers=S.offers.filter(o=>o.pid!==id);neuzugang(p,S.my);versprechenKauf(p);
+  news(`Neuzugang: ${p.n} kommt ${from?`für ${fmt(fee)} von ${from.name}${aus?` (${gruppenName(avGruppe(from))})`:''}`:'ablösefrei'} (Gehalt ${fmt(sal)}/Jahr, bis ${S.season+yrs}).`,'good');save();closeOv();render();toast(`${p.n} unterschreibt!`);}
 
 // Lernziel eines eigenen Spielers (K03 §5.6). Leer = der Co-Trainer entscheidet.
 // Lernziel setzen (K03 §5.6, K07): Sind alle Lernplätze belegt, gibt der Spieler mit dem geringsten Fortschritt unter den vom Co-Trainer gewählten seinen Platz ab.
@@ -93,6 +97,6 @@ function mansAnsprache(art){const r=mannschaftsAnsprache(art);save();render();to
 function teameventUI(){teameventLauf();save();render();}
 // Scouting (K18): Spieler beobachten lassen, Suchauftrag starten und beenden
 function beobachten(pid){const sc=document.getElementById('scsel'),wo=document.getElementById('scwo');if(!sc)return;const f=beobachtenLauf(pid,+sc.value,+(wo?wo.value:2));save();if(f){toast(f);return;}openP(pid);render();}
-function sucheStarten(){const g=id=>document.getElementById(id);const f=sucheLauf(+g('su_scout').value,{pos:g('su_pos').value,alterBis:g('su_alter').value,abloeseBis:g('su_abl').value});save();if(f)toast(f);render();}
+function sucheStarten(){const g=id=>document.getElementById(id);const f=sucheLauf(+g('su_scout').value,{pos:g('su_pos').value,alterBis:g('su_alter').value,abloeseBis:g('su_abl').value,region:(g('su_reg')||{}).value});save();if(f)toast(f);render();}
 function sucheBeenden(id){auftragEnde(id);save();render();}
 

@@ -5,8 +5,8 @@
 
 // Standardnormaler Wert je Schlüssel (Box-Muller aus zwei Hash-Zahlen)
 function hashNormal(...k){const h=hash32([S.seed,...k].join('|')),a=(mix32(h,1)+0.5)/4294967296,b=(mix32(h,2)+0.5)/4294967296;return Math.sqrt(-2*Math.log(a))*Math.cos(2*Math.PI*b);} // nachgemischt, sonst leicht schief
-// Grundkenntnis (K18 §3.1): was jeder weiß, ohne zu beobachten. Ausland und Jugend kommen mit K32 und K08.
-function grundKenntnis(p){const G=RSC.grund;if(p.team===S.my)return G.eigen;const t=S.teams[p.team];if(p.team<0||!t||t.lg>3)return G.unten;return t.lg===myT().lg?G.liga:G.deutsch;}
+// Grundkenntnis (K18 §3.1): was jeder weiß, ohne zu beobachten. Ausland (Pool aus K32): 5. Jugend kommt mit K08.
+function grundKenntnis(p){const G=RSC.grund;if(p.team===S.my)return G.eigen;if(istAusland(p))return G.ausland;const t=S.teams[p.team];if(p.team<0||!t||t.lg>3)return G.unten;return t.lg===myT().lg?G.liga:G.deutsch;}
 const kenntnisEintrag=p=>(S.kenntnis||{})[p.id];
 function kenntnis(p){const g=grundKenntnis(p),e=kenntnisEintrag(p);return e?Math.max(g,Math.round(e.k)):g;}
 const sichtBreite=k=>{for(const[b,w]of RSC.sicht)if(k<b)return w;return RSC.sicht[RSC.sicht.length-1][1];};
@@ -17,10 +17,13 @@ function lieblingstyp(x){if(!x||x.r!=='scout')return null;const h=hash32('lt|'+x
   return{typ:['schnell','kopfballstark','jung'][(h>>>8)%3],plus:F.lieblingstyp[0]+(h>>>12)%(F.lieblingstyp[1]-F.lieblingstyp[0]+1)};}
 const LIEBLINGSTYP_NAME={schnell:'schnelle Spieler',kopfballstark:'Kopfballspieler',jung:'junge Spieler'};
 const passtTyp=(p,typ)=>typ==='jung'?p.age<=21:hatMk(p,typ);
-// Spezialgebiet (aus der Nummer des Scouts): Inland, Jugend oder Ausland. Ausland bringt erst mit dem Auslandspool (K32) Vorteile.
+// Spezialgebiet (aus der Nummer des Scouts): Inland, Jugend oder Ausland. Im eigenen Gebiet wirkt ein Scout 1,3-fach, außerhalb 0,8-fach (K18 §5.1).
+// Inland: Spieler deutscher Vereine und Vereinslose. Ausland: Spieler der Auslandsvereine (K32). Jugend: Spieler bis 21, egal wo.
 const scoutGebiet=x=>['inland','inland','jugend','ausland'][hash32('gb|'+x.id)%4];
 const GEBIET_NAME={inland:'Inland',jugend:'Jugend',ausland:'Ausland'};
-function gebietFaktor(x,p){const g=scoutGebiet(x),P=RSC.proWoche;if(g==='jugend')return p.age<=21?P.gebiet:P.fremd;return g==='inland'?P.gebiet:P.fremd;}
+function gebietFaktor(x,p){const g=scoutGebiet(x),P=RSC.proWoche;if(g==='jugend')return p.age<=21?P.gebiet:P.fremd;return (g==='ausland')===istAusland(p)?P.gebiet:P.fremd;}
+// Reisekosten je Woche (K18 §5.4): im Ausland das Fünffache
+const reiseKosten=ausland=>ausland?RSC.kosten.ausland:RSC.kosten.inland;
 const scoutVon=id=>(S.stab||[]).find(x=>x.id===id);
 
 // Sicht auf die Stärke (K18 §3.2, §5.2): Mitte und Spanne. Eigene Spieler genau.
@@ -52,27 +55,28 @@ function beobachtenLauf(pid,scoutId,wochen){const p=PIX.get(pid),x=meineScouts()
   S.auftraege=[...(S.auftraege||[]),{art:'spieler',scout:x.id,pid,rest:clamp(Math.round(wochen)||1,1,3),von:absTag(S.tag)}];
   news(`Scout ${x.n} beobachtet ${p.n} (${clamp(Math.round(wochen)||1,1,3)} Woche${wochen>1?'n':''}).`);return'';}
 function sucheLauf(scoutId,krit){const x=meineScouts().find(y=>y.id===scoutId);if(!x)return'Dieser Scout arbeitet nicht für dich.';if(!scoutFrei(x))return`${x.n} hat schon einen Auftrag.`;
-  const k={pos:['TW','AB','MF','ST'].includes(krit.pos)?krit.pos:'',alterBis:clamp(+krit.alterBis||40,16,40),abloeseBis:Math.max(0,+krit.abloeseBis||0)};
-  S.auftraege=[...(S.auftraege||[]),{art:'suche',scout:x.id,krit:k,kand:[],gesehen:[],von:absTag(S.tag)}];news(`Suchauftrag an ${x.n}: ${k.pos||'alle Positionen'}, bis ${k.alterBis} Jahre${k.abloeseBis?`, Ablöse bis ${k.abloeseBis} Mio €`:''}.`);return'';}
+  const k={pos:['TW','AB','MF','ST'].includes(krit.pos)?krit.pos:'',alterBis:clamp(+krit.alterBis||40,16,40),abloeseBis:Math.max(0,+krit.abloeseBis||0),region:krit.region==='ausland'?'ausland':'inland'};
+  S.auftraege=[...(S.auftraege||[]),{art:'suche',scout:x.id,krit:k,kand:[],gesehen:[],von:absTag(S.tag)}];news(`Suchauftrag an ${x.n}: ${k.region==='ausland'?'Ausland':'Inland'}, ${k.pos||'alle Positionen'}, bis ${k.alterBis} Jahre${k.abloeseBis?`, Ablöse bis ${k.abloeseBis} Mio €`:''}.`);return'';}
 function auftragEnde(scoutId){S.auftraege=(S.auftraege||[]).filter(a=>a.scout!==scoutId);}
 // Aufträge von Scouts, die nicht mehr für dich arbeiten, fallen weg (Entlassung, Vertragsende)
 function auftraegeAufraeumen(){S.auftraege=(S.auftraege||[]).filter(a=>{const x=scoutVon(a.scout);return x&&x.team===S.my;});}
 function kenntnisPlus(p,x,f){const P=RSC.proWoche,g=x?P.basis*(P.q[0]+P.q[1]*x.q)*gebietFaktor(x,p)*f:f,S0=S.kenntnis=S.kenntnis||{},e=S0[p.id]||(S0[p.id]={k:grundKenntnis(p),s:[]});
   e.k=Math.min(100,Math.max(e.k,grundKenntnis(p))+g);if(x&&!e.s.includes(x.id))e.s.push(x.id);}
 // Bericht als Nachricht (K18 §4.5): Spanne, Talent, Merkmale, Empfehlung
-function bericht(p,x){const s=staerkeSicht(p),m=merkmaleSicht(p),t=p.team>=0&&S.teams[p.team]?S.teams[p.team].name:'vereinslos';
+function bericht(p,x){const s=staerkeSicht(p),m=merkmaleSicht(p),t=vereinName(p);
   news(`Scoutbericht von ${x.n}: ${p.n} (${t}, ${p.age}), Stärke etwa ${s.lo}–${s.hi}${p.age<=23?`, Talent ${stars(p)}`:''}${m.liste.length?`, ${m.liste.map(k=>RP.merkmale[k].name).join(', ')}`:''}. Empfehlung: ${empfehlung(p)}.`,'tr');}
-// Suchauftrag je Woche: vier neue Namen nach den Kriterien, beobachtet mit halber Wirkung, die besten acht nach Einschätzung bleiben auf der Liste
+// Suchauftrag je Woche: vier neue Namen nach den Kriterien, beobachtet mit halber Wirkung, die besten acht nach Einschätzung bleiben auf der Liste.
+// Region Inland: deutsche Vereine und Vereinslose. Region Ausland: der Auslandspool (K32).
 function suchWoche(a,x,beob,xi){const C=RSC.suche,k=a.krit,gesehen=new Set(a.gesehen);
-  const pool=S.pl.filter(p=>p.team!==S.my&&p.team>=-1&&(p.team<0||aktiv(S.teams[p.team]))&&(!k.pos||p.pos===k.pos)&&p.age<=k.alterBis&&!gesehen.has(p.id)&&(!k.abloeseBis||askPrice(p,xi)<=k.abloeseBis*1e6))
+  const pool=(k.region==='ausland'?auslandSpieler():S.pl.filter(p=>p.team!==S.my&&p.team>=-1&&(p.team<0||aktiv(S.teams[p.team])))).filter(p=>(!k.pos||p.pos===k.pos)&&p.age<=k.alterBis&&!gesehen.has(p.id)&&(!k.abloeseBis||askPrice(p,xi)<=k.abloeseBis*1e6))
     .sort((p,q)=>publikMitte(q)-publikMitte(p));
   pool.slice(0,C.jeWoche).forEach(p=>{kenntnisPlus(p,x,C.anteil);beob.add(p.id);a.gesehen.push(p.id);});
   a.kand=a.gesehen.map(id=>PIX.get(id)).filter(p=>p&&p.team!==S.my).sort((p,q)=>staerkeSicht(q).mitte-staerkeSicht(p).mitte).slice(0,C.kandidaten[1]).map(p=>p.id);}
 // Woche (montags): Aufträge, Kosten, Berichte; Kenntnis verblasst ohne Beobachtung (2 je Monat)
 function scoutingWoche(){S.kenntnis=S.kenntnis||{};const beob=new Set();let xi=null;
-  (S.auftraege||[]).forEach(a=>{const x=scoutVon(a.scout);if(!x||x.team!==S.my){a.ende=1;return;}money('Scouting',-RSC.kosten.inland);
-    if(a.art==='spieler'){const p=PIX.get(a.pid);if(!p||p.team===S.my){a.ende=1;return;}kenntnisPlus(p,x,1);beob.add(p.id);if(--a.rest<=0){a.ende=1;bericht(p,x);}}
-    else{if(!xi){xi=new Set();S.teams.forEach(t=>{if(aktiv(t))bestXI(t.id,t.form).forEach(id=>xi.add(id));});}suchWoche(a,x,beob,xi);}});
+  (S.auftraege||[]).forEach(a=>{const x=scoutVon(a.scout);if(!x||x.team!==S.my){a.ende=1;return;}
+    if(a.art==='spieler'){const p=PIX.get(a.pid);if(!p||p.team===S.my){a.ende=1;return;}money('Scouting',-reiseKosten(istAusland(p)));kenntnisPlus(p,x,1);beob.add(p.id);if(--a.rest<=0){a.ende=1;bericht(p,x);}}
+    else{money('Scouting',-reiseKosten(a.krit.region==='ausland'));if(!xi&&a.krit.region!=='ausland'){xi=new Set();S.teams.forEach(t=>{if(aktiv(t))bestXI(t.id,t.form).forEach(id=>xi.add(id));});}suchWoche(a,x,beob,xi);}});
   S.auftraege=(S.auftraege||[]).filter(a=>!a.ende);
   for(const id in S.kenntnis){if(beob.has(+id))continue;const p=PIX.get(+id),e=S.kenntnis[id];if(!p||p.team===S.my){delete S.kenntnis[id];continue;}
     e.k-=RSC.verblassen*7/30;if(e.k<=grundKenntnis(p))delete S.kenntnis[id];}}

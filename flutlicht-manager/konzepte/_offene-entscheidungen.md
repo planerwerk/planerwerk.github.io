@@ -216,7 +216,7 @@ Bei der Umsetzung (U7c):
 9. **Relegation:** Das Rückspiel hat bei Gleichstand in der Summe Verlängerung und Elfmeterschießen aus der Engine, auch live. Das Los bleibt nur für alte Spielstände. Echt setzt sich der Bundesligist seit 2009 in etwa 80 % durch (13 von 16 bis 2024, Sky), im Spiel sind es etwa 50 %, weil der 16. der 1. Liga und der 3. der 2. Liga in unserer Welt fast gleich stark sind (Konsistenzprüfung AI5).
 10. **Supercup** ab der zweiten Saison (für die erste fehlt die Vorsaison im Spiel): Meister gegen Pokalsieger am Samstag vor dem 1. Spieltag beim Meister, sonst gegen den Vizemeister, wie 2024 Leverkusen gegen Stuttgart. Bei Gleichstand direkt Elfmeterschießen, seit 2010 gibt es keine Verlängerung. Karten und Sperren zählen wie im Pokal, Tore nicht zur Torjägerliste. Noch ohne Prämie (K23).
 11. **Zweitmannschaften:** Spielt die erste Mannschaft in derselben Liga, muss die Zweite eine Liga tiefer, und der beste Absteiger dieser Liga bleibt drin. Die echte Regel ist weiter nicht geprüft (Nr. 4).
-12. **Länderspiele noch nicht gebaut:** Spieler haben noch keine Nationalität (kommt mit K32 und dem Auslandspool, K03). Ohne sie gibt es keine Nominierung. Ebenfalls offen: Spielverlegung auf Antrag, Rotation der Favoriten in Runde 1 und 2, Pokal an Dienstag und Mittwoch, Prämien für den Supercup.
+12. **Länderspiele noch nicht gebaut:** Seit U9b haben alle Spieler eine Nationalität, die Nationen-Tabelle liegt vor. Vorher: Spieler haben noch keine Nationalität (kommt mit K32 und dem Auslandspool, K03). Ohne sie gibt es keine Nominierung. Ebenfalls offen: Spielverlegung auf Antrag, Rotation der Favoriten in Runde 1 und 2, Pokal an Dienstag und Mittwoch, Prämien für den Supercup.
 13. **Lernstufen (K36):** Pokal, Relegation und Supercup laufen ab Stufe 1 (nur Termine und Ergebnisse). Die Auslosung ist ab Stufe 1 ein Moment. Spielverlegung beantragen kommt später auf Stufe 4, wenn es sie gibt.
 
 ## K14 – Stimmung, Selbstvertrauen, Kabine
@@ -326,7 +326,17 @@ Bei der Umsetzung (U9a):
 12. **Scouts im Stab:** vier Plätze, Start nach Ansehen (1, ab 60 zwei, ab 80 drei).
 13. **Kenntnis gehört dem Verein,** beim Jobwechsel beginnst du neu.
 14. **Lernstufen:** Beobachten ab C, Scouts ab B, Suchauftrag ab A.
-15. **Noch nicht gebaut:** Unsicherheit der Computer-Vereine, Gegnerbeobachtung, Ereignisse, Ausland, Jugend.
+15. **Noch nicht gebaut:** Unsicherheit der Computer-Vereine, Gegnerbeobachtung, Ereignisse, Jugend. Ausland seit U9b gebaut.
+
+Bei der Umsetzung (U9b), ausführlich in K18 §12 Nr. 17–24:
+17. **Grundkenntnis Ausland 5,** Spanne ohne Scout etwa ±10, Merkmale unbekannt.
+18. **Gebiet der Scouts wirkt:** im eigenen Gebiet 1,3-fach, außerhalb 0,8-fach. Das Gebiet steht in der Stab-Ansicht.
+19. **Reisekosten Ausland** 15.000 € je Woche, auch für den Suchauftrag im Ausland.
+20. **Suchauftrag mit Region** (Inland oder Ausland).
+21. **Ausland als eigener Filter** im Transfermarkt, nicht in der Liste „alle“.
+22. **Nationalität** auf jeder Spielerkarte und im Transfermarkt.
+23. **Lernstufen:** im Ausland beobachten und kaufen ab B, Suchauftrag Ausland ab A.
+24. **Offen:** Die Ablöseforderung verrät den wahren Wert (U10).
 
 ## K19 – Transfers I
 Datei: `konzepte/K19-transfers.md`
@@ -445,6 +455,25 @@ Datei: `konzepte/K32-spielwelt.md`
 1. ~~Vereinsgruppen~~ **Entschieden am 8.11.:** echte Auslandsvereinsnamen, erzeugte Spieler, nur die Namen werden gepflegt.
 2. **Keine automatische Nachregelung** der Weltstärke im Spiel. Das Gleichgewicht wird über Tests kalibriert (K02: kein Gummiband).
 3. **Zwölf Länder** im Pool, Nationen-Tabelle für alle Länder der Welt (für Nationalitäten der Spieler).
+
+Bei der Umsetzung (U9b, 11.11.), ausführlich in K32 §12 Nr. 4–20:
+4. **208 echte Vereine in zwölf Ländern:** zehn Länder mit der vollständigen höchsten Liga 2026/27, Skandinavien und Osteuropa als Auswahl. Stufe, Ansehen und Finanzkraft von mir geschätzt.
+5. **Kern je Verein** 10, 8 oder 6 Spieler nach Stufe, mit festen Plätzen je Position und ein bis zwei Talentplätzen. Zusammen 1.664 Poolspieler.
+6. **Stärke und Talent nach Ansehen** des Vereins, Talent begrenzt (Kernspieler höchstens Grundstärke + 6), damit Weltklasse selten bleibt.
+7. **Pool getrennt gespeichert** (`S.ausland.pl`, eigener Nummernkreis), nicht in `S.pl`.
+8. **Eigener Zufallsstrom:** Die deutsche Welt ist mit und ohne Pool gleich.
+9. **Vorlauf von sechs Saisons** beim Aufbau, damit der Pool im Gleichgewicht startet.
+10. **Entwicklung** nach K03 mit fester Spielpraxis (80, Talente 45), Form wandert um die Mitte.
+11. **Saisonwechsel des Pools:** Karriereende, Abgang aus dem Kern (zu schwach ab 24, Los ab 31), Wechsel zu größeren Auslandsvereinen, Lücken aus dem übrigen Kader.
+12. **Nationalität im Pool:** einheimisch 45, 60 oder 72 % je Stufe, Namen je Sprachraum.
+13. **Kauf im Ausland:** Ablöse = Marktwert × (0,8 + 0,6 × Finanzkraft/100), Wechselbereitschaft −5, Deutsche im Ausland +10.
+14. **Verkauf ins Ausland:** 30 % der Angebote für deine Spieler kommen aus dem Ausland, Budget = Finanzkraft² × 12.000 €.
+15. **Erfundene Spieler deutscher Vereine:** Nationalität aus dem Nachnamen (deutscher Name 93 % Deutschland, fremder Name 50 % Herkunftsland).
+16. **Echte Spieler:** Nationalität aus den Wikipedia-Kadern, bei Doppelstaatlern die erste Flagge. Vier Bielefelder mit zwei Flaggen als Deutsche.
+17. **Nationen-Tabelle** mit 148 Nationen und dem Rang vom 7. Oktober 2026, nicht alle Länder der Welt.
+18. **Poolspieler schlank gespeichert** (ohne Sperren, Karten, berechnete Eigenschaften), Spielstand unter 3 MB.
+19. **Lernstufen:** Auslandsmarkt ansehen frei, im Ausland beobachten und kaufen ab B, Suchauftrag Ausland ab A.
+20. **Noch nicht gebaut:** Handel der Computer-Vereine mit dem Ausland (U11), Integration, Deutschkenntnisse, Heimweh, Landsleute, Länderspiele, Ereignisse, Europapokal.
 
 ## K34 – Statistik und Historie
 Datei: `konzepte/K34-statistik.md`

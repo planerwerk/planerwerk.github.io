@@ -6,7 +6,7 @@ function sternZahl(p){const d=p.pot-p.str,st=RP.sterne;return d>=st[0]?4:d>=st[1
 // Angezeigte Sterne mit Schätzfehler (K03): Das wahre Talent kennt niemand genau
 function stars(p){const n=clamp(sternZahl(p)+sternFehler(p),1,4);return '★★★★'.slice(0,n)+'☆☆☆☆'.slice(n);}
 const teamLevel=tid=>{const s=squad(tid).map(p=>p.str).sort((a,b)=>b-a).slice(0,RP.niveauSpieler);return s.length?s.reduce((a,b)=>a+b,0)/s.length:RP.niveauLeer;};
-function askPrice(p,xiSet){const v=value(p);if(p.team<0)return 0;if(p.list)return p.ask||v;const t=S.teams[p.team];const inXI=xiSet?xiSet.has(p.id):bestXI(t.id,t.form).includes(p.id);return Math.round(v*(inXI?RM.forderung.stammspieler:RM.forderung.sonst)/RM.runden)*RM.runden;}
+function askPrice(p,xiSet){const v=value(p);if(p.team<0)return 0;if(istAusland(p))return auslandPreis(p);if(p.list)return p.ask||v;const t=S.teams[p.team];const inXI=xiSet?xiSet.has(p.id):bestXI(t.id,t.form).includes(p.id);return Math.round(v*(inXI?RM.forderung.stammspieler:RM.forderung.sonst)/RM.runden)*RM.runden;}
 const extDemand=p=>{const g=RM.gehalt;return Math.round(salaryFor(p.str)*(g.basis+p.seed*g.zufall)*(p.age>=g.altAb?g.altFaktor:1)/1000)*1000;};
 const kreditRahmen=t=>(RF.kreditRahmen.basis+t.rep*RF.kreditRahmen.jeAnsehen)*(t.id===S.my?stufe().kredit:1);
 // Schwierigkeit (K02 §5.4): Spielstände ohne Angabe gelten als „Normal“
@@ -22,7 +22,7 @@ function zuschauerSpanne(t,preis){const Z=RF.zuschauer,ref=Z.refBasis+t.rep*Z.re
   const reps=S.teams.filter(x=>x.lg===t.lg&&x.id!==t.id).map(x=>x.rep),f=rep=>t.fans*pf*ff*(Z.gegnerBasis+rep/100*Z.gegnerFaktor)*lf;
   return[Math.round(Math.min(t.cap,f(Math.min(...reps))*Z.zufallBasis)),Math.round(Math.min(t.cap,f(Math.max(...reps))*(Z.zufallBasis+Z.zufallSpanne)))];}
 
-function mkPlayer(o){const age=o.age,str=o.str,T=RP.talent;const p={id:S.pid++,n:o.n||rname(),pos:o.pos,age,str,pot:o.pot||Math.round(str+riA((T.find(x=>age<=x[0])||[0,RP.talentSonst])[1])),form:RP.startForm,fit:riA(RP.startFitness),ko:riA(RP.startKondition),sv:0,sp:RP.startSpielpraxis,ent:S.tag,sw:Math.round(str),team:o.team,inj:0,sperre:{liga:{rot:0,gelb:0},pokal:{rot:0,gelb:0}},kt:{liga:0,pokal:0},g:0,pg:0,apps:0,ct:o.ct||riA(RP.vertrag),list:0,ask:0,seed:R()};p.sal=salaryFor(p.str);spielerStart(p);return p;}
+function mkPlayer(o){const age=o.age,str=o.str,T=RP.talent;const p={id:o.id!=null?o.id:S.pid++,n:o.n||rname(),pos:o.pos,age,str,pot:o.pot||Math.round(str+riA((T.find(x=>age<=x[0])||[0,RP.talentSonst])[1])),form:RP.startForm,fit:riA(RP.startFitness),ko:riA(RP.startKondition),sv:0,sp:RP.startSpielpraxis,ent:S.tag,sw:Math.round(str),team:o.team,inj:0,sperre:{liga:{rot:0,gelb:0},pokal:{rot:0,gelb:0}},kt:{liga:0,pokal:0},g:0,pg:0,apps:0,ct:o.ct||riA(RP.vertrag),list:0,ask:0,seed:R()};p.sal=salaryFor(p.str);spielerStart(p);p.nat=o.nat||natAusName(p);return p;} // Nationalität (K03): echte Spieler aus den Daten, erfundene aus dem Nachnamen
 const lgIds=lg=>S.teams.filter(t=>t.lg===lg).map(t=>t.id);
 const grundStaerke=rep=>RW.grund.basis+rep*RW.grund.jeAnsehen;
 function buildWorld(seed){const W=RW;
@@ -34,7 +34,7 @@ function buildWorld(seed){const W=RW;
     const t={id:i,name:c.name,sh:c.kurz,lg:c.liga,region:c.region,zweite:c.zweite?VEREINE.findIndex(v=>v.kurz===c.zweite):-1,ewig3:c.ewig3||0,abstieg3:c.abstieg3||0,rep:c.ansehen,cap:c.plaetze,fans:c.fans,col:c.farbe,cash:Math.round(W.konto.basis+c.ansehen*c.ansehen*W.konto.jeAnsehen2),form:pick(W.startFormationen),tac:'N',ein:'N',price:Math.round(W.ticket.basis+c.ansehen*W.ticket.jeAnsehen),logen:0,shop:0,youth:W.startJugend,expPos:W.startZiel,lastPos:W.startZiel};
     S.teams.push(t);if(c.liga>3)return;
     const real=KADER[c.kurz]||[], base=grundStaerke(c.ansehen), quota=real.length>=W.kaderVollAb?W.sollVoll:W.sollDuenn, st=W.stammplaetze, have={TW:0,AB:0,MF:0,ST:0};
-    real.forEach(([n,pos,age,str])=>{const p=mkPlayer({n,pos,age,str,team:i});if(age<=W.jungeEchte.bisAlter)p.pot=str+riA(W.jungeEchte.talent);addP(p);have[pos]++;});
+    real.forEach(([n,pos,age,str,nat])=>{const p=mkPlayer({n,pos,age,str,team:i,nat});if(age<=W.jungeEchte.bisAlter)p.pot=str+riA(W.jungeEchte.talent);addP(p);have[pos]++;});
     for(const pos in quota)for(let k=have[pos];k<quota[pos];k++){const starter=k<st[pos];addP(mkPlayer({pos,age:riA(W.ersatzAlter),str:Math.round(starter?base+riA(W.stammStreuung):base-W.ersatzAbschlag+riA(W.ersatzStreuung)),team:i}));}
     const N=W.nachwuchs;if(real.length<N.wennUnter)for(let k=0;k<N.anzahl;k++){const p=mkPlayer({pos:pick(N.positionen),age:riA(N.alter),str:Math.round(base-N.abschlag+riA(N.streuung)),team:i});p.pot=Math.round(base+riA(N.talent));addP(p);}
   });
@@ -42,7 +42,8 @@ function buildWorld(seed){const W=RW;
   const sp=spielplanFuer(S.season);S.fx=sp.fx;S.plan.zeit=sp.zeit;initCup();
   mitStrom(strom('profil'),()=>S.teams.forEach(t=>{t.stil=profilStil();})); // Lieblingsstil jedes Vereins (K06 §7, bis K31)
   S.teams.forEach(t=>{t.urlaubFertig=true;});S.pl.forEach(p=>{p.koVor=p.ko;});
-  mitStrom(strom('stab'),stabAufbau);mitStrom(strom('scouts'),scoutsAufbau);kabineStart(); // Trainerstab nach Ansehen (K16), Kabine mit Rollen, Kapitän und Startstimmung (K14) // Start Anfang Juli: Urlaub vorbei, Laufplan bis zum Trainingsauftakt (K12a)
+  mitStrom(strom('stab'),stabAufbau);mitStrom(strom('scouts'),scoutsAufbau);kabineStart();mitStrom(strom('ausland'),auslandAufbau); // Auslandspool zuletzt und mit eigenem Strom (K32 §3.1)
+  // Trainerstab nach Ansehen (K16), Kabine mit Rollen, Kapitän und Startstimmung (K14) // Start Anfang Juli: Urlaub vorbei, Laufplan bis zum Trainingsauftakt (K12a)
 }
 // Neuer Kader für einen Verein, der aus der Regionalliga aufsteigt (alles erfundene Spieler)
 function kaderErzeugen(t){const W=RW,base=grundStaerke(t.rep),st=W.stammplaetze;

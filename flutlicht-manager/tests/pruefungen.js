@@ -13,7 +13,7 @@ module.exports=()=>{
    if(!['TW','AB','MF','ST'].includes(p.pos))e.push('Pos '+p.pos);
    if(p.fit<0||p.fit>100)e.push('Frische außerhalb '+p.fit);if(p.form<0||p.form>20)e.push('Form außerhalb '+p.form);if(p.ko<0||p.ko>100)e.push('Kondition außerhalb '+p.ko);if(p.sp<0||p.sp>100)e.push('Spielpraxis außerhalb '+p.sp);if(p.sv<-3||p.sv>3)e.push('Selbstvertrauen außerhalb '+p.sv);if(p.str<20||p.str>99)e.push('Stärke außerhalb '+p.str);
    if(p.inj<0||(p.sperre&&['liga','pokal'].some(w=>p.sperre[w].rot<0||p.sperre[w].gelb<0)))e.push(`negative Ausfallzeit ${p.n}`);});
-  if(PIX.size!==S.pl.length)e.push(`PIX ${PIX.size} vs ${S.pl.length}`);
+  const pool=S.ausland?S.ausland.pl:[];if(PIX.size!==S.pl.length+pool.length)e.push(`PIX ${PIX.size} vs ${S.pl.length}+${pool.length}`);
   S.pl.forEach(p=>{if(PIX.get(p.id)!==p)e.push('PIX veraltet '+p.id);});
   S.teams.forEach(t=>{for(const k of ['cash','rep','cap','fans','price','logen','shop','youth'])if(!isFinite(t[k]))e.push(`Team ${t.name} ${k}=${t[k]}`);
    const n=S.pl.filter(p=>p.team===t.id).length;if(t.lg>3&&n)e.push(`Regionalligist ${t.name} hat ${n} Spieler`);if(t.lg<=3&&t.id!==S.my&&(n<15||n>36))e.push(`Kader ${t.name}: ${n}`);});
@@ -45,6 +45,14 @@ module.exports=()=>{
   // Scouting (K18): Kenntnis 0–100, Aufträge nur mit eigenen Scouts
   for(const id in (S.kenntnis||{})){const k=S.kenntnis[id].k;if(!(k>=0&&k<=100))e.push('Kenntnis außerhalb 0–100');}
   (S.auftraege||[]).forEach(a=>{const x=(S.stab||[]).find(y=>y.id===a.scout);if(!x||x.team!==S.my||x.r!=='scout')e.push('Auftrag ohne eigenen Scout');});
+  // Auslandspool und Nationalität (K32, K03): Pool getrennt von den Ligen, Kern 6–10 je Verein, jeder Spieler mit Nation aus der Tabelle
+  S.pl.forEach(p=>{if(!p.nat||!nation(p.nat))e.push(`Spieler ${p.n} ohne Nationalität (${p.nat})`);});
+  if(S.ausland){const zahl={};pool.forEach(p=>{if(ids.has(p.id))e.push('Poolspieler mit Nummer eines Ligaspielers '+p.id);if(PIX.get(p.id)!==p)e.push('PIX kennt Poolspieler nicht '+p.id);
+     if(!(p.team>=2000)||!S.ausland.v[p.team-2000])e.push(`Poolspieler ${p.n} team=${p.team}`);if(!p.nat||!nation(p.nat))e.push(`Poolspieler ${p.n} ohne Nationalität`);
+     for(const k of ['str','pot','form','fit','ko','sp','sal','age','ct'])if(typeof p[k]!=='number'||!isFinite(p[k]))e.push(`Poolspieler ${p.n} ${k}=${p[k]}`);
+     if(p.str<20||p.str>99||p.form<0||p.form>20)e.push(`Poolspieler ${p.n} Werte außerhalb`);zahl[p.team]=(zahl[p.team]||0)+1;});
+    S.ausland.v.forEach(v=>{const n=zahl[v.id]||0;if(n<3||n>14)e.push(`Kern ${v.name}: ${n}`);});
+    (S.offers||[]).forEach(o=>{if(o.tid>=2000&&!S.ausland.v[o.tid-2000])e.push('Angebot von unbekanntem Auslandsverein');});}
   return e;};
  window.__scan=function(){const t=document.getElementById('app').innerText+' || '+document.getElementById('ov').innerText;const re=/undefined|NaN|\[object|\bnull\b|Infinity/;const i=t.search(re);return i<0?'':t.slice(Math.max(0,i-70),i+40).replace(/\s+/g,' ');};
 };

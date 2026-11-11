@@ -78,13 +78,15 @@ function spielerStart(p){const P=RP.persoenlichkeit;p.ch={};P.werte.forEach(k=>p
   p.mk={};const M=RP.startMerkmale,ziel=stufenWert(M.staerken,p.str),anz=Math.floor(ziel)+(R()<ziel%1?1:0),gw=Object.assign({},M.gewichte[p.pos]);
   for(let i=0;i<Math.min(anz,platzStaerken(p));i++){const k=waehleGewichtet(gw);if(!k||gw[k]==null)break;p.mk[k]=1;delete gw[k];if(!Object.keys(gw).length)break;}
   if(p.pos!=='TW'&&R()<M.beidfuessig&&Object.keys(p.mk).length<platzStaerken(p))p.mk.beidfuessig=1;
-  const sw=stufenWert(M.schwaechen,p.str),opts=Object.entries(RP.merkmale).filter(([k,m])=>m.schwaeche&&m.g.includes(p.pos)&&!Object.entries(RP.merkmale).some(([k2,m2])=>m2.gegen===k&&p.mk[k2])).map(([k])=>k);
+  const sw=stufenWert(M.schwaechen,p.str),ME=MERKMAL_LISTE||(MERKMAL_LISTE=Object.entries(RP.merkmale)),opts=ME.filter(([k,m])=>m.schwaeche&&m.g.includes(p.pos)&&!ME.some(([k2,m2])=>m2.gegen===k&&p.mk[k2])).map(([k])=>k);
   if(opts.length&&R()<sw)p.mk[pick(opts)]=1;
   p.ls=null;p.wiv=0;p.vt=p.team;p.ekw=riA(RP.entdeckenWochen);p.tf=ri(-RP.talentSchaetzung.fehler,RP.talentSchaetzung.fehler);eigenschaftenNeu(p);}
 // Eigenschaften aus der Persönlichkeit. Gespeichert in p.eig (Liste), neu berechnet beim Start und am 1. Juli (Alter, Persönlichkeit).
 function eigenschaftenNeu(p){p.eig=eigenschaftenBerechnen(p);}
 const eigenschaften=p=>p.eig||(p.eig=eigenschaftenBerechnen(p));
-function eigenschaftenBerechnen(p){if(!p.ch)return[];return Object.entries(RP.eigenschaften).filter(([k,e])=>Object.entries(e.wenn).every(([w,[a,b]])=>p.ch[w]>=a&&p.ch[w]<=b)&&(!e.abAlter||p.age>=e.abAlter)).map(([k])=>k);}
+let MERKMAL_LISTE=null,EIGENSCHAFT_LISTE=null; // feste Listen aus den Regeln, einmal aufgebaut (spart Zeit beim Erzeugen vieler Spieler)
+function eigenschaftenBerechnen(p){if(!p.ch)return[];const EL=EIGENSCHAFT_LISTE||(EIGENSCHAFT_LISTE=Object.entries(RP.eigenschaften).map(([k,e])=>[k,e,Object.entries(e.wenn)]));
+  return EL.filter(([k,e,w])=>w.every(([x,[a,b]])=>p.ch[x]>=a&&p.ch[x]<=b)&&(!e.abAlter||p.age>=e.abAlter)).map(([k])=>k);}
 const hatEig=(p,k)=>eigenschaften(p).includes(k);
 // Was du über einen Spieler weißt: Eigenschaften eigener Spieler nach einigen Wochen, nur solche, die im Spiel wirken
 function bekannteEigenschaften(p){if(p.team!==S.my||p.wiv<p.ekw)return[];return eigenschaften(p).filter(k=>RP.eigenschaftenWirksam.includes(k));}

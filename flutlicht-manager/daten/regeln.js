@@ -52,7 +52,37 @@ const REGELN={
     jungeEchte:{bisAlter:0,talent:[0,0]}, // ersetzt durch spieler.talent (gilt jetzt für echte und erfundene Spieler)
     nachwuchs:{wennUnter:22,anzahl:2,positionen:['AB','MF','ST'],alter:[17,19],abschlag:15,streuung:[-3,3],talent:[-4,8]},
     vereinslose:{anzahl:45,positionen:['TW','AB','AB','MF','MF','ST','ST'],alter:[21,33],staerke:[56,72]},
-    amateurStaerke:[46,56]           // Stärke der Amateurklubs im Pokal (4. bis 6. Liga), jede Saison neu
+    amateurStaerke:[46,56],          // Stärke der Amateurklubs im Pokal (4. bis 6. Liga), jede Saison neu
+    // Nationalität (K03, K32 §3.2, U9b). Echte Spieler: fünfte Spalte in daten/spieler.js. Erfundene Spieler der deutschen Vereine: aus dem Nachnamen
+    // (daten/namen.js, NACHNAMEN_HERKUNFT), fest je Spieler und ohne Zufallsstrom. Deutscher Nachname: mit 93 % Deutschland, sonst eine Nation aus „sonst“.
+    // Fremdsprachiger Nachname: mit 50 % das Land der Herkunft, sonst Deutschland.
+    nation:{heimat:'GER',deutscherName:0.93,fremderName:0.5,sonst:['AUT','SUI','DEN','NED','POL','FRA','CRO','USA']},
+    // Auslandspool (K32 §3.1, §11, U9b): Vereine aus daten/ausland.js, je Verein ein Kern erzeugter Spieler. Der übrige Kader ist nur die Grundstärke aus dem Ansehen (welt.grund).
+    ausland:{
+      kern:{1:10,2:8,3:6},             // Kernspieler je Verein nach Stufe (1 Spitze, 2 Mitte, 3 unten)
+      positionen:['TW','AB','MF','ST','AB','MF','ST','MF','AB','ST'], // Positionen im Kern, der Reihe nach
+      talente:{1:2,2:2,3:1},           // so viele Plätze im Kern gehören jungen Talenten (bis 21 Jahre)
+      staerke:[-3,5],                  // Kernspieler: Grundstärke des Vereins + Streuung
+      potMax:6,                        // Talent (pot) eines Kernspielers höchstens Grundstärke + 6
+      alter:[22,31],
+      talent:{alter:[17,20],abschlag:[5,11],pot:[1,8],jungBis:21}, // Talent: Grundstärke − Abschlag, Talent (pot) = Grundstärke + pot
+      einheimisch:{1:0.45,2:0.6,3:0.72}, // Anteil der Spieler aus dem Land des Vereins je Stufe (überwiegend aus dem Land, K32 §5.2)
+      legionaere:{BRA:8,ARG:6,FRA:7,ESP:5,POR:4,NED:4,BEL:3,ENG:2,ITA:2,GER:4,AUT:2,SUI:2,DEN:3,SWE:2,NOR:2,CRO:3,SRB:3,POL:2,CZE:1,UKR:2,TUR:2,
+        SEN:3,CIV:3,MLI:2,CMR:2,GUI:1,COD:2,NGA:4,GHA:3,MAR:3,ALG:2,JPN:2,USA:2,URU:2,COL:3}, // Gewichte für die Nation der übrigen Spieler
+      praxis:{stamm:80,talent:45},     // angenommene Spielpraxis (bleibt fest, Poolspieler haben keine Spiele)
+      formZufall:0.5,                  // Form wandert je Woche um bis zu ±0,5 und zieht wie überall zur Mitte
+      raus:7,rausAbAlter:24,           // im Sommer: wer ab diesem Alter mehr als 7 unter der Grundstärke seines Vereins liegt, fällt aus dem Kern
+      altRaus:{ab:31,jeJahr:0.12},     // im Sommer: ab 31 fällt ein Spieler mit (Alter − 30) × 12 % aus dem Kern (Bank, kleinere Liga), zusätzlich zum Karriereende
+      aufstieg:{ab:6,chance:0.5,fenster:3}, // im Sommer: wer mehr als 6 darüber liegt, wechselt mit 50 % zu einem größeren Auslandsverein (dessen Grundstärke höchstens 3 unter seiner Stärke)
+      forderung:[0.8,0.6],             // Ablöseforderung = Marktwert × (0,8 + 0,6 × Finanzkraft/100): arme Vereine verkaufen günstiger (K32 §6)
+      budget:12000,                    // Transferbudget eines Auslandsvereins = Finanzkraft² × 12.000 € (Spielwert, K23)
+      angebote:{anteil:0.3,niveau:5},  // Anteil der Angebote für deine Spieler, die aus dem Ausland kommen; der Spieler darf höchstens 5 unter der Grundstärke des Käufers liegen
+      interesse:{fremd:-5,heimkehr:10},// Wechselbereitschaft zu dir: Spieler aus dem Ausland etwas geringer, Deutsche im Ausland höher (Rückkehr, K32 §8)
+      namenVersuche:6,                 // so oft wird ein Name neu gewürfelt, wenn es ihn im Pool schon gibt
+      // Vorlauf beim Aufbau der Welt: Der Pool durchläuft so viele Saisons in groben Schritten (Entwicklung, Karriereende, neue Talente), damit er im Gleichgewicht startet.
+      // Ohne Vorlauf wären alle Talente gleich jung und würden zusammen hochwachsen (Welle bei den Spielern ab Stärke 85 über etwa zwölf Saisons).
+      vorlauf:{saisons:6,schritte:3,tage:105}
+    }
   },
 
   spieler:{
@@ -297,7 +327,7 @@ const REGELN={
       arzt:{name:'Mannschaftsarzt',plaetze:1,gehalt:0.6,text:'Diagnosen (mit K10)'},physio:{name:'Physiotherapeut',plaetze:2,gehalt:0.4,text:'kürzere Ausfallzeiten'},
       video:{name:'Videoanalyst',plaetze:1,gehalt:0.5,text:'Spielvorbereitung wirkt doppelt (ab Qualität 10)'},standard:{name:'Standardtrainer',plaetze:1,gehalt:0.4,text:'Standard-Einheiten wirken stärker'},
       psycho:{name:'Sportpsychologe',plaetze:1,gehalt:0.5,text:'Selbstvertrauen erholt sich schneller, Nervenschwache leiden weniger'},
-      scout:{name:'Scout',plaetze:4,gehalt:0.35,text:'beobachtet Spieler und sucht Kandidaten (K18): schmalere Spannen, weniger Fehlkäufe'}},
+      scout:{name:'Scout',plaetze:4,gehalt:0.35,text:'beobachtet Spieler und sucht Kandidaten (K18): schmalere Spannen, weniger Fehlkäufe. Im eigenen Gebiet (Inland, Jugend oder Ausland) lernt er schneller, außerhalb langsamer'}},
     wirkung:{co:[0.85,0.015],coPlaetze:{basis:3,jeQualitaet:0.2,max:10},athletik:{risiko:-0.01,kondition:0.005},torwart:[0.85,0.015],physio:{ausfall:-0.01,max:0.25},
       video:{ab:10,bonus:1},standard:0.015,psycho:{erholung:0.05,nervenschwach:-0.025}},
     ohne:3,gehalt:{basis:{1:300000,2:120000,3:50000},steigung:0.15,runden:5000},

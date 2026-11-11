@@ -1,6 +1,6 @@
 # K32 – Spielwelt und Saisonwechsel
 
-Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12.
+Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12. **Auslandspool und Nationen umgesetzt in U9b** (11. November 2026, `js/ausland.js`, `daten/ausland.js`, `daten/nationen.js`, Test `tests/ausland.js`): 208 echte Auslandsvereine in zwölf Ländern, je Verein ein Kern von 6–10 erzeugten Spielern, Nationalität für alle Spieler, Entwicklung und Saisonwechsel des Pools, Kauf im Ausland, Verkauf ins Ausland. Der Rest (Karriereende nach 5.1, Trainerpool, Gleichgewicht der Ligen, Handel der Computer-Vereine mit dem Ausland) folgt in Welle 4 und mit U11. Abweichungen in Abschnitt 12.
 Hängt ab von: K03, K08, K31, K33 · Wird gebraucht von: K13 (Nominierungen), K16 und K28 (Trainerpool), K18 (Ausland), K19.
 Teile: **Auslandspool** in Welle 3 (vorgezogen, PLAN §2), der Rest in Welle 4. Der Unterbau (3. Liga, Regionalliga) steht in K32a.
 
@@ -147,6 +147,8 @@ welt:{
 
 `saison.karriereende` aus der heutigen `regeln.js` geht darin auf.
 
+**Gebaut in U9b** (`REGELN.welt.nation` und `REGELN.welt.ausland`, mit Kommentar je Wert): Kern je Stufe, Positionen, Talentplätze, Streuung der Stärke, Grenze für das Talent, Anteil der Einheimischen, Gewichte der Legionäre, angenommene Spielpraxis, Formzufall, Abgang aus dem Kern, Wechsel zu größeren Vereinen, Ablöseforderung, Budget, Anteil der Angebote aus dem Ausland, Wechselbereitschaft, Vorlauf.
+
 ## 12. Offene Fragen
 
 **Vorläufig entschieden** (von mir, ohne Rücksprache):
@@ -155,10 +157,33 @@ welt:{
 2. **Keine automatische Nachregelung** der Weltstärke im Spiel. Das Gleichgewicht wird über Tests kalibriert (K02: kein Gummiband).
 3. **Zwölf Länder** im Pool, Nationen-Tabelle für alle Länder der Welt (für Nationalitäten der Spieler).
 
+**Vorläufig entschieden bei der Umsetzung (U9b, 11. November 2026):**
+
+4. **Zwölf Länder, 208 Vereine:** England, Spanien, Italien (je 20), Frankreich, Niederlande, Portugal, Belgien, Türkei (je 18), Österreich, Schweiz (je 12) mit der vollständigen höchsten Liga 2026/27. Skandinavien (18: Dänemark, Schweden, Norwegen) und Osteuropa (16: Polen, Tschechien, Kroatien, Serbien, Ukraine) sind eine Auswahl der größten Vereine. Alle Namen sind per Websuche geprüft (englische Wikipedia, Saisonartikel der Ligen, abgerufen am 11.11.2026), in der im Deutschen üblichen Schreibweise. Stufe, Ansehen und Finanzkraft sind grobe Schätzungen von mir.
+5. **Kern nach Stufe:** Spitze 10, Mitte 8, unten 6 Spieler, zusammen 1.664 Poolspieler. Jeder Kern hat feste Plätze: einen Torwart, Abwehr, Mittelfeld und Sturm nach einer festen Reihenfolge, dazu zwei Talentplätze (unten einer) für Spieler bis 21 Jahre.
+6. **Stärke nach Ansehen:** Kernspieler liegen bei der Grundstärke des Vereins (48 + 0,4 × Ansehen, wie bei erfundenen Spielern deutscher Vereine) −3 bis +5, Talente 5–11 darunter. Das Talent (pot) hängt am Verein: Talente Grundstärke +1 bis +8, Kernspieler höchstens +6. Ohne diese Grenze wuchsen bei den Spitzenvereinen rund 30 Spieler ab Stärke 90 heran (bis 97). Jetzt sind es 7–16, der stärkste liegt bei 93–94 (Bundesliga zum Start: Kane 90).
+7. **Gespeichert getrennt von den Ligaspielern** in `S.ausland.pl`, nicht in `S.pl` (Abweichung von 3.1). Grund: Alle Schleifen über `S.pl` (Training, Spieltag, Kabine, Markt) setzen deutsche Vereine voraus. So bleiben sie unberührt und schnell. `PIX` kennt beide Listen, das Feld `team` ist die Kennung des Auslandsvereins (ab 2000). Poolspieler haben einen eigenen Nummernkreis (ab 1.000.000), damit neue Poolspieler die Nummern der Ligaspieler nicht verschieben.
+8. **Eigener Zufallsstrom:** Aufbau, Woche und Saisonwechsel des Pools laufen in eigenen Strömen. Die deutsche Welt ist mit und ohne Pool gleich: Zwei simulierte Saisons liefern nach U9b dieselben Ergebnisse wie davor.
+9. **Vorlauf beim Aufbau:** Der Pool durchläuft sechs Saisons in groben Schritten, bevor das Spiel beginnt. Ohne Vorlauf waren alle Talente gleich jung und wuchsen zusammen hoch (Spieler ab Stärke 85: von 100 auf 167 und zurück auf 87 über 13 Saisons). Mit Vorlauf startet der Pool im Gleichgewicht und bleibt dort (über sechs gespielte Saisons: Schnitt 77,7–77,8, Alter im Schnitt 26, 109–124 Spieler ab 85). Der Aufbau einer neuen Welt dauert mit Pool und Vorlauf etwa 0,3 statt 0,12 Sekunden.
+10. **Entwicklung:** je Woche nach K03 mit fester angenommener Spielpraxis (Kernspieler 80, Talente 45), Form wandert um ±0,5 und zieht zur Mitte. Poolspieler haben keine Spiele, keine Frische-Rechnung, keine Stimmung.
+11. **Saisonwechsel des Pools:** Alter +1, Karriereende nach der heutigen Regel (ab 34), dazu fällt aus dem Kern, wer ab 24 Jahren mehr als 7 unter der Grundstärke liegt oder wer ab 31 das Los zieht ((Alter − 30) × 12 %). Wer mehr als 6 über der Grundstärke liegt, wechselt mit 50 % zu einem größeren Auslandsverein. Lücken füllt der Verein aus dem übrigen Kader (ein neuer erzeugter Spieler). Das ist die vereinfachte Fassung von „kaufen und verkaufen wie Computer-Vereine“.
+12. **Nationalität im Pool:** einheimisch zu 45 % (Spitze), 60 % (Mitte), 72 % (unten), sonst eine Nation aus einer gewichteten Liste (darunter Deutschland für mögliche Rückkehrer). Die Namen kommen aus Namenslisten je Sprachraum (`daten/namen.js`), doppelte Namen werden vermieden.
+13. **Kauf im Ausland:** über dieselbe Spielerkarte wie im Inland. Die Ablöseforderung ist Marktwert × (0,8 + 0,6 × Finanzkraft/100): arme Vereine verkaufen unter Marktwert, reiche deutlich darüber. Die Wechselbereitschaft sinkt um 5 Punkte, bei Deutschen im Ausland steigt sie um 10 (Rückkehr).
+14. **Verkauf ins Ausland:** 30 % der Angebote für deine Spieler kommen von Auslandsvereinen, wenn der Spieler höchstens 5 unter deren Grundstärke liegt und das Budget reicht (Finanzkraft² × 12.000 €). Der Spieler zieht dann in den Pool um.
+15. **Nationalität erfundener Spieler der deutschen Vereine:** aus dem Nachnamen abgeleitet, fest je Spieler und ohne Zufallsstrom. Deutscher Nachname: 93 % Deutschland. Fremdsprachiger Nachname: 50 % das Land der Herkunft, sonst Deutschland. In der 3. Liga sind so etwa 76 % Deutsche.
+16. **Nationalität echter Spieler:** fünfte Spalte in `daten/spieler.js`, für alle 1.011 Spieler aus den Kadertabellen der Wikipedia (abgerufen am 11.11.2026). 474 spielen nicht für Deutschland. Bei Doppelstaatlern zählt die erste Flagge der Kadertabelle. Vier Spieler von Arminia Bielefeld, die dort mit zwei Flaggen stehen, sind als Deutsche eingetragen.
+17. **Nationen-Tabelle:** 148 Nationen mit Rang der FIFA-Weltrangliste vom 7. Oktober 2026 (Abweichung von Nr. 3: nicht alle Länder der Welt, sondern alle, deren Rang abrufbar war, und alle, die im Spiel vorkommen). Indonesien und Philippinen sind geschätzt, Bolivien ist erschlossen. Weitere Nationen lassen sich anhängen.
+18. **Spielstand:** Poolspieler werden ohne Sperren, Karten und berechnete Eigenschaften gespeichert, Stärke und Form mit zwei Nachkommastellen. Der Pool braucht etwa 740 KB, der ganze Spielstand bleibt über sechs Saisons unter 3 MB.
+19. **Lernstufen (K36):** Der Auslandsmarkt ist als Information frei. Im Ausland beobachten und kaufen ab der B-Lizenz (`ausland`), Suchauftrag im Ausland mit dem Suchauftrag ab A. Angebote aus dem Ausland gehören zu den Transfers (C).
+20. **Noch nicht gebaut:** Computer-Vereine kaufen im Ausland, Auslandsvereine kaufen bei Computer-Vereinen (beides U11, K31), Integration, Deutschkenntnisse, Heimweh und Landsleute (K03 §5.5, K14), Länderspiele (K13), die Ereignisse aus §8, Karriereende nach 5.1, Trainerpool, Europapokal (K37).
+
 **Noch zu recherchieren:** Abgänge der Bundesliga ins Ausland je Sommer, durchschnittliches Karriereende von Torhütern.
 
 ## Quellen
 
 - Auslandsspieler unsicher, Auslandspool vorgezogen: PLAN §2, `konzepte/_konsistenzpruefung.md` C4
+- Vereine der Auslandsligen 2026/27 (abgerufen am 11.11.2026): englische Wikipedia, Saisonartikel [Premier League](https://en.wikipedia.org/wiki/2026–27_Premier_League), [La Liga](https://en.wikipedia.org/wiki/2026–27_La_Liga), [Serie A](https://en.wikipedia.org/wiki/2026–27_Serie_A), [Ligue 1](https://en.wikipedia.org/wiki/2026–27_Ligue_1), [Eredivisie](https://en.wikipedia.org/wiki/2026–27_Eredivisie), [Primeira Liga](https://en.wikipedia.org/wiki/2026–27_Primeira_Liga), [Belgian Pro League](https://en.wikipedia.org/wiki/2026–27_Belgian_Pro_League), [Austrian Bundesliga](https://en.wikipedia.org/wiki/2026–27_Austrian_Football_Bundesliga), [Swiss Super League](https://en.wikipedia.org/wiki/2026–27_Swiss_Super_League), [Süper Lig](https://en.wikipedia.org/wiki/2026–27_Süper_Lig), [Danish Superliga](https://en.wikipedia.org/wiki/2026–27_Danish_Superliga), [Allsvenskan 2026](https://en.wikipedia.org/wiki/2026_Allsvenskan), [Eliteserien 2026](https://en.wikipedia.org/wiki/2026_Eliteserien), [Ekstraklasa](https://en.wikipedia.org/wiki/2026–27_Ekstraklasa), [Czech First League](https://en.wikipedia.org/wiki/2026–27_Czech_First_League), [HNL](https://en.wikipedia.org/wiki/2026–27_Croatian_Football_League), [Serbian SuperLiga](https://en.wikipedia.org/wiki/2026–27_Serbian_SuperLiga), [Ukrainian Premier League](https://en.wikipedia.org/wiki/2026–27_Ukrainian_Premier_League)
+- FIFA-Weltrangliste vom 7. Oktober 2026: [deutsche Wikipedia](https://de.wikipedia.org/wiki/FIFA-Weltrangliste) (Plätze 1–20) und die Verbandsartikel der englischen Wikipedia ([UEFA](https://en.wikipedia.org/wiki/UEFA), [CONMEBOL](https://en.wikipedia.org/wiki/CONMEBOL), [CAF](https://en.wikipedia.org/wiki/Confederation_of_African_Football), [AFC](https://en.wikipedia.org/wiki/Asian_Football_Confederation), [CONCACAF](https://en.wikipedia.org/wiki/CONCACAF))
+- Nationalität der echten Spieler: Kadertabellen der Vereinsartikel in der deutschen Wikipedia und der Saisonartikel 2026/27 in der englischen Wikipedia, abgerufen am 11.11.2026
 - Karriereende im Schnitt mit 33: K03, Quellen (SoccHealth-Studie laut Ärzte Zeitung)
 - Datenbanken der Community: `konzepte/_recherche-genre.md`, Abschnitte 4c und 4d

@@ -7,13 +7,13 @@ function fmt(n){const a=Math.abs(n);if(a>=1e6)return (n/1e6).toLocaleString('de-
 const de=(n,d=0)=>Number(n).toLocaleString('de-DE',{minimumFractionDigits:d,maximumFractionDigits:d});
 // S = Spielstand (wird gespeichert). Alles andere hier ist Zustand der Oberfläche.
 let S=null,PIX=new Map(),TAB='buero',CONF=null,LAST=null,SORT='pos',TLG=0,TDAY=null,BUSY=false;
-const TF={pos:'',lg:'',max:'',q:'',list:0};
+const TF={pos:'',lg:'',max:'',q:'',list:0,land:''};
 const app=document.getElementById('app'), ovEl=document.getElementById('ov');
-function reindex(){PIX=new Map(S.pl.map(p=>[p.id,p]));}
+function reindex(){PIX=new Map(S.pl.map(p=>[p.id,p]));if(S.ausland)S.ausland.pl.forEach(p=>PIX.set(p.id,p));} // Ligaspieler und Auslandspool (K32)
 function addP(p){S.pl.push(p);PIX.set(p.id,p);return p;}
 const myT=()=>S.teams[S.my];
 const squad=tid=>S.pl.filter(p=>p.team===tid);
-const tn=id=>id>=1000?S.am[id-1000].name:S.teams[id].name;
+const tn=id=>id>=AV0?avVon(id).name:id>=1000?S.am[id-1000].name:S.teams[id].name; // ab 2000 Auslandsvereine (js/ausland.js), ab 1000 Amateure
 const last=n=>n.split(' ').slice(-1)[0];
 function news(t,c=''){S.news.unshift({t,c,w:datumKurz(S.tag)});if(S.news.length>REGELN.spielstand.nachrichtenMax)S.news.length=REGELN.spielstand.nachrichtenMax;}
 function money(k,v){myT().cash+=v;S.fin[k]=(S.fin[k]||0)+v;}

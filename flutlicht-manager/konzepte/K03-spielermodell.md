@@ -495,7 +495,7 @@ Die bisherigen Einträge `training.wachstum`, `training.zufall`, `training.fitne
 - **Entwicklung der Stärke** in kleinen Schritten an jedem Spieltag. Die Form beschleunigt oder bremst sie: Tore in Serie, Paraden, Siegesserien gegen die Erwartung, und genauso umgekehrt (5.1, 5.2).
 - **Lernen im Spiel:** Szenen wie Ecken mit Torfolge zahlen auf Merkmale ein, Fehlschläge auf Schwächen (5.6).
 - **Charakter:** Bei echten Spielern wird abgeleitet, was sich aus Fakten belegen lässt, sonst Zufall. Später erzeugte Spieler bekommen nur Zufall (5.9).
-- **Nationalität** wird festgelegt (Feld `nat`). Wann die Daten nachgetragen werden, ist egal.
+- **Nationalität** wird festgelegt (Feld `nat`). Wann die Daten nachgetragen werden, ist egal. **Nachgetragen in U9b (11.11.):** Alle Spieler haben das Feld `nat` (FIFA-Kürzel, Tabelle in `daten/nationen.js`). Echte Spieler: fünfte Spalte in `daten/spieler.js`, aus den Kadertabellen der Wikipedia. Erfundene Spieler der deutschen Vereine: aus dem Nachnamen abgeleitet. Auslandspool: nach Land des Vereins (K32 §12 Nr. 12, 15, 16). Die Nationalität steht auf der Spielerkarte und im Transfermarkt. Deutschkenntnisse (`de`), Integration und Landsleute (3.4, 5.5) sind noch nicht gebaut, `landsleute()` und `gleicheSprache()` stehen dafür bereit.
 - **Positionen:** 14 feine Positionen in vier Gruppen, ergänzt um zentrales Mittelfeld, hängende Spitze und die Seiten (3.1a). Kein Libero.
 - **Fuß:** rechts oder links, deutlich mehr Rechtsfüße (77 %). „beidfüßig“ ist ein Merkmal.
 - **„Trainingsweltmeister“** in der umgangssprachlichen Bedeutung.

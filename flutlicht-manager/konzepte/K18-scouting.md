@@ -1,6 +1,6 @@
 # K18 – Scouting und Informationsnebel
 
-Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12. **Umgesetzt in U9a** (11. November 2026, `js/scouting.js`, Test `tests/scouting.js`): Kenntnis je Spieler, ehrliche Spannen für fremde Spieler, Merkmale nach Kenntnis, Scouts als Rolle im Stab mit Qualität, Gebiet und Lieblingstyp, Beobachtung mit Bericht, Suchauftrag, Verblassen, Kenntnis aus Spielen, öffentlicher Marktwert. Computer-Vereine bewerten noch mit wahren Werten (kommt mit U11). Abweichungen in Abschnitt 12.
+Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12. **Umgesetzt in U9a** (11. November 2026, `js/scouting.js`, Test `tests/scouting.js`): Kenntnis je Spieler, ehrliche Spannen für fremde Spieler, Merkmale nach Kenntnis, Scouts als Rolle im Stab mit Qualität, Gebiet und Lieblingstyp, Beobachtung mit Bericht, Suchauftrag, Verblassen, Kenntnis aus Spielen, öffentlicher Marktwert. Computer-Vereine bewerten noch mit wahren Werten (kommt mit U11). Abweichungen in Abschnitt 12. **Auslandsscouting umgesetzt in U9b** (11. November 2026, Test `tests/ausland.js`): Grundkenntnis 5 für den Auslandspool, Gebiet der Scouts wirkt, Reisekosten Ausland, Suchauftrag mit Region.
 Hängt ab von: K03 (Werte, Sichtbarkeit), K16 (Scouts als Mitarbeiter), K35a (unscharfe Regler) · Wird gebraucht von: K06, K08, K19, K20, K31, K32.
 
 ## 1. Ziel und Spielgefühl
@@ -161,7 +161,7 @@ scouting:{
 **Vorläufig entschieden bei der Umsetzung (U9a, 11. November 2026):**
 5. **Spannen kalibriert:** Halbe Breite je Kenntnis ±10 (unter 10), ±7 (unter 20), ±4,8 (unter 30), ±3,5 (unter 45), ±2,5 (unter 60), ±2 (unter 80), ±1 (darüber), Grundfehler eines Scouts 0,15 × (21 − Qualität), Lieblingstyp +1 bis +3. Mit den Werten aus 3.2 und 5.2 (±12/8/5/3/1,5, Fehler 0,3 × (21 − Qualität)) lag der Test „Fehlkäufe“ weit über dem Ziel, und ein durchschnittlicher Scout hätte die Spanne breiter statt schmaler gemacht. Jetzt: andere deutsche Liga ohne Scouting etwa ±5, mit einem guten Scout nach drei Wochen etwa ±2.
 6. **Fehler kommen aus dem Seed:** je Spieler und je Scout ein fester, normalverteilter Fehler aus einer Hash-Zahl, kein Zufallsstrom. Neuladen ändert nichts, mehr Kenntnis rückt die Mitte zur Wahrheit. Die Spanne ist 1,4-mal die Streuung (etwa 84 % Treffer), eine Vorliebe des Scouts verbreitert sie, damit sie ehrlich bleibt. Beim Bau fiel auf, dass eine einfache Hash-Zahl leicht schiefe Werte gibt, sie wird deshalb nachgemischt.
-7. **Grundkenntnis:** eigene Liga 40, andere deutsche Profiliga 25, Regionalliga und vereinslos 15, jedes Spiel gegen dich +5. Ausland (5) und Jugend (0) kommen mit U9b und U9c.
+7. **Grundkenntnis:** eigene Liga 40, andere deutsche Profiliga 25, Regionalliga und vereinslos 15, jedes Spiel gegen dich +5. Ausland (5) ist seit U9b gebaut (Nr. 17), Jugend (0) kommt mit U9c.
 8. **Was du von fremden Spielern siehst:** Stärke als Spanne, Merkmale nach Kenntnis (unter 20 nichts, bis 39 das Auffälligste, bis 59 die Stärken, ab 60 auch die Schwächen), Talent wie bisher als Sterne mit Schätzfehler. Eigenschaften fremder Spieler bleiben unbekannt (wie vorher), Form, Frische, Kondition und Spielpraxis zeigt die Karte nur bei eigenen Spielern.
 9. **Marktwert fremder Spieler** ist eine öffentliche Schätzung aus der Grundkenntnis, damit er die wahre Stärke nicht verrät. Die geforderte Ablöse kommt weiter vom Verein, der seinen Spieler kennt.
 10. **Transfermarkt nach Einschätzung sortiert,** nicht nach dem wahren Wert.
@@ -171,6 +171,16 @@ scouting:{
 14. **Lernstufen (K36):** Informationen sind frei. Beobachten ab der C-Lizenz (mit den Transfers), Scouts einstellen ab B (Stab), Suchauftrag ab A (Scouting im Detail).
 15. **Noch nicht gebaut:** Unsicherheit der Computer-Vereine (U11), Gegnerbeobachtung, Konkurrenz am Tisch und die übrigen Ereignisse aus §8, Ausland (U9b), Jugend (U9c), Auslandsreisekosten. Die Kaderstärke ganzer Gegner bleibt als öffentlicher Wert genau.
 16. **Test „Fehlkäufe“ genauer gefasst:** Der Beste aus zehn Kandidaten aus verschiedenen Vereinen der 2. und 3. Liga nach Einschätzung, dazu „Einzelkauf ohne Auswahl unter 15 %“.
+
+**Vorläufig entschieden bei der Umsetzung (U9b, 11. November 2026):**
+17. **Grundkenntnis Ausland 5** für alle Spieler des Auslandspools (K32). Die Spanne ohne Scout ist etwa ±10 und damit doppelt so grob wie bei einer anderen deutschen Liga (±5). Merkmale sind ohne Scout unbekannt. Die Spanne bleibt ehrlich: 86 % Treffer bei Grundkenntnis, 88–95 % mit Scouts.
+18. **Gebiet der Scouts wirkt jetzt** (ersetzt den letzten Satz von Nr. 12): Ein Scout mit dem Gebiet Ausland lernt bei Spielern der Auslandsvereine 1,3-fach und im Inland 0,8-fach, ein Inland-Scout umgekehrt. Jugend-Scouts lernen bei Spielern bis 21 Jahre 1,3-fach, egal wo. Ein Auslandsscout der Qualität 10 bringt einen Spieler in vier Wochen von 5 auf Kenntnis 60, ein Inland-Scout braucht sieben. Das Gebiet steht in der Stab-Ansicht neben der Rolle, damit du gezielt einstellen kannst.
+19. **Reisekosten Ausland:** 15.000 € je Beobachtungswoche statt 3.000 € (§5.4), auch für den Suchauftrag im Ausland.
+20. **Suchauftrag mit Region** (§4 Nr. 2): Inland (deutsche Vereine und Vereinslose, wie bisher) oder Ausland (der Pool). Ohne Angabe gilt Inland.
+21. **Transfermarkt:** Das Ausland ist ein eigener Filter mit Länderauswahl. In der Liste „alle“ fehlt es, weil 1.664 kaum bekannte Spieler mit breiten Spannen die Liste nach Einschätzung überschwemmen würden.
+22. **Bericht und Karte** nennen den Auslandsverein und das Land. Die Nationalität ist immer öffentlich (§3.2) und steht jetzt auf jeder Spielerkarte und im Transfermarkt.
+23. **Lernstufen (K36):** im Ausland beobachten und kaufen ab B (`ausland`), Suchauftrag im Ausland ab A (mit `suchauftrag`).
+24. **Offen aus Nr. 15:** Unsicherheit der Computer-Vereine (U11), Gegnerbeobachtung, Ereignisse aus §8, Jugend (U9c). Dazu neu: Die Ablöseforderung eines Auslandsvereins beruht auf dem wahren Wert und verrät damit mehr, als die Spanne zeigt (wie im Inland, Nr. 9). Das gehört zu den Verhandlungen in U10.
 
 ## Quellen
 
