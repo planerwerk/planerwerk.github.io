@@ -469,7 +469,7 @@ Bei der Umsetzung (U9b, 11.11.), ausführlich in K32 §12 Nr. 4–20:
 13. **Kauf im Ausland:** Ablöse = Marktwert × (0,8 + 0,6 × Finanzkraft/100), Wechselbereitschaft −5, Deutsche im Ausland +10.
 14. **Verkauf ins Ausland:** 30 % der Angebote für deine Spieler kommen aus dem Ausland, Budget = Finanzkraft² × 12.000 €.
 15. **Erfundene Spieler deutscher Vereine:** Nationalität aus dem Nachnamen (deutscher Name 93 % Deutschland, fremder Name 50 % Herkunftsland).
-16. **Echte Spieler:** Nationalität aus den Wikipedia-Kadern, bei Doppelstaatlern die erste Flagge. Vier Bielefelder mit zwei Flaggen als Deutsche.
+16. **Echte Spieler:** Nationalität aus den Wikipedia-Kadern, bei Doppelstaatlern die Flagge der Kadertabelle. Vier Bielefelder mit zwei Flaggen als Deutsche.
 17. **Nationen-Tabelle** mit 148 Nationen und dem Rang vom 7. Oktober 2026, nicht alle Länder der Welt.
 18. **Poolspieler schlank gespeichert** (ohne Sperren, Karten, berechnete Eigenschaften), Spielstand unter 3 MB.
 19. **Lernstufen:** Auslandsmarkt ansehen frei, im Ausland beobachten und kaufen ab B, Suchauftrag Ausland ab A.

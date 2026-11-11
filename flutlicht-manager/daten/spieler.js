@@ -1,7 +1,10 @@
 // Kader 2026/27 nach der deutschen Wikipedia (Stand je Verein in KADER_STAND).
-// Eine Zeile pro Spieler: [Name, Position, Alter am 1.7.2026, Stärke]
+// Eine Zeile pro Spieler: [Name, Position, Alter am 1.7.2026, Stärke, Nationalität]
 //   Position: TW Torwart, AB Abwehr, MF Mittelfeld, ST Sturm
 //   Stärke: 1–99, geschätzt
+//   Nationalität: Kürzel aus daten/nationen.js (GER Deutschland), die Nation, für die der Spieler laut Kadertabelle spielt.
+//     Quelle: Kadertabellen der deutschen Wikipedia (Vereinsartikel) und der englischen Wikipedia (Saisonartikel 2026/27), abgerufen am 11.11.2026.
+//     Fehlt das Kürzel in einer Zeile, leitet das Spiel die Nationalität aus dem Nachnamen ab (wie bei erfundenen Spielern).
 // Bearbeiten: Werte hier ändern und das Spiel neu laden. Das wirkt ab der nächsten neuen Karriere.
 // Fehlende Plätze im Kader füllt das Spiel mit erfundenen Spielern auf.
 const KADER={

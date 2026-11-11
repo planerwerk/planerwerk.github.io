@@ -73,12 +73,13 @@ async function actions(s,tag){const wk=s.wk,yr=s.season,K=yr+':'+wk+':';
    await tabClick('Transfers');const s2=await pg.$('button:text-is("Suchauftrag starten")');if(s2){await pg.selectOption('#su_pos','ST');await s2.click();if(!(await pg.evaluate(()=>(S.auftraege||[]).some(a=>a.art==='suche'))))note(tag,'Suchauftrag nicht angelegt');}
    actlog.push(tag+' Scouting: Beobachtung und Suchauftrag');}
  // Ausland (K32, U9b): Filter im Transfermarkt, Länderfilter, Spielerkarte mit Nationalität und Auslandsverein, Beobachtung (wenn ein Scout frei ist), Kauf
- if(yr===2026&&wk===11&&once(K+'ausland')){await tabClick('Transfers');await pg.selectOption('#tf_lg','a');
-   if(!(await pg.$$('tbody tr.click')).length)note(tag,'Ausland: keine Spieler im Transfermarkt');
-   await pg.selectOption('#tf_land','ENG');const eng=await pg.evaluate(()=>{const z=[...document.querySelectorAll('.card tbody tr.click')].slice(0,10);return z.length>0&&z.every(tr=>tr.children[5].textContent.includes('England'));});if(!eng)note(tag,'Ausland: Länderfilter greift nicht');
+ if(yr===2026&&wk===11&&once(K+'ausland')){await tabClick('Transfers');await pg.evaluate(()=>{TF.pos='';TF.max='';TF.q='';TF.list=0;});await pg.selectOption('#tf_lg','a'); // Filter früherer Schritte zurücksetzen
+   const marktZeilen=()=>pg.evaluate(()=>[...document.querySelector('.card table').querySelectorAll('tbody tr.click')].slice(0,10).map(tr=>tr.children[5]?tr.children[5].textContent:''));
+   if(!(await marktZeilen()).length)note(tag,'Ausland: keine Spieler im Transfermarkt');
+   await pg.selectOption('#tf_land','ENG');const z=await marktZeilen();if(!z.length||!z.every(t=>t.includes('England')))note(tag,'Ausland: Länderfilter greift nicht');
    let sc=await pg.evaluate(()=>__scan());if(sc)note(tag,'Transfermarkt Ausland: '+sc);
    const kand=await pg.evaluate(()=>{const t=myT();return S.ausland.pl.filter(p=>askPrice(p)<t.cash*0.4&&p.str<teamLevel(S.my)+2).sort((a,b)=>b.str-a.str).slice(0,6).map(p=>p.id);});let kauf='kein Kandidat';
-   for(const id of kand){await pg.evaluate(i=>openP(i),id);const txt=await pg.evaluate(()=>document.getElementById('ov').innerText);if(!/Nationalität/.test(txt))note(tag,'Spielerkarte ohne Nationalität');
+   for(const id of kand){await pg.evaluate(i=>openP(i),id);const txt=await pg.evaluate(()=>document.getElementById('ov').innerText);if(!/nationalität/i.test(txt))note(tag,'Spielerkarte ohne Nationalität'); // Beschriftungen stehen in Großbuchstaben
      sc=await pg.evaluate(()=>__scan());if(sc)note(tag,'Spielerkarte Ausland: '+sc);
      if(id===kand[0]){const b=await pg.$('button:text-is("Beobachten lassen")');if(b){await b.click();if(!(await pg.evaluate(i=>(S.auftraege||[]).some(a=>a.pid===i),id)))note(tag,'Ausland: Beobachtung nicht angelegt');await closeModal();continue;}}
      await pg.click('button:text-is("Angebot abgeben")');kauf=await msgOrClosed();
