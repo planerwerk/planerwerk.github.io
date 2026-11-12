@@ -60,9 +60,30 @@ Der Plan ist eine Tabelle **„Tage bis zum nächsten Spiel / Tage seit dem letz
 ### 3.3 Einzeltraining
 
 - **Lernziele** (K03 §5.6): Ein Spieler lernt ein Merkmal, zwei gleichzeitig nur halb so schnell.
-- **Umschulung:** Ein Spieler lernt eine neue Position. Die Eignung steigt pro Woche um 4 Punkte bei verwandten Positionen (Startwert mindestens 75 %) und um 2 Punkte bei fremden, bis höchstens 90 % (mit „vielseitig“ 95 %). Einsätze auf der neuen Position zählen wie eine Trainingswoche zusätzlich.
+- **Umschulung** (geändert nach deiner Entscheidung vom 12.11.): Ein Spieler lernt eine neue Position. Sie ist die Ausnahme, nicht die Regel.
+  - **Frei wählbar sind nur Nachbarpositionen.** Nachbarn sind die Paare, die in der Eignungstabelle als verwandt stehen (K03 §3.1a), die rechte Seite wie die linke:
+
+    | Position | Nachbarpositionen |
+    |---|---|
+    | Innenverteidiger | Außenverteidiger links und rechts, defensives Mittelfeld |
+    | Außenverteidiger | Innenverteidiger, der andere Außenverteidiger, Mittelfeld auf seiner Seite |
+    | defensives Mittelfeld | Innenverteidiger, zentrales Mittelfeld, Spielmacher |
+    | zentrales Mittelfeld | defensives und offensives Mittelfeld, Spielmacher, linkes und rechtes Mittelfeld |
+    | Spielmacher | defensives, zentrales und offensives Mittelfeld |
+    | offensives Mittelfeld | zentrales Mittelfeld, Spielmacher, hängende Spitze, Linksaußen und Rechtsaußen |
+    | linkes oder rechtes Mittelfeld | Außenverteidiger und Außenstürmer seiner Seite, zentrales Mittelfeld, die andere Seite |
+    | Mittelstürmer | hängende Spitze, Linksaußen und Rechtsaußen |
+    | hängende Spitze | Mittelstürmer, offensives Mittelfeld, Linksaußen und Rechtsaußen |
+    | Außenstürmer | Mittelfeld seiner Seite, offensives Mittelfeld, Mittelstürmer, hängende Spitze, die andere Seite |
+
+  - **Weiter entfernte Positionen** gehen nur bei sehr jungen Spielern (bis 19 Jahre) oder mit dem Merkmal „vielseitig“. So kann aus einem 17-jährigen Innenverteidiger noch ein Stürmer werden.
+  - **Torwart ist ausgeschlossen,** in beide Richtungen und in jedem Alter.
+  - **Tempo:** 4 Punkte pro Woche bei Positionen mit Startwert ab 75 %, sonst 2 Punkte, mal Alter: bis 19 Jahre ×1,25, bis 23 ×1, bis 27 ×0,8, bis 30 ×0,6, darüber ×0,4.
+  - **Höchstwert:** Nachbarposition 90 % (mit „vielseitig“ 95 %), entfernte Position 85 %. Nach Alter weniger: bis 23 Jahre voll, bis 27 Jahre −2, bis 30 Jahre −5, darüber −8. Liegt der Höchstwert nicht über dem, was er dort schon kann, gibt es keine Umschulung.
+  - **Selten:** Ein Spieler lernt in seiner Laufbahn eine Position dazu, mit „vielseitig“ zwei. Die Umschulung belegt einen Einzeltrainingsplatz. Computer-Vereine schulen nicht um.
+  - Einsätze auf der neuen Position zählen wie eine Trainingswoche zusätzlich (noch nicht gebaut).
 - **Plätze:** Wie viele Spieler gleichzeitig Einzeltraining haben, hängt vom Stab ab (K16). Bis dahin 5 Plätze im Kader.
-- Gespeichert am Spieler: Lernziele `ls` (K03), trainierte Eignungen `eig = {Position: Wert}`.
+- Gespeichert am Spieler: Lernziele `ls` (K03), trainierte Eignungen `ue = {Position: Wert}` (bis UL irrtümlich im Feld `eig`), abgeschlossene Umschulungen `uf`.
 
 ### 3.4 Belastung
 
@@ -185,7 +206,7 @@ Testskript: Teil von `tests/spielermodell.js` und `tests/akzeptanz.js`.
 | Vorbereitung | Sofort hart nach dem Urlaub: mindestens 1,5-mal so viele Trainingsverletzungen in den ersten drei Wochen wie bei langsamem Steigern |
 | Kondition | Standardwoche hält sie bei 78–82, Aufbauwoche hebt sie Richtung 90 (K03 §10) |
 | Vertrautheit | 30 → 80 in 6–8 Wochen mit zwei Taktik-Einheiten pro Woche |
-| Umschulung | verwandte Position von 75 auf 90 % in etwa vier Wochen, fremde von 60 auf 90 % in etwa 15 Wochen |
+| Umschulung | Nachbarposition mit 22 Jahren von 75 auf 90 % in etwa vier Wochen. Mit 17 Jahren Innenverteidiger zum Mittelstürmer von 55 auf 85 % in 10–14 Wochen. Mit 24 Jahren nur Nachbarpositionen wählbar. Torwart nie. Mit 30 Jahren langsamer und nur bis 85 %. Nach einer Umschulung keine zweite (mit „vielseitig“ zwei). Fortschritt bleibt nach Speichern und Laden. |
 | Verletzungen im Training | Anteil an allen Verletzungen 40–55 % (abgeleitet in K10 §10, prüfen) |
 
 ## 11. Stellschrauben
@@ -229,7 +250,7 @@ training:{
 10. **Trainingsverletzungen:** Grundrate 0,00032 je Einheit (mit Athletiktrainer, K16), damit 40–55 % aller Verletzungen im Training passieren. Das passt zur UEFA-Studie (Spiel 27,5, Training 4,1 Verletzungen je 1000 Stunden) bei üblichen Trainings- und Spielstunden.
 11. **„Training wirkt“ wird über die Wirkung geprüft** (Startelf stärker, Kondition höher, nicht mehr Ausfälle), nicht über Punkte: Punkte schwanken über wenige Saisons um ±7 je Saison. Gemessen: Startelf +0,4 bis +0,5 stärker als mit „Schonen“, also etwa +1 Punkt im ersten Jahr und mehr danach.
 12. **Vorbereitung** als Vorlage mit vier Wochen (normal, hart, hart, Taktik). Der Co-Trainer nutzt sie bis zum ersten Pflichtspiel. Doppeleinheiten, Leistungstests und Testspiele kommen mit K11 und K12a.
-13. **Umschulung** belegt einen der fünf Einzeltrainingsplätze. Verwandt heißt: Eignung ohne Fußabzug mindestens 75 %. Der Fuß bleibt nach der Umschulung ein Nachteil (außer bei beidfüßigen).
+13. **Umschulung** belegt einen der fünf Einzeltrainingsplätze. Verwandt heißt: Eignung ohne Fußabzug mindestens 75 %. Der Fuß bleibt nach der Umschulung ein Nachteil (außer bei beidfüßigen). **Geändert am 12.11. nach deiner Entscheidung** (§3.3): nur Nachbarpositionen, entfernte nur sehr jung oder vielseitig, nie Torwart, nach Alter gestaffelt, eine Umschulung je Laufbahn. Vorläufig von mir: was als Nachbar gilt (die verwandten Paare der Eignungstabelle), „sehr jung“ bis 19 Jahre, Torwart auch für sehr junge und vielseitige Spieler ausgeschlossen, die Staffeln für Tempo und Höchstwert, die Grenze von einer Position (zwei mit „vielseitig“), „bestimmtes Talent“ gleich Merkmal „vielseitig“.
 14. **Noch nicht gebaut:** eigene Vorlagen speichern, Erinnerung „Plan passt nicht“, Ereignisse aus §8, eigenes Torwarttraining (K16), Bonus +2 % mit Gegneranalyse (K18).
 
 **Recherchiert:** Anteil der Trainingsverletzungen siehe Nr. 10.

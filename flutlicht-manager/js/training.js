@@ -50,9 +50,36 @@ function trainingWoche(p){const T=RT,K=T.kondition;
     const E=T.entwicklung;p.trf=clamp((E.min+(1-E.min)*(p.we||0)/E.normalReiz)*(p.pos==='TW'?stabFaktor(p.team,'torwart'):1),E.min,E.max);}
   p.wk=0;p.we=0;}
 const genugTraining=p=>(p.wt||0)>=RT.lernen.mindestTage;
-// Umschulung (K07 §3.3): Eignung auf der neuen Position steigt pro Woche, verwandte Positionen schneller
-// Der Fortschritt steht in p.ue (Eignung in Prozent je Position). Bis UL hing er am Feld eig, der Liste der Eigenschaften, und ging beim Speichern verloren.
-function umschulungWoche(p){if(!p.um||p.team<0||p.inj>0)return;const U=RT.umschulung,pos=p.um,max=hatMk(p,'vielseitig')?U.maxVielseitig:U.max;p.ue=p.ue||{};
-  const basis=Math.round(eignung(Object.assign({},p,{ue:null,fuss:'B'}),pos)*100), // ohne Fußabzug: verwandt ist, was nah beieinander liegt
-   akt=Math.max(p.ue[pos]||0,basis),plus=(basis>=U.verwandtAb?U.verwandt:U.fremd)*stabFaktor(p.team,'co')*(genugTraining(p)?1:0.5);
-  p.ue[pos]=Math.min(max,akt+plus);if(p.ue[pos]>=max){if(p.team===S.my)news(`Umschulung abgeschlossen: ${p.n} kann jetzt ${RP.positionsNamen[pos]||pos} (${max} %).`,'good');p.um=null;}}
+// Umschulung (K07 §3.3, Entscheidung vom 12.11.): Die Eignung auf einer neuen Position steigt pro Woche. Frei wählbar sind nur Nachbarpositionen,
+// weiter entfernte nur bei sehr jungen Spielern oder mit dem Merkmal „vielseitig“. Torwart ist ausgeschlossen. Ältere lernen langsamer und weniger.
+// Der Fortschritt steht in p.ue (Eignung in Prozent je Position), abgeschlossene Umschulungen in p.uf. Bis UL hing der Fortschritt am Feld eig und ging beim Speichern verloren.
+// Nachbarposition: steht in der Eignungstabelle als verwandt, in einer der beiden Richtungen, rechte Seite wie linke
+function nachbarPos(von,nach){if(von===nach)return false;const N=RE.eignung.nah;let x=von,y=nach;if(seite(x)==='R'){x=TAUSCH[x];y=TAUSCH[y]||y;}return !!((N[x]&&N[x][y])||(N[y]&&N[y][x]));}
+const umgeschult=p=>p.uf||[];
+const umschulungTempo=p=>{const U=RT.umschulung,t=U.tempo.find(x=>p.age<=x[0]);return t?t[1]:U.tempoSonst;};
+// Höchstwert der Eignung, den er dort erreichen kann: Nachbarposition 90 (vielseitig 95), entfernte 85, mit Abzug nach Alter
+function umschulungMax(p,pos){const U=RT.umschulung,fp=p.fp||STD_POS[p.pos],z=U.maxAlter.find(x=>p.age<=x[0]);
+  return(nachbarPos(fp,pos)?(hatMk(p,'vielseitig')?U.maxVielseitig:U.max):U.fernMax)+(z?z[1]:U.maxAlterSonst);}
+const eignungOhneTraining=(p,pos)=>Math.round(eignung(Object.assign({},p,{ue:null,fuss:'B'}),pos)*100);
+// Darf dieser Spieler auf diese Position umgeschult werden? Leer heißt ja, sonst steht hier der Grund.
+function umschulungGrund(p,pos){const U=RT.umschulung,fp=p.fp||STD_POS[p.pos];
+  if(!RP.positionsNamen[pos]||pos===fp)return'Das ist schon seine Position.';
+  if(posGruppe(pos)==='TW'||p.pos==='TW')return'Torwart ist eine eigene Ausbildung. Eine Umschulung gibt es nicht, in keine Richtung.';
+  if(umgeschult(p).includes(pos))return'Diese Position hat er schon gelernt.';
+  const grenze=hatMk(p,'vielseitig')?U.positionenVielseitig:U.positionen;
+  if(umgeschult(p).length>=grenze)return`Er hat schon ${grenze===1?'eine Position':grenze+' Positionen'} dazugelernt. Mehr geht in einer Laufbahn nicht.`;
+  if(!nachbarPos(fp,pos)&&!hatMk(p,'vielseitig')&&p.age>U.jungBis)return`Zu weit weg von seiner Position. Das geht nur bei Nachbarpositionen, bei sehr jungen Spielern (bis ${U.jungBis} Jahre) oder mit dem Merkmal „vielseitig“.`;
+  if(umschulungMax(p,pos)<=Math.max(eignungOhneTraining(p,pos),(p.ue&&p.ue[pos])||0))return'In seinem Alter lernt er dort nichts mehr dazu.';
+  return'';}
+// Kurzer Hinweis für die Spielerkarte: was bei diesem Spieler geht und warum
+function umschulungHinweis(p){const U=RT.umschulung,gel=umgeschult(p);if(p.pos==='TW')return'Ein Torwart bleibt Torwart, eine Umschulung gibt es nicht.';
+  const teile=[];if(gel.length)teile.push(`Dazugelernt: ${gel.map(x=>RP.positionsNamen[x]||x).join(', ')}.`);
+  if(!umschulungZiele(p).length&&!p.um)teile.push(gel.length?'Mehr geht in einer Laufbahn nicht.':'In seinem Alter lernt er auf keiner Nachbarposition mehr dazu.');
+  else teile.push(hatMk(p,'vielseitig')?'Vielseitig: auch entfernte Positionen und eine zweite Umschulung sind möglich.':p.age<=U.jungBis?`Bis ${U.jungBis} Jahre sind auch entfernte Positionen möglich, danach nur noch Nachbarpositionen.`:'Möglich sind nur Nachbarpositionen. Torwart nie.');
+  const t=umschulungTempo(p);teile.push(t>1?'Er lernt schnell.':t<0.7?'In seinem Alter lernt er langsam und erreicht weniger.':'');return teile.filter(Boolean).join(' ');}
+const umschulungZiele=p=>Object.keys(RP.positionsNamen).filter(x=>!umschulungGrund(p,x));
+function umschulungWoche(p){if(!p.um||p.team<0||p.inj>0)return;const U=RT.umschulung,pos=p.um;if(umschulungGrund(p,pos)){p.um=null;return;}
+  const max=umschulungMax(p,pos),basis=eignungOhneTraining(p,pos);p.ue=p.ue||{};
+  // ohne Fußabzug: verwandt ist, was nah beieinander liegt
+  const akt=Math.max(p.ue[pos]||0,basis),plus=(basis>=U.verwandtAb?U.verwandt:U.fremd)*umschulungTempo(p)*stabFaktor(p.team,'co')*(genugTraining(p)?1:0.5);
+  p.ue[pos]=Math.min(max,akt+plus);if(p.ue[pos]>=max){p.uf=[...umgeschult(p),pos];if(p.team===S.my)news(`Umschulung abgeschlossen: ${p.n} kann jetzt ${RP.positionsNamen[pos]||pos} (${max} %).`,'good');p.um=null;}}

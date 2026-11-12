@@ -50,7 +50,7 @@ function poolSpieler(v,pos,talent,namen){const A=RW.ausland,base=avStaerke(v);
   p.sp=talent?A.praxis.talent:A.praxis.stamm;p.fit=100;poolSchlank(p);return p;}
 // Poolspieler ohne Buchführung der Ligen (Sperren, Karten, berechnete Eigenschaften): spart Platz im Spielstand, beim Wechsel nach Deutschland kommt sie zurück
 function poolSchlank(p){delete p.eig;delete p.sperre;delete p.kt;}
-const POOL_FELDER=['id','n','pos','age','str','pot','form','fit','ko','sv','sp','ent','sw','team','inj','g','pg','apps','ct','list','ask','seed','sal','ch','fp','fuss','mk','ls','wiv','vt','ekw','tf','nat','lf','fk','ue'];
+const POOL_FELDER=['id','n','pos','age','str','pot','form','fit','ko','sv','sp','ent','sw','team','inj','g','pg','apps','ct','list','ask','seed','sal','ch','fp','fuss','mk','ls','wiv','vt','ekw','tf','nat','lf','fk','ue','uf'];
 const istTalent=p=>p.age<=RW.ausland.talent.jungBis;
 // Plan eines Kerns: feste Plätze für Talente (bis 21 Jahre), die übrigen Plätze nach Positionen, damit jeder Kern alle Mannschaftsteile hat
 function kernPlan(v){const A=RW.ausland,soll=A.kern[v.stufe],talente=A.talente[v.stufe],platz={TW:0,AB:0,MF:0,ST:0};A.positionen.slice(0,soll-talente).forEach(x=>platz[x]++);return{soll,talente,platz};}

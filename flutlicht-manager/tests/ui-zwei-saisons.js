@@ -97,7 +97,13 @@ async function actions(s,tag){const wk=s.wk,yr=s.season,K=yr+':'+wk+':';
  if(wk===26&&once(K+'edit')){const id=await pg.evaluate(()=>squad(S.my)[0].id);await pg.evaluate(i=>openP(i),id);
    if(await pg.$('summary:text-is("Spielerdaten bearbeiten")')||await pg.$('#e_s'))note(tag,'Bearbeiten im Spiel ist noch vorhanden');
    if(await pg.evaluate(()=>typeof saveEdit!=='undefined'))note(tag,'saveEdit gibt es noch');
-   const rg=await pg.$$eval('.ovb .rg',x=>x.length);if(rg<3)note(tag,`Spielerkarte: ${rg} statt 3 Regler`);await closeModal();actlog.push(tag+' Spielerkarte ohne Bearbeiten, mit Reglern geprüft');}
+   const rg=await pg.$$eval('.ovb .rg',x=>x.length);if(rg<3)note(tag,`Spielerkarte: ${rg} statt 3 Regler`);await closeModal();actlog.push(tag+' Spielerkarte ohne Bearbeiten, mit Reglern geprüft');
+   // Umschulung (K07, Entscheidung 12.11.): Ein junger Feldspieler bekommt nur erlaubte Ziele angeboten (nie Torwart), die Wahl wird angenommen. Ein Torwart hat keine Ziele.
+   const um=await pg.evaluate(()=>{const p=squad(S.my).filter(x=>x.pos!=='TW'&&!x.um&&umschulungZiele(x).length).sort((a,b)=>a.age-b.age)[0],t=squad(S.my).find(x=>x.pos==='TW');return{id:p?p.id:null,tw:t?t.id:null};});
+   if(um.id!=null){await pg.evaluate(i=>openP(i),um.id);const sel='.ovb select[onchange^="setUmschulung"]',opt=await pg.$$eval(sel+' option',o=>o.map(x=>x.value).filter(Boolean));
+     if(!opt.length||opt.includes('TW'))note(tag,'Umschulung: falsche Ziele '+opt.join(','));else{await pg.selectOption(sel,opt[0]);if(!(await pg.evaluate(([i,z])=>PIX.get(i).um===z,[um.id,opt[0]])))note(tag,'Umschulung nicht angenommen');}
+     const sc=await pg.evaluate(()=>__scan());if(sc)note(tag,'Spielerkarte Umschulung: '+sc);await closeModal();actlog.push(tag+' Umschulung gewählt: '+opt[0]);}
+   if(um.tw!=null){await pg.evaluate(i=>openP(i),um.tw);const n=await pg.$$eval('.ovb select[onchange^="setUmschulung"] option',o=>o.filter(x=>x.value).length);if(n)note(tag,'Torwart hat Umschulungsziele');await closeModal();}}
  if(wk===30&&once(K+'frei')){const id=await pg.evaluate(()=>squad(S.my).sort((a,b)=>a.str-b.str)[0].id);await pg.evaluate(i=>openP(i),id);await pg.click('button:has-text("Vertrag auflösen")');actlog.push(tag+' Spieler freigestellt');}
  if(yr===2027&&wk===2&&once(K+'normal')){await tabClick('Training & Jugend');await pg.click('.opt:has(b:text-is("Co-Trainer entscheidet"))');await tabClick('Aufstellung');await pg.selectOption('#formsel','3-5-2');await pg.selectOption('#stilsel','konter');}
  if(yr===2027&&wk===9&&once(K+'vertrauen')){await pg.evaluate(()=>{S.trust=5;});actlog.push(tag+' Vertrauen künstlich auf 5 gesetzt (Entlassung testen)');}

@@ -743,3 +743,15 @@ Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `
 | AX12 | **Beim Bau selbst verursacht und behoben:** Vier Kommentare am Zeilenende hatten Code auf derselben Zeile auskommentiert (Angebotsprüfung im Markt, Startelf beim Spielstart, Reaktion der Gegner in der Taktik, Rollenwahl in der Aufstellung). Gefunden über den Browser-Test und eine Suche, vor dem Commit behoben. | ✅ |
 | AX13 | **Tests, die schon vorher rot waren, sind unverändert:** `tests/kalibrierung.js` Ausgabe Zeile für Zeile wie vor U9b und UL (vier rote Werte), `tests/medizin.js` Rückfall nach Zerrung 17 % von 930, `tests/akzeptanz.js` gleich bis auf das Tempo (Abwehr +0,8; Tempo 3,09 ms, grün). Ohne Lernstufen ist die simulierte Saison dieselbe wie vor UL. | 📌 wie AS13–AS15, AW15 |
 | AX14 | **K33:** neues Feld `lizenz`, neue Datei `js/lizenz.js`. Version bleibt 4. | ✅ in K33 |
+
+---
+
+## AY. Nachtrag zur Umschulung (Entscheidung vom 12. November 2026)
+
+| # | Befund | Status |
+|---|---|---|
+| AY1 | **K07 §3.3 gegen deine Entscheidung:** Bisher ließ sich jeder Feldspieler auf jede Feldposition umschulen, bis 90 %, in jedem Alter. Jetzt: nur Nachbarpositionen, entfernte nur bis 19 Jahre oder mit „vielseitig“, Torwart nie, Tempo und Höchstwert nach Alter, eine Umschulung je Laufbahn. | ✅ K07 §3.3, §12 Nr. 13 |
+| AY2 | **„Nachbarposition“ war nirgends festgelegt.** Sie folgt jetzt der Eignungstabelle aus K03 §3.1a (`REGELN.engine.eignung.nah`): Nachbarn sind die Paare, die dort als verwandt stehen. Wer die Tabelle ändert, ändert auch die Umschulung. | ✅ vorläufig |
+| AY3 | **„Bestimmtes Talent“** ist das Merkmal „vielseitig“. Ein eigenes Talent je Zielposition gibt es nicht. | ✅ vorläufig, 📌 K03 falls du ein eigenes Merkmal willst |
+| AY4 | **K31:** Computer-Vereine schulen nicht um („nur bei Mangel auf einer Position“ aus K07 §7 ist nicht gebaut). Mit den strengeren Regeln bleibt das selten, wenn es kommt. | 📌 U11 |
+| AY5 | **K07 §3.3:** „Einsätze auf der neuen Position zählen wie eine Trainingswoche zusätzlich“ ist weiter nicht gebaut. | 📌 klein |

@@ -240,7 +240,14 @@ const REGELN={
     // Trainingsfaktor der Entwicklung: 0,6 (kaum Training) bis 1,25, Standardwoche (Reiz 2,5) = 1. Wer platt ist (Frische unter 70), lernt schlechter.
     entwicklung:{min:0.5,max:1.25,normalReiz:1.5,frischeUnter:70,frischeFaktor:0.8}, // normalReiz: Standardwoche mit sieben Tagen Abstand (Taktik, Kondition, Taktik)
     lernen:{mindestTage:3,einheit:0.2},
-    umschulung:{verwandt:4,fremd:2,verwandtAb:75,max:90,maxVielseitig:95},
+    // Umschulung (K07 §3.3, Entscheidung vom 12.11.): frei wählbar sind nur Nachbarpositionen (verwandt laut engine.eignung.nah). Weiter entfernte Positionen
+    // gehen nur bei sehr jungen Spielern (bis jungBis) oder mit dem Merkmal „vielseitig“. Torwart ist ausgeschlossen, in beide Richtungen.
+    // Punkte je Woche: verwandt (Startwert ab verwandtAb) oder fremd, mal Tempo nach Alter. Höchstwert: max (vielseitig maxVielseitig, entfernte Position fernMax)
+    // plus Abzug nach Alter. Ein Spieler lernt in seiner Laufbahn höchstens so viele Positionen dazu (positionen, mit „vielseitig“ positionenVielseitig).
+    umschulung:{verwandt:4,fremd:2,verwandtAb:75,max:90,maxVielseitig:95,fernMax:85,jungBis:19,
+      tempo:[[19,1.25],[23,1],[27,0.8],[30,0.6]],tempoSonst:0.4,
+      maxAlter:[[23,0],[27,-2],[30,-5]],maxAlterSonst:-8,
+      positionen:1,positionenVielseitig:2},
     verletzung:{basis:0.0016,sprungAb:1.3,sprungJe01:1.5,frischeAb:80,frischeJePunkt:0.05}, // Art und Dauer aus REGELN.medizin (K10)
     last:{akut:7,chronisch:28,grund:2}, // grund: gewohnte Last mindestens 2 pro Tag
     spielLast:15,spielKondition:1 // Last und Konditionsreiz eines ganzen Pflichtspiels
