@@ -72,10 +72,11 @@ function kiEinspruch(v,p){if(v.antrag<2)return false;const t=S.teams[p.team],xi=
 
 // Jeden Tag: Anträge stellen, Fristen ablaufen lassen, Urteile sprechen
 function sportgerichtTag(d){if(!S.verfahren||!S.verfahren.length)return;
-  S.verfahren.forEach(v=>{const p=PIX.get(v.pid);if(!p){v.stand='erledigt';return;}const mein=p.team===S.my;
+  S.verfahren.forEach(v=>{const p=PIX.get(v.pid);if(!p){v.stand='erledigt';return;}const mein=p.team===S.my&&!autoB('sportgericht'); // mein: du entscheidest selbst (K36)
     if(v.stand==='offen'&&d>=v.antragAm){v.antrag=antragFuer(v);v.frist=d+RD.verfahren.frist;v.stand='antrag';
       if(mein)news(`Sportgericht: Der Kontrollausschuss beantragt ${v.antrag} ${WB_SPIEL[v.wb]}${v.antrag===1?'':'e'} Sperre für ${p.n} (${VERGEHEN[v.art]}${v.vor?`, ${v.vor}. Rote Karte in zwölf Monaten`:''}). Annehmen oder Einspruch bis ${datumKurz(v.frist)}, im Büro.`,'bad');
-      else if(kiEinspruch(v,p))sgEinspruchLauf(v,d);}
+      else{const ein=kiEinspruch(v,p);if(ein)sgEinspruchLauf(v,d);if(p.team===S.my)stabMeldung(ein?`Sportgericht: Antrag ${v.antrag} ${WB_SPIEL[v.wb]}e Sperre für ${p.n}. Der Verein hat Einspruch eingelegt.`:`Sportgericht: Der Verein nimmt die Strafe an (${v.antrag} ${WB_SPIEL[v.wb]}${v.antrag===1?'':'e'} Sperre für ${p.n}).`,'bad');}
+      if(mein&&S.lizenz)S.lizenz.gel.sportgericht=1;}
     else if(v.stand==='antrag'&&d>v.frist)sgAnnehmenLauf(v,d); // ohne Antwort gilt Zustimmung
     else if(v.stand==='einspruch'&&d>=v.urteilAm)sgEntscheiden(v,d);});
   S.verfahren=S.verfahren.filter(v=>v.stand!=='erledigt');}

@@ -11,7 +11,7 @@ function spielAbstand(d){const key=S.season+'/'+d;if(ABSTAND.key===key)return AB
 // Vorlage, die der Co-Trainer (und jeder Computer-Verein) wählt (K07 §7): englische Woche bei höchstens 4 Tagen zwischen zwei Spielen, Aufbau in Pausen, Vorbereitung vor dem ersten Pflichtspiel
 function vorlageAuto(a,d,t){if(!a||a.next==null)return'aufbau';if(a.last==null&&d<auftaktTag(t)+RT.vorbereitungTage)return'vorbereitung';
   const gap=a.last!=null?a.next-a.last:99;return gap<=RT.englischBis?'englisch':a.next-d>RT.pauseAb?'aufbau':'standard';}
-const vorlageVon=(t,a,d)=>t&&t.vorlage&&t.vorlage!=='auto'&&RT.vorlagen[t.vorlage]?t.vorlage:vorlageAuto(a,d,t);
+const vorlageVon=(t,a,d)=>t&&t.vorlage&&t.vorlage!=='auto'&&RT.vorlagen[t.vorlage]&&!(t.id===S.my&&autoB('vorlage'))?t.vorlage:vorlageAuto(a,d,t);
 // Einheit eines Spielers an Tag d: [Einheit, Intensität] oder null (Spieltag). MD+1 regenerieren nur Spieler mit mindestens 60 Minuten.
 function einheitFuer(p,t,a,d){a=a||{};if(a.heute)return null;const key=vorlageVon(t,a,d),V=RT.vorlagen[key];
   const L=a.last!=null?d-a.last:null,N=a.next!=null?a.next-d:null;
@@ -51,7 +51,8 @@ function trainingWoche(p){const T=RT,K=T.kondition;
   p.wk=0;p.we=0;}
 const genugTraining=p=>(p.wt||0)>=RT.lernen.mindestTage;
 // Umschulung (K07 §3.3): Eignung auf der neuen Position steigt pro Woche, verwandte Positionen schneller
-function umschulungWoche(p){if(!p.um||p.team<0||p.inj>0)return;const U=RT.umschulung,pos=p.um,max=hatMk(p,'vielseitig')?U.maxVielseitig:U.max;p.eig=p.eig||{};
-  const basis=Math.round(eignung(Object.assign({},p,{eig:null,fuss:'B'}),pos)*100), // ohne Fußabzug: verwandt ist, was nah beieinander liegt
-   akt=Math.max(p.eig[pos]||0,basis),plus=(basis>=U.verwandtAb?U.verwandt:U.fremd)*stabFaktor(p.team,'co')*(genugTraining(p)?1:0.5);
-  p.eig[pos]=Math.min(max,akt+plus);if(p.eig[pos]>=max){if(p.team===S.my)news(`Umschulung abgeschlossen: ${p.n} kann jetzt ${RP.positionsNamen[pos]||pos} (${max} %).`,'good');p.um=null;}}
+// Der Fortschritt steht in p.ue (Eignung in Prozent je Position). Bis UL hing er am Feld eig, der Liste der Eigenschaften, und ging beim Speichern verloren.
+function umschulungWoche(p){if(!p.um||p.team<0||p.inj>0)return;const U=RT.umschulung,pos=p.um,max=hatMk(p,'vielseitig')?U.maxVielseitig:U.max;p.ue=p.ue||{};
+  const basis=Math.round(eignung(Object.assign({},p,{ue:null,fuss:'B'}),pos)*100), // ohne Fußabzug: verwandt ist, was nah beieinander liegt
+   akt=Math.max(p.ue[pos]||0,basis),plus=(basis>=U.verwandtAb?U.verwandt:U.fremd)*stabFaktor(p.team,'co')*(genugTraining(p)?1:0.5);
+  p.ue[pos]=Math.min(max,akt+plus);if(p.ue[pos]>=max){if(p.team===S.my)news(`Umschulung abgeschlossen: ${p.n} kann jetzt ${RP.positionsNamen[pos]||pos} (${max} %).`,'good');p.um=null;}}

@@ -16,9 +16,12 @@ const f1=x=>x.toFixed(1),pc=x=>(x*100).toFixed(0)+' %';
     W.ev('vertrautSetzen')(t,'stil','pressing',W.ev('vertraut')(t,'stil','pressing')+RTA.vertrautheit.jeSpiel);W.ev('vertrautheitWoche')(t);w++;}
   pruef(w>=6&&w<=8,'Vertrautheit: von 30 auf 80 in 6–8 Wochen (Standardwoche, ein Spiel pro Woche)',w+' Wochen');}
 // 3. Umschulung: verwandte Position von 75 auf 90 % in etwa vier Wochen, fremde von 60 auf 90 % in etwa 15 Wochen
-{const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S,eig0=W.ev('eignung'),eig=(q,pos)=>eig0(Object.assign({},q,{fuss:'B'}),pos);const p=S.pl.find(x=>x.team>=0&&x.fp==='IV'&&!x.mk.vielseitig),wochen=ziel=>{p.um=ziel;p.eig={};let w=0;while(p.um&&w<40){p.wt=5;W.ev('umschulungWoche')(p);w++;}return w;};
-  const v=wochen('LV'),fr=wochen('MS');pruef(v>=3&&v<=5,`Umschulung: verwandte Position (IV → LV, ${Math.round(eig(Object.assign({},p,{eig:null}),'LV')*100)} %) auf 90 % in 3–5 Wochen`,v+' Wochen');
-  pruef(fr>=12&&fr<=18,`Umschulung: fremde Position (IV → MS, ${Math.round(eig(Object.assign({},p,{eig:null}),'MS')*100)} %) auf 90 % in 12–18 Wochen`,fr+' Wochen');}
+{const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S,eig0=W.ev('eignung'),eig=(q,pos)=>eig0(Object.assign({},q,{fuss:'B'}),pos);const p=S.pl.find(x=>x.team>=0&&x.fp==='IV'&&!x.mk.vielseitig),wochen=ziel=>{p.um=ziel;p.ue={};let w=0;while(p.um&&w<40){p.wt=5;W.ev('umschulungWoche')(p);w++;}return w;};
+  const v=wochen('LV'),fr=wochen('MS');pruef(v>=3&&v<=5,`Umschulung: verwandte Position (IV → LV, ${Math.round(eig(Object.assign({},p,{ue:null}),'LV')*100)} %) auf 90 % in 3–5 Wochen`,v+' Wochen');
+  pruef(fr>=12&&fr<=18,`Umschulung: fremde Position (IV → MS, ${Math.round(eig(Object.assign({},p,{ue:null}),'MS')*100)} %) auf 90 % in 12–18 Wochen`,fr+' Wochen');
+  // Der Fortschritt übersteht Speichern, Laden und den Saisonwechsel (bis UL hing er an der Liste der Eigenschaften und ging verloren)
+  const q=S.pl.find(x=>x.team>=0&&x.fp==='ZM'&&x!==p);q.um='LV';for(let w=0;w<5;w++){q.wt=5;W.ev('umschulungWoche')(q);}const e0=eig(q,'LV'),geladen=JSON.parse(JSON.stringify(q));W.ev('eigenschaftenNeu')(q);
+  pruef(e0>eig(Object.assign({},q,{ue:null}),'LV')+0.02&&Math.abs(eig(geladen,'LV')-e0)<1e-9&&Math.abs(eig(q,'LV')-e0)<1e-9&&Array.isArray(q.eig),'Umschulung: Fortschritt bleibt nach Speichern, Laden und Saisonwechsel erhalten',`${Math.round(e0*100)} %`);}
 // 4. Über Saisons: Anteil der Trainingsverletzungen 40–55 %. Training wirkt: Mit dem Co-Trainer-Plan entwickeln sich die Spieler schneller und sind konditionell besser als mit „Schonen“,
 //    ohne deutlich mehr Ausfälle. Punkte schwanken über wenige Saisons zu stark (±7 je Saison), darum wird die Wirkung selbst geprüft:
 //    +1 Stärke der Startelf sind etwa +2,5 Punkte pro Saison (tests/akzeptanz.js). Dauerhaft hart kostet sichtbar mehr Trainingsverletzungen.

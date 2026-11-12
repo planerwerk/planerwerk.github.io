@@ -36,7 +36,7 @@ function elfOhneAusfaelle(t,sq){const sl=slotsVerein(t),used=new Set(),xi=Array(
   const pass=ok=>sl.forEach((pos,i)=>{if(xi[i]!=null)return;let best=null,bv=-1;for(const p of sq){if(used.has(p.id)||!ok(p,pos))continue;const v=eff(p,pos,100);if(v>bv){bv=v;best=p;}}if(best){xi[i]=best.id;used.add(best.id);}});
   pass((p,pos)=>(p.fp||STD_POS[p.pos])===pos);pass((p,pos)=>posGruppe(p.fp||STD_POS[p.pos])===posGruppe(pos));return fillXI(sl,sq,xi,used).filter(x=>x!=null);}
 // Rolle, die der Trainer vergeben hat: bei dir die gewählte (sonst der Vorschlag des Co-Trainers), bei Computer-Vereinen der Vorschlag
-const kaderRolle=p=>(p.team===S.my&&p.kr)||p.krA||'ergaenzung';
+const kaderRolle=p=>(p.team===S.my&&p.kr&&!autoB('kaderrollen')&&p.kr)||p.krA||'ergaenzung';
 const krStufe=p=>KR_STUFE[kaderRolle(p)]||1;
 const einschaetzung=p=>p.krS||krStufe(p);
 // Erwartete Einsatzzeit: deine Rolle, wenn sie mindestens seiner Einschätzung entspricht, sonst die Mitte der beiden Anteile
@@ -78,7 +78,7 @@ function bausteine(p){const Z=RKA.ziel,t=S.teams[p.team]||{},B={},E=RKA.einsatz;
   const V=RKA.vertrag,q=p.sal/salaryFor(p.str);let v=q<V.unter?-V.minus*Math.min(1,(V.unter-q)/0.4):q>V.ueber?V.plus*Math.min(1,(q-V.ueber)/0.35):0;
   if(p.ct<=1&&einschaetzung(p)>=3)v+=V.auslaufend;if(v<0&&hatEig(p,'soeldner'))v*=V.soeldner;B.vertrag=clamp(v,Math.max(Z.vertrag[0],V.max),Z.vertrag[1]);
   const Ro=RKA.rolle,R=krStufe(p),Sx=einschaetzung(p);let tr=p.tb||0;
-  if(p.team===S.my&&p.kr){if(R<Sx)tr+=Ro.zuNiedrig*(Sx-R)*(hatEig(p,'diva')?Ro.diva:1);else if(R>Sx)tr+=Math.min(Ro.hoeherMax,Ro.hoeher*(R-Sx));} // nur eine Rolle, die du selbst vergeben hast
+  if(p.team===S.my&&p.kr&&!autoB('kaderrollen')){if(R<Sx)tr+=Ro.zuNiedrig*(Sx-R)*(hatEig(p,'diva')?Ro.diva:1);else if(R>Sx)tr+=Math.min(Ro.hoeherMax,Ro.hoeher*(R-Sx));} // nur eine Rolle, die du selbst vergeben hast
   B.trainer=clamp(tr,Z.trainer[0],Z.trainer[1]);
   B.umfeld=clamp((p.ubW>0?p.ub||0:0)+(t.kap!==p.id?t.kapB||0:0),Z.umfeld[0],Z.umfeld[1]);
   return B;}
@@ -131,12 +131,12 @@ function grueppchen(tid,kader){const G=RKA.gruppe,ids=new Set((kader||squad(tid)
 // ---------- Wechselwunsch (K14 §5.4) ----------
 function wwStufe3(p){const t=S.teams[p.team];p.ww=3;p.wws=0;S.gw=(S.gw||[]).filter(g=>g.pid!==p.id);if(t&&p.ww3s!==S.season){p.ww3s=S.season;t.kst=Object.assign({ww3:0},t.kst||{});t.kst.ww3++;} // je Spieler und Saison einmal gezählt
   if(p.team===S.my)news(`${p.n} hat offiziell um seine Freigabe gebeten. Andere Vereine wissen es, sein Marktwert sinkt um 10 %.`,'bad');
-  else{p.list=1;p.ask=value(p);}}
+  if(stabMacht(p.team,'transfers')){p.list=1;p.ask=value(p);}}
 function wechselwunschWoche(p){const W=RKA.wechsel,mein=p.team===S.my;
   p.wu=p.st<W.grummeln[0]?(p.wu||0)+1:0;p.wv=p.st<W.gespraech[0]?(p.wv||0)+1:0;p.wws=(p.wws||0)+1;
   if(p.ww>0&&p.st>W.zurueckAb){p.ww--;p.wws=0;if(mein&&p.ww===0)news(`${p.n} ist wieder zufrieden.`,'good');if(p.ww<2)S.gw=(S.gw||[]).filter(g=>g.pid!==p.id);return;}
   if(p.ww===0&&p.wu>=W.grummeln[1]){p.ww=1;p.wws=0;}
-  else if(p.ww===1&&p.wv>=W.gespraech[1]){p.ww=2;p.wws=0;if(mein)gespraechswunsch(p);else kiGespraech(p);}
+  else if(p.ww===1&&p.wv>=W.gespraech[1]){p.ww=2;p.wws=0;if(mein&&!autoB('gespraeche'))gespraechswunsch(p);else{kiGespraech(p);if(mein)stabMeldung(`Der Co-Trainer hat mit ${p.n} gesprochen, der unzufrieden war. ${p.ww===1?'Das Gespräch hat geholfen.':'Es hat nichts gebracht.'}`,p.ww===1?'':'bad');}}
   else if(p.ww===2&&p.wws>=W.offiziell&&p.st<W.gespraech[0]){if(mein)S.gw=(S.gw||[]).filter(g=>g.pid!==p.id);wwStufe3(p);}
   else if(p.ww===3&&p.wws>=W.oeffentlich&&R()<(hatEig(p,'diva')||hatEig(p,'soeldner')?W.oeffentlichDiva:W.oeffentlichChance)){p.ww=4;p.wws=0;
     squad(p.team).forEach(q=>{if(q!==p)stimmungAendern(q,-W.teamMinus);});if(mein)news(`${p.n} beklagt sich öffentlich und will weg. Die Stimmung in der Kabine leidet.`,'bad');}}

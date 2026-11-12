@@ -493,6 +493,67 @@ const REGELN={
       spielStaerke:{basis:50,jeAnsehen:0.4},tore:1.35,heim:1.1}
   },
 
+  // Lernstufen (K36 §11, UL). Im Spiel heißen sie „Lizenz“. Je Bereich: ab = Lizenz, ab der du selbst entscheidest (1 Teamleiter bis 5 Pro-Lizenz),
+  // name = Anzeige, tab = wo die Funktion steht, auto = der Bereich kann in der Automatik laufen, wer und tut = wer es dann erledigt und wie
+  // (dieselbe Regel wie bei den Computer-Vereinen). Bereiche ohne auto ruhen, solange sie gesperrt sind.
+  lizenz:{
+    start:true,                      // Voreinstellung beim Spielstart: mit Lernstufen
+    namen:['Teamleiter','C-Lizenz','B-Lizenz','A-Lizenz','Pro-Lizenz'],
+    bereiche:{
+      aufstellung:{ab:1,name:'Aufstellung',tab:'aufst',auto:1,wer:'der Co-Trainer',tut:'stellt vor jedem Spiel die beste verfügbare Elf auf'},
+      formation:{ab:1,name:'Grundordnung',tab:'aufst',auto:1,wer:'der Co-Trainer',tut:'prüft einmal im Monat, welche Grundordnung am besten zum Kader passt'},
+      ausrichtung3:{ab:1,name:'Ausrichtung (defensiv, ausgewogen, offensiv)',tab:'aufst'},
+      live:{ab:1,name:'Spiel live ansehen',tab:'buero'},
+      wechsel:{ab:1,name:'Wechsel im Live-Spiel',tab:'buero'},
+      verletzte:{ab:1,name:'Verletztenliste',tab:'kader'},
+      pokal:{ab:1,name:'Pokal, Relegation, Supercup',tab:'pokal'},
+      stimmung:{ab:1,name:'Stimmung und Kabine ansehen',tab:'kabine'},
+      stil:{ab:2,name:'Spielstil',tab:'aufst',auto:1,wer:'der Co-Trainer',tut:'wählt den Stil gegen jeden Gegner neu'},
+      zurufe:{ab:2,name:'Zurufe und Halbzeitansprache',tab:'buero'},
+      vorlage:{ab:2,name:'Trainingsvorlage',tab:'training',auto:1,wer:'der Co-Trainer',tut:'plant das Training nach dem Abstand zum Spiel'},
+      transfers:{ab:2,name:'Transfers',tab:'transfer',auto:1,wer:'der Verein',tut:'kauft und verkauft nach den Regeln der Computer-Vereine'},
+      gespraeche:{ab:2,name:'Einzelgespräche',tab:'kabine',auto:1,wer:'der Co-Trainer',tut:'spricht mit Spielern, die reden wollen'},
+      ansprache:{ab:2,name:'Mannschaftsansprache',tab:'kabine'},
+      kapitaen:{ab:2,name:'Kapitän',tab:'kabine',auto:1,wer:'der Co-Trainer',tut:'bestimmt den Kapitän nach Führung und Vereinsjahren'},
+      beobachten:{ab:2,name:'Spieler beobachten lassen',tab:'transfer'},
+      ausrichtung5:{ab:3,name:'Ausrichtung in fünf Stufen',tab:'aufst'},
+      einstellung:{ab:3,name:'Einstellung zum Spiel und Einsatz',tab:'aufst',auto:1,wer:'der Co-Trainer',tut:'ruft in wichtigen Spielen das „Spiel der Saison“ aus, sonst normal'},
+      rollen:{ab:3,name:'Rollen am Platz',tab:'aufst',auto:1,wer:'der Co-Trainer',tut:'lässt die Standardrollen der Grundordnung spielen'},
+      schuetzen:{ab:3,name:'Standardschützen und Zurufe an einzelne Spieler',tab:'aufst',auto:1,wer:'der Co-Trainer',tut:'lässt den Besten nach Merkmal und Stärke schießen'},
+      lernziel:{ab:3,name:'Lernziele',tab:'training',auto:1,wer:'der Co-Trainer',tut:'vergibt die Lernplätze an die jüngsten Spieler'},
+      umschulung:{ab:3,name:'Umschulung',tab:'training'},
+      sommer:{ab:3,name:'Urlaub und Trainingsauftakt',tab:'training',auto:1,wer:'der Co-Trainer',tut:'nimmt die übliche Urlaubslänge und den üblichen Auftakt'},
+      testspiele:{ab:3,name:'Testspiele',tab:'training',auto:1,wer:'der Co-Trainer',tut:'plant zwei Testspiele gegen Amateure je Vorbereitung'},
+      lager:{ab:3,name:'Trainingslager',tab:'training'},
+      stab:{ab:3,name:'Trainerstab',tab:'stab',auto:1,wer:'der Verein',tut:'verlängert die Verträge der Mitarbeiter meistens und ersetzt einen fehlenden Co-Trainer'},
+      vertraege:{ab:3,name:'Verträge',tab:'kader',auto:1,wer:'der Verein',tut:'verlängert auslaufende Verträge meistens'},
+      jugend:{ab:3,name:'Jugendarbeit',tab:'training',auto:1,wer:'der Verein',tut:'hält die Jugendarbeit auf der üblichen Stufe'},
+      ausland:{ab:3,name:'Im Ausland beobachten und kaufen',tab:'transfer'},
+      kaderrollen:{ab:3,name:'Kaderrollen',tab:'kabine',auto:1,wer:'der Co-Trainer',tut:'verteilt die Rollen nach der besten Elf'},
+      versprechen:{ab:3,name:'Zusagen und Teamevent',tab:'kabine'},
+      suchauftrag:{ab:4,name:'Suchauftrag für Scouts',tab:'transfer'},
+      sportgericht:{ab:4,name:'Sportgericht',tab:'buero',auto:1,wer:'der Verein',tut:'nimmt Strafen an oder legt bei harten Anträgen Einspruch ein'},
+      medizin:{ab:4,name:'Fit spritzen und früher zurückholen',tab:'kader',auto:1,wer:'der Mannschaftsarzt',tut:'spritzt nur in wichtigen Spielen Stammspieler mit kurzer Verletzung fit'},
+      sponsor:{ab:4,name:'Trikotsponsor',tab:'buero',auto:1,wer:'der Verein',tut:'nimmt das Angebot mit dem höchsten festen Betrag'},
+      preise:{ab:4,name:'Eintrittspreis',tab:'finanzen',auto:1,wer:'der Verein',tut:'setzt den Richtpreis nach Liga und Ansehen'},
+      stadion:{ab:5,name:'Stadionausbau',tab:'stadion'},
+      kredit:{ab:5,name:'Kredit',tab:'finanzen',auto:1,wer:'der Verein',tut:'nimmt keinen Kredit auf und tilgt am Saisonende aus dem Guthaben'}
+    },
+    // Aufstieg zur Lizenz 2 bis 5 (K36 §5.3): Mindestzeit in Pflichtspielen seit dem letzten Aufstieg und so viele der Aufgaben (noetig), oder die späteste Zeit.
+    // abSaison: frühestens in dieser Saison deiner Laufbahn. spaetestens: nach so vielen Pflichtspielen, oder in der Saison deiner Laufbahn ab dem Datum (07-01 oder 01-01).
+    aufstieg:[null,
+      {spiele:4,noetig:3,aufgaben:['startelf','liveBisEnde','wechsel','ordnung'],spaetestens:{spiele:12}},
+      {spiele:10,noetig:3,aufgaben:['stil','vorlage','zuruf','gespraechOderTransfer'],spaetestens:{saison:2,datum:'07-01'}},
+      {spiele:10,abSaison:2,noetig:3,aufgaben:['rolleOderSchuetze','lernziel','sommerplan','vertragOderStab','kaderrolleOderVersprechen'],spaetestens:{saison:2,datum:'01-01'}},
+      {spiele:12,abSaison:3,noetig:2,aufgaben:['sportgericht','medizin','sponsorOderPreis'],spaetestens:{saison:3,datum:'01-01'}}],
+    aufgabenNamen:{startelf:'Startelf selbst geändert',liveBisEnde:'ein Pflichtspiel live bis zum Abpfiff verfolgt',wechsel:'im Live-Spiel gewechselt',ordnung:'Grundordnung oder Ausrichtung geändert',
+      stil:'Spielstil gewählt',vorlage:'Trainingsvorlage selbst gesetzt',zuruf:'Zuruf oder Halbzeitansprache',gespraechOderTransfer:'Einzelgespräch geführt oder Transferangebot abgegeben',
+      rolleOderSchuetze:'Rolle oder Schütze festgelegt',lernziel:'Lernziel oder Umschulung',sommerplan:'Testspiel, Trainingslager oder Urlaubslänge selbst gewählt',vertragOderStab:'Vertrag verlängert oder Mitarbeiter eingestellt',kaderrolleOderVersprechen:'Kaderrolle oder Zusage',
+      sportgericht:'Sportgerichtsverfahren selbst entschieden',medizin:'fit gespritzt oder früher zurückgeholt',sponsorOderPreis:'Sponsor oder Eintrittspreis selbst gewählt'},
+    ohneGelegenheit:['sportgericht','medizin'], // zählen als erledigt, wenn es seit dem Aufstieg bis zur Mindestzeit keine Gelegenheit gab
+    testspieleAuto:2,testspielAbstand:6          // Automatik: so viele Testspiele je Vorbereitung, mit mindestens so vielen Tagen Abstand
+  },
+
   stadion:{
     tribuene:{plaetze:3000,kosten:4.5e6,wochen:6,max:90000},
     logen:{anzahl:10,kosten:2.5e6,wochen:4,max:120},
@@ -517,4 +578,4 @@ const REGELN={
 // Schreibschutz: Zur Laufzeit darf kein Code eine Regel ändern.
 (function frieren(o){Object.freeze(o);Object.values(o).forEach(v=>{if(v&&typeof v==='object'&&!Object.isFrozen(v))frieren(v);});})(REGELN);
 // Kurzformen für den Code
-const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui,RL=REGELN.live,RTA=REGELN.taktik,RSO=REGELN.sommer,RST=REGELN.stab,RD=REGELN.disziplin,RMD=REGELN.medizin,RWB=REGELN.wettbewerbe,RTS=REGELN.testspiele,RLA=REGELN.lager,RKA=REGELN.kabine,RGS=REGELN.gespraeche,RSC=REGELN.scouting;
+const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui,RL=REGELN.live,RTA=REGELN.taktik,RSO=REGELN.sommer,RST=REGELN.stab,RD=REGELN.disziplin,RMD=REGELN.medizin,RWB=REGELN.wettbewerbe,RTS=REGELN.testspiele,RLA=REGELN.lager,RKA=REGELN.kabine,RGS=REGELN.gespraeche,RSC=REGELN.scouting,RLZ=REGELN.lizenz;

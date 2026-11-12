@@ -16,7 +16,7 @@ const ordnungFaktor=(t,f)=>{const V=RTA.vertrautheit,v=vertraut(t,'ordnung',f);r
 
 // Rollen (K06 §3.1): Mittelfeld-Mitte als DM, ZM, SM oder OM (höchstens ein Spielmacher), Sturm-Mitte als MS oder HS. Gespeichert je Grundordnung.
 const rolleWaehlbar=pos=>RTA.rollen.mitte.includes(pos)?'mitte':RTA.rollen.sturm.includes(pos)?'sturm':null;
-function slotsVerein(t,form){const f=form||t.form,sl=slots(f).slice(),r=t&&t.rollen&&t.rollen[f];if(r)for(const i in r){const g=rolleWaehlbar(sl[i]);if(g&&RTA.rollen[g].includes(r[i]))sl[i]=r[i];}return sl;}
+function slotsVerein(t,form){const f=form||t.form,sl=slots(f).slice(),r=t&&t.rollen&&!(t.id===S.my&&autoB('rollen'))&&t.rollen[f];if(r)for(const i in r){const g=rolleWaehlbar(sl[i]);if(g&&RTA.rollen[g].includes(r[i]))sl[i]=r[i];}return sl;}
 
 // Ligaschnitt der Teamwerte (für die Umsetzung), einmal pro Tag gerechnet
 let LIGA_W={key:null,w:{}};
@@ -47,8 +47,8 @@ function stilWirkung(stil,u){const d=RTA.stile[stil]||{},vorteil={kontrolle:v=>v
 
 // Vor dem Anpfiff: Stil, Einstellung, Umsetzung, Kreislauf und Faktoren beider Mannschaften (Computer-Trainer wählen ihren Stil gegen diesen Gegner)
 function taktikAnlegen(Ss,o){Ss.forEach(sd=>{if(sd.am)return;const t=S.teams[sd.id];sd.stil=STILE.includes(t.stil)?t.stil:'ausgewogen';
-    sd.einst=sd.id===S.my?(t.einstellung||'normal'):(o.wichtig?'saison':'normal');sd.wRoh=sd.w;});
-  Ss.forEach((sd,s)=>{if(!sd.am&&sd.id!==S.my)sd.stil=kiStil(sd,Ss[1-s]);});
+    sd.einst=!stabMacht(sd.id,'einstellung')?(t.einstellung||'normal'):(o.wichtig?'saison':'normal');sd.wRoh=sd.w;});
+  Ss.forEach((sd,s)=>{if(!sd.am&&stabMacht(sd.id,'stil'))sd.stil=kiStil(sd,Ss[1-s]);}); // auch dein Verein, solange der Co-Trainer den Stil wählt (K36)
   taktikWirkung(Ss);}
 function taktikWirkung(Ss){const E=RTA.einstellung;
   Ss.forEach(sd=>{if(sd.am)return;sd.u=umsetzung(sd,sd.stil);});
@@ -61,7 +61,8 @@ function taktikWirkung(Ss){const E=RTA.einstellung;
   Ss.forEach(sd=>{if(sd.am)return;sd.w=teamWerte(sd);sd.A=0.5*sd.w.AM+0.25*(sd.w.AL+sd.w.AR);sd.D=0.4*sd.w.DM+0.2*(sd.w.DL+sd.w.DR)+0.2*sd.w.TW;});}
 // Computer-Trainer (K06 §7): Außenseiter mauern oder kontern, Favoriten pressen oder haben den Ball, sonst ihr Profil. Gegen dich kontern sie mit Wahrscheinlichkeit 25 % deinen Lieblingsstil.
 function kiStil(sd,op){const K=RTA.ki,t=S.teams[sd.id],q=op.am?2:(sd.A+sd.D)/Math.max(1,op.A+op.D);
-  if(op.id===S.my&&R()<K.reaktion){const v=(S.stilVerlauf||[]).slice(-K.rueckblick);if(v.length){const z={};v.forEach(x=>z[x]=(z[x]||0)+1);const lieb=Object.entries(z).sort((a,b)=>b[1]-a[1])[0][0],gegen=Object.keys(RTA.kreislauf).find(k=>RTA.kreislauf[k]===lieb);if(gegen)return gegen;}}
+  // Die Reaktion gilt nur deinem eigenen Lieblingsstil: Wählt dein Co-Trainer den Stil, gibt es keinen (K36)
+  if(op.id===S.my&&!autoB('stil')&&R()<K.reaktion){const v=(S.stilVerlauf||[]).slice(-K.rueckblick);if(v.length){const z={};v.forEach(x=>z[x]=(z[x]||0)+1);const lieb=Object.entries(z).sort((a,b)=>b[1]-a[1])[0][0],gegen=Object.keys(RTA.kreislauf).find(k=>RTA.kreislauf[k]===lieb);if(gegen)return gegen;}}
   // Wahl nach Umsetzung und Kreislauf gegen den (bisher bekannten) Stil des Gegners
   const kreis=k=>op.am?0:RTA.kreislauf[k]===op.stil?1:RTA.kreislauf[op.stil]===k?-1:0,wahl=l=>l.map(k=>[k,umsetzung(sd,k)+K.kreislaufGewicht*kreis(k)]).sort((a,b)=>b[1]-a[1])[0][0];
   if(q<K.aussenseiter)return wahl(['mauern','konter']);if(q>K.favorit)return wahl(['ballbesitz','pressing']);return STILE.includes(t.stil)?t.stil:'ausgewogen';}

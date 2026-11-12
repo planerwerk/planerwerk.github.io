@@ -38,10 +38,10 @@ function stabAufbau(){const A=RST.start;S.stab=[];S.stabId=0;
 function stabQText(x){if(x.team===S.my&&(x.wiv||0)>=RST.genauNachWochen)return String(x.q);const u=RST.unschaerfe,h=(x.id*2654435761>>>0)%(2*u+1)-u,m=clamp(x.q+h,1,20);return`${clamp(m-u,1,20)}–${clamp(m+u,1,20)}`;}
 // Woche: Zeit im Verein (für die genaue Qualität), Computer-Vereine besetzen den Co-Trainer nach, wenn er fehlt
 function stabWoche(){(S.stab||[]).forEach(x=>{if(x.team>=0)x.wiv=(x.wiv||0)+1;});
-  S.teams.forEach(t=>{if(!aktiv(t)||t.id===S.my||stabVon(t.id,'co').length)return;const frei=S.stab.filter(x=>x.team<0&&x.r==='co').sort((a,b)=>b.q-a.q)[0];if(frei){frei.team=t.id;frei.sal=stabGehalt('co',frei.q,t.lg);frei.ct=riA(RST.vertrag);stabGeaendert();}});}
+  S.teams.forEach(t=>{if(!aktiv(t)||!stabMacht(t.id,'stab')||stabVon(t.id,'co').length)return;const neu=S.stab.filter(x=>x.team<0&&x.r==='co').sort((a,b)=>b.q-a.q)[0];if(neu){neu.team=t.id;neu.sal=stabGehalt('co',neu.q,t.lg);neu.ct=riA(RST.vertrag);stabGeaendert();if(t.id===S.my)stabMeldung(`Der Verein hat ${neu.n} als Co-Trainer eingestellt.`);}});}
 // Neue Saison: Verträge laufen aus. Computer-Vereine verlängern meist, eigene Mitarbeiter gehen, wenn du nicht verlängert hast.
 function stabSaison(){(S.stab||[]).forEach(x=>{x.age++;if(x.team<0)return;x.ct--;if(x.ct>0)return;
-    if(x.team!==S.my&&R()<RST.verlaengern){x.ct=riA(RST.vertrag);return;}if(x.team===S.my)news(`${RST.rollen[x.r].name} ${x.n} verlässt den Verein (Vertrag ausgelaufen).`,'bad');x.team=-1;});
+    if(stabMacht(x.team,'stab')&&R()<RST.verlaengern){x.ct=riA(RST.vertrag);if(x.team===S.my)stabMeldung(`Der Verein hat den Vertrag von ${RST.rollen[x.r].name} ${x.n} verlängert.`);return;}if(x.team===S.my)news(`${RST.rollen[x.r].name} ${x.n} verlässt den Verein (Vertrag ausgelaufen).`,'bad');x.team=-1;});
   S.stab=S.stab.filter(x=>x.team>=0||x.age<RST.rente);while(S.stab.filter(x=>x.team<0).length<RST.vereinslos){const r=pick(STAB_ROLLEN());S.stab.push(stabNeu(r,riA(RST.start.vereinslosQ),-1,2));}stabGeaendert();auftraegeAufraeumen();}
 // Gehälter des eigenen Stabs je Ligaspiel (wie die Spielergehälter)
 const stabGehaelter=tid=>(S.stab||[]).filter(x=>x.team===tid).reduce((a,x)=>a+x.sal,0);

@@ -58,6 +58,6 @@ function setTarget(){LIGEN.forEach(lg=>S.teams.filter(t=>t.lg===lg).sort((a,b)=>
   // Schwierigkeit: Ziel einen Platz leichter oder strenger, nie schlechter als das schlechteste Ziel der Liga und nie besser als das beste (1. Liga Platz 1, sonst Platz 2)
   if(stufe().ziel)z=clamp(z+stufe().ziel,lg>=2?Math.min(z,RV.ziel.unterhalbMindestens):1,Math.max(z,RV.ziel.schlechtester[lg]));S.target=z;}
 function sponsOffers(){const t=myT(),SP=RF.sponsor;const b=t.rep*t.rep*(SP['liga'+t.lg]||SP.liga3);const ns=shuffle(SPONSOREN.slice());const r=v=>Math.round(v/1000)*1000;
-  S.sponsOffers=SP.angebote.map((a,i)=>({name:ns[i],base:r(b*a.fix),win:a.sieg?r(b*a.sieg):0,yrs:a.jahre,info:a.info}));}
+  S.sponsOffers=SP.angebote.map((a,i)=>({name:ns[i],base:r(b*a.fix),win:a.sieg?r(b*a.sieg):0,yrs:a.jahre,info:a.info}));sponsorAuto();} // in der Automatik wählt der Verein sofort (K36)
 function sponsorWaehlen(i){S.spons={...S.sponsOffers[i]};S.sponsOffers=null;news(`Sponsorvertrag unterschrieben: ${S.spons.name}.`,'good');}
-function pickSponsor(i){sponsorWaehlen(i);save();render();}
+function pickSponsor(i){if(!darf('sponsor','sponsorOderPreis'))return;sponsorWaehlen(i);save();render();}

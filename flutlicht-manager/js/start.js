@@ -7,6 +7,7 @@ function renderStart(){
   <div class="card"><h2>Neues Spiel</h2><div class="form"><label>Dein Name <input id="mgr" value="Trainer" maxlength="30"></label>
   <label>Verein <select id="club"><optgroup label="1. Bundesliga 2026/27">${opt(1)}</optgroup><optgroup label="2. Bundesliga 2026/27">${opt(2)}</optgroup></select></label>
   <label>Schwierigkeit <select id="stufe">${Object.entries(REGELN.schwierigkeit.stufen).map(([k,s])=>`<option value="${k}" ${k===REGELN.schwierigkeit.standard?'selected':''}>${s.name}: ${s.text}</option>`).join('')}</select></label>
+  <label>Einstieg <select id="lernstufen"><option value="1" ${RLZ.start?'selected':''}>Mit Lernstufen (empfohlen für den Einstieg): Du beginnst mit Aufstellung und Spiel, der Stab macht den Rest, Schritt für Schritt kommt mehr dazu</option><option value="0" ${RLZ.start?'':'selected'}>Alles frei: jede Entscheidung von Anfang an bei dir</option></select></label>
   <details><summary>Erweitert</summary><label style="margin-top:8px">Startwert für den Zufall (Seed, leer = zufällig) <input id="seed" inputmode="numeric" placeholder="zum Beispiel 12345"></label></details>
   <button class="go" onclick="newGame()">Anpfiff zur Karriere</button></div></div>
   <details class="card"><summary>Spielstand-Code laden</summary><textarea id="imp" placeholder="Code hier einfügen" style="margin-top:8px"></textarea><div class="row" style="margin-top:8px"><button onclick="importSave()">Laden</button></div></details>
@@ -16,9 +17,12 @@ try{REGELN.spielstand.alteSchluessel.forEach(k=>localStorage.removeItem(k));}cat
 function loadLocal(){try{const s=localStorage.getItem(REGELN.spielstand.schluessel);if(s){const d=JSON.parse(s);if(d.v!==REGELN.spielstand.version){toast('Der gespeicherte Spielstand passt nicht zu dieser Version.');return;}S=d;reindex();TAB='buero';render();if(S.live)liveFortsetzen();}}catch(e){toast('Spielstand konnte nicht geladen werden.');}}
 function newGame(){const id=+document.getElementById('club').value,name=(document.getElementById('mgr').value||'Trainer').trim().slice(0,30)||'Trainer';
   const se=(document.getElementById('seed')||{}).value,seed=se&&/^\d+$/.test(se.trim())?(+se.trim())>>>0:neuerSeed();
-  buildWorld(seed);S.my=id;S.mgr=name;stufeAnwenden((document.getElementById('stufe')||{}).value);sponsOffers();S.lineup=bestXI(id,myT().form);
+  buildWorld(seed);S.my=id;S.mgr=name;stufeAnwenden((document.getElementById('stufe')||{}).value);
+  // Lernstufen (K36): gesperrte Bereiche führt der Stab, deshalb vor den Sponsorangeboten anlegen
+  const ls=document.getElementById('lernstufen');lizenzStart(ls?ls.value!=='0':RLZ.start);sponsOffers();S.lineup=bestXI(id,myT().form);
   news(`Tipp: Kader und Aufstellung prüfen, Sponsor wählen, dann oben auf „Tag beenden ▶“ klicken. Dein erstes Pflichtspiel ist am ${datumMittel(ersterPflichttermin())}.`);
   news(`Willkommen, ${name}! Der Vorstand von ${myT().name} erwartet: ${targetText(myT().lg,S.target)}.`,'good');
+  if(S.lizenz.an)news(`Du beginnst als ${lizenzName(1)}: Aufstellung, Grundordnung, Ausrichtung und dein Spiel gehören dir. Alles andere erledigt der Stab, bis du die nächste Lizenz hast. Oben steht deine Lizenz, ein Klick zeigt den Weg.`);
   save();TAB='buero';render();}
 
 // Test- und Fehlersuch-Zugang

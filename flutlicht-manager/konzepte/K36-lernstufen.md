@@ -1,6 +1,6 @@
 # K36 – Einstieg mit Lernstufen
 
-Status: **Entwurf** (9. November 2026), geschrieben ohne Rücksprache auf Grundlage deiner Entscheidungen vom 9.11. Vorläufige Entscheidungen stehen in Abschnitt 12. **Noch nicht umgesetzt**, die Umsetzung UL folgt nach deiner Abstimmung.
+Status: **Entwurf** (9. November 2026), geschrieben ohne Rücksprache auf Grundlage deiner Entscheidungen vom 9.11. Vorläufige Entscheidungen stehen in Abschnitt 12. **Umgesetzt in UL** (12. November 2026, `js/lizenz.js`, Tests `tests/lizenz.js` und `tests/ui-lernstufen.js`), freigegeben am 11.11. abends („nichts auslassen“). Die vorläufigen Entscheidungen bleiben vorläufig, bis du widersprichst. Abweichungen vom Entwurf stehen in Abschnitt 12 ab Nr. 14.
 Hängt ab von: K16 (Stab und Automatik), K02 (gleiche Regeln, Schwierigkeit), K35a (Bedienkonzept) · Wird gebraucht von: allen Bereichen mit eigener Entscheidung (K05–K07, K09–K16, K19, K21, K23–K29).
 
 ## 1. Ziel und Spielgefühl
@@ -75,8 +75,8 @@ Grundlage sind die Notizen in K10 §12 Nr. 14, K11 §12 Nr. 12, K13 §12 Nr. 13 
 
 | Bereich (Schlüssel) | Funktion | Lizenz | Bis dahin macht es | Quelle |
 |---|---|---|---|---|
-| `aufstellung` | Startelf setzen, beste Elf aufstellen | 1 Teamleiter | – | PLAN §4 |
-| `formation` | Grundordnung wählen, auch im Live-Spiel | 1 Teamleiter | – | PLAN §4 |
+| `aufstellung` | Startelf setzen, beste Elf aufstellen | 1 Teamleiter | – (auf Wunsch stellt der Co-Trainer auf, 12 Nr. 15) | PLAN §4 |
+| `formation` | Grundordnung wählen, auch im Live-Spiel | 1 Teamleiter | – (auf Wunsch wählt der Co-Trainer, 12 Nr. 15) | PLAN §4 |
 | `ausrichtung3` | Ausrichtung defensiv, normal, offensiv, auch im Live-Spiel | 1 Teamleiter | – | PLAN §4 |
 | `live` | Spiel live ansehen, Konferenz, sofort berechnen, vorspulen | 1 Teamleiter | – | K05 |
 | `wechsel` | Wechsel im Live-Spiel | 1 Teamleiter | Computer-Trainer, wenn du nicht wechselst (wie bisher) | K05 |
@@ -91,18 +91,19 @@ Grundlage sind die Notizen in K10 §12 Nr. 14, K11 §12 Nr. 12, K13 §12 Nr. 13 
 | `ansprache` | Mannschaftsansprache außerhalb des Spiels (U8) | 2 C-Lizenz | keine Ansprache | K15 §5.4 |
 | `kapitaen` | Kapitän bestimmen (U8) | 2 C-Lizenz | Co-Trainer wählt nach Führung und Vereinsjahren | K14 §5.8 |
 | `ausrichtung5` | Ausrichtung in fünf Stufen | 3 B-Lizenz | nur drei Stufen wählbar | PLAN §4 |
-| `einstellung` | Einstellung zum nächsten Spiel, Härte im Zweikampf | 3 B-Lizenz | normal | PLAN §4, K06 |
+| `einstellung` | Einstellung zum nächsten Spiel, Härte im Zweikampf | 3 B-Lizenz | Co-Trainer wie bei den Computer-Vereinen: in wichtigen Spielen „Spiel der Saison“, sonst normal, Härte normal (12 Nr. 16) | PLAN §4, K06 |
 | `rollen` | Rollen am Platz | 3 B-Lizenz | Co-Trainer nach `slotsVerein` | PLAN §4, K06 |
 | `schuetzen` | Standardschützen, Reihenfolge im Elfmeterschießen, Zurufe an einzelne Spieler | 3 B-Lizenz | Co-Trainer nach Merkmalen und Stärke | PLAN §4, K05, K06 |
 | `beobachten` | Spieler von einem Scout beobachten lassen (U9a) | 2 C-Lizenz | kein Auftrag, nur Grundkenntnis | K18 |
 | `lernziel` | Lernziele und Einzeltraining | 3 B-Lizenz | Co-Trainer vergibt die Lernplätze (`lernAutomatik`) | PLAN §4, K07 |
 | `umschulung` | Umschulung auf eine neue Position | 3 B-Lizenz | keine Umschulung | PLAN §4, K07 |
-| `sommer` | Urlaubslänge und Trainingsauftakt | 3 B-Lizenz | Co-Trainer nach `urlaubVorschlag` | PLAN §4, K12a |
+| `sommer` | Urlaubslänge und Trainingsauftakt | 3 B-Lizenz | übliche Urlaubslänge und üblicher Auftakt wie bei den Computer-Vereinen (12 Nr. 16) | PLAN §4, K12a |
 | `testspiele` | Testspiele anfragen | 3 B-Lizenz | Co-Trainer plant zwei Testspiele gegen Amateure je Vorbereitung | K11 Nr. 12 |
 | `lager` | Trainingslager buchen | 3 B-Lizenz | kein Lager (wie die Computer-Vereine heute) | K11 Nr. 12 |
 | `stab` | Mitarbeiter einstellen, verlängern, entlassen | 3 B-Lizenz | Verein besetzt fehlende Rollen und verlängert wie die Computer-Vereine (`stabSaison`) | PLAN §4, K16 |
 | `vertraege` | Verträge verlängern, Spieler freistellen | 3 B-Lizenz | Verein verlängert nach den Regeln der Computer-Vereine | PLAN §4, K21 |
 | `ausland` | Spieler im Ausland beobachten und kaufen (U9b) | 3 B-Lizenz | Verein kauft nur im Inland (wie die Computer-Vereine bis U11), der Auslandsmarkt ist als Information frei | K32 §6, K18 |
+| `jugend` | Stufe der Jugendarbeit (bis K08 gebaut ist) | 3 B-Lizenz | Verein hält die übliche Stufe 2 wie die Computer-Vereine | K08, 12 Nr. 15 |
 | `kaderrollen` | Kaderrollen festlegen (U8) | 3 B-Lizenz | Co-Trainer verteilt die Rollen nach Stärke (K14 §7) | K14 §3.1 |
 | `versprechen` | Zusagen im Gespräch, Teamevent (U8) | 3 B-Lizenz | keine Zusagen, kein Teamevent | K15 §5.3, K14 §6 |
 | `suchauftrag` | Suchauftrag für Scouts (U9a), auch mit der Region Ausland (U9b) | 4 A-Lizenz | kein Suchauftrag | K18 |
@@ -221,6 +222,8 @@ lizenz:{
 
 `saison` zählt ab der ersten Saison deiner Laufbahn (1 = erste Saison). `abSaison:3` heißt: frühestens ab dem 1. Juli nach der zweiten Saison.
 
+**Gebaut in UL** (`REGELN.lizenz`): statt `frei:{…}` gibt es `bereiche` mit je einem Eintrag `{ab, name, tab, auto, wer, tut}` (Lizenz, Anzeige, Ort, ob es eine Automatik gibt, wer sie führt und was er tut). Die späteste Zeit steht als Saison deiner Laufbahn mit Datum: `{saison:2,datum:'07-01'}` ist der 1. Juli nach der ersten Saison. Dazu `aufgabenNamen`, `ohneGelegenheit`, `testspieleAuto` und `testspielAbstand`.
+
 ## 12. Offene Fragen
 
 **Mit dir entschieden (9.11.):** Namen nach den Trainerlizenzen. In der ersten Saison 2–3 Stufen, alles frei nach 2–3 Saisons. Überspringen und Abschalten jederzeit. Gesperrte Bereiche laufen automatisch über den Stab.
@@ -241,7 +244,26 @@ lizenz:{
 12. **Automatik mit Klugheit „normal“,** bis K16 §5.1 die Qualität des Stabs einbezieht.
 13. **Der Aufstieg zählt nicht in das Halte-Budget.**
 
-**Für UL zu klären:** Computer-Vereine brauchen eigene Regeln für Testspiele, Vertragsverlängerungen und Kredit, damit die Automatik für dich dieselben Regeln nutzt (7). Die Aufstiegskarte braucht für jeden Bereich einen Satz „was der Stab bisher getan hat“.
+**Vorläufig entschieden bei der Umsetzung (UL, 12. November 2026):**
+
+14. **Gesperrt und Automatik sind dasselbe Stück Code:** `autoB(bereich)` ist wahr, wenn der Bereich gesperrt ist oder du ihn frei beim Stab gelassen hast. Die Spiellogik fragt dann `stabMacht(verein, bereich)` und behandelt deinen Verein wie einen Computer-Verein. Ohne `S.lizenz` (Tests, alte Spielstände) ist alles frei und nichts automatisch: Das Spiel läuft wie vor UL.
+15. **38 Bereiche.** Neu gegenüber §5.2: `jugend` (B-Lizenz, die Stufe der Jugendarbeit hatte keine Lizenz). `aufstellung` und `formation` bleiben beim Teamleiter frei, haben aber eine freiwillige Automatik (der Co-Trainer stellt die beste Elf auf und prüft monatlich die Grundordnung). So lässt sich auch das Kernstück delegieren (K16 §3.3).
+16. **Die Automatik nutzt die Regel der Computer-Vereine, auch wo §5.2 etwas Klügeres vorsah:** Einstellung (in wichtigen Spielen „Spiel der Saison“ statt immer normal) und Sommer (übliche Urlaubslänge statt Vorschlag nach Belastung). Grund ist Grundsatz 1: kein zweites Regelwerk. Klügere Regeln kommen mit U11 für alle.
+17. **Transfers in der Automatik:** Dein Verein nimmt am Markt der Computer-Vereine teil (Transferliste, Käufe, Verkäufe, Kader auffüllen im Sommer). Angebote an dich gibt es dann nicht. Jeder Wechsel steht im Posteingang.
+18. **Testspiele:** Der Co-Trainer plant in der Vorbereitung zwei Testspiele gegen Amateure, wie §5.2 es vorsieht. Computer-Vereine spielen weiter keine (K11, Konsistenzprüfung AQ3). Das ist der einzige Bereich, in dem die Automatik etwas tut, was Computer-Vereine nicht tun.
+19. **Gegner reagieren nicht auf deinen Lieblingsstil, solange der Co-Trainer den Stil wählt** (K06 §7). Vorher konterten sie auch die Wahl des Co-Trainers, das kostete in einem Seed acht Punkte.
+20. **Neu freie Bereiche bleiben in der Automatik,** bis du dort etwas änderst (dann gehört der Bereich dir) oder „Selbst machen“ wählst. In der Lizenz-Ansicht lässt sich jeder freie Bereich mit Automatik dem Stab zurückgeben.
+21. **Abschalten** macht alles frei, bisher Gesperrtes läuft in der Automatik weiter (keine Arbeit über Nacht, wie Nr. 6). „Alles Freie selbst machen“ nimmt alles auf einmal zurück. Wer beim Spielstart „Alles frei“ wählt, führt alles selbst wie vor UL.
+22. **Aufstiegskarte:** oben im Büro, als Halt am Tag des Aufstiegs. Geprüft wird nur an Tagen ohne eigenes Spiel, die Karte kommt also nie vor dem Anpfiff. Sie nennt die neuen Bereiche mit Knopf „Hingehen“, was der Stab dort bisher getan hat, und die Aufgaben der nächsten Lizenz.
+23. **Aufgabe „live bis zum Abpfiff“** zählt, wenn du im Live-Spiel nicht bis zum Ende vorgespult hast. Vorspulen bis zur Halbzeit ist erlaubt.
+24. **Zusagen im Gespräch** hängen am Bereich `versprechen` (B). Themen mit Zusage sind bis dahin im Gespräch gesperrt, die übrigen ab C frei.
+25. **Sponsor, Eintrittspreis, Kredit:** Der Verein nimmt sofort das Angebot mit dem höchsten festen Betrag, setzt vor jedem Heimspiel den Richtpreis und tilgt am Saisonende aus dem Guthaben.
+26. **Gesperrte Bedienelemente** bleiben sichtbar, sind aber aus, mit dem Hinweis „Macht der Co-Trainer · frei ab der B-Lizenz“. Gesperrte Rollen am Platz stehen nur als Kürzel da. Die Lizenz steht in der Kopfzeile, ein Klick öffnet die Lizenz-Ansicht (auch im Menü).
+27. **Meldungen des Stabs** stehen einzeln im Posteingang (Strafe angenommen, Vertrag verlängert, Gespräch geführt, Testspiel angefragt). Die Sammlung im Wochenbericht aus §8 ist noch nicht gebaut.
+28. **Test „kein Nachteil“ ergänzt:** Eine einzelne Saison schwankt um mehrere Punkte, sechs Seeds reichen für das Ziel „höchstens 2 Punkte“ nur knapp. Dazu kommt deshalb der Gleichschritt-Test: Ohne die Testspiele entwickelt sich der Kader 150 Tage lang Tag für Tag genau wie beim selben Verein als Computer-Verein. Gemessen über sechs Seeds: Stab am Steuer 52,2 Punkte, ohne Testspiele 53,5, als Computer-Verein 53,7.
+29. **Noch nicht gebaut:** Rauschen der Automatik nach Qualität des Mitarbeiters (K16 §5.1, Nr. 12), Testspiele und Kredit der Computer-Vereine (7), Sammlung der Stab-Meldungen im Wochenbericht, eine eigene kleine Aufgabe auf der Aufstiegskarte (sie zeigt die Aufgaben der nächsten Lizenz).
+
+**Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 
 ## Quellen
 

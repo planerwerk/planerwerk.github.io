@@ -13,7 +13,8 @@ pg.on('console',m=>{if(m.type()==='error')note('JS','CONSOLE '+m.text());});
 await pg.goto(FILE);await pg.evaluate(()=>{localStorage.clear();localStorage.setItem('flutlicht-manager-v1','{"v":1}');localStorage.setItem('flutlicht-manager-v2','{"v":2}');});await pg.reload();
 if(await pg.evaluate(()=>!!(localStorage.getItem('flutlicht-manager-v1')||localStorage.getItem('flutlicht-manager-v2'))))note('Start','alte Spielstände nicht gelöscht');
 if(await pg.$('button:text-is("Weiterspielen")'))note('Start','alter Spielstand wird zum Weiterspielen angeboten');
-await pg.selectOption('#club',{label:'SC Freiburg'});await pg.fill('#mgr','Testtrainer');await pg.click('summary:text-is("Erweitert")');await pg.fill('#seed','4711');await pg.click('text=Anpfiff zur Karriere');
+// Dieser Lauf spielt „Alles frei“ (ohne Lernstufen), damit jede Funktion von Anfang an bedient werden kann. Die Lernstufen prüft tests/ui-lernstufen.js.
+await pg.selectOption('#club',{label:'SC Freiburg'});await pg.selectOption('#lernstufen','0');await pg.fill('#mgr','Testtrainer');await pg.click('summary:text-is("Erweitert")');await pg.fill('#seed','4711');await pg.click('text=Anpfiff zur Karriere');
 await pg.evaluate(PRUEFUNGEN);
 if(await pg.evaluate(()=>S.seed)!==4711)note('Start','Seed aus dem Startbildschirm nicht übernommen');
 const st=()=>pg.evaluate(()=>({phase:S.phase,tag:S.tag,wk:Math.floor((S.tag-S.plan.start)/7),season:S.season,fired:S.fired,team:S.teams[S.my].name,datum:datumKurz(S.tag)}));

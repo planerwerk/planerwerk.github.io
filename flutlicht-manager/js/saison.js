@@ -30,7 +30,7 @@ function seasonEndLauf(){
   S.hist.push({s:S.season,team:me.name,lg:me.lg,pos,ok:sm.ok});
   S.summary=sm;S.phase='end';
   if(sm.down3.includes(S.my)&&!S.fired){S.fired=1;news(`${me.name} steigt in die Regionalliga ab. Der Verein trennt sich von dir.`,'bad');mkJobs();}
-  if(S.trust<B.entlassenSaisonUnter&&!S.fired){S.fired=1;mkJobs();}save();}
+  if(S.trust<B.entlassenSaisonUnter&&!S.fired){S.fired=1;mkJobs();}lizenzRueckblick();kreditAuto();save();}
 // Regionalliga (K32a): je Staffel wird ein Meister gelost, gewichtet nach Ansehen. West und Südwest steigen direkt auf,
 // von Nord, Nordost und Bayern eine Staffel im Wechsel, die beiden anderen Meister spielen Aufstiegsspiele.
 function poisson(l){const L=Math.exp(-l);let k=0,p=1;do{k++;p*=R();}while(p>L&&k<12);return k-1;}
@@ -60,15 +60,16 @@ function newSeasonLauf(){S.vstat={};S.testspiele=[];kabineSaison();const sm=S.su
   S.pl.forEach(p=>{if(p.team<-1)return;p.age++;p.g=0;p.pg=0;p.apps=0;disziplinSaison(p);p.form=Z.neuForm;p.sv=0;p.ent=0;eigenschaftenNeu(p);
     if(p.team>=0&&!aktiv(S.teams[p.team])){p.team=-1;p.list=0;}
     if((p.age>=K.abAlter&&R()<(p.age-K.nullAlter)*K.jeJahr)||p.age>=K.spaetestens){if(p.team===S.my)news(`${p.n} beendet seine Karriere.`);p.team=-2;return;}
-    if(p.team>=0){p.ct--;if(p.ct<=0){if(p.team===S.my){news(`Vertrag ausgelaufen: ${p.n} verlässt den Verein.`,'bad');p.team=-1;p.list=0;}else if(R()<Z.vertrag.verlaengern){p.ct=riA(Z.vertrag.jahre);p.sal=salaryFor(p.str);}else{p.team=-1;p.list=0;}}}
+    if(p.team>=0){p.ct--;if(p.ct<=0){const mein=p.team===S.my;if(mein&&!autoB('vertraege')){news(`Vertrag ausgelaufen: ${p.n} verlässt den Verein.`,'bad');p.team=-1;p.list=0;}
+      else if(R()<Z.vertrag.verlaengern){p.ct=riA(Z.vertrag.jahre);p.sal=salaryFor(p.str);if(mein)stabMeldung(`Der Verein hat den Vertrag von ${p.n} verlängert (${p.ct} Jahr${p.ct>1?'e':''}).`);}else{if(mein)news(`Vertrag ausgelaufen: ${p.n} verlässt den Verein. Der Verein hat nicht verlängert.`,'bad');p.team=-1;p.list=0;}}}
     if(p.team!==S.my)p.list=0;});
   S.pl=S.pl.filter(p=>p.team!==-2);reindex();mitStrom(strom('auslandSaison',S.season),auslandSaison); // Auslandspool: Alter, Karriereende, neue Talente (K32 §4.1)
   sm.up4.forEach(id=>{if(!squad(id).length)kaderErzeugen(S.teams[id]);});
   const N=Z.nachwuchs;
-  S.teams.forEach(t=>{if(!aktiv(t))return;const base=grundStaerke(t.rep),yl=t.id===S.my?t.youth:N.computerStufe;
+  S.teams.forEach(t=>{if(!aktiv(t))return;const base=grundStaerke(t.rep),yl=t.id===S.my&&!autoB('jugend')?t.youth:N.computerStufe;
     for(let k=0;k<N.anzahl;k++){const pos=pick(N.positionen);const p=mkPlayer({pos,age:N.alter,str:Math.round(base-N.abschlag+riA(N.streuung)+yl),team:t.id,ct:N.vertrag});p.pot=Math.round(base-N.talentAbschlag+riA(N.talentStreuung)+yl*N.talentJeStufe);p.sal=Math.round(p.sal*N.gehalt/1000)*1000;addP(p);
       if(t.id===S.my)news(`Aus der Jugend: ${p.n} (${p.pos}, ${N.alter}) rückt in den Profikader auf. Talent ${stars(p)}.`,'good');}
-    if(t.id===S.my)return;
+    if(!stabMacht(t.id,'transfers'))return; // dein Verein füllt den Kader nur auf, solange der Verein die Transfers führt (K36)
     const need=Z.kaderSoll;
     for(const pos in need){let have=squad(t.id).filter(p=>p.pos===pos).length;while(have<need[pos]){const fa=S.pl.filter(p=>p.team===-1&&p.pos===pos&&p.str<=base+Z.vereinslosBis).sort((a,b)=>b.str-a.str)[0];
       if(fa&&R()<Z.vereinslosChance){fa.team=t.id;fa.ct=riA(Z.vertrag.jahre);fa.sal=salaryFor(fa.str);}else addP(mkPlayer({pos,age:riA(Z.auffuellAlter),str:Math.round(base-Z.auffuellAbschlag+riA(Z.auffuellStreuung)),team:t.id}));have++;}}

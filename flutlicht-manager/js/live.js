@@ -67,7 +67,7 @@ function liveHalte(){const L=LIVE,G=L.G,A=liveEinst().anhalten,neu=G.ev.slice(L.
 // Gelb-Rot-Gefahr (K05 §4.3): verwarnte Abwehrspieler und Sechser, Ungestüme und Hitzköpfe foulen am meisten
 function gelbRotGefahr(G,s,id){const x=G.Ss[s].xp.find(y=>y.p.id===id);if(!x)return false;return posGruppe(x.pos)==='AB'||x.pos==='DM'||hatMk(x.p,'ungestuem')||hatEig(x.p,'hitzkopf');}
 // Vorspulen: der Co-Trainer übernimmt bis zur Halbzeit oder bis zum Ende
-function liveSpulen(bis){const L=LIVE;if(!L||L.ende)return;liveStop();const G=L.G,alt=G.auto[L.s],m0=G.m,k0=G.elf?G.elf.k:null;G.auto[L.s]=true;
+function liveSpulen(bis){const L=LIVE;if(!L||L.ende)return;if(bis==='ende')L.vorgespult=1;liveStop();const G=L.G,alt=G.auto[L.s],m0=G.m,k0=G.elf?G.elf.k:null;G.auto[L.s]=true;
   while(!G.ende&&!(bis==='hz'&&G.m>=45)){G.minute();}
   G.auto[L.s]=alt;if(S.live){S.live.eing.push({m:m0,k:k0,a:'spulen',x:[G.m]});}L.evN=G.ev.length;if(bis==='hz'&&G.m===45){L.hz=true;L.meldung='Halbzeit. Der Co-Trainer hat bis hierher entschieden.';}
   liveSichern();liveRender();if(G.ende)liveAbpfiff();}
@@ -79,21 +79,21 @@ function liveSteuer(){const L=LIVE,el=document.getElementById('lv-steuer');if(!e
 function liveAbpfiff(){const L=LIVE;if(!L||L.ende)return;liveStop();L.ende=true;const G=L.G;L.meldung=G.pen?`Elfmeterschießen ${G.pen[0]}:${G.pen[1]}.`:'Abpfiff.';liveRender();liveSteuer();}
 // Ergebnis eintragen und den Tag abschließen
 function liveWeiter(){const L=LIVE;if(!L||!L.ende)return;BUSY=true;let out=null;
-  try{liveEintragen(L.v);S.live=null;out=tagesSpieleAbschliessen(L.v.out);LAST=out;
+  try{liveEintragen(L.v);S.live=null;if(!L.vorgespult)aufgabe('liveBisEnde');out=tagesSpieleAbschliessen(L.v.out);LAST=out;
     if(L.ansprache){const T=myT();T.ansp=[...(T.ansp||[]),L.ansprache].slice(-RL.ansprache.abnutzungSpiele);if(L.anspPasst!=null)halbzeitGlaub(L.anspPasst);}save();}
   catch(e){console.error(e);toast('Fehler: '+e.message);}finally{BUSY=false;}
   LIVE=null;closeOv();weiterUI();}
 
 // ---------- Eingriffe ----------
-function liveZuruf(art){const L=LIVE;if(!L||L.ende)return;const r=L.G.zuruf(L.s,art);if(r.ok)liveMerken('zuruf',[art]);
+function liveZuruf(art){if(!darf('zurufe','zuruf'))return;const L=LIVE;if(!L||L.ende)return;const r=L.G.zuruf(L.s,art);if(r.ok)liveMerken('zuruf',[art]);
   L.meldung=r.ok?(r.w===1?`„${ZURUF_TEXT[art]}“ – die Mannschaft reagiert.`:r.w>0?`„${ZURUF_TEXT[art]}“ – schon wieder? Wirkt nur noch halb.`:`„${ZURUF_TEXT[art]}“ – keiner hört mehr hin.`):r.grund;liveRender();}
-function liveSpielerZuruf(id,art){const L=LIVE;if(!L||L.ende)return;const p=PIX.get(id),r=L.G.spielerZuruf(L.s,id,art);if(r.ok)liveMerken('spieler',[id,art]);if(r.ok)L.meldung=`${art==='loben'?'Lob':'Kritik'} für ${p.n}: ${r.text}.`;liveRender();}
-function liveTaktik(k,v){const L=LIVE;if(!L||L.ende)return;const o={};o[k]=v;L.G.taktik(L.s,o);liveMerken('taktik',[o]);const pl=L.G.plan[L.s].filter(x=>x.art===k).pop();
+function liveSpielerZuruf(id,art){if(!darf('schuetzen'))return;const L=LIVE;if(!L||L.ende)return;const p=PIX.get(id),r=L.G.spielerZuruf(L.s,id,art);if(r.ok)liveMerken('spieler',[id,art]);if(r.ok)L.meldung=`${art==='loben'?'Lob':'Kritik'} für ${p.n}: ${r.text}.`;liveRender();}
+function liveTaktik(k,v){if(!darf(k==='form'?'formation':k==='stil'?'stil':k==='ein'?'einstellung':v==='SD'||v==='SO'?'ausrichtung5':'ausrichtung3',k==='stil'?'stil':k==='ein'?null:'ordnung'))return;const L=LIVE;if(!L||L.ende)return;const o={};o[k]=v;L.G.taktik(L.s,o);liveMerken('taktik',[o]);const pl=L.G.plan[L.s].filter(x=>x.art===k).pop();
   L.meldung=pl?(pl.ab<=L.G.m+1?'Die Umstellung gilt ab sofort.':`Die Umstellung greift ab der ${pl.ab}. Minute.`):'Unverändert.';liveRender();}
 function liveRaus(id){const L=LIVE;if(!L)return;L.raus=L.raus===id?null:id;liveRender();}
-function liveRein(id){const L=LIVE;if(!L||!L.raus)return;const aus=PIX.get(L.raus),ein=PIX.get(id),ausId=L.raus,r=L.G.wechseln(L.s,L.raus,id);if(r.ok)liveMerken('wechsel',[ausId,id]);
+function liveRein(id){const L=LIVE;if(!L||!L.raus)return;const aus=PIX.get(L.raus),ein=PIX.get(id),ausId=L.raus,r=L.G.wechseln(L.s,L.raus,id);if(r.ok){liveMerken('wechsel',[ausId,id]);aufgabe('wechsel');}
   L.meldung=r.ok?`Wechsel: ${ein.n} kommt für ${aus.n}.`:r.grund;L.raus=null;L.evN=L.G.ev.length;liveRender();}
-function liveAnsprache(art){const L=LIVE;if(!L||L.G.m!==45||L.ansprache)return;const T=myT(),alt=(T.ansp||[]).slice(-(RL.ansprache.abnutzungSpiele-1));
+function liveAnsprache(art){if(!darf('zurufe','zuruf'))return;const L=LIVE;if(!L||L.G.m!==45||L.ansprache)return;const T=myT(),alt=(T.ansp||[]).slice(-(RL.ansprache.abnutzungSpiele-1));
   // Glaubwürdigkeit (K15 §5.5): Die Wirkung hängt davon ab, wie sehr die Mannschaft dir glaubt. Nur Ansprachen mit Anlass verändern danach die Glaubwürdigkeit.
   const abn=(alt.length===RL.ansprache.abnutzungSpiele-1&&alt.every(a=>a===art)&&art!=='schweigen'?0.5:1)*glaubFaktor(),r=L.G.ansprache(L.s,art,abn);L.ansprache=art;L.anspPasst=['loben','motivieren','fordern','beruhigen'].includes(art)?(r.passt&&abn>=glaubFaktor()?true:r.passt?null:false):null;liveMerken('ansprache',[art,abn]);
   L.meldung=`Ansprache „${ANSPRACHE_TEXT[art]}“${r.passt?'':' – passt nicht zur Lage, die Spieler sind irritiert'}${abn<glaubFaktor()?' (kennen sie schon, wirkt nur halb)':''}.`;liveRender();}
@@ -121,13 +121,13 @@ function liveElf(){const L=LIVE,G=L.G,s=L.s,sd=G.Ss[s],fw=G.wechselFrei(s),max=R
   const zeile=x=>{const p=x.p,f=Math.round(G.fr[p.id]),rot=G.off.has(p.id),verl=G.inj.some(i=>i.id===p.id),gelb=G.yel[p.id];
     return`<div class="lv-sp ${L.raus===p.id?'sel':''}"><span class="pos ${posGruppe(x.pos)}">${x.pos}</span><span class="lv-n">${esc(p.n)}${gelb?' <i class="ic Y"></i>':''}${verl?' <i class="ic I"></i>':''}${rot?' <i class="ic R"></i>':''}</span>
       <span class="meter" title="Frische ${f} %"><i class="${f<55?'low':f<70?'mid':''}" style="width:${f}%"></i></span><span class="lv-f">${f} %</span>
-      ${rot||L.ende?'':`<span class="lv-akt"><button onclick="liveSpielerZuruf(${p.id},'loben')" title="Loben">Lob</button><button onclick="liveSpielerZuruf(${p.id},'kritik')" title="Kritisieren">Kritik</button><button onclick="liveRaus(${p.id})" ${fw.ok&&G.bank[s].length?'':'disabled'}>${L.raus===p.id?'abbrechen':'raus'}</button></span>`}</div>`;};
+      ${rot||L.ende?'':`<span class="lv-akt"><button onclick="liveSpielerZuruf(${p.id},'loben')"${lzAus('schuetzen')} title="Loben">Lob</button><button onclick="liveSpielerZuruf(${p.id},'kritik')"${lzAus('schuetzen')} title="Kritisieren">Kritik</button><button onclick="liveRaus(${p.id})" ${fw.ok&&G.bank[s].length?'':'disabled'}>${L.raus===p.id?'abbrechen':'raus'}</button></span>`}</div>`;};
   const bank=G.bank[s].map(id=>PIX.get(id)).filter(Boolean);
   return`<div class="card"><h3>Auf dem Platz <span class="dim">· ${sd.form||myT().form}, Wechsel ${G.wz[s]}/${max}${fw.ok?'':' – '+fw.grund}</span></h3><div class="lv-elf">${sd.xp.filter(x=>!G.raus.has(x.p.id)).map(zeile).join('')}</div></div>
   <div class="card"><h3>Bank</h3>${L.raus?`<p class="dim">Wer kommt für ${esc(PIX.get(L.raus).n)}?</p>`:'<p class="dim">Erst bei einem Spieler auf dem Platz „raus“ wählen.</p>'}
     <div class="lv-elf">${bank.map(p=>`<div class="lv-sp"><span class="pos ${p.pos}">${p.fp||p.pos}</span><span class="lv-n">${esc(p.n)} <span class="dim">${Math.round(p.str)}</span></span><span class="meter"><i style="width:${Math.round(p.fit)}%"></i></span><span class="lv-f">${Math.round(p.fit)} %</span><span class="lv-akt"><button onclick="liveRein(${p.id})" ${L.raus?'':'disabled'}>rein</button></span></div>`).join('')||'<p class="dim">Niemand mehr auf der Bank.</p>'}</div></div>`;}
 function liveTaktikAnsicht(){const L=LIVE,G=L.G,s=L.s,sd=G.Ss[s],plan=G.plan[s];
-  const sel=(k,opts,akt)=>`<select onchange="liveTaktik('${k}',this.value)" ${L.ende?'disabled':''}>${opts.map(([v,l])=>`<option value="${v}" ${v===akt?'selected':''}>${l}</option>`).join('')}</select>`;
+  const sel=(k,opts,akt)=>`<select onchange="liveTaktik('${k}',this.value)" ${L.ende?'disabled':''}${k==='stil'?lzAus('stil'):k==='ein'?lzAus('einstellung'):''}>${opts.map(([v,l])=>`<option value="${v}" ${v===akt?'selected':''} ${k==='tac'&&(v==='SD'||v==='SO')&&!frei('ausrichtung5')?'disabled':''}>${l}</option>`).join('')}</select>`;
   const geplant=plan.length?`<p class="dim">Geplant: ${plan.map(x=>`${{form:'Grundordnung',tac:'Ausrichtung',ein:'Einsatz',stil:'Spielstil'}[x.art]} → ${x.art==='tac'?AUSRICHTUNG[x.wert]:x.art==='ein'?EINSATZ[x.wert]:x.art==='stil'?STIL_NAME[x.wert]:x.wert} ab der ${x.ab}. Minute`).join(', ')}</p>`:'';
   const op=G.Ss[1-s],kr=!op.am&&RTA.kreislauf[sd.stil]===op.stil?'Dein Stil schlägt seinen.':!op.am&&RTA.kreislauf[op.stil]===sd.stil?'Sein Stil schlägt deinen.':'';
   const aktiv=G.rufe[s].filter(r=>G.m>=r.m&&G.m<r.m+RL.zurufe.dauer&&r.w).map(r=>`${ZURUF_TEXT[r.art]} (bis zur ${r.m+RL.zurufe.dauer}. Minute)`);
@@ -135,10 +135,10 @@ function liveTaktikAnsicht(){const L=LIVE,G=L.G,s=L.s,sd=G.Ss[s],plan=G.plan[s];
     <label>Grundordnung ${sel('form',Object.keys(RE.formationen).map(f=>[f,f]),sd.form)}</label>
     <label>Ausrichtung ${sel('tac',Object.entries(AUSRICHTUNG),sd.tac)}</label>
     <label>Einsatz ${sel('ein',Object.entries(EINSATZ),sd.ein)}</label>
-    <label>Spielstil ${sel('stil',STILE.map(k=>[k,STIL_NAME[k]]),sd.stil)}</label></div>
+    <label>Spielstil ${sel('stil',STILE.map(k=>[k,STIL_NAME[k]]),sd.stil)}</label></div>${lzHinweis('stil')}${lzHinweis('einstellung')}
     <p class="dim">Gegner: ${op.am?'Amateurklub':`${STIL_NAME[op.stil]||'–'}, ${op.form||''}`}. ${kr} Umsetzung deines Stils ${Math.round((sd.u||1)*100)} %.</p>
     <p class="dim">Grundordnung und Spielstil wirken nach ${RL.umstellung.ordnung} Minuten, Ausrichtung und Einsatz nach ${RL.umstellung.ausrichtung}. In der Halbzeit gelten Ausrichtung und Einsatz sofort.</p>${geplant}</div>
-  <div class="card"><h3>Zurufe</h3><div class="row">${ZURUFE.map(a=>`<button onclick="liveZuruf('${a}')" ${L.ende?'disabled':''}>${ZURUF_TEXT[a]}</button>`).join('')}</div>
+  <div class="card"><h3>Zurufe</h3>${lzHinweis('zurufe')}<div class="row">${ZURUFE.map(a=>`<button onclick="liveZuruf('${a}')" ${L.ende?'disabled':''}${lzAus('zurufe')}>${ZURUF_TEXT[a]}</button>`).join('')}</div>
     <p class="dim">Wirken ${RL.zurufe.dauer} Minuten. Derselbe Zuruf innerhalb von ${RL.zurufe.abnutzungMinuten} Minuten wirkt nur halb, ein drittes Mal gar nicht. „Zeit schinden“ nur bei Führung, kostet Gelbe Karten.</p>
     ${aktiv.length?`<p>Aktiv: ${aktiv.map(esc).join(', ')}</p>`:''}</div>`;}
 function liveStat(){const G=LIVE.G,st=G.st,b=st.besitz[0]+st.besitz[1],z=(l,a,c)=>`<div class="lv-st"><span>${a}</span><span>${l}</span><span>${c}</span></div>`;
@@ -150,11 +150,11 @@ function liveKonf(){const L=LIVE,G=L.G,mn=G.m,done=L.ende;
 // Elfmeterschießen (K05 §4.6): Reihenfolge der Schützen vor dem ersten Schuss
 function liveElfmeter(){const L=LIVE,G=L.G,s=L.s,reihe=G.elfmeterReihe[s].filter(id=>G.Ss[s].xp.some(x=>x.p.id===id&&!G.off.has(id)));
   return`<div class="card lv-hz"><h3>Elfmeterschießen</h3><p class="dim">Die ersten fünf schießen zuerst, danach geht es der Reihe nach weiter. ▲ schiebt einen Schützen nach vorn.</p>
-  <ol class="lv-reihe">${reihe.map((id,i)=>{const p=PIX.get(id);return`<li><span>${esc(p.n)}${hatMk(p,'elfmeter')?' <span class="dim">(Elfmeterschütze)</span>':''}${hatEig(p,'nervenschwach')&&bekannteEigenschaften(p).includes('nervenschwach')?' <span class="dim">(nervenschwach)</span>':''}</span>${i?`<button onclick="liveReihe(${id})" aria-label="${esc(p.n)} nach vorn">▲</button>`:''}</li>`;}).join('')}</ol></div>`;}
-function liveReihe(id){const L=LIVE;if(!L||!L.G.elf||L.G.elf.k)return;const r=L.G.elfmeterReihe[L.s],i=r.indexOf(id);if(i>0){[r[i-1],r[i]]=[r[i],r[i-1]];liveMerken('reihe',[r.slice()]);}liveRender();}
+  <ol class="lv-reihe">${reihe.map((id,i)=>{const p=PIX.get(id);return`<li><span>${esc(p.n)}${hatMk(p,'elfmeter')?' <span class="dim">(Elfmeterschütze)</span>':''}${hatEig(p,'nervenschwach')&&bekannteEigenschaften(p).includes('nervenschwach')?' <span class="dim">(nervenschwach)</span>':''}</span>${i?`<button onclick="liveReihe(${id})"${lzAus('schuetzen')} aria-label="${esc(p.n)} nach vorn">▲</button>`:''}</li>`;}).join('')}</ol></div>`;}
+function liveReihe(id){if(!darf('schuetzen'))return;const L=LIVE;if(!L||!L.G.elf||L.G.elf.k)return;const r=L.G.elfmeterReihe[L.s],i=r.indexOf(id);if(i>0){[r[i-1],r[i]]=[r[i],r[i-1]];liveMerken('reihe',[r.slice()]);}liveRender();}
 // Halbzeit (K05 §4.4): Statistik, Einschätzung des Co-Trainers, Ansprache
 function liveHalbzeit(){const L=LIVE,G=L.G;return`<div class="card lv-hz"><h3>Halbzeit</h3><p>${esc(coEinschaetzung(G,L.s))}</p>
-  ${L.ansprache?`<p class="dim">Ansprache gehalten: ${ANSPRACHE_TEXT[L.ansprache]}.</p>`:`<p class="dim">Ansprache in der Kabine:</p><div class="row lv-ansp">${ANSPRACHEN.map(a=>`<button onclick="liveAnsprache('${a}')" title="${ANSPRACHE_HILFE[a]}">${ANSPRACHE_TEXT[a]}${G.passt(L.s,a)&&a!=='schweigen'&&a!=='taktik'&&a!=='augenzwinkernd'?' ✓':''}</button>`).join('')}</div><p class="dim">✓ passt zur Lage. Unpassende Ansprachen schaden.</p>`}</div>`;}
+  ${L.ansprache?`<p class="dim">Ansprache gehalten: ${ANSPRACHE_TEXT[L.ansprache]}.</p>`:`${lzHinweis('zurufe')}<p class="dim">Ansprache in der Kabine:</p><div class="row lv-ansp">${ANSPRACHEN.map(a=>`<button onclick="liveAnsprache('${a}')"${lzAus('zurufe')} title="${ANSPRACHE_HILFE[a]}">${ANSPRACHE_TEXT[a]}${G.passt(L.s,a)&&a!=='schweigen'&&a!=='taktik'&&a!=='augenzwinkernd'?' ✓':''}</button>`).join('')}</div><p class="dim">✓ passt zur Lage. Unpassende Ansprachen schaden.</p>`}</div>`;}
 // Einschätzung des Co-Trainers: schwächster und stärkster Bereich im Vergleich zum Gegner (Genauigkeit ab K16)
 function coEinschaetzung(G,s){const W=G.werte(),me=W[s],op=W[1-s];if(!me||!op)return'';
   const v=[['linke Abwehrseite',me.DL/op.AR],['rechte Abwehrseite',me.DR/op.AL],['Innenverteidigung',me.DM/op.AM],['Mittelfeld',me.K/op.K],['linke Angriffsseite',me.AL/op.DR],['rechte Angriffsseite',me.AR/op.DL],['Mitte im Angriff',me.AM/op.DM]].sort((a,b)=>a[1]-b[1]);

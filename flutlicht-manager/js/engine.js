@@ -8,7 +8,7 @@ const seite=pos=>/^(LV|LM|LA|LS)$/.test(pos)?'L':/^(RV|RM|RA|RS)$/.test(pos)?'R'
 const linksForm=pos=>seite(pos)==='R'?TAUSCH[pos]:pos;
 const STD_POS={TW:'TW',AB:'IV',MF:'ZM',ST:'MS'};
 // Eignung eines Spielers für einen Platz (K03 §3.1a): eigene Position 100 %, verwandte 75–92 %, Gruppe 70 %, sonst 55 %, Torwart und Feld 45 %
-function eignung(p,pos){const E=RE.eignung,fp=p.fp||STD_POS[p.pos];if(fp===pos)return 1;const tr=p.eig&&p.eig[pos]?p.eig[pos]/100:0;
+function eignung(p,pos){const E=RE.eignung,fp=p.fp||STD_POS[p.pos];if(fp===pos)return 1;const tr=p.ue&&p.ue[pos]?p.ue[pos]/100:0;
   const gA=posGruppe(fp),gB=posGruppe(pos);let w;
   if(gA==='TW'||gB==='TW')w=E.torwartFeld;
   else{let a=fp,b=pos;if(seite(a)==='R'){a=TAUSCH[a];b=TAUSCH[b]||b;}w=(E.nah[a]&&E.nah[a][b])||(E.nah[b]&&E.nah[b][a])||(gA===gB?E.gleicheGruppe:E.andereGruppe);
@@ -25,7 +25,8 @@ function bestXI(tid,form,kader){const sl=slotsVerein(S.teams[tid],form),pool=(ka
   const pass=ok=>sl.forEach((pos,i)=>{if(xi[i]!=null)return;let best=null,bv=-1;for(const p of pool){if(used.has(p.id)||!ok(p,pos))continue;const v=eff(p,pos);if(v>bv){bv=v;best=p;}}if(best){xi[i]=best.id;used.add(best.id);}});
   pass((p,pos)=>(p.fp||STD_POS[p.pos])===pos);pass((p,pos)=>posGruppe(p.fp||STD_POS[p.pos])===posGruppe(pos));
   return fillXI(sl,pool,xi,used);}
-function myXI(){const t=myT(),sl=slotsVerein(t),pool=squad(S.my).filter(avail),used=new Set();
+function myXI(){if(autoB('aufstellung'))return bestXI(S.my,myT().form); // Automatik (K36): der Co-Trainer stellt auf
+  const t=myT(),sl=slotsVerein(t),pool=squad(S.my).filter(avail),used=new Set();
   const xi=sl.map((pos,i)=>{const id=(S.lineup||[])[i];const p=PIX.get(id);if(p&&p.team===S.my&&avail(p)&&!used.has(id)){used.add(id);return id;}return null;});
   return fillXI(sl,pool,xi,used);}
 
@@ -125,7 +126,7 @@ const wb=o.wb||'liga',H=mitWettbewerb(wb,()=>side(hid,true,o.neutral)),A=mitWett
     return waehle(c,x=>(G[linksForm(x.pos)]||0.3)*Math.pow(x.p.str/RE.schuetzen.mitte,RE.schuetzen.exponent)*((typ==='gross'||typ==='halb')&&hatMk(x.p,'torjaeger')?Mk.torjaeger.wahl:1)*((typ==='kopf'||typ==='ecke')&&hatMk(x.p,'kopfballstark')?Mk.kopfballstark.wahl:1)*(typ==='fern'&&hatMk(x.p,'weitschuetze')?Mk.weitschuetze.anteil:1)).p;};
   const torwart=s=>{const k=Ss[1-s].xp.find(x=>x.pos==='TW'&&!off.has(x.p.id));return k?k.p:null;};
   // Standardschützen (K06 §5.8): der eingeteilte, wenn er auf dem Platz steht, sonst der nächste der Liste
-  const schuetzeFuer=(s,art)=>{const sd=Ss[s];if(sd.am)return null;const t=S.teams[sd.id],l=t.schuetzen&&t.schuetzen[art];if(!l)return null;for(const id of [].concat(l)){const x=imSpiel(s).find(y=>y.p.id===id);if(x)return x.p;}return null;};
+  const schuetzeFuer=(s,art)=>{const sd=Ss[s];if(sd.am)return null;const t=S.teams[sd.id],l=t.schuetzen&&!(t.id===S.my&&autoB('schuetzen'))&&t.schuetzen[art];if(!l)return null;for(const id of [].concat(l)){const x=imSpiel(s).find(y=>y.p.id===id);if(x)return x.p;}return null;};
   // Abschluss: Tor, Parade, vorbei oder geblockt. Ergebnis 'tor', 'parade', 'vorbei'
   const abschluss=(m,s,typ,schuetze,basisArt,extra=1)=>{if(!schuetze)return'vorbei';const Mk=RE.mk,kp=torwart(s),opW=W[1-s];st.schuesse[s]++;if(typ==='gross')st.gross[s]++;
     let p=RE.tor[typ]*extra*schuetzenFaktor(schuetze.str*zustandMit(schuetze,fr[schuetze.id]==null?schuetze.fit:fr[schuetze.id]))*torwartFaktor(opW.TW)*(basisArt==='patzer'?1:abwehrFaktor(opW,typ,W[s]))*(1+0.01*(schuetze.sv||0));
@@ -237,7 +238,7 @@ const wb=o.wb||'liga',H=mitWettbewerb(wb,()=>side(hid,true,o.neutral)),A=mitWett
     else if((m===90&&!(o.ko&&gleich))||m===120){if(m===120&&gleich)G.elf=elfmeterAnlegen();else G.ende=true;}};
   // Elfmeterschießen (K05 §4.6): Schuss für Schuss in der Reihenfolge der Mannschaften, beendet, sobald es entschieden ist
   const elfmeterAnlegen=()=>({z:strom('spiel',saison,tag,hid,aid,'elfmeter'),k:0,t:[0,0],n:[0,0]});
-  G.elfmeterReihe=[0,1].map(s=>{const l=elfmeterReihe(Ss[s]).map(p=>p.id),t=!Ss[s].am&&S.teams[Ss[s].id],w=((t&&t.schuetzen&&t.schuetzen.elfmeter)||[]).filter(id=>l.includes(id));return[...w,...l.filter(id=>!w.includes(id))];});
+  G.elfmeterReihe=[0,1].map(s=>{const l=elfmeterReihe(Ss[s]).map(p=>p.id),t=!Ss[s].am&&S.teams[Ss[s].id],w=((t&&t.schuetzen&&!(t.id===S.my&&autoB('schuetzen'))&&t.schuetzen.elfmeter)||[]).filter(id=>l.includes(id));return[...w,...l.filter(id=>!w.includes(id))];});
   G.elfmeterSchuss=()=>{const E=G.elf;if(!E||G.ende)return;const s=E.k%2,reihe=G.elfmeterReihe[s].filter(id=>Ss[s].xp.some(x=>x.p.id===id&&!off.has(id))),
       sch=PIX.get(reihe[E.n[s]%Math.max(1,reihe.length)]),kp=torwart(s),tor=mitStrom(E.z,()=>R()<elfmeterQuote(sch,kp));
     E.n[s]++;if(tor)E.t[s]++;E.k++;ev.push({m:120,s,t:'E',p:sch?sch.id:null,n:sch?sch.n:'ein Spieler',tor,st:[...E.t],nr:E.n[s]});

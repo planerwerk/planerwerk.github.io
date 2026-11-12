@@ -449,6 +449,26 @@ Datei: `konzepte/K31-computer-vereine.md`
 3. **Klugheit gilt für alle Computer-Vereine gemeinsam** (eine Stufe je Spielstand, K02).
 4. **„Note über 10 oder mehr Einsätze schlechter als die Schwelle“** aus deinen Vorgaben: Schwelle vorläufig 4,5 im Notenschnitt der letzten 10 Einsätze.
 
+## K36 – Einstieg mit Lernstufen (Umsetzung UL, 12.11.)
+Datei: `konzepte/K36-lernstufen.md`, ausführlich in §12 Nr. 1–29. Die Nummern 1–13 stammen aus dem Entwurf vom 9.11. und gelten weiter als vorläufig.
+
+14. **Gesperrt und Automatik sind derselbe Code,** dein Verein wird dann wie ein Computer-Verein behandelt.
+15. **38 Bereiche,** neu `jugend` (B). Aufstellung und Grundordnung mit freiwilliger Automatik.
+16. **Automatik nach der Regel der Computer-Vereine,** auch bei Einstellung und Sommer (statt der klügeren Vorschläge aus der Tabelle).
+17. **Transfers in der Automatik:** Dein Verein handelt am Markt der Computer-Vereine, keine Angebote an dich.
+18. **Zwei Testspiele gegen Amateure** plant der Co-Trainer nur für dich, Computer-Vereine spielen weiter keine.
+19. **Gegner reagieren nicht auf den Stil des Co-Trainers.**
+20. **Neu freie Bereiche bleiben in der Automatik,** Eingreifen übernimmt.
+21. **Abschalten** lässt bisher Gesperrtes in der Automatik. „Alles frei“ beim Spielstart führt alles von Hand.
+22. **Aufstiegskarte** als Halt am Tag des Aufstiegs, nie am Spieltag.
+23. **„Live bis zum Abpfiff“** zählt ohne Vorspulen bis zum Ende.
+24. **Zusagen** erst mit dem Bereich Versprechen (B).
+25. **Sponsor, Preis, Kredit:** höchstes festes Angebot, Richtpreis, Tilgung am Saisonende.
+26. **Gesperrtes ist sichtbar, aber aus,** mit Hinweis.
+27. **Meldungen des Stabs** einzeln im Posteingang.
+28. **Test „kein Nachteil“** ergänzt um den Gleichschritt über 150 Tage.
+29. **Noch nicht gebaut:** Rauschen nach Qualität des Stabs, Testspiele und Kredit der Computer-Vereine, Sammlung im Wochenbericht.
+
 ## K32 – Spielwelt und Saisonwechsel
 Datei: `konzepte/K32-spielwelt.md`
 
