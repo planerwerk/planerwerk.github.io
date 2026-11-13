@@ -33,7 +33,9 @@ function saisons({n=1,seed=1,verein=6,beiSaisonende=null,beiSaisonstart=null,bei
     S.my=id;S.fired=0;S.trust=W.ev('RV').neuerJob;S.offers=[];S.constr=null;S.loan=0;S.fin={};S.att=[0,0];F.setTarget();S.spons=null;F.sponsOffers();S.lineup=F.bestXI(id,W.ev('myT()').form);};
   let fertig=0,schritte=0,saison=null;
   while(fertig<n&&schritte<5000){schritte++;S=W.S;
-    if(S.season!==saison&&S.phase==='play'){saison=S.season;if(beiSaisonstart)beiSaisonstart(S,F);}
+    // Der Simulator spielt den Trainer: Ohne Lernstufen rückt niemand von allein auf. Darum holt er jeden Sommer die zwei Besten ab 17 aus der Jugend, wie die Automatik und die Computer-Vereine (K08).
+    if(S.season!==saison&&S.phase==='play'){if(saison!=null&&!S.lizenz)W.ev('jugendKader()').filter(p=>p.age>=17).sort((a,b)=>b.str-a.str).slice(0,2).forEach(p=>F.jugendHoch(p));
+      saison=S.season;if(beiSaisonstart)beiSaisonstart(S,F);}
     if(S.sponsOffers)F.sponsorWaehlen(0);
     if(S.phase==='end'){if(beiSaisonende)beiSaisonende(S,F);fertig++;job();if(fertig>=n)break;F.sommerpause();continue;}
     job();

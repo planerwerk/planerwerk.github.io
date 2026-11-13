@@ -29,6 +29,7 @@ function tagesSpieleAbschliessenLauf(out){const d=out.tag;S.gespielt=d;
   sperrenAbsitzen(wbs);
   out.list.forEach(r=>applyMatch(r,!!r.cup));
   einsatzBuchen(out.list,d); // Einsatzzeit und Bankzeit nach Grund (K14 §12), nach den Noten
+  mitStrom(strom('praegung',S.season,d),()=>praegungNachSpiel(out.list,d)); // Prägungen junger Spieler (K08 §5.3)
   S.pl.forEach(p=>{if(spielten.has(p.team))entwicklungBuchen(p,d);});
   out.mine=out.list.find(r=>r.h===S.my||r.a===S.my)||null;if(out.mine)lizenzSpiel();
   const t=myT(),m=out.mine;
@@ -52,7 +53,7 @@ function tagesSpieleAbschliessenLauf(out){const d=out.tag;S.gespielt=d;
 
 // Werte pro Tag: Ausfalltage zählen herunter, Frische erholt sich, Fristen laufen ab, Bau wird fertig.
 function taeglich(d){return mitStrom(strom('tag',S.season,d),()=>taeglichLauf(d));}
-function taeglichLauf(d){const T=RT;if(S.phase==='play')testspieleTag(d);
+function taeglichLauf(d){const T=RT;praegungTag(d);if(S.phase==='play')testspieleTag(d);
   const ab=S.phase==='play'?spielAbstand(d):new Map(),status=new Map();
   S.teams.forEach(t=>{if(!aktiv(t))return;sommerTag(t,ab.get(t.id),d);const st=sommerStatus(t);status.set(t.id,st);
     if(S.phase==='play'&&d===auftaktTag(t)&&st!=='urlaub'){sommerAuftakt(t);status.set(t.id,'');if(t.id===S.my)news('Trainingsauftakt: Die Mannschaft ist zurück. Morgen ist Leistungstest.');}
@@ -66,7 +67,7 @@ function taeglichLauf(d){const T=RT;if(S.phase==='play')testspieleTag(d);
   const c=S.constr;if(c&&d>=c.bis){const t=myT();if(c.k==='cap')t.cap+=RB.tribuene.plaetze;if(c.k==='logen')t.logen+=RB.logen.anzahl;if(c.k==='shop')t.shop++;news(`Bau abgeschlossen: ${c.label}.`,'good');S.constr=null;}}
 // Werte pro Woche (montags): Training und Entwicklung, Transfermarkt, Vorstand bei Minus auf dem Konto.
 function woechentlich(d){return mitStrom(strom('woche',S.season,d),()=>woechentlichLauf(d));}
-function woechentlichLauf(d){if(!imUrlaub())mitStrom(strom('training',S.season,d),training);mitStrom(strom('kabine',S.season,d),()=>kabineWoche(d));scoutingWoche();mitStrom(strom('ausland',S.season,d),auslandWoche);mitStrom(strom('markt',S.season,d),market);
+function woechentlichLauf(d){if(!imUrlaub())mitStrom(strom('training',S.season,d),training);mitStrom(strom('kabine',S.season,d),()=>kabineWoche(d));mitStrom(strom('jugend',S.season,d),()=>jugendWoche(d));scoutingWoche();mitStrom(strom('ausland',S.season,d),auslandWoche);mitStrom(strom('markt',S.season,d),market);
   if(myT().cash<0){S.trust+=RV.kontoMinus;if(R()<RV.kontoMinusMeldung)news('Der Vorstand ist alarmiert: Das Vereinskonto ist im Minus!','bad');}
   S.trust=clamp(S.trust,0,100);vorstandPruefen();}
 

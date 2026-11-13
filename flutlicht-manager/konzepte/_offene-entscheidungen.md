@@ -525,3 +525,14 @@ Mit dir entschieden (9.11.): Namen nach den Trainerlizenzen, 2–3 Stufen in der
 11. **Zurufe an einzelne Spieler ab B,** an die Mannschaft ab C.
 12. **Automatik mit Klugheit „normal“,** bis K16 §5.1 gebaut ist.
 13. **Der Aufstieg zählt nicht in das Halte-Budget.**
+
+## K08 Jugend, umgesetzt in U9c (13.11.), vorläufig von mir
+
+Nach deiner Vorgabe vom 13.11. (Jugendarbeit als Langzeitprozess). Vorläufig von mir, im Einzelnen in K08 §12 Nr. 5 bis 17:
+
+- **Jugendniveau:** Ziele je Stufe 15, 35, 55, 75, 95, Aufbau höchstens 6 und Abbau bis 10 Punkte je Saison, Startwert 10 + 0,5 × Ansehen, Deckel 70 bis zum Leistungszentrum.
+- **Deckel für Talente:** höchstens Grundstärke des Vereins + 12.
+- **Nur dein Verein** hat einen Jugendkader, Computer-Vereine behalten zwei Aufrücker je Sommer.
+- **Geld bei Abgängen:** halber Marktwert beim Verkauf ab 16, 60 % davon mit 19, nichts unter 100.000 €, 15 % Beteiligung am Weiterverkauf über fünf Jahre.
+- **Belastung** wirkt auf Stimmung und Verletzungen nur bei deinem Verein.
+- **Führst du den Jugendkader selbst, rückt niemand von allein auf.** Das gilt auch für alte Spielstände ohne Lernstufen: Dort kamen bisher jeden Sommer zwei Spieler von selbst.

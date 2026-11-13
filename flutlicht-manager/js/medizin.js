@@ -7,7 +7,7 @@ const PHASE={verdacht:'Untersuchung',behandlung:'Behandlung',aufbau:'Aufbautrain
 // Risiko eines Spielers für alle Quellen (K10 §5.1): Robustheit, „verletzungsanfällig“, Saisonbelastung, Rückfallfenster
 function robFaktor(p){const r=p.ch&&p.ch.rob!=null?p.ch.rob:10;return RMD.robustheit[0]+RMD.robustheit[1]*r;}
 function rueckfallFaktor(p){const f=p.rf;return f&&absTag(S.tag)<=f.bis?1+f.w*RMD.reha.rueckfallMal:1;}
-const verletzRisiko=p=>robFaktor(p)*(hatEig(p,'verletzungsanfaellig')?RMD.anfaellig:1)*belastungRisiko(p);
+const verletzRisiko=p=>robFaktor(p)*(hatEig(p,'verletzungsanfaellig')?RMD.anfaellig:1)*belastungRisiko(p)*(p.vz?RJ.belastung.verletzung:1); // vz: junger Spieler über der Belastungsgrenze (K08 §5.4)
 // Überlastung im Spiel: Frische unter 80 % je Punkt +5 %, unter 60 % doppelt, ab 30 Jahren ×1,3
 function ueberlastFaktor(p,fr){const Q=RMD.risiko,f=fr==null?p.fit:fr;let x=f<Q.frischeAb?1+Q.frischeJePunkt*(Q.frischeAb-f):1;if(f<Q.frischeKritisch)x*=Q.kritisch;
   return x*(p.age>=Q.altAb?Q.alt:1)*rueckfallFaktor(p)*stabFaktor(p.team,'athletik');}

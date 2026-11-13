@@ -776,3 +776,20 @@ Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `
 | AZ12 | **K36 §10 „Kein Nachteil“ nach U8d:** Der Test fiel auf −4,7 Punkte (sechs Seeds), vorher −1,5. Nachgemessen über 18 Seeds auf dem alten und dem neuen Stand: −1,2 ± 1,7 gegen −2,5 ± 1,6, gepaart −1,3 ± 1,3. Ein Rückschritt durch U8d ist nicht nachweisbar, der Gleichschritt-Test (150 Tage Tag für Tag gleich) ist grün. Der feste Vergleich des Mittels mit −2 war bei dieser Streuung ein Münzwurf. Der Test prüft jetzt, ob ein Nachteil von mehr als 2 Punkten nachweisbar ist. Das Ziel selbst bleibt unbelegt. | ✅ Test, 📌 U11 (Buchhaltung, Testspiele) |
 | AZ13 | **Kalibrierung nach U8d:** weiter vier rote Werte, einer hat gewechselt. „Heimsieg gleich starker Teams“ ist grün, „Bundesligist kommt im Pokal gegen Amateure weiter“ ist rot (97 % bei 61 Spielen, Ziel 88 bis 94 %, vorher 90 % bei 67). Favoritensiege 85 % statt 82 % (72 Spiele). Bei diesen Fallzahlen passt das zu Rauschen, die Kabine wirkt auf Amateure nicht. Beobachten. | 📌 beobachten |
 | AZ14 | **K31, K19 (Fund des Fuzz-Tests):** Wer einen Verein mit zu kleinem Kader verließ (hier 13 Spieler nach vielen Vertragsauflösungen), hinterließ einen Computer-Verein, der erst im Sommer auffüllte. Jetzt füllt der alte Verein beim Vereinswechsel sofort auf, nach derselben Regel wie im Sommer. | ✅ |
+
+---
+
+## BA. Nachtrag zu U9c Jugend (13. November 2026)
+
+| # | Befund | Status |
+|---|---|---|
+| BA1 | **K08 §5.1 gegen deine Vorgabe vom 13.11.:** Der Entwurf hing das Talent des Jahrgangs an die Stufe der Ausgaben im selben Jahr. Jetzt hängt es am Jugendniveau, das den Ausgaben über viele Saisons folgt (§5.0). | ✅ K08 §5.0, §5.1 |
+| BA2 | **K08 §5.1 gegen die Welt:** Der Entwurf rechnete mit einer festen Basis je Liga (54, 50, 46). Die Aufrücker der Computer-Vereine hängen aber an der Grundstärke des Vereins. Gebaut ist die Grundstärke, sonst wären Jugendspieler eines Spitzenvereins zu schwach und die eines Aufsteigers zu stark. | ✅ vorläufig |
+| BA3 | **K08 §7 „gleiche Regeln für Computer-Vereine“:** Nur dein Verein hat einen Jugendkader. Abschlag und Abstand sind so kalibriert, dass die zwei Besten eines Jahrgangs den zwei Aufrückern eines Computer-Vereins entsprechen. Computer-Vereine haben kein Jugendniveau und verkaufen keine Jugendspieler. | ✅ vorläufig, 📌 K31 |
+| BA4 | **K36 und alte Spielstände:** Bisher kamen bei deinem Verein jeden Sommer zwei Spieler von selbst. Jetzt nur noch mit der Automatik `jugendkader`. Ohne Lernstufen musst du selbst aufrücken lassen, eine Nachricht erinnert vier Wochen vor Saisonende. Der Simulator der Tests holt deshalb selbst zwei Spieler je Sommer. | ✅, Hinweis in den offenen Entscheidungen |
+| BA5 | **K08 §5.4 gegen K31:** Die Belastung junger Spieler kostet Stimmung und erhöht das Verletzungsrisiko nur bei deinem Verein. Computer-Trainer achten nicht darauf, sonst hätten ihre jungen Stammspieler dauernd Frust. | 📌 U11 |
+| BA6 | **K08 §5.3:** „Öffentlich kritisieren“ und „Presse abschirmen“ fehlen (K29). Dafür zählt Kritik im Einzelgespräch mit ×1,5. Das Derby als Topspiel fehlt (K27). | 📌 K29, K27 |
+| BA7 | **K16:** Der Jugendtrainer ist als Rolle gebaut, der Jugendleiter und der Leihmanager nicht. Jugendtrainer kommen wie die Scouts mit eigenem Zufallsstrom zum Stab, damit der übrige Stab unverändert bleibt. | ✅, 📌 U10 (Leihmanager) |
+| BA8 | **K03:** Die Eigenschaft „Mentor“ ist jetzt sichtbar, weil sie eine Wirkung hat (Pate, Bankplatz). „Integrationsfigur“, „vereinstreu“ und „Heimweh-Typ“ bleiben unsichtbar. | ✅ |
+| BA9 | **K23 Finanzen:** Neue Einnahme „Jugend: Abgänge“. Bei einem Spitzenverein kann ein starker 19-Jähriger ohne Profivertrag etwa 2 Mio € Ausbildungsentschädigung bringen. Das ist viel und gehört in die Kalibrierung der Finanzen. | 📌 K23 |
+| BA10 | **K08 §10 „Spätzünder“** (etwa 5 % der Zwei-Sterne-Talente) ist nicht gemessen. Der Mechanismus ist da (ein Schub hebt mit 25 % das Talent um 2 bis 6). Die Messung braucht viele Saisons. | 📌 mit der Kalibrierung |

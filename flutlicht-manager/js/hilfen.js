@@ -9,7 +9,7 @@ const de=(n,d=0)=>Number(n).toLocaleString('de-DE',{minimumFractionDigits:d,maxi
 let S=null,PIX=new Map(),TAB='buero',CONF=null,LAST=null,SORT='pos',TLG=0,TDAY=null,BUSY=false;
 const TF={pos:'',lg:'',max:'',q:'',list:0,land:''};
 const app=document.getElementById('app'), ovEl=document.getElementById('ov');
-function reindex(){PIX=new Map(S.pl.map(p=>[p.id,p]));if(S.ausland)S.ausland.pl.forEach(p=>PIX.set(p.id,p));} // Ligaspieler und Auslandspool (K32)
+function reindex(){PIX=new Map(S.pl.map(p=>[p.id,p]));if(S.ausland)S.ausland.pl.forEach(p=>PIX.set(p.id,p));if(S.jg)S.jg.forEach(p=>PIX.set(p.id,p));} // Ligaspieler und Auslandspool (K32)
 function addP(p){S.pl.push(p);PIX.set(p.id,p);return p;}
 const myT=()=>S.teams[S.my];
 const squad=tid=>S.pl.filter(p=>p.team===tid);

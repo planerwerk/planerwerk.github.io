@@ -1,6 +1,6 @@
 # K08 – Jugend und Talententwicklung
 
-Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12.
+Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache, **überarbeitet nach deiner Vorgabe vom 13.11.** (Jugendarbeit als Langzeitprozess, Abschnitt 5.0). Vorläufige Entscheidungen stehen in Abschnitt 12. **Umgesetzt in U9c** (13. November 2026, `js/jugend.js`, Test `tests/jugend.js`): Jugendniveau, Jugendkader, Jahrgang, Aufrücken, Verkauf und Geld bei Abgängen, Prägungen mit Umgang, Belastung junger Spieler, Paten, Jugendtrainer. Noch offen: zweite Mannschaft (U9d), Leistungszentrum (K26), Leihe (U10), Ereigniskarten (U12).
 Hängt ab von: K03 (Entwicklung, Talent, Persönlichkeit), K07 (Training), K14 (Rolle „Talent“), K15 (Gespräche), K16 (Jugendtrainer) · Wird gebraucht von: K18, K19, K26, K32.
 
 ## 1. Ziel und Spielgefühl
@@ -40,7 +40,26 @@ Hängt ab von: K03 (Entwicklung, Talent, Persönlichkeit), K07 (Training), K14 (
 
 ## 5. Regeln und Formeln
 
+### 5.0 Jugendniveau (deine Vorgabe vom 13.11.)
+
+- **Jugendarbeit ist ein Langzeitprozess.** Jeder Verein hat ein Jugendniveau von 0 bis 100. Die Qualität der Jahrgänge und das Tempo im Jugendkader hängen an diesem Niveau, nicht an den Ausgaben des laufenden Jahres.
+- **Die Ausgaben (Stufe 1 bis 5) setzen nur ein Ziel:** 15, 35, 55, 75, 95. Das Niveau bewegt sich jede Woche ein kleines Stück dorthin, höchstens 6 Punkte je Saison nach oben und bis zu 10 nach unten. Von ganz unten bis zum Deckel dauert es knapp zwölf Saisons. Wer spart, verliert schneller, als er aufgebaut hat.
+- **Startwert:** 10 + 0,5 × Ansehen (Bayern etwa 57, ein Drittligist um 35).
+- **Deckel 70,** bis es das Leistungszentrum gibt (K26). Stufen mit einem Ziel über dem Deckel bringen bis dahin nicht mehr.
+- **Nichts wird überdurchschnittlich gut:** Kein Talent liegt mehr als 12 Punkte über der Grundstärke des Vereins.
+
 ### 5.1 Qualität des Jahrgangs
+
+**Gebaut (U9c), ersetzt die Formel darunter:**
+
+```
+Talent eines Neuen = Grundstärke des Vereins − 12 + (Jugendniveau − 40) × 0,15 + Jugendtrainer/4 + Region + Zufall (−8 bis +12), höchstens Grundstärke + 12
+Stärke mit 15 = Talent − 19 bis 29
+```
+
+Die Grundstärke des Vereins ist dieselbe wie bei den Aufrückern der Computer-Vereine. Abschlag und Abstand sind so kalibriert, dass die zwei Besten eines Jahrgangs mit 17 im Schnitt den zwei Aufrückern eines Computer-Vereins entsprechen (Stärke 62,0 gegen 61,8, Talent 75,1 gegen 75,3). Region: Vereine ab 40.000 Fans +2.
+
+**Entwurf vom 7.11. (nicht gebaut):**
 
 ```
 Talent eines Neuen = Basis(Liga) + 3 × Jugendarbeit + Jugendtrainer/4 + Region + Zufall (−8 bis +12)
@@ -56,7 +75,7 @@ Stärke mit 15 = Talent − 15 bis 25
 ### 5.2 Entwicklung im Jugendkader
 
 - Wachstum wie K03 §5.1 mit Alter, Talentrest, Form (bei Jugendlichen fest 10) und Professionalität.
-- **Trainingsfaktor** = 0,8 + 0,05 × Jugendarbeit + 0,01 × Qualität des Jugendtrainers (0,85–1,25).
+- **Trainingsfaktor** = 0,8 + 0,004 × Jugendniveau + 0,01 × Qualität des Jugendtrainers (0,8–1,28). Im Entwurf hing er an der Stufe der Ausgaben.
 - **Spielpraxis** zählt bis 18 nur halb (K03 §5.1). Im Jugendkader gilt sie als ausreichend.
 - **Mentor im Profikader** (Eigenschaft „Mentor“, K03) als Pate: Wachstum ×1,1, Professionalität des Talents +1 pro Saison mit 30 %.
 
@@ -170,6 +189,7 @@ Grenze: 0,85 bis 19 Jahre, 1,0 mit 20–21
 ## 11. Stellschrauben
 
 ```js
+// Stand des Entwurfs vom 7.11. Die gebauten Werte stehen in daten/regeln.js unter jugend (mit niveau, verkauf, stab).
 jugend:{
   jahrgang:{anzahl:[3,6],alter:15,talentBasis:{1:54,2:50,3:46},jeStufe:3,jeTrainer:0.25,region:2,zufall:[-8,12],abstand:[15,25],gold:{chance:0.03,plus:5}},
   aufruecken:{ab:17,spaetestens:19},
@@ -194,7 +214,23 @@ jugend:{
 3. **Leihmanager** als zusätzliche Rolle im Stab in Welle 3 (Community-Wunsch), K16 wird ergänzt.
 4. **Talentwerte des Jahrgangs** sind Spielwerte und werden mit K32 so kalibriert, dass die Welt im Gleichgewicht bleibt.
 
-**Mit dir entschieden (13.11.), noch nicht eingearbeitet:** Jugendarbeit wirkt als Langzeitprozess über zehn und mehr Saisons, Leistungszentrum zum Ausbauen, zweite Mannschaft mit Budget und Deckel, Aufrücken und Weiterverkauf aus Jugend und Zweiter, Geld auch für Abgänge, die nicht Profi wurden (nicht bei Amateuren). Recherche und Vorschlag stehen im PLAN §4 bei K08. Abschnitt 5.1 (Qualität des Jahrgangs aus der aktuellen Stufe) wird dafür umgebaut.
+**Mit dir entschieden (13.11.) und in U9c gebaut:** Jugendarbeit wirkt als Langzeitprozess (5.0). Aufrücken und Verkauf direkt aus der Jugend. Geld auch für Abgänge, die bei dir kein Profi wurden, nichts bei Amateuren. Zweite Mannschaft und Leistungszentrum folgen (U9d, K26).
+
+**Vorläufig entschieden bei der Umsetzung (U9c, 13. November 2026):**
+
+5. **Nur dein Verein hat einen Jugendkader.** Computer-Vereine bekommen weiter jeden Sommer zwei 17-Jährige (`saison.nachwuchs`). Das spart Speicher und Rechenzeit. Nach einem Vereinswechsel entsteht beim neuen Verein ein neuer Jugendkader.
+6. **Jugendkader:** vier Jahrgänge von 15 bis 18, anfangs die älteren ausgedünnt (100, 90, 75, 60 %). Jugendspieler stehen nicht im Profikader und haben einen eigenen Nummernkreis ab 500.000.
+7. **Aufrücken** ab 17 mit Profivertrag über drei Jahre und 30 % des üblichen Gehalts. Wer am 1. Juli 19 wird und nicht aufgerückt ist, geht. Vier Wochen vor Saisonende erinnert eine Nachricht.
+8. **Geld bei Abgängen:** Verkauf aus der Jugend ab 16 zum halben Marktwert. Abgang mit 19: 60 % davon als Ausbildungsentschädigung. Liegt der Preis unter 100.000 €, nimmt ihn kein Profiverein, er geht zu den Amateuren und bringt nichts. Beteiligung am Weiterverkauf: 15 %, fünf Jahre lang, je Jahr 12 % Chance auf einen Wechsel für das 1,5- bis 4-Fache des damaligen Werts (im Schnitt knapp 20 % des Werts je Abgang). Verkaufte und abgegangene Jugendspieler verlassen die simulierte Welt.
+9. **Automatik (K36):** Führt der Verein den Jugendkader, holt er am 1. Juli die zwei Besten ab 17 hoch, wie die Computer-Vereine. Führst du ihn selbst, rückt niemand von allein auf.
+10. **Prägungen** gelten für alle Vereine und Spieler bis 21. Bei deinen Spielern bleibt eine Prägung drei Tage offen, dein Umgang zählt: Lob nach gutem Spiel ×1,3 Schub, „Druck nehmen“ nach schlechtem ×0,5 Knacks, Kritik im Einzelgespräch ×1,5 Knacks (öffentliche Kritik ×2 kommt mit K29). Computer-Vereine lösen sofort auf, ohne Umgang.
+11. **Anlässe:** Debüt (erstes Profi-Pflichtspiel), erstes Topspiel von Beginn an (Gegner unter den ersten vier ab dem 5. Spieltag, Pokal ab Viertelfinale, Relegation, Supercup), entscheidendes Tor (Führung zum Sieg mit einem Tor Unterschied, Ausgleich ab der 80. Minute), entscheidender Fehler (Platzverweis; ohne Sieg: verschossener Elfmeter, Torwartpatzer). Das Derby fehlt, bis K27 Rivalen kennt.
+12. **Gemessen:** 2,3 Prägungen je Verein und Saison (Ziel 2 bis 5), ohne die Grundchancen zu ändern.
+13. **Belastung junger Spieler:** Minutenanteil (der gleitende Schnitt aus K14) plus 0,1 je Druckspiel der letzten acht Wochen. Über der Grenze: Knacks ×1,5 bei allen, Stimmung −2 pro Woche und Verletzungsrisiko ×1,3 **nur bei deinem Verein**, weil Computer-Trainer noch nicht darauf achten (K31).
+14. **Paten:** Ein Mentor (Eigenschaft, jetzt sichtbar) betreut höchstens zwei Talente bis 21. Entwicklung ×1,1, je Saison mit 30 % ein Punkt Professionalität.
+15. **Jugendtrainer** ist eine neue Rolle im Stab (zwei Plätze, K16). Bestehende Spielstände bekommen sie nachgetragen.
+16. **Ertrag:** Ein Verein aus dem Mittelfeld der 1. Liga bekommt mit Niveau 70 und gutem Jugendtrainer in 52 % der Jahrgänge einen Spieler, der mit 21 mindestens 75 hat, mit Niveau 10 ohne Jugendtrainer nie.
+17. **Noch nicht gebaut:** zweite Mannschaft (U9d), Leistungszentrum (K26), Leihe, Leihmanager und Leihwunsch (U10), Ereigniskarten Probetraining, Abwerben und Skandal (U12), öffentliche Kritik und Abschirmen (K29), Derby als Topspiel (K27), Computer-Trainer achten auf die Belastung (K31), Spätzünder als eigene Messung über viele Saisons.
 
 **Noch zu recherchieren:** Regeln zu Ausbildungsentschädigung und zu deutschen beziehungsweise lokal ausgebildeten Spielern im Kader (DFL), falls sie ins Spiel sollen.
 

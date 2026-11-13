@@ -33,7 +33,7 @@ function entwickeln(p,tage){if(tage<=0)return;const E=RP.entwicklung,P=E.praxis;
   const rest=clamp((p.pot-p.str)/E.talentWeich,0,1),fa=Math.pow(E.formBasis,p.form-RP.form.mitte),fb=1/fa;
   let pa=p.sp>=P.hoch?P.auf:p.sp<P.tief?P.aufTief:1,pb=p.sp<P.tief&&p.age>=P.abTiefAb?P.abTief:1;
   if(p.age<=P.halbBis){pa=1+(pa-1)/2;pb=1+(pb-1)/2;}
-  const prof=profi(p),tr=p.trf||1;
+  const prof=profi(p),tr=(p.trf||1)*jugendTempo(p);
   const schritt=(wachs*rest*fa*pa*tr*(E.profi.auf[0]+E.profi.auf[1]*prof)-abb*fb*pb*(E.profi.ab[0]+E.profi.ab[1]*prof))*tage/E.tageProSaison
     +(R()-0.5)*2*E.zufall*tage/7*(p.age<=E.jung.bisAlter?E.jung.zufall:1);
   p.str=clamp(Math.min(p.str+schritt,Math.max(p.pot,p.str)),RT.staerkeMin,RT.staerkeMax);}

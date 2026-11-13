@@ -2,7 +2,7 @@
 // Alle Zahlen stehen in daten/regeln.js unter REGELN.gespraeche (Kurzform RGS). Stimmung und Wechselwunsch: js/kabine.js (K14).
 // Ein Gespräch ist ein Thema und eine Haltung (K15 §12 Nr. 1). Höchstens drei Einzelgespräche und eine Mannschaftsansprache pro Woche.
 
-const THEMEN={rolle:'Rolle erklären',einsatz:'Einsatz versprechen',geduld:'Geduld erbitten',wechsel:'Wechsel in Aussicht stellen',konkurrent:'Keine Konkurrenz holen',lob:'Loben',kritik:'Kritisieren'};
+const THEMEN={rolle:'Rolle erklären',einsatz:'Einsatz versprechen',geduld:'Geduld erbitten',wechsel:'Wechsel in Aussicht stellen',konkurrent:'Keine Konkurrenz holen',lob:'Loben',kritik:'Kritisieren',schuetzen:'Druck nehmen'};
 const THEMA_HILFE={rolle:'Er sieht sich höher, als du ihn einsetzt. Erklären hilft ein wenig, verspricht aber nichts.',
   einsatz:`Zusage: mindestens ${Math.round(RGS.versprechen.einsatz.anteil*100)} % der Minuten in den nächsten ${RGS.versprechen.einsatz.spiele} Pflichtspielen, in denen er fit ist.`,
   geduld:`Zusage: ein Startelf-Einsatz innerhalb von ${RGS.versprechen.geduld.tage/7} Wochen. Für Talente, Neuzugänge und nach Verletzungen.`,
@@ -10,6 +10,7 @@ const THEMA_HILFE={rolle:'Er sieht sich höher, als du ihn einsetzt. Erklären h
   konkurrent:`Zusage: ${Math.round(RGS.versprechen.konkurrent.tage/30)} Monate kein Neuzugang auf seiner Position, der höchstens ${RGS.versprechen.konkurrent.staerke} Punkte schwächer ist als er.`,
   lob:'Passt nach einer guten Note, nach einer schlechten wirkt es seltsam.',kritik:'Passt nach einer schwachen Note. Manche spornt es an, andere trifft es hart.'};
 const HALTUNGEN={v:'verständnisvoll',s:'sachlich',b:'bestimmt'};
+THEMA_HILFE.schuetzen='Für junge Spieler nach einem schweren Spiel oder bei zu viel Last: senkt das Risiko eines Knacks und baut Selbstvertrauen auf (K08).';
 const M_ANSPRACHEN={rueckendeckung:'Rückendeckung',weckruf:'Weckruf',ziel:'Ziel neu setzen',endspiel:'Endspiel-Rede',rotation:'Rotation ankündigen'};
 const M_ANSPRACHE_HILFE={rueckendeckung:'passt nach einer Niederlagenserie: Selbstvertrauen und Stimmung aller steigen',weckruf:'passt bei schwachen Ergebnissen trotz guter Lage: die nächsten zwei Spiele zählen für die Form stärker, Kämpfer mögen das, Diven nicht',
   ziel:'passt zum Saisonstart und in der Winterpause: Stimmung aller etwas besser',endspiel:'passt vor einem Pokalfinale, der Relegation oder dem letzten Spieltag: wirkt im Spiel, nur Nervenschwache verkrampfen',
@@ -42,6 +43,7 @@ function themaAnlass(p,thema){const V=RGS.versprechen,offen=offeneVersprechen().
   if(thema==='geduld')return krStufe(p)<=2||p.age<=RKA.talentBis||(p.wiv||0)<RKA.zusammenhalt.neuerWochen||p.ww>=1?'':'Er hat keinen Grund zu warten.';
   if(thema==='wechsel')return p.ww>=1||stimmung(p)<50?'':'Er will gar nicht weg.';
   if(thema==='konkurrent')return einschaetzung(p)>=3&&(rivalen(p).length||squad(S.my).some(q=>q!==p&&q.pos===p.pos&&(q.wiv||0)<RKA.zusammenhalt.neuerWochen&&q.str>=p.str-V.konkurrent.staerke))?'':'Er fürchtet keine Konkurrenz.';
+  if(thema==='schuetzen')return p.age<=RJ.praegung.bisAlter&&(p.prO||p.sv<0||(p.lastG!=null&&p.lastG>=RGS.lage.kritikAb)||ueberBelastung(p))?'':'Er spürt gerade keinen besonderen Druck.';
   return'';}
 // Lob und Kritik nach der letzten Note: unpassend kehrt die Wirkung halb um (K15 §5.1)
 function themaLage(p,thema){const L=RGS.lage,n=p.lastG;if(n==null)return 1;if(thema==='lob'&&n>=L.kritikAb+0.5)return RGS.wirkung.unpassend;if(thema==='kritik'&&n<=L.lobBis-0.5)return RGS.wirkung.unpassend;return 1;}
@@ -70,6 +72,8 @@ function gespraechFuehren(pid,thema,haltung){const p=PIX.get(pid);if(!p||p.team!
     if(gestritten){w=Math.min(w,0)+RGS.streit.stimmung;p.streit=absTag(S.tag);zusammenhaltAendern(myT(),RKA.zusammenhalt.streit);}
     stimmungAendern(p,w);if(w)trainerWirkung(p,w*RGS.wirkung.trainerAnteil);
     if(thema==='kritik'&&hatEig(p,'nervenschwach')&&!anlass)svAendern(p,RGS.reaktion.nervenschwach.sv);
+    // Umgang nach einem prägenden Spiel (K08 §5.3), Druck nehmen baut Selbstvertrauen auf, ein Altstar nimmt seine Rolle an (K14 §12)
+    if(!anlass){praegungUmgang(p,thema);if(thema==='schuetzen'&&p.sv<0)svAendern(p,RGS.schuetzenSv);if(thema==='rolle'&&w>0&&p.kr&&p.age>=RKA.bank.altstar.ab)p.krOk=p.kr;}
     let vs=null;if(!anlass&&!gestritten&&w>0&&RGS.versprechen[thema])vs=versprechenAnlegen(p,thema);
     let geloest=null;if(wunsch&&!anlass){S.gw=S.gw.filter(g=>g.pid!==p.id);const L=RGS.loesen; // ohne Anlass bleibt der Gesprächswunsch offen
       if(gestritten||w<=0){geloest=false;wwStufe3(p);}else if(R()<clamp(L.basis+L.jePunkt*w,L.min,L.max)){geloest=true;p.ww=1;p.wws=0;p.wv=0;}}

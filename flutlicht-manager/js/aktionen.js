@@ -106,6 +106,12 @@ function mansAnsprache(art){if(!darf('ansprache'))return;const r=mannschaftsAnsp
 function teameventUI(){if(!darf('versprechen','kaderrolleOderVersprechen'))return;teameventLauf();save();render();}
 // Jugendarbeit: Stufe 1–5 (bis K08 gebaut ist)
 function setJugend(l){if(!darf('jugend'))return;myT().youth=clamp(Math.round(+l)||1,1,5);save();render();}
+// Jugend (K08): aufrücken, aus der Jugend verkaufen, Pate zuweisen
+function jugendAufruecken(id){if(!darf('jugendkader'))return;const p=PIX.get(id),A=RJ.aufruecken;if(!istJugend(p)||!jugendKader().includes(p))return;if(p.age<A.ab){toast(`Aufrücken geht ab ${A.ab} Jahren.`);return;}
+  if(squad(S.my).length>=RM.kaderMax){toast(`Dein Kader ist voll (höchstens ${RM.kaderMax} Spieler).`);return;}jugendHoch(p);news(`Aus der Jugend: ${p.n} (${p.pos}, ${p.age}) rückt in den Profikader auf. Talent ${stars(p)}.`,'good');save();closeOv();render();}
+function jugendVerkaufen(id){if(!darf('jugendkader'))return;const p=PIX.get(id);if(!istJugend(p)||!jugendKader().includes(p)||p.age<RJ.verkauf.ab)return;if(!jugendVerkauf(p)){toast('Kein Profiverein zahlt für ihn.');return;}save();closeOv();render();}
+function setPate(id,mid){if(!darf('pate'))return;const p=PIX.get(id),m=mid?PIX.get(+mid):null,P=RJ.pate;if(!p||p.team!==S.my||p.age>P.bisAlter)return;
+  if(!m)delete p.pate;else{if(m.team!==S.my||m===p||!hatEig(m,'mentor')||patenkinder(m).filter(q=>q!==p).length>=P.jeMentor)return;p.pate=m.id;}save();openP(id);render();}
 // Scouting (K18): Spieler beobachten lassen, Suchauftrag starten und beenden
 function beobachten(pid){{const q=PIX.get(pid);if(!darf('beobachten')||(q&&istAusland(q)&&!darf('ausland')))return;}const sc=document.getElementById('scsel'),wo=document.getElementById('scwo');if(!sc)return;const f=beobachtenLauf(pid,+sc.value,+(wo?wo.value:2));save();if(f){toast(f);return;}openP(pid);render();}
 function sucheStarten(){if(!darf('suchauftrag'))return;const g=id=>document.getElementById(id);const f=sucheLauf(+g('su_scout').value,{pos:g('su_pos').value,alterBis:g('su_alter').value,abloeseBis:g('su_abl').value,region:(g('su_reg')||{}).value});save();if(f)toast(f);render();}

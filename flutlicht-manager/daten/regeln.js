@@ -117,13 +117,13 @@ const REGELN={
       nervenschwach:{name:'nervenschwach',art:'−',wenn:{dru:[1,4]},text:'schwächer in engen und wichtigen Spielen und vom Punkt'},
       fuehrungsspieler:{name:'Führungsspieler',art:'+',wenn:{fue:[16,20]},abAlter:24,text:'reißt bei Rückstand die Mannschaft mit, zählt in der Kabine doppelt und steckt andere an'},
       integrationsfigur:{name:'Integrationsfigur',art:'+',wenn:{fue:[13,20],anp:[15,20]}},
-      mentor:{name:'Mentor',art:'+',wenn:{pro:[14,20],fue:[12,20]},abAlter:29},
+      mentor:{name:'Mentor',art:'+',wenn:{pro:[14,20],fue:[12,20]},abAlter:29,text:'als Pate lernt ein Talent 10 % schneller und wird professioneller, einen Bankplatz nimmt er dann hin'},
       kaempfer:{name:'Kämpfer',art:'+',wenn:{ehr:[16,20],dru:[12,20]},text:'legt bei Rückstand zu, Kritik spornt ihn an'},
       vereinstreu:{name:'vereinstreu',art:'+',wenn:{loy:[17,20]}},
       diva:{name:'Diva',art:'−',wenn:{ehr:[15,20],anp:[1,6]},text:'eine zu niedrige Rolle kostet doppelt Stimmung, mag keine Kritik und keinen harten Ton'},
       soeldner:{name:'Söldner',art:'−',wenn:{loy:[1,4]},text:'schaut aufs Gehalt, Gespräche wirken schwächer'},
       heimweh:{name:'Heimweh-Typ',art:'−',wenn:{anp:[1,4]}}},
-    eigenschaftenWirksam:['vorbildprofi','partyloewe','trainingsweltmeister','hitzkopf','verletzungsanfaellig','nervenschwach','kaempfer','fuehrungsspieler','diva','soeldner'],
+    eigenschaftenWirksam:['vorbildprofi','partyloewe','trainingsweltmeister','hitzkopf','verletzungsanfaellig','nervenschwach','kaempfer','fuehrungsspieler','diva','soeldner','mentor'],
     entdeckenWochen:[2,8],          // so lange dauert es, bis der Co-Trainer eine Eigenschaft eines neuen Spielers meldet
     // Merkmale (K03 §3.4): Stärken und Schwächen. Schwierigkeit: Lernfortschritt pro Woche leicht 12 %, mittel 6 %, schwer 3 %.
     merkmale:{
@@ -334,11 +334,12 @@ const REGELN={
       arzt:{name:'Mannschaftsarzt',plaetze:1,gehalt:0.6,text:'Diagnosen (mit K10)'},physio:{name:'Physiotherapeut',plaetze:2,gehalt:0.4,text:'kürzere Ausfallzeiten'},
       video:{name:'Videoanalyst',plaetze:1,gehalt:0.5,text:'Spielvorbereitung wirkt doppelt (ab Qualität 10)'},standard:{name:'Standardtrainer',plaetze:1,gehalt:0.4,text:'Standard-Einheiten wirken stärker'},
       psycho:{name:'Sportpsychologe',plaetze:1,gehalt:0.5,text:'Selbstvertrauen erholt sich schneller, Nervenschwache leiden weniger'},
+      jugend:{name:'Jugendtrainer',plaetze:2,gehalt:0.35,text:'hebt das Talent der Jahrgänge und das Tempo der Entwicklung im Jugendkader (K08)'},
       scout:{name:'Scout',plaetze:4,gehalt:0.35,text:'beobachtet Spieler und sucht Kandidaten (K18): schmalere Spannen, weniger Fehlkäufe. Im eigenen Gebiet (Inland, Jugend oder Ausland) lernt er schneller, außerhalb langsamer'}},
     wirkung:{co:[0.85,0.015],coPlaetze:{basis:3,jeQualitaet:0.2,max:10},athletik:{risiko:-0.01,kondition:0.005},torwart:[0.85,0.015],physio:{ausfall:-0.01,max:0.25},
       video:{ab:10,bonus:1},standard:0.015,psycho:{erholung:0.05,nervenschwach:-0.025}},
     ohne:3,gehalt:{basis:{1:300000,2:120000,3:50000},steigung:0.15,runden:5000},
-    start:{qualitaetJeAnsehen:0.2,streuung:[-3,3],zweiterCoAb:70,vereinslosQ:[3,16],rolleAbAnsehen:{arzt:30,physio:30,torwart:35,athletik:40,video:55,standard:60,psycho:65}},
+    start:{qualitaetJeAnsehen:0.2,streuung:[-3,3],zweiterCoAb:70,vereinslosQ:[3,16],rolleAbAnsehen:{arzt:30,physio:30,torwart:35,athletik:40,jugend:45,video:55,standard:60,psycho:65}},
     vereinslos:40,vertrag:[1,3],alter:[32,58],rente:68,verlaengern:0.7,abfindung:0.5,unschaerfe:3,genauNachWochen:6},
   // Disziplin und Sportgericht (K09 §11, Welle 2). Anteile und Kartenquoten der Foularten sind auf die echten Häufigkeiten kalibriert (K09 §10),
   // nicht die Rohwerte aus §3.1: sonst gäbe es doppelt so viele Rote Karten. art: Vergehen vor dem Sportgericht.
@@ -414,7 +415,7 @@ const REGELN={
       frueh:{vor:46,stimmung:-3,sv:-0.5},spaet:{nach:88,minuten:3,etabliert:-1,unerfahren:1},
       erfolg:{ab:3,je:0.15,min:0.5,max:1.5},                 // Serie der letzten fünf Spiele gegen die Erwartung: Siegesserie halbiert die Abwertung, Krise ×1,5
       chance:{spiele:3,note:3.0},                            // Vertreter eines fehlenden Stammspielers mit Notenschnitt bis 3,0 nach drei Spielen
-      sperre:{hitzkopf:-1},fuehrer:{freunde:-1},
+      sperre:{hitzkopf:-1},fuehrer:{freunde:-1},altstar:{ab:31,spiele:200},
       bedeutungslos:{spieltage:5,plus:2,minus:-2,minuten:20,grenzen:{1:[1,4,6,15,16],2:[2,3,15,16],3:[2,3,16]}},
       pokalTempo:0.5,diva:2},
     erfolg:{abSpiele:3,platz:25,platzMax:7,serie:1,serieMax:3,zerfall:0.9},
@@ -435,6 +436,29 @@ const REGELN={
     teamevent:{stimmung:5,zh:5,kosten:{1:50000,2:25000,3:10000},wochen:4},
     urlaub:{lang:3,kurz:-3,wochen:8},
     ki:{gelingt:0.55,stimmung:5}},      // Computer-Trainer: Gespräch bei Gesprächswunsch gelingt zu 55 % (K15 §7, Klugheit „normal“, bis K02 Klugheitsstufen hat)
+  // Jugend und Talententwicklung (K08 §11, U9c). Der Jugendkader gehört deinem Verein, Computer-Vereine bekommen ihre Aufrücker weiter über saison.nachwuchs.
+  jugend:{
+    // Jugendniveau (deine Vorgabe vom 13.11.): Die Ausgaben (Stufe 1–5) setzen das Ziel, das Niveau folgt langsam. Mit +6 je Saison dauert es von 0 bis zum Deckel etwa zwölf Saisons.
+    // Startwert 10 + 0,5 × Ansehen. Deckel 70, bis es das Leistungszentrum gibt (K26). Talent des Jahrgangs: (Niveau − 40) × 0,15.
+    niveau:{start:[10,0.5],ziel:[0,15,35,55,75,95],deckel:70,aufbau:6,abbau:10,mitte:40,jeTalent:0.15},
+    // Jahrgang: Talent = Grundstärke des Vereins − 12 + Niveau + Jugendtrainer/4 + Region + Zufall, höchstens Grundstärke + 12. Stärke mit 15 = Talent − 19 bis 29.
+    // Abschlag und Abstand sind so gewählt, dass die zwei Besten eines Jahrgangs mit 17 den Aufrückern eines Computer-Vereins entsprechen (tests/jugend.js).
+    jahrgang:{anzahl:[3,6],alter:15,abschlag:12,jeTrainer:0.25,region:2,regionAbFans:40000,zufall:[-8,12],abstand:[19,29],deckel:12,gold:{chance:0.03,plus:5}},
+    start:{alter:[15,16,17,18],bleiben:[1,0.9,0.75,0.6]},   // erster Jugendkader: vier Jahrgänge, die Älteren ausgedünnt
+    aufruecken:{ab:17,spaetestens:19,auto:2,erinnerungTage:35},
+    // Geld für Abgänge: Verkauf aus der Jugend ab 16 zum halben Marktwert, mit 19 als Ausbildungsentschädigung 60 % davon, unter 100.000 € nur Amateure (kein Geld).
+    // Beteiligung am Weiterverkauf: 15 %, fünf Jahre lang, je Jahr 12 % Chance auf einen Wechsel für das 1,5- bis 4-Fache des damaligen Werts.
+    verkauf:{ab:16,faktor:0.5,mit19:0.6,minWert:100000,runden:10000,anteil:0.15,jahre:5,weiterChance:0.12,weiterFaktor:[1.5,4],merken:40},
+    training:{basis:0.8,jeNiveau:0.004,jeTrainer:0.01,praxis:50,form:10}, // Trainingsfaktor im Jugendkader: 0,8 + 0,004 × Niveau + 0,01 × Jugendtrainer
+    stab:{vereinslos:8},
+    pate:{wachstum:1.1,profi:0.3,jeMentor:2,bisAlter:21},
+    // Prägungen (K08 §5.3): [Chance Schub, Chance Knacks] je Anlass. faktor: Häufigkeit insgesamt, kalibriert auf 2–5 Prägungen je Verein und Saison.
+    praegung:{faktor:1,debuet:[0.15,0.05],topspiel:[0.20,0.12],tor:[0.30,0],fehler:[0,0.30],topAbRunde:3,topPlaetze:4,topAbSpieltag:5,spaetAb:80,
+      druck:{schub:[0.5,0.05],knacks:[1.5,-0.05]},note:1.3,sieg:1.2,niederlage:1.2,
+      umgang:{loben:1.3,schuetzen:0.5,kritik:1.5,tage:3},belastung:1.5,psychologe:-0.02,
+      schub:{talent:[0.25,2,6],tempo:1.3,tage:90,sv:1,stimmung:5},knacks:{talent:[0.15,1,3],tempo:0.5,tage:[30,90],sv:-1,stimmung:-5},bisAlter:21,verlauf:6},
+    // Belastung junger Spieler (K08 §5.4): Minutenanteil + 0,1 je Druckspiel der letzten acht Wochen, Grenze 0,85 bis 19 Jahre und 1,0 bis 21
+    belastung:{tage:56,druck:0.1,grenze:[[19,0.85],[21,1.0]],verletzung:1.3,stimmung:-2}},
   // Scouting und Informationsnebel (K18 §11, U9a). Spannen sind ehrlich: der wahre Wert liegt in mindestens 80 % der Fälle darin (z = 1,4 ergibt etwa 84 %)
   scouting:{grund:{eigen:100,liga:40,jeSpiel:5,deutsch:25,unten:15,ausland:5,jugend:0},
     sicht:[[10,10],[20,7],[30,4.8],[45,3.5],[60,2.5],[80,2],[101,1]], // [bis Kenntnis, Spanne ± Stärke ohne Scout-Fehler], kalibriert auf die Fehlkäufe in tests/scouting.js
@@ -446,9 +470,9 @@ const REGELN={
     empfehlung:{verpflichten:1,beobachten:-3},                 // Mitte gegen deinen Stammspieler auf der Position
     start:{scouts:[[0,1],[60,2],[80,3]],vereinslos:8}},        // Scouts je Verein nach Ansehen, dazu vereinslose
   // Gespräche und Ansprachen (K15 §11, U8): Glaubwürdigkeit, Wirkung, Abnutzung, Versprechen, Mannschaftsansprache
-  gespraeche:{proWoche:3,
+  gespraeche:{proWoche:3,schuetzenSv:0.3,
     glaubwuerdigkeit:{start:60,faktor:[0.5,0.7],erholungBis:60,erholung:1,gehalten:3,gebrochen:-10,offenAb:4,offenMinus:2,krise:25,krisenVorstand:-3},
-    wirkung:{rolle:3,einsatz:10,geduld:5,wechsel:8,konkurrent:6,lob:4,kritik:-4,unpassend:-0.5,nachStreit:0.5,nachStreitTage:28,trainerAnteil:0.5},
+    wirkung:{rolle:3,einsatz:10,geduld:5,wechsel:8,konkurrent:6,schuetzen:3,lob:4,kritik:-4,unpassend:-0.5,nachStreit:0.5,nachStreitTage:28,trainerAnteil:0.5},
     lage:{lobBis:3,kritikAb:4},           // Lob passt bei einer Note bis 3,0, Kritik ab 4,0 (letztes Spiel)
     abnutzung:{wochen:4,zweites:0.5,danach:0.2},
     loesen:{basis:0.15,jePunkt:0.04,min:0.05,max:0.9}, // Gesprächswunsch gelöst mit 15 % + 4 % je Punkt Wirkung
@@ -551,6 +575,8 @@ const REGELN={
       stab:{ab:3,name:'Trainerstab',tab:'stab',auto:1,wer:'der Verein',tut:'verlängert die Verträge der Mitarbeiter meistens und ersetzt einen fehlenden Co-Trainer'},
       vertraege:{ab:3,name:'Verträge',tab:'kader',auto:1,wer:'der Verein',tut:'verlängert auslaufende Verträge meistens'},
       jugend:{ab:3,name:'Jugendarbeit',tab:'training',auto:1,wer:'der Verein',tut:'hält die Jugendarbeit auf der üblichen Stufe'},
+      jugendkader:{ab:3,name:'Jugendkader (Aufrücken und Verkauf)',tab:'training',auto:1,wer:'der Verein',tut:'holt jeden Sommer die zwei Besten ab 17 Jahren in den Profikader'},
+      pate:{ab:4,name:'Paten für Talente',tab:'kader'},
       ausland:{ab:3,name:'Im Ausland beobachten und kaufen',tab:'transfer'},
       kaderrollen:{ab:3,name:'Kaderrollen',tab:'kabine',auto:1,wer:'der Co-Trainer',tut:'verteilt die Rollen nach der besten Elf'},
       versprechen:{ab:3,name:'Zusagen und Teamevent',tab:'kabine'},
@@ -601,4 +627,4 @@ const REGELN={
 // Schreibschutz: Zur Laufzeit darf kein Code eine Regel ändern.
 (function frieren(o){Object.freeze(o);Object.values(o).forEach(v=>{if(v&&typeof v==='object'&&!Object.isFrozen(v))frieren(v);});})(REGELN);
 // Kurzformen für den Code
-const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui,RL=REGELN.live,RTA=REGELN.taktik,RSO=REGELN.sommer,RST=REGELN.stab,RD=REGELN.disziplin,RMD=REGELN.medizin,RWB=REGELN.wettbewerbe,RTS=REGELN.testspiele,RLA=REGELN.lager,RKA=REGELN.kabine,RGS=REGELN.gespraeche,RSC=REGELN.scouting,RLZ=REGELN.lizenz;
+const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui,RL=REGELN.live,RTA=REGELN.taktik,RSO=REGELN.sommer,RST=REGELN.stab,RD=REGELN.disziplin,RMD=REGELN.medizin,RWB=REGELN.wettbewerbe,RTS=REGELN.testspiele,RLA=REGELN.lager,RKA=REGELN.kabine,RGS=REGELN.gespraeche,RSC=REGELN.scouting,RLZ=REGELN.lizenz,RJ=REGELN.jugend;

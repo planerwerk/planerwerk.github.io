@@ -334,7 +334,7 @@ function applyMatchLauf(r,cup){const N=RE.note,V=RP.selbstvertrauen;
       const fest=N.basis-(p.str-N.staerkeMitte)/N.staerkeTeiler;
       let gr=fest-res*N.ergebnis-goals*N.tor+(R()-0.5)*N.zufall;if(r.off.includes(id))gr+=N.platzverweis;gr=clamp(Math.round(gr*2)/2,N.min,N.max);
       const erw=clamp(fest-eres*N.ergebnis-xgF*anteil*N.tor,N.min,N.max);
-      p.lastG=gr;formNachNote(p,gr,erw,weckFaktor(tid));if(goals)svAendern(p,goals*V.tor);if(gr<=2)svAendern(p,V.guteNote);else if(gr>=5)svAendern(p,V.schlechteNote);
+      p.lastG=gr;(r.ne=r.ne||{})[id]=erw;formNachNote(p,gr,erw,weckFaktor(tid));if(goals)svAendern(p,goals*V.tor);if(gr<=2)svAendern(p,V.guteNote);else if(gr>=5)svAendern(p,V.schlechteNote);
       p.played=1;(r.nt=r.nt||{})[id]=gr;if(tid===S.my)(r.grades=r.grades||{})[id]=gr;});
     serieBuchen(S.teams[tid],res>0?3:res===0?1:0,E.punkte,r.xi[s]);weckNachSpiel(tid);});
   if(r.taktik)r.taktik.forEach((tk,s)=>{const tid=s?r.a:r.h;if(!tk||tid>=1000)return;const t=S.teams[tid],V=RTA.vertrautheit,ES=RTA.einstellung.saison;
