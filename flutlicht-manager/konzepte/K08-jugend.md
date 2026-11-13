@@ -194,6 +194,8 @@ jugend:{
 3. **Leihmanager** als zusätzliche Rolle im Stab in Welle 3 (Community-Wunsch), K16 wird ergänzt.
 4. **Talentwerte des Jahrgangs** sind Spielwerte und werden mit K32 so kalibriert, dass die Welt im Gleichgewicht bleibt.
 
+**Mit dir entschieden (13.11.), noch nicht eingearbeitet:** Jugendarbeit wirkt als Langzeitprozess über zehn und mehr Saisons, Leistungszentrum zum Ausbauen, zweite Mannschaft mit Budget und Deckel, Aufrücken und Weiterverkauf aus Jugend und Zweiter, Geld auch für Abgänge, die nicht Profi wurden (nicht bei Amateuren). Recherche und Vorschlag stehen im PLAN §4 bei K08. Abschnitt 5.1 (Qualität des Jahrgangs aus der aktuellen Stufe) wird dafür umgebaut.
+
 **Noch zu recherchieren:** Regeln zu Ausbildungsentschädigung und zu deutschen beziehungsweise lokal ausgebildeten Spielern im Kader (DFL), falls sie ins Spiel sollen.
 
 ## Quellen
