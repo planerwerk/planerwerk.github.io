@@ -104,6 +104,7 @@ Die Persönlichkeitswerte (K03 §3.3) verschieben das zusätzlich leicht, damit 
 | Weckruf | schlechte Leistungen trotz guter Lage | Form der nächsten zwei Spiele: Note zählt 20 % stärker (Reiz), Kämpfer +, Diven − |
 | Ziel neu setzen | Saisonstart, Winterpause | Stimmung +2, Erwartung im Baustein „Erfolg“ wird neu justiert (K14) |
 | Endspiel-Rede | Pokalfinale, Relegation, letzter Spieltag | Wirkung im Spiel +2 %, bei Nervenschwachen −2 % |
+| Rotation ankündigen (U8d, K14 §12) | englische Woche voraus: zwei Pflichtspiele in sieben Tagen, oder das nächste höchstens vier Tage nach dem letzten | sieben Tage lang zählt die Bank für Stammspieler nicht (bis drei Spiele in Folge), dazu +1 je Spiel auf der Bank. Unpassend: Stammspieler −1 |
 
 Alle mit Glaubwürdigkeit und Abnutzung wie in 5.1.
 

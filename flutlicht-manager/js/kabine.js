@@ -2,9 +2,9 @@
 // Alle Zahlen stehen in daten/regeln.js unter REGELN.kabine (Kurzform RKA). Gespräche, Versprechen und Ansprachen: js/gespraeche.js (K15).
 // Gilt für alle Vereine gleich. Nur Gesprächswünsche deiner Spieler werden zum Halt, bei Computer-Vereinen führt der Trainer das Gespräch (K15 §7).
 
-const KR_STUFE={talent:1,ergaenzung:1,rotation:2,stamm:3,schluessel:4};
-const KR_NAME={schluessel:'Schlüsselspieler',stamm:'Stammspieler',rotation:'Rotation',ergaenzung:'Ergänzung',talent:'Talent'};
-const KR_LISTE=['schluessel','stamm','rotation','ergaenzung','talent'];
+const KR_STUFE={talent:1,ergaenzung:1,pokal:2,rotation:2,stamm:3,schluessel:4};
+const KR_NAME={schluessel:'Schlüsselspieler',stamm:'Stammspieler',rotation:'Rotation',pokal:'spielt im Pokal',ergaenzung:'Ergänzung',talent:'Talent'};
+const KR_LISTE=['schluessel','stamm','rotation','pokal','ergaenzung','talent'];
 const KR_AUS_STUFE=['','ergaenzung','rotation','stamm','schluessel'];
 const WW_NAME=['zufrieden','grummelt','will reden','will weg','will öffentlich weg'];
 const BAUSTEIN_NAME={einsatz:'Einsatzzeit',erfolg:'Erfolg',leistung:'Form',vertrag:'Gehalt und Vertrag',trainer:'Trainer (Rolle, Gespräche)',umfeld:'Umfeld (Kapitän, Urlaub)'};
@@ -12,7 +12,7 @@ const BAUSTEIN_GRUND={einsatz:'zu wenig Einsatzzeit',erfolg:'Misserfolg',leistun
 
 // Startwert ohne Zufall (aus der Spielernummer), damit das Anlegen keinen Zufallsstrom verschiebt (K02)
 const stimmungStart=p=>RKA.start[0]+(Math.imul(p.id,2654435761)>>>0)%(RKA.start[1]-RKA.start[0]+1);
-function kabineInit(p){if(p.st==null)p.st=stimmungStart(p);if(p.ww==null)p.ww=0;}
+function kabineInit(p){if(p.st==null)p.st=stimmungStart(p);if(p.ww==null)p.ww=0;if(p.ppk==null)p.ppk=ppkStart(p);}
 const stimmung=p=>{kabineInit(p);return p.st;};
 // Sofortige Änderung (K14 §4.2): gedeckelt auf ±10 je Ereignis, der Rest wirkt über den Baustein „Trainer“, wenn rest gesetzt ist
 function stimmungAendern(p,v,rest){kabineInit(p);const M=RKA.sofortMax,s=clamp(v,-M,M);p.st=clamp(p.st+s,0,100);if(rest&&v!==s)trainerWirkung(p,v-s);}
@@ -24,13 +24,18 @@ function zusammenhaltAendern(t,v){if(!t)return;t.zh=clamp(zusammenhalt(t)+v,0,10
 // Nach Rang in der Positionsgruppe: so viele Stammplätze, wie die Grundordnung Plätze hat, dazu halb so viele Rotationsplätze (Torhüter: keine).
 // Die drei Stärksten unter den Stammspielern sind Schlüsselspieler, junge Ergänzungsspieler Talente.
 // krA: Vorschlag des Co-Trainers (so verteilen auch die Computer-Trainer). krS: eigene Einschätzung als Stufe 1–4, Ehrgeizige sehen sich eine Stufe höher.
-function rollenBerechnen(tid,kader){const t=S.teams[tid],sq=kader||squad(tid);if(!t||!sq.length)return;const need={},xi=new Set(elfOhneAusfaelle(t,sq));
+function rollenBerechnen(tid,kader){const t=S.teams[tid],sq=kader||squad(tid);if(!t||!sq.length)return;const need={},xi=new Set(elfOhneAusfaelle(t,sq)),ohne=sq.filter(p=>p.krA&&p.ea!=null&&erwartungEinsatz(p)===0);
   slotsVerein(t).forEach(pos=>{const g=posGruppe(pos);need[g]=(need[g]||0)+1;});const stamm=sq.filter(p=>xi.has(p.id));stamm.forEach(p=>p.krA='stamm');
   ['TW','AB','MF','ST'].forEach(g=>{let rot=g==='TW'?0:Math.ceil((need[g]||0)*RKA.rotationAnteil);
     sq.filter(p=>p.pos===g&&!xi.has(p.id)).sort((a,b)=>b.str-a.str).forEach(p=>{p.krA=rot-->0?'rotation':'ergaenzung';});});
   stamm.sort((a,b)=>b.str-a.str).slice(0,RKA.schluesselAnzahl).forEach(p=>p.krA='schluessel');
-  sq.forEach(p=>{if(p.krA==='ergaenzung'&&p.age<=RKA.talentBis)p.krA='talent';
-    p.krS=Math.min(4,KR_STUFE[p.krA]+(p.ch&&p.ch.ehr>=RKA.ehrgeizigAb?1:0));if(p.kr&&(!KR_STUFE[p.kr]||tid!==S.my))delete p.kr;});}
+  const pokal=imPokal(tid);
+  sq.forEach(p=>{if(p.krA==='ergaenzung'&&p.age<=RKA.talentBis)p.krA='talent';if(p.krP&&stammA(p))delete p.krP;
+    // krP: Anspruch aus Leistung (Joker, Chance genutzt), hebt die Einschätzung um eine Stufe, aber nicht über Stammspieler
+    p.krS=Math.min(p.krP?3:4,KR_STUFE[p.krA]+(p.ch&&p.ch.ehr>=RKA.ehrgeizigAb?1:0)+(p.krP||0));if(p.kr&&(!KR_STUFE[p.kr]||tid!==S.my))delete p.kr;
+    if(p.kr==='pokal'&&!pokal){delete p.kr;p.ea=erwartungEinsatz(p);if(S.phase==='play')news(`Der Pokal ist für euch vorbei: Die Rolle „${KR_NAME.pokal}“ von ${p.n} endet.`);}});
+  // Wer bisher nichts erwartet hat (unerfahren, Nummer 2 im Tor) und jetzt eine Erwartung hat, beginnt bei ihr und nicht im Minus
+  ohne.forEach(p=>{const e=erwartungEinsatz(p);if(e>0)p.ea=Math.max(p.ea,e);});}
 // Beste Elf, wenn alle fit wären (wie bestXI in engine.js, aber ohne Ausfälle): wer darin steht, ist Stammspieler
 function elfOhneAusfaelle(t,sq){const sl=slotsVerein(t),used=new Set(),xi=Array(sl.length).fill(null);
   const pass=ok=>sl.forEach((pos,i)=>{if(xi[i]!=null)return;let best=null,bv=-1;for(const p of sq){if(used.has(p.id)||!ok(p,pos))continue;const v=eff(p,pos,100);if(v>bv){bv=v;best=p;}}if(best){xi[i]=best.id;used.add(best.id);}});
@@ -40,19 +45,107 @@ const kaderRolle=p=>(p.team===S.my&&p.kr&&!autoB('kaderrollen')&&p.kr)||p.krA||'
 const krStufe=p=>KR_STUFE[kaderRolle(p)]||1;
 const einschaetzung=p=>p.krS||krStufe(p);
 // Erwartete Einsatzzeit: deine Rolle, wenn sie mindestens seiner Einschätzung entspricht, sonst die Mitte der beiden Anteile
-function erwartungEinsatz(p){const R=krStufe(p),E=einschaetzung(p),a=RKA.rollen[R===1&&kaderRolle(p)==='talent'?'talent':KR_AUS_STUFE[R]];return R>=E?a:(a+RKA.rollen[KR_AUS_STUFE[E]])/2;}
+// Keine Erwartung haben Unerfahrene und die Nummer 2 im Tor (K14 §12). Die Rolle „spielt im Pokal“ erwartet fast alle Pokalspiele.
+function erwartungEinsatz(p){const k=kaderRolle(p);if(k==='pokal')return RKA.rollen.pokal;if(unerfahren(p)||ersatzTorwart(p))return 0;
+  const R=krStufe(p),E=einschaetzung(p),a=RKA.rollen[R===1&&k==='talent'?'talent':KR_AUS_STUFE[R]];return R>=E?a:(a+RKA.rollen[KR_AUS_STUFE[E]])/2;}
 
-// ---------- Einsatzzeit und Spielfolgen (nach jedem Pflichtspiel, vor dem Absitzen der Sperren) ----------
-// Gleitender Schnitt der Minuten. Wer verletzt oder gesperrt fehlt, wird nicht gezählt. Dazu Startelf und Siege für den Zusammenhalt.
-function einsatzBuchen(list){const a=RKA.einsatzTempo;
-  list.forEach(r=>{const wb=wbVon(r);[0,1].forEach(s=>{const tid=s?r.a:r.h,t=S.teams[tid];if(tid>=1000||!t)return;
-    const min=new Map(r.xpo[s].map(x=>[x[0],x[3]==null?90:x[3]]));
-    mitWettbewerb(wb,()=>squad(tid).forEach(p=>{kabineInit(p);if(p.ea==null)p.ea=erwartungEinsatz(p);if(!min.has(p.id)&&!avail(p))return;
-      p.ea=p.ea*(1-a)+a*Math.min(1,(min.get(p.id)||0)/90);}));
-    t.xiW=(r.xi[s]||[]).slice();if(winner(r)===tid&&r.hg!==r.ag||(r.pen&&winner(r)===tid))t.siegeW=(t.siegeW||0)+1;
-    // Neue Stammspieler (K14 §5.6): ein Neuzugang in der Startelf kostet einmal Zusammenhalt
-    (r.xi[s]||[]).forEach(id=>{const p=PIX.get(id);if(p&&p.zhNeu===tid){delete p.zhNeu;zusammenhaltAendern(t,RKA.zusammenhalt.neuer);}});});});}
-
+// ---------- Einsatzzeit und Bankzeit nach Grund (K14 §12, U8d), nach jedem Pflichtspiel ----------
+// Der Grund zählt, nicht nur die Minuten: Je Spiel und Spieler steht fest, warum er nicht gespielt hat. Davon hängt ab, ob das Spiel in den gleitenden Schnitt
+// der Einsatzzeit eingeht (p.ea) und was es sofort an Stimmung bringt oder kostet. p.bg merkt den Grund des letzten Spiels für die Anzeige.
+const BANK_GRUND={rotation:'Rotation, geschont (zählt nicht)',joker:'Joker mit Wirkung (zählt als erfüllt)',rivale:'sein Konkurrent spielt',unerfahren:'unerfahren, erwartet noch nichts',
+  tw2:'Nummer 2 im Tor, erwartet keine Einsätze',pokal:'spielt im Pokal, Liga zählt nicht',aufbau:'Aufbau nach Verletzung (zählt nicht)',form:'Formkrise, er sieht die Bank ein',
+  tribuene:'nicht im Spieltagskader',frueh:'früh ausgewechselt',spaet:'erst in der Nachspielzeit eingewechselt',ww:'will weg, versteht die Bank',sperre:'erstes Spiel nach der Sperre (zählt nicht)',bank:'Bank ohne besonderen Grund'};
+const feinPos=p=>p.fp||STD_POS[p.pos];
+const stammA=p=>KR_STUFE[p.krA]>=3; // stünde in der besten Elf ohne Ausfälle
+// Profi-Pflichtspiele über die Karriere. Startwert ohne Zufall aus Alter und Spielernummer (bis 18 Jahre: null)
+const ppkStart=p=>p.age<=18?0:(p.age-18)*(5+(Math.imul(p.id,40503)>>>0)%20);
+const unerfahren=p=>krStufe(p)<=1&&(p.ppk==null?ppkStart(p):p.ppk)<RKA.bank.unerfahren.spiele;
+const ersatzTorwart=p=>p.pos==='TW'&&!stammA(p)&&krStufe(p)<3&&kaderRolle(p)!=='pokal';
+const empfindlich=p=>hatEig(p,'diva')||hatEig(p,'nervenschwach');
+const formkrise=p=>{const F=RKA.bank.formkrise,l=p.n5||[];return l.length>=F.noten&&l.reduce((a,b)=>a+b,0)/l.length>=F.note;};
+const imPokal=tid=>!!(S.cup&&S.cup.alive&&S.cup.alive.includes(tid));
+// Rivalen-Zähler als Abzug: nach der Schonfrist je Spiel mehr, bis −10. Diven und Nervenschwache ohne Schonfrist. Kommt zur Spanne des Bausteins „Einsatz“ dazu.
+function rivalenAbzug(p){if(!p.rz)return 0;const RV=RKA.bank.rivale,frist=empfindlich(p)?0:RV.schonfrist;return p.rz>frist?Math.min(RV.max,(p.rz-frist)*RV.je):0;}
+// Sein Konkurrent in der Startelf: gleiche Feinposition und höchstens 3 Punkte Abstand, oder ein erklärter Rivale (S.bz)
+function platzRivale(p,xi){const fp=feinPos(p),ab=RKA.bank.rivale.staerke;for(const id of xi){const q=PIX.get(id);if(!q||q===p)continue;if(feinPos(q)===fp&&Math.abs(q.str-p.str)<=ab)return q;const b=beziehung(p,q);if(b&&b[2]==='R')return q;}return null;}
+function englischeWoche(tid,d){const a=spielAbstand(d).get(tid),n=RKA.bank.englischTage;return !!a&&((a.last!=null&&d-a.last<=n)||(a.next!=null&&a.next-d<=n));}
+// Mannschaftserfolg: Serie der letzten fünf Spiele gegen die erwarteten Punkte. Siegesserie: Abwertung halb, Krise: ×1,5
+function erfolgFaktor(t){const E=RKA.bank.erfolg,l=(t.erw||[]).slice(-5);if(l.length<E.ab)return 1;return clamp(1-l.reduce((a,x)=>a+x[0]-x[1],0)*E.je,E.min,E.max);}
+// Bedeutungslose Spiele: In den letzten fünf Spieltagen kann der Verein keine Grenze der Tabelle mehr überschreiten (Titel, Europa, Relegation, Abstieg, eigenes Ziel)
+function saisonEntschieden(t,tab){const E=RKA.bank.bedeutungslos,fx=S.fx&&S.fx[t.lg],i=tab.findIndex(r=>r.id===t.id);if(!fx||i<0)return false;
+  const rest=fx.length-tab[i].sp;if(rest<1||rest>E.spieltage)return false;
+  for(const g of new Set([...(E.grenzen[t.lg]||[]),(t.id===S.my?S.target:t.expPos)||0])){if(!g||g>=tab.length)continue;if(i<g?tab[i].p-tab[g].p<=rest*3:tab[g-1].p-tab[i].p<=rest*3)return false;}return true;}
+// Vor dem Nachlauf der Spiele: wer verletzt oder gesperrt fehlte (danach sitzen die Sperren ab, und neue Verletzungen kommen dazu). 1 = nur gesperrt
+function einsatzVorher(list){list.forEach(r=>{const wb=wbVon(r);r.na=[0,1].map(s=>{const tid=s?r.a:r.h;if(tid>=1000||!S.teams[tid])return[];
+  return mitWettbewerb(wb,()=>squad(tid).filter(p=>!avail(p)).map(p=>[p.id,p.inj>0?0:1]));});});}
+// Nach den Noten (applyMatch): Einsatzzeit und Folgen je Spieler, dazu Startelf, Siege und neue Stammspieler für den Zusammenhalt
+function einsatzBuchen(list,d=S.tag){const tabs={},heute=absTag(d);
+  list.forEach(r=>{const pokal=wbVon(r)==='pokal',ws=r.ws||[],tore=new Map();(r.ev||[]).forEach(e=>{if(e.t==='G')tore.set(e.p,(tore.get(e.p)||0)+1);});
+    [0,1].forEach(s=>{const tid=s?r.a:r.h,t=S.teams[tid];if(tid>=1000||!t)return;const sq=squad(tid),xi=new Set(r.xi[s]||[]);
+      const c={r,t,sq,xi,pokal,heute,tore,mein:tid===S.my,min:new Map(r.xpo[s].map(x=>[x[0],x[3]==null?90:x[3]])),kader:r.bk&&r.bk[s]?new Set([...xi,...r.bk[s]]):null,
+        fehlt:new Map((r.na&&r.na[s])||[]),rein:new Map(ws.filter(w=>w[0]===s).map(w=>[w[3],w[1]])),raus:new Map(ws.filter(w=>w[0]===s).map(w=>[w[2],w[1]])),verl:new Set((r.inj||[]).map(x=>x.id)),
+        englisch:S.plan?englischeWoche(tid,d):false,rotAn:t.rotAn&&heute<=t.rotAn.bis?t.rotAn.f:0,egal:false};
+      if(r.lg&&S.res&&S.res[r.lg])c.egal=saisonEntschieden(t,tabs[r.lg]||(tabs[r.lg]=table(r.lg)));
+      sq.forEach(p=>bankFall(p,c));
+      // Wer wie oft in Folge im Tor stand (Torwart-Duell)
+      const tw=(r.xi[s]||[]).map(id=>PIX.get(id)).find(p=>p&&p.pos==='TW');if(tw)t.twS=t.twS&&t.twS[0]===tw.id?[tw.id,t.twS[1]+1]:[tw.id,1];
+      t.xiW=(r.xi[s]||[]).slice();if(winner(r)===tid&&r.hg!==r.ag||(r.pen&&winner(r)===tid))t.siegeW=(t.siegeW||0)+1;
+      // Neue Stammspieler (K14 §5.6): ein Neuzugang in der Startelf kostet einmal Zusammenhalt
+      (r.xi[s]||[]).forEach(id=>{const p=PIX.get(id);if(p&&p.zhNeu===tid){delete p.zhNeu;zusammenhaltAendern(t,RKA.zusammenhalt.neuer);}});});});}
+// Ein Spieler in einem Pflichtspiel seines Vereins. c: Spiel, Startelf, Spieltagskader, Minuten, Wechsel, Ausfälle, englische Woche, angekündigte Rotation
+function bankFall(p,c){const B=RKA.bank,t=c.t,gespielt=c.min.has(p.id),m=c.min.get(p.id)||0;kabineInit(p);if(p.ea==null)p.ea=erwartungEinsatz(p);
+  if(p.rue&&c.heute>p.rue)delete p.rue;
+  if(!gespielt&&c.fehlt.has(p.id)){if(c.fehlt.get(p.id))p.nsp=1;delete p.bg;return;} // verletzt oder gesperrt: zählt nicht
+  const e=erwartungEinsatz(p),unerf=unerfahren(p),etabliert=!unerf&&krStufe(p)>=2,diva=hatEig(p,'diva')?B.diva:1,rolle=kaderRolle(p),note=c.r.nt&&c.r.nt[p.id]!=null?c.r.nt[p.id]:null;
+  let anteil=Math.min(1,m/90),tempo=rolle==='pokal'&&c.pokal?B.pokalTempo:RKA.einsatzTempo,zaehlt=true,grund='';
+  if(gespielt){p.ppk=(p.ppk||0)+1;if(note!=null)p.n5=[...(p.n5||[]),note].slice(-5);delete p.nsp;
+    if(p.ppk===1)stimmungAendern(p,B.unerfahren.debuet);else if(unerf&&m>=B.unerfahren.einsatzMin)stimmungAendern(p,B.unerfahren.einsatz);
+    if(c.xi.has(p.id)){p.bnk=0;p.rz=0;const ab=c.raus.get(p.id);
+      // früh ausgewechselt ohne Verletzung oder Platzverweis: Bloßstellung
+      if(ab!=null&&ab<B.frueh.vor&&!c.verl.has(p.id)&&!(c.r.off||[]).includes(p.id)){grund='frueh';stimmungAendern(p,B.frueh.stimmung*(diva>1||hatEig(p,'fuehrungsspieler')?B.diva:1));if(hatEig(p,'nervenschwach'))svAendern(p,B.frueh.sv);}
+      vertretung(p,c,note);}
+    else{const ab=c.rein.get(p.id),stark=(c.tore.get(p.id)||0)>0||(note!=null&&note<=B.joker.note);p.bnk=(p.bnk||0)+1;
+      if(m<B.joker.kurz)p.jk=[...(p.jk||[]),stark?1:0].slice(-B.joker.von);
+      if(stark){grund='joker';stimmungAendern(p,B.joker.stimmung);anteil=Math.max(anteil,e);jokerAnspruch(p,c);}
+      else if(ab!=null&&ab>B.spaet.nach&&m<=B.spaet.minuten){grund='spaet';const v=unerf?B.spaet.unerfahren:etabliert?B.spaet.etabliert:0;if(v)stimmungAendern(p,v);}
+      if(!stark&&m<B.rivale.haltenAb&&p.rz&&platzRivale(p,c.xi))p.rz++;}
+    if(rolle==='pokal'&&!c.pokal&&anteil<p.ea)zaehlt=false;}
+  else{p.bnk=(p.bnk||0)+1;const imKader=!c.kader||c.kader.has(p.id),riv=platzRivale(p,c.xi),entschuldigt=g=>{grund=g;zaehlt=false;};
+    if(p.ww>=3)entschuldigt('ww');
+    else if(p.nsp){entschuldigt('sperre');if(hatEig(p,'hitzkopf'))stimmungAendern(p,B.sperre.hitzkopf);}
+    else if(p.rue&&!(diva>1&&riv))entschuldigt('aufbau');
+    else if(rolle==='pokal'&&!c.pokal)entschuldigt('pokal');
+    else if(ersatzTorwart(p))grund='tw2';
+    else if(unerf){grund='unerfahren';if(imKader)stimmungAendern(p,B.unerfahren.kader);}
+    else if(stammA(p)&&(c.rotAn>0||p.fit<B.frischeUnter||c.englisch)&&p.bnk<=(c.rotAn>0?B.rotationAngekuendigt:B.rotationReihe)){entschuldigt('rotation');if(c.rotAn>0)stimmungAendern(p,B.angekuendigt*c.rotAn);}
+    else{ // der Bankplatz zählt
+      if(riv){grund='rivale';p.rz=(p.rz||0)+1;
+        // Schonfrist: Kämpfer, Vorbildprofis und Mentoren beißen sich rein oder nehmen es hin, Diven und Nervenschwache trifft es sofort
+        if(p.rz<=B.rivale.schonfrist){if(hatEig(p,'kaempfer')||hatEig(p,'vorbildprofi')||hatEig(p,'mentor'))zaehlt=false;else if(empfindlich(p)){stimmungAendern(p,B.rivale.sofort*diva);if(hatEig(p,'nervenschwach'))svAendern(p,B.rivale.sv);}}}
+      else{p.rz=0;if(formkrise(p)){grund='form';if(diva===1)tempo*=B.formkrise.faktor;if(hatEig(p,'nervenschwach'))svAendern(p,B.formkrise.sv);}else grund='bank';}
+      if(!imKader&&etabliert){stimmungAendern(p,B.tribuene*diva);if(grund==='bank')grund='tribuene';}
+      // Kapitän oder Führungsspieler fit auf der Bank: seine Freunde murren
+      if(t.kap===p.id||hatEig(p,'fuehrungsspieler'))freundeVon(p).forEach(q=>{if(q.team===p.team)stimmungAendern(q,B.fuehrer.freunde);});}
+    delete p.nsp;}
+  // Bedeutungslose Spiele: Reservisten und Talente erwarten Chancen
+  if(c.egal&&!stammA(p)&&krStufe(p)<=2&&!['ww','aufbau','sperre'].includes(grund))stimmungAendern(p,m>=B.bedeutungslos.minuten?B.bedeutungslos.plus:B.bedeutungslos.minus);
+  if(zaehlt)p.ea=p.ea*(1-tempo)+tempo*anteil;
+  // Wer bisher nichts erwartet hat und es jetzt tut (zehntes Profispiel), beginnt bei seiner Erwartung und nicht im Minus
+  if(e===0){const e1=erwartungEinsatz(p);if(e1>0)p.ea=Math.max(p.ea,e1);}
+  if(grund)p.bg=grund;else delete p.bg;}
+// Anspruch aus Leistung: Die Einschätzung steigt um eine Stufe (höchstens Stammspieler), bis er Stammspieler ist oder die Saison endet
+function anspruch(p){p.krP=1;p.krS=Math.min(3,(p.krS||1)+1);return KR_NAME[KR_AUS_STUFE[p.krS]];}
+// Joker (K14 §12): Ehrgeizige fordern nach drei starken Kurzeinsätzen in fünf mehr („Ich liefere doch!“)
+function jokerAnspruch(p,c){const J=RKA.bank.joker;if(p.krP||stammA(p)||!(p.ch&&p.ch.ehr>=RKA.ehrgeizigAb)||(p.jk||[]).reduce((a,b)=>a+b,0)<J.starke)return;
+  const als=anspruch(p);p.jk=[];if(c.mein)news(`${p.n} hat als Joker wiederholt geliefert und fordert mehr: Er sieht sich als ${als}.`);}
+// Chance genutzt (K14 §12): Er vertritt einen verletzten oder gesperrten Stammspieler seiner Position mit guten Noten. Dann sieht er sich eine Stufe höher, und beide werden Rivalen.
+function vertretung(p,c,note){const C=RKA.bank.chance;if(stammA(p)||note==null||p.krP)return;const fp=feinPos(p),weg=c.sq.filter(q=>c.fehlt.has(q.id)&&stammA(q)),wen=weg.find(q=>feinPos(q)===fp)||weg.find(q=>q.pos===p.pos);if(!wen)return;
+  const v=p.vtr&&p.vtr[0]===wen.id?p.vtr:[wen.id,0,0];v[1]++;v[2]+=note;p.vtr=v;if(v[1]<C.spiele||v[2]/v[1]>C.note)return;
+  const als=anspruch(p);delete p.vtr;if(!beziehung(p,wen)&&Math.abs(p.str-wen.str)<=RKA.beziehungen.rivaleEnde){S.bz=S.bz||[];S.bz.push([p.id,wen.id,'R',1]);}
+  if(c.mein)news(`${p.n} hat seine Chance genutzt (Notenschnitt ${(v[2]/v[1]).toFixed(1).replace('.',',')} als Vertreter von ${wen.n}). Er sieht sich als ${als}. Kehrt ${wen.n} zurück, kämpfen beide um den Platz.`);}
+// Torwart-Duell (K14 §12): Nummer 2 höchstens zwei Punkte hinter der Nummer 1. Offen, bis du eine Rolle vergibst oder derselbe fünf Spiele in Folge im Tor steht.
+function torwartDuell(t,sq){const T=RKA.bank.torwart,tw=(sq||squad(t.id)).filter(p=>p.pos==='TW').sort((a,b)=>(stammA(b)-stammA(a))||b.str-a.str);if(tw.length<2||tw[0].str-tw[1].str>T.duell)return null;
+  if(t.twS&&t.twS[1]>=T.klarNach)return null;if(t.id===S.my&&!autoB('kaderrollen')&&(tw[0].kr||tw[1].kr))return null;return[tw[0],tw[1]];}
 // ---------- Zielstimmung (K14 §5.1) ----------
 // Ruf-Gefälle (K14 §5.2): Ruf des Trainers bis K28 aus dem Ansehen des Vereins und den Trainerjahren, Ruf des Spielers aus der Stärke
 function trainerRuf(){const T=RKA.rufGefaelle.trainer;return Math.min(T[3],T[0]+T[1]*myT().rep+T[2]*(S.hist||[]).length);}
@@ -71,8 +164,8 @@ function erfolgBerechnen(t){const E=RKA.erfolg,lg=t.lg,sp=(S.res[lg]||[]).filter
   const se=(t.erw||[]).slice(-5).reduce((a,x)=>a+x[0]-x[1],0);t.erf=pl+clamp(se*E.serie,-E.serieMax,E.serieMax);}
 function bausteine(p){const Z=RKA.ziel,t=S.teams[p.team]||{},B={},E=RKA.einsatz;
   const e=erwartungEinsatz(p),a=p.ea==null?e:p.ea;let x=(a-e)*E.skala;
-  if(x<0){x*=E.ehrgeiz[0]+E.ehrgeiz[1]*(p.ch?p.ch.ehr:10);if(rufGefaelle(p))x*=RKA.rufGefaelle.einsatz;if(rivalen(p).some(q=>(q.ea||0)>a+0.2))x*=E.rivale;}
-  B.einsatz=clamp(x,Z.einsatz[0],Z.einsatz[1]);
+  if(x<0){x*=E.ehrgeiz[0]+E.ehrgeiz[1]*(p.ch?p.ch.ehr:10);if(rufGefaelle(p))x*=RKA.rufGefaelle.einsatz;x*=erfolgFaktor(t);}
+  B.einsatz=clamp(x,Z.einsatz[0],Z.einsatz[1])-rivalenAbzug(p);
   B.erfolg=clamp(t.erf||0,Z.erfolg[0],Z.erfolg[1]);
   B.leistung=clamp((p.form-RP.form.mitte)*RKA.leistung,Z.leistung[0],Z.leistung[1]);
   const V=RKA.vertrag,q=p.sal/salaryFor(p.str);let v=q<V.unter?-V.minus*Math.min(1,(V.unter-q)/0.4):q>V.ueber?V.plus*Math.min(1,(q-V.ueber)/0.35):0;
@@ -90,7 +183,8 @@ function hauptgrund(p){const B=bausteine(p),[k,v]=Object.entries(B).sort((a,b)=>
 // Leistung: im Zustandsfaktor (K03 §5.8), unter 20 bis −3 %, über 85 bis +2 %
 function stimmungFaktor(p){const F=RKA.folgen.leistung,s=p.st;if(s==null)return 1;return s<F.unter?1-F.minus*(F.unter-s)/F.unter:s>F.ueber?1+F.plus*(s-F.ueber)/(100-F.ueber):1;}
 // Lernen: unter 30 lernt er 30 % langsamer, Rivalen lernen 5 % schneller (Konkurrenz belebt)
-const lernStimmung=p=>(p.st!=null&&p.st<RKA.folgen.lernenUnter?RKA.folgen.lernen:1)*(rivalen(p).length?RKA.beziehungen.lernen:1);
+// Kämpfer und Vorbildprofis beißen sich in den ersten drei Spielen hinter dem Konkurrenten rein: ×1,1 (K14 §12)
+const lernStimmung=p=>(p.st!=null&&p.st<RKA.folgen.lernenUnter?RKA.folgen.lernen:1)*(rivalen(p).length?RKA.beziehungen.lernen:1)*(p.rz>=1&&p.rz<=RKA.bank.rivale.schonfrist&&(hatEig(p,'kaempfer')||hatEig(p,'vorbildprofi'))?RKA.bank.rivale.lernen:1);
 // Vertrag: unter 40 nur zu deutlich höheren Bedingungen, unter 25 gar nicht (K21 baut das später aus)
 const verlaengertNicht=p=>p.st!=null&&p.st<RKA.folgen.vertragUnter[1];
 const vertragsAufschlag=p=>p.st!=null&&p.st<RKA.folgen.vertragUnter[0]?1+RKA.folgen.vertragAufschlag:1;
@@ -154,6 +248,11 @@ function kabineWoche(d){const K=RKA,A=K.ansteckung,aktive=S.teams.filter(t=>akti
   const anst=new Map(),add=(p,v)=>anst.set(p.id,(anst.get(p.id)||0)+v);
   aktive.forEach(t=>{const sq=kader.get(t.id);sq.filter(p=>hatEig(p,'fuehrungsspieler')).forEach(f=>{const s=stimmung(f);
     if(s<A.fuehrerUnter)freundeVon(f).forEach(q=>{if(q.team===t.id)add(q,A.freunde);});else if(s>A.fuehrerUeber)sq.forEach(q=>{if(q!==f&&stimmung(q)<A.alleUnter)add(q,A.alle);});});});
+  // Torwart-Duell (K14 §12): beide −1 pro Woche, Diven doppelt, solange die Rangfolge offen ist (nur während der Saison)
+  aktive.forEach(t=>{const du=S.phase==='play'&&t.twS?torwartDuell(t,kader.get(t.id)):null,mein=t.id===S.my;
+    if(du){du.forEach(p=>add(p,K.bank.torwart.woche*(hatEig(p,'diva')?K.bank.diva:1)));
+      if(mein&&!t.twD)news(`Torwart-Duell: ${du[0].n} und ${du[1].n} sind fast gleich stark, die Rangfolge ist offen. Das kostet beide Stimmung, bis ${frei('kaderrollen')&&!autoB('kaderrollen')?'du einem von beiden eine Kaderrolle gibst oder ':''}derselbe ${K.bank.torwart.klarNach} Spiele in Folge im Tor steht.`);t.twD=1;}
+    else if(t.twD){delete t.twD;if(mein&&S.phase==='play')news('Die Rangfolge im Tor ist geklärt.','good');}});
   const vorher=new Map();
   kader.forEach(sq=>sq.forEach(p=>{kabineInit(p);if(p.team===S.my)vorher.set(p.id,p.st);
     p.st=clamp(p.st+clamp((zielStimmung(p)-p.st)*K.traegheit+(anst.get(p.id)||0),-K.wocheMax,K.wocheMax),0,100);
@@ -175,7 +274,9 @@ function kabinenBericht(vorher,gr){const un=[],auf=[];squad(S.my).forEach(p=>{co
 
 // ---------- Saison und Sommer ----------
 // Am 1. Juli: Freundschaften werden fester, Zähler der Saison auf null
-function kabineSaison(){(S.bz||[]).forEach(b=>{if(b[2]==='F')b[3]=Math.min(3,b[3]+1);});S.teams.forEach(t=>{t.kst={ww3:0};delete t.endspiel;delete t.weck;});}
+const BANK_ZAEHLER=['rz','bnk','jk','vtr','nsp','bg','krP','rue']; // Zähler der Bankzeit: neu mit jeder Saison und jedem Vereinswechsel
+function kabineSaison(){(S.bz||[]).forEach(b=>{if(b[2]==='F')b[3]=Math.min(3,b[3]+1);});S.teams.forEach(t=>{t.kst={ww3:0};delete t.endspiel;delete t.weck;delete t.rotAn;});
+  S.pl.forEach(p=>BANK_ZAEHLER.forEach(k=>delete p[k]));}
 // Nach dem Saisonwechsel (neue Kader der Aufsteiger, neue Talente): Rollen sofort, Einsatzzeit nur für Spieler ohne Wert
 function kabineNachSaisonwechsel(){S.bz=(S.bz||[]).filter(b=>PIX.get(b[0])&&PIX.get(b[1]));S.vs=(S.vs||[]).filter(v=>PIX.get(v.pid));S.gw=(S.gw||[]).filter(g=>{const p=PIX.get(g.pid);return p&&p.team===S.my&&p.ww===2;}); // ausgelaufene Verträge: Gesprächswunsch erledigt
   S.teams.forEach(t=>{if(!aktiv(t))return;rollenBerechnen(t.id);kapitaenPruefen(t);squad(t.id).forEach(p=>{kabineInit(p);if(p.ea==null)p.ea=erwartungEinsatz(p);});});}
@@ -188,6 +289,6 @@ function teameventLauf(){const T=RKA.teamevent,t=myT(),{kosten,abn}=teameventMoe
   squad(S.my).forEach(p=>stimmungAendern(p,T.stimmung*abn));zusammenhaltAendern(t,T.zh*abn);t.tev=[...(t.tev||[]).filter(x=>x>absTag(S.tag)-T.wochen*7),absTag(S.tag)];
   news(`Teamevent: Die Mannschaft verbringt einen Tag zusammen (${fmt(kosten)}).${abn<1?' Die Spieler kennen das schon, es wirkt schwächer.':''}`,'good');return abn;}
 // Neuer Verein (Transfer, K14): Neuanfang beim Wechselwunsch, Einsatzzeit neu, alte Rolle und Gespräche vergessen. Zählt als neuer Stammspieler für den Zusammenhalt, sobald er in der Startelf steht.
-function neuAnfang(p,tid){kabineInit(p);S.gw=(S.gw||[]).filter(g=>g.pid!==p.id);p.ww=0;p.wws=0;p.wu=0;p.wv=0;p.st=Math.max(p.st,stimmungStart(p));['ea','tb','kr','gs','streit'].forEach(k=>delete p[k]);p.zhNeu=tid;}
+function neuAnfang(p,tid){kabineInit(p);S.gw=(S.gw||[]).filter(g=>g.pid!==p.id);p.ww=0;p.wws=0;p.wu=0;p.wv=0;p.st=Math.max(p.st,stimmungStart(p));['ea','tb','kr','gs','streit','trib',...BANK_ZAEHLER].forEach(k=>delete p[k]);p.zhNeu=tid;}
 // Beim Aufbau der Welt: Rollen, Kapitän, Startstimmung und Einsatzzeit nach der erwarteten Rolle, damit die ersten Spiele keinen Sprung machen
 function kabineStart(){S.bz=S.bz||[];S.teams.forEach(t=>{t.kst={ww3:0};if(!aktiv(t))return;rollenBerechnen(t.id);kapitaenPruefen(t);t.zh=zusammenhalt(t);squad(t.id).forEach(p=>{kabineInit(p);p.ea=erwartungEinsatz(p);});});}

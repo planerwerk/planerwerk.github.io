@@ -33,7 +33,10 @@ const pokalLosHeute=d=>S.phase==='play'&&S.cup&&S.cup.alive.includes(S.my)&&poka
 // Bei Gleichstand direkt Elfmeterschießen (seit 2010 keine Verlängerung). In der ersten Saison gibt es keinen, weil die Vorsaison fehlt.
 function supercupAnlegen(sm){S.supercup=null;if(!sm||sm.champ==null)return;const g=sm.cup!=null&&sm.cup!==sm.champ?sm.cup:sm.vize;if(g==null)return;
   const z=S.plan.zeit[1];if(!z||!z[0])return;let d=Math.min(...z[0].map(x=>x[0]))-RWB.supercup.vorSpieltag;while(wochentag(d)!==6)d--;
-  const P=S.plan.pokal[0];if(P&&Math.abs(P[0]-d)<RWB.spielplan.mindestTage)d-=7;
+  // 72 Stunden (K13): Abstand zur ersten Pokalrunde und zu den Ligaspielen beider Teilnehmer. Ein Pokalsieger aus der 2. Liga hat da schon Spieltage, dann rückt der Supercup wochenweise vor.
+  const M=RWB.spielplan.mindestTage,P=S.plan.pokal[0],belegt=new Set(P?[P[0]]:[]);
+  [sm.champ,g].forEach(id=>{const lg=S.teams[id].lg,zl=S.plan.zeit[lg]||[];(S.fx[lg]||[]).forEach((md,k)=>md.forEach((f,i)=>{if((f[0]===id||f[1]===id)&&zl[k]&&zl[k][i])belegt.add(zl[k][i][0]);}));});
+  const frei=x=>{for(let k=1-M;k<M;k++)if(belegt.has(x+k))return false;return true;};for(let n=0;n<8&&!frei(d);n++)d-=7;
   S.supercup={h:sm.champ,a:g,tag:d,min:minute(RWB.supercup.anstoss),r:null};}
 const supercupAm=d=>S.supercup&&S.supercup.tag===d&&!S.supercup.r?S.supercup:null;
 

@@ -101,6 +101,7 @@ nominiert, wenn Stärke ≥ Schwelle, höchstens die 26 Stärksten je Nation
 
 - Meister gegen Pokalsieger. Gewinnt ein Verein beides, spielt der Vizemeister (prüfen).
 - Ein Spiel, bei Gleichstand direkt Elfmeterschießen (prüfen). Zählt für Statistik und Vitrine (K34), kleine Prämie.
+- **72 Stunden (ergänzt am 13.11.):** Der Termin hält drei Tage Abstand zur ersten Pokalrunde und zu den Ligaspielen beider Teilnehmer. Steht ein Zweitligist als Pokalsieger im Supercup, hat seine Liga schon begonnen, dann rückt der Supercup wochenweise vor.
 
 ### 5.3 Elfmeterschießen
 

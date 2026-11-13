@@ -396,11 +396,27 @@ const REGELN={
     ligaFaktor:{1:1,2:0.6,3:0.35},tage:[5,10],training:1.15,vertrautheit:1.25,zusammenhalt:1,zusammenhaltBis:7,kollerAb:8,koller:0.13,kollerSv:-0.5,ablenkung:0.15,ablenkungSv:-1},
   // Stimmung, Kaderrollen, Wechselwunsch, Kabine, Zusammenhalt, Beziehungen, Kapitän (K14 §11, U8). Spielwerte, kalibriert mit tests/kabine.js
   kabine:{start:[60,75],                // Stimmung zu Beginn (0–100)
-    rollen:{schluessel:0.85,stamm:0.65,rotation:0.40,ergaenzung:0.15,talent:0.15}, // erwartete Einsatzzeit je Kaderrolle (Anteil der Minuten)
+    rollen:{schluessel:0.85,stamm:0.65,rotation:0.40,ergaenzung:0.15,talent:0.15,pokal:0.9}, // erwartete Einsatzzeit je Kaderrolle (Anteil der Minuten), „spielt im Pokal“: Anteil der Pokalspiele
     einsatzTempo:0.2,                   // gleitender Schnitt der Einsatzzeit je Pflichtspiel (wirkt wie etwa sechs Wochen)
     schluesselAnzahl:3,rotationAnteil:0.5,talentBis:21,ehrgeizigAb:15, // Rollen nach Rang in der Gruppe: Stammplätze, dazu halb so viele Rotationsplätze
     ziel:{basis:60,einsatz:[-28,10],erfolg:[-10,10],leistung:[-5,5],vertrag:[-15,5],trainer:[-15,10],umfeld:[-10,5]},
-    einsatz:{skala:40,ehrgeiz:[0.5,0.05],rivale:1.5},    // (Anteil − Erwartung) × 40 × (0,5 + 0,05 × Ehrgeiz), negativ verstärkt durch Ehrgeiz
+    einsatz:{skala:40,ehrgeiz:[0.5,0.05]},    // (Anteil − Erwartung) × 40 × (0,5 + 0,05 × Ehrgeiz), negativ verstärkt durch Ehrgeiz
+    // Bankzeit nach Grund (K14 §12, U8d): Der Grund entscheidet, ob ein Spiel ohne Einsatz für die Einsatzzeit zählt und was es sofort an Stimmung kostet oder bringt
+    bank:{frischeUnter:85,englischTage:4,     // Rotation: Stammspieler mit Frische unter 85 % oder in einer englischen Woche (höchstens 4 Tage zum Spiel davor oder danach)
+      rotationReihe:2,rotationAngekuendigt:3,angekuendigt:1, // höchstens zwei Spiele in Folge (angekündigt drei), angekündigt +1 Stimmung
+      joker:{note:2.5,stimmung:3,kurz:60,starke:3,von:5},    // eingewechselt mit Tor oder Note bis 2,5: +3 und erfüllt. Ehrgeizige: drei starke Kurzeinsätze in fünf heben die Einschätzung
+      rivale:{staerke:3,schonfrist:3,je:1,max:10,sofort:-1,sv:-0.2,lernen:1.1,haltenAb:30}, // Konkurrent in der Startelf: nach drei Spielen −1, −2 … bis −10. Diven und Nervenschwache sofort, Kämpfer lernen ×1,1
+      unerfahren:{spiele:10,kader:1,einsatz:3,einsatzMin:10,debuet:5}, // unter 10 Profi-Pflichtspielen: keine Erwartung, Kader +1, Einsatz ab 10 Minuten +3, Debüt +5
+      torwart:{duell:2,woche:-1,klarNach:5},                 // Nummer 2 höchstens 2 Punkte dahinter: beide −1 pro Woche, bis fünf Spiele in Folge derselbe im Tor steht
+      aufbau:{abTagen:14,tage:21},                           // nach einer Verletzung ab 14 Tagen: drei Wochen ohne Erwartung
+      formkrise:{note:4.0,noten:3,faktor:0.5,sv:0.2},        // Notenschnitt der letzten fünf Einsätze ab 4,0: die Bank zählt halb
+      tribuene:-2,                                           // gesund, aber nicht im Spieltagskader (Rolle ab Rotation)
+      frueh:{vor:46,stimmung:-3,sv:-0.5},spaet:{nach:88,minuten:3,etabliert:-1,unerfahren:1},
+      erfolg:{ab:3,je:0.15,min:0.5,max:1.5},                 // Serie der letzten fünf Spiele gegen die Erwartung: Siegesserie halbiert die Abwertung, Krise ×1,5
+      chance:{spiele:3,note:3.0},                            // Vertreter eines fehlenden Stammspielers mit Notenschnitt bis 3,0 nach drei Spielen
+      sperre:{hitzkopf:-1},fuehrer:{freunde:-1},
+      bedeutungslos:{spieltage:5,plus:2,minus:-2,minuten:20,grenzen:{1:[1,4,6,15,16],2:[2,3,15,16],3:[2,3,16]}},
+      pokalTempo:0.5,diva:2},
     erfolg:{abSpiele:3,platz:25,platzMax:7,serie:1,serieMax:3,zerfall:0.9},
     leistung:0.5,                        // (Form − 10) × 0,5
     vertrag:{unter:0.8,minus:12,ueber:1.15,plus:3,auslaufend:-3,soeldner:1.5,max:-8}, // vorläufig höchstens −8, bis K21 das Gehaltsgefüge baut
@@ -444,7 +460,7 @@ const REGELN={
       nervenschwach:{v:1.3,s:1,b:0.5,lob:1.2,kritik:-8,sv:-0.5},hitzkopf:{v:1,s:1,b:0.7,lob:1,kritik:-4,streitB:0.2,streitKritik:0.2},
       vorbildprofi:{v:1,s:1.2,b:1,lob:0.7,kritik:-2},fuehrungsspieler:{v:1,s:1.2,b:1,lob:1,kritik:-2},soeldner:{v:0.7,s:1,b:1,lob:0.7,kritik:-4}},
     persoenlichkeit:0.02,                 // Anpassungsfähigkeit verschiebt die Wirkung um ±2 % je Punkt Abstand von 10
-    mannschaft:{proWoche:1,rueckendeckung:{sv:0.3,stimmung:3},weckruf:{note:1.2,spiele:2,kaempfer:2,diva:-2},ziel:{stimmung:2},endspiel:{wirkung:0.02,nervenschwach:-0.02}},
+    mannschaft:{proWoche:1,rueckendeckung:{sv:0.3,stimmung:3},weckruf:{note:1.2,spiele:2,kaempfer:2,diva:-2},ziel:{stimmung:2},endspiel:{wirkung:0.02,nervenschwach:-0.02},rotation:{tage:7,unpassend:-1}},
     halbzeit:{passend:1,unpassend:-2}}, // Glaubwürdigkeit nach einer passenden oder unpassenden Halbzeitansprache
   // Live-Spiel (K05 §11): Tempo, Halte, Wechsel, Umstellungszeit, Zurufe, Halbzeitansprache, Computer-Trainer, Druckleiste
   live:{tempo:{langsam:2000,normal:1000,schnell:300},

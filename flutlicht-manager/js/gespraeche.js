@@ -10,9 +10,10 @@ const THEMA_HILFE={rolle:'Er sieht sich höher, als du ihn einsetzt. Erklären h
   konkurrent:`Zusage: ${Math.round(RGS.versprechen.konkurrent.tage/30)} Monate kein Neuzugang auf seiner Position, der höchstens ${RGS.versprechen.konkurrent.staerke} Punkte schwächer ist als er.`,
   lob:'Passt nach einer guten Note, nach einer schlechten wirkt es seltsam.',kritik:'Passt nach einer schwachen Note. Manche spornt es an, andere trifft es hart.'};
 const HALTUNGEN={v:'verständnisvoll',s:'sachlich',b:'bestimmt'};
-const M_ANSPRACHEN={rueckendeckung:'Rückendeckung',weckruf:'Weckruf',ziel:'Ziel neu setzen',endspiel:'Endspiel-Rede'};
+const M_ANSPRACHEN={rueckendeckung:'Rückendeckung',weckruf:'Weckruf',ziel:'Ziel neu setzen',endspiel:'Endspiel-Rede',rotation:'Rotation ankündigen'};
 const M_ANSPRACHE_HILFE={rueckendeckung:'passt nach einer Niederlagenserie: Selbstvertrauen und Stimmung aller steigen',weckruf:'passt bei schwachen Ergebnissen trotz guter Lage: die nächsten zwei Spiele zählen für die Form stärker, Kämpfer mögen das, Diven nicht',
-  ziel:'passt zum Saisonstart und in der Winterpause: Stimmung aller etwas besser',endspiel:'passt vor einem Pokalfinale, der Relegation oder dem letzten Spieltag: wirkt im Spiel, nur Nervenschwache verkrampfen'};
+  ziel:'passt zum Saisonstart und in der Winterpause: Stimmung aller etwas besser',endspiel:'passt vor einem Pokalfinale, der Relegation oder dem letzten Spieltag: wirkt im Spiel, nur Nervenschwache verkrampfen',
+  rotation:'passt vor einer englischen Woche: sieben Tage lang nimmt kein Stammspieler eine Pause auf der Bank übel, bis zu drei Spiele in Folge'};
 const VERSPRECHEN_NAME={einsatz:'Einsatz',geduld:'Geduld',wechsel:'Wechsel',konkurrent:'keine Konkurrenz'};
 const VERSPRECHEN_STAND={offen:'offen',gehalten:'gehalten',gebrochen:'gebrochen',hinfaellig:'hinfällig'};
 
@@ -129,7 +130,11 @@ function anspracheGeeignet(art){const t=myT(),erw=(t.erw||[]).slice(-3),sp=(S.re
   if(art==='rueckendeckung')return erw.filter(x=>x[0]===0).length>=2;
   if(art==='weckruf')return erw.length>=3&&erw.reduce((a,x)=>a+x[0]-x[1],0)<=-1.5&&t.expPos&&rank(t.lg,S.my)<=t.expPos+2;
   if(art==='ziel')return S.phase==='play'&&(sp<3||mo===11&&datumVon(S.tag).getUTCDate()>=15||mo===0);
-  if(art==='endspiel')return naechstesEndspiel()!=null;return false;}
+  if(art==='endspiel')return naechstesEndspiel()!=null;
+  if(art==='rotation')return englischeWocheVoraus();return false;}
+// Englische Woche voraus (K14 §12): in den nächsten sieben Tagen zwei Pflichtspiele, oder eines höchstens vier Tage nach dem letzten
+function englischeWocheVoraus(){const n=RGS.mannschaft.rotation.tage,e=RKA.bank.englischTage,l=[];for(let d=S.tag;d<=S.tag+n;d++)if(meinSpiel(d))l.push(d);
+  if(l.length>=2)return true;if(!l.length)return false;const a=spielAbstand(l[0]).get(S.my);return !!a&&a.last!=null&&l[0]-a.last<=e;}
 function mannschaftsAnsprache(art){const M=RGS.mannschaft,t=myT();if(!M_ANSPRACHEN[art])return{ok:false,text:'Unbekannte Ansprache.'};
   if(anspracheDieseWoche())return{ok:false,text:'Diese Woche hast du schon zur Mannschaft gesprochen.'};
   const A=RGS.abnutzung,n=(t.mans||[]).filter(([d,k])=>k===art&&d>absTag(S.tag)-A.wochen*7).length,abn=n===0?1:n===1?A.zweites:A.danach,passt=anspracheGeeignet(art);
@@ -138,6 +143,8 @@ function mannschaftsAnsprache(art){const M=RGS.mannschaft,t=myT();if(!M_ANSPRACH
   if(art==='weckruf'){t.weck={n:M.weckruf.spiele,f};sq.forEach(p=>{if(hatEig(p,'kaempfer'))stimmungAendern(p,M.weckruf.kaempfer*Math.abs(f));if(hatEig(p,'diva'))stimmungAendern(p,M.weckruf.diva*Math.abs(f));});}
   if(art==='ziel')sq.forEach(p=>stimmungAendern(p,M.ziel.stimmung*f));
   if(art==='endspiel'){const d=naechstesEndspiel();if(d!=null)t.endspiel={tag:d,s:S.season,f};}
+  // Rotation ankündigen (K14 §12, „Erklären hilft“): passend gilt sie sieben Tage, unpassend sind die Stammspieler irritiert
+  if(art==='rotation'){if(f>0)t.rotAn={bis:absTag(S.tag)+M.rotation.tage,f};else{delete t.rotAn;sq.forEach(p=>{if(stammA(p))stimmungAendern(p,M.rotation.unpassend);});}}
   const text=`Ansprache „${M_ANSPRACHEN[art]}“${passt?'':' – passt nicht zur Lage, die Spieler sind irritiert'}${abn<1?' (kennen sie schon, wirkt schwächer)':''}.`;news(text,passt?'good':'bad');return{ok:true,text,passt,f};}
 // Weckruf: Die Note zählt in den nächsten zwei Pflichtspielen 20 % stärker für die Form (in engine.js beim Formwechsel nach dem Spiel)
 const weckFaktor=tid=>{const t=S.teams[tid];return t&&t.weck&&t.weck.n>0?1+(RGS.mannschaft.weckruf.note-1)*t.weck.f:1;};

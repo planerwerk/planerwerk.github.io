@@ -755,3 +755,21 @@ Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `
 | AY3 | **„Bestimmtes Talent“** ist das Merkmal „vielseitig“. Ein eigenes Talent je Zielposition gibt es nicht. | ✅ vorläufig, 📌 K03 falls du ein eigenes Merkmal willst |
 | AY4 | **K31:** Computer-Vereine schulen nicht um („nur bei Mangel auf einer Position“ aus K07 §7 ist nicht gebaut). Mit den strengeren Regeln bleibt das selten, wenn es kommt. | 📌 U11 |
 | AY5 | **K07 §3.3:** „Einsätze auf der neuen Position zählen wie eine Trainingswoche zusätzlich“ ist weiter nicht gebaut. | 📌 klein |
+
+---
+
+## AZ. Nachtrag zu U8d Bankzeit nach Grund (13. November 2026)
+
+| # | Befund | Status |
+|---|---|---|
+| AZ1 | **K14 §5.1 gegen §12:** Der Baustein „Einsatz“ hat die Spanne −28 bis +10, der Rivalen-Zähler kommt mit bis zu −10 dazu. Innerhalb der Spanne war der Test „zehn Spiele hinter dem Rivalen führen zum Gesprächswunsch“ nicht erreichbar (Trägheit 20 % pro Woche). | ✅ K14 §12 Nr. 25, vorläufig |
+| AZ2 | **K14 §12 Nr. 13 (U8):** Der feste Faktor 1,5 gegen erklärte Rivalen entfällt, der Zähler ersetzt ihn. Ein erklärter Rivale in der Startelf zählt wie ein Konkurrent mit höchstens 3 Punkten Abstand. | ✅ |
+| AZ3 | **K05 §3.2:** Die Bank wählt der Co-Trainer, eine eigene Bankwahl gibt es nicht. Der Fall „Tribüne“ wäre für dich nie eingetreten. Neu: Tribüne an der Spielerkarte. Eine volle Bankwahl bleibt offen. | ✅ klein, 📌 K05 |
+| AZ4 | **K15 §5.4:** „Rotation ankündigen“ hieß in K14 „vierte Mannschaftsansprache“, es ist die fünfte (nach Rückendeckung, Weckruf, Ziel, Endspiel). | ✅ K15 §5.4, K14 §12 Nr. 36 |
+| AZ5 | **K31:** Computer-Vereine rotieren kaum (etwa 25 Fälle je Saison), weil ihre Aufstellung die Frische nur über die Stärke kennt. Sie kennen weder die Rolle „spielt im Pokal“ noch die Ankündigung. Offen aus U8 bleibt die Wochen-Stammelf mit Rotation nach Rollen. | 📌 U11 |
+| AZ6 | **K06, K36:** Stellt der Co-Trainer für dich auf (Automatik), spielt er die beste Elf auch im Pokal. Eine Rolle „spielt im Pokal“ wird dann enttäuscht. | 📌 K06 oder U11 |
+| AZ7 | **K03, K04:** „Profi-Pflichtspiele über die Karriere“ gab es nicht. Für vorhandene Spieler sind sie aus dem Alter geschätzt (bis 18 Jahre null). Echte Laufbahndaten kommen mit der Historie (K34). | ✅ vorläufig, 📌 K34 |
+| AZ8 | **K14 §12, Fälle für spätere Schritte:** teurer Neuzugang und Vertragsjahr (U10, K19, K21), Altstar, Mentor und Leihwunsch (U9c, U10), passt nicht ins System mit dem Gespräch „Position erklären“ (K06, K15), neuer Trainer (K28, U12), Länderspiele (K13). Im PLAN §7 bei den Schritten vermerkt. | 📌 |
+| AZ9 | **K10:** Rückkehrer haben Frische 70 bis 80 %. Damit greift bei Stammspielern nach dem Aufbau oft zuerst die Rotation. Beides entschuldigt die Bank, das passt zusammen. | ✅ |
+| AZ10 | **K13 §5.2 Supercup gegen 72 Stunden:** Der Termin wurde nur gegen den 1. Spieltag der Bundesliga und die erste Pokalrunde geprüft. Ein Pokalsieger aus der 2. Liga hatte am Tag danach ein Ligaspiel (tests/wettbewerbe.js, sichtbar geworden durch andere Ergebnisse nach U8d). Jetzt hält der Supercup Abstand zu den Ligaspielen beider Teilnehmer und rückt sonst wochenweise vor. | ✅ |
+| AZ11 | **tests/training.js „dauerhaft hart“:** Die Prüfung verglich einen einzelnen Verein (etwa 14 Trainingsverletzungen je Saison). Das Rauschen war größer als die Wirkung (+12 bis +17 %, gemessen an allen Vereinen), die Prüfung fiel je nach Lauf rot oder grün aus. Jetzt trainieren im Vergleichslauf alle Vereine hart, verlangt sind mindestens 5 % mehr. | ✅ |

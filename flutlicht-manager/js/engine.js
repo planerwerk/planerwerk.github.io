@@ -303,11 +303,11 @@ const wb=o.wb||'liga',H=mitWettbewerb(wb,()=>side(hid,true,o.neutral)),A=mitWett
       const l=ids.map(([id,[a,b]])=>{const p=PIX.get(+id),ps=pos[id]||(p?STD_POS[p.pos]:'ZM'),min=Math.max(1,(b==null?ende:b)-a);
         const g=ps==='TW'?0.01:(RE.schuetzen.halb[linksForm(ps)]||0.3)*Math.pow((p?p.str:60)/RE.schuetzen.mitte,RE.schuetzen.exponent)*Math.min(90,min)/90;return[+id,ps,g,min];});
       const tot=l.reduce((a,x)=>a+x[2],0);return l.map(x=>[x[0],x[1],tot?x[2]/tot:0,x[3]]);};
-    return{h:hid,a:aid,hg:sc[0],ag:sc[1],ev,pen:G.pen,sr:G.schiri.n,yel:Object.keys(yel).map(Number),off:[...off],inj,xi:[H.xi,A.xi],ein:G.ein,xg0,xpo:[H.am?[]:teil(H,0),A.am?[]:teil(A,1)],st,sz,sv:G.sv,taktik:[H,A].map(sd=>sd.am?null:{stil:sd.stil,form:sd.form,einst:sd.einst,u:Math.round(sd.u*100)/100})};};
+    return{h:hid,a:aid,hg:sc[0],ag:sc[1],ev,pen:G.pen,sr:G.schiri.n,yel:Object.keys(yel).map(Number),off:[...off],inj,xi:[H.xi,A.xi],ein:G.ein,bk:[0,1].map(s=>[...G.ein[s],...(G.bank[s]||[])]),ws:G.wechsel.map(w=>[w.s,w.m,w.aus,w.ein]),xg0,xpo:[H.am?[]:teil(H,0),A.am?[]:teil(A,1)],st,sz,sv:G.sv,taktik:[H,A].map(sd=>sd.am?null:{stil:sd.stil,form:sd.form,einst:sd.einst,u:Math.round(sd.u*100)/100})};};
   return G;}
-// Bank (K05 §3.2): 9 Spieler, darunter ein Torwart, sonst die stärksten verfügbaren aus jeder Gruppe
+// Bank (K05 §3.2): 9 Spieler, darunter ein Torwart, sonst die stärksten verfügbaren aus jeder Gruppe. Wen du auf die Tribüne gesetzt hast (p.trib, K14 §12), bleibt draußen.
 const ZURUFE=['druck','ruhe','konzentration','zeit'],ANSPRACHEN=['loben','motivieren','fordern','beruhigen','taktik','schweigen','augenzwinkernd'];
-function bankWaehlen(sd){if(sd.am)return[];const imXI=new Set(sd.xi),pool=squad(sd.id).filter(p=>avail(p)&&!imXI.has(p.id)).sort((a,b)=>b.str-a.str),n=RL.wechsel.bank,b=[];
+function bankWaehlen(sd){if(sd.am)return[];const imXI=new Set(sd.xi),ohne=sd.id===S.my&&!autoB('aufstellung'),pool=squad(sd.id).filter(p=>avail(p)&&!imXI.has(p.id)&&!(ohne&&p.trib)).sort((a,b)=>b.str-a.str),n=RL.wechsel.bank,b=[];
   const tw=pool.find(p=>p.pos==='TW');if(tw)b.push(tw);['AB','MF','ST'].forEach(g=>pool.filter(p=>p.pos===g).slice(0,2).forEach(p=>{if(b.length<n&&!b.includes(p))b.push(p);}));
   pool.forEach(p=>{if(b.length<n&&!b.includes(p)&&p.pos!=='TW')b.push(p);});return b.map(p=>p.id);}
 // Erwartung gegen Amateurklubs: Verhältnis der Teamwerte
@@ -335,7 +335,7 @@ function applyMatchLauf(r,cup){const N=RE.note,V=RP.selbstvertrauen;
       let gr=fest-res*N.ergebnis-goals*N.tor+(R()-0.5)*N.zufall;if(r.off.includes(id))gr+=N.platzverweis;gr=clamp(Math.round(gr*2)/2,N.min,N.max);
       const erw=clamp(fest-eres*N.ergebnis-xgF*anteil*N.tor,N.min,N.max);
       p.lastG=gr;formNachNote(p,gr,erw,weckFaktor(tid));if(goals)svAendern(p,goals*V.tor);if(gr<=2)svAendern(p,V.guteNote);else if(gr>=5)svAendern(p,V.schlechteNote);
-      p.played=1;if(tid===S.my)(r.grades=r.grades||{})[id]=gr;});
+      p.played=1;(r.nt=r.nt||{})[id]=gr;if(tid===S.my)(r.grades=r.grades||{})[id]=gr;});
     serieBuchen(S.teams[tid],res>0?3:res===0?1:0,E.punkte,r.xi[s]);weckNachSpiel(tid);});
   if(r.taktik)r.taktik.forEach((tk,s)=>{const tid=s?r.a:r.h;if(!tk||tid>=1000)return;const t=S.teams[tid],V=RTA.vertrautheit,ES=RTA.einstellung.saison;
     vertrautSetzen(t,'stil',tk.stil,vertraut(t,'stil',tk.stil)+V.jeSpiel);vertrautSetzen(t,'ordnung',tk.form,vertraut(t,'ordnung',tk.form)+V.jeSpiel);

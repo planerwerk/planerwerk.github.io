@@ -45,19 +45,20 @@ const f1=x=>x.toFixed(1),pc=x=>(x*100).toFixed(0)+' %';
 
 // 4. Über Saisons: Anteil der Trainingsverletzungen 40–55 %. Training wirkt: Mit dem Co-Trainer-Plan entwickeln sich die Spieler schneller und sind konditionell besser als mit „Schonen“,
 //    ohne deutlich mehr Ausfälle. Punkte schwanken über wenige Saisons zu stark (±7 je Saison), darum wird die Wirkung selbst geprüft:
-//    +1 Stärke der Startelf sind etwa +2,5 Punkte pro Saison (tests/akzeptanz.js). Dauerhaft hart kostet sichtbar mehr Trainingsverletzungen.
-{const X=6;const lauf=vorlage=>{let spielV=0,trainV=0,eigeneT=0;const str=[],ko=[],aus=[];
-    saisons({n:N,seed:SEED,verein:X,beiSaisonstart:S=>{S.teams[X].vorlage=vorlage;},
+//    +1 Stärke der Startelf sind etwa +2,5 Punkte pro Saison (tests/akzeptanz.js). Dauerhaft hart kostet sichtbar mehr Trainingsverletzungen (gemessen an allen Vereinen).
+{const X=6;const lauf=(vorlage,alle)=>{let spielV=0,trainV=0,eigeneT=0;const str=[],ko=[],aus=[];
+    saisons({n:N,seed:SEED,verein:X,beiSaisonstart:S=>{S.teams.forEach(t=>{if(alle||t.id===X)t.vorlage=vorlage;});},
       beiSpielen:(l,S)=>{l.forEach(r=>{spielV+=r.inj.length;});const r=l.find(x=>x.h===X||x.a===X);if(!r)return;const s=r.h===X?0:1,P=new Map(S.pl.map(p=>[p.id,p])),xi=r.xi[s].map(id=>P.get(id)).filter(Boolean);
         str.push(S.pl.filter(p=>p.team===X).reduce((a,p,_,q)=>a+(p.trf||1)/q.length,0));ko.push(xi.reduce((a,p)=>a+p.ko,0)/xi.length);aus.push(S.pl.filter(p=>p.team===X&&p.inj>0).length);},
       beiSaisonende:S=>{trainV+=S.pl.reduce((a,p)=>a+(p.tinj||0),0);eigeneT+=S.pl.filter(p=>p.team===X).reduce((a,p)=>a+(p.tinj||0),0);S.pl.forEach(p=>{p.tinj=0;});}});
     const m=a=>a.reduce((x,y)=>x+y,0)/Math.max(1,a.length),zweite=a=>a.slice(Math.floor(a.length/2));
-    return{anteil:trainV/(trainV+spielV),trf:m(str),ko:m(ko),aus:m(aus),eigeneT:eigeneT/N};};
-  const auto=lauf('auto'),schonen=lauf('schonen'),hart=lauf('aufbau');
+    return{anteil:trainV/(trainV+spielV),trf:m(str),ko:m(ko),aus:m(aus),eigeneT:eigeneT/N,alleT:trainV/N};};
+  const auto=lauf('auto'),schonen=lauf('schonen'),hart=lauf('aufbau',true);
   pruef(auto.anteil>=0.40&&auto.anteil<=0.55,'Verletzungen: Anteil aus dem Training 40–55 %',pc(auto.anteil));
   pruef(auto.trf-schonen.trf>=0.08,'Training wirkt: Trainingsfaktor der Entwicklung im Kader mit dem Co-Trainer-Plan mindestens 0,08 höher als mit „Schonen“',`${auto.trf.toFixed(2)} gegen ${schonen.trf.toFixed(2)}`);
   pruef(auto.ko-schonen.ko>=10,'Training wirkt: Kondition der Startelf mindestens 10 höher als mit „Schonen“',`${f1(auto.ko)} gegen ${f1(schonen.ko)}`);
   pruef(auto.aus<=schonen.aus+1,'Training kostet nicht zu viel: im Schnitt höchstens ein Verletzter mehr im Kader als mit „Schonen“',`${f1(auto.aus)} gegen ${f1(schonen.aus)}`);
-  pruef(hart.eigeneT>auto.eigeneT,'Dauerhaft hart (Aufbau das ganze Jahr) kostet mehr Trainingsverletzungen als der Co-Trainer-Plan',`${f1(hart.eigeneT)} gegen ${f1(auto.eigeneT)} pro Saison`);}
+  // Ein einzelner Verein hat etwa 14 Trainingsverletzungen je Saison, das Rauschen ist größer als die Wirkung (+12 bis +17 %). Darum trainieren im Vergleichslauf alle Vereine hart.
+  pruef(hart.alleT>auto.alleT*1.05,'Dauerhaft hart (Aufbau das ganze Jahr, alle Vereine) kostet mindestens 5 % mehr Trainingsverletzungen als der Co-Trainer-Plan',`${Math.round(hart.alleT)} gegen ${Math.round(auto.alleT)} pro Saison (+${((hart.alleT/auto.alleT-1)*100).toFixed(0)} %)`);}
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

@@ -23,11 +23,12 @@ function tagesSpieleAbschliessen(out){return mitStrom(strom('spieltagEnde',S.sea
 function tagesSpieleAbschliessenLauf(out){const d=out.tag;S.gespielt=d;
   out.gruppen.filter(g=>g.art==='test').forEach(g=>g.list.forEach(r=>testspielNach(r,g.x)));out.gruppen=out.gruppen.filter(g=>g.art!=='test');
   out.list=out.gruppen.flatMap(g=>g.list);if(!out.list.length)return out;
-  einsatzBuchen(out.list);versprechenNachSpiel(out.list);scoutingNachSpiel(out.list); // Einsatzzeit, Startelf und Siege (K14), Versprechen (K15), solange Gesperrte noch als gesperrt gelten
+  einsatzVorher(out.list);versprechenNachSpiel(out.list);scoutingNachSpiel(out.list); // wer fehlte (K14 §12) und Versprechen (K15), solange Gesperrte noch als gesperrt gelten
   // Sperren zählen die Spiele der eigenen Mannschaft im selben Wettbewerb (K09)
   const spielten=new Set(),wbs=new Set();out.list.forEach(r=>{spielten.add(r.h);spielten.add(r.a);const w=wbVon(r);wbs.add(r.h+':'+w);wbs.add(r.a+':'+w);});
   sperrenAbsitzen(wbs);
   out.list.forEach(r=>applyMatch(r,!!r.cup));
+  einsatzBuchen(out.list,d); // Einsatzzeit und Bankzeit nach Grund (K14 §12), nach den Noten
   S.pl.forEach(p=>{if(spielten.has(p.team))entwicklungBuchen(p,d);});
   out.mine=out.list.find(r=>r.h===S.my||r.a===S.my)||null;if(out.mine)lizenzSpiel();
   const t=myT(),m=out.mine;

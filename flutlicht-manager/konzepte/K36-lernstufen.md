@@ -75,20 +75,20 @@ Grundlage sind die Notizen in K10 §12 Nr. 14, K11 §12 Nr. 12, K13 §12 Nr. 13 
 
 | Bereich (Schlüssel) | Funktion | Lizenz | Bis dahin macht es | Quelle |
 |---|---|---|---|---|
-| `aufstellung` | Startelf setzen, beste Elf aufstellen | 1 Teamleiter | – (auf Wunsch stellt der Co-Trainer auf, 12 Nr. 15) | PLAN §4 |
+| `aufstellung` | Startelf setzen, beste Elf aufstellen, seit U8d einen Spieler auf die Tribüne setzen | 1 Teamleiter | – (auf Wunsch stellt der Co-Trainer auf, 12 Nr. 15) | PLAN §4 |
 | `formation` | Grundordnung wählen, auch im Live-Spiel | 1 Teamleiter | – (auf Wunsch wählt der Co-Trainer, 12 Nr. 15) | PLAN §4 |
 | `ausrichtung3` | Ausrichtung defensiv, normal, offensiv, auch im Live-Spiel | 1 Teamleiter | – | PLAN §4 |
 | `live` | Spiel live ansehen, Konferenz, sofort berechnen, vorspulen | 1 Teamleiter | – | K05 |
 | `wechsel` | Wechsel im Live-Spiel | 1 Teamleiter | Computer-Trainer, wenn du nicht wechselst (wie bisher) | K05 |
 | `verletzte` | Verletztenliste, Diagnose als Spanne (Information) | 1 Teamleiter | – | K10 Nr. 14 |
 | `pokal` | Pokal, Relegation, Supercup, Auslosung als Moment | 1 Teamleiter | – | K13 Nr. 13 |
-| `stimmung` | Stimmung, Wechselwunsch und Glaubwürdigkeit sehen, Wochenbericht (U8) | 1 Teamleiter | – | K14, K15 |
+| `stimmung` | Stimmung, Wechselwunsch und Glaubwürdigkeit sehen, Wochenbericht (U8), seit U8d der Grund des letzten Bankplatzes | 1 Teamleiter | – | K14, K15 |
 | `stil` | Spielstil wählen, auch im Live-Spiel, Gegneranalyse | 2 C-Lizenz | Co-Trainer nach `kiStil` | PLAN §4, K06 |
 | `zurufe` | Zurufe an die Mannschaft und Halbzeitansprache | 2 C-Lizenz | keine Ansprache (neutral) | PLAN §4, K05 |
 | `vorlage` | Trainingsvorlage wählen | 2 C-Lizenz | Co-Trainer nach `vorlageAuto` | PLAN §4, K07 |
 | `transfers` | Transferliste, Angebote annehmen und ablehnen (seit U9b auch von Auslandsvereinen), Spieler kaufen | 2 C-Lizenz | Verein nach den Regeln der Computer-Vereine (`market`) | PLAN §4, K19 |
 | `gespraeche` | Einzelgespräche ohne Versprechen, Gesprächswunsch als Halt (U8) | 2 C-Lizenz | Co-Trainer führt das Gespräch nach der Regel der Computer-Vereine (K15 §7) | K15 |
-| `ansprache` | Mannschaftsansprache außerhalb des Spiels (U8) | 2 C-Lizenz | keine Ansprache | K15 §5.4 |
+| `ansprache` | Mannschaftsansprache außerhalb des Spiels (U8), seit U8d auch „Rotation ankündigen“ | 2 C-Lizenz | keine Ansprache | K15 §5.4 |
 | `kapitaen` | Kapitän bestimmen (U8) | 2 C-Lizenz | Co-Trainer wählt nach Führung und Vereinsjahren | K14 §5.8 |
 | `ausrichtung5` | Ausrichtung in fünf Stufen | 3 B-Lizenz | nur drei Stufen wählbar | PLAN §4 |
 | `einstellung` | Einstellung zum nächsten Spiel, Härte im Zweikampf | 3 B-Lizenz | Co-Trainer wie bei den Computer-Vereinen: in wichtigen Spielen „Spiel der Saison“, sonst normal, Härte normal (12 Nr. 16) | PLAN §4, K06 |
@@ -104,7 +104,7 @@ Grundlage sind die Notizen in K10 §12 Nr. 14, K11 §12 Nr. 12, K13 §12 Nr. 13 
 | `vertraege` | Verträge verlängern, Spieler freistellen | 3 B-Lizenz | Verein verlängert nach den Regeln der Computer-Vereine | PLAN §4, K21 |
 | `ausland` | Spieler im Ausland beobachten und kaufen (U9b) | 3 B-Lizenz | Verein kauft nur im Inland (wie die Computer-Vereine bis U11), der Auslandsmarkt ist als Information frei | K32 §6, K18 |
 | `jugend` | Stufe der Jugendarbeit (bis K08 gebaut ist) | 3 B-Lizenz | Verein hält die übliche Stufe 2 wie die Computer-Vereine | K08, 12 Nr. 15 |
-| `kaderrollen` | Kaderrollen festlegen (U8) | 3 B-Lizenz | Co-Trainer verteilt die Rollen nach Stärke (K14 §7) | K14 §3.1 |
+| `kaderrollen` | Kaderrollen festlegen (U8), seit U8d auch die Rolle „spielt im Pokal“ | 3 B-Lizenz | Co-Trainer verteilt die Rollen nach Stärke (K14 §7) | K14 §3.1 |
 | `versprechen` | Zusagen im Gespräch, Teamevent (U8) | 3 B-Lizenz | keine Zusagen, kein Teamevent | K15 §5.3, K14 §6 |
 | `suchauftrag` | Suchauftrag für Scouts (U9a), auch mit der Region Ausland (U9b) | 4 A-Lizenz | kein Suchauftrag | K18 |
 | `sportgericht` | Strafe annehmen oder Einspruch | 4 A-Lizenz | Verein nach `kiEinspruch` | PLAN §4, K09 |

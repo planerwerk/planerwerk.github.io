@@ -87,7 +87,13 @@ function tsAnfragen(){if(!darf('testspiele','sommerplan'))return;const d=+docume
 function lagerBuchen(){if(!darf('lager','sommerplan'))return;const o=document.getElementById('la_ort').value,v=+document.getElementById('la_von').value,n=+document.getElementById('la_tage').value,f=lagerMoeglich(o,v,n);if(f){toast(f);return;}
   const k=lagerBuchenLauf(o,v,n);news(`Trainingslager gebucht: ${RLA.orte[o].name}, ${datumKurz(v)} bis ${datumKurz(v+n-1)}, Kosten ${fmt(k)}.`);save();render();}
 // Kabine und Gespräche (K14, K15): Kaderrolle, Kapitän, Einzelgespräch, Mannschaftsansprache, Teamevent
-function setKaderrolle(id,k){if(!darf('kaderrollen','kaderrolleOderVersprechen'))return;const p=PIX.get(id);if(!p||p.team!==S.my)return;if(k&&KR_STUFE[k])p.kr=k;else delete p.kr;save();openP(id);render();}
+function setKaderrolle(id,k){if(!darf('kaderrollen','kaderrolleOderVersprechen'))return;const p=PIX.get(id);if(!p||p.team!==S.my)return;
+  if(k==='pokal'&&!imPokal(S.my)){toast('Ihr seid nicht mehr im Pokal.');return;}
+  const alt=kaderRolle(p);if(k&&KR_STUFE[k])p.kr=k;else delete p.kr;
+  if((alt==='pokal')!==(kaderRolle(p)==='pokal'))p.ea=erwartungEinsatz(p); // Rolle „spielt im Pokal“ misst nur Pokalspiele: Die Einsatzzeit beginnt bei der neuen Erwartung
+  save();openP(id);render();}
+// Tribüne (K14 §12): Der Spieler kommt nicht in den Spieltagskader, bis du es zurücknimmst. Etablierte nehmen das übel.
+function setTribuene(id){if(!darf('aufstellung'))return;const p=PIX.get(id);if(!p||p.team!==S.my)return;if(p.trib)delete p.trib;else{p.trib=1;if(S.lineup)S.lineup=S.lineup.map(x=>x===id?null:x);}save();openP(id);render();}
 function setKapitaen(v){if(!darf('kapitaen'))return;const t=myT(),id=+v,neu=PIX.get(id);if(!neu||neu.team!==S.my||id===t.kap)return;const alt=PIX.get(t.kap),K=RKA.kapitaen,f=S.kapFrei;
   const frei=f?(f.s===S.season&&S.tag<=f.bis):(S.season===RW.startSaison&&S.tag<=14);
   if(alt&&alt.team===S.my&&!frei){stimmungAendern(alt,K.absetzen);freundeVon(alt).forEach(q=>{if(q.team===S.my)stimmungAendern(q,K.absetzenFreunde);});news(`${alt.n} ist nicht mehr Kapitän und enttäuscht. Neuer Kapitän: ${neu.n}.`,'bad');}
