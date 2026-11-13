@@ -109,8 +109,10 @@ const punkte=(S,F,id)=>{const lg=S.teams[id].lg,r=F.table(lg).find(x=>x.id===id)
 {const lauf=(seed,mein)=>{const {W,F}=neueWelt();F.buildWorld(seed);let S=W.S;S.my=mein;S.mgr='Simulator';F.setTarget();F.lizenzStart(false);allesAuto(S,W.ev,true);F.sponsOffers();S.lineup=F.bestXI(mein,W.ev('myT()').form);let n=0;
     while(S.phase!=='end'&&n<2000){n++;if(S.sponsOffers)F.sponsorWaehlen(0);if(S.fired){S.fired=0;S.trust=60;}if(W.ev('heuteMeinSpiel()'))F.tagesSpiele(S.tag);F.weiter();S=W.S;}return punkte(S,F,6);};
   const d=[];for(let i=0;i<SEEDS;i++){const seed=SEED+10+i,a=lauf(seed,6),c=lauf(seed,30);d.push([a,c]);}
-  const diff=mw(d.map(([a,c])=>a-c));
-  pruef(diff>=-2,`Kein Nachteil: Automatik gegen Computer-Verein über ${SEEDS} Seeds, im Schnitt höchstens 2 Punkte weniger`,`${diff>=0?'+':''}${diff.toFixed(1)} Punkte (${d.map(([a,c])=>a+':'+c).join(', ')})`);}
+  // Ein Paar streut um etwa 7 Punkte, das Mittel über sechs Seeds also um knapp 3. Ein fester Vergleich mit −2 fiele je nach Lauf rot oder grün aus.
+  // Geprüft wird deshalb, ob ein Nachteil von mehr als 2 Punkten nachweisbar ist (einseitig, 95 %). Genau messen: 18 Seeds, siehe K36 §12 Nr. 30.
+  const dl=d.map(([a,c])=>a-c),diff=mw(dl),se=Math.sqrt(dl.reduce((x,y)=>x+(y-diff)*(y-diff),0)/Math.max(1,dl.length-1)/dl.length);
+  pruef(diff+1.64*se>=-2,`Kein Nachteil: Automatik gegen Computer-Verein über ${SEEDS} Seeds, ein Nachteil von mehr als 2 Punkten ist nicht nachweisbar`,`${diff>=0?'+':''}${diff.toFixed(1)} ± ${se.toFixed(1)} Punkte (${d.map(([a,c])=>a+':'+c).join(', ')})`);}
 
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

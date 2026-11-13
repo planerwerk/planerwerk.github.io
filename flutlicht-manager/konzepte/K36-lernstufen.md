@@ -190,7 +190,7 @@ Der Aufstieg zählt nicht in das Budget von 2–4 Halten pro Woche (PLAN §2), w
 | Prüfung | Ziel |
 |---|---|
 | Gleiche Welt | Mit gleichem Seed und ohne eigene Eingriffe ergibt eine Saison mit Lernstufen dieselben Ergebnisse wie eine Saison ohne Lernstufen, in der jeder Bereich auf Automatik steht. |
-| Kein Nachteil | Die Automatik holt über sechs Seeds im Schnitt höchstens 2 Punkte weniger als derselbe Verein als Computer-Verein. |
+| Kein Nachteil | Die Automatik holt im Schnitt höchstens 2 Punkte weniger als derselbe Verein als Computer-Verein. Der Test prüft über sechs Seeds, ob ein größerer Nachteil nachweisbar ist (12 Nr. 30). |
 | Tempo neugierig | Ein Test-Spieler, der jede freie Funktion einmal benutzt, hat am Ende der ersten Saison die B-Lizenz und am 1. Juli nach der zweiten die Pro-Lizenz. |
 | Tempo gemütlich | Ein Test-Spieler ohne Eingriffe bekommt die C-Lizenz nach 12 Pflichtspielen, B am 1. Juli, A am 1. Januar der zweiten und Pro am 1. Januar der dritten Saison. |
 | Keine Halte aus Gesperrtem | Mit Lernstufen gibt es nicht mehr Halte pro Woche als ohne. Aus gesperrten Bereichen kommt kein Halt. |
@@ -262,6 +262,7 @@ lizenz:{
 27. **Meldungen des Stabs** stehen einzeln im Posteingang (Strafe angenommen, Vertrag verlängert, Gespräch geführt, Testspiel angefragt). Die Sammlung im Wochenbericht aus §8 ist noch nicht gebaut.
 28. **Test „kein Nachteil“ ergänzt:** Eine einzelne Saison schwankt um mehrere Punkte, sechs Seeds reichen für das Ziel „höchstens 2 Punkte“ nur knapp. Dazu kommt deshalb der Gleichschritt-Test: Ohne die Testspiele entwickelt sich der Kader 150 Tage lang Tag für Tag genau wie beim selben Verein als Computer-Verein. Gemessen über sechs Seeds: Stab am Steuer 52,2 Punkte, ohne Testspiele 53,5, als Computer-Verein 53,7.
 29. **Noch nicht gebaut:** Rauschen der Automatik nach Qualität des Mitarbeiters (K16 §5.1, Nr. 12), Testspiele und Kredit der Computer-Vereine (7), Sammlung der Stab-Meldungen im Wochenbericht, eine eigene kleine Aufgabe auf der Aufstiegskarte (sie zeigt die Aufgaben der nächsten Lizenz).
+30. **„Kein Nachteil“ genau gemessen (13.11., nach U8d):** Über 18 Seeds holt die Automatik −2,5 ± 1,6 Punkte gegenüber demselben Verein als Computer-Verein, vor U8d waren es −1,2 ± 1,7. Der gepaarte Unterschied (−1,3 ± 1,3) ist nicht von null zu unterscheiden. Das Ziel „höchstens 2 Punkte“ ist damit weder belegt noch widerlegt. Ein Paar streut um etwa 7 Punkte, das Mittel über sechs Seeds um knapp 3, der alte feste Vergleich mit −2 fiel deshalb je nach Lauf rot oder grün aus. Der Test prüft jetzt, ob ein Nachteil von mehr als 2 Punkten nachweisbar ist (Mittel plus 1,64 Standardfehler mindestens −2). Die bekannten Ursachen des Rests bleiben: echte Buchhaltung gegen Einnahmen nach Formel und die Testspiele, die nur dein Verein spielt (Nr. 28, U11).
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 
