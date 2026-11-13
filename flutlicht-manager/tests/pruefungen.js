@@ -13,7 +13,10 @@ module.exports=()=>{
    if(!['TW','AB','MF','ST'].includes(p.pos))e.push('Pos '+p.pos);
    if(p.fit<0||p.fit>100)e.push('Frische außerhalb '+p.fit);if(p.form<0||p.form>20)e.push('Form außerhalb '+p.form);if(p.ko<0||p.ko>100)e.push('Kondition außerhalb '+p.ko);if(p.sp<0||p.sp>100)e.push('Spielpraxis außerhalb '+p.sp);if(p.sv<-3||p.sv>3)e.push('Selbstvertrauen außerhalb '+p.sv);if(p.str<20||p.str>99)e.push('Stärke außerhalb '+p.str);
    if(p.inj<0||(p.sperre&&['liga','pokal'].some(w=>p.sperre[w].rot<0||p.sperre[w].gelb<0)))e.push(`negative Ausfallzeit ${p.n}`);});
-  const pool=S.ausland?S.ausland.pl:[];if(PIX.size!==S.pl.length+pool.length)e.push(`PIX ${PIX.size} vs ${S.pl.length}+${pool.length}`);
+  const pool=S.ausland?S.ausland.pl:[],jg=S.jg||[];if(PIX.size!==S.pl.length+pool.length+jg.length)e.push(`PIX ${PIX.size} vs ${S.pl.length}+${pool.length}+${jg.length}`);
+  // Jugendkader (K08): eigene Liste, eigener Nummernkreis, 15 bis 18 Jahre, nie im Profikader
+  jg.forEach(p=>{if(PIX.get(p.id)!==p)e.push('PIX kennt Jugendspieler nicht '+p.id);if(p.team!==-3||p.id<500000||p.age<15||p.age>18||!(p.str<=p.pot+0.01))e.push('Jugendspieler außerhalb des Rahmens '+p.id);});
+  if(S.pl.some(p=>p.team===-3))e.push('Jugendspieler im Profikader');const tj=S.teams[S.my];if(tj.jn!=null&&!(tj.jn>=0&&tj.jn<=REGELN.jugend.niveau.deckel))e.push('Jugendniveau außerhalb des Rahmens '+tj.jn);
   S.pl.forEach(p=>{if(PIX.get(p.id)!==p)e.push('PIX veraltet '+p.id);});
   S.teams.forEach(t=>{for(const k of ['cash','rep','cap','fans','price','logen','shop','youth'])if(!isFinite(t[k]))e.push(`Team ${t.name} ${k}=${t[k]}`);
    const n=S.pl.filter(p=>p.team===t.id).length;if(t.lg>3&&n)e.push(`Regionalligist ${t.name} hat ${n} Spieler`);if(t.lg<=3&&t.id!==S.my&&(n<15||n>36))e.push(`Kader ${t.name}: ${n}`);});

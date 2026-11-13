@@ -47,7 +47,7 @@ const {W,F,S:Send}=saisons({n:N,seed:SEED,verein:6,beiSaisonstart:merken,beiSais
   // Die Alterstabelle gilt für Mittelfeldspieler (Positionsalter = Alter). Torhüter und Abwehr bauen später ab, Stürmer früher.
   {const pl=S.pl.filter(p=>p.team>=0),RP=FX.__W.ev('RP');staerkenJeSpieler.push(pl.reduce((n,p)=>n+Object.keys(p.mk||{}).filter(k=>!RP.merkmale[k].schwaeche).length,0)/pl.length);}
   S.pl.forEach(p=>{const a=start.get(p.id);if(!a||p.team<0)return;if(a.pos==='MF')(deltas[gruppe(a.age)]=deltas[gruppe(a.age)]||[]).push(p.str-a.str);
-    if(a.age>=33){if(a.pos==='TW')abbauTW.push(p.str-a.str);if(a.pos==='MF')abbauMF.push(p.str-a.str);}if(p.str>a.pot+0.001)talentVerletzt++;formWerte.push(p.form);});
+    if(a.age>=33){if(a.pos==='TW')abbauTW.push(p.str-a.str);if(a.pos==='MF')abbauMF.push(p.str-a.str);}if(p.str>Math.max(a.pot,p.pot)+0.001)talentVerletzt++;formWerte.push(p.form);});
   [1,2,3].forEach(lg=>{const ids=S.teams.filter(t=>t.lg===lg).map(t=>t.id);const m=ids.map(id=>{const s=S.pl.filter(p=>p.team===id).map(p=>p.str).sort((a,b)=>b-a).slice(0,14);return s.reduce((x,y)=>x+y,0)/Math.max(1,s.length);});niveau[lg].push(m.reduce((x,y)=>x+y,0)/m.length);});
   // Formspirale: Haben die stärksten Kader automatisch bessere Form? (Der Meister selbst ist durch Glück ausgewählt und taugt nicht als Maß.)
   const lvl=S.teams.filter(t=>t.lg===1).map(t=>{const sq=S.pl.filter(p=>p.team===t.id);const top=sq.map(p=>p.str).sort((a,b)=>b-a).slice(0,14);return{id:t.id,l:top.reduce((a,b)=>a+b,0)/top.length,f:sq.filter(p=>p.apps>=10)};}).sort((a,b)=>b.l-a.l);
@@ -65,6 +65,7 @@ pruef(fIn>=0.6&&fIn<=0.85,'Form: 60–85 % zwischen 7 und 13',(fIn*100).toFixed(
 pruef(fEx<=0.05,'Form: höchstens 5 % bei ≤ 4 oder ≥ 16',(fEx*100).toFixed(1)+' %');
 const mS=formStark.reduce((a,b)=>a+b,0)/formStark.length,mW=formSchwach.reduce((a,b)=>a+b,0)/formSchwach.length;
 pruef(Math.abs(mS-mW)<=1.5,'Keine Formspirale: die vier stärksten Kader der 1. Liga haben im Schnitt höchstens 1,5 mehr Form als die vier schwächsten',`stark ${f1(mS)}, schwach ${f1(mW)}`);
-pruef(talentVerletzt===0,'Niemand überschreitet sein Talent',talentVerletzt);
+// Seit U9c kann ein Schub das Talent während der Saison heben (K08 §5.3). Verglichen wird deshalb mit dem höheren Wert aus Saisonbeginn und Saisonende.
+pruef(talentVerletzt===0,'Niemand überschreitet sein Talent (ein Schub darf es heben)',talentVerletzt);
 if(staerkenJeSpieler.length>=2){const sp=Math.max(...staerkenJeSpieler)-Math.min(...staerkenJeSpieler);pruef(sp<=0.4,'Merkmale stabil: Stärken je Spieler schwanken über die Saisons höchstens um 0,4',staerkenJeSpieler.map(f2).join(' → '));}
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

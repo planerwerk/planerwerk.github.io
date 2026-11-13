@@ -117,7 +117,7 @@ function praegungAufloesen(p,o){const U=RJ.praegung.umgang;let ps=o.s,pk=o.k;if(
   return mitStrom(strom('praegung',S.season,S.tag,p.id),()=>{const x=R();return x<ps?praegungFolge(p,'schub',o.an):x<ps+pk?praegungFolge(p,'knacks',o.an):null;});}
 // Folgen (K08 §5.3): Talent, Tempo der Entwicklung für einige Monate, Selbstvertrauen, Stimmung, Meldung
 function praegungFolge(p,art,an){const F=RJ.praegung[art],schub=art==='schub',heute=absTag(S.tag),t=S.teams[p.team];let dt=0;
-  if(R()<F.talent[0]){dt=ri(F.talent[1],F.talent[2])*(schub?1:-1);const alt=p.pot;p.pot=clamp(p.pot+dt,Math.round(p.str),99);dt=p.pot-alt;}
+  if(R()<F.talent[0]){dt=ri(F.talent[1],F.talent[2])*(schub?1:-1);const alt=p.pot;p.pot=clamp(p.pot+dt,Math.ceil(p.str),99);dt=p.pot-alt;}
   p.pt=[F.tempo,heute+(Array.isArray(F.tage)?riA(F.tage):F.tage)];svAendern(p,F.sv);stimmungAendern(p,F.stimmung);
   p.pr=[...(p.pr||[]),[S.season,schub?1:-1,an[0]]].slice(-RJ.praegung.verlauf);if(t){t.kst=t.kst||{ww3:0};t.kst.pr=(t.kst.pr||0)+1;}
   if(p.team===S.my)news(schub?`Durchbruch: ${p.n} (${p.age}) ist seit ${PRAEGUNG_SEIT[an[0]]} wie verwandelt. Er entwickelt sich in den nächsten Monaten schneller.${dt>0?' Der Co-Trainer traut ihm jetzt mehr zu.':''}`
