@@ -76,6 +76,8 @@ Später möglich (K30): ein Traditionsverein will zurück, ein Lizenzentzug, ein
 
 ## 12. Offene Fragen
 
+**Nachtrag U9d (15.11.):** Die Aufstiegslosung lässt Zweitmannschaften aus, deren erste Mannschaft in der 3. Liga oder tiefer spielt (Regel des DFB, K13 §12 Nachtrag U9d). Im Spiel betrifft das nur Hoffenheim II und Stuttgart II, wenn sie im Pool stehen. Ist die Zweite deines Vereins im Pool und wird gelost, nimmt sie deinen Amateurkader mit, statt einen erfundenen Kader zu bekommen (K08 §5.6). Die übrigen Zweitmannschaften der Regionalliga stehen nicht im Pool (vorläufig, die Losgewichte bleiben unverändert).
+
 1. Entschieden am 7.11.: 3. Liga und darunter werden später ausgebaut (echte Kader, Start in der 3. Liga nach K21 und K23). Was steht, bleibt.
 3. **Regionalliga-Wechsel:** Die Reihenfolge Nord, Nordost, Bayern habe ich aus den Aufstiegsspielen 2025 und 2026 abgeleitet. Bitte bei Gelegenheit gegen die DFB-Regel prüfen.
 4. **Kapazitäten der Regionalligisten** sind gerundet und aus dem Gedächtnis. Nachprüfen, wenn sie wichtig werden.

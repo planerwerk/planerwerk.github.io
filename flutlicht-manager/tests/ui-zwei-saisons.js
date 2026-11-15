@@ -1,4 +1,4 @@
-// Zwei Saisons über die echte Oberfläche spielen: „Tag beenden“, Erinnerungen, Konferenz, Transfers, Verträge,
+// Zwei Saisons über die echte Oberfläche spielen: „Tag beenden“, Erinnerungen, Konferenz, Transfers, Verträge, Zweite Mannschaft (U9d),
 // Speichern und Laden, Entlassung, Handy-Breite, Kabine mit Kapitän, Ansprache, Teamevent, Rolle und Gesprächen (K14, K15). Nach jedem Halt werden die Spieldaten geprüft.
 const {chromium}=require('playwright');const path=require('path');const PRUEFUNGEN=require('./pruefungen.js');
 const FILE='file://'+path.resolve(__dirname,'..','index.html');
@@ -36,7 +36,15 @@ async function actions(s,tag){const wk=s.wk,yr=s.season,K=yr+':'+wk+':';
    const sc=await pg.evaluate(()=>__scan());if(sc)note(tag,'Aufstellung: '+sc);actlog.push(tag+' Taktik geändert (System, Stil, Rolle, Einstellung, Schütze)');}
  if(yr===2026&&wk===2&&once(K+'verein')){await tabClick('Training & Jugend');await pg.click('.opt:has(b:text-is("Aufbau"))');await pg.click('.opt:has(b:text-is("Stufe 4"))');
    await tabClick('Finanzen');await pg.fill('#price','38');await pg.locator('#price').dispatchEvent('change');await pg.click('button:text-is("+5 Mio leihen")');
-   await tabClick('Stadion');await pg.click('.opt:has(b:text-is("Tribüne ausbauen"))');actlog.push(tag+' Training hart, Jugend 4, Preis 38, Kredit, Tribüne');}
+   await tabClick('Stadion');await pg.click('.opt:has(b:text-is("Tribüne ausbauen"))');actlog.push(tag+' Training hart, Jugend 4, Preis 38, Kredit, Tribüne');
+   // Zweite Mannschaft (K08 §5.6, U9d): Budget, ein Jugendspieler in die Zweite, Spielerkarte eines Amateurs, Aufrücken
+   await tabClick('Training & Jugend');const zk='.card:has(h2:text-is("Zweite Mannschaft"))';
+   if(!await pg.$(zk+' .opt'))note(tag,'Zweite: keine Karte mit Budget (Freiburg hat eine Zweite in der Regionalliga Südwest)');
+   else{await pg.click(zk+' .opt:has(b:text-is("Stufe 5"))');const z0=await pg.evaluate(()=>zweiteKader().length);const jb=await pg.$('.card:has(h2:text-is("Jugendkader")) button:text-is("In die Zweite")');
+     if(jb)await jb.click();const z1=await pg.evaluate(()=>({n:zweiteKader().length,stufe:zweiteStufe(),liga:zweiteLigaName()}));if(z1.stufe!==5||(jb&&z1.n!==z0+1))note(tag,'Zweite: Stufe oder Wechsel aus der Jugend ohne Wirkung '+JSON.stringify(z1));
+     await pg.click(zk+' tbody tr');await pg.waitForTimeout(60);const sc=await pg.evaluate(()=>__scan());if(sc)note(tag,'Spielerkarte der Zweiten: '+sc);
+     const k0=await pg.evaluate(()=>squad(S.my).length);const hoch=await pg.$('button:text-is("In den Profikader holen")');if(hoch){await hoch.click();if(await pg.evaluate(()=>squad(S.my).length)!==k0+1)note(tag,'Zweite: Aufrücken ohne Wirkung');}else{note(tag,'Zweite: Spielerkarte ohne Aufrücken');await closeModal();}
+     actlog.push(tag+` Zweite (${z1.liga}): Stufe 5, Jugendspieler hin, einer zu den Profis`);}}
  if((wk===3||wk===18)&&once(K+'kauf')){const id=await pg.evaluate(()=>{const t=myT(),lv=teamLevel(S.my);const c=S.pl.filter(p=>p.team>=0&&p.team!==S.my&&p.list&&p.str>lv-3&&askPrice(p)<t.cash*0.7).sort((a,b)=>b.str-a.str);return c.length?c[0].id:null;});
    if(id!=null){await pg.evaluate(i=>openP(i),id);await pg.click('button:text-is("Angebot abgeben")');actlog.push(tag+' Kauf Listenspieler: '+await msgOrClosed());}else actlog.push(tag+' kein passender Listenspieler');
    const star=await pg.evaluate(()=>{const c=S.pl.filter(p=>p.team===0&&!p.list).sort((a,b)=>b.str-a.str);return c[0].id;});

@@ -536,3 +536,17 @@ Nach deiner Vorgabe vom 13.11. (Jugendarbeit als Langzeitprozess). Vorläufig vo
 - **Geld bei Abgängen:** halber Marktwert beim Verkauf ab 16, 60 % davon mit 19, nichts unter 100.000 €, 15 % Beteiligung am Weiterverkauf über fünf Jahre.
 - **Belastung** wirkt auf Stimmung und Verletzungen nur bei deinem Verein.
 - **Führst du den Jugendkader selbst, rückt niemand von allein auf.** Das gilt auch für alte Spielstände ohne Lernstufen: Dort kamen bisher jeden Sommer zwei Spieler von selbst.
+
+## K08 Zweite Mannschaft, umgesetzt in U9d (15.11.), vorläufig von mir
+
+Nach deiner Vorgabe vom 13.11. (Zweite wird mit Geld besser, alles gedeckelt, die Profis bedienen sich). Vorläufig von mir, im Einzelnen in K08 §5.6 und §12 Nr. 18 bis 31:
+
+- **Wer eine Zweite hat:** Stand 2026/27 nach Websuche, 20 in der Regionalliga, 15 in der Oberliga, Hoffenheim II und Stuttgart II als Verein in der 3. Liga. Ohne Zweite (etwa Leverkusen, Leipzig, Union, Wolfsburg, Heidenheim) bleibt es beim Abgang mit 19. Eine Zweite gründen geht nicht.
+- **Nur dein Verein** hat einen Amateurkader (22 Spieler bis 23 Jahre), ohne simulierte Spiele. Am Saisonende wird der Platz aus der Stärke über die Saison ausgespielt.
+- **Deckel:** gewertet höchstens wie ein gutes Team der Liga (Regionalliga 60, Oberliga 54) und mindestens 8 unter den Profis. Auch das Talent der Neuen ist gedeckelt.
+- **Budget** in fünf Stufen (15.000 bis 120.000 € je Ligaspieltag, Oberliga 30 %), wirkt über die Neuen jedes Sommers: Von Stufe 1 auf 5 dauert es fünf bis sechs Saisons.
+- **Regionalliga-Meister verzichtet** auf die 3. Liga, bis die Regionalliga simuliert wird. Die Oberliga ist der Boden.
+- **Regel des DFB:** Die Zweite eines Drittligisten muss in die Oberliga.
+- **Verkauf aus der Zweiten** nur ab Stärke 59, zum halben Marktwert. Mit 24 geht ein Amateur ohne Geld.
+- **Profis in die Zweite abstellen** kommt mit der Leihe (U10).
+- **Automatik:** brauchbare 19-Jährige in die Zweite, je Sommer höchstens einer aus der Zweiten zu den Profis.

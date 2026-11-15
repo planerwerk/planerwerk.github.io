@@ -71,7 +71,7 @@ Hängt ab von: K01 (Kalender), K32a (Unterbau), K04/K05 (Verlängerung, Elfmeter
 ### 3.7 Zweitmannschaften
 
 - Spielen in der 3. Liga oder darunter, nicht im Pokal, steigen nicht in die 2. Liga auf (gibt es so).
-- **Neu:** Steigt die erste Mannschaft in die Liga ihrer Zweitmannschaft ab, muss die Zweitmannschaft eine Liga tiefer (Konsistenzprüfung I5). Die echte Regel ist noch zu prüfen (Frage 4).
+- **Neu:** Steigt die erste Mannschaft in die Liga ihrer Zweitmannschaft ab, muss die Zweitmannschaft eine Liga tiefer (Konsistenzprüfung I5). Seit U9d geprüft: Die Zweite eines Drittligisten darf nicht einmal in der Regionalliga spielen (§12, Nachtrag U9d).
 
 ## 4. Abläufe
 
@@ -193,10 +193,12 @@ wettbewerbe:{
 9. **Relegation:** Das Rückspiel hat bei Gleichstand in der Summe Verlängerung und Elfmeterschießen aus der Engine, auch live. Das Los bleibt nur für alte Spielstände. Echt setzt sich der Bundesligist seit 2009 in etwa 80 % durch (13 von 16 bis 2024, Sky), im Spiel sind es etwa 50 %, weil der 16. der 1. Liga und der 3. der 2. Liga in unserer Welt fast gleich stark sind (Konsistenzprüfung AI5).
 10. **Supercup** ab der zweiten Saison (für die erste fehlt die Vorsaison im Spiel): Meister gegen Pokalsieger am Samstag vor dem 1. Spieltag beim Meister, sonst gegen den Vizemeister, wie 2024 Leverkusen gegen Stuttgart. Bei Gleichstand direkt Elfmeterschießen, seit 2010 gibt es keine Verlängerung. Karten und Sperren zählen wie im Pokal, Tore nicht zur Torjägerliste. Noch ohne Prämie (K23).
 11. **Zweitmannschaften:** Spielt die erste Mannschaft in derselben Liga, muss die Zweite eine Liga tiefer, und der beste Absteiger dieser Liga bleibt drin. Die echte Regel ist weiter nicht geprüft (Nr. 4).
+
+**Nachtrag U9d (15. November 2026), Nr. 4 und 11 geprüft:** Laut Websuche (DFB-Portal und diefalsche9.de, Wortlaut der Spielordnung nicht gelesen) gilt: Zweite Mannschaften von Drittligisten dürfen nicht in der Regionalliga spielen, zwei Mannschaften eines Vereins nie in derselben Liga, die Zweite eines Erst- oder Zweitligisten darf in die 3. Liga. Beispiel: Düsseldorf II musste im Sommer 2026 nach dem Abstieg der ersten Mannschaft trotz Klassenerhalts in die Oberliga. Umgesetzt: Die Zweite deines Vereins (K08 §5.6) muss in die Oberliga, sobald die erste in der 3. Liga spielt. Hoffenheim II und Stuttgart II nehmen an der Aufstiegslosung der Regionalliga nur teil, wenn ihre erste Mannschaft in der 1. oder 2. Liga spielt. Im Regionalliga-Pool selbst bleiben sie, weil es im Spiel keine Oberliga gibt (vorläufig).
 12. **Länderspiele noch nicht gebaut:** Seit U9b (11.11.) haben alle Spieler eine Nationalität, und die Nationen-Tabelle mit dem Rang der Weltrangliste vom 7. Oktober 2026 liegt in `daten/nationen.js` (K32 §12 Nr. 17). Nominierung, Abstellung und Rückkehr fehlen weiter. Ebenfalls offen: Spielverlegung auf Antrag, Rotation der Favoriten in Runde 1 und 2, Pokal an Dienstag und Mittwoch, Prämien für den Supercup.
 13. **Lernstufen (K36):** Pokal, Relegation und Supercup laufen ab Stufe 1 (nur Termine und Ergebnisse). Die Auslosung ist ab Stufe 1 ein Moment. Spielverlegung beantragen kommt später auf Stufe 4, wenn es sie gibt.
 
-**Noch zu recherchieren:** Heimrecht in späteren Pokalrunden, Supercup-Regeln, Regel für Zweitmannschaften, Schwelle für Spielverlegungen, echte Pokalprämien 2026/27.
+**Noch zu recherchieren:** Heimrecht in späteren Pokalrunden, Supercup-Regeln, Schwelle für Spielverlegungen, echte Pokalprämien 2026/27.
 
 ## Quellen
 

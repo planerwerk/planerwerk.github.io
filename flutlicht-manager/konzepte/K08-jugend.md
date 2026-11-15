@@ -1,6 +1,6 @@
 # K08 – Jugend und Talententwicklung
 
-Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache, **überarbeitet nach deiner Vorgabe vom 13.11.** (Jugendarbeit als Langzeitprozess, Abschnitt 5.0). Vorläufige Entscheidungen stehen in Abschnitt 12. **Umgesetzt in U9c** (13. November 2026, `js/jugend.js`, Test `tests/jugend.js`): Jugendniveau, Jugendkader, Jahrgang, Aufrücken, Verkauf und Geld bei Abgängen, Prägungen mit Umgang, Belastung junger Spieler, Paten, Jugendtrainer. Noch offen: zweite Mannschaft (U9d), Leistungszentrum (K26), Leihe (U10), Ereigniskarten (U12).
+Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache, **überarbeitet nach deiner Vorgabe vom 13.11.** (Jugendarbeit als Langzeitprozess, Abschnitt 5.0). Vorläufige Entscheidungen stehen in Abschnitt 12. **Umgesetzt in U9c** (13. November 2026, `js/jugend.js`, Test `tests/jugend.js`): Jugendniveau, Jugendkader, Jahrgang, Aufrücken, Verkauf und Geld bei Abgängen, Prägungen mit Umgang, Belastung junger Spieler, Paten, Jugendtrainer. **Zweite Mannschaft umgesetzt in U9d** (15. November 2026, `js/zweite.js`, Test `tests/zweite.js`, Abschnitt 5.6). Noch offen: Leistungszentrum (K26), Leihe (U10), Ereigniskarten (U12).
 Hängt ab von: K03 (Entwicklung, Talent, Persönlichkeit), K07 (Training), K14 (Rolle „Talent“), K15 (Gespräche), K16 (Jugendtrainer) · Wird gebraucht von: K18, K19, K26, K32.
 
 ## 1. Ziel und Spielgefühl
@@ -121,6 +121,37 @@ Grenze: 0,85 bis 19 Jahre, 1,0 mit 20–21
 - Druckspiele: Derby, Topspiel, Pokal ab Viertelfinale, Relegation.
 - Sichtbar als Regler auf der Spielerkarte mit Warnzone (K35a).
 
+### 5.6 Zweite Mannschaft (U9d, 15.11.)
+
+Deine Vorgabe vom 13.11.: Die zweite Mannschaft in der Regionalliga wird mit Geld besser, alles ist gedeckelt, die Profis bedienen sich hin und wieder bei ihr, auch um direkt weiterzuverkaufen. Wechsel zu Amateuren bringen nichts.
+
+**Wer hat eine Zweite (Websuche vom 15.11., Wikipedia „2026–27 Regionalliga“ und „2026–27 Oberliga“):**
+
+- **Regionalliga (20):** Bayern II, Augsburg II, Nürnberg II, Fürth II (Bayern); Dortmund II, Gladbach II, Köln II, Schalke II, Paderborn II, Bochum II (West); Frankfurt II, Freiburg II, Mainz II, Kaiserslautern II (Südwest); HSV II, Werder II, St. Pauli II, Hannover II (Nord); Hertha II, Magdeburg II (Nordost).
+- **3. Liga (2):** Hoffenheim II und Stuttgart II, im Spiel schon seit U1 eigene Vereine.
+- **Oberliga (15):** Elversberg, Darmstadt, Karlsruhe, Kiel, Bielefeld, Dresden, Braunschweig (aus der 2. Liga), Düsseldorf, Rostock, Münster, Regensburg, Ingolstadt, Meppen, Verl, Fortuna Köln (aus der 3. Liga).
+- **Keine Zweite im Spiel:** Leverkusen (seit 2014 keine), Wolfsburg (2021 abgemeldet), Union (nur ein U21-Perspektivteam ohne Ligabetrieb), Leipzig, Heidenheim, Osnabrück, Cottbus und die übrigen Drittligisten. Zweitmannschaften unterhalb der Oberliga zählen nicht.
+- **Regel des DFB** (aus den Suchergebnissen, Wortlaut der Spielordnung nicht gelesen, dfb.de war aus dieser Sitzung nicht erreichbar): Zweite Mannschaften von Drittligisten dürfen nicht in der Regionalliga spielen, zwei Mannschaften eines Vereins nie in derselben Liga, die Zweite eines Lizenzvereins darf in die 3. Liga. Deshalb musste Düsseldorf II im Sommer 2026 trotz Klassenerhalts in die Oberliga.
+
+**Wie sie im Spiel funktioniert (vorläufig, von mir):**
+
+```
+Amateurkader: 22 Spieler bis 23 Jahre (U23), höchstens 26, keine simulierten Spiele (wie der Jugendkader)
+Stärke = Schnitt der besten 14. Gewertet = min(Stärke, Deckel)
+Deckel = min(gutes Team der Liga, Kaderstärke der Profis − 8)        Regionalliga: Schnitt 57, gut 60 · Oberliga: Schnitt 51, gut 54
+Neue (jeden Sommer, 18–21 Jahre): Talent = Ligaschnitt + Stufe (−5, −3, −1, +0,5, +2) + Zufall (−4 bis +4), höchstens Deckel + 2
+                                   Stärke = Talent − 1 bis 4, je Jahr unter 21 weitere 1,5
+Budget: Stufe 1–5, 15.000 bis 120.000 € je Ligaspieltag (Oberliga × 0,3), Trainingsfaktor 0,9 bis 1,1. Start: ab Ansehen 80 Stufe 4, sonst 3
+Spielpraxis: die 14 Stärksten 70 (Wachstum ×1,2), die übrigen 35
+Saisonende: 18 Teams, Hin- und Rückspiel, Gegner um den Ligaschnitt (Streuung 2,5), erwartete Tore 1,4 × e^(0,08 × Abstand), Heimvorteil 1,1
+```
+
+- **Geld wirkt als Prozess:** Das Budget hebt das Talent der Neuen und das Training. Weil jeden Sommer nur fünf bis sieben Neue kommen, dauert der Umschwung von Stufe 1 auf Stufe 5 fünf bis sechs Saisons (gemessen: 52 → 55 → 57 → 57 → 58 → 59 → 60). Im Gleichgewicht: Stufe 1 um 53 (steigt ab), Stufe 3 um 57 (Platz 9), Stufe 5 am Deckel 60 (Platz 5, in 14 % der Saisons Meister).
+- **Auf- und Abstieg:** Die letzten drei der Regionalliga steigen in die Oberliga ab, der Oberliga-Meister steigt auf. Die Oberliga ist der Boden. Der Meister der Regionalliga verzichtet vorerst auf die 3. Liga (bis die Regionalliga ausgebaut ist, K32a §12 Nr. 1). Spielt die erste Mannschaft in der 3. Liga, muss die Zweite in die Oberliga und darf nicht aufsteigen.
+- **Flüsse:** Aus der Jugend ab 17 in die Zweite (statt mit 19 zu gehen). Aus der Zweiten jederzeit in den Profikader (Profivertrag drei Jahre, halbes Gehalt, die Spielpraxis bleibt). Verkauf ab 18 zum halben Marktwert mit Beteiligung am Weiterverkauf, aber nur ab Stärke 59 (Kaderspieler der 3. Liga). Wer 24 wird, geht zu den Amateuren, ohne Geld.
+- **Automatik (K36):** Brauchbare 19-Jährige (höchstens 3 unter der Stärke der Zweiten) gehen in die Zweite, die übrigen wie bisher. Je Sommer rückt höchstens einer auf, der höchstens 4 unter der Kaderstärke der Profis liegt. Das Budget hält der Verein auf der Startstufe.
+- **Hoffenheim und Stuttgart:** Solange ihre Zweite in der 3. Liga spielt, ist sie ein Computer-Verein mit eigenem Kader und eigenen Finanzen. Du schickst Jugendspieler mit kleinem Vertrag hin und holst Spieler mit ihrem Vertrag zu den Profis. Steigt sie ab, bleiben die Spieler bis 22 als Amateurkader. Wird sie aus der Regionalliga gelost, nimmt sie den Amateurkader in die 3. Liga mit.
+
 ### 5.5 Leihe für Spielpraxis
 
 - Leihvertrag (K19) mit Regeln: **Mindest-Spielzeit** (Rolle beim Leihverein), **Liga**, **Rückruf** im Winter ja oder nein.
@@ -230,7 +261,24 @@ jugend:{
 14. **Paten:** Ein Mentor (Eigenschaft, jetzt sichtbar) betreut höchstens zwei Talente bis 21. Entwicklung ×1,1, je Saison mit 30 % ein Punkt Professionalität.
 15. **Jugendtrainer** ist eine neue Rolle im Stab (zwei Plätze, K16). Bestehende Spielstände bekommen sie nachgetragen.
 16. **Ertrag:** Ein Verein aus dem Mittelfeld der 1. Liga bekommt mit Niveau 70 und gutem Jugendtrainer in 52 % der Jahrgänge einen Spieler, der mit 21 mindestens 75 hat, mit Niveau 10 ohne Jugendtrainer nie.
-17. **Noch nicht gebaut:** zweite Mannschaft (U9d), Leistungszentrum (K26), Leihe, Leihmanager und Leihwunsch (U10), Ereigniskarten Probetraining, Abwerben und Skandal (U12), öffentliche Kritik und Abschirmen (K29), Derby als Topspiel (K27), Computer-Trainer achten auf die Belastung (K31), Spätzünder als eigene Messung über viele Saisons.
+17. **Noch nicht gebaut:** zweite Mannschaft (seit U9d gebaut, Nr. 18 bis 31), Leistungszentrum (K26), Leihe, Leihmanager und Leihwunsch (U10), Ereigniskarten Probetraining, Abwerben und Skandal (U12), öffentliche Kritik und Abschirmen (K29), Derby als Topspiel (K27), Computer-Trainer achten auf die Belastung (K31), Spätzünder als eigene Messung über viele Saisons.
+
+**Vorläufig entschieden bei der Umsetzung der zweiten Mannschaft (U9d, 15. November 2026):**
+
+18. **Nur dein Verein hat einen Amateurkader** (wie beim Jugendkader, Nr. 5). Computer-Vereine bekommen weiter ihre zwei Aufrücker. Hoffenheim II und Stuttgart II bleiben eigene Vereine.
+19. **Welche Vereine eine Zweite haben,** steht in `daten/vereine.js` (Feld `zw`, Oberliga mit Namen in `ol`), Stand 2026/27 nach Websuche. Ohne Zweite bleibt es bei U9c: Wer mit 19 nicht aufrückt, geht. Eine Zweite gründen geht nicht (eine neue Zweite müsste ganz unten anfangen), die Leihe kommt mit U10.
+20. **Keine simulierten Spiele:** Die Zweite spielt wie der Jugendkader keine Spiele. Am Saisonende zählt ihre gewertete Stärke im Schnitt der Saison. Wer ihr mitten in der Saison die Besten wegnimmt, macht sie schlechter.
+21. **Ligastärken** sind an der 3. Liga im Spiel gemessen (Schnitt 63, Schlusslicht um 59): Regionalliga Schnitt 57, gutes Team 60, Oberliga 51 und 54. Spielwerte, nicht recherchiert.
+22. **Deckel:** gewertet höchstens wie ein gutes Team der Liga und immer mindestens 8 unter der Kaderstärke der Profis. Das Talent der Neuen ist ebenfalls gedeckelt (Deckel + 2), sonst wuchsen sie in einer Saison auf Drittliga-Niveau (gemessen: 63 bis 65 statt 60).
+23. **Budget:** fünf Stufen, Kosten je Ligaspieltag, in der Oberliga 30 %. Start und Automatik: ab Ansehen 80 Stufe 4, sonst Stufe 3. Mit Stufe 2 als Start wären Augsburg II und Hertha II in jeder dritten Saison abgestiegen.
+24. **Erster Kader:** 22 Spieler von 18 bis 23, die Älteren mit den Jahren in der Zweiten gewachsen (wie der erste Jugendkader). Er liegt zu Beginn etwa einen Punkt unter dem Saisonschnitt späterer Jahre.
+25. **Regionalliga-Meister verzichtet** auf die 3. Liga, bis die Regionalliga simuliert wird. Ausnahme: Hoffenheim II und Stuttgart II stehen im Regionalliga-Pool und können wie bisher gelost werden.
+26. **Oberliga als Boden:** Die Zweite steigt nicht in die Verbandsliga ab, weil es sie im Spiel nicht gibt. Nach einem Abstieg aus der Regionalliga heißt ihre Liga „Oberliga“, außer der Verein hat einen echten Oberliga-Namen in den Daten.
+27. **Verkauf nur ab Stärke 59:** Ohne diese Schwelle hätte fast jeder Amateur über 200.000 € gebracht (ein 23-Jähriger mit Stärke 40 rund 210.000 €), und jeden Sommer kämen 22 kostenlose Neue nach. Der Marktwert im unteren Bereich ist für K23 zu prüfen.
+28. **Kein Geld mit 24:** Amateurverträge laufen aus. Die Ausbildungsentschädigung der FIFA hängt am ersten Profivertrag, gezählt wird die Ausbildung zwischen 12 und 23 Jahren (laut Suchergebnissen, den Wortlaut von Anhang 4 des FIFA-Reglements habe ich nicht gelesen). Vorläufig bringt ein Abgang mit 24 deshalb nichts.
+29. **Profis in die Zweite abstellen** (Spielpraxis für Ergänzungsspieler bis 23) ist nicht gebaut. Es braucht dieselben Aufräumarbeiten wie die Leihe (Kabine, Zusagen, Vertrag, Gehalt) und kommt mit U10.
+30. **Wertung über die Saison statt Spieltage:** Platz und Punkte erscheinen erst am Saisonende (Nachricht und Saisonbilanz). Eine Tabelle der Regionalliga mit echten Gegnern gibt es nicht.
+31. **Lizenz (K36):** zwei neue Bereiche, `zweite` (Budget) und `zweitekader` (Wechsel aus der Jugend, Aufrücken, Verkauf), beide B-Lizenz mit Automatik.
 
 **Noch zu recherchieren:** Regeln zu Ausbildungsentschädigung und zu deutschen beziehungsweise lokal ausgebildeten Spielern im Kader (DFL), falls sie ins Spiel sollen.
 
