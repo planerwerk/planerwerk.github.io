@@ -110,6 +110,13 @@ function setJugend(l){if(!darf('jugend'))return;myT().youth=clamp(Math.round(+l)
 function jugendAufruecken(id){if(!darf('jugendkader'))return;const p=PIX.get(id),A=RJ.aufruecken;if(!istJugend(p)||!jugendKader().includes(p))return;if(p.age<A.ab){toast(`Aufrücken geht ab ${A.ab} Jahren.`);return;}
   if(squad(S.my).length>=RM.kaderMax){toast(`Dein Kader ist voll (höchstens ${RM.kaderMax} Spieler).`);return;}jugendHoch(p);news(`Aus der Jugend: ${p.n} (${p.pos}, ${p.age}) rückt in den Profikader auf. Talent ${stars(p)}.`,'good');save();closeOv();render();}
 function jugendVerkaufen(id){if(!darf('jugendkader'))return;const p=PIX.get(id);if(!istJugend(p)||!jugendKader().includes(p)||p.age<RJ.verkauf.ab)return;if(!jugendVerkauf(p)){toast('Kein Profiverein zahlt für ihn.');return;}save();closeOv();render();}
+// Zweite Mannschaft (K08 §5.6): Budget, aus der Jugend hinschicken, zu den Profis holen, verkaufen
+function setZweite(l){if(!darf('zweite'))return;if(!hatZweite()||zweiteSim())return;myT().zws=clamp(Math.round(+l)||1,1,5);save();render();}
+function jugendInZweite(id){if(!darf('zweitekader'))return;const p=PIX.get(id);if(!istJugend(p)||!jugendKader().includes(p)||!hatZweite())return;if(p.age<RZ.aufruecken.ausJugendAb){toast(`Wechsel in die Zweite ab ${RZ.aufruecken.ausJugendAb} Jahren.`);return;}
+  if(!zweiteSim()&&zweiteKader().length>=RZ.kader.max){toast(`Die Zweite ist voll (höchstens ${RZ.kader.max} Spieler).`);return;}zweiteAufnehmen(p);news(`${p.n} (${p.pos}, ${p.age}) wechselt aus der Jugend in die Zweite.`);save();closeOv();render();}
+function zweiteAufruecken(id){if(!darf('zweitekader'))return;const p=PIX.get(id),sim=zweiteSim();if(!p||!(istZweite(p)&&zweiteKader().includes(p))&&!(sim&&p.team===sim.id))return;
+  if(squad(S.my).length>=RM.kaderMax){toast(`Dein Kader ist voll (höchstens ${RM.kaderMax} Spieler).`);return;}zweiteHoch(p);news(`Aus der Zweiten: ${p.n} (${p.pos}, ${p.age}) rückt in den Profikader auf. Talent ${stars(p)}.`,'good');save();closeOv();render();}
+function zweiteVerkaufen(id){if(!darf('zweitekader'))return;const p=PIX.get(id);if(!istZweite(p)||!zweiteKader().includes(p)||p.age<RZ.verkauf.ab)return;if(!zweiteVerkauf(p)){toast('Kein Profiverein zahlt für ihn.');return;}save();closeOv();render();}
 function setPate(id,mid){if(!darf('pate'))return;const p=PIX.get(id),m=mid?PIX.get(+mid):null,P=RJ.pate;if(!p||p.team!==S.my||p.age>P.bisAlter)return;
   if(!m)delete p.pate;else{if(m.team!==S.my||m===p||!hatEig(m,'mentor')||patenkinder(m).filter(q=>q!==p).length>=P.jeMentor)return;p.pate=m.id;}save();openP(id);render();}
 // Scouting (K18): Spieler beobachten lassen, Suchauftrag starten und beenden

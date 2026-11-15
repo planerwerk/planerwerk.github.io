@@ -28,6 +28,7 @@ function seasonEndLauf(){
   news(`Relegation 2./3. Liga: ${sm.rel2Res}. ${tn(sm.rw2)} spielt nächste Saison in der 2. Liga.`);
   news(`Aus der Regionalliga steigen auf: ${sm.up4.map(tn).join(', ')}.`);
   S.hist.push({s:S.season,team:me.name,lg:me.lg,pos,ok:sm.ok});
+  sm.zw=mitStrom(strom('zweiteErgebnis',S.season),()=>zweiteSaisonEnde(sm)); // zweite Mannschaft (K08 §5.6)
   S.summary=sm;S.phase='end';
   if(sm.down3.includes(S.my)&&!S.fired){S.fired=1;news(`${me.name} steigt in die Regionalliga ab. Der Verein trennt sich von dir.`,'bad');mkJobs();}
   if(S.trust<B.entlassenSaisonUnter&&!S.fired){S.fired=1;mkJobs();}lizenzRueckblick();kreditAuto();save();}
@@ -37,7 +38,7 @@ function poisson(l){const L=Math.exp(-l);let k=0,p=1;do{k++;p*=R();}while(p>L&&k
 function kleinesSpiel(h,a){const G=RS.regionalliga,st=id=>G.spielStaerke.basis+S.teams[id].rep*G.spielStaerke.jeAnsehen,q=st(h)/st(a);return[poisson(G.tore*G.heim*q*q),poisson(G.tore/G.heim/(q*q))];}
 function regionalligaAufsteiger(){const G=RS.regionalliga,meister={},ids=[],txt=[];
   const W=G.gewicht,maxEwig=Math.max(1,...S.teams.map(t=>t.ewig3||0)),gew=t=>{const n=S.season-(t.abstieg3||-99)-1;return(W.grund+W.ewigFaktor*(t.ewig3||0)/maxEwig)*(n>=0&&n<W.absteiger.length?W.absteiger[n]:1);};
-  G.staffeln.forEach(r=>{const c=S.teams.filter(t=>t.lg===4&&t.region===r);if(!c.length)return;const w=c.map(gew);let x=R()*w.reduce((a,b)=>a+b,0),k=0;while(k<c.length-1&&(x-=w[k])>0)k++;meister[r]=c[k].id;});
+  G.staffeln.forEach(r=>{const c=S.teams.filter(t=>t.lg===4&&t.region===r&&zweiteDarfAufsteigen(t));if(!c.length)return;const w=c.map(gew);let x=R()*w.reduce((a,b)=>a+b,0),k=0;while(k<c.length-1&&(x-=w[k])>0)k++;meister[r]=c[k].id;});
   const wechsel=G.wechsel[((S.season+1-G.wechselStart)%3+3)%3];
   G.direkt.concat([wechsel]).forEach(r=>{if(meister[r]!=null){ids.push(meister[r]);txt.push(`${tn(meister[r])} (Meister ${r})`);}});
   const spiel=G.wechsel.filter(r=>r!==wechsel&&meister[r]!=null).map(r=>meister[r]);
@@ -45,7 +46,7 @@ function regionalligaAufsteiger(){const G=RS.regionalliga,meister={},ids=[],txt=
     if(w==null){const e=shootout();w=e[0]>e[1]?b:a;zusatz=`, Elfmeterschießen ${e[0]}:${e[1]}`;}
     ids.push(w);txt.push(`Aufstiegsspiele ${tn(a)} – ${tn(b)} ${h1[0]}:${h1[1]} und ${h2[0]}:${h2[1]}${zusatz} → ${tn(w)}`);}
   else spiel.forEach(id=>ids.push(id));
-  while(ids.length<RS.abstieg3){const c=S.teams.filter(t=>t.lg===4&&!ids.includes(t.id)).sort((a,b)=>b.rep-a.rep)[0];if(!c)break;ids.push(c.id);}
+  while(ids.length<RS.abstieg3){const c=S.teams.filter(t=>t.lg===4&&!ids.includes(t.id)&&zweiteDarfAufsteigen(t)).sort((a,b)=>b.rep-a.rep)[0];if(!c)break;ids.push(c.id);}
   return{ids:ids.slice(0,RS.abstieg3),text:txt.join(' · ')};}
 // Saisonwechsel am 1. Juli: Auf- und Abstieg, Alter, Verträge, Nachwuchs, neuer Spielplan
 function newSeason(){return mitStrom(strom('saison',S.season),newSeasonLauf);}
@@ -56,6 +57,7 @@ function newSeasonLauf(){S.vstat={};S.testspiele=[];kabineSaison();const sm=S.su
   zweiteRegeln(); // Zweitmannschaften nie in der Liga der ersten Mannschaft (K13 §3.7)
   S.teams.forEach(t=>{if(t.lastLg>3&&t.lg>3)return;const A=Z.ansehen;let d=t.lastLg<=3?clamp((t.expPos-t.lastPos)*A.faktor,-A.maxAenderung,A.maxAenderung):0;
     if(t.lg<t.lastLg)d+=A.aufstieg;if(t.lg>t.lastLg)d+=A.abstieg;t.rep=clamp(Math.round(t.rep+d),A.min,A.max);t.fans=Math.round(clamp(t.fans*(1+d*Z.fans.faktor),Z.fans.min,t.cap*Z.fans.maxJePlatz));});
+  zweiteAbstiegSim(); // deine Zweite aus der 3. Liga abgestiegen: Spieler bis 23 bleiben als Amateurkader (K08 §5.6)
   const K=Z.karriereende;
   S.pl.forEach(p=>{if(p.team<-1)return;p.age++;p.g=0;p.pg=0;p.apps=0;disziplinSaison(p);p.form=Z.neuForm;p.sv=0;p.ent=0;eigenschaftenNeu(p);
     if(p.team>=0&&!aktiv(S.teams[p.team])){p.team=-1;p.list=0;}
@@ -64,10 +66,10 @@ function newSeasonLauf(){S.vstat={};S.testspiele=[];kabineSaison();const sm=S.su
       else if(R()<Z.vertrag.verlaengern){p.ct=riA(Z.vertrag.jahre);p.sal=salaryFor(p.str);if(mein)stabMeldung(`Der Verein hat den Vertrag von ${p.n} verlängert (${p.ct} Jahr${p.ct>1?'e':''}).`);}else{if(mein)news(`Vertrag ausgelaufen: ${p.n} verlässt den Verein. Der Verein hat nicht verlängert.`,'bad');p.team=-1;p.list=0;}}}
     if(p.team!==S.my)p.list=0;});
   S.pl=S.pl.filter(p=>p.team!==-2);reindex();mitStrom(strom('auslandSaison',S.season),auslandSaison); // Auslandspool: Alter, Karriereende, neue Talente (K32 §4.1)
-  sm.up4.forEach(id=>{if(!squad(id).length)kaderErzeugen(S.teams[id]);});
+  sm.up4.forEach(id=>{if(!squad(id).length&&!zweiteWirdVerein(id))kaderErzeugen(S.teams[id]);}); // deine Zweite nimmt ihren Amateurkader mit (K08 §5.6)
   const N=Z.nachwuchs;
   S.teams.forEach(t=>{if(!aktiv(t))return;const base=grundStaerke(t.rep),yl=t.id===S.my&&!autoB('jugend')?t.youth:N.computerStufe;
-    if(t.id===S.my)mitStrom(strom('jugendSaison',S.season),jugendSaison); // dein Verein: Jugendkader statt fertiger Aufrücker (K08)
+    if(t.id===S.my){mitStrom(strom('zweiteSaison',S.season),zweiteSaison);mitStrom(strom('jugendSaison',S.season),jugendSaison);mitStrom(strom('zweiteAuffuellen',S.season),zweiteAuffuellen);} // dein Verein: Zweite und Jugendkader statt fertiger Aufrücker (K08)
     else for(let k=0;k<N.anzahl;k++){const pos=pick(N.positionen);const p=mkPlayer({pos,age:N.alter,str:Math.round(base-N.abschlag+riA(N.streuung)+yl),team:t.id,ct:N.vertrag});p.pot=Math.round(base-N.talentAbschlag+riA(N.talentStreuung)+yl*N.talentJeStufe);p.sal=Math.round(p.sal*N.gehalt/1000)*1000;addP(p);
       if(t.id===S.my)news(`Aus der Jugend: ${p.n} (${p.pos}, ${N.alter}) rückt in den Profikader auf. Talent ${stars(p)}.`,'good');}
     if(!stabMacht(t.id,'transfers'))return; // dein Verein füllt den Kader nur auf, solange der Verein die Transfers führt (K36)

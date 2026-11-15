@@ -459,6 +459,28 @@ const REGELN={
       schub:{talent:[0.25,2,6],tempo:1.3,tage:90,sv:1,stimmung:5},knacks:{talent:[0.15,1,3],tempo:0.5,tage:[30,90],sv:-1,stimmung:-5},bisAlter:21,verlauf:6},
     // Belastung junger Spieler (K08 §5.4): Minutenanteil + 0,1 je Druckspiel der letzten acht Wochen, Grenze 0,85 bis 19 Jahre und 1,0 bis 21
     belastung:{tage:56,druck:0.1,grenze:[[19,0.85],[21,1.0]],verletzung:1.3,stimmung:-2}},
+  // Zweite Mannschaft (K08 §5.6, U9d): Amateurkader deines Vereins in der Regionalliga (4) oder Oberliga (5), ohne simulierte Spiele.
+  // Ligen: Stärke des Ligaschnitts und eines guten Teams (gemessen an der 3. Liga: Schnitt 63, Schlusslicht um 59). Die Regionalliga-Meisterschaft bringt vorerst keinen Aufstieg.
+  // Saison: 18 Teams mit Hin- und Rückspiel, Gegner mit Stärke Schnitt ± Streuung, erwartete Tore = tore × e^(k × Abstand), zu Hause × heim.
+  // Die Oberliga ist der Boden (ab:0): Tiefer fällt die Zweite im Spiel nicht, die Verbandsligen gibt es nicht.
+  // Budget in fünf Stufen: Kosten je Ligaspieltag (Oberliga × 0,3), Stärke der Neuen gegenüber dem Ligaschnitt, Trainingsfaktor. Start und Automatik nach Ansehen (ab 80 Stufe 4, sonst 3).
+  // Deckel (deine Vorgabe vom 13.11.): Die Zweite spielt nie stärker als ein gutes Team ihrer Liga und immer mindestens 8 Punkte unter der Kaderstärke der Profis.
+  // Kader: 22 Spieler bis 23 Jahre (U23), höchstens 26. Wer 24 wird, geht zu den Amateuren (kein Geld). Neue kommen jeden Sommer mit 18 bis 21 Jahren.
+  // Talent der Neuen = Ligaschnitt + Stufe (zugang) + Zufall, höchstens Deckel + 2. Stärke = Talent − 1 bis 4, je Jahr unter 21 weitere 1,5.
+  // Die 14 Stärksten spielen regelmäßig (Spielpraxis 70, die übrigen 35). Aufrücken mit Profivertrag über drei Jahre zum halben üblichen Gehalt.
+  // Automatik (K36): 19-Jährige aus der Jugend, die höchstens 3 unter der Stärke der Zweiten liegen, gehen in die Zweite. Jeden Sommer rückt höchstens einer auf,
+  // wenn er höchstens 4 unter der Kaderstärke der Profis liegt. Verkauf ab 18 zur Hälfte des Marktwerts, Beteiligung wie bei der Jugend. Profivereine zahlen nur für Spieler
+  // ab Stärke 59 (ein Kaderspieler in der 3. Liga), sonst gingen jeden Sommer 22 kostenlose Neue für mehrere Hunderttausend Euro weg (U9d, Befund BB).
+  zweite:{
+    ligen:{4:{name:'Regionalliga',schnitt:57,gut:60,teams:18,auf:0,ab:3,kosten:1},5:{name:'Oberliga',schnitt:51,gut:54,teams:18,auf:1,ab:0,kosten:0.3}},
+    saison:{streuung:2.5,tore:1.4,heim:1.1,k:0.08},
+    stufe:{kosten:[0,15000,30000,50000,80000,120000],zugang:[0,-5,-3,-1,0.5,2],training:[0,0.9,0.95,1,1.05,1.1],start:[[80,4],[0,3]]},
+    deckel:{profiAbstand:8},
+    kader:{soll:22,max:26,bisAlter:23,zugangAlter:[18,21],zugangZufall:[-4,4],talentUeber:2,abstand:[1,4],abstandAb:21,abstandJeJahr:1.5,stamm:14,startAlter:[18,23],pos:{TW:3,AB:7,MF:7,ST:5},verlauf:10},
+    praxis:{stamm:70,rest:35,form:10},
+    aufruecken:{gehalt:0.5,vertrag:3,ausJugendAb:17,autoAbstand:4,auto:1},
+    ausJugend:{autoAbstand:3,vertrag:2,gehalt:0.3},
+    verkauf:{ab:18,faktor:0.5,abStaerke:59}},
   // Scouting und Informationsnebel (K18 §11, U9a). Spannen sind ehrlich: der wahre Wert liegt in mindestens 80 % der Fälle darin (z = 1,4 ergibt etwa 84 %)
   scouting:{grund:{eigen:100,liga:40,jeSpiel:5,deutsch:25,unten:15,ausland:5,jugend:0},
     sicht:[[10,10],[20,7],[30,4.8],[45,3.5],[60,2.5],[80,2],[101,1]], // [bis Kenntnis, Spanne ± Stärke ohne Scout-Fehler], kalibriert auf die Fehlkäufe in tests/scouting.js
@@ -576,6 +598,8 @@ const REGELN={
       vertraege:{ab:3,name:'Verträge',tab:'kader',auto:1,wer:'der Verein',tut:'verlängert auslaufende Verträge meistens'},
       jugend:{ab:3,name:'Jugendarbeit',tab:'training',auto:1,wer:'der Verein',tut:'hält die Jugendarbeit auf der üblichen Stufe'},
       jugendkader:{ab:3,name:'Jugendkader (Aufrücken und Verkauf)',tab:'training',auto:1,wer:'der Verein',tut:'holt jeden Sommer die zwei Besten ab 17 Jahren in den Profikader'},
+      zweite:{ab:3,name:'Budget der zweiten Mannschaft',tab:'training',auto:1,wer:'der Verein',tut:'hält die Zweite auf der üblichen Stufe'},
+      zweitekader:{ab:3,name:'Zweite Mannschaft (Aufrücken, Wechsel aus der Jugend, Verkauf)',tab:'training',auto:1,wer:'der Verein',tut:'schickt brauchbare 19-Jährige in die Zweite und holt jeden Sommer höchstens einen, der fast so gut ist wie die Profis, hoch'},
       pate:{ab:4,name:'Paten für Talente',tab:'kader'},
       ausland:{ab:3,name:'Im Ausland beobachten und kaufen',tab:'transfer'},
       kaderrollen:{ab:3,name:'Kaderrollen',tab:'kabine',auto:1,wer:'der Co-Trainer',tut:'verteilt die Rollen nach der besten Elf'},
@@ -627,4 +651,4 @@ const REGELN={
 // Schreibschutz: Zur Laufzeit darf kein Code eine Regel ändern.
 (function frieren(o){Object.freeze(o);Object.values(o).forEach(v=>{if(v&&typeof v==='object'&&!Object.isFrozen(v))frieren(v);});})(REGELN);
 // Kurzformen für den Code
-const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui,RL=REGELN.live,RTA=REGELN.taktik,RSO=REGELN.sommer,RST=REGELN.stab,RD=REGELN.disziplin,RMD=REGELN.medizin,RWB=REGELN.wettbewerbe,RTS=REGELN.testspiele,RLA=REGELN.lager,RKA=REGELN.kabine,RGS=REGELN.gespraeche,RSC=REGELN.scouting,RLZ=REGELN.lizenz,RJ=REGELN.jugend;
+const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui,RL=REGELN.live,RTA=REGELN.taktik,RSO=REGELN.sommer,RST=REGELN.stab,RD=REGELN.disziplin,RMD=REGELN.medizin,RWB=REGELN.wettbewerbe,RTS=REGELN.testspiele,RLA=REGELN.lager,RKA=REGELN.kabine,RGS=REGELN.gespraeche,RSC=REGELN.scouting,RLZ=REGELN.lizenz,RJ=REGELN.jugend,RZ=REGELN.zweite;

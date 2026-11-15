@@ -67,7 +67,7 @@ function taeglichLauf(d){const T=RT;praegungTag(d);if(S.phase==='play')testspiel
   const c=S.constr;if(c&&d>=c.bis){const t=myT();if(c.k==='cap')t.cap+=RB.tribuene.plaetze;if(c.k==='logen')t.logen+=RB.logen.anzahl;if(c.k==='shop')t.shop++;news(`Bau abgeschlossen: ${c.label}.`,'good');S.constr=null;}}
 // Werte pro Woche (montags): Training und Entwicklung, Transfermarkt, Vorstand bei Minus auf dem Konto.
 function woechentlich(d){return mitStrom(strom('woche',S.season,d),()=>woechentlichLauf(d));}
-function woechentlichLauf(d){if(!imUrlaub())mitStrom(strom('training',S.season,d),training);mitStrom(strom('kabine',S.season,d),()=>kabineWoche(d));mitStrom(strom('jugend',S.season,d),()=>jugendWoche(d));scoutingWoche();mitStrom(strom('ausland',S.season,d),auslandWoche);mitStrom(strom('markt',S.season,d),market);
+function woechentlichLauf(d){if(!imUrlaub())mitStrom(strom('training',S.season,d),training);mitStrom(strom('kabine',S.season,d),()=>kabineWoche(d));mitStrom(strom('jugend',S.season,d),()=>jugendWoche(d));mitStrom(strom('zweite',S.season,d),()=>zweiteWoche(d));scoutingWoche();mitStrom(strom('ausland',S.season,d),auslandWoche);mitStrom(strom('markt',S.season,d),market);
   if(myT().cash<0){S.trust+=RV.kontoMinus;if(R()<RV.kontoMinusMeldung)news('Der Vorstand ist alarmiert: Das Vereinskonto ist im Minus!','bad');}
   S.trust=clamp(S.trust,0,100);vorstandPruefen();}
 
@@ -79,7 +79,7 @@ function finanzenLiga(m){const t=myT();if(m.h===S.my)heimspielEinnahmen(m,false)
   money('TV-Gelder',tvGeld(t));
   if(S.spons){money('Sponsor',S.spons.base);if(S.spons.win&&winner(m)===S.my&&m.hg!==m.ag)money('Sponsor',S.spons.win);}
   const n=S.fx[t.lg].length;money('Gehälter',-Math.round(squad(S.my).reduce((s,p)=>s+p.sal,0)/n));if(S.stab)money('Trainerstab',-Math.round(stabGehaelter(S.my)/n));
-  money('Stadion & Betrieb',-Math.round(t.cap*RF.betrieb.jePlatz+t.logen*RF.betrieb.jeLoge));money('Jugendarbeit',-RF.jugendKosten[autoB('jugend')?RS.nachwuchs.computerStufe:t.youth]);
+  money('Stadion & Betrieb',-Math.round(t.cap*RF.betrieb.jePlatz+t.logen*RF.betrieb.jeLoge));money('Jugendarbeit',-RF.jugendKosten[autoB('jugend')?RS.nachwuchs.computerStufe:t.youth]);{const z=zweiteKosten();if(z)money('Zweite Mannschaft',-z);}
   if(S.loan>0)money('Kreditzinsen',-Math.round(S.loan*RF.kreditZins/n));}
 // Woche (K03 §4): Kondition, Form, Selbstvertrauen, Entwicklung für Spieler ohne Pflichtspiel seit 7 Tagen, Wochenbericht des Co-Trainers
 function training(){const T=RT,d=S.tag,bericht=[];lernplaetzeVergeben();if(S.stab)stabWoche();const monat=Math.floor(S.tag/7)%RTA.ki.ordnungAlleWochen===0;S.teams.forEach(t=>{if(!aktiv(t))return;if(stabMacht(t.id,'formation')&&monat){const f0=t.form;kiOrdnung(t);if(t.id===S.my&&t.form!==f0){S.lineup=bestXI(S.my,t.form);stabMeldung(`Der Co-Trainer stellt die Grundordnung auf ${t.form} um.`);}}vertrautheitWoche(t);});
