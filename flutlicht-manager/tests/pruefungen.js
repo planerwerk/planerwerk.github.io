@@ -43,6 +43,10 @@ module.exports=()=>{
    const ex=64>>S.cup.hist.length;if(S.cup.alive.length!==ex)e.push(`Pokal ${S.cup.alive.length} statt ${ex}`);if(new Set(S.cup.alive).size!==S.cup.alive.length)e.push('Pokal doppelt');
    if(S.cup.alive.some(id=>id<1000&&(S.teams[id].zweite>=0||S.teams[id].lg>3)))e.push('Zweitmannschaft oder Regionalligist im Pokal');
    const cupSoll=S.plan.pokal.filter(([d])=>vorbei(d)).length;if(S.cup.hist.length!==cupSoll)e.push(`Pokal: ${S.cup.hist.length} Runden, laut Kalender ${cupSoll}`);}
+  // Vereinbarte Wechsel (K19, U10a): Eintrag und Spieler passen zusammen, im offenen Fenster ist nichts mehr offen
+  const wl=S.wechsel||[];wl.forEach(id=>{const p=PIX.get(id);if(!p||!p.wech)e.push('vorgemerkter Wechsel ohne Spieler '+id);});
+  S.pl.forEach(p=>{if(p.wech&&!wl.includes(p.id))e.push('Wechsel ohne Eintrag '+p.n);});if(wl.length&&fensterOffen(S.tag)&&S.phase==='play')e.push('vorgemerkter Wechsel im offenen Fenster');
+  S.offers.forEach(o=>{if(PIX.get(o.pid)&&PIX.get(o.pid).wech)e.push('Angebot für einen schon verkauften Spieler');});
   S.offers.forEach(o=>{if(!PIX.get(o.pid))e.push('Angebot ohne Spieler');if(!(o.bis>=S.tag))e.push('abgelaufenes Angebot liegt noch vor');});
   if(S.constr&&!(S.constr.bis>S.tag))e.push('Bau hätte fertig sein müssen');
   // Kabine und Gespräche (K14, K15): Wertebereiche, Gesprächswünsche, Zusagen, Beziehungen

@@ -6,7 +6,7 @@ function sternZahl(p){const d=p.pot-p.str,st=RP.sterne;return d>=st[0]?4:d>=st[1
 // Angezeigte Sterne mit Schätzfehler (K03): Das wahre Talent kennt niemand genau
 function stars(p){const n=clamp(sternZahl(p)+sternFehler(p),1,4);return '★★★★'.slice(0,n)+'☆☆☆☆'.slice(n);}
 const teamLevel=tid=>{const s=squad(tid).map(p=>p.str).sort((a,b)=>b-a).slice(0,RP.niveauSpieler);return s.length?s.reduce((a,b)=>a+b,0)/s.length:RP.niveauLeer;};
-function askPrice(p,xiSet){const v=value(p);if(p.team<0)return 0;if(istAusland(p))return auslandPreis(p);if(p.list)return p.ask||v;const t=S.teams[p.team];const inXI=xiSet?xiSet.has(p.id):bestXI(t.id,t.form).includes(p.id);return Math.round(v*(inXI?RM.forderung.stammspieler:RM.forderung.sonst)/RM.runden)*RM.runden;}
+function askPrice(p){return forderung(p);} // Forderung des Vereins nach dem Vereinswert (K19 §5.1, U10a), mit dem Stand der Verhandlung
 const extDemand=p=>{const g=RM.gehalt;return Math.round(salaryFor(p.str)*(g.basis+p.seed*g.zufall)*(p.age>=g.altAb?g.altFaktor:1)/1000)*1000;};
 const kreditRahmen=t=>(RF.kreditRahmen.basis+t.rep*RF.kreditRahmen.jeAnsehen)*(t.id===S.my?stufe().kredit:1);
 // Schwierigkeit (K02 §5.4): Spielstände ohne Angabe gelten als „Normal“

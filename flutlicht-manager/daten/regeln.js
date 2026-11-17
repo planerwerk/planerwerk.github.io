@@ -217,6 +217,24 @@ const REGELN={
     gehalt:{basis:1.05,zufall:0.2,altAb:31,altFaktor:0.85} // Gehaltsforderung = Gehalt × (basis + Zufall), ältere günstiger bei Verlängerung
   },
 
+  // Transfers I (K19 §5, §11, U10a): Fenster für alle, Vereinswert mit einer Formel für Kauf und Verkauf, Verhandlungsrunden.
+  // Fenster (DFL 2026/27, jeweils bis 20 Uhr): Sommer 1.7. bis 1.9., Winter 1.1. bis 1.2. Außerhalb wird verhandelt, gewechselt wird zum nächsten Fensterbeginn. Vereinslose jederzeit.
+  // Wechsel unter Computer-Vereinen nur im Fenster, dafür 2 bis 5 je Woche (vorher 0 bis 2 das ganze Jahr, im Schnitt etwa gleich viele je Saison).
+  // Vereinswert = Marktwert × Stellenwert (Kaderrolle beim Verkäufer, Bedarf beim Käufer) × Restlaufzeit × Finanzlage. Forderung = Vereinswert × 1,15, höchstens 1,8 × Marktwert.
+  // Schmerzgrenze = Vereinswert × 0,95. Gegenangebot in der Mitte zwischen letzter Forderung und deinem Angebot, nie unter der Schmerzgrenze. Höchstens vier Runden beim Kauf,
+  // drei beim Verkauf. Spottangebot (unter 60 % der Forderung) kostet Geduld (zwei Spottangebote, dann Abbruch). Abbruch: vier Wochen Pause. Ein anständiges Angebot (ab 80 %)
+  // drückt die Forderung um 3 %, höchstens einmal in vier Wochen. Angebote der Computer-Vereine: 85 bis 100 % ihres Vereinswerts, nur mit Bedarf (mindestens so gut wie ihr Stammspieler).
+  transfers:{
+    fenster:[['07-01','09-01'],['01-01','02-01']],
+    fensterWechsel:[2,5],
+    stellenwert:{schluessel:1.5,stamm:1.3,rotation:1,pokal:1,talent:1,ergaenzung:0.8},
+    kauf:{besser:1.2,gleich:1,schlechter:0.7,spanne:2},
+    restlaufzeit:[0.6,0.6,0.85,1],
+    finanzlage:{knappUnter:1.5e6,knapp:0.9,reichAb:20e6,reich:1.1},
+    forderung:1.15,schmerzgrenze:0.95,maxFaktor:1.8,
+    runden:{kauf:4,verkauf:3},geduld:2,spott:0.6,anstaendig:0.8,preisdruck:{prozent:0.03,tage:28},pause:28,
+    angebotKI:[0.85,1],auslandMax:1.15},
+
   // Training (K07 §11): Einheiten, Intensität, Vorlagen nach Abstand zum Spiel, Kondition und Entwicklung aus dem Wochenreiz, Belastung, Verletzungen, Umschulung
   training:{
     staerkeMin:25,staerkeMax:99,
@@ -651,4 +669,4 @@ const REGELN={
 // Schreibschutz: Zur Laufzeit darf kein Code eine Regel ändern.
 (function frieren(o){Object.freeze(o);Object.values(o).forEach(v=>{if(v&&typeof v==='object'&&!Object.isFrozen(v))frieren(v);});})(REGELN);
 // Kurzformen für den Code
-const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui,RL=REGELN.live,RTA=REGELN.taktik,RSO=REGELN.sommer,RST=REGELN.stab,RD=REGELN.disziplin,RMD=REGELN.medizin,RWB=REGELN.wettbewerbe,RTS=REGELN.testspiele,RLA=REGELN.lager,RKA=REGELN.kabine,RGS=REGELN.gespraeche,RSC=REGELN.scouting,RLZ=REGELN.lizenz,RJ=REGELN.jugend,RZ=REGELN.zweite;
+const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui,RL=REGELN.live,RTA=REGELN.taktik,RSO=REGELN.sommer,RST=REGELN.stab,RD=REGELN.disziplin,RMD=REGELN.medizin,RWB=REGELN.wettbewerbe,RTS=REGELN.testspiele,RLA=REGELN.lager,RKA=REGELN.kabine,RGS=REGELN.gespraeche,RSC=REGELN.scouting,RLZ=REGELN.lizenz,RJ=REGELN.jugend,RZ=REGELN.zweite,RTR=REGELN.transfers;

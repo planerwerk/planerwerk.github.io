@@ -40,14 +40,14 @@ const bauVoll=(k,t)=>k==='cap'?t.cap>=RB.tribuene.max:k==='logen'?t.logen>=RB.lo
 function startBuild(k){if(!darf('stadion'))return;const t=myT();if(S.constr||bauVoll(k,t))return;
   const cost=bauKosten(k,t),label=bauLabel(k,t);if(t.cash<cost){toast('Dafür reicht der Kontostand nicht.');return;}
   const bis=S.tag+bauWochen(k)*7;money('Stadionbau',-cost);S.constr={k,bis,label};news(`Baubeginn: ${label}, fertig am ${datumKurz(bis)}.`);save();render();}
-function setListed(id,on){if(!darf('transfers','gespraechOderTransfer'))return;const p=PIX.get(id);if(on){const v=+document.getElementById('ask').value;p.list=1;p.ask=Math.max(RM.runden,Math.round(v*1e6/RM.runden)*RM.runden);news(`${p.n} steht für ${fmt(p.ask)} auf der Transferliste.`);}else{p.list=0;S.offers=S.offers.filter(o=>o.pid!==id);versprechenAngebot(id,null);}save();openP(id);render();}
+function setListed(id,on){if(!darf('transfers','gespraechOderTransfer'))return;const p=PIX.get(id);if(p.wech){toast('Er ist schon verkauft.');return;}if(on){const v=+document.getElementById('ask').value;p.list=1;p.ask=Math.max(RM.runden,Math.round(v*1e6/RM.runden)*RM.runden);news(`${p.n} steht für ${fmt(p.ask)} auf der Transferliste.`);}else{p.list=0;S.offers=S.offers.filter(o=>o.pid!==id);versprechenAngebot(id,null);}save();openP(id);render();}
 function extend(id){if(!darf('vertraege','vertragOderStab'))return;const p=PIX.get(id),y=+document.getElementById('ext').value;if(verlaengertNicht(p)){toast(`${p.n} will nicht verlängern. Erst muss seine Stimmung besser werden.`);return;}p.ct=y;p.sal=Math.round(extDemand(p)*vertragsAufschlag(p)/1000)*1000;news(`Vertrag verlängert: ${p.n} bis ${S.season+y}, ${fmt(p.sal)} pro Jahr.`,'good');save();openP(id);render();}
 const abfindung=p=>Math.round(p.sal*p.ct*RF.abfindung);
-function release(id){if(!darf('vertraege'))return;const p=PIX.get(id),c=abfindung(p);money('Abfindungen',-c);kabineAbgang(p,S.my);p.team=-1;p.list=0;S.offers=S.offers.filter(o=>o.pid!==id);news(`${p.n} wurde freigestellt (Abfindung ${fmt(c)}).`);save();closeOv();render();}
-function acceptOffer(i){if(!darf('transfers','gespraechOderTransfer'))return;const o=S.offers[i],p=o&&PIX.get(o.pid);if(!p||p.team!==S.my)return;
-  if(o.tid>=AV0){const v=avVon(o.tid);if(!v){S.offers.splice(i,1);save();render();return;} // Verkauf ins Ausland (K32): Der Spieler zieht in den Pool um
-    money('Transfers',o.amt);kabineAbgang(p,S.my);insAusland(p,v.id);S.offers=S.offers.filter(x=>x.pid!==o.pid);news(`Verkauft: ${p.n} wechselt für ${fmt(o.amt)} zu ${v.name} (${gruppenName(avGruppe(v))}).`,'good');save();render();return;}
-  const b=S.teams[o.tid];if(!aktiv(b)){S.offers.splice(i,1);toast(`${b.name} spielt nicht mehr in den Profiligen, das Angebot ist hinfällig.`);save();render();return;}money('Transfers',o.amt);b.cash-=o.amt;kabineAbgang(p,S.my);p.team=b.id;p.list=0;p.ct=riA(RM.neuerVertrag);S.offers=S.offers.filter(x=>x.pid!==o.pid);news(`Verkauft: ${p.n} wechselt für ${fmt(o.amt)} zu ${b.name}.`,'good');save();render();}
+function release(id){if(!darf('vertraege'))return;if((PIX.get(id)||{}).wech){toast('Er ist schon verkauft.');return;}const p=PIX.get(id),c=abfindung(p);money('Abfindungen',-c);kabineAbgang(p,S.my);p.team=-1;p.list=0;S.offers=S.offers.filter(o=>o.pid!==id);news(`${p.n} wurde freigestellt (Abfindung ${fmt(c)}).`);save();closeOv();render();}
+function acceptOffer(i){if(!darf('transfers','gespraechOderTransfer'))return;verkaufAbschluss(S.offers[i]);save();render();}
+// Gegenforderung auf ein Angebot (K19 §4.2): Liegt sie im Rahmen des Bieters, ist der Spieler verkauft, sonst erhöht er (höchstens drei Runden)
+function gegenAngebot(i){if(!darf('transfers','gespraechOderTransfer'))return;const o=S.offers[i],el=document.getElementById('gf'+i);if(!o||!el)return;const betrag=Math.round((+el.value||0)*1e6);
+  if(betrag<=o.amt){toast('Das Angebot liegt schon darüber. Nimm es einfach an.');return;}const r=gegenRunde(o,betrag);if(r.ok)verkaufAbschluss(o);else toast(r.text);save();render();}
 function declineOffer(i){if(!darf('transfers'))return;const o=S.offers[i];if(o)versprechenAngebot(o.pid,o.amt);S.offers.splice(i,1);save();render();}
 function offer(id){{const q=PIX.get(id);if(!darf('transfers','gespraechOderTransfer')||(q&&istAusland(q)&&!darf('ausland')))return;}const p=PIX.get(id),t=myT(),msg=document.getElementById('msg'),yrs=+document.getElementById('yrs').value,M=RM,I=M.interesse;
   if(squad(S.my).length>=M.kaderMax){msg.textContent=`Dein Kader ist voll (höchstens ${M.kaderMax} Spieler).`;return;}
@@ -56,11 +56,12 @@ function offer(id){{const q=PIX.get(id);if(!darf('transfers','gespraechOderTrans
     +(aus?(p.nat===RW.nation.heimat?IA.heimkehr:IA.fremd):0); // aus dem Ausland etwas schwerer zu holen, Deutsche kommen gern zurück (K32 §8)
   if(interest<0){msg.textContent=`${p.n} hat kein Interesse an einem Wechsel zu ${t.name}.`;return;}
   const sal=Math.round(salaryFor(p.str)*(M.gehalt.basis+p.seed*M.gehalt.zufall)/1000)*1000;let fee=0;
-  if(from){fee=Math.round((+document.getElementById('fee').value||0)*1e6);const ask=askPrice(p);
-    if(fee<ask*M.ernstAb){msg.textContent=`${from.name}: „Kein ernsthaftes Angebot.“ Gefordert sind etwa ${fmt(ask)}.`;return;}
-    if(fee<ask){msg.textContent=`${from.name} will mindestens ${fmt(ask)}.`;return;}
+  if(from){if(p.wech){msg.textContent=`${p.n} wechselt schon zu ${wechselZiel(p.wech)}.`;return;}fee=Math.round((+document.getElementById('fee').value||0)*1e6);
     if(t.cash<fee){msg.textContent='Dafür reicht dein Kontostand nicht.';return;}
-    money('Transfers',-fee);if(!aus)from.cash+=fee;}
+    const r=kaufRunde(p,fee);if(!r.ok){msg.textContent=r.text;const fe=document.getElementById('fee');if(r.gegen&&fe)fe.value=(r.gegen/1e6).toFixed(2);save();return;} // Verhandlungsrunde (K19 §5.2)
+    money('Transfers',-fee);if(!aus)from.cash+=fee;if(S.verh)delete S.verh[p.id];
+    if(!fensterOffen()){wechselVormerken(p,S.my,{ct:yrs,sal,preis:fee});S.offers=S.offers.filter(o=>o.pid!==id); // außerhalb des Fensters: Einigung jetzt, Wechsel zum nächsten Fensterbeginn (K19 §5.6)
+      news(`Einigung: ${p.n} kommt für ${fmt(fee)} von ${from.name} (Gehalt ${fmt(sal)}/Jahr). Er wechselt mit dem Transferfenster am ${datumKurz(p.wech.ab)}.`,'good');save();closeOv();render();toast(`Einigung mit ${p.n}`);return;}}
   else{const hg=Math.round(sal*RF.handgeld/1000)*1000;if(t.cash<hg){msg.textContent='Nicht genug Geld für das Handgeld.';return;}money('Handgelder',-hg);}
   if(aus)ausDemAusland(p,S.my);else if(from)kabineAbgang(p,from.id);p.team=S.my;p.list=0;p.ct=yrs;p.sal=sal;S.offers=S.offers.filter(o=>o.pid!==id);neuzugang(p,S.my);versprechenKauf(p);
   news(`Neuzugang: ${p.n} kommt ${from?`für ${fmt(fee)} von ${from.name}${aus?` (${gruppenName(avGruppe(from))})`:''}`:'ablösefrei'} (Gehalt ${fmt(sal)}/Jahr, bis ${S.season+yrs}).`,'good');save();closeOv();render();toast(`${p.n} unterschreibt!`);}
