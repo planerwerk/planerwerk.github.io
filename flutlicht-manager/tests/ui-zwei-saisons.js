@@ -92,7 +92,7 @@ async function actions(s,tag){const wk=s.wk,yr=s.season,K=yr+':'+wk+':';
      sc=await pg.evaluate(()=>__scan());if(sc)note(tag,'Spielerkarte Ausland: '+sc);
      if(id===kand[0]){const b=await pg.$('button:text-is("Beobachten lassen")');if(b){await b.click();if(!(await pg.evaluate(i=>(S.auftraege||[]).some(a=>a.pid===i),id)))note(tag,'Ausland: Beobachtung nicht angelegt');await closeModal();continue;}}
      await pg.click('button:text-is("Angebot abgeben")');kauf=await msgOrClosed();
-     if(kauf==='OK'){const ok=await pg.evaluate(i=>{const p=PIX.get(i);return p.team===S.my&&S.pl.includes(p)&&!S.ausland.pl.includes(p)&&!!p.sperre&&p.st!=null;},id);if(!ok)note(tag,'Ausland: Neuzugang nicht sauber im Kader');break;}}
+     if(kauf==='OK'){const ok=await pg.evaluate(i=>{const p=PIX.get(i);return (p.team===S.my&&S.pl.includes(p)&&!S.ausland.pl.includes(p)&&!!p.sperre&&p.st!=null)||(!!p.wech&&p.wech.nach===S.my&&S.ausland.pl.includes(p)&&!fensterOffen());},id);if(!ok)note(tag,'Ausland: Neuzugang nicht sauber im Kader oder nicht vorgemerkt');else if(await pg.evaluate(i=>!!PIX.get(i).wech,id))kauf='OK, Wechsel zum Winterfenster vereinbart (K19)';break;}}
    await tabClick('Transfers');await pg.selectOption('#tf_lg','');actlog.push(tag+' Ausland: Markt, Karte, Kauf: '+kauf);}
  if(yr===2026&&wk===14&&once(K+'scout2')){const n=await pg.evaluate(()=>{const a=(S.auftraege||[]).find(x=>x.art==='suche');return a?a.kand.length:-1;});if(n>=0&&n<3)note(tag,`Suchauftrag hat nach fünf Wochen nur ${n} Kandidaten`);actlog.push(tag+` Suchauftrag: ${n} Kandidaten`);}
  // Gesprächswunsch (K14 §5.4): über das Büro zum Gespräch, Einsatz versprechen

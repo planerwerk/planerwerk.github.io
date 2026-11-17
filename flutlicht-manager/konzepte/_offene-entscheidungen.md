@@ -550,3 +550,13 @@ Nach deiner Vorgabe vom 13.11. (Zweite wird mit Geld besser, alles gedeckelt, di
 - **Verkauf aus der Zweiten** nur ab Stärke 59, zum halben Marktwert. Mit 24 geht ein Amateur ohne Geld.
 - **Profis in die Zweite abstellen** kommt mit der Leihe (U10).
 - **Automatik:** brauchbare 19-Jährige in die Zweite, je Sommer höchstens einer aus der Zweiten zu den Profis.
+
+## K19 Transfers I, umgesetzt in U10a (17.11.), vorläufig von mir
+
+Im Einzelnen in K19 §12 Nr. 5 bis 15:
+
+- **Fenster:** 1.7. bis 1.9. und 1.1. bis 1.2., jedes Jahr dieselben Kalendertage. Außerhalb: Einigung und Geld sofort, Wechsel zum Fensterbeginn. Auch fürs Ausland.
+- **Computer-Vereine** wechseln nur im Fenster, 2 bis 5 je Woche (etwa so viele je Saison wie vorher).
+- **Vereinswert** ohne Beziehung und ohne Scouting-Schätzung (kommt mit U11, U12). Der Marktwert bleibt ohne Restlaufzeit.
+- **Bedarf** statt Kaderplanung: Computer-Vereine bieten nur, wenn dein Spieler mindestens so gut ist wie ihr schwächster Stammspieler auf der Position.
+- **Antworten sofort,** Geduld für zwei Spottangebote, höchstens vier Runden beim Kauf und drei beim Verkauf, vier Wochen Pause nach einem Abbruch.

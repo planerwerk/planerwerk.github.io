@@ -1,6 +1,6 @@
 # K19 – Transfers I
 
-Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12.
+Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12. **Teilweise umgesetzt in U10a** (17. November 2026, `js/transfers.js`, Test `tests/transfers.js`): Fenster für alle, Vereinswert mit einer Formel, Verhandlungsrunden beim Kauf, Gegenforderung beim Verkauf, Wechsel zum Fensterbeginn. Offen: Interesse nach §5.3 und Vorvertrag (U10b), Berater (U10c), Leihe und Medizincheck (U10d), Bestandteile, Tausch, Konkurrenz (K20).
 Hängt ab von: K18 (Scouting), K21 (Verträge), K22 (Berater), K17 (Beziehungen), K14 (Wechselwunsch) · Wird gebraucht von: K20, K23, K31.
 
 ## 1. Ziel und Spielgefühl
@@ -207,10 +207,24 @@ transfers:{
 3. **Fenster** nach den echten Terminen 2026/27, danach verschoben wie die übrigen Termine.
 4. **Abwerben, Bieterwettstreit im Detail und Deadline Day** bleiben in K20 (Welle 4).
 
-**Noch zu recherchieren:** typische Zahl der Zugänge je Verein und Fenster, echte Transferfenster ab 2027 (FIFA-Änderungen, K21).
+**Vorläufig entschieden bei der Umsetzung (U10a, 17. November 2026):**
+
+5. **Fenster** nach der Websuche vom 17.11.: Sommer 1. Juli bis 1. September 2026, Winter 1. Januar bis 1. Februar 2027, jeweils bis 20 Uhr (ran.de). In späteren Saisons dieselben Kalendertage, nicht um Wochen verschoben wie die Spieltermine. Das Sonderfenster vom 1. bis 10. Juni 2026 (Klub-WM) gibt es im Spiel nicht.
+6. **Wechsel unter Computer-Vereinen nur im Fenster,** dafür 2 bis 5 je Woche. Gemessen über eine Saison: 26 Wechsel, alle im Fenster. Vorher waren es 29 über das ganze Jahr verteilt.
+7. **Einigung außerhalb des Fensters:** Die Ablöse fließt sofort, der Spieler wechselt zum nächsten Fensterbeginn und spielt bis dahin für seinen Verein. Ein verkaufter Spieler lässt sich nicht mehr auflösen oder auf die Liste setzen, für ihn kommen keine Angebote mehr. Im Sommer geschieht der Wechsel vor dem Saisonwechsel der Verträge. Das gilt auch für Käufe im Ausland und Verkäufe dorthin (die echten Fenster im Ausland weichen ab, vorläufig). Verkäufe aus Jugend und Zweiter in andere Ligen gelten sofort, weil diese Spieler die simulierte Welt verlassen.
+8. **Der Marktwert bleibt, wie er ist** (ohne Restlaufzeit und Merkmale). Die Restlaufzeit wirkt nur im Vereinswert. Deshalb misst der Test die fairen Angebote am Marktwert mal Restlaufzeit: 100 % liegen zwischen 80 und 120 %, am reinen Marktwert 89 %.
+9. **Vereinswert ohne Beziehung und ohne Schätzung:** Beziehungen (K17) kommen mit U12, die Bewertung mit dem eigenen Scouting (K18, Befund AV2) mit U11. Bis dahin kennen Computer-Vereine die wahren Werte.
+10. **Bedarf des Käufers:** verglichen mit dem schwächsten Stammspieler seiner Positionsgruppe (Torwart 1, Abwehr 4, Mittelfeld 4, Sturm 2). Besser als er um mehr als 2: ×1,2, gleich (±2): ×1,0, schlechter: ×0,7. Computer-Vereine bieten für deine Spieler nur, wenn sie mindestens gleich gut sind (Bedarf, bis K31 mit U11 kommt).
+11. **Finanzlage:** knapp unter 1,5 Mio € Kontostand, reich ab 20 Mio € (Spielwerte).
+12. **Antworten kommen sofort** statt nach einem bis fünf Tagen. Das spart Halte. Das Gegenangebot steht in der Spielerkarte und im Angebotsfeld.
+13. **Geduld 2:** Nach zwei Spottangeboten bricht der Verein ab, sonst nach der vierten erfolglosen Runde. Pause vier Wochen. Preisdruck höchstens einmal in vier Wochen.
+14. **Deine Gegenforderung** auf ein Angebot: Der Bieter geht bis zu seinem Vereinswert mit, Auslandsvereine bis 15 % über ihr Gebot. Drei Runden, dann zieht er zurück.
+15. **Noch nicht gebaut:** Interesse des Spielers nach §5.3 und Vorvertrag (U10b), Berater (U10c), Leihe und Medizincheck (U10d), Bestandteile (Raten, Boni, Weiterverkaufsbeteiligung), Tausch, Transferstatus „unverkäuflich“, Konkurrenz um denselben Spieler (K20).
+
+**Noch zu recherchieren:** typische Zahl der Zugänge je Verein und Fenster, echte Transferfenster ab 2027 (FIFA-Änderungen, K21), Fenster der Auslandsligen.
 
 ## Quellen
 
-- Transferfenster 2026/27: [ran.de: Transferfenster 2026](https://ran.joyn.de/sports/fussball/bundesliga/deadline-day2026-welche-transferfenster-sind-noch-geoeffnet-86342) (aus K01)
+- Transferfenster 2026/27: [ran.de: Transferfenster 2026](https://ran.joyn.de/sports/fussball/bundesliga/deadline-day2026-welche-transferfenster-sind-noch-geoeffnet-86342) (aus K01), am 17.11. erneut geprüft: Sommer bis 1.9.2026, Winter 1.1. bis 1.2.2027, jeweils 20 Uhr ([Heidelberg24: Deadline Day](https://www.heidelberg24.de/sport/fussball/so-laeuft-der-deadline-day-fuer-werder-bremen-und-co-letzter-transfertag-bundesliga-news-zr-94468996.html))
 - Spottangebote, Mondpreise, Preisdruck über die Zeit: `konzepte/_recherche-genre.md`, Abschnitte 3.1, 4, 4d
 - Ablauf, Bestandteile, Medizincheck, weitere Transferarten: `konzepte/_rohmaterial-logik-v1.md`, Abschnitte 12.1, 12.2, 12.4
