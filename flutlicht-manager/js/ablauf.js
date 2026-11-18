@@ -29,6 +29,7 @@ function tagesSpieleAbschliessenLauf(out){const d=out.tag;S.gespielt=d;
   sperrenAbsitzen(wbs);
   out.list.forEach(r=>applyMatch(r,!!r.cup));
   einsatzBuchen(out.list,d); // Einsatzzeit und Bankzeit nach Grund (K14 §12), nach den Noten
+  praemienNachSpiel(out.list); // Prämien deiner Spieler (K21, U10b)
   mitStrom(strom('praegung',S.season,d),()=>praegungNachSpiel(out.list,d)); // Prägungen junger Spieler (K08 §5.3)
   S.pl.forEach(p=>{if(spielten.has(p.team))entwicklungBuchen(p,d);});
   out.mine=out.list.find(r=>r.h===S.my||r.a===S.my)||null;if(out.mine)lizenzSpiel();
@@ -68,7 +69,7 @@ function taeglichLauf(d){const T=RT;praegungTag(d);wechselTag(d); // vereinbarte
   const c=S.constr;if(c&&d>=c.bis){const t=myT();if(c.k==='cap')t.cap+=RB.tribuene.plaetze;if(c.k==='logen')t.logen+=RB.logen.anzahl;if(c.k==='shop')t.shop++;news(`Bau abgeschlossen: ${c.label}.`,'good');S.constr=null;}}
 // Werte pro Woche (montags): Training und Entwicklung, Transfermarkt, Vorstand bei Minus auf dem Konto.
 function woechentlich(d){return mitStrom(strom('woche',S.season,d),()=>woechentlichLauf(d));}
-function woechentlichLauf(d){if(!imUrlaub())mitStrom(strom('training',S.season,d),training);mitStrom(strom('kabine',S.season,d),()=>kabineWoche(d));mitStrom(strom('jugend',S.season,d),()=>jugendWoche(d));mitStrom(strom('zweite',S.season,d),()=>zweiteWoche(d));scoutingWoche();mitStrom(strom('ausland',S.season,d),auslandWoche);mitStrom(strom('markt',S.season,d),market);
+function woechentlichLauf(d){if(!imUrlaub())mitStrom(strom('training',S.season,d),training);mitStrom(strom('kabine',S.season,d),()=>kabineWoche(d));mitStrom(strom('jugend',S.season,d),()=>jugendWoche(d));mitStrom(strom('zweite',S.season,d),()=>zweiteWoche(d));mitStrom(strom('vertraege',S.season,d),()=>vertraegeWoche(d));scoutingWoche();mitStrom(strom('ausland',S.season,d),auslandWoche);mitStrom(strom('markt',S.season,d),market);
   if(myT().cash<0){S.trust+=RV.kontoMinus;if(R()<RV.kontoMinusMeldung)news('Der Vorstand ist alarmiert: Das Vereinskonto ist im Minus!','bad');}
   S.trust=clamp(S.trust,0,100);vorstandPruefen();}
 
@@ -100,7 +101,7 @@ function market(){const M=RM;
   for(let k=0;k<n;k++){const L=S.pl.filter(p=>p.list&&!p.wech&&p.team>=0&&stabMacht(p.team,'transfers')&&squad(p.team).length>M.verkaeufer.kaderMin);if(!L.length)break;const p=pick(L);
     const B=S.teams.filter(t=>stabMacht(t.id,'transfers')&&aktiv(t)&&t.id!==p.team&&t.cash>p.ask&&teamLevel(t.id)<p.str+M.kaeufer.niveauPlus&&squad(t.id).length<M.kaeufer.kaderMax);if(!B.length)continue;
     const b=pick(B),from=S.teams[p.team];kasse(b,-p.ask);kasse(from,p.ask);kabineAbgang(p,from.id);S.offers=S.offers.filter(o=>o.pid!==p.id);news(`Wechsel perfekt: ${p.n} geht für ${fmt(p.ask)} von ${from.name} zu ${b.name}.`,'tr');
-    p.team=b.id;p.list=0;p.ct=riA(M.neuerVertrag);p.sal=salaryFor(p.str);neuzugang(p,b.id);}
+    p.team=b.id;p.list=0;p.ct=riA(M.neuerVertrag);p.sal=salaryFor(p.str);p.seit=absTag(S.tag);p.abl=p.ask;neuzugang(p,b.id);}
   const lvl=teamLevel(S.my),A=M.angebote,U=M.ueberraschung,bis=S.tag+RK.angebotTage;
   // Angebote an dich nur, wenn du die Transfers selbst führst (K36)
   // Gebote nach dem Vereinswert des Bieters, nur von Vereinen mit Bedarf (K19 §5.4, U10a). max: wie weit der Bieter bei deiner Gegenforderung mitgeht

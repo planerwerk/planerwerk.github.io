@@ -53,7 +53,7 @@ function erwartungEinsatz(p){const k=kaderRolle(p);if(k==='pokal')return RKA.rol
 // ---------- Einsatzzeit und Bankzeit nach Grund (K14 §12, U8d), nach jedem Pflichtspiel ----------
 // Der Grund zählt, nicht nur die Minuten: Je Spiel und Spieler steht fest, warum er nicht gespielt hat. Davon hängt ab, ob das Spiel in den gleitenden Schnitt
 // der Einsatzzeit eingeht (p.ea) und was es sofort an Stimmung bringt oder kostet. p.bg merkt den Grund des letzten Spiels für die Anzeige.
-const BANK_GRUND={rotation:'Rotation, geschont (zählt nicht)',joker:'Joker mit Wirkung (zählt als erfüllt)',rivale:'sein Konkurrent spielt',unerfahren:'unerfahren, erwartet noch nichts',
+const BANK_GRUND={weg:'wechselt bald, erwartet nichts mehr',rotation:'Rotation, geschont (zählt nicht)',joker:'Joker mit Wirkung (zählt als erfüllt)',rivale:'sein Konkurrent spielt',unerfahren:'unerfahren, erwartet noch nichts',
   tw2:'Nummer 2 im Tor, erwartet keine Einsätze',pokal:'spielt im Pokal, Liga zählt nicht',aufbau:'Aufbau nach Verletzung (zählt nicht)',form:'Formkrise, er sieht die Bank ein',
   tribuene:'nicht im Spieltagskader',frueh:'früh ausgewechselt',spaet:'erst in der Nachspielzeit eingewechselt',ww:'will weg, versteht die Bank',sperre:'erstes Spiel nach der Sperre (zählt nicht)',mentor:'betreut als Pate ein Talent, nimmt die Bank hin',bank:'Bank ohne besonderen Grund'};
 const feinPos=p=>p.fp||STD_POS[p.pos];
@@ -113,6 +113,7 @@ function bankFall(p,c){const B=RKA.bank,t=c.t,gespielt=c.min.has(p.id),m=c.min.g
     if(rolle==='pokal'&&!c.pokal&&anteil<p.ea)zaehlt=false;}
   else{p.bnk=(p.bnk||0)+1;const imKader=!c.kader||c.kader.has(p.id),riv=platzRivale(p,c.xi),entschuldigt=g=>{grund=g;zaehlt=false;};
     if(p.ww>=3)entschuldigt('ww');
+    else if(p.wech&&p.wech.nach!==p.team)entschuldigt('weg'); // hat woanders unterschrieben oder ist verkauft: erwartet nichts mehr (K14 §12, U10b)
     else if(p.nsp){entschuldigt('sperre');if(hatEig(p,'hitzkopf'))stimmungAendern(p,B.sperre.hitzkopf);}
     else if(p.rue&&!(diva>1&&riv))entschuldigt('aufbau');
     else if(rolle==='pokal'&&!c.pokal)entschuldigt('pokal');
@@ -131,6 +132,7 @@ function bankFall(p,c){const B=RKA.bank,t=c.t,gespielt=c.min.has(p.id),m=c.min.g
     delete p.nsp;}
   // Bedeutungslose Spiele: Reservisten und Talente erwarten Chancen
   if(c.egal&&!stammA(p)&&krStufe(p)<=2&&!['ww','aufbau','sperre'].includes(grund))stimmungAendern(p,m>=B.bedeutungslos.minuten?B.bedeutungslos.plus:B.bedeutungslos.minus);
+  if(zaehlt&&anteil<p.ea)tempo*=vertragsDruck(p); // Vertragsjahr und teurer Neuzugang: Der Bankplatz wiegt schwerer (K14 §12, U10b)
   if(zaehlt)p.ea=p.ea*(1-tempo)+tempo*anteil;
   // Wer bisher nichts erwartet hat und es jetzt tut (zehntes Profispiel), beginnt bei seiner Erwartung und nicht im Minus
   if(e===0){const e1=erwartungEinsatz(p);if(e1>0)p.ea=Math.max(p.ea,e1);}

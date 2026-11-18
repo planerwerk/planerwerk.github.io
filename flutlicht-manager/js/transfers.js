@@ -59,11 +59,11 @@ function gegenRunde(o,betrag){const T=RTR,max=o.max||o.amt;o.r=(o.r||0)+1;if(bet
 function verkaufAbschluss(o){const p=o&&PIX.get(o.pid);if(!p||p.team!==S.my||p.wech)return;const offen=fensterOffen(),weg=()=>{S.offers=S.offers.filter(x=>x.pid!==o.pid);};
   if(o.tid>=AV0){const v=avVon(o.tid);if(!v){S.offers=S.offers.filter(x=>x!==o);return;}money('Transfers',o.amt);weg();const land=gruppenName(avGruppe(v));
     if(!offen){wechselVormerken(p,o.tid,{preis:o.amt});news(`Einigung: ${p.n} wechselt für ${fmt(o.amt)} zu ${v.name} (${land}), mit dem Transferfenster am ${datumKurz(p.wech.ab)}.`,'good');return;}
-    kabineAbgang(p,S.my);insAusland(p,v.id);news(`Verkauft: ${p.n} wechselt für ${fmt(o.amt)} zu ${v.name} (${land}).`,'good');return;} // Verkauf ins Ausland (K32): Der Spieler zieht in den Pool um
+    kabineAbgang(p,S.my);vertragEnde(p);insAusland(p,v.id);news(`Verkauft: ${p.n} wechselt für ${fmt(o.amt)} zu ${v.name} (${land}).`,'good');return;} // Verkauf ins Ausland (K32): Der Spieler zieht in den Pool um
   const b=S.teams[o.tid];if(!b||!aktiv(b)){S.offers=S.offers.filter(x=>x!==o);toast(`${b?b.name:'Der Verein'} spielt nicht mehr in den Profiligen, das Angebot ist hinfällig.`);return;}
   money('Transfers',o.amt);b.cash-=o.amt;weg();
   if(!offen){wechselVormerken(p,b.id,{ct:riA(RM.neuerVertrag),preis:o.amt});news(`Einigung: ${p.n} wechselt für ${fmt(o.amt)} zu ${b.name}, mit dem Transferfenster am ${datumKurz(p.wech.ab)}.`,'good');return;}
-  kabineAbgang(p,S.my);p.team=b.id;p.list=0;p.ct=riA(RM.neuerVertrag);news(`Verkauft: ${p.n} wechselt für ${fmt(o.amt)} zu ${b.name}.`,'good');}
+  kabineAbgang(p,S.my);vertragEnde(p);p.seit=absTag(S.tag);p.abl=o.amt;p.team=b.id;p.list=0;p.ct=riA(RM.neuerVertrag);news(`Verkauft: ${p.n} wechselt für ${fmt(o.amt)} zu ${b.name}.`,'good');}
 
 // ---------- Wechsel zum nächsten Fensterbeginn ----------
 // p.wech = {nach, von, ct, sal, preis, ab}. Die Ablöse fließt bei der Einigung, der Spieler bleibt bis zum Fensterbeginn bei seinem Verein.
@@ -72,10 +72,11 @@ const wechselZiel=w=>w.nach>=AV0?(avVon(w.nach)||{name:'Ausland'}).name:tn(w.nac
 // Vollziehen (Fensterbeginn). Im Sommer vor dem Saisonwechsel der Verträge, darum dort ein Vertragsjahr mehr.
 function wechselVollziehen(sommer){const l=(S.wechsel||[]).map(id=>PIX.get(id)).filter(p=>p&&p.wech);S.wechsel=[];
   l.forEach(p=>{const w=p.wech;delete p.wech;if(p.team===-2)return;const mein=w.nach===S.my||w.von===S.my;
-    if(w.nach>=AV0){const v=avVon(w.nach);if(!v||istAusland(p))return;kabineAbgang(p,p.team);insAusland(p,v.id);}
+    if(w.nach>=AV0){const v=avVon(w.nach);if(!v||istAusland(p))return;kabineAbgang(p,p.team);vertragEnde(p);insAusland(p,v.id);}
     else{const t=S.teams[w.nach];if(!t||!aktiv(t)){if(!istAusland(p)){kabineAbgang(p,p.team);p.team=-1;p.list=0;}return;}
       if(istAusland(p))ausDemAusland(p,w.nach);else kabineAbgang(p,p.team);
-      p.team=w.nach;p.list=0;p.ct=(w.ct||riA(RM.neuerVertrag))+(sommer?1:0);if(w.sal)p.sal=w.sal;neuzugang(p,w.nach);if(w.nach===S.my){kabineInit(p);versprechenKauf(p);}}
+      if(w.von===S.my)vertragEnde(p);p.team=w.nach;p.list=0;p.ct=(w.ct||riA(RM.neuerVertrag))+(sommer?1:0);if(w.sal)p.sal=w.sal;p.seit=absTag(S.tag);if(w.preis)p.abl=w.preis;
+      if(w.nach===S.my){if(w.vp)p.vp=w.vp;else delete p.vp;if(w.ak)p.ak=w.ak;else delete p.ak;if(w.lk)p.lk=w.lk;else delete p.lk;}neuzugang(p,w.nach);if(w.nach===S.my){kabineInit(p);versprechenKauf(p);}}
     if(mein)news(`Transferfenster: ${p.n} wechselt wie vereinbart ${w.nach===S.my?'zu dir':'zu '+wechselZiel(w)}.`,w.nach===S.my?'good':'tr');});}
 // Täglich: am ersten Tag des Winterfensters (der Sommer beginnt mit dem Saisonwechsel)
 function wechselTag(d){if(d>0&&fensterOffen(d)&&!fensterOffen(d-1)&&(S.wechsel||[]).length)wechselVollziehen(false);}

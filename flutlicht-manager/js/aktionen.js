@@ -41,30 +41,38 @@ function startBuild(k){if(!darf('stadion'))return;const t=myT();if(S.constr||bau
   const cost=bauKosten(k,t),label=bauLabel(k,t);if(t.cash<cost){toast('Dafür reicht der Kontostand nicht.');return;}
   const bis=S.tag+bauWochen(k)*7;money('Stadionbau',-cost);S.constr={k,bis,label};news(`Baubeginn: ${label}, fertig am ${datumKurz(bis)}.`);save();render();}
 function setListed(id,on){if(!darf('transfers','gespraechOderTransfer'))return;const p=PIX.get(id);if(p.wech){toast('Er ist schon verkauft.');return;}if(on){const v=+document.getElementById('ask').value;p.list=1;p.ask=Math.max(RM.runden,Math.round(v*1e6/RM.runden)*RM.runden);news(`${p.n} steht für ${fmt(p.ask)} auf der Transferliste.`);}else{p.list=0;S.offers=S.offers.filter(o=>o.pid!==id);versprechenAngebot(id,null);}save();openP(id);render();}
-function extend(id){if(!darf('vertraege','vertragOderStab'))return;const p=PIX.get(id),y=+document.getElementById('ext').value;if(verlaengertNicht(p)){toast(`${p.n} will nicht verlängern. Erst muss seine Stimmung besser werden.`);return;}p.ct=y;p.sal=Math.round(extDemand(p)*vertragsAufschlag(p)/1000)*1000;news(`Vertrag verlängert: ${p.n} bis ${S.season+y}, ${fmt(p.sal)} pro Jahr.`,'good');save();openP(id);render();}
+function extend(id){if(!darf('vertraege','vertragOderStab'))return;const p=PIX.get(id),y=+(document.getElementById('ext')||{}).value||1;if(!p||p.team!==S.my)return;if(p.wech){toast('Er ist schon verkauft.');return;}
+  if(verlaengertNicht(p)){toast(`${p.n} will nicht verlängern. Erst muss seine Stimmung besser werden.`);return;}
+  const F=gehaltForderung(p,false),o=vtPaket(p,F,y,false),r=vertragRunde(p,S.my,o,F); // Verhandlung über das Paket (K21 §4.1, U10b)
+  if(!r.ok){toast(r.text);save();openP(id);render();return;}vtUnterschrift(p,o,false);news(`Vertrag verlängert: ${p.n} bis ${S.season+o.ct}, ${fmt(o.sal)} pro Jahr${o.vp||o.ak||o.lk?', mit Prämien oder Klauseln':''}.`,'good');save();openP(id);render();}
 const abfindung=p=>Math.round(p.sal*p.ct*RF.abfindung);
-function release(id){if(!darf('vertraege'))return;if((PIX.get(id)||{}).wech){toast('Er ist schon verkauft.');return;}const p=PIX.get(id),c=abfindung(p);money('Abfindungen',-c);kabineAbgang(p,S.my);p.team=-1;p.list=0;S.offers=S.offers.filter(o=>o.pid!==id);news(`${p.n} wurde freigestellt (Abfindung ${fmt(c)}).`);save();closeOv();render();}
+function release(id){if(!darf('vertraege'))return;if((PIX.get(id)||{}).wech){toast('Er ist schon verkauft.');return;}const p=PIX.get(id),c=abfindung(p);money('Abfindungen',-c);kabineAbgang(p,S.my);vertragEnde(p);p.team=-1;p.list=0;S.offers=S.offers.filter(o=>o.pid!==id);news(`${p.n} wurde freigestellt (Abfindung ${fmt(c)}).`);save();closeOv();render();}
 function acceptOffer(i){if(!darf('transfers','gespraechOderTransfer'))return;verkaufAbschluss(S.offers[i]);save();render();}
 // Gegenforderung auf ein Angebot (K19 §4.2): Liegt sie im Rahmen des Bieters, ist der Spieler verkauft, sonst erhöht er (höchstens drei Runden)
 function gegenAngebot(i){if(!darf('transfers','gespraechOderTransfer'))return;const o=S.offers[i],el=document.getElementById('gf'+i);if(!o||!el)return;const betrag=Math.round((+el.value||0)*1e6);
   if(betrag<=o.amt){toast('Das Angebot liegt schon darüber. Nimm es einfach an.');return;}const r=gegenRunde(o,betrag);if(r.ok)verkaufAbschluss(o);else toast(r.text);save();render();}
 function declineOffer(i){if(!darf('transfers'))return;const o=S.offers[i];if(o)versprechenAngebot(o.pid,o.amt);S.offers.splice(i,1);save();render();}
-function offer(id){{const q=PIX.get(id);if(!darf('transfers','gespraechOderTransfer')||(q&&istAusland(q)&&!darf('ausland')))return;}const p=PIX.get(id),t=myT(),msg=document.getElementById('msg'),yrs=+document.getElementById('yrs').value,M=RM,I=M.interesse;
+function offer(id){{const q=PIX.get(id);if(!darf('transfers','gespraechOderTransfer')||(q&&istAusland(q)&&!darf('ausland')))return;}const p=PIX.get(id),t=myT(),msg=document.getElementById('msg'),yrs=+document.getElementById('yrs').value||3,M=RM;
   if(squad(S.my).length>=M.kaderMax){msg.textContent=`Dein Kader ist voll (höchstens ${M.kaderMax} Spieler).`;return;}
-  const aus=istAusland(p),from=aus?avVon(p.team):p.team>=0?S.teams[p.team]:null,lvl=teamLevel(S.my),IA=RW.ausland.interesse;
-  const interest=(t.rep-(from?from.rep:t.rep-I.vereinslosAbstand))+(lvl-p.str)*I.niveauFaktor+I.basis+(t.lg===1?I.liga1:t.lg===2?I.liga2:I.liga3)+(p.age>=I.altAb?I.altPlus:0)+(p.seed-0.5)*I.zufall
-    +(aus?(p.nat===RW.nation.heimat?IA.heimkehr:IA.fremd):0); // aus dem Ausland etwas schwerer zu holen, Deutsche kommen gern zurück (K32 §8)
-  if(interest<0){msg.textContent=`${p.n} hat kein Interesse an einem Wechsel zu ${t.name}.`;return;}
-  const sal=Math.round(salaryFor(p.str)*(M.gehalt.basis+p.seed*M.gehalt.zufall)/1000)*1000;let fee=0;
-  if(from){if(p.wech){msg.textContent=`${p.n} wechselt schon zu ${wechselZiel(p.wech)}.`;return;}fee=Math.round((+document.getElementById('fee').value||0)*1e6);
-    if(t.cash<fee){msg.textContent='Dafür reicht dein Kontostand nicht.';return;}
-    const r=kaufRunde(p,fee);if(!r.ok){msg.textContent=r.text;const fe=document.getElementById('fee');if(r.gegen&&fe)fe.value=(r.gegen/1e6).toFixed(2);save();return;} // Verhandlungsrunde (K19 §5.2)
-    money('Transfers',-fee);if(!aus)from.cash+=fee;if(S.verh)delete S.verh[p.id];
-    if(!fensterOffen()){wechselVormerken(p,S.my,{ct:yrs,sal,preis:fee});S.offers=S.offers.filter(o=>o.pid!==id); // außerhalb des Fensters: Einigung jetzt, Wechsel zum nächsten Fensterbeginn (K19 §5.6)
-      news(`Einigung: ${p.n} kommt für ${fmt(fee)} von ${from.name} (Gehalt ${fmt(sal)}/Jahr). Er wechselt mit dem Transferfenster am ${datumKurz(p.wech.ab)}.`,'good');save();closeOv();render();toast(`Einigung mit ${p.n}`);return;}}
-  else{const hg=Math.round(sal*RF.handgeld/1000)*1000;if(t.cash<hg){msg.textContent='Nicht genug Geld für das Handgeld.';return;}money('Handgelder',-hg);}
-  if(aus)ausDemAusland(p,S.my);else if(from)kabineAbgang(p,from.id);p.team=S.my;p.list=0;p.ct=yrs;p.sal=sal;S.offers=S.offers.filter(o=>o.pid!==id);neuzugang(p,S.my);versprechenKauf(p);
-  news(`Neuzugang: ${p.n} kommt ${from?`für ${fmt(fee)} von ${from.name}${aus?` (${gruppenName(avGruppe(from))})`:''}`:'ablösefrei'} (Gehalt ${fmt(sal)}/Jahr, bis ${S.season+yrs}).`,'good');save();closeOv();render();toast(`${p.n} unterschreibt!`);}
+  const aus=istAusland(p),from=aus?avVon(p.team):p.team>=0?S.teams[p.team]:null;if(p.wech){msg.textContent=`${p.n} wechselt schon zu ${wechselZiel(p.wech)}.`;return;}
+  // Interesse (K19 §5.3): Fehlt wenig, verlangt er mehr Geld, fehlt viel, will er nicht (U10b)
+  const F=gehaltMitInteresse(p,wechselInteresse(p));if(F==null){msg.textContent=`${p.n} hat kein Interesse an einem Wechsel zu ${t.name}.`;return;}
+  const vorv=!!from&&p.ct===1&&vorvertragZeit(),o=vtPaket(p,F,yrs,!from);let fee=0;
+  // Schritt 1: Ablöse mit dem Verein (K19 §5.2). Im letzten halben Jahr seines Vertrags geht es ohne Ablöse zum Sommer (Vorvertrag, K21 §4.3).
+  if(from&&!vorv){const v=verhandlung(p);if(v.einig&&v.einig.bis>=S.tag)fee=v.einig.fee;else{fee=Math.round((+document.getElementById('fee').value||0)*1e6);
+      if(t.cash<fee+o.hg){msg.textContent='Dafür reicht dein Kontostand nicht.';return;}
+      const r=kaufRunde(p,fee);if(!r.ok){msg.textContent=r.text;const fe=document.getElementById('fee');if(r.gegen&&fe)fe.value=(r.gegen/1e6).toFixed(2);save();return;}
+      verhandlung(p).einig={fee,bis:S.tag+14};}}
+  if(t.cash<fee+o.hg){msg.textContent='Dafür reicht dein Kontostand nicht.';return;}
+  // Schritt 2: Vertrag mit dem Spieler (K21 §4.1)
+  const r2=vertragRunde(p,S.my,o,F);if(!r2.ok){msg.textContent=(fee?`Einigung mit ${from.name} über ${fmt(fee)} steht (bis ${datumKurz(verhandlung(p).einig.bis)}). `:'')+r2.text;save();return;}
+  if(fee){money('Transfers',-fee);if(!aus)from.cash+=fee;}if(S.verh)delete S.verh[p.id];if(o.hg)money('Handgelder',-o.hg);
+  if(from&&(vorv||!fensterOffen())){wechselVormerken(p,S.my,Object.assign({ct:o.ct,sal:o.sal,preis:fee,vp:o.vp,ak:o.ak,lk:o.lk},vorv?{ab:tageDerSaison()}:{}));S.offers=S.offers.filter(x=>x.pid!==id); // Wechsel zum nächsten Fenster (K19 §5.6) oder zum Sommer (Vorvertrag)
+    news(vorv?`Vorvertrag: ${p.n} kommt im Sommer ablösefrei von ${from.name} (Gehalt ${fmt(o.sal)}/Jahr).`:`Einigung: ${p.n} kommt für ${fmt(fee)} von ${from.name} (Gehalt ${fmt(o.sal)}/Jahr). Er wechselt mit dem Transferfenster am ${datumKurz(p.wech.ab)}.`,'good');save();closeOv();render();toast(`Einigung mit ${p.n}`);return;}
+  if(aus)ausDemAusland(p,S.my);else if(from)kabineAbgang(p,from.id);p.team=S.my;p.list=0;vtUnterschrift(p,Object.assign({},o,{hg:0}),true);p.abl=fee;S.offers=S.offers.filter(x=>x.pid!==id);neuzugang(p,S.my);versprechenKauf(p);
+  news(`Neuzugang: ${p.n} kommt ${from?`für ${fmt(fee)} von ${from.name}${aus?` (${gruppenName(avGruppe(from))})`:''}`:'ablösefrei'} (Gehalt ${fmt(o.sal)}/Jahr, bis ${S.season+o.ct}).`,'good');save();closeOv();render();toast(`${p.n} unterschreibt!`);}
+// Prämien und Klauseln im Vertragsformular zeigen (K21, ab der A-Lizenz)
+function vertragDetails(id){if(!darf('praemien'))return;VT_DETAIL=1;openP(id);}
 
 // Lernziel eines eigenen Spielers (K03 §5.6). Leer = der Co-Trainer entscheidet.
 // Lernziel setzen (K03 §5.6, K07): Sind alle Lernplätze belegt, gibt der Spieler mit dem geringsten Fortschritt unter den vom Co-Trainer gewählten seinen Platz ab.

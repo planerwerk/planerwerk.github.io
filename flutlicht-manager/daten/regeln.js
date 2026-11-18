@@ -232,6 +232,26 @@ const REGELN={
     runden:{kauf:4,verkauf:3},geduld:2,spott:0.6,anstaendig:0.8,preisdruck:{prozent:0.03,tage:28},pause:28,
     angebotKI:[0.85,1],auslandMax:1.15},
 
+  // Verträge (K21 §5, §11, U10b): Gehaltsforderung, Verhandlung über ein Paket, Prämien je Spiel, Klauseln, Vorvertrag, Interesse beim Wechsel (K19 §5.3), Bankzeit (K14 §12).
+  // Forderung = Gehalt nach Stärke × Alter (bis 23 ×0,8, ab 31 ×0,9) × Talent (bis 23 mit drei Sternen ×1,1) × Söldner 1,2 oder vereinstreu 0,9 × Zufall (0,95 bis 1,05),
+  // beim Wechsel ×1,1, bei Verlängerung × Stimmungsaufschlag (K14). Ein Liga-Faktor fehlt bewusst: Die Gehaltskurve nach Stärke gibt der 2. Liga schon etwa 40 % (K21 §12).
+  // Annahme, wenn der Wert des Pakets je Jahr die Forderung erreicht (Schwelle je Spieler ±3 %): Gehalt + Handgeld/Laufzeit + erwartete Prämien × Sicherheit
+  // (0,6 + 0,02 × Druckresistenz) + Klauseln (Ausstiegsklausel bis 1,5 × Marktwert: 10 % weniger nötig, bis 3 ×: 5 %; Ligaklausel: 5 % je 30 % Kürzung mehr nötig)
+  // − Laufzeitwunsch (bis 23 je Jahr über 3: 3 %, ab 30 je Jahr unter 3: 5 %). Drei Runden, jede Ablehnung kostet 2 Stimmung, dann vier Wochen Pause.
+  // Prämien: Auflauf voll bei Startelf oder Einwechslung bis zur Halbzeit, sonst halb; Punkt nur in der Liga bei Startelf oder 45 Minuten; Tor je Tor; Zu-Null für Torwart und Abwehr ab 60 Minuten.
+  // Vorvertrag ab 1. Januar im letzten Vertragsjahr (FIFA, sechs Monate, Wortlaut nicht geprüft). Ausstiegsklausel ziehen nur im Fenster.
+  vertraege:{
+    laufzeit:{max:5,maxU18:3,jungBis:23,altAb:30,mitte:3,jung:0.03,alt:0.05},
+    forderung:{alter:[[23,0.8],[30,1],[99,0.9]],talent:1.1,talentSterne:3,talentBis:23,soeldner:1.2,treu:0.9,zufall:[0.95,0.1],wechsel:1.1},
+    zone:0.03,runden:3,rundeStimmung:-2,vertagtTage:28,gespraechTage:56,
+    einsatz:{stamm:0.85,rotation:0.45,rest:0.15},spiele:{1:36,2:36,3:39},punkteJeSpiel:1.4,torquote:{ST:0.35,MF:0.12,AB:0.04,TW:0},zuNullQuote:0.25,
+    sicher:[0.6,0.02],praemie:{halbAbMinute:46,punktAbMinuten:45,zuNullAbMinuten:60},
+    ausstieg:{billigAb:1.5,mittelAb:3,bonus:0.1,chance:0.25},
+    ligaklausel:{malus:0.05,ref:0.3,stufen:[0,0.2,0.3,0.5]},
+    interesse:{lage:0.3,lageMitte:55,wechselwunsch:15,bindung:-3,treu:-10,landsleute:3,landsleuteMax:6,geldAb:-10,geldJePunkt:0.03},
+    vorvertrag:{von:'01-01',bis:'06-30',chance:0.06,ansehenMinus:5},
+    bank:{vertragsjahr:1.5,soeldner:2,neuzugang:1.5,neuTage:365,teuerAnteil:0.25}},
+
   // Training (K07 §11): Einheiten, Intensität, Vorlagen nach Abstand zum Spiel, Kondition und Entwicklung aus dem Wochenreiz, Belastung, Verletzungen, Umschulung
   training:{
     staerkeMin:25,staerkeMax:99,
@@ -616,6 +636,7 @@ const REGELN={
       zweite:{ab:3,name:'Budget der zweiten Mannschaft',tab:'training',auto:1,wer:'der Verein',tut:'hält die Zweite auf der üblichen Stufe'},
       zweitekader:{ab:3,name:'Zweite Mannschaft (Aufrücken, Wechsel aus der Jugend, Verkauf)',tab:'training',auto:1,wer:'der Verein',tut:'schickt brauchbare 19-Jährige in die Zweite und holt jeden Sommer höchstens einen, der fast so gut ist wie die Profis, hoch'},
       pate:{ab:4,name:'Paten für Talente',tab:'kader'},
+      praemien:{ab:4,name:'Prämien und Klauseln in Verträgen',tab:'kader'},
       ausland:{ab:3,name:'Im Ausland beobachten und kaufen',tab:'transfer'},
       kaderrollen:{ab:3,name:'Kaderrollen',tab:'kabine',auto:1,wer:'der Co-Trainer',tut:'verteilt die Rollen nach der besten Elf'},
       versprechen:{ab:3,name:'Zusagen und Teamevent',tab:'kabine'},
@@ -666,4 +687,4 @@ const REGELN={
 // Schreibschutz: Zur Laufzeit darf kein Code eine Regel ändern.
 (function frieren(o){Object.freeze(o);Object.values(o).forEach(v=>{if(v&&typeof v==='object'&&!Object.isFrozen(v))frieren(v);});})(REGELN);
 // Kurzformen für den Code
-const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui,RL=REGELN.live,RTA=REGELN.taktik,RSO=REGELN.sommer,RST=REGELN.stab,RD=REGELN.disziplin,RMD=REGELN.medizin,RWB=REGELN.wettbewerbe,RTS=REGELN.testspiele,RLA=REGELN.lager,RKA=REGELN.kabine,RGS=REGELN.gespraeche,RSC=REGELN.scouting,RLZ=REGELN.lizenz,RJ=REGELN.jugend,RZ=REGELN.zweite,RTR=REGELN.transfers;
+const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui,RL=REGELN.live,RTA=REGELN.taktik,RSO=REGELN.sommer,RST=REGELN.stab,RD=REGELN.disziplin,RMD=REGELN.medizin,RWB=REGELN.wettbewerbe,RTS=REGELN.testspiele,RLA=REGELN.lager,RKA=REGELN.kabine,RGS=REGELN.gespraeche,RSC=REGELN.scouting,RLZ=REGELN.lizenz,RJ=REGELN.jugend,RZ=REGELN.zweite,RTR=REGELN.transfers,RVT=REGELN.vertraege;

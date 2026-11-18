@@ -45,7 +45,8 @@ module.exports=()=>{
    const cupSoll=S.plan.pokal.filter(([d])=>vorbei(d)).length;if(S.cup.hist.length!==cupSoll)e.push(`Pokal: ${S.cup.hist.length} Runden, laut Kalender ${cupSoll}`);}
   // Vereinbarte Wechsel (K19, U10a): Eintrag und Spieler passen zusammen, im offenen Fenster ist nichts mehr offen
   const wl=S.wechsel||[];wl.forEach(id=>{const p=PIX.get(id);if(!p||!p.wech)e.push('vorgemerkter Wechsel ohne Spieler '+id);});
-  S.pl.forEach(p=>{if(p.wech&&!wl.includes(p.id))e.push('Wechsel ohne Eintrag '+p.n);});if(wl.length&&fensterOffen(S.tag)&&S.phase==='play')e.push('vorgemerkter Wechsel im offenen Fenster');
+  S.pl.forEach(p=>{if(p.wech&&!wl.includes(p.id))e.push('Wechsel ohne Eintrag '+p.n);});if(fensterOffen(S.tag)&&S.phase==='play'&&wl.some(id=>{const p=PIX.get(id);return p&&p.wech&&p.wech.ab<=S.tag;}))e.push('fälliger Wechsel im offenen Fenster nicht vollzogen');
+  S.pl.forEach(p=>{if(p.vp&&Object.values(p.vp).some(x=>!(x>=0&&isFinite(x))))e.push('Prämie kaputt '+p.n);if(p.ak!=null&&!(p.ak>0))e.push('Ausstiegsklausel kaputt '+p.n);if(p.lk!=null&&!(p.lk>0&&p.lk<1))e.push('Ligaklausel kaputt '+p.n);});
   S.offers.forEach(o=>{if(PIX.get(o.pid)&&PIX.get(o.pid).wech)e.push('Angebot für einen schon verkauften Spieler');});
   S.offers.forEach(o=>{if(!PIX.get(o.pid))e.push('Angebot ohne Spieler');if(!(o.bis>=S.tag))e.push('abgelaufenes Angebot liegt noch vor');});
   if(S.constr&&!(S.constr.bis>S.tag))e.push('Bau hätte fertig sein müssen');
