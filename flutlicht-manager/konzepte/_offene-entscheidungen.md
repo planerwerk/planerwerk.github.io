@@ -581,3 +581,12 @@ Im Einzelnen in K22 §12 Nr. 10 bis 18:
 - **Beziehung** durch zügige Abschlüsse, Verkauf wechselwilliger Mandanten und Einladungen (einmal im Monat), schlechter durch harte Verhandlungen, jede Saison verblasst ein Viertel.
 - **Ab +40 Tipps, ab +60 Angebote, Rat an den Spieler und Warnung vor Vorverträgen.**
 - **Noch nicht:** Gerüchte, Pakete, Familien-Emotionen, Abwerben, Beziehungen der Computer-Vereine, Antwort mit Verzögerung.
+
+## Leihe, Profis in der Zweiten, Medizincheck, umgesetzt in U10d (18.11.), vorläufig von mir
+
+Im Einzelnen in K08 §5.5, §12 Nr. 29 und K19 §12 Nr. 17:
+
+- **Leihen nur im Fenster, immer bis zum Saisonende.** Gehaltsanteil nach Bereitschaft des Leihvereins (100, 50 oder 0 %), Einsatzgarantie mit Meldung, Rückruf im Winter, Kaufoption.
+- **Ausleihen nur von Reservisten,** die bei dir mindestens Rotation wären. Du zahlst das Gehalt, eine Leihgebühr gibt es nicht.
+- **Profis bis 23 in die Zweite:** Vertrag und Gehalt bleiben, mit 24 automatisch zurück.
+- **Medizincheck:** 5.000 € je Kauf, bei Befund 10 bis 30 % weniger Ablöse und ein zweiter Klick.

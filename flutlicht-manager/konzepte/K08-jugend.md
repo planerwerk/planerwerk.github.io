@@ -154,6 +154,9 @@ Saisonende: 18 Teams, Hin- und Rückspiel, Gegner um den Ligaschnitt (Streuung 2
 
 ### 5.5 Leihe für Spielpraxis
 
+**Gebaut in U10d (18. November 2026, `js/leihe.js`, Test `tests/leihe.js`), vorläufig:** Leihen nur im Transferfenster und immer bis zum Saisonende. Verleihen an Vereine mit Bedarf; sie übernehmen 100 % des Gehalts, wenn der Spieler um mehr als 2 besser ist als ihre Kaderstärke, 50 % bei ±2, sonst nichts. Vereinbart werden Einsatz (Stammspieler 60 %, Rotation 30 % der Minuten, Meldung ab der achten Woche, wenn es nicht passt), Rückruf im Winterfenster und eine Kaufoption, die der Leihverein zum Saisonende zieht, wenn sie unter seinem Vereinswert liegt. Ausleihen geht bei Spielern, die bei ihrem Verein Ergänzung, Talent, Rotation oder Pokalspieler sind und bei dir mindestens Rotation wären; du zahlst das ganze Gehalt. Nicht gebaut: Leihgebühr, Kaufpflicht, Liga als Bedingung, Beziehung zum Leihverein (K17), Leihmanager (K16), Leihen der Computer-Vereine untereinander (U11).
+
+
 - Leihvertrag (K19) mit Regeln: **Mindest-Spielzeit** (Rolle beim Leihverein), **Liga**, **Rückruf** im Winter ja oder nein.
 - Entwicklung beim Leihverein nach K03 mit seiner Spielpraxis und dem Trainingsfaktor des Leihvereins (dessen Stab, K16).
 - Hält der Leihverein die Spielzeit nicht ein: Meldung, Rückruf möglich (wenn vereinbart), Beziehung zum Verein − (K17).
@@ -276,7 +279,7 @@ jugend:{
 26. **Oberliga als Boden:** Die Zweite steigt nicht in die Verbandsliga ab, weil es sie im Spiel nicht gibt. Nach einem Abstieg aus der Regionalliga heißt ihre Liga „Oberliga“, außer der Verein hat einen echten Oberliga-Namen in den Daten.
 27. **Verkauf nur ab Stärke 59:** Ohne diese Schwelle hätte fast jeder Amateur über 200.000 € gebracht (ein 23-Jähriger mit Stärke 40 rund 210.000 €), und jeden Sommer kämen 22 kostenlose Neue nach. Der Marktwert im unteren Bereich ist für K23 zu prüfen.
 28. **Kein Geld mit 24:** Amateurverträge laufen aus. Die Ausbildungsentschädigung der FIFA hängt am ersten Profivertrag, gezählt wird die Ausbildung zwischen 12 und 23 Jahren (laut Suchergebnissen, den Wortlaut von Anhang 4 des FIFA-Reglements habe ich nicht gelesen). Vorläufig bringt ein Abgang mit 24 deshalb nichts.
-29. **Profis in die Zweite abstellen** (Spielpraxis für Ergänzungsspieler bis 23) ist nicht gebaut. Es braucht dieselben Aufräumarbeiten wie die Leihe (Kabine, Zusagen, Vertrag, Gehalt) und kommt mit U10.
+29. **Profis in die Zweite abstellen** (gebaut in U10d, 18.11.): Spieler bis 23 behalten Vertrag und Gehalt (das du weiter zahlst), bekommen in der Zweiten Spielpraxis und kehren mit „Aufrücken“ oder automatisch mit 24 zurück. Zusagen an sie werden hinfällig, Lernziel und Umschulung entfallen. Bei Hoffenheim und Stuttgart gehen sie zum Verein in der 3. Liga.
 30. **Wertung über die Saison statt Spieltage:** Platz und Punkte erscheinen erst am Saisonende (Nachricht und Saisonbilanz). Eine Tabelle der Regionalliga mit echten Gegnern gibt es nicht.
 31. **Lizenz (K36):** zwei neue Bereiche, `zweite` (Budget) und `zweitekader` (Wechsel aus der Jugend, Aufrücken, Verkauf), beide B-Lizenz mit Automatik.
 

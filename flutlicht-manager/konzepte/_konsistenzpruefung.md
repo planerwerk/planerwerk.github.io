@@ -874,3 +874,17 @@ Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `
 | BE6 | **K36:** neuer Bereich `berater` (B-Lizenz), 44 Bereiche. | ✅ |
 | BE7 | **K33, K23:** neues Feld `ber`, am Spieler `vvW`, neue Ausgaben „Beraterprovision“ und „Kontaktpflege“. | ✅ K33, 📌 K23 |
 | BE8 | **Alle Tests nach U10c:** grün sind `berater`, `vertraege`, `transfers`, `zweite`, `jugend`, `schwierigkeit`, `spielermodell`, `live`, `sommer`, `testspiele`, `training`, `taktik`, `disziplin`, `scouting`, `wettbewerbe`, `stab`, `kabine`, `zufall`, `ausland`, `lizenz` und einzeln `ui-zwei-saisons`, `fuzz-karrieren`, `live-neuladen`, `ui-lernstufen`, `seed`. `medizin` und `kalibrierung` geben dieselben Werte wie nach U10b (die Berater ändern die Welt nicht), `akzeptanz` wie bekannt (Abwehr, Verhältnis, Tempo 4,31 ms). | ✅ |
+
+---
+
+## BF. Nachtrag zu U10d Leihe, Profis in der Zweiten, Medizincheck (18. November 2026)
+
+| # | Befund | Status |
+|---|---|---|
+| BF1 | **K08 §5.5 (Leihvertrag mit Liga, Mindestspielzeit, Rückruf) gegen K19 §3 (Dauer, Gehaltsanteil, Kaufoption oder -pflicht):** Gebaut ist die Schnittmenge: Gehaltsanteil, Einsatz als Stammspieler oder Rotation, Rückruf im Winter, Kaufoption. Dauer immer bis zum Saisonende. Liga als Bedingung, Kaufpflicht und Leihgebühr fehlen. | ✅ vorläufig, K08 §5.5 |
+| BF2 | **Gehalt bei Leihen:** Der Vertrag bleibt beim abgebenden Verein, der Leihverein übernimmt einen Anteil. Computer-Vereine haben Einnahmen nach Formel (AX4), ihr Anteil kostet sie also nichts. Für dich zählt nur dein Rest. | ✅, 📌 K23 |
+| BF3 | **Profis in der Zweiten (K08 §12 Nr. 29):** Sie verlassen den Profikader (Aufstellung, Kabine, Angebote), behalten aber Vertrag und Gehalt. Freundschaften bleiben bestehen, Zusagen werden hinfällig. Ihr Vertrag läuft in der Zweiten weiter und kann dort enden. | ✅ vorläufig |
+| BF4 | **K19 §5.5 Medizincheck:** Befund und Abschlag sind je Spieler fest (kein neuer Zufall). Die Leistungsklausel als zweite Wahl fehlt, ebenso eine genauere Diagnose (K10). Die Kosten fallen beim ersten Prüfen an, auch wenn der Kauf danach platzt. | ✅ vorläufig |
+| BF5 | **Bestehende Tests:** Käufe in `tests/transfers.js`, `tests/vertraege.js` und `tests/ausland.js` klicken bei einem Befund ein zweites Mal. | ✅ |
+| BF6 | **K16 Leihmanager, K17 Beziehung zum Leihverein, K31 Leihen unter Computer-Vereinen** fehlen. | 📌 K16, U11, U12 |
+| BF7 | **K36:** neuer Bereich `leihe` (B-Lizenz), 45 Bereiche. **K33:** Felder `leihe`, `zwP`, `verh.mc`, neue Datei `js/leihe.js`. | ✅ |
