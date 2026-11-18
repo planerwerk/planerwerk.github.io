@@ -8,7 +8,7 @@
 const vtFrac=x=>x-Math.floor(x);
 function gehaltForderung(p,neu){const F=RVT.forderung,a=(F.alter.find(x=>p.age<=x[0])||[0,1])[1];
   let f=salaryFor(p.str)*a*(p.age<=F.talentBis&&sternZahl(p)>=F.talentSterne?F.talent:1)*(hatEig(p,'soeldner')?F.soeldner:hatEig(p,'vereinstreu')?F.treu:1)*(F.zufall[0]+(p.seed||0.5)*F.zufall[1]);
-  f*=neu?F.wechsel:vertragsAufschlag(p);return Math.round(f/1000)*1000;}
+  f*=(neu?F.wechsel:vertragsAufschlag(p))*beraterFaktor(p);return Math.round(f/1000)*1000;} // Berater: Profil und Beziehung (K22, U10c)
 // Schwelle des Spielers: seine Forderung, je Spieler fest um bis zu ±3 % verschoben. Du siehst nur die Zone.
 const vtSchwelle=(p,F)=>F*(1+(vtFrac((p.seed||0.5)*7)-0.5)*2*RVT.zone);
 const vtZone=F=>[Math.round(F*(1-RVT.zone)/10000)*10000,Math.round(F*(1+RVT.zone)/10000)*10000];
@@ -24,7 +24,7 @@ function wechselInteresse(p){const t=myT(),I=RM.interesse,IV=RVT.interesse,IA=RW
   if(from&&!aus){if(p.st!=null)x+=(IV.lageMitte-p.st)*IV.lage;if(p.ww>=3)x+=IV.wechselwunsch;x+=Math.max(0,(p.ct||1)-1)*IV.bindung;}
   if(from&&hatEig(p,'vereinstreu'))x+=IV.treu;
   if(p.nat)x+=Math.min(IV.landsleuteMax,squad(S.my).filter(q=>q.nat===p.nat).length*IV.landsleute)*(p.nat===RW.nation.heimat?0:1);
-  return x;}
+  return x+beraterInteresse(p);} // ab +60 rät sein Berater ihm zu dir (K22)
 // Fehlt etwas Interesse (bis −10), will er mehr Geld: je Punkt 3 % mehr. Darunter hilft kein Geld.
 function gehaltMitInteresse(p,interesse){const F=gehaltForderung(p,true),IV=RVT.interesse;if(interesse>=0)return F;if(interesse<IV.geldAb)return null;return Math.round(F*(1-interesse*IV.geldJePunkt)/1000)*1000;}
 
@@ -50,9 +50,9 @@ const vtVon=p=>{const v=S.vt&&S.vt[p.id];return v&&v.team===p.team?v:null;};
 function vertragRunde(p,tid,o,F){const V=RVT,v=vtVerhandlung(p),eigen=p.team===tid;S.vtGespr=S.vtGespr||{};S.vtGespr[p.id]=S.tag;
   if(v.pause>S.tag)return{text:`${p.n} will bis ${datumKurz(v.pause)} nicht über einen Vertrag reden.`};
   const maxCt=p.age<18?V.laufzeit.maxU18:V.laufzeit.max;if(!(o.ct>=1&&o.ct<=maxCt))return{text:`Laufzeit 1 bis ${maxCt} Jahre.`};
-  const w=paketWert(p,tid,o,F),sch=vtSchwelle(p,F);if(w>=sch){if(S.vt)delete S.vt[p.id];return{ok:true};}
+  const w=paketWert(p,tid,o,F),sch=vtSchwelle(p,F);if(w>=sch){const runden=v.r;if(S.vt)delete S.vt[p.id];return{ok:true,runden};}
   v.r++;if(eigen)stimmungAendern(p,V.rundeStimmung);
-  if(v.r>=V.runden){v.pause=S.tag+V.vertagtTage;v.r=0;return{text:`${p.n} lehnt ab. Nach ${V.runden} Runden ist das Gespräch bis ${datumKurz(v.pause)} vertagt.`};}
+  if(v.r>=V.runden){v.pause=S.tag+V.vertagtTage;v.r=0;beraterBeziehung(p,RBE.beziehung.hart);return{text:`${p.n} lehnt ab. Nach ${V.runden} Runden ist das Gespräch bis ${datumKurz(v.pause)} vertagt.`};}
   return{text:`${p.n} lehnt ab (Runde ${v.r} von ${V.runden}). Ihm fehlen etwa ${fmt(Math.max(10000,Math.round((sch-w)/10000)*10000))} pro Jahr.`};}
 // Paket aus dem Formular der Spielerkarte. Leere Felder: Gehalt = obere Kante der Zone, Handgeld bei Vereinslosen wie bisher (halbes Jahresgehalt), sonst 0.
 // Prämien und Klauseln zählen nur ab der A-Lizenz (K36, Bereich praemien).
@@ -90,7 +90,8 @@ function vertraegeWoche(d){const V=RVT,t=myT();
     p.team=b.id;p.list=0;p.ct=riA(RM.neuerVertrag);p.seit=absTag(d);p.abl=betrag;neuzugang(p,b.id);news(`Ausstiegsklausel gezogen: ${b.name} zahlt ${fmt(betrag)} für ${p.n}. Er wechselt sofort.`,'bad');});
   // Vorvertrag woanders: im letzten halben Jahr, wenn du seit acht Wochen nicht mit ihm über einen Vertrag geredet hast (ohne Vorwarnung, K21 §4.3)
   if(vorvertragZeit(d)&&!autoB('vertraege'))squad(S.my).filter(p=>p.ct===1&&!p.wech&&!(S.vtGespr&&S.vtGespr[p.id]>=d-V.gespraechTage)).forEach(p=>{
-    const B=S.teams.filter(b=>b.id!==S.my&&aktiv(b)&&b.rep>=t.rep-V.vorvertrag.ansehenMinus&&hatBedarf(b,p));if(!B.length||R()>=V.vorvertrag.chance)return;const b=pick(B);
+    const B=S.teams.filter(b=>b.id!==S.my&&aktiv(b)&&b.rep>=t.rep-V.vorvertrag.ansehenMinus&&hatBedarf(b,p));if(!B.length||R()>=V.vorvertrag.chance)return;const b=pick(B),ber=beraterVon(p);
+    if(ber&&ber.bz>=RBE.beziehung.warnAb&&p.vvW!==S.season){p.vvW=S.season;news(`Berater ${ber.n} warnt dich: ${b.name} will ${p.n} einen Vorvertrag geben. Rede mit ihm über eine Verlängerung.`,'offer');return;} // K22 §12 Nr. 5
     wechselVormerken(p,b.id,{ct:riA(RM.neuerVertrag),preis:0,ab:tageDerSaison()});S.offers=S.offers.filter(o=>o.pid!==p.id);news(`Vorvertrag: ${p.n} hat bei ${b.name} unterschrieben und geht im Sommer ablösefrei. Ihr hattet nicht über eine Verlängerung geredet.`,'bad');});}
 
 // ---------- Bankzeit (K14 §12): Vertragsjahr und teurer Neuzugang ----------

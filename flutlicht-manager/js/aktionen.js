@@ -44,7 +44,7 @@ function setListed(id,on){if(!darf('transfers','gespraechOderTransfer'))return;c
 function extend(id){if(!darf('vertraege','vertragOderStab'))return;const p=PIX.get(id),y=+(document.getElementById('ext')||{}).value||1;if(!p||p.team!==S.my)return;if(p.wech){toast('Er ist schon verkauft.');return;}
   if(verlaengertNicht(p)){toast(`${p.n} will nicht verlängern. Erst muss seine Stimmung besser werden.`);return;}
   const F=gehaltForderung(p,false),o=vtPaket(p,F,y,false),r=vertragRunde(p,S.my,o,F); // Verhandlung über das Paket (K21 §4.1, U10b)
-  if(!r.ok){toast(r.text);save();openP(id);render();return;}vtUnterschrift(p,o,false);news(`Vertrag verlängert: ${p.n} bis ${S.season+o.ct}, ${fmt(o.sal)} pro Jahr${o.vp||o.ak||o.lk?', mit Prämien oder Klauseln':''}.`,'good');save();openP(id);render();}
+  if(!r.ok){toast(r.text);save();openP(id);render();return;}vtUnterschrift(p,o,false);beraterAbschluss(p,o.sal,0,r.runden);news(`Vertrag verlängert: ${p.n} bis ${S.season+o.ct}, ${fmt(o.sal)} pro Jahr${o.vp||o.ak||o.lk?', mit Prämien oder Klauseln':''}.`,'good');save();openP(id);render();}
 const abfindung=p=>Math.round(p.sal*p.ct*RF.abfindung);
 function release(id){if(!darf('vertraege'))return;if((PIX.get(id)||{}).wech){toast('Er ist schon verkauft.');return;}const p=PIX.get(id),c=abfindung(p);money('Abfindungen',-c);kabineAbgang(p,S.my);vertragEnde(p);p.team=-1;p.list=0;S.offers=S.offers.filter(o=>o.pid!==id);news(`${p.n} wurde freigestellt (Abfindung ${fmt(c)}).`);save();closeOv();render();}
 function acceptOffer(i){if(!darf('transfers','gespraechOderTransfer'))return;verkaufAbschluss(S.offers[i]);save();render();}
@@ -63,16 +63,18 @@ function offer(id){{const q=PIX.get(id);if(!darf('transfers','gespraechOderTrans
       if(t.cash<fee+o.hg){msg.textContent='Dafür reicht dein Kontostand nicht.';return;}
       const r=kaufRunde(p,fee);if(!r.ok){msg.textContent=r.text;const fe=document.getElementById('fee');if(r.gegen&&fe)fe.value=(r.gegen/1e6).toFixed(2);save();return;}
       verhandlung(p).einig={fee,bis:S.tag+14};}}
-  if(t.cash<fee+o.hg){msg.textContent='Dafür reicht dein Kontostand nicht.';return;}
+  if(t.cash<fee+o.hg+beraterProvision(p,o.sal,fee)){msg.textContent='Dafür reicht dein Kontostand nicht (mit Provision für den Berater).';return;}
   // Schritt 2: Vertrag mit dem Spieler (K21 §4.1)
   const r2=vertragRunde(p,S.my,o,F);if(!r2.ok){msg.textContent=(fee?`Einigung mit ${from.name} über ${fmt(fee)} steht (bis ${datumKurz(verhandlung(p).einig.bis)}). `:'')+r2.text;save();return;}
-  if(fee){money('Transfers',-fee);if(!aus)from.cash+=fee;}if(S.verh)delete S.verh[p.id];if(o.hg)money('Handgelder',-o.hg);
+  if(fee){money('Transfers',-fee);if(!aus)from.cash+=fee;}if(S.verh)delete S.verh[p.id];if(o.hg)money('Handgelder',-o.hg);beraterAbschluss(p,o.sal,fee,r2.runden); // Provision und Beziehung (K22)
   if(from&&(vorv||!fensterOffen())){wechselVormerken(p,S.my,Object.assign({ct:o.ct,sal:o.sal,preis:fee,vp:o.vp,ak:o.ak,lk:o.lk},vorv?{ab:tageDerSaison()}:{}));S.offers=S.offers.filter(x=>x.pid!==id); // Wechsel zum nächsten Fenster (K19 §5.6) oder zum Sommer (Vorvertrag)
     news(vorv?`Vorvertrag: ${p.n} kommt im Sommer ablösefrei von ${from.name} (Gehalt ${fmt(o.sal)}/Jahr).`:`Einigung: ${p.n} kommt für ${fmt(fee)} von ${from.name} (Gehalt ${fmt(o.sal)}/Jahr). Er wechselt mit dem Transferfenster am ${datumKurz(p.wech.ab)}.`,'good');save();closeOv();render();toast(`Einigung mit ${p.n}`);return;}
   if(aus)ausDemAusland(p,S.my);else if(from)kabineAbgang(p,from.id);p.team=S.my;p.list=0;vtUnterschrift(p,Object.assign({},o,{hg:0}),true);p.abl=fee;S.offers=S.offers.filter(x=>x.pid!==id);neuzugang(p,S.my);versprechenKauf(p);
   news(`Neuzugang: ${p.n} kommt ${from?`für ${fmt(fee)} von ${from.name}${aus?` (${gruppenName(avGruppe(from))})`:''}`:'ablösefrei'} (Gehalt ${fmt(o.sal)}/Jahr, bis ${S.season+o.ct}).`,'good');save();closeOv();render();toast(`${p.n} unterschreibt!`);}
 // Prämien und Klauseln im Vertragsformular zeigen (K21, ab der A-Lizenz)
 function vertragDetails(id){if(!darf('praemien'))return;VT_DETAIL=1;openP(id);}
+// Berater einladen (K22 §12 Nr. 3): VIP-Loge oder Essen, einmal im Monat je Berater
+function beraterEinladen(id){if(!darf('berater'))return;toast(beraterEinladenLauf(id));save();render();}
 
 // Lernziel eines eigenen Spielers (K03 §5.6). Leer = der Co-Trainer entscheidet.
 // Lernziel setzen (K03 §5.6, K07): Sind alle Lernplätze belegt, gibt der Spieler mit dem geringsten Fortschritt unter den vom Co-Trainer gewählten seinen Platz ab.

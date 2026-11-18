@@ -252,6 +252,19 @@ const REGELN={
     vorvertrag:{von:'01-01',bis:'06-30',chance:0.06,ansehenMinus:5},
     bank:{vertragsjahr:1.5,soeldner:2,neuzugang:1.5,neuTage:365,teuerAnteil:0.25}},
 
+  // Berater (K22 §11, U10c): 60 erfundene Berater mit Profil und Einfluss (1–20). Etwa 60 % der Spieler haben einen, Stars (Stärke oder Talent ab 80) fast alle.
+  // Wer welchen Berater hat, folgt fest aus Seed und Spielernummer. Forderung nach Profil (gierig ×1,15 bis Familienberater ×0,95), Beziehung −2 % je 20 Punkte (höchstens ±10 %).
+  // Provision bei Unterschrift: 5–10 % des ersten Jahresgehalts, beim Wechsel 3–8 % der Ablöse, mit guter Beziehung bis zu 50 % weniger (U10c, damit sich Kontakte wie in K22 §10 lohnen). Beziehung: zügiger Abschluss (höchstens eine abgelehnte Runde) +5,
+  // drei abgelehnte Runden −5, einen wechselwilligen Mandanten verkaufen +8, Einladung +3 (einmal im Monat), jede Saison ein Viertel zurück Richtung null.
+  // Ab +40 Tipps zu unzufriedenen Mandanten (Kenntnis 50), ab +60 Angebote im Fenster vor allen anderen, ein Rat an den Spieler (+5 Interesse) und eine Warnung vor einem Vorvertrag.
+  berater:{anzahl:60,einfluss:[1,20],
+    profile:{gierig:{anteil:0.25,forderung:1.15},serioes:{anteil:0.35,forderung:1},verschwiegen:{anteil:0.15,forderung:1.05},strippenzieher:{anteil:0.1,forderung:1.1},familie:{anteil:0.15,forderung:0.95}},
+    anteilMit:0.58,anteilStars:0.92,starsAb:80,familieBis:23,
+    provision:{gehalt:[0.05,0.10],abloese:[0.03,0.08]},
+    beziehung:{je20:0.02,max:0.1,provJe20:0.1,provMax:0.5,tippsAb:40,erstzugriffAb:60,ratAb:60,interesse:5,warnAb:60,zuegig:5,zuegigBis:1,hart:-5,wunschVerkauf:8,verblassen:0.25},
+    tippChance:0.15,tippStimmung:45,tippKenntnis:50,angebotChance:0.1,angebotNiveau:3,
+    einladung:{kosten:5000,kostenLoge:2000,plus:3,tage:30}},
+
   // Training (K07 §11): Einheiten, Intensität, Vorlagen nach Abstand zum Spiel, Kondition und Entwicklung aus dem Wochenreiz, Belastung, Verletzungen, Umschulung
   training:{
     staerkeMin:25,staerkeMax:99,
@@ -637,6 +650,7 @@ const REGELN={
       zweitekader:{ab:3,name:'Zweite Mannschaft (Aufrücken, Wechsel aus der Jugend, Verkauf)',tab:'training',auto:1,wer:'der Verein',tut:'schickt brauchbare 19-Jährige in die Zweite und holt jeden Sommer höchstens einen, der fast so gut ist wie die Profis, hoch'},
       pate:{ab:4,name:'Paten für Talente',tab:'kader'},
       praemien:{ab:4,name:'Prämien und Klauseln in Verträgen',tab:'kader'},
+      berater:{ab:3,name:'Berater einladen',tab:'transfer'},
       ausland:{ab:3,name:'Im Ausland beobachten und kaufen',tab:'transfer'},
       kaderrollen:{ab:3,name:'Kaderrollen',tab:'kabine',auto:1,wer:'der Co-Trainer',tut:'verteilt die Rollen nach der besten Elf'},
       versprechen:{ab:3,name:'Zusagen und Teamevent',tab:'kabine'},
@@ -687,4 +701,4 @@ const REGELN={
 // Schreibschutz: Zur Laufzeit darf kein Code eine Regel ändern.
 (function frieren(o){Object.freeze(o);Object.values(o).forEach(v=>{if(v&&typeof v==='object'&&!Object.isFrozen(v))frieren(v);});})(REGELN);
 // Kurzformen für den Code
-const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui,RL=REGELN.live,RTA=REGELN.taktik,RSO=REGELN.sommer,RST=REGELN.stab,RD=REGELN.disziplin,RMD=REGELN.medizin,RWB=REGELN.wettbewerbe,RTS=REGELN.testspiele,RLA=REGELN.lager,RKA=REGELN.kabine,RGS=REGELN.gespraeche,RSC=REGELN.scouting,RLZ=REGELN.lizenz,RJ=REGELN.jugend,RZ=REGELN.zweite,RTR=REGELN.transfers,RVT=REGELN.vertraege;
+const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui,RL=REGELN.live,RTA=REGELN.taktik,RSO=REGELN.sommer,RST=REGELN.stab,RD=REGELN.disziplin,RMD=REGELN.medizin,RWB=REGELN.wettbewerbe,RTS=REGELN.testspiele,RLA=REGELN.lager,RKA=REGELN.kabine,RGS=REGELN.gespraeche,RSC=REGELN.scouting,RLZ=REGELN.lizenz,RJ=REGELN.jugend,RZ=REGELN.zweite,RTR=REGELN.transfers,RVT=REGELN.vertraege,RBE=REGELN.berater;
