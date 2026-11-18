@@ -1,6 +1,6 @@
 # K22 – Berater
 
-Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12.
+Status: **Entwurf**, **teilweise umgesetzt in U10c** (18. November 2026, `js/berater.js`, Test `tests/berater.js`, §12 Nr. 10 bis 18) (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12.
 Hängt ab von: K21 (Verträge), K17 (Beziehungen) · Wird gebraucht von: K19, K20, K29, K30.
 
 ## 1. Ziel und Spielgefühl
@@ -139,6 +139,18 @@ berater:{
 7. **Risiko großer Nähe:** Hat ein Berater fünf und mehr Mandanten in deinem Kader, entsteht ein Berater-Klüngel. Er drängt dir Pakete auf (Strippenzieher), seine Mandanten halten zusammen (Grüppchen, K14), die Presse spricht vom „Beraterverein“ (K29).
 8. **Bestechung und Schwarzgeld** sind kein Werkzeug für Beziehungen. Manipulation und Wettbetrug gibt es nur als sehr seltene Weltereignisse (K30 §8.4, entschieden 10.11.).
 9. **Computer-Vereine** bauen Beziehungen nach denselben Regeln auf. Große Vereine machen viele Geschäfte und haben so von selbst die besten Kontakte zu den großen Beratern (K02 §5.3a).
+
+**Vorläufig entschieden bei der Umsetzung (U10c, 18. November 2026):**
+
+10. **60 Berater**, Profile nach Anteil: gierig 25 %, seriös 35 %, verschwiegen 15 %, Strippenzieher 10 %, Familienberater 15 %. Einfluss 1 bis 20 bestimmt, wie viele Mandanten einer hat. Namen erfunden.
+11. **Mandanten ohne Zufall der Welt:** Ob und welchen Berater ein Spieler hat, folgt fest aus Seed und Spielernummer (Hash). So ändert sich die übrige Welt nicht. Gemessen: 62 % der Profis, 93 % der Stars (Stärke oder Talent ab 80). Familienberater nur bis 23 Jahre. Der Wechsel des Beraters (Ereignis) fehlt.
+12. **Forderung:** Profil mal Beziehung (−2 % je 20 Punkte, höchstens ±10 %), bei Verlängerung und Wechsel.
+13. **Provision** bei Unterschrift: 5–10 % des ersten Jahresgehalts, beim Wechsel 3–8 % der Ablöse. **Neu:** Gute Beziehung senkt auch die Provision (−10 % je 20 Punkte, höchstens −50 %), schlechte erhöht sie. Ohne das hätte eine Beziehung von +70 die Kosten eines Transfers nur um 2 % gesenkt (Ziel §10: 3–6 %), jetzt 3 %.
+14. **Beziehung gebaut:** zügiger Abschluss (höchstens eine abgelehnte Runde) +5, drei abgelehnte Runden −5, einen wechselwilligen Mandanten verkaufen +8, Einladung +3 einmal im Monat (5.000 €, mit VIP-Loge 2.000 €), jede Saison ein Viertel zurück Richtung null. **Nicht gebaut:** Mandanten gut behandeln, Chance für junge Mandanten, gebrochene Zusagen, Bank gegen die Rolle, Verkauf gegen den Willen, Abwerben (K20), großzügigere Provision, Sportdirektor (K16).
+15. **Wirkung gebaut:** Tipps ab +40 (Kenntnis 50 über einen unzufriedenen Mandanten, 15 % je Woche), Angebote ab +60 im Fenster (10 % je Woche), Rat an den Spieler ab +60 (+5 Interesse, „+10 %“ aus Nr. 5 als Punkte gelesen), Warnung vor einem Vorvertrag ab +60 (einmal je Saison und Spieler).
+16. **Nicht gebaut:** Antwort nach 1 bis 3 Tagen (Antworten kommen weiter sofort, wie in U10a), Gerüchte gieriger Berater (K29), früherer Wechselwunsch bei gierigen Beratern (K14), Pakete der Strippenzieher, emotionale Familienberater, Berater-Klüngel, Treffen am Verein vorbei (K20), Beziehungen der Computer-Vereine.
+17. **Lizenz (K36):** Einladen ab der B-Lizenz (Bereich `berater`, ohne Automatik). Forderung, Provision und Tipps wirken immer.
+18. **K23:** neue Ausgaben „Beraterprovision“ und „Kontaktpflege“.
 
 ## Quellen
 

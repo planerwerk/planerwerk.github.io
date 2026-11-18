@@ -107,6 +107,7 @@ Grundlage sind die Notizen in K10 §12 Nr. 14, K11 §12 Nr. 12, K13 §12 Nr. 13 
 | `jugendkader` | Aufrücken aus der Jugend und Verkauf aus der Jugend (U9c). Den Jugendkader ansehen ist immer frei | 3 B-Lizenz | Verein holt jeden Sommer die zwei Besten ab 17 in den Profikader | K08 §12 Nr. 9 |
 | `pate` | Einem Talent einen Mentor als Paten geben (U9c) | 4 A-Lizenz | kein Pate | K08 §5.2 |
 | `praemien` | Prämien und Klauseln in Vertragsangeboten (U10b) | 4 A-Lizenz | keine Prämien und Klauseln | K21 §12 Nr. 9, 19 |
+| `berater` | Berater einladen (U10c). Kontakte ansehen ist immer frei | 3 B-Lizenz | keine Einladungen | K22 §12 Nr. 17 |
 | `zweite` | Stufe des Budgets der zweiten Mannschaft (U9d) | 3 B-Lizenz | Verein hält die Startstufe nach Ansehen (ab 80 Stufe 4, sonst 3) | K08 §5.6, §12 Nr. 23 |
 | `zweitekader` | Jugendspieler in die Zweite schicken, aus der Zweiten aufrücken lassen, aus der Zweiten verkaufen (U9d). Die Zweite ansehen ist immer frei | 3 B-Lizenz | Verein schickt brauchbare 19-Jährige in die Zweite und holt je Sommer höchstens einen hoch, der fast so gut ist wie die Profis | K08 §5.6, §12 Nr. 31 |
 | `kaderrollen` | Kaderrollen festlegen (U8), seit U8d auch die Rolle „spielt im Pokal“ | 3 B-Lizenz | Co-Trainer verteilt die Rollen nach Stärke (K14 §7) | K14 §3.1 |
@@ -271,6 +272,7 @@ lizenz:{
 31. **U9c Jugend:** zwei neue Bereiche, `jugendkader` (B-Lizenz, mit Automatik) und `pate` (A-Lizenz, ohne). Das Gespräch „Druck nehmen“ hängt am Bereich `gespraeche` (C-Lizenz). Jugendkader, Jugendniveau, Belastungsregler und Prägungen sind als Information immer sichtbar. Damit sind es 40 Bereiche.
 32. **U9d Zweite Mannschaft:** zwei neue Bereiche, `zweite` (Budget) und `zweitekader` (Wechsel aus der Jugend, Aufrücken, Verkauf), beide B-Lizenz mit Automatik. Die Karte der Zweiten ist als Information immer sichtbar. Damit sind es 42 Bereiche.
 33. **U10a und U10b:** Verhandeln und Gegenforderung hängen an `transfers`, Verlängern mit Gehalt, Laufzeit und Handgeld an `vertraege`. Neu ist `praemien` (A-Lizenz, ohne Automatik) für Prämien und Klauseln: Darunter bleibt das Formular einfach. Damit sind es 43 Bereiche.
+34. **U10c Berater:** neuer Bereich `berater` (B-Lizenz, ohne Automatik) für die Einladung. Damit sind es 44 Bereiche.
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 

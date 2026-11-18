@@ -859,3 +859,18 @@ Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `
 | BD13 | **Beim Testlauf gefunden und behoben:** (1) Unterschrieb ein Spieler woanders einen Vorvertrag, blieb ein offenes Angebot für ihn stehen (`tests/fuzz-karrieren.js`, Datenprüfung). (2) Bei einem unzufriedenen Spieler fehlte das Laufzeitfeld, weil das ganze Formular ausgeblendet war (`tests/ui-zwei-saisons.js`). Das Feld steht jetzt immer da, „Verlängern“ meldet die Absage. (3) Ein Kommentar am Zeilenende im Browser-Test hatte den Rest der Zeile auskommentiert (wie AX12), vor dem Lauf bemerkt. | ✅ |
 | BD14 | **Alle Tests nach U10b:** grün sind `vertraege`, `transfers`, `zweite`, `jugend`, `schwierigkeit`, `spielermodell`, `live`, `sommer`, `taktik`, `testspiele`, `training`, `disziplin`, `scouting`, `wettbewerbe`, `stab`, `kabine`, `zufall`, `ausland`, `lizenz` und einzeln die Browser-Tests `ui-zwei-saisons`, `fuzz-karrieren`, `live-neuladen`, `ui-lernstufen`, `seed`. Bekannt rot: `kalibrierung` (BD11), `medizin` (BD10), `akzeptanz` (Abwehr +0,8, Verhältnis der Bereiche, Tempo 4,81 ms, wie vorher schwankend). | ✅ |
 | BD12 | **`tests/lizenz.js` „Kein Nachteil“:** jetzt +2,5 ± 2,5 Punkte für die Automatik (vorher −3,2 ± 3,4). Die Welt hat sich durch U10a und U10b verschoben. Das bestätigt BC: Die Streuung je Seed ist größer als jeder Unterschied der Regeln. | ✅ |
+
+---
+
+## BE. Nachtrag zu U10c Berater (18. November 2026)
+
+| # | Befund | Status |
+|---|---|---|
+| BE1 | **K22 §5 gegen §10:** Die Beziehung senkt laut §5 nur die Gehaltsforderung. Bei Ablöse, drei Jahresgehältern und Provision ergab das 2 % Ersparnis bei +70, das Ziel „3–6 %“ war mit der Regel nicht erreichbar. Gebaut: Die Beziehung senkt auch die Provision. | ✅ vorläufig, K22 §12 Nr. 13 |
+| BE2 | **K22 §3.2 (am Spieler `berater`) gegen „gleiche Welt“:** Eine gespeicherte Zuordnung hätte beim Aufbau Zufall gebraucht. Gebaut: Zuordnung aus Seed und Spielernummer per Hash, nichts gespeichert, kein Zufall verbraucht (geprüft in `tests/berater.js`). Folge: Ein Spieler wechselt nie den Berater. | ✅ vorläufig, 📌 Ereignis Berater-Wechsel (K30) |
+| BE3 | **K22 §4 Nr. 1 (Antwort nach 1–3 Tagen):** nicht gebaut, Verhandlungen bleiben sofort (wie BC7). | 📌 mit K20 |
+| BE4 | **K22 §12 Nr. 5 „Interesse +10 %“:** Das Interesse ist eine Punktzahl, nicht in Prozent. Gelesen als +5 Punkte. | ✅ vorläufig |
+| BE5 | **K14, K29, K20, K16:** gierige Berater und Wechselwunsch, Gerüchte, Abwerben über den Berater, Sportdirektor mit Netzwerk fehlen noch, ebenso Beziehungen der Computer-Vereine (K22 §12 Nr. 9). | 📌 mit ihren Konzepten |
+| BE6 | **K36:** neuer Bereich `berater` (B-Lizenz), 44 Bereiche. | ✅ |
+| BE7 | **K33, K23:** neues Feld `ber`, am Spieler `vvW`, neue Ausgaben „Beraterprovision“ und „Kontaktpflege“. | ✅ K33, 📌 K23 |
+| BE8 | **Alle Tests nach U10c:** grün sind `berater`, `vertraege`, `transfers`, `zweite`, `jugend`, `schwierigkeit`, `spielermodell`, `live`, `sommer`, `testspiele`, `training`, `taktik`, `disziplin`, `scouting`, `wettbewerbe`, `stab`, `kabine`, `zufall`, `ausland`, `lizenz` und einzeln `ui-zwei-saisons`, `fuzz-karrieren`, `live-neuladen`, `ui-lernstufen`, `seed`. `medizin` und `kalibrierung` geben dieselben Werte wie nach U10b (die Berater ändern die Welt nicht), `akzeptanz` wie bekannt (Abwehr, Verhältnis, Tempo 4,31 ms). | ✅ |

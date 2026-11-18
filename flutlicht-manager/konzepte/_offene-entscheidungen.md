@@ -571,3 +571,13 @@ Im Einzelnen in K21 §12 Nr. 10 bis 19, dazu K19 §12 Nr. 16 und K14 §12 Nr. 40
 - **Vorvertrag ab 1. Januar:** Ohne Gespräch in den letzten acht Wochen können eigene Spieler im letzten Jahr woanders unterschreiben. Fremde Spieler im letzten Jahr kommen ohne Ablöse zum Sommer. Die Sechs-Monats-Regel stammt aus dem Gedächtnis.
 - **Ausstiegsklausel** ziehen nur Vereine mit mindestens deinem Ansehen, nur im Fenster.
 - **Prämien und Klauseln** erst ab der A-Lizenz.
+
+## K22 Berater, umgesetzt in U10c (18.11.), vorläufig von mir
+
+Im Einzelnen in K22 §12 Nr. 10 bis 18:
+
+- **60 erfundene Berater** mit fünf Profilen. Wer welchen Berater hat, steht fest (aus Seed und Spielernummer), etwa 60 % der Profis und über 90 % der Stars.
+- **Gute Beziehung senkt Forderung und Provision.** Die Provision kam dazu, weil sich Kontakte sonst kaum gelohnt hätten (2 % statt 3–6 % je Transfer).
+- **Beziehung** durch zügige Abschlüsse, Verkauf wechselwilliger Mandanten und Einladungen (einmal im Monat), schlechter durch harte Verhandlungen, jede Saison verblasst ein Viertel.
+- **Ab +40 Tipps, ab +60 Angebote, Rat an den Spieler und Warnung vor Vorverträgen.**
+- **Noch nicht:** Gerüchte, Pakete, Familien-Emotionen, Abwerben, Beziehungen der Computer-Vereine, Antwort mit Verzögerung.
