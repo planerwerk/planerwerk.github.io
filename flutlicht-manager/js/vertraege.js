@@ -91,7 +91,7 @@ function vertraegeWoche(d){const V=RVT,t=myT();
   // Vorvertrag woanders: im letzten halben Jahr, wenn du seit acht Wochen nicht mit ihm über einen Vertrag geredet hast (ohne Vorwarnung, K21 §4.3)
   if(vorvertragZeit(d)&&!autoB('vertraege'))squad(S.my).filter(p=>p.ct===1&&!p.wech&&!(S.vtGespr&&S.vtGespr[p.id]>=d-V.gespraechTage)).forEach(p=>{
     const B=S.teams.filter(b=>b.id!==S.my&&aktiv(b)&&b.rep>=t.rep-V.vorvertrag.ansehenMinus&&hatBedarf(b,p));if(!B.length||R()>=V.vorvertrag.chance)return;const b=pick(B);
-    wechselVormerken(p,b.id,{ct:riA(RM.neuerVertrag),preis:0,ab:tageDerSaison()});news(`Vorvertrag: ${p.n} hat bei ${b.name} unterschrieben und geht im Sommer ablösefrei. Ihr hattet nicht über eine Verlängerung geredet.`,'bad');});}
+    wechselVormerken(p,b.id,{ct:riA(RM.neuerVertrag),preis:0,ab:tageDerSaison()});S.offers=S.offers.filter(o=>o.pid!==p.id);news(`Vorvertrag: ${p.n} hat bei ${b.name} unterschrieben und geht im Sommer ablösefrei. Ihr hattet nicht über eine Verlängerung geredet.`,'bad');});}
 
 // ---------- Bankzeit (K14 §12): Vertragsjahr und teurer Neuzugang ----------
 // Faktor auf das Tempo, mit dem ein Bankplatz die Einsatzerwartung senkt. Wer woanders unterschrieben hat, erwartet nichts mehr (siehe bankFall).
