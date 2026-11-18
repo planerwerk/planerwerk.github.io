@@ -560,3 +560,14 @@ Im Einzelnen in K19 §12 Nr. 5 bis 15:
 - **Vereinswert** ohne Beziehung und ohne Scouting-Schätzung (kommt mit U11, U12). Der Marktwert bleibt ohne Restlaufzeit.
 - **Bedarf** statt Kaderplanung: Computer-Vereine bieten nur, wenn dein Spieler mindestens so gut ist wie ihr schwächster Stammspieler auf der Position.
 - **Antworten sofort,** Geduld für zwei Spottangebote, höchstens vier Runden beim Kauf und drei beim Verkauf, vier Wochen Pause nach einem Abbruch.
+
+## K21 Verträge, umgesetzt in U10b (18.11.), vorläufig von mir
+
+Im Einzelnen in K21 §12 Nr. 10 bis 19, dazu K19 §12 Nr. 16 und K14 §12 Nr. 40:
+
+- **Kein Liga-Faktor** in der Gehaltsforderung, weil die Kurve nach Stärke die 2. Liga schon günstiger macht.
+- **Gebaut:** Handgeld, Auflauf-, Punkt-, Tor- und Zu-Null-Prämie, Ausstiegsklausel, Ligaklausel (Kürzung bei Abstieg). Noch nicht: Erfolgsprämien für Aufstieg, Klassenerhalt und Titel, Treueprämie, Teamprämien, Zielvorgaben, Gehaltsgefüge.
+- **Annahmezone ±3 %,** drei Runden, je Absage −2 Stimmung, dann vier Wochen Pause. Leere Felder sind die obere Kante der Zone.
+- **Vorvertrag ab 1. Januar:** Ohne Gespräch in den letzten acht Wochen können eigene Spieler im letzten Jahr woanders unterschreiben. Fremde Spieler im letzten Jahr kommen ohne Ablöse zum Sommer. Die Sechs-Monats-Regel stammt aus dem Gedächtnis.
+- **Ausstiegsklausel** ziehen nur Vereine mit mindestens deinem Ansehen, nur im Fenster.
+- **Prämien und Klauseln** erst ab der A-Lizenz.

@@ -1,6 +1,6 @@
 # K21 – Verträge und Gehälter
 
-Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache, **ergänzt am 10. November 2026** um Punkt-, Auflauf-, Aufstiegs- und Klassenerhaltsprämien, Ligaklausel und Verhandlung nach Charakter (deine Entscheidung: echte Vertragsverhandlungen mit Prämien). Vorläufige Entscheidungen stehen in Abschnitt 12.
+Status: **Entwurf**, **teilweise umgesetzt in U10b** (18. November 2026, §12 Nr. 10 bis 19) (7. November 2026), geschrieben ohne Rücksprache, **ergänzt am 10. November 2026** um Punkt-, Auflauf-, Aufstiegs- und Klassenerhaltsprämien, Ligaklausel und Verhandlung nach Charakter (deine Entscheidung: echte Vertragsverhandlungen mit Prämien). Vorläufige Entscheidungen stehen in Abschnitt 12.
 **Stand im Spiel (10.11.):** noch keine Verhandlung. Es gibt nur Laufzeit und Grundgehalt, eine feste Forderung mit dem Knopf „Verlängern“ (seit U8 teurer bei schlechter Stimmung, unter 25 gar nicht) und Handgeld für Vereinslose. Gebaut wird das Konzept mit U10.
 Hängt ab von: K14 (Stimmung, Rollen), K15 (Gespräche), K28 (Gehaltsrahmen) · Wird gebraucht von: K19, K20, K22, K23, K31.
 
@@ -199,6 +199,19 @@ vertraege:{
 7. **Prämien nach Erwartungswert mit Abschlag nach Sicherheitsbedürfnis,** Wichtigkeit der Vertragsteile nach Charakter (5.1a).
 8. **Bei Schonung zahlt der Verein die Punktprämie** nur, wenn das im Vertrag steht. Der Spieler kann es fordern.
 9. **Lernstufen (K36):** Verlängern mit Laufzeit und Grundgehalt ab der B-Lizenz, Prämien und Klauseln ab der A-Lizenz. Bis dahin verhandelt der Verein nach den Regeln der Computer-Vereine.
+
+**Vorläufig entschieden bei der Umsetzung (U10b, 18. November 2026, `js/vertraege.js`, Test `tests/vertraege.js`):**
+
+10. **Kein Liga-Faktor in der Forderung:** Die Gehaltskurve nach Stärke gibt der 2. Liga schon etwa 40 % der Bundesliga (Stärke 68 gegen 77: rund 0,5 gegen 1,2 Mio €). Ein zusätzlicher Faktor 0,45 hätte doppelt gezählt.
+11. **Gehalt und Laufzeit bleiben in `p.sal` und `p.ct`.** Neu am Spieler: `vp` (Prämien), `ak` (Ausstiegsklausel), `lk` (Ligaklausel als Kürzung bei Abstieg), `seit`, `abl`. Das Objekt `vertrag` aus §3.1 ist nicht gebaut, damit alte Spielstände und alle übrigen Stellen weiterlaufen.
+12. **Gebaut sind:** Handgeld bei jeder Unterschrift, Auflauf-, Punkt-, Tor- und Zu-Null-Prämie, Ausstiegsklausel, Ligaklausel (nur Kürzung bei Abstieg). **Nicht gebaut:** Vorlagenprämie (die Engine zählt keine Vorlagen), Aufstiegs-, Klassenerhalts-, Titel- und Treueprämie, Teamprämien (K12b), Abstiegsklausel mit Ausstiegsrecht, Verlängerungsoption, versprochene Rolle als Klausel (es gibt die Zusage im Gespräch, K15), Zielvorgabe, Gehaltsgefüge (§5.3), Berater (U10c).
+13. **Annahme:** Wert des Pakets je Jahr gegen eine Schwelle, die je Spieler fest um bis zu ±3 % um die Forderung liegt. Du siehst die Zone und nach einer Absage, wie viel ungefähr fehlt. Leere Felder füllt das Spiel mit der oberen Kante der Zone, dann sagt er sicher zu.
+14. **Erwartete Einsätze für die Prämien:** beim eigenen Verein seine Einsatzerwartung (K14), beim Wechsel nach seinem Rang auf der Position (Stammspieler 85 %, Rotation 45 %, sonst 15 %). Punkte je Spiel fest 1,4, Torquote nach Position (Sturm 0,35, Mittelfeld 0,12, Abwehr 0,04), Zu-Null in einem Viertel der Spiele. Sicherheit 0,6 + 0,02 × Druckresistenz.
+15. **Klauseln als Tausch:** Ausstiegsklausel bis 1,5 × Marktwert spart 10 % Gehalt, bis 3 × 5 %. Ligaklausel kostet 5 % je 30 % Kürzung. Laufzeitwunsch: bis 23 je Jahr über drei 3 % mehr, ab 30 je Jahr unter drei 5 % mehr.
+16. **Ausstiegsklausel ziehen:** nur im Fenster, nur Vereine mit mindestens deinem Ansehen, Bedarf, genug Geld und einem Vereinswert über dem Betrag, je Woche 25 %. Der Spieler geht sofort, ohne weitere Zustimmung.
+17. **Vorvertrag** ab 1. Januar im letzten Vertragsjahr (sechs Monate, FIFA-Regel aus dem Gedächtnis, den Wortlaut von Art. 18 des Reglements habe ich nicht gelesen). Eigene Spieler: Hast du acht Wochen lang nicht mit ihm über einen Vertrag geredet (jedes Angebot zählt als Gespräch), unterschreibt er mit 6 % je Woche bei einem Verein mit Bedarf und mindestens deinem Ansehen minus 5 und geht im Sommer ablösefrei. Führt der Verein die Verträge (K36), passiert das nicht. Fremde Spieler im letzten Jahr kommen ab 1. Januar ohne Ablöse zum Sommer. Computer-Vereine schließen untereinander keine Vorverträge (U11).
+18. **Kauf in zwei Schritten mit einem Klick:** erst die Ablöse mit dem Verein (U10a), dann der Vertrag mit dem Spieler. Lehnt er ab, bleibt die Einigung mit dem Verein 14 Tage stehen. Bezahlt wird erst bei seiner Unterschrift.
+19. **Lizenz (K36):** Verlängern und Kaufen mit Gehalt, Laufzeit und Handgeld wie bisher (`vertraege` B, `transfers` C), Prämien und Klauseln im neuen Bereich `praemien` ab der A-Lizenz, ohne Automatik.
 
 **Noch zu recherchieren:** Vorvertrags-Regel sechs Monate (FIFA-Text), mögliche FIFA-Änderungen ab 2027, Zahl ablösefreier Wechsel je Liga.
 
