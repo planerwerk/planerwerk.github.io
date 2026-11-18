@@ -265,6 +265,16 @@ const REGELN={
     tippChance:0.15,tippStimmung:45,tippKenntnis:50,angebotChance:0.1,angebotNiveau:3,
     einladung:{kosten:5000,kostenLoge:2000,plus:3,tage:30}},
 
+  // Leihe, Profis in der Zweiten, Medizincheck (K08 §5.5, §12 Nr. 29, K19 §4.3, §5.5, U10d). Leihen nur im Fenster, bis zum Saisonende, Rückkehr am 1. Juli.
+  // Verleihen: Ein Verein mit Bedarf nimmt ihn, wenn er höchstens so viel Gehalt zahlen soll, wie er bereit ist (100 %, wenn der Spieler um mehr als 2 besser ist als seine Kaderstärke,
+  // 50 % bei ±2, sonst 0 %). Einsatzgarantie: Stammspieler 60 %, Rotation 30 % der Minuten, geprüft ab der achten Woche. Kaufoption: Der Leihverein zieht sie, wenn sie unter seinem Vereinswert liegt.
+  // Ausleihen: nur Spieler, die bei ihrem Verein nicht Stamm- oder Schlüsselspieler sind und bei dir mindestens Rotation wären. Du zahlst das ganze Gehalt.
+  // In die Zweite: Profis bis 23 behalten Vertrag und Gehalt und bekommen Spielpraxis. Mit 24 kommen sie zurück.
+  // Medizincheck: 5.000 € je Kauf. Befund bei einer Verletzung, mehr als 60 Ausfalltagen in zwölf Monaten oder „verletzungsanfällig“: Ablöse 10 bis 30 % niedriger, zweiter Klick zum Abschluss.
+  leihe:{zahlBereit:{besser:1,gleich:0.5,schlechter:0,spanne:2},anteile:[0,0.5,1],garantie:{stamm:0.6,rotation:0.3},pruefAbWochen:8,
+    holenRollen:['ergaenzung','talent','rotation','pokal'],zweiteBis:23,
+    medizin:{kosten:5000,abTagen:60,tage:365,abschlag:[0.1,0.3]}},
+
   // Training (K07 §11): Einheiten, Intensität, Vorlagen nach Abstand zum Spiel, Kondition und Entwicklung aus dem Wochenreiz, Belastung, Verletzungen, Umschulung
   training:{
     staerkeMin:25,staerkeMax:99,
@@ -651,6 +661,7 @@ const REGELN={
       pate:{ab:4,name:'Paten für Talente',tab:'kader'},
       praemien:{ab:4,name:'Prämien und Klauseln in Verträgen',tab:'kader'},
       berater:{ab:3,name:'Berater einladen',tab:'transfer'},
+      leihe:{ab:3,name:'Leihen (abgeben, holen, zurückholen)',tab:'kader'},
       ausland:{ab:3,name:'Im Ausland beobachten und kaufen',tab:'transfer'},
       kaderrollen:{ab:3,name:'Kaderrollen',tab:'kabine',auto:1,wer:'der Co-Trainer',tut:'verteilt die Rollen nach der besten Elf'},
       versprechen:{ab:3,name:'Zusagen und Teamevent',tab:'kabine'},
@@ -701,4 +712,4 @@ const REGELN={
 // Schreibschutz: Zur Laufzeit darf kein Code eine Regel ändern.
 (function frieren(o){Object.freeze(o);Object.values(o).forEach(v=>{if(v&&typeof v==='object'&&!Object.isFrozen(v))frieren(v);});})(REGELN);
 // Kurzformen für den Code
-const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui,RL=REGELN.live,RTA=REGELN.taktik,RSO=REGELN.sommer,RST=REGELN.stab,RD=REGELN.disziplin,RMD=REGELN.medizin,RWB=REGELN.wettbewerbe,RTS=REGELN.testspiele,RLA=REGELN.lager,RKA=REGELN.kabine,RGS=REGELN.gespraeche,RSC=REGELN.scouting,RLZ=REGELN.lizenz,RJ=REGELN.jugend,RZ=REGELN.zweite,RTR=REGELN.transfers,RVT=REGELN.vertraege,RBE=REGELN.berater;
+const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui,RL=REGELN.live,RTA=REGELN.taktik,RSO=REGELN.sommer,RST=REGELN.stab,RD=REGELN.disziplin,RMD=REGELN.medizin,RWB=REGELN.wettbewerbe,RTS=REGELN.testspiele,RLA=REGELN.lager,RKA=REGELN.kabine,RGS=REGELN.gespraeche,RSC=REGELN.scouting,RLZ=REGELN.lizenz,RJ=REGELN.jugend,RZ=REGELN.zweite,RTR=REGELN.transfers,RVT=REGELN.vertraege,RBE=REGELN.berater,RLE=REGELN.leihe;

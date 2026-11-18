@@ -94,8 +94,8 @@ function zweiteInDieDritte(e){const N=RZ.aufruecken;S.zw.forEach(p=>{p.age++;eig
   const n=S.zw.length;S.zw=[];S.zwSt=[0,0];rollenBerechnen(e.id);news(`${e.name} steigt in die 3. Liga auf. Die ${n} Spieler der Zweiten spielen dort als eigener Verein weiter.`,'good');}
 // In den Profikader: aus dem Amateurkader mit Profivertrag (drei Jahre, halbes Gehalt), aus der simulierten Zweiten mit dem bestehenden Vertrag
 function zweiteHoch(p){const N=RZ.aufruecken,sim=zweiteSim();
-  if(istZweite(p)){S.zw=S.zw.filter(x=>x!==p);p.ct=N.vertrag;p.sal=Math.round(salaryFor(p.str)*N.gehalt/1000)*1000;p.ppk=p.ppk||0;S.pl.push(p);}
-  else if(sim&&p.team===sim.id){delete p.kr;}else return null;
+  if(istZweite(p)){S.zw=S.zw.filter(x=>x!==p);if(!p.zwP){p.ct=N.vertrag;p.sal=Math.round(salaryFor(p.str)*N.gehalt/1000)*1000;}p.ppk=p.ppk||0;S.pl.push(p);} // abgestellte Profis behalten ihren Vertrag (U10d)
+  else if(sim&&p.team===sim.id){delete p.kr;}else return null;delete p.zwP;
   p.team=S.my;p.list=0;p.wiv=0;delete p.trf;delete p.ent;PIX.set(p.id,p);kabineInit(p);rollenBerechnen(S.my);if(sim)rollenBerechnen(sim.id);p.ea=erwartungEinsatz(p);return p;}
 // Aus der Jugend in die Zweite (ab 17): in den Amateurkader oder mit kleinem Vertrag zur simulierten Zweiten in der 3. Liga
 function zweiteAufnehmen(p){if(!istJugend(p)||!hatZweite())return null;const sim=zweiteSim(),J=RZ.ausJugend;S.jg=S.jg.filter(x=>x!==p);p.zwJ=1;delete p.trf;
@@ -119,14 +119,17 @@ function zweiteSaison(){if(!hatZweite())return;const e=zweiteEintrag();
   if(dritt&&neu<5){neu=5;txt.push(`Die Zweite eines Drittligisten darf nicht in der Regionalliga spielen: Sie muss in die ${zweiteLigaName(5)}.`);}
   S.zwL=neu;S.zwSt=[0,0];
   l.forEach(p=>{p.age++;eigenschaftenNeu(p);});
-  const weg=l.filter(p=>p.age>RZ.kader.bisAlter);weg.forEach(zweiteWeg);S.zw=l.filter(p=>p.age<=RZ.kader.bisAlter);
+  // Abgestellte Profis (U10d): Ihr Vertrag läuft weiter. Endet er, gehen sie. Mit 24 kehren sie in den Profikader zurück.
+  const ende=l.filter(p=>p.zwP&&--p.ct<=0);ende.forEach(zweiteWeg);if(ende.length)txt.push(`Vertrag ausgelaufen: ${ende.map(p=>p.n).join(', ')} ${ende.length>1?'verlassen':'verlässt'} den Verein.`);
+  const zurueck=l.filter(p=>p.zwP&&p.ct>0&&p.age>RZ.kader.bisAlter);
+  const weg=l.filter(p=>!p.zwP&&p.age>RZ.kader.bisAlter);weg.forEach(zweiteWeg);S.zw=l.filter(p=>!ende.includes(p)&&!weg.includes(p));zurueck.forEach(p=>{zweiteHoch(p);txt.push(`${p.n} ist zu alt für die U23 und kehrt in den Profikader zurück.`);});
   if(weg.length)txt.push(`${weg.map(p=>p.n).join(', ')} ${weg.length>1?'sind':'ist'} zu alt für die U23 und ${weg.length>1?'gehen':'geht'} zu den Amateuren.`);
   if(autoB('zweitekader'))zweiteAutoHoch(S.zw);
   if(txt.length)news(txt.join(' '),neu<alt?'good':neu>alt?'bad':'');}
 // Teil 2 (nach jugendSaison): mit Neuen auf 22 auffüllen, über 26 gehen die Schwächsten
 function zweiteAuffuellen(){if(!hatZweite()||zweiteSim())return;const K=RZ.kader,l=zweiteKader(),neu=[];
   while(l.length<K.soll){const p=zweiteNeu(l);l.push(p);PIX.set(p.id,p);neu.push(p);}
-  let raus=[];if(l.length>K.max){raus=l.slice().sort((a,b)=>a.str-b.str).slice(0,l.length-K.max);raus.forEach(zweiteWeg);S.zw=l.filter(p=>!raus.includes(p));}
+  let raus=[];if(l.length>K.max){raus=l.filter(p=>!p.zwP).sort((a,b)=>a.str-b.str).slice(0,l.length-K.max);raus.forEach(zweiteWeg);S.zw=l.filter(p=>!raus.includes(p));}
   if(neu.length||raus.length)news(`Zweite Mannschaft (${zweiteLigaName()}): ${neu.length?`${neu.length} Neue aus der Region (Stärke ${Math.min(...neu.map(p=>Math.round(p.str)))} bis ${Math.max(...neu.map(p=>Math.round(p.str)))})`:'keine Neuen'}${raus.length?`, ${raus.map(p=>p.n).join(', ')} ${raus.length>1?'müssen':'muss'} gehen, der Kader ist voll`:''}.`);}
 
 // ---------- Geld ----------

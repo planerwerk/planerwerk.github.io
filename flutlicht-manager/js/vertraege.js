@@ -89,7 +89,7 @@ function vertraegeWoche(d){const V=RVT,t=myT();
     if(!B.length||R()>=V.ausstieg.chance)return;const b=pick(B),betrag=p.ak;money('Transfers',betrag);b.cash-=betrag;kabineAbgang(p,S.my);vertragEnde(p);S.offers=S.offers.filter(o=>o.pid!==p.id);
     p.team=b.id;p.list=0;p.ct=riA(RM.neuerVertrag);p.seit=absTag(d);p.abl=betrag;neuzugang(p,b.id);news(`Ausstiegsklausel gezogen: ${b.name} zahlt ${fmt(betrag)} für ${p.n}. Er wechselt sofort.`,'bad');});
   // Vorvertrag woanders: im letzten halben Jahr, wenn du seit acht Wochen nicht mit ihm über einen Vertrag geredet hast (ohne Vorwarnung, K21 §4.3)
-  if(vorvertragZeit(d)&&!autoB('vertraege'))squad(S.my).filter(p=>p.ct===1&&!p.wech&&!(S.vtGespr&&S.vtGespr[p.id]>=d-V.gespraechTage)).forEach(p=>{
+  if(vorvertragZeit(d)&&!autoB('vertraege'))squad(S.my).filter(p=>p.ct===1&&!p.wech&&!p.leihe&&!(S.vtGespr&&S.vtGespr[p.id]>=d-V.gespraechTage)).forEach(p=>{
     const B=S.teams.filter(b=>b.id!==S.my&&aktiv(b)&&b.rep>=t.rep-V.vorvertrag.ansehenMinus&&hatBedarf(b,p));if(!B.length||R()>=V.vorvertrag.chance)return;const b=pick(B),ber=beraterVon(p);
     if(ber&&ber.bz>=RBE.beziehung.warnAb&&p.vvW!==S.season){p.vvW=S.season;news(`Berater ${ber.n} warnt dich: ${b.name} will ${p.n} einen Vorvertrag geben. Rede mit ihm über eine Verlängerung.`,'offer');return;} // K22 §12 Nr. 5
     wechselVormerken(p,b.id,{ct:riA(RM.neuerVertrag),preis:0,ab:tageDerSaison()});S.offers=S.offers.filter(o=>o.pid!==p.id);news(`Vorvertrag: ${p.n} hat bei ${b.name} unterschrieben und geht im Sommer ablösefrei. Ihr hattet nicht über eine Verlängerung geredet.`,'bad');});}

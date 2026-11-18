@@ -9,7 +9,7 @@ const welt=(id=9)=>{const {W,F}=neueWelt();const zaehl=[];const orig=F.news;F.ne
   F.buildWorld(SEED);const S=W.S,ev=W.ev;S.my=id;S.mgr='Test';F.setTarget();F.sponsOffers();F.sponsorWaehlen(0);S.lineup=F.bestXI(id,ev('myT()').form);
   const im=(k,fn)=>ev('mitStrom')(ev('strom')('test',k),fn);return{W,F,S,ev,im,t:ev('myT()'),T:ev('RTR'),zaehl};};
 // Ein Kauf über die Spielerkarte ohne Oberfläche: Felder für Angebot und Laufzeit setzen, dann offer()
-const kaufe=(w,p,fee,yrs=3)=>{const els=w.W.ev('document');els.getElementById('fee').value=String(fee/1e6);els.getElementById('yrs').value=String(yrs);els.getElementById('msg').textContent='';w.F.offer(p.id);return els.getElementById('msg').textContent;};
+const kaufe=(w,p,fee,yrs=3)=>{const els=w.W.ev('document');els.getElementById('fee').value=String(fee/1e6);els.getElementById('yrs').value=String(yrs);els.getElementById('msg').textContent='';w.F.offer(p.id);if(els.getElementById('msg').textContent.includes('Medizincheck')){els.getElementById('msg').textContent='';w.F.offer(p.id);}return els.getElementById('msg').textContent;}; // bei einem Befund im Medizincheck ein zweiter Klick (U10d)
 
 // 1. Fenster: Sommer 1.7. bis 1.9., Winter 1.1. bis 1.2. Wechsel unter Computer-Vereinen nur dort, über eine Saison etwa so viele wie vorher
 {const w=welt(),{F,S,ev}=w,auf=ev('fensterOffen');

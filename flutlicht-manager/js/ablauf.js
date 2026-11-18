@@ -69,7 +69,7 @@ function taeglichLauf(d){const T=RT;praegungTag(d);wechselTag(d); // vereinbarte
   const c=S.constr;if(c&&d>=c.bis){const t=myT();if(c.k==='cap')t.cap+=RB.tribuene.plaetze;if(c.k==='logen')t.logen+=RB.logen.anzahl;if(c.k==='shop')t.shop++;news(`Bau abgeschlossen: ${c.label}.`,'good');S.constr=null;}}
 // Werte pro Woche (montags): Training und Entwicklung, Transfermarkt, Vorstand bei Minus auf dem Konto.
 function woechentlich(d){return mitStrom(strom('woche',S.season,d),()=>woechentlichLauf(d));}
-function woechentlichLauf(d){if(!imUrlaub())mitStrom(strom('training',S.season,d),training);mitStrom(strom('kabine',S.season,d),()=>kabineWoche(d));mitStrom(strom('jugend',S.season,d),()=>jugendWoche(d));mitStrom(strom('zweite',S.season,d),()=>zweiteWoche(d));mitStrom(strom('vertraege',S.season,d),()=>vertraegeWoche(d));mitStrom(strom('berater',S.season,d),()=>beraterWoche(d));scoutingWoche();mitStrom(strom('ausland',S.season,d),auslandWoche);mitStrom(strom('markt',S.season,d),market);
+function woechentlichLauf(d){if(!imUrlaub())mitStrom(strom('training',S.season,d),training);mitStrom(strom('kabine',S.season,d),()=>kabineWoche(d));mitStrom(strom('jugend',S.season,d),()=>jugendWoche(d));mitStrom(strom('zweite',S.season,d),()=>zweiteWoche(d));mitStrom(strom('vertraege',S.season,d),()=>vertraegeWoche(d));mitStrom(strom('berater',S.season,d),()=>beraterWoche(d));leiheWoche(d);scoutingWoche();mitStrom(strom('ausland',S.season,d),auslandWoche);mitStrom(strom('markt',S.season,d),market);
   if(myT().cash<0){S.trust+=RV.kontoMinus;if(R()<RV.kontoMinusMeldung)news('Der Vorstand ist alarmiert: Das Vereinskonto ist im Minus!','bad');}
   S.trust=clamp(S.trust,0,100);vorstandPruefen();}
 
@@ -80,7 +80,7 @@ function heimspielEinnahmen(m,cup){const t=myT();if(autoB('preise'))t.price=clam
 function finanzenLiga(m){const t=myT();if(m.h===S.my)heimspielEinnahmen(m,false);
   money('TV-Gelder',tvGeld(t));
   if(S.spons){money('Sponsor',S.spons.base);if(S.spons.win&&winner(m)===S.my&&m.hg!==m.ag)money('Sponsor',S.spons.win);}
-  const n=S.fx[t.lg].length;money('Gehälter',-Math.round(squad(S.my).reduce((s,p)=>s+p.sal,0)/n));if(S.stab)money('Trainerstab',-Math.round(stabGehaelter(S.my)/n));
+  const n=S.fx[t.lg].length;money('Gehälter',-Math.round((squad(S.my).reduce((s,p)=>s+p.sal,0)+leiheGehaelter())/n)); // dazu verliehene Spieler und Profis in der Zweiten (U10d)if(S.stab)money('Trainerstab',-Math.round(stabGehaelter(S.my)/n));
   money('Stadion & Betrieb',-Math.round(t.cap*RF.betrieb.jePlatz+t.logen*RF.betrieb.jeLoge));money('Jugendarbeit',-RF.jugendKosten[autoB('jugend')?RS.nachwuchs.computerStufe:t.youth]);{const z=zweiteKosten();if(z)money('Zweite Mannschaft',-z);}
   if(S.loan>0)money('Kreditzinsen',-Math.round(S.loan*RF.kreditZins/n));}
 // Woche (K03 §4): Kondition, Form, Selbstvertrauen, Entwicklung für Spieler ohne Pflichtspiel seit 7 Tagen, Wochenbericht des Co-Trainers
@@ -95,17 +95,17 @@ function training(){const T=RT,d=S.tag,bericht=[];lernplaetzeVergeben();if(S.sta
 function bieter(inland,p,preis,abAnsehen){const aus=auslandKaeufer(p,preis).filter(v=>abAnsehen==null||v.rep>=abAnsehen);if(!aus.length)return inland;return !inland.length||R()<RW.ausland.angebote.anteil?aus:inland;}
 function market(){const M=RM;
   const kasse=(t,v)=>{if(t.id===S.my)money('Transfers',v);else t.cash+=v;};
-  S.teams.forEach(t=>{if(!stabMacht(t.id,'transfers')||!aktiv(t))return;const alle=squad(t.id);if(alle.length<=M.verkaeufer.kaderMin)return;const xi=new Set(bestXI(t.id,t.form));const sq=alle.filter(x=>!x.list&&!x.wech&&!xi.has(x.id));if(!sq.length)return;
+  S.teams.forEach(t=>{if(!stabMacht(t.id,'transfers')||!aktiv(t))return;const alle=squad(t.id);if(alle.length<=M.verkaeufer.kaderMin)return;const xi=new Set(bestXI(t.id,t.form));const sq=alle.filter(x=>!x.list&&!x.wech&&!x.leihe&&!xi.has(x.id));if(!sq.length)return;
     if(sq.length>M.listeVoll.kaderAb&&R()<M.listeVoll.chance){const p=pick(sq);p.list=1;p.ask=value(p);}else if(R()<M.listeZufall.chance){const p=pick(sq);p.list=1;p.ask=Math.round(value(p)*M.listeZufall.aufschlag/M.runden)*M.runden;}});
   const n=fensterOffen(S.tag)?riA(RTR.fensterWechsel):0; // Wechsel unter Computer-Vereinen nur im Transferfenster (K19 §5.6, U10a)
-  for(let k=0;k<n;k++){const L=S.pl.filter(p=>p.list&&!p.wech&&p.team>=0&&stabMacht(p.team,'transfers')&&squad(p.team).length>M.verkaeufer.kaderMin);if(!L.length)break;const p=pick(L);
+  for(let k=0;k<n;k++){const L=S.pl.filter(p=>p.list&&!p.wech&&!p.leihe&&p.team>=0&&stabMacht(p.team,'transfers')&&squad(p.team).length>M.verkaeufer.kaderMin);if(!L.length)break;const p=pick(L);
     const B=S.teams.filter(t=>stabMacht(t.id,'transfers')&&aktiv(t)&&t.id!==p.team&&t.cash>p.ask&&teamLevel(t.id)<p.str+M.kaeufer.niveauPlus&&squad(t.id).length<M.kaeufer.kaderMax);if(!B.length)continue;
     const b=pick(B),from=S.teams[p.team];kasse(b,-p.ask);kasse(from,p.ask);kabineAbgang(p,from.id);S.offers=S.offers.filter(o=>o.pid!==p.id);news(`Wechsel perfekt: ${p.n} geht für ${fmt(p.ask)} von ${from.name} zu ${b.name}.`,'tr');
     p.team=b.id;p.list=0;p.ct=riA(M.neuerVertrag);p.sal=salaryFor(p.str);p.seit=absTag(S.tag);p.abl=p.ask;neuzugang(p,b.id);}
   const lvl=teamLevel(S.my),A=M.angebote,U=M.ueberraschung,bis=S.tag+RK.angebotTage;
   // Angebote an dich nur, wenn du die Transfers selbst führst (K36)
   // Gebote nach dem Vereinswert des Bieters, nur von Vereinen mit Bedarf (K19 §5.4, U10a). max: wie weit der Bieter bei deiner Gegenforderung mitgeht
-  if(!autoB('transfers'))squad(S.my).forEach(p=>{if(p.wech||S.offers.some(o=>o.pid===p.id))return;
+  if(!autoB('transfers'))squad(S.my).forEach(p=>{if(p.wech||p.leihe||S.offers.some(o=>o.pid===p.id))return;
     if(p.list){const ratio=p.ask/value(p),st=A.preis.find(x=>ratio<=x[0]),pr=st?st[1]:A.preisSonst;
       if(R()<pr){const B=bieter(S.teams.filter(t=>t.id!==S.my&&aktiv(t)&&t.cash>p.ask*A.kontoAnteil&&hatBedarf(t,p)),p,p.ask);if(B.length){const b=pick(B),g=gebotFuer(b,p,p.ask);S.offers.push({pid:p.id,tid:b.id,amt:g.amt,max:g.max,r:0,bis});news(`Angebot: ${b.name} bietet ${fmt(g.amt)} für ${p.n} (gilt bis ${datumKurz(bis)}).`,'offer');}}}
     else if(p.str>=lvl+U.niveauPlus&&R()<U.chance){const B=bieter(S.teams.filter(t=>t.id!==S.my&&aktiv(t)&&t.rep>=myT().rep&&t.cash>value(p)&&hatBedarf(t,p)),p,value(p),myT().rep);if(B.length){const b=pick(B),g=gebotFuer(b,p,null);S.offers.push({pid:p.id,tid:b.id,amt:g.amt,max:g.max,r:0,bis});news(`Überraschung: ${b.name} will ${p.n} und bietet ${fmt(g.amt)} (gilt bis ${datumKurz(bis)}).`,'offer');}}});

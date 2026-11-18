@@ -52,7 +52,7 @@ const welt=(id=9)=>{const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S,ev=W.e
   const geredet=sq.slice(0,6);S.tag=200;S.vtGespr={};geredet.forEach(p=>S.vtGespr[p.id]=S.tag);for(let i=0;i<8;i++)im('w'+i,()=>ev('vertraegeWoche')(S.tag));
   const weg=sq.filter(p=>p.wech&&p.wech.preis===0),geredetWeg=geredet.filter(p=>p.wech).length;
   pruef(weg.length>=3&&geredetWeg===0&&weg.every(p=>p.team===S.my&&p.wech.ab===ev('tageDerSaison()')),'Vorvertrag: Wer nicht über eine Verlängerung geredet hat, verliert Spieler im letzten Jahr ablösefrei zum Sommer, mit Gespräch nicht',`${weg.length} von ${sq.length-geredet.length} ohne Gespräch`);
-  const q=S.pl.filter(x=>x.team>=0&&x.team!==S.my&&x.age<30).sort((a,b)=>b.str-a.str).find(x=>{x.ct=1;setz({yrs:3});F.offer(x.id);return x.wech&&x.wech.nach===S.my;});const c0=t.cash;
+  const q=S.pl.filter(x=>x.team>=0&&x.team!==S.my&&x.age<30).sort((a,b)=>b.str-a.str).find(x=>{x.ct=1;setz({yrs:3});F.offer(x.id);if(!x.wech&&ev('document').getElementById('msg').textContent.includes('Medizincheck')){setz({yrs:3});F.offer(x.id);}return x.wech&&x.wech.nach===S.my;});const c0=t.cash;
   pruef(q&&q.wech.preis===0&&q.wech.ab===ev('tageDerSaison()'),'Vorvertrag mit einem fremden Spieler im letzten Jahr: ohne Ablöse, Wechsel im Sommer',q&&q.n);}
 
 // 7. Interesse beim Wechsel (K19 §5.3, §10): Stars wechseln kaum zu kleinen Vereinen, unzufriedene Spieler eher, Wechselwunsch hilft, Bindung hält
