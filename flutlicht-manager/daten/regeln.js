@@ -203,17 +203,14 @@ const REGELN={
     kaderMax:36,                     // dein Kader höchstens
     listeVoll:{kaderAb:26,chance:0.3}, // Computer-Verein mit großem Kader setzt einen Ersatzspieler auf die Liste
     listeZufall:{chance:0.06,aufschlag:1.1},
-    wechsel:{eins:0.5,zwei:0.5},     // Transfers unter Computer-Vereinen pro Woche: 1 mit 50 %, sonst 2 mit 50 %
     kaeufer:{niveauPlus:2,kaderMax:30},
     verkaeufer:{kaderMin:20},        // Computer-Vereine geben nur ab, solange danach mindestens so viele Spieler bleiben
     neuerVertrag:[2,4],
-    forderung:{stammspieler:1.6,sonst:1.25}, // Ablöseforderung = Marktwert × Faktor
     runden:25000,
     angebote:{preis:[[1,0.4],[1.3,0.2],[1.7,0.06]],preisSonst:0.01, // Chance je Woche nach Forderung/Marktwert
-      kontoAnteil:0.8,betragBasis:0.85,betragSpanne:0.2,laufzeitWochen:3},
-    ueberraschung:{niveauPlus:2,chance:0.012,betragBasis:1.1,betragSpanne:0.4},
+      kontoAnteil:0.8,laufzeitWochen:3}, // Beträge seit U10a nach dem Vereinswert des Bieters (transfers.angebotKI)
+    ueberraschung:{niveauPlus:2,chance:0.012},
     interesse:{basis:18,liga1:5,liga2:-8,liga3:-16,altAb:31,altPlus:8,niveauFaktor:1.5,zufall:20,vereinslosAbstand:5},
-    ernstAb:0.7,                     // darunter: „Kein ernsthaftes Angebot“
     gehalt:{basis:1.05,zufall:0.2,altAb:31,altFaktor:0.85} // Gehaltsforderung = Gehalt × (basis + Zufall), ältere günstiger bei Verlängerung
   },
 

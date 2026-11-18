@@ -43,11 +43,11 @@ function kaufRunde(p,fee){const T=RTR,v=verhandlung(p),F=forderung(p),sch=schmer
   v.f=f;return{text:txt+`${wer}: Gegenangebot ${fmt(f)} (Runde ${v.r} von ${T.runden.kauf}).`,gegen:f};}
 
 // ---------- Angebote für deine Spieler (K19 §5.4) und deine Gegenforderung (§4.2) ----------
-// Gebot eines Bieters: Computer-Vereine 85–100 % ihres Vereinswerts, höchstens die Forderung der Transferliste. Obergrenze = ihr Vereinswert.
-// Auslandsvereine wie bisher nach Forderung oder Marktwert (ihre Kader kennt das Spiel nicht im Einzelnen), Obergrenze 15 % darüber.
-function gebotFuer(b,p,ask){const A=RM.angebote,U=RM.ueberraschung,G=RTR.angebotKI;
-  if(b.id>=AV0){const a=ask?ask*(A.betragBasis+R()*A.betragSpanne):value(p)*(U.betragBasis+R()*U.betragSpanne);return{amt:rundeAb(a),max:rundeAb(a*RTR.auslandMax)};}
-  const vw=vwKauf(p,b.id);let a=vw*(G[0]+R()*(G[1]-G[0]));if(ask&&a>ask)a=ask;return{amt:rundeAb(a),max:rundeAb(Math.max(vw,a))};}
+// Gebot eines Bieters: 85–100 % seines Vereinswerts, höchstens die Forderung der Transferliste. Obergrenze = sein Vereinswert.
+// Auslandsvereine mit derselben Formel, nur ohne Bedarf (ihre Kader kennt das Spiel nicht im Einzelnen): Marktwert × Restlaufzeit, Obergrenze 15 % darüber (U10a, Befund BC).
+const vwAusland=p=>value(p)*rlFaktor(p);
+function gebotFuer(b,p,ask){const G=RTR.angebotKI,aus=b.id>=AV0,vw=aus?vwAusland(p):vwKauf(p,b.id);let a=vw*(G[0]+R()*(G[1]-G[0]));if(ask&&a>ask)a=ask;
+  return{amt:rundeAb(a),max:rundeAb(Math.max(aus?vw*RTR.auslandMax:vw,a))};}
 // Hat ein Computer-Verein Bedarf? Der Spieler ist mindestens so gut wie sein schwächster Stammspieler auf der Position (K31 kommt mit U11)
 const hatBedarf=(t,p)=>kaufStellenwert(p,t.id)>=RTR.kauf.gleich;
 // Deine Gegenforderung: Liegt sie im Rahmen des Bieters, nimmt er an. Sonst erhöht er in die Mitte, nach drei Runden zieht er zurück.
