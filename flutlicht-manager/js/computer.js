@@ -3,7 +3,8 @@
 // Die Regeln gelten für jeden Verein, dessen Transfers nicht du führst (stabMacht(tid,'transfers')): alle Computer-Vereine und dein Verein in der Automatik (K36).
 // Im Spielstand neu: am Verein t.tb = {k: Saison und Fenster, b: Budget, a: ausgegeben, n: Zugänge über den Markt, f: Planstellen aufgefüllt, s: Sternejagd erledigt}
 // und t.profil (zweites Vereinsprofil, U11b). Verträge nach Rang seit U11c (vertragChance, kiVertraegeFrueh, dazu newSeason in js/saison.js).
-// Noch nicht gebaut: Klugheit (§5.4), Vorverträge und Klauseln unter Computer-Vereinen, Leihen, Trainerwechsel (§5.5), Gehaltsrahmen (§3.3).
+// Leihen unter Computer-Vereinen seit U11d1 (§5.9: kiLeihbar, kiLeihKandidat, kiLeihe), mit dem Leihkontingent aus js/leihe.js.
+// Noch nicht gebaut: Klugheit (§5.4), Vorverträge und Klauseln unter Computer-Vereinen, Trainerwechsel (§5.5), Gehaltsrahmen (§3.3).
 
 // ---------- Vereinsprofile (K31 §3.2, §5.7, U11b) ----------
 // Bis zu zwei Profile. „ehrgeizig“ folgt aus der Lage (unter den Ersten nach Ansehen in seiner Liga, oder in der ersten Saison nach einem Aufstieg) und wird nicht gespeichert.
@@ -110,6 +111,24 @@ function kiWechsel(p,b,preis,art){const von=p.team>=0?S.teams[p.team]:null;
   else if(b.id===S.my)stabMeldung(`Der Verein hat den vereinslosen ${p.n} verpflichtet.`);
   p.team=b.id;p.list=0;p.ask=0;p.ct=riA(RM.neuerVertrag);p.sal=salaryFor(p.str);p.seit=absTag(S.tag);p.abl=preis;neuzugang(p,b.id);}
 
+// ---------- Leihen unter Computer-Vereinen (K31 §5.9, U11d1) ----------
+// Leihbar: höchstens alterMax Jahre, im Kaderplan seines Vereins Überhang (Ausbildungsverein: auch Talent), gesund, kein vereinbarter Wechsel, nicht geliehen, nicht in der Zweiten.
+// Der Verleiher behält mehr als markt.verkaeufer.kaderMin Spieler. Regel B gilt von selbst: Überhang und Talente liegen über den Planstellen.
+function kiLeihbar(p,P){const L=RCV.leihe;return p.age<=L.alterMax&&!(p.inj>0)&&!p.wech&&!p.leihe&&!p.zwP&&P.alle.length>RM.verkaeufer.kaderMin&&profilWert(P.t,'leihRaenge',L.leihRaenge).includes(P.rang.get(p.id));}
+// Bester Leihspieler für eine Lücke (nur Gründe aus leihe.gruende): passt in die Gruppe, hat die gesuchte Stärke und bekäme beim Leihverein mindestens einen Platz als Herausforderer
+// (er will spielen). Der Verleiher ist ein Verein, dessen Leihen nicht du führst (dein Verein verleiht nie von selbst), und das Kontingent lässt die Leihe zu. Keine Ansehensgrenze.
+function kiLeihKandidat(t,n,senk,plan,z){if(!n.g||!RCV.leihe.gruende.includes(n.grund))return null;const min=n.min-senk,G=plan(t).gr[n.g],platz=Math.min(G.soll,2*G.stamm);let best=null,bv=-Infinity;
+  for(const p of S.pl){if(p.team<0||p.team===t.id||p.leihe||planGruppe(p)!==n.g||p.str<min||(n.statt&&p.str<=n.statt.str))continue;
+    const von=S.teams[p.team];if(!von||!aktiv(von)||!stabMacht(von.id,'leihe'))continue;
+    if(G.l.filter(x=>x.str>p.str).length>=platz)continue; // beim Leihverein säße er nur auf der Bank
+    if(!kiLeihbar(p,plan(von))||!leihErlaubt(p,von.id,t.id,z))continue;
+    const v=p.str+(R()-0.5)*2*RCV.schaetzFehler;if(v>bv){bv=v;best={p,von:von.id};}}
+  return best;}
+// Die Leihe selbst: bis zum Saisonende, ohne Gebühr, ohne Kaufoption und Rückruf. Computer-Vereine führen keine Gehaltsbuchhaltung (§3.3), der Anteil steht nur am Spieler.
+// Keine Meldung (K31 §12 Nr. 31). Rückkehr am Saisonende über leiheEnde (js/leihe.js).
+function kiLeihe(p,b){const von=p.team;kabineAbgang(p,von);S.offers=S.offers.filter(o=>o.pid!==p.id);
+  p.leihe={von,anteil:zahlBereit(p,b.id),rolle:'rotation',rueckruf:false,option:0,start:absTag(S.tag)};p.team=b.id;p.list=0;p.ask=0;neuzugang(p,b.id);}
+
 // ---------- Sicherheitsnetz: offene Planstellen am Ende des Sommerfensters ----------
 // Was der Markt nicht besetzt hat, füllt der Verein auf: zuerst der beste Vereinslose der Gruppe, sonst ein erzeugter Spieler der Gruppe (Stärke und Alter wie kaderAuffuellen am 1. Juli).
 function planAuffuellen(t,P,liste){const Z=RS,F=RCV.fuellen,base=grundStaerke(t.rep),neu=[];
@@ -143,14 +162,21 @@ function kiMarkt(){const nr=fensterNr(),vereine=S.teams.filter(t=>aktiv(t)&&stab
   kiVertraegeFrueh(kader); // Herbst: Verträge der Gebrauchten früh verlängern (U11c), ändert keinen Kader
   if(nr<0)return;
   vereine.forEach(t=>kiBudget(t,nr)); // Budget aller Vereine vor dem ersten Wechsel des Fensters festlegen (nicht erst, wenn ein Verein an der Reihe ist oder verkauft)
-  const K=RCV.kauf,dran=shuffle(vereine.filter(()=>R()<RCV.aktivJeWoche));
-  // Ein Zugang: Wechsel ausführen, Budget und Zähler des Käufers, Kaderlisten, Budget des Verkäufers, Pläne beider Vereine neu
-  const zugang=(t,tb,c,art)=>{kiWechsel(c.p,t,c.preis,art);tb.a+=c.preis;tb.n++;kader.get(t.id).push(c.p);plaene.delete(t.id);
-    if(c.von!=null){const l=kader.get(c.von),i=l.indexOf(c.p);if(i>=0)l.splice(i,1);kiBudget(S.teams[c.von],nr).b+=Math.round(c.preis*RCV.finanzen.reinvest);plaene.delete(c.von);}};
+  const K=RCV.kauf,L=RCV.leihe,dran=shuffle(vereine.filter(()=>R()<RCV.aktivJeWoche)),z=leihZaehler(); // z: Leihkontingent, bei jeder Leihe nachgeführt (U11d1)
+  // Kaderlisten nachführen und die Pläne beider Vereine neu berechnen lassen
+  const umzug=(p,von,nach)=>{kader.get(nach).push(p);plaene.delete(nach);if(von!=null){const l=kader.get(von),i=l.indexOf(p);if(i>=0)l.splice(i,1);plaene.delete(von);}};
+  // Ein Zugang: Wechsel ausführen, Budget und Zähler des Käufers, Kaderlisten, Budget des Verkäufers
+  const zugang=(t,tb,c,art)=>{kiWechsel(c.p,t,c.preis,art);tb.a+=c.preis;tb.n++;umzug(c.p,c.von,t.id);if(c.von!=null)kiBudget(S.teams[c.von],nr).b+=Math.round(c.preis*RCV.finanzen.reinvest);};
+  // Eine Leihe (U11d1): zählt als Zugang der Woche und zur Obergrenze des Fensters, kostet kein Budget
+  const leihe=(t,tb,c)=>{kiLeihe(c.p,t);leihZaehlen(z,c.p,c.von,t.id);tb.n++;umzug(c.p,c.von,t.id);};
   dran.forEach(t=>{const tb=kiBudget(t,nr),sq=kader.get(t.id);if(tb.n>=K.jeFenster[nr]||sq.length>=RM.kaeufer.kaderMax)return;
     // Sternejagd zuerst: ehrgeizige Vereine, einmal je Saison im Sommerfenster. Gelingt sie, war das der Zugang dieser Woche.
     if(nr===RCV.sterneJagd.fenster&&!tb.s&&vereinsProfile(t).includes('ehrgeizig')){const c=kiStern(t,plan(t),tb.b-tb.a,kader);if(c){tb.s=1;zugang(t,tb,c,'stern');return;}}
-    const senk=kiSenkung(tb);
-    for(const n of planBedarf(plan(t))){const c=kiKandidat(t,n,tb.b-tb.a,senk,kader,plan);if(!c)continue;zugang(t,tb,c);break;}});
+    // Je Lücke: bei „verletzt“ zuerst Leihe, dann Kauf; bei „offen“ zuerst Kauf, sonst Leihe (§5.9). Dein Verein leiht nie von selbst (Bereich leihe ohne Automatik).
+    const senk=kiSenkung(tb),leiht=S.phase==='play'&&stabMacht(t.id,'leihe'); // nicht vor dem Saisonwechsel, sonst endete die Leihe sofort wieder
+    for(const n of planBedarf(plan(t))){const zuerst=L.zuerst.includes(n.grund);
+      const a=leiht&&zuerst?kiLeihKandidat(t,n,senk,plan,z):null;if(a){leihe(t,tb,a);break;}
+      const c=kiKandidat(t,n,tb.b-tb.a,senk,kader,plan);if(c){zugang(t,tb,c);break;}
+      const b=leiht&&!zuerst?kiLeihKandidat(t,n,senk,plan,z):null;if(b){leihe(t,tb,b);break;}}});
   const ende=fensterEnde();
   if(nr===RCV.fuellen.fenster&&ende!=null&&ende-S.tag<7)vereine.forEach(t=>{const tb=kiBudget(t,nr);if(tb.f)return;tb.f=1;const l=kader.get(t.id);planAuffuellen(t,kaderplan(t,l),l);});}

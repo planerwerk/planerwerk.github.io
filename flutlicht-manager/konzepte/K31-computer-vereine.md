@@ -206,6 +206,49 @@ Die Chance schließt die Zusage des Spielers ein. Ein Verein ohne Plan (gerade i
 
 **Nicht gebaut:** Vorverträge und Ausstiegsklauseln unter Computer-Vereinen (Konsistenzprüfung BD4, BD7), Verhandlung über Gehalt und Prämien, Interesse des Spielers.
 
+### 5.9 Umsetzung U11d1 (19. November 2026, ohne Testlauf): Leihen unter Computer-Vereinen
+
+§3.2 („Ausbildungsverein verleiht viel“), §5.1 („Stammspieler mehr als 8 Wochen verletzt: im Winter oft Leihe“), K08 (Talente, Leihen).
+
+**Wirklichkeit (recherchiert, Quellen unten):** Die FIFA begrenzt Leihen seit dem 1. Juli 2022. Ein Verein darf während einer Spielzeit zu jedem Zeitpunkt höchstens acht Berufsspieler verliehen und acht ausgeliehen haben, 2023/24 sieben, **seit dem 1. Juli 2024 sechs**. Zwischen denselben zwei Vereinen sind es höchstens drei je Richtung. Ausgenommen sind Spieler bis 21 Jahre und vom Verein ausgebildete Spieler. Eine Leihe läuft mindestens von einer Registrierungsperiode zur nächsten und höchstens ein Jahr, Weiterverleihen ist verboten. Die DFL hat für Leihen im Inland ebenfalls ein Kontingent von sechs, mit Ausnahmen für junge deutsche Spieler (wenn der verleihende Verein eine U23 hat) und für U21-Spieler mit dem Status „Local Player“.
+
+**Leihkontingent (gilt für alle, auch für dich):**
+
+- Je Verein höchstens 6 verliehene und 6 ausgeliehene Spieler, von einem Verein an denselben anderen höchstens 3.
+- Spieler bis 21 Jahre zählen nicht. Gezählt werden die laufenden Leihen.
+- Weiterverleihen ging schon vorher nicht (U10d). Jede Leihe läuft bis zum Saisonende.
+
+**Verleihen (ein Computer-Verein gibt ab).** Leihbar ist ein Spieler, der:
+
+- höchstens 23 Jahre alt ist,
+- im Kaderplan Überhang ist (beim Ausbildungsverein auch Talente),
+- gesund ist, keinen vereinbarten Wechsel hat, nicht schon geliehen ist und nicht in der Zweiten spielt.
+
+Der Verein behält danach mehr als 20 Spieler. Regel B (§5.2) gilt damit von selbst, denn Überhang und Talente liegen über den Planstellen.
+
+**Ausleihen (ein Computer-Verein nimmt).** Eine Leihe besetzt eine Lücke aus dem Bedarf (§5.1) wie ein Kauf:
+
+| Bedarf | Leihe |
+|---|---|
+| verletzt (Stammspieler länger als 8 Wochen weg) | **zuerst Leihe**, dann Kauf. Eine Lücke auf Zeit bekommt eine Lösung auf Zeit. |
+| offene Planstelle | zuerst Kauf. Leihe nur, wenn kein Kauf geht (Budget, kein passender Spieler). |
+| schwach, Wechselwunsch, Talent | keine Leihe, da braucht der Verein einen Spieler für länger |
+
+- Gesucht wird wie beim Kauf: passende Gruppe, gesuchte Stärke, Schätzfehler ±2.
+- Der Spieler bekäme beim Leihverein mindestens einen Platz als Herausforderer, sonst will er nicht. Er soll spielen.
+- Die Ansehensgrenze des Kaufs (30) gilt nicht. Leihen nach unten sind der Normalfall.
+- Keine Leihgebühr, keine Kaufoption, kein Rückruf. Computer-Vereine führen keine Gehaltsbuchhaltung (§3.3), also fließt kein Geld. Der Gehaltsanteil am Spieler folgt `zahlBereit` (U10d) und dient nur zur Anzeige.
+- Die Leihe zählt als der eine Zugang der Woche und zur Obergrenze des Fensters (4 im Sommer, 2 im Winter).
+- Rückkehr am Saisonende wie bei deinen Leihen (`leiheEnde`, U10d).
+
+**Dein Verein:**
+
+- Der Bereich `leihe` hat keine Automatik (K36). Dein Verein verleiht und leiht deshalb nie von selbst, auch nicht, wenn der Verein deine Transfers führt.
+- Computer-Vereine leihen nicht bei dir aus.
+- Neu für dich ist das Kontingent beim Verleihen und Ausleihen. Die Spielerkarte zeigt jetzt richtig an, wenn ein Spieler zwischen zwei anderen Vereinen verliehen ist (vorher stand dort „Du zahlst sein Gehalt“).
+
+**Meldungen:** Leihen unter Computer-Vereinen kommen nicht in den Posteingang, es wären viele. Man sieht sie auf der Spielerkarte.
+
 ## 6. Hebel des Spielers
 
 K31 beschreibt die Gegner. Deine Hebel gegenüber ihnen:
@@ -259,6 +302,8 @@ Testskript: `tests/welt.js` (neu), viele Saisons ohne menschlichen Spieler.
 
 **Stand U11a:** `tests/welt.js` ist geschrieben und **noch nie gelaufen**. Es prüft den Kaderplan an einem gebauten Kader, die Transferliste, das Budget, „gleicher Seed, gleiche Wechsel“, die Automatik und dann Saisons im Ablauf: Jeder Wechsel wird im Moment des Wechsels geprüft (nur im Fenster, Bedarf beim Käufer, Grund A und Regel B beim Verkäufer, Budget, Obergrenze). Langzeit-Spannung, ausgewogene Kader und „Stars wandern nach oben“ zählen erst ab zehn Saisons (`node tests/welt.js 10`), darunter gibt das Skript die Werte nur aus. Budgetnutzung und Zugänge je Verein werden ausgegeben, aber nicht gewertet, bis die Zahlen kalibriert sind. Trainerwechsel und Klugheit sind nicht gebaut.
 
+**Stand U11d1:** `tests/welt.js` Nr. 6d prüft Leihen an einem gebauten Fall: ein Verein mit lange verletztem Stammspieler im Winterfenster leiht einen Überzähligen, und das Kontingent stoppt die siebte Leihe. Im Ablauf (Nr. 7) wird jede Leihe im Moment der Leihe geprüft: nur im Fenster, Bedarf beim Leihverein, leihbar beim Verleiher, Kontingent. Am Saisonende sind alle zurück. Auch das ist nie gelaufen.
+
 ## 11. Stellschrauben
 
 ```js
@@ -298,6 +343,8 @@ computer:{
 }
 ```
 
+Dazu seit U11d1 (§5.9): `computer.leihe:{alterMax:23,leihRaenge:['ueber'],gruende:['verletzt','offen'],zuerst:['verletzt']}`, im Profil Ausbildungsverein `leihRaenge:['ueber','talent']`, und für alle Vereine `leihe.kontingent:{max:6,paar:3,freiBis:21}`.
+
 Entfernt sind `markt.listeVoll`, `markt.listeZufall`, `markt.kaeufer.niveauPlus` und `transfers.fensterWechsel`. Geblieben sind `markt.kaeufer.kaderMax` (30), `markt.verkaeufer.kaderMin` (20) und `saison.kaderSoll` (Mindestkader am 1. Juli, siehe §12 Nr. 12).
 
 ## 12. Offene Fragen
@@ -311,7 +358,7 @@ Entfernt sind `markt.listeVoll`, `markt.listeZufall`, `markt.kaeufer.niveauPlus`
 
 **Vorläufig entschieden mit U11a** (19.11., von mir, ohne Rücksprache und ohne Testlauf):
 
-5. **U11 in Teilschritten:** U11a Kaderplan, Bedarf, Kauf und Verkauf, Budget (gebaut). U11b Vereinsprofile und Sternejagd (gebaut). U11c Verträge nach Rang (gebaut, enger als zuerst geplant, Nr. 23). U11d Vorverträge und Klauseln unter Computer-Vereinen, Leihen unter Computer-Vereinen, Klugheit, Trainerwechsel (hängt an K28).
+5. **U11 in Teilschritten:** U11a Kaderplan, Bedarf, Kauf und Verkauf, Budget (gebaut). U11b Vereinsprofile und Sternejagd (gebaut). U11c Verträge nach Rang (gebaut, enger als zuerst geplant, Nr. 23). U11d Vorverträge und Klauseln unter Computer-Vereinen, Leihen unter Computer-Vereinen (als U11d1 gebaut, Nr. 25), Klugheit, Trainerwechsel (hängt an K28).
 6. **Planstellen folgen der Grundordnung nur zur Hälfte** (Mittel aus Standard und dem Doppelten der Plätze). So bleibt es bei 24 Planstellen, und ein Wechsel der Ordnung macht nicht den halben Kader überzählig.
 7. **Anspruch = Kaderstärke, mindestens die Grundstärke nach dem Ansehen.** Nur die eigene Kaderstärke hätte bedeutet: Ein Verein, dessen Kader schwächer geworden ist, will nichts mehr. Das wäre gegen „die Großen bleiben groß“.
 8. **„Stammspieler mehr als 3 unter dem Qualitätsziel“** (§5.1) wörtlich gelesen: mehr als 6 unter dem Anspruch. Die schärfere Lesart (mehr als 3 unter dem Anspruch) hätte bei fast jedem Kader Dauerbedarf erzeugt.
@@ -338,6 +385,23 @@ Entfernt sind `markt.listeVoll`, `markt.listeZufall`, `markt.kaeufer.niveauPlus`
 23. **U11c enger als in Nr. 5 geplant:** nur Verträge nach Rang (früh verlängern, beim Saisonwechsel nach Rang). Vorverträge und Ausstiegsklauseln unter Computer-Vereinen rutschen nach U11d, weil sie für Computer-Vereine ein Vertragspaket bräuchten, das es noch nicht gibt.
 24. **Früh verlängern von Oktober bis Dezember mit 15 % je Woche** (vorläufig, nicht recherchiert). Folge für dich: Spieler anderer Vereine, die dort gebraucht werden, bekommst du seltener ablösefrei über einen Vorvertrag. Überzählige und ältere Ergänzungsspieler bleiben dafür im letzten Jahr und gehen im Sommer meist ablösefrei.
 
+**Vorläufig entschieden mit U11d1** (19.11., von mir, ohne Rücksprache und ohne Testlauf):
+
+25. **U11d in Teilen.** U11d1 sind die Leihen unter Computer-Vereinen (gebaut, §5.9). Die übrigen Teile warten:
+    - Klugheit (§5.4) braucht eine Klugheitsstufe im Spielstand. Die gibt es noch nicht, K02 nennt sie, gebaut sind nur die Schwierigkeitsgrade.
+    - Vorverträge und Ausstiegsklauseln unter Computer-Vereinen brauchen ein Vertragspaket für Computer-Vereine (Nr. 23).
+    - Der Trainerwechsel wartet auf den Vorstand (K28, U12).
+26. **Kontingent wie bei FIFA und DFL seit 2024/25:** 6 verliehen, 6 ausgeliehen, 3 zwischen zwei Vereinen, Spieler bis 21 zählen nicht. Drei Vereinfachungen:
+    - „Vom Verein ausgebildet“ kennt das Spiel nicht, weil es keine Ausbildungsjahre zählt.
+    - Die Ausnahmen der DFL für junge deutsche Spieler fehlen.
+    - Gezählt wird, was gerade läuft. Ein Rückruf im Winter macht also einen Platz frei.
+27. **Das Kontingent gilt auch für dich** (eine Regel für alle). Die Auswahl der Leihvereine auf der Spielerkarte zeigt nur Vereine, bei denen noch Platz ist.
+28. **Leihbar ist nur Überhang bis 23 Jahre, beim Ausbildungsverein dazu die Talente.** Ein anderer Verein behält seine Talente im eigenen Kader. Ob das zu wenige Leihen ergibt, zeigt erst ein Testlauf. Zum Vergleich: Der FC Bayern hatte 2024/25 26 Spieler verliehen, das ist ein Ausreißer, meist Jugendspieler.
+29. **Keine Leihgebühr und kein Geld unter Computer-Vereinen**, weil sie keine Gehaltsbuchhaltung haben (§3.3). Kommt mit K23.
+30. **Keine Leihe bei „schwach“, „Wechselwunsch“ und „Talent“.** Bei „verletzt“ zuerst Leihe, bei „offen“ nur, wenn kein Kauf geht.
+31. **Keine Meldung** für Leihen unter Computer-Vereinen (Nr. 16, bündeln mit K29).
+32. **Dein Verein leiht nie von selbst.** Der Bereich `leihe` bekommt keine Automatik (K36), Computer-Vereine leihen nicht bei dir aus. Sonst würde der Verein über deinen Kader entscheiden, ohne dass du es eingestellt hast.
+
 **Recherche (19.11.), nur teilweise geklärt:**
 
 - **Zu- und Abgänge je Verein:** Die englische Wikipedia führt je Fenster Listen „In“ und „Out“ je Verein, ohne Ablösen. Gezählt wurden nur die lesbaren Teile: Winter 2025/26 bei sieben Bundesligisten 0 bis 5 Zugänge (im Schnitt 2,3) und mindestens 3 bis 8 Abgänge. Sommer 2025: Bayern 3 Zugänge und 16 Abgänge, Leverkusen 13 und 17 (Leihrückkehrer und Jugendspieler zählen bei den Abgängen mit). Das ZDF nannte im Sommer 2025 mitten im Fenster 66 Zugänge und 75 Abgänge für die 18 Vereine, also mindestens 3,7 Zugänge je Verein. Das passt zu „Sommer 3–8, Winter 0–3“ in §10, ist aber keine vollständige Zählung.
@@ -347,6 +411,9 @@ Entfernt sind `markt.listeVoll`, `markt.listeZufall`, `markt.kaeufer.niveauPlus`
 
 - Transferlisten: Wikipedia (englisch), „List of German football transfers summer 2025“ und „List of German football transfers winter 2025–26“, abgerufen am 19.11.2026, nur teilweise gelesen (https://en.wikipedia.org/wiki/List_of_German_football_transfers_summer_2025, https://en.wikipedia.org/wiki/List_of_German_football_transfers_winter_2025%E2%80%9326)
 - Zwischenstand Sommer 2025 (66 Zugänge, 75 Abgänge): ZDFheute, „Bundesliga: Was von der Transferperiode zu erwarten ist“ (https://www.zdfheute.de/sport/bundesliga-transfermarkt-neuzugaenge-100.html)
+- Leihkontingent der FIFA (8, 7, ab 1.7.2024 sechs; drei zwischen zwei Vereinen; Ausnahmen bis 21 und vom Verein ausgebildet; Dauer; kein Weiterverleihen): FIFA, Pressemitteilung „Neue Leihgabenregelung der FIFA“ vom 20.01.2022, abgerufen am 19.11.2026 (https://inside.fifa.com/de/organisation/media-releases/neue-leihgabenregelung-der-fifa)
+- Nationales Leihkontingent der DFL (sechs, Ausnahmen für junge deutsche Spieler mit U23 beim verleihenden Verein und für U21 „Local Player“): SID bei Flashscore, „DFL ändert Leihspieler-Regeln“, ohne sichtbares Datum, abgerufen am 19.11.2026 (https://www.flashscore.de/news/fu-ball-bundesliga-mehr-chancen-fur-junge-deutsche-spieler-dfl-andert-leihspieler-regeln/KCTnbPDj/)
+- 26 verliehene Spieler des FC Bayern 2024/25 (nur aus der Suchvorschau, Seite nicht gelesen): FC Bayern, „Loan Watch: So verlief die Spielzeit 2024/25 für die Leihspieler des FC Bayern“ (https://fcbayern.com/de/news/2025/06/loan-watch-so-verlief-die-spielzeit-2024-25-fuer-die-leihspieler-des-fc-bayern-teil-1)
 - Trainerwechsel, Zahlen nicht einsehbar: Statista, „Trainerwechsel pro Saison in der 1. Fußball-Bundesliga“ (https://de.statista.com/statistik/daten/studie/36473/umfrage/trainerwechsel-in-der-fussball-bundesliga-seit-der-saison-63-64)
 
 - Kaderplan, Bedarf, Verkaufs- und Kaufregeln, Finanzen, Trainerwechsel: `konzepte/_rohmaterial-logik-v1.md`, Kapitel 13 (Verkaufsregeln nach deinen Vorgaben)

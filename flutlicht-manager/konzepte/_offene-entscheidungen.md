@@ -622,3 +622,12 @@ Im Einzelnen in K31 §5.8 und §12 Nr. 23 und 24.
 - **Verträge nach Rang:** Computer-Vereine (und dein Verein, wenn der Verein die Verträge führt) verlängern Stammspieler, Herausforderer und Talente schon von Oktober bis Dezember (15 % je Woche). Beim Saisonwechsel bleiben Gebrauchte zu 90 %, junge Ergänzung zu 50 %, alle anderen zu 10 %. Vorher 70 % für alle.
 - **Folge für dich:** weniger ablösefreie Vorverträge bei Stammspielern anderer Vereine, mehr Vereinslose im Sommer.
 - **Vorverträge und Ausstiegsklauseln unter Computer-Vereinen** rutschen nach U11d.
+
+## K31 Computer-Vereine, U11d1 Leihen (19.11.), vorläufig von mir, gebaut ohne Testlauf
+
+Im Einzelnen in K31 §5.9 und §12 Nr. 25 bis 32.
+
+- **Computer-Vereine leihen untereinander:** Überzählige bis 23 Jahre (der Ausbildungsverein auch Talente) gehen an Vereine mit einer Lücke. Bei einem lange verletzten Stammspieler kommt zuerst eine Leihe, bei einer offenen Planstelle nur, wenn kein Kauf geht. Ohne Geld, ohne Meldung, zurück am Saisonende.
+- **Leihkontingent für alle, auch für dich** (FIFA seit 2024/25, DFL im Inland): höchstens 6 verliehen, 6 ausgeliehen, 3 an denselben Verein, Spieler bis 21 zählen nicht.
+- **Dein Verein leiht nie von selbst:** Der Bereich `leihe` bleibt ohne Automatik, Computer-Vereine leihen nicht bei dir aus.
+- **Rest von U11d wartet:** Klugheit (braucht die Klugheitsstufe, K02), Vorverträge und Klauseln unter Computer-Vereinen (brauchen ein Vertragspaket), Trainerwechsel (braucht den Vorstand, K28, U12).

@@ -268,8 +268,10 @@ const REGELN={
   // Ausleihen: nur Spieler, die bei ihrem Verein nicht Stamm- oder Schlüsselspieler sind und bei dir mindestens Rotation wären. Du zahlst das ganze Gehalt.
   // In die Zweite: Profis bis 23 behalten Vertrag und Gehalt und bekommen Spielpraxis. Mit 24 kommen sie zurück.
   // Medizincheck: 5.000 € je Kauf. Befund bei einer Verletzung, mehr als 60 Ausfalltagen in zwölf Monaten oder „verletzungsanfällig“: Ablöse 10 bis 30 % niedriger, zweiter Klick zum Abschluss.
+  // Leihkontingent (FIFA seit 1.7.2024, DFL im Inland, K31 §5.9, U11d1): je Verein höchstens max verliehen und max ausgeliehen, von einem Verein an denselben anderen höchstens paar.
+  // Spieler bis freiBis Jahre zählen nicht. Gilt für alle Vereine, auch für dich. Gezählt werden die laufenden Leihen.
   leihe:{zahlBereit:{besser:1,gleich:0.5,schlechter:0,spanne:2},anteile:[0,0.5,1],garantie:{stamm:0.6,rotation:0.3},pruefAbWochen:8,
-    holenRollen:['ergaenzung','talent','rotation','pokal'],zweiteBis:23,
+    holenRollen:['ergaenzung','talent','rotation','pokal'],zweiteBis:23,kontingent:{max:6,paar:3,freiBis:21},
     medizin:{kosten:5000,abTagen:60,tage:365,abschlag:[0.1,0.3]}},
 
   // Computer-Vereine (K31 §5.6, §11, U11a): Kaderplan, Bedarf, Verkaufs- und Kaufregeln, Transferbudget. Gilt für alle Vereine, deren Transfers nicht du führst,
@@ -296,7 +298,7 @@ const REGELN={
     // Das zweite Profil wird beim Aufbau der Welt nach gewichte gelost (oder steht als profil in daten/vereine.js). werte: was ein Profil am Standard ändert.
     // qualitaet: Aufschlag auf alle Qualitätsziele (−1 = strenger). budget: Faktor auf den Anteil des Kontos. zahlt: Faktor auf den Vereinswert des Käufers.
     profile:{gewichte:{kein:4,sparsam:2,ausbildung:2,malocher:2,altherren:1,spekulant:1},ehrgeizigBis:{1:4,2:3,3:3},
-      werte:{ehrgeizig:{qualitaet:-1,budget:1.4},sparsam:{zahlt:0.9,budget:0.7},ausbildung:{talente:[3,5],talentGewicht:0.6,alterMax:28},
+      werte:{ehrgeizig:{qualitaet:-1,budget:1.4},sparsam:{zahlt:0.9,budget:0.7},ausbildung:{talente:[3,5],talentGewicht:0.6,alterMax:28,leihRaenge:['ueber','talent']},
         altherren:{talente:[1,3],talentGewicht:0,altMalus:0,alterMax:34},spekulant:{talentGewicht:0.8},malocher:{}}},
     // Sternejagd (K31 §5.3): ehrgeizige Vereine, im Fenster fenster (0 = Sommer), höchstens einer je Saison. Der Spieler ist mindestens ueberNiveau stärker als der Anspruch,
     // höchstens alterMax alt, sein Verein hat mindestens ansehenPlus weniger Ansehen. Preis: verkauf.angebotAb × Marktwert × Restlaufzeit, mindestens die Forderung nach K19.
@@ -307,6 +309,9 @@ const REGELN={
     vertrag:{wichtig:['stamm','herausforderer','talent'],chanceWichtig:0.9,ergaenzung:0.5,ergaenzungBis:30,sonst:0.1,frueh:{von:'10-01',bis:'12-31',chance:0.15}},
     kauf:{jeFenster:[4,2],ansehenMinus:30,alterMax:32,jungBis:23,talentGewicht:0.3,altAb:29,altMalus:1},
     finanzen:{budgetAnteil:[0.5,0.25],reinvest:0.8},
+    // Leihen unter Computer-Vereinen (K31 §5.9, U11d1). Leihbar: bis alterMax Jahre, Rang in leihRaenge (Ausbildungsverein: Profilwert, auch Talente), gesund, Verleiher behält mehr als
+    // markt.verkaeufer.kaderMin. Geliehen wird für die Lücken in gruende: zuerst (vor dem Kauf) bei den Gründen in zuerst, sonst nur, wenn kein Kauf geht. Kontingent: leihe.kontingent.
+    leihe:{alterMax:23,leihRaenge:['ueber'],gruende:['verletzt','offen'],zuerst:['verletzt']},
     aktivJeWoche:0.5,schaetzFehler:2,
     fuellen:{fenster:0,vereinslosBis:4,vereinslosChance:0.6}}, // fenster: Nummer des Fensters in transfers.fenster, an dessen Ende aufgefüllt wird (0 = Sommer)
 

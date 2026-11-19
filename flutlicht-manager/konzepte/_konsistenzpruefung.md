@@ -948,3 +948,21 @@ Wie BG und BH: kein Test gelaufen, die Zahlen sind geschätzt.
 | BI5 | **Mehr Vereinslose im Sommer:** Überzählige gehen jetzt meist. Der Deckel `saison.vereinsloseMax` (90) schneidet den Rest ab. Ob der Markt im Juli genug Vereinslose für offene Planstellen hat, zeigt erst `tests/welt.js`. | ⚠️ messen |
 | BI6 | **BD4 und BD7 bleiben offen:** Vorverträge und Ausstiegsklauseln unter Computer-Vereinen fehlen weiter (jetzt U11d). | 📌 U11d |
 | BI7 | **`tests/welt.js` Nr. 6c:** Chance je Rang, früh verlängern (zwölf Herbstwochen, etwa 86 %), nicht im März, deine Spieler unberührt, dazu im Ablauf der Anteil der Gebrauchten mit auslaufendem Vertrag (nur Ausgabe). Nie gelaufen. | ⚠️ offen |
+
+---
+
+## BJ. Nachtrag zu U11d1 Computer-Vereine: Leihen unter Computer-Vereinen, Leihkontingent (19. November 2026, ohne Testlauf)
+
+Wie BG bis BI: kein Test gelaufen. Das Kontingent ist recherchiert (FIFA, DFL), die übrigen Zahlen sind geschätzt.
+
+| # | Befund | Status |
+|---|---|---|
+| BJ1 | **Fehler aus U10d gefunden:** Die Spielerkarte nahm an, jede Leihe betreffe dich. Bei einer Leihe zwischen zwei anderen Vereinen hätte dort „Du zahlst sein Gehalt“ gestanden. Mit U11d1 gab es solche Leihen zum ersten Mal, die Karte zeigt jetzt „X hat ihn von Y ausgeliehen“. | ✅ behoben |
+| BJ2 | **Andere Stellen, die Leihen nur bei dir erwarten:** `leiheGehaelter` und `leiheWoche` prüfen `von === S.my`. `leiheEnde` gibt jede Leihe zurück, egal von wem. Kauf geliehener Spieler ist gesperrt (`aktionen.js`, „gerade ausgeliehen“), ebenso bei `kiKandidat` und `kiStern`. Passt. | ✅ |
+| BJ3 | **Berater-Tipps (K22) können einen geliehenen Spieler nennen** (`berater.js` filtert nur `wech`). Der Kauf scheitert dann mit „gerade ausgeliehen“. Klein, nicht geändert. | 📌 klein |
+| BJ4 | **Leihen zählen zur Obergrenze des Fensters** (4 im Sommer, 2 im Winter). Dadurch gibt es etwas weniger Käufe. `tests/transfers.js` Nr. 1 (mindestens 15 Wechsel mit Ablöse je Saison) kann sich verschieben, ebenso `tests/welt.js` Nr. 7. | ⚠️ messen |
+| BJ5 | **Zufall:** Die Suche nach Leihspielern würfelt im Markt-Strom (Schätzfehler). Die Welt nach dem ersten Fenster ist eine andere als mit U11c. | ✅ erwartet |
+| BJ6 | **Kontingent auch für dich:** `verleihen`, `ausleihen` und die Liste der Leihvereine prüfen es. `tests/leihe.js` verleiht zwei Spieler und leiht einen aus, das bleibt unter 6. Nicht nachgeprüft. | ⚠️ messen |
+| BJ7 | **Leihe am 1. Juli:** Der Markt läuft montags. Fiele ein Montag mit offenem Fenster vor den Saisonwechsel, endete eine Leihe sofort wieder. Deshalb leihen Computer-Vereine nur in der Spielphase (`S.phase === 'play'`). | ✅ vorbeugend |
+| BJ8 | **Nicht gebaut:** Leihgebühr, Kaufoption und Rückruf unter Computer-Vereinen, Entwicklung beim Leihverein über dessen Stab (K08 §5.5), Leihen ins und aus dem Ausland, die Ausnahmen „vom Verein ausgebildet“ und die der DFL für junge deutsche Spieler. | 📌 später |
+| BJ9 | **`tests/welt.js` Nr. 6d und Nr. 7:** Leihbar, Leihkandidat, Leihe ohne Geld, Kontingent (6, 3, bis 21 frei), Rückkehr am Saisonende. Im Ablauf wird jede Leihe geprüft (Fenster, Bedarf, leihbar, Kontingent, nie dein Verein), nach jedem Saisonwechsel ist niemand mehr verliehen. Nie gelaufen. | ⚠️ offen |
