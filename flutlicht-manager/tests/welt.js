@@ -1,0 +1,125 @@
+// Computer-Vereine (K31 §10, U11a): Kaderplan (Planstellen je Grundordnung, Rang, Talente), Verkaufsregeln A und B, Bedarf, Transferliste, Budget je Fenster,
+// gleicher Seed ergibt dieselben Wechsel, dein Verein in der Automatik folgt denselben Regeln. Dann Saisons im Ablauf: Jeder Wechsel wird im Moment des Wechsels
+// geprüft (nur im Fenster, Bedarf beim Käufer, Grund A und Regel B beim Verkäufer, Budget, Obergrenze je Fenster), dazu Kadergrößen und Konten am Saisonende.
+// Die Zielwerte aus K31 §10, die zehn Saisons brauchen (Langzeit-Spannung, ausgewogene Kader, Stars wandern nach oben), zählen erst ab zehn Saisons, sonst werden sie nur ausgegeben.
+// Aufruf: node tests/welt.js [Saisons=2] [Seed=5]. Nur Node.js.
+// ACHTUNG: Dieses Skript ist noch nie gelaufen. U11a entstand auf einem Rechner ohne Node.js. Fehler können im Spiel oder im Skript selbst liegen.
+const {neueWelt,saisons}=require('./sim');
+const N=+(process.argv[2]||2),SEED=+(process.argv[3]||5),probleme=[],t0=Date.now();
+const pruef=(ok,text,wert)=>{console.log(`${ok?'✓':'✗'} ${text}${wert!=null?': '+wert:''}`);if(!ok)probleme.push(text+(wert!=null?' ('+wert+')':''));};
+const info=(text,wert)=>console.log(`  ${text}${wert!=null?': '+wert:''}`);
+const pc=x=>(x*100).toFixed(0)+' %',f1=x=>x.toFixed(1),m=l=>l.length?l.reduce((a,b)=>a+b,0)/l.length:0;
+const welt=(id=9)=>{const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S,ev=W.ev;S.my=id;S.mgr='Test';F.setTarget();F.sponsOffers();F.sponsorWaehlen(0);S.lineup=F.bestXI(id,ev('myT()').form);
+  const im=(k,fn)=>ev('mitStrom')(ev('strom')('test',k),fn);return{W,F,S,ev,im,C:ev('RCV')};};
+// Einen Tag weiter wie in tests/transfers.js
+const schritt=w=>{const S=w.W.S;if(S.sponsOffers)w.F.sponsorWaehlen(0);if(w.ev('heuteMeinSpiel()'))w.F.tagesSpiele(S.tag);w.F.weiter();};
+// Protokoll aller Wechsel der Computer-Vereine: Der Zustand wird festgehalten, bevor der Wechsel geschieht. getS liefert den aktuellen Spielstand.
+const mitProtokoll=(F,getS,talentBis)=>{const log=[],orig=F.kiWechsel;
+  F.kiWechsel=function(p,b,preis){const S=getS(),von=p.team>=0?S.teams[p.team]:null,g=F.planGruppe(p),bed=F.planBedarf(F.kaderplan(b));
+    const e={s:S.season,tag:S.tag,pid:p.id,nach:b.id,von:von?von.id:-1,preis,g,offen:F.fensterEnde(S.tag)!=null,nr:F.fensterNr(S.tag),
+      bedarf:bed.some(n=>n.grund==='talent'?p.age<=talentBis:n.g===g),grundA:true,regelB:true,kaderVon:99,rest:b.tb?b.tb.b-b.tb.a:-1};
+    if(von){const P=F.kaderplan(von);e.grundA=P.abgabe.has(p.id);e.regelB=P.gr[g].l.length>P.gr[g].soll;e.kaderVon=P.alle.length;}
+    log.push(e);return orig(p,b,preis);};
+  return log;};
+
+// 1. Planstellen (K31 §3.1): bei jeder Grundordnung 24, Torwart 3, die Ordnung verschiebt den Plan nur leicht
+{const {S,F,ev,C}=welt(),t=S.teams.find(x=>x.id!==S.my&&x.lg===1),alt=t.form,rollen=t.rollen,fehler=[];delete t.rollen;
+  for(const f of Object.keys(ev('RE').formationen)){t.form=f;const {soll,stamm}=F.planSoll(t),sum=o=>C.gruppen.reduce((a,g)=>a+o[g],0);
+    if(sum(soll)!==24||soll.TW!==3||sum(stamm)!==11||C.gruppen.some(g=>g!=='TW'&&Math.abs(soll[g]-C.planstellen[g])>2))fehler.push(`${f}: ${C.gruppen.map(g=>g+' '+soll[g]).join(', ')}`);}
+  t.form='4-3-3';const a=F.planSoll(t).soll;t.form='4-4-2';const b=F.planSoll(t).soll;t.form=alt;if(rollen)t.rollen=rollen;
+  pruef(!fehler.length,'Planstellen: bei jeder Grundordnung 24 (Torwart 3, elf Stammplätze), höchstens 2 neben dem Standard',fehler[0]||'alle Grundordnungen');
+  pruef(a.ZM===6&&a.OM===2&&a.ST===5&&b.ZM===5&&b.OM===4&&b.ST===4&&b.IV===4&&b.AV===4,'Planstellen: 4-3-3 mit ZM 6, OM 2, ST 5 und 4-4-2 mit ZM 5, OM 4, ST 4',`4-3-3: ZM ${a.ZM}, OM ${a.OM}, ST ${a.ST}`);}
+
+// 2. Rang, Talente, Verkaufsregeln und Bedarf an einem gebauten Kader (4-4-2, alle 26 Jahre): 24 Spieler auf 24 Planstellen
+{const {S,F,C}=welt(),t=S.teams.find(x=>x.id!==S.my&&x.lg===2),alt=[t.form,t.rep,t.rollen];t.form='4-4-2';t.rep=30;delete t.rollen; // Ansehen 30: Grundstärke 60, der Anspruch kommt aus dem Kader
+  let id=900000;const sp=(fp,str,o)=>Object.assign({id:id++,n:'Test '+id,fp,pos:C.grob[C.gruppeVon[fp]],str,age:26,pot:str,ww:0,inj:0,team:t.id},o||{});
+  const basis=()=>[sp('TW',72),sp('TW',66),sp('TW',62),sp('IV',72),sp('IV',71),sp('IV',67),sp('IV',64),sp('LV',71),sp('RV',70),sp('LV',66),sp('RV',64),
+    sp('ZM',73),sp('DM',71),sp('ZM',68),sp('SM',66),sp('DM',63),sp('LM',72),sp('RM',70),sp('OM',67),sp('LM',64),sp('MS',74),sp('MS',71),sp('LA',67),sp('HS',64)];
+  const plan=k=>F.kaderplan(t,k),bedarf=k=>F.planBedarf(plan(k)),gruende=k=>bedarf(k).map(n=>n.grund+(n.g?' '+n.g:'')).join(', ')||'keiner';
+  let k=basis(),P=plan(k);
+  pruef(P.abgabe.size===0&&bedarf(k).length===1&&bedarf(k)[0].grund==='talent'&&P.rang.get(k[3].id)==='stamm'&&P.rang.get(k[5].id)==='herausforderer'&&P.rang.get(k[2].id)==='ergaenzung',
+    'Voller Kader: niemand wird abgegeben, Bedarf nur „Talent“ (alle sind 26), Rang nach Stärke in der Gruppe',`Bedarf: ${gruende(k)}, abgegeben: ${P.abgabe.size}`);
+  k=basis();const ueber=sp('IV',60);k.push(ueber);P=plan(k);
+  pruef(P.rang.get(ueber.id)==='ueber'&&P.abgabe.get(ueber.id)==='ueberhang'&&P.abgabe.size===1,'Überhang: Der fünfte Innenverteidiger steht zum Verkauf, sonst niemand',[...P.abgabe.values()].join(', '));
+  k=basis();const jung=sp('IV',60,{age:19,pot:75});k.push(jung);P=plan(k);
+  pruef(P.rang.get(jung.id)==='talent'&&P.abgabe.size===0,'Talent: Ein überzähliger 19-Jähriger besetzt eine Talent-Planstelle und ist kein Überhang',P.rang.get(jung.id));
+  k=basis();k[3].ww=3;P=plan(k);const b3=bedarf(k);
+  pruef(P.abgabe.size===0&&b3.some(n=>n.grund==='wechselwunsch'&&n.g==='IV'),'Regel B: Ein Stammspieler mit Wechselwunsch wird nicht abgegeben, solange die Gruppe nicht überbesetzt ist. Erst kaufen, dann verkaufen',gruende(k));
+  k.push(sp('IV',70));P=plan(k);
+  pruef(P.abgabe.get(k[3].id)==='wechselwunsch'&&!F.planBedarf(P).some(n=>n.grund==='wechselwunsch'),'Nach dem Ersatzkauf darf er gehen, und der Bedarf ist weg (eine Lücke, ein Kauf)',[...P.abgabe.values()].join(', '));
+  k=basis();k.splice(13,1);const b5=bedarf(k);
+  pruef(b5[0].grund==='offen'&&b5[0].g==='ZM'&&b5[0].prio===3&&b5[0].rang==='ergaenzung'&&Math.abs(b5[0].min-(plan(k).niveau-C.qualitaet.ergaenzung))<1e-9,'Offene Planstelle: hoher Bedarf in der Gruppe, gesucht wird der Rang des freien Platzes',gruende(k));
+  k=basis();k[21].str=50;k[22].str=49;k[23].str=48;P=plan(k);const b6=F.planBedarf(P).find(n=>n.grund==='schwach'); // der zweite Stammplatz im Sturm fällt an den Besten der drei Schwachen
+  pruef(!!b6&&b6.g==='ST'&&b6.statt===k[21]&&Math.abs(b6.min-(P.niveau-C.qualitaet.stamm))<1e-9&&P.abgabe.size===0,'Schwacher Stammspieler (mehr als 6 unter dem Anspruch): Bedarf „schwach“, er selbst bleibt bis zum Ersatz',gruende(k));
+  k=basis();k[20].inj=70;k[22].str=55;k[23].str=54;const b7=bedarf(k);k[22].str=70;const b7b=bedarf(k);
+  pruef(b7.some(n=>n.grund==='verletzt'&&n.g==='ST')&&!b7b.some(n=>n.grund==='verletzt'),'Lange verletzter Stammspieler: Bedarf nur ohne brauchbaren Herausforderer',`${b7.map(n=>n.grund).join(', ')} / ${b7b.map(n=>n.grund).join(', ')||'keiner'}`);
+  k=basis();const letzter=sp('OM',40);k.push(letzter);const schw=k[19];schw.str=45;P=plan(k);
+  pruef(P.abgabe.get(schw.id)==='schwach'&&P.abgabe.get(letzter.id)==='ueberhang'&&P.abgabe.size===2,'Zu schwach für seinen Rang (mehr als 6 unter dem Ziel): steht mit Überhang in der Gruppe zum Verkauf, neben dem Überzähligen',[...P.abgabe.values()].join(', '));
+  t.form=alt[0];t.rep=alt[1];if(alt[2])t.rollen=alt[2];}
+
+// 3. Transferliste außerhalb des Fensters (keine Wechsel): Auf der Liste steht genau, wer nach dem Plan gehen darf. Preis höchstens Marktwert × Restlaufzeit × Finanzlage.
+{const w=welt(),{S,F,ev,im}=w;S.tag=120;const cash0=S.teams.map(t=>t.cash);im('liste',()=>F.kiMarkt());
+  let falsch=0,gelistet=0,teuer=0,mein=0;const min=ev('RM').verkaeufer.kaderMin;
+  S.teams.forEach(t=>{if(t.lg>3)return;const P=F.kaderplan(t);P.alle.forEach(p=>{if(t.id===S.my){if(p.list)mein++;return;}if(p.wech||p.leihe||p.zwP)return;
+      const soll=P.alle.length>min&&P.abgabe.has(p.id);if(!!p.list!==soll)falsch++;if(p.list){gelistet++;if(p.ask>ev('value')(p)*ev('rlFaktor')(p)*ev('RTR').finanzlage.reich+25000||p.ask<25000)teuer++;}});});
+  pruef(falsch===0&&gelistet>0&&mein===0,'Transferliste: genau die Spieler, die nach den Verkaufsregeln gehen dürfen. Deine Spieler bleiben unberührt',`${gelistet} auf der Liste, ${falsch} falsch, ${mein} von dir`);
+  pruef(teuer===0,'Preis auf der Liste: höchstens Marktwert × Restlaufzeit × Finanzlage, mindestens 25.000 €',`${teuer} außerhalb`);
+  pruef(S.teams.every((t,i)=>t.cash===cash0[i])&&S.teams.every(t=>!t.tb),'Außerhalb des Fensters: kein Wechsel, kein Budget, kein Geld bewegt');}
+
+// 4. Eine Fensterwoche: Budget = Konto × Anteil am Anfang des Fensters (Verkäufer bekommen 80 % der Ablöse dazu), jeder Wechsel im Rahmen
+{const w=welt(),{S,F,ev,im,C}=w;S.tag=5;const cash0=S.teams.map(t=>t.cash),log=mitProtokoll(F,()=>w.W.S,C.talentBis);im('woche',()=>F.kiMarkt());
+  const ein={};log.forEach(e=>{if(e.von>=0)ein[e.von]=(ein[e.von]||0)+Math.round(e.preis*C.finanzen.reinvest);});
+  const mitTb=S.teams.filter(t=>t.tb),falsch=mitTb.filter(t=>t.tb.b!==Math.max(0,Math.round(cash0[t.id]*C.finanzen.budgetAnteil[0]))+(ein[t.id]||0)||t.tb.a>t.tb.b||t.cash<0);
+  pruef(mitTb.length>0&&!falsch.length&&!S.teams[S.my].tb,'Budget: die Hälfte des Kontos am Anfang des Sommerfensters, Verkäufe erhöhen es, niemand gibt mehr aus. Dein Verein hat keins, solange du die Transfers führst',`${mitTb.length} Vereine mit Budget, ${falsch.length} falsch`);
+  pruef(log.every(e=>e.offen&&e.bedarf&&e.grundA&&e.regelB&&e.kaderVon>ev('RM').verkaeufer.kaderMin&&e.preis<=e.rest),'Erste Fensterwoche: jeder Wechsel mit Bedarf, mit Grund, nach Regel B und im Budget',`${log.length} Wechsel, davon ${log.filter(e=>e.von<0).length} Vereinslose`);
+  const je={};log.forEach(e=>{je[e.nach]=(je[e.nach]||0)+1;});pruef(Object.values(je).every(n=>n===1),'Eine Lücke, ein Kauf: je Verein höchstens ein Zugang in der Woche');}
+
+// 5. Gleicher Seed, gleiche Wechsel (Sommerfenster bis Mitte September), anderer Verlauf nur durch andere Würfel
+{const lauf=()=>{const w=welt(),log=mitProtokoll(w.F,()=>w.W.S,w.C.talentBis);let n=0;while(w.W.S.tag<75&&n++<200)schritt(w);return log.map(e=>[e.tag,e.pid,e.von,e.nach,e.preis].join(':')).join(' ');};
+  const a=lauf(),b=lauf();pruef(a===b&&a.length>0,'Gleicher Seed: dieselben Wechsel in derselben Reihenfolge',`${a?a.split(' ').length:0} Wechsel im Sommer`);}
+
+// 6. Automatik (K36): Führt der Verein deine Transfers, gelten für deinen Kader dieselben Regeln (Liste nach Plan, Budget aus dem Konto)
+{const w=welt(),{S,F,ev,im,C}=w;F.lizenzStart(true);S.tag=120;im('auto',()=>F.kiMarkt());
+  const P=F.kaderplan(S.teams[S.my]),falsch=P.alle.filter(p=>!p.wech&&!p.leihe&&!p.zwP&&!!p.list!==(P.alle.length>ev('RM').verkaeufer.kaderMin&&P.abgabe.has(p.id))).length;
+  pruef(ev("autoB('transfers')")&&falsch===0,'Automatik: Als Teamleiter führt der Verein deine Transferliste nach denselben Verkaufsregeln',`${falsch} falsch`);
+  S.tag=5;const cash=S.teams[S.my].cash;im('auto2',()=>F.kiMarkt());const tb=S.teams[S.my].tb;
+  pruef(!!tb&&tb.a<=tb.b&&tb.b>=Math.max(0,Math.round(cash*C.finanzen.budgetAnteil[0]))&&S.teams[S.my].cash>=0,'Automatik: Dein Verein bekommt im Fenster ein Budget aus dem Konto und bleibt darin',tb?`Budget ${tb.b}, ausgegeben ${tb.a}`:'kein Budget');}
+
+// 7. Saisons im Ablauf: jeder Wechsel geprüft, Zahl der Wechsel, Obergrenze je Fenster, Kader und Konten am Saisonende
+{const R0=neueWelt().W,C=R0.ev('RCV'),RM=R0.ev('RM');let log=null,S0=null;const ende=[],fuell=[];
+  const lauf=saisons({n:N,seed:SEED,verein:6,
+    beiSaisonstart:(S,F)=>{if(log)return;S0=S;log=mitProtokoll(F,()=>S0,C.talentBis);const orig=F.planAuffuellen;F.planAuffuellen=function(t,P,l){const n=orig(t,P,l);fuell.push({s:S0.season,t:t.id,n});return n;};},
+    beiSaisonende:(S,F)=>{const z={s:S.season,offen:0,leer:0,ueber2:0,vereine:0,kader:[],minus:0};
+      S.teams.forEach(t=>{if(t.lg>3||t.id===S.my)return;z.vereine++;const P=F.kaderplan(t);z.kader.push(P.alle.length);if(t.cash<0)z.minus++;let u2=false;
+        C.gruppen.forEach(g=>{const G=P.gr[g];if(G.l.length<G.soll)z.offen+=G.soll-G.l.length;if(!G.l.length&&G.soll>0)z.leer++;if(G.l.filter(p=>P.rang.get(p.id)==='ueber').length>2)u2=true;});if(u2)z.ueber2++;});
+      ende.push(z);}});
+  const S=lauf.W.S,ev=lauf.W.ev,jahre=[...new Set(log.map(e=>e.s))];
+  pruef(log.length>0&&log.every(e=>e.offen),'Wechsel der Computer-Vereine nur im Fenster',`${log.length} Wechsel in ${N} Saison(s), ${log.filter(e=>!e.offen).length} außerhalb`);
+  const ohne=log.filter(e=>!e.bedarf).length;pruef(ohne<=log.length*0.01,'Kein Kaderchaos: höchstens 1 % der Käufe ohne Bedarf in der Gruppe (K31 §10)',`${ohne} von ${log.length}`);
+  const vk=log.filter(e=>e.von>=0),regel=vk.filter(e=>!e.grundA||!e.regelB||e.kaderVon<=RM.verkaeufer.kaderMin).length;
+  pruef(regel===0,'Verkaufsregeln: kein Verkauf ohne Grund A, keine Gruppe nach dem Verkauf unter ihren Planstellen, kein Verein unter 21 Spielern (K31 §10)',`${regel} von ${vk.length} Verkäufen`);
+  pruef(log.every(e=>e.preis<=e.rest),'Budget: kein Kauf über dem Rest des Budgets',`${log.filter(e=>e.preis>e.rest).length} darüber`);
+  const jeFenster={};log.forEach(e=>{const k=e.s+':'+e.nr+':'+e.nach;jeFenster[k]=(jeFenster[k]||0)+1;});
+  const zuViel=Object.entries(jeFenster).filter(([k,n])=>n>C.kauf.jeFenster[+k.split(':')[1]]).length;pruef(zuViel===0,'Obergrenze: höchstens 4 Zugänge über den Markt im Sommer und 2 im Winter je Verein',`${zuViel} darüber`);
+  jahre.forEach(s=>{const l=log.filter(e=>e.s===s),bez=l.filter(e=>e.von>=0),so=l.filter(e=>e.nr===0),wi=l.filter(e=>e.nr===1),f=fuell.filter(x=>x.s===s),z=ende.find(x=>x.s===s)||{vereine:55};
+    pruef(bez.length>=15,`Saison ${s}: mindestens 15 Wechsel mit Ablöse unter Computer-Vereinen (wie tests/transfers.js)`,`${bez.length} mit Ablöse, ${l.length-bez.length} Vereinslose`);
+    info(`Saison ${s}: Zugänge über den Markt je Verein`,`Sommer ${f1(so.length/z.vereine)}, Winter ${f1(wi.length/z.vereine)} (K31 §10 nennt 3–8 und 0–3 für alle Zugänge zusammen)`);
+    info(`Saison ${s}: am Ende des Sommerfensters aufgefüllt`,`${f.reduce((a,x)=>a+x.n,0)} Spieler bei ${f.filter(x=>x.n>0).length} Vereinen`);});
+  ende.forEach(z=>{const mn=Math.min(...z.kader),mx=Math.max(...z.kader);
+    pruef(mn>=15&&mx<=36&&z.minus===0&&z.leer===0,`Saisonende ${z.s}: Kader zwischen 15 und 36, keine Gruppe ganz leer, kein Konto im Minus`,`Kader ${mn} bis ${mx}, ${z.leer} leere Gruppen, ${z.minus} im Minus`);
+    info(`Saisonende ${z.s}: offene Planstellen je Verein`,`${f1(z.offen/z.vereine)}, Vereine mit mehr als 2 Spielern Überhang in einer Gruppe: ${pc(z.ueber2/z.vereine)}`);});
+  // Budget genutzt (K31 §10: 60 bis 100 %): Anteil des Winterbudgets der letzten Saison, der ausgegeben wurde (das Sommerbudget ist dann schon überschrieben)
+  {const tb=S.teams.filter(t=>t.tb&&t.tb.b>0).map(t=>t.tb.a/t.tb.b);info('Budget genutzt im letzten Fenster (nur zur Ansicht)',tb.length?pc(m(tb)):'kein Budget');}
+  // Zielwerte, die zehn Saisons brauchen (K31 §10)
+  const letzte=ende[ende.length-1],top5=S.teams.filter(t=>t.lg<=3).sort((a,b)=>b.rep-a.rep).slice(0,5),platz=top5.map(t=>t.lg===1?t.lastPos:18+t.lastPos),
+    stars=S.pl.filter(p=>p.team>=0&&p.str>=85),oben=stars.filter(p=>S.teams[p.team].rep>75).length;
+  if(N>=10){
+    pruef(m(platz)<=8,'Langzeit-Spannung: Die fünf Vereine mit dem höchsten Ansehen stehen im Schnitt unter den besten acht (K31 §10)',`Ø Platz ${f1(m(platz))}`);
+    pruef(letzte.leer===0&&letzte.ueber2<=letzte.vereine*0.05,'Ausgewogene Kader: keine Gruppe unbesetzt, höchstens 5 % der Vereine mit mehr als 2 Spielern Überhang je Gruppe (K31 §10)',`${pc(letzte.ueber2/letzte.vereine)}`);
+    pruef(!stars.length||oben/stars.length>=0.7,'Stars wandern nach oben: Spieler ab Stärke 85 zu mindestens 70 % bei Vereinen mit Ansehen über 75 (K31 §10)',`${oben} von ${stars.length}`);}
+  else{info('Erst ab zehn Saisons gewertet (node tests/welt.js 10): Langzeit-Spannung',`fünf höchste Ansehen im Schnitt auf Platz ${f1(m(platz))}`);
+    info('Erst ab zehn Saisons gewertet: Stars bei Vereinen mit Ansehen über 75',`${oben} von ${stars.length}`);}
+  info('Nicht gebaut und nicht geprüft','Trainerwechsel je Saison, Klugheit, Vereinsprofile, Sternejagd (K31 §10, U11b bis U11d)');}
+
+console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
+console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

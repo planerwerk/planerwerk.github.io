@@ -201,9 +201,7 @@ const REGELN={
 
   markt:{
     kaderMax:36,                     // dein Kader höchstens
-    listeVoll:{kaderAb:26,chance:0.3}, // Computer-Verein mit großem Kader setzt einen Ersatzspieler auf die Liste
-    listeZufall:{chance:0.06,aufschlag:1.1},
-    kaeufer:{niveauPlus:2,kaderMax:30},
+    kaeufer:{kaderMax:30},           // Computer-Vereine kaufen nur, solange ihr Kader kleiner ist. Wer auf die Transferliste kommt und wer kauft, regelt seit U11a der Kaderplan (REGELN.computer)
     verkaeufer:{kaderMin:20},        // Computer-Vereine geben nur ab, solange danach mindestens so viele Spieler bleiben
     neuerVertrag:[2,4],
     runden:25000,
@@ -216,14 +214,13 @@ const REGELN={
 
   // Transfers I (K19 §5, §11, U10a): Fenster für alle, Vereinswert mit einer Formel für Kauf und Verkauf, Verhandlungsrunden.
   // Fenster (DFL 2026/27, jeweils bis 20 Uhr): Sommer 1.7. bis 1.9., Winter 1.1. bis 1.2. Außerhalb wird verhandelt, gewechselt wird zum nächsten Fensterbeginn. Vereinslose jederzeit.
-  // Wechsel unter Computer-Vereinen nur im Fenster, dafür 2 bis 5 je Woche (vorher 0 bis 2 das ganze Jahr, im Schnitt etwa gleich viele je Saison).
+  // Wechsel unter Computer-Vereinen nur im Fenster. Wie viele es sind, folgt seit U11a aus dem Kaderplan (REGELN.computer), nicht mehr aus einer festen Zahl je Woche.
   // Vereinswert = Marktwert × Stellenwert (Kaderrolle beim Verkäufer, Bedarf beim Käufer) × Restlaufzeit × Finanzlage. Forderung = Vereinswert × 1,15, höchstens 1,8 × Marktwert.
   // Schmerzgrenze = Vereinswert × 0,95. Gegenangebot in der Mitte zwischen letzter Forderung und deinem Angebot, nie unter der Schmerzgrenze. Höchstens vier Runden beim Kauf,
   // drei beim Verkauf. Spottangebot (unter 60 % der Forderung) kostet Geduld (zwei Spottangebote, dann Abbruch). Abbruch: vier Wochen Pause. Ein anständiges Angebot (ab 80 %)
   // drückt die Forderung um 3 %, höchstens einmal in vier Wochen. Angebote der Computer-Vereine: 85 bis 100 % ihres Vereinswerts, nur mit Bedarf (mindestens so gut wie ihr Stammspieler).
   transfers:{
     fenster:[['07-01','09-01'],['01-01','02-01']],
-    fensterWechsel:[2,5],
     stellenwert:{schluessel:1.5,stamm:1.3,rotation:1,pokal:1,talent:1,ergaenzung:0.8},
     kauf:{besser:1.2,gleich:1,schlechter:0.7,spanne:2},
     restlaufzeit:[0.6,0.6,0.85,1],
@@ -274,6 +271,31 @@ const REGELN={
   leihe:{zahlBereit:{besser:1,gleich:0.5,schlechter:0,spanne:2},anteile:[0,0.5,1],garantie:{stamm:0.6,rotation:0.3},pruefAbWochen:8,
     holenRollen:['ergaenzung','talent','rotation','pokal'],zweiteBis:23,
     medizin:{kosten:5000,abTagen:60,tage:365,abschlag:[0.1,0.3]}},
+
+  // Computer-Vereine (K31 §5.6, §11, U11a): Kaderplan, Bedarf, Verkaufs- und Kaufregeln, Transferbudget. Gilt für alle Vereine, deren Transfers nicht du führst,
+  // also auch für deinen Verein in der Automatik (K36). ALLE ZAHLEN HIER SIND NOCH UNGEPRÜFT: U11a entstand ohne Testlauf (tests/welt.js).
+  // Kaderplan: sechs Gruppen aus den 14 Positionen. Planstellen je Gruppe = Mittel aus dem Standard (planstellen) und dem Doppelten der Plätze in der Grundordnung,
+  // Torwart fest. Das sind bei jeder Grundordnung 24. Rang nach Stärke: so viele Stammspieler wie Plätze in der Ordnung, ebenso viele Herausforderer, dann Ergänzung, darüber Überhang.
+  // Überzählige bis talentBis sind Talente (höchstens talente[1]), kein Überhang. Anspruch = Kaderstärke, mindestens die Grundstärke nach dem Ansehen (welt.grund).
+  // qualitaet: so weit darf ein Rang unter dem Anspruch liegen. bedarf: Stammspieler mehr als stammUnterZiel unter seinem Ziel oder länger als verletztTage verletzt.
+  // Budget nutzen: In den letzten endspurtWochen des Fensters sinkt die gesuchte Stärke um anspruchJeWoche je Woche, solange mehr als budgetRestAb des Budgets übrig ist.
+  // verkauf.unterPlanstelle: so weit unter dem Ziel seines Rangs gilt ein Spieler als zu schwach (nur mit Überhang in der Gruppe, nie Stammspieler).
+  // kauf: Zugänge über den Markt je Fenster [Sommer, Winter], der Spieler geht höchstens ansehenMinus nach unten, Höchstalter, Auswahl nach Stärke + talentGewicht × (Talent − Stärke)
+  // bis jungBis, minus altMalus je Jahr über altAb, plus Schätzfehler ±schaetzFehler. finanzen: Budget = Konto × budgetAnteil [Sommer, Winter] am Anfang des Fensters,
+  // Verkäufe im Fenster erhöhen es um reinvest × Ablöse. aktivJeWoche: Anteil der Vereine, die in einer Fensterwoche auf den Markt gehen.
+  // fuellen: letzte Woche des Sommerfensters, offene Planstellen mit Vereinslosen (bis Grundstärke + vereinslosBis, mit vereinslosChance) oder erzeugten Spielern wie saison.auffuell*.
+  computer:{
+    gruppen:['TW','IV','AV','ZM','OM','ST'],
+    gruppeVon:{TW:'TW',IV:'IV',LV:'AV',RV:'AV',LS:'AV',RS:'AV',DM:'ZM',ZM:'ZM',SM:'ZM',OM:'OM',LM:'OM',RM:'OM',MS:'ST',HS:'ST',LA:'ST',RA:'ST'},
+    grob:{TW:'TW',IV:'AB',AV:'AB',ZM:'MF',OM:'MF',ST:'ST'},
+    planstellen:{TW:3,IV:4,AV:4,ZM:5,OM:4,ST:4},talente:[2,4],talentBis:21,
+    qualitaet:{stamm:3,herausforderer:6,ergaenzung:10},
+    bedarf:{stammUnterZiel:3,verletztTage:56,budgetRestAb:0.4,endspurtWochen:3,anspruchJeWoche:1},
+    verkauf:{unterPlanstelle:6},
+    kauf:{jeFenster:[4,2],ansehenMinus:30,alterMax:32,jungBis:23,talentGewicht:0.3,altAb:29,altMalus:1},
+    finanzen:{budgetAnteil:[0.5,0.25],reinvest:0.8},
+    aktivJeWoche:0.5,schaetzFehler:2,
+    fuellen:{fenster:0,vereinslosBis:4,vereinslosChance:0.6}}, // fenster: Nummer des Fensters in transfers.fenster, an dessen Ende aufgefüllt wird (0 = Sommer)
 
   // Training (K07 §11): Einheiten, Intensität, Vorlagen nach Abstand zum Spiel, Kondition und Entwicklung aus dem Wochenreiz, Belastung, Verletzungen, Umschulung
   training:{
@@ -712,4 +734,4 @@ const REGELN={
 // Schreibschutz: Zur Laufzeit darf kein Code eine Regel ändern.
 (function frieren(o){Object.freeze(o);Object.values(o).forEach(v=>{if(v&&typeof v==='object'&&!Object.isFrozen(v))frieren(v);});})(REGELN);
 // Kurzformen für den Code
-const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui,RL=REGELN.live,RTA=REGELN.taktik,RSO=REGELN.sommer,RST=REGELN.stab,RD=REGELN.disziplin,RMD=REGELN.medizin,RWB=REGELN.wettbewerbe,RTS=REGELN.testspiele,RLA=REGELN.lager,RKA=REGELN.kabine,RGS=REGELN.gespraeche,RSC=REGELN.scouting,RLZ=REGELN.lizenz,RJ=REGELN.jugend,RZ=REGELN.zweite,RTR=REGELN.transfers,RVT=REGELN.vertraege,RBE=REGELN.berater,RLE=REGELN.leihe;
+const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui,RL=REGELN.live,RTA=REGELN.taktik,RSO=REGELN.sommer,RST=REGELN.stab,RD=REGELN.disziplin,RMD=REGELN.medizin,RWB=REGELN.wettbewerbe,RTS=REGELN.testspiele,RLA=REGELN.lager,RKA=REGELN.kabine,RGS=REGELN.gespraeche,RSC=REGELN.scouting,RLZ=REGELN.lizenz,RJ=REGELN.jugend,RZ=REGELN.zweite,RTR=REGELN.transfers,RVT=REGELN.vertraege,RBE=REGELN.berater,RLE=REGELN.leihe,RCV=REGELN.computer;

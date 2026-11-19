@@ -888,3 +888,29 @@ Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `
 | BF5 | **Bestehende Tests:** Käufe in `tests/transfers.js`, `tests/vertraege.js` und `tests/ausland.js` klicken bei einem Befund ein zweites Mal. | ✅ |
 | BF6 | **K16 Leihmanager, K17 Beziehung zum Leihverein, K31 Leihen unter Computer-Vereinen** fehlen. | 📌 K16, U11, U12 |
 | BF7 | **K36:** neuer Bereich `leihe` (B-Lizenz), 45 Bereiche. **K33:** Felder `leihe`, `zwP`, `verh.mc`, neue Datei `js/leihe.js`. | ✅ |
+
+---
+
+## BG. Nachtrag zu U11a Computer-Vereine: Kaderplan, Bedarf, Kauf und Verkauf (19. November 2026, ohne Testlauf)
+
+**Wichtig:** U11a entstand auf einem Rechner ohne Node.js und ohne Playwright. Kein Test ist gelaufen, auch `tests/welt.js` nicht. Geprüft sind nur die Klammern der geänderten Dateien (Hilfsskript) und der Code von Hand. Alle Zahlen in `REGELN.computer` sind Schätzungen.
+
+| # | Befund | Status |
+|---|---|---|
+| BG1 | **Fehler aus U10d gefunden und behoben:** In `js/ablauf.js` (`finanzenLiga`) stand die Buchung „Trainerstab“ seit U10d in derselben Zeile hinter einem `//`-Kommentar und lief nicht mehr (wie AX12 und BD13). Eigener Commit, `tests/stab.js` muss es bestätigen. | ✅ ohne Testlauf |
+| BG2 | **K31 §3.1 (Planstellen fest je Gruppe) gegen K06 (zehn Grundordnungen):** Ein 4-3-3 hat kein offensives Mittelfeld, ein 3-5-2 drei Innenverteidiger. Gebaut: Planstellen = Mittel aus dem Standard und dem Doppelten der Plätze in der Ordnung. Das ergibt immer 24. | ✅ vorläufig, K31 §12 Nr. 6 |
+| BG3 | **K31 §3.1 („Vereinsniveau“) ist nicht definiert.** Gebaut: Anspruch = Kaderstärke, mindestens die Grundstärke nach dem Ansehen. | ✅ vorläufig, K31 §12 Nr. 7 |
+| BG4 | **K31 §5.1 gegen §3.1:** „Stammspieler mehr als 3 unter dem Qualitätsziel“ kann 3 oder 6 unter dem Anspruch heißen. Gebaut: 6 (wörtlich). | ✅ vorläufig, K31 §12 Nr. 8 |
+| BG5 | **K31 §5.2 Grund „Note“ gegen K33:** Das Spiel speichert keine Noten der letzten Einsätze. Gebaut ist nur „Stärke deutlich unter der Planstelle“. | 📌 K34 oder U11c |
+| BG6 | **K31 §5.2 (Angebot über 150 %) gegen K19 §5.1 (Käufer zahlt höchstens das 1,2-Fache):** Unter Computer-Vereinen kommt so nie ein Kauf über 150 % zustande. Gebaut: nur Spieler der Transferliste und Vereinslose. Mehr zahlen erst ehrgeizige Vereine (Sternejagd). | 📌 U11b |
+| BG7 | **K31 §5.2 Regel B gegen K19 (dein Kauf):** Für dich gilt weiter der Preis nach Kaderrolle. Du kannst einen Spieler aus einer voll besetzten Gruppe kaufen, der Verein sucht danach Ersatz. | ✅ vorläufig, K31 §12 Nr. 11 |
+| BG8 | **BC5 nur zum Teil erledigt:** Der Kaderplan steuert Käufe und Verkäufe unter Computer-Vereinen. `hatBedarf` (Angebote an dich, Leihe, Ausstiegsklausel, Vorvertrag) ist unverändert. Die Umstellung ändert die Häufigkeit der Angebote und braucht `tests/transfers.js`, `tests/leihe.js`, `tests/vertraege.js` und `tests/ausland.js`. | 📌 mit dem ersten Testlauf |
+| BG9 | **K03 (feine Positionen per Zufall) gegen den Kaderplan:** Die Hälfte der Mittelfeldspieler landet außen oder offensiv, der Plan will dort zwei bis vier von neun. Echte Kader (im Schnitt 28 Spieler, 6 Stürmer) haben dazu mehr Stürmer als Planstellen. Erwartung für die erste Saison: viele Überzählige auf der Liste, die niemand braucht, und zu wenige zentrale Mittelfeldspieler. | 📌 K03 Daten, messen mit `tests/welt.js` |
+| BG10 | **K31 („`saison.kaderSoll` geht im Kaderplan auf“):** nicht ganz. `kaderSoll` bleibt als Mindestkader am 1. Juli, damit jeder Verein spielfähig ist. Offene Planstellen füllt der Verein erst in der letzten Woche des Sommerfensters auf (Vereinslose oder erzeugte Spieler der Gruppe). | ✅ vorläufig, K31 §12 Nr. 12 |
+| BG11 | **K36 Gleichschritt (`tests/lizenz.js`):** Der alte Markt hing nur über „Konto größer als der Preis“ am Geld. Der neue hat ein Budget. Damit dein Verein in der Automatik und derselbe Verein als Computer-Verein gleich entscheiden, steht das Budget am ersten Montag des Fensters fest. Die Finanzlage (K19, Konto unter 1,5 oder ab 20 Mio €) hängt weiter am laufenden Konto. | ⚠️ nicht nachgeprüft |
+| BG12 | **K23:** Computer-Vereine zahlen weiter keine Gehälter (AX4). Ein Gehaltsrahmen (K31 §3.3) fehlt. Bei deinem Verein in der Automatik kosten Zugänge echtes Gehalt, begrenzt nur durch das Budget für die Ablöse. | 📌 K23 |
+| BG13 | **K29 Meldungsdichte:** Jeder Wechsel mit Ablöse steht im Posteingang. Vorher waren es 2 bis 5 je Fensterwoche, jetzt können es in der ersten Juliwoche deutlich mehr sein. | 📌 K29, messen |
+| BG14 | **Erwartete Verschiebungen in bestehenden Tests** (nicht gemessen): `tests/transfers.js` Nr. 1 (mindestens 15 Wechsel je Saison, jetzt aus dem Kaderplan statt 2 bis 5 je Woche), `tests/ausland.js` (Anteil der Auslandsangebote: Computer-Vereine geben im Fenster bis zur Hälfte ihres Kontos aus, also bieten weniger deutsche Vereine), `tests/kalibrierung.js` und alle Tests über mehrere Saisons (andere Welt). `tests/pruefungen.js` verlangt Kader von 15 bis 36: Der Markt hält 21 bis 30 ein. | ⚠️ offen |
+| BG15 | **K33:** neues Feld `tb` am Verein, neue Datei `js/computer.js`, `mkPlayer` mit `fp`. **K36:** kein neuer Bereich. | ✅ |
+| BG16 | **Nicht gebaut aus K31:** Profile und Sternejagd (§3.2, §5.3), Klugheit (§5.4), Verträge nach Rang (§4 Nr. 4, dazu BD4 und BD7), Leihen unter Computer-Vereinen (BF6), Trainerwechsel (§5.5), Gehaltsrahmen und Notverkauf (§3.3, §8), Ereignisse (§8), Käufe im Ausland, Anzeige des Bedarfs anderer Vereine (§6), Schätzung über das eigene Scouting (BC6). | 📌 U11b bis U11d, U12 |
+| BG17 | **Alle Tests nach U11a: stehen aus.** Zuerst `node tests/welt.js`, dann `tests/stab.js` (BG1), `tests/transfers.js`, `tests/lizenz.js` (Gleichschritt, „kein Nachteil“), `tests/leihe.js`, `tests/vertraege.js`, `tests/ausland.js`, dann die ganze Liste aus `tests/README.md`, die Browser-Tests einzeln. Der volle Testlauf nach U10d steht ebenfalls noch aus (kein Eintrag in BF). | ⚠️ offen |

@@ -1,6 +1,7 @@
 # K31 – Computer-Vereine
 
 Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12.
+**U11a gebaut am 19. November 2026, noch ohne Testlauf** (Kaderplan, Bedarf, Verkaufs- und Kaufregeln, Transferbudget je Fenster): siehe §5.6. Auf dem Rechner, auf dem U11a entstand, gibt es kein Node.js. Alle Zahlen in §5.6 und §11 sind deshalb ungeprüft, `tests/welt.js` ist geschrieben, aber nie gelaufen.
 Hängt ab von: K19 (Transfers), K21 (Verträge), K18 (Scouting), K28 (Vorstand), K02 (Klugheit) · Wird gebraucht von: K06, K07, K20, K23, K32.
 
 ## 1. Ziel und Spielgefühl
@@ -114,6 +115,55 @@ Klugheit ändert nur Entscheidungen, nie Stärken oder Würfel.
 - Vertrauen aus Sport und Finanzen (K28 §5.1, vereinfacht), Ultimatum, Entlassung nach Geduld des Präsidenten.
 - Neuer Trainer aus dem **Trainerpool** (vereinslose Trainer, Co-Trainer anderer Vereine, ehemalige Spieler, K16). Er bringt seinen Lieblingsstil (Vertrautheit sinkt, K06), einen kurzen Stimmungsschub (+5 für alle, K14) und einen Kaderumbau im nächsten Fenster (Bedarf neu nach seinem Stil).
 
+### 5.6 Umsetzung U11a (19. November 2026, ohne Testlauf)
+
+Code in `js/computer.js`, Zahlen in `REGELN.computer`. Die Regeln gelten für jeden Verein, dessen Transfers nicht du führst: alle Computer-Vereine und dein Verein in der Automatik (K36, Bereich `transfers`).
+
+**Kaderplan**
+
+- Sechs Gruppen aus den 14 Positionen: TW · IV · AV (LV, RV, Schiene) · ZM (DM, ZM, SM) · OM (OM, LM, RM) · ST (MS, HS, LA, RA).
+- Planstellen je Gruppe = Mittel aus dem Standard (§3.1) und dem Doppelten der Plätze in der Grundordnung, gerundet. Torwart fest 3. Das ergibt bei jeder Grundordnung 24 Planstellen. Beispiel 4-3-3: ZM 6, OM 2, ST 5.
+- Rang nach Stärke in der Gruppe: so viele Stammspieler wie Plätze in der Grundordnung, ebenso viele Herausforderer, der Rest der Planstellen Ergänzung. Wer darüber liegt, ist Überhang.
+- Überzählige bis 21 Jahre sind Talente (die bis zu 4 mit dem größten Talent), kein Überhang.
+- Anspruch (das „Vereinsniveau“ im Plan) = die eigene Kaderstärke, mindestens aber die Grundstärke nach dem Ansehen (48 + 0,4 × Ansehen). So baut ein Verein wieder auf, dessen Kader unter seinen Rang gefallen ist.
+
+**Bedarf** (in dieser Reihenfolge, je Woche höchstens ein Kauf)
+
+| Grund | Priorität | gesucht wird |
+|---|---|---|
+| offene Planstelle | hoch | Stärke mindestens Anspruch minus Qualitätsziel des freien Rangs |
+| Stammspieler mehr als 3 unter dem Qualitätsziel (also mehr als 6 unter dem Anspruch) | hoch | Anspruch − 3 |
+| Stammspieler länger als 8 Wochen verletzt, kein brauchbarer Herausforderer, kein Überhang | mittel | Anspruch − 6 |
+| Stammspieler mit Wechselwunsch ab Stufe 3, kein Überhang | mittel | Anspruch − 3 |
+| weniger als 2 Talente | niedrig | bis 21 Jahre, Talent mindestens Anspruch − 3 |
+
+**Verkauf** (§5.2, A und B)
+
+- B zuerst: Abgegeben wird nur aus einer Gruppe, die mehr Spieler hat als Planstellen. Geprüft wird noch einmal im Moment des Verkaufs.
+- A: Wechselwunsch ab Stufe 3, oder Überhang, oder (nicht bei Stammspielern) mehr als 6 unter dem Qualitätsziel seines Rangs.
+- Wer A und B erfüllt, steht auf der Transferliste. Preis: Marktwert × Stellenwert (höchstens 1) × Restlaufzeit × Finanzlage (K19 §5.1).
+- Ein Verein mit 20 oder weniger Spielern gibt niemanden ab. Geliehene Spieler, vereinbarte Wechsel und Profis in der Zweiten bleiben außen vor.
+- Grund „Note“ (§12 Nr. 4) und das außergewöhnliche Angebot über 150 % fehlen noch (siehe §12 Nr. 9 und 10).
+
+**Kauf**
+
+- Nur im Fenster. Jede Woche ist die Hälfte der Vereine aktiv, in zufälliger Reihenfolge.
+- Kandidaten: Vereinslose und Spieler der Transferliste, die in die Gruppe passen und die gesuchte Stärke haben. Höchstens 32 Jahre alt.
+- Der Spieler geht nicht zu einem Verein, dessen Ansehen mehr als 30 unter dem seines Vereins liegt, außer er will weg.
+- Der Käufer zahlt höchstens seinen Vereinswert: Marktwert × 1,2 für einen Stammplatz, sonst × 1 (K19 §5.1, hier nach der Planstelle statt nach dem schwächsten Stammspieler).
+- Gewählt wird der Beste: Stärke, bei Jungen ein Teil des Talents, ab 30 ein Abzug, dazu ein Schätzfehler von ±2.
+- Höchstens 4 Zugänge im Sommer und 2 im Winter über den Markt. Kader höchstens 30.
+
+**Budget**
+
+- Am Anfang jedes Fensters: 50 % des Kontos im Sommer, 25 % im Winter. Verkäufe im Fenster erhöhen es um 80 % der Ablöse.
+- Budget nutzen (§5.1): In den letzten drei Wochen des Fensters senkt ein Verein mit mehr als 40 % Rest die gesuchte Stärke um 1 je Woche.
+
+**Sicherheitsnetz**
+
+- Am 1. Juli füllt jeder Verein wie bisher auf die Mindestzahl je Mannschaftsteil auf (`saison.kaderSoll`).
+- In der letzten Woche des Sommerfensters füllt er Planstellen, die der Markt nicht besetzt hat: zuerst Vereinslose, sonst erzeugte Spieler der passenden Gruppe.
+
 ## 6. Hebel des Spielers
 
 K31 beschreibt die Gegner. Deine Hebel gegenüber ihnen:
@@ -165,6 +215,8 @@ Testskript: `tests/welt.js` (neu), viele Saisons ohne menschlichen Spieler.
 | Trainerwechsel | 3–7 pro Saison in der 1. Liga (prüfen, K28) |
 | Klugheit | „clever“ holt im Schnitt mehr Punkte je Euro als „gemütlich“, bei gleichen Kadern und Würfeln |
 
+**Stand U11a:** `tests/welt.js` ist geschrieben und **noch nie gelaufen**. Es prüft den Kaderplan an einem gebauten Kader, die Transferliste, das Budget, „gleicher Seed, gleiche Wechsel“, die Automatik und dann Saisons im Ablauf: Jeder Wechsel wird im Moment des Wechsels geprüft (nur im Fenster, Bedarf beim Käufer, Grund A und Regel B beim Verkäufer, Budget, Obergrenze). Langzeit-Spannung, ausgewogene Kader und „Stars wandern nach oben“ zählen erst ab zehn Saisons (`node tests/welt.js 10`), darunter gibt das Skript die Werte nur aus. Budgetnutzung und Zugänge je Verein werden ausgegeben, aber nicht gewertet, bis die Zahlen kalibriert sind. Trainerwechsel und Klugheit sind nicht gebaut.
+
 ## 11. Stellschrauben
 
 ```js
@@ -182,6 +234,24 @@ computer:{
 
 `markt.listeVoll`, `markt.listeZufall`, `markt.wechsel`, `markt.kaeufer` und `saison.kaderSoll` aus der heutigen `regeln.js` gehen darin auf.
 
+**Gebaut in U11a** (`REGELN.computer`, alle Zahlen ungeprüft):
+
+```js
+computer:{
+  gruppen:['TW','IV','AV','ZM','OM','ST'],
+  planstellen:{TW:3,IV:4,AV:4,ZM:5,OM:4,ST:4},talente:[2,4],talentBis:21,
+  qualitaet:{stamm:3,herausforderer:6,ergaenzung:10},
+  bedarf:{stammUnterZiel:3,verletztTage:56,budgetRestAb:0.4,endspurtWochen:3,anspruchJeWoche:1},
+  verkauf:{unterPlanstelle:6},
+  kauf:{jeFenster:[4,2],ansehenMinus:30,alterMax:32,jungBis:23,talentGewicht:0.3,altAb:29,altMalus:1},
+  finanzen:{budgetAnteil:[0.5,0.25],reinvest:0.8},
+  aktivJeWoche:0.5,schaetzFehler:2,
+  fuellen:{fenster:0,vereinslosBis:4,vereinslosChance:0.6}
+}
+```
+
+Entfernt sind `markt.listeVoll`, `markt.listeZufall`, `markt.kaeufer.niveauPlus` und `transfers.fensterWechsel`. Geblieben sind `markt.kaeufer.kaderMax` (30), `markt.verkaeufer.kaderMin` (20) und `saison.kaderSoll` (Mindestkader am 1. Juli, siehe §12 Nr. 12).
+
 ## 12. Offene Fragen
 
 **Vorläufig entschieden** (von mir, ohne Rücksprache):
@@ -191,9 +261,32 @@ computer:{
 3. **Klugheit gilt für alle Computer-Vereine gemeinsam** (eine Stufe je Spielstand, K02).
 4. **„Note über 10 oder mehr Einsätze schlechter als die Schwelle“** aus deinen Vorgaben: Schwelle vorläufig 4,5 im Notenschnitt der letzten 10 Einsätze.
 
-**Noch zu recherchieren:** echte Zahl der Zu- und Abgänge je Verein und Fenster, Trainerwechsel pro Saison.
+**Vorläufig entschieden mit U11a** (19.11., von mir, ohne Rücksprache und ohne Testlauf):
+
+5. **U11 in Teilschritten:** U11a Kaderplan, Bedarf, Kauf und Verkauf, Budget (gebaut). U11b Vereinsprofile und Sternejagd. U11c Verträge nach Rang, Vorverträge und Klauseln unter Computer-Vereinen. U11d Leihen unter Computer-Vereinen, Klugheit, Trainerwechsel (hängt an K28).
+6. **Planstellen folgen der Grundordnung nur zur Hälfte** (Mittel aus Standard und dem Doppelten der Plätze). So bleibt es bei 24 Planstellen, und ein Wechsel der Ordnung macht nicht den halben Kader überzählig.
+7. **Anspruch = Kaderstärke, mindestens die Grundstärke nach dem Ansehen.** Nur die eigene Kaderstärke hätte bedeutet: Ein Verein, dessen Kader schwächer geworden ist, will nichts mehr. Das wäre gegen „die Großen bleiben groß“.
+8. **„Stammspieler mehr als 3 unter dem Qualitätsziel“** (§5.1) wörtlich gelesen: mehr als 6 unter dem Anspruch. Die schärfere Lesart (mehr als 3 unter dem Anspruch) hätte bei fast jedem Kader Dauerbedarf erzeugt.
+9. **Grund „Note“ fehlt** (Nr. 4): Das Spiel speichert keine Noten der letzten Einsätze. Als „lange schwach“ zählt bis dahin nur „Stärke deutlich unter der Planstelle“.
+10. **Das außergewöhnliche Angebot (über 150 %)** ist für Käufe unter Computer-Vereinen noch nicht gebaut. Ein Käufer zahlt höchstens das 1,2-Fache (K19 §5.1), also bekommt er nur Spieler der Transferliste. Mehr zahlen erst ehrgeizige Vereine auf Sternejagd (U11b). Für dich gilt weiter K19: Stammspieler kosten etwa das 1,5-Fache (Stellenwert 1,3 × Forderung 1,15), das entspricht der Regel.
+11. **Regel B gilt für dich noch nicht:** Du kannst weiter jeden Spieler kaufen, den sein Verein nach K19 bepreist. Der Verein sucht danach Ersatz (offene Planstelle).
+12. **`saison.kaderSoll` bleibt als Mindestkader am 1. Juli**, damit jeder Verein spielfähig ist. Die Planstellen füllt erst der Markt, den Rest das Sicherheitsnetz in der letzten Woche des Sommerfensters. So kommt der Markt vor den erzeugten Spielern dran.
+13. **Angebote an dich, Leihe, Ausstiegsklausel und Vorvertrag** fragen weiter `hatBedarf` aus U10a (mindestens so gut wie der schwächste Stammspieler des Mannschaftsteils), nicht den Kaderplan. Die Umstellung ändert, wie oft du Angebote bekommst. Das braucht einen Testlauf (Konsistenzprüfung BC5, BG).
+14. **Budget fest am Anfang des Fensters** (50 % und 25 % des Kontos). Grund: Dein Verein in der Automatik hat echte Buchhaltung, ein Computer-Verein Einnahmen nach Formel. Mit einem festen Budget entscheiden beide im Sommerfenster gleich (`tests/lizenz.js`, Gleichschritt). Einen Gehaltsrahmen gibt es noch nicht (K23).
+15. **Feine Positionen und Kaderplan passen nicht zusammen:** `spieler.positionen` würfelt die Hälfte der Mittelfeldspieler auf die Außen und ins offensive Mittelfeld, der Plan will dort zwei bis vier von neun. Folge im ersten Sommer: viele Überzählige im offensiven Mittelfeld und im Sturm, zu wenige zentrale Mittelfeldspieler. Das gleicht sich über das Auffüllen und den Kaderschnitt aus, nicht über den Markt. Besser wird es erst mit echten Daten zu den feinen Positionen (K03, PLAN §7 Nr. 5).
+16. **Meldungen:** Jeder Wechsel mit Ablöse steht wie bisher im Posteingang. Es werden mehr als vorher. Bündeln oder nach Liga filtern kommt mit K29.
+17. **Keine neue Funktion für dich, also kein neuer Bereich der Lernstufen (K36).** Die Automatik des Bereichs `transfers` folgt den neuen Regeln. Eine Anzeige „Bedarf der anderen Vereine“ (§6) ist noch nicht gebaut.
+
+**Recherche (19.11.), nur teilweise geklärt:**
+
+- **Zu- und Abgänge je Verein:** Die englische Wikipedia führt je Fenster Listen „In“ und „Out“ je Verein, ohne Ablösen. Gezählt wurden nur die lesbaren Teile: Winter 2025/26 bei sieben Bundesligisten 0 bis 5 Zugänge (im Schnitt 2,3) und mindestens 3 bis 8 Abgänge. Sommer 2025: Bayern 3 Zugänge und 16 Abgänge, Leverkusen 13 und 17 (Leihrückkehrer und Jugendspieler zählen bei den Abgängen mit). Das ZDF nannte im Sommer 2025 mitten im Fenster 66 Zugänge und 75 Abgänge für die 18 Vereine, also mindestens 3,7 Zugänge je Verein. Das passt zu „Sommer 3–8, Winter 0–3“ in §10, ist aber keine vollständige Zählung.
+- **Trainerwechsel pro Saison:** nicht geklärt. Statista führt die Reihe seit 1963/64, die Zahlen stehen hinter einer Anmeldung. Offen bis U11d.
 
 ## Quellen
+
+- Transferlisten: Wikipedia (englisch), „List of German football transfers summer 2025“ und „List of German football transfers winter 2025–26“, abgerufen am 19.11.2026, nur teilweise gelesen (https://en.wikipedia.org/wiki/List_of_German_football_transfers_summer_2025, https://en.wikipedia.org/wiki/List_of_German_football_transfers_winter_2025%E2%80%9326)
+- Zwischenstand Sommer 2025 (66 Zugänge, 75 Abgänge): ZDFheute, „Bundesliga: Was von der Transferperiode zu erwarten ist“ (https://www.zdfheute.de/sport/bundesliga-transfermarkt-neuzugaenge-100.html)
+- Trainerwechsel, Zahlen nicht einsehbar: Statista, „Trainerwechsel pro Saison in der 1. Fußball-Bundesliga“ (https://de.statista.com/statistik/daten/studie/36473/umfrage/trainerwechsel-in-der-fussball-bundesliga-seit-der-saison-63-64)
 
 - Kaderplan, Bedarf, Verkaufs- und Kaufregeln, Finanzen, Trainerwechsel: `konzepte/_rohmaterial-logik-v1.md`, Kapitel 13 (Verkaufsregeln nach deinen Vorgaben)
 - Kritik an der KI-Kaderplanung, zu leicht nach ein paar Saisons: `konzepte/_recherche-genre.md`, Abschnitte 4 und 4b

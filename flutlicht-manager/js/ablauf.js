@@ -95,14 +95,8 @@ function training(){const T=RT,d=S.tag,bericht=[];lernplaetzeVergeben();if(S.sta
 // Bieter für einen deiner Spieler: deutsche Vereine oder, mit dem Anteil aus REGELN.welt.ausland.angebote, Auslandsvereine mit passender Stärke und genug Budget (K32 §3.1)
 function bieter(inland,p,preis,abAnsehen){const aus=auslandKaeufer(p,preis).filter(v=>abAnsehen==null||v.rep>=abAnsehen);if(!aus.length)return inland;return !inland.length||R()<RW.ausland.angebote.anteil?aus:inland;}
 function market(){const M=RM;
-  const kasse=(t,v)=>{if(t.id===S.my)money('Transfers',v);else t.cash+=v;};
-  S.teams.forEach(t=>{if(!stabMacht(t.id,'transfers')||!aktiv(t))return;const alle=squad(t.id);if(alle.length<=M.verkaeufer.kaderMin)return;const xi=new Set(bestXI(t.id,t.form));const sq=alle.filter(x=>!x.list&&!x.wech&&!x.leihe&&!xi.has(x.id));if(!sq.length)return;
-    if(sq.length>M.listeVoll.kaderAb&&R()<M.listeVoll.chance){const p=pick(sq);p.list=1;p.ask=value(p);}else if(R()<M.listeZufall.chance){const p=pick(sq);p.list=1;p.ask=Math.round(value(p)*M.listeZufall.aufschlag/M.runden)*M.runden;}});
-  const n=fensterOffen(S.tag)?riA(RTR.fensterWechsel):0; // Wechsel unter Computer-Vereinen nur im Transferfenster (K19 §5.6, U10a)
-  for(let k=0;k<n;k++){const L=S.pl.filter(p=>p.list&&!p.wech&&!p.leihe&&p.team>=0&&stabMacht(p.team,'transfers')&&squad(p.team).length>M.verkaeufer.kaderMin);if(!L.length)break;const p=pick(L);
-    const B=S.teams.filter(t=>stabMacht(t.id,'transfers')&&aktiv(t)&&t.id!==p.team&&t.cash>p.ask&&teamLevel(t.id)<p.str+M.kaeufer.niveauPlus&&squad(t.id).length<M.kaeufer.kaderMax);if(!B.length)continue;
-    const b=pick(B),from=S.teams[p.team];kasse(b,-p.ask);kasse(from,p.ask);kabineAbgang(p,from.id);S.offers=S.offers.filter(o=>o.pid!==p.id);news(`Wechsel perfekt: ${p.n} geht für ${fmt(p.ask)} von ${from.name} zu ${b.name}.`,'tr');
-    p.team=b.id;p.list=0;p.ct=riA(M.neuerVertrag);p.sal=salaryFor(p.str);p.seit=absTag(S.tag);p.abl=p.ask;neuzugang(p,b.id);}
+  // Transferliste und Wechsel aller Vereine, deren Transfers nicht du führst: Kaderplan, Bedarf, Verkaufs- und Kaufregeln (K31, U11a, js/computer.js). Wechsel nur im Fenster (K19 §5.6).
+  kiMarkt();
   const lvl=teamLevel(S.my),A=M.angebote,U=M.ueberraschung,bis=S.tag+RK.angebotTage;
   // Angebote an dich nur, wenn du die Transfers selbst führst (K36)
   // Gebote nach dem Vereinswert des Bieters, nur von Vereinen mit Bedarf (K19 §5.4, U10a). max: wie weit der Bieter bei deiner Gegenforderung mitgeht

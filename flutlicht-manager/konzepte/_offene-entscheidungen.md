@@ -451,6 +451,8 @@ Datei: `konzepte/K31-computer-vereine.md`
 3. **Klugheit gilt für alle Computer-Vereine gemeinsam** (eine Stufe je Spielstand, K02).
 4. **„Note über 10 oder mehr Einsätze schlechter als die Schwelle“** aus deinen Vorgaben: Schwelle vorläufig 4,5 im Notenschnitt der letzten 10 Einsätze.
 
+Dazu seit U11a (19.11.) K31 §12 Nr. 5 bis 17, siehe unten „K31 Computer-Vereine, U11a“.
+
 ## K36 – Einstieg mit Lernstufen (Umsetzung UL, 12.11.)
 Datei: `konzepte/K36-lernstufen.md`, ausführlich in §12 Nr. 1–29. Die Nummern 1–13 stammen aus dem Entwurf vom 9.11. und gelten weiter als vorläufig.
 
@@ -590,3 +592,16 @@ Im Einzelnen in K08 §5.5, §12 Nr. 29 und K19 §12 Nr. 17:
 - **Ausleihen nur von Reservisten,** die bei dir mindestens Rotation wären. Du zahlst das Gehalt, eine Leihgebühr gibt es nicht.
 - **Profis bis 23 in die Zweite:** Vertrag und Gehalt bleiben, mit 24 automatisch zurück.
 - **Medizincheck:** 5.000 € je Kauf, bei Befund 10 bis 30 % weniger Ablöse und ein zweiter Klick.
+
+## K31 Computer-Vereine, U11a (19.11.), vorläufig von mir, gebaut ohne Testlauf
+
+Im Einzelnen in K31 §5.6 und §12 Nr. 5 bis 17. **Alle Zahlen sind ungeprüft,** weil auf dem Rechner kein Node.js lief.
+
+- **Teilschritte:** U11a Kaderplan, Bedarf, Kauf und Verkauf, Budget (gebaut). U11b Profile und Sternejagd, U11c Verträge nach Rang, U11d Leihen, Klugheit, Trainerwechsel.
+- **Kaderplan:** sechs Gruppen, 24 Planstellen, die Grundordnung verschiebt sie zur Hälfte. Anspruch = Kaderstärke, mindestens die Grundstärke nach dem Ansehen.
+- **Bedarf:** offene Planstelle, Stammspieler mehr als 6 unter dem Anspruch, lange verletzt, Wechselwunsch, zu wenige Talente. Je Woche höchstens ein Kauf, im Sommer höchstens 4, im Winter 2.
+- **Verkauf:** nur aus einer überbesetzten Gruppe (Regel B), mit Grund (Wechselwunsch, Überhang, deutlich zu schwach). Der Grund „Note“ fehlt, weil das Spiel keine Noten speichert.
+- **Budget:** 50 % des Kontos im Sommer, 25 % im Winter, fest am Anfang des Fensters. Kein Gehaltsrahmen.
+- **Für dich ändert sich:** Auf der Transferliste stehen jetzt die Überzähligen aller Vereine, zum Vereinswert ohne Aufschlag. Regel B und das Angebot über 150 % gelten für dich noch nicht (weiter K19).
+- **Unverändert:** Angebote an dich, Leihe, Ausstiegsklausel und Vorvertrag fragen weiter den Bedarf aus U10a.
+- **Sicherheitsnetz:** Mindestkader am 1. Juli wie bisher, offene Planstellen werden in der letzten Woche des Sommerfensters aufgefüllt.

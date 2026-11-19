@@ -275,6 +275,7 @@ lizenz:{
 33. **U10a und U10b:** Verhandeln und Gegenforderung hängen an `transfers`, Verlängern mit Gehalt, Laufzeit und Handgeld an `vertraege`. Neu ist `praemien` (A-Lizenz, ohne Automatik) für Prämien und Klauseln: Darunter bleibt das Formular einfach. Damit sind es 43 Bereiche.
 34. **U10c Berater:** neuer Bereich `berater` (B-Lizenz, ohne Automatik) für die Einladung. Damit sind es 44 Bereiche.
 35. **U10d Leihe:** neuer Bereich `leihe` (B-Lizenz, ohne Automatik). Profis in die Zweite abstellen hängt an `zweitekader`, der Medizincheck an `transfers`. Damit sind es 45 Bereiche.
+36. **U11a Computer-Vereine (19.11., ohne Testlauf):** keine neue Funktion für dich, also kein neuer Bereich, es bleibt bei 45. Die Automatik des Bereichs `transfers` folgt jetzt dem Kaderplan (K31 §5.6): Der Verein setzt Überzählige auf die Transferliste, kauft nur bei Bedarf und bleibt im Budget (die Hälfte des Kontos im Sommer, ein Viertel im Winter). Das Budget steht am Anfang des Fensters fest, damit die Automatik im Sommerfenster genau wie ein Computer-Verein entscheidet (Gleichschritt in `tests/lizenz.js`, noch nicht nachgeprüft).
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 

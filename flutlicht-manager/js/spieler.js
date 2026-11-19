@@ -72,7 +72,7 @@ function waehleGewichtet(obj){const e=Object.entries(obj);let x=R()*e.reduce((a,
 const stufenWert=(tab,x)=>{let v=tab[0][1];for(const[ab,w]of tab)if(x>=ab)v=w;return v;};
 // Startwerte eines neuen Spielers (K03 §5.9): Persönlichkeit, feine Position, Fuß, Merkmale. Echte Spieler: alles per Zufall, bis Fakten-Daten da sind.
 function spielerStart(p){const P=RP.persoenlichkeit;p.ch={};P.werte.forEach(k=>p.ch[k]=normal(P.mitte,P.streuung,P.min,P.max));
-  p.fp=waehleGewichtet(RP.positionen[p.pos]);p.fuss=R()<RP.fuss.rechts?'R':'L';
+  if(!p.fp)p.fp=waehleGewichtet(RP.positionen[p.pos]);p.fuss=R()<RP.fuss.rechts?'R':'L'; // feine Position nur würfeln, wenn sie nicht vorgegeben ist (mkPlayer mit o.fp, K31)
   // Mit Seite: Linke Positionen eher Linksfüße, rechte eher Rechtsfüße (ohne harte Regel)
   if(/^L/.test(p.fp)&&R()<0.35)p.fuss='L';if(/^R/.test(p.fp)&&R()<0.35)p.fuss='R';
   p.mk={};const M=RP.startMerkmale,ziel=stufenWert(M.staerken,p.str),anz=Math.floor(ziel)+(R()<ziel%1?1:0),gw=Object.assign({},M.gewichte[p.pos]);
