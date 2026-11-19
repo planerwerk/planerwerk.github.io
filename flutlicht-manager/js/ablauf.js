@@ -80,7 +80,8 @@ function heimspielEinnahmen(m,cup){const t=myT();if(autoB('preise'))t.price=clam
 function finanzenLiga(m){const t=myT();if(m.h===S.my)heimspielEinnahmen(m,false);
   money('TV-Gelder',tvGeld(t));
   if(S.spons){money('Sponsor',S.spons.base);if(S.spons.win&&winner(m)===S.my&&m.hg!==m.ag)money('Sponsor',S.spons.win);}
-  const n=S.fx[t.lg].length;money('Gehälter',-Math.round((squad(S.my).reduce((s,p)=>s+p.sal,0)+leiheGehaelter())/n)); // dazu verliehene Spieler und Profis in der Zweiten (U10d)if(S.stab)money('Trainerstab',-Math.round(stabGehaelter(S.my)/n));
+  const n=S.fx[t.lg].length;money('Gehälter',-Math.round((squad(S.my).reduce((s,p)=>s+p.sal,0)+leiheGehaelter())/n)); // dazu verliehene Spieler und Profis in der Zweiten (U10d)
+  if(S.stab)money('Trainerstab',-Math.round(stabGehaelter(S.my)/n));
   money('Stadion & Betrieb',-Math.round(t.cap*RF.betrieb.jePlatz+t.logen*RF.betrieb.jeLoge));money('Jugendarbeit',-RF.jugendKosten[autoB('jugend')?RS.nachwuchs.computerStufe:t.youth]);{const z=zweiteKosten();if(z)money('Zweite Mannschaft',-z);}
   if(S.loan>0)money('Kreditzinsen',-Math.round(S.loan*RF.kreditZins/n));}
 // Woche (K03 §4): Kondition, Form, Selbstvertrauen, Entwicklung für Spieler ohne Pflichtspiel seit 7 Tagen, Wochenbericht des Co-Trainers
