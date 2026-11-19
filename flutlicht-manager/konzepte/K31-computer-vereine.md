@@ -1,7 +1,7 @@
 # K31 – Computer-Vereine
 
 Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12.
-**U11a gebaut am 19. November 2026, noch ohne Testlauf** (Kaderplan, Bedarf, Verkaufs- und Kaufregeln, Transferbudget je Fenster): siehe §5.6. **U11b am selben Tag, ebenfalls ohne Testlauf** (Vereinsprofile, Sternejagd): siehe §5.7. Auf dem Rechner, auf dem U11a entstand, gibt es kein Node.js. Alle Zahlen in §5.6 und §11 sind deshalb ungeprüft, `tests/welt.js` ist geschrieben, aber nie gelaufen.
+**U11a gebaut am 19. November 2026, noch ohne Testlauf** (Kaderplan, Bedarf, Verkaufs- und Kaufregeln, Transferbudget je Fenster): siehe §5.6. **U11b und U11c am selben Tag, ebenfalls ohne Testlauf** (Vereinsprofile, Sternejagd; Verträge nach Rang): siehe §5.7 und §5.8. Auf dem Rechner, auf dem U11a entstand, gibt es kein Node.js. Alle Zahlen in §5.6 und §11 sind deshalb ungeprüft, `tests/welt.js` ist geschrieben, aber nie gelaufen.
 Hängt ab von: K19 (Transfers), K21 (Verträge), K18 (Scouting), K28 (Vorstand), K02 (Klugheit) · Wird gebraucht von: K06, K07, K20, K23, K32.
 
 ## 1. Ziel und Spielgefühl
@@ -188,6 +188,24 @@ Code in `js/computer.js`, Zahlen in `REGELN.computer`. Die Regeln gelten für je
 - Der Verkäufer nimmt an, auch wenn seine Gruppe danach eine Planstelle zu wenig hat. Seine Ersatzsuche beginnt in der nächsten Woche (offene Planstelle).
 - Der Kauf zählt als der eine Zugang der Woche und zur Obergrenze des Fensters.
 
+### 5.8 Umsetzung U11c (19. November 2026, ohne Testlauf): Verträge nach Rang
+
+§4 Nr. 4: „Stammspieler im letzten Jahr früh verlängern, ältere Reservisten auslaufen lassen.“ Gilt für jeden Verein, dessen Verträge nicht du führst (Bereich `vertraege`, K36), also auch für deinen Verein in der Automatik.
+
+**Früh verlängern:** Von Oktober bis Dezember verlängert ein Verein jede Woche mit 15 % den auslaufenden Vertrag jedes Spielers, den er braucht (Stammspieler, Herausforderer, Talent). Nach den 13 Wochen sind so etwa 88 % gebunden. Grund: Ab dem 1. Januar dürfen andere Vereine und du ihnen einen Vorvertrag geben (K21 §4.3). Laufzeit 1 bis 3 Jahre ab dem Sommer, Gehalt nach Stärke (wie bisher beim Saisonwechsel).
+
+**Saisonwechsel:** Wer dann noch ausläuft, bleibt mit einer Chance nach seinem Rang im Kaderplan (berechnet vor dem Altern):
+
+| Rang | Chance (vorher für alle 70 %) |
+|---|---|
+| Stammspieler, Herausforderer, Talent | 90 % |
+| Ergänzung unter 30 Jahren | 50 % |
+| Ergänzung ab 30, Überzählige | 10 % |
+
+Die Chance schließt die Zusage des Spielers ein. Ein Verein ohne Plan (gerade in die Regionalliga abgestiegen) nutzt die alte Regel.
+
+**Nicht gebaut:** Vorverträge und Ausstiegsklauseln unter Computer-Vereinen (Konsistenzprüfung BD4, BD7), Verhandlung über Gehalt und Prämien, Interesse des Spielers.
+
 ## 6. Hebel des Spielers
 
 K31 beschreibt die Gegner. Deine Hebel gegenüber ihnen:
@@ -271,6 +289,8 @@ computer:{
     werte:{ehrgeizig:{qualitaet:-1,budget:1.4},sparsam:{zahlt:0.9,budget:0.7},ausbildung:{talente:[3,5],talentGewicht:0.6,alterMax:28},
       altherren:{talente:[1,3],talentGewicht:0,altMalus:0,alterMax:34},spekulant:{talentGewicht:0.8},malocher:{}}},
   sterneJagd:{fenster:0,ueberNiveau:2,ansehenPlus:5,alterMax:29},                                                  // U11b
+  vertrag:{wichtig:['stamm','herausforderer','talent'],chanceWichtig:0.9,ergaenzung:0.5,ergaenzungBis:30,sonst:0.1,   // U11c
+    frueh:{von:'10-01',bis:'12-31',chance:0.15}},
   kauf:{jeFenster:[4,2],ansehenMinus:30,alterMax:32,jungBis:23,talentGewicht:0.3,altAb:29,altMalus:1},
   finanzen:{budgetAnteil:[0.5,0.25],reinvest:0.8},
   aktivJeWoche:0.5,schaetzFehler:2,
@@ -291,7 +311,7 @@ Entfernt sind `markt.listeVoll`, `markt.listeZufall`, `markt.kaeufer.niveauPlus`
 
 **Vorläufig entschieden mit U11a** (19.11., von mir, ohne Rücksprache und ohne Testlauf):
 
-5. **U11 in Teilschritten:** U11a Kaderplan, Bedarf, Kauf und Verkauf, Budget (gebaut). U11b Vereinsprofile und Sternejagd. U11c Verträge nach Rang, Vorverträge und Klauseln unter Computer-Vereinen. U11d Leihen unter Computer-Vereinen, Klugheit, Trainerwechsel (hängt an K28).
+5. **U11 in Teilschritten:** U11a Kaderplan, Bedarf, Kauf und Verkauf, Budget (gebaut). U11b Vereinsprofile und Sternejagd (gebaut). U11c Verträge nach Rang (gebaut, enger als zuerst geplant, Nr. 23). U11d Vorverträge und Klauseln unter Computer-Vereinen, Leihen unter Computer-Vereinen, Klugheit, Trainerwechsel (hängt an K28).
 6. **Planstellen folgen der Grundordnung nur zur Hälfte** (Mittel aus Standard und dem Doppelten der Plätze). So bleibt es bei 24 Planstellen, und ein Wechsel der Ordnung macht nicht den halben Kader überzählig.
 7. **Anspruch = Kaderstärke, mindestens die Grundstärke nach dem Ansehen.** Nur die eigene Kaderstärke hätte bedeutet: Ein Verein, dessen Kader schwächer geworden ist, will nichts mehr. Das wäre gegen „die Großen bleiben groß“.
 8. **„Stammspieler mehr als 3 unter dem Qualitätsziel“** (§5.1) wörtlich gelesen: mehr als 6 unter dem Anspruch. Die schärfere Lesart (mehr als 3 unter dem Anspruch) hätte bei fast jedem Kader Dauerbedarf erzeugt.
@@ -312,6 +332,11 @@ Entfernt sind `markt.listeVoll`, `markt.listeZufall`, `markt.kaeufer.niveauPlus`
 20. **Wirkung der Profile nur auf Transfers.** Malocher (Training, Einsatz) ist noch wirkungslos, der Ausbildungsverein verleiht noch nicht (U11d), der Spekulant verkauft noch nicht mit Gewinn (das widerspräche Regel B, §5.2). „Sparsam verkauft bei gutem Angebot eher“ fehlt, weil das außergewöhnliche Angebot nur auf der Sternejagd vorkommt.
 21. **Profile sind für dich nicht sichtbar.** Eine Anzeige wäre eine neue Information und bräuchte die Oberfläche (K35, K36: Informationen sind frei).
 22. **Dein Verein in der Automatik bekommt dieselben Profile** und kann als „ehrgeiziger“ Verein bis zu 70 % des Kontos ausgeben und auf Sternejagd gehen (Konsistenzprüfung BH8). Gründe: K36 Grundsatz 1, der Gleichschritt in `tests/lizenz.js`, und der alte Markt kaufte mit bis zu 100 % des Kontos.
+
+**Vorläufig entschieden mit U11c** (19.11., von mir, ohne Rücksprache und ohne Testlauf):
+
+23. **U11c enger als in Nr. 5 geplant:** nur Verträge nach Rang (früh verlängern, beim Saisonwechsel nach Rang). Vorverträge und Ausstiegsklauseln unter Computer-Vereinen rutschen nach U11d, weil sie für Computer-Vereine ein Vertragspaket bräuchten, das es noch nicht gibt.
+24. **Früh verlängern von Oktober bis Dezember mit 15 % je Woche** (vorläufig, nicht recherchiert). Folge für dich: Spieler anderer Vereine, die dort gebraucht werden, bekommst du seltener ablösefrei über einen Vorvertrag. Überzählige und ältere Ergänzungsspieler bleiben dafür im letzten Jahr und gehen im Sommer meist ablösefrei.
 
 **Recherche (19.11.), nur teilweise geklärt:**
 

@@ -107,12 +107,28 @@ const mitProtokoll=(F,getS,talentBis)=>{const log=[],orig=F.kiWechsel;
     'Sternejagd: genau ein Stern je Sommer, der Stärkste eines kleineren Vereins, mindestens 150 % des Marktwerts × Restlaufzeit',e?`${q.n} (${q.str}) von ${v.name} zu ${t.name} für ${e.preis}, Soll mindestens ${Math.round(soll)}`:`kein Stern in 14 Wochen, ${st.length} Käufe`);
   const alle=log.filter(x=>x.art==='stern');pruef(alle.every(x=>x.repDiff>=C.sterneJagd.ansehenPlus&&x.preis<=x.rest&&x.nr===C.sterneJagd.fenster)&&new Set(alle.map(x=>x.nach)).size===alle.length,'Sternejagd: nur nach oben, im Budget, im Sommerfenster, je Verein höchstens einer',`${alle.length} Sterne`);}
 
+// 6c. Verträge nach Rang (K31 §5.8, U11c): Chance je Rang beim Saisonwechsel, früh verlängern im Herbst nur für Gebrauchte, deine Spieler bleiben unberührt
+{const w=welt(),{S,F,ev,im,C}=w,V=C.vertrag,t=S.teams.find(x=>x.id!==S.my&&x.lg===1),P=F.kaderplan(t),nach=r=>P.alle.filter(p=>P.rang.get(p.id)===r);
+  const st=nach('stamm')[0],ue=nach('ueber')[0],alt=nach('ergaenzung').find(p=>p.age>=V.ergaenzungBis),jung=nach('ergaenzung').find(p=>p.age<V.ergaenzungBis),ch=p=>F.vertragChance(p,P);
+  pruef(ch(st)===V.chanceWichtig&&(!ue||ch(ue)===V.sonst)&&(!alt||ch(alt)===V.sonst)&&(!jung||ch(jung)===V.ergaenzung)&&F.vertragChance(st,null)===ev('RS').vertrag.verlaengern,
+    'Verträge nach Rang: Gebrauchte zu 90 %, junge Ergänzung zu 50 %, ältere Ergänzung und Überzählige zu 10 %, ohne Plan die alte Regel (70 %)',`geprüft: Stamm${ue?', Überzählige':''}${alt?', ältere Ergänzung':''}${jung?', junge Ergänzung':''}`);
+  // Alle auf ein Jahr Restvertrag, dann zwölf Wochen im Oktober (ohne Fenster: kein Wechsel, nur Verträge)
+  S.pl.forEach(p=>{if(p.team>=0)p.ct=1;});const rang=new Map();S.teams.forEach(x=>{if(x.lg<=3&&x.id!==S.my){const Q=F.kaderplan(x);Q.alle.forEach(p=>rang.set(p.id,Q.rang.get(p.id)));}});
+  S.tag=F.tagAusDatum(`${S.season}-10-05`,S.season);for(let i=0;i<12;i++)im('frueh'+i,()=>F.kiMarkt());
+  const gebraucht=S.pl.filter(p=>p.team>=0&&p.team!==S.my&&V.wichtig.includes(rang.get(p.id))&&!p.leihe),andere=S.pl.filter(p=>p.team>=0&&p.team!==S.my&&rang.has(p.id)&&!V.wichtig.includes(rang.get(p.id)));
+  const verl=gebraucht.filter(p=>p.ct>1).length/Math.max(1,gebraucht.length),soll=1-Math.pow(1-V.frueh.chance,12),falsch=andere.filter(p=>p.ct!==1).length,mein=ev('squad')(S.my).filter(p=>p.ct!==1).length;
+  pruef(Math.abs(verl-soll)<=0.06&&falsch===0&&mein===0&&gebraucht.every(p=>p.ct===1||(p.ct>=2&&p.ct<=1+ev('RS').vertrag.jahre[1])),'Früh verlängern: Im Herbst werden nur Gebrauchte gebunden (zwölf Wochen: etwa 86 %), Ergänzung und Überzählige nie, deine Spieler nicht',`${pc(verl)} von ${gebraucht.length}, ${falsch} andere verlängert, ${mein} von dir`);
+  // Außerhalb von Oktober bis Dezember passiert nichts (März: kein Fenster, also auch keine Wechsel, die Laufzeiten neu setzen)
+  S.pl.forEach(p=>{if(p.team>=0)p.ct=1;});S.tag=F.tagAusDatum(`${S.season+1}-03-10`,S.season);for(let i=0;i<4;i++)im('maerz'+i,()=>F.kiMarkt());
+  pruef(S.pl.every(p=>p.team<0||p.ct===1),'Ab Januar verlängert niemand mehr vorzeitig (dann gelten die Vorverträge), geprüft im März');}
+
 // 7. Saisons im Ablauf: jeder Wechsel geprüft, Zahl der Wechsel, Obergrenze je Fenster, Kader und Konten am Saisonende
 {const R0=neueWelt().W,C=R0.ev('RCV'),RM=R0.ev('RM');let log=null,S0=null;const ende=[],fuell=[];
   const lauf=saisons({n:N,seed:SEED,verein:6,
     beiSaisonstart:(S,F)=>{if(log)return;S0=S;log=mitProtokoll(F,()=>S0,C.talentBis);const orig=F.planAuffuellen;F.planAuffuellen=function(t,P,l){const n=orig(t,P,l);fuell.push({s:S0.season,t:t.id,n});return n;};},
-    beiSaisonende:(S,F)=>{const z={s:S.season,offen:0,leer:0,ueber2:0,vereine:0,kader:[],minus:0};
+    beiSaisonende:(S,F)=>{const z={s:S.season,offen:0,leer:0,ueber2:0,vereine:0,kader:[],minus:0,gebraucht:0,laufenAus:0};
       S.teams.forEach(t=>{if(t.lg>3||t.id===S.my)return;z.vereine++;const P=F.kaderplan(t);z.kader.push(P.alle.length);if(t.cash<0)z.minus++;let u2=false;
+        P.alle.forEach(p=>{if(C.vertrag.wichtig.includes(P.rang.get(p.id))){z.gebraucht++;if(p.ct===1)z.laufenAus++;}});
         C.gruppen.forEach(g=>{const G=P.gr[g];if(G.l.length<G.soll)z.offen+=G.soll-G.l.length;if(!G.l.length&&G.soll>0)z.leer++;if(G.l.filter(p=>P.rang.get(p.id)==='ueber').length>2)u2=true;});if(u2)z.ueber2++;});
       ende.push(z);}});
   const S=lauf.W.S,ev=lauf.W.ev,jahre=[...new Set(log.map(e=>e.s))];
@@ -131,7 +147,8 @@ const mitProtokoll=(F,getS,talentBis)=>{const log=[],orig=F.kiWechsel;
     info(`Saison ${s}: am Ende des Sommerfensters aufgefüllt`,`${f.reduce((a,x)=>a+x.n,0)} Spieler bei ${f.filter(x=>x.n>0).length} Vereinen`);});
   ende.forEach(z=>{const mn=Math.min(...z.kader),mx=Math.max(...z.kader);
     pruef(mn>=15&&mx<=36&&z.minus===0&&z.leer===0,`Saisonende ${z.s}: Kader zwischen 15 und 36, keine Gruppe ganz leer, kein Konto im Minus`,`Kader ${mn} bis ${mx}, ${z.leer} leere Gruppen, ${z.minus} im Minus`);
-    info(`Saisonende ${z.s}: offene Planstellen je Verein`,`${f1(z.offen/z.vereine)}, Vereine mit mehr als 2 Spielern Überhang in einer Gruppe: ${pc(z.ueber2/z.vereine)}`);});
+    info(`Saisonende ${z.s}: offene Planstellen je Verein`,`${f1(z.offen/z.vereine)}, Vereine mit mehr als 2 Spielern Überhang in einer Gruppe: ${pc(z.ueber2/z.vereine)}`);
+    info(`Saisonende ${z.s}: Gebrauchte mit auslaufendem Vertrag (U11c, früh verlängert sollten es unter 20 % sein)`,`${z.laufenAus} von ${z.gebraucht} (${pc(z.laufenAus/Math.max(1,z.gebraucht))})`);});
   // Budget genutzt (K31 §10: 60 bis 100 %): Anteil des Winterbudgets der letzten Saison, der ausgegeben wurde (das Sommerbudget ist dann schon überschrieben)
   {const tb=S.teams.filter(t=>t.tb&&t.tb.b>0).map(t=>t.tb.a/t.tb.b);info('Budget genutzt im letzten Fenster (nur zur Ansicht)',tb.length?pc(m(tb)):'kein Budget');}
   // Zielwerte, die zehn Saisons brauchen (K31 §10)

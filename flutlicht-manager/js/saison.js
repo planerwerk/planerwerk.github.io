@@ -63,11 +63,12 @@ function newSeasonLauf(){wechselVollziehen(true);leiheEnde(); // Leihen enden mi
     if(t.lg<t.lastLg)d+=A.aufstieg;if(t.lg>t.lastLg)d+=A.abstieg;t.rep=clamp(Math.round(t.rep+d),A.min,A.max);t.fans=Math.round(clamp(t.fans*(1+d*Z.fans.faktor),Z.fans.min,t.cap*Z.fans.maxJePlatz));});
   zweiteAbstiegSim(); // deine Zweite aus der 3. Liga abgestiegen: Spieler bis 23 bleiben als Amateurkader (K08 §5.6)
   const K=Z.karriereende;
+  const vPlan=new Map();S.teams.forEach(t=>{if(aktiv(t)&&stabMacht(t.id,'vertraege'))vPlan.set(t.id,kaderplan(t));}); // Verträge nach Rang (K31 §5.8, U11c): Plan vor dem Altern, ohne Zufall
   S.pl.forEach(p=>{if(p.team<-1)return;p.age++;p.g=0;p.pg=0;p.apps=0;disziplinSaison(p);p.form=Z.neuForm;p.sv=0;p.ent=0;eigenschaftenNeu(p);
     if(p.team>=0&&!aktiv(S.teams[p.team])){p.team=-1;p.list=0;}
     if((p.age>=K.abAlter&&R()<(p.age-K.nullAlter)*K.jeJahr)||p.age>=K.spaetestens){if(p.team===S.my)news(`${p.n} beendet seine Karriere.`);p.team=-2;return;}
     if(p.team>=0){p.ct--;if(p.ct<=0){const mein=p.team===S.my;if(mein&&!autoB('vertraege')){news(`Vertrag ausgelaufen: ${p.n} verlässt den Verein.`,'bad');p.team=-1;p.list=0;}
-      else if(R()<Z.vertrag.verlaengern){p.ct=riA(Z.vertrag.jahre);p.sal=salaryFor(p.str);if(mein)stabMeldung(`Der Verein hat den Vertrag von ${p.n} verlängert (${p.ct} Jahr${p.ct>1?'e':''}).`);}else{if(mein)news(`Vertrag ausgelaufen: ${p.n} verlässt den Verein. Der Verein hat nicht verlängert.`,'bad');p.team=-1;p.list=0;}}}
+      else if(R()<vertragChance(p,vPlan.get(p.team))){p.ct=riA(Z.vertrag.jahre);p.sal=salaryFor(p.str);if(mein)stabMeldung(`Der Verein hat den Vertrag von ${p.n} verlängert (${p.ct} Jahr${p.ct>1?'e':''}).`);}else{if(mein)news(`Vertrag ausgelaufen: ${p.n} verlässt den Verein. Der Verein hat nicht verlängert.`,'bad');p.team=-1;p.list=0;}}}
     if(p.team!==S.my)p.list=0;});
   S.pl=S.pl.filter(p=>p.team!==-2);reindex();mitStrom(strom('auslandSaison',S.season),auslandSaison); // Auslandspool: Alter, Karriereende, neue Talente (K32 §4.1)
   sm.up4.forEach(id=>{if(!squad(id).length&&!zweiteWirdVerein(id))kaderErzeugen(S.teams[id]);}); // deine Zweite nimmt ihren Amateurkader mit (K08 §5.6)

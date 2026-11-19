@@ -932,3 +932,19 @@ Wie BG: kein Test gelaufen, alle Zahlen geschätzt.
 | BH7 | **K35, K36:** Profile sind für dich nicht sichtbar, kein neuer Bereich. **K33:** Felder `profil` und `tb.s`. | ✅, 📌 K35 |
 | BH8 | **Dein Verein in der Automatik** hat wie jeder Verein ein gelostes zweites Profil und kann „ehrgeizig“ sein. Dann geht der Verein mit 70 % deines Kontos auf den Markt und auf Sternejagd. **Entschieden (19.11., vorläufig, von mir auf dein „mach wie du denkst“):** bleibt so. Gründe: K36 Grundsatz 1 (kein zweites Regelwerk), der Gleichschritt in `tests/lizenz.js` verlangt dieselbe Regel, und der alte Markt war strenger: Er kaufte, solange das Konto größer war als der Preis, also mit bis zu 100 % des Kontos. Bleibt ein Unterschied: Dein Verein zahlt für Zugänge echtes Gehalt, Computer-Vereine nicht (AX4, BG12). | ✅ vorläufig, K31 §12 Nr. 22 |
 | BH9 | **`tests/welt.js`** prüft dazu: Profile (Verteilung, Wirkung auf Qualitätsziel, Talente, Budget), Sternejagd an einem gebauten Fall und im Ablauf. Nie gelaufen. | ⚠️ offen |
+
+---
+
+## BI. Nachtrag zu U11c Computer-Vereine: Verträge nach Rang (19. November 2026, ohne Testlauf)
+
+Wie BG und BH: kein Test gelaufen, die Zahlen sind geschätzt.
+
+| # | Befund | Status |
+|---|---|---|
+| BI1 | **K31 §4 Nr. 4 gegen den bisherigen Code:** Computer-Vereine verlängerten beim Saisonwechsel jeden auslaufenden Vertrag mit 70 %, egal ob Stammspieler oder Überzähliger. Jetzt nach Rang im Kaderplan: Gebrauchte 90 %, junge Ergänzung 50 %, sonst 10 %. Gebrauchte werden schon von Oktober bis Dezember gebunden. | ✅ vorläufig, K31 §5.8 |
+| BI2 | **K21 §4.3 (Vorvertrag fremder Spieler ohne Ablöse):** Für dich gibt es weniger ablösefreie Gelegenheiten bei Stammspielern anderer Vereine, mehr bei Überzähligen. Das entspricht K31 §1 („plant wie ein echter Verein“). | ✅ vorläufig, K31 §12 Nr. 24 |
+| BI3 | **K36 Gleichschritt:** Das frühe Verlängern läuft im Markt-Strom für alle Vereine, deren Verträge nicht du führst, also im Gleichschritt-Test für beide Welten gleich. Nicht nachgeprüft. | ⚠️ messen |
+| BI4 | **Saisonwechsel:** Der Kaderplan je Verein wird vor dem Altern und vor den Karriereenden berechnet, ohne Zufall. Die Zahl der Würfe bleibt gleich (ein Wurf je auslaufendem Vertrag), die Welt ändert sich trotzdem, weil andere Spieler bleiben. | ✅ |
+| BI5 | **Mehr Vereinslose im Sommer:** Überzählige gehen jetzt meist. Der Deckel `saison.vereinsloseMax` (90) schneidet den Rest ab. Ob der Markt im Juli genug Vereinslose für offene Planstellen hat, zeigt erst `tests/welt.js`. | ⚠️ messen |
+| BI6 | **BD4 und BD7 bleiben offen:** Vorverträge und Ausstiegsklauseln unter Computer-Vereinen fehlen weiter (jetzt U11d). | 📌 U11d |
+| BI7 | **`tests/welt.js` Nr. 6c:** Chance je Rang, früh verlängern (zwölf Herbstwochen, etwa 86 %), nicht im März, deine Spieler unberührt, dazu im Ablauf der Anteil der Gebrauchten mit auslaufendem Vertrag (nur Ausgabe). Nie gelaufen. | ⚠️ offen |

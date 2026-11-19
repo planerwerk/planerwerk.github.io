@@ -614,3 +614,11 @@ Im Einzelnen in K31 §5.7 und §12 Nr. 18 bis 22.
 - **Wirkung nur auf Transfers:** Qualitätsziel, Budget, Zahlungsbereitschaft, Talente, Alter der Zugänge. Malocher ist noch wirkungslos.
 - **Sternejagd:** ehrgeizige Vereine, einmal je Sommer, Spieler mindestens 2 über dem eigenen Niveau von einem Verein mit mindestens 5 weniger Ansehen, für 150 % des Marktwerts.
 - **Dein Verein in der Automatik** folgt denselben Profilen. Als ehrgeiziger Verein gibt er bis zu 70 % des Kontos aus. **Vorläufig entschieden: bleibt so** (Konsistenzprüfung BH8, K31 §12 Nr. 22). Der alte Markt gab sogar bis zu 100 % aus.
+
+## K31 Computer-Vereine, U11c (19.11.), vorläufig von mir, gebaut ohne Testlauf
+
+Im Einzelnen in K31 §5.8 und §12 Nr. 23 und 24.
+
+- **Verträge nach Rang:** Computer-Vereine (und dein Verein, wenn der Verein die Verträge führt) verlängern Stammspieler, Herausforderer und Talente schon von Oktober bis Dezember (15 % je Woche). Beim Saisonwechsel bleiben Gebrauchte zu 90 %, junge Ergänzung zu 50 %, alle anderen zu 10 %. Vorher 70 % für alle.
+- **Folge für dich:** weniger ablösefreie Vorverträge bei Stammspielern anderer Vereine, mehr Vereinslose im Sommer.
+- **Vorverträge und Ausstiegsklauseln unter Computer-Vereinen** rutschen nach U11d.

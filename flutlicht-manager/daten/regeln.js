@@ -301,6 +301,10 @@ const REGELN={
     // Sternejagd (K31 §5.3): ehrgeizige Vereine, im Fenster fenster (0 = Sommer), höchstens einer je Saison. Der Spieler ist mindestens ueberNiveau stärker als der Anspruch,
     // höchstens alterMax alt, sein Verein hat mindestens ansehenPlus weniger Ansehen. Preis: verkauf.angebotAb × Marktwert × Restlaufzeit, mindestens die Forderung nach K19.
     sterneJagd:{fenster:0,ueberNiveau:2,ansehenPlus:5,alterMax:29},
+    // Verträge nach Rang (K31 §4 Nr. 4, §5.8, U11c). Gilt für Vereine, deren Verträge nicht du führst (Bereich vertraege). wichtig: Ränge, die der Verein halten will.
+    // Saisonwechsel: Chance auf Verlängerung je Rang (schließt die Zusage des Spielers ein), Ergänzungsspieler nur unter ergaenzungBis Jahren mit der Chance ergaenzung.
+    // frueh: in diesem Zeitraum (MM-TT) jede Woche diese Chance, den auslaufenden Vertrag eines wichtigen Spielers vorzeitig zu verlängern (vor den Vorverträgen ab 1. Januar).
+    vertrag:{wichtig:['stamm','herausforderer','talent'],chanceWichtig:0.9,ergaenzung:0.5,ergaenzungBis:30,sonst:0.1,frueh:{von:'10-01',bis:'12-31',chance:0.15}},
     kauf:{jeFenster:[4,2],ansehenMinus:30,alterMax:32,jungBis:23,talentGewicht:0.3,altAb:29,altMalus:1},
     finanzen:{budgetAnteil:[0.5,0.25],reinvest:0.8},
     aktivJeWoche:0.5,schaetzFehler:2,
@@ -684,7 +688,7 @@ const REGELN={
       testspiele:{ab:3,name:'Testspiele',tab:'training',auto:1,wer:'der Co-Trainer',tut:'plant zwei Testspiele gegen Amateure je Vorbereitung'},
       lager:{ab:3,name:'Trainingslager',tab:'training'},
       stab:{ab:3,name:'Trainerstab',tab:'stab',auto:1,wer:'der Verein',tut:'verlängert die Verträge der Mitarbeiter meistens und ersetzt einen fehlenden Co-Trainer'},
-      vertraege:{ab:3,name:'Verträge',tab:'kader',auto:1,wer:'der Verein',tut:'verlängert auslaufende Verträge meistens'},
+      vertraege:{ab:3,name:'Verträge',tab:'kader',auto:1,wer:'der Verein',tut:'verlängert die Verträge der Spieler, die er braucht, schon im Herbst und lässt Überzählige gehen'},
       jugend:{ab:3,name:'Jugendarbeit',tab:'training',auto:1,wer:'der Verein',tut:'hält die Jugendarbeit auf der üblichen Stufe'},
       jugendkader:{ab:3,name:'Jugendkader (Aufrücken und Verkauf)',tab:'training',auto:1,wer:'der Verein',tut:'holt jeden Sommer die zwei Besten ab 17 Jahren in den Profikader'},
       zweite:{ab:3,name:'Budget der zweiten Mannschaft',tab:'training',auto:1,wer:'der Verein',tut:'hält die Zweite auf der üblichen Stufe'},

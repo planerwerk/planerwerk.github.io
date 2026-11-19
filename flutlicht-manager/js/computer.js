@@ -2,7 +2,8 @@
 // Alle Zahlen stehen in daten/regeln.js unter REGELN.computer (Kurzform RCV). ACHTUNG: U11a entstand ohne Testlauf (K31 §5.6), tests/welt.js ist noch nie gelaufen.
 // Die Regeln gelten für jeden Verein, dessen Transfers nicht du führst (stabMacht(tid,'transfers')): alle Computer-Vereine und dein Verein in der Automatik (K36).
 // Im Spielstand neu: am Verein t.tb = {k: Saison und Fenster, b: Budget, a: ausgegeben, n: Zugänge über den Markt, f: Planstellen aufgefüllt, s: Sternejagd erledigt}
-// und t.profil (zweites Vereinsprofil, U11b). Noch nicht gebaut: Klugheit (§5.4), Verträge nach Rang (§4 Nr. 4), Leihen, Trainerwechsel (§5.5), Gehaltsrahmen (§3.3).
+// und t.profil (zweites Vereinsprofil, U11b). Verträge nach Rang seit U11c (vertragChance, kiVertraegeFrueh, dazu newSeason in js/saison.js).
+// Noch nicht gebaut: Klugheit (§5.4), Vorverträge und Klauseln unter Computer-Vereinen, Leihen, Trainerwechsel (§5.5), Gehaltsrahmen (§3.3).
 
 // ---------- Vereinsprofile (K31 §3.2, §5.7, U11b) ----------
 // Bis zu zwei Profile. „ehrgeizig“ folgt aus der Lage (unter den Ersten nach Ansehen in seiner Liga, oder in der ersten Saison nach einem Aufstieg) und wird nicht gespeichert.
@@ -120,6 +121,17 @@ function planAuffuellen(t,P,liste){const Z=RS,F=RCV.fuellen,base=grundStaerke(t.
       neuzugang(p,t.id);liste.push(p);neu.push(p);}});
   if(neu.length&&t.id===S.my)stabMeldung(`Der Verein hat den Kader ergänzt: ${neu.map(p=>p.n).join(', ')}.`);return neu.length;}
 
+// ---------- Verträge nach Rang (K31 §4 Nr. 4, §5.8, U11c) ----------
+// Chance, dass ein auslaufender Vertrag beim Saisonwechsel verlängert wird (die Zusage des Spielers eingeschlossen). P: Kaderplan seines Vereins, ohne Plan die alte Regel.
+function vertragChance(p,P){const V=RCV.vertrag,r=P?P.rang.get(p.id):null;if(!r)return RS.vertrag.verlaengern;
+  if(V.wichtig.includes(r))return V.chanceWichtig;return r==='ergaenzung'&&p.age<V.ergaenzungBis?V.ergaenzung:V.sonst;}
+// Früh verlängern: Von Oktober bis Dezember bindet ein Verein jede Woche mit 15 % die Spieler mit auslaufendem Vertrag, die er braucht,
+// bevor ab dem 1. Januar andere Vereine (und du) ihnen einen Vorvertrag geben dürfen (K21 §4.3). Laufzeit und Gehalt wie beim Saisonwechsel.
+function kiVertraegeFrueh(kader){const V=RCV.vertrag,F=V.frueh,k=mmtt(S.tag);if(S.phase!=='play'||k<F.von||k>F.bis)return;
+  S.teams.forEach(t=>{if(!aktiv(t)||!stabMacht(t.id,'vertraege'))return;const sq=kader.get(t.id)||[],P=kaderplan(t,sq);
+    sq.forEach(p=>{if(p.ct!==1||p.wech||p.leihe||p.zwP||!V.wichtig.includes(P.rang.get(p.id))||R()>=F.chance)return;
+      p.ct=1+riA(RS.vertrag.jahre);p.sal=salaryFor(p.str);if(t.id===S.my)stabMeldung(`Der Verein hat den Vertrag von ${p.n} vorzeitig verlängert (bis Juni ${S.season+p.ct}).`);});});}
+
 // ---------- Woche (montags im Markt-Strom, aufgerufen aus market in js/ablauf.js) ----------
 // 1. Transferliste aller Vereine nach den Verkaufsregeln (auch außerhalb der Fenster, damit du sie siehst).
 // 2. Im Fenster: Ein Teil der Vereine ist aktiv, in zufälliger Reihenfolge. Jeder kauft höchstens einen Spieler, für seine dringendste Lücke, die sich besetzen lässt.
@@ -128,6 +140,7 @@ function kiMarkt(){const nr=fensterNr(),vereine=S.teams.filter(t=>aktiv(t)&&stab
   S.pl.forEach(p=>{const l=kader.get(p.team);if(l)l.push(p);});
   const plan=t=>{let x=plaene.get(t.id);if(!x){x=kaderplan(t,kader.get(t.id));plaene.set(t.id,x);}return x;};
   vereine.forEach(t=>kiListe(plan(t)));
+  kiVertraegeFrueh(kader); // Herbst: Verträge der Gebrauchten früh verlängern (U11c), ändert keinen Kader
   if(nr<0)return;
   vereine.forEach(t=>kiBudget(t,nr)); // Budget aller Vereine vor dem ersten Wechsel des Fensters festlegen (nicht erst, wenn ein Verein an der Reihe ist oder verkauft)
   const K=RCV.kauf,dran=shuffle(vereine.filter(()=>R()<RCV.aktivJeWoche));
