@@ -914,3 +914,21 @@ Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `
 | BG15 | **K33:** neues Feld `tb` am Verein, neue Datei `js/computer.js`, `mkPlayer` mit `fp`. **K36:** kein neuer Bereich. | ✅ |
 | BG16 | **Nicht gebaut aus K31:** Profile und Sternejagd (§3.2, §5.3), Klugheit (§5.4), Verträge nach Rang (§4 Nr. 4, dazu BD4 und BD7), Leihen unter Computer-Vereinen (BF6), Trainerwechsel (§5.5), Gehaltsrahmen und Notverkauf (§3.3, §8), Ereignisse (§8), Käufe im Ausland, Anzeige des Bedarfs anderer Vereine (§6), Schätzung über das eigene Scouting (BC6). | 📌 U11b bis U11d, U12 |
 | BG17 | **Alle Tests nach U11a: stehen aus.** Zuerst `node tests/welt.js`, dann `tests/stab.js` (BG1), `tests/transfers.js`, `tests/lizenz.js` (Gleichschritt, „kein Nachteil“), `tests/leihe.js`, `tests/vertraege.js`, `tests/ausland.js`, dann die ganze Liste aus `tests/README.md`, die Browser-Tests einzeln. Der volle Testlauf nach U10d steht ebenfalls noch aus (kein Eintrag in BF). | ⚠️ offen |
+
+---
+
+## BH. Nachtrag zu U11b Computer-Vereine: Vereinsprofile und Sternejagd (19. November 2026, ohne Testlauf)
+
+Wie BG: kein Test gelaufen, alle Zahlen geschätzt.
+
+| # | Befund | Status |
+|---|---|---|
+| BH1 | **K31 §3.2 und §12 Nr. 2 (Profile als Stammdaten) gegen die Regel „Fakten vorher prüfen“:** Ein Profil je echtem Verein wäre eine Behauptung über echte Vereine. Gebaut: „ehrgeizig“ aus der Lage (Erste nach Ansehen je Liga, Aufsteiger), das zweite Profil gelost. Das Feld `profil` in `daten/vereine.js` ist vorbereitet, aber leer. | ✅ vorläufig, K31 §12 Nr. 18 |
+| BH2 | **K06 §7 (`t.stil`, Lieblingsstil „bis K31“):** bleibt, wie er ist. Das zweite Profil hat einen eigenen Zufallsstrom (`vereinsprofil`), die übrige Welt ändert sich durch das Losen nicht. | ✅ |
+| BH3 | **K31 §11 (`sterneJagd.ueberNiveau:5`):** gebaut mit 2. Bei 5 fände ein Spitzenverein im Inland fast niemanden, und Käufe im Ausland gibt es für Computer-Vereine noch nicht (K32). | ✅ vorläufig, 📌 K32 |
+| BH4 | **BG6 erledigt für ehrgeizige Vereine:** Auf der Sternejagd zahlt der Käufer das außergewöhnliche Angebot (150 % × Restlaufzeit, mindestens die Forderung nach K19). Der Verkäufer gibt ab, auch wenn Regel B verletzt ist, und sucht Ersatz. Alle anderen Vereine kaufen weiter nur von der Liste. | ✅ |
+| BH5 | **K02 §5.3a („Die Reichen werden reicher, mit Maß“):** Die Sternejagd zieht starke Spieler zu den Vereinen mit dem höchsten Ansehen, 70 % des Kontos als Budget verstärken das. Ob die drei Wertvollsten dadurch zu oft Meister werden, zeigt erst eine Messung über viele Saisons (Kalibrierziel nach U11, PLAN §7). | ⚠️ messen |
+| BH6 | **Profile ohne Wirkung oder mit halber Wirkung:** Malocher (K07), Ausbildungsverein verleiht nicht (U11d), Spekulant verkauft nicht mit Gewinn (Regel B), „sparsam verkauft eher“ fehlt. Profile ändern sich nicht mit der Zeit, außer „ehrgeizig“. | 📌 U11d, K07 |
+| BH7 | **K35, K36:** Profile sind für dich nicht sichtbar, kein neuer Bereich. **K33:** Felder `profil` und `tb.s`. | ✅, 📌 K35 |
+| BH8 | **Dein Verein in der Automatik** hat wie jeder Verein ein gelostes zweites Profil und kann „ehrgeizig“ sein. Dann geht der Verein mit 70 % deines Kontos auf den Markt und auf Sternejagd. Das ist dieselbe Regel wie bei den Computer-Vereinen (K36 Grundsatz 1), kann dich aber überraschen. | ⚠️ prüfen, ob gewollt |
+| BH9 | **`tests/welt.js`** prüft dazu: Profile (Verteilung, Wirkung auf Qualitätsziel, Talente, Budget), Sternejagd an einem gebauten Fall und im Ablauf. Nie gelaufen. | ⚠️ offen |

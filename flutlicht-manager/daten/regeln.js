@@ -291,7 +291,16 @@ const REGELN={
     planstellen:{TW:3,IV:4,AV:4,ZM:5,OM:4,ST:4},talente:[2,4],talentBis:21,
     qualitaet:{stamm:3,herausforderer:6,ergaenzung:10},
     bedarf:{stammUnterZiel:3,verletztTage:56,budgetRestAb:0.4,endspurtWochen:3,anspruchJeWoche:1},
-    verkauf:{unterPlanstelle:6},
+    verkauf:{unterPlanstelle:6,angebotAb:1.5}, // angebotAb: außergewöhnliches Angebot (× Marktwert), dafür gibt ein Verein auch ohne Grund ab (Sternejagd)
+    // Vereinsprofile (K31 §3.2, §5.7, U11b). „ehrgeizig“ folgt aus der Lage: unter den ersten ehrgeizigBis nach Ansehen in der Liga oder gerade aufgestiegen.
+    // Das zweite Profil wird beim Aufbau der Welt nach gewichte gelost (oder steht als profil in daten/vereine.js). werte: was ein Profil am Standard ändert.
+    // qualitaet: Aufschlag auf alle Qualitätsziele (−1 = strenger). budget: Faktor auf den Anteil des Kontos. zahlt: Faktor auf den Vereinswert des Käufers.
+    profile:{gewichte:{kein:4,sparsam:2,ausbildung:2,malocher:2,altherren:1,spekulant:1},ehrgeizigBis:{1:4,2:3,3:3},
+      werte:{ehrgeizig:{qualitaet:-1,budget:1.4},sparsam:{zahlt:0.9,budget:0.7},ausbildung:{talente:[3,5],talentGewicht:0.6,alterMax:28},
+        altherren:{talente:[1,3],talentGewicht:0,altMalus:0,alterMax:34},spekulant:{talentGewicht:0.8},malocher:{}}},
+    // Sternejagd (K31 §5.3): ehrgeizige Vereine, im Fenster fenster (0 = Sommer), höchstens einer je Saison. Der Spieler ist mindestens ueberNiveau stärker als der Anspruch,
+    // höchstens alterMax alt, sein Verein hat mindestens ansehenPlus weniger Ansehen. Preis: verkauf.angebotAb × Marktwert × Restlaufzeit, mindestens die Forderung nach K19.
+    sterneJagd:{fenster:0,ueberNiveau:2,ansehenPlus:5,alterMax:29},
     kauf:{jeFenster:[4,2],ansehenMinus:30,alterMax:32,jungBis:23,talentGewicht:0.3,altAb:29,altMalus:1},
     finanzen:{budgetAnteil:[0.5,0.25],reinvest:0.8},
     aktivJeWoche:0.5,schaetzFehler:2,

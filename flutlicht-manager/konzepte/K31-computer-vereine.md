@@ -1,7 +1,7 @@
 # K31 – Computer-Vereine
 
 Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12.
-**U11a gebaut am 19. November 2026, noch ohne Testlauf** (Kaderplan, Bedarf, Verkaufs- und Kaufregeln, Transferbudget je Fenster): siehe §5.6. Auf dem Rechner, auf dem U11a entstand, gibt es kein Node.js. Alle Zahlen in §5.6 und §11 sind deshalb ungeprüft, `tests/welt.js` ist geschrieben, aber nie gelaufen.
+**U11a gebaut am 19. November 2026, noch ohne Testlauf** (Kaderplan, Bedarf, Verkaufs- und Kaufregeln, Transferbudget je Fenster): siehe §5.6. **U11b am selben Tag, ebenfalls ohne Testlauf** (Vereinsprofile, Sternejagd): siehe §5.7. Auf dem Rechner, auf dem U11a entstand, gibt es kein Node.js. Alle Zahlen in §5.6 und §11 sind deshalb ungeprüft, `tests/welt.js` ist geschrieben, aber nie gelaufen.
 Hängt ab von: K19 (Transfers), K21 (Verträge), K18 (Scouting), K28 (Vorstand), K02 (Klugheit) · Wird gebraucht von: K06, K07, K20, K23, K32.
 
 ## 1. Ziel und Spielgefühl
@@ -164,6 +164,30 @@ Code in `js/computer.js`, Zahlen in `REGELN.computer`. Die Regeln gelten für je
 - Am 1. Juli füllt jeder Verein wie bisher auf die Mindestzahl je Mannschaftsteil auf (`saison.kaderSoll`).
 - In der letzten Woche des Sommerfensters füllt er Planstellen, die der Markt nicht besetzt hat: zuerst Vereinslose, sonst erzeugte Spieler der passenden Gruppe.
 
+### 5.7 Umsetzung U11b (19. November 2026, ohne Testlauf): Vereinsprofile und Sternejagd
+
+**Profile** (§3.2). Jeder Verein hat bis zu zwei:
+
+- **„ehrgeizig“ folgt aus der Lage** und wird nicht gespeichert: die ersten vier nach Ansehen in der 1. Liga, die ersten drei in der 2. und 3. Liga, dazu jeder Aufsteiger in seiner ersten Saison („Aufstieg macht ehrgeizig“, §4 Nr. 7).
+- **Das zweite Profil steht am Verein** (`profil`). Beim Aufbau der Welt wird es gelost (eigener Zufallsstrom): kein Profil 4, sparsam 2, Ausbildungsverein 2, Malocher 2, Altherren-Truppe 1, Spekulant 1. Ein Eintrag `profil` in `daten/vereine.js` geht vor. Dort steht noch keiner (§12 Nr. 18).
+
+| Profil | Wirkung in U11b |
+|---|---|
+| ehrgeizig | Qualitätsziel 1 strenger, Budget 70 % statt 50 % des Kontos (Winter 35 %), Sternejagd |
+| sparsam | zahlt höchstens 90 % seines Vereinswerts, Budget 35 % (Winter 17,5 %) |
+| Ausbildungsverein | 3 bis 5 Talent-Planstellen, Talent zählt bei der Auswahl doppelt, kauft niemanden über 28 |
+| Altherren-Truppe | 1 bis 3 Talent-Planstellen, Talent zählt nicht, kein Abzug fürs Alter, kauft bis 34 |
+| Spekulant | Talent zählt bei der Auswahl fast dreifach |
+| Malocher | noch ohne Wirkung (Training und Einsatz, K07) |
+
+**Sternejagd** (§5.3): Ein ehrgeiziger Verein holt im Sommer höchstens einen Spieler, der nicht auf der Liste steht.
+
+- Der Spieler ist mindestens 2 stärker als der Anspruch des Käufers, höchstens 29 Jahre alt und bekäme einen Stammplatz.
+- Sein Verein hat mindestens 5 weniger Ansehen (der Spieler geht nach oben) und mehr als 20 Spieler.
+- Preis: das außergewöhnliche Angebot aus §5.2, also 150 % des Marktwerts × Restlaufzeit, mindestens aber die Forderung, die auch du hören würdest (K19 §5.1). Er muss ins Budget passen.
+- Der Verkäufer nimmt an, auch wenn seine Gruppe danach eine Planstelle zu wenig hat. Seine Ersatzsuche beginnt in der nächsten Woche (offene Planstelle).
+- Der Kauf zählt als der eine Zugang der Woche und zur Obergrenze des Fensters.
+
 ## 6. Hebel des Spielers
 
 K31 beschreibt die Gegner. Deine Hebel gegenüber ihnen:
@@ -242,7 +266,11 @@ computer:{
   planstellen:{TW:3,IV:4,AV:4,ZM:5,OM:4,ST:4},talente:[2,4],talentBis:21,
   qualitaet:{stamm:3,herausforderer:6,ergaenzung:10},
   bedarf:{stammUnterZiel:3,verletztTage:56,budgetRestAb:0.4,endspurtWochen:3,anspruchJeWoche:1},
-  verkauf:{unterPlanstelle:6},
+  verkauf:{unterPlanstelle:6,angebotAb:1.5},
+  profile:{gewichte:{kein:4,sparsam:2,ausbildung:2,malocher:2,altherren:1,spekulant:1},ehrgeizigBis:{1:4,2:3,3:3},   // U11b
+    werte:{ehrgeizig:{qualitaet:-1,budget:1.4},sparsam:{zahlt:0.9,budget:0.7},ausbildung:{talente:[3,5],talentGewicht:0.6,alterMax:28},
+      altherren:{talente:[1,3],talentGewicht:0,altMalus:0,alterMax:34},spekulant:{talentGewicht:0.8},malocher:{}}},
+  sterneJagd:{fenster:0,ueberNiveau:2,ansehenPlus:5,alterMax:29},                                                  // U11b
   kauf:{jeFenster:[4,2],ansehenMinus:30,alterMax:32,jungBis:23,talentGewicht:0.3,altAb:29,altMalus:1},
   finanzen:{budgetAnteil:[0.5,0.25],reinvest:0.8},
   aktivJeWoche:0.5,schaetzFehler:2,
@@ -276,6 +304,13 @@ Entfernt sind `markt.listeVoll`, `markt.listeZufall`, `markt.kaeufer.niveauPlus`
 15. **Feine Positionen und Kaderplan passen nicht zusammen:** `spieler.positionen` würfelt die Hälfte der Mittelfeldspieler auf die Außen und ins offensive Mittelfeld, der Plan will dort zwei bis vier von neun. Folge im ersten Sommer: viele Überzählige im offensiven Mittelfeld und im Sturm, zu wenige zentrale Mittelfeldspieler. Das gleicht sich über das Auffüllen und den Kaderschnitt aus, nicht über den Markt. Besser wird es erst mit echten Daten zu den feinen Positionen (K03, PLAN §7 Nr. 5).
 16. **Meldungen:** Jeder Wechsel mit Ablöse steht wie bisher im Posteingang. Es werden mehr als vorher. Bündeln oder nach Liga filtern kommt mit K29.
 17. **Keine neue Funktion für dich, also kein neuer Bereich der Lernstufen (K36).** Die Automatik des Bereichs `transfers` folgt den neuen Regeln. Eine Anzeige „Bedarf der anderen Vereine“ (§6) ist noch nicht gebaut.
+
+**Vorläufig entschieden mit U11b** (19.11., von mir, ohne Rücksprache und ohne Testlauf):
+
+18. **Profile nicht als Stammdaten der echten Vereine.** „ehrgeizig“ folgt aus der Lage (die Ersten nach Ansehen je Liga, Aufsteiger), das zweite Profil wird gelost. Grund: Welcher echte Verein „sparsam“ oder eine „Altherren-Truppe“ ist, wäre eine Behauptung über echte Vereine, die recherchiert und belegt sein müsste. Das Feld `profil` in `daten/vereine.js` ist dafür vorbereitet. Abweichung von Nr. 2.
+19. **Sternejagd mit 2 statt 5 über dem Niveau** (§11 nennt `ueberNiveau:5`). Bei 5 fände ein Spitzenverein in Deutschland fast niemanden. Für die ganz Großen kommt der Stern ohnehin aus dem Ausland (K32, noch nicht gebaut).
+20. **Wirkung der Profile nur auf Transfers.** Malocher (Training, Einsatz) ist noch wirkungslos, der Ausbildungsverein verleiht noch nicht (U11d), der Spekulant verkauft noch nicht mit Gewinn (das widerspräche Regel B, §5.2). „Sparsam verkauft bei gutem Angebot eher“ fehlt, weil das außergewöhnliche Angebot nur auf der Sternejagd vorkommt.
+21. **Profile sind für dich nicht sichtbar.** Eine Anzeige wäre eine neue Information und bräuchte die Oberfläche (K35, K36: Informationen sind frei).
 
 **Recherche (19.11.), nur teilweise geklärt:**
 

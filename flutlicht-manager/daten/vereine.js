@@ -6,6 +6,8 @@
 // zw: Liga der zweiten Mannschaft 2026/27 (4 = Regionalliga, Staffel wie region; 5 = Oberliga, Name in ol). Ohne zw keine Zweite im Spiel
 //   (gar keine oder unterhalb der Oberliga). Quelle: Wikipedia „2026–27 Regionalliga“ und „2026–27 Oberliga“, abgerufen am 15.11.2026 (U9d, K08 §5.6).
 //   Hoffenheim und Stuttgart haben ihre Zweite in der 3. Liga, dort ist sie ein eigener Eintrag mit Feld zweite.
+// profil (optional, K31 §3.2, U11b): zweites Vereinsprofil, eines von sparsam, ausbildung, altherren, spekulant, malocher (oder "kein"). Ohne Eintrag lost das Spiel
+//   beim Aufbau der Welt. Noch steht bei keinem Verein eins: Welcher echte Verein welches Profil hat, ist nicht recherchiert.
 // Bearbeiten: Werte hier ändern und das Spiel neu laden. Das wirkt ab der nächsten neuen Karriere.
 const VEREINE=[
   {name:"FC Bayern München",kurz:"FCB",liga:1,ansehen:95,plaetze:75000,fans:75000,farbe:"#dc052d",region:"Bayern",zw:4,ewig3:0},

@@ -605,3 +605,12 @@ Im Einzelnen in K31 §5.6 und §12 Nr. 5 bis 17. **Alle Zahlen sind ungeprüft,*
 - **Für dich ändert sich:** Auf der Transferliste stehen jetzt die Überzähligen aller Vereine, zum Vereinswert ohne Aufschlag. Regel B und das Angebot über 150 % gelten für dich noch nicht (weiter K19).
 - **Unverändert:** Angebote an dich, Leihe, Ausstiegsklausel und Vorvertrag fragen weiter den Bedarf aus U10a.
 - **Sicherheitsnetz:** Mindestkader am 1. Juli wie bisher, offene Planstellen werden in der letzten Woche des Sommerfensters aufgefüllt.
+
+## K31 Computer-Vereine, U11b (19.11.), vorläufig von mir, gebaut ohne Testlauf
+
+Im Einzelnen in K31 §5.7 und §12 Nr. 18 bis 21.
+
+- **Profile:** „ehrgeizig“ sind die ersten vier nach Ansehen in der 1. Liga, die ersten drei in der 2. und 3. Liga und jeder Aufsteiger. Das zweite Profil wird gelost, nicht je echtem Verein gepflegt (Abweichung von Nr. 2 oben).
+- **Wirkung nur auf Transfers:** Qualitätsziel, Budget, Zahlungsbereitschaft, Talente, Alter der Zugänge. Malocher ist noch wirkungslos.
+- **Sternejagd:** ehrgeizige Vereine, einmal je Sommer, Spieler mindestens 2 über dem eigenen Niveau von einem Verein mit mindestens 5 weniger Ansehen, für 150 % des Marktwerts.
+- **Dein Verein in der Automatik** folgt denselben Profilen. Als ehrgeiziger Verein gibt er bis zu 70 % des Kontos aus. Bitte entscheiden, ob das so bleiben soll (Konsistenzprüfung BH8).
