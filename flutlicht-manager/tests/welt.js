@@ -97,12 +97,13 @@ const mitProtokoll=(F,getS,talentBis)=>{const log=[],orig=F.kiWechsel;
 // 6b. Sternejagd (K31 §5.3, U11b): Ein ehrgeiziger Verein mit Geld holt einen Spieler über seinem Niveau von einem kleineren Verein, für das außergewöhnliche Angebot, einmal je Saison
 {const w=welt(),{S,F,ev,im,C}=w;S.tag=5;const t=S.teams.filter(x=>x.lg===2&&x.id!==S.my).sort((a,b)=>b.rep-a.rep)[0],v=S.teams.filter(x=>x.lg<=3&&x.id!==S.my&&t.rep-x.rep>=C.sterneJagd.ansehenPlus+3).sort((a,b)=>b.rep-a.rep)[0];
   {const sq=ev('squad')(t.id).sort((a,b)=>a.str-b.str);sq.slice(0,Math.max(0,sq.length-26)).forEach(p=>{p.team=-1;});} // Platz im Kader des Käufers (höchstens 30)
-  // Der Stern spielt in einer Gruppe, in der die Grundordnung des Käufers einen Stammplatz hat
-  const niveau=F.kaderplan(t).niveau,plaetze=F.planSoll(t).stamm,q=ev('squad')(v.id).filter(p=>p.pos!=='TW'&&plaetze[F.planGruppe(p)]>0).sort((a,b)=>b.str-a.str)[0];q.str=Math.min(97,Math.round(niveau)+12);q.pot=Math.max(q.pot,q.str);q.age=24;q.ct=3;q.list=0;delete q.wech;delete q.leihe;
+  // Der Stern spielt in einer Gruppe, in der die Grundordnung des Käufers einen Stammplatz hat. Stärke 96: Mit 500 Mio € auf dem Konto könnte der Käufer jeden Spieler
+  // kleinerer Vereine bezahlen, also muss der Stern klar der Beste sein (auch mit Schätzfehler ±2), sonst nimmt die Jagd einen anderen.
+  const niveau=F.kaderplan(t).niveau,plaetze=F.planSoll(t).stamm,q=ev('squad')(v.id).filter(p=>p.pos!=='TW'&&plaetze[F.planGruppe(p)]>0).sort((a,b)=>b.str-a.str)[0];q.str=96;q.pot=Math.max(q.pot,q.str);q.age=24;q.ct=3;q.list=0;delete q.wech;delete q.leihe;
   t.cash=5e8;const soll=ev('value')(q)*C.verkauf.angebotAb*ev('rlFaktor')(q),log=mitProtokoll(F,()=>w.W.S,C.talentBis);
   for(let i=0;i<14;i++)im('stern'+i,()=>F.kiMarkt());
   const st=log.filter(e=>e.art==='stern'&&e.nach===t.id),e=st[0];
-  pruef(F.vereinsProfile(t).includes('ehrgeizig')&&st.length===1&&e.pid===q.id&&q.team===t.id&&e.preis>=soll-25000&&e.repDiff>=C.sterneJagd.ansehenPlus&&t.tb.s===1,
+  pruef(niveau+C.sterneJagd.ueberNiveau<=q.str&&F.vereinsProfile(t).includes('ehrgeizig')&&st.length===1&&e.pid===q.id&&q.team===t.id&&e.preis>=soll-25000&&e.repDiff>=C.sterneJagd.ansehenPlus&&t.tb.s===1,
     'Sternejagd: genau ein Stern je Sommer, der Stärkste eines kleineren Vereins, mindestens 150 % des Marktwerts × Restlaufzeit',e?`${q.n} (${q.str}) von ${v.name} zu ${t.name} für ${e.preis}, Soll mindestens ${Math.round(soll)}`:`kein Stern in 14 Wochen, ${st.length} Käufe`);
   const alle=log.filter(x=>x.art==='stern');pruef(alle.every(x=>x.repDiff>=C.sterneJagd.ansehenPlus&&x.preis<=x.rest&&x.nr===C.sterneJagd.fenster)&&new Set(alle.map(x=>x.nach)).size===alle.length,'Sternejagd: nur nach oben, im Budget, im Sommerfenster, je Verein höchstens einer',`${alle.length} Sterne`);}
 

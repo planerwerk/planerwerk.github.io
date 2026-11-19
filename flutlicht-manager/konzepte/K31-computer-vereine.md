@@ -311,6 +311,7 @@ Entfernt sind `markt.listeVoll`, `markt.listeZufall`, `markt.kaeufer.niveauPlus`
 19. **Sternejagd mit 2 statt 5 über dem Niveau** (§11 nennt `ueberNiveau:5`). Bei 5 fände ein Spitzenverein in Deutschland fast niemanden. Für die ganz Großen kommt der Stern ohnehin aus dem Ausland (K32, noch nicht gebaut).
 20. **Wirkung der Profile nur auf Transfers.** Malocher (Training, Einsatz) ist noch wirkungslos, der Ausbildungsverein verleiht noch nicht (U11d), der Spekulant verkauft noch nicht mit Gewinn (das widerspräche Regel B, §5.2). „Sparsam verkauft bei gutem Angebot eher“ fehlt, weil das außergewöhnliche Angebot nur auf der Sternejagd vorkommt.
 21. **Profile sind für dich nicht sichtbar.** Eine Anzeige wäre eine neue Information und bräuchte die Oberfläche (K35, K36: Informationen sind frei).
+22. **Dein Verein in der Automatik bekommt dieselben Profile** und kann als „ehrgeiziger“ Verein bis zu 70 % des Kontos ausgeben und auf Sternejagd gehen (Konsistenzprüfung BH8). Gründe: K36 Grundsatz 1, der Gleichschritt in `tests/lizenz.js`, und der alte Markt kaufte mit bis zu 100 % des Kontos.
 
 **Recherche (19.11.), nur teilweise geklärt:**
 

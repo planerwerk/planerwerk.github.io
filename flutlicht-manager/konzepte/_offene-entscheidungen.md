@@ -608,9 +608,9 @@ Im Einzelnen in K31 §5.6 und §12 Nr. 5 bis 17. **Alle Zahlen sind ungeprüft,*
 
 ## K31 Computer-Vereine, U11b (19.11.), vorläufig von mir, gebaut ohne Testlauf
 
-Im Einzelnen in K31 §5.7 und §12 Nr. 18 bis 21.
+Im Einzelnen in K31 §5.7 und §12 Nr. 18 bis 22.
 
 - **Profile:** „ehrgeizig“ sind die ersten vier nach Ansehen in der 1. Liga, die ersten drei in der 2. und 3. Liga und jeder Aufsteiger. Das zweite Profil wird gelost, nicht je echtem Verein gepflegt (Abweichung von Nr. 2 oben).
 - **Wirkung nur auf Transfers:** Qualitätsziel, Budget, Zahlungsbereitschaft, Talente, Alter der Zugänge. Malocher ist noch wirkungslos.
 - **Sternejagd:** ehrgeizige Vereine, einmal je Sommer, Spieler mindestens 2 über dem eigenen Niveau von einem Verein mit mindestens 5 weniger Ansehen, für 150 % des Marktwerts.
-- **Dein Verein in der Automatik** folgt denselben Profilen. Als ehrgeiziger Verein gibt er bis zu 70 % des Kontos aus. Bitte entscheiden, ob das so bleiben soll (Konsistenzprüfung BH8).
+- **Dein Verein in der Automatik** folgt denselben Profilen. Als ehrgeiziger Verein gibt er bis zu 70 % des Kontos aus. **Vorläufig entschieden: bleibt so** (Konsistenzprüfung BH8, K31 §12 Nr. 22). Der alte Markt gab sogar bis zu 100 % aus.
