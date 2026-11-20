@@ -1,6 +1,6 @@
 # K20 – Transfers II: Abwerben, Bieterwettstreit, Deadline Day
 
-Status: **Entwurf** (8. November 2026), nach „weiter, entscheide du“. Vorläufige Entscheidungen stehen in Abschnitt 12.
+Status: **Entwurf** (8. November 2026), nach „weiter, entscheide du“. Vorläufige Entscheidungen stehen in Abschnitt 12. **Teilweise umgesetzt mit U15 (20. November 2026, §5.4), noch ohne Testlauf.**
 Hängt ab von: K19 (Transfers I), K17 (Beziehungen), K22 (Berater), K29 (Presse) · Wird gebraucht von: K30, K31.
 
 ## 1. Ziel und Spielgefühl
@@ -80,6 +80,33 @@ Risiko je Treffen = 8 % × Bekanntheit × Berater × Ort × (1 + 0,2 × bisherig
 
 Keine Geldstrafe, kein Verbandsverfahren.
 
+### 5.4 Umsetzung U15 (20.11.2026)
+
+**Abwerben (§4.1, §5.1 bis §5.3):**
+
+- **Wer:** Spieler deutscher Computer-Vereine (nicht aus dem Auslandspool, nicht vereinslos, nicht verliehen). Auf der Spielerkarte die Karte „Heimlich treffen“. Lizenz-Bereich `abwerben` ab der A-Lizenz, ohne Automatik (dein Verein wirbt nie von selbst ab).
+- **Treffen:** höchstens eins je Woche und Spieler. Orte mit Kosten: Hotel in einer anderen Stadt 15.000 €, Restaurant 5.000 €, beim Berater 10.000 € (nur mit Berater). Gebucht unter „Abwerben“.
+- **Wechselbereitschaft je Treffen:** (10 + Interesse/10) × Berater × Stimmung × treu. Interesse aus K19 §5.3 (`wechselInteresse`), begrenzt auf −50 bis 100. Berater: gierig und Strippenzieher ×1,2, sonst ×1. Stimmung beim alten Verein unter 40 ×1,3, über 70 ×0,7. Vereinstreue Spieler ×0,4.
+- **Auffliegen je Treffen:** 8 % × Bekanntheit (Stärke über 80 ×1,5) × Berater (verschwiegen 0,4, Familie 0,8, seriös 1, Strippenzieher 1,2, gierig 1,5, ohne Berater 1,1) × Ort (Hotel 0,6, Restaurant 1,2, Berater 0,8) × (1 + 0,2 × bisherige Treffen). Vereinstreue petzen zusätzlich mit 30 %. Nationalspieler (×1,3) fehlen, das Spiel kennt keine Nationalmannschaft.
+- **Ab 70 Bereitschaft:** Er bittet offiziell um den Wechsel (Wechselwunsch Stufe 3, K14, Ablöse −10 %) und sein Verein setzt ihn auf die Transferliste. Danach der normale Kauf nach K19.
+- **Aufgeflogen:** Beziehung zu seinem Verein −15 bis −30 (K17), Ablöseforderung dieses Vereins für ihn +15 % bis zum Saisonende, seine Stimmung −10, Vertrauen deines Vorstands −3. Für diesen Spieler ist das Abwerben in dieser Saison vorbei. Fans (K27) und Presse (K29) fehlen noch, es gibt eine Meldung.
+- **Zufall:** im Grundstrom, weil es deine Handlung ist (wie bei K17).
+
+**Deadline Day (§4.3):**
+
+- Die letzten drei Tage eines Fensters. Im Büro eine Übersicht: offene Verhandlungen, Angebote für deine Spieler, Lücken im Kader.
+- **Halt am letzten Tag** („Deadline Day“), abschaltbar im Menü bei den Erinnerungen.
+- **Computer-Vereine:** am letzten Tag ein zusätzlicher Markttag (eigener Strom `deadline`). Die Obergrenzen je Fenster gelten weiter.
+- **Noch nicht:** Preise ±15 % und Antworten am selben Tag. Antworten kommen schon heute sofort (U10a), die Preisschwankung wartet auf K23.
+
+**Bieterrunde (§4.2), nur wenn du verkaufst:**
+
+- Bieten zwei oder mehr Vereine für denselben deiner Spieler, kannst du einmal je Fenster und Spieler eine Bieterrunde ausrufen.
+- Jeder Bieter erfährt das höchste Gebot und darf einmal erhöhen, der niedrigste zuerst: auf 2 bis 10 % über das Höchstgebot, höchstens bis zu seiner Grenze. Ist ein gieriger Berater dabei, 5 % mehr. Alle Angebote gelten danach noch mindestens 2 Tage.
+- **Noch nicht:** Bieterwettstreit, wenn du kaufst (Computer-Vereine bieten gegen dich), und das Recht des Spielers, das höchste Angebot abzulehnen.
+
+**Später:** Computer-Vereine werben deine Spieler ab (§7), Klugheit beim Abwerben (K02).
+
 ## 6. Hebel des Spielers
 
 | Hebel | Nutzen | Preis |
@@ -134,10 +161,23 @@ abwerben:{
 
 **Vorläufig entschieden:** keine Strafen, Wechselbereitschaft ab 70 führt zum Wechselwunsch, Computer-Vereine werben auch ab, Deadline Day mit eigenem Halt am letzten Tag.
 
-**Noch zu recherchieren:** Anteil der Wechsel in den letzten Tagen eines Fensters.
+**Noch zu recherchieren:** Anteil der Wechsel in den letzten Tagen eines Fensters. Am 20.11.2026 gesucht, keine Zahl gefunden. Die Berichte sagen nur, dass die großen Wechsel meist vorher fertig sind und am letzten Tag viele kleinere kommen (Quellen unten).
+
+**Vorläufig entschieden mit U15 (20.11.2026, von mir, weil „entscheide du“):**
+
+1. Abwerben nur bei deutschen Computer-Vereinen, ab der A-Lizenz, ohne Automatik (§5.4).
+2. Feste Kosten je Ort statt einer Spanne (§5.4).
+3. Bereitschaft und Risiko mit den Formeln aus §5.1 und §5.2, Berater-Profile aus K22 zugeordnet (Strippenzieher wie gierig, Familie vorsichtig), ohne Berater etwas riskanter (§5.4).
+4. Aufgeflogen: Ablöse +15 % bis zum Saisonende, Abwerben dieses Spielers für die Saison vorbei (§5.4).
+5. Deadline Day mit Übersicht, Halt am letzten Tag und einem zusätzlichen Markttag der Computer-Vereine. Ohne Preisschwankung (§5.4).
+6. Bieterrunde nur beim Verkauf, einmal je Fenster und Spieler (§5.4).
+7. Computer-Vereine werben noch nicht ab (§7 kommt später).
 
 ## Quellen
 
 - Abwerben ohne feste Strafen, Klatsch und Tratsch: PLAN §2
 - Treffen, Risiko, Deadline Day: `konzepte/_rohmaterial-logik-v1.md`, Abschnitte 12.3, 12.4
 - Abwerben über Berater, loyale Spieler petzen: `konzepte/_recherche-genre.md`, Abschnitt 4b
+- Deadline Day 2024: die großen Wechsel vorher, am letzten Tag vor allem Leipzig und Dortmund aktiv: https://www.zdfheute.de/sport/fussball-deadline-day-transfers-100.html (Suche vom 20.11.2026)
+- Sommerfenster 2025 vom 1. Juli bis 1. September (dazu 1. bis 10. Juni): https://www.bundesliga.com/en/bundesliga/news/official-bundesliga-transfer-centre-summer-2025-32088
+- Deadline Day 2026, Abschlüsse in den letzten Minuten: https://fussballdaten.de/news/bundesliga-deadline-day-2026-alle-offiziellen-transfers-ueberblick/

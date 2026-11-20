@@ -1,6 +1,6 @@
 # K34 – Statistik und Historie
 
-Status: **Entwurf** (8. November 2026), nach „weiter, entscheide du“. Vorläufige Entscheidungen stehen in Abschnitt 12.
+Status: **Entwurf** (8. November 2026), nach „weiter, entscheide du“. Vorläufige Entscheidungen stehen in Abschnitt 12. **Umgesetzt mit U13 (20. November 2026, §5.3 bis §5.9), noch ohne Testlauf.**
 Hängt ab von: K04 (Spieldaten), K29 (Sprüche) · Wird gebraucht von: K28, K35a.
 
 ## 1. Ziel und Spielgefühl
@@ -50,6 +50,56 @@ Hängt ab von: K04 (Spieldaten), K29 (Sprüche) · Wird gebraucht von: K28, K35a
 - Ziel: Statistik nach 20 Saisons höchstens 1 MB im Spielstand.
 - Spieler ohne Einsatz in den letzten 5 Saisons werden zu einer Zeile Karrieresumme verdichtet.
 
+### 5.3 Umsetzung U13 (20.11.2026): Erfassung
+
+- **Je Spieler und Saison** zählt das Spiel in `p.sst`: Ligaspiele, Minuten, Tore, Vorlagen, Notensumme und Zahl der Noten, Gelb, Rot, für Torhüter Spiele zu null und Paraden, dazu Pokalspiele, Pokaltore und Pokalvorlagen. Relegation und Supercup zählen nicht mit (wie die Torjägerliste heute).
+- **Eine Zeile je Saison und Verein:** Wechselt ein Spieler in der Saison den Verein, schließt seine Zeile und eine neue beginnt. Zum Saisonende wandern alle Zeilen in die Karriere `p.kar` als Liste von Zahlen: Saison, Verein, Liga, Spiele, Minuten, Tore, Vorlagen, Notenschnitt × 100, Gelb, Rot, Pokalspiele, Pokaltore, Pokalvorlagen, Stärke und Marktwert in Tausend zum Saisonende, Spiele zu null, Paraden. Nullen am Ende fallen weg, Feldspieler sparen so die beiden Torhüterwerte.
+- **Verdichten (§5.2):** Wer fünf Saisons ohne Einsatz ist, behält nur eine Summenzeile `p.kas`.
+- **Ehemalige:** Hört ein Spieler auf (oder fällt aus dem Spielstand), bleibt eine kurze Summe in `S.stat.ehem`, wenn er mindestens 150 Ligaspiele hatte, eine Ehrung bekam oder mindestens 30 Pflichtspiele für einen Verein bestritt, den du trainiert hast. Höchstens 400 Einträge, die ältesten gehen zuerst.
+- **Verläufe:** Für Spieler deines Kaders am ersten Montag des Monats Stärke, Form und Marktwert in `p.mvl`, höchstens 36 Werte (3 Saisons). Danach bleibt je Saison der Wert aus der Karrierezeile. Für alle anderen gibt es nur die Werte zum Saisonende.
+- **Ab Spielbeginn:** Alle Zahlen beginnen mit deinem Spielstand. Wer schon vorher gespielt hat, startet bei null. Die Ansicht sagt das.
+
+### 5.4 Vorlagen
+
+- Das Spiel kannte bisher keine Vorlagen. Sie werden **nach dem Spiel** verteilt, mit eigenem Zufallsstrom `vorlagen` je Spiel. Die Ergebnisse, Noten und Tore bleiben dadurch genau wie vorher.
+- **Keine Vorlage** bei Elfmeter, direktem Freistoß und Eigentor (Definition von Opta, Quelle unten).
+- **Anteil mit Vorlage je Art des Tores (vorläufig, eigene Schätzung, keine Ligazahl gefunden):** Ecke und Freistoßflanke 95 %, Kopfball 90 %, Großchance und Konter 85 %, Halbchance 75 %, Fernschuss 40 %, nach Torwartpatzer 10 %.
+- **Wer die Vorlage gibt:** Bei Ecke und Freistoßflanke der eingeteilte Schütze, wenn er auf dem Platz stand. Sonst einer der Mitspieler, die in dieser Minute auf dem Platz standen (Startelf und Einwechslungen, ohne Ausgewechselte und Platzverweise), gewichtet nach Position (Außen, Zehner und Spielmacher am meisten, Torwart fast nie), Stärke und dem Merkmal Flankengeber (bei Kopfbällen ×2,5).
+
+### 5.5 Ehrungen zum Saisonende (alle drei Ligen)
+
+- **Torschützenkönig:** meiste Ligatore in dieser Liga, bei Gleichstand mehrere.
+- **Elf des Jahres:** 4-3-3 nach Grobposition (1 Torwart, 4 Abwehr, 3 Mittelfeld, 3 Sturm), bester Notenschnitt mit mindestens 20 benoteten Ligaspielen. Fehlen Kandidaten, gilt die halbe Grenze.
+- **Spieler der Saison:** 10 × (4 − Notenschnitt) + Tore + 0,7 × Vorlagen + 0,5 × Plätze vor dem Letzten (mindestens 20 Noten).
+- **Talent der Saison:** bis 21 Jahre, mindestens 10 Noten, 2 × Stärkegewinn in der Saison + 5 × (4 − Notenschnitt).
+- **Trainer der Saison:** größter Abstand zwischen Ligapunkten und erwarteten Punkten aus den Torchancen (K04 §5.8). Bei Computer-Vereinen heißt er „Trainer von …“, weil sie keine Trainernamen haben.
+- **Wirkung:** Geehrte Spieler sind bis zum Ende der folgenden Saison 5 % mehr wert. Trainer der Saison gibt dir Ruf +5 (K28 §5.4).
+
+### 5.6 Rekorde
+
+- **Je Liga:** höchster Sieg, meiste Ligatore eines Spielers in einer Saison, längste Serie ohne Niederlage (nur Spiele dieser Liga, nach einem Ligawechsel beginnt die Serie neu).
+- **Die 1. Liga startet mit den echten Bundesliga-Rekorden** (geprüft am 20.11.2026): 12:0 Mönchengladbach gegen Dortmund (29.4.1978), 41 Tore von Lewandowski (2020/21), 53 Spiele ohne Niederlage von Bayern (November 2012 bis März 2014). Wer sie bricht, bekommt die Meldung „Bundesliga-Rekord“. Die 2. und 3. Liga beginnen leer (vorläufig, die Werte habe ich nicht gesucht) und melden erst ab der zweiten Saison.
+- **Vereinsrekorde** für Vereine, die du trainierst: Zuschauer, höchster Sieg, teuerster Zugang, teuerster Abgang. Gemeldet wird nur, wenn ein alter Wert übertroffen wird.
+- **Rekordtransfer der Spielwelt:** teuerster Zugang eines deutschen Vereins. Kein echter Startwert, weil die Geldbeträge im Spiel erst mit K23 an die echten angepasst werden.
+
+### 5.7 Vitrine und Karriere
+
+- **Vitrine:** Meisterschaft, Pokal, Supercup und Aufstieg deines Vereins und deine Ehrungen, mit Saison und Verein. Turnierpokale aus Testspielen (K11) gibt es im Spiel noch nicht.
+- **Karriere:** Stationen mit Beginn, Ende und Grund (entlassen, zurückgetreten, gewechselt), je Saison Verein, Liga, Platz, Punkte, Tore, Zuschauerschnitt, Umsatz, Ergebnis, Ruf und Schwierigkeit. Das Gehalt des Trainers fehlt, bis K28 es einführt.
+- **Saisonarchiv:** Abschlusstabellen aller drei Ligen (Verein, Punkte, Tore), Meister, Pokalsieger, Supercup, Aufsteiger und die Ehrungen.
+
+### 5.8 Meldungen
+
+- Neuer Rekord (siehe §5.6), Ehrungen für eigene Spieler und für dich, Torschützenkönig und Spieler der Saison der 1. Liga.
+- **Jubiläum:** 100., 200., 300. … Pflichtspiel eines eigenen Spielers für deinen Verein (gezählt ab Spielbeginn) und 10 Jahre im Verein.
+
+### 5.9 Ansicht
+
+- Neuer Bereich **Statistik** mit Saison (Torjäger, Vorlagen, Scorer, Noten, Torhüter, dein Kader), Ehrungen, Rekorde, Archiv und Karriere mit Vitrine und Ehemaligen.
+- **Spielerkarte:** Saison und Karriere als Tabelle, bei eigenen Spielern der Verlauf der Stärke als Linie am Regler.
+- **Vergleich:** Auf der Spielerkarte „Vergleichen“ merkt sich den Spieler. Die Statistik zeigt die letzten zwei nebeneinander.
+- **Lizenz:** Bereich `statistik` ab der ersten Lizenz (K36 §5.2). Statistik steuert nichts, darum keine Automatik.
+
 ## 6. Hebel des Spielers
 
 Keine. Statistik beschreibt, sie steuert nicht.
@@ -84,11 +134,40 @@ K03 (Verläufe), K04 (Spieldaten), K11 (Turnierpokale), K13 (Titel), K28 (Ruf, K
 statistik:{verlaufSaisons:3,chronikMax:100,verdichtenNachSaisons:5,elfMinEinsaetze:20,elfOrdnung:'4-3-3',ehrungMarktwert:0.05,trainerRuf:5,speicherMax:1e6}
 ```
 
+Seit U13 stehen die Werte in `daten/regeln.js` unter `statistik` (Vorlagen, Ehrungen, Rekorde mit echten Startwerten, Ehemalige, Jubiläen, Speicher).
+
 ## 12. Offene Fragen
 
 **Vorläufig entschieden:** Elf des Jahres in 4-3-3, volle Details drei Saisons lang, Sprüche-Chronik bis 100 Einträge.
+
+**Vorläufig entschieden mit U13 (20.11.2026, von mir, weil „entscheide du“):**
+
+1. Statistik ab Spielbeginn, frühere Spiele zählen nicht (§5.3).
+2. Eine Karrierezeile je Saison und Verein, als Zahlenliste mit gekürzten Nullen am Ende (§5.3).
+3. Verläufe je Monat nur für den eigenen Kader, sonst ein Wert je Saison (§5.3). Grund: Speicher. Ein Monatsverlauf für alle 1700 Spieler der drei Ligen bräuchte allein rund 700 KB.
+4. Vorlagen nach dem Spiel mit eigenem Strom, damit die Kalibrierung der Engine unverändert bleibt (§5.4). Anteile je Torart sind geschätzt.
+5. Ehrungen für alle drei Ligen, Meldungen nur für die 1. Liga und für eigene Leute (§5.5, §5.8).
+6. Spieler der Saison und Talent der Saison mit festen Gewichten (§5.5).
+7. Trainer der Saison nach Punkten über der Erwartung. Bei Computer-Vereinen ohne Namen (§5.5).
+8. Marktwert +5 % bis zum Ende der folgenden Saison (§5.5).
+9. 1. Liga mit echten Rekorden als Startwert, 2. und 3. Liga leer (§5.6).
+10. Kein echter Startwert für den Rekordtransfer, bis K23 die Geldbeträge anpasst (§5.6).
+11. Ehemalige mit Grenzen 150 Ligaspiele, Ehrung oder 30 Spiele für deinen Verein, höchstens 400 (§5.3).
+12. Jubiläen ab Spielbeginn gezählt, nur für eigene Spieler (§5.8).
+13. Torschützenkönig je Liga aus den Zeilen dieser Liga. Wer in der Winterpause die Liga wechselt, hat zwei Zeilen und zählt in jeder Liga nur mit seinen Toren dort.
+14. Spiele zu null: Torwart mit mindestens 60 Minuten und kein Gegentor im ganzen Spiel. Paraden: jeder gehaltene Schuss aufs Tor und jeder gehaltene Elfmeter.
+15. Vergleich zweier Spieler über „Vergleichen“ auf der Spielerkarte statt einer eigenen Suche (§5.9).
+16. Lizenz `statistik` ab der ersten Stufe, ohne Automatik (§5.9).
+
+**Noch offen:** Sprüche-Chronik (wartet auf K29), Turnierpokale (K11), Gehalt in der Karriere (K28), Startwerte der Rekorde für die 2. und 3. Liga.
 
 ## Quellen
 
 - Wünsche zu Statistik und Historie: `konzepte/_recherche-genre.md`, Abschnitt 4b
 - Zuständigkeit Sprüche-Chronik: `konzepte/_konsistenzpruefung.md`, D6
+- Vorlage nach Opta (keine Vorlage bei Elfmeter, direktem Freistoß und Eigentor): https://www.squawka.com/en/?p=1316430 (Suche vom 20.11.2026, Wiedergabe der Opta-Definition)
+- 12:0 Mönchengladbach gegen Dortmund 1978: https://www.bundesliga.com/de/bundesliga/news/rekorde-tore-meisterschaft-historie-bestmarken-spieler-meiste-3235
+- 41 Tore Lewandowski 2020/21 (vorher Gerd Müller 40, 1971/72): https://www.bundesliga.com/de/bundesliga/news/robert-lewandowski-41-saisontore-2020-2021-gerd-muller-rekord-24079
+- Kane 2025/26 mit 36 Toren Torschützenkönig, der Rekord steht weiter: https://www.bundesliga.com/en/bundesliga/news/harry-kane-top-scorer-2025-26-third-time-bayern-munich-37407
+- 53 Bundesligaspiele ohne Niederlage, Bayern, 3.11.2012 bis 29.3.2014: https://guinnessworldrecords.com/world-records/114310-longest-unbeaten-streak-in-bundesliga und https://www.bundesliga.com/en/news/Bundesliga/0000290529.jsp
+- Kriterien der kicker-Elf der Saison habe ich nicht gefunden. Die Grenze von 20 Noten ist meine Wahl.

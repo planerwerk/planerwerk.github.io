@@ -44,7 +44,8 @@ function jugendWoche(d){const A=RJ.aufruecken,l=jugendKader();jugendNiveauWoche(
   if(S.phase==='play'&&d>=S.plan.ende-A.erinnerungTage&&S.jgErin!==S.season&&!autoB('jugendkader')){S.jgErin=S.season;const alt=l.filter(p=>p.age>=A.spaetestens-1);
     if(alt.length)news(`Jugend: ${alt.map(p=>`${p.n} (${p.pos}, ${Math.round(p.str)})`).join(', ')} ${alt.length>1?'werden':'wird'} im Sommer ${A.spaetestens}. Wer bis zum 1. Juli nicht in den Profikader aufrückt${hatZweite()?' oder in die Zweite wechselt':''}, verlässt den Verein (Training & Jugend).`);}}
 // In den Profikader: Profivertrag über drei Jahre mit kleinem Gehalt, Rolle „Talent“ kommt mit der nächsten Woche (K14)
-function jugendHoch(p){const N=RS.nachwuchs;S.jg=S.jg.filter(x=>x!==p);p.team=S.my;p.ct=N.vertrag;p.sal=Math.round(salaryFor(p.str)*N.gehalt/1000)*1000;p.sp=RP.startSpielpraxis;p.wiv=0;p.ppk=0;delete p.trf;delete p.ent;
+function jugendHoch(p){const N=RS.nachwuchs;S.jg=S.jg.filter(x=>x!==p);p.team=S.my;p.ej=S.my; // Eigengewächs (K27, U16)
+  p.ct=N.vertrag;p.sal=Math.round(salaryFor(p.str)*N.gehalt/1000)*1000;p.sp=RP.startSpielpraxis;p.wiv=0;p.ppk=0;delete p.trf;delete p.ent;
   S.pl.push(p);PIX.set(p.id,p);kabineInit(p);rollenBerechnen(S.my);p.ea=erwartungEinsatz(p);return p;}
 // Geld für Abgänge (deine Vorgabe vom 13.11.): Auch wer bei dir kein Profi wird, bringt Geld, wenn ein Profiverein ihn nimmt (Ausland, niedrigere Liga).
 // Preis beim Verkauf aus der Jugend: Anteil am Marktwert, weil er noch nichts gezeigt hat. Unter dem Mindestwert interessiert sich kein Profiverein, dann bleiben nur Amateure (kein Geld).

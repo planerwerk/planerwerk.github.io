@@ -890,3 +890,313 @@ Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `
 | BF7 | **K36:** neuer Bereich `leihe` (B-Lizenz), 45 Bereiche. **K33:** Felder `leihe`, `zwP`, `verh.mc`, neue Datei `js/leihe.js`. | ✅ |
 | BF8 | **Fehler beim Bau, gefunden von `tests/stab.js`:** Ein Kommentar am Zeilenende (Gehälter verliehener Spieler) hatte auf derselben Zeile die Buchung der Stab-Gehälter auskommentiert. Seit dem ersten Commit von U10d wurden die Gehälter des Trainerstabs nicht gebucht. Behoben, danach Node-Tests und die großen Browser-Tests erneut. Derselbe Fehler wie AX12 und BD13. | ✅ |
 | BF9 | **Neuer Wächter `tests/code.js`:** sucht in `js/`, `tests/` und `daten/regeln.js` Kommentare am Zeilenende, hinter denen noch Code steht. Gegenprobe mit der fehlerhaften Fassung: Die Zeile wird gefunden. Läuft ab jetzt bei jedem Testlauf mit. | ✅ |
+
+---
+
+## BG. Nachtrag zu U11a Computer-Vereine: Kaderplan, Bedarf, Kauf und Verkauf (19. November 2026, ohne Testlauf)
+
+**Wichtig:** U11a entstand auf einem Rechner ohne Node.js und ohne Playwright. Kein Test ist gelaufen, auch `tests/welt.js` nicht. Geprüft sind nur die Klammern der geänderten Dateien (Hilfsskript) und der Code von Hand. Alle Zahlen in `REGELN.computer` sind Schätzungen.
+
+| # | Befund | Status |
+|---|---|---|
+| BG1 | **Fehler aus U10d gefunden und behoben:** In `js/ablauf.js` (`finanzenLiga`) stand die Buchung „Trainerstab“ seit U10d in derselben Zeile hinter einem `//`-Kommentar und lief nicht mehr (wie AX12 und BD13). Eigener Commit, `tests/stab.js` muss es bestätigen. | ✅ ohne Testlauf |
+| BG2 | **K31 §3.1 (Planstellen fest je Gruppe) gegen K06 (zehn Grundordnungen):** Ein 4-3-3 hat kein offensives Mittelfeld, ein 3-5-2 drei Innenverteidiger. Gebaut: Planstellen = Mittel aus dem Standard und dem Doppelten der Plätze in der Ordnung. Das ergibt immer 24. | ✅ vorläufig, K31 §12 Nr. 6 |
+| BG3 | **K31 §3.1 („Vereinsniveau“) ist nicht definiert.** Gebaut: Anspruch = Kaderstärke, mindestens die Grundstärke nach dem Ansehen. | ✅ vorläufig, K31 §12 Nr. 7 |
+| BG4 | **K31 §5.1 gegen §3.1:** „Stammspieler mehr als 3 unter dem Qualitätsziel“ kann 3 oder 6 unter dem Anspruch heißen. Gebaut: 6 (wörtlich). | ✅ vorläufig, K31 §12 Nr. 8 |
+| BG5 | **K31 §5.2 Grund „Note“ gegen K33:** Das Spiel speichert keine Noten der letzten Einsätze. Gebaut ist nur „Stärke deutlich unter der Planstelle“. | 📌 K34 oder U11c |
+| BG6 | **K31 §5.2 (Angebot über 150 %) gegen K19 §5.1 (Käufer zahlt höchstens das 1,2-Fache):** Unter Computer-Vereinen kommt so nie ein Kauf über 150 % zustande. Gebaut: nur Spieler der Transferliste und Vereinslose. Mehr zahlen erst ehrgeizige Vereine (Sternejagd). | 📌 U11b |
+| BG7 | **K31 §5.2 Regel B gegen K19 (dein Kauf):** Für dich gilt weiter der Preis nach Kaderrolle. Du kannst einen Spieler aus einer voll besetzten Gruppe kaufen, der Verein sucht danach Ersatz. | ✅ vorläufig, K31 §12 Nr. 11 |
+| BG8 | **BC5 nur zum Teil erledigt:** Der Kaderplan steuert Käufe und Verkäufe unter Computer-Vereinen. `hatBedarf` (Angebote an dich, Leihe, Ausstiegsklausel, Vorvertrag) ist unverändert. Die Umstellung ändert die Häufigkeit der Angebote und braucht `tests/transfers.js`, `tests/leihe.js`, `tests/vertraege.js` und `tests/ausland.js`. | 📌 mit dem ersten Testlauf |
+| BG9 | **K03 (feine Positionen per Zufall) gegen den Kaderplan:** Die Hälfte der Mittelfeldspieler landet außen oder offensiv, der Plan will dort zwei bis vier von neun. Echte Kader (im Schnitt 28 Spieler, 6 Stürmer) haben dazu mehr Stürmer als Planstellen. Erwartung für die erste Saison: viele Überzählige auf der Liste, die niemand braucht, und zu wenige zentrale Mittelfeldspieler. | 📌 K03 Daten, messen mit `tests/welt.js` |
+| BG10 | **K31 („`saison.kaderSoll` geht im Kaderplan auf“):** nicht ganz. `kaderSoll` bleibt als Mindestkader am 1. Juli, damit jeder Verein spielfähig ist. Offene Planstellen füllt der Verein erst in der letzten Woche des Sommerfensters auf (Vereinslose oder erzeugte Spieler der Gruppe). | ✅ vorläufig, K31 §12 Nr. 12 |
+| BG11 | **K36 Gleichschritt (`tests/lizenz.js`):** Der alte Markt hing nur über „Konto größer als der Preis“ am Geld. Der neue hat ein Budget. Damit dein Verein in der Automatik und derselbe Verein als Computer-Verein gleich entscheiden, steht das Budget am ersten Montag des Fensters fest. Die Finanzlage (K19, Konto unter 1,5 oder ab 20 Mio €) hängt weiter am laufenden Konto. | ⚠️ nicht nachgeprüft |
+| BG12 | **K23:** Computer-Vereine zahlen weiter keine Gehälter (AX4). Ein Gehaltsrahmen (K31 §3.3) fehlt. Bei deinem Verein in der Automatik kosten Zugänge echtes Gehalt, begrenzt nur durch das Budget für die Ablöse. | 📌 K23 |
+| BG13 | **K29 Meldungsdichte:** Jeder Wechsel mit Ablöse steht im Posteingang. Vorher waren es 2 bis 5 je Fensterwoche, jetzt können es in der ersten Juliwoche deutlich mehr sein. | 📌 K29, messen |
+| BG14 | **Erwartete Verschiebungen in bestehenden Tests** (nicht gemessen): `tests/transfers.js` Nr. 1 (mindestens 15 Wechsel je Saison, jetzt aus dem Kaderplan statt 2 bis 5 je Woche), `tests/ausland.js` (Anteil der Auslandsangebote: Computer-Vereine geben im Fenster bis zur Hälfte ihres Kontos aus, also bieten weniger deutsche Vereine), `tests/kalibrierung.js` und alle Tests über mehrere Saisons (andere Welt). `tests/pruefungen.js` verlangt Kader von 15 bis 36: Der Markt hält 21 bis 30 ein. | ⚠️ offen |
+| BG15 | **K33:** neues Feld `tb` am Verein, neue Datei `js/computer.js`, `mkPlayer` mit `fp`. **K36:** kein neuer Bereich. | ✅ |
+| BG16 | **Nicht gebaut aus K31:** Profile und Sternejagd (§3.2, §5.3), Klugheit (§5.4), Verträge nach Rang (§4 Nr. 4, dazu BD4 und BD7), Leihen unter Computer-Vereinen (BF6), Trainerwechsel (§5.5), Gehaltsrahmen und Notverkauf (§3.3, §8), Ereignisse (§8), Käufe im Ausland, Anzeige des Bedarfs anderer Vereine (§6), Schätzung über das eigene Scouting (BC6). | 📌 U11b bis U11d, U12 |
+| BG17 | **Alle Tests nach U11a: stehen aus.** Zuerst `node tests/welt.js`, dann `tests/stab.js` (BG1), `tests/transfers.js`, `tests/lizenz.js` (Gleichschritt, „kein Nachteil“), `tests/leihe.js`, `tests/vertraege.js`, `tests/ausland.js`, dann die ganze Liste aus `tests/README.md`, die Browser-Tests einzeln. Der volle Testlauf nach U10d steht ebenfalls noch aus (kein Eintrag in BF). | ⚠️ offen |
+
+---
+
+## BH. Nachtrag zu U11b Computer-Vereine: Vereinsprofile und Sternejagd (19. November 2026, ohne Testlauf)
+
+Wie BG: kein Test gelaufen, alle Zahlen geschätzt.
+
+| # | Befund | Status |
+|---|---|---|
+| BH1 | **K31 §3.2 und §12 Nr. 2 (Profile als Stammdaten) gegen die Regel „Fakten vorher prüfen“:** Ein Profil je echtem Verein wäre eine Behauptung über echte Vereine. Gebaut: „ehrgeizig“ aus der Lage (Erste nach Ansehen je Liga, Aufsteiger), das zweite Profil gelost. Das Feld `profil` in `daten/vereine.js` ist vorbereitet, aber leer. | ✅ vorläufig, K31 §12 Nr. 18 |
+| BH2 | **K06 §7 (`t.stil`, Lieblingsstil „bis K31“):** bleibt, wie er ist. Das zweite Profil hat einen eigenen Zufallsstrom (`vereinsprofil`), die übrige Welt ändert sich durch das Losen nicht. | ✅ |
+| BH3 | **K31 §11 (`sterneJagd.ueberNiveau:5`):** gebaut mit 2. Bei 5 fände ein Spitzenverein im Inland fast niemanden, und Käufe im Ausland gibt es für Computer-Vereine noch nicht (K32). | ✅ vorläufig, 📌 K32 |
+| BH4 | **BG6 erledigt für ehrgeizige Vereine:** Auf der Sternejagd zahlt der Käufer das außergewöhnliche Angebot (150 % × Restlaufzeit, mindestens die Forderung nach K19). Der Verkäufer gibt ab, auch wenn Regel B verletzt ist, und sucht Ersatz. Alle anderen Vereine kaufen weiter nur von der Liste. | ✅ |
+| BH5 | **K02 §5.3a („Die Reichen werden reicher, mit Maß“):** Die Sternejagd zieht starke Spieler zu den Vereinen mit dem höchsten Ansehen, 70 % des Kontos als Budget verstärken das. Ob die drei Wertvollsten dadurch zu oft Meister werden, zeigt erst eine Messung über viele Saisons (Kalibrierziel nach U11, PLAN §7). | ⚠️ messen |
+| BH6 | **Profile ohne Wirkung oder mit halber Wirkung:** Malocher (K07), Ausbildungsverein verleiht nicht (U11d), Spekulant verkauft nicht mit Gewinn (Regel B), „sparsam verkauft eher“ fehlt. Profile ändern sich nicht mit der Zeit, außer „ehrgeizig“. | 📌 U11d, K07 |
+| BH7 | **K35, K36:** Profile sind für dich nicht sichtbar, kein neuer Bereich. **K33:** Felder `profil` und `tb.s`. | ✅, 📌 K35 |
+| BH8 | **Dein Verein in der Automatik** hat wie jeder Verein ein gelostes zweites Profil und kann „ehrgeizig“ sein. Dann geht der Verein mit 70 % deines Kontos auf den Markt und auf Sternejagd. **Entschieden (19.11., vorläufig, von mir auf dein „mach wie du denkst“):** bleibt so. Gründe: K36 Grundsatz 1 (kein zweites Regelwerk), der Gleichschritt in `tests/lizenz.js` verlangt dieselbe Regel, und der alte Markt war strenger: Er kaufte, solange das Konto größer war als der Preis, also mit bis zu 100 % des Kontos. Bleibt ein Unterschied: Dein Verein zahlt für Zugänge echtes Gehalt, Computer-Vereine nicht (AX4, BG12). | ✅ vorläufig, K31 §12 Nr. 22 |
+| BH9 | **`tests/welt.js`** prüft dazu: Profile (Verteilung, Wirkung auf Qualitätsziel, Talente, Budget), Sternejagd an einem gebauten Fall und im Ablauf. Nie gelaufen. | ⚠️ offen |
+
+---
+
+## BI. Nachtrag zu U11c Computer-Vereine: Verträge nach Rang (19. November 2026, ohne Testlauf)
+
+Wie BG und BH: kein Test gelaufen, die Zahlen sind geschätzt.
+
+| # | Befund | Status |
+|---|---|---|
+| BI1 | **K31 §4 Nr. 4 gegen den bisherigen Code:** Computer-Vereine verlängerten beim Saisonwechsel jeden auslaufenden Vertrag mit 70 %, egal ob Stammspieler oder Überzähliger. Jetzt nach Rang im Kaderplan: Gebrauchte 90 %, junge Ergänzung 50 %, sonst 10 %. Gebrauchte werden schon von Oktober bis Dezember gebunden. | ✅ vorläufig, K31 §5.8 |
+| BI2 | **K21 §4.3 (Vorvertrag fremder Spieler ohne Ablöse):** Für dich gibt es weniger ablösefreie Gelegenheiten bei Stammspielern anderer Vereine, mehr bei Überzähligen. Das entspricht K31 §1 („plant wie ein echter Verein“). | ✅ vorläufig, K31 §12 Nr. 24 |
+| BI3 | **K36 Gleichschritt:** Das frühe Verlängern läuft im Markt-Strom für alle Vereine, deren Verträge nicht du führst, also im Gleichschritt-Test für beide Welten gleich. Nicht nachgeprüft. | ⚠️ messen |
+| BI4 | **Saisonwechsel:** Der Kaderplan je Verein wird vor dem Altern und vor den Karriereenden berechnet, ohne Zufall. Die Zahl der Würfe bleibt gleich (ein Wurf je auslaufendem Vertrag), die Welt ändert sich trotzdem, weil andere Spieler bleiben. | ✅ |
+| BI5 | **Mehr Vereinslose im Sommer:** Überzählige gehen jetzt meist. Der Deckel `saison.vereinsloseMax` (90) schneidet den Rest ab. Ob der Markt im Juli genug Vereinslose für offene Planstellen hat, zeigt erst `tests/welt.js`. | ⚠️ messen |
+| BI6 | **BD4 und BD7 bleiben offen:** Vorverträge und Ausstiegsklauseln unter Computer-Vereinen fehlen weiter (jetzt U11d). | 📌 U11d |
+| BI7 | **`tests/welt.js` Nr. 6c:** Chance je Rang, früh verlängern (zwölf Herbstwochen, etwa 86 %), nicht im März, deine Spieler unberührt, dazu im Ablauf der Anteil der Gebrauchten mit auslaufendem Vertrag (nur Ausgabe). Nie gelaufen. | ⚠️ offen |
+
+---
+
+## BJ. Nachtrag zu U11d1 Computer-Vereine: Leihen unter Computer-Vereinen, Leihkontingent (19. November 2026, ohne Testlauf)
+
+Wie BG bis BI: kein Test gelaufen. Das Kontingent ist recherchiert (FIFA, DFL), die übrigen Zahlen sind geschätzt.
+
+| # | Befund | Status |
+|---|---|---|
+| BJ1 | **Fehler aus U10d gefunden:** Die Spielerkarte nahm an, jede Leihe betreffe dich. Bei einer Leihe zwischen zwei anderen Vereinen hätte dort „Du zahlst sein Gehalt“ gestanden. Mit U11d1 gab es solche Leihen zum ersten Mal, die Karte zeigt jetzt „X hat ihn von Y ausgeliehen“. | ✅ behoben |
+| BJ2 | **Andere Stellen, die Leihen nur bei dir erwarten:** `leiheGehaelter` und `leiheWoche` prüfen `von === S.my`. `leiheEnde` gibt jede Leihe zurück, egal von wem. Kauf geliehener Spieler ist gesperrt (`aktionen.js`, „gerade ausgeliehen“), ebenso bei `kiKandidat` und `kiStern`. Passt. | ✅ |
+| BJ3 | **Berater-Tipps (K22) können einen geliehenen Spieler nennen** (`berater.js` filtert nur `wech`). Der Kauf scheitert dann mit „gerade ausgeliehen“. Klein, nicht geändert. | 📌 klein |
+| BJ4 | **Leihen zählen zur Obergrenze des Fensters** (4 im Sommer, 2 im Winter). Dadurch gibt es etwas weniger Käufe. `tests/transfers.js` Nr. 1 (mindestens 15 Wechsel mit Ablöse je Saison) kann sich verschieben, ebenso `tests/welt.js` Nr. 7. | ⚠️ messen |
+| BJ5 | **Zufall:** Die Suche nach Leihspielern würfelt im Markt-Strom (Schätzfehler). Die Welt nach dem ersten Fenster ist eine andere als mit U11c. | ✅ erwartet |
+| BJ6 | **Kontingent auch für dich:** `verleihen`, `ausleihen` und die Liste der Leihvereine prüfen es. `tests/leihe.js` verleiht zwei Spieler und leiht einen aus, das bleibt unter 6. Nicht nachgeprüft. | ⚠️ messen |
+| BJ7 | **Leihe am 1. Juli:** Der Markt läuft montags. Fiele ein Montag mit offenem Fenster vor den Saisonwechsel, endete eine Leihe sofort wieder. Deshalb leihen Computer-Vereine nur in der Spielphase (`S.phase === 'play'`). | ✅ vorbeugend |
+| BJ8 | **Nicht gebaut:** Leihgebühr, Kaufoption und Rückruf unter Computer-Vereinen, Entwicklung beim Leihverein über dessen Stab (K08 §5.5), Leihen ins und aus dem Ausland, die Ausnahmen „vom Verein ausgebildet“ und die der DFL für junge deutsche Spieler. | 📌 später |
+| BJ9 | **`tests/welt.js` Nr. 6d und Nr. 7:** Leihbar, Leihkandidat, Leihe ohne Geld, Kontingent (6, 3, bis 21 frei), Rückkehr am Saisonende. Im Ablauf wird jede Leihe geprüft (Fenster, Bedarf, leihbar, Kontingent, nie dein Verein), nach jedem Saisonwechsel ist niemand mehr verliehen. Nie gelaufen. | ⚠️ offen |
+
+---
+
+## BK. Nachtrag zu U11d2 Computer-Vereine: Vorstand und Trainerwechsel (19. November 2026, ohne Testlauf)
+
+Wie BG bis BJ: kein Test gelaufen. Recherchiert ist nur der Zielwert (4 bis 10 Wechsel je Saison in der 1. Liga), alle Stellschrauben sind geschätzt.
+
+| # | Befund | Status |
+|---|---|---|
+| BK1 | **K31 §5.5 hing an K28.** Gebaut ist nur der Teil für Computer-Vereine (K28 §7). Dein Vorstand rechnet weiter wie bisher (Werte je Spiel, Entlassung unter 12 nach der Schonfrist). Zwei verschiedene Modelle bis U12. | 📌 U12 |
+| BK2 | **Kalibrierung offen:** Ob mit Grenze 20, Trägheit 0,2 und Sport 5 je Platz 4 bis 10 Wechsel je Saison in der 1. Liga herauskommen, zeigt erst `tests/welt.js` (Nr. 7 gibt die Zahl je Liga aus, gewertet wird nur „nicht absurd“). | ⚠️ messen |
+| BK3 | **Neuer Stil mitten in der Saison:** `t.stil` ändert sich. Ob der Computer-Trainer im Spiel (K06, U5a) und die Gegneranalyse ihn ohne Zwischenspeicher lesen, habe ich nicht nachgeprüft. Die Vertrautheit mit dem neuen Stil ist niedrig, weil `vertrautheitWoche` in `training` jede Woche für jeden aktiven Verein die Werte aller anderen Stile speichert (mindestens 30). Ohne gespeicherten Wert gäbe `vertraut` dem neuen Lieblingsstil den Startwert 70. | ⚠️ prüfen |
+| BK9 | **Grundordnung:** Zuerst geplant war eine neue Ordnung mit 50 %. Gestrichen, weil `kiOrdnung` die Ordnung der Computer-Vereine jeden Monat neu nach dem Kader wählt (in `training`). Die mitgebrachte Ordnung wäre nach spätestens vier Wochen wieder weg. | ✅ gestrichen |
+| BK4 | **Eigene Zufallsströme** (`vorstandKI` je Woche und zum Saisonwechsel). Die übrigen Ströme bleiben gleich, die Welt ändert sich trotzdem, weil Stil und Ordnung die Spiele ändern. | ✅ |
+| BK5 | **Saisonwechsel:** `kiVorstandSaison` läuft vor Auf- und Abstieg und vor `setTarget`, damit erwarteter und letzter Platz zur alten Saison gehören. Die Schonfrist zählt die Ligaspiele der Tabelle, die bei null beginnt, darum steht `ab` dann auf 0. | ✅ |
+| BK6 | **Dein alter Verein:** Wirst du entlassen oder wechselst du, ist er ab dann ein Computer-Verein. Sein Vorstand beginnt mit 55, er hat Schonfrist bis zum siebten Ligaspiel der Saison. | ✅ |
+| BK7 | **`tests/welt.js` Nr. 6e und Nr. 7:** Präsident, Niederlagenserie mit Ultimatum, Entlassung spätestens nach dem zweiten Ultimatum, Stimmungsschub, Wechsel im Sommer, Rückkehr zum Start. Im Ablauf die Zahl je Liga und Saison. Nie gelaufen. | ⚠️ offen |
+| BK8 | **`tests/fuzz-karrieren.js`, `tests/schwierigkeit.js`, `tests/lizenz.js`** prüfen deinen Vorstand. Er ist unverändert, die Gegner spielen aber anders. Kann Werte verschieben. | ⚠️ messen |
+
+---
+
+## BL. Nachtrag zu U12a Vorstand: Vertrauen mit Bausteinen, Ultimatum, Ruf (20. November 2026, ohne Testlauf)
+
+Eigener Zweig `mitarbeit/popolupo-u12-vorstand`, baut auf U11 auf (Präsident aus U11d2). Kein Test gelaufen.
+
+| # | Befund | Status |
+|---|---|---|
+| BL1 | **Weniger Entlassungen, später:** Statt sofort an der Grenze gibt es zwei Ligaspiele Ultimatum, oft ein zweites. Der träge Anteil zieht das Vertrauen dabei zum Ziel, wer an der Grenze knapp unter dem Ziel liegt, übersteht das Ultimatum meist. `tests/fuzz-karrieren.js` und alle Läufe über mehrere Saisons sehen weniger Jobwechsel. | ⚠️ messen |
+| BL2 | **`tests/schwierigkeit.js` angepasst:** Vertrauen 10 nach 7 Spieltagen gibt auf Schwer ein Ultimatum statt der Entlassung. Der Gleichschritt Leicht gegen Schwer bleibt gültig: Das Ultimatum hat keinen eigenen Halt, und der Würfel liegt in einem eigenen Strom (`ultimatum`). | ✅ angepasst |
+| BL3 | **`tests/ui-zwei-saisons.js` angepasst:** Vertrauen 5 hätte nicht mehr sicher zur Entlassung geführt. Jetzt Vertrauen 0 und ein abgelaufenes letztes Ultimatum, dann entlässt die nächste Prüfung. | ✅ angepasst |
+| BL4 | **Gleich viele Würfe im Strom „woche“:** Die Meldung bei Konto im Minus würfelt wie bisher nur bei Konto im Minus. Die Entlassungschance würfelt im eigenen Strom. Der Rest der Welt bleibt gleich, bis eine Entlassung anders fällt. | ✅ |
+| BL5 | **Zwei Modelle angeglichen:** Dieselbe Formel (`vertrauenZiel`) für dich und die Computer-Vereine, mit verschiedenen Werten (dein Soll ist das Saisonziel, du hast zusätzlich Umfeld und Kredit, die Grenze kommt aus der Schwierigkeit). | ✅ |
+| BL6 | **`tests/lizenz.js` und `tests/sim.js`** setzen bei einem Jobwechsel `S.fired`, `S.trust` usw. von Hand, aber nicht `S.ult`. Das Ultimatum merkt sich den Verein und verfällt beim Wechsel von selbst. | ✅ |
+| BL7 | **Platz je Spiel entfällt:** Bisher gab jedes Ligaspiel ab dem 5. Spieltag −2 bis +0,6 für den Tabellenplatz. Das steckt jetzt im Baustein Sport (montags, träge). Wer weit unter dem Ziel steht, verliert Vertrauen langsamer, aber stetig. Kalibrierung offen. | ⚠️ messen |
+| BL8 | **Ruf bei alten Spielständen:** fehlt, gilt als 30. | ✅ |
+| BL9 | **`tests/vorstand.js`:** Formel, träger und schneller Anteil, Ultimatum (aufgehoben, letztes, Entlassung, nur beim eigenen Verein), Ruf, Jobangebote. Nie gelaufen. | ⚠️ offen |
+
+---
+
+## BM. Nachtrag zu U12b Vorstand: Nebenziele und Rücktritt (20. November 2026, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-u12-vorstand`. Kein Test gelaufen.
+
+| # | Befund | Status |
+|---|---|---|
+| BM1 | **Zielgespräch (K28 §5.2) verschoben:** Ohne Transferbudget und Prämie (K23) hätte Tiefstapeln keinen Preis. | 📌 mit K23 |
+| BM2 | **`setTarget` setzt jetzt auch die Nebenziele.** Es wird beim Spielstart, zum Saisonwechsel, beim Jobwechsel und beim Wechsel der Schwierigkeit gerufen. Eigener Strom je Saison und Verein, darum ändert mehrfaches Rufen nichts und verschiebt keinen anderen Strom. | ✅ |
+| BM3 | **Pokal-Runden:** Der Stand liest `S.cup.hist` (eine Liste je gespielter Runde) und `S.cup.alive`. Annahme: `hist[r]` ist Runde r (0 = 1. Runde). So legt `ablauf.js` die Runden an. | ✅ angenommen |
+| BM4 | **Einsätze statt Minuten:** `p.apps` zählt jedes Spiel mit Einsatz, auch im Pokal. Ob Testspiele mitzählen, habe ich nicht geprüft. Wenn ja, ist das Jugendziel leichter. | ⚠️ prüfen |
+| BM5 | **Nebenziele im Vertrauen:** höchstens ±10 je Woche im Ziel, zum Saisonende ±5 je Nebenziel. Ein verfehltes Nebenziel kann damit über die Entlassung zum Saisonende (Vertrauen unter 15) mitentscheiden. | ⚠️ messen |
+| BM6 | **Rücktritt nutzt den Weg der Entlassung** (`S.fired`, Jobangebote, Halt „Entlassen“). Das Fenster sagt „Zurückgetreten“. In den Tests mit Jobwechsel (`sim.js`, `lizenz.js`) wird `S.ruecktritt` nicht zurückgesetzt, dort tritt aber niemand zurück. | ✅ |
+| BM7 | **Neuer Knopf im Büro** („Zurücktreten …“, mit Rückfrage). Die Browser-Tests klicken Knöpfe gezielt nach Text, keiner klickt zufällig. | ✅ |
+| BM8 | **`tests/vorstand.js` Nr. 7 bis 9:** Nebenziele setzen, Stand, Baustein, Saisonende, Rücktritt mit Jobwechsel. Nie gelaufen. | ⚠️ offen |
+
+---
+
+## BN. Nachtrag zu U12c Beziehungsnetz (20. November 2026, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-u12-vorstand`. Kein Test gelaufen. Derbys recherchiert, alle anderen Zahlen aus K17 §11.
+
+| # | Befund | Status |
+|---|---|---|
+| BN1 | **Ablöse mit Beziehung nur für dich:** `forderungDu` statt `forderungBasis` in `forderung` und `schmerzgrenze`. Die Sternejagd der Computer-Vereine nutzt weiter `forderungBasis` ohne Beziehung. | ✅ |
+| BN2 | **Tests mit Käufen bei Derby-Rivalen:** `tests/transfers.js` und andere spielen oft mit Freiburg (Nr. 6). Freiburg hat das Baden-Derby gegen Karlsruhe. Ein Kauf in Karlsruhe ist jetzt etwa 4,5 % teurer. Ob ein Test genau dort kauft, habe ich nicht geprüft. | ⚠️ messen |
+| BN3 | **Zufall:** Gewürfelt wird nur bei einer Beziehung unter −50 (Ablehnung), im Grundstrom, weil es deine Handlung ist. Alle anderen Änderungen sind fest. Die Welt bleibt gleich, solange niemand unter −50 fällt. | ✅ |
+| BN4 | **Derby-Gleichgewicht:** Zwei Derbys je Saison mit Sieger geben −4, das Vergessen holt im Jahr etwa 46 % der Abweichung zurück. Ein Derby pendelt sich bei etwa −39 ein und bleibt über −50, blockiert also keine Wechsel. | ✅ gerechnet |
+| BN5 | **Größe des Spielstands:** Jeder Wechsel unter Computer-Vereinen speichert eine Beziehung (+5). Gelöscht wird erst unter 2 Abstand, nach etwa 18 Monaten. Geschätzt einige Hundert Einträge mit je bis zu fünf Gründen, grob 50 KB. | ⚠️ messen |
+| BN6 | **Testspiele:** Jedes gespielte Testspiel gibt +3, das erhöht die Zusage beim nächsten Mal leicht. `tests/testspiele.js` prüft Zusagen. Bei Beziehung 0 gilt der alte Wert genau. | ⚠️ messen |
+| BN7 | **Nicht gebaut:** Abwerben (K20), Gerüchte und Fehden (K29), Brisanz im Spiel (K09), Hilfe in der Not, Versöhnung und lachender Dritter (K30), Partnervereine (keine Quelle), Rheinland-Derby als Gruppe. | 📌 später |
+| BN8 | **`tests/beziehungen.js`:** Grundwerte, Verlauf, Vergessen, Ablöse, Gesprächsbereitschaft, Testspiele, Derby, fairer Kauf, Computer-Vereine meiden −50, Anzeige. Nie gelaufen. | ⚠️ offen |
+
+---
+
+## BO. Nachtrag zu U12d Ereigniskarten: Gerüst und die ersten fünf Karten (20. November 2026, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-u12-vorstand`. Kein Test gelaufen.
+
+| # | Befund | Status |
+|---|---|---|
+| BO1 | **Gleichschritt mit und ohne Automatik (`tests/lizenz.js`, K36 §10):** Wer nicht antwortet, bekommt die Voreinstellung, und zwar vor den Spielen desselben Tages (`kartenAuto` am Anfang von `tagesSpieleVorbereiten`). In der Automatik geschieht das schon montags am Ende der Woche. Dazwischen liegt nichts, was Spiele beeinflusst. Der Würfel einer Karte hängt nur an Karte, Saison und Tag. | ✅ entworfen |
+| BO2 | **Neuer Halt „Ereignis“** (K01): nur bei einer Entscheidung im Budget, höchstens eine kleine je Woche, mit den Spielen der Woche höchstens 4 Halte. `tests/lizenz.js` zählt Halte, der neue Grund ist dort nicht verboten. | ⚠️ messen |
+| BO3 | **Eigener Strom `ereignisse`:** jede Woche fünf Würfe (einer je Karte), danach Auslöser. Keine Verschiebung anderer Ströme. | ✅ |
+| BO4 | **Häufigkeit:** Mit 1 zu 120 je Woche und Karte kommen pro Saison grob ein bis zwei Karten, weil die Hochzeit fast immer auslösbar ist und der Geheimtipp oft. Das ist weit unter „15–30 Entscheidungen je Saison“ (§10), der Katalog ist aber erst fünf Karten groß. | 📌 wächst mit dem Katalog |
+| BO5 | **Keine Ketten, keine verzögerten Folgen, keine Merker** (§3.1). Die erste Karte, die sie braucht, ist der lachende Dritte (§8.3, K17 §5.4). | 📌 später |
+| BO6 | **„Ultimatum“ (K28 §8) ist keine Karte**, sondern seit U12a eine Meldung mit Frist (`vorstandPruefen`). Ob es in den Katalog wandert, entscheidet sich mit der Priorität „Fristen und Pflichten“ (§5.2). | 📌 offen |
+| BO7 | **`tests/karten.js`:** Prüfskript für den Katalog, Auslöser, Entscheidung mit Halt, Automatik ohne Antwort, Budget, gleicher Würfel, Woche. Nie gelaufen. | ⚠️ offen |
+
+---
+
+## BP. Nachtrag zu UX1 automatische Usability-Prüfungen (20. November 2026, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-u12-vorstand` (UX1 folgt laut PLAN §7 direkt auf U12). Konzept neu: `konzepte/K40-usability.md`. Kein Test gelaufen.
+
+| # | Befund | Status |
+|---|---|---|
+| BP1 | **Neue Abhängigkeit für Tester:** axe-core (`npm i axe-core`), wie Playwright nicht im Repo. Ohne axe-core prüft das Skript nur die Tastatur und sagt das. | ✅ dokumentiert |
+| BP2 | **Fokus beim Öffnen eines Fensters** liegt jetzt auf dem Schließen-Knopf oder dem Fenster selbst. Die Browser-Tests klicken und füllen Felder gezielt, der Fokus stört sie nicht. Nicht nachgeprüft. | ⚠️ messen |
+| BP3 | **Escape schließt Fenster mit Schließen-Knopf** (Spielerkarte, Menü, Jugend, Zweite, Lizenz). Entlassung und Saisonbilanz haben keinen und bleiben offen. | ✅ |
+| BP4 | **Erster Lauf wird Verstöße finden** (zum Beispiel Kontraste der Regler oder Tabellen ohne Überschriften). Sie kommen nach `konzepte/_usability.md`, abgearbeitet wird danach. | 📌 erwartet |
+| BP5 | **Nicht nachgeprüft:** `axe.source` und das Feld `impact` (K40 §12). Das Skript meldet, wenn `axe.source` fehlt. | ⚠️ prüfen |
+
+---
+
+## BQ. Nachtrag zu U13 Statistik und Historie (20. November 2026, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-u13-statistik` (baut auf U12 auf). Konzept: K34 §5.3 bis §5.9 und §12. Neue Datei `js/statistik.js`. Kein Test gelaufen.
+
+| # | Befund | Status |
+|---|---|---|
+| BQ1 | **Vorlagen mit eigenem Strom `vorlagen` je Spiel**, nach dem Spiel verteilt. Ergebnisse, Noten und alle anderen Ströme bleiben gleich. `tests/statistik.js` vergleicht eine Saison mit und ohne Statistik. | ✅ entworfen |
+| BQ2 | **Marktwert +5 % für Geehrte** (bis zum Ende der folgenden Saison) ändert Preise und damit ab der zweiten Saison den Transfermarkt. Läufe über mehrere Saisons (`tests/welt.js 10`, `tests/fuzz-karrieren.js`) sehen andere Wechsel. Je Liga und Saison sind das etwa 15 Spieler. | ⚠️ messen |
+| BQ3 | **Speicher:** geschätzt 1700 aktive Spieler mit im Schnitt 6 Zeilen zu 45 Zeichen, dazu Archiv (etwa 2 KB je Saison) und Ehemalige (höchstens 400). Grob 500 KB nach 20 Saisons. Der Test misst anteilig. | ⚠️ messen |
+| BQ4 | **Meldungen:** Bundesliga-Rekorde kommen fast nie (echte Startwerte). Rekordtransfer und Rekorde der eigenen Liga melden erst ab der zweiten Saison, Vereinsrekorde nur beim Übertreffen eines alten Werts. In den ersten Saisons nach dem Start kann der Rekordtransfer trotzdem mehrmals fallen. | ⚠️ messen |
+| BQ5 | **Gleichschritt (`tests/lizenz.js`, `tests/schwierigkeit.js`):** Die Statistik würfelt nur im eigenen Strom. Der Ruf +5 für den Trainer der Saison wirkt nur auf deine Jobangebote. | ✅ entworfen |
+| BQ6 | **Rechenzeit der Ansicht:** Die Seite „Saison“ läuft bei jedem Aufbau über alle Spieler (Ligen, Ausland, Jugend, Zweite). Im Browser nicht gemessen. | ⚠️ messen |
+| BQ7 | **Browser-Tests:** `tests/ui-zugang.js` und `tests/ui-zwei-saisons.js` prüfen jetzt auch die Ansicht Statistik. Der Vergleich hat eine leere Kopfzelle oben links, axe kann das als kleinen Verstoß melden (zählt nicht, nur schwere Verstöße zählen). | ⚠️ messen |
+| BQ8 | **Alte Spielstände:** `S.stat`, `p.sst` und `p.kar` entstehen beim ersten Spiel. Die Statistik beginnt dann mit der laufenden Saison. `tests/statistik.js` prüft das. | ✅ |
+| BQ9 | **Zwei Torjägerlisten:** Die Tabelle zeigt weiter `topScorers` (Ligatore nach dem heutigen Verein), die Statistik zählt je Liga aus den Zeilen. Bei einem Wechsel zwischen den Ligen im Winter können sie sich unterscheiden. Die Ehrung folgt der Statistik. | 📌 später angleichen |
+| BQ10 | **Nicht gebaut:** Sprüche-Chronik (wartet auf K29), Turnierpokale (K11), Gehalt des Trainers (K28), Startwerte der Rekorde für die 2. und 3. Liga, Linien für Form und Marktwert (gespeichert, angezeigt wird nur die Stärke). | 📌 später |
+| BQ11 | **`tests/statistik.js`:** sechs Prüfungen, siehe Test-README. Nie gelaufen. Dafür hat `tests/sim.js` die Option `vorher` bekommen (läuft vor dem Welt-Aufbau). | ⚠️ offen |
+
+---
+
+## BR. Nachtrag zu U14 Saisonvorbereitung (20. November 2026, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-u14-saisonvorbereitung` (baut auf U13 auf). Konzept: K12b §5.1 bis §5.3 und §12. Neue Datei `js/vorbereitung.js`. Kein Test gelaufen.
+
+| # | Befund | Status |
+|---|---|---|
+| BR1 | **Geld für Computer-Vereine:** Jeder Verein bekommt zur Saisoneröffnung Ansehen × 2.000 € (Erstligist mit Ansehen 70: 140.000 €). Das ändert ihre Konten und damit Käufe ab dem ersten Sommer. `tests/welt.js` prüft Budgets und Wechselzahlen, die Größenordnung ist klein gegen die Einnahmen je Spieltag. | ⚠️ messen |
+| BR2 | **Eigener Strom `eroeffnung`** je Verein und Saison, nur für den Regen. Der Tagesstrom bleibt gleich. | ✅ |
+| BR3 | **Gleichschritt (`tests/lizenz.js`):** Die Eröffnung hängt nicht an Lernstufen oder Automatik, nur am Spielplan. Die Liste ist reine Anzeige. Die neue Erinnerung ist kein Halt. | ✅ entworfen |
+| BR4 | **Erinnerung auf „Schwer“:** Die neue Art `vorbereitung` steht in `RK.erinnerungen`, also schaltet „Schwer“ sie zum Spielstart ab wie die anderen. Alte Spielstände auf „Schwer“ haben sie an (die Abschaltung läuft nur beim Start). | 📌 klein |
+| BR5 | **Liste erst ab 1. Juli** statt ab Saisonabschluss (K12b §12 Nr. 1). In der Phase „Saisonende“ zeigt das Büro keine Liste. | 📌 vorläufig |
+| BR6 | **Nicht gebaut:** Sponsorentag und weitere Werbeflächen (K24), Trikotvorstellung (K25), Zielgespräch (K28), Fanstimmung +3 (K27), Presse-Anekdote zum Foto (K29). Die Liste bekommt die Punkte mit ihren Konzepten. | 📌 später |
+| BR7 | **Mannschaftsfotos** liegen in `S.stat.foto` (höchstens 30) und stehen auf der Statistik-Seite Karriere. | ✅ |
+| BR8 | **`tests/vorbereitung.js`:** sieben Prüfungen, siehe Test-README. Nie gelaufen. | ⚠️ offen |
+
+---
+
+## BS. Nachtrag zu U15 Transfers II: Abwerben, Deadline Day, Bieterrunde (20. November 2026, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-u15-transfers2` (baut auf U14 auf). Konzept: K20 §5.4 und §12. Neue Datei `js/abwerben.js`. Kein Test gelaufen.
+
+| # | Befund | Status |
+|---|---|---|
+| BS1 | **Zusätzlicher Markttag am letzten Tag jedes Fensters** für alle Computer-Vereine (eigener Strom `deadline`). Die Obergrenzen je Fenster (`computer.kauf.jeFenster` 4 und 2) gelten weiter, weil `kiBudget` je Fenster zählt. `tests/welt.js` sieht mehr Wechsel zum Fensterende, die Zahl je Saison steigt etwas. | ⚠️ messen |
+| BS2 | **Neuer Halt „Deadline Day“** zweimal je Saison. `tests/lizenz.js` und `tests/karten.js` zählen Halte, beide Läufe haben ihn gleich. Auf „Schwer“ ist er wie alle Erinnerungen beim Start aus. | ✅ entworfen |
+| BS3 | **Abwerben würfelt im Grundstrom**, weil es deine Handlung ist (wie Ablehnungen in K17, BN3). Ohne Abwerben ändert sich nichts. | ✅ |
+| BS4 | **Ablöse +15 % nach Auffliegen** steckt in `forderungDu`, also nur für dich. Die Computer-Vereine untereinander sind nicht betroffen. | ✅ |
+| BS5 | **Computer-Vereine setzen gelistete Spieler zurück:** `kiListe` (computer.js) nimmt Spieler von der Liste, die nicht mehr im Abgabeplan stehen. Ein abgeworbener Spieler kann so wieder von der Liste fallen, sein Wechselwunsch (Ablöse −10 %) bleibt. Gilt schon für jeden Wechselwunsch Stufe 3 seit U8. | 📌 später prüfen |
+| BS6 | **Nicht gebaut:** Computer-Vereine werben deine Spieler ab (§7), Bieterwettstreit beim Kauf, Spieler lehnt das höchste Gebot ab, Preise ±15 % am Deadline Day, Fans und Presse beim Auffliegen (K27, K29), Nationalspieler im Risiko. | 📌 später |
+| BS7 | **`tests/abwerben.js`:** sieben Prüfungen, siehe Test-README. Nie gelaufen. | ⚠️ offen |
+
+---
+
+## BT. Nachtrag zu U16 Fans (20. November 2026, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-u16-fans` (baut auf U15 auf). Konzept: K27 §5.4b und §12. Neue Datei `js/fans.js`. Kein Test gelaufen.
+
+| # | Befund | Status |
+|---|---|---|
+| BT1 | **Zuschauer und Einnahmen:** Am Start ist die Stimmung 60 und der Faktor genau 1. Danach schwankt er zwischen 0,85 und 1,10. Wer erfolgreich ist und faire Preise nimmt, hat bis zu 10 % mehr Zuschauer, auch in der Vorhersage am Ticketpreis. Ein eigenes Finanz-Prüfskript gibt es nicht. `tests/testspiele.js` (Zuschauer im Testspiel), `tests/schwierigkeit.js` (Konten) und `tests/ui-zwei-saisons.js` können abweichen. | ⚠️ messen |
+| BT2 | **Vorstand mit toter Zone:** Zwischen 45 und 75 wirkt die Fanstimmung nicht. `tests/vorstand.js` rechnet das Ziel ohne Fans nach. Das stimmt, solange die Stimmung in der Zone bleibt, am Start also immer. | ✅ entworfen |
+| BT3 | **Pfiffe** ändern das Selbstvertrauen (−0,2 je Heimspiel unter 30) und damit die Torchance (`abschluss` nutzt `sv`). Ergebnisse ändern sich erst, wenn eine Stimmung unter 30 fällt. | ⚠️ messen |
+| BT4 | **Ohne Zufall:** Fanstimmung, Anlässe und Fan-Gespräch würfeln nicht. Kein Strom verschiebt sich. | ✅ |
+| BT5 | **Publikumslieblinge ab Spielbeginn:** In der ersten Saison gibt es kaum welche (60 Pflichtspiele), die Identifikation steigt erst ab der zweiten. Eigengewächse kennt das Spiel nur für Aufrücker ab U16. | 📌 vorläufig |
+| BT6 | **Rechenzeit:** Montags für 56 Vereine Tabelle und Lieblinge (Zeilen der Statistik). Nicht gemessen. | ⚠️ messen |
+| BT7 | **Nicht gebaut:** Dauerkarten, Gästeblock (K23), Ultras und Tradition (keine Quellen je Verein), Choreo, Pyro, Platzsturm (K09, K30), Heimvorteil durch Fans, Wirkung auf den Vorstand der Computer-Vereine, Presse (K29), der negative Teil der Identifikation. | 📌 später |
+| BT8 | **`tests/fans.js`:** zehn Prüfungen, siehe Test-README. Nie gelaufen. | ⚠️ offen |
+
+---
+
+## BU. Nachtrag zu U17a Pressekonferenzen (20. November 2026, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-u17-presse` (baut auf U16 auf). Konzept: K29 §5.4 und §12 Nr. 7 bis 14. Neue Dateien `daten/presse.js` und `js/presse.js`. Kein Test gelaufen.
+
+| # | Befund | Status |
+|---|---|---|
+| BU1 | **Gleichschritt (`tests/lizenz.js`):** Mit Lernstufen geht bis zur C-Lizenz sofort der Co-Trainer, danach bleibt die Pressekonferenz einen Tag offen und der Co-Trainer geht am nächsten Tag. Ohne Lernstufen mit Automatik geht er sofort. Der Co-Trainer würfelt nicht und ändert nur das Medienklima, das nirgends wirkt. Ergebnisse bleiben gleich. | ✅ entworfen |
+| BU2 | **Neuer Halt „Pressekonferenz“:** höchstens 20 je Saison, mindestens 4 Tage Abstand. Der Vergleich „mit Lernstufen nicht mehr Halte als ohne“ (`tests/lizenz.js`) hält, weil die Lernstufen bis zur C-Lizenz keine Pressekonferenz-Halte haben. | ✅ entworfen |
+| BU3 | **Eigener Strom `presse`** für Anlass und Fragen, deine Antworten im Grundstrom. Wer nicht antwortet, verschiebt keinen Strom. | ✅ |
+| BU4 | **Wirkung auf Stimmung, Vorstand, Fans:** nur durch deine Antworten. Im Test-Lauf ohne Oberfläche antwortet niemand, also keine Wirkung außer Medienklima. Was die Antworten im Spiel bewegen, zeigt erst das Spielen mit Oberfläche. | ⚠️ messen (Testrunde mit Menschen) |
+| BU5 | **Kein Ton dominiert (K29 §10):** Der Test mit fünf Strategien über viele Saisons fehlt noch, weil die Simulation keine Antworten wählt. Die Werte sind so gesetzt, dass jede Art einen Preis hat. | 📌 Test später |
+| BU6 | **Katalog klein:** 54 Fragen, 30 Antworten, 22 Schlagzeilen. Wiederholungen kommen öfter als in K29 §10 verlangt. | 📌 wächst |
+| BU7 | **Kampfansagen ohne Gegner** (Antritt, Auftakt ohne Ligaspiel) werden nicht geprüft. | 📌 klein |
+| BU8 | **Nicht gebaut:** Gerüchteküche (U17b), Medienpolitik, Exklusivinterview, Maulkorb, Interviews der Spieler, Interview am Spielfeldrand, Computer-Trainer mit Medienprofil, Journalisten mit Beziehung, Pressekonferenz nach Urteilen. | 📌 später |
+| BU9 | **`tests/presse.js`:** sieben Prüfungen, siehe Test-README. Nie gelaufen. | ⚠️ offen |
+
+---
+
+## BV. Nachtrag zu U18a Trainerpool (20. November 2026, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-u18-trainerpool` (baut auf U17 auf). Konzept: K32 §3.3b und §12 Nr. 21 bis 25. Neue Datei `js/trainerpool.js`. Kein Test gelaufen.
+
+| # | Befund | Status |
+|---|---|---|
+| BV1 | **Trainerwechsel würfelt den Stil nicht mehr:** Der Nachfolger bringt seinen Lieblingsstil mit, `profilStil()` fällt im Strom `vorstandKI` weg. Damit verschieben sich die späteren Würfe dieses Stroms, und die Stile der Vereine nach einem Wechsel sind andere. Ergebnisse ab dem ersten Trainerwechsel weichen von U17 ab. Gleichschritt-Tests vergleichen Läufe desselben Stands und bleiben gültig. | ⚠️ messen |
+| BV2 | **Eigener Strom `trainerpool`** für Aufbau, neue Trainer und Ex-Spieler. Der Aufbau passiert beim ersten Zugriff (Trainerwechsel, Saisonende, Jobwechsel oder Anzeige). Weil er nur im eigenen Strom würfelt, ist der Zeitpunkt egal. | ✅ |
+| BV3 | **Verteilung der Stile:** Freie Trainer bekommen ihren Stil aus `profilStil()` wie bisher die Nachfolger. Die Verteilung über viele Wechsel bleibt gleich. | ✅ entworfen |
+| BV4 | **Keine echten Personen:** Cheftrainer haben erfundene Namen. Ex-Spieler werden nur Trainer, wenn ihr Name nicht in `daten/spieler.js` steht. | ✅ |
+| BV5 | **Ruf der Computer-Trainer** wirkt noch nirgends außer bei der Wahl des Nachfolgers. Später: Jobangebote für dich gegen Konkurrenz, Medienprofil (K29). | 📌 später |
+| BV6 | **Nicht gebaut:** Ex-Spieler als Mitarbeiter im Stab (K16), Karriereende nach K32 §5.1, Ereignisse aus K32 §8 (Altstar, Abschiedsspiel, Rückkehrer, England ruft). | 📌 später |
+| BV7 | **`tests/trainerpool.js`:** fünf Prüfungen, siehe Test-README. Nie gelaufen. | ⚠️ offen |
+
+---
+
+## BW. Basisstand mit Testlauf übernommen, Gerüchteküche U17b (20. November 2026, U17b ohne Testlauf)
+
+| # | Befund | Status |
+|---|---|---|
+| BW1 | **Testlauf auf dem Basisstand:** Der Commit e8ea42d auf `claude/compassionate-galileo-bsbua4` meldet für U10d „alle Tests gelaufen“ und behebt dieselbe verschluckte Buchung der Stab-Gehälter wie mein Commit a789c0a auf U11 (BF8). Ich habe e8ea42d in U11 zusammengeführt (Konflikt in `ablauf.js` zugunsten der Fassung mit `/* */`) und von dort nacheinander in U12 bis U18. Meine Zweige U11 bis U18 selbst sind weiter ungetestet. | ✅ zusammengeführt |
+| BW2 | **Wächter `tests/code.js` (BF9) auf meinen Zweigen:** Ohne Node.js habe ich ihn in Perl nachgebaut (gleiche Regeln) und über U11 bis U18 und U17b laufen lassen. Keine Zeile, in der ein Kommentar Code verschluckt. Gegenprobe mit der fehlerhaften Fassung von `ablauf.js`: wird gefunden. | ✅ |
+| BW3 | **Gerüchteküche im eigenen Strom `geruechte`.** Wirkungen: Stimmung −3 bei Wechselgerüchten über deine Spieler, Vertrauen −2 bei Gerüchten über dich, Fans −2 beim Liebling, Ablöse und Gebote ×1,1 oder ×1,15 für 30 Tage. Die Stimmung ändert sich auch im Lauf ohne Oberfläche, also auch die Ergebnisse (wenig). | ⚠️ messen |
+| BW4 | **Gleichschritt (`tests/lizenz.js`):** Die Gerüchte hängen nur an Dingen, die in beiden Läufen gleich sind (Verhandlungen gibt es im Test nicht, Wechselwunsch, Berater, Ultimatum, Beziehungen, Listen). Die Pressekonferenz dazu fällt unter BU1. | ✅ entworfen |
+| BW5 | **Gebote bei bekanntem Interesse:** `gebotFuer` multipliziert Gebot und Grenze der Transferliste, nicht die Obergrenze `max` für deine Gegenforderung. Wer mehr fordert, kommt also nicht weiter als ohne Gerücht. | 📌 klein |
+| BW6 | **Nicht gebaut:** Medienpolitik, Exklusivinterview, Gerüchte unter Computer-Vereinen mit Wirkung auf deren Spieler, Gehaltsforderung bei bekanntem Interesse. | 📌 später |
+| BW7 | **`tests/geruechte.js`:** sechs Prüfungen, siehe Test-README. Nie gelaufen. `tests/presse.js` kennt den neuen Platzhalter `{medium}` und 14 Anlässe. | ⚠️ offen |
+
+---
+
+## BX. Nachtrag zu U18b Ereigniskarten der Spielwelt (20. November 2026, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-u18b-spielwelt-karten` (baut auf U17b auf). Konzept: K32 §8 und §12 Nr. 26, K30 §3.2. Kein Test gelaufen.
+
+| # | Befund | Status |
+|---|---|---|
+| BX1 | **Mehr Würfe im Strom `ereignisse`:** Jede Woche ein Wurf mehr je neuer Karte (vier mehr) und eine längere Mischung. Alle späteren Karten fallen dadurch anders als in U17b. Kein anderer Strom ist betroffen. | ✅ bekannt |
+| BX2 | **Gleichschritt (`tests/lizenz.js`):** Die Auslöser schauen nicht auf Lizenz oder Automatik, sonst zögen die Läufe mit und ohne Lernstufen verschiedene Karten (ein erster Entwurf tat das, vor dem Commit korrigiert). Die Lizenz prüft erst die Wirkung: „verpflichten“ geht nur, wenn `transfers` frei ist, sonst eine Meldung. Die Voreinstellungen sind in beiden Läufen gleich. | ✅ entworfen |
+| BX3 | **Abschiedsspiel braucht Ehemalige** aus K34 (`S.stat.ehem`). Die gibt es erst nach dem ersten Saisonwechsel, und nur mit 60 Pflichtspielen für deinen Verein ab Spielbeginn. In den ersten zwei Saisons kommt die Karte also kaum. | 📌 vorläufig |
+| BX4 | **Karriereende nach K32 §5.1** bleibt offen, bis ein Testlauf zeigt, wie stabil die Welt ist (es verschiebt Alter und Zahl der Spieler). | 📌 nach Testlauf |
+| BX5 | **`tests/spielwelt-karten.js`:** vier Prüfungen. Den Katalog prüft `tests/karten.js` mit (erlaubte Wirkungen, Platzhalter, Auslöser). Nie gelaufen. | ⚠️ offen |

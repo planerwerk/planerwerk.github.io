@@ -1,6 +1,6 @@
 # K28 – Vorstand, Ziele, Karriere
 
-Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12.
+Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12. Teilweise gebaut: Computer-Vereine in U11d2 (§7), Vertrauen, Ultimatum und Ruf für dich in U12a (§5.6), Nebenziele und Rücktritt in U12b (§5.7), beide 20.11., ohne Testlauf.
 Hängt ab von: K02 (Geduld je Stufe), K15 (Gespräche) · Wird gebraucht von: K12b, K14, K19, K23, K29.
 
 ## 1. Ziel und Spielgefühl
@@ -94,6 +94,83 @@ Chance nach gescheitertem Ultimatum = 0,9 − 0,03 × Geduld des Präsidenten   
 - Laufzeit 1–3 Jahre, Gehalt nach Liga und Ruf. Verlängerung zum Saisonende, wenn das Vertrauen über 55 liegt.
 - **Abfindung** bei Entlassung (Restgehalt × 0,5). Das Gehalt ist eine Karriere-Statistik (K34), kein eigenes Wirtschaftsspiel (vorläufig, Community-Wunsch „mit dem Trainergehalt etwas anfangen“ später).
 
+### 5.6 Umsetzung U12a (20. November 2026, ohne Testlauf): Vertrauen mit Bausteinen, Ultimatum, Ruf
+
+U12 in Teilschritten (vorläufig, §12 Nr. 5):
+
+- **U12a:** Vertrauen, Ultimatum und Ruf für dich (gebaut).
+- **U12b:** Zielgespräch und Nebenziele. Braucht Budgets aus K23 für Tiefstapeln und Hochpokern.
+- **U12c:** Beziehungen (K17).
+- **U12d:** Ereignis-Gerüst (K30), dazu die Karten aus §8.
+
+**Vertrauen (§5.1).** Zwei Teile:
+
+- **Schneller Anteil nach jedem Ligaspiel:** die bisherigen Werte je Sieg, Remis und Niederlage, jetzt mit halbem Gewicht (`vertrauen.schnell` 0,5). Die bisherigen Werte je Spiel für den Tabellenplatz (`platz`) entfallen, der Platz steckt jetzt im Baustein Sport. Die Pokalwerte bleiben, wie sie sind.
+- **Träger Anteil jeden Montag:** ab dem 5. eigenen Ligaspiel bewegt sich das Vertrauen um 20 % auf ein Ziel zu.
+
+```
+Ziel = 50 + Sport + Serie + Finanzen + Umfeld   (0 bis 100)
+Sport    = 5 × (Saisonziel − Tabellenplatz), begrenzt auf −35 bis +25
+Serie    = 10 × (Punkte je Spiel in den letzten 5 Ligaspielen − 1,3), begrenzt auf −15 bis +10
+Finanzen = −15 bei Konto im Minus, dazu −5 mit Kredit (zusammen höchstens −15)
+Umfeld   = bei Glaubwürdigkeit unter 25 (K15) bis −10, linear
+```
+
+- Die Formel ist dieselbe wie bei den Computer-Vereinen (K31 §5.10), nur mit dem Saisonziel statt dem erwarteten Platz und mit Umfeld.
+- Nebenziele (Baustein „Ziele“) gibt es erst mit U12b. Fans und Medien im Umfeld kommen mit K27 und K29.
+- Die bisherigen −2 je Woche bei Konto im Minus gehen im Baustein Finanzen auf. Die Meldung „Der Vorstand ist alarmiert“ bleibt.
+
+**Ultimatum (§4 Nr. 4, §5.3).** Grenze und Schonfrist kommen weiter aus der Schwierigkeit (K02: Leicht 5 und 10, Normal 12 und 6, Schwer 18 und 4). Fällt das Vertrauen nach der Schonfrist unter die Grenze, gibt es keine sofortige Entlassung mehr:
+
+1. **Ultimatum:** Meldung, dann 2 Ligaspiele Zeit. Es gibt keinen eigenen Halt, das nächste Spiel hält ohnehin an.
+2. Danach ist das Vertrauen wieder mindestens an der Grenze: Das Ultimatum ist aufgehoben (Meldung).
+3. Sonst wirst du mit der Chance 0,9 − 0,03 × Geduld deines Präsidenten entlassen. Der Präsident ist derselbe wie in K31 §5.10, fest aus der Vereinsnummer. Wirst du nicht entlassen, folgt ein **letztes Ultimatum** über 2 Ligaspiele.
+4. Nach dem letzten Ultimatum unter der Grenze: Entlassung.
+
+Das Ultimatum endet mit der Saison und mit einem Jobwechsel. Die Entlassung zum Saisonende (Ziel weit verfehlt und Vertrauen unter 15, Abstieg in die Regionalliga) bleibt wie bisher.
+
+**Ruf als Trainer (§5.4).** Start 30 (auch für alte Spielstände). Zum Saisonende:
+
+| Anlass | Ruf |
+|---|---|
+| Saisonziel übertroffen | +3 je Platz |
+| Meister / Pokalsieg / Aufstieg | +15 / +10 / +8 |
+| Abstieg | −6 |
+| Ziel deutlich verfehlt (mehr als 3 Plätze) | −4 |
+| Entlassung (auch zum Saisonende) | −8 |
+| Vergessen | vorher 5 % Richtung 30 |
+
+- **Wirkung in U12a:** Die Jobangebote richten sich nach dem Ansehen deines Vereins minus 4 plus 1 je Punkt Ruf über 30 (darunter entsprechend weniger). Wer dreimal sein Ziel um zwei Plätze übertrifft, hat einen Ruf von etwa 47 und bekommt Angebote von Vereinen mit etwa 13 mehr Ansehen als seiner (§10: 10 bis 20).
+- Kabine, Spielerinteresse, Presse und Glaubwürdigkeit (§5.4) kommen später.
+
+**Anzeige im Büro (Information, immer frei, K36):** Ruf als Trainer, die Geduld des Präsidenten in Worten (ungeduldig bis 7, geduldig ab 14), ein laufendes Ultimatum mit den verbleibenden Ligaspielen.
+
+### 5.7 Umsetzung U12b (20. November 2026, ohne Testlauf): Nebenziele und Rücktritt
+
+Das **Zielgespräch** mit Tiefstapeln und Hochpokern (§5.2) wartet: Seine Folgen sind Transferbudget und Prämie, beides gibt es erst mit K23. Ohne sie wäre Tiefstapeln immer richtig. U12b baut die Nebenziele (§3.1) und den Rücktritt (§5.3).
+
+**Nebenziele.** Der Vorstand setzt sie zum Saisonstart und beim Jobwechsel, zusammen mit dem Saisonziel (eigener Zufallsstrom je Saison und Verein, mehrfaches Setzen gibt dasselbe):
+
+| Nebenziel | Erfüllt | Verfehlt | gibt es, wenn |
+|---|---|---|---|
+| Pokal | mindestens die Runde erreicht: 1. Liga Achtelfinale, 2. und 3. Liga 2. Runde | vorher ausgeschieden | dein Verein im Pokal ist |
+| Jugend | Spieler bis 21 Jahre im Kader kommen zusammen auf 25 Einsätze | Saisonende darunter | du Spieler bis 21 hast |
+| Finanzen | kein Verlust in der Saison (Summe der Buchungen mindestens 0) | Saisonende mit Verlust | immer |
+
+- **Anzahl:** eines. Ein ehrgeiziger Präsident (Ehrgeiz ab 14) setzt zwei.
+- **Auswahl:** Das Profil deines Vereins (K31 §3.2) kommt zuerst: Ausbildungsverein → Jugend, sparsam → Finanzen, ehrgeizig → Pokal. Den Rest lost der Vorstand.
+- **Baustein „Ziele“ im Vertrauen** (§5.1, −10 bis +10, montags): erfüllt +5, verfehlt −5. Finanzen mit Verlust bis jetzt: −3 („gefährdet“).
+- **Saisonende:** je erfülltem Nebenziel Vertrauen +5, je verfehltem −5, mit Meldung. Das geschieht vor der Prüfung auf Entlassung zum Saisonende.
+- **Anzeige:** im Büro unter dem Saisonziel, mit Stand.
+- Kader (Gehaltssumme) und Zuschauer (§3.1) fehlen noch. Zuschauer brauchen K27, die Gehaltssumme einen Gehaltsrahmen aus K23.
+
+**Rücktritt** (§5.3, **neue Funktion**, Bereich `ruecktritt`, Grundlizenz, ohne Automatik, K36):
+
+- Im Büro „Zurücktreten …“, mit Rückfrage.
+- Danach wie nach einer Entlassung: Jobangebote nach deinem Ruf. Der Ruf sinkt nur um 5 statt um 8.
+- Das Fenster heißt dann „Zurückgetreten“ statt „Entlassen!“.
+- Nur während der Saison und nur, solange du nicht entlassen bist.
+
 ## 6. Hebel des Spielers
 
 | Hebel | Nutzen | Preis |
@@ -108,6 +185,13 @@ Chance nach gescheitertem Ultimatum = 0,9 − 0,03 × Geduld des Präsidenten   
 
 - Gleiche Regeln für Computer-Trainer, vereinfacht: Vertrauen aus Sport und Finanzen, Ultimatum, Entlassung nach Geduld des Präsidenten.
 - Entlassene Computer-Trainer und neue Trainer kommen aus einem Trainerpool (K31), darunter ehemalige Spieler (K16, K32).
+- **Gebaut in U11d2 (19. November 2026, ohne Testlauf, K31 §5.10):**
+  - Vertrauen der Computer-Vereine aus Sport, Serie und Finanzen, mit Trägheit.
+  - Ultimatum unter 20 über zwei Ligaspiele, Entlassung nach der Geduld des Präsidenten, ein zweites, letztes Ultimatum.
+  - Trainerwechsel im Sommer bei deutlich verfehltem Ziel.
+  - Der Präsident hat Geduld, Ehrgeiz und Sparsamkeit, fest aus der Vereinsnummer und ohne Namen. Gewählt wird er nicht.
+  - Noch ohne Trainerpool: Der neue Trainer bringt einen neuen Lieblingsstil mit und einen Stimmungsschub.
+  - **Dein Vorstand ist unverändert** (Rest von K28 in U12).
 
 ## 8. Ereignisse
 
@@ -169,6 +253,25 @@ vorstand:{
 2. **Vertrauen mit Bausteinen und Trägheit,** die Werte je Spiel bleiben mit halbem Gewicht.
 3. **Nach dem Aufstieg immer Klassenerhalt** als Standardziel.
 4. **Trainergehalt nur als Statistik.**
+
+**Vorläufig entschieden mit U12a** (20.11., von mir, ohne Rücksprache und ohne Testlauf):
+
+5. **U12 in vier Teilschritten** (§5.6): U12a Vertrauen, Ultimatum, Ruf. U12b Zielgespräch und Nebenziele. U12c Beziehungen (K17). U12d Ereignis-Gerüst (K30).
+6. **Ultimatum über Ligaspiele statt Pflichtspiele.** Pokalspiele liegen unregelmäßig, mit Ligaspielen ist die Frist für alle gleich lang.
+7. **Kein eigener Halt für das Ultimatum.** Das nächste eigene Spiel hält ohnehin an, die Meldung steht dann oben.
+8. **Platz je Spiel entfällt** (bisher `vorstand.platz`): Sonst zählte der Tabellenplatz doppelt, im schnellen und im trägen Anteil.
+9. **Sport gegen das Saisonziel**, nicht gegen den erwarteten Platz wie bei Computer-Vereinen. Dein Ziel ist das, was der Vorstand von dir verlangt (K02 verschiebt es je Stufe).
+10. **Präsident ohne Namen und ohne Wahl,** wie in K31 §12 Nr. 34. Neuwahl und „Präsident mischt sich ein“ kommen mit K30.
+11. **Ruf wirkt zuerst nur auf Jobangebote.** Die anderen Wirkungen brauchen K14, K19 und K29 im Detail.
+12. **Rücktritt** (§5.3) fehlt noch. Er wäre eine neue Funktion mit Lizenz (K36) und kommt mit U12b.
+
+**Vorläufig entschieden mit U12b** (20.11., von mir, ohne Rücksprache und ohne Testlauf):
+
+13. **Zielgespräch verschoben, bis K23 Budgets hat** (§5.7). Damit ist §5.2 ganz offen. U12b besteht aus Nebenzielen und Rücktritt.
+14. **Drei Nebenziele statt fünf:** Pokal, Jugend, Finanzen. Für Kader und Zuschauer fehlen Gehaltsrahmen und K27.
+15. **Jugend in Einsätzen statt Minuten:** Das Spiel zählt Einsätze je Spieler (`apps`), keine Minuten. 25 Einsätze entsprechen grob einem Talent, das zwei Drittel der Ligaspiele bestreitet.
+16. **Ehrgeiz des Präsidenten wirkt:** ab 14 zwei Nebenziele. Damit ist neben der Geduld der zweite Charakterwert in Gebrauch.
+17. **Rücktritt in der Grundlizenz:** Er ist eine Karriere-Entscheidung, keine Fähigkeit, die man lernen muss.
 
 **Noch zu recherchieren:** Zahl der Trainerwechsel pro Saison in 1., 2. und 3. Liga.
 

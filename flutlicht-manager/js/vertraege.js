@@ -24,6 +24,7 @@ function wechselInteresse(p){const t=myT(),I=RM.interesse,IV=RVT.interesse,IA=RW
   if(from&&!aus){if(p.st!=null)x+=(IV.lageMitte-p.st)*IV.lage;if(p.ww>=3)x+=IV.wechselwunsch;x+=Math.max(0,(p.ct||1)-1)*IV.bindung;}
   if(from&&hatEig(p,'vereinstreu'))x+=IV.treu;
   if(p.nat)x+=Math.min(IV.landsleuteMax,squad(S.my).filter(q=>q.nat===p.nat).length*IV.landsleute)*(p.nat===RW.nation.heimat?0:1);
+  if(p.rkI&&p.rkI.s===S.season)x+=p.rkI.v; // Heimweh, Kontakt über eine Ereigniskarte (K32 §8, U18b)
   return x+beraterInteresse(p);} // ab +60 rät sein Berater ihm zu dir (K22)
 // Fehlt etwas Interesse (bis −10), will er mehr Geld: je Punkt 3 % mehr. Darunter hilft kein Geld.
 function gehaltMitInteresse(p,interesse){const F=gehaltForderung(p,true),IV=RVT.interesse;if(interesse>=0)return F;if(interesse<IV.geldAb)return null;return Math.round(F*(1-interesse*IV.geldJePunkt)/1000)*1000;}
@@ -86,8 +87,9 @@ const vorvertragZeit=(tag=S.tag)=>{const k=mmtt(tag),V=RVT.vorvertrag;return S.p
 function vertraegeWoche(d){const V=RVT,t=myT();
   // Ausstiegsklausel: Ein größerer Verein mit Bedarf und Geld zahlt den Betrag (nur im Fenster). Der Spieler geht sofort.
   if(fensterOffen(d))squad(S.my).filter(p=>p.ak&&!p.wech).forEach(p=>{const B=S.teams.filter(b=>b.id!==S.my&&aktiv(b)&&b.rep>=t.rep&&b.cash>=p.ak&&hatBedarf(b,p)&&vwKauf(p,b.id)>=p.ak);
-    if(!B.length||R()>=V.ausstieg.chance)return;const b=pick(B),betrag=p.ak;money('Transfers',betrag);b.cash-=betrag;kabineAbgang(p,S.my);vertragEnde(p);S.offers=S.offers.filter(o=>o.pid!==p.id);
-    p.team=b.id;p.list=0;p.ct=riA(RM.neuerVertrag);p.seit=absTag(d);p.abl=betrag;neuzugang(p,b.id);news(`Ausstiegsklausel gezogen: ${b.name} zahlt ${fmt(betrag)} für ${p.n}. Er wechselt sofort.`,'bad');});
+    if(!B.length||R()>=V.ausstieg.chance)return;const b=pick(B),betrag=p.ak;money('Transfers',betrag);b.cash-=betrag;bezDuAendern(b.id,RBZ.anlass.ausstieg,`Ausstiegsklausel von ${p.n} gezogen`); // K17, U12c
+    kabineAbgang(p,S.my);vertragEnde(p);S.offers=S.offers.filter(o=>o.pid!==p.id);
+    p.team=b.id;p.list=0;p.ct=riA(RM.neuerVertrag);p.seit=absTag(d);p.abl=betrag;neuzugang(p,b.id);statTransfer(p,betrag,S.my,b.id);news(`Ausstiegsklausel gezogen: ${b.name} zahlt ${fmt(betrag)} für ${p.n}. Er wechselt sofort.`,'bad');});
   // Vorvertrag woanders: im letzten halben Jahr, wenn du seit acht Wochen nicht mit ihm über einen Vertrag geredet hast (ohne Vorwarnung, K21 §4.3)
   if(vorvertragZeit(d)&&!autoB('vertraege'))squad(S.my).filter(p=>p.ct===1&&!p.wech&&!p.leihe&&!(S.vtGespr&&S.vtGespr[p.id]>=d-V.gespraechTage)).forEach(p=>{
     const B=S.teams.filter(b=>b.id!==S.my&&aktiv(b)&&b.rep>=t.rep-V.vorvertrag.ansehenMinus&&hatBedarf(b,p));if(!B.length||R()>=V.vorvertrag.chance)return;const b=pick(B),ber=beraterVon(p);

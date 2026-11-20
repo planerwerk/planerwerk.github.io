@@ -1,6 +1,10 @@
 // Fenster über der Arbeitsfläche: Spielerkarte, Vorbericht, Konferenz, Saisonbilanz, Entlassung, Menü.
-function ov(h){ovEl.innerHTML=`<div class="ov" role="dialog" aria-modal="true"><div class="ovb">${h}</div></div>`;}
+// Fokus beim Öffnen (K40 §5.2, UX1): auf den Schließen-Knopf, sonst auf das Fenster selbst, damit ein versehentliches Enter keine Option wählt
+function ov(h){ovEl.innerHTML=`<div class="ov" role="dialog" aria-modal="true"><div class="ovb" tabindex="-1">${h}</div></div>`;
+  const f=ovEl.querySelector('.ovb .x')||ovEl.querySelector('.ovb');if(f&&f.focus)f.focus();}
 function closeOv(){ovEl.innerHTML='';}
+// Escape schließt ein Fenster mit Schließen-Knopf. Fenster ohne Knopf verlangen eine Entscheidung und bleiben offen (K40 §5.2, UX1).
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&ovEl.querySelector('.ovb .x')){e.preventDefault();closeOv();}});
 function openP(id){const p=PIX.get(id);if(!p)return;if(istJugend(p))return openJ(p);if(istZweite(p))return openZ(p);const mine=p.team===S.my,aus=istAusland(p),t=aus?avVon(p.team):p.team>=0?S.teams[p.team]:null,v=mine?value(p):wertSicht(p);let act=''; // aus: Spieler eines Auslandsvereins (K32)
   if(p.leihe)act=leiheKarte(p); // U10d
   else if(p.wech)act=`<div class="card"><h3>Vereinbarter Wechsel</h3><p>${mine||p.wech.von===S.my?'Verkauft':'Er'} ${p.wech.nach===S.my?`kommt zu dir`:`wechselt zu ${esc(wechselZiel(p.wech))}`}, mit dem Transferfenster am ${esc(datumKurz(p.wech.ab))}${p.wech.preis?` (Ablöse ${fmt(p.wech.preis)})`:''}.</p><p class="dim">Bis dahin bleibt er bei ${esc(vereinName(p))}.</p></div>`; // K19 §5.6, U10a
@@ -11,9 +15,10 @@ function openP(id){const p=PIX.get(id);if(!p)return;if(istJugend(p))return openJ
     <h3>Vertrag mit ihm</h3>${vertragFormular(p,Fv,S.my,!t)}
     <label>Vertragslaufzeit <select id="yrs">${[1,2,3,4,5].filter(y=>p.age>=18||y<=RVT.laufzeit.maxU18).map(y=>`<option value="${y}" ${y===3?'selected':''}>${y} Jahr(e)</option>`).join('')}</select></label><button class="go" onclick="offer(${id})"${aus?lzAusAlle('transfers','ausland'):lzAus('transfers')}>${t?(vorv?'Vorvertrag anbieten':'Angebot abgeben'):'Verpflichten'}</button></div>${aus?lzHinweisAlle('transfers','ausland'):lzHinweis('transfers')}<p id="msg" class="msg" aria-live="polite"></p></div>`;}
   if(!p.leihe&&!p.wech&&!istAusland(p))act+=leiheKarte(p); // Verleihen, Ausleihen, in die Zweite (U10d)
+  if(!mine&&!aus&&t)act+=bezKarte(p.team)+abwKarte(p); // Beziehung zu seinem Verein (K17, U12c), heimlich treffen (K20, U15)
   if(!mine)act+=scoutKarte(p);
   const kad=aus?avStaerke(t):p.team>=0?teamLevel(p.team):null,jung=p.age<=23;
-  const werte=!mine?scoutWerte(p,kad):`<div class="card rgs">${rgAnzeige({label:'Stärke',sub:jung?'1–99, Schraffur: Talent':'1–99',min:1,max:99,wert:Math.round(p.str),talent:jung?talentBand(p):null,marker:kad?[{v:kad,t:'Ø Kader '+Math.round(kad)}]:[]})}
+  const werte=!mine?scoutWerte(p,kad):`<div class="card rgs">${rgAnzeige({label:'Stärke',sub:jung?'1–99, Schraffur: Talent':'1–99',min:1,max:99,wert:Math.round(p.str),talent:jung?talentBand(p):null,marker:kad?[{v:kad,t:'Ø Kader '+Math.round(kad)}]:[],trend:(p.mvl||[]).map(x=>x[2])})}
     ${rgAnzeige({label:'Form',sub:'0–20, Mitte 10: Leistung gegenüber der Erwartung, beschleunigt die Entwicklung',min:0,max:20,wert:p.form,dez:1,marker:[{v:RP.form.mitte,t:'Mitte'}]})}
     ${rgAnzeige({label:'Frische',sub:'wirkt auf die Stärke im Spiel',min:0,max:100,wert:Math.round(p.fit),einheit:' %',zonen:RU.zonenFitness})}
     ${rgAnzeige({label:'Kondition',sub:'Trainingszustand: wie schnell die Frische sinkt und zurückkommt',min:0,max:100,wert:Math.round(p.ko)})}
@@ -30,7 +35,7 @@ function openP(id){const p=PIX.get(id);if(!p)return;if(istJugend(p))return openJ
       ${p.ls?`<p class="dim">Lernt gerade ${esc(RPm[p.ls.k].name)}: ${Math.round(p.ls.f)} %</p>`:opts.length?'':'<p class="dim">Gerade nichts zu lernen.</p>'}<p class="dim">Lernplätze im Verein: ${squad(S.my).filter(x=>x.ls).length} von ${lernPlaetze(S.my)} belegt</p>`:''}</div>`;
   ov(`<div class="phead"><span class="pos ${p.pos}">${p.pos}</span><h2>${esc(p.n)}</h2><button class="x" onclick="closeOv()" aria-label="Schließen">✕</button></div>
   <div class="facts">${fact('Verein',t?esc(t.name)+(aus?` (${esc(gruppenName(avGruppe(t)))})`:''):'vereinslos')}${fact('Nationalität',esc(natName(p)))}${fact('Alter',p.age)}${fact('Berater',esc(beraterText(p)))}${jung?fact('Talent',stars(p)):''}${fact(mine?'Marktwert':'Marktwert (geschätzt)',fmt(v))}${fact('Gehalt',fmt(p.sal))}${p.team>=0?fact('Vertrag bis',S.season+p.ct):''}${fact('Selbstvertrauen',svWort(p.sv))}${!mine&&p.ww>=3?fact('Wechselwunsch','will weg'):''}${aus?'':fact('Ligatore',p.g)+fact('Einsätze',p.apps)}${p.lastG?fact('Letzte Note',p.lastG.toFixed(1).replace('.',',')):''}${p.inj>0?fact(p.vl&&p.vl.art==='krankheit'?'Krank':'Verletzt',verletzungText(p)||p.inj+' Tage'):''}${(p.vh||[]).length?fact('Verletzungen (2 Jahre)',p.vh.filter(x=>x.art!=='krankheit').length):''}${sperrText(p)?fact('Sperre',sperrText(p).replace(/^gesperrt \(|\)$/g,'')):''}${aus?'':fact('Gelbe Karten',`Liga ${(p.kt&&p.kt.liga)||0} · Pokal ${(p.kt&&p.kt.pokal)||0}`)}</div>
-  ${werte}<div class="grid">${profil}${mine?stimmungKarte(p):''}${act}</div>`);}
+  ${werte}<div class="grid">${profil}${mine?stimmungKarte(p):''}${act}${statKarte(p)}</div>`);} // Statistik und Vergleichen (K34 §5.9, U13)
 // „Tag beenden“ (K01): erst Erinnerungen, dann dein Spiel (Vorbericht, Anpfiff, Konferenz), dann weiter bis zum nächsten Halt.
 function tagBeenden(ohneErinnerung){if(LIVE){liveFrame();liveRender();return;}if(S.live){liveFortsetzen();if(LIVE)return;}if(CONF){confFrame();renderConf();return;}if(BUSY)return;
   if(S.phase==='end'){showSummary();return;}if(S.fired){showFired();return;}
@@ -47,7 +52,7 @@ function showPre(e){const t=myT(),f=paarung(e),out=squad(S.my).filter(p=>!avail(
     <p>Deine Elf: ${t.form}, ${STIL_NAME[t.stil]||STIL_NAME.ausgewogen}, ${AUSRICHTUNG[t.tac]||AUSRICHTUNG.N}, Einsatz ${EINSATZ[t.ein]}${(t.einstellung||'normal')!=='normal'?`, <b>${EINSTELLUNG_NAME[t.einstellung]}</b>`:''}.${f?` Schiedsrichter: ${esc(schiriText(schiriFuer(f[0],f[1],hash32(['spiel',S.season,S.tag,f[0],f[1]].join('|')))))}.`:''}${f?gegnerStile(f[0]===S.my?f[1]:f[0]):''}${out.length?` <span class="dim">Fehlen: ${out.map(p=>esc(p.n)).join(', ')} – werden automatisch ersetzt.</span>`:''}</p>
     <div class="row"><button onclick="closeOv();tab('aufst')">Aufstellung ändern</button><button id="sofort" onclick="kickoff()" title="Der Co-Trainer entscheidet im Spiel">Sofort berechnen</button><button class="go" id="kick" onclick="kickoffLive()">Live anpfeifen</button></div>`);}
 // Gegneranalyse (K06 §4): die zuletzt gespielten Stile, ohne Gewähr (Scout und Co-Trainer machen es mit K16, K18 genauer)
-function gegnerStile(id){if(id>=1000)return'';const t=S.teams[id];if(!t||!t.stile||!t.stile.length)return'';return` <span class="dim">${esc(t.name)} spielte zuletzt: ${t.stile.slice().reverse().map(k=>STIL_NAME[k]).join(', ')} (${t.form}).</span>`;}
+function gegnerStile(id){if(id>=1000)return'';const t=S.teams[id];if(!t||!t.stile||!t.stile.length)return'';const ch=trainerVon(id);return` <span class="dim">${esc(t.name)}${ch?` (Trainer ${esc(ch.n)}, Lieblingsstil ${esc(STIL_NAME[ch.stil]||ch.stil)})`:''} spielte zuletzt: ${t.stile.slice().reverse().map(k=>STIL_NAME[k]).join(', ')} (${t.form}).</span>`;}
 function kickoff(){if(BUSY||CONF)return;BUSY=true;let out=null;try{out=tagesSpiele(S.tag);LAST=out;save();}catch(e){console.error(e);toast('Fehler: '+e.message);}finally{BUSY=false;}if(out&&out.list.length)showConf(out);else weiterUI();}
 function showConf(out){const maxM=out.list.some(r=>r.ev.some(e=>e.m>90))?120:90;CONF={out,min:0,speed:1,maxM,done:false};confFrame();renderConf();CONF.timer=setInterval(tickConf,110);}
 function confFrame(){const g=CONF.out.gruppen,mg=g.find(x=>x.list.includes(CONF.out.mine))||g[0];CONF.btn=0;ov(`<div class="row between"><h2 style="margin:0">${esc(mg.titel)}${mg.art==='liga'?' · Konferenz':''}</h2><span class="clock" id="cf-clock"></span></div><div class="conf" id="cf-body"></div><div class="row" id="cf-btns"><button id="cf-speed" onclick="confSpeed()">Schneller</button><button onclick="confEnd()">Zum Abpfiff</button></div>`);}
@@ -56,7 +61,7 @@ function confEnd(){if(!CONF)return;CONF.min=CONF.maxM;tickConf();}
 function tickConf(){if(!CONF)return;CONF.min=Math.min(CONF.maxM,CONF.min+CONF.speed);if(CONF.min>=CONF.maxM&&!CONF.done){CONF.done=true;clearInterval(CONF.timer);}renderConf();}
 function scoreAt(r,mn){const s=[0,0];r.ev.forEach(e=>{if(e.t==='G'&&e.m<=mn)s[e.s]++;});return s;}
 function evText(e,r){const tm=esc(tn(e.s?r.a:r.h)),k=e.m*7+e.s*3;
-  if(e.t==='G'){const L=(e.art&&TICKER_ARTEN[e.art])||TICKER_TOR;return`<b>${esc(L[k%L.length].replace('{n}',e.n).replace('{sc}',e.sc.join(':')))}</b> <span class="dim">${tm}</span>`;}
+  if(e.t==='G'){const L=(e.art&&TICKER_ARTEN[e.art])||TICKER_TOR;return`<b>${esc(L[k%L.length].replace('{n}',e.n).replace('{sc}',e.sc.join(':')))}</b>${e.vn?` (Vorlage ${esc(e.vn)})`:''} <span class="dim">${tm}</span>`;} // Vorlage seit U13 (K34 §5.4)
   if(e.t==='C')return esc(e.x||TICKER_CHANCE[k%TICKER_CHANCE.length].replace('{n}',e.n).replace('{gk}',e.gk));
   if(e.t==='Y')return`Gelbe Karte für ${esc(e.n)} <span class="dim">${tm}</span>`;
   if(e.t==='R')return`<b>${e.gy?'Gelb-Rot':'Rote Karte'}</b> für ${esc(e.n)} <span class="dim">${tm}</span>`;
@@ -91,7 +96,7 @@ function showSummary(){const sm=S.summary;if(!sm)return;const L=ids=>ids.map(id=
   <p>DFB-Pokalsieger: <b>${sm.cup!=null?esc(tn(sm.cup)):'–'}</b> · Torschützenkönig: ${esc(sm.ts)}</p>${sm.zw?`
   <p><b>Zweite Mannschaft:</b> ${esc(sm.zw)}</p>`:''}
   ${S.fired?'<p class="neg"><b>Du musst gehen: Der Verein trennt sich von dir.</b></p><div class="row"><button class="go" onclick="showFired()">Jobangebote ansehen</button></div>':`<p class="dim">Jetzt beginnt die Sommerpause: Urlaub bis zum Trainingsauftakt, am 1. Juli der Saisonwechsel mit neuen Verträgen und Sponsorangeboten.</p><div class="row"><button class="go" onclick="sommerpause();closeOv();TAB='buero';render()">Weiter in die Sommerpause</button><button onclick="closeOv()">Später</button></div>`}`);}
-function showFired(){if(!S.jobs)mkJobs();ov(`<h2>Entlassen!</h2><p>Der Vorstand von ${esc(myT().name)} hat dir das Vertrauen entzogen. Diese Vereine bieten dir einen Job an:</p>
+function showFired(){if(!S.jobs)mkJobs();ov(`${S.ruecktritt?`<h2>Zurückgetreten</h2><p>Du hast ${esc(myT().name)} verlassen.`:`<h2>Entlassen!</h2><p>Der Vorstand von ${esc(myT().name)} hat dir das Vertrauen entzogen.`} Diese Vereine bieten dir einen Job an:</p>
   <div class="opts">${S.jobs.map(id=>{const t=S.teams[id];return`<button class="opt" onclick="takeJob(${id})"><b>${chip(id)}${esc(t.name)}</b><span>${t.lg}. Liga · Platz ${rank(t.lg,id)} · Kontostand ${fmt(t.cash)}</span></button>`;}).join('')}</div>
   <div class="row"><button onclick="confirmNew()">Stattdessen neues Spiel</button></div>`);}
 function menu(){let size='';try{size=Math.round(JSON.stringify(S).length/1024)+' KB';}catch(e){}

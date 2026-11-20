@@ -25,8 +25,9 @@ function neueWelt(){
 // beiSaisonende(S,F) wird am Ende jeder Saison aufgerufen, solange Tabellen und Ergebnisse noch vollständig sind.
 // beiSaisonstart(S,F) direkt nach dem Welt-Aufbau und nach jedem Saisonwechsel (1. Juli).
 // beiSpielen(liste,S) bekommt nach jedem Spieltag alle Ergebnisse mit Ereignissen und Statistik.
-function saisons({n=1,seed=1,verein=6,beiSaisonende=null,beiSaisonstart=null,beiSpielen=null}={}){
-  const {W,F}=neueWelt();
+// vorher(F,W) läuft vor dem Welt-Aufbau, zum Beispiel um eine Funktion abzuschalten (tests/statistik.js).
+function saisons({n=1,seed=1,verein=6,beiSaisonende=null,beiSaisonstart=null,beiSpielen=null,vorher=null}={}){
+  const {W,F}=neueWelt();if(vorher)vorher(F,W);
   if(beiSpielen){const orig=F.tagesSpiele;F.tagesSpiele=function(d){const o=orig(d);if(o&&o.list.length)beiSpielen(o.list,W.S,o);return o;};}
   F.buildWorld(seed);let S=W.S;S.my=verein;S.mgr='Simulator';F.setTarget();F.sponsOffers();S.lineup=F.bestXI(verein,W.ev('myT()').form);
   const job=()=>{const S=W.S;if(!S.fired)return;if(!S.jobs||!S.jobs.length)F.mkJobs();const id=S.jobs[0];

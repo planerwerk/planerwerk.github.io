@@ -17,7 +17,7 @@ try{REGELN.spielstand.alteSchluessel.forEach(k=>localStorage.removeItem(k));}cat
 function loadLocal(){try{const s=localStorage.getItem(REGELN.spielstand.schluessel);if(s){const d=JSON.parse(s);if(d.v!==REGELN.spielstand.version){toast('Der gespeicherte Spielstand passt nicht zu dieser Version.');return;}S=d;reindex();TAB='buero';render();if(S.live)liveFortsetzen();}}catch(e){toast('Spielstand konnte nicht geladen werden.');}}
 function newGame(){const id=+document.getElementById('club').value,name=(document.getElementById('mgr').value||'Trainer').trim().slice(0,30)||'Trainer';
   const se=(document.getElementById('seed')||{}).value,seed=se&&/^\d+$/.test(se.trim())?(+se.trim())>>>0:neuerSeed();
-  buildWorld(seed);S.my=id;S.mgr=name;stufeAnwenden((document.getElementById('stufe')||{}).value);
+  buildWorld(seed);S.my=id;S.mgr=name;stufeAnwenden((document.getElementById('stufe')||{}).value);statS();presseS().antritt=1; // Statistik ab Spielbeginn, erste Station des Trainers (K34, U13), Antrittspressekonferenz (K29, U17a)
   // Lernstufen (K36): gesperrte Bereiche führt der Stab, deshalb vor den Sponsorangeboten anlegen
   const ls=document.getElementById('lernstufen');lizenzStart(ls?ls.value!=='0':RLZ.start);sponsOffers();S.lineup=bestXI(id,myT().form);
   news(`Tipp: Kader und Aufstellung prüfen, Sponsor wählen, dann oben auf „Tag beenden ▶“ klicken. Dein erstes Pflichtspiel ist am ${datumMittel(ersterPflichttermin())}.`);

@@ -1,6 +1,6 @@
 # K17 – Beziehungsnetz
 
-Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12.
+Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12. Teilweise gebaut in U12c (§5.5, 20.11., ohne Testlauf).
 Hängt ab von: – · Wird gebraucht von: K11, K19, K20, K22, K29, K30, K31.
 
 ## 1. Ziel und Spielgefühl
@@ -77,6 +77,55 @@ Hängt ab von: – · Wird gebraucht von: K11, K19, K20, K22, K29, K30, K31.
 - Bieten zwei Vereine um denselben Spieler und gewinnst du ihn, sinkt die Beziehung **zwischen den beiden** um 10, deine zu ihnen nur um 2.
 - Mit einer Ereigniskarte (K30) und geschicktem Vorgehen auch 0.
 
+### 5.5 Umsetzung U12c (20. November 2026, ohne Testlauf)
+
+Code in `js/beziehungen.js`, Zahlen in `REGELN.beziehungen`, Derbys in `daten/vereine.js` (`DERBYS`).
+
+**Gebaut sind zwei Arten von Beziehungen:**
+
+- **Verein–Verein:** alle Vereine der drei Profiligen untereinander.
+- **Du–Verein:** wandert mit dir, wenn du den Verein wechselst.
+
+Für deine Geschäfte mit einem Verein zählt die Summe aus deiner Beziehung und der deines Vereins, begrenzt auf ±100 (§12 Nr. 4). Berater haben ihre Beziehung schon seit U10c (K22). Journalisten kommen mit K29, Spieler außerhalb des Kaders später.
+
+**Grundwerte (recherchiert, Quelle unten):** Derby −30, Rivalität ohne Derby −15. Beide stehen in `DERBYS`, nur mit Paaren, die die Quelle ausdrücklich nennt:
+
+- **Derbys:** Revierderby (Dortmund–Schalke), Nordderby (Bremen–HSV), Hamburger Derby (HSV–St. Pauli), Berliner Derby (Union–Hertha), Rheinderby (Gladbach–Köln), Kölner Derbys (Köln–Fortuna Köln, Köln–Viktoria Köln), Frankenderby (Fürth–Nürnberg), Bayerisches Derby (Nürnberg–Bayern), Augsburg–Ingolstadt, Donauderby (Regensburg–Ingolstadt), Baden-Schwaben-Derby (Karlsruhe–Stuttgart), Baden-Derby (Freiburg–Karlsruhe), Hessenderby (Frankfurt–Darmstadt), Niedersachsenderby (Hannover–Braunschweig), Grenzlandderby (Münster–Osnabrück), Südwestderby (Kaiserslautern–Saarbrücken), Westfalenderby (Bielefeld–Münster), Elb-Clásico (Dresden–Magdeburg), Rostock–St. Pauli.
+- **Rivalitäten:** Der Klassiker (Bayern–Dortmund), Nord-Süd-Gipfel (HSV–Bayern, Bremen–Bayern).
+
+Partnervereine (+30) gibt es noch keine. Dazu bräuchte es eine Quelle.
+
+**Anlässe (§5.1), gebaut:**
+
+| Anlass | Beziehung | Änderung |
+|---|---|---|
+| fairer Kauf: Ablöse mindestens 90 % der Forderung | du–Verkäufer | +5 |
+| fairer Verkauf: Angebot ohne Gegenforderung angenommen | du–Käufer | +5 |
+| Spottangebot (unter 60 % der Forderung) | du–Verein | −3 |
+| Ausstiegsklausel deines Spielers gezogen | du–Käufer | −8 |
+| Testspiel gespielt | du–Gegner | +3 |
+| Leihe zurück: Absprache gehalten / nicht gehalten | du–Leihverein | +5 / −5 |
+| Wechsel unter Computer-Vereinen (immer zum Listenpreis) | Verein–Verein | +5 |
+| Derby mit Sieger (jede Liga, alle Vereine) | Verein–Verein | −2 |
+
+Noch nicht gebaut: Abwerben (K20), Presse und Gerüchte (K29), Vorfälle im Spiel (K09), Hilfe in der Not und lachender Dritter (Ereigniskarten, K30).
+
+**Wirkungen (§5.2), gebaut:**
+
+- **Ablöse:** Forderung und Schmerzgrenze beim Kauf × (1 − 0,0015 × Beziehung). Das gilt nur für deine Käufe. Die Preise unter Computer-Vereinen bleiben, wie sie sind.
+- **Gesprächsbereitschaft:** Unter −50 lehnt ein Verein mit 50 % schon das erste Gespräch ab. Dann gilt die Pause wie nach einem Abbruch. Gewürfelt wird im Grundstrom, weil es deine Handlung ist.
+- **Testspiele:** Zusage × (1 + 0,005 × Beziehung).
+- **Computer-Vereine** kaufen nicht bei einem Verein, zu dem ihre Beziehung unter −50 liegt (§7).
+
+Noch nicht gebaut: Leihangebote über +40 (braucht K30), Gerüchte (K29), Brisanz im Spiel.
+
+**Vergessen:** am ersten Montag jedes Monats 5 % zurück zum Grundwert (−50 ist nach einem Jahr etwa −27). Liegt ein Wert weniger als 2 vom Grundwert entfernt, fällt er aus dem Spielstand.
+
+**Anzeige (Information, frei, K36):**
+
+- Auf der Spielerkarte eines fremden Spielers: deine Beziehung zu seinem Verein, mit dem letzten Grund.
+- Im Büro: die drei besten und die drei schlechtesten Beziehungen.
+
 ## 6. Hebel des Spielers
 
 | Hebel | Nutzen | Preis |
@@ -143,7 +192,18 @@ beziehungen:{
 2. **Derbys als Stammdaten** mit festem Grundwert −30.
 3. **Keine Beziehung zu einzelnen Fans oder Fangruppen hier,** das gehört zu K27.
 
+**Vorläufig entschieden mit U12c** (20.11., von mir, ohne Rücksprache und ohne Testlauf):
+
+4. **Für deine Geschäfte zählt die Summe** aus deiner persönlichen Beziehung und der deines Vereins. Wer zum Derby-Rivalen wechselt, merkt die −30 des neuen Vereins.
+5. **Derbys nur mit Quelle.** In `DERBYS` stehen nur Paare, die der englische Wikipedia-Artikel „German football rivalries“ ausdrücklich nennt. Die Gruppe „Rheinland-Derby“ (jedes Spiel zwischen Köln, Gladbach, Düsseldorf und Leverkusen) ist nicht als Einzelpaare übernommen.
+6. **Rivalität ohne Derby −15** (Klassiker, Nord-Süd-Gipfel), eine eigene Stufe zwischen 0 und Derby.
+7. **„Fair“ messbar gemacht:** Kauf mit mindestens 90 % der Forderung, Verkauf ohne Gegenforderung. „Ohne Hängepartie“ (§5.1) ist beim Kauf noch nicht gezählt.
+8. **Wechsel unter Computer-Vereinen gelten immer als fair** (sie zahlen den Listenpreis, K31 §5.6).
+9. **Derby-Ergebnisse für alle Vereine,** nicht nur deine (§7 „gleiche Regeln“).
+10. **Löschen ab weniger als 2 Abstand zum Grundwert,** damit der Spielstand klein bleibt. +5 aus einem Wechsel ist damit nach etwa eineinhalb Jahren vergessen.
+
 ## Quellen
 
 - Abwerben ohne feste Strafen, Klatsch und Tratsch, lachender Dritter: PLAN §2
 - Werte, Anlässe, Wirkungen: PLAN §4 (Notizen zu K17 und K30)
+- Derbys und Rivalitäten: Wikipedia (englisch), „German football rivalries“, abgerufen am 20.11.2026 (https://en.wikipedia.org/wiki/German_football_rivalries). Gelesen bis zum Abschnitt „France“, der Rest nur zusammengefasst. Bei Fürth–Nürnberg, Regensburg–Ingolstadt und Bremen–HSV ist die Paarung aus dem Aufbau der Tabelle erschlossen, nicht wörtlich gelesen. Alle drei sind allgemein bekannt.

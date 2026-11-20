@@ -95,7 +95,7 @@ const meineSpieltage=()=>meineLigaspiele().filter(e=>e.tag<S.tag||(e.tag===S.tag
 const heuteMeinSpiel=()=>S.phase==='play'&&S.gespielt!==S.tag&&!!meinSpiel(S.tag);
 
 // Halt-Regeln: Hier hält „Tag beenden“ an.
-function haltGrund(d){if(S.phase==='end')return'Saisonende';if(S.fired)return'Entlassen';if(S.phase==='play'&&meinSpiel(d))return'Spiel';if(S.lizenz&&S.lizenz.karte&&S.lizenz.karte.tag===d&&S.lizenz.karte.s===S.season)return'Lizenz';if(pokalLosHeute(d))return'Auslosung';if(S.offers.some(o=>o.bis===d)||(!autoB('sportgericht')&&meineVerfahren().some(v=>v.stand==='antrag'&&v.frist===d)))return'Frist';if((S.gw||[]).some(g=>g.tag===d&&g.s===S.season))return'Gesprächswunsch';if(S.phase==='play'&&d===auftaktTag(myT()))return'Trainingsauftakt';return'';}
+function haltGrund(d){if(S.phase==='end')return'Saisonende';if(S.fired)return'Entlassen';if(S.phase==='play'&&meinSpiel(d))return'Spiel';if(S.lizenz&&S.lizenz.karte&&S.lizenz.karte.tag===d&&S.lizenz.karte.s===S.season)return'Lizenz';if(pokalLosHeute(d))return'Auslosung';if(S.offers.some(o=>o.bis===d)||(!autoB('sportgericht')&&meineVerfahren().some(v=>v.stand==='antrag'&&v.frist===d)))return'Frist';if((S.gw||[]).some(g=>g.tag===d&&g.s===S.season))return'Gesprächswunsch';if(((S.karten&&S.karten.offen)||[]).some(k=>k.tag===d&&k.s===S.season))return'Ereignis';if(S.phase==='play'&&erinnerungAn('deadline')&&deadlineLetzter(d))return'Deadline Day';if(S.pk&&S.pk.tag===d&&S.pk.s===S.season&&!autoB('presse'))return'Pressekonferenz';if(S.phase==='play'&&d===auftaktTag(myT()))return'Trainingsauftakt';return'';}
 function naechsterHalt(){const ende=S.phase==='sommer'?tageDerSaison():S.plan.ende;
   for(let d=S.tag+1;d<=S.tag+RK.maxSprung;d++){if(d>=ende||haltGrund(d)||(S.phase==='play'&&d===auftaktTag(myT())))return Math.min(d,ende);}return S.tag+RK.maxSprung;}
 
@@ -122,4 +122,5 @@ function erinnerungen(){const E=[],d=S.tag,m=heuteMeinSpiel()?meinSpiel(d):null;
   if(m&&erinnerungAn('sponsor')&&S.sponsOffers)E.push({art:'sponsor',text:'Du hast noch keinen Trikotsponsor gewählt. Sonst nimmt der Vorstand das erste Angebot.',tab:'buero',knopf:'Zu den Angeboten'});
   if(erinnerungAn('vertrag')&&!autoB('vertraege')&&tageDerSaison()-d<=RK.erinnerungVertragTage){const xi=new Set(myXI()),e=squad(S.my).filter(p=>p.ct<=1&&xi.has(p.id));
     if(e.length)E.push({art:'vertrag',text:`Die Verträge von ${e.map(p=>esc(p.n)).join(', ')} enden am 30. Juni. Danach sind sie weg.`,tab:'kader',knopf:'Zum Kader'});}
+  if(erinnerungAn('vorbereitung')){const v=vorbereitungErinnerung();if(v)E.push(v);} // offene Punkte vor dem Saisonstart, höchstens einmal je Woche (K12b §5.1, U14)
   return E;}

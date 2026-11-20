@@ -1,0 +1,46 @@
+// Gerüchteküche (K29 §4.3, §5.5, U17b): Anlässe, Woche im eigenen Strom (1 bis 3, höchstens eins über dich), Wirkung (Stimmung, Vertrauen, Ablöse, Gebote),
+// Pressekonferenz „Gerüchte“, Treffsicherheit nach 30 Tagen, 20 Wochen im Ablauf.
+// Aufruf: node tests/geruechte.js. Nur Node.js.
+// ACHTUNG: Dieses Skript ist noch nie gelaufen. U17b entstand auf einem Rechner ohne Node.js. Fehler können im Spiel oder im Skript selbst liegen.
+const {neueWelt}=require('./sim');
+const probleme=[],pruef=(ok,text,wert)=>{console.log(`${ok?'✓':'✗'} ${text}${wert!=null?': '+wert:''}`);if(!ok)probleme.push(text+(wert!=null?' ('+wert+')':''));};
+const VEREIN=6,SEED=4711,nah=(a,b,e=0.01)=>Math.abs(a-b)<=e*Math.max(1,Math.abs(b));
+function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREIN;S.mgr='Test';F.setTarget();F.sponsOffers();F.sponsorWaehlen(0);S.lineup=F.bestXI(VEREIN,W.ev('myT()').form);S.phase='play';
+  return{W,F,S,ev:W.ev,t:W.ev('myT()')};}
+const fremd=w=>w.S.pl.find(p=>p.team>=0&&p.team!==VEREIN&&w.S.teams[p.team].lg===1&&!p.leihe&&!p.wech);
+
+// 1. Anlässe: deine Verhandlung und ein unzufriedener Spieler
+{const w=welt(),{F,S,ev}=w,p=fremd(w),q=ev('squad')(VEREIN)[0];S.verh={[p.id]:{team:p.team,f:5e6,r:1,g:3,pause:-1,druck:-999}};q.ww=2;
+  const K=F.gerKandidaten();pruef(K.mein.some(c=>c.art==='verhandlung'&&c.pid===p.id&&c.w===1)&&K.mein.some(c=>c.art==='unzufrieden'&&c.pid===q.id),'Anlässe: deine Verhandlung (wahr) und ein Spieler mit Wechselwunsch Stufe 2',K.mein.map(c=>c.art).join(', '));}
+
+// 2. Woche: 1 bis 3 Gerüchte, höchstens eins über deinen Verein, der Grundstrom bleibt unberührt
+{const w=welt(),{F,S,ev}=w,mit=ev('mitStrom'),st=ev('strom');let ok=true,txt=[];
+  for(let k=0;k<12;k++){const vor=F.gerS().l.length,z0=JSON.stringify(S.zufall);mit(st('geruechte',S.season,k),()=>F.geruechteWoche());const neu=F.gerS().l.slice(vor);S.pk=null;
+    if(neu.length<1||neu.length>3||neu.filter(g=>g.mein).length>1||JSON.stringify(S.zufall)!==z0)ok=false;txt.push(neu.length);S.tag+=7;}
+  pruef(ok,'Woche: 1 bis 3 Gerüchte, höchstens eins über dich, Grundstrom unberührt',txt.join(' '));}
+
+// 3. Wirkung: unzufrieden −3 Stimmung, Trainergerücht −2 Vertrauen, bekanntes Interesse hebt Forderung (×1,1) und Gebote (×1,15)
+{const w=welt(),{F,S,ev}=w,q=ev('squad')(VEREIN)[1],p=fremd(w),st=ev('stimmung');q.st=50;S.trust=50;
+  F.gerVeroeffentlichen({art:'unzufrieden',tid:VEREIN,pid:q.id,w:1});S.pk=null;F.gerVeroeffentlichen({art:'trainer',tid:VEREIN,w:1});S.pk=null;
+  const f0=ev('forderungDu')(p);F.gerVeroeffentlichen({art:'verhandlung',tid:p.team,klub:VEREIN,pid:p.id,w:1});S.pk=null;const f1=ev('forderungDu')(p);
+  const r=ev('squad')(VEREIN)[2],b=S.teams.find(x=>x.lg===1&&x.id!==VEREIN),mit=ev('mitStrom'),sm=ev('strom'),g0=mit(sm('t','g'),()=>F.gebotFuer(b,r,null));
+  F.gerVeroeffentlichen({art:'interesse',tid:VEREIN,pid:r.id,w:0.5});S.pk=null;const g1=mit(sm('t','g'),()=>F.gebotFuer(b,r,null));
+  pruef(st(q)===47&&S.trust===48&&nah(f1/f0,1.1,0.02)&&nah(g1.amt/g0.amt,1.15,0.03),'Wirkung: Stimmung −3, Vertrauen −2, Forderung ×1,1, Gebot ×1,15',`${st(q)}, ${S.trust}, ${(f1/f0).toFixed(3)}, ${(g1.amt/g0.amt).toFixed(3)}`);}
+
+// 4. Gerücht über deinen Verein bringt die Pressekonferenz „Gerüchte“ mit dem Medium in der Frage
+{const w=welt(),{F,S}=w,q=w.ev('squad')(VEREIN)[0];F.gerVeroeffentlichen({art:'absprung',tid:VEREIN,pid:q.id,w:0});
+  pruef(!!S.pk&&S.pk.art==='geruecht'&&!!S.pk.medium,'Pressekonferenz: Ein Gerücht über deinen Verein bringt den Anlass „Gerüchte“ mit Medium',S.pk?`${S.pk.art}, ${S.pk.medium}`:'keine');}
+
+// 5. Treffsicherheit nach 30 Tagen: Wechsel trat ein +3, erfundenes Trainer-Aus ohne Wechsel −3
+{const w=welt(),{F,S}=w,p=fremd(w),t=S.teams.find(x=>x.lg===2);F.trainerS();const P=F.gerS();P.ruf.fach=60;P.ruf.boulevard=40;
+  F.gerVeroeffentlichen({art:'liste',tid:p.team,pid:p.id,w:1,m:'fach'});const g1=P.l[P.l.length-1];g1.m='fach';
+  F.gerVeroeffentlichen({art:'trainerAus',tid:t.id,w:0});const g2=P.l[P.l.length-1];g2.m='boulevard';S.pk=null;
+  p.team=S.teams.find(x=>x.lg===3).id;S.tag+=31;F.gerPruefen();
+  pruef(g1.r===1&&g2.r===0&&P.ruf.fach===63&&P.ruf.boulevard===37,'Treffsicherheit: eingetretener Wechsel +3 für das Fachblatt, falsches Trainer-Aus −3 für den Boulevard',`${g1.r}/${g2.r}, Fachblatt ${P.ruf.fach}, Boulevard ${P.ruf.boulevard}`);}
+
+// 6. 20 Wochen im Ablauf ohne Fehler, Zahl der Gerüchte plausibel
+{const w=welt(),{W,F}=w;let fehler='',n=0;try{while(n<400&&W.S.tag<140){n++;if(W.S.sponsOffers)F.sponsorWaehlen(0);if(W.ev('heuteMeinSpiel()'))F.tagesSpiele(W.S.tag);F.weiter();}}catch(e){fehler=e.message;}
+  const l=F.gerS().l,wochen=Math.max(1,Math.floor((W.S.tag)/7));
+  pruef(!fehler&&l.length>=wochen&&l.length<=3*wochen+3,'Ablauf: 20 Wochen ohne Fehler, ein bis drei Gerüchte je Woche',fehler||`${l.length} Gerüchte in etwa ${wochen} Wochen, über dich ${l.filter(g=>g.mein).length}`);}
+
+console.log(probleme.length?`\n${probleme.length} Problem(e).`:'\nAlles in Ordnung.');process.exitCode=probleme.length?1:0;

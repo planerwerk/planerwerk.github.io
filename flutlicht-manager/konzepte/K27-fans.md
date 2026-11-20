@@ -1,6 +1,6 @@
 # K27 – Fans und Zuschauer
 
-Status: **Entwurf** (8. November 2026), nach „weiter, entscheide du“. Vorläufige Entscheidungen stehen in Abschnitt 12.
+Status: **Entwurf** (8. November 2026), nach „weiter, entscheide du“. Vorläufige Entscheidungen stehen in Abschnitt 12. **Teilweise umgesetzt mit U16 (20. November 2026, §5.4b), noch ohne Testlauf.**
 Hängt ab von: K23 (Finanzen), K26 (Stadion) · Wird gebraucht von: K04 (Heimvorteil), K09 (Zuschauer-Vergehen), K14, K24, K25, K28.
 
 ## 1. Ziel und Spielgefühl
@@ -75,6 +75,23 @@ Ziel = 60 + Erfolg + Preise + Identifikation + Entscheidungen + Umfeld     (0–
 | Fan-Gespräch | jederzeit, höchstens einmal im Monat | Fanstimmung +3 bis +8 bei Glaubwürdigkeit (K15), −5 bei leeren Versprechen |
 | Platzsturm | Aufstieg, Klassenerhalt am letzten Spieltag | Feier, kleine Geldstrafe (K09) |
 
+### 5.4b Umsetzung U16 (20.11.2026)
+
+- **Fanstimmung `t.fanst`** für alle Vereine der drei Ligen, Start 60, montags 15 % Richtung Ziel. Ohne Zufall.
+- **Bausteine des Ziels:**
+  - **Erfolg** (−20 bis +20): ab dem 5. Ligaspiel 2 × (erwarteter Platz − Platz), dazu 10 × (Punkte je Spiel der letzten fünf − 1,3), dazu Anlässe mit Gedächtnis: Derbysieg +6, Derbyniederlage −6 (doppelt wie in §5.1), Pokalrunde überstanden +2, Pokal-Aus gegen einen tieferklassigen Verein −4. Anlässe verblassen um 20 % je Woche.
+  - **Preise** (−15 bis +5): 30 × (1 − Ticketpreis / Richtpreis). 10 % über dem Richtpreis kosten 3 Punkte.
+  - **Identifikation** (vorerst 0 bis +10): 2 je Publikumsliebling im Kader. Den negativen Teil (−5 für eine Söldnertruppe aus lauter Neuzugängen) gibt es noch nicht, damit die Stimmung am Start bei 60 bleibt: Weil die Statistik erst mit dem Spielstand beginnt, hätte am Start noch kein Verein einen Liebling. Publikumsliebling: mindestens 60 Pflichtspiele für den Verein (gezählt ab Spielbeginn, K34) oder ein Eigengewächs (aus der eigenen Jugend) mit mindestens 20.
+  - **Entscheidungen** (−15 bis +5): Verkauf eines Publikumslieblings −8, verblasst um 10 % je Woche.
+  - **Umfeld** (−5 bis +5): Saisoneröffnung +3 (K12b), Fan-Gespräch, verblasst um 10 % je Woche. Presse (K29) kommt später.
+- **Wirkung auf die Zuschauer** (§5.3): Faktor 0,85 bei 0, 1,0 bei 60, 1,10 bei 100, linear dazwischen. Am Start also wie bisher. Gilt in deinen Heimspielen, Testspielen und in der Vorhersage am Ticketpreis.
+- **Wirkung auf deinen Vorstand** (K28): Baustein Fans im Ziel des Vertrauens, nur außerhalb von 45 bis 75: darunter (Stimmung − 45) / 3 bis höchstens −10, darüber (Stimmung − 75) / 5 bis höchstens +5.
+- **Protest** (§5.4): Unter 30 pfeifen die Fans in deinen Ligaheimspielen. Selbstvertrauen deiner eingesetzten Spieler −0,2, mit Meldung.
+- **Fan-Gespräch** (§5.4): höchstens einmal im Monat, Stimmung im Baustein Umfeld +3 bis +8 nach deiner Glaubwürdigkeit (K15). Unter 25 Glaubwürdigkeit nennen die Fans es leere Versprechen: −5. Lizenz-Bereich `fangespraech` ab der C-Lizenz, ohne Automatik.
+- **Anzeige:** im Stadion die Fanstimmung als Regler mit den Bausteinen und das Fan-Gespräch.
+- **Computer-Vereine:** gleiche Stimmung, wirkt aber noch nirgends (ihre Einnahmen kommen aus einer Formel ohne Zuschauer, ihr Vorstand aus U11d2 bleibt unverändert).
+- **Noch nicht:** Dauerkarten und Gästeblock (warten auf K23), Ultras und Tradition als Stammdaten (dafür fehlen Quellen je Verein), Choreo, Pyrotechnik und Platzsturm (K09, K30), Heimvorteil durch Fans (würde die Kalibrierung der Engine ändern).
+
 ### 5.5 Größenordnungen
 
 - **Echte Werte 2024/25:** Auslastung in der 1. Liga 95,9 %, in der 2. Liga nach der Hinrunde 84,3 % bei etwa 29.800 Zuschauern im Schnitt. Die 36 Vereine der 1. und 2. Liga verkauften zusammen knapp 21 Mio. Tickets (Quellen).
@@ -135,6 +152,17 @@ fans:{
 **Vorläufig entschieden:** Fanstimmung als eigener Wert, Ultra-Szene und Tradition als Stammdaten (0–3), Dauerkarten mit Rabatt, Gästeblock 10 %.
 
 **Noch zu recherchieren:** Dauerkartenanteile, Zuschauerschnitt der 1. und 3. Liga als Vollsaison, Zahl der Pyro-Verfahren.
+
+**Vorläufig entschieden mit U16 (20.11.2026, von mir, weil „entscheide du“):**
+
+1. Fanstimmung für alle Vereine, wirksam vorerst nur bei dir (§5.4b).
+2. Gewichte der Bausteine wie in §5.4b, alle geschätzt.
+3. Publikumsliebling über Pflichtspiele für den Verein (ab Spielbeginn) oder Eigengewächs. Ein eigenes Merkmal „Publikumsliebling“ (K03) gibt es nicht.
+4. Eigengewächse: neues Kennzeichen am Spieler für Aufrücker aus der Jugend, bei dir und bei den Computer-Vereinen. Spieler vom Spielstart haben keins.
+5. Zuschauerfaktor neutral bei 60, damit sich am Start nichts ändert.
+6. Vorstand mit toter Zone von 45 bis 75, damit kleine Schwankungen das Vertrauen nicht bewegen.
+7. Fan-Gespräch ab der C-Lizenz, einmal im Monat.
+8. Dauerkarten, Gästeblock, Ultras, Tradition, Choreo, Pyro, Platzsturm und Heimvorteil verschoben (§5.4b).
 
 ## Quellen
 

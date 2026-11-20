@@ -21,6 +21,7 @@ function zusageChance(tid,d){const Z=RTS.zusage;if(tid>=1000)return Z.max;const 
   let p=Z.grund*(diff>=Z.staerkerAb?Z.staerker:diff<=-Z.schwaecherAb?Z.schwaecher:1)*(pflichtspielNah(tid,d,RTS.abstandPflichtspiel)?Z.kalender:1)
     *(o.region===myT().region?Z.region:1)*(inVorbereitung(d)?Z.vorbereitung:Z.saison);
   if(inVorbereitung(d)&&vorbereitungsWoche(d)<RTS.abWoche)return 0; // Profis erst ab der 3. Vorbereitungswoche, davor nur Amateure (Anstoss-Idee)
+  p*=1+RBZ.wirkung.testspiel*bezWirk(tid); // Beziehung (K17 §5.2, U12c)
   return clamp(p,Z.min,Z.max);}
 function testspielAnfragen(tid,d){if(!testspielTage().includes(d))return null;(S.testspiele=S.testspiele||[]);S.testId=(S.testId||0)+1;
   const x={id:S.testId,tag:d,gegner:tid,heim:tid<1000,stand:'angefragt',antwortAm:S.tag+riA(RTS.antwortTage)};S.testspiele.push(x);return x;}
@@ -41,6 +42,7 @@ function testspielNach(r,x){const T=RTS,N=RE.note,F=RP.frische;
     const tk=r.taktik&&r.taktik[s],t=S.teams[tid];if(tk){vertrautSetzen(t,'stil',tk.stil,vertraut(t,'stil',tk.stil)+T.vertrautheit);vertrautSetzen(t,'ordnung',tk.form,vertraut(t,'ordnung',tk.form)+T.vertrautheit);}});
   lernenImSpiel(Object.assign({},r,{sz:r.sz.filter((_,i)=>i%2===0)}));
   r.inj.forEach(i=>verletzen(PIX.get(i.id),i.q||'kollision'));
+  if(x&&x.gegner<AV0)bezDuAendern(x.gegner,RBZ.anlass.testspiel,'Testspiel gespielt'); // K17 §5.5, U12c (Amateure haben keine Beziehung)
   // Geld (K11 §5.2): als Gastgeber Zuschauer mit nachlassendem Interesse, beim Amateurverein eine feste Gage
   const t=myT();let geld=0,zus=0;
   if(x.heim&&r.h===S.my){const N2=T.nachfrage,w=inVorbereitung(x.tag)?vorbereitungsWoche(x.tag):99,f=Math.max(N2.min,N2.start+N2.jeWoche*Math.max(0,w-T.abWoche))*(r.a<1000&&S.teams[r.a].rep>=N2.grossAb?N2.grosserName:1);

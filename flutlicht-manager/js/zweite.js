@@ -98,7 +98,7 @@ function zweiteHoch(p){const N=RZ.aufruecken,sim=zweiteSim();
   else if(sim&&p.team===sim.id){delete p.kr;}else return null;delete p.zwP;
   p.team=S.my;p.list=0;p.wiv=0;delete p.trf;delete p.ent;PIX.set(p.id,p);kabineInit(p);rollenBerechnen(S.my);if(sim)rollenBerechnen(sim.id);p.ea=erwartungEinsatz(p);return p;}
 // Aus der Jugend in die Zweite (ab 17): in den Amateurkader oder mit kleinem Vertrag zur simulierten Zweiten in der 3. Liga
-function zweiteAufnehmen(p){if(!istJugend(p)||!hatZweite())return null;const sim=zweiteSim(),J=RZ.ausJugend;S.jg=S.jg.filter(x=>x!==p);p.zwJ=1;delete p.trf;
+function zweiteAufnehmen(p){if(!istJugend(p)||!hatZweite())return null;const sim=zweiteSim(),J=RZ.ausJugend;S.jg=S.jg.filter(x=>x!==p);p.zwJ=1;p.ej=S.my;delete p.trf;
   if(sim){p.team=sim.id;p.ct=J.vertrag;p.sal=Math.round(salaryFor(p.str)*J.gehalt/1000)*1000;p.sp=RP.startSpielpraxis;p.wiv=0;p.ppk=0;delete p.ent;S.pl.push(p);kabineInit(p);rollenBerechnen(sim.id);p.ea=erwartungEinsatz(p);}
   else{const l=zweiteKader();p.team=ZWEITE_TEAM;p.sal=0;l.push(p);}
   PIX.set(p.id,p);return p;}

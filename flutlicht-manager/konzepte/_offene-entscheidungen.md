@@ -200,6 +200,18 @@ Datei: `konzepte/K12b-saisonvorbereitung.md`
 
 Liste statt Pflichtschritte, Automatik für Unerledigtes, Saisoneröffnung als kleines Fest.
 
+**Mit U14 von mir vorläufig entschieden (20.11.2026, K12b §12 Nr. 1 bis 7):**
+
+- Die Liste gibt es ab dem 1. Juli, nicht schon ab dem Saisonabschluss.
+- Sie enthält nur Punkte, deren Funktion es schon gibt.
+- Jeder Punkt hat drei Zustände: von dir erledigt, vom Stab erledigt, offen.
+- Keine eigene Lizenz für die Liste.
+- Saisoneröffnung am letzten Samstag vor dem ersten Pflichtspiel, für alle Vereine.
+- Regen mit 20 %, dann gibt es 60 % der Einnahme.
+- Das Mannschaftsfoto kommt in die Statistik. Nachzügler bekommen eine Meldung.
+
+Offen: Sponsorentag (K24), Trikotvorstellung (K25), Zielgespräch (K28), Fanstimmung (K27).
+
 ## K13 – Wettbewerbe und Spielplan
 Datei: `konzepte/K13-wettbewerbe.md`
 
@@ -351,7 +363,17 @@ Datei: `konzepte/K19-transfers.md`
 ## K20 – Transfers II: Abwerben, Bieterwettstreit, Deadline Day
 Datei: `konzepte/K20-transfers-2.md`
 
-**Noch zu recherchieren:** Anteil der Wechsel in den letzten Tagen eines Fensters.
+**Noch zu recherchieren:** Anteil der Wechsel in den letzten Tagen eines Fensters (am 20.11. gesucht, keine Zahl gefunden).
+
+**Mit U15 von mir vorläufig entschieden (20.11.2026, K20 §12 Nr. 1 bis 7):**
+
+- Abwerben nur bei deutschen Computer-Vereinen, ab der A-Lizenz, ohne Automatik.
+- Feste Kosten je Ort.
+- Berater-Profile aus K22 zugeordnet. Ohne Berater ist es etwas riskanter.
+- Fliegt es auf, steigt die Ablöse bis zum Saisonende um 15 %, und das Abwerben dieses Spielers ist für die Saison vorbei.
+- Deadline Day mit Übersicht, Halt am letzten Tag und einem zusätzlichen Markttag. Die Preise schwanken noch nicht.
+- Bieterrunde nur beim Verkauf.
+- Computer-Vereine werben noch nicht ab.
 
 ## K21 – Verträge und Gehälter
 Datei: `konzepte/K21-vertraege.md`
@@ -415,6 +437,17 @@ Datei: `konzepte/K27-fans.md`
 
 **Noch zu recherchieren:** Dauerkartenanteile, Zuschauerschnitt der 1. und 3. Liga als Vollsaison, Zahl der Pyro-Verfahren.
 
+**Mit U16 von mir vorläufig entschieden (20.11.2026, K27 §12 Nr. 1 bis 8):**
+
+- Fanstimmung für alle Vereine. Sie wirkt vorerst nur bei dir.
+- Die Gewichte der Bausteine sind geschätzt.
+- Publikumsliebling über Pflichtspiele für den Verein oder als Eigengewächs.
+- Ein neues Kennzeichen markiert Eigengewächse.
+- Der Zuschauerfaktor ist bei 60 neutral.
+- Der Vorstand hat eine tote Zone von 45 bis 75.
+- Fan-Gespräch ab der C-Lizenz.
+- Dauerkarten, Gästeblock, Ultras, Tradition, Choreo, Pyro, Platzsturm und Heimvorteil kommen später.
+
 ## K28 – Vorstand, Ziele, Karriere
 Datei: `konzepte/K28-vorstand.md`
 
@@ -433,6 +466,25 @@ Datei: `konzepte/K29-medien-presse.md`
 5. **Weitere Recherche** bei der Umsetzung (U17), nicht jetzt.
 6. **Gerüchteküche und Datenmodell** ergänzt (3.4, 4.3), damit sind B3 und B4 erledigt.
 
+**Mit U17a von mir vorläufig entschieden (20.11.2026, K29 §12 Nr. 7 bis 14):**
+
+- Erst die Pressekonferenzen, dann die Gerüchteküche (U17b).
+- Dreizehn Anlässe, höchstens 20 je Saison, Sperre 21 Tage je Art.
+- Zwei bis drei Fragen je Pressekonferenz.
+- Neuer Halt „Pressekonferenz“. Ohne Antwort geht der Co-Trainer.
+- Lizenz `presse` ab der C-Lizenz mit Automatik.
+- Wirkungen als Spielwerte nach der Tendenz aus K29 §5.1.
+- Das Medienklima ist ein eigener Wert und wird vorerst nur angezeigt.
+- Zum Start 54 Fragen, 30 Antworten und 22 Schlagzeilen.
+
+**Mit U17b von mir vorläufig entschieden (20.11.2026, K29 §12 Nr. 15 bis 19):**
+
+- Ein bis drei Gerüchte je Woche, höchstens eins über deinen Verein.
+- Sieben Quellen mit festem Wahrheitsgehalt. Erfundene Gerüchte kommen nur von Boulevard und Portal.
+- Wirkung auf Stimmung, Fans, Vertrauen und Ablöse. Die Werte sind geschätzt.
+- Jedes Medium hat eine Treffsicherheit. Sie wird nach 30 Tagen geprüft.
+- Neuer Anlass „Gerüchte“ für die Pressekonferenz.
+
 ## K30 – Ereigniskarten und Story-Playbook (Gerüst)
 Datei: `konzepte/K30-ereigniskarten.md`
 
@@ -450,6 +502,8 @@ Datei: `konzepte/K31-computer-vereine.md`
 2. **Sechs Profile,** je Verein ein bis zwei, als Stammdaten.
 3. **Klugheit gilt für alle Computer-Vereine gemeinsam** (eine Stufe je Spielstand, K02).
 4. **„Note über 10 oder mehr Einsätze schlechter als die Schwelle“** aus deinen Vorgaben: Schwelle vorläufig 4,5 im Notenschnitt der letzten 10 Einsätze.
+
+Dazu seit U11a (19.11.) K31 §12 Nr. 5 bis 17, siehe unten „K31 Computer-Vereine, U11a“.
 
 ## K36 – Einstieg mit Lernstufen (Umsetzung UL, 12.11.)
 Datei: `konzepte/K36-lernstufen.md`, ausführlich in §12 Nr. 1–29. Die Nummern 1–13 stammen aus dem Entwurf vom 9.11. und gelten weiter als vorläufig.
@@ -497,10 +551,33 @@ Bei der Umsetzung (U9b, 11.11.), ausführlich in K32 §12 Nr. 4–20:
 19. **Lernstufen:** Auslandsmarkt ansehen frei, im Ausland beobachten und kaufen ab B, Suchauftrag Ausland ab A.
 20. **Noch nicht gebaut:** Handel der Computer-Vereine mit dem Ausland (U11), Integration, Deutschkenntnisse, Heimweh, Landsleute, Länderspiele, Ereignisse, Europapokal.
 
+Bei der Umsetzung (U18a, 20.11.), ausführlich in K32 §12 Nr. 21–25:
+21. **Erfundene Cheftrainer** für alle Computer-Vereine, keine echten.
+22. **Nachfolger ohne Zufall** nach dem Ruf, der zum Ansehen passt.
+23. **Ruf der Computer-Trainer** zum Saisonende nach Platz gegen Erwartung, Meister und Abstieg.
+24. **Ex-Spieler als Trainer** mit 15 % ab 150 Ligaspielen, nur erfundene Spieler.
+25. **Pool mit mindestens 12 freien Trainern.**
+26. **Ereignisse aus §8 als Ereigniskarten** (U18b): Altstar, Abschiedsspiel, Heimweh, England ruft. Das Karriereende nach §5.1 wartet auf einen Testlauf.
+
 ## K34 – Statistik und Historie
 Datei: `konzepte/K34-statistik.md`
 
 Elf des Jahres in 4-3-3, volle Details drei Saisons lang, Sprüche-Chronik bis 100 Einträge.
+
+**Mit U13 von mir vorläufig entschieden (20.11.2026, K34 §12 Nr. 1 bis 16):**
+
+- Statistik ab Spielbeginn. Eine Zeile je Saison und Verein.
+- Monatsverlauf nur für den eigenen Kader.
+- Vorlagen nach dem Spiel mit eigenem Strom. Die Anteile je Torart sind geschätzt.
+- Ehrungen für alle drei Ligen, Meldungen für die 1. Liga und eigene Leute.
+- Feste Gewichte für Spieler und Talent der Saison. Trainer der Saison nach Punkten über der Erwartung.
+- Marktwert +5 % nach einer Ehrung, für dich Ruf +5 als Trainer der Saison.
+- Echte Bundesliga-Rekorde als Startwert. 2. und 3. Liga beginnen leer, kein Startwert für den Rekordtransfer.
+- Ehemalige ab 150 Ligaspielen, mit Ehrung oder mit 30 Spielen für einen deiner Vereine. Jubiläen ab Spielbeginn.
+- Vergleich über „Vergleichen“ auf der Spielerkarte.
+- Lizenz `statistik` ab der ersten Stufe.
+
+Offen: Sprüche-Chronik (K29), Turnierpokale (K11), Gehalt in der Karriere (K28), Rekord-Startwerte der 2. und 3. Liga.
 
 ## K35b – Look und Stil
 Datei: `konzepte/K35b-look.md`
@@ -590,3 +667,95 @@ Im Einzelnen in K08 §5.5, §12 Nr. 29 und K19 §12 Nr. 17:
 - **Ausleihen nur von Reservisten,** die bei dir mindestens Rotation wären. Du zahlst das Gehalt, eine Leihgebühr gibt es nicht.
 - **Profis bis 23 in die Zweite:** Vertrag und Gehalt bleiben, mit 24 automatisch zurück.
 - **Medizincheck:** 5.000 € je Kauf, bei Befund 10 bis 30 % weniger Ablöse und ein zweiter Klick.
+
+## K31 Computer-Vereine, U11a (19.11.), vorläufig von mir, gebaut ohne Testlauf
+
+Im Einzelnen in K31 §5.6 und §12 Nr. 5 bis 17. **Alle Zahlen sind ungeprüft,** weil auf dem Rechner kein Node.js lief.
+
+- **Teilschritte:** U11a Kaderplan, Bedarf, Kauf und Verkauf, Budget (gebaut). U11b Profile und Sternejagd, U11c Verträge nach Rang, U11d Leihen, Klugheit, Trainerwechsel.
+- **Kaderplan:** sechs Gruppen, 24 Planstellen, die Grundordnung verschiebt sie zur Hälfte. Anspruch = Kaderstärke, mindestens die Grundstärke nach dem Ansehen.
+- **Bedarf:** offene Planstelle, Stammspieler mehr als 6 unter dem Anspruch, lange verletzt, Wechselwunsch, zu wenige Talente. Je Woche höchstens ein Kauf, im Sommer höchstens 4, im Winter 2.
+- **Verkauf:** nur aus einer überbesetzten Gruppe (Regel B), mit Grund (Wechselwunsch, Überhang, deutlich zu schwach). Der Grund „Note“ fehlt, weil das Spiel keine Noten speichert.
+- **Budget:** 50 % des Kontos im Sommer, 25 % im Winter, fest am Anfang des Fensters. Kein Gehaltsrahmen.
+- **Für dich ändert sich:** Auf der Transferliste stehen jetzt die Überzähligen aller Vereine, zum Vereinswert ohne Aufschlag. Regel B und das Angebot über 150 % gelten für dich noch nicht (weiter K19).
+- **Unverändert:** Angebote an dich, Leihe, Ausstiegsklausel und Vorvertrag fragen weiter den Bedarf aus U10a.
+- **Sicherheitsnetz:** Mindestkader am 1. Juli wie bisher, offene Planstellen werden in der letzten Woche des Sommerfensters aufgefüllt.
+
+## K31 Computer-Vereine, U11b (19.11.), vorläufig von mir, gebaut ohne Testlauf
+
+Im Einzelnen in K31 §5.7 und §12 Nr. 18 bis 22.
+
+- **Profile:** „ehrgeizig“ sind die ersten vier nach Ansehen in der 1. Liga, die ersten drei in der 2. und 3. Liga und jeder Aufsteiger. Das zweite Profil wird gelost, nicht je echtem Verein gepflegt (Abweichung von Nr. 2 oben).
+- **Wirkung nur auf Transfers:** Qualitätsziel, Budget, Zahlungsbereitschaft, Talente, Alter der Zugänge. Malocher ist noch wirkungslos.
+- **Sternejagd:** ehrgeizige Vereine, einmal je Sommer, Spieler mindestens 2 über dem eigenen Niveau von einem Verein mit mindestens 5 weniger Ansehen, für 150 % des Marktwerts.
+- **Dein Verein in der Automatik** folgt denselben Profilen. Als ehrgeiziger Verein gibt er bis zu 70 % des Kontos aus. **Vorläufig entschieden: bleibt so** (Konsistenzprüfung BH8, K31 §12 Nr. 22). Der alte Markt gab sogar bis zu 100 % aus.
+
+## K31 Computer-Vereine, U11c (19.11.), vorläufig von mir, gebaut ohne Testlauf
+
+Im Einzelnen in K31 §5.8 und §12 Nr. 23 und 24.
+
+- **Verträge nach Rang:** Computer-Vereine (und dein Verein, wenn der Verein die Verträge führt) verlängern Stammspieler, Herausforderer und Talente schon von Oktober bis Dezember (15 % je Woche). Beim Saisonwechsel bleiben Gebrauchte zu 90 %, junge Ergänzung zu 50 %, alle anderen zu 10 %. Vorher 70 % für alle.
+- **Folge für dich:** weniger ablösefreie Vorverträge bei Stammspielern anderer Vereine, mehr Vereinslose im Sommer.
+- **Vorverträge und Ausstiegsklauseln unter Computer-Vereinen** rutschen nach U11d.
+
+## K31 Computer-Vereine, U11d1 Leihen (19.11.), vorläufig von mir, gebaut ohne Testlauf
+
+Im Einzelnen in K31 §5.9 und §12 Nr. 25 bis 32.
+
+- **Computer-Vereine leihen untereinander:** Überzählige bis 23 Jahre (der Ausbildungsverein auch Talente) gehen an Vereine mit einer Lücke. Bei einem lange verletzten Stammspieler kommt zuerst eine Leihe, bei einer offenen Planstelle nur, wenn kein Kauf geht. Ohne Geld, ohne Meldung, zurück am Saisonende.
+- **Leihkontingent für alle, auch für dich** (FIFA seit 2024/25, DFL im Inland): höchstens 6 verliehen, 6 ausgeliehen, 3 an denselben Verein, Spieler bis 21 zählen nicht.
+- **Dein Verein leiht nie von selbst:** Der Bereich `leihe` bleibt ohne Automatik, Computer-Vereine leihen nicht bei dir aus.
+- **Rest von U11d wartet:** Klugheit (braucht die Klugheitsstufe, K02), Vorverträge und Klauseln unter Computer-Vereinen (brauchen ein Vertragspaket). Der Trainerwechsel kam gleich danach als U11d2.
+
+## K31 Computer-Vereine, U11d2 Trainerwechsel (19.11.), vorläufig von mir, gebaut ohne Testlauf
+
+Im Einzelnen in K31 §5.10 und §12 Nr. 33 bis 39.
+
+- **Computer-Vereine entlassen Trainer:** Das Vertrauen kommt aus Tabellenplatz gegen Erwartung, den letzten fünf Ligaspielen und dem Konto. Unter 20 gibt es ein Ultimatum über zwei Spiele, danach die Entlassung nach der Geduld des Präsidenten oder ein zweites, letztes Ultimatum. Wer sein Ziel weit verfehlt, wechselt im Sommer.
+- **Der neue Trainer** bringt einen neuen Lieblingsstil und +5 Stimmung. Die Grundordnung wählt der Computer-Trainer wie bisher jeden Monat. Noch ohne Namen und ohne Trainerpool.
+- **Ziel:** 4 bis 10 Wechsel je Saison in der 1. Liga (recherchiert). Ob es passt, zeigt erst ein Testlauf.
+- **Dein Vorstand ist unverändert** bis U12. Neu für dich ist nur die Meldung „Großer Umbruch“ aus deiner Liga.
+
+## K28 Vorstand, U12a (20.11.), vorläufig von mir, gebaut ohne Testlauf
+
+Im Einzelnen in K28 §5.6 und §12 Nr. 5 bis 12.
+
+- **U12 in vier Teilen:** U12a Vertrauen, Ultimatum, Ruf. U12b Zielgespräch und Nebenziele (mit Rücktritt). U12c Beziehungen (K17). U12d Ereignis-Gerüst (K30).
+- **Vertrauen:** Siege und Niederlagen zählen nur noch halb. Dazu bewegt es sich jeden Montag ab dem 5. Ligaspiel um 20 % auf ein Ziel aus Platz gegen Saisonziel, Serie, Konto, Kredit und Glaubwürdigkeit zu.
+- **Ultimatum statt sofortiger Entlassung:** zwei Ligaspiele Zeit. Danach entscheidet die Geduld des Präsidenten, ob es ein letztes Ultimatum gibt.
+- **Ruf als Trainer** (Start 30) steigt mit übertroffenen Zielen und Titeln und sinkt mit Abstieg und Entlassung. Er bestimmt, wie gute Vereine dir Jobs anbieten. Im Büro siehst du Ruf, Präsident und ein laufendes Ultimatum.
+
+## K28 Vorstand, U12b (20.11.), vorläufig von mir, gebaut ohne Testlauf
+
+Im Einzelnen in K28 §5.7 und §12 Nr. 13 bis 17.
+
+- **Nebenziele:** Der Vorstand setzt eins, ein ehrgeiziger Präsident zwei. Zur Wahl stehen Pokalrunde, Einsätze für Spieler bis 21 und eine Saison ohne Verlust. Das Profil deines Vereins bestimmt, welches zuerst kommt. Sie wirken auf das Vertrauen, während der Saison und zum Saisonende.
+- **Rücktritt:** jederzeit während der Saison, Ruf −5 statt −8 bei einer Entlassung, danach Jobangebote. Grundlizenz.
+- **Zielgespräch** mit Tiefstapeln und Hochpokern wartet auf Budgets und Prämien (K23).
+
+## K17 Beziehungen, U12c (20.11.), vorläufig von mir, gebaut ohne Testlauf
+
+Im Einzelnen in K17 §5.5 und §12 Nr. 4 bis 10.
+
+- **Zwei Arten:** Verein–Verein und du–Verein (wandert mit dir). Für deine Geschäfte zählt die Summe.
+- **Derbys (−30) und Rivalitäten (−15)** nur mit Quelle, 20 Derbys und 3 Rivalitäten.
+- **Anlässe:** fairer Kauf und Verkauf +5, Spottangebot −3, gezogene Ausstiegsklausel −8, Testspiel +3, Leihe mit gehaltener Absprache +5 (sonst −5), Wechsel unter Computer-Vereinen +5, Derby mit Sieger −2.
+- **Wirkung:** Ablöse ±15 %, unter −50 oft kein Gespräch, Zusage zu Testspielen, Computer-Vereine kaufen und leihen nicht unter −50.
+- **Vergessen:** 5 % je Monat. Anzeige im Büro und auf der Spielerkarte.
+
+## K30 Ereigniskarten, U12d (20.11.), vorläufig von mir, gebaut ohne Testlauf
+
+Im Einzelnen in K30 §5.5 und §12 Nr. 4 bis 9.
+
+- **Gerüst:** Katalog als Daten (`daten/karten.js`), Auslöser als benannte Prüfungen im Code, eigener Zufallsstrom, Sperrzeiten, Seltenheitsstufen, Budget für Infos, Entscheidungen und Halte.
+- **Entscheidungen** halten an und stehen im Büro. Ohne Antwort wählt der Co-Trainer vor dem Anpfiff die Voreinstellung. Wer will, schaltet die Automatik ein (neuer Bereich `ereignisse`, Grundlizenz).
+- **Erste fünf Karten:** Der Präsident mischt sich ein, Rückendeckung vom Vorstand, Versöhnung, ein Spieler heiratet, Geheimtipp.
+- **Noch nicht:** Ketten, verzögerte Folgen, Meldungsdichte, Chronik, Skandale.
+
+## K40 Usability, UX1 (20.11.), vorläufig von mir, gebaut ohne Testlauf
+
+Im Einzelnen in `konzepte/K40-usability.md` (neu, aus dem Vorschlag in PLAN §4).
+
+- **Eigenes Testskript** `tests/ui-zugang.js`: axe-core auf allen Ansichten, Spielerkarte und Menü, nur schwere Verstöße zählen. Dazu Tastatur: „Tag beenden“ mit Tab und Enter, Fokus sichtbar.
+- **Kleine Änderung im Spiel:** Escape schließt Fenster mit Schließen-Knopf, beim Öffnen springt der Fokus ins Fenster (nicht auf die erste Option).
+- **axe-core kommt aus der Installation des Testers,** wie Playwright.

@@ -156,6 +156,8 @@ Saisonende: 18 Teams, Hin- und Rückspiel, Gegner um den Ligaschnitt (Streuung 2
 
 **Gebaut in U10d (18. November 2026, `js/leihe.js`, Test `tests/leihe.js`), vorläufig:** Leihen nur im Transferfenster und immer bis zum Saisonende. Verleihen an Vereine mit Bedarf; sie übernehmen 100 % des Gehalts, wenn der Spieler um mehr als 2 besser ist als ihre Kaderstärke, 50 % bei ±2, sonst nichts. Vereinbart werden Einsatz (Stammspieler 60 %, Rotation 30 % der Minuten, Meldung ab der achten Woche, wenn es nicht passt), Rückruf im Winterfenster und eine Kaufoption, die der Leihverein zum Saisonende zieht, wenn sie unter seinem Vereinswert liegt. Ausleihen geht bei Spielern, die bei ihrem Verein Ergänzung, Talent, Rotation oder Pokalspieler sind und bei dir mindestens Rotation wären; du zahlst das ganze Gehalt. Nicht gebaut: Leihgebühr, Kaufpflicht, Liga als Bedingung, Beziehung zum Leihverein (K17), Leihmanager (K16), Leihen der Computer-Vereine untereinander (U11).
 
+**Ergänzt in U11d1 (19. November 2026, ohne Testlauf, K31 §5.9):** Computer-Vereine leihen untereinander: Überzählige bis 23 Jahre (der Ausbildungsverein auch Talente) gehen an Vereine mit einer Lücke. Für alle Vereine, auch für dich, gilt das **Leihkontingent** nach FIFA und DFL: höchstens 6 Spieler verliehen und 6 ausgeliehen, höchstens 3 von einem Verein an denselben anderen, Spieler bis 21 zählen nicht. Die Spielerkarte zeigt Leihen zwischen zwei anderen Vereinen jetzt richtig an.
+
 
 - Leihvertrag (K19) mit Regeln: **Mindest-Spielzeit** (Rolle beim Leihverein), **Liga**, **Rückruf** im Winter ja oder nein.
 - Entwicklung beim Leihverein nach K03 mit seiner Spielpraxis und dem Trainingsfaktor des Leihvereins (dessen Stab, K16).

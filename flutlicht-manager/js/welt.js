@@ -1,7 +1,7 @@
 // Welt: Spieler erzeugen, Welt bauen, Spielplan, Ziele, Sponsoren, Preise.
 const rname=()=>pick(VORNAMEN)+' '+pick(NACHNAMEN);
 const salaryFor=s=>{const g=RP.gehalt;return Math.round(g.basis*Math.exp(g.steigung*(s-g.mitte))/g.runden)*g.runden;};
-function value(p){const m=RP.marktwert,s=p.age<m.jungUnter?p.str*m.staerkeAnteil+Math.max(p.str,p.pot)*m.talentAnteil:p.str;let v=m.basis*Math.exp(m.steigung*(s-m.mitte));const a=p.age,f=m.alter.find(x=>a<=x[0]);v*=f?f[1]:m.alterSonst;if(p.ww>=3)v*=RKA.wechsel.abloese;return Math.max(m.minimum,Math.round(v/m.runden)*m.runden);} // offizieller Wechselwunsch: Ablöse −10 % (K14 §5.4)
+function value(p){const m=RP.marktwert,s=p.age<m.jungUnter?p.str*m.staerkeAnteil+Math.max(p.str,p.pot)*m.talentAnteil:p.str;let v=m.basis*Math.exp(m.steigung*(s-m.mitte));const a=p.age,f=m.alter.find(x=>a<=x[0]);v*=f?f[1]:m.alterSonst;if(p.ww>=3)v*=RKA.wechsel.abloese;if(p.ehj!=null&&S.season-p.ehj<=1)v*=1+RSTAT.ehrung.marktwert;return Math.max(m.minimum,Math.round(v/m.runden)*m.runden);} // offizieller Wechselwunsch: Ablöse −10 % (K14 §5.4)
 function sternZahl(p){const d=p.pot-p.str,st=RP.sterne;return d>=st[0]?4:d>=st[1]?3:d>=st[2]?2:1;}
 // Angezeigte Sterne mit Schätzfehler (K03): Das wahre Talent kennt niemand genau
 function stars(p){const n=clamp(sternZahl(p)+sternFehler(p),1,4);return '★★★★'.slice(0,n)+'☆☆☆☆'.slice(n);}
@@ -19,10 +19,10 @@ const richtPreis=t=>RF.zuschauer.refBasis+t.rep*RF.zuschauer.refJeAnsehen;
 function talentBand(p){const s=Math.round(p.str),st=RP.sterne,n=clamp(sternZahl(p)+sternFehler(p),1,4);const[a,b]=n===4?[st[0],99]:n===3?[st[1],st[0]]:n===2?[st[2],st[1]]:[0,st[2]];return[Math.min(99,s+a),Math.min(99,s+b)];}
 // Vorhersage für den Ticketpreis-Regler: Zuschauer je Ligaheimspiel als Spanne (schwächster bis stärkster Gegner, mit Tageszufall). Würfelt nicht.
 function zuschauerSpanne(t,preis){const Z=RF.zuschauer,ref=Z.refBasis+t.rep*Z.refJeAnsehen,pf=clamp(Math.pow(ref/preis,Z.preisExponent),Z.preisMin,Z.preisMax),ff=Z.formBasis+Z.formJePunkt*formPts(t.id),lf=t.lg===1?1:Z.liga2;
-  const reps=S.teams.filter(x=>x.lg===t.lg&&x.id!==t.id).map(x=>x.rep),f=rep=>t.fans*pf*ff*(Z.gegnerBasis+rep/100*Z.gegnerFaktor)*lf;
+  const reps=S.teams.filter(x=>x.lg===t.lg&&x.id!==t.id).map(x=>x.rep),f=rep=>t.fans*pf*ff*(Z.gegnerBasis+rep/100*Z.gegnerFaktor)*lf*fanFaktor(t); // Fanstimmung (K27, U16)
   return[Math.round(Math.min(t.cap,f(Math.min(...reps))*Z.zufallBasis)),Math.round(Math.min(t.cap,f(Math.max(...reps))*(Z.zufallBasis+Z.zufallSpanne)))];}
 
-function mkPlayer(o){const age=o.age,str=o.str,T=RP.talent;const p={id:o.id!=null?o.id:S.pid++,n:o.n||rname(),pos:o.pos,age,str,pot:o.pot||Math.round(str+riA((T.find(x=>age<=x[0])||[0,RP.talentSonst])[1])),form:RP.startForm,fit:riA(RP.startFitness),ko:riA(RP.startKondition),sv:0,sp:RP.startSpielpraxis,ent:S.tag,sw:Math.round(str),team:o.team,inj:0,sperre:{liga:{rot:0,gelb:0},pokal:{rot:0,gelb:0}},kt:{liga:0,pokal:0},g:0,pg:0,apps:0,ct:o.ct||riA(RP.vertrag),list:0,ask:0,seed:R()};p.sal=salaryFor(p.str);spielerStart(p);p.nat=o.nat||natAusName(p);return p;} // Nationalität (K03): echte Spieler aus den Daten, erfundene aus dem Nachnamen
+function mkPlayer(o){const age=o.age,str=o.str,T=RP.talent;const p={id:o.id!=null?o.id:S.pid++,n:o.n||rname(),pos:o.pos,age,str,pot:o.pot||Math.round(str+riA((T.find(x=>age<=x[0])||[0,RP.talentSonst])[1])),form:RP.startForm,fit:riA(RP.startFitness),ko:riA(RP.startKondition),sv:0,sp:RP.startSpielpraxis,ent:S.tag,sw:Math.round(str),team:o.team,inj:0,sperre:{liga:{rot:0,gelb:0},pokal:{rot:0,gelb:0}},kt:{liga:0,pokal:0},g:0,pg:0,apps:0,ct:o.ct||riA(RP.vertrag),list:0,ask:0,seed:R()};p.sal=salaryFor(p.str);if(o.fp)p.fp=o.fp;spielerStart(p);p.nat=o.nat||natAusName(p);return p;} // Nationalität (K03): echte Spieler aus den Daten, erfundene aus dem Nachnamen. o.fp: feine Position vorgegeben (Kaderplan, K31)
 const lgIds=lg=>S.teams.filter(t=>t.lg===lg).map(t=>t.id);
 const grundStaerke=rep=>RW.grund.basis+rep*RW.grund.jeAnsehen;
 function buildWorld(seed){const W=RW;
@@ -41,6 +41,7 @@ function buildWorld(seed){const W=RW;
   const V=W.vereinslose;for(let k=0;k<V.anzahl;k++)addP(mkPlayer({pos:pick(V.positionen),age:riA(V.alter),str:riA(V.staerke),team:-1}));
   const sp=spielplanFuer(S.season);S.fx=sp.fx;S.plan.zeit=sp.zeit;initCup();
   mitStrom(strom('profil'),()=>S.teams.forEach(t=>{t.stil=profilStil();})); // Lieblingsstil jedes Vereins (K06 §7, bis K31)
+  mitStrom(strom('vereinsprofil'),profileAufbau); // zweites Vereinsprofil (K31 §3.2, U11b), eigener Strom
   S.teams.forEach(t=>{t.urlaubFertig=true;});S.pl.forEach(p=>{p.koVor=p.ko;});
   mitStrom(strom('stab'),stabAufbau);mitStrom(strom('scouts'),scoutsAufbau);mitStrom(strom('jugendstab'),jugendStabAufbau);kabineStart();mitStrom(strom('ausland'),auslandAufbau); // Auslandspool zuletzt und mit eigenem Strom (K32 §3.1)
   // Trainerstab nach Ansehen (K16), Kabine mit Rollen, Kapitän und Startstimmung (K14) // Start Anfang Juli: Urlaub vorbei, Laufplan bis zum Trainingsauftakt (K12a)
@@ -56,7 +57,7 @@ function targetFor(r,lg){const z=RV.ziel;return r===1?1:r<=z.spitzeBis?r+z.spitz
 function targetText(lg,t){if(lg===1)return t===1?'Deutsche Meisterschaft':t<=4?'Platz '+t+' oder besser (Champions League)':t<=7?'Platz '+t+' oder besser (Europapokal)':t<=12?'Platz '+t+' oder besser (Mittelfeld)':'Klassenerhalt (Platz '+t+' oder besser)';return t<=2?'Aufstieg (Platz '+t+' oder besser)':t===3?'Relegationsplatz (Platz 3)':t>=RV.ziel.schlechtester[lg]?'Klassenerhalt (Platz '+t+' oder besser)':'Platz '+t+' oder besser';}
 function setTarget(){LIGEN.forEach(lg=>S.teams.filter(t=>t.lg===lg).sort((a,b)=>b.rep-a.rep).forEach((t,i)=>t.expPos=i+1));const lg=myT().lg,r=targetFor(myT().expPos,lg);let z=lg>=2?Math.max(RV.ziel.unterhalbMindestens,r):r;
   // Schwierigkeit: Ziel einen Platz leichter oder strenger, nie schlechter als das schlechteste Ziel der Liga und nie besser als das beste (1. Liga Platz 1, sonst Platz 2)
-  if(stufe().ziel)z=clamp(z+stufe().ziel,lg>=2?Math.min(z,RV.ziel.unterhalbMindestens):1,Math.max(z,RV.ziel.schlechtester[lg]));S.target=z;}
+  if(stufe().ziel)z=clamp(z+stufe().ziel,lg>=2?Math.min(z,RV.ziel.unterhalbMindestens):1,Math.max(z,RV.ziel.schlechtester[lg]));S.target=z;nebenzieleSetzen();} // Nebenziele mit dem Saisonziel (K28 §5.7, U12b, js/vorstand.js)
 function sponsOffers(){const t=myT(),SP=RF.sponsor;const b=t.rep*t.rep*(SP['liga'+t.lg]||SP.liga3);const ns=shuffle(SPONSOREN.slice());const r=v=>Math.round(v/1000)*1000;
   S.sponsOffers=SP.angebote.map((a,i)=>({name:ns[i],base:r(b*a.fix),win:a.sieg?r(b*a.sieg):0,yrs:a.jahre,info:a.info}));sponsorAuto();} // in der Automatik wählt der Verein sofort (K36)
 function sponsorWaehlen(i){S.spons={...S.sponsOffers[i]};S.sponsOffers=null;news(`Sponsorvertrag unterschrieben: ${S.spons.name}.`,'good');}
