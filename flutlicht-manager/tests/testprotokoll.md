@@ -13,6 +13,51 @@ Node.js 22, Playwright mit Chromium, für `tests/ui-zugang.js` axe-core 4.10.2 (
 
 ---
 
+## Lauf 2, 20.11.2026: `popolupo-u18b-spielwelt-karten` (cb3649b)
+
+Die Spitze enthält alle Zweige von U11 bis U18b (Stand 17:27) und den Merge mit e8ea42d. Getestet als Ganzes. Für die neuen Funde ist der auslösende Commit angegeben, wo er gemessen ist.
+
+| Test | Ergebnis | Fund |
+|---|---|---|
+| code, berater, beziehungen, karten, vorstand, spielwelt-karten (neu), vorbereitung (neu), disziplin, jugend, kabine, leihe, live, scouting, sommer, stab, taktik, testspiele, training, vertraege, wettbewerbe, zufall, zweite | grün | jugend wieder grün (T1.7 erledigt) |
+| ui-lernstufen, live-neuladen, seed (Browser) | grün | |
+| presse, abwerben, fans (neu) | Abbruch beim Aufbau | T2.1, mit Testkorrektur: presse grün, fans grün, abwerben T2.2 |
+| geruechte (neu) | rot (1) | T2.3 |
+| trainerpool (neu) | rot (1) | T2.4 |
+| statistik (neu) | rot (1) | T2.5 |
+| welt | rot (1) | T1.2 offen |
+| lizenz | rot (1) | nur noch T1.1, Halte wieder grün (T1.6 erledigt) |
+| spielermodell | rot (3) | T1.3 offen, Werte wie in Lauf 1 |
+| transfers | rot (1) | T1.5 offen |
+| ausland | rot (2) | **neu**, T2.5 und T2.6 |
+| schwierigkeit | rot (1) | **neu**, T2.7 |
+| kalibrierung | rot (3, alle gelb am Rand) | Remis 23 %, Pokal gegen Amateure 95 % (Ziel bis 94 %), Ballbesitz wie vorher |
+| medizin | rot (1) | Kreuzbandrisse 9,5 (vorher 10,0), wie vorher |
+| ui-zwei-saisons | rot (63) | **neu**, T2.8 |
+| fuzz-karrieren | rot (104) | **neu**, T2.8 |
+| ui-zugang | rot (6) | T1.4 offen, genau dieselben Verstöße wie in Lauf 1 |
+| akzeptanz | läuft | |
+
+**T2.1 Testhilfe `welt(true)` in `tests/presse.js`, `tests/abwerben.js`, `tests/fans.js` bricht ab** (`TypeError: Cannot read properties of null (reading '0')` in `sponsorWaehlen`). Mit Lernstufen wählt der Verein den Sponsor sofort (`sponsorAuto` in `sponsOffers`), danach ist `S.sponsOffers` leer. Korrektur wie in den älteren Tests: `if(S.sponsOffers)F.sponsorWaehlen(0)`. In einer Testkopie mit dieser einen Zeile: presse grün, fans grün, abwerben siehe T2.2. Kein Fehler im Spiel.
+
+**T2.2 `tests/abwerben.js` „schlechte Stimmung ×1,3“: gemessen ×1,40** (11,80 → 16,51). Ursache: `abwPlus` nimmt die Stimmung zweimal, einmal über `wechselInteresse(p)` (hängt selbst an der Stimmung) und einmal über den Faktor `stimmung.unter`. Hotel gegen Restaurant (×2,0) und zwei Treffen (×1,4) stimmen. **Offen:** Soll die Stimmung doppelt wirken (dann Test anpassen), oder nur über einen der beiden Wege?
+
+**T2.3 `tests/geruechte.js` „1 bis 3 Gerüchte je Woche“: Wochen ohne Gerücht** (0 1 0 1 2 2 1 1 1 0 1 1). Gemessen in einer frischen Welt: `gerKandidaten()` liefert 12 Wochen lang 0 eigene und 0 fremde Anlässe. Ein Platz bekommt dann nur ein Gerücht, wenn der Wurf „erfunden“ trifft, sonst bleibt er leer. Ohne die Vorbereitung des Tests waren es höchstens 1 je Woche, in 6 von 12 Wochen keins. Vorschlag: Fehlt ein Anlass, wird erfunden. Oder der Test baut vorher Anlässe.
+
+**T2.4 `tests/trainerpool.js` „nach dem Saisonwechsel mindestens 12 frei“: 11.** Knapp unter der Grenze, am Anfang sind es genau 12. Der Pool wächst beim Saisonwechsel nicht nach.
+
+**T2.5 Speicherbedarf (U13 Statistik):** `tests/statistik.js` 176 KB nach 2 Saisons (Grenze 100 KB, also anteilig 1 MB nach 20 Saisons). Passend dazu `tests/ausland.js` „Spielstand unter 3 MB“: 1757, 2665, 2898, 3010, 3072, 3164 KB nach 1 bis 6 Saisons (vor U11: höchstens 2629 KB, in U12: 2821 KB).
+
+**T2.6 `tests/ausland.js` „Verkauf ins Ausland“ rot, ein Fehler im Test.** Die 40 Aufrufe von `weiter()` davor enden in U18b am 28.12. (Tag 180), also außerhalb des Fensters. Das Spiel merkt den Wechsel dann richtig nur vor (`p.wech` ab Tag 184, Geld gebucht, Angebot erledigt). In U12 endete die Schleife noch im Fenster. Vorschlag: Der Test stellt das Datum ins Fenster oder ruft danach `wechselTag` auf.
+
+**T2.7 `tests/schwierigkeit.js` „Gleiche Ergebnisse auf Leicht und Schwer“ rot seit U15 (bc11332; U14 e445032 ist noch grün).** Ein Fehler im Test, kein Unterschied im Spiel. Der neue Halt „Deadline Day“ (Erinnerung `deadline`) hält nur auf Leicht (Tag 62 und 215). Der Test schaltet beide Welten Halt für Halt weiter und vergleicht danach verschiedene Tage. Tag für Tag verglichen sind die Ergebnisse bis zur Entlassung auf Schwer (Tag 290) gleich. Vorschlag: im Test beide Welten bis zum selben `S.tag` laufen lassen. Ohne den Markttag am Deadline Day (`deadlineTag`) bleibt der Test rot, daran liegt es also nicht.
+
+**T2.8 `tests/ui-zwei-saisons.js` und `tests/fuzz-karrieren.js`: Fehlalarm „null“ (U13).** Die Textprüfung `__scan` in `tests/pruefungen.js` sucht `\bnull\b` gegen kaputte Anzeigen und schlägt bei der neuen Zeile „Torhüter: Spiele zu null“ in der Statistik an (62 von 63 und alle 104 Meldungen). Vorschlag: „zu null“ in `__scan` ausnehmen oder die Zeile umbenennen. Die einzige weitere Meldung in `ui-zwei-saisons`: „Menü: 7 statt 5 Erinnerungs-Schalter“. Seit U14 (`vorbereitung`) und U15 (`deadline`) sind es 7, der Test erwartet noch 5.
+
+**Stand der Funde aus Lauf 1:** T1.1, T1.2, T1.3, T1.4, T1.5 offen. T1.6 und T1.7 auf U18b grün.
+
+---
+
 ## Lauf 1, 20.11.2026: `popolupo-u11-computer-vereine` (c309f56) und `popolupo-u12-vorstand` (70e10e2)
 
 Beide Zweige lagen auf fba0ec9 (U10d). Ergebnisse von U11 und U12 sind bis auf die genannten Ausnahmen gleich.
