@@ -1019,3 +1019,20 @@ Zweig `mitarbeit/popolupo-u12-vorstand`. Kein Test gelaufen.
 | BM6 | **Rücktritt nutzt den Weg der Entlassung** (`S.fired`, Jobangebote, Halt „Entlassen“). Das Fenster sagt „Zurückgetreten“. In den Tests mit Jobwechsel (`sim.js`, `lizenz.js`) wird `S.ruecktritt` nicht zurückgesetzt, dort tritt aber niemand zurück. | ✅ |
 | BM7 | **Neuer Knopf im Büro** („Zurücktreten …“, mit Rückfrage). Die Browser-Tests klicken Knöpfe gezielt nach Text, keiner klickt zufällig. | ✅ |
 | BM8 | **`tests/vorstand.js` Nr. 7 bis 9:** Nebenziele setzen, Stand, Baustein, Saisonende, Rücktritt mit Jobwechsel. Nie gelaufen. | ⚠️ offen |
+
+---
+
+## BN. Nachtrag zu U12c Beziehungsnetz (20. November 2026, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-u12-vorstand`. Kein Test gelaufen. Derbys recherchiert, alle anderen Zahlen aus K17 §11.
+
+| # | Befund | Status |
+|---|---|---|
+| BN1 | **Ablöse mit Beziehung nur für dich:** `forderungDu` statt `forderungBasis` in `forderung` und `schmerzgrenze`. Die Sternejagd der Computer-Vereine nutzt weiter `forderungBasis` ohne Beziehung. | ✅ |
+| BN2 | **Tests mit Käufen bei Derby-Rivalen:** `tests/transfers.js` und andere spielen oft mit Freiburg (Nr. 6). Freiburg hat das Baden-Derby gegen Karlsruhe. Ein Kauf in Karlsruhe ist jetzt etwa 4,5 % teurer. Ob ein Test genau dort kauft, habe ich nicht geprüft. | ⚠️ messen |
+| BN3 | **Zufall:** Gewürfelt wird nur bei einer Beziehung unter −50 (Ablehnung), im Grundstrom, weil es deine Handlung ist. Alle anderen Änderungen sind fest. Die Welt bleibt gleich, solange niemand unter −50 fällt. | ✅ |
+| BN4 | **Derby-Gleichgewicht:** Zwei Derbys je Saison mit Sieger geben −4, das Vergessen holt im Jahr etwa 46 % der Abweichung zurück. Ein Derby pendelt sich bei etwa −39 ein und bleibt über −50, blockiert also keine Wechsel. | ✅ gerechnet |
+| BN5 | **Größe des Spielstands:** Jeder Wechsel unter Computer-Vereinen speichert eine Beziehung (+5). Gelöscht wird erst unter 2 Abstand, nach etwa 18 Monaten. Geschätzt einige Hundert Einträge mit je bis zu fünf Gründen, grob 50 KB. | ⚠️ messen |
+| BN6 | **Testspiele:** Jedes gespielte Testspiel gibt +3, das erhöht die Zusage beim nächsten Mal leicht. `tests/testspiele.js` prüft Zusagen. Bei Beziehung 0 gilt der alte Wert genau. | ⚠️ messen |
+| BN7 | **Nicht gebaut:** Abwerben (K20), Gerüchte und Fehden (K29), Brisanz im Spiel (K09), Hilfe in der Not, Versöhnung und lachender Dritter (K30), Partnervereine (keine Quelle), Rheinland-Derby als Gruppe. | 📌 später |
+| BN8 | **`tests/beziehungen.js`:** Grundwerte, Verlauf, Vergessen, Ablöse, Gesprächsbereitschaft, Testspiele, Derby, fairer Kauf, Computer-Vereine meiden −50, Anzeige. Nie gelaufen. | ⚠️ offen |

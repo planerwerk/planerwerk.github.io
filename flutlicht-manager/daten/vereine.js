@@ -100,6 +100,17 @@ const VEREINE=[
   {name:"FC Memmingen",kurz:"MEM",liga:4,ansehen:25,plaetze:5100,fans:2500,farbe:"#d40f14",region:"Bayern",ewig3:0}
 ];
 
+// Derbys und Rivalitäten (K17 §3, §5.5, U12c): [Kürzel, Kürzel, Name, Art]. Art 'derby' (Grundwert der Beziehung −30) oder 'rivale' (−15), Werte in REGELN.beziehungen.grund.
+// Nur Paare, die die Quelle ausdrücklich nennt: Wikipedia (englisch), „German football rivalries“, abgerufen am 20.11.2026.
+// Fürth–Nürnberg, Regensburg–Ingolstadt und Bremen–HSV sind aus dem Aufbau der Tabelle dort erschlossen (K17 Quellen).
+const DERBYS=[
+  ["BVB","S04","Revierderby","derby"],["SVW","HSV","Nordderby","derby"],["HSV","STP","Hamburger Derby","derby"],["FCU","BSC","Berliner Derby","derby"],
+  ["BMG","KOE","Rheinderby","derby"],["KOE","FKO","Kölner Derby","derby"],["KOE","VIK","Kölner Derby","derby"],["SGF","FCN","Frankenderby","derby"],
+  ["FCN","FCB","Bayerisches Derby","derby"],["FCA","FCI","Derby Augsburg–Ingolstadt","derby"],["JRE","FCI","Donauderby","derby"],["KSC","VFB","Baden-Schwaben-Derby","derby"],
+  ["SCF","KSC","Baden-Derby","derby"],["SGE","D98","Hessenderby","derby"],["H96","EBS","Niedersachsenderby","derby"],["PRM","OSN","Grenzlandderby","derby"],
+  ["FCK","FCS","Südwestderby","derby"],["DSC","PRM","Westfalenderby","derby"],["SGD","FCM","Elb-Clásico","derby"],["HRO","STP","Derby Rostock–St. Pauli","derby"],
+  ["FCB","BVB","Der Klassiker","rivale"],["HSV","FCB","Nord-Süd-Gipfel","rivale"],["SVW","FCB","Nord-Süd-Gipfel","rivale"]];
+
 // Erfundene Amateurklubs für den DFB-Pokal (64 Teams = 36 aus 1. und 2. Liga, 4 aus der 3. Liga, 24 Amateure).
 const AMATEURE=["TSV Rheinau","SV Hohenfeld","FC Eintracht Lohberg","SpVgg Kirchheide","VfR Altmühl","TuS Bergen-Ost","SC Wiesental","FSV Lindenau","FC Ahrweiler-Süd","SV Moorbach","TSG Steinfurt-Land","FC Viktoria Hellweg","SV Blau-Weiß Elmshagen","TuS Nordenham-Mitte","VfB Grünstadt","SV Germania Kalkreuth","FC Teutonia Wendel","SC Hafenstadt","TSV Bad Hollerbach","SpVgg Unterried","SV Rot-Weiß Ostheim","FC Sankt Albrecht","VfL Heidekamp","TuS Oberwinter","SV Seeblick","FC Haldenau","SV Fortuna Talheim","FC Wacker Rennsteig"];
 

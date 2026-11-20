@@ -29,14 +29,18 @@ function forderungBasis(p){if(p.team<0)return 0;if(istAusland(p))return auslandP
 // Stand der Verhandlung um einen Spieler (gilt, solange er beim selben Verein ist)
 function verhandlung(p){S.verh=S.verh||{};let v=S.verh[p.id];if(!v||v.team!==p.team)v=S.verh[p.id]={team:p.team,f:null,r:0,g:RTR.geduld,pause:-1,druck:-999};return v;}
 const verhandlungVon=p=>{const v=S.verh&&S.verh[p.id];return v&&v.team===p.team?v:null;};
+// Grundforderung an dich: mit deiner Beziehung zum Verein (K17 §5.2, U12c, nur inländische Vereine). Preise unter Computer-Vereinen nutzen forderungBasis ohne Beziehung.
+const forderungDu=p=>forderungBasis(p)*(p.team>=0&&p.team<AV0&&S.teams[p.team]?bezAbloese(p.team):1);
 // Aktuelle Forderung: Grundforderung oder das letzte Gegenangebot
-function forderung(p){const b=rundeAb(forderungBasis(p)),v=verhandlungVon(p);return v&&v.f!=null?Math.min(b,v.f):b;}
-const schmerzgrenze=p=>rundeAb(forderungBasis(p)/RTR.forderung*RTR.schmerzgrenze);
+function forderung(p){const b=rundeAb(forderungDu(p)),v=verhandlungVon(p);return v&&v.f!=null?Math.min(b,v.f):b;}
+const schmerzgrenze=p=>rundeAb(forderungDu(p)/RTR.forderung*RTR.schmerzgrenze);
 // Eine Runde: dein Angebot an den Verein. Rückgabe {ok,preis} oder {text,gegen}
 function kaufRunde(p,fee){const T=RTR,v=verhandlung(p),F=forderung(p),sch=schmerzgrenze(p),wer=vereinName(p);
   if(v.pause>S.tag)return{text:`${wer} will bis ${datumKurz(v.pause)} nicht mehr über ${p.n} reden.`};
+  // Schlechte Beziehung (K17 §5.2, U12c): Zu Beginn einer Verhandlung lehnt der Verein womöglich jedes Gespräch ab
+  if(v.r===0&&bezLehntAb(p.team)){v.pause=S.tag+T.pause;return{text:`${wer} will mit dir nicht über ${p.n} reden (Beziehung ${bezZahl(bezWirk(p.team))}). Frühestens am ${datumKurz(v.pause)} wieder.`};}
   if(fee>=F)return{ok:true,preis:fee};
-  v.r++;let txt='';if(fee<F*T.spott){v.g--;txt=`${wer} nimmt das als Spottangebot. `;}
+  v.r++;let txt='';if(fee<F*T.spott){v.g--;txt=`${wer} nimmt das als Spottangebot. `;bezDuAendern(p.team,RBZ.anlass.spott,`Spottangebot für ${p.n}`);}
   if(v.g<=0||v.r>=T.runden.kauf){v.pause=S.tag+T.pause;v.f=null;v.r=0;v.g=T.geduld;return{text:txt+`${wer} bricht die Verhandlung ab. Frühestens am ${datumKurz(v.pause)} wieder.`};}
   let f=Math.max(sch,rundeAb((F+fee)/2));
   if(fee>=F*T.anstaendig&&S.tag-v.druck>=T.preisdruck.tage){f=Math.max(sch,rundeAb(f*(1-T.preisdruck.prozent)));v.druck=S.tag;}
@@ -62,7 +66,7 @@ function verkaufAbschluss(o){const p=o&&PIX.get(o.pid);if(!p||p.team!==S.my||p.w
     if(!offen){wechselVormerken(p,o.tid,{preis:o.amt});news(`Einigung: ${p.n} wechselt für ${fmt(o.amt)} zu ${v.name} (${land}), mit dem Transferfenster am ${datumKurz(p.wech.ab)}.`,'good');return;}
     kabineAbgang(p,S.my);vertragEnde(p);insAusland(p,v.id);news(`Verkauft: ${p.n} wechselt für ${fmt(o.amt)} zu ${v.name} (${land}).`,'good');return;} // Verkauf ins Ausland (K32): Der Spieler zieht in den Pool um
   const b=S.teams[o.tid];if(!b||!aktiv(b)){S.offers=S.offers.filter(x=>x!==o);toast(`${b?b.name:'Der Verein'} spielt nicht mehr in den Profiligen, das Angebot ist hinfällig.`);return;}
-  money('Transfers',o.amt);b.cash-=o.amt;weg();
+  money('Transfers',o.amt);b.cash-=o.amt;weg();if((o.r||0)<=RBZ.fairRunden)bezDuAendern(b.id,RBZ.anlass.fair,`fairer Transfer: ${p.n}`); // Angebot ohne Gegenforderung angenommen (K17, U12c)
   if(!offen){wechselVormerken(p,b.id,{ct:riA(RM.neuerVertrag),preis:o.amt});news(`Einigung: ${p.n} wechselt für ${fmt(o.amt)} zu ${b.name}, mit dem Transferfenster am ${datumKurz(p.wech.ab)}.`,'good');return;}
   kabineAbgang(p,S.my);vertragEnde(p);p.seit=absTag(S.tag);p.abl=o.amt;p.team=b.id;p.list=0;p.ct=riA(RM.neuerVertrag);news(`Verkauft: ${p.n} wechselt für ${fmt(o.amt)} zu ${b.name}.`,'good');}
 

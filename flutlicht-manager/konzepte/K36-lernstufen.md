@@ -281,6 +281,7 @@ lizenz:{
 39. **U11d2 Trainerwechsel bei Computer-Vereinen (19.11., ohne Testlauf):** keine neue Funktion für dich, kein neuer Bereich. Neu ist nur eine Meldung („Großer Umbruch“), wenn ein Verein deiner Liga den Trainer wechselt. Meldungen sind Informationen und immer frei.
 40. **U12a Vorstand (20.11., ohne Testlauf):** keine neue Funktion, kein neuer Bereich. Neu sind Informationen im Büro (Ruf als Trainer, Geduld des Präsidenten, laufendes Ultimatum) und Meldungen zum Ultimatum, alles frei. Der Rücktritt (K28 §5.3) wäre eine neue Funktion mit Lizenz und kommt erst mit U12b.
 41. **U12b Nebenziele und Rücktritt (20.11., ohne Testlauf):** neuer Bereich `ruecktritt` (Grundlizenz, ohne Automatik, Büro). Damit sind es 46 Bereiche. Begründung für die Grundlizenz: eine Karriere-Entscheidung, keine Fähigkeit, die man lernt (K28 §12 Nr. 17). Die Nebenziele sind Information und Vorgabe des Vorstands, keine Funktion.
+42. **U12c Beziehungen (20.11., ohne Testlauf):** keine neue Funktion, kein neuer Bereich. Die Beziehungen sind Information (Büro, Spielerkarte) und wirken in Bereichen, die es schon gibt (`transfers`, `testspiele`, `leihe`).
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 

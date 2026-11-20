@@ -11,6 +11,7 @@ function openP(id){const p=PIX.get(id);if(!p)return;if(istJugend(p))return openJ
     <h3>Vertrag mit ihm</h3>${vertragFormular(p,Fv,S.my,!t)}
     <label>Vertragslaufzeit <select id="yrs">${[1,2,3,4,5].filter(y=>p.age>=18||y<=RVT.laufzeit.maxU18).map(y=>`<option value="${y}" ${y===3?'selected':''}>${y} Jahr(e)</option>`).join('')}</select></label><button class="go" onclick="offer(${id})"${aus?lzAusAlle('transfers','ausland'):lzAus('transfers')}>${t?(vorv?'Vorvertrag anbieten':'Angebot abgeben'):'Verpflichten'}</button></div>${aus?lzHinweisAlle('transfers','ausland'):lzHinweis('transfers')}<p id="msg" class="msg" aria-live="polite"></p></div>`;}
   if(!p.leihe&&!p.wech&&!istAusland(p))act+=leiheKarte(p); // Verleihen, Ausleihen, in die Zweite (U10d)
+  if(!mine&&!aus&&t)act+=bezKarte(p.team); // Beziehung zu seinem Verein (K17, U12c)
   if(!mine)act+=scoutKarte(p);
   const kad=aus?avStaerke(t):p.team>=0?teamLevel(p.team):null,jung=p.age<=23;
   const werte=!mine?scoutWerte(p,kad):`<div class="card rgs">${rgAnzeige({label:'Stärke',sub:jung?'1–99, Schraffur: Talent':'1–99',min:1,max:99,wert:Math.round(p.str),talent:jung?talentBand(p):null,marker:kad?[{v:kad,t:'Ø Kader '+Math.round(kad)}]:[]})}

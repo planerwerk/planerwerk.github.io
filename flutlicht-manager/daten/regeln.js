@@ -323,6 +323,14 @@ const REGELN={
     aktivJeWoche:0.5,schaetzFehler:2,
     fuellen:{fenster:0,vereinslosBis:4,vereinslosChance:0.6}}, // fenster: Nummer des Fensters in transfers.fenster, an dessen Ende aufgefüllt wird (0 = Sommer)
 
+  // Beziehungsnetz (K17 §5.5, §11, U12c): Werte −100 bis +100. grund: Grundwert für Derby und Rivalität (Paare in daten/vereine.js, DERBYS).
+  // vergessen: Anteil zurück zum Grundwert am ersten Montag jedes Monats, loeschenUnter: so nah am Grundwert fällt ein Eintrag weg. verlauf: so viele Gründe je Beziehung.
+  // anlass: Änderungen. fairKauf: Ablöse mindestens dieser Anteil der Forderung, fairRunden: Verkauf mit höchstens so vielen Gegenforderungen.
+  // wirkung: abloese (Forderung × (1 + abloese × Beziehung)), unter gespraechUnter lehnt ein Verein mit gespraechAblehnen ab, testspiel (Zusage × (1 + testspiel × Beziehung)).
+  beziehungen:{grund:{derby:-30,rivale:-15},vergessen:0.05,loeschenUnter:2,verlauf:5,fairKauf:0.9,fairRunden:0,
+    anlass:{fair:5,spott:-3,ausstieg:-8,testspiel:3,leiheGut:5,leiheSchlecht:-5,kiWechsel:5,derbySieg:-2},
+    wirkung:{abloese:-0.0015,gespraechUnter:-50,gespraechAblehnen:0.5,testspiel:0.005},anzeige:3},
+
   // Training (K07 §11): Einheiten, Intensität, Vorlagen nach Abstand zum Spiel, Kondition und Entwicklung aus dem Wochenreiz, Belastung, Verletzungen, Umschulung
   training:{
     staerkeMin:25,staerkeMax:99,
@@ -766,7 +774,7 @@ const REGELN={
     zonenFitness:[{von:0,bis:70,art:'bad',text:'deutlich geschwächt (Frische senkt die Stärke im Spiel)'},
       {von:70,bis:85,art:'warn',text:'etwas geschwächt'},{von:85,bis:100,art:'good',text:'fit'}],
     zonenSpielpraxis:[{von:0,bis:50,art:'warn',text:'fehlt: kostet bis zu 4 % Stärke im Spiel und bremst die Entwicklung'},{von:50,bis:100,art:'good',text:'ausreichend'}],
-    zonenVertrauen:[{von:0,bis:12,art:'bad',text:'Entlassung droht'},{von:12,bis:30,art:'warn',text:'Der Vorstand ist unzufrieden'},
+    zonenVertrauen:[{von:0,bis:12,art:'bad',text:'Ultimatum, danach droht die Entlassung'},{von:12,bis:30,art:'warn',text:'Der Vorstand ist unzufrieden'},
       {von:55,bis:100,art:'good',text:'Der Vorstand ist zufrieden'}],
     ausverkauftAb:0.95               // ab diesem Anteil der Plätze gilt ein Heimspiel als (fast) ausverkauft
   }
@@ -775,4 +783,4 @@ const REGELN={
 // Schreibschutz: Zur Laufzeit darf kein Code eine Regel ändern.
 (function frieren(o){Object.freeze(o);Object.values(o).forEach(v=>{if(v&&typeof v==='object'&&!Object.isFrozen(v))frieren(v);});})(REGELN);
 // Kurzformen für den Code
-const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui,RL=REGELN.live,RTA=REGELN.taktik,RSO=REGELN.sommer,RST=REGELN.stab,RD=REGELN.disziplin,RMD=REGELN.medizin,RWB=REGELN.wettbewerbe,RTS=REGELN.testspiele,RLA=REGELN.lager,RKA=REGELN.kabine,RGS=REGELN.gespraeche,RSC=REGELN.scouting,RLZ=REGELN.lizenz,RJ=REGELN.jugend,RZ=REGELN.zweite,RTR=REGELN.transfers,RVT=REGELN.vertraege,RBE=REGELN.berater,RLE=REGELN.leihe,RCV=REGELN.computer;
+const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui,RL=REGELN.live,RTA=REGELN.taktik,RSO=REGELN.sommer,RST=REGELN.stab,RD=REGELN.disziplin,RMD=REGELN.medizin,RWB=REGELN.wettbewerbe,RTS=REGELN.testspiele,RLA=REGELN.lager,RKA=REGELN.kabine,RGS=REGELN.gespraeche,RSC=REGELN.scouting,RLZ=REGELN.lizenz,RJ=REGELN.jugend,RZ=REGELN.zweite,RTR=REGELN.transfers,RVT=REGELN.vertraege,RBE=REGELN.berater,RLE=REGELN.leihe,RCV=REGELN.computer,RBZ=REGELN.beziehungen;

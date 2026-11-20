@@ -657,3 +657,13 @@ Im Einzelnen in K28 §5.7 und §12 Nr. 13 bis 17.
 - **Nebenziele:** Der Vorstand setzt eins, ein ehrgeiziger Präsident zwei. Zur Wahl stehen Pokalrunde, Einsätze für Spieler bis 21 und eine Saison ohne Verlust. Das Profil deines Vereins bestimmt, welches zuerst kommt. Sie wirken auf das Vertrauen, während der Saison und zum Saisonende.
 - **Rücktritt:** jederzeit während der Saison, Ruf −5 statt −8 bei einer Entlassung, danach Jobangebote. Grundlizenz.
 - **Zielgespräch** mit Tiefstapeln und Hochpokern wartet auf Budgets und Prämien (K23).
+
+## K17 Beziehungen, U12c (20.11.), vorläufig von mir, gebaut ohne Testlauf
+
+Im Einzelnen in K17 §5.5 und §12 Nr. 4 bis 10.
+
+- **Zwei Arten:** Verein–Verein und du–Verein (wandert mit dir). Für deine Geschäfte zählt die Summe.
+- **Derbys (−30) und Rivalitäten (−15)** nur mit Quelle, 20 Derbys und 3 Rivalitäten.
+- **Anlässe:** fairer Kauf und Verkauf +5, Spottangebot −3, gezogene Ausstiegsklausel −8, Testspiel +3, Leihe mit gehaltener Absprache +5 (sonst −5), Wechsel unter Computer-Vereinen +5, Derby mit Sieger −2.
+- **Wirkung:** Ablöse ±15 %, unter −50 oft kein Gespräch, Zusage zu Testspielen, Computer-Vereine kaufen und leihen nicht unter −50.
+- **Vergessen:** 5 % je Monat. Anzeige im Büro und auf der Spielerkarte.

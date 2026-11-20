@@ -47,6 +47,7 @@ function leiheWoche(d){const L=RLE;S.pl.forEach(p=>{if(!p.leihe||p.leihe.von!==S
   const soll=L.garantie[p.leihe.rolle]||0;if((p.ea||0)<soll){p.leihe.gemeldet=1;news(`Leihe: ${tn(p.team)} hält die Absprache nicht. ${p.n} kommt auf ${Math.round((p.ea||0)*100)} % der Minuten, vereinbart waren ${Math.round(soll*100)} %.${p.leihe.rueckruf?' Im Winterfenster kannst du ihn zurückholen.':''}`,'bad');}});}
 // Saisonende (newSeason, vor den Verträgen): Rückkehr oder Kaufoption
 function leiheEnde(){S.pl.forEach(p=>{if(!p.leihe)return;const l=p.leihe,bei=S.teams[p.team],heim=S.teams[l.von];
+    if(l.von===S.my&&bei&&bei.id!==S.my)bezDuAendern(bei.id,l.gemeldet?RBZ.anlass.leiheSchlecht:RBZ.anlass.leiheGut,`Leihe von ${p.n}: Absprache ${l.gemeldet?'nicht ':''}gehalten`); // K17, U12c
     if(l.option&&bei&&aktiv(bei)&&bei.id!==l.von&&bei.cash>=l.option&&l.option<=vwKauf(p,bei.id)){if(l.von===S.my){money('Transfers',l.option);vertragEnde(p);}else if(heim)heim.cash+=l.option;bei.cash-=l.option;
       delete p.leihe;p.ct=riA(RM.neuerVertrag)+1;p.seit=absTag(S.tag);p.abl=l.option;if(l.von===S.my)news(`Kaufoption gezogen: ${p.n} bleibt für ${fmt(l.option)} bei ${bei.name}.`,'good');return;}
     const von=p.team;kabineAbgang(p,von);delete p.leihe;p.team=l.von;if(heim)neuzugang(p,l.von);if(l.von===S.my){kabineInit(p);news(`Leihe beendet: ${p.n} ist von ${tn(von)} zurück.`);}});}

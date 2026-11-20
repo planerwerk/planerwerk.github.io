@@ -91,6 +91,7 @@ function kiKandidat(t,n,rest,senk,kader,plan){const K=RCV.kauf,min=n.min-senk,al
     else if(planGruppe(p)!==n.g||p.str<min||(n.statt&&p.str<=n.statt.str))continue;
     let preis=0;
     if(von){if(von.rep-t.rep>K.ansehenMinus&&(p.ww||0)<3)continue; // er geht nicht weit nach unten, außer er will weg
+      if(bez(t.id,von.id)<RBZ.wirkung.gespraechUnter)continue; // mit diesem Verein redet der Käufer nicht (K17 §7, U12c)
       if(kader.get(von.id).length<=RM.verkaeufer.kaderMin||!plan(von).abgabe.has(p.id))continue;
       preis=kiPreis(p);if(preis>rest||preis>kiZahlt(p,t,n))continue;}
     const v=(n.grund==='talent'?p.pot:p.str+(p.age<=K.jungBis?(p.pot-p.str)*talentGewicht:0)-Math.max(0,p.age-K.altAb)*altMalus)+(R()-0.5)*2*RCV.schaetzFehler;
@@ -101,6 +102,7 @@ function kiKandidat(t,n,rest,senk,kader,plan){const K=RCV.kauf,min=n.min-senk,al
 function kiStern(t,P,rest,kader){const J=RCV.sterneJagd;let best=null,bv=-Infinity;
   for(const p of S.pl){if(p.team<0||p.team===t.id||p.wech||p.leihe||p.zwP||p.age>J.alterMax||p.str<P.niveau+J.ueberNiveau)continue;
     const von=S.teams[p.team];if(!von||!aktiv(von)||!stabMacht(von.id,'transfers')||t.rep-von.rep<J.ansehenPlus||kader.get(von.id).length<=RM.verkaeufer.kaderMin)continue;
+    if(bez(t.id,von.id)<RBZ.wirkung.gespraechUnter)continue; // kein Gespräch unter −50 (K17 §7, U12c)
     const G=P.gr[planGruppe(p)],letzter=G.stamm?G.l[G.stamm-1]:null;if(!G.stamm||(letzter&&p.str<=letzter.str))continue;
     const preis=kiSternPreis(p);if(preis>rest)continue;
     const v=p.str+(R()-0.5)*2*RCV.schaetzFehler;if(v>bv){bv=v;best={p,preis,von:von.id};}}
@@ -109,7 +111,8 @@ function kiStern(t,P,rest,kader){const J=RCV.sterneJagd;let best=null,bv=-Infini
 function kiWechsel(p,b,preis,art){const von=p.team>=0?S.teams[p.team]:null;
   if(von){if(b.id===S.my)money('Transfers',-preis);else b.cash-=preis;
     if(von.id===S.my){money('Transfers',preis);vertragEnde(p);}else von.cash+=preis;
-    kabineAbgang(p,von.id);S.offers=S.offers.filter(o=>o.pid!==p.id);news(`Wechsel perfekt: ${p.n} geht für ${fmt(preis)} von ${von.name} zu ${b.name}.`,'tr');}
+    kabineAbgang(p,von.id);S.offers=S.offers.filter(o=>o.pid!==p.id);news(`Wechsel perfekt: ${p.n} geht für ${fmt(preis)} von ${von.name} zu ${b.name}.`,'tr');
+    bezAendern(von.id,b.id,RBZ.anlass.kiWechsel,`Transfer ${p.n}`);} // zum Listenpreis, also fair (K17 §12 Nr. 8, U12c)
   else if(b.id===S.my)stabMeldung(`Der Verein hat den vereinslosen ${p.n} verpflichtet.`);
   p.team=b.id;p.list=0;p.ask=0;p.ct=riA(RM.neuerVertrag);p.sal=salaryFor(p.str);p.seit=absTag(S.tag);p.abl=preis;neuzugang(p,b.id);}
 
@@ -121,7 +124,7 @@ function kiLeihbar(p,P){const L=RCV.leihe;return p.age<=L.alterMax&&!(p.inj>0)&&
 // (er will spielen). Der Verleiher ist ein Verein, dessen Leihen nicht du führst (dein Verein verleiht nie von selbst), und das Kontingent lässt die Leihe zu. Keine Ansehensgrenze.
 function kiLeihKandidat(t,n,senk,plan,z){if(!n.g||!RCV.leihe.gruende.includes(n.grund))return null;const min=n.min-senk,G=plan(t).gr[n.g],platz=Math.min(G.soll,2*G.stamm);let best=null,bv=-Infinity;
   for(const p of S.pl){if(p.team<0||p.team===t.id||p.leihe||planGruppe(p)!==n.g||p.str<min||(n.statt&&p.str<=n.statt.str))continue;
-    const von=S.teams[p.team];if(!von||!aktiv(von)||!stabMacht(von.id,'leihe'))continue;
+    const von=S.teams[p.team];if(!von||!aktiv(von)||!stabMacht(von.id,'leihe')||bez(t.id,von.id)<RBZ.wirkung.gespraechUnter)continue; // kein Gespräch unter −50 (K17 §7, U12c)
     if(G.l.filter(x=>x.str>p.str).length>=platz)continue; // beim Leihverein säße er nur auf der Bank
     if(!kiLeihbar(p,plan(von))||!leihErlaubt(p,von.id,t.id,z))continue;
     const v=p.str+(R()-0.5)*2*RCV.schaetzFehler;if(v>bv){bv=v;best={p,von:von.id};}}
