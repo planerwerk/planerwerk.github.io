@@ -1186,3 +1186,17 @@ Zweig `mitarbeit/popolupo-u18-trainerpool` (baut auf U17 auf). Konzept: K32 §3.
 | BW5 | **Gebote bei bekanntem Interesse:** `gebotFuer` multipliziert Gebot und Grenze der Transferliste, nicht die Obergrenze `max` für deine Gegenforderung. Wer mehr fordert, kommt also nicht weiter als ohne Gerücht. | 📌 klein |
 | BW6 | **Nicht gebaut:** Medienpolitik, Exklusivinterview, Gerüchte unter Computer-Vereinen mit Wirkung auf deren Spieler, Gehaltsforderung bei bekanntem Interesse. | 📌 später |
 | BW7 | **`tests/geruechte.js`:** sechs Prüfungen, siehe Test-README. Nie gelaufen. `tests/presse.js` kennt den neuen Platzhalter `{medium}` und 14 Anlässe. | ⚠️ offen |
+
+---
+
+## BX. Nachtrag zu U18b Ereigniskarten der Spielwelt (20. November 2026, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-u18b-spielwelt-karten` (baut auf U17b auf). Konzept: K32 §8 und §12 Nr. 26, K30 §3.2. Kein Test gelaufen.
+
+| # | Befund | Status |
+|---|---|---|
+| BX1 | **Mehr Würfe im Strom `ereignisse`:** Jede Woche ein Wurf mehr je neuer Karte (vier mehr) und eine längere Mischung. Alle späteren Karten fallen dadurch anders als in U17b. Kein anderer Strom ist betroffen. | ✅ bekannt |
+| BX2 | **Gleichschritt (`tests/lizenz.js`):** Die Auslöser schauen nicht auf Lizenz oder Automatik, sonst zögen die Läufe mit und ohne Lernstufen verschiedene Karten (ein erster Entwurf tat das, vor dem Commit korrigiert). Die Lizenz prüft erst die Wirkung: „verpflichten“ geht nur, wenn `transfers` frei ist, sonst eine Meldung. Die Voreinstellungen sind in beiden Läufen gleich. | ✅ entworfen |
+| BX3 | **Abschiedsspiel braucht Ehemalige** aus K34 (`S.stat.ehem`). Die gibt es erst nach dem ersten Saisonwechsel, und nur mit 60 Pflichtspielen für deinen Verein ab Spielbeginn. In den ersten zwei Saisons kommt die Karte also kaum. | 📌 vorläufig |
+| BX4 | **Karriereende nach K32 §5.1** bleibt offen, bis ein Testlauf zeigt, wie stabil die Welt ist (es verschiebt Alter und Zahl der Spieler). | 📌 nach Testlauf |
+| BX5 | **`tests/spielwelt-karten.js`:** vier Prüfungen. Den Katalog prüft `tests/karten.js` mit (erlaubte Wirkungen, Platzhalter, Auslöser). Nie gelaufen. | ⚠️ offen |

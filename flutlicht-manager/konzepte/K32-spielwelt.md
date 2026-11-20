@@ -121,6 +121,14 @@ Chance je Saison = Grundwert(Alter) × Niveau × Verletzung × Professionalität
 | Rückkehr aus dem Ausland | deutscher Spieler im Pool, Heimweh oder Familie | Interesse an deinem Verein hoch (K19) |
 | England ruft | reiche Gruppe bietet für deinen Star | Entscheidung nach K19 |
 
+**Umgesetzt mit U18b (20.11.2026) als Ereigniskarten (K30, `daten/karten.js`):**
+
+- **Altstar** (gelegentlich): ein Vereinsloser ab 32, mindestens so stark wie dein Kader im Schnitt − 3, wenn du Platz im Kader hast. Unterschreiben kann er nur, wenn du die Transfers selbst führen darfst (Lizenz C). Verpflichten für ein Jahr zu 60 % des üblichen Gehalts, Kondition −20, Fans +3. Voreinstellung: absagen.
+- **Abschiedsspiel** (häufig, aber nur mit Anlass): ein Ehemaliger (K34) mit mindestens 60 Pflichtspielen für deinen Verein hat zum letzten Saisonwechsel aufgehört. Abschiedsspiel: 150.000 € und Fans +4, sonst eine kleine Ehrung mit Fans +1.
+- **Heimweh** (gelegentlich): ein deutscher Spieler im Auslandspool, 26 bis 33 Jahre, mindestens so stark wie dein Kader − 3. Kontakt hebt sein Interesse an dir um 15 bis zum Saisonende (K19 §5.3).
+- **England ruft** (selten, große Entscheidung): dein bester Spieler ab Stärke 78 und bis 30 Jahre, ein englischer Verein mit genug Budget. Die Auslöser schauen nicht auf Lizenz und Automatik (Gleichschritt). Gespräche zulassen bringt ein Angebot über 1,3 × Marktwert (Obergrenze 1,5) ins Büro, sonst Fans +2 und Stimmung des Spielers −2.
+- Dafür vier neue Wirkungen im Katalog (K30 §3.2): `fans`, `verpflichten`, `interesse`, `angebot`.
+
 ## 9. Wechselwirkungen
 
 | Konzept | Zusammenspiel |
@@ -196,6 +204,7 @@ welt:{
 23. **Ruf der Computer-Trainer** zum Saisonende nach Platz gegen Erwartung, Meister und Abstieg (§3.3b).
 24. **Ex-Spieler als Trainer** mit 15 % ab 150 Ligaspielen (§3.3b). Ex-Spieler im Stab kommen mit einem späteren Schritt.
 25. **Pool mit mindestens 12 freien Trainern** (§3.3b).
+26. **Ereignisse aus §8 als Ereigniskarten** mit den Schwellen und Werten aus §8 (U18b), alle geschätzt. Das Karriereende nach §5.1 wartet auf einen Testlauf, weil es das Gleichgewicht der Welt verschiebt.
 
 **Noch zu recherchieren:** Abgänge der Bundesliga ins Ausland je Sommer, durchschnittliches Karriereende von Torhütern.
 

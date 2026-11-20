@@ -21,5 +21,23 @@ const KARTEN=[
     optionen:[{text:'Teamausflug zur Feier',wirkung:[{art:'geld',wert:-20000},{art:'zusammenhalt',wert:3},{art:'stimmung',wert:5}],folge:'Ein schöner Abend. Die Mannschaft rückt zusammen.'},
       {text:'Glückwunschkarte vom Verein',wirkung:[{art:'stimmung',wert:2}],folge:'{spieler} freut sich über die Karte.'}],auto:1},
   {id:'geheimtipp',titel:'Geheimtipp',bereich:'K18',art:'info',stufe:'haeufig',ausloeser:'geheimtipp',sperrTage:365,
-    texte:['Ein Bekannter aus dem Unterhaus schwärmt von {spieler} bei {verein}: „Den musst du dir anschauen.“','Am Rande eines Testspiels hört man den Namen {spieler} ({verein}) immer wieder.']}
+    texte:['Ein Bekannter aus dem Unterhaus schwärmt von {spieler} bei {verein}: „Den musst du dir anschauen.“','Am Rande eines Testspiels hört man den Namen {spieler} ({verein}) immer wieder.']},
+  // Spielwelt (K32 §8, U18b). Neue Wirkungen: fans (Umfeld der Fanstimmung, K27), verpflichten (Vereinslosen holen, wert = Anteil am üblichen Gehalt),
+  // interesse (Wechselinteresse des Spielers an dir bis Saisonende), angebot (Angebot des beteiligten Auslandsvereins, wert × Marktwert).
+  {id:'altstar',titel:'Ein Altstar will es noch einmal wissen',bereich:'K32',art:'entscheidung',gross:false,stufe:'gelegentlich',ausloeser:'altstar',sperrTage:365,
+    texte:['{spieler} ist vereinslos und ruft selbst an: Ein Jahr will er noch spielen, für wenig Geld, Hauptsache Bundesliga-Luft.','Der Berater von {spieler} meldet sich: Sein Mandant hat noch keinen Verein und würde für ein kleines Gehalt bei dir unterschreiben.'],
+    optionen:[{text:'Für ein Jahr verpflichten',wirkung:[{art:'verpflichten',wert:0.6},{art:'fans',wert:3}],folge:'Die Fans freuen sich auf den alten Bekannten. Ganz fit ist er noch nicht.'},
+      {text:'Freundlich absagen',wirkung:[],folge:'{spieler} wünscht dir Glück und sucht weiter.'}],auto:1},
+  {id:'abschiedsspiel',titel:'Abschiedsspiel',bereich:'K32',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'abschied',sperrTage:3650,
+    texte:['{spieler} hat seine Karriere beendet. Die Fans wünschen sich ein Abschiedsspiel mit alten Weggefährten.','Nach vielen Jahren im Verein hat {spieler} aufgehört. Der Fanclub fragt nach einem Abschiedsspiel im Stadion.'],
+    optionen:[{text:'Abschiedsspiel ausrichten',wirkung:[{art:'geld',wert:150000},{art:'fans',wert:4}],folge:'Ein bewegender Abend im ausverkauften Stadion.'},
+      {text:'Kleine Ehrung vor einem Heimspiel',wirkung:[{art:'fans',wert:1}],folge:'Blumen, Applaus, ein Foto mit dem Präsidenten.'}],auto:1},
+  {id:'rueckkehrer',titel:'Heimweh',bereich:'K32',art:'entscheidung',gross:false,stufe:'gelegentlich',ausloeser:'rueckkehrer',sperrTage:365,
+    texte:['{spieler} ({verein}) hat Heimweh. Sein Umfeld lässt durchblicken, dass er gern zurück nach Deutschland käme.','Aus dem Umfeld von {spieler} ({verein}) hört man: Die Familie will zurück nach Deutschland.'],
+    optionen:[{text:'Kontakt aufnehmen',wirkung:[{art:'interesse',wert:15}],folge:'Er weiß jetzt, dass du an ihm interessiert bist.'},
+      {text:'Kein Bedarf',wirkung:[],folge:'Du lässt die Sache laufen.'}],auto:1},
+  {id:'englandRuft',titel:'England ruft',bereich:'K32',art:'entscheidung',gross:true,stufe:'selten',ausloeser:'englandRuft',sperrTage:730,
+    texte:['{verein} meldet sich: Man will {spieler} und würde deutlich über Marktwert zahlen.','Ein Anruf aus England: {verein} hat {spieler} lange beobachtet und bietet ernsthaft.'],
+    optionen:[{text:'Gespräche zulassen',wirkung:[{art:'angebot',wert:1.3}],folge:'Das Angebot liegt im Büro. Annehmen, ablehnen oder mehr fordern kannst du wie bei jedem Angebot.'},
+      {text:'Er ist unverkäuflich',wirkung:[{art:'fans',wert:2},{art:'stimmung',wert:-2}],folge:'Die Fans feiern das klare Wort. {spieler} hätte es sich wenigstens anhören wollen.'}],auto:1}
 ];

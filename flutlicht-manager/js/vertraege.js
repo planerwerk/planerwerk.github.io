@@ -24,6 +24,7 @@ function wechselInteresse(p){const t=myT(),I=RM.interesse,IV=RVT.interesse,IA=RW
   if(from&&!aus){if(p.st!=null)x+=(IV.lageMitte-p.st)*IV.lage;if(p.ww>=3)x+=IV.wechselwunsch;x+=Math.max(0,(p.ct||1)-1)*IV.bindung;}
   if(from&&hatEig(p,'vereinstreu'))x+=IV.treu;
   if(p.nat)x+=Math.min(IV.landsleuteMax,squad(S.my).filter(q=>q.nat===p.nat).length*IV.landsleute)*(p.nat===RW.nation.heimat?0:1);
+  if(p.rkI&&p.rkI.s===S.season)x+=p.rkI.v; // Heimweh, Kontakt über eine Ereigniskarte (K32 §8, U18b)
   return x+beraterInteresse(p);} // ab +60 rät sein Berater ihm zu dir (K22)
 // Fehlt etwas Interesse (bis −10), will er mehr Geld: je Punkt 3 % mehr. Darunter hilft kein Geld.
 function gehaltMitInteresse(p,interesse){const F=gehaltForderung(p,true),IV=RVT.interesse;if(interesse>=0)return F;if(interesse<IV.geldAb)return null;return Math.round(F*(1-interesse*IV.geldJePunkt)/1000)*1000;}

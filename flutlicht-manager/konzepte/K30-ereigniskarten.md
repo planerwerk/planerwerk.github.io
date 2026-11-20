@@ -45,6 +45,7 @@ Karten dürfen nur Werte ändern, die es im Spiel gibt (K35a: Texte beschreiben 
 - Geld (K23), Fans (K27, später)
 - Persönlichkeit um 1–3 (K03 §5.7), Talent (nur über K08)
 - Merker für Ketten („Familie ist umgezogen“)
+- **Seit U18b (20.11.2026, K32 §8):** Fans (Baustein Umfeld der Fanstimmung, K27), einen Vereinslosen verpflichten (ein Jahr, Anteil am üblichen Gehalt), Wechselinteresse eines Spielers an dir (K19 §5.3, bis Saisonende), Angebot eines Vereins für deinen Spieler (Vielfaches des Marktwerts, danach wie jedes Angebot, K19 §5.4). Im Code `fans`, `verpflichten`, `interesse`, `angebot`.
 
 ### 3.3 Speicherorte
 
