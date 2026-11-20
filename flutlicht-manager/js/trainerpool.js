@@ -36,4 +36,6 @@ function trainerNeueSaison(abgaenge){const Q=RTP,E=Q.exSpieler;trainerS();S.trai
   (abgaenge||[]).forEach(p=>{if(echterName(p.n))return;const a=statSumme(p);if(a.sp<E.ab)return;mitStrom(strom('trainerpool',S.season,'ex',p.id),()=>{if(R()>=E.chance)return;
     const x=trainerNeu(E.basis+a.sp/E.jeSpiele+(p.ehj!=null?E.ehrung:0),null);x.n=p.n;x.alter=riA(E.alter);x.ex=1;});});
   const fehlt=Q.minPool-trainerFrei().length;if(fehlt>0)mitStrom(strom('trainerpool',S.season,'fuellen'),()=>{for(let k=0;k<fehlt;k++)trainerNeu(riA(Q.aufbau.poolRuf),null);});
-  S.teams.forEach(t=>{if(aktiv(t)&&t.id!==S.my&&!trainerVon(t.id))trainerKommt(t);});}
+  S.teams.forEach(t=>{if(aktiv(t)&&t.id!==S.my&&!trainerVon(t.id))trainerKommt(t);});
+  // Nach der Besetzung wieder auf minPool freie Trainer auffüllen, eigener Strom (T2.4): Sonst fehlt nach dem Saisonwechsel genau einer, der gerade einen Verein übernommen hat.
+  const rest=Q.minPool-trainerFrei().length;if(rest>0)mitStrom(strom('trainerpool',S.season,'nachfuellen'),()=>{for(let k=0;k<rest;k++)trainerNeu(riA(Q.aufbau.poolRuf),null);});}

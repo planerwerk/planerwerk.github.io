@@ -25,7 +25,7 @@ function gerErfunden(mein){if(mein){const sq=squad(S.my);if(R()<0.3||!sq.length)
 function geruechteWoche(){if(S.phase!=='play'||S.fired)return;const G=RGR,K=gerKandidaten(),n=G.proWoche[0]+Math.floor(R()*(G.proWoche[1]-G.proWoche[0]+1));let meins=false;
   for(let k=0;k<n;k++){let c=null;
     if(!meins&&R()<G.meinVerein){c=R()<G.erfindung?gerErfunden(true):K.mein.length?K.mein.splice(Math.floor(R()*K.mein.length),1)[0]:null;if(c)meins=true;}
-    if(!c)c=R()<G.erfindung?gerErfunden(false):K.fremd.length?K.fremd.splice(Math.floor(R()*K.fremd.length),1)[0]:null;
+    if(!c)c=R()<G.erfindung?gerErfunden(false):K.fremd.length?K.fremd.splice(Math.floor(R()*K.fremd.length),1)[0]:gerErfunden(false); // ohne Anlass erfinden die Medien etwas (T2.3, vorläufig)
     if(c){if(c.w==null)c.w=R()<G.aergerWahr?1:0;gerVeroeffentlichen(c);}}
   gerPruefen();}
 function gerVeroeffentlichen(c){const G=RGR,W=G.wirkung,P=gerS(),m=c.w===0&&c.art!=='aerger'?(R()<0.6?'boulevard':'portal'):gerMedium(c.art),t=S.teams[c.tid],p=c.pid!=null?PIX.get(c.pid):null;
