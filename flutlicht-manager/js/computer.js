@@ -4,7 +4,8 @@
 // Im Spielstand neu: am Verein t.tb = {k: Saison und Fenster, b: Budget, a: ausgegeben, n: Zugänge über den Markt, f: Planstellen aufgefüllt, s: Sternejagd erledigt}
 // und t.profil (zweites Vereinsprofil, U11b). Verträge nach Rang seit U11c (vertragChance, kiVertraegeFrueh, dazu newSeason in js/saison.js).
 // Leihen unter Computer-Vereinen seit U11d1 (§5.9: kiLeihbar, kiLeihKandidat, kiLeihe), mit dem Leihkontingent aus js/leihe.js.
-// Vorstand und Trainerwechsel der Computer-Vereine seit U11d2 (§5.10: praesident, kiVorstandWoche, kiTrainerWechsel, kiVorstandSaison), am Verein t.vor, Protokoll S.trainerWechsel.
+// Vorstand und Trainerwechsel der Computer-Vereine seit U11d2 (§5.10: kiVorstandWoche, kiTrainerWechsel, kiVorstandSaison), am Verein t.vor, Protokoll S.trainerWechsel.
+// Präsident und Formel des Vertrauens in js/vorstand.js (U12a).
 // Noch nicht gebaut: Klugheit (§5.4), Vorverträge und Klauseln unter Computer-Vereinen, Trainerpool mit Namen, Gehaltsrahmen (§3.3).
 
 // ---------- Vereinsprofile (K31 §3.2, §5.7, U11b) ----------
@@ -131,16 +132,13 @@ function kiLeihe(p,b){const von=p.team;kabineAbgang(p,von);S.offers=S.offers.fil
   p.leihe={von,anteil:zahlBereit(p,b.id),rolle:'rotation',rueckruf:false,option:0,start:absTag(S.tag)};p.team=b.id;p.list=0;p.ask=0;neuzugang(p,b.id);}
 
 // ---------- Vorstand und Trainerwechsel (K28 §7, K31 §5.5, §5.10, U11d2) ----------
-// Präsident jedes Vereins: Geduld, Ehrgeiz, Sparsamkeit (je 1–20), fest aus der Vereinsnummer. Kein Zufallsstrom, alte Spielstände brauchen nichts. In U11d2 wirkt nur die Geduld.
-function praesident(t){const P=RV.praesident,w=k=>P.min+(Math.imul(t.id+1,k)>>>0)%(P.max-P.min+1);return{geduld:w(2654435761),ehrgeiz:w(2246822519),sparsam:w(3266489917)};}
+// Präsident jedes Vereins (praesident) und die Formel des Vertrauens (vertrauenZiel) stehen seit U12a in js/vorstand.js, für dich und die Computer-Vereine.
 // Vorstand eines Computer-Vereins am Verein: t.vor = {v Vertrauen, u Ligaspiele bei Beginn des Ultimatums (null = keins), n Nummer des Ultimatums, ab Ligaspiele beim Amtsantritt}
 function kiVor(t){if(!t.vor)t.vor={v:RCV.vorstand.start,u:null,n:0,ab:0};return t.vor;}
 // Ziel des Vertrauens aus der Tabellenzeile r und dem Platz pos: Sport (Platz gegen erwarteten Platz), Serie (letzte Ligaspiele), Finanzen (Konto im Minus)
-function kiVertrauenZiel(t,r,pos){const V=RCV.vorstand,l=r.last.slice(-V.serieSpiele),sport=clamp((t.expPos-pos)*V.jePlatz,V.sport[0],V.sport[1]),
-    serie=l.length?clamp((l.reduce((a,b)=>a+b,0)/l.length-V.serieMitte)*V.serieFaktor,V.serie[0],V.serie[1]):0;
-  return clamp(V.basis+sport+serie+(t.cash<0?V.finanzMinus:0),0,100);}
+function kiVertrauenZiel(t,r,pos){const V=RCV.vorstand;return vertrauenZiel(V,r,pos,t.expPos,t.cash<0?V.finanzMinus:0);}
 // Entlassung nach einem gescheiterten ersten Ultimatum (K28 §5.3): 0,9 − 0,03 × Geduld
-function kiEntlassChance(t){const E=RCV.vorstand.entlassung;return clamp(E.basis+E.jeGeduld*praesident(t).geduld,0,1);}
+function kiEntlassChance(t){return entlassChance(t,RCV.vorstand.entlassung);}
 // Woche (montags, eigener Strom): Vertrauen, Ultimatum, Entlassung. Nur Computer-Vereine der 1. bis 3. Liga, nur in der Spielzeit, ab dem fünften Ligaspiel.
 function kiVorstandWoche(){if(S.phase!=='play')return;const V=RCV.vorstand,tab={};
   S.teams.forEach(t=>{if(t.id===S.my||!aktiv(t)||t.lg>3)return;const T=tab[t.lg]||(tab[t.lg]=table(t.lg)),i=T.findIndex(r=>r.id===t.id),r=T[i];if(!r||r.sp<V.abSpiel)return;

@@ -30,8 +30,9 @@ function seasonEndLauf(){
   S.hist.push({s:S.season,team:me.name,lg:me.lg,pos,ok:sm.ok});
   sm.zw=mitStrom(strom('zweiteErgebnis',S.season),()=>zweiteSaisonEnde(sm)); // zweite Mannschaft (K08 §5.6)
   S.summary=sm;S.phase='end';
-  if(sm.down3.includes(S.my)&&!S.fired){S.fired=1;news(`${me.name} steigt in die Regionalliga ab. Der Verein trennt sich von dir.`,'bad');mkJobs();}
-  if(S.trust<B.entlassenSaisonUnter&&!S.fired){S.fired=1;mkJobs();}lizenzRueckblick();kreditAuto();save();}
+  rufSaison(sm); // Ruf als Trainer (K28 §5.4, U12a), vor einer Entlassung, damit die Jobangebote schon den neuen Ruf sehen
+  if(sm.down3.includes(S.my))entlassen(`${me.name} steigt in die Regionalliga ab. Der Verein trennt sich von dir.`);
+  if(S.trust<B.entlassenSaisonUnter)entlassen();lizenzRueckblick();kreditAuto();save();}
 // Regionalliga (K32a): je Staffel wird ein Meister gelost, gewichtet nach Ansehen. West und Südwest steigen direkt auf,
 // von Nord, Nordost und Bayern eine Staffel im Wechsel, die beiden anderen Meister spielen Aufstiegsspiele.
 function poisson(l){const L=Math.exp(-l);let k=0,p=1;do{k++;p*=R();}while(p>L&&k<12);return k-1;}
@@ -93,8 +94,9 @@ function newSeasonLauf(){wechselVollziehen(true);leiheEnde(); // Leihen enden mi
 function kaderAuffuellen(t,base){const Z=RS,need=Z.kaderSoll;
   for(const pos in need){let have=squad(t.id).filter(p=>p.pos===pos).length;while(have<need[pos]){const fa=S.pl.filter(p=>p.team===-1&&p.pos===pos&&p.str<=base+Z.vereinslosBis).sort((a,b)=>b.str-a.str)[0];
       if(fa&&R()<Z.vereinslosChance){fa.team=t.id;fa.ct=riA(Z.vertrag.jahre);fa.sal=salaryFor(fa.str);}else addP(mkPlayer({pos,age:riA(Z.auffuellAlter),str:Math.round(base-Z.auffuellAbschlag+riA(Z.auffuellStreuung)),team:t.id}));have++;}}}
-function mkJobs(){const J=RV.jobs,r=myT().rep-J.ansehenAbschlag,weg=S.summary?S.summary.down3:[];const c=S.teams.filter(t=>t.id!==S.my&&aktiv(t)&&!weg.includes(t.id)).sort((a,b)=>Math.abs(a.rep-r)-Math.abs(b.rep-r)).slice(0,J.kandidaten);S.jobs=shuffle(c).slice(0,J.angebote).map(t=>t.id);}
+function mkJobs(){const J=RV.jobs,r=myT().rep-J.ansehenAbschlag+(ruf()-RV.ruf.start)*RV.ruf.jobsJePunkt, // Ruf als Trainer (K28 §5.4, U12a)
+  weg=S.summary?S.summary.down3:[];const c=S.teams.filter(t=>t.id!==S.my&&aktiv(t)&&!weg.includes(t.id)).sort((a,b)=>Math.abs(a.rep-r)-Math.abs(b.rep-r)).slice(0,J.kandidaten);S.jobs=shuffle(c).slice(0,J.angebote).map(t=>t.id);}
 function takeJob(id){const old=myT().name,alt=myT();LAST=null;versprechenJobwechsel();S.kenntnis={};S.auftraege=[];S.my=id;
   if(aktiv(alt))mitStrom(strom('auffuellen',S.season,S.tag,alt.id),()=>kaderAuffuellen(alt,grundStaerke(alt.rep))); // dein alter Verein ist jetzt ein Computer-Verein und füllt seinen Kader sofort auf
-  S.kapFrei={s:S.season,bis:S.tag+14};S.fired=0;S.trust=RV.neuerJob;S.offers=[];S.constr=null;S.loan=0;S.fin={};S.att=[0,0];setTarget();if(!S.spons||S.sponsOffers===null){S.spons=null;sponsOffers();}S.lineup=bestXI(id,myT().form);
+  S.kapFrei={s:S.season,bis:S.tag+14};S.fired=0;S.ult=null;S.trust=RV.neuerJob;S.offers=[];S.constr=null;S.loan=0;S.fin={};S.att=[0,0];setTarget();if(!S.spons||S.sponsOffers===null){S.spons=null;sponsOffers();}S.lineup=bestXI(id,myT().form);
   news(`Neuer Job: ${S.mgr} übernimmt ${myT().name} (vorher ${old}). Ziel: ${targetText(myT().lg,S.target)}.`,'good');save();closeOv();TAB='buero';render();if(S.phase==='end')showSummary();}

@@ -130,7 +130,8 @@ async function actions(s,tag){const wk=s.wk,yr=s.season,K=yr+':'+wk+':';
    if(um.tw!=null){await pg.evaluate(i=>openP(i),um.tw);const n=await pg.$$eval('.ovb select[onchange^="setUmschulung"] option',o=>o.filter(x=>x.value).length);if(n)note(tag,'Torwart hat Umschulungsziele');await closeModal();}}
  if(wk===30&&once(K+'frei')){const id=await pg.evaluate(()=>squad(S.my).sort((a,b)=>a.str-b.str)[0].id);await pg.evaluate(i=>openP(i),id);await pg.click('button:has-text("Vertrag auflösen")');actlog.push(tag+' Spieler freigestellt');}
  if(yr===2027&&wk===2&&once(K+'normal')){await tabClick('Training & Jugend');await pg.click('.opt:has(b:text-is("Co-Trainer entscheidet"))');await tabClick('Aufstellung');await pg.selectOption('#formsel','3-5-2');await pg.selectOption('#stilsel','konter');}
- if(yr===2027&&wk===9&&once(K+'vertrauen')){await pg.evaluate(()=>{S.trust=5;});actlog.push(tag+' Vertrauen künstlich auf 5 gesetzt (Entlassung testen)');}
+ // Seit U12a gibt es vor der Entlassung ein Ultimatum (K28 §5.6). Damit die Entlassung sicher kommt: Vertrauen 0 und ein abgelaufenes letztes Ultimatum.
+ if(yr===2027&&wk===9&&once(K+'vertrauen')){await pg.evaluate(()=>{S.trust=0;S.ult={tid:S.my,s:S.season,ab:meineSpieltage()-2,n:2};});actlog.push(tag+' Vertrauen künstlich auf 0 und letztes Ultimatum abgelaufen (Entlassung testen)');}
  const rid=await pg.evaluate(()=>S.pl[Math.floor(Math.random()*S.pl.length)].id);await pg.evaluate(i=>openP(i),rid);const sc=await pg.evaluate(()=>__scan());if(sc)note(tag,'Spielerfenster: '+sc);await closeModal();
  if(wk%5===0&&once(K+'plan')){await tabClick('Spielplan');await pg.selectOption('#daysel',String(wk%34));await tabClick('Tabelle');await pg.click('button:text-is("2. Liga")');await pg.click('button:text-is("3. Liga")');const sc=await pg.evaluate(()=>__scan());if(sc)note(tag,'Tabelle 3. Liga: '+sc);}
 }

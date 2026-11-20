@@ -984,3 +984,21 @@ Wie BG bis BJ: kein Test gelaufen. Recherchiert ist nur der Zielwert (4 bis 10 W
 | BK6 | **Dein alter Verein:** Wirst du entlassen oder wechselst du, ist er ab dann ein Computer-Verein. Sein Vorstand beginnt mit 55, er hat Schonfrist bis zum siebten Ligaspiel der Saison. | ✅ |
 | BK7 | **`tests/welt.js` Nr. 6e und Nr. 7:** Präsident, Niederlagenserie mit Ultimatum, Entlassung spätestens nach dem zweiten Ultimatum, Stimmungsschub, Wechsel im Sommer, Rückkehr zum Start. Im Ablauf die Zahl je Liga und Saison. Nie gelaufen. | ⚠️ offen |
 | BK8 | **`tests/fuzz-karrieren.js`, `tests/schwierigkeit.js`, `tests/lizenz.js`** prüfen deinen Vorstand. Er ist unverändert, die Gegner spielen aber anders. Kann Werte verschieben. | ⚠️ messen |
+
+---
+
+## BL. Nachtrag zu U12a Vorstand: Vertrauen mit Bausteinen, Ultimatum, Ruf (20. November 2026, ohne Testlauf)
+
+Eigener Zweig `mitarbeit/popolupo-u12-vorstand`, baut auf U11 auf (Präsident aus U11d2). Kein Test gelaufen.
+
+| # | Befund | Status |
+|---|---|---|
+| BL1 | **Weniger Entlassungen, später:** Statt sofort an der Grenze gibt es zwei Ligaspiele Ultimatum, oft ein zweites. Der träge Anteil zieht das Vertrauen dabei zum Ziel, wer an der Grenze knapp unter dem Ziel liegt, übersteht das Ultimatum meist. `tests/fuzz-karrieren.js` und alle Läufe über mehrere Saisons sehen weniger Jobwechsel. | ⚠️ messen |
+| BL2 | **`tests/schwierigkeit.js` angepasst:** Vertrauen 10 nach 7 Spieltagen gibt auf Schwer ein Ultimatum statt der Entlassung. Der Gleichschritt Leicht gegen Schwer bleibt gültig: Das Ultimatum hat keinen eigenen Halt, und der Würfel liegt in einem eigenen Strom (`ultimatum`). | ✅ angepasst |
+| BL3 | **`tests/ui-zwei-saisons.js` angepasst:** Vertrauen 5 hätte nicht mehr sicher zur Entlassung geführt. Jetzt Vertrauen 0 und ein abgelaufenes letztes Ultimatum, dann entlässt die nächste Prüfung. | ✅ angepasst |
+| BL4 | **Gleich viele Würfe im Strom „woche“:** Die Meldung bei Konto im Minus würfelt wie bisher nur bei Konto im Minus. Die Entlassungschance würfelt im eigenen Strom. Der Rest der Welt bleibt gleich, bis eine Entlassung anders fällt. | ✅ |
+| BL5 | **Zwei Modelle angeglichen:** Dieselbe Formel (`vertrauenZiel`) für dich und die Computer-Vereine, mit verschiedenen Werten (dein Soll ist das Saisonziel, du hast zusätzlich Umfeld und Kredit, die Grenze kommt aus der Schwierigkeit). | ✅ |
+| BL6 | **`tests/lizenz.js` und `tests/sim.js`** setzen bei einem Jobwechsel `S.fired`, `S.trust` usw. von Hand, aber nicht `S.ult`. Das Ultimatum merkt sich den Verein und verfällt beim Wechsel von selbst. | ✅ |
+| BL7 | **Platz je Spiel entfällt:** Bisher gab jedes Ligaspiel ab dem 5. Spieltag −2 bis +0,6 für den Tabellenplatz. Das steckt jetzt im Baustein Sport (montags, träge). Wer weit unter dem Ziel steht, verliert Vertrauen langsamer, aber stetig. Kalibrierung offen. | ⚠️ messen |
+| BL8 | **Ruf bei alten Spielständen:** fehlt, gilt als 30. | ✅ |
+| BL9 | **`tests/vorstand.js`:** Formel, träger und schneller Anteil, Ultimatum (aufgehoben, letztes, Entlassung, nur beim eigenen Verein), Ruf, Jobangebote. Nie gelaufen. | ⚠️ offen |

@@ -640,3 +640,12 @@ Im Einzelnen in K31 §5.10 und §12 Nr. 33 bis 39.
 - **Der neue Trainer** bringt einen neuen Lieblingsstil und +5 Stimmung. Die Grundordnung wählt der Computer-Trainer wie bisher jeden Monat. Noch ohne Namen und ohne Trainerpool.
 - **Ziel:** 4 bis 10 Wechsel je Saison in der 1. Liga (recherchiert). Ob es passt, zeigt erst ein Testlauf.
 - **Dein Vorstand ist unverändert** bis U12. Neu für dich ist nur die Meldung „Großer Umbruch“ aus deiner Liga.
+
+## K28 Vorstand, U12a (20.11.), vorläufig von mir, gebaut ohne Testlauf
+
+Im Einzelnen in K28 §5.6 und §12 Nr. 5 bis 12.
+
+- **U12 in vier Teilen:** U12a Vertrauen, Ultimatum, Ruf. U12b Zielgespräch und Nebenziele (mit Rücktritt). U12c Beziehungen (K17). U12d Ereignis-Gerüst (K30).
+- **Vertrauen:** Siege und Niederlagen zählen nur noch halb. Dazu bewegt es sich jeden Montag ab dem 5. Ligaspiel um 20 % auf ein Ziel aus Platz gegen Saisonziel, Serie, Konto, Kredit und Glaubwürdigkeit zu.
+- **Ultimatum statt sofortiger Entlassung:** zwei Ligaspiele Zeit. Danach entscheidet die Geduld des Präsidenten, ob es ein letztes Ultimatum gibt.
+- **Ruf als Trainer** (Start 30) steigt mit übertroffenen Zielen und Titeln und sinkt mit Abstieg und Entlassung. Er bestimmt, wie gute Vereine dir Jobs anbieten. Im Büro siehst du Ruf, Präsident und ein laufendes Ultimatum.

@@ -636,9 +636,17 @@ const REGELN={
     sieg:{staerker:4,sonst:2.5},
     remis:{staerker:1,schwaecher:-1,sonst:0},
     niederlage:{staerker:-1,schwaecher:-3.5,sonst:-2.5},
-    platzAbSpieltag:5,               // ab diesem Spieltag-Index zählt der Tabellenplatz
-    platz:{weitAb:3,weit:-2,drunter:-0.6,drueber:0.6},
-    kontoMinus:-2,kontoMinusMeldung:0.3,
+    platzAbSpieltag:5,               // ab so vielen eigenen Ligaspielen zählt der träge Anteil (Tabellenplatz, Serie)
+    kontoMinusMeldung:0.3,           // Chance je Woche auf die Meldung „Der Vorstand ist alarmiert“ bei Konto im Minus
+    // Vertrauen mit Bausteinen (K28 §5.1, §5.6, U12a). schnell: Gewicht der Werte je Sieg, Remis, Niederlage. Montags um traegheit Richtung Ziel = basis + Sport + Serie + Finanzen + Umfeld.
+    // Sport: jePlatz × (Saisonziel − Platz) in sport. Serie wie bei Computer-Vereinen. Finanzen: kontoMinus bei Konto im Minus, kredit mit Kredit, zusammen mindestens finanzMin.
+    // Umfeld: bei Glaubwürdigkeit unter glaubUnter linear bis umfeldMin.
+    vertrauen:{schnell:0.5,traegheit:0.2,basis:50,jePlatz:5,sport:[-35,25],serieSpiele:5,serieMitte:1.3,serieFaktor:10,serie:[-15,10],kontoMinus:-15,kredit:-5,finanzMin:-15,glaubUnter:25,umfeldMin:-10},
+    // Ultimatum statt sofortiger Entlassung (K28 §5.3, U12a): spiele Ligaspiele Zeit, danach Entlassung mit entlassung.basis + jeGeduld × Geduld, sonst ein letztes Ultimatum.
+    ultimatum:{spiele:2,entlassung:{basis:0.9,jeGeduld:-0.03}},
+    // Ruf als Trainer (K28 §5.4, U12a), 0–100. Zum Saisonende erst vergessen (Richtung start), dann die Anlässe. jobsJePunkt: so viel Ansehen mehr je Punkt Ruf über start bei Jobangeboten.
+    // geduldig: Grenzen für die Anzeige der Geduld des Präsidenten (bis ungeduldig: „ungeduldig“, ab geduldig: „geduldig“).
+    ruf:{start:30,vergessen:0.05,jePlatzUeber:3,meister:15,pokal:10,aufstieg:8,abstieg:-6,verfehlt:-4,entlassung:-8,jobsJePunkt:1,ungeduldig:7,geduldig:14},
     entlassenUnter:12,schonfristSpieltage:6, // entlassen erst nach mehr als so vielen eigenen Ligaspieltagen. Die Schwierigkeit ersetzt beide Werte.
     pokalAus:-6,pokalWeiter:1.5,pokalSieg:10,
     saisonErreicht:20,saisonWeitAb:3,saisonWeit:-25,saisonVerfehlt:-8,entlassenSaisonUnter:15,

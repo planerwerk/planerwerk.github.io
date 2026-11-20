@@ -14,8 +14,10 @@ for(const k of ['leicht','normal','schwer']){const {W,S,vorher}=R[k],t=W.ev('myT
   const z=k==='leicht'?vorher.ziel+1:k==='schwer'?vorher.ziel-1:vorher.ziel;pruef(S.target===z||(k==='schwer'&&S.target===vorher.ziel),`${St(k).name}: Saisonziel`,`${vorher.ziel} → ${S.target}`);
   const aus=Object.keys(W.ev('RK').erinnerungen).filter(e=>!W.ev('erinnerungAn')(e)).length;pruef(St(k).erinnerungen?aus===0:aus===Object.keys(W.ev('RK').erinnerungen).length,`${St(k).name}: Erinnerungen ${St(k).erinnerungen?'an':'aus'}`);
   const p=W.S.pl.find(x=>x.team===VEREIN);p.tf=1;p.wiv=0;pruef(W.ev('sternFehler')(p)===(St(k).sterneGenau?0:1),`${St(k).name}: Talentsterne neuer Spieler ${St(k).sterneGenau?'genau':'unscharf'}`);}
-// Entlassung: Vertrauen 10 nach 7 Spieltagen. Leicht (Grenze 5): bleibt. Schwer (Grenze 18): entlassen.
-for(const k of ['leicht','schwer']){const {W,F,S}=R[k],ls=W.ev('meineLigaspiele()');S.tag=ls[6].tag+1;S.trust=10;S.phase='play';S.fired=0;W.ev('vorstandPruefen()');pruef(!!S.fired===(10<St(k).entlassenUnter),`${St(k).name}: Vertrauen 10 nach 7 Spieltagen → ${10<St(k).entlassenUnter?'entlassen':'bleibt'}`);}
+// Grenze des Vorstands: Vertrauen 10 nach 7 Spieltagen. Leicht (Grenze 5): nichts. Schwer (Grenze 18): Ultimatum. Seit U12a (K28 §5.6) entlässt der Vorstand nicht mehr sofort,
+// erst nach dem Ultimatum (geprüft in tests/vorstand.js).
+for(const k of ['leicht','schwer']){const {W,S}=R[k],ls=W.ev('meineLigaspiele()');S.tag=ls[6].tag+1;S.trust=10;S.phase='play';S.fired=0;S.ult=null;W.ev('vorstandPruefen()');const unter=10<St(k).entlassenUnter;
+  pruef(!!S.ult===unter&&!S.fired,`${St(k).name}: Vertrauen 10 nach 7 Spieltagen → ${unter?'Ultimatum':'nichts'}, keine sofortige Entlassung`);}
 // Gleiche Würfel: eine Saison ohne Eingriffe auf Leicht und Schwer, im Gleichschritt, bis zum Saisonende oder bis eine der beiden Welten den Trainer entlässt
 // (eine Entlassung ist eine andere Lage, danach dürfen sich die Welten unterscheiden)
 {const a=welt('leicht'),b=welt('schwer');let n=0,gleich=true;

@@ -71,7 +71,7 @@ function taeglichLauf(d){const T=RT;praegungTag(d);wechselTag(d); // vereinbarte
 function woechentlich(d){return mitStrom(strom('woche',S.season,d),()=>woechentlichLauf(d));}
 function woechentlichLauf(d){if(!imUrlaub())mitStrom(strom('training',S.season,d),training);mitStrom(strom('kabine',S.season,d),()=>kabineWoche(d));mitStrom(strom('jugend',S.season,d),()=>jugendWoche(d));mitStrom(strom('zweite',S.season,d),()=>zweiteWoche(d));mitStrom(strom('vertraege',S.season,d),()=>vertraegeWoche(d));mitStrom(strom('berater',S.season,d),()=>beraterWoche(d));leiheWoche(d);scoutingWoche();mitStrom(strom('ausland',S.season,d),auslandWoche);mitStrom(strom('markt',S.season,d),market);
   mitStrom(strom('vorstandKI',S.season,d),kiVorstandWoche); // Vorstand und Trainerwechsel der Computer-Vereine (K31 §5.10, U11d2)
-  if(myT().cash<0){S.trust+=RV.kontoMinus;if(R()<RV.kontoMinusMeldung)news('Der Vorstand ist alarmiert: Das Vereinskonto ist im Minus!','bad');}
+  vorstandWoche(); // träger Anteil des Vertrauens aus Bausteinen, Meldung bei Konto im Minus (K28 §5.1, U12a, js/vorstand.js)
   S.trust=clamp(S.trust,0,100);vorstandPruefen();}
 
 function attendance(t,opp,cup){const Z=RF.zuschauer,ref=Z.refBasis+t.rep*Z.refJeAnsehen,pf=clamp(Math.pow(ref/t.price,Z.preisExponent),Z.preisMin,Z.preisMax),ff=Z.formBasis+Z.formJePunkt*formPts(t.id),of=Z.gegnerBasis+(opp?opp.rep:Z.gegnerOhne)/100*Z.gegnerFaktor,lf=t.lg===1?1:t.lg===2?Z.liga2:Z.liga3;return Math.round(Math.min(t.cap,t.fans*pf*ff*of*lf*(cup?Z.pokal:1)*(Z.zufallBasis+R()*Z.zufallSpanne)));}
@@ -106,8 +106,7 @@ function market(){const M=RM;
       if(R()<pr){const B=bieter(S.teams.filter(t=>t.id!==S.my&&aktiv(t)&&t.cash>p.ask*A.kontoAnteil&&hatBedarf(t,p)),p,p.ask);if(B.length){const b=pick(B),g=gebotFuer(b,p,p.ask);S.offers.push({pid:p.id,tid:b.id,amt:g.amt,max:g.max,r:0,bis});news(`Angebot: ${b.name} bietet ${fmt(g.amt)} für ${p.n} (gilt bis ${datumKurz(bis)}).`,'offer');}}}
     else if(p.str>=lvl+U.niveauPlus&&R()<U.chance){const B=bieter(S.teams.filter(t=>t.id!==S.my&&aktiv(t)&&t.rep>=myT().rep&&t.cash>value(p)&&hatBedarf(t,p)),p,value(p),myT().rep);if(B.length){const b=pick(B),g=gebotFuer(b,p,null);S.offers.push({pid:p.id,tid:b.id,amt:g.amt,max:g.max,r:0,bis});news(`Überraschung: ${b.name} will ${p.n} und bietet ${fmt(g.amt)} (gilt bis ${datumKurz(bis)}).`,'offer');}}});
   S.offers=S.offers.filter(o=>PIX.get(o.pid)&&PIX.get(o.pid).team===S.my);}
-// Vorstand: Ergebnis im Ligaspiel und Tabellenplatz
+// Vorstand: Ergebnis im Ligaspiel, schneller Anteil mit halbem Gewicht (K28 §5.1, U12a). Der Tabellenplatz zählt seit U12a im trägen Anteil (vorstandWoche).
+// Ultimatum und Entlassung: vorstandPruefen in js/vorstand.js.
 function vorstandLiga(e,m){const t=myT(),B=RV,home=m.h===S.my,gf=home?m.hg:m.ag,ga=home?m.ag:m.hg,o=S.teams[home?m.a:m.h],str=o.rep>t.rep+B.staerkerAb,wk=o.rep<t.rep-B.staerkerAb;
-  S.trust+=gf>ga?(str?B.sieg.staerker:B.sieg.sonst):gf===ga?(str?B.remis.staerker:wk?B.remis.schwaecher:B.remis.sonst):(str?B.niederlage.staerker:wk?B.niederlage.schwaecher:B.niederlage.sonst);
-  if(e.md>=B.platzAbSpieltag){const pos=rank(t.lg,S.my);S.trust+=pos>S.target+B.platz.weitAb?B.platz.weit:pos>S.target?B.platz.drunter:B.platz.drueber;}}
-function vorstandPruefen(){const St=stufe();if(S.trust<St.entlassenUnter&&meineSpieltage()>St.schonfrist&&!S.fired&&S.phase!=='end'){S.fired=1;mkJobs();}}
+  S.trust+=B.vertrauen.schnell*(gf>ga?(str?B.sieg.staerker:B.sieg.sonst):gf===ga?(str?B.remis.staerker:wk?B.remis.schwaecher:B.remis.sonst):(str?B.niederlage.staerker:wk?B.niederlage.schwaecher:B.niederlage.sonst));}
