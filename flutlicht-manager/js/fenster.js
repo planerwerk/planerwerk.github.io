@@ -1,6 +1,10 @@
 // Fenster über der Arbeitsfläche: Spielerkarte, Vorbericht, Konferenz, Saisonbilanz, Entlassung, Menü.
-function ov(h){ovEl.innerHTML=`<div class="ov" role="dialog" aria-modal="true"><div class="ovb">${h}</div></div>`;}
+// Fokus beim Öffnen (K40 §5.2, UX1): auf den Schließen-Knopf, sonst auf das Fenster selbst, damit ein versehentliches Enter keine Option wählt
+function ov(h){ovEl.innerHTML=`<div class="ov" role="dialog" aria-modal="true"><div class="ovb" tabindex="-1">${h}</div></div>`;
+  const f=ovEl.querySelector('.ovb .x')||ovEl.querySelector('.ovb');if(f&&f.focus)f.focus();}
 function closeOv(){ovEl.innerHTML='';}
+// Escape schließt ein Fenster mit Schließen-Knopf. Fenster ohne Knopf verlangen eine Entscheidung und bleiben offen (K40 §5.2, UX1).
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&ovEl.querySelector('.ovb .x')){e.preventDefault();closeOv();}});
 function openP(id){const p=PIX.get(id);if(!p)return;if(istJugend(p))return openJ(p);if(istZweite(p))return openZ(p);const mine=p.team===S.my,aus=istAusland(p),t=aus?avVon(p.team):p.team>=0?S.teams[p.team]:null,v=mine?value(p):wertSicht(p);let act=''; // aus: Spieler eines Auslandsvereins (K32)
   if(p.leihe)act=leiheKarte(p); // U10d
   else if(p.wech)act=`<div class="card"><h3>Vereinbarter Wechsel</h3><p>${mine||p.wech.von===S.my?'Verkauft':'Er'} ${p.wech.nach===S.my?`kommt zu dir`:`wechselt zu ${esc(wechselZiel(p.wech))}`}, mit dem Transferfenster am ${esc(datumKurz(p.wech.ab))}${p.wech.preis?` (Ablöse ${fmt(p.wech.preis)})`:''}.</p><p class="dim">Bis dahin bleibt er bei ${esc(vereinName(p))}.</p></div>`; // K19 §5.6, U10a

@@ -1,0 +1,47 @@
+// Barrierefreiheit und Tastatur (K40 §5.1, UX1): axe-core auf Startbildschirm, allen zwölf Ansichten, Spielerkarte und Menü (WCAG 2.0 und 2.1, A und AA),
+// dann Tastatur: „Tag beenden“ mit Tab erreichbar und mit Enter auslösbar, sichtbarer Fokus, Fenster bekommen den Fokus und schließen mit Escape.
+// Aufruf: node tests/ui-zugang.js. Braucht Playwright, für den ersten Teil dazu axe-core (npm i axe-core). Ohne axe-core prüft es nur die Tastatur.
+// ACHTUNG: Dieses Skript ist noch nie gelaufen (UX1 entstand am 20.11. ohne Node.js und Playwright). Beim ersten Lauf sind Verstöße zu erwarten (K40 §10).
+const {chromium}=require('playwright');const path=require('path');
+const FILE='file://'+path.resolve(__dirname,'..','index.html');
+const TABS=['Büro','Kalender','Kader','Kabine','Aufstellung','Tabelle','Spielplan','Pokal','Transfers','Finanzen','Stadion','Training & Jugend'];
+const probleme=[],hinweise=[],pruef=(ok,text,wert)=>{console.log(`${ok?'✓':'✗'} ${text}${wert!=null?': '+wert:''}`);if(!ok)probleme.push(text+(wert!=null?' ('+wert+')':''));};
+let AXE=null;try{AXE=require('axe-core');}catch(e){hinweise.push('axe-core fehlt (npm i axe-core): nur die Tastatur wird geprüft.');}
+(async()=>{
+const b=await chromium.launch();const pg=await (await b.newContext({viewport:{width:1280,height:900}})).newPage();
+pg.on('pageerror',e=>probleme.push('JS: '+e.message));
+await pg.goto(FILE);await pg.evaluate(()=>localStorage.clear());await pg.reload();
+// axe-core in die Seite laden und prüfen. Rückgabe: Verstöße [{id, impact, n, help}]
+const axeLauf=async wo=>{if(!AXE)return;if(typeof AXE.source!=='string'){hinweise.push('axe-core ohne axe.source, Prüfung übersprungen');AXE=null;return;}
+  if(!await pg.evaluate(()=>typeof axe!=='undefined'))await pg.addScriptTag({content:AXE.source});
+  const v=await pg.evaluate(async()=>(await axe.run(document,{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21a','wcag21aa']}})).violations.map(x=>({id:x.id,impact:x.impact,n:x.nodes.length,help:x.help})));
+  const schwer=v.filter(x=>x.impact==='serious'||x.impact==='critical'),rest=v.filter(x=>!schwer.includes(x));
+  pruef(!schwer.length,`axe ${wo}: keine schweren Verstöße`,schwer.map(x=>`${x.id} (${x.impact}, ${x.n}×): ${x.help}`).join(' | ')||null);
+  if(rest.length)hinweise.push(`axe ${wo}: ${rest.map(x=>`${x.id} (${x.impact}, ${x.n}×)`).join(', ')}`);};
+await axeLauf('Startbildschirm');
+// Karriere wie in tests/ui-zwei-saisons.js: Freiburg, ohne Lernstufen, fester Seed
+await pg.selectOption('#club',{label:'SC Freiburg'});await pg.selectOption('#lernstufen','0');await pg.fill('#mgr','Testtrainer');await pg.click('summary:text-is("Erweitert")');await pg.fill('#seed','4711');await pg.click('text=Anpfiff zur Karriere');
+for(const t of TABS){await pg.click(`.tabs button:text-is("${t}")`);await axeLauf('Ansicht '+t);}
+await pg.click('.tabs button:text-is("Kader")');const zeile=await pg.$('tr.click');
+if(zeile){await zeile.click();await axeLauf('Spielerkarte');
+  const fokus=await pg.evaluate(()=>{const a=document.activeElement;return !!a&&!!a.closest('.ovb');});pruef(fokus,'Fenster: Beim Öffnen liegt der Fokus im Fenster');
+  await pg.keyboard.press('Escape');pruef(await pg.evaluate(()=>!document.getElementById('ov').innerHTML),'Fenster: Escape schließt die Spielerkarte');}
+else hinweise.push('keine Kaderzeile zum Öffnen gefunden');
+// Tastatur: vom Seitenanfang mit Tab zu „Tag beenden“, jeder Fokus sichtbar und kein div ohne Rolle
+await pg.click('.tabs button:text-is("Büro")');await pg.evaluate(()=>{document.activeElement&&document.activeElement.blur&&document.activeElement.blur();window.scrollTo(0,0);});
+let gefunden=false,schritte=0;const unsichtbar=[];
+for(;schritte<80&&!gefunden;schritte++){await pg.keyboard.press('Tab');const f=await pg.evaluate(()=>{const a=document.activeElement;if(!a||a===document.body)return null;const r=a.getBoundingClientRect();
+    return{text:(a.innerText||a.value||a.getAttribute('aria-label')||'').trim().slice(0,40),tag:a.tagName,rolle:a.getAttribute('role'),sichtbar:r.width>0&&r.height>0};});
+  if(!f)continue;if(!f.sichtbar||(f.tag==='DIV'&&!f.rolle))unsichtbar.push(`${f.tag} „${f.text}“`);if(/Tag beenden/.test(f.text))gefunden=true;}
+pruef(gefunden,'Tastatur: „Tag beenden“ mit Tab erreichbar',`${schritte} Schritte`);
+pruef(!unsichtbar.length,'Tastatur: jeder Fokus sichtbar, kein div ohne Rolle',unsichtbar.slice(0,5).join(', ')||null);
+if(gefunden){const vor=await pg.evaluate(()=>S.tag);await pg.keyboard.press('Enter');await pg.waitForTimeout(150);
+  const nach=await pg.evaluate(()=>({tag:S.tag,ov:!!document.getElementById('ov').innerHTML}));
+  pruef(nach.tag!==vor||nach.ov,'Tastatur: Enter auf „Tag beenden“ geht weiter (oder öffnet den Vorbericht beziehungsweise eine Erinnerung)',`Tag ${vor} → ${nach.tag}${nach.ov?', Fenster offen':''}`);}
+// Menü: Fokus und Escape
+const menu=await pg.$('button:text-is("Menü")');if(menu){await pg.evaluate(()=>closeOv());await menu.click();await axeLauf('Menü');await pg.keyboard.press('Escape');
+  pruef(await pg.evaluate(()=>!document.getElementById('ov').innerHTML),'Fenster: Escape schließt das Menü');}
+await b.close();
+if(hinweise.length)console.log('\nHINWEISE\n'+hinweise.join('\n'));
+console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);
+})();

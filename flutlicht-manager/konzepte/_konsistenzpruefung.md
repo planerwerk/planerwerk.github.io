@@ -1052,3 +1052,17 @@ Zweig `mitarbeit/popolupo-u12-vorstand`. Kein Test gelaufen.
 | BO5 | **Keine Ketten, keine verzögerten Folgen, keine Merker** (§3.1). Die erste Karte, die sie braucht, ist der lachende Dritte (§8.3, K17 §5.4). | 📌 später |
 | BO6 | **„Ultimatum“ (K28 §8) ist keine Karte**, sondern seit U12a eine Meldung mit Frist (`vorstandPruefen`). Ob es in den Katalog wandert, entscheidet sich mit der Priorität „Fristen und Pflichten“ (§5.2). | 📌 offen |
 | BO7 | **`tests/karten.js`:** Prüfskript für den Katalog, Auslöser, Entscheidung mit Halt, Automatik ohne Antwort, Budget, gleicher Würfel, Woche. Nie gelaufen. | ⚠️ offen |
+
+---
+
+## BP. Nachtrag zu UX1 automatische Usability-Prüfungen (20. November 2026, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-u12-vorstand` (UX1 folgt laut PLAN §7 direkt auf U12). Konzept neu: `konzepte/K40-usability.md`. Kein Test gelaufen.
+
+| # | Befund | Status |
+|---|---|---|
+| BP1 | **Neue Abhängigkeit für Tester:** axe-core (`npm i axe-core`), wie Playwright nicht im Repo. Ohne axe-core prüft das Skript nur die Tastatur und sagt das. | ✅ dokumentiert |
+| BP2 | **Fokus beim Öffnen eines Fensters** liegt jetzt auf dem Schließen-Knopf oder dem Fenster selbst. Die Browser-Tests klicken und füllen Felder gezielt, der Fokus stört sie nicht. Nicht nachgeprüft. | ⚠️ messen |
+| BP3 | **Escape schließt Fenster mit Schließen-Knopf** (Spielerkarte, Menü, Jugend, Zweite, Lizenz). Entlassung und Saisonbilanz haben keinen und bleiben offen. | ✅ |
+| BP4 | **Erster Lauf wird Verstöße finden** (zum Beispiel Kontraste der Regler oder Tabellen ohne Überschriften). Sie kommen nach `konzepte/_usability.md`, abgearbeitet wird danach. | 📌 erwartet |
+| BP5 | **Nicht nachgeprüft:** `axe.source` und das Feld `impact` (K40 §12). Das Skript meldet, wenn `axe.source` fehlt. | ⚠️ prüfen |

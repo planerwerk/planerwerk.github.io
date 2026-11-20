@@ -676,3 +676,11 @@ Im Einzelnen in K30 §5.5 und §12 Nr. 4 bis 9.
 - **Entscheidungen** halten an und stehen im Büro. Ohne Antwort wählt der Co-Trainer vor dem Anpfiff die Voreinstellung. Wer will, schaltet die Automatik ein (neuer Bereich `ereignisse`, Grundlizenz).
 - **Erste fünf Karten:** Der Präsident mischt sich ein, Rückendeckung vom Vorstand, Versöhnung, ein Spieler heiratet, Geheimtipp.
 - **Noch nicht:** Ketten, verzögerte Folgen, Meldungsdichte, Chronik, Skandale.
+
+## K40 Usability, UX1 (20.11.), vorläufig von mir, gebaut ohne Testlauf
+
+Im Einzelnen in `konzepte/K40-usability.md` (neu, aus dem Vorschlag in PLAN §4).
+
+- **Eigenes Testskript** `tests/ui-zugang.js`: axe-core auf allen Ansichten, Spielerkarte und Menü, nur schwere Verstöße zählen. Dazu Tastatur: „Tag beenden“ mit Tab und Enter, Fokus sichtbar.
+- **Kleine Änderung im Spiel:** Escape schließt Fenster mit Schließen-Knopf, beim Öffnen springt der Fokus ins Fenster (nicht auf die erste Option).
+- **axe-core kommt aus der Installation des Testers,** wie Playwright.
