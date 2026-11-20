@@ -4,7 +4,8 @@
 // Zwei Schritte (K05): vorbereiten lost aus und rechnet alle Spiele, abschließen trägt sie ein (Tabellen, Finanzen, Vorstand).
 // Beim Live-Spiel bleibt dein Spiel dazwischen offen und läuft Minute für Minute in der Ansicht (js/live.js).
 function tagesSpiele(d){const v=tagesSpieleVorbereiten(d,false);return tagesSpieleAbschliessen(v.out);}
-function tagesSpieleVorbereiten(d,live){return mitStrom(strom('spieltag',S.season,d),()=>{const out={tag:d,gruppen:[],list:[],mine:null},vorher=S.gespielt;let G=null,platz=null;S.gespielt=d;
+function tagesSpieleVorbereiten(d,live){kartenAuto(d); // unbeantwortete Ereigniskarten vor dem Anpfiff (K30, U12d)
+  return mitStrom(strom('spieltag',S.season,d),()=>{const out={tag:d,gruppen:[],list:[],mine:null},vorher=S.gespielt;let G=null,platz=null;S.gespielt=d;
   if(S.sponsOffers&&meinSpiel(d))sponsorWaehlen(0);
   const spiel=(h,a,o,meta,g)=>{const i=g.list.length;if(o.wichtig){kiSpritzen(h);kiSpritzen(a);} // fit spritzen nur in wichtigen Spielen (K10 §7)
     if(live&&!o.test&&(h===S.my||a===S.my)){G=spielAnlegen(h,a,Object.assign({},o,{auto:[h!==S.my,a!==S.my]}));platz={meta,g,i};g.list.push(null);return;}g.list.push(Object.assign(sim(h,a,o),meta));};
@@ -65,6 +66,7 @@ function taeglichLauf(d){const T=RT;praegungTag(d);wechselTag(d); // vereinbarte
     const tr=!urlaub&&p.team>=0&&p.inj<=0&&S.phase==='play'?trainingTag(p,S.teams[p.team],ab.get(p.team),d):0;tagesWerte(p,urlaub,tr);});
   S.offers.filter(o=>o.bis<d).forEach(o=>versprechenAngebot(o.pid,o.amt)); // abgelaufenes Angebot zählt wie abgelehnt (Versprechen „Wechsel“, K15)
   S.offers=S.offers.filter(o=>o.bis>=d&&PIX.get(o.pid)&&PIX.get(o.pid).team===S.my&&!PIX.get(o.pid).wech&&(o.tid>=AV0?!!avVon(o.tid):S.teams[o.tid]&&aktiv(S.teams[o.tid])));
+  kartenAuto(d-1); // offene Ereigniskarten von gestern entscheidet der Co-Trainer (K30, U12d)
   medizinTag(d);sportgerichtTag(d);pokalAuslosungTag(d);versprechenTag();testspieleAuto(d);lizenzTag(d);
   const c=S.constr;if(c&&d>=c.bis){const t=myT();if(c.k==='cap')t.cap+=RB.tribuene.plaetze;if(c.k==='logen')t.logen+=RB.logen.anzahl;if(c.k==='shop')t.shop++;news(`Bau abgeschlossen: ${c.label}.`,'good');S.constr=null;}}
 // Werte pro Woche (montags): Training und Entwicklung, Transfermarkt, Vorstand bei Minus auf dem Konto.
@@ -73,7 +75,8 @@ function woechentlichLauf(d){if(!imUrlaub())mitStrom(strom('training',S.season,d
   mitStrom(strom('vorstandKI',S.season,d),kiVorstandWoche); // Vorstand und Trainerwechsel der Computer-Vereine (K31 §5.10, U11d2)
   if(+mmtt(d).slice(3)<=7)bezVergessen(); // Beziehungen: am ersten Montag des Monats 5 % zurück zum Grundwert (K17 §4, U12c)
   vorstandWoche(); // träger Anteil des Vertrauens aus Bausteinen, Meldung bei Konto im Minus (K28 §5.1, U12a, js/vorstand.js)
-  S.trust=clamp(S.trust,0,100);vorstandPruefen();}
+  S.trust=clamp(S.trust,0,100);vorstandPruefen();
+  mitStrom(strom('ereignisse',S.season,d),()=>kartenWoche(d));} // Ereigniskarten als Letztes der Woche (K30 §5.5, U12d, js/karten.js)
 
 function attendance(t,opp,cup){const Z=RF.zuschauer,ref=Z.refBasis+t.rep*Z.refJeAnsehen,pf=clamp(Math.pow(ref/t.price,Z.preisExponent),Z.preisMin,Z.preisMax),ff=Z.formBasis+Z.formJePunkt*formPts(t.id),of=Z.gegnerBasis+(opp?opp.rep:Z.gegnerOhne)/100*Z.gegnerFaktor,lf=t.lg===1?1:t.lg===2?Z.liga2:Z.liga3;return Math.round(Math.min(t.cap,t.fans*pf*ff*of*lf*(cup?Z.pokal:1)*(Z.zufallBasis+R()*Z.zufallSpanne)));}
 function heimspielEinnahmen(m,cup){const t=myT();if(autoB('preise'))t.price=clamp(Math.round(richtPreis(t)),RF.ticketPreis.min,RF.ticketPreis.max); // Automatik: Richtpreis (K36)

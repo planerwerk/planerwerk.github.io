@@ -667,3 +667,12 @@ Im Einzelnen in K17 §5.5 und §12 Nr. 4 bis 10.
 - **Anlässe:** fairer Kauf und Verkauf +5, Spottangebot −3, gezogene Ausstiegsklausel −8, Testspiel +3, Leihe mit gehaltener Absprache +5 (sonst −5), Wechsel unter Computer-Vereinen +5, Derby mit Sieger −2.
 - **Wirkung:** Ablöse ±15 %, unter −50 oft kein Gespräch, Zusage zu Testspielen, Computer-Vereine kaufen und leihen nicht unter −50.
 - **Vergessen:** 5 % je Monat. Anzeige im Büro und auf der Spielerkarte.
+
+## K30 Ereigniskarten, U12d (20.11.), vorläufig von mir, gebaut ohne Testlauf
+
+Im Einzelnen in K30 §5.5 und §12 Nr. 4 bis 9.
+
+- **Gerüst:** Katalog als Daten (`daten/karten.js`), Auslöser als benannte Prüfungen im Code, eigener Zufallsstrom, Sperrzeiten, Seltenheitsstufen, Budget für Infos, Entscheidungen und Halte.
+- **Entscheidungen** halten an und stehen im Büro. Ohne Antwort wählt der Co-Trainer vor dem Anpfiff die Voreinstellung. Wer will, schaltet die Automatik ein (neuer Bereich `ereignisse`, Grundlizenz).
+- **Erste fünf Karten:** Der Präsident mischt sich ein, Rückendeckung vom Vorstand, Versöhnung, ein Spieler heiratet, Geheimtipp.
+- **Noch nicht:** Ketten, verzögerte Folgen, Meldungsdichte, Chronik, Skandale.

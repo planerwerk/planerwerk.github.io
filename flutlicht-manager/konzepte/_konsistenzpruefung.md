@@ -1036,3 +1036,19 @@ Zweig `mitarbeit/popolupo-u12-vorstand`. Kein Test gelaufen. Derbys recherchiert
 | BN6 | **Testspiele:** Jedes gespielte Testspiel gibt +3, das erhöht die Zusage beim nächsten Mal leicht. `tests/testspiele.js` prüft Zusagen. Bei Beziehung 0 gilt der alte Wert genau. | ⚠️ messen |
 | BN7 | **Nicht gebaut:** Abwerben (K20), Gerüchte und Fehden (K29), Brisanz im Spiel (K09), Hilfe in der Not, Versöhnung und lachender Dritter (K30), Partnervereine (keine Quelle), Rheinland-Derby als Gruppe. | 📌 später |
 | BN8 | **`tests/beziehungen.js`:** Grundwerte, Verlauf, Vergessen, Ablöse, Gesprächsbereitschaft, Testspiele, Derby, fairer Kauf, Computer-Vereine meiden −50, Anzeige. Nie gelaufen. | ⚠️ offen |
+
+---
+
+## BO. Nachtrag zu U12d Ereigniskarten: Gerüst und die ersten fünf Karten (20. November 2026, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-u12-vorstand`. Kein Test gelaufen.
+
+| # | Befund | Status |
+|---|---|---|
+| BO1 | **Gleichschritt mit und ohne Automatik (`tests/lizenz.js`, K36 §10):** Wer nicht antwortet, bekommt die Voreinstellung, und zwar vor den Spielen desselben Tages (`kartenAuto` am Anfang von `tagesSpieleVorbereiten`). In der Automatik geschieht das schon montags am Ende der Woche. Dazwischen liegt nichts, was Spiele beeinflusst. Der Würfel einer Karte hängt nur an Karte, Saison und Tag. | ✅ entworfen |
+| BO2 | **Neuer Halt „Ereignis“** (K01): nur bei einer Entscheidung im Budget, höchstens eine kleine je Woche, mit den Spielen der Woche höchstens 4 Halte. `tests/lizenz.js` zählt Halte, der neue Grund ist dort nicht verboten. | ⚠️ messen |
+| BO3 | **Eigener Strom `ereignisse`:** jede Woche fünf Würfe (einer je Karte), danach Auslöser. Keine Verschiebung anderer Ströme. | ✅ |
+| BO4 | **Häufigkeit:** Mit 1 zu 120 je Woche und Karte kommen pro Saison grob ein bis zwei Karten, weil die Hochzeit fast immer auslösbar ist und der Geheimtipp oft. Das ist weit unter „15–30 Entscheidungen je Saison“ (§10), der Katalog ist aber erst fünf Karten groß. | 📌 wächst mit dem Katalog |
+| BO5 | **Keine Ketten, keine verzögerten Folgen, keine Merker** (§3.1). Die erste Karte, die sie braucht, ist der lachende Dritte (§8.3, K17 §5.4). | 📌 später |
+| BO6 | **„Ultimatum“ (K28 §8) ist keine Karte**, sondern seit U12a eine Meldung mit Frist (`vorstandPruefen`). Ob es in den Katalog wandert, entscheidet sich mit der Priorität „Fristen und Pflichten“ (§5.2). | 📌 offen |
+| BO7 | **`tests/karten.js`:** Prüfskript für den Katalog, Auslöser, Entscheidung mit Halt, Automatik ohne Antwort, Budget, gleicher Würfel, Woche. Nie gelaufen. | ⚠️ offen |

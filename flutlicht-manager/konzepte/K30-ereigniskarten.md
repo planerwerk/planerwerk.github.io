@@ -1,6 +1,6 @@
 # K30 – Ereigniskarten und Story-Playbook (Gerüst)
 
-Status: **Entwurf des Gerüsts** (7. November 2026), geschrieben ohne Rücksprache. Der Katalog wächst laufend (PLAN §3).
+Status: **Entwurf des Gerüsts** (7. November 2026), geschrieben ohne Rücksprache. Der Katalog wächst laufend (PLAN §3). Gerüst und fünf Karten gebaut in U12d (§5.5, 20.11., ohne Testlauf).
 Hängt ab von: K01 (Halte), K02 (Zufall), allen Bereichen, die Karten liefern · Wird gebraucht von: allen Konzepten mit Abschnitt 8.
 
 ## 1. Ziel und Spielgefühl
@@ -112,6 +112,75 @@ Nachgerechnet mit einem kleinen Simulationsskript: Mit diesen Stufen sind nach 1
 - Zufall aus dem eigenen Strom „ereignisse“ (K02), Neuladen bringt keine andere Karte.
 - **Inhalte wachsen nach und nach** als Daten (`daten/ereignisse.js`): Vorlagen mit Platzhaltern für Beteiligte, Varianten und Folgen. 1000 Szenarien sind ein Ziel über viele Schritte, kein Startumfang.
 - **Sammlung (Idee, vorläufig):** Das Spiel merkt sich über alle Karrieren im Browser, welche Szenarien du schon erlebt hast („Chronik: 137 von 1000“), getrennt vom Spielstand. Seltene Funde sind so eine kleine Belohnung.
+
+### 5.5 Umsetzung U12d (20. November 2026, ohne Testlauf): das Gerüst und die ersten fünf Karten
+
+**Dateien:**
+
+- Katalog: `daten/karten.js` (`KARTEN`), mit Texten, Optionen und Wirkungen als Daten.
+- Logik: `js/karten.js`. Die Auslöser sind dort benannte Prüfungen (`AUSLOESER`), auf die der Katalog mit einem Namen zeigt. So bleibt Logik aus den Stammdaten heraus.
+- Zahlen: `REGELN.karten`.
+
+**Prüfen und Auswählen** (montags, eigener Strom `ereignisse` je Tag):
+
+1. Die Karten des Katalogs werden in gemischter Reihenfolge geprüft.
+2. Eine Karte ist auslösbar, wenn:
+   - ihr Auslöser Beteiligte findet,
+   - ihre Sperrzeit für diese Beteiligten vorbei ist (Standard 120 Tage),
+   - eine sehr seltene Karte in dieser Karriere noch nicht kam.
+3. Sie kommt dann mit der Chance 1 / (Saisons der Seltenheitsstufe × 40 Wochen). Eine häufige Karte (alle 3 Saisons) hat also 1 zu 120 je Woche, in der ihre Bedingungen erfüllt sind.
+4. Der Regler Meldungsdichte fehlt noch (K35a), es gilt „normal“.
+
+**Dosierung (§5.1):**
+
+- Höchstens 5 Infos je Woche.
+- Höchstens eine kleine Entscheidung je Woche und eine große je Monat, je Bereich höchstens eine je Woche.
+- Halte je Woche höchstens 4, eigene Spiele der Woche mitgezählt.
+- Passt eine Entscheidung nicht ins Budget, entscheidet die Automatik: Der Co-Trainer wählt die Voreinstellung der Karte, und sie kommt als Info („Der Co-Trainer hat … entschieden“).
+
+**Entscheidungen:**
+
+- Eine Entscheidungskarte hält am selben Tag an (Halt „Ereignis“) und steht oben im Büro, mit ihren Optionen als Knöpfen.
+- Gehst du weiter, ohne zu wählen, entscheidet am nächsten Tag die Automatik.
+- **Lizenz-Bereich `ereignisse`** (Grundlizenz, mit Automatik, K36): Wer will, lässt den Co-Trainer alle Karten entscheiden. Dann kommen sie nur noch als Info.
+
+**Wirkungen** (nur erlaubte, §3.2):
+
+| Wirkung | Ziel |
+|---|---|
+| `stimmung` | Beteiligter Spieler |
+| `stimmungAlle` | Kader |
+| `zusammenhalt` | Kader |
+| `glaub` | Glaubwürdigkeit |
+| `vertrauen` | Vertrauen des Vorstands |
+| `ruf` | Ruf als Trainer |
+| `bezDu` | Beziehung zum beteiligten Verein |
+| `geld` | Buchung „Ereignisse“ |
+
+Jede Wirkung kann eine Chance haben. Dann wird im Strom `ereignisse` gewürfelt, und sie hat einen Text für Erfolg und Misserfolg.
+
+**Texte:** Platzhalter `{spieler}`, `{verein}`, `{praesident}`. Varianten werden reihum genutzt (§5.3).
+
+**Spielstand `S.karten`:**
+
+- `sp`: Sperren, Karte und Beteiligte → Tag.
+- `w`: Zähler der Woche und des Monats.
+- `offen`: offene Entscheidungen.
+- `v`: Zeiger auf die Textvariante je Karte.
+- `log`: die letzten 100 Karten, für Tests und Statistik.
+- `einmal`: sehr seltene Karten, die schon kamen.
+
+**Die ersten fünf Karten** (aus Konzepten, deren Werte das Spiel schon rechnet):
+
+| Karte | Konzept | Art | Auslöser | Optionen und Wirkungen |
+|---|---|---|---|---|
+| Der Präsident mischt sich ein | K28 §8 | Entscheidung, klein | Präsident mit Ehrgeiz ab 14, die letzten drei Ligaspiele verloren | „Er bekommt seine Chance“: Vertrauen +5, Glaubwürdigkeit −3. „Ich stelle auf“: Vertrauen −5, Glaubwürdigkeit +3 (Voreinstellung) |
+| Rückendeckung vom Vorstand | K28 §8 | Info | Vertrauen ab 80, obwohl du unter dem Saisonziel stehst | keine |
+| Versöhnung | K17 §8 | Entscheidung, klein | Beziehung zu einem Verein unter −50 | „Treffen vorschlagen“: mit 60 % Beziehung +20, sonst −5. „Abwarten“: nichts (Voreinstellung) |
+| Ein Spieler heiratet | PLAN §4, K14 | Entscheidung, klein | ein Spieler deines Kaders zwischen 24 und 34 (Sperre je Spieler 2000 Tage) | „Teamausflug zur Feier“: −20.000 €, Zusammenhalt +3, Stimmung des Spielers +5. „Glückwunschkarte“: Stimmung +2 (Voreinstellung) |
+| Geheimtipp | K18 §8 | Info | ein Talent bis 20 bei einem Verein der 2. oder 3. Liga mit großem Talent | keine, nur der Hinweis |
+
+Noch nicht gebaut: verzögerte Folgen und Ketten (§3.1, §8.3), Merker, Meldungsdichte, die Chronik über alle Karrieren (§5.4), Skandale (§8.4), Kategorien mit eigener Rate.
 
 ## 6. Hebel des Spielers
 
@@ -228,6 +297,15 @@ karten:{
 3. **Katalog wächst mit den Konzepten,** K30 hält nur die Übersicht.
 
 **Mit dir entschieden (10. November 2026):** Sehr viele Szenarien (Ziel 1000), viele davon so selten, dass alle erst nach etwa 2000 Saisons einmal vorgekommen sind. Manipulation und Wettbetrug als sehr seltene Weltereignisse (etwa einmal in zehn Saisons). Doping kommt nicht ins Spiel.
+
+**Vorläufig entschieden mit U12d** (20.11., von mir, ohne Rücksprache und ohne Testlauf):
+
+4. **Auslöser als benannte Prüfungen im Code,** der Katalog nennt nur ihren Namen. Die Texte, Optionen und Wirkungen stehen als Daten in `daten/karten.js`.
+5. **Chance je Woche = 1 / (Saisons der Stufe × 40).** Gilt nur in Wochen, in denen die Bedingungen erfüllt sind. Die Raten in §5.4 sind damit Obergrenzen.
+6. **Keine Antwort heißt Automatik am nächsten Tag,** wie bei den Fristen des Sportgerichts.
+7. **Bereich `ereignisse` mit Automatik in der Grundlizenz.** Er ist sofort frei, und die Automatik lässt alle Karten vom Co-Trainer entscheiden.
+8. **Erste fünf Karten** nur mit Wirkungen, die es schon gibt. Ketten und verzögerte Folgen kommen mit der nächsten Karte, die sie braucht (der lachende Dritte, §8.3).
+9. **Geld aus Karten bucht als „Ereignisse“** in den Finanzen.
 
 **Vorläufig dazu:** Kategorie, Szenario und Varianten als drei Ebenen, vier Seltenheitsstufen (5.4), sehr seltene Szenarien höchstens einmal je Karriere, keine eigene Entscheidung zum Mitmachen bei Manipulation, eine Sammlung erlebter Szenarien über alle Karrieren.
 
