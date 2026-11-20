@@ -131,9 +131,13 @@ function kiLeihKandidat(t,n,senk,plan,z){if(!n.g||!RCV.leihe.gruende.includes(n.
     const v=p.str+(R()-0.5)*2*RCV.schaetzFehler;if(v>bv){bv=v;best={p,von:von.id};}}
   return best;}
 // Die Leihe selbst: bis zum Saisonende, ohne Gebühr, ohne Kaufoption und Rückruf. Computer-Vereine führen keine Gehaltsbuchhaltung (§3.3), der Anteil steht nur am Spieler.
-// Keine Meldung (K31 §12 Nr. 31). Rückkehr am Saisonende über leiheEnde (js/leihe.js).
+// Keine Meldung unter Computer-Vereinen (K31 §12 Nr. 31). Rückkehr am Saisonende über leiheEnde (js/leihe.js).
+// Seit T1.1 (vorläufig) leiht auch dein Verein in der Automatik (Bereich leihe mit Automatik, K36 Grundsatz 1): Holt er einen Spieler, zahlst du das Gehalt voll
+// wie beim Ausleihen von Hand (U10d), verleiht er einen, zahlt der andere Verein seinen Anteil. Beides meldet der Verein im Posteingang.
 function kiLeihe(p,b){const von=p.team;kabineAbgang(p,von);S.offers=S.offers.filter(o=>o.pid!==p.id);
-  p.leihe={von,anteil:zahlBereit(p,b.id),rolle:'rotation',rueckruf:false,option:0,start:absTag(S.tag)};p.team=b.id;p.list=0;p.ask=0;neuzugang(p,b.id);}
+  p.leihe={von,anteil:b.id===S.my?1:zahlBereit(p,b.id),rolle:'rotation',rueckruf:false,option:0,start:absTag(S.tag)};p.team=b.id;p.list=0;p.ask=0;neuzugang(p,b.id);
+  if(b.id===S.my){kabineInit(p);rollenBerechnen(S.my);stabMeldung(`Der Verein hat ${p.n} bis zum Saisonende von ${tn(von)} ausgeliehen.`);}
+  else if(von===S.my){rollenBerechnen(S.my);stabMeldung(`Der Verein hat ${p.n} bis zum Saisonende an ${b.name} verliehen.`);}}
 
 // ---------- Vorstand und Trainerwechsel (K28 §7, K31 §5.5, §5.10, U11d2) ----------
 // Präsident jedes Vereins (praesident) und die Formel des Vertrauens (vertrauenZiel) stehen seit U12a in js/vorstand.js, für dich und die Computer-Vereine.
@@ -206,7 +210,7 @@ function kiMarkt(){const nr=fensterNr(),vereine=S.teams.filter(t=>aktiv(t)&&stab
   dran.forEach(t=>{const tb=kiBudget(t,nr),sq=kader.get(t.id);if(tb.n>=K.jeFenster[nr]||sq.length>=RM.kaeufer.kaderMax)return;
     // Sternejagd zuerst: ehrgeizige Vereine, einmal je Saison im Sommerfenster. Gelingt sie, war das der Zugang dieser Woche.
     if(nr===RCV.sterneJagd.fenster&&!tb.s&&vereinsProfile(t).includes('ehrgeizig')){const c=kiStern(t,plan(t),tb.b-tb.a,kader);if(c){tb.s=1;zugang(t,tb,c,'stern');return;}}
-    // Je Lücke: bei „verletzt“ zuerst Leihe, dann Kauf; bei „offen“ zuerst Kauf, sonst Leihe (§5.9). Dein Verein leiht nie von selbst (Bereich leihe ohne Automatik).
+    // Je Lücke: bei „verletzt“ zuerst Leihe, dann Kauf; bei „offen“ zuerst Kauf, sonst Leihe (§5.9). Dein Verein leiht nur in der Automatik (Bereich leihe, seit T1.1).
     const senk=kiSenkung(tb),leiht=S.phase==='play'&&stabMacht(t.id,'leihe'); // nicht vor dem Saisonwechsel, sonst endete die Leihe sofort wieder
     for(const n of planBedarf(plan(t))){const zuerst=L.zuerst.includes(n.grund);
       const a=leiht&&zuerst?kiLeihKandidat(t,n,senk,plan,z):null;if(a){leihe(t,tb,a);break;}

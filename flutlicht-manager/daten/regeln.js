@@ -813,7 +813,7 @@ const REGELN={
       pate:{ab:4,name:'Paten für Talente',tab:'kader'},
       praemien:{ab:4,name:'Prämien und Klauseln in Verträgen',tab:'kader'},
       berater:{ab:3,name:'Berater einladen',tab:'transfer'},
-      leihe:{ab:3,name:'Leihen (abgeben, holen, zurückholen)',tab:'kader'},
+      leihe:{ab:3,name:'Leihen (abgeben, holen, zurückholen)',tab:'kader',auto:1,wer:'der Verein',tut:'leiht bei einem lange verletzten Stammspieler oder einer offenen Planstelle aus und gibt Überzählige bis 23 Jahre ab'}, // Automatik seit T1.1 (vorläufig, K36 Grundsatz 1)
       ausland:{ab:3,name:'Im Ausland beobachten und kaufen',tab:'transfer'},
       kaderrollen:{ab:3,name:'Kaderrollen',tab:'kabine',auto:1,wer:'der Co-Trainer',tut:'verteilt die Rollen nach der besten Elf'},
       versprechen:{ab:3,name:'Zusagen und Teamevent',tab:'kabine'},

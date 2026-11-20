@@ -99,7 +99,8 @@ const punkte=(S,F,id)=>{const lg=S.teams[id].lg,r=F.table(lg).find(x=>x.id===id)
 // 5a. Gleichschritt: Mit dem Stab am Steuer (ohne die Testspiele, die Computer-Vereine noch nicht spielen) entwickelt sich der Kader Tag für Tag
 // genau wie beim selben Verein als Computer-Verein. Das zeigt, dass die Automatik dieselben Regeln nutzt. Später trennen sich die Welten über das Geld
 // (dein Verein hat echte Buchhaltung, Computer-Vereine bekommen Einnahmen nach Formel) und damit über den Transfermarkt.
-{const TAGE=150,mach=mein=>{const {W,F}=neueWelt();F.buildWorld(SEED+10);const S=W.S;S.my=mein;S.mgr='Sim';F.setTarget();F.lizenzStart(false);allesAuto(S,W.ev,true);delete S.lizenz.auto.testspiele;F.sponsOffers();S.lineup=F.bestXI(mein,W.ev('myT()').form);return{W,F};};
+// Ebenfalls ausgenommen: die Gerüchteküche (U17b). Sie wählt jede Woche gezielt ein Gerücht über deinen Verein, das die Stimmung drückt, Computer-Vereine bekommen keins (T1.1).
+{const TAGE=150,mach=mein=>{const {W,F}=neueWelt();F.buildWorld(SEED+10);const S=W.S;S.my=mein;S.mgr='Sim';F.setTarget();F.lizenzStart(false);allesAuto(S,W.ev,true);delete S.lizenz.auto.testspiele;W.ev('geruechteWoche=()=>{}');F.sponsOffers();S.lineup=F.bestXI(mein,W.ev('myT()').form);return{W,F};};
   const a=mach(6),b=mach(30),bild=x=>JSON.stringify(x.W.S.pl.filter(p=>p.team===6).map(p=>[p.id,p.str,p.fit,p.ko,p.form,p.sp,p.st,p.inj,p.sv,p.ww,p.ea]))+JSON.stringify([x.W.S.teams[6].form,x.W.S.teams[6].zh,x.W.S.res[1].filter(r=>r[0]===6||r[1]===6)]);
   const schritt=x=>{const S=x.W.S;if(S.sponsOffers)x.F.sponsorWaehlen(0);if(S.fired){S.fired=0;S.trust=60;}x.W.ev('tagEnde')(S.tag);S.tag++;S.gespielt=-1;x.W.ev('tagBeginn')(S.tag);};
   let gleich=0;for(let i=0;i<TAGE;i++){schritt(a);schritt(b);if(bild(a)!==bild(b))break;gleich++;}
