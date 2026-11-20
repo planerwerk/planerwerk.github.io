@@ -888,6 +888,8 @@ Geprüft: `K04-engine.md` gegen K03, PLAN.md, Rohmaterial 5–8, Recherche und `
 | BF5 | **Bestehende Tests:** Käufe in `tests/transfers.js`, `tests/vertraege.js` und `tests/ausland.js` klicken bei einem Befund ein zweites Mal. | ✅ |
 | BF6 | **K16 Leihmanager, K17 Beziehung zum Leihverein, K31 Leihen unter Computer-Vereinen** fehlen. | 📌 K16, U11, U12 |
 | BF7 | **K36:** neuer Bereich `leihe` (B-Lizenz), 45 Bereiche. **K33:** Felder `leihe`, `zwP`, `verh.mc`, neue Datei `js/leihe.js`. | ✅ |
+| BF8 | **Fehler beim Bau, gefunden von `tests/stab.js`:** Ein Kommentar am Zeilenende (Gehälter verliehener Spieler) hatte auf derselben Zeile die Buchung der Stab-Gehälter auskommentiert. Seit dem ersten Commit von U10d wurden die Gehälter des Trainerstabs nicht gebucht. Behoben, danach Node-Tests und die großen Browser-Tests erneut. Derselbe Fehler wie AX12 und BD13. | ✅ |
+| BF9 | **Neuer Wächter `tests/code.js`:** sucht in `js/`, `tests/` und `daten/regeln.js` Kommentare am Zeilenende, hinter denen noch Code steht. Gegenprobe mit der fehlerhaften Fassung: Die Zeile wird gefunden. Läuft ab jetzt bei jedem Testlauf mit. | ✅ |
 
 ---
 
