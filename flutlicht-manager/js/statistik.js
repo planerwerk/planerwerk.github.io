@@ -83,7 +83,8 @@ function vereinsRekord(tid,k,n,o,besser){if(tid!==S.my)return;const v=statS().re
 // Zuschauer (ablauf.js heimspielEinnahmen)
 function statZuschauer(m,att){vereinsRekord(S.my,'zus',att,{txt:`gegen ${tn(m.a)}`,wann:`${datumKurz(S.tag)} ${stSaison(S.season)}`});}
 // Transfers mit Ablöse: Rekordtransfer der Spielwelt (Zugang eines deutschen Vereins) und Vereinsrekorde
-function statTransfer(p,fee,von,nach){if(!p||!(fee>0))return;const st=statS(),de0=id=>id!=null&&id>=0&&id<1000&&!!S.teams[id],wann=stSaison(S.season);
+function statTransfer(p,fee,von,nach){if(!p||!(fee>0))return;fansAbgang(p,von); // Verkauf eines Publikumslieblings (K27, U16)
+  const st=statS(),de0=id=>id!=null&&id>=0&&id<1000&&!!S.teams[id],wann=stSaison(S.season);
   if(de0(nach)){const a=st.rek.welt.transfer;if(!a||fee>a.n){st.rek.welt.transfer={n:fee,pid:p.id,txt:`${p.n}, ${stVerein(von)} → ${stVerein(nach)}`,wann};
     if(a&&S.season-st.ab>=RSTAT.rekord.meldenAb)news(`Rekordtransfer: ${p.n} wechselt für ${fmt(fee)} von ${stVerein(von)} zu ${stVerein(nach)}. Bisher: ${a.txt} (${fmt(a.n)}).`,'tr');}
     vereinsRekord(nach,'zu',fee,{txt:`${p.n} von ${stVerein(von)}`,wann});}

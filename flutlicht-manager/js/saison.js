@@ -80,7 +80,8 @@ function newSeasonLauf(){wechselVollziehen(true);leiheEnde(); // Leihen enden mi
   const N=Z.nachwuchs;
   S.teams.forEach(t=>{if(!aktiv(t))return;const base=grundStaerke(t.rep),yl=t.id===S.my&&!autoB('jugend')?t.youth:N.computerStufe;
     if(t.id===S.my){mitStrom(strom('zweiteSaison',S.season),zweiteSaison);mitStrom(strom('jugendSaison',S.season),jugendSaison);mitStrom(strom('zweiteAuffuellen',S.season),zweiteAuffuellen);} // dein Verein: Zweite und Jugendkader statt fertiger Aufrücker (K08)
-    else for(let k=0;k<N.anzahl;k++){const pos=pick(N.positionen);const p=mkPlayer({pos,age:N.alter,str:Math.round(base-N.abschlag+riA(N.streuung)+yl),team:t.id,ct:N.vertrag});p.pot=Math.round(base-N.talentAbschlag+riA(N.talentStreuung)+yl*N.talentJeStufe);p.sal=Math.round(p.sal*N.gehalt/1000)*1000;addP(p);
+    else for(let k=0;k<N.anzahl;k++){const pos=pick(N.positionen);const p=mkPlayer({pos,age:N.alter,str:Math.round(base-N.abschlag+riA(N.streuung)+yl),team:t.id,ct:N.vertrag});p.ej=t.id; // Eigengewächs (K27, U16)
+      p.pot=Math.round(base-N.talentAbschlag+riA(N.talentStreuung)+yl*N.talentJeStufe);p.sal=Math.round(p.sal*N.gehalt/1000)*1000;addP(p);
       if(t.id===S.my)news(`Aus der Jugend: ${p.n} (${p.pos}, ${N.alter}) rückt in den Profikader auf. Talent ${stars(p)}.`,'good');}
     if(!stabMacht(t.id,'transfers'))return; // dein Verein füllt den Kader nur auf, solange der Verein die Transfers führt (K36)
     kaderAuffuellen(t,base);

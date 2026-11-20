@@ -1119,3 +1119,20 @@ Zweig `mitarbeit/popolupo-u15-transfers2` (baut auf U14 auf). Konzept: K20 §5.4
 | BS5 | **Computer-Vereine setzen gelistete Spieler zurück:** `kiListe` (computer.js) nimmt Spieler von der Liste, die nicht mehr im Abgabeplan stehen. Ein abgeworbener Spieler kann so wieder von der Liste fallen, sein Wechselwunsch (Ablöse −10 %) bleibt. Gilt schon für jeden Wechselwunsch Stufe 3 seit U8. | 📌 später prüfen |
 | BS6 | **Nicht gebaut:** Computer-Vereine werben deine Spieler ab (§7), Bieterwettstreit beim Kauf, Spieler lehnt das höchste Gebot ab, Preise ±15 % am Deadline Day, Fans und Presse beim Auffliegen (K27, K29), Nationalspieler im Risiko. | 📌 später |
 | BS7 | **`tests/abwerben.js`:** sieben Prüfungen, siehe Test-README. Nie gelaufen. | ⚠️ offen |
+
+---
+
+## BT. Nachtrag zu U16 Fans (20. November 2026, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-u16-fans` (baut auf U15 auf). Konzept: K27 §5.4b und §12. Neue Datei `js/fans.js`. Kein Test gelaufen.
+
+| # | Befund | Status |
+|---|---|---|
+| BT1 | **Zuschauer und Einnahmen:** Am Start ist die Stimmung 60 und der Faktor genau 1. Danach schwankt er zwischen 0,85 und 1,10. Wer erfolgreich ist und faire Preise nimmt, hat bis zu 10 % mehr Zuschauer, auch in der Vorhersage am Ticketpreis. Ein eigenes Finanz-Prüfskript gibt es nicht. `tests/testspiele.js` (Zuschauer im Testspiel), `tests/schwierigkeit.js` (Konten) und `tests/ui-zwei-saisons.js` können abweichen. | ⚠️ messen |
+| BT2 | **Vorstand mit toter Zone:** Zwischen 45 und 75 wirkt die Fanstimmung nicht. `tests/vorstand.js` rechnet das Ziel ohne Fans nach. Das stimmt, solange die Stimmung in der Zone bleibt, am Start also immer. | ✅ entworfen |
+| BT3 | **Pfiffe** ändern das Selbstvertrauen (−0,2 je Heimspiel unter 30) und damit die Torchance (`abschluss` nutzt `sv`). Ergebnisse ändern sich erst, wenn eine Stimmung unter 30 fällt. | ⚠️ messen |
+| BT4 | **Ohne Zufall:** Fanstimmung, Anlässe und Fan-Gespräch würfeln nicht. Kein Strom verschiebt sich. | ✅ |
+| BT5 | **Publikumslieblinge ab Spielbeginn:** In der ersten Saison gibt es kaum welche (60 Pflichtspiele), die Identifikation steigt erst ab der zweiten. Eigengewächse kennt das Spiel nur für Aufrücker ab U16. | 📌 vorläufig |
+| BT6 | **Rechenzeit:** Montags für 56 Vereine Tabelle und Lieblinge (Zeilen der Statistik). Nicht gemessen. | ⚠️ messen |
+| BT7 | **Nicht gebaut:** Dauerkarten, Gästeblock (K23), Ultras und Tradition (keine Quellen je Verein), Choreo, Pyro, Platzsturm (K09, K30), Heimvorteil durch Fans, Wirkung auf den Vorstand der Computer-Vereine, Presse (K29), der negative Teil der Identifikation. | 📌 später |
+| BT8 | **`tests/fans.js`:** zehn Prüfungen, siehe Test-README. Nie gelaufen. | ⚠️ offen |

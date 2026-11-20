@@ -437,6 +437,17 @@ Datei: `konzepte/K27-fans.md`
 
 **Noch zu recherchieren:** Dauerkartenanteile, Zuschauerschnitt der 1. und 3. Liga als Vollsaison, Zahl der Pyro-Verfahren.
 
+**Mit U16 von mir vorläufig entschieden (20.11.2026, K27 §12 Nr. 1 bis 8):**
+
+- Fanstimmung für alle Vereine. Sie wirkt vorerst nur bei dir.
+- Die Gewichte der Bausteine sind geschätzt.
+- Publikumsliebling über Pflichtspiele für den Verein oder als Eigengewächs.
+- Ein neues Kennzeichen markiert Eigengewächse.
+- Der Zuschauerfaktor ist bei 60 neutral.
+- Der Vorstand hat eine tote Zone von 45 bis 75.
+- Fan-Gespräch ab der C-Lizenz.
+- Dauerkarten, Gästeblock, Ultras, Tradition, Choreo, Pyro, Platzsturm und Heimvorteil kommen später.
+
 ## K28 – Vorstand, Ziele, Karriere
 Datei: `konzepte/K28-vorstand.md`
 

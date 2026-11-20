@@ -24,7 +24,7 @@ function vorstandWoche(){const t=myT(),V=RV.vertrauen;
   if(S.phase!=='play'||S.fired||meineSpieltage()<RV.platzAbSpieltag)return;
   const T=table(t.lg),i=T.findIndex(r=>r.id===S.my);if(i<0)return;
   const finanzen=Math.max(V.finanzMin,(t.cash<0?V.kontoMinus:0)+(S.loan>0?V.kredit:0)),g=glaub(t),umfeld=g<V.glaubUnter?V.umfeldMin*(V.glaubUnter-g)/V.glaubUnter:0;
-  S.trust=clamp(S.trust+(vertrauenZiel(V,T[i],i+1,S.target,finanzen+umfeld+zieleBaustein())-S.trust)*V.traegheit,0,100);}
+  S.trust=clamp(S.trust+(vertrauenZiel(V,T[i],i+1,S.target,finanzen+umfeld+zieleBaustein()+fansVorstand(t))-S.trust)*V.traegheit,0,100);}
 
 // ---------- Ultimatum und Entlassung (K28 §4 Nr. 4, §5.3) ----------
 // Nach jedem Spieltag und jeden Montag. Grenze und Schonfrist aus der Schwierigkeit (K02). Unter der Grenze nach der Schonfrist: Ultimatum über RV.ultimatum.spiele Ligaspiele.

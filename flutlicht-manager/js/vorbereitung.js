@@ -15,6 +15,7 @@ function eroeffnungTag(tid){const k=S.seed+'/'+S.season;if(VB_TAGE.k!==k)VB_TAGE
 // Täglich (ablauf.js taeglichLauf): Saisoneröffnung aller Vereine an ihrem Tag
 function vorbereitungTag(d){if(S.phase!=='play')return;S.teams.forEach(t=>{if(!aktiv(t)||t.eroe===S.season||eroeffnungTag(t.id)!==d)return;t.eroe=S.season;mitStrom(strom('eroeffnung',S.season,t.id),()=>eroeffnung(t,d));});}
 function eroeffnung(t,d){const E=RVB.eroeffnung,regen=R()<E.regen.chance,betrag=Math.round(t.rep*E.jeAnsehen*(regen?E.regen.faktor:1)/1000)*1000;
+  fanAnlass(t,'fanU',RFS.umfeld.eroeffnung); // Fanstimmung +3 (K27 §5.4b, U16)
   if(t.id!==S.my){t.cash+=betrag;return;}
   money('Saisoneröffnung',betrag);mannschaftsfoto(t,d);
   news(`Saisoneröffnung: ${t.name} stellt die Mannschaft vor${regen?', im Regen, aber die Fans bleiben bis zum Schluss':''}. Einnahmen ${fmt(betrag)}. Das Mannschaftsfoto ist gemacht.`,'good');}

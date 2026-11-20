@@ -37,11 +37,11 @@ function tagesSpieleAbschliessenLauf(out){const d=out.tag;S.gespielt=d;
   out.mine=out.list.find(r=>r.h===S.my||r.a===S.my)||null;if(out.mine)lizenzSpiel();
   const t=myT(),m=out.mine;
   for(const g of out.gruppen){const e=g.e,mg=g.list.includes(m)?m:null;
-    if(g.art==='liga'){g.list.forEach(r=>{S.res[e.lg].push([r.h,r.a,r.hg,r.ag,e.md]);bezDerbySpiel(r);}); // Derby mit Sieger: Rivalität wächst (K17, U12c)
-      if(mg){news(`${e.md+1}. Spieltag: ${tn(mg.h)} – ${tn(mg.a)} ${mg.hg}:${mg.ag}`,(mg.h===S.my?mg.hg>mg.ag:mg.ag>mg.hg)?'good':(mg.hg===mg.ag?'':'bad'));finanzenLiga(mg);vorstandLiga(e,mg);
+    if(g.art==='liga'){g.list.forEach(r=>{S.res[e.lg].push([r.h,r.a,r.hg,r.ag,e.md]);bezDerbySpiel(r);fansDerby(r);}); // Derby mit Sieger: Rivalität wächst (K17, U12c)
+      if(mg){news(`${e.md+1}. Spieltag: ${tn(mg.h)} – ${tn(mg.a)} ${mg.hg}:${mg.ag}`,(mg.h===S.my?mg.hg>mg.ag:mg.ag>mg.hg)?'good':(mg.hg===mg.ag?'':'bad'));finanzenLiga(mg);vorstandLiga(e,mg);fansHeimspiel(mg);
         if(e.md+1===RK.vertragsWarnungNachSpieltag){const x=squad(S.my).filter(p=>p.ct<=1);if(x.length)news(`Achtung: ${x.length} Vertrag/Verträge enden zum Saisonende (${x.slice(0,6).map(p=>p.n).join(', ')}${x.length>6?' …':''}). Verlängern: im Kader auf den Spieler klicken.`,'bad');}}
       g.list.forEach(r=>[r.h,r.a].forEach(id=>{if(id!==S.my){const x=S.teams[id];x.cash+=x.rep*x.rep*RF.fremdeEinnahmen.liga;}}));}
-    else if(g.art==='pokal'){S.cup.hist.push(g.list.map(r=>[r.h,r.a,r.hg,r.ag,r.pen]));S.cup.alive=g.list.map(winner);
+    else if(g.art==='pokal'){S.cup.hist.push(g.list.map(r=>[r.h,r.a,r.hg,r.ag,r.pen]));S.cup.alive=g.list.map(winner);fansPokal(g.list);
       if(mg){const won=winner(mg)===S.my,opp=mg.h===S.my?mg.a:mg.h;news(`DFB-Pokal, ${POKAL_RUNDEN[e.r]}: ${tn(mg.h)} – ${tn(mg.a)} ${mg.hg}:${mg.ag}${mg.pen?` (i.E. ${mg.pen[0]}:${mg.pen[1]})`:''} – ${won?(e.r===5?'POKALSIEG!':'weiter!'):'ausgeschieden.'}`,won?'good':'bad');
         if(!won&&(opp>=1000||S.teams[opp].lg>t.lg))S.trust+=RV.pokalAus;if(won)S.trust+=RV.pokalWeiter;
         if(mg.h===S.my&&e.r!==5)heimspielEinnahmen(mg,true);money('Pokalprämien',RF.pokalPraemien[e.r]);}
@@ -75,11 +75,11 @@ function woechentlich(d){return mitStrom(strom('woche',S.season,d),()=>woechentl
 function woechentlichLauf(d){if(!imUrlaub())mitStrom(strom('training',S.season,d),training);mitStrom(strom('kabine',S.season,d),()=>kabineWoche(d));mitStrom(strom('jugend',S.season,d),()=>jugendWoche(d));mitStrom(strom('zweite',S.season,d),()=>zweiteWoche(d));mitStrom(strom('vertraege',S.season,d),()=>vertraegeWoche(d));mitStrom(strom('berater',S.season,d),()=>beraterWoche(d));leiheWoche(d);scoutingWoche();mitStrom(strom('ausland',S.season,d),auslandWoche);mitStrom(strom('markt',S.season,d),market);
   mitStrom(strom('vorstandKI',S.season,d),kiVorstandWoche); // Vorstand und Trainerwechsel der Computer-Vereine (K31 §5.10, U11d2)
   if(+mmtt(d).slice(3)<=7){bezVergessen();statistikMonat();} // erster Montag des Monats: Beziehungen 5 % zurück zum Grundwert (K17 §4, U12c), Verlauf des eigenen Kaders (K34 §5.3, U13)
-  vorstandWoche(); // träger Anteil des Vertrauens aus Bausteinen, Meldung bei Konto im Minus (K28 §5.1, U12a, js/vorstand.js)
+  fansWoche();vorstandWoche(); // Fanstimmung (K27, U16) vor dem Vorstand; träger Anteil des Vertrauens aus Bausteinen, Meldung bei Konto im Minus (K28 §5.1, U12a, js/vorstand.js)
   S.trust=clamp(S.trust,0,100);vorstandPruefen();
   mitStrom(strom('ereignisse',S.season,d),()=>kartenWoche(d));} // Ereigniskarten als Letztes der Woche (K30 §5.5, U12d, js/karten.js)
 
-function attendance(t,opp,cup){const Z=RF.zuschauer,ref=Z.refBasis+t.rep*Z.refJeAnsehen,pf=clamp(Math.pow(ref/t.price,Z.preisExponent),Z.preisMin,Z.preisMax),ff=Z.formBasis+Z.formJePunkt*formPts(t.id),of=Z.gegnerBasis+(opp?opp.rep:Z.gegnerOhne)/100*Z.gegnerFaktor,lf=t.lg===1?1:t.lg===2?Z.liga2:Z.liga3;return Math.round(Math.min(t.cap,t.fans*pf*ff*of*lf*(cup?Z.pokal:1)*(Z.zufallBasis+R()*Z.zufallSpanne)));}
+function attendance(t,opp,cup){const Z=RF.zuschauer,ref=Z.refBasis+t.rep*Z.refJeAnsehen,pf=clamp(Math.pow(ref/t.price,Z.preisExponent),Z.preisMin,Z.preisMax),ff=Z.formBasis+Z.formJePunkt*formPts(t.id),of=Z.gegnerBasis+(opp?opp.rep:Z.gegnerOhne)/100*Z.gegnerFaktor,lf=t.lg===1?1:t.lg===2?Z.liga2:Z.liga3;return Math.round(Math.min(t.cap,t.fans*pf*ff*of*lf*(cup?Z.pokal:1)*(Z.zufallBasis+R()*Z.zufallSpanne)*fanFaktor(t)));} // Fanstimmung (K27 §5.4b, U16)
 function heimspielEinnahmen(m,cup){const t=myT();if(autoB('preise'))t.price=clamp(Math.round(richtPreis(t)),RF.ticketPreis.min,RF.ticketPreis.max); // Automatik: Richtpreis (K36)
   const att=attendance(t,m.a>=1000?null:S.teams[m.a],cup);m.att=att;S.att[0]+=att;S.att[1]++;statZuschauer(m,att);money('Zuschauer',att*t.price);if(t.shop)money('Fanartikel',att*RF.fanartikel[t.shop]);if(t.logen)money('VIP-Logen',t.logen*RF.loge);}
 // Buchungen je Ligaspieltag des eigenen Vereins

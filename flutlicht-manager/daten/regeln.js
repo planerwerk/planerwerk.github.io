@@ -370,6 +370,18 @@ const REGELN={
     folgen:{beziehung:[-30,-15],forderung:1.15,stimmung:-10,vertrauen:-3},
     deadline:{tage:3},bieter:{plus:[0.02,0.10],gierig:0.05,frist:2}},
 
+  // Fanstimmung (K27 §5.4b, §11, U16), 0–100. Montags traegheit Richtung Ziel = start + Erfolg + Preise + Identifikation + Entscheidungen + Umfeld, je Baustein begrenzt.
+  // erfolg: jePlatz × (erwarteter Platz − Platz) ab abSpiel Ligaspielen, serie × (Punkte je Spiel der letzten fünf − serieMitte), Anlässe (derby, pokal, pokalAusTiefer) mit verblassen je Woche.
+  // preise: faktor × (1 − Preis/Richtpreis). ident: basis + jeLiebling (der negative Teil für Söldnertruppen kommt später), Liebling ab lieblingSpiele (Eigengewächs ab lieblingEigen). entscheid: lieblingVerkauf. umfeld: eroeffnung, gespraech [min, max] nach Glaubwürdigkeit, leer unter leerUnter.
+  // nachfrage: Zuschauerfaktor bei 0, bei start und bei 100. vorstand: tote Zone [unten, oben], darunter /teilerUnten bis minUnten, darüber /teilerOben bis maxOben.
+  // protestUnter: Pfiffe in Ligaheimspielen, Selbstvertrauen pfiffeSv. gespraechTage: Abstand zwischen zwei Fan-Gesprächen. ALLE WERTE GESCHÄTZT (K27 §12).
+  fanstimmung:{start:60,traegheit:0.15,
+    erfolg:{spanne:[-20,20],jePlatz:2,abSpiel:5,serie:10,serieMitte:1.3,derby:6,pokal:2,pokalAusTiefer:-4,verblassen:0.2},
+    preise:{spanne:[-15,5],faktor:30},ident:{spanne:[-5,10],basis:0,jeLiebling:2,lieblingSpiele:60,lieblingEigen:20},
+    entscheid:{spanne:[-15,5],lieblingVerkauf:-8,verblassen:0.1},umfeld:{spanne:[-5,5],eroeffnung:3,gespraech:[3,8],leer:-5,leerUnter:25,verblassen:0.1},
+    nachfrage:[0.85,1,1.10],vorstand:{zone:[45,75],teilerUnten:3,minUnten:-10,teilerOben:5,maxOben:5},
+    protestUnter:30,pfiffeSv:-0.2,gespraechTage:30},
+
   // Training (K07 §11): Einheiten, Intensität, Vorlagen nach Abstand zum Spiel, Kondition und Entwicklung aus dem Wochenreiz, Belastung, Verletzungen, Umschulung
   training:{
     staerkeMin:25,staerkeMax:99,
@@ -779,6 +791,7 @@ const REGELN={
       versprechen:{ab:3,name:'Zusagen und Teamevent',tab:'kabine'},
       suchauftrag:{ab:4,name:'Suchauftrag für Scouts',tab:'transfer'},
       abwerben:{ab:4,name:'Spieler heimlich abwerben',tab:'transfer'}, // K20 §5.4, U15 (ohne Automatik: dein Verein wirbt nie von selbst ab)
+      fangespraech:{ab:2,name:'Fan-Gespräch',tab:'stadion'}, // K27 §5.4b, U16 (ohne Automatik)
       sportgericht:{ab:4,name:'Sportgericht',tab:'buero',auto:1,wer:'der Verein',tut:'nimmt Strafen an oder legt bei harten Anträgen Einspruch ein'},
       medizin:{ab:4,name:'Fit spritzen und früher zurückholen',tab:'kader',auto:1,wer:'der Mannschaftsarzt',tut:'spritzt nur in wichtigen Spielen Stammspieler mit kurzer Verletzung fit'},
       sponsor:{ab:4,name:'Trikotsponsor',tab:'buero',auto:1,wer:'der Verein',tut:'nimmt das Angebot mit dem höchsten festen Betrag'},
@@ -825,4 +838,4 @@ const REGELN={
 // Schreibschutz: Zur Laufzeit darf kein Code eine Regel ändern.
 (function frieren(o){Object.freeze(o);Object.values(o).forEach(v=>{if(v&&typeof v==='object'&&!Object.isFrozen(v))frieren(v);});})(REGELN);
 // Kurzformen für den Code
-const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui,RL=REGELN.live,RTA=REGELN.taktik,RSO=REGELN.sommer,RST=REGELN.stab,RD=REGELN.disziplin,RMD=REGELN.medizin,RWB=REGELN.wettbewerbe,RTS=REGELN.testspiele,RLA=REGELN.lager,RKA=REGELN.kabine,RGS=REGELN.gespraeche,RSC=REGELN.scouting,RLZ=REGELN.lizenz,RJ=REGELN.jugend,RZ=REGELN.zweite,RTR=REGELN.transfers,RVT=REGELN.vertraege,RBE=REGELN.berater,RLE=REGELN.leihe,RCV=REGELN.computer,RBZ=REGELN.beziehungen,RKT=REGELN.karten,RSTAT=REGELN.statistik,RVB=REGELN.vorbereitung,RAW=REGELN.abwerben;
+const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui,RL=REGELN.live,RTA=REGELN.taktik,RSO=REGELN.sommer,RST=REGELN.stab,RD=REGELN.disziplin,RMD=REGELN.medizin,RWB=REGELN.wettbewerbe,RTS=REGELN.testspiele,RLA=REGELN.lager,RKA=REGELN.kabine,RGS=REGELN.gespraeche,RSC=REGELN.scouting,RLZ=REGELN.lizenz,RJ=REGELN.jugend,RZ=REGELN.zweite,RTR=REGELN.transfers,RVT=REGELN.vertraege,RBE=REGELN.berater,RLE=REGELN.leihe,RCV=REGELN.computer,RBZ=REGELN.beziehungen,RKT=REGELN.karten,RSTAT=REGELN.statistik,RVB=REGELN.vorbereitung,RAW=REGELN.abwerben,RFS=REGELN.fanstimmung;
