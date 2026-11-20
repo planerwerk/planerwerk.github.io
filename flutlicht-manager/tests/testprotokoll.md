@@ -36,7 +36,7 @@ Die Spitze enthält alle Zweige von U11 bis U18b (Stand 17:27) und den Merge mit
 | ui-zwei-saisons | rot (63) | **neu**, T2.8 |
 | fuzz-karrieren | rot (104) | **neu**, T2.8 |
 | ui-zugang | rot (6) | T1.4 offen, genau dieselben Verstöße wie in Lauf 1 |
-| akzeptanz | läuft | |
+| akzeptanz | rot (3) | wie vorher: Abwehr +0,8, Verhältnis der Bereiche, Tempo 4,71 ms |
 
 **T2.1 Testhilfe `welt(true)` in `tests/presse.js`, `tests/abwerben.js`, `tests/fans.js` bricht ab** (`TypeError: Cannot read properties of null (reading '0')` in `sponsorWaehlen`). Mit Lernstufen wählt der Verein den Sponsor sofort (`sponsorAuto` in `sponsOffers`), danach ist `S.sponsOffers` leer. Korrektur wie in den älteren Tests: `if(S.sponsOffers)F.sponsorWaehlen(0)`. In einer Testkopie mit dieser einen Zeile: presse grün, fans grün, abwerben siehe T2.2. Kein Fehler im Spiel.
 
