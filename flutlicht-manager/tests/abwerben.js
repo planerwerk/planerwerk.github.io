@@ -5,7 +5,7 @@
 const {neueWelt}=require('./sim');
 const probleme=[],pruef=(ok,text,wert)=>{console.log(`${ok?'✓':'✗'} ${text}${wert!=null?': '+wert:''}`);if(!ok)probleme.push(text+(wert!=null?' ('+wert+')':''));};
 const VEREIN=6,SEED=4711,nah=(a,b,e=0.01)=>Math.abs(a-b)<=e*Math.max(1,Math.abs(b));
-function welt(lernstufen){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREIN;S.mgr='Test';if(lernstufen)F.lizenzStart(true);F.setTarget();F.sponsOffers();F.sponsorWaehlen(0);
+function welt(lernstufen){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREIN;S.mgr='Test';if(lernstufen)F.lizenzStart(true);F.setTarget();F.sponsOffers();if(S.sponsOffers)F.sponsorWaehlen(0);
   S.lineup=F.bestXI(VEREIN,W.ev('myT()').form);W.ev('myT()').cash=50e6;return{W,F,S,ev:W.ev};}
 // Ein Spieler eines anderen Erstligisten, nicht vereinstreu (sonst petzt er)
 const ziel=(w,f)=>w.S.pl.find(p=>p.team>=0&&p.team!==VEREIN&&p.team<1000&&w.S.teams[p.team].lg===1&&!w.ev('hatEig')(p,'vereinstreu')&&!p.leihe&&!p.wech&&(!f||f(p)));
@@ -15,9 +15,12 @@ const ziel=(w,f)=>w.S.pl.find(p=>p.team>=0&&p.team!==VEREIN&&p.team<1000&&w.S.te
   pruef(ev('abwerbbar')(fremd)&&!ev('abwerbbar')(eigen)&&(!los||!ev('abwerbbar')(los))&&(!aus||!ev('abwerbbar')(aus)),'Abwerben nur bei Spielern deutscher Computer-Vereine, nicht bei eigenen, Vereinslosen oder im Auslandspool');}
 
 // 2. Formeln: Stimmung unter 40 ×1,3 gegen die Mitte, Restaurant doppelt so riskant wie das Hotel, jedes Treffen +20 %
-{const w=welt(false),{F}=w,p=ziel(w),st=p.st;p.st=55;const mitte=F.abwPlus(p);p.st=30;const schlecht=F.abwPlus(p);p.st=st;
+// Die Stimmung wirkt nach K20 §11 zweimal: über das Wechselinteresse (K19 §5.3) und über den eigenen Faktor. Der Faktor wird bei festem Interesse geprüft (T2.2),
+// die Gesamtwirkung muss darüber liegen.
+{const w=welt(false),{F,ev}=w,p=ziel(w),st=p.st,ab=x=>{p.st=x;const v=F.abwPlus(p);p.st=st;return v;};
+  const gesamt=[ab(55),ab(30)];ev('globalThis.__wiAlt=wechselInteresse;wechselInteresse=()=>'+ev('wechselInteresse')(p));const fest=[ab(55),ab(30)];ev('wechselInteresse=__wiAlt');
   const h=F.abwRisiko(p,'hotel',0),r=F.abwRisiko(p,'restaurant',0),h2=F.abwRisiko(p,'hotel',2);
-  pruef(mitte>0&&nah(schlecht/mitte,1.3)&&nah(r/h,2)&&nah(h2/h,1.4),'Formeln: schlechte Stimmung ×1,3, Restaurant doppelt so riskant wie das Hotel, nach zwei Treffen ×1,4',`${mitte.toFixed(2)} → ${schlecht.toFixed(2)}, Hotel ${(h*100).toFixed(1)} %, Restaurant ${(r*100).toFixed(1)} %, Hotel nach 2 Treffen ${(h2*100).toFixed(1)} %`);}
+  pruef(fest[0]>0&&nah(fest[1]/fest[0],1.3)&&gesamt[1]/gesamt[0]>=1.3&&nah(r/h,2)&&nah(h2/h,1.4),'Formeln: schlechte Stimmung ×1,3 (bei festem Interesse, mit dem Interesse mehr), Restaurant doppelt so riskant wie das Hotel, nach zwei Treffen ×1,4',`fest ${fest[0].toFixed(2)} → ${fest[1].toFixed(2)}, mit Interesse ${gesamt[0].toFixed(2)} → ${gesamt[1].toFixed(2)}, Hotel ${(h*100).toFixed(1)} %, Restaurant ${(r*100).toFixed(1)} %, Hotel nach 2 Treffen ${(h2*100).toFixed(1)} %`);}
 
 // 3. Treffen ohne Auffliegen bis zum Wechselwunsch: einmal je Woche, Kosten je Treffen, ab 70 Wechselwunsch Stufe 3 und Transferliste
 {const w=welt(false),{F,S}=w,p=ziel(w);F.abwRisiko=()=>0;const cash0=W0(w),O=w.ev('RAW').ort.hotel;let n=0,doppelt=false;

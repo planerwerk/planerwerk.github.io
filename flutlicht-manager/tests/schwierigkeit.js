@@ -20,10 +20,12 @@ for(const k of ['leicht','schwer']){const {W,S}=R[k],ls=W.ev('meineLigaspiele()'
   pruef(!!S.ult===unter&&!S.fired,`${St(k).name}: Vertrauen 10 nach 7 Spieltagen → ${unter?'Ultimatum':'nichts'}, keine sofortige Entlassung`);}
 // Gleiche Würfel: eine Saison ohne Eingriffe auf Leicht und Schwer, im Gleichschritt, bis zum Saisonende oder bis eine der beiden Welten den Trainer entlässt
 // (eine Entlassung ist eine andere Lage, danach dürfen sich die Welten unterscheiden)
-{const a=welt('leicht'),b=welt('schwer');let n=0,gleich=true;
-  while(n<500&&a.S.phase!=='end'&&!a.S.fired&&!b.S.fired){n++;for(const w of [a,b]){if(w.W.ev('heuteMeinSpiel()'))w.F.tagesSpiele(w.W.S.tag);w.F.weiter();}
+// Verglichen wird Tag für Tag: Die Halte unterscheiden sich je Stufe (Erinnerungen, seit U15 auch „Deadline Day“ nur auf Leicht), also läuft die Welt weiter, die zurückliegt (T2.7).
+{const a=welt('leicht'),b=welt('schwer');let n=0,gleich=true,verglichen=0;
+  while(n<1000&&a.S.phase!=='end'&&!a.S.fired&&!b.S.fired){n++;const ta=a.W.S.tag,tb=b.W.S.tag;
+    for(const w of ta===tb?[a,b]:ta<tb?[a]:[b]){if(w.W.ev('heuteMeinSpiel()'))w.F.tagesSpiele(w.W.S.tag);w.F.weiter();}
     if(a.S.fired||b.S.fired)break; // am Tag der Entlassung endet der Vergleich
-    if(JSON.stringify(a.W.S.res)!==JSON.stringify(b.W.S.res)){gleich=false;break;}}
+    if(a.W.S.tag===b.W.S.tag){verglichen++;if(JSON.stringify(a.W.S.res)!==JSON.stringify(b.W.S.res)){gleich=false;break;}}}
   const sp=Object.values(a.W.S.res).reduce((s,l)=>s+l.length,0);
   pruef(gleich&&sp>=100,'Gleiche Ergebnisse auf Leicht und Schwer (gleicher Seed, ohne Eingriffe)',`${sp} Ergebnisse verglichen${b.S.fired?', Schwer: entlassen an Tag '+b.S.tag:''}`);}
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

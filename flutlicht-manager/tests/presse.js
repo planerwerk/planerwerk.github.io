@@ -5,7 +5,7 @@
 const {neueWelt}=require('./sim');
 const probleme=[],pruef=(ok,text,wert)=>{console.log(`${ok?'✓':'✗'} ${text}${wert!=null?': '+wert:''}`);if(!ok)probleme.push(text+(wert!=null?' ('+wert+')':''));};
 const VEREIN=6,SEED=4711;
-function welt(lernstufen){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREIN;S.mgr='Test';if(lernstufen)F.lizenzStart(true);F.setTarget();F.sponsOffers();F.sponsorWaehlen(0);
+function welt(lernstufen){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREIN;S.mgr='Test';if(lernstufen)F.lizenzStart(true);F.setTarget();F.sponsOffers();if(S.sponsOffers)F.sponsorWaehlen(0);
   S.lineup=F.bestXI(VEREIN,W.ev('myT()').form);S.phase='play';return{W,F,S,ev:W.ev,t:W.ev('myT()')};}
 const frei=(w)=>{const P=w.F.presseS();P.letzte=-99;P.sperre={};P.n={};w.S.pk=null;};
 const gegner=w=>w.S.teams.find(x=>x.lg===w.t.lg&&x.id!==VEREIN).id;

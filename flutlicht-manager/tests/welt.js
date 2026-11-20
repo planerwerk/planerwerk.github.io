@@ -136,8 +136,12 @@ const mitLeihProtokoll=(F,getS,C)=>{const log=[],orig=F.kiLeihe;
   let d=S.tag;while(F.fensterNr(d)!==1&&d<S.tag+400)d++;S.tag=d; // erster Tag des Winterfensters
   const t=S.teams.filter(x=>x.id!==S.my&&x.lg===2).sort((a,b)=>a.rep-b.rep)[0];delete t.profil;
   const P0=plan(t),g=['IV','ZM','ST','AV','OM'].find(x=>P0.gr[x].stamm>0&&P0.gr[x].soll>P0.gr[x].stamm),G0=P0.gr[g];
-  // Die Gruppe genau besetzen, den besten Spieler lange verletzen, die Herausforderer deutlich schwächer machen (kein brauchbarer Ersatz)
-  G0.l.slice(G0.soll).forEach(p=>{p.team=-1;p.list=0;});G0.l[0].inj=70;G0.l.slice(G0.stamm,G0.soll).forEach(p=>{p.str=Math.round(P0.niveau-P0.Q.herausforderer-4);});
+  // Die Gruppe genau besetzen, den besten Spieler lange verletzen, die Herausforderer deutlich schwächer machen (kein brauchbarer Ersatz).
+  // Seit T1.2: Fehlen Spieler, kommen schwache Herausforderer dazu, und die übrigen Stammspieler sind gut genug für ihren Platz. Sonst bliebe nach der Leihe
+  // ein zu schwacher Stammspieler übrig, und der Bedarf „verletzt“ hinge an ihm statt an der Verletzung.
+  const schwach=Math.round(P0.niveau-P0.Q.herausforderer-4),fp0=Object.keys(C.gruppeVon).find(k=>C.gruppeVon[k]===g);
+  G0.l.slice(G0.soll).forEach(p=>{p.team=-1;p.list=0;});for(let i=G0.l.length;i<G0.soll;i++)F.addP(F.mkPlayer({pos:C.grob[g],fp:fp0,team:t.id,age:27,str:schwach}));
+  G0.l[0].inj=70;G0.l.slice(1,G0.stamm).forEach(p=>{p.str=Math.max(p.str,Math.round(P0.niveau-P0.Q.stamm));p.inj=0;});G0.l.slice(G0.stamm,G0.soll).forEach(p=>{p.str=schwach;});
   const n=F.planBedarf(plan(t)).find(x=>x.grund==='verletzt'&&x.g===g);
   // Beim Verleiher (stärkster Erstligist) einen 22-Jährigen dazu, der dort Überhang ist und beim Zweitligisten Herausforderer wäre
   const v=S.teams.filter(x=>x.id!==S.my&&x.lg===1).sort((a,b)=>b.rep-a.rep)[0];delete v.profil;

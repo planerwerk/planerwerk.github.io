@@ -35,7 +35,8 @@ const kaufe=(w,p,fee,yrs=3)=>{const els=w.W.ev('document');els.getElementById('f
   // Spott: zwei Spottangebote, dann Abbruch und vier Wochen Pause
   delete S.verh[p.id];const s1=ev('kaufRunde')(p,Math.round(F0*0.3)),s2=ev('kaufRunde')(p,Math.round(F0*0.3)),v=ev('verhandlungVon')(p),s3=ev('kaufRunde')(p,F0*2);
   pruef(!s1.ok&&!s2.ok&&s2.text.includes('bricht')&&v.pause===S.tag+T.pause&&!s3.ok&&s3.text.includes('nicht mehr'),'Spott: Nach zwei Spottangeboten bricht der Verein ab und redet vier Wochen nicht, auch nicht über ein hohes Angebot',s2.text);
-  S.tag+=T.pause;const s4=ev('kaufRunde')(p,F0);S.tag-=T.pause;pruef(s4.ok,'Nach der Pause wird wieder verhandelt');
+  // Seit U12c kosten Spottangebote Beziehung, die Forderung steigt dadurch leicht: nach der Pause die aktuelle Forderung bieten (T1.5)
+  S.tag+=T.pause;const F1=ev('forderung')(p),s4=ev('kaufRunde')(p,F1);S.tag-=T.pause;pruef(s4.ok&&F1>=F0,'Nach der Pause wird wieder verhandelt (zur aktuellen Forderung, nach zwei Spottangeboten nicht billiger)',`${F0} → ${F1}`);
   delete S.verh[p.id];let n=0,r;do{r=ev('kaufRunde')(p,Math.round(F0*0.7));n++;}while(!r.text?.includes('bricht')&&n<10);
   pruef(n===T.runden.kauf,'Höchstens vier Runden: Danach bricht der Verein ab',`nach ${n} Angeboten`);}
 

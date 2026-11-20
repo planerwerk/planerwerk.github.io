@@ -70,5 +70,5 @@ module.exports=()=>{
     S.ausland.v.forEach(v=>{const n=zahl[v.id]||0;if(n<3||n>14)e.push(`Kern ${v.name}: ${n}`);});
     (S.offers||[]).forEach(o=>{if(o.tid>=2000&&!S.ausland.v[o.tid-2000])e.push('Angebot von unbekanntem Auslandsverein');});}
   return e;};
- window.__scan=function(){const t=document.getElementById('app').innerText+' || '+document.getElementById('ov').innerText;const re=/undefined|NaN|\[object|\bnull\b|Infinity/;const i=t.search(re);return i<0?'':t.slice(Math.max(0,i-70),i+40).replace(/\s+/g,' ');};
+ window.__scan=function(){const t=document.getElementById('app').innerText+' || '+document.getElementById('ov').innerText;const re=/undefined|NaN|\[object|(?<!zu )\bnull\b|Infinity/; /* „Spiele zu null“ in der Statistik ist kein Fehler (T2.8) */const i=t.search(re);return i<0?'':t.slice(Math.max(0,i-70),i+40).replace(/\s+/g,' ');};
 };

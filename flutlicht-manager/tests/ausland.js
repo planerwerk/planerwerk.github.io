@@ -95,8 +95,11 @@ const scout=(S,F,q,gebiet,ev=F.__ev)=>{let x;for(let i=0;i<80;i++){x=F.stabNeu('
   pruef(!fehler&&p&&p.team===S.my&&isFinite(p.str)&&isFinite(p.fit)&&p.st>=0&&p.st<=100,'Mit dem Neuzugang laufen Tage, Wochen und Spiele fehlerfrei',fehler||`Tag ${S.tag}`);
 
   // 10. Verkauf ins Ausland (K32 §3.1): Angebot eines Auslandsvereins annehmen, der Spieler zieht in den Pool
-  const eigen=ev('squad')(S.my).sort((a,b)=>b.str-a.str)[5],av=S.ausland.v[0],n0=S.ausland.pl.length,cash=t.cash;S.offers=[{pid:eigen.id,tid:av.id,amt:5e6,bis:S.tag+7}];F.acceptOffer(0);
-  pruef(eigen.team===av.id&&S.ausland.pl.includes(eigen)&&!S.pl.includes(eigen)&&S.ausland.pl.length===n0+1&&t.cash===cash+5e6&&!S.offers.length&&ev('kenntnis')(eigen)===5,'Verkauf ins Ausland: Spieler im Pool, Geld gebucht, Angebot erledigt',`${eigen.n} zu ${av.name}`);}
+  const eigen=ev('squad')(S.my).sort((a,b)=>b.str-a.str)[5],av=S.ausland.v[0],n0=S.ausland.pl.length,cash=t.cash;S.offers=[{pid:eigen.id,tid:av.id,amt:5e6,bis:S.tag+7}];
+  // Außerhalb des Fensters wird der Wechsel nur vorgemerkt (U10a) und zum Fensterbeginn vollzogen. Wo die Tage davor enden, hängt an den Halten (T2.6).
+  const offen=ev('fensterOffen')(),vorgemerkt=()=>!offen&&!!eigen.wech&&eigen.wech.nach===av.id&&t.cash===cash+5e6&&!S.offers.length;F.acceptOffer(0);const vm=vorgemerkt();
+  if(!offen&&eigen.wech){S.tag=eigen.wech.ab;ev('wechselTag')(S.tag);}
+  pruef((offen||vm)&&eigen.team===av.id&&S.ausland.pl.includes(eigen)&&!S.pl.includes(eigen)&&S.ausland.pl.length===n0+1&&t.cash===cash+5e6&&!S.offers.length&&ev('kenntnis')(eigen)===5,'Verkauf ins Ausland: Spieler im Pool, Geld gebucht, Angebot erledigt (außerhalb des Fensters erst vorgemerkt, dann zum Fensterbeginn)',`${eigen.n} zu ${av.name}${offen?'':', vorgemerkt bis Tag '+S.tag}`);}
 
 // 11. Angebote aus dem Ausland (K32 §3.1): Ein Teil der Angebote für deine Spieler kommt von Auslandsvereinen, die sportlich passen und das Budget haben
 {const {S,F,ev}=welt(0),liste=ev('squad')(S.my).sort((a,b)=>b.str-a.str).slice(3,11);let aus=0,inl=0,passt=true;
