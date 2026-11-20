@@ -1066,3 +1066,23 @@ Zweig `mitarbeit/popolupo-u12-vorstand` (UX1 folgt laut PLAN §7 direkt auf U12)
 | BP3 | **Escape schließt Fenster mit Schließen-Knopf** (Spielerkarte, Menü, Jugend, Zweite, Lizenz). Entlassung und Saisonbilanz haben keinen und bleiben offen. | ✅ |
 | BP4 | **Erster Lauf wird Verstöße finden** (zum Beispiel Kontraste der Regler oder Tabellen ohne Überschriften). Sie kommen nach `konzepte/_usability.md`, abgearbeitet wird danach. | 📌 erwartet |
 | BP5 | **Nicht nachgeprüft:** `axe.source` und das Feld `impact` (K40 §12). Das Skript meldet, wenn `axe.source` fehlt. | ⚠️ prüfen |
+
+---
+
+## BQ. Nachtrag zu U13 Statistik und Historie (20. November 2026, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-u13-statistik` (baut auf U12 auf). Konzept: K34 §5.3 bis §5.9 und §12. Neue Datei `js/statistik.js`. Kein Test gelaufen.
+
+| # | Befund | Status |
+|---|---|---|
+| BQ1 | **Vorlagen mit eigenem Strom `vorlagen` je Spiel**, nach dem Spiel verteilt. Ergebnisse, Noten und alle anderen Ströme bleiben gleich. `tests/statistik.js` vergleicht eine Saison mit und ohne Statistik. | ✅ entworfen |
+| BQ2 | **Marktwert +5 % für Geehrte** (bis zum Ende der folgenden Saison) ändert Preise und damit ab der zweiten Saison den Transfermarkt. Läufe über mehrere Saisons (`tests/welt.js 10`, `tests/fuzz-karrieren.js`) sehen andere Wechsel. Je Liga und Saison sind das etwa 15 Spieler. | ⚠️ messen |
+| BQ3 | **Speicher:** geschätzt 1700 aktive Spieler mit im Schnitt 6 Zeilen zu 45 Zeichen, dazu Archiv (etwa 2 KB je Saison) und Ehemalige (höchstens 400). Grob 500 KB nach 20 Saisons. Der Test misst anteilig. | ⚠️ messen |
+| BQ4 | **Meldungen:** Bundesliga-Rekorde kommen fast nie (echte Startwerte). Rekordtransfer und Rekorde der eigenen Liga melden erst ab der zweiten Saison, Vereinsrekorde nur beim Übertreffen eines alten Werts. In den ersten Saisons nach dem Start kann der Rekordtransfer trotzdem mehrmals fallen. | ⚠️ messen |
+| BQ5 | **Gleichschritt (`tests/lizenz.js`, `tests/schwierigkeit.js`):** Die Statistik würfelt nur im eigenen Strom. Der Ruf +5 für den Trainer der Saison wirkt nur auf deine Jobangebote. | ✅ entworfen |
+| BQ6 | **Rechenzeit der Ansicht:** Die Seite „Saison“ läuft bei jedem Aufbau über alle Spieler (Ligen, Ausland, Jugend, Zweite). Im Browser nicht gemessen. | ⚠️ messen |
+| BQ7 | **Browser-Tests:** `tests/ui-zugang.js` und `tests/ui-zwei-saisons.js` prüfen jetzt auch die Ansicht Statistik. Der Vergleich hat eine leere Kopfzelle oben links, axe kann das als kleinen Verstoß melden (zählt nicht, nur schwere Verstöße zählen). | ⚠️ messen |
+| BQ8 | **Alte Spielstände:** `S.stat`, `p.sst` und `p.kar` entstehen beim ersten Spiel. Die Statistik beginnt dann mit der laufenden Saison. `tests/statistik.js` prüft das. | ✅ |
+| BQ9 | **Zwei Torjägerlisten:** Die Tabelle zeigt weiter `topScorers` (Ligatore nach dem heutigen Verein), die Statistik zählt je Liga aus den Zeilen. Bei einem Wechsel zwischen den Ligen im Winter können sie sich unterscheiden. Die Ehrung folgt der Statistik. | 📌 später angleichen |
+| BQ10 | **Nicht gebaut:** Sprüche-Chronik (wartet auf K29), Turnierpokale (K11), Gehalt des Trainers (K28), Startwerte der Rekorde für die 2. und 3. Liga, Linien für Form und Marktwert (gespeichert, angezeigt wird nur die Stärke). | 📌 später |
+| BQ11 | **`tests/statistik.js`:** sechs Prüfungen, siehe Test-README. Nie gelaufen. Dafür hat `tests/sim.js` die Option `vorher` bekommen (läuft vor dem Welt-Aufbau). | ⚠️ offen |

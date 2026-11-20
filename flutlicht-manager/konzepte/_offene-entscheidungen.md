@@ -504,6 +504,21 @@ Datei: `konzepte/K34-statistik.md`
 
 Elf des Jahres in 4-3-3, volle Details drei Saisons lang, Sprüche-Chronik bis 100 Einträge.
 
+**Mit U13 von mir vorläufig entschieden (20.11.2026, K34 §12 Nr. 1 bis 16):**
+
+- Statistik ab Spielbeginn. Eine Zeile je Saison und Verein.
+- Monatsverlauf nur für den eigenen Kader.
+- Vorlagen nach dem Spiel mit eigenem Strom. Die Anteile je Torart sind geschätzt.
+- Ehrungen für alle drei Ligen, Meldungen für die 1. Liga und eigene Leute.
+- Feste Gewichte für Spieler und Talent der Saison. Trainer der Saison nach Punkten über der Erwartung.
+- Marktwert +5 % nach einer Ehrung, für dich Ruf +5 als Trainer der Saison.
+- Echte Bundesliga-Rekorde als Startwert. 2. und 3. Liga beginnen leer, kein Startwert für den Rekordtransfer.
+- Ehemalige ab 150 Ligaspielen, mit Ehrung oder mit 30 Spielen für einen deiner Vereine. Jubiläen ab Spielbeginn.
+- Vergleich über „Vergleichen“ auf der Spielerkarte.
+- Lizenz `statistik` ab der ersten Stufe.
+
+Offen: Sprüche-Chronik (K29), Turnierpokale (K11), Gehalt in der Karriere (K28), Rekord-Startwerte der 2. und 3. Liga.
+
 ## K35b – Look und Stil
 Datei: `konzepte/K35b-look.md`
 

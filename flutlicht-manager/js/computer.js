@@ -114,7 +114,8 @@ function kiWechsel(p,b,preis,art){const von=p.team>=0?S.teams[p.team]:null;
     kabineAbgang(p,von.id);S.offers=S.offers.filter(o=>o.pid!==p.id);news(`Wechsel perfekt: ${p.n} geht für ${fmt(preis)} von ${von.name} zu ${b.name}.`,'tr');
     bezAendern(von.id,b.id,RBZ.anlass.kiWechsel,`Transfer ${p.n}`);} // zum Listenpreis, also fair (K17 §12 Nr. 8, U12c)
   else if(b.id===S.my)stabMeldung(`Der Verein hat den vereinslosen ${p.n} verpflichtet.`);
-  p.team=b.id;p.list=0;p.ask=0;p.ct=riA(RM.neuerVertrag);p.sal=salaryFor(p.str);p.seit=absTag(S.tag);p.abl=preis;neuzugang(p,b.id);}
+  p.team=b.id;p.list=0;p.ask=0;p.ct=riA(RM.neuerVertrag);p.sal=salaryFor(p.str);p.seit=absTag(S.tag);p.abl=preis;neuzugang(p,b.id);
+  if(von)statTransfer(p,preis,von.id,b.id);} // Rekordtransfer und Vereinsrekorde (K34 §5.6, U13)
 
 // ---------- Leihen unter Computer-Vereinen (K31 §5.9, U11d1) ----------
 // Leihbar: höchstens alterMax Jahre, im Kaderplan seines Vereins Überhang (Ausbildungsverein: auch Talent), gesund, kein vereinbarter Wechsel, nicht geliehen, nicht in der Zweiten.

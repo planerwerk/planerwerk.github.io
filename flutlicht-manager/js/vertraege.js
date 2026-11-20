@@ -88,7 +88,7 @@ function vertraegeWoche(d){const V=RVT,t=myT();
   if(fensterOffen(d))squad(S.my).filter(p=>p.ak&&!p.wech).forEach(p=>{const B=S.teams.filter(b=>b.id!==S.my&&aktiv(b)&&b.rep>=t.rep&&b.cash>=p.ak&&hatBedarf(b,p)&&vwKauf(p,b.id)>=p.ak);
     if(!B.length||R()>=V.ausstieg.chance)return;const b=pick(B),betrag=p.ak;money('Transfers',betrag);b.cash-=betrag;bezDuAendern(b.id,RBZ.anlass.ausstieg,`Ausstiegsklausel von ${p.n} gezogen`); // K17, U12c
     kabineAbgang(p,S.my);vertragEnde(p);S.offers=S.offers.filter(o=>o.pid!==p.id);
-    p.team=b.id;p.list=0;p.ct=riA(RM.neuerVertrag);p.seit=absTag(d);p.abl=betrag;neuzugang(p,b.id);news(`Ausstiegsklausel gezogen: ${b.name} zahlt ${fmt(betrag)} für ${p.n}. Er wechselt sofort.`,'bad');});
+    p.team=b.id;p.list=0;p.ct=riA(RM.neuerVertrag);p.seit=absTag(d);p.abl=betrag;neuzugang(p,b.id);statTransfer(p,betrag,S.my,b.id);news(`Ausstiegsklausel gezogen: ${b.name} zahlt ${fmt(betrag)} für ${p.n}. Er wechselt sofort.`,'bad');});
   // Vorvertrag woanders: im letzten halben Jahr, wenn du seit acht Wochen nicht mit ihm über einen Vertrag geredet hast (ohne Vorwarnung, K21 §4.3)
   if(vorvertragZeit(d)&&!autoB('vertraege'))squad(S.my).filter(p=>p.ct===1&&!p.wech&&!p.leihe&&!(S.vtGespr&&S.vtGespr[p.id]>=d-V.gespraechTage)).forEach(p=>{
     const B=S.teams.filter(b=>b.id!==S.my&&aktiv(b)&&b.rep>=t.rep-V.vorvertrag.ansehenMinus&&hatBedarf(b,p));if(!B.length||R()>=V.vorvertrag.chance)return;const b=pick(B),ber=beraterVon(p);

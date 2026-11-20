@@ -18,7 +18,7 @@ function openP(id){const p=PIX.get(id);if(!p)return;if(istJugend(p))return openJ
   if(!mine&&!aus&&t)act+=bezKarte(p.team); // Beziehung zu seinem Verein (K17, U12c)
   if(!mine)act+=scoutKarte(p);
   const kad=aus?avStaerke(t):p.team>=0?teamLevel(p.team):null,jung=p.age<=23;
-  const werte=!mine?scoutWerte(p,kad):`<div class="card rgs">${rgAnzeige({label:'Stärke',sub:jung?'1–99, Schraffur: Talent':'1–99',min:1,max:99,wert:Math.round(p.str),talent:jung?talentBand(p):null,marker:kad?[{v:kad,t:'Ø Kader '+Math.round(kad)}]:[]})}
+  const werte=!mine?scoutWerte(p,kad):`<div class="card rgs">${rgAnzeige({label:'Stärke',sub:jung?'1–99, Schraffur: Talent':'1–99',min:1,max:99,wert:Math.round(p.str),talent:jung?talentBand(p):null,marker:kad?[{v:kad,t:'Ø Kader '+Math.round(kad)}]:[],trend:(p.mvl||[]).map(x=>x[2])})}
     ${rgAnzeige({label:'Form',sub:'0–20, Mitte 10: Leistung gegenüber der Erwartung, beschleunigt die Entwicklung',min:0,max:20,wert:p.form,dez:1,marker:[{v:RP.form.mitte,t:'Mitte'}]})}
     ${rgAnzeige({label:'Frische',sub:'wirkt auf die Stärke im Spiel',min:0,max:100,wert:Math.round(p.fit),einheit:' %',zonen:RU.zonenFitness})}
     ${rgAnzeige({label:'Kondition',sub:'Trainingszustand: wie schnell die Frische sinkt und zurückkommt',min:0,max:100,wert:Math.round(p.ko)})}
@@ -35,7 +35,7 @@ function openP(id){const p=PIX.get(id);if(!p)return;if(istJugend(p))return openJ
       ${p.ls?`<p class="dim">Lernt gerade ${esc(RPm[p.ls.k].name)}: ${Math.round(p.ls.f)} %</p>`:opts.length?'':'<p class="dim">Gerade nichts zu lernen.</p>'}<p class="dim">Lernplätze im Verein: ${squad(S.my).filter(x=>x.ls).length} von ${lernPlaetze(S.my)} belegt</p>`:''}</div>`;
   ov(`<div class="phead"><span class="pos ${p.pos}">${p.pos}</span><h2>${esc(p.n)}</h2><button class="x" onclick="closeOv()" aria-label="Schließen">✕</button></div>
   <div class="facts">${fact('Verein',t?esc(t.name)+(aus?` (${esc(gruppenName(avGruppe(t)))})`:''):'vereinslos')}${fact('Nationalität',esc(natName(p)))}${fact('Alter',p.age)}${fact('Berater',esc(beraterText(p)))}${jung?fact('Talent',stars(p)):''}${fact(mine?'Marktwert':'Marktwert (geschätzt)',fmt(v))}${fact('Gehalt',fmt(p.sal))}${p.team>=0?fact('Vertrag bis',S.season+p.ct):''}${fact('Selbstvertrauen',svWort(p.sv))}${!mine&&p.ww>=3?fact('Wechselwunsch','will weg'):''}${aus?'':fact('Ligatore',p.g)+fact('Einsätze',p.apps)}${p.lastG?fact('Letzte Note',p.lastG.toFixed(1).replace('.',',')):''}${p.inj>0?fact(p.vl&&p.vl.art==='krankheit'?'Krank':'Verletzt',verletzungText(p)||p.inj+' Tage'):''}${(p.vh||[]).length?fact('Verletzungen (2 Jahre)',p.vh.filter(x=>x.art!=='krankheit').length):''}${sperrText(p)?fact('Sperre',sperrText(p).replace(/^gesperrt \(|\)$/g,'')):''}${aus?'':fact('Gelbe Karten',`Liga ${(p.kt&&p.kt.liga)||0} · Pokal ${(p.kt&&p.kt.pokal)||0}`)}</div>
-  ${werte}<div class="grid">${profil}${mine?stimmungKarte(p):''}${act}</div>`);}
+  ${werte}<div class="grid">${profil}${mine?stimmungKarte(p):''}${act}${statKarte(p)}</div>`);} // Statistik und Vergleichen (K34 §5.9, U13)
 // „Tag beenden“ (K01): erst Erinnerungen, dann dein Spiel (Vorbericht, Anpfiff, Konferenz), dann weiter bis zum nächsten Halt.
 function tagBeenden(ohneErinnerung){if(LIVE){liveFrame();liveRender();return;}if(S.live){liveFortsetzen();if(LIVE)return;}if(CONF){confFrame();renderConf();return;}if(BUSY)return;
   if(S.phase==='end'){showSummary();return;}if(S.fired){showFired();return;}
@@ -61,7 +61,7 @@ function confEnd(){if(!CONF)return;CONF.min=CONF.maxM;tickConf();}
 function tickConf(){if(!CONF)return;CONF.min=Math.min(CONF.maxM,CONF.min+CONF.speed);if(CONF.min>=CONF.maxM&&!CONF.done){CONF.done=true;clearInterval(CONF.timer);}renderConf();}
 function scoreAt(r,mn){const s=[0,0];r.ev.forEach(e=>{if(e.t==='G'&&e.m<=mn)s[e.s]++;});return s;}
 function evText(e,r){const tm=esc(tn(e.s?r.a:r.h)),k=e.m*7+e.s*3;
-  if(e.t==='G'){const L=(e.art&&TICKER_ARTEN[e.art])||TICKER_TOR;return`<b>${esc(L[k%L.length].replace('{n}',e.n).replace('{sc}',e.sc.join(':')))}</b> <span class="dim">${tm}</span>`;}
+  if(e.t==='G'){const L=(e.art&&TICKER_ARTEN[e.art])||TICKER_TOR;return`<b>${esc(L[k%L.length].replace('{n}',e.n).replace('{sc}',e.sc.join(':')))}</b>${e.vn?` (Vorlage ${esc(e.vn)})`:''} <span class="dim">${tm}</span>`;} // Vorlage seit U13 (K34 §5.4)
   if(e.t==='C')return esc(e.x||TICKER_CHANCE[k%TICKER_CHANCE.length].replace('{n}',e.n).replace('{gk}',e.gk));
   if(e.t==='Y')return`Gelbe Karte für ${esc(e.n)} <span class="dim">${tm}</span>`;
   if(e.t==='R')return`<b>${e.gy?'Gelb-Rot':'Rote Karte'}</b> für ${esc(e.n)} <span class="dim">${tm}</span>`;

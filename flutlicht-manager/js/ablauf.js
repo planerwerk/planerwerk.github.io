@@ -29,6 +29,7 @@ function tagesSpieleAbschliessenLauf(out){const d=out.tag;S.gespielt=d;
   const spielten=new Set(),wbs=new Set();out.list.forEach(r=>{spielten.add(r.h);spielten.add(r.a);const w=wbVon(r);wbs.add(r.h+':'+w);wbs.add(r.a+':'+w);});
   sperrenAbsitzen(wbs);
   out.list.forEach(r=>applyMatch(r,!!r.cup));
+  statistikNachSpiel(out.list,d); // Statistik, Vorlagen (eigener Strom je Spiel), Rekorde, Jubiläen (K34, U13)
   einsatzBuchen(out.list,d); // Einsatzzeit und Bankzeit nach Grund (K14 §12), nach den Noten
   praemienNachSpiel(out.list); // Prämien deiner Spieler (K21, U10b)
   mitStrom(strom('praegung',S.season,d),()=>praegungNachSpiel(out.list,d)); // Prägungen junger Spieler (K08 §5.3)
@@ -73,14 +74,14 @@ function taeglichLauf(d){const T=RT;praegungTag(d);wechselTag(d); // vereinbarte
 function woechentlich(d){return mitStrom(strom('woche',S.season,d),()=>woechentlichLauf(d));}
 function woechentlichLauf(d){if(!imUrlaub())mitStrom(strom('training',S.season,d),training);mitStrom(strom('kabine',S.season,d),()=>kabineWoche(d));mitStrom(strom('jugend',S.season,d),()=>jugendWoche(d));mitStrom(strom('zweite',S.season,d),()=>zweiteWoche(d));mitStrom(strom('vertraege',S.season,d),()=>vertraegeWoche(d));mitStrom(strom('berater',S.season,d),()=>beraterWoche(d));leiheWoche(d);scoutingWoche();mitStrom(strom('ausland',S.season,d),auslandWoche);mitStrom(strom('markt',S.season,d),market);
   mitStrom(strom('vorstandKI',S.season,d),kiVorstandWoche); // Vorstand und Trainerwechsel der Computer-Vereine (K31 §5.10, U11d2)
-  if(+mmtt(d).slice(3)<=7)bezVergessen(); // Beziehungen: am ersten Montag des Monats 5 % zurück zum Grundwert (K17 §4, U12c)
+  if(+mmtt(d).slice(3)<=7){bezVergessen();statistikMonat();} // erster Montag des Monats: Beziehungen 5 % zurück zum Grundwert (K17 §4, U12c), Verlauf des eigenen Kaders (K34 §5.3, U13)
   vorstandWoche(); // träger Anteil des Vertrauens aus Bausteinen, Meldung bei Konto im Minus (K28 §5.1, U12a, js/vorstand.js)
   S.trust=clamp(S.trust,0,100);vorstandPruefen();
   mitStrom(strom('ereignisse',S.season,d),()=>kartenWoche(d));} // Ereigniskarten als Letztes der Woche (K30 §5.5, U12d, js/karten.js)
 
 function attendance(t,opp,cup){const Z=RF.zuschauer,ref=Z.refBasis+t.rep*Z.refJeAnsehen,pf=clamp(Math.pow(ref/t.price,Z.preisExponent),Z.preisMin,Z.preisMax),ff=Z.formBasis+Z.formJePunkt*formPts(t.id),of=Z.gegnerBasis+(opp?opp.rep:Z.gegnerOhne)/100*Z.gegnerFaktor,lf=t.lg===1?1:t.lg===2?Z.liga2:Z.liga3;return Math.round(Math.min(t.cap,t.fans*pf*ff*of*lf*(cup?Z.pokal:1)*(Z.zufallBasis+R()*Z.zufallSpanne)));}
 function heimspielEinnahmen(m,cup){const t=myT();if(autoB('preise'))t.price=clamp(Math.round(richtPreis(t)),RF.ticketPreis.min,RF.ticketPreis.max); // Automatik: Richtpreis (K36)
-  const att=attendance(t,m.a>=1000?null:S.teams[m.a],cup);m.att=att;S.att[0]+=att;S.att[1]++;money('Zuschauer',att*t.price);if(t.shop)money('Fanartikel',att*RF.fanartikel[t.shop]);if(t.logen)money('VIP-Logen',t.logen*RF.loge);}
+  const att=attendance(t,m.a>=1000?null:S.teams[m.a],cup);m.att=att;S.att[0]+=att;S.att[1]++;statZuschauer(m,att);money('Zuschauer',att*t.price);if(t.shop)money('Fanartikel',att*RF.fanartikel[t.shop]);if(t.logen)money('VIP-Logen',t.logen*RF.loge);}
 // Buchungen je Ligaspieltag des eigenen Vereins
 function finanzenLiga(m){const t=myT();if(m.h===S.my)heimspielEinnahmen(m,false);
   money('TV-Gelder',tvGeld(t));

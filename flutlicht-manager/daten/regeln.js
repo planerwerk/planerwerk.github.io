@@ -337,6 +337,25 @@ const REGELN={
   karten:{seltenheit:{haeufig:3,gelegentlich:20,selten:100,sehrSelten:400},wochenJeSaison:40,
     infoProWoche:5,entscheidung:{kleinProWoche:1,grossProMonat:1,jeBereichProWoche:1},halteProWoche:4,sperrTage:120,log:100},
 
+  // Statistik und Historie (K34 §5.3 bis §5.9, §11, U13). ALLE ANTEILE UND GEWICHTE GESCHÄTZT (K34 §12).
+  // vorlage.anteil: Chance auf eine Vorlage je Art des Tores (keine bei Elfmeter, direktem Freistoß, Eigentor). gewicht: je Position auf dem Platz (linke Form),
+  // staerkeExp: Gewicht × (Stärke/mitte)^staerkeExp, flankengeber: Faktor bei Kopfball und Flanken, sonst flankengeberSonst.
+  // zuNullMin: Torwart mit so vielen Minuten bekommt ein Spiel zu null. verlauf: so viele Monatswerte für eigene Spieler. verdichtenNach: Saisons ohne Einsatz bis zur Summenzeile.
+  // ehrung: Elf des Jahres (Grobposition: Anzahl), Mindestzahl Noten, Gewichte für Spieler und Talent der Saison, Marktwert für geehrte Spieler, Ruf für den Trainer der Saison.
+  // rekord.allzeit: echte Bundesliga-Rekorde als Startwert der 1. Liga (Quellen in K34). meldenAb: 2. und 3. Liga melden Rekorde erst ab dieser Saison des Spielstands (1 = zweite).
+  // ehemalige: Grenzen für die Liste der Ehemaligen. jubilaeum: Pflichtspiele für den Verein (jedes Vielfache), Jahre im Verein.
+  statistik:{
+    vorlage:{anteil:{ecke:0.95,freistossFlanke:0.95,kopf:0.9,gross:0.85,konter:0.85,halb:0.75,fern:0.4,patzer:0.1},keine:['elfmeter','freistoss'],
+      gewicht:{LA:3,OM:3,SM:3,HS:2.5,LM:2.5,ZM:2,MS:1.5,LV:1.5,DM:1,IV:0.4,TW:0.05},staerkeExp:1,mitte:70,flankengeber:2.5,flankengeberSonst:1.2,flanken:['kopf','ecke','freistossFlanke']},
+    zuNullMin:60,verlauf:36,verdichtenNach:5,
+    ehrung:{elf:{TW:1,AB:4,MF:3,ST:3},elfMinNoten:20,spieler:{minNoten:20,mitte:4,note:10,tor:1,vorlage:0.7,platz:0.5},
+      talent:{bisAlter:21,minNoten:10,mitte:4,fortschritt:2,note:5},marktwert:0.05,trainerRuf:5},
+    rekord:{allzeit:{1:{sieg:{hg:12,ag:0,h:'Borussia Mönchengladbach',a:'Borussia Dortmund',datum:'29.4.1978'},tore:{n:41,name:'Robert Lewandowski',verein:'FC Bayern München',saison:'2020/21'},
+      serie:{n:53,verein:'FC Bayern München',zeit:'November 2012 bis März 2014'}}},meldenAb:1},
+    ehemalige:{ligaspiele:150,vereinSpiele:30,max:400},
+    jubilaeum:{spiele:100,jahre:10},
+    speicher:{max:1e6,saisons:20}}, // Ziel (K34 §10): Statistik nach 20 Saisons unter 1 MB im Spielstand (geprüft in tests/statistik.js)
+
   // Training (K07 §11): Einheiten, Intensität, Vorlagen nach Abstand zum Spiel, Kondition und Entwicklung aus dem Wochenreiz, Belastung, Verletzungen, Umschulung
   training:{
     staerkeMin:25,staerkeMax:99,
@@ -712,6 +731,7 @@ const REGELN={
       pokal:{ab:1,name:'Pokal, Relegation, Supercup',tab:'pokal'},
       ruecktritt:{ab:1,name:'Rücktritt',tab:'buero'}, // K28 §5.7, U12b
       ereignisse:{ab:1,name:'Entscheidungen in Ereigniskarten',tab:'buero',auto:1,wer:'der Co-Trainer',tut:'wählt bei jeder Karte die vorsichtige Voreinstellung'}, // K30 §5.5, U12d
+      statistik:{ab:1,name:'Statistik und Historie',tab:'statistik'}, // K34 §5.9, U13 (steuert nichts, darum ohne Automatik)
       stimmung:{ab:1,name:'Stimmung und Kabine ansehen',tab:'kabine'},
       stil:{ab:2,name:'Spielstil',tab:'aufst',auto:1,wer:'der Co-Trainer',tut:'wählt den Stil gegen jeden Gegner neu'},
       zurufe:{ab:2,name:'Zurufe und Halbzeitansprache',tab:'buero'},
@@ -790,4 +810,4 @@ const REGELN={
 // Schreibschutz: Zur Laufzeit darf kein Code eine Regel ändern.
 (function frieren(o){Object.freeze(o);Object.values(o).forEach(v=>{if(v&&typeof v==='object'&&!Object.isFrozen(v))frieren(v);});})(REGELN);
 // Kurzformen für den Code
-const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui,RL=REGELN.live,RTA=REGELN.taktik,RSO=REGELN.sommer,RST=REGELN.stab,RD=REGELN.disziplin,RMD=REGELN.medizin,RWB=REGELN.wettbewerbe,RTS=REGELN.testspiele,RLA=REGELN.lager,RKA=REGELN.kabine,RGS=REGELN.gespraeche,RSC=REGELN.scouting,RLZ=REGELN.lizenz,RJ=REGELN.jugend,RZ=REGELN.zweite,RTR=REGELN.transfers,RVT=REGELN.vertraege,RBE=REGELN.berater,RLE=REGELN.leihe,RCV=REGELN.computer,RBZ=REGELN.beziehungen,RKT=REGELN.karten;
+const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui,RL=REGELN.live,RTA=REGELN.taktik,RSO=REGELN.sommer,RST=REGELN.stab,RD=REGELN.disziplin,RMD=REGELN.medizin,RWB=REGELN.wettbewerbe,RTS=REGELN.testspiele,RLA=REGELN.lager,RKA=REGELN.kabine,RGS=REGELN.gespraeche,RSC=REGELN.scouting,RLZ=REGELN.lizenz,RJ=REGELN.jugend,RZ=REGELN.zweite,RTR=REGELN.transfers,RVT=REGELN.vertraege,RBE=REGELN.berater,RLE=REGELN.leihe,RCV=REGELN.computer,RBZ=REGELN.beziehungen,RKT=REGELN.karten,RSTAT=REGELN.statistik;

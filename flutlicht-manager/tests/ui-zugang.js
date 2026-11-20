@@ -4,7 +4,7 @@
 // ACHTUNG: Dieses Skript ist noch nie gelaufen (UX1 entstand am 20.11. ohne Node.js und Playwright). Beim ersten Lauf sind Verstöße zu erwarten (K40 §10).
 const {chromium}=require('playwright');const path=require('path');
 const FILE='file://'+path.resolve(__dirname,'..','index.html');
-const TABS=['Büro','Kalender','Kader','Kabine','Aufstellung','Tabelle','Spielplan','Pokal','Transfers','Finanzen','Stadion','Training & Jugend'];
+const TABS=['Büro','Kalender','Kader','Kabine','Aufstellung','Tabelle','Spielplan','Pokal','Statistik','Transfers','Finanzen','Stadion','Training & Jugend'];
 const probleme=[],hinweise=[],pruef=(ok,text,wert)=>{console.log(`${ok?'✓':'✗'} ${text}${wert!=null?': '+wert:''}`);if(!ok)probleme.push(text+(wert!=null?' ('+wert+')':''));};
 let AXE=null;try{AXE=require('axe-core');}catch(e){hinweise.push('axe-core fehlt (npm i axe-core): nur die Tastatur wird geprüft.');}
 (async()=>{

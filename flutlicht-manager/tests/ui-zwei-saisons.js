@@ -4,7 +4,7 @@ const {chromium}=require('playwright');const path=require('path');const PRUEFUNG
 const FILE='file://'+path.resolve(__dirname,'..','index.html');
 const problems=[];const note=(w,m)=>{problems.push(`[${w}] ${m}`);};
 const seasons=[];const actlog=[];const done=new Set();let rem=0,stops=0;const proWoche={};
-const TABS=['Büro','Kalender','Kader','Kabine','Aufstellung','Tabelle','Spielplan','Pokal','Transfers','Finanzen','Stadion','Training & Jugend'];
+const TABS=['Büro','Kalender','Kader','Kabine','Aufstellung','Tabelle','Spielplan','Pokal','Statistik','Transfers','Finanzen','Stadion','Training & Jugend'];
 (async()=>{
 const b=await chromium.launch();const ctx=await b.newContext({viewport:{width:1280,height:900}});const pg=await ctx.newPage();
 pg.on('pageerror',e=>note('JS','PAGEERR '+e.message+' | '+(e.stack||'').split('\n').slice(1,3).join(' ')));

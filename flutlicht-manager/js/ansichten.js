@@ -2,7 +2,7 @@
 const POSO={TW:0,AB:1,MF:2,ST:3};
 const SORTS={pos:(a,b)=>POSO[a.pos]-POSO[b.pos]||b.str-a.str,str:(a,b)=>b.str-a.str,age:(a,b)=>a.age-b.age,val:(a,b)=>value(b)-value(a)};
 const SORTL={pos:'Position',str:'Stärke',age:'Alter',val:'Marktwert'};
-const TABS=[['buero','Büro'],['kalender','Kalender'],['kader','Kader'],['kabine','Kabine'],['aufst','Aufstellung'],['tabelle','Tabelle'],['spielplan','Spielplan'],['pokal','Pokal'],['transfer','Transfers'],['finanzen','Finanzen'],['stadion','Stadion'],['training','Training & Jugend'],['stab','Stab']];
+const TABS=[['buero','Büro'],['kalender','Kalender'],['kader','Kader'],['kabine','Kabine'],['aufst','Aufstellung'],['tabelle','Tabelle'],['spielplan','Spielplan'],['pokal','Pokal'],['statistik','Statistik'],['transfer','Transfers'],['finanzen','Finanzen'],['stadion','Stadion'],['training','Training & Jugend'],['stab','Stab']];
 const fact=(k,v)=>`<div><span class="lbl">${k}</span><b>${v}</b></div>`;
 const chip=id=>`<span class="dot" style="background:${S.teams[id].col}"></span>`;
 const avgAtt=()=>S.att[1]?Math.round(S.att[0]/S.att[1]).toLocaleString('de-DE'):'–';
@@ -212,6 +212,7 @@ V.kalender=()=>{const h=datumVon(S.tag),y=h.getUTCFullYear(),m=h.getUTCMonth()+K
   <div class="kgrid">${['Mo','Di','Mi','Do','Fr','Sa','So'].map(x=>`<div class="kh">${x}</div>`).join('')}${c}</div>
   <p class="dim" style="margin-top:8px">H = Heimspiel, A = Auswärtsspiel, dazu das Kürzel des Gegners. Gestrichelt: Länderspiel- oder Winterpause. Termine 2026/27 nach dem Rahmenterminkalender, einzelne Spieltage geschätzt.</p></div>
   <div class="card"><h3>Nächste Termine</h3>${komm.length?`<table><tbody>${komm.map(([d,e])=>{const f=e.art==='ende'?null:paarung(e),o=f?(f[0]===S.my?f[1]:f[0]):null;return`<tr><td>${datumKurz(d)}</td><td>${esc(spielName(e))}${f?`<br><span class="dim">${f[0]===S.my?'gegen':'bei'} ${esc(tn(o))}</span>`:e.art==='pokal'?'<br><span class="dim">Gegner wird ausgelost</span>':''}</td></tr>`;}).join('')}</tbody></table>`:'<p class="dim">Keine Termine mehr.</p>'}</div></div>`;};
+V.statistik=()=>statistikAnsicht(); // Statistik und Historie (K34 §5.9, U13, js/statistik.js)
 V.pokal=()=>{const done=S.cup.hist.length>=6,alive=S.cup.alive.includes(S.my);
   return`<div class="card"><h2>DFB-Pokal ${S.season}/${(S.season+1)%100}</h2><p>${done?`Pokalsieger: <b>${esc(tn(S.cup.alive[0]))}</b>`:alive?'Dein Verein ist noch im Wettbewerb.':'Dein Verein ist ausgeschieden.'} <span class="dim">64 Teams: 36 aus der 1. und 2. Liga, ${RF.pokal.drittligisten} aus der 3. Liga und ${RF.pokal.amateure} Amateurklubs. K.-o.-Modus mit Verlängerung und Elfmeterschießen.</span></p>
   <p class="dim">Termine: ${POKAL_RUNDEN.map((n,i)=>`${n} ${datumKurz(S.plan.pokal[i][0])}`).join(' · ')}</p>
