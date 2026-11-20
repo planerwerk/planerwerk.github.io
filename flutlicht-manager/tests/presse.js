@@ -11,11 +11,11 @@ const frei=(w)=>{const P=w.F.presseS();P.letzte=-99;P.sperre={};P.n={};w.S.pk=nu
 const gegner=w=>w.S.teams.find(x=>x.lg===w.t.lg&&x.id!==VEREIN).id;
 
 // 1. Katalog: jede Antwortart gibt es, jede Frage hat drei Arten, keine unbekannten Platzhalter, jeder Anlass hat Fragen ohne Spieler
-{const {ev}=welt(false),P=ev('PRESSE'),bekannt=['verein','gegner','spieler','platz','serie','trainer','liga'],fehler=[];
+{const {ev}=welt(false),P=ev('PRESSE'),bekannt=['verein','gegner','spieler','platz','serie','trainer','liga','medium'],fehler=[];
   Object.entries(P.anlaesse).forEach(([k,a])=>{if(!a.fragen.some(f=>!f.sp))fehler.push(k+': nur Fragen mit Spieler');a.fragen.forEach(f=>{if(f.o.length!==3||f.o.some(x=>!P.antworten[x]||!P.arten[x]))fehler.push(k+': '+f.t);
     (f.t.match(/\{(\w+)\}/g)||[]).forEach(m=>{if(!bekannt.includes(m.slice(1,-1)))fehler.push(k+': '+m);});if(f.t.includes('{spieler}')&&!f.sp)fehler.push(k+': {spieler} ohne sp');});});
   Object.keys(P.arten).forEach(x=>{if(!P.antworten[x]||!P.schlagzeilen[x])fehler.push('Art ohne Texte: '+x);});
-  pruef(!fehler.length,'Katalog: 13 Anlässe, je Frage drei bekannte Antwortarten, keine unbekannten Platzhalter',fehler.slice(0,5).join(' | ')||`${Object.keys(P.anlaesse).length} Anlässe`);}
+  pruef(!fehler.length,'Katalog: 14 Anlässe, je Frage drei bekannte Antwortarten, keine unbekannten Platzhalter',fehler.slice(0,5).join(' | ')||`${Object.keys(P.anlaesse).length} Anlässe`);}
 
 // 2. Anlass: zwei bis drei Fragen, nur eine offen, Abstand 4 Tage, Sperre 21 Tage je Art, Budget 20
 {const w=welt(false),{F,S}=w,a=F.presseAnlass('derby',{gegner:gegner(w)}),n=S.pk?S.pk.fragen.length:0,b=F.presseAnlass('krise',{serie:3});

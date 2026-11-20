@@ -216,6 +216,30 @@ Das ist der Maßstab für die Verbindung zu K09.
 - **Zufall:** Auswahl der Fragen und die Automatik im eigenen Strom `presse`, deine Antworten im Grundstrom.
 - **Noch nicht (U17b und später):** Gerüchteküche (§4.3), Medienpolitik und Exklusivinterview, Maulkorb und Interviews der Spieler, Interview am Spielfeldrand, Computer-Trainer mit Medienprofil, Beziehung zu einzelnen Journalisten, Pressekonferenz nach Urteilen des Sportgerichts.
 
+### 5.5 Umsetzung U17b (20.11.2026): Gerüchteküche
+
+- **Wann:** montags im eigenen Strom `geruechte`, ein bis drei Gerüchte je Woche über die ganze Liga, höchstens eins über deinen Verein (mit 50 % Chance, wenn es einen Anlass gibt).
+- **Quellen (§4.3) und Wahrheitsgehalt:**
+
+  | Quelle | Gerücht | wahr |
+  |---|---|---|
+  | deine Verhandlung (K19) | „{dein Verein} verhandelt mit {Verein} über {Spieler}“ | wahr |
+  | Transferliste eines Computer-Vereins | „{Verein} will {Spieler} abgeben“ | wahr |
+  | Wechselwunsch ab Stufe 2 (K14) | „{Spieler} ist unzufrieden“ | wahr |
+  | gieriger Berater (K22) eines deiner besten Spieler | „Mehrere Vereine wollen {Spieler}“ | halb |
+  | Ultimatum (K28, K31) | „{Trainer} wackelt bei {Verein}“ | wahr |
+  | Beziehung unter −30 (K17) | „Ärger zwischen {Verein} und {Verein}“ | zu 30 % wahr |
+  | Erfindung (Boulevard, Portal) | „{Spieler} vor dem Absprung“, „{Trainer} vor dem Aus“ | falsch |
+
+- **Wirkung:**
+  - Wechselgerücht über einen deiner Spieler: seine Stimmung −3 (Unruhe).
+  - Verkauf eines Lieblings im Gespräch: Fans −2 (K27).
+  - Gerücht über dich als Trainer: Vertrauen −2 (K28).
+  - Bekanntes Interesse (deine Verhandlung oder „mehrere Vereine“): Die Ablöse für diesen Spieler steigt für 30 Tage um 10 % (wahr) oder 15 % (halb). Bei deinen Spielern bieten die Vereine entsprechend mehr. Die Gehaltsforderung bleibt vorerst gleich.
+- **Reaktion:** Ein Gerücht über deinen Verein bringt eine Pressekonferenz „Gerüchte“ (neuer Anlass). Wer dementiert (Rückendeckung) und den Spieler dann doch binnen vier Wochen abgibt, verliert Glaubwürdigkeit (Gedächtnis aus §5.4).
+- **Medien mit Treffsicherheit:** Boulevard 40, Fachblatt 75, Fernsehen 60, Portal 50, Lokalzeitung 65. Nach 30 Tagen wird geprüft: Wechsel- und Trainergerüchte am Ausgang (gewechselt, Trainer weg), die übrigen am Wahrheitsgehalt. Treffer +3, Fehler −3. Die Gerüchteküche im Büro zeigt die letzten Gerüchte mit dem Medium und wie oft es trifft.
+- **Noch nicht:** Medienpolitik (offen, zurückhaltend, abgeschottet), Exklusivinterview, Gerüchte über Computer-Vereine untereinander mit Wirkung auf deren Spieler, Gehaltsforderung bei bekanntem Interesse.
+
 ## 6. Hebel des Spielers
 
 - Ton je Frage wählen.
@@ -288,6 +312,14 @@ Das ist der Maßstab für die Verbindung zu K09.
 12. Wirkungen als Spielwerte nach der Tendenz aus §5.1 (§5.4, Tabelle).
 13. Medienklima als eigener Wert, vorerst nur angezeigt.
 14. Eigene Texte für 54 Fragen in 13 Anlässen, 30 Antworten (drei je Art) und 22 Schlagzeilen zum Start. Die 300 Fragen aus §10 sind das Ziel, der Katalog wächst. Bis dahin wiederholen sich Fragen öfter als in §10 verlangt.
+
+**Vorläufig entschieden mit U17b (20.11.2026):**
+
+15. Ein bis drei Gerüchte je Woche, höchstens eins über deinen Verein (§5.5).
+16. Sieben Quellen mit festem Wahrheitsgehalt, Erfindungen nur von Boulevard und Portal (§5.5).
+17. Wirkung auf Stimmung, Fans, Vertrauen und Ablöse wie in §4.3, Werte geschätzt (§5.5).
+18. Treffsicherheit der Medien als Wert je Medium, geprüft nach 30 Tagen (§5.5).
+19. Neuer Anlass „Gerüchte“ für die Pressekonferenz (§5.5).
 
 **Quellen zu U17a:** Medienrichtlinien 2. Bundesliga 2025/26 (Pflichten der Clubs: Pressekonferenz vor einem Spieltag): https://www.dynamo-dresden.de/fileadmin/04_Verein/06_Presse/Dokumente/2025_26/Medienrichtlinien_2BL_2025_2026.pdf · gemeinsame Pressekonferenz nach dem Spiel in der Verantwortung des Heimclubs: https://www.sport1.de/news/fussball/bundesliga/2024/03/bundesliga-pk-trubel-nach-bayern-schock (Suche vom 20.11.2026, nur Auszüge gelesen).
 

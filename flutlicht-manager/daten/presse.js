@@ -81,6 +81,12 @@ const PRESSE={
       {t:'Haben Sie mit {spieler} gesprochen?',o:['rueckendeckung','kritikSpieler','floskel'],sp:1},
       {t:'Ist das ein Zeichen, dass es in der Kabine nicht stimmt?',o:['rueckendeckung','angriffMedien','floskel']},
       {t:'Wer ersetzt {spieler}, wenn er geht?',o:['rueckendeckung','kritikSpieler','humor'],sp:1}]},
+    geruecht:{name:'Pressekonferenz zu den Gerüchten',fragen:[ // U17b
+      {t:'Laut {medium} will {spieler} den Verein verlassen. Stimmt das?',o:['rueckendeckung','kritikSpieler','floskel'],sp:1},
+      {t:'{medium} berichtet von Interesse anderer Vereine an {spieler}. Verkaufen Sie?',o:['rueckendeckung','angriffMedien','floskel'],sp:1},
+      {t:'Was sagen Sie zu den Berichten über Ihre Zukunft?',o:['ankuendigung','angriffMedien','humor'],trainer:1},
+      {t:'Woher kommen diese Geschichten?',o:['floskel','angriffMedien','humor']},
+      {t:'Gibt es Unruhe in der Kabine?',o:['rueckendeckung','kritikTeam','floskel']}]},
     abwerben:{name:'Pressekonferenz nach dem aufgeflogenen Treffen',fragen:[
       {t:'Sie haben sich heimlich mit {spieler} getroffen. Was sagen Sie dazu?',o:['ankuendigung','angriffMedien','floskel'],sp:1},
       {t:'Der andere Verein ist verärgert. Entschuldigen Sie sich?',o:['rueckendeckung','provokation','humor']},
@@ -107,4 +113,15 @@ const PRESSE={
     floskel:{m:'fach',t:['Viel gesagt, nichts verraten: {trainer} bleibt vage','Pressekonferenz bei {verein}: die üblichen Sätze']},
     humor:{m:'tv',t:['Lacher bei {verein}: {trainer} in Plauderlaune','{trainer} nimmt es mit Humor']},
     ausraster:{m:'boulevard',t:['WUTREDE! {trainer} explodiert','Ausraster bei {verein}: {trainer} verlässt das Podium']},
-    delegiert:{m:'fach',t:['Ohne den Chef: Co-Trainer spricht für {verein}','{trainer} schickt den Co-Trainer']}}};
+    delegiert:{m:'fach',t:['Ohne den Chef: Co-Trainer spricht für {verein}','{trainer} schickt den Co-Trainer']}},
+  // Gerüchteküche (K29 §4.3, §5.5, U17b). Platzhalter: {verein} betroffener Verein, {klub} zweiter Verein, {spieler}, {coach} Trainer des betroffenen Vereins.
+  // m: Medien, die so etwas bringen (das erste ist am wahrscheinlichsten).
+  geruechte:{
+    verhandlung:{m:['fach','lokal','tv'],t:['{klub} verhandelt mit {verein} über {spieler}','Gespräche zwischen {klub} und {verein}: Es geht um {spieler}']},
+    liste:{m:['fach','portal'],t:['{verein} würde {spieler} abgeben','{spieler} darf {verein} verlassen']},
+    unzufrieden:{m:['lokal','boulevard'],t:['{spieler} ist bei {verein} unzufrieden','Frust bei {spieler}: Er fühlt sich bei {verein} nicht mehr wohl']},
+    interesse:{m:['boulevard','portal','tv'],t:['Mehrere Vereine wollen {spieler} von {verein}','Wettrennen um {spieler}: Gleich drei Klubs sind dran']},
+    trainer:{m:['tv','boulevard','fach'],t:['{coach} wackelt bei {verein}','Bei {verein} wird es eng für {coach}']},
+    aerger:{m:['boulevard','portal'],t:['Ärger zwischen {verein} und {klub}','Eiszeit: {verein} und {klub} reden nicht mehr miteinander']},
+    absprung:{m:['boulevard','portal'],t:['{spieler} vor dem Absprung bei {verein}','Insider: {spieler} hat {verein} schon abgeschrieben']},
+    trainerAus:{m:['boulevard','portal'],t:['{coach} vor dem Aus bei {verein}','Erste Kandidaten für die Nachfolge von {coach} gehandelt']}}};

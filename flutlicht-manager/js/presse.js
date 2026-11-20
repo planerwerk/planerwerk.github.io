@@ -6,7 +6,7 @@
 function presseS(){return S.presse||(S.presse={klima:RPK.klimaStart,n:{},letzte:-99,sperre:{},arten:[],aus:{},aussagen:[]});}
 const pkText=(s,c)=>String(s).replace(/\{(\w+)\}/g,(m,k)=>c[k]!=null?c[k]:m);
 const pkOffen=s=>/\{\w+\}/.test(s);
-function pkKontext(pk){const t=myT(),p=pk.pid!=null?PIX.get(pk.pid):null;return{verein:t.name,gegner:pk.gegner!=null?tn(pk.gegner):null,spieler:p?p.n:null,platz:rank(t.lg,S.my),serie:pk.serie!=null?pk.serie:null,trainer:S.mgr||'Der Trainer',liga:ligaName(t.lg)};}
+function pkKontext(pk){const t=myT(),p=pk.pid!=null?PIX.get(pk.pid):null;return{verein:t.name,gegner:pk.gegner!=null?tn(pk.gegner):null,spieler:p?p.n:null,platz:rank(t.lg,S.my),serie:pk.serie!=null?pk.serie:null,trainer:S.mgr||'Der Trainer',liga:ligaName(t.lg),medium:pk.medium&&PRESSE.medien[pk.medium]?PRESSE.medien[pk.medium].name:null};}
 // Text ohne offene Platzhalter, fest gewählt (k), sonst der erste passende
 function pkWahl(l,c,k){const ok=l.map(x=>pkText(x,c)).filter(x=>!pkOffen(x));return ok.length?ok[k%ok.length]:pkText(l[0],c).replace(/\{\w+\}/g,'');}
 const jMedium=n=>(PRESSE.journalisten.find(j=>j.n===n)||{m:'fach'}).m;
@@ -14,10 +14,10 @@ const jMedium=n=>(PRESSE.journalisten.find(j=>j.n===n)||{m:'fach'}).m;
 // ---------- Anlass (K29 §4.1) ----------
 function presseAnlass(art,o={}){if(S.phase!=='play'||S.pk||S.fired)return false;const P=presseS(),Q=RPK,heute=absTag(S.tag),A=PRESSE.anlaesse[art];if(!A)return false;
   if((P.n[S.season]||0)>=Q.budget||heute-P.letzte<Q.abstand||(P.sperre[art]!=null&&heute-P.sperre[art]<Q.sperre))return false;
-  return mitStrom(strom('presse',S.season,S.tag,art),()=>{let l=A.fragen.filter(f=>(o.pid!=null||!f.sp)&&(o.gegner!=null||!f.t.includes('{gegner}'))&&(o.serie!=null||!f.t.includes('{serie}')));if(!l.length)return false;
+  return mitStrom(strom('presse',S.season,S.tag,art),()=>{let l=A.fragen.filter(f=>(o.pid!=null||!f.sp)&&(o.gegner!=null||!f.t.includes('{gegner}'))&&(o.serie!=null||!f.t.includes('{serie}'))&&(o.medium!=null||!f.t.includes('{medium}'))&&(!f.trainer||o.trainer));if(!l.length)return false;
     const n=Math.min(l.length,Q.fragen[0]+Math.floor(R()*(Q.fragen[1]-Q.fragen[0]+1))),fr=[],js=PRESSE.journalisten;
     while(fr.length<n&&l.length)fr.push(l.splice(Math.floor(R()*l.length),1)[0]);
-    P.id=(P.id||0)+1;S.pk={id:P.id,art,tag:S.tag,s:S.season,gegner:o.gegner!=null?o.gegner:null,pid:o.pid!=null?o.pid:null,serie:o.serie!=null?o.serie:null,i:0,
+    P.id=(P.id||0)+1;S.pk={id:P.id,art,tag:S.tag,s:S.season,medium:o.medium||null,gegner:o.gegner!=null?o.gegner:null,pid:o.pid!=null?o.pid:null,serie:o.serie!=null?o.serie:null,i:0,
       fragen:fr.map(f=>({t:f.t,o:f.o,sp:f.sp?1:0,j:js[Math.floor(R()*js.length)].n})),antw:[]};
     P.n[S.season]=(P.n[S.season]||0)+1;P.letzte=heute;P.sperre[art]=heute;
     if(autoB('presse'))presseDelegieren(true);else news(`Pressekonferenz heute: ${A.name}. Im Büro hingehen oder den Co-Trainer schicken.`);return true;});}

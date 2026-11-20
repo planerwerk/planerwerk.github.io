@@ -1172,3 +1172,17 @@ Zweig `mitarbeit/popolupo-u18-trainerpool` (baut auf U17 auf). Konzept: K32 §3.
 | BV5 | **Ruf der Computer-Trainer** wirkt noch nirgends außer bei der Wahl des Nachfolgers. Später: Jobangebote für dich gegen Konkurrenz, Medienprofil (K29). | 📌 später |
 | BV6 | **Nicht gebaut:** Ex-Spieler als Mitarbeiter im Stab (K16), Karriereende nach K32 §5.1, Ereignisse aus K32 §8 (Altstar, Abschiedsspiel, Rückkehrer, England ruft). | 📌 später |
 | BV7 | **`tests/trainerpool.js`:** fünf Prüfungen, siehe Test-README. Nie gelaufen. | ⚠️ offen |
+
+---
+
+## BW. Basisstand mit Testlauf übernommen, Gerüchteküche U17b (20. November 2026, U17b ohne Testlauf)
+
+| # | Befund | Status |
+|---|---|---|
+| BW1 | **Testlauf auf dem Basisstand:** Der Commit e8ea42d auf `claude/compassionate-galileo-bsbua4` meldet für U10d „alle Tests gelaufen“ und behebt dieselbe verschluckte Buchung der Stab-Gehälter wie mein Commit a789c0a auf U11 (BF8). Ich habe e8ea42d in U11 zusammengeführt (Konflikt in `ablauf.js` zugunsten der Fassung mit `/* */`) und von dort nacheinander in U12 bis U18. Meine Zweige U11 bis U18 selbst sind weiter ungetestet. | ✅ zusammengeführt |
+| BW2 | **Wächter `tests/code.js` (BF9) auf meinen Zweigen:** Ohne Node.js habe ich ihn in Perl nachgebaut (gleiche Regeln) und über U11 bis U18 und U17b laufen lassen. Keine Zeile, in der ein Kommentar Code verschluckt. Gegenprobe mit der fehlerhaften Fassung von `ablauf.js`: wird gefunden. | ✅ |
+| BW3 | **Gerüchteküche im eigenen Strom `geruechte`.** Wirkungen: Stimmung −3 bei Wechselgerüchten über deine Spieler, Vertrauen −2 bei Gerüchten über dich, Fans −2 beim Liebling, Ablöse und Gebote ×1,1 oder ×1,15 für 30 Tage. Die Stimmung ändert sich auch im Lauf ohne Oberfläche, also auch die Ergebnisse (wenig). | ⚠️ messen |
+| BW4 | **Gleichschritt (`tests/lizenz.js`):** Die Gerüchte hängen nur an Dingen, die in beiden Läufen gleich sind (Verhandlungen gibt es im Test nicht, Wechselwunsch, Berater, Ultimatum, Beziehungen, Listen). Die Pressekonferenz dazu fällt unter BU1. | ✅ entworfen |
+| BW5 | **Gebote bei bekanntem Interesse:** `gebotFuer` multipliziert Gebot und Grenze der Transferliste, nicht die Obergrenze `max` für deine Gegenforderung. Wer mehr fordert, kommt also nicht weiter als ohne Gerücht. | 📌 klein |
+| BW6 | **Nicht gebaut:** Medienpolitik, Exklusivinterview, Gerüchte unter Computer-Vereinen mit Wirkung auf deren Spieler, Gehaltsforderung bei bekanntem Interesse. | 📌 später |
+| BW7 | **`tests/geruechte.js`:** sechs Prüfungen, siehe Test-README. Nie gelaufen. `tests/presse.js` kennt den neuen Platzhalter `{medium}` und 14 Anlässe. | ⚠️ offen |

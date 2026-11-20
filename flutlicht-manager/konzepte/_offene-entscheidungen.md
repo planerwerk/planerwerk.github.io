@@ -477,6 +477,14 @@ Datei: `konzepte/K29-medien-presse.md`
 - Das Medienklima ist ein eigener Wert und wird vorerst nur angezeigt.
 - Zum Start 54 Fragen, 30 Antworten und 22 Schlagzeilen.
 
+**Mit U17b von mir vorläufig entschieden (20.11.2026, K29 §12 Nr. 15 bis 19):**
+
+- Ein bis drei Gerüchte je Woche, höchstens eins über deinen Verein.
+- Sieben Quellen mit festem Wahrheitsgehalt. Erfundene Gerüchte kommen nur von Boulevard und Portal.
+- Wirkung auf Stimmung, Fans, Vertrauen und Ablöse. Die Werte sind geschätzt.
+- Jedes Medium hat eine Treffsicherheit. Sie wird nach 30 Tagen geprüft.
+- Neuer Anlass „Gerüchte“ für die Pressekonferenz.
+
 ## K30 – Ereigniskarten und Story-Playbook (Gerüst)
 Datei: `konzepte/K30-ereigniskarten.md`
 
