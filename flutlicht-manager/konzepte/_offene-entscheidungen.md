@@ -543,6 +543,13 @@ Bei der Umsetzung (U9b, 11.11.), ausführlich in K32 §12 Nr. 4–20:
 19. **Lernstufen:** Auslandsmarkt ansehen frei, im Ausland beobachten und kaufen ab B, Suchauftrag Ausland ab A.
 20. **Noch nicht gebaut:** Handel der Computer-Vereine mit dem Ausland (U11), Integration, Deutschkenntnisse, Heimweh, Landsleute, Länderspiele, Ereignisse, Europapokal.
 
+Bei der Umsetzung (U18a, 20.11.), ausführlich in K32 §12 Nr. 21–25:
+21. **Erfundene Cheftrainer** für alle Computer-Vereine, keine echten.
+22. **Nachfolger ohne Zufall** nach dem Ruf, der zum Ansehen passt.
+23. **Ruf der Computer-Trainer** zum Saisonende nach Platz gegen Erwartung, Meister und Abstieg.
+24. **Ex-Spieler als Trainer** mit 15 % ab 150 Ligaspielen, nur erfundene Spieler.
+25. **Pool mit mindestens 12 freien Trainern.**
+
 ## K34 – Statistik und Historie
 Datei: `konzepte/K34-statistik.md`
 

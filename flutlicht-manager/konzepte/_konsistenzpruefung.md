@@ -1154,3 +1154,19 @@ Zweig `mitarbeit/popolupo-u17-presse` (baut auf U16 auf). Konzept: K29 §5.4 und
 | BU7 | **Kampfansagen ohne Gegner** (Antritt, Auftakt ohne Ligaspiel) werden nicht geprüft. | 📌 klein |
 | BU8 | **Nicht gebaut:** Gerüchteküche (U17b), Medienpolitik, Exklusivinterview, Maulkorb, Interviews der Spieler, Interview am Spielfeldrand, Computer-Trainer mit Medienprofil, Journalisten mit Beziehung, Pressekonferenz nach Urteilen. | 📌 später |
 | BU9 | **`tests/presse.js`:** sieben Prüfungen, siehe Test-README. Nie gelaufen. | ⚠️ offen |
+
+---
+
+## BV. Nachtrag zu U18a Trainerpool (20. November 2026, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-u18-trainerpool` (baut auf U17 auf). Konzept: K32 §3.3b und §12 Nr. 21 bis 25. Neue Datei `js/trainerpool.js`. Kein Test gelaufen.
+
+| # | Befund | Status |
+|---|---|---|
+| BV1 | **Trainerwechsel würfelt den Stil nicht mehr:** Der Nachfolger bringt seinen Lieblingsstil mit, `profilStil()` fällt im Strom `vorstandKI` weg. Damit verschieben sich die späteren Würfe dieses Stroms, und die Stile der Vereine nach einem Wechsel sind andere. Ergebnisse ab dem ersten Trainerwechsel weichen von U17 ab. Gleichschritt-Tests vergleichen Läufe desselben Stands und bleiben gültig. | ⚠️ messen |
+| BV2 | **Eigener Strom `trainerpool`** für Aufbau, neue Trainer und Ex-Spieler. Der Aufbau passiert beim ersten Zugriff (Trainerwechsel, Saisonende, Jobwechsel oder Anzeige). Weil er nur im eigenen Strom würfelt, ist der Zeitpunkt egal. | ✅ |
+| BV3 | **Verteilung der Stile:** Freie Trainer bekommen ihren Stil aus `profilStil()` wie bisher die Nachfolger. Die Verteilung über viele Wechsel bleibt gleich. | ✅ entworfen |
+| BV4 | **Keine echten Personen:** Cheftrainer haben erfundene Namen. Ex-Spieler werden nur Trainer, wenn ihr Name nicht in `daten/spieler.js` steht. | ✅ |
+| BV5 | **Ruf der Computer-Trainer** wirkt noch nirgends außer bei der Wahl des Nachfolgers. Später: Jobangebote für dich gegen Konkurrenz, Medienprofil (K29). | 📌 später |
+| BV6 | **Nicht gebaut:** Ex-Spieler als Mitarbeiter im Stab (K16), Karriereende nach K32 §5.1, Ereignisse aus K32 §8 (Altstar, Abschiedsspiel, Rückkehrer, England ruft). | 📌 später |
+| BV7 | **`tests/trainerpool.js`:** fünf Prüfungen, siehe Test-README. Nie gelaufen. | ⚠️ offen |

@@ -397,6 +397,13 @@ const REGELN={
     schiri:{verfahren:0.3,strafe:{1:[20000,50000],2:[10000,25000],3:[5000,12000]}},
     gedaechtnis:{rueckendeckungTage:28,rueckendeckungGlaub:-5,kultFans:2,haemeGlaub:-3,haemeFans:-2,aussagen:40},delegieren:-2,chronikHumor:0.3,chronikMax:100},
 
+  // Trainerpool (K32 §3.3b, U18a): Cheftrainer der Computer-Vereine. aufbau: Ruf = Ansehen + streuung, Alter, freie Trainer mit Ruf poolRuf. wechsel: Ruf des Entlassenen, Nachfolger höchstens ueber über dem Ansehen.
+  // saison: je Platz über/unter der Erwartung (bis platzMax), Meister, Abstieg, freie Trainer vergessen Richtung mitte, Ruhestand der freien ab ruhestand.
+  // exSpieler: ab Ligaspielen mit chance, Ruf basis + Ligaspiele/jeSpiele, mit Ehrung +ehrung. ALLE WERTE GESCHÄTZT (K32 §12 Nr. 21 bis 25).
+  trainerpool:{aufbau:{streuung:[-10,10],alter:[38,62],pool:12,poolRuf:[30,80]},wechsel:{entlassen:-5,ueber:10},
+    saison:{jePlatz:2,platzMax:6,meister:10,abstieg:-6,vergessen:0.05,mitte:40,ruhestand:68},
+    exSpieler:{ab:150,chance:0.15,basis:25,jeSpiele:20,ehrung:10,alter:[34,40]},minPool:12},
+
   // Training (K07 §11): Einheiten, Intensität, Vorlagen nach Abstand zum Spiel, Kondition und Entwicklung aus dem Wochenreiz, Belastung, Verletzungen, Umschulung
   training:{
     staerkeMin:25,staerkeMax:99,
@@ -854,4 +861,4 @@ const REGELN={
 // Schreibschutz: Zur Laufzeit darf kein Code eine Regel ändern.
 (function frieren(o){Object.freeze(o);Object.values(o).forEach(v=>{if(v&&typeof v==='object'&&!Object.isFrozen(v))frieren(v);});})(REGELN);
 // Kurzformen für den Code
-const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui,RL=REGELN.live,RTA=REGELN.taktik,RSO=REGELN.sommer,RST=REGELN.stab,RD=REGELN.disziplin,RMD=REGELN.medizin,RWB=REGELN.wettbewerbe,RTS=REGELN.testspiele,RLA=REGELN.lager,RKA=REGELN.kabine,RGS=REGELN.gespraeche,RSC=REGELN.scouting,RLZ=REGELN.lizenz,RJ=REGELN.jugend,RZ=REGELN.zweite,RTR=REGELN.transfers,RVT=REGELN.vertraege,RBE=REGELN.berater,RLE=REGELN.leihe,RCV=REGELN.computer,RBZ=REGELN.beziehungen,RKT=REGELN.karten,RSTAT=REGELN.statistik,RVB=REGELN.vorbereitung,RAW=REGELN.abwerben,RFS=REGELN.fanstimmung,RPK=REGELN.presse;
+const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui,RL=REGELN.live,RTA=REGELN.taktik,RSO=REGELN.sommer,RST=REGELN.stab,RD=REGELN.disziplin,RMD=REGELN.medizin,RWB=REGELN.wettbewerbe,RTS=REGELN.testspiele,RLA=REGELN.lager,RKA=REGELN.kabine,RGS=REGELN.gespraeche,RSC=REGELN.scouting,RLZ=REGELN.lizenz,RJ=REGELN.jugend,RZ=REGELN.zweite,RTR=REGELN.transfers,RVT=REGELN.vertraege,RBE=REGELN.berater,RLE=REGELN.leihe,RCV=REGELN.computer,RBZ=REGELN.beziehungen,RKT=REGELN.karten,RSTAT=REGELN.statistik,RVB=REGELN.vorbereitung,RAW=REGELN.abwerben,RFS=REGELN.fanstimmung,RPK=REGELN.presse,RTP=REGELN.trainerpool;

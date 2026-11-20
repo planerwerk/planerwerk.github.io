@@ -43,6 +43,18 @@ Teile: **Auslandspool** in Welle 3 (vorgezogen, PLAN §2), der Rest in Welle 4. 
 
 - Vereinslose Trainer für Computer-Vereine (K28, K31): erfundene Trainer, entlassene Trainer, ehemalige Spieler (K16). Je Trainer Ruf, Lieblingsstil (K06), Haltung.
 
+### 3.3b Umsetzung U18a (20.11.2026): Trainerpool
+
+- **Jeder Computer-Verein der drei Ligen hat einen Cheftrainer** mit Namen, Ruf (0–100), Lieblingsstil (K06) und Alter. Dein Verein hat keinen, der Trainer bist du.
+- **Erfundene Namen,** obwohl die Spieler echt sind: Trainer sprechen in Pressekonferenzen und Meldungen, und dort gibt es keine echten Personen (K29 §12 Nr. 3). Die Namen kommen aus derselben Namensliste wie erfundene Spieler.
+- **Aufbau:** Ruf = Ansehen des Vereins −10 bis +10, der Lieblingsstil ist der heutige Stil des Vereins. Dazu 12 freie Trainer im Pool mit Ruf 30 bis 80. Eigener Zufallsstrom `trainerpool`.
+- **Trainerwechsel** (U11d2, K31 §5.10): Der alte Trainer geht mit Ruf −5 in den Pool. Nachfolger ist der freie Trainer, dessen Ruf am besten zum Ansehen des Vereins passt (höchstens 10 darüber), ohne Zufall. Der Verein spielt dann seinen Lieblingsstil. Ist der Pool leer, kommt ein neuer Trainer.
+- **Dein Jobwechsel:** Der Trainer deines neuen Vereins geht in den Pool, dein alter Verein holt einen aus dem Pool.
+- **Saisonende:** Ruf der Trainer im Amt nach Platz gegen Erwartung (2 je Platz, ±6), Meister +10, Abstieg −6. Freie Trainer vergessen 5 % Richtung 40. Alle werden ein Jahr älter, freie Trainer ab 68 hören auf.
+- **Ehemalige Spieler werden Trainer** (§4.1 Nr. 3): Wer mit mindestens 150 Ligaspielen aufhört, wird mit 15 % Trainer im Pool. Ruf 25 + Ligaspiele / 20, mit Ehrung +10. Eigener Strom je Spieler. Mitarbeiter im Stab (K16) aus Ex-Spielern fehlen noch.
+- **Pool nachfüllen:** zum 1. Juli auf mindestens 12 freie Trainer.
+- **Anzeige:** Namen in Meldungen zum Trainerwechsel, beim „Trainer der Saison“ (K34) und im Vorbericht beim Gegner.
+
 ## 4. Abläufe
 
 ### 4.1 Saisonwechsel (1. Juli, gibt es)
@@ -176,6 +188,14 @@ welt:{
 18. **Spielstand:** Poolspieler werden ohne Sperren, Karten und berechnete Eigenschaften gespeichert, Stärke und Form mit zwei Nachkommastellen. Der Pool braucht etwa 740 KB, der ganze Spielstand bleibt über sechs Saisons unter 3 MB.
 19. **Lernstufen (K36):** Der Auslandsmarkt ist als Information frei. Im Ausland beobachten und kaufen ab der B-Lizenz (`ausland`), Suchauftrag im Ausland mit dem Suchauftrag ab A. Angebote aus dem Ausland gehören zu den Transfers (C).
 20. **Noch nicht gebaut:** Computer-Vereine kaufen im Ausland, Auslandsvereine kaufen bei Computer-Vereinen (beides U11, K31), Integration, Deutschkenntnisse, Heimweh und Landsleute (K03 §5.5, K14), Länderspiele (K13), die Ereignisse aus §8, Karriereende nach 5.1, Trainerpool, Europapokal (K37).
+
+**Vorläufig entschieden bei der Umsetzung (U18a, 20. November 2026):**
+
+21. **Erfundene Cheftrainer** für alle Computer-Vereine, keine echten (§3.3b).
+22. **Nachfolger ohne Zufall** nach dem Ruf, der zum Ansehen passt (§3.3b).
+23. **Ruf der Computer-Trainer** zum Saisonende nach Platz gegen Erwartung, Meister und Abstieg (§3.3b).
+24. **Ex-Spieler als Trainer** mit 15 % ab 150 Ligaspielen (§3.3b). Ex-Spieler im Stab kommen mit einem späteren Schritt.
+25. **Pool mit mindestens 12 freien Trainern** (§3.3b).
 
 **Noch zu recherchieren:** Abgänge der Bundesliga ins Ausland je Sommer, durchschnittliches Karriereende von Torhütern.
 

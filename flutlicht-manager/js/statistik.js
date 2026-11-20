@@ -118,7 +118,7 @@ function ehrungenLiga(lg,M,tab){const E=RSTAT.ehrung,l=[...M.values()],maxT=l.re
   const tz=statS().tz;let tr=null,tw=-Infinity;tab.forEach(r=>{const z=tz[r.id];if(!z)return;const w=z[0]-z[1]/100;if(w>tw){tw=w;tr=r.id;}});
   const kurz=a=>[a.p.id,a.p.n,a.tid];
   return{ts:ts.map(a=>kurz(a).concat([a.t])),elf:elf.map(a=>kurz(a).concat([a.p.pos,Math.round(statSchnitt(a)*100)])),sp:sp?kurz(sp):null,ta:ta?kurz(ta):null,
-    tr:tr!=null?[tr,tr===S.my?S.mgr:null,Math.round(tw*10)/10]:null};}
+    tr:tr!=null?[tr,trainerName(tr),Math.round(tw*10)/10]:null};}
 function statistikSaison(sm){const st=statS(),s=S.season,E=RSTAT.ehrung,L=saisonSammeln(s),me=myT();
   const auf={1:[...sm.up,...(sm.rw===sm.rel[1]?[sm.rw]:[])],2:[...sm.up3,...(sm.rw2===sm.rel2[1]?[sm.rw2]:[])],3:[...sm.up4]};
   const sc=S.supercup&&S.supercup.r?S.supercup.r.sieger:null,a={s,tab:{},m:[sm.champ,sm.champ2,sm.champ3],p:sm.cup,sc,auf,ehr:{},eg:Object.assign({},st.eg)};

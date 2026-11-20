@@ -32,7 +32,7 @@ function seasonEndLauf(){
   S.summary=sm;S.phase='end';
   nebenzieleSaison(); // Nebenziele des Vorstands (K28 §5.7, U12b), vor der Prüfung auf Entlassung
   rufSaison(sm); // Ruf als Trainer (K28 §5.4, U12a), vor einer Entlassung, damit die Jobangebote schon den neuen Ruf sehen
-  statistikSaison(sm); // Ehrungen, Saisonarchiv, Vitrine, Karrierezeilen (K34, U13), nach dem Ruf (Trainer der Saison +5) und vor einer Entlassung
+  statistikSaison(sm);trainerSaison(sm); // Ruf der Computer-Trainer (K32 §3.3b, U18a); Ehrungen, Saisonarchiv, Vitrine, Karrierezeilen (K34, U13), nach dem Ruf (Trainer der Saison +5) und vor einer Entlassung
   if(sm.down3.includes(S.my))entlassen(`${me.name} steigt in die Regionalliga ab. Der Verein trennt sich von dir.`);
   if(S.trust<B.entlassenSaisonUnter)entlassen();lizenzRueckblick();kreditAuto();save();}
 // Regionalliga (K32a): je Staffel wird ein Meister gelost, gewichtet nach Ansehen. West und Südwest steigen direkt auf,
@@ -74,7 +74,7 @@ function newSeasonLauf(){wechselVollziehen(true);leiheEnde(); // Leihen enden mi
     if(p.team>=0){p.ct--;if(p.ct<=0){const mein=p.team===S.my;if(mein&&!autoB('vertraege')){news(`Vertrag ausgelaufen: ${p.n} verlässt den Verein.`,'bad');p.team=-1;p.list=0;}
       else if(R()<vertragChance(p,vPlan.get(p.team))){p.ct=riA(Z.vertrag.jahre);p.sal=salaryFor(p.str);if(mein)stabMeldung(`Der Verein hat den Vertrag von ${p.n} verlängert (${p.ct} Jahr${p.ct>1?'e':''}).`);}else{if(mein)news(`Vertrag ausgelaufen: ${p.n} verlässt den Verein. Der Verein hat nicht verlängert.`,'bad');p.team=-1;p.list=0;}}}
     if(p.team!==S.my)p.list=0;});
-  statistikAbschied(S.pl.filter(p=>p.team===-2)); // Ehemalige (K34 §5.3, U13)
+  {const weg=S.pl.filter(p=>p.team===-2);statistikAbschied(weg);trainerNeueSaison(weg);} // Ehemalige (K34 §5.3, U13), Trainerpool mit Ex-Spielern (K32 §3.3b, U18a)
   S.pl=S.pl.filter(p=>p.team!==-2);reindex();mitStrom(strom('auslandSaison',S.season),auslandSaison); // Auslandspool: Alter, Karriereende, neue Talente (K32 §4.1)
   sm.up4.forEach(id=>{if(!squad(id).length&&!zweiteWirdVerein(id))kaderErzeugen(S.teams[id]);}); // deine Zweite nimmt ihren Amateurkader mit (K08 §5.6)
   const N=Z.nachwuchs;
@@ -100,7 +100,7 @@ function kaderAuffuellen(t,base){const Z=RS,need=Z.kaderSoll;
       if(fa&&R()<Z.vereinslosChance){fa.team=t.id;fa.ct=riA(Z.vertrag.jahre);fa.sal=salaryFor(fa.str);}else addP(mkPlayer({pos,age:riA(Z.auffuellAlter),str:Math.round(base-Z.auffuellAbschlag+riA(Z.auffuellStreuung)),team:t.id}));have++;}}}
 function mkJobs(){const J=RV.jobs,r=myT().rep-J.ansehenAbschlag+(ruf()-RV.ruf.start)*RV.ruf.jobsJePunkt, // Ruf als Trainer (K28 §5.4, U12a)
   weg=S.summary?S.summary.down3:[];const c=S.teams.filter(t=>t.id!==S.my&&aktiv(t)&&!weg.includes(t.id)).sort((a,b)=>Math.abs(a.rep-r)-Math.abs(b.rep-r)).slice(0,J.kandidaten);S.jobs=shuffle(c).slice(0,J.angebote).map(t=>t.id);}
-function takeJob(id){const old=myT().name,alt=myT();LAST=null;statStation(id);presseS().antritt=1;S.pk=null; // Stationen des Trainers mit Grund (K34 §5.7, U13), solange S.fired und S.ruecktritt noch gelten
+function takeJob(id){const old=myT().name,alt=myT();LAST=null;statStation(id);presseS().antritt=1;S.pk=null;trainerJobwechsel(alt,id); // Stationen des Trainers mit Grund (K34 §5.7, U13), solange S.fired und S.ruecktritt noch gelten
 versprechenJobwechsel();S.kenntnis={};S.auftraege=[];S.my=id;
   if(aktiv(alt))mitStrom(strom('auffuellen',S.season,S.tag,alt.id),()=>kaderAuffuellen(alt,grundStaerke(alt.rep))); // dein alter Verein ist jetzt ein Computer-Verein und füllt seinen Kader sofort auf
   S.kapFrei={s:S.season,bis:S.tag+14};S.fired=0;S.ult=null;S.ruecktritt=0;S.trust=RV.neuerJob;S.offers=[];S.constr=null;S.loan=0;S.fin={};S.att=[0,0];setTarget();if(!S.spons||S.sponsOffers===null){S.spons=null;sponsOffers();}S.lineup=bestXI(id,myT().form);
