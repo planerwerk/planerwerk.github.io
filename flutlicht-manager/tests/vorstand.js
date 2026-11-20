@@ -53,4 +53,27 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   S.ruf=30;im('jobs',()=>F.mkJobs());const a=schnitt();S.ruf=60;im('jobs',()=>F.mkJobs());const b=schnitt();
   pruef(b>a+5,'Jobangebote: Ruf 60 bringt Vereine mit deutlich mehr Ansehen als Ruf 30',`Schnitt ${Math.round(a)} → ${Math.round(b)}, dein Verein ${ev('myT()').rep}`);}
 
+// 7. Nebenziele (K28 §5.7, U12b): mit dem Saisonziel gesetzt, Anzahl nach dem Ehrgeiz des Präsidenten, gleich bei erneutem Setzen, das Profil zuerst
+{const {S,F,ev,B}=welt(),N=B.nebenziele,t=ev('myT()'),l=()=>ev('meineZiele()').map(z=>z.k).join(','),a=l();F.setTarget();const b=l();
+  const soll=F.praesident(t).ehrgeiz>=N.ehrgeizigAb?N.anzahl[1]:N.anzahl[0],alt=t.profil;t.profil='ausbildung';F.nebenzieleSetzen();const jung=ev('squad')(S.my).some(p=>p.age<=N.jugendBis),c=l();if(alt)t.profil=alt;else delete t.profil;F.nebenzieleSetzen();
+  pruef(a.length>0&&a===b&&a.split(',').length===soll&&(!jung||c.split(',').includes('jugend')),'Nebenziele: mit dem Saisonziel gesetzt, so viele wie der Ehrgeiz des Präsidenten sagt, erneut gesetzt dieselben, beim Ausbildungsverein immer mit Jugend',`${a} (Ehrgeiz ${F.praesident(t).ehrgeiz}), Ausbildungsverein: ${c}`);}
+
+// 8. Stand der Nebenziele und Baustein „Ziele“: Pokal (Runde erreicht, ausgeschieden), Finanzen (gefährdet, zum Saisonende erfüllt oder verfehlt), Jugend (Einsätze)
+{const {S,F,ev,B}=welt(),N=B.nebenziele,me=S.my,st=(z,e)=>F.nebenzielStand(z,e),pk={k:'pokal',min:2},fi={k:'finanzen',min:0},ju={k:'jugend',min:N.jugendEinsaetze};
+  const spiel=[me,9999,1,0];S.cup={alive:[me],hist:[]};const p0=st(pk,false);S.cup.hist=[[spiel]];const p1=st(pk,false);S.cup.hist=[[spiel],[spiel]];const p2=st(pk,false);
+  S.cup={alive:[9999],hist:[[spiel]]};const p3=st(pk,false);
+  S.fin={a:-5};const f0=st(fi,false),f1=st(fi,true);S.fin={a:5};const f2=st(fi,true);
+  const jung=ev('squad')(me).filter(p=>p.age<=N.jugendBis);jung.forEach(p=>{p.apps=0;});const j0=st(ju,false);if(jung.length)jung[0].apps=N.jugendEinsaetze;const j1=jung.length?st(ju,false):'erfuellt';
+  S.ziele={s:S.season,tid:me,l:[pk,fi]};S.cup={alive:[me],hist:[[spiel],[spiel]]};S.fin={a:5};const bs=F.zieleBaustein();
+  pruef(p0==='offen'&&p1==='offen'&&p2==='erfuellt'&&p3==='verfehlt'&&f0==='gefaehrdet'&&f1==='verfehlt'&&f2==='erfuellt'&&j0==='offen'&&j1==='erfuellt'&&bs===N.erfuellt,
+    'Stand: Pokal offen bis zur Zielrunde, dann erfüllt, früher raus verfehlt. Finanzen mit Verlust gefährdet, zum Saisonende verfehlt oder erfüllt. Jugend nach Einsätzen. Baustein +5 je erfülltem',
+    [p0,p1,p2,p3,f0,f1,f2,j0,j1,bs].join(', '));
+  S.trust=50;S.ziele={s:S.season,tid:me,l:[pk,fi]};S.cup={alive:[9999],hist:[[spiel]]};F.nebenzieleSaison();
+  pruef(S.trust===50+N.saisonVerfehlt+N.saisonErfuellt,'Saisonende: je erfülltem Nebenziel +5, je verfehltem −5',`Vertrauen ${S.trust}`);}
+
+// 9. Rücktritt (K28 §5.3, U12b): sofort weg, Ruf −5 statt −8, Jobangebote; mit dem neuen Job ist der Rücktritt vergessen
+{const {S,F,ev,B}=welt();S.phase='play';S.ruf=30;F.ruecktritt();const weg=S.fired===1&&S.ruecktritt===1,r=ev('ruf()'),jobs=(S.jobs||[]).slice();
+  if(jobs.length)F.takeJob(jobs[0]);
+  pruef(weg&&r===30+B.ruf.ruecktritt&&jobs.length>0&&S.fired===0&&!S.ruecktritt&&S.my===jobs[0],'Rücktritt: sofort weg, Ruf −5, Jobangebote, beim neuen Verein ist alles zurückgesetzt',`Ruf ${r}, ${jobs.length} Angebote`);}
+
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

@@ -649,3 +649,11 @@ Im Einzelnen in K28 §5.6 und §12 Nr. 5 bis 12.
 - **Vertrauen:** Siege und Niederlagen zählen nur noch halb. Dazu bewegt es sich jeden Montag ab dem 5. Ligaspiel um 20 % auf ein Ziel aus Platz gegen Saisonziel, Serie, Konto, Kredit und Glaubwürdigkeit zu.
 - **Ultimatum statt sofortiger Entlassung:** zwei Ligaspiele Zeit. Danach entscheidet die Geduld des Präsidenten, ob es ein letztes Ultimatum gibt.
 - **Ruf als Trainer** (Start 30) steigt mit übertroffenen Zielen und Titeln und sinkt mit Abstieg und Entlassung. Er bestimmt, wie gute Vereine dir Jobs anbieten. Im Büro siehst du Ruf, Präsident und ein laufendes Ultimatum.
+
+## K28 Vorstand, U12b (20.11.), vorläufig von mir, gebaut ohne Testlauf
+
+Im Einzelnen in K28 §5.7 und §12 Nr. 13 bis 17.
+
+- **Nebenziele:** Der Vorstand setzt eins, ein ehrgeiziger Präsident zwei. Zur Wahl stehen Pokalrunde, Einsätze für Spieler bis 21 und eine Saison ohne Verlust. Das Profil deines Vereins bestimmt, welches zuerst kommt. Sie wirken auf das Vertrauen, während der Saison und zum Saisonende.
+- **Rücktritt:** jederzeit während der Saison, Ruf −5 statt −8 bei einer Entlassung, danach Jobangebote. Grundlizenz.
+- **Zielgespräch** mit Tiefstapeln und Hochpokern wartet auf Budgets und Prämien (K23).

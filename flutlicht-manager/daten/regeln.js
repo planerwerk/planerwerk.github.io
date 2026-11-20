@@ -646,7 +646,12 @@ const REGELN={
     ultimatum:{spiele:2,entlassung:{basis:0.9,jeGeduld:-0.03}},
     // Ruf als Trainer (K28 §5.4, U12a), 0–100. Zum Saisonende erst vergessen (Richtung start), dann die Anlässe. jobsJePunkt: so viel Ansehen mehr je Punkt Ruf über start bei Jobangeboten.
     // geduldig: Grenzen für die Anzeige der Geduld des Präsidenten (bis ungeduldig: „ungeduldig“, ab geduldig: „geduldig“).
-    ruf:{start:30,vergessen:0.05,jePlatzUeber:3,meister:15,pokal:10,aufstieg:8,abstieg:-6,verfehlt:-4,entlassung:-8,jobsJePunkt:1,ungeduldig:7,geduldig:14},
+    ruf:{start:30,vergessen:0.05,jePlatzUeber:3,meister:15,pokal:10,aufstieg:8,abstieg:-6,verfehlt:-4,entlassung:-8,ruecktritt:-5,jobsJePunkt:1,ungeduldig:7,geduldig:14},
+    // Nebenziele (K28 §3.1, §5.7, U12b): anzahl [normal, Präsident mit Ehrgeiz ab ehrgeizigAb]. pokalRunde je Liga: Index in POKAL_RUNDEN, die erreicht werden muss.
+    // jugend: Spieler bis jugendBis zusammen jugendEinsaetze Einsätze. finanzen: Summe der Buchungen der Saison mindestens 0. profil: dieses Nebenziel kommt beim Profil zuerst (K31 §3.2).
+    // Baustein „Ziele“ im Vertrauen (montags): erfuellt, verfehlt, gefaehrdet je Nebenziel, begrenzt auf baustein. Saisonende: saisonErfuellt oder saisonVerfehlt je Nebenziel.
+    nebenziele:{anzahl:[1,2],ehrgeizigAb:14,pokalRunde:{1:2,2:1,3:1},jugendBis:21,jugendEinsaetze:25,profil:{ausbildung:'jugend',sparsam:'finanzen',ehrgeizig:'pokal'},
+      erfuellt:5,verfehlt:-5,gefaehrdet:-3,baustein:[-10,10],saisonErfuellt:5,saisonVerfehlt:-5},
     entlassenUnter:12,schonfristSpieltage:6, // entlassen erst nach mehr als so vielen eigenen Ligaspieltagen. Die Schwierigkeit ersetzt beide Werte.
     pokalAus:-6,pokalWeiter:1.5,pokalSieg:10,
     saisonErreicht:20,saisonWeitAb:3,saisonWeit:-25,saisonVerfehlt:-8,entlassenSaisonUnter:15,
@@ -691,6 +696,7 @@ const REGELN={
       wechsel:{ab:1,name:'Wechsel im Live-Spiel',tab:'buero'},
       verletzte:{ab:1,name:'Verletztenliste',tab:'kader'},
       pokal:{ab:1,name:'Pokal, Relegation, Supercup',tab:'pokal'},
+      ruecktritt:{ab:1,name:'Rücktritt',tab:'buero'}, // K28 §5.7, U12b
       stimmung:{ab:1,name:'Stimmung und Kabine ansehen',tab:'kabine'},
       stil:{ab:2,name:'Spielstil',tab:'aufst',auto:1,wer:'der Co-Trainer',tut:'wählt den Stil gegen jeden Gegner neu'},
       zurufe:{ab:2,name:'Zurufe und Halbzeitansprache',tab:'buero'},

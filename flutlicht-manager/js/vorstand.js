@@ -2,6 +2,7 @@
 // Zahlen in daten/regeln.js unter REGELN.vorstand (Kurzform RV). Die Computer-Vereine nutzen dieselbe Formel vereinfacht (js/computer.js, kiVorstandWoche, K31 §5.10).
 // ACHTUNG: U12a entstand ohne Testlauf (K28 §5.6), tests/vorstand.js ist noch nie gelaufen.
 // Im Spielstand neu: S.ult = {tid, s, ab (eigene Ligaspiele bei Beginn), n (1 oder 2 = letztes)} während eines Ultimatums, S.ruf (Ruf als Trainer, fehlt = Startwert).
+// Seit U12b (K28 §5.7): S.ziele (Nebenziele der Saison), S.ruecktritt (1 nach einem Rücktritt bis zum nächsten Job), Bereich ruecktritt.
 
 // ---------- Präsident (K28 §3) ----------
 // Geduld, Ehrgeiz, Sparsamkeit (je 1–20), fest aus der Vereinsnummer. Kein Zufallsstrom, alte Spielstände brauchen nichts. Bisher wirkt nur die Geduld.
@@ -23,7 +24,7 @@ function vorstandWoche(){const t=myT(),V=RV.vertrauen;
   if(S.phase!=='play'||S.fired||meineSpieltage()<RV.platzAbSpieltag)return;
   const T=table(t.lg),i=T.findIndex(r=>r.id===S.my);if(i<0)return;
   const finanzen=Math.max(V.finanzMin,(t.cash<0?V.kontoMinus:0)+(S.loan>0?V.kredit:0)),g=glaub(t),umfeld=g<V.glaubUnter?V.umfeldMin*(V.glaubUnter-g)/V.glaubUnter:0;
-  S.trust=clamp(S.trust+(vertrauenZiel(V,T[i],i+1,S.target,finanzen+umfeld)-S.trust)*V.traegheit,0,100);}
+  S.trust=clamp(S.trust+(vertrauenZiel(V,T[i],i+1,S.target,finanzen+umfeld+zieleBaustein())-S.trust)*V.traegheit,0,100);}
 
 // ---------- Ultimatum und Entlassung (K28 §4 Nr. 4, §5.3) ----------
 // Nach jedem Spieltag und jeden Montag. Grenze und Schonfrist aus der Schwierigkeit (K02). Unter der Grenze nach der Schonfrist: Ultimatum über RV.ultimatum.spiele Ligaspiele.
@@ -43,6 +44,47 @@ function entlassen(text){if(S.fired)return;S.fired=1;S.ult=null;rufAendern(RV.ru
 // Anzeige im Büro: laufendes Ultimatum (oder leer)
 function ultimatumText(){const u=S.ult;if(!u||u.tid!==S.my||u.s!==S.season||S.phase!=='play')return'';const rest=Math.max(0,RV.ultimatum.spiele-(meineSpieltage()-u.ab));
   return`<p class="neg"><b>${u.n>1?'Letztes Ultimatum':'Ultimatum'}:</b> noch ${rest} Ligaspiel${rest===1?'':'e'}, dann muss das Vertrauen wieder bei mindestens ${stufe().entlassenUnter} liegen.</p>`;}
+
+// ---------- Nebenziele (K28 §3.1, §5.7, U12b) ----------
+// S.ziele = {s Saison, tid Verein, l: [{k pokal|jugend|finanzen, min}]}. Gesetzt mit dem Saisonziel (setTarget), eigener Strom je Saison und Verein: mehrfaches Setzen gibt dasselbe.
+// Möglich: Pokal (nur wenn du noch drin bist und die Zielrunde nicht schon erreicht hast), Jugend (nur mit Spielern bis jugendBis), Finanzen (immer).
+// Anzahl nach dem Ehrgeiz des Präsidenten, das Nebenziel zum Profil deines Vereins zuerst, den Rest lost der Vorstand.
+function nebenzieleSetzen(){const N=RV.nebenziele,t=myT(),moegl=[],runde=N.pokalRunde[t.lg]||1;
+  if(S.cup&&S.cup.alive.includes(S.my)&&S.cup.hist.length<runde)moegl.push('pokal');
+  if(squad(S.my).some(p=>p.age<=N.jugendBis))moegl.push('jugend');
+  moegl.push('finanzen');
+  const n=praesident(t).ehrgeiz>=N.ehrgeizigAb?N.anzahl[1]:N.anzahl[0],zuerst=vereinsProfile(t).map(k=>N.profil[k]).filter(k=>k&&moegl.includes(k));
+  const l=mitStrom(strom('nebenziele',S.season,S.my),()=>[...new Set([...zuerst,...shuffle(moegl.filter(k=>!zuerst.includes(k)))])].slice(0,n));
+  S.ziele={s:S.season,tid:S.my,l:l.map(k=>({k,min:k==='pokal'?runde:k==='jugend'?N.jugendEinsaetze:0}))};}
+// Nebenziele der laufenden Saison bei deinem Verein (nach einem Jobwechsel ohne neues setTarget: keine)
+const meineZiele=()=>S.ziele&&S.ziele.s===S.season&&S.ziele.tid===S.my?S.ziele.l:[];
+const jugendEinsaetze=()=>squad(S.my).filter(p=>p.age<=RV.nebenziele.jugendBis).reduce((a,p)=>a+(p.apps||0),0);
+// Stand: 'erfuellt', 'verfehlt', 'gefaehrdet' oder 'offen'. ende: Saisonende, dann gibt es nur erfüllt oder verfehlt.
+// Pokal: Runde r erreicht, wenn du in Runde r gespielt hast oder nach r gespielten Runden noch dabei bist.
+function nebenzielStand(z,ende){
+  if(z.k==='pokal'){const c=S.cup||{alive:[],hist:[]},dabei=r=>(c.hist[r]||[]).some(m=>m[0]===S.my||m[1]===S.my)||(c.alive.includes(S.my)&&c.hist.length>=r);
+    return dabei(z.min)?'erfuellt':(ende||!c.alive.includes(S.my))?'verfehlt':'offen';}
+  if(z.k==='jugend')return jugendEinsaetze()>=z.min?'erfuellt':ende?'verfehlt':'offen';
+  if(z.k==='finanzen'){const s=Object.values(S.fin||{}).reduce((a,b)=>a+b,0);return ende?(s>=0?'erfuellt':'verfehlt'):(s<0?'gefaehrdet':'offen');}
+  return'offen';}
+// Baustein „Ziele“ im Vertrauen (montags)
+function zieleBaustein(){const N=RV.nebenziele;let s=0;meineZiele().forEach(z=>{const st=nebenzielStand(z,false);s+=st==='erfuellt'?N.erfuellt:st==='verfehlt'?N.verfehlt:st==='gefaehrdet'?N.gefaehrdet:0;});
+  return clamp(s,N.baustein[0],N.baustein[1]);}
+// Saisonende (seasonEndLauf, vor der Prüfung auf Entlassung): Vertrauen je Nebenziel, Meldung
+function nebenzieleSaison(){const N=RV.nebenziele,l=meineZiele();if(!l.length)return;let alle=true;
+  const txt=l.map(z=>{const ok=nebenzielStand(z,true)==='erfuellt';if(!ok)alle=false;S.trust=clamp(S.trust+(ok?N.saisonErfuellt:N.saisonVerfehlt),0,100);return`${nebenzielName(z)}: ${ok?'erfüllt':'verfehlt'}`;});
+  news(`Nebenziele des Vorstands: ${txt.join(' · ')}.`,alle?'good':'bad');}
+function nebenzielName(z){return z.k==='pokal'?`Pokal: mindestens ${POKAL_RUNDEN[z.min]}`:z.k==='jugend'?`Jugend: Spieler bis ${RV.nebenziele.jugendBis} zusammen ${z.min} Einsätze`:'Finanzen: kein Verlust in dieser Saison';}
+// Anzeige im Büro
+function nebenzieleText(){const l=meineZiele();if(!l.length)return'';const W={erfuellt:'erfüllt',verfehlt:'verfehlt',gefaehrdet:'gefährdet',offen:'offen'};
+  return`<p class="dim">Nebenziele: ${l.map(z=>`${esc(nebenzielName(z))}${z.k==='jugend'?` (bisher ${jugendEinsaetze()})`:''}: ${W[nebenzielStand(z,false)]}`).join(' · ')}</p>`;}
+
+// ---------- Rücktritt (K28 §5.3, §5.7, U12b, Bereich ruecktritt) ----------
+function ruecktrittFragen(){if(!darf('ruecktritt'))return;if(S.fired||S.phase!=='play'){toast('Zurücktreten geht nur während der Saison.');return;}
+  ov(`<h2>Zurücktreten?</h2><p>Du verlässt ${esc(myT().name)} sofort. Dein Ruf als Trainer sinkt um ${-RV.ruf.ruecktritt} (bei einer Entlassung wären es ${-RV.ruf.entlassung}). Danach bekommst du Jobangebote nach deinem Ruf.</p>
+    <div class="row"><button class="go" onclick="ruecktritt()">Ja, zurücktreten</button><button onclick="closeOv()">Abbrechen</button></div>`);}
+function ruecktritt(){if(!darf('ruecktritt')||S.fired||S.phase!=='play')return;S.fired=1;S.ruecktritt=1;S.ult=null;rufAendern(RV.ruf.ruecktritt);
+  news(`Du trittst bei ${myT().name} zurück.`,'bad');mkJobs();closeOv();save();render();showFired();}
 
 // ---------- Ruf als Trainer (K28 §5.4) ----------
 const ruf=()=>S.ruf==null?RV.ruf.start:S.ruf;

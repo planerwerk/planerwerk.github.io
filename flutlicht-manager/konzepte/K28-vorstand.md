@@ -1,6 +1,6 @@
 # K28 – Vorstand, Ziele, Karriere
 
-Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12. Teilweise gebaut: Computer-Vereine in U11d2 (§7), Vertrauen, Ultimatum und Ruf für dich in U12a (§5.6, 20.11., ohne Testlauf).
+Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12. Teilweise gebaut: Computer-Vereine in U11d2 (§7), Vertrauen, Ultimatum und Ruf für dich in U12a (§5.6), Nebenziele und Rücktritt in U12b (§5.7), beide 20.11., ohne Testlauf.
 Hängt ab von: K02 (Geduld je Stufe), K15 (Gespräche) · Wird gebraucht von: K12b, K14, K19, K23, K29.
 
 ## 1. Ziel und Spielgefühl
@@ -145,6 +145,32 @@ Das Ultimatum endet mit der Saison und mit einem Jobwechsel. Die Entlassung zum 
 
 **Anzeige im Büro (Information, immer frei, K36):** Ruf als Trainer, die Geduld des Präsidenten in Worten (ungeduldig bis 7, geduldig ab 14), ein laufendes Ultimatum mit den verbleibenden Ligaspielen.
 
+### 5.7 Umsetzung U12b (20. November 2026, ohne Testlauf): Nebenziele und Rücktritt
+
+Das **Zielgespräch** mit Tiefstapeln und Hochpokern (§5.2) wartet: Seine Folgen sind Transferbudget und Prämie, beides gibt es erst mit K23. Ohne sie wäre Tiefstapeln immer richtig. U12b baut die Nebenziele (§3.1) und den Rücktritt (§5.3).
+
+**Nebenziele.** Der Vorstand setzt sie zum Saisonstart und beim Jobwechsel, zusammen mit dem Saisonziel (eigener Zufallsstrom je Saison und Verein, mehrfaches Setzen gibt dasselbe):
+
+| Nebenziel | Erfüllt | Verfehlt | gibt es, wenn |
+|---|---|---|---|
+| Pokal | mindestens die Runde erreicht: 1. Liga Achtelfinale, 2. und 3. Liga 2. Runde | vorher ausgeschieden | dein Verein im Pokal ist |
+| Jugend | Spieler bis 21 Jahre im Kader kommen zusammen auf 25 Einsätze | Saisonende darunter | du Spieler bis 21 hast |
+| Finanzen | kein Verlust in der Saison (Summe der Buchungen mindestens 0) | Saisonende mit Verlust | immer |
+
+- **Anzahl:** eines. Ein ehrgeiziger Präsident (Ehrgeiz ab 14) setzt zwei.
+- **Auswahl:** Das Profil deines Vereins (K31 §3.2) kommt zuerst: Ausbildungsverein → Jugend, sparsam → Finanzen, ehrgeizig → Pokal. Den Rest lost der Vorstand.
+- **Baustein „Ziele“ im Vertrauen** (§5.1, −10 bis +10, montags): erfüllt +5, verfehlt −5. Finanzen mit Verlust bis jetzt: −3 („gefährdet“).
+- **Saisonende:** je erfülltem Nebenziel Vertrauen +5, je verfehltem −5, mit Meldung. Das geschieht vor der Prüfung auf Entlassung zum Saisonende.
+- **Anzeige:** im Büro unter dem Saisonziel, mit Stand.
+- Kader (Gehaltssumme) und Zuschauer (§3.1) fehlen noch. Zuschauer brauchen K27, die Gehaltssumme einen Gehaltsrahmen aus K23.
+
+**Rücktritt** (§5.3, **neue Funktion**, Bereich `ruecktritt`, Grundlizenz, ohne Automatik, K36):
+
+- Im Büro „Zurücktreten …“, mit Rückfrage.
+- Danach wie nach einer Entlassung: Jobangebote nach deinem Ruf. Der Ruf sinkt nur um 5 statt um 8.
+- Das Fenster heißt dann „Zurückgetreten“ statt „Entlassen!“.
+- Nur während der Saison und nur, solange du nicht entlassen bist.
+
 ## 6. Hebel des Spielers
 
 | Hebel | Nutzen | Preis |
@@ -238,6 +264,14 @@ vorstand:{
 10. **Präsident ohne Namen und ohne Wahl,** wie in K31 §12 Nr. 34. Neuwahl und „Präsident mischt sich ein“ kommen mit K30.
 11. **Ruf wirkt zuerst nur auf Jobangebote.** Die anderen Wirkungen brauchen K14, K19 und K29 im Detail.
 12. **Rücktritt** (§5.3) fehlt noch. Er wäre eine neue Funktion mit Lizenz (K36) und kommt mit U12b.
+
+**Vorläufig entschieden mit U12b** (20.11., von mir, ohne Rücksprache und ohne Testlauf):
+
+13. **Zielgespräch verschoben, bis K23 Budgets hat** (§5.7). Damit ist §5.2 ganz offen. U12b besteht aus Nebenzielen und Rücktritt.
+14. **Drei Nebenziele statt fünf:** Pokal, Jugend, Finanzen. Für Kader und Zuschauer fehlen Gehaltsrahmen und K27.
+15. **Jugend in Einsätzen statt Minuten:** Das Spiel zählt Einsätze je Spieler (`apps`), keine Minuten. 25 Einsätze entsprechen grob einem Talent, das zwei Drittel der Ligaspiele bestreitet.
+16. **Ehrgeiz des Präsidenten wirkt:** ab 14 zwei Nebenziele. Damit ist neben der Geduld der zweite Charakterwert in Gebrauch.
+17. **Rücktritt in der Grundlizenz:** Er ist eine Karriere-Entscheidung, keine Fähigkeit, die man lernen muss.
 
 **Noch zu recherchieren:** Zahl der Trainerwechsel pro Saison in 1., 2. und 3. Liga.
 

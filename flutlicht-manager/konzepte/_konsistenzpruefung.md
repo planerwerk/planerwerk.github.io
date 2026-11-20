@@ -1002,3 +1002,20 @@ Eigener Zweig `mitarbeit/popolupo-u12-vorstand`, baut auf U11 auf (Präsident au
 | BL7 | **Platz je Spiel entfällt:** Bisher gab jedes Ligaspiel ab dem 5. Spieltag −2 bis +0,6 für den Tabellenplatz. Das steckt jetzt im Baustein Sport (montags, träge). Wer weit unter dem Ziel steht, verliert Vertrauen langsamer, aber stetig. Kalibrierung offen. | ⚠️ messen |
 | BL8 | **Ruf bei alten Spielständen:** fehlt, gilt als 30. | ✅ |
 | BL9 | **`tests/vorstand.js`:** Formel, träger und schneller Anteil, Ultimatum (aufgehoben, letztes, Entlassung, nur beim eigenen Verein), Ruf, Jobangebote. Nie gelaufen. | ⚠️ offen |
+
+---
+
+## BM. Nachtrag zu U12b Vorstand: Nebenziele und Rücktritt (20. November 2026, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-u12-vorstand`. Kein Test gelaufen.
+
+| # | Befund | Status |
+|---|---|---|
+| BM1 | **Zielgespräch (K28 §5.2) verschoben:** Ohne Transferbudget und Prämie (K23) hätte Tiefstapeln keinen Preis. | 📌 mit K23 |
+| BM2 | **`setTarget` setzt jetzt auch die Nebenziele.** Es wird beim Spielstart, zum Saisonwechsel, beim Jobwechsel und beim Wechsel der Schwierigkeit gerufen. Eigener Strom je Saison und Verein, darum ändert mehrfaches Rufen nichts und verschiebt keinen anderen Strom. | ✅ |
+| BM3 | **Pokal-Runden:** Der Stand liest `S.cup.hist` (eine Liste je gespielter Runde) und `S.cup.alive`. Annahme: `hist[r]` ist Runde r (0 = 1. Runde). So legt `ablauf.js` die Runden an. | ✅ angenommen |
+| BM4 | **Einsätze statt Minuten:** `p.apps` zählt jedes Spiel mit Einsatz, auch im Pokal. Ob Testspiele mitzählen, habe ich nicht geprüft. Wenn ja, ist das Jugendziel leichter. | ⚠️ prüfen |
+| BM5 | **Nebenziele im Vertrauen:** höchstens ±10 je Woche im Ziel, zum Saisonende ±5 je Nebenziel. Ein verfehltes Nebenziel kann damit über die Entlassung zum Saisonende (Vertrauen unter 15) mitentscheiden. | ⚠️ messen |
+| BM6 | **Rücktritt nutzt den Weg der Entlassung** (`S.fired`, Jobangebote, Halt „Entlassen“). Das Fenster sagt „Zurückgetreten“. In den Tests mit Jobwechsel (`sim.js`, `lizenz.js`) wird `S.ruecktritt` nicht zurückgesetzt, dort tritt aber niemand zurück. | ✅ |
+| BM7 | **Neuer Knopf im Büro** („Zurücktreten …“, mit Rückfrage). Die Browser-Tests klicken Knöpfe gezielt nach Text, keiner klickt zufällig. | ✅ |
+| BM8 | **`tests/vorstand.js` Nr. 7 bis 9:** Nebenziele setzen, Stand, Baustein, Saisonende, Rücktritt mit Jobwechsel. Nie gelaufen. | ⚠️ offen |

@@ -91,7 +91,7 @@ function showSummary(){const sm=S.summary;if(!sm)return;const L=ids=>ids.map(id=
   <p>DFB-Pokalsieger: <b>${sm.cup!=null?esc(tn(sm.cup)):'–'}</b> · Torschützenkönig: ${esc(sm.ts)}</p>${sm.zw?`
   <p><b>Zweite Mannschaft:</b> ${esc(sm.zw)}</p>`:''}
   ${S.fired?'<p class="neg"><b>Du musst gehen: Der Verein trennt sich von dir.</b></p><div class="row"><button class="go" onclick="showFired()">Jobangebote ansehen</button></div>':`<p class="dim">Jetzt beginnt die Sommerpause: Urlaub bis zum Trainingsauftakt, am 1. Juli der Saisonwechsel mit neuen Verträgen und Sponsorangeboten.</p><div class="row"><button class="go" onclick="sommerpause();closeOv();TAB='buero';render()">Weiter in die Sommerpause</button><button onclick="closeOv()">Später</button></div>`}`);}
-function showFired(){if(!S.jobs)mkJobs();ov(`<h2>Entlassen!</h2><p>Der Vorstand von ${esc(myT().name)} hat dir das Vertrauen entzogen. Diese Vereine bieten dir einen Job an:</p>
+function showFired(){if(!S.jobs)mkJobs();ov(`${S.ruecktritt?`<h2>Zurückgetreten</h2><p>Du hast ${esc(myT().name)} verlassen.`:`<h2>Entlassen!</h2><p>Der Vorstand von ${esc(myT().name)} hat dir das Vertrauen entzogen.`} Diese Vereine bieten dir einen Job an:</p>
   <div class="opts">${S.jobs.map(id=>{const t=S.teams[id];return`<button class="opt" onclick="takeJob(${id})"><b>${chip(id)}${esc(t.name)}</b><span>${t.lg}. Liga · Platz ${rank(t.lg,id)} · Kontostand ${fmt(t.cash)}</span></button>`;}).join('')}</div>
   <div class="row"><button onclick="confirmNew()">Stattdessen neues Spiel</button></div>`);}
 function menu(){let size='';try{size=Math.round(JSON.stringify(S).length/1024)+' KB';}catch(e){}
