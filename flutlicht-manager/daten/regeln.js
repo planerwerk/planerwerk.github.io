@@ -28,7 +28,7 @@ const REGELN={
       2:{wochenende:[['Sa','20:30',1],['Fr','18:30',2],['So','13:30',3],['Sa','13:00',3]],mitte:[['Di','18:30',4],['Mi','18:30',5]],letzter:'15:30'},
       3:{wochenende:[['Sa','16:30',1],['Fr','19:00',1],['So','16:30',1],['So','19:30',1],['So','13:30',1],['Sa','14:00',5]],mitte:[['Di','19:00',5],['Mi','19:00',5]],letzter:'13:30'}},
     attraktivZufall:15,              // Zufall bei der Verteilung auf die Anstoßzeiten (in Ansehen-Punkten)
-    erinnerungen:{frist:'Angebot läuft heute ab',aufstellung:'Startelf hat Ausfälle',sponsor:'Kein Sponsor gewählt',vertrag:'Verträge laufen aus',versprechen:'Versprechen droht zu kippen',vorbereitung:'Punkte vor dem Saisonstart offen (höchstens einmal je Woche)'} // abschaltbar im Menü; vorbereitung seit U14 (K12b)
+    erinnerungen:{frist:'Angebot läuft heute ab',aufstellung:'Startelf hat Ausfälle',sponsor:'Kein Sponsor gewählt',vertrag:'Verträge laufen aus',versprechen:'Versprechen droht zu kippen',vorbereitung:'Punkte vor dem Saisonstart offen (höchstens einmal je Woche)',deadline:'Halt am letzten Tag des Transferfensters (Deadline Day)'} // abschaltbar im Menü; vorbereitung seit U14 (K12b)
   },
 
   welt:{
@@ -359,6 +359,16 @@ const REGELN={
   // Saisonvorbereitung (K12b §5, §11, U14). Saisoneröffnung am letzten Samstag vor dem ersten Pflichtspiel: Einnahme jeAnsehen × Ansehen, bei Regen (chance) nur faktor davon.
   // fotoNachTage: so lange nach dem Mannschaftsfoto gibt es die Meldung für Nachzügler. fotos: so viele Mannschaftsfotos bleiben in der Statistik. GESCHÄTZT.
   vorbereitung:{eroeffnung:{jeAnsehen:2000,regen:{chance:0.2,faktor:0.6}},fotoNachTage:21,fotos:30,erinnerungTage:7},
+
+  // Transfers II (K20 §5.4, §11, U15): Abwerben, Deadline Day, Bieterrunde. ALLE WERTE GESCHÄTZT (K20 §12).
+  // ort: Kosten und Faktor fürs Auffliegen. bereitschaft je Treffen: (basis + jeInteresse × Interesse) × Berater × Stimmung (unter/über) × treu, Interesse begrenzt auf interesse.
+  // risiko je Treffen: basis × bekannt (ab Stärke bekanntAb) × Berater (ohne: ohneBerater) × Ort × (1 + jeTreffen × bisherige Treffen), petzen: vereinstreue zusätzlich.
+  // folgen: Beziehung (Spanne), Ablöse × forderung bis Saisonende, Stimmung, Vertrauen. deadline: letzte Tage des Fensters. bieter: Aufschlag aufs Höchstgebot, gierig zusätzlich, Frist in Tagen.
+  abwerben:{ort:{hotel:{name:'Hotel in einer anderen Stadt',kosten:15000,risiko:0.6},restaurant:{name:'Restaurant',kosten:5000,risiko:1.2},berater:{name:'beim Berater',kosten:10000,risiko:0.8}},
+    bereitschaft:{basis:10,jeInteresse:0.1,interesse:[-50,100],berater:{gierig:1.2,strippenzieher:1.2},stimmung:{unter:[40,1.3],ueber:[70,0.7]},treu:0.4,ab:70},
+    risiko:{basis:0.08,bekanntAb:80,bekannt:1.5,berater:{verschwiegen:0.4,familie:0.8,serioes:1,strippenzieher:1.2,gierig:1.5},ohneBerater:1.1,jeTreffen:0.2,petzen:0.3},
+    folgen:{beziehung:[-30,-15],forderung:1.15,stimmung:-10,vertrauen:-3},
+    deadline:{tage:3},bieter:{plus:[0.02,0.10],gierig:0.05,frist:2}},
 
   // Training (K07 §11): Einheiten, Intensität, Vorlagen nach Abstand zum Spiel, Kondition und Entwicklung aus dem Wochenreiz, Belastung, Verletzungen, Umschulung
   training:{
@@ -768,6 +778,7 @@ const REGELN={
       kaderrollen:{ab:3,name:'Kaderrollen',tab:'kabine',auto:1,wer:'der Co-Trainer',tut:'verteilt die Rollen nach der besten Elf'},
       versprechen:{ab:3,name:'Zusagen und Teamevent',tab:'kabine'},
       suchauftrag:{ab:4,name:'Suchauftrag für Scouts',tab:'transfer'},
+      abwerben:{ab:4,name:'Spieler heimlich abwerben',tab:'transfer'}, // K20 §5.4, U15 (ohne Automatik: dein Verein wirbt nie von selbst ab)
       sportgericht:{ab:4,name:'Sportgericht',tab:'buero',auto:1,wer:'der Verein',tut:'nimmt Strafen an oder legt bei harten Anträgen Einspruch ein'},
       medizin:{ab:4,name:'Fit spritzen und früher zurückholen',tab:'kader',auto:1,wer:'der Mannschaftsarzt',tut:'spritzt nur in wichtigen Spielen Stammspieler mit kurzer Verletzung fit'},
       sponsor:{ab:4,name:'Trikotsponsor',tab:'buero',auto:1,wer:'der Verein',tut:'nimmt das Angebot mit dem höchsten festen Betrag'},
@@ -814,4 +825,4 @@ const REGELN={
 // Schreibschutz: Zur Laufzeit darf kein Code eine Regel ändern.
 (function frieren(o){Object.freeze(o);Object.values(o).forEach(v=>{if(v&&typeof v==='object'&&!Object.isFrozen(v))frieren(v);});})(REGELN);
 // Kurzformen für den Code
-const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui,RL=REGELN.live,RTA=REGELN.taktik,RSO=REGELN.sommer,RST=REGELN.stab,RD=REGELN.disziplin,RMD=REGELN.medizin,RWB=REGELN.wettbewerbe,RTS=REGELN.testspiele,RLA=REGELN.lager,RKA=REGELN.kabine,RGS=REGELN.gespraeche,RSC=REGELN.scouting,RLZ=REGELN.lizenz,RJ=REGELN.jugend,RZ=REGELN.zweite,RTR=REGELN.transfers,RVT=REGELN.vertraege,RBE=REGELN.berater,RLE=REGELN.leihe,RCV=REGELN.computer,RBZ=REGELN.beziehungen,RKT=REGELN.karten,RSTAT=REGELN.statistik,RVB=REGELN.vorbereitung;
+const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui,RL=REGELN.live,RTA=REGELN.taktik,RSO=REGELN.sommer,RST=REGELN.stab,RD=REGELN.disziplin,RMD=REGELN.medizin,RWB=REGELN.wettbewerbe,RTS=REGELN.testspiele,RLA=REGELN.lager,RKA=REGELN.kabine,RGS=REGELN.gespraeche,RSC=REGELN.scouting,RLZ=REGELN.lizenz,RJ=REGELN.jugend,RZ=REGELN.zweite,RTR=REGELN.transfers,RVT=REGELN.vertraege,RBE=REGELN.berater,RLE=REGELN.leihe,RCV=REGELN.computer,RBZ=REGELN.beziehungen,RKT=REGELN.karten,RSTAT=REGELN.statistik,RVB=REGELN.vorbereitung,RAW=REGELN.abwerben;

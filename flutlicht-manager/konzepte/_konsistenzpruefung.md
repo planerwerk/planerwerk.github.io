@@ -1103,3 +1103,19 @@ Zweig `mitarbeit/popolupo-u14-saisonvorbereitung` (baut auf U13 auf). Konzept: K
 | BR6 | **Nicht gebaut:** Sponsorentag und weitere Werbeflächen (K24), Trikotvorstellung (K25), Zielgespräch (K28), Fanstimmung +3 (K27), Presse-Anekdote zum Foto (K29). Die Liste bekommt die Punkte mit ihren Konzepten. | 📌 später |
 | BR7 | **Mannschaftsfotos** liegen in `S.stat.foto` (höchstens 30) und stehen auf der Statistik-Seite Karriere. | ✅ |
 | BR8 | **`tests/vorbereitung.js`:** sieben Prüfungen, siehe Test-README. Nie gelaufen. | ⚠️ offen |
+
+---
+
+## BS. Nachtrag zu U15 Transfers II: Abwerben, Deadline Day, Bieterrunde (20. November 2026, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-u15-transfers2` (baut auf U14 auf). Konzept: K20 §5.4 und §12. Neue Datei `js/abwerben.js`. Kein Test gelaufen.
+
+| # | Befund | Status |
+|---|---|---|
+| BS1 | **Zusätzlicher Markttag am letzten Tag jedes Fensters** für alle Computer-Vereine (eigener Strom `deadline`). Die Obergrenzen je Fenster (`computer.kauf.jeFenster` 4 und 2) gelten weiter, weil `kiBudget` je Fenster zählt. `tests/welt.js` sieht mehr Wechsel zum Fensterende, die Zahl je Saison steigt etwas. | ⚠️ messen |
+| BS2 | **Neuer Halt „Deadline Day“** zweimal je Saison. `tests/lizenz.js` und `tests/karten.js` zählen Halte, beide Läufe haben ihn gleich. Auf „Schwer“ ist er wie alle Erinnerungen beim Start aus. | ✅ entworfen |
+| BS3 | **Abwerben würfelt im Grundstrom**, weil es deine Handlung ist (wie Ablehnungen in K17, BN3). Ohne Abwerben ändert sich nichts. | ✅ |
+| BS4 | **Ablöse +15 % nach Auffliegen** steckt in `forderungDu`, also nur für dich. Die Computer-Vereine untereinander sind nicht betroffen. | ✅ |
+| BS5 | **Computer-Vereine setzen gelistete Spieler zurück:** `kiListe` (computer.js) nimmt Spieler von der Liste, die nicht mehr im Abgabeplan stehen. Ein abgeworbener Spieler kann so wieder von der Liste fallen, sein Wechselwunsch (Ablöse −10 %) bleibt. Gilt schon für jeden Wechselwunsch Stufe 3 seit U8. | 📌 später prüfen |
+| BS6 | **Nicht gebaut:** Computer-Vereine werben deine Spieler ab (§7), Bieterwettstreit beim Kauf, Spieler lehnt das höchste Gebot ab, Preise ±15 % am Deadline Day, Fans und Presse beim Auffliegen (K27, K29), Nationalspieler im Risiko. | 📌 später |
+| BS7 | **`tests/abwerben.js`:** sieben Prüfungen, siehe Test-README. Nie gelaufen. | ⚠️ offen |

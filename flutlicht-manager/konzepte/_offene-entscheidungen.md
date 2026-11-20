@@ -363,7 +363,17 @@ Datei: `konzepte/K19-transfers.md`
 ## K20 – Transfers II: Abwerben, Bieterwettstreit, Deadline Day
 Datei: `konzepte/K20-transfers-2.md`
 
-**Noch zu recherchieren:** Anteil der Wechsel in den letzten Tagen eines Fensters.
+**Noch zu recherchieren:** Anteil der Wechsel in den letzten Tagen eines Fensters (am 20.11. gesucht, keine Zahl gefunden).
+
+**Mit U15 von mir vorläufig entschieden (20.11.2026, K20 §12 Nr. 1 bis 7):**
+
+- Abwerben nur bei deutschen Computer-Vereinen, ab der A-Lizenz, ohne Automatik.
+- Feste Kosten je Ort.
+- Berater-Profile aus K22 zugeordnet. Ohne Berater ist es etwas riskanter.
+- Fliegt es auf, steigt die Ablöse bis zum Saisonende um 15 %, und das Abwerben dieses Spielers ist für die Saison vorbei.
+- Deadline Day mit Übersicht, Halt am letzten Tag und einem zusätzlichen Markttag. Die Preise schwanken noch nicht.
+- Bieterrunde nur beim Verkauf.
+- Computer-Vereine werben noch nicht ab.
 
 ## K21 – Verträge und Gehälter
 Datei: `konzepte/K21-vertraege.md`

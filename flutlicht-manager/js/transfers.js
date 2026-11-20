@@ -30,7 +30,7 @@ function forderungBasis(p){if(p.team<0)return 0;if(istAusland(p))return auslandP
 function verhandlung(p){S.verh=S.verh||{};let v=S.verh[p.id];if(!v||v.team!==p.team)v=S.verh[p.id]={team:p.team,f:null,r:0,g:RTR.geduld,pause:-1,druck:-999};return v;}
 const verhandlungVon=p=>{const v=S.verh&&S.verh[p.id];return v&&v.team===p.team?v:null;};
 // Grundforderung an dich: mit deiner Beziehung zum Verein (K17 §5.2, U12c, nur inländische Vereine). Preise unter Computer-Vereinen nutzen forderungBasis ohne Beziehung.
-const forderungDu=p=>forderungBasis(p)*(p.team>=0&&p.team<AV0&&S.teams[p.team]?bezAbloese(p.team):1);
+const forderungDu=p=>forderungBasis(p)*(p.team>=0&&p.team<AV0&&S.teams[p.team]?bezAbloese(p.team):1)*abwFaktor(p); // aufgeflogenes Abwerben +15 % (K20 §5.4, U15)
 // Aktuelle Forderung: Grundforderung oder das letzte Gegenangebot
 function forderung(p){const b=rundeAb(forderungDu(p)),v=verhandlungVon(p);return v&&v.f!=null?Math.min(b,v.f):b;}
 const schmerzgrenze=p=>rundeAb(forderungDu(p)/RTR.forderung*RTR.schmerzgrenze);
