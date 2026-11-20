@@ -122,4 +122,5 @@ function erinnerungen(){const E=[],d=S.tag,m=heuteMeinSpiel()?meinSpiel(d):null;
   if(m&&erinnerungAn('sponsor')&&S.sponsOffers)E.push({art:'sponsor',text:'Du hast noch keinen Trikotsponsor gewählt. Sonst nimmt der Vorstand das erste Angebot.',tab:'buero',knopf:'Zu den Angeboten'});
   if(erinnerungAn('vertrag')&&!autoB('vertraege')&&tageDerSaison()-d<=RK.erinnerungVertragTage){const xi=new Set(myXI()),e=squad(S.my).filter(p=>p.ct<=1&&xi.has(p.id));
     if(e.length)E.push({art:'vertrag',text:`Die Verträge von ${e.map(p=>esc(p.n)).join(', ')} enden am 30. Juni. Danach sind sie weg.`,tab:'kader',knopf:'Zum Kader'});}
+  if(erinnerungAn('vorbereitung')){const v=vorbereitungErinnerung();if(v)E.push(v);} // offene Punkte vor dem Saisonstart, höchstens einmal je Woche (K12b §5.1, U14)
   return E;}

@@ -1086,3 +1086,20 @@ Zweig `mitarbeit/popolupo-u13-statistik` (baut auf U12 auf). Konzept: K34 §5.3 
 | BQ9 | **Zwei Torjägerlisten:** Die Tabelle zeigt weiter `topScorers` (Ligatore nach dem heutigen Verein), die Statistik zählt je Liga aus den Zeilen. Bei einem Wechsel zwischen den Ligen im Winter können sie sich unterscheiden. Die Ehrung folgt der Statistik. | 📌 später angleichen |
 | BQ10 | **Nicht gebaut:** Sprüche-Chronik (wartet auf K29), Turnierpokale (K11), Gehalt des Trainers (K28), Startwerte der Rekorde für die 2. und 3. Liga, Linien für Form und Marktwert (gespeichert, angezeigt wird nur die Stärke). | 📌 später |
 | BQ11 | **`tests/statistik.js`:** sechs Prüfungen, siehe Test-README. Nie gelaufen. Dafür hat `tests/sim.js` die Option `vorher` bekommen (läuft vor dem Welt-Aufbau). | ⚠️ offen |
+
+---
+
+## BR. Nachtrag zu U14 Saisonvorbereitung (20. November 2026, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-u14-saisonvorbereitung` (baut auf U13 auf). Konzept: K12b §5.1 bis §5.3 und §12. Neue Datei `js/vorbereitung.js`. Kein Test gelaufen.
+
+| # | Befund | Status |
+|---|---|---|
+| BR1 | **Geld für Computer-Vereine:** Jeder Verein bekommt zur Saisoneröffnung Ansehen × 2.000 € (Erstligist mit Ansehen 70: 140.000 €). Das ändert ihre Konten und damit Käufe ab dem ersten Sommer. `tests/welt.js` prüft Budgets und Wechselzahlen, die Größenordnung ist klein gegen die Einnahmen je Spieltag. | ⚠️ messen |
+| BR2 | **Eigener Strom `eroeffnung`** je Verein und Saison, nur für den Regen. Der Tagesstrom bleibt gleich. | ✅ |
+| BR3 | **Gleichschritt (`tests/lizenz.js`):** Die Eröffnung hängt nicht an Lernstufen oder Automatik, nur am Spielplan. Die Liste ist reine Anzeige. Die neue Erinnerung ist kein Halt. | ✅ entworfen |
+| BR4 | **Erinnerung auf „Schwer“:** Die neue Art `vorbereitung` steht in `RK.erinnerungen`, also schaltet „Schwer“ sie zum Spielstart ab wie die anderen. Alte Spielstände auf „Schwer“ haben sie an (die Abschaltung läuft nur beim Start). | 📌 klein |
+| BR5 | **Liste erst ab 1. Juli** statt ab Saisonabschluss (K12b §12 Nr. 1). In der Phase „Saisonende“ zeigt das Büro keine Liste. | 📌 vorläufig |
+| BR6 | **Nicht gebaut:** Sponsorentag und weitere Werbeflächen (K24), Trikotvorstellung (K25), Zielgespräch (K28), Fanstimmung +3 (K27), Presse-Anekdote zum Foto (K29). Die Liste bekommt die Punkte mit ihren Konzepten. | 📌 später |
+| BR7 | **Mannschaftsfotos** liegen in `S.stat.foto` (höchstens 30) und stehen auf der Statistik-Seite Karriere. | ✅ |
+| BR8 | **`tests/vorbereitung.js`:** sieben Prüfungen, siehe Test-README. Nie gelaufen. | ⚠️ offen |

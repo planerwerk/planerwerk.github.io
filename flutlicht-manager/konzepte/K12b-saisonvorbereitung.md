@@ -1,6 +1,6 @@
 # K12b – Saisonvorbereitung (Rahmen)
 
-Status: **Entwurf** (8. November 2026), nach „weiter, entscheide du“. Vorläufige Entscheidungen stehen in Abschnitt 12.
+Status: **Entwurf** (8. November 2026), nach „weiter, entscheide du“. Vorläufige Entscheidungen stehen in Abschnitt 12. **Umgesetzt mit U14 (20. November 2026, §5.1 bis §5.3), noch ohne Testlauf.**
 Hängt ab von: K12a (Sommer), K19, K24, K25, K28 · Wird gebraucht von: –
 
 ## 1. Ziel und Spielgefühl
@@ -41,6 +41,27 @@ Hängt ab von: K12a (Sommer), K19, K24, K25, K28 · Wird gebraucht von: –
 
 Keine eigenen Formeln. K12b ordnet nur Termine. Für Computer-Vereine laufen die Punkte automatisch nach ihren Konzepten.
 
+### 5.1 Umsetzung U14 (20.11.2026): die Liste
+
+- **Wann:** im Büro ab dem 1. Juli (Saisonwechsel) bis zum ersten Pflichtspiel deines Vereins (Liga, Pokal oder Supercup, was zuerst kommt). Abweichung von §4 Nr. 1: Zwischen Saisonabschluss und 1. Juli gibt es sie noch nicht, weil Sponsorangebote, Spielplan und Kader der neuen Saison erst mit dem Saisonwechsel entstehen (vorläufig).
+- **Drei Zustände je Punkt:** erledigt (von dir), erledigt der Stab oder der Verein (Automatik, gesperrter Bereich oder Standard), offen.
+- **Punkte, die es im Spiel schon gibt:** Urlaub und Trainingsauftakt (K12a), Trikotsponsor (heutiges Sponsorangebot, K24 kommt später), Testspiele und Trainingslager (K11), Kaderplanung (Lücken gegen die Sollstärke je Position), Kapitän (K14), Saisonziel (als Hinweis, das Zielgespräch kommt mit K28 und K23), Saisoneröffnung mit Mannschaftsfoto.
+- **Noch nicht in der Liste,** weil die Funktion fehlt: Sponsorentag und weitere Werbeflächen (K24), Trikotvorstellung und Sortiment (K25), Zielgespräch (K28). Sie kommen mit ihren Konzepten dazu.
+- **Erinnerung:** höchstens einmal je Woche vor „Tag beenden“, nur bei offenen Punkten, abschaltbar wie alle Erinnerungen. Auf der Schwierigkeit „Schwer“ gibt es keine Erinnerungen.
+- **Lizenz:** Die Liste ist Information, die Saisoneröffnung läuft von selbst. Kein neuer Bereich. Jeder Punkt zeigt den Bereich, zu dem er gehört, gesperrte Punkte nennen, wer sie erledigt.
+
+### 5.2 Saisoneröffnung
+
+- **Termin:** der letzte Samstag vor dem ersten Pflichtspiel des Vereins. Echte Vereine stellen dort die Mannschaft vor, oft mit Testspiel (Dortmund 2025 im ausverkauften Stadion, Union Berlin 2026 mit Testspiel gegen Ipswich, Quellen unten). Das Testspiel planst du wie bisher selbst.
+- **Für alle Vereine:** Computer-Vereine bekommen dieselbe Einnahme auf ihr Konto.
+- **Einnahme:** Ansehen × 2.000 € (Spielwert aus §4). Bei Regen 60 % davon. Regen mit 20 % (eigene Schätzung) aus dem eigenen Strom `eroeffnung` je Verein und Saison.
+- **Mannschaftsfoto:** Die Namen des Kaders kommen in die Statistik (K34, Seite Karriere). Wer in den drei Wochen danach zu dir wechselt, fehlt auf dem Foto, dazu gibt es eine kleine Meldung (Karte aus §8, ohne Presse, bis K29 kommt).
+- **Nicht gebaut:** Fanstimmung +3 (wartet auf K27).
+
+### 5.3 Computer-Vereine
+
+Ohne Liste. Sie bekommen nur die Saisoneröffnung.
+
 ## 6. Hebel des Spielers
 
 Reihenfolge und Zeitpunkt der Punkte. Wer das Zielgespräch nach den Transfers führt, kennt seinen Kader besser, hat aber weniger Budget-Spielraum während der Transfers.
@@ -77,7 +98,21 @@ vorbereitung:{eroeffnung:{jeAnsehen:2000,fans:3},erinnerungProWoche:1,zielgespra
 
 **Vorläufig entschieden:** Liste statt Pflichtschritte, Automatik für Unerledigtes, Saisoneröffnung als kleines Fest.
 
+**Vorläufig entschieden mit U14 (20.11.2026, von mir, weil „entscheide du“):**
+
+1. Liste erst ab dem 1. Juli statt ab dem Saisonabschluss (§5.1).
+2. Nur Punkte, deren Funktion es schon gibt. Sponsorentag, Trikot und Zielgespräch kommen mit K24, K25 und K28 (§5.1).
+3. Drei Zustände je Punkt statt erledigt oder offen (§5.1).
+4. Keine eigene Lizenz, weil die Liste nur informiert (§5.1, K36 Nr. 45).
+5. Saisoneröffnung am letzten Samstag vor dem ersten Pflichtspiel, für alle Vereine (§5.2).
+6. Regen mit 20 % und 60 % der Einnahme (§5.2, geschätzt).
+7. Mannschaftsfoto in der Statistik, Meldung für Nachzügler in den drei Wochen danach (§5.2).
+
 ## Quellen
+
+- Saisoneröffnung mit Mannschaftsvorstellung im ausverkauften Stadion, Dortmund 2025: https://www.bvb.de/de/de/fans/events-fuer-fans/saisoneroeffnung.html (Suche vom 20.11.2026)
+- Union Berlin stellt 2026 Trainer und Mannschaft vor, danach Testspiel gegen Ipswich: https://www.volksstimme.de/panorama/union-feiert-saisoneroffnung-gegen-ipswich-town-4273351
+- Regenwahrscheinlichkeit und Einnahmen der Eröffnung: nicht recherchiert, Spielwerte.
 
 - Saisonziel, Sponsorentag, Testspielplanung: PLAN §4 (GameStar 4/2000)
 - Zuständigkeiten: `konzepte/_konsistenzpruefung.md`, D3

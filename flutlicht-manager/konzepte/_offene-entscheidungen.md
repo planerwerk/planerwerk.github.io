@@ -200,6 +200,18 @@ Datei: `konzepte/K12b-saisonvorbereitung.md`
 
 Liste statt Pflichtschritte, Automatik für Unerledigtes, Saisoneröffnung als kleines Fest.
 
+**Mit U14 von mir vorläufig entschieden (20.11.2026, K12b §12 Nr. 1 bis 7):**
+
+- Die Liste gibt es ab dem 1. Juli, nicht schon ab dem Saisonabschluss.
+- Sie enthält nur Punkte, deren Funktion es schon gibt.
+- Jeder Punkt hat drei Zustände: von dir erledigt, vom Stab erledigt, offen.
+- Keine eigene Lizenz für die Liste.
+- Saisoneröffnung am letzten Samstag vor dem ersten Pflichtspiel, für alle Vereine.
+- Regen mit 20 %, dann gibt es 60 % der Einnahme.
+- Das Mannschaftsfoto kommt in die Statistik. Nachzügler bekommen eine Meldung.
+
+Offen: Sponsorentag (K24), Trikotvorstellung (K25), Zielgespräch (K28), Fanstimmung (K27).
+
 ## K13 – Wettbewerbe und Spielplan
 Datei: `konzepte/K13-wettbewerbe.md`
 
