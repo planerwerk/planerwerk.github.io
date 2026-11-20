@@ -25,7 +25,7 @@ function abwTreffen(id,ort){if(!darf('abwerben'))return;const p=PIX.get(id),O=RA
 // Aufgeflogen (K20 §5.3): Beziehung, Ablöse bis zum Saisonende, Stimmung des Spielers, Vertrauen deines Vorstands. Keine Strafe.
 function abwAufgeflogen(p,a,petzt){const F=RAW.folgen,tid=p.team,d=Math.round(F.beziehung[0]+R()*(F.beziehung[1]-F.beziehung[0]));a.auf=1;
   bezDuAendern(tid,d,`Abwerbeversuch bei ${p.n} aufgeflogen`);p.abwF={s:S.season,tid};stimmungAendern(p,F.stimmung);S.trust=clamp(S.trust+F.vertrauen,0,100);
-  news(`${petzt?`${p.n} hat ${tn(tid)} von deinen Treffen erzählt`:`Aufgeflogen: Deine Treffen mit ${p.n} sind bekannt geworden`}. ${tn(tid)} ist verärgert, die Ablöse für ihn steigt um ${Math.round((F.forderung-1)*100)} %, dein Vorstand ist nicht begeistert.`,'bad');}
+  news(`${petzt?`${p.n} hat ${tn(tid)} von deinen Treffen erzählt`:`Aufgeflogen: Deine Treffen mit ${p.n} sind bekannt geworden`}. ${tn(tid)} ist verärgert, die Ablöse für ihn steigt um ${Math.round((F.forderung-1)*100)} %, dein Vorstand ist nicht begeistert.`,'bad');presseAnlass('abwerben',{pid:p.id,gegner:tid});} // Pressekonferenz dazu (K29, U17a)
 // Faktor auf die Forderung seines Vereins (transfers.js forderungDu)
 const abwFaktor=p=>p.abwF&&p.abwF.s===S.season&&p.abwF.tid===p.team?RAW.folgen.forderung:1;
 // Karte auf der Spielerkarte (fenster.js openP)

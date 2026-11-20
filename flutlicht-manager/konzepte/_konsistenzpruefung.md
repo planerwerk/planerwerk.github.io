@@ -1136,3 +1136,21 @@ Zweig `mitarbeit/popolupo-u16-fans` (baut auf U15 auf). Konzept: K27 §5.4b und 
 | BT6 | **Rechenzeit:** Montags für 56 Vereine Tabelle und Lieblinge (Zeilen der Statistik). Nicht gemessen. | ⚠️ messen |
 | BT7 | **Nicht gebaut:** Dauerkarten, Gästeblock (K23), Ultras und Tradition (keine Quellen je Verein), Choreo, Pyro, Platzsturm (K09, K30), Heimvorteil durch Fans, Wirkung auf den Vorstand der Computer-Vereine, Presse (K29), der negative Teil der Identifikation. | 📌 später |
 | BT8 | **`tests/fans.js`:** zehn Prüfungen, siehe Test-README. Nie gelaufen. | ⚠️ offen |
+
+---
+
+## BU. Nachtrag zu U17a Pressekonferenzen (20. November 2026, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-u17-presse` (baut auf U16 auf). Konzept: K29 §5.4 und §12 Nr. 7 bis 14. Neue Dateien `daten/presse.js` und `js/presse.js`. Kein Test gelaufen.
+
+| # | Befund | Status |
+|---|---|---|
+| BU1 | **Gleichschritt (`tests/lizenz.js`):** Mit Lernstufen geht bis zur C-Lizenz sofort der Co-Trainer, danach bleibt die Pressekonferenz einen Tag offen und der Co-Trainer geht am nächsten Tag. Ohne Lernstufen mit Automatik geht er sofort. Der Co-Trainer würfelt nicht und ändert nur das Medienklima, das nirgends wirkt. Ergebnisse bleiben gleich. | ✅ entworfen |
+| BU2 | **Neuer Halt „Pressekonferenz“:** höchstens 20 je Saison, mindestens 4 Tage Abstand. Der Vergleich „mit Lernstufen nicht mehr Halte als ohne“ (`tests/lizenz.js`) hält, weil die Lernstufen bis zur C-Lizenz keine Pressekonferenz-Halte haben. | ✅ entworfen |
+| BU3 | **Eigener Strom `presse`** für Anlass und Fragen, deine Antworten im Grundstrom. Wer nicht antwortet, verschiebt keinen Strom. | ✅ |
+| BU4 | **Wirkung auf Stimmung, Vorstand, Fans:** nur durch deine Antworten. Im Test-Lauf ohne Oberfläche antwortet niemand, also keine Wirkung außer Medienklima. Was die Antworten im Spiel bewegen, zeigt erst das Spielen mit Oberfläche. | ⚠️ messen (Testrunde mit Menschen) |
+| BU5 | **Kein Ton dominiert (K29 §10):** Der Test mit fünf Strategien über viele Saisons fehlt noch, weil die Simulation keine Antworten wählt. Die Werte sind so gesetzt, dass jede Art einen Preis hat. | 📌 Test später |
+| BU6 | **Katalog klein:** 54 Fragen, 30 Antworten, 22 Schlagzeilen. Wiederholungen kommen öfter als in K29 §10 verlangt. | 📌 wächst |
+| BU7 | **Kampfansagen ohne Gegner** (Antritt, Auftakt ohne Ligaspiel) werden nicht geprüft. | 📌 klein |
+| BU8 | **Nicht gebaut:** Gerüchteküche (U17b), Medienpolitik, Exklusivinterview, Maulkorb, Interviews der Spieler, Interview am Spielfeldrand, Computer-Trainer mit Medienprofil, Journalisten mit Beziehung, Pressekonferenz nach Urteilen. | 📌 später |
+| BU9 | **`tests/presse.js`:** sieben Prüfungen, siehe Test-README. Nie gelaufen. | ⚠️ offen |

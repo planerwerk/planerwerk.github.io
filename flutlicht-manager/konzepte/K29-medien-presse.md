@@ -1,6 +1,6 @@
 # K29 – Medien und Pressekonferenzen
 
-Status: **Entwurf**, überarbeitet am 8. November 2026 nach „weiter, entscheide du“: Datenmodell (3.4) und Gerüchteküche (4.3) ergänzt, offene Fragen vorläufig entschieden. Hängt ab von: K14 Stimmung, K15 Gespräche, K17 Beziehungen, K09 Sportgericht. Wird gebraucht von: K30 Ereigniskarten, K25 Merchandising, K28 Vorstand.
+Status: **Entwurf**, überarbeitet am 8. November 2026 nach „weiter, entscheide du“: Datenmodell (3.4) und Gerüchteküche (4.3) ergänzt, offene Fragen vorläufig entschieden. **Pressekonferenzen umgesetzt mit U17a (20. November 2026, §5.4), noch ohne Testlauf.** Hängt ab von: K14 Stimmung, K15 Gespräche, K17 Beziehungen, K09 Sportgericht. Wird gebraucht von: K30 Ereigniskarten, K25 Merchandising, K28 Vorstand.
 
 ## 1. Ziel und Spielgefühl
 
@@ -187,6 +187,35 @@ Das ist der Maßstab für die Verbindung zu K09.
   Die Wahrscheinlichkeiten verschieben sich je nach Ruf, Kader und Lage.
 - **Verfahren nach Kritik am Schiedsrichter:** Die Chance auf ein Verfahren hängt von der Schärfe ab. Die Geldstrafe liegt etwa bei 5.000–50.000 €, je nach Schärfe und Liga (an 3.2 kalibriert). Eine anschließende Entschuldigung mildert die Strafe.
 
+### 5.4 Umsetzung U17a (20.11.2026): Pressekonferenzen
+
+- **Echte Häufigkeit zum Vergleich:** Die Medienrichtlinien der DFL verlangen von den Vereinen eine Pressekonferenz vor jedem Spieltag, nach dem Spiel gibt es eine gemeinsame des Heimvereins (Quellen unten). Das Spiel zeigt davon nur die mit Anlass (§4.1), die Routine bleibt im Hintergrund.
+- **Anlässe in U17a:** Antritt bei einem neuen Verein, Saisonauftakt (zwei Tage vor dem ersten Ligaspiel), Derby, Spitzenspiel (beide unter den ersten vier, ab dem 10. Spieltag), Pokal ab dem Viertelfinale, Relegation (je am Tag vor dem Spiel), Krise (drei Liganiederlagen in Folge), Ultimatum des Vorstands, Höhenflug (fünf Ligasiege in Folge), Tabellenführung (zum ersten Mal in der Saison, ab dem 5. Spieltag), Kantersieg (vier Tore Abstand), offizieller Wechselwunsch eines deiner Spieler, aufgeflogenes Abwerben (K20). Höchstens 20 je Saison, mindestens 4 Tage Abstand, immer nur eine offen. Jede Art hat eine Sperre (21 Tage).
+- **Ablauf:** Die Pressekonferenz steht im Büro, der Tag hält an („Pressekonferenz“). Zwei bis drei Fragen aus der Liste des Anlasses, gestellt von erfundenen Journalisten erfundener Medien (`daten/presse.js`). Je Frage drei Antworten mit sichtbarem Ton (＋, −, ○). In Krise und Ultimatum gibt es dazu die vierte Antwort „Ausraster“, höchstens zweimal je Saison.
+- **Co-Trainer schicken:** Er antwortet mit Floskeln. Medienklima −2. Wer am Tag der Pressekonferenz nicht hingeht, schickt ihn automatisch. Lizenz-Bereich `presse` ab der C-Lizenz mit Automatik: Bis dahin geht immer der Co-Trainer, du liest nur die Schlagzeile.
+- **Antwortarten und Grundwirkung** (§5.1, Spielwerte):
+
+  | Art | Ton | Mannschaft | genannter Spieler | Fans | Vorstand | Medienklima | sonst |
+  |---|---|---|---|---|---|---|---|
+  | Rückendeckung | ＋ | +2 | +5 | 0 | 0 | +1 | Gedächtnis: Verkauf in 4 Wochen kostet Glaubwürdigkeit −5 |
+  | Kampfansage | ＋ | +1 | 0 | +2 | −0,5 | 0 | Gedächtnis: Sieg im nächsten Spiel gegen den Gegner wird Kult (Chronik, Fans +2), Niederlage Häme (Glaubwürdigkeit −3, Fans −2) |
+  | Kritik an der Mannschaft | − | Kämpfer +2, Diven und Nervenschwache −3, sonst −1 | 0 | 0 | +1 | +1 | |
+  | Kritik an einem Spieler | − | 0 | −8 | 0 | 0 | +1 | |
+  | Kritik am Schiedsrichter | − | +1 | 0 | +3 | −1 | 0 | Verfahren mit 30 %: Geldstrafe 5.000 bis 50.000 € je nach Liga (§3.2) |
+  | Angriff auf die Medien | − | +1 | 0 | +1 | −1 | −4 | |
+  | Provokation des Gegners | − | 0 | 0 | +2 | 0 | +1 | Beziehung zum Gegner −3 (K17) |
+  | Floskel | ○ | 0 | 0 | 0 | 0 | −1 | |
+  | Humor | ○ | +1 | 0 | +1 | in der Krise −1 | +1 | 30 % Chance auf die Chronik |
+  | Ausraster | ±± | Weckruf 35 %: +4 · Bruch 35 %: −5 und Vorstand −3 · Kult 30 %: Fans +6 und Chronik | | | | | |
+
+- **Streuung und Deckel:** jede Wirkung × 0,5 bis 1,5 (Grundstrom, deine Handlung). Je Pressekonferenz gedeckelt: Mannschaft ±6, Spieler ±10, Fans ±6, Vorstand ±4, Medienklima ±8.
+- **Abnutzung:** Dieselbe Antwortart wie die letzte wirkt halb, wie die letzten beiden ein Viertel.
+- **Wohin die Werte gehen:** Mannschaft und Spieler in die Stimmung (K14), Fans in den Baustein Umfeld (K27), Vorstand ins Vertrauen (K28), Medienklima in einen neuen Wert 0–100 (Start 50, Anzeige im Büro, wirkt später auf Gerüchte und Fragen).
+- **Zeitungsecho:** gleich nach der Pressekonferenz eine Schlagzeile des Mediums, das am stärksten reagiert (Boulevard bei Kritik, Ausraster und Provokation, Fachblatt bei Floskeln, Lokalzeitung bei Rückendeckung, Fernsehen bei Kampfansage und Humor).
+- **Sprüche-Chronik:** Kult, eingelöste Kampfansagen, bestrafte Schiedsrichterkritik und manche Humor-Antworten kommen in die Chronik der Statistik (K34, höchstens 100).
+- **Zufall:** Auswahl der Fragen und die Automatik im eigenen Strom `presse`, deine Antworten im Grundstrom.
+- **Noch nicht (U17b und später):** Gerüchteküche (§4.3), Medienpolitik und Exklusivinterview, Maulkorb und Interviews der Spieler, Interview am Spielfeldrand, Computer-Trainer mit Medienprofil, Beziehung zu einzelnen Journalisten, Pressekonferenz nach Urteilen des Sportgerichts.
+
 ## 6. Hebel des Spielers
 
 - Ton je Frage wählen.
@@ -248,6 +277,19 @@ Das ist der Maßstab für die Verbindung zu K09.
 4. **Interviews von Spielern** kommen mit K14 und K15 (Welle 3): Führungsspieler und Diven sprechen, mit Wirkung auf Stimmung und Glaubwürdigkeit.
 5. **Weitere Recherche** bei der Umsetzung (U17), nicht jetzt.
 6. **Gerüchteküche und Datenmodell** ergänzt (3.4, 4.3), damit sind B3 und B4 erledigt.
+
+**Vorläufig entschieden mit U17a (20.11.2026, von mir, weil „entscheide du“):**
+
+7. Erst die Pressekonferenzen, die Gerüchteküche folgt als U17b (§5.4).
+8. Dreizehn Anlässe, höchstens 20 je Saison, Sperre 21 Tage je Art (§5.4).
+9. Zwei bis drei Fragen statt zwei bis vier, damit eine Pressekonferenz kurz bleibt.
+10. Neuer Halt „Pressekonferenz“. Ohne Antwort geht der Co-Trainer (§5.4).
+11. Lizenz `presse` ab der C-Lizenz mit Automatik (Co-Trainer).
+12. Wirkungen als Spielwerte nach der Tendenz aus §5.1 (§5.4, Tabelle).
+13. Medienklima als eigener Wert, vorerst nur angezeigt.
+14. Eigene Texte für 54 Fragen in 13 Anlässen, 30 Antworten (drei je Art) und 22 Schlagzeilen zum Start. Die 300 Fragen aus §10 sind das Ziel, der Katalog wächst. Bis dahin wiederholen sich Fragen öfter als in §10 verlangt.
+
+**Quellen zu U17a:** Medienrichtlinien 2. Bundesliga 2025/26 (Pflichten der Clubs: Pressekonferenz vor einem Spieltag): https://www.dynamo-dresden.de/fileadmin/04_Verein/06_Presse/Dokumente/2025_26/Medienrichtlinien_2BL_2025_2026.pdf · gemeinsame Pressekonferenz nach dem Spiel in der Verantwortung des Heimclubs: https://www.sport1.de/news/fussball/bundesliga/2024/03/bundesliga-pk-trubel-nach-bayern-schock (Suche vom 20.11.2026, nur Auszüge gelesen).
 
 ## Quellen
 

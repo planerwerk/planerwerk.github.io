@@ -466,6 +466,17 @@ Datei: `konzepte/K29-medien-presse.md`
 5. **Weitere Recherche** bei der Umsetzung (U17), nicht jetzt.
 6. **Gerüchteküche und Datenmodell** ergänzt (3.4, 4.3), damit sind B3 und B4 erledigt.
 
+**Mit U17a von mir vorläufig entschieden (20.11.2026, K29 §12 Nr. 7 bis 14):**
+
+- Erst die Pressekonferenzen, dann die Gerüchteküche (U17b).
+- Dreizehn Anlässe, höchstens 20 je Saison, Sperre 21 Tage je Art.
+- Zwei bis drei Fragen je Pressekonferenz.
+- Neuer Halt „Pressekonferenz“. Ohne Antwort geht der Co-Trainer.
+- Lizenz `presse` ab der C-Lizenz mit Automatik.
+- Wirkungen als Spielwerte nach der Tendenz aus K29 §5.1.
+- Das Medienklima ist ein eigener Wert und wird vorerst nur angezeigt.
+- Zum Start 54 Fragen, 30 Antworten und 22 Schlagzeilen.
+
 ## K30 – Ereigniskarten und Story-Playbook (Gerüst)
 Datei: `konzepte/K30-ereigniskarten.md`
 

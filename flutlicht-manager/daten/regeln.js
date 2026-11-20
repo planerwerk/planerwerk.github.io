@@ -382,6 +382,21 @@ const REGELN={
     nachfrage:[0.85,1,1.10],vorstand:{zone:[45,75],teilerUnten:3,minUnten:-10,teilerOben:5,maxOben:5},
     protestUnter:30,pfiffeSv:-0.2,gespraechTage:30},
 
+  // Pressekonferenzen (K29 §5.4, §11, U17a). Texte in daten/presse.js. budget: höchstens je Saison, abstand: Tage zwischen zwei, sperre: Tage je Anlass, fragen: [min, max].
+  // anlass: Schwellen (spitzeBis Platz, spitzeAb Spieltag, pokalAb Runde, krise Niederlagen, hoehenflug Siege, fuehrungAb Spieltag, kantersieg Tore Abstand, auftaktVorher Tage).
+  // wirkung je Antwortart: team (Stimmung aller), spieler (genannter Spieler), fans (Umfeld K27), vorstand (Vertrauen), medien (Medienklima). streuung: × [min, max]. deckel je Pressekonferenz.
+  // abnutzung: Faktor, wenn die Art der letzten (bzw. der letzten beiden) entspricht. ausraster: Wahrscheinlichkeiten, Wirkungen, je Saison. schiri: Verfahren, Strafe je Liga [min, max].
+  // gedaechtnis: Rückendeckung und Verkauf (Tage, Glaubwürdigkeit), Kampfansage (Kult, Häme). delegieren: Medienklima. chronikHumor: Chance. ALLE WERTE GESCHÄTZT (K29 §12).
+  presse:{budget:20,abstand:4,sperre:21,fragen:[2,3],klimaStart:50,
+    anlass:{spitzeBis:4,spitzeAb:10,pokalAb:3,krise:3,hoehenflug:5,fuehrungAb:5,kantersieg:4,auftaktVorher:2},
+    wirkung:{rueckendeckung:{team:2,spieler:5,medien:1},ankuendigung:{team:1,fans:2,vorstand:-0.5},kritikTeam:{vorstand:1,medien:1,kaempfer:2,empfindlich:-3,sonst:-1},
+      kritikSpieler:{spieler:-8,medien:1},kritikSchiri:{team:1,fans:3,vorstand:-1},angriffMedien:{team:1,fans:1,vorstand:-1,medien:-4},provokation:{fans:2,medien:1,beziehung:-3},
+      floskel:{medien:-1},humor:{team:1,fans:1,medien:1,krise:-1}},
+    streuung:[0.5,1.5],deckel:{team:6,spieler:10,fans:6,vorstand:4,medien:8},abnutzung:[0.5,0.25],
+    ausraster:{weckruf:0.35,bruch:0.35,kult:0.3,proSaison:2,weckrufTeam:4,bruchTeam:-5,bruchVorstand:-3,kultFans:6},
+    schiri:{verfahren:0.3,strafe:{1:[20000,50000],2:[10000,25000],3:[5000,12000]}},
+    gedaechtnis:{rueckendeckungTage:28,rueckendeckungGlaub:-5,kultFans:2,haemeGlaub:-3,haemeFans:-2,aussagen:40},delegieren:-2,chronikHumor:0.3,chronikMax:100},
+
   // Training (K07 §11): Einheiten, Intensität, Vorlagen nach Abstand zum Spiel, Kondition und Entwicklung aus dem Wochenreiz, Belastung, Verletzungen, Umschulung
   training:{
     staerkeMin:25,staerkeMax:99,
@@ -792,6 +807,7 @@ const REGELN={
       suchauftrag:{ab:4,name:'Suchauftrag für Scouts',tab:'transfer'},
       abwerben:{ab:4,name:'Spieler heimlich abwerben',tab:'transfer'}, // K20 §5.4, U15 (ohne Automatik: dein Verein wirbt nie von selbst ab)
       fangespraech:{ab:2,name:'Fan-Gespräch',tab:'stadion'}, // K27 §5.4b, U16 (ohne Automatik)
+      presse:{ab:2,name:'Pressekonferenzen',tab:'buero',auto:1,wer:'der Co-Trainer',tut:'geht zu jeder Pressekonferenz und antwortet mit Floskeln'}, // K29 §5.4, U17a
       sportgericht:{ab:4,name:'Sportgericht',tab:'buero',auto:1,wer:'der Verein',tut:'nimmt Strafen an oder legt bei harten Anträgen Einspruch ein'},
       medizin:{ab:4,name:'Fit spritzen und früher zurückholen',tab:'kader',auto:1,wer:'der Mannschaftsarzt',tut:'spritzt nur in wichtigen Spielen Stammspieler mit kurzer Verletzung fit'},
       sponsor:{ab:4,name:'Trikotsponsor',tab:'buero',auto:1,wer:'der Verein',tut:'nimmt das Angebot mit dem höchsten festen Betrag'},
@@ -838,4 +854,4 @@ const REGELN={
 // Schreibschutz: Zur Laufzeit darf kein Code eine Regel ändern.
 (function frieren(o){Object.freeze(o);Object.values(o).forEach(v=>{if(v&&typeof v==='object'&&!Object.isFrozen(v))frieren(v);});})(REGELN);
 // Kurzformen für den Code
-const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui,RL=REGELN.live,RTA=REGELN.taktik,RSO=REGELN.sommer,RST=REGELN.stab,RD=REGELN.disziplin,RMD=REGELN.medizin,RWB=REGELN.wettbewerbe,RTS=REGELN.testspiele,RLA=REGELN.lager,RKA=REGELN.kabine,RGS=REGELN.gespraeche,RSC=REGELN.scouting,RLZ=REGELN.lizenz,RJ=REGELN.jugend,RZ=REGELN.zweite,RTR=REGELN.transfers,RVT=REGELN.vertraege,RBE=REGELN.berater,RLE=REGELN.leihe,RCV=REGELN.computer,RBZ=REGELN.beziehungen,RKT=REGELN.karten,RSTAT=REGELN.statistik,RVB=REGELN.vorbereitung,RAW=REGELN.abwerben,RFS=REGELN.fanstimmung;
+const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui,RL=REGELN.live,RTA=REGELN.taktik,RSO=REGELN.sommer,RST=REGELN.stab,RD=REGELN.disziplin,RMD=REGELN.medizin,RWB=REGELN.wettbewerbe,RTS=REGELN.testspiele,RLA=REGELN.lager,RKA=REGELN.kabine,RGS=REGELN.gespraeche,RSC=REGELN.scouting,RLZ=REGELN.lizenz,RJ=REGELN.jugend,RZ=REGELN.zweite,RTR=REGELN.transfers,RVT=REGELN.vertraege,RBE=REGELN.berater,RLE=REGELN.leihe,RCV=REGELN.computer,RBZ=REGELN.beziehungen,RKT=REGELN.karten,RSTAT=REGELN.statistik,RVB=REGELN.vorbereitung,RAW=REGELN.abwerben,RFS=REGELN.fanstimmung,RPK=REGELN.presse;

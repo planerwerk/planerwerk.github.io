@@ -51,6 +51,7 @@ function tagesSpieleAbschliessenLauf(out){const d=out.tag;S.gespielt=d;
       if(mg)news(`${spielName(e)}: ${tn(r.h)} – ${tn(r.a)} ${r.hg}:${r.ag}${r.pen?` (i.E. ${r.pen[0]}:${r.pen[1]})`:''}`,(r.h===S.my?r.hg>r.ag:r.ag>r.hg)?'good':(r.hg===r.ag?'':'bad'));}
     else if(g.art==='supercup'){const r=g.list[0],w=winner(r);S.supercup.r={hg:r.hg,ag:r.ag,pen:r.pen||null,sieger:w};
       news(`Supercup: ${tn(r.h)} – ${tn(r.a)} ${r.hg}:${r.ag}${r.pen?` (i.E. ${r.pen[0]}:${r.pen[1]})`:''}. ${tn(w)} holt den Supercup.`,mg?(w===S.my?'good':'bad'):'');}}
+  presseNachSpiel(out.mine); // Kampfansagen prüfen, Pressekonferenz nach Krise, Serie, Kantersieg (K29 §5.4, U17a)
   S.trust=clamp(S.trust,0,100);vorstandPruefen();
   return out;}
 
@@ -68,14 +69,14 @@ function taeglichLauf(d){const T=RT;praegungTag(d);wechselTag(d); // vereinbarte
   S.offers.filter(o=>o.bis<d).forEach(o=>versprechenAngebot(o.pid,o.amt)); // abgelaufenes Angebot zählt wie abgelehnt (Versprechen „Wechsel“, K15)
   S.offers=S.offers.filter(o=>o.bis>=d&&PIX.get(o.pid)&&PIX.get(o.pid).team===S.my&&!PIX.get(o.pid).wech&&(o.tid>=AV0?!!avVon(o.tid):S.teams[o.tid]&&aktiv(S.teams[o.tid])));
   kartenAuto(d-1); // offene Ereigniskarten von gestern entscheidet der Co-Trainer (K30, U12d)
-  medizinTag(d);sportgerichtTag(d);pokalAuslosungTag(d);versprechenTag();testspieleAuto(d);lizenzTag(d);vorbereitungTag(d);deadlineTag(d); // Saisoneröffnung aller Vereine (K12b §5.2, U14) und zusätzlicher Markttag am Deadline Day (K20 §5.4, U15), je mit eigenem Strom
+  medizinTag(d);sportgerichtTag(d);pokalAuslosungTag(d);versprechenTag();testspieleAuto(d);lizenzTag(d);vorbereitungTag(d);deadlineTag(d);presseTag(d); // Saisoneröffnung aller Vereine (K12b §5.2, U14) und zusätzlicher Markttag am Deadline Day (K20 §5.4, U15), je mit eigenem Strom
   const c=S.constr;if(c&&d>=c.bis){const t=myT();if(c.k==='cap')t.cap+=RB.tribuene.plaetze;if(c.k==='logen')t.logen+=RB.logen.anzahl;if(c.k==='shop')t.shop++;news(`Bau abgeschlossen: ${c.label}.`,'good');S.constr=null;}}
 // Werte pro Woche (montags): Training und Entwicklung, Transfermarkt, Vorstand bei Minus auf dem Konto.
 function woechentlich(d){return mitStrom(strom('woche',S.season,d),()=>woechentlichLauf(d));}
 function woechentlichLauf(d){if(!imUrlaub())mitStrom(strom('training',S.season,d),training);mitStrom(strom('kabine',S.season,d),()=>kabineWoche(d));mitStrom(strom('jugend',S.season,d),()=>jugendWoche(d));mitStrom(strom('zweite',S.season,d),()=>zweiteWoche(d));mitStrom(strom('vertraege',S.season,d),()=>vertraegeWoche(d));mitStrom(strom('berater',S.season,d),()=>beraterWoche(d));leiheWoche(d);scoutingWoche();mitStrom(strom('ausland',S.season,d),auslandWoche);mitStrom(strom('markt',S.season,d),market);
   mitStrom(strom('vorstandKI',S.season,d),kiVorstandWoche); // Vorstand und Trainerwechsel der Computer-Vereine (K31 §5.10, U11d2)
   if(+mmtt(d).slice(3)<=7){bezVergessen();statistikMonat();} // erster Montag des Monats: Beziehungen 5 % zurück zum Grundwert (K17 §4, U12c), Verlauf des eigenen Kaders (K34 §5.3, U13)
-  fansWoche();vorstandWoche(); // Fanstimmung (K27, U16) vor dem Vorstand; träger Anteil des Vertrauens aus Bausteinen, Meldung bei Konto im Minus (K28 §5.1, U12a, js/vorstand.js)
+  fansWoche();presseWoche();vorstandWoche(); // Fanstimmung (K27, U16) vor dem Vorstand; träger Anteil des Vertrauens aus Bausteinen, Meldung bei Konto im Minus (K28 §5.1, U12a, js/vorstand.js)
   S.trust=clamp(S.trust,0,100);vorstandPruefen();
   mitStrom(strom('ereignisse',S.season,d),()=>kartenWoche(d));} // Ereigniskarten als Letztes der Woche (K30 §5.5, U12d, js/karten.js)
 
