@@ -249,6 +249,44 @@ Der Verein behält danach mehr als 20 Spieler. Regel B (§5.2) gilt damit von se
 
 **Meldungen:** Leihen unter Computer-Vereinen kommen nicht in den Posteingang, es wären viele. Man sieht sie auf der Spielerkarte.
 
+### 5.10 Umsetzung U11d2 (19. November 2026, ohne Testlauf): Vorstand und Trainerwechsel bei Computer-Vereinen
+
+§4 Nr. 6, §5.5 und K28 §7: „Gleiche Regeln für Computer-Trainer, vereinfacht: Vertrauen aus Sport und Finanzen, Ultimatum, Entlassung nach Geduld des Präsidenten.“ Gilt für jeden Computer-Verein der 1. bis 3. Liga, nie für deinen Verein. Dein Vorstand bleibt, wie er ist, bis U12.
+
+**Wirklichkeit (recherchiert, Quellen unten):** In der 1. Liga gab es seit 2000 je Saison etwa 4 bis 10 Trainerentlassungen während der Saison. Spitzen waren 10 (2005/06) und 9 (2002/03, 2022/23), die wenigsten 4. In der 2. Liga waren es 2024/25 mit 15 so viele wie nie, bei drei Vereinen sogar zwei. Die Reihe von Statista seit 1963/64 steht hinter einer Anmeldung.
+
+**Präsident:** Jeder Verein hat einen Präsidenten mit Geduld, Ehrgeiz und Sparsamkeit (je 1 bis 20, K28 §3). Die Werte folgen fest aus der Vereinsnummer, ohne Zufallsstrom. So brauchen alte Spielstände nichts nachzutragen, und die Welt bleibt gleich. Er hat keinen Namen, das Spiel sagt „der Präsident“. Wahlen gibt es noch nicht. In U11d2 wirkt nur die Geduld.
+
+**Vertrauen** (0 bis 100, Start 55, am Verein `vor.v`). Jeden Montag in der Spielzeit bewegt es sich um 20 % auf ein Ziel zu:
+
+```
+Ziel = 50 + Sport + Serie + Finanzen   (0 bis 100)
+Sport    = 5 × (erwarteter Platz − Tabellenplatz), begrenzt auf −35 bis +25   (K28 §5.1)
+Serie    = 10 × (Punkte je Spiel in den letzten 5 Ligaspielen − 1,3), begrenzt auf −15 bis +10
+Finanzen = −15, wenn das Konto im Minus ist
+```
+
+Es zählt erst ab dem 5. Ligaspiel, wie bei dir (`platzAbSpieltag`). Der erwartete Platz ist der Rang nach Ansehen (`expPos`).
+
+**Ultimatum:** Fällt das Vertrauen unter 20 und hat der Trainer mehr als 6 Ligaspiele hinter sich, bekommt er ein Ultimatum über 2 Ligaspiele. Danach:
+
+- Vertrauen wieder mindestens 20: Das Ultimatum ist vorbei.
+- Sonst nach dem ersten Ultimatum Entlassung mit der Chance 0,9 − 0,03 × Geduld (0,3 bis 0,87, K28 §5.3), sonst ein zweites, letztes Ultimatum.
+- Nach dem zweiten Ultimatum: Entlassung.
+
+**Saisonende:** Hat ein Verein seinen erwarteten Platz um mehr als 3 verfehlt und liegt das Vertrauen unter 30, wechselt er den Trainer im Sommer. Für alle Vereine geht das Vertrauen dann halb zurück zum Start (55), und die Schonfrist beginnt neu.
+
+**Der neue Trainer** (§5.5):
+
+- bringt seinen Lieblingsstil mit (gelost wie beim Aufbau der Welt, `profilStil`). Die Vertrautheit mit dem neuen Stil ist anfangs niedrig (K06). `vertrautheitWoche` speichert sie jede Woche für alle Stile außer dem aktuellen, also gilt der gespeicherte Wert (mindestens 30) und nicht der Startwert 70.
+- bringt keine eigene Grundordnung mit. Die wählt der Computer-Trainer schon heute jeden Monat nach dem Kader (`kiOrdnung`), eine mitgebrachte wäre nach spätestens vier Wochen wieder weg.
+- gibt allen Spielern einen Stimmungsschub von +5 (K14).
+- bekommt Vertrauen 55 und eine neue Schonfrist von 6 Ligaspielen.
+
+Einen Trainerpool mit Namen gibt es noch nicht (K16, K32). Der Trainer hat noch keinen Namen.
+
+**Meldung:** nur, wenn der Verein in deiner Liga spielt („Großer Umbruch“, §8). Alle Wechsel stehen in `S.trainerWechsel` (die letzten 200), für Statistik (K34) und Tests.
+
 ## 6. Hebel des Spielers
 
 K31 beschreibt die Gegner. Deine Hebel gegenüber ihnen:
@@ -297,7 +335,7 @@ Testskript: `tests/welt.js` (neu), viele Saisons ohne menschlichen Spieler.
 | Stars wandern nach oben | Spieler ab 85 Stärke spielen nach 10 Saisons zu mindestens 70 % bei Vereinen mit Ansehen über 75 |
 | kein Kaderchaos | höchstens 1 % der Käufe auf eine Position ohne Bedarf |
 | Verkaufsregeln | kein Verkauf ohne Grund A, keine Gruppe nach einem Verkauf unterbesetzt ohne Ersatzkauf im selben Fenster |
-| Trainerwechsel | 3–7 pro Saison in der 1. Liga (prüfen, K28) |
+| Trainerwechsel | 4–10 pro Saison in der 1. Liga (recherchiert 19.11., §5.10; vorher 3–7) |
 | Klugheit | „clever“ holt im Schnitt mehr Punkte je Euro als „gemütlich“, bei gleichen Kadern und Würfeln |
 
 **Stand U11a:** `tests/welt.js` ist geschrieben und **noch nie gelaufen**. Es prüft den Kaderplan an einem gebauten Kader, die Transferliste, das Budget, „gleicher Seed, gleiche Wechsel“, die Automatik und dann Saisons im Ablauf: Jeder Wechsel wird im Moment des Wechsels geprüft (nur im Fenster, Bedarf beim Käufer, Grund A und Regel B beim Verkäufer, Budget, Obergrenze). Langzeit-Spannung, ausgewogene Kader und „Stars wandern nach oben“ zählen erst ab zehn Saisons (`node tests/welt.js 10`), darunter gibt das Skript die Werte nur aus. Budgetnutzung und Zugänge je Verein werden ausgegeben, aber nicht gewertet, bis die Zahlen kalibriert sind. Trainerwechsel und Klugheit sind nicht gebaut.
@@ -402,10 +440,20 @@ Entfernt sind `markt.listeVoll`, `markt.listeZufall`, `markt.kaeufer.niveauPlus`
 31. **Keine Meldung** für Leihen unter Computer-Vereinen (Nr. 16, bündeln mit K29).
 32. **Dein Verein leiht nie von selbst.** Der Bereich `leihe` bekommt keine Automatik (K36), Computer-Vereine leihen nicht bei dir aus. Sonst würde der Verein über deinen Kader entscheiden, ohne dass du es eingestellt hast.
 
+**Vorläufig entschieden mit U11d2** (19.11., von mir, ohne Rücksprache und ohne Testlauf):
+
+33. **Trainerwechsel vor dem Vorstand für dich.** K31 §5.5 hängt an K28. Gebaut ist nur der vereinfachte Teil für Computer-Vereine aus K28 §7. Dein Vorstand (Vertrauen, Entlassung) bleibt unverändert bis U12. Grund: Der Teil für Computer-Vereine ändert nichts an deinem Spiel, außer an den Gegnern.
+34. **Präsident fest aus der Vereinsnummer** statt gelost. Keine Namen, weil ein Präsident eines echten Vereins eine echte Person wäre.
+35. **Grenze 20 statt 12** wie bei dir (Normal). Ohne den schnellen Anteil je Spiel, den dein Vorstand hat, käme das träge Vertrauen der Computer-Vereine kaum unter 12. Die Zahlen sind Schätzungen. Ob 4 bis 10 Wechsel je Saison in der 1. Liga herauskommen, zeigt erst `tests/welt.js`.
+36. **Zielwert in §10 geändert:** 4 bis 10 Trainerwechsel je Saison in der 1. Liga (vorher 3 bis 7, ungeprüft).
+37. **Kein Trainerpool, keine Namen:** Der neue Trainer ist nur ein neuer Stil und ein Stimmungsschub. Pool und Namen kommen mit K16 und K32.
+38. **Keine eigene Grundordnung des neuen Trainers** (Abweichung von §5.5, „Kaderumbau nach seinem Stil“): Die Ordnung wählt `kiOrdnung` jeden Monat nach dem Kader. Ein echter Umbau nach dem Stil des neuen Trainers bräuchte Planstellen je Stil, das wäre ein eigener Schritt.
+39. **Meldung nur aus deiner Liga.** Die anderen Wechsel stehen im Protokoll, bis K29 und K34 sie zeigen.
+
 **Recherche (19.11.), nur teilweise geklärt:**
 
 - **Zu- und Abgänge je Verein:** Die englische Wikipedia führt je Fenster Listen „In“ und „Out“ je Verein, ohne Ablösen. Gezählt wurden nur die lesbaren Teile: Winter 2025/26 bei sieben Bundesligisten 0 bis 5 Zugänge (im Schnitt 2,3) und mindestens 3 bis 8 Abgänge. Sommer 2025: Bayern 3 Zugänge und 16 Abgänge, Leverkusen 13 und 17 (Leihrückkehrer und Jugendspieler zählen bei den Abgängen mit). Das ZDF nannte im Sommer 2025 mitten im Fenster 66 Zugänge und 75 Abgänge für die 18 Vereine, also mindestens 3,7 Zugänge je Verein. Das passt zu „Sommer 3–8, Winter 0–3“ in §10, ist aber keine vollständige Zählung.
-- **Trainerwechsel pro Saison:** nicht geklärt. Statista führt die Reihe seit 1963/64, die Zahlen stehen hinter einer Anmeldung. Offen bis U11d.
+- **Trainerwechsel pro Saison:** teilweise geklärt (19.11., U11d2). 1. Liga seit 2000 etwa 4 bis 10 Entlassungen während der Saison (90min, ohne Interimstrainer), 2. Liga 2024/25 15 (ran). Die vollständige Reihe von Statista steht hinter einer Anmeldung.
 
 ## Quellen
 
@@ -414,6 +462,8 @@ Entfernt sind `markt.listeVoll`, `markt.listeZufall`, `markt.kaeufer.niveauPlus`
 - Leihkontingent der FIFA (8, 7, ab 1.7.2024 sechs; drei zwischen zwei Vereinen; Ausnahmen bis 21 und vom Verein ausgebildet; Dauer; kein Weiterverleihen): FIFA, Pressemitteilung „Neue Leihgabenregelung der FIFA“ vom 20.01.2022, abgerufen am 19.11.2026 (https://inside.fifa.com/de/organisation/media-releases/neue-leihgabenregelung-der-fifa)
 - Nationales Leihkontingent der DFL (sechs, Ausnahmen für junge deutsche Spieler mit U23 beim verleihenden Verein und für U21 „Local Player“): SID bei Flashscore, „DFL ändert Leihspieler-Regeln“, ohne sichtbares Datum, abgerufen am 19.11.2026 (https://www.flashscore.de/news/fu-ball-bundesliga-mehr-chancen-fur-junge-deutsche-spieler-dfl-andert-leihspieler-regeln/KCTnbPDj/)
 - 26 verliehene Spieler des FC Bayern 2024/25 (nur aus der Suchvorschau, Seite nicht gelesen): FC Bayern, „Loan Watch: So verlief die Spielzeit 2024/25 für die Leihspieler des FC Bayern“ (https://fcbayern.com/de/news/2025/06/loan-watch-so-verlief-die-spielzeit-2024-25-fuer-die-leihspieler-des-fc-bayern-teil-1)
+- Trainerentlassungen je Saison in der 1. Liga seit 2000 (Spitzen 10 in 2005/06, 9 in 2002/03 und 2022/23; ohne Interimstrainer): 90min, „Die Bundesliga-Saisons mit den häufigsten Trainerentlassungen“, abgerufen am 19.11.2026, nur aus der Suchvorschau, einige Überschriften dort wirken vertauscht (https://www.90min.de/die-bundesliga-saisons-mit-den-haufigsten-trainerentlassungen)
+- 15 Trainerentlassungen in der 2. Liga 2024/25, zwei Spieltage vor Schluss: ran.de, „2. Bundesliga völlig furios: Entlassungen en masse“, abgerufen am 19.11.2026, nur aus der Suchvorschau (https://ran.joyn.de/sports/fussball/2-bundesliga/2-bundesliga-voellig-furios-entlassungen-en-masse-so-schnell-ist-das-trainerkarussell-im-unterhaus-gefahren-81594)
 - Trainerwechsel, Zahlen nicht einsehbar: Statista, „Trainerwechsel pro Saison in der 1. Fußball-Bundesliga“ (https://de.statista.com/statistik/daten/studie/36473/umfrage/trainerwechsel-in-der-fussball-bundesliga-seit-der-saison-63-64)
 
 - Kaderplan, Bedarf, Verkaufs- und Kaufregeln, Finanzen, Trainerwechsel: `konzepte/_rohmaterial-logik-v1.md`, Kapitel 13 (Verkaufsregeln nach deinen Vorgaben)

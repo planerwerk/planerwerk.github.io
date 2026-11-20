@@ -630,4 +630,13 @@ Im Einzelnen in K31 §5.9 und §12 Nr. 25 bis 32.
 - **Computer-Vereine leihen untereinander:** Überzählige bis 23 Jahre (der Ausbildungsverein auch Talente) gehen an Vereine mit einer Lücke. Bei einem lange verletzten Stammspieler kommt zuerst eine Leihe, bei einer offenen Planstelle nur, wenn kein Kauf geht. Ohne Geld, ohne Meldung, zurück am Saisonende.
 - **Leihkontingent für alle, auch für dich** (FIFA seit 2024/25, DFL im Inland): höchstens 6 verliehen, 6 ausgeliehen, 3 an denselben Verein, Spieler bis 21 zählen nicht.
 - **Dein Verein leiht nie von selbst:** Der Bereich `leihe` bleibt ohne Automatik, Computer-Vereine leihen nicht bei dir aus.
-- **Rest von U11d wartet:** Klugheit (braucht die Klugheitsstufe, K02), Vorverträge und Klauseln unter Computer-Vereinen (brauchen ein Vertragspaket), Trainerwechsel (braucht den Vorstand, K28, U12).
+- **Rest von U11d wartet:** Klugheit (braucht die Klugheitsstufe, K02), Vorverträge und Klauseln unter Computer-Vereinen (brauchen ein Vertragspaket). Der Trainerwechsel kam gleich danach als U11d2.
+
+## K31 Computer-Vereine, U11d2 Trainerwechsel (19.11.), vorläufig von mir, gebaut ohne Testlauf
+
+Im Einzelnen in K31 §5.10 und §12 Nr. 33 bis 39.
+
+- **Computer-Vereine entlassen Trainer:** Das Vertrauen kommt aus Tabellenplatz gegen Erwartung, den letzten fünf Ligaspielen und dem Konto. Unter 20 gibt es ein Ultimatum über zwei Spiele, danach die Entlassung nach der Geduld des Präsidenten oder ein zweites, letztes Ultimatum. Wer sein Ziel weit verfehlt, wechselt im Sommer.
+- **Der neue Trainer** bringt einen neuen Lieblingsstil und +5 Stimmung. Die Grundordnung wählt der Computer-Trainer wie bisher jeden Monat. Noch ohne Namen und ohne Trainerpool.
+- **Ziel:** 4 bis 10 Wechsel je Saison in der 1. Liga (recherchiert). Ob es passt, zeigt erst ein Testlauf.
+- **Dein Vorstand ist unverändert** bis U12. Neu für dich ist nur die Meldung „Großer Umbruch“ aus deiner Liga.

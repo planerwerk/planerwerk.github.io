@@ -1,7 +1,7 @@
 // Computer-Vereine (K31 §10, U11a): Kaderplan (Planstellen je Grundordnung, Rang, Talente), Verkaufsregeln A und B, Bedarf, Transferliste, Budget je Fenster,
 // gleicher Seed ergibt dieselben Wechsel, dein Verein in der Automatik folgt denselben Regeln. Dann Saisons im Ablauf: Jeder Wechsel wird im Moment des Wechsels
 // geprüft (nur im Fenster, Bedarf beim Käufer, Grund A und Regel B beim Verkäufer, Budget, Obergrenze je Fenster), dazu Kadergrößen und Konten am Saisonende.
-// Seit U11d1 auch Leihen unter Computer-Vereinen (Nr. 6d, im Ablauf jede Leihe im Moment der Leihe) und das Leihkontingent.
+// Seit U11d1 auch Leihen unter Computer-Vereinen (Nr. 6d, im Ablauf jede Leihe im Moment der Leihe) und das Leihkontingent. Seit U11d2 Vorstand und Trainerwechsel (Nr. 6e, im Ablauf gezählt).
 // Die Zielwerte aus K31 §10, die zehn Saisons brauchen (Langzeit-Spannung, ausgewogene Kader, Stars wandern nach oben), zählen erst ab zehn Saisons, sonst werden sie nur ausgegeben.
 // Aufruf: node tests/welt.js [Saisons=2] [Seed=5]. Nur Node.js.
 // ACHTUNG: Dieses Skript ist noch nie gelaufen. U11a entstand auf einem Rechner ohne Node.js. Fehler können im Spiel oder im Skript selbst liegen.
@@ -159,6 +159,24 @@ const mitLeihProtokoll=(F,getS,C)=>{const log=[],orig=F.kiLeihe;
     'Kontingent: höchstens 6 Spieler über 21 ausgeliehen, höchstens 3 von einem Verein an denselben anderen, Spieler bis 21 zählen nicht',`ausgeliehen bei ${u.name}: ${z1.ein.get(u.id)}, ${a.name} → ${b.name}: ${z2.paar.get(a.id+'>'+b.id)}`);
   F.leiheEnde();pruef(S.pl.every(p=>!p.leihe)&&(!c||c.p.team===c.von),'Saisonende: Alle Leihen enden, jeder ist zurück bei seinem Verein',`${S.pl.filter(p=>p.leihe).length} noch verliehen`);}
 
+// 6e. Trainerwechsel bei Computer-Vereinen (K28 §7, K31 §5.10, U11d2): Präsident fest aus der Vereinsnummer. Der Favorit verliert zehnmal: Vertrauen unter 20, Ultimatum über zwei Spiele,
+// Entlassung spätestens nach dem zweiten Ultimatum, Stimmungsschub, Vertrauen zurück auf 55. Der Zweite gewinnt immer und bekommt kein Ultimatum. Dein Verein hat diesen Vorstand nicht.
+{const w=welt(),{S,F,ev,im,C}=w,V=C.vorstand,squad=ev('squad'),stimmung=ev('stimmung');
+  const lg1=S.teams.filter(t=>t.lg===1&&t.id!==S.my).sort((a,b)=>a.expPos-b.expPos),x=lg1[0],y=lg1[1],geg=lg1.slice(2);
+  const pr=F.praesident(x);
+  pruef(pr.geduld===F.praesident(x).geduld&&S.teams.every(t=>{const g=F.praesident(t).geduld;return g>=1&&g<=20;}),'Präsident: Geduld 1 bis 20, fest aus der Vereinsnummer',`Geduld ${pr.geduld}, Entlassung nach dem ersten Ultimatum ${pc(F.kiEntlassChance(x))}`);
+  let k=0;const spiele=n=>{for(let i=0;i<n;i++){const g=geg[k++%geg.length].id;S.res[1].push([x.id,g,0,3]);S.res[1].push([y.id,g,3,0]);}};
+  const st0=squad(x.id).reduce((a,p)=>a+stimmung(p),0),stil0=x.stil;
+  spiele(10);for(let i=0;i<8;i++)im('vk'+i,()=>F.kiVorstandWoche());const o=x.vor;
+  pruef(!!o&&o.v<V.grenze&&o.u===10&&o.n===1&&!!y.vor&&y.vor.u==null&&!S.teams[S.my].vor,'Niederlagenserie: Vertrauen unter 20, Ultimatum über zwei Spiele. Der Verein mit Siegen bekommt keins, dein Verein hat diesen Vorstand nicht',o?`Vertrauen ${o.v}, Ultimatum ab Spiel ${o.u}, beim Zweiten ${y.vor?y.vor.v:'–'}`:'kein Vorstand');
+  let runden=0;const weg=()=>(S.trainerWechsel||[]).some(e=>e.t===x.id);while(!weg()&&runden<3){spiele(2);im('vu'+runden,()=>F.kiVorstandWoche());runden++;}
+  const st1=squad(x.id).reduce((a,p)=>a+stimmung(p),0);
+  pruef(weg()&&runden<=2&&x.vor.v===V.start&&x.vor.u==null&&x.vor.ab>=12&&st1>st0,'Entlassung spätestens nach dem zweiten Ultimatum: neuer Trainer mit Vertrauen 55, neue Schonfrist, Stimmungsschub für alle',
+    `nach ${runden} Ultimatum-Runde(n), Stil ${stil0} → ${x.stil}, Stimmung ${st0} → ${st1}`);
+  // Saisonwechsel: Ziel weit verfehlt und wenig Vertrauen → Wechsel im Sommer; alle anderen halb zurück zum Start
+  const z=lg1[2];z.lastPos=z.expPos+V.saisonWeitAb+2;F.kiVor(z).v=V.saisonUnter-5;const y0=y.vor.v,n0=S.trainerWechsel.length;im('vs',()=>F.kiVorstandSaison());
+  pruef(S.trainerWechsel.length===n0+1&&S.trainerWechsel[n0].t===z.id&&Math.abs(y.vor.v-(y0+(V.start-y0)*V.saisonZurueck))<0.11&&y.vor.ab===0,'Saisonwechsel: Ziel weit verfehlt und wenig Vertrauen, Wechsel im Sommer. Die anderen gehen halb zurück zum Start',`${S.trainerWechsel.length-n0} Wechsel im Sommer`);}
+
 // 7. Saisons im Ablauf: jeder Wechsel geprüft, Zahl der Wechsel, Obergrenze je Fenster, Kader und Konten am Saisonende
 {const R0=neueWelt().W,C=R0.ev('RCV'),RM=R0.ev('RM');let log=null,leihLog=null,S0=null;const ende=[],fuell=[],nochVerliehen=[];
   const lauf=saisons({n:N,seed:SEED,verein:6,
@@ -181,6 +199,10 @@ const mitLeihProtokoll=(F,getS,C)=>{const log=[],orig=F.kiLeihe;
     pruef(!falsch.length,'Leihen unter Computer-Vereinen: nur im Fenster, nur für eine Lücke (verletzt oder offen), nur Leihbare, im Kontingent, nie mit deinem Verein',`${leihLog.length} Leihen, ${falsch.length} falsch`);
     pruef(nochVerliehen.every(x=>x===0),'Leihen enden mit der Saison: nach jedem Saisonwechsel ist niemand mehr verliehen',nochVerliehen.join(', ')||'kein Saisonwechsel im Lauf');
     [...new Set(leihLog.map(e=>e.s))].forEach(s=>{const l=leihLog.filter(e=>e.s===s);info(`Saison ${s}: Leihen unter Computer-Vereinen`,`Sommer ${l.filter(e=>e.nr===0).length}, Winter ${l.filter(e=>e.nr===1).length}, davon Spieler bis 21: ${l.filter(e=>e.alter<=21).length}`);});}
+  // Trainerwechsel (U11d2): je Saison und Liga, während der Saison und im Sommer danach. Ziel 4 bis 10 in der 1. Liga (K31 §10), bis zur Kalibrierung nur grob gewertet.
+  {const tw=S.trainerWechsel||[],je={},proVerein={};tw.forEach(e=>{je[e.s+':'+e.lg]=(je[e.s+':'+e.lg]||0)+1;proVerein[e.s+':'+e.t]=(proVerein[e.s+':'+e.t]||0)+1;});
+    jahre.forEach(s=>info(`Saison ${s}: Trainerwechsel`,`1. Liga ${je[s+':1']||0}, 2. Liga ${je[s+':2']||0}, 3. Liga ${je[s+':3']||0} (Ziel 1. Liga: 4 bis 10)`));
+    pruef(jahre.every(s=>(je[s+':1']||0)<=18)&&Object.values(proVerein).every(n=>n<=3),'Trainerwechsel nicht absurd: höchstens 18 je Saison in der 1. Liga, kein Verein öfter als dreimal in einer Saison',`${tw.length} Wechsel in ${N} Saison(s)`);}
   const jeFenster={};[...log,...leihLog].forEach(e=>{const k=e.s+':'+e.nr+':'+e.nach;jeFenster[k]=(jeFenster[k]||0)+1;});
   const zuViel=Object.entries(jeFenster).filter(([k,n])=>n>C.kauf.jeFenster[+k.split(':')[1]]).length;pruef(zuViel===0,'Obergrenze: höchstens 4 Zugänge über den Markt im Sommer und 2 im Winter je Verein, Leihen eingerechnet',`${zuViel} darüber`);
   jahre.forEach(s=>{const l=log.filter(e=>e.s===s),bez=l.filter(e=>e.von>=0),so=l.filter(e=>e.nr===0),wi=l.filter(e=>e.nr===1),f=fuell.filter(x=>x.s===s),z=ende.find(x=>x.s===s)||{vereine:55};
@@ -202,7 +224,7 @@ const mitLeihProtokoll=(F,getS,C)=>{const log=[],orig=F.kiLeihe;
     pruef(!stars.length||oben/stars.length>=0.7,'Stars wandern nach oben: Spieler ab Stärke 85 zu mindestens 70 % bei Vereinen mit Ansehen über 75 (K31 §10)',`${oben} von ${stars.length}`);}
   else{info('Erst ab zehn Saisons gewertet (node tests/welt.js 10): Langzeit-Spannung',`fünf höchste Ansehen im Schnitt auf Platz ${f1(m(platz))}`);
     info('Erst ab zehn Saisons gewertet: Stars bei Vereinen mit Ansehen über 75',`${oben} von ${stars.length}`);}
-  info('Nicht gebaut und nicht geprüft','Trainerwechsel je Saison, Klugheit, Vorverträge und Klauseln unter Computer-Vereinen (K31 §10, Rest von U11d)');}
+  info('Nicht gebaut und nicht geprüft','Klugheit, Vorverträge und Klauseln unter Computer-Vereinen (K31 §10, Rest von U11d)');}
 
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

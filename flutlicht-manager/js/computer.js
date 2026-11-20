@@ -4,7 +4,8 @@
 // Im Spielstand neu: am Verein t.tb = {k: Saison und Fenster, b: Budget, a: ausgegeben, n: Zugänge über den Markt, f: Planstellen aufgefüllt, s: Sternejagd erledigt}
 // und t.profil (zweites Vereinsprofil, U11b). Verträge nach Rang seit U11c (vertragChance, kiVertraegeFrueh, dazu newSeason in js/saison.js).
 // Leihen unter Computer-Vereinen seit U11d1 (§5.9: kiLeihbar, kiLeihKandidat, kiLeihe), mit dem Leihkontingent aus js/leihe.js.
-// Noch nicht gebaut: Klugheit (§5.4), Vorverträge und Klauseln unter Computer-Vereinen, Trainerwechsel (§5.5), Gehaltsrahmen (§3.3).
+// Vorstand und Trainerwechsel der Computer-Vereine seit U11d2 (§5.10: praesident, kiVorstandWoche, kiTrainerWechsel, kiVorstandSaison), am Verein t.vor, Protokoll S.trainerWechsel.
+// Noch nicht gebaut: Klugheit (§5.4), Vorverträge und Klauseln unter Computer-Vereinen, Trainerpool mit Namen, Gehaltsrahmen (§3.3).
 
 // ---------- Vereinsprofile (K31 §3.2, §5.7, U11b) ----------
 // Bis zu zwei Profile. „ehrgeizig“ folgt aus der Lage (unter den Ersten nach Ansehen in seiner Liga, oder in der ersten Saison nach einem Aufstieg) und wird nicht gespeichert.
@@ -128,6 +129,37 @@ function kiLeihKandidat(t,n,senk,plan,z){if(!n.g||!RCV.leihe.gruende.includes(n.
 // Keine Meldung (K31 §12 Nr. 31). Rückkehr am Saisonende über leiheEnde (js/leihe.js).
 function kiLeihe(p,b){const von=p.team;kabineAbgang(p,von);S.offers=S.offers.filter(o=>o.pid!==p.id);
   p.leihe={von,anteil:zahlBereit(p,b.id),rolle:'rotation',rueckruf:false,option:0,start:absTag(S.tag)};p.team=b.id;p.list=0;p.ask=0;neuzugang(p,b.id);}
+
+// ---------- Vorstand und Trainerwechsel (K28 §7, K31 §5.5, §5.10, U11d2) ----------
+// Präsident jedes Vereins: Geduld, Ehrgeiz, Sparsamkeit (je 1–20), fest aus der Vereinsnummer. Kein Zufallsstrom, alte Spielstände brauchen nichts. In U11d2 wirkt nur die Geduld.
+function praesident(t){const P=RV.praesident,w=k=>P.min+(Math.imul(t.id+1,k)>>>0)%(P.max-P.min+1);return{geduld:w(2654435761),ehrgeiz:w(2246822519),sparsam:w(3266489917)};}
+// Vorstand eines Computer-Vereins am Verein: t.vor = {v Vertrauen, u Ligaspiele bei Beginn des Ultimatums (null = keins), n Nummer des Ultimatums, ab Ligaspiele beim Amtsantritt}
+function kiVor(t){if(!t.vor)t.vor={v:RCV.vorstand.start,u:null,n:0,ab:0};return t.vor;}
+// Ziel des Vertrauens aus der Tabellenzeile r und dem Platz pos: Sport (Platz gegen erwarteten Platz), Serie (letzte Ligaspiele), Finanzen (Konto im Minus)
+function kiVertrauenZiel(t,r,pos){const V=RCV.vorstand,l=r.last.slice(-V.serieSpiele),sport=clamp((t.expPos-pos)*V.jePlatz,V.sport[0],V.sport[1]),
+    serie=l.length?clamp((l.reduce((a,b)=>a+b,0)/l.length-V.serieMitte)*V.serieFaktor,V.serie[0],V.serie[1]):0;
+  return clamp(V.basis+sport+serie+(t.cash<0?V.finanzMinus:0),0,100);}
+// Entlassung nach einem gescheiterten ersten Ultimatum (K28 §5.3): 0,9 − 0,03 × Geduld
+function kiEntlassChance(t){const E=RCV.vorstand.entlassung;return clamp(E.basis+E.jeGeduld*praesident(t).geduld,0,1);}
+// Woche (montags, eigener Strom): Vertrauen, Ultimatum, Entlassung. Nur Computer-Vereine der 1. bis 3. Liga, nur in der Spielzeit, ab dem fünften Ligaspiel.
+function kiVorstandWoche(){if(S.phase!=='play')return;const V=RCV.vorstand,tab={};
+  S.teams.forEach(t=>{if(t.id===S.my||!aktiv(t)||t.lg>3)return;const T=tab[t.lg]||(tab[t.lg]=table(t.lg)),i=T.findIndex(r=>r.id===t.id),r=T[i];if(!r||r.sp<V.abSpiel)return;
+    const o=kiVor(t);o.v=Math.round((o.v+(kiVertrauenZiel(t,r,i+1)-o.v)*V.traegheit)*10)/10;
+    if(o.u==null){if(o.v<V.grenze&&r.sp-o.ab>V.schonfrist){o.u=r.sp;o.n=1;}return;} // Ultimatum über die nächsten Ligaspiele
+    if(r.sp-o.u<V.ultimatumSpiele)return;
+    if(o.v>=V.grenze){o.u=null;o.n=0;return;} // überstanden
+    if(o.n>=2||R()<kiEntlassChance(t))kiTrainerWechsel(t,r.sp);else{o.u=r.sp;o.n=2;}});} // sonst das zweite, letzte Ultimatum
+// Der Wechsel: neuer Lieblingsstil (die Vertrautheit damit ist niedrig, vertrautheitWoche hat sie für alle anderen Stile gespeichert), Stimmungsschub, Vertrauen auf Start,
+// Schonfrist ab sp Ligaspielen. Die Grundordnung wählt der Computer-Trainer wie bisher jeden Monat (kiOrdnung in training). Meldung nur aus deiner Liga („Großer Umbruch“, §8).
+function kiTrainerWechsel(t,sp){const V=RCV.vorstand;t.stil=profilStil();
+  squad(t.id).forEach(p=>stimmungAendern(p,V.schub));t.vor={v:V.start,u:null,n:0,ab:sp};
+  const l=S.trainerWechsel||(S.trainerWechsel=[]);l.push({s:S.season,tag:S.tag,t:t.id,lg:t.lg});if(l.length>V.protokoll)l.splice(0,l.length-V.protokoll);
+  if(t.lg===myT().lg)news(`Großer Umbruch: ${t.name} trennt sich vom Trainer. Der Nachfolger setzt auf ${STIL_NAME[t.stil]||t.stil}.`,'tr');}
+// Saisonwechsel (eigener Strom, vor Auf- und Abstieg): erwarteten Platz deutlich verfehlt und wenig Vertrauen, dann Wechsel im Sommer.
+// Danach für alle: Vertrauen halb zurück zum Start, kein Ultimatum, Schonfrist neu (die Tabelle beginnt bei null).
+function kiVorstandSaison(){const V=RCV.vorstand;S.teams.forEach(t=>{if(t.id===S.my||!aktiv(t)||t.lg>3)return;
+  if(t.lastPos>t.expPos+V.saisonWeitAb&&kiVor(t).v<V.saisonUnter)kiTrainerWechsel(t,0);
+  const o=kiVor(t);o.v=Math.round((o.v+(V.start-o.v)*V.saisonZurueck)*10)/10;o.u=null;o.n=0;o.ab=0;});}
 
 // ---------- Sicherheitsnetz: offene Planstellen am Ende des Sommerfensters ----------
 // Was der Markt nicht besetzt hat, füllt der Verein auf: zuerst der beste Vereinslose der Gruppe, sonst ein erzeugter Spieler der Gruppe (Stärke und Alter wie kaderAuffuellen am 1. Juli).

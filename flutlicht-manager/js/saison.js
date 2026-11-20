@@ -51,6 +51,7 @@ function regionalligaAufsteiger(){const G=RS.regionalliga,meister={},ids=[],txt=
 // Saisonwechsel am 1. Juli: Auf- und Abstieg, Alter, Verträge, Nachwuchs, neuer Spielplan
 function newSeason(){return mitStrom(strom('saison',S.season),newSeasonLauf);}
 function newSeasonLauf(){wechselVollziehen(true);leiheEnde(); // Leihen enden mit der Saison (U10d)
+  mitStrom(strom('vorstandKI',S.season),kiVorstandSaison); // Trainerwechsel im Sommer bei Computer-Vereinen, vor Auf- und Abstieg (K31 §5.10, U11d2)
    // vereinbarte Wechsel zum Sommerfenster, vor dem Saisonwechsel der Verträge (K19, U10a)
   S.vstat={};S.testspiele=[];kabineSaison();const sm=S.summary,Z=RS,setze=(ids,lg)=>ids.forEach(id=>S.teams[id].lg=lg);sommerNeueSaison();if(S.stab)stabSaison();
   setze(sm.down,2);setze(sm.up,1);if(sm.rw===sm.rel[1]){S.teams[sm.rel[1]].lg=1;S.teams[sm.rel[0]].lg=2;}

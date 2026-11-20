@@ -108,6 +108,13 @@ Chance nach gescheitertem Ultimatum = 0,9 − 0,03 × Geduld des Präsidenten   
 
 - Gleiche Regeln für Computer-Trainer, vereinfacht: Vertrauen aus Sport und Finanzen, Ultimatum, Entlassung nach Geduld des Präsidenten.
 - Entlassene Computer-Trainer und neue Trainer kommen aus einem Trainerpool (K31), darunter ehemalige Spieler (K16, K32).
+- **Gebaut in U11d2 (19. November 2026, ohne Testlauf, K31 §5.10):**
+  - Vertrauen der Computer-Vereine aus Sport, Serie und Finanzen, mit Trägheit.
+  - Ultimatum unter 20 über zwei Ligaspiele, Entlassung nach der Geduld des Präsidenten, ein zweites, letztes Ultimatum.
+  - Trainerwechsel im Sommer bei deutlich verfehltem Ziel.
+  - Der Präsident hat Geduld, Ehrgeiz und Sparsamkeit, fest aus der Vereinsnummer und ohne Namen. Gewählt wird er nicht.
+  - Noch ohne Trainerpool: Der neue Trainer bringt einen neuen Lieblingsstil mit und einen Stimmungsschub.
+  - **Dein Vorstand ist unverändert** (Rest von K28 in U12).
 
 ## 8. Ereignisse
 

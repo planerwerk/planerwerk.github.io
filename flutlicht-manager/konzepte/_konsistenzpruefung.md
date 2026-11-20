@@ -966,3 +966,21 @@ Wie BG bis BI: kein Test gelaufen. Das Kontingent ist recherchiert (FIFA, DFL), 
 | BJ7 | **Leihe am 1. Juli:** Der Markt läuft montags. Fiele ein Montag mit offenem Fenster vor den Saisonwechsel, endete eine Leihe sofort wieder. Deshalb leihen Computer-Vereine nur in der Spielphase (`S.phase === 'play'`). | ✅ vorbeugend |
 | BJ8 | **Nicht gebaut:** Leihgebühr, Kaufoption und Rückruf unter Computer-Vereinen, Entwicklung beim Leihverein über dessen Stab (K08 §5.5), Leihen ins und aus dem Ausland, die Ausnahmen „vom Verein ausgebildet“ und die der DFL für junge deutsche Spieler. | 📌 später |
 | BJ9 | **`tests/welt.js` Nr. 6d und Nr. 7:** Leihbar, Leihkandidat, Leihe ohne Geld, Kontingent (6, 3, bis 21 frei), Rückkehr am Saisonende. Im Ablauf wird jede Leihe geprüft (Fenster, Bedarf, leihbar, Kontingent, nie dein Verein), nach jedem Saisonwechsel ist niemand mehr verliehen. Nie gelaufen. | ⚠️ offen |
+
+---
+
+## BK. Nachtrag zu U11d2 Computer-Vereine: Vorstand und Trainerwechsel (19. November 2026, ohne Testlauf)
+
+Wie BG bis BJ: kein Test gelaufen. Recherchiert ist nur der Zielwert (4 bis 10 Wechsel je Saison in der 1. Liga), alle Stellschrauben sind geschätzt.
+
+| # | Befund | Status |
+|---|---|---|
+| BK1 | **K31 §5.5 hing an K28.** Gebaut ist nur der Teil für Computer-Vereine (K28 §7). Dein Vorstand rechnet weiter wie bisher (Werte je Spiel, Entlassung unter 12 nach der Schonfrist). Zwei verschiedene Modelle bis U12. | 📌 U12 |
+| BK2 | **Kalibrierung offen:** Ob mit Grenze 20, Trägheit 0,2 und Sport 5 je Platz 4 bis 10 Wechsel je Saison in der 1. Liga herauskommen, zeigt erst `tests/welt.js` (Nr. 7 gibt die Zahl je Liga aus, gewertet wird nur „nicht absurd“). | ⚠️ messen |
+| BK3 | **Neuer Stil mitten in der Saison:** `t.stil` ändert sich. Ob der Computer-Trainer im Spiel (K06, U5a) und die Gegneranalyse ihn ohne Zwischenspeicher lesen, habe ich nicht nachgeprüft. Die Vertrautheit mit dem neuen Stil ist niedrig, weil `vertrautheitWoche` in `training` jede Woche für jeden aktiven Verein die Werte aller anderen Stile speichert (mindestens 30). Ohne gespeicherten Wert gäbe `vertraut` dem neuen Lieblingsstil den Startwert 70. | ⚠️ prüfen |
+| BK9 | **Grundordnung:** Zuerst geplant war eine neue Ordnung mit 50 %. Gestrichen, weil `kiOrdnung` die Ordnung der Computer-Vereine jeden Monat neu nach dem Kader wählt (in `training`). Die mitgebrachte Ordnung wäre nach spätestens vier Wochen wieder weg. | ✅ gestrichen |
+| BK4 | **Eigene Zufallsströme** (`vorstandKI` je Woche und zum Saisonwechsel). Die übrigen Ströme bleiben gleich, die Welt ändert sich trotzdem, weil Stil und Ordnung die Spiele ändern. | ✅ |
+| BK5 | **Saisonwechsel:** `kiVorstandSaison` läuft vor Auf- und Abstieg und vor `setTarget`, damit erwarteter und letzter Platz zur alten Saison gehören. Die Schonfrist zählt die Ligaspiele der Tabelle, die bei null beginnt, darum steht `ab` dann auf 0. | ✅ |
+| BK6 | **Dein alter Verein:** Wirst du entlassen oder wechselst du, ist er ab dann ein Computer-Verein. Sein Vorstand beginnt mit 55, er hat Schonfrist bis zum siebten Ligaspiel der Saison. | ✅ |
+| BK7 | **`tests/welt.js` Nr. 6e und Nr. 7:** Präsident, Niederlagenserie mit Ultimatum, Entlassung spätestens nach dem zweiten Ultimatum, Stimmungsschub, Wechsel im Sommer, Rückkehr zum Start. Im Ablauf die Zahl je Liga und Saison. Nie gelaufen. | ⚠️ offen |
+| BK8 | **`tests/fuzz-karrieren.js`, `tests/schwierigkeit.js`, `tests/lizenz.js`** prüfen deinen Vorstand. Er ist unverändert, die Gegner spielen aber anders. Kann Werte verschieben. | ⚠️ messen |

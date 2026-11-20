@@ -312,6 +312,14 @@ const REGELN={
     // Leihen unter Computer-Vereinen (K31 §5.9, U11d1). Leihbar: bis alterMax Jahre, Rang in leihRaenge (Ausbildungsverein: Profilwert, auch Talente), gesund, Verleiher behält mehr als
     // markt.verkaeufer.kaderMin. Geliehen wird für die Lücken in gruende: zuerst (vor dem Kauf) bei den Gründen in zuerst, sonst nur, wenn kein Kauf geht. Kontingent: leihe.kontingent.
     leihe:{alterMax:23,leihRaenge:['ueber'],gruende:['verletzt','offen'],zuerst:['verletzt']},
+    // Vorstand und Trainerwechsel der Computer-Vereine (K28 §7, K31 §5.5, §5.10, U11d2). Vertrauen 0–100, Start start, montags um traegheit Richtung Ziel = basis + Sport + Serie + Finanzen.
+    // Sport: jePlatz × (erwarteter Platz − Tabellenplatz), begrenzt auf sport. Serie: serieFaktor × (Punkte je Spiel der letzten serieSpiele Ligaspiele − serieMitte), begrenzt auf serie.
+    // Finanzen: finanzMinus bei Konto im Minus. Erst ab abSpiel Ligaspielen. Ultimatum unter grenze, wenn der Trainer mehr als schonfrist Ligaspiele hinter sich hat, über ultimatumSpiele Spiele.
+    // Danach Entlassung mit entlassung.basis + jeGeduld × Geduld des Präsidenten, sonst ein zweites, letztes Ultimatum. Saisonende: erwarteten Platz um mehr als saisonWeitAb verfehlt
+    // und Vertrauen unter saisonUnter: Wechsel im Sommer; danach geht das Vertrauen aller um saisonZurueck zurück zum Start. Neuer Trainer: neuer Lieblingsstil, Stimmung + schub für alle
+    // (die Grundordnung wählt der Computer-Trainer ohnehin jeden Monat). protokoll: so viele Wechsel bleiben in S.trainerWechsel. ALLE ZAHLEN GESCHÄTZT, Ziel 4 bis 10 je Saison in der 1. Liga.
+    vorstand:{start:55,traegheit:0.2,basis:50,jePlatz:5,sport:[-35,25],serieSpiele:5,serieMitte:1.3,serieFaktor:10,serie:[-15,10],finanzMinus:-15,abSpiel:5,
+      grenze:20,schonfrist:6,ultimatumSpiele:2,entlassung:{basis:0.9,jeGeduld:-0.03},saisonWeitAb:3,saisonUnter:30,saisonZurueck:0.5,schub:5,protokoll:200},
     aktivJeWoche:0.5,schaetzFehler:2,
     fuellen:{fenster:0,vereinslosBis:4,vereinslosChance:0.6}}, // fenster: Nummer des Fensters in transfers.fenster, an dessen Ende aufgefüllt wird (0 = Sommer)
 
@@ -635,6 +643,7 @@ const REGELN={
     pokalAus:-6,pokalWeiter:1.5,pokalSieg:10,
     saisonErreicht:20,saisonWeitAb:3,saisonWeit:-25,saisonVerfehlt:-8,entlassenSaisonUnter:15,
     neuerJob:55,
+    praesident:{min:1,max:20}, // Geduld, Ehrgeiz, Sparsamkeit des Präsidenten (K28 §3), fest aus der Vereinsnummer. Wirkt seit U11d2 nur bei Computer-Vereinen (Geduld).
     jobs:{ansehenAbschlag:4,kandidaten:8,angebote:4},
     ziel:{spitzeBis:3,spitzePlus:1,plus:2,schlechtester:{1:15,2:15,3:16},unterhalbMindestens:2} // Saisonziel aus dem erwarteten Platz; 2. und 3. Liga: bestes Ziel Platz 2
   },
