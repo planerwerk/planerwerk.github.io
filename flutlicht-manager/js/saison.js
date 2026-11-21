@@ -33,7 +33,7 @@ function seasonEndLauf(){
   S.summary=sm;S.phase='end';
   nebenzieleSaison(); // Nebenziele des Vorstands (K28 §5.7, U12b), vor der Prüfung auf Entlassung
   rufSaison(sm); // Ruf als Trainer (K28 §5.4, U12a), vor einer Entlassung, damit die Jobangebote schon den neuen Ruf sehen
-  statistikSaison(sm);trainerSaison(sm);finanzenSaisonende(); // Ruf der Computer-Trainer (K32 §3.3b, U18a); Ehrungen, Saisonarchiv, Vitrine, Karrierezeilen (K34, U13), nach dem Ruf (Trainer der Saison +5) und vor einer Entlassung
+  statistikSaison(sm);trainerSaison(sm);finanzenSaisonende();marketingSaisonende(sm); // Ruf der Computer-Trainer (K32 §3.3b, U18a); Ehrungen, Saisonarchiv, Vitrine, Karrierezeilen (K34, U13), nach dem Ruf (Trainer der Saison +5) und vor einer Entlassung
   if(sm.down3.includes(S.my))entlassen(`${me.name} steigt in die Regionalliga ab. Der Verein trennt sich von dir.`);
   if(S.trust<B.entlassenSaisonUnter)entlassen();lizenzRueckblick();kreditAuto();save();}
 // Regionalliga (K32a): je Staffel wird ein Meister gelost, gewichtet nach Ansehen. West und Südwest steigen direkt auf,
@@ -66,7 +66,8 @@ function newSeasonLauf(){lizenzNachweis();wechselVollziehen(true);leiheEnde();ve
   beraterSaison(); // Beziehungen zu Beratern verblassen (K22, U10c)
   S.teams.forEach(t=>{if(t.lastLg>3&&t.lg>3)return;const A=Z.ansehen;let d=t.lastLg<=3?clamp((t.expPos-t.lastPos)*A.faktor,-A.maxAenderung,A.maxAenderung):0;
     if(t.lg<t.lastLg)d+=A.aufstieg;if(t.lg>t.lastLg)d+=A.abstieg;t.rep=clamp(Math.round(t.rep+d),A.min,A.max);t.fans=Math.round(clamp(t.fans*(1+d*Z.fans.faktor),Z.fans.min,t.cap*Z.fans.maxJePlatz));});
-  zweiteAbstiegSim(); // deine Zweite aus der 3. Liga abgestiegen: Spieler bis 23 bleiben als Amateurkader (K08 §5.6)
+  zweiteAbstiegSim();marketingNeueSaison(); // Fans-Bonus der Kampagnen (K25 §5.4, K25a)
+  // deine Zweite aus der 3. Liga abgestiegen: Spieler bis 23 bleiben als Amateurkader (K08 §5.6)
   const K=Z.karriereende;
   const vPlan=new Map();S.teams.forEach(t=>{if(aktiv(t)&&stabMacht(t.id,'vertraege'))vPlan.set(t.id,kaderplan(t));}); // Verträge nach Rang (K31 §5.8, U11c): Plan vor dem Altern, ohne Zufall
   S.pl.forEach(p=>{if(p.team<-1)return;p.age++;p.g=0;p.pg=0;p.apps=0;disziplinSaison(p);p.form=Z.neuForm;p.sv=0;p.ent=0;eigenschaftenNeu(p);

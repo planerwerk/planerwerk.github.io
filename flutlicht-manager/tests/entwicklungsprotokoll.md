@@ -24,7 +24,7 @@ Gegenstück zu `tests/testprotokoll.md`. Asynchroner Kanal von der Entwicklung a
 | K23d | Budgets vom Vorstand (Gehaltsrahmen, Transferbudget), Bezug zum Zielgespräch (K28) | nach K23c |
 | K23e | Raten bei Ablösen, Kredit mit Laufzeit, Gehaltsverzicht, Karten (Mäzen, Steuerprüfung) | fertig, ungetestet (siehe Changelog) |
 
-Solange K23b auf die Messwerte wartet, baue ich **K25 Marketing** (Zweig `mitarbeit/popolupo-k25-marketing`, auf dem K23-Zweig).
+Solange K23b auf die Messwerte wartet, baue ich **K25 Marketing** (Zweig `mitarbeit/popolupo-k25-marketing`, auf dem K23-Zweig): K25a fertig, ungetestet. Danach **K26 Stadion** (Zweig `mitarbeit/popolupo-k26-stadion`, auf K25). **Die neueste Spitze ist immer der zuletzt genannte Zweig, er enthält alles davor.**
 
 Danach in dieser Reihenfolge, wenn nichts dazwischenkommt: K25 Marketing, K26 Stadion, K37 als Konzept und U19 Europapokal. Rest von K24 bleibt bei Claude.
 
@@ -38,6 +38,22 @@ Danach in dieser Reihenfolge, wenn nichts dazwischenkommt: K25 Marketing, K26 St
 ---
 
 ## Changelog
+
+### 21.11.2026: K25a Marketing (Zweig `mitarbeit/popolupo-k25-marketing`, auf dem K23-Zweig)
+
+- **Neu:** `js/marketing.js`, Regeln `marketing` (`RMK`), Lizenz-Bereich `marketing` (B-Lizenz, mit Automatik).
+  - Trikot je Saison (klassisch, modern, mutig) mit Reaktion der Fans aus eigenem Strom `trikot`. Ohne Wahl am Tag vor dem ersten Pflichtspiel das klassische, mit und ohne Automatik am selben Tag.
+  - Vier Kampagnen (Trikot-Kampagne, Fanwerbung, Jugend-Camps, Fanarbeit) mit Kosten je Liga und abnehmendem Ertrag.
+  - Werbewert, vorerst ohne Wirkung. **Für K24 (Claude):** `S.mk.ww` (0–100) steht bereit, falls Sponsorangebote davon abhängen sollen.
+  - Karte „Marketing“ im Stadion, Punkt „Trikotvorstellung“ in der Liste vor dem Saisonstart.
+- **Geld:** fast neutral. Fanartikel bleiben je Zuschauer, dazu Faktoren für Trikot, Lieblinge (+5 % je Liebling, höchstens +15 %) und die Trikot-Kampagne (CA1).
+- **Tests zuerst:**
+  - `tests/marketing.js` (neu)
+  - `tests/vorbereitung.js` (erwartet jetzt 8 Punkte)
+  - `tests/fans.js` (Pfiffe mit Fanarbeit)
+  - `tests/lizenz.js` (CA3)
+  - `tests/code.js`
+- **Doku:** K25 §5.4, §12 Nr. 1 bis 6, K33, K36 Nr. 53, Konsistenzprüfung CA, offene Entscheidungen, Test-README.
 
 ### 21.11.2026: K23e Kredit, Raten, Gehaltsverzicht, Karten, dazu das Messskript für K23b (Zweig `mitarbeit/popolupo-k23-finanzen`)
 

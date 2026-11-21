@@ -441,6 +441,15 @@ Datei: `konzepte/K25-marketing.md`
 
 sechs Kampagnen, drei Trikotdesigns je Saison, Sortiment in drei Stufen, Online-Shop ohne eigene Steuerung. Alle Beträge sind Spielwerte (Kalibrierung mit K23).
 
+**Mit K25a von popolupo vorläufig entschieden (21.11.2026, K25 §12 Nr. 1 bis 6):**
+
+- Der Fanartikel-Erlös bleibt geldneutral: Faktoren auf den heutigen Erlös statt der neuen Formel.
+- Die Fans reagieren auf das Trikot nach einem Würfel aus eigenem Strom, ohne Tradition. Voreinstellung ist das klassische Trikot.
+- Vier von sechs Kampagnen. Dauerkarten und Mitglieder warten.
+- Fanarbeit wirkt auf die Pfiffe.
+- Der Werbewert hat noch keine Wirkung.
+- Bereich `marketing` ab der B-Lizenz mit Automatik.
+
 ## K26 – Stadion und Infrastruktur
 Datei: `konzepte/K26-stadion.md`
 

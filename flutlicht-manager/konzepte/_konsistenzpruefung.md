@@ -1235,3 +1235,19 @@ Zweig `mitarbeit/popolupo-k23-finanzen`. Konzept: K23 §5.5d, §12 Nr. 10 bis 14
 | BZ6 | **Beträge der Karten** (1,5 Mio. €, 250.000 €, 400.000 €) sind feste Werte in der heutigen Größenordnung. Nach K23c müssen sie mit. | 📌 K23c |
 | BZ7 | **`tests/finanzmodell.js` (Messung für K23b):** rechnet in einer normalen Saison für jeden Verein aus, was Einnahmen und Ausgaben nach dem vollen Modell wären, und vergleicht mit der heutigen Pauschale. Keine Prüfung, nur Zahlen. Bitte die Ausgabe ins Testprotokoll, danach stelle ich K23b ein. | ⚠️ bitte laufen lassen |
 | BZ8 | **`tests/finanzen.js`** hat vier Prüfungen mehr (Kredit, Raten, Gehaltsverzicht, Mäzen), zusammen neun. Nie gelaufen. | ⚠️ offen |
+
+---
+
+## CA. Nachtrag zu K25a Marketing: Trikot, Kampagnen, Werbewert (21. November 2026, popolupo, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-k25-marketing` (baut auf `mitarbeit/popolupo-k23-finanzen` auf). Konzept: K25 §5.4, §12 Nr. 1 bis 6. Neue Datei `js/marketing.js`. Kein Test gelaufen.
+
+| # | Befund | Status |
+|---|---|---|
+| CA1 | **Fast geldneutral:** Der Fanartikel-Erlös bleibt je Zuschauer, dazu Faktoren. Das Trikot liegt im Schnitt bei etwa 1,0. Neu sind +5 % je Publikumsliebling (höchstens +15 %). In der ersten Saison gibt es kaum Lieblinge (K27 BT5), danach etwas mehr Fanartikel-Erlös als bisher. | ⚠️ messen |
+| CA2 | **Eigener Strom `trikot`** je Saison und Verein, ein Wurf (beim mutigen Design Kult oder Spott, sonst die Stelle in der Spanne). Kein anderer Strom verschiebt sich. | ✅ |
+| CA3 | **Gleichschritt (`tests/lizenz.js`):** Ohne Wahl nimmt der Verein am Tag vor dem ersten Pflichtspiel das klassische Trikot, mit und ohne Automatik am selben Tag. Kampagnen startet nur der Mensch. | ✅ entworfen |
+| CA4 | **Liste vor dem Saisonstart** (K12b) hat jetzt acht Punkte. `tests/vorbereitung.js` erwartet 8. | ✅ |
+| CA5 | **Fanarbeit wirkt auf die Pfiffe** (K27), weil es noch keine Pyrotechnik gibt (K09). | 📌 vorläufig |
+| CA6 | **Nicht gebaut:** Dauerkarten-Aktion, Mitgliederaktion, Online-Shop, Sortiment in Stufen, Kampagnen der Computer-Vereine, Karten aus K25 §8 (Retro-Trikot zum Jubiläum, Trikot ausverkauft), Tradition als Stammdatum. | 📌 später |
+| CA7 | **`tests/marketing.js`:** sechs Prüfungen, siehe Test-README. Nie gelaufen. | ⚠️ offen |
