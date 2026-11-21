@@ -19,10 +19,12 @@ Gegenstück zu `tests/testprotokoll.md`. Asynchroner Kanal von der Entwicklung a
 | Teil | Inhalt | Stand |
 |---|---|---|
 | K23a | Monatsbericht, Liquiditätsprognose, Lizenzprüfung im März mit Auflagen, Insolvenz mit Punktabzug (zuerst nur für deinen Verein) | fertig, ungetestet (siehe Changelog) |
-| K23b | gleiche Einnahmen und Ausgaben für Computer-Vereine statt Pauschale, Säulenmodell der Medien, Pauschale für die Europapokal-Plätze | in Arbeit |
-| K23c | echte Größenordnungen für alle Geldwerte (Einnahmen, Gehälter, Ablösen), danach die Sponsorenhöhen aus K24 §5.1 | geplant |
-| K23d | Budgets vom Vorstand (Gehaltsrahmen, Transferbudget), Bezug zum Zielgespräch (K28) | geplant |
-| K23e | Raten bei Ablösen, Kredit mit Laufzeit, Gehaltsverzicht, Karten (Mäzen, Steuerprüfung) | geplant |
+| K23b | gleiche Einnahmen und Ausgaben für Computer-Vereine statt Pauschale, Säulenmodell der Medien, Pauschale für die Europapokal-Plätze | **wartet auf Messwerte:** bitte `node tests/finanzmodell.js` laufen lassen und die Ausgabe ins Testprotokoll (BZ7) |
+| K23c | echte Größenordnungen für alle Geldwerte (Einnahmen, Gehälter, Ablösen), danach die Sponsorenhöhen aus K24 §5.1 | nach K23b |
+| K23d | Budgets vom Vorstand (Gehaltsrahmen, Transferbudget), Bezug zum Zielgespräch (K28) | nach K23c |
+| K23e | Raten bei Ablösen, Kredit mit Laufzeit, Gehaltsverzicht, Karten (Mäzen, Steuerprüfung) | fertig, ungetestet (siehe Changelog) |
+
+Solange K23b auf die Messwerte wartet, baue ich **K25 Marketing** (Zweig `mitarbeit/popolupo-k25-marketing`, auf dem K23-Zweig).
 
 Danach in dieser Reihenfolge, wenn nichts dazwischenkommt: K25 Marketing, K26 Stadion, K37 als Konzept und U19 Europapokal. Rest von K24 bleibt bei Claude.
 
@@ -36,6 +38,23 @@ Danach in dieser Reihenfolge, wenn nichts dazwischenkommt: K25 Marketing, K26 St
 ---
 
 ## Changelog
+
+### 21.11.2026: K23e Kredit, Raten, Gehaltsverzicht, Karten, dazu das Messskript für K23b (Zweig `mitarbeit/popolupo-k23-finanzen`)
+
+- **Neu in `js/finanzen.js`:**
+  - Kredit in Tranchen mit 1 bis 5 Jahren Laufzeit (Auswahl auf der Finanzseite), monatliche Tilgung, Sondertilgung, Kreditflüsse getrennt von `S.fin` (Spalte „Kredit“ im Monatsbericht).
+  - Ablöse in Raten beim Kauf (Häkchen im Angebot): Hälfte sofort, Rest mit 5 % in 12 Monatsraten.
+  - Gehaltsverzicht in der Not (15 %, 3 Monate, Stimmung −10).
+  - Karten „Mäzen“ (Geld gegen Einfluss des Präsidenten) und „Steuerprüfung“.
+- **Geändert:** `loan` (aktionen.js) und `kreditAuto` (lizenz.js) laufen über die Tranchen. `offer` prüft das Konto mit der Anzahlung. Die Gehaltsbuchung in `finanzenLiga` hat den Faktor des Verzichts. `praesidentSerie` kommt mit Mäzen auch ohne Ehrgeiz.
+- **Tests zuerst:**
+  - `tests/finanzen.js` (neun Prüfungen)
+  - `tests/karten.js` (Katalog mit zwei Karten mehr)
+  - `tests/code.js`
+  - `tests/transfers.js` und `tests/vertraege.js` (Kauf mit neuer Kontoprüfung)
+  - `tests/lizenz.js`
+- **Bitte messen (BZ7):** `node tests/finanzmodell.js` und die Ausgabe ins Testprotokoll, gern mit 2 Saisons. Damit stelle ich K23b ein (gleiche Einnahmen für Computer-Vereine), ohne die Welt aus dem Gleichgewicht zu bringen.
+- **Doku:** K23 §5.5d, §12 Nr. 10 bis 14, K30 §3.2, K33, K36 Nr. 52, Konsistenzprüfung BZ, offene Entscheidungen, Test-README.
 
 ### 21.11.2026: K23a Finanzplan (Zweig `mitarbeit/popolupo-k23-finanzen`)
 

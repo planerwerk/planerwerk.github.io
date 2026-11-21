@@ -31,9 +31,31 @@ const tagMit=(ev,mmtt)=>{for(let d=0;d<400;d++)if(ev('mmtt')(d)===mmtt)return d;
 
 // 5. Eine Saison im Ablauf: Monatsberichte, und der Kontostand ist aus den Buchungen nachvollziehbar (Summe der Monatssalden = Änderung des Kontostands)
 {let erg=null;saisons({n:1,seed:SEED,verein:VEREIN,beiSaisonende:S=>{const v=S.finV||[];if(!v.length){erg={n:0};return;}
-    const start=v[0].cash-v[0].saldo,summe=v.reduce((a,r)=>a+r.saldo,0),diff=Math.abs(v[v.length-1].cash-start-summe),umsatz=v.reduce((a,r)=>a+r.ein-r.aus,0);
+    const start=v[0].cash-v[0].saldo-(v[0].k||0),summe=v.reduce((a,r)=>a+r.saldo+(r.k||0),0),diff=Math.abs(v[v.length-1].cash-start-summe),umsatz=v.reduce((a,r)=>a+r.ein-r.aus,0); // k: Kreditflüsse (K23e)
     erg={n:v.length,diff,umsatz,loan:S.loan||0};}});
   pruef(erg&&erg.n>=9&&erg.diff<=Math.max(1000,erg.umsatz*0.001),'Saison: mindestens 9 Monatsberichte, Kontostand gleich Startstand plus Summe der Monatssalden (K23 §10)',
     erg?`${erg.n} Berichte, Abweichung ${Math.round(erg.diff)} € bei ${Math.round(erg.umsatz)} € Umsatz${erg.loan?', Kredit '+erg.loan:''}`:'kein Saisonende');}
+
+// ---------- K23e (§5.5d) ----------
+// 6. Kredit mit Laufzeit: Tranche, Tilgung am Monatsersten, Kreditfluss im Bericht, Sondertilgung; alter Kredit ohne Tranche wird übernommen
+{const {F,S,ev,t}=welt(),d=tagMit(ev,'10-01');t.cash=10e6;S.loan=0;F.kreditAufnehmen(2.4e6,2);const rate=S.kredite[0].rate;S.finM={s:S.season,mo:'09',fin:Object.assign({},S.fin),cash:t.cash,k:0};S.tag=d;
+  const c0=t.cash;F.finanzenMonat(d);const row=S.finV[S.finV.length-1],nachRate=S.loan,cashNach=t.cash;F.kreditTilgen(1e6);
+  const w2=welt();w2.S.loan=1e6;w2.F.kreditTilgen(0);const alt=(w2.S.kredite||[]).length===1&&w2.S.kredite[0].rest===1e6;
+  pruef(rate===100000&&row.k===2.4e6&&nachRate===2.3e6&&cashNach===c0-1e5&&S.loan===1.3e6&&alt,'Kredit: 2,4 Mio. über 2 Jahre = 100.000 € im Monat, Aufnahme im Bericht, Tilgung am Monatsersten, Sondertilgung, alter Kredit wird Tranche',
+    `Rate ${rate}, k ${row.k}, Kredit ${nachRate} → ${S.loan}`);}
+
+// 7. Ablöse in Raten: Hälfte sofort, Rest mit 5 % Aufschlag in 12 Raten, Rate am Monatsersten gebucht
+{const {F,S,ev,W}=welt(),d=tagMit(ev,'11-01'),doc=W.ev('document'),el=doc.getElementById('raten');el.checked=true;const f0=S.fin['Transfers']||0;F.abloeseZahlen(4e6,'Testspieler');el.checked=false;
+  const sofort=f0-(S.fin['Transfers']||0),r=S.raten[0];S.finM={s:S.season,mo:'10',fin:Object.assign({},S.fin),cash:W.ev('myT()').cash,k:0};S.tag=d;F.finanzenMonat(d);
+  pruef(sofort===2e6&&r&&r.rest===Math.round(2e6*1.05)-Math.ceil(2.1e6/12)&&S.fin['Transfers: Raten']===-Math.ceil(2.1e6/12),'Raten: 2 Mio. sofort, 2,1 Mio. in 12 Raten, erste Rate am Monatsersten',`sofort ${sofort}, Rest ${r&&r.rest}`);}
+
+// 8. Gehaltsverzicht: nur in der Not, 15 % weniger Gehalt, Stimmung −10, einmal je Saison
+{const {F,S,ev,t}=welt(),p=ev('squad')(VEREIN)[0];p.st=50;t.cash=1e6;F.gehaltsverzicht();const ohneNot=!S.verzicht;t.cash=-1e5;F.gehaltsverzicht();const mit=!!S.verzicht&&ev('gehaltFaktor')()===0.85&&ev('stimmung')(p)===40;
+  const bis=S.verzicht.bis;S.verzicht.bis=0;F.gehaltsverzicht();const nurEinmal=S.verzicht.bis===0;S.verzicht.bis=bis;
+  pruef(ohneNot&&mit&&nurEinmal,'Gehaltsverzicht: ohne Not abgelehnt, in der Not 15 % weniger Gehalt und Stimmung −10, nur einmal je Saison');}
+
+// 9. Mäzen: nur in der Not; angenommen bringt Geld, danach mischt sich auch ein Präsident ohne Ehrgeiz ein
+{const {F,S,ev,t}=welt(),A=ev('AUSLOESER');t.cash=1e6;const ohne=A.maezen();t.cash=-1e5;const mit=A.maezen();const g0=S.fin['Ereignisse']||0;F.kartenEntscheiden({id:'maezen',tag:S.tag,s:S.season,b:{},text:''},0,false);
+  pruef(ohne===null&&!!mit&&(S.fin['Ereignisse']||0)-g0===1500000&&S.maezen===S.season,'Mäzen: nur in der Not, 1,5 Mio. €, danach mischt sich der Präsident ein',`Geld ${(S.fin['Ereignisse']||0)-g0}, Merker ${S.maezen}`);}
 
 console.log(probleme.length?`\n${probleme.length} Problem(e).`:'\nAlles in Ordnung.');process.exitCode=probleme.length?1:0;

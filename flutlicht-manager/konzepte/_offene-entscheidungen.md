@@ -421,6 +421,14 @@ Datei: `konzepte/K23-finanzen.md`
 - Lizenzprüfung am 1. März, Nachweis bis 31. Mai, sonst Transfersperre.
 - Insolvent ist ein Verein nach zwei Monatsersten unter dem negativen Kreditrahmen. Folgen: 9 Punkte Abzug, Vertrauen −30, Schuldenschnitt.
 
+**Mit K23e von popolupo vorläufig entschieden (21.11.2026, K23 §12 Nr. 10 bis 14):**
+
+- K23e kommt vor K23b bis K23d.
+- Kredite laufen in Tranchen mit 1 bis 5 Jahren Laufzeit und werden monatlich getilgt. Kreditflüsse stehen nicht in `S.fin`.
+- Ablöse in Raten: die Hälfte sofort, der Rest mit 5 % Aufschlag in 12 Raten.
+- Gehaltsverzicht: 15 % für drei Monate, Stimmung −10, nur in der Not.
+- Die Karten Mäzen und Steuerprüfung haben feste Beträge.
+
 ## K24 – Sponsoren
 Datei: `konzepte/K24-sponsoren.md`
 

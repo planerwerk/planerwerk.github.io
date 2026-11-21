@@ -1,6 +1,6 @@
 # K23 – Finanzen und Budget
 
-Status: **Entwurf** (8. November 2026), geschrieben nach „weiter, entscheide du“ (PLAN §1, Punkt 9). Vorläufige Entscheidungen stehen in Abschnitt 12. **Teilschritt K23a umgesetzt (21. November 2026, popolupo, §5.5c), noch ohne Testlauf.**
+Status: **Entwurf** (8. November 2026), geschrieben nach „weiter, entscheide du“ (PLAN §1, Punkt 9). Vorläufige Entscheidungen stehen in Abschnitt 12. **Teilschritte K23a und K23e umgesetzt (21. November 2026, popolupo, §5.5c, §5.5d), noch ohne Testlauf.**
 Hängt ab von: K13 (Wettbewerbe, Prämien), K19 (Transfers), K21 (Gehälter), K28 (Vorstand) · Wird gebraucht von: K24–K27, K31.
 
 ## 1. Ziel und Spielgefühl
@@ -121,6 +121,16 @@ K23 ändert fast jede Geldzahl im Spiel. Damit jeder Schritt für sich getestet 
 - **Computer-Vereine:** bekommen Lizenzprüfung und Insolvenz erst mit K23b, weil sie heute keine Ausgaben buchen.
 - **Lizenz (K36):** keine neue Funktion. Monatsbericht und Prognose sind Information, Auflagen und Insolvenz Folgen.
 
+### 5.5d Umsetzung K23e (21.11.2026): Kredit mit Laufzeit, Raten, Gehaltsverzicht, Karten
+
+K23e kommt vor K23b bis K23d, weil es die Welt kaum verschiebt (nur dein Verein). K23b wartet auf Messwerte aus `tests/finanzmodell.js`.
+
+- **Kredit mit Laufzeit** (§5.5): Beim Aufnehmen wählst du 1 bis 5 Jahre (Standard 3). Jede Tranche wird am Monatsersten in gleichen Raten getilgt. Zinsen wie bisher je Ligaspiel auf den offenen Betrag. Sondertilgung geht jederzeit, die älteste Tranche zuerst. Die Automatik des Vereins (Bereich `kredit`) tilgt am Saisonende wie bisher aus dem Guthaben.
+- **Kreditflüsse getrennt erfasst:** Aufnahme und Tilgung sind keine Einnahmen oder Ausgaben und stehen deshalb nicht in `S.fin` (sonst zählten sie in der Saisonbilanz und im Nebenziel „Finanzen“ des Vorstands). Der Monatsbericht nennt sie getrennt, die Prüfung „Kontostand nachvollziehbar“ rechnet sie mit.
+- **Ablöse in Raten** (§5.5, K19): Beim Kauf von einem Verein mit Ablöse kannst du „in Raten“ wählen. Die Hälfte zahlst du sofort, der Rest kostet 5 % Aufschlag und wird in 12 Monatsraten fällig (Buchung „Transfers: Raten“). Der Verkäufer bekommt sein Geld sofort (eine Bank finanziert, vereinfacht). Die Prognose zieht fällige Raten ab.
+- **Gehaltsverzicht** (§5.5): nur in der Not (Kontostand im Minus oder offene Lizenzauflagen), höchstens einmal je Saison. Die Mannschaft verzichtet drei Monate auf 15 % der Gehälter, die Stimmung aller sinkt um 10. Lizenz-Bereich `kredit` (Pro-Lizenz), weil es dieselbe Art Notmaßnahme ist wie der Kredit.
+- **Karten** (§8, K30): „Ein Mäzen bietet Geld an“ (gelegentlich, nur in der Not): 1,5 Mio. €, dafür mischt sich der Präsident für den Rest der Saison auch ohne Ehrgeiz ein (Karte „Der Präsident mischt sich ein“). „Steuerprüfung“ (selten): zahlen (−250.000 €) oder Einspruch (50 %: nichts, sonst −400.000 €).
+
 ### 5.6 Größenordnungen
 
 - Ziel: Erstligisten im Schnitt etwa 280 Mio. € Umsatz (2024/25: 5,12 Mrd. € für 18 Vereine), Zweitligisten etwa 67 Mio. € (1,21 Mrd. €), mit großer Spanne. Der größte Verein liegt nahe einer Milliarde.
@@ -205,6 +215,14 @@ finanzen:{
 7. Prognose aus dem laufenden Saldo je Ligaspiel, ohne einmalige Buchungen (§5.5c).
 8. Lizenzprüfung am 1. März, Nachweis bis 31. Mai, sonst Transfersperre für die nächste Saison (§5.5c).
 9. Insolvenz nach zwei Monatsersten unter dem negativen Kreditrahmen, 9 Punkte, Vertrauen −30, Schuldenschnitt auf 0 (§5.5c).
+
+**Vorläufig entschieden mit K23e (21.11.2026, von mir):**
+
+10. K23e vor K23b bis K23d (§5.5d).
+11. Kredit in Tranchen mit Laufzeit 1 bis 5 Jahre und monatlicher Tilgung. Kreditflüsse außerhalb von `S.fin` (§5.5d).
+12. Ablöse in Raten: Hälfte sofort, Rest mit 5 % Aufschlag in 12 Monatsraten. Der Verkäufer bekommt alles sofort (§5.5d).
+13. Gehaltsverzicht 15 % für drei Monate, Stimmung −10, nur in der Not, einmal je Saison, Bereich `kredit` (§5.5d).
+14. Karten Mäzen und Steuerprüfung mit festen Beträgen (§5.5d). Sie passen erst nach K23c zur echten Größe.
 
 **Quellen der Recherche vom 21.11.2026:**
 - Personalaufwand 2. Liga zum Gesamterlös: https://report.bundesliga.de/2425/de/_assets/downloads/key-bundesliga-2-dfl-er25.pdf

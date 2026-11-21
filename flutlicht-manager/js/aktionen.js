@@ -32,7 +32,7 @@ function setSchuetze(art,i,id){if(!darf('schuetzen','rolleOderSchuetze'))return;
 function setEin(v){if(!darf('einstellung'))return;myT().ein=v;save();render();}
 function autoXI(){if(!darf('aufstellung'))return;S.lineup=bestXI(S.my,myT().form);save();render();toast('Beste verfügbare Elf aufgestellt.');}
 function setPrice(v){if(!darf('preise','sponsorOderPreis'))return;const P=RF.ticketPreis;myT().price=clamp(Math.round(+v||P.standard),P.min,P.max);save();render();}
-function loan(k){if(!darf('kredit'))return;const t=myT(),max=kreditRahmen(t);if(k>0){const a=Math.min(k*1e6,max-S.loan);if(a<=0){toast('Kreditrahmen ausgeschöpft.');return;}S.loan+=a;t.cash+=a;}else{const a=Math.min(k===-99?S.loan:1e6,S.loan,Math.max(0,t.cash));if(a<=0){toast('Nichts zu tilgen oder kein Geld.');return;}S.loan-=a;t.cash-=a;}save();render();}
+function loan(k){if(!darf('kredit'))return;const t=myT(),max=kreditRahmen(t);if(k>0){const a=Math.min(k*1e6,max-S.loan);if(a<=0){toast('Kreditrahmen ausgeschöpft.');return;}kreditAufnehmen(a,+((document.getElementById('kreditJahre')||{}).value)||RFP.kredit.standard);}else{const a=Math.min(k===-99?S.loan:1e6,S.loan,Math.max(0,t.cash));if(a<=0){toast('Nichts zu tilgen oder kein Geld.');return;}kreditTilgen(a);}save();render();}
 const bauLabel=(k,t)=>k==='cap'?`Tribünenausbau (+${RB.tribuene.plaetze.toLocaleString('de-DE')} Plätze)`:k==='logen'?`${RB.logen.anzahl} VIP-Logen`:'Fanshop Stufe '+(t.shop+1);
 const bauKosten=(k,t)=>k==='cap'?RB.tribuene.kosten:k==='logen'?RB.logen.kosten:RB.fanshop.kosten[t.shop];
 const bauWochen=k=>k==='cap'?RB.tribuene.wochen:k==='logen'?RB.logen.wochen:RB.fanshop.wochen;
@@ -60,17 +60,18 @@ function offer(id){if(transferSperre()){toast('Transfersperre wegen der Lizenzau
   const vorv=!!from&&p.ct===1&&vorvertragZeit(),o=vtPaket(p,F,yrs,!from);let fee=0;
   // Schritt 1: Ablöse mit dem Verein (K19 §5.2). Im letzten halben Jahr seines Vertrags geht es ohne Ablöse zum Sommer (Vorvertrag, K21 §4.3).
   if(from&&!vorv){const v=verhandlung(p);if(v.einig&&v.einig.bis>=S.tag)fee=v.einig.fee;else{fee=Math.round((+document.getElementById('fee').value||0)*1e6);
-      if(t.cash<fee+o.hg){msg.textContent='Dafür reicht dein Kontostand nicht.';return;}
+      if(t.cash<feeJetzt(fee)+o.hg){msg.textContent='Dafür reicht dein Kontostand nicht.';return;}
       const r=kaufRunde(p,fee);if(!r.ok){msg.textContent=r.text;const fe=document.getElementById('fee');if(r.gegen&&fe)fe.value=(r.gegen/1e6).toFixed(2);save();return;}
       verhandlung(p).einig={fee,bis:S.tag+14};}}
-  if(t.cash<fee+o.hg+beraterProvision(p,o.sal,fee)){msg.textContent='Dafür reicht dein Kontostand nicht (mit Provision für den Berater).';return;}
+  if(t.cash<feeJetzt(fee)+o.hg+beraterProvision(p,o.sal,fee)){msg.textContent='Dafür reicht dein Kontostand nicht (mit Provision für den Berater).';return;}
   // Schritt 2: Vertrag mit dem Spieler (K21 §4.1)
   if(istLeihe(p)){msg.textContent=`${p.n} ist gerade ausgeliehen.`;return;}
   const r2=vertragRunde(p,S.my,o,F);if(!r2.ok){msg.textContent=(fee?`Einigung mit ${from.name} über ${fmt(fee)} steht (bis ${datumKurz(verhandlung(p).einig.bis)}). `:'')+r2.text;save();return;}
   {const v=verhandlung(p);if(!v.mc){money('Medizincheck',-RLE.medizin.kosten);const b=medizinBefund(p);v.mc={b:b||''};if(b){const a=medizinAbschlag(p);if(fee){fee=Math.round(fee*(1-a)/RM.runden)*RM.runden;if(v.einig)v.einig.fee=fee;} // Medizincheck (K19 §5.5, U10d)
     msg.textContent=`Medizincheck: Befund, ${b}.${fee?` Der Verein senkt die Ablöse um ${Math.round(a*100)} % auf ${fmt(fee)}.`:''} Noch einmal „${vorv?'Vorvertrag anbieten':from?'Angebot abgeben':'Verpflichten'}“ zum Abschluss, sonst lass es.`;save();return;}}}
   if(fee&&from&&!aus)bezKaufFair(p,from.id,fee); // fairer Kauf verbessert die Beziehung (K17 §5.5, U12c), vor dem Löschen der Verhandlung
-  if(fee){money('Transfers',-fee);if(!aus)from.cash+=fee;}if(S.verh)delete S.verh[p.id];if(o.hg)money('Handgelder',-o.hg);beraterAbschluss(p,o.sal,fee,r2.runden); // Provision und Beziehung (K22)
+  if(fee){abloeseZahlen(fee,p.n);if(!aus)from.cash+=fee;} // seit K23e auf Wunsch in Raten (K23 §5.5d)
+ if(S.verh)delete S.verh[p.id];if(o.hg)money('Handgelder',-o.hg);beraterAbschluss(p,o.sal,fee,r2.runden); // Provision und Beziehung (K22)
   if(from&&(vorv||!fensterOffen())){wechselVormerken(p,S.my,Object.assign({ct:o.ct,sal:o.sal,preis:fee,vp:o.vp,ak:o.ak,lk:o.lk},vorv?{ab:tageDerSaison()}:{}));S.offers=S.offers.filter(x=>x.pid!==id); // Wechsel zum nächsten Fenster (K19 §5.6) oder zum Sommer (Vorvertrag)
     news(vorv?`Vorvertrag: ${p.n} kommt im Sommer ablösefrei von ${from.name} (Gehalt ${fmt(o.sal)}/Jahr).`:`Einigung: ${p.n} kommt für ${fmt(fee)} von ${from.name} (Gehalt ${fmt(o.sal)}/Jahr). Er wechselt mit dem Transferfenster am ${datumKurz(p.wech.ab)}.`,'good');save();closeOv();render();toast(`Einigung mit ${p.n}`);return;}
   if(aus)ausDemAusland(p,S.my);else if(from)kabineAbgang(p,from.id);p.team=S.my;p.list=0;vtUnterschrift(p,Object.assign({},o,{hg:0}),true);p.abl=fee;S.offers=S.offers.filter(x=>x.pid!==id);neuzugang(p,S.my);versprechenKauf(p);if(from)statTransfer(p,fee,from.id,S.my); // Rekorde (K34 §5.6, U13)

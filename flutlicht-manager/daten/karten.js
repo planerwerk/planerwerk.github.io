@@ -39,5 +39,14 @@ const KARTEN=[
   {id:'englandRuft',titel:'England ruft',bereich:'K32',art:'entscheidung',gross:true,stufe:'selten',ausloeser:'englandRuft',sperrTage:730,
     texte:['{verein} meldet sich: Man will {spieler} und würde deutlich über Marktwert zahlen.','Ein Anruf aus England: {verein} hat {spieler} lange beobachtet und bietet ernsthaft.'],
     optionen:[{text:'Gespräche zulassen',wirkung:[{art:'angebot',wert:1.3}],folge:'Das Angebot liegt im Büro. Annehmen, ablehnen oder mehr fordern kannst du wie bei jedem Angebot.'},
-      {text:'Er ist unverkäuflich',wirkung:[{art:'fans',wert:2},{art:'stimmung',wert:-2}],folge:'Die Fans feiern das klare Wort. {spieler} hätte es sich wenigstens anhören wollen.'}],auto:1}
+      {text:'Er ist unverkäuflich',wirkung:[{art:'fans',wert:2},{art:'stimmung',wert:-2}],folge:'Die Fans feiern das klare Wort. {spieler} hätte es sich wenigstens anhören wollen.'}],auto:1},
+  // Finanzen (K23 §8, K23e). Neue Wirkung maezen: Der Präsident mischt sich bis Saisonende auch ohne Ehrgeiz ein (Auslöser praesidentSerie).
+  {id:'maezen',titel:'Ein Mäzen bietet Geld an',bereich:'K23',art:'entscheidung',gross:true,stufe:'gelegentlich',ausloeser:'maezen',sperrTage:365,
+    texte:['Ein Unternehmer aus der Region will helfen: 1,5 Mio. €, sofort. Er möchte dafür „ein bisschen mitreden“.','Der Präsident hat einen Gönner aufgetrieben. Das Geld wäre da, der Gönner will dafür bei der Aufstellung gehört werden.'],
+    optionen:[{text:'Geld annehmen',wirkung:[{art:'geld',wert:1500000},{art:'maezen',wert:1}],folge:'Das Konto atmet auf. Der Präsident wird sich jetzt öfter melden.'},
+      {text:'Ablehnen',wirkung:[{art:'glaub',wert:2}],folge:'Du bleibst unabhängig. In der Kabine hat man das gehört.'}],auto:1},
+  {id:'steuerpruefung',titel:'Steuerprüfung',bereich:'K23',art:'entscheidung',gross:false,stufe:'selten',ausloeser:'steuer',sperrTage:730,
+    texte:['Das Finanzamt hat die Bücher geprüft und will 250.000 € nachträglich.','Die Betriebsprüfung findet Fehler bei der Abrechnung von Prämien: 250.000 € Nachzahlung.'],
+    optionen:[{text:'Zahlen',wirkung:[{art:'geld',wert:-250000}],folge:'Bezahlt, die Sache ist erledigt.'},
+      {text:'Einspruch einlegen',wirkung:[{art:'geld',wert:0,chance:0.5,schlecht:-400000,gut:'Der Einspruch hat Erfolg.',schlechtText:'Der Einspruch scheitert, mit Zinsen werden es 400.000 €.'}]}],auto:0}
 ];

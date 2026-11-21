@@ -412,7 +412,9 @@ const REGELN={
   // auflage: Vertrauen bei Auflagen. insolvenz: so viele Monatserste nacheinander unter dem negativen Kreditrahmen, Punktabzug, Vertrauen. warnMonate: Vorlauf der Warnung.
   // monatTage: Tage je Monat für die Warnung. PUNKTABZUG GESCHÄTZT (K23 §12 Nr. 9).
   finanzplan:{laufend:['TV-Gelder','Sponsor','Zuschauer','VIP-Logen','Fanartikel','Gehälter','Trainerstab','Prämien','Stadion & Betrieb','Jugendarbeit','Zweite Mannschaft','Kreditzinsen','Scouting'],
-    minSpiele:3,lizenzTag:'03-01',nachweisTag:'05-31',auflage:-5,insolvenz:{monate:2,punkte:9,vertrauen:-30},warnMonate:3,monatTage:30},
+    minSpiele:3,lizenzTag:'03-01',nachweisTag:'05-31',auflage:-5,insolvenz:{monate:2,punkte:9,vertrauen:-30},warnMonate:3,monatTage:30,
+    // K23e (§5.5d): kredit: Laufzeiten in Jahren, Standard. raten: Anzahlung, Aufschlag auf den Rest, Zahl der Monatsraten. verzicht: Anteil der Gehälter, Dauer in Tagen, Stimmung. GESCHÄTZT.
+    kredit:{jahre:[1,2,3,4,5],standard:3},raten:{anzahlung:0.5,aufschlag:0.05,monate:12},verzicht:{anteil:0.15,tage:90,stimmung:-10}},
 
   // Gerüchteküche (K29 §4.3, §5.5, U17b). proWoche: [min, max] je Woche, meinVerein: Chance auf eins über deinen Verein, dauer: Tage bis zur Prüfung und Wirkung auf die Ablöse.
   // wirkung: Stimmung des Spielers, Fans, Vertrauen, Ablöse × preis (wahr, halb). medien: Start der Treffsicherheit, treffer/fehler danach. aergerUnter: Beziehung für „Ärger“, aergerWahr: Anteil wahr.

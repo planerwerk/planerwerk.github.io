@@ -291,6 +291,7 @@ lizenz:{
 49. **U17b Gerüchteküche (20.11., ohne Testlauf):** keine neue Funktion, kein neuer Bereich. Gerüchte sind Information. Die Pressekonferenz „Gerüchte“ gehört zum Bereich `presse`.
 50. **U18b Karten der Spielwelt (20.11., ohne Testlauf):** keine neue Funktion, kein neuer Bereich. Die Karten gehören zum Bereich `ereignisse`. Die Auslöser schauen nicht auf Lizenzen (Gleichschritt). Der Altstar unterschreibt nur, wenn `transfers` frei ist.
 51. **K23a Finanzplan (21.11., popolupo, ohne Testlauf):** keine neue Funktion, kein neuer Bereich. Monatsbericht und Prognose sind Information, Auflagen, Transfersperre und Insolvenz sind Folgen. Die Transfersperre gilt auch für die Automatik der Transfers und für den Altstar aus den Ereigniskarten.
+52. **K23e Kredit, Raten, Gehaltsverzicht (21.11., popolupo, ohne Testlauf):** keine neuen Bereiche. Laufzeit und Sondertilgung gehören zu `kredit` (Pro-Lizenz), ebenso der Gehaltsverzicht als Notmaßnahme. Die Ablöse in Raten ist eine Wahl beim Kauf und gehört zu `transfers`. Die Automatik von `kredit` tilgt wie bisher am Saisonende aus dem Guthaben, die monatliche Tilgung läuft immer.
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 

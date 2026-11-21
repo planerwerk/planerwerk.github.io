@@ -1218,3 +1218,20 @@ Zweig `mitarbeit/popolupo-k23-finanzen` (auf 362fa12, Testlauf 4). Konzept: K23 
 | BY7 | **Computer-Vereine** bekommen Lizenz und Insolvenz erst mit K23b (heute keine Ausgaben). | 📌 K23b |
 | BY8 | **Nummern der Nachträge:** popolupo nimmt in der Konsistenzprüfung die nächsten freien Buchstaben (BY, BZ, CA …). Sollte Claude gleichzeitig einen Nachtrag anhängen, gibt es beim Zusammenführen einen Konflikt am Dateiende. Dann einfach umbenennen. | 📌 Absprache |
 | BY9 | **`tests/finanzen.js`:** fünf Prüfungen, siehe Test-README. Nie gelaufen. | ⚠️ offen |
+
+---
+
+## BZ. Nachtrag zu K23e: Kredit mit Laufzeit, Ablöse in Raten, Gehaltsverzicht, Karten Mäzen und Steuerprüfung (21. November 2026, popolupo, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-k23-finanzen`. Konzept: K23 §5.5d, §12 Nr. 10 bis 14. Kein Test gelaufen. Dazu das Messskript `tests/finanzmodell.js` für K23b.
+
+| # | Befund | Status |
+|---|---|---|
+| BZ1 | **Monatliche Tilgung verschiebt dein Konto:** Wer einen Kredit hat, zahlt jetzt jeden Monat ab (vorher nur auf Knopfdruck oder in der Automatik am Saisonende). Im Simulator nimmt niemand Kredit, die Tests ohne Kredit bleiben gleich. Alte Spielstände mit Kredit bekommen beim ersten Zugriff eine Tranche über drei Jahre. | ⚠️ messen |
+| BZ2 | **Kreditflüsse außerhalb von `S.fin`:** Saisonbilanz, Nebenziel „Finanzen“ (K28) und die Ergebnisse in der Statistik (K34) sehen Kredite wie bisher nicht. Der Monatsbericht und `tests/finanzen.js` rechnen sie getrennt mit (`k`). | ✅ |
+| BZ3 | **Raten aus Ablösen:** Der Verkäufer bekommt alles sofort, du zahlst die Hälfte sofort und den Rest mit 5 % Aufschlag. Computer-Vereine nutzen keine Raten. Die Prognose zieht offene Raten und Tilgungen ab. | ✅ vorläufig |
+| BZ4 | **Gehaltsverzicht** senkt die Buchung „Gehälter“ für 90 Tage um 15 %. Die Prämien (K21) bleiben. | ✅ |
+| BZ5 | **Neue Karten im Strom `ereignisse`:** zwei Würfe mehr je Woche (BX1 gilt weiter). Der Mäzen kommt nur in der Not (Kontostand im Minus oder offene Auflagen), in beiden Läufen des Gleichschritts gleich. | ✅ entworfen |
+| BZ6 | **Beträge der Karten** (1,5 Mio. €, 250.000 €, 400.000 €) sind feste Werte in der heutigen Größenordnung. Nach K23c müssen sie mit. | 📌 K23c |
+| BZ7 | **`tests/finanzmodell.js` (Messung für K23b):** rechnet in einer normalen Saison für jeden Verein aus, was Einnahmen und Ausgaben nach dem vollen Modell wären, und vergleicht mit der heutigen Pauschale. Keine Prüfung, nur Zahlen. Bitte die Ausgabe ins Testprotokoll, danach stelle ich K23b ein. | ⚠️ bitte laufen lassen |
+| BZ8 | **`tests/finanzen.js`** hat vier Prüfungen mehr (Kredit, Raten, Gehaltsverzicht, Mäzen), zusammen neun. Nie gelaufen. | ⚠️ offen |
