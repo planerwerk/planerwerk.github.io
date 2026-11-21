@@ -50,7 +50,7 @@ function poolSpieler(v,pos,talent,namen){const A=RW.ausland,base=avStaerke(v);
   p.sp=talent?A.praxis.talent:A.praxis.stamm;p.fit=100;poolSchlank(p);return p;}
 // Poolspieler ohne Buchführung der Ligen (Sperren, Karten, berechnete Eigenschaften): spart Platz im Spielstand, beim Wechsel nach Deutschland kommt sie zurück
 function poolSchlank(p){delete p.eig;delete p.sperre;delete p.kt;}
-const POOL_FELDER=['id','n','pos','age','str','pot','form','fit','ko','sv','sp','ent','sw','team','inj','g','pg','apps','ct','list','ask','seed','sal','ch','fp','fuss','mk','ls','wiv','vt','ekw','tf','nat','lf','fk','ue','uf'];
+const POOL_FELDER=['id','n','pos','age','str','pot','form','fit','ko','sv','sp','ent','sw','team','inj','g','pg','apps','ct','list','ask','seed','sal','ch','fp','fuss','mk','ls','wiv','vt','ekw','tf','nat','lf','fk','ue','uf','kar','kas','ehj']; // kar, kas, ehj: Karriere und Ehrung bleiben beim Wechsel ins Ausland (K34, T3.1)
 const istTalent=p=>p.age<=RW.ausland.talent.jungBis;
 // Plan eines Kerns: feste Plätze für Talente (bis 21 Jahre), die übrigen Plätze nach Positionen, damit jeder Kern alle Mannschaftsteile hat
 function kernPlan(v){const A=RW.ausland,soll=A.kern[v.stufe],talente=A.talente[v.stufe],platz={TW:0,AB:0,MF:0,ST:0};A.positionen.slice(0,soll-talente).forEach(x=>platz[x]++);return{soll,talente,platz};}
@@ -91,7 +91,7 @@ function ausDemAusland(p,tid){const i=S.ausland.pl.indexOf(p);if(i>=0)S.ausland.
   p.team=tid;p.ent=S.tag;p.sw=Math.round(p.str);p.koVor=p.ko;p.sp=Math.min(p.sp,RW.ausland.praxis.stamm);
   if(!p.sperre)p.sperre={liga:{rot:0,gelb:0},pokal:{rot:0,gelb:0}};if(!p.kt)p.kt={liga:0,pokal:0};eigenschaftenNeu(p);}
 // Ein Spieler wechselt zu einem Auslandsverein: Er zieht in den Pool um, alles Vereinsbezogene fällt weg.
-function insAusland(p,avId){const i=S.pl.indexOf(p);if(i>=0)S.pl.splice(i,1);if(!S.ausland.pl.includes(p))S.ausland.pl.push(p);
+function insAusland(p,avId){if(typeof statZeileSchliessen==="function")statZeileSchliessen(p); /* laufende Statistikzeile vorher abschließen (T3.1) */const i=S.pl.indexOf(p);if(i>=0)S.pl.splice(i,1);if(!S.ausland.pl.includes(p))S.ausland.pl.push(p);
   for(const k in p)if(!POOL_FELDER.includes(k))delete p[k]; // Stimmung, Rollen, Belastung, Verletzungsakte und alles andere Vereinsbezogene
   p.team=avId;p.list=0;p.ask=0;p.inj=0;p.ls=null;p.g=0;p.pg=0;p.apps=0;p.sv=0;p.sp=RW.ausland.praxis.stamm;p.fit=100;p.ct=riA(RM.neuerVertrag);p.sal=salaryFor(p.str);
   S.gw=(S.gw||[]).filter(g=>g.pid!==p.id);S.bz=(S.bz||[]).filter(b=>b[0]!==p.id&&b[1]!==p.id);(S.vs||[]).forEach(v=>{if(v.pid===p.id&&v.stand==='offen')v.stand='hinfaellig';});}
