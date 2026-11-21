@@ -31,7 +31,7 @@ function zurueckholen(p){if(!istLeihe(p)||p.leihe.von!==S.my)return'Er ist nicht
 
 // ---------- Leihe holen ----------
 // Ein Verein gibt nur Spieler ab, die bei ihm nicht Stamm- oder Schlüsselspieler sind. Der Spieler will Einsatzzeit: bei dir mindestens Rotation.
-function ausleihen(p){if(!p||p.team<0||p.team===S.my||istAusland(p)||p.wech||istLeihe(p))return'Diesen Spieler kannst du nicht ausleihen.';if(!fensterOffen())return'Leihen geht nur im Transferfenster.';
+function ausleihen(p){if(transferSperre())return'Transfersperre wegen der Lizenzauflagen: In dieser Saison darfst du nicht ausleihen.';if(!p||p.team<0||p.team===S.my||istAusland(p)||p.wech||istLeihe(p))return'Diesen Spieler kannst du nicht ausleihen.';if(!fensterOffen())return'Leihen geht nur im Transferfenster.';
   if(!RLE.holenRollen.includes(kaderRolle(p)))return`${tn(p.team)} gibt ${p.n} nicht ab, er ist dort gesetzt.`;
   if(einsatzSchaetzung(p,S.my)<RVT.einsatz.rotation)return`${p.n} will Spielzeit. Bei dir sähe er die Bank.`;if(squad(S.my).length>=RM.kaderMax)return`Dein Kader ist voll (höchstens ${RM.kaderMax} Spieler).`;
   if(!leihErlaubt(p,p.team,S.my))return leihKontingentText(); // U11d1

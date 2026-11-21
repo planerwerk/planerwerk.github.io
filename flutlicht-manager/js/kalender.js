@@ -63,6 +63,7 @@ function termineAm(d){const P=S.plan,L=[],g={};
   const r=P.pokal.findIndex(x=>x[0]===d);if(r>=0)L.push({art:'pokal',r,tag:d,min:P.pokal[r][1]});
   [['rel',P.rel],['rel2',P.rel2]].forEach(([art,a])=>{const k=a.findIndex(x=>x[0]===d);if(k>=0)L.push({art,leg:k,tag:d,min:a[k][1]});});
   const sc=supercupAm(d);if(sc)L.push({art:'supercup',tag:d,min:sc.min});
+  euTermineAm(d).forEach(x=>L.push(x)); // Europapokal (K37, U19a)
   if(d===P.ende)L.push({art:'ende',tag:d});return L;}
 // Relegationen: rel = 16. der 1. Liga gegen 3. der 2. Liga, rel2 = 16. der 2. Liga gegen den drittbesten Aufstiegsberechtigten der 3. Liga
 const aufstiegsReihe3=()=>table(3).filter(r=>S.teams[r.id].zweite<0).map(r=>r.id);
@@ -75,12 +76,13 @@ function meinSpiel(d){const t=myT();
     if(e.art==='liga'&&e.lg===t.lg){const i=e.idx.find(j=>{const f=S.fx[e.lg][e.md][j];return f[0]===S.my||f[1]===S.my;});if(i!=null)return{...e,i,min:S.plan.zeit[e.lg][e.md][i][1]};}
     if(e.art==='pokal'&&S.cup.hist.length===e.r&&S.cup.alive.includes(S.my))return e;
     if((e.art==='rel'||e.art==='rel2')&&relBereit(e.art)&&relTeams(e.art).includes(S.my))return e;
-    if(e.art==='supercup'&&[S.supercup.h,S.supercup.a].includes(S.my))return e;}
+    if(e.art==='supercup'&&[S.supercup.h,S.supercup.a].includes(S.my))return e;
+    if(e.art==='eu'){const m=euMeinSpiel(e);if(m)return Object.assign({},e,{h:m.h,a:m.a});}}
   return null;}
 // Heim- und Gastverein deines Spiels (Pokal: wird erst beim Anpfiff gelost)
-function paarung(e){if(e.art==='liga')return S.fx[e.lg][e.md][e.i];if(e.art==='supercup')return[S.supercup.h,S.supercup.a];
+function paarung(e){if(e.art==='liga')return S.fx[e.lg][e.md][e.i];if(e.art==='supercup')return[S.supercup.h,S.supercup.a];if(e.art==='eu')return e.h!=null?[e.h,e.a]:null;
   if(e.art==='pokal'){const l=S.cup.los&&S.cup.los.r===e.r?S.cup.los.paare.find(x=>x.includes(S.my)):null;return l||null;}if(e.art==='rel'||e.art==='rel2'){const[a,b]=relTeams(e.art);return e.leg===0?[b,a]:[a,b];}return null;}
-function spielName(e){return e.art==='supercup'?'Supercup':e.art==='liga'?`${e.md+1}. Spieltag`:e.art==='pokal'?`DFB-Pokal, ${POKAL_RUNDEN[e.r]}`:e.art==='rel'||e.art==='rel2'?`Relegation${e.art==='rel2'?' 2./3. Liga':''}, ${e.leg?'Rückspiel':'Hinspiel'}`:'Saisonende';}
+function spielName(e){return e.art==='eu'?euSpielName(e):e.art==='supercup'?'Supercup':e.art==='liga'?`${e.md+1}. Spieltag`:e.art==='pokal'?`DFB-Pokal, ${POKAL_RUNDEN[e.r]}`:e.art==='rel'||e.art==='rel2'?`Relegation${e.art==='rel2'?' 2./3. Liga':''}, ${e.leg?'Rückspiel':'Hinspiel'}`:'Saisonende';}
 const spielZeit=e=>e.min!=null?`${WT[wochentag(e.tag)]} ${uhr(e.min)}`:datumKurz(e.tag);
 function naechstesSpiel(ab){for(let d=ab;d<=S.plan.ende;d++){const e=meinSpiel(d);if(e)return e;}return null;}
 // Deine Ligaspiele der Saison mit Tag (auch vergangene)
@@ -95,7 +97,7 @@ const meineSpieltage=()=>meineLigaspiele().filter(e=>e.tag<S.tag||(e.tag===S.tag
 const heuteMeinSpiel=()=>S.phase==='play'&&S.gespielt!==S.tag&&!!meinSpiel(S.tag);
 
 // Halt-Regeln: Hier hält „Tag beenden“ an.
-function haltGrund(d){if(S.phase==='end')return'Saisonende';if(S.fired)return'Entlassen';if(S.phase==='play'&&meinSpiel(d))return'Spiel';if(S.lizenz&&S.lizenz.karte&&S.lizenz.karte.tag===d&&S.lizenz.karte.s===S.season)return'Lizenz';if(pokalLosHeute(d))return'Auslosung';if(S.offers.some(o=>o.bis===d)||(!autoB('sportgericht')&&meineVerfahren().some(v=>v.stand==='antrag'&&v.frist===d)))return'Frist';if((S.gw||[]).some(g=>g.tag===d&&g.s===S.season))return'Gesprächswunsch';if(((S.karten&&S.karten.offen)||[]).some(k=>k.tag===d&&k.s===S.season))return'Ereignis';if(S.phase==='play'&&erinnerungAn('deadline')&&deadlineLetzter(d))return'Deadline Day';if(S.pk&&S.pk.tag===d&&S.pk.s===S.season&&!autoB('presse'))return'Pressekonferenz';if(S.phase==='play'&&d===auftaktTag(myT()))return'Trainingsauftakt';return'';}
+function haltGrund(d){if(S.phase==='end')return'Saisonende';if(S.fired)return'Entlassen';if(S.phase==='play'&&meinSpiel(d))return'Spiel';if(S.lizenz&&S.lizenz.karte&&S.lizenz.karte.tag===d&&S.lizenz.karte.s===S.season)return'Lizenz';if(pokalLosHeute(d)||euLosHeute(d))return'Auslosung';if(S.offers.some(o=>o.bis===d)||(!autoB('sportgericht')&&meineVerfahren().some(v=>v.stand==='antrag'&&v.frist===d)))return'Frist';if((S.gw||[]).some(g=>g.tag===d&&g.s===S.season))return'Gesprächswunsch';if(((S.karten&&S.karten.offen)||[]).some(k=>k.tag===d&&k.s===S.season))return'Ereignis';if(S.phase==='play'&&erinnerungAn('deadline')&&deadlineLetzter(d))return'Deadline Day';if(S.pk&&S.pk.tag===d&&S.pk.s===S.season&&!autoB('presse'))return'Pressekonferenz';if(S.phase==='play'&&d===auftaktTag(myT()))return'Trainingsauftakt';return'';}
 function naechsterHalt(){const ende=S.phase==='sommer'?tageDerSaison():S.plan.ende;
   for(let d=S.tag+1;d<=S.tag+RK.maxSprung;d++){if(d>=ende||haltGrund(d)||(S.phase==='play'&&d===auftaktTag(myT())))return Math.min(d,ende);}return S.tag+RK.maxSprung;}
 

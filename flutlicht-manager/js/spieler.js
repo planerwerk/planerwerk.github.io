@@ -62,7 +62,8 @@ function spielendeAm(d){const s=new Set();for(const e of termineAm(d)){
     if(e.art==='liga')e.idx.forEach(i=>{const f=S.fx[e.lg][e.md][i];s.add(f[0]);s.add(f[1]);});
     else if(e.art==='pokal'&&S.cup.hist.length===e.r)S.cup.alive.forEach(id=>{if(id<1000)s.add(id);});
     else if((e.art==='rel'||e.art==='rel2')&&relBereit(e.art))relTeams(e.art).forEach(id=>s.add(id));
-    else if(e.art==='supercup'){s.add(S.supercup.h);s.add(S.supercup.a);}}
+    else if(e.art==='supercup'){s.add(S.supercup.h);s.add(S.supercup.a);}
+    else if(e.art==='eu')euSpieleAm(e).forEach(m=>{if(euDe(m.h))s.add(m.h);if(euDe(m.a))s.add(m.a);});} // Europapokal (K37, U19a)
   return s;}
 
 // ---------- U2c: Persönlichkeit, Eigenschaften, Merkmale, Position, Fuß, Talentschätzung ----------

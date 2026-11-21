@@ -132,6 +132,7 @@ function statistikSaison(sm){const st=statS(),s=S.season,E=RSTAT.ehrung,L=saison
   const e1=a.ehr[1];if(e1.ts.length)news(`Torschützenkönig der 1. Bundesliga: ${e1.ts.map(x=>`${x[1]} (${tn(x[2])}, ${x[3]} Tore)`).join(' und ')}.${e1.sp?` Spieler der Saison: ${e1.sp[1]} (${tn(e1.sp[2])}).`:''}`);
   // Vitrine (K34 §5.7)
   const v=(k,lg)=>st.vit.push({s,k,lg,tid:S.my});a.m.forEach((id,i)=>{if(id===S.my)v('meister',i+1);});if(sm.cup===S.my)v('pokal',0);if(sc===S.my)v('supercup',0);
+  if(S.eu&&S.eu.s===s)EU_WB.forEach(wb=>{if(S.eu.titel[wb]===S.my)v(wb,0);}); // Europapokal (K37, U19b)
   LIGEN.forEach(lg=>{if(auf[lg].includes(S.my))v('aufstieg',lg);});
   // Karriere des Trainers: die Zeile dieser Saison in S.hist ergänzen
   const h=S.hist[S.hist.length-1];if(h&&h.s===s){const row=table(me.lg).find(r=>r.id===S.my)||{p:0,tf:0,ta:0};
@@ -198,7 +199,7 @@ function stAnsichtArchiv(st){if(!st.arch.length)return`<div class="card"><p>Das 
   const tab=lg=>`<div class="card"><h3>${ligaName(lg)}</h3><div class="tw"><table><thead><tr><th class="num">#</th><th>Verein</th><th class="num">Tore</th><th class="num">Pkt</th></tr></thead><tbody>${(a.tab[lg]||[]).map((r,i)=>`<tr class="${meine.has(r[0])?'me':''}"><td class="num">${i+1}</td><td>${esc(stVerein(r[0]))}${(a.auf[lg-1]||[]).includes(r[0])?' <span class="dim">(Aufstieg)</span>':''}</td><td class="num">${r[2]}:${r[3]}</td><td class="num"><b>${r[1]}</b></td></tr>`).join('')}</tbody></table></div></div>`;
   return`<div class="card"><div class="row between"><h3>Saison ${stSaison(a.s)}</h3><select aria-label="Saison im Archiv" onchange="STARCH=+this.value;render()">${st.arch.map(x=>`<option value="${x.s}" ${x.s===a.s?'selected':''}>${stSaison(x.s)}</option>`).join('')}</select></div>
     <div class="facts">${fact('Meister',esc(stVerein(a.m[0])))}${fact('Pokalsieger',esc(stVerein(a.p)))}${a.sc!=null?fact('Supercup',esc(stVerein(a.sc))):''}</div><h3>Titel seit Spielbeginn</h3>${meister}</div><div class="grid">${LIGEN.map(tab).join('')}</div>`;}
-function stAnsichtKarriere(st){const G={meister:'Meister',pokal:'DFB-Pokal',supercup:'Supercup',aufstieg:'Aufstieg',trainer:'Trainer der Saison'},E=RSTAT.ehemalige,meine=new Set(st.st.map(x=>x.tid));
+function stAnsichtKarriere(st){const G={meister:'Meister',pokal:'DFB-Pokal',supercup:'Supercup',aufstieg:'Aufstieg',trainer:'Trainer der Saison',cl:'Champions League',el:'Europa League',ecl:'Conference League'},E=RSTAT.ehemalige,meine=new Set(st.st.map(x=>x.tid));
   const wo=x=>x.k==='meister'||x.k==='trainer'?` ${ligaName(x.lg)}`:x.k==='aufstieg'?` in die ${ligaName(x.lg)}`:'';
   const vit=st.vit.length?`<ul>${st.vit.slice().reverse().map(x=>`<li><b>${G[x.k]||x.k}</b>${wo(x)} · ${esc(stVerein(x.tid))} · ${stSaison(x.s)}</li>`).join('')}</ul>`:'<p class="dim">Noch leer.</p>';
   const stn=st.st.map(x=>`<tr><td>${esc(stVerein(x.tid))}</td><td>${stSaison(x.von[0])}</td><td>${x.bis?stSaison(x.bis[0]):'heute'}</td><td>${esc(x.g||'')}</td></tr>`).reverse().join('');

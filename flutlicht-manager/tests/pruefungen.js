@@ -7,7 +7,8 @@ module.exports=()=>{
   S.pl.forEach(p=>{if(ids.has(p.id))e.push('doppelte ID '+p.id);ids.add(p.id);
    for(const k of ['str','pot','form','fit','ko','sp','sv','sal','age','ct','inj','g','apps'])if(typeof p[k]!=='number'||!isFinite(p[k]))e.push(`Spieler ${p.n} ${k}=${p[k]}`);
    // Sperren und Gelbe Karten je Wettbewerb (K09); alte Spielstände haben noch sus und yc
-   if(p.sperre||p.kt){for(const w of ['liga','pokal']){const s=p.sperre&&p.sperre[w],k=p.kt&&p.kt[w];if(p.sperre&&!(s&&[s.rot,s.gelb].every(x=>typeof x==='number'&&isFinite(x))))e.push(`Spieler ${p.n} sperre.${w}=${JSON.stringify(s)}`);if(p.kt&&!(typeof k==='number'&&isFinite(k)))e.push(`Spieler ${p.n} kt.${w}=${k}`);}}
+   // Europapokal (eu, seit K37, U19a) entsteht beim ersten Zugriff und wird nur geprüft, wenn es da ist
+   if(p.sperre||p.kt){for(const w of ['liga','pokal','eu']){const s=p.sperre&&p.sperre[w],k=p.kt&&p.kt[w];if(p.sperre&&(w!=='eu'||s)&&!(s&&[s.rot,s.gelb].every(x=>typeof x==='number'&&isFinite(x))))e.push(`Spieler ${p.n} sperre.${w}=${JSON.stringify(s)}`);if(p.kt&&(w!=='eu'||k!=null)&&!(typeof k==='number'&&isFinite(k)))e.push(`Spieler ${p.n} kt.${w}=${k}`);}}
    else if(typeof p.sus!=='number'||typeof p.yc!=='number')e.push(`Spieler ${p.n} ohne Sperren und Karten`);
    if(p.team>=S.teams.length||p.team<-1)e.push(`Spieler ${p.n} team=${p.team}`);
    if(!['TW','AB','MF','ST'].includes(p.pos))e.push('Pos '+p.pos);

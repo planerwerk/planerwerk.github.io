@@ -14,6 +14,9 @@ function tagesSpieleVorbereiten(d,live){kartenAuto(d); // unbeantwortete Ereigni
     if(e.art==='liga'){const g={titel:`${ligaName(e.lg)} · ${e.md+1}. Spieltag`,art:'liga',e,list:[]};e.idx.forEach(i=>{const[h,a]=S.fx[e.lg][e.md][i];spiel(h,a,{},{lg:e.lg,min:S.plan.zeit[e.lg][e.md][i][1]},g);});out.gruppen.push(g);}
     else if(e.art==='pokal'){if(S.cup.hist.length!==e.r)continue;const fin=e.r===5,g={titel:`DFB-Pokal · ${POKAL_RUNDEN[e.r]}`,art:'pokal',e,list:[]};pokalPaare(e.r).forEach(([h,a])=>spiel(h,a,{wb:'pokal',ko:1,neutral:fin,wichtig:e.r>=RTA.ki.wichtigAbRunde},{cup:1,min:e.min},g));out.gruppen.push(g);}
     else if(e.art==='supercup'){const x=S.supercup,g={titel:'Supercup',art:'supercup',e,list:[]};spiel(x.h,x.a,{wb:'pokal',ko:1,elfDirekt:1,wichtig:true},{supercup:1,min:e.min},g);out.gruppen.push(g);}
+    else if(e.art==='eu'){const L=euSpieleAm(e);if(!L.length)continue;const g={titel:euSpielName(e),art:'eu',e,list:[],kurz:[]}; // Europapokal (K37, U19a): Ausland gegen Ausland als Kurzrechnung im eigenen Strom
+      mitStrom(strom('eukurz',S.season,d,e.wb,e.runde,e.leg,e.md==null?-1:e.md),()=>L.forEach(m=>{if(!euDe(m.h)&&!euDe(m.a))g.kurz.push(Object.assign(euKurz(m.h,m.a,m.o),{i:m.i}));}));
+      L.forEach(m=>{if(euDe(m.h)||euDe(m.a))spiel(m.h,m.a,m.o,{eu:e.wb,euI:m.i,min:e.min},g);});out.gruppen.push(g);}
     else if(e.art==='rel'||e.art==='rel2'){const sp=S[e.art==='rel'?'relSp':'relSp2'];if(!relBereit(e.art)||sp[e.leg])continue;const[h,a]=e.leg===0?relTeams(e.art).reverse():relTeams(e.art);const g={titel:`Relegation${e.art==='rel2'?' 2./3. Liga':''} · ${e.leg?'Rückspiel':'Hinspiel'}`,art:e.art,e,list:[]};spiel(h,a,e.leg===1&&sp[0]?{wichtig:true,ko:1,agg:[sp[0].ag,sp[0].hg]}:{wichtig:true},{rel:1,min:e.min},g);out.gruppen.push(g);}
   }
   if(G)S.gespielt=vorher; // erst nach dem Abpfiff gilt der Tag als gespielt (Neuladen mitten im Spiel)
@@ -23,7 +26,7 @@ function liveEintragen(v){const r=Object.assign(v.G.ergebnis(),v.platz.meta);v.p
 function tagesSpieleAbschliessen(out){return mitStrom(strom('spieltagEnde',S.season,out.tag),()=>tagesSpieleAbschliessenLauf(out));}
 function tagesSpieleAbschliessenLauf(out){const d=out.tag;S.gespielt=d;
   out.gruppen.filter(g=>g.art==='test').forEach(g=>g.list.forEach(r=>testspielNach(r,g.x)));out.gruppen=out.gruppen.filter(g=>g.art!=='test');
-  out.list=out.gruppen.flatMap(g=>g.list);if(!out.list.length)return out;
+  out.list=out.gruppen.flatMap(g=>g.list);if(!out.list.length){out.gruppen.filter(g=>g.art==='eu').forEach(g=>euNachSpielen(g,null));return out;} // nur Ausland gegen Ausland im Europapokal: trotzdem eintragen (K37)
   einsatzVorher(out.list);versprechenNachSpiel(out.list);scoutingNachSpiel(out.list); // wer fehlte (K14 §12) und Versprechen (K15), solange Gesperrte noch als gesperrt gelten
   // Sperren zählen die Spiele der eigenen Mannschaft im selben Wettbewerb (K09)
   const spielten=new Set(),wbs=new Set();out.list.forEach(r=>{spielten.add(r.h);spielten.add(r.a);const w=wbVon(r);wbs.add(r.h+':'+w);wbs.add(r.a+':'+w);});
@@ -50,7 +53,8 @@ function tagesSpieleAbschliessenLauf(out){const d=out.tag;S.gespielt=d;
     else if(g.art==='rel'||g.art==='rel2'){const r=g.list[0];S[g.art==='rel'?'relSp':'relSp2'][e.leg]={h:r.h,a:r.a,hg:r.hg,ag:r.ag,pen:r.pen||null};
       if(mg)news(`${spielName(e)}: ${tn(r.h)} – ${tn(r.a)} ${r.hg}:${r.ag}${r.pen?` (i.E. ${r.pen[0]}:${r.pen[1]})`:''}`,(r.h===S.my?r.hg>r.ag:r.ag>r.hg)?'good':(r.hg===r.ag?'':'bad'));}
     else if(g.art==='supercup'){const r=g.list[0],w=winner(r);S.supercup.r={hg:r.hg,ag:r.ag,pen:r.pen||null,sieger:w};
-      news(`Supercup: ${tn(r.h)} – ${tn(r.a)} ${r.hg}:${r.ag}${r.pen?` (i.E. ${r.pen[0]}:${r.pen[1]})`:''}. ${tn(w)} holt den Supercup.`,mg?(w===S.my?'good':'bad'):'');}}
+      news(`Supercup: ${tn(r.h)} – ${tn(r.a)} ${r.hg}:${r.ag}${r.pen?` (i.E. ${r.pen[0]}:${r.pen[1]})`:''}. ${tn(w)} holt den Supercup.`,mg?(w===S.my?'good':'bad'):'');}
+    else if(g.art==='eu')euNachSpielen(g,mg);} // Europapokal (K37, U19a)
   presseNachSpiel(out.mine); // Kampfansagen prüfen, Pressekonferenz nach Krise, Serie, Kantersieg (K29 §5.4, U17a)
   S.trust=clamp(S.trust,0,100);vorstandPruefen();
   return out;}
@@ -69,8 +73,8 @@ function taeglichLauf(d){const T=RT;praegungTag(d);wechselTag(d); // vereinbarte
   S.offers.filter(o=>o.bis<d).forEach(o=>versprechenAngebot(o.pid,o.amt)); // abgelaufenes Angebot zählt wie abgelehnt (Versprechen „Wechsel“, K15)
   S.offers=S.offers.filter(o=>o.bis>=d&&PIX.get(o.pid)&&PIX.get(o.pid).team===S.my&&!PIX.get(o.pid).wech&&(o.tid>=AV0?!!avVon(o.tid):S.teams[o.tid]&&aktiv(S.teams[o.tid])));
   kartenAuto(d-1); // offene Ereigniskarten von gestern entscheidet der Co-Trainer (K30, U12d)
-  medizinTag(d);sportgerichtTag(d);pokalAuslosungTag(d);versprechenTag();testspieleAuto(d);lizenzTag(d);vorbereitungTag(d);deadlineTag(d);presseTag(d); // Saisoneröffnung aller Vereine (K12b §5.2, U14) und zusätzlicher Markttag am Deadline Day (K20 §5.4, U15), je mit eigenem Strom
-  const c=S.constr;if(c&&d>=c.bis){const t=myT();if(c.k==='cap')t.cap+=RB.tribuene.plaetze;if(c.k==='logen')t.logen+=RB.logen.anzahl;if(c.k==='shop')t.shop++;news(`Bau abgeschlossen: ${c.label}.`,'good');S.constr=null;}}
+  medizinTag(d);sportgerichtTag(d);pokalAuslosungTag(d);versprechenTag();testspieleAuto(d);lizenzTag(d);vorbereitungTag(d);deadlineTag(d);presseTag(d);finanzenTag(d);marketingTag(d); // Saisoneröffnung aller Vereine (K12b §5.2, U14) und zusätzlicher Markttag am Deadline Day (K20 §5.4, U15), je mit eigenem Strom
+  bauTag(d);euTag(d);} // Bau mit Genehmigung, Verzögerung und Ende (K26 §4, K26a, js/stadion.js), Auslosungen im Europapokal (K37, U19a, js/europa.js)
 // Werte pro Woche (montags): Training und Entwicklung, Transfermarkt, Vorstand bei Minus auf dem Konto.
 function woechentlich(d){return mitStrom(strom('woche',S.season,d),()=>woechentlichLauf(d));}
 function woechentlichLauf(d){if(!imUrlaub())mitStrom(strom('training',S.season,d),training);mitStrom(strom('kabine',S.season,d),()=>kabineWoche(d));mitStrom(strom('jugend',S.season,d),()=>jugendWoche(d));mitStrom(strom('zweite',S.season,d),()=>zweiteWoche(d));mitStrom(strom('vertraege',S.season,d),()=>vertraegeWoche(d));mitStrom(strom('berater',S.season,d),()=>beraterWoche(d));leiheWoche(d);scoutingWoche();mitStrom(strom('ausland',S.season,d),auslandWoche);mitStrom(strom('markt',S.season,d),market);
@@ -82,12 +86,12 @@ function woechentlichLauf(d){if(!imUrlaub())mitStrom(strom('training',S.season,d
 
 function attendance(t,opp,cup){const Z=RF.zuschauer,ref=Z.refBasis+t.rep*Z.refJeAnsehen,pf=clamp(Math.pow(ref/t.price,Z.preisExponent),Z.preisMin,Z.preisMax),ff=Z.formBasis+Z.formJePunkt*formPts(t.id),of=Z.gegnerBasis+(opp?opp.rep:Z.gegnerOhne)/100*Z.gegnerFaktor,lf=t.lg===1?1:t.lg===2?Z.liga2:Z.liga3;return Math.round(Math.min(t.cap,t.fans*pf*ff*of*lf*(cup?Z.pokal:1)*(Z.zufallBasis+R()*Z.zufallSpanne)*fanFaktor(t)));} // Fanstimmung (K27 §5.4b, U16)
 function heimspielEinnahmen(m,cup){const t=myT();if(autoB('preise'))t.price=clamp(Math.round(richtPreis(t)),RF.ticketPreis.min,RF.ticketPreis.max); // Automatik: Richtpreis (K36)
-  const att=attendance(t,m.a>=1000?null:S.teams[m.a],cup);m.att=att;S.att[0]+=att;S.att[1]++;statZuschauer(m,att);money('Zuschauer',att*t.price);if(t.shop)money('Fanartikel',att*RF.fanartikel[t.shop]);if(t.logen)money('VIP-Logen',t.logen*RF.loge);}
+  const att=attendance(t,m.a>=AV0?avVon(m.a):m.a>=1000?null:S.teams[m.a],cup);m.att=att;S.att[0]+=att;S.att[1]++;statZuschauer(m,att);money('Zuschauer',Math.round(att*t.price*zuschauerFaktor(t)));if(t.shop)money('Fanartikel',Math.round(att*RF.fanartikel[t.shop]*merchFaktor(t)));if(t.logen)money('VIP-Logen',t.logen*RF.loge);}
 // Buchungen je Ligaspieltag des eigenen Vereins
 function finanzenLiga(m){const t=myT();if(m.h===S.my)heimspielEinnahmen(m,false);
   money('TV-Gelder',tvGeld(t));
   if(S.spons){money('Sponsor',S.spons.base);if(S.spons.win&&winner(m)===S.my&&m.hg!==m.ag)money('Sponsor',S.spons.win);}werbungSpieltag(m); // Ausrüster und Ärmel (K24a)
-  const n=S.fx[t.lg].length;money('Gehälter',-Math.round((squad(S.my).reduce((s,p)=>s+p.sal,0)+leiheGehaelter())/n)); /* dazu verliehene Spieler und Profis in der Zweiten (U10d) */if(S.stab)money('Trainerstab',-Math.round(stabGehaelter(S.my)/n));
+  const n=S.fx[t.lg].length;money('Gehälter',-Math.round((squad(S.my).reduce((s,p)=>s+p.sal,0)+leiheGehaelter())/n*gehaltFaktor())); /* dazu verliehene Spieler und Profis in der Zweiten (U10d) */if(S.stab)money('Trainerstab',-Math.round(stabGehaelter(S.my)/n));
   money('Stadion & Betrieb',-Math.round(t.cap*RF.betrieb.jePlatz+t.logen*RF.betrieb.jeLoge));money('Jugendarbeit',-RF.jugendKosten[autoB('jugend')?RS.nachwuchs.computerStufe:t.youth]);{const z=zweiteKosten();if(z)money('Zweite Mannschaft',-z);}
   if(S.loan>0)money('Kreditzinsen',-Math.round(S.loan*RF.kreditZins/n));}
 // Woche (K03 §4): Kondition, Form, Selbstvertrauen, Entwicklung für Spieler ohne Pflichtspiel seit 7 Tagen, Wochenbericht des Co-Trainers

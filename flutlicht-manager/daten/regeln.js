@@ -407,6 +407,47 @@ const REGELN={
     schiri:{verfahren:0.3,strafe:{1:[20000,50000],2:[10000,25000],3:[5000,12000]}},
     gedaechtnis:{rueckendeckungTage:28,rueckendeckungGlaub:-5,kultFans:2,haemeGlaub:-3,haemeFans:-2,aussagen:40},delegieren:-2,chronikHumor:0.3,chronikMax:100},
 
+  // Marketing (K25 §5.4, §11, K25a). trikot: Faktor auf den Fanartikel-Erlös [min, max] und Fanstimmung je Design, mutig: Chance auf Kult, sonst Spott.
+  // kampagnen: Kosten in der 1. Liga, Dauer in Tagen (sommer: bis zum ersten Pflichtspiel), Wirkung. ligaFaktor: Kosten je Liga. abnutzung: 1., 2., 3. Mal in der Saison.
+  // merch: Publikumslieblinge je Spieler und höchstens. werbewert: Start = Ansehen × startJeAnsehen, Rückgang je Monat Richtung Start, Titel. ALLE WERTE GESCHÄTZT (K25 §12).
+  marketing:{trikot:{klassisch:{faktor:[0.95,1.05],fans:1},modern:{faktor:[0.9,1.15],fans:0},mutig:{kult:0.5,faktor:[0.8,1.25],fans:[-3,3]}},
+    kampagnen:{trikot:{name:'Trikot-Kampagne',kosten:150000,tage:28,merch:0.15},fanwerbung:{name:'Fanwerbung in der Region',kosten:200000,tage:56,fans:0.02,werbewert:5},
+      camps:{name:'Jugend-Camps',kosten:60000,sommer:1,fans:0.01,stimmung:1},fanarbeit:{name:'Fanarbeit',kosten:50000,tage:120,pfiffe:0.7}},
+    ligaFaktor:{1:1,2:0.4,3:0.2},abnutzung:[1,0.5,0.25],merch:{liebling:0.05,lieblingMax:0.15},werbewert:{startJeAnsehen:0.5,zurueck:0.02,titel:5},karte:{merchTage:28}}, // karte: Dauer der Wirkung merch aus der Karte „Trikot ausverkauft“ (K25b)
+
+  // Europapokal (K37, U19a). plaetze: Bundesliga-Platz je Wettbewerb, nachruecken: wer einspringt, wenn der Pokalsieger schon über die Liga dabei ist.
+  // wb: Teilnehmer, Spiele der Ligaphase, Töpfe; titel: wohin der Titelverteidiger kommt. laender: Auslandsvereine je Land (angelehnt an die Zulassungsliste, an den Pool angepasst).
+  // zufall: Streuung des Ansehens bei der Auswahl. quali: der Gegner des deutschen Siebten kommt aus so vielen der besten übrigen Auslandsvereine.
+  // auslosung: Baupläne (Versuche), davon die ersten mit Höchstzahl je Land, Tauschversuche im Topf je Bauplan. kurz: Ausland gegen Ausland ohne Engine (Tore bei gleicher Stärke, Exponent, Heimvorteil, Verlängerung als Anteil).
+  // staerke: Faktor auf die Teamstärke der Auslandsvereine (Kalibrierung, Konsistenzprüfung AW13). ALLE WERTE GESCHÄTZT (K37 §12).
+  europa:{plaetze:{cl:[1,2,3,4],el:[5],ecl:[6],nachruecken:{el:6,ecl:7}},
+    wb:{cl:{name:'Champions League',kurz:'CL',teams:36,toepfe:4,titel:'cl'},el:{name:'Europa League',kurz:'EL',teams:36,toepfe:4,titel:'cl'},ecl:{name:'Conference League',kurz:'ECL',teams:36,toepfe:6,titel:'el'}},
+    laender:{cl:{ENG:5,ESP:4,ITA:4,FRA:3,POR:2,NED:2,BEL:2,TUR:2,AUT:1,SUI:1,CZE:1,DEN:1,NOR:1,CRO:1,SRB:1,UKR:1},
+      el:{ENG:3,ESP:2,ITA:2,FRA:2,POR:2,NED:2,BEL:2,TUR:2,AUT:2,SUI:2,CZE:2,DEN:2,NOR:2,SWE:2,POL:2,CRO:1,SRB:1,UKR:1},
+      ecl:{ENG:1,ESP:2,ITA:2,FRA:1,POR:2,NED:3,BEL:3,TUR:3,AUT:3,SUI:3,CZE:1,DEN:2,NOR:2,SWE:3,POL:3,CRO:1}},
+    zufall:8,quali:8,auslosung:{versuche:30,ohneHoechstzahl:15,hoechstzahl:2,tausch:3000},
+    kurz:{tore:1.4,exp:1.6,heim:1.03,verl:0.33},staerke:{faktor:1},
+    // Geld (K37 §5.3, U19b): echte Beträge 2025/26 (Websuche 21.11.2026), mal faktor bis K23c (dann 1). start: Startgeld, sieg/remis je Spiel der Ligaphase, rang: je Anteil (Platz 1 = 36 Anteile),
+    // po bis fin: beim Erreichen der Runde, titel: Sieger zusätzlich, wert: Schnitt der Wertsäule je Teilnehmer (verteilt nach dem Rang des Ansehens). Nicht recherchierte Werte sind 0 (K37 §12).
+    geld:{faktor:0.2,cl:{start:18.62e6,sieg:2.1e6,remis:0.7e6,rang:275000,po:1e6,af:11e6,vf:12.5e6,hf:15e6,fin:18.5e6,titel:6.5e6,wert:24e6},
+      el:{start:4.31e6,sieg:450000,remis:150000,rang:75000,top8:600000,top16:300000,po:0,af:1.75e6,vf:2.5e6,hf:4.2e6,fin:7e6,titel:6e6,wert:5.5e6}, // top8, top16: Bonus nach der Ligaphase für Platz 1–8 und 9–16
+      ecl:{start:3.17e6,sieg:400000,remis:133000,rang:28000,top8:400000,top16:200000,po:0,af:800000,vf:1.3e6,hf:2.5e6,fin:4e6,titel:3e6,wert:2.8e6}},
+    // Ansehen zum Saisonwechsel (K37 §5.4): erreichte Runde, Anteil je Wettbewerb. vertrauen: Vorstand bei jedem gewonnenen Duell und beim Titel.
+    ansehen:{af:1,vf:2,hf:3,titel:4,anteil:{cl:1,el:0.5,ecl:0.25}},vertrauen:{weiter:1.5,titel:10},
+    // U19c: wertung: Länderwertung der Saison (Punkte je Sieg und Remis, geteilt durch die Zahl der Vereine des Landes), die besten plaetze Länder bekommen nächste Saison einen Platz mehr
+    // in der Champions League (European Performance Spot seit 2024/25). interesse: Wechselinteresse der Spieler an einem Verein im Wettbewerb (K19). ziel: Nebenziel des Vorstands
+    // (K28 §5.7), K.-o.-Play-offs erreichen, in der Champions League ab diesem Ansehen das Achtelfinale.
+    wertung:{sieg:2,remis:1,plaetze:2},interesse:{cl:6,el:3,ecl:1},ziel:{afAbAnsehen:85}},
+
+  // Finanzplan (K23 §5.5c, K23a): Monatsbericht, Prognose, Lizenzprüfung, Insolvenz. laufend: Buchungsarten, die in die Prognose eingehen (die übrigen sind einmalig).
+  // minSpiele: so viele eigene Ligaspiele braucht der Schnitt dieser Saison, sonst gilt der der letzten Saison. lizenzTag, nachweisTag: Datum (MM-TT) der Prüfung und der Frist.
+  // auflage: Vertrauen bei Auflagen. insolvenz: so viele Monatserste nacheinander unter dem negativen Kreditrahmen, Punktabzug, Vertrauen. warnMonate: Vorlauf der Warnung.
+  // monatTage: Tage je Monat für die Warnung. PUNKTABZUG GESCHÄTZT (K23 §12 Nr. 9).
+  finanzplan:{laufend:['TV-Gelder','Sponsor','Zuschauer','VIP-Logen','Fanartikel','Gehälter','Trainerstab','Prämien','Stadion & Betrieb','Jugendarbeit','Zweite Mannschaft','Kreditzinsen','Scouting','Instandhaltung'],
+    minSpiele:3,lizenzTag:'03-01',nachweisTag:'05-31',auflage:-5,insolvenz:{monate:2,punkte:9,vertrauen:-30},warnMonate:3,monatTage:30,
+    // K23e (§5.5d): kredit: Laufzeiten in Jahren, Standard. raten: Anzahlung, Aufschlag auf den Rest, Zahl der Monatsraten. verzicht: Anteil der Gehälter, Dauer in Tagen, Stimmung. GESCHÄTZT.
+    kredit:{jahre:[1,2,3,4,5],standard:3},raten:{anzahlung:0.5,aufschlag:0.05,monate:12},verzicht:{anteil:0.15,tage:90,stimmung:-10}},
+
   // Gerüchteküche (K29 §4.3, §5.5, U17b). proWoche: [min, max] je Woche, meinVerein: Chance auf eins über deinen Verein, dauer: Tage bis zur Prüfung und Wirkung auf die Ablöse.
   // wirkung: Stimmung des Spielers, Fans, Vertrauen, Ablöse × preis (wahr, halb). medien: Start der Treffsicherheit, treffer/fehler danach. aergerUnter: Beziehung für „Ärger“, aergerWahr: Anteil wahr.
   // erfindung: Chance, dass ein Gerücht erfunden ist. anzeige: so viele im Büro, log: so viele gespeichert. ALLE WERTE GESCHÄTZT (K29 §12 Nr. 15 bis 19).
@@ -553,7 +594,7 @@ const REGELN={
     taetlichkeit:{jeSpiel:0.0016,schwer:0.05}, // etwa eine Tätlichkeit je Liga und Saison (306 Spiele)
     faktoren:{hart:1.3,fair:0.7,hitzkopf:1.5,hitzkopfMeckern:2,hitzkopfTaetlichkeit:3,muedeUnter:60,muede:1.2,rueckstand:1.0,rueckstandAb:75, // Rückstand ×1,2 aus K09 §5.1 vorläufig aus (K09 §12 Nr. 9)
       mitGelb:{foul:0.35,karte:0.5}}, // verwarnte Spieler foulen vorsichtiger, außer Hitzköpfen (Konsistenzprüfung AI4)
-    gelbsperre:{liga:[5,10,15],pokal:[5],spiele:1},gelbRot:1, // nach der letzten Schwelle zählt es neu
+    gelbsperre:{liga:[5,10,15],pokal:[5],eu:[3,5,7,9],spiele:1},gelbRot:1, // nach der letzten Schwelle zählt es neu; eu: Europapokal nach der UEFA-Regel (K37, U19a)
     rot:{notbremse:[1,1,2],grob:[2,1,4],unsportlich:[2,1,5],taetlichkeit:[4,3,6],schwer:[8,6,12],wiederholung:1,wiederholungTage:365,zufall:1,verletzung:1,verletzungAbTagen:28},
     verfahren:{antragTage:[1,2],frist:2,urteilTage:[2,5],urteilSpaetestens:10,archiv:60},
     einspruch:{kosten:[10000,30000],gemindert:0.25,erhoeht:0.10,hart:{gemindert:0.35,erhoeht:0.05},eindeutig:{gemindert:0.10,erhoeht:0.15}},
@@ -831,6 +872,7 @@ const REGELN={
       abwerben:{ab:4,name:'Spieler heimlich abwerben',tab:'transfer'}, // K20 §5.4, U15 (ohne Automatik: dein Verein wirbt nie von selbst ab)
       fangespraech:{ab:2,name:'Fan-Gespräch',tab:'stadion'}, // K27 §5.4b, U16 (ohne Automatik)
       presse:{ab:2,name:'Pressekonferenzen',tab:'buero',auto:1,wer:'der Co-Trainer',tut:'geht zu jeder Pressekonferenz und antwortet mit Floskeln'}, // K29 §5.4, U17a
+      marketing:{ab:3,name:'Marketing (Trikot und Kampagnen)',tab:'stadion',auto:1,wer:'der Verein',tut:'nimmt das klassische Trikot und startet keine Kampagnen'}, // K25 §5.4, K25a
       sportgericht:{ab:4,name:'Sportgericht',tab:'buero',auto:1,wer:'der Verein',tut:'nimmt Strafen an oder legt bei harten Anträgen Einspruch ein'},
       medizin:{ab:4,name:'Fit spritzen und früher zurückholen',tab:'kader',auto:1,wer:'der Mannschaftsarzt',tut:'spritzt nur in wichtigen Spielen Stammspieler mit kurzer Verletzung fit'},
       sponsor:{ab:4,name:'Werbeverträge (Trikotbrust, Ausrüster, Ärmel)',tab:'buero',auto:1,wer:'der Verein',tut:'nimmt je Fläche das Angebot mit dem höchsten festen Betrag'}, // seit K24a alle Werbeflächen
@@ -856,7 +898,15 @@ const REGELN={
   stadion:{
     tribuene:{plaetze:3000,kosten:4.5e6,wochen:6,max:90000},
     logen:{anzahl:10,kosten:2.5e6,wochen:4,max:120},
-    fanshop:{kosten:[1.5e6,3e6,5e6],wochen:3,max:3}
+    fanshop:{kosten:[1.5e6,3e6,5e6],wochen:3,max:3},
+    // Bauprozess (K26 §4, §5.1, K26a): genehmigung Wochen, auflagen Chance und Mehrkosten, verzoegerung Chance und Wochen, mehrkosten Chance und Anteil. instandhaltung: Anteil der Bausumme je Jahr.
+    // anlagen: Stufen min/max, Start, Grundkosten (× faktor je erreichter Stufe), Wochen, Wirkung. ALLE WERTE GESCHÄTZT (K26 §12).
+    prozess:{genehmigung:[2,8],auflagen:{chance:0.2,kosten:[0.05,0.15]},verzoegerung:{chance:0.3,wochen:[1,6]},mehrkosten:{chance:0.15,anteil:[0.05,0.2]}},instandhaltung:0.01,
+    anlagen:{training:{name:'Trainingsgelände',start:2,max:5,kosten:2e6,wochen:10,entwicklung:0.05,risiko:-0.04},
+      nlz:{name:'Nachwuchsleistungszentrum',start:0,max:5,kosten:1.5e6,wochen:16,deckelJe:6},
+      reha:{name:'Reha-Zentrum',start:0,max:3,kosten:1e6,wochen:8,je:0.03,minFaktor:0.75},
+      catering:{name:'Catering',start:0,max:1,kosten:1.5e6,wochen:6,zuschauer:0.05},
+      tafel:{name:'Anzeigetafel',start:0,max:1,kosten:1e6,wochen:4,zuschauer:0.03},faktor:1.6}
   },
 
   ui:{
@@ -877,4 +927,4 @@ const REGELN={
 // Schreibschutz: Zur Laufzeit darf kein Code eine Regel ändern.
 (function frieren(o){Object.freeze(o);Object.values(o).forEach(v=>{if(v&&typeof v==='object'&&!Object.isFrozen(v))frieren(v);});})(REGELN);
 // Kurzformen für den Code
-const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui,RL=REGELN.live,RTA=REGELN.taktik,RSO=REGELN.sommer,RST=REGELN.stab,RD=REGELN.disziplin,RMD=REGELN.medizin,RWB=REGELN.wettbewerbe,RTS=REGELN.testspiele,RLA=REGELN.lager,RKA=REGELN.kabine,RGS=REGELN.gespraeche,RSC=REGELN.scouting,RLZ=REGELN.lizenz,RJ=REGELN.jugend,RZ=REGELN.zweite,RTR=REGELN.transfers,RVT=REGELN.vertraege,RBE=REGELN.berater,RLE=REGELN.leihe,RCV=REGELN.computer,RBZ=REGELN.beziehungen,RKT=REGELN.karten,RSTAT=REGELN.statistik,RVB=REGELN.vorbereitung,RAW=REGELN.abwerben,RFS=REGELN.fanstimmung,RPK=REGELN.presse,RTP=REGELN.trainerpool,RGR=REGELN.geruechte;
+const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui,RL=REGELN.live,RTA=REGELN.taktik,RSO=REGELN.sommer,RST=REGELN.stab,RD=REGELN.disziplin,RMD=REGELN.medizin,RWB=REGELN.wettbewerbe,RTS=REGELN.testspiele,RLA=REGELN.lager,RKA=REGELN.kabine,RGS=REGELN.gespraeche,RSC=REGELN.scouting,RLZ=REGELN.lizenz,RJ=REGELN.jugend,RZ=REGELN.zweite,RTR=REGELN.transfers,RVT=REGELN.vertraege,RBE=REGELN.berater,RLE=REGELN.leihe,RCV=REGELN.computer,RBZ=REGELN.beziehungen,RKT=REGELN.karten,RSTAT=REGELN.statistik,RVB=REGELN.vorbereitung,RAW=REGELN.abwerben,RFS=REGELN.fanstimmung,RPK=REGELN.presse,RTP=REGELN.trainerpool,RGR=REGELN.geruechte,RFP=REGELN.finanzplan,RMK=REGELN.marketing,REU=REGELN.europa;

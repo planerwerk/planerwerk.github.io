@@ -21,6 +21,7 @@ const vtVorschlag=F=>Math.ceil(F*(1+RVT.zone)/1000)*1000;
 function wechselInteresse(p){const t=myT(),I=RM.interesse,IV=RVT.interesse,IA=RW.ausland.interesse,aus=istAusland(p),from=aus?avVon(p.team):p.team>=0?S.teams[p.team]:null,lvl=teamLevel(S.my);
   let x=(t.rep-(from?from.rep:t.rep-I.vereinslosAbstand))+(lvl-p.str)*I.niveauFaktor+I.basis+(t.lg===1?I.liga1:t.lg===2?I.liga2:I.liga3)+(p.age>=I.altAb?I.altPlus:0)+((p.seed||0.5)-0.5)*I.zufall
     +(aus?(p.nat===RW.nation.heimat?IA.heimkehr:IA.fremd):0);
+  x+=euInteresse(S.my)-(from?euInteresse(p.team):0); // Europapokal: Spieler wollen eher zu einem Verein, der international spielt (K37, U19c)
   if(from&&!aus){if(p.st!=null)x+=(IV.lageMitte-p.st)*IV.lage;if(p.ww>=3)x+=IV.wechselwunsch;x+=Math.max(0,(p.ct||1)-1)*IV.bindung;}
   if(from&&hatEig(p,'vereinstreu'))x+=IV.treu;
   if(p.nat)x+=Math.min(IV.landsleuteMax,squad(S.my).filter(q=>q.nat===p.nat).length*IV.landsleute)*(p.nat===RW.nation.heimat?0:1);

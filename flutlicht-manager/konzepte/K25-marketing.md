@@ -1,6 +1,6 @@
 # K25 – Marketing und Merchandising
 
-Status: **Entwurf** (8. November 2026), nach „weiter, entscheide du“. Vorläufige Entscheidungen stehen in Abschnitt 12.
+Status: **Entwurf** (8. November 2026), nach „weiter, entscheide du“. Vorläufige Entscheidungen stehen in Abschnitt 12. **Teilschritt K25a umgesetzt (21. November 2026, popolupo, §5.4), noch ohne Testlauf.**
 Hängt ab von: K27 (Fans), K24 (Ausrüster), K23 (Finanzen) · Wird gebraucht von: K23, K24, K27.
 
 ## 1. Ziel und Spielgefühl
@@ -65,6 +65,29 @@ Erlös je Monat = Fans × Kaufkraft × Sortiment × Trikotfaktor × Erfolg × St
 - Drei Designs zur Wahl. Fans reagieren nach Tradition (K27): Traditionsvereine mögen klassisch (+), mutige Designs teilen die Fans (Verkäufe mal hoch, mal Spott).
 - Reaktion gewürfelt mit Erwartung je Tradition, Ergebnis sofort als Info („Das neue Trikot spaltet die Fans“).
 
+### 5.4 Umsetzung K25a (21.11.2026, popolupo): Trikot, Kampagnen, Werbewert, Faktoren im Fanartikel-Erlös
+
+- **Geldneutral bis K23c:** Der Fanartikel-Erlös bleibt „Zuschauer × Betrag je Fanshop-Stufe“ im Heimspiel. Neu sind Faktoren darauf: Trikot (0,8 bis 1,25), Publikumslieblinge (+5 % je Liebling aus K27, höchstens +15 %), laufende Trikot-Kampagne (+15 %). Die Formel aus §5.2 mit Fans, Kaufkraft und Online-Shop kommt mit K23c, weil sie die Größe der Einnahmen verschiebt.
+- **Trikot je Saison** (§5.3): klassisch, modern oder mutig, zu wählen vom 1. Juli bis zum ersten Pflichtspiel (Punkt „Trikotvorstellung“ in der Liste aus K12b). Danach steht es fest. Reaktion beim Vorstellen, eigener Strom `trikot`:
+  - klassisch: Faktor 0,95 bis 1,05, Fanstimmung +1
+  - modern: Faktor 0,9 bis 1,15
+  - mutig: halb und halb Kult (Faktor 1,25, Fanstimmung +3) oder Spott (Faktor 0,8, Fanstimmung −3), mit Meldung
+  - Ohne Wahl nimmt der Verein vor dem ersten Pflichtspiel das klassische.
+  Tradition (K27) fehlt als Stammdatum, darum ist die Erwartung für alle gleich.
+- **Kampagnen** (§5.1), Kosten in der 1. Liga, 2. Liga × 0,4, 3. Liga × 0,2:
+
+  | Kampagne | Kosten | Dauer | Wirkung |
+  |---|---|---|---|
+  | Trikot-Kampagne | 150.000 € | 4 Wochen | Fanartikel +15 % |
+  | Fanwerbung in der Region | 200.000 € | 8 Wochen | Fans +2 % zum Saisonende, Werbewert +5 |
+  | Jugend-Camps | 60.000 € | nur im Sommer (bis zum ersten Pflichtspiel) | Fans +1 % zum Saisonende, Fanstimmung +1 |
+  | Fanarbeit | 50.000 € | eine Halbserie (120 Tage) | Pfiffe bei Protest wirken nur zu 70 % (K27) |
+
+  Dieselbe Kampagne in derselben Saison wirkt beim zweiten Mal halb, beim dritten Mal ein Viertel. Gleichzeitig läuft jede Art höchstens einmal.
+- **Noch nicht:** Dauerkarten-Aktion (Dauerkarten kommen mit K27 und K23), Mitgliederaktion (Mitglieder und Beiträge mit K23c), Online-Shop, Sortiment in drei Stufen statt Fanshop-Ausbau (K26), Kampagnen der Computer-Vereine.
+- **Werbewert** 0–100: Start = Ansehen ÷ 2. Kampagnen heben ihn (Fanwerbung +5), Monatsende 2 % zurück Richtung Start, Meisterschaft, Pokalsieg oder Aufstieg +5. Vorerst nur Anzeige, die Wirkung auf Sponsoren gehört zu K24 (Claude).
+- **Lizenz:** neuer Bereich `marketing` (B-Lizenz, mit Automatik: Der Verein nimmt das klassische Trikot und startet keine Kampagnen).
+
 ## 6. Hebel des Spielers
 
 | Hebel | Nutzen | Preis |
@@ -85,6 +108,8 @@ Gleiches Modell, Kampagnen nach Budget und Profil. Ehrgeizige Vereine investiere
 | Trikot spaltet die Fans | mutiges Design | Presse, Verkäufe schwanken |
 | Retro-Trikot zum Jubiläum | Vereinsjubiläum | Verkäufe +30 % für einen Monat |
 | Trikot ausverkauft | Teenie-Star in Form, Erfolg | Info, Nachproduktion kostet |
+
+**Umsetzung K25b (21.11.2026, popolupo, ohne Testlauf):** „Trikot ausverkauft“ ist eine Entscheidungskarte. Auslöser: ein Spieler deines Vereins bis 20 Jahre mit mindestens 3 Ligatoren in der Saison. Nachproduzieren kostet 100.000 € und bringt vier Wochen lang 20 % mehr Fanartikel, sonst Fanstimmung −1. „Retro-Trikot zum Jubiläum“ wartet auf ein Gründungsjahr in den Stammdaten.
 
 ## 9. Wechselwirkungen
 
@@ -114,6 +139,15 @@ marketing:{
 ## 12. Offene Fragen
 
 **Vorläufig entschieden:** sechs Kampagnen, drei Trikotdesigns je Saison, Sortiment in drei Stufen, Online-Shop ohne eigene Steuerung. Alle Beträge sind Spielwerte (Kalibrierung mit K23).
+
+**Vorläufig entschieden mit K25a (21.11.2026, popolupo):**
+
+1. Geldneutral: Faktoren auf den heutigen Fanartikel-Erlös statt der neuen Formel, die kommt mit K23c (§5.4).
+2. Trikot mit Reaktion aus eigenem Strom, ohne Tradition, klassisch als Voreinstellung (§5.4).
+3. Vier von sechs Kampagnen, Dauerkarten und Mitglieder warten auf K27 und K23 (§5.4).
+4. Fanarbeit wirkt auf die Pfiffe aus K27, bis es Pyrotechnik gibt (§5.4).
+5. Werbewert als Wert ohne Wirkung, für K24 vorbereitet (§5.4).
+6. Bereich `marketing` ab der B-Lizenz mit Automatik (§5.4).
 
 ## Quellen
 

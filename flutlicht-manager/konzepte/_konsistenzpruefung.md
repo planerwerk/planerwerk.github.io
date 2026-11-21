@@ -1200,3 +1200,184 @@ Zweig `mitarbeit/popolupo-u18b-spielwelt-karten` (baut auf U17b auf). Konzept: K
 | BX3 | **Abschiedsspiel braucht Ehemalige** aus K34 (`S.stat.ehem`). Die gibt es erst nach dem ersten Saisonwechsel, und nur mit 60 Pflichtspielen für deinen Verein ab Spielbeginn. In den ersten zwei Saisons kommt die Karte also kaum. | 📌 vorläufig |
 | BX4 | **Karriereende nach K32 §5.1** bleibt offen, bis ein Testlauf zeigt, wie stabil die Welt ist (es verschiebt Alter und Zahl der Spieler). | 📌 nach Testlauf |
 | BX5 | **`tests/spielwelt-karten.js`:** vier Prüfungen. Den Katalog prüft `tests/karten.js` mit (erlaubte Wirkungen, Platzhalter, Auslöser). Nie gelaufen. | ⚠️ offen |
+
+---
+
+## BY. Nachtrag zu K23a Finanzplan: Monatsbericht, Prognose, Lizenzprüfung, Insolvenz (21. November 2026, popolupo, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-k23-finanzen` (auf 362fa12, Testlauf 4). Konzept: K23 §5.5b, §5.5c, §12 Nr. 5 bis 9. Neue Datei `js/finanzen.js`. Kein Test gelaufen.
+
+| # | Befund | Status |
+|---|---|---|
+| BY1 | **Kein Geld verschoben:** Die Buchungen bleiben je Spieltag, der Monatsbericht fasst nur zusammen. Für einen gesunden Verein ändert K23a nichts außer Meldungen und der Finanzseite. Ergebnisse aller übrigen Tests sollten gleich bleiben. | ✅ entworfen |
+| BY2 | **Ohne Zufall:** Bericht, Prognose, Lizenz und Insolvenz würfeln nicht. Kein Strom verschiebt sich. | ✅ |
+| BY3 | **Punktabzug in `table`:** wirkt nur, wenn `S.abzug` für die Saison einen Eintrag hat. Sonst unveränderte Tabelle. | ✅ |
+| BY4 | **Transfersperre** sperrt deine Käufe (`offer`), Leihen (`ausleihen`), den Altstar aus den Karten und die Automatik der Transfers für deinen Verein (`kiMarkt`). In der Automatik fallen damit Würfe im Strom `markt` weg, beide Läufe des Gleichschritts haben aber dieselben Finanzen und damit dieselbe Sperre. | ✅ entworfen |
+| BY5 | **Liquidität zählt den freien Kreditrahmen mit.** Darum hilft ein neuer Kredit bei den Auflagen nicht (Kontostand steigt, freier Rahmen sinkt gleich viel). Nachweis nur über Verkäufe oder geringere Kosten. | 📌 vorläufig |
+| BY6 | **Kontostand nachvollziehbar (K23 §10):** `tests/finanzen.js` prüft über eine Saison, ob Startstand plus Summe der Monatssalden den Kontostand ergibt. Fällt die Prüfung durch, ändert irgendwo Code dein Konto ohne `money()`. Bekannt ist der Kredit (`loan`), er bucht nicht in `S.fin`. | ⚠️ messen |
+| BY7 | **Computer-Vereine** bekommen Lizenz und Insolvenz erst mit K23b (heute keine Ausgaben). | 📌 K23b |
+| BY8 | **Nummern der Nachträge:** popolupo nimmt in der Konsistenzprüfung die nächsten freien Buchstaben (BY, BZ, CA …). Sollte Claude gleichzeitig einen Nachtrag anhängen, gibt es beim Zusammenführen einen Konflikt am Dateiende. Dann einfach umbenennen. | 📌 Absprache |
+| BY9 | **`tests/finanzen.js`:** fünf Prüfungen, siehe Test-README. Nie gelaufen. | ⚠️ offen |
+
+---
+
+## BZ. Nachtrag zu K23e: Kredit mit Laufzeit, Ablöse in Raten, Gehaltsverzicht, Karten Mäzen und Steuerprüfung (21. November 2026, popolupo, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-k23-finanzen`. Konzept: K23 §5.5d, §12 Nr. 10 bis 14. Kein Test gelaufen. Dazu das Messskript `tests/finanzmodell.js` für K23b.
+
+| # | Befund | Status |
+|---|---|---|
+| BZ1 | **Monatliche Tilgung verschiebt dein Konto:** Wer einen Kredit hat, zahlt jetzt jeden Monat ab (vorher nur auf Knopfdruck oder in der Automatik am Saisonende). Im Simulator nimmt niemand Kredit, die Tests ohne Kredit bleiben gleich. Alte Spielstände mit Kredit bekommen beim ersten Zugriff eine Tranche über drei Jahre. | ⚠️ messen |
+| BZ2 | **Kreditflüsse außerhalb von `S.fin`:** Saisonbilanz, Nebenziel „Finanzen“ (K28) und die Ergebnisse in der Statistik (K34) sehen Kredite wie bisher nicht. Der Monatsbericht und `tests/finanzen.js` rechnen sie getrennt mit (`k`). | ✅ |
+| BZ3 | **Raten aus Ablösen:** Der Verkäufer bekommt alles sofort, du zahlst die Hälfte sofort und den Rest mit 5 % Aufschlag. Computer-Vereine nutzen keine Raten. Die Prognose zieht offene Raten und Tilgungen ab. | ✅ vorläufig |
+| BZ4 | **Gehaltsverzicht** senkt die Buchung „Gehälter“ für 90 Tage um 15 %. Die Prämien (K21) bleiben. | ✅ |
+| BZ5 | **Neue Karten im Strom `ereignisse`:** zwei Würfe mehr je Woche (BX1 gilt weiter). Der Mäzen kommt nur in der Not (Kontostand im Minus oder offene Auflagen), in beiden Läufen des Gleichschritts gleich. | ✅ entworfen |
+| BZ6 | **Beträge der Karten** (1,5 Mio. €, 250.000 €, 400.000 €) sind feste Werte in der heutigen Größenordnung. Nach K23c müssen sie mit. | 📌 K23c |
+| BZ7 | **`tests/finanzmodell.js` (Messung für K23b):** rechnet in einer normalen Saison für jeden Verein aus, was Einnahmen und Ausgaben nach dem vollen Modell wären, und vergleicht mit der heutigen Pauschale. Keine Prüfung, nur Zahlen. Bitte die Ausgabe ins Testprotokoll, danach stelle ich K23b ein. | ⚠️ bitte laufen lassen |
+| BZ8 | **`tests/finanzen.js`** hat vier Prüfungen mehr (Kredit, Raten, Gehaltsverzicht, Mäzen), zusammen neun. Nie gelaufen. | ⚠️ offen |
+
+---
+
+## CA. Nachtrag zu K25a Marketing: Trikot, Kampagnen, Werbewert (21. November 2026, popolupo, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-k25-marketing` (baut auf `mitarbeit/popolupo-k23-finanzen` auf). Konzept: K25 §5.4, §12 Nr. 1 bis 6. Neue Datei `js/marketing.js`. Kein Test gelaufen.
+
+| # | Befund | Status |
+|---|---|---|
+| CA1 | **Fast geldneutral:** Der Fanartikel-Erlös bleibt je Zuschauer, dazu Faktoren. Das Trikot liegt im Schnitt bei etwa 1,0. Neu sind +5 % je Publikumsliebling (höchstens +15 %). In der ersten Saison gibt es kaum Lieblinge (K27 BT5), danach etwas mehr Fanartikel-Erlös als bisher. | ⚠️ messen |
+| CA2 | **Eigener Strom `trikot`** je Saison und Verein, ein Wurf (beim mutigen Design Kult oder Spott, sonst die Stelle in der Spanne). Kein anderer Strom verschiebt sich. | ✅ |
+| CA3 | **Gleichschritt (`tests/lizenz.js`):** Ohne Wahl nimmt der Verein am Tag vor dem ersten Pflichtspiel das klassische Trikot, mit und ohne Automatik am selben Tag. Kampagnen startet nur der Mensch. | ✅ entworfen |
+| CA4 | **Liste vor dem Saisonstart** (K12b) hat jetzt acht Punkte. `tests/vorbereitung.js` erwartet 8. | ✅ |
+| CA5 | **Fanarbeit wirkt auf die Pfiffe** (K27), weil es noch keine Pyrotechnik gibt (K09). | 📌 vorläufig |
+| CA6 | **Nicht gebaut:** Dauerkarten-Aktion, Mitgliederaktion, Online-Shop, Sortiment in Stufen, Kampagnen der Computer-Vereine, Karten aus K25 §8 (Retro-Trikot zum Jubiläum, Trikot ausverkauft), Tradition als Stammdatum. | 📌 später |
+| CA7 | **`tests/marketing.js`:** sechs Prüfungen, siehe Test-README. Nie gelaufen. | ⚠️ offen |
+
+---
+
+## CB. Nachtrag zu K26a Stadion: Bauprozess, Anlagen, Instandhaltung (21. November 2026, popolupo, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-k26-stadion` (baut auf `mitarbeit/popolupo-k25-marketing` auf). Konzept: K26 §5.1, §12 Nr. 1 bis 7. Neue Datei `js/stadion.js`. Kein Test gelaufen.
+
+| # | Befund | Status |
+|---|---|---|
+| CB1 | **Welt neutral zum Start:** Das Trainingsgelände beginnt auf Stufe 2 mit Faktor 1, Nachwuchsleistungszentrum und Reha-Zentrum auf Stufe 0 (Deckel 70 wie bisher, Faktor 1). Catering und Anzeigetafel fehlen zum Start. Ohne Ausbau ändert sich nichts an Training, Jugend, Verletzungen und Zuschauereinnahmen. | ✅ entworfen |
+| CB2 | **Eigener Strom `bau`** je Saison, Tag und Bauteil. Alle Würfe (Genehmigung, Auflagen, Verzögerung, Mehrkosten) fallen beim Start. Kein anderer Strom verschiebt sich. | ✅ |
+| CB3 | **Gleichschritt (`tests/lizenz.js`):** Bauen startet nur der Mensch, `stadion` hat keine Automatik. Ohne Bau läuft `bauTag` leer. | ✅ entworfen |
+| CB4 | **Tribüne:** Während des Baus fehlen 3.000 Plätze, danach kommen 6.000 dazu, zusammen +3.000 wie bisher. Bei einer laufenden alten Baustelle ohne Phase kommen wie bisher 3.000 dazu. | ✅ entworfen |
+| CB5 | **Reha und Physio zusammen höchstens −25 %** Ausfallzeit. Der Physio allein schafft höchstens −25 % (`stab.physio.max`), die Untergrenze ändert für Vereine ohne Reha-Zentrum nichts. | ✅ |
+| CB6 | **Computer-Vereine bauen noch nicht.** Ihre Anlagen stehen auf der Startstufe, Instandhaltung zahlen sie nicht. | 📌 vorläufig |
+| CB7 | **`startBuildAlt`** in `js/aktionen.js` bleibt als alter Ablauf stehen, wird aber nicht mehr aufgerufen. Kann weg, sobald `tests/stadion.js` gelaufen ist. | 📌 aufräumen |
+| CB8 | **Nicht gebaut:** neues Stadion als Großprojekt, Stehplätze und Sitzplätze, Rasenqualität und Rasenheizung, Flutlicht, Parkplätze, Namensrechte, Zuschuss der Stadt. | 📌 später |
+| CB9 | **`tests/stadion.js`:** sechs Prüfungen, siehe Test-README. Nie gelaufen. | ⚠️ offen |
+
+---
+
+## CC. Nachtrag zu U19a Europapokal: Teilnehmer, Ligaphase, K.-o.-Runden, Spiele (21. November 2026, popolupo, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-u19-europapokal` (baut auf `mitarbeit/popolupo-k26-stadion` auf). Konzept: K37, §12 Nr. 1 bis 13. Neue Datei `js/europa.js`. Kein Test gelaufen.
+
+| # | Befund | Status |
+|---|---|---|
+| CC1 | **Die Welt ändert sich:** Bis zu neun deutsche Vereine spielen 6 bis 17 Spiele mehr. Frische, Verletzungen und Training (über `spielendeAm`) ändern sich bei ihnen, damit auch Liga-Ergebnisse. Kalibrierung, Akzeptanz und Fuzz-Tests können sich verschieben. | ⚠️ messen |
+| CC2 | **Stärke der Auslandsvereine** (AW13): Mittel der elf Besten aus Kernspielern und `avStaerke`, Faktor `REU.staerke.faktor` = 1. Ob deutsche Vereine zu oft oder zu selten weiterkommen, zeigt erst ein Lauf über viele Saisons (K37 §10). | ⚠️ messen |
+| CC3 | **Block statt Kader** (K37 §5.2, Nr. 11): Gegen einen Auslandsverein laufen die Angriffe wie gegen Amateure (`amateurAngriff`), Stil und Taktik wirken weniger. Fouls und Verletzungen gibt es nur auf deiner Seite. | 📌 vorläufig, U19c |
+| CC4 | **Eigene Ströme** `europa` (Teilnehmer), `eulos` (Auslosungen je Wettbewerb und Runde), `eukurz` (Kurzrechnung je Termin). Die Engine-Spiele haben ihren Strom je Spiel wie bisher. Im Grundstrom würfelt nichts Neues. | ✅ |
+| CC5 | **72 Stunden:** `pokalVerlegen` heißt jetzt `ligaVerlegen` mit Grund im Text. Neu verlegt es auch ein Ligaspiel am selben Tag (vorher nur davor oder danach). Das kann beim Pokal einen alten, nie bemerkten Doppeltermin eines Drittligisten auflösen. | ✅ entworfen |
+| CC6 | **Sperren je Wettbewerb:** `eu` neben `liga` und `pokal`, beim ersten Zugriff angelegt. Gelbsperre nach der 3., 5., 7. und 9. Gelben. `tests/pruefungen.js` prüft `eu`, wenn es da ist. | ✅ entworfen |
+| CC7 | **Finale nach dem Saisonende:** 2027 liegen das Finale der Champions League (5.6.) und der Conference League (2.6.) nach dem letzten Spieltag. Beide rücken auf den 1.6. | 📌 vorläufig |
+| CC8 | **Ausland gegen Ausland** ist eine Kurzrechnung ohne Minuten (etwa 450 von 530 Spielen je Saison). Diese Spiele erscheinen nur in Tabelle und Baum, nicht in der Statistik. | 📌 vorläufig |
+| CC9 | **Noch kein Geld außer Zuschauern** bei deinen Heimspielen, keine Prämien für Computer-Vereine, kein Ansehen, keine Statistik der Europapokaltore (`p.g` zählt sie nicht). Kommt mit U19b. | 📌 U19b |
+| CC10 | **`tests/europapokal.js`:** sieben Prüfungen, siehe Test-README. Nie gelaufen. | ⚠️ offen |
+
+---
+
+## CD. Nachtrag zu U19b Europapokal: Prämien, Wertsäule, Ansehen (21. November 2026, popolupo, ohne Testlauf)
+
+Gleicher Zweig wie CC. Konzept: K37 §5.3, §5.4, §12 Nr. 14 und 15.
+
+| # | Befund | Status |
+|---|---|---|
+| CD1 | **Geld für die Großen:** Ein deutscher Verein in der Champions League bekommt mit Faktor 0,2 etwa 3,7 Mio. Startgeld, 2 bis 9 Mio. Wertsäule und 0,4 Mio. je Sieg, mit Achtelfinale und Viertelfinale zusammen grob 15 bis 20 Mio. Spielgeld. Das ist mehr als die TV-Gelder der Saison im Spiel (Bayern etwa 12 Mio.). So ist es gewollt (K02 §5.3a), aber es verschiebt die Konten der Computer-Vereine und damit K23b. | ⚠️ messen |
+| CD2 | **Faktor 0,2 ist uneinheitlich mit dem Pokal:** Die Pokalprämien im Spiel (0,2 bis 4,5 Mio.) sind schon echte Beträge, TV-Gelder und Gehälter etwa ein Fünftel. Der Europapokal folgt TV und Gehältern. K23c bringt alles auf eine Größenordnung. | 📌 K23c |
+| CD3 | **Rang- und Play-off-Prämie** nur in der Champions League, in Europa League und Conference League nicht recherchiert und darum 0. **Nachtrag 21.11.:** Europa League recherchiert (75.000 je Anteil, Platz 1–8 600.000, 9–16 300.000) und eingebaut. Conference League aus Salary Sport geschätzt (28.000 € je Anteil, Platz 1–8 400.000, 9–16 200.000), nicht amtlich. | 📌 amtliche Werte offen |
+| CD4 | **Ansehen** steigt zum Saisonwechsel um höchstens 4 (Champions-League-Sieg), zusammen mit dem Ansehen aus der Liga ohne eigene Obergrenze. Die Fans folgen über `Z.fans.faktor`. | ✅ entworfen |
+| CD5 | **Zuschauer:** Der Gegner zählt mit seinem Ansehen wie ein Bundesligist, das Spiel gilt als Pokalspiel (`cup`). | ✅ |
+| CD6 | **Nicht gebaut:** Ziele des Vorstands mit Europapokal (K28), Interesse der Spieler (K19), Europapokal in der Saisonstatistik (K34). | 📌 später |
+| CD7 | **`tests/europapokal.js`** hat jetzt acht Prüfungen (dazu Geld und Ansehen). Nie gelaufen. | ⚠️ offen |
+
+---
+
+## CE. Nachtrag zu U19c Europapokal: Länderwertung, Interesse, Nebenziel (21. November 2026, popolupo, ohne Testlauf)
+
+Gleicher Zweig wie CC. Konzept: K37 §12 Nr. 16 bis 18.
+
+| # | Befund | Status |
+|---|---|---|
+| CE1 | **Länderwertung ohne die übrigen Länder:** Nur die 18 Länder des Pools und Deutschland. Länder mit vielen Vereinen in Europa League und Conference League verlieren im Schnitt, weil dort weniger gewonnen wird als bei den Großen. Ob Deutschland zu oft oder zu selten den fünften Platz holt, zeigt erst ein Lauf über viele Saisons (echt: Für 2024/25 bekam Deutschland den Platz, für 2026/27 nach einer Überschrift bei ran vom Frühjahr 2026 nicht, Websuche 21.11.). | ⚠️ messen |
+| CE2 | **Wechselinteresse** steigt für deinen Verein im Europapokal um bis zu 6. Das ändert Ergebnisse in `tests/vertraege.js` und `tests/transfers.js`, wenn dein Testverein international spielt (Freiburg in der Qualifikation der Conference League). | ⚠️ messen |
+| CE3 | **Nebenziel „Europapokal“** kommt in den Topf der möglichen Nebenziele, wenn dein Verein schon in der Ligaphase steht. Die Auslosung der Nebenziele im Strom `nebenziele` ändert sich dann, sonst nicht. | ✅ |
+| CE4 | **`tests/europapokal.js`** hat jetzt neun Prüfungen. Nie gelaufen. | ⚠️ offen |
+
+---
+
+## CF. Vereinswechsel räumt auf: Bau, Finanzplan, Marketing (21. November 2026, popolupo, ohne Testlauf)
+
+Bei einer Nachkontrolle von K23e, K25a und K26a gefunden. Diese Zustände hängen am Spieler, nicht am Verein, und gingen bisher beim Vereinswechsel mit.
+
+| # | Befund | Status |
+|---|---|---|
+| CF1 | **Tribüne (K26a):** `takeJob` löschte `S.constr`. Lief gerade ein Tribünenbau, fehlten dem alten Verein danach für immer 3.000 Plätze. Jetzt baut der alte Verein fertig (`bauAbgeben`), die Wirkung kommt sofort, Auflagen und Mehrkosten fallen weg. | ✅ behoben |
+| CF2 | **Kredit und Raten (K23e):** `takeJob` setzte nur `S.loan` auf 0, die Tranchen in `S.kredite` und die Ablöse-Raten in `S.raten` blieben. Der neue Verein hätte sie monatlich abbezahlt. Jetzt setzt `finanzenJobwechsel` Tranchen, Raten, Verzicht, Monatsberichte, Lizenzprüfung (auch eine Transfersperre), Schnitt und Mäzen zurück. Die Schulden des alten Vereins verschwinden wie bisher. | ✅ behoben |
+| CF3 | **Marketing (K25a):** Werbewert, Trikot und Kampagnen gingen zum neuen Verein mit. Jetzt beginnt dort alles neu (`marketingJobwechsel`). | ✅ behoben |
+| CF4 | **Simulator:** `tests/sim.js` ahmt `takeJob` nach und ruft jetzt dieselben drei Funktionen auf, wenn es sie gibt. | ✅ |
+| CF5 | **Tests:** `tests/stadion.js` Nr. 7 (Tribüne beim Wechsel), `tests/finanzen.js` Nr. 10 (nichts geht mit, der neue Verein zahlt nichts). Nie gelaufen. | ⚠️ offen |
+
+---
+
+## CG. Nachtrag zu K25b: Karte „Trikot ausverkauft“ (21. November 2026, popolupo, ohne Testlauf)
+
+Konzept: K25 §8. Gleicher Zweig wie CC.
+
+| # | Befund | Status |
+|---|---|---|
+| CG1 | **Mehr Würfe im Strom `ereignisse`:** Eine Karte mehr im Katalog, darum fallen die späteren Karten anders als vorher (wie BX1). | ✅ erwartet |
+| CG2 | **Gleichschritt:** Der Auslöser schaut nur auf Alter und Ligatore, nicht auf Lizenz oder Automatik. | ✅ |
+| CG3 | **Europapokaltore** (`eg`, U19b) wurden zum Saisonwechsel nicht zurückgesetzt. Jetzt wie `g` und `pg`. | ✅ behoben |
+| CG4 | **Tests:** `tests/marketing.js` Nr. 7, `tests/karten.js` prüft den Katalog. Nie gelaufen. | ⚠️ offen |
+
+---
+
+## CH. Prüfung des Europapokals ohne Laufzeit (21. November 2026, popolupo)
+
+Ein zweiter Durchgang hat `js/europa.js` und alle Anschlüsse nur gelesen (eigener Prüf-Agent, ohne meine Annahmen). Funde und was daraus wurde:
+
+| # | Befund | Status |
+|---|---|---|
+| CH1 | **Tage nur mit Spielen Ausland gegen Ausland gingen verloren:** `tagesSpieleAbschliessenLauf` brach ohne Engine-Spiele früh ab, die Kurzrechnung wurde nie eingetragen. Folge: Ligaphase unvollständig, keine Play-offs, kein Sieger (zum Beispiel Conference League ohne deutschen Verein, Spieltag 6 am 17.12.). Jetzt werden diese Gruppen vor dem Abbruch eingetragen. Dazu ein Sicherheitsnetz `euNachholen`: Jeden Morgen holt es Spiele vor dem Tag nach, die noch offen sind (Kurzrechnung, deutsche Vereine mit ihrer Kaderstärke). | ✅ behoben |
+| CH2 | **Kein Gegner aus dem eigenen Land hielt in der Champions League fast nie:** Die Auslosung zog ganze Baupläne neu und prüfte erst danach. Bei rund 35 Paaren aus demselben Land war eine gültige Auslosung sehr unwahrscheinlich, übrig blieb die letzte ungültige (etwa Bayern gegen Dortmund). Jetzt tauscht sie Vereine innerhalb der Töpfe (lokale Suche), bis die Konflikte weg sind. | ✅ behoben |
+| CH3 | **`tests/europapokal.js` Nr. 1** hätte immer versagt (zwei `null` aus der Qualifikation zählten als Doppelte). | ✅ behoben |
+| CH4 | **Amateurverein als Pokalsieger** (Kennung ab 1000) hätte `euDeutsche` abstürzen lassen. Jetzt geht sein Platz an die Liga. **Schon vorher da:** `supercupAnlegen` in `js/wettbewerbe.js` greift für den Pokalsieger ebenfalls auf `S.teams[id]` zu und würde dort zuerst abbrechen. Nicht von mir geändert. | ✅ behoben / ⚠️ alt, für dich |
+| CH5 | **Rückspiel erst nach dem Hinspiel als dein Spiel sichtbar:** Für Planung, nächstes Spiel und englische Wochen fehlte es. Jetzt ist es vorher sichtbar, gespielt wird es erst nach dem Hinspiel. | ✅ behoben |
+| CH6 | **Nach dem Aus in der Qualifikation** zeigte die Karte noch „Dein Verein spielt in der Conference League“. Jetzt zählt die Qualifikation nur, solange sie offen ist. | ✅ behoben |
+| CH7 | **Europapokaltore** wurden nicht zurückgesetzt. Schon mit CG3 behoben. | ✅ |
+| CH8 | **`tests/europapokal.js` Nr. 6** brach bei fehlender Runde mit einem Fehler ab statt sauber zu scheitern. | ✅ behoben |
+| CH9 | **Ohne Befund geprüft:** Datenformen von Hin- und Rückspiel in allen Lese- und Schreibstellen, Bauplan der Ligaphase (je Spieltag ein Spiel, Heimspiele, Gegner je Topf), Turnierbaum und Termine, Terminindex, alle Spielpfade mit Auslandsvereinen, Zufall nur über Ströme, `F.` gegen `ev(...)` in den Tests. | ✅ |
+| CH11 | **Zweite Prüfung, Finanzplan, Marketing, Stadion:** siehe CI. | ✅ |
+| CH10 | **Laufzeit der Auslosung:** im schlechtesten Fall 30 Baupläne mit je 3.000 Tauschversuchen, grob eine bis zwei Sekunden. Meist reicht der erste Bauplan. Bitte beim Testlauf auf die Dauer achten. | ⚠️ messen |
+
+---
+
+## CI. Prüfung von K23a, K23e, K25a, K26a ohne Laufzeit (21. November 2026, popolupo)
+
+Wieder ein eigener Prüf-Agent, nur lesend. Keine Laufzeitfehler gefunden, aber diese Fehler:
+
+| # | Befund | Status |
+|---|---|---|
+| CI1 | **Der 1. Juli läuft nie durch `taeglich`** (`weiter` bricht nach `newSeason` ab). Folgen im Finanzplan: Der Bericht am 1. August hieß „Juni“, enthielt aber den Juli. Der Juni wurde nie berichtet, Tilgung und Raten liefen nur elfmal im Jahr. Jetzt schließt `newSeasonLauf` den Juni mit `finanzenMonat(…, true)`, und `finanzenSaisonstart` bucht Tilgung, Raten und Instandhaltung des 1. Juli in die neue Saison. **Allgemein für dich:** Auch andere Tagesaufgaben laufen am 1. Juli nicht. Bisher ist mir dort nichts aufgefallen. | ✅ behoben / ⚠️ Hinweis |
+| CI2 | **Saldo je Spiel nach einem Vereinswechsel mitten in der Saison:** `S.fin` beginnt beim Wechsel neu, gezählt wurden aber alle Ligaspiele des neuen Vereins. Jetzt zählen nur die Spiele seit dem Wechsel (`S.finSp0`, `finanzenStart`). | ✅ behoben |
+| CI3 | **Transfersperre umgehbar:** Nach dem verfehlten Nachweis am 31. Mai ging im Juni noch ein Kauf, vollzogen zum Saisonwechsel. Die Automatik füllte den Kader beim Saisonwechsel ebenfalls auf. Jetzt sperrt `offer` ab dem Urteil (`transferSperreNaechste`), und die Automatik füllt deinen Kader dann nicht auf. Wechsel, die vor dem Urteil vereinbart wurden, bleiben gültig (vorläufig, sonst müsste Geld zurück). | ✅ behoben |
+| CI4 | **Schuldenschnitt als Einnahme:** Er stand in `S.fin` und machte das Nebenziel „Finanzen“ durch eine Insolvenz erfüllbar. Jetzt zählt er dort nicht mit. | ✅ behoben |
+| CI5 | **Erster Monatsbericht kam einen Monat zu spät** (neues Spiel, Vereinswechsel). Ohne Stand gilt jetzt `S.fin` seit dem Anfang als Grundlage. | ✅ behoben |
+| CI6 | **Rate 0 bei sehr kleinen Krediten:** Die Tranche wäre nie kleiner geworden. Rate jetzt mindestens 1 €, aufgerundet. | ✅ behoben |
+| CI7 | **Alter Spielstand, Bau im alten Format** mit Fertigtag nach dem Saisonende wird nie fertig. War schon vorher so. Nicht geändert. | 📌 alt |
+| CI8 | **Ohne Befund geprüft:** Kredite (Summe der Tranchen gleich `S.loan` auf allen Wegen), Monatsbericht innerhalb der Saison, Termine der Lizenzprüfung, Bauprozess mit Tribüne, alle `S.teams`-Zugriffe der Anlagen, Zufall nur über Ströme, Erwartungswerte in den Tests. | ✅ |

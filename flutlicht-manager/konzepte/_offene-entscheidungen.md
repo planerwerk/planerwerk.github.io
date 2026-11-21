@@ -413,6 +413,22 @@ Datei: `konzepte/K23-finanzen.md`
 3. **Gehaltsrahmen 50 %** der erwarteten Einnahmen ohne Transfers (Spielwert).
 4. **Insolvenz mit 9 Punkten Abzug** (vorläufig, prüfen).
 
+**Mit K23a von popolupo vorläufig entschieden (21.11.2026, K23 §12 Nr. 5 bis 9):**
+
+- K23 kommt in Teilschritten, K23a bis K23e.
+- Bis K23c bucht das Spiel weiter je Spieltag, der Monatsbericht fasst nur zusammen.
+- Die Prognose rechnet mit dem laufenden Saldo je Ligaspiel.
+- Lizenzprüfung am 1. März, Nachweis bis 31. Mai, sonst Transfersperre.
+- Insolvent ist ein Verein nach zwei Monatsersten unter dem negativen Kreditrahmen. Folgen: 9 Punkte Abzug, Vertrauen −30, Schuldenschnitt.
+
+**Mit K23e von popolupo vorläufig entschieden (21.11.2026, K23 §12 Nr. 10 bis 14):**
+
+- K23e kommt vor K23b bis K23d.
+- Kredite laufen in Tranchen mit 1 bis 5 Jahren Laufzeit und werden monatlich getilgt. Kreditflüsse stehen nicht in `S.fin`.
+- Ablöse in Raten: die Hälfte sofort, der Rest mit 5 % Aufschlag in 12 Raten.
+- Gehaltsverzicht: 15 % für drei Monate, Stimmung −10, nur in der Not.
+- Die Karten Mäzen und Steuerprüfung haben feste Beträge.
+
 ## K24 – Sponsoren
 Datei: `konzepte/K24-sponsoren.md`
 
@@ -425,10 +441,29 @@ Datei: `konzepte/K25-marketing.md`
 
 sechs Kampagnen, drei Trikotdesigns je Saison, Sortiment in drei Stufen, Online-Shop ohne eigene Steuerung. Alle Beträge sind Spielwerte (Kalibrierung mit K23).
 
+**Mit K25a von popolupo vorläufig entschieden (21.11.2026, K25 §12 Nr. 1 bis 6):**
+
+- Der Fanartikel-Erlös bleibt geldneutral: Faktoren auf den heutigen Erlös statt der neuen Formel.
+- Die Fans reagieren auf das Trikot nach einem Würfel aus eigenem Strom, ohne Tradition. Voreinstellung ist das klassische Trikot.
+- Vier von sechs Kampagnen. Dauerkarten und Mitglieder warten.
+- Fanarbeit wirkt auf die Pfiffe.
+- Der Werbewert hat noch keine Wirkung.
+- Bereich `marketing` ab der B-Lizenz mit Automatik.
+
 ## K26 – Stadion und Infrastruktur
 Datei: `konzepte/K26-stadion.md`
 
-**Noch zu recherchieren:** echte Baukosten je Platz, Stehplatzanteile der Bundesliga-Stadien, Eigentumsverhältnisse der Stadien.
+**Noch zu recherchieren:** echte Baukosten je Platz, Stehplatzanteile der Bundesliga-Stadien, Eigentumsverhältnisse der Stadien. (Baukosten am 21.11. nachgetragen in K26 §12: 3.000 bis 6.000 € je Sitzplatz. Stehplätze und Eigentum nur teilweise, vorläufig 15 bis 25 % Stehplätze und Eigentum als Stammdatum für einen späteren Schritt K26b.)
+
+**Mit K26a von popolupo vorläufig entschieden (21.11.2026, K26 §12 Nr. 1 bis 7):**
+
+- Bauprozess mit Genehmigung, Auflagen, Verzögerung und Mehrkosten für alle Bauten, gewürfelt beim Start.
+- Trainingsgelände ab Stufe 2 mit neutraler Wirkung dort.
+- Das Nachwuchsleistungszentrum hebt den Deckel des Jugendniveaus.
+- Reha-Zentrum und Physio zusammen höchstens −25 % Ausfallzeit.
+- Catering +5 %, Anzeigetafel +3 % auf die Zuschauereinnahmen.
+- Instandhaltung 1 % der Bausumme im Jahr.
+- Computer-Vereine bauen noch nicht.
 
 **Ergänzt 10.11.:** Greenkeeper (Platzwart) im Stab (K16), Rasenqualität 0–100 je Platz mit kleiner Wirkung auf Ballbesitzstile, Verletzungsrisiko und Heimvorteil (K26 3.2a, Spielwerte).
 
@@ -751,6 +786,27 @@ Im Einzelnen in K30 §5.5 und §12 Nr. 4 bis 9.
 - **Entscheidungen** halten an und stehen im Büro. Ohne Antwort wählt der Co-Trainer vor dem Anpfiff die Voreinstellung. Wer will, schaltet die Automatik ein (neuer Bereich `ereignisse`, Grundlizenz).
 - **Erste fünf Karten:** Der Präsident mischt sich ein, Rückendeckung vom Vorstand, Versöhnung, ein Spieler heiratet, Geheimtipp.
 - **Noch nicht:** Ketten, verzögerte Folgen, Meldungsdichte, Chronik, Skandale.
+
+## K37 – Europapokal (Entwurf 21.11.2026, popolupo)
+Datei: `konzepte/K37-europapokal.md`
+
+**Vorläufig entschieden (K37 §12 Nr. 1 bis 10):**
+
+- Echter Modus seit 2024/25 mit Ligaphase und K.-o.-Runden. Eine Qualifikation spielt nur der deutsche Siebte.
+- Sieben feste deutsche Plätze (4/2/1). Die Länderwertung mit dem fünften Platz kommt später (U19c).
+- Auslandsvereine nach Kontingent je Land, Ansehen und Zufall, weil die Auslandsligen nicht gespielt werden.
+- Spiele mit deutscher Beteiligung in der vollen Engine, Ausland gegen Ausland als Kurzrechnung.
+- Auslandsspieler ohne Folgen aus dem Spiel.
+- Echte Prämien 2025/26 mal Faktor 0,2, bis K23c alle Geldwerte auf echte Größenordnungen bringt.
+- Wertsäule nach dem Rang des Ansehens unter den Teilnehmern.
+- Ein Finale nach dem Saisonende rückt auf den letzten Spieltag vor.
+- Ein deutscher Titelverteidiger nimmt keinen Bundesliga-Platz weg.
+- Kein neuer Lizenz-Bereich in U19a und U19b.
+- Mit U19a (21.11.): Auslandsvereine spielen in der Engine vorerst als Block mit Teamstärke (volle Kader in U19c). Die Auslosung folgt einem festen Bauplan mit gezogenen Plätzen im Topf. Gelbsperre im Europapokal nach der 3., 5., 7. und 9. Gelben.
+- Mit U19b (21.11.): Vorstand +1,5 je gewonnenem Duell und +10 beim Titel, kein Abzug beim Ausscheiden. Startgeld und Wertsäule mit der Auslosung, Rangprämie nach der Ligaphase, Rundenprämien beim Erreichen.
+- Mit U19c (21.11.): Länderwertung nur aus der laufenden Saison, die besten zwei Länder bekommen einen Platz mehr in der Champions League. Wechselinteresse +6/+3/+1. Nebenziel „Europapokal“ (K.-o.-Play-offs, ab Ansehen 85 Achtelfinale).
+
+**Noch zu recherchieren:** amtliche Rangprämie der Conference League (vorläufig geschätzt), Zulassungsliste 2026/27 für die Länderkontingente, Termine der Conference-League-Ligaphase 2026/27. Erledigt am 21.11.: Rangprämie der Europa League, deutsche Starter 2026/27 (Bayern holte das Double, Sechster und Siebter rücken nach).
 
 ## K40 Usability, UX1 (20.11.), vorläufig von mir, gebaut ohne Testlauf
 

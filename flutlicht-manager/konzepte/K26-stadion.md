@@ -1,6 +1,6 @@
 # K26 – Stadion und Infrastruktur
 
-Status: **Entwurf** (8. November 2026), nach „weiter, entscheide du“. Vorläufige Entscheidungen stehen in Abschnitt 12.
+Status: **Entwurf** (8. November 2026), nach „weiter, entscheide du“. Vorläufige Entscheidungen stehen in Abschnitt 12. **Teilschritt K26a umgesetzt (21. November 2026, popolupo, §5.1), noch ohne Testlauf.**
 Hängt ab von: K23 (Finanzen), K27 (Fans) · Wird gebraucht von: K07, K08, K10, K24, K25.
 
 ## 1. Ziel und Spielgefühl
@@ -68,6 +68,24 @@ Hängt ab von: K23 (Finanzen), K27 (Fans) · Wird gebraucht von: K07, K08, K10, 
 - **Anlagen:** Kosten steigen je Stufe (×1,6), laufende Kosten je Stufe.
 - **Abnehmender Nutzen:** Kapazität über der Nachfrage bringt nichts, außer in Spitzenspielen. Die Vorhersage zeigt die zu erwartende Auslastung als Band (K35a).
 
+### 5.1 Umsetzung K26a (21.11.2026, popolupo): Bauprozess und Anlagen
+
+- **Bauprozess für alle Bauten** (§4, auch Tribüne, Logen, Fanshop): eine Baustelle zur Zeit wie bisher. Erst die **Genehmigung** (2 bis 8 Wochen, mit 20 % Auflagen: +5 bis +15 % Kosten). Dann der **Bau** mit der bisherigen Dauer. Mit 30 % **Verzögerung** um 1 bis 6 Wochen, mit 15 % **Mehrkosten** von 5 bis 20 %. Die Baukosten zahlst du beim Start, Auflagen beim Baubeginn, Mehrkosten beim Ende. Alles wird beim Start im eigenen Strom `bau` gewürfelt, gemeldet wird es, wenn es eintritt. Während eine Tribüne gebaut wird, fehlen ihre 3.000 Plätze.
+- **Anlagen** (§3.2), Kosten der nächsten Stufe = Grundkosten × 1,6 je erreichter Stufe:
+
+  | Anlage | Stufen | Start | Grundkosten | Bauzeit | Wirkung |
+  |---|---|---|---|---|---|
+  | Trainingsgelände | 1–5 | 2 | 2 Mio. € | 10 Wochen | Entwicklung im Training × (1 + 0,05 × (Stufe − 2)), Verletzungsrisiko im Training × (1 − 0,04 × (Stufe − 2)). Auf der Startstufe wie bisher. |
+  | Nachwuchsleistungszentrum | 0–5 | 0 | 1,5 Mio. € | 16 Wochen | hebt den Deckel des Jugendniveaus (K08) um 6 je Stufe (70 bis 100). Die Jugendarbeit (K08) bleibt daneben bestehen (Abweichung von §3.2). |
+  | Reha-Zentrum | 0–3 | 0 | 1 Mio. € | 8 Wochen | Ausfallzeit −3 % je Stufe, mit dem Physiotherapeuten zusammen höchstens −25 % (K10, K16) |
+  | Catering | 0–1 | 0 | 1,5 Mio. € | 6 Wochen | Zuschauereinnahmen +5 % |
+  | Anzeigetafel | 0–1 | 0 | 1 Mio. € | 4 Wochen | Zuschauereinnahmen +3 % |
+
+- **Instandhaltung** (§5): 1 % der Bausumme im Jahr, monatlich gebucht („Instandhaltung“, laufend in der Prognose von K23a). Gezählt werden die Bauten ab K26a.
+- **Computer-Vereine** bauen noch nicht (§7). Ihre Anlagen bleiben auf der Startstufe, das Trainingsgelände wirkt dort also wie bisher.
+- **Lizenz:** Bereich `stadion` (wie die Tribünen), kein neuer Bereich.
+- **Noch nicht:** Steh- und Sitzplätze, Business-Seats, Dach, Rasenheizung, Flutlicht, Rasenqualität mit Greenkeeper (§3.2a), Eigentum und Miete (§3.3), neues Stadion als Großprojekt, Karten aus §8, Bauen der Computer-Vereine.
+
 ## 6. Hebel des Spielers
 
 | Hebel | Nutzen | Preis |
@@ -127,7 +145,23 @@ stadion:{
 
 **Noch zu recherchieren:** echte Baukosten je Platz, Stehplatzanteile der Bundesliga-Stadien, Eigentumsverhältnisse der Stadien.
 
+**Recherche Baukosten (21.11.2026, popolupo, Websuche):** Planungswerte je Sitzplatz etwa 3.000 bis 3.500 € bei einfachem und 5.000 bis 6.000 € bei gehobenem Standard (Hubert Nienhoff, gmp Architekten, bei t-online). Beispiel: Der Umbau der Haupttribüne in Stuttgart für die EM 2024 stieg von geplant 65 auf 140 Mio. € (Stuttgarter Zeitung). Echt kosten 3.000 Plätze also etwa 9 bis 18 Mio. €. Im Spiel kostet die Tribüne 4,5 Mio. (Spielgeld, wie TV-Gelder und Gehälter etwa ein Viertel bis ein Fünftel der echten Größenordnung). Bleibt so bis K23c.
+
+**Recherche Stehplätze und Eigentum (21.11.2026, popolupo, Websuche, nur teilweise):** Allianz Arena 75.024 Plätze, davon 15.794 Stehplätze (Sport1, Stand vor Corona, also etwa 21 %). VfB Stuttgart 8.268 Stehplätze (Stuttgarter Zeitung) bei rund 60.000 Plätzen, also etwa 14 %. Eine vollständige Liste je Verein habe ich nicht gefunden. Beim Eigentum unterscheidet eine Arbeit am KIT privates und öffentliches Eigentum sowie öffentlich-private Partnerschaften, eine Liste je Stadion war nicht lesbar. Bekannt ist etwa: In Darmstadt gehört das Stadion der Stadt. **Vorläufig für einen späteren Schritt K26b:** Stehplatzanteil 15 bis 25 % je Stadion, Eigentum als Stammdatum mit „Verein“, „Stadt“ oder „Gesellschaft“, beides erst mit dem Ticketmodell aus K27 und K23c.
+
+**Vorläufig entschieden mit K26a (21.11.2026, popolupo):**
+
+1. Bauprozess mit Genehmigung, Auflagen, Verzögerung und Mehrkosten für alle Bauten, gewürfelt beim Start im eigenen Strom (§5.1).
+2. Trainingsgelände mit Startstufe 2 und neutraler Wirkung dort, damit sich ohne Ausbau nichts ändert (§5.1).
+3. Nachwuchsleistungszentrum hebt den Deckel des Jugendniveaus, die Jugendarbeit bleibt (§5.1).
+4. Reha-Zentrum mit Physio zusammen höchstens −25 % Ausfallzeit (§5.1).
+5. Catering +5 %, Anzeigetafel +3 % auf die Zuschauereinnahmen (§5.1).
+6. Instandhaltung 1 % der Bausumme im Jahr, nur für Bauten ab K26a (§5.1).
+7. Computer-Vereine bauen noch nicht (§5.1).
+
 ## Quellen
 
+- Stehplätze und Eigentum (abgerufen 21.11.2026): [Sport1, Stehplätze der Bundesliga](https://www.sport1.de/news/fussball/bundesliga/2022/01/bundesliga-stehplatze-bvb-hat-die-meisten), [Stuttgarter Zeitung, Cannstatter Kurve](https://www.stuttgarter-zeitung.de/sport/vfb-stuttgart/vfb-stuttgart-8268-stehplaetze-wo-die-cannstatter-kurve-im-ligavergleich-liegt-78891019.html), [KIT, Eigentümer-Betreiber-Modelle](https://publikationen.bibliothek.kit.edu/1000120963/82115628), [Bund der Steuerzahler, Stadien](https://steuerzahler.de/aktuelles/detail/fussball-das-problem-mit-den-stadien)
+- Baukosten je Sitzplatz (abgerufen 21.11.2026): [t-online, Stadion der Zukunft](https://www.t-online.de/sport/fussball/id_89133096/star-architekten-ueber-stadion-der-zukunft-zeit-der-ballerbuden-ist-vorbei-.html), [Stuttgarter Zeitung, Umbau für die EM 2024](https://www.stuttgarter-zeitung.de/lokales/stuttgart/stadionumbau-fuer-em-2024-deutlich-teurer-was-die-kostenexplosion-fuer-den-vfb-bedeutet-78984534.html)
 - Stadionbaukasten, Spott über kleine Ausbauten: `konzepte/_recherche-genre.md`, Abschnitte 4 und 4b
 - Platzwart: PLAN §4 (GameStar 4/2000)

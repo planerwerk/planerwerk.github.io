@@ -27,7 +27,7 @@ function fanFaktor(t){const N=RFS.nachfrage,v=fanst(t),s=RFS.start;return v<=s?N
 // Baustein im Vertrauen deines Vorstands (vorstand.js vorstandWoche), mit toter Zone
 function fansVorstand(t){const Z=RFS.vorstand,v=fanst(t);return v<Z.zone[0]?Math.max(Z.minUnten,(v-Z.zone[0])/Z.teilerUnten):v>Z.zone[1]?Math.min(Z.maxOben,(v-Z.zone[1])/Z.teilerOben):0;}
 // Nach deinem Ligaheimspiel (ablauf.js): Pfiffe bei Protest
-function fansHeimspiel(m){if(!m||m.h!==S.my||fanst(myT())>=RFS.protestUnter)return;(m.xpo[0]||[]).forEach(([id])=>{const p=PIX.get(id);if(p)svAendern(p,RFS.pfiffeSv);});
+function fansHeimspiel(m){if(!m||m.h!==S.my||fanst(myT())>=RFS.protestUnter)return;(m.xpo[0]||[]).forEach(([id])=>{const p=PIX.get(id);if(p)svAendern(p,RFS.pfiffeSv*fanarbeitFaktor());});
   news(`Pfiffe im eigenen Stadion: Die Fans sind unzufrieden (Fanstimmung ${Math.round(fanst(myT()))}). Das Selbstvertrauen der Spieler leidet.`,'bad');}
 // Fan-Gespräch (K27 §5.4): einmal im Monat, Wirkung nach Glaubwürdigkeit
 const fanGespraechFrei=()=>S.fanG==null||absTag(S.tag)-S.fanG>=RFS.gespraechTage;

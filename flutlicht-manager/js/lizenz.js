@@ -68,7 +68,7 @@ function testspieleAuto(d){if(S.phase!=='play'||!autoB('testspiele')||!inVorbere
 function sponsorAuto(){if(!S.sponsOffers||!autoB('sponsor'))return;let i=0;S.sponsOffers.forEach((o,k)=>{if(o.base>S.sponsOffers[i].base)i=k;});const o=S.sponsOffers[i];sponsorWaehlen(i);
   stabMeldung(`Der Verein hat den Sponsorvertrag mit ${o.name} unterschrieben (${fmt(o.base)} pro Spieltag, das höchste feste Angebot).`);}
 // Kredit (K36 §5.2): kein neuer Kredit, am Saisonende Tilgung aus dem Guthaben
-function kreditAuto(){if(!autoB('kredit')||!(S.loan>0))return;const t=myT(),a=Math.min(S.loan,Math.max(0,t.cash));if(a<=0)return;S.loan-=a;t.cash-=a;stabMeldung(`Der Verein hat ${fmt(a)} Kredit getilgt.`);}
+function kreditAuto(){if(!autoB('kredit')||!(S.loan>0))return;const t=myT(),a=Math.min(S.loan,Math.max(0,t.cash));if(a<=0)return;kreditTilgen(a);stabMeldung(`Der Verein hat ${fmt(a)} Kredit getilgt.`);}
 
 // ---------- Oberfläche ----------
 // Hinweis an einer Funktion: gesperrt („Macht der Co-Trainer · frei ab der B-Lizenz“) oder in der Automatik. Leer, wenn du selbst entscheidest.

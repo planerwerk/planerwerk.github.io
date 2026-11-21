@@ -2,22 +2,22 @@
 // Gelbsperren nach der 5., 10. und 15. Gelben, Verfahren nach Roter Karte mit Antrag, Frist, Einspruch und Urteil, Wiederholungstäter.
 // Die Karten selbst fallen in der Engine (js/engine.js, foul und unsportlich), mit den Werten aus REGELN.disziplin.
 const VERGEHEN={notbremse:'Notbremse',grob:'grobes Foulspiel',unsportlich:'Unsportlichkeit gegen den Schiedsrichter',taetlichkeit:'Tätlichkeit',schwer:'schwere Tätlichkeit'};
-const WETTBEWERBE=['liga','pokal'],WB_NAME={liga:'Liga',pokal:'Pokal'},WB_SPIEL={liga:'Ligaspiel',pokal:'Pokalspiel'};
+const WETTBEWERBE=['liga','pokal','eu'],WB_NAME={liga:'Liga',pokal:'Pokal',eu:'Europapokal'},WB_SPIEL={liga:'Ligaspiel',pokal:'Pokalspiel',eu:'Europapokalspiel'}; // eu seit K37, U19a: Sperren der UEFA getrennt
 const AUSGANG={bestaetigt:'bestätigt',gemindert:'gemindert',erhoeht:'erhöht',angenommen:'angenommen'};
-const wbVon=r=>r&&(r.cup||r.supercup)?'pokal':'liga'; // Relegation zählt zur Liga (K09 §12 Nr. 3), der Supercup zum Pokal (K13)
+const wbVon=r=>r&&r.eu?'eu':r&&(r.cup||r.supercup)?'pokal':'liga'; // Relegation zählt zur Liga (K09 §12 Nr. 3), der Supercup zum Pokal (K13)
 const absTag=d=>Math.round(saisonNull(S.season)/TAG_MS)+d;
 
 // Sperren je Wettbewerb: rot (Rot und Gelb-Rot, läuft in die nächste Saison weiter) und gelb (Gelbsperre, verfällt am Saisonende).
 // Alte Spielstände hatten p.sus (alle Wettbewerbe zusammen) und p.yc: beim ersten Zugriff übernommen.
-function sperren(p){if(!p.sperre){p.sperre={liga:{rot:p.sus||0,gelb:0},pokal:{rot:0,gelb:0}};delete p.sus;}return p.sperre;}
-function gelbe(p){if(!p.kt){p.kt={liga:p.yc||0,pokal:0};delete p.yc;}return p.kt;}
+function sperren(p){if(!p.sperre){p.sperre={liga:{rot:p.sus||0,gelb:0},pokal:{rot:0,gelb:0}};delete p.sus;}if(!p.sperre.eu)p.sperre.eu={rot:0,gelb:0};return p.sperre;} // eu beim ersten Zugriff (K37)
+function gelbe(p){if(!p.kt){p.kt={liga:p.yc||0,pokal:0};delete p.yc;}if(p.kt.eu==null)p.kt.eu=0;return p.kt;}
 const sperreIn=(p,wb)=>{const s=p.sperre&&p.sperre[wb];return s?s.rot+s.gelb:p.sperre||wb!=='liga'?0:p.sus||0;}; // im Testspiel (wb 'test') gibt es keine Sperren
 const verfahrenVon=(p,wb)=>(S.verfahren||[]).find(v=>v.pid===p.id&&(!wb||v.wb===wb));
 
 // Für welchen Wettbewerb gerade aufgestellt wird. In der Engine gesetzt, sonst gilt das nächste eigene Spiel (Ansichten, Aufstellung).
 let WB=null,WB_NAECHST={k:null,wb:'liga'};
 function naechsterWb(){if(!S.plan)return'liga';const k=S.season+'/'+S.tag+'/'+S.gespielt+'/'+S.cup.hist.length;
-  if(WB_NAECHST.k!==k){const e=S.phase==='play'?naechstesSpiel(S.gespielt===S.tag?S.tag+1:S.tag):null;WB_NAECHST={k,wb:e&&e.art==='pokal'?'pokal':'liga'};}return WB_NAECHST.wb;}
+  if(WB_NAECHST.k!==k){const e=S.phase==='play'?naechstesSpiel(S.gespielt===S.tag?S.tag+1:S.tag):null;WB_NAECHST={k,wb:e&&e.art==='pokal'?'pokal':e&&e.art==='eu'?'eu':'liga'};}return WB_NAECHST.wb;}
 const gesperrt=(p,wb)=>sperreIn(p,wb||WB||(p.team===S.my?naechsterWb():'liga'))>0;
 function mitWettbewerb(wb,fn){const alt=WB;WB=wb;try{return fn();}finally{WB=alt;}}
 
@@ -33,7 +33,7 @@ function disziplinNachSpiel(r){const wb=wbVon(r),D=RD,G=D.gelbsperre[wb],mein=id
   const gr=new Set(r.ev.filter(e=>e.t==='R'&&e.gy).map(e=>e.p));
   r.yel.forEach(id=>{if(gr.has(id))return; // die Gelbe vor Gelb-Rot zählt nicht mit (K09 §12 Nr. 7, vorläufig)
     const p=PIX.get(id);if(!p)return;const k=gelbe(p);k[wb]=(k[wb]||0)+1;
-    if(G.includes(k[wb])){sperren(p)[wb].gelb+=D.gelbsperre.spiele;if(mein(id))news(`${p.n} sieht die ${k[wb]}. Gelbe Karte im ${wb==='liga'?'Ligabetrieb':'Pokal'} und fehlt im nächsten ${WB_SPIEL[wb]}.`,'bad');}
+    if(G.includes(k[wb])){sperren(p)[wb].gelb+=D.gelbsperre.spiele;if(mein(id))news(`${p.n} sieht die ${k[wb]}. Gelbe Karte im ${wb==='liga'?'Ligabetrieb':wb==='eu'?'Europapokal':'Pokal'} und fehlt im nächsten ${WB_SPIEL[wb]}.`,'bad');}
     if(k[wb]>=G[G.length-1])k[wb]=0;});
   r.ev.forEach(e=>{if(e.t!=='R'||e.p==null)return;const p=PIX.get(e.p);if(!p)return;const s=sperren(p)[wb];
     if(e.gy){s.rot+=D.gelbRot;if(mein(e.p))news(`Gelb-Rot: ${p.n} fehlt im nächsten ${WB_SPIEL[wb]}.`,'bad');return;}
@@ -83,4 +83,4 @@ function sportgerichtTag(d){if(!S.verfahren||!S.verfahren.length)return;
 const meineVerfahren=()=>(S.verfahren||[]).filter(v=>{const p=PIX.get(v.pid);return p&&p.team===S.my;});
 
 // Saisonwechsel: Gelbe Karten und Gelbsperren verfallen, Rot- und Gelb-Rot-Sperren laufen weiter (K09 §3.2, auch im Pokal)
-function disziplinSaison(p){if(p.kt)p.kt={liga:0,pokal:0};else delete p.yc;if(p.sperre)WETTBEWERBE.forEach(wb=>{p.sperre[wb].gelb=0;});}
+function disziplinSaison(p){if(p.kt)p.kt={liga:0,pokal:0,eu:0};else delete p.yc;if(p.sperre)WETTBEWERBE.forEach(wb=>{if(p.sperre[wb])p.sperre[wb].gelb=0;});}
