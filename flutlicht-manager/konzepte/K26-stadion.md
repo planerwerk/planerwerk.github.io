@@ -145,7 +145,9 @@ stadion:{
 
 **Noch zu recherchieren:** echte Baukosten je Platz, Stehplatzanteile der Bundesliga-Stadien, Eigentumsverhältnisse der Stadien.
 
-**Recherche Baukosten (21.11.2026, popolupo, Websuche):** Planungswerte je Sitzplatz etwa 3.000 bis 3.500 € bei einfachem und 5.000 bis 6.000 € bei gehobenem Standard (Hubert Nienhoff, gmp Architekten, bei t-online). Beispiel: Der Umbau der Haupttribüne in Stuttgart für die EM 2024 stieg von geplant 65 auf 140 Mio. € (Stuttgarter Zeitung). Echt kosten 3.000 Plätze also etwa 9 bis 18 Mio. €. Im Spiel kostet die Tribüne 4,5 Mio. (Spielgeld, wie TV-Gelder und Gehälter etwa ein Viertel bis ein Fünftel der echten Größenordnung). Bleibt so bis K23c. Offen bleiben Stehplatzanteile und Eigentum.
+**Recherche Baukosten (21.11.2026, popolupo, Websuche):** Planungswerte je Sitzplatz etwa 3.000 bis 3.500 € bei einfachem und 5.000 bis 6.000 € bei gehobenem Standard (Hubert Nienhoff, gmp Architekten, bei t-online). Beispiel: Der Umbau der Haupttribüne in Stuttgart für die EM 2024 stieg von geplant 65 auf 140 Mio. € (Stuttgarter Zeitung). Echt kosten 3.000 Plätze also etwa 9 bis 18 Mio. €. Im Spiel kostet die Tribüne 4,5 Mio. (Spielgeld, wie TV-Gelder und Gehälter etwa ein Viertel bis ein Fünftel der echten Größenordnung). Bleibt so bis K23c.
+
+**Recherche Stehplätze und Eigentum (21.11.2026, popolupo, Websuche, nur teilweise):** Allianz Arena 75.024 Plätze, davon 15.794 Stehplätze (Sport1, Stand vor Corona, also etwa 21 %). VfB Stuttgart 8.268 Stehplätze (Stuttgarter Zeitung) bei rund 60.000 Plätzen, also etwa 14 %. Eine vollständige Liste je Verein habe ich nicht gefunden. Beim Eigentum unterscheidet eine Arbeit am KIT privates und öffentliches Eigentum sowie öffentlich-private Partnerschaften, eine Liste je Stadion war nicht lesbar. Bekannt ist etwa: In Darmstadt gehört das Stadion der Stadt. **Vorläufig für einen späteren Schritt K26b:** Stehplatzanteil 15 bis 25 % je Stadion, Eigentum als Stammdatum mit „Verein“, „Stadt“ oder „Gesellschaft“, beides erst mit dem Ticketmodell aus K27 und K23c.
 
 **Vorläufig entschieden mit K26a (21.11.2026, popolupo):**
 
@@ -159,6 +161,7 @@ stadion:{
 
 ## Quellen
 
+- Stehplätze und Eigentum (abgerufen 21.11.2026): [Sport1, Stehplätze der Bundesliga](https://www.sport1.de/news/fussball/bundesliga/2022/01/bundesliga-stehplatze-bvb-hat-die-meisten), [Stuttgarter Zeitung, Cannstatter Kurve](https://www.stuttgarter-zeitung.de/sport/vfb-stuttgart/vfb-stuttgart-8268-stehplaetze-wo-die-cannstatter-kurve-im-ligavergleich-liegt-78891019.html), [KIT, Eigentümer-Betreiber-Modelle](https://publikationen.bibliothek.kit.edu/1000120963/82115628), [Bund der Steuerzahler, Stadien](https://steuerzahler.de/aktuelles/detail/fussball-das-problem-mit-den-stadien)
 - Baukosten je Sitzplatz (abgerufen 21.11.2026): [t-online, Stadion der Zukunft](https://www.t-online.de/sport/fussball/id_89133096/star-architekten-ueber-stadion-der-zukunft-zeit-der-ballerbuden-ist-vorbei-.html), [Stuttgarter Zeitung, Umbau für die EM 2024](https://www.stuttgarter-zeitung.de/lokales/stuttgart/stadionumbau-fuer-em-2024-deutlich-teurer-was-die-kostenexplosion-fuer-den-vfb-bedeutet-78984534.html)
 - Stadionbaukasten, Spott über kleine Ausbauten: `konzepte/_recherche-genre.md`, Abschnitte 4 und 4b
 - Platzwart: PLAN §4 (GameStar 4/2000)

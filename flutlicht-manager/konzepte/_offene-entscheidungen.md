@@ -453,7 +453,7 @@ sechs Kampagnen, drei Trikotdesigns je Saison, Sortiment in drei Stufen, Online-
 ## K26 – Stadion und Infrastruktur
 Datei: `konzepte/K26-stadion.md`
 
-**Noch zu recherchieren:** echte Baukosten je Platz, Stehplatzanteile der Bundesliga-Stadien, Eigentumsverhältnisse der Stadien. (Baukosten am 21.11. nachgetragen in K26 §12: 3.000 bis 6.000 € je Sitzplatz.)
+**Noch zu recherchieren:** echte Baukosten je Platz, Stehplatzanteile der Bundesliga-Stadien, Eigentumsverhältnisse der Stadien. (Baukosten am 21.11. nachgetragen in K26 §12: 3.000 bis 6.000 € je Sitzplatz. Stehplätze und Eigentum nur teilweise, vorläufig 15 bis 25 % Stehplätze und Eigentum als Stammdatum für einen späteren Schritt K26b.)
 
 **Mit K26a von popolupo vorläufig entschieden (21.11.2026, K26 §12 Nr. 1 bis 7):**
 
