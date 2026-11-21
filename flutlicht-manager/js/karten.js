@@ -32,7 +32,9 @@ const AUSLOESER={
     const v=auslandKaeufer(p,value(p)).filter(x=>x.land==='ENG').sort((a,b)=>avBudget(b)-avBudget(a))[0];return v?{spieler:p.id,verein:v.id}:null;},
   // Finanzen (K23e): Mäzen nur in der Not (Kontostand im Minus oder offene Lizenzauflagen), Steuerprüfung immer möglich (selten über die Stufe)
   maezen(){return inNot()?{}:null;},
-  steuer(){return{};}
+  steuer(){return{};},
+  // Marketing (K25 §8, K25b): ein Spieler deines Vereins bis 20 mit mindestens 3 Ligatoren in dieser Saison
+  teenieStar(){const l=squad(S.my).filter(p=>p.age<=20&&(p.g||0)>=3);return l.length?{spieler:pick(l).id}:null;}
 };
 
 // ---------- Dosierung (K30 §5.1) ----------
@@ -91,9 +93,10 @@ function kartenWirkung(w,b,c){let wert=w.wert,txt='';if(w.chance!=null){const ok
   else if(w.art==='verpflichten'){if(p&&p.team===-1&&frei('transfers')&&!transferSperre())karteVerpflichten(p,wert);else if(p)news(`${p.n} unterschreibt nicht: Die Transfers führt noch der Verein.`,'');}
   else if(w.art==='interesse'){if(p)p.rkI={s:S.season,v:wert};}
   else if(w.art==='maezen')S.maezen=S.season; // K23e: Präsident mischt sich bis Saisonende ein
+  else if(w.art==='merch')mkS().extra={bis:absTag(S.tag)+RMK.karte.merchTage,f:wert}; // K25b: Fanartikel-Erlös für einige Wochen höher
   else if(w.art==='angebot'){if(p&&p.team===S.my&&b.verein!=null&&!S.offers.some(o=>o.pid===p.id&&o.tid===b.verein)){const v=value(p);S.offers.push({pid:p.id,tid:b.verein,amt:rundeAb(v*wert),max:rundeAb(v*(wert+0.2)),r:0,bis:S.tag+RK.angebotTage});}}
   return txt;}
-const KARTEN_WIRKUNGEN=['stimmung','stimmungAlle','zusammenhalt','glaub','vertrauen','ruf','bezDu','geld','fans','verpflichten','interesse','angebot','maezen'];
+const KARTEN_WIRKUNGEN=['stimmung','stimmungAlle','zusammenhalt','glaub','vertrauen','ruf','bezDu','geld','fans','verpflichten','interesse','angebot','maezen','merch'];
 // Vereinslosen per Karte holen (Altstar, K32 §8): ein Jahr, Gehalt × f, Kondition −20 (lange ohne Training)
 function karteVerpflichten(p,f){p.team=S.my;p.list=0;p.ct=1;p.sal=Math.round(salaryFor(p.str)*f/1000)*1000;p.seit=absTag(S.tag);p.ko=Math.max(0,(p.ko||50)-20);
   neuzugang(p,S.my);kabineInit(p);rollenBerechnen(S.my);news(`${p.n} unterschreibt für ein Jahr (Gehalt ${fmt(p.sal)}).`,'good');}

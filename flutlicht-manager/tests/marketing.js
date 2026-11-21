@@ -36,4 +36,10 @@ function welt(lernstufen){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;
   const w=welt(true);w.F.kampagneStarten('fanwerbung');const gesperrt=!(w.S.mk&&w.S.mk.k.fanwerbung);
   pruef(spaet&&gesperrt,'Jugend-Camps nur in der Vorbereitung, Kampagnen erst ab der B-Lizenz');}
 
+// 7. Karte „Trikot ausverkauft“ (K25b): Auslöser bei einem Spieler bis 20 mit 3 Ligatoren, Wirkung merch hebt den Fanartikel-Faktor vier Wochen um 20 %
+{const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S,ev=W.ev;S.my=VEREIN;S.phase='play';const t=ev('myT()'),jung=ev('squad')(VEREIN).sort((a,b)=>a.age-b.age)[0];
+  const ohne=ev('AUSLOESER').teenieStar();jung.age=19;jung.g=3;const mit=ev('AUSLOESER').teenieStar();const f0=F.merchFaktor(t);F.kartenWirkung({art:'merch',wert:0.2},{},{titel:'Test'});const f1=F.merchFaktor(t);
+  S.tag+=29;const f2=F.merchFaktor(t);
+  pruef(!!mit&&Math.abs(f1/f0-1.2)<1e-9&&Math.abs(f2-f0)<1e-9,'Karte „Trikot ausverkauft“: Auslöser und vier Wochen mehr Fanartikel',`ohne ${!!ohne}, mit ${!!mit}, Faktor ${f0.toFixed(3)} → ${f1.toFixed(3)} → ${f2.toFixed(3)}`);}
+
 console.log(probleme.length?`\n${probleme.length} Problem(e).`:'\nAlles in Ordnung.');process.exitCode=probleme.length?1:0;

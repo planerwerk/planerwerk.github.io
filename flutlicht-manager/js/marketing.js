@@ -28,7 +28,7 @@ function marketingTag(d){if(S.phase!=='play')return;const M=mkS(),e=ersterPflich
 // Faktor auf den Fanartikel-Erlös im Heimspiel (ablauf.js heimspielEinnahmen)
 function merchFaktor(t){if(!t||t.id!==S.my)return 1;const M=mkS(),E=RMK.merch;let f=M.trikot?M.trikot.f:1;
   const lieb=squad(S.my).filter(p=>istLiebling(p,S.my)).length;f*=1+Math.min(E.lieblingMax,lieb*E.liebling);
-  if(mkAktiv('trikot'))f*=1+RMK.kampagnen.trikot.merch*(M.k.trikot.w||1);return f;}
+  if(mkAktiv('trikot'))f*=1+RMK.kampagnen.trikot.merch*(M.k.trikot.w||1);if(M.extra&&M.extra.bis>=absTag(S.tag))f*=1+M.extra.f;return f;} // extra: Karte „Trikot ausverkauft“ (K25b)
 // Pfiffe bei Protest (fans.js fansHeimspiel): mit laufender Fanarbeit schwächer
 const fanarbeitFaktor=()=>mkAktiv('fanarbeit')?RMK.kampagnen.fanarbeit.pfiffe:1;
 // Saisonende (saison.js seasonEndLauf): Titel heben den Werbewert. Saisonwechsel (newSeasonLauf, vor S.season++): Fans-Bonus der Kampagnen

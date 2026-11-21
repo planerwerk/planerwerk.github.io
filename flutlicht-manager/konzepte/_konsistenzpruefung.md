@@ -1331,3 +1331,16 @@ Bei einer Nachkontrolle von K23e, K25a und K26a gefunden. Diese Zustände hänge
 | CF3 | **Marketing (K25a):** Werbewert, Trikot und Kampagnen gingen zum neuen Verein mit. Jetzt beginnt dort alles neu (`marketingJobwechsel`). | ✅ behoben |
 | CF4 | **Simulator:** `tests/sim.js` ahmt `takeJob` nach und ruft jetzt dieselben drei Funktionen auf, wenn es sie gibt. | ✅ |
 | CF5 | **Tests:** `tests/stadion.js` Nr. 7 (Tribüne beim Wechsel), `tests/finanzen.js` Nr. 10 (nichts geht mit, der neue Verein zahlt nichts). Nie gelaufen. | ⚠️ offen |
+
+---
+
+## CG. Nachtrag zu K25b: Karte „Trikot ausverkauft“ (21. November 2026, popolupo, ohne Testlauf)
+
+Konzept: K25 §8. Gleicher Zweig wie CC.
+
+| # | Befund | Status |
+|---|---|---|
+| CG1 | **Mehr Würfe im Strom `ereignisse`:** Eine Karte mehr im Katalog, darum fallen die späteren Karten anders als vorher (wie BX1). | ✅ erwartet |
+| CG2 | **Gleichschritt:** Der Auslöser schaut nur auf Alter und Ligatore, nicht auf Lizenz oder Automatik. | ✅ |
+| CG3 | **Europapokaltore** (`eg`, U19b) wurden zum Saisonwechsel nicht zurückgesetzt. Jetzt wie `g` und `pg`. | ✅ behoben |
+| CG4 | **Tests:** `tests/marketing.js` Nr. 7, `tests/karten.js` prüft den Katalog. Nie gelaufen. | ⚠️ offen |

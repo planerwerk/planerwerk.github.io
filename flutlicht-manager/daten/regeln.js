@@ -413,7 +413,7 @@ const REGELN={
   marketing:{trikot:{klassisch:{faktor:[0.95,1.05],fans:1},modern:{faktor:[0.9,1.15],fans:0},mutig:{kult:0.5,faktor:[0.8,1.25],fans:[-3,3]}},
     kampagnen:{trikot:{name:'Trikot-Kampagne',kosten:150000,tage:28,merch:0.15},fanwerbung:{name:'Fanwerbung in der Region',kosten:200000,tage:56,fans:0.02,werbewert:5},
       camps:{name:'Jugend-Camps',kosten:60000,sommer:1,fans:0.01,stimmung:1},fanarbeit:{name:'Fanarbeit',kosten:50000,tage:120,pfiffe:0.7}},
-    ligaFaktor:{1:1,2:0.4,3:0.2},abnutzung:[1,0.5,0.25],merch:{liebling:0.05,lieblingMax:0.15},werbewert:{startJeAnsehen:0.5,zurueck:0.02,titel:5}},
+    ligaFaktor:{1:1,2:0.4,3:0.2},abnutzung:[1,0.5,0.25],merch:{liebling:0.05,lieblingMax:0.15},werbewert:{startJeAnsehen:0.5,zurueck:0.02,titel:5},karte:{merchTage:28}}, // karte: Dauer der Wirkung merch aus der Karte „Trikot ausverkauft“ (K25b)
 
   // Europapokal (K37, U19a). plaetze: Bundesliga-Platz je Wettbewerb, nachruecken: wer einspringt, wenn der Pokalsieger schon über die Liga dabei ist.
   // wb: Teilnehmer, Spiele der Ligaphase, Töpfe; titel: wohin der Titelverteidiger kommt. laender: Auslandsvereine je Land (angelehnt an die Zulassungsliste, an den Pool angepasst).

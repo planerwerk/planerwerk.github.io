@@ -109,6 +109,8 @@ Gleiches Modell, Kampagnen nach Budget und Profil. Ehrgeizige Vereine investiere
 | Retro-Trikot zum Jubiläum | Vereinsjubiläum | Verkäufe +30 % für einen Monat |
 | Trikot ausverkauft | Teenie-Star in Form, Erfolg | Info, Nachproduktion kostet |
 
+**Umsetzung K25b (21.11.2026, popolupo, ohne Testlauf):** „Trikot ausverkauft“ ist eine Entscheidungskarte. Auslöser: ein Spieler deines Vereins bis 20 Jahre mit mindestens 3 Ligatoren in der Saison. Nachproduzieren kostet 100.000 € und bringt vier Wochen lang 20 % mehr Fanartikel, sonst Fanstimmung −1. „Retro-Trikot zum Jubiläum“ wartet auf ein Gründungsjahr in den Stammdaten.
+
 ## 9. Wechselwirkungen
 
 K03 (Teenie-Star, Publikumsliebling), K09 (Fanarbeit gegen Pyro), K12b (Trikotvorstellung), K23 (Erlöse), K24 (Ausrüster), K26 (Fanshop), K27 (Fans, Tradition, Dauerkarten).

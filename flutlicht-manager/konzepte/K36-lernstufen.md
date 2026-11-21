@@ -297,6 +297,7 @@ lizenz:{
 55. **U19a Europapokal (21.11., popolupo, ohne Testlauf):** keine neue Funktion, kein neuer Bereich. Spiele und Auslosungen sind ab Teamleiter dabei (K37 §9), Aufstellung, Taktik und Live-Spiel gehören zu ihren bisherigen Bereichen. Die Auslosung ist ein Halt wie beim Pokal. Der Gleichschritt hält, weil Auslosungen und die Kurzrechnung eigene Ströme haben und nicht auf Lizenzen schauen.
 56. **U19b Prämien und Ansehen im Europapokal (21.11., popolupo, ohne Testlauf):** keine neue Funktion, kein neuer Bereich. Prämien, Ansehen und Vertrauen sind Folgen der Spiele.
 57. **U19c Länderwertung, Interesse, Nebenziel (21.11., popolupo, ohne Testlauf):** keine neue Funktion, kein neuer Bereich. Die Länderwertung ist Information, das Nebenziel gehört zum Vorstand wie die übrigen Nebenziele.
+58. **K25b Karte „Trikot ausverkauft“ (21.11., popolupo, ohne Testlauf):** keine neue Funktion. Die Karte gehört zum Bereich `ereignisse`, der Auslöser schaut nicht auf Lizenzen (Gleichschritt).
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 

@@ -45,6 +45,11 @@ const KARTEN=[
     texte:['Ein Unternehmer aus der Region will helfen: 1,5 Mio. €, sofort. Er möchte dafür „ein bisschen mitreden“.','Der Präsident hat einen Gönner aufgetrieben. Das Geld wäre da, der Gönner will dafür bei der Aufstellung gehört werden.'],
     optionen:[{text:'Geld annehmen',wirkung:[{art:'geld',wert:1500000},{art:'maezen',wert:1}],folge:'Das Konto atmet auf. Der Präsident wird sich jetzt öfter melden.'},
       {text:'Ablehnen',wirkung:[{art:'glaub',wert:2}],folge:'Du bleibst unabhängig. In der Kabine hat man das gehört.'}],auto:1},
+  // Marketing (K25 §8, K25b). Neue Wirkung merch: Fanartikel-Erlös × (1 + wert) für vier Wochen. Auslöser teenieStar: Spieler bis 20 mit mindestens 3 Ligatoren.
+  {id:'trikotAusverkauft',titel:'Trikot ausverkauft',bereich:'K25',art:'entscheidung',gross:false,stufe:'gelegentlich',ausloeser:'teenieStar',sperrTage:365,
+    texte:['Das Trikot von {spieler} ist ausverkauft. Der Ausrüster könnte nachproduzieren, das kostet 100.000 €.','Nach den Toren von {spieler} gibt es im Fanshop kein Trikot mit seiner Nummer mehr. Nachproduzieren würde 100.000 € kosten.'],
+    optionen:[{text:'Nachproduzieren lassen',wirkung:[{art:'geld',wert:-100000},{art:'merch',wert:0.2}],folge:'Die neuen Trikots verkaufen sich gut, vier Wochen lang mehr Fanartikel.'},
+      {text:'Nicht nachproduzieren',wirkung:[{art:'fans',wert:-1}],folge:'Wer kein Trikot mehr bekommen hat, ist enttäuscht.'}],auto:0},
   {id:'steuerpruefung',titel:'Steuerprüfung',bereich:'K23',art:'entscheidung',gross:false,stufe:'selten',ausloeser:'steuer',sperrTage:730,
     texte:['Das Finanzamt hat die Bücher geprüft und will 250.000 € nachträglich.','Die Betriebsprüfung findet Fehler bei der Abrechnung von Prämien: 250.000 € Nachzahlung.'],
     optionen:[{text:'Zahlen',wirkung:[{art:'geld',wert:-250000}],folge:'Bezahlt, die Sache ist erledigt.'},
