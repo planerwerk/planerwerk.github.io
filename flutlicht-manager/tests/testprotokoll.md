@@ -13,6 +13,47 @@ Node.js 22, Playwright mit Chromium, für `tests/ui-zugang.js` axe-core 4.10.2 (
 
 ---
 
+## Lauf 3, 21.11.2026: Claude-Zweig mit den Korrekturen (b53a0c2, danach b4c97a4)
+
+Am 20.11. abends kam nichts Neues dazu, getestet und korrigiert wurde der Stand von Lauf 2. Claude hat dafür `popolupo-u18b-spielwelt-karten` (cb3649b) in den Claude-Zweig geholt (2ee1122). **Für popolupo:** Bitte vor dem Weiterbauen den Zweig `claude/compassionate-galileo-bsbua4` holen, die Korrekturen stecken in Code und Tests von U11 bis U18b.
+
+**Erledigt** (Fund, Commit, was geändert ist):
+
+| Fund | Commit | Änderung |
+|---|---|---|
+| T2.1 | 551f97e | `presse.js`, `abwerben.js`, `fans.js`: Sponsorwahl nur, wenn Angebote da sind |
+| T2.2 | 551f97e | `abwerben.js` prüft den Stimmungsfaktor bei festem Interesse (Code unverändert, die doppelte Wirkung steht so in K20 §11) |
+| T2.6 | 551f97e | `ausland.js`: Verkauf außerhalb des Fensters wird erst vorgemerkt, dann zum Fensterbeginn geprüft |
+| T2.7 | 551f97e | `schwierigkeit.js` vergleicht Leicht und Schwer Tag für Tag |
+| T2.8 | 551f97e | `__scan` nimmt „zu null“ aus, `ui-zwei-saisons.js` liest die Zahl der Erinnerungs-Schalter aus den Regeln |
+| T1.5 | 551f97e | `transfers.js` bietet nach der Pause die aktuelle Forderung |
+| T1.2 | 551f97e | `welt.js`: Aufbau füllt die Gruppe auf, Stammspieler gut genug (der Code von `planBedarf` blieb) |
+| T2.3 | 6cb54e2 | Gerüchte: Fehlt ein Anlass, erfinden die Medien etwas (vorläufig) |
+| T2.4 | 6cb54e2 | Trainerpool wird nach der Besetzung wieder auf 12 freie aufgefüllt (eigener Strom) |
+| T1.1 | 1bcbd3c | Leihen haben eine Automatik (vorläufig, K36 Grundsatz 1): Dein Verein leiht in der Automatik nach den Regeln der Computer-Vereine und meldet es. Der Gleichschritt-Test nimmt die Gerüchteküche aus (sie trifft gezielt deinen Verein), wie schon die Testspiele |
+| T2.5 | 76e52de, f885c60 | Statistik nach 20 Saisons gemessen: 662 KB (Kurve 101, 176, 244, 303 … ab Saison 13 etwa 650 KB), die Prüfung für kurze Läufe erlaubt das 2,5-Fache des Schnitts. Verletzungsakte wird zu jedem Saisonwechsel gekürzt. `save()` meldet einmal, wenn der Browser nicht speichert (bisher still). Grenze des Spielstands: 3 MB Welt plus 1 MB Statistik (K33, K34) |
+| T1.3 | 76e52de | Ursache gemessen: Seit U11a verpflichteten Vereine starke Vereinslose ohne Grenze (in der 3. Liga bis 16 über ihrer Grundstärke), und seit U11c hielten sie rund 99 % der Wichtigen (früh und beim Saisonwechsel), der frühere Abfluss starker Spieler fehlte. Geändert (alles vorläufig): Vereinslose höchstens Grundstärke + 2, Wichtige ab 30 nicht früh und nur zu 60 %, Abwanderung ins Ausland in der letzten Woche des Sommerfensters (K32 §8: 1. Liga 6–12, 2. Liga 3–6, 3. Liga 2–5). Ergebnis: 1. und 3. Liga im Rahmen, **2. Liga noch knapp darüber** (siehe unten) |
+| T1.4 | b53a0c2 | Namen für sieben Auswahlfelder und das Exportfeld, Rolle `img` für den Regler, Kabinen-Tabelle per Tastatur scrollbar, Nebenschrift `--mist` etwas heller (Kontrast 4,5:1). Im Test: Tab-Startpunkt an den Seitenanfang (nach `blur()` machte Chrome an der letzten Stelle weiter) und Vergleich ohne Großschreibung (der Knopf steht per CSS in Großbuchstaben) |
+| T3.1 | b4c97a4 | Neu in Lauf 3 gefunden: Beim Wechsel ins Ausland gingen laufende Statistikzeile, Karriere und Ehrung verloren (Spielertore ≠ Tabellentore). Jetzt wird die Zeile vorher abgeschlossen, `kar`, `kas`, `ehj` bleiben |
+
+**Ergebnisse Lauf 3** (Node-Tests auf b53a0c2, `statistik.js` danach auf b4c97a4 wieder grün):
+
+| Test | Ergebnis |
+|---|---|
+| alle übrigen Node-Tests (31) | grün, darunter welt, lizenz (Gleichschritt 150 Tage), transfers, ausland, schwierigkeit, presse, abwerben, fans, geruechte, trainerpool |
+| ui-zwei-saisons | grün |
+| spielermodell | rot (1): 2. Liga 69,8 → 72,4 (Spanne 2,6, höchstens 2). 1. Liga 77,1 → 78,1 und 3. Liga 65,4 → 67,1 im Rahmen |
+| sommer | rot (1): T3.2 |
+| kalibrierung | rot (5, davon 4 gelb am Rand): Favoritensieg Top 3 gegen Letzte 3 60 % (Ziel 65–75 %, n=73, war schon vor U11 rot) |
+| medizin | rot (1): Kreuzbandrisse 9,0 (wie vorher) |
+| disziplin | rot (1): Hitzköpfe 1,72-mal so viele Karten (Ziel 1,3–1,7), am Rand |
+
+**T3.2 `tests/sommer.js` „Kondition zum ersten Ligaspiel nach der Vorbereitung 80–88“: 78,1** (Lauf 2: 80,3, vor U11: 84,8). Gemessen: derselbe Kader (24 Spieler, keine Neuzugänge), die Kondition entwickelt sich anders. Ohne die Abwanderung ins Ausland wären es 82,0, ohne die Grenze für Vereinslose 78,4, ohne die Regel ab 30 79,6. Dein Verein ist von der Abwanderung nicht betroffen, der Weg führt über die Welt (Gegner, Belastung der Vorsaison). Nicht weiter untersucht. **Offen.**
+
+**T1.3 Rest:** Die 2. Liga liegt je nach Lauf zwischen 1,9 und 2,7 Spanne (Grenze 2,0). Weitere Stellschrauben (Anspruch gedeckelt, Verlängerung je Liga) brachten nichts Messbares und sind wieder raus. **Offen.**
+
+---
+
 ## Lauf 2, 20.11.2026: `popolupo-u18b-spielwelt-karten` (cb3649b)
 
 Die Spitze enthält alle Zweige von U11 bis U18b (Stand 17:27) und den Merge mit e8ea42d. Getestet als Ganzes. Für die neuen Funde ist der auslösende Commit angegeben, wo er gemessen ist.
