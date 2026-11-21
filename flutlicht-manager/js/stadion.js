@@ -34,9 +34,13 @@ function bauTag(d){const c=S.constr;if(!c)return;const t=myT(),heute=absTag(d);
     if(c.k==='cap'){t.cap=Math.max(0,t.cap-RB.tribuene.plaetze);txt+=` Während des Baus fehlen ${RB.tribuene.plaetze.toLocaleString('de-DE')} Plätze.`;}news(txt+` Fertig am ${datumKurz(c.bis-absTag(0))}.`);}
   if(c.phase==='bau'&&heute>=c.bis){if(c.verzug&&!c.gemeldet){c.gemeldet=1;c.bis+=c.verzug*7;news(`Bauverzögerung: ${c.label} wird ${c.verzug} Woche${c.verzug>1?'n':''} später fertig, am ${datumKurz(c.bis-absTag(0))}.`,'bad');return;}bauFertig(c,t);}}
 function bauFertig(c,t){if(c.mehr){const x=Math.round(c.kosten*c.mehr/1000)*1000;money('Stadionbau',-x);c.kosten+=x;news(`Mehrkosten beim Bau: ${fmt(x)}.`,'bad');}
-  if(c.k==='cap')t.cap+=RB.tribuene.plaetze*(c.phase==='bau'?2:1);else if(c.k==='logen')t.logen+=RB.logen.anzahl;else if(c.k==='shop')t.shop++;
+  bauWirkung(c,t);news(`Bau abgeschlossen: ${c.label}.`,'good');S.constr=null;}
+// Wirkung eines fertigen Baus: Plätze (die während des Baus fehlenden kommen zurück), Logen, Fanshop oder Stufe der Anlage, Bausumme für die Instandhaltung
+function bauWirkung(c,t){if(c.k==='cap')t.cap+=RB.tribuene.plaetze*(c.phase==='bau'?2:1);else if(c.k==='logen')t.logen+=RB.logen.anzahl;else if(c.k==='shop')t.shop++;
   else if(ANLAGEN.includes(c.k)){t.anl=t.anl||{};t.anl[c.k]=anlage(t,c.k)+1;}
-  if(c.phase!=null)t.bausumme=(t.bausumme||0)+(c.kosten||0);news(`Bau abgeschlossen: ${c.label}.`,'good');S.constr=null;}
+  if(c.phase!=null)t.bausumme=(t.bausumme||0)+(c.kosten||0);}
+// Vereinswechsel (saison.js takeJob, vor dem Wechsel): Der alte Verein baut ohne dich fertig. Die Wirkung kommt sofort, Auflagen und Mehrkosten fallen weg (vorläufig).
+function bauAbgeben(){const c=S.constr;if(c)bauWirkung(c,myT());S.constr=null;}
 // Monatlich (finanzen.js finanzenMonat über finanzenTag): Instandhaltung 1 % der Bausumme im Jahr
 function instandhaltung(){const t=myT();if(t.bausumme>0)money('Instandhaltung',-Math.round(t.bausumme*RB.instandhaltung/12));}
 // Karte im Stadion: Anlagen und Baustelle

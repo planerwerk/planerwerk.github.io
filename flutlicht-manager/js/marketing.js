@@ -34,6 +34,8 @@ const fanarbeitFaktor=()=>mkAktiv('fanarbeit')?RMK.kampagnen.fanarbeit.pfiffe:1;
 // Saisonende (saison.js seasonEndLauf): Titel heben den Werbewert. Saisonwechsel (newSeasonLauf, vor S.season++): Fans-Bonus der Kampagnen
 function marketingSaisonende(sm){const M=mkS(),W=RMK.werbewert;const titel=[sm.champ,sm.champ2,sm.champ3,sm.cup].includes(S.my)||[...sm.up,...sm.up3,...sm.up4].includes(S.my);if(titel)M.ww=clamp(Math.round(M.ww+W.titel),0,100);}
 function marketingNeueSaison(){const M=S.mk,t=myT();if(!M||M.s!==S.season||!M.fans)return;t.fans=Math.round(t.fans*(1+M.fans));news(`Die Kampagnen der Saison bringen ${Math.round(M.fans*100)} % mehr Anhänger.`,'good');}
+// Vereinswechsel (saison.js takeJob): Trikot, Kampagnen und Werbewert gehören dem alten Verein, beim neuen beginnt alles mit seinem Ansehen
+function marketingJobwechsel(){S.mk=null;}
 // Karte im Stadion
 function marketingKarte(){const t=myT(),M=mkS(),C=RMK.kampagnen,tr=M.trikot,offen=!tr||!tr.fest;
   return`<div class="card"><h2>Marketing</h2>${lzHinweis('marketing')}<p>Werbewert ${Math.round(M.ww)} von 100 <span class="dim">(wie bekannt der Verein ist, wirkt später auf Sponsoren)</span></p>

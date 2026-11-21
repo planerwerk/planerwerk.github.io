@@ -37,4 +37,8 @@ function bisFertig(w){const {F,S,ev}=w;let d=S.tag,n=0;while(S.constr&&n<400){d+
 {const {F,S,t}=welt(),l0=t.logen;S.constr={k:'logen',bis:S.tag+3,label:'10 VIP-Logen'};F.bauTag(S.tag+2);const noch=!!S.constr;F.bauTag(S.tag+3);
   pruef(noch&&!S.constr&&t.logen===l0+10,'Alter Spielstand: Baustelle im alten Format wird am alten Tag fertig');}
 
+// 7. Vereinswechsel während des Tribünenbaus: Der alte Verein baut fertig, ihm fehlen danach keine Plätze
+{const w=welt(),{F,S,ev,t}=w,cap0=t.cap;F.bauStarten('cap');let d=S.tag,n=0;while(S.constr&&S.constr.phase!=='bau'&&n<100){d++;n++;F.bauTag(d);}const waehrend=t.cap;F.bauAbgeben();
+  pruef(waehrend===cap0-3000&&t.cap===cap0+3000&&!S.constr,'Vereinswechsel: Tribüne beim alten Verein fertig, keine Plätze verloren',`${cap0} → ${waehrend} → ${t.cap}`);}
+
 console.log(probleme.length?`\n${probleme.length} Problem(e).`:'\nAlles in Ordnung.');process.exitCode=probleme.length?1:0;

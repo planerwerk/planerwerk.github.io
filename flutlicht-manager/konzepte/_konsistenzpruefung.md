@@ -1317,3 +1317,17 @@ Gleicher Zweig wie CC. Konzept: K37 §12 Nr. 16 bis 18.
 | CE2 | **Wechselinteresse** steigt für deinen Verein im Europapokal um bis zu 6. Das ändert Ergebnisse in `tests/vertraege.js` und `tests/transfers.js`, wenn dein Testverein international spielt (Freiburg in der Qualifikation der Conference League). | ⚠️ messen |
 | CE3 | **Nebenziel „Europapokal“** kommt in den Topf der möglichen Nebenziele, wenn dein Verein schon in der Ligaphase steht. Die Auslosung der Nebenziele im Strom `nebenziele` ändert sich dann, sonst nicht. | ✅ |
 | CE4 | **`tests/europapokal.js`** hat jetzt neun Prüfungen. Nie gelaufen. | ⚠️ offen |
+
+---
+
+## CF. Vereinswechsel räumt auf: Bau, Finanzplan, Marketing (21. November 2026, popolupo, ohne Testlauf)
+
+Bei einer Nachkontrolle von K23e, K25a und K26a gefunden. Diese Zustände hängen am Spieler, nicht am Verein, und gingen bisher beim Vereinswechsel mit.
+
+| # | Befund | Status |
+|---|---|---|
+| CF1 | **Tribüne (K26a):** `takeJob` löschte `S.constr`. Lief gerade ein Tribünenbau, fehlten dem alten Verein danach für immer 3.000 Plätze. Jetzt baut der alte Verein fertig (`bauAbgeben`), die Wirkung kommt sofort, Auflagen und Mehrkosten fallen weg. | ✅ behoben |
+| CF2 | **Kredit und Raten (K23e):** `takeJob` setzte nur `S.loan` auf 0, die Tranchen in `S.kredite` und die Ablöse-Raten in `S.raten` blieben. Der neue Verein hätte sie monatlich abbezahlt. Jetzt setzt `finanzenJobwechsel` Tranchen, Raten, Verzicht, Monatsberichte, Lizenzprüfung (auch eine Transfersperre), Schnitt und Mäzen zurück. Die Schulden des alten Vereins verschwinden wie bisher. | ✅ behoben |
+| CF3 | **Marketing (K25a):** Werbewert, Trikot und Kampagnen gingen zum neuen Verein mit. Jetzt beginnt dort alles neu (`marketingJobwechsel`). | ✅ behoben |
+| CF4 | **Simulator:** `tests/sim.js` ahmt `takeJob` nach und ruft jetzt dieselben drei Funktionen auf, wenn es sie gibt. | ✅ |
+| CF5 | **Tests:** `tests/stadion.js` Nr. 7 (Tribüne beim Wechsel), `tests/finanzen.js` Nr. 10 (nichts geht mit, der neue Verein zahlt nichts). Nie gelaufen. | ⚠️ offen |

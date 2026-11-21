@@ -70,6 +70,8 @@ function kreditTilgen(a){const t=myT();kreditAltUebernehmen();const g=Math.max(0
 function monatsRaten(){const t=myT();kreditAltUebernehmen();let tilg=0;S.kredite.forEach(k=>{const x=Math.min(k.rest,k.rate);k.rest-=x;tilg+=x;});S.kredite=S.kredite.filter(k=>k.rest>0);
   if(tilg){S.loan=Math.max(0,(S.loan||0)-tilg);t.cash-=tilg;kreditFluss(-tilg);}
   (S.raten||[]).forEach(r=>{const x=Math.min(r.rest,r.rate);r.rest-=x;money('Transfers: Raten',-x);});S.raten=(S.raten||[]).filter(r=>r.rest>0);}
+// Vereinswechsel (saison.js takeJob): Kredite, Raten, Verzicht, Monatsberichte, Lizenzprüfung, Schnitt und Mäzen gehören dem alten Verein (wie bisher S.loan)
+function finanzenJobwechsel(){S.kredite=[];S.raten=[];S.verzicht=null;S.finK=null;S.finM=null;S.finV=[];S.finSchnitt=null;S.lzp=null;S.maezen=null;}
 // Feste Zahlungen der nächsten m Monate (Tilgung und Raten), für die Prognose
 function festeZahlungen(m){let s=0;(S.kredite||[]).forEach(k=>s+=Math.min(k.rest,k.rate*m));(S.raten||[]).forEach(r=>s+=Math.min(r.rest,r.rate*m));return s;}
 // Ablöse in Raten (Kauf, aktionen.js offer): Hälfte sofort, Rest mit Aufschlag in Monatsraten. Der Verkäufer bekommt alles sofort.
