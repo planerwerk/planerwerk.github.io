@@ -127,7 +127,9 @@ const scout=(S,F,q,gebiet,ev=F.__ev)=>{let x;for(let i=0;i<80;i++){x=F.stabNeu('
     pruef(mess.every(m=>m.jung>=S_JUNG_MIN(m.n))&&mess.every(m=>m.alt<=38),'Jede Saison genug Talente, niemand über 38',`bis 21 Jahre: ${mess.map(m=>m.jung).join(', ')}; Alter Ø ${mess.map(m=>m.alter.toFixed(1)).join(', ')}`);
     pruef(mess.every(m=>m.formOk&&m.sauber&&m.kern&&m.nat),'Form 0–20, Kern 6–10 je Verein, Pool und Ligen getrennt, alle mit Nationalität');
     const e=mess.filter(m=>m.ende).map(m=>m.ende);pruef(e.every(x=>Math.abs(x.form-10)<0.5&&x.streu>0.4&&x.streu<3),'Form der Poolspieler wandert um 10',`Ø ${e.map(x=>x.form.toFixed(1)).join(', ')}, Streuung ${e.map(x=>x.streu.toFixed(1)).join(', ')}`);
-    pruef(mess.every(m=>m.kb<3072),'Spielstand bleibt unter 3 MB',mess.map(m=>Math.round(m.kb)).join(', ')+' KB');}}
+    // 3 MB für die Welt (K33) und dazu das eigene Budget der Statistik (K34 §10, höchstens 1 MB nach 20 Saisons), die erst mit U13 kam (T2.5)
+    const grenze=3072+(r?Math.round(r.W.ev('RSTAT').speicher.max/1024):0);
+    pruef(mess.every(m=>m.kb<grenze),`Spielstand bleibt unter 3 MB plus Statistik-Budget (${grenze} KB)`,mess.map(m=>Math.round(m.kb)).join(', ')+' KB');}}
 function S_JUNG_MIN(n){return n*0.08;}
 
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
