@@ -13,8 +13,8 @@ function bisNachStart(w,mitSponsor){const {W,F}=w,erster=F.ersterPflichttag(W.S.
   while(W.S.tag<=erster&&n<400){n++;const S=W.S;if(mitSponsor&&S.sponsOffers)F.sponsorWaehlen(0);if(W.ev('heuteMeinSpiel()'))F.tagesSpiele(S.tag);F.weiter();}return erster;}
 
 // 1. Liste am Spielstart: aktiv, sieben Punkte, Sponsor offen bis zur Wahl
-{const {F,S}=welt(false),P=F.vorbereitungPunkte(),a=zust(F,'sponsor');F.sponsorWaehlen(0);const b=zust(F,'sponsor');
-  pruef(F.vorbereitungAktiv()&&P.length===7&&a==='offen'&&b==='ja'&&F.vorbereitungKarte().includes('Vor dem Saisonstart'),'Liste: am Spielstart aktiv, sieben Punkte, Sponsor offen und nach der Wahl erledigt',`${P.map(x=>x.k+':'+x.zust).join(', ')}`);}
+{const {F,S}=welt(false),P=F.vorbereitungPunkte(),a=zust(F,'sponsor');F.sponsorWaehlen(0);const b0=zust(F,'sponsor');F.werbungVorSpiel();const b=zust(F,'sponsor'); /* seit K24a gehören Ausrüster und Ärmel dazu */
+  pruef(F.vorbereitungAktiv()&&P.length===7&&a==='offen'&&b0==='offen'&&b==='ja'&&F.vorbereitungKarte().includes('Vor dem Saisonstart'),'Liste: am Spielstart aktiv, sieben Punkte, Werbeverträge offen, nach der Wahl der Brust noch offen (Ausrüster, Ärmel), nach allen erledigt',`${P.map(x=>x.k+':'+x.zust).join(', ')}`);}
 
 // 2. Kaderplanung: ein Torwart weniger macht den Punkt offen, mit Lernstufen (Transfers beim Verein) erledigt ihn der Verein
 {const {F,ev}=welt(false),tw=ev('squad')(VEREIN).filter(p=>p.pos==='TW');tw.forEach(p=>p.team=-1);const offen=zust(F,'kader'),text=(F.vorbereitungPunkte().find(x=>x.k==='kader')||{}).text||'';

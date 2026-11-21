@@ -197,6 +197,12 @@ const REGELN={
         {fix:1,sieg:0,jahre:1,info:'Festes Geld pro Spieltag, 1 Saison'},
         {fix:0.65,sieg:1.3,jahre:1,info:'Weniger Fixum, dafür Prämie pro Sieg, 1 Saison'},
         {fix:0.92,sieg:0,jahre:3,info:'Langfristig: 3 Saisons feste Summe'}]},
+    // Werbeflächen (K24 §3.1, Teilschritt K24a, 21.11.): Trikotbrust, Ausrüster und Ärmel mit je eigenen Angeboten in der Form oben.
+    // Vorläufig geldneutral: Die drei teilen sich den bisherigen Brustbetrag. Verhältnis nach den Zielanteilen in K24 §3.1 (Brust 35–45 %, Ausrüster 15–25 %, Ärmel 5–10 %).
+    // Die Höhe nach K24 §5.1 (Bayern etwa 60 Mio. € für die Brust) kommt erst mit K23, weil sie die ganze Wirtschaft verschiebt. Namen erfunden.
+    werbung:{anteil:{brust:0.6,ausruester:0.29,aermel:0.11},titel:{brust:'Trikotbrust',ausruester:'Ausrüster',aermel:'Ärmel'},
+      namen:{ausruester:['Falkner Sport','Sprintwerk','Kranich Teamwear','Nordlicht Athletics','Bergfalke Sport','Tiedemann Sportswear'],
+        aermel:['Moorland Versicherung','Weserblick Immobilien','Albtrauf Software','Uferwerk Logistik','Sonnhalde Energie','Grünfeld Mobilfunk']}},
     abfindung:0.5,                   // Abfindung = Gehalt × Restlaufzeit × Wert
     handgeld:0.5,                    // Handgeld für Vereinslose = Gehalt × Wert
     handgeldAnzeige:0.6              // Schätzung im Spielerfenster
@@ -827,7 +833,7 @@ const REGELN={
       presse:{ab:2,name:'Pressekonferenzen',tab:'buero',auto:1,wer:'der Co-Trainer',tut:'geht zu jeder Pressekonferenz und antwortet mit Floskeln'}, // K29 §5.4, U17a
       sportgericht:{ab:4,name:'Sportgericht',tab:'buero',auto:1,wer:'der Verein',tut:'nimmt Strafen an oder legt bei harten Anträgen Einspruch ein'},
       medizin:{ab:4,name:'Fit spritzen und früher zurückholen',tab:'kader',auto:1,wer:'der Mannschaftsarzt',tut:'spritzt nur in wichtigen Spielen Stammspieler mit kurzer Verletzung fit'},
-      sponsor:{ab:4,name:'Trikotsponsor',tab:'buero',auto:1,wer:'der Verein',tut:'nimmt das Angebot mit dem höchsten festen Betrag'},
+      sponsor:{ab:4,name:'Werbeverträge (Trikotbrust, Ausrüster, Ärmel)',tab:'buero',auto:1,wer:'der Verein',tut:'nimmt je Fläche das Angebot mit dem höchsten festen Betrag'}, // seit K24a alle Werbeflächen
       preise:{ab:4,name:'Eintrittspreis',tab:'finanzen',auto:1,wer:'der Verein',tut:'setzt den Richtpreis nach Liga und Ansehen'},
       stadion:{ab:5,name:'Stadionausbau',tab:'stadion'},
       kredit:{ab:5,name:'Kredit',tab:'finanzen',auto:1,wer:'der Verein',tut:'nimmt keinen Kredit auf und tilgt am Saisonende aus dem Guthaben'}
