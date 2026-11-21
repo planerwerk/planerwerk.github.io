@@ -28,11 +28,11 @@ if(zeile){await zeile.click();await axeLauf('Spielerkarte');
   await pg.keyboard.press('Escape');pruef(await pg.evaluate(()=>!document.getElementById('ov').innerHTML),'Fenster: Escape schließt die Spielerkarte');}
 else hinweise.push('keine Kaderzeile zum Öffnen gefunden');
 // Tastatur: vom Seitenanfang mit Tab zu „Tag beenden“, jeder Fokus sichtbar und kein div ohne Rolle
-await pg.click('.tabs button:text-is("Büro")');await pg.evaluate(()=>{document.activeElement&&document.activeElement.blur&&document.activeElement.blur();window.scrollTo(0,0);});
+await pg.click('.tabs button:text-is("Büro")');await pg.evaluate(()=>{document.activeElement&&document.activeElement.blur&&document.activeElement.blur();window.scrollTo(0,0);const h=document.querySelector("header.top")||document.body;h.setAttribute("tabindex","-1");h.focus();h.removeAttribute("tabindex"); /* Startpunkt an den Seitenanfang: Nach blur() macht Chrome sonst an der zuletzt fokussierten Stelle weiter (T1.4) */});
 let gefunden=false,schritte=0;const unsichtbar=[];
 for(;schritte<80&&!gefunden;schritte++){await pg.keyboard.press('Tab');const f=await pg.evaluate(()=>{const a=document.activeElement;if(!a||a===document.body)return null;const r=a.getBoundingClientRect();
     return{text:(a.innerText||a.value||a.getAttribute('aria-label')||'').trim().slice(0,40),tag:a.tagName,rolle:a.getAttribute('role'),sichtbar:r.width>0&&r.height>0};});
-  if(!f)continue;if(!f.sichtbar||(f.tag==='DIV'&&!f.rolle))unsichtbar.push(`${f.tag} „${f.text}“`);if(/Tag beenden/.test(f.text))gefunden=true;}
+  if(!f)continue;if(!f.sichtbar||(f.tag==='DIV'&&!f.rolle))unsichtbar.push(`${f.tag} „${f.text}“`);if(/Tag beenden/i.test(f.text))gefunden=true; /* der Knopf steht per CSS in Großbuchstaben (T1.4) */}
 pruef(gefunden,'Tastatur: „Tag beenden“ mit Tab erreichbar',`${schritte} Schritte`);
 pruef(!unsichtbar.length,'Tastatur: jeder Fokus sichtbar, kein div ohne Rolle',unsichtbar.slice(0,5).join(', ')||null);
 if(gefunden){const vor=await pg.evaluate(()=>S.tag);await pg.keyboard.press('Enter');await pg.waitForTimeout(150);

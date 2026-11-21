@@ -102,7 +102,7 @@ function showFired(){if(!S.jobs)mkJobs();ov(`${S.ruecktritt?`<h2>Zurückgetreten
 function menu(){let size='';try{size=Math.round(JSON.stringify(S).length/1024)+' KB';}catch(e){}
   ov(`<div class="phead"><h2>Menü</h2><button class="x" onclick="closeOv()" aria-label="Schließen">✕</button></div>
   <p>Der Spielstand wird nach jedem Spieltag automatisch in diesem Browser gespeichert. Für andere Geräte oder als Sicherung: Code kopieren und später unter „Spielstand-Code laden“ einfügen.</p>
-  <div class="card"><h3>Spielstand sichern (${size})</h3><textarea id="exp" readonly>${esc(JSON.stringify(S))}</textarea><div class="row" style="margin-top:8px"><button onclick="copyExp()">Code kopieren</button></div></div>
+  <div class="card"><h3>Spielstand sichern (${size})</h3><textarea id="exp" readonly aria-label="Spielstand als Text zum Kopieren">${esc(JSON.stringify(S))}</textarea><div class="row" style="margin-top:8px"><button onclick="copyExp()">Code kopieren</button></div></div>
   <div class="card"><h3>Spielstand-Code laden</h3><textarea id="imp" placeholder="Code hier einfügen"></textarea><div class="row" style="margin-top:8px"><button onclick="importSave()">Laden</button></div></div>
   <div class="card"><h3>Erinnerungen vor „Tag beenden“</h3><p class="dim">Sie erscheinen nur, wenn wirklich etwas offen ist.</p><div class="form">${Object.entries(RK.erinnerungen).map(([k,l])=>`<label class="pick"><input type="checkbox" ${erinnerungAn(k)?'checked':''} onchange="erinnerungAus('${k}',!this.checked)"> ${l}</label>`).join('')}</div></div>
   ${S.hist.length?`<div class="card"><h3>Deine Karriere</h3>${S.hist.map(h=>`<p>${h.s}/${(h.s+1)%100}: ${esc(h.team)}, ${h.lg}. Liga, Platz ${h.pos} ${h.ok?'✓':''}</p>`).join('')}</div>`:''}

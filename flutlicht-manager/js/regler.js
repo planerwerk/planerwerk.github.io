@@ -24,7 +24,7 @@ function rgSpark(vals){const w=160,h=22,step=w/(vals.length-1),min=Math.min(...v
 function rgUnscharf(o){const{label,sub='',min,max,spanne,einheit='',f=de}=o;
   const inner=spanne?`<div class="rg-band" style="left:${rgPct(spanne[0],min,max)}%;width:${rgBreite(spanne[0],spanne[1],min,max)}%"></div>`:`<div class="rg-unknown">? ? ? ? ? ?</div>`;
   const val=spanne?(f(spanne[0])===f(spanne[1])?f(spanne[0]):`<small>ca.</small> ${f(spanne[0])}–${f(spanne[1])}`):'?';
-  return`<div class="rg"><div class="rg-lbl">${label}${sub?`<small>${sub}</small>`:''}</div><div class="rg-track" aria-label="${esc(label)}">${inner}</div><div class="rg-val rg-klein">${val}${einheit?`<small>${einheit}</small>`:''}</div><div class="rg-scale"><span>${f(min)}</span><span>${f(max)}</span></div></div>`;}
+  return`<div class="rg"><div class="rg-lbl">${label}${sub?`<small>${sub}</small>`:''}</div><div class="rg-track" role="img" aria-label="${esc(label)}">${inner}</div><div class="rg-val rg-klein">${val}${einheit?`<small>${einheit}</small>`:''}</div><div class="rg-scale"><span>${f(min)}</span><span>${f(max)}</span></div></div>`;}
 // Mini-Regler für Tabellen
 const rgMini=(v,min,max,art='',dez=0)=>`<div class="rg-mini"><div class="rg-track"><div class="rg-fill ${art}" style="width:${rgPct(v,min,max)}%"></div></div><span class="rg-n">${de(v,dez)}</span></div>`;
 // Stell-Regler (Mischpult-Fader) mit optionaler Empfehlung als Band

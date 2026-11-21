@@ -1,6 +1,6 @@
 /* Layout: Anzeigetafel oben (Verein, Konto, Vorstand, Weiter), darunter Reiter, darunter Arbeitsfläche; Spieltag-Konferenz als Overlay. Bewusst nur ein (Nacht-)Thema: Flutlicht. */
 :root{
-  --night:#0d1d17; --turf:#142a21; --turf2:#1b392c; --chalk:#eef4ef; --mist:#9db3a6; --rule:#2b4a3c;
+  --night:#0d1d17; --turf:#142a21; --turf2:#1b392c; --chalk:#eef4ef; --mist:#a3b9ac; /* etwas heller für den Kontrast 4,5:1 auf den dunkleren Karten (T1.4) */ --rule:#2b4a3c;
   --amber:#ffb627; --ink:#1d1400; --good:#4fc98d; --warn:#e9c349; --bad:#ef5b5b; --blue:#6fa8ff;
   --f-disp:"Saira Condensed","Arial Narrow",system-ui,sans-serif;
   --f-body:"Barlow",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
