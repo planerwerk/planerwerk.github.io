@@ -806,7 +806,7 @@ Datei: `konzepte/K37-europapokal.md`
 - Mit U19b (21.11.): Vorstand +1,5 je gewonnenem Duell und +10 beim Titel, kein Abzug beim Ausscheiden. Startgeld und Wertsäule mit der Auslosung, Rangprämie nach der Ligaphase, Rundenprämien beim Erreichen.
 - Mit U19c (21.11.): Länderwertung nur aus der laufenden Saison, die besten zwei Länder bekommen einen Platz mehr in der Champions League. Wechselinteresse +6/+3/+1. Nebenziel „Europapokal“ (K.-o.-Play-offs, ab Ansehen 85 Achtelfinale).
 
-**Noch zu recherchieren:** Rang- und Play-off-Prämien in Europa League und Conference League, Zulassungsliste 2026/27 für die Länderkontingente, deutsche Starter 2026/27 aus einer zweiten Quelle, Termine der Conference-League-Ligaphase 2026/27.
+**Noch zu recherchieren:** amtliche Rangprämie der Conference League (vorläufig geschätzt), Zulassungsliste 2026/27 für die Länderkontingente, Termine der Conference-League-Ligaphase 2026/27. Erledigt am 21.11.: Rangprämie der Europa League, deutsche Starter 2026/27 (Bayern holte das Double, Sechster und Siebter rücken nach).
 
 ## K40 Usability, UX1 (20.11.), vorläufig von mir, gebaut ohne Testlauf
 

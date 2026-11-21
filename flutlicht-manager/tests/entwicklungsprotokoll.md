@@ -46,6 +46,11 @@ Solange K23b auf die Messwerte wartet, baue ich weiter:
 
 ## Changelog
 
+### 21.11.2026: Recherche K37: Pokalsieger 2026, Rangprämie Conference League (Zweig `mitarbeit/popolupo-u19-europapokal`)
+
+- Bayern gewann 2026 auch den DFB-Pokal, darum stimmen die deutschen Starter 2026/27 in `daten/termine.js` (Sechster und Siebter rücken nach).
+- Rangprämie der Conference League vorläufig geschätzt (CD3), in `REGELN.europa.geld.ecl`.
+
 ### 21.11.2026: Finanzplan nach einer Prüfung ohne Laufzeit korrigiert (Zweig `mitarbeit/popolupo-u19-europapokal`)
 
 - **Behoben** (Konsistenzprüfung CI):

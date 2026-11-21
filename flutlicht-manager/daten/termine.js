@@ -28,6 +28,7 @@ const TERMINE_2026={
       losPo:'2027-01-29',po:['2027-02-18','2027-02-25'],losAf:'2027-02-26',af:['2027-03-11','2027-03-18'],vf:['2027-04-08','2027-04-15'],hf:['2027-04-29','2027-05-06'],fin:'2027-05-26'},
     ecl:{zeit:'18:45',quali:['2026-08-20','2026-08-27'],los:'2026-08-28',liga:['2026-10-15','2026-10-22','2026-11-05','2026-11-26','2026-12-10','2026-12-17'],
       losPo:'2027-01-29',po:['2027-02-18','2027-02-25'],losAf:'2027-02-26',af:['2027-03-11','2027-03-18'],vf:['2027-04-08','2027-04-15'],hf:['2027-04-29','2027-05-06'],fin:'2027-06-02'}},
-  // Deutsche Teilnehmer 2026/27 (Kürzel aus daten/vereine.js, Websuche 21.11.2026, zweite Quelle offen, K37 §5.1). ecl spielt die Play-off-Runde der Qualifikation.
+  // Deutsche Teilnehmer 2026/27 (Kürzel aus daten/vereine.js, Websuche 21.11.2026, K37 §5.1). Bayern holte Meisterschaft und Pokal (Finale 23.5.2026, 3:0 gegen Stuttgart),
+  // darum rücken der Sechste in die Europa League und der Siebte in die Conference League nach. ecl spielt die Play-off-Runde der Qualifikation.
   europaStart:{cl:['FCB','BVB','RBL','VFB'],el:['B04','TSG'],ecl:['SCF']}
 };
