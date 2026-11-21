@@ -13,6 +13,24 @@ Node.js 22, Playwright mit Chromium, für `tests/ui-zugang.js` axe-core 4.10.2 (
 
 ---
 
+## Lauf 7, 21./22.11.2026 nachts: Claude-Zweig mit K24b und K24c (452dc0f, auf eb3efbe)
+
+**Neu von Claude** (Rest von K24, wie im Entwicklungsprotokoll abgesprochen). popolupos Spitze eb3efbe ist dafür in den Claude-Zweig geholt (5d8444b, ohne Konflikt).
+- **K24b** (f5f0d50): je Fläche (auch die Brust) ein viertes Angebot eines umstrittenen Geldgebers (30 % über dem besten festen, zwei Jahre, Fans −5 bei Vertragsschluss und −1 an jedem Monatsersten über `fanAnlass(…,'fanD',…)`, Skandal mit 5 % je Saison: Fans −10 und kostenlose Kündigung). Sponsorentag (50.000 €, offene Angebote +10 %, einmal je Saison). Werbewert aus K25 (`S.mk.ww`) als Faktor auf neue Angebote, höchstens ±15 %. Automatik und Vorstand nehmen nie den umstrittenen Geldgeber.
+- **K24c** (fd16ce3): Zufriedenheit je Vertrag zum Saisonende (`werbungSaisonende` in `saison.js` neben `marketingSaisonende`), Verlängerungsangebot zufriedener Partner (ab 70, 10 % mehr), Abstiegsklausel (−40 %). **Für popolupo:** Die Laufzeit der Brust zählt jetzt in `werbungSaison` herunter, die Zeile `if(S.spons){S.spons.yrs--…}` in `newSeason` ist weg. `sponsOffers` hängt das Verlängerungsangebot an, bevor die Automatik wählt.
+- **Geld:** Ohne deine Wahl unverändert (der Vorstand nimmt das erste Angebot). Bei K23c gern die Höhen in `RF.sponsor` ändern, die drei Flächen hängen über `RF.werbung.anteil` daran.
+
+| Test | Ergebnis |
+|---|---|
+| werbung (32 Prüfungen, davon 21 neu für K24b und K24c) | grün |
+| alle übrigen Node-Tests | genau wie in Lauf 5: grün bis auf T5.1 und T5.5 (lizenz), T5.2 (wettbewerbe), T1.3 Rest (spielermodell), Randwerte in kalibrierung, jugend, medizin. Dieselben Zahlen, K24b und K24c verschieben nichts |
+| lizenz | „Sponsor: Der Verein nimmt sofort das höchste feste Angebot“ und „kein Nachteil“ grün (+2,8 ± 2,3 Punkte) |
+| Browser-Tests, akzeptanz | siehe unten |
+
+Lauf 6 (nur K24b) wurde nach 12 grünen Tests abgebrochen, weil K24c den Saisonwechsel berührt und Lauf 7 beides prüft.
+
+---
+
 ## Lauf 5, 21.11.2026 abends: `popolupo-u19-europapokal` (eb3efbe), enthält K23a, K23e, K25a, K25b, K26a, U19a bis U19c
 
 Nur getestet, nichts am Code geändert (Auftrag „nur testen“). Die Spitze baut auf 362fa12 auf, alle Korrekturen aus Lauf 3 und 4 sind drin.
