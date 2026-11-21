@@ -13,6 +13,70 @@ Node.js 22, Playwright mit Chromium, für `tests/ui-zugang.js` axe-core 4.10.2 (
 
 ---
 
+## Lauf 5, 21.11.2026 abends: `popolupo-u19-europapokal` (eb3efbe), enthält K23a, K23e, K25a, K25b, K26a, U19a bis U19c
+
+Nur getestet, nichts am Code geändert (Auftrag „nur testen“). Die Spitze baut auf 362fa12 auf, alle Korrekturen aus Lauf 3 und 4 sind drin.
+
+| Test | Ergebnis |
+|---|---|
+| finanzen, marketing, stadion, europapokal (neu) | grün beim ersten Lauf |
+| alle übrigen Node-Tests außer den unten genannten (30), dazu werbung, statistik, welt, sommer | grün. **sommer jetzt 84,8 (T3.2 erledigt durch die veränderte Welt)** |
+| fuzz-karrieren, ui-lernstufen, live-neuladen, seed, ui-zugang | grün |
+| lizenz | rot (2): T5.1 und T5.5 |
+| wettbewerbe | rot (1): T5.2 |
+| ui-zwei-saisons | rot (1): T5.4 |
+| spielermodell | rot (2): 2. Liga 69,8 → 71,8 (Spanne 2,0), 3. Liga 65,3 → 68,0 (Spanne 2,7), T1.3 Rest |
+| kalibrierung | rot, nur zwei gelbe Randwerte (Elfmetertore 8 %, Elfmeter 0,32 je Spiel), besser als in Lauf 4 |
+| jugend, medizin | am Rand wie früher (Prägungen 1,95, Rückfall 15 %) |
+| akzeptanz | rot (3) wie immer: Abwehr +0,8, Verhältnis der Bereiche, Tempo 4,18 ms |
+
+**T5.1 `lizenz.js` Gleichschritt nur 25 Tage (vorher 150).** Ursache gemessen: Ereigniskarte „Ein Spieler heiratet“ (U12d) am Mo 27.7. Sie trifft deinen Verein, also im einen Lauf einen Freiburger (Stimmung +2), im anderen einen Bielefelder. Wie bei der Gerüchteküche (T1.1) eine gewollte Ungleichheit, die Karte kam vorher nur nicht in den ersten 150 Tagen (der Europapokal ändert die Spiele je Woche und damit das Kartenbudget). Ohne Gerüchte und ohne Karten (`kartenWoche`) sind es wieder 150 Tage gleich. Vorschlag: Der Test nimmt auch die Karten aus.
+
+**T5.5 `lizenz.js` „Jede Aktion in js/aktionen.js prüft ihren Bereich: startBuild“.** Kein Fehler im Spiel: `startBuild` reicht seit K26a an `bauStarten` (stadion.js) weiter, und das prüft `darf('stadion')`. Die Prüfung im Test liest nur die Aktion selbst. Vorschlag: `darf('stadion')` auch in `startBuild`. Nebenbei: `startBuildAlt` wird nirgends aufgerufen.
+
+**T5.2 `wettbewerbe.js` „72 Stunden“: 24 Fälle**, zum Beispiel Bayern an den Tagen 112/114 (Mi 21.10. Champions League, Fr 23.10. Bundesliga), 147/149, 210/212. `ligaVerlegen` (U19a) verlegt Ligaspiele nach einem Europapokal-Abend nicht weit genug. `europapokal.js` lässt einen Fall je Saison zu und ist darum grün. **Echter Fund.**
+
+**T5.4 `ui-zwei-saisons.js` „1 gesperrte/verletzte Spieler eingesetzt“ (Do 27.8.).** Kein Fehler im Spiel. Nachgebaut: Jordy Makengo (Freiburg) spielte in der Qualifikation der Conference League und war nur im DFB-Pokal gesperrt, das ist erlaubt (Sperren je Wettbewerb seit U19a). Der Test vergleicht bei allem außer der Liga mit der Pokalsperre. Vorschlag: bei `wbVon(r)==='eu'` die Sperre `eu` prüfen.
+
+**T5.3 Europapokal zu schwer für deutsche Vereine (CC2, gemessen mit Seed 5 über drei Saisons):**
+
+| Saison | Champions League | Europa League | Conference League | Länderwertung GER |
+|---|---|---|---|---|
+| 2026 | FCB Achtelfinale, BVB, RBL, VFB Ligaphase | B04 K.-o.-Play-offs, TSG Ligaphase | SCF Ligaphase | 17. von 19 |
+| 2027 | FCB, KOE, SGE, RBL Ligaphase | SCF, SVW Ligaphase | kein deutscher Verein in der Ligaphase | 18. von 19 |
+| 2028 | BVB, FCB K.-o.-Play-offs, B04, RBL Ligaphase | VFB, WOB Ligaphase | SGE Viertelfinale | 12. von 19 |
+
+Summe in der Champions League: 9-mal Ligaphase, 2-mal K.-o.-Play-offs, 1-mal Achtelfinale, kein deutscher Sieger. Sieger: Chelsea, Chelsea, Atlético Madrid (CL), Juventus, Bodø/Glimt, Başakşehir (EL), Gent, Bilbao, Lech Posen (ECL). K37 §10 nennt „meist Achtelfinale in der Champions League“. Nicht untersucht, ob die Blockstärke der Auslandsvereine (`euStaerke`) oder die Belastung der Deutschen den Ausschlag gibt.
+
+**BZ7 `node tests/finanzmodell.js 2` (Seed 4711, auf eb3efbe, also mit Europapokal):**
+
+```
+Saison 2026, 1. Liga, 18 Vereine: Einnahmen 42.4 Mio (TV 10.1 Mio, Sponsor 7.9 Mio, Spieltag 24.4 Mio), Ausgaben 32.6 Mio (Gehälter 29.7 Mio), Saldo 9.8 Mio je Verein, Spanne -8.4 Mio bis 31.0 Mio, mit Minus 1, heutige Pauschale 5.2 Mio
+  schwächste: Bayer 04 Leverkusen (Ansehen 84): ein 40.4 Mio, aus 48.8 Mio, Saldo -8.4 Mio, heute 7.2 Mio | 1. FC Union Berlin (Ansehen 64): ein 27.2 Mio, aus 26.5 Mio, Saldo 0.7 Mio, heute 4.2 Mio | TSG Hoffenheim (Ansehen 70): ein 32.2 Mio, aus 30.7 Mio, Saldo 1.4 Mio, heute 5.0 Mio
+  stärkste: Hamburger SV (Ansehen 66): ein 46.6 Mio, aus 27.5 Mio, Saldo 19.0 Mio, heute 4.4 Mio | FC Schalke 04 (Ansehen 64): ein 48.0 Mio, aus 23.5 Mio, Saldo 24.5 Mio, heute 4.2 Mio | Borussia Dortmund (Ansehen 86): ein 73.0 Mio, aus 42.1 Mio, Saldo 31.0 Mio, heute 7.5 Mio
+Saison 2026, 2. Liga, 18 Vereine: Einnahmen 14.6 Mio (TV 3.3 Mio, Sponsor 1.7 Mio, Spieltag 9.6 Mio), Ausgaben 14.5 Mio (Gehälter 12.1 Mio), Saldo 0.1 Mio je Verein, Spanne -4.8 Mio bis 6.6 Mio, mit Minus 9, heutige Pauschale 2.8 Mio
+  schwächste: VfL Wolfsburg (Ansehen 62): ein 15.2 Mio, aus 20.0 Mio, Saldo -4.8 Mio, heute 3.9 Mio | SV Darmstadt 98 (Ansehen 51): ein 11.1 Mio, aus 14.4 Mio, Saldo -3.4 Mio, heute 2.7 Mio | SpVgg Greuther Fürth (Ansehen 47): ein 8.4 Mio, aus 11.4 Mio, Saldo -3.0 Mio, heute 2.3 Mio
+  stärkste: 1. FC Nürnberg (Ansehen 54): ein 19.6 Mio, aus 14.7 Mio, Saldo 4.9 Mio, heute 3.0 Mio | 1. FC Kaiserslautern (Ansehen 55): ein 21.2 Mio, aus 15.4 Mio, Saldo 5.8 Mio, heute 3.1 Mio | Hertha BSC (Ansehen 57): ein 23.7 Mio, aus 17.2 Mio, Saldo 6.6 Mio, heute 3.3 Mio
+Saison 2026, 3. Liga, 20 Vereine: Einnahmen 6.3 Mio (TV 1.4 Mio, Sponsor 0.5 Mio, Spieltag 4.5 Mio), Ausgaben 9.2 Mio (Gehälter 7.0 Mio), Saldo -2.9 Mio je Verein, Spanne -6.2 Mio bis 4.0 Mio, mit Minus 16, heutige Pauschale 1.8 Mio
+  schwächste: TSG 1899 Hoffenheim II (Ansehen 35): ein 2.3 Mio, aus 8.4 Mio, Saldo -6.2 Mio, heute 1.4 Mio | SV Wehen Wiesbaden (Ansehen 40): ein 3.7 Mio, aus 9.4 Mio, Saldo -5.7 Mio, heute 1.8 Mio | VfB Stuttgart II (Ansehen 35): ein 2.2 Mio, aus 7.7 Mio, Saldo -5.4 Mio, heute 1.4 Mio
+  stärkste: Hansa Rostock (Ansehen 46): ein 13.3 Mio, aus 11.9 Mio, Saldo 1.4 Mio, heute 2.4 Mio | Alemannia Aachen (Ansehen 44): ein 12.4 Mio, aus 11.0 Mio, Saldo 1.4 Mio, heute 2.2 Mio | Fortuna Düsseldorf (Ansehen 47): ein 17.1 Mio, aus 13.1 Mio, Saldo 4.0 Mio, heute 2.5 Mio
+Dein Verein SC Freiburg: laufender Saldo nach den echten Buchungen 6.8 Mio, nach dem Modell 5.6 Mio
+Saison 2027, 1. Liga, 18 Vereine: Einnahmen 44.4 Mio (TV 10.2 Mio, Sponsor 8.0 Mio, Spieltag 26.3 Mio), Ausgaben 32.0 Mio (Gehälter 28.9 Mio), Saldo 12.5 Mio je Verein, Spanne -13.8 Mio bis 30.2 Mio, mit Minus 1, heutige Pauschale 5.3 Mio
+  schwächste: Bayer 04 Leverkusen (Ansehen 85): ein 41.0 Mio, aus 54.8 Mio, Saldo -13.8 Mio, heute 7.4 Mio | 1. FC Union Berlin (Ansehen 65): ein 27.8 Mio, aus 27.5 Mio, Saldo 0.2 Mio, heute 4.3 Mio | TSG Hoffenheim (Ansehen 72): ein 33.1 Mio, aus 27.5 Mio, Saldo 5.6 Mio, heute 5.3 Mio
+  stärkste: Hertha BSC (Ansehen 61): ein 39.4 Mio, aus 18.0 Mio, Saldo 21.4 Mio, heute 3.8 Mio | FC Schalke 04 (Ansehen 65): ein 48.2 Mio, aus 22.1 Mio, Saldo 26.1 Mio, heute 4.3 Mio | Borussia Dortmund (Ansehen 84): ein 71.8 Mio, aus 41.6 Mio, Saldo 30.2 Mio, heute 7.2 Mio
+Saison 2027, 2. Liga, 18 Vereine: Einnahmen 13.8 Mio (TV 3.3 Mio, Sponsor 1.6 Mio, Spieltag 8.9 Mio), Ausgaben 15.3 Mio (Gehälter 13.0 Mio), Saldo -1.5 Mio je Verein, Spanne -11.9 Mio bis 8.2 Mio, mit Minus 11, heutige Pauschale 2.7 Mio
+  schwächste: SC Freiburg (Ansehen 62): ein 18.1 Mio, aus 30.0 Mio, Saldo -11.9 Mio, heute 3.9 Mio | SC Paderborn 07 (Ansehen 51): ein 9.8 Mio, aus 17.6 Mio, Saldo -7.8 Mio, heute 2.7 Mio | SV Elversberg (Ansehen 49): ein 7.8 Mio, aus 14.5 Mio, Saldo -6.6 Mio, heute 2.4 Mio
+  stärkste: 1. FC Kaiserslautern (Ansehen 50): ein 19.4 Mio, aus 16.5 Mio, Saldo 2.9 Mio, heute 2.5 Mio | Karlsruher SC (Ansehen 54): ein 16.7 Mio, aus 12.4 Mio, Saldo 4.3 Mio, heute 3.0 Mio | Fortuna Düsseldorf (Ansehen 51): ein 21.6 Mio, aus 13.4 Mio, Saldo 8.2 Mio, heute 2.7 Mio
+Saison 2027, 3. Liga, 20 Vereine: Einnahmen 5.9 Mio (TV 1.3 Mio, Sponsor 0.5 Mio, Spieltag 4.0 Mio), Ausgaben 9.6 Mio (Gehälter 7.5 Mio), Saldo -3.8 Mio je Verein, Spanne -7.6 Mio bis 0.8 Mio, mit Minus 18, heutige Pauschale 1.7 Mio
+  schwächste: SV Darmstadt 98 (Ansehen 41): ein 6.8 Mio, aus 14.4 Mio, Saldo -7.6 Mio, heute 1.9 Mio | SV Wehen Wiesbaden (Ansehen 40): ein 3.8 Mio, aus 10.3 Mio, Saldo -6.5 Mio, heute 1.8 Mio | FC Ingolstadt 04 (Ansehen 37): ein 3.6 Mio, aus 9.0 Mio, Saldo -5.4 Mio, heute 1.6 Mio
+  stärkste: MSV Duisburg (Ansehen 39): ein 10.1 Mio, aus 10.6 Mio, Saldo -0.4 Mio, heute 1.7 Mio | Hansa Rostock (Ansehen 42): ein 11.8 Mio, aus 11.7 Mio, Saldo 0.1 Mio, heute 2.0 Mio | Alemannia Aachen (Ansehen 43): ein 12.4 Mio, aus 11.6 Mio, Saldo 0.8 Mio, heute 2.1 Mio
+Dein Verein VfL Bochum: laufender Saldo nach den echten Buchungen -0.6 Mio, nach dem Modell 1.1 Mio
+```
+
+**Zu den Hinweisen im Entwicklungsprotokoll:** Die Änderungen an `tests/sim.js` (Vereinswechsel ruft `finanzenStart`, `bauAbgeben`, `finanzenJobwechsel`, `marketingJobwechsel`) passen. CH4 (`supercupAnlegen` mit Amateur-Pokalsieger) und CI1 (der 1. Juli läuft nicht durch `taeglich`) sind noch nicht bearbeitet, dieser Lauf war nur ein Testlauf.
+
+---
+
 ## Lauf 4, 21.11.2026: Claude-Zweig mit K24a Werbeflächen (887b0e2, danach 5910b26)
 
 **Neu von Claude: K24a Werbeflächen** (726a439, Doku 887b0e2): Ausrüster und Ärmel neben der Trikotbrust, je Fläche drei Angebote und höchstens ein Vertrag, Automatik je Fläche, ohne Wahl das erste Angebot vor dem ersten Pflichtspiel. Vorläufig geldneutral (die drei teilen sich den bisherigen Brustbetrag 60 / 29 / 11 %), die Höhen aus K24 §5.1 erst mit K23. Neue Datei `js/werbung.js`, Test `tests/werbung.js`, `tests/vorbereitung.js` angepasst (Werbeverträge sind erst erledigt, wenn alle Flächen vergeben sind). **Für popolupo:** K24 ist damit angefangen, bitte nicht parallel daran bauen. Frei sind K23, K25, K26 und U19.
