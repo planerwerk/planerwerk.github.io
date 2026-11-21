@@ -202,7 +202,13 @@ const REGELN={
     // Die Höhe nach K24 §5.1 (Bayern etwa 60 Mio. € für die Brust) kommt erst mit K23, weil sie die ganze Wirtschaft verschiebt. Namen erfunden.
     werbung:{anteil:{brust:0.6,ausruester:0.29,aermel:0.11},titel:{brust:'Trikotbrust',ausruester:'Ausrüster',aermel:'Ärmel'},
       namen:{ausruester:['Falkner Sport','Sprintwerk','Kranich Teamwear','Nordlicht Athletics','Bergfalke Sport','Tiedemann Sportswear'],
-        aermel:['Moorland Versicherung','Weserblick Immobilien','Albtrauf Software','Uferwerk Logistik','Sonnhalde Energie','Grünfeld Mobilfunk']}},
+        aermel:['Moorland Versicherung','Weserblick Immobilien','Albtrauf Software','Uferwerk Logistik','Sonnhalde Energie','Grünfeld Mobilfunk']},
+      // K24b (21.11., alle Werte aus K24 §5.4, §4.3, vorläufig): je Fläche ein viertes Angebot von einem umstrittenen Geldgeber (30 % über dem besten festen Angebot,
+      // zwei Jahre). Fans: −5 bei Vertragsschluss, −1 an jedem Monatsersten. Skandal mit 5 % je Saison: Fans −10, danach darfst du kostenlos kündigen. Die Automatik meidet sie (K24 §7).
+      umstritten:{faktor:1.3,jahre:2,fans:-5,fansMonat:-1,skandal:0.05,skandalFans:-10,info:'Umstrittener Geldgeber: 30 % mehr, zwei Jahre, die Fans murren',
+        namen:['Kronos Kapital','Sandor Energy Group','Vexo Krypto','Ostkap Rohstoffe','Glücksstern Wetten','Bastion Trading']},
+      sponsorentag:{kosten:50000,plus:0.1}, // einmal je Saison, solange Angebote offen sind: offene Angebote 10 % besser (K24 §4.3)
+      werbewert:{jePunkt:0.004,max:0.15}}, // Werbewert aus K25 (S.mk.ww) über seinem Startwert hebt neue Angebote, darunter senkt er sie, höchstens ±15 %
     abfindung:0.5,                   // Abfindung = Gehalt × Restlaufzeit × Wert
     handgeld:0.5,                    // Handgeld für Vereinslose = Gehalt × Wert
     handgeldAnzeige:0.6              // Schätzung im Spielerfenster

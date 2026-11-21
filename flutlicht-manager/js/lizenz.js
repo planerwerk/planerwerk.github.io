@@ -65,7 +65,7 @@ function testspieleAuto(d){if(S.phase!=='play'||!autoB('testspiele')||!inVorbere
   const tage=testspielTage().filter(t=>inVorbereitung(t)&&!da.some(x=>Math.abs(x.tag-t)<RLZ.testspielAbstand));if(!tage.length)return;
   const t=tage[0],g=testspielGegner(t).find(x=>x.am);if(!g)return;const x=testspielAnfragen(g.id,t);if(x)stabMeldung(`Der Co-Trainer hat ein Testspiel bei ${tn(g.id)} am ${datumKurz(t)} angefragt.`);}
 // Sponsor (K36 §5.2): Der Verein nimmt das Angebot mit dem höchsten Grundbetrag
-function sponsorAuto(){if(!S.sponsOffers||!autoB('sponsor'))return;let i=0;S.sponsOffers.forEach((o,k)=>{if(o.base>S.sponsOffers[i].base)i=k;});const o=S.sponsOffers[i];sponsorWaehlen(i);
+function sponsorAuto(){if(!S.sponsOffers||!autoB('sponsor'))return;let i=0;S.sponsOffers.forEach((o,k)=>{if(!istUmstritten(o)&&o.base>S.sponsOffers[i].base)i=k;}); /* umstrittene meidet der Verein (K24b) */const o=S.sponsOffers[i];sponsorWaehlen(i);
   stabMeldung(`Der Verein hat den Sponsorvertrag mit ${o.name} unterschrieben (${fmt(o.base)} pro Spieltag, das höchste feste Angebot).`);}
 // Kredit (K36 §5.2): kein neuer Kredit, am Saisonende Tilgung aus dem Guthaben
 function kreditAuto(){if(!autoB('kredit')||!(S.loan>0))return;const t=myT(),a=Math.min(S.loan,Math.max(0,t.cash));if(a<=0)return;kreditTilgen(a);stabMeldung(`Der Verein hat ${fmt(a)} Kredit getilgt.`);}

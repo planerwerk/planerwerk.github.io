@@ -10,9 +10,9 @@ function welt(lernstufen){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;
 // 1. Angebote je Fläche, geldneutral: Die festen Beträge der drei Flächen ergeben zusammen den früheren Brustbetrag (Ansehen² × Ligawert), bis auf Rundung
 {const {S,ev}=welt(false),t=ev('myT()'),SP=ev('RF').sponsor,alt=t.rep*t.rep*(SP['liga'+t.lg]||SP.liga3),A=SP.angebote;
   const fl=Object.keys(S.werbOffers||{}),summe=k=>S.sponsOffers[k].base+fl.reduce((a,f)=>a+S.werbOffers[f][k].base,0);
-  const ok=fl.length===2&&fl.includes('ausruester')&&fl.includes('aermel')&&fl.every(f=>S.werbOffers[f].length===A.length)&&A.every((a,k)=>Math.abs(summe(k)-alt*a.fix)<=3000);
-  const namen=fl.every(f=>S.werbOffers[f].every(o=>ev('RF').werbung.namen[f].includes(o.name)));
-  pruef(ok&&namen,'Angebote: Ausrüster und Ärmel je drei, Namen aus der Liste, die festen Beträge aller drei Flächen ergeben zusammen den früheren Brustbetrag',`früher ${Math.round(alt)}, jetzt ${A.map((a,k)=>summe(k)).join(' / ')} (Soll ${A.map(a=>Math.round(alt*a.fix)).join(' / ')})`);}
+  const ok=fl.length===2&&fl.includes('ausruester')&&fl.includes('aermel')&&fl.every(f=>S.werbOffers[f].length===A.length+1)&&S.sponsOffers.length===A.length+1&&A.every((a,k)=>Math.abs(summe(k)-alt*a.fix)<=3000);
+  const U=ev('RF').werbung.umstritten,namen=fl.every(f=>S.werbOffers[f].every(o=>o.im==='umstritten'?U.namen.includes(o.name):ev('RF').werbung.namen[f].includes(o.name)));
+  pruef(ok&&namen,'Angebote: Ausrüster und Ärmel je drei (dazu seit K24b je ein umstrittenes, auch bei der Brust), Namen aus den Listen, die festen Beträge aller drei Flächen ergeben zusammen den früheren Brustbetrag',`früher ${Math.round(alt)}, jetzt ${A.map((a,k)=>summe(k)).join(' / ')} (Soll ${A.map(a=>Math.round(alt*a.fix)).join(' / ')})`);}
 
 // 2. Wahl: je Fläche höchstens ein Vertrag, die Angebote der Fläche sind danach weg, Meldung
 {const {S,F}=welt(false);F.sponsorWaehlen(1);F.werbungWaehlen('ausruester',2);const w=S.werbung.ausruester;
@@ -36,7 +36,7 @@ function welt(lernstufen){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;
 
 // 6. Saisonwechsel: Laufzeiten zählen herunter, ausgelaufene Flächen bekommen neue Angebote
 {const {S,F}=welt(false);F.sponsorWaehlen(0);F.werbungWaehlen('ausruester',2);F.werbungWaehlen('aermel',0);S.season++;F.werbungSaison();
-  pruef(S.werbung.ausruester&&S.werbung.ausruester.yrs===2&&!S.werbung.aermel&&S.werbOffers.aermel&&S.werbOffers.aermel.length===3,'Saisonwechsel: drei Jahre werden zu zwei, der Einjahresvertrag läuft aus und die Fläche bekommt neue Angebote',`Ausrüster noch ${S.werbung.ausruester&&S.werbung.ausruester.yrs}, Ärmel ${S.werbung.aermel?'belegt':'frei'}`);}
+  pruef(S.werbung.ausruester&&S.werbung.ausruester.yrs===2&&!S.werbung.aermel&&S.werbOffers.aermel&&S.werbOffers.aermel.length===4,'Saisonwechsel: drei Jahre werden zu zwei, der Einjahresvertrag läuft aus und die Fläche bekommt neue Angebote',`Ausrüster noch ${S.werbung.ausruester&&S.werbung.ausruester.yrs}, Ärmel ${S.werbung.aermel?'belegt':'frei'}`);}
 
 // 7. Jobwechsel: Die Verträge gehören dem alten Verein
 {const {S,F}=welt(false);F.werbungVorSpiel();F.werbungNeuerVerein();F.werbungOffen();
@@ -53,7 +53,45 @@ function welt(lernstufen){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;
 // 10. Speichern und Laden, Anzeige
 {const {S,F,ev}=welt(false);F.werbungWaehlen('aermel',1);const kopie=JSON.parse(JSON.stringify(S));
   const karte=ev('werbungAngebotsKarte()'),vertr=ev('werbungVertraege()');
-  pruef(kopie.werbung.aermel.name===S.werbung.aermel.name&&kopie.werbOffers.ausruester.length===3,'Speichern und Laden: Verträge und offene Angebote bleiben erhalten');
+  pruef(kopie.werbung.aermel.name===S.werbung.aermel.name&&kopie.werbOffers.ausruester.length===4,'Speichern und Laden: Verträge und offene Angebote bleiben erhalten');
   pruef(karte.includes('Ausrüster')&&karte.includes('pickWerbung')&&!karte.includes('undefined')&&vertr.includes('Ärmel')&&vertr.includes('Trikotbrust')&&vertr.includes('Zusammen fest'),'Anzeige: Büro mit den Angeboten je Fläche, Finanzen mit allen Verträgen und der Summe');}
+
+// ---------- K24b: umstrittene Geldgeber, Sponsorentag, Werbewert ----------
+// 11. Das vierte Angebot jeder Fläche (auch der Brust) ist umstritten: 30 % über dem besten festen Angebot, zwei Jahre, ohne Siegprämie
+{const {S,ev}=welt(false),U=ev('RF').werbung.umstritten,A=ev('RF').sponsor.angebote,best=l=>Math.max(...l.filter(o=>o.im!=='umstritten').map(o=>o.base));
+  const listen={brust:S.sponsOffers,...S.werbOffers},ok=Object.entries(listen).every(([f,l])=>{const u=l[A.length];return u&&u.im==='umstritten'&&!u.win&&u.yrs===U.jahre&&Math.abs(u.base-best(l)*U.faktor)<=2000&&l.slice(0,A.length).every(o=>o.im!=='umstritten');});
+  pruef(ok,'Umstritten: je Fläche (Brust, Ausrüster, Ärmel) ein viertes Angebot, 30 % über dem besten festen, zwei Jahre, ohne Siegprämie',Object.entries(listen).map(([f,l])=>`${f} ${l[A.length]&&l[A.length].base} gegen ${best(l)}`).join(', '));}
+
+// 12. Die Automatik meidet umstrittene Geldgeber (K24 §7), der Vorstand nimmt ohne Wahl das erste Angebot (nie das umstrittene)
+{const {S}=welt(true),{S:S2,F:F2}=welt(false);F2.sponsorWaehlen(0);F2.werbungVorSpiel();
+  pruef(S.spons&&S.spons.im!=='umstritten'&&Object.values(S.werbung).every(w=>w.im!=='umstritten')&&S2.spons.im!=='umstritten'&&Object.values(S2.werbung).every(w=>w.im!=='umstritten'),'Automatik und Vorstand nehmen nie den umstrittenen Geldgeber');}
+
+// 13. Unterschrift beim umstrittenen Geldgeber: Fans −5 (Baustein Entscheidungen), an jedem Monatsersten −1 je laufendem umstrittenen Vertrag
+{const {S,F,ev}=welt(false),U=ev('RF').werbung.umstritten,t=ev('myT()'),A=ev('RF').sponsor.angebote;S.phase='play';const d0=t.fanD||0;F.werbungWaehlen('aermel',A.length);const d1=t.fanD||0;
+  F.sponsorWaehlen(A.length);const d2=t.fanD||0;let tag=S.tag+1;while(ev('mmtt')(tag).slice(3)!=='01')tag++;ev('werbungTag')(tag);const d3=t.fanD||0;ev('werbungTag')(tag+1);const d4=t.fanD||0;
+  pruef(Math.abs(d1-d0-U.fans)<0.01&&Math.abs(d2-d1-U.fans)<0.01&&Math.abs(d3-d2-2*U.fansMonat)<0.01&&d4===d3&&S.news.some(n=>n.t.includes('Die Fans murren')),'Fans: −5 je umstrittener Unterschrift, −1 je Vertrag am Monatsersten, sonst nichts',`${d0} → ${d1} → ${d2} → ${d3} → ${d4}`);}
+
+// 14. Skandal: zum Saisonwechsel mit etwa 5 % je umstrittenem Vertrag (eigener Strom), Fans −10, danach kostenlos kündbar; die Fläche bekommt neue Angebote
+{const {S,F,ev}=welt(false),U=ev('RF').werbung.umstritten,A=ev('RF').sponsor.angebote,t=ev('myT()');let n=0,versuche=0,kuendigung=null;ev('render=()=>{};save=()=>{};toast=()=>{};');
+  for(let k=0;k<400;k++){S.werbung={};S.werbOffers={};S.werbOffers.aermel=ev("werbAngebote('aermel')");F.werbungWaehlen('aermel',A.length);S.werbung.aermel.yrs=5;S.season++;const vor=t.fanD||0;ev('werbSkandale()');versuche++;
+    if(S.werbung.aermel.skandal){n++;if(!kuendigung){const fans=(t.fanD||0)-vor;const z0=JSON.stringify(S.zufall);F.werbungKuendigen('aermel');kuendigung={fans,frei:!S.werbung.aermel&&S.werbOffers.aermel&&S.werbOffers.aermel.length===A.length+1,z:JSON.stringify(S.zufall)===z0};}}}
+  pruef(n/versuche>=0.02&&n/versuche<=0.09&&kuendigung&&Math.abs(kuendigung.fans-U.skandalFans)<0.01&&kuendigung.frei&&S.news.some(x=>x.t.includes('Skandal um')),'Skandal: etwa 5 % je Saison, Fans −10, danach kostenlos kündbar, die Fläche bekommt neue Angebote',`${n} von ${versuche} (${(100*n/versuche).toFixed(1)} %), Kündigung ${JSON.stringify(kuendigung)}`);
+  const {S:S3,F:F3}=welt(false);F3.werbungWaehlen('aermel',0);ev('render=()=>{};save=()=>{};');const vorher=JSON.stringify(S3.werbung);F3.werbungKuendigen('aermel');
+  pruef(JSON.stringify(S3.werbung)===vorher,'Ohne Skandal lässt sich ein Werbevertrag nicht kündigen');}
+
+// 15. Sponsorentag: kostet 50.000 €, hebt alle offenen Angebote um 10 %, nur einmal je Saison, ohne offene Angebote nicht möglich
+{const {S,F,ev}=welt(false),T=ev('RF').werbung.sponsorentag,t=ev('myT()');ev('render=()=>{};save=()=>{};toast=()=>{};');const c0=t.cash,b0=S.sponsOffers[0].base,a0=S.werbOffers.aermel[1].win;
+  F.sponsorenTag();const c1=t.cash,b1=S.sponsOffers[0].base,a1=S.werbOffers.aermel[1].win;F.sponsorenTag();const c2=t.cash;
+  const {S:S2,F:F2,ev:ev2}=welt(false);ev2('render=()=>{};save=()=>{};toast=()=>{};');F2.sponsorWaehlen(0);F2.werbungVorSpiel();const c3=ev2('myT()').cash;F2.sponsorenTag();
+  pruef(c0-c1===T.kosten&&Math.abs(b1-b0*(1+T.plus))<=1000&&Math.abs(a1-a0*(1+T.plus))<=1000&&c2===c1&&S.sponsorTag===S.season&&ev2('myT()').cash===c3,'Sponsorentag: 50.000 €, offene Angebote 10 % besser, nur einmal je Saison, ohne offene Angebote nichts',`Brust ${b0} → ${b1}, Siegprämie Ärmel ${a0} → ${a1}, Konto −${c0-c1}`);}
+
+// 16. Werbewert (K25): über dem Startwert bessere Angebote, darunter schlechtere, höchstens ±15 %, am Startwert neutral
+{const {S,ev}=welt(false),W=ev('RF').werbung.werbewert,start=ev('myT()').rep*ev('RMK').werbewert.startJeAnsehen,f=ww=>{S.mk={s:S.season,ww};return ev('werbFaktor()');};
+  const neutral=f(start),plus=f(start+10),viel=f(start+100),minus=f(start-100);delete S.mk;const ohne=ev('werbFaktor()');
+  pruef(neutral===1&&Math.abs(plus-(1+10*W.jePunkt))<1e-9&&Math.abs(viel-(1+W.max))<1e-9&&Math.abs(minus-(1-W.max))<1e-9&&ohne===1,'Werbewert: am Startwert und ohne Marketing neutral, +10 Punkte = +4 %, höchstens ±15 %',`${neutral}, ${plus.toFixed(3)}, ${viel}, ${minus}, ohne ${ohne}`);}
+
+// 17. Lizenz: Sponsorentag und Kündigung sind ohne A-Lizenz gesperrt
+{const {S,F,ev}=welt(true);ev('render=()=>{};save=()=>{};toast=()=>{};');S.lizenz.auto={};S.werbOffers={aermel:ev("werbAngebote('aermel')")};const c=ev('myT()').cash;F.sponsorenTag();
+  pruef(ev('myT()').cash===c&&S.sponsorTag!==S.season,'Lizenz: Ohne A-Lizenz kein Sponsorentag');}
 
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);
