@@ -418,14 +418,14 @@ const REGELN={
   // Europapokal (K37, U19a). plaetze: Bundesliga-Platz je Wettbewerb, nachruecken: wer einspringt, wenn der Pokalsieger schon über die Liga dabei ist.
   // wb: Teilnehmer, Spiele der Ligaphase, Töpfe; titel: wohin der Titelverteidiger kommt. laender: Auslandsvereine je Land (angelehnt an die Zulassungsliste, an den Pool angepasst).
   // zufall: Streuung des Ansehens bei der Auswahl. quali: der Gegner des deutschen Siebten kommt aus so vielen der besten übrigen Auslandsvereine.
-  // auslosung: Versuche, davon ohne die Höchstzahl je Land. kurz: Ausland gegen Ausland ohne Engine (Tore bei gleicher Stärke, Exponent, Heimvorteil, Verlängerung als Anteil).
+  // auslosung: Baupläne (Versuche), davon die ersten mit Höchstzahl je Land, Tauschversuche im Topf je Bauplan. kurz: Ausland gegen Ausland ohne Engine (Tore bei gleicher Stärke, Exponent, Heimvorteil, Verlängerung als Anteil).
   // staerke: Faktor auf die Teamstärke der Auslandsvereine (Kalibrierung, Konsistenzprüfung AW13). ALLE WERTE GESCHÄTZT (K37 §12).
   europa:{plaetze:{cl:[1,2,3,4],el:[5],ecl:[6],nachruecken:{el:6,ecl:7}},
     wb:{cl:{name:'Champions League',kurz:'CL',teams:36,toepfe:4,titel:'cl'},el:{name:'Europa League',kurz:'EL',teams:36,toepfe:4,titel:'cl'},ecl:{name:'Conference League',kurz:'ECL',teams:36,toepfe:6,titel:'el'}},
     laender:{cl:{ENG:5,ESP:4,ITA:4,FRA:3,POR:2,NED:2,BEL:2,TUR:2,AUT:1,SUI:1,CZE:1,DEN:1,NOR:1,CRO:1,SRB:1,UKR:1},
       el:{ENG:3,ESP:2,ITA:2,FRA:2,POR:2,NED:2,BEL:2,TUR:2,AUT:2,SUI:2,CZE:2,DEN:2,NOR:2,SWE:2,POL:2,CRO:1,SRB:1,UKR:1},
       ecl:{ENG:1,ESP:2,ITA:2,FRA:1,POR:2,NED:3,BEL:3,TUR:3,AUT:3,SUI:3,CZE:1,DEN:2,NOR:2,SWE:3,POL:3,CRO:1}},
-    zufall:8,quali:8,auslosung:{versuche:400,ohneHoechstzahl:200,hoechstzahl:2},
+    zufall:8,quali:8,auslosung:{versuche:30,ohneHoechstzahl:15,hoechstzahl:2,tausch:3000},
     kurz:{tore:1.4,exp:1.6,heim:1.03,verl:0.33},staerke:{faktor:1},
     // Geld (K37 §5.3, U19b): echte Beträge 2025/26 (Websuche 21.11.2026), mal faktor bis K23c (dann 1). start: Startgeld, sieg/remis je Spiel der Ligaphase, rang: je Anteil (Platz 1 = 36 Anteile),
     // po bis fin: beim Erreichen der Runde, titel: Sieger zusätzlich, wert: Schnitt der Wertsäule je Teilnehmer (verteilt nach dem Rang des Ansehens). Nicht recherchierte Werte sind 0 (K37 §12).

@@ -169,7 +169,7 @@ REGELN.europa = {
 9. Ein deutscher Titelverteidiger nimmt keinen Bundesliga-Platz weg (§5.1).
 10. Kein neuer Lizenz-Bereich in U19a und U19b (§9).
 11. In U19a spielt der Auslandsverein in der Engine als Block mit Teamstärke, volle Kader kommen in U19c (§5.2).
-12. Auslosung der Ligaphase nach einem festen Bauplan, der jedem Verein je Spieltag genau ein Spiel gibt, je Topf zwei Gegner (Conference League: einen) und gleich viele Heim- und Auswärtsspiele. Gezogen wird, wer an welchem Platz im Topf steht, mit bis zu 400 Versuchen gegen Gegner aus dem eigenen Land und mehr als zwei aus demselben Land (§4.3).
+12. Auslosung der Ligaphase nach einem festen Bauplan, der jedem Verein je Spieltag genau ein Spiel gibt, je Topf zwei Gegner (Conference League: einen) und gleich viele Heim- und Auswärtsspiele. Gezogen wird, wer an welchem Platz im Topf steht. Danach tauscht die Auslosung Vereine innerhalb eines Topfs, bis kein Gegner aus dem eigenen Land und höchstens zwei aus demselben Land bleiben (bis zu 30 Baupläne mit je 3.000 Tauschversuchen, die zweite Hälfte ohne die Höchstzahl; findet sie keine Lösung, nimmt sie die mit den wenigsten Konflikten) (§4.3, geändert nach einer Prüfung am 21.11., Konsistenzprüfung CH2).
 13. Gelbsperre im Europapokal nach der 3., 5., 7. und 9. Gelben (UEFA-Regel, ohne das Streichen nach dem Viertelfinale) (§4.4).
 14. Vorstand +1,5 Vertrauen je gewonnenem Duell (wie im Pokal) und +10 beim Titel, kein Abzug beim Ausscheiden (U19b).
 15. Startgeld und Wertsäule werden mit der Auslosung der Ligaphase gezahlt, die Rangprämie nach der Ligaphase, Rundenprämien beim Erreichen der Runde (U19b).

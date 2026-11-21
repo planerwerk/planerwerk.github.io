@@ -8,7 +8,7 @@ function welt(seed=SEED){const {W,F}=neueWelt();F.buildWorld(seed);const S=W.S;S
 const WB=['cl','el','ecl'];
 
 // 1. Teilnehmer der ersten Saison: die echten deutschen Starter, sonst Auslandsvereine, keiner doppelt, 36 je Wettbewerb (Conference League 35 und die Qualifikation)
-{const {S,ev}=welt(),E=S.eu,kurz=id=>S.teams[id].sh,alle=[...E.cl.t,...E.el.t,...E.ecl.t,...(E.ecl.q||[])];
+{const {S,ev}=welt(),E=S.eu,kurz=id=>S.teams[id].sh,alle=[...E.cl.t,...E.el.t,...E.ecl.t,...(E.ecl.q?E.ecl.q.slice(0,2):[])];
   const de=WB.map(wb=>E[wb].t.filter(id=>id<2000).map(kurz).join(',')).join(' | ');
   pruef(E.cl.t.length===36&&E.el.t.length===36&&E.ecl.t.length===35&&!!E.ecl.q&&S.teams[E.ecl.q[0]].sh==='SCF'&&new Set(alle).size===alle.length,'Teilnehmer: 36/36/35 und Qualifikation mit Freiburg, niemand doppelt',de);
   pruef(['FCB','BVB','RBL','VFB'].every(k=>E.cl.t.some(id=>id<2000&&kurz(id)===k))&&['B04','TSG'].every(k=>E.el.t.some(id=>id<2000&&kurz(id)===k)),'Deutsche Starter 2026/27 wie in daten/termine.js');
@@ -52,7 +52,7 @@ const WB=['cl','el','ecl'];
       ['po','af','vf','hf'].forEach(r=>(W.ko[r]||[]).forEach((k,i)=>{[0,1].forEach(leg=>{add(k[0],p[r][leg][i%2]);add(k[1],p[r][leg][i%2]);});}));(W.ko.fin||[]).forEach(k=>{add(k[0],p.fin);add(k[1],p.fin);});
       if(W.q)[0,1].forEach(leg=>{add(W.q[0],p.quali[leg][0]);add(W.q[1],p.quali[leg][0]);});});
     const deIds=new Set(WB.flatMap(wb=>E[wb].t.filter(id=>id<2000)));tage.forEach((l,id)=>{if(!deIds.has(id))return;info.de++;l.sort((a,b)=>a-b);for(let i=1;i<l.length;i++)if(l[i]-l[i-1]<3)info.abstand++;});}});
-  const E=info.E,voll=wb=>{const W=E[wb];return W.lp.length===(wb==='ecl'?108:144)&&W.lp.every(m=>m[4]!=null)&&W.ko.po.length===8&&W.ko.af.length===8&&W.ko.vf.length===4&&W.ko.hf.length===2&&W.ko.fin.length===1&&!!W.ko.fin[0][2];};
+  const E=info.E,n=(W,r)=>(W.ko[r]||[]).length,voll=wb=>{const W=E[wb];return(W.lp||[]).length===(wb==='ecl'?108:144)&&W.lp.every(m=>m[4]!=null)&&n(W,'po')===8&&n(W,'af')===8&&n(W,'vf')===4&&n(W,'hf')===2&&n(W,'fin')===1&&!!W.ko.fin[0][2];};
   pruef(WB.every(voll)&&WB.every(wb=>E.titel[wb]!=null),'Saison: Ligaphase und alle K.-o.-Runden gespielt, je Wettbewerb ein Sieger',WB.map(wb=>`${wb} ${E.titel[wb]}`).join(', '));
   pruef(info.abstand<=2,'Saison: deutsche Teilnehmer spielen höchstens zweimal mit weniger als drei Tagen Abstand',`${info.abstand} Fälle bei ${info.de} Vereinen`);
   // U19b: Prämien. Jeder deutsche Teilnehmer der Champions League hat mindestens das Startgeld, deine Buchung „Europapokal“ ist gleich deinen Prämien

@@ -29,7 +29,9 @@ function euStaerke(id){const k=S.seed+'/'+S.season+'/'+S.tag+'/'+(S.ausland?S.au
 // Torschützen eines Auslandsvereins: Stürmer doppelt, übrige Feldspieler einfach
 const euTorschuetzen=id=>avKader(id).filter(p=>p.pos!=='TW').flatMap(p=>p.pos==='ST'?[p.n,p.n]:[p.n]);
 // Ausland gegen Ausland ohne Engine (K37 §5.2): erwartete Tore aus dem Verhältnis der Stärken, im K.-o.-Spiel Verlängerung und Elfmeterschießen
-function euKurz(h,a,o){const K=REU.kurz,q=euStaerke(h)*(o.neutral?1:K.heim)/euStaerke(a),xh=clamp(K.tore*Math.pow(q,K.exp),0.2,5),xa=clamp(K.tore*Math.pow(1/q,K.exp),0.1,5);
+// Stärke für die Kurzrechnung: Auslandsverein wie oben, deutscher Verein (nur beim Nachholen) mit seiner Kaderstärke
+const euSt=id=>euDe(id)?teamLevel(id):euStaerke(id);
+function euKurz(h,a,o){const K=REU.kurz,q=euSt(h)*(o.neutral?1:K.heim)/euSt(a),xh=clamp(K.tore*Math.pow(q,K.exp),0.2,5),xa=clamp(K.tore*Math.pow(1/q,K.exp),0.1,5);
   let hg=poisson(xh),ag=poisson(xa),pen=null;const agg=o.agg||[0,0],gleich=()=>hg+agg[0]===ag+agg[1];
   if(o.ko&&gleich()){hg+=poisson(xh*K.verl);ag+=poisson(xa*K.verl);if(gleich())pen=shootout();}
   return{h,a,hg,ag,pen};}
@@ -80,7 +82,8 @@ function euZielStand(z,ende){const W=euAktiv()&&S.eu[z.wb];if(!W||!W.t.includes(
 function euDeutsche(sm,fuenf){const out={cl:[],el:[],ecl:[]};
   if(!sm){const ix={};S.teams.forEach(t=>{ix[t.sh]=t.id;});EU_WB.forEach(wb=>(TERMINE_2026.europaStart[wb]||[]).forEach(k=>{if(ix[k]!=null)out[wb].push(ix[k]);}));return out;}
   const P0=REU.plaetze,o=fuenf?1:0,P={cl:fuenf?[...P0.cl,P0.cl[P0.cl.length-1]+1]:P0.cl,el:P0.el.map(p=>p+o),ecl:P0.ecl.map(p=>p+o),nachruecken:{el:P0.nachruecken.el+o,ecl:P0.nachruecken.ecl+o}};
-  const an=p=>{const t=S.teams.find(x=>x.lastLg===1&&x.lastPos===p);return t?t.id:null;},cw=sm.cup,cp=cw!=null&&S.teams[cw].lastLg===1?S.teams[cw].lastPos:99;
+  // Ein Amateurverein als Pokalsieger (Kennung ab 1000) spielt nicht mit: sein Platz geht wie bei einem schon qualifizierten Pokalsieger an die Liga (cp 0)
+  const an=p=>{const t=S.teams.find(x=>x.lastLg===1&&x.lastPos===p);return t?t.id:null;},cw=sm.cup,cp=cw==null?99:cw>=1000?0:S.teams[cw].lastLg===1?S.teams[cw].lastPos:99;
   P.cl.forEach(p=>out.cl.push(an(p)));P.el.forEach(p=>out.el.push(an(p)));
   if(cw!=null)out.el.push(cp<=P.el[P.el.length-1]?an(P.nachruecken.el):cw); // Pokalsieger schon über die Liga dabei: der Nächste rückt nach
   out.ecl.push(an(cw!=null&&cp<=P.ecl[0]?P.nachruecken.ecl:P.ecl[0]));
@@ -110,7 +113,7 @@ function europaAnlegen(sm){const vor=S.eu&&S.eu.titel?S.eu.titel:null,wv=sm&&S.e
   if(sm&&plus.length)news(`Länderwertung ${S.season-1}/${S.season%100}: ${plus.map(euLandName).join(' und ')} ${plus.length>1?'bekommen':'bekommt'} diese Saison einen Platz mehr in der Champions League.${plus.includes('GER')?' Damit spielt auch der Fünfte der Bundesliga dort.':''}`,plus.includes('GER')?'good':'');
   if(sm){const m=euMeinWb();if(m)news(m==='ecl'&&S.eu.ecl.q&&S.eu.ecl.q[0]===S.my?`Europapokal: Dein Verein spielt die Play-off-Runde der Qualifikation zur Conference League gegen ${tn(S.eu.ecl.q[1])} (${datumKurz(euPlan().ecl.quali[0][0])} und ${datumKurz(euPlan().ecl.quali[1][0])}).`
     :`Europapokal: Dein Verein spielt in der ${euName(m)}. Die Ligaphase wird am ${datumKurz(euPlan()[m].los)} ausgelost.`,'good');}}
-const euMeinWb=()=>euAktiv()?EU_WB.find(wb=>S.eu[wb].t.includes(S.my)||(S.eu[wb].q&&S.eu[wb].q.includes(S.my)))||null:null;
+const euMeinWb=()=>euAktiv()?EU_WB.find(wb=>S.eu[wb].t.includes(S.my)||(S.eu[wb].q&&S.eu[wb].q.includes(S.my)&&euSieger(S.eu[wb].q)==null))||null:null; // Qualifikation nur, solange sie offen ist
 
 // ---------- Auslosung der Ligaphase (K37 §4.3) ----------
 // Vier Töpfe zu neun: Tage 0 bis 2 je zwei Spiele im eigenen Topf (Kreis k gegen k+1, k hat Heimrecht) und ein Spiel gegen den Partnertopf (0-1, 2-3),
@@ -133,11 +136,19 @@ function euHeimAusgleich(M,soll){const H=new Map();M.forEach(m=>{H.set(m[0],(H.g
     while(q.length&&ziel==null){const x=q.shift();for(const m of M){if(m[0]!==x||prev.has(m[1]))continue;prev.set(m[1],m);if(H.get(m[1])<soll){ziel=m[1];break;}q.push(m[1]);}}
     if(ziel==null)return;let y=ziel;while(y!==u){const m=prev.get(y),x=m[0];m[0]=y;m[1]=x;H.set(x,H.get(x)-1);H.set(y,H.get(y)+1);y=x;}}}
 // Kein Gegner aus dem eigenen Land, höchstens max aus demselben Land
-function euLosOk(M,max){const c=new Map(),zaehl=(id,l)=>{let m=c.get(id);if(!m){m={};c.set(id,m);}m[l]=(m[l]||0)+1;return m[l];};
-  for(const[h,a]of M){const lh=euLand(h),la=euLand(a);if(lh===la||zaehl(h,la)>max||zaehl(a,lh)>max)return false;}return true;}
-function euLigaphaseLosen(wb){const W=S.eu[wb],A=REU.auslosung,vor=S.eu.vor&&S.eu.vor[wb],n=REU.wb[wb].toepfe,T=W.t.slice().sort((a,b)=>(b===vor)-(a===vor)||euRep(b)-euRep(a));
-  if(T.length!==REU.wb[wb].teams){W.lp=[];return;}const g=T.length/n;let M=null;
-  for(let v=0;v<A.versuche;v++){const P=Array.from({length:n},(_,i)=>shuffle(T.slice(i*g,i*g+g)));M=n===4?euPlan4(P):euPlan6(P);if(euLosOk(M,v<A.ohneHoechstzahl?A.hoechstzahl:99))break;}
+// Kosten einer Auslosung: 10 je Spiel zweier Vereine aus demselben Land, 1 je Gegner über der Höchstzahl aus einem Land. M: Spiele zwischen Plätzen, A: Verein je Platz.
+function euLosKosten(M,A,max){const c=new Map();let k=0;
+  for(const[h,a]of M){const th=A[h],ta=A[a],lh=euLand(th),la=euLand(ta);if(lh===la)k+=10;
+    [[th,la],[ta,lh]].forEach(([t,l])=>{let m=c.get(t);if(!m){m={};c.set(t,m);}m[l]=(m[l]||0)+1;if(m[l]>max)k++;});}return k;}
+// Der Bauplan legt fest, welcher Platz gegen welchen spielt. Gezogen wird, wer auf welchem Platz im Topf steht. Danach tauscht die Auslosung Vereine innerhalb eines Topfs,
+// solange das die Kosten nicht erhöht (ein Tausch im Topf erhält Spieltage, Heimspiele und Gegner je Topf), bis kein Konflikt bleibt. Sonst neuer Bauplan, zuletzt ohne Höchstzahl.
+function euLigaphaseLosen(wb){const W=S.eu[wb],A0=REU.auslosung,vor=S.eu.vor&&S.eu.vor[wb],n=REU.wb[wb].toepfe,T=W.t.slice().sort((a,b)=>(b===vor)-(a===vor)||euRep(b)-euRep(a));
+  if(T.length!==REU.wb[wb].teams){W.lp=[];return;}const g=T.length/n,platz=Array.from({length:n},(_,p)=>Array.from({length:g},(_,k)=>p*g+k));let M=null,A=null,best=Infinity;
+  for(let v=0;v<A0.versuche&&best>0;v++){const m=n===4?euPlan4(platz):euPlan6(platz),a=[],max=v<A0.ohneHoechstzahl?A0.hoechstzahl:99;
+    for(let p=0;p<n;p++)shuffle(T.slice(p*g,p*g+g)).forEach((id,k)=>{a[p*g+k]=id;});let k=euLosKosten(m,a,max);
+    for(let it=0;it<A0.tausch&&k>0;it++){const p=Math.floor(R()*n),i=p*g+Math.floor(R()*g),j=p*g+Math.floor(R()*g);if(i===j)continue;[a[i],a[j]]=[a[j],a[i]];const k2=euLosKosten(m,a,max);if(k2<=k)k=k2;else[a[i],a[j]]=[a[j],a[i]];}
+    if(k<best){best=k;M=m;A=a;}}
+  M=M.map(([h,a,d])=>[A[h],A[a],d]);
   const tage=euPlan()[wb].liga,reihe=shuffle([...Array(tage.length).keys()]),je={};M.forEach(m=>{const md=reihe[m[2]];(je[md]=je[md]||[]).push(m);});
   W.lp=[];Object.keys(je).forEach(md=>shuffle(je[md]).forEach((m,i)=>W.lp.push([m[0],m[1],+md,tage[md][i%2],null,null])));W.lp.sort((x,y)=>x[2]-y[2]||x[3]-y[3]);S.eu.v++;
   euVerlegen(wb,'lp');euStartgeld(wb);const mein=W.lp.filter(m=>m[0]===S.my||m[1]===S.my);
@@ -185,7 +196,7 @@ function euSpieleAm(e){const W=euAktiv()&&S.eu[e.wb];if(!W)return[];const P=euPl
   if(e.runde==='fin'){(W.ko.fin||[]).forEach((k,i)=>{if(!k[2]&&P.fin===e.tag)out.push({h:k[0],a:k[1],i,o:{wb:'eu',ko:1,neutral:1,wichtig:1}});});return out;}
   const L=e.runde==='q'?(W.q?[W.q]:[]):(W.ko[e.runde]||[]),tage=e.runde==='q'?P.quali:P[e.runde];
   L.forEach((k,i)=>{if(tage[e.leg][i%2]!==e.tag)return;if(e.leg===0&&!k[2])out.push({h:k[1],a:k[0],i,o:{wb:'eu',wichtig:1}});
-    else if(e.leg===1&&k[2]&&!k[3])out.push({h:k[0],a:k[1],i,o:{wb:'eu',ko:1,agg:[k[2][1],k[2][0]],wichtig:1}});});
+    else if(e.leg===1&&!k[3])out.push({h:k[0],a:k[1],i,o:{wb:'eu',ko:1,agg:k[2]?[k[2][1],k[2][0]]:[0,0],wichtig:1}});}); // Rückspiel schon vor dem Hinspiel sichtbar (Planung), gespielt wird es erst danach
   return out;}
 const euMeinSpiel=e=>euSpieleAm(e).find(m=>m.h===S.my||m.a===S.my)||null;
 const euSpielName=e=>`${euName(e.wb)}, ${e.runde==='lp'?`${e.md+1}. Spieltag`:EU_RUNDE[e.runde]+(e.runde==='fin'?'':e.leg?', Rückspiel':', Hinspiel')}`;
@@ -213,17 +224,26 @@ function euVerlegen(wb,runde){const W=S.eu[wb],P=euPlan()[wb],plan=[];
 // Täglich (ablauf.js taeglichLauf): Auslosungen, je mit eigenem Strom
 function euTag(d){if(!euAktiv()||S.phase!=='play')return;const P=euPlan();
   EU_WB.forEach(wb=>{const W=S.eu[wb],p=P[wb];
-    if(d>=p.los&&!W.lp)mitStrom(strom('eulos',S.season,wb,'lp'),()=>{if(W.q){euDuellErgaenzen(wb,'q',W.q);const s=euSieger(W.q);if(s!=null&&!W.t.includes(s))W.t.push(s);}euLigaphaseLosen(wb);});
+    mitStrom(strom('eunach',S.season,d,wb),()=>euNachholen(wb,d)); // Sicherheitsnetz: nichts bleibt ungespielt liegen
+    if(d>=p.los&&!W.lp)mitStrom(strom('eulos',S.season,wb,'lp'),()=>{if(W.q){euDuellErgaenzen(W.q);const s=euSieger(W.q);if(s!=null&&!W.t.includes(s))W.t.push(s);}euLigaphaseLosen(wb);});
     if(d>=p.losPo&&W.lp&&W.lp.length&&!W.ko.po&&euLigaFertig(wb))mitStrom(strom('eulos',S.season,wb,'po'),()=>euPlayoffsLosen(wb));
     if(d>=p.losAf&&W.ko.po&&!W.ko.af&&W.ko.po.every(k=>euSieger(k)!=null))mitStrom(strom('eulos',S.season,wb,'af'),()=>euAchtelfinaleLosen(wb));});}
 // Fehlende Spiele eines Duells nachrechnen (alte Spielstände, übersprungene Tage): Kurzrechnung mit der Kaderstärke deutscher Vereine
-function euDuellErgaenzen(wb,runde,k){const st=id=>euDe(id)?teamLevel(id):euStaerke(id),kurz=(h,a,o)=>{const K=REU.kurz,q=st(h)*K.heim/st(a),agg=o.agg||[0,0];
-    let hg=poisson(clamp(K.tore*Math.pow(q,K.exp),0.2,5)),ag=poisson(clamp(K.tore*Math.pow(1/q,K.exp),0.1,5)),pen=null;if(o.ko&&hg+agg[0]===ag+agg[1])pen=shootout();return[hg,ag,pen];};
-  if(!k[2]){const r=kurz(k[1],k[0],{});k[2]=[r[0],r[1]];}if(!k[3])k[3]=kurz(k[0],k[1],{ko:1,agg:[k[2][1],k[2][0]]});}
+function euDuellErgaenzen(k){if(!k[2]){const r=euKurz(k[1],k[0],{});k[2]=[r.hg,r.ag];}if(!k[3]){const r=euKurz(k[0],k[1],{ko:1,agg:[k[2][1],k[2][0]]});k[3]=[r.hg,r.ag,r.pen];}}
+// Sicherheitsnetz (euTag, eigener Strom): Spiele vor Tag d, die nicht eingetragen sind, per Kurzrechnung nachholen und die Runde abschließen.
+// Im normalen Ablauf ist nichts offen, weil jeder Tag seine Spiele am Tagesende einträgt (auch reine Auslandstage, ablauf.js).
+function euNachholen(wb,d){const W=S.eu[wb],P=euPlan()[wb],runden=new Set();
+  (W.lp||[]).forEach((m,i)=>{if(m[3]<d&&m[4]==null){const r=euKurz(m[0],m[1],{});euLpEintragen(wb,i,r.hg,r.ag);}});
+  const duelle=(r,L,tage)=>L.forEach((k,i)=>{if(tage[1][i%2]<d&&(!k[2]||!k[3])){euDuellErgaenzen(k);runden.add(r);}else if(tage[0][i%2]<d&&!k[2]){const x=euKurz(k[1],k[0],{});k[2]=[x.hg,x.ag];}});
+  if(W.q)duelle('q',[W.q],P.quali);['po','af','vf','hf'].forEach(r=>{if(W.ko[r])duelle(r,W.ko[r],P[r]);});
+  (W.ko.fin||[]).forEach(k=>{if(P.fin<d&&!k[2]){const x=euKurz(k[0],k[1],{ko:1,neutral:1});k[2]=[x.hg,x.ag,x.pen];runden.add('fin');}});
+  runden.forEach(r=>euRundeFertig({wb,runde:r,leg:1}));}
+// Ergebnis der Ligaphase eintragen, mit Sieg- und Remisprämie für deutsche Vereine (U19b)
+function euLpEintragen(wb,i,hg,ag){const m=S.eu[wb].lp[i];m[4]=hg;m[5]=ag;[[m[0],hg-ag],[m[1],ag-hg]].forEach(([id,dd])=>euZahlen(id,euGeldWert(wb,dd>0?'sieg':dd===0?'remis':'-')));}
 // Nach den Spielen eines Termins (ablauf.js tagesSpieleAbschliessenLauf): Ergebnisse eintragen, Runde abschließen, Meldungen
 function euNachSpielen(g,mg){const e=g.e,W=S.eu[e.wb];
   [...g.list.map(r=>({i:r.euI,hg:r.hg,ag:r.ag,pen:r.pen||null})),...g.kurz].forEach(x=>{
-    if(e.runde==='lp'){const m=W.lp[x.i];m[4]=x.hg;m[5]=x.ag;[[m[0],x.hg-x.ag],[m[1],x.ag-x.hg]].forEach(([id,d])=>euZahlen(id,euGeldWert(e.wb,d>0?'sieg':d===0?'remis':'-')));return;} // Sieg- und Remisprämie (U19b)
+    if(e.runde==='lp'){euLpEintragen(e.wb,x.i,x.hg,x.ag);return;}
     const k=e.runde==='q'?W.q:W.ko[e.runde][x.i];if(e.runde==='fin')k[2]=[x.hg,x.ag,x.pen];else if(e.leg===0)k[2]=[x.hg,x.ag];else k[3]=[x.hg,x.ag,x.pen];});
   if(mg){const mein=mg.h===S.my,gf=mein?mg.hg:mg.ag,ga=mein?mg.ag:mg.hg,k=e.runde==='lp'?null:e.runde==='q'?W.q:W.ko[e.runde].find(x=>x[0]===S.my||x[1]===S.my),s=k?euSieger(k):null;
     const zusatz=e.runde==='lp'||(e.runde!=='fin'&&e.leg===0)?'':s===S.my?(e.runde==='fin'?` – ${euName(e.wb).toUpperCase()}-SIEGER!`:' – weiter!'):' – ausgeschieden.';

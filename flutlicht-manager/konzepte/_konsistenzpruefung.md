@@ -1344,3 +1344,22 @@ Konzept: K25 §8. Gleicher Zweig wie CC.
 | CG2 | **Gleichschritt:** Der Auslöser schaut nur auf Alter und Ligatore, nicht auf Lizenz oder Automatik. | ✅ |
 | CG3 | **Europapokaltore** (`eg`, U19b) wurden zum Saisonwechsel nicht zurückgesetzt. Jetzt wie `g` und `pg`. | ✅ behoben |
 | CG4 | **Tests:** `tests/marketing.js` Nr. 7, `tests/karten.js` prüft den Katalog. Nie gelaufen. | ⚠️ offen |
+
+---
+
+## CH. Prüfung des Europapokals ohne Laufzeit (21. November 2026, popolupo)
+
+Ein zweiter Durchgang hat `js/europa.js` und alle Anschlüsse nur gelesen (eigener Prüf-Agent, ohne meine Annahmen). Funde und was daraus wurde:
+
+| # | Befund | Status |
+|---|---|---|
+| CH1 | **Tage nur mit Spielen Ausland gegen Ausland gingen verloren:** `tagesSpieleAbschliessenLauf` brach ohne Engine-Spiele früh ab, die Kurzrechnung wurde nie eingetragen. Folge: Ligaphase unvollständig, keine Play-offs, kein Sieger (zum Beispiel Conference League ohne deutschen Verein, Spieltag 6 am 17.12.). Jetzt werden diese Gruppen vor dem Abbruch eingetragen. Dazu ein Sicherheitsnetz `euNachholen`: Jeden Morgen holt es Spiele vor dem Tag nach, die noch offen sind (Kurzrechnung, deutsche Vereine mit ihrer Kaderstärke). | ✅ behoben |
+| CH2 | **Kein Gegner aus dem eigenen Land hielt in der Champions League fast nie:** Die Auslosung zog ganze Baupläne neu und prüfte erst danach. Bei rund 35 Paaren aus demselben Land war eine gültige Auslosung sehr unwahrscheinlich, übrig blieb die letzte ungültige (etwa Bayern gegen Dortmund). Jetzt tauscht sie Vereine innerhalb der Töpfe (lokale Suche), bis die Konflikte weg sind. | ✅ behoben |
+| CH3 | **`tests/europapokal.js` Nr. 1** hätte immer versagt (zwei `null` aus der Qualifikation zählten als Doppelte). | ✅ behoben |
+| CH4 | **Amateurverein als Pokalsieger** (Kennung ab 1000) hätte `euDeutsche` abstürzen lassen. Jetzt geht sein Platz an die Liga. **Schon vorher da:** `supercupAnlegen` in `js/wettbewerbe.js` greift für den Pokalsieger ebenfalls auf `S.teams[id]` zu und würde dort zuerst abbrechen. Nicht von mir geändert. | ✅ behoben / ⚠️ alt, für dich |
+| CH5 | **Rückspiel erst nach dem Hinspiel als dein Spiel sichtbar:** Für Planung, nächstes Spiel und englische Wochen fehlte es. Jetzt ist es vorher sichtbar, gespielt wird es erst nach dem Hinspiel. | ✅ behoben |
+| CH6 | **Nach dem Aus in der Qualifikation** zeigte die Karte noch „Dein Verein spielt in der Conference League“. Jetzt zählt die Qualifikation nur, solange sie offen ist. | ✅ behoben |
+| CH7 | **Europapokaltore** wurden nicht zurückgesetzt. Schon mit CG3 behoben. | ✅ |
+| CH8 | **`tests/europapokal.js` Nr. 6** brach bei fehlender Runde mit einem Fehler ab statt sauber zu scheitern. | ✅ behoben |
+| CH9 | **Ohne Befund geprüft:** Datenformen von Hin- und Rückspiel in allen Lese- und Schreibstellen, Bauplan der Ligaphase (je Spieltag ein Spiel, Heimspiele, Gegner je Topf), Turnierbaum und Termine, Terminindex, alle Spielpfade mit Auslandsvereinen, Zufall nur über Ströme, `F.` gegen `ev(...)` in den Tests. | ✅ |
+| CH10 | **Laufzeit der Auslosung:** im schlechtesten Fall 30 Baupläne mit je 3.000 Tauschversuchen, grob eine bis zwei Sekunden. Meist reicht der erste Bauplan. Bitte beim Testlauf auf die Dauer achten. | ⚠️ messen |
