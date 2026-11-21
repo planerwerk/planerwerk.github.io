@@ -18,5 +18,7 @@ const last=n=>n.split(' ').slice(-1)[0];
 function news(t,c=''){S.news.unshift({t,c,w:datumKurz(S.tag)});if(S.news.length>REGELN.spielstand.nachrichtenMax)S.news.length=REGELN.spielstand.nachrichtenMax;}
 function money(k,v){myT().cash+=v;S.fin[k]=(S.fin[k]||0)+v;}
 function toast(m){const t=document.getElementById('toast');t.textContent=m;t.hidden=false;clearTimeout(toast.h);toast.h=setTimeout(()=>t.hidden=true,3200);}
-function save(){try{localStorage.setItem(REGELN.spielstand.schluessel,JSON.stringify(S));}catch(e){}}
+// Speichern im Browser. Scheitert es (meist: Speicher voll), sagt das Spiel es einmal im Posteingang, statt still nicht mehr zu speichern (T2.5).
+let SPEICHER_FEHLER=false;
+function save(){try{localStorage.setItem(REGELN.spielstand.schluessel,JSON.stringify(S));SPEICHER_FEHLER=false;}catch(e){if(!SPEICHER_FEHLER&&S){SPEICHER_FEHLER=true;news('Der Browser hat den Spielstand nicht gespeichert, vermutlich ist sein Speicher voll. Was seit dem letzten Speichern passiert ist, geht beim Schließen verloren. Gib in den Browser-Einstellungen Speicher frei.','bad');}}}
 function hasSave(){try{return !!localStorage.getItem(REGELN.spielstand.schluessel);}catch(e){return false;}}

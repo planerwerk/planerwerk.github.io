@@ -117,13 +117,16 @@ const mitLeihProtokoll=(F,getS,C)=>{const log=[],orig=F.kiLeihe;
 
 // 6c. Verträge nach Rang (K31 §5.8, U11c): Chance je Rang beim Saisonwechsel, früh verlängern im Herbst nur für Gebrauchte, deine Spieler bleiben unberührt
 {const w=welt(),{S,F,ev,im,C}=w,V=C.vertrag,t=S.teams.find(x=>x.id!==S.my&&x.lg===1),P=F.kaderplan(t),nach=r=>P.alle.filter(p=>P.rang.get(p.id)===r);
-  const st=nach('stamm')[0],ue=nach('ueber')[0],alt=nach('ergaenzung').find(p=>p.age>=V.ergaenzungBis),jung=nach('ergaenzung').find(p=>p.age<V.ergaenzungBis),ch=p=>F.vertragChance(p,P);
-  pruef(ch(st)===V.chanceWichtig&&(!ue||ch(ue)===V.sonst)&&(!alt||ch(alt)===V.sonst)&&(!jung||ch(jung)===V.ergaenzung)&&F.vertragChance(st,null)===ev('RS').vertrag.verlaengern,
-    'Verträge nach Rang: Gebrauchte zu 90 %, junge Ergänzung zu 50 %, ältere Ergänzung und Überzählige zu 10 %, ohne Plan die alte Regel (70 %)',`geprüft: Stamm${ue?', Überzählige':''}${alt?', ältere Ergänzung':''}${jung?', junge Ergänzung':''}`);
+  // Seit T1.3: Gebrauchte ab altAb (30) nur mit chanceAlt (60 %) und nicht früh
+  const gross=P.alle.filter(p=>V.wichtig.includes(P.rang.get(p.id))),st=gross.find(p=>!V.altAb||p.age<V.altAb),ab30=V.altAb?gross.find(p=>p.age>=V.altAb):null;
+  const ue=nach('ueber')[0],alt=nach('ergaenzung').find(p=>p.age>=V.ergaenzungBis),jung=nach('ergaenzung').find(p=>p.age<V.ergaenzungBis),ch=p=>F.vertragChance(p,P);
+  pruef(ch(st)===V.chanceWichtig&&(!ab30||ch(ab30)===V.chanceAlt)&&(!ue||ch(ue)===V.sonst)&&(!alt||ch(alt)===V.sonst)&&(!jung||ch(jung)===V.ergaenzung)&&F.vertragChance(st,null)===ev('RS').vertrag.verlaengern,
+    'Verträge nach Rang: Gebrauchte zu 90 % (ab 30 zu 60 %), junge Ergänzung zu 50 %, ältere Ergänzung und Überzählige zu 10 %, ohne Plan die alte Regel (70 %)',`geprüft: Gebrauchter${ab30?', Gebrauchter ab 30':''}${ue?', Überzählige':''}${alt?', ältere Ergänzung':''}${jung?', junge Ergänzung':''}`);
   // Alle auf ein Jahr Restvertrag, dann zwölf Wochen im Oktober (ohne Fenster: kein Wechsel, nur Verträge)
   S.pl.forEach(p=>{if(p.team>=0)p.ct=1;});const rang=new Map();S.teams.forEach(x=>{if(x.lg<=3&&x.id!==S.my){const Q=F.kaderplan(x);Q.alle.forEach(p=>rang.set(p.id,Q.rang.get(p.id)));}});
   S.tag=F.tagAusDatum(`${S.season}-10-05`,S.season);for(let i=0;i<12;i++)im('frueh'+i,()=>F.kiMarkt());
-  const gebraucht=S.pl.filter(p=>p.team>=0&&p.team!==S.my&&V.wichtig.includes(rang.get(p.id))&&!p.leihe),andere=S.pl.filter(p=>p.team>=0&&p.team!==S.my&&rang.has(p.id)&&!V.wichtig.includes(rang.get(p.id)));
+  const altG=p=>V.altAb&&p.age>=V.altAb; // Gebrauchte ab 30 werden nicht früh verlängert (T1.3), sie zählen zu den anderen
+  const gebraucht=S.pl.filter(p=>p.team>=0&&p.team!==S.my&&V.wichtig.includes(rang.get(p.id))&&!p.leihe&&!altG(p)),andere=S.pl.filter(p=>p.team>=0&&p.team!==S.my&&rang.has(p.id)&&(!V.wichtig.includes(rang.get(p.id))||altG(p)));
   const verl=gebraucht.filter(p=>p.ct>1).length/Math.max(1,gebraucht.length),soll=1-Math.pow(1-V.frueh.chance,12),falsch=andere.filter(p=>p.ct!==1).length,mein=ev('squad')(S.my).filter(p=>p.ct!==1).length;
   pruef(Math.abs(verl-soll)<=0.06&&falsch===0&&mein===0&&gebraucht.every(p=>p.ct===1||(p.ct>=2&&p.ct<=1+ev('RS').vertrag.jahre[1])),'Früh verlängern: Im Herbst werden nur Gebrauchte gebunden (zwölf Wochen: etwa 86 %), Ergänzung und Überzählige nie, deine Spieler nicht',`${pc(verl)} von ${gebraucht.length}, ${falsch} andere verlängert, ${mein} von dir`);
   // Außerhalb von Oktober bis Dezember passiert nichts (März: kein Fenster, also auch keine Wechsel, die Laufzeiten neu setzen)

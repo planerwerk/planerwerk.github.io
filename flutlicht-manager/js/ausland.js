@@ -97,3 +97,15 @@ function insAusland(p,avId){const i=S.pl.indexOf(p);if(i>=0)S.pl.splice(i,1);if(
   S.gw=(S.gw||[]).filter(g=>g.pid!==p.id);S.bz=(S.bz||[]).filter(b=>b[0]!==p.id&&b[1]!==p.id);(S.vs||[]).forEach(v=>{if(v.pid===p.id&&v.stand==='offen')v.stand='hinfaellig';});}
 // Auslandsvereine, die für einen deiner Spieler bieten könnten: Er passt sportlich (höchstens einige Punkte unter der Grundstärke) und das Budget reicht (K32 §3.1)
 function auslandKaeufer(p,preis){const A=RW.ausland;return(S.ausland?S.ausland.v:[]).filter(v=>p.str>=avStaerke(v)-A.angebote.niveau&&avBudget(v)>preis);}
+// Abwanderung (K32 §8, T1.3, vorläufig): Einmal je Sommerfenster kaufen Auslandsvereine Spieler aus den drei Ligen, bei allen Vereinen, deren Transfers nicht du führst
+// (Computer-Vereine und dein Verein in der Automatik, gleiche Regel). Je Liga eine gewürfelte Zahl, die Stärksten zuerst (mit Schätzfehler), höchstens jeVerein je Verein.
+// Käufer ist der zahlungsfähige Auslandsverein, dessen Grundstärke der Stärke des Spielers am nächsten liegt. Eigener Strom. Rückgabe [{p, von, preis, v}] für den Markt.
+function auslandAbwanderung(vereine){if(!S.ausland)return[];const A=RW.ausland.abwanderung,out=[];
+  mitStrom(strom('abwanderung',S.season),()=>{for(const lg of [1,2,3]){if(!A.liga[lg])continue;const ids=new Set(vereine.filter(t=>t.lg===lg).map(t=>t.id)),n=riA(A.liga[lg]),jeV=new Map();let k=0;
+    const kand=S.pl.filter(p=>ids.has(p.team)&&p.age<=A.alterMax&&p.str>=A.ab[lg]&&!p.wech&&!p.leihe&&!p.zwP).map(p=>({p,w:p.str+(R()-0.5)*2*RCV.schaetzFehler})).sort((a,b)=>b.w-a.w||a.p.id-b.p.id);
+    for(const {p} of kand){if(k>=n)break;if((jeV.get(p.team)||0)>=A.jeVerein)continue;const preis=Math.round(vwAusland(p)*A.preis/RM.runden)*RM.runden,l=auslandKaeufer(p,preis);if(!l.length)continue;
+      const v=l.reduce((b,x)=>Math.abs(avStaerke(x)-p.str)<Math.abs(avStaerke(b)-p.str)?x:b);jeV.set(p.team,(jeV.get(p.team)||0)+1);k++;out.push({p,von:p.team,preis,v});}}});
+  out.forEach(({p,von,preis,v})=>{const t=S.teams[von];if(von===S.my){money('Transfers',preis);vertragEnde(p);}else t.cash+=preis;
+    kabineAbgang(p,von);S.offers=S.offers.filter(o=>o.pid!==p.id);insAusland(p,v.id);statTransfer(p,preis,von,v.id);
+    news(`Wechsel perfekt: ${p.n} geht für ${fmt(preis)} von ${t.name} zu ${v.name} (${gruppenName(avGruppe(v))}).`,'tr');if(von===S.my)stabMeldung(`Der Verein hat ${p.n} für ${fmt(preis)} an ${v.name} verkauft.`);});
+  return out;}

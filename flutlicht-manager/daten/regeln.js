@@ -77,6 +77,9 @@ const REGELN={
       forderung:[0.8,0.6],             // Ablöseforderung = Marktwert × (0,8 + 0,6 × Finanzkraft/100): arme Vereine verkaufen günstiger (K32 §6)
       budget:12000,                    // Transferbudget eines Auslandsvereins = Finanzkraft² × 12.000 € (Spielwert, K23)
       angebote:{anteil:0.3,niveau:5},  // Anteil der Angebote für deine Spieler, die aus dem Ausland kommen; der Spieler darf höchstens 5 unter der Grundstärke des Käufers liegen
+      // Abwanderung (K32 §8 „Bundesliga verliert je Sommer Spieler an reiche Auslandsgruppen“, T1.3, vorläufig): im Sommerfenster je Liga so viele Käufe aus dem Ausland,
+      // ab dieser Stärke, bis zu diesem Alter, höchstens jeVerein je Verein, Ablöse = Vereinswert fürs Ausland × preis. Sommer 2025: allein die vier teuersten Zugänge der Premier League kamen aus der Bundesliga.
+      abwanderung:{liga:{1:[6,12],2:[3,6],3:[2,5]},ab:{1:78,2:72,3:67},alterMax:29,jeVerein:2,preis:1.2},
       interesse:{fremd:-5,heimkehr:10},// Wechselbereitschaft zu dir: Spieler aus dem Ausland etwas geringer, Deutsche im Ausland höher (Rückkehr, K32 §8)
       namenVersuche:6,                 // so oft wird ein Name neu gewürfelt, wenn es ihn im Pool schon gibt
       // Vorlauf beim Aufbau der Welt: Der Pool durchläuft so viele Saisons in groben Schritten (Entwicklung, Karriereende, neue Talente), damit er im Gleichgewicht startet.
@@ -306,8 +309,9 @@ const REGELN={
     // Verträge nach Rang (K31 §4 Nr. 4, §5.8, U11c). Gilt für Vereine, deren Verträge nicht du führst (Bereich vertraege). wichtig: Ränge, die der Verein halten will.
     // Saisonwechsel: Chance auf Verlängerung je Rang (schließt die Zusage des Spielers ein), Ergänzungsspieler nur unter ergaenzungBis Jahren mit der Chance ergaenzung.
     // frueh: in diesem Zeitraum (MM-TT) jede Woche diese Chance, den auslaufenden Vertrag eines wichtigen Spielers vorzeitig zu verlängern (vor den Vorverträgen ab 1. Januar).
-    vertrag:{wichtig:['stamm','herausforderer','talent'],chanceWichtig:0.9,ergaenzung:0.5,ergaenzungBis:30,sonst:0.1,frueh:{von:'10-01',bis:'12-31',chance:0.15}},
-    kauf:{jeFenster:[4,2],ansehenMinus:30,alterMax:32,jungBis:23,talentGewicht:0.3,altAb:29,altMalus:1},
+    vertrag:{wichtig:['stamm','herausforderer','talent'],chanceWichtig:0.9,ergaenzung:0.5,ergaenzungBis:30,sonst:0.1,frueh:{von:'10-01',bis:'12-31',chance:0.15},
+      altAb:30,chanceAlt:0.6}, // altAb, chanceAlt (T1.3, vorläufig): Wichtige ab 30 werden nicht früh verlängert und beim Saisonwechsel nur mit 60 %, wie in der Wirklichkeit gehen ältere Stammspieler oft ablösefrei. Ohne das wuchs die Stärke der Ligen über die Saisons
+    kauf:{jeFenster:[4,2],ansehenMinus:30,alterMax:32,jungBis:23,talentGewicht:0.3,altAb:29,altMalus:1,vereinslosBis:2}, // vereinslosBis: Vereinslose höchstens Grundstärke des Käufers + 2 (T1.3, vorläufig)
     finanzen:{budgetAnteil:[0.5,0.25],reinvest:0.8},
     // Leihen unter Computer-Vereinen (K31 §5.9, U11d1). Leihbar: bis alterMax Jahre, Rang in leihRaenge (Ausbildungsverein: Profilwert, auch Talente), gesund, Verleiher behält mehr als
     // markt.verkaeufer.kaderMin. Geliehen wird für die Lücken in gruende: zuerst (vor dem Kauf) bei den Gründen in zuerst, sonst nur, wenn kein Kauf geht. Kontingent: leihe.kontingent.
@@ -354,7 +358,7 @@ const REGELN={
       serie:{n:53,verein:'FC Bayern München',zeit:'November 2012 bis März 2014'}}},meldenAb:1},
     ehemalige:{ligaspiele:150,vereinSpiele:30,max:400},
     jubilaeum:{spiele:100,jahre:10},
-    speicher:{max:1e6,saisons:20}}, // Ziel (K34 §10): Statistik nach 20 Saisons unter 1 MB im Spielstand (geprüft in tests/statistik.js)
+    speicher:{max:1e6,saisons:20,frueh:2.5}}, // Ziel (K34 §10): Statistik nach 20 Saisons unter 1 MB im Spielstand (geprüft in tests/statistik.js). frueh: In den ersten Saisons wächst sie schneller (gemessen 101, 176, 244, 303 KB, ab Saison 13 etwa 650 KB), kurze Läufe dürfen bis zum 2,5-Fachen des Schnitts je Saison (T2.5)
 
   // Saisonvorbereitung (K12b §5, §11, U14). Saisoneröffnung am letzten Samstag vor dem ersten Pflichtspiel: Einnahme jeAnsehen × Ansehen, bei Regen (chance) nur faktor davon.
   // fotoNachTage: so lange nach dem Mannschaftsfoto gibt es die Meldung für Nachzügler. fotos: so viele Mannschaftsfotos bleiben in der Statistik. GESCHÄTZT.

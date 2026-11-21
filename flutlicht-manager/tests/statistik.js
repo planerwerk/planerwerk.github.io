@@ -44,8 +44,9 @@ const lauf=saisons({n:N,seed:SEED,verein:VEREIN,
 jeSaison.forEach(o=>pruef(o.ok,`Saison ${o.s}: Spielertore = Tabellentore je Liga, ein Torschützenkönig mit den meisten Toren, Elf des Jahres 1-4-3-3, Ehrungen mit Marktwert, Karriere, Rekorde`,o.txt.join('; ')||`${o.bytes} Zeichen Statistik`));
 pruef(tore>0&&falsch===0&&vorl/tore>0.55&&vorl/tore<0.9,'Vorlagen: nie für den Torschützen selbst, nie bei Elfmeter oder direktem Freistoß, insgesamt 55 bis 90 % der Tore',
   `${vorl} von ${tore} (${Math.round(vorl/Math.max(1,tore)*100)} %), je Art ${Object.entries(art).map(([k,[t,v]])=>`${k} ${Math.round(v/t*100)} %`).join(', ')}`);
-{const RS=lauf.W.ev('RSTAT').speicher,letzte=jeSaison[jeSaison.length-1],ziel=RS.max*Math.min(N,RS.saisons)/RS.saisons;
-  pruef(letzte&&letzte.bytes<ziel,`Speicher: Statistik nach ${N} Saison(s) unter ${Math.round(ziel/1000)} KB (anteilig zu 1 MB nach 20 Saisons)`,letzte?`${Math.round(letzte.bytes/1000)} KB`:'–');}
+// Die Statistik wächst anfangs schneller und bleibt dann stehen (Spieler hören auf, Inaktive werden verdichtet). Kurze Läufe prüfen darum gegen das frueh-Fache des Schnitts je Saison (T2.5).
+{const RS=lauf.W.ev('RSTAT').speicher,letzte=jeSaison[jeSaison.length-1],ziel=Math.min(RS.max,RS.max/RS.saisons*(RS.frueh||1)*N);
+  pruef(letzte&&letzte.bytes<ziel,`Speicher: Statistik nach ${N} Saison(s) unter ${Math.round(ziel/1000)} KB (1 MB nach 20 Saisons, am Anfang bis zum ${RS.frueh||1}-Fachen des Schnitts je Saison)`,letzte?`${Math.round(letzte.bytes/1000)} KB`:'–');}
 
 // 5. Ansicht: alle Unterseiten, Spielerkarte und Vergleich ohne Fehler
 {const {W,F,S}=lauf;let fehler='';try{for(const k of ['saison','ehrungen','rekorde','archiv','karriere']){W.ev(`STV='${k}'`);for(const lg of [1,2,3]){W.ev(`STLG=${lg}`);const h=F.statistikAnsicht();if(!h||h.length<200)fehler+=`${k}/${lg} leer; `;}}

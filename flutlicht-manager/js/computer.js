@@ -87,6 +87,9 @@ function kiKandidat(t,n,rest,senk,kader,plan){const K=RCV.kauf,min=n.min-senk,al
   for(const p of S.pl){if(p.team===t.id||p.team<-1||p.wech||p.leihe||p.zwP||p.age>alterMax)continue;
     const von=p.team>=0?S.teams[p.team]:null;
     if(p.team>=0&&(!p.list||!von||!aktiv(von)||!stabMacht(von.id,'transfers')))continue;
+    // Ein Vereinsloser geht nicht weit nach unten: höchstens Grundstärke des Käufers + kauf.vereinslosBis, etwas enger als beim Auffüllen (T1.3). Ohne die Grenze unterschrieben
+    // starke Vereinslose bei Drittligisten (bis 16 über deren Grundstärke), und die unteren Ligen wurden über die Saisons stärker.
+    if(!von&&p.str>grundStaerke(t.rep)+(K.vereinslosBis!=null?K.vereinslosBis:RCV.fuellen.vereinslosBis))continue;
     if(n.grund==='talent'){if(p.age>RCV.talentBis||p.pot<min)continue;}
     else if(planGruppe(p)!==n.g||p.str<min||(n.statt&&p.str<=n.statt.str))continue;
     let preis=0;
@@ -181,12 +184,12 @@ function planAuffuellen(t,P,liste){const Z=RS,F=RCV.fuellen,base=grundStaerke(t.
 // ---------- Verträge nach Rang (K31 §4 Nr. 4, §5.8, U11c) ----------
 // Chance, dass ein auslaufender Vertrag beim Saisonwechsel verlängert wird (die Zusage des Spielers eingeschlossen). P: Kaderplan seines Vereins, ohne Plan die alte Regel.
 function vertragChance(p,P){const V=RCV.vertrag,r=P?P.rang.get(p.id):null;if(!r)return RS.vertrag.verlaengern;
-  if(V.wichtig.includes(r))return V.chanceWichtig;return r==='ergaenzung'&&p.age<V.ergaenzungBis?V.ergaenzung:V.sonst;}
+  if(V.wichtig.includes(r))return V.altAb&&p.age>=V.altAb?V.chanceAlt:V.chanceWichtig;return r==='ergaenzung'&&p.age<V.ergaenzungBis?V.ergaenzung:V.sonst;} // ab altAb seltener (T1.3)
 // Früh verlängern: Von Oktober bis Dezember bindet ein Verein jede Woche mit 15 % die Spieler mit auslaufendem Vertrag, die er braucht,
 // bevor ab dem 1. Januar andere Vereine (und du) ihnen einen Vorvertrag geben dürfen (K21 §4.3). Laufzeit und Gehalt wie beim Saisonwechsel.
 function kiVertraegeFrueh(kader){const V=RCV.vertrag,F=V.frueh,k=mmtt(S.tag);if(S.phase!=='play'||k<F.von||k>F.bis)return;
   S.teams.forEach(t=>{if(!aktiv(t)||!stabMacht(t.id,'vertraege'))return;const sq=kader.get(t.id)||[],P=kaderplan(t,sq);
-    sq.forEach(p=>{if(p.ct!==1||p.wech||p.leihe||p.zwP||!V.wichtig.includes(P.rang.get(p.id))||R()>=F.chance)return;
+    sq.forEach(p=>{if(p.ct!==1||p.wech||p.leihe||p.zwP||!V.wichtig.includes(P.rang.get(p.id))||(V.altAb&&p.age>=V.altAb)||R()>=F.chance)return; // ab altAb nicht früh (T1.3)
       p.ct=1+riA(RS.vertrag.jahre);p.sal=salaryFor(p.str);if(t.id===S.my)stabMeldung(`Der Verein hat den Vertrag von ${p.n} vorzeitig verlängert (bis Juni ${S.season+p.ct}).`);});});}
 
 // ---------- Woche (montags im Markt-Strom, aufgerufen aus market in js/ablauf.js) ----------
@@ -217,4 +220,7 @@ function kiMarkt(){const nr=fensterNr(),vereine=S.teams.filter(t=>aktiv(t)&&stab
       const c=kiKandidat(t,n,tb.b-tb.a,senk,kader,plan);if(c){zugang(t,tb,c);break;}
       const b=leiht&&!zuerst?kiLeihKandidat(t,n,senk,plan,z):null;if(b){leihe(t,tb,b);break;}}});
   const ende=fensterEnde();
+  // Abwanderung ins Ausland einmal je Sommer in der letzten Woche des Fensters (K32 §8, T1.3, js/ausland.js): Die Sternejagd hat davor das ganze Fenster,
+  // die Lücken schließt gleich danach das Auffüllen.
+  if(nr===0&&ende!=null&&ende-S.tag<7&&S.abwanderung!==S.season){S.abwanderung=S.season;auslandAbwanderung(vereine).forEach(({p,von})=>{const l=kader.get(von),i=l?l.indexOf(p):-1;if(i>=0)l.splice(i,1);plaene.delete(von);});}
   if(nr===RCV.fuellen.fenster&&ende!=null&&ende-S.tag<7)vereine.forEach(t=>{const tb=kiBudget(t,nr);if(tb.f)return;tb.f=1;const l=kader.get(t.id);planAuffuellen(t,kaderplan(t,l),l);});}
