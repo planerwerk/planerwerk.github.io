@@ -25,7 +25,9 @@ Node.js 22, Playwright mit Chromium, für `tests/ui-zugang.js` axe-core 4.10.2 (
 | werbung (32 Prüfungen, davon 21 neu für K24b und K24c) | grün |
 | alle übrigen Node-Tests | genau wie in Lauf 5: grün bis auf T5.1 und T5.5 (lizenz), T5.2 (wettbewerbe), T1.3 Rest (spielermodell), Randwerte in kalibrierung, jugend, medizin. Dieselben Zahlen, K24b und K24c verschieben nichts |
 | lizenz | „Sponsor: Der Verein nimmt sofort das höchste feste Angebot“ und „kein Nachteil“ grün (+2,8 ± 2,3 Punkte) |
-| Browser-Tests, akzeptanz | siehe unten |
+| fuzz-karrieren, ui-lernstufen, live-neuladen, seed, ui-zugang | grün |
+| ui-zwei-saisons | rot (1): nur T5.4 wie in Lauf 5 (Pokalsperre im Europapokal), die neuen Werbeflächen und der Sponsorentag laufen über die echte Oberfläche ohne Fehler |
+| akzeptanz | rot (2) wie immer: Abwehr +0,8, Verhältnis der Bereiche (Tempo diesmal im Ziel) |
 
 Lauf 6 (nur K24b) wurde nach 12 grünen Tests abgebrochen, weil K24c den Saisonwechsel berührt und Lauf 7 beides prüft.
 
