@@ -13,6 +13,21 @@ Node.js 22, Playwright mit Chromium, für `tests/ui-zugang.js` axe-core 4.10.2 (
 
 ---
 
+## Lauf 4, 21.11.2026: Claude-Zweig mit K24a Werbeflächen (887b0e2, danach 5910b26)
+
+**Neu von Claude: K24a Werbeflächen** (726a439, Doku 887b0e2): Ausrüster und Ärmel neben der Trikotbrust, je Fläche drei Angebote und höchstens ein Vertrag, Automatik je Fläche, ohne Wahl das erste Angebot vor dem ersten Pflichtspiel. Vorläufig geldneutral (die drei teilen sich den bisherigen Brustbetrag 60 / 29 / 11 %), die Höhen aus K24 §5.1 erst mit K23. Neue Datei `js/werbung.js`, Test `tests/werbung.js`, `tests/vorbereitung.js` angepasst (Werbeverträge sind erst erledigt, wenn alle Flächen vergeben sind). **Für popolupo:** K24 ist damit angefangen, bitte nicht parallel daran bauen. Frei sind K23, K25, K26 und U19.
+
+| Test | Ergebnis |
+|---|---|
+| alle Node-Tests außer den unten genannten (33), dazu werbung (neu) und statistik | grün |
+| ui-zwei-saisons, ui-lernstufen, live-neuladen, seed, ui-zugang | grün |
+| fuzz-karrieren | rot in Lauf 4 (T4.1), nach der Korrektur grün |
+| spielermodell, sommer, kalibrierung, medizin, disziplin, akzeptanz | wie in Lauf 3 (T1.3 Rest, T3.2, Werte am Rand). Gleiche Zahlen wie in Lauf 3: K24a ist wirklich geldneutral |
+
+**T4.1 (erledigt in 5910b26):** Die Abwanderung brachte Auslandsvereinen bis zum Saisonende zu viele Kernspieler (Manchester City und Inter Mailand je 15, erlaubt 6–10). Jetzt kauft ein Auslandsverein nur, wenn der Spieler bei ihm einen Kernplatz bekäme, höchstens einmal je Sommer, und sein Kern wird gleich auf Plan gekürzt. Danach geprüft: spielermodell (2. Liga Spanne jetzt 2,0), sommer, welt, ausland, statistik, lizenz, transfers, werbung, fuzz-karrieren.
+
+---
+
 ## Lauf 3, 21.11.2026: Claude-Zweig mit den Korrekturen (b53a0c2, danach b4c97a4)
 
 Am 20.11. abends kam nichts Neues dazu, getestet und korrigiert wurde der Stand von Lauf 2. Claude hat dafür `popolupo-u18b-spielwelt-karten` (cb3649b) in den Claude-Zweig geholt (2ee1122). **Für popolupo:** Bitte vor dem Weiterbauen den Zweig `claude/compassionate-galileo-bsbua4` holen, die Korrekturen stecken in Code und Tests von U11 bis U18b.
