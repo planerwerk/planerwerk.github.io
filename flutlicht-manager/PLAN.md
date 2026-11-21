@@ -64,7 +64,7 @@ Spalte „Welle“: wann das Konzept spätestens fertig sein muss. Umfang des Ko
 | K04 | Match-Engine (**Entwurf**: `konzepte/K04-engine.md`) | Minutenablauf, Chancentypen, Teamwerte mit abnehmendem Ertrag, Deckel für Einzelspieler (Torwart-Problem), Tagesform, Spielverlauf-Effekte, Ermüdung, Zielverteilungen | L | 1 |
 | K33 | Daten, Spielstand, `regeln.js` (**Entwurf**, umgesetzt: `konzepte/K33-daten.md`) | Dateiaufbau, Stammdaten, Versionen des Spielstands, wie man an Werten schraubt, Daten-Update für neue Saisons | S | 1 |
 | K36 | Einstieg mit Lernstufen (**Entwurf** 9.11., umgesetzt in UL am 12.11.: `konzepte/K36-lernstufen.md`, Gedanken in §4) | Stufenleiter, was auf welcher Stufe frei ist, Aufstieg nach Verständnis statt nach Zeit, Automatik für gesperrte Bereiche, Aufstiegsmoment mit Erklärung, Aus-Schalter, „jetzt freischalten“ | M | 2b |
-| K37 | Europapokal: Champions League, Europa League, Conference League (**Idee** 10.11., erste Gedanken in §4) | Qualifikation über Liga und Pokal, Ligaphase und K.-o.-Runden, Auslandsgegner aus K32, Prämien und Marktpool als Geld, Belastung durch englische Wochen, Ansehen, UEFA-Koeffizient | L | 4b |
+| K37 | Europapokal: Champions League, Europa League, Conference League (**Entwurf** 21.11., popolupo, `konzepte/K37-europapokal.md`; Idee 10.11., erste Gedanken in §4) | Qualifikation über Liga und Pokal, Ligaphase und K.-o.-Runden, Auslandsgegner aus K32, Prämien und Marktpool als Geld, Belastung durch englische Wochen, Ansehen, UEFA-Koeffizient | L | 4b |
 
 ### B – Sport
 
@@ -291,6 +291,8 @@ Ich halte die Idee für richtig. Das Spiel hat schon jetzt viele Stellschrauben 
 > Ausgearbeitet in `konzepte/K36-lernstufen.md` (Entwurf, 9.11.): Lizenz je Funktion (§5.2), Aufstieg mit Mindestzeit, Aufgaben und spätester Zeit (§5.3), A frühestens in der zweiten, Pro frühestens nach der zweiten Saison. Abweichung von der Leiter oben: Stadion und Kredit kommen mit der Pro-Lizenz, damit sie bis Welle 4 nicht leer ist. Im Spiel heißen die Stufen „Lizenz“, weil „Stufe“ schon für Schwierigkeit und Wechselwunsch steht.
 
 ### K37 – Europapokal (10.11.)
+
+> Seit 21.11. als Entwurf ausgearbeitet in `konzepte/K37-europapokal.md` (popolupo): echter Modus seit 2024/25, Prämien 2025/26 mal Faktor 0,2 bis K23c, Teilschritte U19a bis U19c.
 
 Erste Gedanken, kein Konzept:
 

@@ -787,6 +787,24 @@ Im Einzelnen in K30 §5.5 und §12 Nr. 4 bis 9.
 - **Erste fünf Karten:** Der Präsident mischt sich ein, Rückendeckung vom Vorstand, Versöhnung, ein Spieler heiratet, Geheimtipp.
 - **Noch nicht:** Ketten, verzögerte Folgen, Meldungsdichte, Chronik, Skandale.
 
+## K37 – Europapokal (Entwurf 21.11.2026, popolupo)
+Datei: `konzepte/K37-europapokal.md`
+
+**Vorläufig entschieden (K37 §12 Nr. 1 bis 10):**
+
+- Echter Modus seit 2024/25 mit Ligaphase und K.-o.-Runden. Eine Qualifikation spielt nur der deutsche Siebte.
+- Sieben feste deutsche Plätze (4/2/1). Die Länderwertung mit dem fünften Platz kommt später (U19c).
+- Auslandsvereine nach Kontingent je Land, Ansehen und Zufall, weil die Auslandsligen nicht gespielt werden.
+- Spiele mit deutscher Beteiligung in der vollen Engine, Ausland gegen Ausland als Kurzrechnung.
+- Auslandsspieler ohne Folgen aus dem Spiel.
+- Echte Prämien 2025/26 mal Faktor 0,2, bis K23c alle Geldwerte auf echte Größenordnungen bringt.
+- Wertsäule nach dem Rang des Ansehens unter den Teilnehmern.
+- Ein Finale nach dem Saisonende rückt auf den letzten Spieltag vor.
+- Ein deutscher Titelverteidiger nimmt keinen Bundesliga-Platz weg.
+- Kein neuer Lizenz-Bereich in U19a und U19b.
+
+**Noch zu recherchieren:** Rang- und Play-off-Prämien in Europa League und Conference League, Zulassungsliste 2026/27 für die Länderkontingente, deutsche Starter 2026/27 aus einer zweiten Quelle, Termine der Conference-League-Ligaphase 2026/27.
+
 ## K40 Usability, UX1 (20.11.), vorläufig von mir, gebaut ohne Testlauf
 
 Im Einzelnen in `konzepte/K40-usability.md` (neu, aus dem Vorschlag in PLAN §4).

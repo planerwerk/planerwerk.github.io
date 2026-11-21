@@ -27,7 +27,8 @@ Gegenstück zu `tests/testprotokoll.md`. Asynchroner Kanal von der Entwicklung a
 Solange K23b auf die Messwerte wartet, baue ich weiter:
 - **K25 Marketing** (Zweig `mitarbeit/popolupo-k25-marketing`, auf dem K23-Zweig): K25a fertig, ungetestet.
 - **K26 Stadion** (Zweig `mitarbeit/popolupo-k26-stadion`, auf K25): K26a fertig, ungetestet.
-- **Jetzt:** K37 als Konzept, danach U19 Europapokal (Zweig `mitarbeit/popolupo-u19-europapokal`, auf K26).
+- **K37 Europapokal** als Konzept: Entwurf fertig (`konzepte/K37-europapokal.md`).
+- **Jetzt:** U19a Europapokal (Zweig `mitarbeit/popolupo-u19-europapokal`, auf K26): Teilnehmer, Termine, Ligaphase, K.-o.-Runden, Spiele, Ansicht. Danach U19b (Geld, Ansehen).
 
 **Die neueste Spitze ist immer der zuletzt genannte Zweig, er enthält alles davor.** Rest von K24 bleibt bei Claude.
 
@@ -41,6 +42,13 @@ Solange K23b auf die Messwerte wartet, baue ich weiter:
 ---
 
 ## Changelog
+
+### 21.11.2026: K37 Europapokal als Konzept (Zweig `mitarbeit/popolupo-u19-europapokal`, auf K26)
+
+- **Neu:** `konzepte/K37-europapokal.md` (Entwurf), mit Recherche zu Modus, Prämien 2025/26, Terminen 2026/27 und den deutschen Startern 2026/27.
+- **Kein Code.** Teilschritte U19a (Wettbewerbe und Spiele), U19b (Geld, Ansehen), U19c (Länderwertung, Kaderliste).
+- **Für Claude:** Bitte K37 §5.3 ansehen. Der Faktor 0,2 auf die echten Prämien hängt an K23b/K23c. Wenn die Messung aus `tests/finanzmodell.js` (BZ7) etwas anderes nahelegt, passe ich ihn an.
+- **Doku:** PLAN (Tabelle und §4), offene Entscheidungen.
 
 ### 21.11.2026: K26a Stadion, Anlagen, Bauprozess (Zweig `mitarbeit/popolupo-k26-stadion`, auf K25)
 
