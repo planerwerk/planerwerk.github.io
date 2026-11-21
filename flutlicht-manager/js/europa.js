@@ -43,8 +43,9 @@ function euZahlen(tid,betrag,grund){if(!betrag||!euDe(tid))return;S.eu.geld=S.eu
 // Mit der Auslosung der Ligaphase: Startgeld und Wertsäule (Schnitt × 2 × (37 − Rang des Ansehens) / 37)
 function euStartgeld(wb){const W=S.eu[wb],rang=W.t.slice().sort((a,b)=>euRep(b)-euRep(a));
   W.t.filter(euDe).forEach(id=>euZahlen(id,euGeldWert(wb,'start')+euGeldWert(wb,'wert',2*(37-(rang.indexOf(id)+1))/37),`Startgeld und Wertsäule der ${euName(wb)}`));}
-// Nach der Ligaphase: Rangprämie (Platz 1 bekommt 36 Anteile, Platz 36 einen)
-function euRangpraemie(wb){if(!REU.geld[wb].rang)return;euTabelle(wb).forEach((r,i)=>euZahlen(r.id,euGeldWert(wb,'rang',36-i),`Rangprämie für Platz ${i+1} der Ligaphase`));}
+// Nach der Ligaphase: Rangprämie (Platz 1 bekommt 36 Anteile, Platz 36 einen), dazu wo recherchiert ein Bonus für Platz 1–8 und 9–16
+function euRangpraemie(wb){const G=REU.geld[wb];if(!G.rang&&!G.top8&&!G.top16)return;
+  euTabelle(wb).forEach((r,i)=>euZahlen(r.id,euGeldWert(wb,'rang',36-i)+(i<8?euGeldWert(wb,'top8'):i<16?euGeldWert(wb,'top16'):0),`Rangprämie für Platz ${i+1} der Ligaphase`));}
 // Beim Erreichen einer K.-o.-Runde
 function euRundenGeld(wb,r){(S.eu[wb].ko[r]||[]).forEach(k=>[k[0],k[1]].forEach(id=>euZahlen(id,euGeldWert(wb,r),`${EU_RUNDE[r]} der ${euName(wb)} erreicht`)));}
 // Ansehen zum Saisonwechsel (saison.js, vor dem neuen Europapokal): erreichte Runde mal Anteil des Wettbewerbs

@@ -430,7 +430,7 @@ const REGELN={
     // Geld (K37 §5.3, U19b): echte Beträge 2025/26 (Websuche 21.11.2026), mal faktor bis K23c (dann 1). start: Startgeld, sieg/remis je Spiel der Ligaphase, rang: je Anteil (Platz 1 = 36 Anteile),
     // po bis fin: beim Erreichen der Runde, titel: Sieger zusätzlich, wert: Schnitt der Wertsäule je Teilnehmer (verteilt nach dem Rang des Ansehens). Nicht recherchierte Werte sind 0 (K37 §12).
     geld:{faktor:0.2,cl:{start:18.62e6,sieg:2.1e6,remis:0.7e6,rang:275000,po:1e6,af:11e6,vf:12.5e6,hf:15e6,fin:18.5e6,titel:6.5e6,wert:24e6},
-      el:{start:4.31e6,sieg:450000,remis:150000,rang:0,po:0,af:1.75e6,vf:2.5e6,hf:4.2e6,fin:7e6,titel:6e6,wert:5.5e6},
+      el:{start:4.31e6,sieg:450000,remis:150000,rang:75000,top8:600000,top16:300000,po:0,af:1.75e6,vf:2.5e6,hf:4.2e6,fin:7e6,titel:6e6,wert:5.5e6}, // top8, top16: Bonus nach der Ligaphase für Platz 1–8 und 9–16
       ecl:{start:3.17e6,sieg:400000,remis:133000,rang:0,po:0,af:800000,vf:1.3e6,hf:2.5e6,fin:4e6,titel:3e6,wert:2.8e6}},
     // Ansehen zum Saisonwechsel (K37 §5.4): erreichte Runde, Anteil je Wettbewerb. vertrauen: Vorstand bei jedem gewonnenen Duell und beim Titel.
     ansehen:{af:1,vf:2,hf:3,titel:4,anteil:{cl:1,el:0.5,ecl:0.25}},vertrauen:{weiter:1.5,titel:10},

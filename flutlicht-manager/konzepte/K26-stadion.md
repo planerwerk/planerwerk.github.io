@@ -145,6 +145,8 @@ stadion:{
 
 **Noch zu recherchieren:** echte Baukosten je Platz, Stehplatzanteile der Bundesliga-Stadien, Eigentumsverhältnisse der Stadien.
 
+**Recherche Baukosten (21.11.2026, popolupo, Websuche):** Planungswerte je Sitzplatz etwa 3.000 bis 3.500 € bei einfachem und 5.000 bis 6.000 € bei gehobenem Standard (Hubert Nienhoff, gmp Architekten, bei t-online). Beispiel: Der Umbau der Haupttribüne in Stuttgart für die EM 2024 stieg von geplant 65 auf 140 Mio. € (Stuttgarter Zeitung). Echt kosten 3.000 Plätze also etwa 9 bis 18 Mio. €. Im Spiel kostet die Tribüne 4,5 Mio. (Spielgeld, wie TV-Gelder und Gehälter etwa ein Viertel bis ein Fünftel der echten Größenordnung). Bleibt so bis K23c. Offen bleiben Stehplatzanteile und Eigentum.
+
 **Vorläufig entschieden mit K26a (21.11.2026, popolupo):**
 
 1. Bauprozess mit Genehmigung, Auflagen, Verzögerung und Mehrkosten für alle Bauten, gewürfelt beim Start im eigenen Strom (§5.1).
@@ -157,5 +159,6 @@ stadion:{
 
 ## Quellen
 
+- Baukosten je Sitzplatz (abgerufen 21.11.2026): [t-online, Stadion der Zukunft](https://www.t-online.de/sport/fussball/id_89133096/star-architekten-ueber-stadion-der-zukunft-zeit-der-ballerbuden-ist-vorbei-.html), [Stuttgarter Zeitung, Umbau für die EM 2024](https://www.stuttgarter-zeitung.de/lokales/stuttgart/stadionumbau-fuer-em-2024-deutlich-teurer-was-die-kostenexplosion-fuer-den-vfb-bedeutet-78984534.html)
 - Stadionbaukasten, Spott über kleine Ausbauten: `konzepte/_recherche-genre.md`, Abschnitte 4 und 4b
 - Platzwart: PLAN §4 (GameStar 4/2000)

@@ -1299,7 +1299,7 @@ Gleicher Zweig wie CC. Konzept: K37 §5.3, §5.4, §12 Nr. 14 und 15.
 |---|---|---|
 | CD1 | **Geld für die Großen:** Ein deutscher Verein in der Champions League bekommt mit Faktor 0,2 etwa 3,7 Mio. Startgeld, 2 bis 9 Mio. Wertsäule und 0,4 Mio. je Sieg, mit Achtelfinale und Viertelfinale zusammen grob 15 bis 20 Mio. Spielgeld. Das ist mehr als die TV-Gelder der Saison im Spiel (Bayern etwa 12 Mio.). So ist es gewollt (K02 §5.3a), aber es verschiebt die Konten der Computer-Vereine und damit K23b. | ⚠️ messen |
 | CD2 | **Faktor 0,2 ist uneinheitlich mit dem Pokal:** Die Pokalprämien im Spiel (0,2 bis 4,5 Mio.) sind schon echte Beträge, TV-Gelder und Gehälter etwa ein Fünftel. Der Europapokal folgt TV und Gehältern. K23c bringt alles auf eine Größenordnung. | 📌 K23c |
-| CD3 | **Rang- und Play-off-Prämie** nur in der Champions League, in Europa League und Conference League nicht recherchiert und darum 0. | 📌 recherchieren |
+| CD3 | **Rang- und Play-off-Prämie** nur in der Champions League, in Europa League und Conference League nicht recherchiert und darum 0. **Nachtrag 21.11.:** Europa League recherchiert (75.000 je Anteil, Platz 1–8 600.000, 9–16 300.000) und eingebaut. Conference League weiter 0. | 📌 Conference League recherchieren |
 | CD4 | **Ansehen** steigt zum Saisonwechsel um höchstens 4 (Champions-League-Sieg), zusammen mit dem Ansehen aus der Liga ohne eigene Obergrenze. Die Fans folgen über `Z.fans.faktor`. | ✅ entworfen |
 | CD5 | **Zuschauer:** Der Gegner zählt mit seinem Ansehen wie ein Bundesligist, das Spiel gilt als Pokalspiel (`cup`). | ✅ |
 | CD6 | **Nicht gebaut:** Ziele des Vorstands mit Europapokal (K28), Interesse der Spieler (K19), Europapokal in der Saisonstatistik (K34). | 📌 später |

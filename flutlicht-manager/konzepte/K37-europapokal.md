@@ -92,8 +92,8 @@ Echte Beträge 2025/26 (Websuche 21.11.):
 |---|---|---|---|
 | Startgeld | 18,62 Mio. | 4,31 Mio. | 3,17 Mio. |
 | Sieg / Unentschieden in der Ligaphase | 2,1 Mio. / 0,7 Mio. | 450.000 / 150.000 | 400.000 / 133.000 |
-| Rangprämie Ligaphase | 1 bis 36 Anteile zu je etwa 275.000 | (nicht recherchiert, vorläufig keine) | (nicht recherchiert, vorläufig keine) |
-| K.-o.-Play-offs | 1 Mio. | (nicht recherchiert) | (nicht recherchiert) |
+| Rangprämie Ligaphase | 1 bis 36 Anteile zu je etwa 275.000 | 1 bis 36 Anteile zu je 75.000, dazu Platz 1–8 600.000 und Platz 9–16 300.000 (Nachtrag 21.11.) | (nicht recherchiert, vorläufig keine) |
+| K.-o.-Play-offs | 1 Mio. | (in der Rangprämie enthalten) | (nicht recherchiert) |
 | Achtelfinale | 11 Mio. | 1,75 Mio. | 800.000 |
 | Viertelfinale | 12,5 Mio. | 2,5 Mio. | 1,3 Mio. |
 | Halbfinale | 15 Mio. | 4,2 bis 4,5 Mio. (Quellen uneins) | 2,5 Mio. |
@@ -184,6 +184,7 @@ REGELN.europa = {
 Alle abgerufen am 21.11.2026 (Websuche):
 - Prämien Champions League 2025/26: [beIN Sports](https://www.beinsports.com/en-us/soccer/uefa-champions-league/articles/uefa-confirms-prize-distribution-for-2025-26-champions-league-2025-08-27), [Football365](https://www.football365.com/news/champions-league-2025-26-prize-money-table-arsenal-liverpool), [beIN Sports, Viertelfinale](https://www.beinsports.com/en-us/soccer/uefa-champions-league/articles/the-fortune-that-the-teams-reaching-the-quarter-finals-of-the-champions-league-like-arsenal-have-pocketed-2026-03-19), UEFA-Rundschreiben 2026/48 ([KSI](https://www.ksi.is/api/download/media/e1wixrnh/20260713_circular_2026_48_en-1.pdf))
 - Prämien Europa League 2025/26: [The Scotsman](https://www.scotsman.com/sport/football/rangers/latest-rangers-news/europa-league-prize-money-202526-how-much-rangers-and-celtic-could-earn-from-playing-in-the-competition-5329844), [FootballTransfers](https://www.footballtransfers.com/en/football-finance/uefa-prize-money/2026/04/europa-league-prize-money-2025-26), [Bolavip](https://bolavip.com/en/soccer/uefa-europa-league-final-prize-money)
+- Rangprämie und Bonus für Platz 1–16 in der Europa League 2025/26 (Nachtrag 21.11.): [FootballTransfers](https://www.footballtransfers.com/en/football-finance/uefa-prize-money/2026/04/europa-league-prize-money-2025-26), [Salary Sport](https://salarysport.com/football/europa-league/prize-money/) (gleiche Aufteilung in Pfund)
 - Prämien Conference League 2025/26: [FootballTransfers](https://www.footballtransfers.com/en/transfer-news/football-finance/uefa-prize-money/2026/04/europa-conference-league-prize-money-2025-26), [SalaryLeaks](https://www.salaryleaks.com/prize-money/uefa-conference-league), [Voronoi](https://www.voronoiapp.com/sports/How-much-money-is-at-stake-in-European-Football-6678)
 - Termine Champions League 2026/27: [UEFA](https://www.uefa.com/uefachampionsleague/news/02a8-21767f4e5e55-bd27f9adffd3-1000--champions-league-2026-27-alle-spiele-und-ergebnisse-der-liga/), [Flashscore](https://www.flashscore.de/news/fu-ball-champions-league-spielplan-termine-auslosungen-tv-alle-infos-zur-liga-phase-der-uefa-champions-league/d07YaiB4/)
 - Termine Europa League und Conference League 2026/27: [UEFA, Europa League](https://www.uefa.com/uefaeuropaleague/news/02a6-20d57cfcd03e-407c22a7f465-1000--2026-27-europa-league-teams-dates-draws-format-final/), [UEFA, Conference League](https://www.uefa.com/uefaconferenceleague/news/02a6-20d57d15f093-a90cf54c928f-1000--202627-conference-league-teams-dates-draws-format-final/)
