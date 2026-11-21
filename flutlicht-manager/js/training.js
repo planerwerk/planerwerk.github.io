@@ -31,11 +31,11 @@ function sprungFaktor(q){const V=RT.verletzung;return q<=V.sprungAb?1:1+V.sprung
 function trainingTag(p,t,a,d){const T=RT,e=einheitFuer(p,t,a,d);if(!e)return 0;const lf=lagerFaktor(p.team,d);if(!lf.training)return 0; // Wetter im Lager: Einheit fällt aus
   const[u,iz]=e,E=T.einheiten[u]||{},I=T.intensitaet[iz]||T.intensitaet.normal;
   const df=(E.frische||0)>0?E.frische*I.wirkung:(E.frische||0)*I.frische;
-  p.wk=(p.wk||0)+(E.kondition||0)*I.wirkung*stabFaktor(p.team,'kondition')*lf.kondition;p.we=(p.we||0)+(E.entwicklung||0)*I.wirkung*lf.training*(p.fit<T.entwicklung.frischeUnter?T.entwicklung.frischeFaktor:1);
+  p.wk=(p.wk||0)+(E.kondition||0)*I.wirkung*stabFaktor(p.team,'kondition')*lf.kondition;p.we=(p.we||0)+(E.entwicklung||0)*I.wirkung*lf.training*gelaendeFaktor(p.team)*(p.fit<T.entwicklung.frischeUnter?T.entwicklung.frischeFaktor:1);
   if(u!=='frei'&&u!=='regeneration')p.wt=(p.wt||0)+1;if(E.lernen)p.wl=1;
   if(E.praxis)p.sp=Math.min(100,p.sp+RP.spielpraxis.jeSpiel*E.praxis*I.wirkung);
   lastBuchen(p,Math.max(0,-df));
-  if(E.risiko!==0&&u!=='frei'&&u!=='regeneration'){const V=T.verletzung,r=V.basis*I.risiko*(E.risiko||1)*sprungFaktor(lastQuote(p))*(p.fit<V.frischeAb?1+V.frischeJePunkt*(V.frischeAb-p.fit):1)*verletzRisiko(p)*rueckfallFaktor(p)*stabFaktor(p.team,'athletik');
+  if(E.risiko!==0&&u!=='frei'&&u!=='regeneration'){const V=T.verletzung,r=V.basis*I.risiko*(E.risiko||1)*sprungFaktor(lastQuote(p))*(p.fit<V.frischeAb?1+V.frischeJePunkt*(V.frischeAb-p.fit):1)*verletzRisiko(p)*rueckfallFaktor(p)*stabFaktor(p.team,'athletik')*gelaendeRisiko(p.team);
     if(R()<r&&verletzen(p,'training'))p.tinj=(p.tinj||0)+1;}
   return df;}
 // Verein am Tag d: Vertrautheit aus Taktik-Einheiten und Spielvorbereitung (K07 §5.3), Merker für Spielvorbereitung und Standards

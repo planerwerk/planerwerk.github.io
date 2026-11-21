@@ -1,6 +1,6 @@
 # K26 – Stadion und Infrastruktur
 
-Status: **Entwurf** (8. November 2026), nach „weiter, entscheide du“. Vorläufige Entscheidungen stehen in Abschnitt 12.
+Status: **Entwurf** (8. November 2026), nach „weiter, entscheide du“. Vorläufige Entscheidungen stehen in Abschnitt 12. **Teilschritt K26a umgesetzt (21. November 2026, popolupo, §5.1), noch ohne Testlauf.**
 Hängt ab von: K23 (Finanzen), K27 (Fans) · Wird gebraucht von: K07, K08, K10, K24, K25.
 
 ## 1. Ziel und Spielgefühl
@@ -68,6 +68,24 @@ Hängt ab von: K23 (Finanzen), K27 (Fans) · Wird gebraucht von: K07, K08, K10, 
 - **Anlagen:** Kosten steigen je Stufe (×1,6), laufende Kosten je Stufe.
 - **Abnehmender Nutzen:** Kapazität über der Nachfrage bringt nichts, außer in Spitzenspielen. Die Vorhersage zeigt die zu erwartende Auslastung als Band (K35a).
 
+### 5.1 Umsetzung K26a (21.11.2026, popolupo): Bauprozess und Anlagen
+
+- **Bauprozess für alle Bauten** (§4, auch Tribüne, Logen, Fanshop): eine Baustelle zur Zeit wie bisher. Erst die **Genehmigung** (2 bis 8 Wochen, mit 20 % Auflagen: +5 bis +15 % Kosten). Dann der **Bau** mit der bisherigen Dauer. Mit 30 % **Verzögerung** um 1 bis 6 Wochen, mit 15 % **Mehrkosten** von 5 bis 20 %. Die Baukosten zahlst du beim Start, Auflagen beim Baubeginn, Mehrkosten beim Ende. Alles wird beim Start im eigenen Strom `bau` gewürfelt, gemeldet wird es, wenn es eintritt. Während eine Tribüne gebaut wird, fehlen ihre 3.000 Plätze.
+- **Anlagen** (§3.2), Kosten der nächsten Stufe = Grundkosten × 1,6 je erreichter Stufe:
+
+  | Anlage | Stufen | Start | Grundkosten | Bauzeit | Wirkung |
+  |---|---|---|---|---|---|
+  | Trainingsgelände | 1–5 | 2 | 2 Mio. € | 10 Wochen | Entwicklung im Training × (1 + 0,05 × (Stufe − 2)), Verletzungsrisiko im Training × (1 − 0,04 × (Stufe − 2)). Auf der Startstufe wie bisher. |
+  | Nachwuchsleistungszentrum | 0–5 | 0 | 1,5 Mio. € | 16 Wochen | hebt den Deckel des Jugendniveaus (K08) um 6 je Stufe (70 bis 100). Die Jugendarbeit (K08) bleibt daneben bestehen (Abweichung von §3.2). |
+  | Reha-Zentrum | 0–3 | 0 | 1 Mio. € | 8 Wochen | Ausfallzeit −3 % je Stufe, mit dem Physiotherapeuten zusammen höchstens −25 % (K10, K16) |
+  | Catering | 0–1 | 0 | 1,5 Mio. € | 6 Wochen | Zuschauereinnahmen +5 % |
+  | Anzeigetafel | 0–1 | 0 | 1 Mio. € | 4 Wochen | Zuschauereinnahmen +3 % |
+
+- **Instandhaltung** (§5): 1 % der Bausumme im Jahr, monatlich gebucht („Instandhaltung“, laufend in der Prognose von K23a). Gezählt werden die Bauten ab K26a.
+- **Computer-Vereine** bauen noch nicht (§7). Ihre Anlagen bleiben auf der Startstufe, das Trainingsgelände wirkt dort also wie bisher.
+- **Lizenz:** Bereich `stadion` (wie die Tribünen), kein neuer Bereich.
+- **Noch nicht:** Steh- und Sitzplätze, Business-Seats, Dach, Rasenheizung, Flutlicht, Rasenqualität mit Greenkeeper (§3.2a), Eigentum und Miete (§3.3), neues Stadion als Großprojekt, Karten aus §8, Bauen der Computer-Vereine.
+
 ## 6. Hebel des Spielers
 
 | Hebel | Nutzen | Preis |
@@ -126,6 +144,16 @@ stadion:{
 **Ergänzt am 10. November 2026:** Der Platzwart heißt jetzt Greenkeeper und gehört zum Stab (K16 §12 Nr. 15), damit er wie alle Mitarbeiter eingestellt, bezahlt und abgeworben wird. Die Rasenqualität hat eigene Regeln (3.2a).
 
 **Noch zu recherchieren:** echte Baukosten je Platz, Stehplatzanteile der Bundesliga-Stadien, Eigentumsverhältnisse der Stadien.
+
+**Vorläufig entschieden mit K26a (21.11.2026, popolupo):**
+
+1. Bauprozess mit Genehmigung, Auflagen, Verzögerung und Mehrkosten für alle Bauten, gewürfelt beim Start im eigenen Strom (§5.1).
+2. Trainingsgelände mit Startstufe 2 und neutraler Wirkung dort, damit sich ohne Ausbau nichts ändert (§5.1).
+3. Nachwuchsleistungszentrum hebt den Deckel des Jugendniveaus, die Jugendarbeit bleibt (§5.1).
+4. Reha-Zentrum mit Physio zusammen höchstens −25 % Ausfallzeit (§5.1).
+5. Catering +5 %, Anzeigetafel +3 % auf die Zuschauereinnahmen (§5.1).
+6. Instandhaltung 1 % der Bausumme im Jahr, nur für Bauten ab K26a (§5.1).
+7. Computer-Vereine bauen noch nicht (§5.1).
 
 ## Quellen
 

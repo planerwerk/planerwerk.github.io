@@ -27,7 +27,8 @@ function spanne(t,breite){return[Math.max(1,Math.round(t*(1-breite*R()))),Math.m
 
 // Verletzung oder Krankheit anlegen. Gibt die Verletzung zurück (oder null, wenn der Spieler schon ausfällt).
 function verletzen(p,q,o={}){if(!p||p.team<0)return null;const art=o.art||artFuer(q,p),A=RMD.arten[art];
-  let t=dauerFuer(art);if(q!=='krankheit')t=Math.max(1,Math.round(t*stabFaktor(p.team,'physio')));
+  let t=dauerFuer(art);if(q!=='krankheit')t=Math.max(1,Math.round(t*Math.max(RB.anlagen.reha.minFaktor,stabFaktor(p.team,'physio')*rehaFaktor(p.team)))); // Reha-Zentrum (K26 §5.1, K26a)
+ 
   if(p.inj>0&&p.vl&&p.inj>=t)return null;const heute=absTag(S.tag),b=arztBreite(p.team),D=RMD.diagnose;
   p.inj=t+1; // Zähler läuft ab morgen herunter (wie bisher: w Wochen = die nächsten 7·w Tage)
   p.vl={art,q,ab:heute,t,dg:heute+(q==='krankheit'?0:diagnoseTage(p.team)),sv:spanne(t,D.verdacht*b),sd:spanne(t,D.genau*b)};

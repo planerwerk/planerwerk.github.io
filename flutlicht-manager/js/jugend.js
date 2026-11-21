@@ -21,8 +21,8 @@ function jugendStabAufbau(){const A=RST.start,ab=A.rolleAbAnsehen.jugend||0;S.jg
 const jugendStufe=()=>autoB('jugend')?RS.nachwuchs.computerStufe:myT().youth;
 // Jugendniveau 0–100 (K08 §5.0): Startwert nach Ansehen. Die Stufe der Ausgaben setzt das Ziel, das Niveau folgt langsam: Aufbau höchstens 6 Punkte je Saison,
 // Abbau schneller. Bis zum Leistungszentrum (K26) gilt ein fester Deckel.
-function jugendNiveau(){const t=myT(),N=RJ.niveau;if(t.jn==null)t.jn=clamp(Math.round(N.start[0]+N.start[1]*t.rep),0,N.deckel);return t.jn;}
-const jugendZiel=()=>Math.min(RJ.niveau.deckel,RJ.niveau.ziel[jugendStufe()]||0);
+function jugendNiveau(){const t=myT(),N=RJ.niveau;if(t.jn==null)t.jn=clamp(Math.round(N.start[0]+N.start[1]*t.rep),0,jugendDeckel());return t.jn;}
+const jugendZiel=()=>Math.min(jugendDeckel(),RJ.niveau.ziel[jugendStufe()]||0);
 function jugendNiveauWoche(){const N=RJ.niveau,t=myT(),jn=jugendNiveau(),z=jugendZiel();t.jn=jn<z?Math.min(z,jn+N.aufbau/52):Math.max(z,jn-N.abbau/52);}
 // Trainingsfaktor im Jugendkader (K08 §5.2): aus Jugendniveau und Qualität des Jugendtrainers
 const jugendTraining=()=>{const T=RJ.training;return T.basis+T.jeNiveau*jugendNiveau()+T.jeTrainer*jugendTrainerQ(S.my);};
@@ -134,10 +134,10 @@ function praegungUmgang(p,thema){if(p.prO&&['lob','kritik','schuetzen'].includes
 // ---------- Anzeige ----------
 // Karte „Jugendarbeit“: Ausgaben als Stufe, Jugendniveau als Regler mit Ziel und Deckel
 function jugendArbeitKarte(){const t=myT(),N=RJ.niveau,jn=jugendNiveau(),z=jugendZiel();
-  return`<div class="card"><h2>Jugendarbeit</h2><div class="rgs">${rgAnzeige({label:'Jugendniveau',sub:'0–100: bestimmt das Talent der Jahrgänge und das Tempo im Jugendkader',min:0,max:100,wert:Math.round(jn),marker:[{v:z,t:'Ziel'},{v:N.deckel,t:'Deckel'}]})}</div>
+  return`<div class="card"><h2>Jugendarbeit</h2><div class="rgs">${rgAnzeige({label:'Jugendniveau',sub:'0–100: bestimmt das Talent der Jahrgänge und das Tempo im Jugendkader',min:0,max:100,wert:Math.round(jn),marker:[{v:z,t:'Ziel'},{v:jugendDeckel(),t:'Deckel'}]})}</div>
     <p>Die Ausgaben setzen das Ziel, das Niveau folgt langsam: höchstens +${N.aufbau} Punkte pro Saison nach oben, bis zu −${N.abbau} nach unten. Gute Jugendarbeit ist eine Sache von vielen Jahren.</p>
     <div class="opts">${[1,2,3,4,5].map(l=>`<button class="opt ${t.youth===l?'on':''}" onclick="setJugend(${l})"${lzAus('jugend')}><b>Stufe ${l}</b><span>${fmt(RF.jugendKosten[l])} pro Spieltag · Ziel ${Math.min(N.deckel,N.ziel[l])}</span></button>`).join('')}</div>${lzHinweis('jugend')}
-    <p class="dim">Deckel ${N.deckel}: Mehr geht erst mit einem Leistungszentrum (kommt mit dem Ausbau der Infrastruktur). Stufen mit einem Ziel über dem Deckel bringen bis dahin nicht mehr.</p></div>`;}
+    <p class="dim">Deckel ${jugendDeckel()}: Mehr geht mit dem Ausbau des Nachwuchsleistungszentrums (Stadion, Anlagen: +6 je Stufe). Stufen mit einem Ziel über dem Deckel bringen bis dahin nicht mehr.</p></div>`;}
 // Karte im Reiter „Training & Jugend“
 function jugendKarte(){const A=RJ.aufruecken,l=jugendKader().slice().sort((a,b)=>b.age-a.age||b.str-a.str),hat=S.stab&&stabVon(S.my,'jugend').length,zw=hatZweite();
   const zeile=p=>`<tr class="click" onclick="openP(${p.id})"><td>${esc(p.n)}</td><td><span class="pos ${p.pos}">${p.fp||p.pos}</span></td><td class="num">${p.age}</td><td class="num">${Math.round(p.str)}</td><td>${stars(p)}</td>

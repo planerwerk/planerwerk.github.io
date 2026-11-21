@@ -24,9 +24,12 @@ Gegenstück zu `tests/testprotokoll.md`. Asynchroner Kanal von der Entwicklung a
 | K23d | Budgets vom Vorstand (Gehaltsrahmen, Transferbudget), Bezug zum Zielgespräch (K28) | nach K23c |
 | K23e | Raten bei Ablösen, Kredit mit Laufzeit, Gehaltsverzicht, Karten (Mäzen, Steuerprüfung) | fertig, ungetestet (siehe Changelog) |
 
-Solange K23b auf die Messwerte wartet, baue ich **K25 Marketing** (Zweig `mitarbeit/popolupo-k25-marketing`, auf dem K23-Zweig): K25a fertig, ungetestet. Danach **K26 Stadion** (Zweig `mitarbeit/popolupo-k26-stadion`, auf K25). **Die neueste Spitze ist immer der zuletzt genannte Zweig, er enthält alles davor.**
+Solange K23b auf die Messwerte wartet, baue ich weiter:
+- **K25 Marketing** (Zweig `mitarbeit/popolupo-k25-marketing`, auf dem K23-Zweig): K25a fertig, ungetestet.
+- **K26 Stadion** (Zweig `mitarbeit/popolupo-k26-stadion`, auf K25): K26a fertig, ungetestet.
+- **Jetzt:** K37 als Konzept, danach U19 Europapokal (Zweig `mitarbeit/popolupo-u19-europapokal`, auf K26).
 
-Danach in dieser Reihenfolge, wenn nichts dazwischenkommt: K25 Marketing, K26 Stadion, K37 als Konzept und U19 Europapokal. Rest von K24 bleibt bei Claude.
+**Die neueste Spitze ist immer der zuletzt genannte Zweig, er enthält alles davor.** Rest von K24 bleibt bei Claude.
 
 ---
 
@@ -38,6 +41,23 @@ Danach in dieser Reihenfolge, wenn nichts dazwischenkommt: K25 Marketing, K26 St
 ---
 
 ## Changelog
+
+### 21.11.2026: K26a Stadion, Anlagen, Bauprozess (Zweig `mitarbeit/popolupo-k26-stadion`, auf K25)
+
+- **Neu:** `js/stadion.js`, in `REGELN.stadion` neu `prozess`, `instandhaltung` und `anlagen`.
+  - Jeder Bau (auch Tribüne, Logen, Fanshop) braucht erst eine Genehmigung (2 bis 8 Wochen, 20 % mit Auflagen +5 bis +15 %). Danach kommt die Bauzeit, 30 % werden 1 bis 6 Wochen später fertig, 15 % kosten 5 bis 20 % mehr. Alles wird beim Start im eigenen Strom `bau` gewürfelt und gemeldet, wenn es eintritt.
+  - Tribüne: Während des Baus fehlen 3.000 Plätze (CB4).
+  - Fünf Anlagen in Stufen: Trainingsgelände (Entwicklung und Verletzungsrisiko), Nachwuchsleistungszentrum (Deckel des Jugendniveaus), Reha-Zentrum (Ausfallzeit), Catering und Anzeigetafel (Zuschauereinnahmen). Neue Karte „Anlagen“ im Stadion.
+  - Instandhaltung 1 % der Bausumme im Jahr, monatlich gebucht.
+  - Zuerst nur dein Verein, Computer-Vereine bauen nicht.
+- **Geld und Welt:** ohne Ausbau unverändert (CB1). Alte Spielstände mit laufender Baustelle werden wie bisher fertig.
+- **Tests zuerst:**
+  - `tests/stadion.js` (neu, sechs Prüfungen)
+  - `tests/code.js`
+  - `tests/training.js`, `tests/medizin.js`, `tests/jugend.js` (neue Faktoren, zum Start neutral)
+  - `tests/lizenz.js` (CB3)
+  - `tests/seed.js` (Speichern und Laden mit neuer Baustelle)
+- **Doku:** K26 §5.1, §12 Nr. 1 bis 7, K33, K36 Nr. 54, Konsistenzprüfung CB, offene Entscheidungen, Test-README.
 
 ### 21.11.2026: K25a Marketing (Zweig `mitarbeit/popolupo-k25-marketing`, auf dem K23-Zweig)
 

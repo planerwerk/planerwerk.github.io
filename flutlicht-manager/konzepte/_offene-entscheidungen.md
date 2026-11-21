@@ -455,6 +455,16 @@ Datei: `konzepte/K26-stadion.md`
 
 **Noch zu recherchieren:** echte Baukosten je Platz, Stehplatzanteile der Bundesliga-Stadien, Eigentumsverhältnisse der Stadien.
 
+**Mit K26a von popolupo vorläufig entschieden (21.11.2026, K26 §12 Nr. 1 bis 7):**
+
+- Bauprozess mit Genehmigung, Auflagen, Verzögerung und Mehrkosten für alle Bauten, gewürfelt beim Start.
+- Trainingsgelände ab Stufe 2 mit neutraler Wirkung dort.
+- Das Nachwuchsleistungszentrum hebt den Deckel des Jugendniveaus.
+- Reha-Zentrum und Physio zusammen höchstens −25 % Ausfallzeit.
+- Catering +5 %, Anzeigetafel +3 % auf die Zuschauereinnahmen.
+- Instandhaltung 1 % der Bausumme im Jahr.
+- Computer-Vereine bauen noch nicht.
+
 **Ergänzt 10.11.:** Greenkeeper (Platzwart) im Stab (K16), Rasenqualität 0–100 je Platz mit kleiner Wirkung auf Ballbesitzstile, Verletzungsrisiko und Heimvorteil (K26 3.2a, Spielwerte).
 
 ## K27 – Fans und Zuschauer

@@ -419,7 +419,7 @@ const REGELN={
   // minSpiele: so viele eigene Ligaspiele braucht der Schnitt dieser Saison, sonst gilt der der letzten Saison. lizenzTag, nachweisTag: Datum (MM-TT) der Prüfung und der Frist.
   // auflage: Vertrauen bei Auflagen. insolvenz: so viele Monatserste nacheinander unter dem negativen Kreditrahmen, Punktabzug, Vertrauen. warnMonate: Vorlauf der Warnung.
   // monatTage: Tage je Monat für die Warnung. PUNKTABZUG GESCHÄTZT (K23 §12 Nr. 9).
-  finanzplan:{laufend:['TV-Gelder','Sponsor','Zuschauer','VIP-Logen','Fanartikel','Gehälter','Trainerstab','Prämien','Stadion & Betrieb','Jugendarbeit','Zweite Mannschaft','Kreditzinsen','Scouting'],
+  finanzplan:{laufend:['TV-Gelder','Sponsor','Zuschauer','VIP-Logen','Fanartikel','Gehälter','Trainerstab','Prämien','Stadion & Betrieb','Jugendarbeit','Zweite Mannschaft','Kreditzinsen','Scouting','Instandhaltung'],
     minSpiele:3,lizenzTag:'03-01',nachweisTag:'05-31',auflage:-5,insolvenz:{monate:2,punkte:9,vertrauen:-30},warnMonate:3,monatTage:30,
     // K23e (§5.5d): kredit: Laufzeiten in Jahren, Standard. raten: Anzahlung, Aufschlag auf den Rest, Zahl der Monatsraten. verzicht: Anteil der Gehälter, Dauer in Tagen, Stimmung. GESCHÄTZT.
     kredit:{jahre:[1,2,3,4,5],standard:3},raten:{anzahlung:0.5,aufschlag:0.05,monate:12},verzicht:{anteil:0.15,tage:90,stimmung:-10}},
@@ -874,7 +874,15 @@ const REGELN={
   stadion:{
     tribuene:{plaetze:3000,kosten:4.5e6,wochen:6,max:90000},
     logen:{anzahl:10,kosten:2.5e6,wochen:4,max:120},
-    fanshop:{kosten:[1.5e6,3e6,5e6],wochen:3,max:3}
+    fanshop:{kosten:[1.5e6,3e6,5e6],wochen:3,max:3},
+    // Bauprozess (K26 §4, §5.1, K26a): genehmigung Wochen, auflagen Chance und Mehrkosten, verzoegerung Chance und Wochen, mehrkosten Chance und Anteil. instandhaltung: Anteil der Bausumme je Jahr.
+    // anlagen: Stufen min/max, Start, Grundkosten (× faktor je erreichter Stufe), Wochen, Wirkung. ALLE WERTE GESCHÄTZT (K26 §12).
+    prozess:{genehmigung:[2,8],auflagen:{chance:0.2,kosten:[0.05,0.15]},verzoegerung:{chance:0.3,wochen:[1,6]},mehrkosten:{chance:0.15,anteil:[0.05,0.2]}},instandhaltung:0.01,
+    anlagen:{training:{name:'Trainingsgelände',start:2,max:5,kosten:2e6,wochen:10,entwicklung:0.05,risiko:-0.04},
+      nlz:{name:'Nachwuchsleistungszentrum',start:0,max:5,kosten:1.5e6,wochen:16,deckelJe:6},
+      reha:{name:'Reha-Zentrum',start:0,max:3,kosten:1e6,wochen:8,je:0.03,minFaktor:0.75},
+      catering:{name:'Catering',start:0,max:1,kosten:1.5e6,wochen:6,zuschauer:0.05},
+      tafel:{name:'Anzeigetafel',start:0,max:1,kosten:1e6,wochen:4,zuschauer:0.03},faktor:1.6}
   },
 
   ui:{

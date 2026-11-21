@@ -27,7 +27,7 @@ function finanzenMonat(d){const t=myT();let M=S.finM;const mo=mmtt(d).slice(0,2)
     (S.finV=S.finV||[]).push({mo:M.mo,ein,aus,saldo:ein+aus,k,cash:t.cash,prog});
     const warn=bald<R0?` Achtung: Nach der Prognose fällt der Kontostand in den nächsten drei Monaten unter den Kreditrahmen (${fmt(R0)}). Dann droht die Insolvenz.`:'';
     news(`Monatsbericht ${monatName(M.mo)}: Einnahmen ${fmt(ein)}, Ausgaben ${fmt(-aus)}, Saldo ${fmt(ein+aus)}.${k?` Kredit ${k>0?'aufgenommen':'getilgt'}: ${fmt(Math.abs(k))}.`:''} Kontostand ${fmt(t.cash)}, Prognose zum Saisonende ${fmt(prog)}.${warn}`,warn||ein+aus<0?'bad':'');}
-  S.finM={s:S.season,mo,fin:Object.assign({},fin),cash:t.cash,k:kreditNetto()};monatsRaten();}
+  S.finM={s:S.season,mo,fin:Object.assign({},fin),cash:t.cash,k:kreditNetto()};monatsRaten();instandhaltung();} // Instandhaltung der Bauten (K26 §5.1)
 // Insolvenz (K23 §5.4): an zwei Monatsersten nacheinander unter dem negativen Kreditrahmen. Punktabzug, Vertrauen, Schuldenschnitt, höchstens einmal je Saison.
 function insolvenzPruefen(){const t=myT(),L=lzpS(),I=RFP.insolvenz;if(t.cash<-kreditRahmen(t))L.unter=(L.unter||0)+1;else L.unter=0;
   if(L.unter<I.monate||L.ins===S.season||S.phase!=='play')return;L.ins=S.season;L.unter=0;

@@ -1251,3 +1251,21 @@ Zweig `mitarbeit/popolupo-k25-marketing` (baut auf `mitarbeit/popolupo-k23-finan
 | CA5 | **Fanarbeit wirkt auf die Pfiffe** (K27), weil es noch keine Pyrotechnik gibt (K09). | 📌 vorläufig |
 | CA6 | **Nicht gebaut:** Dauerkarten-Aktion, Mitgliederaktion, Online-Shop, Sortiment in Stufen, Kampagnen der Computer-Vereine, Karten aus K25 §8 (Retro-Trikot zum Jubiläum, Trikot ausverkauft), Tradition als Stammdatum. | 📌 später |
 | CA7 | **`tests/marketing.js`:** sechs Prüfungen, siehe Test-README. Nie gelaufen. | ⚠️ offen |
+
+---
+
+## CB. Nachtrag zu K26a Stadion: Bauprozess, Anlagen, Instandhaltung (21. November 2026, popolupo, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-k26-stadion` (baut auf `mitarbeit/popolupo-k25-marketing` auf). Konzept: K26 §5.1, §12 Nr. 1 bis 7. Neue Datei `js/stadion.js`. Kein Test gelaufen.
+
+| # | Befund | Status |
+|---|---|---|
+| CB1 | **Welt neutral zum Start:** Das Trainingsgelände beginnt auf Stufe 2 mit Faktor 1, Nachwuchsleistungszentrum und Reha-Zentrum auf Stufe 0 (Deckel 70 wie bisher, Faktor 1). Catering und Anzeigetafel fehlen zum Start. Ohne Ausbau ändert sich nichts an Training, Jugend, Verletzungen und Zuschauereinnahmen. | ✅ entworfen |
+| CB2 | **Eigener Strom `bau`** je Saison, Tag und Bauteil. Alle Würfe (Genehmigung, Auflagen, Verzögerung, Mehrkosten) fallen beim Start. Kein anderer Strom verschiebt sich. | ✅ |
+| CB3 | **Gleichschritt (`tests/lizenz.js`):** Bauen startet nur der Mensch, `stadion` hat keine Automatik. Ohne Bau läuft `bauTag` leer. | ✅ entworfen |
+| CB4 | **Tribüne:** Während des Baus fehlen 3.000 Plätze, danach kommen 6.000 dazu, zusammen +3.000 wie bisher. Bei einer laufenden alten Baustelle ohne Phase kommen wie bisher 3.000 dazu. | ✅ entworfen |
+| CB5 | **Reha und Physio zusammen höchstens −25 %** Ausfallzeit. Der Physio allein schafft höchstens −25 % (`stab.physio.max`), die Untergrenze ändert für Vereine ohne Reha-Zentrum nichts. | ✅ |
+| CB6 | **Computer-Vereine bauen noch nicht.** Ihre Anlagen stehen auf der Startstufe, Instandhaltung zahlen sie nicht. | 📌 vorläufig |
+| CB7 | **`startBuildAlt`** in `js/aktionen.js` bleibt als alter Ablauf stehen, wird aber nicht mehr aufgerufen. Kann weg, sobald `tests/stadion.js` gelaufen ist. | 📌 aufräumen |
+| CB8 | **Nicht gebaut:** neues Stadion als Großprojekt, Stehplätze und Sitzplätze, Rasenqualität und Rasenheizung, Flutlicht, Parkplätze, Namensrechte, Zuschuss der Stadt. | 📌 später |
+| CB9 | **`tests/stadion.js`:** sechs Prüfungen, siehe Test-README. Nie gelaufen. | ⚠️ offen |
