@@ -100,12 +100,17 @@ function auslandKaeufer(p,preis){const A=RW.ausland;return(S.ausland?S.ausland.v
 // Abwanderung (K32 §8, T1.3, vorläufig): Einmal je Sommerfenster kaufen Auslandsvereine Spieler aus den drei Ligen, bei allen Vereinen, deren Transfers nicht du führst
 // (Computer-Vereine und dein Verein in der Automatik, gleiche Regel). Je Liga eine gewürfelte Zahl, die Stärksten zuerst (mit Schätzfehler), höchstens jeVerein je Verein.
 // Käufer ist der zahlungsfähige Auslandsverein, dessen Grundstärke der Stärke des Spielers am nächsten liegt. Eigener Strom. Rückgabe [{p, von, preis, v}] für den Markt.
-function auslandAbwanderung(vereine){if(!S.ausland)return[];const A=RW.ausland.abwanderung,out=[];
+// Käufer nur, wenn der Spieler dort einen Kernplatz bekäme (kernKuerzen würde ihn behalten), und je Auslandsverein höchstens ein Kauf je Sommer.
+// Nach dem Kauf wird der Kern des Käufers gleich auf Plan gekürzt (sonst hätte er bis zum Saisonende zu viele Kernspieler, gefunden in Lauf 4).
+function avPlatzFuer(v,p){const P=kernPlan(v),k=avKader(v.id);if(istTalent(p)){const t=k.filter(istTalent).sort((a,b)=>b.pot-a.pot);return P.talente>0&&(t.length<P.talente||p.pot>t[P.talente-1].pot);}
+  const n=P.platz[p.pos]||0,l=k.filter(q=>!istTalent(q)&&q.pos===p.pos).sort((a,b)=>b.str-a.str);return n>0&&(l.length<n||p.str>l[n-1].str);}
+function auslandAbwanderung(vereine){if(!S.ausland)return[];const A=RW.ausland.abwanderung,out=[],belegt=new Set();
   mitStrom(strom('abwanderung',S.season),()=>{for(const lg of [1,2,3]){if(!A.liga[lg])continue;const ids=new Set(vereine.filter(t=>t.lg===lg).map(t=>t.id)),n=riA(A.liga[lg]),jeV=new Map();let k=0;
     const kand=S.pl.filter(p=>ids.has(p.team)&&p.age<=A.alterMax&&p.str>=A.ab[lg]&&!p.wech&&!p.leihe&&!p.zwP).map(p=>({p,w:p.str+(R()-0.5)*2*RCV.schaetzFehler})).sort((a,b)=>b.w-a.w||a.p.id-b.p.id);
-    for(const {p} of kand){if(k>=n)break;if((jeV.get(p.team)||0)>=A.jeVerein)continue;const preis=Math.round(vwAusland(p)*A.preis/RM.runden)*RM.runden,l=auslandKaeufer(p,preis);if(!l.length)continue;
-      const v=l.reduce((b,x)=>Math.abs(avStaerke(x)-p.str)<Math.abs(avStaerke(b)-p.str)?x:b);jeV.set(p.team,(jeV.get(p.team)||0)+1);k++;out.push({p,von:p.team,preis,v});}}});
+    for(const {p} of kand){if(k>=n)break;if((jeV.get(p.team)||0)>=A.jeVerein)continue;const preis=Math.round(vwAusland(p)*A.preis/RM.runden)*RM.runden,l=auslandKaeufer(p,preis).filter(x=>!belegt.has(x.id)&&avPlatzFuer(x,p));if(!l.length)continue;
+      const v=l.reduce((b,x)=>Math.abs(avStaerke(x)-p.str)<Math.abs(avStaerke(b)-p.str)?x:b);belegt.add(v.id);jeV.set(p.team,(jeV.get(p.team)||0)+1);k++;out.push({p,von:p.team,preis,v});}}});
   out.forEach(({p,von,preis,v})=>{const t=S.teams[von];if(von===S.my){money('Transfers',preis);vertragEnde(p);}else t.cash+=preis;
     kabineAbgang(p,von);S.offers=S.offers.filter(o=>o.pid!==p.id);insAusland(p,v.id);statTransfer(p,preis,von,v.id);
+    {const weg=new Set();kernKuerzen(v,avKader(v.id),weg);if(weg.size){S.ausland.pl=S.ausland.pl.filter(q=>!weg.has(q.id));weg.forEach(id=>PIX.delete(id));}} // Kern des Käufers auf Plan
     news(`Wechsel perfekt: ${p.n} geht für ${fmt(preis)} von ${t.name} zu ${v.name} (${gruppenName(avGruppe(v))}).`,'tr');if(von===S.my)stabMeldung(`Der Verein hat ${p.n} für ${fmt(preis)} an ${v.name} verkauft.`);});
   return out;}
