@@ -46,6 +46,18 @@ Solange K23b auf die Messwerte wartet, baue ich weiter:
 
 ## Changelog
 
+### 21.11.2026: Finanzplan nach einer Prüfung ohne Laufzeit korrigiert (Zweig `mitarbeit/popolupo-u19-europapokal`)
+
+- **Behoben** (Konsistenzprüfung CI):
+  - Monatsbericht an der Saisongrenze, zwölf statt elf Raten im Jahr (CI1).
+  - Saldo je Spiel nach einem Vereinswechsel (CI2).
+  - Transfersperre nicht mehr über Juni-Käufe und Automatik umgehbar (CI3).
+  - Schuldenschnitt zählt nicht für das Nebenziel „Finanzen“ (CI4).
+  - Erster Monatsbericht pünktlich (CI5), Mindestrate bei Krediten (CI6).
+- **Hinweis für dich (CI1):** Der 1. Juli läuft nie durch `taeglich`, weil `weiter` nach `newSeason` abbricht. Das betrifft alle Tagesaufgaben, nicht nur meine.
+- **Auch geändert:** `tests/sim.js` ruft nach dem Vereinswechsel `finanzenStart` auf.
+- **Tests zuerst:** `tests/finanzen.js` (besonders Nr. 4, Kontostand über eine Saison), `tests/vorstand.js` (Nebenziel Finanzen).
+
 ### 21.11.2026: Europapokal nach einer Prüfung ohne Laufzeit korrigiert (Zweig `mitarbeit/popolupo-u19-europapokal`)
 
 - **Zwei schwere Fehler behoben** (Konsistenzprüfung CH):

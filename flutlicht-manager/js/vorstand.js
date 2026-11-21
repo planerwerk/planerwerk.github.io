@@ -66,7 +66,7 @@ function nebenzielStand(z,ende){
     return dabei(z.min)?'erfuellt':(ende||!c.alive.includes(S.my))?'verfehlt':'offen';}
   if(z.k==='jugend')return jugendEinsaetze()>=z.min?'erfuellt':ende?'verfehlt':'offen';
   if(z.k==='europa')return euZielStand(z,ende);
-  if(z.k==='finanzen'){const s=Object.values(S.fin||{}).reduce((a,b)=>a+b,0);return ende?(s>=0?'erfuellt':'verfehlt'):(s<0?'gefaehrdet':'offen');}
+  if(z.k==='finanzen'){const s=Object.entries(S.fin||{}).filter(([k])=>k!=='Schuldenschnitt').reduce((a,[,v])=>a+v,0);return ende?(s>=0?'erfuellt':'verfehlt'):(s<0?'gefaehrdet':'offen');}
   return'offen';}
 // Baustein „Ziele“ im Vertrauen (montags)
 function zieleBaustein(){const N=RV.nebenziele;let s=0;meineZiele().forEach(z=>{const st=nebenzielStand(z,false);s+=st==='erfuellt'?N.erfuellt:st==='verfehlt'?N.verfehlt:st==='gefaehrdet'?N.gefaehrdet:0;});

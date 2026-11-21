@@ -1362,4 +1362,22 @@ Ein zweiter Durchgang hat `js/europa.js` und alle Anschlüsse nur gelesen (eigen
 | CH7 | **Europapokaltore** wurden nicht zurückgesetzt. Schon mit CG3 behoben. | ✅ |
 | CH8 | **`tests/europapokal.js` Nr. 6** brach bei fehlender Runde mit einem Fehler ab statt sauber zu scheitern. | ✅ behoben |
 | CH9 | **Ohne Befund geprüft:** Datenformen von Hin- und Rückspiel in allen Lese- und Schreibstellen, Bauplan der Ligaphase (je Spieltag ein Spiel, Heimspiele, Gegner je Topf), Turnierbaum und Termine, Terminindex, alle Spielpfade mit Auslandsvereinen, Zufall nur über Ströme, `F.` gegen `ev(...)` in den Tests. | ✅ |
+| CH11 | **Zweite Prüfung, Finanzplan, Marketing, Stadion:** siehe CI. | ✅ |
 | CH10 | **Laufzeit der Auslosung:** im schlechtesten Fall 30 Baupläne mit je 3.000 Tauschversuchen, grob eine bis zwei Sekunden. Meist reicht der erste Bauplan. Bitte beim Testlauf auf die Dauer achten. | ⚠️ messen |
+
+---
+
+## CI. Prüfung von K23a, K23e, K25a, K26a ohne Laufzeit (21. November 2026, popolupo)
+
+Wieder ein eigener Prüf-Agent, nur lesend. Keine Laufzeitfehler gefunden, aber diese Fehler:
+
+| # | Befund | Status |
+|---|---|---|
+| CI1 | **Der 1. Juli läuft nie durch `taeglich`** (`weiter` bricht nach `newSeason` ab). Folgen im Finanzplan: Der Bericht am 1. August hieß „Juni“, enthielt aber den Juli. Der Juni wurde nie berichtet, Tilgung und Raten liefen nur elfmal im Jahr. Jetzt schließt `newSeasonLauf` den Juni mit `finanzenMonat(…, true)`, und `finanzenSaisonstart` bucht Tilgung, Raten und Instandhaltung des 1. Juli in die neue Saison. **Allgemein für dich:** Auch andere Tagesaufgaben laufen am 1. Juli nicht. Bisher ist mir dort nichts aufgefallen. | ✅ behoben / ⚠️ Hinweis |
+| CI2 | **Saldo je Spiel nach einem Vereinswechsel mitten in der Saison:** `S.fin` beginnt beim Wechsel neu, gezählt wurden aber alle Ligaspiele des neuen Vereins. Jetzt zählen nur die Spiele seit dem Wechsel (`S.finSp0`, `finanzenStart`). | ✅ behoben |
+| CI3 | **Transfersperre umgehbar:** Nach dem verfehlten Nachweis am 31. Mai ging im Juni noch ein Kauf, vollzogen zum Saisonwechsel. Die Automatik füllte den Kader beim Saisonwechsel ebenfalls auf. Jetzt sperrt `offer` ab dem Urteil (`transferSperreNaechste`), und die Automatik füllt deinen Kader dann nicht auf. Wechsel, die vor dem Urteil vereinbart wurden, bleiben gültig (vorläufig, sonst müsste Geld zurück). | ✅ behoben |
+| CI4 | **Schuldenschnitt als Einnahme:** Er stand in `S.fin` und machte das Nebenziel „Finanzen“ durch eine Insolvenz erfüllbar. Jetzt zählt er dort nicht mit. | ✅ behoben |
+| CI5 | **Erster Monatsbericht kam einen Monat zu spät** (neues Spiel, Vereinswechsel). Ohne Stand gilt jetzt `S.fin` seit dem Anfang als Grundlage. | ✅ behoben |
+| CI6 | **Rate 0 bei sehr kleinen Krediten:** Die Tranche wäre nie kleiner geworden. Rate jetzt mindestens 1 €, aufgerundet. | ✅ behoben |
+| CI7 | **Alter Spielstand, Bau im alten Format** mit Fertigtag nach dem Saisonende wird nie fertig. War schon vorher so. Nicht geändert. | 📌 alt |
+| CI8 | **Ohne Befund geprüft:** Kredite (Summe der Tranchen gleich `S.loan` auf allen Wegen), Monatsbericht innerhalb der Saison, Termine der Lizenzprüfung, Bauprozess mit Tribüne, alle `S.teams`-Zugriffe der Anlagen, Zufall nur über Ströme, Erwartungswerte in den Tests. | ✅ |

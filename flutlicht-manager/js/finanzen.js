@@ -5,7 +5,10 @@
 // S.abzug = {Saison: {Verein: Punkte}} (saison.js table). Ohne Zufall.
 const finLaufend=()=>Object.entries(S.fin||{}).filter(([k])=>RFP.laufend.includes(k)).reduce((a,[,v])=>a+v,0);
 // Laufender Saldo je eigenem Ligaspiel: Schnitt dieser Saison, vor minSpiele der der letzten Saison, sonst 0
-function saldoJeSpiel(){const n=meineSpieltage();if(n>=RFP.minSpiele)return finLaufend()/n;return S.finSchnitt!=null?S.finSchnitt:0;}
+function saldoJeSpiel(){const n=finSpiele();if(n>=RFP.minSpiele)return finLaufend()/n;return S.finSchnitt!=null?S.finSchnitt:0;}
+// Eigene Ligaspiele seit Beginn der Buchungen: nach einem Vereinswechsel mitten in der Saison erst ab dem Wechsel (S.finSp0 = {s, n}, finanzenStart)
+const finSpiele=()=>meineSpieltage()-(S.finSp0&&S.finSp0.s===S.season?S.finSp0.n:0);
+function finanzenStart(){S.finSp0={s:S.season,n:meineSpieltage()};}
 const restSpiele=(bis)=>meineLigaspiele().filter(e=>(e.tag>S.tag||(e.tag===S.tag&&S.gespielt!==e.tag))&&(bis==null||e.tag<=bis)).length;
 // Prognose des Kontostands: bis Saisonende, mit naechste zusätzlich eine ganze nächste Saison mit demselben Schnitt
 // Seit K23e abzüglich der festen Zahlungen (Tilgung, Raten aus Ablösen) in den verbleibenden Monaten
@@ -13,13 +16,17 @@ function finPrognose(naechste){const t=myT(),s=saldoJeSpiel(),mon=Math.max(0,Mat
   let c=t.cash+s*restSpiele()-festeZahlungen(mon);if(naechste)c+=s*((S.fx&&S.fx[t.lg]||[]).length)-(festeZahlungen(mon+12)-festeZahlungen(mon));return Math.round(c);}
 const lzpS=()=>S.lzp||(S.lzp={});
 const transferSperre=()=>!!S.lzp&&S.lzp.sperre===S.season;
+// Sperre für die nächste Saison steht schon fest (ab dem Nachweis am 31. Mai): keine Käufe mehr, die erst zum Saisonwechsel vollzogen würden
+const transferSperreNaechste=()=>!!S.lzp&&S.lzp.sperre===S.season+1;
 const monatName=mo=>(typeof MONL!=='undefined'?MONL:MON)[(+mo+11)%12];
 
 // Täglich (ablauf.js taeglichLauf): am Monatsersten der Bericht, am 1. März die Lizenzprüfung, am 31. Mai der Nachweis
 function finanzenTag(d){const k=mmtt(d);if(k.slice(3)==='01')finanzenMonat(d);if(S.phase==='play'&&k===RFP.lizenzTag)lizenzPruefung();if(k===RFP.nachweisTag)lizenzNachweis();}
 // Reihenfolge: erst die Insolvenz (ein Schuldenschnitt gehört in den abgelaufenen Monat), dann der Bericht, dann der neue Stand, dann Tilgung und Raten (gehören in den neuen Monat).
 // k: Kreditflüsse des Monats (Aufnahme +, Tilgung −), getrennt von Einnahmen und Ausgaben (K23e).
-function finanzenMonat(d){const t=myT();let M=S.finM;const mo=mmtt(d).slice(0,2);
+// ohneZahlungen: zum Saisonwechsel (der 1. Juli selbst läuft nie durch taeglich), Tilgung und Raten bucht dann finanzenSaisonstart in die neue Saison.
+// Ohne Stand (neues Spiel, Vereinswechsel) gilt S.fin seit dem Anfang als Grundlage, so kommt der erste Bericht schon am nächsten Monatsersten.
+function finanzenMonat(d,ohneZahlungen){const t=myT();let M=S.finM||{s:S.season,mo:mmtt(d-1).slice(0,2),fin:{},cash:t.cash,k:0};const mo=mmtt(d).slice(0,2);
   if(M&&M.s!==S.season){M={s:S.season,mo:M.mo,fin:{},cash:M.cash,k:0};S.finV=[];} // neue Saison: S.fin und die Kreditflüsse beginnen bei null
   insolvenzPruefen();const fin=S.fin||{};
   if(M){let ein=0,aus=0;for(const k of new Set([...Object.keys(fin),...Object.keys(M.fin)])){const v=(fin[k]||0)-(M.fin[k]||0);if(v>0)ein+=v;else aus+=v;}
@@ -27,7 +34,9 @@ function finanzenMonat(d){const t=myT();let M=S.finM;const mo=mmtt(d).slice(0,2)
     (S.finV=S.finV||[]).push({mo:M.mo,ein,aus,saldo:ein+aus,k,cash:t.cash,prog});
     const warn=bald<R0?` Achtung: Nach der Prognose fällt der Kontostand in den nächsten drei Monaten unter den Kreditrahmen (${fmt(R0)}). Dann droht die Insolvenz.`:'';
     news(`Monatsbericht ${monatName(M.mo)}: Einnahmen ${fmt(ein)}, Ausgaben ${fmt(-aus)}, Saldo ${fmt(ein+aus)}.${k?` Kredit ${k>0?'aufgenommen':'getilgt'}: ${fmt(Math.abs(k))}.`:''} Kontostand ${fmt(t.cash)}, Prognose zum Saisonende ${fmt(prog)}.${warn}`,warn||ein+aus<0?'bad':'');}
-  S.finM={s:S.season,mo,fin:Object.assign({},fin),cash:t.cash,k:kreditNetto()};monatsRaten();instandhaltung();} // Instandhaltung der Bauten (K26 §5.1)
+  S.finM={s:S.season,mo,fin:Object.assign({},fin),cash:t.cash,k:kreditNetto()};if(!ohneZahlungen){monatsRaten();instandhaltung();}} // Instandhaltung der Bauten (K26 §5.1)
+// Saisonwechsel (saison.js newSeasonLauf, nach S.fin={}): Stand für den Juli, dann Tilgung, Raten und Instandhaltung des 1. Juli in der neuen Saison
+function finanzenSaisonstart(){S.finM={s:S.season,mo:'07',fin:{},cash:myT().cash,k:0};monatsRaten();instandhaltung();}
 // Insolvenz (K23 §5.4): an zwei Monatsersten nacheinander unter dem negativen Kreditrahmen. Punktabzug, Vertrauen, Schuldenschnitt, höchstens einmal je Saison.
 function insolvenzPruefen(){const t=myT(),L=lzpS(),I=RFP.insolvenz;if(t.cash<-kreditRahmen(t))L.unter=(L.unter||0)+1;else L.unter=0;
   if(L.unter<I.monate||L.ins===S.season||S.phase!=='play')return;L.ins=S.season;L.unter=0;
@@ -44,7 +53,7 @@ function lizenzNachweis(){const L=S.lzp;if(!L||L.s!==S.season||!L.fehlt||L.gepru
   if(liq>=0){L.fehlt=0;news('Lizenz: Die Auflagen sind erfüllt.','good');return;}
   L.sperre=S.season+1;news(`Lizenz: Die Auflagen sind nicht erfüllt. Transfersperre in der Saison ${stSaison(S.season+1)}: keine Käufe, keine Leihen, keine Vereinslosen. Verkaufen geht.`,'bad');}
 // Saisonende (saison.js seasonEndLauf): Schnitt je Ligaspiel für die Prognose zu Beginn der nächsten Saison
-function finanzenSaisonende(){const n=meineSpieltage();if(n>=RFP.minSpiele)S.finSchnitt=Math.round(finLaufend()/n);}
+function finanzenSaisonende(){const n=finSpiele();if(n>=RFP.minSpiele)S.finSchnitt=Math.round(finLaufend()/n);}
 // Karte auf der Finanzseite
 function finanzenKarte(){const t=myT(),L=S.lzp||{},v=S.finV||[],p=finPrognose(false);
   const lz=transferSperre()?'<p class="neg"><b>Transfersperre in dieser Saison</b> (Lizenzauflagen nicht erfüllt).</p>':L.s===S.season&&L.fehlt&&!L.geprueft?`<p class="neg"><b>Lizenzauflagen:</b> Es fehlen ${fmt(L.fehlt)} bis zum Ende der nächsten Saison. Nachweis bis 31. Mai.</p>`:L.sperre===S.season+1?`<p class="neg">Transfersperre in der nächsten Saison.</p>`:'';
@@ -60,9 +69,9 @@ function finanzenKarte(){const t=myT(),L=S.lzp||{},v=S.finV||[],p=finPrognose(fa
 function kreditFluss(v){const K=S.finK&&S.finK.s===S.season?S.finK:(S.finK={s:S.season,auf:0,tilg:0});if(v>0)K.auf+=v;else K.tilg+=v;}
 const kreditNetto=()=>S.finK&&S.finK.s===S.season?S.finK.auf+S.finK.tilg:0;
 // Alter Spielstand oder Kredit ohne Tranche: eine Tranche mit Standardlaufzeit
-function kreditAltUebernehmen(){const K=S.kredite||(S.kredite=[]),summe=K.reduce((x,k)=>x+k.rest,0);if((S.loan||0)>summe+1){const a=S.loan-summe,j=RFP.kredit.standard;K.push({rest:a,rate:Math.round(a/(j*12)),bis:absTag(S.tag)+j*365});}}
+function kreditAltUebernehmen(){const K=S.kredite||(S.kredite=[]),summe=K.reduce((x,k)=>x+k.rest,0);if((S.loan||0)>summe+1){const a=S.loan-summe,j=RFP.kredit.standard;K.push({rest:a,rate:Math.max(1,Math.ceil(a/(j*12))),bis:absTag(S.tag)+j*365});}}
 function kreditAufnehmen(a,jahre){const t=myT(),j=RFP.kredit.jahre.includes(jahre)?jahre:RFP.kredit.standard;kreditAltUebernehmen();
-  S.kredite.push({rest:a,rate:Math.round(a/(j*12)),bis:absTag(S.tag)+j*365});S.loan=(S.loan||0)+a;t.cash+=a;kreditFluss(a);}
+  S.kredite.push({rest:a,rate:Math.max(1,Math.ceil(a/(j*12))),bis:absTag(S.tag)+j*365});S.loan=(S.loan||0)+a;t.cash+=a;kreditFluss(a);}
 // Sondertilgung (und Automatik am Saisonende): älteste Tranche zuerst, nur aus dem Guthaben
 function kreditTilgen(a){const t=myT();kreditAltUebernehmen();const g=Math.max(0,Math.min(a,S.loan||0,Math.max(0,t.cash)));let rest=g;
   for(const k of S.kredite){if(rest<=0)break;const x=Math.min(rest,k.rest);k.rest-=x;rest-=x;}S.kredite=S.kredite.filter(k=>k.rest>0);S.loan-=g;t.cash-=g;if(g)kreditFluss(-g);return g;}

@@ -86,13 +86,15 @@ function newSeasonLauf(){lizenzNachweis();wechselVollziehen(true);leiheEnde();ve
       p.pot=Math.round(base-N.talentAbschlag+riA(N.talentStreuung)+yl*N.talentJeStufe);p.sal=Math.round(p.sal*N.gehalt/1000)*1000;addP(p);
       if(t.id===S.my)news(`Aus der Jugend: ${p.n} (${p.pos}, ${N.alter}) rückt in den Profikader auf. Talent ${stars(p)}.`,'good');}
     if(!stabMacht(t.id,'transfers'))return; // dein Verein füllt den Kader nur auf, solange der Verein die Transfers führt (K36)
+    if(t.id===S.my&&transferSperreNaechste())return; // Transfersperre der neuen Saison gilt auch für die Automatik (K23a)
     kaderAuffuellen(t,base);
     const sq=squad(t.id);if(sq.length>Z.kaderMax)sq.sort((a,b)=>a.str-b.str).slice(0,sq.length-Z.kaderMax).forEach(p=>{p.team=-1;p.list=0;});});
   const fa=S.pl.filter(p=>p.team===-1);if(fa.length>Z.vereinsloseMax){fa.sort((a,b)=>a.str-b.str).slice(0,fa.length-Z.vereinsloseMax).forEach(p=>p.team=-2);statistikAbschied(fa.filter(p=>p.team===-2));S.pl=S.pl.filter(p=>p.team!==-2);reindex();}
   S.am.forEach(a=>a.str=riA(RW.amateurStaerke));
+  finanzenMonat(tageDerSaison(),true); // Monatsbericht Juni zum 1. Juli, der Tag läuft sonst nie durch taeglich (K23a)
   S.season++;S.plan=planFuer(S.season);S.tag=S.plan.start;S.gespielt=-1;S.relSp=[];S.relSp2=[];S.res={1:[],2:[],3:[]};
   const sp=spielplanFuer(S.season);S.fx=sp.fx;S.plan.zeit=sp.zeit;initCup();supercupAnlegen(sm);europaAnlegen(sm); // Europapokal (K37, U19a), eigener Strom
-  S.fin={};S.att=[0,0];S.offers=S.offers.filter(o=>PIX.get(o.pid)&&PIX.get(o.pid).team===S.my);S.phase='play';S.summary=null;TDAY=null;TLG=0;LAST=null;
+  S.fin={};finanzenSaisonstart();S.att=[0,0];S.offers=S.offers.filter(o=>PIX.get(o.pid)&&PIX.get(o.pid).team===S.my);S.phase='play';S.summary=null;TDAY=null;TLG=0;LAST=null;
   setTarget();werbungSaison();if(S.spons){S.spons.yrs--;if(S.spons.yrs<=0)S.spons=null;}if(!S.spons)sponsOffers(); /* Werbeflächen zählen herunter (K24a) */
   S.lineup=bestXI(S.my,myT().form);kabineNachSaisonwechsel();jubilaeumJahre(); // 10 Jahre im Verein (K34 §8, U13)
   news(`Neue Saison ${S.season}/${(S.season+1)%100} in der ${ligaName(myT().lg)}: Ziel des Vorstands – ${targetText(myT().lg,S.target)}. Trainingsauftakt am ${datumMittel(auftaktTag(myT()))}.`,'good');save();}
@@ -103,7 +105,7 @@ function kaderAuffuellen(t,base){const Z=RS,need=Z.kaderSoll;
 function mkJobs(){const J=RV.jobs,r=myT().rep-J.ansehenAbschlag+(ruf()-RV.ruf.start)*RV.ruf.jobsJePunkt, // Ruf als Trainer (K28 §5.4, U12a)
   weg=S.summary?S.summary.down3:[];const c=S.teams.filter(t=>t.id!==S.my&&aktiv(t)&&!weg.includes(t.id)).sort((a,b)=>Math.abs(a.rep-r)-Math.abs(b.rep-r)).slice(0,J.kandidaten);S.jobs=shuffle(c).slice(0,J.angebote).map(t=>t.id);}
 function takeJob(id){const old=myT().name,alt=myT();LAST=null;statStation(id);presseS().antritt=1;S.pk=null;trainerJobwechsel(alt,id); // Stationen des Trainers mit Grund (K34 §5.7, U13), solange S.fired und S.ruecktritt noch gelten
-versprechenJobwechsel();bauAbgeben();finanzenJobwechsel();marketingJobwechsel();S.kenntnis={};S.auftraege=[];S.my=id;
+versprechenJobwechsel();bauAbgeben();finanzenJobwechsel();marketingJobwechsel();S.kenntnis={};S.auftraege=[];S.my=id;finanzenStart();
   if(aktiv(alt))mitStrom(strom('auffuellen',S.season,S.tag,alt.id),()=>kaderAuffuellen(alt,grundStaerke(alt.rep))); // dein alter Verein ist jetzt ein Computer-Verein und füllt seinen Kader sofort auf
   S.kapFrei={s:S.season,bis:S.tag+14};S.fired=0;S.ult=null;S.ruecktritt=0;S.trust=RV.neuerJob;S.offers=[];S.constr=null;S.loan=0;S.fin={};S.att=[0,0];setTarget();werbungNeuerVerein();if(!S.spons||S.sponsOffers===null){S.spons=null;sponsOffers();}werbungOffen();S.lineup=bestXI(id,myT().form);
   news(`Neuer Job: ${S.mgr} übernimmt ${myT().name} (vorher ${old}). Ziel: ${targetText(myT().lg,S.target)}.`,'good');save();closeOv();TAB='buero';render();if(S.phase==='end')showSummary();}
