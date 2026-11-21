@@ -1,6 +1,6 @@
 # K24 – Sponsoren
 
-Status: **Entwurf** (8. November 2026), nach „weiter, entscheide du“. Vorläufige Entscheidungen stehen in Abschnitt 12.
+Status: **Entwurf** (8. November 2026), nach „weiter, entscheide du“. Vorläufige Entscheidungen stehen in Abschnitt 12. **Teilschritt K24a umgesetzt** (21. November 2026, `js/werbung.js`, Test `tests/werbung.js`): Werbeflächen Trikotbrust, Ausrüster und Ärmel mit je drei Angeboten in der heutigen Form (festes Geld, Fixum mit Siegprämie, drei Jahre), je Fläche höchstens ein Vertrag, Automatik je Fläche, ohne Wahl das erste Angebot vor dem ersten Pflichtspiel. **Vorläufig geldneutral:** Die drei Flächen teilen sich den bisherigen Brustbetrag (60 / 29 / 11 %), die Höhen aus §5.1 kommen erst mit K23, weil sie die ganze Wirtschaft verschieben. Noch offen: Stadionname, Bande und Partnerpool, Trainingskleidung, Verhandeln mit Reglern, Sponsorentag, Zufriedenheit, umstrittene Sponsoren, Ereignisse, Computer-Vereine nach §7.
 Hängt ab von: K23 (Finanzen), K27 (Fans), K25 (Marketing) · Wird gebraucht von: K12b, K23, K30.
 
 ## 1. Ziel und Spielgefühl
@@ -132,7 +132,7 @@ sponsoren:{
 
 ## 12. Offene Fragen
 
-**Vorläufig entschieden:** begrenzte Flächen nach 3.1, erfundene Sponsoren, Sponsorentag als feste Option in der Vorbereitung, Stadionname nur mit eigenem oder gepachtetem Stadion.
+**Vorläufig entschieden:** begrenzte Flächen nach 3.1, erfundene Sponsoren, Sponsorentag als feste Option in der Vorbereitung, Stadionname nur mit eigenem oder gepachtetem Stadion. Seit K24a (21.11.): Ausrüster und Ärmel gehören zum Bereich `sponsor` (A-Lizenz) und nutzen dieselbe Angebotsform wie die Brust, Anteile am bisherigen Brustbetrag 60 / 29 / 11 % (geldneutral bis K23), eigener Zufallsstrom `werbung` je Saison und Fläche.
 
 **Noch zu recherchieren:** Ärmel- und Namensrechte-Erlöse in der Bundesliga, Sponsoring in 2. und 3. Liga.
 

@@ -116,7 +116,7 @@ Grundlage sind die Notizen in K10 §12 Nr. 14, K11 §12 Nr. 12, K13 §12 Nr. 13 
 | `suchauftrag` | Suchauftrag für Scouts (U9a), auch mit der Region Ausland (U9b) | 4 A-Lizenz | kein Suchauftrag | K18 |
 | `sportgericht` | Strafe annehmen oder Einspruch | 4 A-Lizenz | Verein nach `kiEinspruch` | PLAN §4, K09 |
 | `medizin` | fit spritzen, früher zurückholen | 4 A-Lizenz | Arzt nach `kiSpritzen` | K10 Nr. 14 |
-| `sponsor` | Trikotsponsor wählen | 4 A-Lizenz | Verein nimmt das Angebot mit dem höchsten Grundbetrag | PLAN §4, K24 |
+| `sponsor` | Werbeverträge wählen (Trikotbrust, seit K24a auch Ausrüster und Ärmel) | 4 A-Lizenz | Verein nimmt je Fläche das Angebot mit dem höchsten Grundbetrag | PLAN §4, K24 |
 | `preise` | Eintrittspreis | 4 A-Lizenz | Richtpreis nach Liga und Ansehen (`richtPreis`) | K27 |
 | `stadion` | Ausbau von Tribüne, Logen, Fanshop | 5 Pro-Lizenz | kein Ausbau (wie die Computer-Vereine heute) | PLAN §4 (dort Stufe 4), 12 Nr. 4 |
 | `kredit` | Kredit aufnehmen und tilgen | 5 Pro-Lizenz | kein Kredit, Tilgung aus Überschüssen am Saisonende | K23, 12 Nr. 4 |

@@ -31,7 +31,7 @@ const res=await pg.evaluate(()=>{const out=[];
      else if(r<0.44){tab('aufst');}
      if(S.sponsOffers&&T()<0.5)pickSponsor(Math.floor(T()*3));
      TF.lg=T()<0.2?'a':'';TF.land=TF.lg&&T()<0.5?rnd(auslandGruppen()):''; // Transfermarkt auch mit dem Filter Ausland prüfen (K32)
-     for(const k in V){const h=V[k]().replace(/<[^>]+>/g,' ');const m=h.match(/.{0,50}(undefined|NaN|\[object|Infinity|\bnull\b).{0,30}/);if(m)log.errors.push('Text '+k+': '+m[0]);}
+     for(const k in V){const h=V[k]().replace(/<[^>]+>/g,' ');const m=h.match(/.{0,50}(undefined|NaN|\[object|Infinity|(?<!zu )\bnull\b).{0,30}/); /* „Spiele zu null“ ist kein Fehler (T2.8) */if(m)log.errors.push('Text '+k+': '+m[0]);}
      const hh=hdr().replace(/<[^>]+>/g,' ');if(/undefined|NaN/.test(hh))log.errors.push('Kopfzeile: '+hh.slice(0,120));
      erinnerungen().forEach(e=>{if(/undefined|NaN/.test(e.text))log.errors.push('Erinnerung: '+e.text);});
     }catch(e){log.errors.push('Aktion: '+e.message+' @'+(e.stack||'').split('\n')[1]);}
