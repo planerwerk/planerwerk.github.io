@@ -94,4 +94,28 @@ function welt(lernstufen){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;
 {const {S,F,ev}=welt(true);ev('render=()=>{};save=()=>{};toast=()=>{};');S.lizenz.auto={};S.werbOffers={aermel:ev("werbAngebote('aermel')")};const c=ev('myT()').cash;F.sponsorenTag();
   pruef(ev('myT()').cash===c&&S.sponsorTag!==S.season,'Lizenz: Ohne A-Lizenz kein Sponsorentag');}
 
+// ---------- K24c: Zufriedenheit, Verlängerung, Abstiegsklausel ----------
+const sm0=(S,pos,target,ab)=>({pos,target,down:ab?[S.my]:[],down2:[],down3:[],rel:null,rel2:null});
+// 18. Zufriedenheit zum Saisonende: +5 je Platz über dem Ziel (höchstens ±25), Abstieg −20, Grenzen 0 bis 100
+{const {S,F,ev}=welt(false),Z=ev('RF').werbung.zufriedenheit;F.sponsorWaehlen(2);F.werbungVorSpiel();ev('myT()').fanst=ev('RFS').start;
+  ev('werbungSaisonende')(sm0(S,5,8,false));const z1=S.spons.z,za=S.werbung.aermel.z;ev('werbungSaisonende')(sm0(S,18,4,false));const z2=S.spons.z;
+  pruef(z1===Z.start+3*Z.jePlatz&&za===z1&&z2===z1-Z.erfolgMax,'Zufriedenheit: drei Plätze über dem Ziel +15, weit darunter höchstens −25, für alle Flächen gleich',`${Z.start} → ${z1} → ${z2}`);}
+
+// 19. Abstiegsklausel: Verträge, die in die nächste Saison reichen, zahlen nach einem Abstieg 40 % weniger; auslaufende bleiben
+{const {S,F,ev}=welt(false),Z=ev('RF').werbung.zufriedenheit;F.sponsorWaehlen(2);F.werbungWaehlen('aermel',0);F.werbungWaehlen('ausruester',2);
+  const b0=S.spons.base,a0=S.werbung.aermel.base,u0=S.werbung.ausruester.base;ev('werbungSaisonende')(sm0(S,17,10,true));
+  pruef(Math.abs(S.spons.base-b0*(1-Z.klausel))<=1000&&S.werbung.aermel.base===a0&&Math.abs(S.werbung.ausruester.base-u0*(1-Z.klausel))<=1000&&S.spons.z===Z.start-Z.erfolgMax+Z.abstieg&&S.news.some(n=>n.t.includes('Abstiegsklausel')),
+    'Abstiegsklausel: Dreijahresverträge −40 %, der auslaufende Einjahresvertrag bleibt, Zufriedenheit nach Abstieg −20',`Brust ${b0} → ${S.spons.base}, Ärmel ${a0} → ${S.werbung.aermel.base}, Zufriedenheit ${S.spons.z}`);}
+
+// 20. Verlängerung: Läuft der Vertrag eines zufriedenen Partners (ab 70) aus, steht er mit 10 % mehr in den neuen Angeboten; ein unzufriedener nicht. Die Brust zählt nur einmal herunter.
+{const {S,F,ev}=welt(false),Z=ev('RF').werbung.zufriedenheit,A=ev('RF').sponsor.angebote;F.sponsorWaehlen(0);F.werbungWaehlen('aermel',0);F.werbungWaehlen('ausruester',2);
+  S.spons.z=80;S.werbung.aermel.z=60;const brust=S.spons,yA=S.werbung.ausruester.yrs;S.season++;F.werbungSaison();if(!S.spons)F.sponsOffers();
+  const v=(S.sponsOffers||[]).find(o=>o.ver),va=(S.werbOffers.aermel||[]).find(o=>o.ver);
+  pruef(!!v&&v.name===brust.name&&Math.abs(v.base-brust.base*(1+Z.plus))<=1000&&v.yrs===Z.jahre&&!va&&S.werbOffers.aermel.length===A.length+1&&S.werbung.ausruester.yrs===yA-1&&!S.werbAlt.brust,
+    'Verlängerung: zufriedener Partner (80) mit 10 % mehr in den neuen Angeboten, unzufriedener (60) nicht, Laufzeiten zählen einmal herunter',v?`${brust.name} ${brust.base} → ${v.base}, ${v.yrs} Jahre`:'kein Angebot');}
+
+// 21. Die Automatik nimmt eine Verlängerung, wenn sie das höchste feste Angebot ist
+{const {S,F,ev}=welt(true);S.spons.z=90;S.spons.yrs=1;S.spons.base=Math.max(...[S.spons.base])*2;const name=S.spons.name;S.season++;F.werbungSaison();if(!S.spons)F.sponsOffers();
+  pruef(S.spons&&S.spons.name===name&&S.spons.ver===1,'Automatik: nimmt die Verlängerung, wenn sie das höchste feste Angebot ist',S.spons&&S.spons.name);}
+
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

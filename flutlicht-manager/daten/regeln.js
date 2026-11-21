@@ -208,6 +208,10 @@ const REGELN={
       umstritten:{faktor:1.3,jahre:2,fans:-5,fansMonat:-1,skandal:0.05,skandalFans:-10,info:'Umstrittener Geldgeber: 30 % mehr, zwei Jahre, die Fans murren',
         namen:['Kronos Kapital','Sandor Energy Group','Vexo Krypto','Ostkap Rohstoffe','Glücksstern Wetten','Bastion Trading']},
       sponsorentag:{kosten:50000,plus:0.1}, // einmal je Saison, solange Angebote offen sind: offene Angebote 10 % besser (K24 §4.3)
+      // K24c (21.11., K24 §5.3 und §3.2, vorläufig): Zufriedenheit je Vertrag 0–100, Start 50, zum Saisonende +5 je Platz über dem Ziel (höchstens ±25), Fanstimmung über ihrem
+      // Start × 0,5 (±10), Werbewert über seinem Start × 0,5 (±10), Abstieg −20. Ab 70 bietet der Partner zum Vertragsende eine Verlängerung mit 10 % mehr (zwei Jahre).
+      // Abstiegsklausel: Laufende Verträge, die in die nächste Saison reichen, zahlen nach einem Abstieg 40 % weniger.
+      zufriedenheit:{start:50,jePlatz:5,erfolgMax:25,fans:0.5,fansMax:10,werbewert:0.5,werbewertMax:10,abstieg:-20,verlaengernAb:70,plus:0.1,jahre:2,klausel:0.4},
       werbewert:{jePunkt:0.004,max:0.15}}, // Werbewert aus K25 (S.mk.ww) über seinem Startwert hebt neue Angebote, darunter senkt er sie, höchstens ±15 %
     abfindung:0.5,                   // Abfindung = Gehalt × Restlaufzeit × Wert
     handgeld:0.5,                    // Handgeld für Vereinslose = Gehalt × Wert
