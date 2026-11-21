@@ -91,7 +91,7 @@ function newSeasonLauf(){lizenzNachweis();wechselVollziehen(true);leiheEnde();ve
   const fa=S.pl.filter(p=>p.team===-1);if(fa.length>Z.vereinsloseMax){fa.sort((a,b)=>a.str-b.str).slice(0,fa.length-Z.vereinsloseMax).forEach(p=>p.team=-2);statistikAbschied(fa.filter(p=>p.team===-2));S.pl=S.pl.filter(p=>p.team!==-2);reindex();}
   S.am.forEach(a=>a.str=riA(RW.amateurStaerke));
   S.season++;S.plan=planFuer(S.season);S.tag=S.plan.start;S.gespielt=-1;S.relSp=[];S.relSp2=[];S.res={1:[],2:[],3:[]};
-  const sp=spielplanFuer(S.season);S.fx=sp.fx;S.plan.zeit=sp.zeit;initCup();supercupAnlegen(sm);
+  const sp=spielplanFuer(S.season);S.fx=sp.fx;S.plan.zeit=sp.zeit;initCup();supercupAnlegen(sm);europaAnlegen(sm); // Europapokal (K37, U19a), eigener Strom
   S.fin={};S.att=[0,0];S.offers=S.offers.filter(o=>PIX.get(o.pid)&&PIX.get(o.pid).team===S.my);S.phase='play';S.summary=null;TDAY=null;TLG=0;LAST=null;
   setTarget();werbungSaison();if(S.spons){S.spons.yrs--;if(S.spons.yrs<=0)S.spons=null;}if(!S.spons)sponsOffers(); /* Werbeflächen zählen herunter (K24a) */
   S.lineup=bestXI(S.my,myT().form);kabineNachSaisonwechsel();jubilaeumJahre(); // 10 Jahre im Verein (K34 §8, U13)

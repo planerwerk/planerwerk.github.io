@@ -136,7 +136,7 @@ function liveTaktikAnsicht(){const L=LIVE,G=L.G,s=L.s,sd=G.Ss[s],plan=G.plan[s];
     <label>Ausrichtung ${sel('tac',Object.entries(AUSRICHTUNG),sd.tac)}</label>
     <label>Einsatz ${sel('ein',Object.entries(EINSATZ),sd.ein)}</label>
     <label>Spielstil ${sel('stil',STILE.map(k=>[k,STIL_NAME[k]]),sd.stil)}</label></div>${lzHinweis('stil')}${lzHinweis('einstellung')}
-    <p class="dim">Gegner: ${op.am?'Amateurklub':`${STIL_NAME[op.stil]||'–'}, ${op.form||''}`}. ${kr} Umsetzung deines Stils ${Math.round((sd.u||1)*100)} %.</p>
+    <p class="dim">Gegner: ${op.am?(op.aus?'Auslandsverein':'Amateurklub'):`${STIL_NAME[op.stil]||'–'}, ${op.form||''}`}. ${kr} Umsetzung deines Stils ${Math.round((sd.u||1)*100)} %.</p>
     <p class="dim">Grundordnung und Spielstil wirken nach ${RL.umstellung.ordnung} Minuten, Ausrichtung und Einsatz nach ${RL.umstellung.ausrichtung}. In der Halbzeit gelten Ausrichtung und Einsatz sofort.</p>${geplant}</div>
   <div class="card"><h3>Zurufe</h3>${lzHinweis('zurufe')}<div class="row">${ZURUFE.map(a=>`<button onclick="liveZuruf('${a}')" ${L.ende?'disabled':''}${lzAus('zurufe')}>${ZURUF_TEXT[a]}</button>`).join('')}</div>
     <p class="dim">Wirken ${RL.zurufe.dauer} Minuten. Derselbe Zuruf innerhalb von ${RL.zurufe.abnutzungMinuten} Minuten wirkt nur halb, ein drittes Mal gar nicht. „Zeit schinden“ nur bei Führung, kostet Gelbe Karten.</p>

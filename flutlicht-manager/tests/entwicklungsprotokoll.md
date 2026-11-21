@@ -28,7 +28,8 @@ Solange K23b auf die Messwerte wartet, baue ich weiter:
 - **K25 Marketing** (Zweig `mitarbeit/popolupo-k25-marketing`, auf dem K23-Zweig): K25a fertig, ungetestet.
 - **K26 Stadion** (Zweig `mitarbeit/popolupo-k26-stadion`, auf K25): K26a fertig, ungetestet.
 - **K37 Europapokal** als Konzept: Entwurf fertig (`konzepte/K37-europapokal.md`).
-- **Jetzt:** U19a Europapokal (Zweig `mitarbeit/popolupo-u19-europapokal`, auf K26): Teilnehmer, Termine, Ligaphase, K.-o.-Runden, Spiele, Ansicht. Danach U19b (Geld, Ansehen).
+- **U19a Europapokal** (Zweig `mitarbeit/popolupo-u19-europapokal`, auf K26): fertig, ungetestet.
+- **Jetzt:** U19b (Prämien, Wertsäule, Ansehen, Statistik, Ziele des Vorstands), auf demselben Zweig.
 
 **Die neueste Spitze ist immer der zuletzt genannte Zweig, er enthält alles davor.** Rest von K24 bleibt bei Claude.
 
@@ -42,6 +43,29 @@ Solange K23b auf die Messwerte wartet, baue ich weiter:
 ---
 
 ## Changelog
+
+### 21.11.2026: U19a Europapokal (Zweig `mitarbeit/popolupo-u19-europapokal`, auf K26)
+
+- **Neu:** `js/europa.js`, Regeln `europa` (`REU`), Termine 2026/27 und deutsche Starter in `daten/termine.js`.
+  - Drei Wettbewerbe mit je 36 Vereinen. Deutsche nach Tabelle und Pokal, in der ersten Saison die echten Starter. Auslandsvereine aus dem Pool nach Kontingent, Ansehen und Zufall.
+  - Auslosung der Ligaphase nach Töpfen (K37 Nr. 12), Tabelle, K.-o.-Play-offs, Turnierbaum bis zum Finale. Play-off-Runde der Qualifikation für den deutschen Siebten.
+  - Spiele mit deutscher Beteiligung in der Engine, der Auslandsverein als Block (CC3). Ausland gegen Ausland als Kurzrechnung.
+  - Auslosung als Halt, Spielkarte, Kalender, Karte „Europapokal“ im Reiter Pokal.
+- **Geändert:**
+  - `pokalVerlegen` heißt jetzt `ligaVerlegen` und verlegt auch Spiele am selben Tag (CC5).
+  - Sperren und Gelbe Karten haben `eu` (CC6).
+  - `side` in der Engine kennt Auslandsvereine.
+  - Europapokaltore zählen nicht als Ligatore.
+- **Zu erwarten:** Die Welt ändert sich, weil bis zu neun deutsche Vereine mehr spielen (CC1). Kalibrierung, Akzeptanz und Fuzz-Tests können sich verschieben.
+- **Tests zuerst:**
+  - `tests/europapokal.js` (neu, sieben Prüfungen)
+  - `tests/code.js`
+  - `tests/disziplin.js`, `tests/wettbewerbe.js` (Sperren, Verlegung)
+  - `tests/pruefungen.js` und `tests/seed.js` (Spielstand mit `S.eu`)
+  - `tests/lizenz.js`, `tests/zufall.js` (CC4)
+  - danach alles, besonders `tests/kalibrierung.js` und `tests/fuzz-karrieren.js`
+- **Bitte messen (CC2):** Wie weit kommen deutsche Vereine über einige Saisons? Ziel nach K37 §10: meist Achtelfinale in der Champions League, selten ein deutscher Sieger.
+- **Doku:** K37 (Status, §5.2, §12 Nr. 11 bis 13), K33, K36 Nr. 55, Konsistenzprüfung CC, offene Entscheidungen, Test-README.
 
 ### 21.11.2026: K37 Europapokal als Konzept (Zweig `mitarbeit/popolupo-u19-europapokal`, auf K26)
 

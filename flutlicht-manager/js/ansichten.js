@@ -33,6 +33,7 @@ const V={};
 // Karte für ein Spiel deines Vereins (heute oder demnächst)
 function spielKarte(e,heute){const f=paarung(e),wann=(heute?'Heute':datumKurz(e.tag))+(e.min!=null?', '+uhr(e.min)+' Uhr':'');
   if(!f)return`<div class="vs"><span>${wann} · ${spielName(e)}</span><b>Gegner wird ausgelost</b><span>K.-o.-Spiel mit Verlängerung und Elfmeterschießen</span></div>`;
+  if(e.art==='eu')return euSpielKarte(e,f,wann); // Europapokal (K37, U19a)
   const home=f[0]===S.my,oid=home?f[1]:f[0],o=S.teams[oid],ort=e.art==='pokal'&&e.r===5?'Finale in Berlin':home?'Heimspiel':'Auswärtsspiel';
   if(!o)return`<div class="vs"><span>${wann} · ${spielName(e)} · ${ort}</span><b>${esc(tn(oid))}</b><span>Amateurverein · K.-o.-Spiel mit Verlängerung und Elfmeterschießen</span></div>`;
   if(e.art==='pokal'||e.art==='supercup')return`<div class="vs"><span>${wann} · ${spielName(e)} · ${ort}</span><b>${chip(o.id)}${esc(o.name)}</b><span>${o.lg}. Liga · Kaderstärke ${teamLevel(o.id).toFixed(1)} (deine: ${teamLevel(S.my).toFixed(1)}) · ${e.art==='supercup'?'bei Gleichstand direkt Elfmeterschießen':'K.-o.-Spiel'}</span></div>`;
@@ -41,6 +42,7 @@ function spielKarte(e,heute){const f=paarung(e),wann=(heute?'Heute':datumKurz(e.
 function kalTermin(d){const r={kurz:'',cls:'',titel:''},l=meineLigaspiele().find(e=>e.tag===d);
   if(l){const f=S.fx[l.lg][l.md][l.i],home=f[0]===S.my,o=home?f[1]:f[0],x=S.res[l.lg].find(y=>y[4]===l.md&&y[0]===f[0]&&y[1]===f[1]);
     r.kurz=`${home?'H':'A'} ${S.teams[o].sh}`;r.titel=`${l.md+1}. Spieltag, ${uhr(l.min)} Uhr: ${home?'gegen':'bei'} ${S.teams[o].name}`;r.cls='sp';if(x){const gf=home?x[2]:x[3],ga=home?x[3]:x[2];r.erg=`${x[2]}:${x[3]}`;r.cls+=gf>ga?' win':gf<ga?' loss':' draw';}return r;}
+  const eu=euKalTermin(d);if(eu)return Object.assign(r,eu); // Europapokal (K37, U19a)
   for(const e of termineAm(d)){
     if(e.art==='pokal'){const h=S.cup.hist[e.r],m=h&&h.find(y=>y[0]===S.my||y[1]===S.my);
       if(m){const home=m[0]===S.my,o=home?m[1]:m[0];r.kurz=`Pokal ${o>=1000?'Amat.':S.teams[o].sh}`;r.erg=`${m[2]}:${m[3]}${m[4]?' i.E.':''}`;r.cls='sp pk'+(winner({h:m[0],a:m[1],hg:m[2],ag:m[3],pen:m[4]})===S.my?' win':' loss');r.titel=`DFB-Pokal, ${POKAL_RUNDEN[e.r]}`;return r;}
@@ -216,7 +218,7 @@ V.statistik=()=>statistikAnsicht(); // Statistik und Historie (K34 §5.9, U13, j
 V.pokal=()=>{const done=S.cup.hist.length>=6,alive=S.cup.alive.includes(S.my);
   return`<div class="card"><h2>DFB-Pokal ${S.season}/${(S.season+1)%100}</h2><p>${done?`Pokalsieger: <b>${esc(tn(S.cup.alive[0]))}</b>`:alive?'Dein Verein ist noch im Wettbewerb.':'Dein Verein ist ausgeschieden.'} <span class="dim">64 Teams: 36 aus der 1. und 2. Liga, ${RF.pokal.drittligisten} aus der 3. Liga und ${RF.pokal.amateure} Amateurklubs. K.-o.-Modus mit Verlängerung und Elfmeterschießen.</span></p>
   <p class="dim">Termine: ${POKAL_RUNDEN.map((n,i)=>`${n} ${datumKurz(S.plan.pokal[i][0])}`).join(' · ')}</p>
-  ${S.cup.hist.map((rd,i)=>`<h3 style="margin-top:14px">${POKAL_RUNDEN[i]} · ${datumKurz(S.plan.pokal[i][0])}</h3><div class="tw"><table><tbody>${rd.map(([h,a,hg,ag,pen])=>`<tr class="${h===S.my||a===S.my?'me':''}"><td>${esc(tn(h))}</td><td class="num"><b>${hg}:${ag}</b>${pen?` <span class="dim">(${pen[0]}:${pen[1]} i.E.)</span>`:''}</td><td>${esc(tn(a))}</td></tr>`).join('')}</tbody></table></div>`).reverse().join('')||`<p class="dim">Die 1. Runde wird am ${datumMittel(S.plan.pokal[0][0])} gespielt.</p>`}</div>`;};
+  ${S.cup.hist.map((rd,i)=>`<h3 style="margin-top:14px">${POKAL_RUNDEN[i]} · ${datumKurz(S.plan.pokal[i][0])}</h3><div class="tw"><table><tbody>${rd.map(([h,a,hg,ag,pen])=>`<tr class="${h===S.my||a===S.my?'me':''}"><td>${esc(tn(h))}</td><td class="num"><b>${hg}:${ag}</b>${pen?` <span class="dim">(${pen[0]}:${pen[1]} i.E.)</span>`:''}</td><td>${esc(tn(a))}</td></tr>`).join('')}</tbody></table></div>`).reverse().join('')||`<p class="dim">Die 1. Runde wird am ${datumMittel(S.plan.pokal[0][0])} gespielt.</p>`}</div>${europaKarte()}`;}; // Europapokal (K37, U19a)
 V.transfer=()=>{const t=myT(),XI=new Set();S.teams.forEach(x=>bestXI(x.id,x.form).forEach(id=>XI.add(id)));
   const aus=TF.lg==='a'; // Ausland ist ein eigener Filter (K32): Der Pool ist groß und kaum bekannt, er würde die Liste sonst überschwemmen
   let L=aus?auslandSpieler().filter(p=>!TF.land||avGruppe(avVon(p.team))===TF.land):S.pl.filter(p=>p.team!==S.my&&p.team>=-1);

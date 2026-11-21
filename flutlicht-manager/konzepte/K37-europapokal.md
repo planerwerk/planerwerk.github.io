@@ -1,6 +1,6 @@
 # K37 – Europapokal
 
-Status: **Entwurf** (21. November 2026, popolupo), nach „weiter, entscheide du“. Grundlage sind die ersten Gedanken in PLAN §4 (10.11.). Vorläufige Entscheidungen stehen in Abschnitt 12. Umsetzung in U19 (Teilschritte in §4.6).
+Status: **Entwurf** (21. November 2026, popolupo), nach „weiter, entscheide du“. Grundlage sind die ersten Gedanken in PLAN §4 (10.11.). Vorläufige Entscheidungen stehen in Abschnitt 12. Umsetzung in U19 (Teilschritte in §4.6). **U19a umgesetzt (21. November 2026, popolupo), noch ohne Testlauf.**
 Hängt ab von: K01 (Kalender), K13 (Wettbewerbe), K23 (Finanzen), K32 (Auslandsvereine) · Wird gebraucht von: K02 §5.3a (Vorsprung der Großen), K07 und K12a (Belastung), K19 (Anziehung für Spieler), K28 (Ziele des Vorstands), K34 (Statistik).
 
 ## 1. Ziel und Spielgefühl
@@ -61,7 +61,9 @@ Hängt ab von: K01 (Kalender), K13 (Wettbewerbe), K23 (Finanzen), K32 (Auslandsv
 |---|---|
 | **U19a** | Teilnehmer, Termine, Auslosung und Tabelle der Ligaphase, K.-o.-Baum, Spiele mit deutscher Beteiligung in der Engine, Ausland gegen Ausland als Kurzrechnung, Verlegung der Ligaspiele, Ansicht „Europa“ |
 | **U19b** | Prämien und Wertsäule (§5.3), Ansehen und Fans (§5.4), Statistik (K34), Ziele des Vorstands (K28) |
-| **U19c** | Länderwertung mit dem fünften Platz in der Champions League, Kaderliste der UEFA (25 Spieler, davon 8 lokal ausgebildet), Auslandsvereine mit Ansehen nach ihren Ergebnissen |
+| **U19c** | Länderwertung mit dem fünften Platz in der Champions League, Kaderliste der UEFA (25 Spieler, davon 8 lokal ausgebildet), Auslandsvereine mit Ansehen nach ihren Ergebnissen, Auslandsvereine mit vollem Kader in der Engine statt als Block (§5.2) |
+
+**Stand U19a (21.11.):** Teilnehmer, Termine, Auslosung der Ligaphase, Tabelle, K.-o.-Baum, Spiele, Verlegung der Ligaspiele, Sperren je Wettbewerb (UEFA: Gelbsperre nach der 3., 5., 7. und 9. Gelben), Karte im Reiter Pokal. Einnahmen bisher nur die Zuschauer deiner Heimspiele (wie im Pokal), Prämien folgen mit U19b.
 
 ## 5. Regeln und Formeln
 
@@ -73,6 +75,7 @@ Hängt ab von: K01 (Kalender), K13 (Wettbewerbe), K23 (Finanzen), K32 (Auslandsv
 
 ### 5.2 Spiele
 - **Mit deutscher Beteiligung:** volle Engine (K04), Live-Spiel wie in der Liga. Der Auslandsverein tritt mit einem Kader an, den das Spiel beim Anpfiff zusammenstellt: seine Kernspieler aus dem Pool (K32 §3.1) und für die übrigen Plätze Ergänzungsspieler mit der Grundstärke aus dem Ansehen (`avStaerke`). Ergänzungsspieler werden nicht gespeichert (Name und Werte fest aus Seed, Verein und Saison). Auslandsspieler bekommen aus dem Spiel keine Folgen (keine Sperren, Verletzungen, Frische), nur Tore und Karten für die Anzeige.
+- **So gebaut in U19a (Abweichung, vorläufig):** Der Auslandsverein spielt in der Engine als **Block** mit seiner Teamstärke, wie heute die Amateure im Pokal (`side`, `am`). Die Teamstärke ist das Mittel der elf Besten aus Kernspielern und Ergänzung mit `avStaerke`. Die Torschützen kommen aus seinen Kernspielern. Grund: Der Block-Weg ist in der Engine erprobt (Pokal) und braucht keine Spieler außerhalb von `S.pl`. Die Kehrseite: Gegen einen Block wirken deine Taktik und dein Stil weniger als gegen einen Bundesligisten. Volle Kader kommen in U19c.
 - **Ausland gegen Ausland:** Kurzrechnung ohne Minuten: erwartete Tore aus dem Verhältnis der Teamstärken (wie gegen Amateure, `amateurErwartung`), Poisson-Würfe im Strom `europa`. Von rund 530 Spielen je Saison (alle drei Wettbewerbe) laufen so nur die etwa 50 bis 80 mit deutscher Beteiligung durch die Engine.
 - **Heimvorteil** wie in der Liga. Finale neutral.
 - **Prüfliste für die Technik:** Rund 50 Stellen im Code unterscheiden Vereine nach der Grenze 1000 (Amateure, Stand 21.11.). Auslandsvereine haben Kennungen ab 2000 und brauchen dort einen eigenen Zweig (`side`, Statistik, Kabine, Disziplin).
@@ -160,6 +163,9 @@ REGELN.europa = {
 8. Finale nach dem Saisonende rückt auf den letzten Spieltag vor (§4.4).
 9. Ein deutscher Titelverteidiger nimmt keinen Bundesliga-Platz weg (§5.1).
 10. Kein neuer Lizenz-Bereich in U19a und U19b (§9).
+11. In U19a spielt der Auslandsverein in der Engine als Block mit Teamstärke, volle Kader kommen in U19c (§5.2).
+12. Auslosung der Ligaphase nach einem festen Bauplan, der jedem Verein je Spieltag genau ein Spiel gibt, je Topf zwei Gegner (Conference League: einen) und gleich viele Heim- und Auswärtsspiele. Gezogen wird, wer an welchem Platz im Topf steht, mit bis zu 400 Versuchen gegen Gegner aus dem eigenen Land und mehr als zwei aus demselben Land (§4.3).
+13. Gelbsperre im Europapokal nach der 3., 5., 7. und 9. Gelben (UEFA-Regel, ohne das Streichen nach dem Viertelfinale) (§4.4).
 
 **Noch zu recherchieren:** Rangprämie und Play-off-Prämie in Europa League und Conference League, genaue Halbfinal- und Siegprämien, die Zulassungsliste 2026/27 für die Länderkontingente, die deutschen Starter 2026/27 aus einer zweiten Quelle, die Termine der Conference-League-Ligaphase 2026/27 (gefunden nur Spieltag 1 am 15.10. und Spieltag 6 am 17.12.).
 

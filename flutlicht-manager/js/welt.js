@@ -44,6 +44,7 @@ function buildWorld(seed){const W=RW;
   mitStrom(strom('vereinsprofil'),profileAufbau); // zweites Vereinsprofil (K31 §3.2, U11b), eigener Strom
   S.teams.forEach(t=>{t.urlaubFertig=true;});S.pl.forEach(p=>{p.koVor=p.ko;});
   mitStrom(strom('stab'),stabAufbau);mitStrom(strom('scouts'),scoutsAufbau);mitStrom(strom('jugendstab'),jugendStabAufbau);kabineStart();mitStrom(strom('ausland'),auslandAufbau); // Auslandspool zuletzt und mit eigenem Strom (K32 §3.1)
+  europaAnlegen(null); // Europapokal mit den echten Startern 2026/27 (K37, U19a), eigener Strom
   // Trainerstab nach Ansehen (K16), Kabine mit Rollen, Kapitän und Startstimmung (K14) // Start Anfang Juli: Urlaub vorbei, Laufplan bis zum Trainingsauftakt (K12a)
 }
 // Neuer Kader für einen Verein, der aus der Regionalliga aufsteigt (alles erfundene Spieler)

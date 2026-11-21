@@ -1269,3 +1269,22 @@ Zweig `mitarbeit/popolupo-k26-stadion` (baut auf `mitarbeit/popolupo-k25-marketi
 | CB7 | **`startBuildAlt`** in `js/aktionen.js` bleibt als alter Ablauf stehen, wird aber nicht mehr aufgerufen. Kann weg, sobald `tests/stadion.js` gelaufen ist. | 📌 aufräumen |
 | CB8 | **Nicht gebaut:** neues Stadion als Großprojekt, Stehplätze und Sitzplätze, Rasenqualität und Rasenheizung, Flutlicht, Parkplätze, Namensrechte, Zuschuss der Stadt. | 📌 später |
 | CB9 | **`tests/stadion.js`:** sechs Prüfungen, siehe Test-README. Nie gelaufen. | ⚠️ offen |
+
+---
+
+## CC. Nachtrag zu U19a Europapokal: Teilnehmer, Ligaphase, K.-o.-Runden, Spiele (21. November 2026, popolupo, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-u19-europapokal` (baut auf `mitarbeit/popolupo-k26-stadion` auf). Konzept: K37, §12 Nr. 1 bis 13. Neue Datei `js/europa.js`. Kein Test gelaufen.
+
+| # | Befund | Status |
+|---|---|---|
+| CC1 | **Die Welt ändert sich:** Bis zu neun deutsche Vereine spielen 6 bis 17 Spiele mehr. Frische, Verletzungen und Training (über `spielendeAm`) ändern sich bei ihnen, damit auch Liga-Ergebnisse. Kalibrierung, Akzeptanz und Fuzz-Tests können sich verschieben. | ⚠️ messen |
+| CC2 | **Stärke der Auslandsvereine** (AW13): Mittel der elf Besten aus Kernspielern und `avStaerke`, Faktor `REU.staerke.faktor` = 1. Ob deutsche Vereine zu oft oder zu selten weiterkommen, zeigt erst ein Lauf über viele Saisons (K37 §10). | ⚠️ messen |
+| CC3 | **Block statt Kader** (K37 §5.2, Nr. 11): Gegen einen Auslandsverein laufen die Angriffe wie gegen Amateure (`amateurAngriff`), Stil und Taktik wirken weniger. Fouls und Verletzungen gibt es nur auf deiner Seite. | 📌 vorläufig, U19c |
+| CC4 | **Eigene Ströme** `europa` (Teilnehmer), `eulos` (Auslosungen je Wettbewerb und Runde), `eukurz` (Kurzrechnung je Termin). Die Engine-Spiele haben ihren Strom je Spiel wie bisher. Im Grundstrom würfelt nichts Neues. | ✅ |
+| CC5 | **72 Stunden:** `pokalVerlegen` heißt jetzt `ligaVerlegen` mit Grund im Text. Neu verlegt es auch ein Ligaspiel am selben Tag (vorher nur davor oder danach). Das kann beim Pokal einen alten, nie bemerkten Doppeltermin eines Drittligisten auflösen. | ✅ entworfen |
+| CC6 | **Sperren je Wettbewerb:** `eu` neben `liga` und `pokal`, beim ersten Zugriff angelegt. Gelbsperre nach der 3., 5., 7. und 9. Gelben. `tests/pruefungen.js` prüft `eu`, wenn es da ist. | ✅ entworfen |
+| CC7 | **Finale nach dem Saisonende:** 2027 liegen das Finale der Champions League (5.6.) und der Conference League (2.6.) nach dem letzten Spieltag. Beide rücken auf den 1.6. | 📌 vorläufig |
+| CC8 | **Ausland gegen Ausland** ist eine Kurzrechnung ohne Minuten (etwa 450 von 530 Spielen je Saison). Diese Spiele erscheinen nur in Tabelle und Baum, nicht in der Statistik. | 📌 vorläufig |
+| CC9 | **Noch kein Geld außer Zuschauern** bei deinen Heimspielen, keine Prämien für Computer-Vereine, kein Ansehen, keine Statistik der Europapokaltore (`p.g` zählt sie nicht). Kommt mit U19b. | 📌 U19b |
+| CC10 | **`tests/europapokal.js`:** sieben Prüfungen, siehe Test-README. Nie gelaufen. | ⚠️ offen |

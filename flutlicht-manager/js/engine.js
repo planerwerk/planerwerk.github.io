@@ -48,6 +48,7 @@ function teamWerte(sd,fr,off,lage){const T=RE.team,k=RE.staerke,acc={K:[],AM:[],
   return w;}
 // Eine Mannschaft vor dem Anpfiff. A und D sind Gesamtwerte für Vorschau und Tauziehen.
 function side(tid,home,neutral){
+  if(tid>=AV0){const v=euStaerke(tid)*(home&&!neutral?RE.heim.alle:1),w={K:v,AM:v,AL:v,AR:v,DM:v,DL:v,DR:v,TW:v};return{id:tid,am:true,aus:true,w,A:v,D:v,red:0,xp:[],xi:[],ein:'N',tac:'N',namen:euTorschuetzen(tid)};} // Auslandsverein im Europapokal (K37, U19a): Block mit Teamstärke wie die Amateure
   if(tid>=1000){const a=S.am[tid-1000],v=a.str*(home&&!neutral?RE.heim.amateure:1),w={K:v,AM:v,AL:v,AR:v,DM:v,DL:v,DR:v,TW:v};return{id:tid,am:true,w,A:v,D:v,red:0,xp:[],xi:[],ein:'N',tac:'N'};}
   const t=S.teams[tid],sl=slotsVerein(t),xi=tid===S.my?myXI():bestXI(tid,t.form),xp=[];
   xi.forEach((id,i)=>{const p=id!=null?PIX.get(id):null;if(p)xp.push({p,pos:sl[i]});});
@@ -221,7 +222,7 @@ const wb=o.wb||'liga',H=mitWettbewerb(wb,()=>side(hid,true,o.neutral)),A=mitWett
   const zeitspiel=(m,t)=>{if(R()<RL.zurufe.zeit.gelbJeMinute*G.zf(t,'zeitspiel')){const c=imSpiel(t).filter(x=>!yel[x.p.id]);if(!c.length)return;const p=waehle(c,()=>1).p;yel[p.id]=1;ev.push({m,s:t,t:'Y',p:p.id,n:p.n,x:`Gelb wegen Zeitspiel für ${p.n}`});sz.push([p.id,'gelb',0]);}};
   // Spiele gegen Amateurklubs: vereinfacht mit Teamwerten aus ihrer Stärke
   const amateurAngriff=(m,s,verl)=>{const me=W[s],op=W[1-s];if(R()<routeChance(me.AM,op.DM)*(verl?RE.verlaengerung:1)){const typ=waehle(Object.keys(RE.mix.mitte),k=>RE.mix.mitte[k]);
-      if(Ss[s].am){st.schuesse[s]++;if(R()<RE.tor[typ]*torwartFaktor(op.TW)){sc[s]++;ev.push({m,s,t:'G',p:null,n:rname(),sc:[...sc],art:typ});}}else abschluss(m,s,typ,schuetzeWahl(s,typ));}};
+      if(Ss[s].am){st.schuesse[s]++;if(R()<RE.tor[typ]*torwartFaktor(op.TW)){sc[s]++;ev.push({m,s,t:'G',p:null,n:Ss[s].namen&&Ss[s].namen.length?pick(Ss[s].namen):rname(),sc:[...sc],art:typ});}}else abschluss(m,s,typ,schuetzeWahl(s,typ));}};
   [H,A].forEach(sd=>sd.xp.forEach(x=>G.minuten[x.p.id]=[0,null]));
   G.Ss=Ss;G.H=H;G.A=A;G.xg0=xg0;G.ev=ev;G.sc=sc;G.st=st;G.fr=fr;G.yel=yel;G.off=off;G.inj=inj;G.sz=sz;G.pen=null;
   G.bank=mitWettbewerb(wb,()=>[bankWaehlen(H),bankWaehlen(A)]);
@@ -330,7 +331,7 @@ function applyMatchLauf(r,cup){const N=RE.note,V=RP.selbstvertrauen;
   [0,1].forEach(s=>{const tid=s?r.a:r.h;if(tid>=1000)return;const gf=s?r.ag:r.hg,ga=s?r.hg:r.ag,res=gf>ga?1:gf<ga?-1:0;
     const xgF=r.xg0[s],E=erwartung(xgF,r.xg0[1-s]),eres=E.sieg-E.niederlage;
     r.xpo[s].forEach(([id,,anteil,min=90])=>{const p=PIX.get(id);if(!p)return;p.apps++;nachSpiel(p,min);
-      const goals=r.ev.filter(e=>e.t==='G'&&e.p===id).length;if(cup)p.pg=(p.pg||0)+goals;else if(!r.rel&&!r.supercup)p.g+=goals;if(min<N.mindestMinuten){p.played=1;return;} // Kurzeinsatz: keine Note
+      const goals=r.ev.filter(e=>e.t==='G'&&e.p===id).length;if(cup)p.pg=(p.pg||0)+goals;else if(!r.rel&&!r.supercup&&!r.eu)p.g+=goals;if(min<N.mindestMinuten){p.played=1;return;} // Kurzeinsatz: keine Note
       const fest=N.basis-(p.str-N.staerkeMitte)/N.staerkeTeiler;
       let gr=fest-res*N.ergebnis-goals*N.tor+(R()-0.5)*N.zufall;if(r.off.includes(id))gr+=N.platzverweis;gr=clamp(Math.round(gr*2)/2,N.min,N.max);
       const erw=clamp(fest-eres*N.ergebnis-xgF*anteil*N.tor,N.min,N.max);

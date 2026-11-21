@@ -15,10 +15,12 @@ function pokalAuslosen(r){const al=shuffle(S.cup.alive.slice()),paare=[];
   if(r<=RWB.pokal.heimrechtBisRunde)while(am.length&&pro.length)paare.push([am.shift(),pro.shift()]);
   const rest=shuffle([...am,...pro]);for(let i=0;i<rest.length;i+=2)paare.push([rest[i],rest[i+1]]);return paare;}
 // 72 Stunden (K13 §3.5): Nach der Auslosung verlegt die Liga Spiele, die weniger als drei Tage vor oder nach der Pokalrunde liegen (Sonntag → Samstag davor)
-function pokalVerlegen(r,paare){const d=S.plan.pokal[r][0],M=RWB.spielplan.mindestTage,ids=new Set(paare.flat().filter(id=>id<1000));let n=0;
+function pokalVerlegen(r,paare){return ligaVerlegen(S.plan.pokal[r][0],new Set(paare.flat().filter(id=>id<1000)),'des Pokals');}
+// Ligaspiele der Vereine ids, die weniger als drei Tage vor oder nach Tag d liegen, verlegen (Pokal, seit K37 auch Europapokal)
+function ligaVerlegen(d,ids,grund){const M=RWB.spielplan.mindestTage;let n=0;
   LIGEN.forEach(lg=>(S.fx[lg]||[]).forEach((md,k)=>md.forEach(([h,a],i)=>{if(!ids.has(h)&&!ids.has(a))return;const z=S.plan.zeit[lg][k][i],alt=z[0];
-    if(z[0]>d-M&&z[0]<d){z[0]=d-M;while(wochentag(z[0])===0||wochentag(z[0])===1)z[0]--;}else if(z[0]>d&&z[0]<d+M)z[0]=d+M;else return;n++;
-    if(h===S.my||a===S.my)news(`Wegen des Pokals wird dein Ligaspiel gegen ${tn(h===S.my?a:h)} von ${datumKurz(alt)} auf ${datumKurz(z[0])} verlegt.`);})));
+    if(z[0]>d-M&&z[0]<d){z[0]=d-M;while(wochentag(z[0])===0||wochentag(z[0])===1)z[0]--;}else if(z[0]>=d&&z[0]<d+M)z[0]=d+M;else return;n++; // am selben Tag: danach (seit K37)
+    if(h===S.my||a===S.my)news(`Wegen ${grund} wird dein Ligaspiel gegen ${tn(h===S.my?a:h)} von ${datumKurz(alt)} auf ${datumKurz(z[0])} verlegt.`);})));
   if(n)TAGINDEX.plan=null;return n;}
 function pokalAuslosungTag(d){if(S.phase!=='play'||!S.cup||S.cup.alive.length<2)return;const r=S.cup.hist.length,t=pokalLosTag(r);
   if(t==null||d<t||(S.cup.los&&S.cup.los.r===r))return;

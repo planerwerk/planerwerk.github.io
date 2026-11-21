@@ -415,6 +415,19 @@ const REGELN={
       camps:{name:'Jugend-Camps',kosten:60000,sommer:1,fans:0.01,stimmung:1},fanarbeit:{name:'Fanarbeit',kosten:50000,tage:120,pfiffe:0.7}},
     ligaFaktor:{1:1,2:0.4,3:0.2},abnutzung:[1,0.5,0.25],merch:{liebling:0.05,lieblingMax:0.15},werbewert:{startJeAnsehen:0.5,zurueck:0.02,titel:5}},
 
+  // Europapokal (K37, U19a). plaetze: Bundesliga-Platz je Wettbewerb, nachruecken: wer einspringt, wenn der Pokalsieger schon über die Liga dabei ist.
+  // wb: Teilnehmer, Spiele der Ligaphase, Töpfe; titel: wohin der Titelverteidiger kommt. laender: Auslandsvereine je Land (angelehnt an die Zulassungsliste, an den Pool angepasst).
+  // zufall: Streuung des Ansehens bei der Auswahl. quali: der Gegner des deutschen Siebten kommt aus so vielen der besten übrigen Auslandsvereine.
+  // auslosung: Versuche, davon ohne die Höchstzahl je Land. kurz: Ausland gegen Ausland ohne Engine (Tore bei gleicher Stärke, Exponent, Heimvorteil, Verlängerung als Anteil).
+  // staerke: Faktor auf die Teamstärke der Auslandsvereine (Kalibrierung, Konsistenzprüfung AW13). ALLE WERTE GESCHÄTZT (K37 §12).
+  europa:{plaetze:{cl:[1,2,3,4],el:[5],ecl:[6],nachruecken:{el:6,ecl:7}},
+    wb:{cl:{name:'Champions League',kurz:'CL',teams:36,toepfe:4,titel:'cl'},el:{name:'Europa League',kurz:'EL',teams:36,toepfe:4,titel:'cl'},ecl:{name:'Conference League',kurz:'ECL',teams:36,toepfe:6,titel:'el'}},
+    laender:{cl:{ENG:5,ESP:4,ITA:4,FRA:3,POR:2,NED:2,BEL:2,TUR:2,AUT:1,SUI:1,CZE:1,DEN:1,NOR:1,CRO:1,SRB:1,UKR:1},
+      el:{ENG:3,ESP:2,ITA:2,FRA:2,POR:2,NED:2,BEL:2,TUR:2,AUT:2,SUI:2,CZE:2,DEN:2,NOR:2,SWE:2,POL:2,CRO:1,SRB:1,UKR:1},
+      ecl:{ENG:1,ESP:2,ITA:2,FRA:1,POR:2,NED:3,BEL:3,TUR:3,AUT:3,SUI:3,CZE:1,DEN:2,NOR:2,SWE:3,POL:3,CRO:1}},
+    zufall:8,quali:8,auslosung:{versuche:400,ohneHoechstzahl:200,hoechstzahl:2},
+    kurz:{tore:1.4,exp:1.6,heim:1.03,verl:0.33},staerke:{faktor:1}},
+
   // Finanzplan (K23 §5.5c, K23a): Monatsbericht, Prognose, Lizenzprüfung, Insolvenz. laufend: Buchungsarten, die in die Prognose eingehen (die übrigen sind einmalig).
   // minSpiele: so viele eigene Ligaspiele braucht der Schnitt dieser Saison, sonst gilt der der letzten Saison. lizenzTag, nachweisTag: Datum (MM-TT) der Prüfung und der Frist.
   // auflage: Vertrauen bei Auflagen. insolvenz: so viele Monatserste nacheinander unter dem negativen Kreditrahmen, Punktabzug, Vertrauen. warnMonate: Vorlauf der Warnung.
@@ -570,7 +583,7 @@ const REGELN={
     taetlichkeit:{jeSpiel:0.0016,schwer:0.05}, // etwa eine Tätlichkeit je Liga und Saison (306 Spiele)
     faktoren:{hart:1.3,fair:0.7,hitzkopf:1.5,hitzkopfMeckern:2,hitzkopfTaetlichkeit:3,muedeUnter:60,muede:1.2,rueckstand:1.0,rueckstandAb:75, // Rückstand ×1,2 aus K09 §5.1 vorläufig aus (K09 §12 Nr. 9)
       mitGelb:{foul:0.35,karte:0.5}}, // verwarnte Spieler foulen vorsichtiger, außer Hitzköpfen (Konsistenzprüfung AI4)
-    gelbsperre:{liga:[5,10,15],pokal:[5],spiele:1},gelbRot:1, // nach der letzten Schwelle zählt es neu
+    gelbsperre:{liga:[5,10,15],pokal:[5],eu:[3,5,7,9],spiele:1},gelbRot:1, // nach der letzten Schwelle zählt es neu; eu: Europapokal nach der UEFA-Regel (K37, U19a)
     rot:{notbremse:[1,1,2],grob:[2,1,4],unsportlich:[2,1,5],taetlichkeit:[4,3,6],schwer:[8,6,12],wiederholung:1,wiederholungTage:365,zufall:1,verletzung:1,verletzungAbTagen:28},
     verfahren:{antragTage:[1,2],frist:2,urteilTage:[2,5],urteilSpaetestens:10,archiv:60},
     einspruch:{kosten:[10000,30000],gemindert:0.25,erhoeht:0.10,hart:{gemindert:0.35,erhoeht:0.05},eindeutig:{gemindert:0.10,erhoeht:0.15}},
