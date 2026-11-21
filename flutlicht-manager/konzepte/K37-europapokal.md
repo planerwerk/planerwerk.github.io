@@ -1,6 +1,6 @@
 # K37 – Europapokal
 
-Status: **Entwurf** (21. November 2026, popolupo), nach „weiter, entscheide du“. Grundlage sind die ersten Gedanken in PLAN §4 (10.11.). Vorläufige Entscheidungen stehen in Abschnitt 12. Umsetzung in U19 (Teilschritte in §4.6). **U19a und U19b umgesetzt (21. November 2026, popolupo), noch ohne Testlauf.**
+Status: **Entwurf** (21. November 2026, popolupo), nach „weiter, entscheide du“. Grundlage sind die ersten Gedanken in PLAN §4 (10.11.). Vorläufige Entscheidungen stehen in Abschnitt 12. Umsetzung in U19 (Teilschritte in §4.6). **U19a bis U19c umgesetzt (21. November 2026, popolupo), noch ohne Testlauf.**
 Hängt ab von: K01 (Kalender), K13 (Wettbewerbe), K23 (Finanzen), K32 (Auslandsvereine) · Wird gebraucht von: K02 §5.3a (Vorsprung der Großen), K07 und K12a (Belastung), K19 (Anziehung für Spieler), K28 (Ziele des Vorstands), K34 (Statistik).
 
 ## 1. Ziel und Spielgefühl
@@ -61,11 +61,14 @@ Hängt ab von: K01 (Kalender), K13 (Wettbewerbe), K23 (Finanzen), K32 (Auslandsv
 |---|---|
 | **U19a** | Teilnehmer, Termine, Auslosung und Tabelle der Ligaphase, K.-o.-Baum, Spiele mit deutscher Beteiligung in der Engine, Ausland gegen Ausland als Kurzrechnung, Verlegung der Ligaspiele, Ansicht „Europa“ |
 | **U19b** | Prämien und Wertsäule (§5.3), Ansehen und Fans (§5.4), Statistik (K34), Ziele des Vorstands (K28) |
-| **U19c** | Länderwertung mit dem fünften Platz in der Champions League, Kaderliste der UEFA (25 Spieler, davon 8 lokal ausgebildet), Auslandsvereine mit Ansehen nach ihren Ergebnissen, Auslandsvereine mit vollem Kader in der Engine statt als Block (§5.2) |
+| **U19c** | Länderwertung mit dem fünften Platz in der Champions League, Interesse der Spieler (K19), Nebenziel des Vorstands (K28) |
+| **U19d** | Kaderliste der UEFA (25 Spieler, davon 8 lokal ausgebildet), Auslandsvereine mit Ansehen nach ihren Ergebnissen, Auslandsvereine mit vollem Kader in der Engine statt als Block (§5.2), Europapokal in der Saisonstatistik (K34) |
 
 **Stand U19a (21.11.):** Teilnehmer, Termine, Auslosung der Ligaphase, Tabelle, K.-o.-Baum, Spiele, Verlegung der Ligaspiele, Sperren je Wettbewerb (UEFA: Gelbsperre nach der 3., 5., 7. und 9. Gelben), Karte im Reiter Pokal. Einnahmen bisher nur die Zuschauer deiner Heimspiele (wie im Pokal), Prämien folgen mit U19b.
 
 **Stand U19b (21.11.):** Startgeld und Wertsäule mit der Auslosung, Sieg- und Remisprämie je Spiel, Rangprämie nach der Ligaphase (nur Champions League recherchiert), Rundenprämien, Siegprämie, alles mal 0,2 und für alle deutschen Teilnehmer (dein Verein bucht „Europapokal“). Zuschauer nach dem Ansehen des Gegners. Ansehen und damit Fans zum Saisonwechsel (§5.4). Vorstand +1,5 je gewonnenem Duell, +10 beim Titel. Europapokaltore am Spieler getrennt (`eg`), Titel in der Vitrine. **Noch nicht:** Ziele des Vorstands mit Europapokal (K28 §5.7), Interesse der Spieler an Vereinen im Europapokal (K19), Europapokal in der Statistik der Saison (K34).
+
+**Stand U19c (21.11.):** Länderwertung je Saison (Sieg 2, Remis 1, geteilt durch die Zahl der Vereine des Landes, nur Länder im Pool und Deutschland). Die besten zwei Länder bekommen nächste Saison einen Platz mehr in der Champions League. Für Deutschland heißt das: Der Fünfte spielt Champions League, alle Plätze danach rücken um eins nach. Spieler wollen eher zu einem Verein im Europapokal (Interesse +6, +3, +1). Neues Nebenziel des Vorstands: K.-o.-Play-offs erreichen, in der Champions League ab Ansehen 85 das Achtelfinale.
 
 ## 5. Regeln und Formeln
 
@@ -170,6 +173,9 @@ REGELN.europa = {
 13. Gelbsperre im Europapokal nach der 3., 5., 7. und 9. Gelben (UEFA-Regel, ohne das Streichen nach dem Viertelfinale) (§4.4).
 14. Vorstand +1,5 Vertrauen je gewonnenem Duell (wie im Pokal) und +10 beim Titel, kein Abzug beim Ausscheiden (U19b).
 15. Startgeld und Wertsäule werden mit der Auslosung der Ligaphase gezahlt, die Rangprämie nach der Ligaphase, Rundenprämien beim Erreichen der Runde (U19b).
+16. Länderwertung nur aus der laufenden Saison (die echte Regel für den Zusatzplatz nutzt ebenfalls nur eine Saison), ohne Bonuspunkte und ohne halbe Punkte in der Qualifikation (U19c).
+17. Interesse der Spieler +6 (Champions League), +3 (Europa League), +1 (Conference League), verglichen mit dem bisherigen Verein (U19c).
+18. Nebenziel „Europapokal“: K.-o.-Play-offs, in der Champions League ab Ansehen 85 das Achtelfinale (U19c).
 
 **Noch zu recherchieren:** Rangprämie und Play-off-Prämie in Europa League und Conference League, genaue Halbfinal- und Siegprämien, die Zulassungsliste 2026/27 für die Länderkontingente, die deutschen Starter 2026/27 aus einer zweiten Quelle, die Termine der Conference-League-Ligaphase 2026/27 (gefunden nur Spieltag 1 am 15.10. und Spieltag 6 am 17.12.).
 

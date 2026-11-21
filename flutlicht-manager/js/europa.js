@@ -52,11 +52,34 @@ function euAnsehen(tid){if(!S.eu||tid>=AV0)return 0;const A=REU.ansehen;let x=0;
   EU_WB.forEach(wb=>{const W=S.eu[wb];if(!W||!W.t.includes(tid))return;const drin=r=>(W.ko[r]||[]).some(k=>k[0]===tid||k[1]===tid);
     x+=(S.eu.titel[wb]===tid?A.titel:drin('fin')||drin('hf')?A.hf:drin('vf')?A.vf:drin('af')?A.af:0)*A.anteil[wb];});return Math.round(x);}
 
+// ---------- Länderwertung, Interesse, Nebenziel (U19c) ----------
+// Länderwertung einer Saison: Punkte für Siege und Remis (nach 90 oder 120 Minuten), je Land geteilt durch die Zahl seiner Vereine (mit der Qualifikation)
+function euLaenderwertung(E){if(!E)return[];const W=REU.wertung,m=new Map(),gesehen=new Set(),zeile=l=>{if(!m.has(l))m.set(l,{land:l,p:0,n:0});return m.get(l);},
+    pkt=(id,gf,ga)=>{zeile(euLand(id)).p+=gf>ga?W.sieg:gf===ga?W.remis:0;};
+  EU_WB.forEach(wb=>{const X=E[wb];[...X.t,...(X.q?[X.q[0],X.q[1]]:[])].forEach(id=>{if(gesehen.has(id))return;gesehen.add(id);zeile(euLand(id)).n++;});
+    (X.lp||[]).forEach(([h,a,,,hg,ag])=>{if(hg!=null){pkt(h,hg,ag);pkt(a,ag,hg);}});
+    const duell=k=>{if(k.length===3){if(k[2]){pkt(k[0],k[2][0],k[2][1]);pkt(k[1],k[2][1],k[2][0]);}return;}
+      if(k[2]){pkt(k[1],k[2][0],k[2][1]);pkt(k[0],k[2][1],k[2][0]);}if(k[3]){pkt(k[0],k[3][0],k[3][1]);pkt(k[1],k[3][1],k[3][0]);}};
+    if(X.q)duell(X.q);EU_KO.forEach(r=>(X.ko[r]||[]).forEach(duell));});
+  return[...m.values()].filter(x=>x.n>0).map(x=>Object.assign(x,{w:Math.round(x.p/x.n*100)/100})).sort((a,b)=>b.w-a.w||b.p-a.p);}
+const euLandName=l=>(nation(l)||{name:l}).name;
+// Wechselinteresse (vertraege.js wechselInteresse): Spieler wollen eher zu einem Verein im Europapokal
+const euInteresse=tid=>{if(!euAktiv()||tid==null||tid<0)return 0;const wb=EU_WB.find(w=>S.eu[w].t.includes(tid));return wb?REU.interesse[wb]:0;};
+// Nebenziel des Vorstands (vorstand.js): K.-o.-Play-offs erreichen, in der Champions League ab REU.ziel.afAbAnsehen das Achtelfinale
+function euZielMoeglich(){const wb=euMeinWb();if(!wb||!S.eu[wb].t.includes(S.my))return null;return{wb,min:wb==='cl'&&myT().rep>=REU.ziel.afAbAnsehen?'af':'po'};}
+function euZielStand(z,ende){const W=euAktiv()&&S.eu[z.wb];if(!W||!W.t.includes(S.my))return ende?'verfehlt':'offen';
+  const mit=k=>k[0]===S.my||k[1]===S.my,tb=euLigaFertig(z.wb)?euTabelle(z.wb).findIndex(r=>r.id===S.my):-1;
+  if(z.min==='po'&&tb>=0)return tb<24?'erfuellt':'verfehlt';
+  if(z.min==='af'){if((W.ko.af||[]).some(mit)||(tb>=0&&tb<8))return'erfuellt';if(tb>=24)return'verfehlt';const k=(W.ko.po||[]).find(mit),s=k?euSieger(k):null;if(s!=null)return s===S.my?'erfuellt':'verfehlt';}
+  return ende?'verfehlt':'offen';}
+
 // ---------- Teilnehmer (K37 §5.1) ----------
 // Deutsche Vereine nach Abschlusstabelle und Pokalsieger der Vorsaison. sm fehlt in der ersten Saison: dann die echten Starter.
-function euDeutsche(sm){const out={cl:[],el:[],ecl:[]};
+// fuenf: Deutschland hat über die Länderwertung einen Platz mehr in der Champions League (U19c), dann rücken alle Plätze danach um eins nach.
+function euDeutsche(sm,fuenf){const out={cl:[],el:[],ecl:[]};
   if(!sm){const ix={};S.teams.forEach(t=>{ix[t.sh]=t.id;});EU_WB.forEach(wb=>(TERMINE_2026.europaStart[wb]||[]).forEach(k=>{if(ix[k]!=null)out[wb].push(ix[k]);}));return out;}
-  const P=REU.plaetze,an=p=>{const t=S.teams.find(x=>x.lastLg===1&&x.lastPos===p);return t?t.id:null;},cw=sm.cup,cp=cw!=null&&S.teams[cw].lastLg===1?S.teams[cw].lastPos:99;
+  const P0=REU.plaetze,o=fuenf?1:0,P={cl:fuenf?[...P0.cl,P0.cl[P0.cl.length-1]+1]:P0.cl,el:P0.el.map(p=>p+o),ecl:P0.ecl.map(p=>p+o),nachruecken:{el:P0.nachruecken.el+o,ecl:P0.nachruecken.ecl+o}};
+  const an=p=>{const t=S.teams.find(x=>x.lastLg===1&&x.lastPos===p);return t?t.id:null;},cw=sm.cup,cp=cw!=null&&S.teams[cw].lastLg===1?S.teams[cw].lastPos:99;
   P.cl.forEach(p=>out.cl.push(an(p)));P.el.forEach(p=>out.el.push(an(p)));
   if(cw!=null)out.el.push(cp<=P.el[P.el.length-1]?an(P.nachruecken.el):cw); // Pokalsieger schon über die Liga dabei: der Nächste rückt nach
   out.ecl.push(an(cw!=null&&cp<=P.ecl[0]?P.nachruecken.ecl:P.ecl[0]));
@@ -66,22 +89,24 @@ function euTitelDeutsch(de,vor){if(!vor)return;const rang=w=>EU_WB.indexOf(w);
   EU_WB.forEach(wb=>{const id=vor[wb];if(id==null||!euDe(id))return;const ziel=REU.wb[wb].titel,jetzt=EU_WB.find(w=>de[w].includes(id));
     if(jetzt&&rang(jetzt)<=rang(ziel))return;if(jetzt)de[jetzt]=de[jetzt].filter(x=>x!==id);de[ziel].push(id);});}
 // Auslandsvereine: je Land nach Ansehen plus Zufall, zuerst die Champions League. Fehlen Plätze, die Nächsten aus allen Ländern. Titelverteidiger sind fest dabei.
-function euAuslandWaehlen(bedarf,vor){const Z=REU.zufall,sc=(S.ausland?S.ausland.v:[]).map((v,i)=>({id:AV0+i,land:v.land,w:v.rep+(R()*2-1)*Z,fest:false}));
+function euAuslandWaehlen(bedarf,vor,plus=[]){const Z=REU.zufall,sc=(S.ausland?S.ausland.v:[]).map((v,i)=>({id:AV0+i,land:v.land,w:v.rep+(R()*2-1)*Z,fest:false}));
   const used=new Set(),out={cl:[],el:[],ecl:[]},nimm=(wb,x)=>{used.add(x.id);out[wb].push(x);};
   if(vor)EU_WB.forEach(wb=>{const id=vor[wb],x=id!=null&&!euDe(id)?sc[id-AV0]:null;if(x&&!used.has(x.id)){x.fest=true;nimm(REU.wb[wb].titel,x);}});
-  EU_WB.forEach(wb=>{const K=REU.laender[wb];
+  EU_WB.forEach(wb=>{const K=Object.assign({},REU.laender[wb]);if(wb==='cl')plus.forEach(l=>{if(l!=='GER')K[l]=(K[l]||0)+1;}); // Länderwertung: ein Platz mehr (U19c)
     for(const land in K)sc.filter(x=>x.land===land&&!used.has(x.id)).sort((a,b)=>b.w-a.w).slice(0,K[land]).forEach(x=>nimm(wb,x));
     sc.filter(x=>!used.has(x.id)).sort((a,b)=>b.w-a.w).slice(0,Math.max(0,bedarf[wb]-out[wb].length)).forEach(x=>nimm(wb,x));
     out[wb].sort((a,b)=>b.w-a.w);while(out[wb].length>bedarf[wb]){const i=out[wb].map(x=>!x.fest).lastIndexOf(true);if(i<0)break;used.delete(out[wb][i].id);out[wb].splice(i,1);}});
   return{cl:out.cl.map(x=>x.id),el:out.el.map(x=>x.id),ecl:out.ecl.map(x=>x.id),quali:sc.filter(x=>!used.has(x.id)).sort((a,b)=>b.w-a.w).slice(0,REU.quali).map(x=>x.id)};}
 // Saisonwechsel (saison.js newSeasonLauf) und neue Welt (welt.js buildWorld, ohne sm): Teilnehmer aller drei Wettbewerbe, eigener Strom 'europa'
-function europaAnlegen(sm){const vor=S.eu&&S.eu.titel?S.eu.titel:null;S.eu=null;if(!S.ausland||!S.ausland.v.length)return;
-  mitStrom(strom('europa',S.season),()=>{const dt=euDeutsche(sm);euTitelDeutsch(dt,vor);
-    const a=euAuslandWaehlen({cl:36-dt.cl.length,el:36-dt.el.length,ecl:36-dt.ecl.length},vor);
-    S.eu={s:S.season,v:1,vor,titel:{cl:null,el:null,ecl:null},cl:{t:[...dt.cl,...a.cl],lp:null,ko:{}},el:{t:[...dt.el,...a.el],lp:null,ko:{}},ecl:{t:a.ecl.slice(),lp:null,ko:{},q:null}};
+function europaAnlegen(sm){const vor=S.eu&&S.eu.titel?S.eu.titel:null,wv=sm&&S.eu?euLaenderwertung(S.eu).map(x=>({land:x.land,w:x.w})):[],plus=wv.slice(0,REU.wertung.plaetze).map(x=>x.land);
+  S.eu=null;if(!S.ausland||!S.ausland.v.length)return;
+  mitStrom(strom('europa',S.season),()=>{const dt=euDeutsche(sm,plus.includes('GER'));euTitelDeutsch(dt,vor);
+    const a=euAuslandWaehlen({cl:36-dt.cl.length,el:36-dt.el.length,ecl:36-dt.ecl.length},vor,plus);
+    S.eu={s:S.season,v:1,vor,wv,plus,titel:{cl:null,el:null,ecl:null},cl:{t:[...dt.cl,...a.cl],lp:null,ko:{}},el:{t:[...dt.el,...a.el],lp:null,ko:{}},ecl:{t:a.ecl.slice(),lp:null,ko:{},q:null}};
     // Der deutsche Starter der Conference League spielt die Play-off-Runde der Qualifikation gegen einen der besten übrigen Auslandsvereine (K37 §4.2)
     dt.ecl.forEach(id=>{const g=a.quali.length?a.quali[Math.floor(R()*a.quali.length)]:null;if(g!=null&&!S.eu.ecl.q)S.eu.ecl.q=[id,g,null,null];else S.eu.ecl.t.push(id);});});
   if(S.eu.ecl.q)euVerlegen('ecl','q');
+  if(sm&&plus.length)news(`Länderwertung ${S.season-1}/${S.season%100}: ${plus.map(euLandName).join(' und ')} ${plus.length>1?'bekommen':'bekommt'} diese Saison einen Platz mehr in der Champions League.${plus.includes('GER')?' Damit spielt auch der Fünfte der Bundesliga dort.':''}`,plus.includes('GER')?'good':'');
   if(sm){const m=euMeinWb();if(m)news(m==='ecl'&&S.eu.ecl.q&&S.eu.ecl.q[0]===S.my?`Europapokal: Dein Verein spielt die Play-off-Runde der Qualifikation zur Conference League gegen ${tn(S.eu.ecl.q[1])} (${datumKurz(euPlan().ecl.quali[0][0])} und ${datumKurz(euPlan().ecl.quali[1][0])}).`
     :`Europapokal: Dein Verein spielt in der ${euName(m)}. Die Ligaphase wird am ${datumKurz(euPlan()[m].los)} ausgelost.`,'good');}}
 const euMeinWb=()=>euAktiv()?EU_WB.find(wb=>S.eu[wb].t.includes(S.my)||(S.eu[wb].q&&S.eu[wb].q.includes(S.my)))||null:null;
@@ -219,6 +244,9 @@ function euSpielKarte(e,f,wann){const home=f[0]===S.my,oid=home?f[1]:f[0],v=avVo
 // Kalendertag (ansichten.js kalTermin)
 function euKalTermin(d){const x=euMeineSpiele().find(y=>y.tag===d);if(!x)return null;const home=x.h===S.my,o=home?x.a:x.h,r={kurz:`${REU.wb[x.wb].kurz} ${o>=AV0?(avVon(o).name.split(' ').pop()).slice(0,6):S.teams[o].sh}`,cls:'sp pk',titel:euSpielName(x)+`: ${home?'gegen':'bei'} ${tn(o)}`};
   if(x.hg!=null){const gf=home?x.hg:x.ag,ga=home?x.ag:x.hg;r.erg=`${x.hg}:${x.ag}${x.pen?' i.E.':''}`;r.cls+=gf>ga?' win':gf<ga?' loss':' draw';}return r;}
+// Länderwertung dieser Saison (die ersten fünf und Deutschland) und wer diese Saison einen Platz mehr hat
+function euWertungText(){const l=euLaenderwertung(S.eu),i=l.findIndex(x=>x.land==='GER'),zeig=l.slice(0,5).concat(i>=5?[l[i]]:[]);if(!l.length)return'';
+  return`<p class="dim">Länderwertung dieser Saison: ${zeig.map(x=>`${l.indexOf(x)+1}. ${esc(euLandName(x.land))} ${de(x.w,2)}`).join(' · ')}. Die besten ${REU.wertung.plaetze} bekommen nächste Saison einen Platz mehr in der Champions League.${S.eu.plus&&S.eu.plus.length?` Diese Saison: ${S.eu.plus.map(x=>esc(euLandName(x))).join(' und ')}.`:''}</p>`;}
 // Karte im Reiter Pokal: deutsche Starter, dein Wettbewerb mit Tabelle der Ligaphase, K.-o.-Runden und deinen Spielen
 function europaKarte(){if(!euAktiv())return'';const mein=euMeinWb(),wb=mein||'cl',W=S.eu[wb],tb=euTabelle(wb),zeile=k=>{const s=euSieger(k),f=(a,b)=>`<b>${a}:${b}</b>`;
     return`<tr class="${k[0]===S.my||k[1]===S.my?'me':''}"><td>${esc(tn(k[0]))}</td><td>${esc(tn(k[1]))}</td><td class="num">${k.length===3?(k[2]?f(k[2][0],k[2][1])+(k[2][2]?' i.E.':''):'–'):`${k[2]?f(k[2][1],k[2][0]):'–'} · ${k[3]?f(k[3][0],k[3][1])+(k[3][2]?' i.E.':''):'–'}`}</td><td>${s!=null?esc(tn(s)):''}</td></tr>`;};
@@ -229,5 +257,6 @@ function europaKarte(){if(!euAktiv())return'';const mein=euMeinWb(),wb=mein||'cl
   const q=W.q&&(W.q[0]===S.my||W.q[1]===S.my)?`<h3 style="margin-top:14px">${EU_RUNDE.q}</h3><div class="tw"><table><tbody>${zeile(W.q)}</tbody></table></div>`:'';
   return`<div class="card"><h2>Europapokal ${S.season}/${(S.season+1)%100}</h2><p>${mein?`Dein Verein spielt in der <b>${euName(mein)}</b>.`:'Dein Verein ist diese Saison nicht im Europapokal.'} <span class="dim">Deutsche Starter: ${starter}.</span></p>
     ${mein&&sp?`<h3>Deine Spiele</h3><ul>${sp}</ul>`:''}${mein?'':`<p class="dim">Hier: ${euName(wb)}.</p>`}${ko}${q}${lp}
+    ${euWertungText()}
     ${mein?`<p>Prämien dieser Saison: <b>${fmt((S.eu.geld&&S.eu.geld[S.my])||0)}</b> <span class="dim">(Startgeld, Wertsäule, Siege, Runden, gebucht als „Europapokal“)</span></p>`:''}
     <p class="dim">Modus seit 2024/25: 36 Vereine in einer Ligaphase (Conference League 6, sonst 8 Spiele), danach Hin- und Rückspiel bis zum Halbfinale und ein Finale. Prämien nach den echten Beträgen 2025/26, im Spielgeld mal ${de(REU.geld.faktor,1)} (K37 §5.3).</p></div>`;}

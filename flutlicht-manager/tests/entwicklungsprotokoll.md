@@ -30,7 +30,8 @@ Solange K23b auf die Messwerte wartet, baue ich weiter:
 - **K37 Europapokal** als Konzept: Entwurf fertig (`konzepte/K37-europapokal.md`).
 - **U19a Europapokal** (Zweig `mitarbeit/popolupo-u19-europapokal`, auf K26): fertig, ungetestet.
 - **U19b** (Prämien, Wertsäule, Ansehen, Vertrauen, Vitrine), auf demselben Zweig: fertig, ungetestet.
-- **Jetzt:** U19c (Länderwertung mit fünftem Platz in der Champions League, Kaderliste der UEFA), auf demselben Zweig.
+- **U19c** (Länderwertung mit fünftem Platz, Interesse, Nebenziel), auf demselben Zweig: fertig, ungetestet.
+- **Danach offen:** U19d (Kaderliste der UEFA, volle Kader der Auslandsvereine in der Engine, Europapokal in der Saisonstatistik). Ich warte damit auf einen Testlauf von U19a bis U19c, weil volle Kader tief in die Engine gehen.
 
 **Die neueste Spitze ist immer der zuletzt genannte Zweig, er enthält alles davor.** Rest von K24 bleibt bei Claude.
 
@@ -44,6 +45,15 @@ Solange K23b auf die Messwerte wartet, baue ich weiter:
 ---
 
 ## Changelog
+
+### 21.11.2026: U19c Europapokal: Länderwertung, Interesse, Nebenziel (Zweig `mitarbeit/popolupo-u19-europapokal`)
+
+- **Neu in `js/europa.js`:** Länderwertung je Saison, Anzeige in der Karte „Europapokal“. Die besten zwei Länder bekommen nächste Saison einen Platz mehr in der Champions League, für Deutschland rückt dann der Fünfte nach.
+- **Geändert:**
+  - `wechselInteresse` (vertraege.js): +6/+3/+1 für einen Verein im Europapokal, verglichen mit dem bisherigen Verein.
+  - Nebenziele (vorstand.js): neue Art „Europapokal“.
+- **Tests zuerst:** `tests/europapokal.js` (jetzt neun Prüfungen), `tests/vorstand.js` (Nebenziele), `tests/vertraege.js` und `tests/transfers.js` (Interesse, CE2).
+- **Doku:** K37 (Stand, §4.6 mit U19d, §12 Nr. 16 bis 18), K33, K36 Nr. 57, Konsistenzprüfung CE, offene Entscheidungen, Test-README.
 
 ### 21.11.2026: U19b Europapokal: Prämien, Wertsäule, Ansehen (Zweig `mitarbeit/popolupo-u19-europapokal`)
 

@@ -804,6 +804,7 @@ Datei: `konzepte/K37-europapokal.md`
 - Kein neuer Lizenz-Bereich in U19a und U19b.
 - Mit U19a (21.11.): Auslandsvereine spielen in der Engine vorerst als Block mit Teamstärke (volle Kader in U19c). Die Auslosung folgt einem festen Bauplan mit gezogenen Plätzen im Topf. Gelbsperre im Europapokal nach der 3., 5., 7. und 9. Gelben.
 - Mit U19b (21.11.): Vorstand +1,5 je gewonnenem Duell und +10 beim Titel, kein Abzug beim Ausscheiden. Startgeld und Wertsäule mit der Auslosung, Rangprämie nach der Ligaphase, Rundenprämien beim Erreichen.
+- Mit U19c (21.11.): Länderwertung nur aus der laufenden Saison, die besten zwei Länder bekommen einen Platz mehr in der Champions League. Wechselinteresse +6/+3/+1. Nebenziel „Europapokal“ (K.-o.-Play-offs, ab Ansehen 85 Achtelfinale).
 
 **Noch zu recherchieren:** Rang- und Play-off-Prämien in Europa League und Conference League, Zulassungsliste 2026/27 für die Länderkontingente, deutsche Starter 2026/27 aus einer zweiten Quelle, Termine der Conference-League-Ligaphase 2026/27.
 

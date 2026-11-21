@@ -70,4 +70,14 @@ const WB=['cl','el','ecl'];
     const tv=E.vor&&E.vor.cl;ok={top:top.every(id=>E.cl.t.includes(id)),fuenf:!!fuenf&&(E.el.t.includes(fuenf.id)||E.cl.t.includes(fuenf.id)),tv:tv==null||E.cl.t.includes(tv),n:WB.map(wb=>E[wb].t.length+(E[wb].q?1:0)).join('/')};}});
   pruef(!!ok&&ok.top&&ok.fuenf&&ok.tv,'Saisonwechsel: Teilnehmer aus Tabelle, Pokal und Titelverteidigung',ok?JSON.stringify(ok):'kein Saisonwechsel');}
 
+// 9. U19c: Länderwertung mit Platz mehr in der Champions League, Plätze der Bundesliga mit und ohne fünften Platz, Interesse, Nebenziel des Vorstands
+{const {F,S,ev}=welt(),E=S.eu,cl=E.cl,aus=cl.t.filter(id=>id>=2000);cl.lp=[];cl.t.filter(id=>id<2000).forEach(id=>{for(let k=0;k<8;k++)cl.lp.push([id,aus[k],k,0,3,0]);}); // deutsche Vereine gewinnen alles
+  const wl=F.euLaenderwertung(E),erst=wl[0]&&wl[0].land;
+  const l1=S.teams.filter(t=>t.lg===1).sort((a,b)=>b.rep-a.rep);l1.forEach((t,i)=>{t.lastLg=1;t.lastPos=i+1;});const pokal=l1[9].id;
+  const ohne=F.euDeutsche({cup:pokal},false),mit=F.euDeutsche({cup:pokal},true),pos=l=>l.map(id=>S.teams[id].lastPos).join('+');
+  const a=F.euAuslandWaehlen({cl:32,el:34,ecl:35},null,['ENG']),eng=a.cl.filter(id=>ev('avVon')(id).land==='ENG').length;
+  const bay=cl.t.find(id=>id<2000&&S.teams[id].sh==='FCB'),inter=ev('euInteresse')(bay),alt=S.my;S.my=bay;const ziel=F.euZielMoeglich();S.my=alt;
+  pruef(erst==='GER'&&ohne.cl.length===4&&mit.cl.length===5&&pos(mit.el)==='6+10'&&pos(mit.ecl)==='7'&&pos(ohne.ecl)==='6'&&eng>=6&&inter===6&&!!ziel&&ziel.min==='af',
+    'U19c: Länderwertung, fünfter Platz, Kontingent plus eins, Interesse, Nebenziel',`erstes Land ${erst}, CL ${pos(ohne.cl)} / ${pos(mit.cl)}, EL ${pos(mit.el)}, ECL ${pos(ohne.ecl)} / ${pos(mit.ecl)}, England ${eng}, Interesse ${inter}, Ziel ${ziel&&ziel.min}`);}
+
 console.log(probleme.length?`\n${probleme.length} Problem(e).`:'\nAlles in Ordnung.');process.exitCode=probleme.length?1:0;

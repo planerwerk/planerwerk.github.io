@@ -433,7 +433,11 @@ const REGELN={
       el:{start:4.31e6,sieg:450000,remis:150000,rang:0,po:0,af:1.75e6,vf:2.5e6,hf:4.2e6,fin:7e6,titel:6e6,wert:5.5e6},
       ecl:{start:3.17e6,sieg:400000,remis:133000,rang:0,po:0,af:800000,vf:1.3e6,hf:2.5e6,fin:4e6,titel:3e6,wert:2.8e6}},
     // Ansehen zum Saisonwechsel (K37 §5.4): erreichte Runde, Anteil je Wettbewerb. vertrauen: Vorstand bei jedem gewonnenen Duell und beim Titel.
-    ansehen:{af:1,vf:2,hf:3,titel:4,anteil:{cl:1,el:0.5,ecl:0.25}},vertrauen:{weiter:1.5,titel:10}},
+    ansehen:{af:1,vf:2,hf:3,titel:4,anteil:{cl:1,el:0.5,ecl:0.25}},vertrauen:{weiter:1.5,titel:10},
+    // U19c: wertung: Länderwertung der Saison (Punkte je Sieg und Remis, geteilt durch die Zahl der Vereine des Landes), die besten plaetze Länder bekommen nächste Saison einen Platz mehr
+    // in der Champions League (European Performance Spot seit 2024/25). interesse: Wechselinteresse der Spieler an einem Verein im Wettbewerb (K19). ziel: Nebenziel des Vorstands
+    // (K28 §5.7), K.-o.-Play-offs erreichen, in der Champions League ab diesem Ansehen das Achtelfinale.
+    wertung:{sieg:2,remis:1,plaetze:2},interesse:{cl:6,el:3,ecl:1},ziel:{afAbAnsehen:85}},
 
   // Finanzplan (K23 §5.5c, K23a): Monatsbericht, Prognose, Lizenzprüfung, Insolvenz. laufend: Buchungsarten, die in die Prognose eingehen (die übrigen sind einmalig).
   // minSpiele: so viele eigene Ligaspiele braucht der Schnitt dieser Saison, sonst gilt der der letzten Saison. lizenzTag, nachweisTag: Datum (MM-TT) der Prüfung und der Frist.

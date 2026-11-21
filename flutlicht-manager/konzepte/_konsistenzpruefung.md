@@ -1304,3 +1304,16 @@ Gleicher Zweig wie CC. Konzept: K37 §5.3, §5.4, §12 Nr. 14 und 15.
 | CD5 | **Zuschauer:** Der Gegner zählt mit seinem Ansehen wie ein Bundesligist, das Spiel gilt als Pokalspiel (`cup`). | ✅ |
 | CD6 | **Nicht gebaut:** Ziele des Vorstands mit Europapokal (K28), Interesse der Spieler (K19), Europapokal in der Saisonstatistik (K34). | 📌 später |
 | CD7 | **`tests/europapokal.js`** hat jetzt acht Prüfungen (dazu Geld und Ansehen). Nie gelaufen. | ⚠️ offen |
+
+---
+
+## CE. Nachtrag zu U19c Europapokal: Länderwertung, Interesse, Nebenziel (21. November 2026, popolupo, ohne Testlauf)
+
+Gleicher Zweig wie CC. Konzept: K37 §12 Nr. 16 bis 18.
+
+| # | Befund | Status |
+|---|---|---|
+| CE1 | **Länderwertung ohne die übrigen Länder:** Nur die 18 Länder des Pools und Deutschland. Länder mit vielen Vereinen in Europa League und Conference League verlieren im Schnitt, weil dort weniger gewonnen wird als bei den Großen. Ob Deutschland zu oft oder zu selten den fünften Platz holt, zeigt erst ein Lauf über viele Saisons (echt: Für 2024/25 bekam Deutschland den Platz, für 2026/27 nach einer Überschrift bei ran vom Frühjahr 2026 nicht, Websuche 21.11.). | ⚠️ messen |
+| CE2 | **Wechselinteresse** steigt für deinen Verein im Europapokal um bis zu 6. Das ändert Ergebnisse in `tests/vertraege.js` und `tests/transfers.js`, wenn dein Testverein international spielt (Freiburg in der Qualifikation der Conference League). | ⚠️ messen |
+| CE3 | **Nebenziel „Europapokal“** kommt in den Topf der möglichen Nebenziele, wenn dein Verein schon in der Ligaphase steht. Die Auslosung der Nebenziele im Strom `nebenziele` ändert sich dann, sonst nicht. | ✅ |
+| CE4 | **`tests/europapokal.js`** hat jetzt neun Prüfungen. Nie gelaufen. | ⚠️ offen |
