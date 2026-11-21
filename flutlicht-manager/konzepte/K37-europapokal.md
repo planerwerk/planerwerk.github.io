@@ -112,6 +112,28 @@ Echte Beträge 2025/26 (Websuche 21.11.):
 ### 5.5 Belastung
 - Keine eigene Regel. Frische, Kondition, Verletzungen und Rotation laufen über K07, K10 und die Aufstellung der Computer-Trainer, die schon heute nach Frische auswählt (`bestXI`).
 
+### 5.6 Kaderliste der UEFA (Entwurf für U19d, 21.11.2026, noch nicht gebaut)
+Echte Regel 2025/26 (UEFA-Reglement Art. 31, Websuche 21.11.):
+- **Liste A:** höchstens 25 Spieler, mindestens 2 Torhüter. 8 Plätze sind lokal Ausgebildeten vorbehalten, davon höchstens 4 verbandsausgebildet. Wer weniger lokal Ausgebildete hat, darf entsprechend weniger melden.
+- **Vereinsausgebildet:** drei Jahre im selben Verein zwischen 15 und 21. **Verbandsausgebildet:** drei Jahre bei Vereinen desselben Verbands in diesem Alter.
+- **Liste B:** junge Spieler, die seit zwei Jahren im Verein sind, ohne Höchstzahl.
+- **Nachmeldung** für die K.-o.-Phase: bis zu drei neue Spieler. Ein Ersatz für einen verletzten Torhüter geht jederzeit.
+
+Im Spiel (vorläufig):
+- **Lokal ausgebildet als Näherung**, weil die Laufbahn vor dem Spielstart fehlt: vereinsausgebildet ist, wer aus der eigenen Jugend kommt (`p.ej` gleich Verein). Verbandsausgebildet sind die übrigen Spieler mit deutscher Nationalität.
+- **Liste B:** bis 21 Jahre und `p.ej` gleich Verein oder seit zwei Jahren im Verein (`p.seit`).
+- **Frist:** Meldung bis zum Tag vor dem 1. Spieltag der Ligaphase, Nachmeldung bis zum Tag vor den K.-o.-Play-offs. Ohne Meldung meldet der Verein an diesem Tag die Besten nach den Regeln (mit und ohne Automatik am selben Tag, Gleichschritt).
+- **Lizenz:** Bereich `aufstellung` (ab Teamleiter). Mit Automatik meldet der Co-Trainer.
+- **Engine:** Im Europapokal sind nur gemeldete Spieler verfügbar (`avail` mit Wettbewerb `eu`).
+- **Computer-Vereine** melden automatisch nach Stärke.
+- **Ansicht:** im Kader eine Spalte „UEFA“ (A, B oder leer), Melden und Streichen, Zähler 25 / 8 / 4.
+
+### 5.7 Volle Kader der Auslandsvereine (Entwurf für U19d, noch nicht gebaut)
+- `side` stellt den Auslandsverein aus seinen Kernspielern (K32 §3.1) und Ergänzungsspielern auf. Die Ergänzung wird je Verein, Saison und Platz fest aus dem Seed erzeugt und nicht gespeichert (Name aus der Namensliste des Landes, Stärke `avStaerke` mit kleiner Streuung).
+- **Keine Folgen für Auslandsspieler:** keine Verletzung, keine Karte mit Sperre, keine Frische. Dafür braucht es Wächter in `applyMatchLauf` (Verletzungen), `disziplinNachSpiel` und `lernenImSpiel` für Spieler mit `istAusland`.
+- **Stil:** vorläufig „ausgewogen“, später nach Land.
+- **Kalibrierung:** wie CC2. Erst messen, ob deutsche Vereine gegen den Block zu oft oder zu selten weiterkommen, dann umstellen.
+
 ## 6. Hebel des Spielers
 - **Prioritäten setzen:** Aufstellung und Rotation zwischen Liga und Europapokal.
 - **Kader breiter planen** (K19), wenn Europa wahrscheinlich ist.
@@ -132,7 +154,7 @@ Später als Karten (K30), noch nicht gebaut: Fanmarsch in der fremden Stadt, Pyr
 - **K28 Vorstand:** Ziele wie „Europapokal erreichen“ oder „Achtelfinale“ (U19b).
 - **K34 Statistik:** Europapokal-Spiele und Tore getrennt zählen (U19b).
 - **K13 Wettbewerbe:** Termine neben Pokal und Liga, Verlegung nach 72 Stunden.
-- **K36 Lernstufen:** Spiele und Auslosungen sind ab Teamleiter dabei. Kein neuer Bereich in U19a und U19b. Die Kaderliste in U19c gehört zum Bereich `kader`.
+- **K36 Lernstufen:** Spiele und Auslosungen sind ab Teamleiter dabei. Kein neuer Bereich in U19a bis U19c. Die Kaderliste in U19d gehört zum Bereich `aufstellung` (berichtigt am 21.11., einen Bereich `kader` gibt es nicht, §5.6).
 
 ## 10. Zielwerte und Tests
 - **Deutsche Ergebnisse** über viele Saisons in der Größenordnung der Wirklichkeit: in der Champions League kommen deutsche Vereine meist ins Achtelfinale, der Größte gelegentlich ins Halbfinale, ein deutscher Sieger etwa alle 10 bis 15 Jahre (Bayern 2013, 2020). Die Teamstärke der Auslandsvereine braucht dafür eine eigene Kalibrierung (K32, Konsistenzprüfung AW13).
@@ -188,6 +210,7 @@ Alle abgerufen am 21.11.2026 (Websuche):
 - Pokalsieger 2026 (Nachtrag 21.11.): [ZDFheute, Pokalfinale](https://www.zdfheute.de/sport/fussball-dfb-pokal-2025-26-finale-fc-bayern-muenchen-vfb-stuttgart-tore-ergebnis-100.html), [DFB](https://www.dfb.de/news/vfb-entthront-fc-bayern-gewinnt-zum-21-mal-den-dfb-pokal)
 - Rangprämie Conference League (Nachtrag 21.11., nicht amtlich): [Salary Sport](https://salarysport.com/football/conference-league/prize-money/)
 - Prämien Conference League 2025/26: [FootballTransfers](https://www.footballtransfers.com/en/transfer-news/football-finance/uefa-prize-money/2026/04/europa-conference-league-prize-money-2025-26), [SalaryLeaks](https://www.salaryleaks.com/prize-money/uefa-conference-league), [Voronoi](https://www.voronoiapp.com/sports/How-much-money-is-at-stake-in-European-Football-6678)
+- Kaderliste (Nachtrag 21.11.): [UEFA-Reglement 2025/26, Art. 31](https://documents.uefa.com/r/Regulations-of-the-UEFA-Champions-League-2025/26/Article-31-Player-lists-Online), [UEFA, Meldung zur Ligaphase](https://www.uefa.com/uefachampionsleague/news/029c-1e6a3464bdcd-ac4d3eea76b7-1000--champions-league-league-phase-squads-player-registration-)
 - Termine Champions League 2026/27: [UEFA](https://www.uefa.com/uefachampionsleague/news/02a8-21767f4e5e55-bd27f9adffd3-1000--champions-league-2026-27-alle-spiele-und-ergebnisse-der-liga/), [Flashscore](https://www.flashscore.de/news/fu-ball-champions-league-spielplan-termine-auslosungen-tv-alle-infos-zur-liga-phase-der-uefa-champions-league/d07YaiB4/)
 - Termine Europa League und Conference League 2026/27: [UEFA, Europa League](https://www.uefa.com/uefaeuropaleague/news/02a6-20d57cfcd03e-407c22a7f465-1000--2026-27-europa-league-teams-dates-draws-format-final/), [UEFA, Conference League](https://www.uefa.com/uefaconferenceleague/news/02a6-20d57d15f093-a90cf54c928f-1000--202627-conference-league-teams-dates-draws-format-final/)
 - Deutsche Startplätze: [ZDFheute](https://www.zdfheute.de/sport/fussball-champions-league-internationale-platzvergabe-100.html), [bundesliga.com](https://www.bundesliga.com/de/bundesliga/news/rennen-platz-7-conference-league-europa-freiburg-frankfurt-augsburg-37373), [Soccergraph](https://www.soccergraph.com/2026/08/which-bundesliga-clubs-qualified-for-europe.html)

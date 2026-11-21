@@ -46,6 +46,13 @@ Solange K23b auf die Messwerte wartet, baue ich weiter:
 
 ## Changelog
 
+### 21.11.2026: K37 §5.6 und §5.7: Entwurf für U19d (Zweig `mitarbeit/popolupo-u19-europapokal`, kein Code)
+
+- Kaderliste der UEFA nach dem echten Reglement, mit Näherung für lokal Ausgebildete, Frist und Gleichschritt, Bereich `aufstellung`.
+- Volle Kader der Auslandsvereine in der Engine, mit den nötigen Wächtern.
+- Berichtigt: In K37 §9 stand ein Bereich `kader`, den es nicht gibt.
+- **Gebaut wird U19d erst nach einem Testlauf von U19a bis U19c.**
+
 ### 21.11.2026: Recherche K37: Pokalsieger 2026, Rangprämie Conference League (Zweig `mitarbeit/popolupo-u19-europapokal`)
 
 - Bayern gewann 2026 auch den DFB-Pokal, darum stimmen die deutschen Starter 2026/27 in `daten/termine.js` (Sechster und Siebter rücken nach).
