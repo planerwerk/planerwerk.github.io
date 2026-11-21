@@ -1,8 +1,8 @@
 // Europapokal (K37, U19a): Champions League, Europa League, Conference League mit Ligaphase und K.-o.-Runden nach dem Modus seit 2024/25.
 // Teilnehmer: deutsche Vereine nach Tabelle und Pokal der Vorsaison (erste Saison: daten/termine.js), Auslandsvereine aus dem Pool (K32) nach Kontingent, Ansehen und Zufall.
 // Spiele mit deutscher Beteiligung laufen durch die Engine. Der Auslandsverein spielt dort als Block mit seiner Teamstärke (wie die Amateure im Pokal), die Torschützen kommen aus seinen Kernspielern.
-// Ausland gegen Ausland: Kurzrechnung im eigenen Strom. Geld und Ansehen kommen mit U19b.
-// Im Spielstand: S.eu = {s, v (Zähler für den Terminindex), vor {cl, el, ecl} Titelverteidiger, titel {cl, el, ecl} Sieger dieser Saison, cl/el/ecl: {t Teilnehmer, q, lp, ko}}
+// Ausland gegen Ausland: Kurzrechnung im eigenen Strom. Seit U19b: Prämien und Wertsäule für deutsche Vereine, Ansehen zum Saisonwechsel, Vertrauen des Vorstands, Titel in der Vitrine.
+// Im Spielstand: S.eu = {s, v (Zähler für den Terminindex), vor {cl, el, ecl} Titelverteidiger, titel {cl, el, ecl} Sieger dieser Saison, geld {Verein: Prämien der Saison}, cl/el/ecl: {t Teilnehmer, q, lp, ko}}
 //   lp: [heim, gast, spieltag, tag, heimtore, gasttore]. q und ko.po bis ko.hf: [x (Rückspiel zu Hause), y, hinspiel [tore y, tore x] | null, rückspiel [tore x, tore y, elfmeter | null] | null].
 //   ko.fin: [x, y, ergebnis [tore x, tore y, elfmeter | null] | null] auf neutralem Platz.
 const EU_WB=['cl','el','ecl'],EU_KO=['po','af','vf','hf','fin'];
@@ -33,6 +33,24 @@ function euKurz(h,a,o){const K=REU.kurz,q=euStaerke(h)*(o.neutral?1:K.heim)/euSt
   let hg=poisson(xh),ag=poisson(xa),pen=null;const agg=o.agg||[0,0],gleich=()=>hg+agg[0]===ag+agg[1];
   if(o.ko&&gleich()){hg+=poisson(xh*K.verl);ag+=poisson(xa*K.verl);if(gleich())pen=shootout();}
   return{h,a,hg,ag,pen};}
+
+// ---------- Geld und Ansehen (K37 §5.3, §5.4, U19b) ----------
+// Betrag aus REGELN.europa.geld mal Faktor (bis K23c 0,2), auf 1.000 gerundet
+const euGeldWert=(wb,k,n=1)=>Math.round((REU.geld[wb][k]||0)*n*REU.geld.faktor/1000)*1000;
+// Zahlung an einen deutschen Verein: dein Verein bucht „Europapokal“, Computer-Vereine aufs Konto. S.eu.geld zählt je Verein mit (Finanzseite, Tests).
+function euZahlen(tid,betrag,grund){if(!betrag||!euDe(tid))return;S.eu.geld=S.eu.geld||{};S.eu.geld[tid]=(S.eu.geld[tid]||0)+betrag;
+  if(tid===S.my){money('Europapokal',betrag);if(grund)news(`Europapokal: ${grund}, ${fmt(betrag)}.`,'good');}else S.teams[tid].cash+=betrag;}
+// Mit der Auslosung der Ligaphase: Startgeld und Wertsäule (Schnitt × 2 × (37 − Rang des Ansehens) / 37)
+function euStartgeld(wb){const W=S.eu[wb],rang=W.t.slice().sort((a,b)=>euRep(b)-euRep(a));
+  W.t.filter(euDe).forEach(id=>euZahlen(id,euGeldWert(wb,'start')+euGeldWert(wb,'wert',2*(37-(rang.indexOf(id)+1))/37),`Startgeld und Wertsäule der ${euName(wb)}`));}
+// Nach der Ligaphase: Rangprämie (Platz 1 bekommt 36 Anteile, Platz 36 einen)
+function euRangpraemie(wb){if(!REU.geld[wb].rang)return;euTabelle(wb).forEach((r,i)=>euZahlen(r.id,euGeldWert(wb,'rang',36-i),`Rangprämie für Platz ${i+1} der Ligaphase`));}
+// Beim Erreichen einer K.-o.-Runde
+function euRundenGeld(wb,r){(S.eu[wb].ko[r]||[]).forEach(k=>[k[0],k[1]].forEach(id=>euZahlen(id,euGeldWert(wb,r),`${EU_RUNDE[r]} der ${euName(wb)} erreicht`)));}
+// Ansehen zum Saisonwechsel (saison.js, vor dem neuen Europapokal): erreichte Runde mal Anteil des Wettbewerbs
+function euAnsehen(tid){if(!S.eu||tid>=AV0)return 0;const A=REU.ansehen;let x=0;
+  EU_WB.forEach(wb=>{const W=S.eu[wb];if(!W||!W.t.includes(tid))return;const drin=r=>(W.ko[r]||[]).some(k=>k[0]===tid||k[1]===tid);
+    x+=(S.eu.titel[wb]===tid?A.titel:drin('fin')||drin('hf')?A.hf:drin('vf')?A.vf:drin('af')?A.af:0)*A.anteil[wb];});return Math.round(x);}
 
 // ---------- Teilnehmer (K37 §5.1) ----------
 // Deutsche Vereine nach Abschlusstabelle und Pokalsieger der Vorsaison. sm fehlt in der ersten Saison: dann die echten Starter.
@@ -96,7 +114,7 @@ function euLigaphaseLosen(wb){const W=S.eu[wb],A=REU.auslosung,vor=S.eu.vor&&S.e
   for(let v=0;v<A.versuche;v++){const P=Array.from({length:n},(_,i)=>shuffle(T.slice(i*g,i*g+g)));M=n===4?euPlan4(P):euPlan6(P);if(euLosOk(M,v<A.ohneHoechstzahl?A.hoechstzahl:99))break;}
   const tage=euPlan()[wb].liga,reihe=shuffle([...Array(tage.length).keys()]),je={};M.forEach(m=>{const md=reihe[m[2]];(je[md]=je[md]||[]).push(m);});
   W.lp=[];Object.keys(je).forEach(md=>shuffle(je[md]).forEach((m,i)=>W.lp.push([m[0],m[1],+md,tage[md][i%2],null,null])));W.lp.sort((x,y)=>x[2]-y[2]||x[3]-y[3]);S.eu.v++;
-  euVerlegen(wb,'lp');const mein=W.lp.filter(m=>m[0]===S.my||m[1]===S.my);
+  euVerlegen(wb,'lp');euStartgeld(wb);const mein=W.lp.filter(m=>m[0]===S.my||m[1]===S.my);
   if(mein.length)news(`Auslosung ${euName(wb)}: Deine Gegner in der Ligaphase sind ${mein.map(m=>`${tn(m[0]===S.my?m[1]:m[0])} (${m[0]===S.my?'H':'A'})`).join(', ')}.`,'good');}
 
 // ---------- Tabelle und K.-o.-Runden (K37 §4.4) ----------
@@ -112,16 +130,16 @@ function euSieger(k){if(k.length===3){const e=k[2];return e?winner({h:k[0],a:k[1
 // Play-offs: 9/10 gegen 23/24, 11/12 gegen 21/22, 13/14 gegen 19/20, 15/16 gegen 17/18, gelost nur innerhalb der Platzpaare, der besser Platzierte hat das Rückspiel zu Hause
 function euPlayoffsLosen(wb){const W=S.eu[wb],tb=euTabelle(wb).map(r=>r.id),T=[];
   for(let j=0;j<4;j++){const u=shuffle([tb[23-2*j],tb[22-2*j]]);T.push([tb[8+2*j],u[0],null,null],[tb[9+2*j],u[1],null,null]);}
-  W.ko.po=T;S.eu.v++;euVerlegen(wb,'po');euLosMeldung(wb,'po');}
+  W.ko.po=T;S.eu.v++;euVerlegen(wb,'po');euLosMeldung(wb,'po');euRangpraemie(wb);euRundenGeld(wb,'po');}
 // Achtelfinale: Platz 1/2 gegen die Sieger aus 15/16 – 17/18, 3/4 aus 13/14 – 19/20, 5/6 aus 11/12 – 21/22, 7/8 aus 9/10 – 23/24.
 // Turnierbaum in der Reihenfolge 1, 8, 4, 5, 2, 7, 3, 6 (Platz 1 und 2 treffen sich erst im Finale). Wer von einem Platzpaar oben steht, wird gelost.
 function euAchtelfinaleLosen(wb){const W=S.eu[wb],tb=euTabelle(wb).map(r=>r.id),sg=W.ko.po.map(euSieger);
   const s=[0,1,2,3].map(j=>shuffle([tb[2*j],tb[2*j+1]])),g=[0,1,2,3].map(j=>shuffle([sg[2*(3-j)],sg[2*(3-j)+1]])),T=(o,j)=>[s[j][o],g[j][o],null,null];
-  W.ko.af=[T(0,0),T(0,3),T(0,1),T(0,2),T(1,0),T(1,3),T(1,1),T(1,2)];S.eu.v++;euVerlegen(wb,'af');euLosMeldung(wb,'af');}
+  W.ko.af=[T(0,0),T(0,3),T(0,1),T(0,2),T(1,0),T(1,3),T(1,1),T(1,2)];S.eu.v++;euVerlegen(wb,'af');euLosMeldung(wb,'af');euRundenGeld(wb,'af');}
 // Viertelfinale bis Finale aus dem Baum: Nachbarn treffen sich, Heimrecht im Rückspiel für den in der Ligaphase besser Platzierten
 function euNaechsteRunde(wb,r){const W=S.eu[wb],sg=W.ko[EU_KO[EU_KO.indexOf(r)-1]].map(euSieger),rang=new Map(euTabelle(wb).map((x,i)=>[x.id,i])),T=[];
   for(let i=0;i<sg.length;i+=2){const[a,b]=[sg[i],sg[i+1]].sort((p,q)=>rang.get(p)-rang.get(q));T.push(r==='fin'?[a,b,null]:[a,b,null,null]);}
-  W.ko[r]=T;S.eu.v++;euVerlegen(wb,r);euLosMeldung(wb,r);}
+  W.ko[r]=T;S.eu.v++;euVerlegen(wb,r);euLosMeldung(wb,r);euRundenGeld(wb,r);}
 function euLosMeldung(wb,r){const k=(S.eu[wb].ko[r]||[]).find(x=>x[0]===S.my||x[1]===S.my);if(!k)return;const o=k[0]===S.my?k[1]:k[0],P=euPlan()[wb];
   news(r==='fin'?`${euName(wb)}: Dein Verein steht im Finale gegen ${tn(o)}, am ${datumKurz(P.fin)} auf neutralem Platz.`:`Auslosung ${euName(wb)}, ${EU_RUNDE[r]}: gegen ${tn(o)}, Rückspiel ${k[0]===S.my?'zu Hause':'auswärts'}.`,'good');}
 
@@ -179,19 +197,19 @@ function euDuellErgaenzen(wb,runde,k){const st=id=>euDe(id)?teamLevel(id):euStae
 // Nach den Spielen eines Termins (ablauf.js tagesSpieleAbschliessenLauf): Ergebnisse eintragen, Runde abschließen, Meldungen
 function euNachSpielen(g,mg){const e=g.e,W=S.eu[e.wb];
   [...g.list.map(r=>({i:r.euI,hg:r.hg,ag:r.ag,pen:r.pen||null})),...g.kurz].forEach(x=>{
-    if(e.runde==='lp'){const m=W.lp[x.i];m[4]=x.hg;m[5]=x.ag;return;}
+    if(e.runde==='lp'){const m=W.lp[x.i];m[4]=x.hg;m[5]=x.ag;[[m[0],x.hg-x.ag],[m[1],x.ag-x.hg]].forEach(([id,d])=>euZahlen(id,euGeldWert(e.wb,d>0?'sieg':d===0?'remis':'-')));return;} // Sieg- und Remisprämie (U19b)
     const k=e.runde==='q'?W.q:W.ko[e.runde][x.i];if(e.runde==='fin')k[2]=[x.hg,x.ag,x.pen];else if(e.leg===0)k[2]=[x.hg,x.ag];else k[3]=[x.hg,x.ag,x.pen];});
   if(mg){const mein=mg.h===S.my,gf=mein?mg.hg:mg.ag,ga=mein?mg.ag:mg.hg,k=e.runde==='lp'?null:e.runde==='q'?W.q:W.ko[e.runde].find(x=>x[0]===S.my||x[1]===S.my),s=k?euSieger(k):null;
     const zusatz=e.runde==='lp'||(e.runde!=='fin'&&e.leg===0)?'':s===S.my?(e.runde==='fin'?` – ${euName(e.wb).toUpperCase()}-SIEGER!`:' – weiter!'):' – ausgeschieden.';
     news(`${euSpielName(e)}: ${tn(mg.h)} – ${tn(mg.a)} ${mg.hg}:${mg.ag}${mg.pen?` (i.E. ${mg.pen[0]}:${mg.pen[1]})`:''}${zusatz}`,s!=null&&e.runde!=='lp'?(s===S.my?'good':'bad'):gf>ga?'good':gf<ga?'bad':'');
-    if(mein&&e.runde!=='fin')heimspielEinnahmen(mg,true);}
+    if(mein&&e.runde!=='fin')heimspielEinnahmen(mg,true);if(s===S.my&&e.runde!=='lp')S.trust+=REU.vertrauen.weiter;} // Vorstand: jedes gewonnene Duell (U19b)
   euRundeFertig(e);}
 // Runde abgeschlossen: Qualifikation, nächste Runde aus dem Baum, Sieger
 function euRundeFertig(e){const W=S.eu[e.wb];
   if(e.runde==='q'&&e.leg===1&&W.q){const s=euSieger(W.q);if(s!=null&&!W.t.includes(s))W.t.push(s);return;}
   if(e.runde==='lp'||e.runde==='po'||e.runde==='q')return;
   const L=W.ko[e.runde];if(!L||!L.every(k=>euSieger(k)!=null))return;
-  if(e.runde==='fin'){const s=euSieger(L[0]);S.eu.titel[e.wb]=s;news(`${tn(s)} gewinnt die ${euName(e.wb)}!`,s===S.my||euDe(s)?'good':'');return;}
+  if(e.runde==='fin'){const s=euSieger(L[0]);S.eu.titel[e.wb]=s;news(`${tn(s)} gewinnt die ${euName(e.wb)}!`,s===S.my||euDe(s)?'good':'');euZahlen(s,euGeldWert(e.wb,'titel'),`Siegprämie der ${euName(e.wb)}`);if(s===S.my)S.trust+=REU.vertrauen.titel;return;}
   const n=EU_KO[EU_KO.indexOf(e.runde)+1];if(!W.ko[n])euNaechsteRunde(e.wb,n);}
 
 // ---------- Ansicht ----------
@@ -211,4 +229,5 @@ function europaKarte(){if(!euAktiv())return'';const mein=euMeinWb(),wb=mein||'cl
   const q=W.q&&(W.q[0]===S.my||W.q[1]===S.my)?`<h3 style="margin-top:14px">${EU_RUNDE.q}</h3><div class="tw"><table><tbody>${zeile(W.q)}</tbody></table></div>`:'';
   return`<div class="card"><h2>Europapokal ${S.season}/${(S.season+1)%100}</h2><p>${mein?`Dein Verein spielt in der <b>${euName(mein)}</b>.`:'Dein Verein ist diese Saison nicht im Europapokal.'} <span class="dim">Deutsche Starter: ${starter}.</span></p>
     ${mein&&sp?`<h3>Deine Spiele</h3><ul>${sp}</ul>`:''}${mein?'':`<p class="dim">Hier: ${euName(wb)}.</p>`}${ko}${q}${lp}
-    <p class="dim">Modus seit 2024/25: 36 Vereine in einer Ligaphase (Conference League 6, sonst 8 Spiele), danach Hin- und Rückspiel bis zum Halbfinale und ein Finale. Prämien kommen mit dem nächsten Schritt (K37 §5.3).</p></div>`;}
+    ${mein?`<p>Prämien dieser Saison: <b>${fmt((S.eu.geld&&S.eu.geld[S.my])||0)}</b> <span class="dim">(Startgeld, Wertsäule, Siege, Runden, gebucht als „Europapokal“)</span></p>`:''}
+    <p class="dim">Modus seit 2024/25: 36 Vereine in einer Ligaphase (Conference League 6, sonst 8 Spiele), danach Hin- und Rückspiel bis zum Halbfinale und ein Finale. Prämien nach den echten Beträgen 2025/26, im Spielgeld mal ${de(REU.geld.faktor,1)} (K37 §5.3).</p></div>`;}

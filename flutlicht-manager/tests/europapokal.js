@@ -45,7 +45,7 @@ const WB=['cl','el','ecl'];
   pruef(ev('gelbe')(p).eu===3&&ev('gelbe')(p).liga===liga&&sp.eu.gelb===1&&sp.liga.gelb===0&&ev('wbVon')({eu:'cl'})==='eu','Sperren: dritte Gelbe im Europapokal sperrt nur dort',JSON.stringify(sp));}
 
 // 6. Eine Saison im Ablauf: alle Spiele gespielt, Runden vollständig, je Wettbewerb ein Sieger, Ligaspiele deutscher Teilnehmer mit drei Tagen Abstand zum Europapokal
-{let info=null;saisons({n:1,seed:SEED,verein:VEREIN,beiSaisonende:(S,F)=>{const E=S.eu;info={E:JSON.parse(JSON.stringify(E)),abstand:0,de:0};
+{let info=null;saisons({n:1,seed:SEED,verein:VEREIN,beiSaisonende:(S,F)=>{const E=S.eu;info={E:JSON.parse(JSON.stringify(E)),abstand:0,de:0,meinGeld:(E.geld&&E.geld[S.my])||0,meinFin:S.fin['Europapokal']||0};
     const P=S.plan.eu,tage=new Map(),add=(id,d)=>{if(id>=2000)return;if(!tage.has(id))tage.set(id,[]);tage.get(id).push(d);};
     [1,2,3].forEach(lg=>(S.fx[lg]||[]).forEach((md,k)=>md.forEach(([h,a],i)=>{const d=S.plan.zeit[lg][k][i][0];add(h,d);add(a,d);})));
     WB.forEach(wb=>{const W=E[wb],p=P[wb];(W.lp||[]).forEach(m=>{add(m[0],m[3]);add(m[1],m[3]);});
@@ -54,7 +54,16 @@ const WB=['cl','el','ecl'];
     const deIds=new Set(WB.flatMap(wb=>E[wb].t.filter(id=>id<2000)));tage.forEach((l,id)=>{if(!deIds.has(id))return;info.de++;l.sort((a,b)=>a-b);for(let i=1;i<l.length;i++)if(l[i]-l[i-1]<3)info.abstand++;});}});
   const E=info.E,voll=wb=>{const W=E[wb];return W.lp.length===(wb==='ecl'?108:144)&&W.lp.every(m=>m[4]!=null)&&W.ko.po.length===8&&W.ko.af.length===8&&W.ko.vf.length===4&&W.ko.hf.length===2&&W.ko.fin.length===1&&!!W.ko.fin[0][2];};
   pruef(WB.every(voll)&&WB.every(wb=>E.titel[wb]!=null),'Saison: Ligaphase und alle K.-o.-Runden gespielt, je Wettbewerb ein Sieger',WB.map(wb=>`${wb} ${E.titel[wb]}`).join(', '));
-  pruef(info.abstand<=2,'Saison: deutsche Teilnehmer spielen höchstens zweimal mit weniger als drei Tagen Abstand',`${info.abstand} Fälle bei ${info.de} Vereinen`);}
+  pruef(info.abstand<=2,'Saison: deutsche Teilnehmer spielen höchstens zweimal mit weniger als drei Tagen Abstand',`${info.abstand} Fälle bei ${info.de} Vereinen`);
+  // U19b: Prämien. Jeder deutsche Teilnehmer der Champions League hat mindestens das Startgeld, deine Buchung „Europapokal“ ist gleich deinen Prämien
+  const cl=E.cl.t.filter(id=>id<2000),min=Math.round(18.62e6*0.2/1000)*1000;
+  pruef(cl.every(id=>(E.geld[id]||0)>=min)&&info.meinGeld===info.meinFin,'Prämien: Startgeld für alle Deutschen in der Champions League, deine Buchung gleich S.eu.geld',`${cl.map(id=>E.geld[id]).join(', ')} · dein Verein ${info.meinGeld} / ${info.meinFin}`);}
+
+// 8. Geld und Ansehen einzeln (U19b): Startgeld mit Wertsäule nach Rang, Ansehen nach erreichter Runde und Wettbewerb
+{const {F,S,ev}=welt(),cl=S.eu.cl,id=cl.t.find(x=>x<2000),f0=S.teams[id].cash,rang=cl.t.slice().sort((a,b)=>ev('euRep')(b)-ev('euRep')(a)).indexOf(id)+1,G=ev('REU').geld;
+  F.euStartgeld('cl');const soll=Math.round(G.cl.start*G.faktor/1000)*1000+Math.round(G.cl.wert*2*(37-rang)/37*G.faktor/1000)*1000,ist=S.teams[id].cash-f0;
+  cl.ko.vf=[[id,2000,null,null]];const a1=F.euAnsehen(id);S.eu.titel.cl=id;const a2=F.euAnsehen(id);S.eu.titel.cl=null;cl.ko={};S.eu.el.t.push(id);S.eu.el.ko.vf=[[id,2001,null,null]];const a3=F.euAnsehen(id);
+  pruef(id!==S.my&&ist===soll&&a1===2&&a2===4&&a3===1,'Geld und Ansehen: Startgeld mit Wertsäule, Viertelfinale +2, Titel +4, Europa League zur Hälfte',`${ist} statt ${soll}, Ansehen ${a1}/${a2}/${a3}`);}
 
 // 7. Saisonwechsel: die vier Besten der Bundesliga in der Champions League, Platz 5 und der Pokalsieger in der Europa League, der Sieger der Champions League ist wieder dabei
 {let ok=null;saisons({n:2,seed:SEED+1,verein:VEREIN,beiSaisonstart:(S,F)=>{if(S.season===2026)return;const E=S.eu,top=S.teams.filter(t=>t.lastLg===1&&t.lastPos<=4).map(t=>t.id),fuenf=S.teams.find(t=>t.lastLg===1&&t.lastPos===5);

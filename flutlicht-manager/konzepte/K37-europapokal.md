@@ -1,6 +1,6 @@
 # K37 – Europapokal
 
-Status: **Entwurf** (21. November 2026, popolupo), nach „weiter, entscheide du“. Grundlage sind die ersten Gedanken in PLAN §4 (10.11.). Vorläufige Entscheidungen stehen in Abschnitt 12. Umsetzung in U19 (Teilschritte in §4.6). **U19a umgesetzt (21. November 2026, popolupo), noch ohne Testlauf.**
+Status: **Entwurf** (21. November 2026, popolupo), nach „weiter, entscheide du“. Grundlage sind die ersten Gedanken in PLAN §4 (10.11.). Vorläufige Entscheidungen stehen in Abschnitt 12. Umsetzung in U19 (Teilschritte in §4.6). **U19a und U19b umgesetzt (21. November 2026, popolupo), noch ohne Testlauf.**
 Hängt ab von: K01 (Kalender), K13 (Wettbewerbe), K23 (Finanzen), K32 (Auslandsvereine) · Wird gebraucht von: K02 §5.3a (Vorsprung der Großen), K07 und K12a (Belastung), K19 (Anziehung für Spieler), K28 (Ziele des Vorstands), K34 (Statistik).
 
 ## 1. Ziel und Spielgefühl
@@ -64,6 +64,8 @@ Hängt ab von: K01 (Kalender), K13 (Wettbewerbe), K23 (Finanzen), K32 (Auslandsv
 | **U19c** | Länderwertung mit dem fünften Platz in der Champions League, Kaderliste der UEFA (25 Spieler, davon 8 lokal ausgebildet), Auslandsvereine mit Ansehen nach ihren Ergebnissen, Auslandsvereine mit vollem Kader in der Engine statt als Block (§5.2) |
 
 **Stand U19a (21.11.):** Teilnehmer, Termine, Auslosung der Ligaphase, Tabelle, K.-o.-Baum, Spiele, Verlegung der Ligaspiele, Sperren je Wettbewerb (UEFA: Gelbsperre nach der 3., 5., 7. und 9. Gelben), Karte im Reiter Pokal. Einnahmen bisher nur die Zuschauer deiner Heimspiele (wie im Pokal), Prämien folgen mit U19b.
+
+**Stand U19b (21.11.):** Startgeld und Wertsäule mit der Auslosung, Sieg- und Remisprämie je Spiel, Rangprämie nach der Ligaphase (nur Champions League recherchiert), Rundenprämien, Siegprämie, alles mal 0,2 und für alle deutschen Teilnehmer (dein Verein bucht „Europapokal“). Zuschauer nach dem Ansehen des Gegners. Ansehen und damit Fans zum Saisonwechsel (§5.4). Vorstand +1,5 je gewonnenem Duell, +10 beim Titel. Europapokaltore am Spieler getrennt (`eg`), Titel in der Vitrine. **Noch nicht:** Ziele des Vorstands mit Europapokal (K28 §5.7), Interesse der Spieler an Vereinen im Europapokal (K19), Europapokal in der Statistik der Saison (K34).
 
 ## 5. Regeln und Formeln
 
@@ -166,6 +168,8 @@ REGELN.europa = {
 11. In U19a spielt der Auslandsverein in der Engine als Block mit Teamstärke, volle Kader kommen in U19c (§5.2).
 12. Auslosung der Ligaphase nach einem festen Bauplan, der jedem Verein je Spieltag genau ein Spiel gibt, je Topf zwei Gegner (Conference League: einen) und gleich viele Heim- und Auswärtsspiele. Gezogen wird, wer an welchem Platz im Topf steht, mit bis zu 400 Versuchen gegen Gegner aus dem eigenen Land und mehr als zwei aus demselben Land (§4.3).
 13. Gelbsperre im Europapokal nach der 3., 5., 7. und 9. Gelben (UEFA-Regel, ohne das Streichen nach dem Viertelfinale) (§4.4).
+14. Vorstand +1,5 Vertrauen je gewonnenem Duell (wie im Pokal) und +10 beim Titel, kein Abzug beim Ausscheiden (U19b).
+15. Startgeld und Wertsäule werden mit der Auslosung der Ligaphase gezahlt, die Rangprämie nach der Ligaphase, Rundenprämien beim Erreichen der Runde (U19b).
 
 **Noch zu recherchieren:** Rangprämie und Play-off-Prämie in Europa League und Conference League, genaue Halbfinal- und Siegprämien, die Zulassungsliste 2026/27 für die Länderkontingente, die deutschen Starter 2026/27 aus einer zweiten Quelle, die Termine der Conference-League-Ligaphase 2026/27 (gefunden nur Spieltag 1 am 15.10. und Spieltag 6 am 17.12.).
 

@@ -1288,3 +1288,19 @@ Zweig `mitarbeit/popolupo-u19-europapokal` (baut auf `mitarbeit/popolupo-k26-sta
 | CC8 | **Ausland gegen Ausland** ist eine Kurzrechnung ohne Minuten (etwa 450 von 530 Spielen je Saison). Diese Spiele erscheinen nur in Tabelle und Baum, nicht in der Statistik. | 📌 vorläufig |
 | CC9 | **Noch kein Geld außer Zuschauern** bei deinen Heimspielen, keine Prämien für Computer-Vereine, kein Ansehen, keine Statistik der Europapokaltore (`p.g` zählt sie nicht). Kommt mit U19b. | 📌 U19b |
 | CC10 | **`tests/europapokal.js`:** sieben Prüfungen, siehe Test-README. Nie gelaufen. | ⚠️ offen |
+
+---
+
+## CD. Nachtrag zu U19b Europapokal: Prämien, Wertsäule, Ansehen (21. November 2026, popolupo, ohne Testlauf)
+
+Gleicher Zweig wie CC. Konzept: K37 §5.3, §5.4, §12 Nr. 14 und 15.
+
+| # | Befund | Status |
+|---|---|---|
+| CD1 | **Geld für die Großen:** Ein deutscher Verein in der Champions League bekommt mit Faktor 0,2 etwa 3,7 Mio. Startgeld, 2 bis 9 Mio. Wertsäule und 0,4 Mio. je Sieg, mit Achtelfinale und Viertelfinale zusammen grob 15 bis 20 Mio. Spielgeld. Das ist mehr als die TV-Gelder der Saison im Spiel (Bayern etwa 12 Mio.). So ist es gewollt (K02 §5.3a), aber es verschiebt die Konten der Computer-Vereine und damit K23b. | ⚠️ messen |
+| CD2 | **Faktor 0,2 ist uneinheitlich mit dem Pokal:** Die Pokalprämien im Spiel (0,2 bis 4,5 Mio.) sind schon echte Beträge, TV-Gelder und Gehälter etwa ein Fünftel. Der Europapokal folgt TV und Gehältern. K23c bringt alles auf eine Größenordnung. | 📌 K23c |
+| CD3 | **Rang- und Play-off-Prämie** nur in der Champions League, in Europa League und Conference League nicht recherchiert und darum 0. | 📌 recherchieren |
+| CD4 | **Ansehen** steigt zum Saisonwechsel um höchstens 4 (Champions-League-Sieg), zusammen mit dem Ansehen aus der Liga ohne eigene Obergrenze. Die Fans folgen über `Z.fans.faktor`. | ✅ entworfen |
+| CD5 | **Zuschauer:** Der Gegner zählt mit seinem Ansehen wie ein Bundesligist, das Spiel gilt als Pokalspiel (`cup`). | ✅ |
+| CD6 | **Nicht gebaut:** Ziele des Vorstands mit Europapokal (K28), Interesse der Spieler (K19), Europapokal in der Saisonstatistik (K34). | 📌 später |
+| CD7 | **`tests/europapokal.js`** hat jetzt acht Prüfungen (dazu Geld und Ansehen). Nie gelaufen. | ⚠️ offen |

@@ -29,7 +29,8 @@ Solange K23b auf die Messwerte wartet, baue ich weiter:
 - **K26 Stadion** (Zweig `mitarbeit/popolupo-k26-stadion`, auf K25): K26a fertig, ungetestet.
 - **K37 Europapokal** als Konzept: Entwurf fertig (`konzepte/K37-europapokal.md`).
 - **U19a Europapokal** (Zweig `mitarbeit/popolupo-u19-europapokal`, auf K26): fertig, ungetestet.
-- **Jetzt:** U19b (Prämien, Wertsäule, Ansehen, Statistik, Ziele des Vorstands), auf demselben Zweig.
+- **U19b** (Prämien, Wertsäule, Ansehen, Vertrauen, Vitrine), auf demselben Zweig: fertig, ungetestet.
+- **Jetzt:** U19c (Länderwertung mit fünftem Platz in der Champions League, Kaderliste der UEFA), auf demselben Zweig.
 
 **Die neueste Spitze ist immer der zuletzt genannte Zweig, er enthält alles davor.** Rest von K24 bleibt bei Claude.
 
@@ -43,6 +44,18 @@ Solange K23b auf die Messwerte wartet, baue ich weiter:
 ---
 
 ## Changelog
+
+### 21.11.2026: U19b Europapokal: Prämien, Wertsäule, Ansehen (Zweig `mitarbeit/popolupo-u19-europapokal`)
+
+- **Neu in `js/europa.js`:** Startgeld und Wertsäule mit der Auslosung, Sieg- und Remisprämie, Rangprämie (Champions League), Rundenprämien, Siegprämie. Echte Beträge 2025/26 mal 0,2 (`REU.geld.faktor`), für alle deutschen Teilnehmer. Dein Verein bucht „Europapokal“.
+- **Geändert:**
+  - Ansehen zum Saisonwechsel nach erreichter Runde (`euAnsehen` in `saison.js`).
+  - Zuschauer nach dem Ansehen des Gegners.
+  - Vorstand +1,5 je gewonnenem Duell, +10 beim Titel.
+  - Europapokaltore am Spieler in `eg`, Titel in der Vitrine.
+- **Zu erwarten:** Computer-Vereine im Europapokal haben deutlich mehr Geld (CD1). **Für K23b wichtig:** Bitte `tests/finanzmodell.js` auf diesem Stand messen, dann sehe ich das Europapokal-Geld schon in den Zahlen.
+- **Tests zuerst:** `tests/europapokal.js` (jetzt acht Prüfungen), `tests/finanzen.js` (Kontostand aus den Buchungen, neue Buchung „Europapokal“), `tests/statistik.js` (Vitrine).
+- **Doku:** K37 (Stand, §12 Nr. 14 und 15), K33, K36 Nr. 56, Konsistenzprüfung CD, offene Entscheidungen, Test-README.
 
 ### 21.11.2026: U19a Europapokal (Zweig `mitarbeit/popolupo-u19-europapokal`, auf K26)
 
