@@ -84,7 +84,7 @@ function kartenWirkung(w,b,c){let wert=w.wert,txt='';if(w.chance!=null){const ok
   else if(w.art==='bezDu'){if(b.verein!=null)bezDuAendern(b.verein,wert,c.titel);}
   else if(w.art==='geld')money('Ereignisse',wert);
   else if(w.art==='fans')fanAnlass(myT(),'fanU',wert); // seit U18b: Fanstimmung (K27), Umfeld
-  else if(w.art==='verpflichten'){if(p&&p.team===-1&&frei('transfers'))karteVerpflichten(p,wert);else if(p)news(`${p.n} unterschreibt nicht: Die Transfers führt noch der Verein.`,'');}
+  else if(w.art==='verpflichten'){if(p&&p.team===-1&&frei('transfers')&&!transferSperre())karteVerpflichten(p,wert);else if(p)news(`${p.n} unterschreibt nicht: Die Transfers führt noch der Verein.`,'');}
   else if(w.art==='interesse'){if(p)p.rkI={s:S.season,v:wert};}
   else if(w.art==='angebot'){if(p&&p.team===S.my&&b.verein!=null&&!S.offers.some(o=>o.pid===p.id&&o.tid===b.verein)){const v=value(p);S.offers.push({pid:p.id,tid:b.verein,amt:rundeAb(v*wert),max:rundeAb(v*(wert+0.2)),r:0,bis:S.tag+RK.angebotTage});}}
   return txt;}

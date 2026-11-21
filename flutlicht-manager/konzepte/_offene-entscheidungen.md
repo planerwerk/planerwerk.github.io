@@ -413,6 +413,14 @@ Datei: `konzepte/K23-finanzen.md`
 3. **Gehaltsrahmen 50 %** der erwarteten Einnahmen ohne Transfers (Spielwert).
 4. **Insolvenz mit 9 Punkten Abzug** (vorläufig, prüfen).
 
+**Mit K23a von popolupo vorläufig entschieden (21.11.2026, K23 §12 Nr. 5 bis 9):**
+
+- K23 kommt in Teilschritten, K23a bis K23e.
+- Bis K23c bucht das Spiel weiter je Spieltag, der Monatsbericht fasst nur zusammen.
+- Die Prognose rechnet mit dem laufenden Saldo je Ligaspiel.
+- Lizenzprüfung am 1. März, Nachweis bis 31. Mai, sonst Transfersperre.
+- Insolvent ist ein Verein nach zwei Monatsersten unter dem negativen Kreditrahmen. Folgen: 9 Punkte Abzug, Vertrauen −30, Schuldenschnitt.
+
 ## K24 – Sponsoren
 Datei: `konzepte/K24-sponsoren.md`
 

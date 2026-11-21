@@ -2,6 +2,7 @@
 function table(lg){const T={};S.teams.filter(t=>t.lg===lg).forEach(t=>T[t.id]={id:t.id,sp:0,s:0,u:0,n:0,tf:0,ta:0,p:0,last:[]});
   S.res[lg].forEach(([h,a,hg,ag])=>{const H=T[h],A=T[a];if(!H||!A)return;H.sp++;A.sp++;H.tf+=hg;H.ta+=ag;A.tf+=ag;A.ta+=hg;
     if(hg>ag){H.s++;A.n++;H.p+=3;H.last.push(3);A.last.push(0);}else if(hg<ag){A.s++;H.n++;A.p+=3;H.last.push(0);A.last.push(3);}else{H.u++;A.u++;H.p++;A.p++;H.last.push(1);A.last.push(1);}});
+  {const A=(S.abzug||{})[S.season];if(A)Object.values(T).forEach(r=>{if(A[r.id])r.p-=A[r.id];});} // Punktabzug nach Insolvenz (K23 §5.4, K23a)
   return Object.values(T).sort((x,y)=>y.p-x.p||(y.tf-y.ta)-(x.tf-x.ta)||y.tf-x.tf||S.teams[y.id].rep-S.teams[x.id].rep);}
 const rank=(lg,id)=>table(lg).findIndex(r=>r.id===id)+1;
 function formPts(id){const r=table(S.teams[id].lg).find(x=>x.id===id);if(!r||!r.last.length)return 1.4;const l=r.last.slice(-5);return l.reduce((a,b)=>a+b,0)/l.length;}
@@ -32,7 +33,7 @@ function seasonEndLauf(){
   S.summary=sm;S.phase='end';
   nebenzieleSaison(); // Nebenziele des Vorstands (K28 §5.7, U12b), vor der Prüfung auf Entlassung
   rufSaison(sm); // Ruf als Trainer (K28 §5.4, U12a), vor einer Entlassung, damit die Jobangebote schon den neuen Ruf sehen
-  statistikSaison(sm);trainerSaison(sm); // Ruf der Computer-Trainer (K32 §3.3b, U18a); Ehrungen, Saisonarchiv, Vitrine, Karrierezeilen (K34, U13), nach dem Ruf (Trainer der Saison +5) und vor einer Entlassung
+  statistikSaison(sm);trainerSaison(sm);finanzenSaisonende(); // Ruf der Computer-Trainer (K32 §3.3b, U18a); Ehrungen, Saisonarchiv, Vitrine, Karrierezeilen (K34, U13), nach dem Ruf (Trainer der Saison +5) und vor einer Entlassung
   if(sm.down3.includes(S.my))entlassen(`${me.name} steigt in die Regionalliga ab. Der Verein trennt sich von dir.`);
   if(S.trust<B.entlassenSaisonUnter)entlassen();lizenzRueckblick();kreditAuto();save();}
 // Regionalliga (K32a): je Staffel wird ein Meister gelost, gewichtet nach Ansehen. West und Südwest steigen direkt auf,
@@ -53,7 +54,7 @@ function regionalligaAufsteiger(){const G=RS.regionalliga,meister={},ids=[],txt=
   return{ids:ids.slice(0,RS.abstieg3),text:txt.join(' · ')};}
 // Saisonwechsel am 1. Juli: Auf- und Abstieg, Alter, Verträge, Nachwuchs, neuer Spielplan
 function newSeason(){return mitStrom(strom('saison',S.season),newSeasonLauf);}
-function newSeasonLauf(){wechselVollziehen(true);leiheEnde();verlaufKuerzen(); // Leihen enden mit der Saison (U10d), alte Verletzungen fallen aus der Akte (T2.5)
+function newSeasonLauf(){lizenzNachweis();wechselVollziehen(true);leiheEnde();verlaufKuerzen(); // Leihen enden mit der Saison (U10d), alte Verletzungen fallen aus der Akte (T2.5)
   mitStrom(strom('vorstandKI',S.season),kiVorstandSaison); // Trainerwechsel im Sommer bei Computer-Vereinen, vor Auf- und Abstieg (K31 §5.10, U11d2)
    // vereinbarte Wechsel zum Sommerfenster, vor dem Saisonwechsel der Verträge (K19, U10a)
   S.vstat={};S.testspiele=[];kabineSaison();const sm=S.summary,Z=RS,setze=(ids,lg)=>ids.forEach(id=>S.teams[id].lg=lg);sommerNeueSaison();if(S.stab)stabSaison();

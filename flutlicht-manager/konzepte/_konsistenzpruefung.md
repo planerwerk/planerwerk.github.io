@@ -1200,3 +1200,21 @@ Zweig `mitarbeit/popolupo-u18b-spielwelt-karten` (baut auf U17b auf). Konzept: K
 | BX3 | **Abschiedsspiel braucht Ehemalige** aus K34 (`S.stat.ehem`). Die gibt es erst nach dem ersten Saisonwechsel, und nur mit 60 Pflichtspielen für deinen Verein ab Spielbeginn. In den ersten zwei Saisons kommt die Karte also kaum. | 📌 vorläufig |
 | BX4 | **Karriereende nach K32 §5.1** bleibt offen, bis ein Testlauf zeigt, wie stabil die Welt ist (es verschiebt Alter und Zahl der Spieler). | 📌 nach Testlauf |
 | BX5 | **`tests/spielwelt-karten.js`:** vier Prüfungen. Den Katalog prüft `tests/karten.js` mit (erlaubte Wirkungen, Platzhalter, Auslöser). Nie gelaufen. | ⚠️ offen |
+
+---
+
+## BY. Nachtrag zu K23a Finanzplan: Monatsbericht, Prognose, Lizenzprüfung, Insolvenz (21. November 2026, popolupo, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-k23-finanzen` (auf 362fa12, Testlauf 4). Konzept: K23 §5.5b, §5.5c, §12 Nr. 5 bis 9. Neue Datei `js/finanzen.js`. Kein Test gelaufen.
+
+| # | Befund | Status |
+|---|---|---|
+| BY1 | **Kein Geld verschoben:** Die Buchungen bleiben je Spieltag, der Monatsbericht fasst nur zusammen. Für einen gesunden Verein ändert K23a nichts außer Meldungen und der Finanzseite. Ergebnisse aller übrigen Tests sollten gleich bleiben. | ✅ entworfen |
+| BY2 | **Ohne Zufall:** Bericht, Prognose, Lizenz und Insolvenz würfeln nicht. Kein Strom verschiebt sich. | ✅ |
+| BY3 | **Punktabzug in `table`:** wirkt nur, wenn `S.abzug` für die Saison einen Eintrag hat. Sonst unveränderte Tabelle. | ✅ |
+| BY4 | **Transfersperre** sperrt deine Käufe (`offer`), Leihen (`ausleihen`), den Altstar aus den Karten und die Automatik der Transfers für deinen Verein (`kiMarkt`). In der Automatik fallen damit Würfe im Strom `markt` weg, beide Läufe des Gleichschritts haben aber dieselben Finanzen und damit dieselbe Sperre. | ✅ entworfen |
+| BY5 | **Liquidität zählt den freien Kreditrahmen mit.** Darum hilft ein neuer Kredit bei den Auflagen nicht (Kontostand steigt, freier Rahmen sinkt gleich viel). Nachweis nur über Verkäufe oder geringere Kosten. | 📌 vorläufig |
+| BY6 | **Kontostand nachvollziehbar (K23 §10):** `tests/finanzen.js` prüft über eine Saison, ob Startstand plus Summe der Monatssalden den Kontostand ergibt. Fällt die Prüfung durch, ändert irgendwo Code dein Konto ohne `money()`. Bekannt ist der Kredit (`loan`), er bucht nicht in `S.fin`. | ⚠️ messen |
+| BY7 | **Computer-Vereine** bekommen Lizenz und Insolvenz erst mit K23b (heute keine Ausgaben). | 📌 K23b |
+| BY8 | **Nummern der Nachträge:** popolupo nimmt in der Konsistenzprüfung die nächsten freien Buchstaben (BY, BZ, CA …). Sollte Claude gleichzeitig einen Nachtrag anhängen, gibt es beim Zusammenführen einen Konflikt am Dateiende. Dann einfach umbenennen. | 📌 Absprache |
+| BY9 | **`tests/finanzen.js`:** fünf Prüfungen, siehe Test-README. Nie gelaufen. | ⚠️ offen |

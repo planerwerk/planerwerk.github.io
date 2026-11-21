@@ -1,6 +1,6 @@
 # K23 – Finanzen und Budget
 
-Status: **Entwurf** (8. November 2026), geschrieben nach „weiter, entscheide du“ (PLAN §1, Punkt 9). Vorläufige Entscheidungen stehen in Abschnitt 12.
+Status: **Entwurf** (8. November 2026), geschrieben nach „weiter, entscheide du“ (PLAN §1, Punkt 9). Vorläufige Entscheidungen stehen in Abschnitt 12. **Teilschritt K23a umgesetzt (21. November 2026, popolupo, §5.5c), noch ohne Testlauf.**
 Hängt ab von: K13 (Wettbewerbe, Prämien), K19 (Transfers), K21 (Gehälter), K28 (Vorstand) · Wird gebraucht von: K24–K27, K31.
 
 ## 1. Ziel und Spielgefühl
@@ -95,6 +95,32 @@ Hängt ab von: K13 (Wettbewerbe, Prämien), K19 (Transfers), K21 (Gehälter), K2
 - Raten aus Transfers (K19) in beide Richtungen, fällig zum Monatsersten.
 - **Gehaltsverzicht** als Notmaßnahme (Gespräch mit dem Mannschaftsrat, K15): −10 bis −20 % für drei Monate, Stimmung −10.
 
+### 5.5b Umsetzung in Teilschritten (21.11.2026, vorläufig)
+
+K23 ändert fast jede Geldzahl im Spiel. Damit jeder Schritt für sich getestet werden kann:
+
+| Teil | Inhalt |
+|---|---|
+| K23a | Monatsbericht, Liquiditätsprognose, Lizenzprüfung im März mit Auflagen, Insolvenz mit Punktabzug, zuerst nur für deinen Verein |
+| K23b | gleiche Einnahmen und Ausgaben für Computer-Vereine statt Pauschale (§5.2), Säulenmodell der Medien (§5.1), Pauschale für die Europapokal-Plätze |
+| K23c | echte Größenordnungen (§5.6) für alle Geldwerte in einem Zug, danach die Sponsorenhöhen aus K24 §5.1 |
+| K23d | Budgets (§5.3) mit Bezug zum Zielgespräch (K28) |
+| K23e | Raten und Kredit mit Laufzeit (§5.5), Gehaltsverzicht, Karten aus §8 |
+
+**Abweichung von §4:** Die Buchungen bleiben bis K23c je Spieltag. Der Monatsbericht fasst sie zusammen. So ändert K23a kein Geld.
+
+### 5.5c Umsetzung K23a (21.11.2026): Monatsbericht, Prognose, Lizenz, Insolvenz
+
+- **Monatsbericht** am Ersten jedes Monats im Posteingang: Einnahmen, Ausgaben, Saldo des Monats je Buchungsart, Kontostand, Prognose bis Saisonende. Die Finanzseite zeigt die Monate der Saison als Tabelle.
+- **Laufende und einmalige Buchungen:** Für die Prognose zählen nur laufende Arten (TV, Sponsor, Zuschauer, Logen, Fanartikel, Gehälter, Stab, Prämien, Betrieb, Jugend, Zweite, Zinsen, Scouting). Transfers, Handgelder, Abfindungen, Provisionen, Strafen, Bau und Ereignisse sind einmalig.
+- **Prognose:** Kontostand + laufender Saldo je Ligaspiel (Schnitt dieser Saison) × verbleibende Ligaspiele. Vor dem dritten Ligaspiel gilt der Schnitt der letzten Saison, beim ersten Spiel überhaupt 0. Für die Lizenz zusätzlich eine ganze nächste Saison mit demselben Schnitt.
+- **Liquidität** = Kontostand + nicht genutzter Kreditrahmen.
+- **Lizenzprüfung am 1. März** für die nächste Saison: Ist die Liquidität am Ende der nächsten Saison nach der Prognose negativ, gibt es **Auflagen**: Vertrauen −5, Meldung mit dem fehlenden Betrag, Nachweis bis 31. Mai (verkaufen, Kredit, Kosten senken). Fehlt dann noch Geld, gibt es eine **Transfersperre** für die nächste Saison (du kannst nicht kaufen und nicht leihen, verkaufen geht).
+- **Insolvenz:** Liegt der Kontostand an zwei Monatsersten nacheinander unter dem negativen Kreditrahmen, ist der Verein insolvent: 9 Punkte Abzug in der laufenden Saison (vorläufig, die Regel gibt es für die 3. Liga, die Höhe ist nicht belegt), Vertrauen −30, Schuldenschnitt auf Kontostand 0 (der Kredit bleibt), höchstens einmal je Saison.
+- **Warnung:** Der Monatsbericht warnt, wenn die Prognose in den nächsten drei Monaten unter den negativen Kreditrahmen fällt.
+- **Computer-Vereine:** bekommen Lizenzprüfung und Insolvenz erst mit K23b, weil sie heute keine Ausgaben buchen.
+- **Lizenz (K36):** keine neue Funktion. Monatsbericht und Prognose sind Information, Auflagen und Insolvenz Folgen.
+
 ### 5.6 Größenordnungen
 
 - Ziel: Erstligisten im Schnitt etwa 280 Mio. € Umsatz (2024/25: 5,12 Mrd. € für 18 Vereine), Zweitligisten etwa 67 Mio. € (1,21 Mrd. €), mit großer Spanne. Der größte Verein liegt nahe einer Milliarde.
@@ -166,6 +192,25 @@ finanzen:{
 4. **Insolvenz mit 9 Punkten Abzug** (vorläufig, prüfen).
 
 **Noch zu recherchieren:** Personalkostenquote der Bundesliga, Medientopf der 3. Liga, Punktabzug bei Insolvenz in DFL und 3. Liga, aktuelle Säulengewichtung.
+
+**Recherche vom 21.11.2026 (Suchergebnisse, Auszüge):**
+- **Personalkosten:** 2. Liga 2024/25 Personalaufwand Spielbetrieb 24,6 % des Gesamterlöses (2023/24 27,7 %, 2022/23 31,7 %). 1. Liga 2024/25 Personalaufwand Spielbetrieb 35,3 % der Gesamtaufwendungen, die Quote zum Erlös habe ich nicht gefunden. Folgerung für K23d: 50 % Gehaltsrahmen ist zu hoch, eher 35 bis 40 % der Einnahmen ohne Transfers (offen bis K23d).
+- **3. Liga:** 26,2 Mio. € TV-Einnahmen brutto je Saison, 1,31 Mio. € je Verein (Vertrag 2023/24 bis 2026/27). Ab 2027/28 neue Verträge, mehr Geld angekündigt, Höhe offen.
+- **Insolvenz:** Der DFB regelt den Punktabzug bei Insolvenz für 3. Liga und Regionalliga (Spielausschuss entscheidet, Ausnahme bei Insolvenz des Hauptsponsors). Für die Lizenzligen gilt die Lizenzordnung der DFL, die Fundstelle habe ich nicht gelesen. Die 9 Punkte bleiben vorläufig.
+
+**Vorläufig entschieden mit K23a (21.11.2026, von mir):**
+
+5. Teilschritte K23a bis K23e statt eines großen Schritts (§5.5b).
+6. Buchungen bis K23c weiter je Spieltag, der Monatsbericht fasst zusammen (§5.5b).
+7. Prognose aus dem laufenden Saldo je Ligaspiel, ohne einmalige Buchungen (§5.5c).
+8. Lizenzprüfung am 1. März, Nachweis bis 31. Mai, sonst Transfersperre für die nächste Saison (§5.5c).
+9. Insolvenz nach zwei Monatsersten unter dem negativen Kreditrahmen, 9 Punkte, Vertrauen −30, Schuldenschnitt auf 0 (§5.5c).
+
+**Quellen der Recherche vom 21.11.2026:**
+- Personalaufwand 2. Liga zum Gesamterlös: https://report.bundesliga.de/2425/de/_assets/downloads/key-bundesliga-2-dfl-er25.pdf
+- Personalaufwand 1. Liga zu den Gesamtaufwendungen: https://report.bundesliga.de/2425/de/_assets/downloads/key-economic-figures-dfl-er25.pdf
+- 3. Liga 26,2 Mio. € TV-Einnahmen, 1,31 Mio. € je Verein: https://www.dfb.de/ePaper/DFB-Saisonreport-3-Liga-202324/55/
+- Punktabzug bei Insolvenz in 3. Liga und Regionalliga: https://www.dfb.de/fileadmin/_dfbdam/221172-OM_04_2020_Final.pdf und https://www.lto.de/recht/hintergruende/h/dfb-schiedsgericht-punktabzug-wegen-insolvenz-ordentliche-gerichtsbarkeit-rechtsmittel
 
 ## Quellen
 

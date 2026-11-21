@@ -52,7 +52,7 @@ function acceptOffer(i){if(!darf('transfers','gespraechOderTransfer'))return;ver
 function gegenAngebot(i){if(!darf('transfers','gespraechOderTransfer'))return;const o=S.offers[i],el=document.getElementById('gf'+i);if(!o||!el)return;const betrag=Math.round((+el.value||0)*1e6);
   if(betrag<=o.amt){toast('Das Angebot liegt schon darüber. Nimm es einfach an.');return;}const r=gegenRunde(o,betrag);if(r.ok)verkaufAbschluss(o);else toast(r.text);save();render();}
 function declineOffer(i){if(!darf('transfers'))return;const o=S.offers[i];if(o)versprechenAngebot(o.pid,o.amt);S.offers.splice(i,1);save();render();}
-function offer(id){{const q=PIX.get(id);if(!darf('transfers','gespraechOderTransfer')||(q&&istAusland(q)&&!darf('ausland')))return;}const p=PIX.get(id),t=myT(),msg=document.getElementById('msg'),yrs=+document.getElementById('yrs').value||3,M=RM;
+function offer(id){if(transferSperre()){toast('Transfersperre wegen der Lizenzauflagen: In dieser Saison darfst du nicht kaufen.');return;}{const q=PIX.get(id);if(!darf('transfers','gespraechOderTransfer')||(q&&istAusland(q)&&!darf('ausland')))return;}const p=PIX.get(id),t=myT(),msg=document.getElementById('msg'),yrs=+document.getElementById('yrs').value||3,M=RM;
   if(squad(S.my).length>=M.kaderMax){msg.textContent=`Dein Kader ist voll (höchstens ${M.kaderMax} Spieler).`;return;}
   const aus=istAusland(p),from=aus?avVon(p.team):p.team>=0?S.teams[p.team]:null;if(p.wech){msg.textContent=`${p.n} wechselt schon zu ${wechselZiel(p.wech)}.`;return;}
   // Interesse (K19 §5.3): Fehlt wenig, verlangt er mehr Geld, fehlt viel, will er nicht (U10b)
