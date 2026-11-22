@@ -149,6 +149,16 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   const f0=S.fin['Stadionbau']||0;ev('kartenWirkung')({art:'zuschuss',wert:0.15},{},{titel:'Test'});const geld=(S.fin['Stadionbau']||0)-f0,nochmal=A.zuschuss();S.constr=null;
   pruef(ohne===null&&ja&&geld===Math.round(Z.zuschussAb*2*0.15/1000)*1000&&nochmal===null,'Stadt bietet Zuschuss: nur beim Bauprojekt, 15 % der Kosten, einmal',`ohne Bau ${ohne}, Auslöser ${ja}, Geld ${geld}, nochmal ${nochmal}`);}
 
+// K12c. Sommerkarten (K12a §8): Übergewicht nur in den Tagen nach dem Leistungstest bei einem Spieler weit unter dem Kondition-Schnitt; Sonderschichten heben die
+//       Kondition und kosten Frische; Urlaubsfoto nur im Urlaub und nur bei einem Partylöwen
+{const {S,ev}=welt(),A=ev('AUSLOESER'),SO=ev('RSO').leistungstest,K=ev('RKT').sommer,t=ev('myT()'),sq=ev('squad')(S.my).filter(p=>p.inj<=0);
+  sq.forEach(p=>{p.ko=80;p.fit=90;});const p=sq[0];p.ko=80-SO.uebergewichtAb-5;const test=ev('auftaktTag')(t)+SO.tag;
+  S.tag=test-3;const vorher=A.uebergewicht();S.tag=test+2;const ja=A.uebergewicht();S.tag=test+K.nachTestTage+1;const spaet=A.uebergewicht();S.tag=test+2;
+  const ko0=p.ko;ev('kartenWirkung')({art:'sonderschicht',wert:6},{spieler:p.id},{titel:'Test'});const schicht=p.ko===ko0+6&&p.fit===90-K.sonderFrische;
+  const keinUrlaub=A.urlaubsfoto();
+  pruef(vorher===null&&!!ja&&ja.spieler===p.id&&spaet===null&&schicht&&keinUrlaub===null,'Sommerkarten: Übergewicht nach dem Test, Sonderschichten, kein Urlaubsfoto außerhalb des Urlaubs',
+    `vorher ${vorher}, danach ${!!ja}, zu spät ${spaet}, Sonderschicht ${schicht}, Urlaubsfoto ${keinUrlaub}`);}
+
 // U19e. Europapokal-Karten (K37 §8): Auswärtsspiel bei einem Auslandsverein in den nächsten 7 Tagen (kein Heimspiel, nicht später, nicht das Finale), Spiel 1 bis 7 Tage her,
 //       Wunder nach 0:3 im Hinspiel und 4:0 oder 3:0 mit Elfmeterschießen im Rückspiel, nicht nach nur einem Tor Rückstand und nicht beim Ausscheiden. euMeineSpiele ersetzt der Test.
 {const {S,W,ev}=welt(),A=ev('AUSLOESER'),AV=ev('AV0'),me=S.my,d=S.tag;W.ev('euMeineSpiele=function(){return S.testEu||[];}');

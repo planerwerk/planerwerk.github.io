@@ -84,6 +84,16 @@ const KARTEN=[
     texte:['{verein} hat ein Auge auf {spieler} aus deiner Jugend geworfen. Sein Berater lässt durchblicken: Ohne Profivertrag ist er weg.','Die Scouts von {verein} saßen bei jedem Jugendspiel von {spieler}. Jetzt liegt ein Angebot auf dem Tisch.'],
     optionen:[{text:'Profivertrag anbieten',wirkung:[{art:'jugendHoch',wert:1},{art:'fans',wert:1}],folge:'{verein} geht leer aus.'},
       {text:'Ziehen lassen',wirkung:[{art:'jugendWeg',wert:1}],folge:''}],auto:0},
+  // Sommer (K12a §8, K12c, 22.11.). Neue Wirkung sonderschicht: Kondition + wert, Frische − REGELN.karten.sommer.sonderFrische.
+  {id:'uebergewicht',titel:'Übergewicht nach dem Urlaub',bereich:'K12a',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'uebergewicht',sperrTage:300,
+    texte:['Beim Leistungstest fiel {spieler} weit zurück. Die Waage verrät, warum.','{spieler} kommt sichtlich mit ein paar Kilo zu viel aus dem Urlaub. Die Mitspieler grinsen.'],
+    optionen:[{text:'Geldstrafe',wirkung:[{art:'stimmung',wert:-3},{art:'glaub',wert:1}],folge:'{spieler} zahlt in die Mannschaftskasse.'},
+      {text:'Sonderschichten',wirkung:[{art:'sonderschicht',wert:6},{art:'stimmung',wert:-1}],folge:'{spieler} schwitzt in Extraeinheiten.'},
+      {text:'Ignorieren',wirkung:[{art:'glaub',wert:-1}],folge:'Die anderen fragen sich, warum sie sich im Urlaub gequält haben.'}],auto:1},
+  {id:'urlaubsfoto',titel:'Urlaubsfoto in der Zeitung',bereich:'K12a',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'urlaubsfoto',sperrTage:300,
+    texte:['Ein Boulevardblatt zeigt {spieler} feiernd auf Mallorca, mit Drink in der Hand, um fünf Uhr morgens.','Fotos von {spieler} aus dem Urlaub machen die Runde: Partynächte statt Laufplan.'],
+    optionen:[{text:'Zur Rede stellen',wirkung:[{art:'stimmung',wert:-2},{art:'vertrauen',wert:1}],folge:'{spieler} verspricht, sich zusammenzureißen.'},
+      {text:'Ist doch Urlaub',wirkung:[{art:'vertrauen',wert:-2}],folge:'Der Vorstand ist leicht verstimmt.'}],auto:0},
   // Stadion (K26 §8, K26e, 22.11.). Neue Wirkung zuschuss: wert × Baukosten des laufenden Projekts einmal aufs Konto.
   {id:'zuschuss',titel:'Stadt bietet Zuschuss',bereich:'K26',art:'entscheidung',gross:true,stufe:'haeufig',ausloeser:'zuschuss',sperrTage:365,
     texte:['Die Stadt will sich an deinem Bauprojekt beteiligen. Im Gegenzug soll es ein festes Kontingent günstiger Karten für Schulen und Vereine geben.','Der Oberbürgermeister bietet einen Zuschuss für den Ausbau an. Bedingung: bezahlbare Tickets für die Region.'],
