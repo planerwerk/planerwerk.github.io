@@ -29,7 +29,7 @@ const KARTEN=[
   // Kabine (K14 §8, K14b): Kabinenparty, Neuzugang drängt auf Einsatz, Eingewöhnung. Nur bekannte Wirkungen.
   {id:'kabinenparty',titel:'Kabinenparty',bereich:'K14',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'kantersieg',sperrTage:60,
     texte:['Nach dem deutlichen Sieg will die Mannschaft feiern. Der Kapitän fragt, ob ihr heute Abend in die Stadt dürft.','Die Stimmung nach dem Kantersieg ist ausgelassen. In der Kabine wird schon über eine Party geredet.'],
-    optionen:[{text:'Feiern lassen',wirkung:[{art:'zusammenhalt',wert:3},{art:'stimmungAlle',wert:1},{art:'vertrauen',wert:0,chance:0.7,schlecht:-3,gut:'Am nächsten Morgen sind alle pünktlich, fast alle.',schlechtText:'Fotos von der Party landen in der Zeitung. Der Vorstand ist nicht begeistert.'}],folge:'Die Mannschaft feiert ausgelassen.'}, /* Risiko seit Prüfung DT2 */
+    optionen:[{text:'Feiern lassen',wirkung:[{art:'zusammenhalt',wert:3},{art:'stimmungAlle',wert:1},{art:'vertrauen',wert:0,chance:0.7,schlecht:-3,gut:'Am nächsten Morgen sind alle pünktlich, fast alle.',schlechtText:'Fotos von der Party landen in der Zeitung. Der Vorstand ist nicht begeistert.'}],kette:{karte:'partyNacht',tage:[1,2]},folge:'Die Mannschaft feiert ausgelassen.'}, /* Risiko seit Prüfung DT2 */
       {text:'Gemeinsames Essen, dann nach Hause',wirkung:[{art:'zusammenhalt',wert:1},{art:'geld',wert:-10000}],folge:'Ein ruhiger Abend im Teamhotel, alle sind zufrieden.'}],auto:1},
   {id:'neuzugangDraengt',titel:'Neuzugang drängt auf Einsatz',bereich:'K14',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'neuzugangDraengt',sperrTage:365,
     texte:['{spieler} ist seit ein paar Wochen da und hat kaum gespielt. Er klopft an deine Tür: Er will zeigen, warum er gekommen ist.','Der Berater von {spieler} ruft an: Sein Mandant sei nicht gewechselt, um auf der Bank zu sitzen.'],
@@ -198,5 +198,16 @@ const KARTEN=[
   {id:'dritterTreffen',titel:'Der lachende Dritte',bereich:'K17',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'dritterNoch',nurKette:true,
     texte:['Der Berater meldet sich wieder: {spieler} würde gern zu dir wechseln. {verein} verhandelt aber noch mit den beiden anderen Vereinen.'],
     optionen:[{text:'Schnell bieten',wirkung:[{art:'interesse',wert:10}],folge:'{spieler} weiß, dass du es ernst meinst. Ein Angebot machst du auf dem Transfermarkt.'},
-      {text:'Die Vereine gegeneinander ausspielen',wirkung:[{art:'nachlass',wert:0.1,chance:0.6,schlecht:-10,gut:'Es klappt: {verein} senkt die Forderung für {spieler}, und keiner ahnt, woher der Wind weht.',schlechtText:'Es fliegt auf. {verein} fühlt sich vorgeführt.'}]}],auto:0}
+      {text:'Die Vereine gegeneinander ausspielen',wirkung:[{art:'nachlass',wert:0.1,chance:0.6,schlecht:-10,gut:'Es klappt: {verein} senkt die Forderung für {spieler}, und keiner ahnt, woher der Wind weht.',schlechtText:'Es fliegt auf. {verein} fühlt sich vorgeführt.'}]}],auto:0},
+  // Rangelei im Training (K07 §8, K07e) und Partynacht nach der Kabinenparty (K14 §8, K14d, Folgekarte nach K30c), 22.11., popolupo. Nur bekannte Wirkungen, Werte vorläufig.
+  {id:'rangelei',titel:'Rangelei im Training',bereich:'K07',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'rangelei',sperrTage:180,
+    texte:['Im Abschlussspiel gerät {spieler} mit seinem Konkurrenten um den Stammplatz aneinander. Die Mitspieler gehen dazwischen.','Ein hartes Foul, ein Wort gibt das andere: {spieler} und sein Rivale müssen getrennt werden.'],
+    optionen:[{text:'Beide mit einer Geldstrafe belegen',wirkung:[{art:'geld',wert:4000},{art:'stimmung',wert:-3},{art:'glaub',wert:1}],folge:'Die Strafe ist klar. {spieler} ist sauer, die Kabine nimmt es zur Kenntnis.'},
+      {text:'Eine Aussprache führen',wirkung:[{art:'zusammenhalt',wert:2,chance:0.5,schlecht:-1,gut:'Die beiden geben sich die Hand.',schlechtText:'Die Aussprache endet im nächsten Streit.'}]},
+      {text:'Laufen lassen',wirkung:[{art:'zusammenhalt',wert:-2}],folge:'Im Training bleibt die Stimmung gereizt.'}],auto:1},
+  {id:'partyNacht',titel:'Partynacht',bereich:'K14',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'partyNacht',nurKette:true,
+    texte:['Nach der Kabinenparty hat {spieler} in der Stadt allein weitergefeiert. Zum Training kam er zwei Stunden zu spät.','Die Party ist vorbei, nur nicht für {spieler}: Er wurde morgens um sechs vor einem Club fotografiert.'],
+    optionen:[{text:'Geldstrafe verhängen',wirkung:[{art:'geld',wert:5000},{art:'stimmung',wert:-3},{art:'glaub',wert:1}],folge:'{spieler} zahlt und entschuldigt sich bei der Mannschaft.'},
+      {text:'Unter vier Augen reden',wirkung:[{art:'stimmung',wert:-1}],folge:'{spieler} verspricht Besserung.'},
+      {text:'Durchgehen lassen',wirkung:[{art:'glaub',wert:-1},{art:'zusammenhalt',wert:-1}],folge:'Die anderen haben genau hingesehen.'}],auto:1}
 ];

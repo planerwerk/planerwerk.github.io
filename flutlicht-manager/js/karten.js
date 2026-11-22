@@ -76,6 +76,10 @@ const AUSLOESER={
   // noch mindestens restAb Tage, Diagnose gestellt, noch nicht beim Spezialisten
   grippewelle(){const n=squad(S.my).filter(p=>p.inj>0&&p.vl&&p.vl.q==='krankheit').length;return n>=RKT.medizin.grippeAb?{}:null;},
   langeReha(){const M=RKT.medizin,heute=absTag(S.tag),l=squad(S.my).filter(p=>p.inj>=M.restAb&&p.vl&&p.vl.q!=='krankheit'&&p.vl.t>=M.rehaAb&&heute>=p.vl.dg&&!p.vl.rfF);return l.length?{spieler:pick(l).id}:null;},
+  // Rangelei im Training (K07 §8, K07e): ein gesunder Hitzkopf deines Kaders mit einem gesunden Rivalen im Kader (K14). Die Intensität des Trainings zählt (noch) nicht.
+  rangelei(){const l=squad(S.my).filter(p=>!(p.inj>0)&&hatEig(p,'hitzkopf')&&rivalen(p).some(q=>q.team===S.my&&!(q.inj>0)));return l.length?{spieler:pick(l).id}:null;},
+  // Partynacht (K14 §8, K14d): Folgekarte nach „Feiern lassen“ (Kabinenparty), ein gesunder Partylöwe deines Kaders macht weiter. Ohne Partylöwen verfällt sie.
+  partyNacht(b){const l=squad(S.my).filter(p=>!(p.inj>0)&&hatEig(p,'partyloewe'));return b&&l.length?{spieler:pick(l).id}:null;},
   // Folgekarte der Kette (nur über kartenKette, mit den Beteiligten der ersten Karte): Der Spieler ist noch beim selben Verein und noch nicht vergeben
   dritterNoch(b){const p=b&&b.spieler!=null?PIX.get(b.spieler):null;return p&&p.team===b.verein&&!p.wech&&!istLeihe(p)&&S.teams[p.team]&&aktiv(S.teams[p.team])?b:null;},
   // Presse (K29 §8, K17 §8, K29k): Medienklima unter RKT.presse.leckUnter; ein Verein deiner Liga mit Beziehung unter RBZ.wirkung.gespraechUnter

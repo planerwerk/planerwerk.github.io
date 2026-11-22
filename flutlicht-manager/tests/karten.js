@@ -256,6 +256,18 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   pruef(keine&&zuWenig&&welle&&hyg&&!!mit&&bezahlt&&nochmal&&halb&&gesund,'Medizin-Karten: Grippewelle ab drei Kranken, Hygieneplan, lange Reha, Spezialist halbiert den Rückfall und kostet nur mit Verletzung',
     `ohne Anlass ${keine}, zwei Kranke ${zuWenig}, drei ${welle}, Hygiene ${hyg}, Reha ${!!mit}, bezahlt ${bezahlt}, der andere danach ${nochmal}, Rückfall halb ${halb}, gesund ohne Kosten ${gesund}`);}
 
+// K07e, K14d. Rangelei im Training: nur ein gesunder Hitzkopf mit einem gesunden Rivalen im Kader. Partynacht: Folgekarte nach „Feiern lassen“ (Kabinenparty),
+//       mit einem Partylöwen im Kader; ohne ihn verfällt sie still.
+{const {S,F,ev}=welt(),A=ev('AUSLOESER'),sq=ev('squad')(S.my),eig=ev('eigenschaften'),heute=ev('absTag')(S.tag);S.phase='play';
+  sq.forEach(p=>{p.eig=(eig(p)||[]).filter(e=>e!=='hitzkopf'&&e!=='partyloewe');p.inj=0;});S.bz=[];ev('BZV++');const ohne=A.rangelei();
+  const p=sq[0],q=sq[1];p.eig.push('hitzkopf');const ohneRivale=A.rangelei();S.bz.push([p.id,q.id,'R',1]);ev('BZV++');const r=A.rangelei();q.inj=5;const verletzt=A.rangelei();q.inj=0;
+  const party=()=>{const c=ev('karteVon')('kabinenparty');F.kartenZeigen(c,{},S.tag,true);F.karteWaehlen(S.karten.offen.length-1,0);const e=(S.karten.kette||[])[0];
+    const n0=S.karten.log.length,o0=S.karten.offen.length;if(e)F.kartenKette(S.tag+(e.tag-heute));
+    return{gelegt:!!e&&e.id==='partyNacht'&&e.tag>=heute+1&&e.tag<=heute+2,kam:S.karten.offen.slice(o0).some(k=>k.id==='partyNacht')||S.karten.log.slice(n0).some(l=>l.id==='partyNacht'),rest:(S.karten.kette||[]).length};};
+  const a=party();sq[2].eig.push('partyloewe');S.karten.offen=[];const b=party();
+  pruef(ohne===null&&ohneRivale===null&&!!r&&r.spieler===p.id&&verletzt===null&&a.gelegt&&!a.kam&&a.rest===0&&b.gelegt&&b.kam&&b.rest===0,
+    'Rangelei nur mit Hitzkopf und Rivale; Partynacht als Folgekarte nur mit Partylöwe',`ohne ${ohne}, ohne Rivale ${ohneRivale}, Rangelei ${r&&r.spieler===p.id}, Rivale verletzt ${verletzt}, ohne Partylöwe gelegt ${a.gelegt}/gekommen ${a.kam}, mit ${b.gelegt}/${b.kam}`);}
+
 // U19e. Europapokal-Karten (K37 §8): Auswärtsspiel bei einem Auslandsverein in den nächsten 7 Tagen (kein Heimspiel, nicht später, nicht das Finale), Spiel 1 bis 7 Tage her,
 //       Wunder nach 0:3 im Hinspiel und 4:0 oder 3:0 mit Elfmeterschießen im Rückspiel, nicht nach nur einem Tor Rückstand und nicht beim Ausscheiden. euMeineSpiele ersetzt der Test.
 {const {S,W,ev}=welt(),A=ev('AUSLOESER'),AV=ev('AV0'),me=S.my,d=S.tag;W.ev('euMeineSpiele=function(){return S.testEu||[];}');
