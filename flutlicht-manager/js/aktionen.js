@@ -48,7 +48,7 @@ function extend(id){if(!darf('vertraege','vertragOderStab'))return;const p=PIX.g
   if(!r.ok){toast(r.text);save();openP(id);render();return;}vtUnterschrift(p,o,false);beraterAbschluss(p,o.sal,0,r.runden);news(`Vertrag verlängert: ${p.n} bis ${S.season+o.ct}, ${fmt(o.sal)} pro Jahr${o.vp||o.ak||o.lk?', mit Prämien oder Klauseln':''}.`,'good');save();openP(id);render();}
 const abfindung=p=>Math.round(p.sal*p.ct*RF.abfindung);
 function release(id){if(!darf('vertraege'))return;if((PIX.get(id)||{}).wech||(PIX.get(id)||{}).leihe){toast('Das geht bei ihm gerade nicht.');return;}const p=PIX.get(id),c=abfindung(p);money('Abfindungen',-c);kabineAbgang(p,S.my);vertragEnde(p);p.team=-1;p.list=0;S.offers=S.offers.filter(o=>o.pid!==id);news(`${p.n} wurde freigestellt (Abfindung ${fmt(c)}).`);save();closeOv();render();}
-function acceptOffer(i){if(!darf('transfers','gespraechOderTransfer'))return;verkaufAbschluss(S.offers[i]);save();render();}
+function acceptOffer(i,wv){if(!darf('transfers','gespraechOderTransfer'))return;verkaufAbschluss(S.offers[i],!!wv);save();render();}
 // Gegenforderung auf ein Angebot (K19 §4.2): Liegt sie im Rahmen des Bieters, ist der Spieler verkauft, sonst erhöht er (höchstens drei Runden)
 function gegenAngebot(i){if(!darf('transfers','gespraechOderTransfer'))return;const o=S.offers[i],el=document.getElementById('gf'+i);if(!o||!el)return;const betrag=Math.round((+el.value||0)*1e6);
   if(betrag<=o.amt){toast('Das Angebot liegt schon darüber. Nimm es einfach an.');return;}const r=gegenRunde(o,betrag);if(r.ok)verkaufAbschluss(o);else toast(r.text);save();render();}

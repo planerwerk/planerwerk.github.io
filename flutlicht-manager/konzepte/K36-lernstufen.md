@@ -353,6 +353,7 @@ lizenz:{
 111. **K10c Zweite Meinung (22.11., popolupo, ohne Testlauf):** neue Aktion im bestehenden Bereich `medizin` (wie fit spritzen und früher zurückholen), zählt zur Aufgabe `medizin`. Unter der Automatik holt der Arzt keine zweite Meinung.
 112. **K10d Ausfalltage in der Saisonbilanz (22.11., popolupo, ohne Testlauf):** keine neue Funktion, nur eine Zeile in der Saisonbilanz.
 113. **K09c Vereinsstrafe (22.11., popolupo, ohne Testlauf):** neue Entscheidung im bestehenden Bereich `sportgericht`. Unter dessen Automatik gibt es sie nicht (der Verein verzichtet still), damit der Gleichschritt hält.
+114. **K19d Weiterverkaufsbeteiligung (22.11., popolupo, ohne Testlauf):** zweiter Knopf beim Annehmen eines Angebots im bestehenden Bereich `transfers`. Unter der Automatik verkauft der Verein ohne sie.
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 

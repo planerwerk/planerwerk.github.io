@@ -124,5 +124,15 @@ const kaufe=(w,p,fee,yrs=3)=>{const els=w.W.ev('document');els.getElementById('f
   F.kiWechsel(spieler(),kaeufer,1e6,'stern');const a=meld.length;F.kiWechsel(spieler(),kaeufer,1e6);const b=meld.length;F.kiWechsel(spieler(),fremd,1e6,'stern');const c=meld.length;
   pruef(a===1&&b===1&&c===1,'Konkurrent rüstet auf: Meldung nur beim Star-Kauf eines Vereins deiner Liga',`Star ${a}, normaler Kauf ${b-a}, andere Liga ${c-b}`);}
 
+// K19d. Weiterverkaufsbeteiligung (K19 §5.2): Verkauf mit 15 % an einen deutschen Verein, der Käufer zahlt 3 % weniger; verkauft er weiter, bekommt dein Verein 15 %
+//       der neuen Ablöse aus seinem Konto, danach ist sie erledigt (der dritte Verkauf zahlt nichts mehr)
+{const {S,F,ev}=welt(),W=ev('RTR').weiterverkauf,frei=x=>x.id!==S.my&&ev('aktiv')(x)&&!ev('kiTransferSperre')(x)&&x.cash>5e6,vs=S.teams.filter(frei),[b,c,d]=vs;
+  const p=ev('squad')(S.my).find(x=>!x.wech&&!x.leihe),f0=S.fin['Transfers']||0,o={pid:p.id,tid:b.id,amt:1e6,max:1e6,r:0,bis:S.tag+5};S.offers.push(o);
+  F.verkaufAbschluss(o,true);if(p.wech)ev('wechselVollziehen')(true);const erhalten=(S.fin['Transfers']||0)-f0,soll=Math.round(1e6*(1-W.bewertung*W.anteil)/1000)*1000;
+  const hat=!!p.wvb&&p.wvb.tid===S.my&&p.team===b.id,w0=S.fin['Transfers: Weiterverkauf']||0,b0=b.cash;F.kiWechsel(p,c,2e6);const wv=(S.fin['Transfers: Weiterverkauf']||0)-w0,bAbzug=b0+2e6-b.cash;
+  const w1=S.fin['Transfers: Weiterverkauf']||0;F.kiWechsel(p,d,3e6);const danach=(S.fin['Transfers: Weiterverkauf']||0)-w1;
+  pruef(erhalten===soll&&hat&&wv===Math.round(2e6*W.anteil)&&bAbzug===wv&&!p.wvb&&danach===0,'Weiterverkaufsbeteiligung: Abschlag beim Verkauf, Anteil beim nächsten Verkauf, danach erledigt',
+    `erhalten ${erhalten} (soll ${soll}), Klausel ${hat}, Anteil ${wv}, Abzug beim Käufer ${bAbzug}, dritter Verkauf ${danach}`);}
+
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

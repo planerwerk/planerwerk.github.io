@@ -107,13 +107,21 @@ function gegenRunde(o,betrag){const T=RTR,max=o.max||o.amt;o.r=(o.r||0)+1;if(bet
   o.amt=Math.min(max,rundeAb((o.amt+betrag)/2));return{text:`${tn(o.tid)} erhöht auf ${fmt(o.amt)} (Runde ${o.r} von ${T.runden.verkauf}).`};}
 
 // Verkauf eines deiner Spieler nach einem Angebot: im Fenster sofort, sonst Einigung mit Geld jetzt und Wechsel zum nächsten Fensterbeginn
-function verkaufAbschluss(o){const p=o&&PIX.get(o.pid);if(!p||p.team!==S.my||p.wech)return;if((p.ww||0)>=3)beraterBeziehung(p,RBE.beziehung.wunschVerkauf); // einen wechselwilligen Mandanten ziehen lassen (K22)
+// Weiterverkaufsbeteiligung (K19 §5.2, K19d): p.wvb = {tid: begünstigter Verein, anteil}. Beim nächsten Verkauf mit Ablöse durch einen anderen Verein zahlt dieser
+// anteil × Ablöse an den Begünstigten, dann ist sie erledigt. Aufgerufen aus statTransfer (alle Wechsel mit Ablöse). Auslandsvereine zahlen aus ihrem Budget, das nicht geführt wird.
+function weiterverkaufPruefen(p,fee,von){const w=p&&p.wvb;if(!w||von===w.tid||!(fee>0))return;delete p.wvb;const x=Math.round(fee*w.anteil/1000)*1000;if(!x)return;
+  if(von===S.my)money('Transfers: Weiterverkauf',-x);else if(von!=null&&von>=0&&S.teams[von])S.teams[von].cash-=x;
+  if(w.tid===S.my){money('Transfers: Weiterverkauf',x);news(`Weiterverkaufsbeteiligung: ${p.n} wechselt für ${fmt(fee)}, dein Verein bekommt ${Math.round(w.anteil*100)} %, also ${fmt(x)}.`,'good');}
+  else if(S.teams[w.tid])S.teams[w.tid].cash+=x;}
+// wv: mit Weiterverkaufsbeteiligung (nur an deutsche Vereine). Der Käufer zahlt dafür bewertung × anteil weniger (K19 §5.2).
+function verkaufAbschluss(o,wv){const p=o&&PIX.get(o.pid);if(!p||p.team!==S.my||p.wech)return;if((p.ww||0)>=3)beraterBeziehung(p,RBE.beziehung.wunschVerkauf); // einen wechselwilligen Mandanten ziehen lassen (K22)
   if(o.tid<AV0&&kiTransferSperre(S.teams[o.tid])){S.offers=S.offers.filter(x=>x!==o);news(`${S.teams[o.tid].name} hat eine Transfersperre und zieht das Angebot zurück.`,'bad');return;} // Lizenzsperre (K23g, Prüfung DF2)
   const offen=fensterOffen(),weg=()=>{S.offers=S.offers.filter(x=>x.pid!==o.pid);};
   if(o.tid>=AV0){const v=avVon(o.tid);if(!v){S.offers=S.offers.filter(x=>x!==o);return;}money('Transfers',o.amt);weg();const land=gruppenName(avGruppe(v));
     if(!offen){wechselVormerken(p,o.tid,{preis:o.amt});news(`Einigung: ${p.n} wechselt für ${fmt(o.amt)} zu ${v.name} (${land}), mit dem Transferfenster am ${datumKurz(p.wech.ab)}.`,'good');return;}
     kabineAbgang(p,S.my);vertragEnde(p);insAusland(p,v.id);statTransfer(p,o.amt,S.my,v.id);news(`Verkauft: ${p.n} wechselt für ${fmt(o.amt)} zu ${v.name} (${land}).`,'good');return;} // Verkauf ins Ausland (K32): Der Spieler zieht in den Pool um
   const b=S.teams[o.tid];if(!b||!aktiv(b)){S.offers=S.offers.filter(x=>x!==o);toast(`${b?b.name:'Der Verein'} spielt nicht mehr in den Profiligen, das Angebot ist hinfällig.`);return;}
+  if(wv){const W=RTR.weiterverkauf;o.amt=Math.round(o.amt*(1-W.bewertung*W.anteil)/1000)*1000;p.wvb={tid:S.my,anteil:W.anteil};} /* erst nach allen Abbrüchen (K19d) */
   money('Transfers',o.amt);b.cash-=o.amt;weg();if((o.r||0)<=RBZ.fairRunden)bezDuAendern(b.id,RBZ.anlass.fair,`fairer Transfer: ${p.n}`); // Angebot ohne Gegenforderung angenommen (K17, U12c)
   if(!offen){wechselVormerken(p,b.id,{ct:riA(RM.neuerVertrag),preis:o.amt});news(`Einigung: ${p.n} wechselt für ${fmt(o.amt)} zu ${b.name}, mit dem Transferfenster am ${datumKurz(p.wech.ab)}.`,'good');return;}
   kabineAbgang(p,S.my);vertragEnde(p);p.seit=absTag(S.tag);p.abl=o.amt;p.team=b.id;p.list=0;p.ct=riA(RM.neuerVertrag);statTransfer(p,o.amt,S.my,b.id);news(`Verkauft: ${p.n} wechselt für ${fmt(o.amt)} zu ${b.name}.`,'good');}
