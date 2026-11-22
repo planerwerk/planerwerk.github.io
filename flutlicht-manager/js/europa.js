@@ -231,6 +231,7 @@ function euVerlegen(wb,runde){const W=S.eu[wb],P=euPlan()[wb],plan=[];
 function euTag(d){if(!euAktiv()||S.phase!=='play')return;const P=euPlan();
   EU_WB.forEach(wb=>{const W=S.eu[wb],p=P[wb];
     mitStrom(strom('eunach',S.season,d,wb),()=>euNachholen(wb,d)); // Sicherheitsnetz: nichts bleibt ungespielt liegen
+    if(wb==='cl')euListeTag(d); // Kaderliste der UEFA (U19d1), einmal für alle drei Wettbewerbe
     if(d>=p.los&&!W.lp)mitStrom(strom('eulos',S.season,wb,'lp'),()=>{if(W.q){euDuellErgaenzen(W.q);const s=euSieger(W.q);if(s!=null&&!W.t.includes(s))W.t.push(s);}euLigaphaseLosen(wb);});
     if(d>=p.losPo&&W.lp&&W.lp.length&&!W.ko.po&&euLigaFertig(wb))mitStrom(strom('eulos',S.season,wb,'po'),()=>euPlayoffsLosen(wb));
     if(d>=p.losAf&&W.ko.po&&!W.ko.af&&W.ko.po.every(k=>euSieger(k)!=null))mitStrom(strom('eulos',S.season,wb,'af'),()=>euAchtelfinaleLosen(wb));});}
@@ -263,6 +264,47 @@ function euRundeFertig(e){const W=S.eu[e.wb];
   const L=W.ko[e.runde];if(!L||!L.every(k=>euSieger(k)!=null))return;
   if(e.runde==='fin'){const s=euSieger(L[0]);S.eu.titel[e.wb]=s;news(`${tn(s)} gewinnt die ${euName(e.wb)}!`,s===S.my||euDe(s)?'good':'');euZahlen(s,euGeldWert(e.wb,'titel'),`Siegprämie der ${euName(e.wb)}`);if(s===S.my)S.trust+=REU.vertrauen.titel;return;}
   const n=EU_KO[EU_KO.indexOf(e.runde)+1];if(!W.ko[n])euNaechsteRunde(e.wb,n);}
+
+// ---------- Kaderliste der UEFA (K37 §5.6, U19d1) ----------
+// S.eu.liste[Verein] = Spieler-Nummern auf Liste A, S.eu.listeLp[Verein] = Stand zur Frist der Ligaphase (Grundlage der Nachmeldung).
+// Lokal ausgebildet als Näherung: vereinsausgebildet = aus der eigenen Jugend (p.ej), verbandsausgebildet = übrige Spieler mit deutscher Nationalität.
+const euVereinsAus=(p,tid)=>p.ej===tid;
+const euVerbandsAus=(p,tid)=>p.ej!==tid&&p.nat===RW.nation.heimat;
+const euListeB=p=>p.age<=REU.liste.bBis&&(p.ej===p.team||(p.seit!=null&&absTag(S.tag)-p.seit>=REU.liste.bTage));
+function euListeStand(ids,tid){const L=REU.liste,ps=ids.map(id=>PIX.get(id)).filter(p=>p&&p.team===tid),c=ps.filter(p=>euVereinsAus(p,tid)).length,a=ps.filter(p=>euVerbandsAus(p,tid)).length,
+    lokal=Math.min(L.lokal,c+Math.min(a,L.verband)),tw=ps.filter(p=>p.pos==='TW').length;
+  return{n:ps.length,lokal,tw,c,a,max:L.max-L.lokal+lokal,ok:ps.length<=L.max&&ps.length-lokal<=L.max-L.lokal&&tw>=L.tw};}
+// Automatische Meldung: zuerst zwei Torhüter, dann die Stärksten, solange die Regeln halten (Liste B zählt nicht mit)
+function euListeAuto(tid){const L=REU.liste,sq=squad(tid).filter(p=>!euListeB(p)).sort((x,y)=>y.str-x.str),A=[];
+  const passt=id=>{const r=euListeStand([...A,id],tid);return r.n<=L.max&&r.n-r.lokal<=L.max-L.lokal;};
+  sq.filter(p=>p.pos==='TW').slice(0,L.tw).forEach(p=>A.push(p.id));sq.forEach(p=>{if(!A.includes(p.id)&&passt(p.id))A.push(p.id);});return A;}
+// Fristen: Meldung bis zum Tag vor dem 1. Spieltag, Nachmeldung nach dem letzten Spieltag der Ligaphase bis zum Tag vor den K.-o.-Play-offs
+const euFristen=wb=>{const p=euPlan()[wb];return{lp:p.liga[0][0]-1,ab:p.liga[p.liga.length-1][1]+1,ko:p.po[0][0]-1};};
+function euListePhase(wb){const F=euFristen(wb),d=S.tag;return d<=F.lp?'frei':d>=F.ab&&d<=F.ko?'nach':'zu';}
+// Spielberechtigt im Europapokal (disziplin.js gesperrt): ohne Liste alle (Qualifikation, vor der Frist), sonst Liste A oder Liste B
+function euSpielberechtigt(p){if(!euAktiv()||!S.eu.liste)return true;const l=S.eu.liste[p.team];return!l||l.includes(p.id)||euListeB(p);}
+// Täglich (euTag): Zur Frist melden alle deutschen Teilnehmer ohne gültige Liste automatisch, dein Verein mit Automatik immer (gleicher Tag, Gleichschritt).
+// Zur Nachmeldung behalten Computer-Vereine ihre Liste und nehmen bis zu drei neue Spieler aus der automatischen Meldung dazu.
+function euListeTag(d){EU_WB.forEach(wb=>{const W=S.eu[wb],F=euFristen(wb),de=W.t.filter(euDe);if(!de.length||(d!==F.lp&&d!==F.ko))return;const Li=S.eu.liste||(S.eu.liste={});
+  if(d===F.lp)de.forEach(id=>{const mein=id===S.my,auto=mein&&autoB('aufstellung');if(!Li[id]||auto||!euListeStand(Li[id],id).ok){Li[id]=euListeAuto(id);
+      if(mein)news(`Kaderliste ${euName(wb)}: ${auto?'Der Co-Trainer':'Der Verein'} meldet ${Li[id].length} Spieler für Liste A.`,'');}
+    (S.eu.listeLp||(S.eu.listeLp={}))[id]=Li[id].slice();});
+  if(d===F.ko)de.forEach(id=>{if(id===S.my&&!autoB('aufstellung'))return;const alt=Li[id]||[];let neu=0;Li[id]=euListeAuto(id).filter(x=>alt.includes(x)||(neu<REU.liste.nach&&++neu));});});}
+// Melden und Streichen (Karte im Kader). Beim ersten Mal beginnt die Liste mit dem Vorschlag der automatischen Meldung.
+function euListeUmschalten(id){if(!darf('aufstellung'))return;const wb=euMeinWb();if(!wb||!S.eu[wb].t.includes(S.my))return;const ph=euListePhase(wb),L=REU.liste;
+  if(ph==='zu'){toast('Die Kaderliste ist fest, bis zur Nachmeldung vor den K.-o.-Play-offs.');return;}
+  const Li=S.eu.liste||(S.eu.liste={}),l=Li[S.my]||(Li[S.my]=euListeAuto(S.my)),i=l.indexOf(id);
+  if(i>=0)l.splice(i,1);else{const p=PIX.get(id);if(!p||p.team!==S.my)return;if(euListeB(p)){toast(`${p.n} steht auf Liste B und braucht keine Meldung.`);return;}
+    if(ph==='nach'){const lp=(S.eu.listeLp||{})[S.my]||[];if(l.filter(x=>!lp.includes(x)).length>=L.nach){toast(`Zur K.-o.-Phase gehen höchstens ${L.nach} neue Spieler.`);return;}}
+    const r=euListeStand([...l,id],S.my);if(r.n>L.max||r.n-r.lokal>L.max-L.lokal){toast(`Kein Platz: höchstens ${L.max} Spieler, davon ${L.lokal} Plätze für lokal Ausgebildete.`);return;}l.push(id);}
+  save();render();}
+// Karte im Kader
+function euListeKarte(){const wb=euMeinWb();if(!wb||!S.eu[wb].t.includes(S.my))return'';const ph=euListePhase(wb),F=euFristen(wb),l=S.eu.liste&&S.eu.liste[S.my],ids=l||euListeAuto(S.my),r=euListeStand(ids,S.my),sq=squad(S.my).sort((a,b)=>b.str-a.str);
+  const knopf=p=>euListeB(p)?'<span class="tag">Liste B</span>':`<button onclick="euListeUmschalten(${p.id})"${lzAus('aufstellung')}${ph==='zu'?' disabled':''}>${ids.includes(p.id)?'gemeldet, streichen':'melden'}</button>`;
+  const frist=ph==='frei'?`Meldung bis ${datumKurz(F.lp)}.`:ph==='nach'?`Nachmeldung bis ${datumKurz(F.ko)}, höchstens ${REU.liste.nach} neue Spieler.`:`Fest, Nachmeldung ab ${datumKurz(F.ab)}.`;
+  return`<div class="card"><h3>Kaderliste ${esc(euName(wb))}</h3>${lzHinweis('aufstellung')}<p>${l?'Gemeldet':'Vorschlag'}: <b>${r.n}</b> von höchstens ${r.max} auf Liste A, davon ${r.tw} Torhüter, ${r.lokal} lokal Ausgebildete angerechnet (${r.c} aus der eigenen Jugend, ${r.a} aus Deutschland, davon höchstens ${REU.liste.verband}). ${frist}</p>
+    <div class="tw"><table><tbody>${sq.map(p=>`<tr><td><span class="pos ${p.pos}">${p.pos}</span></td><td>${esc(p.n)}${euVereinsAus(p,S.my)?' <span class="dim">(eigene Jugend)</span>':euVerbandsAus(p,S.my)?' <span class="dim">(Deutschland)</span>':''}</td><td class="num">${Math.round(p.str)}</td><td>${knopf(p)}</td></tr>`).join('')}</tbody></table></div>
+    <p class="dim">Wer nicht gemeldet ist, darf im Europapokal nicht spielen. Liste B (bis ${REU.liste.bBis} Jahre, aus der eigenen Jugend oder seit zwei Jahren im Verein) braucht keine Meldung. Ohne deine Meldung meldet der Verein zur Frist.</p></div>`;}
 
 // ---------- Ansicht ----------
 // Karte für dein nächstes Europapokalspiel (ansichten.js spielKarte)

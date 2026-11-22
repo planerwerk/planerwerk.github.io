@@ -447,7 +447,10 @@ const REGELN={
     // U19c: wertung: Länderwertung der Saison (Punkte je Sieg und Remis, geteilt durch die Zahl der Vereine des Landes), die besten plaetze Länder bekommen nächste Saison einen Platz mehr
     // in der Champions League (European Performance Spot seit 2024/25). interesse: Wechselinteresse der Spieler an einem Verein im Wettbewerb (K19). ziel: Nebenziel des Vorstands
     // (K28 §5.7), K.-o.-Play-offs erreichen, in der Champions League ab diesem Ansehen das Achtelfinale.
-    wertung:{sieg:2,remis:1,plaetze:2},interesse:{cl:6,el:3,ecl:1},ziel:{afAbAnsehen:85}},
+    wertung:{sieg:2,remis:1,plaetze:2},interesse:{cl:6,el:3,ecl:1},ziel:{afAbAnsehen:85},
+    // U19d1: liste: Kaderliste der UEFA (Reglement Art. 31): höchstens max auf Liste A, davon tw Torhüter, lokal Plätze für lokal Ausgebildete, davon höchstens verband verbandsausgebildet.
+    // Liste B: bis bBis Jahre und aus der eigenen Jugend oder seit bTage Tagen im Verein. nach: neue Spieler bei der Nachmeldung zur K.-o.-Phase.
+    liste:{max:25,tw:2,lokal:8,verband:4,bBis:21,bTage:730,nach:3}},
 
   // Finanzplan (K23 §5.5c, K23a): Monatsbericht, Prognose, Lizenzprüfung, Insolvenz. laufend: Buchungsarten, die in die Prognose eingehen (die übrigen sind einmalig).
   // minSpiele: so viele eigene Ligaspiele braucht der Schnitt dieser Saison, sonst gilt der der letzten Saison. lizenzTag, nachweisTag: Datum (MM-TT) der Prüfung und der Frist.

@@ -18,7 +18,7 @@ const verfahrenVon=(p,wb)=>(S.verfahren||[]).find(v=>v.pid===p.id&&(!wb||v.wb===
 let WB=null,WB_NAECHST={k:null,wb:'liga'};
 function naechsterWb(){if(!S.plan)return'liga';const k=S.season+'/'+S.tag+'/'+S.gespielt+'/'+S.cup.hist.length;
   if(WB_NAECHST.k!==k){const e=S.phase==='play'?naechstesSpiel(S.gespielt===S.tag?S.tag+1:S.tag):null;WB_NAECHST={k,wb:e&&e.art==='pokal'?'pokal':e&&e.art==='eu'?'eu':'liga'};}return WB_NAECHST.wb;}
-const gesperrt=(p,wb)=>sperreIn(p,wb||WB||(p.team===S.my?naechsterWb():'liga'))>0;
+const gesperrt=(p,wb)=>{const w=wb||WB||(p.team===S.my?naechsterWb():'liga');return sperreIn(p,w)>0||(w==='eu'&&!euSpielberechtigt(p));}; // im Europapokal nur mit Meldung (K37 §5.6, U19d1)
 function mitWettbewerb(wb,fn){const alt=WB;WB=wb;try{return fn();}finally{WB=alt;}}
 
 // Schiedsrichter (K09 §3.3): erfundener Pool je Liga mit Strenge (Karten) und Elfmeterneigung. Angesetzt aus dem Spiel-Hash.

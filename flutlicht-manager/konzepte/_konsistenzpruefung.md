@@ -1424,3 +1424,17 @@ Gleicher Zweig wie CK. Konzept: K23 §5.5f, §12 Nr. 19 und 20.
 | CL3 | **Stabilisiert K23b:** Ein Computer-Verein mit zu hohen Gehältern kauft nicht mehr nach. Verkäufe und auslaufende Verträge senken die Gehälter mit der Zeit. Schneller geht es erst mit Notverkäufen, die gibt es noch nicht. | 📌 später |
 | CL4 | **Anteil 85 % vorläufig:** Er passt zu den heutigen Größenordnungen (Gehälter bei 70 bis 85 % der Einnahmen). Mit K23c auf echte Werte senken. | 📌 K23c |
 | CL5 | **`tests/finanzen.js` Nr. 13.** Nie gelaufen. | ⚠️ offen |
+
+---
+
+## CM. Nachtrag zu U19d1: Kaderliste der UEFA (22. November 2026, popolupo, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-u19d-kaderliste` (auf K23d). Konzept: K37 §5.6, §12 Nr. 19.
+
+| # | Befund | Status |
+|---|---|---|
+| CM1 | **Lokal ausgebildet als Näherung:** Die Laufbahn vor dem Spielstart fehlt. Vereinsausgebildet ist nur, wer aus der eigenen Jugend kommt (`p.ej`), verbandsausgebildet sind die übrigen Deutschen. Echte Eigengewächse der Startkader zählen deshalb nur als verbandsausgebildet. Die Höchstzahl sinkt bei wenigen lokal Ausgebildeten, wie im Reglement. | 📌 vorläufig |
+| CM2 | **Liste B** nur für Spieler bis 21 aus der eigenen Jugend oder seit zwei Jahren im Verein (`p.seit`). Echte junge Spieler der Startkader haben kein `p.seit` und brauchen zuerst eine Meldung auf Liste A. | 📌 vorläufig |
+| CM3 | **Gleichschritt:** Zur Frist meldet der Verein ohne gültige Liste automatisch, mit Automatik immer. Beide Läufe melden am selben Tag dieselbe Liste. | ✅ entworfen |
+| CM4 | **Neuzugänge nach der Frist** dürfen erst nach der Nachmeldung im Europapokal spielen, wie in echt. | ✅ |
+| CM5 | **`tests/europapokal.js` Nr. 10.** Nie gelaufen. | ⚠️ offen |

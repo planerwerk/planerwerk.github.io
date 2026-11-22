@@ -1,6 +1,6 @@
 # K37 – Europapokal
 
-Status: **Entwurf** (21. November 2026, popolupo), nach „weiter, entscheide du“. Grundlage sind die ersten Gedanken in PLAN §4 (10.11.). Vorläufige Entscheidungen stehen in Abschnitt 12. Umsetzung in U19 (Teilschritte in §4.6). **U19a bis U19c umgesetzt (21. November 2026, popolupo), noch ohne Testlauf.**
+Status: **Entwurf** (21. November 2026, popolupo), nach „weiter, entscheide du“. Grundlage sind die ersten Gedanken in PLAN §4 (10.11.). Vorläufige Entscheidungen stehen in Abschnitt 12. Umsetzung in U19 (Teilschritte in §4.6). **U19a bis U19c umgesetzt (21. November 2026, popolupo), in Lauf 5 getestet. U19d1 Kaderliste umgesetzt (22. November 2026), noch ohne Testlauf.**
 Hängt ab von: K01 (Kalender), K13 (Wettbewerbe), K23 (Finanzen), K32 (Auslandsvereine) · Wird gebraucht von: K02 §5.3a (Vorsprung der Großen), K07 und K12a (Belastung), K19 (Anziehung für Spieler), K28 (Ziele des Vorstands), K34 (Statistik).
 
 ## 1. Ziel und Spielgefühl
@@ -112,7 +112,15 @@ Echte Beträge 2025/26 (Websuche 21.11.):
 ### 5.5 Belastung
 - Keine eigene Regel. Frische, Kondition, Verletzungen und Rotation laufen über K07, K10 und die Aufstellung der Computer-Trainer, die schon heute nach Frische auswählt (`bestXI`).
 
-### 5.6 Kaderliste der UEFA (Entwurf für U19d, 21.11.2026, noch nicht gebaut)
+### 5.6 Kaderliste der UEFA (Entwurf 21.11.2026, gebaut als U19d1 am 22.11.2026)
+
+**So gebaut (U19d1):**
+- Liste A je deutschem Teilnehmer in `S.eu.liste`. Beim ersten Melden beginnt deine Liste mit dem Vorschlag der automatischen Meldung (zwei Torhüter, dann die Stärksten nach den Regeln).
+- Zur Frist meldet jeder Verein ohne gültige Liste automatisch, dein Verein mit Automatik der Co-Trainer.
+- Zur Nachmeldung behalten Computer-Vereine ihre Liste und nehmen bis zu drei neue Spieler dazu.
+- Zwischen den Fristen ist deine Liste fest.
+- Im Europapokal sperrt `gesperrt` jeden, der weder auf Liste A noch auf Liste B steht. In der Qualifikation und vor der ersten Frist gibt es noch keine Liste, dann dürfen alle spielen.
+- Karte „Kaderliste“ im Reiter Kader.
 Echte Regel 2025/26 (UEFA-Reglement Art. 31, Websuche 21.11.):
 - **Liste A:** höchstens 25 Spieler, mindestens 2 Torhüter. 8 Plätze sind lokal Ausgebildeten vorbehalten, davon höchstens 4 verbandsausgebildet. Wer weniger lokal Ausgebildete hat, darf entsprechend weniger melden.
 - **Vereinsausgebildet:** drei Jahre im selben Verein zwischen 15 und 21. **Verbandsausgebildet:** drei Jahre bei Vereinen desselben Verbands in diesem Alter.
@@ -198,6 +206,8 @@ REGELN.europa = {
 16. Länderwertung nur aus der laufenden Saison (die echte Regel für den Zusatzplatz nutzt ebenfalls nur eine Saison), ohne Bonuspunkte und ohne halbe Punkte in der Qualifikation (U19c).
 17. Interesse der Spieler +6 (Champions League), +3 (Europa League), +1 (Conference League), verglichen mit dem bisherigen Verein (U19c).
 18. Nebenziel „Europapokal“: K.-o.-Play-offs, in der Champions League ab Ansehen 85 das Achtelfinale (U19c).
+19. Kaderliste mit Näherung für lokal Ausgebildete (eigene Jugend, sonst deutsche Nationalität), Bereich `aufstellung`, ohne Meldung meldet der Verein zur Frist (U19d1, §5.6).
+20. Stärke der Auslandsvereine 0,93 (T5.3, Konsistenzprüfung CJ2).
 
 **Noch zu recherchieren:** amtliche Rangprämie der Conference League (vorläufig aus Salary Sport geschätzt), genaue Halbfinal- und Siegprämien in Europa League und Conference League, die Zulassungsliste 2026/27 für die Länderkontingente, die Termine der Conference-League-Ligaphase 2026/27 (gefunden nur Spieltag 1 am 15.10. und Spieltag 6 am 17.12.). **Erledigt am 21.11.:** Rangprämie der Europa League, deutsche Starter 2026/27.
 

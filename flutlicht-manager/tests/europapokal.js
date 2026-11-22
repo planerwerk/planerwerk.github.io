@@ -80,4 +80,10 @@ const WB=['cl','el','ecl'];
   pruef(erst==='GER'&&ohne.cl.length===4&&mit.cl.length===5&&pos(mit.el)==='6+10'&&pos(mit.ecl)==='7'&&pos(ohne.ecl)==='6'&&eng>=6&&inter===6&&!!ziel&&ziel.min==='af',
     'U19c: Länderwertung, fünfter Platz, Kontingent plus eins, Interesse, Nebenziel',`erstes Land ${erst}, CL ${pos(ohne.cl)} / ${pos(mit.cl)}, EL ${pos(mit.el)}, ECL ${pos(ohne.ecl)} / ${pos(mit.ecl)}, England ${eng}, Interesse ${inter}, Ziel ${ziel&&ziel.min}`);}
 
+// 10. U19d1 Kaderliste der UEFA: automatische Meldung hält die Regeln, zur Frist haben alle deutschen Teilnehmer eine Liste, wer fehlt, ist im Europapokal gesperrt (nicht in der Liga)
+{const {F,S,ev}=welt(),cl=S.eu.cl,de=cl.t.filter(id=>id<2000),L=ev('REU').liste,frist=ev('euFristen')('cl').lp;F.euListeTag(frist);
+  const lis=S.eu.liste||{},bay=de[0],l=lis[bay]||[],st=ev('euListeStand')(l,bay),weg=ev('squad')(bay).find(p=>!l.includes(p.id)&&!ev('euListeB')(p));
+  pruef(de.every(id=>(lis[id]||[]).length>0)&&st.ok&&st.n<=L.max&&st.tw>=L.tw&&(!weg||(ev('gesperrt')(weg,'eu')&&!ev('gesperrt')(weg,'liga'))),'U19d1: Kaderliste zur Frist, Regeln eingehalten, Ungemeldete nur im Europapokal gesperrt',
+    `${de.length} Vereine, Bayern ${st.n} Spieler (${st.tw} Torhüter, ${st.lokal} lokal angerechnet), nicht gemeldet ${weg?weg.n:'niemand'}`);}
+
 console.log(probleme.length?`\n${probleme.length} Problem(e).`:'\nAlles in Ordnung.');process.exitCode=probleme.length?1:0;
