@@ -63,13 +63,19 @@ const AUSLOESER={
 
 // ---------- Dosierung (K30 §5.1) ----------
 // Zähler der laufenden Woche und des laufenden Monats
+// entVor: Entscheidungen der Vorwoche (nur wenn sie direkt davor lag), für die Meldungsdichte „wenig“ (K30b)
 function kartenBudget(d){const K=karten(),wo=Math.floor(absTag(d)/7),mo=S.season*100+(+mmtt(d).slice(0,2));
-  if(K.w.wo!==wo)K.w=Object.assign(K.w,{wo,info:0,ent:0,ber:{}});if(K.w.mo!==mo)Object.assign(K.w,{mo,gross:0});return K.w;}
+  if(K.w.wo!==wo){const vor=K.w.wo===wo-1?(K.w.ent||0):0;K.w=Object.assign(K.w,{wo,info:0,ent:0,entVor:vor,ber:{}});}if(K.w.mo!==mo)Object.assign(K.w,{mo,gross:0});return K.w;}
+// Meldungsdichte (K30 §5.1, K35a, K30b): Regler in den Einstellungen (S.einst.dichte). Er verschiebt nur die Grenzen für Halte und Infos, die Würfel bleiben gleich.
+// klein: Entscheidungen mit Halt je wochen Wochen, gross: große je Monat, info: Karten-Infos je Woche.
+const kartenDichteStufe=()=>{const D=RKT.dichte,k=S.einst&&S.einst.dichte;return D.stufen[k]?k:D.standard;};
+function kartenDichte(){const E=RKT.entscheidung,o=RKT.dichte.stufen[kartenDichteStufe()]||{};return{klein:o.klein||E.kleinProWoche,wochen:o.wochen||1,gross:o.gross||E.grossProMonat,info:o.info||RKT.infoProWoche};}
+function kartenDichteSetzen(k){if(!RKT.dichte.stufen[k])return;S.einst=S.einst||{aus:{}};S.einst.dichte=k;save();}
 // Eigene Spiele in den nächsten sieben Tagen (zählen als Halte)
 const wochenSpiele=d=>{let n=0;for(let x=d;x<d+7;x++)if(meinSpiel(x))n++;return n;};
 // Passt eine Entscheidung noch ins Budget? Sonst entscheidet die Automatik. Mit der Automatik des Bereichs ereignisse entscheidet immer der Co-Trainer.
-function entscheidungImBudget(c,W,d){const E=RKT.entscheidung;if(autoB('ereignisse'))return false;
-  if(c.gross?W.gross>=E.grossProMonat:W.ent>=E.kleinProWoche)return false;if((W.ber[c.bereich]||0)>=E.jeBereichProWoche)return false;
+function entscheidungImBudget(c,W,d){const E=RKT.entscheidung,D=kartenDichte();if(autoB('ereignisse'))return false;
+  if(c.gross?W.gross>=D.gross:W.ent+(D.wochen>1?(W.entVor||0):0)>=D.klein)return false;if((W.ber[c.bereich]||0)>=E.jeBereichProWoche)return false;
   return wochenSpiele(d)+W.ent+1<=RKT.halteProWoche;}
 
 // ---------- Woche (montags, eigener Strom, am Ende von woechentlichLauf) ----------
@@ -79,7 +85,7 @@ function kartenWoche(d){if(S.phase!=='play'||S.fired)return;const K=karten(),W=k
     if(c.stufe==='sehrSelten'&&K.einmal[c.id])continue;const f=AUSLOESER[c.ausloeser];if(!f)continue;const b=f();if(!b)continue;
     const key=[c.id,b.spieler!=null?b.spieler:'',b.verein!=null?b.verein:''].join(':');if(K.sp[key]!=null&&heute-K.sp[key]<(c.sperrTage||RKT.sperrTage))continue;
     let halt=false;if(c.art==='entscheidung')halt=entscheidungImBudget(c,W,d);
-    if(halt){W.ent++;if(c.gross)W.gross++;W.ber[c.bereich]=(W.ber[c.bereich]||0)+1;}else{if(W.info>=RKT.infoProWoche)continue;W.info++;}
+    if(halt){W.ent++;if(c.gross)W.gross++;W.ber[c.bereich]=(W.ber[c.bereich]||0)+1;}else{if(W.info>=kartenDichte().info)continue;W.info++;}
     K.sp[key]=heute;if(c.stufe==='sehrSelten')K.einmal[c.id]=1;kartenZeigen(c,b,d,halt);}}
 // Text mit Platzhaltern, Varianten reihum
 function kartenText(t,b){const p=b.spieler!=null?PIX.get(b.spieler):null,v=b.verein!=null?(b.verein>=AV0?avVon(b.verein):S.teams[b.verein]):null; // Auslandsverein und Name eines Ehemaligen seit U18b

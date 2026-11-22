@@ -133,7 +133,7 @@ Nachgerechnet mit einem kleinen Simulationsskript: Mit diesen Stufen sind nach 1
    - ihre Sperrzeit für diese Beteiligten vorbei ist (Standard 120 Tage),
    - eine sehr seltene Karte in dieser Karriere noch nicht kam.
 3. Sie kommt dann mit der Chance 1 / (Saisons der Seltenheitsstufe × 40 Wochen). Eine häufige Karte (alle 3 Saisons) hat also 1 zu 120 je Woche, in der ihre Bedingungen erfüllt sind.
-4. Der Regler Meldungsdichte fehlt noch (K35a), es gilt „normal“.
+4. Der Regler Meldungsdichte ist seit K30b gebaut (22.11.2026, popolupo, ohne Testlauf): im Menü wenig, normal oder viel. „Wenig“ erlaubt eine kleine Entscheidung mit Halt je zwei Wochen und 3 Karten-Infos je Woche, „viel“ zwei kleine je Woche, zwei große je Monat und 8 Infos. Die Karten kommen gleich oft (gleiche Würfel), was nicht ins Budget passt, entscheidet der Co-Trainer. Die Grenze von 4 Halten je Woche (Spiele mitgezählt) gilt in jeder Stufe. Ohne Einstellung „normal“.
 
 **Dosierung (§5.1):**
 
@@ -184,12 +184,12 @@ Jede Wirkung kann eine Chance haben. Dann wird im Strom `ereignisse` gewürfelt,
 | Ein Spieler heiratet | PLAN §4, K14 | Entscheidung, klein | ein Spieler deines Kaders zwischen 24 und 34 (Sperre je Spieler 2000 Tage) | „Teamausflug zur Feier“: −20.000 €, Zusammenhalt +3, Stimmung des Spielers +5. „Glückwunschkarte“: Stimmung +2 (Voreinstellung) |
 | Geheimtipp | K18 §8 | Info | ein Talent bis 20 bei einem Verein der 2. oder 3. Liga mit großem Talent | keine, nur der Hinweis |
 
-Noch nicht gebaut: verzögerte Folgen und Ketten (§3.1, §8.3), Merker, Meldungsdichte, die Chronik über alle Karrieren (§5.4), Skandale (§8.4), Kategorien mit eigener Rate.
+Noch nicht gebaut: verzögerte Folgen und Ketten (§3.1, §8.3), Merker, die Chronik über alle Karrieren (§5.4), Skandale (§8.4), Kategorien mit eigener Rate.
 
 ## 6. Hebel des Spielers
 
 - Entscheidungen in den Karten.
-- Regler Meldungsdichte.
+- Regler Meldungsdichte (seit K30b im Menü).
 - Automatik: Der Co-Trainer oder der zuständige Mitarbeiter entscheidet Karten, die als Info kommen (K16).
 
 ## 7. Verhalten der Computer-Vereine

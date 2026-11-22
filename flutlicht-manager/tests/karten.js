@@ -80,6 +80,16 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   const p=sq[0];p.eig=p.eig.concat(['fuehrungsspieler']);p.st=K.meutertUnter-5;const ja=A.meuterei();p.st=K.meutertUnter+5;const gut=A.meuterei();p.st=10;p.eig=p.eig.filter(e=>e!=='fuehrungsspieler');const ohne=A.meuterei();
   pruef(!!ja&&ja.spieler===p.id&&gut===null&&ohne===null,'Meuterei: Führungsspieler mit schlechter Stimmung, sonst nicht',`schlecht ${ja&&ja.spieler===p.id}, gut ${gut}, kein Führungsspieler ${ohne}`);}
 
+// K30b. Meldungsdichte (K30 §5.1): „wenig“ erlaubt eine kleine Entscheidung je zwei Wochen und 3 Infos, „viel“ zwei je Woche und 8 Infos, „normal“ wie bisher.
+//       Die Vorwoche zählt nur, wenn sie direkt davor lag. Ohne Einstellung gilt „normal“.
+{const {S,F,ev}=welt(),c=ev('karteVon')('hochzeit'),d=S.tag,R0=ev('RKT'),frei=ev('wochenSpiele')(d)+2<=R0.halteProWoche;
+  const W=F.kartenBudget(d);W.ent=1;const W2=F.kartenBudget(d+7),vor=W2.entVor,W4=(()=>{W2.ent=0;return F.kartenBudget(d+21);})(),luecke=W4.entVor;
+  const stufe=k=>{F.kartenDichteSetzen(k);return F.kartenDichte();},ohne=(delete S.einst,ev('kartenDichteStufe')());
+  const probe=(k,ent,entVor)=>{F.kartenDichteSetzen(k);const X={ent,entVor,gross:0,ber:{}};return F.entscheidungImBudget(c,X,d);};
+  const wenigVor=probe('wenig',0,1),normalVor=probe('normal',0,1),vielZweite=probe('viel',1,0),normalZweite=probe('normal',1,0);
+  pruef(ohne==='normal'&&vor===1&&luecke===0&&stufe('wenig').info===3&&stufe('normal').info===R0.infoProWoche&&stufe('viel').info===8&&wenigVor===false&&normalVor===probe('normal',0,0)&&normalZweite===false&&vielZweite===frei,
+    'Meldungsdichte: wenig, normal, viel verschieben die Grenzen; Vorwoche nur direkt davor; ohne Einstellung normal',`Vorwoche ${vor}/${luecke}, wenig nach einer Entscheidung der Vorwoche ${wenigVor}, viel zweite ${vielZweite} (Halte frei ${frei})`);}
+
 // U19e. Europapokal-Karten (K37 §8): Auswärtsspiel bei einem Auslandsverein in den nächsten 7 Tagen (kein Heimspiel, nicht später, nicht das Finale), Spiel 1 bis 7 Tage her,
 //       Wunder nach 0:3 im Hinspiel und 4:0 oder 3:0 mit Elfmeterschießen im Rückspiel, nicht nach nur einem Tor Rückstand und nicht beim Ausscheiden. euMeineSpiele ersetzt der Test.
 {const {S,W,ev}=welt(),A=ev('AUSLOESER'),AV=ev('AV0'),me=S.my,d=S.tag;W.ev('euMeineSpiele=function(){return S.testEu||[];}');

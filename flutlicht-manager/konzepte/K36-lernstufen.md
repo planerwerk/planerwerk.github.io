@@ -346,6 +346,7 @@ lizenz:{
 104. **K31b Bedarf anderer Vereine (22.11., popolupo, ohne Testlauf):** keine neue Funktion, reine Information auf der Karte deines Spielers, frei in jeder Lizenz (K31 §12 Nr. 17).
 105. **K34d Rekordtransfer mit echtem Startwert (22.11., popolupo, ohne Testlauf):** keine neue Funktion, nur ein Startwert in der Statistik.
 106. **K31c „Konkurrent rüstet auf“ (22.11., popolupo, ohne Testlauf):** keine neue Funktion, nur eine Meldung.
+107. **K30b Meldungsdichte (22.11., popolupo, ohne Testlauf):** eine Einstellung im Menü, keine Funktion mit Lizenz. Sie wirkt in jeder Lizenz, mit der Automatik des Bereichs `ereignisse` entscheidet weiter immer der Co-Trainer.
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 
