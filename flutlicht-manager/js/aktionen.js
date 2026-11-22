@@ -107,7 +107,10 @@ function sgAnnehmen(id){if(!darf('sportgericht','sportgericht'))return;const v=s
 function sgEinspruch(id){if(!darf('sportgericht','sportgericht'))return;const v=sgVerfahren(id);if(!v||v.antrag<2)return;mitStrom(strom('sportgericht',S.season,S.tag,id),()=>sgEinspruchLauf(v,S.tag));
   news(`Einspruch für ${PIX.get(v.pid).n} eingelegt (Anwalt ${fmt(v.kosten)}). Urteil am ${datumKurz(v.urteilAm)}.`);save();render();}
 // Medizin (K10 §5.4): fit spritzen am Spieltag, früher zurückholen aus dem Aufbautraining
-function medSpritzen(id){if(!darf('medizin','medizin'))return;const p=PIX.get(id),i=p&&p.team===S.my?verletzungInfo(p):null;if(!i||!i.spritzbar||!heuteMeinSpiel())return;p.spritze=S.tag;p.spritzeAm=S.tag;news(`${p.n} wird für heute fit gespritzt.`);save();render();}
+function medSpritzen(id){if(!darf('medizin','medizin'))return;const p=PIX.get(id),i=p&&p.team===S.my?verletzungInfo(p):null;if(!i||!i.spritzbar||!heuteMeinSpiel())return;
+  // Arzt widerspricht (K16 §8, K16d): Bei mehr als arztAb Tagen in der angezeigten Spanne rät er ab. Erst ein zweiter Klick am selben Tag spritzt.
+  if(i.rest[1]>RMD.spritzen.arztAb&&p.spritzeWarn!==S.tag){p.spritzeWarn=S.tag;toast(`Der Mannschaftsarzt rät ab: ${p.n} fällt noch ${spanneText(i.rest)} aus, mit ${Math.round(RMD.spritzen.verschlimmerung*100)} % wird es danach schlimmer. Klick noch einmal, wenn du trotzdem spritzen willst.`);save();render();return;}
+  delete p.spritzeWarn;p.spritze=S.tag;p.spritzeAm=S.tag;news(`${p.n} wird für heute fit gespritzt.`);save();render();}
 // Zweite Meinung (K10 §5, K10c): einmal je Verletzung nach der Diagnose, Kosten nach Liga, eigener Strom je Spieler und Tag. Deckt eine Fehldiagnose auf (K10b).
 // besser: Rest der Ausfallzeit kürzer, schlechter: länger (wahre Dauer t, Zähler inj und Spanne gleich verschoben), sonst eine engere Spanne um die wahre Dauer.
 const medZweiteMoeglich=p=>{const i=p&&p.team===S.my?verletzungInfo(p):null;return!!i&&i.phase!=='verdacht'&&i.art!=='krankheit'&&!p.vl.zm;};

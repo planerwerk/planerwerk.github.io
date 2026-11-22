@@ -71,5 +71,14 @@ pruef(spannen>0&&ehrlich/spannen>=0.85,'Diagnose-Spanne enthält die wahre Dauer
 {const b=ev('verletzungsBilanz')(S.my),t=F.verletzungsBilanzText(S.my);
   pruef(t.startsWith(`${b.n} Verletzungen, ${b.tage} Ausfalltage`)&&t.includes('Ligaschnitt')&&F.verletzungsBilanzText(-1)==='','Saisonbilanz: Verletzungen und Ausfalltage mit Ligaschnitt',t);}
 
+// K16d. Arzt widerspricht (K16 §8): Bei mehr als arztAb Tagen in der angezeigten Spanne rät der Arzt beim ersten Klick ab, erst der zweite am selben Tag spritzt;
+//       bei einer kurzen Verletzung spritzt schon der erste Klick. Eigene Welt an einem eigenen Spieltag.
+{const {neueWelt}=require('./sim'),{W:W2,F:F2}=neueWelt();F2.buildWorld(SEED);const S2=W2.S,ev2=W2.ev;S2.my=6;S2.mgr='Test';S2.phase='play';
+  let d=0;while(d<S2.plan.ende&&!F2.meinSpiel(d))d++;S2.tag=d;const A=ev2('RMD').spritzen,heute=ev2('absTag')(d),sq=S2.pl.filter(x=>x.team===S2.my&&x.inj<=0&&x.pos!=='TW');
+  const setz=(p,sp)=>{p.inj=0;p.vl=null;F2.verletzen(p,'kollision',{art:'prellung',still:true});p.inj=sp[1]+1;Object.assign(p.vl,{ab:heute,dg:heute,sd:sp,sv:sp});};
+  const lang=sq[0],kurz=sq[1];setz(lang,[A.arztAb+2,A.arztAb+4]);setz(kurz,[1,2]);
+  F2.medSpritzen(lang.id);const erst=lang.spritze!==d&&lang.spritzeWarn===d;F2.medSpritzen(lang.id);const zweit=lang.spritze===d;F2.medSpritzen(kurz.id);const sofort=kurz.spritze===d;
+  pruef(d<S2.plan.ende&&erst&&zweit&&sofort,'Arzt widerspricht: bei langer Verletzung erst beim zweiten Klick gespritzt, bei kurzer sofort',`Spieltag ${d}, erster Klick ${erst}, zweiter ${zweit}, kurz ${sofort}`);}
+
 console.log(`\n${N} Saison(s), ${verl.length} Verletzungen, ${alle.filter(x=>x.q==='krankheit').length} Krankheiten, in ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);
