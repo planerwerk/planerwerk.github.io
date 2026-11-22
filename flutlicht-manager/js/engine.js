@@ -304,7 +304,7 @@ const wb=o.wb||'liga',H=mitWettbewerb(wb,()=>side(hid,true,o.neutral)),A=mitWett
       const l=ids.map(([id,[a,b]])=>{const p=PIX.get(+id),ps=pos[id]||(p?STD_POS[p.pos]:'ZM'),min=Math.max(1,(b==null?ende:b)-a);
         const g=ps==='TW'?0.01:(RE.schuetzen.halb[linksForm(ps)]||0.3)*Math.pow((p?p.str:60)/RE.schuetzen.mitte,RE.schuetzen.exponent)*Math.min(90,min)/90;return[+id,ps,g,min];});
       const tot=l.reduce((a,x)=>a+x[2],0);return l.map(x=>[x[0],x[1],tot?x[2]/tot:0,x[3]]);};
-    return{h:hid,a:aid,hg:sc[0],ag:sc[1],ev,pen:G.pen,sr:G.schiri.n,yel:Object.keys(yel).map(Number),off:[...off],inj,xi:[H.xi,A.xi],ein:G.ein,bk:[0,1].map(s=>[...G.ein[s],...(G.bank[s]||[])]),ws:G.wechsel.map(w=>[w.s,w.m,w.aus,w.ein]),xg0,xpo:[H.am?[]:teil(H,0),A.am?[]:teil(A,1)],st,sz,sv:G.sv,taktik:[H,A].map(sd=>sd.am?null:{stil:sd.stil,form:sd.form,einst:sd.einst,u:Math.round(sd.u*100)/100})};};
+    return{h:hid,a:aid,hg:sc[0],ag:sc[1],ev,pen:G.pen,sr:G.schiri.n,yel:Object.keys(yel).map(Number),off:[...off],inj,xi:[H.xi,A.xi],ein:G.ein,bk:[0,1].map(s=>[...G.ein[s],...(G.bank[s]||[])]),ws:G.wechsel.map(w=>[w.s,w.m,w.aus,w.ein]),xg0,xpo:[H.am?[]:teil(H,0),A.am?[]:teil(A,1)],st,sz,sv:G.sv,taktik:[H,A].map(sd=>sd.am?null:{stil:sd.stil,form:sd.form,einst:sd.einst,u:Math.round(sd.u*100)/100,konter:sd.konter?1:0})};};
   return G;}
 // Bank (K05 §3.2): 9 Spieler, darunter ein Torwart, sonst die stärksten verfügbaren aus jeder Gruppe. Wen du auf die Tribüne gesetzt hast (p.trib, K14 §12), bleibt draußen.
 const ZURUFE=['druck','ruhe','konzentration','zeit'],ANSPRACHEN=['loben','motivieren','fordern','beruhigen','taktik','schweigen','augenzwinkernd'];

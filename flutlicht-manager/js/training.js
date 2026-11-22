@@ -36,7 +36,7 @@ function planPasstNicht(d){const t=myT(),E=RT.planErinnerung,grund=[];if(autoB('
 // Erinnerung „Lernplatz frei“ (K07 §8, K07d): ein Platz im Einzeltraining ist frei, und du vergibst Lernziele selbst (Bereich lernziel frei, ohne Automatik).
 // Höchstens einmal je RT.lernplatzErinnerung.abstandTage (S.lpEr).
 function lernplatzFrei(d){if(S.phase!=='play'||autoB('lernziel')||!frei('lernziel'))return null;const heute=absTag(d);if(S.lpEr!=null&&heute-S.lpEr<RT.lernplatzErinnerung.abstandTage)return null;
-  const n=lernPlaetze(S.my),belegt=squad(S.my).filter(p=>p.ls||p.um).length;if(belegt>=n)return null;S.lpEr=heute;
+  const n=lernPlaetze(S.my),belegt=squad(S.my).filter(p=>p.ls||p.um).length;if(belegt>=n)return null;if(!squad(S.my).some(p=>!p.ls&&!p.um&&!(p.inj>0)&&(lernOptionen(p).length||(frei('umschulung')&&umschulungZiele(p).length))))return null; /* nur, wenn jemand etwas lernen kann (Prüfung EC4) */S.lpEr=heute;
   return{art:'lernplatz',text:`${n-belegt} von ${n} Plätzen im Einzeltraining ${n-belegt===1?'ist':'sind'} frei. Ein Lernziel oder eine Umschulung bringt einen Spieler weiter.`,tab:'training',knopf:'Zum Training'};}
 function sprungFaktor(q){const V=RT.verletzung;return q<=V.sprungAb?1:1+V.sprungJe01*(q-V.sprungAb)/0.1;}
 

@@ -93,11 +93,12 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 | **K13b** Supercup-Prämie | `mitarbeit/popolupo-k13b-supercup-praemie` (auf K21c) | fertig, ungetestet |
 | **K26e** Stadt bietet Zuschuss | `mitarbeit/popolupo-k26e-stadt-zuschuss` (auf K13b) | fertig, ungetestet |
 | **K12c** Sommerkarten | `mitarbeit/popolupo-k12c-sommerkarten` (auf K26e) | fertig, ungetestet |
+| Korrekturen EC | `mitarbeit/popolupo-ec-korrekturen` (auf K12c) | fertig, ungetestet |
 | U19d2 volle Kader der Auslandsvereine in der Engine | zurückgestellt | Entwurf in K37 §5.7. Die Engine behandelt Auslandsvereine als Block wie Amateure, viele Stellen schlagen Spieler in `PIX` nach. Erst nach einem Testlauf und der Messung des Faktors 0,93 |
 
 **Die neueste Spitze ist immer der zuletzt genannte Zweig, er enthält alles davor.** K24 ist fertig (Claude).
 
-**Vorschlag für den nächsten Testlauf** (Spitze `mitarbeit/popolupo-k12c-sommerkarten`, alles ungetestet, aber von lesenden Prüf-Agenten durchgesehen, Konsistenzprüfung CS bis EB). **Wichtig:** Die Zweige `u12g` und `k29e` laden für sich allein nicht (DN1), bitte die Spitze nehmen:
+**Vorschlag für den nächsten Testlauf** (Spitze `mitarbeit/popolupo-ec-korrekturen`, alles ungetestet, aber von lesenden Prüf-Agenten durchgesehen, Konsistenzprüfung CS bis EC). **Wichtig:** Die Zweige `u12g` und `k29e` laden für sich allein nicht (DN1), bitte die Spitze nehmen:
 1. `node tests/code.js`, dann die schnellen Einzeltests der neuen Teile: `finanzen.js` (Nr. 11 bis 20), `geruechte.js`, `schwierigkeit.js`, `werbung.js`, `europapokal.js`, `vorstand.js` (Nr. 10 bis 19), `karriereende.js`, `stadion.js` (Nr. 8 bis 11), `karten.js`, `spielwelt-karten.js`, `fans.js` (K27b), `abwerben.js` (K20b, K20e), `transfers.js` (K20c, K20d, K19c, K31b, K31c, K19d), `presse.js` (K29b bis K29j), `marketing.js` (K25c, K25d), dazu seit dem Nachmittag des 22.11.: `testspiele.js` (K11b, K11c), `erinnerungen.js` (K09b, K07b, K11d, K07d), `scouting.js` (K18c bis K18e), `medizin.js` (K10b bis K10d), `disziplin.js` (K09c), `vertraege.js` (K21b), `statistik.js` (K34d), `taktik.js` (K06b, eigene Welt am Ende), `stab.js` (K16b).
 2. `node tests/lizenz.js` (Gleichschritt, neue Bereiche `zielgespraech`; seit K36c am Ende die gesammelten Meldungen des Stabs). Viele neue Teile wirken nur ohne Automatik oder über Karten, darum sollte 5a gleich bleiben.
 3. `node tests/finanzmodell.js 2`: Salden je Liga nach K23c. Erwartet nach der Modellrechnung 1. Liga etwa +11 Mio., 2. Liga etwa 0, 3. Liga etwa −1 Mio. je Verein und Saison ohne Transfers (K23 §5.6b). Weichen sie stark ab, bitte die Zeilen ins Testprotokoll, ich stelle dann `REGELN.finanzen.verwaltung` und `sponsor` nach.
@@ -132,6 +133,12 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 ---
 
 ## Changelog
+
+### 22.11.2026: Korrekturen nach Prüfung EC zu K06b, K18d, K18e, K07d und EB (Zweig `mitarbeit/popolupo-ec-korrekturen`, auf K12c)
+
+- Ein lesender Prüf-Agent hat K06b, K18d, K18e, K07d, K29j und die Korrekturen EB durchgesehen (Konsistenzprüfung EC). Nur kleine Funde.
+- **Behoben:** EC1 „Durchschaut“ nur nach einem echten Konter (`kiStil` markiert ihn, `konter` im Spielergebnis, ohne Würfel); EC2 Aufschlag nur beim Verein von damals; EC3 „Scout lag daneben“ nur mit Scout; EC4 „Lernplatz frei“ nur, wenn jemand etwas lernen kann; EC5 „unverkäuflich“ aus der Abwerbe-Karte bricht ein Wechselversprechen wie sonst auch.
+- **Tests zuerst:** `tests/taktik.js` (K06b mit Markierung), `tests/scouting.js` (K18d, K18e), `tests/erinnerungen.js` (K07d), `tests/abwerben.js`.
 
 ### 22.11.2026: K12c Sommerkarten (Zweig `mitarbeit/popolupo-k12c-sommerkarten`, auf K26e)
 

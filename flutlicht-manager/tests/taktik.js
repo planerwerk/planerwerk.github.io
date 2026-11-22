@@ -69,8 +69,8 @@ console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 //       oder ein anderer Stil des Gegners nicht. Eigene Welt, weil oben Taktik-Funktionen ersetzt sind.
 {const {W:W2,F:F2}=neueWelt();F2.buildWorld(SEED);const S2=W2.S,ev=W2.ev;S2.my=6;S2.mgr='Test';F2.setTarget();const K=ev('RTA').kreislauf,lieb=Object.values(K)[0],gegen=Object.keys(K).find(k=>K[k]===lieb),anders=Object.keys(K).concat(['ausgewogen']).find(k=>k!==gegen&&k!==lieb);
   S2.stilVerlauf=[lieb,lieb,lieb];const o=S2.teams.find(t=>t.id!==6&&t.lg===S2.teams[6].lg).id,n=()=>S2.news.filter(x=>x.t.startsWith('Der Gegner hat dich durchschaut')).length;
-  const spiel=(hg,ag,a,b)=>F2.durchschautMeldung({h:6,a:o,hg,ag,taktik:[{stil:a},{stil:b}]});
-  spiel(0,2,lieb,gegen);const eins=n();spiel(2,0,lieb,gegen);spiel(0,2,anders,gegen);spiel(0,2,lieb,anders);const danach=n();
+  const spiel=(hg,ag,a,b,k=1)=>F2.durchschautMeldung({h:6,a:o,hg,ag,taktik:[{stil:a},{stil:b,konter:k}]});
+  spiel(0,2,lieb,gegen);const eins=n();spiel(2,0,lieb,gegen);spiel(0,2,anders,gegen);spiel(0,2,lieb,anders);spiel(0,2,lieb,gegen,0);const danach=n(); /* ohne Markierung des Konters keine Meldung (EC1) */
   pruef(!!gegen&&eins===1&&danach===1,'Durchschaut: Meldung nur bei Niederlage mit dem Lieblingsstil gegen seinen Konter',`Konter ${gegen}, Meldungen ${eins} / ${danach}`);}
 
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

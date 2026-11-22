@@ -105,14 +105,14 @@ function gegnerBeobachtenText(){const t=myT(),n=gbNaechstes();if(!n)return'';if(
 // ---------- Konkurrenz am Tisch (K18 §8, K18d) ----------
 // Nach dem Bericht eines Scouts über einen Spieler: mit RSC.konkurrenz.chance hat ein deutscher Verein mit Bedarf ihn ebenfalls beobachtet. Sein Verein weiß das und
 // verlangt von dir für tage Tage preis mehr (forderungDu). Fest aus Seed, Spieler und Tag (hash32), ohne Würfel aus den Strömen. p.kTisch = {bis, f, tid}.
-function konkurrenzTisch(p){const K=RSC.konkurrenz,heute=absTag(S.tag),h=hash32(S.seed+'/ktisch/'+p.id+'/'+heute);if(!p||p.team<0||h%10000>=K.chance*10000)return null;
+function konkurrenzTisch(p){if(!p||p.team<0)return null;const K=RSC.konkurrenz,heute=absTag(S.tag),h=hash32(S.seed+'/ktisch/'+p.id+'/'+heute);if(h%10000>=K.chance*10000)return null;
   const l=S.teams.filter(b=>b.id!==S.my&&b.id!==p.team&&aktiv(b)&&hatBedarf(b,p));if(!l.length)return null;const b=l[Math.floor(h/10000)%l.length];
-  p.kTisch={bis:heute+K.tage,f:1+K.preis,tid:b.id};news(`Konkurrenz am Tisch: Auch ein Scout von ${b.name} hat ${p.n} beobachtet. Sein Verein weiß das und verlangt von dir ${Math.round(K.preis*100)} % mehr.`,'');return b;}
-const konkurrenzTischFaktor=p=>p&&p.kTisch&&absTag(S.tag)<=p.kTisch.bis?p.kTisch.f:1;
+  p.kTisch={bis:heute+K.tage,f:1+K.preis,tid:b.id,von:p.team};news(`Konkurrenz am Tisch: Auch ein Scout von ${b.name} hat ${p.n} beobachtet. Sein Verein weiß das und verlangt von dir ${Math.round(K.preis*100)} % mehr.`,'');return b;}
+const konkurrenzTischFaktor=p=>p&&p.kTisch&&p.kTisch.von===p.team&&absTag(S.tag)<=p.kTisch.bis?p.kTisch.f:1; // nur beim selben Verein (Prüfung EC2)
 
 // ---------- Scout liegt daneben (K18 §8, K18e) ----------
 // Beim Kauf (aktionen.js) merkt sich das Spiel die Mitte deiner Einschätzung und die wahre Stärke (p.kaufSicht). Ist der Spieler bei dir (montags, scoutingWoche) und lag
 // die Mitte mindestens RSC.daneben.ab über der wahren Stärke beim Kauf, kommt eine Meldung. Danach ist der Merker weg. Nur Anzeige.
-function kaufSichtMerken(p){const s=staerkeSicht(p);if(!s||s.genau)return;p.kaufSicht={mitte:Math.round(s.mitte),str:Math.round(p.str)};}
+function kaufSichtMerken(p){const s=staerkeSicht(p);if(!s||s.genau)return;const e=kenntnisEintrag(p);p.kaufSicht={mitte:Math.round(s.mitte),str:Math.round(p.str),scout:e&&e.s&&e.s.length?1:0};}
 function scoutDanebenWoche(){squad(S.my).forEach(p=>{const k=p.kaufSicht;if(!k)return;delete p.kaufSicht;
-  if(k.mitte-k.str>=RSC.daneben.ab)news(`Scout lag daneben: ${p.n} ist schwächer als gedacht. Beim Kauf sah es nach etwa ${k.mitte} aus, tatsächlich waren es ${k.str}.`,'bad');});}
+  if(k.mitte-k.str>=RSC.daneben.ab)news(`${k.scout?'Scout lag daneben':'Einschätzung lag daneben'}: ${p.n} ist schwächer als gedacht${k.scout?'':' (ohne Scout nur ein grober Eindruck)'}. Beim Kauf sah es nach etwa ${k.mitte} aus, tatsächlich waren es ${k.str}.`,'bad');});}

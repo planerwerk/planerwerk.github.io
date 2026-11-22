@@ -2017,3 +2017,15 @@ Ein Agent hat 34b1633, 53d8da8, 956fc85, 72a06c1 und 5497208 gelesen (nichts aus
 | EB6 | Das gelockte Talent bekam beim neuen Verein kein `p.seit`/`p.abl` (galt dort als vereinsausgebildet), und der Verein wurde beim Entscheiden nicht auf `aktiv` geprüft. Jetzt beides. Den Kaderdeckel des Käufers prüft die Karte nicht (ein Talent mehr ist vertretbar). | ✅ behoben, Rest dokumentiert |
 | EB7 | Profivertrag und Abgang aus der Karte wirken auch, wenn der Bereich `jugendkader` noch gesperrt ist. Entschieden (vorläufig): gewollt, das entspricht dem Aufrücken durch den Co-Trainer unter der Automatik. | dokumentiert |
 | EB8 | Eine fremde, veraltete Klausel (Spieler ablösefrei geholt) verhinderte deine neue Weiterverkaufsbeteiligung. Jetzt blockiert nur eine Klausel, die deinen Verein bindet (oder eine alte ohne `von`). | ✅ behoben |
+
+## EC. Prüfung von K06b, K18d, K18e, K07d, K29j und der Korrekturen EB ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 7a5808c, c35cbc9, 6b31038, 3f2e209, a9de4dc und a032948 gelesen (nichts ausgeführt). Kein blockierender und kein mittlerer Fehler. Ohne Befund: K29j, Namen, `${}`, Zahlen, alte Spielstände, keine neuen Würfel in geteilten Strömen, Gleichschritt, `kiAbwUnruhig` gleich dem Wochenlauf, `kiAbwFrist` für alte Spielstände. Korrekturen auf `mitarbeit/popolupo-ec-korrekturen`.
+
+| # | Befund | Status |
+|---|---|---|
+| EC1 | „Durchschaut“ nahm den Lieblingsstil aus einem Verlauf, der das gerade gespielte Spiel schon enthielt, und kam auch, wenn der Gegner gar nicht reagiert hatte (schon nach dem ersten Spiel). Jetzt markiert `kiStil` seine Reaktion (`konter` im Ergebnis, ohne Würfel), und die Meldung kommt nur damit und nur, wenn sein Stil deinen schlägt. | ✅ behoben |
+| EC2 | Der Aufschlag „Konkurrenz am Tisch“ galt auch nach einem Wechsel des Spielers zu einem anderen Verein. Jetzt nur beim Verein von damals (`kTisch.von`). Die Prüfung `!p` steht jetzt vor dem Zugriff. | ✅ behoben |
+| EC3 | „Scout lag daneben“ kam auch ohne Scout (die Einschätzung war nur Grundwissen). Jetzt merkt sich der Kauf, ob ein Scout den Spieler gesehen hat; ohne Scout heißt es „Einschätzung lag daneben“. | ✅ behoben |
+| EC4 | „Lernplatz frei“ konnte jede Woche kommen, obwohl niemand etwas lernen konnte (die Automatik der Lernplätze füllt sonst alle). Jetzt nur, wenn ein Spieler ohne Ziel ein Merkmal lernen oder umgeschult werden kann. | ✅ behoben |
+| EC5 | „Unverkäuflich“ aus der Abwerbe-Karte umging ein offenes Wechselversprechen (EB3 hatte `versprechenAngebot` entfernt). Jetzt wieder mit `versprechenAngebot`, nur ohne Spielerfenster und zweite Meldung. | ✅ behoben |

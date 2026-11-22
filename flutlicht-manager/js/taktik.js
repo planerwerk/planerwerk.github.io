@@ -65,7 +65,7 @@ function taktikWirkung(Ss){const E=RTA.einstellung;
 // Computer-Trainer (K06 §7): Außenseiter mauern oder kontern, Favoriten pressen oder haben den Ball, sonst ihr Profil. Gegen dich kontern sie mit Wahrscheinlichkeit 25 % deinen Lieblingsstil.
 function kiStil(sd,op){const K=RTA.ki,t=S.teams[sd.id],q=op.am?2:(sd.A+sd.D)/Math.max(1,op.A+op.D);
   // Die Reaktion gilt nur deinem eigenen Lieblingsstil: Wählt dein Co-Trainer den Stil, gibt es keinen (K36)
-  if(op.id===S.my&&!autoB('stil')&&R()<K.reaktion){const v=(S.stilVerlauf||[]).slice(-K.rueckblick);if(v.length){const z={};v.forEach(x=>z[x]=(z[x]||0)+1);const lieb=Object.entries(z).sort((a,b)=>b[1]-a[1])[0][0],gegen=Object.keys(RTA.kreislauf).find(k=>RTA.kreislauf[k]===lieb);if(gegen)return gegen;}}
+  if(op.id===S.my&&!autoB('stil')&&R()<K.reaktion){const v=(S.stilVerlauf||[]).slice(-K.rueckblick);if(v.length){const z={};v.forEach(x=>z[x]=(z[x]||0)+1);const lieb=Object.entries(z).sort((a,b)=>b[1]-a[1])[0][0],gegen=Object.keys(RTA.kreislauf).find(k=>RTA.kreislauf[k]===lieb);if(gegen){sd.konter=1;return gegen;}}}
   // Wahl nach Umsetzung und Kreislauf gegen den (bisher bekannten) Stil des Gegners
   const kreis=k=>op.am?0:RTA.kreislauf[k]===op.stil?1:RTA.kreislauf[op.stil]===k?-1:0,wahl=l=>l.map(k=>[k,umsetzung(sd,k)+K.kreislaufGewicht*kreis(k)]).sort((a,b)=>b[1]-a[1])[0][0];
   if(q<K.aussenseiter)return wahl(['mauern','konter']);if(q>K.favorit)return wahl(['ballbesitz','pressing']);return STILE.includes(t.stil)?t.stil:'ausgewogen';}
@@ -78,9 +78,8 @@ function kiOrdnung(t){let best=t.form,bv=-1;const kader=squad(t.id);if(!kader.le
 function profilStil(){return waehleGewichtet(Object.assign({},RTA.ki.profil));}
 
 // ---------- „Der Gegner hat dich durchschaut“ (K06 §8, K06b) ----------
-// Dein Lieblingsstil: der häufigste der letzten RTA.ki.rueckblick Spiele (dieselbe Regel wie in kiStil). Nach einem verlorenen Pflichtspiel, in dem du ihn gespielt hast
-// und der Computer-Trainer den Stil wählte, der ihn schlägt: eine Meldung. Nur wenn du den Stil selbst wählst (sonst kontert niemand). Ohne Würfel.
-function lieblingsstil(){const v=(S.stilVerlauf||[]).slice(-RTA.ki.rueckblick);if(!v.length)return null;const z={};v.forEach(x=>z[x]=(z[x]||0)+1);return Object.entries(z).sort((a,b)=>b[1]-a[1])[0][0];}
+// Nach einem verlorenen Ligaspiel, in dem der Computer-Trainer bewusst auf deinen Lieblingsstil reagiert hat (kiStil markiert das mit konter, Prüfung EC1) und sein Stil
+// deinen gespielten schlägt: eine Meldung. Nur wenn du den Stil selbst wählst (sonst kontert niemand). Ohne Würfel.
 function durchschautMeldung(m){if(!m||!m.taktik||autoB('stil'))return;const s=m.h===S.my?0:1,mein=m.taktik[s],geg=m.taktik[1-s],gf=s?m.ag:m.hg,ga=s?m.hg:m.ag,oid=s?m.h:m.a;
-  if(!mein||!geg||gf>=ga||oid>=1000)return;const lieb=lieblingsstil(),gegen=lieb?Object.keys(RTA.kreislauf).find(k=>RTA.kreislauf[k]===lieb):null;
-  if(lieb&&gegen&&mein.stil===lieb&&geg.stil===gegen)news(`Der Gegner hat dich durchschaut: ${tn(oid)} stellte sich mit ${STIL_NAME[gegen]||gegen} auf dein ${STIL_NAME[lieb]||lieb} ein. Wer immer gleich spielt, wird gekontert.`,'');}
+  if(!mein||!geg||!geg.konter||gf>=ga||oid>=1000||RTA.kreislauf[geg.stil]!==mein.stil)return;
+  news(`Der Gegner hat dich durchschaut: ${tn(oid)} stellte sich mit ${STIL_NAME[geg.stil]||geg.stil} auf dein ${STIL_NAME[mein.stil]||mein.stil} ein. Wer immer gleich spielt, wird gekontert.`,'');}

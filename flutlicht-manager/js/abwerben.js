@@ -79,7 +79,7 @@ const kiAbwFrist=d=>!autoB('transfers')&&!!kiAbwOffen()&&S.kiAbw.bis===d;
 function kiAbwerbenAntwort(art){if(!darf('transfers'))return;const a=kiAbwOffen();if(!a)return;const K=RAW.ki,p=PIX.get(a.pid),b=S.teams[a.tid];S.kiAbw=null;
   if(art==='rede'){stimmungAendern(p,K.stimmung);glaubAendern(K.glaub);news(`Du stellst ${p.n} zur Rede. Er verspricht, sich auf den Verein zu konzentrieren.`,'');}
   else if(art==='oeffentlich'){bezDuAendern(b.id,K.beziehung,`Abwerbeversuch bei ${p.n}`);fanAnlass(myT(),'fanU',K.fans);news(`Du machst den Abwerbeversuch von ${b.name} öffentlich. Die Fans stehen hinter dir, ${b.name} ist verärgert.`,'');}
-  else{S.unv=S.unv||{};S.unv[p.id]=1;p.list=0;S.offers=S.offers.filter(o=>o.pid!==p.id);news(`${p.n} ist ab sofort unverkäuflich. Wer ihn will, muss den Höchstpreis zahlen.`,'');}
+  else{S.unv=S.unv||{};S.unv[p.id]=1;p.list=0;S.offers=S.offers.filter(o=>o.pid!==p.id);versprechenAngebot(p.id,null);news(`${p.n} ist ab sofort unverkäuflich. Wer ihn will, muss den Höchstpreis zahlen.`,'');}
   save();render();}
 function kiAbwerbenKarte(){const a=kiAbwOffen();if(!a)return'';const p=PIX.get(a.pid),b=S.teams[a.tid];
   return`<div class="card"><h3>Abwerbeversuch</h3><p>${esc(b.name)} hat heimlich mit ${esc(p.n)} gesprochen. Wie reagierst du? Antwort bis ${datumKurz(a.bis)}.</p><div class="row"><button onclick="kiAbwerbenAntwort('rede')"${lzAus('transfers')}>Spieler zur Rede stellen</button><button onclick="kiAbwerbenAntwort('oeffentlich')"${lzAus('transfers')}>Öffentlich machen</button><button onclick="kiAbwerbenAntwort('preis')"${lzAus('transfers')}>Unverkäuflich machen</button></div></div>`;}

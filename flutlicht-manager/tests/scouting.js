@@ -73,7 +73,7 @@ const scout=(S,F,q,gebiet,ev=F.__ev)=>{let x;for(let i=0;i<50;i++){x=F.stabNeu('
 // K18e. Scout liegt daneben (K18 §8): Einschätzung beim Kauf 6 über der wahren Stärke gibt eine Meldung, 2 darüber keine; der Merker ist danach weg;
 //       kaufSichtMerken merkt sich bei einem fremden Spieler Mitte und Stärke, bei einem eigenen (genau bekannt) nichts
 {const {S,F,ev}=welt(),sq=ev('squad')(S.my),[p,q]=sq,n=()=>S.news.filter(x=>x.t.startsWith('Scout lag daneben')).length,f=S.pl.find(x=>x.team>=0&&x.team!==S.my);
-  p.kaufSicht={mitte:Math.round(p.str)+6,str:Math.round(p.str)};q.kaufSicht={mitte:Math.round(q.str)+2,str:Math.round(q.str)};F.scoutDanebenWoche();
+  p.kaufSicht={mitte:Math.round(p.str)+6,str:Math.round(p.str),scout:1};q.kaufSicht={mitte:Math.round(q.str)+2,str:Math.round(q.str),scout:1};F.scoutDanebenWoche();
   F.kaufSichtMerken(f);F.kaufSichtMerken(p);
   pruef(n()===1&&!p.kaufSicht&&!q.kaufSicht&&!!f.kaufSicht&&f.kaufSicht.str===Math.round(f.str),'Scout liegt daneben: Meldung ab 5 unter der Einschätzung, Merker beim Kauf',`Meldungen ${n()}, fremder Spieler ${JSON.stringify(f.kaufSicht)}`);}
 
