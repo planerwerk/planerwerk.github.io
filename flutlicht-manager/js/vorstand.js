@@ -129,6 +129,9 @@ function zwischenbilanzWoche(){const t=myT(),n=(S.fx&&S.fx[t.lg]||[]).length,sp=
 function zwischenbilanz(pos,sp){const t=myT(),Z=RV.zwischenbilanz,z=meinZg();S.zb={s:S.season,tid:S.my,sp,pos,art:'fest'};
   if(pos<=S.target-Z.abstand){const neu=zgZielGrenze(t.lg,S.target-Z.hoch);if(neu<S.target){const d=neu-S.target;S.target=neu;if(z)z.vorschlag+=d;S.zb.art='hoch';
       news(`Zwischenbilanz: Der Vorstand ist begeistert (Platz ${pos}) und hebt das Ziel an: ${targetText(t.lg,neu)}.`,'good');return;}}
+  // U12k: Weit hinter dem Ziel senkt ein geduldiger Präsident von sich aus, ohne Antrag und ohne Abzug beim Budget. Alles rechnet danach vom neuen Ziel (wie beim Anheben).
+  if(pos>=S.target+Z.vonSichAus&&praesident(t).geduld>=RV.ruf.geduldig){const neu=zgZielGrenze(t.lg,S.target+Z.senken);if(neu>S.target){const d=neu-S.target;S.target=neu;if(z)z.vorschlag+=d;S.zb.art='gesenkt';
+      news(`Zwischenbilanz: Platz ${pos}. Der Präsident bleibt geduldig und senkt das Ziel von sich aus: ${targetText(t.lg,neu)}.`,'');return;}}
   if(pos>=S.target+Z.abstand&&zgZielGrenze(t.lg,S.target+Z.senken)>S.target){S.zb.art='antrag';
     news(`Zwischenbilanz: Platz ${pos} liegt weit hinter dem Ziel (${targetText(t.lg,S.target)}). Bis zum nächsten Ligaspiel kannst du im Büro beantragen, das Ziel zu senken.`,'bad');return;}
   news(`Zwischenbilanz: Der Vorstand hält am Ziel fest (${targetText(t.lg,S.target)}, aktuell Platz ${pos}).`,'');}

@@ -151,4 +151,13 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
     'Präsidentenwahl: Werte, Takt, Chance, Abwahl mit Vertrauen zur Mitte, Wiederwahl ohne Folgen',
     `andere Werte bei ${anders} von ${alle.length}, Takt ${takt}, Chance ${c0.toFixed(2)} / Aufstieg ${cAuf.toFixed(2)} / Abstieg ${cAb.toFixed(2)} / Fans 90 ${cFans.toFixed(2)}, abgewählt ${n1} von ${faellig}, Vertrauen ${trust1}, danach ${n2}`);}
 
+// 18. Vorstand senkt von sich aus (K28 §5.9, U12k): mindestens 6 Plätze hinter dem Ziel und ein geduldiger Präsident → Ziel um 1 schlechter, ohne Antrag und ohne Budgetabzug,
+//     der Vorschlag rückt mit; ungeduldig oder nur 4 Plätze dahinter → Antrag wie bisher
+{const B=welt().B,Z=B.zwischenbilanz,sp=w=>w.ev('meineSpieltage')(),geduld=(w,g)=>w.W.ev(`praesident=function(){return{geduld:${g},ehrgeiz:10,sparsam:10};}`);
+  const a=welt();geduld(a,B.ruf.geduldig);a.S.target=5;const v0=a.S.zg.vorschlag,b0=a.ev('zgBudgetFaktor')();a.F.zwischenbilanz(5+Z.vonSichAus,sp(a));
+  const senkt=a.S.target===5+Z.senken&&a.S.zb.art==='gesenkt'&&a.S.zg.vorschlag===v0+Z.senken&&!a.ev('zbAntragOffen')()&&a.ev('zgBudgetFaktor')()===b0;
+  const b=welt();geduld(b,B.ruf.ungeduldig);b.S.target=5;b.F.zwischenbilanz(5+Z.vonSichAus,sp(b));const ungeduldig=b.S.target===5&&b.S.zb.art==='antrag';
+  const c=welt();geduld(c,B.ruf.geduldig);c.S.target=5;c.F.zwischenbilanz(5+Z.abstand,sp(c));const knapp=c.S.target===5&&c.S.zb.art==='antrag';
+  pruef(senkt&&ungeduldig&&knapp,'Vorstand senkt von sich aus: geduldiger Präsident weit hinter dem Ziel, sonst Antrag',`gesenkt ${senkt}, ungeduldig Antrag ${ungeduldig}, knapp Antrag ${knapp}`);}
+
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

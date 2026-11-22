@@ -48,13 +48,14 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 | **U12i** Präsidentenwahl auf der Mitgliederversammlung | `mitarbeit/popolupo-u12i-praesidentenwahl` (auf K20d) | fertig, ungetestet |
 | **U12j** Jobangebot während der Saison (Karte), dazu Korrekturen DP | `mitarbeit/popolupo-u12j-jobangebot` (auf U12i) | fertig, ungetestet |
 | **K29f** Interview am Spielfeldrand | `mitarbeit/popolupo-k29f-spielfeldrand` (auf U12j) | fertig, ungetestet |
-| **K29g** Pressekonferenz nach dem Urteil | `mitarbeit/popolupo-k29g-urteil` (auf K29f) | fertig, ungetestet |
+| **K29g** Pressekonferenz nach dem Urteil, dazu Korrekturen DQ und DR (Pressekonferenzen nach dem Spiel) | `mitarbeit/popolupo-k29g-urteil` (auf K29f) | fertig, ungetestet |
+| **U12k** Vorstand senkt das Ziel von sich aus | `mitarbeit/popolupo-u12k-vorstand-senkt` (auf K29g) | fertig, ungetestet |
 | U19d2 volle Kader der Auslandsvereine in der Engine | zurückgestellt | Entwurf in K37 §5.7. Die Engine behandelt Auslandsvereine als Block wie Amateure, viele Stellen schlagen Spieler in `PIX` nach. Erst nach einem Testlauf und der Messung des Faktors 0,93 |
 
 **Die neueste Spitze ist immer der zuletzt genannte Zweig, er enthält alles davor.** K24 ist fertig (Claude).
 
-**Vorschlag für den nächsten Testlauf** (Spitze `mitarbeit/popolupo-k29g-urteil`, alles ungetestet, aber von lesenden Prüf-Agenten durchgesehen, Konsistenzprüfung CS, CX, CZ, DD, DF, DI, DL, DM, DN). **Wichtig:** Die Zweige `u12g` und `k29e` laden für sich allein nicht (DN1), bitte die Spitze nehmen:
-1. `node tests/code.js`, dann die schnellen Einzeltests der neuen Teile: `finanzen.js` (Nr. 11 bis 20), `geruechte.js`, `schwierigkeit.js`, `werbung.js`, `europapokal.js`, `vorstand.js` (Nr. 10 bis 17), `karriereende.js`, `stadion.js` (Nr. 8 bis 11), `karten.js`, `spielwelt-karten.js`, `fans.js` (K27b), `abwerben.js` (K20b), `transfers.js` (K20c, K20d), `presse.js` (K29b bis K29g), `marketing.js` (K25c, K25d).
+**Vorschlag für den nächsten Testlauf** (Spitze `mitarbeit/popolupo-u12k-vorstand-senkt`, alles ungetestet, aber von lesenden Prüf-Agenten durchgesehen, Konsistenzprüfung CS, CX, CZ, DD, DF, DI, DL, DM, DN). **Wichtig:** Die Zweige `u12g` und `k29e` laden für sich allein nicht (DN1), bitte die Spitze nehmen:
+1. `node tests/code.js`, dann die schnellen Einzeltests der neuen Teile: `finanzen.js` (Nr. 11 bis 20), `geruechte.js`, `schwierigkeit.js`, `werbung.js`, `europapokal.js`, `vorstand.js` (Nr. 10 bis 18), `karriereende.js`, `stadion.js` (Nr. 8 bis 11), `karten.js`, `spielwelt-karten.js`, `fans.js` (K27b), `abwerben.js` (K20b), `transfers.js` (K20c, K20d), `presse.js` (K29b bis K29g), `marketing.js` (K25c, K25d).
 2. `node tests/lizenz.js` (Gleichschritt, neue Bereiche `zielgespraech`).
 3. `node tests/finanzmodell.js 2`: Salden je Liga nach K23c. Erwartet nach der Modellrechnung 1. Liga etwa +11 Mio., 2. Liga etwa 0, 3. Liga etwa −1 Mio. je Verein und Saison ohne Transfers (K23 §5.6b). Weichen sie stark ab, bitte die Zeilen ins Testprotokoll, ich stelle dann `REGELN.finanzen.verwaltung` und `sponsor` nach.
 4. Die langen Läufe: `welt.js` über zehn Saisons (Karriereende CR3, Pool CR4, Bauten CT3, Transfers CP3/CP4), `ui-zwei-saisons.js`, `fuzz-karrieren.js`.
@@ -88,6 +89,11 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 ---
 
 ## Changelog
+
+### 22.11.2026: U12k Vorstand senkt das Ziel von sich aus (Zweig `mitarbeit/popolupo-u12k-vorstand-senkt`, auf K29g)
+
+- **Neu (K28 §5.9):** Liegst du bei der Zwischenbilanz mindestens 6 Plätze hinter dem Ziel und ist der Präsident geduldig, senkt der Vorstand das Ziel um einen Platz. Das geschieht ohne Antrag und ohne Abzug beim Budget. Sonst bleibt es beim Antrag wie bisher.
+- **Tests zuerst:** `tests/vorstand.js` Nr. 18, dazu Nr. 14 (unverändert, 4 Plätze Rückstand).
 
 ### 22.11.2026: Korrekturen nach Prüfung DR zu K29f und K29g, dazu ein alter Fehler aus U17a (Zweig `mitarbeit/popolupo-k29g-urteil`)
 

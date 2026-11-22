@@ -196,7 +196,8 @@ Jetzt gibt es Budgets (K23d, K23 §5.5f) und echte Größenordnungen (K23c), dam
   - Abgelehnt: Vertrauen −3.
 - **Dazwischen:** Meldung, das Ziel bleibt.
 - **Lizenz (K36):** der Antrag gehört zum Bereich `zielgespraech` (Grundlizenz), ohne Automatik.
-- **Noch nicht:** Der Vorstand senkt nicht von sich aus, Nebenziele werden nicht angepasst.
+- **Seit U12k (22.11., popolupo, ohne Testlauf):** Liegst du mindestens 6 Plätze hinter dem Ziel und ist der Präsident geduldig (Geduld ab 14), senkt der Vorstand das Ziel von sich aus um einen Platz, ohne Antrag und ohne Abzug beim Transferbudget. Wie beim Anheben rechnet danach alles vom neuen Ziel, auch der Ruf. Ungeduldige oder mittlere Präsidenten und 4 bis 5 Plätze Rückstand: Antrag wie bisher.
+- **Noch nicht:** Nebenziele werden nicht angepasst.
 
 ### 5.10 Umsetzung U12g (22. November 2026, popolupo, ohne Testlauf): Trainervertrag
 
