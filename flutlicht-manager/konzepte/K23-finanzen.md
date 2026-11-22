@@ -156,6 +156,44 @@ Gebaut:
 - Ziel: Erstligisten im Schnitt etwa 280 Mio. € Umsatz (2024/25: 5,12 Mrd. € für 18 Vereine), Zweitligisten etwa 67 Mio. € (1,21 Mrd. €), mit großer Spanne. Der größte Verein liegt nahe einer Milliarde.
 - Die heutigen Werte im Spiel sind kleiner (TV je Spieltag 120.000 € + 2.500 € × Ansehen). U13 stellt alle Geldwerte auf echte Größenordnung um, Gehälter (K21) und Ablösen (K19) im selben Zug, damit die Verhältnisse stimmen.
 
+### 5.6a Plan für K23c (22.11.2026, popolupo, Entwurf, noch nicht gebaut)
+
+**Echt gegen Spiel**, je Verein und Saison. Echt: Saison 2023/24 (DFL-Wirtschaftsreport 2025, DFB-Saisonreport 3. Liga). Spiel: Messung BZ7, Saison 2026.
+
+| Bereich | 1. Liga echt | 1. Liga Spiel | 2. Liga echt | 2. Liga Spiel | 3. Liga echt | 3. Liga Spiel |
+|---|---|---|---|---|---|---|
+| Umsatz | 267 Mio. (4,80 Mrd. / 18) | 42 Mio. | 59 Mio. (1,07 Mrd. / 18) | 15 Mio. | etwa 16 Mio. (Aufwand 16,8 Mio., Minus etwa 0,6 Mio.) | 6 Mio. |
+| Medien national | etwa 50 Mio. (Topf 1,121 Mrd., 80 % für die 1. Liga) | 10 Mio. | etwa 12,5 Mio. | 3,3 Mio. | nicht recherchiert | 1,4 Mio. |
+| Werbung | 57 Mio. (1,02 Mrd. / 18) | 8 Mio. | nicht recherchiert | 1,7 Mio. | nicht recherchiert | 0,5 Mio. |
+| Spieltag | 29 Mio. (524 Mio. / 18) | 24 Mio. | nicht recherchiert | 10 Mio. | nicht recherchiert | 4,5 Mio. |
+| Personal Spielbetrieb | 93 Mio. (1,67 Mrd. / 18) | 30 Mio. | 16,4 Mio. (296 Mio. / 18) | 12 Mio. | nicht recherchiert | 7 Mio. |
+
+**Was daraus folgt:**
+- Zuschauer, Pokalprämien und vermutlich auch die Ablösen liegen im Spiel schon nahe an echt.
+- TV-Gelder (etwa ein Fünftel), Werbung (etwa ein Siebtel) und die Gehälter der Großen (etwa ein Drittel) sind zu klein.
+- Ein einheitlicher Faktor reicht deshalb nicht. K23c hebt die zu kleinen Bereiche, die übrigen bleiben.
+
+**Vorschlag (vorläufig):**
+1. **TV:** Säulenmodell (§5.1) mit echten Töpfen, 1. Liga im Schnitt 50 Mio., 2. Liga 12,5 Mio., 3. Liga eigener Topf (Höhe recherchieren).
+2. **Werbung:** `RF.sponsor` (K24, Claude ist einverstanden, siehe Testprotokoll Lauf 7) auf echte Größe, 1. Liga im Schnitt 57 Mio. für alle Flächen zusammen.
+3. **Gehälter steiler statt nur höher:**
+   - In der 1. Liga sollen sie etwa dreimal so hoch werden, in der 3. Liga nur wenig mehr.
+   - Formel `gehalt = basis × e^(steigung × (Stärke − 75))` mit `basis` 2,1 Mio. statt 1 Mio. und `steigung` 0,137 statt 0,1.
+   - Gerechnet: Stärke 60 bekommt 0,27 statt 0,22 Mio., Stärke 85 8,2 statt 2,7 Mio., Stärke 90 16 statt 4,5 Mio.
+   - Marktwerte im selben Verhältnis anpassen, sonst stimmt das Verhältnis Gehalt zu Wert nicht mehr (echt etwa 10 bis 15 % je Jahr). Das muss vorher gemessen werden.
+4. **Europapokal:** Faktor `REU.geld.faktor` 0,2 → 1.
+5. **Sonstige Einnahmen** (K23b) aus echten Anteilen (7–11 % des Umsatzes) statt fester Beträge je Liga.
+6. **Kosten mitziehen:**
+   - Betrieb, Jugend, Stab, Startkonto, Kreditrahmen.
+   - Feste Beträge in Karten, Kampagnen (K25) und Bauten (K26, echt 3.000 bis 6.000 € je Sitzplatz).
+7. **Reihenfolge:** erst messen, wie Gehälter und Marktwerte im Spiel heute verteilt sind (je Liga Schnitt und Spanne), dann alle Werte in einem Commit, dann ein voller Testlauf.
+
+**Noch zu recherchieren:**
+- TV-Topf der 3. Liga.
+- Werbung und Spieltag der 2. und 3. Liga.
+- Personal der 3. Liga.
+- Echte Gehälter und Marktwerte nach Stärke (zum Beispiel Kaderwert und Gehaltsliste eines Vereins je Liga).
+
 ## 6. Hebel des Spielers
 
 | Hebel | Nutzen | Preis |
@@ -255,6 +293,8 @@ finanzen:{
 - Punktabzug bei Insolvenz in 3. Liga und Regionalliga: https://www.dfb.de/fileadmin/_dfbdam/221172-OM_04_2020_Final.pdf und https://www.lto.de/recht/hintergruende/h/dfb-schiedsgericht-punktabzug-wegen-insolvenz-ordentliche-gerichtsbarkeit-rechtsmittel
 
 ## Quellen
+
+- Wirtschaftszahlen 2023/24 für den Plan K23c (abgerufen 22.11.2026): [DFL-Wirtschaftsreport, Bundesliga, Gewinn- und Verlustrechnung](https://report.bundesliga.de/2324/en/economic-report/economic-figures/bundesliga/income-statement.html), [DFL, 2. Bundesliga](https://report.bundesliga.de/2324/en/economic-report/economic-figures/bundesliga-2/income-statement.html), [DFL, Lizenzfußball](https://report.bundesliga.de/2324/en/economic-report/economic-figures/licensed-football/revenue-and-expenditure.html), [DFB-Saisonreport 3. Liga 2023/24](https://assets.dfb.de/uploads/000/315/789/original_Saisonreport_3Liga_A4_23_24.pdf), [Stuttgarter Zeitung, Umsatzrekord](https://www.stuttgarter-zeitung.de/sport/dfl-erstmals-ueber-sechs-milliarden-ligen-mit-rekordumsatz-79123089.html)
 
 - Umsatz 2024/25, Bundesliga und 2. Liga, Kosten, Gewinn: [bundesliga.com](https://www.bundesliga.com/de/bundesliga/news/bundesliga-saison-2024-25-dfl-milliarden-umsatz-rekord-35757), [sportschau.de](https://sportschau.de/fussball/bundesliga/dfl-verkuendet-umsatzrekord-der-bundesligisten,dfl-umsatzrekord-102.html), [DFL Economic Report 24/25](https://report.bundesliga.de/2425/en/economic-report/economic-figures/licensed-football/revenue-and-expenditure.html)
 - Erlösstruktur 2022/23: [DFL-Kennzahlen Bundesliga (PDF)](https://report.bundesliga.de/2425/de/_assets/downloads/key-bundesliga-dfl-er25.pdf)

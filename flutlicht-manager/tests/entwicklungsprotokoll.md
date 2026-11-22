@@ -46,6 +46,17 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 22.11.2026: Plan für K23c, Messung erweitert (Zweig `mitarbeit/popolupo-k23b-computer-finanzen`)
+
+- **K23 §5.6a:** Plan für die echten Größenordnungen, mit Zahlen aus dem DFL-Wirtschaftsreport.
+  - Im Spiel sind TV-Gelder etwa ein Fünftel, Werbung ein Siebtel und die Gehälter der Großen ein Drittel der echten Werte.
+  - Zuschauer, Pokalprämien und vermutlich die Ablösen stimmen schon ungefähr.
+  - Vorschlag: eine steilere Gehaltskurve, TV nach dem Säulenmodell, Werbung auf echte Größe, Europapokal mal 1.
+- **`tests/finanzmodell.js`** gibt je Liga zusätzlich Gehälter und Marktwerte aus (Schnitt, Median, Spitze, nach Stärke).
+  - **Bitte mit dem Lauf zu K23b einmal `node tests/finanzmodell.js 2` ins Testprotokoll.**
+  - Daraus stelle ich die Gehalts- und Marktwertkurve für K23c ein.
+- **Kein Spielcode geändert.**
+
 ### 22.11.2026: K23b Computer-Vereine nach denselben Regeln (Zweig `mitarbeit/popolupo-k23b-computer-finanzen`, auf den Korrekturen)
 
 - **Neu in `js/finanzen.js`:**

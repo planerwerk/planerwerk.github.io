@@ -5,7 +5,7 @@
 //   Zum Vergleich die heutige Pauschale der Computer-Vereine (Ansehen² × fremdeEinnahmen.liga je Ligaspiel).
 // Ausgabe je Liga: Einnahmen, Ausgaben und Saldo je Saison (Schnitt, Spanne), Anteil mit Minus, die drei schwächsten und stärksten Vereine, dazu dein Verein mit den echten Buchungen.
 // Aufruf: node tests/finanzmodell.js [Saisons, Standard 1]. Nur Node.js. Keine Prüfung mit Exit-Code, nur Zahlen für das Testprotokoll.
-// ACHTUNG: Dieses Skript ist noch nie gelaufen (K23b-Vorbereitung, 21.11., ohne Node.js).
+// Lief in Lauf 5 (Testprotokoll, BZ7). Die Zeilen „Spieler“ und „nach Stärke“ für K23c (22.11.) sind neu und noch nie gelaufen.
 const {saisons}=require('./sim');
 const N=Math.max(1,+(process.argv[2]||1)),SEED=4711,VEREIN=6;
 const konto=new Map(); // Verein → {ein, aus, alt, sp}
@@ -28,7 +28,12 @@ saisons({n:N,seed:SEED,verein:VEREIN,
       ergebnis.push(`Saison ${S.season}, ${lg}. Liga, ${l.length} Vereine: Einnahmen ${fmt(sum(x=>x.k.ein))} (TV ${fmt(sum(x=>x.k.tv))}, Sponsor ${fmt(sum(x=>x.k.spons))}, Spieltag ${fmt(sum(x=>x.k.tor))}), `+
         `Ausgaben ${fmt(sum(x=>x.k.aus))} (Gehälter ${fmt(sum(x=>x.k.gehalt))}), Saldo ${fmt(sum(saldo))} je Verein, Spanne ${fmt(saldo(sort[0]))} bis ${fmt(saldo(sort[sort.length-1]))}, `+
         `mit Minus ${l.filter(x=>saldo(x)<0).length}, heutige Pauschale ${fmt(sum(x=>x.k.alt))}`);
-      ergebnis.push('  schwächste: '+sort.slice(0,3).map(zeile).join(' | '));ergebnis.push('  stärkste: '+sort.slice(-3).map(zeile).join(' | '));}
+      ergebnis.push('  schwächste: '+sort.slice(0,3).map(zeile).join(' | '));ergebnis.push('  stärkste: '+sort.slice(-3).map(zeile).join(' | '));
+      // Für K23c (K23 §5.6a): Gehälter und Marktwerte der Spieler je Liga (Schnitt, Median, Spitze) und je Stärkeband
+      const sp=l.flatMap(x=>ev('squad')(x.t.id)),med=a=>{const s=a.slice().sort((p,q)=>p-q);return s.length?s[Math.floor(s.length/2)]:0;},sal=sp.map(p=>p.sal),wert=sp.map(p=>ev('value')(p));
+      const band=[[0,60],[60,65],[65,70],[70,75],[75,80],[80,85],[85,99]].map(([a,b])=>{const q=sp.filter(p=>p.str>=a&&p.str<b);return q.length?`${a}–${b}: ${q.length} Spieler, Gehalt ${fmt(q.reduce((s,p)=>s+p.sal,0)/q.length)}, Wert ${fmt(q.reduce((s,p)=>s+ev('value')(p),0)/q.length)}`:null;}).filter(Boolean);
+      ergebnis.push(`  Spieler: ${sp.length}, Gehalt Schnitt ${fmt(sal.reduce((a,b)=>a+b,0)/Math.max(1,sal.length))}, Median ${fmt(med(sal))}, Spitze ${fmt(Math.max(0,...sal))}; Marktwert Schnitt ${fmt(wert.reduce((a,b)=>a+b,0)/Math.max(1,wert.length))}, Median ${fmt(med(wert))}, Spitze ${fmt(Math.max(0,...wert))}`);
+      ergebnis.push('  nach Stärke: '+band.join(' | '));}
     const t=ev('myT()'),lauf=Object.entries(S.fin).filter(([k])=>ev('RFP').laufend.includes(k)).reduce((a,[,v])=>a+v,0);
     ergebnis.push(`Dein Verein ${t.name}: laufender Saldo nach den echten Buchungen ${fmt(lauf)}, nach dem Modell ${fmt(z(t.id).ein-z(t.id).aus)}`);
     konto.clear();}});
