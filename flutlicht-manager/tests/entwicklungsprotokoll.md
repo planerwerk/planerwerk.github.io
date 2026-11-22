@@ -59,13 +59,14 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 | **K14c** Karte „Führungsspieler meutert“ | `mitarbeit/popolupo-k14c-meuterei` (auf K29h) | fertig, ungetestet |
 | **K07b** Erinnerung „Plan passt nicht“ | `mitarbeit/popolupo-k07b-plan-erinnerung` (auf K14c) | fertig, ungetestet |
 | **K34c** Europapokal in der Saisonstatistik | `mitarbeit/popolupo-k34c-europa-statistik` (auf K07b) | fertig, ungetestet |
-| **K29i** Interviews der Spieler und Maulkorb | `mitarbeit/popolupo-k29i-maulkorb` (auf K34c) | fertig, ungetestet |
+| **K29i** Interviews der Spieler und Maulkorb, dazu Korrekturen DU | `mitarbeit/popolupo-k29i-maulkorb` (auf K34c) | fertig, ungetestet |
+| **U12l** Budgetgespräch mit dem Vorstand | `mitarbeit/popolupo-u12l-budgetgespraech` (auf K29i) | fertig, ungetestet |
 | U19d2 volle Kader der Auslandsvereine in der Engine | zurückgestellt | Entwurf in K37 §5.7. Die Engine behandelt Auslandsvereine als Block wie Amateure, viele Stellen schlagen Spieler in `PIX` nach. Erst nach einem Testlauf und der Messung des Faktors 0,93 |
 
 **Die neueste Spitze ist immer der zuletzt genannte Zweig, er enthält alles davor.** K24 ist fertig (Claude).
 
-**Vorschlag für den nächsten Testlauf** (Spitze `mitarbeit/popolupo-k29i-maulkorb`, alles ungetestet, aber von lesenden Prüf-Agenten durchgesehen, Konsistenzprüfung CS, CX, CZ, DD, DF, DI, DL, DM, DN). **Wichtig:** Die Zweige `u12g` und `k29e` laden für sich allein nicht (DN1), bitte die Spitze nehmen:
-1. `node tests/code.js`, dann die schnellen Einzeltests der neuen Teile: `finanzen.js` (Nr. 11 bis 20), `geruechte.js`, `schwierigkeit.js`, `werbung.js`, `europapokal.js`, `vorstand.js` (Nr. 10 bis 18), `karriereende.js`, `stadion.js` (Nr. 8 bis 11), `karten.js`, `spielwelt-karten.js`, `fans.js` (K27b), `abwerben.js` (K20b), `transfers.js` (K20c, K20d, K19c), `presse.js` (K29b bis K29i), `marketing.js` (K25c, K25d).
+**Vorschlag für den nächsten Testlauf** (Spitze `mitarbeit/popolupo-u12l-budgetgespraech`, alles ungetestet, aber von lesenden Prüf-Agenten durchgesehen, Konsistenzprüfung CS, CX, CZ, DD, DF, DI, DL, DM, DN). **Wichtig:** Die Zweige `u12g` und `k29e` laden für sich allein nicht (DN1), bitte die Spitze nehmen:
+1. `node tests/code.js`, dann die schnellen Einzeltests der neuen Teile: `finanzen.js` (Nr. 11 bis 20), `geruechte.js`, `schwierigkeit.js`, `werbung.js`, `europapokal.js`, `vorstand.js` (Nr. 10 bis 19), `karriereende.js`, `stadion.js` (Nr. 8 bis 11), `karten.js`, `spielwelt-karten.js`, `fans.js` (K27b), `abwerben.js` (K20b), `transfers.js` (K20c, K20d, K19c), `presse.js` (K29b bis K29i), `marketing.js` (K25c, K25d).
 2. `node tests/lizenz.js` (Gleichschritt, neue Bereiche `zielgespraech`).
 3. `node tests/finanzmodell.js 2`: Salden je Liga nach K23c. Erwartet nach der Modellrechnung 1. Liga etwa +11 Mio., 2. Liga etwa 0, 3. Liga etwa −1 Mio. je Verein und Saison ohne Transfers (K23 §5.6b). Weichen sie stark ab, bitte die Zeilen ins Testprotokoll, ich stelle dann `REGELN.finanzen.verwaltung` und `sponsor` nach.
 4. Die langen Läufe: `welt.js` über zehn Saisons (Karriereende CR3, Pool CR4, Bauten CT3, Transfers CP3/CP4), `ui-zwei-saisons.js`, `fuzz-karrieren.js`.
@@ -99,6 +100,14 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 ---
 
 ## Changelog
+
+### 22.11.2026: U12l Budgetgespräch (Zweig `mitarbeit/popolupo-u12l-budgetgespraech`, auf K29i)
+
+- **Neu (K28, K15 §12 Nr. 20):** Einmal je Saison kannst du im Büro mehr Transferbudget beantragen.
+  - Die Zusage hängt an Vertrauen, Ruf und der Sparsamkeit des Präsidenten. Bei wenig Glaubwürdigkeit ist sie halb so wahrscheinlich.
+  - Zugesagt: +20 % Transferbudget bis Saisonende.
+  - Abgelehnt: Vertrauen −3.
+- **Tests zuerst:** `tests/vorstand.js` Nr. 19.
 
 ### 22.11.2026: Korrekturen nach Prüfung DU zu K19c, K09b und K16b (Zweig `mitarbeit/popolupo-k29i-maulkorb`)
 

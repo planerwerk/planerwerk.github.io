@@ -401,3 +401,13 @@ vorstand:{
 - Saisonziel verhandeln: PLAN §4 (GameStar 4/2000)
 - Unrealistische Ziele nach Aufstiegen, Trainergehalt: `konzepte/_recherche-genre.md`, Abschnitt 4b
 - Heutige Vorstandslogik: `daten/regeln.js` (Abschnitt `vorstand`), `js/ablauf.js`
+
+### 5.14 Umsetzung U12l (22. November 2026, popolupo, ohne Testlauf): Budgetgespräch
+
+Nach K15 §12 Nr. 20 („Gespräche mit dem Vorstand“), mit der Glaubwürdigkeit als Warnsignal.
+
+- **Wann:** einmal je Saison und Verein, während der Saison, im Büro unter dem Saisonziel. Bereich `zielgespraech` (Grundlizenz).
+- **Zusage:** 40 % + 1 % je Punkt Vertrauen über 50 + 0,5 % je Punkt Ruf über 30 − 2 % je Punkt Sparsamkeit des Präsidenten über 10. Bei Glaubwürdigkeit unter 40 halb so viel. Zwischen 5 und 90 %, eigener Strom.
+- **Zugesagt:** Das Transferbudget steigt bis Saisonende um 20 % (zusammen mit dem Faktor aus dem Zielgespräch).
+- **Abgelehnt:** Vertrauen −3.
+- **Noch nicht:** Gehaltsrahmen verhandeln, Gespräch über einen Stadionausbau.

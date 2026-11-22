@@ -926,7 +926,11 @@ const REGELN={
     jobs:{ansehenAbschlag:4,kandidaten:8,angebote:4},
     // Jobangebot während der Saison (K28 §8, U12j, 22.11., GESCHÄTZT): Karte ab Ruf rufAb, Verein mit mindestens abstand mehr Ansehen und höchstens Ruf + rufSpanne;
     // beim Wechsel zahlt der neue Verein dem alten abloese × dein Gehalt je Saison
-    jobangebot:{rufAb:55,abstand:8,rufSpanne:10,abloese:1}, // rufSpanne: über der Mitte der Jobangebote (mkJobs), seit Prüfung DQ1 (vorher Ruf + 40, das hat nichts begrenzt)
+    jobangebot:{rufAb:55,abstand:8,rufSpanne:10,abloese:1},
+    // Budgetgespräch (K28, K15 §12 Nr. 20, U12l, 22.11., GESCHÄTZT): einmal je Saison mehr Transferbudget beantragen. Zusage mit basis + jeVertrauen × (Vertrauen − 50)
+    // + jeRuf × (Ruf − Startruf) − jeSparsam × (Sparsamkeit des Präsidenten − 10), bei Glaubwürdigkeit unter glaubUnter × glaubFaktor, in grenzen (eigener Strom).
+    // Zugesagt: Transferbudget × (1 + plus) bis Saisonende. Abgelehnt: Vertrauen abgelehnt.
+    budgetgespraech:{basis:0.4,jeVertrauen:0.01,jeRuf:0.005,jeSparsam:0.02,glaubUnter:40,glaubFaktor:0.5,grenzen:[0.05,0.9],plus:0.2,abgelehnt:-3}, // rufSpanne: über der Mitte der Jobangebote (mkJobs), seit Prüfung DQ1 (vorher Ruf + 40, das hat nichts begrenzt)
     // Trainervertrag (K28 §5.5, U12g, 22.11., GESCHÄTZT, nur Statistik, es fließt kein Geld): Gehalt je Saison = basis × liga × e^(steigung × (Ansehen − mitte)) × (1 + jeRuf × (Ruf − Startruf)), auf runden.
     // Laufzeit nach der Geduld des Präsidenten (Grenzen wie ruf.ungeduldig und ruf.geduldig); ab Tag winterAb zählt die laufende Saison nicht mit. Läuft er aus: Vertrauen über verlaengernAb
     // verlängert um verlaengern Saisons mit neuem Gehalt, sonst um bewaehrung zum alten. Abfindung bei Entlassung: Restgehalt × abfindung. saisonTage: Tage je Saison für den Anteil.

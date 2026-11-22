@@ -837,6 +837,7 @@ Im Einzelnen in K28 §5.8 und §12 Nr. 18 bis 22.
 - **Seit U12h (K28 §5.11):** Dein Ruf als Trainer wirkt auf das Interesse von Spielern (+0,2 je Punkt über 30), auf das Ruf-Gefälle in der Kabine (statt der Trainerjahre) und auf die Glaubwürdigkeit beim neuen Verein (60 + 0,3 je Punkt).
 - **Seit U12i (K28 §5.12, §12 Nr. 27):** Präsidentenwahl auf der Mitgliederversammlung alle 3 oder 4 Jahre. Der Präsident bleibt mit 65 % (± Punkte, Auf- und Abstieg, Fanstimmung). Ein neuer bringt neue Werte, dein Vertrauen rückt zur Hälfte Richtung 50.
 - **Seit U12j (K28 §5.13, §12 Nr. 28):** Jobangebot während der Saison als Karte ab Ruf 55 von einem Verein mit mindestens 8 mehr Ansehen (höchstens Ruf + 40). Wechseln nur auf deine Wahl, der alte Verein bekommt ein Jahresgehalt als Ablöse.
+- **Seit U12l (K28 §5.14):** Budgetgespräch einmal je Saison: Zusage nach Vertrauen, Ruf und Sparsamkeit des Präsidenten (bei wenig Glaubwürdigkeit halb so oft), dann Transferbudget +20 % bis Saisonende; abgelehnt Vertrauen −3.
 
 ## K17 Beziehungen, U12c (20.11.), vorläufig von mir, gebaut ohne Testlauf
 

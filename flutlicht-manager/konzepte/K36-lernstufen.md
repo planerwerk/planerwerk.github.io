@@ -338,6 +338,7 @@ lizenz:{
 96. **K07b Erinnerung „Plan passt nicht“ (22.11., popolupo, ohne Testlauf):** keine neue Funktion, eine weitere Erinnerung vor „Tag beenden“, im Menü abschaltbar. Ohne Wirkung aufs Spiel.
 97. **K34c Europapokal in der Saisonstatistik (22.11., popolupo, ohne Testlauf):** nur Anzeige.
 98. **K29i Interviews der Spieler und Maulkorb (22.11., popolupo, ohne Testlauf):** Maulkorb als Schalter im bestehenden Bereich `presse`. In der Automatik weder Interviews noch Maulkorb (Gleichschritt unberührt, er vergleicht die Stimmung).
+99. **U12l Budgetgespräch (22.11., popolupo, ohne Testlauf):** keine neue Funktion, eine weitere Schaltfläche im Bereich `zielgespraech` (Grundlizenz, ohne Automatik).
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 

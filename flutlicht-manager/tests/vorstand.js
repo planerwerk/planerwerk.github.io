@@ -160,4 +160,14 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   const c=welt();geduld(c,B.ruf.geduldig);c.S.target=5;c.F.zwischenbilanz(5+Z.abstand,sp(c));const knapp=c.S.target===5&&c.S.zb.art==='antrag';
   pruef(senkt&&ungeduldig&&knapp,'Vorstand senkt von sich aus: geduldiger Präsident weit hinter dem Ziel, sonst Antrag',`gesenkt ${senkt}, ungeduldig Antrag ${ungeduldig}, knapp Antrag ${knapp}`);}
 
+// 19. Budgetgespräch (U12l): Zusage 0,4 bei Vertrauen 50, Startruf und Sparsamkeit 10, halb so viel bei Glaubwürdigkeit unter 40; zugesagt Transferbudget × 1,2 bis Saisonende,
+//     nur einmal je Saison; abgelehnt Vertrauen −3
+{const B=welt().B.budgetgespraech,setze=(w,s)=>w.W.ev(`praesident=function(){return{geduld:10,ehrgeiz:10,sparsam:${s}};}`);
+  const a=welt();setze(a,10);a.S.trust=50;a.S.ruf=a.B.ruf.start;a.ev('myT()').glaub=60;const c0=a.F.bgChance();a.ev('myT()').glaub=30;const c1=a.F.bgChance();a.ev('myT()').glaub=60;
+  a.W.ev('bgChance=function(){return 1;}');const f0=a.ev('zgBudgetFaktor')();a.F.budgetGespraech();const ja=a.S.bg&&a.S.bg.ok===1&&Math.abs(a.ev('zgBudgetFaktor')()-f0*(1+B.plus))<1e-9;
+  const t1=a.S.trust;a.W.ev('bgChance=function(){return 0;}');a.F.budgetGespraech();const einmal=a.S.bg.ok===1&&a.S.trust===t1;
+  const b=welt();b.S.trust=50;b.W.ev('bgChance=function(){return 0;}');b.F.budgetGespraech();const nein=b.S.bg&&b.S.bg.ok===0&&b.S.trust===50+B.abgelehnt&&b.ev('zgBudgetFaktor')()===1;
+  pruef(Math.abs(c0-B.basis)<1e-9&&Math.abs(c1-B.basis*B.glaubFaktor)<1e-9&&ja&&einmal&&nein,'Budgetgespräch: Chance, Zusage mit mehr Budget, einmal je Saison, Ablehnung kostet Vertrauen',
+    `Chance ${c0.toFixed(2)} / bei wenig Glaubwürdigkeit ${c1.toFixed(2)}, zugesagt ${ja}, einmal ${einmal}, abgelehnt ${nein}`);}
+
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

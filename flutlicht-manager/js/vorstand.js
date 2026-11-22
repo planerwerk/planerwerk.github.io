@@ -87,7 +87,7 @@ function zielgespraechStart(){S.zg={s:S.season,tid:S.my,vorschlag:S.target,sp:me
 const meinZg=()=>S.zg&&S.zg.s===S.season&&S.zg.tid===S.my?S.zg:null;
 const zgOffen=()=>{const z=meinZg();return!!z&&!z.fertig&&!S.fired&&S.phase==='play'&&meineSpieltage()===z.sp;};
 // Faktor auf das Transferbudget deines Vereins (finanzen.js transferBudget)
-const zgBudgetFaktor=()=>{const z=meinZg(),Z=RV.zielgespraech;if(!z||!z.stufe)return 1;return z.stufe<0?1-Z.budgetHoch*z.stufe:Math.max(0,1-Z.budgetTief*z.stufe);};
+const zgBudgetFaktor=()=>{const z=meinZg(),Z=RV.zielgespraech,b=bgFaktor();if(!z||!z.stufe)return b;return b*(z.stufe<0?1-Z.budgetHoch*z.stufe:Math.max(0,1-Z.budgetTief*z.stufe));}; /* mal Budgetgespräch (U12l) */
 // Chance, dass der Vorstand beim Tiefstapeln um n Plätze zusagt
 function zgTiefChance(n){const Z=RV.zielgespraech.tief,e=praesident(myT()).ehrgeiz;
   return clamp(Z.basis-Z.weiterer*(n-1)+Z.jeVertrauen*(S.trust-50)+Z.jeRuf*(ruf()-RV.ruf.start)+(e>=RV.nebenziele.ehrgeizigAb?-Z.ehrgeiz:e<=Z.ruhigBis?Z.ehrgeiz:0),Z.grenzen[0],Z.grenzen[1]);}
@@ -222,3 +222,17 @@ function praesidentenWahlen(sm){const W=RV.praesident.wahl;let n=0;
   return n;}
 // Anzeige im Büro (Karte Saisonziel)
 function wahlText(t){const s=naechsteWahl(t);return`Nächste Präsidentenwahl auf der Mitgliederversammlung im Sommer ${s+1}.`;}
+
+// ---------- Budgetgespräch (K28, K15 §12 Nr. 20, U12l) ----------
+// S.bg = {s, tid, ok (1 zugesagt, 0 abgelehnt)}: einmal je Saison und Verein, nur während der Saison, Bereich zielgespraech. Zugesagt: Transferbudget × (1 + plus) bis Saisonende.
+const bgMein=()=>S.bg&&S.bg.s===S.season&&S.bg.tid===S.my?S.bg:null;
+const bgFaktor=()=>{const b=bgMein();return b&&b.ok?1+RV.budgetgespraech.plus:1;};
+const bgOffen=()=>!bgMein()&&S.phase==='play'&&!S.fired;
+function bgChance(){const B=RV.budgetgespraech,P=praesident(myT());let c=B.basis+B.jeVertrauen*(S.trust-50)+B.jeRuf*(ruf()-RV.ruf.start)-B.jeSparsam*(P.sparsam-10);
+  if(glaub()<B.glaubUnter)c*=B.glaubFaktor;return clamp(c,B.grenzen[0],B.grenzen[1]);}
+function budgetGespraech(){if(!darf('zielgespraech')||!bgOffen())return;const B=RV.budgetgespraech,ok=mitStrom(strom('budgetgespraech',S.season,S.my),()=>R())<bgChance();
+  S.bg={s:S.season,tid:S.my,ok:ok?1:0};
+  if(ok)news(`Budgetgespräch: Der Vorstand gibt dir mehr Spielraum, das Transferbudget steigt bis Saisonende um ${Math.round(B.plus*100)} %.`,'good');
+  else{S.trust=clamp(S.trust+B.abgelehnt,0,100);news('Budgetgespräch: Der Vorstand lehnt ab. Mehr Geld gibt es nicht, die Bitte hat ihn verstimmt.','bad');}save();render();}
+function budgetGespraechText(){const b=bgMein();if(b)return`<p class="dim">Budgetgespräch dieser Saison: ${b.ok?'zugesagt, Transferbudget +'+Math.round(RV.budgetgespraech.plus*100)+' %':'abgelehnt'}.</p>`;if(!bgOffen())return'';
+  return`<div class="row"><button onclick="budgetGespraech()"${lzAus('zielgespraech')}>Mehr Transferbudget beantragen (Zusage etwa ${Math.round(bgChance()*100)} %)</button></div>`;}
