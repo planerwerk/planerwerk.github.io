@@ -20,6 +20,8 @@ function setVorlage(k){if(!darf('vorlage','vorlage'))return;myT().vorlage=k==='a
 function eigeneVorlageSpeichern(){if(!darf('vorlage','vorlage'))return;const w={},g=id=>{const e=document.getElementById(id);return e?e.value:'';};
   EIGENE_SLOTS.forEach(([k])=>{w[k]=[g(`ev_${k}_e`),g(`ev_${k}_i`)];});const r=eigeneVorlageSpeichernLauf(eigeneVorlageAus(w,g('ev_name')));
   if(!S.eigV||!S.eigV[r]){toast(r);return;}myT().vorlage=r;news(`Eigene Trainingsvorlage „${S.eigV[r].name}“ gespeichert und eingestellt.`);save();render();}
+// Spielverlegung beantragen (K13 §13, K13d): Lizenzbereich verlegung, Gründe und neuer Termin in wettbewerbe.js
+function spielVerlegen(){if(!darf('verlegung'))return;const g=spielVerlegenLauf();if(g){toast(g);return;}save();render();}
 function eigeneVorlageLoeschen(k){if(!darf('vorlage','vorlage'))return;eigeneVorlageLoeschenLauf(k);save();render();}
 function setUmschulung(id,pos){if(!darf('umschulung','lernziel'))return;const p=PIX.get(id);if(!p||p.team!==S.my)return;if(!pos){p.um=null;save();openP(id);return;}
   const grund=umschulungGrund(p,pos);if(grund){toast(grund);openP(id);return;}

@@ -115,6 +115,7 @@ Grundlage sind die Notizen in K10 §12 Nr. 14, K11 §12 Nr. 12, K13 §12 Nr. 13 
 | `versprechen` | Zusagen im Gespräch, Teamevent (U8) | 3 B-Lizenz | keine Zusagen, kein Teamevent | K15 §5.3, K14 §6 |
 | `suchauftrag` | Suchauftrag für Scouts (U9a), auch mit der Region Ausland (U9b) | 4 A-Lizenz | kein Suchauftrag | K18 |
 | `sportgericht` | Strafe annehmen oder Einspruch | 4 A-Lizenz | Verein nach `kiEinspruch` | PLAN §4, K09 |
+| `verlegung` | Spielverlegung beantragen bei Personalnot (K13d) | 4 A-Lizenz | ohne Automatik, der Verein beantragt nie von selbst | K13 §12 Nr. 13 |
 | `medizin` | fit spritzen, früher zurückholen | 4 A-Lizenz | Arzt nach `kiSpritzen` | K10 Nr. 14 |
 | `sponsor` | Werbeverträge wählen (Trikotbrust, seit K24a auch Ausrüster und Ärmel) | 4 A-Lizenz | Verein nimmt je Fläche das Angebot mit dem höchsten Grundbetrag | PLAN §4, K24 |
 | `preise` | Eintrittspreis | 4 A-Lizenz | Richtpreis nach Liga und Ansehen (`richtPreis`) | K27 |
@@ -390,6 +391,7 @@ lizenz:{
 148. **K07f Eigene Trainingsvorlagen (23.11., popolupo, ohne Testlauf):** im Bereich `vorlage` (wie die Wahl der Vorlage). Mit Automatik des Bereichs plant der Co-Trainer, die eigenen Vorlagen bleiben gespeichert.
 149. **K21d Pokalprämie (23.11., popolupo, ohne Testlauf):** keine neue Funktion, sie gehört zur Teamprämie im Bereich `praemien`.
 150. **K21e Aufstiegs- und Klassenerhaltsprämie (23.11., popolupo, ohne Testlauf):** keine neue Funktion, sie gehört zur Teamprämie im Bereich `praemien`.
+151. **K13d Spielverlegung beantragen (23.11., popolupo, ohne Testlauf):** neuer Bereich `verlegung` (A-Lizenz, Büro, ohne Automatik). Damit sind es im Code 54 Bereiche (gezählt in `REGELN.lizenz.bereiche`, die Zählung oben war zuletzt 52).
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 

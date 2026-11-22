@@ -136,7 +136,7 @@ Hängt ab von: K03 (Frische, Robustheit, Saisonbelastung), K04 (Fouls, Ermüdung
   - Anlass: mindestens drei Kranke im Kader.
   - „Hygieneplan umsetzen“ (Voreinstellung): 3.000 € (3. Liga, nach Liga mehr). Die Ansteckung endet sofort, und zwei Wochen lang erkranken nur halb so viele (`RMD.krankheit.hygiene`). Seit Prüfung EF2 gilt das auch nach neuen Kranken, die Ansteckung zählt während des Plans nicht (`krankFaktor`).
   - „Normal weitermachen“: nichts.
-  - Die Spielverlegung fehlt weiter, sie kommt mit K13 (Stufe 4).
+  - Spielverlegung beantragen gibt es seit K13d (Stufe 4, bei weniger als 16 einsatzfähigen Spielern).
 - **Lange Reha** (Entscheidung, Chance 0,03 je Woche mit Anlass, Sperre 365 Tage). Sie steht statt „Kreuzbandriss“:
   - Anlass: ein Spieler mit einer Verletzung ab 60 Tagen, die noch mindestens 30 Tage dauert, Diagnose gestellt.
   - „Zum Spezialisten schicken“: 15.000 €, Stimmung +3, das Rückfallrisiko nach der Rückkehr halbiert (`p.vl.rfF`). Geld und Stimmung gibt es nur, solange er noch verletzt ist (`dann`).

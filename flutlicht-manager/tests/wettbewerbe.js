@@ -53,5 +53,17 @@ pruef(supercups.length===N-1&&supercups.every(x=>!x.verl&&(x.hg!==x.ag)===!x.pen
   pruef(s1===1&&s2===1&&r1===null&&!!los&&los[1]===top.id&&noch===null&&n('Pokal-Los des Jahres')===1,'Pokalmeldungen: Sensation nur gegen Amateure oder Drittligisten, Los des Jahres nicht in Runde 1 und einmal je Saison',
     `Sensationen ${s1}/${s2}, Runde 1 ${r1}, Los ${los&&los.join('–')} (Ansehen ${top.rep}), zweites Mal ${noch}`);}
 
+// K13d. Spielverlegung (K13 §13): nur mit weniger als 16 einsatzfähigen Spielern (oder ohne Torwart), für das nächste Ligaspiel in höchstens 7 Tagen, einmal je Saison.
+//       Der neue Termin liegt nach dem alten, hat drei Tage Abstand zu allen Spielen beider Vereine, ist kein Montag und liegt vor dem letzten Spieltag.
+{const {W:W4,F:F4}=neueWelt();F4.buildWorld(SEED);const S4=W4.S,ev4=W4.ev,V=ev4('RWB').verlegung,M=ev4('RWB').spielplan.mindestTage;S4.my=6;S4.mgr='Test';S4.phase='play';
+  let e=null;for(let d=S4.tag+1;d<S4.plan.ende&&!e;d++){const x=F4.meinSpiel(d);if(x&&x.art==='liga')e=x;}
+  let ok=false,info='kein Ligaspiel gefunden';
+  if(e){S4.tag=e.tag-2;const sq=ev4('squad')(S4.my);sq.forEach(p=>{p.inj=0;});const voll=F4.spielVerlegenLauf();let n=sq.length;for(const p of sq){if(n<V.minSpieler)break;if(p.pos!=='TW'){p.inj=10;n--;}}
+    const z=S4.plan.zeit[e.lg][e.md][e.i],alt=z[0],[h,a]=S4.fx[e.lg][e.md][e.i],r=F4.spielVerlegenLauf(),neu=z[0],Z=S4.plan.zeit[e.lg],letzter=Math.min(...Z[Z.length-1].map(x=>x[0]));
+    const abstand=[h,a].every(id=>[...F4.spieltageVon(id,z)].every(x=>Math.abs(x-neu)>=M)),zweimal=F4.spielVerlegenLauf();
+    ok=typeof voll==='string'&&r===null&&neu>alt&&abstand&&neu<letzter&&ev4('wochentag')(neu)!==1&&typeof zweimal==='string';
+    info=`voller Kader ${typeof voll==='string'?'abgelehnt':voll}, Antrag ${r}, ${alt} → ${neu}, Abstand ${abstand}, vor dem letzten Spieltag ${neu<letzter}, zweiter Antrag ${typeof zweimal==='string'?'abgelehnt':zweimal}`;}
+  pruef(ok,'Spielverlegung: nur bei Personalnot, neuer Termin mit Abstand, einmal je Saison',info);}
+
 console.log(`\n${N} Saison(s) in ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

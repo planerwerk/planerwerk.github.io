@@ -35,6 +35,26 @@ function ligaVerlegen(d,ids,grund){const M=RWB.spielplan.mindestTage;let n=0;
     const neu=kand.find(frei);if(neu!=null)z[0]=neu;else if(vor){z[0]=d-M;while(wochentag(z[0])===0||wochentag(z[0])===1)z[0]--;}else z[0]=d+M;n++;
     if(h===S.my||a===S.my)news(`Wegen ${grund} wird dein Ligaspiel gegen ${tn(h===S.my?a:h)} von ${datumKurz(alt)} auf ${datumKurz(z[0])} verlegt.`);})));
   if(n)TAGINDEX.plan=null;return n;}
+// ---------- Spielverlegung auf Antrag (K13 §13, K13d) ----------
+// Lage für dein nächstes Ligaspiel in höchstens RWB.verlegung.vorTage Tagen: n einsatzfähige Spieler (nicht verletzt oder krank, nicht in der Liga gesperrt), tw: ein Torwart dabei,
+// grund: weniger als minSpieler oder kein Torwart. Ohne solches Spiel null.
+function verlegungLage(){const V=RWB.verlegung,e=naechstesSpiel(S.tag+1); /* ab morgen, ein Spiel am selben Tag verlegt die Liga nicht mehr */if(!e||e.art!=='liga'||e.i==null||e.tag-S.tag>V.vorTage)return null;
+  const ok=squad(S.my).filter(p=>!(p.inj>0)&&!(sperreIn(p,'liga')>0)),tw=ok.some(p=>p.pos==='TW');return{e,n:ok.length,tw,grund:ok.length<V.minSpieler||!tw};}
+// Neuer Termin: der erste Tag ab dem alten + mindestTage, an dem beide Vereine mindestTage Abstand zu allen ihren Spielen haben, kein Montag,
+// bis sucheTage später und vor dem letzten Spieltag der Liga. Sonst null.
+function verlegungTag(e){const M=RWB.spielplan.mindestTage,V=RWB.verlegung,Z=S.plan.zeit[e.lg],z=Z[e.md][e.i],[h,a]=S.fx[e.lg][e.md][e.i],belegt=[spieltageVon(h,z),spieltageVon(a,z)];
+  const letzter=Math.min(...Z[Z.length-1].map(x=>x[0])),frei=x=>belegt.every(s=>{for(let j=1-M;j<M;j++)if(s.has(x+j))return false;return true;});
+  for(let x=z[0]+M;x<=z[0]+V.sucheTage&&x<letzter;x++)if(wochentag(x)!==1&&frei(x))return x;return null;}
+// Antrag: Rückgabe null (verlegt, mit Meldung) oder der Grund der Ablehnung. Höchstens proSaison je Saison (S.verlegt = {Saison: Zahl}).
+function spielVerlegenLauf(){const V=RWB.verlegung,l=verlegungLage();if(!l)return'In den nächsten Tagen hast du kein Ligaspiel.';
+  if(!l.grund)return`Die Liga lehnt ab: ${l.n} Spieler sind einsatzfähig, darunter ein Torwart.`;if(((S.verlegt||{})[S.season]||0)>=V.proSaison)return'In dieser Saison hast du schon eine Verlegung bekommen.';
+  const x=verlegungTag(l.e);if(x==null)return'Die Liga findet keinen Ersatztermin.';const z=S.plan.zeit[l.e.lg][l.e.md][l.e.i],alt=z[0],[h,a]=S.fx[l.e.lg][l.e.md][l.e.i];
+  z[0]=x;TAGINDEX.plan=null;S.verlegt=Object.assign({},S.verlegt,{[S.season]:((S.verlegt||{})[S.season]||0)+1});
+  news(`Spielverlegung: Die Liga verlegt dein Spiel gegen ${tn(h===S.my?a:h)} vom ${datumKurz(alt)} auf den ${datumKurz(x)}.`,'good');return null;}
+// Karte im Büro, nur wenn ein Antrag Aussicht hat
+function verlegungKarte(){if(S.fired||S.phase!=='play')return'';const l=verlegungLage();if(!l||!l.grund||((S.verlegt||{})[S.season]||0)>=RWB.verlegung.proSaison)return'';
+  return`<div class="card"><h3>Spielverlegung</h3><p>Für das Spiel am ${datumKurz(l.e.tag)} sind nur ${l.n} Spieler einsatzfähig${l.tw?'':', kein Torwart'}. Die Liga verlegt, wenn weniger als ${RWB.verlegung.minSpieler} Spieler mit einem Torwart bereitstehen, höchstens ${RWB.verlegung.proSaison}-mal je Saison.</p>
+    <button onclick="spielVerlegen()"${lzAus('verlegung')}>Verlegung beantragen</button>${lzHinweis('verlegung')}</div>`;}
 // Tage, an denen ein Verein schon spielt (Liga ohne das Spiel ohne, Pokal solange er dabei ist, Supercup, Europapokal)
 function spieltageVon(tid,ohne){const s=new Set(),t=tid<1000?S.teams[tid]:null;if(!t)return s;const lg=t.lg,Z=S.plan.zeit[lg]||[];
   (S.fx[lg]||[]).forEach((md,k)=>md.forEach(([h,a],i)=>{const z=Z[k]&&Z[k][i];if(z&&z!==ohne&&(h===tid||a===tid))s.add(z[0]);}));
