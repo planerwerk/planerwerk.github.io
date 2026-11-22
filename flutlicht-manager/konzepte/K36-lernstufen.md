@@ -373,6 +373,7 @@ lizenz:{
 131. **K13c Pokalmeldungen (22.11., popolupo, ohne Testlauf):** keine neue Funktion, nur Meldungen.
 132. **K29k Presse-Karten (22.11., popolupo, ohne Testlauf):** keine neue Funktion, zwei Entscheidungskarten im Bereich `ereignisse`.
 133. **K17b Hilfe in der Not (22.11., popolupo, ohne Testlauf):** keine neue Funktion, eine Entscheidungskarte im Bereich `ereignisse`; die Leihe selbst prüft wie immer (Fenster, Kader, Kontingent).
+134. **K22c Berater droht mit Wechsel (22.11., popolupo, ohne Testlauf):** keine neue Funktion, eine Entscheidungskarte im Bereich `ereignisse`.
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 

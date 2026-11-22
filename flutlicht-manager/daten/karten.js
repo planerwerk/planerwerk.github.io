@@ -84,6 +84,11 @@ const KARTEN=[
     texte:['{verein} hat ein Auge auf {spieler} aus deiner Jugend geworfen. Sein Berater lässt durchblicken: Ohne Profivertrag ist er weg.','Die Scouts von {verein} saßen bei jedem Jugendspiel von {spieler}. Jetzt liegt ein Angebot auf dem Tisch.'],
     optionen:[{text:'Profivertrag anbieten',wirkung:[{art:'jugendHoch',wert:1},{art:'fans',wert:1}],folge:'{verein} geht leer aus.'},
       {text:'Ziehen lassen',wirkung:[{art:'jugendWeg',wert:1}],folge:''}],auto:0},
+  // Berater droht mit Wechsel (K21 §8, K22 §8, K22c, 22.11.). Nur bekannte Wirkungen.
+  {id:'beraterDroht',titel:'Berater droht mit Wechsel',bereich:'K22',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'beraterDroht',sperrTage:365,
+    texte:['Der Berater von {spieler} lässt über die Presse ausrichten: Ohne deutlich mehr Geld wechselt sein Mandant im Sommer ablösefrei.','„Andere Vereine stehen Schlange“, sagt der Berater von {spieler}. Er will sofort eine Gehaltserhöhung sehen.'],
+    optionen:[{text:'Nachgeben',wirkung:[{art:'gehaltAnpassen',wert:1},{art:'beraterBez',wert:5},{art:'stimmung',wert:2}],folge:'Der Berater ist zufrieden. Die Verhandlung über den neuen Vertrag wird nicht billiger.'},
+      {text:'Standhaft bleiben',wirkung:[{art:'beraterBez',wert:-10},{art:'stimmung',wert:-2},{art:'glaub',wert:1}],folge:'Du lässt dich nicht erpressen. {spieler} ist verunsichert.'}],auto:1},
   // Hilfe in der Not (K17 §8, K17b, 22.11.). Neue Wirkung leihe: der beteiligte Spieler kommt per Leihe (leihe.js ausleihen, mit allen Prüfungen).
   {id:'hilfeInNot',titel:'Hilfe in der Not',bereich:'K17',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'hilfeInNot',sperrTage:120,
     texte:['Bei dir fallen so viele Spieler aus, dass man es bei {verein} mitbekommen hat. Sie bieten dir {spieler} bis zum Saisonende an.','Ein Anruf von {verein}: „Ihr habt doch gerade Personalnot. {spieler} könnte euch helfen, als Leihe.“'],

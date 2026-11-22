@@ -171,6 +171,11 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   if(h){const p=ev('PIX').get(h.spieler),grund=ev('kartenWirkung')({art:'leihe',wert:1},h,{titel:'Test'});geholt=(p.team===S.my&&!!p.leihe)||!!grund;} /* oder ausleihen nennt einen Grund */
   pruef(ohne===null&&(offen?!!h&&h.verein===b.id&&geholt!==false:h===null),'Hilfe in der Not: Verletzungskrise, befreundeter Verein, Leihe',`ohne Krise ${ohne}, Fenster ${offen}, Angebot ${h&&h.verein}, geholt ${geholt}`);}
 
+// K22c. Berater droht mit Wechsel (K22 §8): nur bei einem Spieler im letzten Vertragsjahr mit gierigem Berater
+{const {S,ev}=welt(),A=ev('AUSLOESER'),sq=ev('squad')(S.my),bv=ev('beraterVon');sq.forEach(p=>{p.ct=3;});const ohne=A.beraterDroht();
+  const g=sq.find(p=>(bv(p)||{}).prof==='gierig'),a=sq.find(p=>bv(p)&&bv(p).prof!=='gierig');if(g)g.ct=1;if(a)a.ct=1;const mit=A.beraterDroht();
+  pruef(ohne===null&&(g?!!mit&&mit.spieler===g.id:mit===null),'Berater droht: nur letztes Vertragsjahr und gieriger Berater',`ohne ${ohne}, gierig ${g?g.n:'keiner im Kader'}, Auslöser ${mit&&mit.spieler}`);}
+
 // U19e. Europapokal-Karten (K37 §8): Auswärtsspiel bei einem Auslandsverein in den nächsten 7 Tagen (kein Heimspiel, nicht später, nicht das Finale), Spiel 1 bis 7 Tage her,
 //       Wunder nach 0:3 im Hinspiel und 4:0 oder 3:0 mit Elfmeterschießen im Rückspiel, nicht nach nur einem Tor Rückstand und nicht beim Ausscheiden. euMeineSpiele ersetzt der Test.
 {const {S,W,ev}=welt(),A=ev('AUSLOESER'),AV=ev('AV0'),me=S.my,d=S.tag;W.ev('euMeineSpiele=function(){return S.testEu||[];}');
