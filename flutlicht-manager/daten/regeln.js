@@ -414,6 +414,7 @@ const REGELN={
       3:{sieg:{hg:0,ag:7,h:'FC Carl Zeiss Jena',a:'1. FC Saarbrücken',datum:'11.8.2010'},tore:{n:28,name:'Lars Gindorf',verein:'Alemannia Aachen',saison:'2025/26'},
         serie:{n:21,verein:'Karlsruher SC',zeit:'2017/18'}}},meldenAb:1},
     ehemalige:{ligaspiele:150,vereinSpiele:30,max:400},
+    euListe:10, // Europapokal in der Saisonstatistik (K37, K34c): so viele deutsche Torjäger
     jubilaeum:{spiele:100,jahre:10},
     speicher:{max:1e6,saisons:20,frueh:2.5}}, // Ziel (K34 §10): Statistik nach 20 Saisons unter 1 MB im Spielstand (geprüft in tests/statistik.js). frueh: In den ersten Saisons wächst sie schneller (gemessen 101, 176, 244, 303 KB, ab Saison 13 etwa 650 KB), kurze Läufe dürfen bis zum 2,5-Fachen des Schnitts je Saison (T2.5)
 

@@ -159,6 +159,8 @@ Seit U13 stehen die Werte in `daten/regeln.js` unter `statistik` (Vorlagen, Ehru
 15. Vergleich zweier Spieler über „Vergleichen“ auf der Spielerkarte statt einer eigenen Suche (§5.9).
 16. Lizenz `statistik` ab der ersten Stufe, ohne Automatik (§5.9).
 
+**Seit K34c (22.11., popolupo, ohne Testlauf):** In der Saisonstatistik steht unter den Ligalisten eine Karte mit den deutschen Torjägern im Europapokal (bis zu 10, nach Europapokaltoren dieser Saison).
+
 **Noch offen:** Turnierpokale (K11).
 
 ## Quellen

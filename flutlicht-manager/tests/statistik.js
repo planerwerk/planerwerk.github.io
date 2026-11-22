@@ -63,4 +63,9 @@ pruef(tore>0&&falsch===0&&vorl/tore>0.55&&vorl/tore<0.9,'Vorlagen: nie für den 
     delete W.S.stat;for(const p of W.ev('PIX').values()){delete p.sst;delete p.kar;}for(let i=0;i<20;i++){S=W.S;if(W.ev('heuteMeinSpiel()'))F.tagesSpiele(S.tag);F.weiter();}}catch(e){fehler=e.message;}
   pruef(!fehler&&W.S.stat&&W.S.stat.ab===W.S.season,'Alter Spielstand: ohne S.stat und Zeilen geht es ohne Fehler weiter, die Statistik beginnt mit der laufenden Saison',fehler||(W.S.stat?`ab ${W.S.stat.ab}`:'kein S.stat'));}
 
+// K34c. Europapokal in der Saisonstatistik (K37): Torjäger deutscher Vereine nach Europapokaltoren, ohne Tore keine Karte
+{const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREIN;const leer=F.stEuropaTorjaeger()==='';
+  const a=S.pl.find(p=>p.team===VEREIN),b=S.pl.find(p=>p.team>=0&&p.team<1000&&p.team!==VEREIN);a.eg=1;b.eg=3;const h=F.stEuropaTorjaeger(),ia=h.indexOf(a.n),ib=h.indexOf(b.n);
+  pruef(leer&&ia>0&&ib>0&&ib<ia,'Europapokal in der Saisonstatistik: deutsche Torjäger nach Toren',`leer ${leer}, Reihenfolge ${ib<ia}`);}
+
 console.log(probleme.length?`\n${probleme.length} Problem(e).`:'\nAlles in Ordnung.');process.exitCode=probleme.length?1:0;
