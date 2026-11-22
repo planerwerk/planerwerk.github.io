@@ -38,5 +38,11 @@ pruef(supercups.length===N-1&&supercups.every(x=>!x.verl&&(x.hg!==x.ag)===!x.pen
   // Echt seit 2009 etwa 80 % (13 von 16 bis 2024). Im Spiel sind der 16. der 1. Liga und der 3. der 2. Liga fast gleich stark (Konsistenzprüfung AI5, K32): nur Plausibilität
   pruef(erst/n>=0.3&&erst/n<=0.85,'Relegation: der Erstligist setzt sich in 30–85 % durch (echt etwa 80 %, Abstand der Kader: AI5)',pc(erst/n));
   pruef(elf>0&&verl>0,'Relegation: Verlängerung und Elfmeterschießen kommen vor, kein Los',`Verlängerung ${pc(verl/n)}, Elfmeterschießen ${pc(elf/n)}`);}
+// K13b. Supercup-Prämie: Sieger 3 Mio. €, Verlierer 2 Mio. €; Computer-Vereine aufs Konto, dein Verein als Buchung „Supercup“
+{const {W:W2,F:F2}=neueWelt();F2.buildWorld(SEED);const S2=W2.S;S2.my=6;S2.mgr='Test';F2.setTarget();const P=W2.ev('RWB').supercup.praemie,[a,b]=S2.teams.filter(t=>t.id!==6&&t.lg===1);
+  const ca=a.cash,cb=b.cash;F2.supercupPraemie({h:a.id,a:b.id},a.id);const ki=a.cash-ca===P.sieger&&b.cash-cb===P.verlierer;
+  const f0=S2.fin['Supercup']||0;F2.supercupPraemie({h:6,a:b.id},b.id);const mein=(S2.fin['Supercup']||0)-f0===P.verlierer;
+  pruef(ki&&mein,'Supercup-Prämie: Sieger und Verlierer, Computer-Vereine und dein Verein',`Computer ${ki}, dein Verein ${mein}`);}
+
 console.log(`\n${N} Saison(s) in ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

@@ -70,3 +70,7 @@ function zweiteRegeln(){const out=[];S.teams.forEach(t=>{if(t.zweite<0)return;co
   const lg=t.lg;t.lg=lg+1;out.push(t.id);const ret=S.teams.filter(x=>x.lg===lg+1&&x.lastLg===lg&&x.id!==t.id&&x.zweite<0).sort((a,b)=>(a.lastPos||99)-(b.lastPos||99))[0];
   if(ret){ret.lg=lg;if(ret.id===S.my)news(`${t.name} muss wegen der ersten Mannschaft absteigen. Dein Verein bleibt deshalb in der ${ligaName(lg)}!`,'good');}
   if(t.id===S.my)news(`Deine Mannschaft muss absteigen, weil die erste Mannschaft (${erste.name}) jetzt in derselben Liga spielt.`,'bad');});return out;}
+
+// Prämien des Supercups (K13 §12 Nr. 12, K13b): Sieger und Verlierer nach RWB.supercup.praemie, für deinen Verein als Buchung „Supercup“, für Computer-Vereine aufs Konto
+function supercupPraemie(r,w){const P=RWB.supercup.praemie;[r.h,r.a].forEach(id=>{const x=id===w?P.sieger:P.verlierer;if(!x||id==null||id<0||id>=1000)return;
+  if(id===S.my){money('Supercup',x);news(`Supercup-Prämie: ${fmt(x)}.`,'good');}else if(S.teams[id])S.teams[id].cash+=x;});}

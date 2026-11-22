@@ -367,6 +367,7 @@ lizenz:{
 125. **K16c Mitarbeiter abgeworben (22.11., popolupo, ohne Testlauf):** keine neue Funktion, eine Entscheidungskarte im Bereich `ereignisse`.
 126. **K27c Fan-Karten (22.11., popolupo, ohne Testlauf):** keine neue Funktion, zwei Entscheidungskarten im Bereich `ereignisse`. Der Protest kommt unter der Automatik der Preise nie (dort gilt der Richtpreis).
 127. **K21c Vertragskarten (22.11., popolupo, ohne Testlauf):** keine neue Funktion, zwei Entscheidungskarten im Bereich `ereignisse`. Die Gehaltserhöhung hält den Gehaltsrahmen ein.
+128. **K13b Supercup-Prämie (22.11., popolupo, ohne Testlauf):** keine neue Funktion, nur Geld für beide Teilnehmer.
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 

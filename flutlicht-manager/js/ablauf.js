@@ -53,7 +53,7 @@ function tagesSpieleAbschliessenLauf(out){const d=out.tag;S.gespielt=d;
       g.list.forEach(r=>kiPokalSpiel(r,e.r));} // Computer-Vereine: Rundenprämie und Zuschauer wie du statt Pauschale für alle (K23b)
     else if(g.art==='rel'||g.art==='rel2'){const r=g.list[0];S[g.art==='rel'?'relSp':'relSp2'][e.leg]={h:r.h,a:r.a,hg:r.hg,ag:r.ag,pen:r.pen||null};
       if(mg)news(`${spielName(e)}: ${tn(r.h)} – ${tn(r.a)} ${r.hg}:${r.ag}${r.pen?` (i.E. ${r.pen[0]}:${r.pen[1]})`:''}`,(r.h===S.my?r.hg>r.ag:r.ag>r.hg)?'good':(r.hg===r.ag?'':'bad'));}
-    else if(g.art==='supercup'){const r=g.list[0],w=winner(r);S.supercup.r={hg:r.hg,ag:r.ag,pen:r.pen||null,sieger:w};
+    else if(g.art==='supercup'){const r=g.list[0],w=winner(r);S.supercup.r={hg:r.hg,ag:r.ag,pen:r.pen||null,sieger:w};supercupPraemie(r,w);
       news(`Supercup: ${tn(r.h)} – ${tn(r.a)} ${r.hg}:${r.ag}${r.pen?` (i.E. ${r.pen[0]}:${r.pen[1]})`:''}. ${tn(w)} holt den Supercup.`,mg?(w===S.my?'good':'bad'):'');}
     else if(g.art==='eu')euNachSpielen(g,mg);} // Europapokal (K37, U19a)
   presseNachSpiel(out.mine);spielfeldrandNachSpiel(out.mine); // Interview am Spielfeldrand (K29f). Kampfansagen prüfen, Pressekonferenz nach Krise, Serie, Kantersieg (K29 §5.4, U17a)
