@@ -689,7 +689,8 @@ const REGELN={
     vereinslos:40,vertrag:[1,3],alter:[32,58],rente:68,verlaengern:0.7,abfindung:0.5,unschaerfe:3,genauNachWochen:6,
     // Ex-Spieler im Stab (K32 §3.3b, K16 §10, K32c, 22.11., GESCHÄTZT): ab Ligaspielen mit chance vereinsloser Mitarbeiter, Torhüter als Torwarttrainer, sonst nach Gewicht rollen;
     // Qualität basis + Ligaspiele/jeSpiele (+ehrung bei einer Ehrung) + streuung. Ziel K16 §10: 5 bis 15 je Saison in der ganzen Welt.
-    exSpieler:{ab:100,chance:0.25,basis:4,jeSpiele:60,ehrung:2,streuung:[-2,2],rollen:{co:5,jugend:3,standard:2},freiSaisons:5}}, // freiSaisons: so lange bleibt ein Ex-Spieler ohne Job in der Liste (DP5)
+    exSpieler:{ab:100,chance:0.25,basis:4,jeSpiele:60,ehrung:2,streuung:[-2,2],rollen:{co:5,jugend:3,standard:2},freiSaisons:5},
+    mitnehmen:{max:2,wochen:30}}, // mitnehmen (K16 §5, K16b, GESCHÄTZT): beim Jobwechsel bis zu max Mitarbeiter, die mindestens wochen bei dir waren. freiSaisons: so lange bleibt ein Ex-Spieler ohne Job in der Liste (DP5)
   // Disziplin und Sportgericht (K09 §11, Welle 2). Anteile und Kartenquoten der Foularten sind auf die echten Häufigkeiten kalibriert (K09 §10),
   // nicht die Rohwerte aus §3.1: sonst gäbe es doppelt so viele Rote Karten. art: Vergehen vor dem Sportgericht.
   disziplin:{

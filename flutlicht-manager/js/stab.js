@@ -53,5 +53,17 @@ function stabExSpieler(abgaenge){if(!S.stab)return 0;const E=RST.exSpieler;let n
       const x=stabNeu(r,E.basis+a.sp/E.jeSpiele+(p.ehj!=null?E.ehrung:0)+ri(E.streuung[0],E.streuung[1]),-1,2);x.n=p.n;x.age=p.age;x.ex=a.sp;x.exS=S.season;S.stab.push(x);n++;
       if(a.ver[S.my])news(`${p.n} beendet seine Karriere und steht als ${RST.rollen[r].name} zur Verfügung (${a.sp} Ligaspiele).`);});});
   if(n)stabGeaendert();return n;}
+// Trainerteam mitnehmen (K16 §5, §12 Nr. 4, K16b): beim Jobwechsel bis zu mitnehmen.max Mitarbeiter, die mindestens mitnehmen.wochen bei dir waren (wiv).
+// Wahl in S.mitnehmen (Liste der Nummern, im Fenster der Jobangebote), takeJob zieht sie um. Beim neuen Verein Gehalt nach seiner Liga; ist die Rolle voll, geht der Schwächste dort.
+const mitnehmbar=()=>(S.stab||[]).filter(x=>x.team===S.my&&(x.wiv||0)>=RST.mitnehmen.wochen);
+function mitnehmenWahl(id,an){const l=(S.mitnehmen||[]).filter(x=>x!==id);if(an&&l.length<RST.mitnehmen.max&&mitnehmbar().some(x=>x.id===id))l.push(id);S.mitnehmen=l;save();showFired();}
+function mitnehmenText(){const l=mitnehmbar();if(!l.length)return'';const w=S.mitnehmen||[];
+  return`<div class="card"><h3>Trainerteam mitnehmen</h3><p class="dim">Bis zu ${RST.mitnehmen.max} Mitarbeiter, die mindestens ${RST.mitnehmen.wochen} Wochen bei dir waren, kommen mit. Beim neuen Verein gilt das Gehalt seiner Liga.</p><div class="form">${l.map(x=>`<label class="pick"><input type="checkbox" ${w.includes(x.id)?'checked':''} onchange="mitnehmenWahl(${x.id},this.checked)"> ${esc(RST.rollen[x.r].name)} ${esc(x.n)}</label>`).join('')}</div></div>`;}
+// takeJob (saison.js), nach dem Wechsel von S.my: die gewählten Mitarbeiter des alten Vereins ziehen um. Rückgabe: Zahl
+function stabMitnehmen(altId){const w=S.mitnehmen||[];S.mitnehmen=null;if(!S.stab||!w.length)return 0;const lg=myT().lg;let n=0;
+  w.slice(0,RST.mitnehmen.max).forEach(id=>{const x=S.stab.find(y=>y.id===id&&y.team===altId&&(y.wiv||0)>=RST.mitnehmen.wochen);if(!x)return;
+    const da=S.stab.filter(y=>y.team===S.my&&y.r===x.r).sort((a,b)=>a.q-b.q);if(da.length>=RST.rollen[x.r].plaetze)da[0].team=-1;
+    x.team=S.my;x.sal=stabGehalt(x.r,x.q,lg);x.ct=Math.max(1,x.ct||1);n++;news(`${RST.rollen[x.r].name} ${x.n} kommt mit zu ${myT().name}.`,'good');});
+  if(n)stabGeaendert();return n;}
 // Gehälter des eigenen Stabs je Ligaspiel (wie die Spielergehälter)
 const stabGehaelter=tid=>(S.stab||[]).filter(x=>x.team===tid).reduce((a,x)=>a+x.sal,0);

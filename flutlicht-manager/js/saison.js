@@ -119,7 +119,7 @@ function kaderAuffuellen(t,base){const Z=RS,need=Z.kaderSoll;
 function mkJobs(){const J=RV.jobs,r=myT().rep-J.ansehenAbschlag+(ruf()-RV.ruf.start)*RV.ruf.jobsJePunkt, // Ruf als Trainer (K28 §5.4, U12a)
   weg=S.summary?S.summary.down3:[];const c=S.teams.filter(t=>t.id!==S.my&&aktiv(t)&&!weg.includes(t.id)).sort((a,b)=>Math.abs(a.rep-r)-Math.abs(b.rep-r)).slice(0,J.kandidaten);S.jobs=shuffle(c).slice(0,J.angebote).map(t=>t.id);}
 function takeJob(id){const old=myT().name,alt=myT();LAST=null;kartenJobwechsel();statStation(id);presseS().antritt=1;presseS().urteil=null;S.pk=null;S.ifr=null;trainerJobwechsel(alt,id); // Stationen des Trainers mit Grund (K34 §5.7, U13), solange S.fired und S.ruecktritt noch gelten
-versprechenJobwechsel();bauAbgeben();finanzenJobwechsel();marketingJobwechsel();S.kenntnis={};S.auftraege=[];S.my=id;finanzenStart();vertragNeu(id);myT().glaub=glaubNeu();
+versprechenJobwechsel();bauAbgeben();finanzenJobwechsel();marketingJobwechsel();S.kenntnis={};S.auftraege=[];S.my=id;finanzenStart();vertragNeu(id);myT().glaub=glaubNeu();stabMitnehmen(alt.id);
   if(aktiv(alt))mitStrom(strom('auffuellen',S.season,S.tag,alt.id),()=>kaderAuffuellen(alt,grundStaerke(alt.rep))); // dein alter Verein ist jetzt ein Computer-Verein und füllt seinen Kader sofort auf
   S.kapFrei={s:S.season,bis:S.tag+14};S.fired=0;S.ult=null;S.ruecktritt=0;S.trust=RV.neuerJob;S.offers=[];S.constr=null;S.loan=0;S.fin={};S.att=[0,0];setTarget();werbungNeuerVerein();if(!S.spons||S.sponsOffers===null){S.spons=null;sponsOffers();}werbungOffen();S.lineup=bestXI(id,myT().form);
   news(`Neuer Job: ${S.mgr} übernimmt ${myT().name} (vorher ${old}). Ziel: ${targetText(myT().lg,S.target)}.`,'good');save();closeOv();TAB='buero';render();if(S.phase==='end')showSummary();}

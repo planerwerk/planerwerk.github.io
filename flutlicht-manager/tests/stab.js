@@ -37,5 +37,13 @@ const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S,ev=W.ev;
   pruef(n1===2&&!!t1&&t1.r==='torwart'&&t1.team===-1&&t1.ex===300&&Math.abs(t1.q-qSoll)<=2&&!!f1&&Object.keys(E.rollen).includes(f1.r)&&n2===0&&n3>=30&&n3<=70,
     'Ex-Spieler im Stab: Torhüter als Torwarttrainer, Feldspieler als Co-, Jugend- oder Standardtrainer, nur ab 100 Ligaspielen, nicht zugleich Trainer, Anteil etwa ein Viertel',
     `${n1} neu (Torhüter ${t1&&t1.r} Q${t1&&t1.q}, Feld ${f1&&f1.r}), Trainer ${n2}, 200 Abgänger → ${n3}`);}
+// K16b. Trainerteam mitnehmen (K16 §5): nur wer mindestens 30 Wochen bei dir war, höchstens zwei; beim neuen Verein Gehalt nach seiner Liga, ist die Rolle voll, geht der Schwächste dort
+{const w=neueWelt();w.F.buildWorld(SEED);const V=w.W.S,ev=w.W.ev,M=ev('RST').mitnehmen,alt=V.teams.find(t=>ev('aktiv')(t)&&t.lg===2&&ev('stabVon')(t.id,'co').length);V.my=alt.id;
+  const co=ev('stabVon')(alt.id,'co')[0],ander=V.stab.find(x=>x.team===alt.id&&x!==co);co.wiv=M.wochen;if(ander)ander.wiv=M.wochen-1;
+  const liste=ev('mitnehmbar')().map(x=>x.id),nurCo=liste.includes(co.id)&&(!ander||!liste.includes(ander.id));
+  const neu=V.teams.find(t=>ev('aktiv')(t)&&t.lg===1&&ev('stabVon')(t.id,'co').length>=ev('RST').rollen.co.plaetze),schwach=ev('stabVon')(neu.id,'co').slice().sort((a,b)=>a.q-b.q)[0];
+  V.mitnehmen=[co.id].concat(ander?[ander.id]:[]);V.my=neu.id;const n=w.F.stabMitnehmen(alt.id);ev('stabGeaendert')();
+  const ok=n===1&&co.team===neu.id&&co.sal===ev('stabGehalt')('co',co.q,1)&&(!ander||ander.team===alt.id)&&schwach.team===-1&&ev('stabVon')(neu.id,'co').length<=ev('RST').rollen.co.plaetze&&V.mitnehmen===null;
+  pruef(nurCo&&ok,'Trainerteam mitnehmen: nur nach 30 Wochen, Gehalt der neuen Liga, volle Rolle gibt den Schwächsten ab',`wählbar ${liste.length}, mitgenommen ${n}, Co-Trainer jetzt bei ${co.team===neu.id?'neuem Verein':co.team}, Schwächster frei ${schwach.team===-1}`);}
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);
