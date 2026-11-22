@@ -490,7 +490,11 @@ const REGELN={
     medienprofil:{anteile:{diplomatisch:40,floskel:25,laut:20,psycho:15},anlaesse:['derby','spitze','pokal','relegation'],chance:{laut:0.6,psycho:0.5},
       gelassen:1,konterEigen:1,konterGegner:1,ignorieren:{laut:0,psycho:-1},offen:{laut:-1,psycho:-2}},
     // K29f (22.11., GESCHÄTZT): Interview am Spielfeldrand nach deinem Spiel, Wirkung der Antwortart × faktor, ohne Streuung, Abnutzung und Deckel
-    spielfeldrand:{faktor:0.5}},
+    spielfeldrand:{faktor:0.5},
+    // K29i (22.11., GESCHÄTZT): Interviews deiner Spieler, montags mit chance (eigener Strom), Mitteilsame mit gewicht öfter; Fettnäpfchen mit basis (+ mitteilsam, + unzufrieden unter Stimmung
+    // unzufriedenUnter, höchstens max). Maulkorb: keine Interviews, Mitteilsame je Woche Stimmung maulkorb. Nicht in der Automatik (Bereich presse).
+    interview:{chance:0.3,mitteilsam:['diva','partyloewe','hitzkopf'],gewicht:3,fettnapf:{basis:0.3,mitteilsam:0.3,unzufrieden:0.2,unzufriedenUnter:40,max:0.9},
+      schlecht:{klima:-2,zusammenhalt:-1,fans:-1},gut:{klima:1,fans:1},maulkorb:-1}},
 
   // Marketing (K25 §5.4, §11, K25a). trikot: Faktor auf den Fanartikel-Erlös [min, max] und Fanstimmung je Design, mutig: Chance auf Kult, sonst Spott.
   // kampagnen: Kosten in der 1. Liga, Dauer in Tagen (sommer: bis zum ersten Pflichtspiel), Wirkung. ligaFaktor: Kosten je Liga. abnutzung: 1., 2., 3. Mal in der Saison.

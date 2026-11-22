@@ -137,4 +137,11 @@ const gegner=w=>w.S.teams.find(x=>x.lg===w.t.lg&&x.id!==VEREIN).id;
   const kopf=ok&&/Sportgericht|Urteil/.test(F.pkSchlagzeile('kritikSchiri',pk)),sonst=ev('pkArtName')({art:'derby'},'kritikSchiri')===ev('PRESSE').arten.kritikSchiri.name;
   pruef(ok&&text&&name&&kopf&&sonst,'Kritik am Urteil: eigener Name, eigene Texte, eigene Schlagzeile nur nach dem Urteil',`Pressekonferenz ${ok}, Text ${text}, Name ${name}, Schlagzeile ${kopf}, sonst ${sonst}`);}
 
+// K29i. Interviews der Spieler und Maulkorb (K29 §6): in etwa 30 % der Wochen ein Interview (Medienklima ändert sich), mit Maulkorb keins, dafür Stimmung −1 bei Mitteilsamen; Automatik: nichts
+{const {S,F,ev}=welt(false),P=ev('presseS')(),sq=ev('squad')(VEREIN);let n=0;for(let k=0;k<40;k++){P.klima=50;S.tag=k*7;F.spielerInterviewWoche();if(P.klima!==50)n++;}
+  sq.forEach(p=>{ev('stimmung')(p);p.st=50;});const d=sq[0];d.eig=(ev('eigenschaften')(d)||[]).concat(['diva']);const r=sq.find(p=>p!==d&&!ev('mitteilsam')(p));
+  S.maulkorb=1;P.klima=50;F.spielerInterviewWoche();const korb=d.st===49&&(!r||r.st===50)&&P.klima===50;S.maulkorb=0;
+  const a=welt(true),Pa=a.ev('presseS')();let na=0;for(let k=0;k<20;k++){Pa.klima=50;a.S.tag=k*7;a.F.spielerInterviewWoche();if(Pa.klima!==50)na++;}
+  pruef(n>=4&&n<=22&&korb&&na===0,'Interviews der Spieler: etwa jede dritte Woche, Maulkorb kostet Mitteilsame Stimmung, Automatik ohne Interviews',`${n} von 40 Wochen, Maulkorb ${korb}, Automatik ${na}`);}
+
 console.log(probleme.length?`\n${probleme.length} Problem(e).`:'\nAlles in Ordnung.');process.exitCode=probleme.length?1:0;

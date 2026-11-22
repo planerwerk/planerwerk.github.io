@@ -167,11 +167,23 @@ function spielfeldrandKarte(){if(!ifrOffen())return'';const x=S.ifr,c=ifrKontext
   return`<div class="card"><h3>Interview am Spielfeldrand</h3><p><b>„${esc(frage)}“</b></p><div class="opts">${IFR_ARTEN.map((art,i)=>`<button class="opt" onclick="spielfeldrandAntwort('${art}')"${lzAus('presse')}><b>${PRESSE.arten[art].ton} ${esc(PRESSE.arten[art].name)}</b><span>„${esc(pkWahl(PRESSE.antworten[art].filter(z=>!z.includes('{spieler}')),c,x.tag+i))}“</span></button>`).join('')}</div>
     <p class="dim">Kurz und freiwillig, die Wirkung ist halb so groß wie in einer Pressekonferenz. Ohne Antwort passiert nichts. <button onclick="spielfeldrandAus(false)">Interviews ausschalten</button></p></div>`;}
 
+// ---------- Interviews deiner Spieler und Maulkorb (K29 §6, K29i) ----------
+// S.maulkorb = 1: keine Interviews, Mitteilsame verlieren je Woche Stimmung. Montags (presseWoche), nicht in der Automatik, eigener Strom je Saison und Tag.
+const mitteilsam=p=>RPK.interview.mitteilsam.some(k=>hatEig(p,k));
+function spielerInterviewWoche(){if(S.phase!=='play'||S.fired||autoB('presse'))return;const I=RPK.interview,t=myT(),sq=squad(S.my);if(!sq.length)return;
+  if(S.maulkorb){sq.filter(mitteilsam).forEach(p=>stimmungAendern(p,I.maulkorb));return;}
+  mitStrom(strom('interview',S.season,S.tag),()=>{if(R()>=I.chance)return;const g=sq.map(p=>mitteilsam(p)?I.gewicht:1),s=g.reduce((a,b)=>a+b,0);let x=R()*s,p=sq[sq.length-1];
+    for(let i=0;i<sq.length;i++){x-=g[i];if(x<0){p=sq[i];break;}}const F=I.fettnapf,c=Math.min(F.max,F.basis+(mitteilsam(p)?F.mitteilsam:0)+(stimmung(p)<F.unzufriedenUnter?F.unzufrieden:0));
+    const schlecht=R()<c,W=schlecht?I.schlecht:I.gut,l=PRESSE.spielerInterview[schlecht?'schlecht':'gut'],txt=pkText(l[Math.floor(R()*l.length)],{spieler:p.n,verein:t.name}),P=presseS();
+    if(W.klima)P.klima=fanZahl(clamp(P.klima+W.klima,0,100));if(W.fans)fanAnlass(t,'fanU',W.fans);if(W.zusammenhalt)zusammenhaltAendern(t,W.zusammenhalt);news(`Interview: ${txt}`,schlecht?'bad':'good');});}
+function maulkorbSetzen(an){if(!darf('presse'))return;S.maulkorb=an?1:0;news(an?'Maulkorb: Deine Spieler geben keine Interviews mehr.':'Maulkorb aufgehoben: Deine Spieler dürfen wieder Interviews geben.');save();render();}
+
 // ---------- Anzeige ----------
 // Medienpolitik im Medien-Kasten (K29b): aktuelle Art, Knöpfe zum Wechseln (Bereich presse)
 function medienpolitikText(){const M=REGELN.medienpolitik,m=medienpolitik(),aus=lzAus('presse');
   return`<p class="dim">Medienpolitik: <b>${esc(m.name)}</b> (${esc(m.text)}). Ein schlechtes Medienklima bringt mehr Gerüchte über deinen Verein, öfter erfundene.</p>
     <div class="row">${Object.keys(M.arten).map(k=>`<button class="${k===m.k?'go':''}" onclick="medienpolitikSetzen('${k}')"${aus}>${esc(M.arten[k].name)}</button>`).join('')}</div>
+    <p class="dim">${S.maulkorb?'Maulkorb: Deine Spieler geben keine Interviews, Diven, Partylöwen und Hitzköpfe sind darüber nicht glücklich.':'Deine Spieler geben ab und zu Interviews, mitteilsame öfter und mit mehr Fettnäpfchen.'} <button onclick="maulkorbSetzen(${S.maulkorb?0:1})"${aus}>${S.maulkorb?'Maulkorb aufheben':'Maulkorb verhängen'}</button></p>
     <p class="dim">Bei schlechtem Klima sitzen in der Pressekonferenz öfter Boulevard und Portal, unter ${RPK.klimaFragen.bohrenUnter} gibt es eine Frage mehr.${S.einst&&S.einst.ifrAus?' <button onclick="spielfeldrandAus(true)">Interviews am Spielfeldrand einschalten</button>':''}</p>${exklusivText()}`;}
 // Exklusivinterview im Medien-Kasten (K29c): Beziehung je Medium, Knöpfe, solange frei
 function exklusivText(){const E=REGELN.exklusiv,aus=lzAus('presse'),l=Object.keys(PRESSE.medien),f=x=>`${x>0?'+':''}${x}`;

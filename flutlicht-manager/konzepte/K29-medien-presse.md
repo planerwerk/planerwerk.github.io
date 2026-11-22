@@ -268,7 +268,7 @@ Das ist der Maßstab für die Verbindung zu K09.
 - **Verblassen:** Montags rückt jede Beziehung um 0,5 Richtung 0. Ein Exklusivinterview (+10) ist nach 20 Wochen vergessen, wer alle vier Wochen eines gibt, hält das Medium oben.
 - **Anzeige:** Bei jeder Frage steht die Beziehung zum Medium des Fragers, im Medien-Kasten der Hinweis auf Klima und Frager.
 - **Zufall:** Der Wurf für den Journalisten bleibt im Strom `presse`, die zusätzliche Frage zieht dort zwei Würfe mehr. Der Grundstrom ist unberührt.
-- **Noch nicht:** Computer-Trainer mit Medienprofil und Provokationen vor Topspielen (§7, seit K29e), Maulkorb und Interviews der Spieler, Interview am Spielfeldrand (seit K29f), Pressekonferenz nach Urteilen des Sportgerichts (seit K29g).
+- **Noch nicht:** Computer-Trainer mit Medienprofil und Provokationen vor Topspielen (§7, seit K29e), Maulkorb und Interviews der Spieler, Interview am Spielfeldrand (seit K29f), Pressekonferenz nach Urteilen des Sportgerichts (seit K29g). Maulkorb und Interviews der Spieler seit K29i.
 
 **Umsetzung K29e (22.11.2026, popolupo, ohne Testlauf): Medienprofil der Computer-Trainer und Sticheleien vor Topspielen (§7, Muster 8)**
 - **Medienprofil:** Jeder Computer-Trainer hat ein festes Profil aus seiner Nummer, ohne Zufall.
@@ -409,3 +409,10 @@ Das ist der Maßstab für die Verbindung zu K09.
 **Korrektur nach Prüfung DR (22.11.2026, popolupo, ohne Testlauf): Pressekonferenzen nach dem Spiel (seit U17a)**
 - **Fehler:** Kantersieg, Krise, Höhenflug und Tabellenführung öffnen ihre Pressekonferenz nach dem Spiel. Nach dem Abpfiff geht es sofort zum nächsten Tag weiter, und dort hat der Co-Trainer sie gleich übernommen. Du hast sie nie gesehen, und jede kostete 2 Punkte Medienklima.
 - **Jetzt:** Diese Anlässe finden am Tag nach dem Spiel statt. Dort hält „Tag beenden“ an (Halt „Pressekonferenz“), am Tag darauf übernimmt der Co-Trainer wie bei allen anderen.
+
+**Umsetzung K29i (22.11.2026, popolupo, ohne Testlauf): Interviews der Spieler und Maulkorb (§6)**
+- **Interviews:** Montags gibt mit 30 % einer deiner Spieler ein Interview (eigener Strom je Saison und Tag). Mitteilsame Spieler (Diva, Partylöwe, Hitzkopf) werden dreimal so oft gewählt.
+- **Fettnäpfchen:** Chance 30 %, +30 % bei Mitteilsamen, +20 % bei Stimmung unter 40, höchstens 90 %. Dann Medienklima −2, Zusammenhalt −1, Fans −1. Sonst Medienklima +1, Fans +1. Eigene Texte, Meldung im Posteingang.
+- **Maulkorb** im Medien-Kasten: keine Interviews, dafür verlieren Mitteilsame jede Woche 1 Punkt Stimmung.
+- **Automatik:** In der Automatik (Bereich `presse`) gibt es weder Interviews noch Maulkorb, der Gleichschritt bleibt gleich.
+- **Noch nicht:** Interviews der Spieler anderer Vereine, Spieler, die trotz Maulkorb reden.
