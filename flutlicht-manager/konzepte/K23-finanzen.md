@@ -160,7 +160,8 @@ Gebaut:
 - **Über 100 %** sinkt das Vertrauen des Vorstands (Baustein Finanzen −5).
 - **Über 110 %** gibt der Vorstand keine neuen Gehälter frei. Das gilt für dich (Angebot) und für Computer-Vereine (kein Kauf im Fenster), damit beide Läufe im Gleichschritt-Test gleich entscheiden.
 - **Transferbudget** = Kontostand über einer Reserve von 10 % der erwarteten Einnahmen. Vorerst nur Anzeige, das Budget der Computer-Vereine bleibt wie bisher ein Anteil des Kontos (K31).
-- **Noch nicht:** Zielgespräch (K28 §5.2), sparsame Profile mit mehr Reserve, Lizenzprüfung für Computer-Vereine.
+- **Seit U12e (22.11.):** Das Zielgespräch (K28 §5.8) verschiebt dein Transferbudget (+10 % je Platz hochgepokert, −15 % je Platz tiefgestapelt), Kauf darüber kostet Vertrauen.
+- **Noch nicht:** sparsame Profile mit mehr Reserve, Lizenzprüfung für Computer-Vereine.
 
 ### 5.6 Größenordnungen
 

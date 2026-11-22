@@ -1484,3 +1484,17 @@ Ausführlich in K23 §5.6b. Gebaut ohne die Messung aus K23 §5.6a, mit einer ei
 | CP5 | **Alte Spielstände:** Gehälter einmal auf die neue Kurve umgerechnet (`k23cUmstellen` beim Laden, Import und Live-Update, Merker `S.k23c`). Kontostände bleiben, die TV-Wertung startet aus Liga und Ansehen. | ✅ |
 | CP6 | **Tests angepasst:** `tests/werbung.js` Nr. 1 (drei Flächen zusammen 63 % des Grundbetrags), `tests/finanzen.js` Nr. 11 (mit Verwaltung) und neu Nr. 14 bis 18, `tests/transfers.js` (reich ab `finanzlage.reichAb`), `tests/europapokal.js` Nr. 6 (Startgeld mit dem Faktor aus den Regeln), `tests/finanzmodell.js` (Werbung und Verwaltung wie im Spiel). | ✅ ungetestet |
 | CP7 | **Noch nicht umgestellt:** feste Beträge der Karten, Kampagnen (K25), Fanartikel, Logen, Stab, übrige Bauten. Fanartikel der Computer-Vereine fehlen ganz. | offen, nach dem Testlauf |
+
+---
+
+## CQ. Nachtrag zu U12e: Zielgespräch (22. November 2026, popolupo, ohne Testlauf)
+
+Ausführlich in K28 §5.8. Zweig `mitarbeit/popolupo-u12e-zielgespraech`, auf K23c.
+
+| # | Befund | Status |
+|---|---|---|
+| CQ1 | **Zeitpunkt:** `zielgespraechStart` hängt am Ende von `setTarget` (Saisonstart, Jobwechsel, neues Spiel). Offen, solange die Zahl deiner gespielten Ligaspiele gleich der beim Setzen ist. Ein Jobwechsel mitten in der Saison öffnet ein neues Gespräch beim neuen Verein. | ✅ |
+| CQ2 | **Gleichschritt (K36):** Gewürfelt wird nur beim Tiefstapeln (Strom `zielgespraech`), also nur nach deinem Klick. Ohne Eingriff bleibt alles wie vorher, auch das Transferbudget (Faktor 1). | ✅ |
+| CQ3 | **Transferbudget weich:** `zgUeberBudget` steht in `offer` direkt vor der Zahlung der Ablöse. Käufe über die Automatik (Computer-Regeln) laufen nicht durch `offer` und kosten nichts. Vorher konnte man das ganze Konto ausgeben, das geht weiter, nur mit Vertrauen. | ⚠️ im Spiel ansehen, ob die Meldung zu oft kommt (das Budget ist das Konto über 10 % der erwarteten Einnahmen) |
+| CQ4 | **Ruf:** `rufSaison` rechnet „übertroffen“ nach dem Tiefstapeln vom Vorschlag aus, „deutlich verfehlt“ weiter vom verhandelten Ziel. Ein hochgepokertes, erreichtes Ziel bringt den Zuschlag dazu. Alte Spielstände ohne `S.zg`: alles wie bisher. | ✅ |
+| CQ5 | **Vorbereitungsliste (K12b):** Der Punkt „Saisonziel“ heißt jetzt „Saisonziel und Zielgespräch“. Er bleibt ohne Entscheidung „Standard“ (nicht „offen“), damit die Erinnerung vor „Tag beenden“ nicht öfter kommt als bisher. | ✅ |

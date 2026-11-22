@@ -80,6 +80,41 @@ function nebenzielName(z){return z.k==='europa'?`Europapokal: mindestens ${EU_RU
 function nebenzieleText(){const l=meineZiele();if(!l.length)return'';const W={erfuellt:'erfüllt',verfehlt:'verfehlt',gefaehrdet:'gefährdet',offen:'offen'};
   return`<p class="dim">Nebenziele: ${l.map(z=>`${esc(nebenzielName(z))}${z.k==='jugend'?` (bisher ${jugendEinsaetze()})`:''}: ${W[nebenzielStand(z,false)]}`).join(' · ')}</p>`;}
 
+// ---------- Zielgespräch (K28 §5.2, U12e, Bereich zielgespraech) ----------
+// S.zg = {s Saison, tid Verein, vorschlag (Platz des Vorstands), sp (eigene Ligaspiele beim Setzen), stufe (Plätze: negativ hochgepokert, positiv tiefgestapelt), fertig, ab (1 = abgelehnt)}.
+// Gesetzt mit dem Saisonziel (setTarget). Offen bis zu deinem nächsten Ligaspiel. Ohne Entscheidung gilt der Vorschlag (keine Automatik nötig, kein Zufall).
+function zielgespraechStart(){S.zg={s:S.season,tid:S.my,vorschlag:S.target,sp:meineSpieltage(),stufe:0};}
+const meinZg=()=>S.zg&&S.zg.s===S.season&&S.zg.tid===S.my?S.zg:null;
+const zgOffen=()=>{const z=meinZg();return!!z&&!z.fertig&&!S.fired&&S.phase==='play'&&meineSpieltage()===z.sp;};
+// Faktor auf das Transferbudget deines Vereins (finanzen.js transferBudget)
+const zgBudgetFaktor=()=>{const z=meinZg(),Z=RV.zielgespraech;if(!z||!z.stufe)return 1;return z.stufe<0?1-Z.budgetHoch*z.stufe:Math.max(0,1-Z.budgetTief*z.stufe);};
+// Chance, dass der Vorstand beim Tiefstapeln um n Plätze zusagt
+function zgTiefChance(n){const Z=RV.zielgespraech.tief,e=praesident(myT()).ehrgeiz;
+  return clamp(Z.basis-Z.weiterer*(n-1)+Z.jeVertrauen*(S.trust-50)+Z.jeRuf*(ruf()-RV.ruf.start)+(e>=RV.nebenziele.ehrgeizigAb?-Z.ehrgeiz:e<=Z.ruhigBis?Z.ehrgeiz:0),Z.grenzen[0],Z.grenzen[1]);}
+const zgZielGrenze=(lg,z)=>clamp(z,1,RV.ziel.schlechtester[lg]||z);
+// d = 0: Vorschlag annehmen, d < 0: hochpokern um −d Plätze, d > 0: tiefstapeln um d Plätze
+function zielVerhandeln(d){if(!darf('zielgespraech')||!zgOffen())return;const z=S.zg,Z=RV.zielgespraech,t=myT(),n=Math.abs(d);if(n>Z.maxPlaetze)return;
+  if(!d){z.fertig=1;news(`Zielgespräch: Du nimmst das Ziel des Vorstands an (${targetText(t.lg,S.target)}).`,'');save();render();return;}
+  const neu=zgZielGrenze(t.lg,S.target+d);if(neu===S.target){toast('Weiter geht es in diese Richtung nicht.');return;}
+  if(d<0){z.stufe=neu-z.vorschlag;S.target=neu;z.fertig=1;news(`Zielgespräch: Du versprichst mehr (${targetText(t.lg,neu)}). Der Vorstand gibt ${Math.round((zgBudgetFaktor()-1)*100)} % mehr Transferbudget frei und erwartet, dass du lieferst.`,'good');}
+  else if(mitStrom(strom('zielgespraech',S.season,S.my),()=>R())<zgTiefChance(n)){z.stufe=neu-z.vorschlag;S.target=neu;z.fertig=1;
+    news(`Zielgespräch: Der Vorstand lässt sich herunterhandeln (${targetText(t.lg,neu)}). Dafür gibt er ${Math.round((1-zgBudgetFaktor())*100)} % weniger Transferbudget frei.`,'');}
+  else{z.fertig=1;z.ab=1;S.trust=clamp(S.trust+Z.abgelehnt,0,100);news(`Zielgespräch: Der Vorstand lässt nicht mit sich handeln. Das Ziel bleibt (${targetText(t.lg,S.target)}), die Stimmung ist etwas abgekühlt.`,'bad');}
+  save();render();}
+// Kauf über dem Transferbudget (aktionen.js, vor der Zahlung): der Vorstand ist verstimmt, Vertrauen je angefangene 10 % der Ablöse über dem Budget
+function zgUeberBudget(fee){const Z=RV.zielgespraech,b=transferBudget(myT());if(!(fee>b))return;const k=Math.ceil((fee-b)/fee*10);
+  S.trust=clamp(S.trust+Math.max(Z.ueberMax,Z.ueberBudget*k),0,100);news(`Der Vorstand hatte für Ablösen nur ${fmt(b)} freigegeben. Dass du ${fmt(fee)} zahlst, gefällt ihm nicht.`,'bad');}
+// Ruf zum Saisonende (rufSaison): Nach dem Tiefstapeln zählt „übertroffen“ vom Vorschlag aus, ein hochgepokertes und erreichtes Ziel bringt einen Zuschlag
+const zgRufSoll=soll=>{const z=meinZg();return z&&z.stufe>0?Math.min(soll,z.vorschlag):soll;};
+const zgRufZuschlag=pos=>{const z=meinZg();return z&&z.stufe<0&&pos<=S.target?RV.zielgespraech.rufHoch*-z.stufe:0;};
+// Karte im Büro, solange das Gespräch offen ist
+function zielgespraechKarte(){if(!zgOffen())return'';const t=myT(),Z=RV.zielgespraech,aus=lzAus('zielgespraech'),b=(d,txt)=>{const neu=zgZielGrenze(t.lg,S.target+d);return neu===S.target?'':`<button onclick="zielVerhandeln(${d})"${aus}>${txt}</button>`;};
+  const hoch=[...Array(Z.maxPlaetze)].map((_,i)=>b(-(i+1),`Hochpokern: ${targetText(t.lg,zgZielGrenze(t.lg,S.target-(i+1)))} (Budget +${Math.round(Z.budgetHoch*(i+1)*100)} %)`)).join('');
+  const tief=[...Array(Z.maxPlaetze)].map((_,i)=>b(i+1,`Tiefstapeln: ${targetText(t.lg,zgZielGrenze(t.lg,S.target+i+1))} (Zusage etwa ${Math.round(zgTiefChance(i+1)*100)} %, Budget −${Math.round(Z.budgetTief*(i+1)*100)} %)`)).join('');
+  return`<div class="card"><h3>Zielgespräch mit dem Vorstand</h3><p>Der Vorstand schlägt vor: <b>${targetText(t.lg,S.target)}</b>. Bis zu deinem nächsten Ligaspiel kannst du verhandeln, danach gilt der Vorschlag.</p>
+    <p class="dim">Hochpokern sagt der Vorstand immer zu: mehr Transferbudget und mehr Ruf, wenn du lieferst, aber das Ziel gilt. Tiefstapeln nimmt Druck, kostet Budget und bringt weniger Ruf. Lehnt der Vorstand ab, kühlt das Vertrauen um ${-Z.abgelehnt} ab. Eine Entscheidung je Saison.</p>
+    <div class="row"><button class="go" onclick="zielVerhandeln(0)"${aus}>Ziel annehmen</button>${hoch}${tief}</div>${lzHinweis('zielgespraech')}</div>`;}
+
 // ---------- Rücktritt (K28 §5.3, §5.7, U12b, Bereich ruecktritt) ----------
 function ruecktrittFragen(){if(!darf('ruecktritt'))return;if(S.fired||S.phase!=='play'){toast('Zurücktreten geht nur während der Saison.');return;}
   ov(`<h2>Zurücktreten?</h2><p>Du verlässt ${esc(myT().name)} sofort. Dein Ruf als Trainer sinkt um ${-RV.ruf.ruecktritt} (bei einer Entlassung wären es ${-RV.ruf.entlassung}). Danach bekommst du Jobangebote nach deinem Ruf.</p>
@@ -91,8 +126,8 @@ function ruecktritt(){if(!darf('ruecktritt')||S.fired||S.phase!=='play')return;S
 const ruf=()=>S.ruf==null?RV.ruf.start:S.ruf;
 function rufAendern(d){S.ruf=Math.round(clamp(ruf()+d,0,100)*10)/10;}
 // Saisonende (seasonEndLauf, vor einer Entlassung): erst vergessen, dann Ziel übertroffen oder deutlich verfehlt, Titel, Auf- und Abstieg. sm: Saisonbilanz.
-function rufSaison(sm){const F=RV.ruf,me=S.my;let d=(F.start-ruf())*F.vergessen;
-  if(sm.pos<sm.target)d+=(sm.target-sm.pos)*F.jePlatzUeber;else if(sm.pos>sm.target+RV.saisonWeitAb)d+=F.verfehlt;
+function rufSaison(sm){const F=RV.ruf,me=S.my,soll=zgRufSoll(sm.target);let d=(F.start-ruf())*F.vergessen+zgRufZuschlag(sm.pos); // Zielgespräch (U12e)
+  if(sm.pos<soll)d+=(soll-sm.pos)*F.jePlatzUeber;else if(sm.pos>sm.target+RV.saisonWeitAb)d+=F.verfehlt;
   if(sm.champ===me)d+=F.meister;if(sm.cup===me)d+=F.pokal;
   if(sm.up.includes(me)||sm.up3.includes(me)||(sm.lg===2&&sm.rw===me)||(sm.lg===3&&sm.rw2===me))d+=F.aufstieg;
   if(sm.down.includes(me)||sm.down2.includes(me)||sm.down3.includes(me)||(sm.lg===1&&sm.rel[0]===me&&sm.rw!==me)||(sm.lg===2&&sm.rel2[0]===me&&sm.rw2!==me))d+=F.abstieg;

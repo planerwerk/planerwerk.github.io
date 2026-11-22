@@ -99,7 +99,8 @@ const gehaltsSumme=t=>squad(t.id).reduce((s,p)=>s+p.sal,0)+stabGehaelter(t.id);
 const rahmenAnteil=t=>gehaltsSumme(t)/Math.max(1,gehaltsRahmen(t));
 // Darf ein Verein ein neues Gehalt dazunehmen? Gleiche Regel für dich (offer, Karte „verpflichten“) und Computer-Vereine (kiMarkt): mit dem neuen Gehalt höchstens sperreAb × Rahmen
 const rahmenErlaubt=(t,neu)=>gehaltsSumme(t)+(neu||0)<=gehaltsRahmen(t)*RFP.budget.sperreAb;
-const transferBudget=t=>Math.max(0,t.cash-Math.round(erwarteteEinnahmen(t)*RFP.budget.reserve));
+// Bei deinem Verein verschoben durch das Zielgespräch (K28 §5.2, U12e): hochgepokert mehr, tiefgestapelt weniger
+const transferBudget=t=>Math.max(0,Math.round((t.cash-Math.round(erwarteteEinnahmen(t)*RFP.budget.reserve))*(t.id===S.my?zgBudgetFaktor():1)));
 
 // ---------- K23e (§5.5d): Kredit mit Laufzeit, Raten aus Ablösen, Gehaltsverzicht ----------
 // Kredit in Tranchen: S.kredite = [{rest, rate, bis}], S.loan bleibt die Summe der Reste (Zinsen und Anzeige wie bisher).

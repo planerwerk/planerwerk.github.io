@@ -38,7 +38,7 @@ function vorbereitungPunkte(){const t=myT(),P=[],Z=(k,name,zust,text,tab,b)=>P.p
   const soll=RS.kaderSoll,sq=squad(S.my),fehlt=Object.keys(soll).map(pos=>[pos,soll[pos]-sq.filter(p=>p.pos===pos).length]).filter(x=>x[1]>0);
   Z('kader','Kaderplanung',!fehlt.length?'ja':a('transfers')?'auto':'offen',fehlt.length?`Es fehlen ${fehlt.map(([pos,n])=>`${n} ${pos}`).join(', ')} (Sollstärke ${Object.entries(soll).map(([pos,n])=>`${n} ${pos}`).join(', ')}).`:`${sq.length} Spieler, alle Positionen besetzt.`,'transfer','transfers');
   const kap=PIX.get(t.kap);Z('kapitaen','Kapitän',kap&&kap.team===S.my?(t.kapAuto?'auto':'ja'):a('kapitaen')?'auto':'offen',kap&&kap.team===S.my?`${kap.n}${t.kapAuto?' (vom Co-Trainer bestimmt)':''}.`:'Noch kein Kapitän.','kabine','kapitaen');
-  Z('ziel','Saisonziel','ja',`${targetText(t.lg,S.target)}. Das Zielgespräch mit dem Vorstand kommt später.`,'buero',null);
+  {const z=meinZg();Z('ziel','Saisonziel und Zielgespräch',z&&z.fertig?'ja':'auto',`${targetText(t.lg,S.target)}. ${zgOffen()?'Das Zielgespräch läuft (Karte oben im Büro). Ohne Entscheidung gilt der Vorschlag.':z&&z.stufe?`Verhandelt, der Vorschlag war: ${targetText(t.lg,z.vorschlag)}.`:'Vorschlag des Vorstands.'}`,'buero','zielgespraech');} // K28 §5.2, U12e
   const et=eroeffnungTag(S.my),f=S.stat&&S.stat.foto&&S.stat.foto.find(x=>x.s===S.season&&x.tid===S.my);
   Z('eroeffnung','Saisoneröffnung und Mannschaftsfoto',f?'ja':'auto',f?'Erledigt, das Foto steht in der Statistik.':et!=null?`Am ${datumMittel(et)}, läuft von selbst.`:'Termin steht noch nicht fest.','buero',null);
   return P;}

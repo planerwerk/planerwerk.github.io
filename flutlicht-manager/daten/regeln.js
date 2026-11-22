@@ -836,6 +836,13 @@ const REGELN={
     // Baustein „Ziele“ im Vertrauen (montags): erfuellt, verfehlt, gefaehrdet je Nebenziel, begrenzt auf baustein. Saisonende: saisonErfuellt oder saisonVerfehlt je Nebenziel.
     nebenziele:{anzahl:[1,2],ehrgeizigAb:14,pokalRunde:{1:2,2:1,3:1},jugendBis:21,jugendEinsaetze:25,profil:{ausbildung:'jugend',sparsam:'finanzen',ehrgeizig:'pokal'},
       erfuellt:5,verfehlt:-5,gefaehrdet:-3,baustein:[-10,10],saisonErfuellt:5,saisonVerfehlt:-5},
+    // Zielgespräch (K28 §5.2, U12e, 22.11., ALLE WERTE GESCHÄTZT): offen ab dem Setzen des Saisonziels bis zu deinem nächsten Ligaspiel, eine Entscheidung je Saison.
+    // Hochpokern um 1 bis maxPlaetze Plätze: immer angenommen, Transferbudget +budgetHoch je Platz, zum Saisonende Ruf +rufHoch je Platz, wenn das Ziel erreicht ist.
+    // Tiefstapeln: Zusage mit tief.basis − tief.weiterer × (Plätze − 1) + jeVertrauen × (Vertrauen − 50) + jeRuf × (Ruf − Startruf), bei einem ehrgeizigen Präsidenten
+    // (ab nebenziele.ehrgeizigAb) − ehrgeiz, bei einem ruhigen (bis ruhigBis) + ehrgeiz, begrenzt auf grenzen (eigener Strom). Zugesagt: Transferbudget −budgetTief je Platz,
+    // der Ruf rechnet „übertroffen“ weiter vom Vorschlag aus (kleinere Prämie). Abgelehnt: Vertrauen abgelehnt, das Ziel bleibt.
+    // ueberBudget: Kauf über dem Transferbudget kostet Vertrauen je angefangene 10 % der Ablöse über dem Budget, höchstens ueberMax.
+    zielgespraech:{maxPlaetze:2,budgetHoch:0.1,budgetTief:0.15,rufHoch:2,tief:{basis:0.6,weiterer:0.2,jeVertrauen:0.005,jeRuf:0.005,ehrgeiz:0.15,ruhigBis:7,grenzen:[0.05,0.95]},abgelehnt:-3,ueberBudget:-1,ueberMax:-10},
     entlassenUnter:12,schonfristSpieltage:6, // entlassen erst nach mehr als so vielen eigenen Ligaspieltagen. Die Schwierigkeit ersetzt beide Werte.
     pokalAus:-6,pokalWeiter:1.5,pokalSieg:10,
     saisonErreicht:20,saisonWeitAb:3,saisonWeit:-25,saisonVerfehlt:-8,entlassenSaisonUnter:15,
@@ -881,6 +888,7 @@ const REGELN={
       verletzte:{ab:1,name:'Verletztenliste',tab:'kader'},
       pokal:{ab:1,name:'Pokal, Relegation, Supercup',tab:'pokal'},
       ruecktritt:{ab:1,name:'Rücktritt',tab:'buero'}, // K28 §5.7, U12b
+      zielgespraech:{ab:1,name:'Zielgespräch mit dem Vorstand',tab:'buero'}, // K28 §5.2, U12e: ohne Automatik, ohne Entscheidung gilt der Vorschlag
       ereignisse:{ab:1,name:'Entscheidungen in Ereigniskarten',tab:'buero',auto:1,wer:'der Co-Trainer',tut:'wählt bei jeder Karte die vorsichtige Voreinstellung'}, // K30 §5.5, U12d
       statistik:{ab:1,name:'Statistik und Historie',tab:'statistik'}, // K34 §5.9, U13 (steuert nichts, darum ohne Automatik)
       stimmung:{ab:1,name:'Stimmung und Kabine ansehen',tab:'kabine'},

@@ -789,7 +789,17 @@ Im Einzelnen in K28 §5.7 und §12 Nr. 13 bis 17.
 
 - **Nebenziele:** Der Vorstand setzt eins, ein ehrgeiziger Präsident zwei. Zur Wahl stehen Pokalrunde, Einsätze für Spieler bis 21 und eine Saison ohne Verlust. Das Profil deines Vereins bestimmt, welches zuerst kommt. Sie wirken auf das Vertrauen, während der Saison und zum Saisonende.
 - **Rücktritt:** jederzeit während der Saison, Ruf −5 statt −8 bei einer Entlassung, danach Jobangebote. Grundlizenz.
-- **Zielgespräch** mit Tiefstapeln und Hochpokern wartet auf Budgets und Prämien (K23).
+- **Zielgespräch** mit Tiefstapeln und Hochpokern wartet auf Budgets und Prämien (K23). Gebaut am 22.11. in U12e (nächster Abschnitt).
+
+## K28 Vorstand, U12e Zielgespräch (22.11.), vorläufig von popolupo, gebaut ohne Testlauf
+
+Im Einzelnen in K28 §5.8 und §12 Nr. 18 bis 22.
+
+- **Ablauf:** Vorschlag mit dem Saisonziel, verhandeln bis zum nächsten eigenen Ligaspiel, eine Entscheidung je Saison, ohne Entscheidung gilt der Vorschlag.
+- **Hochpokern** (1 bis 2 Plätze): immer angenommen, Transferbudget +10 % je Platz, Ruf +2 je Platz, wenn das Ziel erreicht ist.
+- **Tiefstapeln:** Zusage nach Vertrauen, Ruf, Plätzen und Ehrgeiz des Präsidenten, dann Budget −15 % je Platz und weniger Ruf. Abgelehnt: Vertrauen −3.
+- **Transferbudget als weiche Grenze:** darüber kaufen kostet Vertrauen, sperrt aber nicht.
+- **Prämie als Ruf,** weil es kein Trainergehalt gibt. Grundlizenz, ohne Automatik.
 
 ## K17 Beziehungen, U12c (20.11.), vorläufig von mir, gebaut ohne Testlauf
 

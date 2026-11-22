@@ -1,6 +1,6 @@
 # K28 – Vorstand, Ziele, Karriere
 
-Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12. Teilweise gebaut: Computer-Vereine in U11d2 (§7), Vertrauen, Ultimatum und Ruf für dich in U12a (§5.6), Nebenziele und Rücktritt in U12b (§5.7), beide 20.11., ohne Testlauf.
+Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12. Teilweise gebaut: Computer-Vereine in U11d2 (§7), Vertrauen, Ultimatum und Ruf für dich in U12a (§5.6), Nebenziele und Rücktritt in U12b (§5.7), beide 20.11., Zielgespräch in U12e (§5.8, 22.11.), alle ohne Testlauf.
 Hängt ab von: K02 (Geduld je Stufe), K15 (Gespräche) · Wird gebraucht von: K12b, K14, K19, K23, K29.
 
 ## 1. Ziel und Spielgefühl
@@ -171,6 +171,21 @@ Das **Zielgespräch** mit Tiefstapeln und Hochpokern (§5.2) wartet: Seine Folge
 - Das Fenster heißt dann „Zurückgetreten“ statt „Entlassen!“.
 - Nur während der Saison und nur, solange du nicht entlassen bist.
 
+### 5.8 Umsetzung U12e (22. November 2026, popolupo, ohne Testlauf): Zielgespräch
+
+Jetzt gibt es Budgets (K23d, K23 §5.5f) und echte Größenordnungen (K23c), damit hat §5.2 Folgen.
+
+- **Wann:** Mit dem Saisonziel (Saisonstart, Jobwechsel, neues Spiel) legt der Vorstand einen Vorschlag vor. Bis zu deinem nächsten Ligaspiel kannst du im Büro verhandeln (Karte „Zielgespräch mit dem Vorstand“, dazu ein Punkt in der Liste „Vor dem Saisonstart“, K12b). Ohne Entscheidung gilt der Vorschlag. Eine Entscheidung je Saison.
+- **Ziel annehmen:** nichts ändert sich.
+- **Hochpokern** um einen oder zwei Plätze: immer angenommen. Transferbudget +10 % je Platz. Erreichst du das Ziel, steigt dein Ruf zum Saisonende zusätzlich um 2 je Platz. Das Ziel gilt für Vertrauen, Ultimatum und Entlassung.
+- **Tiefstapeln** um einen oder zwei Plätze: Zusage mit 60 % − 20 % je weiterem Platz + 0,5 % je Punkt Vertrauen über 50 + 0,5 % je Punkt Ruf über 30, bei einem ehrgeizigen Präsidenten (ab 14) −15 %, bei einem ruhigen (bis 7) +15 %, begrenzt auf 5 bis 95 % (eigener Strom).
+  - Zugesagt: Ziel schlechter, Transferbudget −15 % je Platz, der Ruf rechnet „übertroffen“ weiter vom Vorschlag aus.
+  - Abgelehnt: Das Ziel bleibt, Vertrauen −3.
+- **Transferbudget** (K23d): Kontostand über der Reserve, mal dem Faktor aus dem Gespräch. Kaufst du über dem Budget, ist der Vorstand verstimmt: Vertrauen −1 je angefangene 10 % der Ablöse über dem Budget, höchstens −10, mit Meldung.
+- **Lizenz (K36):** neuer Bereich `zielgespraech` in der Grundlizenz, ohne Automatik (ohne Entscheidung gilt der Vorschlag).
+- **Gleichschritt:** Das Gespräch würfelt nur, wenn du tiefstapelst. Ohne Eingriff ändert sich nichts.
+- **Noch nicht:** Zwischenbilanz im Winter (§4 Nr. 3), Sparsamkeit des Präsidenten beim Budget, Nebenziele verhandeln.
+
 ## 6. Hebel des Spielers
 
 | Hebel | Nutzen | Preis |
@@ -272,6 +287,14 @@ vorstand:{
 15. **Jugend in Einsätzen statt Minuten:** Das Spiel zählt Einsätze je Spieler (`apps`), keine Minuten. 25 Einsätze entsprechen grob einem Talent, das zwei Drittel der Ligaspiele bestreitet.
 16. **Ehrgeiz des Präsidenten wirkt:** ab 14 zwei Nebenziele. Damit ist neben der Geduld der zweite Charakterwert in Gebrauch.
 17. **Rücktritt in der Grundlizenz:** Er ist eine Karriere-Entscheidung, keine Fähigkeit, die man lernen muss.
+
+**Vorläufig entschieden mit U12e** (22.11., popolupo, ohne Rücksprache und ohne Testlauf, §5.8):
+
+18. **Vorschlag wie bisher** (Ziel aus dem erwarteten Platz, verschoben nach der Schwierigkeit). Der Ehrgeiz des Präsidenten verschiebt nicht den Vorschlag, sondern macht ihn schwerer oder leichter herunterzuhandeln (±15 %).
+19. **Ein bis zwei Plätze, eine Entscheidung je Saison,** offen bis zum nächsten eigenen Ligaspiel. Ohne Entscheidung gilt der Vorschlag.
+20. **Transferbudget als weiche Grenze:** Kaufen über dem Budget geht, kostet aber Vertrauen (−1 je angefangene 10 % der Ablöse über dem Budget, höchstens −10). Eine harte Sperre hätte viele bestehende Abläufe verändert.
+21. **Prämie als Ruf:** Ein Trainergehalt gibt es nicht. Nach dem Tiefstapeln zählt „übertroffen“ vom Vorschlag aus, ein erreichtes hochgepokertes Ziel bringt +2 Ruf je Platz.
+22. **Zielgespräch in der Grundlizenz** (Bereich `zielgespraech`), wie der Rücktritt.
 
 **Noch zu recherchieren:** Zahl der Trainerwechsel pro Saison in 1., 2. und 3. Liga.
 

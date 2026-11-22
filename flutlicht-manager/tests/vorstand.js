@@ -5,7 +5,7 @@ const {neueWelt}=require('./sim');
 const probleme=[],pruef=(ok,text,wert)=>{console.log(`${ok?'✓':'✗'} ${text}${wert!=null?': '+wert:''}`);if(!ok)probleme.push(text+(wert!=null?' ('+wert+')':''));};
 const VEREIN=6,SEED=4711,nah=(a,b,e=0.01)=>Math.abs(a-b)<=e;
 function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREIN;S.mgr='Test';F.setTarget();F.sponsOffers();F.sponsorWaehlen(0);S.lineup=F.bestXI(VEREIN,W.ev('myT()').form);
-  const im=(k,fn)=>W.ev('mitStrom')(W.ev('strom')('test',k),fn);return{W,F,S,ev:W.ev,im,B:W.ev('RV')};}
+  const im=(k,fn)=>W.ev('mitStrom')(W.ev('strom')('test',k),fn);return{W,F,S,ev:W.ev,im,B:W.ev('RV')};} // W auch für Überschreibungen in den Tests zum Zielgespräch (Nr. 10 bis 13)
 
 // 1. Formel (K28 §5.1): 50 + Sport (5 je Platz gegen das Soll, −35 bis +25) + Serie (10 × (Punkte je Spiel − 1,3), −15 bis +10) + Finanzen und Umfeld, begrenzt auf 0 bis 100
 {const {F,B}=welt(),V=B.vertrauen,z=(pos,soll,last,extra)=>F.vertrauenZiel(V,{last},pos,soll,extra);
@@ -75,5 +75,31 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
 {const {S,F,ev,B}=welt();S.phase='play';S.ruf=30;F.ruecktritt();const weg=S.fired===1&&S.ruecktritt===1,r=ev('ruf()'),jobs=(S.jobs||[]).slice();
   if(jobs.length)F.takeJob(jobs[0]);
   pruef(weg&&r===30+B.ruf.ruecktritt&&jobs.length>0&&S.fired===0&&!S.ruecktritt&&S.my===jobs[0],'Rücktritt: sofort weg, Ruf −5, Jobangebote, beim neuen Verein ist alles zurückgesetzt',`Ruf ${r}, ${jobs.length} Angebote`);}
+
+// 10. Zielgespräch (K28 §5.2, U12e): mit dem Saisonziel offen, Hochpokern immer angenommen (Ziel besser, Transferbudget +10 % je Platz), nur eine Entscheidung je Saison,
+//     nach dem nächsten Ligaspiel zu, Karte im Büro nur solange offen
+{const {S,F,ev,B}=welt(),t=ev('myT()'),Z=B.zielgespraech;t.cash=60e6;const z0=S.target,b0=ev('transferBudget')(t),offen0=ev('zgOffen')(),karte0=F.zielgespraechKarte().length>0;
+  F.zielVerhandeln(-1);const z1=S.target,b1=ev('transferBudget')(t);F.zielVerhandeln(-1);const z2=S.target;
+  const w=welt();w.S.zg.sp=-1;const zu=!w.ev('zgOffen')()&&w.F.zielgespraechKarte()==='';
+  pruef(offen0&&karte0&&z1===Math.max(1,z0-1)&&(z0===1||Math.abs(b1-Math.round(b0*(1+Z.budgetHoch)))<=1)&&z2===z1&&S.zg.fertig===1&&zu,'Zielgespräch: Hochpokern, Budget, eine Entscheidung, Fenster',`Ziel ${z0} → ${z1} → ${z2}, Budget ${b0} → ${b1}, zu nach dem Ligaspiel ${zu}`);}
+
+// 11. Tiefstapeln mit Zusage: Ziel schlechter, Transferbudget −15 % je Platz, der Ruf rechnet „übertroffen“ weiter vom Vorschlag aus
+{const {S,F,ev,B,W}=welt(),t=ev('myT()'),Z=B.zielgespraech,me=S.my;W.ev('zgTiefChance=function(){return 1;}');t.cash=60e6;const z0=S.target,b0=ev('transferBudget')(t);
+  F.zielVerhandeln(1);const z1=S.target,b1=ev('transferBudget')(t);
+  const sm=o=>Object.assign({pos:8,target:S.target,lg:1,champ:-1,cup:-1,up:[],up3:[],down:[],down2:[],down3:[],rel:[-1,-1],rel2:[-1,-1],rw:-1,rw2:-1},o);
+  S.ruf=30;F.rufSaison(sm({pos:z0}));const r=ev('ruf()');
+  pruef(z1===z0+1&&S.zg.stufe===1&&Math.abs(b1-Math.round(b0*(1-Z.budgetTief)))<=1&&nah(r,30),'Zielgespräch: Tiefstapeln mit Zusage, Budget kleiner, Ziel genau erreicht bringt keinen Ruf (Vorschlag zählt)',`Ziel ${z0} → ${z1}, Budget ${b0} → ${b1}, Ruf ${r}`);}
+
+// 12. Tiefstapeln abgelehnt: Ziel bleibt, Vertrauen −3, Gespräch beendet. Zusage-Chance: steigt mit Vertrauen und Ruf, sinkt mit jedem weiteren Platz
+{const {S,F,ev,B,W}=welt(),Z=B.zielgespraech;const c1=F.zgTiefChance(1),c2=F.zgTiefChance(2);S.trust=90;const c3=F.zgTiefChance(1);
+  W.ev('zgTiefChance=function(){return 0;}');S.trust=60;const z0=S.target;F.zielVerhandeln(1);
+  pruef(S.target===z0&&nah(S.trust,60+Z.abgelehnt)&&S.zg.fertig===1&&S.zg.ab===1&&c2<c1&&c3>c1,'Zielgespräch: Tiefstapeln abgelehnt, Chance nach Vertrauen und Plätzen',`Chance ${c1.toFixed(2)} / ${c2.toFixed(2)} / bei Vertrauen 90 ${c3.toFixed(2)}, Vertrauen ${S.trust}`);}
+
+// 13. Hochgepokert und erreicht: Ruf-Zuschlag je Platz. Kauf über dem Transferbudget: Vertrauen je angefangene 10 % der Ablöse darüber
+{const {S,F,ev,B}=welt(),t=ev('myT()'),Z=B.zielgespraech;S.target=Math.max(3,S.target);S.zg.vorschlag=S.target;F.zielVerhandeln(-2);
+  const sm=o=>Object.assign({pos:8,target:S.target,lg:1,champ:-1,cup:-1,up:[],up3:[],down:[],down2:[],down3:[],rel:[-1,-1],rel2:[-1,-1],rw:-1,rw2:-1},o);
+  S.ruf=30;F.rufSaison(sm({pos:S.target}));const r=ev('ruf()');
+  const w=welt(),tt=w.ev('myT()');tt.cash=w.ev('erwarteteEinnahmen')(tt)*w.ev('RFP').budget.reserve+5e6;w.S.trust=50;const b=w.ev('transferBudget')(tt);w.F.zgUeberBudget(b+4e6);const v1=w.S.trust;w.S.trust=50;w.F.zgUeberBudget(b);
+  pruef(nah(r,30+2*Z.rufHoch)&&nah(b,5e6,2)&&nah(v1,50+Z.ueberBudget*Math.ceil(4e6/(b+4e6)*10))&&w.S.trust===50,'Zielgespräch: Ruf-Zuschlag nach Hochpokern, Vertrauen bei Kauf über dem Budget',`Ruf ${r}, Budget ${b}, Vertrauen ${v1}`);}
 
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

@@ -23,6 +23,7 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 | **K23d** Budgets vom Vorstand (Gehaltsrahmen, Transferbudget) | derselbe Zweig | fertig, ungetestet |
 | **U19d1** Kaderliste der UEFA | `mitarbeit/popolupo-u19d-kaderliste` (auf K23d) | fertig, ungetestet |
 | **K23c** echte Größenordnungen | `mitarbeit/popolupo-k23c-groessenordnungen` (auf U19d1) | fertig, ungetestet, ohne die Messung, Werte aus einer eigenen Modellrechnung, vorläufig |
+| **U12e** Zielgespräch mit dem Vorstand (K28 §5.8) | `mitarbeit/popolupo-u12e-zielgespraech` (auf K23c) | fertig, ungetestet |
 | U19d2 volle Kader der Auslandsvereine in der Engine | danach | Entwurf in K37 §5.7 |
 
 **Die neueste Spitze ist immer der zuletzt genannte Zweig, er enthält alles davor.** K24 ist fertig (Claude).
@@ -56,6 +57,15 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 ---
 
 ## Changelog
+
+### 22.11.2026: U12e Zielgespräch (Zweig `mitarbeit/popolupo-u12e-zielgespraech`, auf K23c)
+
+- **Neu (K28 §5.2, §5.8):** Zielgespräch mit dem Vorstand im Büro, offen ab dem Setzen des Saisonziels bis zum nächsten eigenen Ligaspiel.
+  - Annehmen, Hochpokern (immer angenommen, Budget +10 % je Platz, Ruf-Zuschlag bei Erfolg), Tiefstapeln (Zusage nach Vertrauen, Ruf, Ehrgeiz des Präsidenten; Budget −15 % je Platz; abgelehnt Vertrauen −3).
+  - Transferbudget (K23d) bekommt den Faktor aus dem Gespräch. Kauf über dem Budget kostet Vertrauen (weiche Grenze).
+  - Neuer Bereich `zielgespraech` (Grundlizenz, ohne Automatik), K36 Nr. 62.
+- **Tests zuerst:** `tests/vorstand.js` (neu Nr. 10 bis 13), `tests/lizenz.js` (neuer Bereich), `tests/vorbereitung.js` (Punkt „Saisonziel und Zielgespräch“).
+- **Doku:** K28 §5.8 und §12 Nr. 18 bis 22, K23 §5.5f, K33, K36, Konsistenzprüfung CQ, offene Entscheidungen, Test-README.
 
 ### 22.11.2026: K23c echte Größenordnungen (Zweig `mitarbeit/popolupo-k23c-groessenordnungen`, auf U19d1)
 
