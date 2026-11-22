@@ -122,6 +122,10 @@ const PRESSE={
     laut:['Wir fahren da hin, um zu gewinnen. Alles andere interessiert uns nicht.','Bei allem Respekt: {verein} ist für uns kein Maßstab.','Die sollen erst einmal zeigen, dass sie mit uns mithalten können.'],
     psycho:['Ich höre, bei {verein} ist die Stimmung nicht die beste. Das wird man morgen sehen.','Wenn {verein} früh hinten liegt, kippt das Spiel. Das wissen die auch.','Die Abwehr von {verein} wackelt, wenn man sie unter Druck setzt.']},
   stichelFrage:['{gtrainer} hat über Ihre Mannschaft gesagt: „{zitat}“ Was entgegnen Sie?','Ihr Kollege {gtrainer} meint: „{zitat}“ Ihre Antwort?'],
+  // Interview am Spielfeldrand (K29 §4.1, K29f): eine Frage je Ergebnis, Platzhalter {gegner}, {ergebnis} (aus deiner Sicht). Antworten: Rückendeckung, Kritik an der Mannschaft, Floskel.
+  spielfeldrand:{sieg:['{ergebnis} gegen {gegner}. Was war heute der Schlüssel?','Ein verdienter Sieg gegen {gegner}?','{ergebnis}. Wie fühlt sich das an?'],
+    remis:['{ergebnis} gegen {gegner}. Zufrieden mit dem Punkt?','Ein Punkt gegen {gegner}. Gewonnen oder verloren?'],
+    niederlage:['{ergebnis} gegen {gegner}. Woran hat es gelegen?','Woran hat’s gelegen?','Was fehlt Ihrer Mannschaft nach dem {ergebnis}?']},
   // Gerüchteküche (K29 §4.3, §5.5, U17b). Platzhalter: {verein} betroffener Verein, {klub} zweiter Verein, {spieler}, {coach} Trainer des betroffenen Vereins.
   // m: Medien, die so etwas bringen (das erste ist am wahrscheinlichsten).
   geruechte:{

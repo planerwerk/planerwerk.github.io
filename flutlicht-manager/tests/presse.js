@@ -103,4 +103,16 @@ const gegner=w=>w.S.teams.find(x=>x.lg===w.t.lg&&x.id!==VEREIN).id;
   pruef(anteil&&fest&&np>=6&&np<=24&&okp&&nd===0&&konter==='51/51'&&offen===48&&auto,'Medienprofile: Anteile, Stichelei vor dem Derby, Konter wirkt auf beide, offene Stichelei −2, Automatik ohne Wirkung',
     `Anteile ${JSON.stringify(zahl)}, Psychospieler ${np} von 30 (${okp}), Diplomat ${nd}, Konter ${konter}, offen ${offen}, Automatik ${auto}`);}
 
+// K29f. Interview am Spielfeldrand (K29 §4.1): nach deinem Spiel eine Frage ohne offene Platzhalter, Rückendeckung hebt die Mannschaft um 1 (halbe Wirkung) und das Klima um 0,5,
+//       gilt nur am Spieltag, abschaltbar, nicht neben einer offenen Pressekonferenz, nicht in der Automatik
+{const {S,F,ev}=welt(false),g=gegner({S,t:ev('myT()')}),sq=ev('squad')(VEREIN),P=ev('presseS')();P.klima=50;sq.forEach(p=>p.st=50);
+  F.spielfeldrandNachSpiel({h:VEREIN,a:g,hg:0,ag:2});const offen=ev('ifrOffen')(),html=F.spielfeldrandKarte(),frage=/Woran|fehlt/.test(html)&&!/\{\w+\}/.test(html)&&html.includes('0:2');
+  F.spielfeldrandAntwort('rueckendeckung');const st=sq[0].st,kl=P.klima,weg=!S.ifr;
+  F.spielfeldrandNachSpiel({h:g,a:VEREIN,hg:1,ag:3});S.tag++;const morgen=!ev('ifrOffen')();S.tag--;
+  F.spielfeldrandAus(false);F.spielfeldrandNachSpiel({h:VEREIN,a:g,hg:1,ag:1});const aus=!S.ifr;F.spielfeldrandAus(true);
+  S.pk={art:'derby',fragen:[],i:0,antw:[],s:S.season,tag:S.tag};F.spielfeldrandNachSpiel({h:VEREIN,a:g,hg:1,ag:1});const pk=!S.ifr;S.pk=null;
+  const a=welt(true);a.F.spielfeldrandNachSpiel({h:VEREIN,a:gegner(a),hg:2,ag:0});const auto=!a.S.ifr;
+  pruef(offen&&frage&&st===51&&kl===50.5&&weg&&morgen&&aus&&pk&&auto,'Interview am Spielfeldrand: Frage, halbe Wirkung, nur am Spieltag, abschaltbar, nicht neben Pressekonferenz und Automatik',
+    `offen ${offen}, Frage ${frage}, Stimmung ${st}, Klima ${kl}, morgen weg ${morgen}, aus ${aus}, neben Pressekonferenz ${pk}, Automatik ${auto}`);}
+
 console.log(probleme.length?`\n${probleme.length} Problem(e).`:'\nAlles in Ordnung.');process.exitCode=probleme.length?1:0;

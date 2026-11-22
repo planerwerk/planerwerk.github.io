@@ -138,17 +138,35 @@ function kampfansagePruefen(gegner,gf,ga){const P=presseS(),G=RPK.gedaechtnis,t=
     if(gf>ga){fanAnlass(t,'fanU',G.kultFans);chronikEintrag(a.txt,`Wort gehalten gegen ${tn(gegner)}`);news(`Wort gehalten: Deine Kampfansage gegen ${tn(gegner)} ist jetzt Kult.`,'good');}
     else if(gf<ga){glaubAendern(G.haemeGlaub);fanAnlass(t,'fanU',G.haemeFans);news(`Häme in der Presse: Erst große Worte, dann verloren gegen ${tn(gegner)}.`,'bad');}});}
 
+// ---------- Interview am Spielfeldrand (K29 §4.1, K29f) ----------
+// S.ifr = {tag, s, g Gegner, gf, ga} nach deinem Spiel (ablauf.js nach presseNachSpiel), gilt nur an diesem Tag. Nicht in der Automatik, nicht neben einer offenen
+// Pressekonferenz, abschaltbar (S.einst.ifrAus). Ohne Zufall, ohne Antwort ohne Folgen.
+const ifrOffen=()=>!!(S.ifr&&S.ifr.s===S.season&&S.ifr.tag===S.tag);
+const IFR_ARTEN=['rueckendeckung','kritikTeam','floskel'];
+function spielfeldrandNachSpiel(m){S.ifr=null;if(!m||S.phase!=='play'||S.pk||S.fired||autoB('presse')||!darf('presse')||(S.einst&&S.einst.ifrAus))return;const s=m.h===S.my?0:1;
+  S.ifr={tag:S.tag,s:S.season,g:s?m.h:m.a,gf:s?m.ag:m.hg,ga:s?m.hg:m.ag};}
+function ifrKontext(){const x=S.ifr,c=pkKontext({gegner:x.g,pid:null,serie:null,medium:null});c.ergebnis=`${x.gf}:${x.ga}`;return c;}
+// Antwort: Wirkung der Antwortart (RPK.wirkung) × spielfeldrand.faktor; Kritik trifft alle wie „sonst“ (ohne Kämpfer und Empfindliche)
+function spielfeldrandAntwort(art){if(!ifrOffen()||!IFR_ARTEN.includes(art)||!darf('presse'))return;const F=RPK.spielfeldrand.faktor,w=RPK.wirkung[art]||{},t=myT(),P=presseS();S.ifr=null;
+  const team=(art==='kritikTeam'?w.sonst:(w.team||0))*F;if(team)squad(S.my).forEach(p=>stimmungAendern(p,team));
+  if(w.fans)fanAnlass(t,'fanU',w.fans*F);if(w.vorstand)S.trust=clamp(S.trust+w.vorstand*F,0,100);if(w.medien)P.klima=fanZahl(clamp(P.klima+w.medien*F,0,100));
+  news(`Interview am Spielfeldrand: ${PRESSE.arten[art].name}.`);save();render();}
+function spielfeldrandAus(an){S.einst=S.einst||{aus:{}};S.einst.ifrAus=an?0:1;if(!an)S.ifr=null;save();render();}
+function spielfeldrandKarte(){if(!ifrOffen())return'';const x=S.ifr,c=ifrKontext(),Z=PRESSE.spielfeldrand,l=Z[x.gf>x.ga?'sieg':x.gf<x.ga?'niederlage':'remis'],frage=pkText(l[x.tag%l.length],c);
+  return`<div class="card"><h3>Interview am Spielfeldrand</h3><p><b>„${esc(frage)}“</b></p><div class="opts">${IFR_ARTEN.map((art,i)=>`<button class="opt" onclick="spielfeldrandAntwort('${art}')"${lzAus('presse')}><b>${PRESSE.arten[art].ton} ${esc(PRESSE.arten[art].name)}</b><span>„${esc(pkWahl(PRESSE.antworten[art].filter(z=>!z.includes('{spieler}')),c,x.tag+i))}“</span></button>`).join('')}</div>
+    <p class="dim">Kurz und freiwillig, die Wirkung ist halb so groß wie in einer Pressekonferenz. Ohne Antwort passiert nichts. <button onclick="spielfeldrandAus(false)">Interviews ausschalten</button></p></div>`;}
+
 // ---------- Anzeige ----------
 // Medienpolitik im Medien-Kasten (K29b): aktuelle Art, Knöpfe zum Wechseln (Bereich presse)
 function medienpolitikText(){const M=REGELN.medienpolitik,m=medienpolitik(),aus=lzAus('presse');
   return`<p class="dim">Medienpolitik: <b>${esc(m.name)}</b> (${esc(m.text)}). Ein schlechtes Medienklima bringt mehr Gerüchte über deinen Verein, öfter erfundene.</p>
     <div class="row">${Object.keys(M.arten).map(k=>`<button class="${k===m.k?'go':''}" onclick="medienpolitikSetzen('${k}')"${aus}>${esc(M.arten[k].name)}</button>`).join('')}</div>
-    <p class="dim">Bei schlechtem Klima sitzen in der Pressekonferenz öfter Boulevard und Portal, unter ${RPK.klimaFragen.bohrenUnter} gibt es eine Frage mehr.</p>${exklusivText()}`;}
+    <p class="dim">Bei schlechtem Klima sitzen in der Pressekonferenz öfter Boulevard und Portal, unter ${RPK.klimaFragen.bohrenUnter} gibt es eine Frage mehr.${S.einst&&S.einst.ifrAus?' <button onclick="spielfeldrandAus(true)">Interviews am Spielfeldrand einschalten</button>':''}</p>${exklusivText()}`;}
 // Exklusivinterview im Medien-Kasten (K29c): Beziehung je Medium, Knöpfe, solange frei
 function exklusivText(){const E=REGELN.exklusiv,aus=lzAus('presse'),l=Object.keys(PRESSE.medien),f=x=>`${x>0?'+':''}${x}`;
   return`<p class="dim">Beziehungen: ${l.map(k=>`${esc(PRESSE.medien[k].name)} ${f(Math.round(medienBez(k)))}`).join(' · ')}. Gewogene Medien schreiben milder über dich, verärgerte schärfer, auch über deine Antworten in der Pressekonferenz. Mit der Zeit verblasst beides.</p>
     ${exklusivFrei()?`<div class="row">${l.map(k=>`<button onclick="exklusivInterview('${k}')"${aus}>Exklusivinterview: ${esc(PRESSE.medien[k].name)}</button>`).join('')}</div>`:`<p class="dim">Das nächste Exklusivinterview geht in ${E.tage-(absTag(S.tag)-S.exkl)} Tag${E.tage-(absTag(S.tag)-S.exkl)===1?'':'en'}.</p>`}`;}
-function presseKarte(){const P=presseS(),pk=S.pk;
-  if(!pk)return`<div class="card"><h3>Medien</h3><p>Medienklima ${Math.round(P.klima)} von 100${(P.n[S.season]||0)?` · ${P.n[S.season]} Pressekonferenz${P.n[S.season]===1?'':'en'} in dieser Saison`:''}.</p>${medienpolitikText()}</div>`;
+function presseKarte(){const P=presseS(),pk=S.pk,ifr=spielfeldrandKarte(); /* Interview am Spielfeldrand vor dem Medien-Kasten (K29f) */
+  if(!pk)return ifr+`<div class="card"><h3>Medien</h3><p>Medienklima ${Math.round(P.klima)} von 100${(P.n[S.season]||0)?` · ${P.n[S.season]} Pressekonferenz${P.n[S.season]===1?'':'en'} in dieser Saison`:''}.</p>${medienpolitikText()}</div>`;
   const A=PRESSE.anlaesse[pk.art];return`<div class="card"><h3>${esc(A.name)}</h3>${lzHinweis('presse')}<p>${pk.fragen.length} Fragen warten. Medienklima ${Math.round(P.klima)} von 100.</p>
     <div class="row"><button class="go" onclick="pkZeigen()"${lzAus('presse')}>Hingehen</button><button onclick="presseDelegieren(false)">Co-Trainer schicken</button></div><p class="dim">Gehst du heute nicht hin, schickt der Verein den Co-Trainer.</p></div>`;}

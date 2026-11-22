@@ -268,7 +268,7 @@ Das ist der Maßstab für die Verbindung zu K09.
 - **Verblassen:** Montags rückt jede Beziehung um 0,5 Richtung 0. Ein Exklusivinterview (+10) ist nach 20 Wochen vergessen, wer alle vier Wochen eines gibt, hält das Medium oben.
 - **Anzeige:** Bei jeder Frage steht die Beziehung zum Medium des Fragers, im Medien-Kasten der Hinweis auf Klima und Frager.
 - **Zufall:** Der Wurf für den Journalisten bleibt im Strom `presse`, die zusätzliche Frage zieht dort zwei Würfe mehr. Der Grundstrom ist unberührt.
-- **Noch nicht:** Computer-Trainer mit Medienprofil und Provokationen vor Topspielen (§7, seit K29e), Maulkorb und Interviews der Spieler, Interview am Spielfeldrand, Pressekonferenz nach Urteilen des Sportgerichts.
+- **Noch nicht:** Computer-Trainer mit Medienprofil und Provokationen vor Topspielen (§7, seit K29e), Maulkorb und Interviews der Spieler, Interview am Spielfeldrand (seit K29f), Pressekonferenz nach Urteilen des Sportgerichts.
 
 **Umsetzung K29e (22.11.2026, popolupo, ohne Testlauf): Medienprofil der Computer-Trainer und Sticheleien vor Topspielen (§7, Muster 8)**
 - **Medienprofil:** Jeder Computer-Trainer hat ein festes Profil aus seiner Nummer, ohne Zufall.
@@ -289,6 +289,13 @@ Das ist der Maßstab für die Verbindung zu K09.
 
 - **Automatik:** In der Automatik (Bereich `presse`) bleibt die Stichelei ohne Wirkung, der Co-Trainer nimmt sie gelassen. So bleibt der Gleichschritt gleich, denn er vergleicht die Stimmung der Spieler.
 - **Noch nicht:** Aussagen der Computer-Trainer mit Folgen für sie selbst (Strafen, Ärger, Gerüchte), Sticheleien gegen andere Computer-Vereine, Profil bei eigenen Pressekonferenzen der Computer-Trainer.
+
+**Umsetzung K29f (22.11.2026, popolupo, ohne Testlauf): Interview am Spielfeldrand (§4.1, Muster 6)**
+- **Wann:** nach jedem deiner Pflichtspiele, nur am Spieltag. Nicht, wenn gerade eine Pressekonferenz offen ist, und nicht in der Automatik (Bereich `presse`).
+- **Ablauf:** Im Büro steht eine Karte mit einer Frage je Ergebnis, zum Beispiel „Woran hat’s gelegen?“, und drei Antworten: Rückendeckung, Kritik an der Mannschaft, Floskel. Ohne Antwort passiert nichts, auch kein Halt.
+- **Wirkung:** die Werte der Antwortart aus der Pressekonferenz mal 0,5, ohne Streuung, Abnutzung und Deckel. Rückendeckung: Mannschaft +1, Medienklima +0,5. Kritik: alle −0,5, Vorstand +0,5, Klima +0,5. Floskel: Klima −0,5.
+- **Abschaltbar:** „Interviews ausschalten“ auf der Karte, im Medien-Kasten wieder einschalten.
+- **Zufall:** keiner, Frage und Antworttexte reihum nach dem Tag.
 
 ## 6. Hebel des Spielers
 

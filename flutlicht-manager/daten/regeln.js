@@ -483,7 +483,9 @@ const REGELN={
     // mit chance (Strom presse). Antwort auf die Stichelei, zusätzlich zur normalen Wirkung: gelassen (Humor) eigene Mannschaft +gelassen, kontern (Provokation) eigene +konterEigen und die Spieler des Gegners
     // +konterGegner (Trotz), ignorieren (Floskel) eigene +ignorieren[Profil]; nicht hingegangen (ohne Automatik) eigene +offen[Profil]
     medienprofil:{anteile:{diplomatisch:40,floskel:25,laut:20,psycho:15},anlaesse:['derby','spitze','pokal','relegation'],chance:{laut:0.6,psycho:0.5},
-      gelassen:1,konterEigen:1,konterGegner:1,ignorieren:{laut:0,psycho:-1},offen:{laut:-1,psycho:-2}}},
+      gelassen:1,konterEigen:1,konterGegner:1,ignorieren:{laut:0,psycho:-1},offen:{laut:-1,psycho:-2}},
+    // K29f (22.11., GESCHÄTZT): Interview am Spielfeldrand nach deinem Spiel, Wirkung der Antwortart × faktor, ohne Streuung, Abnutzung und Deckel
+    spielfeldrand:{faktor:0.5}},
 
   // Marketing (K25 §5.4, §11, K25a). trikot: Faktor auf den Fanartikel-Erlös [min, max] und Fanstimmung je Design, mutig: Chance auf Kult, sonst Spott.
   // kampagnen: Kosten in der 1. Liga, Dauer in Tagen (sommer: bis zum ersten Pflichtspiel), Wirkung. ligaFaktor: Kosten je Liga. abnutzung: 1., 2., 3. Mal in der Saison.
