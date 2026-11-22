@@ -9,9 +9,12 @@ const inVorbereitung=d=>d>=auftaktTag(myT())&&d<ersterPflichttermin();
 function pflichtspielNah(tid,d,k){for(let x=d-k;x<=d+k;x++){if(spielendeAm(x).has(tid))return true;if(S.supercup&&S.supercup.tag===x&&[S.supercup.h,S.supercup.a].includes(tid))return true;
     const P=S.plan.pokal.findIndex(z=>z[0]===x);if(P>=0&&S.cup.alive.includes(tid)&&S.cup.hist.length<=P)return true;}return false;}
 // Mögliche Tage für ein Testspiel: ab übermorgen plus Antwortzeit, kein Urlaub, Abstand zu eigenen Pflichtspielen, höchstens eins pro Tag
-function testspielTage(){const T=RTS,l=[],von=S.tag+T.vorlaufTage,bis=Math.min(S.plan.ende-1,S.tag+T.planTage),belegt=new Set((S.testspiele||[]).filter(x=>x.stand!=='abgesagt').map(x=>x.tag));
+function testspielTage(){const T=RTS,l=[],von=S.tag+T.vorlaufTage,bis=Math.min(S.plan.ende-1,S.tag+T.planTage),alle=testspielBelegt(),belegt=new Set(alle);
   for(let d=von;d<=bis;d++){if(belegt.has(d)||d<auftaktTag(myT())||pflichtspielNah(S.my,d,T.abstandPflichtspiel))continue;
-    const w=Math.floor(d/7),n=(S.testspiele||[]).filter(x=>x.stand!=='abgesagt'&&Math.floor(x.tag/7)===w).length;if(n>=T.maxProWoche)continue;l.push(d);}return l;}
+    const w=Math.floor(d/7),n=alle.filter(x=>Math.floor(x/7)===w).length;if(n>=T.maxProWoche)continue;l.push(d);}return l;}
+// Belegte Testspieltage (nicht abgesagt), dazu Tag 2 eines angemeldeten Sommerturniers, solange er noch nicht eingetragen ist (Prüfung DW1)
+function testspielBelegt(){const U=S.turnier,l=(S.testspiele||[]).filter(x=>x.stand!=='abgesagt').map(x=>x.tag);
+  if(U&&U.s===S.season&&U.platz==null&&!(S.testspiele||[]).some(x=>x.turnier&&x.runde===2))l.push(U.tag+1);return l;}
 // Vorgeschlagene Gegner: zwei Amateurvereine aus der Region, Profis aus der 1. bis 3. Liga nach Niveau (näher zuerst)
 function testspielGegner(d){const me=teamLevel(S.my),t=myT(),pro=S.teams.filter(x=>aktiv(x)&&x.id!==S.my).map(x=>({id:x.id,d:teamLevel(x.id)-me,reg:x.region===t.region}))
     .sort((a,b)=>Math.abs(a.d)-Math.abs(b.d)-(a.reg-b.reg)*2).slice(0,inVorbereitung(d)&&vorbereitungsWoche(d)<RTS.abWoche?0:RTS.vorschlaege);
@@ -45,7 +48,7 @@ function testspielNach(r,x){const T=RTS,N=RE.note,F=RP.frische;
   if(x&&x.gegner<AV0)bezDuAendern(x.gegner,RBZ.anlass.testspiel,'Testspiel gespielt'); // K17 §5.5, U12c (Amateure haben keine Beziehung)
   // Geld (K11 §5.2): als Gastgeber Zuschauer mit nachlassendem Interesse, beim Amateurverein eine feste Gage
   const t=myT();let geld=0,zus=0;
-  if(x.heim&&r.h===S.my){const N2=T.nachfrage,w=inVorbereitung(x.tag)?vorbereitungsWoche(x.tag):99,f=Math.max(N2.min,N2.start+N2.jeWoche*Math.max(0,w-T.abWoche))*(r.a<1000&&S.teams[r.a].rep>=N2.grossAb?N2.grosserName:1);
+  if(x.heim&&r.h===S.my&&!x.turnier){const N2=T.nachfrage, /* im Turnier nur Antrittsgeld und Siegprämie, die Zuschauer gehören dem Ausrichter (Prüfung DW7) */w=inVorbereitung(x.tag)?vorbereitungsWoche(x.tag):99,f=Math.max(N2.min,N2.start+N2.jeWoche*Math.max(0,w-T.abWoche))*(r.a<1000&&S.teams[r.a].rep>=N2.grossAb?N2.grosserName:1);
     zus=Math.round(Math.min(t.cap,attendance(t,r.a<1000?S.teams[r.a]:null,false)*f));geld=zus*t.price;}
   else if(r.h>=1000){const G=T.gageAmateur;geld=Math.round((G[0]+(G[1]-G[0])*clamp(t.rep/100,0,1))/1000)*1000;}
   if(geld)money('Testspiele',geld);x.erg={hg:r.hg,ag:r.ag,zus,geld};x.stand='gespielt';
@@ -76,7 +79,9 @@ function lagerTag(d){const l=lagerAktiv(d);if(!l)return;const O=RLA.orte[l.ort],
 // Vier Vereine, zwei Tage in der Vorbereitung: Halbfinale gegen einen Verein deines Niveaus (Tag 1, als Testspiel), das andere Halbfinale wird kurz nach Ansehen gerechnet
 // (eigener Strom), Tag 2 Finale oder Spiel um Platz 3. Remis: Elfmeterschießen (eigener Strom). Antrittsgeld und Siegprämie nach Liga, Pokal in der Vitrine (K34), Stimmung beim Sieg.
 // S.turnier = {s, tag, g: [drei Gegner], platz}. Einmal je Saison.
-function turnierMoeglich(d){const tage=testspielTage();return inVorbereitung(d)&&inVorbereitung(d+1)&&tage.includes(d)&&tage.includes(d+1)&&!(S.turnier&&S.turnier.s===S.season);}
+// Ab der Woche RTS.abWoche, weil vorher keine Profis zusagen (Prüfung DW6). Liegen beide Tage in einer Woche, zählen sie zusammen zu maxProWoche.
+function turnierMoeglich(d){const tage=testspielTage(),w=x=>Math.floor(x/7),eine=w(d)===w(d+1)?testspielBelegt().filter(x=>w(x)===w(d)).length+2<=RTS.maxProWoche:true;
+  return inVorbereitung(d)&&inVorbereitung(d+1)&&vorbereitungsWoche(d)>=RTS.abWoche&&tage.includes(d)&&tage.includes(d+1)&&eine&&!(S.turnier&&S.turnier.s===S.season);}
 function turnierAnmelden(d){if(!darf('testspiele','sommerplan'))return;if(!turnierMoeglich(d)){toast('An diesen Tagen geht kein Turnier.');return;}
   const g=testspielGegner(d).filter(x=>!x.am).slice(0,3).map(x=>x.id);if(g.length<3){toast('Es finden sich keine drei Gegner.');return;}
   const T=RTS.turnier,lg=myT().lg,geld=T.antritt[lg]||T.antritt[3];S.turnier={s:S.season,tag:d,g,platz:null};S.testspiele=S.testspiele||[];S.testId=(S.testId||0)+1;
@@ -98,13 +103,15 @@ function turnierText(){const T=RTS.turnier;if(S.turnier&&S.turnier.s===S.season)
 
 // ---------- Anfragen der Computer-Vereine (K11 §5, K11c) ----------
 // In der Vorbereitung ab Woche RTS.abWoche fragt montags mit kiAnfrage.chance ein Verein deines Niveaus nach einem Testspiel bei sich (eigener Strom je Saison und Tag).
-// S.tsKI = {tid, tag, bis}: Antwort bis bis, sonst verfällt sie. Nicht in der Automatik der Testspiele (dort plant der Co-Trainer selbst).
-function kiTestspielAnfrage(d){if(S.phase!=='play'||(S.tsKI&&S.tsKI.bis>=d)||autoB('testspiele')||!inVorbereitung(d)||vorbereitungsWoche(d)<RTS.abWoche)return;
-  mitStrom(strom('tsKI',S.season,d),()=>{if(R()>=RTS.kiAnfrage.chance)return;const tage=testspielTage().filter(inVorbereitung);if(!tage.length)return;
+// S.tsKI = {tid, tag, bis, s, my}: Antwort bis bis, sonst verfällt sie. Gilt nur in ihrer Saison und für den Verein, den du da trainiert hast (Prüfung DW2).
+// Nicht in der Automatik der Testspiele (dort plant der Co-Trainer selbst). Der Tag liegt so weit hinten, dass er bei einer Antwort am letzten Tag noch frei sein kann (DW3).
+const tsKIOffen=d=>{const a=S.tsKI;return a&&a.s===S.season&&a.my===S.my&&a.bis>=d?a:null;};
+function kiTestspielAnfrage(d){if(S.phase!=='play'||tsKIOffen(d)||autoB('testspiele')||!inVorbereitung(d)||vorbereitungsWoche(d)<RTS.abWoche)return;
+  mitStrom(strom('tsKI',S.season,d),()=>{if(R()>=RTS.kiAnfrage.chance)return;const tage=testspielTage().filter(x=>inVorbereitung(x)&&x>=d+RTS.kiAnfrage.tage+RTS.vorlaufTage);if(!tage.length)return;
     const pro=testspielGegner(tage[0]).filter(x=>!x.am);if(!pro.length)return;const g=pro[Math.floor(R()*pro.length)].id,tag=tage[Math.floor(R()*tage.length)];
-    S.tsKI={tid:g,tag,bis:d+RTS.kiAnfrage.tage};news(`Testspiel-Anfrage: ${tn(g)} lädt dich am ${datumKurz(tag)} zu sich ein. Antwort im Training bis ${datumKurz(S.tsKI.bis)}.`,'offer');});}
-function kiTestspielAntwort(ja){const a=S.tsKI;if(!a||!darf('testspiele','sommerplan'))return;S.tsKI=null;
+    S.tsKI={tid:g,tag,bis:d+RTS.kiAnfrage.tage,s:S.season,my:S.my};news(`Testspiel-Anfrage: ${tn(g)} lädt dich am ${datumKurz(tag)} zu sich ein. Antwort im Training bis ${datumKurz(S.tsKI.bis)}.`,'offer');});}
+function kiTestspielAntwort(ja){const a=tsKIOffen(S.tag);if(!a||!darf('testspiele','sommerplan'))return;S.tsKI=null;
   if(ja&&testspielTage().includes(a.tag)){S.testspiele=S.testspiele||[];S.testId=(S.testId||0)+1;S.testspiele.push({id:S.testId,tag:a.tag,gegner:a.tid,heim:false,stand:'zugesagt'});news(`Testspiel am ${datumKurz(a.tag)} bei ${tn(a.tid)} vereinbart.`,'good');}
   else if(ja)toast('An diesem Tag geht es nicht mehr.');save();render();}
-function kiTestspielText(){const a=S.tsKI;if(!a||a.bis<S.tag)return'';
+function kiTestspielText(){const a=tsKIOffen(S.tag);if(!a)return'';
   return`<div class="card"><p>${esc(tn(a.tid))} lädt dich am ${datumKurz(a.tag)} zu einem Testspiel ein (Antwort bis ${datumKurz(a.bis)}).</p><div class="row"><button onclick="kiTestspielAntwort(1)"${lzAus('testspiele')}>Zusagen</button><button onclick="kiTestspielAntwort(0)"${lzAus('testspiele')}>Absagen</button></div></div>`;}

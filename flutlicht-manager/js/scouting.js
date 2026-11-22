@@ -91,8 +91,13 @@ function scoutsAufbau(){const A=RST.start,Z=RSC.start;S.teams.forEach(t=>{if(!ak
 // Bis zu diesem Spiel verdoppelt sich der Bonus der Spielvorbereitung (taktik.js), wie mit einem Videoanalysten, beides zusammen nicht doppelt. Ohne Zufall.
 const gegnerBeobachtet=(t,g)=>!!(t&&t.gb&&t.gb.g===g&&S.tag<=t.gb.bis);
 function gbNaechstes(){const e=heuteMeinSpiel()?meinSpiel(S.tag):naechstesSpiel(S.tag+1);if(!e)return null;const g=pkGegner(e);return g==null||g>=1000?null:{g,d:e.tag};}
-function gegnerBeobachten(){if(!darf('beobachten'))return;const t=myT(),n=gbNaechstes();if(!n||gegnerBeobachtet(t,n.g))return;
+// Warum die Beobachtung nichts brächte (Prüfung DW8), sonst '': Der Videoanalyst verdoppelt den Bonus schon, oder am Spieltag fehlt die Spielvorbereitung der letzten zwei Tage (taktik.js)
+function gbOhneWirkung(t,n){if(stabFaktor(S.my,'video')>1)return'Dein Videoanalyst hat den Gegner schon im Blick, die Spielvorbereitung wirkt doppelt.';
+  if(n.d===S.tag&&!(t.vbTag!=null&&S.tag-t.vbTag<=2&&S.tag>t.vbTag))return'Ohne Spielvorbereitung in den letzten zwei Tagen bringt eine Beobachtung nichts mehr.';return'';}
+function gegnerBeobachten(){if(!darf('beobachten'))return;const t=myT(),n=gbNaechstes();if(!n||gegnerBeobachtet(t,n.g)||gbOhneWirkung(t,n))return;
   if(!stabVon(S.my,'scout').length){toast('Dafür brauchst du einen Scout im Trainerstab.');return;}
-  money('Scouting',-RSC.gegner.kosten);t.gb={g:n.g,bis:n.d};news(`Ein Scout beobachtet ${tn(n.g)} vor dem Spiel am ${datumKurz(n.d)}. Die Spielvorbereitung wirkt doppelt.`);save();render();}
+  money('Scouting',-RSC.gegner.kosten);t.gb={g:n.g,bis:n.d};news(`Ein Scout beobachtet ${tn(n.g)} vor dem Spiel am ${datumKurz(n.d)}. Die Spielvorbereitung wirkt doppelt.`);save();render();
+  if(heuteMeinSpiel())showPre(meinSpiel(S.tag));} /* Fenster vor dem Spiel neu zeichnen, render() tut das nicht (DW8) */
 function gegnerBeobachtenText(){const t=myT(),n=gbNaechstes();if(!n)return'';if(gegnerBeobachtet(t,n.g))return' <span class="dim">Ein Scout hat den Gegner beobachtet, die Spielvorbereitung wirkt doppelt.</span>';
+  const ohne=gbOhneWirkung(t,n);if(ohne)return` <span class="dim">${esc(ohne)}</span>`;
   return` <button onclick="gegnerBeobachten()"${lzAus('beobachten')}>Gegner beobachten lassen (${fmt(RSC.gegner.kosten)})</button>`;}

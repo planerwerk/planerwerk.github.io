@@ -97,9 +97,9 @@ const zgZielGrenze=(lg,z)=>clamp(z,lg>=2?RV.ziel.unterhalbMindestens:1,RV.ziel.s
 function zielVerhandeln(d){if(!darf('zielgespraech')||!zgOffen())return;const z=S.zg,Z=RV.zielgespraech,t=myT();if(Math.abs(d)>Z.maxPlaetze)return;
   if(!d){z.fertig=1;news(`Zielgespräch: Du nimmst das Ziel des Vorstands an (${targetText(t.lg,S.target)}).`,'');save();render();return;}
   const neu=zgZielGrenze(t.lg,S.target+d),n=Math.abs(neu-S.target);if(!n){toast('Weiter geht es in diese Richtung nicht.');return;}
-  if(d<0){z.stufe=neu-z.vorschlag;S.target=neu;z.fertig=1;news(`Zielgespräch: Du versprichst mehr (${targetText(t.lg,neu)}). Der Vorstand gibt ${Math.round((zgBudgetFaktor()-1)*100)} % mehr Transferbudget frei und erwartet, dass du lieferst.`,'good');}
+  if(d<0){z.stufe=neu-z.vorschlag;S.target=neu;z.fertig=1;news(`Zielgespräch: Du versprichst mehr (${targetText(t.lg,neu)}). Der Vorstand gibt ${Math.round((zgBudgetFaktor()/bgFaktor()-1)*100)} % mehr Transferbudget frei und erwartet, dass du lieferst.`,'good');}
   else if(mitStrom(strom('zielgespraech',S.season,S.my),()=>R())<zgTiefChance(n)){z.stufe=neu-z.vorschlag;S.target=neu;z.fertig=1;
-    news(`Zielgespräch: Der Vorstand lässt sich herunterhandeln (${targetText(t.lg,neu)}). Dafür gibt er ${Math.round((1-zgBudgetFaktor())*100)} % weniger Transferbudget frei.`,'');}
+    news(`Zielgespräch: Der Vorstand lässt sich herunterhandeln (${targetText(t.lg,neu)}). Dafür gibt er ${Math.round((1-zgBudgetFaktor()/bgFaktor())*100)} % weniger Transferbudget frei.`,'');}
   else{z.fertig=1;z.ab=1;S.trust=clamp(S.trust+Z.abgelehnt,0,100);news(`Zielgespräch: Der Vorstand lässt nicht mit sich handeln. Das Ziel bleibt (${targetText(t.lg,S.target)}), die Stimmung ist etwas abgekühlt.`,'bad');}
   save();render();}
 // Kauf über dem Transferbudget (aktionen.js, vor der Zahlung): der Vorstand ist verstimmt, Vertrauen je angefangene 10 % der Ablöse über dem Budget
@@ -228,7 +228,7 @@ function wahlText(t){const s=naechsteWahl(t);return`Nächste Präsidentenwahl au
 const bgMein=()=>S.bg&&S.bg.s===S.season&&S.bg.tid===S.my?S.bg:null;
 const bgFaktor=()=>{const b=bgMein();return b&&b.ok?1+RV.budgetgespraech.plus:1;};
 const bgOffen=()=>!bgMein()&&S.phase==='play'&&!S.fired;
-function bgChance(){const B=RV.budgetgespraech,P=praesident(myT());let c=B.basis+B.jeVertrauen*(S.trust-50)+B.jeRuf*(ruf()-RV.ruf.start)-B.jeSparsam*(P.sparsam-10);
+function bgChance(){const B=RV.budgetgespraech,P=praesident(myT());let c=B.basis+B.jeVertrauen*(S.trust-B.vertrauenMitte)+B.jeRuf*(ruf()-RV.ruf.start)-B.jeSparsam*(P.sparsam-B.sparsamMitte);
   if(glaub()<B.glaubUnter)c*=B.glaubFaktor;return clamp(c,B.grenzen[0],B.grenzen[1]);}
 function budgetGespraech(){if(!darf('zielgespraech')||!bgOffen())return;const B=RV.budgetgespraech,ok=mitStrom(strom('budgetgespraech',S.season,S.my),()=>R())<bgChance();
   S.bg={s:S.season,tid:S.my,ok:ok?1:0};

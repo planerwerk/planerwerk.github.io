@@ -53,10 +53,15 @@ const scout=(S,F,q,gebiet,ev=F.__ev)=>{let x;for(let i=0;i<50;i++){x=F.stabNeu('
 
 // K18c. Gegnerbeobachtung (K18 §8, K07 §5): mit einem Scout im Stab den nächsten Gegner beobachten, Reisekosten einmal, bis zum Spieltag beobachtet, danach nicht mehr; ohne Scout nichts
 {const {F,S,ev}=welt(),t=ev('myT()'),l=ev('meineLigaspiele')();S.tag=l[3].tag-2;S.gespielt=-1;
-  ev('S').stab=ev('S').stab.filter(x=>!(x.team===S.my&&x.r==='scout'));ev('stabGeaendert')();F.gegnerBeobachten();const ohne=!t.gb;
+  ev('S').stab=ev('S').stab.filter(x=>!(x.team===S.my&&(x.r==='scout'||x.r==='video')));ev('stabGeaendert')();F.gegnerBeobachten();const ohne=!t.gb; /* ohne Videoanalyst, sonst wirkt die Beobachtung nicht (DW8) */
   const sc=ev('stabNeu')('scout',10,S.my,t.lg);S.stab.push(sc);ev('stabGeaendert')();const n=F.gbNaechstes(),k0=S.fin['Scouting']||0;F.gegnerBeobachten();
   const ja=!!n&&!!t.gb&&t.gb.g===n.g&&t.gb.bis===n.d&&ev('gegnerBeobachtet')(t,n.g)&&(S.fin['Scouting']||0)-k0===-ev('RSC').gegner.kosten;S.tag=(n?n.d:0)+1;const vorbei=!ev('gegnerBeobachtet')(t,n&&n.g);
   pruef(ohne&&ja&&vorbei,'Gegnerbeobachtung: nur mit Scout, Kosten einmal, gilt bis zum Spieltag',`ohne Scout ${ohne}, beobachtet ${ja}, danach vorbei ${vorbei}`);}
+// DW8. Keine Kosten ohne Wirkung: am Spieltag ohne Spielvorbereitung der letzten zwei Tage und mit einem Videoanalysten bleibt das Geld, der Knopf fehlt
+{const {F,S,ev}=welt(),t=ev('myT()'),l=ev('meineLigaspiele')();S.stab=S.stab.filter(x=>!(x.team===S.my&&(x.r==='scout'||x.r==='video')));S.stab.push(ev('stabNeu')('scout',10,S.my,t.lg));ev('stabGeaendert')();
+  S.tag=l[3].tag;S.gespielt=-1;delete t.vbTag;delete t.gb;const k0=S.fin['Scouting']||0;F.gegnerBeobachten();const ohnePrep=!t.gb&&(S.fin['Scouting']||0)===k0&&!F.gegnerBeobachtenText().includes('<button');
+  S.tag=l[3].tag-2;S.stab.push(ev('stabNeu')('video',12,S.my,t.lg));ev('stabGeaendert')();F.gegnerBeobachten();const mitVideo=!t.gb&&(S.fin['Scouting']||0)===k0&&F.gegnerBeobachtenText().includes('Videoanalyst');
+  pruef(ohnePrep&&mitVideo,'Gegnerbeobachtung ohne Wirkung kostet nichts (am Spieltag ohne Vorbereitung, mit Videoanalyst)',`ohne Vorbereitung ${ohnePrep}, mit Videoanalyst ${mitVideo}`);}
 
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

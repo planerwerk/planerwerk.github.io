@@ -51,17 +51,29 @@ if(lager){const f=ev('lagerMoeglich')('schwarzwald',S.tag+1,7);if(f)return{fehle
 //       Halbfinale verloren → Spiel um Platz 3; nur einmal je Saison
 {const T=welt().ev('RTS').turnier,lauf=(sieg1,sieg2)=>{const {F,S,ev}=welt();S.tag=ev('auftaktTag')(ev('myT()'))+3*7;const d=ev('testspielTage')().find(x=>F.turnierMoeglich(x));if(d==null)return{fehler:'kein Turniertag'};
     const f0=S.fin['Testspiele']||0;F.turnierAnmelden(d);const x1=S.testspiele.find(x=>x.turnier&&x.runde===1);if(!x1)return{fehler:'nicht angemeldet'};const antritt=(S.fin['Testspiele']||0)-f0;
+    const tag2frei=ev('testspielTage')().includes(d+1); /* Tag 2 ist reserviert (DW1) */
     F.turnierNach({h:S.my,a:x1.gegner,hg:sieg1?2:0,ag:sieg1?0:2},x1);const x2=S.testspiele.find(x=>x.turnier&&x.runde===2);if(!x2)return{fehler:'kein zweites Spiel'};
-    F.turnierNach({h:S.my,a:x2.gegner,hg:sieg2?1:0,ag:sieg2?0:1},x2);const v=(S.stat&&S.stat.vit||[]).some(e=>e.k==='turnier');
-    return{d,antritt,finale:x2.finale,tag2:x2.tag===d+1,platz:S.turnier.platz,v,nochmal:F.turnierMoeglich(d+7)};};
+    F.turnierNach({h:S.my,a:x2.gegner,hg:sieg2?1:0,ag:sieg2?0:1},x2);const v=(S.stat&&S.stat.vit||[]).some(e=>e.k==='turnier'),f1=S.fin['Testspiele']||0;
+    // Einmal je Saison (DW10): Tage, an denen ohne das erste Turnier eines ginge, gehen jetzt nicht
+    const U=S.turnier,frei=ev('testspielTage')().filter(x=>{S.turnier=null;const m=F.turnierMoeglich(x);S.turnier=U;return m;});
+    return{d,antritt,tag2frei,finale:x2.finale,tag2:x2.tag===d+1,platz:S.turnier.platz,v,sieg:f1-f0-antritt,nochmal:frei.some(x=>F.turnierMoeglich(x)),pruefbar:frei.length};};
   const a=lauf(true,true),b=lauf(false,true),lg=welt().ev('myT()').lg;
-  pruef(!a.fehler&&a.antritt===(T.antritt[lg]||T.antritt[3])&&a.finale===1&&a.tag2&&a.platz===1&&a.v&&!a.nochmal&&!b.fehler&&b.finale===0&&b.platz===3&&!b.v,
-    'Sommerturnier: Anmeldung mit Antrittsgeld, Finale am Tag danach, Turniersieg mit Pokal, Spiel um Platz 3, einmal je Saison',a.fehler||b.fehler||`Platz ${a.platz} und ${b.platz}, Pokal ${a.v}`);}
+  // Vor der Woche RTS.abWoche geht kein Turnier, weil keine Profis zusagen (DW6)
+  const frueh=(()=>{const {F,S,ev}=welt();S.tag=ev('auftaktTag')(ev('myT()'));return ev('testspielTage')().filter(x=>ev('vorbereitungsWoche')(x)<ev('RTS').abWoche).some(x=>F.turnierMoeglich(x));})();
+  pruef(!a.fehler&&a.antritt===(T.antritt[lg]||T.antritt[3])&&!a.tag2frei&&a.finale===1&&a.tag2&&a.platz===1&&a.v&&a.sieg===(T.sieg[lg]||T.sieg[3])&&!a.nochmal&&!b.fehler&&b.finale===0&&b.platz===3&&!b.v&&b.sieg===0&&!frueh,
+    'Sommerturnier: Anmeldung mit Antrittsgeld, Tag 2 reserviert, Finale am Tag danach, Turniersieg mit Pokal und Siegprämie, Spiel um Platz 3, einmal je Saison, nicht vor der 3. Woche',
+    a.fehler||b.fehler||`Platz ${a.platz} und ${b.platz}, Pokal ${a.v}, Siegprämie ${a.sieg}, Tag 2 frei ${a.tag2frei}, nochmal ${a.nochmal} (${a.pruefbar} Tage geprüft), früh ${frueh}`);}
 // K11c. Anfragen der Computer-Vereine (K11 §5): in der Vorbereitung eine Einladung (Chance hier 1), Zusage ergibt ein Auswärtstestspiel, Absage nichts; in der Automatik keine Anfrage
-{const lauf=(ja,auto)=>{const {F,S,ev}=welt();if(auto){F.lizenzStart(true);}ev('RTS').kiAnfrage.chance=1;const d=ev('auftaktTag')(ev('myT()'))+3*7;S.tag=d;F.kiTestspielAnfrage(d);const a=S.tsKI;
-    if(!a)return{a:null};F.kiTestspielAntwort(ja);const x=(S.testspiele||[]).find(y=>y.gegner===a.tid&&y.tag===a.tag);return{a,x,weg:!S.tsKI};};
-  const j=lauf(1,false),n=lauf(0,false),au=lauf(1,true);
-  pruef(!!j.a&&!!j.x&&j.x.heim===false&&j.x.stand==='zugesagt'&&j.weg&&!!n.a&&!n.x&&n.weg&&!au.a,'Anfragen der Computer-Vereine: Einladung, Zusage als Auswärtsspiel, Absage, keine in der Automatik',
-    `Zusage ${!!j.x}, Absage ${!n.x}, Automatik ${au.a?'Anfrage':'keine'}`);}
+// Seit Prüfung DW: über den Montag in testspieleTag, Antwort am letzten Tag der Frist (DW3), Halt „Frist“ an diesem Tag (DW4), nicht mehr in der nächsten Saison
+// oder bei einem anderen Verein (DW2)
+{const lauf=(ja,auto)=>{const {F,S,ev}=welt();if(auto){F.lizenzStart(true);}ev('RTS').kiAnfrage.chance=1;let d=ev('auftaktTag')(ev('myT()'))+3*7;
+    while(ev('wochentag')(d)!==ev('RK').wochenTag)d++;S.tag=d;F.testspieleTag(d);const a=S.tsKI;
+    if(!a)return{a:null};const frist=ev('haltGrund')(a.bis),abstand=a.tag-d;S.tag=a.bis;F.kiTestspielAntwort(ja);const x=(S.testspiele||[]).find(y=>y.gegner===a.tid&&y.tag===a.tag);
+    S.tsKI=Object.assign({},a,{bis:a.bis+30});S.season++;const naechste=!!ev('tsKIOffen')(S.tag);S.season--;S.tsKI.my=S.my+1;const andere=!!ev('tsKIOffen')(S.tag);S.tsKI=null;
+    return{a,x,weg:true,frist,abstand,alt:naechste||andere};};
+  const j=lauf(1,false),n=lauf(0,false),au=lauf(1,true),R=welt().ev('RTS');
+  pruef(!!j.a&&!!j.x&&j.x.heim===false&&j.x.stand==='zugesagt'&&j.frist==='Frist'&&j.abstand>=R.kiAnfrage.tage+R.vorlaufTage&&!j.alt&&!!n.a&&!n.x&&!au.a,
+    'Anfragen der Computer-Vereine: Einladung am Montag, Zusage am letzten Tag als Auswärtsspiel, Halt zur Frist, Absage, keine in der Automatik, nicht in der nächsten Saison oder bei einem anderen Verein',
+    `Zusage ${!!j.x}, Absage ${!n.x}, Automatik ${au.a?'Anfrage':'keine'}, Halt ${j.frist}, Abstand ${j.abstand} Tage, alte Einladung gilt ${j.alt}`);}
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

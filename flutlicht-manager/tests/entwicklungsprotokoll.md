@@ -64,7 +64,7 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 | **K18c** Gegnerbeobachtung, dazu Korrekturen DV | `mitarbeit/popolupo-k18c-gegnerbeobachtung` (auf U12l) | fertig, ungetestet |
 | **K11b** Sommerturnier | `mitarbeit/popolupo-k11b-sommerturnier` (auf K18c) | fertig, ungetestet |
 | **K11c** Testspiel-Anfragen der Computer-Vereine | `mitarbeit/popolupo-k11c-testspiel-anfragen` (auf K11b) | fertig, ungetestet |
-| **U19e** Europapokal-Karten, dazu **K31b** Bedarf anderer Vereine | `mitarbeit/popolupo-u19e-europa-karten` (auf K11c) | fertig, ungetestet |
+| **U19e** Europapokal-Karten, dazu **K31b** Bedarf anderer Vereine und Korrekturen DW | `mitarbeit/popolupo-u19e-europa-karten` (auf K11c) | fertig, ungetestet |
 | U19d2 volle Kader der Auslandsvereine in der Engine | zurückgestellt | Entwurf in K37 §5.7. Die Engine behandelt Auslandsvereine als Block wie Amateure, viele Stellen schlagen Spieler in `PIX` nach. Erst nach einem Testlauf und der Messung des Faktors 0,93 |
 
 **Die neueste Spitze ist immer der zuletzt genannte Zweig, er enthält alles davor.** K24 ist fertig (Claude).
@@ -104,6 +104,17 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 ---
 
 ## Changelog
+
+### 22.11.2026: Korrekturen nach Prüfung DW zu U12l, K18c, K11b und K11c (Zweig `mitarbeit/popolupo-u19e-europa-karten`, dritter Commit)
+
+- Ein lesender Prüf-Agent hat die vier Schritte und die Korrekturen DV durchgesehen (Konsistenzprüfung DW). Er fand keinen blockierenden Fehler.
+- **Behoben:**
+  - DW1, DW6, DW7 (Sommerturnier): Tag 2 ist ab der Anmeldung belegt, Turniere erst ab der 3. Woche, keine Zuschauereinnahmen im Turnier.
+  - DW2 bis DW4 (Einladungen): gelten nur in ihrer Saison und für ihren Verein, der Termin passt auch bei einer Antwort am letzten Tag, Halt „Frist“ an diesem Tag.
+  - DW5: Das Zielgespräch nennt wieder die richtigen Prozente, wenn vorher das Budgetgespräch geklappt hat.
+  - DW8: Die Gegnerbeobachtung kostet nichts mehr, wenn sie nichts bringt (Videoanalyst, keine Spielvorbereitung).
+  - DW9: Kommentar, zwei Zahlen in die Regeln.
+- **Tests zuerst:** `tests/testspiele.js` (K11b, K11c), `tests/scouting.js` (K18c, DW8), `tests/vorstand.js`.
 
 ### 22.11.2026: K31b Bedarf anderer Vereine (Zweig `mitarbeit/popolupo-u19e-europa-karten`, zweiter Commit)
 
