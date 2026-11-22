@@ -62,7 +62,7 @@ function tagesSpieleAbschliessenLauf(out){const d=out.tag;S.gespielt=d;
 
 // Werte pro Tag: Ausfalltage zählen herunter, Frische erholt sich, Fristen laufen ab, Bau wird fertig.
 function taeglich(d){return mitStrom(strom('tag',S.season,d),()=>taeglichLauf(d));}
-function taeglichLauf(d){const T=RT;praegungTag(d);wechselTag(d); // vereinbarte Wechsel zum Winterfenster (K19, U10a)
+function taeglichLauf(d){const T=RT;praegungTag(d);wechselTag(d);konkurrenzTag(d); // vereinbarte Wechsel zum Winterfenster (K19, U10a), Frist im Bieterwettstreit (K20c)
   if(S.phase==='play')testspieleTag(d);
   const ab=S.phase==='play'?spielAbstand(d):new Map(),status=new Map();
   S.teams.forEach(t=>{if(!aktiv(t))return;sommerTag(t,ab.get(t.id),d);const st=sommerStatus(t);status.set(t.id,st);

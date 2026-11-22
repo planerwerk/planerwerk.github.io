@@ -7,6 +7,7 @@ const pruef=(ok,text,wert)=>{console.log(`${ok?'✓':'✗'} ${text}${wert!=null?
 const pc=x=>(x*100).toFixed(0)+' %',f2=x=>x.toFixed(2),m=l=>l.length?l.reduce((a,b)=>a+b,0)/l.length:0;
 const welt=(id=9)=>{const {W,F}=neueWelt();const zaehl=[];const orig=F.news;F.news=function(t,c){if(String(t).startsWith('Wechsel perfekt'))zaehl.push(W.S.tag);return orig(t,c);};
   F.buildWorld(SEED);const S=W.S,ev=W.ev;S.my=id;S.mgr='Test';F.setTarget();F.sponsOffers();F.sponsorWaehlen(0);S.lineup=F.bestXI(id,ev('myT()').form);
+  ev('RAW').konkurrenz.chance=0; // ohne Mitbieter (K20c), damit die Käufe der älteren Prüfungen gleich bleiben. Nr. K20c schaltet ihn ein.
   const im=(k,fn)=>ev('mitStrom')(ev('strom')('test',k),fn);return{W,F,S,ev,im,t:ev('myT()'),T:ev('RTR'),zaehl};};
 // Ein Kauf über die Spielerkarte ohne Oberfläche: Felder für Angebot und Laufzeit setzen, dann offer()
 const kaufe=(w,p,fee,yrs=3)=>{const els=w.W.ev('document');els.getElementById('fee').value=String(fee/1e6);els.getElementById('yrs').value=String(yrs);els.getElementById('msg').textContent='';w.F.offer(p.id);if(els.getElementById('msg').textContent.includes('Medizincheck')){els.getElementById('msg').textContent='';w.F.offer(p.id);}return els.getElementById('msg').textContent;}; // bei einem Befund im Medizincheck ein zweiter Klick (U10d)
@@ -78,6 +79,17 @@ const kaufe=(w,p,fee,yrs=3)=>{const els=w.W.ev('document');els.getElementById('f
 // 9. Speichern und Laden mit einem vereinbarten Wechsel
 {const w=welt(),{S,F,ev,t,W}=w;t.cash=5e8;S.tag=100;const p=S.pl.filter(q=>q.team>=0&&q.team!==S.my&&q.age<29).sort((a,b)=>b.str-a.str).find(q=>{const msg=kaufe(w,q,ev('askPrice')(q));return !msg||!msg.includes('kein Interesse');});
   W.S=JSON.parse(JSON.stringify(S));F.reindex();const q=ev('PIX').get(p.id);ev('wechselTag')(184);pruef(q&&q.team===W.S.my&&!q.wech,'Speichern und Laden: Der vereinbarte Wechsel bleibt erhalten und wird vollzogen');}
+
+// K20c. Bieterwettstreit beim Kauf (K20 §4.2): Nach dem Ja des Verkäufers bietet ein Computer-Verein mit Bedarf mehr, die Forderung steigt auf sein Gebot,
+//       weniger reicht nicht, Mitgehen gewinnt (der andere zieht zurück), nur einmal je Spieler und Saison; ohne Mitgehen wechselt der Spieler nach der Frist zum Konkurrenten
+{const w=welt(),{S,F,ev}=w;ev('RAW').konkurrenz.chance=1;S.teams.forEach(x=>{if(x.id!==S.my)x.cash=5e8;});
+  const p=S.pl.filter(q=>q.team>=0&&q.team<1000&&q.team!==S.my&&!q.leihe&&S.teams[q.team].lg===2).sort((a,b)=>b.str-a.str)[0],fee=ev('forderung')(p);
+  const k=F.konkurrenzKauf(p,fee),v=ev('verhandlungVon')(p),zweimal=F.konkurrenzKauf(p,fee)===null;
+  const f1=ev('forderung')(p),r1=F.kaufRunde(p,fee),r2=k?F.kaufRunde(p,k):null,weg=!v||!v.konk;
+  const w2=welt(),q=w2.S.pl.filter(x=>x.team>=0&&x.team<1000&&x.team!==w2.S.my&&!x.leihe).sort((a,b)=>b.str-a.str)[5],b=w2.S.teams.find(x=>x.id!==w2.S.my&&x.id!==q.team&&w2.ev('aktiv')(x)&&w2.ev('squad')(x.id).length<30);
+  b.cash=5e8;const vq=w2.ev('verhandlung')(q);vq.konk={tid:b.id,amt:1e6,bis:w2.S.tag};w2.F.konkurrenzTag(w2.S.tag);const noch=q.team!==b.id;w2.F.konkurrenzTag(w2.S.tag+1);
+  pruef(k>fee&&!!v&&v.konk===null&&zweimal&&f1===k&&!r1.ok&&r1.gegen===k&&!!r2&&r2.ok&&weg&&noch&&q.team===b.id,'K20c: Bieterwettstreit beim Kauf (Gegenangebot, Mitgehen, Frist)',
+    `Ablöse ${fee}, Gegenangebot ${k}, Forderung ${f1}, weniger: ${r1.text||''}, Wechsel nach der Frist zu ${q.team===b.id?b.name:'–'}`);}
 
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

@@ -29,7 +29,8 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 | **K23f** Kartenbeträge nach Liga | `mitarbeit/popolupo-k23f-karten-nach-liga` (auf K26b) | fertig, ungetestet |
 | **K27b** Dauerkarten | `mitarbeit/popolupo-k27b-dauerkarten` (auf K23f) | fertig, ungetestet |
 | **K20b** Preise am Deadline Day, dazu Korrekturen CX | `mitarbeit/popolupo-k20b-deadline-preise` (auf K27b) | fertig, ungetestet |
-| **K26c** Fanshop und Instandhaltung der Computer-Vereine | `mitarbeit/popolupo-k26c-fanshop-instandhaltung` (auf K20b) | fertig, ungetestet |
+| **K26c** Fanshop und Instandhaltung der Computer-Vereine, dazu Korrekturen CZ | `mitarbeit/popolupo-k26c-fanshop-instandhaltung` (auf K20b) | fertig, ungetestet |
+| **K20c** Bieterwettstreit beim Kauf | `mitarbeit/popolupo-k20c-bieter-kauf` (auf K26c) | fertig, ungetestet |
 | U19d2 volle Kader der Auslandsvereine in der Engine | danach | Entwurf in K37 §5.7 |
 
 **Die neueste Spitze ist immer der zuletzt genannte Zweig, er enthält alles davor.** K24 ist fertig (Claude).
@@ -63,6 +64,11 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 ---
 
 ## Changelog
+
+### 22.11.2026: K20c Bieterwettstreit beim Kauf (Zweig `mitarbeit/popolupo-k20c-bieter-kauf`, auf K26c)
+
+- **Neu (K20 §4.2, Konsistenzprüfung DA):** Sagt ein deutscher Verein im offenen Fenster Ja zu deiner Ablöse, bietet mit 25 % ein Computer-Verein mit Bedarf mit (2 bis 10 % mehr, höchstens sein Vereinswert). Du hast 2 Tage zum Mitgehen, sonst wechselt der Spieler zu ihm.
+- **Tests zuerst:** `tests/transfers.js` (neu K20c, ältere Prüfungen ohne Mitbieter), `tests/vertraege.js`, `tests/leihe.js`, `tests/fuzz-karrieren.js`, `tests/lizenz.js`.
 
 ### 22.11.2026: Korrekturen nach Prüfung CZ (Zweig `mitarbeit/popolupo-k26c-fanshop-instandhaltung`)
 

@@ -35,13 +35,28 @@ function deadlinePreis(p){const D=RAW.deadline;if(!D.preis||!(p.team>=0&&p.team<
   return clamp(1+D.preis*(2*u-1)+(p.list?D.liste:0),1-D.preis+Math.min(0,D.liste),1+D.preis);}
 const forderungDu=p=>forderungBasis(p)*(p.team>=0&&p.team<AV0&&S.teams[p.team]?bezAbloese(p.team):1)*abwFaktor(p)*gerFaktor(p)*deadlinePreis(p); // aufgeflogenes Abwerben +15 % (K20 §5.4, U15), bekanntes Interesse aus der Gerüchteküche (K29 §5.5, U17b)
 // Aktuelle Forderung: Grundforderung oder das letzte Gegenangebot
-function forderung(p){const b=rundeAb(forderungDu(p)),v=verhandlungVon(p);return v&&v.f!=null?Math.min(b,v.f):b;}
+function forderung(p){const b=rundeAb(forderungDu(p)),v=verhandlungVon(p),f=v&&v.f!=null?Math.min(b,v.f):b;return konkurrenzOffen(v)?Math.max(f,v.konk.amt):f;} // Gegenangebot eines anderen Vereins (K20c)
+// ---------- Bieterwettstreit beim Kauf (K20 §4.2, K20c) ----------
+// In der Verhandlung v: kg = Saison der einmaligen Prüfung, konk = {tid Konkurrent, amt Gebot, bis Frist (Tag)} solange offen. Gewürfelt im eigenen Strom je Spieler und Saison.
+const konkurrenzOffen=v=>!!(v&&v.konk&&v.konk.bis>=S.tag);
+// Nach deiner angenommenen Ablöse (aktionen.js offer): Gibt es einen Mitbieter, Rückgabe sein Gebot (und v.konk gesetzt), sonst null
+function konkurrenzKauf(p,fee){const v=verhandlung(p),B=RAW.bieter,K=RAW.konkurrenz;if(v.kg===S.season||!fensterOffen()||!(p.team>=0&&p.team<1000)||p.team===S.my||istLeihe(p))return null;v.kg=S.season;
+  const kand=S.teams.filter(t=>t.id!==S.my&&t.id!==p.team&&aktiv(t)&&hatBedarf(t,p)&&t.cash>fee*(1+B.plus[1]+B.gierig)&&rahmenErlaubt(t,salaryFor(p.str))&&bez(t.id,p.team)>=RBZ.wirkung.gespraechUnter&&squad(t.id).length<RM.kaeufer.kaderMax);
+  if(!kand.length)return null;
+  return mitStrom(strom('konkurrenzKauf',S.season,p.id),()=>{if(R()>=K.chance)return null;const b=pick(kand),be=beraterVon(p),gier=be&&be.prof==='gierig'?B.gierig:0;
+    const amt=rundeAb(Math.min(vwKauf(p,b.id),fee*(1+B.plus[0]+R()*(B.plus[1]-B.plus[0])+gier)));if(amt<=fee)return null;v.konk={tid:b.id,amt,bis:S.tag+B.frist};return amt;});}
+// Täglich (ablauf.js taeglichLauf): Frist vorbei, ohne dass du mitgegangen bist: Der Spieler wechselt zum Konkurrenten, wenn das Fenster noch offen ist
+function konkurrenzTag(d){if(!S.verh)return;Object.keys(S.verh).forEach(id=>{const v=S.verh[id],k=v&&v.konk;if(!k||d<=k.bis)return;v.konk=null;const p=PIX.get(+id),b=S.teams[k.tid];
+  if(!p||p.team!==v.team||p.wech||p.leihe||!fensterOffen(d)||!b||!aktiv(b)||b.cash<k.amt||squad(b.id).length>=RM.kaeufer.kaderMax)return;
+  delete S.verh[id];kiWechsel(p,b,k.amt);news(`Bieterwettstreit verloren: ${p.n} wechselt für ${fmt(k.amt)} zu ${b.name}.`,'bad');});}
 const schmerzgrenze=p=>rundeAb(forderungDu(p)/RTR.forderung*RTR.schmerzgrenze);
 // Eine Runde: dein Angebot an den Verein. Rückgabe {ok,preis} oder {text,gegen}
 function kaufRunde(p,fee){const T=RTR,v=verhandlung(p),F=forderung(p),sch=schmerzgrenze(p),wer=vereinName(p);
   if(v.pause>S.tag)return{text:`${wer} will bis ${datumKurz(v.pause)} nicht mehr über ${p.n} reden.`};
   // Schlechte Beziehung (K17 §5.2, U12c): Zu Beginn einer Verhandlung lehnt der Verein womöglich jedes Gespräch ab
   if(v.r===0&&bezLehntAb(p.team)){v.pause=S.tag+T.pause;return{text:`${wer} will mit dir nicht über ${p.n} reden (Beziehung ${bezZahl(bezWirk(p.team))}). Frühestens am ${datumKurz(v.pause)} wieder.`};}
+  // Bieterwettstreit (K20c): Solange das Gegenangebot gilt, zählt nur, ob du mitgehst. Gehst du mit, zieht der andere Verein zurück.
+  if(konkurrenzOffen(v)){if(fee>=v.konk.amt){v.konk=null;return{ok:true,preis:fee};}return{text:`${wer} hat ein höheres Angebot eines anderen Vereins vorliegen: ${fmt(v.konk.amt)}. Bis ${datumKurz(v.konk.bis)} kannst du mitgehen.`,gegen:v.konk.amt};}
   if(fee>=F)return{ok:true,preis:fee};
   v.r++;let txt='';if(fee<F*T.spott){v.g--;txt=`${wer} nimmt das als Spottangebot. `;bezDuAendern(p.team,RBZ.anlass.spott,`Spottangebot für ${p.n}`);}
   if(v.g<=0||v.r>=T.runden.kauf){v.pause=S.tag+T.pause;v.f=null;v.r=0;v.g=T.geduld;return{text:txt+`${wer} bricht die Verhandlung ab. Frühestens am ${datumKurz(v.pause)} wieder.`};}

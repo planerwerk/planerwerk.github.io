@@ -420,7 +420,10 @@ const REGELN={
     folgen:{beziehung:[-30,-15],forderung:1.15,stimmung:-10,vertrauen:-3},
     // Deadline Day (K20 §4.3, K20b 22.11., GESCHÄTZT): in den letzten tage Tagen eines Fensters schwankt die Forderung deutscher Computer-Vereine an dich um bis zu ±preis
     // (fest je Spieler und Tag), für Spieler auf ihrer Transferliste um liste verschoben. Angebote für deine Spieler auf der Transferliste kommen angebote-mal so oft.
-    deadline:{tage:3,preis:0.15,liste:-0.1,angebote:1.5},bieter:{plus:[0.02,0.10],gierig:0.05,frist:2}},
+    deadline:{tage:3,preis:0.15,liste:-0.1,angebote:1.5},bieter:{plus:[0.02,0.10],gierig:0.05,frist:2},
+    // Bieterwettstreit beim Kauf (K20 §4.2, K20c, 22.11., GESCHÄTZT): Sagt ein deutscher Verein im offenen Fenster Ja zu deiner Ablöse, bietet mit dieser Chance ein Computer-Verein
+    // mit Bedarf mit (einmal je Spieler und Saison): deine Ablöse plus bieter.plus (gieriger Berater + bieter.gierig), höchstens sein Vereinswert. Du hast bieter.frist Tage zum Mitgehen.
+    konkurrenz:{chance:0.25}},
 
   // Fanstimmung (K27 §5.4b, §11, U16), 0–100. Montags traegheit Richtung Ziel = start + Erfolg + Preise + Identifikation + Entscheidungen + Umfeld, je Baustein begrenzt.
   // erfolg: jePlatz × (erwarteter Platz − Platz) ab abSpiel Ligaspielen, serie × (Punkte je Spiel der letzten fünf − serieMitte), Anlässe (derby, pokal, pokalAusTiefer) mit verblassen je Woche.
