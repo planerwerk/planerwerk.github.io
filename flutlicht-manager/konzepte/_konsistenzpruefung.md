@@ -1553,3 +1553,16 @@ Zweig `mitarbeit/popolupo-k23f-karten-nach-liga`, auf K26b. Erledigt CP7 zum Tei
 | CU2 | **Texte:** Platzhalter `{geld:Grundwert}`, ersetzt in `kartenText` (auch im Ausgang). Das Prüfskript in `tests/karten.js` erkennt ihn nicht als unbekannten Platzhalter, weil es nur `{wort}` sucht. | ✅ |
 | CU3 | **Tests angepasst:** `tests/karten.js` (Teamausflug), `tests/finanzen.js` (Mäzen), `tests/spielwelt-karten.js` (Abschiedsspiel) rechnen mit `kartenGeld`. Der Testverein spielt in der 1. Liga, die Beträge sind dort viermal so hoch. | ✅ ungetestet |
 | CU4 | **Noch offen aus CP7:** Kampagnen (haben schon einen Ligafaktor, K25a), Fanartikel und Logen, Fanartikel der Computer-Vereine. | offen |
+
+---
+
+## CV. Nachtrag zu K27b: Dauerkarten (22. November 2026, popolupo, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-k27b-dauerkarten`, auf K23f. Ausführlich in K27 §5.2 (Umsetzung).
+
+| # | Befund | Status |
+|---|---|---|
+| CV1 | **Einnahmen:** `heimspielEinnahmen` bucht in der Liga „Dauerkarten“ (alle Inhaber, Preis × (1 − Rabatt)) und „Zuschauer“ nur für die übrige Nachfrage. Die gezählten Zuschauer sind mindestens die Zahl der Dauerkarten. Bei vollem Stadion und 20 % Rabatt sinken die Spieltagseinnahmen gegenüber vorher um etwa 9 bis 12 %. | ⚠️ im Testlauf ansehen, ob die Prognose und das Nebenziel Finanzen damit kippen |
+| CV2 | **Gleichschritt:** In der Automatik gilt der Standardrabatt, der Baustein der Fanstimmung bekommt +0. Der Würfel der Zuschauer bleibt (ein Wurf je Heimspiel wie vorher). Nur das Geld deines Vereins ändert sich, und das trennt die Läufe ohnehin. | ✅ |
+| CV3 | **Computer-Vereine** haben keine Dauerkarten. Ihre Einnahmen sind ohnehin der Erwartungswert ohne Würfel (K23b). | bewusst |
+| CV4 | **Alte Spielstände:** ohne `S.dk` verkauft der Verein beim nächsten Ligaheimspiel, auch mitten in der Saison. | ✅ |

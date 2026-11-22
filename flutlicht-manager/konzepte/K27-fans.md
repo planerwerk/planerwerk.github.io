@@ -1,6 +1,6 @@
 # K27 – Fans und Zuschauer
 
-Status: **Entwurf** (8. November 2026), nach „weiter, entscheide du“. Vorläufige Entscheidungen stehen in Abschnitt 12. **Teilweise umgesetzt mit U16 (20. November 2026, §5.4b), noch ohne Testlauf.**
+Status: **Entwurf** (8. November 2026), nach „weiter, entscheide du“. Vorläufige Entscheidungen stehen in Abschnitt 12. **Teilweise umgesetzt mit U16 (20. November 2026, §5.4b) und K27b Dauerkarten (22. November 2026, §5.2), noch ohne Testlauf.**
 Hängt ab von: K23 (Finanzen), K26 (Stadion) · Wird gebraucht von: K04 (Heimvorteil), K09 (Zuschauer-Vergehen), K14, K24, K25, K28.
 
 ## 1. Ziel und Spielgefühl
@@ -58,6 +58,15 @@ Ziel = 60 + Erfolg + Preise + Identifikation + Entscheidungen + Umfeld     (0–
 - **Verkauf** im Sommer: Anteil der Kapazität = 0,35 + 0,25 × Fanstimmung/100, verschoben durch den Rabatt (Spielwert, prüfen) und begrenzt durch die Plätze ohne Gästeblock.
 - Dauerkarten-Inhaber zählen in jedem Heimspiel als Zuschauer (Nichterscheinen spielt keine Rolle für die Einnahmen).
 - **Folge:** Einnahmen sicherer, weniger Schwankung durch Formkrisen.
+
+**Umsetzung K27b (22.11.2026, popolupo, ohne Testlauf, `js/fans.js`):**
+- **Nur dein Verein.** Die Einnahmen der Computer-Vereine bleiben beim Erwartungswert (K23b), dort gleichen sich Schwankungen ohnehin aus.
+- **Verkauf** beim ersten Ligaheimspiel der Saison (auch nach einem Jobwechsel beim neuen Verein). Anteil der Plätze = 0,35 + 0,25 × Fanstimmung/100 + 0,5 × (Rabatt − 20 %), höchstens 90 % (10 % Gästeblock).
+- **Rabatt** 10, 20 oder 30 % im Finanzen-Tab unter dem Eintrittspreis, nur vor dem Verkauf, Bereich `preise` (in der Automatik 20 %).
+- **Je Ligaheimspiel:** Alle Inhaber zählen als Zuschauer und zahlen Ticketpreis × (1 − Rabatt) (Buchung „Dauerkarten“, laufend in der Prognose). Die übrige Nachfrage kauft Einzelkarten zum vollen Preis. Pokal und Europapokal laufen wie bisher nur mit Einzelkarten.
+- **Fanstimmung:** Baustein Preise +2 je 10 Prozentpunkte Rabatt über dem Standard, −2 darunter.
+- **Rechnung:** Bei 20 % Rabatt und einem vollen Stadion bringen Dauerkarten weniger als Einzelkarten. In einer Krise (Nachfrage unter der Zahl der Dauerkarten) bringen sie mehr. Das ist der Hebel aus §6.
+- **Noch nicht:** Gästeblock als eigene Plätze, Dauerkarten der Computer-Vereine, Warteliste.
 
 ### 5.3 Nachfrage
 
@@ -163,6 +172,7 @@ fans:{
 6. Vorstand mit toter Zone von 45 bis 75, damit kleine Schwankungen das Vertrauen nicht bewegen.
 7. Fan-Gespräch ab der C-Lizenz, einmal im Monat.
 8. Dauerkarten, Gästeblock, Ultras, Tradition, Choreo, Pyro, Platzsturm und Heimvorteil verschoben (§5.4b).
+9. **Dauerkarten gebaut mit K27b** (22.11., popolupo, ohne Testlauf, §5.2): nur dein Verein, Verkauf beim ersten Ligaheimspiel, Rabatt 10, 20 oder 30 % im Bereich `preise`, Zahlung je Ligaheimspiel statt auf einmal (so stimmt die Prognose aus K23a), Fanstimmung ±2 je 10 Prozentpunkte Rabatt.
 
 ## Quellen
 

@@ -53,4 +53,14 @@ function welt(lernstufen){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;
 {let anteil=null,werte='';saisons({n:1,seed:SEED,verein:VEREIN,beiSaisonende:S=>{const l=S.teams.filter(t=>t.lg<=3).map(t=>t.fanst==null?60:t.fanst);anteil=l.filter(v=>v>=40&&v<=80).length/l.length;werte=`min ${Math.min(...l)}, max ${Math.max(...l)}`;}});
   pruef(anteil!=null&&anteil>=0.7,'Saison: mindestens 70 % der Vereine mit Fanstimmung zwischen 40 und 80',anteil!=null?`${Math.round(anteil*100)} % (${werte})`:'kein Saisonende');}
 
+// K27b. Dauerkarten (K27 §5.2): Anteil nach Fanstimmung und Rabatt, höchstens ohne Gästeblock; Verkauf beim ersten Ligaheimspiel; die Inhaber zahlen auch bei kleiner Nachfrage;
+//       Rabatt nur vor dem Verkauf wählbar; mehr Rabatt hebt den Baustein Preise der Fanstimmung
+{const {W,F,S,ev,t}=welt(false),D=ev('RFS').dauerkarten;t.fanst=60;const a20=F.dkAnteil(t,0.2),a30=F.dkAnteil(t,0.3);t.fanst=100;const voll=F.dkAnteil(t,0.3);t.fanst=60;
+  const p0=F.fanBausteine(t).preise;F.dkRabattSetzen(0.3);const p1=F.fanBausteine(t).preise;
+  const o=S.teams.find(x=>x.lg===t.lg&&x.id!==S.my);W.ev('attendance=function(){return 100;}');const f0=S.fin['Dauerkarten']||0,z0=S.fin['Zuschauer']||0;
+  F.heimspielEinnahmen({h:S.my,a:o.id,hg:0,ag:0},false);const d=ev('dkAktuell')(),pz=t.price*ev('zuschauerFaktor')(t);
+  const dk1=(S.fin['Dauerkarten']||0)-f0,z1=(S.fin['Zuschauer']||0)-z0;F.dkRabattSetzen(0.1);const fest=ev('dkAktuell')().r===0.3;
+  pruef(nah(a20,D.basis+D.jeStimmung*0.6)&&nah(a30,a20+D.jeRabatt*0.1)&&nah(voll,1-D.gaesteblock)&&nah(p1-p0,D.fans)&&!!d&&d.n===Math.round(t.cap*a30)&&dk1===Math.round(Math.min(d.n,t.cap)*pz*0.7)&&z1===0&&fest,
+    'Dauerkarten: Anteil, Verkauf beim ersten Ligaheimspiel, Einnahmen auch bei kleiner Nachfrage, Rabatt danach fest, Fanstimmung',`Anteil ${a20.toFixed(3)} / ${a30.toFixed(3)} / ${voll.toFixed(3)}, Preise ${p0.toFixed(2)} → ${p1.toFixed(2)}, verkauft ${d&&d.n}, Dauerkarten ${dk1}, Einzelkarten ${z1}`);}
+
 console.log(probleme.length?`\n${probleme.length} Problem(e).`:'\nAlles in Ordnung.');process.exitCode=probleme.length?1:0;

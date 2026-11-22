@@ -8,7 +8,7 @@ function istLiebling(p,tid){const F=RFS.ident,n=vereinsSpiele(p,tid);return n>=F
 function fanBausteine(t){const F=RFS,E=F.erfolg,c=(x,s)=>clamp(x,s[0],s[1]);let erfolg=t.fanE||0;
   const tab=table(t.lg),i=tab.findIndex(r=>r.id===t.id),r=tab[i];
   if(r&&r.sp>=E.abSpiel){erfolg+=E.jePlatz*((t.expPos||i+1)-(i+1));const l=r.last.slice(-5);if(l.length)erfolg+=E.serie*(l.reduce((a,b)=>a+b,0)/l.length-E.serieMitte);}
-  const rp=richtPreis(t),preise=t.price&&rp>0?F.preise.faktor*(1-t.price/rp):0,lieb=squad(t.id).filter(p=>istLiebling(p,t.id));
+  const rp=richtPreis(t),preise=(t.price&&rp>0?F.preise.faktor*(1-t.price/rp):0)+dkFans(t),lieb=squad(t.id).filter(p=>istLiebling(p,t.id)); // dazu der Dauerkartenrabatt (K27b)
   return{erfolg:c(erfolg,E.spanne),preise:c(preise,F.preise.spanne),ident:c(F.ident.basis+F.ident.jeLiebling*lieb.length,F.ident.spanne),entscheid:c(t.fanD||0,F.entscheid.spanne),umfeld:c(t.fanU||0,F.umfeld.spanne),lieb};}
 function fanZiel(t){const b=fanBausteine(t);return clamp(RFS.start+b.erfolg+b.preise+b.ident+b.entscheid+b.umfeld,0,100);}
 // Montags (ablauf.js woechentlichLauf, vor dem Vorstand): Richtung Ziel, Anlässe verblassen
@@ -39,3 +39,23 @@ function fansKarte(){const t=myT(),b=fanBausteine(t),v=fanst(t),z=fanZiel(t),f=x
   return`<div class="card rgs"><h2>Fans</h2>${rgAnzeige({label:'Fanstimmung',sub:'0–100, wirkt auf Zuschauer und Vorstand',min:0,max:100,wert:Math.round(v),marker:[{v:Math.round(z),t:'Ziel '+Math.round(z)}],zonen:[{von:0,bis:RFS.protestUnter,art:'bad',text:'Protest: Pfiffe in Heimspielen'},{von:RFS.vorstand.zone[1],bis:100,art:'good',text:'Rückenwind'}]})}
     <p class="dim">Bausteine des Ziels (montags 15 % Richtung Ziel): Erfolg ${f(b.erfolg)}, Preise ${f(b.preise)}, Identifikation ${f(b.ident)}${b.lieb.length?` (Lieblinge: ${b.lieb.slice(0,5).map(p=>esc(p.n)).join(', ')}${b.lieb.length>5?' …':''})`:''}, Entscheidungen ${f(b.entscheid)}, Umfeld ${f(b.umfeld)}. Zuschauer × ${de(fanFaktor(t),2)}.</p>
     ${lzHinweis('fangespraech')}<div class="row"><button onclick="fanGespraech()"${lzAus('fangespraech')}${fanGespraechFrei()?'':' disabled'}>Fan-Gespräch</button><span class="dim">einmal im Monat, wirkt nach deiner Glaubwürdigkeit (${Math.round(glaub(t))})</span></div></div>`;}
+
+// ---------- Dauerkarten (K27 §5.2, K27b, 22.11., popolupo) ----------
+// Nur dein Verein. S.dk = {s Saison, tid Verein, r Rabatt, n verkauft (fehlt bis zum Verkauf)}. Verkauf beim ersten Ligaheimspiel der Saison (ablauf.js heimspielEinnahmen),
+// vorher wählst du den Rabatt (Bereich preise, in der Automatik der Standard). Je Ligaheimspiel zahlen alle Inhaber Preis × (1 − Rabatt), auch wenn weniger kommen. Kein Zufall.
+const dkStand=()=>S.dk&&S.dk.s===S.season&&S.dk.tid===S.my?S.dk:null;
+const dkAktuell=()=>{const d=dkStand();return d&&d.n!=null?d:null;};
+const dkRabatt=()=>{const D=RFS.dauerkarten,d=dkStand();return autoB('preise')||!d||d.r==null?D.rabatt:d.r;};
+// Anteil der Plätze nach Fanstimmung und Rabatt, höchstens ohne Gästeblock
+function dkAnteil(t,r){const D=RFS.dauerkarten;return clamp(D.basis+D.jeStimmung*fanst(t)/100+D.jeRabatt*(r-D.rabatt),0,1-D.gaesteblock);}
+function dkVerkauf(t){const r=dkRabatt(),n=Math.round(t.cap*dkAnteil(t,r));S.dk={s:S.season,tid:S.my,r,n};
+  news(`Dauerkarten: ${n.toLocaleString('de-DE')} verkauft (${Math.round(r*100)} % Rabatt). Die Inhaber zahlen in jedem Ligaheimspiel, auch wenn weniger kommen.`,'');return S.dk;}
+// Fanstimmung, Baustein Preise (fans.js fanBausteine): mehr Rabatt als der Standard freut die Fans, weniger ärgert sie. Nur dein Verein.
+function dkFans(t){if(!t||t.id!==S.my)return 0;const D=RFS.dauerkarten;return D.fans*(dkRabatt()-D.rabatt)*10;}
+function dkRabattSetzen(r){const D=RFS.dauerkarten;if(!darf('preise')||!D.stufen.includes(r)||dkAktuell())return;S.dk={s:S.season,tid:S.my,r};save();render();}
+// Anzeige im Finanzen-Tab unter dem Eintrittspreis
+function dauerkartenText(t){const D=RFS.dauerkarten,d=dkAktuell(),pct=x=>Math.round(x*100)+' %';
+  if(d)return`<p>Dauerkarten: <b>${d.n.toLocaleString('de-DE')}</b> verkauft (${pct(d.r)} Rabatt), je Ligaheimspiel ${fmt(Math.round(d.n*t.price*zuschauerFaktor(t)*(1-d.r)))}.</p>`;
+  const r=dkRabatt();
+  return`<p>Dauerkarten werden beim ersten Ligaheimspiel verkauft, voraussichtlich etwa ${Math.round(t.cap*dkAnteil(t,r)).toLocaleString('de-DE')} (${pct(r)} Rabatt). Mehr Rabatt: mehr Dauerkarten und zufriedenere Fans, aber weniger je Platz.</p>
+    <div class="row">${D.stufen.map(x=>`<button class="${x===r?'go':''}" onclick="dkRabattSetzen(${x})"${lzAus('preise')}>${pct(x)} Rabatt</button>`).join('')}</div>`;}

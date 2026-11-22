@@ -27,6 +27,7 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 | **K32 §5.1** Karriereende nach Formel, dazu Korrekturen zu K23c (CS) | `mitarbeit/popolupo-k32-karriereende` (auf U12e) | fertig, ungetestet |
 | **K26b** Computer-Vereine bauen | `mitarbeit/popolupo-k26b-computer-bauen` (auf dem Karriereende) | fertig, ungetestet |
 | **K23f** Kartenbeträge nach Liga | `mitarbeit/popolupo-k23f-karten-nach-liga` (auf K26b) | fertig, ungetestet |
+| **K27b** Dauerkarten | `mitarbeit/popolupo-k27b-dauerkarten` (auf K23f) | fertig, ungetestet |
 | U19d2 volle Kader der Auslandsvereine in der Engine | danach | Entwurf in K37 §5.7 |
 
 **Die neueste Spitze ist immer der zuletzt genannte Zweig, er enthält alles davor.** K24 ist fertig (Claude).
@@ -60,6 +61,11 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 ---
 
 ## Changelog
+
+### 22.11.2026: K27b Dauerkarten (Zweig `mitarbeit/popolupo-k27b-dauerkarten`, auf K23f)
+
+- **Neu (K27 §5.2, Konsistenzprüfung CV):** Dauerkarten für deinen Verein: Verkauf beim ersten Ligaheimspiel nach Fanstimmung und Rabatt (10, 20, 30 %, Bereich `preise`), je Ligaheimspiel Buchung „Dauerkarten“, Einzelkarten nur für die übrige Nachfrage, Fanstimmung ±2 je 10 Prozentpunkte Rabatt.
+- **Tests zuerst:** `tests/fans.js` (neu K27b), `tests/finanzen.js` (Kontostand nachvollziehbar, Prognose), `tests/lizenz.js` (Gleichschritt), `tests/ui-zwei-saisons.js` (Finanzen-Tab).
 
 ### 22.11.2026: K23f Kartenbeträge nach Liga (Zweig `mitarbeit/popolupo-k23f-karten-nach-liga`, auf K26b)
 

@@ -510,6 +510,12 @@ Datei: `konzepte/K27-fans.md`
 - Ein neues Kennzeichen markiert Eigengewächse.
 - Der Zuschauerfaktor ist bei 60 neutral.
 - Der Vorstand hat eine tote Zone von 45 bis 75.
+
+**Mit K27b von popolupo vorläufig entschieden (22.11.2026, K27 §5.2, §12 Nr. 9, ohne Testlauf):**
+
+- Dauerkarten nur für deinen Verein, verkauft beim ersten Ligaheimspiel, Rabatt 10, 20 oder 30 % (Bereich `preise`).
+- Die Inhaber zahlen je Ligaheimspiel statt auf einmal, damit die Prognose stimmt.
+- Fanstimmung ±2 je 10 Prozentpunkte Rabatt gegenüber dem Standard.
 - Fan-Gespräch ab der C-Lizenz.
 - Dauerkarten, Gästeblock, Ultras, Tradition, Choreo, Pyro, Platzsturm und Heimvorteil kommen später.
 

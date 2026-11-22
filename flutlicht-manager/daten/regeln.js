@@ -430,7 +430,11 @@ const REGELN={
     preise:{spanne:[-15,5],faktor:30},ident:{spanne:[-5,10],basis:0,jeLiebling:2,lieblingSpiele:60,lieblingEigen:20},
     entscheid:{spanne:[-15,5],lieblingVerkauf:-8,verblassen:0.1},umfeld:{spanne:[-5,5],eroeffnung:3,gespraech:[3,8],leer:-5,leerUnter:25,verblassen:0.1},
     nachfrage:[0.85,1,1.10],vorstand:{zone:[45,75],teilerUnten:3,minUnten:-10,teilerOben:5,maxOben:5},
-    protestUnter:30,pfiffeSv:-0.2,gespraechTage:30},
+    protestUnter:30,pfiffeSv:-0.2,gespraechTage:30,
+    // Dauerkarten (K27 §5.2, K27b, 22.11., popolupo, GESCHÄTZT): nur dein Verein, verkauft beim ersten Ligaheimspiel der Saison. Anteil der Plätze = basis + jeStimmung × Fanstimmung/100
+    // + jeRabatt × (Rabatt − rabatt), höchstens 1 − gaesteblock. Rabatt wählbar aus stufen (Bereich preise, Automatik: rabatt). Je Ligaheimspiel zahlen alle Inhaber Preis × (1 − Rabatt),
+    // auch wenn weniger Zuschauer kommen. Fanstimmung (Baustein Preise): fans je 10 Prozentpunkte Rabatt über oder unter dem Standard.
+    dauerkarten:{basis:0.35,jeStimmung:0.25,rabatt:0.2,stufen:[0.1,0.2,0.3],jeRabatt:0.5,gaesteblock:0.1,fans:2}},
 
   // Pressekonferenzen (K29 §5.4, §11, U17a). Texte in daten/presse.js. budget: höchstens je Saison, abstand: Tage zwischen zwei, sperre: Tage je Anlass, fragen: [min, max].
   // anlass: Schwellen (spitzeBis Platz, spitzeAb Spieltag, pokalAb Runde, krise Niederlagen, hoehenflug Siege, fuehrungAb Spieltag, kantersieg Tore Abstand, auftaktVorher Tage).
@@ -486,7 +490,7 @@ const REGELN={
   // minSpiele: so viele eigene Ligaspiele braucht der Schnitt dieser Saison, sonst gilt der der letzten Saison. lizenzTag, nachweisTag: Datum (MM-TT) der Prüfung und der Frist.
   // auflage: Vertrauen bei Auflagen. insolvenz: so viele Monatserste nacheinander unter dem negativen Kreditrahmen, Punktabzug, Vertrauen. warnMonate: Vorlauf der Warnung.
   // monatTage: Tage je Monat für die Warnung. PUNKTABZUG GESCHÄTZT (K23 §12 Nr. 9).
-  finanzplan:{laufend:['TV-Gelder','Sponsor','Weitere Sponsoren','Zuschauer','VIP-Logen','Fanartikel','Gehälter','Trainerstab','Prämien','Stadion & Betrieb','Verwaltung','Jugendarbeit','Zweite Mannschaft','Kreditzinsen','Scouting','Instandhaltung','Sonstige Einnahmen'],
+  finanzplan:{laufend:['TV-Gelder','Sponsor','Weitere Sponsoren','Zuschauer','Dauerkarten','VIP-Logen','Fanartikel','Gehälter','Trainerstab','Prämien','Stadion & Betrieb','Verwaltung','Jugendarbeit','Zweite Mannschaft','Kreditzinsen','Scouting','Instandhaltung','Sonstige Einnahmen'],
     minSpiele:3,lizenzTag:'03-01',nachweisTag:'05-31',auflage:-5,insolvenz:{monate:2,punkte:9,vertrauen:-30},warnMonate:3,monatTage:30,
     // K23b (§5.5e): sonstiges: Sonstige Einnahmen (Mitglieder, Vermarktung, Stadionvermietung) je Ligaspiel nach Liga, für alle Vereine. Seit K23c (vorläufig) etwa 7 % der Einnahmen
     // ohne Transfers wie in echt (7–11 %): 1. Liga 10,2 Mio. €, 2. Liga 2,7 Mio. €, 3. Liga 1,1 Mio. € je Saison. Vorher 0, 25.000 und 60.000 € als Ausgleich der zu kleinen Werbung.

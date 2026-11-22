@@ -305,6 +305,7 @@ lizenz:{
 63. **K32 §5.1 Karriereende (22.11., popolupo, ohne Testlauf):** keine neue Funktion, kein neuer Bereich. Eigener Strom je Spieler und Saison, unabhängig von Lizenz und Automatik (Gleichschritt).
 64. **K26b Computer-Vereine bauen (22.11., popolupo, ohne Testlauf):** keine neue Funktion, kein neuer Bereich. Nur Computer-Vereine bauen, zum Saisonstart. Dein Verein baut nur selbst (Bereich `stadion`, Pro-Lizenz, ohne Automatik). Der Gleichschritt-Test (150 Tage ohne Saisonwechsel) ist nicht berührt. Im Test „Kein Nachteil“ über ganze Saisons kann der Computer-Lauf ab der zweiten Saison etwas besser dastehen, weil nur er baut.
 65. **K23f Kartenbeträge nach Liga (22.11., popolupo, ohne Testlauf):** keine neue Funktion, kein neuer Bereich. Nur die Höhe der Geldwirkungen hängt an der Liga deines Vereins.
+66. **K27b Dauerkarten (22.11., popolupo, ohne Testlauf):** neue Funktion (Rabatt der Dauerkarten wählen) im bestehenden Bereich `preise` (A-Lizenz, Automatik: der Verein nimmt 20 %). Kein neuer Bereich, weil es eine Preisentscheidung wie der Eintrittspreis ist. Gleichschritt: In der Automatik ist der Rabatt der Standard, die Fanstimmung bekommt dann +0.
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 
