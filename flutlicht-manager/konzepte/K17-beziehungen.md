@@ -149,6 +149,8 @@ Noch nicht gebaut: Leihangebote über +40 (braucht K30), Gerüchte (K29), Brisan
 | Fehde in der Presse | Beziehung unter −50, Trainer kritisiert dich öffentlich | Antwort (K29) oder schweigen |
 | Versöhnung | Beziehung lange unter −50, Zufall | Treffen, +20, wenn es klappt |
 
+**Gebaut:** „Versöhnung“ seit U12d, „Fehde in der Presse“ seit K29k (22.11.2026, ohne Testlauf) für einen Verein deiner Liga mit Beziehung unter −50 (zurückschießen: Beziehung −5, Fans +1, Glaubwürdigkeit +1; schweigen: Beziehung +3). „Hilfe in der Not“ und „Der entfernte Verwandte“ fehlen noch.
+
 ## 9. Wechselwirkungen
 
 | Konzept | Zusammenspiel |

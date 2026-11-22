@@ -159,6 +159,11 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   pruef(vorher===null&&!!ja&&ja.spieler===p.id&&spaet===null&&schicht&&keinUrlaub===null,'Sommerkarten: Übergewicht nach dem Test, Sonderschichten, kein Urlaubsfoto außerhalb des Urlaubs',
     `vorher ${vorher}, danach ${!!ja}, zu spät ${spaet}, Sonderschicht ${schicht}, Urlaubsfoto ${keinUrlaub}`);}
 
+// K29k. Presse-Karten (K29 §8, K17 §8): Leck nur bei Medienklima unter 45; Fehde nur mit einem Verein deiner Liga, zu dem die Beziehung unter −50 liegt
+{const {S,F,ev}=welt(),A=ev('AUSLOESER'),P=ev('presseS')(),t=ev('myT()');P.klima=60;const kein=A.leck();P.klima=30;const leck=!!A.leck();
+  const keineFehde=A.fehde(),x=S.teams.find(y=>y.id!==S.my&&y.lg===t.lg&&ev('aktiv')(y));F.bezDuAendern(x.id,-90,'Test');const f=A.fehde();
+  pruef(kein===null&&leck&&keineFehde===null&&!!f&&f.verein===x.id,'Presse-Karten: Leck bei schlechtem Klima, Fehde bei schlechter Beziehung',`Klima 60 ${kein}, Klima 30 ${leck}, Fehde ohne ${keineFehde}, mit ${f&&f.verein===x.id}`);}
+
 // U19e. Europapokal-Karten (K37 §8): Auswärtsspiel bei einem Auslandsverein in den nächsten 7 Tagen (kein Heimspiel, nicht später, nicht das Finale), Spiel 1 bis 7 Tage her,
 //       Wunder nach 0:3 im Hinspiel und 4:0 oder 3:0 mit Elfmeterschießen im Rückspiel, nicht nach nur einem Tor Rückstand und nicht beim Ausscheiden. euMeineSpiele ersetzt der Test.
 {const {S,W,ev}=welt(),A=ev('AUSLOESER'),AV=ev('AV0'),me=S.my,d=S.tag;W.ev('euMeineSpiele=function(){return S.testEu||[];}');

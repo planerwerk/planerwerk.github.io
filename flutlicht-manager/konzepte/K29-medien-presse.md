@@ -326,6 +326,8 @@ Das ist der Maßstab für die Verbindung zu K09.
 - Ein Reporter-Versprecher wird zum Running Gag (Muster 7), reine Farbe.
 - Ein Moderator macht nach deinem Ausraster Werbung mit dem Spruch (Muster 2).
 
+**Gebaut als K29k (22.11.2026, popolupo, ohne Testlauf), Karte nach K30:** „Wer war das Leck?“ bei Medienklima unter 45 (Leck suchen: Zusammenhalt −2, Glaubwürdigkeit +2; ignorieren: Glaubwürdigkeit −1). Die übrigen Ereignisse fehlen noch.
+
 ## 9. Wechselwirkungen
 
 | Konzept | Wechselwirkung |

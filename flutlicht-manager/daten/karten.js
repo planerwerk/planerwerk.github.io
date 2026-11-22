@@ -84,6 +84,15 @@ const KARTEN=[
     texte:['{verein} hat ein Auge auf {spieler} aus deiner Jugend geworfen. Sein Berater lässt durchblicken: Ohne Profivertrag ist er weg.','Die Scouts von {verein} saßen bei jedem Jugendspiel von {spieler}. Jetzt liegt ein Angebot auf dem Tisch.'],
     optionen:[{text:'Profivertrag anbieten',wirkung:[{art:'jugendHoch',wert:1},{art:'fans',wert:1}],folge:'{verein} geht leer aus.'},
       {text:'Ziehen lassen',wirkung:[{art:'jugendWeg',wert:1}],folge:''}],auto:0},
+  // Presse (K29 §8, K17 §8, K29k, 22.11.). Nur bekannte Wirkungen.
+  {id:'leck',titel:'Wer war das Leck?',bereich:'K29',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'leck',sperrTage:120,
+    texte:['Die Zeitung zitiert wörtlich aus deiner Kabinenansprache. Irgendjemand redet mit der Presse.','Interna aus dem Training stehen online, samt Aufstellung. Wer war das?'],
+    optionen:[{text:'Das Leck suchen',wirkung:[{art:'zusammenhalt',wert:-2},{art:'glaub',wert:2}],folge:'Du stellst klar, dass so etwas nicht geht. In der Kabine wird jeder misstrauisch.'},
+      {text:'Ignorieren',wirkung:[{art:'glaub',wert:-1}],folge:'Du lässt es laufen. Ob es aufhört?'}],auto:1},
+  {id:'fehde',titel:'Fehde in der Presse',bereich:'K17',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'fehde',sperrTage:180,
+    texte:['Der Trainer von {verein} legt in einem Interview gegen dich nach. Die Reporter warten auf deine Antwort.','Aus {verein} kommen spitze Bemerkungen über deine Arbeit. Antwortest du?'],
+    optionen:[{text:'Zurückschießen',wirkung:[{art:'bezDu',wert:-5},{art:'fans',wert:1},{art:'glaub',wert:1}],folge:'Die Fans feiern deine Antwort, die Fehde geht weiter.'},
+      {text:'Schweigen',wirkung:[{art:'bezDu',wert:3}],folge:'Du bleibst sachlich. Die Lage beruhigt sich ein wenig.'}],auto:1},
   // Sommer (K12a §8, K12c, 22.11.). Neue Wirkung sonderschicht: Kondition + wert, Frische − REGELN.karten.sommer.sonderFrische.
   {id:'uebergewicht',titel:'Übergewicht nach dem Urlaub',bereich:'K12a',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'uebergewicht',sperrTage:300,
     texte:['Beim Leistungstest fiel {spieler} weit zurück. Die Waage verrät, warum.','{spieler} kommt sichtlich mit ein paar Kilo zu viel aus dem Urlaub. Die Mitspieler grinsen.'],

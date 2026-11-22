@@ -54,6 +54,9 @@ const AUSLOESER={
   pauseBitte(){const T=RKT.training,l=squad(S.my).filter(p=>!(p.inj>0)&&p.fit<T.pauseUnter&&profi(p)>=T.profiAb);return l.length?{spieler:pick(l).id}:null;},
   // Jugend (K08 §8, K08b): Talent zum Probetraining, jederzeit in der Saison
   probetraining(){return S.phase==='play'?{}:null;},
+  // Presse (K29 §8, K17 §8, K29k): Medienklima unter RKT.presse.leckUnter; ein Verein deiner Liga mit Beziehung unter RBZ.wirkung.gespraechUnter
+  leck(){return presseS().klima<RKT.presse.leckUnter?{}:null;},
+  fehde(){const t=myT(),l=S.teams.filter(x=>x.id!==S.my&&aktiv(x)&&x.lg===t.lg&&bezWirk(x.id)<RBZ.wirkung.gespraechUnter);return l.length?{verein:pick(l).id}:null;},
   // Sommer (K12a §8, K12c): bis RKT.sommer.nachTestTage nach dem Leistungstest ein Spieler mit Übergewicht (Kondition wie im Test zu niedrig); im Urlaub ein Partylöwe
   uebergewicht(){const t=myT(),test=auftaktTag(t)+RSO.leistungstest.tag;if(S.tag<test||S.tag>test+RKT.sommer.nachTestTage)return null;const sq=squad(S.my).filter(p=>p.inj<=0);if(!sq.length)return null;
     const m=sq.reduce((a,p)=>a+p.ko,0)/sq.length,l=sq.filter(p=>p.ko<=m-RSO.leistungstest.uebergewichtAb);return l.length?{spieler:pick(l).id}:null;},
