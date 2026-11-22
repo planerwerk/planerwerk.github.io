@@ -2029,3 +2029,17 @@ Ein Agent hat 7a5808c, c35cbc9, 6b31038, 3f2e209, a9de4dc und a032948 gelesen (n
 | EC3 | „Scout lag daneben“ kam auch ohne Scout (die Einschätzung war nur Grundwissen). Jetzt merkt sich der Kauf, ob ein Scout den Spieler gesehen hat; ohne Scout heißt es „Einschätzung lag daneben“. | ✅ behoben |
 | EC4 | „Lernplatz frei“ konnte jede Woche kommen, obwohl niemand etwas lernen konnte (die Automatik der Lernplätze füllt sonst alle). Jetzt nur, wenn ein Spieler ohne Ziel ein Merkmal lernen oder umgeschult werden kann. | ✅ behoben |
 | EC5 | „Unverkäuflich“ aus der Abwerbe-Karte umging ein offenes Wechselversprechen (EB3 hatte `versprechenAngebot` entfernt). Jetzt wieder mit `versprechenAngebot`, nur ohne Spielerfenster und zweite Meldung. | ✅ behoben |
+
+## ED. Prüfung von K16c, K27c, K21c, K13b, K26e, K12c und der Korrekturen EC ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 4a991fb, e5a65f5, fc1bf59, 9d07188, 7f00d5f, ffa480a und 65c8e73 gelesen (nichts ausgeführt). Kein blockierender Fehler, zwei mittlere. Ohne Befund: K13b (Supercup, nicht in den 150 Tagen von 5a), `kiStil`/`sd.konter` (neues `sd` je Spiel, kein zusätzlicher Würfel), Dauerkarten bei gesenktem Preis, Namen, `${}`, alte Spielstände. Korrekturen auf `mitarbeit/popolupo-ed-korrekturen`.
+
+| # | Befund | Status |
+|---|---|---|
+| ED1 | **Mittel: `preisRichtwert` konnte den Preis erhöhen.** Wer unter dem Richtpreis lag, bekam mit dem Zuschuss (Text „Die Ticketpreise sinken“) einen höheren Preis. Jetzt höchstens auf den Richtpreis, nie hinauf. | ✅ behoben |
+| ED2 | **Mittel (Test): Die Markierung des Konters wurde nicht geprüft.** Der Test gab `konter` direkt vor. Jetzt ruft er `kiStil` mit sicherer Reaktion auf und prüft `sd.konter`. Das Kopieren in `r.taktik` in der Engine ist eine Zeile und bleibt ohne eigenen Test. | ✅ behoben, Rest dokumentiert |
+| ED3 | Die Sperre von „Mitarbeiter abgeworben“ galt je Verein, nicht je Mitarbeiter (der Schlüssel kannte `stab` nicht). Jetzt ist der Mitarbeiter Teil des Schlüssels. | ✅ behoben |
+| ED4 | `karteStab`: Pflichtrolle erst beim Entscheiden prüfen (sonst konnte der letzte Co-Trainer gehen), Ablöse höchstens das Konto des Vereins, „halten“ im Gehaltsrahmen (sonst geht er). | ✅ behoben |
+| ED5 | „Übergewicht“ nahm die Kondition von heute statt des Tests (Altstar mit −20, nach dem Test Geheilte). Jetzt merkt sich `leistungstest` die Auffälligen (`S.lt`), nur sie kommen infrage. | ✅ behoben |
+| ED6 | Späte Entscheidungen: „Provision zahlen“ zahlte auch für einen Spieler, der weg ist (jetzt Wirkung `provisionZahlen` mit Prüfung), „Zuschuss“ konnte ein neueres Projekt treffen (jetzt an `S.constr.ab` gebunden). | ✅ behoben |
+| ED7 | Tests: K21c jetzt sicher im Gehaltsrahmen und mit `beraterBez`, K12c mit `S.lt`, K18d mit `kTisch.von` (EC2), K18e mit dem Weg ohne Scout (EC3). Weiter ohne eigenen Test: EC4, EC5, Urlaubsfoto positiv, `b0.stab` in K16c. | teils offen |

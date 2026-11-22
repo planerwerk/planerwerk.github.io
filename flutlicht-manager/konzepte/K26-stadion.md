@@ -132,7 +132,7 @@ Bauen nach Nachfrage und Budget: Tribünen, wenn die Auslastung zwei Saisons üb
 | Stadt bietet Zuschuss | Großprojekt, Zufall | Geld gegen Auflagen |
 | Anwohner klagen | Ausbau, Zufall | Genehmigung verzögert |
 
-**Stand 22.11.2026:** Bauverzögerung, Auflagen (Lärmschutz, Verkehr) und Mehrkosten kommen seit K26a als Meldungen im Bauablauf. „Stadt bietet Zuschuss“ seit K26e (ohne Testlauf) als große Entscheidungskarte bei einem Bauprojekt ab 5 Mio. €: annehmen bringt 15 % der Baukosten (neue Kartenwirkung `zuschuss`), dafür sinkt der Ticketpreis auf den Richtpreis. „Rasen nach Frost kaputt“ fehlt (Rasenqualität ist zurückgestellt).
+**Stand 22.11.2026:** Bauverzögerung, Auflagen (Lärmschutz, Verkehr) und Mehrkosten kommen seit K26a als Meldungen im Bauablauf. „Stadt bietet Zuschuss“ seit K26e (ohne Testlauf) als große Entscheidungskarte bei einem Bauprojekt ab 5 Mio. €: annehmen bringt 15 % der Baukosten (neue Kartenwirkung `zuschuss`), dafür sinkt der Ticketpreis auf den Richtpreis. Seit Prüfung ED1 sinkt er höchstens auf den Richtpreis, ein niedrigerer Preis bleibt. „Rasen nach Frost kaputt“ fehlt (Rasenqualität ist zurückgestellt).
 
 ## 9. Wechselwirkungen
 

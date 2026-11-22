@@ -134,7 +134,7 @@ const KARTEN=[
       {text:'Ignorieren',wirkung:[{art:'stimmung',wert:-4}],folge:'{spieler} zieht sich zurück.'}],auto:1},
   {id:'provision',titel:'Provisionsstreit',bereich:'K22',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'provision',sperrTage:365,
     texte:['Der Berater von {spieler} meldet sich: Beim Wechsel sei eine Provision „vergessen“ worden. Er will {geld:20000}.','Nachforderung vom Berater von {spieler}: {geld:20000} zusätzlich, sonst gebe es Ärger.'],
-    optionen:[{text:'Zahlen',wirkung:[{art:'geld',wert:-20000},{art:'beraterBez',wert:5}],folge:'Der Berater ist zufrieden.'},
+    optionen:[{text:'Zahlen',wirkung:[{art:'provisionZahlen',wert:-20000},{art:'beraterBez',wert:5}],folge:'Der Berater ist zufrieden.'},
       {text:'Nicht zahlen',wirkung:[{art:'beraterBez',wert:-15},{art:'stimmung',wert:-2}],folge:'Der Berater droht, {spieler} ist verunsichert.'}],auto:1},
   // Fans (K27 §8, K27c, 22.11.). Neue Wirkung preisRichtwert: dein Ticketpreis auf den Richtpreis.
   {id:'ticketProtest',titel:'Protest gegen Ticketpreise',bereich:'K27',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'ticketProtest',sperrTage:90,

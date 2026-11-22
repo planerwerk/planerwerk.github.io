@@ -66,16 +66,18 @@ const scout=(S,F,q,gebiet,ev=F.__ev)=>{let x;for(let i=0;i<50;i++){x=F.stabNeu('
 // K18d. Konkurrenz am Tisch (K18 §8): mit Chance 0 nichts; mit Chance 1 nach einem Bericht ein anderer Verein mit Bedarf, die Forderung an dich steigt um 5 %; nach der Frist wieder normal
 {const {S,F,ev}=welt(),K=ev('RSC').konkurrenz,p=S.pl.filter(x=>x.team>=0&&x.team!==S.my&&S.teams[x.team]&&S.teams[x.team].lg===1).sort((a,b)=>b.str-a.str)[0];
   K.chance=0;const nein=F.konkurrenzTisch(p),f0=ev('forderungDu')(p);K.chance=1;const b=F.konkurrenzTisch(p),f1=ev('forderungDu')(p);
+  const t0=p.team,anders=S.teams.find(x=>x.id!==t0&&x.id!==S.my).id;p.team=anders;const woanders=ev('konkurrenzTischFaktor')(p)===1;p.team=t0; /* nur beim Verein von damals (EC2) */
   p.kTisch.bis=ev('absTag')(S.tag)-1;const f2=ev('forderungDu')(p);
-  pruef(nein===null&&!!b&&b.id!==p.team&&b.id!==S.my&&Math.abs(f1/f0-(1+K.preis))<0.001&&Math.abs(f2-f0)<1,'Konkurrenz am Tisch: anderer Verein mit Bedarf, Forderung + 5 % bis zur Frist',
+  pruef(nein===null&&!!b&&b.id!==p.team&&b.id!==S.my&&Math.abs(f1/f0-(1+K.preis))<0.001&&Math.abs(f2-f0)<1&&woanders,'Konkurrenz am Tisch: anderer Verein mit Bedarf, Forderung + 5 % bis zur Frist, nur beim selben Verein',
     `Chance 0 ${nein}, Verein ${b&&b.name}, Forderung ${Math.round(f0)} → ${Math.round(f1)} → ${Math.round(f2)}`);}
 
 // K18e. Scout liegt daneben (K18 §8): Einschätzung beim Kauf 6 über der wahren Stärke gibt eine Meldung, 2 darüber keine; der Merker ist danach weg;
 //       kaufSichtMerken merkt sich bei einem fremden Spieler Mitte und Stärke, bei einem eigenen (genau bekannt) nichts
 {const {S,F,ev}=welt(),sq=ev('squad')(S.my),[p,q]=sq,n=()=>S.news.filter(x=>x.t.startsWith('Scout lag daneben')).length,f=S.pl.find(x=>x.team>=0&&x.team!==S.my);
   p.kaufSicht={mitte:Math.round(p.str)+6,str:Math.round(p.str),scout:1};q.kaufSicht={mitte:Math.round(q.str)+2,str:Math.round(q.str),scout:1};F.scoutDanebenWoche();
+  const r=sq[2],m=()=>S.news.filter(x=>x.t.startsWith('Einschätzung lag daneben')).length;r.kaufSicht={mitte:Math.round(r.str)+6,str:Math.round(r.str),scout:0};F.scoutDanebenWoche();const ohneScout=m()===1&&n()===1; /* ohne Scout andere Meldung (EC3) */
   F.kaufSichtMerken(f);F.kaufSichtMerken(p);
-  pruef(n()===1&&!p.kaufSicht&&!q.kaufSicht&&!!f.kaufSicht&&f.kaufSicht.str===Math.round(f.str),'Scout liegt daneben: Meldung ab 5 unter der Einschätzung, Merker beim Kauf',`Meldungen ${n()}, fremder Spieler ${JSON.stringify(f.kaufSicht)}`);}
+  pruef(n()===1&&ohneScout&&!p.kaufSicht&&!q.kaufSicht&&!!f.kaufSicht&&f.kaufSicht.str===Math.round(f.str),'Scout liegt daneben: Meldung ab 5 unter der Einschätzung, Merker beim Kauf',`Meldungen ${n()}, fremder Spieler ${JSON.stringify(f.kaufSicht)}`);}
 
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);
