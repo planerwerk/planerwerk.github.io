@@ -397,6 +397,7 @@ const REGELN={
     // Der lachende Dritte (K30 §8.3, K17 §5.4, K30c, 22.11., popolupo, GESCHÄTZT): Du kennst den Berater ab Beziehung beraterAb, sonst mit Glück einen Verwandten (verwandt je Prüfung).
     // Unterschreibt der Spieler bei dir, sinkt die Beziehung zwischen den beiden anderen Vereinen um zwischen, deine zu ihnen um du (bei geschicktem Vorgehen gar nicht)
     dritter:{beraterAb:20,verwandt:0.05,zwischen:-10,du:-2},
+    medizin:{grippeAb:3,rehaAb:60,restAb:30}, // Medizin-Karten (K10 §8, K10e, 22.11., GESCHÄTZT): Grippewelle ab grippeAb Kranken im Kader; lange Reha bei einer Verletzung ab rehaAb Tagen mit noch mindestens restAb Tagen
     hilfe:{verletzteAb:5,bezAb:40}, // Hilfe in der Not (K17 §8, K17b, 22.11., GESCHÄTZT): ab verletzteAb Verletzten im offenen Fenster bietet ein Verein mit Beziehung über bezAb eine Leihe an
     presse:{leckUnter:45}, // Presse-Karten (K29 §8, K17 §8, K29k, 22.11., GESCHÄTZT): Leck bei Medienklima unter leckUnter; Fehde bei Beziehung unter RBZ.wirkung.gespraechUnter
     sommer:{nachTestTage:14,sonderFrische:15}, // Sommerkarten (K12a §8, K12c, 22.11., GESCHÄTZT): Übergewicht bis nachTestTage nach dem Leistungstest; Sonderschichten kosten sonderFrische Frische
@@ -764,7 +765,7 @@ const REGELN={
       kollision:0.0016,ueberlastung:0.0022, // je Minute und Mannschaft
       frischeAb:80,frischeJePunkt:0.05,frischeKritisch:60,kritisch:2,stil:1.2,altAb:30,alt:1.3},
     robustheit:[1.6,-0.06],anfaellig:1.6,
-    krankheit:{proTag:0.0006,winter:2,winterMonate:[11,0,1],ansteckung:2,ansteckungTage:5}, // Spielwerte, nicht recherchiert
+    krankheit:{proTag:0.0006,winter:2,winterMonate:[11,0,1],ansteckung:2,ansteckungTage:5,hygiene:0.5}, // Spielwerte, nicht recherchiert. hygiene: Faktor während eines Hygieneplans (Karte „Grippewelle“, K10e, GESCHÄTZT)
     diagnose:{tage:[3,1],verdacht:0.6,genau:0.25,arzt:{ohne:2,jeQualitaet:-0.1,min:0.5},fehl:{ohne:0.15,jeQualitaet:-0.006,min:0.03,faktor:0.6,abTage:10}}, // Breite ±60 % und ±25 % bei Arzt-Qualität 10; fehl: Fehldiagnose (K10b, 22.11., GESCHÄTZT), Chance ohne + jeQualitaet × Arzt-Qualität (mindestens min), angezeigt faktor × wahre Dauer, ab abTage Tagen
     reha:{behandlung:0.7,rueckkehrFrische:[70,80],abTagen:7,fenster:56,rueckfallMal:7,gleicheArt:0.35},
     spritzen:{wirkung:0.95,verschlimmerung:0.15},frueher:{frische:65,rueckfall:2},

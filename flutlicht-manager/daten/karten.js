@@ -178,6 +178,16 @@ const KARTEN=[
     texte:['Das Finanzamt hat die Bücher geprüft und will {geld:250000} nachträglich.','Die Betriebsprüfung findet Fehler bei der Abrechnung von Prämien: {geld:250000} Nachzahlung.'],
     optionen:[{text:'Zahlen',wirkung:[{art:'geld',wert:-250000}],folge:'Bezahlt, die Sache ist erledigt.'},
       {text:'Einspruch einlegen',wirkung:[{art:'geld',wert:0,chance:0.5,schlecht:-400000,gut:'Der Einspruch hat Erfolg.',schlechtText:'Der Einspruch scheitert, mit Zinsen werden es {geld:400000}.'}]}],auto:0},
+  // Medizin (K10 §8, K10e, 22.11., popolupo): Anlasskarten (K30d). Grippewelle ab drei Kranken (Hygieneplan: Ansteckung vorbei, zwei Wochen halb so viele Krankheiten),
+  // lange Reha (statt „Kreuzbandriss“ für jede lange Verletzung: Spezialist halbiert das Rückfallrisiko nach der Rückkehr). Werte vorläufig.
+  {id:'grippewelle',titel:'Grippewelle',bereich:'K10',art:'entscheidung',gross:false,stufe:'haeufig',chance:0.5,ausloeser:'grippewelle',sperrTage:60,
+    texte:['Im Kader geht ein Infekt um. Der Mannschaftsarzt rät, die Kranken strikt zu trennen und einen Hygieneplan aufzustellen. Kosten {geld:3000}.','Schon wieder fehlen mehrere Spieler mit Fieber. Der Arzt will für zwei Wochen getrennte Kabinen und Desinfektion, für {geld:3000}.'],
+    optionen:[{text:'Hygieneplan umsetzen',wirkung:[{art:'geld',wert:-3000},{art:'hygiene',wert:14}],folge:'Getrennte Kabinen, eigene Trinkflaschen, Desinfektion. Die Ansteckungsgefahr sinkt.'},
+      {text:'Normal weitermachen',wirkung:[],folge:'Die Mannschaft trainiert weiter zusammen.'}],auto:0},
+  {id:'langeReha',titel:'Lange Reha',bereich:'K10',art:'entscheidung',gross:false,stufe:'haeufig',chance:0.03,ausloeser:'langeReha',sperrTage:365,
+    texte:['{spieler} fällt noch lange aus. Ein Spezialist für Rehabilitation würde ihn betreuen, für {geld:15000}. Danach wäre die Gefahr eines Rückfalls kleiner.','Der Mannschaftsarzt schlägt vor, {spieler} für die Reha zu einem Spezialisten zu schicken ({geld:15000}). Das senkt das Risiko eines Rückfalls.'],
+    optionen:[{text:'Zum Spezialisten schicken',wirkung:[{art:'spezialist',wert:0.5,dann:[{art:'geld',wert:-15000},{art:'stimmung',wert:3}],gut:'{spieler} ist dankbar für die Hilfe.'}],folge:''},
+      {text:'Reha im Verein',wirkung:[],folge:'{spieler} macht seine Reha bei euren Physiotherapeuten.'}],auto:1},
   // Der lachende Dritte (K30 §8.3, K17 §5.4, K30c, 22.11., popolupo): die erste Kette. Karte 1 im Wochenlauf, Karte 2 (nurKette) drei bis sieben Tage nach dem Treffen.
   // Den Ausgang rechnet dritterKauf, wenn der Spieler bei dir unterschreibt (Merker p.ld3 aus den Wirkungen dritter und nachlass). Werte vorläufig.
   {id:'dritterTipp',titel:'Der lachende Dritte',bereich:'K17',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'lachenderDritter',sperrTage:365,

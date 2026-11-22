@@ -130,6 +130,20 @@ Hängt ab von: K03 (Frische, Robustheit, Saisonbelastung), K04 (Fouls, Ermüdung
 | Grippewelle | drei oder mehr Kranke gleichzeitig | Info, eventuell Antrag auf Spielverlegung (K13, Community-Wunsch) |
 | Verletzungsserie | drei Muskelverletzungen in zwei Wochen | Arzt nennt die Ursache (Belastungssprung, Frische) |
 
+**Gebaut als K10e (22.11.2026, popolupo, ohne Testlauf), beide als Anlasskarten (K30d):**
+
+- **Grippewelle** (Entscheidung, Chance 0,5 je Woche mit Anlass, Sperre 60 Tage):
+  - Anlass: mindestens drei Kranke im Kader.
+  - „Hygieneplan umsetzen“ (Voreinstellung): 3.000 € (3. Liga, nach Liga mehr). Die Ansteckung endet sofort, und zwei Wochen lang erkranken nur halb so viele (`RMD.krankheit.hygiene`).
+  - „Normal weitermachen“: nichts.
+  - Die Spielverlegung fehlt weiter, sie kommt mit K13 (Stufe 4).
+- **Lange Reha** (Entscheidung, Chance 0,03 je Woche mit Anlass, Sperre 365 Tage). Sie steht statt „Kreuzbandriss“:
+  - Anlass: ein Spieler mit einer Verletzung ab 60 Tagen, die noch mindestens 30 Tage dauert, Diagnose gestellt.
+  - „Zum Spezialisten schicken“: 15.000 €, Stimmung +3, das Rückfallrisiko nach der Rückkehr halbiert (`p.vl.rfF`). Geld und Stimmung gibt es nur, solange er noch verletzt ist (`dann`).
+  - „Reha im Verein“ (Voreinstellung): nichts.
+  - Grund für den Umbau: Ein Kreuzbandriss ist selten (1 % der Verletzungen), und die Karte hätte nur in der Woche danach kommen können. Die Reha dauert Monate, dort passt die Entscheidung.
+- „Spieler spielt trotz Schmerzen“ gibt es schon als „fit spritzen“ (§5.4). „Spieler verheimlicht Verletzung“ fehlt noch, die Karte bräuchte eine versteckte Verletzung in der Engine.
+
 ## 9. Wechselwirkungen
 
 | Konzept | Zusammenspiel |
@@ -205,7 +219,7 @@ medizin:{
 12. **Fit spritzen** geht nur am Spieltag. Computer-Vereine spritzen nur in wichtigen Spielen (Pokal ab Runde 3, Relegation) und nur Stammspieler mit höchstens 10 Tagen Ausfall. Verschlimmerung: Prellung → Faserriss, Bänderdehnung → Bänderriss, Rücken/Leiste → Zerrung, Bruch (Nase) bekommt 7 Tage mehr.
 13. **Robustheit und „verletzungsanfällig“** wirken beide (1,6 − 0,06 × Robustheit und ×1,6), wie in 5.1. Ein Anfälliger (Robustheit 1–4) verletzt sich damit gut doppelt so oft wie der Durchschnitt, nicht nur 60 % öfter, wie der Merkmalstext sagt. Prüfen.
 14. **Lernstufen (K36):** Verletztenliste und Diagnose ab Stufe 1 (nur Information), fit spritzen und früher zurückholen ab Stufe 4. Davor entscheidet der Arzt nach den Regeln der Computer-Vereine.
-15. **Noch nicht gebaut:** Pflichtwechsel und Zusatzwechsel bei Gehirnerschütterung, Ereignisse aus §8, Reha-Zentrum (K26), Rotation der Computer-Vereine nach Saisonbelastung. Die Ausfalltage stehen seit K10d (22.11.2026, ohne Testlauf) auch in der Saisonbilanz, mit dem Ligaschnitt.
+15. **Noch nicht gebaut:** Pflichtwechsel und Zusatzwechsel bei Gehirnerschütterung, Ereignisse aus §8 außer Verletzungsserie (K07c), Grippewelle und lange Reha (K10e), Reha-Zentrum (K26), Rotation der Computer-Vereine nach Saisonbelastung. Die Ausfalltage stehen seit K10d (22.11.2026, ohne Testlauf) auch in der Saisonbilanz, mit dem Ligaschnitt.
 
 **Noch zu recherchieren:** aktuelle Gesamtrate für Männer-Profis (je 1000 Stunden und pro Team und Saison), Anteil der Trainingsverletzungen, Regel zu zusätzlichen Wechseln bei Gehirnerschütterung in Bundesliga und Pokal.
 

@@ -241,6 +241,21 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   pruef(kc(kv('wunder'))===1&&kc(kv('fanmarsch'))===kv('fanmarsch').chance&&stufe&&wunder,'Anlasskarten: eigene Chance je Woche statt der Stufe, das Wunder kommt sicher',
     `Wunder ${kc(kv('wunder'))}, Fanmarsch ${kc(kv('fanmarsch'))}, Hochzeit nach Stufe ${stufe}, Wunder in der Woche ${wunder}`);}
 
+// K10e. Medizin-Karten (K10 §8): Grippewelle erst ab drei Kranken, der Hygieneplan beendet die Ansteckung und setzt hygBis. Lange Reha nur bei langer Verletzung mit Diagnose;
+//       der Spezialist halbiert das Rückfallrisiko nach der Rückkehr und kostet nur, solange der Spieler noch verletzt ist (dann).
+{const {S,F,ev}=welt(),A=ev('AUSLOESER'),M=ev('RKT').medizin,sq=ev('squad')(S.my),t=ev('myT()'),heute=ev('absTag')(S.tag),st=ev('stimmung');S.phase='play';
+  sq.forEach(p=>{p.inj=0;p.vl=null;st(p);p.st=50;});const keine=A.grippewelle()===null&&A.langeReha()===null;
+  sq.slice(0,M.grippeAb-1).forEach(p=>F.verletzen(p,'krankheit',{still:true}));const zuWenig=A.grippewelle()===null;F.verletzen(sq[M.grippeAb-1],'krankheit',{still:true});const welle=!!A.grippewelle();
+  ev('kartenWirkung')({art:'hygiene',wert:14},{},{titel:'Test'});const hyg=t.krankBis<heute&&t.hygBis===heute+14;
+  const p=sq[M.grippeAb+1],q=sq[M.grippeAb+2];[p,q].forEach(x=>{F.verletzen(x,'kollision',{art:'kreuzband',still:true});x.vl.dg=heute;});const mit=A.langeReha();
+  let bezahlt=false,nochmal=null,halb=false,gesund=false;
+  if(mit){const r=ev('PIX').get(mit.spieler),s=r===p?q:p,c=ev('karteVon')('langeReha'),w=c.optionen[0].wirkung[0],f0=S.fin.Ereignisse||0,st0=st(r);ev('kartenWirkung')(w,mit,c);
+    bezahlt=(S.fin.Ereignisse||0)<f0&&r.vl.rfF===0.5&&st(r)>st0;nochmal=A.langeReha();const RF=ev('RMD').arten.kreuzband.rueckfall;
+    r.inj=0;F.medizinRueckkehr(r);s.inj=0;F.medizinRueckkehr(s);halb=Math.abs(r.rf.w-RF*0.5)<1e-9&&Math.abs(s.rf.w-RF)<1e-9;
+    const f1=S.fin.Ereignisse||0;ev('kartenWirkung')(w,{spieler:r.id},c);gesund=(S.fin.Ereignisse||0)===f1&&!r.vl;nochmal=nochmal&&nochmal.spieler===s.id;}
+  pruef(keine&&zuWenig&&welle&&hyg&&!!mit&&bezahlt&&nochmal&&halb&&gesund,'Medizin-Karten: Grippewelle ab drei Kranken, Hygieneplan, lange Reha, Spezialist halbiert den Rückfall und kostet nur mit Verletzung',
+    `ohne Anlass ${keine}, zwei Kranke ${zuWenig}, drei ${welle}, Hygiene ${hyg}, Reha ${!!mit}, bezahlt ${bezahlt}, der andere danach ${nochmal}, Rückfall halb ${halb}, gesund ohne Kosten ${gesund}`);}
+
 // U19e. Europapokal-Karten (K37 §8): Auswärtsspiel bei einem Auslandsverein in den nächsten 7 Tagen (kein Heimspiel, nicht später, nicht das Finale), Spiel 1 bis 7 Tage her,
 //       Wunder nach 0:3 im Hinspiel und 4:0 oder 3:0 mit Elfmeterschießen im Rückspiel, nicht nach nur einem Tor Rückstand und nicht beim Ausscheiden. euMeineSpiele ersetzt der Test.
 {const {S,W,ev}=welt(),A=ev('AUSLOESER'),AV=ev('AV0'),me=S.my,d=S.tag;W.ev('euMeineSpiele=function(){return S.testEu||[];}');

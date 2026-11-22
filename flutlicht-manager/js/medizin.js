@@ -48,7 +48,7 @@ const verletzungText=p=>{const i=verletzungInfo(p);return i?`${i.name}, ${PHASE[
 // Rückkehr (K10 §5.3): nach längeren Ausfällen Frische 70–80 %, danach acht Wochen erhöhtes Rückfallrisiko bei Muskel- und Bandverletzungen
 function medizinRueckkehr(p,frisch){const v=p.vl;if(!v)return;const A=RMD.arten[v.art],R0=RMD.reha,heute=absTag(S.tag);
   if(v.t>=R0.abTagen)p.fit=Math.min(p.fit,frisch!=null?frisch:riA(R0.rueckkehrFrische));
-  if(A.rueckfall)p.rf={art:v.art,bis:heute+R0.fenster,w:A.rueckfall*(frisch!=null?RMD.frueher.rueckfall:1)};
+  if(A.rueckfall)p.rf={art:v.art,bis:heute+R0.fenster,w:A.rueckfall*(frisch!=null?RMD.frueher.rueckfall:1)*(v.rfF||1)}; // rfF: Reha beim Spezialisten (Karte „Lange Reha“, K10e)
   if(v.t>=RKA.bank.aufbau.abTagen)p.rue=heute+RKA.bank.aufbau.tage; // Aufbau: drei Wochen ohne Erwartung an Einsatzzeit (K14 §12)
   p.vh=[...(p.vh||[]).filter(x=>heute-x.ab<=RMD.verlaufTage),{art:v.art,q:v.q,ab:v.ab,t:v.t}];p.vl=null;p.spritze=null;
   if(p.team===S.my&&v.t>=R0.abTagen)news(`${p.n} ist nach ${A.name} zurück im Mannschaftstraining.`,'good');}
@@ -66,7 +66,7 @@ function medizinTag(d){const K=RMD.krankheit,heute=absTag(d),winter=K.winterMona
   S.pl.forEach(p=>{if(p.team<0)return;if(p.inj===0&&p.vl)medizinRueckkehr(p);});fehlAufklaeren(heute);
   if(S.phase!=='play')return;
   S.pl.forEach(p=>{if(p.team<0||p.inj>0)return;const t=S.teams[p.team];if(!t||!aktiv(t)||sommerStatus(t)==='urlaub')return;
-    if(R()<K.proTag*(winter?K.winter:1)*((t.krankBis||0)>=heute?K.ansteckung:1))verletzen(p,'krankheit');});}
+    if(R()<K.proTag*(winter?K.winter:1)*((t.krankBis||0)>=heute?K.ansteckung:1)*((t.hygBis||0)>=heute?K.hygiene:1))verletzen(p,'krankheit');});} // Hygieneplan (t.hygBis, nur über die Karte „Grippewelle“, K10e)
 
 // Fit spritzen (K10 §5.4): nur am Spieltag und nur bei Arten mit „ja“. Wirkung ×0,95, danach mit 15 % Verschlimmerung.
 const gespritzt=p=>p.spritze===S.tag&&p.inj>0&&p.vl&&RMD.arten[p.vl.art].spritzen;
