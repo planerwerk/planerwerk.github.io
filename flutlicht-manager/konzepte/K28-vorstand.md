@@ -1,6 +1,6 @@
 # K28 – Vorstand, Ziele, Karriere
 
-Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12. Teilweise gebaut: Computer-Vereine in U11d2 (§7), Vertrauen, Ultimatum und Ruf für dich in U12a (§5.6), Nebenziele und Rücktritt in U12b (§5.7), beide 20.11., Zielgespräch in U12e (§5.8, 22.11.), Zwischenbilanz im Winter in U12f (§5.9, 22.11.), Trainervertrag als Statistik in U12g (§5.10, 22.11.), Wirkung des Rufs in U12h (§5.11, 22.11.), Präsidentenwahl in U12i (§5.12, 22.11.), alle ohne Testlauf.
+Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12. Teilweise gebaut: Computer-Vereine in U11d2 (§7), Vertrauen, Ultimatum und Ruf für dich in U12a (§5.6), Nebenziele und Rücktritt in U12b (§5.7), beide 20.11., Zielgespräch in U12e (§5.8, 22.11.), Zwischenbilanz im Winter in U12f (§5.9, 22.11.), Trainervertrag als Statistik in U12g (§5.10, 22.11.), Wirkung des Rufs in U12h (§5.11, 22.11.), Präsidentenwahl in U12i (§5.12, 22.11.), Jobangebot während der Saison in U12j (§5.13, 22.11.), alle ohne Testlauf.
 Hängt ab von: K02 (Geduld je Stufe), K15 (Gespräche) · Wird gebraucht von: K12b, K14, K19, K23, K29.
 
 ## 1. Ziel und Spielgefühl
@@ -253,6 +253,19 @@ Nach §8 („Neuer Präsident: Wahl alle 3–4 Jahre“) und K25 §5.5 (Mitglied
 - **Lizenz (K36):** keine neue Funktion.
 - **Noch nicht:** Namen der Präsidenten, Kandidaten mit Programm, Einfluss des Trainers auf die Wahl, Mitglieder als Stimmen (K25d), neue Ziele direkt nach der Wahl (gilt erst mit dem Saisonziel der neuen Saison).
 
+### 5.13 Umsetzung U12j (22. November 2026, popolupo, ohne Testlauf): Jobangebot während der Saison
+
+Nach §8 als Ereigniskarte (K30, `daten/karten.js`, Bereich `ereignisse`).
+
+- **Wann:** Dein Ruf ist mindestens 55, du hast mindestens 5 Ligaspiele bestritten und stehst nicht im Ultimatum. Es meldet sich ein Verein derselben oder einer höheren Liga mit mindestens 8 mehr Ansehen als deiner. Große Vereine melden sich erst bei großem Ruf: Ihr Ansehen ist höchstens Ruf + 40. Stufe „häufig“ (etwa alle drei Saisons, solange die Bedingungen gelten), höchstens einmal je Jahr.
+- **Wechseln:** Du übernimmst den Verein sofort.
+  - Dein Gehalt bis heute steht in der Karriere, die Station endet mit „gewechselt“, eine Abfindung gibt es nicht.
+  - Der neue Verein zahlt deinem alten ein Jahresgehalt als Ablöse für deinen Vertrag, höchstens sein Kontostand.
+  - Danach gilt alles wie bei jedem Jobwechsel: neuer Vertrag, Vertrauen 55, Glaubwürdigkeit nach Ruf.
+- **Bleiben und es öffentlich sagen:** Vertrauen +5, Fans +2. Das ist auch die Voreinstellung, der Co-Trainer wechselt nie für dich.
+- **Sich alles anhören und dann absagen:** Ruf +1. Mit 50 % wird das Treffen publik, dann Vertrauen −8.
+- **Noch nicht:** Ausstiegsklausel im Trainervertrag, Angebot während des Ultimatums als Rettung, Angebote aus dem Ausland.
+
 ## 6. Hebel des Spielers
 
 | Hebel | Nutzen | Preis |
@@ -376,6 +389,7 @@ vorstand:{
 **Vorläufig entschieden mit U12i** (22.11., popolupo, ohne Testlauf, §5.12):
 
 27. **Präsidentenwahl alle 3 oder 4 Jahre** nach festem Takt je Verein, Chance zu bleiben aus Punkten, Auf- und Abstieg und Fanstimmung. Ein neuer Präsident bekommt neue Werte, dein Vertrauen rückt zur Hälfte Richtung 50.
+28. **Jobangebot als Karte** (U12j, §5.13): ab Ruf 55, Wechsel nur auf deine Wahl, Ablöse ein Jahresgehalt für den alten Verein.
 
 **Noch zu recherchieren:** Zahl der Trainerwechsel pro Saison in 1., 2. und 3. Liga.
 

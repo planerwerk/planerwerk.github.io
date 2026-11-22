@@ -222,7 +222,7 @@ Jedes Konzept führt seine Karten in Abschnitt 8. Stand heute:
 | K19 Transfers | 5 | Befund beim Medizincheck, Rückkehr des verlorenen Sohns |
 | K21 Verträge | 5 | Vorvertrag woanders, Gehaltsneid |
 | K22 Berater | 5 | Der entfernte Verwandte, Provisionsstreit |
-| K28 Vorstand | 5 | Ultimatum, Präsident mischt sich ein, neuer Präsident |
+| K28 Vorstand | 5 | Ultimatum, Präsident mischt sich ein, neuer Präsident (seit U12i als Wahl, keine Karte), Jobangebot (seit U12j als Karte) |
 | K31 Computer-Vereine | 4 | Konkurrent rüstet auf, Notverkauf |
 
 Zusammen etwa 100 Karten, viele davon Infos.

@@ -832,6 +832,7 @@ Im Einzelnen in K28 §5.8 und §12 Nr. 18 bis 22.
 - **Seit U12g (K28 §5.10, §12 Nr. 25, 26):** Trainervertrag nur als Statistik: Gehalt nach Liga, Ansehen und Ruf (Bayern etwa 7 Mio., 3. Liga etwa 0,14 Mio. je Saison, geschätzt), Laufzeit nach der Geduld des Präsidenten, Verlängerung über Vertrauen 55, sonst ein Jahr Bewährung, Abfindung Restgehalt × 0,5. Kein Abschied bei Vertragsende.
 - **Seit U12h (K28 §5.11):** Dein Ruf als Trainer wirkt auf das Interesse von Spielern (+0,2 je Punkt über 30), auf das Ruf-Gefälle in der Kabine (statt der Trainerjahre) und auf die Glaubwürdigkeit beim neuen Verein (60 + 0,3 je Punkt).
 - **Seit U12i (K28 §5.12, §12 Nr. 27):** Präsidentenwahl auf der Mitgliederversammlung alle 3 oder 4 Jahre. Der Präsident bleibt mit 65 % (± Punkte, Auf- und Abstieg, Fanstimmung). Ein neuer bringt neue Werte, dein Vertrauen rückt zur Hälfte Richtung 50.
+- **Seit U12j (K28 §5.13, §12 Nr. 28):** Jobangebot während der Saison als Karte ab Ruf 55 von einem Verein mit mindestens 8 mehr Ansehen (höchstens Ruf + 40). Wechseln nur auf deine Wahl, der alte Verein bekommt ein Jahresgehalt als Ablöse.
 
 ## K17 Beziehungen, U12c (20.11.), vorläufig von mir, gebaut ohne Testlauf
 

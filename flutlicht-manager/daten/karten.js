@@ -10,6 +10,12 @@ const KARTEN=[
       'Der Präsident steht nach dem Training am Platz: „Warum spielt eigentlich {spieler} nicht?“ Drei Niederlagen machen ihn ungeduldig.'],
     optionen:[{text:'Er bekommt seine Chance',wirkung:[{art:'vertrauen',wert:5},{art:'glaub',wert:-3}],folge:'Der Präsident ist zufrieden. In der Kabine hat man mitbekommen, wer hier aufstellt.'},
       {text:'Ich stelle auf, nicht der Präsident',wirkung:[{art:'vertrauen',wert:-5},{art:'glaub',wert:3}],folge:'Der Präsident legt verärgert auf. Die Mannschaft rechnet dir das hoch an.'}],auto:1},
+  // Jobangebot während der Saison (K28 §8, U12j). Neue Wirkung jobwechsel: du übernimmst den beteiligten Verein sofort, dein Verein bekommt eine Ablöse für deinen Vertrag.
+  {id:'jobangebot',titel:'Jobangebot',bereich:'K28',art:'entscheidung',gross:true,stufe:'haeufig',ausloeser:'jobangebot',sperrTage:365,
+    texte:['Der Präsident von {verein} ruft persönlich an: Er will dich, sofort. Dein Verein bekäme eine Ablöse für deinen Vertrag.','Ein Berater lässt durchblicken: {verein} sucht einen neuen Trainer und hat nur einen Namen auf dem Zettel, deinen.'],
+    optionen:[{text:'Wechseln',wirkung:[{art:'jobwechsel',wert:1}],folge:''},
+      {text:'Bleiben und es öffentlich sagen',wirkung:[{art:'vertrauen',wert:5},{art:'fans',wert:2}],folge:'Der Vorstand und die Fans hören es gern.'},
+      {text:'Sich alles anhören und dann absagen',wirkung:[{art:'ruf',wert:1},{art:'vertrauen',wert:0,chance:0.5,schlecht:-8,gut:'Niemand hat etwas von dem Treffen mitbekommen.',schlechtText:'Das Treffen wird publik. Der Vorstand ist verstimmt.'}],folge:''}],auto:1},
   {id:'rueckendeckung',titel:'Rückendeckung vom Vorstand',bereich:'K28',art:'info',stufe:'haeufig',ausloeser:'rueckendeckung',
     texte:['Der Vorstand stellt sich öffentlich hinter dich: Trotz der Tabelle glaubt man an deinen Weg.','„Der Trainer hat unser volles Vertrauen“, sagt der Präsident, und diesmal meint er es.']},
   {id:'versoehnung',titel:'Versöhnung',bereich:'K17',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'versoehnung',sperrTage:365,

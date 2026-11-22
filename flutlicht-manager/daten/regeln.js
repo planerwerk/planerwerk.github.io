@@ -910,6 +910,9 @@ const REGELN={
       // + jePunkt × (Punkte je Spiel − mitte) + aufstieg/abstieg + fans × (Fanstimmung − 50), in grenzen. Sonst ein neuer; bei dir rückt das Vertrauen um vertrauen Richtung 50.
       versatz:101,wahl:{jahre:[3,4],bleiben:0.65,mitte:1.35,jePunkt:0.3,aufstieg:0.15,abstieg:-0.25,fans:0.005,grenzen:[0.2,0.95],vertrauen:0.5}},
     jobs:{ansehenAbschlag:4,kandidaten:8,angebote:4},
+    // Jobangebot während der Saison (K28 §8, U12j, 22.11., GESCHÄTZT): Karte ab Ruf rufAb, Verein mit mindestens abstand mehr Ansehen und höchstens Ruf + rufSpanne;
+    // beim Wechsel zahlt der neue Verein dem alten abloese × dein Gehalt je Saison
+    jobangebot:{rufAb:55,abstand:8,rufSpanne:40,abloese:1},
     // Trainervertrag (K28 §5.5, U12g, 22.11., GESCHÄTZT, nur Statistik, es fließt kein Geld): Gehalt je Saison = basis × liga × e^(steigung × (Ansehen − mitte)) × (1 + jeRuf × (Ruf − Startruf)), auf runden.
     // Laufzeit nach der Geduld des Präsidenten (Grenzen wie ruf.ungeduldig und ruf.geduldig); ab Tag winterAb zählt die laufende Saison nicht mit. Läuft er aus: Vertrauen über verlaengernAb
     // verlängert um verlaengern Saisons mit neuem Gehalt, sonst um bewaehrung zum alten. Abfindung bei Entlassung: Restgehalt × abfindung. saisonTage: Tage je Saison für den Anteil.
