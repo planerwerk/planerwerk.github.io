@@ -85,7 +85,7 @@ console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 {const {S,F,ev}=welt(),T=ev('RKA').teampraemie,t=ev('myT()'),o=S.teams.find(x=>x.lg===t.lg&&x.id!==S.my);S.phase='play';
   F.lizenzStart(true);S.lizenz.stufe=1;F.teampraemieSetzen('hoch');const gesperrt=ev('tpStufe')()==='normal';delete S.lizenz;
   F.teampraemieSetzen('hoch');const hoch=ev('tpStufe')()==='hoch',st=ev('teampraemieStimmung'),mein=st(t)===T.stimmung&&st(o)===0;
-  const f0=S.fin['Prämien: Mannschaft']||0;F.teampraemieSpiel({h:S.my,a:o.id,hg:2,ag:0});const sieg=(S.fin['Prämien: Mannschaft']||0)-f0;F.teampraemieSpiel({h:S.my,a:o.id,hg:1,ag:1});const remis=(S.fin['Prämien: Mannschaft']||0)-f0-sieg;
+  const f0=S.fin['Prämien']||0;F.teampraemieSpiel({h:S.my,a:o.id,hg:2,ag:0});const sieg=(S.fin['Prämien']||0)-f0;F.teampraemieSpiel({h:S.my,a:o.id,hg:1,ag:1});const remis=(S.fin['Prämien']||0)-f0-sieg;
   S.tag=ev('meineLigaspiele')()[0].tag+1;F.teampraemieSetzen('normal');const fest=ev('tpStufe')()==='hoch';
   pruef(gesperrt&&hoch&&mein&&sieg===-ev('squad')(S.my).length*(T.jeSpieler[t.lg]||T.jeSpieler[3])&&remis===0&&fest,'Teamprämie: Lizenz, hoch vor dem ersten Ligaspiel, Kosten je Sieg, Stimmung nur bei dir, danach fest',
     `ohne Lizenz ${gesperrt}, hoch ${hoch}, Stimmung ${mein}, Sieg ${sieg}, Remis ${remis}, nach dem ersten Spiel fest ${fest}`);}

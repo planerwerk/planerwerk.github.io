@@ -48,11 +48,18 @@ console.log(`\n${N} Saison(s), ${sum.spiele} Ligaspiele, in ${((Date.now()-t0)/1
 {const {neueWelt}=require('./sim'),lauf=(ja,auto)=>{const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S,ev=W.ev;S.my=6;S.mgr='Test';F.setTarget();
     if(auto){F.lizenzStart(true);S.lizenz.auto.sportgericht=1;}const p=ev('squad')(S.my)[0];ev('stimmung')(p);p.st=50;const t=ev('myT()');t.glaub=50;
     F.sgUrteil({pid:p.id,team:S.my,wb:'liga',art:'grob',tag:S.tag,antrag:2,gesessen:0,vor:0},2,'angenommen',S.tag);const karte=F.vereinsstrafeKarte();
-    if(!karte)return{karte:false};const b=S.vstrafe.betrag,f0=S.fin['Vereinsstrafen']||0;F.vereinsstrafe(ja);
-    return{karte:true,geld:(S.fin['Vereinsstrafen']||0)-f0,b,st:p.st,glaub:ev('glaub')(t),weg:!S.vstrafe,soll:2*(ev('RD').vereinsstrafe.jeSpiel[t.lg]||ev('RD').vereinsstrafe.jeSpiel[3])};};
+    if(!karte)return{karte:false};const b=S.vstrafe[0].betrag,f0=S.fin['Vereinsstrafen']||0;F.vereinsstrafe(p.id,ja);
+    return{karte:true,geld:(S.fin['Vereinsstrafen']||0)-f0,b,st:p.st,glaub:ev('glaub')(t),weg:!S.vstrafe.length,soll:2*(ev('RD').vereinsstrafe.jeSpiel[t.lg]||ev('RD').vereinsstrafe.jeSpiel[3])};};
   const ja=lauf(1,false),nein=lauf(0,false),au=lauf(1,true);
   pruef(ja.karte&&ja.geld===ja.b&&ja.b===ja.soll&&ja.st<50&&ja.glaub>50&&ja.weg&&nein.karte&&nein.geld===0&&nein.st>50&&nein.glaub<50&&!au.karte,
     'Vereinsstrafe: Karte nach dem Urteil, verhängen (Geld, Stimmung runter, Glaubwürdigkeit rauf), verzichten (umgekehrt), keine unter der Automatik',
     `verhängt ${ja.geld} € (soll ${ja.soll}), Stimmung ${ja.st}, Glaubwürdigkeit ${ja.glaub}; verzichtet Stimmung ${nein.st}, Glaubwürdigkeit ${nein.glaub}; Automatik ${au.karte}`);}
+
+// EA1 bis EA3. Vereinsstrafe: zwei Urteile ergeben zwei Karten; am letzten Tag hält das Spiel an („Frist“); für eine Rote Karte bei einem anderen Verein keine Karte
+{const {neueWelt}=require('./sim'),{W,F}=neueWelt();F.buildWorld(SEED);const S=W.S,ev=W.ev;S.my=6;S.mgr='Test';F.setTarget();S.phase='play';
+  const [p,q,r]=ev('squad')(S.my),urteil=(x,team)=>F.sgUrteil({pid:x.id,team,wb:'liga',art:'grob',tag:S.tag,antrag:1,gesessen:0,vor:0},1,'angenommen',S.tag);
+  urteil(p,S.my);urteil(q,S.my);urteil(r,S.my+1);const offen=ev('vereinsstrafeOffen')(),zwei=offen.length===2&&!offen.some(v=>v.pid===r.id);
+  const bis=offen[0].bis,frist=ev('vereinsstrafeFrist')(bis)&&!ev('vereinsstrafeFrist')(bis-1),karten=(F.vereinsstrafeKarte().match(/<h3>Vereinsstrafe<\/h3>/g)||[]).length===2;
+  pruef(zwei&&karten&&frist,'Vereinsstrafe: mehrere Karten, Halt am letzten Tag, keine für eine Rote Karte bei einem anderen Verein',`offen ${offen.length}, Karten ${karten}, Halt ${frist}`);}
 
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

@@ -65,16 +65,20 @@ function sgUrteil(v,n,ausgang,d){const p=PIX.get(v.pid);if(p){const s=sperren(p)
   (S.sgArchiv=S.sgArchiv||[]).unshift({pid:v.pid,n:p?p.n:'?',team:v.team,wb:v.wb,art:v.art,tag:v.tag,antrag:v.antrag,urteil:n,ausgang,am:d,einspruch:!!v.einspruch});
   S.sgArchiv.length=Math.min(S.sgArchiv.length,RD.verfahren.archiv);
   if(p&&p.team===S.my){const rest=sperreIn(p,v.wb);news(`Sportgericht: ${p.n} ist für ${n} ${WB_SPIEL[v.wb]}${n===1?'':'e'} gesperrt (${VERGEHEN[v.art]}, ${AUSGANG[ausgang]}).${rest?` Noch ${rest} offen.`:' Die Sperre ist schon abgesessen.'}`,ausgang==='gemindert'?'good':'bad');
-    if(n>=RPK.anlass.urteilAb&&rest>0)presseS().urteil={pid:p.id,tag:absTag(S.tag),s:S.season,wb:v.wb};if(n>0&&!autoB('sportgericht'))vereinsstrafeAnbieten(p,n);}} /* Pressekonferenz nach dem Urteil (K29 §4.1, K29g): vorgemerkt, presseTag öffnet sie (Prüfung DR2, DR4: nur, solange die Sperre noch läuft) */
-// Vereinsstrafe (K09 §5.2, K14 §6, K09c): Nach einem Urteil gegen deinen Spieler entscheidest du binnen RD.vereinsstrafe.tage Tagen, ob er eine interne Geldstrafe zahlt.
-// Nicht unter der Automatik des Sportgerichts (Gleichschritt in tests/lizenz.js). Ohne Antwort keine Strafe. S.vstrafe = {pid, betrag, bis, s}.
-function vereinsstrafeAnbieten(p,n){const V=RD.vereinsstrafe;S.vstrafe={pid:p.id,betrag:n*(V.jeSpiel[myT().lg]||V.jeSpiel[3]),bis:S.tag+V.tage,s:S.season};}
-const vereinsstrafeOffen=()=>{const v=S.vstrafe,p=v&&PIX.get(v.pid);return v&&v.s===S.season&&v.bis>=S.tag&&p&&p.team===S.my?v:null;};
-function vereinsstrafe(ja){if(!darf('sportgericht'))return;const v=vereinsstrafeOffen();if(!v)return;const p=PIX.get(v.pid),V=RD.vereinsstrafe;S.vstrafe=null;
+    if(n>=RPK.anlass.urteilAb&&rest>0)presseS().urteil={pid:p.id,tag:absTag(S.tag),s:S.season,wb:v.wb};if(n>0&&v.team===S.my&&!autoB('sportgericht'))vereinsstrafeAnbieten(p,n);}} /* Pressekonferenz nach dem Urteil (K29 §4.1, K29g): vorgemerkt, presseTag öffnet sie (Prüfung DR2, DR4: nur, solange die Sperre noch läuft) */
+// Vereinsstrafe (K09 §5.2, K14 §6, K09c): Nach einem Urteil gegen deinen Spieler (für eine Rote Karte bei deinem Verein) entscheidest du binnen RD.vereinsstrafe.tage Tagen,
+// ob er eine interne Geldstrafe zahlt. Nicht unter der Automatik des Sportgerichts (Gleichschritt in tests/lizenz.js). Ohne Antwort keine Strafe. Am letzten Tag hält
+// das Spiel an („Frist“, kalender.js haltGrund, Prüfung EA1). S.vstrafe = [{pid, betrag, bis, s}], mehrere zugleich möglich (EA2; alte Spielstände: ein Objekt).
+const vstrafeListe=()=>{let l=S.vstrafe;if(l&&!Array.isArray(l))l=S.vstrafe=[l];return l||[];};
+function vereinsstrafeAnbieten(p,n){const V=RD.vereinsstrafe,neu={pid:p.id,betrag:n*(V.jeSpiel[myT().lg]||V.jeSpiel[3]),bis:S.tag+V.tage,s:S.season};
+  S.vstrafe=vstrafeListe().filter(v=>v.pid!==p.id&&v.s===S.season&&v.bis>=S.tag).concat([neu]);news(`Im Büro: Verhängst du gegen ${p.n} eine Vereinsstrafe? Antwort bis ${datumKurz(neu.bis)}.`,'');}
+const vereinsstrafeOffen=()=>vstrafeListe().filter(v=>{const p=PIX.get(v.pid);return v.s===S.season&&v.bis>=S.tag&&p&&p.team===S.my;});
+const vereinsstrafeFrist=d=>!autoB('sportgericht')&&vereinsstrafeOffen().some(v=>v.bis===d);
+function vereinsstrafe(pid,ja){if(!darf('sportgericht'))return;const v=vereinsstrafeOffen().find(x=>x.pid===pid);if(!v)return;const p=PIX.get(v.pid),V=RD.vereinsstrafe;S.vstrafe=vstrafeListe().filter(x=>x!==v);
   if(ja){money('Vereinsstrafen',v.betrag);stimmungAendern(p,V.stimmung);glaubAendern(V.glaub);news(`${p.n} zahlt ${fmt(v.betrag)} Strafe in die Vereinskasse. Die Mannschaft sieht: Die Regeln gelten für alle.`,'');}
   else{stimmungAendern(p,V.erlassStimmung);glaubAendern(V.erlassGlaub);news(`Du verzichtest auf eine Strafe für ${p.n}. Er dankt es dir, in der Kabine wird darüber geredet.`,'');}save();render();}
-function vereinsstrafeKarte(){const v=vereinsstrafeOffen();if(!v)return'';const p=PIX.get(v.pid);
-  return`<div class="card"><h3>Vereinsstrafe</h3><p>${esc(p.n)} ist gesperrt. Verhängst du eine interne Geldstrafe von ${fmt(v.betrag)}? Antwort bis ${datumKurz(v.bis)}, sonst bleibt es ohne Strafe.</p><div class="row"><button onclick="vereinsstrafe(1)"${lzAus('sportgericht')}>Strafe verhängen</button><button onclick="vereinsstrafe(0)"${lzAus('sportgericht')}>Darauf verzichten</button></div></div>`;}
+function vereinsstrafeKarte(){return vereinsstrafeOffen().map(v=>{const p=PIX.get(v.pid);
+  return`<div class="card"><h3>Vereinsstrafe</h3><p>${esc(p.n)} wurde gesperrt. Verhängst du eine interne Geldstrafe von ${fmt(v.betrag)}? Antwort bis ${datumKurz(v.bis)}, sonst bleibt es ohne Strafe.</p><div class="row"><button onclick="vereinsstrafe(${p.id},1)"${lzAus('sportgericht')}>Strafe verhängen</button><button onclick="vereinsstrafe(${p.id},0)"${lzAus('sportgericht')}>Darauf verzichten</button></div></div>`;}).join('');}
 function sgAnnehmenLauf(v,d){sgUrteil(v,v.antrag,'angenommen',d);}
 function sgEinspruchLauf(v,d){const E=RD.einspruch;v.einspruch=true;v.stand='einspruch';v.kosten=riA(E.kosten);
   v.urteilAm=Math.min(v.tag+RD.verfahren.urteilSpaetestens,d+riA(RD.verfahren.urteilTage));

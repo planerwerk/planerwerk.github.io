@@ -48,7 +48,7 @@ Gespeichert am Spieler als `vertrag = {bis, gehalt, praemien, klauseln}`. `ct` u
 
 ### 3.2 Teamprämien
 
-Sieg-, Klassenerhalts-, Aufstiegs- und Pokalprämien legt der Verein für die ganze Mannschaft fest (Saisonbeginn, K12b). Sie wirken auf die Stimmung (K14, Baustein „Erfolg“) und kosten Geld (K23). **Gebaut als K21b** (22.11.2026, popolupo, ohne Testlauf, vorläufig nur die Siegprämie): In der Kabine wählst du bis zum ersten Ligaspiel „normal“ (in den Gehältern enthalten, ohne Wirkung) oder „hoch“. Hoch kostet je Ligasieg 15.000, 4.000 oder 1.000 € je Spieler im Kader (Buchung „Prämien: Mannschaft“) und hebt den Baustein Erfolg deiner Spieler um 2. Ab der A-Lizenz (Bereich `praemien`). Ohne Wahl gilt „normal“, das ist auch die Automatik und das Verhalten der Computer-Vereine, darum bleibt der Gleichschritt. Klassenerhalts-, Aufstiegs- und Pokalprämien fehlen noch.
+Sieg-, Klassenerhalts-, Aufstiegs- und Pokalprämien legt der Verein für die ganze Mannschaft fest (Saisonbeginn, K12b). Sie wirken auf die Stimmung (K14, Baustein „Erfolg“) und kosten Geld (K23). **Gebaut als K21b** (22.11.2026, popolupo, ohne Testlauf, vorläufig nur die Siegprämie): In der Kabine wählst du bis zum ersten Ligaspiel „normal“ (in den Gehältern enthalten, ohne Wirkung) oder „hoch“. Hoch kostet je Ligasieg 15.000, 4.000 oder 1.000 € je Spieler im Kader (Buchung „Prämien“, geht in die Finanzprognose ein, seit Prüfung EA6) und hebt den Baustein Erfolg deiner Spieler um 2. Ab der A-Lizenz (Bereich `praemien`). Ohne Wahl gilt „normal“, das ist auch die Automatik und das Verhalten der Computer-Vereine, darum bleibt der Gleichschritt. Klassenerhalts-, Aufstiegs- und Pokalprämien fehlen noch.
 
 ## 4. Abläufe
 

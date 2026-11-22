@@ -1988,3 +1988,17 @@ Ein Agent hat 8702394, fc41bed, 0314438, 684a255 und 5c55511 gelesen (nichts aus
 | DZ4 | Die Fehldiagnose lag oft ganz unter der ersten Einschätzung und fiel so sofort auf. Jetzt reicht ihre Obergrenze bis zur Untergrenze der ersten Einschätzung (höchstens wahre Dauer − 1). | ✅ behoben |
 | DZ5 | Nach einem Jobwechsel in der Phase „Saisonende“ zeigte die Saisonbilanz die Verletzungen des neuen Vereins. Jetzt hält `seasonEnd` den Text in der Bilanz fest. | ✅ behoben |
 | DZ6 | Die zweite Meinung erfüllt die Lizenzaufgabe `medizin`, die Gelegenheit dafür zählte sie aber nicht. Jetzt zählt eine mögliche zweite Meinung als Gelegenheit. | ✅ behoben |
+
+## EA. Prüfung von K09c, K19d, K21b und der Korrekturen DZ ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 54e3a1e, 0a9841b, 838821e, 0dd110f und 464e56d gelesen (nichts ausgeführt). Kein blockierender Fehler, drei mittlere. Ohne Befund: Doku-Berichtigung, Korrekturen DZ (`naechstesSpiel` sucht bis zum Saisonende, `v.t` passt zum Zähler), Geldfluss der Weiterverkaufsbeteiligung auf allen Wegen, Gleichschritt, Namen, `${}`. Korrekturen auf `mitarbeit/popolupo-ea-korrekturen`.
+
+| # | Befund | Status |
+|---|---|---|
+| EA1 | **Mittel: Vereinsstrafe verfällt ungesehen.** Das Urteil kommt im Tageslauf ohne Halt, „Tag beenden“ springt bis zu sieben Tage, die Frist ist drei. Jetzt Meldung „Im Büro: …“ beim Urteil und Halt „Frist“ am letzten Tag. | ✅ behoben |
+| EA2 | Ein zweites Urteil innerhalb der Frist löschte die erste Karte. Jetzt eine Liste (alte Spielstände mit einem Objekt werden umgewandelt), je Spieler eine Karte. | ✅ behoben |
+| EA3 | Die Karte kam auch für eine Rote Karte bei einem anderen Verein (gekaufter Spieler mit laufendem Verfahren, Rückkehr von einer Leihe). Jetzt nur, wenn das Verfahren deinem Verein gehört. Text „wurde gesperrt“ statt „ist gesperrt“. | ✅ behoben |
+| EA4 | **Mittel: Weiterverkaufsbeteiligung hing am Spieler, nicht am Käufer.** Nach einem ablösefreien Wechsel zahlte der nächste Verein, der nichts zugesagt hatte; ein eigener Rückkauf und Weiterverkauf ohne Klausel zahlte trotzdem; eine alte Klausel konnte überschrieben werden. Jetzt `p.wvb.von` = der Verein, der sie schuldet. Nur er zahlt, jeder andere Wechsel mit Ablöse beendet sie ohne Zahlung. Hat der Spieler schon eine Klausel, gibt es keine neue (der Knopf fehlt dann). | ✅ behoben |
+| EA5 | Kaufte dein Verein den Spieler zurück, zahlte der Verkäufer dir 15 % deiner eigenen Ablöse. Jetzt endet sie beim Rückkauf ohne Zahlung. | ✅ behoben |
+| EA6 | **Mittel: Teamprämie nicht in der Finanzprognose.** Gebucht unter „Prämien: Mannschaft“, das nicht in `RFP.finanzplan.laufend` steht. Jetzt unter „Prämien“ (in der Prognose). | ✅ behoben |
+| EA7 | Nach einem Jobwechsel oder im Sommer hieß es „Für diese Saison festgelegt“, auch ohne Wahl bei diesem Verein, und „hoch“ wirkte bis zum 1. Juli auf die Stimmung. Jetzt eigener Text und Wirkung nur in der Saison. | ✅ behoben |

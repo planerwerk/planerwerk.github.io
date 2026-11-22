@@ -290,14 +290,14 @@ function kabineNachSaisonwechsel(){S.bz=(S.bz||[]).filter(b=>PIX.get(b[0])&&PIX.
 // Ohne Setzen gilt „normal“ ohne jede Wirkung, also auch unter jeder Automatik und bei allen Computer-Vereinen (Gleichschritt in tests/lizenz.js).
 const tpStufe=()=>S.tp&&S.tp.s===S.season&&S.tp.tid===S.my?S.tp.stufe:'normal';
 const tpOffen=()=>S.phase==='play'&&!S.fired&&meineSpieltage()<1;
-const teampraemieStimmung=t=>t&&t.id===S.my&&tpStufe()==='hoch'?RKA.teampraemie.stimmung:0;
+const teampraemieStimmung=t=>t&&t.id===S.my&&S.phase==='play'&&tpStufe()==='hoch'?RKA.teampraemie.stimmung:0; // nur in der Saison (Prüfung EA7)
 function teampraemieSetzen(stufe){if(!RKA.teampraemie.stufen[stufe]||!tpOffen())return;if(!darf('praemien'))return;S.tp={s:S.season,tid:S.my,stufe};
   news(`Teamprämie für diese Saison: ${RKA.teampraemie.stufen[stufe]}.`,'');save();render();}
 // Nach einem Ligaspiel deines Vereins (ablauf.js): bei „hoch“ und Sieg je Spieler im Kader die Zusatzprämie
 function teampraemieSpiel(m){if(!m||tpStufe()!=='hoch')return;const home=m.h===S.my,gf=home?m.hg:m.ag,ga=home?m.ag:m.hg;if(gf<=ga)return;
-  const T=RKA.teampraemie,x=squad(S.my).length*(T.jeSpieler[myT().lg]||T.jeSpieler[3]);if(x)money('Prämien: Mannschaft',-x);}
+  const T=RKA.teampraemie,x=squad(S.my).length*(T.jeSpieler[myT().lg]||T.jeSpieler[3]);if(x)money('Prämien',-x);} // „Prämien“ geht in die Finanzprognose ein (Prüfung EA6)
 function teampraemieKarte(){const T=RKA.teampraemie,st=tpStufe(),je=T.jeSpieler[myT().lg]||T.jeSpieler[3];
-  return`<div class="card"><h3>Teamprämie</h3><p>${esc(T.stufen[st])}.${st==='hoch'?` Je Ligasieg ${fmt(je)} je Spieler, die Stimmung im Baustein Erfolg +${T.stimmung}.`:''}</p>${tpOffen()?`<div class="row">${Object.entries(T.stufen).map(([k,l])=>`<button onclick="teampraemieSetzen('${k}')"${lzAus('praemien')}${k===st?' disabled':''}>${esc(l)}</button>`).join('')}</div><p class="dim">Festlegen bis zum ersten Ligaspiel. „Hoch“ kostet je Ligasieg ${fmt(je)} je Spieler im Kader.</p>${lzHinweis('praemien')}`:'<p class="dim">Für diese Saison festgelegt.</p>'}</div>`;}
+  return`<div class="card"><h3>Teamprämie</h3><p>${esc(T.stufen[st])}.${st==='hoch'?` Je Ligasieg ${fmt(je)} je Spieler, die Stimmung im Baustein Erfolg +${T.stimmung}.`:''}</p>${tpOffen()?`<div class="row">${Object.entries(T.stufen).map(([k,l])=>`<button onclick="teampraemieSetzen('${k}')"${lzAus('praemien')}${k===st?' disabled':''}>${esc(l)}</button>`).join('')}</div><p class="dim">Festlegen bis zum ersten Ligaspiel. „Hoch“ kostet je Ligasieg ${fmt(je)} je Spieler im Kader.</p>${lzHinweis('praemien')}`:`<p class="dim">${S.tp&&S.tp.s===S.season&&S.tp.tid===S.my?'Für diese Saison festgelegt.':'Wählbar erst wieder vor dem ersten Ligaspiel der nächsten Saison.'}</p>`}</div>`;}
 // Urlaubslänge (K12a, K14 §5.1 Umfeld): vier Wochen +3, zwei Wochen −3 für Spieler mit hoher Saisonbelastung, wirkt acht Wochen
 function kabineUrlaub(t,wochen){const U=RKA.urlaub;squad(t.id).forEach(p=>{const v=wochen>=4?U.lang:wochen<=2&&(p.sb||0)>=RSO.belastung.ab?U.kurz:0;if(v){p.ub=v;p.ubW=U.wochen+wochen;}else{delete p.ub;delete p.ubW;}});}
 // Teamevent (K14 §6): Stimmung und Zusammenhalt, nutzt sich innerhalb von vier Wochen ab, kostet Geld

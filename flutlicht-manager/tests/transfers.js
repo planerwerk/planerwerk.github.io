@@ -131,8 +131,11 @@ const kaufe=(w,p,fee,yrs=3)=>{const els=w.W.ev('document');els.getElementById('f
   F.verkaufAbschluss(o,true);if(p.wech)ev('wechselVollziehen')(true);const erhalten=(S.fin['Transfers']||0)-f0,soll=Math.round(1e6*(1-W.bewertung*W.anteil)/1000)*1000;
   const hat=!!p.wvb&&p.wvb.tid===S.my&&p.team===b.id,w0=S.fin['Transfers: Weiterverkauf']||0,b0=b.cash;F.kiWechsel(p,c,2e6);const wv=(S.fin['Transfers: Weiterverkauf']||0)-w0,bAbzug=b0+2e6-b.cash;
   const w1=S.fin['Transfers: Weiterverkauf']||0;F.kiWechsel(p,d,3e6);const danach=(S.fin['Transfers: Weiterverkauf']||0)-w1;
-  pruef(erhalten===soll&&hat&&wv===Math.round(2e6*W.anteil)&&bAbzug===wv&&!p.wvb&&danach===0,'Weiterverkaufsbeteiligung: Abschlag beim Verkauf, Anteil beim nächsten Verkauf, danach erledigt',
-    `erhalten ${erhalten} (soll ${soll}), Klausel ${hat}, Anteil ${wv}, Abzug beim Käufer ${bAbzug}, dritter Verkauf ${danach}`);}
+  // Prüfung EA4, EA5: Verkauf durch einen anderen als den gebundenen Verein zahlt nichts, Rückkauf durch den Begünstigten auch nicht; beide Male ist sie erledigt
+  p.wvb={tid:S.my,anteil:W.anteil,von:b.id};const w2=S.fin['Transfers: Weiterverkauf']||0;F.kiWechsel(p,c,1e6);const fremd=(S.fin['Transfers: Weiterverkauf']||0)-w2===0&&!p.wvb;
+  p.wvb={tid:S.my,anteil:W.anteil,von:p.team};ev('statTransfer')(p,1e6,p.team,S.my);const zurueck=(S.fin['Transfers: Weiterverkauf']||0)-w2===0&&!p.wvb;
+  pruef(erhalten===soll&&hat&&wv===Math.round(2e6*W.anteil)&&bAbzug===wv&&danach===0&&fremd&&zurueck,'Weiterverkaufsbeteiligung: Abschlag beim Verkauf, Anteil beim nächsten Verkauf des Käufers, danach erledigt, nichts bei fremdem Verkauf oder Rückkauf',
+    `erhalten ${erhalten} (soll ${soll}), Klausel ${hat}, Anteil ${wv}, Abzug beim Käufer ${bAbzug}, dritter Verkauf ${danach}, fremder Verkauf ${fremd}, Rückkauf ${zurueck}`);}
 
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);
