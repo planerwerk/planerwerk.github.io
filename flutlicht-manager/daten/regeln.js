@@ -402,7 +402,13 @@ const REGELN={
     ehrung:{elf:{TW:1,AB:4,MF:3,ST:3},elfMinNoten:20,spieler:{minNoten:20,mitte:4,note:10,tor:1,vorlage:0.7,platz:0.5},
       talent:{bisAlter:21,minNoten:10,mitte:4,fortschritt:2,note:5},marktwert:0.05,trainerRuf:5},
     rekord:{allzeit:{1:{sieg:{hg:12,ag:0,h:'Borussia Mönchengladbach',a:'Borussia Dortmund',datum:'29.4.1978'},tore:{n:41,name:'Robert Lewandowski',verein:'FC Bayern München',saison:'2020/21'},
-      serie:{n:53,verein:'FC Bayern München',zeit:'November 2012 bis März 2014'}}},meldenAb:1},
+      serie:{n:53,verein:'FC Bayern München',zeit:'November 2012 bis März 2014'}},
+      // 2. und 3. Liga seit K34 (22.11.2026, popolupo, Quellen bundesliga.com und dfb.de, siehe K34 §5.6). 2. Liga: Rekorde seit 1974, also auch aus der zweigleisigen Zeit.
+      2:{sieg:{hg:11,ag:0,h:'Arminia Bielefeld',a:'Arminia Hannover',datum:'23.5.1980'},tore:{n:41,name:'Horst Hrubesch',verein:'Rot-Weiss Essen',saison:'1977/78'},
+        serie:{n:28,verein:'FC St. Pauli und Arminia Bielefeld',zeit:'1976 bis 1979 und 1979/80'}},
+      // 3. Liga: 7:0 gab es viermal, hier der erste (danach Wehen Wiesbaden 2018, Mannheim und Zwickau 2022). 21 Spiele ohne Niederlage auch Saarbrücken 2011 über zwei Saisons.
+      3:{sieg:{hg:0,ag:7,h:'FC Carl Zeiss Jena',a:'1. FC Saarbrücken',datum:'11.8.2010'},tore:{n:28,name:'Lars Gindorf',verein:'Alemannia Aachen',saison:'2025/26'},
+        serie:{n:21,verein:'Karlsruher SC',zeit:'2017/18'}}},meldenAb:1},
     ehemalige:{ligaspiele:150,vereinSpiele:30,max:400},
     jubilaeum:{spiele:100,jahre:10},
     speicher:{max:1e6,saisons:20,frueh:2.5}}, // Ziel (K34 §10): Statistik nach 20 Saisons unter 1 MB im Spielstand (geprüft in tests/statistik.js). frueh: In den ersten Saisons wächst sie schneller (gemessen 101, 176, 244, 303 KB, ab Saison 13 etwa 650 KB), kurze Läufe dürfen bis zum 2,5-Fachen des Schnitts je Saison (T2.5)

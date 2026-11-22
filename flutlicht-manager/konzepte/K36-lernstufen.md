@@ -320,6 +320,7 @@ lizenz:{
 78. **U12g Trainervertrag (22.11., popolupo, ohne Testlauf):** keine neue Funktion, nur Anzeige und Karriere-Statistik. Der Vorstand verlängert von selbst, du entscheidest nichts. Ohne Zufall und ohne Geld (Gleichschritt unberührt).
 79. **K29e Medienprofil der Computer-Trainer und Sticheleien (22.11., popolupo, ohne Testlauf):** keine neue Funktion, eine weitere Frage im bestehenden Bereich `presse` (C-Lizenz). In der Automatik bleibt die Stichelei ohne Wirkung (Gleichschritt unberührt, er vergleicht die Stimmung).
 80. **U12h Ruf wirkt (22.11., popolupo, ohne Testlauf):** keine neue Funktion. Der Ruf wirkt auf Interesse, Kabine und Glaubwürdigkeit beim neuen Verein. Ohne Zufall. Im Gleichschritt bleibt der Ruf in den 150 Tagen beim Start, die Werte ändern sich also nicht.
+81. **K34b Rekorde der 2. und 3. Liga (22.11., popolupo, ohne Testlauf):** keine neue Funktion, nur Startwerte und Meldungen. Ohne Zufall (Gleichschritt unberührt).
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 

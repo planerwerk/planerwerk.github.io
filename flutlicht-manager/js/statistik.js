@@ -61,11 +61,15 @@ function statSpielBuchen(r,cup,lg,d){const st=statS(),V=RSTAT,nt=r.nt||{},seite=
   [0,1].forEach(s=>{const tid=s?r.a:r.h;if(tid!==S.my)return;(r.xpo[s]||[]).forEach(([id])=>{const p=PIX.get(id);if(p)jubilaeumSpiele(p,tid);});});}
 
 // ---------- Rekorde (K34 §5.6) ----------
-function rekLiga(lg){const L=statS().rek.lg;if(!L[lg]){const A=RSTAT.rekord.allzeit[lg];
-    L[lg]=A?{sieg:{n:A.sieg.hg-A.sieg.ag,hg:A.sieg.hg,ag:A.sieg.ag,txt:`${A.sieg.h} – ${A.sieg.a}`,wann:A.sieg.datum,echt:1},tore:{n:A.tore.n,txt:`${A.tore.name} (${A.tore.verein})`,wann:A.tore.saison,echt:1},serie:{n:A.serie.n,txt:A.serie.verein,wann:A.serie.zeit,echt:1}}:{};}
-  return L[lg];}
-// Melden: 1. Liga immer (echte Startwerte), 2. und 3. Liga nur die eigene Liga und erst ab der zweiten Saison des Spielstands
-const rekMelden=lg=>lg===1||(lg===myT().lg&&S.season-statS().ab>=RSTAT.rekord.meldenAb);
+// Startwerte: die echten Rekorde (A). Alte Spielstände ohne sie (2. und 3. Liga vor K34b) bekommen sie einmal nachträglich (Merker start);
+// ein Rekord aus dem Spiel bleibt, wenn er besser ist als der echte. Gleich gut: der echte bleibt, wie beim Melden.
+function rekLiga(lg){const L=statS().rek.lg,R0=L[lg]||(L[lg]={}),A=RSTAT.rekord.allzeit[lg];if(!A||R0.start)return R0;R0.start=1;
+  const s=Math.abs(A.sieg.hg-A.sieg.ag),hoch=Math.max(A.sieg.hg,A.sieg.ag);
+  if(!R0.sieg||R0.sieg.n<s||(R0.sieg.n===s&&Math.max(R0.sieg.hg,R0.sieg.ag)<=hoch))R0.sieg={n:s,hg:A.sieg.hg,ag:A.sieg.ag,txt:`${A.sieg.h} – ${A.sieg.a}`,wann:A.sieg.datum,echt:1};
+  if(!R0.tore||R0.tore.n<=A.tore.n)R0.tore={n:A.tore.n,txt:`${A.tore.name} (${A.tore.verein})`,wann:A.tore.saison,echt:1};
+  if(!R0.serie||R0.serie.n<=A.serie.n)R0.serie={n:A.serie.n,txt:A.serie.verein,wann:A.serie.zeit,echt:1};return R0;}
+// Melden: 1. Liga immer (echte Startwerte), 2. und 3. Liga nur die eigene Liga; ohne echte Startwerte erst ab der zweiten Saison des Spielstands (seit K34 haben beide welche)
+const rekMelden=lg=>lg===1||(lg===myT().lg&&(!!RSTAT.rekord.allzeit[lg]||S.season-statS().ab>=RSTAT.rekord.meldenAb));
 function rekNeu(lg,art,text){if(!rekMelden(lg))return;news(`${lg===1?'Bundesliga-Rekord':'Rekord der '+ligaName(lg)}: ${text}`,'good');}
 function siegRekord(r,lg,d){const n=Math.abs(r.hg-r.ag);if(!n)return;const R0=rekLiga(lg),a=R0.sieg,hoch=Math.max(r.hg,r.ag);
   if(a&&(n<a.n||(n===a.n&&hoch<=Math.max(a.hg,a.ag))))return;
