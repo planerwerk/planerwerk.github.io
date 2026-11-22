@@ -23,8 +23,9 @@ function gerErfunden(mein){if(mein){const sq=squad(S.my);if(R()<0.3||!sq.length)
   if(R()<0.5)return{art:'trainerAus',tid:t.id,w:0};const sq=squad(t.id).sort((a,b)=>b.str-a.str);return sq.length?{art:'absprung',tid:t.id,pid:sq[0].id,w:0}:null;}
 // Montags (ablauf.js woechentlichLauf, eigener Strom)
 function geruechteWoche(){if(S.phase!=='play'||S.fired)return;const G=RGR,K=gerKandidaten(),n=G.proWoche[0]+Math.floor(R()*(G.proWoche[1]-G.proWoche[0]+1));let meins=false;
+  const mp=medienpolitik(),kf=klimaFaktor(); /* Medienpolitik und Medienklima (K29b): gleich viele Würfe, nur die Schwellen für Gerüchte über dich ändern sich */
   for(let k=0;k<n;k++){let c=null;
-    if(!meins&&R()<G.meinVerein){c=R()<G.erfindung?gerErfunden(true):K.mein.length?K.mein.splice(Math.floor(R()*K.mein.length),1)[0]:null;if(c)meins=true;}
+    if(!meins&&R()<Math.min(1,G.meinVerein*mp.mein*kf)){c=R()<Math.min(1,G.erfindung*mp.erfindung*kf)?gerErfunden(true):K.mein.length?K.mein.splice(Math.floor(R()*K.mein.length),1)[0]:null;if(c)meins=true;}
     if(!c)c=R()<G.erfindung?gerErfunden(false):K.fremd.length?K.fremd.splice(Math.floor(R()*K.fremd.length),1)[0]:gerErfunden(false); // ohne Anlass erfinden die Medien etwas (T2.3, vorläufig)
     if(c){if(c.w==null)c.w=R()<G.aergerWahr?1:0;gerVeroeffentlichen(c);}}
   gerPruefen();}

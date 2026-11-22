@@ -310,6 +310,7 @@ lizenz:{
 68. **K26c Fanshop und Instandhaltung der Computer-Vereine (22.11., popolupo, ohne Testlauf):** keine neue Funktion, kein neuer Bereich. Nur Computer-Vereine, zum Saisonstart und je Ligaspiel, ohne Zufall.
 69. **K20c Bieterwettstreit beim Kauf (22.11., popolupo, ohne Testlauf):** keine neue Funktion, gehört zum Bereich `transfers` (dein Angebot). Nur nach deinem Angebot, im eigenen Strom je Spieler und Saison. Die Automatik kauft nach den Regeln der Computer-Vereine und trifft nie auf den Ablauf (Gleichschritt).
 70. **U12f Zwischenbilanz im Winter (22.11., popolupo, ohne Testlauf):** neue Funktion (Ziel senken beantragen) im Bereich `zielgespraech` (Grundlizenz), ohne Automatik: Ohne Antrag bleibt das Ziel. Das Anheben durch den Vorstand würfelt nicht.
+71. **K29b Medienpolitik (22.11., popolupo, ohne Testlauf):** neue Funktion (Medienpolitik wählen) im bestehenden Bereich `presse` (C-Lizenz, Automatik: zurückhaltend). Kein neuer Bereich, weil sie zum Umgang mit den Medien gehört. Gleichschritt: In der Automatik ändert sich nichts, die Gerüchteküche ist im Test ohnehin aus.
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 

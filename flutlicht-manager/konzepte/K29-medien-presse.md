@@ -240,6 +240,14 @@ Das ist der Maßstab für die Verbindung zu K09.
 - **Medien mit Treffsicherheit:** Boulevard 40, Fachblatt 75, Fernsehen 60, Portal 50, Lokalzeitung 65. Nach 30 Tagen wird geprüft: Wechsel- und Trainergerüchte am Ausgang (gewechselt, Trainer weg), die übrigen am Wahrheitsgehalt. Treffer +3, Fehler −3. Die Gerüchteküche im Büro zeigt die letzten Gerüchte mit dem Medium und wie oft es trifft.
 - **Noch nicht:** Medienpolitik (offen, zurückhaltend, abgeschottet), Exklusivinterview, Gerüchte über Computer-Vereine untereinander mit Wirkung auf deren Spieler, Gehaltsforderung bei bekanntem Interesse.
 
+**Umsetzung K29b (22.11.2026, popolupo, ohne Testlauf): Medienpolitik und Wirkung des Medienklimas (§6, §5.4)**
+- **Medienpolitik** im Medien-Kasten des Büros, Bereich `presse` (C-Lizenz, in der Automatik „zurückhaltend“):
+  - offen: Medienklima je Woche +0,5 bis 70, Gerüchte über deinen Verein 1,25-mal so oft, Erfundenes 0,8-mal.
+  - zurückhaltend: wie bisher.
+  - abgeschottet: Medienklima je Woche −0,5 bis 30, Gerüchte über dich 0,6-mal so oft, Erfundenes 1,4-mal.
+- **Medienklima wirkt jetzt** (§5.4 „wirkt später auf Gerüchte“): Die Chance auf ein Gerücht über dich und der Anteil erfundener Gerüchte über dich mal 1 + 0,5 × (50 − Klima)/50, also 1,5 bei 0 und 0,5 bei 100. Gleich viele Würfe wie vorher, nur die Schwellen ändern sich.
+- **Noch nicht:** Wirkung des Klimas auf die Fragen der Pressekonferenz, Exklusivinterview (braucht Beziehungen zu einzelnen Medien).
+
 ## 6. Hebel des Spielers
 
 - Ton je Frage wählen.

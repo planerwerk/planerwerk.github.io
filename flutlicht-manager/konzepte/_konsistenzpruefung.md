@@ -1635,3 +1635,15 @@ Zweig `mitarbeit/popolupo-u12f-zwischenbilanz`, auf K20c. Ausführlich in K28 §
 | DB2 | **Zusammenspiel mit dem Zielgespräch (U12e):** Anheben verschiebt den Vorschlag mit (der Ruf rechnet vom neuen Ziel), ein zugesagter Antrag erhöht `stufe` wie Tiefstapeln (Budget −15 %, „übertroffen“ vom alten Vorschlag). Ohne Zielgespräch in der Saison (alter Spielstand) ändert sich nur das Ziel. | ✅ |
 | DB3 | **Gleichschritt:** Die Bilanz liegt nach den 150 Tagen des Tests, würfelt nur beim Antrag und ändert nur Ziel und Vertrauen deines Vereins. | ✅ |
 | DB4 | **Kommentar-Wächter:** Ein Kommentar mit `);` am Zeilenende wurde als verschluckter Code gemeldet (Fehlalarm), umformuliert. | ✅ |
+
+---
+
+## DC. Nachtrag zu K29b: Medienpolitik und Wirkung des Medienklimas (22. November 2026, popolupo, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-k29b-medienpolitik`, auf U12f. Ausführlich in K29 (Umsetzung K29b).
+
+| # | Befund | Status |
+|---|---|---|
+| DC1 | **Medienklima wirkt:** Bisher wurde es nur angezeigt (K29 §12 Nr. 13). Jetzt verändert es die Schwellen für Gerüchte über deinen Verein in `geruechteWoche`, gleich viele Würfe. Pressekonferenzen, die das Klima bewegen, haben damit erstmals eine Folge über die Anzeige hinaus. | ✅ |
+| DC2 | **Ältere Tests:** Mit Klima 50 und „zurückhaltend“ sind alle Faktoren 1. Bewegen Pressekonferenzen im Test das Klima, ändert sich die Zahl der Gerüchte über dich leicht. | ⚠️ `tests/geruechte.js` ansehen |
+| DC3 | **Gleichschritt:** Automatik heißt „zurückhaltend“, die Gerüchteküche ist im Test 5a ohnehin aus. | ✅ |

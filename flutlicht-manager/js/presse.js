@@ -86,7 +86,14 @@ function chronikEintrag(txt,kopf){const st=statS(),l=st.chronik||(st.chronik=[])
 
 // ---------- Gedächtnis (K29 §5.2) ----------
 // Montags: Rückendeckung und vier Wochen später verkauft kostet Glaubwürdigkeit
-function presseWoche(){const P=presseS(),G=RPK.gedaechtnis,heute=absTag(S.tag);
+// ---------- Medienpolitik (K29 §6, K29b) ----------
+// S.mp = Art (offen, zurueckhaltend, abgeschottet). In der Automatik (Bereich presse) und ohne Wahl gilt der Standard. Wirkt je Woche aufs Medienklima und auf die Gerüchte über dich.
+const medienpolitik=()=>{const M=REGELN.medienpolitik,k=autoB('presse')||!S.mp||!M.arten[S.mp]?M.standard:S.mp;return Object.assign({k},M.arten[k]);};
+function medienpolitikSetzen(k){if(!darf('presse')||!REGELN.medienpolitik.arten[k])return;S.mp=k;save();render();}
+// Faktor des Medienklimas auf Gerüchte über dich (geruechte.js): unter 50 mehr, darüber weniger
+const klimaFaktor=()=>1+REGELN.medienpolitik.klimaWirkung*(50-presseS().klima)/50;
+function medienpolitikWoche(){const P=presseS(),m=medienpolitik();if(!m.klima)return;const n=P.klima+m.klima;P.klima=fanZahl(m.klima>0?Math.min(Math.max(P.klima,m.ziel),n):Math.max(Math.min(P.klima,m.ziel),n));}
+function presseWoche(){medienpolitikWoche();const P=presseS(),G=RPK.gedaechtnis,heute=absTag(S.tag);
   P.aussagen.forEach(a=>{if(a.ok||a.art!=='rueckendeckung'||a.pid==null)return;if(heute-a.tag>G.rueckendeckungTage){a.ok=1;return;}const p=PIX.get(a.pid);
     if(p&&p.team!==S.my){a.ok=1;glaubAendern(G.rueckendeckungGlaub);news(`Die Presse erinnert an deine Rückendeckung für ${p.n}. Jetzt ist er weg. Deine Glaubwürdigkeit leidet.`,'bad');}});}
 // Nach deinem Spiel: Kampfansage gegen diesen Gegner eingelöst (Kult) oder nicht (Häme)
@@ -96,7 +103,11 @@ function kampfansagePruefen(gegner,gf,ga){const P=presseS(),G=RPK.gedaechtnis,t=
     else if(gf<ga){glaubAendern(G.haemeGlaub);fanAnlass(t,'fanU',G.haemeFans);news(`Häme in der Presse: Erst große Worte, dann verloren gegen ${tn(gegner)}.`,'bad');}});}
 
 // ---------- Anzeige ----------
+// Medienpolitik im Medien-Kasten (K29b): aktuelle Art, Knöpfe zum Wechseln (Bereich presse)
+function medienpolitikText(){const M=REGELN.medienpolitik,m=medienpolitik(),aus=lzAus('presse');
+  return`<p class="dim">Medienpolitik: <b>${esc(m.name)}</b> (${esc(m.text)}). Ein schlechtes Medienklima bringt mehr Gerüchte über deinen Verein, öfter erfundene.</p>
+    <div class="row">${Object.keys(M.arten).map(k=>`<button class="${k===m.k?'go':''}" onclick="medienpolitikSetzen('${k}')"${aus}>${esc(M.arten[k].name)}</button>`).join('')}</div>`;}
 function presseKarte(){const P=presseS(),pk=S.pk;
-  if(!pk)return`<div class="card"><h3>Medien</h3><p>Medienklima ${Math.round(P.klima)} von 100${(P.n[S.season]||0)?` · ${P.n[S.season]} Pressekonferenz${P.n[S.season]===1?'':'en'} in dieser Saison`:''}.</p></div>`;
+  if(!pk)return`<div class="card"><h3>Medien</h3><p>Medienklima ${Math.round(P.klima)} von 100${(P.n[S.season]||0)?` · ${P.n[S.season]} Pressekonferenz${P.n[S.season]===1?'':'en'} in dieser Saison`:''}.</p>${medienpolitikText()}</div>`;
   const A=PRESSE.anlaesse[pk.art];return`<div class="card"><h3>${esc(A.name)}</h3>${lzHinweis('presse')}<p>${pk.fragen.length} Fragen warten. Medienklima ${Math.round(P.klima)} von 100.</p>
     <div class="row"><button class="go" onclick="pkZeigen()"${lzAus('presse')}>Hingehen</button><button onclick="presseDelegieren(false)">Co-Trainer schicken</button></div><p class="dim">Gehst du heute nicht hin, schickt der Verein den Co-Trainer.</p></div>`;}

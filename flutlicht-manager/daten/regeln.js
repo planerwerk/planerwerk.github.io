@@ -446,6 +446,12 @@ const REGELN={
   // wirkung je Antwortart: team (Stimmung aller), spieler (genannter Spieler), fans (Umfeld K27), vorstand (Vertrauen), medien (Medienklima). streuung: × [min, max]. deckel je Pressekonferenz.
   // abnutzung: Faktor, wenn die Art der letzten (bzw. der letzten beiden) entspricht. ausraster: Wahrscheinlichkeiten, Wirkungen, je Saison. schiri: Verfahren, Strafe je Liga [min, max].
   // gedaechtnis: Rückendeckung und Verkauf (Tage, Glaubwürdigkeit), Kampfansage (Kult, Häme). delegieren: Medienklima. chronikHumor: Chance. ALLE WERTE GESCHÄTZT (K29 §12).
+  // Medienpolitik (K29 §6, K29b, 22.11., GESCHÄTZT): dauerhafte Einstellung deines Vereins (Bereich presse, in der Automatik standard). Je Woche zieht sie das Medienklima um klima
+  // in Richtung ziel. mein: Chance auf ein Gerücht über deinen Verein × mein, erfindung: Anteil erfundener Gerüchte über dich × erfindung.
+  // klimaWirkung: Medienklima unter 50 macht Gerüchte über dich häufiger und öfter erfunden, darüber seltener, Faktor 1 + klimaWirkung × (50 − Klima)/50.
+  medienpolitik:{standard:'zurueckhaltend',klimaWirkung:0.5,arten:{offen:{name:'offen',text:'Interviews und Einblicke: mehr Berichte über deinen Verein, die Medien mögen dich',mein:1.25,erfindung:0.8,klima:0.5,ziel:70},
+    zurueckhaltend:{name:'zurückhaltend',text:'das Übliche',mein:1,erfindung:1,klima:0,ziel:50},
+    abgeschottet:{name:'abgeschottet',text:'keine Einblicke: weniger Berichte, dafür mehr Erfundenes, die Medien sind verstimmt',mein:0.6,erfindung:1.4,klima:-0.5,ziel:30}}},
   presse:{budget:20,abstand:4,sperre:21,fragen:[2,3],klimaStart:50,
     anlass:{spitzeBis:4,spitzeAb:10,pokalAb:3,krise:3,hoehenflug:5,fuehrungAb:5,kantersieg:4,auftaktVorher:2},
     wirkung:{rueckendeckung:{team:2,spieler:5,medien:1},ankuendigung:{team:1,fans:2,vorstand:-0.5},kritikTeam:{vorstand:1,medien:1,kaempfer:2,empfindlich:-3,sonst:-1},
