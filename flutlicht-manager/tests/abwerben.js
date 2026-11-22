@@ -71,4 +71,10 @@ function W0(w){return w.ev('myT()').cash;}
   pruef(!!o.a&&o.unruhig===1&&o.karte&&o.weg&&o.bz<0&&!!pr.a&&pr.unv&&!au.a&&au.unruhig===0,'Computer-Vereine werben ab: ein Spieler unruhig, Karte beim Auffliegen, Antworten wirken, nichts unter der Automatik',
     `Abwerbeversuch ${!!o.a}, unruhig ${o.unruhig}, Karte ${o.karte}, Beziehung ${o.bz}, unverkäuflich ${pr.unv}, Automatik ${au.a?'Versuch':'nichts'}`);}
 
+// EB1. Unruhe nach einem Abwerbeversuch auf Stufe 2: ohne Automatik der Gespräche ein Gesprächswunsch, mit Automatik spricht der Co-Trainer (kein Gesprächswunsch)
+{const lauf=auto=>{const {S,F,ev}=welt(auto);if(auto){S.lizenz.auto.gespraeche=1;}const p=ev('squad')(S.my)[0];ev('stimmung')(p);p.ww=1;S.gw=[];
+    ev('mitStrom')(ev('strom')('test','eb1'),()=>F.kiAbwUnruhig(p));return{wunsch:(S.gw||[]).some(g=>g.pid===p.id),ww:p.ww};};
+  const ohne=lauf(false),mit=lauf(true);
+  pruef(ohne.wunsch&&ohne.ww===2&&!mit.wunsch&&mit.ww<=2,'Abwerbeversuch Stufe 2: Gesprächswunsch nur ohne Automatik der Gespräche',`ohne ${JSON.stringify(ohne)}, mit ${JSON.stringify(mit)}`);}
+
 console.log(probleme.length?`\n${probleme.length} Problem(e).`:'\nAlles in Ordnung.');process.exitCode=probleme.length?1:0;

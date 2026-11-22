@@ -2002,3 +2002,18 @@ Ein Agent hat 54e3a1e, 0a9841b, 838821e, 0dd110f und 464e56d gelesen (nichts aus
 | EA5 | Kaufte dein Verein den Spieler zurück, zahlte der Verkäufer dir 15 % deiner eigenen Ablöse. Jetzt endet sie beim Rückkauf ohne Zahlung. | ✅ behoben |
 | EA6 | **Mittel: Teamprämie nicht in der Finanzprognose.** Gebucht unter „Prämien: Mannschaft“, das nicht in `RFP.finanzplan.laufend` steht. Jetzt unter „Prämien“ (in der Prognose). | ✅ behoben |
 | EA7 | Nach einem Jobwechsel oder im Sommer hieß es „Für diese Saison festgelegt“, auch ohne Wahl bei diesem Verein, und „hoch“ wirkte bis zum 1. Juli auf die Stimmung. Jetzt eigener Text und Wirkung nur in der Saison. | ✅ behoben |
+
+## EB. Prüfung von K07c, K20e, K08b, K08c und der Korrekturen EA ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 34b1633, 53d8da8, 956fc85, 72a06c1 und 5497208 gelesen (nichts ausgeführt). Kein blockierender Fehler, zwei mittlere. Ohne Befund: K07c (Wirkung `pause` prüft den Verein beim Entscheiden), K08b, die Korrekturen EA (Liste der Vereinsstrafen, Halt, Weiterverkauf: zahlt im Normalfall genau einmal), Gleichschritt (Abwerben nur ohne Automatik der Transfers, eigener Strom). Korrekturen auf `mitarbeit/popolupo-eb-korrekturen`.
+
+| # | Befund | Status |
+|---|---|---|
+| EB1 | **Mittel: Abwerbeversuch erzeugte einen Gesprächswunsch auch unter der Automatik der Gespräche.** `wwHoeher` fragt die Automatik nicht. Wer die Transfers schon selbst führt, die Gespräche aber noch nicht, bekam Halt und Karte aus einem Bereich des Co-Trainers, und niemand sprach mit dem Spieler. Jetzt `kiAbwUnruhig`: auf Stufe 2 wie im Wochenlauf, unter der Automatik spricht der Co-Trainer. | ✅ behoben |
+| EB2 | Ein Spieler auf Stufe 2 sprang durch einen Abwerbeversuch direkt zum offiziellen Wechselwunsch (Stufe 3). Jetzt nur Spieler bis Stufe 1. | ✅ behoben |
+| EB3 | „Unverkäuflich machen“ rief `setUnverkaeuflich` auf: Spielerfenster über dem Büro, zweite Meldung und `versprechenAngebot`, das ein offenes Wechselversprechen brechen konnte. Jetzt setzt die Antwort den Status still selbst. | ✅ behoben |
+| EB4 | Die Frist des Abwerbeversuchs hatte keinen Halt, ein zweiter aufgeflogener Versuch überschrieb den ersten. Jetzt Halt „Frist“ am letzten Tag, und solange eine Karte offen ist, macht ein neuer Versuch den Spieler nur unruhig, ohne neue Karte. | ✅ behoben |
+| EB5 | **Mittel: Profivertrag aus der Karte am falschen Kaderdeckel.** `RS.kaderMax` (28, Deckel der Computer-Vereine) statt `RM.kaderMax` (36, dein Kader). Jetzt `RM.kaderMax` wie beim Aufrücken. | ✅ behoben |
+| EB6 | Das gelockte Talent bekam beim neuen Verein kein `p.seit`/`p.abl` (galt dort als vereinsausgebildet), und der Verein wurde beim Entscheiden nicht auf `aktiv` geprüft. Jetzt beides. Den Kaderdeckel des Käufers prüft die Karte nicht (ein Talent mehr ist vertretbar). | ✅ behoben, Rest dokumentiert |
+| EB7 | Profivertrag und Abgang aus der Karte wirken auch, wenn der Bereich `jugendkader` noch gesperrt ist. Entschieden (vorläufig): gewollt, das entspricht dem Aufrücken durch den Co-Trainer unter der Automatik. | dokumentiert |
+| EB8 | Eine fremde, veraltete Klausel (Spieler ablösefrei geholt) verhinderte deine neue Weiterverkaufsbeteiligung. Jetzt blockiert nur eine Klausel, die deinen Verein bindet (oder eine alte ohne `von`). | ✅ behoben |

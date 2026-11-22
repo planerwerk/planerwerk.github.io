@@ -62,18 +62,24 @@ function bieterKnoepfe(){const ids=[...new Set(S.offers.map(o=>o.pid))].filter(b
 // und die werben sich nicht gegenseitig ab: Gleichschritt in tests/lizenz.js). Mit RAW.ki.chance sucht ein Verein mit Bedarf einen deiner Leistungsträger aus. Der Spieler wird
 // unruhig (Wechselwunsch eine Stufe höher). Mit RAW.ki.aufflieg fliegt es auf: S.kiAbw = {pid, tid, bis, s} wartet im Büro auf deine Entscheidung.
 function kiAbwerbenKandidaten(){const K=RAW.ki,t=myT(),lvl=teamLevel(S.my);
-  const sp=squad(S.my).filter(p=>!p.wech&&!p.leihe&&p.age<=K.alterMax&&p.str>=lvl+K.staerkePlus&&(p.ww||0)<3);
+  const sp=squad(S.my).filter(p=>!p.wech&&!p.leihe&&p.age<=K.alterMax&&p.str>=lvl+K.staerkePlus&&(p.ww||0)<2); /* höchstens bis Stufe 2, nie direkt zum offiziellen Wechselwunsch (Prüfung EB2) */
   const vs=S.teams.filter(b=>b.id!==S.my&&aktiv(b)&&!kiTransferSperre(b)&&b.rep>=t.rep-K.ansehenMinus);return{sp,vs};}
 function kiAbwerbenWoche(d){const K=RAW.ki;if(S.phase!=='play'||S.fired||autoB('transfers')||R()>=K.chance)return;const {sp,vs}=kiAbwerbenKandidaten();
   const paare=[];sp.forEach(p=>vs.forEach(b=>{if(b.cash>value(p)&&hatBedarf(b,p))paare.push([p,b]);}));if(!paare.length)return;
-  const [p,b]=paare[Math.floor(R()*paare.length)];wwHoeher(p);
-  if(R()<K.aufflieg){S.kiAbw={pid:p.id,tid:b.id,bis:d+K.frist,s:S.season};news(`Aufgeflogen: ${b.name} hat heimlich mit ${p.n} gesprochen. Deine Entscheidung steht im Büro.`,'bad');}}
+  const [p,b]=paare[Math.floor(R()*paare.length)];kiAbwUnruhig(p);
+  if(R()<K.aufflieg&&!kiAbwOffen()){S.kiAbw={pid:p.id,tid:b.id,bis:d+K.frist,s:S.season};news(`Aufgeflogen: ${b.name} hat heimlich mit ${p.n} gesprochen. Deine Entscheidung steht im Büro.`,'bad');}}
 const kiAbwOffen=()=>{const a=S.kiAbw,p=a&&PIX.get(a.pid);return a&&a.s===S.season&&a.bis>=S.tag&&p&&p.team===S.my&&S.teams[a.tid]?a:null;};
+// Wechselwunsch eine Stufe höher wie wwHoeher, aber bei Stufe 2 wie im Wochenlauf (kabine.js): Gesprächswunsch nur ohne Automatik der Gespräche, sonst spricht der
+// Co-Trainer (Prüfung EB1). Stufe 3 erreicht ein Abwerbeversuch nie (Kandidaten nur bis Stufe 1).
+function kiAbwUnruhig(p){if((p.ww||0)!==1){wwHoeher(p);return;}p.ww=2;p.wws=0;if(!autoB('gespraeche'))gespraechswunsch(p);
+  else{kiGespraech(p);stabMeldung(`Der Co-Trainer hat mit ${p.n} gesprochen, der nach einem Abwerbeversuch unruhig ist. ${p.ww===1?'Das Gespräch hat geholfen.':'Es hat nichts gebracht.'}`,p.ww===1?'':'bad');}}
+// Halt am letzten Tag der Entscheidung (Prüfung EB4)
+const kiAbwFrist=d=>!autoB('transfers')&&!!kiAbwOffen()&&S.kiAbw.bis===d;
 // art: 'rede' (Spieler zur Rede stellen), 'oeffentlich' (Presse, Beziehung), 'preis' (unverkäuflich, K19c)
 function kiAbwerbenAntwort(art){if(!darf('transfers'))return;const a=kiAbwOffen();if(!a)return;const K=RAW.ki,p=PIX.get(a.pid),b=S.teams[a.tid];S.kiAbw=null;
   if(art==='rede'){stimmungAendern(p,K.stimmung);glaubAendern(K.glaub);news(`Du stellst ${p.n} zur Rede. Er verspricht, sich auf den Verein zu konzentrieren.`,'');}
   else if(art==='oeffentlich'){bezDuAendern(b.id,K.beziehung,`Abwerbeversuch bei ${p.n}`);fanAnlass(myT(),'fanU',K.fans);news(`Du machst den Abwerbeversuch von ${b.name} öffentlich. Die Fans stehen hinter dir, ${b.name} ist verärgert.`,'');}
-  else{setUnverkaeuflich(p.id,1);news(`${p.n} ist ab sofort unverkäuflich. Wer ihn will, muss den Höchstpreis zahlen.`,'');}
+  else{S.unv=S.unv||{};S.unv[p.id]=1;p.list=0;S.offers=S.offers.filter(o=>o.pid!==p.id);news(`${p.n} ist ab sofort unverkäuflich. Wer ihn will, muss den Höchstpreis zahlen.`,'');}
   save();render();}
 function kiAbwerbenKarte(){const a=kiAbwOffen();if(!a)return'';const p=PIX.get(a.pid),b=S.teams[a.tid];
   return`<div class="card"><h3>Abwerbeversuch</h3><p>${esc(b.name)} hat heimlich mit ${esc(p.n)} gesprochen. Wie reagierst du? Antwort bis ${datumKurz(a.bis)}.</p><div class="row"><button onclick="kiAbwerbenAntwort('rede')"${lzAus('transfers')}>Spieler zur Rede stellen</button><button onclick="kiAbwerbenAntwort('oeffentlich')"${lzAus('transfers')}>Öffentlich machen</button><button onclick="kiAbwerbenAntwort('preis')"${lzAus('transfers')}>Unverkäuflich machen</button></div></div>`;}

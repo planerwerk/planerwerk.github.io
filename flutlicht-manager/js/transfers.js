@@ -114,6 +114,8 @@ function weiterverkaufPruefen(p,fee,von,nach){const w=p&&p.wvb;if(!w||!(fee>0)||
   if(von===S.my)money('Transfers: Weiterverkauf',-x);else if(von!=null&&von>=0&&S.teams[von])S.teams[von].cash-=x;
   if(w.tid===S.my){money('Transfers: Weiterverkauf',x);news(`Weiterverkaufsbeteiligung: ${p.n} wechselt für ${fmt(fee)}, dein Verein bekommt ${Math.round(w.anteil*100)} %, also ${fmt(x)}.`,'good');}
   else if(S.teams[w.tid])S.teams[w.tid].cash+=x;}
+// Bindet eine bestehende Klausel deinen Verein? Nur dann gibt es keine neue (Prüfung EB8). Eine fremde Klausel endet beim Verkauf ohnehin ohne Zahlung, alte ohne von zählen mit.
+const wvbBindet=p=>!!p.wvb&&(p.wvb.von==null||p.wvb.von===S.my);
 // wv: mit Weiterverkaufsbeteiligung (nur an deutsche Vereine). Der Käufer zahlt dafür bewertung × anteil weniger (K19 §5.2).
 function verkaufAbschluss(o,wv){const p=o&&PIX.get(o.pid);if(!p||p.team!==S.my||p.wech)return;if((p.ww||0)>=3)beraterBeziehung(p,RBE.beziehung.wunschVerkauf); // einen wechselwilligen Mandanten ziehen lassen (K22)
   if(o.tid<AV0&&kiTransferSperre(S.teams[o.tid])){S.offers=S.offers.filter(x=>x!==o);news(`${S.teams[o.tid].name} hat eine Transfersperre und zieht das Angebot zurück.`,'bad');return;} // Lizenzsperre (K23g, Prüfung DF2)
@@ -122,7 +124,7 @@ function verkaufAbschluss(o,wv){const p=o&&PIX.get(o.pid);if(!p||p.team!==S.my||
     if(!offen){wechselVormerken(p,o.tid,{preis:o.amt});news(`Einigung: ${p.n} wechselt für ${fmt(o.amt)} zu ${v.name} (${land}), mit dem Transferfenster am ${datumKurz(p.wech.ab)}.`,'good');return;}
     kabineAbgang(p,S.my);vertragEnde(p);insAusland(p,v.id);statTransfer(p,o.amt,S.my,v.id);news(`Verkauft: ${p.n} wechselt für ${fmt(o.amt)} zu ${v.name} (${land}).`,'good');return;} // Verkauf ins Ausland (K32): Der Spieler zieht in den Pool um
   const b=S.teams[o.tid];if(!b||!aktiv(b)){S.offers=S.offers.filter(x=>x!==o);toast(`${b?b.name:'Der Verein'} spielt nicht mehr in den Profiligen, das Angebot ist hinfällig.`);return;}
-  if(wv&&!p.wvb){const W=RTR.weiterverkauf;o.amt=Math.round(o.amt*(1-W.bewertung*W.anteil)/1000)*1000;p.wvb={tid:S.my,anteil:W.anteil,von:b.id};} /* erst nach allen Abbrüchen (K19d) */
+  if(wv&&!wvbBindet(p)){const W=RTR.weiterverkauf;o.amt=Math.round(o.amt*(1-W.bewertung*W.anteil)/1000)*1000;p.wvb={tid:S.my,anteil:W.anteil,von:b.id};} /* erst nach allen Abbrüchen (K19d) */
   money('Transfers',o.amt);b.cash-=o.amt;weg();if((o.r||0)<=RBZ.fairRunden)bezDuAendern(b.id,RBZ.anlass.fair,`fairer Transfer: ${p.n}`); // Angebot ohne Gegenforderung angenommen (K17, U12c)
   if(!offen){wechselVormerken(p,b.id,{ct:riA(RM.neuerVertrag),preis:o.amt});news(`Einigung: ${p.n} wechselt für ${fmt(o.amt)} zu ${b.name}, mit dem Transferfenster am ${datumKurz(p.wech.ab)}.`,'good');return;}
   kabineAbgang(p,S.my);vertragEnde(p);p.seit=absTag(S.tag);p.abl=o.amt;p.team=b.id;p.list=0;p.ct=riA(RM.neuerVertrag);statTransfer(p,o.amt,S.my,b.id);news(`Verkauft: ${p.n} wechselt für ${fmt(o.amt)} zu ${b.name}.`,'good');}
