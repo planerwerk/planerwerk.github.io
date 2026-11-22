@@ -356,7 +356,7 @@ Bei der Umsetzung (U9b), ausführlich in K18 §12 Nr. 17–24:
 Datei: `konzepte/K19-transfers.md`
 
 1. **Eine Formel für alle Vereine** beim Kaufen und Verkaufen, Ausreißer nur aus Schätzfehlern.
-2. **Unverkäuflich ist nie absolut:** ab dem 1,8-Fachen wird verhandelt.
+2. **Unverkäuflich ist nie absolut:** ab dem 1,8-Fachen wird verhandelt. Seit K19c (22.11., popolupo, vorläufig): bei Computer-Vereinen die drei Stärksten mit mindestens zwei Jahren Vertrag, für dich zum Höchstpreis 1,8 × Marktwert (der Vereinswert lag ohnehin unter dieser Grenze). Eigene Spieler markierst du selbst.
 3. **Fenster** nach den echten Terminen 2026/27, danach verschoben wie die übrigen Termine.
 4. **Abwerben, Bieterwettstreit im Detail und Deadline Day** bleiben in K20 (Welle 4).
 

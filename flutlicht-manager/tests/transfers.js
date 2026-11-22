@@ -101,5 +101,14 @@ const kaufe=(w,p,fee,yrs=3)=>{const els=w.W.ev('document');els.getElementById('f
   N.max=0;N.basis=0;vq.konk={tid:b.id,amt:2e6,bis:S.tag+1,dein:15e5};F.konkurrenzTag(S.tag+2);const weg=q.team===b.id;
   pruef(bleibt&&weg,'K20d: Der Spieler lehnt den Höchstbietenden ab und der Verkäufer nimmt deine Ablöse, ohne Chance wechselt er',`bleibt ${bleibt} (Forderung ${ev('forderung')(q)}), ohne Chance gewechselt ${weg}`);}
 
+// K19c. Transferstatus „unverkäuflich“ (K19 §5): die drei Stärksten eines Computer-Vereins mit mindestens 2 Jahren Vertrag kosten dich den Höchstpreis (1,8 × Marktwert),
+//       mit 1 Jahr Vertrag, auf der Liste oder als Nummer 4 nicht; dein eigener Spieler: markieren, von der Liste, Transferliste hebt es wieder auf
+{const w=welt(),{S,F,ev}=w,U=ev('RTR').unverkaeuflich,t=S.teams.find(x=>x.id!==S.my&&ev('aktiv')(x)&&x.lg===1),sq=ev('squad')(t.id).sort((a,b)=>b.str-a.str),p=sq[0],vier=sq[U.schluessel];
+  p.ct=3;p.list=0;const ja=F.unverkaeuflichKI(p),f1=ev('forderungDu')(p);
+  p.ct=1;const kurz=!F.unverkaeuflichKI(p),f0=ev('forderungDu')(p);p.ct=3;p.list=1;p.ask=1e6;const liste=!F.unverkaeuflichKI(p);p.list=0;vier.ct=3;const nr4=!F.unverkaeuflichKI(vier);
+  const m=ev('squad')(S.my)[0];F.setUnverkaeuflich(m.id,1);const markiert=ev('unverkaeuflichDu')(m)&&!m.list;F.setListed(m.id,1);const aufgehoben=!ev('unverkaeuflichDu')(m)&&m.list===1;
+  pruef(ja&&f1>=f0&&kurz&&liste&&nr4&&markiert&&aufgehoben,'K19c: unverkäuflich (Schlüsselspieler mit langem Vertrag zum Höchstpreis, eigene markieren und aufheben)',
+    `Schlüsselspieler ${ja}, Forderung ${f0} → ${f1}, 1 Jahr ${kurz}, Liste ${liste}, Nummer 4 ${nr4}, eigener markiert ${markiert}, aufgehoben ${aufgehoben}`);}
+
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

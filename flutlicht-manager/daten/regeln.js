@@ -273,7 +273,10 @@ const REGELN={
     finanzlage:{knappUnter:2e6,knapp:0.9,reichAb:60e6,reich:1.1}, // K23c: reich erst ab 60 Mio. € (vorher 20 Mio.), weil die Kontostände gewachsen sind
     forderung:1.15,schmerzgrenze:0.95,maxFaktor:1.8,
     runden:{kauf:4,verkauf:3},geduld:2,spott:0.6,anstaendig:0.8,preisdruck:{prozent:0.03,tage:28},pause:28,
-    angebotKI:[0.85,1],auslandMax:1.15},
+    angebotKI:[0.85,1],auslandMax:1.15,
+    // Transferstatus „unverkäuflich“ (K19 §5, K19c, 22.11., GESCHÄTZT): bei Computer-Vereinen die schluessel stärksten Spieler mit mindestens bindungAb Jahren Vertrag,
+    // nicht auf der Transferliste. Für dich gilt dann der Höchstpreis maxFaktor × Marktwert. Deine eigenen markierst du selbst.
+    unverkaeuflich:{schluessel:3,bindungAb:2}},
 
   // Verträge (K21 §5, §11, U10b): Gehaltsforderung, Verhandlung über ein Paket, Prämien je Spiel, Klauseln, Vorvertrag, Interesse beim Wechsel (K19 §5.3), Bankzeit (K14 §12).
   // Forderung = Gehalt nach Stärke × Alter (bis 23 ×0,8, ab 31 ×0,9) × Talent (bis 23 mit drei Sternen ×1,1) × Söldner 1,2 oder vereinstreu 0,9 × Zufall (0,95 bis 1,05),

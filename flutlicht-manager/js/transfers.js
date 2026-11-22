@@ -33,7 +33,13 @@ const verhandlungVon=p=>{const v=S.verh&&S.verh[p.id];return v&&v.team===p.team?
 // Deadline Day (K20 §4.3, K20b): Forderung deutscher Computer-Vereine schwankt in den letzten Tagen des Fensters, fest je Spieler und Tag (eigener Strom), Transferliste billiger
 function deadlinePreis(p){const D=RAW.deadline;if(!D.preis||!(p.team>=0&&p.team<1000&&p.team!==S.my)||!deadlineTage())return 1;const u=mitStrom(strom('deadlinePreis',S.season,absTag(S.tag),p.id),()=>R());
   return clamp(1+D.preis*(2*u-1)+(p.list?D.liste:0),1-D.preis+Math.min(0,D.liste),1+D.preis);}
-const forderungDu=p=>forderungBasis(p)*(p.team>=0&&p.team<AV0&&S.teams[p.team]?bezAbloese(p.team):1)*abwFaktor(p)*gerFaktor(p)*deadlinePreis(p); // aufgeflogenes Abwerben +15 % (K20 §5.4, U15), bekanntes Interesse aus der Gerüchteküche (K29 §5.5, U17b)
+// Transferstatus „unverkäuflich“ (K19 §5, K19c). Computer-Vereine: ihre stärksten Spieler mit langem Vertrag, nicht auf der Liste. Nur für deine Käufe (forderungDu),
+// nicht unter Computer-Vereinen (kiSternPreis nutzt forderungBasis), sonst würde der Gleichschritt abweichen. Du zahlst dann den Höchstpreis maxFaktor × Marktwert.
+function unverkaeuflichKI(p){const U=RTR.unverkaeuflich;if(!p||p.team<0||p.team>=AV0||p.team===S.my||p.list||p.leihe||(p.ct||0)<U.bindungAb)return false;const t=S.teams[p.team];if(!t||!aktiv(t))return false;
+  return squad(p.team).slice().sort((a,b)=>b.str-a.str).slice(0,U.schluessel).some(q=>q.id===p.id);}
+// Deine Spieler: S.unv = {Spieler: 1}. Überraschungsangebote nur ab dem Höchstpreis (ablauf.js market), nicht zugleich auf der Transferliste.
+const unverkaeuflichDu=p=>!!(p&&S.unv&&S.unv[p.id]&&p.team===S.my);
+const forderungDu=p=>(unverkaeuflichKI(p)?value(p)*RTR.maxFaktor:forderungBasis(p))*(p.team>=0&&p.team<AV0&&S.teams[p.team]?bezAbloese(p.team):1)*abwFaktor(p)*gerFaktor(p)*deadlinePreis(p); // aufgeflogenes Abwerben +15 % (K20 §5.4, U15), bekanntes Interesse aus der Gerüchteküche (K29 §5.5, U17b)
 // Aktuelle Forderung: Grundforderung oder das letzte Gegenangebot
 function forderung(p){const b=rundeAb(forderungDu(p)),v=verhandlungVon(p),f=v&&v.f!=null?Math.min(b,v.f):b;return konkurrenzOffen(v)?Math.max(f,v.konk.amt):f;} // Gegenangebot eines anderen Vereins (K20c)
 // ---------- Bieterwettstreit beim Kauf (K20 §4.2, K20c) ----------
