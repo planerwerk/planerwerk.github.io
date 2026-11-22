@@ -51,5 +51,12 @@ const scout=(S,F,q,gebiet,ev=F.__ev)=>{let x;for(let i=0;i<50;i++){x=F.stabNeu('
   const eigen=ev('squad')(S.my).every(p=>ev('staerkeText')(p)===String(Math.round(p.str)));
   pruef(vor===nach&&eigen,'Gleiche Spannen nach Speichern und Laden, eigene Spieler genau',vor===nach?'':'abweichend');}
 
+// K18c. Gegnerbeobachtung (K18 §8, K07 §5): mit einem Scout im Stab den nächsten Gegner beobachten, Reisekosten einmal, bis zum Spieltag beobachtet, danach nicht mehr; ohne Scout nichts
+{const {F,S,ev}=welt(),t=ev('myT()'),l=ev('meineLigaspiele')();S.tag=l[3].tag-2;S.gespielt=-1;
+  ev('S').stab=ev('S').stab.filter(x=>!(x.team===S.my&&x.r==='scout'));ev('stabGeaendert')();F.gegnerBeobachten();const ohne=!t.gb;
+  const sc=ev('stabNeu')('scout',10,S.my,t.lg);S.stab.push(sc);ev('stabGeaendert')();const n=F.gbNaechstes(),k0=S.fin['Scouting']||0;F.gegnerBeobachten();
+  const ja=!!n&&!!t.gb&&t.gb.g===n.g&&t.gb.bis===n.d&&ev('gegnerBeobachtet')(t,n.g)&&(S.fin['Scouting']||0)-k0===-ev('RSC').gegner.kosten;S.tag=(n?n.d:0)+1;const vorbei=!ev('gegnerBeobachtet')(t,n&&n.g);
+  pruef(ohne&&ja&&vorbei,'Gegnerbeobachtung: nur mit Scout, Kosten einmal, gilt bis zum Spieltag',`ohne Scout ${ohne}, beobachtet ${ja}, danach vorbei ${vorbei}`);}
+
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

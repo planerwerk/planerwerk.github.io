@@ -85,3 +85,14 @@ function scoutingNachSpiel(list){const m=list.find(r=>r.h===S.my||r.a===S.my);if
 // Scouts beim Aufbau der Welt (eigener Zufallsstrom, damit der übrige Stab gleich bleibt): je Verein nach Ansehen, dazu vereinslose
 function scoutsAufbau(){const A=RST.start,Z=RSC.start;S.teams.forEach(t=>{if(!aktiv(t))return;const n=stufenWert(Z.scouts,t.rep);for(let i=0;i<n;i++)S.stab.push(stabNeu('scout',t.rep*A.qualitaetJeAnsehen+ri(A.streuung[0],A.streuung[1])-i,t.id,t.lg));});
   for(let i=0;i<Z.vereinslos;i++)S.stab.push(stabNeu('scout',riA(A.vereinslosQ),-1,2));stabGeaendert();}
+
+// ---------- Gegnerbeobachtung (K18 §8, K07 §5 „+2 % mit Gegneranalyse“, K18c) ----------
+// Ein Scout deines Stabs schaut den Gegner deines nächsten Pflichtspiels an (Reisekosten RSC.gegner.kosten). t.gb = {g Gegner, bis Tag des Spiels}.
+// Bis zu diesem Spiel verdoppelt sich der Bonus der Spielvorbereitung (taktik.js), wie mit einem Videoanalysten, beides zusammen nicht doppelt. Ohne Zufall.
+const gegnerBeobachtet=(t,g)=>!!(t&&t.gb&&t.gb.g===g&&S.tag<=t.gb.bis);
+function gbNaechstes(){const e=heuteMeinSpiel()?meinSpiel(S.tag):naechstesSpiel(S.tag+1);if(!e)return null;const g=pkGegner(e);return g==null||g>=1000?null:{g,d:e.tag};}
+function gegnerBeobachten(){if(!darf('beobachten'))return;const t=myT(),n=gbNaechstes();if(!n||gegnerBeobachtet(t,n.g))return;
+  if(!stabVon(S.my,'scout').length){toast('Dafür brauchst du einen Scout im Trainerstab.');return;}
+  money('Scouting',-RSC.gegner.kosten);t.gb={g:n.g,bis:n.d};news(`Ein Scout beobachtet ${tn(n.g)} vor dem Spiel am ${datumKurz(n.d)}. Die Spielvorbereitung wirkt doppelt.`);save();render();}
+function gegnerBeobachtenText(){const t=myT(),n=gbNaechstes();if(!n)return'';if(gegnerBeobachtet(t,n.g))return' <span class="dim">Ein Scout hat den Gegner beobachtet, die Spielvorbereitung wirkt doppelt.</span>';
+  return` <button onclick="gegnerBeobachten()"${lzAus('beobachten')}>Gegner beobachten lassen (${fmt(RSC.gegner.kosten)})</button>`;}

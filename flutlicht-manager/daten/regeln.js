@@ -844,6 +844,7 @@ const REGELN={
     fehler:{je:0.15,lieblingstyp:[1,3],lieblingsChance:0.3},   // Grundfehler eines Scouts: Streuung 0,15 × (21 − Qualität)
     verblassen:2,                                             // je Monat ohne Beobachtung, nicht unter die Grundkenntnis
     kosten:{inland:3000,ausland:15000},                       // je Beobachtungswoche (Spielwerte, K23)
+    gegner:{kosten:3000}, // Gegnerbeobachtung vor dem nächsten Pflichtspiel (K18c, 22.11., GESCHÄTZT): Reisekosten einmal
     suche:{kandidaten:[3,8],jeWoche:4,anteil:0.5},             // Suchauftrag: je Woche vier neue Namen, Beobachtung mit halber Wirkung
     empfehlung:{verpflichten:1,beobachten:-3},                 // Mitte gegen deinen Stammspieler auf der Position
     start:{scouts:[[0,1],[60,2],[80,3]],vereinslos:8}},        // Scouts je Verein nach Ansehen, dazu vereinslose
