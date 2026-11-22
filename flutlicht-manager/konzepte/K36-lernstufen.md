@@ -329,6 +329,7 @@ lizenz:{
 87. **K29g Pressekonferenz nach dem Urteil (22.11., popolupo, ohne Testlauf):** neuer Anlass im bestehenden Bereich `presse`. In der Automatik geht der Co-Trainer (Gleichschritt unberührt, er vergleicht weder Medienklima noch Pressekonferenzen).
 88. **U12k Vorstand senkt von sich aus (22.11., popolupo, ohne Testlauf):** keine neue Funktion, eine weitere Folge der Zwischenbilanz (Grundlizenz, ohne Zufall).
 89. **K25e Vorkaufsrecht der Mitglieder (22.11., popolupo, ohne Testlauf):** keine neue Funktion, ein weiterer Baustein im Anteil der Dauerkarten (Bereich `preise`). Ohne Zufall, nur dein Verein verkauft Dauerkarten (Gleichschritt unberührt, er vergleicht kein Geld).
+90. **K14b Kabinen-Karten (22.11., popolupo, ohne Testlauf):** drei neue Karten im Bereich `ereignisse` (Kabinenparty, Neuzugang drängt auf Einsatz, Eingewöhnung). Die Wochenkarten sind im Gleichschritt aus.
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 

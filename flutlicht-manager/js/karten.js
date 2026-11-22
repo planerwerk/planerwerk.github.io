@@ -23,6 +23,14 @@ const AUSLOESER={
   versoehnung(){const l=S.teams.filter(t=>t.id!==S.my&&aktiv(t)&&bezWirk(t.id)<RBZ.wirkung.gespraechUnter);return l.length?{verein:pick(l).id}:null;},
   // Ein Spieler deines Kaders zwischen 24 und 34
   hochzeit(){const l=squad(S.my).filter(p=>p.age>=24&&p.age<=34);return l.length?{spieler:pick(l).id}:null;},
+  // Kabine (K14 §8, K14b). Kantersieg: dein letztes Ligaspiel gewonnen mit mindestens RPK.anlass.kantersieg Toren Abstand
+  kantersieg(){const t=myT(),l=(S.res[t.lg]||[]).filter(r=>r[0]===S.my||r[1]===S.my),r=l[l.length-1];if(!r)return null;const gf=r[0]===S.my?r[2]:r[3],ga=r[0]===S.my?r[3]:r[2];
+    return gf-ga>=RPK.anlass.kantersieg?{}:null;},
+  // Neuzugang: seit höchstens kabinenKarten.neuTage bei dir, mindestens so stark wie dein Kader im Schnitt − 2, in dieser Saison höchstens kaumMinuten Minuten, ab dem 3. Ligaspiel
+  neuzugangDraengt(){const K=RKT.kabine,heute=absTag(S.tag),lvl=teamLevel(S.my);if(meineSpieltage()<K.abSpieltag)return null;
+    const l=squad(S.my).filter(p=>p.seit!=null&&heute-p.seit<=K.neuTage&&!p.leihe&&p.str>=lvl-2&&!(p.sst&&p.sst.s===S.season&&p.sst.tid===S.my&&p.sst.min>K.kaumMinuten));return l.length?{spieler:pick(l).id}:null;},
+  // Eingewöhnung: Spieler aus dem Ausland (andere Nationalität) seit höchstens kabinenKarten.fremdTage bei dir
+  eingewoehnung(){const K=RKT.kabine,heute=absTag(S.tag),l=squad(S.my).filter(p=>p.seit!=null&&heute-p.seit<=K.fremdTage&&p.nat&&p.nat!==RW.nation.heimat);return l.length?{spieler:pick(l).id}:null;},
   // Ein Talent bis 20 bei einem Verein der 2. oder 3. Liga, dessen Talent mindestens deine Kaderstärke erreicht
   geheimtipp(){const lvl=teamLevel(S.my),l=S.pl.filter(p=>p.team>=0&&p.team!==S.my&&p.age<=20&&S.teams[p.team]&&S.teams[p.team].lg>=2&&S.teams[p.team].lg<=3&&p.pot>=lvl);
     if(!l.length)return null;const p=pick(l);return{spieler:p.id,verein:p.team};},

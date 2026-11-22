@@ -51,11 +51,12 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 | **K29g** Pressekonferenz nach dem Urteil, dazu Korrekturen DQ und DR (Pressekonferenzen nach dem Spiel) | `mitarbeit/popolupo-k29g-urteil` (auf K29f) | fertig, ungetestet |
 | **U12k** Vorstand senkt das Ziel von sich aus | `mitarbeit/popolupo-u12k-vorstand-senkt` (auf K29g) | fertig, ungetestet |
 | **K25e** Vorkaufsrecht der Mitglieder bei Dauerkarten | `mitarbeit/popolupo-k25e-mitglieder-dauerkarten` (auf U12k) | fertig, ungetestet |
+| **K14b** Kabinen-Karten (Kabinenparty, Neuzugang, Eingewöhnung) | `mitarbeit/popolupo-k14b-kabinen-karten` (auf K25e) | fertig, ungetestet |
 | U19d2 volle Kader der Auslandsvereine in der Engine | zurückgestellt | Entwurf in K37 §5.7. Die Engine behandelt Auslandsvereine als Block wie Amateure, viele Stellen schlagen Spieler in `PIX` nach. Erst nach einem Testlauf und der Messung des Faktors 0,93 |
 
 **Die neueste Spitze ist immer der zuletzt genannte Zweig, er enthält alles davor.** K24 ist fertig (Claude).
 
-**Vorschlag für den nächsten Testlauf** (Spitze `mitarbeit/popolupo-k25e-mitglieder-dauerkarten`, alles ungetestet, aber von lesenden Prüf-Agenten durchgesehen, Konsistenzprüfung CS, CX, CZ, DD, DF, DI, DL, DM, DN). **Wichtig:** Die Zweige `u12g` und `k29e` laden für sich allein nicht (DN1), bitte die Spitze nehmen:
+**Vorschlag für den nächsten Testlauf** (Spitze `mitarbeit/popolupo-k14b-kabinen-karten`, alles ungetestet, aber von lesenden Prüf-Agenten durchgesehen, Konsistenzprüfung CS, CX, CZ, DD, DF, DI, DL, DM, DN). **Wichtig:** Die Zweige `u12g` und `k29e` laden für sich allein nicht (DN1), bitte die Spitze nehmen:
 1. `node tests/code.js`, dann die schnellen Einzeltests der neuen Teile: `finanzen.js` (Nr. 11 bis 20), `geruechte.js`, `schwierigkeit.js`, `werbung.js`, `europapokal.js`, `vorstand.js` (Nr. 10 bis 18), `karriereende.js`, `stadion.js` (Nr. 8 bis 11), `karten.js`, `spielwelt-karten.js`, `fans.js` (K27b), `abwerben.js` (K20b), `transfers.js` (K20c, K20d), `presse.js` (K29b bis K29g), `marketing.js` (K25c, K25d).
 2. `node tests/lizenz.js` (Gleichschritt, neue Bereiche `zielgespraech`).
 3. `node tests/finanzmodell.js 2`: Salden je Liga nach K23c. Erwartet nach der Modellrechnung 1. Liga etwa +11 Mio., 2. Liga etwa 0, 3. Liga etwa −1 Mio. je Verein und Saison ohne Transfers (K23 §5.6b). Weichen sie stark ab, bitte die Zeilen ins Testprotokoll, ich stelle dann `REGELN.finanzen.verwaltung` und `sponsor` nach.
@@ -90,6 +91,14 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 ---
 
 ## Changelog
+
+### 22.11.2026: K14b Kabinen-Karten (Zweig `mitarbeit/popolupo-k14b-kabinen-karten`, auf K25e)
+
+- **Neu (K14 §8):** drei Ereigniskarten, alle mit Wirkungen, die es schon gibt.
+  - Kabinenparty nach einem Kantersieg: feiern (Zusammenhalt +3, alle +1) oder Essen im Teamhotel (Zusammenhalt +1, Geld).
+  - Neuzugang drängt auf Einsatz: Er war höchstens 60 Tage da und hat kaum gespielt. Chance (Stimmung +5) oder gedulden (−3).
+  - Eingewöhnung eines Spielers aus dem Ausland: Hilfe (Geld, Stimmung +4, Voreinstellung) oder allein (−3).
+- **Tests zuerst:** `tests/karten.js` (Katalog Nr. 1 mit den neuen Karten, neuer Fall K14b).
 
 ### 22.11.2026: K25e Vorkaufsrecht der Mitglieder bei Dauerkarten (Zweig `mitarbeit/popolupo-k25e-mitglieder-dauerkarten`, auf U12k)
 

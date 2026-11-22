@@ -214,7 +214,7 @@ Jedes Konzept führt seine Karten in Abschnitt 8. Stand heute:
 | K11 Testspiele | 7 | Dorfverein im Ausnahmezustand, Lagerkoller |
 | K12a Sommer | 4 | Übergewicht nach dem Urlaub, Urlaub verlängern |
 | K13 Wettbewerbe | 5 | Pokal-Los des Jahres, Anruf des Bundestrainers |
-| K14 Kabine | 6 | Grüppchenbildung, Führungsspieler meutert |
+| K14 Kabine | 6 | Grüppchenbildung, Führungsspieler meutert; seit K14b als Karten: Kabinenparty, Neuzugang drängt auf Einsatz, Eingewöhnung |
 | K15 Gespräche | 4 | Versprechen kippt, Kabine glaubt dir nicht mehr |
 | K16 Stab | 4 | Co-Trainer wird Cheftrainer, Ex-Kapitän kehrt zurück |
 | K17 Beziehungen | 4 | Hilfe in der Not, Fehde in der Presse, Versöhnung |
