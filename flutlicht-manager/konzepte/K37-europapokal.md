@@ -153,7 +153,13 @@ Im Spiel (vorläufig):
 - Auslandsvereine treffen keine Entscheidungen. Ihre Kernspieler spielen, wenn sie gesund sind.
 
 ## 8. Ereignisse
-Später als Karten (K30), noch nicht gebaut: Fanmarsch in der fremden Stadt, Pyrotechnik mit UEFA-Strafe (K09), Reisechaos, Wunder von … (Aufholjagd im Rückspiel als Meldung).
+Als Karten (K30), **gebaut als U19e am 22.11.2026, ohne Testlauf**. Katalog in `daten/karten.js`, Auslöser in `js/karten.js`, Zahlen in `REGELN.karten.europa`:
+- **Fanmarsch** (Entscheidung, klein): Dein nächstes Europapokal-Auswärtsspiel bei einem Auslandsverein liegt in den nächsten 7 Tagen (nicht das Finale, es ist neutral). Busse und Fahnen bezahlen (10.000 € in der 3. Liga, in der 1. Liga ×4) bringt Fans +3, sonst +1. Voreinstellung: die Fans organisieren selbst.
+- **Reisechaos** (Entscheidung, klein, gleicher Auslöser): Charterflug am Vortag (20.000 €, 1. Liga ×4) oder Linienflug mit 40 % Risiko auf Stimmung −2 für alle. Voreinstellung: Charterflug.
+- **Pyrotechnik** (Entscheidung, klein): Dein letztes Europapokalspiel liegt 1 bis 7 Tage zurück. Die UEFA-Strafe von 12.000 € (1. Liga ×4, also 48.000 €) zahlt der Verein immer, die Wahl betrifft die Haltung: Täter ermitteln (Vertrauen +2, Fans −2), schweigen (Vertrauen −2) oder Einspruch (30 % Senkung auf 4.000 €, sonst 16.000 € mit Verfahrenskosten). Echte UEFA-Strafen für deutsche Vereine lagen bei 25.000 bis 80.000 € (Websuche 22.11., Eintracht Frankfurt gegen Lazio 80.000 €, gegen Inter 50.000 €, gegen die AS Rom 25.000 €). Voreinstellung: schweigen. Der Zuschauerausschluss im Wiederholungsfall (K09) steht nur im Text, als Wirkung fehlt er.
+- **Ein Wunder** (Meldung): Im Hinspiel mit mindestens 2 Toren Rückstand, im Rückspiel 1 bis 7 Tage zuvor gedreht (nach Toren oder im Elfmeterschießen).
+- **Dosierung wie alle Karten** (K30 §5.4): häufig heißt 1 zu 120 je Woche, in der der Auslöser passt. Ein Verein mit acht bis zehn Europapokal-Wochen sieht jede dieser Karten also nur alle zwölf bis fünfzehn Saisons. Eine eigene, höhere Rate für Karten mit festem Anlass würde K30 §5.4 ändern (mit dir entschieden am 10.11.) und ist darum nicht gebaut, siehe §12 Nr. 21.
+- **Gleichschritt:** Die Karten würfeln im Strom `ereignisse` wie alle Karten, `kartenWoche` ist in `tests/lizenz.js` 5a abgeschaltet. Kein neuer Lizenz-Bereich, Entscheidungen im Bereich `ereignisse`.
 
 ## 9. Wechselwirkungen
 - **K23 Finanzen:** größte neue Einnahme der Großen. K23b misst erst die Konten ohne Europapokal, U19b setzt danach den Faktor (§5.3).
@@ -208,10 +214,14 @@ REGELN.europa = {
 18. Nebenziel „Europapokal“: K.-o.-Play-offs, in der Champions League ab Ansehen 85 das Achtelfinale (U19c).
 19. Kaderliste mit Näherung für lokal Ausgebildete (eigene Jugend, sonst deutsche Nationalität), Bereich `aufstellung`, ohne Meldung meldet der Verein zur Frist (U19d1, §5.6).
 20. Stärke der Auslandsvereine 0,93 (T5.3, Konsistenzprüfung CJ2).
+21. **Europapokal-Karten in der normalen Dosierung** (U19e, §8, 22.11., popolupo): Sie sind damit selten. Vorschlag für später, nicht gebaut: ein Feld `chance` je Karte für Karten mit festem Anlass (Wahrscheinlichkeit je Woche, in der der Anlass besteht), bei gleich vielen Würfen je Woche. Das ändert K30 §5.4 und braucht deine Entscheidung.
+22. **UEFA-Strafe mal Ligafaktor** (U19e): Die Karten rechnen alle Beträge von der 3. Liga hoch (K23f). Im Europapokal spielen fast nur Vereine der 1. Liga, dort sind es 48.000 €, im Bereich der echten Strafen.
 
 **Noch zu recherchieren:** amtliche Rangprämie der Conference League (vorläufig aus Salary Sport geschätzt), genaue Halbfinal- und Siegprämien in Europa League und Conference League, die Zulassungsliste 2026/27 für die Länderkontingente, die Termine der Conference-League-Ligaphase 2026/27 (gefunden nur Spieltag 1 am 15.10. und Spieltag 6 am 17.12.). **Erledigt am 21.11.:** Rangprämie der Europa League, deutsche Starter 2026/27.
 
 ## Quellen
+
+UEFA-Strafen für Pyrotechnik (U19e, Websuche 22.11.2026, nur Zusammenfassungen gelesen): [sport1: Strafe nach dem Spiel bei Lazio](https://www.sport1.de/fussball/bundesliga/2019/01/uefa-bestraft-eintracht-frankfurt-mit-geldstrafe-und-zuschauerausschluss), [nau.ch: nur Geldstrafe nach Inter](https://www.nau.ch/sport/fussball/gluck-fur-eintracht-fans-uefa-verhangt-nur-geldstrafe-65500866), [sport1: Strafe nach Marseille 2022](https://www.sport1.de/news/fussball/champions-league/2022/09/nach-marseille-ausschreitungen-uefa-verkundet-strafe-fur-eintracht-frankfurt), [sport1: Bewährung verspielt, 2025](https://www.sport1.de/news/fussball/europa-league/2025/03/bewahrung-verspielt-frankfurt-droht-fan-arger)
 
 Alle abgerufen am 21.11.2026 (Websuche):
 - Prämien Champions League 2025/26: [beIN Sports](https://www.beinsports.com/en-us/soccer/uefa-champions-league/articles/uefa-confirms-prize-distribution-for-2025-26-champions-league-2025-08-27), [Football365](https://www.football365.com/news/champions-league-2025-26-prize-money-table-arsenal-liverpool), [beIN Sports, Viertelfinale](https://www.beinsports.com/en-us/soccer/uefa-champions-league/articles/the-fortune-that-the-teams-reaching-the-quarter-finals-of-the-champions-league-like-arsenal-have-pocketed-2026-03-19), UEFA-Rundschreiben 2026/48 ([KSI](https://www.ksi.is/api/download/media/e1wixrnh/20260713_circular_2026_48_en-1.pdf))

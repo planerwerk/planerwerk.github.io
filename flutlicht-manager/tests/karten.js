@@ -80,4 +80,16 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   const p=sq[0];p.eig=p.eig.concat(['fuehrungsspieler']);p.st=K.meutertUnter-5;const ja=A.meuterei();p.st=K.meutertUnter+5;const gut=A.meuterei();p.st=10;p.eig=p.eig.filter(e=>e!=='fuehrungsspieler');const ohne=A.meuterei();
   pruef(!!ja&&ja.spieler===p.id&&gut===null&&ohne===null,'Meuterei: Führungsspieler mit schlechter Stimmung, sonst nicht',`schlecht ${ja&&ja.spieler===p.id}, gut ${gut}, kein Führungsspieler ${ohne}`);}
 
+// U19e. Europapokal-Karten (K37 §8): Auswärtsspiel bei einem Auslandsverein in den nächsten 7 Tagen (kein Heimspiel, nicht später, nicht das Finale), Spiel 1 bis 7 Tage her,
+//       Wunder nach 0:3 im Hinspiel und 4:0 oder 3:0 mit Elfmeterschießen im Rückspiel, nicht nach nur einem Tor Rückstand und nicht beim Ausscheiden. euMeineSpiele ersetzt der Test.
+{const {S,W,ev}=welt(),A=ev('AUSLOESER'),AV=ev('AV0'),me=S.my,d=S.tag;W.ev('euMeineSpiele=function(){return S.testEu||[];}');
+  const sp=o=>Object.assign({wb:'el',runde:'af',leg:0,tag:d,min:0,h:me,a:AV,hg:null,ag:null,pen:null},o),mit=(l,f)=>{S.testEu=l;return f();};
+  const aus=mit([sp({tag:d+3,h:AV,a:me})],A.euAuswaerts),heim=mit([sp({tag:d+3})],A.euAuswaerts),spaet=mit([sp({tag:d+9,h:AV,a:me})],A.euAuswaerts),fin=mit([sp({runde:'fin',tag:d+3,h:AV,a:me})],A.euAuswaerts);
+  const nach=mit([sp({tag:d-4,hg:1,ag:1})],A.euNachSpiel),alt=mit([sp({tag:d-9,hg:1,ag:1})],A.euNachSpiel);
+  const hin=(hg,ag)=>sp({tag:d-11,h:AV,a:me,hg,ag}),rueck=(hg,ag,pen)=>sp({leg:1,tag:d-4,hg,ag,pen:pen||null});
+  const w1=mit([hin(3,0),rueck(4,0)],A.euWunder),w2=mit([hin(3,0),rueck(3,0,[4,3])],A.euWunder),w3=mit([hin(2,1),rueck(2,0)],A.euWunder),w4=mit([hin(3,0),rueck(2,0)],A.euWunder);delete S.testEu;
+  pruef(!!aus&&aus.verein===AV&&heim===null&&spaet===null&&fin===null&&!!nach&&nach.verein===AV&&alt===null&&!!w1&&w1.verein===AV&&!!w2&&w3===null&&w4===null,
+    'Europapokal-Karten: Auswärtsspiel bald, Spiel kürzlich, Wunder nur nach zwei Toren Rückstand und Weiterkommen',
+    `auswärts ${!!aus}, heim ${heim}, später ${spaet}, Finale ${fin}, nach dem Spiel ${!!nach} / zu lange her ${alt}, Wunder ${!!w1} / i.E. ${!!w2} / ein Tor ${w3} / raus ${w4}`);}
+
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

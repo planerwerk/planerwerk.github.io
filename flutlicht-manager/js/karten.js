@@ -49,7 +49,16 @@ const AUSLOESER={
   maezen(){return inNot()?{}:null;},
   steuer(){return{};},
   // Marketing (K25 §8, K25b): ein Spieler deines Vereins bis 20 mit mindestens 3 Ligatoren in dieser Saison
-  teenieStar(){const l=squad(S.my).filter(p=>p.age<=20&&(p.g||0)>=3);return l.length?{spieler:pick(l).id}:null;}
+  teenieStar(){const l=squad(S.my).filter(p=>p.age<=20&&(p.g||0)>=3);return l.length?{spieler:pick(l).id}:null;},
+  // Europapokal (K37 §8, U19e), aus euMeineSpiele (europa.js). Auswärts: dein nächstes Europapokal-Auswärtsspiel bei einem Auslandsverein in den nächsten RKT.europa.vorTage Tagen
+  // (nicht das Finale, es ist neutral). Nach dem Spiel: dein letztes gespieltes Europapokalspiel liegt 1 bis RKT.europa.nachTage Tage zurück.
+  euAuswaerts(){const E=RKT.europa,m=euMeineSpiele().find(x=>x.a===S.my&&x.h>=AV0&&x.runde!=='fin'&&x.hg==null&&x.tag>=S.tag&&x.tag<S.tag+E.vorTage);return m?{verein:m.h}:null;},
+  euNachSpiel(){const E=RKT.europa,m=euMeineSpiele().filter(x=>x.hg!=null&&S.tag-x.tag>=1&&S.tag-x.tag<=E.nachTage).pop();return m?{verein:m.h===S.my?m.a:m.h}:null;},
+  // Wunder: im Hinspiel mit mindestens RKT.europa.wunderAb Toren Rückstand, im Rückspiel (1 bis nachTage Tage her) gedreht, nach Toren oder im Elfmeterschießen
+  euWunder(){const E=RKT.europa,l=euMeineSpiele(),m=l.find(x=>x.leg===1&&x.hg!=null&&S.tag-x.tag>=1&&S.tag-x.tag<=E.nachTage);if(!m)return null;
+    const h=l.find(x=>x.wb===m.wb&&x.runde===m.runde&&x.leg===0);if(!h||h.hg==null)return null;const mir=(x,a,b)=>x.h===S.my?a:b;
+    const gf0=mir(h,h.hg,h.ag),ga0=mir(h,h.ag,h.hg),gf=gf0+mir(m,m.hg,m.ag),ga=ga0+mir(m,m.ag,m.hg),pen=m.pen?mir(m,m.pen[0]-m.pen[1],m.pen[1]-m.pen[0]):0;
+    return ga0-gf0>=E.wunderAb&&(gf>ga||(gf===ga&&pen>0))?{verein:m.h===S.my?m.a:m.h}:null;}
 };
 
 // ---------- Dosierung (K30 §5.1) ----------
