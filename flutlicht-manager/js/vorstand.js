@@ -91,11 +91,12 @@ const zgBudgetFaktor=()=>{const z=meinZg(),Z=RV.zielgespraech;if(!z||!z.stufe)re
 // Chance, dass der Vorstand beim Tiefstapeln um n Plätze zusagt
 function zgTiefChance(n){const Z=RV.zielgespraech.tief,e=praesident(myT()).ehrgeiz;
   return clamp(Z.basis-Z.weiterer*(n-1)+Z.jeVertrauen*(S.trust-50)+Z.jeRuf*(ruf()-RV.ruf.start)+(e>=RV.nebenziele.ehrgeizigAb?-Z.ehrgeiz:e<=Z.ruhigBis?Z.ehrgeiz:0),Z.grenzen[0],Z.grenzen[1]);}
-const zgZielGrenze=(lg,z)=>clamp(z,1,RV.ziel.schlechtester[lg]||z);
-// d = 0: Vorschlag annehmen, d < 0: hochpokern um −d Plätze, d > 0: tiefstapeln um d Plätze
-function zielVerhandeln(d){if(!darf('zielgespraech')||!zgOffen())return;const z=S.zg,Z=RV.zielgespraech,t=myT(),n=Math.abs(d);if(n>Z.maxPlaetze)return;
+// Grenzen wie bei setTarget: in der 2. und 3. Liga höchstens Platz ziel.unterhalbMindestens (Aufstieg), nie schlechter als das schlechteste Ziel der Liga (Prüfung CX3)
+const zgZielGrenze=(lg,z)=>clamp(z,lg>=2?RV.ziel.unterhalbMindestens:1,RV.ziel.schlechtester[lg]||z);
+// d = 0: Vorschlag annehmen, d < 0: hochpokern um −d Plätze, d > 0: tiefstapeln um d Plätze. Gezählt werden die Plätze nach der Grenze (CX4).
+function zielVerhandeln(d){if(!darf('zielgespraech')||!zgOffen())return;const z=S.zg,Z=RV.zielgespraech,t=myT();if(Math.abs(d)>Z.maxPlaetze)return;
   if(!d){z.fertig=1;news(`Zielgespräch: Du nimmst das Ziel des Vorstands an (${targetText(t.lg,S.target)}).`,'');save();render();return;}
-  const neu=zgZielGrenze(t.lg,S.target+d);if(neu===S.target){toast('Weiter geht es in diese Richtung nicht.');return;}
+  const neu=zgZielGrenze(t.lg,S.target+d),n=Math.abs(neu-S.target);if(!n){toast('Weiter geht es in diese Richtung nicht.');return;}
   if(d<0){z.stufe=neu-z.vorschlag;S.target=neu;z.fertig=1;news(`Zielgespräch: Du versprichst mehr (${targetText(t.lg,neu)}). Der Vorstand gibt ${Math.round((zgBudgetFaktor()-1)*100)} % mehr Transferbudget frei und erwartet, dass du lieferst.`,'good');}
   else if(mitStrom(strom('zielgespraech',S.season,S.my),()=>R())<zgTiefChance(n)){z.stufe=neu-z.vorschlag;S.target=neu;z.fertig=1;
     news(`Zielgespräch: Der Vorstand lässt sich herunterhandeln (${targetText(t.lg,neu)}). Dafür gibt er ${Math.round((1-zgBudgetFaktor())*100)} % weniger Transferbudget frei.`,'');}
@@ -104,13 +105,17 @@ function zielVerhandeln(d){if(!darf('zielgespraech')||!zgOffen())return;const z=
 // Kauf über dem Transferbudget (aktionen.js, vor der Zahlung): der Vorstand ist verstimmt, Vertrauen je angefangene 10 % der Ablöse über dem Budget
 function zgUeberBudget(fee){const Z=RV.zielgespraech,b=transferBudget(myT());if(!(fee>b))return;const k=Math.ceil((fee-b)/fee*10);
   S.trust=clamp(S.trust+Math.max(Z.ueberMax,Z.ueberBudget*k),0,100);news(`Der Vorstand hatte für Ablösen nur ${fmt(b)} freigegeben. Dass du ${fmt(fee)} zahlst, gefällt ihm nicht.`,'bad');}
-// Ruf zum Saisonende (rufSaison): Nach dem Tiefstapeln zählt „übertroffen“ vom Vorschlag aus, ein hochgepokertes und erreichtes Ziel bringt einen Zuschlag
-const zgRufSoll=soll=>{const z=meinZg();return z&&z.stufe>0?Math.min(soll,z.vorschlag):soll;};
+// Ruf zum Saisonende (rufSaison): Nach jeder Verhandlung zählt „übertroffen“ vom Vorschlag aus, „deutlich verfehlt“ vom verhandelten Ziel. Ein hochgepokertes und erreichtes
+// Ziel bringt dazu einen Zuschlag (Prüfung CX2: vorher zählte „übertroffen“ vom höheren Ziel, Hochpokern brachte so weniger Ruf als Annehmen)
+const zgRufSoll=soll=>{const z=meinZg();return z&&z.stufe?z.vorschlag:soll;};
 const zgRufZuschlag=pos=>{const z=meinZg();return z&&z.stufe<0&&pos<=S.target?RV.zielgespraech.rufHoch*-z.stufe:0;};
 // Karte im Büro, solange das Gespräch offen ist
-function zielgespraechKarte(){if(!zgOffen())return'';const t=myT(),Z=RV.zielgespraech,aus=lzAus('zielgespraech'),b=(d,txt)=>{const neu=zgZielGrenze(t.lg,S.target+d);return neu===S.target?'':`<button onclick="zielVerhandeln(${d})"${aus}>${txt}</button>`;};
-  const hoch=[...Array(Z.maxPlaetze)].map((_,i)=>b(-(i+1),`Hochpokern: ${targetText(t.lg,zgZielGrenze(t.lg,S.target-(i+1)))} (Budget +${Math.round(Z.budgetHoch*(i+1)*100)} %)`)).join('');
-  const tief=[...Array(Z.maxPlaetze)].map((_,i)=>b(i+1,`Tiefstapeln: ${targetText(t.lg,zgZielGrenze(t.lg,S.target+i+1))} (Zusage etwa ${Math.round(zgTiefChance(i+1)*100)} %, Budget −${Math.round(Z.budgetTief*(i+1)*100)} %)`)).join('');
+// Je Richtung nur Knöpfe mit verschiedenem Ziel, Budget und Chance nach den tatsächlich verschobenen Plätzen (CX4)
+function zielgespraechKarte(){if(!zgOffen())return'';const t=myT(),Z=RV.zielgespraech,aus=lzAus('zielgespraech');
+  const knoepfe=(vz,txt)=>{const da=new Set([S.target]);return[...Array(Z.maxPlaetze)].map((_,i)=>{const d=vz*(i+1),neu=zgZielGrenze(t.lg,S.target+d),n=Math.abs(neu-S.target);
+    if(da.has(neu))return'';da.add(neu);return`<button onclick="zielVerhandeln(${d})"${aus}>${txt(neu,n)}</button>`;}).join('');};
+  const hoch=knoepfe(-1,(neu,n)=>`Hochpokern: ${targetText(t.lg,neu)} (Budget +${Math.round(Z.budgetHoch*n*100)} %)`);
+  const tief=knoepfe(1,(neu,n)=>`Tiefstapeln: ${targetText(t.lg,neu)} (Zusage etwa ${Math.round(zgTiefChance(n)*100)} %, Budget −${Math.round(Z.budgetTief*n*100)} %)`);
   return`<div class="card"><h3>Zielgespräch mit dem Vorstand</h3><p>Der Vorstand schlägt vor: <b>${targetText(t.lg,S.target)}</b>. Bis zu deinem nächsten Ligaspiel kannst du verhandeln, danach gilt der Vorschlag.</p>
     <p class="dim">Hochpokern sagt der Vorstand immer zu: mehr Transferbudget und mehr Ruf, wenn du lieferst, aber das Ziel gilt. Tiefstapeln nimmt Druck, kostet Budget und bringt weniger Ruf. Lehnt der Vorstand ab, kühlt das Vertrauen um ${-Z.abgelehnt} ab. Eine Entscheidung je Saison.</p>
     <div class="row"><button class="go" onclick="zielVerhandeln(0)"${aus}>Ziel annehmen</button>${hoch}${tief}</div>${lzHinweis('zielgespraech')}</div>`;}

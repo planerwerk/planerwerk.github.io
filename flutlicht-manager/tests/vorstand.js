@@ -100,6 +100,7 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   const sm=o=>Object.assign({pos:8,target:S.target,lg:1,champ:-1,cup:-1,up:[],up3:[],down:[],down2:[],down3:[],rel:[-1,-1],rel2:[-1,-1],rw:-1,rw2:-1},o);
   S.ruf=30;F.rufSaison(sm({pos:S.target}));const r=ev('ruf()');
   const w=welt(),tt=w.ev('myT()');tt.cash=w.ev('erwarteteEinnahmen')(tt)*w.ev('RFP').budget.reserve+5e6;w.S.trust=50;const b=w.ev('transferBudget')(tt);w.F.zgUeberBudget(b+4e6);const v1=w.S.trust;w.S.trust=50;w.F.zgUeberBudget(b);
-  pruef(nah(r,30+2*Z.rufHoch)&&nah(b,5e6,2)&&nah(v1,50+Z.ueberBudget*Math.ceil(4e6/(b+4e6)*10))&&w.S.trust===50,'Zielgespräch: Ruf-Zuschlag nach Hochpokern, Vertrauen bei Kauf über dem Budget',`Ruf ${r}, Budget ${b}, Vertrauen ${v1}`);}
+  const gr=ev('zgZielGrenze'),grenzen=gr(2,1)===B.ziel.unterhalbMindestens&&gr(3,1)===B.ziel.unterhalbMindestens&&gr(1,0)===1; // CX3: 2. und 3. Liga nicht besser als Platz 2
+  pruef(grenzen&&nah(r,30+2*(B.ruf.jePlatzUeber+Z.rufHoch))&&nah(b,5e6,2)&&nah(v1,50+Z.ueberBudget*Math.ceil(4e6/(b+4e6)*10))&&w.S.trust===50,'Zielgespräch: Ruf-Zuschlag nach Hochpokern, Vertrauen bei Kauf über dem Budget',`Ruf ${r}, Budget ${b}, Vertrauen ${v1}`);}
 
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

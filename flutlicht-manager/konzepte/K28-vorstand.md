@@ -177,11 +177,12 @@ Jetzt gibt es Budgets (K23d, K23 §5.5f) und echte Größenordnungen (K23c), dam
 
 - **Wann:** Mit dem Saisonziel (Saisonstart, Jobwechsel, neues Spiel) legt der Vorstand einen Vorschlag vor. Bis zu deinem nächsten Ligaspiel kannst du im Büro verhandeln (Karte „Zielgespräch mit dem Vorstand“, dazu ein Punkt in der Liste „Vor dem Saisonstart“, K12b). Ohne Entscheidung gilt der Vorschlag. Eine Entscheidung je Saison.
 - **Ziel annehmen:** nichts ändert sich.
-- **Hochpokern** um einen oder zwei Plätze: immer angenommen. Transferbudget +10 % je Platz. Erreichst du das Ziel, steigt dein Ruf zum Saisonende zusätzlich um 2 je Platz. Das Ziel gilt für Vertrauen, Ultimatum und Entlassung.
+- **Grenzen** wie beim Saisonziel: in der 2. und 3. Liga nie besser als Platz 2 (Aufstieg), nie schlechter als das schlechteste Ziel der Liga. Stößt ein Schritt an die Grenze, zählt nur die tatsächliche Verschiebung (Budget und Zusage-Chance).
+- **Hochpokern** um einen oder zwei Plätze: immer angenommen. Transferbudget +10 % je Platz. „Übertroffen“ zählt beim Ruf weiter vom Vorschlag aus, erreichst du das höhere Ziel, gibt es zusätzlich +2 je Platz. Das Ziel gilt für Vertrauen, Ultimatum, Entlassung und „deutlich verfehlt“. (Korrigiert nach Prüfung CX2: Vorher zählte „übertroffen“ vom höheren Ziel, Hochpokern brachte so weniger Ruf als Annehmen.)
 - **Tiefstapeln** um einen oder zwei Plätze: Zusage mit 60 % − 20 % je weiterem Platz + 0,5 % je Punkt Vertrauen über 50 + 0,5 % je Punkt Ruf über 30, bei einem ehrgeizigen Präsidenten (ab 14) −15 %, bei einem ruhigen (bis 7) +15 %, begrenzt auf 5 bis 95 % (eigener Strom).
   - Zugesagt: Ziel schlechter, Transferbudget −15 % je Platz, der Ruf rechnet „übertroffen“ weiter vom Vorschlag aus.
   - Abgelehnt: Das Ziel bleibt, Vertrauen −3.
-- **Transferbudget** (K23d): Kontostand über der Reserve, mal dem Faktor aus dem Gespräch. Kaufst du über dem Budget, ist der Vorstand verstimmt: Vertrauen −1 je angefangene 10 % der Ablöse über dem Budget, höchstens −10, mit Meldung.
+- **Transferbudget** (K23d): Kontostand über der Reserve, mal dem Faktor aus dem Gespräch. Der Faktor gilt auch für das Budget der Automatik, solange der Verein deine Transfers führt (`kiBudget`, Prüfung CX5). Kaufst du über dem Budget, ist der Vorstand verstimmt: Vertrauen −1 je angefangene 10 % der Ablöse über dem Budget, höchstens −10, mit Meldung.
 - **Lizenz (K36):** neuer Bereich `zielgespraech` in der Grundlizenz, ohne Automatik (ohne Entscheidung gilt der Vorschlag).
 - **Gleichschritt:** Das Gespräch würfelt nur, wenn du tiefstapelst. Ohne Eingriff ändert sich nichts.
 - **Noch nicht:** Zwischenbilanz im Winter (§4 Nr. 3), Sparsamkeit des Präsidenten beim Budget, Nebenziele verhandeln.

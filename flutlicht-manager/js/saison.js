@@ -15,7 +15,7 @@ function karriereChance(p,sch){const K=RS.karriereende,G=K.grund,a=p.age-(p.pos=
   let f=1;for(let i=0;i<G.length;i++)if(a<=G[i][0]){f=i?G[i-1][1]+(G[i][1]-G[i-1][1])*(a-G[i-1][0])/(G[i][0]-G[i-1][0]):G[0][1];break;}
   const t=p.team>=0?S.teams[p.team]:null,ls=sch?(t&&t.lg<=3?sch[t.lg]:sch[3]):null;
   if(ls!=null&&p.str<ls-K.schwachUnter)f*=K.schwach;else if(t&&K.stammRollen.includes(kaderRolle(p)))f*=K.stamm;
-  const heute=absTag(S.tag);if(p.age>=K.kreuzbandAb&&((p.vl&&p.vl.art==='kreuzband')||(p.vh||[]).some(x=>x.art==='kreuzband'&&heute-x.ab<=K.kreuzbandTage)))f*=K.kreuzband;
+  const heute=absTag(S.tag);if(p.age>=K.kreuzbandAb&&((p.inj>0&&p.vl&&p.vl.art==='kreuzband')||(p.vh||[]).some(x=>x.art==='kreuzband'&&heute-x.ab<=K.kreuzbandTage)))f*=K.kreuzband;
   if(hatEig(p,'vorbildprofi'))f*=K.profi;return Math.min(1,f);}
 // Hört der Spieler auf? Gewürfelt im eigenen Strom je Spieler und Saison, nur wenn die Chance zwischen 0 und 1 liegt
 function karriereEnde(p,sch){const c=karriereChance(p,sch);return c>=1||(c>0&&mitStrom(strom('karriereende',S.season,p.id),()=>R())<c);}

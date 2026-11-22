@@ -1579,3 +1579,19 @@ Zweig `mitarbeit/popolupo-k20b-deadline-preise`, auf K27b. Erledigt den offenen 
 | CW2 | **Angebote an dich:** Die Chance je Markttag für Spieler auf deiner Transferliste ist in den letzten drei Tagen 1,5-mal so hoch. Gleich viele Würfe wie vorher, nur die Schwelle ändert sich. | ✅ |
 | CW3 | **Gleichschritt:** Die Regeln der Computer-Vereine (`kiPreis`, `kiZahlt`, `kiSternPreis`) und die Automatik rechnen ohne Schwankung. | ✅ |
 | CW4 | **Noch nicht:** Computer-Vereine untereinander mit Schwankung, Bieterwettstreit beim Kauf (K20 §4.2). | offen |
+
+---
+
+## CX. Prüfung von U12e, Karriereende und K26b ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat a764c13, d7b48e2 und e3322cf gelesen (nichts ausgeführt). Korrekturen auf der neuesten Spitze `mitarbeit/popolupo-k20b-deadline-preise`.
+
+| # | Befund | Status |
+|---|---|---|
+| CX1 | **`tests/karriereende.js` Nr. 5:** `sommerpause` setzt nur die Phase, die neue Saison beginnt erst mit `weiter`. Der Test maß deshalb vor dem Altern. Jetzt zwei Saisons im Simulator, gemessen zum Start der zweiten. | ✅ behoben |
+| CX2 | **Ruf nach dem Hochpokern** war kleiner als nach dem Annehmen („übertroffen“ zählte vom höheren Ziel, −3 je Platz, der Zuschlag gab nur +2 zurück). Jetzt zählt „übertroffen“ nach jeder Verhandlung vom Vorschlag aus, der Zuschlag kommt dazu. `tests/vorstand.js` Nr. 13 prüft den neuen Wert. | ✅ behoben |
+| CX3 | **Grenzen des Ziels:** In der 2. und 3. Liga ließ sich auf Platz 1 hochpokern, `setTarget` erlaubt dort höchstens Platz 2. Jetzt dieselbe Grenze. | ✅ behoben |
+| CX4 | **Schritte an der Grenze:** Ein Schritt um zwei, der nur einen Platz verschiebt, zeigte doppeltes Budget und würfelte mit der Chance für zwei Plätze. Jetzt zählen die tatsächlich verschobenen Plätze, doppelte Knöpfe fallen weg. | ✅ behoben |
+| CX5 | **Budget in der Automatik:** Mit Lizenz 1 führt der Verein die Transfers, sein Budget (`kiBudget`) kannte den Faktor aus dem Gespräch nicht. Jetzt schon. Ohne Verhandlung ist der Faktor 1, der Gleichschritt bleibt. | ✅ behoben |
+| CX6 | **Kreuzband bei Vereinslosen:** Ein entlassener Spieler mit Kreuzbandriss behielt `p.vl` für immer und bekam jede Saison ×1,5. Jetzt zählt ein laufender Riss nur mit `p.inj > 0`. | ✅ behoben |
+| CX7 | Ohne Befund: Laufzeitfehler, Regelpfade, alte Spielstände, Fenster des Gesprächs, Formel des Karriereendes, Bauen der Computer-Vereine (K26b), Zufall und Gleichschritt, Kommentare mitten in der Zeile. | ✅ |

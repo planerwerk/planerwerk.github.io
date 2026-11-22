@@ -63,6 +63,12 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 22.11.2026: Korrekturen nach Prüfung CX (Zweig `mitarbeit/popolupo-k20b-deadline-preise`)
+
+- Ein lesender Prüf-Agent hat U12e, das Karriereende und K26b durchgesehen (Konsistenzprüfung CX).
+- **Behoben:** `tests/karriereende.js` Nr. 5 jetzt über zwei Saisons (CX1), Ruf nach dem Hochpokern vom Vorschlag aus plus Zuschlag (CX2), Grenzen des Ziels in der 2. und 3. Liga (CX3), Schritte an der Grenze (CX4), Faktor des Zielgesprächs auch im Budget der Automatik (CX5), Kreuzband bei Vereinslosen (CX6).
+- **Tests zuerst:** `tests/karriereende.js`, `tests/vorstand.js` (Nr. 13), `tests/lizenz.js` (Gleichschritt mit `kiBudget`).
+
 ### 22.11.2026: K20b Preise am Deadline Day (Zweig `mitarbeit/popolupo-k20b-deadline-preise`, auf K27b)
 
 - **Neu (K20 §4.3, Konsistenzprüfung CW):** In den letzten drei Tagen eines Fensters schwankt die Forderung deutscher Computer-Vereine an dich um bis zu ±15 % (fest je Spieler und Tag), Spieler auf ihrer Transferliste kosten 10 % weniger, Angebote für deine gelisteten Spieler kommen 1,5-mal so oft. Hinweis in der Deadline-Karte.

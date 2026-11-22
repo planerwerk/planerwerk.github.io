@@ -63,7 +63,7 @@ function planBedarf(P){const Q=P.Q,B=RCV.bedarf,niveau=P.niveau,out=[];
 function fensterNr(tag=S.tag){const k=mmtt(tag);return RTR.fenster.findIndex(([a,b])=>k>=a&&k<=b);}
 // Transferbudget: einmal am Anfang des Fensters aus dem Konto festgelegt. Danach zählt nur noch, was ausgegeben und durch Verkäufe eingenommen wurde.
 // So entscheidet dein Verein in der Automatik genau wie als Computer-Verein, auch wenn die laufende Buchhaltung anders ist (tests/lizenz.js, Gleichschritt).
-function kiBudget(t,nr){const k=S.season*10+nr;if(!t.tb||t.tb.k!==k)t.tb={k,b:Math.max(0,Math.round(t.cash*RCV.finanzen.budgetAnteil[nr]*profilWert(t,'budget',1))),a:0,n:0};return t.tb;}
+function kiBudget(t,nr){const k=S.season*10+nr;if(!t.tb||t.tb.k!==k)t.tb={k,b:Math.max(0,Math.round(t.cash*RCV.finanzen.budgetAnteil[nr]*profilWert(t,'budget',1)*(t.id===S.my?zgBudgetFaktor():1))),a:0,n:0};return t.tb;} // Zielgespräch wirkt auch in der Automatik (U12e, Prüfung CX5), ohne Verhandlung Faktor 1
 // Budget nutzen (§5.1): In den letzten Wochen des Fensters sinkt die gesuchte Stärke, solange mehr als 40 % des Budgets übrig sind
 function kiSenkung(tb){const B=RCV.bedarf,ende=fensterEnde();if(ende==null||tb.a>=tb.b*(1-B.budgetRestAb))return 0;return Math.max(0,B.endspurtWochen-Math.floor((ende-S.tag)/7))*B.anspruchJeWoche;}
 // Preis eines Spielers der Transferliste: Vereinswert des Verkäufers (K19 §5.1), aber ohne Aufschlag für den Stellenwert. Wer gehen darf, kostet höchstens den Marktwert.

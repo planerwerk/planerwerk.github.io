@@ -33,9 +33,9 @@ function spieler(S){const t=S.teams.find(x=>x.lg===1&&x.id!==S.my),p=S.pl.find(q
   pruef(feld>=33&&feld<=35.5&&tw-feld>1.5&&tw-feld<=2.5,'Schnitt des Karriereendes nach der Formel',`Feldspieler ${feld.toFixed(2)}, Torhüter ${tw.toFixed(2)}`);}
 
 // 5. Eine Saison im Ablauf: nach dem Saisonwechsel ist kein Feldspieler älter als 38 und kein Torhüter älter als 40 (sie wären sicher abgetreten), es haben welche aufgehört
-// (Der Simulator hört nach der letzten Saison vor der Sommerpause auf, darum ruft der Test sie am Saisonende selbst auf, wie es der Simulator sonst täte.)
-{let info=null;saisons({n:1,seed:SEED,verein:VEREIN,beiSaisonende:(S0,F)=>{info={alt:S0.pl.filter(p=>p.team>=0&&p.age>=31).length,n0:S0.pl.length};F.sommerpause();
-    const S=F.__W.S;info.zuAlt=S.pl.filter(p=>p.team>=0&&(p.pos==='TW'?p.age>40:p.age>38)).length;info.neu=S.season;}});
-  pruef(info&&info.zuAlt===0&&info.neu===2027,'Saisonwechsel: niemand über der Altersgrenze',info?`zu alt ${info.zuAlt}, vorher ${info.alt} Spieler ab 31, Saison ${info.neu}`:'kein Saisonende');}
+// (Gemessen zum Start der zweiten Saison, darum zwei Saisons im Simulator. Die Sommerpause setzt nur die Phase, die neue Saison beginnt erst mit „weiter“, Prüfung CX1.)
+{let info=null,alt=null;saisons({n:2,seed:SEED,verein:VEREIN,beiSaisonende:(S)=>{if(alt==null)alt=S.pl.filter(p=>p.team>=0&&p.age>=31).length;},
+    beiSaisonstart:(S)=>{if(S.season!==2027||info)return;info={zuAlt:S.pl.filter(p=>p.team>=0&&(p.pos==='TW'?p.age>40:p.age>38)).length,neu:S.season};}});
+  pruef(info&&info.zuAlt===0&&info.neu===2027,'Saisonwechsel: niemand über der Altersgrenze',info?`zu alt ${info.zuAlt}, vorher ${alt} Spieler ab 31, Saison ${info.neu}`:'kein Saisonwechsel');}
 
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);
