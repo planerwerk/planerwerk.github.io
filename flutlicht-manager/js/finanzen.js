@@ -21,7 +21,7 @@ const transferSperreNaechste=()=>!!S.lzp&&S.lzp.sperre===S.season+1;
 const monatName=mo=>(typeof MONL!=='undefined'?MONL:MON)[(+mo+11)%12];
 
 // Täglich (ablauf.js taeglichLauf): am Monatsersten der Bericht, am 1. März die Lizenzprüfung, am 31. Mai der Nachweis
-function finanzenTag(d){const k=mmtt(d);if(k.slice(3)==='01')finanzenMonat(d);if(S.phase==='play'&&k===RFP.lizenzTag)lizenzPruefung();if(k===RFP.nachweisTag)lizenzNachweis();}
+function finanzenTag(d){const k=mmtt(d);if(k.slice(3)==='01'){finanzenMonat(d);kiInsolvenzPruefen();}if(S.phase==='play'&&k===RFP.lizenzTag)lizenzPruefung();if(k===RFP.nachweisTag)lizenzNachweis();}
 // Reihenfolge: erst die Insolvenz (ein Schuldenschnitt gehört in den abgelaufenen Monat), dann der Bericht, dann der neue Stand, dann Tilgung und Raten (gehören in den neuen Monat).
 // k: Kreditflüsse des Monats (Aufnahme +, Tilgung −), getrennt von Einnahmen und Ausgaben (K23e).
 // ohneZahlungen: zum Saisonwechsel (der 1. Juli selbst läuft nie durch taeglich), Tilgung und Raten bucht dann finanzenSaisonstart in die neue Saison.
@@ -62,6 +62,28 @@ function finanzenKarte(){const t=myT(),L=S.lzp||{},v=S.finV||[],p=finPrognose(fa
     ${(S.kredite||[]).length?`<p>Kredite: ${S.kredite.map(k=>`${fmt(k.rest)} (Rate ${fmt(k.rate)} im Monat)`).join(', ')}</p>`:''}${(S.raten||[]).length?`<p>Ablösen in Raten: ${S.raten.map(r=>`${esc(r.n||'')} noch ${fmt(r.rest)} (Rate ${fmt(r.rate)})`).join(', ')}</p>`:''}
     ${verzichtAktiv()?`<p class="dim">Gehaltsverzicht läuft (${Math.round(S.verzicht.anteil*100)} %).</p>`:inNot()?`<div class="row"><button onclick="gehaltsverzicht()"${lzAus('kredit')}>Mannschaft um Gehaltsverzicht bitten</button><span class="dim">${Math.round(RFP.verzicht.anteil*100)} % für drei Monate, Stimmung ${RFP.verzicht.stimmung}, einmal je Saison</span></div>`:''}
     <p class="dim">Lizenzprüfung am 1. März für die nächste Saison. Insolvent ist, wer an zwei Monatsersten nacheinander unter dem Kreditrahmen von ${fmt(-kreditRahmen(t))} steht: ${RFP.insolvenz.punkte} Punkte Abzug.</p></div>`;}
+
+// ---------- K23b (§5.2, §5.5e): Computer-Vereine nach denselben Regeln wie du ----------
+// Sonstige Einnahmen (Mitglieder, Vermarktung, K23 §3.1) je Ligaspiel für alle Vereine, vorläufig nach Liga bis K23c
+const sonstigeEinnahmen=t=>RFP.sonstiges[t.lg]||0;
+// Zuschauer im Heimspiel ohne Würfel (Mitte der Spanne) und zum Richtpreis: so verschiebt die Rechnung für Computer-Vereine keinen Zufallsstrom
+function zuschauerErwartung(t,opp,cup){const Z=RF.zuschauer,ff=Z.formBasis+Z.formJePunkt*formPts(t.id),of=Z.gegnerBasis+(opp?opp.rep:Z.gegnerOhne)/100*Z.gegnerFaktor,lf=t.lg===1?1:t.lg===2?Z.liga2:Z.liga3;
+  return Math.round(Math.min(t.cap,t.fans*ff*of*lf*(cup?Z.pokal:1)*(Z.zufallBasis+Z.zufallSpanne/2)*fanFaktor(t)));}
+function kiHeimEinnahmen(t,opp,cup){const att=zuschauerErwartung(t,opp,cup);return Math.round(att*richtPreis(t)*zuschauerFaktor(t))+(t.shop?Math.round(att*RF.fanartikel[t.shop]):0)+(t.logen||0)*RF.loge;}
+// Je Ligaspiel (ablauf.js): TV, Sponsor (Ansehen² × Ligawert wie die Angebote an dich), Sonstiges, im Heimspiel Zuschauer, Fanartikel, Logen,
+// minus Gehälter von Kader und Stab, Stadion und Betrieb, Jugendarbeit (Stufe der Computer-Vereine). Ersetzt die Pauschale fremdeEinnahmen.
+function kiFinanzenSpiel(t,r){if(!t||!aktiv(t))return;const n=(S.fx[t.lg]||[]).length||34,heim=r.h===t.id,opp=heim?(S.teams[r.a]||null):null;
+  const ein=tvGeld(t)+t.rep*t.rep*(RF.sponsor['liga'+t.lg]||RF.sponsor.liga3)+sonstigeEinnahmen(t)+(heim?kiHeimEinnahmen(t,opp,false):0);
+  const aus=Math.round((squad(t.id).reduce((s,p)=>s+p.sal,0)+stabGehaelter(t.id))/n)+Math.round(t.cap*RF.betrieb.jePlatz+(t.logen||0)*RF.betrieb.jeLoge)+RF.jugendKosten[RS.nachwuchs.computerStufe];
+  t.cash+=ein-aus;}
+// Je Pokalspiel: Rundenprämie für beide, Zuschauer für den Gastgeber (nicht im Finale), Siegprämie im Finale. Bisher bekamen alle Vereine eine Pauschale je Runde.
+function kiPokalSpiel(r,runde){[r.h,r.a].forEach(id=>{if(id===S.my||id>=1000)return;const t=S.teams[id];if(!t)return;
+  t.cash+=RF.pokalPraemien[runde]+(id===r.h&&runde!==5?kiHeimEinnahmen(t,r.a<1000?S.teams[r.a]:null,true):0)+(runde===5&&winner(r)===id?RF.pokalSieg:0);});}
+// Insolvenz der Computer-Vereine (am Monatsersten, Regel wie insolvenzPruefen): zwei Monatserste unter dem negativen Kreditrahmen, Punktabzug, Schuldenschnitt
+function kiInsolvenzPruefen(){if(S.phase!=='play')return;const I=RFP.insolvenz;
+  S.teams.forEach(t=>{if(t.id===S.my||!aktiv(t))return;if(t.cash>=-kreditRahmen(t)){if(t.fu)t.fu=0;return;}t.fu=(t.fu||0)+1;if(t.fu<I.monate||t.fins===S.season)return;
+    t.fu=0;t.fins=S.season;const A=S.abzug||(S.abzug={}),a=A[S.season]||(A[S.season]={});a[t.id]=(a[t.id]||0)+I.punkte;t.cash=0;
+    news(`Insolvenz: ${t.name} ist zahlungsunfähig. ${I.punkte} Punkte Abzug, die Gläubiger verzichten auf die Schulden.`,'');});}
 
 // ---------- K23e (§5.5d): Kredit mit Laufzeit, Raten aus Ablösen, Gehaltsverzicht ----------
 // Kredit in Tranchen: S.kredite = [{rest, rate, bis}], S.loan bleibt die Summe der Reste (Zinsen und Anzeige wie bisher).

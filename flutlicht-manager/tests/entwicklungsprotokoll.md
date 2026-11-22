@@ -46,6 +46,18 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 22.11.2026: K23b Computer-Vereine nach denselben Regeln (Zweig `mitarbeit/popolupo-k23b-computer-finanzen`, auf den Korrekturen)
+
+- **Neu in `js/finanzen.js`:**
+  - `kiFinanzenSpiel`: Computer-Vereine buchen je Ligaspiel wie du. Einnahmen sind TV, Sponsor, Sonstiges und zu Hause Zuschauer, Fanartikel und Logen. Ausgaben sind Gehälter von Kader und Stab, Betrieb und Jugend.
+  - `kiPokalSpiel`: Rundenprämien statt der Pauschale für alle.
+  - `kiInsolvenzPruefen`: Insolvenz auch für Computer-Vereine.
+  - `sonstigeEinnahmen`: für alle Vereine je Ligaspiel, 2. Liga 25.000 €, 3. Liga 60.000 € (aus BZ7, vorläufig).
+- **Geändert:** `fremdeEinnahmen` wird nicht mehr benutzt (nur noch im Messskript zum Vergleich). Deine Buchung „Sonstige Einnahmen“ in der 2. und 3. Liga.
+- **Zu erwarten (CK1):** Erstligisten werden reicher, besonders die mit großem Stadion. Das kann Kalibrierung, T1.3 Rest und die Titelverteilung verschieben.
+- **Bitte messen:** `node tests/finanzmodell.js 2` noch einmal. Die Spalte „heute“ ist dann die alte Pauschale zum Vergleich, der Saldo sollte zu den echten Kontoständen passen. Dazu die Kontostände der Computer-Vereine nach drei bis fünf Saisons, wenn das leicht geht (Schnitt je Liga, Zahl im Minus, Insolvenzen).
+- **Tests zuerst:** `tests/finanzen.js` (Nr. 11 und 12 neu), `tests/spielermodell.js` (T1.3), `tests/kalibrierung.js`, `tests/fuzz-karrieren.js`.
+
 ### 22.11.2026: Korrekturen zu Lauf 5 (Zweig `mitarbeit/popolupo-t5-korrekturen`, auf 0fae7b8)
 
 - **Behebt T5.2:** `ligaVerlegen` mit Blick auf alle Spiele beider Vereine (`spieltageVon` in wettbewerbe.js, `euTageVon` in europa.js).

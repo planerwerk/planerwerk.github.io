@@ -43,13 +43,13 @@ function tagesSpieleAbschliessenLauf(out){const d=out.tag;S.gespielt=d;
     if(g.art==='liga'){g.list.forEach(r=>{S.res[e.lg].push([r.h,r.a,r.hg,r.ag,e.md]);bezDerbySpiel(r);fansDerby(r);}); // Derby mit Sieger: Rivalität wächst (K17, U12c)
       if(mg){news(`${e.md+1}. Spieltag: ${tn(mg.h)} – ${tn(mg.a)} ${mg.hg}:${mg.ag}`,(mg.h===S.my?mg.hg>mg.ag:mg.ag>mg.hg)?'good':(mg.hg===mg.ag?'':'bad'));finanzenLiga(mg);vorstandLiga(e,mg);fansHeimspiel(mg);
         if(e.md+1===RK.vertragsWarnungNachSpieltag){const x=squad(S.my).filter(p=>p.ct<=1);if(x.length)news(`Achtung: ${x.length} Vertrag/Verträge enden zum Saisonende (${x.slice(0,6).map(p=>p.n).join(', ')}${x.length>6?' …':''}). Verlängern: im Kader auf den Spieler klicken.`,'bad');}}
-      g.list.forEach(r=>[r.h,r.a].forEach(id=>{if(id!==S.my){const x=S.teams[id];x.cash+=x.rep*x.rep*RF.fremdeEinnahmen.liga;}}));}
+      g.list.forEach(r=>[r.h,r.a].forEach(id=>{if(id!==S.my)kiFinanzenSpiel(S.teams[id],r);}));} // Computer-Vereine nach denselben Regeln wie du statt Pauschale (K23b)
     else if(g.art==='pokal'){S.cup.hist.push(g.list.map(r=>[r.h,r.a,r.hg,r.ag,r.pen]));S.cup.alive=g.list.map(winner);fansPokal(g.list);
       if(mg){const won=winner(mg)===S.my,opp=mg.h===S.my?mg.a:mg.h;news(`DFB-Pokal, ${POKAL_RUNDEN[e.r]}: ${tn(mg.h)} – ${tn(mg.a)} ${mg.hg}:${mg.ag}${mg.pen?` (i.E. ${mg.pen[0]}:${mg.pen[1]})`:''} – ${won?(e.r===5?'POKALSIEG!':'weiter!'):'ausgeschieden.'}`,won?'good':'bad');
         if(!won&&(opp>=1000||S.teams[opp].lg>t.lg))S.trust+=RV.pokalAus;if(won)S.trust+=RV.pokalWeiter;
         if(mg.h===S.my&&e.r!==5)heimspielEinnahmen(mg,true);money('Pokalprämien',RF.pokalPraemien[e.r]);}
       if(e.r===5){const cw=S.cup.alive[0];news(`${tn(cw)} gewinnt den DFB-Pokal!`,'good');if(cw===S.my){money('Pokalprämien',RF.pokalSieg);S.trust+=RV.pokalSieg;}}
-      S.teams.forEach(x=>{if(x.id!==S.my&&aktiv(x))x.cash+=x.rep*x.rep*RF.fremdeEinnahmen.pokal;});}
+      g.list.forEach(r=>kiPokalSpiel(r,e.r));} // Computer-Vereine: Rundenprämie und Zuschauer wie du statt Pauschale für alle (K23b)
     else if(g.art==='rel'||g.art==='rel2'){const r=g.list[0];S[g.art==='rel'?'relSp':'relSp2'][e.leg]={h:r.h,a:r.a,hg:r.hg,ag:r.ag,pen:r.pen||null};
       if(mg)news(`${spielName(e)}: ${tn(r.h)} – ${tn(r.a)} ${r.hg}:${r.ag}${r.pen?` (i.E. ${r.pen[0]}:${r.pen[1]})`:''}`,(r.h===S.my?r.hg>r.ag:r.ag>r.hg)?'good':(r.hg===r.ag?'':'bad'));}
     else if(g.art==='supercup'){const r=g.list[0],w=winner(r);S.supercup.r={hg:r.hg,ag:r.ag,pen:r.pen||null,sieger:w};
@@ -89,7 +89,7 @@ function heimspielEinnahmen(m,cup){const t=myT();if(autoB('preise'))t.price=clam
   const att=attendance(t,m.a>=AV0?avVon(m.a):m.a>=1000?null:S.teams[m.a],cup);m.att=att;S.att[0]+=att;S.att[1]++;statZuschauer(m,att);money('Zuschauer',Math.round(att*t.price*zuschauerFaktor(t)));if(t.shop)money('Fanartikel',Math.round(att*RF.fanartikel[t.shop]*merchFaktor(t)));if(t.logen)money('VIP-Logen',t.logen*RF.loge);}
 // Buchungen je Ligaspieltag des eigenen Vereins
 function finanzenLiga(m){const t=myT();if(m.h===S.my)heimspielEinnahmen(m,false);
-  money('TV-Gelder',tvGeld(t));
+  money('TV-Gelder',tvGeld(t));{const so=sonstigeEinnahmen(t);if(so)money('Sonstige Einnahmen',so);} // Mitglieder, Vermarktung (K23 §3.1, K23b)
   if(S.spons){money('Sponsor',S.spons.base);if(S.spons.win&&winner(m)===S.my&&m.hg!==m.ag)money('Sponsor',S.spons.win);}werbungSpieltag(m); // Ausrüster und Ärmel (K24a)
   const n=S.fx[t.lg].length;money('Gehälter',-Math.round((squad(S.my).reduce((s,p)=>s+p.sal,0)+leiheGehaelter())/n*gehaltFaktor())); /* dazu verliehene Spieler und Profis in der Zweiten (U10d) */if(S.stab)money('Trainerstab',-Math.round(stabGehaelter(S.my)/n));
   money('Stadion & Betrieb',-Math.round(t.cap*RF.betrieb.jePlatz+t.logen*RF.betrieb.jeLoge));money('Jugendarbeit',-RF.jugendKosten[autoB('jugend')?RS.nachwuchs.computerStufe:t.youth]);{const z=zweiteKosten();if(z)money('Zweite Mannschaft',-z);}

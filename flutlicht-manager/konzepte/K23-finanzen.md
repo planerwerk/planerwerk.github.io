@@ -102,7 +102,7 @@ K23 ändert fast jede Geldzahl im Spiel. Damit jeder Schritt für sich getestet 
 | Teil | Inhalt |
 |---|---|
 | K23a | Monatsbericht, Liquiditätsprognose, Lizenzprüfung im März mit Auflagen, Insolvenz mit Punktabzug, zuerst nur für deinen Verein |
-| K23b | gleiche Einnahmen und Ausgaben für Computer-Vereine statt Pauschale (§5.2), Säulenmodell der Medien (§5.1), Pauschale für die Europapokal-Plätze |
+| K23b | gleiche Einnahmen und Ausgaben für Computer-Vereine statt Pauschale (§5.2). Gebaut am 22.11. (§5.5e). Das Säulenmodell der Medien wandert nach K23c, die Pauschale für die Europapokal-Plätze entfällt, weil es den Europapokal gibt (K37) |
 | K23c | echte Größenordnungen (§5.6) für alle Geldwerte in einem Zug, danach die Sponsorenhöhen aus K24 §5.1 |
 | K23d | Budgets (§5.3) mit Bezug zum Zielgespräch (K28) |
 | K23e | Raten und Kredit mit Laufzeit (§5.5), Gehaltsverzicht, Karten aus §8 |
@@ -130,6 +130,26 @@ K23e kommt vor K23b bis K23d, weil es die Welt kaum verschiebt (nur dein Verein)
 - **Ablöse in Raten** (§5.5, K19): Beim Kauf von einem Verein mit Ablöse kannst du „in Raten“ wählen. Die Hälfte zahlst du sofort, der Rest kostet 5 % Aufschlag und wird in 12 Monatsraten fällig (Buchung „Transfers: Raten“). Der Verkäufer bekommt sein Geld sofort (eine Bank finanziert, vereinfacht). Die Prognose zieht fällige Raten ab.
 - **Gehaltsverzicht** (§5.5): nur in der Not (Kontostand im Minus oder offene Lizenzauflagen), höchstens einmal je Saison. Die Mannschaft verzichtet drei Monate auf 15 % der Gehälter, die Stimmung aller sinkt um 10. Lizenz-Bereich `kredit` (Pro-Lizenz), weil es dieselbe Art Notmaßnahme ist wie der Kredit.
 - **Karten** (§8, K30): „Ein Mäzen bietet Geld an“ (gelegentlich, nur in der Not): 1,5 Mio. €, dafür mischt sich der Präsident für den Rest der Saison auch ohne Ehrgeiz ein (Karte „Der Präsident mischt sich ein“). „Steuerprüfung“ (selten): zahlen (−250.000 €) oder Einspruch (50 %: nichts, sonst −400.000 €).
+
+### 5.5e Umsetzung K23b (22.11.2026, popolupo): Computer-Vereine nach denselben Regeln
+
+Grundlage ist die Messung BZ7 im Testprotokoll (Lauf 5, zwei Saisons). Nach dem vollen Modell lägen die Vereine im Schnitt bei:
+
+| Liga | Saldo je Verein und Saison | mit Minus | heutige Pauschale |
+|---|---|---|---|
+| 1. Liga | +9,8 bis +12,5 Mio. (Spanne −13,8 bis +31,0) | 1 von 18 | 5,2 Mio. |
+| 2. Liga | +0,1 bis −1,5 Mio. | 9 bis 11 von 18 | 2,8 Mio. |
+| 3. Liga | −2,9 bis −3,8 Mio. | 16 bis 18 von 20 | 1,8 Mio. |
+
+Gebaut:
+- **Je Ligaspiel** bucht jeder Computer-Verein dasselbe wie du:
+  - Einnahmen: TV-Geld, Sponsor (Ansehen² × Ligawert wie bei den Angeboten an dich), sonstige Einnahmen, zu Hause Zuschauer, Fanartikel und Logen.
+  - Ausgaben: Gehälter von Kader und Stab, Stadion und Betrieb, Jugendarbeit.
+  - Die Zuschauerzahl kommt aus dem Erwartungswert ohne Würfel, zum Richtpreis. So verschiebt sich kein Zufallsstrom. Die Pauschale `fremdeEinnahmen` entfällt.
+- **Pokal:** Rundenprämie für beide Teilnehmer, Zuschauer für den Gastgeber, Siegprämie im Finale. Vorher bekam jeder Verein eine Pauschale je Runde, auch ohne Spiel.
+- **Sonstige Einnahmen** (Mitglieder, Vermarktung, §3.1) je Ligaspiel für alle Vereine, auch für dich: 1. Liga 0, 2. Liga 25.000 €, 3. Liga 60.000 €. Damit liegt die 2. Liga im Schnitt knapp im Plus und die 3. Liga knapp im Minus, wie in echt. **Vorläufig bis K23c**, dort kommen sie aus echten Anteilen.
+- **Insolvenz für Computer-Vereine** nach deiner Regel: zwei Monatserste unter dem negativen Kreditrahmen, 9 Punkte Abzug, Schuldenschnitt. Bei einem Kreditrahmen von 12 Mio. für einen Drittligisten kommt das selten und erst nach Jahren.
+- **Noch nicht:** Lizenzprüfung für Computer-Vereine (mit den Budgets in K23d), Säulenmodell der TV-Gelder (§5.1, mit den echten Beträgen in K23c), Zuschauer der Computer-Vereine im Europapokal.
 
 ### 5.6 Größenordnungen
 
@@ -223,6 +243,10 @@ finanzen:{
 12. Ablöse in Raten: Hälfte sofort, Rest mit 5 % Aufschlag in 12 Monatsraten. Der Verkäufer bekommt alles sofort (§5.5d).
 13. Gehaltsverzicht 15 % für drei Monate, Stimmung −10, nur in der Not, einmal je Saison, Bereich `kredit` (§5.5d).
 14. Karten Mäzen und Steuerprüfung mit festen Beträgen (§5.5d). Sie passen erst nach K23c zur echten Größe.
+15. Computer-Vereine buchen je Ligaspiel nach deinem Modell, Zuschauer ohne Würfel zum Richtpreis (§5.5e).
+16. Sonstige Einnahmen je Ligaspiel nach Liga für alle Vereine (0, 25.000, 60.000 €), vorläufig bis K23c (§5.5e).
+17. Insolvenz für Computer-Vereine nach deiner Regel, Lizenzprüfung für sie erst mit K23d (§5.5e).
+18. Das Säulenmodell der TV-Gelder kommt mit K23c (§5.5e).
 
 **Quellen der Recherche vom 21.11.2026:**
 - Personalaufwand 2. Liga zum Gesamterlös: https://report.bundesliga.de/2425/de/_assets/downloads/key-bundesliga-2-dfl-er25.pdf

@@ -1395,3 +1395,18 @@ Zweig `mitarbeit/popolupo-t5-korrekturen` (auf 0fae7b8). Funde aus `tests/testpr
 | CJ3 | **T5.1, T5.4:** nur Tests angepasst (Karten aus dem Gleichschritt, Sperre `eu` im Browser-Test). | ✅ |
 | CJ4 | **T5.5, CB7:** `startBuild` prüft die Lizenz selbst, `startBuildAlt` ist weg. | ✅ |
 | CJ5 | **CH4:** `supercupAnlegen` nimmt bei einem Amateur-Pokalsieger den Vizemeister. | ✅ behoben |
+
+---
+
+## CK. Nachtrag zu K23b: Computer-Vereine nach denselben Regeln (22. November 2026, popolupo, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-k23b-computer-finanzen` (auf den Korrekturen zu Lauf 5). Konzept: K23 §5.5e, §12 Nr. 15 bis 18. Grundlage: Messung BZ7.
+
+| # | Befund | Status |
+|---|---|---|
+| CK1 | **Die Welt verschiebt sich:** Erstligisten haben im Schnitt etwa doppelt so viel Geld wie mit der Pauschale (+10 statt +5 Mio. je Saison), Vereine mit großem Stadion noch mehr (Dortmund, Schalke, HSV +20 bis +30 Mio.), Leverkusen mit kleinem Stadion und hohen Gehältern ein Minus. Mehr Geld heißt mehr Käufe (Budget 70 % des Kontos). Das kann T1.3 Rest und die Dominanz der Großen (K02 §5.3a) in beide Richtungen verschieben. | ⚠️ messen |
+| CK2 | **Sonstige Einnahmen auch für dich:** In der 2. Liga 0,85 Mio., in der 3. Liga 2,3 Mio. mehr je Saison. Das macht deinen Start in den unteren Ligen leichter als bisher. | 📌 vorläufig bis K23c |
+| CK3 | **Kein neuer Zufall:** Zuschauer der Computer-Vereine aus dem Erwartungswert, keine Würfe im Strom `spieltagEnde`. | ✅ |
+| CK4 | **Insolvenzen der Computer-Vereine** sind selten (Kreditrahmen in der 3. Liga rund 12 Mio.). Erst eine lange Verlustreihe führt dorthin. Bitte über viele Saisons zählen. | ⚠️ messen |
+| CK5 | **Pokal:** Die Pauschale ging an alle Vereine, auch ohne Spiel. Jetzt bekommen nur Teilnehmer Geld, dafür mehr (Rundenprämien 0,2 bis 4,5 Mio.). | ✅ |
+| CK6 | **`tests/finanzen.js` Nr. 11 und 12:** Buchung je Spiel, Insolvenz. Nie gelaufen. | ⚠️ offen |

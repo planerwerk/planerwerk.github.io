@@ -183,7 +183,7 @@ const REGELN={
     pokalPraemien:[2e5,4e5,8e5,1.6e6,3.2e6,4.5e6], // je gespielter Runde
     pokalSieg:3e6,
     pokal:{drittligisten:4,amateure:24}, // DFB-Pokal: 36 aus 1. und 2. Liga, dazu die besten Drittligisten (ohne Zweitmannschaften) und Amateure
-    fremdeEinnahmen:{liga:30,pokal:10}, // Computer-Vereine: Ansehen² × Wert je Spieltag bzw. Pokalrunde
+    fremdeEinnahmen:{liga:30,pokal:10}, // bis K23b die Pauschale der Computer-Vereine (Ansehen² × Wert je Spieltag bzw. Pokalrunde), seit K23b nur noch zum Vergleich in tests/finanzmodell.js
     fanartikel:[0,1.5,3,5],          // € je Zuschauer, Index = Fanshop-Stufe
     loge:3000,                       // € je Loge und Heimspiel
     zuschauer:{refBasis:15,refJeAnsehen:0.25, // Richtpreis = refBasis + Ansehen × refJeAnsehen
@@ -453,8 +453,11 @@ const REGELN={
   // minSpiele: so viele eigene Ligaspiele braucht der Schnitt dieser Saison, sonst gilt der der letzten Saison. lizenzTag, nachweisTag: Datum (MM-TT) der Prüfung und der Frist.
   // auflage: Vertrauen bei Auflagen. insolvenz: so viele Monatserste nacheinander unter dem negativen Kreditrahmen, Punktabzug, Vertrauen. warnMonate: Vorlauf der Warnung.
   // monatTage: Tage je Monat für die Warnung. PUNKTABZUG GESCHÄTZT (K23 §12 Nr. 9).
-  finanzplan:{laufend:['TV-Gelder','Sponsor','Zuschauer','VIP-Logen','Fanartikel','Gehälter','Trainerstab','Prämien','Stadion & Betrieb','Jugendarbeit','Zweite Mannschaft','Kreditzinsen','Scouting','Instandhaltung'],
+  finanzplan:{laufend:['TV-Gelder','Sponsor','Zuschauer','VIP-Logen','Fanartikel','Gehälter','Trainerstab','Prämien','Stadion & Betrieb','Jugendarbeit','Zweite Mannschaft','Kreditzinsen','Scouting','Instandhaltung','Sonstige Einnahmen'],
     minSpiele:3,lizenzTag:'03-01',nachweisTag:'05-31',auflage:-5,insolvenz:{monate:2,punkte:9,vertrauen:-30},warnMonate:3,monatTage:30,
+    // K23b (§5.5e): sonstiges: Sonstige Einnahmen (Mitglieder, Vermarktung) je Ligaspiel nach Liga, für alle Vereine. Aus der Messung BZ7 so gewählt, dass die 2. Liga im Schnitt
+    // knapp im Plus und die 3. Liga knapp im Minus liegt (wie in echt). VORLÄUFIG bis K23c.
+    sonstiges:{1:0,2:25000,3:60000},
     // K23e (§5.5d): kredit: Laufzeiten in Jahren, Standard. raten: Anzahlung, Aufschlag auf den Rest, Zahl der Monatsraten. verzicht: Anteil der Gehälter, Dauer in Tagen, Stimmung. GESCHÄTZT.
     kredit:{jahre:[1,2,3,4,5],standard:3},raten:{anzahlung:0.5,aufschlag:0.05,monate:12},verzicht:{anteil:0.15,tage:90,stimmung:-10}},
 

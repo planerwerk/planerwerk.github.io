@@ -429,6 +429,13 @@ Datei: `konzepte/K23-finanzen.md`
 - Gehaltsverzicht: 15 % für drei Monate, Stimmung −10, nur in der Not.
 - Die Karten Mäzen und Steuerprüfung haben feste Beträge.
 
+**Mit K23b von popolupo vorläufig entschieden (22.11.2026, K23 §12 Nr. 15 bis 18):**
+
+- Computer-Vereine buchen je Ligaspiel nach deinem Modell, mit Zuschauern aus dem Erwartungswert ohne Würfel.
+- Sonstige Einnahmen je Ligaspiel für alle Vereine: 1. Liga 0, 2. Liga 25.000 €, 3. Liga 60.000 €, bis K23c.
+- Insolvenz auch für Computer-Vereine. Die Lizenzprüfung bekommen sie erst mit K23d.
+- Das Säulenmodell der TV-Gelder kommt mit K23c.
+
 ## K24 – Sponsoren
 Datei: `konzepte/K24-sponsoren.md`
 

@@ -63,4 +63,14 @@ const tagMit=(ev,mmtt)=>{for(let d=0;d<400;d++)if(ev('mmtt')(d)===mmtt)return d;
   const neu=S.teams.find(x=>x.lg===1&&x.id!==S.my).id;F.takeJob(neu);const c0=ev('myT()').cash;F.monatsRaten();const c1=ev('myT()').cash;
   pruef(S.my===neu&&(S.kredite||[]).length===0&&(S.raten||[]).length===0&&!ev('transferSperre')()&&ev('mkS')().ww!==99&&c1===c0,'Vereinswechsel: keine Kredite, Raten, Sperre oder Marketingwerte vom alten Verein',`Kredite ${(S.kredite||[]).length}, Raten ${(S.raten||[]).length}, Werbewert ${ev('mkS')().ww}, Kasse ${c0} → ${c1}`);}
 
+// 11. K23b: Computer-Verein je Ligaspiel nach dem Modell (auswärts TV + Sponsor + Sonstiges − Gehälter − Betrieb − Jugend, zu Hause dazu die Zuschauer), keine Pauschale mehr
+{const {F,S,ev}=welt(),RF=ev('RF'),t=S.teams.find(x=>x.lg===3&&x.id!==S.my),o=S.teams.find(x=>x.lg===3&&x.id!==S.my&&x.id!==t.id),n=S.fx[3].length;
+  const soll=ev('tvGeld')(t)+t.rep*t.rep*RF.sponsor.liga3+ev('RFP').sonstiges[3]-Math.round((ev('squad')(t.id).reduce((a,p)=>a+p.sal,0)+ev('stabGehaelter')(t.id))/n)-Math.round(t.cap*RF.betrieb.jePlatz+(t.logen||0)*RF.betrieb.jeLoge)-RF.jugendKosten[ev('RS').nachwuchs.computerStufe];
+  let c=t.cash;F.kiFinanzenSpiel(t,{h:o.id,a:t.id});const aus=t.cash-c;c=t.cash;F.kiFinanzenSpiel(t,{h:t.id,a:o.id});const heim=t.cash-c;
+  pruef(aus===soll&&heim-aus===ev('kiHeimEinnahmen')(t,o,false)&&heim>aus,'K23b: Computer-Verein bucht Einnahmen und Ausgaben je Spiel, zu Hause mit Zuschauern',`auswärts ${aus} (Soll ${soll}), zu Hause ${heim}`);}
+
+// 12. K23b: Insolvenz eines Computer-Vereins nach zwei Monatsersten unter dem Kreditrahmen: 9 Punkte Abzug, Konto auf 0
+{const {F,S,ev}=welt(),t=S.teams.find(x=>x.lg===2&&x.id!==S.my);t.cash=-ev('kreditRahmen')(t)-1;F.kiInsolvenzPruefen();const nachEinem=(S.abzug&&S.abzug[S.season]||{})[t.id]||0;t.cash=-ev('kreditRahmen')(t)-1;F.kiInsolvenzPruefen();
+  pruef(nachEinem===0&&S.abzug[S.season][t.id]===9&&t.cash===0,'K23b: Insolvenz eines Computer-Vereins mit Punktabzug und Schuldenschnitt',`Abzug ${S.abzug&&S.abzug[S.season]&&S.abzug[S.season][t.id]}, Konto ${t.cash}`);}
+
 console.log(probleme.length?`\n${probleme.length} Problem(e).`:'\nAlles in Ordnung.');process.exitCode=probleme.length?1:0;
