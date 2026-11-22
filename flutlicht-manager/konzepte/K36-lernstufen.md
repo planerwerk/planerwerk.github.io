@@ -378,6 +378,7 @@ lizenz:{
 136. **K30c Ketten und „Der lachende Dritte“ (22.11., popolupo, ohne Testlauf):** keine neue Funktion, zwei Entscheidungskarten im Bereich `ereignisse`, die zweite nur als Folgekarte. Das Angebot selbst machst du wie immer auf dem Transfermarkt (Bereich `transfers`). Der Nachlass senkt nur die Forderung, gekauft wird mit den üblichen Prüfungen.
 137. **K30d Anlasskarten (22.11., popolupo, ohne Testlauf):** keine neue Funktion. Karten zu seltenen Anlässen kommen öfter, sie bleiben im Bereich `ereignisse`.
 138. **K10e Medizin-Karten (22.11., popolupo, ohne Testlauf):** keine neue Funktion, zwei Entscheidungskarten im Bereich `ereignisse`. Hygieneplan und Spezialist gibt es nur über die Karten.
+139. **K17d Klatsch und Tratsch (22.11., popolupo, ohne Testlauf):** keine neue Funktion. Die Gerüchte kommen wie bisher als Information, eine neue Art („Thema“) und mehr Gerüchte bei schlechter Beziehung.
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 

@@ -48,4 +48,13 @@ const fremd=w=>w.S.pl.find(p=>p.team>=0&&p.team!==VEREIN&&w.S.teams[p.team].lg==
   alle(E.grenzen[0]);S.trust=50;F.gerVeroeffentlichen({art:'trainerAus',tid:S.my,w:0});const boese=S.trust-50;alle(E.grenzen[1]);S.trust=50;F.gerVeroeffentlichen({art:'trainerAus',tid:S.my,w:0});const gut=S.trust-50;
   pruef(nah(boese,W.vertrauen*E.wirkung[1])&&nah(gut,W.vertrauen*E.wirkung[0]),'Gerücht über dich wirkt nach der Beziehung zum Medium',`verärgert ${boese}, gewogen ${gut} (Grundwert ${W.vertrauen})`);}
 
+// K17d. Klatsch und Tratsch (K17 §5.2, §5.3): Bei einer Beziehung unter −30 gibt es „soll dort ein Thema sein“ mit einem Spieler, den der Verein brauchen könnte.
+//       Gerüchte über dich kommen doppelt so oft, der Spieler fühlt sich begehrt oder wird unruhig. Ohne schlechte Beziehung nichts davon.
+{const {S,F,ev}=welt(),G=ev('RGR'),k0=ev('gerKlatschFaktor')(),ohne=F.gerKandidaten().mein.filter(c=>c.art==='thema').length;
+  const k=S.teams.find(x=>x.id!==S.my&&ev('aktiv')(x)&&ev('squad')(S.my).some(p=>ev('hatBedarf')(x,p)));F.bezDuAendern(k.id,-90,'Test');const k1=ev('gerKlatschFaktor')();
+  const c=F.gerKandidaten().mein.find(x=>x.art==='thema'&&x.klub===k.id),p=c&&ev('PIX').get(c.pid);let d=null;
+  if(p){ev('stimmung')(p);p.st=50;F.gerVeroeffentlichen(Object.assign({},c,{w:1}));d=p.st-50;}
+  pruef(k0===1&&ohne===0&&k1===G.klatsch.mein&&!!p&&ev('hatBedarf')(k,p)&&d!==0&&d!=null&&S.ger.l.some(g=>g.art==='thema'&&g.pid===p.id&&g.mein===1),
+    'Klatsch: Thema-Gerücht bei schlechter Beziehung, Gerüchte über dich doppelt so oft, Stimmung ändert sich',`Faktor ${k0} → ${k1}, ohne Ärger ${ohne}, Spieler ${p&&p.n}, Stimmung ${d}`);}
+
 console.log(probleme.length?`\n${probleme.length} Problem(e).`:'\nAlles in Ordnung.');process.exitCode=probleme.length?1:0;

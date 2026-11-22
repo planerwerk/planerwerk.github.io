@@ -118,7 +118,17 @@ Noch nicht gebaut: Abwerben (K20), Presse und Gerüchte (K29), Vorfälle im Spie
 - **Testspiele:** Zusage × (1 + 0,005 × Beziehung).
 - **Computer-Vereine** kaufen nicht bei einem Verein, zu dem ihre Beziehung unter −50 liegt (§7).
 
-Noch nicht gebaut: Leihangebote über +40 (braucht K30), Gerüchte (K29), Brisanz im Spiel.
+Noch nicht gebaut: Brisanz im Spiel. Leihangebote über +40 gibt es seit K17b als Karte „Hilfe in der Not“.
+
+**Gerüchte und Klatsch (§5.2, §5.3), gebaut seit K17d (22.11.2026, popolupo, ohne Testlauf):**
+
+- **Auslöser:** Deine Beziehung zu einem Verein (du und dein Verein, wie bei allen Geschäften) liegt unter −30 (`REGELN.geruechte.aergerUnter`).
+- **Häufigkeit:** Gerüchte über deinen Verein kommen dann doppelt so oft (`klatsch.mein`). Gewürfelt wird gleich oft, nur die Schwelle ändert sich, wie bei Medienpolitik und Medienklima (K29b).
+- **Neue Art „Thema“:** „{spieler} soll bei {klub} ein Thema sein“. Es geht um einen Spieler deines Kaders, den dieser Verein brauchen könnte.
+  - Wirkung: Mit 30 % fühlt er sich begehrt (Stimmung +3), sonst wird er unruhig (Stimmung −3, verstärkt durch eine verärgerte Redaktion wie bei den anderen Gerüchten, K29c).
+  - Eine sinkende Stimmung macht einen Wechselwunsch wahrscheinlicher (K14). Einen eigenen Zuschlag gibt es dafür nicht.
+  - Nach 30 Tagen zählt für die Treffsicherheit, ob er gewechselt ist.
+- Gerüchte laufen im eigenen Strom und sind im Gleichschritt (5a) abgeschaltet.
 
 **Vergessen:** am ersten Montag jedes Monats 5 % zurück zum Grundwert (−50 ist nach einem Jahr etwa −27). Liegt ein Wert weniger als 2 vom Grundwert entfernt, fällt er aus dem Spielstand.
 

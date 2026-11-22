@@ -148,5 +148,6 @@ const PRESSE={
     interesse:{m:['boulevard','portal','tv'],t:['Mehrere Vereine wollen {spieler} von {verein}','Wettrennen um {spieler}: Gleich drei Klubs sind dran']},
     trainer:{m:['tv','boulevard','fach'],t:['{coach} wackelt bei {verein}','Bei {verein} wird es eng für {coach}']},
     aerger:{m:['boulevard','portal'],t:['Ärger zwischen {verein} und {klub}','Eiszeit: {verein} und {klub} reden nicht mehr miteinander']},
+    thema:{m:['boulevard','portal','lokal'],t:['{spieler} soll bei {klub} ein Thema sein','Bei {klub} fällt immer öfter der Name {spieler}']}, /* Klatsch (K17 §5.3, K17d) */
     absprung:{m:['boulevard','portal'],t:['{spieler} vor dem Absprung bei {verein}','Insider: {spieler} hat {verein} schon abgeschrieben']},
     trainerAus:{m:['boulevard','portal'],t:['{coach} vor dem Aus bei {verein}','Erste Kandidaten für die Nachfolge von {coach} gehandelt']}}};
