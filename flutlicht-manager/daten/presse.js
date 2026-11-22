@@ -128,6 +128,9 @@ const PRESSE={
     laut:['Wir fahren da hin, um zu gewinnen. Alles andere interessiert uns nicht.','Bei allem Respekt: {verein} ist für uns kein Maßstab.','Die sollen erst einmal zeigen, dass sie mit uns mithalten können.'],
     psycho:['Ich höre, bei {verein} ist die Stimmung nicht die beste. Das wird man morgen sehen.','Wenn {verein} früh hinten liegt, kippt das Spiel. Das wissen die auch.','Die Abwehr von {verein} wackelt, wenn man sie unter Druck setzt.']},
   stichelFrage:['{gtrainer} hat über Ihre Mannschaft gesagt: „{zitat}“ Was entgegnen Sie?','Ihr Kollege {gtrainer} meint: „{zitat}“ Ihre Antwort?'],
+  // Pressekonferenz nach dem Urteil (K29g, K29h): die Antwortart Schiedsrichterkritik heißt dort „Kritik am Urteil“, mit eigenen Texten und eigener Schlagzeile (Prüfung DR5)
+  urteil:{name:'Kritik am Urteil',antworten:['Dieses Urteil ist ein Witz. {spieler} hat den Ball gespielt, das sieht jeder.','Wir akzeptieren das, aber verstehen tun wir es nicht. Das ist viel zu hart.','Andere bekommen für dasselbe ein Spiel. Bei uns sind es gleich mehrere. Das muss man sich fragen.'],
+    schlagzeile:{m:'boulevard',t:['{trainer} schießt gegen das Sportgericht','Urteil gegen {spieler}: {trainer} tobt']}},
   // Interview am Spielfeldrand (K29 §4.1, K29f): eine Frage je Ergebnis, Platzhalter {gegner}, {ergebnis} (aus deiner Sicht). Antworten: Rückendeckung, Kritik an der Mannschaft, Floskel.
   spielfeldrand:{sieg:['{ergebnis} gegen {gegner}. Was war heute der Schlüssel?','Ein verdienter Sieg gegen {gegner}?','{ergebnis}. Wie fühlt sich das an?'],
     remis:['{ergebnis} gegen {gegner}. Zufrieden mit dem Punkt?','Ein Punkt gegen {gegner}. Gewonnen oder verloren?'],

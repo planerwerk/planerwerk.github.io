@@ -41,7 +41,7 @@ function presseAnlass(art,o={}){if(S.phase!=='play'||S.pk||S.fired)return false;
 // Co-Trainer schicken (oder automatisch): Floskeln, Medienklima −2
 function presseDelegieren(auto){const pk=S.pk;if(!pk)return;const P=presseS(),A=PRESSE.anlaesse[pk.art];S.pk=null;P.klima=clamp(P.klima+RPK.delegieren,0,100);
   news(`${A.name}: ${auto?'Der Co-Trainer geht hin':'Du schickst den Co-Trainer'}. ${pkSchlagzeile('delegiert',pk)}`);stichelOffen(pk);if(!auto){save();closeOv();render();}}
-function pkSchlagzeile(art,pk){const Z=PRESSE.schlagzeilen[art];if(!Z)return'';return`${PRESSE.medien[Z.m].name}: „${pkWahl(Z.t,pkKontext(pk),pk.id)}“`;}
+function pkSchlagzeile(art,pk){const Z=pkUrteil(pk,art)?PRESSE.urteil.schlagzeile:PRESSE.schlagzeilen[art]; /* Kritik am Urteil (K29h) */if(!Z)return'';return`${PRESSE.medien[Z.m].name}: „${pkWahl(Z.t,pkKontext(pk),pk.id)}“`;}
 
 // ---------- Auslöser ----------
 // Täglich (ablauf.js taeglichLauf): Automatik für gestern, Antritt, Auftakt, Tag vor Derby, Spitzenspiel, Pokal ab Viertelfinale, Relegation, Ultimatum, Wechselwunsch
@@ -72,12 +72,15 @@ function presseNachSpiel(m){if(!m||S.phase!=='play')return;const s=m.h===S.my?0:
   else if(T[0].id===S.my&&r.sp>=A.fuehrungAb&&P.fue!==S.season&&presseAnlass('fuehrung',{morgen:1}))P.fue=S.season;}
 
 // ---------- Ablauf im Büro (K29 §4.2) ----------
+// Kritik am Urteil (K29h): Schiedsrichterkritik in der Pressekonferenz nach dem Urteil, mit eigenen Texten, Namen und Schlagzeile
+const pkUrteil=(pk,art)=>!!pk&&pk.art==='urteil'&&art==='kritikSchiri';
+const pkArtName=(pk,art)=>pkUrteil(pk,art)?PRESSE.urteil.name:PRESSE.arten[art].name;
 function pkOptionen(pk){const f=pk.fragen[pk.i],c=pkKontext(pk),P=presseS(),l=f.o.slice();
   if((pk.art==='krise'||pk.art==='ultimatum')&&(P.aus[S.season]||0)<RPK.ausraster.proSaison)l.push('ausraster');
-  return l.map((art,k)=>({art,text:pkWahl(PRESSE.antworten[art].filter(x=>f.sp||!x.includes('{spieler}')),c,pk.id+pk.i+k)}));}
+  return l.map((art,k)=>({art,text:pkWahl((pkUrteil(pk,art)?PRESSE.urteil.antworten:PRESSE.antworten[art]).filter(x=>f.sp||!x.includes('{spieler}')),c,pk.id+pk.i+k)}));}
 function pkZeigen(){const pk=S.pk;if(!pk)return;if(!darf('presse'))return;const f=pk.fragen[pk.i],c=pkKontext(pk),A=PRESSE.anlaesse[pk.art],M=PRESSE.medien[jMedium(f.j)];
   ov(`<div class="phead"><h2>${esc(A.name)}</h2><button class="x" onclick="closeOv()" aria-label="Schließen">✕</button></div><p class="dim">Frage ${pk.i+1} von ${pk.fragen.length} · ${esc(f.j)} (${esc(M.name)}, ${esc(M.art)}, Beziehung ${(b=>`${b>0?'+':''}${b}`)(Math.round(medienBez(jMedium(f.j))))})</p>
-    <p><b>„${esc(pkText(f.t,c))}“</b></p><div class="opts">${pkOptionen(pk).map(o=>`<div class="card"><p><b>${PRESSE.arten[o.art].ton} ${esc(PRESSE.arten[o.art].name)}</b></p><p>„${esc(o.text)}“</p><button onclick="pkAntwort('${o.art}')">So antworten</button></div>`).join('')}</div>
+    <p><b>„${esc(pkText(f.t,c))}“</b></p><div class="opts">${pkOptionen(pk).map(o=>`<div class="card"><p><b>${PRESSE.arten[o.art].ton} ${esc(pkArtName(pk,o.art))}</b></p><p>„${esc(o.text)}“</p><button onclick="pkAntwort('${o.art}')">So antworten</button></div>`).join('')}</div>
     <p class="dim">Du siehst nur den Ton, nicht die Wirkung. Was es gebracht hat, steht danach in der Zeitung.</p>`);}
 function pkAntwort(art){const pk=S.pk;if(!pk)return;const o=pkOptionen(pk).find(x=>x.art===art);if(!o)return;pk.antw.push({art,txt:o.text});pk.i++;
   if(pk.i<pk.fragen.length){save();pkZeigen();return;}pkAbschluss();save();closeOv();render();}
@@ -106,7 +109,7 @@ function pkAbschluss(){const pk=S.pk;if(!pk)return;S.pk=null;const P=presseS(),Q
   if(trotz&&pk.gegner!=null&&pk.gegner<1000)squad(pk.gegner).forEach(p=>stimmungAendern(p,c(trotz,'team'))); /* Trotz beim Gegner nach deinem Konter (K29e) */
   if(sum.fans)fanAnlass(t,'fanU',c(sum.fans,'fans'));if(sum.vorstand)S.trust=clamp(S.trust+c(sum.vorstand,'vorstand'),0,100);P.klima=fanZahl(clamp(P.klima+c(sum.medien,'medien'),0,100));
   if(bez)bezDuAendern(pk.gegner,Math.round(bez),'Provokation in der Pressekonferenz');
-  if(schiri&&R()<Q.schiri.verfahren){const L=Q.schiri.strafe[t.lg]||Q.schiri.strafe[3],b=Math.round((L[0]+R()*(L[1]-L[0]))/1000)*1000;money('Strafen',-b);news(`Das Sportgericht bestraft deine Kritik am Schiedsrichter mit ${fmt(b)}.`,'bad');if(!chronik)chronik=schiri;}
+  if(schiri&&R()<Q.schiri.verfahren){const L=Q.schiri.strafe[t.lg]||Q.schiri.strafe[3],b=Math.round((L[0]+R()*(L[1]-L[0]))/1000)*1000;money('Strafen',-b);news(`Das Sportgericht bestraft deine Kritik ${pk.art==='urteil'?'an seinem Urteil':'am Schiedsrichter'} mit ${fmt(b)}.`,'bad');if(!chronik)chronik=schiri;}
   const echo=PK_ECHO.find(x=>pk.antw.some(a=>a.art===x));if(echo)news(`Zeitungsecho, ${pkSchlagzeile(echo,pk)}`);
   if(chronik)chronikEintrag(chronik.txt,echo?pkSchlagzeile(echo,pk):'');}
 function chronikEintrag(txt,kopf){const st=statS(),l=st.chronik||(st.chronik=[]);l.push({s:S.season,tag:S.tag,tid:S.my,txt,kopf});if(l.length>RPK.chronikMax)l.splice(0,l.length-RPK.chronikMax);}

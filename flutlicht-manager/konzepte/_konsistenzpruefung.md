@@ -1860,7 +1860,7 @@ Ein Agent hat 30a8575 und 3ef6aa5 gelesen (nichts ausgeführt, `dubletten.pl` un
 | DR2 | **Urteil verdrängt Spiel-Pressekonferenzen:** Das Sportgericht läuft im Tageslauf vor `presseTag`, die Pressekonferenz zum Urteil blockierte Derby, Spitzenspiel, Pokal oder Saisonauftakt. Jetzt vorgemerkt und in `presseTag` nach diesen Anlässen geöffnet, verfällt nach 7 Tagen. | ✅ behoben |
 | DR3 | **Remis-Frage nach Pokalspielen:** Ein Elfmeterschießen galt als Remis („Zufrieden mit dem Punkt?“). Jetzt zählt der Sieger, ein Remis außerhalb der Liga bekommt eine eigene Frage. | ✅ behoben |
 | DR4 | **Pressekonferenz nach abgesessener Sperre:** Jetzt nur, solange die Sperre noch läuft. | ✅ behoben |
-| DR5 | Die Antworten zur Kritik am Urteil sind die Texte der Schiedsrichterkritik. Dokumentiert, eigene Texte später. | offen |
+| DR5 | Die Antworten zur Kritik am Urteil waren die Texte der Schiedsrichterkritik. Seit K29h eigene Texte, Name und Schlagzeile. | ✅ behoben (K29h) |
 | DR6 | Test K29f hing am Tag (Frage reihum). Jetzt mit festem Tag. Doku: bei schlechtem Klima bis zu vier Fragen. | ✅ behoben |
 | DR7 | Ohne Befund: Interview für Liga, Pokal (auch geteilte Runden), Supercup, Europapokal und Relegation, nicht für Testspiele; Speichern und Laden, alte Spielstände ohne `einst`, keine Wirkung in der Automatik, keine Würfe, Platzhalter; alle Wege zum Urteil, Ströme, Gleichschritt, Katalog. | ✅ |
 

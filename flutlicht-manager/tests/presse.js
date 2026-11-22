@@ -130,4 +130,11 @@ const gegner=w=>w.S.teams.find(x=>x.lg===w.t.lg&&x.id!==VEREIN).id;
   pruef(zwei&&fremd&&vor&&ok&&verfallen,'Pressekonferenz nach dem Urteil: ab 3 Spielen Sperre für deinen Spieler, vorgemerkt, im Tageslauf geöffnet, verfällt',
     `2 Spiele ohne ${zwei}, anderer Verein ohne ${fremd}, vorgemerkt ${vor}, ${S.pk?S.pk.art:'geöffnet '+ok}, verfallen ${verfallen}`);}
 
+// K29h. Kritik am Urteil (Prüfung DR5): in der Pressekonferenz nach dem Urteil heißt die Schiedsrichterkritik „Kritik am Urteil“, mit eigenen Texten und eigener Schlagzeile; sonst wie bisher
+{const w=welt(false),{S,F,ev}=w,P=ev('presseS')(),U=ev('PRESSE').urteil,p=ev('squad')(VEREIN)[3];P.urteil={pid:p.id,tag:ev('absTag')(S.tag),s:S.season,wb:'liga'};ev('sperren')(p).liga.rot=3;F.presseTag(S.tag);
+  const pk=S.pk;let ok=!!pk&&pk.art==='urteil';if(ok){pk.fragen=[{t:'{spieler}?',o:['rueckendeckung','kritikSchiri','floskel'],sp:1,j:'Ralf Kessler'}];pk.i=0;}
+  const o=ok?F.pkOptionen(pk).find(x=>x.art==='kritikSchiri'):null,text=!!o&&U.antworten.some(a=>ev('pkText')(a,ev('pkKontext')(pk))===o.text),name=ok&&ev('pkArtName')(pk,'kritikSchiri')===U.name;
+  const kopf=ok&&/Sportgericht|Urteil/.test(F.pkSchlagzeile('kritikSchiri',pk)),sonst=ev('pkArtName')({art:'derby'},'kritikSchiri')===ev('PRESSE').arten.kritikSchiri.name;
+  pruef(ok&&text&&name&&kopf&&sonst,'Kritik am Urteil: eigener Name, eigene Texte, eigene Schlagzeile nur nach dem Urteil',`Pressekonferenz ${ok}, Text ${text}, Name ${name}, Schlagzeile ${kopf}, sonst ${sonst}`);}
+
 console.log(probleme.length?`\n${probleme.length} Problem(e).`:'\nAlles in Ordnung.');process.exitCode=probleme.length?1:0;
