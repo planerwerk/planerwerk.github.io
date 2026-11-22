@@ -65,5 +65,5 @@ function dkRabattSetzen(r){const D=RFS.dauerkarten;if(!darf('preise')||!D.stufen
 function dauerkartenText(t){const D=RFS.dauerkarten,d=dkAktuell(),pct=x=>Math.round(x*100)+' %';
   if(d)return`<p>Dauerkarten: <b>${d.n.toLocaleString('de-DE')}</b> verkauft (${pct(d.r)} Rabatt${d.p!=null?`, Preis beim Verkauf ${d.p} €`:''}), je Ligaheimspiel ${fmt(Math.round(Math.min(d.n,t.cap)*dkPreis(t,d)))}.</p>`;
   const r=dkRabatt();
-  return`<p>Dauerkarten werden beim ersten Ligaheimspiel verkauft, voraussichtlich etwa ${Math.round(t.cap*dkAnteil(t,r)).toLocaleString('de-DE')} (${pct(r)} Rabatt, Vorkaufsrecht der Mitglieder +${pct(dkMitglieder(t))}). Mehr Rabatt: mehr Dauerkarten und zufriedenere Fans, aber weniger je Platz.</p>
+  return`<p>Dauerkarten werden beim ersten Ligaheimspiel verkauft, voraussichtlich etwa ${Math.round(t.cap*dkAnteil(t,r)).toLocaleString('de-DE')} (${pct(r)} Rabatt, Vorkaufsrecht der Mitglieder +${Math.round(dkMitglieder(t)*100)} Prozentpunkte). Mehr Rabatt: mehr Dauerkarten und zufriedenere Fans, aber weniger je Platz.</p>
     <div class="row">${D.stufen.map(x=>`<button class="${x===r?'go':''}" onclick="dkRabattSetzen(${x})"${lzAus('preise')}>${pct(x)} Rabatt</button>`).join('')}</div>`;}

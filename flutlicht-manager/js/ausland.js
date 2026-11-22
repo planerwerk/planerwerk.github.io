@@ -87,7 +87,7 @@ function auslandSaison(){if(!S.ausland)return;const A=RW.ausland,V=S.ausland.v,w
 
 // ---------- Wechsel zwischen Pool und Ligen ----------
 // Ein Poolspieler kommt zu einem deutschen Verein: Er zieht in S.pl um und beginnt dort wie jeder Neuzugang.
-function ausDemAusland(p,tid){const i=S.ausland.pl.indexOf(p);if(i>=0)S.ausland.pl.splice(i,1);if(!S.pl.includes(p))S.pl.push(p);
+function ausDemAusland(p,tid){const i=S.ausland.pl.indexOf(p);if(i>=0)S.ausland.pl.splice(i,1);if(!S.pl.includes(p))S.pl.push(p);p.ausAb=absTag(S.tag); /* Ankunft aus dem Ausland, für die Eingewöhnung (K14b, Prüfung DT1) */
   p.team=tid;p.ent=S.tag;p.sw=Math.round(p.str);p.koVor=p.ko;p.sp=Math.min(p.sp,RW.ausland.praxis.stamm);
   if(!p.sperre)p.sperre={liga:{rot:0,gelb:0},pokal:{rot:0,gelb:0}};if(!p.kt)p.kt={liga:0,pokal:0};eigenschaftenNeu(p);}
 // Ein Spieler wechselt zu einem Auslandsverein: Er zieht in den Pool um, alles Vereinsbezogene fällt weg.

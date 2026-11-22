@@ -1879,3 +1879,19 @@ Ein Agent hat ef6619c gelesen und die drei Wege nach dem Abpfiff Schritt für Sc
 | DS5 | Test Nr. 7 prüft jetzt Tag danach, Halt, Bleiben und Übernahme durch den Co-Trainer. | ✅ behoben |
 | DS6 | Hinweis: `fuzz-karrieren.js` und `ui-zwei-saisons.js` bekommen ein paar Halte mehr je Saison, ihre Grenzen bitte im Blick behalten. | zur Kenntnis |
 | DS7 | Ohne Befund: alle drei Wege, Spiel am Tag danach (ein Halt), Erinnerungen, `naechsterHalt` nach dem Laden, Interview in allen Wegen bis zum nächsten `weiter`, Urteil am selben Tag, Gleichschritt 5a, Test 4 in `lizenz.js`, `schwierigkeit.js`. | ✅ |
+
+---
+
+## DT. Prüfung von U12k, K25e und K14b ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 6fd507f, 9a8696d und 9d4e16d gelesen (nichts ausgeführt, `dubletten.pl` und `codewaechter.pl` ohne Befund). Kein blockierender Fehler. Korrekturen auf `mitarbeit/popolupo-k16b-team-mitnehmen`.
+
+| # | Befund | Status |
+|---|---|---|
+| DT1 | **Eingewöhnung für jeden Ausländer:** Auch wer von einem deutschen Verein kam, „tat sich schwer im neuen Land“. Jetzt nur nach einer Ankunft aus dem Ausland (`p.ausAb`, gesetzt in `ausDemAusland`). | ✅ behoben |
+| DT2 | **Eine Antwort immer besser:** Kabinenparty „feiern“ und Neuzugang „Chance“ kosteten nichts. Jetzt: Bei der Party werden mit 30 % Fotos publik (Vertrauen −3). Die Chance für den Neuzugang kostet Zusammenhalt −1. Der Text verspricht keine Folge mehr, die es nicht gibt. | ✅ behoben |
+| DT3 | **U12k nach Hochpokern:** Die freiwillige Senkung behielt das höhere Budget und den Ruf-Zuschlag. Jetzt senkt der Präsident nach Hochpokern nicht von sich aus, dann bleibt der Antrag. | ✅ behoben |
+| DT4 | Neuzugang: nur einsatzfähig und frühestens nach 14 Tagen im Verein. Die Zahl 2 (Stärke) steht jetzt in den Regeln. | ✅ behoben |
+| DT5 | Kabinenparty nur bis 7 Tage nach dem Kantersieg (nicht nach der Winterpause). | ✅ behoben |
+| DT6 | Kleinigkeiten: Kommentare, `gesenkt` in K33, „Prozentpunkte“ in der Anzeige der Dauerkarten. | ✅ behoben |
+| DT7 | Ohne Befund: U12k bei alten Spielständen und am Rand der Liga, Vertrauen danach, Test 18 und 14; K25e bei 0 Mitgliedern und Kapazität 0, Freiburg genau +10 Punkte, Tests K27b und K25e; `S.res` nur Liga, `p.seit` auf allen Wegen, Katalog, Test K14b, Gleichschritt. Hinweis: Fast jeder Erstligist bekommt die vollen 10 Punkte Vorkaufsrecht. | ✅ |

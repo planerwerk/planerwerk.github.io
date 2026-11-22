@@ -29,11 +29,11 @@ const KARTEN=[
   // Kabine (K14 §8, K14b): Kabinenparty, Neuzugang drängt auf Einsatz, Eingewöhnung. Nur bekannte Wirkungen.
   {id:'kabinenparty',titel:'Kabinenparty',bereich:'K14',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'kantersieg',sperrTage:60,
     texte:['Nach dem deutlichen Sieg will die Mannschaft feiern. Der Kapitän fragt, ob ihr heute Abend in die Stadt dürft.','Die Stimmung nach dem Kantersieg ist ausgelassen. In der Kabine wird schon über eine Party geredet.'],
-    optionen:[{text:'Feiern lassen',wirkung:[{art:'zusammenhalt',wert:3},{art:'stimmungAlle',wert:1}],folge:'Die Mannschaft feiert ausgelassen. Am nächsten Morgen sind alle pünktlich, fast alle.'},
+    optionen:[{text:'Feiern lassen',wirkung:[{art:'zusammenhalt',wert:3},{art:'stimmungAlle',wert:1},{art:'vertrauen',wert:0,chance:0.7,schlecht:-3,gut:'Am nächsten Morgen sind alle pünktlich, fast alle.',schlechtText:'Fotos von der Party landen in der Zeitung. Der Vorstand ist nicht begeistert.'}],folge:'Die Mannschaft feiert ausgelassen.'}, /* Risiko seit Prüfung DT2 */
       {text:'Gemeinsames Essen, dann nach Hause',wirkung:[{art:'zusammenhalt',wert:1},{art:'geld',wert:-10000}],folge:'Ein ruhiger Abend im Teamhotel, alle sind zufrieden.'}],auto:1},
   {id:'neuzugangDraengt',titel:'Neuzugang drängt auf Einsatz',bereich:'K14',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'neuzugangDraengt',sperrTage:365,
     texte:['{spieler} ist seit ein paar Wochen da und hat kaum gespielt. Er klopft an deine Tür: Er will zeigen, warum er gekommen ist.','Der Berater von {spieler} ruft an: Sein Mandant sei nicht gewechselt, um auf der Bank zu sitzen.'],
-    optionen:[{text:'Er bekommt seine Chance',wirkung:[{art:'stimmung',wert:5}],folge:'{spieler} brennt auf seinen Einsatz. Stell ihn auch auf, sonst ist die Enttäuschung groß.'},
+    optionen:[{text:'Er bekommt seine Chance',wirkung:[{art:'stimmung',wert:5},{art:'zusammenhalt',wert:-1}],folge:'{spieler} brennt auf seinen Einsatz. Die Etablierten im Kader schauen skeptisch.'}, /* Preis seit Prüfung DT2 */
       {text:'Er muss sich gedulden',wirkung:[{art:'stimmung',wert:-3}],folge:'{spieler} nickt, glücklich ist er nicht.'}],auto:1},
   {id:'eingewoehnung',titel:'Eingewöhnung',bereich:'K14',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'eingewoehnung',sperrTage:365,
     texte:['{spieler} tut sich schwer im neuen Land: Sprache, Wohnung, die Familie ist noch nicht da. Soll der Verein helfen?','Man merkt {spieler} an, dass er noch nicht angekommen ist. Ein Dolmetscher und Hilfe bei der Wohnungssuche würden ihm helfen.'],

@@ -95,6 +95,17 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 22.11.2026: Korrekturen nach Prüfung DT zu U12k, K25e und K14b (Zweig `mitarbeit/popolupo-k16b-team-mitnehmen`)
+
+- Ein lesender Prüf-Agent hat U12k, K25e und K14b durchgesehen (Konsistenzprüfung DT). Er fand keinen blockierenden Fehler.
+- **Behoben:**
+  - DT1: Eingewöhnung nur nach einer Ankunft aus dem Ausland.
+  - DT2: Die starken Antworten bei Kabinenparty und Neuzugang haben jetzt einen Preis.
+  - DT3: Nach Hochpokern senkt der Präsident nicht von sich aus.
+  - DT4 und DT5: Neuzugang nur einsatzfähig und ab 14 Tagen, Party nur bis 7 Tage nach dem Spiel.
+  - DT6: Kleinigkeiten.
+- **Tests zuerst:** `tests/karten.js` (K14b angepasst), `tests/vorstand.js` Nr. 18.
+
 ### 22.11.2026: K16b Trainerteam mitnehmen (Zweig `mitarbeit/popolupo-k16b-team-mitnehmen`, auf K09b)
 
 - **Neu (K16 §5, §12 Nr. 4):** Im Fenster der Jobangebote wählst du bis zu zwei Mitarbeiter, die mindestens 30 Wochen bei dir waren. Sie kommen mit zum neuen Verein.

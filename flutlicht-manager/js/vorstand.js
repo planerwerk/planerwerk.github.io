@@ -130,7 +130,7 @@ function zwischenbilanz(pos,sp){const t=myT(),Z=RV.zwischenbilanz,z=meinZg();S.z
   if(pos<=S.target-Z.abstand){const neu=zgZielGrenze(t.lg,S.target-Z.hoch);if(neu<S.target){const d=neu-S.target;S.target=neu;if(z)z.vorschlag+=d;S.zb.art='hoch';
       news(`Zwischenbilanz: Der Vorstand ist begeistert (Platz ${pos}) und hebt das Ziel an: ${targetText(t.lg,neu)}.`,'good');return;}}
   // U12k: Weit hinter dem Ziel senkt ein geduldiger Präsident von sich aus, ohne Antrag und ohne Abzug beim Budget. Alles rechnet danach vom neuen Ziel (wie beim Anheben).
-  if(pos>=S.target+Z.vonSichAus&&praesident(t).geduld>=RV.ruf.geduldig){const neu=zgZielGrenze(t.lg,S.target+Z.senken);if(neu>S.target){const d=neu-S.target;S.target=neu;if(z)z.vorschlag+=d;S.zb.art='gesenkt';
+  if(pos>=S.target+Z.vonSichAus&&praesident(t).geduld>=RV.ruf.geduldig&&!(z&&z.stufe<0)){ /* nicht nach Hochpokern, dann bleibt der Antrag (Prüfung DT3) */ const neu=zgZielGrenze(t.lg,S.target+Z.senken);if(neu>S.target){const d=neu-S.target;S.target=neu;if(z)z.vorschlag+=d;S.zb.art='gesenkt';
       news(`Zwischenbilanz: Platz ${pos}. Der Präsident bleibt geduldig und senkt das Ziel von sich aus: ${targetText(t.lg,neu)}.`,'');return;}}
   if(pos>=S.target+Z.abstand&&zgZielGrenze(t.lg,S.target+Z.senken)>S.target){S.zb.art='antrag';
     news(`Zwischenbilanz: Platz ${pos} liegt weit hinter dem Ziel (${targetText(t.lg,S.target)}). Bis zum nächsten Ligaspiel kannst du im Büro beantragen, das Ziel zu senken.`,'bad');return;}
