@@ -12,7 +12,7 @@ function tagesSpieleVorbereiten(d,live){kartenAuto(d); // unbeantwortete Ereigni
   testspielHeute(d).forEach(x=>{const g={titel:'Testspiel',art:'test',e:{art:'test'},x,list:[]},hg=x.heim?[S.my,x.gegner]:[x.gegner,S.my];spiel(hg[0],hg[1],{test:1,wb:'test'},{test:1},g);out.gruppen.push(g);}); // Testspiele ohne Halt (K11)
   for(const e of termineAm(d)){
     if(e.art==='liga'){const g={titel:`${ligaName(e.lg)} · ${e.md+1}. Spieltag`,art:'liga',e,list:[]};e.idx.forEach(i=>{const[h,a]=S.fx[e.lg][e.md][i];spiel(h,a,{},{lg:e.lg,min:S.plan.zeit[e.lg][e.md][i][1]},g);});out.gruppen.push(g);}
-    else if(e.art==='pokal'){if(S.cup.hist.length!==e.r)continue;const fin=e.r===5,g={titel:`DFB-Pokal · ${POKAL_RUNDEN[e.r]}`,art:'pokal',e,list:[]};pokalPaare(e.r).forEach(([h,a])=>spiel(h,a,{wb:'pokal',ko:1,neutral:fin,wichtig:e.r>=RTA.ki.wichtigAbRunde},{cup:1,min:e.min},g));out.gruppen.push(g);}
+    else if(e.art==='pokal'){if(S.cup.hist.length!==e.r)continue;const fin=e.r===5,g={titel:`DFB-Pokal · ${POKAL_RUNDEN[e.r]}`,art:'pokal',e,list:[]},pl=pokalPaareAm(e);if(!pl.length)continue;pl.forEach(([h,a])=>spiel(h,a,{wb:'pokal',ko:1,neutral:fin,wichtig:e.r>=RTA.ki.wichtigAbRunde},{cup:1,min:e.min},g));out.gruppen.push(g);}
     else if(e.art==='supercup'){const x=S.supercup,g={titel:'Supercup',art:'supercup',e,list:[]};spiel(x.h,x.a,{wb:'pokal',ko:1,elfDirekt:1,wichtig:true},{supercup:1,min:e.min},g);out.gruppen.push(g);}
     else if(e.art==='eu'){const L=euSpieleAm(e);if(!L.length)continue;const g={titel:euSpielName(e),art:'eu',e,list:[],kurz:[]}; // Europapokal (K37, U19a): Ausland gegen Ausland als Kurzrechnung im eigenen Strom
       mitStrom(strom('eukurz',S.season,d,e.wb,e.runde,e.leg,e.md==null?-1:e.md),()=>L.forEach(m=>{if(!euDe(m.h)&&!euDe(m.a))g.kurz.push(Object.assign(euKurz(m.h,m.a,m.o),{i:m.i}));}));
@@ -44,7 +44,8 @@ function tagesSpieleAbschliessenLauf(out){const d=out.tag;S.gespielt=d;
       if(mg){news(`${e.md+1}. Spieltag: ${tn(mg.h)} – ${tn(mg.a)} ${mg.hg}:${mg.ag}`,(mg.h===S.my?mg.hg>mg.ag:mg.ag>mg.hg)?'good':(mg.hg===mg.ag?'':'bad'));finanzenLiga(mg);vorstandLiga(e,mg);fansHeimspiel(mg);
         if(e.md+1===RK.vertragsWarnungNachSpieltag){const x=squad(S.my).filter(p=>p.ct<=1);if(x.length)news(`Achtung: ${x.length} Vertrag/Verträge enden zum Saisonende (${x.slice(0,6).map(p=>p.n).join(', ')}${x.length>6?' …':''}). Verlängern: im Kader auf den Spieler klicken.`,'bad');}}
       g.list.forEach(r=>[r.h,r.a].forEach(id=>{if(id!==S.my)kiFinanzenSpiel(S.teams[id],r);}));} // Computer-Vereine nach denselben Regeln wie du statt Pauschale (K23b)
-    else if(g.art==='pokal'){S.cup.hist.push(g.list.map(r=>[r.h,r.a,r.hg,r.ag,r.pen]));S.cup.alive=g.list.map(winner);fansPokal(g.list);
+    else if(g.art==='pokal'){const zeilen=g.list.map(r=>[r.h,r.a,r.hg,r.ag,r.pen]),sieger=g.list.map(winner); // geteilte Runde (T8.2): erst nach dem zweiten Tag eintragen
+      if(pokalGeteilt(e.r)&&!e.spaet)S.cup.teil={r:e.r,z:zeilen,s:sieger};else{const T=S.cup.teil&&S.cup.teil.r===e.r?S.cup.teil:{z:[],s:[]};S.cup.hist.push(T.z.concat(zeilen));S.cup.alive=T.s.concat(sieger);delete S.cup.teil;}fansPokal(g.list);
       if(mg){const won=winner(mg)===S.my,opp=mg.h===S.my?mg.a:mg.h;news(`DFB-Pokal, ${POKAL_RUNDEN[e.r]}: ${tn(mg.h)} – ${tn(mg.a)} ${mg.hg}:${mg.ag}${mg.pen?` (i.E. ${mg.pen[0]}:${mg.pen[1]})`:''} – ${won?(e.r===5?'POKALSIEG!':'weiter!'):'ausgeschieden.'}`,won?'good':'bad');
         if(!won&&(opp>=1000||S.teams[opp].lg>t.lg))S.trust+=RV.pokalAus;if(won)S.trust+=RV.pokalWeiter;
         if(mg.h===S.my&&e.r!==5)heimspielEinnahmen(mg,true);money('Pokalprämien',RF.pokalPraemien[e.r]);}

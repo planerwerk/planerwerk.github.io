@@ -1458,3 +1458,13 @@ Dritter Prüf-Agent, nur lesend, über T5-Korrekturen, K23b, K23d und U19d1. Kei
 | CN8 | **Startkader und Liste A** (CM6). | ✅ behoben (Näherung) |
 | CN9 | **`tests/finanzmodell.js`** rechnete die Zeile „nach dem Modell“ anders als das Spiel. Jetzt mit `kiHeimEinnahmen` und `sonstigeEinnahmen`. | ✅ behoben |
 | CN10 | **Anzeige der Gegnerstärke** zeigte den Block mit 0,93 neben deiner ungeteilten Kaderstärke. Jetzt beide auf derselben Skala. | ✅ behoben |
+
+---
+
+## CO. Korrekturen zu Lauf 8 (22. November 2026, popolupo, ohne Testlauf)
+
+| # | Befund | Status |
+|---|---|---|
+| CO1 | **T8.2, Donnerstag → Samstag:** In einer Pokalwoche (Europapokal am Donnerstag, Pokal am Dienstag) passt kein Ligaspiel mit drei Tagen Abstand zu beiden. Wie beim DFB spielen solche Vereine den Pokal jetzt einen Tag später, ihre Gegner mit ihnen. In Runde 1 (Samstag) heißt das Sonntag, nach der Qualifikation zur Conference League am Donnerstag. `S.cup.spaet[Runde]` hält die Vereine fest. Die Runde wird erst nach dem zweiten Tag in `S.cup.hist` eingetragen, bis dahin liegt der erste Tag in `S.cup.teil`. | ✅ behoben |
+| CO2 | **Eingriff in den Pokal (K13):** `termineAm`, `meinSpiel`, `spielendeAm`, `kalTermin` und das Eintragen der Runde kennen jetzt zwei Tage. Das Finale und alte Spielstände ohne `S.cup.spaet` spielen wie bisher an einem Tag. | ⚠️ bitte im Browser-Test ansehen |
+| CO3 | **T8.1, T8.3:** nur Tests. `tests/finanzen.js` ohne Entlassung, `tests/training.js` Nr. 4 ohne Europapokal (die englischen Wochen eines Europapokal-Vereins verschieben Kondition und Ausfälle). | ✅ |

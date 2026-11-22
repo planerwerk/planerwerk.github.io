@@ -15,7 +15,16 @@ function pokalAuslosen(r){const al=shuffle(S.cup.alive.slice()),paare=[];
   if(r<=RWB.pokal.heimrechtBisRunde)while(am.length&&pro.length)paare.push([am.shift(),pro.shift()]);
   const rest=shuffle([...am,...pro]);for(let i=0;i<rest.length;i+=2)paare.push([rest[i],rest[i+1]]);return paare;}
 // 72 Stunden (K13 §3.5): Nach der Auslosung verlegt die Liga Spiele, die weniger als drei Tage vor oder nach der Pokalrunde liegen (Sonntag → Samstag davor)
-function pokalVerlegen(r,paare){return ligaVerlegen(S.plan.pokal[r][0],new Set(paare.flat().filter(id=>id<1000)),'des Pokals');}
+function pokalVerlegen(r,paare){const d=S.plan.pokal[r][0],ids=spaet=>new Set(paare.filter(p=>pokalSpaetIst(r,p[0])===spaet).flat().filter(id=>id<1000));
+  return ligaVerlegen(d,ids(false),'des Pokals')+ligaVerlegen(d+1,ids(true),'des Pokals');}
+// Pokal am zweiten Tag (T8.2, wie beim DFB): Wer in den fünf Tagen vor der Runde im Europapokal spielt, spielt den Pokal einen Tag später (Dienstag → Mittwoch,
+// in der 1. Runde Samstag → Sonntag), mit seinem Gegner. Sonst passt zwischen Donnerstag und Dienstag kein Ligaspiel mit drei Tagen Abstand.
+// S.cup.spaet[Runde] = Vereine dieser Paarungen, bleibt die ganze Saison stehen (Kalender, Ergebnisse).
+function pokalSpaet(r,paare){if(r>=5||!S.plan.pokal[r])return[];const d=S.plan.pokal[r][0];return paare.filter(p=>p.some(id=>id<1000&&euTageVon(id).some(x=>x<d&&x>=d-5))).flat();}
+const pokalSpaetIst=(r,id)=>!!(S.cup&&S.cup.spaet&&(S.cup.spaet[r]||[]).includes(id));
+const pokalGeteilt=r=>!!(S.cup&&S.cup.spaet&&(S.cup.spaet[r]||[]).length);
+const pokalPaareAm=e=>pokalPaare(e.r).filter(p=>pokalSpaetIst(e.r,p[0])===!!e.spaet);
+const pokalMeinTag=e=>pokalSpaetIst(e.r,S.my)===!!e.spaet;
 // Ligaspiele der Vereine ids, die weniger als drei Tage vor oder nach Tag d liegen, verlegen (Pokal, seit K37 auch Europapokal).
 // Seit T5.2: Der neue Tag muss für beide Vereine drei Tage Abstand zu allen ihren übrigen Spielen haben (Liga, Pokal, Supercup, Europapokal). Kandidaten der Reihe nach,
 // zuerst in Richtung des alten Termins, nie auf einen Montag (Montag abends vor Donnerstag wären keine 72 Stunden). Passt keiner, gilt die alte Regel (Sonntag und Montag vor dem Termin → Samstag, danach → drei Tage später).
@@ -29,14 +38,14 @@ function ligaVerlegen(d,ids,grund){const M=RWB.spielplan.mindestTage;let n=0;
 // Tage, an denen ein Verein schon spielt (Liga ohne das Spiel ohne, Pokal solange er dabei ist, Supercup, Europapokal)
 function spieltageVon(tid,ohne){const s=new Set(),t=tid<1000?S.teams[tid]:null;if(!t)return s;const lg=t.lg,Z=S.plan.zeit[lg]||[];
   (S.fx[lg]||[]).forEach((md,k)=>md.forEach(([h,a],i)=>{const z=Z[k]&&Z[k][i];if(z&&z!==ohne&&(h===tid||a===tid))s.add(z[0]);}));
-  if(S.cup&&S.cup.alive.includes(tid))S.plan.pokal.forEach(([x],r)=>{if(r>=S.cup.hist.length)s.add(x);});
+  if(S.cup&&S.cup.alive.includes(tid))S.plan.pokal.forEach(([x],r)=>{if(r>=S.cup.hist.length)s.add(x+(pokalSpaetIst(r,tid)?1:0));});
   if(S.supercup&&!S.supercup.r&&(S.supercup.h===tid||S.supercup.a===tid))s.add(S.supercup.tag);
   euTageVon(tid).forEach(x=>s.add(x));return s;}
 function pokalAuslosungTag(d){if(S.phase!=='play'||!S.cup||S.cup.alive.length<2)return;const r=S.cup.hist.length,t=pokalLosTag(r);
   if(t==null||d<t||(S.cup.los&&S.cup.los.r===r))return;
-  S.cup.los={r,am:d,paare:mitStrom(strom('pokallos',S.season,r),()=>pokalAuslosen(r))};pokalVerlegen(r,S.cup.los.paare);
+  S.cup.los={r,am:d,paare:mitStrom(strom('pokallos',S.season,r),()=>pokalAuslosen(r))};(S.cup.spaet=S.cup.spaet||{})[r]=pokalSpaet(r,S.cup.los.paare);pokalVerlegen(r,S.cup.los.paare);
   const m=S.cup.los.paare.find(x=>x.includes(S.my));
-  if(m)news(`Auslosung DFB-Pokal, ${POKAL_RUNDEN[r]}: ${tn(m[0])} – ${tn(m[1])}${r===5?' im Finale in Berlin':m[0]===S.my?', ein Heimspiel':', auswärts'} am ${datumKurz(S.plan.pokal[r][0])}.`,'good');}
+  if(m)news(`Auslosung DFB-Pokal, ${POKAL_RUNDEN[r]}: ${tn(m[0])} – ${tn(m[1])}${r===5?' im Finale in Berlin':m[0]===S.my?', ein Heimspiel':', auswärts'} am ${datumKurz(S.plan.pokal[r][0]+(pokalSpaetIst(r,S.my)?1:0))}${pokalSpaetIst(r,S.my)?' (einen Tag später wegen des Europapokals)':''}.`,'good');}
 // Paarungen der Runde: aus der Auslosung, sonst jetzt losen (alte Spielstände)
 function pokalPaare(r){if(!S.cup.los||S.cup.los.r!==r){S.cup.los={r,am:S.tag,paare:mitStrom(strom('pokallos',S.season,r),()=>pokalAuslosen(r))};pokalVerlegen(r,S.cup.los.paare);}return S.cup.los.paare;}
 const pokalLosHeute=d=>S.phase==='play'&&S.cup&&S.cup.alive.includes(S.my)&&pokalLosTag(S.cup.hist.length)===d&&!(S.cup.los&&S.cup.los.r===S.cup.hist.length&&S.cup.los.am<d);

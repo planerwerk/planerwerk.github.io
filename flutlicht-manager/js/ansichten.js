@@ -45,9 +45,9 @@ function kalTermin(d){const r={kurz:'',cls:'',titel:''},l=meineLigaspiele().find
     r.kurz=`${home?'H':'A'} ${S.teams[o].sh}`;r.titel=`${l.md+1}. Spieltag, ${uhr(l.min)} Uhr: ${home?'gegen':'bei'} ${S.teams[o].name}`;r.cls='sp';if(x){const gf=home?x[2]:x[3],ga=home?x[3]:x[2];r.erg=`${x[2]}:${x[3]}`;r.cls+=gf>ga?' win':gf<ga?' loss':' draw';}return r;}
   const eu=euKalTermin(d);if(eu)return Object.assign(r,eu); // Europapokal (K37, U19a)
   for(const e of termineAm(d)){
-    if(e.art==='pokal'){const h=S.cup.hist[e.r],m=h&&h.find(y=>y[0]===S.my||y[1]===S.my);
+    if(e.art==='pokal'){const h=S.cup.hist[e.r],m=h&&pokalMeinTag(e)&&h.find(y=>y[0]===S.my||y[1]===S.my);
       if(m){const home=m[0]===S.my,o=home?m[1]:m[0];r.kurz=`Pokal ${o>=1000?'Amat.':S.teams[o].sh}`;r.erg=`${m[2]}:${m[3]}${m[4]?' i.E.':''}`;r.cls='sp pk'+(winner({h:m[0],a:m[1],hg:m[2],ag:m[3],pen:m[4]})===S.my?' win':' loss');r.titel=`DFB-Pokal, ${POKAL_RUNDEN[e.r]}`;return r;}
-      if(!h&&S.cup.alive.includes(S.my)){r.kurz='Pokal';r.cls='sp pk';r.titel=`DFB-Pokal, ${POKAL_RUNDEN[e.r]}`;return r;}
+      if(!h&&S.cup.alive.includes(S.my)&&pokalMeinTag(e)){r.kurz='Pokal';r.cls='sp pk';r.titel=`DFB-Pokal, ${POKAL_RUNDEN[e.r]}`;return r;}
       r.kurz='Pokal';r.cls='fremd';r.titel=`DFB-Pokal, ${POKAL_RUNDEN[e.r]} (ohne dich)`;}
     if(e.art==='rel'||e.art==='rel2'){const x=S[e.art==='rel'?'relSp':'relSp2'][e.leg],mine=x?(x.h===S.my||x.a===S.my):(relBereit(e.art)&&relTeams(e.art).includes(S.my));
       if(mine){r.kurz='Relegation';r.cls='sp';r.titel=spielName(e);if(x)r.erg=`${x.hg}:${x.ag}`;return r;}if(!r.kurz){r.kurz='Relegation';r.cls='fremd';r.titel=spielName(e);}}

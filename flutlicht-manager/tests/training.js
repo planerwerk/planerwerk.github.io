@@ -46,8 +46,9 @@ const f1=x=>x.toFixed(1),pc=x=>(x*100).toFixed(0)+' %';
 // 4. Über Saisons: Anteil der Trainingsverletzungen 40–55 %. Training wirkt: Mit dem Co-Trainer-Plan entwickeln sich die Spieler schneller und sind konditionell besser als mit „Schonen“,
 //    ohne deutlich mehr Ausfälle. Punkte schwanken über wenige Saisons zu stark (±7 je Saison), darum wird die Wirkung selbst geprüft:
 //    +1 Stärke der Startelf sind etwa +2,5 Punkte pro Saison (tests/akzeptanz.js). Dauerhaft hart kostet sichtbar mehr Trainingsverletzungen (gemessen an allen Vereinen).
+//    Ohne Europapokal (T8.3): Verein 6 (Freiburg) spielt sonst oft international, die englischen Wochen verschieben Kondition und Ausfälle unabhängig vom Training.
 {const X=6;const lauf=(vorlage,alle)=>{let spielV=0,trainV=0,eigeneT=0;const str=[],ko=[],aus=[];
-    saisons({n:N,seed:SEED,verein:X,beiSaisonstart:S=>{S.teams.forEach(t=>{if(alle||t.id===X)t.vorlage=vorlage;});},
+    saisons({n:N,seed:SEED,verein:X,vorher:(F,W)=>{W.ev('europaAnlegen=function(){S.eu=null;}');},beiSaisonstart:S=>{S.teams.forEach(t=>{if(alle||t.id===X)t.vorlage=vorlage;});},
       beiSpielen:(l,S)=>{l.forEach(r=>{spielV+=r.inj.length;});const r=l.find(x=>x.h===X||x.a===X);if(!r)return;const s=r.h===X?0:1,P=new Map(S.pl.map(p=>[p.id,p])),xi=r.xi[s].map(id=>P.get(id)).filter(Boolean);
         str.push(S.pl.filter(p=>p.team===X).reduce((a,p,_,q)=>a+(p.trf||1)/q.length,0));ko.push(xi.reduce((a,p)=>a+p.ko,0)/xi.length);aus.push(S.pl.filter(p=>p.team===X&&p.inj>0).length);},
       beiSaisonende:S=>{trainV+=S.pl.reduce((a,p)=>a+(p.tinj||0),0);eigeneT+=S.pl.filter(p=>p.team===X).reduce((a,p)=>a+(p.tinj||0),0);S.pl.forEach(p=>{p.tinj=0;});}});

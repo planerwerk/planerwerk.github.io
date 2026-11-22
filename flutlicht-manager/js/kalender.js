@@ -61,6 +61,7 @@ function spieleAm(d){if(TAGINDEX.plan!==S.plan){const m=new Map();LIGEN.forEach(
 function termineAm(d){const P=S.plan,L=[],g={};
   spieleAm(d).forEach(x=>{const k=x.lg+':'+x.md;if(!g[k]){g[k]={art:'liga',lg:x.lg,md:x.md,idx:[],tag:d};L.push(g[k]);}g[k].idx.push(x.i);});
   const r=P.pokal.findIndex(x=>x[0]===d);if(r>=0)L.push({art:'pokal',r,tag:d,min:P.pokal[r][1]});
+  const r2=P.pokal.findIndex(x=>x[0]+1===d);if(r2>=0&&pokalGeteilt(r2))L.push({art:'pokal',r:r2,tag:d,min:P.pokal[r2][1],spaet:1}); // zweiter Pokaltag für Vereine aus dem Europapokal (T8.2)
   [['rel',P.rel],['rel2',P.rel2]].forEach(([art,a])=>{const k=a.findIndex(x=>x[0]===d);if(k>=0)L.push({art,leg:k,tag:d,min:a[k][1]});});
   const sc=supercupAm(d);if(sc)L.push({art:'supercup',tag:d,min:sc.min});
   euTermineAm(d).forEach(x=>L.push(x)); // Europapokal (K37, U19a)
@@ -74,7 +75,7 @@ const relBereit=art=>art==='rel'?ligaFertig(1)&&ligaFertig(2):ligaFertig(2)&&lig
 function meinSpiel(d){const t=myT();
   for(const e of termineAm(d)){
     if(e.art==='liga'&&e.lg===t.lg){const i=e.idx.find(j=>{const f=S.fx[e.lg][e.md][j];return f[0]===S.my||f[1]===S.my;});if(i!=null)return{...e,i,min:S.plan.zeit[e.lg][e.md][i][1]};}
-    if(e.art==='pokal'&&S.cup.hist.length===e.r&&S.cup.alive.includes(S.my))return e;
+    if(e.art==='pokal'&&S.cup.hist.length===e.r&&S.cup.alive.includes(S.my)&&pokalMeinTag(e))return e;
     if((e.art==='rel'||e.art==='rel2')&&relBereit(e.art)&&relTeams(e.art).includes(S.my))return e;
     if(e.art==='supercup'&&[S.supercup.h,S.supercup.a].includes(S.my))return e;
     if(e.art==='eu'){const m=euMeinSpiel(e);if(m)return Object.assign({},e,{h:m.h,a:m.a});}}

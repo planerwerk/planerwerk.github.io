@@ -30,7 +30,7 @@ const tagMit=(ev,mmtt)=>{for(let d=0;d<400;d++)if(ev('mmtt')(d)===mmtt)return d;
   pruef(nachEins&&vor===3&&nach===-6&&S.trust===30&&t.cash===0,'Insolvenz: erst beim zweiten Monatsersten, 9 Punkte Abzug (3 → −6), Vertrauen −30, Kontostand 0',`${vor} → ${nach}, Vertrauen ${S.trust}, Konto ${t.cash}`);}
 
 // 5. Eine Saison im Ablauf: Monatsberichte, und der Kontostand ist aus den Buchungen nachvollziehbar (Summe der Monatssalden = Änderung des Kontostands)
-{let erg=null;saisons({n:1,seed:SEED,verein:VEREIN,beiSaisonende:S=>{const v=S.finV||[];if(!v.length){erg={n:0};return;}
+{let erg=null;saisons({n:1,seed:SEED,verein:VEREIN,vorher:(F,W)=>{W.ev('entlassen=function(){}');},beiSaisonende:S=>{const v=S.finV||[];if(!v.length){erg={n:0};return;}
     const start=v[0].cash-v[0].saldo-(v[0].k||0),summe=v.reduce((a,r)=>a+r.saldo+(r.k||0),0),diff=Math.abs(v[v.length-1].cash-start-summe),umsatz=v.reduce((a,r)=>a+r.ein-r.aus,0); // k: Kreditflüsse (K23e)
     erg={n:v.length,diff,umsatz,loan:S.loan||0};}});
   pruef(erg&&erg.n>=9&&erg.diff<=Math.max(1000,erg.umsatz*0.001),'Saison: mindestens 9 Monatsberichte, Kontostand gleich Startstand plus Summe der Monatssalden (K23 §10)',

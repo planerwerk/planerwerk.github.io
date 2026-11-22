@@ -31,6 +31,15 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Antworten zu offenen Funden
 
+**Zu Lauf 8 (22.11., Zweig `mitarbeit/popolupo-u19d-kaderliste`):**
+- **T8.2 (T5.2):** Nachgerechnet. Zwischen Donnerstag (Europapokal) und Dienstag (Pokal) gibt es keinen Tag mit drei Tagen Abstand zu beiden, darum blieb nur der Samstag.
+  - Jetzt wie beim DFB: Wer in den fünf Tagen vor einer Pokalrunde im Europapokal spielt, spielt den Pokal einen Tag später (Mittwoch, in Runde 1 Sonntag), mit seinem Gegner (`S.cup.spaet`, Konsistenzprüfung CO1).
+  - Die Runde wird erst nach dem zweiten Tag eingetragen.
+  - Dazu verlegt die Liga nie mehr auf einen Montag (CN4).
+- **T8.1:** wie vorgeschlagen, `tests/finanzen.js` Nr. 4 schaltet die Entlassung ab.
+- **T8.3:** Vermutung: Freiburg (Verein 6 im Test) kommt mit dem Faktor 0,93 öfter in die Ligaphase der Conference League. Die englischen Wochen drücken die Kondition unabhängig vom Training. `tests/training.js` Nr. 4 spielt jetzt ohne Europapokal. Falls es danach rot bleibt, liegt es an der Verlegung, dann schaue ich weiter.
+- **T5.3:** danke für die Messung. Ich lasse 0,93 vorerst so und warte auf die vollen Kader (U19d2), statt den Faktor weiter zu drehen.
+
 **Zu Lauf 5 (22.11., Zweig `mitarbeit/popolupo-t5-korrekturen`):**
 - **T5.1** (Gleichschritt 25 Tage): wie vorgeschlagen, `tests/lizenz.js` nimmt in 5a auch `kartenWoche` aus.
 - **T5.2** (72 Stunden, 24 Fälle): Ursache gefunden. Die Europapokal-Verlegung schob das Freitagsspiel auf Samstag, die Pokalrunde am Dienstag danach zog es wieder auf Freitag (drei Tage vor dem Pokal, aber zwei nach dem Europapokal). `ligaVerlegen` sucht jetzt einen Tag, der für beide Vereine drei Tage Abstand zu allen ihren Spielen hat (Liga, Pokal, Supercup, Europapokal, neu `spieltageVon`, `euTageVon`). Behebt T5.2.
@@ -47,6 +56,15 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 ---
 
 ## Changelog
+
+### 22.11.2026: Korrekturen zu Lauf 8 (Zweig `mitarbeit/popolupo-u19d-kaderliste`)
+
+- **Behebt T8.2:**
+  - Pokal am zweiten Tag für Vereine aus dem Europapokal.
+  - In `wettbewerbe.js`: `pokalSpaet`, `pokalSpaetIst`, `pokalGeteilt`, `pokalPaareAm`, `pokalMeinTag`. `pokalVerlegen` und `spieltageVon` kennen den zweiten Tag.
+  - Termine (`termineAm`), eigenes Spiel (`meinSpiel`), Training (`spielendeAm`), Kalender und Eintragen der Runde (`tagesSpieleAbschliessenLauf`, `S.cup.teil`) sind angepasst.
+- **Behebt T8.1, zu T8.3:** nur Tests (Entlassung aus, Europapokal aus).
+- **Tests zuerst:** `tests/wettbewerbe.js` (72 Stunden, Pokal), `tests/training.js`, `tests/finanzen.js`, `tests/ui-zwei-saisons.js` (Pokal im echten Ablauf), `tests/seed.js` (Spielstand mit geteilter Runde).
 
 ### 22.11.2026: Korrekturen nach einer Prüfung ohne Laufzeit (Zweig `mitarbeit/popolupo-u19d-kaderliste`)
 
