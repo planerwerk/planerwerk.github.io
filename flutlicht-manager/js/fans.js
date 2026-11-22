@@ -41,21 +41,25 @@ function fansKarte(){const t=myT(),b=fanBausteine(t),v=fanst(t),z=fanZiel(t),f=x
     ${lzHinweis('fangespraech')}<div class="row"><button onclick="fanGespraech()"${lzAus('fangespraech')}${fanGespraechFrei()?'':' disabled'}>Fan-Gespräch</button><span class="dim">einmal im Monat, wirkt nach deiner Glaubwürdigkeit (${Math.round(glaub(t))})</span></div></div>`;}
 
 // ---------- Dauerkarten (K27 §5.2, K27b, 22.11., popolupo) ----------
-// Nur dein Verein. S.dk = {s Saison, tid Verein, r Rabatt, n verkauft (fehlt bis zum Verkauf)}. Verkauf beim ersten Ligaheimspiel der Saison (ablauf.js heimspielEinnahmen),
-// vorher wählst du den Rabatt (Bereich preise, in der Automatik der Standard). Je Ligaheimspiel zahlen alle Inhaber Preis × (1 − Rabatt), auch wenn weniger kommen. Kein Zufall.
+// Nur dein Verein. S.dk = {s Saison, tid Verein, r Rabatt, n verkauft und p Ticketpreis beim Verkauf (beide fehlen bis zum Verkauf)}. Verkauf beim ersten Ligaheimspiel der Saison
+// (ablauf.js heimspielEinnahmen), vorher wählst du den Rabatt (Bereich preise, in der Automatik der Standard). Je Ligaheimspiel zahlen alle Inhaber den Preis vom Verkauf
+// (höchstens den heutigen, wenn du ihn senkst) × (1 − Rabatt), auch wenn weniger kommen. Kein Zufall. Prüfung CZ: vorher zahlten sie den Preis des Tages, ein späteres Hochsetzen lohnte sich.
 const dkStand=()=>S.dk&&S.dk.s===S.season&&S.dk.tid===S.my?S.dk:null;
 const dkAktuell=()=>{const d=dkStand();return d&&d.n!=null?d:null;};
-const dkRabatt=()=>{const D=RFS.dauerkarten,d=dkStand();return autoB('preise')||!d||d.r==null?D.rabatt:d.r;};
+// Nach dem Verkauf gilt der verkaufte Rabatt, auch wenn die Automatik danach wieder eingeschaltet wird (CZ3)
+const dkRabatt=()=>{const D=RFS.dauerkarten,d=dkStand();if(d&&d.n!=null)return d.r;return autoB('preise')||!d||d.r==null?D.rabatt:d.r;};
+// Preis je Dauerkarte und Ligaheimspiel: Preis beim Verkauf, höchstens der heutige, mit Catering und Anzeigetafel, abzüglich Rabatt
+const dkPreis=(t,d)=>Math.min(t.price,d.p!=null?d.p:t.price)*zuschauerFaktor(t)*(1-d.r);
 // Anteil der Plätze nach Fanstimmung und Rabatt, höchstens ohne Gästeblock
 function dkAnteil(t,r){const D=RFS.dauerkarten;return clamp(D.basis+D.jeStimmung*fanst(t)/100+D.jeRabatt*(r-D.rabatt),0,1-D.gaesteblock);}
-function dkVerkauf(t){const r=dkRabatt(),n=Math.round(t.cap*dkAnteil(t,r));S.dk={s:S.season,tid:S.my,r,n};
+function dkVerkauf(t){const r=dkRabatt(),n=Math.round(t.cap*dkAnteil(t,r));S.dk={s:S.season,tid:S.my,r,n,p:t.price};
   news(`Dauerkarten: ${n.toLocaleString('de-DE')} verkauft (${Math.round(r*100)} % Rabatt). Die Inhaber zahlen in jedem Ligaheimspiel, auch wenn weniger kommen.`,'');return S.dk;}
 // Fanstimmung, Baustein Preise (fans.js fanBausteine): mehr Rabatt als der Standard freut die Fans, weniger ärgert sie. Nur dein Verein.
 function dkFans(t){if(!t||t.id!==S.my)return 0;const D=RFS.dauerkarten;return D.fans*(dkRabatt()-D.rabatt)*10;}
 function dkRabattSetzen(r){const D=RFS.dauerkarten;if(!darf('preise')||!D.stufen.includes(r)||dkAktuell())return;S.dk={s:S.season,tid:S.my,r};save();render();}
 // Anzeige im Finanzen-Tab unter dem Eintrittspreis
 function dauerkartenText(t){const D=RFS.dauerkarten,d=dkAktuell(),pct=x=>Math.round(x*100)+' %';
-  if(d)return`<p>Dauerkarten: <b>${d.n.toLocaleString('de-DE')}</b> verkauft (${pct(d.r)} Rabatt), je Ligaheimspiel ${fmt(Math.round(d.n*t.price*zuschauerFaktor(t)*(1-d.r)))}.</p>`;
+  if(d)return`<p>Dauerkarten: <b>${d.n.toLocaleString('de-DE')}</b> verkauft (${pct(d.r)} Rabatt${d.p!=null?`, Preis beim Verkauf ${d.p} €`:''}), je Ligaheimspiel ${fmt(Math.round(Math.min(d.n,t.cap)*dkPreis(t,d)))}.</p>`;
   const r=dkRabatt();
   return`<p>Dauerkarten werden beim ersten Ligaheimspiel verkauft, voraussichtlich etwa ${Math.round(t.cap*dkAnteil(t,r)).toLocaleString('de-DE')} (${pct(r)} Rabatt). Mehr Rabatt: mehr Dauerkarten und zufriedenere Fans, aber weniger je Platz.</p>
     <div class="row">${D.stufen.map(x=>`<button class="${x===r?'go':''}" onclick="dkRabattSetzen(${x})"${lzAus('preise')}>${pct(x)} Rabatt</button>`).join('')}</div>`;}

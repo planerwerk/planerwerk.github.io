@@ -1608,3 +1608,17 @@ Zweig `mitarbeit/popolupo-k26c-fanshop-instandhaltung`, auf K20b mit den Korrekt
 | CY2 | **Instandhaltung:** `kiFinanzenSpiel` zieht je Ligaspiel 1 % der Bausumme je Saison anteilig ab, wie bei dir monatlich. Gezählt werden nur Bauten ab K26b. | ✅ |
 | CY3 | **Wirkung auf die Salden (K23 §5.6b):** Die Computer-Vereine gewinnen mit dem Fanshop etwas dazu, die Modellrechnung ohne Fanartikel unterschätzt das. Im Testlauf mit `tests/finanzmodell.js` ansehen. | ⚠️ |
 | CY4 | **`tests/stadion.js` Nr. 9** prüft jetzt den Fanshop als erste Anlage, neu Nr. 10 die Instandhaltung. | ✅ ungetestet |
+
+---
+
+## CZ. Prüfung von K23f, K27b, K20b und K26c ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 5559cf4, 183ed6e, ba38849 und 32b75fc gelesen (nichts ausgeführt). Korrekturen auf der neuesten Spitze `mitarbeit/popolupo-k26c-fanshop-instandhaltung`.
+
+| # | Befund | Status |
+|---|---|---|
+| CZ1 | **`tests/fans.js` (K27b):** Der Deckel von 90 % war mit Fanstimmung 100 und 30 % Rabatt nicht erreichbar (0,65). Jetzt prüft der Test ihn mit 100 % Rabatt (Rechnung 1,0, gedeckelt 0,9). | ✅ behoben |
+| CZ2 | **Ausnutzbar:** Die Inhaber zahlten den Ticketpreis des Tages. Nach dem Verkauf den Preis auf 150 € setzen brachte für die Dauerkarten fast das Doppelte eines ausverkauften Stadions, ohne dass sie wegbleiben. Jetzt gilt der Preis vom Verkauf (`S.dk.p`), höchstens der heutige. Der Test setzt den Preis danach hoch und erwartet dieselbe Buchung. | ✅ behoben |
+| CZ3 | **Rabatt nach dem Verkauf:** Wurde danach die Automatik eingeschaltet, rechnete die Fanstimmung mit dem Standardrabatt statt dem verkauften. Jetzt gilt nach dem Verkauf immer der verkaufte Rabatt. | ✅ behoben |
+| CZ4 | **Anzeige:** Der Betrag je Heimspiel zählte während eines Tribünenbaus zu viele Plätze. Jetzt wie die Buchung höchstens die Plätze. | ✅ behoben |
+| CZ5 | Ohne Befund: K23f (Rundung, alle Textwege mit Platzhalter, Tests), K20b (Grenzen, verschachtelter Strom, Gleichschritt, kein anderer Test an einem Deadline-Tag), K26c (Fanshop-Stufen und Kostenliste, Instandhaltung, Tests 9 und 10), Laufzeit, Kommentare mitten in der Zeile. | ✅ |

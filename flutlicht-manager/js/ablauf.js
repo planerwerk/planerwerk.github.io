@@ -90,7 +90,7 @@ function heimspielEinnahmen(m,cup){const t=myT();if(autoB('preise'))t.price=clam
   const att0=attendance(t,m.a>=AV0?avVon(m.a):m.a>=1000?null:S.teams[m.a],cup),pz=t.price*zuschauerFaktor(t);
   /* Dauerkarten (K27b): in der Liga zählen alle Inhaber als Zuschauer und zahlen Preis × (1 − Rabatt), die übrige Nachfrage kauft Einzelkarten */
   const dk=cup?null:(dkAktuell()||dkVerkauf(t)),n=dk?Math.min(dk.n,t.cap):0,att=Math.max(att0,n);
-  m.att=att;S.att[0]+=att;S.att[1]++;statZuschauer(m,att);if(n)money('Dauerkarten',Math.round(n*pz*(1-dk.r)));money('Zuschauer',Math.round(Math.max(0,att0-n)*pz));if(t.shop)money('Fanartikel',Math.round(att*RF.fanartikel[t.shop]*merchFaktor(t)));if(t.logen)money('VIP-Logen',t.logen*RF.loge);}
+  m.att=att;S.att[0]+=att;S.att[1]++;statZuschauer(m,att);if(n)money('Dauerkarten',Math.round(n*dkPreis(t,dk)));money('Zuschauer',Math.round(Math.max(0,att0-n)*pz));if(t.shop)money('Fanartikel',Math.round(att*RF.fanartikel[t.shop]*merchFaktor(t)));if(t.logen)money('VIP-Logen',t.logen*RF.loge);}
 // Buchungen je Ligaspieltag des eigenen Vereins
 function finanzenLiga(m){const t=myT();if(m.h===S.my)heimspielEinnahmen(m,false);
   money('TV-Gelder',tvGeld(t));{const so=sonstigeEinnahmen(t);if(so)money('Sonstige Einnahmen',so);} // Mitglieder, Vermarktung (K23 §3.1, K23b)

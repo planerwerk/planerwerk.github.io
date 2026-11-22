@@ -63,7 +63,7 @@ Ziel = 60 + Erfolg + Preise + Identifikation + Entscheidungen + Umfeld     (0–
 - **Nur dein Verein.** Die Einnahmen der Computer-Vereine bleiben beim Erwartungswert (K23b), dort gleichen sich Schwankungen ohnehin aus.
 - **Verkauf** beim ersten Ligaheimspiel der Saison (auch nach einem Jobwechsel beim neuen Verein). Anteil der Plätze = 0,35 + 0,25 × Fanstimmung/100 + 0,5 × (Rabatt − 20 %), höchstens 90 % (10 % Gästeblock).
 - **Rabatt** 10, 20 oder 30 % im Finanzen-Tab unter dem Eintrittspreis, nur vor dem Verkauf, Bereich `preise` (in der Automatik 20 %).
-- **Je Ligaheimspiel:** Alle Inhaber zählen als Zuschauer und zahlen Ticketpreis × (1 − Rabatt) (Buchung „Dauerkarten“, laufend in der Prognose). Die übrige Nachfrage kauft Einzelkarten zum vollen Preis. Pokal und Europapokal laufen wie bisher nur mit Einzelkarten.
+- **Je Ligaheimspiel:** Alle Inhaber zählen als Zuschauer und zahlen den Ticketpreis vom Tag des Verkaufs × (1 − Rabatt), höchstens den heutigen Preis, wenn du ihn später senkst (Buchung „Dauerkarten“, laufend in der Prognose). Ein späteres Hochsetzen des Preises ändert an den Dauerkarten nichts (Prüfung CZ2). Die übrige Nachfrage kauft Einzelkarten zum vollen Preis. Pokal und Europapokal laufen wie bisher nur mit Einzelkarten.
 - **Fanstimmung:** Baustein Preise +2 je 10 Prozentpunkte Rabatt über dem Standard, −2 darunter.
 - **Rechnung:** Bei 20 % Rabatt und einem vollen Stadion bringen Dauerkarten weniger als Einzelkarten. In einer Krise (Nachfrage unter der Zahl der Dauerkarten) bringen sie mehr. Das ist der Hebel aus §6.
 - **Noch nicht:** Gästeblock als eigene Plätze, Dauerkarten der Computer-Vereine, Warteliste.

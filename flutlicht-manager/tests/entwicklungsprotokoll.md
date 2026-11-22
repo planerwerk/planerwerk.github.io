@@ -64,6 +64,12 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 22.11.2026: Korrekturen nach Prüfung CZ (Zweig `mitarbeit/popolupo-k26c-fanshop-instandhaltung`)
+
+- Ein lesender Prüf-Agent hat K23f, K27b, K20b und K26c durchgesehen (Konsistenzprüfung CZ). Befunde nur bei den Dauerkarten.
+- **Behoben:** Test für den Deckel (CZ1), Dauerkarten zahlen den Preis vom Verkauf statt des Tagespreises (CZ2), verkaufter Rabatt gilt auch mit Automatik (CZ3), Anzeige während eines Tribünenbaus (CZ4).
+- **Tests zuerst:** `tests/fans.js` (K27b).
+
 ### 22.11.2026: K26c Fanshop und Instandhaltung der Computer-Vereine (Zweig `mitarbeit/popolupo-k26c-fanshop-instandhaltung`, auf K20b)
 
 - **Neu (K26 §5.2, Konsistenzprüfung CY):** Computer-Vereine bauen zum Saisonstart auch Fanshops (vorn in der Liste) und verkaufen damit Fanartikel. Sie zahlen Instandhaltung je Ligaspiel.
