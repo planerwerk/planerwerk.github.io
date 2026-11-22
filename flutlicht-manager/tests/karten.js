@@ -357,6 +357,18 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   pruef(sieg[0]&&!sieg[1]&&nieder[1]&&!nieder[0]&&!frueh[0]&&!remis[0]&&!remis[1]&&!pen[0]&&!hoch[0],'Last-Minute-Drama: spätes Siegtor oder Gegentor, nicht früh, nicht beim Remis, Elfmeterschießen oder zwei Toren',
     `Sieg ${sieg}, Niederlage ${nieder}, früh ${frueh}, Remis ${remis}, Elfmeter ${pen}, zwei Tore ${hoch}`);}
 
+// K06c, K09e. Taktik-Coup nur als siegreicher Außenseiter mit dem Stil, der den des Gegners schlägt; Pyrotechnik nur nach einem Derby (Freiburg – Karlsruhe);
+//       Rudelbildung nur nach einem Derby mit Roter Karte.
+{const {S,F,ev}=welt(),A=ev('AUSLOESER'),K=ev('RTA').kreislauf,tl=ev('teamLevel'),N=ev('RKT').spiel;S.phase='play';
+  const geg=S.teams.filter(t=>t.id!==S.my&&ev('aktiv')(t)).sort((a,b)=>tl(b.id)-tl(a.id))[0],stark=tl(geg.id)-tl(S.my)>=N.coupAb,st='pressing';
+  const r=o=>Object.assign({h:S.my,a:geg.id,hg:1,ag:0,ev:[],taktik:[{stil:st},{stil:K[st]}]},o),m=o=>F.letztesSpielMerken(r(o),S.tag);
+  m({});const coup=A.taktikCoup();m({taktik:[{stil:st},{stil:st}]});const falscherStil=A.taktikCoup();m({hg:0,ag:1});const verloren=A.taktikCoup(),keinDerby=A.derbyPyro();
+  const ksc=S.teams.find(t=>t.sh==='KSC');F.letztesSpielMerken({h:S.my,a:ksc.id,hg:1,ag:1,ev:[]},S.tag);const pyro=A.derbyPyro(),ohneRot=A.rudelbildung();
+  F.letztesSpielMerken({h:S.my,a:ksc.id,hg:1,ag:1,ev:[{m:30,s:1,t:'R',p:null}]},S.tag);const rudel=A.rudelbildung();
+  pruef(stark&&!!coup&&coup.verein===geg.id&&falscherStil===null&&verloren===null&&keinDerby===null&&!!pyro&&pyro.verein===ksc.id&&ohneRot===null&&!!rudel,
+    'Taktik-Coup als Außenseiter mit dem passenden Stil, Pyrotechnik nach dem Derby, Rudelbildung nur mit Roter Karte',
+    `Außenseiter ${stark}, Coup ${coup&&coup.verein}, gleicher Stil ${falscherStil}, verloren ${verloren}, kein Derby ${keinDerby}, Pyro ${pyro&&pyro.verein}, ohne Rot ${ohneRot}, Rudel ${!!rudel}`);}
+
 // U19e. Europapokal-Karten (K37 §8): Auswärtsspiel bei einem Auslandsverein in den nächsten 7 Tagen (kein Heimspiel, nicht später, nicht das Finale), Spiel 1 bis 7 Tage her,
 //       Wunder nach 0:3 im Hinspiel und 4:0 oder 3:0 mit Elfmeterschießen im Rückspiel, nicht nach nur einem Tor Rückstand und nicht beim Ausscheiden. euMeineSpiele ersetzt der Test.
 {const {S,W,ev}=welt(),A=ev('AUSLOESER'),AV=ev('AV0'),me=S.my,d=S.tag;W.ev('euMeineSpiele=function(){return S.testEu||[];}');

@@ -160,6 +160,8 @@ Antrag = Grundstrafe + Wiederholungstäter + Verletzungsfolge + Zufall (−1 bis
 | Rudelbildung | Rote Karte im Derby, Zufall | Geldstrafe für beide Vereine |
 | Pyro-Show | Fangruppe, Derby (K27) | Geldstrafe, Presse (K29) |
 
+**Gebaut als K09e** (23.11.2026, popolupo, ohne Testlauf, Anlasskarten nach deinem Pflichtspiel): „Pyrotechnik im Derby“ (Entscheidung nach einem Derby, Chance 0,3: zahlen und Täter ermitteln, zahlen und schweigen oder Einspruch; 12.000 € in der 3. Liga, nach Liga mehr) und „Rudelbildung“ (nach einem Derby mit Roter Karte, Chance 0,5, 6.000 €). Die Strafe gegen den anderen Verein fehlt, Karten gelten nur deinem Verein.
+
 ## 9. Wechselwirkungen
 
 | Konzept | Zusammenspiel |

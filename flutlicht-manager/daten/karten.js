@@ -271,5 +271,17 @@ const KARTEN=[
     wirkung:[{art:'fans',wert:2},{art:'stimmungAlle',wert:1}]},
   {id:'lastMinuteNiederlage',titel:'Bittere Schlussminuten',bereich:'K05',art:'info',stufe:'haeufig',chance:1,ausloeser:'lastMinuteNiederlage',sperrTage:30,
     texte:['Das Gegentor in den letzten Minuten sitzt tief. In der Kabine sagt lange keiner etwas.','So kurz vor Schluss alles verloren: Die Spieler liegen nach dem Abpfiff auf dem Rasen.'],
-    wirkung:[{art:'stimmungAlle',wert:-1}]}
+    wirkung:[{art:'stimmungAlle',wert:-1}]},
+  // Taktik-Coup (K06 §8, K06c) und Derby (K09 §8, K09e), 23.11., popolupo: nach deinem Pflichtspiel, Anlasskarten. Werte vorläufig.
+  {id:'taktikCoup',titel:'Taktik-Coup',bereich:'K06',art:'info',stufe:'haeufig',chance:1,ausloeser:'taktikCoup',sperrTage:60,
+    texte:['Die Presse feiert deinen Plan gegen {verein}: Der Außenseiter hat den Favoriten mit seinen eigenen Waffen geschlagen.','„Ein taktisches Meisterstück“, schreibt die Fachpresse nach dem Sieg gegen {verein}.'],
+    wirkung:[{art:'ruf',wert:1},{art:'fans',wert:1}]},
+  {id:'derbyPyro',titel:'Pyrotechnik im Derby',bereich:'K09',art:'entscheidung',gross:false,stufe:'haeufig',chance:0.3,ausloeser:'derbyPyro',sperrTage:60,
+    texte:['Im Derby gegen {verein} brannten in deiner Kurve Bengalos. Der DFB-Kontrollausschuss beantragt {geld:12000} Geldstrafe.','Nach den Rauchbomben im Derby gegen {verein} will das Sportgericht {geld:12000}.'],
+    optionen:[{text:'Zahlen und die Täter ermitteln',wirkung:[{art:'geld',wert:-12000},{art:'vertrauen',wert:1},{art:'fans',wert:-1}],folge:'Der Vorstand lobt die klare Linie. Die Kurve findet das weniger gut.'},
+      {text:'Zahlen und schweigen',wirkung:[{art:'geld',wert:-12000},{art:'vertrauen',wert:-1}],folge:'Bezahlt. Der Vorstand hätte sich ein deutlicheres Wort gewünscht.'},
+      {text:'Einspruch einlegen',wirkung:[{art:'geld',wert:-4000,chance:0.3,schlecht:-16000,gut:'Das Sportgericht senkt die Strafe auf {geld:4000}.',schlechtText:'Der Einspruch scheitert, mit den Kosten werden es {geld:16000}.'}]}],auto:1},
+  {id:'rudelbildung',titel:'Rudelbildung',bereich:'K09',art:'info',stufe:'haeufig',chance:0.5,ausloeser:'rudelbildung',sperrTage:60,
+    texte:['Nach der Roten Karte im Derby gegen {verein} gingen beide Mannschaften aufeinander los. Das Sportgericht verhängt {geld:6000} gegen deinen Verein.','Die Rudelbildung im Derby gegen {verein} kostet deinen Verein {geld:6000}.'],
+    wirkung:[{art:'geld',wert:-6000}]}
 ];

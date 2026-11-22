@@ -397,6 +397,7 @@ lizenz:{
 154. **K25e Tradition beim Trikot (23.11., popolupo, ohne Testlauf):** keine neue Funktion, die Reaktion auf das Trikot im Bereich `marketing` hängt jetzt vom Gründungsjahr ab.
 155. **K05c Joker und Handschlag (23.11., popolupo, ohne Testlauf):** keine neue Funktion, eine Meldung und eine Entscheidungskarte im Bereich `ereignisse`.
 156. **K05d Last-Minute-Drama (23.11., popolupo, ohne Testlauf):** keine neue Funktion, zwei Meldungen mit Wirkung im Bereich `ereignisse`.
+157. **K06c Taktik-Coup, K09e Derby-Karten (23.11., popolupo, ohne Testlauf):** keine neue Funktion, zwei Meldungen und eine Entscheidungskarte im Bereich `ereignisse`.
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 

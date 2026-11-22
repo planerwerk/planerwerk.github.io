@@ -208,6 +208,8 @@ Es gibt keine Höchstzahl. Wer „Spiel der Saison“ ständig nutzt, spielt in 
 | Der Gegner hat dich durchschaut | ein Computer-Trainer kontert deinen Lieblingsstil und gewinnt | Info, Hinweis im Spielbericht |
 | Standard-Spezialisten | auffällig viele Standardtore in einer Halbserie | Presse, Gegner stellen sich darauf ein (Ecken gegen dich ×0,95 für einen Monat) |
 
+**Gebaut als K06c** (23.11.2026, popolupo, ohne Testlauf, Meldung mit Wirkung nach deinem Pflichtspiel): „Taktik-Coup“, wenn du als Außenseiter (Niveau des Gegners mindestens 2 höher) mit dem Stil gewinnst, der den des Gegners im Kreislauf schlägt. Ruf +1, Fans +1. „Spieler hadert mit seiner Position“ und „Standard-Spezialisten“ fehlen noch.
+
 ## 9. Wechselwirkungen
 
 | Konzept | Zusammenspiel |
