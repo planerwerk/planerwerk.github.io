@@ -205,7 +205,7 @@ welt:{
 17. **Nationen-Tabelle:** 148 Nationen mit Rang der FIFA-Weltrangliste vom 7. Oktober 2026 (Abweichung von Nr. 3: nicht alle Länder der Welt, sondern alle, deren Rang abrufbar war, und alle, die im Spiel vorkommen). Indonesien und Philippinen sind geschätzt, Bolivien ist erschlossen. Weitere Nationen lassen sich anhängen.
 18. **Spielstand:** Poolspieler werden ohne Sperren, Karten und berechnete Eigenschaften gespeichert, Stärke und Form mit zwei Nachkommastellen. Der Pool braucht etwa 740 KB, der ganze Spielstand bleibt über sechs Saisons unter 3 MB.
 19. **Lernstufen (K36):** Der Auslandsmarkt ist als Information frei. Im Ausland beobachten und kaufen ab der B-Lizenz (`ausland`), Suchauftrag im Ausland mit dem Suchauftrag ab A. Angebote aus dem Ausland gehören zu den Transfers (C).
-20. **Noch nicht gebaut:** Computer-Vereine kaufen im Ausland, Auslandsvereine kaufen bei Computer-Vereinen (beides U11, K31), Integration, Deutschkenntnisse, Heimweh und Landsleute (K03 §5.5, K14), Länderspiele (K13), die Ereignisse aus §8, Karriereende nach 5.1, Trainerpool, Europapokal (K37).
+20. **Noch nicht gebaut:** Computer-Vereine kaufen im Ausland, Auslandsvereine kaufen bei Computer-Vereinen (beides U11, K31), Integration, Deutschkenntnisse, Heimweh und Landsleute (K03 §5.5, K14), Länderspiele (K13). Seit 23.11.2026 berichtigt: Ereignisse aus §8 gibt es seit U18b als Karten, das Karriereende nach 5.1 seit K32 §5.1 (Karriereende nach Formel), den Trainerpool seit U18a, den Europapokal seit U19a bis U19e.
 
 **Vorläufig entschieden bei der Umsetzung (U18a, 20. November 2026):**
 
