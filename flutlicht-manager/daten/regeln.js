@@ -741,7 +741,7 @@ const REGELN={
       frischeAb:80,frischeJePunkt:0.05,frischeKritisch:60,kritisch:2,stil:1.2,altAb:30,alt:1.3},
     robustheit:[1.6,-0.06],anfaellig:1.6,
     krankheit:{proTag:0.0006,winter:2,winterMonate:[11,0,1],ansteckung:2,ansteckungTage:5}, // Spielwerte, nicht recherchiert
-    diagnose:{tage:[3,1],verdacht:0.6,genau:0.25,arzt:{ohne:2,jeQualitaet:-0.1,min:0.5}}, // Breite ±60 % und ±25 % bei Arzt-Qualität 10
+    diagnose:{tage:[3,1],verdacht:0.6,genau:0.25,arzt:{ohne:2,jeQualitaet:-0.1,min:0.5},fehl:{ohne:0.15,jeQualitaet:-0.006,min:0.03,faktor:0.6,abTage:10}}, // Breite ±60 % und ±25 % bei Arzt-Qualität 10; fehl: Fehldiagnose (K10b, 22.11., GESCHÄTZT), Chance ohne + jeQualitaet × Arzt-Qualität (mindestens min), angezeigt faktor × wahre Dauer, ab abTage Tagen
     reha:{behandlung:0.7,rueckkehrFrische:[70,80],abTagen:7,fenster:56,rueckfallMal:7,gleicheArt:0.35},
     spritzen:{wirkung:0.95,verschlimmerung:0.15},frueher:{frische:65,rueckfall:2},
     verlaufTage:730},

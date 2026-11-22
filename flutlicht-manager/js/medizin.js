@@ -32,6 +32,7 @@ function verletzen(p,q,o={}){if(!p||p.team<0)return null;const art=o.art||artFue
   if(p.inj>0&&p.vl&&p.inj>=t)return null;const heute=absTag(S.tag),b=arztBreite(p.team),D=RMD.diagnose;
   p.inj=t+1; // Zähler läuft ab morgen herunter (wie bisher: w Wochen = die nächsten 7·w Tage)
   p.vl={art,q,ab:heute,t,dg:heute+(q==='krankheit'?0:diagnoseTage(p.team)),sv:spanne(t,D.verdacht*b),sd:spanne(t,D.genau*b)};
+  if(p.team===S.my&&q!=='krankheit'&&t>=D.fehl.abTage&&fehlDiagnose(p,heute))Object.assign(p.vl,{sk:p.vl.sd,sd:[Math.max(1,Math.round(t*D.fehl.faktor*(1-D.genau))),Math.max(1,Math.round(t*D.fehl.faktor))],fehl:1}); /* K10b */
   p.spritze=null;if(q==='krankheit'){const tm=S.teams[p.team];if(tm)tm.krankBis=heute+RMD.krankheit.ansteckungTage;}
   verletzungZaehlen(p.team,q,t);
   if(p.team===S.my&&!o.still)news(q==='krankheit'?`${p.n} ist krank (${A.name}) und fällt einige Tage aus.`:`Verletzung (${URSACHE[q]}): ${p.n}, ${RMD.gruppen[A.g]}. Erste Einschätzung: ${spanneText(p.vl.sv)}.`,'bad');
@@ -53,8 +54,14 @@ function medizinRueckkehr(p,frisch){const v=p.vl;if(!v)return;const A=RMD.arten[
   if(p.team===S.my&&v.t>=R0.abTagen)news(`${p.n} ist nach ${A.name} zurück im Mannschaftstraining.`,'good');}
 
 // Jeden Tag: Rückkehr, Krankheiten (im Winter doppelt, Ansteckung im Kader)
+// Fehldiagnose (K10 §12 Nr. 9, K10b): nur bei deinem Verein und nur in der Anzeige. Die genaue Diagnose ist zu optimistisch (faktor × wahre Dauer), die richtige Spanne
+// steht in sk. Fest aus Seed, Spieler und Tag (hash32), ohne Würfel aus den Strömen, damit kein Ablauf sich verschiebt. Chance nach der Qualität des Mannschaftsarztes.
+function fehlDiagnose(p,heute){const F=RMD.diagnose.fehl,q=S.stab?stabQ(p.team,'arzt'):10,c=clamp(F.ohne+F.jeQualitaet*q,F.min,F.ohne);return hash32(S.seed+'/fehl/'+p.id+'/'+heute)%10000<c*10000;}
+// Aufklärung: Ist der Spieler am Ende der angezeigten Spanne noch verletzt, gilt die richtige Spanne, mit Meldung
+function fehlAufklaeren(heute){squad(S.my).forEach(p=>{const v=p.vl;if(!(p.inj>0&&v&&v.fehl&&v.sk&&heute>=v.ab+v.sd[1]))return;v.sd=v.sk;delete v.sk;delete v.fehl;
+  const i=verletzungInfo(p);news(`Rückschlag bei ${p.n}: Die Diagnose war zu optimistisch.${i?` Neue Einschätzung: noch ${spanneText(i.rest)}.`:''}`,'bad');});}
 function medizinTag(d){const K=RMD.krankheit,heute=absTag(d),winter=K.winterMonate.includes(datumVon(d).getUTCMonth());
-  S.pl.forEach(p=>{if(p.team<0)return;if(p.inj===0&&p.vl)medizinRueckkehr(p);});
+  S.pl.forEach(p=>{if(p.team<0)return;if(p.inj===0&&p.vl)medizinRueckkehr(p);});fehlAufklaeren(heute);
   if(S.phase!=='play')return;
   S.pl.forEach(p=>{if(p.team<0||p.inj>0)return;const t=S.teams[p.team];if(!t||!aktiv(t)||sommerStatus(t)==='urlaub')return;
     if(R()<K.proTag*(winter?K.winter:1)*((t.krankBis||0)>=heute?K.ansteckung:1))verletzen(p,'krankheit');});}
