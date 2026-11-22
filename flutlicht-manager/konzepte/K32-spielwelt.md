@@ -51,7 +51,7 @@ Teile: **Auslandspool** in Welle 3 (vorgezogen, PLAN §2), der Rest in Welle 4. 
 - **Trainerwechsel** (U11d2, K31 §5.10): Der alte Trainer geht mit Ruf −5 in den Pool. Nachfolger ist der freie Trainer, dessen Ruf am besten zum Ansehen des Vereins passt (höchstens 10 darüber), ohne Zufall. Der Verein spielt dann seinen Lieblingsstil. Ist der Pool leer, kommt ein neuer Trainer.
 - **Dein Jobwechsel:** Der Trainer deines neuen Vereins geht in den Pool, dein alter Verein holt einen aus dem Pool.
 - **Saisonende:** Ruf der Trainer im Amt nach Platz gegen Erwartung (2 je Platz, ±6), Meister +10, Abstieg −6. Freie Trainer vergessen 5 % Richtung 40. Alle werden ein Jahr älter, freie Trainer ab 68 hören auf.
-- **Ehemalige Spieler werden Trainer** (§4.1 Nr. 3): Wer mit mindestens 150 Ligaspielen aufhört, wird mit 15 % Trainer im Pool. Ruf 25 + Ligaspiele / 20, mit Ehrung +10. Eigener Strom je Spieler. Mitarbeiter im Stab (K16) aus Ex-Spielern fehlen noch.
+- **Ehemalige Spieler werden Trainer** (§4.1 Nr. 3): Wer mit mindestens 150 Ligaspielen aufhört, wird mit 15 % Trainer im Pool. Ruf 25 + Ligaspiele / 20, mit Ehrung +10. Eigener Strom je Spieler. Seit K32c (22.11.2026, popolupo, ohne Testlauf) kommen Ex-Spieler auch in den Stab: ab 100 Ligaspielen mit 25 % als vereinslose Mitarbeiter, Torhüter als Torwarttrainer, sonst Co-, Jugend- oder Standardtrainer (5 : 3 : 2), Qualität 4 + Ligaspiele / 60 (+2 mit Ehrung) ± 2, eigener Strom je Spieler. Wer gerade Trainer im Pool geworden ist, kommt nicht dazu. Echte Namen sind hier erlaubt, weil Mitarbeiter nicht in Pressekonferenzen reden (vorläufig). Hat er für deinen Verein gespielt, kommt eine Meldung.
 - **Pool nachfüllen:** zum 1. Juli auf mindestens 12 freie Trainer.
 - **Anzeige:** Namen in Meldungen zum Trainerwechsel, beim „Trainer der Saison“ (K34) und im Vorbericht beim Gegner.
 
@@ -212,7 +212,7 @@ welt:{
 21. **Erfundene Cheftrainer** für alle Computer-Vereine, keine echten (§3.3b).
 22. **Nachfolger ohne Zufall** nach dem Ruf, der zum Ansehen passt (§3.3b).
 23. **Ruf der Computer-Trainer** zum Saisonende nach Platz gegen Erwartung, Meister und Abstieg (§3.3b).
-24. **Ex-Spieler als Trainer** mit 15 % ab 150 Ligaspielen (§3.3b). Ex-Spieler im Stab kommen mit einem späteren Schritt.
+24. **Ex-Spieler als Trainer** mit 15 % ab 150 Ligaspielen (§3.3b). Ex-Spieler im Stab seit K32c (ab 100 Ligaspielen mit 25 %, §3.3b).
 25. **Pool mit mindestens 12 freien Trainern** (§3.3b).
 26. **Ereignisse aus §8 als Ereigniskarten** mit den Schwellen und Werten aus §8 (U18b), alle geschätzt. Das Karriereende nach §5.1 wartet auf einen Testlauf, weil es das Gleichgewicht der Welt verschiebt.
 27. **Karriereende nach §5.1 gebaut ohne Testlauf** (22.11., popolupo, der Nutzer wollte heute nicht auf Tests warten): Stützstellen linear verbunden, Ligaschnitt = Mittel der Kaderstärken, Vereinslose gegen die 3. Liga, „zu schwach“ vor „Stammspieler“, eigener Strom je Spieler. Der Auslandspool nutzt dieselbe Chance ohne Niveau (§5.1).

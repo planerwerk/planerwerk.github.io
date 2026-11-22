@@ -89,7 +89,7 @@ function newSeasonLauf(){lizenzNachweis();wechselVollziehen(true);leiheEnde();ve
     if(p.team>=0){p.ct--;if(p.ct<=0){const mein=p.team===S.my;if(mein&&!autoB('vertraege')){news(`Vertrag ausgelaufen: ${p.n} verlässt den Verein.`,'bad');p.team=-1;p.list=0;}
       else if(R()<vertragChance(p,vPlan.get(p.team))){p.ct=riA(Z.vertrag.jahre);p.sal=salaryFor(p.str);if(mein)stabMeldung(`Der Verein hat den Vertrag von ${p.n} verlängert (${p.ct} Jahr${p.ct>1?'e':''}).`);}else{if(mein)news(`Vertrag ausgelaufen: ${p.n} verlässt den Verein. Der Verein hat nicht verlängert.`,'bad');p.team=-1;p.list=0;}}}
     if(p.team!==S.my)p.list=0;});
-  {const weg=S.pl.filter(p=>p.team===-2);statistikAbschied(weg);trainerNeueSaison(weg);} // Ehemalige (K34 §5.3, U13), Trainerpool mit Ex-Spielern (K32 §3.3b, U18a)
+  {const weg=S.pl.filter(p=>p.team===-2);statistikAbschied(weg);trainerNeueSaison(weg);stabExSpieler(weg);} /* Ex-Spieler im Stab (K32c), nach dem Trainerpool */ // Ehemalige (K34 §5.3, U13), Trainerpool mit Ex-Spielern (K32 §3.3b, U18a)
   S.pl=S.pl.filter(p=>p.team!==-2);reindex();mitStrom(strom('auslandSaison',S.season),auslandSaison); // Auslandspool: Alter, Karriereende, neue Talente (K32 §4.1)
   sm.up4.forEach(id=>{if(!squad(id).length&&!zweiteWirdVerein(id))kaderErzeugen(S.teams[id]);}); // deine Zweite nimmt ihren Amateurkader mit (K08 §5.6)
   const N=Z.nachwuchs;

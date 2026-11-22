@@ -26,5 +26,16 @@ const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S,ev=W.ev;
   const r=saisons({n:2,seed:SEED,verein:6,beiSaisonstart:S=>{nachher=S.stab.length;frei=S.stab.filter(x=>x.team<0).length;}});
   pruef(gehalt<0,'Gehälter des Stabs werden je Ligaspiel gebucht',Math.round(gehalt).toLocaleString('de-DE')+' €');
   pruef(frei>=W.ev('RST').vereinslos&&Math.abs(nachher-vorher)<=W.ev('RST').vereinslos,'Neue Saison: Verträge laufen aus, genug vereinslose Mitarbeiter bleiben',`${vorher} → ${nachher} Mitarbeiter, ${frei} vereinslos`);}
+// K32c. Ex-Spieler im Stab (K32 §3.3b): mit Chance 1 wird jeder Abgänger ab 100 Ligaspielen vereinsloser Mitarbeiter (Torhüter als Torwarttrainer, Qualität nach den Spielen),
+//       darunter keiner; wer gerade Trainer im Pool geworden ist, nicht; mit Chance 0,25 über 200 Abgänger etwa ein Viertel
+{const w=neueWelt();w.F.buildWorld(SEED);const V=w.W.S,E=w.W.ev('RST').exSpieler,pl=V.pl.filter(p=>p.team>=0).slice(0,240),tw=pl.find(p=>p.pos==='TW'),feld=pl.find(p=>p.pos!=='TW');
+  const alt=E.chance;E.chance=1;tw.kas={sp:300};feld.kas={sp:160};const wenig=pl.find(p=>p!==tw&&p!==feld);wenig.kas={sp:20};const vor=V.stab.length;
+  const n1=w.F.stabExSpieler([tw,feld,wenig]),neu=V.stab.slice(vor),t1=neu.find(x=>x.n===tw.n),f1=neu.find(x=>x.n===feld.n);
+  const coach=pl.find(p=>p!==tw&&p!==feld&&p!==wenig);coach.kas={sp:200};(V.trainer||(V.trainer=[])).push({id:9999,n:coach.n,ex:1,seit:V.season,tid:null,st:[]});const n2=w.F.stabExSpieler([coach]);
+  E.chance=alt;const viele=pl.filter(p=>p!==tw&&p!==feld&&p!==wenig&&p!==coach).slice(0,200);viele.forEach(p=>p.kas={sp:150});const n3=w.F.stabExSpieler(viele);
+  const qSoll=Math.round(E.basis+300/E.jeSpiele);
+  pruef(n1===2&&!!t1&&t1.r==='torwart'&&t1.team===-1&&t1.ex===300&&Math.abs(t1.q-qSoll)<=2&&!!f1&&Object.keys(E.rollen).includes(f1.r)&&n2===0&&n3>=30&&n3<=70,
+    'Ex-Spieler im Stab: Torhüter als Torwarttrainer, Feldspieler als Co-, Jugend- oder Standardtrainer, nur ab 100 Ligaspielen, nicht zugleich Trainer, Anteil etwa ein Viertel',
+    `${n1} neu (Torhüter ${t1&&t1.r} Q${t1&&t1.q}, Feld ${f1&&f1.r}), Trainer ${n2}, 200 Abgänger → ${n3}`);}
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);
