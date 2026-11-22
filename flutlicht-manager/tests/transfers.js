@@ -118,5 +118,11 @@ const kaufe=(w,p,fee,yrs=3)=>{const els=w.W.ev('document');els.getElementById('f
   pruef(JSON.stringify(ist)===JSON.stringify(soll)&&ordnung&&B.preis===p.ask&&html.includes('Bedarf anderer Vereine')&&F.bedarfAndereText(fremd)==='',
     'Bedarf anderer Vereine: dieselben Vereine wie die Bieter im Markt, Lücken zuerst, nur für deine Spieler',`${B.l.length} Vereine, davon ${B.l.filter(x=>x.luecke).length} mit Lücke, Ausland ${B.aus}`);}
 
+// K31c. Konkurrent rüstet auf (K31 §8): Der Star-Kauf (Sternejagd) eines Vereins deiner Liga steht als Meldung da, ein normaler Kauf und ein Verein einer anderen Liga nicht
+{const {S,F,ev}=welt(),t=ev('myT()'),meld=[],orig=F.news;F.news=function(x,c){if(String(x).startsWith('Konkurrent rüstet auf'))meld.push(x);return orig(x,c);};
+  const kaeufer=S.teams.find(x=>x.id!==S.my&&x.lg===t.lg),fremd=S.teams.find(x=>x.lg!==t.lg&&x.lg<=3),spieler=()=>S.pl.find(p=>p.team>=0&&p.team!==S.my&&p.team!==kaeufer.id&&p.team!==fremd.id&&!p.wech&&!p.leihe);
+  F.kiWechsel(spieler(),kaeufer,1e6,'stern');const a=meld.length;F.kiWechsel(spieler(),kaeufer,1e6);const b=meld.length;F.kiWechsel(spieler(),fremd,1e6,'stern');const c=meld.length;
+  pruef(a===1&&b===1&&c===1,'Konkurrent rüstet auf: Meldung nur beim Star-Kauf eines Vereins deiner Liga',`Star ${a}, normaler Kauf ${b-a}, andere Liga ${c-b}`);}
+
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

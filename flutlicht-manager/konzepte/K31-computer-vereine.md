@@ -307,6 +307,12 @@ Das ganze Konzept.
 | Konkurrent rüstet auf | ehrgeiziger Rivale kauft einen Star | Presse, deine Fans erwarten eine Antwort (K27) |
 | Notverkauf | Verein über dem Gehaltsrahmen | Spieler unter Wert auf dem Markt |
 
+**Stand 22.11.2026:**
+- „Großer Umbruch“ seit U11d2.
+- „Rekordtransfer“ seit U13, seit K34d mit echtem Startwert.
+- **„Konkurrent rüstet auf“ seit K31c (ohne Testlauf):** Gelingt einem Verein deiner Liga die Sternejagd (§5.7), steht es als Meldung da. Nur eine Meldung, ohne Presse und Fans. Eine Wirkung auf deinen Verein gäbe es nur in deiner Welt, nicht beim selben Verein als Computer-Verein, und das bricht den Gleichschritt in `tests/lizenz.js`. Presse und Fans kommen, wenn es dafür eine Karte gibt (K30).
+- **„Notverkauf“ fehlt noch:** Er ändert die Verkaufsregeln aller Vereine und gehört zu einem Schritt mit Testlauf.
+
 ## 9. Wechselwirkungen
 
 | Konzept | Zusammenspiel |

@@ -65,7 +65,7 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 | **K11b** Sommerturnier | `mitarbeit/popolupo-k11b-sommerturnier` (auf K18c) | fertig, ungetestet |
 | **K11c** Testspiel-Anfragen der Computer-Vereine | `mitarbeit/popolupo-k11c-testspiel-anfragen` (auf K11b) | fertig, ungetestet |
 | **U19e** Europapokal-Karten, dazu **K31b** Bedarf anderer Vereine und Korrekturen DW | `mitarbeit/popolupo-u19e-europa-karten` (auf K11c) | fertig, ungetestet |
-| **K34d** Rekordtransfer mit echtem Startwert | `mitarbeit/popolupo-k34d-rekordtransfer` (auf U19e) | fertig, ungetestet |
+| **K34d** Rekordtransfer mit echtem Startwert, dazu **K31c** „Konkurrent rüstet auf“ | `mitarbeit/popolupo-k34d-rekordtransfer` (auf U19e) | fertig, ungetestet |
 | U19d2 volle Kader der Auslandsvereine in der Engine | zurückgestellt | Entwurf in K37 §5.7. Die Engine behandelt Auslandsvereine als Block wie Amateure, viele Stellen schlagen Spieler in `PIX` nach. Erst nach einem Testlauf und der Messung des Faktors 0,93 |
 
 **Die neueste Spitze ist immer der zuletzt genannte Zweig, er enthält alles davor.** K24 ist fertig (Claude).
@@ -105,6 +105,11 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 ---
 
 ## Changelog
+
+### 22.11.2026: K31c „Konkurrent rüstet auf“ (Zweig `mitarbeit/popolupo-k34d-rekordtransfer`, zweiter Commit)
+
+- **Neu (K31 §8):** Holt ein Verein deiner Liga einen Star (Sternejagd), steht das als Meldung da. Nur eine Meldung, damit der Gleichschritt hält.
+- **Tests zuerst:** `tests/transfers.js` (neuer Fall K31c).
 
 ### 22.11.2026: K34d Rekordtransfer mit echtem Startwert (Zweig `mitarbeit/popolupo-k34d-rekordtransfer`, auf U19e)
 

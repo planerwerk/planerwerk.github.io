@@ -110,11 +110,12 @@ function kiStern(t,P,rest,kader){const J=RCV.sterneJagd;let best=null,bv=-Infini
     const preis=kiSternPreis(p);if(preis>rest)continue;
     const v=p.str+(R()-0.5)*2*RCV.schaetzFehler;if(v>bv){bv=v;best={p,preis,von:von.id};}}
   return best;}
-// Der Wechsel selbst: Geld, Kabine, Vertrag. Vereinslose kommen ohne Ablöse und ohne Meldung (außer bei dir). art: 'stern' bei der Sternejagd (nur für Auswertungen, tests/welt.js).
+// Der Wechsel selbst: Geld, Kabine, Vertrag. Vereinslose kommen ohne Ablöse und ohne Meldung (außer bei dir). art: 'stern' bei der Sternejagd (Auswertungen in tests/welt.js, Meldung „Konkurrent rüstet auf“ seit K31c).
 function kiWechsel(p,b,preis,art){const von=p.team>=0?S.teams[p.team]:null;
   if(von){if(b.id===S.my)money('Transfers',-preis);else b.cash-=preis;
     if(von.id===S.my){money('Transfers',preis);vertragEnde(p);}else von.cash+=preis;
     kabineAbgang(p,von.id);S.offers=S.offers.filter(o=>o.pid!==p.id);news(`Wechsel perfekt: ${p.n} geht für ${fmt(preis)} von ${von.name} zu ${b.name}.`,'tr');
+    if(art==='stern'&&b.id!==S.my&&S.teams[S.my]&&b.lg===myT().lg)news(`Konkurrent rüstet auf: ${b.name} holt mit ${p.n} einen Star für ${fmt(preis)}. Die Zeitungen fragen, was du dagegenhältst.`,'tr'); /* K31 §8, K31c: nur Meldung, deine Liga */
     bezAendern(von.id,b.id,RBZ.anlass.kiWechsel,`Transfer ${p.n}`);} // zum Listenpreis, also fair (K17 §12 Nr. 8, U12c)
   else if(b.id===S.my)stabMeldung(`Der Verein hat den vereinslosen ${p.n} verpflichtet.`);
   p.team=b.id;p.list=0;p.ask=0;p.ct=riA(RM.neuerVertrag);p.sal=salaryFor(p.str);p.seit=absTag(S.tag);p.abl=preis;neuzugang(p,b.id);
