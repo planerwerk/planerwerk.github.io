@@ -468,7 +468,7 @@ const REGELN={
     schiri:{verfahren:0.3,strafe:{1:[20000,50000],2:[10000,25000],3:[5000,12000]}},
     gedaechtnis:{rueckendeckungTage:28,rueckendeckungGlaub:-5,kultFans:2,haemeGlaub:-3,haemeFans:-2,aussagen:40},delegieren:-2,chronikHumor:0.3,chronikMax:100,
     // K29d (22.11., GESCHÄTZT): Medienklima in der Pressekonferenz. Gewicht der scharfen Medien 1 + gewicht × (50 − Klima)/50, der übrigen 1 − …; unter bohrenUnter eine Frage mehr
-    klimaFragen:{scharf:['boulevard','portal'],gewicht:0.5,bohrenUnter:35}},
+    klimaFragen:{scharf:['boulevard','portal'],gewicht:0.5,bohrenUnter:35,bohrenPlus:1}},
 
   // Marketing (K25 §5.4, §11, K25a). trikot: Faktor auf den Fanartikel-Erlös [min, max] und Fanstimmung je Design, mutig: Chance auf Kult, sonst Spott.
   // kampagnen: Kosten in der 1. Liga, Dauer in Tagen (sommer: bis zum ersten Pflichtspiel), Wirkung. ligaFaktor: Kosten je Liga. abnutzung: 1., 2., 3. Mal in der Saison.

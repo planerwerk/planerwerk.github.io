@@ -80,6 +80,17 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 22.11.2026: Korrekturen nach Prüfung DM zu K29d (Zweig `mitarbeit/popolupo-u12g-trainervertrag`)
+
+- Ein lesender Prüf-Agent hat K29d durchgesehen (Konsistenzprüfung DM). Er fand keinen blockierenden Fehler.
+- **Behoben:**
+  - DM1: Auch der Ausraster wirkt über das fragende Medium.
+  - DM2: Der Faktor je Frage steht vor den Antworten fest.
+  - DM3: Das Exklusivinterview rundet.
+  - DM4: Die zusätzliche Frage steht in den Regeln.
+  - DM5: Doku.
+- **Tests zuerst:** `tests/presse.js` (K29c, K29d).
+
 ### 22.11.2026: U12g Trainervertrag (Zweig `mitarbeit/popolupo-u12g-trainervertrag`, auf K29d)
 
 - **Neu (K28 §5.10, nur Statistik, es fließt kein Geld):**
@@ -99,7 +110,7 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
   - Unter Klima 35 eine Frage mehr.
   - Die Wirkung auf Fans und Vorstand läuft über die Beziehung zum fragenden Medium. Jede Antwort ändert diese Beziehung um ihre halbe Wirkung aufs Klima.
   - Beziehungen verblassen montags um 0,5 Richtung 0.
-- **Tests zuerst:** `tests/presse.js` (neuer Fall K29d, dazu die alten Fälle 2, 4 und 6, die Journalisten fest setzen).
+- **Tests zuerst:** `tests/presse.js` (neuer Fall K29d, dazu die alten Fälle 4, 5 und 6, die Journalisten fest setzen).
 - **Zu erwarten:** Der Gleichschritt bleibt gleich, weil in der Automatik der Co-Trainer geht und die Wahl der Journalisten nur im Strom `presse` würfelt.
 
 ### 22.11.2026: Korrekturen nach Prüfung DL (Zweig `mitarbeit/popolupo-k25d-mitglieder`)

@@ -1765,3 +1765,18 @@ Ein Agent hat 902200f gelesen (nichts ausgeführt). Korrekturen auf `mitarbeit/p
 | DL3 | **Mitgliederaktion wiederholbar:** alle vier Wochen, mit dauerhafter Wirkung. Jetzt einmal je Saison (`einmal` in den Kampagnen). | ✅ behoben |
 | DL4 | **Doku:** Bayern bekommt gegenüber K23c etwa +19,5 Mio. € (nicht +15), das Minimum der 2. Liga ist Greuther Fürth (nicht Elversberg). | ✅ behoben |
 | DL5 | Ohne Befund: Werte der Tests von Hand nachgerechnet, `S.fx` bei jedem Aufruf vorhanden, Zweite mit 0 Mitgliedern, Zeile in `saison.js`, `vereine.js` (56 Vereine, Zeilenenden), alle Nutzer von `sonstigeEinnahmen`, Gleichschritt, Kommentare. | ✅ |
+
+---
+
+## DM. Prüfung von K29d ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat dc13074 gelesen (nichts ausgeführt). Kein blockierender Fehler. Die Korrekturen liegen auf `mitarbeit/popolupo-u12g-trainervertrag`, mit U12g zusammen.
+
+| # | Befund | Status |
+|---|---|---|
+| DM1 | **Ausraster ohne Medium:** Bruch (Vorstand −3) und Kult (Fans +6) gingen am Faktor der Beziehung vorbei, obwohl die Doku „jede Antwort“ sagt. Jetzt auch über das fragende Medium. Kein zusätzlicher Wurf. | ✅ behoben |
+| DM2 | **Reihenfolge:** Der Faktor wurde je Antwort neu gelesen, nachdem frühere Antworten derselben Pressekonferenz die Beziehung schon geändert hatten. Jetzt steht der Faktor je Frage vor den Antworten fest. | ✅ behoben |
+| DM3 | **Exklusivinterview ohne Rundung:** Ganze Zahlen auf jetzt gebrochene Beziehungen, ohne `fanZahl`. Jetzt über `medienBezAendern`, mit Rundung und Grenzen. | ✅ behoben |
+| DM4 | Die zusätzliche Frage stand als 1 im Code, jetzt `klimaFragen.bohrenPlus`. | ✅ behoben |
+| DM5 | **Doku:** „Noch nicht“ von K29c ist veraltet. Die Beziehung steigt auch bei Kritik und Provokation (Klima +1), mit Abnutzung weniger. Im Changelog sind es die Fälle 4, 5 und 6. | ✅ behoben |
+| DM6 | Ohne Befund: gleiche Wahl bei Klima 50 auch an den Grenzen (R() liefert k/2^32, ×9 exakt), Anteile 0,6 und 1/7, Würfe nur im Strom `presse`, Gleichschritt (Co-Trainer sofort, `S.mb` bleibt leer), Zuordnung Antwort zu Frage, Deckel nach dem Faktor, Rundung und −0 beim Verblassen, alle Testwerte von Hand. | ✅ |
