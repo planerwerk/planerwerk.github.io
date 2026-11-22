@@ -13,6 +13,44 @@ Node.js 22, Playwright mit Chromium, für `tests/ui-zugang.js` axe-core 4.10.2 (
 
 ---
 
+## Lauf 8, 22.11.2026: `popolupo-t5-korrekturen` (5253729, auf 0fae7b8)
+
+Nur getestet, am Code von popolupo nichts geändert.
+
+**Erledigt laut Lauf 8:** T5.1 und T5.5 (`lizenz.js` grün, Gleichschritt wieder 150 Tage), T5.4 (`ui-zwei-saisons.js` grün). T5.3 deutlich besser (siehe unten). CH4 nicht einzeln geprüft.
+
+| Test | Ergebnis |
+|---|---|
+| lizenz, europapokal, werbung, statistik, welt, jugend und alle übrigen Node-Tests außer den unten genannten | grün |
+| alle Browser-Tests (ui-zwei-saisons, fuzz-karrieren, ui-lernstufen, live-neuladen, seed, ui-zugang) | grün |
+| wettbewerbe | rot (1): **T5.2 noch offen**, siehe T8.2 |
+| finanzen | rot (1): T8.1 (Fehler im Test) |
+| training | rot (2): T8.3, neu |
+| spielermodell | rot (2): T1.3 Rest, 2. Liga 69,8 → 72,2, 3. Liga 65,4 → 68,0 |
+| kalibrierung | rot (3, alle gelb am Rand): Elfmetertore 8 %, Elfmeter 0,32, Favoritensieg 64 % (Ziel ab 65 %) |
+| medizin | rot (3, am Rand): Zerrungen 25 %, Rückfall 16 %, Kreuzbandrisse 9,0 |
+| akzeptanz | rot (3) wie immer: Abwehr +0,8, Verhältnis, Tempo 5,8 ms (Rechner war nebenbei belastet) |
+
+**T8.2 (zu T5.2) `wettbewerbe.js` „72 Stunden“: noch 23 Fälle.** Nachgebaut mit Seed 5 über eine Saison: alle Fälle sind **Donnerstag Europapokal → Samstag Liga** (6) oder **Donnerstag Europapokal → Samstag Pokal** (1), zum Beispiel Leverkusen Do 22.10. Europa League / Sa 24.10. Bundesliga, Freiburg Do 20.8. Conference League (Qualifikation) / Sa 22.8. DFB-Pokal. Mittwoch → Freitag kommt nicht mehr vor. `ligaVerlegen` müsste nach einem Donnerstag auf den Sonntag schieben (so plant es auch die DFL für Vereine in der Europa League).
+
+**T8.1 `finanzen.js` „mindestens 9 Monatsberichte“: 4.** Kein Fehler im Spiel: In dieser Welt wird der Trainer der Testsimulation (Freiburg, Seed 4711) an Tag 221 entlassen und wechselt zu Union Berlin. Beim Vereinswechsel beginnt `S.finV` neu (`finanzenJobwechsel`), zum Saisonende stehen darum nur 4 Berichte. In Lauf 7 kam die Entlassung erst am Saisonende (11 Berichte). Vorschlag: Der Test zählt die Berichte bis zum Vereinswechsel mit, oder er wählt einen Verein, der nicht entlassen wird, oder er schaltet die Entlassung ab.
+
+**T8.3 `training.js` neu rot:** „Training wirkt: Kondition der Startelf mindestens 10 höher als mit Schonen“ 77,9 gegen 68,6 (Lauf 7: 79,5 gegen 68,5) und „Training kostet nicht zu viel: höchstens ein Verletzter mehr“ 3,0 gegen 2,0 (Lauf 7: 2,4 gegen 2,5). Zwischen Lauf 7 und Lauf 8 hat sich nur dieser Korrekturzweig geändert (Verlegung und Stärke im Europapokal). Vermutung: Die verlegten Spiele machen den Spielplan dichter, weniger Trainingstage, mehr Belastung. Nicht untersucht.
+
+**T5.3 nach der Korrektur (Faktor 0,93), gemessen wie in Lauf 5 (Seed 5, drei Saisons):**
+
+| Saison | Champions League | Europa League | Conference League | Länderwertung GER |
+|---|---|---|---|---|
+| 2026 | FCB K.-o.-Play-offs, BVB, RBL, VFB Ligaphase | B04 Achtelfinale, TSG Ligaphase | SCF Ligaphase | 16. von 19 |
+| 2027 | FCB Viertelfinale, SCF K.-o.-Play-offs, BMG, B04 Ligaphase | FCA K.-o.-Play-offs, VFB Ligaphase | SGE Achtelfinale | 8. von 19 |
+| 2028 | VFB Halbfinale, SGE Viertelfinale, FCB Achtelfinale, BVB Ligaphase | B04 Finale, RBL Ligaphase | SCF Halbfinale | 2. von 19 |
+
+Champions League: 6-mal Ligaphase (vorher 9), 2-mal K.-o.-Play-offs, je einmal Achtelfinale und Halbfinale, 2-mal Viertelfinale, kein deutscher Sieger. Sieger: Chelsea, Liverpool, Liverpool (CL), Sturm Graz, Brentford, Anderlecht (EL), Gent, Bilbao, Groningen (ECL). Damit näher an K37 §10, die Hälfte scheidet aber noch in der Ligaphase aus.
+
+**Neu von Claude auf dem Claude-Zweig** (seit Lauf 7, nicht in diesem Korrekturzweig): Sponsorentag in drei Größen auf Wunsch des Nutzers (c50db88): klein, mittel, groß mit Kosten nach Liga, Zuschlag gewürfelt in 5–7 %, 7–10 % oder 8–11 %, als Rückmeldung nur ein Text (Erfolg, voller Erfolg, grandioser Erfolg). Betrifft nur `js/werbung.js`, `daten/regeln.js` (`RF.werbung.sponsorentag`) und `tests/werbung.js`.
+
+---
+
 ## Lauf 7, 21./22.11.2026 nachts: Claude-Zweig mit K24b und K24c (452dc0f, auf eb3efbe)
 
 **Neu von Claude** (Rest von K24, wie im Entwicklungsprotokoll abgesprochen). popolupos Spitze eb3efbe ist dafür in den Claude-Zweig geholt (5d8444b, ohne Konflikt).
