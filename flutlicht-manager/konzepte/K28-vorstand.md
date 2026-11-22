@@ -1,6 +1,6 @@
 # K28 – Vorstand, Ziele, Karriere
 
-Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12. Teilweise gebaut: Computer-Vereine in U11d2 (§7), Vertrauen, Ultimatum und Ruf für dich in U12a (§5.6), Nebenziele und Rücktritt in U12b (§5.7), beide 20.11., Zielgespräch in U12e (§5.8, 22.11.), Zwischenbilanz im Winter in U12f (§5.9, 22.11.), Trainervertrag als Statistik in U12g (§5.10, 22.11.), Wirkung des Rufs in U12h (§5.11, 22.11.), alle ohne Testlauf.
+Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12. Teilweise gebaut: Computer-Vereine in U11d2 (§7), Vertrauen, Ultimatum und Ruf für dich in U12a (§5.6), Nebenziele und Rücktritt in U12b (§5.7), beide 20.11., Zielgespräch in U12e (§5.8, 22.11.), Zwischenbilanz im Winter in U12f (§5.9, 22.11.), Trainervertrag als Statistik in U12g (§5.10, 22.11.), Wirkung des Rufs in U12h (§5.11, 22.11.), Präsidentenwahl in U12i (§5.12, 22.11.), alle ohne Testlauf.
 Hängt ab von: K02 (Geduld je Stufe), K15 (Gespräche) · Wird gebraucht von: K12b, K14, K19, K23, K29.
 
 ## 1. Ziel und Spielgefühl
@@ -237,6 +237,22 @@ Nach §5.4 „Wirkt auf“. Die Jobangebote nutzten den Ruf schon seit U12a, jet
 - **Lizenz (K36):** keine neue Funktion.
 - **Noch nicht:** Ruf und Presse (K29), zum Beispiel mehr Pressekonferenzen oder ein anderes Medienklima für bekannte Trainer.
 
+### 5.12 Umsetzung U12i (22. November 2026, popolupo, ohne Testlauf): Präsidentenwahl
+
+Nach §8 („Neuer Präsident: Wahl alle 3–4 Jahre“) und K25 §5.5 (Mitgliederversammlung).
+
+- **Wann:** im Sommer nach der Saison, auf der Mitgliederversammlung, bei jedem Verein alle 3 oder 4 Jahre. Der Takt ist fest aus der Vereinsnummer, die Vereine wählen also nicht alle im selben Jahr. Im Büro steht, wann dein Verein wieder wählt.
+- **Bleibt der Präsident?** Die Chance ist 65 %, dazu:
+  - +0,3 je Punkt pro Spiel über 1,35 (darunter entsprechend weniger),
+  - +15 % bei einem Aufstieg, −25 % bei einem Abstieg,
+  - +0,5 % je Punkt Fanstimmung über 50 (darunter weniger),
+  - zusammen zwischen 20 und 95 %. Gewürfelt im eigenen Strom je Verein und Saison.
+- **Neuer Präsident:** neue Werte für Geduld, Ehrgeiz und Sparsamkeit (weiter fest aus der Vereinsnummer, jetzt mit der Zahl der Wechsel).
+  - Bei Computer-Vereinen wirkt die neue Geduld auf Trainerwechsel (K31).
+  - Bei dir wirkt sie auf Nebenziele, Tiefstapeln und die Vertragslaufzeit beim nächsten Vertrag. Dein Vertrauen rückt zur Hälfte Richtung 50, denn der Neue muss sich erst ein Bild machen. Du bekommst eine Meldung, auch bei einer Wiederwahl.
+- **Lizenz (K36):** keine neue Funktion.
+- **Noch nicht:** Namen der Präsidenten, Kandidaten mit Programm, Einfluss des Trainers auf die Wahl, Mitglieder als Stimmen (K25d), neue Ziele direkt nach der Wahl (gilt erst mit dem Saisonziel der neuen Saison).
+
 ## 6. Hebel des Spielers
 
 | Hebel | Nutzen | Preis |
@@ -356,6 +372,10 @@ vorstand:{
 
 25. **Trainergehalt nur als Statistik**, nicht über das Vereinskonto. Nr. 21 gilt weiter für Prämien: Sie bleiben Ruf. Das Gehalt richtet sich nach Liga, Ansehen und Ruf, die Laufzeit nach der Geduld des Präsidenten.
 26. **Kein Abschied bei Vertragsende:** Unter Vertrauen 56 verlängert der Vorstand um eine Saison zum alten Gehalt. Der Abschied folgt mit dem Vertragsgespräch.
+
+**Vorläufig entschieden mit U12i** (22.11., popolupo, ohne Testlauf, §5.12):
+
+27. **Präsidentenwahl alle 3 oder 4 Jahre** nach festem Takt je Verein, Chance zu bleiben aus Punkten, Auf- und Abstieg und Fanstimmung. Ein neuer Präsident bekommt neue Werte, dein Vertrauen rückt zur Hälfte Richtung 50.
 
 **Noch zu recherchieren:** Zahl der Trainerwechsel pro Saison in 1., 2. und 3. Liga.
 

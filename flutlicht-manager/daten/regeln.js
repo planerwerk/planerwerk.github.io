@@ -905,7 +905,10 @@ const REGELN={
     pokalAus:-6,pokalWeiter:1.5,pokalSieg:10,
     saisonErreicht:20,saisonWeitAb:3,saisonWeit:-25,saisonVerfehlt:-8,entlassenSaisonUnter:15,
     neuerJob:55,
-    praesident:{min:1,max:20}, // Geduld, Ehrgeiz, Sparsamkeit des Präsidenten (K28 §3), fest aus der Vereinsnummer. Wirkt seit U11d2 nur bei Computer-Vereinen (Geduld).
+    praesident:{min:1,max:20, // Geduld, Ehrgeiz, Sparsamkeit des Präsidenten (K28 §3), fest aus der Vereinsnummer und der Zahl der Wechsel (versatz je Wechsel)
+      // Präsidentenwahl (K28 §8, K25 §5.5, U12i, 22.11., GESCHÄTZT): Mitgliederversammlung im Sommer alle jahre (je nach Vereinsnummer). Der Präsident bleibt mit bleiben
+      // + jePunkt × (Punkte je Spiel − mitte) + aufstieg/abstieg + fans × (Fanstimmung − 50), in grenzen. Sonst ein neuer; bei dir rückt das Vertrauen um vertrauen Richtung 50.
+      versatz:101,wahl:{jahre:[3,4],bleiben:0.65,mitte:1.35,jePunkt:0.3,aufstieg:0.15,abstieg:-0.25,fans:0.005,grenzen:[0.2,0.95],vertrauen:0.5}},
     jobs:{ansehenAbschlag:4,kandidaten:8,angebote:4},
     // Trainervertrag (K28 §5.5, U12g, 22.11., GESCHÄTZT, nur Statistik, es fließt kein Geld): Gehalt je Saison = basis × liga × e^(steigung × (Ansehen − mitte)) × (1 + jeRuf × (Ruf − Startruf)), auf runden.
     // Laufzeit nach der Geduld des Präsidenten (Grenzen wie ruf.ungeduldig und ruf.geduldig); ab Tag winterAb zählt die laufende Saison nicht mit. Läuft er aus: Vertrauen über verlaengernAb

@@ -6,7 +6,7 @@
 
 // ---------- Präsident (K28 §3) ----------
 // Geduld, Ehrgeiz, Sparsamkeit (je 1–20), fest aus der Vereinsnummer. Kein Zufallsstrom, alte Spielstände brauchen nichts. Bisher wirkt nur die Geduld.
-function praesident(t){const P=RV.praesident,w=k=>P.min+(Math.imul(t.id+1,k)>>>0)%(P.max-P.min+1);return{geduld:w(2654435761),ehrgeiz:w(2246822519),sparsam:w(3266489917)};}
+function praesident(t){const P=RV.praesident,b=t.id+1+(t.prw||0)*P.versatz,w=k=>P.min+(Math.imul(b,k)>>>0)%(P.max-P.min+1);return{geduld:w(2654435761),ehrgeiz:w(2246822519),sparsam:w(3266489917)};} /* prw: Zahl der Präsidentenwechsel (U12i), ohne Wechsel wie vorher */
 function praesidentText(t){const g=praesident(t).geduld,F=RV.ruf;return g<=F.ungeduldig?'ungeduldig':g>=F.geduldig?'geduldig':'mittel geduldig';}
 // Chance auf Entlassung nach einem gescheiterten ersten Ultimatum (K28 §5.3): basis + jeGeduld × Geduld. E: Werte (RV.ultimatum.entlassung oder RCV.vorstand.entlassung)
 function entlassChance(t,E){return clamp(E.basis+E.jeGeduld*praesident(t).geduld,0,1);}
@@ -197,3 +197,23 @@ function vertragUmstellen(){if(!S||S.my==null||!S.teams||!S.teams[S.my]||S.fired
 const gehaltLaufend=()=>{const v=S.tvt;return v&&v.tid===S.my&&!S.fired&&S.phase==='play'?Math.round(v.geh*Math.max(0,S.tag-v.ab)/RV.vertrag.saisonTage):0;};
 // Anzeige im Büro (Karte Saisonziel), nur lesend. vertragText gibt es für Spieler (vertraege.js, DN3)
 function trainerVertragText(){const v=S.tvt;if(S.fired||!v||v.tid!==S.my)return'';return`<p class="dim">Dein Vertrag läuft bis ${stSaison(v.bis)}, Gehalt ${fmt(v.geh)} je Saison (nur Statistik).</p>`;}
+
+// ---------- Präsidentenwahl (K28 §8, K25 §5.5, U12i) ----------
+// Mitgliederversammlung im Sommer nach der Saison s, je Verein alle 3 oder 4 Jahre (fest aus der Vereinsnummer). t.prw zählt die Präsidentenwechsel (praesident).
+const wahlJahre=t=>{const J=RV.praesident.wahl.jahre;return J[t.id%J.length];};
+const wahlFaellig=(t,s)=>(s+t.id)%wahlJahre(t)===0;
+function naechsteWahl(t){let s=S.season;while(!wahlFaellig(t,s))s++;return s;}
+// Chance, dass der Präsident bleibt: Punkte je Spiel der Saison, Auf- oder Abstieg (sm), Fanstimmung, in Grenzen. Ohne Zufall.
+function wahlChance(t,sm){const W=RV.praesident.wahl,r=table(t.lg).find(x=>x.id===t.id),ppg=r&&r.sp?r.p/r.sp:W.mitte;let c=W.bleiben+(ppg-W.mitte)*W.jePunkt+(fanst(t)-50)*W.fans;
+  if(sm){if([...(sm.up||[]),...(sm.up3||[]),...(sm.up4||[])].includes(t.id))c+=W.aufstieg;if([...(sm.down||[]),...(sm.down2||[]),...(sm.down3||[])].includes(t.id))c+=W.abstieg;}
+  return clamp(c,W.grenzen[0],W.grenzen[1]);}
+// Saisonwechsel (saison.js newSeasonLauf, vor Auf- und Abstieg): Wahl bei allen Vereinen, bei denen sie fällig ist, eigener Strom je Verein und Saison.
+// Bei dir: Meldung, ein neuer Präsident kennt dich nicht (Vertrauen rückt Richtung 50). Rückgabe: Zahl der neuen Präsidenten.
+function praesidentenWahlen(sm){const W=RV.praesident.wahl;let n=0;
+  S.teams.forEach(t=>{if(!aktiv(t)||!wahlFaellig(t,S.season))return;const c=wahlChance(t,sm),bleibt=mitStrom(strom('praesidentWahl',S.season,t.id),()=>R()<c);
+    if(!bleibt){t.prw=(t.prw||0)+1;n++;}if(t.id!==S.my)return;
+    if(bleibt)news(`Mitgliederversammlung: Der Präsident wird wiedergewählt. Er ist ${praesidentText(t)}.`);
+    else{S.trust=clamp(50+(S.trust-50)*W.vertrauen,0,100);news(`Mitgliederversammlung: Der Präsident wird abgewählt. Der neue ist ${praesidentText(t)}${praesident(t).ehrgeiz>=RV.nebenziele.ehrgeizigAb?' und ehrgeizig':''}. Er muss sich erst ein Bild von dir machen.`,'bad');}});
+  return n;}
+// Anzeige im Büro (Karte Saisonziel)
+function wahlText(t){const s=naechsteWahl(t);return`Nächste Präsidentenwahl auf der Mitgliederversammlung im Sommer ${s+1}.`;}

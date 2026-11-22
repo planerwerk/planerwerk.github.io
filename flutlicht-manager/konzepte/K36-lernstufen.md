@@ -323,6 +323,7 @@ lizenz:{
 81. **K34b Rekorde der 2. und 3. Liga (22.11., popolupo, ohne Testlauf):** keine neue Funktion, nur Startwerte und Meldungen. Ohne Zufall (Gleichschritt unberührt).
 82. **K32c Ex-Spieler im Stab (22.11., popolupo, ohne Testlauf):** keine neue Funktion, mehr Auswahl unter den vereinslosen Mitarbeitern im Bereich `stab`. Erst zum Saisonwechsel, eigener Strom (Gleichschritt unberührt, er läuft 150 Tage).
 83. **K20d Recht des Spielers beim Bieterwettstreit (22.11., popolupo, ohne Testlauf):** keine neue Funktion, eine weitere Folge im Kauf (Bereich `transfers`). Nur nach deinem Angebot, eigener Strom (Gleichschritt unberührt).
+84. **U12i Präsidentenwahl (22.11., popolupo, ohne Testlauf):** keine neue Funktion. Im Sommer, eigener Strom je Verein (Gleichschritt unberührt, er läuft 150 Tage).
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 

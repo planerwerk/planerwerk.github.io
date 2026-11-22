@@ -137,4 +137,18 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   pruef(Math.abs(i1-i0-20*ev('RVT').interesse.ruf)<1e-9&&Math.abs(k0-kSoll)<1e-9&&Math.abs(k1-k1Soll)<1e-9&&g0===G.start&&g1===Math.round(G.start+20*G.jeRuf)&&gJob===g1&&S.my===ziel,
     'Ruf wirkt: Interesse, Kabine, Glaubwürdigkeit beim neuen Verein',`Interesse +${(i1-i0).toFixed(2)}, Kabine ${k0} → ${k1}, Glaubwürdigkeit ${g0} → ${g1}, nach dem Wechsel ${gJob}`);}
 
+// 17. Präsidentenwahl (K28 §8, U12i): ohne Wechsel derselbe Präsident wie vorher, nach einem Wechsel meist andere Werte; Wahl alle 3 oder 4 Jahre; Chance 0,65 ± Auf-/Abstieg und
+//     Fanstimmung; abgewählt: neuer Präsident, dein Vertrauen rückt zur Hälfte Richtung 50; wiedergewählt: nichts ändert sich
+{const {S,F,ev,B}=welt(),W=B.praesident.wahl,t=ev('myT()'),alle=S.teams.filter(x=>ev('aktiv')(x)),p0=JSON.stringify(F.praesident(t));
+  const gleich=JSON.stringify(F.praesident(Object.assign({},t,{prw:0})))===p0,anders=alle.filter(x=>JSON.stringify(F.praesident(x))!==JSON.stringify(F.praesident(Object.assign({},x,{prw:1})))).length;
+  const takt=alle.every(x=>{let n=0;for(let s=S.season;s<S.season+12;s++)if(ev('wahlFaellig')(x,s))n++;return n===12/ev('wahlJahre')(x);});
+  t.fanst=50;const c0=F.wahlChance(t,null),cAuf=F.wahlChance(t,{up:[VEREIN]}),cAb=F.wahlChance(t,{down:[VEREIN]});t.fanst=90;const cFans=F.wahlChance(t,null);t.fanst=50;
+  while(!ev('wahlFaellig')(t,S.season))S.season++;const faellig=alle.filter(x=>ev('wahlFaellig')(x,S.season)).length;
+  Object.assign(W,{grenzen:[0,0]});S.trust=80;const n1=F.praesidentenWahlen(null),trust1=S.trust,prw1=t.prw;
+  Object.assign(W,{grenzen:[1,1]});const n2=F.praesidentenWahlen(null);
+  pruef(gleich&&anders>=alle.length*0.9&&takt&&Math.abs(c0-W.bleiben)<1e-9&&Math.abs(cAuf-c0-W.aufstieg)<1e-9&&Math.abs(cAb-c0-W.abstieg)<1e-9&&Math.abs(cFans-c0-40*W.fans)<1e-9
+    &&n1===faellig&&prw1===1&&trust1===65&&n2===0&&t.prw===1&&S.trust===65,
+    'Präsidentenwahl: Werte, Takt, Chance, Abwahl mit Vertrauen zur Mitte, Wiederwahl ohne Folgen',
+    `andere Werte bei ${anders} von ${alle.length}, Takt ${takt}, Chance ${c0.toFixed(2)} / Aufstieg ${cAuf.toFixed(2)} / Abstieg ${cAb.toFixed(2)} / Fans 90 ${cFans.toFixed(2)}, abgewählt ${n1} von ${faellig}, Vertrauen ${trust1}, danach ${n2}`);}
+
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);
