@@ -83,7 +83,8 @@ const kaufe=(w,p,fee,yrs=3)=>{const els=w.W.ev('document');els.getElementById('f
 // K20c. Bieterwettstreit beim Kauf (K20 §4.2): Nach dem Ja des Verkäufers bietet ein Computer-Verein mit Bedarf mehr, die Forderung steigt auf sein Gebot,
 //       weniger reicht nicht, Mitgehen gewinnt (der andere zieht zurück), nur einmal je Spieler und Saison; ohne Mitgehen wechselt der Spieler nach der Frist zum Konkurrenten
 {const w=welt(),{S,F,ev}=w;ev('RAW').konkurrenz.chance=1;S.teams.forEach(x=>{if(x.id!==S.my)x.cash=5e8;});
-  const p=S.pl.filter(q=>q.team>=0&&q.team<1000&&q.team!==S.my&&!q.leihe&&S.teams[q.team].lg===2).sort((a,b)=>b.str-a.str)[0],fee=ev('forderung')(p);
+  const p=S.pl.filter(q=>q.team>=0&&q.team<1000&&q.team!==S.my&&!q.leihe&&S.teams[q.team].lg===2&&q.age<=30).sort((a,b)=>b.str-a.str)[0];
+  p.list=1;p.ask=ev('rundeAb')(ev('value')(p)*0.9);const fee=ev('forderung')(p); // auf der Transferliste: Ablöse unter dem Deckel von 1,8 × Marktwert (Prüfung DD1)
   const k=F.konkurrenzKauf(p,fee),v=ev('verhandlungVon')(p),zweimal=F.konkurrenzKauf(p,fee)===null;
   const f1=ev('forderung')(p),r1=F.kaufRunde(p,fee),r2=k?F.kaufRunde(p,k):null,weg=!v||!v.konk;
   const w2=welt(),q=w2.S.pl.filter(x=>x.team>=0&&x.team<1000&&x.team!==w2.S.my&&!x.leihe).sort((a,b)=>b.str-a.str)[5],b=w2.S.teams.find(x=>x.id!==w2.S.my&&x.id!==q.team&&w2.ev('aktiv')(x)&&w2.ev('squad')(x.id).length<30);

@@ -1647,3 +1647,20 @@ Zweig `mitarbeit/popolupo-k29b-medienpolitik`, auf U12f. Ausführlich in K29 (Um
 | DC1 | **Medienklima wirkt:** Bisher wurde es nur angezeigt (K29 §12 Nr. 13). Jetzt verändert es die Schwellen für Gerüchte über deinen Verein in `geruechteWoche`, gleich viele Würfe. Pressekonferenzen, die das Klima bewegen, haben damit erstmals eine Folge über die Anzeige hinaus. | ✅ |
 | DC2 | **Ältere Tests:** Mit Klima 50 und „zurückhaltend“ sind alle Faktoren 1. Bewegen Pressekonferenzen im Test das Klima, ändert sich die Zahl der Gerüchte über dich leicht. | ⚠️ `tests/geruechte.js` ansehen |
 | DC3 | **Gleichschritt:** Automatik heißt „zurückhaltend“, die Gerüchteküche ist im Test 5a ohnehin aus. | ✅ |
+
+---
+
+## DD. Prüfung von K20c und U12f ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat bf2de5e und 2c36bd0 gelesen (nichts ausgeführt). Korrekturen auf der neuesten Spitze `mitarbeit/popolupo-k29b-medienpolitik`.
+
+| # | Befund | Status |
+|---|---|---|
+| DD1 | **Mitbieter kam fast nie:** Sein Gebot war durch seinen Vereinswert gedeckelt (höchstens etwa 1,32 × Marktwert), deine Ablöse für Stamm- und Schlüsselspieler liegt aber bei 1,5 bis 1,8 × Marktwert. Der Test K20c wäre gescheitert. Jetzt gedeckelt durch 1,8 × Marktwert und 80 % seines Kontos. Der Test nimmt einen Spieler von der Transferliste. | ✅ behoben |
+| DD2 | **Mitgehen blockiert:** Vor dem Gegenangebot liefen Pause und die Prüfung der Beziehung, bei schlechter Beziehung konntest du nicht mitgehen. Jetzt zählt das Gegenangebot zuerst. | ✅ behoben |
+| DD3 | **Jobwechsel in der Frist:** Führst du danach den Mitbieter oder den Verkäufer, lief der Wechsel trotzdem. Jetzt nicht mehr. | ✅ behoben |
+| DD4 | **Grenzen der Computer-Vereine:** Mitbieter jetzt nur bis 30 Ansehen unter dem Verkäufer und für Spieler bis 32, der Verkäufer behält seine Mindestgröße. Budget und Zahl der Käufe je Fenster des Mitbieters zählen noch nicht mit. | ✅ behoben, Budget offen |
+| DD5 | **Gebot kurz vor Fensterschluss:** wirkte nicht (der Wechsel braucht ein offenes Fenster). Jetzt gibt es dann keinen Mitbieter. | ✅ behoben |
+| DD6 | **`tests/vorstand.js` Nr. 14:** Die Prüfung „einmal je Saison“ lief vor der Hälfte der Spiele und prüfte nichts. Jetzt nach der Hälfte. | ✅ behoben |
+| DD7 | **Alter Spielstand ohne Zielgespräch:** Ein zugesagter Antrag in der Zwischenbilanz senkte nur das Ziel. Jetzt legt er das Zielgespräch wie nach dem Tiefstapeln an (Budget, Ruf). | ✅ behoben |
+| DD8 | Ohne Befund: Laufzeit, Ablauf nach dem Mitgehen, Tagesreihenfolge, Gleichschritt, Logik der Zwischenbilanz, Kommentare. | ✅ |

@@ -136,7 +136,7 @@ const zbAntragOffen=()=>!!(S.zb&&S.zb.s===S.season&&S.zb.tid===S.my&&S.zb.art===
 function zbChance(){const A=RV.zwischenbilanz.antrag;return clamp(A.basis+A.jeVertrauen*(S.trust-50)+A.jeRuf*(ruf()-RV.ruf.start),A.grenzen[0],A.grenzen[1]);}
 // Antrag: zugesagt wirkt wie Tiefstapeln (Zielgespräch: stufe steigt, Budget sinkt, Ruf rechnet vom Vorschlag), abgelehnt kostet Vertrauen
 function zielSenkenAntrag(){if(!darf('zielgespraech')||!zbAntragOffen())return;const t=myT(),Z=RV.zwischenbilanz,neu=zgZielGrenze(t.lg,S.target+Z.senken);S.zb.fertig=1;
-  if(neu>S.target&&mitStrom(strom('zwischenbilanz',S.season,S.my),()=>R())<zbChance()){const d=neu-S.target,z=meinZg();S.target=neu;if(z)z.stufe+=d;
+  if(neu>S.target&&mitStrom(strom('zwischenbilanz',S.season,S.my),()=>R())<zbChance()){const d=neu-S.target,z=meinZg();if(z)z.stufe+=d;else S.zg={s:S.season,tid:S.my,vorschlag:S.target,sp:meineSpieltage(),stufe:d,fertig:1};S.target=neu; /* alter Spielstand ohne Zielgespräch: wie Tiefstapeln anlegen (DD7) */
     news(`Zwischenbilanz: Der Vorstand senkt das Ziel auf ${targetText(t.lg,neu)}. Weniger Druck, aber auch weniger Transferbudget und Ruf.`,'');}
   else{S.trust=clamp(S.trust+Z.abgelehnt,0,100);news(`Zwischenbilanz: Der Vorstand lehnt ab. Das Ziel bleibt (${targetText(t.lg,S.target)}).`,'bad');}
   save();render();}

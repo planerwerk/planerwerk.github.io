@@ -110,7 +110,8 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   const b=welt();b.S.target=5;b.F.zwischenbilanz(5+B.abstand,sp(b));const offen=b.ev('zbAntragOffen')()&&b.F.zwischenbilanzKarte().length>0;b.W.ev('zbChance=function(){return 1;}');b.F.zielSenkenAntrag();
   const gesenkt=b.S.target===5+B.senken&&b.S.zg.stufe===B.senken&&Math.abs(b.ev('zgBudgetFaktor')()-(1-b.B.zielgespraech.budgetTief*B.senken))<1e-9&&!b.ev('zbAntragOffen')();
   const c=welt();c.S.target=5;c.S.trust=60;c.F.zwischenbilanz(5+B.abstand,sp(c));c.W.ev('zbChance=function(){return 0;}');c.F.zielSenkenAntrag();const nein=c.S.target===5&&nah(c.S.trust,60+B.abgelehnt);
-  const d=welt();d.S.target=8;d.F.zwischenbilanz(9,sp(d));const fest=d.S.target===8&&d.S.zb.art==='fest';d.S.target=8;d.F.zwischenbilanzWoche();const einmal=d.S.zb.pos===9;
+  const d=welt();d.S.target=8;d.F.zwischenbilanz(9,sp(d));const fest=d.S.target===8&&d.S.zb.art==='fest';d.S.target=8;const ls=d.ev('meineLigaspiele')(),halb=Math.floor(ls.length/2);d.S.tag=ls[halb].tag+1;d.S.gespielt=-1; // nach der Hälfte (DD6), damit nur S.zb die zweite Bilanz verhindert
+  const ueber=d.ev('meineSpieltage')()>=halb;d.F.zwischenbilanzWoche();const einmal=ueber&&d.S.zb.pos===9;
   pruef(hoch&&offen&&gesenkt&&nein&&fest&&einmal,'Zwischenbilanz: anheben, Antrag mit Zusage und Ablehnung, fest, einmal je Saison',`hoch ${hoch}, Antrag ${offen}, gesenkt ${gesenkt}, abgelehnt ${nein}, fest ${fest}, einmal ${einmal}`);}
 
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

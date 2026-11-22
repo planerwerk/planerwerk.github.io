@@ -67,6 +67,12 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 22.11.2026: Korrekturen nach Prüfung DD (Zweig `mitarbeit/popolupo-k29b-medienpolitik`)
+
+- Ein lesender Prüf-Agent hat K20c und U12f durchgesehen (Konsistenzprüfung DD).
+- **Behoben:** Deckel des Mitbieters (DD1, sonst kam fast nie einer und der Test K20c wäre gescheitert), Mitgehen vor Pause und Beziehung (DD2), kein Wechsel nach einem Jobwechsel in der Frist (DD3), Grenzen wie unter Computer-Vereinen (DD4), kein Mitbieter kurz vor Fensterschluss (DD5), Test „einmal je Saison“ (DD6), alter Spielstand bei der Zwischenbilanz (DD7).
+- **Tests zuerst:** `tests/transfers.js` (K20c), `tests/vorstand.js` (Nr. 14).
+
 ### 22.11.2026: K29b Medienpolitik (Zweig `mitarbeit/popolupo-k29b-medienpolitik`, auf U12f)
 
 - **Neu (K29 §6, Konsistenzprüfung DC):** Medienpolitik offen, zurückhaltend oder abgeschottet im Medien-Kasten (Bereich `presse`). Das Medienklima wirkt jetzt auf die Gerüchte über deinen Verein.
