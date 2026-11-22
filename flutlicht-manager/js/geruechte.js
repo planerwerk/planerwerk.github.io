@@ -19,8 +19,9 @@ function gerKandidaten(){const G=RGR,mein=[],fremd=[],sq=squad(S.my),lvl=new Map
   // Klatsch (K17 §5.3, K17d): je Verein mit schlechter Beziehung ein Spieler deines Kaders, den er brauchen könnte, „soll dort ein Thema sein“
   gerKlatschVereine().forEach(k=>{const l=sq.filter(p=>!p.wech&&!p.leihe&&hatBedarf(S.teams[k],p));if(l.length)mein.push({art:'thema',tid:S.my,klub:k,pid:pick(l).id,w:null});});
   return{mein,fremd};}
-// Vereine, zu denen deine Beziehung (du und dein Verein, bezWirk) unter aergerUnter liegt (K17 §5.2, K17d)
-const gerKlatschVereine=()=>S.teams.filter(t=>t.id!==S.my&&aktiv(t)&&bezWirk(t.id)<RGR.aergerUnter).map(t=>t.id);
+// Vereine, zu denen deine Beziehung (du und dein Verein, bezWirk) mehr als aergerUnter unter ihrem Grundwert liegt (K17 §5.2, K17d). Ohne den Grundwert hätte
+// ein einziges entschiedenes Derby (Grundwert −30, −2) den Klatsch eingeschaltet (Prüfung EG3, vorläufig).
+const gerKlatschVereine=()=>S.teams.filter(t=>t.id!==S.my&&aktiv(t)&&bezWirk(t.id)-bezGrund(S.my,t.id)<RGR.aergerUnter).map(t=>t.id);
 // Gerüchte über deinen Verein mal klatsch.mein, solange es einen solchen Verein gibt (K17 §5.2: doppelt so viele)
 const gerKlatschFaktor=()=>gerKlatschVereine().length?RGR.klatsch.mein:1;
 // Erfundenes Gerücht (Boulevard, Portal): Absprung eines Spielers oder Trainer vor dem Aus
@@ -48,7 +49,8 @@ function gerVeroeffentlichen(c){const G=RGR,W=G.wirkung,P=gerS(),m=c.w===0&&c.ar
 // Nach 30 Tagen: Treffsicherheit der Medien. Wechsel- und Trainergerüchte am Ausgang, die übrigen am Wahrheitsgehalt.
 function gerPruefen(){const G=RGR,P=gerS(),heute=absTag(S.tag);
   P.l.forEach(g=>{if(g.ok||heute-g.tag<G.dauer)return;let r;
-    if(['verhandlung','liste','interesse','absprung','thema'].includes(g.art)){ /* thema (K17d): trat ein, wenn der Spieler gewechselt ist */const p=PIX.get(g.pid);r=!p||p.team!==g.team0||!!p.wech;}
+    if(g.art==='thema'){const p=PIX.get(g.pid);r=!!p&&(p.team===g.klub||!!(p.wech&&p.wech.nach===g.klub));} /* thema (K17d): trat ein, wenn er zu diesem Verein gewechselt ist (Prüfung EG2) */
+    else if(['verhandlung','liste','interesse','absprung'].includes(g.art)){const p=PIX.get(g.pid);r=!p||p.team!==g.team0||!!p.wech;}
     else if(g.art==='trainer'||g.art==='trainerAus')r=g.tid===S.my||g.chef0==null?(S.my!==g.tid||!!S.fired):(S.teams[g.tid]&&S.teams[g.tid].chef!==g.chef0);
     else r=g.w>=0.5;
     g.ok=1;g.r=r?1:0;P.ruf[g.m]=clamp((P.ruf[g.m]!=null?P.ruf[g.m]:50)+(r?G.medien.treffer:G.medien.fehler),0,100);});}

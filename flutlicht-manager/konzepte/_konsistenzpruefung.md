@@ -2091,3 +2091,23 @@ Korrekturen auf `mitarbeit/popolupo-ef-korrekturen` (auf K14e).
 | EF4 | `dritterKauf` wirkte auch beim Vorvertrag, obwohl der Spieler erst in der nächsten Saison wechselt. Jetzt nicht beim Vorvertrag. Der Merker `p.ld3` fällt beim Saisonwechsel weg. | ✅ behoben |
 | EF5 | Test K22c: Der Gehaltsrahmen konnte die Erhöhung ablehnen. Jetzt verdient der ganze Kader die Hälfte des Marktgehalts, wie in K21c. | ✅ behoben |
 | EF6 | Test: Das Gegenangebot nach dem Nachlass war ungeprüft. Jetzt in K30c (EF1). | ✅ behoben |
+
+## EG. Prüfung von K17d, K09d, K07e/K14d, K14e und der Korrekturen EF ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat e2e0339, ad4674f, 27a273b, bced550 und 090e8ca gelesen (nichts ausgeführt). Kein blockierender Fehler, vier kleine.
+
+**Ohne Befund:**
+
+- **K09d:** `G.brisant` in `spielAufbau` für alle Wege des Spiels. Testspiele und Turniere tragen `test`. Auslands- und Amateurvereine sind nie brisant. Es gibt keinen neuen Würfel. Im Gleichschritt kann die Beziehung Verein–Verein in 150 Tagen nicht unter −50 sinken.
+- **K07e/K14d:** Die Partynacht funktioniert auch mit leeren Beteiligten.
+- **Korrekturen EF:** Die Deckelung in `kaufRunde` schadet außerhalb des Nachlasses nicht (schließen zum Preis `F` war schon vorher möglich). `krankFaktor`, `v.nl`, `p.ld3` und der Vorvertrag sind ohne Befund.
+- **Insgesamt:** keine doppelten Namen, alte Spielstände sicher.
+
+Korrekturen auf `mitarbeit/popolupo-eg-korrekturen` (auf K03c).
+
+| # | Befund | Status |
+|---|---|---|
+| EG1 | Die Karte „Grüppchenbildung“ hatte zwei Lücken:<br>– Die Transferliste beachtete nicht, dass der Stab die Transfers führen kann. Er hätte die Liste wieder geräumt, die Strafen wären geblieben.<br>– Anführer konnte ein ausgeliehener Spieler oder einer mit vereinbartem Wechsel sein.<br>Jetzt lehnt die Karte mit Stab ab („Die Transfers führt der Stab“). Der Anführer ist nie ausgeliehen und hat keinen vereinbarten Wechsel. Für solche Spieler gibt es einen eigenen Text. | ✅ behoben |
+| EG2 | Das Gerücht „Thema“ galt als eingetreten, wenn der Spieler zu irgendeinem Verein wechselte. Jetzt zählt nur ein Wechsel zum genannten Verein (auch vereinbart). | ✅ behoben |
+| EG3 | Die Schwelle für Klatsch (−30) war gleich dem Grundwert eines Derbys. Ein einziges entschiedenes Derby hat den Klatsch eingeschaltet. Jetzt zählt die Beziehung ohne ihren Grundwert (vorläufig). | ✅ behoben |
+| EG4 | Test K30c: Die Prüfung des Gegenangebots lief ohne Gegenangebot durch. Jetzt muss es eins geben. Außerdem steht in der README die Dauer von `beziehungen.js` mit 600 Spielen (unter 60 s). | ✅ behoben |

@@ -122,7 +122,7 @@ Brisanz im Spiel seit K09d (22.11.2026, popolupo, ohne Testlauf): Derby oder Bez
 
 **Gerüchte und Klatsch (§5.2, §5.3), gebaut seit K17d (22.11.2026, popolupo, ohne Testlauf):**
 
-- **Auslöser:** Deine Beziehung zu einem Verein (du und dein Verein, wie bei allen Geschäften) liegt unter −30 (`REGELN.geruechte.aergerUnter`).
+- **Auslöser:** Deine Beziehung zu einem Verein (du und dein Verein, wie bei allen Geschäften) liegt mehr als 30 unter ihrem Grundwert (`REGELN.geruechte.aergerUnter`). Seit Prüfung EG3 zählt der Grundwert nicht mit, sonst hätte ein einziges entschiedenes Derby (Grundwert −30, dann −32) den Klatsch eingeschaltet (vorläufig).
 - **Häufigkeit:** Gerüchte über deinen Verein kommen dann doppelt so oft (`klatsch.mein`). Gewürfelt wird gleich oft, nur die Schwelle ändert sich, wie bei Medienpolitik und Medienklima (K29b).
 - **Neue Art „Thema“:** „{spieler} soll bei {klub} ein Thema sein“. Es geht um einen Spieler deines Kaders, den dieser Verein brauchen könnte.
   - Wirkung: Mit 30 % fühlt er sich begehrt (Stimmung +3), sonst wird er unruhig (Stimmung −3, verstärkt durch eine verärgerte Redaktion wie bei den anderen Gerüchten, K29c).
