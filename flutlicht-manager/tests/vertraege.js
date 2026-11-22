@@ -96,4 +96,12 @@ console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
   const sieg=lauf([{h:o.id,a:S.my,hg:0,ag:1},{h:o.id+1,a:o.id+2,hg:1,ag:0}]),elfer=lauf([{h:S.my,a:o.id,hg:1,ag:1,pen:[5,4]}]),aus=lauf([{h:S.my,a:o.id,hg:0,ag:1}]),fremd=lauf([{h:o.id,a:o.id+1,hg:3,ag:0}]);
   pruef(normal===0&&sieg===-n*je&&elfer===-n*je&&aus===0&&fremd===0,'Pokalprämie: nur mit hoch, je gewonnene Runde, auch im Elfmeterschießen',`normal ${normal}, Sieg ${sieg}, Elfmeter ${elfer}, raus ${aus}, ohne dich ${fremd}`);}
 
+// K21e. Aufstiegs- und Klassenerhaltsprämie (K21 §4): nur mit „hoch“; Aufstieg aus der 2. Liga kostet Kadergröße × Prämie; Klassenerhalt nur mit dem Saisonziel Klassenerhalt
+//       und nicht beim Abstieg; ein anderes Saisonziel bringt nichts
+{const {S,F,ev}=welt(),T=ev('RKA').teampraemie,t=ev('myT()'),n=ev('squad')(S.my).length;S.phase='play';
+  const k=()=>S.fin['Prämien']||0,lauf=(auf,ab)=>{const f0=k();F.teampraemieSaison(auf,ab);return k()-f0;};const normal=lauf(true,false);F.teampraemieSetzen('hoch');
+  const lg0=t.lg,ziel0=S.target;t.lg=2;const auf=lauf(true,false);t.lg=1;S.target=15;const kl=lauf(false,false),ab=lauf(false,true);S.target=4;const anders=lauf(false,false);t.lg=lg0;S.target=ziel0;
+  pruef(normal===0&&auf===-n*T.aufstieg[2]&&kl===-n*T.klassenerhalt[1]&&ab===0&&anders===0,'Aufstiegs- und Klassenerhaltsprämie: nur mit hoch, Klassenerhalt nur mit diesem Ziel',
+    `normal ${normal}, Aufstieg ${auf}, Klassenerhalt ${kl}, abgestiegen ${ab}, anderes Ziel ${anders}`);}
+
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

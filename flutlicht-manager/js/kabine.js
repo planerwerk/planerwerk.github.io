@@ -296,6 +296,10 @@ function teampraemieSetzen(stufe){if(!RKA.teampraemie.stufen[stufe]||!tpOffen())
 // Nach einem Ligaspiel deines Vereins (ablauf.js): bei „hoch“ und Sieg je Spieler im Kader die Zusatzprämie
 function teampraemieSpiel(m){if(!m||tpStufe()!=='hoch')return;const home=m.h===S.my,gf=home?m.hg:m.ag,ga=home?m.ag:m.hg;if(gf<=ga)return;
   const T=RKA.teampraemie,x=squad(S.my).length*(T.jeSpieler[myT().lg]||T.jeSpieler[3]);if(x)money('Prämien',-x);} // „Prämien“ geht in die Finanzprognose ein (Prüfung EA6)
+// Aufstiegs- und Klassenerhaltsprämie (K21 §4, K21e): zum Saisonende (saison.js seasonEndLauf) mit Teamprämie „hoch“ beim Aufstieg (auf, auch über die Relegation)
+// oder beim Klassenerhalt (nicht ab), wenn das Saisonziel Klassenerhalt hieß. Kadergröße × Prämie der Liga dieser Saison.
+function teampraemieSaison(auf,ab){if(tpStufe()!=='hoch')return;const t=myT(),T=RKA.teampraemie,kl=!auf&&!ab&&targetText(t.lg,S.target).startsWith('Klassenerhalt');if(!auf&&!kl)return;
+  const x=squad(S.my).length*((auf?T.aufstieg:T.klassenerhalt)[t.lg]||0);if(x){money('Prämien',-x);news(`${auf?'Aufstiegsprämie':'Prämie für den Klassenerhalt'}: ${fmt(x)} für die Mannschaft.`,'');}}
 // Pokalprämie (K21 §4, K21d): mit Teamprämie „hoch“ je gewonnene Runde im DFB-Pokal teampraemie.pokal je Spieler (Liga deines Vereins). list: Spiele des Pokaltags.
 function teampraemiePokal(list){if(tpStufe()!=='hoch')return;const m=(list||[]).find(r=>r&&(r.h===S.my||r.a===S.my));if(!m||winner(m)!==S.my)return;
   const T=RKA.teampraemie,x=squad(S.my).length*(T.pokal[myT().lg]||T.pokal[3]);if(x){money('Prämien',-x);news(`Pokalprämie: ${fmt(x)} für die Mannschaft.`,'');}}
