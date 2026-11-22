@@ -15,7 +15,7 @@ const gegner=w=>w.S.teams.find(x=>x.lg===w.t.lg&&x.id!==VEREIN).id;
   Object.entries(P.anlaesse).forEach(([k,a])=>{if(!a.fragen.some(f=>!f.sp))fehler.push(k+': nur Fragen mit Spieler');a.fragen.forEach(f=>{if(f.o.length!==3||f.o.some(x=>!P.antworten[x]||!P.arten[x]))fehler.push(k+': '+f.t);
     (f.t.match(/\{(\w+)\}/g)||[]).forEach(m=>{if(!bekannt.includes(m.slice(1,-1)))fehler.push(k+': '+m);});if(f.t.includes('{spieler}')&&!f.sp)fehler.push(k+': {spieler} ohne sp');});});
   Object.keys(P.arten).forEach(x=>{if(!P.antworten[x]||!P.schlagzeilen[x])fehler.push('Art ohne Texte: '+x);});
-  pruef(!fehler.length,'Katalog: 14 Anlässe, je Frage drei bekannte Antwortarten, keine unbekannten Platzhalter',fehler.slice(0,5).join(' | ')||`${Object.keys(P.anlaesse).length} Anlässe`);}
+  pruef(!fehler.length,'Katalog: alle Anlässe, je Frage drei bekannte Antwortarten, keine unbekannten Platzhalter',fehler.slice(0,5).join(' | ')||`${Object.keys(P.anlaesse).length} Anlässe`);}
 
 // 2. Anlass: zwei bis drei Fragen, nur eine offen, Abstand 4 Tage, Sperre 21 Tage je Art, Budget 20
 {const w=welt(false),{F,S}=w,a=F.presseAnlass('derby',{gegner:gegner(w)}),n=S.pk?S.pk.fragen.filter(f=>!f.st).length:0,b=F.presseAnlass('krise',{serie:3}); /* n ohne die Stichelei (K29e) */
@@ -114,5 +114,11 @@ const gegner=w=>w.S.teams.find(x=>x.lg===w.t.lg&&x.id!==VEREIN).id;
   const a=welt(true);a.F.spielfeldrandNachSpiel({h:VEREIN,a:gegner(a),hg:2,ag:0});const auto=!a.S.ifr;
   pruef(offen&&frage&&st===51&&kl===50.5&&weg&&morgen&&aus&&pk&&auto,'Interview am Spielfeldrand: Frage, halbe Wirkung, nur am Spieltag, abschaltbar, nicht neben Pressekonferenz und Automatik',
     `offen ${offen}, Frage ${frage}, Stimmung ${st}, Klima ${kl}, morgen weg ${morgen}, aus ${aus}, neben Pressekonferenz ${pk}, Automatik ${auto}`);}
+
+// K29g. Pressekonferenz nach dem Urteil (K29 §4.1): Sperre eines deiner Spieler ab 3 Spielen öffnet sie mit dem Spieler, bei 2 Spielen nicht, bei Spielern anderer Vereine nicht
+{const w=welt(false),{S,F,ev}=w,sq=ev('squad')(VEREIN),p=sq[3],q=S.pl.find(x=>x.team>=0&&x.team<1000&&x.team!==VEREIN),v=(x,n)=>({pid:x.id,wb:'liga',team:x.team,art:'grob',tag:S.tag,antrag:n,vor:0,gesessen:0});
+  F.sgUrteil(v(p,2),2,'angenommen',S.tag);const zwei=!S.pk;frei(w);F.sgUrteil(v(q,4),4,'angenommen',S.tag);const fremd=!S.pk;frei(w);
+  F.sgUrteil(v(p,3),3,'angenommen',S.tag);const ok=!!S.pk&&S.pk.art==='urteil'&&S.pk.pid===p.id&&S.pk.fragen.length>=2;
+  pruef(zwei&&fremd&&ok,'Pressekonferenz nach dem Urteil: ab 3 Spielen Sperre für deinen Spieler, mit ihm als Thema',`2 Spiele ohne ${zwei}, anderer Verein ohne ${fremd}, 3 Spiele ${S.pk?S.pk.art+' mit '+S.pk.fragen.length+' Fragen':'keine'}`);}
 
 console.log(probleme.length?`\n${probleme.length} Problem(e).`:'\nAlles in Ordnung.');process.exitCode=probleme.length?1:0;

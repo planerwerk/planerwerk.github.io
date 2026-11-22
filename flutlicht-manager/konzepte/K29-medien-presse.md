@@ -268,7 +268,7 @@ Das ist der Maßstab für die Verbindung zu K09.
 - **Verblassen:** Montags rückt jede Beziehung um 0,5 Richtung 0. Ein Exklusivinterview (+10) ist nach 20 Wochen vergessen, wer alle vier Wochen eines gibt, hält das Medium oben.
 - **Anzeige:** Bei jeder Frage steht die Beziehung zum Medium des Fragers, im Medien-Kasten der Hinweis auf Klima und Frager.
 - **Zufall:** Der Wurf für den Journalisten bleibt im Strom `presse`, die zusätzliche Frage zieht dort zwei Würfe mehr. Der Grundstrom ist unberührt.
-- **Noch nicht:** Computer-Trainer mit Medienprofil und Provokationen vor Topspielen (§7, seit K29e), Maulkorb und Interviews der Spieler, Interview am Spielfeldrand (seit K29f), Pressekonferenz nach Urteilen des Sportgerichts.
+- **Noch nicht:** Computer-Trainer mit Medienprofil und Provokationen vor Topspielen (§7, seit K29e), Maulkorb und Interviews der Spieler, Interview am Spielfeldrand (seit K29f), Pressekonferenz nach Urteilen des Sportgerichts (seit K29g).
 
 **Umsetzung K29e (22.11.2026, popolupo, ohne Testlauf): Medienprofil der Computer-Trainer und Sticheleien vor Topspielen (§7, Muster 8)**
 - **Medienprofil:** Jeder Computer-Trainer hat ein festes Profil aus seiner Nummer, ohne Zufall.
@@ -296,6 +296,12 @@ Das ist der Maßstab für die Verbindung zu K09.
 - **Wirkung:** die Werte der Antwortart aus der Pressekonferenz mal 0,5, ohne Streuung, Abnutzung und Deckel. Rückendeckung: Mannschaft +1, Medienklima +0,5. Kritik: alle −0,5, Vorstand +0,5, Klima +0,5. Floskel: Klima −0,5.
 - **Abschaltbar:** „Interviews ausschalten“ auf der Karte, im Medien-Kasten wieder einschalten.
 - **Zufall:** keiner, Frage und Antworttexte reihum nach dem Tag.
+
+**Umsetzung K29g (22.11.2026, popolupo, ohne Testlauf): Pressekonferenz nach dem Urteil (§4.1 „Ereignis“)**
+- **Wann:** Das Sportgericht sperrt einen deiner Spieler für mindestens 3 Spiele (angenommen, nach Einspruch oder automatisch). Es gelten die üblichen Grenzen: Budget, 4 Tage Abstand, 21 Tage Sperre je Anlass, Automatik schickt den Co-Trainer.
+- **Fragen** (eigene Texte, fünf, zwei oder drei davon): gerecht oder nicht, hat er der Mannschaft geschadet, wie den Ausfall auffangen, schon mit ihm gesprochen, wird jetzt über Disziplin geredet.
+- **Kritik am Urteil** ist die Antwortart Schiedsrichterkritik: Fans +3, Mannschaft +1, Vorstand −1 und mit 30 % eine Geldstrafe vom Sportgericht.
+- **Rückendeckung** merkt sich die Presse wie sonst, wird er danach verkauft, kostet es Glaubwürdigkeit (§5.2).
 
 ## 6. Hebel des Spielers
 

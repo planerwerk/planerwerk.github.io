@@ -326,6 +326,7 @@ lizenz:{
 84. **U12i Präsidentenwahl (22.11., popolupo, ohne Testlauf):** keine neue Funktion. Im Sommer, eigener Strom je Verein (Gleichschritt unberührt, er läuft 150 Tage).
 85. **U12j Jobangebot (22.11., popolupo, ohne Testlauf):** neue Karte im bestehenden Bereich `ereignisse`. Der Co-Trainer wechselt nie (Voreinstellung bleiben). Die Wochenkarten sind im Gleichschritt aus.
 86. **K29f Interview am Spielfeldrand (22.11., popolupo, ohne Testlauf):** keine neue Funktion, eine kleine Karte im Bereich `presse` (C-Lizenz). In der Automatik gibt es kein Interview (Gleichschritt unberührt).
+87. **K29g Pressekonferenz nach dem Urteil (22.11., popolupo, ohne Testlauf):** neuer Anlass im bestehenden Bereich `presse`. In der Automatik geht der Co-Trainer (Gleichschritt unberührt, er vergleicht weder Medienklima noch Pressekonferenzen).
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 

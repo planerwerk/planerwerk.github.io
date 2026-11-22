@@ -76,6 +76,12 @@ const PRESSE={
       {t:'Was für ein Ergebnis. Ist Ihre Mannschaft so gut, oder war der Gegner so schwach?',o:['rueckendeckung','provokation','humor']},
       {t:'Gibt es trotzdem etwas zu kritisieren?',o:['rueckendeckung','kritikTeam','floskel']},
       {t:'Waren Sie zufrieden mit {spieler}?',o:['rueckendeckung','kritikSpieler','floskel'],sp:1}]},
+    urteil:{name:'Pressekonferenz nach dem Urteil',fragen:[ // K29g: Sperre eines deiner Spieler ab RPK.anlass.urteilAb Spielen. Kritik am Urteil wirkt wie Schiedsrichterkritik (Geldstrafe möglich)
+      {t:'Das Sportgericht sperrt {spieler}. Ist das Urteil gerecht?',o:['rueckendeckung','kritikSchiri','floskel'],sp:1},
+      {t:'Hat {spieler} der Mannschaft mit dieser Aktion geschadet?',o:['rueckendeckung','kritikSpieler','floskel'],sp:1},
+      {t:'Wie wollen Sie den Ausfall von {spieler} auffangen?',o:['rueckendeckung','humor','floskel'],sp:1},
+      {t:'Haben Sie mit {spieler} schon gesprochen?',o:['rueckendeckung','kritikSpieler','humor'],sp:1},
+      {t:'Wird im Verein jetzt über Disziplin geredet?',o:['ankuendigung','kritikTeam','floskel']}]},
     wechselwunsch:{name:'Pressekonferenz zum Wechselwunsch',fragen:[
       {t:'{spieler} will weg. Lassen Sie ihn gehen?',o:['rueckendeckung','kritikSpieler','floskel'],sp:1},
       {t:'Haben Sie mit {spieler} gesprochen?',o:['rueckendeckung','kritikSpieler','floskel'],sp:1},
