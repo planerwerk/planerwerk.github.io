@@ -828,6 +828,7 @@ Im Einzelnen in K28 §5.8 und §12 Nr. 18 bis 22.
 - **Transferbudget als weiche Grenze:** darüber kaufen kostet Vertrauen, sperrt aber nicht.
 - **Prämie als Ruf,** weil es kein Trainergehalt gibt. Grundlizenz, ohne Automatik.
 - **Seit U12f (K28 §5.9, §12 Nr. 23, 24):** Zwischenbilanz zur Hälfte der eigenen Ligaspiele. Der Vorstand hebt bei 4 Plätzen Vorsprung um einen Platz an, bei 4 Plätzen Rückstand kannst du eine Senkung beantragen (wirkt wie Tiefstapeln).
+- **Seit U12g (K28 §5.10, §12 Nr. 25, 26):** Trainervertrag nur als Statistik: Gehalt nach Liga, Ansehen und Ruf (Bayern etwa 7 Mio., 3. Liga etwa 0,14 Mio. je Saison, geschätzt), Laufzeit nach der Geduld des Präsidenten, Verlängerung über Vertrauen 55, sonst ein Jahr Bewährung, Abfindung Restgehalt × 0,5. Kein Abschied bei Vertragsende.
 
 ## K17 Beziehungen, U12c (20.11.), vorläufig von mir, gebaut ohne Testlauf
 

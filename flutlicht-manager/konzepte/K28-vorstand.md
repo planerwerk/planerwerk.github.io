@@ -1,6 +1,6 @@
 # K28 – Vorstand, Ziele, Karriere
 
-Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12. Teilweise gebaut: Computer-Vereine in U11d2 (§7), Vertrauen, Ultimatum und Ruf für dich in U12a (§5.6), Nebenziele und Rücktritt in U12b (§5.7), beide 20.11., Zielgespräch in U12e (§5.8, 22.11.), Zwischenbilanz im Winter in U12f (§5.9, 22.11.), alle ohne Testlauf.
+Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12. Teilweise gebaut: Computer-Vereine in U11d2 (§7), Vertrauen, Ultimatum und Ruf für dich in U12a (§5.6), Nebenziele und Rücktritt in U12b (§5.7), beide 20.11., Zielgespräch in U12e (§5.8, 22.11.), Zwischenbilanz im Winter in U12f (§5.9, 22.11.), Trainervertrag als Statistik in U12g (§5.10, 22.11.), alle ohne Testlauf.
 Hängt ab von: K02 (Geduld je Stufe), K15 (Gespräche) · Wird gebraucht von: K12b, K14, K19, K23, K29.
 
 ## 1. Ziel und Spielgefühl
@@ -198,6 +198,31 @@ Jetzt gibt es Budgets (K23d, K23 §5.5f) und echte Größenordnungen (K23c), dam
 - **Lizenz (K36):** der Antrag gehört zum Bereich `zielgespraech` (Grundlizenz), ohne Automatik.
 - **Noch nicht:** Der Vorstand senkt nicht von sich aus, Nebenziele werden nicht angepasst.
 
+### 5.10 Umsetzung U12g (22. November 2026, popolupo, ohne Testlauf): Trainervertrag
+
+Nach §5.5, nur als Karriere-Statistik (K34). Es fließt kein Geld, das Gehalt steckt wie bisher in der Verwaltung des Vereins (K23c). Ohne Zufall.
+
+- **Gehalt je Saison:** 2 Mio. € × Liga (1. Liga 1, 2. Liga 0,4, 3. Liga 0,25) × e^(0,05 × (Ansehen − 70)) × (1 + 1 % je Punkt Ruf über 30), auf 10.000 € gerundet.
+  - Beispiele beim Startruf: Bayern (Ansehen 95) etwa 7 Mio., ein Verein der 1. Liga mit 60 etwa 1,2 Mio., 2. Liga mit 60 etwa 0,5 Mio., 3. Liga mit 45 etwa 0,14 Mio. (geschätzt).
+- **Laufzeit nach der Geduld des Präsidenten:** ungeduldig eine Saison, mittel zwei, geduldig drei.
+  - Wer bis zum Winter (Tag 183) anfängt, für den zählt die laufende Saison mit. Wer später oder nach dem Saisonende anfängt, für den zählt sie nicht.
+- **Verlängerung zum Saisonende**, wenn der Vertrag ausläuft:
+  - Vertrauen über 55: zwei Saisons mit neuem Gehalt (nach dem heutigen Ruf).
+  - Sonst eine Saison zum alten Gehalt („Bewährung“).
+  - Ein Abschied bei Vertragsende kommt später. Er wäre ein neuer Weg aus dem Job, mit Folgen für Jobangebote, Tests und Gleichschritt.
+- **Ligaklausel:** Steigt der Verein auf oder ab, ändert sich das Gehalt zum 1. Juli im Verhältnis der Ligafaktoren.
+- **Abfindung bei Entlassung:** Restgehalt × 0,5. Rest heißt die Saisons nach der laufenden bis zum Vertragsende plus der Rest der laufenden Saison nach Tagen (nach dem Saisonende 0). Beim Rücktritt gibt es keine.
+- **Karriere (K34 §5.7):**
+  - Jede Station zeigt das Gehalt je Saison und was du dort verdient hast. Das Gehalt zählt anteilig nach Tagen, dazu kommt die Abfindung.
+  - Jede Saisonzeile zeigt das Gehalt laut Vertrag zum Saisonende.
+  - Darüber steht die Summe über alle Stationen.
+  - Alte Spielstände bekommen beim ersten Lesen einen Vertrag ab heute. Was davor verdient wurde, fehlt.
+- **Anzeige:**
+  - In der Karte Saisonziel: Laufzeit und Gehalt.
+  - In den Jobangeboten: das Gehalt, das dich dort etwa erwartet.
+- **Lizenz (K36):** keine neue Funktion, nur Anzeige und Statistik.
+- **Noch nicht:** Vertragsgespräch mit eigener Forderung, Abschied bei Vertragsende, Ausstiegsklausel bei Angeboten anderer Vereine, Gehalt als eigenes Wirtschaftsspiel (Community-Wunsch, §5.5).
+
 ## 6. Hebel des Spielers
 
 | Hebel | Nutzen | Preis |
@@ -312,6 +337,11 @@ vorstand:{
 
 23. **Zwischenbilanz zur Hälfte der eigenen Ligaspiele** statt an einem festen Datum. So passt sie zu allen Ligen und zu einem Jobwechsel.
 24. **Anheben vom Vorstand, Senken nur auf Antrag**, je ein Platz, Schwelle 4 Plätze Abstand. Ein zugesagter Antrag wirkt wie Tiefstapeln.
+
+**Vorläufig entschieden mit U12g** (22.11., popolupo, ohne Testlauf, §5.10):
+
+25. **Trainergehalt nur als Statistik**, nicht über das Vereinskonto. Nr. 21 gilt weiter für Prämien: Sie bleiben Ruf. Das Gehalt richtet sich nach Liga, Ansehen und Ruf, die Laufzeit nach der Geduld des Präsidenten.
+26. **Kein Abschied bei Vertragsende:** Unter Vertrauen 56 verlängert der Vorstand um eine Saison zum alten Gehalt. Der Abschied folgt mit dem Vertragsgespräch.
 
 **Noch zu recherchieren:** Zahl der Trainerwechsel pro Saison in 1., 2. und 3. Liga.
 

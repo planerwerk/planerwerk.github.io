@@ -39,12 +39,13 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 | **K29c** Exklusivinterview | `mitarbeit/popolupo-k29c-exklusivinterview` (auf K26d) | fertig, ungetestet |
 | **K25d** Mitglieder und Mitgliederaktion, dazu Kleinigkeiten zu K29c, Korrekturen DL | `mitarbeit/popolupo-k25d-mitglieder` (auf K29c) | fertig, ungetestet |
 | **K29d** Medienklima und Beziehungen in der Pressekonferenz | `mitarbeit/popolupo-k29d-klima-fragen` (auf K25d) | fertig, ungetestet |
+| **U12g** Trainervertrag als Karriere-Statistik (K28 §5.10), dazu Korrekturen DM zu K29d | `mitarbeit/popolupo-u12g-trainervertrag` (auf K29d) | fertig, ungetestet |
 | U19d2 volle Kader der Auslandsvereine in der Engine | zurückgestellt | Entwurf in K37 §5.7. Die Engine behandelt Auslandsvereine als Block wie Amateure, viele Stellen schlagen Spieler in `PIX` nach. Erst nach einem Testlauf und der Messung des Faktors 0,93 |
 
 **Die neueste Spitze ist immer der zuletzt genannte Zweig, er enthält alles davor.** K24 ist fertig (Claude).
 
-**Vorschlag für den nächsten Testlauf** (Spitze `mitarbeit/popolupo-k29d-klima-fragen`, alles ungetestet, aber von lesenden Prüf-Agenten durchgesehen, Konsistenzprüfung CS, CX, CZ, DD, DF, DI, DL):
-1. `node tests/code.js`, dann die schnellen Einzeltests der neuen Teile: `finanzen.js` (Nr. 11 bis 20), `geruechte.js`, `schwierigkeit.js`, `werbung.js`, `europapokal.js`, `vorstand.js` (Nr. 10 bis 14), `karriereende.js`, `stadion.js` (Nr. 8 bis 11), `karten.js`, `spielwelt-karten.js`, `fans.js` (K27b), `abwerben.js` (K20b), `transfers.js` (K20c), `presse.js` (K29b, K29c, K29d), `marketing.js` (K25c, K25d).
+**Vorschlag für den nächsten Testlauf** (Spitze `mitarbeit/popolupo-u12g-trainervertrag`, alles ungetestet, aber von lesenden Prüf-Agenten durchgesehen, Konsistenzprüfung CS, CX, CZ, DD, DF, DI, DL, DM):
+1. `node tests/code.js`, dann die schnellen Einzeltests der neuen Teile: `finanzen.js` (Nr. 11 bis 20), `geruechte.js`, `schwierigkeit.js`, `werbung.js`, `europapokal.js`, `vorstand.js` (Nr. 10 bis 15), `karriereende.js`, `stadion.js` (Nr. 8 bis 11), `karten.js`, `spielwelt-karten.js`, `fans.js` (K27b), `abwerben.js` (K20b), `transfers.js` (K20c), `presse.js` (K29b, K29c, K29d), `marketing.js` (K25c, K25d).
 2. `node tests/lizenz.js` (Gleichschritt, neue Bereiche `zielgespraech`).
 3. `node tests/finanzmodell.js 2`: Salden je Liga nach K23c. Erwartet nach der Modellrechnung 1. Liga etwa +11 Mio., 2. Liga etwa 0, 3. Liga etwa −1 Mio. je Verein und Saison ohne Transfers (K23 §5.6b). Weichen sie stark ab, bitte die Zeilen ins Testprotokoll, ich stelle dann `REGELN.finanzen.verwaltung` und `sponsor` nach.
 4. Die langen Läufe: `welt.js` über zehn Saisons (Karriereende CR3, Pool CR4, Bauten CT3, Transfers CP3/CP4), `ui-zwei-saisons.js`, `fuzz-karrieren.js`.
@@ -78,6 +79,18 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 ---
 
 ## Changelog
+
+### 22.11.2026: U12g Trainervertrag (Zweig `mitarbeit/popolupo-u12g-trainervertrag`, auf K29d)
+
+- **Neu (K28 §5.10, nur Statistik, es fließt kein Geld):**
+  - Gehalt je Saison nach Liga, Ansehen und Ruf.
+  - Laufzeit nach der Geduld des Präsidenten.
+  - Verlängerung zum Saisonende: über Vertrauen 55 zwei Saisons mit neuem Gehalt, sonst eine zum alten.
+  - Ligaklausel zum 1. Juli.
+  - Abfindung bei Entlassung (Restgehalt × 0,5).
+  - Gehalt und Verdienst je Station und Saison in der Karriere, Anzeige im Büro und in den Jobangeboten.
+- **Tests zuerst:** `tests/vorstand.js` Nr. 15, dann `statistik.js` und `ui-zwei-saisons.js` (Karriere-Ansicht mit zwei neuen Spalten).
+- **Zu erwarten:** Der Gleichschritt bleibt gleich (kein Zufall, kein Geld).
 
 ### 22.11.2026: K29d Medienklima und Beziehungen in der Pressekonferenz (Zweig `mitarbeit/popolupo-k29d-klima-fragen`, auf K25d)
 

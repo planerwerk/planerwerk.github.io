@@ -888,6 +888,10 @@ const REGELN={
     neuerJob:55,
     praesident:{min:1,max:20}, // Geduld, Ehrgeiz, Sparsamkeit des Präsidenten (K28 §3), fest aus der Vereinsnummer. Wirkt seit U11d2 nur bei Computer-Vereinen (Geduld).
     jobs:{ansehenAbschlag:4,kandidaten:8,angebote:4},
+    // Trainervertrag (K28 §5.5, U12g, 22.11., GESCHÄTZT, nur Statistik, es fließt kein Geld): Gehalt je Saison = basis × liga × e^(steigung × (Ansehen − mitte)) × (1 + jeRuf × (Ruf − Startruf)), auf runden.
+    // Laufzeit nach der Geduld des Präsidenten (Grenzen wie ruf.ungeduldig und ruf.geduldig); ab Tag winterAb zählt die laufende Saison nicht mit. Läuft er aus: Vertrauen über verlaengernAb
+    // verlängert um verlaengern Saisons mit neuem Gehalt, sonst um bewaehrung zum alten. Abfindung bei Entlassung: Restgehalt × abfindung. saisonTage: Tage je Saison für den Anteil.
+    vertrag:{basis:2e6,liga:{1:1,2:0.4,3:0.25},steigung:0.05,mitte:70,jeRuf:0.01,runden:1e4,laufzeit:{ungeduldig:1,mittel:2,geduldig:3},winterAb:183,verlaengernAb:55,verlaengern:2,bewaehrung:1,abfindung:0.5,saisonTage:365},
     ziel:{spitzeBis:3,spitzePlus:1,plus:2,schlechtester:{1:15,2:15,3:16},unterhalbMindestens:2} // Saisonziel aus dem erwarteten Platz; 2. und 3. Liga: bestes Ziel Platz 2
   },
 

@@ -85,7 +85,7 @@ Hängt ab von: K04 (Spieldaten), K29 (Sprüche) · Wird gebraucht von: K28, K35a
 ### 5.7 Vitrine und Karriere
 
 - **Vitrine:** Meisterschaft, Pokal, Supercup und Aufstieg deines Vereins und deine Ehrungen, mit Saison und Verein. Turnierpokale aus Testspielen (K11) gibt es im Spiel noch nicht.
-- **Karriere:** Stationen mit Beginn, Ende und Grund (entlassen, zurückgetreten, gewechselt), je Saison Verein, Liga, Platz, Punkte, Tore, Zuschauerschnitt, Umsatz, Ergebnis, Ruf und Schwierigkeit. Das Gehalt des Trainers fehlt, bis K28 es einführt.
+- **Karriere:** Stationen mit Beginn, Ende und Grund (entlassen, zurückgetreten, gewechselt), je Saison Verein, Liga, Platz, Punkte, Tore, Zuschauerschnitt, Umsatz, Ergebnis, Ruf und Schwierigkeit. Das Gehalt des Trainers steht seit U12g (K28 §5.10, 22.11., ohne Testlauf) je Station und je Saison, dazu der Verdienst mit Abfindungen.
 - **Saisonarchiv:** Abschlusstabellen aller drei Ligen (Verein, Punkte, Tore), Meister, Pokalsieger, Supercup, Aufsteiger und die Ehrungen.
 
 ### 5.8 Meldungen
@@ -159,7 +159,7 @@ Seit U13 stehen die Werte in `daten/regeln.js` unter `statistik` (Vorlagen, Ehru
 15. Vergleich zweier Spieler über „Vergleichen“ auf der Spielerkarte statt einer eigenen Suche (§5.9).
 16. Lizenz `statistik` ab der ersten Stufe, ohne Automatik (§5.9).
 
-**Noch offen:** Sprüche-Chronik (wartet auf K29), Turnierpokale (K11), Gehalt in der Karriere (K28), Startwerte der Rekorde für die 2. und 3. Liga.
+**Noch offen:** Turnierpokale (K11), Startwerte der Rekorde für die 2. und 3. Liga.
 
 ## Quellen
 

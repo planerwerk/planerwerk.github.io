@@ -19,7 +19,7 @@ function newGame(){const id=+document.getElementById('club').value,name=(documen
   const se=(document.getElementById('seed')||{}).value,seed=se&&/^\d+$/.test(se.trim())?(+se.trim())>>>0:neuerSeed();
   buildWorld(seed);S.my=id;S.mgr=name;stufeAnwenden((document.getElementById('stufe')||{}).value);statS();presseS().antritt=1; // Statistik ab Spielbeginn, erste Station des Trainers (K34, U13), Antrittspressekonferenz (K29, U17a)
   // Lernstufen (K36): gesperrte Bereiche führt der Stab, deshalb vor den Sponsorangeboten anlegen
-  const ls=document.getElementById('lernstufen');lizenzStart(ls?ls.value!=='0':RLZ.start);sponsOffers();S.lineup=bestXI(id,myT().form);
+  const ls=document.getElementById('lernstufen');lizenzStart(ls?ls.value!=='0':RLZ.start);sponsOffers();S.lineup=bestXI(id,myT().form);vertragNeu(id); /* Trainervertrag (K28 §5.5, U12g), nach der ersten Station */
   news(`Tipp: Kader und Aufstellung prüfen, Sponsor wählen, dann oben auf „Tag beenden ▶“ klicken. Dein erstes Pflichtspiel ist am ${datumMittel(ersterPflichttermin())}.`);
   news(`Willkommen, ${name}! Der Vorstand von ${myT().name} erwartet: ${targetText(myT().lg,S.target)}.`,'good');
   if(S.lizenz.an)news(`Du beginnst als ${lizenzName(1)}: Aufstellung, Grundordnung, Ausrichtung und dein Spiel gehören dir. Alles andere erledigt der Stab, bis du die nächste Lizenz hast. Oben steht deine Lizenz, ein Klick zeigt den Weg.`);

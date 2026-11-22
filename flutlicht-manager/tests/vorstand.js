@@ -114,4 +114,18 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   const ueber=d.ev('meineSpieltage')()>=halb;d.F.zwischenbilanzWoche();const einmal=ueber&&d.S.zb.pos===9;
   pruef(hoch&&offen&&gesenkt&&nein&&fest&&einmal,'Zwischenbilanz: anheben, Antrag mit Zusage und Ablehnung, fest, einmal je Saison',`hoch ${hoch}, Antrag ${offen}, gesenkt ${gesenkt}, abgelehnt ${nein}, fest ${fest}, einmal ${einmal}`);}
 
+// 15. Trainervertrag (K28 §5.5, U12g, nur Statistik): Gehalt nach Liga, Ansehen und Ruf, Laufzeit nach der Geduld (ab dem Winter zählt die Saison nicht), Gehalt anteilig in der Station,
+//     Abfindung = Restgehalt × 0,5, Verlängerung über Vertrauen 55 um zwei Saisons mit neuem Gehalt, sonst eine zum alten, Ligaklausel zum Saisonwechsel
+{const {S,F,ev,B}=welt(),V=B.vertrag,t=ev('myT()'),r=x=>Math.max(V.runden,Math.round(x/V.runden)*V.runden),L=F.vertragLaufzeit(VEREIN);
+  const g=F.trainerGehalt(VEREIN),soll=r(V.basis*(V.liga[t.lg]||V.liga[3])*Math.exp(V.steigung*(t.rep-V.mitte)));S.ruf=B.ruf.start+10;const g10=F.trainerGehalt(VEREIN);S.ruf=B.ruf.start;
+  S.phase='play';S.tag=0;const v0=F.vertragNeu(VEREIN),bis0=v0.bis;S.tag=200;const bis1=F.vertragNeu(VEREIN).bis;S.tag=0;const v=F.vertragNeu(VEREIN),st=F.offeneStation();
+  S.tag=73;F.gehaltBuchen(73);const verd=st.verd;v.bis=S.season+1;const abf=r(v.geh*(1+(1-73/V.saisonTage))*V.abfindung);F.entlassen('Test');
+  const w1=welt();w1.S.trust=60;const a=w1.ev('trainerVertrag')();a.bis=w1.S.season;w1.S.hist.push({s:w1.S.season});w1.S.phase='end';w1.F.vertragSaisonende();const lang=a.bis,hg=w1.S.hist[w1.S.hist.length-1].geh;
+  const w2=welt();w2.S.trust=50;const b=w2.ev('trainerVertrag')();b.bis=w2.S.season;const gb=b.geh;w2.S.phase='end';w2.F.vertragSaisonende();
+  const bisB=b.bis,lgAlt=b.lg===1?2:1;b.lg=lgAlt;b.ab=200;w2.F.vertragNeueSaison();const klausel=b.geh===r(gb*((V.liga[w2.ev('myT()').lg]||V.liga[3])/V.liga[lgAlt]))&&b.ab===0;
+  pruef(g===soll&&Math.abs(g10-g*1.1)<=1.1*V.runden&&bis0===S.season+L-1&&bis1===S.season+L&&!!st&&st.geh===v.geh&&verd===Math.round(v.geh*73/V.saisonTage)&&st.abf===abf&&st.verd===verd&&S.fired===1
+    &&lang===w1.S.season+V.verlaengern&&hg===a.geh&&bisB===w2.S.season+V.bewaehrung&&klausel,
+    'Trainervertrag: Gehalt, Laufzeit, anteiliges Gehalt, Abfindung, Verlängerung, Bewährung, Ligaklausel',
+    `Gehalt ${g} (soll ${soll}, Ruf +10 ${g10}), Laufzeit ${L}: bis ${bis0} / ${bis1}, verdient ${verd}, Abfindung ${st&&st.abf} (soll ${abf}), verlängert bis ${lang}, Bewährung bis ${bisB}, Klausel ${klausel}`);}
+
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

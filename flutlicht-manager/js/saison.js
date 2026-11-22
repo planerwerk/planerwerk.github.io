@@ -48,7 +48,7 @@ function seasonEndLauf(){
   rufSaison(sm); // Ruf als Trainer (K28 §5.4, U12a), vor einer Entlassung, damit die Jobangebote schon den neuen Ruf sehen
   statistikSaison(sm);trainerSaison(sm);finanzenSaisonende();marketingSaisonende(sm);werbungSaisonende(sm); // Ruf der Computer-Trainer (K32 §3.3b, U18a); Ehrungen, Saisonarchiv, Vitrine, Karrierezeilen (K34, U13), nach dem Ruf (Trainer der Saison +5) und vor einer Entlassung
   if(sm.down3.includes(S.my))entlassen(`${me.name} steigt in die Regionalliga ab. Der Verein trennt sich von dir.`);
-  if(S.trust<B.entlassenSaisonUnter)entlassen();lizenzRueckblick();kreditAuto();save();}
+  if(S.trust<B.entlassenSaisonUnter)entlassen();vertragSaisonende();lizenzRueckblick();kreditAuto();save();} /* Trainervertrag (K28 §5.5, U12g): Gehalt der Saison, Verlängerung */
 // Regionalliga (K32a): je Staffel wird ein Meister gelost, gewichtet nach Ansehen. West und Südwest steigen direkt auf,
 // von Nord, Nordost und Bayern eine Staffel im Wechsel, die beiden anderen Meister spielen Aufstiegsspiele.
 function poisson(l){const L=Math.exp(-l);let k=0,p=1;do{k++;p*=R();}while(p>L&&k<12);return k-1;}
@@ -107,7 +107,7 @@ function newSeasonLauf(){lizenzNachweis();wechselVollziehen(true);leiheEnde();ve
   finanzenMonat(tageDerSaison(),true); // Monatsbericht Juni zum 1. Juli, der Tag läuft sonst nie durch taeglich (K23a)
   S.season++;S.plan=planFuer(S.season);S.tag=S.plan.start;S.gespielt=-1;S.relSp=[];S.relSp2=[];S.res={1:[],2:[],3:[]};
   const sp=spielplanFuer(S.season);S.fx=sp.fx;S.plan.zeit=sp.zeit;initCup();supercupAnlegen(sm);europaAnlegen(sm); // Europapokal (K37, U19a), eigener Strom
-  S.fin={};/* TV-Gelder der neuen Saison zu Saisonbeginn festlegen (K23c), so hängen sie nicht davon ab, wann sie zuerst gebraucht werden */tvSaison();finanzenSaisonstart();/* Computer-Vereine bauen (K26b) */kiBauenSaison();S.att=[0,0];S.offers=S.offers.filter(o=>PIX.get(o.pid)&&PIX.get(o.pid).team===S.my);S.phase='play';S.summary=null;TDAY=null;TLG=0;LAST=null;
+  S.fin={};/* TV-Gelder der neuen Saison zu Saisonbeginn festlegen (K23c), so hängen sie nicht davon ab, wann sie zuerst gebraucht werden */tvSaison();finanzenSaisonstart();/* Computer-Vereine bauen (K26b) */kiBauenSaison();/* Ligaklausel des Trainervertrags (U12g) */vertragNeueSaison();S.att=[0,0];S.offers=S.offers.filter(o=>PIX.get(o.pid)&&PIX.get(o.pid).team===S.my);S.phase='play';S.summary=null;TDAY=null;TLG=0;LAST=null;
   setTarget();werbungSaison();if(!S.spons)sponsOffers(); /* alle Werbeflächen samt Brust zählen in werbungSaison herunter (K24a, seit K24c auch die Brust) */
   S.lineup=bestXI(S.my,myT().form);kabineNachSaisonwechsel();jubilaeumJahre(); // 10 Jahre im Verein (K34 §8, U13)
   news(`Neue Saison ${S.season}/${(S.season+1)%100} in der ${ligaName(myT().lg)}: Ziel des Vorstands – ${targetText(myT().lg,S.target)}. Trainingsauftakt am ${datumMittel(auftaktTag(myT()))}.`,'good');save();}
@@ -118,7 +118,7 @@ function kaderAuffuellen(t,base){const Z=RS,need=Z.kaderSoll;
 function mkJobs(){const J=RV.jobs,r=myT().rep-J.ansehenAbschlag+(ruf()-RV.ruf.start)*RV.ruf.jobsJePunkt, // Ruf als Trainer (K28 §5.4, U12a)
   weg=S.summary?S.summary.down3:[];const c=S.teams.filter(t=>t.id!==S.my&&aktiv(t)&&!weg.includes(t.id)).sort((a,b)=>Math.abs(a.rep-r)-Math.abs(b.rep-r)).slice(0,J.kandidaten);S.jobs=shuffle(c).slice(0,J.angebote).map(t=>t.id);}
 function takeJob(id){const old=myT().name,alt=myT();LAST=null;statStation(id);presseS().antritt=1;S.pk=null;trainerJobwechsel(alt,id); // Stationen des Trainers mit Grund (K34 §5.7, U13), solange S.fired und S.ruecktritt noch gelten
-versprechenJobwechsel();bauAbgeben();finanzenJobwechsel();marketingJobwechsel();S.kenntnis={};S.auftraege=[];S.my=id;finanzenStart();
+versprechenJobwechsel();bauAbgeben();finanzenJobwechsel();marketingJobwechsel();S.kenntnis={};S.auftraege=[];S.my=id;finanzenStart();vertragNeu(id);
   if(aktiv(alt))mitStrom(strom('auffuellen',S.season,S.tag,alt.id),()=>kaderAuffuellen(alt,grundStaerke(alt.rep))); // dein alter Verein ist jetzt ein Computer-Verein und füllt seinen Kader sofort auf
   S.kapFrei={s:S.season,bis:S.tag+14};S.fired=0;S.ult=null;S.ruecktritt=0;S.trust=RV.neuerJob;S.offers=[];S.constr=null;S.loan=0;S.fin={};S.att=[0,0];setTarget();werbungNeuerVerein();if(!S.spons||S.sponsOffers===null){S.spons=null;sponsOffers();}werbungOffen();S.lineup=bestXI(id,myT().form);
   news(`Neuer Job: ${S.mgr} übernimmt ${myT().name} (vorher ${old}). Ziel: ${targetText(myT().lg,S.target)}.`,'good');save();closeOv();TAB='buero';render();if(S.phase==='end')showSummary();}
