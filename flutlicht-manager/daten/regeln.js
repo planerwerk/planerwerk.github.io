@@ -388,6 +388,7 @@ const REGELN={
   // Ereigniskarten (K30 §5.5, §11, U12d). Chance je Woche, in der die Bedingungen erfüllt sind: 1 / (seltenheit × wochenJeSaison).
   // Dosierung: infoProWoche, Entscheidungen klein je Woche und groß je Monat, je Bereich je Woche, Halte je Woche (eigene Spiele mitgezählt).
   // sperrTage: Standard-Sperre je Karte und Beteiligten. log: so viele Karten bleiben im Protokoll.
+  // Anlasskarten (K30d, 22.11., popolupo, vorläufig) tragen im Katalog statt der Stufe eine eigene chance je Woche, in der ihr Anlass besteht (0 < chance ≤ 1)
   karten:{seltenheit:{haeufig:3,gelegentlich:20,selten:100,sehrSelten:400},wochenJeSaison:40,
     infoProWoche:5,entscheidung:{kleinProWoche:1,grossProMonat:1,jeBereichProWoche:1},halteProWoche:4,sperrTage:120,log:100,
     // Meldungsdichte (K30 §5.1, K35a, K30b, 22.11., popolupo): Regler in den Einstellungen. Je Stufe ersetzen klein, gross, info die Grenzen oben, wochen: 1 oder 2, bei 2 zählt die Vorwoche mit (mehr Wochen kennt der Code nicht, Prüfung DY8).

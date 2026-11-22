@@ -858,6 +858,8 @@ Im Einzelnen in K30 §5.5 und §12 Nr. 4 bis 9.
 - **Erste fünf Karten:** Der Präsident mischt sich ein, Rückendeckung vom Vorstand, Versöhnung, ein Spieler heiratet, Geheimtipp.
 - **Noch nicht:** Ketten, verzögerte Folgen, Meldungsdichte, Chronik, Skandale.
 - **Seit K23f (22.11., popolupo, vorläufig):** Geldbeträge der Karten gelten für die 3. Liga, mal 2 in der 2. Liga, mal 4 in der 1. Liga. Texte mit Platzhalter `{geld:Grundwert}`.
+- **Seit K30c (22.11., popolupo, vorläufig):** Ketten (Folgekarten nach einigen Tagen), erste Kette „Der lachende Dritte“ (K30 §5.6).
+- **Seit K30d (22.11., popolupo, vorläufig, bitte bestätigen):** Anlasskarten mit eigener Chance je Woche statt der Seltenheitsstufe (K30 §5.5 Nr. 3, K37 §12 Nr. 21). Ohne diese Regel kämen Karten zu seltenen Anlässen (Europapokal, Grippewelle, lange Reha) praktisch nie. In K37 stand die Frage als „braucht deine Entscheidung“. Ich habe sie nach deiner Vorgabe für den Tag selbst beantwortet.
 
 ## K37 – Europapokal (Entwurf 21.11.2026, popolupo)
 Datei: `konzepte/K37-europapokal.md`

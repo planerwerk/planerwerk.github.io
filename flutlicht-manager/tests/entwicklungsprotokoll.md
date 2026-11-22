@@ -102,12 +102,13 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 | Korrekturen ED | `mitarbeit/popolupo-ed-korrekturen` (auf K03b) | fertig, ungetestet |
 | **K30c** Ketten und „Der lachende Dritte“ | `mitarbeit/popolupo-k30c-ketten` (auf den Korrekturen ED) | fertig, ungetestet |
 | Korrekturen EE | `mitarbeit/popolupo-ee-korrekturen` (auf K30c) | fertig, ungetestet |
+| **K30d** Anlasskarten mit eigener Chance (K37 §12 Nr. 21, vorläufig entschieden) | `mitarbeit/popolupo-k30d-anlasskarten` (auf den Korrekturen EE) | fertig, ungetestet |
 | U19d2 volle Kader der Auslandsvereine in der Engine | zurückgestellt | Entwurf in K37 §5.7. Die Engine behandelt Auslandsvereine als Block wie Amateure, viele Stellen schlagen Spieler in `PIX` nach. Erst nach einem Testlauf und der Messung des Faktors 0,93 |
 
 **Die neueste Spitze ist immer der zuletzt genannte Zweig, er enthält alles davor.** K24 ist fertig (Claude).
 
-**Vorschlag für den nächsten Testlauf** (Spitze `mitarbeit/popolupo-ee-korrekturen`, alles ungetestet, bis auf K30c von lesenden Prüf-Agenten durchgesehen, Konsistenzprüfung CS bis EE). **Wichtig:** Die Zweige `u12g` und `k29e` laden für sich allein nicht (DN1), bitte die Spitze nehmen:
-1. `node tests/code.js`, dann die schnellen Einzeltests der neuen Teile: `finanzen.js` (Nr. 11 bis 20), `geruechte.js`, `schwierigkeit.js`, `werbung.js`, `europapokal.js`, `vorstand.js` (Nr. 10 bis 19), `karriereende.js`, `stadion.js` (Nr. 8 bis 11), `karten.js`, `spielwelt-karten.js`, `fans.js` (K27b), `abwerben.js` (K20b, K20e), `transfers.js` (K20c, K20d, K19c, K31b, K31c, K19d), `presse.js` (K29b bis K29j), `marketing.js` (K25c, K25d), dazu seit dem Nachmittag des 22.11.: `testspiele.js` (K11b, K11c), `erinnerungen.js` (K09b, K07b, K11d, K07d), `scouting.js` (K18c bis K18e), `medizin.js` (K10b bis K10d), `disziplin.js` (K09c, EA1 bis EA3), `vertraege.js` (K21b), `statistik.js` (K34d), `taktik.js` (K06b, eigene Welt am Ende), `stab.js` (K16b), `wettbewerbe.js` (K13b, K13c, eigene Welten am Ende), `lizenz.js` (K36c am Ende), und in `karten.js` die neuen Karten (K30b, K07c, K08b, K08c, K16c, K27c, K21c, K26e, K12c, K29k, K17b, K22c, K03b, K30c, U19e). Der Katalog in `karten.js` Fall 1 ist mit `kartenpruefung.pl` schon ohne Node geprüft.
+**Vorschlag für den nächsten Testlauf** (Spitze `mitarbeit/popolupo-k30d-anlasskarten`, alles ungetestet, bis auf K30c und K30d von lesenden Prüf-Agenten durchgesehen, Konsistenzprüfung CS bis EE). **Wichtig:** Die Zweige `u12g` und `k29e` laden für sich allein nicht (DN1), bitte die Spitze nehmen:
+1. `node tests/code.js`, dann die schnellen Einzeltests der neuen Teile: `finanzen.js` (Nr. 11 bis 20), `geruechte.js`, `schwierigkeit.js`, `werbung.js`, `europapokal.js`, `vorstand.js` (Nr. 10 bis 19), `karriereende.js`, `stadion.js` (Nr. 8 bis 11), `karten.js`, `spielwelt-karten.js`, `fans.js` (K27b), `abwerben.js` (K20b, K20e), `transfers.js` (K20c, K20d, K19c, K31b, K31c, K19d), `presse.js` (K29b bis K29j), `marketing.js` (K25c, K25d), dazu seit dem Nachmittag des 22.11.: `testspiele.js` (K11b, K11c), `erinnerungen.js` (K09b, K07b, K11d, K07d), `scouting.js` (K18c bis K18e), `medizin.js` (K10b bis K10d), `disziplin.js` (K09c, EA1 bis EA3), `vertraege.js` (K21b), `statistik.js` (K34d), `taktik.js` (K06b, eigene Welt am Ende), `stab.js` (K16b), `wettbewerbe.js` (K13b, K13c, eigene Welten am Ende), `lizenz.js` (K36c am Ende), und in `karten.js` die neuen Karten (K30b, K07c, K08b, K08c, K16c, K27c, K21c, K26e, K12c, K29k, K17b, K22c, K03b, K30c, K30d, U19e). Der Katalog in `karten.js` Fall 1 ist mit `kartenpruefung.pl` schon ohne Node geprüft.
 2. `node tests/lizenz.js` (Gleichschritt, neue Bereiche `zielgespraech`; seit K36c am Ende die gesammelten Meldungen des Stabs). Viele neue Teile wirken nur ohne Automatik oder über Karten, darum sollte 5a gleich bleiben.
 3. `node tests/finanzmodell.js 2`: Salden je Liga nach K23c. Erwartet nach der Modellrechnung 1. Liga etwa +11 Mio., 2. Liga etwa 0, 3. Liga etwa −1 Mio. je Verein und Saison ohne Transfers (K23 §5.6b). Weichen sie stark ab, bitte die Zeilen ins Testprotokoll, ich stelle dann `REGELN.finanzen.verwaltung` und `sponsor` nach.
 4. Die langen Läufe: `welt.js` über zehn Saisons (Karriereende CR3, Pool CR4, Bauten CT3, Transfers CP3/CP4), `ui-zwei-saisons.js`, `fuzz-karrieren.js`.
@@ -141,6 +142,12 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 ---
 
 ## Changelog
+
+### 22.11.2026: K30d Anlasskarten (Zweig `mitarbeit/popolupo-k30d-anlasskarten`, auf den Korrekturen EE)
+
+- **Neu (K30 §5.5 Nr. 3):** Eine Karte kann statt der Seltenheitsstufe eine eigene `chance` je Woche tragen, in der ihr Anlass besteht. Damit ist die offene Frage K37 §12 Nr. 21 vorläufig entschieden (in `_offene-entscheidungen.md` zur Bestätigung).
+- **Gesetzt:** Fanmarsch 0,15, Reisechaos 0,1, Pyrotechnik 0,1, Wunder 1. Gleich viele Würfel je Woche wie vorher.
+- **Tests zuerst:** `tests/karten.js` (Fall 1 prüft `chance`, neuer Fall K30d). Gleichschritt unverändert erwartet (keine Karten in 5a).
 
 ### 22.11.2026: Korrekturen nach Prüfung EE zu K17b, K22c, K21c, K13c und ED (Zweig `mitarbeit/popolupo-ee-korrekturen`, auf K30c)
 

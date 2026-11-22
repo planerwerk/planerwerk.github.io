@@ -12,6 +12,7 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
 {const {ev}=welt(),K=ev('KARTEN'),A=ev('AUSLOESER'),erlaubt=ev('KARTEN_WIRKUNGEN'),stufen=Object.keys(ev('RKT').seltenheit),fehler=[],ids=new Set();
   const platz=t=>(t.match(/\{[a-z]+\}/g)||[]).filter(x=>!['{spieler}','{verein}','{praesident}','{mitarbeiter}'].includes(x));
   K.forEach(c=>{if(ids.has(c.id))fehler.push(c.id+': doppelt');ids.add(c.id);if(!A[c.ausloeser])fehler.push(c.id+': Auslöser fehlt');if(!stufen.includes(c.stufe))fehler.push(c.id+': Stufe');
+    if(c.chance!=null&&!(c.chance>0&&c.chance<=1))fehler.push(c.id+': chance'); /* Anlasskarten (K30d) */
     if(!c.texte||!c.texte.length)fehler.push(c.id+': kein Text');(c.texte||[]).forEach(t=>{if(platz(t).length)fehler.push(c.id+': Platzhalter '+platz(t));});
     if(c.art==='entscheidung'){if(!c.optionen||c.optionen.length<2||c.optionen.length>3)fehler.push(c.id+': Optionen');if(!(c.auto>=0&&c.auto<(c.optionen||[]).length))fehler.push(c.id+': Voreinstellung');}
     else if(c.art!=='info')fehler.push(c.id+': Art');
@@ -231,6 +232,14 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
     ok=ok1&&ok2&&frueh&&kam&&verfallen&&nach<=ev('rundeAb')(fd*0.9)&&leise&&auf===-10&&z[1]-z[0]===L.zwischen&&da[1]-da[0]===L.du&&z[2]-z[1]===L.zwischen&&da[2]===da[1]&&z[3]===z[2]&&!p.ld3&&weg;
     info=`Spieler ${p.n}, ohne Berater und Verwandten ${ohne}, Auslöser ${!!h}, Treffen ${ok2} (${e?e.tag-heute:'-'} Tage), nicht zu früh ${frueh}, gekommen ${kam}, verfallen ${verfallen}, Forderung ${fd} → ${nach}, leise ${leise}, aufgeflogen ${auf}, zwischen ${z[1]-z[0]}/${z[2]-z[1]}/${z[3]-z[2]}, du ${da[1]-da[0]}/${da[2]-da[1]}, Jobwechsel ${weg}`;}
   pruef(ok,'Der lachende Dritte: Auslöser, Folgekarte nach 3 bis 7 Tagen, Verfall, Nachlass, Ausgang für die beiden Vereine und dich',info);}
+
+// K30d. Anlasskarten (K30 §5.4, K37 §12 Nr. 21): Karten mit chance nehmen diese Chance je Woche statt der Stufe; das Wunder (chance 1) kommt in der Woche nach dem Rückspiel sicher.
+{const {S,W,ev}=welt(),AV=ev('AV0'),me=S.my,d=S.tag,kc=ev('kartenChance'),kv=ev('karteVon');S.phase='play';W.ev('euMeineSpiele=function(){return S.testEu||[];}');
+  const sp=o=>Object.assign({wb:'el',runde:'af',leg:0,tag:d,min:0,h:me,a:AV,hg:null,ag:null,pen:null},o);S.testEu=[sp({tag:d-11,h:AV,a:me,hg:3,ag:0}),sp({leg:1,tag:d-4,hg:4,ag:0})];
+  const vorher=((S.karten||{}).log||[]).length;ev('kartenWoche')(d);const wunder=S.karten.log.slice(vorher).some(l=>l.id==='wunder');delete S.testEu;
+  const stufe=Math.abs(kc(kv('hochzeit'))-1/(ev('RKT').seltenheit.haeufig*ev('RKT').wochenJeSaison))<1e-12;
+  pruef(kc(kv('wunder'))===1&&kc(kv('fanmarsch'))===kv('fanmarsch').chance&&stufe&&wunder,'Anlasskarten: eigene Chance je Woche statt der Stufe, das Wunder kommt sicher',
+    `Wunder ${kc(kv('wunder'))}, Fanmarsch ${kc(kv('fanmarsch'))}, Hochzeit nach Stufe ${stufe}, Wunder in der Woche ${wunder}`);}
 
 // U19e. Europapokal-Karten (K37 §8): Auswärtsspiel bei einem Auslandsverein in den nächsten 7 Tagen (kein Heimspiel, nicht später, nicht das Finale), Spiel 1 bis 7 Tage her,
 //       Wunder nach 0:3 im Hinspiel und 4:0 oder 3:0 mit Elfmeterschießen im Rückspiel, nicht nach nur einem Tor Rückstand und nicht beim Ausscheiden. euMeineSpiele ersetzt der Test.

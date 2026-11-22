@@ -133,6 +133,11 @@ Nachgerechnet mit einem kleinen Simulationsskript: Mit diesen Stufen sind nach 1
    - ihre Sperrzeit für diese Beteiligten vorbei ist (Standard 120 Tage),
    - eine sehr seltene Karte in dieser Karriere noch nicht kam.
 3. Sie kommt dann mit der Chance 1 / (Saisons der Seltenheitsstufe × 40 Wochen). Eine häufige Karte (alle 3 Saisons) hat also 1 zu 120 je Woche, in der ihre Bedingungen erfüllt sind.
+   - **Anlasskarten (K30d, 22.11.2026, popolupo, vorläufig, ohne Testlauf):** Eine Karte kann statt der Stufe eine eigene `chance` je Woche tragen (0 < chance ≤ 1, im Katalog).
+   - Das gilt für Karten, deren Anlass selbst selten ist und nur wenige Wochen besteht, etwa ein Auswärtsspiel im Europapokal oder eine Aufholjagd. Mit 1 zu 120 kämen sie praktisch nie (K37 §12 Nr. 21).
+   - Es bleibt ein Würfel je Karte und Woche. Budget, Sperre und Info-Grenze gelten wie für alle Karten.
+   - Seltenheit nach §5.4 bleibt für Karten ohne festen Anlass. Die Raten in §5.4 zählen Anlasskarten nicht mit.
+   - Gesetzt sind bisher: Fanmarsch 0,15, Reisechaos 0,1, Pyrotechnik 0,1, Wunder 1 (eine Aufholjagd wird immer gemeldet).
 4. Der Regler Meldungsdichte ist seit K30b gebaut (22.11.2026, popolupo, ohne Testlauf): im Menü wenig, normal oder viel. „Wenig“ erlaubt eine kleine Entscheidung mit Halt je zwei Wochen und 3 Karten-Infos je Woche, „viel“ zwei kleine je Woche, zwei große je Monat und 8 Infos. Die Karten kommen gleich oft (gleiche Würfel), was nicht ins Budget passt, entscheidet der Co-Trainer. Seit Prüfung DY8 zählen Entscheidungen ohne Halt nicht mehr zur Info-Grenze, sie fallen also nie weg. Die Grenze von 4 Halten je Woche (Spiele mitgezählt) gilt in jeder Stufe. Ohne Einstellung „normal“.
 
 **Dosierung (§5.1):**
