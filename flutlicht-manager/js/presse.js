@@ -10,15 +10,18 @@ function pkKontext(pk){const t=myT(),p=pk.pid!=null?PIX.get(pk.pid):null;return{
 // Text ohne offene Platzhalter, fest gewählt (k), sonst der erste passende
 function pkWahl(l,c,k){const ok=l.map(x=>pkText(x,c)).filter(x=>!pkOffen(x));return ok.length?ok[k%ok.length]:pkText(l[0],c).replace(/\{\w+\}/g,'');}
 const jMedium=n=>(PRESSE.journalisten.find(j=>j.n===n)||{m:'fach'}).m;
+// Journalist nach Medienklima (K29d): unter 50 kommen Boulevard und Portal öfter, darüber die übrigen. Ein Wurf x wie vorher, bei Klima 50 dieselbe Wahl wie vor K29d.
+function pkJournalist(x){const js=PRESSE.journalisten,K=RPK.klimaFragen,d=(50-presseS().klima)/50*K.gewicht,g=js.map(j=>Math.max(0,1+(K.scharf.includes(j.m)?d:-d))),s=g.reduce((a,b)=>a+b,0);
+  let r=x*s;for(let i=0;i<js.length;i++){r-=g[i];if(r<0)return js[i].n;}return js[js.length-1].n;}
 
 // ---------- Anlass (K29 §4.1) ----------
 function presseAnlass(art,o={}){if(S.phase!=='play'||S.pk||S.fired)return false;const P=presseS(),Q=RPK,heute=absTag(S.tag),A=PRESSE.anlaesse[art];if(!A)return false;
   if((P.n[S.season]||0)>=Q.budget||heute-P.letzte<Q.abstand||(P.sperre[art]!=null&&heute-P.sperre[art]<Q.sperre))return false;
   return mitStrom(strom('presse',S.season,S.tag,art),()=>{let l=A.fragen.filter(f=>(o.pid!=null||!f.sp)&&(o.gegner!=null||!f.t.includes('{gegner}'))&&(o.serie!=null||!f.t.includes('{serie}'))&&(o.medium!=null||!f.t.includes('{medium}'))&&(!f.trainer||o.trainer));if(!l.length)return false;
-    const n=Math.min(l.length,Q.fragen[0]+Math.floor(R()*(Q.fragen[1]-Q.fragen[0]+1))),fr=[],js=PRESSE.journalisten;
+    const n=Math.min(l.length,Q.fragen[0]+Math.floor(R()*(Q.fragen[1]-Q.fragen[0]+1))+(P.klima<Q.klimaFragen.bohrenUnter?1:0)),fr=[]; /* schlechtes Klima: eine Frage mehr (K29d) */
     while(fr.length<n&&l.length)fr.push(l.splice(Math.floor(R()*l.length),1)[0]);
     P.id=(P.id||0)+1;S.pk={id:P.id,art,tag:S.tag,s:S.season,medium:o.medium||null,gegner:o.gegner!=null?o.gegner:null,pid:o.pid!=null?o.pid:null,serie:o.serie!=null?o.serie:null,i:0,
-      fragen:fr.map(f=>({t:f.t,o:f.o,sp:f.sp?1:0,j:js[Math.floor(R()*js.length)].n})),antw:[]};
+      fragen:fr.map(f=>({t:f.t,o:f.o,sp:f.sp?1:0,j:pkJournalist(R())})),antw:[]};
     P.n[S.season]=(P.n[S.season]||0)+1;P.letzte=heute;P.sperre[art]=heute;
     if(autoB('presse'))presseDelegieren(true);else news(`Pressekonferenz heute: ${A.name}. Im Büro hingehen oder den Co-Trainer schicken.`);return true;});}
 // Co-Trainer schicken (oder automatisch): Floskeln, Medienklima −2
@@ -55,7 +58,7 @@ function pkOptionen(pk){const f=pk.fragen[pk.i],c=pkKontext(pk),P=presseS(),l=f.
   if((pk.art==='krise'||pk.art==='ultimatum')&&(P.aus[S.season]||0)<RPK.ausraster.proSaison)l.push('ausraster');
   return l.map((art,k)=>({art,text:pkWahl(PRESSE.antworten[art].filter(x=>f.sp||!x.includes('{spieler}')),c,pk.id+pk.i+k)}));}
 function pkZeigen(){const pk=S.pk;if(!pk)return;if(!darf('presse'))return;const f=pk.fragen[pk.i],c=pkKontext(pk),A=PRESSE.anlaesse[pk.art],M=PRESSE.medien[jMedium(f.j)];
-  ov(`<div class="phead"><h2>${esc(A.name)}</h2><button class="x" onclick="closeOv()" aria-label="Schließen">✕</button></div><p class="dim">Frage ${pk.i+1} von ${pk.fragen.length} · ${esc(f.j)} (${esc(M.name)}, ${esc(M.art)})</p>
+  ov(`<div class="phead"><h2>${esc(A.name)}</h2><button class="x" onclick="closeOv()" aria-label="Schließen">✕</button></div><p class="dim">Frage ${pk.i+1} von ${pk.fragen.length} · ${esc(f.j)} (${esc(M.name)}, ${esc(M.art)}, Beziehung ${(b=>`${b>0?'+':''}${b}`)(Math.round(medienBez(jMedium(f.j))))})</p>
     <p><b>„${esc(pkText(f.t,c))}“</b></p><div class="opts">${pkOptionen(pk).map(o=>`<div class="card"><p><b>${PRESSE.arten[o.art].ton} ${esc(PRESSE.arten[o.art].name)}</b></p><p>„${esc(o.text)}“</p><button onclick="pkAntwort('${o.art}')">So antworten</button></div>`).join('')}</div>
     <p class="dim">Du siehst nur den Ton, nicht die Wirkung. Was es gebracht hat, steht danach in der Zeitung.</p>`);}
 function pkAntwort(art){const pk=S.pk;if(!pk)return;const o=pkOptionen(pk).find(x=>x.art===art);if(!o)return;pk.antw.push({art,txt:o.text});pk.i++;
@@ -64,13 +67,15 @@ function pkAntwort(art){const pk=S.pk;if(!pk)return;const o=pkOptionen(pk).find(
 const PK_ECHO=['ausraster','kritikSpieler','kritikSchiri','provokation','kritikTeam','angriffMedien','ankuendigung','humor','rueckendeckung','floskel'];
 function pkAbschluss(){const pk=S.pk;if(!pk)return;S.pk=null;const P=presseS(),Q=RPK,W=Q.wirkung,D=Q.deckel,t=myT(),krise=pk.art==='krise'||pk.art==='ultimatum',sum={team:0,spieler:0,fans:0,vorstand:0,medien:0};
   let kritik=0,bez=0,schiri=null,chronik=null;const st=()=>Q.streuung[0]+R()*(Q.streuung[1]-Q.streuung[0]),X=Q.ausraster;
-  pk.antw.forEach(a=>{const l=P.arten,ab=l[l.length-1]===a.art?(l[l.length-2]===a.art?Q.abnutzung[1]:Q.abnutzung[0]):1;P.arten=[...l,a.art].slice(-2);
+  pk.antw.forEach((a,i)=>{const l=P.arten,ab=l[l.length-1]===a.art?(l[l.length-2]===a.art?Q.abnutzung[1]:Q.abnutzung[0]):1;P.arten=[...l,a.art].slice(-2);
+    const fm=pk.fragen[i]?jMedium(pk.fragen[i].j):null,mw=fm?medienWirkung(fm):1,oe=v=>v*(v<0?mw:2-mw); /* K29d: Fans und Vorstand lesen es im Medium des Fragers, gewogen milder, verärgert schärfer */
     if(a.art==='ausraster'){P.aus[S.season]=(P.aus[S.season]||0)+1;const x=R();
       if(x<X.weckruf){sum.team+=X.weckrufTeam;news('Nach dem Ausraster: Die Mannschaft wirkt wachgerüttelt.','good');}
       else if(x<X.weckruf+X.bruch){sum.team+=X.bruchTeam;sum.vorstand+=X.bruchVorstand;news('Nach dem Ausraster: In der Kabine rumort es, der Vorstand ist entsetzt.','bad');}
       else{sum.fans+=X.kultFans;chronik=a;news('Nach dem Ausraster: Die Fans feiern dich, der Satz ist schon Kult.','good');}return;}
-    const w=W[a.art]||{},f=st()*ab;['team','spieler','fans','vorstand','medien'].forEach(k=>{if(w[k])sum[k]+=w[k]*f;});
-    if(a.art==='humor'&&krise)sum.vorstand+=W.humor.krise*f;if(a.art==='kritikTeam')kritik+=f;if(a.art==='kritikSchiri')schiri=a;
+    const w=W[a.art]||{},f=st()*ab;['team','spieler','fans','vorstand','medien'].forEach(k=>{if(w[k])sum[k]+=k==='fans'||k==='vorstand'?oe(w[k]*f):w[k]*f;});
+    if(fm&&w.medien)medienBezAendern(fm,w.medien*f*REGELN.exklusiv.ausAntwort); /* K29d: Beziehung zum fragenden Medium */
+    if(a.art==='humor'&&krise)sum.vorstand+=oe(W.humor.krise*f);if(a.art==='kritikTeam')kritik+=f;if(a.art==='kritikSchiri')schiri=a;
     if(a.art==='provokation'&&pk.gegner!=null&&pk.gegner<1000)bez+=W.provokation.beziehung*f;
     if(a.art==='rueckendeckung'||a.art==='ankuendigung')P.aussagen=[...P.aussagen,{s:S.season,tag:absTag(S.tag),art:a.art,pid:pk.pid,gegner:pk.gegner,txt:a.txt}].slice(-Q.gedaechtnis.aussagen);
     if(a.art==='humor'&&!chronik&&R()<Q.chronikHumor)chronik=a;});
@@ -103,7 +108,11 @@ function exklusivInterview(m){const E=REGELN.exklusiv;if(!darf('presse')||!PRESS
   const P=presseS();P.klima=fanZahl(clamp(P.klima+E.klima,0,100));news(`Exklusivinterview in ${PRESSE.medien[m].name} (${PRESSE.medien[m].art}). Die anderen Redaktionen sind verstimmt.`,'');save();render();}
 // Faktor auf die Wirkung eines Gerüchts über deinen Verein aus diesem Medium (geruechte.js)
 const medienWirkung=m=>{const E=REGELN.exklusiv;return clamp(1-medienBez(m)/E.teiler,E.wirkung[0],E.wirkung[1]);};
-function presseWoche(){medienpolitikWoche();const P=presseS(),G=RPK.gedaechtnis,heute=absTag(S.tag);
+// Beziehung zu einem Medium ändern (K29d, Antworten in der Pressekonferenz), in den Grenzen, auf eine Nachkommastelle
+function medienBezAendern(m,x){if(!PRESSE.medien[m]||!x)return;const E=REGELN.exklusiv,B=S.mb||(S.mb={});B[m]=fanZahl(clamp(medienBez(m)+x,E.grenzen[0],E.grenzen[1]));}
+// Montags (presseWoche): Beziehungen verblassen Richtung 0 (K29d)
+function medienBezVerblassen(){const B=S.mb,v=REGELN.exklusiv.verblassen;if(!B)return;Object.keys(B).forEach(k=>{const b=B[k];B[k]=b>0?Math.max(0,fanZahl(b-v)):b<0?Math.min(0,fanZahl(b+v)):0;});}
+function presseWoche(){medienpolitikWoche();medienBezVerblassen();const P=presseS(),G=RPK.gedaechtnis,heute=absTag(S.tag);
   P.aussagen.forEach(a=>{if(a.ok||a.art!=='rueckendeckung'||a.pid==null)return;if(heute-a.tag>G.rueckendeckungTage){a.ok=1;return;}const p=PIX.get(a.pid);
     if(p&&p.team!==S.my){a.ok=1;glaubAendern(G.rueckendeckungGlaub);news(`Die Presse erinnert an deine Rückendeckung für ${p.n}. Jetzt ist er weg. Deine Glaubwürdigkeit leidet.`,'bad');}});}
 // Nach deinem Spiel: Kampfansage gegen diesen Gegner eingelöst (Kult) oder nicht (Häme)
@@ -116,10 +125,11 @@ function kampfansagePruefen(gegner,gf,ga){const P=presseS(),G=RPK.gedaechtnis,t=
 // Medienpolitik im Medien-Kasten (K29b): aktuelle Art, Knöpfe zum Wechseln (Bereich presse)
 function medienpolitikText(){const M=REGELN.medienpolitik,m=medienpolitik(),aus=lzAus('presse');
   return`<p class="dim">Medienpolitik: <b>${esc(m.name)}</b> (${esc(m.text)}). Ein schlechtes Medienklima bringt mehr Gerüchte über deinen Verein, öfter erfundene.</p>
-    <div class="row">${Object.keys(M.arten).map(k=>`<button class="${k===m.k?'go':''}" onclick="medienpolitikSetzen('${k}')"${aus}>${esc(M.arten[k].name)}</button>`).join('')}</div>${exklusivText()}`;}
+    <div class="row">${Object.keys(M.arten).map(k=>`<button class="${k===m.k?'go':''}" onclick="medienpolitikSetzen('${k}')"${aus}>${esc(M.arten[k].name)}</button>`).join('')}</div>
+    <p class="dim">Bei schlechtem Klima sitzen in der Pressekonferenz öfter Boulevard und Portal, unter ${RPK.klimaFragen.bohrenUnter} gibt es eine Frage mehr.</p>${exklusivText()}`;}
 // Exklusivinterview im Medien-Kasten (K29c): Beziehung je Medium, Knöpfe, solange frei
 function exklusivText(){const E=REGELN.exklusiv,aus=lzAus('presse'),l=Object.keys(PRESSE.medien),f=x=>`${x>0?'+':''}${x}`;
-  return`<p class="dim">Beziehungen: ${l.map(k=>`${esc(PRESSE.medien[k].name)} ${f(medienBez(k))}`).join(' · ')}. Gewogene Medien schreiben milder über dich, verärgerte schärfer.</p>
+  return`<p class="dim">Beziehungen: ${l.map(k=>`${esc(PRESSE.medien[k].name)} ${f(Math.round(medienBez(k)))}`).join(' · ')}. Gewogene Medien schreiben milder über dich, verärgerte schärfer, auch über deine Antworten in der Pressekonferenz. Mit der Zeit verblasst beides.</p>
     ${exklusivFrei()?`<div class="row">${l.map(k=>`<button onclick="exklusivInterview('${k}')"${aus}>Exklusivinterview: ${esc(PRESSE.medien[k].name)}</button>`).join('')}</div>`:`<p class="dim">Das nächste Exklusivinterview geht in ${E.tage-(absTag(S.tag)-S.exkl)} Tag${E.tage-(absTag(S.tag)-S.exkl)===1?'':'en'}.</p>`}`;}
 function presseKarte(){const P=presseS(),pk=S.pk;
   if(!pk)return`<div class="card"><h3>Medien</h3><p>Medienklima ${Math.round(P.klima)} von 100${(P.n[S.season]||0)?` · ${P.n[S.season]} Pressekonferenz${P.n[S.season]===1?'':'en'} in dieser Saison`:''}.</p>${medienpolitikText()}</div>`;

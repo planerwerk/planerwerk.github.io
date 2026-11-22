@@ -455,7 +455,9 @@ const REGELN={
     abgeschottet:{name:'abgeschottet',text:'keine Einblicke: weniger Berichte, dafür mehr Erfundenes, die Medien sind verstimmt',mein:0.6,erfindung:1.4,klima:0.5,ziel:30,richtung:-1}}},
   // Exklusivinterview (K29 §6, K29c, 22.11., GESCHÄTZT): höchstens alle tage Tage, Bereich presse. Das gewählte Medium plus, alle anderen andere (Beziehung je Medium in grenzen),
   // Medienklima klima. Gerüchte über deinen Verein wirken (Stimmung, Fans, Vertrauen) mal 1 − Beziehung/teiler, begrenzt auf wirkung: gewogene Medien schreiben milder, verärgerte schärfer.
-  exklusiv:{tage:28,plus:10,andere:-3,grenzen:[-30,30],klima:2,teiler:60,wirkung:[0.5,1.5]},
+  exklusiv:{tage:28,plus:10,andere:-3,grenzen:[-30,30],klima:2,teiler:60,wirkung:[0.5,1.5],
+    // K29d (22.11., GESCHÄTZT): Beziehungen verblassen je Woche um verblassen Richtung 0, eine Antwort ändert die Beziehung zum fragenden Medium um ihre Wirkung aufs Klima × ausAntwort
+    verblassen:0.5,ausAntwort:0.5},
   presse:{budget:20,abstand:4,sperre:21,fragen:[2,3],klimaStart:50,
     anlass:{spitzeBis:4,spitzeAb:10,pokalAb:3,krise:3,hoehenflug:5,fuehrungAb:5,kantersieg:4,auftaktVorher:2},
     wirkung:{rueckendeckung:{team:2,spieler:5,medien:1},ankuendigung:{team:1,fans:2,vorstand:-0.5},kritikTeam:{vorstand:1,medien:1,kaempfer:2,empfindlich:-3,sonst:-1},
@@ -464,7 +466,9 @@ const REGELN={
     streuung:[0.5,1.5],deckel:{team:6,spieler:10,fans:6,vorstand:4,medien:8},abnutzung:[0.5,0.25],
     ausraster:{weckruf:0.35,bruch:0.35,kult:0.3,proSaison:2,weckrufTeam:4,bruchTeam:-5,bruchVorstand:-3,kultFans:6},
     schiri:{verfahren:0.3,strafe:{1:[20000,50000],2:[10000,25000],3:[5000,12000]}},
-    gedaechtnis:{rueckendeckungTage:28,rueckendeckungGlaub:-5,kultFans:2,haemeGlaub:-3,haemeFans:-2,aussagen:40},delegieren:-2,chronikHumor:0.3,chronikMax:100},
+    gedaechtnis:{rueckendeckungTage:28,rueckendeckungGlaub:-5,kultFans:2,haemeGlaub:-3,haemeFans:-2,aussagen:40},delegieren:-2,chronikHumor:0.3,chronikMax:100,
+    // K29d (22.11., GESCHÄTZT): Medienklima in der Pressekonferenz. Gewicht der scharfen Medien 1 + gewicht × (50 − Klima)/50, der übrigen 1 − …; unter bohrenUnter eine Frage mehr
+    klimaFragen:{scharf:['boulevard','portal'],gewicht:0.5,bohrenUnter:35}},
 
   // Marketing (K25 §5.4, §11, K25a). trikot: Faktor auf den Fanartikel-Erlös [min, max] und Fanstimmung je Design, mutig: Chance auf Kult, sonst Spott.
   // kampagnen: Kosten in der 1. Liga, Dauer in Tagen (sommer: bis zum ersten Pflichtspiel), Wirkung. ligaFaktor: Kosten je Liga. abnutzung: 1., 2., 3. Mal in der Saison.

@@ -74,4 +74,18 @@ const gegner=w=>w.S.teams.find(x=>x.lg===w.t.lg&&x.id!==VEREIN).id;
   pruef(a===E.plus&&b===E.andere&&k===50+E.klima&&gesperrt&&wieder&&Math.abs(wf-(1-(E.plus+E.andere)/E.teiler))<1e-9&&Math.abs(wb-(1-2*E.andere/E.teiler))<1e-9,'Exklusivinterview: Beziehungen, Sperrfrist, Wirkung auf Gerüchte',
     `Fachblatt ${a}, Boulevard ${b}, Klima ${k}, gesperrt ${gesperrt}, wieder ${wieder}, Wirkung ${wf.toFixed(3)} / ${wb.toFixed(3)}`);}
 
+// K29d. Medienklima in der Pressekonferenz: bei Klima 50 dieselbe Wahl der Journalisten wie vorher, bei 0 etwa 60 % Boulevard und Portal, bei 100 etwa 14 %;
+//       unter 35 eine Frage mehr; Antworten wirken auf den Vorstand × (1 − Beziehung/60) zum fragenden Medium (negativ) und ändern diese Beziehung; Beziehungen verblassen je Woche um 0,5
+{const {S,F,ev}=welt(false),P=ev('presseS')(),js=ev('PRESSE').journalisten,K=ev('RPK').klimaFragen,scharf=n=>K.scharf.includes(ev('jMedium')(n));
+  P.klima=50;let gleich=true;for(let k=0;k<200;k++){const x=(k+0.5)/200;if(F.pkJournalist(x)!==js[Math.floor(x*js.length)].n)gleich=false;}
+  const anteil=kl=>{P.klima=kl;let n=0;for(let k=0;k<1000;k++)if(scharf(F.pkJournalist((k+0.5)/1000)))n++;return n/1000;},a0=anteil(0),a100=anteil(100);
+  const w=welt(false);w.F.presseS().klima=20;w.F.presseAnlass('derby',{gegner:gegner(w)});const n=w.S.pk?w.S.pk.fragen.length:0;
+  const vorstand=b=>{const v=welt(false);v.S.mb={boulevard:b};v.S.trust=50;v.F.presseAnlass('krise',{serie:3});if(!v.S.pk)return[NaN,NaN];
+    v.S.pk.fragen=[{t:'Medien?',o:['rueckendeckung','angriffMedien','floskel'],sp:0,j:'Ralf Kessler'}];v.S.pk.i=0;v.F.pkAntwort('angriffMedien');return[v.S.trust-50,v.S.mb.boulevard];};
+  const [df,bf]=vorstand(30),[dh]=vorstand(-30);
+  S.mb={fach:2,tv:-1.2,lokal:0.3};F.presseWoche();const e1=[S.mb.fach,S.mb.tv,S.mb.lokal].join('/');for(let i=0;i<4;i++)F.presseWoche();const e5=[S.mb.fach,S.mb.tv].join('/');
+  pruef(gleich&&Math.abs(a0-0.6)<0.01&&Math.abs(a100-1.5/10.5)<0.01&&n>=3&&n<=4&&df<0&&Math.abs(dh/df-3)<1e-6&&bf>=27&&bf<=29&&e1==='1.5/-0.7/0'&&e5==='0/0',
+    'Medienklima in der Pressekonferenz: Journalisten nach Klima, Frage mehr unter 35, Wirkung und Beziehung über das fragende Medium, Verblassen',
+    `gleich ${gleich}, scharf ${a0.toFixed(3)} / ${a100.toFixed(3)}, Fragen ${n}, Vorstand ${df.toFixed(2)} / ${dh.toFixed(2)}, Boulevard danach ${bf}, Verblassen ${e1} → ${e5}`);}
+
 console.log(probleme.length?`\n${probleme.length} Problem(e).`:'\nAlles in Ordnung.');process.exitCode=probleme.length?1:0;

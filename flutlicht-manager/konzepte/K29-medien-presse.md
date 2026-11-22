@@ -254,6 +254,20 @@ Das ist der Maßstab für die Verbindung zu K09.
 - **Wirkung:** Ein Gerücht über deinen Verein trifft Stimmung, Fans und Vertrauen mal 1 − Beziehung/60 (0,5 bis 1,5). Gewogene Medien schreiben milder, verärgerte schärfer. Erfundene Gerüchte kommen weiter vom Boulevard oder vom Portal, wer dort Feinde hat, spürt es.
 - **Noch nicht:** Verblassen der Beziehungen über die Zeit, Wirkung auf die Fragen der Pressekonferenz.
 
+**Umsetzung K29d (22.11.2026, popolupo, ohne Testlauf): Medienklima und Beziehungen in der Pressekonferenz (§4.2, §5.4 „wirkt später auf Fragen“)**
+- **Wer fragt:** Jede Frage stellt ein Journalist, gewählt mit einem Wurf wie bisher, aber gewichtet nach dem Medienklima.
+  - Boulevard und Portal (die scharfen Medien) haben das Gewicht 1 + 0,5 × (50 − Klima)/50, die übrigen 1 − 0,5 × (50 − Klima)/50.
+  - Bei Klima 50 ist die Wahl dieselbe wie vorher. Bei 0 kommen etwa 60 % der Fragen von Boulevard und Portal, bei 100 etwa 14 % (sonst ein Drittel).
+- **Nachbohren:** Unter Klima 35 gibt es eine Frage mehr (drei oder vier statt zwei oder drei).
+- **Wie es ankommt:** Die Wirkung einer Antwort auf die Fans und den Vorstand läuft über das Medium, das gefragt hat.
+  - Negative Wirkung × (1 − Beziehung/60), positive × (1 + Beziehung/60), je zwischen 0,5 und 1,5. Wie bei den Gerüchten (K29c): Gewogene Medien schreiben milder, verärgerte schärfer.
+  - Mannschaft, Spieler und Medienklima bleiben wie bisher. Die Kabine liest keine Zeitung, das Klima ist die Summe aller Medien.
+- **Beziehung aus Antworten:** Jede Antwort ändert die Beziehung zum fragenden Medium um ihre Wirkung aufs Klima × 0,5. Ein Angriff auf die Medien kostet beim Frager also 1 bis 3, eine Floskel bis 0,75, Rückendeckung oder Humor bringen bis 0,75.
+- **Verblassen:** Montags rückt jede Beziehung um 0,5 Richtung 0. Ein Exklusivinterview (+10) ist nach 20 Wochen vergessen, wer alle vier Wochen eines gibt, hält das Medium oben.
+- **Anzeige:** Bei jeder Frage steht die Beziehung zum Medium des Fragers, im Medien-Kasten der Hinweis auf Klima und Frager.
+- **Zufall:** Der Wurf für den Journalisten bleibt im Strom `presse`, die zusätzliche Frage zieht dort zwei Würfe mehr. Der Grundstrom ist unberührt.
+- **Noch nicht:** Computer-Trainer mit Medienprofil und Provokationen vor Topspielen (§7), Maulkorb und Interviews der Spieler, Interview am Spielfeldrand, Pressekonferenz nach Urteilen des Sportgerichts.
+
 ## 6. Hebel des Spielers
 
 - Ton je Frage wählen.

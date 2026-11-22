@@ -37,13 +37,14 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 | **K25c** Dauerkarten-Aktion | `mitarbeit/popolupo-k25c-dauerkarten-aktion` (auf K23g) | fertig, ungetestet |
 | **K26d** Dach, dazu Korrekturen DI | `mitarbeit/popolupo-k26d-dach` (auf K25c) | fertig, ungetestet |
 | **K29c** Exklusivinterview | `mitarbeit/popolupo-k29c-exklusivinterview` (auf K26d) | fertig, ungetestet |
-| **K25d** Mitglieder und Mitgliederaktion, dazu Kleinigkeiten zu K29c | `mitarbeit/popolupo-k25d-mitglieder` (auf K29c) | fertig, ungetestet |
+| **K25d** Mitglieder und Mitgliederaktion, dazu Kleinigkeiten zu K29c, Korrekturen DL | `mitarbeit/popolupo-k25d-mitglieder` (auf K29c) | fertig, ungetestet |
+| **K29d** Medienklima und Beziehungen in der Pressekonferenz | `mitarbeit/popolupo-k29d-klima-fragen` (auf K25d) | fertig, ungetestet |
 | U19d2 volle Kader der Auslandsvereine in der Engine | zurückgestellt | Entwurf in K37 §5.7. Die Engine behandelt Auslandsvereine als Block wie Amateure, viele Stellen schlagen Spieler in `PIX` nach. Erst nach einem Testlauf und der Messung des Faktors 0,93 |
 
 **Die neueste Spitze ist immer der zuletzt genannte Zweig, er enthält alles davor.** K24 ist fertig (Claude).
 
-**Vorschlag für den nächsten Testlauf** (Spitze `mitarbeit/popolupo-k25d-mitglieder`, alles ungetestet, aber von lesenden Prüf-Agenten durchgesehen, Konsistenzprüfung CS, CX, CZ, DD):
-1. `node tests/code.js`, dann die schnellen Einzeltests der neuen Teile: `finanzen.js` (Nr. 11 bis 20), `geruechte.js`, `schwierigkeit.js`, `werbung.js`, `europapokal.js`, `vorstand.js` (Nr. 10 bis 14), `karriereende.js`, `stadion.js` (Nr. 8 bis 11), `karten.js`, `spielwelt-karten.js`, `fans.js` (K27b), `abwerben.js` (K20b), `transfers.js` (K20c), `presse.js` (K29b, K29c), `marketing.js` (K25c).
+**Vorschlag für den nächsten Testlauf** (Spitze `mitarbeit/popolupo-k29d-klima-fragen`, alles ungetestet, aber von lesenden Prüf-Agenten durchgesehen, Konsistenzprüfung CS, CX, CZ, DD, DF, DI, DL):
+1. `node tests/code.js`, dann die schnellen Einzeltests der neuen Teile: `finanzen.js` (Nr. 11 bis 20), `geruechte.js`, `schwierigkeit.js`, `werbung.js`, `europapokal.js`, `vorstand.js` (Nr. 10 bis 14), `karriereende.js`, `stadion.js` (Nr. 8 bis 11), `karten.js`, `spielwelt-karten.js`, `fans.js` (K27b), `abwerben.js` (K20b), `transfers.js` (K20c), `presse.js` (K29b, K29c, K29d), `marketing.js` (K25c, K25d).
 2. `node tests/lizenz.js` (Gleichschritt, neue Bereiche `zielgespraech`).
 3. `node tests/finanzmodell.js 2`: Salden je Liga nach K23c. Erwartet nach der Modellrechnung 1. Liga etwa +11 Mio., 2. Liga etwa 0, 3. Liga etwa −1 Mio. je Verein und Saison ohne Transfers (K23 §5.6b). Weichen sie stark ab, bitte die Zeilen ins Testprotokoll, ich stelle dann `REGELN.finanzen.verwaltung` und `sponsor` nach.
 4. Die langen Läufe: `welt.js` über zehn Saisons (Karriereende CR3, Pool CR4, Bauten CT3, Transfers CP3/CP4), `ui-zwei-saisons.js`, `fuzz-karrieren.js`.
@@ -77,6 +78,16 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 ---
 
 ## Changelog
+
+### 22.11.2026: K29d Medienklima und Beziehungen in der Pressekonferenz (Zweig `mitarbeit/popolupo-k29d-klima-fragen`, auf K25d)
+
+- **Neu (K29 §5, Umsetzung K29d):**
+  - Journalisten nach Medienklima: Bei schlechtem Klima fragen öfter Boulevard und Portal. Bei Klima 50 bleibt die Wahl wie vorher.
+  - Unter Klima 35 eine Frage mehr.
+  - Die Wirkung auf Fans und Vorstand läuft über die Beziehung zum fragenden Medium. Jede Antwort ändert diese Beziehung um ihre halbe Wirkung aufs Klima.
+  - Beziehungen verblassen montags um 0,5 Richtung 0.
+- **Tests zuerst:** `tests/presse.js` (neuer Fall K29d, dazu die alten Fälle 2, 4 und 6, die Journalisten fest setzen).
+- **Zu erwarten:** Der Gleichschritt bleibt gleich, weil in der Automatik der Co-Trainer geht und die Wahl der Journalisten nur im Strom `presse` würfelt.
 
 ### 22.11.2026: Korrekturen nach Prüfung DL (Zweig `mitarbeit/popolupo-k25d-mitglieder`)
 
