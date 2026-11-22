@@ -76,9 +76,10 @@ function siegRekord(r,lg,d){const n=Math.abs(r.hg-r.ag);if(!n)return;const R0=re
   R0.sieg={n,hg:r.hg,ag:r.ag,txt:`${tn(r.h)} – ${tn(r.a)}`,wann:`${datumKurz(d)} ${stSaison(S.season)}`};rekNeu(lg,'sieg',`${tn(r.h)} – ${tn(r.a)} ${r.hg}:${r.ag} ist der höchste Sieg${a?` (bisher ${a.hg}:${a.ag}, ${a.txt})`:''}.`);}
 function toreRekord(p,tid,lg,n){const R0=rekLiga(lg),a=R0.tore;if(a&&n<=a.n)return;const gleich=a&&a.pid===p.id&&a.s===S.season;
   R0.tore={n,pid:p.id,s:S.season,txt:`${p.n} (${tn(tid)})`,wann:stSaison(S.season)};if(!gleich)rekNeu(lg,'tore',`${p.n} (${tn(tid)}) hat ${n} Tore in dieser Saison${a?`, mehr als ${a.txt} mit ${a.n}`:''}.`);}
-function serieStat(tid,lg,verloren){const st=statS(),l=st.lauf[tid]&&st.lauf[tid][1]===lg?st.lauf[tid]:[0,lg];l[0]=verloren?0:l[0]+1;st.lauf[tid]=l;if(verloren)return;
-  const R0=rekLiga(lg),a=R0.serie;if(a&&l[0]<=a.n)return;const gleich=a&&a.tid===tid&&!a.echt&&a.n===l[0]-1; // dieselbe Serie läuft weiter: still verlängern
-  R0.serie={n:l[0],tid,txt:tn(tid),wann:stSaison(S.season)};if(!gleich)rekNeu(lg,'serie',`${tn(tid)} ist seit ${l[0]} Ligaspielen ungeschlagen${a?`, länger als ${a.txt} (${a.n})`:''}.`);}
+// l[2]: Beginn der laufenden Serie (Saison × 1000 + Tag). Dieselbe Serie nur bei gleichem Beginn, sonst ist es eine neue mit Meldung (Prüfung DP4; alte Spielstände ohne Beginn wie bisher)
+function serieStat(tid,lg,verloren){const st=statS(),l=st.lauf[tid]&&st.lauf[tid][1]===lg?st.lauf[tid]:[0,lg];l[0]=verloren?0:l[0]+1;if(l[0]===1)l[2]=S.season*1000+S.tag;st.lauf[tid]=l;if(verloren)return;
+  const R0=rekLiga(lg),a=R0.serie;if(a&&l[0]<=a.n)return;const gleich=a&&a.tid===tid&&!a.echt&&a.n===l[0]-1&&a.ab===l[2]; /* dieselbe Serie läuft weiter: still verlängern */
+  R0.serie={n:l[0],tid,txt:tn(tid),wann:stSaison(S.season),ab:l[2]};if(!gleich)rekNeu(lg,'serie',`${tn(tid)} ist seit ${l[0]} Ligaspielen ungeschlagen${a?`, länger als ${a.txt} (${a.n})`:''}.`);}
 // Vereinsrekorde nur für Vereine, die du trainierst. besser(neu, alt). Meldung nur, wenn ein alter Wert übertroffen wird.
 function vereinsRekord(tid,k,n,o,besser){if(tid!==S.my)return;const v=statS().rek.v,r=v[tid]||(v[tid]={}),neu=Object.assign({n},o),alt=r[k];
   if(alt&&!(besser?besser(neu,alt):neu.n>alt.n))return;r[k]=neu;if(!alt)return;
@@ -190,7 +191,7 @@ function stAnsichtEhrungen(st){const lg=STLG||myT().lg,A=st.arch.slice().reverse
 function stAnsichtRekorde(st){const zeile=(k,r,f)=>`<tr><td>${k}</td><td>${r?f(r):'<span class="dim">noch keiner</span>'}</td></tr>`,wann=r=>` <span class="dim">${esc(r.wann||'')}${r.echt?' · echter Rekord':''}</span>`;
   const liga=lg=>{const R0=rekLiga(lg);return`<div class="card"><h3>${ligaName(lg)}</h3><table><tbody>${zeile('Höchster Sieg',R0.sieg,r=>`<b>${r.hg}:${r.ag}</b> ${esc(r.txt)}${wann(r)}`)}
     ${zeile('Meiste Tore einer Saison',R0.tore,r=>`<b>${r.n}</b> ${esc(r.txt)}${wann(r)}`)}${zeile('Längste Serie ohne Niederlage',R0.serie,r=>`<b>${r.n} Spiele</b> ${esc(r.txt)}${wann(r)}`)}</tbody></table>
-    ${lg===1?'<p class="dim">Startwerte sind die echten Bundesliga-Rekorde.</p>':'<p class="dim">Rekorde seit Spielbeginn.</p>'}</div>`;};
+    ${lg===1?'<p class="dim">Startwerte sind die echten Bundesliga-Rekorde.</p>':RSTAT.rekord.allzeit[lg]?`<p class="dim">Startwerte sind die echten Rekorde der ${ligaName(lg)}.</p>`:'<p class="dim">Rekorde seit Spielbeginn.</p>'}</div>`;};
   const v=Object.entries(st.rek.v).map(([tid,r])=>`<div class="card"><h3>Vereinsrekorde ${esc(stVerein(+tid))}</h3><table><tbody>${zeile('Zuschauer',r.zus,x=>`<b>${de(x.n)}</b> ${esc(x.txt)}${wann(x)}`)}
     ${zeile('Höchster Sieg',r.sieg,x=>`<b>${x.hg}:${x.ag}</b> ${esc(x.txt)}${wann(x)}`)}${zeile('Teuerster Zugang',r.zu,x=>`<b>${fmt(x.n)}</b> ${esc(x.txt)}${wann(x)}`)}${zeile('Teuerster Abgang',r.ab,x=>`<b>${fmt(x.n)}</b> ${esc(x.txt)}${wann(x)}`)}</tbody></table>
     <p class="dim">Seit Spielbeginn, nur in deiner Zeit als Trainer.</p></div>`).join('');

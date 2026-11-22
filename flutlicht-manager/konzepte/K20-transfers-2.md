@@ -122,6 +122,7 @@ Keine Geldstrafe, kein Verbandsverfahren.
 - **Sonst:** wie in K20c, er wechselt zum anderen Verein.
 - **Hinweis:** Die Meldung zum Gegenangebot sagt, dass ein Spieler, der unbedingt zu dir will, das andere Angebot ablehnen kann.
 - **Gleichschritt:** nur nach deinem Angebot, wie K20c.
+- **Nach der Prüfung DP:** Lehnt der Spieler ab, steht die Einigung zu deiner Ablöse 14 Tage fest, ohne neue Runde mit dem Verkäufer. Kann der andere Verein nicht mehr kaufen (Geld, Kader, nicht mehr aktiv), bleibt der Verkäufer ebenfalls bei deinem Gebot. Hast du inzwischen den Verein gewechselt, gilt das Nein nicht mehr.
 
 **Später:** Computer-Vereine werben deine Spieler ab (§7), Klugheit beim Abwerben (K02), das Nein des Spielers, wenn du verkaufst (Bieterrunde).
 

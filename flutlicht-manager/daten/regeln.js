@@ -433,7 +433,7 @@ const REGELN={
     konkurrenz:{chance:0.25,
       // K20d (22.11., GESCHÄTZT): Gehst du nicht mit, lehnt der Spieler den anderen Verein ab, wenn sein Interesse an dir mindestens ab ist: Chance basis + jePunkt je Punkt darüber,
       // höchstens max, mal besser, wenn der andere Verein mehr Ansehen hat als deiner. Dann nimmt der Verkäufer deine Ablöse.
-      nein:{ab:20,basis:0.25,jePunkt:0.01,max:0.6,besser:0.5}}},
+      nein:{ab:20,basis:0.25,jePunkt:0.01,max:0.6,besser:0.5},zusageTage:14}}, // zusageTage: so lange gilt die Einigung danach (wie nach einem Ja, aktionen.js offer)
 
   // Fanstimmung (K27 §5.4b, §11, U16), 0–100. Montags traegheit Richtung Ziel = start + Erfolg + Preise + Identifikation + Entscheidungen + Umfeld, je Baustein begrenzt.
   // erfolg: jePlatz × (erwarteter Platz − Platz) ab abSpiel Ligaspielen, serie × (Punkte je Spiel der letzten fünf − serieMitte), Anlässe (derby, pokal, pokalAusTiefer) mit verblassen je Woche.
@@ -683,7 +683,7 @@ const REGELN={
     vereinslos:40,vertrag:[1,3],alter:[32,58],rente:68,verlaengern:0.7,abfindung:0.5,unschaerfe:3,genauNachWochen:6,
     // Ex-Spieler im Stab (K32 §3.3b, K16 §10, K32c, 22.11., GESCHÄTZT): ab Ligaspielen mit chance vereinsloser Mitarbeiter, Torhüter als Torwarttrainer, sonst nach Gewicht rollen;
     // Qualität basis + Ligaspiele/jeSpiele (+ehrung bei einer Ehrung) + streuung. Ziel K16 §10: 5 bis 15 je Saison in der ganzen Welt.
-    exSpieler:{ab:100,chance:0.25,basis:4,jeSpiele:60,ehrung:2,streuung:[-2,2],rollen:{co:5,jugend:3,standard:2}}},
+    exSpieler:{ab:100,chance:0.25,basis:4,jeSpiele:60,ehrung:2,streuung:[-2,2],rollen:{co:5,jugend:3,standard:2},freiSaisons:5}}, // freiSaisons: so lange bleibt ein Ex-Spieler ohne Job in der Liste (DP5)
   // Disziplin und Sportgericht (K09 §11, Welle 2). Anteile und Kartenquoten der Foularten sind auf die echten Häufigkeiten kalibriert (K09 §10),
   // nicht die Rohwerte aus §3.1: sonst gäbe es doppelt so viele Rote Karten. art: Vergehen vor dem Sportgericht.
   disziplin:{

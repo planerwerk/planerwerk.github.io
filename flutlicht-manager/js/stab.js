@@ -42,14 +42,15 @@ function stabWoche(){(S.stab||[]).forEach(x=>{if(x.team>=0)x.wiv=(x.wiv||0)+1;})
 // Neue Saison: Verträge laufen aus. Computer-Vereine verlängern meist, eigene Mitarbeiter gehen, wenn du nicht verlängert hast.
 function stabSaison(){(S.stab||[]).forEach(x=>{x.age++;if(x.team<0)return;x.ct--;if(x.ct>0)return;
     if(stabMacht(x.team,'stab')&&R()<RST.verlaengern){x.ct=riA(RST.vertrag);if(x.team===S.my)stabMeldung(`Der Verein hat den Vertrag von ${RST.rollen[x.r].name} ${x.n} verlängert.`);return;}if(x.team===S.my)news(`${RST.rollen[x.r].name} ${x.n} verlässt den Verein (Vertrag ausgelaufen).`,'bad');x.team=-1;});
-  S.stab=S.stab.filter(x=>x.team>=0||x.age<RST.rente);while(S.stab.filter(x=>x.team<0).length<RST.vereinslos){const r=pick(STAB_ROLLEN());S.stab.push(stabNeu(r,riA(RST.start.vereinslosQ),-1,2));}stabGeaendert();auftraegeAufraeumen();}
+  /* Ex-Spieler ohne Job gehen nach exSpieler.freiSaisons und zählen beim Auffüllen nicht mit (K32c, Prüfung DP5) */
+  S.stab=S.stab.filter(x=>x.team>=0||(x.age<RST.rente&&!(x.ex&&x.exS!=null&&S.season-x.exS>=RST.exSpieler.freiSaisons)));while(S.stab.filter(x=>x.team<0&&!x.ex).length<RST.vereinslos){const r=pick(STAB_ROLLEN());S.stab.push(stabNeu(r,riA(RST.start.vereinslosQ),-1,2));}stabGeaendert();auftraegeAufraeumen();}
 // Ex-Spieler im Stab (K32 §3.3b, K16 §10, K32c), Saisonwechsel nach dem Trainerpool (saison.js newSeasonLauf): Wer mit mindestens ab Ligaspielen aufhört und nicht gerade
 // Trainer im Pool geworden ist, kommt mit chance als vereinsloser Mitarbeiter dazu. Eigener Strom je Spieler. Rückgabe: Zahl der neuen Mitarbeiter.
 function stabExSpieler(abgaenge){if(!S.stab)return 0;const E=RST.exSpieler;let n=0;
   (abgaenge||[]).forEach(p=>{const a=statSumme(p);if(a.sp<E.ab||(S.trainer||[]).some(x=>x.ex&&x.n===p.n&&x.seit===S.season))return;
     mitStrom(strom('stab',S.season,'ex',p.id),()=>{if(R()>=E.chance)return;let r='torwart';
       if(p.pos!=='TW'){const W=E.rollen,ks=Object.keys(W);let z=R()*ks.reduce((s,k)=>s+W[k],0);r=ks[ks.length-1];for(const k of ks){z-=W[k];if(z<0){r=k;break;}}}
-      const x=stabNeu(r,E.basis+a.sp/E.jeSpiele+(p.ehj!=null?E.ehrung:0)+ri(E.streuung[0],E.streuung[1]),-1,2);x.n=p.n;x.age=p.age;x.ex=a.sp;S.stab.push(x);n++;
+      const x=stabNeu(r,E.basis+a.sp/E.jeSpiele+(p.ehj!=null?E.ehrung:0)+ri(E.streuung[0],E.streuung[1]),-1,2);x.n=p.n;x.age=p.age;x.ex=a.sp;x.exS=S.season;S.stab.push(x);n++;
       if(a.ver[S.my])news(`${p.n} beendet seine Karriere und steht als ${RST.rollen[r].name} zur Verfügung (${a.sp} Ligaspiele).`);});});
   if(n)stabGeaendert();return n;}
 // Gehälter des eigenen Stabs je Ligaspiel (wie die Spielergehälter)

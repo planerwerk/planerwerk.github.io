@@ -62,7 +62,7 @@ function offer(id){if(transferSperre()||transferSperreNaechste()){toast(transfer
       if(t.cash<feeJetzt(fee)+o.hg){msg.textContent='Dafür reicht dein Kontostand nicht.';return;}
       const r=kaufRunde(p,fee);if(!r.ok){msg.textContent=r.text;const fe=document.getElementById('fee');if(r.gegen&&fe)fe.value=(r.gegen/1e6).toFixed(2);save();return;}
       {const k=aus?null:konkurrenzKauf(p,fee);if(k){const bis=datumKurz(verhandlung(p).konk.bis),fe=document.getElementById('fee');if(fe)fe.value=(k/1e6).toFixed(2); // Bieterwettstreit beim Kauf (K20c)
-        msg.textContent=`${from.name} sagt Ja, aber ein anderer Verein bietet ${fmt(k)} für ${p.n}. Bietest du bis ${bis} mindestens so viel, bekommst du den Zuschlag, sonst wechselt er dorthin.`;
+        msg.textContent=`${from.name} sagt Ja, aber ein anderer Verein bietet ${fmt(k)} für ${p.n}. Bietest du bis ${bis} mindestens so viel, bekommst du den Zuschlag. Sonst wechselt er dorthin, es sei denn, er will unbedingt zu dir (K20d).`;
         news(`Bieterwettstreit: Für ${p.n} bietet ein anderer Verein ${fmt(k)}. Frist bis ${bis}.`,'offer');save();return;}}
       verhandlung(p).einig={fee,bis:S.tag+14};}}
   if(t.cash<feeJetzt(fee)+o.hg+beraterProvision(p,o.sal,fee)){msg.textContent='Dafür reicht dein Kontostand nicht (mit Provision für den Berater).';return;}

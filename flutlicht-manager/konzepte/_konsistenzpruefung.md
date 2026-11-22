@@ -1813,3 +1813,19 @@ Ein Agent hat 69be27f und 569fb0d gelesen (nichts ausgeführt, nur `dubletten.pl
 | DO3 | **Test Nr. 16 zu schwach:** Mit Ruf +50 lag die Kabine bei der Obergrenze 95, jeder Faktor ab 0,47 hätte bestanden. Jetzt Ruf +20 (erwartet 81,6). | ✅ behoben |
 | DO4 | Hinweis: In allen `saisons()`-Läufen ohne Lernstufen geht der Co-Trainer am Tag danach. Der Sim-Verein verliert vor Topspielen mit stichelnden Trainern also 1 oder 2 Stimmung. Kein Test mit festen Erwartungen bricht. | zur Kenntnis |
 | DO5 | Ohne Befund: Würfe nur im Strom `presse`, nichts für Diplomaten und Floskelkönige, keine Abstürze (Amateure, Ausland, ohne Trainer, alte offene Pressekonferenzen), Gleichschritt unter Automatik, Deckel, Platzhalter, Testwerte von Hand (Anteile, Sticheleien, 51/51, 48), alle Umbenennungen aus DN, `vertragUmstellen` auf allen drei Ladewegen, `gehaltLaufend`, Doku. | ✅ |
+
+---
+
+## DP. Prüfung von K34b, K32c und K20d ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat e4dcccf, 39d3e7c, 8454a66 und d66cdc7 gelesen (nichts ausgeführt, `dubletten.pl` und `codewaechter.pl` ohne Befund). Kein Fehler, ein mittlerer Befund. Korrekturen auf `mitarbeit/popolupo-u12j-jobangebot`.
+
+| # | Befund | Status |
+|---|---|---|
+| DP1 | **K20d, Nein ohne feste Einigung:** Nach dem Nein des Spielers sank nur die Forderung. Dein nächstes Angebot lief noch einmal durch die Runde mit dem Verkäufer, dort konnte die schlechte Beziehung (unter der Gesprächsgrenze) ablehnen und eine Pause setzen, obwohl der Verkäufer schon Ja gesagt hatte. Jetzt steht die Einigung 14 Tage fest (`einig`, wie nach einem Ja). | ✅ behoben |
+| DP2 | **K20d, Mitbieter fällt aus:** Kann der andere Verein nicht mehr kaufen (Geld, Kader, nicht aktiv), ging das Ja zu deinem Gebot verloren. Jetzt bleibt der Verkäufer dabei. | ✅ behoben |
+| DP3 | **K34b, Hinweis unter den Rekorden:** Bei der 2. und 3. Liga stand noch „Rekorde seit Spielbeginn“. Jetzt „Startwerte sind die echten Rekorde der …“. | ✅ behoben |
+| DP4 | **Serie ohne Niederlage (alt, seit U13):** Erreichte ein Verein mit einer neuen Serie seinen alten Rekord plus eins, galt sie als dieselbe Serie, und es kam keine Meldung. Jetzt merkt sich die Serie ihren Beginn. | ✅ behoben |
+| DP5 | **K32c, Ex-Spieler häufen sich:** Computer-Vereine holen nur Co-Trainer, also blieben Ex-Spieler bis 68 in der Liste und zählten beim Auffüllen mit. Jetzt gehen sie nach fünf Saisons ohne Job und zählen beim Auffüllen nicht mit. | ✅ behoben |
+| DP6 | **K20d, Kleinigkeiten:** Das Nein gilt nur für den Verein, den du beim Gebot geführt hast. Die Meldung beim Gebot nennt das mögliche Nein. Der Hinweis erscheint nicht bei alten Gegenangeboten ohne deine Ablöse. | ✅ behoben |
+| DP7 | Ohne Befund: Startwerte für neue und alte Spielstände (gleich gut: der echte bleibt), echte Rekorde werden nie still verlängert, 0:7 als Startwert, kein Meldungsschwall, Ströme in K32c, Reihenfolge im Saisonwechsel, Meldung nur für eigene Ehemalige, Ausschluss neuer Trainer, alle Testwerte von Hand, Gleichschritt. | ✅ |

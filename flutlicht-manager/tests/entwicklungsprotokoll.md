@@ -87,6 +87,17 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 22.11.2026: Korrekturen nach Prüfung DP zu K34b, K32c und K20d (Zweig `mitarbeit/popolupo-u12j-jobangebot`)
+
+- Ein lesender Prüf-Agent hat K34b, K32c und K20d durchgesehen (Konsistenzprüfung DP). Er fand keinen Fehler, aber einen mittleren Befund.
+- **Behoben:**
+  - DP1 und DP2: Nach dem Nein des Spielers oder wenn der andere Verein ausfällt, steht deine Einigung 14 Tage fest.
+  - DP3: Hinweis unter den Rekorden der 2. und 3. Liga.
+  - DP4: Eine neue Serie ohne Niederlage wird gemeldet, auch wenn derselbe Verein den alten Rekord hielt.
+  - DP5: Ex-Spieler ohne Job gehen nach fünf Saisons.
+  - DP6: Kleinigkeiten bei K20d.
+- **Tests zuerst:** `tests/transfers.js` (K20c, K20d), `tests/statistik.js`, `tests/stab.js`.
+
 ### 22.11.2026: U12j Jobangebot während der Saison (Zweig `mitarbeit/popolupo-u12j-jobangebot`, auf U12i)
 
 - **Neu (K28 §8, §5.13):** eine Ereigniskarte ab Ruf 55.
