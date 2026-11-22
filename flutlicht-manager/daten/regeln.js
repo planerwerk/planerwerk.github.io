@@ -398,6 +398,7 @@ const REGELN={
     // Unterschreibt der Spieler bei dir, sinkt die Beziehung zwischen den beiden anderen Vereinen um zwischen, deine zu ihnen um du (bei geschicktem Vorgehen gar nicht)
     dritter:{beraterAb:20,verwandt:0.05,zwischen:-10,du:-2},
     entwicklung:{jungBis:21,altAb:30,tage:21,punkte:2}, // Durchbruch und Altersverlust (K03 §8, K03c, 22.11., GESCHÄTZT): Stärke seit dem Monatseintrag (p.mvl, K34) mindestens tage alt um punkte gestiegen (bis jungBis Jahre) oder gefallen (ab altAb)
+    jubilaeum:{ab:25,alle:25}, // Jubiläum (K27 §8, K25 §8, K27d, 23.11.): ab ab Jahren alle alle Jahre, im Kalenderjahr des Jubiläums (Gründungsjahr gegr in daten/vereine.js)
     skandal:{sperreLiga:20,sperrePokal:3}, // Skandale (K30 §8.4, K30f, 23.11., GESCHÄTZT): Wettbetrug eines Spielers eines Computer-Vereins, Sperre in Liga- und Pokalspielen
     testspiel:{nachTage:7}, // Testspiel-Karten (K11 §8, K30e, 22.11., GESCHÄTZT): bis nachTage nach dem Testspiel beim Amateurverein oder der Niederlage gegen ihn
     medizin:{grippeAb:3,rehaAb:60,restAb:30}, // Medizin-Karten (K10 §8, K10e, 22.11., GESCHÄTZT): Grippewelle ab grippeAb Kranken im Kader; lange Reha bei einer Verletzung ab rehaAb Tagen mit noch mindestens restAb Tagen

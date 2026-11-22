@@ -100,6 +100,8 @@ const AUSLOESER={
   // ein Spieler eines Computer-Vereins der drei Profiligen wettet auf eigene Spiele (nicht ausgeliehen, kein vereinbarter Wechsel)
   wettpate(){const l=squad(S.my).filter(p=>!(p.inj>0));return l.length?{spieler:pick(l).id}:null;},
   wettbetrug(){const l=S.pl.filter(p=>p.team>=0&&p.team<1000&&p.team!==S.my&&!p.leihe&&!p.wech&&S.teams[p.team]&&aktiv(S.teams[p.team]));const p=l.length?pick(l):null;return p?{spieler:p.id,verein:p.team}:null;},
+  // Jubiläum (K27 §8, K25 §8, K27d): dein Verein wird in diesem Kalenderjahr ein Vielfaches von RKT.jubilaeum.alle Jahre alt (ab ab), Gründungsjahr aus VEREINE (gegr)
+  jubilaeum(){const t=myT(),v=VEREINE[S.my],J=RKT.jubilaeum;if(!t||!v||v.kurz!==t.sh||!v.gegr)return null;const j=datumVon(S.tag).getUTCFullYear()-v.gegr;return j>=J.ab&&j%J.alle===0?{verein:S.my}:null;},
   // Folgekarte der Kette (nur über kartenKette, mit den Beteiligten der ersten Karte): Der Spieler ist noch beim selben Verein und noch nicht vergeben
   dritterNoch(b){const p=b&&b.spieler!=null?PIX.get(b.spieler):null;return p&&p.team===b.verein&&!p.wech&&!istLeihe(p)&&S.teams[p.team]&&aktiv(S.teams[p.team])?b:null;},
   // Presse (K29 §8, K17 §8, K29k): Medienklima unter RKT.presse.leckUnter; ein Verein deiner Liga mit Beziehung unter RBZ.wirkung.gespraechUnter

@@ -130,7 +130,7 @@ Gleiches Modell für Nachfrage, Dauerkarten und Fanstimmung. Ihre Fanstimmung wi
 | Platzsturm | Aufstieg | Feier |
 | Fans wollen reden (Entscheidung) | Fanstimmung unter 25 | Gespräch (5.4) oder ablehnen |
 
-**Gebaut als K27c (22.11.2026, popolupo, ohne Testlauf), Karten nach K30:** „Protest gegen Ticketpreise“ (Preis über 1,3 × Richtpreis bei Fanstimmung unter 50; senken setzt den Richtpreis, neue Kartenwirkung `preisRichtwert`, Fans +2; halten Fans −3) und „Pfiffe gegen den eigenen Spieler“ (ab Wechselwunsch Stufe 3; in Schutz nehmen Stimmung +3, Fans −1; schweigen Stimmung −3). „Fans wollen reden“ gibt es schon als Fan-Gespräch im Büro (U16), Jubiläum und Platzsturm fehlen noch (Gründungsjahre, Aufstiegsfeier).
+**Gebaut als K27c (22.11.2026, popolupo, ohne Testlauf), Karten nach K30:** „Protest gegen Ticketpreise“ (Preis über 1,3 × Richtpreis bei Fanstimmung unter 50; senken setzt den Richtpreis, neue Kartenwirkung `preisRichtwert`, Fans +2; halten Fans −3) und „Pfiffe gegen den eigenen Spieler“ (ab Wechselwunsch Stufe 3; in Schutz nehmen Stimmung +3, Fans −1; schweigen Stimmung −3). „Fans wollen reden“ gibt es schon als Fan-Gespräch im Büro (U16), Platzsturm fehlt noch (Aufstiegsfeier). Das Jubiläum gibt es seit K27d (23.11.2026, popolupo, ohne Testlauf): Gründungsjahre der 54 Profivereine in `daten/vereine.js` (`gegr`, Quelle RSSSF, zwölf nach Vereinsangabe ungeprüft). Im Kalenderjahr eines Vielfachen von 25 Jahren kommt die Anlasskarte „Rundes Jubiläum“: Choreo bezahlen (Fans +3), Retro-Trikot (Fanartikel +25 % für vier Wochen, K25 §8) oder im kleinen Rahmen feiern.
 
 ## 9. Wechselwirkungen
 

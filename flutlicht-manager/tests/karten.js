@@ -330,6 +330,13 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   const mein=ev('squad')(S.my)[0],m0=si(mein,'liga');ev('kartenWirkung')({art:'wettsperre',wert:1},{spieler:mein.id},{titel:'Test'});const nieMein=si(mein,'liga')===m0;
   pruef(lob&&gesperrt&&nieMein,'Skandale: Wettpate gemeldet (Stimmung steigt), Wettbetrug sperrt einen Spieler eines Computer-Vereins, nie deinen',`Wettpate ${lob}, gesperrt ${gesperrt}, dein Spieler unberührt ${nieMein}`);}
 
+// K27d. Jubiläum (K27 §8): Alle Vereine der drei Profiligen (ohne zweite Mannschaften) haben ein Gründungsjahr; die Karte kommt nur im Kalenderjahr eines Vielfachen
+//       von 25 Jahren (ab 25), nicht im Gründungsjahr selbst und nicht in krummen Jahren.
+{const {S,ev}=welt(),A=ev('AUSLOESER'),V=ev('VEREINE'),J=ev('RKT').jubilaeum,v=V[S.my],jahr=ev('datumVon')(S.tag).getUTCFullYear(),g0=v.gegr;S.phase='play';
+  const ohne=V.filter(x=>x.liga<=3&&!x.zweite&&!x.gegr).map(x=>x.kurz);
+  v.gegr=jahr-2*J.alle;const rund=A.jubilaeum();v.gegr=jahr-2*J.alle+1;const krumm=A.jubilaeum();v.gegr=jahr;const neu=A.jubilaeum();v.gegr=g0;
+  pruef(!ohne.length&&!!rund&&rund.verein===S.my&&krumm===null&&neu===null,'Jubiläum: Gründungsjahre vollständig, Karte nur in runden Jahren',`ohne Gründungsjahr ${ohne.join(',')||'keiner'}, rund ${!!rund}, krumm ${krumm}, Gründungsjahr ${neu}`);}
+
 // U19e. Europapokal-Karten (K37 §8): Auswärtsspiel bei einem Auslandsverein in den nächsten 7 Tagen (kein Heimspiel, nicht später, nicht das Finale), Spiel 1 bis 7 Tage her,
 //       Wunder nach 0:3 im Hinspiel und 4:0 oder 3:0 mit Elfmeterschießen im Rückspiel, nicht nach nur einem Tor Rückstand und nicht beim Ausscheiden. euMeineSpiele ersetzt der Test.
 {const {S,W,ev}=welt(),A=ev('AUSLOESER'),AV=ev('AV0'),me=S.my,d=S.tag;W.ev('euMeineSpiele=function(){return S.testEu||[];}');
