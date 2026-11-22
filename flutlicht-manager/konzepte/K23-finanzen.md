@@ -168,6 +168,7 @@ Gebaut:
 - **Wie bei dir (§5.5c), ohne Gespräch und ohne Zufall:** Am 1. März bekommt ein Computer-Verein Auflagen, wenn seine Liquidität am Ende der nächsten Saison negativ ist. Am 31. Mai prüft das Spiel noch einmal: Ist sie dann noch negativ, gilt in der nächsten Saison eine Transfersperre.
 - **Liquidität:** Konto + erwarteter Saldo je Ligaspiel × (restliche Ligaspiele + eine ganze Saison) + Kreditrahmen. Der Saldo kommt aus demselben Modell wie die Buchungen der Computer-Vereine (K23b, K23c): halb zu Hause, Heimspiel zum Erwartungswert, Gehälter, Stab, Betrieb, Verwaltung, Jugend, Instandhaltung.
 - **Sperre:** kein Kauf, keine Leihe, keine Angebote für deine Spieler, kein Mitbieter (K20c). Verkaufen geht weiter.
+- **Nach Prüfung DF:** Die Sperre gilt schon ab dem 31. Mai, ein vorher abgegebenes Angebot zieht der Verein beim Annehmen zurück. Sie gilt auch für Ausstiegsklauseln und für Leihen von dir an ihn. Vereinslose zum Auffüllen des Kaders (Saisonwechsel, Ende des Sommerfensters) bleiben erlaubt, damit niemand mit zu kleinem Kader spielt.
 - **Meldung** nur für Vereine deiner Liga.
 - Nach der Modellrechnung aus §5.6b trifft das anfangs fast keinen Verein. Es greift, wenn ein Verein über Jahre Geld verliert.
 

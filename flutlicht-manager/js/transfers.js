@@ -87,6 +87,7 @@ function gegenRunde(o,betrag){const T=RTR,max=o.max||o.amt;o.r=(o.r||0)+1;if(bet
 
 // Verkauf eines deiner Spieler nach einem Angebot: im Fenster sofort, sonst Einigung mit Geld jetzt und Wechsel zum nächsten Fensterbeginn
 function verkaufAbschluss(o){const p=o&&PIX.get(o.pid);if(!p||p.team!==S.my||p.wech)return;if((p.ww||0)>=3)beraterBeziehung(p,RBE.beziehung.wunschVerkauf); // einen wechselwilligen Mandanten ziehen lassen (K22)
+  if(o.tid<AV0&&kiTransferSperre(S.teams[o.tid])){S.offers=S.offers.filter(x=>x!==o);news(`${S.teams[o.tid].name} hat eine Transfersperre und zieht das Angebot zurück.`,'bad');return;} // Lizenzsperre (K23g, Prüfung DF2)
   const offen=fensterOffen(),weg=()=>{S.offers=S.offers.filter(x=>x.pid!==o.pid);};
   if(o.tid>=AV0){const v=avVon(o.tid);if(!v){S.offers=S.offers.filter(x=>x!==o);return;}money('Transfers',o.amt);weg();const land=gruppenName(avGruppe(v));
     if(!offen){wechselVormerken(p,o.tid,{preis:o.amt});news(`Einigung: ${p.n} wechselt für ${fmt(o.amt)} zu ${v.name} (${land}), mit dem Transferfenster am ${datumKurz(p.wech.ab)}.`,'good');return;}

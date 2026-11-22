@@ -104,7 +104,7 @@ function kiLizenzPruefen(nachweis){const tab={},me=S.teams[S.my];LIGEN.forEach(l
   S.teams.forEach(t=>{if(t.id===S.my||!aktiv(t))return;const neg=kiLiquiditaet(t,tab)<0;if(!nachweis){t.lzA=neg?S.season:null;return;}
     if(t.lzA===S.season&&neg){t.lzSperre=S.season+1;if(me&&t.lg===me.lg)news(`Lizenz: ${t.name} bekommt eine Transfersperre für die nächste Saison (Liquidität nicht nachgewiesen).`,'');}});}
 // Gesperrt in dieser Saison: kein Kauf, keine Leihe, keine Angebote für deine Spieler, kein Mitbieter (computer.js kiMarkt, ablauf.js market, transfers.js konkurrenzKauf)
-const kiTransferSperre=t=>!!t&&t.id!==S.my&&t.lzSperre===S.season;
+const kiTransferSperre=t=>!!t&&t.id!==S.my&&t.lzSperre!=null&&t.lzSperre>=S.season; // schon ab dem 31. Mai (Prüfung DF2), sonst kamen im Juni noch Angebote
 
 // ---------- K23d (§5.3, §5.5f): Budgets vom Vorstand ----------
 // Erwartete Einnahmen einer Saison ohne Transfers und Prämien: Liga-Modell wie bei den Computer-Vereinen (TV, Sponsor, Sonstiges, Heimspiele zum Erwartungswert)

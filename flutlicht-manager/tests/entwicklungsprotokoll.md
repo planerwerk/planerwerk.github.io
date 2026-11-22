@@ -74,6 +74,12 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 22.11.2026: Korrekturen nach Prüfung DF (Zweig `mitarbeit/popolupo-k23g-lizenz-computer`)
+
+- Ein lesender Prüf-Agent hat K29b und K23g durchgesehen (Konsistenzprüfung DF).
+- **Behoben:** Medienklima kehrt mit „zurückhaltend“ zur Mitte zurück (DF1), Sperre ab dem 31. Mai und Rückzug alter Angebote (DF2), keine Ausstiegsklausel und keine Leihe an gesperrte Vereine (DF3).
+- **Tests zuerst:** `tests/presse.js` (K29b), `tests/finanzen.js` (Nr. 19), `tests/leihe.js`, `tests/vertraege.js`.
+
 ### 22.11.2026: K23g Lizenzprüfung der Computer-Vereine (Zweig `mitarbeit/popolupo-k23g-lizenz-computer`, auf K29b)
 
 - **Neu (K23 §5.5g, Konsistenzprüfung DE):** Computer-Vereine bekommen am 1. März Auflagen, wenn ihre Liquidität am Ende der nächsten Saison negativ ist, und am 31. Mai bei weiter negativer Liquidität eine Transfersperre für die nächste Saison (kein Kauf, keine Leihe, keine Angebote, kein Mitbieter).

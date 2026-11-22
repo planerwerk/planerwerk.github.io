@@ -58,13 +58,13 @@ const gegner=w=>w.S.teams.find(x=>x.lg===w.t.lg&&x.id!==VEREIN).id;
   F.presseNachSpiel({h:VEREIN,a:g,hg:0,ag:1,lg});const z1=JSON.stringify(S.zufall);
   pruef(!!S.pk&&S.pk.art==='krise'&&S.pk.serie===3&&z0===z1,'Krise: nach drei Niederlagen in Folge eine Pressekonferenz „Krise“ mit Serie 3, ohne Griff in den Grundstrom',S.pk?`${S.pk.art}, Serie ${S.pk.serie}`:'keine');}
 
-// K29b. Medienpolitik (K29 §6): offen zieht das Medienklima je Woche bis 70 hoch, abgeschottet bis 30 herunter, zurückhaltend lässt es; schlechtes Klima macht Gerüchte über dich
+// K29b. Medienpolitik (K29 §6): offen zieht das Medienklima je Woche bis 70 hoch, abgeschottet bis 30 herunter, zurückhaltend zur Mitte (seit DF1); schlechtes Klima macht Gerüchte über dich
 //       häufiger (Faktor 1,5 bei 0, 0,5 bei 100); mit Lernstufen (Bereich presse in der Automatik) gilt der Standard
 {const {S,F,ev}=welt(false),P=ev('presseS')(),M=ev('REGELN').medienpolitik;P.klima=50;F.medienpolitikSetzen('offen');F.presseWoche();const k1=P.klima;for(let i=0;i<60;i++)F.presseWoche();const k2=P.klima;
   F.medienpolitikSetzen('abgeschottet');for(let i=0;i<100;i++)F.presseWoche();const k3=P.klima;F.medienpolitikSetzen('zurueckhaltend');F.presseWoche();const k4=P.klima;
   P.klima=0;const f0=ev('klimaFaktor')();P.klima=100;const f100=ev('klimaFaktor')();P.klima=50;
   const w=welt(true);w.S.mp='offen';const auto=w.ev('medienpolitik')().k===M.standard;
-  pruef(k1===50+M.arten.offen.klima&&k2===M.arten.offen.ziel&&k3===M.arten.abgeschottet.ziel&&k4===k3&&Math.abs(f0-1.5)<1e-9&&Math.abs(f100-0.5)<1e-9&&S.mp==='zurueckhaltend'&&auto,
+  pruef(k1===50+M.arten.offen.klima&&k2===M.arten.offen.ziel&&k3===M.arten.abgeschottet.ziel&&k4===k3+M.arten.zurueckhaltend.klima&&Math.abs(f0-1.5)<1e-9&&Math.abs(f100-0.5)<1e-9&&S.mp==='zurueckhaltend'&&auto,
     'Medienpolitik: Klima zieht zum Ziel der Art, Faktor auf Gerüchte, Standard in der Automatik',`Klima ${k1} / ${k2} / ${k3} / ${k4}, Faktor ${f0} / ${f100}, Automatik ${auto}`);}
 
 console.log(probleme.length?`\n${probleme.length} Problem(e).`:'\nAlles in Ordnung.');process.exitCode=probleme.length?1:0;

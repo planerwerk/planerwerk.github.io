@@ -87,7 +87,7 @@ function vertraegeSaison(){const t=myT();if(!(t.lastLg&&t.lg>t.lastLg))return;co
 const vorvertragZeit=(tag=S.tag)=>{const k=mmtt(tag),V=RVT.vorvertrag;return S.phase==='play'&&k>=V.von&&k<=V.bis;};
 function vertraegeWoche(d){const V=RVT,t=myT();
   // Ausstiegsklausel: Ein größerer Verein mit Bedarf und Geld zahlt den Betrag (nur im Fenster). Der Spieler geht sofort.
-  if(fensterOffen(d))squad(S.my).filter(p=>p.ak&&!p.wech).forEach(p=>{const B=S.teams.filter(b=>b.id!==S.my&&aktiv(b)&&b.rep>=t.rep&&b.cash>=p.ak&&hatBedarf(b,p)&&vwKauf(p,b.id)>=p.ak);
+  if(fensterOffen(d))squad(S.my).filter(p=>p.ak&&!p.wech).forEach(p=>{const B=S.teams.filter(b=>b.id!==S.my&&aktiv(b)&&!kiTransferSperre(b)&&b.rep>=t.rep&&b.cash>=p.ak&&hatBedarf(b,p)&&vwKauf(p,b.id)>=p.ak);
     if(!B.length||R()>=V.ausstieg.chance)return;const b=pick(B),betrag=p.ak;money('Transfers',betrag);b.cash-=betrag;bezDuAendern(b.id,RBZ.anlass.ausstieg,`Ausstiegsklausel von ${p.n} gezogen`); // K17, U12c
     kabineAbgang(p,S.my);vertragEnde(p);S.offers=S.offers.filter(o=>o.pid!==p.id);
     p.team=b.id;p.list=0;p.ct=riA(RM.neuerVertrag);p.seit=absTag(d);p.abl=betrag;neuzugang(p,b.id);statTransfer(p,betrag,S.my,b.id);news(`Ausstiegsklausel gezogen: ${b.name} zahlt ${fmt(betrag)} für ${p.n}. Er wechselt sofort.`,'bad');});

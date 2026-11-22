@@ -1676,3 +1676,16 @@ Zweig `mitarbeit/popolupo-k23g-lizenz-computer`, auf K29b. Ausführlich in K23 �
 | DE1 | **Ablauf:** `kiLizenzPruefen` hängt in `finanzenTag` an denselben Tagen wie deine Prüfung (1. März Auflagen, 31. Mai Sperre). Die Sperre (`kiTransferSperre`) greift in `kiMarkt` (Kauf, Leihe, Sternejagd), in `market` (Angebote für deine Spieler) und bei Mitbietern (K20c). | ✅ |
 | DE2 | **Modell der Liquidität:** derselbe erwartete Saldo wie in `kiFinanzenSpiel`. Pokal, Europapokal und Transfers fehlen darin, große Vereine im Europapokal stehen dadurch schlechter da als in Wirklichkeit. Nach der Modellrechnung (K23 §5.6b) reicht ihr Konto trotzdem. | ⚠️ im Testlauf über mehrere Saisons ansehen, wie viele Sperren es gibt |
 | DE3 | **K36 „Kein Nachteil“:** Dein Verein in der Automatik läuft durch deine Prüfung, derselbe Verein als Computer-Verein durch diese. Über mehrere Saisons kann das auseinanderlaufen. | ⚠️ `tests/lizenz.js` Nr. 5 |
+
+---
+
+## DF. Prüfung von K29b und K23g ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 8fe3f70 und ab898d3 gelesen (nichts ausgeführt). Korrekturen auf der neuesten Spitze `mitarbeit/popolupo-k23g-lizenz-computer`.
+
+| # | Befund | Status |
+|---|---|---|
+| DF1 | **Medienklima in der Automatik:** Der Co-Trainer senkt es bei jeder Pressekonferenz um 2, nichts hob es wieder. Seit K29b kostet ein schlechtes Klima Gerüchte. Jetzt zieht auch „zurückhaltend“ (Standard und Automatik) das Klima je Woche um 0,5 zur Mitte, in beide Richtungen. | ✅ behoben |
+| DF2 | **Lücke der Sperre:** Vom 31. Mai bis zum 1. Juli kamen noch Angebote gesperrter Vereine, ein angenommenes führte am 1. Juli zum Wechsel. Jetzt gilt die Sperre ab dem 31. Mai, und `verkaufAbschluss` lehnt Angebote gesperrter Vereine ab. | ✅ behoben |
+| DF3 | **Andere Wege:** Ausstiegsklausel (`vertraege.js`) und Leihe an einen gesperrten Verein (`leihVereine`) gingen noch. Jetzt nicht mehr. Vereinslose zum Auffüllen bleiben bewusst erlaubt. Kaufoption aus einer Leihe und Vorverträge gelten wie bei dir weiter. | ✅ behoben, Rest bewusst |
+| DF4 | Ohne Befund: Laufzeit, Grenzen und Rundung des Klimas, gleich viele Würfe, Modell der Liquidität, Zeitpunkte, Gleichschritt, beide Tests, Kommentare. | ✅ |

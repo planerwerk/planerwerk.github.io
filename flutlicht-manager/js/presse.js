@@ -92,7 +92,8 @@ const medienpolitik=()=>{const M=REGELN.medienpolitik,k=autoB('presse')||!S.mp||
 function medienpolitikSetzen(k){if(!darf('presse')||!REGELN.medienpolitik.arten[k])return;S.mp=k;save();render();}
 // Faktor des Medienklimas auf Gerüchte über dich (geruechte.js): unter 50 mehr, darüber weniger
 const klimaFaktor=()=>1+REGELN.medienpolitik.klimaWirkung*(50-presseS().klima)/50;
-function medienpolitikWoche(){const P=presseS(),m=medienpolitik();if(!m.klima)return;const n=P.klima+m.klima;P.klima=fanZahl(m.klima>0?Math.min(Math.max(P.klima,m.ziel),n):Math.max(Math.min(P.klima,m.ziel),n));}
+function medienpolitikWoche(){const P=presseS(),m=medienpolitik(),k=P.klima,s=m.klima;if(!s)return;
+  if(k<m.ziel&&m.richtung>=0)P.klima=fanZahl(Math.min(m.ziel,k+s));else if(k>m.ziel&&m.richtung<=0)P.klima=fanZahl(Math.max(m.ziel,k-s));}
 function presseWoche(){medienpolitikWoche();const P=presseS(),G=RPK.gedaechtnis,heute=absTag(S.tag);
   P.aussagen.forEach(a=>{if(a.ok||a.art!=='rueckendeckung'||a.pid==null)return;if(heute-a.tag>G.rueckendeckungTage){a.ok=1;return;}const p=PIX.get(a.pid);
     if(p&&p.team!==S.my){a.ok=1;glaubAendern(G.rueckendeckungGlaub);news(`Die Presse erinnert an deine Rückendeckung für ${p.n}. Jetzt ist er weg. Deine Glaubwürdigkeit leidet.`,'bad');}});}

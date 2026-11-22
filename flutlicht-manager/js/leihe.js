@@ -18,7 +18,7 @@ const istLeihe=p=>!!(p&&p.leihe);
 // Wie viel Gehalt ein Verein übernehmen würde: Er zahlt alles für einen, der ihn besser macht, die Hälfte für einen gleich guten, sonst nichts
 function zahlBereit(p,tid){const Z=RLE.zahlBereit,lvl=teamLevel(tid);return p.str>lvl+Z.spanne?Z.besser:p.str>=lvl-Z.spanne?Z.gleich:Z.schlechter;}
 // Vereine, die ihn nehmen würden: Bedarf auf seiner Position, aktiv, nicht du, Platz im Leihkontingent (U11d1)
-function leihVereine(p){const z=leihZaehler();return S.teams.filter(t=>t.id!==S.my&&aktiv(t)&&hatBedarf(t,p)&&leihErlaubt(p,S.my,t.id,z)).sort((a,b)=>b.rep-a.rep);}
+function leihVereine(p){const z=leihZaehler();return S.teams.filter(t=>t.id!==S.my&&aktiv(t)&&!kiTransferSperre(t)&&hatBedarf(t,p)&&leihErlaubt(p,S.my,t.id,z)).sort((a,b)=>b.rep-a.rep);}
 // Verleihen (nur im Fenster). o = {tid, anteil, rolle, rueckruf, option}. Rückgabe Text (Fehler) oder null
 function verleihen(p,o){if(!p||p.team!==S.my||p.wech||istLeihe(p))return'Er kann nicht verliehen werden.';if(!fensterOffen())return'Leihen geht nur im Transferfenster.';
   const t=S.teams[o.tid];if(t&&!leihErlaubt(p,S.my,t.id))return leihKontingentText();
