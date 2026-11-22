@@ -25,6 +25,12 @@ function einheitVerein(t,a,d){return einheitFuer(Object.assign({},STARTER,{ltag:
 function lastBuchen(p,l){const L=RT.last;p.la=(p.la||0)+(l-(p.la||0))*2/(L.akut+1);p.lc=(p.lc||0)+(l-(p.lc||0))*2/(L.chronisch+1);}
 // Untergrenze der gewohnten Last: auch im Urlaub halten sich Profis etwas fit, sonst wäre jeder erste Trainingstag ein riesiger Sprung
 const lastQuote=p=>(p.la||0)/Math.max(p.lc||0,RT.last.grund);
+// Erinnerung „Plan passt nicht“ (K07 §5 Nr. 4, K07b): von dir gewählte Standardwoche, obwohl deine nächsten zwei Pflichtspiele höchstens RT.planErinnerung.englischTage auseinander liegen,
+// oder mindestens spielerAb Spieler der Startelf mit Belastungssprung (lastQuote) über sprungAb. Rückgabe: Eintrag für erinnerungen (kalender.js) oder null
+function planPasstNicht(d){const t=myT(),E=RT.planErinnerung,grund=[];const sp=[];for(let x=d;x<=d+E.vorschau&&sp.length<2;x++)if(meinSpiel(x))sp.push(x);
+  if(t.vorlage==='standard'&&!autoB('vorlage')&&sp.length===2&&sp[1]-sp[0]<=E.englischTage)grund.push(`Englische Woche mit der ${RT.vorlagen.standard.name}: Die Vorlage „${RT.vorlagen.englisch.name}“ schont die Spieler.`);
+  const xi=new Set(myXI()),hoch=squad(S.my).filter(p=>xi.has(p.id)&&lastQuote(p)>E.sprungAb);if(hoch.length>=E.spielerAb)grund.push(`${hoch.map(p=>esc(p.n)).join(', ')} haben einen Belastungssprung über ${de(E.sprungAb,1)}: Verletzungsgefahr.`);
+  return grund.length?{art:'plan',text:grund.join(' '),tab:'training',knopf:'Zum Training'}:null;}
 function sprungFaktor(q){const V=RT.verletzung;return q<=V.sprungAb?1:1+V.sprungJe01*(q-V.sprungAb)/0.1;}
 
 // Ein Trainingstag eines Spielers: gibt den Frischeverlust (negativ) oder -gewinn zurück und bucht Reize, Last, Spielpraxis und Verletzungsrisiko

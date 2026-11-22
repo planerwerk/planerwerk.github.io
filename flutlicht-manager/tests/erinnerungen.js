@@ -19,4 +19,11 @@ const SEED=4711;
     else info='kein Derby nach einem Ligaspiel im Spielplan';}
   pruef(ok,'Gelbsperre droht: Erinnerung am Ligaspieltag vor einem Derby, nur bei 4 Gelben, abschaltbar',info);}
 
+// K07b. Plan passt nicht (K07 §5 Nr. 4): drei Spieler der Startelf mit Belastungssprung über 1,5 lösen die Erinnerung aus, zwei nicht; abgeschaltet nicht
+{const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S,ev=W.ev;S.my=6;S.mgr='Test';F.setTarget();F.sponsOffers();if(S.sponsOffers)F.sponsorWaehlen(0);S.lineup=F.bestXI(S.my,ev('myT()').form);
+  ev('myT()').vorlage='auto';const E=ev('RT').planErinnerung,xi=ev('myXI')(),sq=ev('squad')(S.my).filter(p=>xi.includes(p.id));sq.forEach(p=>{p.la=0;p.lc=0;});
+  const plan=()=>F.erinnerungen().some(e=>e.art==='plan');sq.slice(0,E.spielerAb-1).forEach(p=>{p.la=10;p.lc=2;});const zwei=plan();sq[E.spielerAb-1].la=10;sq[E.spielerAb-1].lc=2;const drei=plan();
+  F.erinnerungAus('plan',true);const aus=plan();F.erinnerungAus('plan',false);
+  pruef(!zwei&&drei&&!aus,'Plan passt nicht: ab drei Spielern mit Belastungssprung, abschaltbar',`zwei ${zwei}, drei ${drei}, abgeschaltet ${aus}`);}
+
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);
