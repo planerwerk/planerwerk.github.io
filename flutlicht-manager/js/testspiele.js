@@ -71,3 +71,27 @@ function lagerTag(d){const l=lagerAktiv(d);if(!l)return;const O=RLA.orte[l.ort],
   if(l.tag>=RLA.kollerAb&&R()<RLA.koller){l.koller++;const n=Math.min(sq.length,ri(3,5));shuffle(sq.slice()).slice(0,n).forEach(p=>svAendern(p,RLA.kollerSv));news('Lagerkoller: Die Stimmung im Lager kippt, einige Spieler wollen nach Hause.','bad');}
   if(O.ablenkung)sq.filter(p=>hatEig(p,'partyloewe')).forEach(p=>{if(R()<RLA.ablenkung/(l.bis-l.von+1)){svAendern(p,RLA.ablenkungSv);news(`Trainingslager: ${p.n} wurde nachts in der Stadt gesehen.`,'bad');}});
   if(d===l.bis)news(`Trainingslager in ${O.name} beendet. Der Co-Trainer ist zufrieden mit Kondition und Abläufen.`,'good');}
+
+// ---------- Sommerturnier (K11 §3, K11b) ----------
+// Vier Vereine, zwei Tage in der Vorbereitung: Halbfinale gegen einen Verein deines Niveaus (Tag 1, als Testspiel), das andere Halbfinale wird kurz nach Ansehen gerechnet
+// (eigener Strom), Tag 2 Finale oder Spiel um Platz 3. Remis: Elfmeterschießen (eigener Strom). Antrittsgeld und Siegprämie nach Liga, Pokal in der Vitrine (K34), Stimmung beim Sieg.
+// S.turnier = {s, tag, g: [drei Gegner], platz}. Einmal je Saison.
+function turnierMoeglich(d){const tage=testspielTage();return inVorbereitung(d)&&inVorbereitung(d+1)&&tage.includes(d)&&tage.includes(d+1)&&!(S.turnier&&S.turnier.s===S.season);}
+function turnierAnmelden(d){if(!darf('testspiele','sommerplan'))return;if(!turnierMoeglich(d)){toast('An diesen Tagen geht kein Turnier.');return;}
+  const g=testspielGegner(d).filter(x=>!x.am).slice(0,3).map(x=>x.id);if(g.length<3){toast('Es finden sich keine drei Gegner.');return;}
+  const T=RTS.turnier,lg=myT().lg,geld=T.antritt[lg]||T.antritt[3];S.turnier={s:S.season,tag:d,g,platz:null};S.testspiele=S.testspiele||[];S.testId=(S.testId||0)+1;
+  S.testspiele.push({id:S.testId,tag:d,gegner:g[0],heim:true,stand:'zugesagt',turnier:1,runde:1});money('Testspiele',geld);
+  news(`${T.name}: Halbfinale am ${datumKurz(d)} gegen ${tn(g[0])}, am Tag danach Finale oder Spiel um Platz 3. Antrittsgeld ${fmt(geld)}.`,'good');save();render();}
+// Nach einem Turnierspiel (ablauf.js, nach testspielNach)
+function turnierNach(r,x){const U=S.turnier;if(!x||!x.turnier||!U||U.s!==S.season)return;let gew=winner(r)===S.my;
+  if(r.hg===r.ag&&!r.pen){const e=mitStrom(strom('turnier',S.season,x.runde,'elf'),shootout);gew=r.h===S.my?e[0]>e[1]:e[1]>e[0];}
+  if(x.runde===1){const b=U.g[1],c=U.g[2],rb=S.teams[b].rep,rc=S.teams[c].rep,sb=mitStrom(strom('turnier',S.season,'hf2'),()=>R()*(rb+rc)<rb),fin=sb?b:c,kl=sb?c:b,geg=gew?fin:kl;
+    S.testId=(S.testId||0)+1;S.testspiele.push({id:S.testId,tag:x.tag+1,gegner:geg,heim:true,stand:'zugesagt',turnier:1,runde:2,finale:gew?1:0});
+    news(`${RTS.turnier.name}: ${gew?'Sieg':'Niederlage'} im Halbfinale. Morgen ${gew?'Finale':'Spiel um Platz 3'} gegen ${tn(geg)}.`,gew?'good':'');return;}
+  const T=RTS.turnier,lg=myT().lg;U.platz=x.finale?(gew?1:2):(gew?3:4);
+  if(U.platz===1){money('Testspiele',T.sieg[lg]||T.sieg[3]);statS().vit.push({s:S.season,k:'turnier',lg,tid:S.my});squad(S.my).forEach(p=>stimmungAendern(p,T.stimmung));}
+  news(`${T.name}: Platz ${U.platz}${U.platz===1?`. Der Pokal steht in der Vitrine, Siegprämie ${fmt(T.sieg[lg]||T.sieg[3])}.`:'.'}`,U.platz===1?'good':'');}
+// Anzeige bei den Testspielen (ansichten.js)
+function turnierText(){const T=RTS.turnier;if(S.turnier&&S.turnier.s===S.season){const U=S.turnier;return`<p class="dim">${T.name} am ${datumKurz(U.tag)} mit ${U.g.map(id=>esc(tn(id))).join(', ')}${U.platz?`: Platz ${U.platz}`:''}.</p>`;}
+  const tage=testspielTage().filter(turnierMoeglich);if(!tage.length)return'';
+  return`<div class="row" style="margin-top:8px;flex-wrap:wrap;gap:6px"><select id="tu_tag" aria-label="Erster Turniertag">${tage.map(d=>`<option value="${d}">${datumKurz(d)}</option>`).join('')}</select><button onclick="turnierAnmelden(+document.getElementById('tu_tag').value)"${lzAus('testspiele')}>${T.name} (zwei Tage, Antrittsgeld ${fmt(T.antritt[myT().lg]||T.antritt[3])})</button></div>`;}

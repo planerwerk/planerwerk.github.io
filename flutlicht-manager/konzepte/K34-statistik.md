@@ -161,7 +161,7 @@ Seit U13 stehen die Werte in `daten/regeln.js` unter `statistik` (Vorlagen, Ehru
 
 **Seit K34c (22.11., popolupo, ohne Testlauf):** In der Saisonstatistik steht unter den Ligalisten eine Karte mit den deutschen Torjägern im Europapokal (bis zu 10, nach Europapokaltoren dieser Saison).
 
-**Noch offen:** Turnierpokale (K11).
+**Noch offen:** nichts aus diesem Konzept. Turnierpokale gibt es seit K11b (Sommerturnier, 22.11.).
 
 ## Quellen
 

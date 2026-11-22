@@ -745,7 +745,9 @@ const REGELN={
   testspiele:{abWoche:3,wechsel:11,frische:0.7,risiko:0.6,praxis:0.6,vertrautheit:2,form:0.3,
     zusage:{grund:0.6,staerker:0.4,schwaecher:1.3,staerkerAb:4,schwaecherAb:4,kalender:0.2,region:1.2,vorbereitung:1.2,saison:0.7,min:0.05,max:0.95},
     antwortTage:[1,3],abstandPflichtspiel:2,vorlaufTage:4,planTage:42,maxProWoche:2,vorschlaege:8,
-    nachfrage:{start:0.12,jeWoche:-0.015,min:0.04,grosserName:2,grossAb:80},gageAmateur:[10000,80000]},
+    nachfrage:{start:0.12,jeWoche:-0.015,min:0.04,grosserName:2,grossAb:80},gageAmateur:[10000,80000],
+    // Sommerturnier (K11 §3, K11b, 22.11., GESCHÄTZT): Antrittsgeld und Siegprämie je Liga, Stimmung aller beim Turniersieg
+    turnier:{name:'Sommerturnier',antritt:{1:150000,2:60000,3:25000},sieg:{1:100000,2:40000,3:15000},stimmung:1}},
   lager:{orte:{alpen:{name:'Alpen',saison:'sommer',kosten:40000,kondition:1.15,text:'Höhenlage: Kondition wirkt stärker'},schwarzwald:{name:'Schwarzwald',saison:'sommer',kosten:25000,text:'günstig und ruhig'},
       algarve:{name:'Algarve',saison:'winter',kosten:50000,text:'mildes Wetter'},andalusien:{name:'Andalusien',saison:'winter',kosten:55000,text:'warm, gute Plätze'},
       riviera:{name:'Türkische Riviera',saison:'winter',kosten:30000,ablenkung:true,text:'günstig, aber mehr Ablenkung'},golf:{name:'Golfregion',saison:'winter',kosten:90000,text:'sehr warm, lange Reise'},

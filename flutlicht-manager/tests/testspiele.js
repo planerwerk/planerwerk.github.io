@@ -47,5 +47,15 @@ if(lager){const f=ev('lagerMoeglich')('schwarzwald',S.tag+1,7);if(f)return{fehle
   tage(F,S,40);const g=(S.testspiele||[]).filter(x=>x.stand==='gespielt').length;
   pruef(geplant===2&&g===2&&(S.fin['Testspiele']||0)>0,'Zwei angefragte Testspiele gegen Amateure werden gespielt und bringen Geld',`${g} von ${geplant} gespielt, ${Math.round(S.fin['Testspiele']||0).toLocaleString('de-DE')} €`);
   pruef(!lf&&(S.fin['Trainingslager']||0)<0,'Trainingslager in der Vorbereitung buchbar, Kosten gebucht',lf||`${Math.round(-(S.fin['Trainingslager']||0)).toLocaleString('de-DE')} €`);}
+// K11b. Sommerturnier (K11 §3): in der Vorbereitung anmelden (Antrittsgeld), Halbfinale gewonnen → Finale am Tag danach, Finale gewonnen → Platz 1, Pokal in der Vitrine, Siegprämie;
+//       Halbfinale verloren → Spiel um Platz 3; nur einmal je Saison
+{const T=welt().ev('RTS').turnier,lauf=(sieg1,sieg2)=>{const {F,S,ev}=welt();S.tag=ev('auftaktTag')(ev('myT()'))+3*7;const d=ev('testspielTage')().find(x=>F.turnierMoeglich(x));if(d==null)return{fehler:'kein Turniertag'};
+    const f0=S.fin['Testspiele']||0;F.turnierAnmelden(d);const x1=S.testspiele.find(x=>x.turnier&&x.runde===1);if(!x1)return{fehler:'nicht angemeldet'};const antritt=(S.fin['Testspiele']||0)-f0;
+    F.turnierNach({h:S.my,a:x1.gegner,hg:sieg1?2:0,ag:sieg1?0:2},x1);const x2=S.testspiele.find(x=>x.turnier&&x.runde===2);if(!x2)return{fehler:'kein zweites Spiel'};
+    F.turnierNach({h:S.my,a:x2.gegner,hg:sieg2?1:0,ag:sieg2?0:1},x2);const v=(S.stat&&S.stat.vit||[]).some(e=>e.k==='turnier');
+    return{d,antritt,finale:x2.finale,tag2:x2.tag===d+1,platz:S.turnier.platz,v,nochmal:F.turnierMoeglich(d+7)};};
+  const a=lauf(true,true),b=lauf(false,true),lg=welt().ev('myT()').lg;
+  pruef(!a.fehler&&a.antritt===(T.antritt[lg]||T.antritt[3])&&a.finale===1&&a.tag2&&a.platz===1&&a.v&&!a.nochmal&&!b.fehler&&b.finale===0&&b.platz===3&&!b.v,
+    'Sommerturnier: Anmeldung mit Antrittsgeld, Finale am Tag danach, Turniersieg mit Pokal, Spiel um Platz 3, einmal je Saison',a.fehler||b.fehler||`Platz ${a.platz} und ${b.platz}, Pokal ${a.v}`);}
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

@@ -25,7 +25,7 @@ function tagesSpieleVorbereiten(d,live){kartenAuto(d); // unbeantwortete Ereigni
 function liveEintragen(v){const r=Object.assign(v.G.ergebnis(),v.platz.meta);v.platz.g.list[v.platz.i]=r;return r;}
 function tagesSpieleAbschliessen(out){return mitStrom(strom('spieltagEnde',S.season,out.tag),()=>tagesSpieleAbschliessenLauf(out));}
 function tagesSpieleAbschliessenLauf(out){const d=out.tag;S.gespielt=d;
-  out.gruppen.filter(g=>g.art==='test').forEach(g=>g.list.forEach(r=>testspielNach(r,g.x)));out.gruppen=out.gruppen.filter(g=>g.art!=='test');
+  out.gruppen.filter(g=>g.art==='test').forEach(g=>g.list.forEach(r=>{testspielNach(r,g.x);turnierNach(r,g.x);}));out.gruppen=out.gruppen.filter(g=>g.art!=='test');
   out.list=out.gruppen.flatMap(g=>g.list);if(!out.list.length){out.gruppen.filter(g=>g.art==='eu').forEach(g=>euNachSpielen(g,null));return out;} // nur Ausland gegen Ausland im Europapokal: trotzdem eintragen (K37)
   einsatzVorher(out.list);versprechenNachSpiel(out.list);scoutingNachSpiel(out.list); // wer fehlte (K14 §12) und Versprechen (K15), solange Gesperrte noch als gesperrt gelten
   // Sperren zählen die Spiele der eigenen Mannschaft im selben Wettbewerb (K09)
