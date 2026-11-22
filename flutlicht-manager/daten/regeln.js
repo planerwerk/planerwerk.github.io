@@ -439,6 +439,10 @@ const REGELN={
     bereitschaft:{basis:10,jeInteresse:0.1,interesse:[-50,100],berater:{gierig:1.2,strippenzieher:1.2},stimmung:{unter:[40,1.3],ueber:[70,0.7]},treu:0.4,ab:70},
     risiko:{basis:0.08,bekanntAb:80,bekannt:1.5,berater:{verschwiegen:0.4,familie:0.8,serioes:1,strippenzieher:1.2,gierig:1.5},ohneBerater:1.1,jeTreffen:0.2,petzen:0.3},
     folgen:{beziehung:[-30,-15],forderung:1.15,stimmung:-10,vertrauen:-3},
+    // Computer-Vereine werben deine Spieler ab (K20 §7, K20e, 22.11., popolupo, GESCHÄTZT): montags mit chance ein Verein mit Bedarf, Ansehen ab deinem − ansehenMinus,
+    // Konto über dem Marktwert; der Spieler (Stärke ab deinem Kaderschnitt + staerkePlus, bis alterMax) wird unruhig (Wechselwunsch eine Stufe höher). Mit aufflieg fliegt es auf:
+    // Entscheidung binnen frist Tagen (zur Rede stellen: stimmung, glaub; öffentlich: beziehung, fans; Preis hoch: unverkäuflich). Nur, wenn du die Transfers selbst führst.
+    ki:{chance:0.04,ansehenMinus:5,staerkePlus:0,alterMax:30,aufflieg:0.5,frist:5,stimmung:-3,glaub:2,beziehung:-15,fans:1},
     // Deadline Day (K20 §4.3, K20b 22.11., GESCHÄTZT): in den letzten tage Tagen eines Fensters schwankt die Forderung deutscher Computer-Vereine an dich um bis zu ±preis
     // (fest je Spieler und Tag), für Spieler auf ihrer Transferliste um liste verschoben. Angebote für deine Spieler auf der Transferliste kommen angebote-mal so oft.
     deadline:{tage:3,preis:0.15,liste:-0.1,angebote:1.5},bieter:{plus:[0.02,0.10],gierig:0.05,frist:2},

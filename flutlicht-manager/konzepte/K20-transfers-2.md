@@ -124,7 +124,7 @@ Keine Geldstrafe, kein Verbandsverfahren.
 - **Gleichschritt:** nur nach deinem Angebot, wie K20c.
 - **Nach der Prüfung DP:** Lehnt der Spieler ab, steht die Einigung zu deiner Ablöse 14 Tage fest, ohne neue Runde mit dem Verkäufer. Kann der andere Verein nicht mehr kaufen (Geld, Kader, nicht mehr aktiv), bleibt der Verkäufer ebenfalls bei deinem Gebot. Hast du inzwischen den Verein gewechselt, gilt das Nein nicht mehr.
 
-**Später:** Computer-Vereine werben deine Spieler ab (§7), Klugheit beim Abwerben (K02), das Nein des Spielers, wenn du verkaufst (Bieterrunde).
+**Später:** Klugheit beim Abwerben (K02), das Nein des Spielers, wenn du verkaufst (Bieterrunde). Computer-Vereine werben deine Spieler seit K20e ab (§7).
 
 ## 6. Hebel des Spielers
 
@@ -137,7 +137,7 @@ Keine Geldstrafe, kein Verbandsverfahren.
 
 ## 7. Verhalten der Computer-Vereine
 
-- Auch sie werben ab, auch deine Spieler. Fliegt es auf, bekommst du eine Meldung und eine Entscheidung: Spieler zur Rede stellen (K15), Preis erhöhen, öffentlich machen (Presse, Beziehung zu ihnen −).
+- Auch sie werben ab, auch deine Spieler. Fliegt es auf, bekommst du eine Meldung und eine Entscheidung: Spieler zur Rede stellen (K15), Preis erhöhen, öffentlich machen (Presse, Beziehung zu ihnen −). **Gebaut als K20e** (22.11.2026, popolupo, ohne Testlauf, Werte GESCHÄTZT): montags mit 4 % ein deutscher Verein mit Bedarf, Ansehen höchstens 5 unter deinem und genug Geld; einer deiner Leistungsträger (mindestens Kaderschnitt, bis 30, ohne Wechselwunsch Stufe 3) wird unruhig (Wechselwunsch eine Stufe höher). Mit 50 % fliegt es auf, dann Karte im Büro für 5 Tage: zur Rede stellen (Stimmung −3, Glaubwürdigkeit +2), öffentlich machen (Beziehung −15, Fans +1) oder unverkäuflich machen (K19c). Nur, wenn du die Transfers selbst führst (Gleichschritt, Computer-Vereine werben sich nicht gegenseitig ab). Klugheit (K02) fehlt noch.
 - Klugheit (K02): clevere Vereine wählen sichere Orte und verschwiegene Berater.
 
 ## 8. Ereignisse

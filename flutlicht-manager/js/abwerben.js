@@ -56,3 +56,24 @@ function bieterRunde(pid){if(!darf('transfers'))return;const p=PIX.get(pid);if(!
   news(top>vor?`Bieterrunde für ${p.n}: ${txt.join(', ')}. Höchstes Gebot jetzt ${fmt(top)}.`:`Bieterrunde für ${p.n}: Niemand geht über ${fmt(vor)}.`,'offer');save();render();}
 function bieterKnoepfe(){const ids=[...new Set(S.offers.map(o=>o.pid))].filter(bieterMoeglich);if(!ids.length)return'';
   return`<div class="row">${ids.map(id=>`<button onclick="bieterRunde(${id})"${lzAus('transfers')}>Bieterrunde für ${esc(PIX.get(id).n)}</button>`).join('')}</div><p class="dim">Bieterrunde: Alle Bieter erfahren das höchste Gebot und dürfen einmal erhöhen. Einmal je Fenster und Spieler.</p>`;}
+
+// ---------- Computer-Vereine werben deine Spieler ab (K20 §7, K20e) ----------
+// Montags im eigenen Strom (ablauf.js woechentlichLauf), nur in der Saison und nur, wenn du die Transfers selbst führst (sonst verhält sich dein Verein wie ein Computer-Verein,
+// und die werben sich nicht gegenseitig ab: Gleichschritt in tests/lizenz.js). Mit RAW.ki.chance sucht ein Verein mit Bedarf einen deiner Leistungsträger aus. Der Spieler wird
+// unruhig (Wechselwunsch eine Stufe höher). Mit RAW.ki.aufflieg fliegt es auf: S.kiAbw = {pid, tid, bis, s} wartet im Büro auf deine Entscheidung.
+function kiAbwerbenKandidaten(){const K=RAW.ki,t=myT(),lvl=teamLevel(S.my);
+  const sp=squad(S.my).filter(p=>!p.wech&&!p.leihe&&p.age<=K.alterMax&&p.str>=lvl+K.staerkePlus&&(p.ww||0)<3);
+  const vs=S.teams.filter(b=>b.id!==S.my&&aktiv(b)&&!kiTransferSperre(b)&&b.rep>=t.rep-K.ansehenMinus);return{sp,vs};}
+function kiAbwerbenWoche(d){const K=RAW.ki;if(S.phase!=='play'||S.fired||autoB('transfers')||R()>=K.chance)return;const {sp,vs}=kiAbwerbenKandidaten();
+  const paare=[];sp.forEach(p=>vs.forEach(b=>{if(b.cash>value(p)&&hatBedarf(b,p))paare.push([p,b]);}));if(!paare.length)return;
+  const [p,b]=paare[Math.floor(R()*paare.length)];wwHoeher(p);
+  if(R()<K.aufflieg){S.kiAbw={pid:p.id,tid:b.id,bis:d+K.frist,s:S.season};news(`Aufgeflogen: ${b.name} hat heimlich mit ${p.n} gesprochen. Deine Entscheidung steht im Büro.`,'bad');}}
+const kiAbwOffen=()=>{const a=S.kiAbw,p=a&&PIX.get(a.pid);return a&&a.s===S.season&&a.bis>=S.tag&&p&&p.team===S.my&&S.teams[a.tid]?a:null;};
+// art: 'rede' (Spieler zur Rede stellen), 'oeffentlich' (Presse, Beziehung), 'preis' (unverkäuflich, K19c)
+function kiAbwerbenAntwort(art){if(!darf('transfers'))return;const a=kiAbwOffen();if(!a)return;const K=RAW.ki,p=PIX.get(a.pid),b=S.teams[a.tid];S.kiAbw=null;
+  if(art==='rede'){stimmungAendern(p,K.stimmung);glaubAendern(K.glaub);news(`Du stellst ${p.n} zur Rede. Er verspricht, sich auf den Verein zu konzentrieren.`,'');}
+  else if(art==='oeffentlich'){bezDuAendern(b.id,K.beziehung,`Abwerbeversuch bei ${p.n}`);fanAnlass(myT(),'fanU',K.fans);news(`Du machst den Abwerbeversuch von ${b.name} öffentlich. Die Fans stehen hinter dir, ${b.name} ist verärgert.`,'');}
+  else{setUnverkaeuflich(p.id,1);news(`${p.n} ist ab sofort unverkäuflich. Wer ihn will, muss den Höchstpreis zahlen.`,'');}
+  save();render();}
+function kiAbwerbenKarte(){const a=kiAbwOffen();if(!a)return'';const p=PIX.get(a.pid),b=S.teams[a.tid];
+  return`<div class="card"><h3>Abwerbeversuch</h3><p>${esc(b.name)} hat heimlich mit ${esc(p.n)} gesprochen. Wie reagierst du? Antwort bis ${datumKurz(a.bis)}.</p><div class="row"><button onclick="kiAbwerbenAntwort('rede')"${lzAus('transfers')}>Spieler zur Rede stellen</button><button onclick="kiAbwerbenAntwort('oeffentlich')"${lzAus('transfers')}>Öffentlich machen</button><button onclick="kiAbwerbenAntwort('preis')"${lzAus('transfers')}>Unverkäuflich machen</button></div></div>`;}

@@ -61,4 +61,14 @@ function W0(w){return w.ev('myT()').cash;}
   pruef(tage.length===D.tage&&vorher===1&&gleich&&fs.every(x=>x>=1-D.preis&&x<=1+D.preis)&&new Set(fs).size>1&&schnitt(liste)<schnitt(mit),'Deadline Day: Forderung schwankt fest je Tag, vorher nicht, Transferliste billiger',
     `Faktoren ${fs.map(x=>x.toFixed(3)).join(' / ')}, ohne Liste ${schnitt(mit).toFixed(3)}, mit Liste ${schnitt(liste).toFixed(3)}`);}
 
+// K20e. Computer-Vereine werben ab (K20 §7): mit Chance 1 wird genau ein Leistungsträger unruhig (Wechselwunsch eine Stufe höher); mit Auffliegen 1 eine Karte im Büro;
+//       „öffentlich“ kostet Beziehung, „unverkäuflich“ setzt den Status; unter der Automatik der Transfers passiert nichts
+{const lauf=(auto,art)=>{const {S,F,ev}=welt(auto),K=ev('RAW').ki;K.chance=1;K.aufflieg=1;if(auto)S.lizenz.auto.transfers=1;S.phase='play';
+    const sq=ev('squad')(S.my),ww0=new Map(sq.map(p=>[p.id,p.ww||0]));ev('mitStrom')(ev('strom')('test','kiabw'),()=>F.kiAbwerbenWoche(S.tag));const a=S.kiAbw;
+    const unruhig=sq.filter(p=>(p.ww||0)>ww0.get(p.id)).length;if(!a)return{a:null,unruhig};const karte=F.kiAbwerbenKarte().includes('Abwerbeversuch'),bz0=F.bezDu(a.tid);
+    F.kiAbwerbenAntwort(art);return{a,unruhig,karte,weg:!S.kiAbw,bz:F.bezDu(a.tid)-bz0,unv:!!(S.unv&&S.unv[a.pid])};};
+  const o=lauf(false,'oeffentlich'),pr=lauf(false,'preis'),au=lauf(true,'rede');
+  pruef(!!o.a&&o.unruhig===1&&o.karte&&o.weg&&o.bz<0&&!!pr.a&&pr.unv&&!au.a&&au.unruhig===0,'Computer-Vereine werben ab: ein Spieler unruhig, Karte beim Auffliegen, Antworten wirken, nichts unter der Automatik',
+    `Abwerbeversuch ${!!o.a}, unruhig ${o.unruhig}, Karte ${o.karte}, Beziehung ${o.bz}, unverkäuflich ${pr.unv}, Automatik ${au.a?'Versuch':'nichts'}`);}
+
 console.log(probleme.length?`\n${probleme.length} Problem(e).`:'\nAlles in Ordnung.');process.exitCode=probleme.length?1:0;
