@@ -101,6 +101,14 @@ function turnierText(){const T=RTS.turnier;if(S.turnier&&S.turnier.s===S.season)
   const tage=testspielTage().filter(turnierMoeglich);if(!tage.length)return'';
   return`<div class="row" style="margin-top:8px;flex-wrap:wrap;gap:6px"><select id="tu_tag" aria-label="Erster Turniertag">${tage.map(d=>`<option value="${d}">${datumKurz(d)}</option>`).join('')}</select><button onclick="turnierAnmelden(+document.getElementById('tu_tag').value)"${lzAus('testspiele')}>${T.name} (zwei Tage, Antrittsgeld ${fmt(T.antritt[myT().lg]||T.antritt[3])})</button></div>`;}
 
+// ---------- Erinnerung „spielfreie Woche ohne Testspiel“ (K01 H9, K11 §3, K11d) ----------
+// In der Saison (nicht in der Vorbereitung, nicht im Urlaub): In den RTS.spielfrei.tage Tagen ab dem frühesten Testspieltag (heute + vorlaufTage) liegt kein Pflichtspiel
+// und kein Testspiel, aber ein Testspiel wäre möglich. Nicht unter der Automatik der Testspiele, nicht ohne Lizenz dafür, höchstens einmal je abstandTage (S.tsEr).
+function spielfreiOhneTestspiel(d){const E=RTS.spielfrei;if(S.phase!=='play'||autoB('testspiele')||!frei('testspiele')||imUrlaub()||inVorbereitung(d))return null;
+  const heute=absTag(d);if(S.tsEr!=null&&heute-S.tsEr<E.abstandTage)return null;const von=d+RTS.vorlaufTage,bis=von+E.tage-1;
+  for(let x=von;x<=bis;x++)if(meinSpiel(x))return null;if(testspielBelegt().some(x=>x>=von&&x<=bis))return null;if(!testspielTage().some(x=>x>=von&&x<=bis))return null;
+  S.tsEr=heute;return{art:'spielfrei',text:`Vom ${datumKurz(von)} bis ${datumKurz(bis)} hast du kein Pflichtspiel und kein Testspiel. Ein Testspiel hält die Spieler im Rhythmus.`,tab:'training',knopf:'Zu den Testspielen'};}
+
 // ---------- Anfragen der Computer-Vereine (K11 §5, K11c) ----------
 // In der Vorbereitung ab Woche RTS.abWoche fragt montags mit kiAnfrage.chance ein Verein deines Niveaus nach einem Testspiel bei sich (eigener Strom je Saison und Tag).
 // S.tsKI = {tid, tag, bis, s, my}: Antwort bis bis, sonst verfällt sie. Gilt nur in ihrer Saison und für den Verein, den du da trainiert hast (Prüfung DW2).

@@ -28,7 +28,7 @@ const REGELN={
       2:{wochenende:[['Sa','20:30',1],['Fr','18:30',2],['So','13:30',3],['Sa','13:00',3]],mitte:[['Di','18:30',4],['Mi','18:30',5]],letzter:'15:30'},
       3:{wochenende:[['Sa','16:30',1],['Fr','19:00',1],['So','16:30',1],['So','19:30',1],['So','13:30',1],['Sa','14:00',5]],mitte:[['Di','19:00',5],['Mi','19:00',5]],letzter:'13:30'}},
     attraktivZufall:15,              // Zufall bei der Verteilung auf die Anstoßzeiten (in Ansehen-Punkten)
-    erinnerungen:{frist:'Angebot läuft heute ab',aufstellung:'Startelf hat Ausfälle',sponsor:'Kein Sponsor gewählt',vertrag:'Verträge laufen aus',versprechen:'Versprechen droht zu kippen',vorbereitung:'Punkte vor dem Saisonstart offen (höchstens einmal je Woche)',deadline:'Halt am letzten Tag des Transferfensters (Deadline Day)',gelbsperre:'Gelbsperre droht vor einem Derby oder Spitzenspiel',plan:'Trainingsplan passt nicht (englische Woche, Belastungssprung)'} // abschaltbar im Menü; vorbereitung seit U14 (K12b)
+    erinnerungen:{frist:'Angebot läuft heute ab',aufstellung:'Startelf hat Ausfälle',sponsor:'Kein Sponsor gewählt',vertrag:'Verträge laufen aus',versprechen:'Versprechen droht zu kippen',vorbereitung:'Punkte vor dem Saisonstart offen (höchstens einmal je Woche)',deadline:'Halt am letzten Tag des Transferfensters (Deadline Day)',gelbsperre:'Gelbsperre droht vor einem Derby oder Spitzenspiel',plan:'Trainingsplan passt nicht (englische Woche, Belastungssprung)',spielfrei:'Spielfreie Woche ohne Testspiel (in der Saison)'} // abschaltbar im Menü; vorbereitung seit U14 (K12b)
   },
 
   welt:{
@@ -754,7 +754,7 @@ const REGELN={
     nachfrage:{start:0.12,jeWoche:-0.015,min:0.04,grosserName:2,grossAb:80},gageAmateur:[10000,80000],
     // Sommerturnier (K11 §3, K11b, 22.11., GESCHÄTZT): Antrittsgeld und Siegprämie je Liga, Stimmung aller beim Turniersieg
     turnier:{name:'Sommerturnier',antritt:{1:150000,2:60000,3:25000},sieg:{1:100000,2:40000,3:15000},stimmung:1},
-    kiAnfrage:{chance:0.35,tage:3}}, // Anfragen der Computer-Vereine in der Vorbereitung (K11c, GESCHÄTZT): montags mit chance, Antwort binnen tage
+    kiAnfrage:{chance:0.35,tage:3},spielfrei:{tage:7,abstandTage:7}}, // Anfragen der Computer-Vereine in der Vorbereitung (K11c, GESCHÄTZT): montags mit chance, Antwort binnen tage; spielfrei: Erinnerung „spielfreie Woche ohne Testspiel“ (K01 H9, K11d), Blick auf tage Tage, höchstens einmal je abstandTage
   lager:{orte:{alpen:{name:'Alpen',saison:'sommer',kosten:40000,kondition:1.15,text:'Höhenlage: Kondition wirkt stärker'},schwarzwald:{name:'Schwarzwald',saison:'sommer',kosten:25000,text:'günstig und ruhig'},
       algarve:{name:'Algarve',saison:'winter',kosten:50000,text:'mildes Wetter'},andalusien:{name:'Andalusien',saison:'winter',kosten:55000,text:'warm, gute Plätze'},
       riviera:{name:'Türkische Riviera',saison:'winter',kosten:30000,ablenkung:true,text:'günstig, aber mehr Ablenkung'},golf:{name:'Golfregion',saison:'winter',kosten:90000,text:'sehr warm, lange Reise'},

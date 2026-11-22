@@ -26,4 +26,17 @@ const SEED=4711;
   F.erinnerungAus('plan',true);const aus=plan();F.erinnerungAus('plan',false);
   pruef(!zwei&&drei&&!aus,'Plan passt nicht: ab drei Spielern mit Belastungssprung, abschaltbar',`zwei ${zwei}, drei ${drei}, abgeschaltet ${aus}`);}
 
+// K11d. Spielfreie Woche ohne Testspiel (K01 H9): in der Saison an einem Tag, nach dem sieben Tage (ab dem frühesten Testspieltag) ohne Pflichtspiel kommen;
+//       höchstens einmal je Woche; nicht mit einem Testspiel in dieser Zeit; nicht vor einem Spiel; abgeschaltet nicht
+{const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S,ev=W.ev;S.my=6;S.mgr='Test';F.setTarget();F.sponsOffers();if(S.sponsOffers)F.sponsorWaehlen(0);S.lineup=F.bestXI(S.my,ev('myT()').form);
+  const R0=ev('RTS'),l=ev('meineLigaspiele')(),sf=()=>F.erinnerungen().some(e=>e.art==='spielfrei'),von=x=>x+R0.vorlaufTage,bis=x=>x+R0.vorlaufTage+R0.spielfrei.tage-1;
+  const ohneSpiel=x=>{for(let y=von(x);y<=bis(x);y++)if(ev('meinSpiel')(y))return false;return true;};
+  let d=null;for(let x=l[0].tag+1;x<l[l.length-1].tag&&d==null;x++){S.tag=x;if(ohneSpiel(x)&&ev('testspielTage')().some(y=>y>=von(x)&&y<=bis(x)))d=x;}
+  let ok=false,info='keine spielfreie Woche in der Saison gefunden';
+  if(d!=null){S.tag=d;S.gespielt=-1;delete S.tsEr;const ja=sf(),nochmal=sf();delete S.tsEr;
+    const t=ev('testspielTage')().find(y=>y>=von(d)&&y<=bis(d));S.testspiele=[{id:999,tag:t,gegner:1000,heim:false,stand:'zugesagt'}];const mitTest=sf();S.testspiele=[];delete S.tsEr;
+    S.tag=l[1].tag-R0.vorlaufTage-1;const vorSpiel=sf();delete S.tsEr;S.tag=d;F.erinnerungAus('spielfrei',true);const aus=sf();F.erinnerungAus('spielfrei',false);
+    ok=ja&&!nochmal&&!mitTest&&!vorSpiel&&!aus;info=`Tag ${d}: Erinnerung ${ja}, gleich nochmal ${nochmal}, mit Testspiel ${mitTest}, vor einem Spiel ${vorSpiel}, abgeschaltet ${aus}`;}
+  pruef(ok,'Spielfreie Woche ohne Testspiel: Erinnerung in der Saison, einmal je Woche, nicht mit Testspiel, nicht vor einem Spiel, abschaltbar',info);}
+
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);
