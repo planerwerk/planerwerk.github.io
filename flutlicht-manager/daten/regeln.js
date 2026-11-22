@@ -744,6 +744,9 @@ const REGELN={
     diagnose:{tage:[3,1],verdacht:0.6,genau:0.25,arzt:{ohne:2,jeQualitaet:-0.1,min:0.5},fehl:{ohne:0.15,jeQualitaet:-0.006,min:0.03,faktor:0.6,abTage:10}}, // Breite ±60 % und ±25 % bei Arzt-Qualität 10; fehl: Fehldiagnose (K10b, 22.11., GESCHÄTZT), Chance ohne + jeQualitaet × Arzt-Qualität (mindestens min), angezeigt faktor × wahre Dauer, ab abTage Tagen
     reha:{behandlung:0.7,rueckkehrFrische:[70,80],abTagen:7,fenster:56,rueckfallMal:7,gleicheArt:0.35},
     spritzen:{wirkung:0.95,verschlimmerung:0.15},frueher:{frische:65,rueckfall:2},
+    // Zweite Meinung (K10 §5, K10c, 22.11., popolupo, GESCHÄTZT): einmal je Verletzung nach der Diagnose, kosten nach Liga; mit besser eine bessere Behandlung (Rest × (1 − aenderung)),
+    // mit schlechter mehr Schaden als gedacht (Rest × (1 + aenderung)), sonst eine engere Spanne (Breite × enger). Eine Fehldiagnose (K10b) deckt sie immer auf.
+    zweite:{kosten:{1:15000,2:8000,3:4000},besser:0.2,schlechter:0.05,aenderung:0.15,enger:0.5},
     verlaufTage:730},
   // Wettbewerbe und Spielplan (K13 §11, Welle 2): Pokal-Auslosung, Heimrecht der Amateure (3. Liga und darunter) bis zum Halbfinale (Runde 4), Supercup, 72 Stunden
   wettbewerbe:{pokal:{auslosungTage:14,profitopfZweite:14,heimrechtBisRunde:4},supercup:{vorSpieltag:6,anstoss:'20:30'},spielplan:{mindestTage:3}},

@@ -350,6 +350,7 @@ lizenz:{
 108. **K36c Meldungen des Stabs gesammelt (22.11., popolupo, ohne Testlauf):** keine neue Funktion. Mehrere Meldungen eines Tageslaufs kommen als eine Zeile (Nr. 27).
 109. **K11d Erinnerung „spielfreie Woche ohne Testspiel“ (22.11., popolupo, ohne Testlauf):** keine neue Funktion. Nur wenn der Bereich `testspiele` frei ist und nicht beim Stab liegt.
 110. **K10b Fehldiagnose (22.11., popolupo, ohne Testlauf):** keine neue Funktion, nur die Anzeige der Diagnose und eine Meldung. In jeder Lizenz gleich.
+111. **K10c Zweite Meinung (22.11., popolupo, ohne Testlauf):** neue Aktion im bestehenden Bereich `medizin` (wie fit spritzen und früher zurückholen), zählt zur Aufgabe `medizin`. Unter der Automatik holt der Arzt keine zweite Meinung.
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 

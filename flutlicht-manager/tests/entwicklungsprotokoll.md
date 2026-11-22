@@ -70,11 +70,12 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 | **K36c** Meldungen des Stabs gesammelt, dazu Korrekturen DX | `mitarbeit/popolupo-k36c-stabbericht` (auf K30b) | fertig, ungetestet |
 | **K11d** Erinnerung „spielfreie Woche ohne Testspiel“ | `mitarbeit/popolupo-k11d-spielfrei-erinnerung` (auf K36c) | fertig, ungetestet |
 | **K10b** Fehldiagnose | `mitarbeit/popolupo-k10b-fehldiagnose` (auf K11d) | fertig, ungetestet |
+| **K10c** Zweite Meinung | `mitarbeit/popolupo-k10c-zweite-meinung` (auf K10b) | fertig, ungetestet |
 | U19d2 volle Kader der Auslandsvereine in der Engine | zurückgestellt | Entwurf in K37 §5.7. Die Engine behandelt Auslandsvereine als Block wie Amateure, viele Stellen schlagen Spieler in `PIX` nach. Erst nach einem Testlauf und der Messung des Faktors 0,93 |
 
 **Die neueste Spitze ist immer der zuletzt genannte Zweig, er enthält alles davor.** K24 ist fertig (Claude).
 
-**Vorschlag für den nächsten Testlauf** (Spitze `mitarbeit/popolupo-k10b-fehldiagnose`, alles ungetestet, aber von lesenden Prüf-Agenten durchgesehen, Konsistenzprüfung CS, CX, CZ, DD, DF, DI, DL, DM, DN). **Wichtig:** Die Zweige `u12g` und `k29e` laden für sich allein nicht (DN1), bitte die Spitze nehmen:
+**Vorschlag für den nächsten Testlauf** (Spitze `mitarbeit/popolupo-k10c-zweite-meinung`, alles ungetestet, aber von lesenden Prüf-Agenten durchgesehen, Konsistenzprüfung CS, CX, CZ, DD, DF, DI, DL, DM, DN). **Wichtig:** Die Zweige `u12g` und `k29e` laden für sich allein nicht (DN1), bitte die Spitze nehmen:
 1. `node tests/code.js`, dann die schnellen Einzeltests der neuen Teile: `finanzen.js` (Nr. 11 bis 20), `geruechte.js`, `schwierigkeit.js`, `werbung.js`, `europapokal.js`, `vorstand.js` (Nr. 10 bis 19), `karriereende.js`, `stadion.js` (Nr. 8 bis 11), `karten.js`, `spielwelt-karten.js`, `fans.js` (K27b), `abwerben.js` (K20b), `transfers.js` (K20c, K20d, K19c), `presse.js` (K29b bis K29i), `marketing.js` (K25c, K25d).
 2. `node tests/lizenz.js` (Gleichschritt, neue Bereiche `zielgespraech`).
 3. `node tests/finanzmodell.js 2`: Salden je Liga nach K23c. Erwartet nach der Modellrechnung 1. Liga etwa +11 Mio., 2. Liga etwa 0, 3. Liga etwa −1 Mio. je Verein und Saison ohne Transfers (K23 §5.6b). Weichen sie stark ab, bitte die Zeilen ins Testprotokoll, ich stelle dann `REGELN.finanzen.verwaltung` und `sponsor` nach.
@@ -109,6 +110,11 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 ---
 
 ## Changelog
+
+### 22.11.2026: K10c Zweite Meinung (Zweig `mitarbeit/popolupo-k10c-zweite-meinung`, auf K10b)
+
+- **Neu (K10 §5):** In der Verletztenliste gibt es nach der Diagnose den Knopf „Zweite Meinung“ (einmal je Verletzung, 15.000/8.000/4.000 € je Liga). Er deckt eine Fehldiagnose auf, mit 20 % verkürzt eine andere Behandlung den Rest der Pause um 15 %, mit 5 % wird sie länger, sonst wird die Spanne enger. Eigener Strom, nur auf deinen Klick.
+- **Tests zuerst:** `tests/medizin.js` (neuer Fall K10c).
 
 ### 22.11.2026: K10b Fehldiagnose (Zweig `mitarbeit/popolupo-k10b-fehldiagnose`, auf K11d)
 

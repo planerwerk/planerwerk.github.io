@@ -96,7 +96,7 @@ Hängt ab von: K03 (Frische, Robustheit, Saisonbelastung), K04 (Fouls, Ermüdung
 
 - **Fit spritzen** (nur Arten mit „ja“): Der Spieler kann sofort spielen, mit Wirkung ×0,95. Danach mit 15 % eine Verschlimmerung um eine Stufe (Bänderdehnung → Bänderriss, Prellung → Faserriss im Muskel). Kämpfer wollen, Diven nicht (K14).
 - **Früher zurückholen** aus dem Aufbautraining: einsatzfähig sofort, Frische 65 %, Rückfallwert doppelt.
-- **Zweite Meinung** (Entscheidung nach der Diagnose): kostet Geld (K23), gibt eine engere Spanne. Mit 20 % kommt eine bessere Behandlung heraus (−15 % Dauer), mit 5 % eine schlechtere Nachricht.
+- **Zweite Meinung** (Entscheidung nach der Diagnose): kostet Geld (K23), gibt eine engere Spanne. Mit 20 % kommt eine bessere Behandlung heraus (−15 % Dauer), mit 5 % eine schlechtere Nachricht. **Gebaut seit K10c** (22.11.2026, popolupo, ohne Testlauf): Knopf in der Verletztenliste nach der Diagnose, einmal je Verletzung, 15.000, 8.000 oder 4.000 € je Liga (Buchung „Medizin“), −15 % oder +15 % auf den Rest der Pause, sonst die halbe Breite der Diagnose. Sie deckt eine Fehldiagnose (K10b) immer auf. Kein Halt, keine Automatik (der Arzt holt keine zweite Meinung), eigener Strom.
 
 ### 5.5 Gehirnerschütterung
 
@@ -205,7 +205,7 @@ medizin:{
 12. **Fit spritzen** geht nur am Spieltag. Computer-Vereine spritzen nur in wichtigen Spielen (Pokal ab Runde 3, Relegation) und nur Stammspieler mit höchstens 10 Tagen Ausfall. Verschlimmerung: Prellung → Faserriss, Bänderdehnung → Bänderriss, Rücken/Leiste → Zerrung, Bruch (Nase) bekommt 7 Tage mehr.
 13. **Robustheit und „verletzungsanfällig“** wirken beide (1,6 − 0,06 × Robustheit und ×1,6), wie in 5.1. Ein Anfälliger (Robustheit 1–4) verletzt sich damit gut doppelt so oft wie der Durchschnitt, nicht nur 60 % öfter, wie der Merkmalstext sagt. Prüfen.
 14. **Lernstufen (K36):** Verletztenliste und Diagnose ab Stufe 1 (nur Information), fit spritzen und früher zurückholen ab Stufe 4. Davor entscheidet der Arzt nach den Regeln der Computer-Vereine.
-15. **Noch nicht gebaut:** zweite Meinung, Fehldiagnose, Pflichtwechsel und Zusatzwechsel bei Gehirnerschütterung, Ereignisse aus §8, Saisonbilanz der Ausfalltage in der Saisonzusammenfassung (die Bilanz steht in der Verletztenliste im Kader), Reha-Zentrum (K26), Rotation der Computer-Vereine nach Saisonbelastung.
+15. **Noch nicht gebaut:** Pflichtwechsel und Zusatzwechsel bei Gehirnerschütterung, Ereignisse aus §8, Saisonbilanz der Ausfalltage in der Saisonzusammenfassung (die Bilanz steht in der Verletztenliste im Kader), Reha-Zentrum (K26), Rotation der Computer-Vereine nach Saisonbelastung.
 
 **Noch zu recherchieren:** aktuelle Gesamtrate für Männer-Profis (je 1000 Stunden und pro Team und Saison), Anteil der Trainingsverletzungen, Regel zu zusätzlichen Wechseln bei Gehirnerschütterung in Bundesliga und Pokal.
 

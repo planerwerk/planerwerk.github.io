@@ -57,5 +57,15 @@ pruef(spannen>0&&ehrlich/spannen>=0.85,'Diagnose-Spanne enthält die wahre Dauer
   D.ohne=0;D.min=0;const v0=neu(p),nie=!!v0&&!v0.fehl;Object.assign(D,alt);[p,k].forEach(x=>{x.inj=0;x.vl=null;});
   pruef(falsch&&kiNie&&auf&&nie,'Fehldiagnose: zu optimistisch nur bei deinem Verein, Aufklärung am Ende der Spanne, mit Chance 0 nie',`falsch ${falsch}, Computer-Verein ${kiNie}, Aufklärung ${auf}, Chance 0 ${nie}`);}
 
+// K10c. Zweite Meinung (K10 §5): nicht vor der Diagnose, kostet nach Liga, deckt eine Fehldiagnose auf, danach enthält die Spanne die wahre Dauer
+//       (auch wenn die Behandlung die Pause ändert), nur einmal je Verletzung
+{const p=S.pl.find(x=>x.team===S.my&&x.inj<=0),Z=RMD.zweite,D=RMD.diagnose.fehl,alt=Object.assign({},D),L=S.lizenz;delete S.lizenz;
+  p.inj=0;p.vl=null;D.ohne=1;D.min=1;ev('verletzen')(p,'kollision',{art:'faserriss',still:true});Object.assign(D,alt);const v=p.vl,dg=v.dg;
+  v.dg=v.ab+99;const vorher=ev('medZweiteMoeglich')(p);v.dg=v.ab;const k=Z.kosten[ev('myT()').lg]||Z.kosten[3],m0=S.fin['Medizin']||0;
+  F.medZweite(p.id);const kosten=(S.fin['Medizin']||0)-m0,auf=!v.fehl&&v.zm===1&&v.sd[0]<=v.t&&v.t<=v.sd[1]&&p.inj>0;F.medZweite(p.id);const einmal=(S.fin['Medizin']||0)-m0===kosten;
+  if(L)S.lizenz=L;p.inj=0;p.vl=null;
+  pruef(!vorher&&kosten===-k&&auf&&einmal,'Zweite Meinung: nach der Diagnose, Kosten nach Liga, Fehldiagnose aufgedeckt, Spanne enthält die wahre Dauer, nur einmal',
+    `vor der Diagnose ${vorher}, Kosten ${kosten}, aufgedeckt ${auf}, einmal ${einmal}, Diagnosetag war ${dg}`);}
+
 console.log(`\n${N} Saison(s), ${verl.length} Verletzungen, ${alle.filter(x=>x.q==='krankheit').length} Krankheiten, in ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);
