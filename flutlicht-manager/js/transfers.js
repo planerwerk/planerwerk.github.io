@@ -45,7 +45,7 @@ const konkurrenzOffen=v=>!!(v&&v.konk&&v.konk.bis>=S.tag);
 // Vereinswert, der fast immer unter deiner Ablöse lag). Nicht, wenn das Fenster vor dem Ende der Frist schließt (DD5).
 function konkurrenzKauf(p,fee){const v=verhandlung(p),B=RAW.bieter,K=RAW.konkurrenz,C=RCV.kauf,von=p.team>=0&&p.team<1000?S.teams[p.team]:null;
   if(v.kg===S.season||!von||!fensterOffen()||!fensterOffen(S.tag+B.frist+1)||p.team===S.my||istLeihe(p))return null;v.kg=S.season;
-  const kand=S.teams.filter(t=>t.id!==S.my&&t.id!==p.team&&aktiv(t)&&t.rep>=von.rep-C.ansehenMinus&&p.age<=C.alterMax&&hatBedarf(t,p)&&t.cash*RM.angebote.kontoAnteil>fee*(1+B.plus[0])
+  const kand=S.teams.filter(t=>t.id!==S.my&&t.id!==p.team&&aktiv(t)&&!kiTransferSperre(t)&&t.rep>=von.rep-C.ansehenMinus&&p.age<=C.alterMax&&hatBedarf(t,p)&&t.cash*RM.angebote.kontoAnteil>fee*(1+B.plus[0])
     &&rahmenErlaubt(t,salaryFor(p.str))&&bez(t.id,p.team)>=RBZ.wirkung.gespraechUnter&&squad(t.id).length<RM.kaeufer.kaderMax);
   if(!kand.length)return null;
   return mitStrom(strom('konkurrenzKauf',S.season,p.id),()=>{if(R()>=K.chance)return null;const b=pick(kand),be=beraterVon(p),gier=be&&be.prof==='gierig'?B.gierig:0;

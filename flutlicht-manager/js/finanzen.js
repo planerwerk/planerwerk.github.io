@@ -21,7 +21,7 @@ const transferSperreNaechste=()=>!!S.lzp&&S.lzp.sperre===S.season+1;
 const monatName=mo=>(typeof MONL!=='undefined'?MONL:MON)[(+mo+11)%12];
 
 // Täglich (ablauf.js taeglichLauf): am Monatsersten der Bericht, am 1. März die Lizenzprüfung, am 31. Mai der Nachweis
-function finanzenTag(d){const k=mmtt(d);if(k.slice(3)==='01'){finanzenMonat(d);kiInsolvenzPruefen();}if(S.phase==='play'&&k===RFP.lizenzTag)lizenzPruefung();if(k===RFP.nachweisTag)lizenzNachweis();}
+function finanzenTag(d){const k=mmtt(d);if(k.slice(3)==='01'){finanzenMonat(d);kiInsolvenzPruefen();}if(S.phase==='play'&&k===RFP.lizenzTag){lizenzPruefung();kiLizenzPruefen(false);}if(k===RFP.nachweisTag){lizenzNachweis();kiLizenzPruefen(true);}} // Computer-Vereine seit K23g
 // Reihenfolge: erst die Insolvenz (ein Schuldenschnitt gehört in den abgelaufenen Monat), dann der Bericht, dann der neue Stand, dann Tilgung und Raten (gehören in den neuen Monat).
 // k: Kreditflüsse des Monats (Aufnahme +, Tilgung −), getrennt von Einnahmen und Ausgaben (K23e).
 // ohneZahlungen: zum Saisonwechsel (der 1. Juli selbst läuft nie durch taeglich), Tilgung und Raten bucht dann finanzenSaisonstart in die neue Saison.
@@ -90,6 +90,21 @@ function kiInsolvenzPruefen(){if(S.phase!=='play')return;const I=RFP.insolvenz;
   S.teams.forEach(t=>{if(t.id===S.my||!aktiv(t))return;if(t.cash>=-kreditRahmen(t)){if(t.fu)t.fu=0;return;}t.fu=(t.fu||0)+1;if(t.fu<I.monate||t.fins===S.season)return;
     t.fu=0;t.fins=S.season;const A=S.abzug||(S.abzug={}),a=A[S.season]||(A[S.season]={});a[t.id]=(a[t.id]||0)+I.punkte;t.cash=0;
     news(`Insolvenz: ${t.name} ist zahlungsunfähig. ${I.punkte} Punkte Abzug, die Gläubiger verzichten auf die Schulden.`,'');});}
+
+// ---------- K23g (§5.4, §5.5c): Lizenzprüfung der Computer-Vereine ----------
+// Erwarteter Saldo je Ligaspiel nach dem Modell von kiFinanzenSpiel: halb zu Hause, Heimspiel zum Erwartungswert mit neutraler Form
+function kiSaldoJeSpiel(t){const n=(S.fx[t.lg]||[]).length||34;
+  return tvGeld(t)+sponsorBasis(t)+sonstigeEinnahmen(t)+kiHeimEinnahmen(t,null,false,true)/2-(squad(t.id).reduce((s,p)=>s+p.sal,0)+stabGehaelter(t.id))/n
+    -(t.cap*RF.betrieb.jePlatz+(t.logen||0)*RF.betrieb.jeLoge)-verwaltungKosten(t)-RF.jugendKosten[RS.nachwuchs.computerStufe]-(t.bausumme||0)*RB.instandhaltung/n;}
+// Liquidität am Ende der nächsten Saison: Konto + Saldo × (restliche Ligaspiele dieser Saison + eine ganze Saison) + Kreditrahmen (wie liquiditaet bei dir). tab: Tabellen je Liga
+function kiLiquiditaet(t,tab){const n=(S.fx[t.lg]||[]).length||34,r=(tab&&tab[t.lg]||table(t.lg)).find(x=>x.id===t.id),rest=Math.max(0,n-(r?r.sp:0));return t.cash+kiSaldoJeSpiel(t)*(rest+n)+kreditRahmen(t);}
+// 1. März (nachweis false): Auflagen bei negativer Liquidität (t.lzA = Saison). 31. Mai (nachweis true): mit Auflagen und noch negativ: Transfersperre für die nächste Saison (t.lzSperre).
+// Ohne Gespräch und ohne Zufall. Gilt nicht für deinen Verein, der hat seine eigene Prüfung (lizenzPruefung).
+function kiLizenzPruefen(nachweis){const tab={},me=S.teams[S.my];LIGEN.forEach(lg=>tab[lg]=table(lg));
+  S.teams.forEach(t=>{if(t.id===S.my||!aktiv(t))return;const neg=kiLiquiditaet(t,tab)<0;if(!nachweis){t.lzA=neg?S.season:null;return;}
+    if(t.lzA===S.season&&neg){t.lzSperre=S.season+1;if(me&&t.lg===me.lg)news(`Lizenz: ${t.name} bekommt eine Transfersperre für die nächste Saison (Liquidität nicht nachgewiesen).`,'');}});}
+// Gesperrt in dieser Saison: kein Kauf, keine Leihe, keine Angebote für deine Spieler, kein Mitbieter (computer.js kiMarkt, ablauf.js market, transfers.js konkurrenzKauf)
+const kiTransferSperre=t=>!!t&&t.id!==S.my&&t.lzSperre===S.season;
 
 // ---------- K23d (§5.3, §5.5f): Budgets vom Vorstand ----------
 // Erwartete Einnahmen einer Saison ohne Transfers und Prämien: Liga-Modell wie bei den Computer-Vereinen (TV, Sponsor, Sonstiges, Heimspiele zum Erwartungswert)

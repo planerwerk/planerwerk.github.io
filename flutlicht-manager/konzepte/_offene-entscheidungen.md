@@ -441,6 +441,11 @@ Datei: `konzepte/K23-finanzen.md`
 - K23d kommt vor K23c.
 - Der Gehaltsrahmen ist 85 % der erwarteten Einnahmen, bis K23c. Über 100 % sinkt das Vertrauen, über 110 % gibt es keine neuen Gehälter, für dich und die Computer-Vereine.
 
+**Mit K23g von popolupo vorläufig entschieden (22.11.2026, K23 §5.5g, ohne Testlauf):**
+
+- Computer-Vereine bekommen dieselbe Lizenzprüfung wie du (Auflagen am 1. März, Transfersperre nach dem 31. Mai), ohne Gespräch und ohne Zufall, mit der Liquidität aus ihrem Einnahmenmodell.
+- Die Sperre verbietet Kauf, Leihe und Angebote, Verkaufen geht.
+
 **Mit K23c von popolupo vorläufig entschieden (22.11.2026, K23 §5.6b, §12 Nr. 21 bis 30, ohne Testlauf):**
 
 - K23c ohne die Messung, mit Werten aus einer Modellrechnung der Welt. Ein voller Testlauf soll sie bestätigen.

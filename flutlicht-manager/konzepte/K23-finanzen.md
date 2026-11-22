@@ -163,6 +163,14 @@ Gebaut:
 - **Seit U12e (22.11.):** Das Zielgespräch (K28 §5.8) verschiebt dein Transferbudget (+10 % je Platz hochgepokert, −15 % je Platz tiefgestapelt), Kauf darüber kostet Vertrauen.
 - **Noch nicht:** sparsame Profile mit mehr Reserve, Lizenzprüfung für Computer-Vereine.
 
+### 5.5g Umsetzung K23g (22.11.2026, popolupo, ohne Testlauf): Lizenzprüfung der Computer-Vereine
+
+- **Wie bei dir (§5.5c), ohne Gespräch und ohne Zufall:** Am 1. März bekommt ein Computer-Verein Auflagen, wenn seine Liquidität am Ende der nächsten Saison negativ ist. Am 31. Mai prüft das Spiel noch einmal: Ist sie dann noch negativ, gilt in der nächsten Saison eine Transfersperre.
+- **Liquidität:** Konto + erwarteter Saldo je Ligaspiel × (restliche Ligaspiele + eine ganze Saison) + Kreditrahmen. Der Saldo kommt aus demselben Modell wie die Buchungen der Computer-Vereine (K23b, K23c): halb zu Hause, Heimspiel zum Erwartungswert, Gehälter, Stab, Betrieb, Verwaltung, Jugend, Instandhaltung.
+- **Sperre:** kein Kauf, keine Leihe, keine Angebote für deine Spieler, kein Mitbieter (K20c). Verkaufen geht weiter.
+- **Meldung** nur für Vereine deiner Liga.
+- Nach der Modellrechnung aus §5.6b trifft das anfangs fast keinen Verein. Es greift, wenn ein Verein über Jahre Geld verliert.
+
 ### 5.6 Größenordnungen
 
 - Ziel: Erstligisten im Schnitt etwa 280 Mio. € Umsatz (2024/25: 5,12 Mrd. € für 18 Vereine), Zweitligisten etwa 67 Mio. € (1,21 Mrd. €), mit großer Spanne. Der größte Verein liegt nahe einer Milliarde.

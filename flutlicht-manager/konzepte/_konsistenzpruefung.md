@@ -1664,3 +1664,15 @@ Ein Agent hat bf2de5e und 2c36bd0 gelesen (nichts ausgeführt). Korrekturen auf 
 | DD6 | **`tests/vorstand.js` Nr. 14:** Die Prüfung „einmal je Saison“ lief vor der Hälfte der Spiele und prüfte nichts. Jetzt nach der Hälfte. | ✅ behoben |
 | DD7 | **Alter Spielstand ohne Zielgespräch:** Ein zugesagter Antrag in der Zwischenbilanz senkte nur das Ziel. Jetzt legt er das Zielgespräch wie nach dem Tiefstapeln an (Budget, Ruf). | ✅ behoben |
 | DD8 | Ohne Befund: Laufzeit, Ablauf nach dem Mitgehen, Tagesreihenfolge, Gleichschritt, Logik der Zwischenbilanz, Kommentare. | ✅ |
+
+---
+
+## DE. Nachtrag zu K23g: Lizenzprüfung der Computer-Vereine (22. November 2026, popolupo, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-k23g-lizenz-computer`, auf K29b. Ausführlich in K23 §5.5g.
+
+| # | Befund | Status |
+|---|---|---|
+| DE1 | **Ablauf:** `kiLizenzPruefen` hängt in `finanzenTag` an denselben Tagen wie deine Prüfung (1. März Auflagen, 31. Mai Sperre). Die Sperre (`kiTransferSperre`) greift in `kiMarkt` (Kauf, Leihe, Sternejagd), in `market` (Angebote für deine Spieler) und bei Mitbietern (K20c). | ✅ |
+| DE2 | **Modell der Liquidität:** derselbe erwartete Saldo wie in `kiFinanzenSpiel`. Pokal, Europapokal und Transfers fehlen darin, große Vereine im Europapokal stehen dadurch schlechter da als in Wirklichkeit. Nach der Modellrechnung (K23 §5.6b) reicht ihr Konto trotzdem. | ⚠️ im Testlauf über mehrere Saisons ansehen, wie viele Sperren es gibt |
+| DE3 | **K36 „Kein Nachteil“:** Dein Verein in der Automatik läuft durch deine Prüfung, derselbe Verein als Computer-Verein durch diese. Über mehrere Saisons kann das auseinanderlaufen. | ⚠️ `tests/lizenz.js` Nr. 5 |

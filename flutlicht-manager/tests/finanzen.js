@@ -109,4 +109,11 @@ const tagMit=(ev,mmtt)=>{for(let d=0;d<400;d++)if(ev('mmtt')(d)===mmtt)return d;
   pruef(g[0]>40e6&&g[0]<120e6&&g[1]>8e6&&g[1]<30e6&&g[2]>3e6&&g[2]<12e6&&w1>w3*8&&reich.cash>arm.cash*10&&kr(reich)>kr(arm)*3,'K23c: Größenordnungen (Gehälter, Kaderwerte, Startkonto, Kreditrahmen)',
     `Gehälter je Verein ${g.map(x=>Math.round(x/1e5)/10).join(' / ')} Mio., Kaderwert 1. Liga ${Math.round(w1/1e6)}, 3. Liga ${Math.round(w3/1e6)} Mio., Konto ${Math.round(reich.cash/1e6)} gegen ${Math.round(arm.cash/1e5)/10} Mio., Kreditrahmen ${Math.round(kr(reich)/1e6)} gegen ${Math.round(kr(arm)/1e6)} Mio.`);}
 
+// 19. K23g: Lizenzprüfung der Computer-Vereine: am 1. März Auflagen bei negativer Liquidität, am 31. Mai noch negativ → Transfersperre für die nächste Saison;
+//     ein Verein mit Geld bleibt frei, dein Verein wird hier nicht geprüft
+{const {F,S,ev,t}=welt(),arm=S.teams.find(x=>x.lg===2&&x.id!==S.my),reich=S.teams.find(x=>x.lg===2&&x.id!==S.my&&x.id!==arm.id);
+  arm.cash=-1e9;reich.cash=1e9;t.cash=-1e9;F.kiLizenzPruefen(false);const aufl=arm.lzA===S.season&&reich.lzA==null&&t.lzA==null;F.kiLizenzPruefen(true);
+  const gesperrt=arm.lzSperre===S.season+1&&reich.lzSperre==null;S.season++;const jetzt=ev('kiTransferSperre')(arm)&&!ev('kiTransferSperre')(reich)&&!ev('kiTransferSperre')(t);S.season--;
+  pruef(aufl&&gesperrt&&jetzt,'K23g: Lizenzprüfung der Computer-Vereine mit Auflagen und Transfersperre',`Auflagen ${aufl}, Sperre ${gesperrt}, nächste Saison gesperrt ${jetzt}`);}
+
 console.log(probleme.length?`\n${probleme.length} Problem(e).`:'\nAlles in Ordnung.');process.exitCode=probleme.length?1:0;
