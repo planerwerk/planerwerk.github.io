@@ -310,6 +310,16 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   pruef(ohne===null&&zweiter===null&&sieg&&alt===null&&sv,'Turniersieg: nur nach dem Sieg und bis 7 Tage nach dem Finale, Selbstvertrauen des Kaders steigt',
     `ohne ${ohne}, Zweiter ${zweiter}, Sieg ${sieg}, zu alt ${alt}, Selbstvertrauen ${sv}`);}
 
+// K03c. Entwicklung (K03 §8): Durchbruch bei einem Spieler bis 21, der seit dem Monatseintrag (mindestens 21 Tage alt) 2 Punkte stärker ist (Selbstvertrauen +1),
+//       Altersverlust ab 30 bei 2 Punkten weniger; ein zu junger Eintrag zählt nicht, ohne Eintrag nichts.
+{const {S,F,ev}=welt(),A=ev('AUSLOESER'),E=ev('RKT').entwicklung,sq=ev('squad')(S.my);S.phase='play';sq.forEach(p=>{p.mvl=[];});const ohne=A.durchbruch()===null&&A.altersverlust()===null;
+  const j=sq.find(p=>p.age<=E.jungBis)||sq[0],a=sq.find(p=>p.age>=E.altAb&&p!==j)||sq.find(p=>p!==j);j.age=Math.min(j.age,E.jungBis);a.age=Math.max(a.age,E.altAb);
+  j.mvl=[[S.season,S.tag-E.tage+1,Math.round(j.str)-E.punkte,10,0]];const jungEintrag=A.durchbruch();j.mvl=[[S.season,S.tag-E.tage,Math.round(j.str)-E.punkte,10,0]];const d=A.durchbruch();
+  a.mvl=[[S.season,S.tag-E.tage,Math.round(a.str)+E.punkte,10,0]];const v=A.altersverlust();
+  j.sv=0;F.kartenZeigen(ev('karteVon')('durchbruch'),{spieler:j.id},S.tag,false);const sv=(j.sv||0)>0;
+  pruef(ohne&&jungEintrag===null&&!!d&&d.spieler===j.id&&!!v&&v.spieler===a.id&&sv,'Entwicklung: Durchbruch und Altersverlust nach dem Monatseintrag, Selbstvertrauen',
+    `ohne Eintrag ${ohne}, zu junger Eintrag ${jungEintrag}, Durchbruch ${d&&d.spieler===j.id}, Altersverlust ${v&&v.spieler===a.id}, Selbstvertrauen ${sv}`);}
+
 // U19e. Europapokal-Karten (K37 §8): Auswärtsspiel bei einem Auslandsverein in den nächsten 7 Tagen (kein Heimspiel, nicht später, nicht das Finale), Spiel 1 bis 7 Tage her,
 //       Wunder nach 0:3 im Hinspiel und 4:0 oder 3:0 mit Elfmeterschießen im Rückspiel, nicht nach nur einem Tor Rückstand und nicht beim Ausscheiden. euMeineSpiele ersetzt der Test.
 {const {S,W,ev}=welt(),A=ev('AUSLOESER'),AV=ev('AV0'),me=S.my,d=S.tag;W.ev('euMeineSpiele=function(){return S.testEu||[];}');

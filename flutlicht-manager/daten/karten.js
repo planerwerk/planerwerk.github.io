@@ -236,5 +236,11 @@ const KARTEN=[
   // Turniersieg (K11 §8, K11f, 22.11., popolupo): Info mit Wirkung (K30e), Anlasskarte mit Chance 1. Den Pokal in der Vitrine gibt es seit K11b.
   {id:'turniersieg',titel:'Turniersieg',bereich:'K11',art:'info',stufe:'haeufig',chance:1,ausloeser:'turniersieg',sperrTage:300,
     texte:['Der Pokal aus dem Sommerturnier steht in der Kabine. Ein kleiner Titel, aber die Mannschaft geht mit breiter Brust in die Saison.','Die Spieler haben den Turnierpokal mit in den Mannschaftsbus genommen. Siegen tut gut, auch im Sommer.'],
-    wirkung:[{art:'svAlle',wert:1}]}
+    wirkung:[{art:'svAlle',wert:1}]},
+  // Entwicklung (K03 §8, K03c, 22.11., popolupo): Info-Karten (K30e), Anlasskarten (K30d). Werte vorläufig.
+  {id:'durchbruch',titel:'Durchbruch',bereich:'K03',art:'info',stufe:'haeufig',chance:0.5,ausloeser:'durchbruch',sperrTage:365,
+    texte:['{spieler} hat in den letzten Wochen einen großen Schritt gemacht. Im Training fällt er jedem auf.','Die Lokalzeitung nennt {spieler} das Versprechen der Saison. Der Co-Trainer sagt: „So schnell hat sich lange keiner entwickelt.“'],
+    wirkung:[{art:'selbstvertrauen',wert:1}]},
+  {id:'altersverlust',titel:'Nicht mehr der Schnellste',bereich:'K03',art:'info',stufe:'haeufig',chance:0.5,ausloeser:'altersverlust',sperrTage:365,
+    texte:['Der Co-Trainer meldet: {spieler} verliert die Sprints, die er früher gewonnen hat. Vielleicht ist es Zeit für eine andere Rolle.','{spieler} wirkt in den letzten Wochen einen Schritt langsamer. Er weiß es selbst.']}
 ];

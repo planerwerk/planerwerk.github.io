@@ -93,6 +93,9 @@ const AUSLOESER={
     return l.length?{verein:l[l.length-1].gegner}:null;},
   // Turniersieg (K11 §8, K11f): Sommerturnier (K11b) dieser Saison gewonnen, das Finale (Tag nach dem Halbfinale) höchstens RKT.testspiel.nachTage her
   turniersieg(){const U=S.turnier;if(!U||U.s!==S.season||U.platz!==1)return null;const n=S.tag-(U.tag+1);return n>=0&&n<=RKT.testspiel.nachTage?{}:null;},
+  // Entwicklung (K03 §8, K03c): Stärke heute gegen den jüngsten Monatseintrag (p.mvl, K34) dieser Saison, der mindestens RKT.entwicklung.tage alt ist
+  durchbruch(){const E=RKT.entwicklung,l=squad(S.my).filter(p=>p.age<=E.jungBis&&kartenStaerkePlus(p)>=E.punkte);return l.length?{spieler:pick(l).id}:null;},
+  altersverlust(){const E=RKT.entwicklung,l=squad(S.my).filter(p=>p.age>=E.altAb&&kartenStaerkePlus(p)<=-E.punkte);return l.length?{spieler:pick(l).id}:null;},
   // Folgekarte der Kette (nur über kartenKette, mit den Beteiligten der ersten Karte): Der Spieler ist noch beim selben Verein und noch nicht vergeben
   dritterNoch(b){const p=b&&b.spieler!=null?PIX.get(b.spieler):null;return p&&p.team===b.verein&&!p.wech&&!istLeihe(p)&&S.teams[p.team]&&aktiv(S.teams[p.team])?b:null;},
   // Presse (K29 §8, K17 §8, K29k): Medienklima unter RKT.presse.leckUnter; ein Verein deiner Liga mit Beziehung unter RBZ.wirkung.gespraechUnter
@@ -158,6 +161,8 @@ function kartenWoche(d){if(S.phase!=='play'||S.fired)return;const K=karten(),W=k
     K.sp[key]=heute;if(c.stufe==='sehrSelten')K.einmal[c.id]=1;kartenZeigen(c,b,d,halt);}}
 // Chance je Woche (K30 §5.4, K30d): Anlasskarten mit eigener chance (im Katalog, 0 < chance ≤ 1), sonst nach der Seltenheitsstufe. Ein Würfel je Karte und Woche wie bisher.
 const kartenChance=c=>c.chance!=null?c.chance:1/(RKT.seltenheit[c.stufe]*RKT.wochenJeSaison);
+// Veränderung der Stärke seit dem jüngsten Monatseintrag dieser Saison, der mindestens RKT.entwicklung.tage alt ist (K03c); ohne Eintrag 0
+const kartenStaerkePlus=p=>{const T=RKT.entwicklung.tage,a=(p.mvl||[]).filter(e=>e[0]===S.season&&S.tag-e[1]>=T).pop();return a?Math.round(p.str)-a[2]:0;};
 const kartenHaltZaehlen=(c,W)=>{W.ent++;if(c.gross)W.gross++;W.ber[c.bereich]=(W.ber[c.bereich]||0)+1;};
 // ---------- Ketten (K30 §3.1, §4 Nr. 5, §8.3, K30c) ----------
 // Eine Option mit kette:{karte, tage:[von,bis]} legt die Folgekarte in S.karten.kette ({id, tag absolut, s Saison, b Beteiligte}), gewürfelt im Strom der ersten Karte.

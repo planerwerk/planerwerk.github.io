@@ -386,6 +386,7 @@ lizenz:{
 144. **K30e Info-Karten mit Wirkung (22.11., popolupo, ohne Testlauf):** keine neue Funktion. Drei Meldungen im Bereich `ereignisse` wirken jetzt: Rückendeckung, Dorfverein, Blamage.
 145. **K11f Turniersieg (22.11., popolupo, ohne Testlauf):** keine neue Funktion, eine Meldung mit Wirkung im Bereich `ereignisse`.
 146. **K16d Arzt widerspricht (22.11., popolupo, ohne Testlauf):** keine neue Funktion. Fitspritzen bleibt im Bereich `medizin`, bei langer Verletzung braucht es einen zweiten Klick.
+147. **K03c Durchbruch und Altersverlust (22.11., popolupo, ohne Testlauf):** keine neue Funktion, zwei Meldungen im Bereich `ereignisse`.
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 
