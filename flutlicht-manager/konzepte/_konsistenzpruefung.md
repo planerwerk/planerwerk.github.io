@@ -1829,3 +1829,21 @@ Ein Agent hat e4dcccf, 39d3e7c, 8454a66 und d66cdc7 gelesen (nichts ausgeführt,
 | DP5 | **K32c, Ex-Spieler häufen sich:** Computer-Vereine holen nur Co-Trainer, also blieben Ex-Spieler bis 68 in der Liste und zählten beim Auffüllen mit. Jetzt gehen sie nach fünf Saisons ohne Job und zählen beim Auffüllen nicht mit. | ✅ behoben |
 | DP6 | **K20d, Kleinigkeiten:** Das Nein gilt nur für den Verein, den du beim Gebot geführt hast. Die Meldung beim Gebot nennt das mögliche Nein. Der Hinweis erscheint nicht bei alten Gegenangeboten ohne deine Ablöse. | ✅ behoben |
 | DP7 | Ohne Befund: Startwerte für neue und alte Spielstände (gleich gut: der echte bleibt), echte Rekorde werden nie still verlängert, 0:7 als Startwert, kein Meldungsschwall, Ströme in K32c, Reihenfolge im Saisonwechsel, Meldung nur für eigene Ehemalige, Ausschluss neuer Trainer, alle Testwerte von Hand, Gleichschritt. | ✅ |
+
+---
+
+## DQ. Prüfung von U12i und U12j ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 86ef44d und a3b1902 gelesen (nichts ausgeführt, `dubletten.pl` und `codewaechter.pl` ohne Befund). Kein blockierender Fehler. Korrekturen auf `mitarbeit/popolupo-k29g-urteil`.
+
+| # | Befund | Status |
+|---|---|---|
+| DQ1 | **Jobangebot ohne wirksame Grenze:** Ruf + 40 lag ab Ruf 55 immer bei mindestens 95, ein Drittligatrainer konnte also Bayern angeboten bekommen. Jetzt höchstens die Mitte der Jobangebote nach einer Entlassung (`mkJobs`) plus 10. | ✅ behoben |
+| DQ2 | **„Einmal je Jahr“ nur je Verein:** Die Sperre hing am Schlüssel mit dem Verein, ein anderer Verein konnte in der nächsten Woche anrufen. Jetzt prüft der Auslöser alle Jobangebote der letzten 365 Tage. | ✅ behoben |
+| DQ3 | **Offene Karten wanderten mit:** Nach einem Jobwechsel entschied der Co-Trainer offene Karten des alten Vereins für den neuen (Geld, Fans, Vertrauen, Verpflichtung). Jetzt entscheidet er sie am Anfang von `takeJob` noch für den alten Verein (`kartenJobwechsel`), für jeden Jobwechsel. | ✅ behoben |
+| DQ4 | Kredite und Raten verschwinden beim Jobwechsel wie bisher (auch bei Rücktritt und Entlassung), Computer-Vereine führen keine Kredite. Jetzt in K28 §5.13 genannt. | dokumentiert |
+| DQ5 | Die Ablöse für den Trainervertrag steht nicht in den Finanzen, nur in der Meldung (`takeJob` leert `S.fin`). | dokumentiert |
+| DQ6 | **Präsidentenwahl ohne Relegation:** Auf- und Abstieg über die Relegation zählten nicht. Jetzt wie in `rufSaison`. | ✅ behoben |
+| DQ7 | Wahl bei deinem Verein, während du entlassen bist: keine Meldung, kein Vertrauen (im Spiel kaum möglich, Schutz). | ✅ behoben |
+| DQ8 | Hinweis: Jeder neue Präsident bekommt eine andere Geduld (101 × Multiplikator ergibt modulo 20 immer 9). So gewollt, fest. | zur Kenntnis |
+| DQ9 | Ohne Befund: gleiche Werte ohne Wechsel, Wahl vor Auf- und Abstieg mit der fertigen Tabelle, eigener Strom, Zielgespräch und Nebenziele mit dem neuen Präsidenten, „Sommer s+1“, Automatik bleibt immer, Reihenfolge beim Wechsel (Gehalt, Ablöse, Station „gewechselt“), Pressekonferenz, Ultimatum und Vertrag werden zurückgesetzt, Testwerte von Hand, Gleichschritt. | ✅ |

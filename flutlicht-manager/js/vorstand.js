@@ -205,13 +205,15 @@ const wahlFaellig=(t,s)=>(s+t.id)%wahlJahre(t)===0;
 function naechsteWahl(t){let s=S.season;while(!wahlFaellig(t,s))s++;return s;}
 // Chance, dass der Präsident bleibt: Punkte je Spiel der Saison, Auf- oder Abstieg (sm), Fanstimmung, in Grenzen. Ohne Zufall.
 function wahlChance(t,sm){const W=RV.praesident.wahl,r=table(t.lg).find(x=>x.id===t.id),ppg=r&&r.sp?r.p/r.sp:W.mitte;let c=W.bleiben+(ppg-W.mitte)*W.jePunkt+(fanst(t)-50)*W.fans;
-  if(sm){if([...(sm.up||[]),...(sm.up3||[]),...(sm.up4||[])].includes(t.id))c+=W.aufstieg;if([...(sm.down||[]),...(sm.down2||[]),...(sm.down3||[])].includes(t.id))c+=W.abstieg;}
+  if(sm){const id=t.id,relAuf=(r,w)=>!!r&&w===id&&r[1]===id,relAb=(r,w)=>!!r&&w!=null&&w!==id&&r[0]===id; /* Relegation wie in rufSaison (Prüfung DQ6) */
+    if([...(sm.up||[]),...(sm.up3||[]),...(sm.up4||[])].includes(id)||relAuf(sm.rel,sm.rw)||relAuf(sm.rel2,sm.rw2))c+=W.aufstieg;
+    if([...(sm.down||[]),...(sm.down2||[]),...(sm.down3||[])].includes(id)||relAb(sm.rel,sm.rw)||relAb(sm.rel2,sm.rw2))c+=W.abstieg;}
   return clamp(c,W.grenzen[0],W.grenzen[1]);}
 // Saisonwechsel (saison.js newSeasonLauf, vor Auf- und Abstieg): Wahl bei allen Vereinen, bei denen sie fällig ist, eigener Strom je Verein und Saison.
 // Bei dir: Meldung, ein neuer Präsident kennt dich nicht (Vertrauen rückt Richtung 50). Rückgabe: Zahl der neuen Präsidenten.
 function praesidentenWahlen(sm){const W=RV.praesident.wahl;let n=0;
   S.teams.forEach(t=>{if(!aktiv(t)||!wahlFaellig(t,S.season))return;const c=wahlChance(t,sm),bleibt=mitStrom(strom('praesidentWahl',S.season,t.id),()=>R()<c);
-    if(!bleibt){t.prw=(t.prw||0)+1;n++;}if(t.id!==S.my)return;
+    if(!bleibt){t.prw=(t.prw||0)+1;n++;}if(t.id!==S.my||S.fired)return; /* entlassen: keine Meldung, kein Vertrauen (DQ7) */
     if(bleibt)news(`Mitgliederversammlung: Der Präsident wird wiedergewählt. Er ist ${praesidentText(t)}.`);
     else{S.trust=clamp(50+(S.trust-50)*W.vertrauen,0,100);news(`Mitgliederversammlung: Der Präsident wird abgewählt. Der neue ist ${praesidentText(t)}${praesident(t).ehrgeiz>=RV.nebenziele.ehrgeizigAb?' und ehrgeizig':''}. Er muss sich erst ein Bild von dir machen.`,'bad');}});
   return n;}

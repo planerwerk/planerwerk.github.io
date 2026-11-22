@@ -244,7 +244,7 @@ Nach §8 („Neuer Präsident: Wahl alle 3–4 Jahre“) und K25 §5.5 (Mitglied
 - **Wann:** im Sommer nach der Saison, auf der Mitgliederversammlung, bei jedem Verein alle 3 oder 4 Jahre. Der Takt ist fest aus der Vereinsnummer, die Vereine wählen also nicht alle im selben Jahr. Im Büro steht, wann dein Verein wieder wählt.
 - **Bleibt der Präsident?** Die Chance ist 65 %, dazu:
   - +0,3 je Punkt pro Spiel über 1,35 (darunter entsprechend weniger),
-  - +15 % bei einem Aufstieg, −25 % bei einem Abstieg,
+  - +15 % bei einem Aufstieg, −25 % bei einem Abstieg, auch über die Relegation (DQ6),
   - +0,5 % je Punkt Fanstimmung über 50 (darunter weniger),
   - zusammen zwischen 20 und 95 %. Gewürfelt im eigenen Strom je Verein und Saison.
 - **Neuer Präsident:** neue Werte für Geduld, Ehrgeiz und Sparsamkeit (weiter fest aus der Vereinsnummer, jetzt mit der Zahl der Wechsel).
@@ -257,11 +257,13 @@ Nach §8 („Neuer Präsident: Wahl alle 3–4 Jahre“) und K25 §5.5 (Mitglied
 
 Nach §8 als Ereigniskarte (K30, `daten/karten.js`, Bereich `ereignisse`).
 
-- **Wann:** Dein Ruf ist mindestens 55, du hast mindestens 5 Ligaspiele bestritten und stehst nicht im Ultimatum. Es meldet sich ein Verein derselben oder einer höheren Liga mit mindestens 8 mehr Ansehen als deiner. Große Vereine melden sich erst bei großem Ruf: Ihr Ansehen ist höchstens Ruf + 40. Stufe „häufig“ (etwa alle drei Saisons, solange die Bedingungen gelten), höchstens einmal je Jahr.
+- **Wann:** Dein Ruf ist mindestens 55, du hast mindestens 5 Ligaspiele bestritten und stehst nicht im Ultimatum. Es meldet sich ein Verein derselben oder einer höheren Liga mit mindestens 8 mehr Ansehen als deiner. Große Vereine melden sich erst bei großem Ruf: Ihr Ansehen ist höchstens die Mitte der Jobangebote nach einer Entlassung (Ansehen deines Vereins − 4 + Ruf über 30) plus 10 (seit Prüfung DQ1, vorher Ruf + 40, das begrenzte nichts). Stufe „häufig“ (etwa alle drei Saisons, solange die Bedingungen gelten), höchstens ein Angebot je Jahr über alle Vereine (DQ2).
 - **Wechseln:** Du übernimmst den Verein sofort.
   - Dein Gehalt bis heute steht in der Karriere, die Station endet mit „gewechselt“, eine Abfindung gibt es nicht.
   - Der neue Verein zahlt deinem alten ein Jahresgehalt als Ablöse für deinen Vertrag, höchstens sein Kontostand.
   - Danach gilt alles wie bei jedem Jobwechsel: neuer Vertrag, Vertrauen 55, Glaubwürdigkeit nach Ruf.
+  - Offene Karten des alten Vereins entscheidet vorher der Co-Trainer, sie wandern nicht mit (gilt für jeden Jobwechsel, DQ3).
+  - Kredite und Raten bleiben wie bei jedem Jobwechsel beim alten Verein, ohne Buchung (Computer-Vereine führen keine Kredite). Die Ablöse steht nur in der Meldung, nicht in den Finanzen (DQ4, DQ5).
 - **Bleiben und es öffentlich sagen:** Vertrauen +5, Fans +2. Das ist auch die Voreinstellung, der Co-Trainer wechselt nie für dich.
 - **Sich alles anhören und dann absagen:** Ruf +1. Mit 50 % wird das Treffen publik, dann Vertrauen −8.
 - **Noch nicht:** Ausstiegsklausel im Trainervertrag, Angebot während des Ultimatums als Rettung, Angebote aus dem Ausland.

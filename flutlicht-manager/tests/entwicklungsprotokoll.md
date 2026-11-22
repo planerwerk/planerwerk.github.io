@@ -89,6 +89,17 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 22.11.2026: Korrekturen nach Prüfung DQ zu U12i und U12j (Zweig `mitarbeit/popolupo-k29g-urteil`)
+
+- Ein lesender Prüf-Agent hat U12i und U12j durchgesehen (Konsistenzprüfung DQ). Er fand keinen blockierenden Fehler.
+- **Behoben:**
+  - DQ1: Das Jobangebot hat jetzt eine wirksame Grenze für große Vereine (Mitte der Jobangebote + 10).
+  - DQ2: Höchstens ein Jobangebot je Jahr über alle Vereine.
+  - DQ3: Offene Karten entscheidet der Co-Trainer bei jedem Jobwechsel noch für den alten Verein.
+  - DQ6: Die Präsidentenwahl zählt auch Auf- und Abstieg über die Relegation.
+  - DQ7: Schutz für den Fall einer Wahl während der Entlassung.
+- **Tests zuerst:** `tests/karten.js` (U12j erweitert), `tests/vorstand.js` Nr. 17, dann alle Tests mit Jobwechsel (`vorstand.js`, `ui-zwei-saisons.js`, `fuzz-karrieren.js`).
+
 ### 22.11.2026: K29g Pressekonferenz nach dem Urteil (Zweig `mitarbeit/popolupo-k29g-urteil`, auf K29f)
 
 - **Neu (K29 §4.1):** Sperrt das Sportgericht einen deiner Spieler für mindestens 3 Spiele, kommt eine Pressekonferenz „nach dem Urteil“ mit fünf eigenen Fragen. Kritik am Urteil wirkt wie Schiedsrichterkritik.

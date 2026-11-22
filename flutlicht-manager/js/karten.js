@@ -12,10 +12,11 @@ const AUSLOESER={
   praesidentSerie(){const t=myT();if(praesident(t).ehrgeiz<RV.nebenziele.ehrgeizigAb&&S.maezen!==S.season)return null; // mit Mäzen auch ohne Ehrgeiz (K23e)
    const r=table(t.lg).find(x=>x.id===S.my);if(!r||r.last.length<3||r.last.slice(-3).some(x=>x>0))return null;
     const xi=new Set((S.lineup||[]).map(x=>x&&x.id!=null?x.id:x)),p=squad(S.my).filter(q=>!xi.has(q.id)&&avail(q)).sort((a,b)=>value(b)-value(a))[0];return p?{spieler:p.id}:null;},
-  // Jobangebot (K28 §8, U12j): Ruf ab jobangebot.rufAb, ab dem 5. Ligaspiel, nicht im Ultimatum. Ein Verein derselben oder einer höheren Liga mit mindestens abstand
-  // mehr Ansehen als deiner, aber höchstens Ruf + rufSpanne (große Vereine rufen erst bei großem Ruf an)
-  jobangebot(){const J=RV.jobangebot,t=myT();if(ruf()<J.rufAb||meineSpieltage()<RV.platzAbSpieltag||S.ult)return null;
-    const l=S.teams.filter(x=>x.id!==S.my&&aktiv(x)&&x.lg<=t.lg&&x.rep>=t.rep+J.abstand&&x.rep<=ruf()+J.rufSpanne);return l.length?{verein:pick(l).id}:null;},
+  // Jobangebot (K28 §8, U12j): Ruf ab jobangebot.rufAb, ab dem 5. Ligaspiel, nicht im Ultimatum, höchstens eins je sperrTage über alle Vereine (Prüfung DQ2).
+  // Ein Verein derselben oder einer höheren Liga mit mindestens abstand mehr Ansehen als deiner, aber höchstens jobangebotGrenze (Prüfung DQ1)
+  jobangebot(){const J=RV.jobangebot,t=myT(),K=karten(),heute=absTag(S.tag),sp=(karteVon('jobangebot')||{}).sperrTage||RKT.sperrTage;
+    if(ruf()<J.rufAb||meineSpieltage()<RV.platzAbSpieltag||S.ult||Object.keys(K.sp).some(k=>k.startsWith('jobangebot:')&&heute-K.sp[k]<sp))return null;
+    const l=S.teams.filter(x=>x.id!==S.my&&aktiv(x)&&x.lg<=t.lg&&x.rep>=t.rep+J.abstand&&x.rep<=jobangebotGrenze());return l.length?{verein:pick(l).id}:null;},
   // Vertrauen ab 80, obwohl du unter dem Saisonziel stehst (ab dem 5. Ligaspiel)
   rueckendeckung(){if(S.trust<80||meineSpieltage()<RV.platzAbSpieltag)return null;return rank(myT().lg,S.my)>S.target?{}:null;},
   // Ein Verein, zu dem deine Beziehung unter −50 liegt (K17)
@@ -105,6 +106,10 @@ function kartenWirkung(w,b,c){let wert=w.wert,txt='';if(w.chance!=null){const ok
   else if(w.art==='jobwechsel'){if(b.verein!=null)karteJobwechsel(b.verein);} /* U12j: nur über deine Wahl, die Voreinstellung bleibt */
   return txt;}
 const KARTEN_WIRKUNGEN=['stimmung','stimmungAlle','zusammenhalt','glaub','vertrauen','ruf','bezDu','geld','fans','verpflichten','interesse','angebot','maezen','merch','jobwechsel'];
+// Höchstes Ansehen eines Vereins, der dir einen Job anbietet: dieselbe Mitte wie die Jobangebote nach einer Entlassung (saison.js mkJobs) plus jobangebot.rufSpanne
+const jobangebotGrenze=()=>{const J=RV.jobs;return myT().rep-J.ansehenAbschlag+(ruf()-RV.ruf.start)*RV.ruf.jobsJePunkt+RV.jobangebot.rufSpanne;};
+// Vereinswechsel (saison.js takeJob, vor dem Wechsel): offene Karten entscheidet der Co-Trainer noch für den alten Verein, sie wandern nicht mit (Prüfung DQ3)
+function kartenJobwechsel(){const K=S.karten;if(!K||!K.offen.length)return;K.offen.slice().forEach(k=>{const c=karteVon(k.id);if(c)kartenEntscheiden(k,c.auto,'spaet');});K.offen=[];}
 // Jobwechsel per Karte (K28 §8, U12j): Gehalt bis heute in die Karriere, Ablöse für deinen Vertrag (Gehalt je Saison × jobangebot.abloese, höchstens das Konto des neuen Vereins)
 // vom neuen an den alten Verein, dann takeJob. Nicht, wenn der Verein nicht mehr aktiv ist, du entlassen bist oder er inzwischen deiner ist.
 function karteJobwechsel(id){const t=S.teams[id],alt=myT();if(!t||!aktiv(t)||S.fired||id===S.my){news('Das Angebot ist nicht mehr zu haben.','');return;}
