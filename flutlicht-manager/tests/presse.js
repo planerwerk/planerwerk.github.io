@@ -67,4 +67,11 @@ const gegner=w=>w.S.teams.find(x=>x.lg===w.t.lg&&x.id!==VEREIN).id;
   pruef(k1===50+M.arten.offen.klima&&k2===M.arten.offen.ziel&&k3===M.arten.abgeschottet.ziel&&k4===k3+M.arten.zurueckhaltend.klima&&Math.abs(f0-1.5)<1e-9&&Math.abs(f100-0.5)<1e-9&&S.mp==='zurueckhaltend'&&auto,
     'Medienpolitik: Klima zieht zum Ziel der Art, Faktor auf Gerüchte, Standard in der Automatik',`Klima ${k1} / ${k2} / ${k3} / ${k4}, Faktor ${f0} / ${f100}, Automatik ${auto}`);}
 
+// K29c. Exklusivinterview (K29 §6): gewähltes Medium +10, andere −3, Medienklima +2, erst nach 28 Tagen wieder; Wirkung der Gerüchte × (1 − Beziehung/60)
+{const {S,F,ev}=welt(false),E=ev('REGELN').exklusiv,P=ev('presseS')();P.klima=50;F.exklusivInterview('fach');const a=ev('medienBez')('fach'),b=ev('medienBez')('boulevard'),k=P.klima;
+  F.exklusivInterview('tv');const gesperrt=ev('medienBez')('tv')===E.andere;S.tag+=E.tage;F.exklusivInterview('tv');const wieder=ev('medienBez')('tv')===E.andere+E.plus;
+  const wf=ev('medienWirkung')('fach'),wb=ev('medienWirkung')('boulevard');
+  pruef(a===E.plus&&b===E.andere&&k===50+E.klima&&gesperrt&&wieder&&Math.abs(wf-(1-(E.plus+E.andere)/E.teiler))<1e-9&&Math.abs(wb-(1-2*E.andere/E.teiler))<1e-9,'Exklusivinterview: Beziehungen, Sperrfrist, Wirkung auf Gerüchte',
+    `Fachblatt ${a}, Boulevard ${b}, Klima ${k}, gesperrt ${gesperrt}, wieder ${wieder}, Wirkung ${wf.toFixed(3)} / ${wb.toFixed(3)}`);}
+
 console.log(probleme.length?`\n${probleme.length} Problem(e).`:'\nAlles in Ordnung.');process.exitCode=probleme.length?1:0;

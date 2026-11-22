@@ -33,8 +33,9 @@ function gerVeroeffentlichen(c){const G=RGR,W=G.wirkung,P=gerS(),m=c.w===0&&c.ar
   const ctx={verein:tn(c.tid),klub:c.klub!=null?tn(c.klub):'',spieler:p?p.n:'',coach:trainerName(c.tid)};P.id++;
   const g={id:P.id,art:c.art,m,s:S.season,tag:absTag(S.tag),tid:c.tid,klub:c.klub!=null?c.klub:null,pid:c.pid!=null?c.pid:null,w:c.w,text:gerText(c.art,ctx,P.id),mein:c.tid===S.my||c.klub===S.my?1:0,team0:p?p.team:null,chef0:t?t.chef:null};
   P.l.push(g);if(P.l.length>G.log)P.l.splice(0,P.l.length-G.log);news(`Gerüchteküche, ${PRESSE.medien[m].name}: „${g.text}“`,g.mein?'tr':'');
-  if(p&&p.team===S.my&&['unzufrieden','interesse','absprung'].includes(c.art)){stimmungAendern(p,W.stimmung);if(istLiebling(p,S.my))fanAnlass(myT(),'fanU',W.fans);}
-  if(c.tid===S.my&&(c.art==='trainer'||c.art==='trainerAus'))S.trust=clamp(S.trust+W.vertrauen,0,100);
+  const mw=g.mein?medienWirkung(m):1; /* Beziehung zum Medium (K29c): gewogen milder, verärgert schärfer */
+  if(p&&p.team===S.my&&['unzufrieden','interesse','absprung'].includes(c.art)){stimmungAendern(p,W.stimmung*mw);if(istLiebling(p,S.my))fanAnlass(myT(),'fanU',W.fans*mw);}
+  if(c.tid===S.my&&(c.art==='trainer'||c.art==='trainerAus'))S.trust=clamp(S.trust+W.vertrauen*mw,0,100);
   if(p&&(c.art==='verhandlung'||c.art==='interesse'))p.gerF={f:c.w>=1?W.preis.wahr:W.preis.halb,bis:absTag(S.tag)+G.dauer};
   if(g.mein)presseAnlass('geruecht',{pid:p&&p.team===S.my?p.id:null,medium:m,trainer:c.art==='trainer'||c.art==='trainerAus'});}
 // Nach 30 Tagen: Treffsicherheit der Medien. Wechsel- und Trainergerüchte am Ausgang, die übrigen am Wahrheitsgehalt.

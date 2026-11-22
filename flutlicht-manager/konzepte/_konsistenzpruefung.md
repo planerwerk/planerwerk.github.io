@@ -1726,3 +1726,15 @@ Ein Agent hat 8a94e04 und 0f01091 gelesen (nichts ausgeführt). Korrekturen auf 
 | DI2 | **Kommentar:** `dachFaktor` hatte einen ungenutzten Parameter für den Gegner. Entfernt, Kommentar richtig gestellt. | ✅ behoben |
 | DI3 | **Älterer Fehler:** Die Preisvorschau (`zuschauerSpanne`) rechnete die 3. Liga mit dem Faktor der 2. Liga (0,82 statt 0,7) und zeigte etwa 17 % zu viele Zuschauer. Jetzt wie `attendance`. | ✅ behoben |
 | DI4 | Ohne Befund: Bau des Dachs über die allgemeinen Abläufe, Computer-Vereine bauen es nicht, `zuschauerErwartung` aus `side` ohne Zufall und nur mit Dach, Gleichschritt, Tests, K25c. | ✅ |
+
+---
+
+## DJ. Nachtrag zu K29c: Exklusivinterview (22. November 2026, popolupo, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-k29c-exklusivinterview`, auf K26d mit den Korrekturen DI. Ausführlich in K29 (Umsetzung K29c).
+
+| # | Befund | Status |
+|---|---|---|
+| DJ1 | **Beziehungen je Medium** (`S.mb`) und Exklusivinterview mit Sperrfrist (`S.exkl`), ohne Zufall. Die Wirkung von Gerüchten über dich wird mit der Beziehung des berichtenden Mediums gewichtet (`medienWirkung`), gleich viele Würfe. | ✅ |
+| DJ2 | **Stimmung mit Kommastellen:** −3 × 1,5 gibt −4,5. Das gab es schon durch die Streuung der Pressekonferenzen. | ✅ |
+| DJ3 | **Gleichschritt:** nur nach deinem Klick, die Gerüchteküche ist im Test 5a aus. | ✅ |

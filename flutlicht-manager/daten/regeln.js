@@ -450,6 +450,9 @@ const REGELN={
   // in Richtung ziel, nur nach oben (richtung 1), nur nach unten (−1) oder in beide Richtungen (0). Seit der Prüfung DF1 zieht auch „zurückhaltend“ zur Mitte, sonst sank das Klima
   // in der Automatik (Co-Trainer bei jeder Pressekonferenz −2) immer weiter. mein: Chance auf ein Gerücht über deinen Verein × mein, erfindung: Anteil erfundener Gerüchte über dich × erfindung.
   // klimaWirkung: Medienklima unter 50 macht Gerüchte über dich häufiger und öfter erfunden, darüber seltener, Faktor 1 + klimaWirkung × (50 − Klima)/50.
+  // Exklusivinterview (K29 §6, K29c, 22.11., GESCHÄTZT): höchstens alle tage Tage, Bereich presse. Das gewählte Medium plus, alle anderen andere (Beziehung je Medium in grenzen),
+  // Medienklima klima. Gerüchte über deinen Verein wirken (Stimmung, Fans, Vertrauen) mal 1 − Beziehung/teiler, begrenzt auf wirkung: gewogene Medien schreiben milder, verärgerte schärfer.
+  exklusiv:{tage:28,plus:10,andere:-3,grenzen:[-30,30],klima:2,teiler:60,wirkung:[0.5,1.5]},
   medienpolitik:{standard:'zurueckhaltend',klimaWirkung:0.5,arten:{offen:{name:'offen',text:'Interviews und Einblicke: mehr Berichte über deinen Verein, die Medien mögen dich',mein:1.25,erfindung:0.8,klima:0.5,ziel:70,richtung:1},
     zurueckhaltend:{name:'zurückhaltend',text:'das Übliche, das Klima kehrt langsam zur Mitte zurück',mein:1,erfindung:1,klima:0.5,ziel:50,richtung:0},
     abgeschottet:{name:'abgeschottet',text:'keine Einblicke: weniger Berichte, dafür mehr Erfundenes, die Medien sind verstimmt',mein:0.6,erfindung:1.4,klima:0.5,ziel:30,richtung:-1}}},

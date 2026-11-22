@@ -94,6 +94,15 @@ function medienpolitikSetzen(k){if(!darf('presse')||!REGELN.medienpolitik.arten[
 const klimaFaktor=()=>1+REGELN.medienpolitik.klimaWirkung*(50-presseS().klima)/50;
 function medienpolitikWoche(){const P=presseS(),m=medienpolitik(),k=P.klima,s=m.klima;if(!s)return;
   if(k<m.ziel&&m.richtung>=0)P.klima=fanZahl(Math.min(m.ziel,k+s));else if(k>m.ziel&&m.richtung<=0)P.klima=fanZahl(Math.max(m.ziel,k-s));}
+// ---------- Exklusivinterview (K29 §6, K29c) ----------
+// S.mb = {Medium: Beziehung}, S.exkl = absoluter Tag des letzten Interviews. Ohne Zufall.
+const medienBez=m=>S.mb&&S.mb[m]!=null?S.mb[m]:0;
+const exklusivFrei=()=>S.exkl==null||absTag(S.tag)-S.exkl>=REGELN.exklusiv.tage;
+function exklusivInterview(m){const E=REGELN.exklusiv;if(!darf('presse')||!PRESSE.medien[m])return;if(!exklusivFrei()){toast('Das nächste Exklusivinterview geht erst später.');return;}
+  const B=S.mb||(S.mb={});Object.keys(PRESSE.medien).forEach(k=>{B[k]=clamp(medienBez(k)+(k===m?E.plus:E.andere),E.grenzen[0],E.grenzen[1]);});S.exkl=absTag(S.tag);
+  const P=presseS();P.klima=fanZahl(clamp(P.klima+E.klima,0,100));news(`Exklusivinterview in ${PRESSE.medien[m].name} (${PRESSE.medien[m].art}). Die anderen Redaktionen sind verstimmt.`,'');save();render();}
+// Faktor auf die Wirkung eines Gerüchts über deinen Verein aus diesem Medium (geruechte.js)
+const medienWirkung=m=>{const E=REGELN.exklusiv;return clamp(1-medienBez(m)/E.teiler,E.wirkung[0],E.wirkung[1]);};
 function presseWoche(){medienpolitikWoche();const P=presseS(),G=RPK.gedaechtnis,heute=absTag(S.tag);
   P.aussagen.forEach(a=>{if(a.ok||a.art!=='rueckendeckung'||a.pid==null)return;if(heute-a.tag>G.rueckendeckungTage){a.ok=1;return;}const p=PIX.get(a.pid);
     if(p&&p.team!==S.my){a.ok=1;glaubAendern(G.rueckendeckungGlaub);news(`Die Presse erinnert an deine Rückendeckung für ${p.n}. Jetzt ist er weg. Deine Glaubwürdigkeit leidet.`,'bad');}});}
@@ -107,7 +116,11 @@ function kampfansagePruefen(gegner,gf,ga){const P=presseS(),G=RPK.gedaechtnis,t=
 // Medienpolitik im Medien-Kasten (K29b): aktuelle Art, Knöpfe zum Wechseln (Bereich presse)
 function medienpolitikText(){const M=REGELN.medienpolitik,m=medienpolitik(),aus=lzAus('presse');
   return`<p class="dim">Medienpolitik: <b>${esc(m.name)}</b> (${esc(m.text)}). Ein schlechtes Medienklima bringt mehr Gerüchte über deinen Verein, öfter erfundene.</p>
-    <div class="row">${Object.keys(M.arten).map(k=>`<button class="${k===m.k?'go':''}" onclick="medienpolitikSetzen('${k}')"${aus}>${esc(M.arten[k].name)}</button>`).join('')}</div>`;}
+    <div class="row">${Object.keys(M.arten).map(k=>`<button class="${k===m.k?'go':''}" onclick="medienpolitikSetzen('${k}')"${aus}>${esc(M.arten[k].name)}</button>`).join('')}</div>${exklusivText()}`;}
+// Exklusivinterview im Medien-Kasten (K29c): Beziehung je Medium, Knöpfe, solange frei
+function exklusivText(){const E=REGELN.exklusiv,aus=lzAus('presse'),l=Object.keys(PRESSE.medien),f=x=>`${x>0?'+':''}${x}`;
+  return`<p class="dim">Beziehungen: ${l.map(k=>`${esc(PRESSE.medien[k].name)} ${f(medienBez(k))}`).join(' · ')}. Gewogene Medien schreiben milder über dich, verärgerte schärfer.</p>
+    ${exklusivFrei()?`<div class="row">${l.map(k=>`<button onclick="exklusivInterview('${k}')"${aus}>Exklusivinterview: ${esc(PRESSE.medien[k].name)}</button>`).join('')}</div>`:`<p class="dim">Das nächste Exklusivinterview geht ${E.tage} Tage nach dem letzten.</p>`}`;}
 function presseKarte(){const P=presseS(),pk=S.pk;
   if(!pk)return`<div class="card"><h3>Medien</h3><p>Medienklima ${Math.round(P.klima)} von 100${(P.n[S.season]||0)?` · ${P.n[S.season]} Pressekonferenz${P.n[S.season]===1?'':'en'} in dieser Saison`:''}.</p>${medienpolitikText()}</div>`;
   const A=PRESSE.anlaesse[pk.art];return`<div class="card"><h3>${esc(A.name)}</h3>${lzHinweis('presse')}<p>${pk.fragen.length} Fragen warten. Medienklima ${Math.round(P.klima)} von 100.</p>

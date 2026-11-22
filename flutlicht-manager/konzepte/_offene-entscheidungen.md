@@ -551,6 +551,7 @@ Datei: `konzepte/K29-medien-presse.md`
 - Lizenz `presse` ab der C-Lizenz mit Automatik.
 - Wirkungen als Spielwerte nach der Tendenz aus K29 §5.1.
 - Das Medienklima ist ein eigener Wert und wird vorerst nur angezeigt. Seit K29b (22.11., popolupo, vorläufig) wirkt es auf die Gerüchte über deinen Verein (×1,5 bei 0 bis ×0,5 bei 100), und die Medienpolitik (offen, zurückhaltend, abgeschottet) zieht es je Woche Richtung 70, 50 oder 30.
+- Seit K29c (22.11., popolupo, vorläufig): Beziehung zu den fünf Medien (−30 bis +30), Exklusivinterview alle 28 Tage (+10 für das Medium, −3 für die anderen), Gerüchte über dich wirken nach der Beziehung milder oder schärfer.
 - Zum Start 54 Fragen, 30 Antworten und 22 Schlagzeilen.
 
 **Mit U17b von mir vorläufig entschieden (20.11.2026, K29 §12 Nr. 15 bis 19):**

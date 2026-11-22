@@ -248,6 +248,12 @@ Das ist der Maßstab für die Verbindung zu K09.
 - **Medienklima wirkt jetzt** (§5.4 „wirkt später auf Gerüchte“): Die Chance auf ein Gerücht über dich und der Anteil erfundener Gerüchte über dich mal 1 + 0,5 × (50 − Klima)/50, also 1,5 bei 0 und 0,5 bei 100. Gleich viele Würfe wie vorher, nur die Schwellen ändern sich.
 - **Noch nicht:** Wirkung des Klimas auf die Fragen der Pressekonferenz, Exklusivinterview (braucht Beziehungen zu einzelnen Medien).
 
+**Umsetzung K29c (22.11.2026, popolupo, ohne Testlauf): Exklusivinterview und Beziehung zu einzelnen Medien (§6)**
+- **Beziehung je Medium** (Tagesblitz, Ballwoche, Sportkanal Eins, Netztribüne, Lokalbote) von −30 bis +30, Start 0, Anzeige im Medien-Kasten.
+- **Exklusivinterview** höchstens alle 28 Tage (Bereich `presse`): das gewählte Medium +10, alle anderen −3, Medienklima +2. Ohne Zufall.
+- **Wirkung:** Ein Gerücht über deinen Verein trifft Stimmung, Fans und Vertrauen mal 1 − Beziehung/60 (0,5 bis 1,5). Gewogene Medien schreiben milder, verärgerte schärfer. Erfundene Gerüchte kommen weiter vom Boulevard oder vom Portal, wer dort Feinde hat, spürt es.
+- **Noch nicht:** Verblassen der Beziehungen über die Zeit, Wirkung auf die Fragen der Pressekonferenz.
+
 ## 6. Hebel des Spielers
 
 - Ton je Frage wählen.
