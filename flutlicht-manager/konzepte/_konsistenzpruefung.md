@@ -1799,3 +1799,17 @@ Ein Agent hat 3286ff9 gelesen (nichts ausgeführt). **Ein blockierender Fehler.*
 | DN8 | Ohne Befund: Ablauf bei Spielbeginn, Jobwechsel in der Saison und nach dem Saisonende, Entlassung in der Saison und am Saisonende, Rücktritt, Verlängerung, Ligaklausel, keine doppelte oder verlorene Buchung, keine anderen Wege aus dem Job, Test Nr. 15 von Hand nachgerechnet, Spaltenzahlen, Zahlen in der Doku. | ✅ |
 
 **Neue Prüfung vor jedem Commit:** `perl C:\Users\siegemund.gerry\projekte\flutlicht-tools\dubletten.pl flutlicht-manager` meldet Namen, die auf oberster Ebene in zwei Dateien deklariert sind. Alle Skripte teilen sich einen Namensraum. Für den Kommentar-Wächter (`tests/code.js`) wäre dieselbe Prüfung nützlich.
+
+---
+
+## DO. Prüfung von K29e und U12h ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 69be27f und 569fb0d gelesen (nichts ausgeführt, nur `dubletten.pl` und `codewaechter.pl`, beide ohne Befund). Kein blockierender Fehler. Korrekturen auf `mitarbeit/popolupo-k20d-spieler-nein`.
+
+| # | Befund | Status |
+|---|---|---|
+| DO1 | **Strafe für eine offene Stichelei zu oft:** Sie traf auch, wenn du die Stichelei (immer Frage 1) schon beantwortet und dann den Co-Trainer geschickt hattest, nach einer Entlassung (dann die Mannschaft des alten Vereins) und bei einer Pressekonferenz aus der alten Saison. Jetzt nur ohne Antwort, nicht nach einer Entlassung, nur in derselben Saison. | ✅ behoben |
+| DO2 | **Gleichschritt nach einer Entlassung:** `tests/lizenz.js` 5a setzt nach einer Entlassung `fired` und `trust` zurück, aber nicht den Ruf. Seit U12h wirkt der Ruf in der Kabine, Lauf A wäre dann abgewichen. Der Test setzt jetzt auch `S.ruf` zurück. | ✅ behoben |
+| DO3 | **Test Nr. 16 zu schwach:** Mit Ruf +50 lag die Kabine bei der Obergrenze 95, jeder Faktor ab 0,47 hätte bestanden. Jetzt Ruf +20 (erwartet 81,6). | ✅ behoben |
+| DO4 | Hinweis: In allen `saisons()`-Läufen ohne Lernstufen geht der Co-Trainer am Tag danach. Der Sim-Verein verliert vor Topspielen mit stichelnden Trainern also 1 oder 2 Stimmung. Kein Test mit festen Erwartungen bricht. | zur Kenntnis |
+| DO5 | Ohne Befund: Würfe nur im Strom `presse`, nichts für Diplomaten und Floskelkönige, keine Abstürze (Amateure, Ausland, ohne Trainer, alte offene Pressekonferenzen), Gleichschritt unter Automatik, Deckel, Platzhalter, Testwerte von Hand (Anteile, Sticheleien, 51/51, 48), alle Umbenennungen aus DN, `vertragUmstellen` auf allen drei Ladewegen, `gehaltLaufend`, Doku. | ✅ |

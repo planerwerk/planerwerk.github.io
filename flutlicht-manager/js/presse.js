@@ -22,8 +22,9 @@ function pkStichelei(pk){const M=RPK.medienprofil;if(!M.anlaesse.includes(pk.art
   if(!c||R()>=c)return;const l=PRESSE.sticheleien[pr],F=PRESSE.stichelFrage;pk.profil=pr;pk.zitat=l[Math.floor(R()*l.length)];
   pk.fragen.unshift({t:F[Math.floor(R()*F.length)],o:['humor','provokation','floskel'],sp:0,j:pkJournalist(R()),st:1});
   news(`${x.n} (${tn(pk.gegner)}) stichelt vor dem Spiel: „${pkText(pk.zitat,{verein:myT().name})}“`);}
-// Stichelei ohne Antwort (Co-Trainer geschickt oder nicht hingegangen, aber ohne Automatik): die eigene Mannschaft grübelt
-function stichelOffen(pk){if(!pk.profil||autoB('presse'))return;const v=RPK.medienprofil.offen[pk.profil]||0;if(!v)return;squad(S.my).forEach(p=>stimmungAendern(p,v));
+// Stichelei ohne Antwort (Co-Trainer geschickt oder nicht hingegangen, aber ohne Automatik): die eigene Mannschaft grübelt. Nicht, wenn die erste Frage
+// (die Stichelei) schon beantwortet ist, nach einer Entlassung oder in einer neuen Saison (Prüfung DO1)
+function stichelOffen(pk){if(!pk.profil||pk.i>0||S.fired||pk.s!==S.season||autoB('presse'))return;const v=RPK.medienprofil.offen[pk.profil]||0;if(!v)return;squad(S.my).forEach(p=>stimmungAendern(p,v));
   news(`Die Stichelei von ${trainerName(pk.gegner)} blieb unbeantwortet. In der Kabine wird darüber geredet.`,'bad');}
 
 // ---------- Anlass (K29 §4.1) ----------

@@ -131,10 +131,10 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
 // 16. Ruf wirkt (K28 §5.4, U12h): Interesse der Spieler +0,2 je Punkt Ruf über dem Start, Ruf in der Kabine 50 + 0,3 × Ansehen + 0,5 je Punkt (höchstens 95),
 //     Glaubwürdigkeit beim neuen Verein 60 + 0,3 je Punkt (30 bis 90); beim Jobwechsel gesetzt
 {const {S,F,ev,B}=welt(),G=ev('RGS').glaubwuerdigkeit,T=ev('RKA').rufGefaelle.trainer,p=S.pl.find(x=>x.team>=0&&x.team<1000&&x.team!==VEREIN),r0=B.ruf.start;
-  S.ruf=r0;const i0=F.wechselInteresse(p),k0=F.trainerRuf(),g0=F.glaubNeu();S.ruf=r0+50;const i1=F.wechselInteresse(p),k1=F.trainerRuf(),g1=F.glaubNeu();
-  const rep=ev('myT()').rep,kSoll=Math.min(T[3],T[0]+T[1]*rep),k1Soll=Math.min(T[3],kSoll+T[2]*50);
+  S.ruf=r0;const i0=F.wechselInteresse(p),k0=F.trainerRuf(),g0=F.glaubNeu();S.ruf=r0+20;const i1=F.wechselInteresse(p),k1=F.trainerRuf(),g1=F.glaubNeu();
+  const rep=ev('myT()').rep,kSoll=Math.min(T[3],T[0]+T[1]*rep),k1Soll=Math.min(T[3],kSoll+T[2]*20);
   const ziel=S.teams.find(x=>x.lg===2&&x.id!==VEREIN).id;S.fired=1;F.takeJob(ziel);const gJob=S.teams[ziel].glaub;
-  pruef(Math.abs(i1-i0-50*ev('RVT').interesse.ruf)<1e-9&&Math.abs(k0-kSoll)<1e-9&&Math.abs(k1-k1Soll)<1e-9&&g0===G.start&&g1===Math.round(G.start+50*G.jeRuf)&&gJob===g1&&S.my===ziel,
+  pruef(Math.abs(i1-i0-20*ev('RVT').interesse.ruf)<1e-9&&Math.abs(k0-kSoll)<1e-9&&Math.abs(k1-k1Soll)<1e-9&&g0===G.start&&g1===Math.round(G.start+20*G.jeRuf)&&gJob===g1&&S.my===ziel,
     'Ruf wirkt: Interesse, Kabine, Glaubwürdigkeit beim neuen Verein',`Interesse +${(i1-i0).toFixed(2)}, Kabine ${k0} → ${k1}, Glaubwürdigkeit ${g0} → ${g1}, nach dem Wechsel ${gJob}`);}
 
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

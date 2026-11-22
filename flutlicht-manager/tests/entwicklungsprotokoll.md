@@ -85,6 +85,15 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 22.11.2026: Korrekturen nach Prüfung DO zu K29e und U12h (Zweig `mitarbeit/popolupo-k20d-spieler-nein`)
+
+- Ein lesender Prüf-Agent hat K29e und U12h durchgesehen (Konsistenzprüfung DO). Er fand keinen blockierenden Fehler.
+- **Behoben:**
+  - DO1: Die Strafe für eine offene Stichelei trifft nur, wenn sie nicht beantwortet ist, nicht nach einer Entlassung und nur in derselben Saison.
+  - DO2: `tests/lizenz.js` 5a setzt nach einer Entlassung auch den Ruf zurück.
+  - DO3: `tests/vorstand.js` Nr. 16 prüft mit Ruf +20.
+- **Tests zuerst:** `tests/presse.js` (K29e), `tests/vorstand.js` Nr. 16, `tests/lizenz.js`.
+
 ### 22.11.2026: K20d Nein des Spielers zum Höchstbietenden (Zweig `mitarbeit/popolupo-k20d-spieler-nein`, auf K32c)
 
 - **Neu (K20 §4.2):** Gehst du beim Bieterwettstreit (K20c) nicht mit, lehnt ein Spieler, der unbedingt zu dir will, den anderen Verein ab.

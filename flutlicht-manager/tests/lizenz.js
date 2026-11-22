@@ -103,7 +103,7 @@ const punkte=(S,F,id)=>{const lg=S.teams[id].lg,r=F.table(lg).find(x=>x.id===id)
 // Und die Ereigniskarten (U12d): Viele treffen gezielt deinen Verein (etwa „Ein Spieler heiratet“), im anderen Lauf also einen anderen Verein (T5.1).
 {const TAGE=150,mach=mein=>{const {W,F}=neueWelt();F.buildWorld(SEED+10);const S=W.S;S.my=mein;S.mgr='Sim';F.setTarget();F.lizenzStart(false);allesAuto(S,W.ev,true);delete S.lizenz.auto.testspiele;W.ev('geruechteWoche=()=>{}');W.ev('kartenWoche=()=>{}');F.sponsOffers();S.lineup=F.bestXI(mein,W.ev('myT()').form);return{W,F};};
   const a=mach(6),b=mach(30),bild=x=>JSON.stringify(x.W.S.pl.filter(p=>p.team===6).map(p=>[p.id,p.str,p.fit,p.ko,p.form,p.sp,p.st,p.inj,p.sv,p.ww,p.ea]))+JSON.stringify([x.W.S.teams[6].form,x.W.S.teams[6].zh,x.W.S.res[1].filter(r=>r[0]===6||r[1]===6)]);
-  const schritt=x=>{const S=x.W.S;if(S.sponsOffers)x.F.sponsorWaehlen(0);if(S.fired){S.fired=0;S.trust=60;}x.W.ev('tagEnde')(S.tag);S.tag++;S.gespielt=-1;x.W.ev('tagBeginn')(S.tag);};
+  const schritt=x=>{const S=x.W.S;if(S.sponsOffers)x.F.sponsorWaehlen(0);if(S.fired){S.fired=0;S.trust=60;S.ruf=null;}x.W.ev('tagEnde')(S.tag);S.tag++;S.gespielt=-1;x.W.ev('tagBeginn')(S.tag);};
   let gleich=0;for(let i=0;i<TAGE;i++){schritt(a);schritt(b);if(bild(a)!==bild(b))break;gleich++;}
   pruef(gleich>=TAGE,`Gleichschritt: Kader und Ergebnisse ${TAGE} Tage lang Tag für Tag gleich, ob der Stab deinen Verein führt oder er ein Computer-Verein ist`,`${gleich} Tage gleich`);}
 
