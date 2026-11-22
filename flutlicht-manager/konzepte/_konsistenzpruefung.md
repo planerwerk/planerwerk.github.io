@@ -1511,3 +1511,18 @@ Zweig `mitarbeit/popolupo-k32-karriereende`, auf U12e. Ausführlich in K32 §5.1
 | CR2 | **Zufall:** vorher im Strom des Saisonwechsels, jetzt eigener Strom je Spieler und Saison. Dadurch verschiebt sich der übrige Zufall des Saisonwechsels einmal gegenüber früheren Läufen (andere Anzahl Würfe). Vergleiche mit alten Läufen gleichen Seeds stimmen ab dem ersten Saisonwechsel nicht mehr. | ⚠️ bekannt |
 | CR3 | **Gleichgewicht (K32 §5.3, K03 §10):** Mit 32 und 33 hören jetzt einige auf, mit 35 bis 37 weniger als vorher. Die Ligen könnten über zehn Saisons etwas jünger und anfangs etwas schwächer werden. | ⚠️ `tests/welt.js` über zehn Saisons ansehen |
 | CR4 | **Auslandspool:** gleiche Chance ohne Niveau, im Strom des Pools. Der Pool verliert ab 32 etwas mehr Spieler, seine eigenen Regeln bleiben. | ⚠️ Größe des Pools über zehn Saisons (K32 §10: ±15 %) |
+
+---
+
+## CS. Prüfung von K23c ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat den Commit cfe0f41 gelesen (nichts ausgeführt). Die Korrekturen liegen auf dem Zweig `mitarbeit/popolupo-k32-karriereende` (der neuesten Spitze), nicht auf dem K23c-Zweig.
+
+| # | Befund | Status |
+|---|---|---|
+| CS1 | **`tests/schwierigkeit.js` Nr. 1** rechnete den Kreditrahmen noch mit der alten Formel (`jeAnsehen` fehlt seit K23c, Soll NaN). Jetzt mit der Formel aus den Regeln. | ✅ behoben |
+| CS2 | **Werbung ungerundet:** `sponsorBasis` gab Kommazahlen zurück, dadurch wurden die Kontostände der Computer-Vereine krumm und `tests/finanzen.js` Nr. 11 wäre fast immer an der letzten Binärstelle gescheitert. `sponsorBasis` rundet jetzt auf ganze Euro. | ✅ behoben |
+| CS3 | **Fünfjahreswertung in der Regionalliga:** Vereine in der Regionalliga bekamen keine Saison eingetragen, ihre alten Saisons rückten nicht nach. Jetzt zählt eine Saison dort mit 0 Punkten. | ✅ behoben |
+| CS4 | **Alte Spielstände:** Vorgemerkte Wechsel (`p.wech.sal`) und deine Werbeverträge blieben auf der alten Größe, während Gehälter und Verwaltung neu rechnen (grob −8 Mio. € je Saison für einen Erstligisten). Jetzt rechnet `k23cUmstellen` beides mit um (Verträge: mal neuer durch alten Grundbetrag der Fläche, alte Werte in `RF.sponsorAlt`). `tests/finanzen.js` Nr. 17 prüft es mit. | ✅ behoben |
+| CS5 | **Nicht geprüft werden konnte:** `tests/transfers.js` Nr. 4, 5 und 9 erkennen „kein Interesse“ am Text. Eine Absage wegen des Gehaltsrahmens würde dort als Erfolg zählen. Nach Schätzung bleibt genug Spielraum. | ⚠️ im Lauf ansehen |
+| CS6 | Ohne Befund: Laufzeitfehler, alte Schlüssel im übrigen Code, Gleichschritt (TV hängt nur an Ansehen, Liga und Wertung, alle vor `tvSaison` gesetzt), Rangfolge der Wertung, Kommentare mitten in der Zeile, die neuen Tests 14 bis 16 und 18 (18 nur grob). | ✅ |

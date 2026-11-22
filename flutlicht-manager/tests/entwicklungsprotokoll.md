@@ -59,6 +59,12 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 22.11.2026: Korrekturen zu K23c nach einer Prüfung ohne Laufzeit (Zweig `mitarbeit/popolupo-k32-karriereende`)
+
+- Ein lesender Prüf-Agent hat K23c (cfe0f41) durchgesehen, Konsistenzprüfung CS.
+- **Behoben:** `tests/schwierigkeit.js` mit alter Kreditformel (CS1), ungerundete Werbung bei Computer-Vereinen (CS2, sonst scheitert `tests/finanzen.js` Nr. 11), Fünfjahreswertung in der Regionalliga (CS3), alte Spielstände: auch vorgemerkte Wechsel und Werbeverträge umrechnen (CS4).
+- **Tests zuerst:** `tests/schwierigkeit.js`, `tests/finanzen.js` (Nr. 11, 17).
+
 ### 22.11.2026: Karriereende nach K32 §5.1 (Zweig `mitarbeit/popolupo-k32-karriereende`, auf U12e)
 
 - **Neu:** Chance je Saison = Grundwert nach Alter × Niveau × Verletzung × Professionalität statt „ab 34 je Jahr 25 %, spätestens 38“ (`karriereChance`, `karriereEnde` in `js/saison.js`, Auslandspool in `js/ausland.js`). Eigener Strom je Spieler.

@@ -97,8 +97,11 @@ const tagMit=(ev,mmtt)=>{for(let d=0;d<400;d++)if(ev('mmtt')(d)===mmtt)return d;
 
 // 17. K23c: Alte Spielstände: Gehälter einmal auf die neue Kurve umgerechnet, im gleichen Verhältnis zur Kurve wie vorher, ein zweiter Aufruf ändert nichts
 {const {F,S,ev}=welt(),A=ev('RP').gehaltAlt,alt=s=>A.basis*Math.exp(A.steigung*(s-A.mitte)),kurve=ev('salaryFor'),p=S.pl.find(x=>x.team>=0&&x.str>=80),q=S.pl.find(x=>x.team>=0&&x.str<=62);
-  p.sal=Math.round(alt(p.str)*1.2/1000)*1000;q.sal=Math.round(alt(q.str)/1000)*1000;delete S.k23c;F.k23cUmstellen();const sp=p.sal;F.k23cUmstellen();
-  pruef(S.k23c===1&&Math.abs(p.sal/kurve(p.str)-1.2)<0.01&&Math.abs(q.sal-kurve(q.str))<=2000&&p.sal===sp,'K23c: Gehälter alter Spielstände einmal umgerechnet',`${p.n}: ${p.sal} (Kurve ${kurve(p.str)}), ${q.n}: ${q.sal} (Kurve ${kurve(q.str)})`);}
+  p.sal=Math.round(alt(p.str)*1.2/1000)*1000;q.sal=Math.round(alt(q.str)/1000)*1000;p.wech={nach:S.my,sal:Math.round(alt(p.str)/1000)*1000};
+  const t=ev('myT()'),SA=ev('RF').sponsorAlt,brustAlt=Math.round(t.rep*t.rep*SA.liga[t.lg]*SA.anteil.brust),brustNeu=ev('sponsorBasis')(t)*ev('RF').werbung.anteil.brust;if(S.spons)S.spons.base=brustAlt;
+  delete S.k23c;F.k23cUmstellen();const sp=p.sal;F.k23cUmstellen();const vertrag=!S.spons||Math.abs(S.spons.base-brustNeu)<=2000;
+  pruef(S.k23c===1&&Math.abs(p.sal/kurve(p.str)-1.2)<0.01&&Math.abs(q.sal-kurve(q.str))<=2000&&p.sal===sp&&Math.abs(p.wech.sal-kurve(p.str))<=2000&&vertrag,'K23c: Gehälter, vorgemerkte Wechsel und Werbeverträge alter Spielstände einmal umgerechnet',
+    `${p.n}: ${p.sal} (Kurve ${kurve(p.str)}), Wechsel ${p.wech.sal}, ${q.n}: ${q.sal} (Kurve ${kurve(q.str)}), Brust ${S.spons&&S.spons.base} (Soll ${Math.round(brustNeu)})`);}
 
 // 18. K23c: Größenordnungen in der neuen Welt: Gehälter je Liga, Kaderwerte, Startkonto und Kreditrahmen wachsen mit dem Ansehen (Grenzen grob, Modellrechnung K23 §5.6b)
 {const {S,ev}=welt(),sq=ev('squad'),val=ev('value'),kr=ev('kreditRahmen'),lg=l=>S.teams.filter(x=>x.lg===l),schnitt=(l,f)=>lg(l).reduce((a,x)=>a+sq(x.id).reduce((b,p)=>b+f(p),0),0)/lg(l).length;

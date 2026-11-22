@@ -10,7 +10,7 @@ const R={};for(const k of ['leicht','normal','schwer'])R[k]=welt(k);
 const St=k=>R.normal.W.ev('REGELN').schwierigkeit.stufen[k];
 for(const k of ['leicht','normal','schwer']){const {W,S,vorher}=R[k],t=W.ev('myT()'),kr=W.ev('kreditRahmen'),basis=W.ev('RF').kreditRahmen;
   pruef(Math.abs(t.cash-Math.round(vorher.cash*St(k).konto))<=1,`${St(k).name}: Startkonto ×${St(k).konto}`,`${vorher.cash} → ${t.cash}`);
-  pruef(Math.abs(kr(t)-(basis.basis+t.rep*basis.jeAnsehen)*St(k).kredit)<1,`${St(k).name}: Kreditrahmen ×${St(k).kredit}`);
+  pruef(Math.abs(kr(t)-Math.round(basis.basis*Math.exp(basis.steigung*(t.rep-basis.mitte))/basis.runden)*basis.runden*St(k).kredit)<1,`${St(k).name}: Kreditrahmen ×${St(k).kredit}`); // Formel seit K23c
   const z=k==='leicht'?vorher.ziel+1:k==='schwer'?vorher.ziel-1:vorher.ziel;pruef(S.target===z||(k==='schwer'&&S.target===vorher.ziel),`${St(k).name}: Saisonziel`,`${vorher.ziel} → ${S.target}`);
   const aus=Object.keys(W.ev('RK').erinnerungen).filter(e=>!W.ev('erinnerungAn')(e)).length;pruef(St(k).erinnerungen?aus===0:aus===Object.keys(W.ev('RK').erinnerungen).length,`${St(k).name}: Erinnerungen ${St(k).erinnerungen?'an':'aus'}`);
   const p=W.S.pl.find(x=>x.team===VEREIN);p.tf=1;p.wiv=0;pruef(W.ev('sternFehler')(p)===(St(k).sterneGenau?0:1),`${St(k).name}: Talentsterne neuer Spieler ${St(k).sterneGenau?'genau':'unscharf'}`);}

@@ -214,6 +214,7 @@ const REGELN={
     // Werbung (K23c, vorläufig): Grundbetrag je Ligaspiel = basis × e^(steigung × (Ansehen − mitte)) × liga. Vorher Ansehen² × 45, 18 oder 8.
     // Echt (DFL 2023/24): 1. Liga im Schnitt 57 Mio. € je Saison, 3. Liga 5,8 Mio. €. Im Spiel: 1. Liga etwa 53 Mio. € (Ansehen 95 etwa 200 Mio. €, 55 etwa 15 Mio. €),
     // 2. Liga etwa 8 Mio. €, 3. Liga etwa 4 Mio. €. Davon teilen sich Trikotbrust, Ausrüster und Ärmel den Anteil werbung.anteil, den Rest (werbung.partner) zahlen weitere Partner.
+    sponsorAlt:{liga:{1:45,2:18,3:8},anteil:{brust:0.6,ausruester:0.29,aermel:0.11}}, // Werbung vor K23c (Ansehen² × liga × anteil), nur zum Umrechnen alter Verträge (welt.js k23cUmstellen)
     sponsor:{basis:1.15e6,steigung:0.065,mitte:70,liga:{1:1,2:0.65,3:0.6},
       angebote:[
         {fix:1,sieg:0,jahre:1,info:'Festes Geld pro Spieltag, 1 Saison'},

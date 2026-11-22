@@ -12,7 +12,7 @@ const extDemand=p=>{const g=RM.gehalt;return Math.round(salaryFor(p.str)*(g.basi
 const kreditRahmen=t=>{const K=RF.kreditRahmen;return Math.round(K.basis*Math.exp(K.steigung*(t.rep-K.mitte))/K.runden)*K.runden*(t.id===S.my?stufe().kredit:1);};
 const startKonto=rep=>{const K=RW.konto;return Math.round(K.basis*Math.exp(K.steigung*(rep-K.mitte))/K.runden)*K.runden;};
 // Grundbetrag der Werbung je Ligaspiel (K23c): Grundlage der Angebote für Brust, Ausrüster und Ärmel, der weiteren Partner und der Werbung der Computer-Vereine
-const sponsorBasis=t=>{const P=RF.sponsor;return P.basis*Math.exp(P.steigung*(t.rep-P.mitte))*(P.liga[t.lg]||P.liga[3]);};
+const sponsorBasis=t=>{const P=RF.sponsor;return Math.round(P.basis*Math.exp(P.steigung*(t.rep-P.mitte))*(P.liga[t.lg]||P.liga[3]));}; // gerundet, damit Kontostände ganze Euro bleiben
 // Schwierigkeit (K02 §5.4): Spielstände ohne Angabe gelten als „Normal“
 const stufe=()=>REGELN.schwierigkeit.stufen[S.stufe]||REGELN.schwierigkeit.stufen[REGELN.schwierigkeit.standard];
 function stufeAnwenden(k){S.stufe=REGELN.schwierigkeit.stufen[k]?k:REGELN.schwierigkeit.standard;const St=stufe(),t=myT();t.cash=Math.round(t.cash*St.konto);
@@ -35,11 +35,19 @@ const tvRang=t=>S.teams.filter(x=>x.lg===t.lg).sort((a,b)=>tvWertung(b)-tvWertun
 const tvGeld=t=>Math.round(tvSaisonBetrag(t)/((S.fx&&S.fx[t.lg]||[]).length||(t.lg===3?38:34)));
 // Spielstände von vor K23c (ohne S.k23c): Gehälter einmal auf die neue Kurve umrechnen (gleiches Verhältnis zum Gehalt nach Stärke wie vorher), damit sich niemand
 // plötzlich unterbezahlt fühlt (kabine.js). Kontostände, Verträge mit Sponsoren und Kredite bleiben, sie gleichen sich über die Saisons an. Aufruf nach dem Laden.
-function k23cUmstellen(){if(!S||S.k23c)return;const A=RP.gehaltAlt,alt=s=>A.basis*Math.exp(A.steigung*(s-A.mitte)),neu=p=>{if(p&&p.sal>0)p.sal=Math.max(1000,Math.round(p.sal*salaryFor(p.str)/alt(p.str)/1000)*1000);};
-  S.pl.forEach(neu);if(S.ausland)S.ausland.pl.forEach(neu);if(S.jg)S.jg.forEach(neu);if(S.zw)S.zw.forEach(neu);S.k23c=1;}
+// Dazu vorgemerkte Wechsel (p.wech.sal) und deine Werbeverträge (Brust, Ausrüster, Ärmel: Betrag mal neuer durch alten Grundbetrag der Fläche, Prüfung CS4).
+function k23cUmstellen(){if(!S||S.k23c)return;const A=RP.gehaltAlt,alt=s=>A.basis*Math.exp(A.steigung*(s-A.mitte)),um=(v,s)=>Math.max(1000,Math.round(v*salaryFor(s)/alt(s)/1000)*1000);
+  const neu=p=>{if(!p)return;if(p.sal>0)p.sal=um(p.sal,p.str);if(p.wech&&p.wech.sal>0)p.wech.sal=um(p.wech.sal,p.str);};
+  S.pl.forEach(neu);if(S.ausland)S.ausland.pl.forEach(neu);if(S.jg)S.jg.forEach(neu);if(S.zw)S.zw.forEach(neu);
+  const t=S.teams&&S.teams[S.my],SA=RF.sponsorAlt;
+  if(t&&SA){const sk=(v,f)=>{const a=t.rep*t.rep*(SA.liga[t.lg]||SA.liga[3])*(SA.anteil[f]||0);if(!v||!a)return;const q=sponsorBasis(t)*(RF.werbung.anteil[f]||0)/a;
+      v.base=Math.round(v.base*q/1000)*1000;if(v.win)v.win=Math.round(v.win*q/1000)*1000;};
+    if(S.spons)sk(S.spons,'brust');Object.entries(S.werbung||{}).forEach(([f,w])=>sk(w,f));}
+  S.k23c=1;}
 // Am Saisonende (saison.js): Punkte der Saison in die Fünfjahreswertung, Gesamtplatz aus Liga und Tabellenplatz (t.lastPos)
 function tvWertungEintragen(){if(S.teams.some(t=>t.tv0==null))tvPunkteStart();const off={};let n=0;LIGEN.forEach(lg=>{off[lg]=n;n+=lgIds(lg).length;});
-  S.teams.forEach(t=>{if(!aktiv(t)||!t.lastPos)return;t.tvw=[Math.max(0,n+1-(off[t.lg]+t.lastPos))].concat(t.tvw||[]).slice(0,RF.tv.gewichte.length);});}
+  S.teams.forEach(t=>{if(!aktiv(t)){if(t.tvw)t.tvw=[0].concat(t.tvw).slice(0,RF.tv.gewichte.length);return;} // Regionalliga: Saison mit 0 Punkten, damit ältere Saisons nachrücken
+    if(!t.lastPos)return;t.tvw=[Math.max(0,n+1-(off[t.lg]+t.lastPos))].concat(t.tvw||[]).slice(0,RF.tv.gewichte.length);});}
 const richtPreis=t=>RF.zuschauer.refBasis+t.rep*RF.zuschauer.refJeAnsehen;
 // Talent als Band aus der Sterne-Stufe: zeigt dieselbe Auskunft wie die Sterne, nur als Regler
 function talentBand(p){const s=Math.round(p.str),st=RP.sterne,n=clamp(sternZahl(p)+sternFehler(p),1,4);const[a,b]=n===4?[st[0],99]:n===3?[st[1],st[0]]:n===2?[st[2],st[1]]:[0,st[2]];return[Math.min(99,s+a),Math.min(99,s+b)];}
