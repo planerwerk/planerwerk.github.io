@@ -130,6 +130,8 @@ Gleiches Modell für Nachfrage, Dauerkarten und Fanstimmung. Ihre Fanstimmung wi
 | Platzsturm | Aufstieg | Feier |
 | Fans wollen reden (Entscheidung) | Fanstimmung unter 25 | Gespräch (5.4) oder ablehnen |
 
+**Gebaut als K27c (22.11.2026, popolupo, ohne Testlauf), Karten nach K30:** „Protest gegen Ticketpreise“ (Preis über 1,3 × Richtpreis bei Fanstimmung unter 50; senken setzt den Richtpreis, neue Kartenwirkung `preisRichtwert`, Fans +2; halten Fans −3) und „Pfiffe gegen den eigenen Spieler“ (ab Wechselwunsch Stufe 3; in Schutz nehmen Stimmung +3, Fans −1; schweigen Stimmung −3). „Fans wollen reden“ gibt es schon als Fan-Gespräch im Büro (U16), Jubiläum und Platzsturm fehlen noch (Gründungsjahre, Aufstiegsfeier).
+
 ## 9. Wechselwirkungen
 
 K03 (Publikumsliebling), K04 (Heimvorteil), K08 (Identifikation), K09 (Pyro, Platzsturm), K14 (Umfeld), K15 (Gespräche), K23 (Spieltag), K24 (Sponsor, Stadionname), K25 (Fanartikel, Kampagnen), K26 (Kapazität), K28 (Vertrauen), K29 (Presse).

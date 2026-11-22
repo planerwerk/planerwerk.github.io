@@ -84,6 +84,15 @@ const KARTEN=[
     texte:['{verein} hat ein Auge auf {spieler} aus deiner Jugend geworfen. Sein Berater lässt durchblicken: Ohne Profivertrag ist er weg.','Die Scouts von {verein} saßen bei jedem Jugendspiel von {spieler}. Jetzt liegt ein Angebot auf dem Tisch.'],
     optionen:[{text:'Profivertrag anbieten',wirkung:[{art:'jugendHoch',wert:1},{art:'fans',wert:1}],folge:'{verein} geht leer aus.'},
       {text:'Ziehen lassen',wirkung:[{art:'jugendWeg',wert:1}],folge:''}],auto:0},
+  // Fans (K27 §8, K27c, 22.11.). Neue Wirkung preisRichtwert: dein Ticketpreis auf den Richtpreis.
+  {id:'ticketProtest',titel:'Protest gegen Ticketpreise',bereich:'K27',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'ticketProtest',sperrTage:90,
+    texte:['In der Kurve hängt ein Banner: „Fußball muss bezahlbar bleiben!“ Die Fanclubs fordern niedrigere Ticketpreise.','Die Fanszene ruft zum Protest gegen die Ticketpreise auf. Beim nächsten Heimspiel wollen sie die ersten zehn Minuten schweigen.'],
+    optionen:[{text:'Preise senken',wirkung:[{art:'preisRichtwert',wert:1},{art:'fans',wert:2}],folge:'Die Fans feiern den Erfolg ihres Protests.'},
+      {text:'Preise halten',wirkung:[{art:'fans',wert:-3}],folge:'Die Fronten verhärten sich.'}],auto:1},
+  {id:'pfiffe',titel:'Pfiffe gegen den eigenen Spieler',bereich:'K27',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'pfiffe',sperrTage:120,
+    texte:['Seit {spieler} wechseln will, pfeifen ihn die eigenen Fans bei jeder Ballberührung aus.','„Söldner!“ steht auf einem Plakat in der Kurve. Gemeint ist {spieler}, der den Verein verlassen will.'],
+    optionen:[{text:'Ihn öffentlich in Schutz nehmen',wirkung:[{art:'stimmung',wert:3},{art:'fans',wert:-1}],folge:'{spieler} dankt es dir. Ein Teil der Kurve ist sauer.'},
+      {text:'Schweigen',wirkung:[{art:'stimmung',wert:-3}],folge:'{spieler} fühlt sich allein gelassen.'}],auto:0},
   // Stab (K16 §8, K16c, 22.11.). Neue Wirkungen stabWeg (Wechsel mit Ablöse) und stabHalten (Gehalt + wert), neuer Platzhalter {mitarbeiter}.
   {id:'stabAbgeworben',titel:'Mitarbeiter abgeworben',bereich:'K16',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'stabAbgeworben',sperrTage:365,
     texte:['{verein} will {mitarbeiter} aus deinem Stab holen und bietet ihm deutlich mehr Verantwortung.','{mitarbeiter} hat ein Angebot von {verein} auf dem Tisch. Er fragt, ob du ihn ziehen lässt.'],

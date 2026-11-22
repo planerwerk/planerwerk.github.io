@@ -126,6 +126,15 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   pruef(!!b0&&halten&&weg&&text.includes(x.n)&&text.includes(R.rollen.athletik.name),'Mitarbeiter abgeworben: Auslöser, halten mit mehr Gehalt, wechseln mit Ablöse, Platzhalter',
     `Auslöser ${!!b0}, halten ${halten}, wechseln ${weg} (${geld} €), Text ${text}`);}
 
+// K27c. Fan-Karten (K27 §8): Protest nur bei Preis weit über dem Richtpreis und schlechter Fanstimmung, die Wirkung preisRichtwert setzt den Richtpreis;
+//       Pfiffe nur gegen einen Spieler mit offiziellem Wechselwunsch
+{const {S,ev}=welt(),A=ev('AUSLOESER'),F=ev('RKT').fans,t=ev('myT()'),rp=ev('richtPreis')(t);S.phase='play';
+  t.price=Math.round(rp*F.preisFaktor+5);t.fanst=F.protestUnter-10;const ja=!!A.ticketProtest();t.fanst=F.protestUnter+10;const gut=A.ticketProtest();t.fanst=F.protestUnter-10;
+  t.price=Math.round(rp);const billig=A.ticketProtest();t.price=Math.round(rp*F.preisFaktor+5);ev('kartenWirkung')({art:'preisRichtwert',wert:1},{},{titel:'Test'});const gesenkt=t.price===Math.round(rp)||t.price===ev('RF').ticketPreis.min||t.price===ev('RF').ticketPreis.max;
+  const sq=ev('squad')(S.my);sq.forEach(p=>{p.ww=0;});const keine=A.pfiffe();sq[0].ww=F.wwAb;const pf=A.pfiffe();
+  pruef(ja&&gut===null&&billig===null&&gesenkt&&keine===null&&!!pf&&pf.spieler===sq[0].id,'Fan-Karten: Protest bei hohem Preis und schlechter Stimmung, Preis auf Richtwert, Pfiffe bei Wechselwunsch',
+    `Protest ${ja}, gute Stimmung ${gut}, billig ${billig}, gesenkt ${gesenkt}, Pfiffe ${pf&&pf.spieler===sq[0].id}`);}
+
 // U19e. Europapokal-Karten (K37 §8): Auswärtsspiel bei einem Auslandsverein in den nächsten 7 Tagen (kein Heimspiel, nicht später, nicht das Finale), Spiel 1 bis 7 Tage her,
 //       Wunder nach 0:3 im Hinspiel und 4:0 oder 3:0 mit Elfmeterschießen im Rückspiel, nicht nach nur einem Tor Rückstand und nicht beim Ausscheiden. euMeineSpiele ersetzt der Test.
 {const {S,W,ev}=welt(),A=ev('AUSLOESER'),AV=ev('AV0'),me=S.my,d=S.tag;W.ev('euMeineSpiele=function(){return S.testEu||[];}');
