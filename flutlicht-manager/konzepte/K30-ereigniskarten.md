@@ -240,6 +240,12 @@ Noch nicht gebaut: verzögerte Folgen ohne eigene Karte, die Chronik über alle 
 4. **Keine Lizenzprüfung im Auslöser** (wie bei allen Karten). Das Angebot machst du auf dem Transfermarkt, dort gelten Lizenz und Transfersperre.
 5. **Werte geschätzt** (`REGELN.karten.dritter`, Kosten, Chancen und Nachlass im Katalog).
 
+**Folgewirkungen nur bei Erfolg (`dann`, seit Prüfung EE, 22.11.2026):**
+
+- Eine Wirkung kann `dann:[…]` tragen. Diese Wirkungen kommen nur, wenn die erste geklappt hat, dazu ihr Text `gut`. Sonst zeigt die Karte den Grund des Scheiterns.
+- Erlaubt ist `dann` nur bei Wirkungen, die Erfolg melden (`KARTEN_MIT_ERFOLG`): `leihe`, `gehaltAnpassen`, `provisionZahlen`. Das prüfen `tests/karten.js` Fall 1 und `kartenpruefung.pl`.
+- Grund: Bei „Hilfe in der Not“, „Berater droht“, „Gehaltsneid“ und „Provisionsstreit“ kamen Beziehung und Stimmung auch dann, wenn die Leihe, die Erhöhung oder die Zahlung nicht zustande kam.
+
 ## 6. Hebel des Spielers
 
 - Entscheidungen in den Karten.

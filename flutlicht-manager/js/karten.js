@@ -59,10 +59,11 @@ const AUSLOESER={
   formkrise(){if(S.phase!=='play')return null;const l=squad(S.my).filter(p=>!(p.inj>0)&&p.form<=RKT.form.kriseBis);return l.length?{spieler:pick(l).id}:null;},
   formhoch(){if(S.phase!=='play')return null;const l=squad(S.my).filter(p=>!(p.inj>0)&&p.form>=RKT.form.hochAb);return l.length?{spieler:pick(l).id}:null;},
   // Berater droht mit Wechsel (K21 §8, K22 §8, K22c): ein Spieler deines Kaders im letzten Vertragsjahr mit einem gierigen Berater
-  beraterDroht(){const l=squad(S.my).filter(p=>p.ct<=1&&!p.wech&&!p.leihe&&(beraterVon(p)||{}).prof==='gierig');return l.length?{spieler:pick(l).id}:null;},
+  beraterDroht(){const l=squad(S.my).filter(p=>p.ct<=1&&!p.wech&&!p.leihe&&p.sal<salaryFor(p.str)&&(beraterVon(p)||{}).prof==='gierig'); /* nur unter dem Marktgehalt, sonst kostet Nachgeben nichts (Prüfung EE5) */return l.length?{spieler:pick(l).id}:null;},
   // Hilfe in der Not (K17 §8, K17b): ab RKT.hilfe.verletzteAb Verletzten im offenen Fenster; ein Verein mit Beziehung über bezAb hat einen Spieler, den er abgeben würde (RLE.holenRollen)
   hilfeInNot(){const H=RKT.hilfe;if(!fensterOffen()||squad(S.my).filter(p=>p.inj>0).length<H.verletzteAb)return null;const l=[];
-    S.teams.forEach(b=>{if(b.id===S.my||!aktiv(b)||bezWirk(b.id)<=H.bezAb)return;squad(b.id).forEach(p=>{if(!p.wech&&!p.leihe&&!(p.inj>0)&&RLE.holenRollen.includes(kaderRolle(p)))l.push({spieler:p.id,verein:b.id});});});
+    /* Prüfung EE2: nur Spieler, die die Leihe auch zuließe (ausleihenGrund), nicht aus der Zweiten, und der Verleiher behält mehr als kaderMin Spieler (wie kiLeihbar) */
+    S.teams.forEach(b=>{if(b.id===S.my||!aktiv(b)||bezWirk(b.id)<=H.bezAb)return;const sq=squad(b.id);if(sq.length<=RM.verkaeufer.kaderMin)return;sq.forEach(p=>{if(!(p.inj>0)&&!p.zwP&&!ausleihenGrund(p))l.push({spieler:p.id,verein:b.id});});});
     return l.length?pick(l):null;},
   // Der lachende Dritte (K30 §8.3, K17 §5.4, K30c): im offenen Fenster ein Spieler auf der Transferliste eines Computer-Vereins, für den mindestens zwei andere Computer-Vereine
   // mitbieten könnten (mitbieter, wie im Bieterwettstreit K20c) und der in deinen Kader passt (hatBedarf). Du kennst seinen Berater (Beziehung ab RKT.dritter.beraterAb)
@@ -130,7 +131,7 @@ function entscheidungImBudget(c,W,d){const E=RKT.entscheidung,D=kartenDichte();i
 function kartenWoche(d){if(S.phase!=='play'||S.fired)return;const K=karten(),W=kartenBudget(d),heute=absTag(d);
   for(const c of shuffle(KARTEN.filter(c=>!c.nurKette))){const hit=R()<1/(RKT.seltenheit[c.stufe]*RKT.wochenJeSaison);if(!hit)continue; /* Folgekarten kommen nur über kartenKette (K30c) */
     if(c.stufe==='sehrSelten'&&K.einmal[c.id])continue;const f=AUSLOESER[c.ausloeser];if(!f)continue;const b=f();if(!b)continue;
-    const key=[c.id,b.spieler!=null?b.spieler:b.stab!=null?'s'+b.stab:'',b.verein!=null?b.verein:''].join(':'); /* Mitarbeiter als Beteiligter (Prüfung ED3) */if(K.sp[key]!=null&&heute-K.sp[key]<(c.sperrTage||RKT.sperrTage))continue;
+    const key=[c.id,b.spieler!=null?b.spieler:b.stab!=null?'s'+b.stab:'',b.stab==null&&b.verein!=null?b.verein:''].join(':'); /* Mitarbeiter als Beteiligter (Prüfung ED3), je Mitarbeiter ohne den Verein (EE3) */if(K.sp[key]!=null&&heute-K.sp[key]<(c.sperrTage||RKT.sperrTage))continue;
     let halt=false;if(c.art==='entscheidung')halt=entscheidungImBudget(c,W,d);
     if(halt)kartenHaltZaehlen(c,W);else if(c.art==='info'){if(W.info>=kartenDichte().info)continue;W.info++;} /* Entscheidungen ohne Halt entscheidet der Co-Trainer, sie fallen nicht weg (Prüfung DY8) */
     K.sp[key]=heute;if(c.stufe==='sehrSelten')K.einmal[c.id]=1;kartenZeigen(c,b,d,halt);}}
@@ -170,7 +171,8 @@ function karteWaehlen(n,i){const k=karten().offen[n];if(!k)return;if(!darf('erei
 // wie in einer Welt, in der der Co-Trainer gleich entschieden hätte (Gleichschritt in tests/lizenz.js).
 function kartenAuto(d){const K=S.karten;if(!K||!K.offen.length)return;K.offen.filter(k=>k.tag<=d||k.s!==S.season).forEach(k=>{const c=karteVon(k.id);if(c)kartenEntscheiden(k,c.auto,'spaet');else K.offen=K.offen.filter(x=>x!==k);});}
 // Erlaubte Wirkungen (K30 §3.2). Rückgabe: Text zum Ausgang (bei Wirkungen mit Chance) oder ''
-function kartenWirkung(w,b,c){let wert=w.wert,txt='';if(w.chance!=null){const ok=R()<w.chance;wert=ok?w.wert:(w.schlecht||0);txt=ok?(w.gut||''):(w.schlechtText||'');}
+// dann (Prüfung EE2, EE5, EE6): Folgewirkungen nur, wenn die Wirkung geklappt hat (nur bei KARTEN_MIT_ERFOLG), dazu der Text gut. Sonst der Grund des Scheiterns.
+function kartenWirkung(w,b,c){let wert=w.wert,txt='',erfolg=true;if(w.chance!=null){const ok=R()<w.chance;wert=ok?w.wert:(w.schlecht||0);txt=ok?(w.gut||''):(w.schlechtText||'');}
   const p=b.spieler!=null?PIX.get(b.spieler):null;
   if(w.art==='stimmung'){if(p&&p.team===S.my)stimmungAendern(p,wert);}
   else if(w.art==='stimmungAlle')squad(S.my).forEach(x=>stimmungAendern(x,wert));
@@ -192,19 +194,22 @@ function kartenWirkung(w,b,c){let wert=w.wert,txt='';if(w.chance!=null){const ok
   else if(w.art==='jugendWeg'){const v=b.verein!=null?S.teams[b.verein]:null;if(p&&v&&aktiv(v)&&istJugend(p)&&(S.jg||[]).includes(p))karteJugendWeg(p,v);} /* K08c: wechselt wirklich zum lockenden Verein */
   else if(w.art==='stabWeg'||w.art==='stabHalten'){const x=b.stab!=null?(S.stab||[]).find(y=>y.id===b.stab):null,v=b.verein!=null?S.teams[b.verein]:null;if(x&&x.team===S.my)karteStab(x,v,w.art==='stabWeg',wert);} /* K16c */
   else if(w.art==='preisRichtwert'){const t=myT();t.price=Math.min(t.price,clamp(Math.round(richtPreis(t)),RF.ticketPreis.min,RF.ticketPreis.max));} /* K27c: Ticketpreis höchstens auf den Richtpreis, nie hinauf (Prüfung ED1) */
-  else if(w.art==='gehaltAnpassen'){if(p&&p.team===S.my){const neu=Math.max(p.sal,Math.round(salaryFor(p.str)*wert/1000)*1000);if(!rahmenErlaubt(myT(),neu-p.sal))txt='Der Vorstand gibt die Erhöhung nicht frei (Gehaltsrahmen).';else p.sal=neu;}} /* K21c */
+  else if(w.art==='gehaltAnpassen'){erfolg=false;if(p&&p.team===S.my){const neu=Math.max(p.sal,Math.round(salaryFor(p.str)*wert/1000)*1000);if(neu<=p.sal)txt=`${p.n} verdient schon so viel.`;else if(!rahmenErlaubt(myT(),neu-p.sal))txt='Der Vorstand gibt die Erhöhung nicht frei (Gehaltsrahmen).';else{p.sal=neu;erfolg=true;}}else if(p)txt=`${p.n} ist nicht mehr bei dir.`;} /* K21c, Erfolg nur mit Erhöhung (EE5) */
   else if(w.art==='beraterBez'){if(p)beraterBeziehung(p,wert);} /* K21c: Beziehung zum Berater des Spielers */
-  else if(w.art==='provisionZahlen'){if(p&&p.team===S.my&&wert)money('Ereignisse',kartenGeld(wert));else if(p)txt=`${p.n} ist nicht mehr bei dir, du zahlst nichts.`;} /* K21c: nur, solange er bei dir ist (Prüfung ED6) */
+  else if(w.art==='provisionZahlen'){if(p&&p.team===S.my&&wert)money('Ereignisse',kartenGeld(wert));else{erfolg=false;if(p)txt=`${p.n} ist nicht mehr bei dir, du zahlst nichts.`;}} /* K21c: nur, solange er bei dir ist (Prüfung ED6, EE6) */
   else if(w.art==='zuschuss'){const c=S.constr;if(c&&!c.zuschuss&&(b.bau==null||c.ab===b.bau)){ /* nur das Projekt, um das es ging (Prüfung ED6) */const x=Math.round(c.kosten*wert/1000)*1000;c.zuschuss=x;money('Stadionbau',x);txt=`Die Stadt überweist ${fmt(x)}.`;}} /* K26e: Anteil wert der Baukosten */
   else if(w.art==='sonderschicht'){if(p&&p.team===S.my){p.ko=Math.min(100,(p.ko||0)+wert);p.fit=Math.max(RE.fitnessMin,p.fit-RKT.sommer.sonderFrische);}} /* K12c: Kondition +wert, Frische − sonderFrische */
-  else if(w.art==='leihe'){if(p&&b.verein!=null&&p.team===b.verein){const f=ausleihen(p);if(f)txt=f;}} /* K17b: Leihe über ausleihen (leihe.js), mit allen ihren Prüfungen */
+  else if(w.art==='leihe'){erfolg=false;if(!frei('leihe'))txt='Die Leihen führt noch der Verein.'; /* Lizenz wie beim Ausleihen von Hand (Prüfung EE1) */
+    else if(p&&b.verein!=null&&p.team===b.verein){const f=ausleihen(p);if(f)txt=f;else erfolg=true;}else if(p)txt=`${p.n} ist nicht mehr zu haben.`;} /* K17b: Leihe über ausleihen (leihe.js), mit allen ihren Prüfungen */
   else if(w.art==='selbstvertrauen'){if(p&&p.team===S.my)svAendern(p,wert);} /* K03b */
   else if(w.art==='pause'){if(p&&p.team===S.my){p.fit=Math.min(100,p.fit+wert);p.sp=Math.max(0,(p.sp||0)-RKT.training.pauseSpielpraxis);}} /* K07c: Frische +wert, etwas Spielpraxis weg */
   else if(w.art==='dritter'){if(p&&p.team===b.verein&&b.mit){const m=p.ld3&&p.ld3.s===S.season&&p.ld3.t===S.my?p.ld3:null;p.ld3={s:S.season,t:S.my,v:b.verein,mit:b.mit.slice(),leise:Math.max(wert||0,m?m.leise:0)};}} /* K30c: Merker für den Ausgang (dritterKauf) */
   else if(w.art==='nachlass'){if(!p||p.team!==b.verein||p.wech)txt=`${p?p.n:'Der Spieler'} ist nicht mehr zu haben.`; /* K30c: wert > 0 senkt die Forderung um diesen Anteil, wert < 0 (aufgeflogen) kostet Beziehung */
     else if(wert>0){const v=verhandlung(p),f=rundeAb(forderungDu(p)*(1-wert));v.f=v.f!=null?Math.min(v.f,f):f;if(p.ld3)p.ld3.leise=1;}
     else if(wert<0){bezDuAendern(b.verein,wert,c.titel);if(p.ld3)p.ld3.leise=0;}}
+  if(w.dann&&erfolg&&KARTEN_MIT_ERFOLG.includes(w.art)){const t=w.dann.map(x=>kartenWirkung(x,b,c)).filter(Boolean);txt=[w.gut||'',...t].filter(Boolean).join(' ');}
   return txt;}
+const KARTEN_MIT_ERFOLG=['leihe','gehaltAnpassen','provisionZahlen']; // Wirkungen, die melden, ob sie geklappt haben (für dann)
 const KARTEN_WIRKUNGEN=['stimmung','stimmungAlle','zusammenhalt','glaub','vertrauen','ruf','bezDu','geld','fans','verpflichten','interesse','angebot','maezen','merch','jobwechsel','pause','talent','jugendHoch','jugendWeg','stabWeg','stabHalten','preisRichtwert','gehaltAnpassen','beraterBez','zuschuss','sonderschicht','leihe','selbstvertrauen','provisionZahlen','dritter','nachlass'];
 // Ausgang des lachenden Dritten (K30 §8.3, K17 §5.4, K30c): Unterschreibt der Spieler bei dir (aktionen.js offer, vor dem Abschluss), sinkt die Beziehung zwischen den beiden
 // anderen Vereinen um RKT.dritter.zwischen, deine zu ihnen um RKT.dritter.du, nach geschicktem Vorgehen (leise) gar nicht. Nur in derselben Saison, vom selben Verein, für deinen Verein.

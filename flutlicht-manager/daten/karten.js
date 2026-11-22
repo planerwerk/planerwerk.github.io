@@ -95,12 +95,12 @@ const KARTEN=[
   // Berater droht mit Wechsel (K21 §8, K22 §8, K22c, 22.11.). Nur bekannte Wirkungen.
   {id:'beraterDroht',titel:'Berater droht mit Wechsel',bereich:'K22',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'beraterDroht',sperrTage:365,
     texte:['Der Berater von {spieler} lässt über die Presse ausrichten: Ohne deutlich mehr Geld wechselt sein Mandant im Sommer ablösefrei.','„Andere Vereine stehen Schlange“, sagt der Berater von {spieler}. Er will sofort eine Gehaltserhöhung sehen.'],
-    optionen:[{text:'Nachgeben',wirkung:[{art:'gehaltAnpassen',wert:1},{art:'beraterBez',wert:5},{art:'stimmung',wert:2}],folge:'Der Berater ist zufrieden. Die Verhandlung über den neuen Vertrag wird nicht billiger.'},
+    optionen:[{text:'Nachgeben',wirkung:[{art:'gehaltAnpassen',wert:1,dann:[{art:'beraterBez',wert:5},{art:'stimmung',wert:2}],gut:'Der Berater ist zufrieden. Die Verhandlung über den neuen Vertrag wird nicht billiger.'}],folge:''},
       {text:'Standhaft bleiben',wirkung:[{art:'beraterBez',wert:-10},{art:'stimmung',wert:-2},{art:'glaub',wert:1}],folge:'Du lässt dich nicht erpressen. {spieler} ist verunsichert.'}],auto:1},
   // Hilfe in der Not (K17 §8, K17b, 22.11.). Neue Wirkung leihe: der beteiligte Spieler kommt per Leihe (leihe.js ausleihen, mit allen Prüfungen).
   {id:'hilfeInNot',titel:'Hilfe in der Not',bereich:'K17',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'hilfeInNot',sperrTage:120,
     texte:['Bei dir fallen so viele Spieler aus, dass man es bei {verein} mitbekommen hat. Sie bieten dir {spieler} bis zum Saisonende an.','Ein Anruf von {verein}: „Ihr habt doch gerade Personalnot. {spieler} könnte euch helfen, als Leihe.“'],
-    optionen:[{text:'Leihe annehmen',wirkung:[{art:'leihe',wert:1},{art:'bezDu',wert:5}],folge:''},
+    optionen:[{text:'Leihe annehmen',wirkung:[{art:'leihe',wert:1,dann:[{art:'bezDu',wert:5}]}],folge:''},
       {text:'Danke, wir kommen zurecht',wirkung:[],folge:'{verein} hat Verständnis.'}],auto:1},
   // Presse (K29 §8, K17 §8, K29k, 22.11.). Nur bekannte Wirkungen.
   {id:'leck',titel:'Wer war das Leck?',bereich:'K29',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'leck',sperrTage:120,
@@ -129,12 +129,12 @@ const KARTEN=[
   // Verträge (K21 §8, K22 §8, K21c, 22.11.). Neue Wirkungen gehaltAnpassen (Gehalt auf wert × Marktgehalt, im Gehaltsrahmen) und beraterBez (Beziehung zum Berater).
   {id:'gehaltsneid',titel:'Gehaltsneid',bereich:'K21',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'gehaltsneid',sperrTage:180,
     texte:['{spieler} hat erfahren, was die anderen verdienen. Er fühlt sich unterbezahlt und sagt das auch.','In der Kabine wird über Gehälter geredet. {spieler} verdient deutlich weniger, als er wert ist, und ist sauer.'],
-    optionen:[{text:'Gehalt anpassen',wirkung:[{art:'gehaltAnpassen',wert:0.9},{art:'stimmung',wert:4}],folge:'{spieler} ist zufrieden.'},
+    optionen:[{text:'Gehalt anpassen',wirkung:[{art:'gehaltAnpassen',wert:0.9,dann:[{art:'stimmung',wert:4}],gut:'{spieler} ist zufrieden.'}],folge:''},
       {text:'Ihm die Lage erklären',wirkung:[{art:'stimmung',wert:2,chance:0.5,schlecht:-2,gut:'{spieler} versteht es.',schlechtText:'{spieler} hört nicht zu.'}]},
       {text:'Ignorieren',wirkung:[{art:'stimmung',wert:-4}],folge:'{spieler} zieht sich zurück.'}],auto:1},
   {id:'provision',titel:'Provisionsstreit',bereich:'K22',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'provision',sperrTage:365,
     texte:['Der Berater von {spieler} meldet sich: Beim Wechsel sei eine Provision „vergessen“ worden. Er will {geld:20000}.','Nachforderung vom Berater von {spieler}: {geld:20000} zusätzlich, sonst gebe es Ärger.'],
-    optionen:[{text:'Zahlen',wirkung:[{art:'provisionZahlen',wert:-20000},{art:'beraterBez',wert:5}],folge:'Der Berater ist zufrieden.'},
+    optionen:[{text:'Zahlen',wirkung:[{art:'provisionZahlen',wert:-20000,dann:[{art:'beraterBez',wert:5}],gut:'Der Berater ist zufrieden.'}],folge:''},
       {text:'Nicht zahlen',wirkung:[{art:'beraterBez',wert:-15},{art:'stimmung',wert:-2}],folge:'Der Berater droht, {spieler} ist verunsichert.'}],auto:1},
   // Fans (K27 §8, K27c, 22.11.). Neue Wirkung preisRichtwert: dein Ticketpreis auf den Richtpreis.
   {id:'ticketProtest',titel:'Protest gegen Ticketpreise',bereich:'K27',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'ticketProtest',sperrTage:90,

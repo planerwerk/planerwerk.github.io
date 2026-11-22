@@ -2043,3 +2043,26 @@ Ein Agent hat 4a991fb, e5a65f5, fc1bf59, 9d07188, 7f00d5f, ffa480a und 65c8e73 g
 | ED5 | „Übergewicht“ nahm die Kondition von heute statt des Tests (Altstar mit −20, nach dem Test Geheilte). Jetzt merkt sich `leistungstest` die Auffälligen (`S.lt`), nur sie kommen infrage. | ✅ behoben |
 | ED6 | Späte Entscheidungen: „Provision zahlen“ zahlte auch für einen Spieler, der weg ist (jetzt Wirkung `provisionZahlen` mit Prüfung), „Zuschuss“ konnte ein neueres Projekt treffen (jetzt an `S.constr.ab` gebunden). | ✅ behoben |
 | ED7 | Tests: K21c jetzt sicher im Gehaltsrahmen und mit `beraterBez`, K12c mit `S.lt`, K18d mit `kTisch.von` (EC2), K18e mit dem Weg ohne Scout (EC3). Weiter ohne eigenen Test: EC4, EC5, Urlaubsfoto positiv, `b0.stab` in K16c. | teils offen |
+
+## EE. Prüfung von K13c, K29k, K17b, K22c, K03b und der Korrekturen ED ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat dcf771d, 4188cdc, 276ad82, 829e909, 5faa5fd, 3178f67 und 02f4cbf gelesen (nichts ausgeführt). Kein blockierender Fehler, zwei mittlere, beide in K17b.
+
+**Ohne Befund:**
+
+- K29k: `presseS()` legt `klima` auch in alten Spielständen an.
+- K03b: `pause` und `selbstvertrauen` sind unabhängig.
+- K13c: `winner()` mit Elfmeterschießen, Amateure über `tn`, eine Auslosung je Runde, auch bei geteilter Runde keine doppelte Meldung.
+- ED: `karteStab` ohne Schleife, `S.lt` nach Saison, Verein und Tag geschützt, `S.constr.ab` ändert sich nie.
+- Gleichschritt 5a: Die neuen Teile außerhalb der Karten schreiben nur Meldungen oder `S.lt`.
+
+Korrekturen auf `mitarbeit/popolupo-ee-korrekturen` (auf K30c).
+
+| # | Befund | Status |
+|---|---|---|
+| EE1 | **Mittel: „Hilfe in der Not“ umging die Lizenz der Leihen.** Die Wirkung `leihe` rief `ausleihen` direkt auf, Karten brauchen nur den Bereich `ereignisse` (Stufe 1), Leihen sind erst ab Stufe 3 frei. Jetzt prüft die Wirkung `frei('leihe')` wie `verpflichten` die Transfers („Die Leihen führt noch der Verein.“). Der Auslöser bleibt ohne Lizenzprüfung. | ✅ behoben |
+| EE2 | **Mittel: Der Auslöser bot Spieler an, die die Leihe ablehnt, und die Beziehung +5 kam auch ohne Leihe.** Die Prüfungen von `ausleihen` stehen jetzt in `ausleihenGrund` (ohne Wirkung). Der Auslöser nimmt nur Spieler ohne Grund, nicht aus der Zweiten (`zwP`), und nur, wenn der Verleiher mehr als `kaderMin` Spieler behält (wie `kiLeihbar`). Neu im Katalog: `dann`, Folgewirkungen nur bei Erfolg (`KARTEN_MIT_ERFOLG`: `leihe`, `gehaltAnpassen`, `provisionZahlen`) mit dem Text `gut`. Die Beziehung +5 steht jetzt in `dann`. Der Test K17b prüft die Leihe, die +5 und den Fall mit Lizenz streng. | ✅ behoben |
+| EE3 | Die Sperre von „Mitarbeiter abgeworben“ galt je Mitarbeiter **und** Verein. Ein anderer Verein konnte denselben Mitarbeiter gleich wieder abwerben. Jetzt ohne den Verein, wenn ein Mitarbeiter beteiligt ist. Sperren aus alten Spielständen (Schlüssel mit Verein) gelten einmal nicht mehr. | ✅ behoben |
+| EE4 | „Pokal-Los des Jahres“ kam fast jede Saison schon in Runde 1 (dort ziehen alle Profis Amateure) und konnte sich wiederholen. Jetzt nicht in Runde 1 und höchstens einmal je Saison (`S.cup.losJahr`). Test K13c erweitert. | ✅ behoben |
+| EE5 | „Berater droht“: „Nachgeben“ kostete nichts, wenn der Spieler schon das Marktgehalt bekam, und Beziehung und Stimmung kamen auch, wenn der Vorstand ablehnte. Jetzt nur unter dem Marktgehalt, und Beziehung und Stimmung kommen nur mit Erhöhung (`dann`), sonst nennt die Karte den Grund. Ebenso „Gehaltsneid“. Test K22c erweitert. | ✅ behoben |
+| EE6 | „Provisionsstreit“: Die Beziehung +5 kam auch, wenn der Spieler weg war und nichts gezahlt wurde. Jetzt in `dann`. Test K21c erweitert. | ✅ behoben |

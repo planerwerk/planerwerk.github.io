@@ -31,10 +31,13 @@ function zurueckholen(p){if(!istLeihe(p)||p.leihe.von!==S.my)return'Er ist nicht
 
 // ---------- Leihe holen ----------
 // Ein Verein gibt nur Spieler ab, die bei ihm nicht Stamm- oder Schlüsselspieler sind. Der Spieler will Einsatzzeit: bei dir mindestens Rotation.
-function ausleihen(p){if(transferSperre())return'Transfersperre wegen der Lizenzauflagen: In dieser Saison darfst du nicht ausleihen.';if(!p||p.team<0||p.team===S.my||istAusland(p)||p.wech||istLeihe(p))return'Diesen Spieler kannst du nicht ausleihen.';if(!fensterOffen())return'Leihen geht nur im Transferfenster.';
+// ausleihenGrund: alle Prüfungen ohne Wirkung (Grund oder null), auch für die Karte „Hilfe in der Not“ (K17b, Prüfung EE2)
+function ausleihenGrund(p){if(transferSperre())return'Transfersperre wegen der Lizenzauflagen: In dieser Saison darfst du nicht ausleihen.';if(!p||p.team<0||p.team===S.my||istAusland(p)||p.wech||istLeihe(p))return'Diesen Spieler kannst du nicht ausleihen.';if(!fensterOffen())return'Leihen geht nur im Transferfenster.';
   if(!RLE.holenRollen.includes(kaderRolle(p)))return`${tn(p.team)} gibt ${p.n} nicht ab, er ist dort gesetzt.`;
   if(einsatzSchaetzung(p,S.my)<RVT.einsatz.rotation)return`${p.n} will Spielzeit. Bei dir sähe er die Bank.`;if(squad(S.my).length>=RM.kaderMax)return`Dein Kader ist voll (höchstens ${RM.kaderMax} Spieler).`;
   if(!leihErlaubt(p,p.team,S.my))return leihKontingentText(); // U11d1
+  return null;}
+function ausleihen(p){const g=ausleihenGrund(p);if(g)return g;
   const von=p.team;kabineAbgang(p,von);p.leihe={von,anteil:1,rolle:'rotation',rueckruf:false,option:0,start:absTag(S.tag)};p.team=S.my;p.list=0;neuzugang(p,S.my);kabineInit(p);rollenBerechnen(S.my);
   news(`Leihe: ${p.n} kommt bis zum Saisonende von ${tn(von)}. Du zahlst sein Gehalt.`,'good');return null;}
 

@@ -132,7 +132,7 @@ nominiert, wenn Stärke ≥ Schwelle, höchstens die 26 Stärksten je Nation
 | Überraschungs-Aus | Bundesligist scheidet gegen Amateure aus | Presse, Vorstand (K28) |
 | Pokal-Rotation rächt sich | Favorit rotiert und verliert | Spielbericht erwähnt es |
 
-**Gebaut als K13c (22.11.2026, popolupo, ohne Testlauf), als Meldungen ohne Würfel:** „Pokalsensation“ (ein Erstligist, nicht dein Verein, scheidet gegen einen Amateurverein oder einen Verein ab der 3. Liga aus) und „Pokal-Los des Jahres“ (bei der Auslosung ein Erstligist mit Ansehen ab 80 gegen einen Amateurverein). Die übrigen Meldungen brauchen Länderspiele oder Rotation und fehlen noch.
+**Gebaut als K13c (22.11.2026, popolupo, ohne Testlauf), als Meldungen ohne Würfel:** „Pokalsensation“ (ein Erstligist, nicht dein Verein, scheidet gegen einen Amateurverein oder einen Verein ab der 3. Liga aus) und „Pokal-Los des Jahres“ (bei der Auslosung ein Erstligist mit Ansehen ab 80 gegen einen Amateurverein; seit Prüfung EE4 nicht in der 1. Runde, wo alle Profis Amateure ziehen, und höchstens einmal je Saison). Die übrigen Meldungen brauchen Länderspiele oder Rotation und fehlen noch.
 
 ## 9. Wechselwirkungen
 

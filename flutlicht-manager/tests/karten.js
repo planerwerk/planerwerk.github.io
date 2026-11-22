@@ -15,7 +15,8 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
     if(!c.texte||!c.texte.length)fehler.push(c.id+': kein Text');(c.texte||[]).forEach(t=>{if(platz(t).length)fehler.push(c.id+': Platzhalter '+platz(t));});
     if(c.art==='entscheidung'){if(!c.optionen||c.optionen.length<2||c.optionen.length>3)fehler.push(c.id+': Optionen');if(!(c.auto>=0&&c.auto<(c.optionen||[]).length))fehler.push(c.id+': Voreinstellung');}
     else if(c.art!=='info')fehler.push(c.id+': Art');
-    (c.optionen||[]).forEach(o=>{(o.wirkung||[]).forEach(w=>{if(!erlaubt.includes(w.art))fehler.push(c.id+': Wirkung '+w.art);});[o.folge,...(o.wirkung||[]).map(w=>w.gut),...(o.wirkung||[]).map(w=>w.schlechtText)].filter(Boolean).forEach(t=>{if(platz(t).length)fehler.push(c.id+': Platzhalter '+platz(t));});});});
+    (c.optionen||[]).forEach(o=>{(o.wirkung||[]).forEach(w=>{if(!erlaubt.includes(w.art))fehler.push(c.id+': Wirkung '+w.art);
+      (w.dann||[]).forEach(x=>{if(!erlaubt.includes(x.art))fehler.push(c.id+': Wirkung '+x.art);});if(w.dann&&!ev('KARTEN_MIT_ERFOLG').includes(w.art))fehler.push(c.id+': dann bei '+w.art);}); /* Prüfung EE */[o.folge,...(o.wirkung||[]).map(w=>w.gut),...(o.wirkung||[]).map(w=>w.schlechtText)].filter(Boolean).forEach(t=>{if(platz(t).length)fehler.push(c.id+': Platzhalter '+platz(t));});});});
   /* Ketten (K30c, K30 §10): jede Folgekarte existiert und kommt nur über die Kette, jede nurKette-Karte hat einen Vorgänger, tage gültig */
   const ziele=new Set();K.forEach(c=>(c.optionen||[]).forEach(o=>{if(!o.kette)return;const z=K.find(x=>x.id===o.kette.karte),t=o.kette.tage;ziele.add(o.kette.karte);
     if(!z)fehler.push(c.id+': Folgekarte '+o.kette.karte+' fehlt');else if(!z.nurKette)fehler.push(o.kette.karte+': Folgekarte ohne nurKette');if(!Array.isArray(t)||!(t[0]>=1&&t[1]>=t[0]))fehler.push(c.id+': Kette ohne gültige tage');}));
@@ -145,8 +146,11 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   sq.forEach(p=>{ev('stimmung')(p);p.st=80;p.sal=Math.round(sf(p.str)*0.5);delete p.seit;}); /* alle niedrig, damit der Gehaltsrahmen die Erhöhung sicher erlaubt (ED7) */const p=sq[0];p.sal=Math.round(sf(p.str)*0.5);const zufrieden=A.gehaltsneid();p.st=V.neidStimmung-10;const neid=A.gehaltsneid();
   const s0=p.sal,neu=Math.round(sf(p.str)*0.9/1000)*1000;ev('kartenWirkung')({art:'gehaltAnpassen',wert:0.9},{spieler:p.id},{titel:'Test'});const ok=p.sal===neu;
   const keinNeu=A.provision(),q=sq.find(x=>!!ev('beraterVon')(x));if(q)q.seit=heute-5;const prov=q?A.provision():{spieler:null};let bzOk=true;if(q){const bz0=ev('beraterVon')(q).bz;ev('kartenWirkung')({art:'beraterBez',wert:5},{spieler:q.id},{titel:'Test'});bzOk=ev('beraterVon')(q).bz===Math.min(100,bz0+5);}
-  pruef(zufrieden===null&&!!neid&&neid.spieler===p.id&&ok&&keinNeu===null&&(!q||(!!prov&&prov.spieler===q.id))&&bzOk,'Vertragskarten: Gehaltsneid, Gehalt angepasst, Provisionsstreit nur bei Neuzugang mit Berater',
-    `zufrieden ${zufrieden}, Neid ${!!neid}, Gehalt ${p.sal}, Provision ohne Neuzugang ${keinNeu}, mit ${q?!!prov:'kein Spieler mit Berater'}`);}
+  /* Prüfung EE6: „Zahlen“ gibt die Beziehung zum Berater nur, wenn bezahlt wird (dann) */let zahlOk=true;
+  if(q){const c=ev('karteVon')('provision'),w=c.optionen[0].wirkung[0],bz=()=>ev('beraterVon')(q).bz,f=()=>S.fin.Ereignisse||0;let b0=bz(),f0=f();ev('kartenWirkung')(w,{spieler:q.id},c);const mitZ=f()<f0&&bz()===Math.min(100,b0+5);
+    q.team=-1;b0=bz();f0=f();ev('kartenWirkung')(w,{spieler:q.id},c);zahlOk=mitZ&&f()===f0&&bz()===b0;q.team=S.my;}
+  pruef(zufrieden===null&&!!neid&&neid.spieler===p.id&&ok&&keinNeu===null&&(!q||(!!prov&&prov.spieler===q.id))&&bzOk&&zahlOk,'Vertragskarten: Gehaltsneid, Gehalt angepasst, Provisionsstreit nur bei Neuzugang mit Berater, Beziehung nur mit Zahlung',
+    `zufrieden ${zufrieden}, Neid ${!!neid}, Gehalt ${p.sal}, Provision ohne Neuzugang ${keinNeu}, mit ${q?!!prov:'kein Spieler mit Berater'}, Zahlung und Beziehung ${zahlOk}`);}
 
 // K26e. Stadt bietet Zuschuss (K26 §8): nur bei einem laufenden Bauprojekt ab 5 Mio. €, einmal; die Wirkung zahlt 15 % der Baukosten
 {const {S,ev}=welt(),A=ev('AUSLOESER'),Z=ev('RKT').stadion;S.constr=null;const ohne=A.zuschuss();S.constr={k:'cap',label:'Test',phase:'bau',ab:0,bis:999,kosten:Z.zuschussAb*2};const ja=!!A.zuschuss();
@@ -168,17 +172,29 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   const keineFehde=A.fehde(),x=S.teams.find(y=>y.id!==S.my&&y.lg===t.lg&&ev('aktiv')(y));F.bezDuAendern(x.id,-90,'Test');const f=A.fehde();
   pruef(kein===null&&leck&&keineFehde===null&&!!f&&f.verein===x.id,'Presse-Karten: Leck bei schlechtem Klima, Fehde bei schlechter Beziehung',`Klima 60 ${kein}, Klima 30 ${leck}, Fehde ohne ${keineFehde}, mit ${f&&f.verein===x.id}`);}
 
-// K17b. Hilfe in der Not (K17 §8): nur im offenen Fenster, ab fünf Verletzten und mit einem Verein, zu dem die Beziehung über 40 liegt; die Wirkung leihe holt den Spieler
-{const {S,F,ev}=welt(),A=ev('AUSLOESER'),H=ev('RKT').hilfe,sq=ev('squad')(S.my);sq.forEach(p=>{p.inj=0;});const ohne=A.hilfeInNot();
-  sq.slice(0,H.verletzteAb).forEach(p=>{p.inj=20;});const b=S.teams.find(x=>x.id!==S.my&&ev('aktiv')(x));F.bezDuAendern(b.id,90,'Test');
-  const offen=ev('fensterOffen')(),h=A.hilfeInNot();let geholt=null;
-  if(h){const p=ev('PIX').get(h.spieler),grund=ev('kartenWirkung')({art:'leihe',wert:1},h,{titel:'Test'});geholt=(p.team===S.my&&!!p.leihe)||!!grund;} /* oder ausleihen nennt einen Grund */
-  pruef(ohne===null&&(offen?!!h&&h.verein===b.id&&geholt!==false:h===null),'Hilfe in der Not: Verletzungskrise, befreundeter Verein, Leihe',`ohne Krise ${ohne}, Fenster ${offen}, Angebot ${h&&h.verein}, geholt ${geholt}`);}
+// K17b. Hilfe in der Not (K17 §8): nur im offenen Fenster, ab fünf Verletzten und mit einem Verein, zu dem die Beziehung über 40 liegt; die Wirkung leihe holt den Spieler.
+//       Seit Prüfung EE: Der Auslöser bietet nur Spieler an, die die Leihe zuließe (ausleihenGrund), der Verleiher behält mehr als kaderMin. Die Beziehung +5 gibt es nur mit Leihe (dann),
+//       und mit Lizenz unter der Stufe der Leihen holt die Karte niemanden.
+{const fall=lz=>{const {S,F,ev}=welt(),A=ev('AUSLOESER'),H=ev('RKT').hilfe,sq=ev('squad')(S.my);sq.forEach(p=>{p.inj=0;});const ohne=A.hilfeInNot();
+    sq.slice(0,H.verletzteAb).forEach(p=>{p.inj=20;});const b=S.teams.find(x=>x.id!==S.my&&ev('aktiv')(x));F.bezDuAendern(b.id,90,'Test');
+    const offen=ev('fensterOffen')(),h=A.hilfeInNot();let geholt=null,plus=null,frei=null,kmin=null;
+    if(h){const p=ev('PIX').get(h.spieler),c=ev('karteVon')('hilfeInNot');frei=F.ausleihenGrund(p)===null;kmin=ev('squad')(h.verein).length>ev('RM').verkaeufer.kaderMin;if(lz)F.lizenzStart(true);
+      const b0=F.bezDu(h.verein);c.optionen[0].wirkung.forEach(w=>ev('kartenWirkung')(w,h,c));geholt=p.team===S.my&&!!p.leihe;plus=F.bezDu(h.verein)-b0;}
+    return{ohne,offen,h,b,geholt,plus,frei,kmin};};
+  const a=fall(false),z=fall(true);
+  pruef(a.ohne===null&&(a.offen?!!a.h&&a.h.verein===a.b.id&&a.frei&&a.kmin&&a.geholt===true&&a.plus===5&&z.geholt===false&&z.plus===0:a.h===null),'Hilfe in der Not: Verletzungskrise, befreundeter Verein, Leihe nur wenn möglich, Beziehung nur mit Leihe, Lizenz',
+    `ohne Krise ${a.ohne}, Fenster ${a.offen}, Angebot ${a.h&&a.h.verein}, ausleihbar ${a.frei}, Verleiher über kaderMin ${a.kmin}, geholt ${a.geholt} (+${a.plus}), mit Lizenz geholt ${z.geholt} (+${z.plus})`);}
 
 // K22c. Berater droht mit Wechsel (K22 §8): nur bei einem Spieler im letzten Vertragsjahr mit gierigem Berater
-{const {S,ev}=welt(),A=ev('AUSLOESER'),sq=ev('squad')(S.my),bv=ev('beraterVon');sq.forEach(p=>{p.ct=3;});const ohne=A.beraterDroht();
-  const g=sq.find(p=>(bv(p)||{}).prof==='gierig'),a=sq.find(p=>bv(p)&&bv(p).prof!=='gierig');if(g)g.ct=1;if(a)a.ct=1;const mit=A.beraterDroht();
-  pruef(ohne===null&&(g?!!mit&&mit.spieler===g.id:mit===null),'Berater droht: nur letztes Vertragsjahr und gieriger Berater',`ohne ${ohne}, gierig ${g?g.n:'keiner im Kader'}, Auslöser ${mit&&mit.spieler}`);}
+//       Seit Prüfung EE5 nur unter dem Marktgehalt; „Nachgeben“ gibt Beziehung und Stimmung nur mit Erhöhung (dann), sonst nennt die Karte den Grund.
+{const {S,ev}=welt(),A=ev('AUSLOESER'),sq=ev('squad')(S.my),bv=ev('beraterVon'),sf=ev('salaryFor');sq.forEach(p=>{p.ct=3;});const ohne=A.beraterDroht();
+  const g=sq.find(p=>(bv(p)||{}).prof==='gierig'),a=sq.find(p=>bv(p)&&bv(p).prof!=='gierig');if(g)g.ct=1;if(a)a.ct=1;let gut=null,mit=null,dann=null,ohneErh=null;
+  if(g){g.sal=sf(g.str)*2;gut=A.beraterDroht();g.sal=Math.round(sf(g.str)*0.8/1000)*1000;mit=A.beraterDroht();
+    const c=ev('karteVon')('beraterDroht'),w=c.optionen[0].wirkung[0],b0=bv(g).bz,s0=g.sal;const t=ev('kartenWirkung')(w,{spieler:g.id},c);dann=g.sal>s0&&bv(g).bz-b0===5&&!!t;
+    const b1=bv(g).bz;const t2=ev('kartenWirkung')(w,{spieler:g.id},c);ohneErh=bv(g).bz===b1&&/verdient schon/.test(t2);}
+  else mit=A.beraterDroht();
+  pruef(ohne===null&&(g?gut===null&&!!mit&&mit.spieler===g.id&&dann&&ohneErh:mit===null),'Berater droht: nur letztes Vertragsjahr, gieriger Berater und unter Marktgehalt; Bonus nur mit Erhöhung',
+    `ohne ${ohne}, gierig ${g?g.n:'keiner im Kader'}, gut bezahlt ${gut}, Auslöser ${mit&&mit.spieler}, Nachgeben mit Erhöhung ${dann}, zweimal ohne Erhöhung ${ohneErh}`);}
 
 // K03b. Formkarten (K03 §8): Formkrise bis Form 4, Formhoch ab 16, nur gesunde Spieler; die Wirkung selbstvertrauen ändert das Selbstvertrauen
 {const {S,ev}=welt(),A=ev('AUSLOESER'),FK=ev('RKT').form,sq=ev('squad')(S.my);S.phase='play';sq.forEach(p=>{p.form=10;p.inj=0;});const keine=A.formkrise()===null&&A.formhoch()===null;
