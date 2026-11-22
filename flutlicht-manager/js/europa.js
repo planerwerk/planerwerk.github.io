@@ -30,7 +30,7 @@ function euStaerke(id){const k=S.seed+'/'+S.season+'/'+S.tag+'/'+(S.ausland?S.au
 const euTorschuetzen=id=>avKader(id).filter(p=>p.pos!=='TW').flatMap(p=>p.pos==='ST'?[p.n,p.n]:[p.n]);
 // Ausland gegen Ausland ohne Engine (K37 §5.2): erwartete Tore aus dem Verhältnis der Stärken, im K.-o.-Spiel Verlängerung und Elfmeterschießen
 // Stärke für die Kurzrechnung: Auslandsverein wie oben, deutscher Verein (nur beim Nachholen) mit seiner Kaderstärke
-const euSt=id=>euDe(id)?teamLevel(id):euStaerke(id);
+const euSt=id=>euDe(id)?teamLevel(id)*REU.staerke.faktor:euStaerke(id);
 function euKurz(h,a,o){const K=REU.kurz,q=euSt(h)*(o.neutral?1:K.heim)/euSt(a),xh=clamp(K.tore*Math.pow(q,K.exp),0.2,5),xa=clamp(K.tore*Math.pow(1/q,K.exp),0.1,5);
   let hg=poisson(xh),ag=poisson(xa),pen=null;const agg=o.agg||[0,0],gleich=()=>hg+agg[0]===ag+agg[1];
   if(o.ko&&gleich()){hg+=poisson(xh*K.verl);ag+=poisson(xa*K.verl);if(gleich())pen=shootout();}
@@ -213,6 +213,12 @@ function euMeineSpiele(){const out=[];if(!euAktiv())return out;const P=euPlan(),
 function euLosHeute(d){if(!euAktiv()||S.phase!=='play')return false;const P=euPlan();
   return EU_WB.some(wb=>{const W=S.eu[wb],p=P[wb];if(d===p.los)return W.t.includes(S.my)||(!!W.q&&W.q[0]===S.my&&euSieger(W.q)===S.my);
     if(d!==p.losPo&&d!==p.losAf)return false;const rang=W.lp?euTabelle(wb).findIndex(r=>r.id===S.my):-1;if(d===p.losPo)return rang>=8&&rang<24;if(d===p.losAf)return(rang>=0&&rang<8)||(W.ko.po||[]).some(k=>euSieger(k)===S.my);return false;});}
+// Alle Europapokal-Tage eines Vereins in dieser Saison (wettbewerbe.js spieltageVon, damit eine Verlegung nicht neben einem anderen Spiel landet, T5.2)
+function euTageVon(tid){const out=[];if(!euAktiv())return out;const P=euPlan();
+  EU_WB.forEach(wb=>{const W=S.eu[wb],p=P[wb],duell=(k,i,tage)=>{if(k[0]===tid||k[1]===tid)out.push(tage[0][i%2],tage[1][i%2]);};
+    if(W.q)duell(W.q,0,p.quali);(W.lp||[]).forEach(m=>{if(m[0]===tid||m[1]===tid)out.push(m[3]);});
+    ['po','af','vf','hf'].forEach(r=>(W.ko[r]||[]).forEach((k,i)=>duell(k,i,p[r])));(W.ko.fin||[]).forEach(k=>{if(k[0]===tid||k[1]===tid)out.push(p.fin);});});
+  return out;}
 // 72 Stunden (K13 §3.5): Ligaspiele deutscher Teilnehmer neben einem Europapokalspiel verlegen
 function euVerlegen(wb,runde){const W=S.eu[wb],P=euPlan()[wb],plan=[];
   if(runde==='lp')(W.lp||[]).forEach(m=>plan.push([m[3],[m[0],m[1]]]));

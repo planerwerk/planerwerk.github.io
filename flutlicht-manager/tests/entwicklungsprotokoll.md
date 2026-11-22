@@ -14,30 +14,30 @@ Gegenstück zu `tests/testprotokoll.md`. Asynchroner Kanal von der Entwicklung a
 
 ## Jetzt in Arbeit
 
-**K23 Finanzen** (Zweig `mitarbeit/popolupo-k23-finanzen`, auf 362fa12), in Teilschritten:
+Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue Zweige beginnen auf 0fae7b8 (Lauf 7):
 
-| Teil | Inhalt | Stand |
+| Schritt | Zweig | Stand |
 |---|---|---|
-| K23a | Monatsbericht, Liquiditätsprognose, Lizenzprüfung im März mit Auflagen, Insolvenz mit Punktabzug (zuerst nur für deinen Verein) | fertig, ungetestet (siehe Changelog) |
-| K23b | gleiche Einnahmen und Ausgaben für Computer-Vereine statt Pauschale, Säulenmodell der Medien, Pauschale für die Europapokal-Plätze | **wartet auf Messwerte:** bitte `node tests/finanzmodell.js` laufen lassen und die Ausgabe ins Testprotokoll (BZ7) |
-| K23c | echte Größenordnungen für alle Geldwerte (Einnahmen, Gehälter, Ablösen), danach die Sponsorenhöhen aus K24 §5.1 | nach K23b |
-| K23d | Budgets vom Vorstand (Gehaltsrahmen, Transferbudget), Bezug zum Zielgespräch (K28) | nach K23c |
-| K23e | Raten bei Ablösen, Kredit mit Laufzeit, Gehaltsverzicht, Karten (Mäzen, Steuerprüfung) | fertig, ungetestet (siehe Changelog) |
+| Korrekturen zu Lauf 5 (T5.1 bis T5.5, CH4) | `mitarbeit/popolupo-t5-korrekturen` (auf 0fae7b8) | fertig, ungetestet |
+| **K23b** Computer-Vereine mit Einnahmen und Ausgaben nach dem Modell statt Pauschale (mit den Zahlen aus BZ7) | `mitarbeit/popolupo-k23b-computer-finanzen` (auf den Korrekturen) | **jetzt** |
+| K23c echte Größenordnungen, K23d Budgets vom Vorstand | danach | offen |
+| U19d Kaderliste der UEFA, volle Kader der Auslandsvereine | danach | Entwurf in K37 §5.6, §5.7 |
 
-Solange K23b auf die Messwerte wartet, baue ich weiter:
-- **K25 Marketing** (Zweig `mitarbeit/popolupo-k25-marketing`, auf dem K23-Zweig): K25a fertig, ungetestet.
-- **K26 Stadion** (Zweig `mitarbeit/popolupo-k26-stadion`, auf K25): K26a fertig, ungetestet.
-- **K37 Europapokal** als Konzept: Entwurf fertig (`konzepte/K37-europapokal.md`).
-- **U19a Europapokal** (Zweig `mitarbeit/popolupo-u19-europapokal`, auf K26): fertig, ungetestet.
-- **U19b** (Prämien, Wertsäule, Ansehen, Vertrauen, Vitrine), auf demselben Zweig: fertig, ungetestet.
-- **U19c** (Länderwertung mit fünftem Platz, Interesse, Nebenziel), auf demselben Zweig: fertig, ungetestet.
-- **Danach offen:** U19d (Kaderliste der UEFA, volle Kader der Auslandsvereine in der Engine, Europapokal in der Saisonstatistik). Ich warte damit auf einen Testlauf von U19a bis U19c, weil volle Kader tief in die Engine gehen.
-
-**Die neueste Spitze ist immer der zuletzt genannte Zweig, er enthält alles davor.** Rest von K24 bleibt bei Claude.
+**Die neueste Spitze ist immer der zuletzt genannte Zweig, er enthält alles davor.** K24 ist fertig (Claude).
 
 ---
 
 ## Antworten zu offenen Funden
+
+**Zu Lauf 5 (22.11., Zweig `mitarbeit/popolupo-t5-korrekturen`):**
+- **T5.1** (Gleichschritt 25 Tage): wie vorgeschlagen, `tests/lizenz.js` nimmt in 5a auch `kartenWoche` aus.
+- **T5.2** (72 Stunden, 24 Fälle): Ursache gefunden. Die Europapokal-Verlegung schob das Freitagsspiel auf Samstag, die Pokalrunde am Dienstag danach zog es wieder auf Freitag (drei Tage vor dem Pokal, aber zwei nach dem Europapokal). `ligaVerlegen` sucht jetzt einen Tag, der für beide Vereine drei Tage Abstand zu allen ihren Spielen hat (Liga, Pokal, Supercup, Europapokal, neu `spieltageVon`, `euTageVon`). Behebt T5.2.
+- **T5.3** (Europapokal zu schwer): Der Block der Auslandsvereine bekam die volle Stärke, eine Bundesliga-Elf in der Engine nur etwa 0,93 davon (Zustand, Anteile je Position, Schwächster im Bereich). `REU.staerke.faktor` ist jetzt 0,93. Bitte noch einmal wie in Lauf 5 messen (Seed 5, drei Saisons).
+- **T5.4** (`ui-zwei-saisons.js`): Der Test prüft bei `wbVon(r)==='eu'` jetzt die Sperre `eu`.
+- **T5.5**: `startBuild` prüft `darf('stadion')` selbst, `startBuildAlt` ist entfernt (CB7 erledigt).
+- **CH4** (`supercupAnlegen` mit Amateur-Pokalsieger): gleich mit behoben, dann spielt der Vizemeister. Ich war ohnehin in `wettbewerbe.js`.
+- **CI1** (1. Juli ohne `taeglich`): lasse ich dir, weil es den Kern von `weiter` betrifft.
+- **BZ7:** danke, die Zahlen nehme ich für K23b.
 
 - **T1.3 Rest** (Stärke der 2. Liga knapp über der Grenze) und **T3.2** (Kondition nach der Vorbereitung): Ohne Testlauf kann ich nicht messen, darum fasse ich beides vorerst nicht an. K23b ändert die Konten der Computer-Vereine und damit ihre Käufe, das kann T1.3 in beide Richtungen verschieben. Bitte nach K23b noch einmal ansehen.
 - **T2.2** (Stimmung wirkt beim Abwerben doppelt): Die Entscheidung im Testprotokoll passt (so steht es in K20 §11).
@@ -45,6 +45,13 @@ Solange K23b auf die Messwerte wartet, baue ich weiter:
 ---
 
 ## Changelog
+
+### 22.11.2026: Korrekturen zu Lauf 5 (Zweig `mitarbeit/popolupo-t5-korrekturen`, auf 0fae7b8)
+
+- **Behebt T5.2:** `ligaVerlegen` mit Blick auf alle Spiele beider Vereine (`spieltageVon` in wettbewerbe.js, `euTageVon` in europa.js).
+- **Zu T5.3:** `REU.staerke.faktor` 1 → 0,93. Die Kurzrechnung beim Nachholen nimmt für deutsche Vereine denselben Faktor.
+- **Behebt T5.1, T5.4, T5.5, CH4:** siehe Antworten oben.
+- **Tests zuerst:** `tests/wettbewerbe.js` (72 Stunden), `tests/europapokal.js`, `tests/lizenz.js`, `tests/ui-zwei-saisons.js`, dazu die Messung aus T5.3.
 
 ### 21.11.2026: K37 §5.6 und §5.7: Entwurf für U19d (Zweig `mitarbeit/popolupo-u19-europapokal`, kein Code)
 

@@ -37,10 +37,7 @@ const bauLabel=(k,t)=>k==='cap'?`Tribünenausbau (+${RB.tribuene.plaetze.toLocal
 const bauKosten=(k,t)=>k==='cap'?RB.tribuene.kosten:k==='logen'?RB.logen.kosten:RB.fanshop.kosten[t.shop];
 const bauWochen=k=>k==='cap'?RB.tribuene.wochen:k==='logen'?RB.logen.wochen:RB.fanshop.wochen;
 const bauVoll=(k,t)=>k==='cap'?t.cap>=RB.tribuene.max:k==='logen'?t.logen>=RB.logen.max:t.shop>=RB.fanshop.max;
-function startBuild(k){bauStarten(k);} // seit K26a mit Genehmigung, Auflagen und Verzögerung (js/stadion.js)
-function startBuildAlt(k){if(!darf('stadion'))return;const t=myT();if(S.constr||bauVoll(k,t))return;
-  const cost=bauKosten(k,t),label=bauLabel(k,t);if(t.cash<cost){toast('Dafür reicht der Kontostand nicht.');return;}
-  const bis=S.tag+bauWochen(k)*7;money('Stadionbau',-cost);S.constr={k,bis,label};news(`Baubeginn: ${label}, fertig am ${datumKurz(bis)}.`);save();render();}
+function startBuild(k){if(!darf('stadion'))return;bauStarten(k);} // seit K26a mit Genehmigung, Auflagen und Verzögerung (js/stadion.js), Lizenz auch hier (T5.5)
 function setListed(id,on){if(!darf('transfers','gespraechOderTransfer'))return;const p=PIX.get(id);if(p.wech||p.leihe){toast('Das geht bei ihm gerade nicht.');return;}if(on){const v=+document.getElementById('ask').value;p.list=1;p.ask=Math.max(RM.runden,Math.round(v*1e6/RM.runden)*RM.runden);news(`${p.n} steht für ${fmt(p.ask)} auf der Transferliste.`);}else{p.list=0;S.offers=S.offers.filter(o=>o.pid!==id);versprechenAngebot(id,null);}save();openP(id);render();}
 function extend(id){if(!darf('vertraege','vertragOderStab'))return;const p=PIX.get(id),y=+(document.getElementById('ext')||{}).value||1;if(!p||p.team!==S.my||p.leihe)return;if(p.wech){toast('Er ist schon verkauft.');return;}
   if(verlaengertNicht(p)){toast(`${p.n} will nicht verlängern. Erst muss seine Stimmung besser werden.`);return;}

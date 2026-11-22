@@ -16,12 +16,22 @@ function pokalAuslosen(r){const al=shuffle(S.cup.alive.slice()),paare=[];
   const rest=shuffle([...am,...pro]);for(let i=0;i<rest.length;i+=2)paare.push([rest[i],rest[i+1]]);return paare;}
 // 72 Stunden (K13 §3.5): Nach der Auslosung verlegt die Liga Spiele, die weniger als drei Tage vor oder nach der Pokalrunde liegen (Sonntag → Samstag davor)
 function pokalVerlegen(r,paare){return ligaVerlegen(S.plan.pokal[r][0],new Set(paare.flat().filter(id=>id<1000)),'des Pokals');}
-// Ligaspiele der Vereine ids, die weniger als drei Tage vor oder nach Tag d liegen, verlegen (Pokal, seit K37 auch Europapokal)
+// Ligaspiele der Vereine ids, die weniger als drei Tage vor oder nach Tag d liegen, verlegen (Pokal, seit K37 auch Europapokal).
+// Seit T5.2: Der neue Tag muss für beide Vereine drei Tage Abstand zu allen ihren übrigen Spielen haben (Liga, Pokal, Supercup, Europapokal). Kandidaten der Reihe nach,
+// zuerst in Richtung des alten Termins. Passt keiner, gilt die alte Regel (Sonntag und Montag vor dem Termin → Samstag, danach → drei Tage später).
 function ligaVerlegen(d,ids,grund){const M=RWB.spielplan.mindestTage;let n=0;
   LIGEN.forEach(lg=>(S.fx[lg]||[]).forEach((md,k)=>md.forEach(([h,a],i)=>{if(!ids.has(h)&&!ids.has(a))return;const z=S.plan.zeit[lg][k][i],alt=z[0];
-    if(z[0]>d-M&&z[0]<d){z[0]=d-M;while(wochentag(z[0])===0||wochentag(z[0])===1)z[0]--;}else if(z[0]>=d&&z[0]<d+M)z[0]=d+M;else return;n++; // am selben Tag: danach (seit K37)
+    if(!(z[0]>d-M&&z[0]<d+M))return;const vor=z[0]<d,belegt=[spieltageVon(h,z),spieltageVon(a,z)];[h,a].forEach((id,j)=>{if(ids.has(id))belegt[j].add(d);});
+    const frei=x=>belegt.every(s=>{for(let j=1-M;j<M;j++)if(s.has(x+j))return false;return true;}),kand=vor?[d-M,d-M-1,d-M-2,d+M,d+M+1]:[d+M,d+M+1,d+M+2,d-M,d-M-1];
+    const neu=kand.find(frei);if(neu!=null)z[0]=neu;else if(vor){z[0]=d-M;while(wochentag(z[0])===0||wochentag(z[0])===1)z[0]--;}else z[0]=d+M;n++;
     if(h===S.my||a===S.my)news(`Wegen ${grund} wird dein Ligaspiel gegen ${tn(h===S.my?a:h)} von ${datumKurz(alt)} auf ${datumKurz(z[0])} verlegt.`);})));
   if(n)TAGINDEX.plan=null;return n;}
+// Tage, an denen ein Verein schon spielt (Liga ohne das Spiel ohne, Pokal solange er dabei ist, Supercup, Europapokal)
+function spieltageVon(tid,ohne){const s=new Set(),t=tid<1000?S.teams[tid]:null;if(!t)return s;const lg=t.lg,Z=S.plan.zeit[lg]||[];
+  (S.fx[lg]||[]).forEach((md,k)=>md.forEach(([h,a],i)=>{const z=Z[k]&&Z[k][i];if(z&&z!==ohne&&(h===tid||a===tid))s.add(z[0]);}));
+  if(S.cup&&S.cup.alive.includes(tid))S.plan.pokal.forEach(([x],r)=>{if(r>=S.cup.hist.length)s.add(x);});
+  if(S.supercup&&!S.supercup.r&&(S.supercup.h===tid||S.supercup.a===tid))s.add(S.supercup.tag);
+  euTageVon(tid).forEach(x=>s.add(x));return s;}
 function pokalAuslosungTag(d){if(S.phase!=='play'||!S.cup||S.cup.alive.length<2)return;const r=S.cup.hist.length,t=pokalLosTag(r);
   if(t==null||d<t||(S.cup.los&&S.cup.los.r===r))return;
   S.cup.los={r,am:d,paare:mitStrom(strom('pokallos',S.season,r),()=>pokalAuslosen(r))};pokalVerlegen(r,S.cup.los.paare);
@@ -33,7 +43,7 @@ const pokalLosHeute=d=>S.phase==='play'&&S.cup&&S.cup.alive.includes(S.my)&&poka
 
 // Supercup (K13 §5.2): Meister gegen Pokalsieger am Samstag vor dem 1. Spieltag beim Meister. Holt ein Verein beides, spielt der Vizemeister.
 // Bei Gleichstand direkt Elfmeterschießen (seit 2010 keine Verlängerung). In der ersten Saison gibt es keinen, weil die Vorsaison fehlt.
-function supercupAnlegen(sm){S.supercup=null;if(!sm||sm.champ==null)return;const g=sm.cup!=null&&sm.cup!==sm.champ?sm.cup:sm.vize;if(g==null)return;
+function supercupAnlegen(sm){S.supercup=null;if(!sm||sm.champ==null)return;const g=sm.cup!=null&&sm.cup<1000&&sm.cup!==sm.champ?sm.cup:sm.vize;if(g==null)return;
   const z=S.plan.zeit[1];if(!z||!z[0])return;let d=Math.min(...z[0].map(x=>x[0]))-RWB.supercup.vorSpieltag;while(wochentag(d)!==6)d--;
   // 72 Stunden (K13): Abstand zur ersten Pokalrunde und zu den Ligaspielen beider Teilnehmer. Ein Pokalsieger aus der 2. Liga hat da schon Spieltage, dann rückt der Supercup wochenweise vor.
   const M=RWB.spielplan.mindestTage,P=S.plan.pokal[0],belegt=new Set(P?[P[0]]:[]);

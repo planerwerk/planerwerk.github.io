@@ -1266,7 +1266,7 @@ Zweig `mitarbeit/popolupo-k26-stadion` (baut auf `mitarbeit/popolupo-k25-marketi
 | CB4 | **Tribüne:** Während des Baus fehlen 3.000 Plätze, danach kommen 6.000 dazu, zusammen +3.000 wie bisher. Bei einer laufenden alten Baustelle ohne Phase kommen wie bisher 3.000 dazu. | ✅ entworfen |
 | CB5 | **Reha und Physio zusammen höchstens −25 %** Ausfallzeit. Der Physio allein schafft höchstens −25 % (`stab.physio.max`), die Untergrenze ändert für Vereine ohne Reha-Zentrum nichts. | ✅ |
 | CB6 | **Computer-Vereine bauen noch nicht.** Ihre Anlagen stehen auf der Startstufe, Instandhaltung zahlen sie nicht. | 📌 vorläufig |
-| CB7 | **`startBuildAlt`** in `js/aktionen.js` bleibt als alter Ablauf stehen, wird aber nicht mehr aufgerufen. Kann weg, sobald `tests/stadion.js` gelaufen ist. | 📌 aufräumen |
+| CB7 | **`startBuildAlt`** in `js/aktionen.js` bleibt als alter Ablauf stehen, wird aber nicht mehr aufgerufen. Kann weg, sobald `tests/stadion.js` gelaufen ist. **Entfernt am 22.11. (T5.5).** | ✅ |
 | CB8 | **Nicht gebaut:** neues Stadion als Großprojekt, Stehplätze und Sitzplätze, Rasenqualität und Rasenheizung, Flutlicht, Parkplätze, Namensrechte, Zuschuss der Stadt. | 📌 später |
 | CB9 | **`tests/stadion.js`:** sechs Prüfungen, siehe Test-README. Nie gelaufen. | ⚠️ offen |
 
@@ -1381,3 +1381,17 @@ Wieder ein eigener Prüf-Agent, nur lesend. Keine Laufzeitfehler gefunden, aber 
 | CI6 | **Rate 0 bei sehr kleinen Krediten:** Die Tranche wäre nie kleiner geworden. Rate jetzt mindestens 1 €, aufgerundet. | ✅ behoben |
 | CI7 | **Alter Spielstand, Bau im alten Format** mit Fertigtag nach dem Saisonende wird nie fertig. War schon vorher so. Nicht geändert. | 📌 alt |
 | CI8 | **Ohne Befund geprüft:** Kredite (Summe der Tranchen gleich `S.loan` auf allen Wegen), Monatsbericht innerhalb der Saison, Termine der Lizenzprüfung, Bauprozess mit Tribüne, alle `S.teams`-Zugriffe der Anlagen, Zufall nur über Ströme, Erwartungswerte in den Tests. | ✅ |
+
+---
+
+## CJ. Korrekturen zu Lauf 5 (22. November 2026, popolupo, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-t5-korrekturen` (auf 0fae7b8). Funde aus `tests/testprotokoll.md`, Lauf 5.
+
+| # | Befund | Status |
+|---|---|---|
+| CJ1 | **T5.2, 72 Stunden:** Jede Verlegung schaute nur auf den Anlass (Pokal oder Europapokal). Eine spätere Pokalverlegung konnte ein schon verlegtes Spiel neben den Europapokal zurückschieben. `ligaVerlegen` prüft jetzt alle Termine beider Vereine (`spieltageVon`). Passt kein Kandidat (drei Tage in Richtung des alten Termins, zwei in die andere), gilt die alte Regel. | ✅ behoben |
+| CJ2 | **T5.3, Stärke der Auslandsvereine:** Teamwerte einer Elf liegen in der Engine bei etwa 0,93 × Stärke (Zustand mit Frische um 90, Anteile je Position etwa 0,97, 20 % Gewicht auf dem Schwächsten). Der Block der Auslandsvereine hatte die volle Stärke. Faktor jetzt 0,93. Ob das „meist Achtelfinale“ ergibt, zeigt erst die nächste Messung. | ⚠️ messen |
+| CJ3 | **T5.1, T5.4:** nur Tests angepasst (Karten aus dem Gleichschritt, Sperre `eu` im Browser-Test). | ✅ |
+| CJ4 | **T5.5, CB7:** `startBuild` prüft die Lizenz selbst, `startBuildAlt` ist weg. | ✅ |
+| CJ5 | **CH4:** `supercupAnlegen` nimmt bei einem Amateur-Pokalsieger den Vizemeister. | ✅ behoben |
