@@ -63,5 +63,12 @@ const scout=(S,F,q,gebiet,ev=F.__ev)=>{let x;for(let i=0;i<50;i++){x=F.stabNeu('
   S.tag=l[3].tag-2;S.stab.push(ev('stabNeu')('video',12,S.my,t.lg));ev('stabGeaendert')();F.gegnerBeobachten();const mitVideo=!t.gb&&(S.fin['Scouting']||0)===k0&&F.gegnerBeobachtenText().includes('Videoanalyst');
   pruef(ohnePrep&&mitVideo,'Gegnerbeobachtung ohne Wirkung kostet nichts (am Spieltag ohne Vorbereitung, mit Videoanalyst)',`ohne Vorbereitung ${ohnePrep}, mit Videoanalyst ${mitVideo}`);}
 
+// K18d. Konkurrenz am Tisch (K18 §8): mit Chance 0 nichts; mit Chance 1 nach einem Bericht ein anderer Verein mit Bedarf, die Forderung an dich steigt um 5 %; nach der Frist wieder normal
+{const {S,F,ev}=welt(),K=ev('RSC').konkurrenz,p=S.pl.filter(x=>x.team>=0&&x.team!==S.my&&S.teams[x.team]&&S.teams[x.team].lg===1).sort((a,b)=>b.str-a.str)[0];
+  K.chance=0;const nein=F.konkurrenzTisch(p),f0=ev('forderungDu')(p);K.chance=1;const b=F.konkurrenzTisch(p),f1=ev('forderungDu')(p);
+  p.kTisch.bis=ev('absTag')(S.tag)-1;const f2=ev('forderungDu')(p);
+  pruef(nein===null&&!!b&&b.id!==p.team&&b.id!==S.my&&Math.abs(f1/f0-(1+K.preis))<0.001&&Math.abs(f2-f0)<1,'Konkurrenz am Tisch: anderer Verein mit Bedarf, Forderung + 5 % bis zur Frist',
+    `Chance 0 ${nein}, Verein ${b&&b.name}, Forderung ${Math.round(f0)} → ${Math.round(f1)} → ${Math.round(f2)}`);}
+
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

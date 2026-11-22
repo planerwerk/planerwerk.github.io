@@ -75,7 +75,7 @@ function suchWoche(a,x,beob,xi){const C=RSC.suche,k=a.krit,gesehen=new Set(a.ges
 // Woche (montags): Aufträge, Kosten, Berichte; Kenntnis verblasst ohne Beobachtung (2 je Monat)
 function scoutingWoche(){S.kenntnis=S.kenntnis||{};const beob=new Set();let xi=null;
   (S.auftraege||[]).forEach(a=>{const x=scoutVon(a.scout);if(!x||x.team!==S.my){a.ende=1;return;}
-    if(a.art==='spieler'){const p=PIX.get(a.pid);if(!p||p.team===S.my){a.ende=1;return;}money('Scouting',-reiseKosten(istAusland(p)));kenntnisPlus(p,x,1);beob.add(p.id);if(--a.rest<=0){a.ende=1;bericht(p,x);}}
+    if(a.art==='spieler'){const p=PIX.get(a.pid);if(!p||p.team===S.my){a.ende=1;return;}money('Scouting',-reiseKosten(istAusland(p)));kenntnisPlus(p,x,1);beob.add(p.id);if(--a.rest<=0){a.ende=1;bericht(p,x);konkurrenzTisch(p);}}
     else{money('Scouting',-reiseKosten(a.krit.region==='ausland'));if(!xi&&a.krit.region!=='ausland'){xi=new Set();S.teams.forEach(t=>{if(aktiv(t))bestXI(t.id,t.form).forEach(id=>xi.add(id));});}suchWoche(a,x,beob,xi);}});
   S.auftraege=(S.auftraege||[]).filter(a=>!a.ende);
   for(const id in S.kenntnis){if(beob.has(+id))continue;const p=PIX.get(+id),e=S.kenntnis[id];if(!p||p.team===S.my){delete S.kenntnis[id];continue;}
@@ -101,3 +101,11 @@ function gegnerBeobachten(){if(!darf('beobachten'))return;const t=myT(),n=gbNaec
 function gegnerBeobachtenText(){const t=myT(),n=gbNaechstes();if(!n)return'';if(gegnerBeobachtet(t,n.g))return' <span class="dim">Ein Scout hat den Gegner beobachtet, die Spielvorbereitung wirkt doppelt.</span>';
   const ohne=gbOhneWirkung(t,n);if(ohne)return` <span class="dim">${esc(ohne)}</span>`;
   return` <button onclick="gegnerBeobachten()"${lzAus('beobachten')}>Gegner beobachten lassen (${fmt(RSC.gegner.kosten)})</button>`;}
+
+// ---------- Konkurrenz am Tisch (K18 §8, K18d) ----------
+// Nach dem Bericht eines Scouts über einen Spieler: mit RSC.konkurrenz.chance hat ein deutscher Verein mit Bedarf ihn ebenfalls beobachtet. Sein Verein weiß das und
+// verlangt von dir für tage Tage preis mehr (forderungDu). Fest aus Seed, Spieler und Tag (hash32), ohne Würfel aus den Strömen. p.kTisch = {bis, f, tid}.
+function konkurrenzTisch(p){const K=RSC.konkurrenz,heute=absTag(S.tag),h=hash32(S.seed+'/ktisch/'+p.id+'/'+heute);if(!p||p.team<0||h%10000>=K.chance*10000)return null;
+  const l=S.teams.filter(b=>b.id!==S.my&&b.id!==p.team&&aktiv(b)&&hatBedarf(b,p));if(!l.length)return null;const b=l[Math.floor(h/10000)%l.length];
+  p.kTisch={bis:heute+K.tage,f:1+K.preis,tid:b.id};news(`Konkurrenz am Tisch: Auch ein Scout von ${b.name} hat ${p.n} beobachtet. Sein Verein weiß das und verlangt von dir ${Math.round(K.preis*100)} % mehr.`,'');return b;}
+const konkurrenzTischFaktor=p=>p&&p.kTisch&&absTag(S.tag)<=p.kTisch.bis?p.kTisch.f:1;

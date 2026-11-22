@@ -39,7 +39,7 @@ function unverkaeuflichKI(p){const U=RTR.unverkaeuflich;if(!p||p.team<0||p.team>
   return squad(p.team).slice().sort((a,b)=>b.str-a.str).slice(0,U.schluessel).some(q=>q.id===p.id);}
 // Deine Spieler: S.unv = {Spieler: 1}. Überraschungsangebote nur ab dem Höchstpreis (ablauf.js market), nicht zugleich auf der Transferliste.
 const unverkaeuflichDu=p=>!!(p&&S.unv&&S.unv[p.id]&&p.team===S.my);
-const forderungDu=p=>(unverkaeuflichKI(p)?value(p)*RTR.maxFaktor:forderungBasis(p))*(p.team>=0&&p.team<AV0&&S.teams[p.team]?bezAbloese(p.team):1)*abwFaktor(p)*gerFaktor(p)*deadlinePreis(p); // aufgeflogenes Abwerben +15 % (K20 §5.4, U15), bekanntes Interesse aus der Gerüchteküche (K29 §5.5, U17b)
+const forderungDu=p=>(unverkaeuflichKI(p)?value(p)*RTR.maxFaktor:forderungBasis(p))*(p.team>=0&&p.team<AV0&&S.teams[p.team]?bezAbloese(p.team):1)*abwFaktor(p)*gerFaktor(p)*deadlinePreis(p)*konkurrenzTischFaktor(p); // aufgeflogenes Abwerben +15 % (K20 §5.4, U15), bekanntes Interesse aus der Gerüchteküche (K29 §5.5, U17b)
 // Aktuelle Forderung: Grundforderung oder das letzte Gegenangebot
 function forderung(p){const b=rundeAb(forderungDu(p)),v=verhandlungVon(p),f=v&&v.f!=null?Math.min(b,v.f):b;return konkurrenzOffen(v)?Math.max(f,v.konk.amt):f;} // Gegenangebot eines anderen Vereins (K20c)
 // ---------- Bieterwettstreit beim Kauf (K20 §4.2, K20c) ----------
