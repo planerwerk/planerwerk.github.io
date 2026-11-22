@@ -140,6 +140,8 @@ Forderung = Grundwert(Stärke, Alter) × Liga × Ruf × Markt × Berater × Stim
 | Zielvorgabe erreicht | Klausel greift | Info, Kosten |
 | Berater droht mit Wechsel | gieriger Berater, Verlängerung stockt (K22) | Druck, Presse (K29) |
 
+**Gebaut als K21c (22.11.2026, popolupo, ohne Testlauf), Karte nach K30:** „Gehaltsneid“ (Gehalt unter 70 % des Marktgehalts, Stimmung unter 55; anpassen auf 90 % im Gehaltsrahmen, neue Kartenwirkung `gehaltAnpassen`, erklären mit 50 % Erfolg, ignorieren Stimmung −4). Die übrigen Karten fehlen noch.
+
 ## 9. Wechselwirkungen
 
 | Konzept | Zusammenspiel |

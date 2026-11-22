@@ -79,6 +79,8 @@ Gleiche Regeln. Berater bieten auch Computer-Vereinen Spieler an, gierige spiele
 | Berater-Wechsel | Spieler wechselt den Berater | Beziehung neu |
 | Provisionsstreit | Berater fordert nachträglich mehr | zahlen (Geld) oder nicht (Beziehung −, Stimmung des Spielers −) |
 
+**Gebaut als K21c (22.11.2026, popolupo, ohne Testlauf), Karte nach K30:** „Provisionsstreit“ für einen Neuzugang mit Berater in den ersten 60 Tagen: zahlen (20.000 € in der 3. Liga, nach Liga mehr, Beziehung zum Berater +5) oder nicht (Beziehung −15, Stimmung −2, neue Kartenwirkung `beraterBez`).
+
 ## 9. Wechselwirkungen
 
 | Konzept | Zusammenspiel |

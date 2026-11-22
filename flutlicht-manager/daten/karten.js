@@ -84,6 +84,16 @@ const KARTEN=[
     texte:['{verein} hat ein Auge auf {spieler} aus deiner Jugend geworfen. Sein Berater lässt durchblicken: Ohne Profivertrag ist er weg.','Die Scouts von {verein} saßen bei jedem Jugendspiel von {spieler}. Jetzt liegt ein Angebot auf dem Tisch.'],
     optionen:[{text:'Profivertrag anbieten',wirkung:[{art:'jugendHoch',wert:1},{art:'fans',wert:1}],folge:'{verein} geht leer aus.'},
       {text:'Ziehen lassen',wirkung:[{art:'jugendWeg',wert:1}],folge:''}],auto:0},
+  // Verträge (K21 §8, K22 §8, K21c, 22.11.). Neue Wirkungen gehaltAnpassen (Gehalt auf wert × Marktgehalt, im Gehaltsrahmen) und beraterBez (Beziehung zum Berater).
+  {id:'gehaltsneid',titel:'Gehaltsneid',bereich:'K21',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'gehaltsneid',sperrTage:180,
+    texte:['{spieler} hat erfahren, was die anderen verdienen. Er fühlt sich unterbezahlt und sagt das auch.','In der Kabine wird über Gehälter geredet. {spieler} verdient deutlich weniger, als er wert ist, und ist sauer.'],
+    optionen:[{text:'Gehalt anpassen',wirkung:[{art:'gehaltAnpassen',wert:0.9},{art:'stimmung',wert:4}],folge:'{spieler} ist zufrieden.'},
+      {text:'Ihm die Lage erklären',wirkung:[{art:'stimmung',wert:2,chance:0.5,schlecht:-2,gut:'{spieler} versteht es.',schlechtText:'{spieler} hört nicht zu.'}]},
+      {text:'Ignorieren',wirkung:[{art:'stimmung',wert:-4}],folge:'{spieler} zieht sich zurück.'}],auto:1},
+  {id:'provision',titel:'Provisionsstreit',bereich:'K22',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'provision',sperrTage:365,
+    texte:['Der Berater von {spieler} meldet sich: Beim Wechsel sei eine Provision „vergessen“ worden. Er will {geld:20000}.','Nachforderung vom Berater von {spieler}: {geld:20000} zusätzlich, sonst gebe es Ärger.'],
+    optionen:[{text:'Zahlen',wirkung:[{art:'geld',wert:-20000},{art:'beraterBez',wert:5}],folge:'Der Berater ist zufrieden.'},
+      {text:'Nicht zahlen',wirkung:[{art:'beraterBez',wert:-15},{art:'stimmung',wert:-2}],folge:'Der Berater droht, {spieler} ist verunsichert.'}],auto:1},
   // Fans (K27 §8, K27c, 22.11.). Neue Wirkung preisRichtwert: dein Ticketpreis auf den Richtpreis.
   {id:'ticketProtest',titel:'Protest gegen Ticketpreise',bereich:'K27',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'ticketProtest',sperrTage:90,
     texte:['In der Kurve hängt ein Banner: „Fußball muss bezahlbar bleiben!“ Die Fanclubs fordern niedrigere Ticketpreise.','Die Fanszene ruft zum Protest gegen die Ticketpreise auf. Beim nächsten Heimspiel wollen sie die ersten zehn Minuten schweigen.'],
