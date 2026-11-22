@@ -109,7 +109,7 @@ function spielAufbau(hid,aid,o,saison,tag){const Z=RL.zurufe,hs=hash32(['spiel',
       else if(a.art==='fordern')f*=1+(hatEig(p,'kaempfer')?A.fordern.kaempfer:(hatEig(p,'nervenschwach')||hatEig(p,'diva'))?A.fordern.empfindlich:0)*a.f;}
     const r=G.spielerRuf[p.id];if(r&&m>r.m&&m<=r.m+Z.dauer)f*=1+r.f;return f;};
   G.foulSpieler=id=>{const r=G.spielerRuf[id];return r&&r.fouls&&G.mNow>r.m&&G.mNow<=r.m+Z.dauer?r.fouls:1;};
-const wb=o.wb||'liga',H=mitWettbewerb(wb,()=>side(hid,true,o.neutral)),A=mitWettbewerb(wb,()=>side(aid,false,o.neutral)),Ss=[H,A];G.schiri=schiriFuer(hid,aid,hs);taktikAnlegen(Ss,o);
+const wb=o.wb||'liga',H=mitWettbewerb(wb,()=>side(hid,true,o.neutral)),A=mitWettbewerb(wb,()=>side(aid,false,o.neutral)),Ss=[H,A];G.schiri=schiriFuer(hid,aid,hs);G.brisant=!o.test&&spielBrisant(hid,aid);taktikAnlegen(Ss,o); /* Derby oder Brisanz (K09d): mehr Karten, kein Würfel */
   const xg0=(H.am||A.am)?amateurErwartung(H,A):erwarteteTore(H,A);
   const ev=[],sc=[0,0],yel={},off=new Set(),inj=[],st={besitz:[0,0],schuesse:[0,0],aufsTor:[0,0],ecken:[0,0],fouls:[0,0],gross:[0,0],wege:[[0,0,0],[0,0,0]]},sz=[];
   const fr={};Ss.forEach(sd=>sd.xp.forEach(x=>fr[x.p.id]=x.p.fit));
@@ -174,7 +174,7 @@ const wb=o.wb||'liga',H=mitWettbewerb(wb,()=>side(hid,true,o.neutral)),A=mitWett
       if(R()<k*faktor){const typ=waehle(Object.keys(RE.mix.konter),q=>RE.mix.konter[q]*((Ss[1-s].stilF&&Ss[1-s].stilF.konterMix[q])||1));const r2=abschluss(m,1-s,typ,schuetzeWahl(1-s,typ),'konter');if(r2==='parade'&&R()<RE.ecken.parade)ecke(m,1-s);}}};
   // Fouls und Karten (K09 §5.1): Foulart würfeln, Kartenwahrscheinlichkeit mit Strenge, Einsatz, Hitzkopf, Müdigkeit, Rückstand in der Schlussphase
   const kartenFaktor=(s,p,m)=>{const K=RD.faktoren,sd=Ss[s],d=sc[s]-sc[1-s];return G.schiri.st*(sd.ein==='H'?K.hart:sd.ein==='F'?K.fair:1)*(hatEig(p,'hitzkopf')?K.hitzkopf:1)
-    *((fr[p.id]!=null?fr[p.id]:p.fit)<K.muedeUnter?K.muede:1)*(d<0&&m>=K.rueckstandAb?K.rueckstand:1)*(yel[p.id]?K.mitGelb.karte:1);};
+    *((fr[p.id]!=null?fr[p.id]:p.fit)<K.muedeUnter?K.muede:1)*(d<0&&m>=K.rueckstandAb?K.rueckstand:1)*(yel[p.id]?K.mitGelb.karte:1)*(G.brisant?K.derby:1);}; // Derby und Brisanz (K09 §5.1, K17 §5.2, K09d)
   const platzverweis=(m,s,p,art,x,opfer)=>{off.add(p.id);Ss[s].red++;ev.push({m,s,t:'R',p:p.id,n:p.n,art,x,opfer});sz.push([p.id,'rot',0]);W=werte(m);};
   const gelbeKarte=(m,s,p,x)=>{sz.push([p.id,'gelb',0]);if(yel[p.id]){off.add(p.id);Ss[s].red++;ev.push({m,s,t:'R',p:p.id,n:p.n,gy:1});W=werte(m);}else{yel[p.id]=1;ev.push({m,s,t:'Y',p:p.id,n:p.n,x});}};
   const FOULARTEN=Object.keys(RD.foulArten);

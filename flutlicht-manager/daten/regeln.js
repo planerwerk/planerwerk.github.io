@@ -383,7 +383,7 @@ const REGELN={
   // wirkung: abloese (Forderung × (1 + abloese × Beziehung)), unter gespraechUnter lehnt ein Verein mit gespraechAblehnen ab, testspiel (Zusage × (1 + testspiel × Beziehung)).
   beziehungen:{grund:{derby:-30,rivale:-15},vergessen:0.05,loeschenUnter:2,verlauf:5,fairKauf:0.9,fairRunden:0,
     anlass:{fair:5,spott:-3,ausstieg:-8,testspiel:3,leiheGut:5,leiheSchlecht:-5,kiWechsel:5,derbySieg:-2},
-    wirkung:{abloese:-0.0015,gespraechUnter:-50,gespraechAblehnen:0.5,testspiel:0.005},anzeige:3},
+    wirkung:{abloese:-0.0015,gespraechUnter:-50,gespraechAblehnen:0.5,testspiel:0.005,brisanzUnter:-50},anzeige:3}, // brisanzUnter (K17 §5.2, K09d): zwei Vereine darunter spielen wie im Derby (mehr Karten)
 
   // Ereigniskarten (K30 §5.5, §11, U12d). Chance je Woche, in der die Bedingungen erfüllt sind: 1 / (seltenheit × wochenJeSaison).
   // Dosierung: infoProWoche, Entscheidungen klein je Woche und groß je Monat, je Bereich je Woche, Halte je Woche (eigene Spiele mitgezählt).
@@ -736,7 +736,8 @@ const REGELN={
     meckern:{jeSpiel:0.15,rot:0.02},       // Unsportlichkeit und Meckern: Gelb je Spiel und Mannschaft, ein kleiner Teil wird Rot (Beleidigung)
     taetlichkeit:{jeSpiel:0.0016,schwer:0.05}, // etwa eine Tätlichkeit je Liga und Saison (306 Spiele)
     faktoren:{hart:1.3,fair:0.7,hitzkopf:1.5,hitzkopfMeckern:2,hitzkopfTaetlichkeit:3,muedeUnter:60,muede:1.2,rueckstand:1.0,rueckstandAb:75, // Rückstand ×1,2 aus K09 §5.1 vorläufig aus (K09 §12 Nr. 9)
-      mitGelb:{foul:0.35,karte:0.5}}, // verwarnte Spieler foulen vorsichtiger, außer Hitzköpfen (Konsistenzprüfung AI4)
+      mitGelb:{foul:0.35,karte:0.5}, // verwarnte Spieler foulen vorsichtiger, außer Hitzköpfen (Konsistenzprüfung AI4)
+      derby:1.3}, // Derby oder brisantes Spiel (K09 §5.1, K17 §5.2, K09d, 22.11., popolupo): Karten nach Fouls ×derby. Nicht in Testspielen.
     gelbsperre:{liga:[5,10,15],pokal:[5],eu:[3,5,7,9],spiele:1},gelbRot:1, // nach der letzten Schwelle zählt es neu; eu: Europapokal nach der UEFA-Regel (K37, U19a)
     rot:{notbremse:[1,1,2],grob:[2,1,4],unsportlich:[2,1,5],taetlichkeit:[4,3,6],schwer:[8,6,12],wiederholung:1,wiederholungTage:365,zufall:1,verletzung:1,verletzungAbTagen:28},
     verfahren:{antragTage:[1,2],frist:2,urteilTage:[2,5],urteilSpaetestens:10,archiv:60},

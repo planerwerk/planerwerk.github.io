@@ -56,4 +56,11 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
 {const {S,F,ev,nr}=welt(),h=F.beziehungenKarte(),k=F.bezKarte(nr('KSC'));
   pruef(h.includes('Beziehungen')&&h.includes(S.teams[nr('KSC')].name)&&k.includes('Baden-Derby'),'Anzeige: Büro mit den Beziehungen (Derby dabei), Spielerkarte mit Grund',`Verein ${ev('myT()').name}`);}
 
+// 11. Brisanz (K17 §5.2, K09 §5.1, K09d): Derby oder Beziehung zweier Vereine unter −50 ist brisant. Dort gibt es nach Fouls mehr Karten (×1,3).
+//     Dieselben 200 Spiele (gleiche Tage, gleiche Ströme) einmal ohne, einmal mit Brisanz: mindestens 10 % mehr Karten. Testspiele zählen nie als brisant.
+{const {S,F,ev,nr,B}=welt(),br=ev('spielBrisant'),a=nr('BVB'),b=nr('S04'),c=nr('FCB'),d=nr('SCP');const derby=br(a,b),vorher=br(c,d);
+  const karten=o=>{let n=0;for(let k=0;k<200;k++){S.season=5000+Math.floor(k/100);S.tag=k%100;const r=F.sim(c,d,o);n+=r.ev.filter(e=>e.p!=null&&(e.t==='Y'||e.t==='R')).length;}return n;};
+  const ohne=karten({});F.bezAendern(c,d,-90,'Test');const nachher=br(c,d),mit=karten({}),test=karten({test:1,wb:'test'});
+  pruef(derby&&!vorher&&nachher&&mit>=ohne*1.1&&test<mit,'Brisanz: Derby und Beziehung unter −50 bringen mehr Karten, Testspiele nicht',`Derby ${derby}, vorher ${vorher}, nachher ${nachher}, Karten ohne ${ohne}, mit ${mit}, Testspiel ${test}`);}
+
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

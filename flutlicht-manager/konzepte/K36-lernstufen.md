@@ -379,6 +379,7 @@ lizenz:{
 137. **K30d Anlasskarten (22.11., popolupo, ohne Testlauf):** keine neue Funktion. Karten zu seltenen Anlässen kommen öfter, sie bleiben im Bereich `ereignisse`.
 138. **K10e Medizin-Karten (22.11., popolupo, ohne Testlauf):** keine neue Funktion, zwei Entscheidungskarten im Bereich `ereignisse`. Hygieneplan und Spezialist gibt es nur über die Karten.
 139. **K17d Klatsch und Tratsch (22.11., popolupo, ohne Testlauf):** keine neue Funktion. Die Gerüchte kommen wie bisher als Information, eine neue Art („Thema“) und mehr Gerüchte bei schlechter Beziehung.
+140. **K09d Derby-Faktor und Brisanz (22.11., popolupo, ohne Testlauf):** keine neue Funktion, eine Regel der Engine für alle Vereine.
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 

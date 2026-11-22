@@ -118,7 +118,7 @@ Noch nicht gebaut: Abwerben (K20), Presse und Gerüchte (K29), Vorfälle im Spie
 - **Testspiele:** Zusage × (1 + 0,005 × Beziehung).
 - **Computer-Vereine** kaufen nicht bei einem Verein, zu dem ihre Beziehung unter −50 liegt (§7).
 
-Noch nicht gebaut: Brisanz im Spiel. Leihangebote über +40 gibt es seit K17b als Karte „Hilfe in der Not“.
+Brisanz im Spiel seit K09d (22.11.2026, popolupo, ohne Testlauf): Derby oder Beziehung der beiden Vereine (Verein–Verein, nicht deine) unter −50, dort gibt es nach Fouls ×1,3 Karten (`spielBrisant`, `RD.faktoren.derby`). Noch offen: Derbys und brisante Spiele als „wichtige Spiele“ (K04 §5.5), das ändert die Spielstärke und kommt erst nach einem Testlauf. Leihangebote über +40 gibt es seit K17b als Karte „Hilfe in der Not“.
 
 **Gerüchte und Klatsch (§5.2, §5.3), gebaut seit K17d (22.11.2026, popolupo, ohne Testlauf):**
 

@@ -105,11 +105,12 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 | **K30d** Anlasskarten mit eigener Chance (K37 §12 Nr. 21, vorläufig entschieden) | `mitarbeit/popolupo-k30d-anlasskarten` (auf den Korrekturen EE) | fertig, ungetestet |
 | **K10e** Medizin-Karten (Grippewelle, lange Reha) | `mitarbeit/popolupo-k10e-medizin-karten` (auf K30d) | fertig, ungetestet |
 | **K17d** Klatsch und Tratsch | `mitarbeit/popolupo-k17d-klatsch` (auf K10e) | fertig, ungetestet |
+| **K09d** Derby-Faktor und Brisanz | `mitarbeit/popolupo-k09d-derby-brisanz` (auf K17d) | fertig, ungetestet |
 | U19d2 volle Kader der Auslandsvereine in der Engine | zurückgestellt | Entwurf in K37 §5.7. Die Engine behandelt Auslandsvereine als Block wie Amateure, viele Stellen schlagen Spieler in `PIX` nach. Erst nach einem Testlauf und der Messung des Faktors 0,93 |
 
 **Die neueste Spitze ist immer der zuletzt genannte Zweig, er enthält alles davor.** K24 ist fertig (Claude).
 
-**Vorschlag für den nächsten Testlauf** (Spitze `mitarbeit/popolupo-k17d-klatsch`, alles ungetestet, bis auf K30c, K30d, K10e und K17d von lesenden Prüf-Agenten durchgesehen, Konsistenzprüfung CS bis EE). **Wichtig:** Die Zweige `u12g` und `k29e` laden für sich allein nicht (DN1), bitte die Spitze nehmen:
+**Vorschlag für den nächsten Testlauf** (Spitze `mitarbeit/popolupo-k09d-derby-brisanz`, alles ungetestet, bis auf K30c, K30d, K10e, K17d und K09d von lesenden Prüf-Agenten durchgesehen, Konsistenzprüfung CS bis EE). **Wichtig:** Die Zweige `u12g` und `k29e` laden für sich allein nicht (DN1), bitte die Spitze nehmen:
 1. `node tests/code.js`, dann die schnellen Einzeltests der neuen Teile: `finanzen.js` (Nr. 11 bis 20), `geruechte.js` (seit K17d mit Klatsch), `schwierigkeit.js`, `werbung.js`, `europapokal.js`, `vorstand.js` (Nr. 10 bis 19), `karriereende.js`, `stadion.js` (Nr. 8 bis 11), `karten.js`, `spielwelt-karten.js`, `fans.js` (K27b), `abwerben.js` (K20b, K20e), `transfers.js` (K20c, K20d, K19c, K31b, K31c, K19d), `presse.js` (K29b bis K29j), `marketing.js` (K25c, K25d), dazu seit dem Nachmittag des 22.11.: `testspiele.js` (K11b, K11c), `erinnerungen.js` (K09b, K07b, K11d, K07d), `scouting.js` (K18c bis K18e), `medizin.js` (K10b bis K10d), `disziplin.js` (K09c, EA1 bis EA3), `vertraege.js` (K21b), `statistik.js` (K34d), `taktik.js` (K06b, eigene Welt am Ende), `stab.js` (K16b), `wettbewerbe.js` (K13b, K13c, eigene Welten am Ende), `lizenz.js` (K36c am Ende), und in `karten.js` die neuen Karten (K30b, K07c, K08b, K08c, K16c, K27c, K21c, K26e, K12c, K29k, K17b, K22c, K03b, K30c, K30d, K10e, U19e). Der Katalog in `karten.js` Fall 1 ist mit `kartenpruefung.pl` schon ohne Node geprüft.
 2. `node tests/lizenz.js` (Gleichschritt, neue Bereiche `zielgespraech`; seit K36c am Ende die gesammelten Meldungen des Stabs). Viele neue Teile wirken nur ohne Automatik oder über Karten, darum sollte 5a gleich bleiben.
 3. `node tests/finanzmodell.js 2`: Salden je Liga nach K23c. Erwartet nach der Modellrechnung 1. Liga etwa +11 Mio., 2. Liga etwa 0, 3. Liga etwa −1 Mio. je Verein und Saison ohne Transfers (K23 §5.6b). Weichen sie stark ab, bitte die Zeilen ins Testprotokoll, ich stelle dann `REGELN.finanzen.verwaltung` und `sponsor` nach.
@@ -144,6 +145,12 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 ---
 
 ## Changelog
+
+### 22.11.2026: K09d Derby-Faktor und Brisanz (Zweig `mitarbeit/popolupo-k09d-derby-brisanz`, auf K17d)
+
+- **Neu (K09 §5.1, K17 §5.2):** In Derbys und in Spielen zweier Vereine, deren Beziehung unter −50 liegt, gibt es nach Fouls 1,3-mal so viele Karten. Testspiele zählen nicht. Kein neuer Würfel, nur eine höhere Schwelle in der Engine.
+- **Noch offen:** Derbys als „wichtige Spiele“ (K04 §5.5). Das würde die Spielstärke ändern, darum erst nach einem Testlauf.
+- **Tests zuerst:** `tests/beziehungen.js` (neuer Fall 11), dann `tests/disziplin.js` (Kartenhäufigkeit, erwartet minimal höher, etwa +1 %). Gleichschritt: Derbys gibt es in beiden Welten gleich, die Beziehung Verein–Verein erreicht in 150 Tagen kaum −50. 5a sollte gleich bleiben.
 
 ### 22.11.2026: K17d Klatsch und Tratsch (Zweig `mitarbeit/popolupo-k17d-klatsch`, auf K10e)
 
