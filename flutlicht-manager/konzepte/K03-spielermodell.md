@@ -386,6 +386,8 @@ Ereigniskarten nach K30. Die meisten landen nur im Posteingang. Entscheidungen s
 | Nicht mehr der Schnellste | Altersverlust | Info, eventuell Gespräch über eine neue Rolle (K15) |
 | Eigenschaft entdeckt | Co-Trainer-Bericht | Info |
 | Der Trainingsweltmeister übertreibt | Vorbildprofi oder Trainingsweltmeister bei hartem Training | kleine Verletzung oder Lob vom Co-Trainer |
+
+**Gebaut als K03b (22.11.2026, popolupo, ohne Testlauf), Karten nach K30:** „Formkrise“ (Form bis 4; Gespräch, Pause oder durchziehen, neue Kartenwirkung `selbstvertrauen`) und „Formhoch“ (Form ab 16, Meldung). Vorläufig ohne „über drei Wochen“, die Form wird nicht über die Zeit gespeichert. „Merkmal gelernt“ und „Durchbruch“ (Prägung) gibt es schon als Meldungen.
 | Partynacht (Entscheidung) | Partylöwe, nach einem Sieg, Zufall | Strafe, Gespräch oder Ignorieren: Stimmung, Presse, Kondition |
 | Heimweh (Entscheidung) | Heimweh-Typ, Integration < 40 nach 8 Wochen | Familie holen (Kosten), Landsmann verpflichten, Geduld |
 | Der Hitzkopf und der Schiedsrichter | Hitzkopf, Rote Karte | Verfahren (K09), Presse (K29) |

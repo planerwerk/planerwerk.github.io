@@ -54,6 +54,9 @@ const AUSLOESER={
   pauseBitte(){const T=RKT.training,l=squad(S.my).filter(p=>!(p.inj>0)&&p.fit<T.pauseUnter&&profi(p)>=T.profiAb);return l.length?{spieler:pick(l).id}:null;},
   // Jugend (K08 §8, K08b): Talent zum Probetraining, jederzeit in der Saison
   probetraining(){return S.phase==='play'?{}:null;},
+  // Form (K03 §8, K03b): ein gesunder Spieler deines Kaders mit Form bis RKT.form.kriseBis (Krise) oder ab hochAb (Formhoch), in der Saison
+  formkrise(){if(S.phase!=='play')return null;const l=squad(S.my).filter(p=>!(p.inj>0)&&p.form<=RKT.form.kriseBis);return l.length?{spieler:pick(l).id}:null;},
+  formhoch(){if(S.phase!=='play')return null;const l=squad(S.my).filter(p=>!(p.inj>0)&&p.form>=RKT.form.hochAb);return l.length?{spieler:pick(l).id}:null;},
   // Berater droht mit Wechsel (K21 §8, K22 §8, K22c): ein Spieler deines Kaders im letzten Vertragsjahr mit einem gierigen Berater
   beraterDroht(){const l=squad(S.my).filter(p=>p.ct<=1&&!p.wech&&!p.leihe&&(beraterVon(p)||{}).prof==='gierig');return l.length?{spieler:pick(l).id}:null;},
   // Hilfe in der Not (K17 §8, K17b): ab RKT.hilfe.verletzteAb Verletzten im offenen Fenster; ein Verein mit Beziehung über bezAb hat einen Spieler, den er abgeben würde (RLE.holenRollen)
@@ -174,9 +177,10 @@ function kartenWirkung(w,b,c){let wert=w.wert,txt='';if(w.chance!=null){const ok
   else if(w.art==='zuschuss'){const c=S.constr;if(c&&!c.zuschuss){const x=Math.round(c.kosten*wert/1000)*1000;c.zuschuss=x;money('Stadionbau',x);txt=`Die Stadt überweist ${fmt(x)}.`;}} /* K26e: Anteil wert der Baukosten */
   else if(w.art==='sonderschicht'){if(p&&p.team===S.my){p.ko=Math.min(100,(p.ko||0)+wert);p.fit=Math.max(RE.fitnessMin,p.fit-RKT.sommer.sonderFrische);}} /* K12c: Kondition +wert, Frische − sonderFrische */
   else if(w.art==='leihe'){if(p&&b.verein!=null&&p.team===b.verein){const f=ausleihen(p);if(f)txt=f;}} /* K17b: Leihe über ausleihen (leihe.js), mit allen ihren Prüfungen */
+  else if(w.art==='selbstvertrauen'){if(p&&p.team===S.my)svAendern(p,wert);} /* K03b */
   else if(w.art==='pause'){if(p&&p.team===S.my){p.fit=Math.min(100,p.fit+wert);p.sp=Math.max(0,(p.sp||0)-RKT.training.pauseSpielpraxis);}} /* K07c: Frische +wert, etwas Spielpraxis weg */
   return txt;}
-const KARTEN_WIRKUNGEN=['stimmung','stimmungAlle','zusammenhalt','glaub','vertrauen','ruf','bezDu','geld','fans','verpflichten','interesse','angebot','maezen','merch','jobwechsel','pause','talent','jugendHoch','jugendWeg','stabWeg','stabHalten','preisRichtwert','gehaltAnpassen','beraterBez','zuschuss','sonderschicht','leihe'];
+const KARTEN_WIRKUNGEN=['stimmung','stimmungAlle','zusammenhalt','glaub','vertrauen','ruf','bezDu','geld','fans','verpflichten','interesse','angebot','maezen','merch','jobwechsel','pause','talent','jugendHoch','jugendWeg','stabWeg','stabHalten','preisRichtwert','gehaltAnpassen','beraterBez','zuschuss','sonderschicht','leihe','selbstvertrauen'];
 // Höchstes Ansehen eines Vereins, der dir einen Job anbietet: dieselbe Mitte wie die Jobangebote nach einer Entlassung (saison.js mkJobs) plus jobangebot.rufSpanne
 const jobangebotGrenze=()=>{const J=RV.jobs;return myT().rep-J.ansehenAbschlag+(ruf()-RV.ruf.start)*RV.ruf.jobsJePunkt+RV.jobangebot.rufSpanne;};
 // Vereinswechsel (saison.js takeJob, vor dem Wechsel): offene Karten entscheidet der Co-Trainer noch für den alten Verein, sie wandern nicht mit (Prüfung DQ3)

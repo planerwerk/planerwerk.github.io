@@ -176,6 +176,12 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   const g=sq.find(p=>(bv(p)||{}).prof==='gierig'),a=sq.find(p=>bv(p)&&bv(p).prof!=='gierig');if(g)g.ct=1;if(a)a.ct=1;const mit=A.beraterDroht();
   pruef(ohne===null&&(g?!!mit&&mit.spieler===g.id:mit===null),'Berater droht: nur letztes Vertragsjahr und gieriger Berater',`ohne ${ohne}, gierig ${g?g.n:'keiner im Kader'}, Auslöser ${mit&&mit.spieler}`);}
 
+// K03b. Formkarten (K03 §8): Formkrise bis Form 4, Formhoch ab 16, nur gesunde Spieler; die Wirkung selbstvertrauen ändert das Selbstvertrauen
+{const {S,ev}=welt(),A=ev('AUSLOESER'),FK=ev('RKT').form,sq=ev('squad')(S.my);S.phase='play';sq.forEach(p=>{p.form=10;p.inj=0;});const keine=A.formkrise()===null&&A.formhoch()===null;
+  const p=sq[0],q=sq[1];p.form=FK.kriseBis;q.form=FK.hochAb;const k=A.formkrise(),h=A.formhoch();p.inj=5;const verletzt=A.formkrise();p.inj=0;
+  const sv0=p.sv||0;ev('kartenWirkung')({art:'selbstvertrauen',wert:2},{spieler:p.id},{titel:'Test'});const sv=(p.sv||0)-sv0;
+  pruef(keine&&!!k&&k.spieler===p.id&&!!h&&h.spieler===q.id&&verletzt===null&&sv>0,'Formkarten: Krise und Hoch nach Form, nicht verletzt, Selbstvertrauen wirkt',`ohne ${keine}, Krise ${k&&k.spieler===p.id}, Hoch ${h&&h.spieler===q.id}, verletzt ${verletzt}, Selbstvertrauen +${sv}`);}
+
 // U19e. Europapokal-Karten (K37 §8): Auswärtsspiel bei einem Auslandsverein in den nächsten 7 Tagen (kein Heimspiel, nicht später, nicht das Finale), Spiel 1 bis 7 Tage her,
 //       Wunder nach 0:3 im Hinspiel und 4:0 oder 3:0 mit Elfmeterschießen im Rückspiel, nicht nach nur einem Tor Rückstand und nicht beim Ausscheiden. euMeineSpiele ersetzt der Test.
 {const {S,W,ev}=welt(),A=ev('AUSLOESER'),AV=ev('AV0'),me=S.my,d=S.tag;W.ev('euMeineSpiele=function(){return S.testEu||[];}');

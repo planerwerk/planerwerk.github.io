@@ -84,6 +84,14 @@ const KARTEN=[
     texte:['{verein} hat ein Auge auf {spieler} aus deiner Jugend geworfen. Sein Berater lässt durchblicken: Ohne Profivertrag ist er weg.','Die Scouts von {verein} saßen bei jedem Jugendspiel von {spieler}. Jetzt liegt ein Angebot auf dem Tisch.'],
     optionen:[{text:'Profivertrag anbieten',wirkung:[{art:'jugendHoch',wert:1},{art:'fans',wert:1}],folge:'{verein} geht leer aus.'},
       {text:'Ziehen lassen',wirkung:[{art:'jugendWeg',wert:1}],folge:''}],auto:0},
+  // Form (K03 §8, K03b, 22.11.). Neue Wirkung selbstvertrauen: Selbstvertrauen des Spielers + wert.
+  {id:'formkrise',titel:'Formkrise',bereich:'K03',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'formkrise',sperrTage:90,
+    texte:['{spieler} steckt in einem tiefen Loch. Im Training gelingt ihm nichts, im Spiel noch weniger.','Die Zeitungen schreiben {spieler} schon ab. Er selbst wirkt ratlos.'],
+    optionen:[{text:'Ein Gespräch unter vier Augen',wirkung:[{art:'selbstvertrauen',wert:2},{art:'stimmung',wert:2}],folge:'Ihr redet lange. {spieler} wirkt erleichtert.'},
+      {text:'Zwei Tage Pause',wirkung:[{art:'pause',wert:10},{art:'selbstvertrauen',wert:1}],folge:'{spieler} bekommt den Kopf frei.'},
+      {text:'Er muss da durch',wirkung:[{art:'selbstvertrauen',wert:-1},{art:'glaub',wert:1}],folge:'Du setzt auf Härte. Ob er daran wächst?'}],auto:0},
+  {id:'formhoch',titel:'Formhoch',bereich:'K03',art:'info',stufe:'haeufig',ausloeser:'formhoch',sperrTage:90,
+    texte:['{spieler} spielt sich in einen Rausch. Die ersten Scouts anderer Vereine sitzen auf der Tribüne.','Alles, was {spieler} anfasst, gelingt gerade. Die Presse fragt nach der Nationalmannschaft.']},
   // Berater droht mit Wechsel (K21 §8, K22 §8, K22c, 22.11.). Nur bekannte Wirkungen.
   {id:'beraterDroht',titel:'Berater droht mit Wechsel',bereich:'K22',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'beraterDroht',sperrTage:365,
     texte:['Der Berater von {spieler} lässt über die Presse ausrichten: Ohne deutlich mehr Geld wechselt sein Mandant im Sommer ablösefrei.','„Andere Vereine stehen Schlange“, sagt der Berater von {spieler}. Er will sofort eine Gehaltserhöhung sehen.'],
