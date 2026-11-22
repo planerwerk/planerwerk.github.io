@@ -1946,3 +1946,16 @@ Ein Agent hat a97ce26, dc5ccd6, 8b6873a, 3d6b3ea und 574aca0 gelesen (nichts aus
 | DW9 | Ein Kommentar zu `jobangebot.rufSpanne` war an die Zeile `budgetgespraech` gerutscht, `bgChance` nutzte die Zahlen 50 und 10 im Code (jetzt `vertrauenMitte`, `sparsamMitte`). Unter der Automatik der Transfers merkt sich `kiBudget` das Budget je Fenster, das Plus aus dem Budgetgespräch wirkt dann erst ab dem nächsten Fenster. Das bleibt so und ist hier vermerkt. | ✅ behoben, Rest dokumentiert |
 | DW10 | **Tests:** K11b prüfte „einmal je Saison“ an einem Tag, der auch aus anderen Gründen nicht ging. Jetzt an allen Tagen, an denen ohne das erste Turnier eines ginge, dazu Siegprämie, reservierter Tag 2 und keine Turniere vor der 3. Woche. K11c läuft jetzt über den Montag in `testspieleTag`, antwortet am letzten Tag der Frist und prüft Halt, Saison und Verein. Neu `tests/scouting.js` DW8. Offen: das Elfmeterschießen im Turnier und die Wochengrenze von „Plan passt nicht“ in `tests/erinnerungen.js`. | teils offen |
 | DW11 | Ohne Befund: Korrekturen DV, Gleichschritt 5a (die Einladung entsteht dort, weil `auto.testspiele` fehlt, wirkt aber nicht und würfelt im eigenen Strom), Budgetgespräch und Turnier nur per Knopf. | ✅ |
+
+## DX. Prüfung von U19e, K31b und der Korrekturen DW ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat a10719d, 832e7f5 und 9d726b3 gelesen (nichts ausgeführt). Kein blockierender und kein mittlerer Fehler. Geprüft und ohne Befund: Datenform von `euMeineSpiele` (Hin- und Rückspiel, Elfmeterschießen, Finale), Zeitfenster der Europapokal-Karten mit dem Montag, die Liste in K31b gleich den Bietern im Markt, der Halt „Frist“, Gleichschritt 5a, `showPre` nach der Gegnerbeobachtung, DW5. Korrekturen auf `mitarbeit/popolupo-k36c-stabbericht`.
+
+| # | Befund | Status |
+|---|---|---|
+| DX1 | Nach einem Jobwechsel blieben die gespielten Testspiele des alten Vereins, auch Tag 2 eines gespielten Turniers. `testspielBelegt` erkannte daran den Tag 2 eines neuen Turniers als schon eingetragen (DW1 kam auf diesem Weg zurück), und die alten Spiele zählten beim neuen Verein zur Woche, zur Automatik und zur Vorbereitungsliste. Jetzt löscht `takeJob` alle Testspiele, und Tag 2 muss genau der Tag nach dem Turnierbeginn sein. | ✅ behoben |
+| DX2 | Das Fenster der Spielvorbereitung (2 Tage) stand doppelt im Code (taktik.js, scouting.js). Jetzt `RTA.vorbereitungTage` und ein Helfer `vorbereitungWirkt` für beide. | ✅ behoben |
+| DX3 | Der Test K11b „einmal je Saison“ war bestanden, wenn es keinen prüfbaren Tag gab. Jetzt muss es einen geben. | ✅ behoben |
+| DX4 | Das Changelog zu DW nannte `tests/vorstand.js`, dort fehlte aber ein Fall zu DW5. Jetzt Fall DW5 (Prozente im Zielgespräch nach einem zugesagten Budgetgespräch). | ✅ behoben |
+| DX5 | Die Häufigkeit der Europapokal-Karten stand in K37 §8 für alle gleich. Jetzt je Karte (Pyrotechnik etwa alle 12 bis 15 Saisons, Fanmarsch und Reisechaos 25 bis 30, Wunder fast nie). | ✅ behoben |
+| DX6 | Der Hinweis unter „Bedarf anderer Vereine“ war ungenau (Auslandsvereine bieten ohne Bedarf, unter der Automatik kommen keine Angebote). Jetzt steht beides da. Der Test K31b vergleicht mit einer Kopie des Filters aus `market()`, nicht mit `market()` selbst. Das bleibt so und ist hier vermerkt. | ✅ behoben, Rest dokumentiert |

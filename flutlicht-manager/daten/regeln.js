@@ -676,7 +676,7 @@ const REGELN={
     // Umsetzung = 0,5 × Voraussetzungen + 0,5 × Vertrautheit/100. Grundwert: Bereich gegen Ligaschnitt, ±grundSpanne/2 Punkte = 0 bis 1. Frische und Kondition: von 60 (0) bis 90 (1).
     umsetzung:{voraussetzungen:0.5,vertrautheit:0.5,merkmalErtrag:[1,0.6,0.3],grundSpanne:12,frische:[60,90]},
     vertrautheit:{start:[70,30],trainingWoche:5,jeSpiel:3,vergessen:2,min:30,neuzugang:4,ordnungUnter:60,ordnungMalus:0.03},
-    vorbereitungBonus:0.01,standardsBonus:1.05, // Spielvorbereitung MD-1/MD-2: Teamwerte +1 %, Standard-Einheit in den letzten 7 Tagen: Tore nach Ecken und Freistoßflanken ×1,05 (K07 §5.3)
+    vorbereitungBonus:0.01,vorbereitungTage:2,standardsBonus:1.05, // Spielvorbereitung MD-1/MD-2: Teamwerte +1 %, Standard-Einheit in den letzten 7 Tagen: Tore nach Ecken und Freistoßflanken ×1,05 (K07 §5.3)
     einstellung:{locker:{wirkung:0.96,frische:0.7},saison:{wirkung:1.04,katerTage:10,kater:0.955,frische:5}}, // Kater 10 Tage: trifft auch das nächste Wochenendspiel (K06 §12)
     // Computer-Trainer (K06 §7): Außenseiter mauern oder kontern, Favoriten pressen oder haben den Ball, Reaktion auf deinen Lieblingsstil (Stufe „normal“)
     ki:{aussenseiter:0.95,favorit:1.05,reaktion:0.25,rueckblick:5,profil:{ausgewogen:3,pressing:1,ballbesitz:1,konter:1,mauern:1,fluegel:1},ordnungTreue:1.02,ordnungAlleWochen:4,wichtigAbRunde:3,kreislaufGewicht:0.3}},

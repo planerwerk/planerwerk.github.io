@@ -67,7 +67,7 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 | **U19e** Europapokal-Karten, dazu **K31b** Bedarf anderer Vereine und Korrekturen DW | `mitarbeit/popolupo-u19e-europa-karten` (auf K11c) | fertig, ungetestet |
 | **K34d** Rekordtransfer mit echtem Startwert, dazu **K31c** „Konkurrent rüstet auf“ | `mitarbeit/popolupo-k34d-rekordtransfer` (auf U19e) | fertig, ungetestet |
 | **K30b** Meldungsdichte | `mitarbeit/popolupo-k30b-meldungsdichte` (auf K34d) | fertig, ungetestet |
-| **K36c** Meldungen des Stabs gesammelt | `mitarbeit/popolupo-k36c-stabbericht` (auf K30b) | fertig, ungetestet |
+| **K36c** Meldungen des Stabs gesammelt, dazu Korrekturen DX | `mitarbeit/popolupo-k36c-stabbericht` (auf K30b) | fertig, ungetestet |
 | U19d2 volle Kader der Auslandsvereine in der Engine | zurückgestellt | Entwurf in K37 §5.7. Die Engine behandelt Auslandsvereine als Block wie Amateure, viele Stellen schlagen Spieler in `PIX` nach. Erst nach einem Testlauf und der Messung des Faktors 0,93 |
 
 **Die neueste Spitze ist immer der zuletzt genannte Zweig, er enthält alles davor.** K24 ist fertig (Claude).
@@ -107,6 +107,16 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 ---
 
 ## Changelog
+
+### 22.11.2026: Korrekturen nach Prüfung DX zu U19e, K31b und DW (Zweig `mitarbeit/popolupo-k36c-stabbericht`, zweiter Commit)
+
+- Ein lesender Prüf-Agent hat U19e, K31b und die Korrekturen DW durchgesehen (Konsistenzprüfung DX). Er fand keinen blockierenden und keinen mittleren Fehler.
+- **Behoben:**
+  - DX1: Nach einem Jobwechsel sind alle Testspiele des alten Vereins weg, Tag 2 eines neuen Turniers bleibt reserviert.
+  - DX2: Das Fenster der Spielvorbereitung steht als `RTA.vorbereitungTage` in den Regeln, Engine und Gegnerbeobachtung nutzen denselben Helfer.
+  - DX3, DX4: Tests K11b und neu DW5 in `tests/vorstand.js`.
+  - DX5, DX6: Texte (Häufigkeit der Europapokal-Karten je Karte, Hinweis unter „Bedarf anderer Vereine“).
+- **Tests zuerst:** `tests/testspiele.js`, `tests/vorstand.js` (DW5), `tests/scouting.js`, dazu `tests/taktik.js` wie bisher (die Engine rechnet gleich).
 
 ### 22.11.2026: K36c Meldungen des Stabs gesammelt (Zweig `mitarbeit/popolupo-k36c-stabbericht`, auf K30b)
 

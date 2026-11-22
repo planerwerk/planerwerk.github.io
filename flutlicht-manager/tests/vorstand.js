@@ -90,6 +90,11 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   S.ruf=30;F.rufSaison(sm({pos:z0}));const r=ev('ruf()');
   pruef(z1===z0+1&&S.zg.stufe===1&&Math.abs(b1-Math.round(b0*(1-Z.budgetTief)))<=1&&nah(r,30),'Zielgespräch: Tiefstapeln mit Zusage, Budget kleiner, Ziel genau erreicht bringt keinen Ruf (Vorschlag zählt)',`Ziel ${z0} → ${z1}, Budget ${b0} → ${b1}, Ruf ${r}`);}
 
+// DW5. Nach einem zugesagten Budgetgespräch (+20 %) nennt das Zielgespräch nur seinen eigenen Teil: beim Tiefstapeln um einen Platz „15 % weniger“, nicht den Gesamtfaktor
+{const {S,F,ev,B,W}=welt(),Z=B.zielgespraech;W.ev('zgTiefChance=function(){return 1;}');S.bg={s:S.season,tid:S.my,ok:1};const z0=S.target;F.zielVerhandeln(1);
+  const txt=(S.news.find(n=>n.t.startsWith('Zielgespräch'))||{t:''}).t,soll=`${Math.round(Z.budgetTief*100)} % weniger`;
+  pruef(S.target===z0+1&&txt.includes(soll)&&ev('bgFaktor')()>1,'Zielgespräch nach dem Budgetgespräch: Prozente nur aus dem Zielgespräch',txt.slice(0,160));}
+
 // 12. Tiefstapeln abgelehnt: Ziel bleibt, Vertrauen −3, Gespräch beendet. Zusage-Chance: steigt mit Vertrauen und Ruf, sinkt mit jedem weiteren Platz
 {const {S,F,ev,B,W}=welt(),Z=B.zielgespraech;const c1=F.zgTiefChance(1),c2=F.zgTiefChance(2);S.trust=90;const c3=F.zgTiefChance(1);
   W.ev('zgTiefChance=function(){return 0;}');S.trust=60;const z0=S.target;F.zielVerhandeln(1);

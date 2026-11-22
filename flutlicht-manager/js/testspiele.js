@@ -14,7 +14,7 @@ function testspielTage(){const T=RTS,l=[],von=S.tag+T.vorlaufTage,bis=Math.min(S
     const w=Math.floor(d/7),n=alle.filter(x=>Math.floor(x/7)===w).length;if(n>=T.maxProWoche)continue;l.push(d);}return l;}
 // Belegte Testspieltage (nicht abgesagt), dazu Tag 2 eines angemeldeten Sommerturniers, solange er noch nicht eingetragen ist (Prüfung DW1)
 function testspielBelegt(){const U=S.turnier,l=(S.testspiele||[]).filter(x=>x.stand!=='abgesagt').map(x=>x.tag);
-  if(U&&U.s===S.season&&U.platz==null&&!(S.testspiele||[]).some(x=>x.turnier&&x.runde===2))l.push(U.tag+1);return l;}
+  if(U&&U.s===S.season&&U.platz==null&&!(S.testspiele||[]).some(x=>x.turnier&&x.runde===2&&x.tag===U.tag+1))l.push(U.tag+1);return l;}
 // Vorgeschlagene Gegner: zwei Amateurvereine aus der Region, Profis aus der 1. bis 3. Liga nach Niveau (näher zuerst)
 function testspielGegner(d){const me=teamLevel(S.my),t=myT(),pro=S.teams.filter(x=>aktiv(x)&&x.id!==S.my).map(x=>({id:x.id,d:teamLevel(x.id)-me,reg:x.region===t.region}))
     .sort((a,b)=>Math.abs(a.d)-Math.abs(b.d)-(a.reg-b.reg)*2).slice(0,inVorbereitung(d)&&vorbereitungsWoche(d)<RTS.abWoche?0:RTS.vorschlaege);

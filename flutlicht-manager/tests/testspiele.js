@@ -60,7 +60,7 @@ if(lager){const f=ev('lagerMoeglich')('schwarzwald',S.tag+1,7);if(f)return{fehle
   const a=lauf(true,true),b=lauf(false,true),lg=welt().ev('myT()').lg;
   // Vor der Woche RTS.abWoche geht kein Turnier, weil keine Profis zusagen (DW6)
   const frueh=(()=>{const {F,S,ev}=welt();S.tag=ev('auftaktTag')(ev('myT()'));return ev('testspielTage')().filter(x=>ev('vorbereitungsWoche')(x)<ev('RTS').abWoche).some(x=>F.turnierMoeglich(x));})();
-  pruef(!a.fehler&&a.antritt===(T.antritt[lg]||T.antritt[3])&&!a.tag2frei&&a.finale===1&&a.tag2&&a.platz===1&&a.v&&a.sieg===(T.sieg[lg]||T.sieg[3])&&!a.nochmal&&!b.fehler&&b.finale===0&&b.platz===3&&!b.v&&b.sieg===0&&!frueh,
+  pruef(!a.fehler&&a.antritt===(T.antritt[lg]||T.antritt[3])&&!a.tag2frei&&a.finale===1&&a.tag2&&a.platz===1&&a.v&&a.sieg===(T.sieg[lg]||T.sieg[3])&&!a.nochmal&&a.pruefbar>0&&!b.fehler&&b.finale===0&&b.platz===3&&!b.v&&b.sieg===0&&!frueh,
     'Sommerturnier: Anmeldung mit Antrittsgeld, Tag 2 reserviert, Finale am Tag danach, Turniersieg mit Pokal und Siegprämie, Spiel um Platz 3, einmal je Saison, nicht vor der 3. Woche',
     a.fehler||b.fehler||`Platz ${a.platz} und ${b.platz}, Pokal ${a.v}, Siegprämie ${a.sieg}, Tag 2 frei ${a.tag2frei}, nochmal ${a.nochmal} (${a.pruefbar} Tage geprüft), früh ${frueh}`);}
 // K11c. Anfragen der Computer-Vereine (K11 §5): in der Vorbereitung eine Einladung (Chance hier 1), Zusage ergibt ein Auswärtstestspiel, Absage nichts; in der Automatik keine Anfrage
