@@ -74,6 +74,11 @@ const KARTEN=[
     texte:['Das Trikot von {spieler} ist ausverkauft. Der Ausrüster könnte nachproduzieren, das kostet {geld:100000}.','Nach den Toren von {spieler} gibt es im Fanshop kein Trikot mit seiner Nummer mehr. Nachproduzieren würde {geld:100000} kosten.'],
     optionen:[{text:'Nachproduzieren lassen',wirkung:[{art:'geld',wert:-100000},{art:'merch',wert:0.2}],folge:'Die neuen Trikots verkaufen sich gut, vier Wochen lang mehr Fanartikel.'},
       {text:'Nicht nachproduzieren',wirkung:[{art:'fans',wert:-1}],folge:'Wer kein Trikot mehr bekommen hat, ist enttäuscht.'}],auto:0},
+  // Jugend (K08 §8, K08b, 22.11.). Neue Wirkung talent: ein neues Talent (Alter REGELN.karten.jugend.alter) kommt in deinen Jugendkader, Talent des Jahrgangs + wert.
+  {id:'probetraining',titel:'Talent zum Probetraining',bereich:'K08',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'probetraining',sperrTage:120,
+    texte:['Ein Jugendtrainer aus der Region schwärmt von einem 16-Jährigen. Probetraining bei euch?','Die Eltern eines Talents aus dem Umland fragen an: Ihr Sohn würde gern bei euch vorspielen.'],
+    optionen:[{text:'Zum Probetraining einladen',wirkung:[{art:'geld',wert:-5000},{art:'talent',wert:6,chance:0.6,schlecht:0,gut:'Er überzeugt die Trainer.',schlechtText:'Im Probetraining enttäuscht er, ihr lasst ihn ziehen.'}],folge:''},
+      {text:'Kein Platz im Jugendkader',wirkung:[],folge:'Der Junge versucht es woanders.'}],auto:1},
   // Training (K07 §8, K07c, 22.11.). Neue Wirkung pause: Frische des Spielers + wert, Spielpraxis − REGELN.karten.training.pauseSpielpraxis.
   {id:'pauseBitte',titel:'Spieler bittet um Pause',bereich:'K07',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'pauseBitte',sperrTage:60,
     texte:['{spieler} kommt nach dem Training zu dir: Die Beine sind schwer, er bittet um zwei freie Tage.','Der Athletiktrainer meldet, {spieler} sei platt. Er selbst würde gern kurz durchschnaufen.'],

@@ -266,7 +266,7 @@ jugend:{
 14. **Paten:** Ein Mentor (Eigenschaft, jetzt sichtbar) betreut höchstens zwei Talente bis 21. Entwicklung ×1,1, je Saison mit 30 % ein Punkt Professionalität.
 15. **Jugendtrainer** ist eine neue Rolle im Stab (zwei Plätze, K16). Bestehende Spielstände bekommen sie nachgetragen.
 16. **Ertrag:** Ein Verein aus dem Mittelfeld der 1. Liga bekommt mit Niveau 70 und gutem Jugendtrainer in 52 % der Jahrgänge einen Spieler, der mit 21 mindestens 75 hat, mit Niveau 10 ohne Jugendtrainer nie.
-17. **Noch nicht gebaut:** zweite Mannschaft (seit U9d gebaut, Nr. 18 bis 31), Leistungszentrum (K26), Leihe, Leihmanager und Leihwunsch (U10), Ereigniskarten Probetraining, Abwerben und Skandal (U12), öffentliche Kritik und Abschirmen (K29), Derby als Topspiel (K27), Computer-Trainer achten auf die Belastung (K31), Spätzünder als eigene Messung über viele Saisons.
+17. **Noch nicht gebaut:** zweite Mannschaft (seit U9d gebaut, Nr. 18 bis 31), Leistungszentrum (K26), Leihe, Leihmanager und Leihwunsch (U10), Ereigniskarten Probetraining, Abwerben und Skandal (U12) (Probetraining seit K08b, 22.11.2026, ohne Testlauf: Karte „Talent zum Probetraining“, 5.000 € in der 3. Liga, mit 60 % kommt ein 16-Jähriger mit Talent des Jahrgangs + 6 in deinen Jugendkader, neue Kartenwirkung `talent`), öffentliche Kritik und Abschirmen (K29), Derby als Topspiel (K27), Computer-Trainer achten auf die Belastung (K31), Spätzünder als eigene Messung über viele Saisons.
 
 **Vorläufig entschieden bei der Umsetzung der zweiten Mannschaft (U9d, 15. November 2026):**
 

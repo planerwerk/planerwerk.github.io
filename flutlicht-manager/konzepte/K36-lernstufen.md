@@ -357,6 +357,7 @@ lizenz:{
 115. **K21b Teamprämie (22.11., popolupo, ohne Testlauf):** neue Wahl im bestehenden Bereich `praemien` (ab A-Lizenz), in der Kabine. Ohne Wahl „normal“ ohne Wirkung.
 116. **K07c Trainingskarten (22.11., popolupo, ohne Testlauf):** keine neue Funktion. „Spieler bittet um Pause“ ist eine Entscheidung im Bereich `ereignisse`, die Verletzungsserie eine Meldung.
 117. **K20e Computer-Vereine werben ab (22.11., popolupo, ohne Testlauf):** neue Entscheidung im bestehenden Bereich `transfers`. Unter dessen Automatik gibt es keine Abwerbeversuche (Gleichschritt).
+118. **K08b Talent zum Probetraining (22.11., popolupo, ohne Testlauf):** keine neue Funktion, eine Entscheidungskarte im Bereich `ereignisse`.
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 
