@@ -1738,3 +1738,16 @@ Zweig `mitarbeit/popolupo-k29c-exklusivinterview`, auf K26d mit den Korrekturen 
 | DJ1 | **Beziehungen je Medium** (`S.mb`) und Exklusivinterview mit Sperrfrist (`S.exkl`), ohne Zufall. Die Wirkung von Gerüchten über dich wird mit der Beziehung des berichtenden Mediums gewichtet (`medienWirkung`), gleich viele Würfe. | ✅ |
 | DJ2 | **Stimmung mit Kommastellen:** −3 × 1,5 gibt −4,5. Das gab es schon durch die Streuung der Pressekonferenzen. | ✅ |
 | DJ3 | **Gleichschritt:** nur nach deinem Klick, die Gerüchteküche ist im Test 5a aus. | ✅ |
+
+---
+
+## DK. Prüfung von K29c und Nachtrag zu K25d: Mitglieder (22. November 2026, popolupo, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-k25d-mitglieder`, auf K29c. K25d ausführlich in K25 §5.5.
+
+| # | Befund | Status |
+|---|---|---|
+| DK1 | **Prüfung K29c (Agent, nur lesend):** ohne Fehler. Drei Kleinigkeiten behoben: Die Wirkung der Beziehung auf ein Gerücht hat jetzt einen eigenen Test (`tests/geruechte.js` K29c), der Block `exklusiv` steht in `daten/regeln.js` unter seinem Kommentar und nicht mehr zwischen Kommentar und `medienpolitik`, die Anzeige nennt die verbleibenden Tage bis zum nächsten Interview. | ✅ |
+| DK2 | **Mitglieder (K25d):** Stammdatum aus `daten/vereine.js` (56 Vereine, Quellen dort), Beiträge (60 € je Jahr) in den sonstigen Einnahmen aller Vereine, Grundbetrag je Liga gesenkt, so dass der Schnitt je Liga gleich bleibt. Mitglieder folgen beim Saisonwechsel den Fans, Mitgliederaktion +2 %. | ✅ |
+| DK3 | **Verschiebung innerhalb der Ligen:** Mitgliederstarke Vereine bekommen mehr (Bayern etwa +15 Mio. € je Saison gegenüber K23c), mitgliederschwache weniger (Leipzig, Elversberg, Paderborn etwa −6 Mio. €). Das ändert die Salden aus K23 §5.6b je Verein, nicht im Schnitt. | ⚠️ `tests/finanzmodell.js` ansehen |
+| DK4 | **`tests/finanzen.js` Nr. 11** rechnet die sonstigen Einnahmen jetzt mit `sonstigeEinnahmen` statt dem festen Wert, neu Nr. 20 für Mitglieder und Beiträge. | ✅ |

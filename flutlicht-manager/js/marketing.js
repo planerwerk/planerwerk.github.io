@@ -13,6 +13,7 @@ function kampagneStarten(k){if(!darf('marketing'))return;const C=RMK.kampagnen[k
   const e=M.k[k]||(M.k[k]={n:0,bis:-1,w:1}),w=RMK.abnutzung[Math.min(e.n,RMK.abnutzung.length-1)];e.n++;e.w=w;
   e.bis=C.sommer?absTag(ersterPflichttag(S.my)!=null?ersterPflichttag(S.my):S.tag):absTag(S.tag)+C.tage;money('Marketing',-kosten);
   if(C.fans)M.fans+=C.fans*w;if(C.werbewert)M.ww=clamp(Math.round(M.ww+C.werbewert*w),0,100);if(C.stimmung)fanAnlass(t,'fanU',C.stimmung*w);
+  if(C.mitglieder)t.mitglieder=Math.round(mitgliederVon(t)*(1+C.mitglieder*w)); // Mitgliederaktion (K25d)
   news(`${C.name} gestartet (${fmt(kosten)})${w<1?`. Zum ${e.n}. Mal in dieser Saison, Wirkung nur noch ${Math.round(w*100)} %`:''}.`);save();render();}
 // Trikot (K25 §5.3): Wahl bis zum ersten Pflichtspiel, Reaktion aus eigenem Strom je Saison (gleich, egal an welchem Tag)
 function trikotWaehlen(d){if(!darf('marketing'))return;const M=mkS();if(M.trikot&&M.trikot.fest){toast('Das Trikot dieser Saison ist schon vorgestellt.');return;}if(!RMK.trikot[d])return;trikotVorstellen(d,false);save();render();}
@@ -40,6 +41,7 @@ function marketingJobwechsel(){S.mk=null;}
 // Karte im Stadion
 function marketingKarte(){const t=myT(),M=mkS(),C=RMK.kampagnen,tr=M.trikot,offen=!tr||!tr.fest;
   return`<div class="card"><h2>Marketing</h2>${lzHinweis('marketing')}<p>Werbewert ${Math.round(M.ww)} von 100 <span class="dim">(wie bekannt der Verein ist, wirkt später auf Sponsoren)</span></p>
+    <p>Mitglieder ${mitgliederVon(t).toLocaleString('de-DE')} <span class="dim">(Beiträge etwa ${fmt(mitgliederVon(t)*RFP.mitglieder.beitrag)} je Saison, wachsen und schrumpfen mit den Fans, K25d)</span></p>
     <h3>Trikot ${stSaison(S.season)}</h3>${tr?`<p>${esc(TRIKOT_NAME[tr.d])}, Fanartikel × ${de(tr.f,2)}</p>`:offen&&vorbereitungAktiv()?`<div class="row">${Object.keys(RMK.trikot).map(d=>`<button onclick="trikotWaehlen('${d}')"${lzAus('marketing')}>${esc(TRIKOT_NAME[d])}</button>`).join('')}</div><p class="dim">Klassisch ist sicher, mutig wird Kult oder Spott. Ohne Wahl nimmt der Verein vor dem ersten Pflichtspiel das klassische.</p>`:'<p class="dim">Das Trikot wird in der Vorbereitung vorgestellt.</p>'}
     <h3>Kampagnen</h3><table><tbody>${Object.entries(C).map(([k,c])=>{const e=M.k[k],aktiv=mkAktiv(k);return`<tr><td><b>${esc(c.name)}</b><br><span class="dim">${fmt(kampagnenKosten(k))}${c.sommer?', nur in der Vorbereitung':`, ${Math.round(c.tage/7)} Wochen`}${e&&e.n?`, in dieser Saison ${e.n}×`:''}</span></td>
       <td>${aktiv?'läuft':`<button onclick="kampagneStarten('${k}')"${lzAus('marketing')}>Starten</button>`}</td></tr>`;}).join('')}</tbody></table>

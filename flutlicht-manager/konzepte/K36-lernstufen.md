@@ -315,6 +315,7 @@ lizenz:{
 73. **K25c Dauerkarten-Aktion (22.11., popolupo, ohne Testlauf):** keine neue Funktion, eine weitere Kampagne im Bereich `marketing`. Wirkt nur auf deine Dauerkarten (K27b), ohne Zufall.
 74. **K26d Dach (22.11., popolupo, ohne Testlauf):** keine neue Funktion, ein weiterer Bau im Bereich `stadion`. Wirkt in der Engine nur mit gebautem Dach. Computer-Vereine bauen es nicht, die Automatik deines Vereins baut nicht (Gleichschritt unberührt).
 75. **K29c Exklusivinterview (22.11., popolupo, ohne Testlauf):** neue Funktion im bestehenden Bereich `presse` (C-Lizenz). Ohne Automatik: Der Co-Trainer gibt keine Interviews, die Beziehungen bleiben dann bei 0. Gleichschritt unberührt (Gerüchteküche im Test aus).
+76. **K25d Mitglieder und Mitgliederaktion (22.11., popolupo, ohne Testlauf):** keine neue Funktion, eine weitere Kampagne im Bereich `marketing`. Die Beiträge gelten für alle Vereine gleich und ohne Zufall (Gleichschritt unberührt).
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 

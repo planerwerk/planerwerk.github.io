@@ -478,6 +478,12 @@ sechs Kampagnen, drei Trikotdesigns je Saison, Sortiment in drei Stufen, Online-
 - Der Werbewert hat noch keine Wirkung.
 - Bereich `marketing` ab der B-Lizenz mit Automatik.
 
+**Mit K25c und K25d von popolupo vorläufig entschieden (22.11.2026, K25 §5.4, §5.5, ohne Testlauf):**
+
+- Dauerkarten-Aktion als Sommer-Kampagne vor dem Verkauf, +5 Prozentpunkte Dauerkarten.
+- Echte Mitgliederzahlen je Verein (Stand Winterpause 2025/26, drei Drittligisten geschätzt), Beiträge 60 € je Jahr in den sonstigen Einnahmen aller Vereine, Grundbetrag je Liga so, dass der Schnitt gleich bleibt.
+- Mitglieder folgen den Fans, Mitgliederaktion +2 %.
+
 ## K26 – Stadion und Infrastruktur
 Datei: `konzepte/K26-stadion.md`
 

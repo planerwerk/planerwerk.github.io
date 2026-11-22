@@ -65,7 +65,7 @@ const tagMit=(ev,mmtt)=>{for(let d=0;d<400;d++)if(ev('mmtt')(d)===mmtt)return d;
 
 // 11. K23b: Computer-Verein je Ligaspiel nach dem Modell (auswärts TV + Werbung + Sonstiges − Gehälter − Betrieb − Verwaltung (K23c) − Jugend, zu Hause dazu die Zuschauer), keine Pauschale mehr
 {const {F,S,ev}=welt(),RF=ev('RF'),t=S.teams.find(x=>x.lg===3&&x.id!==S.my),o=S.teams.find(x=>x.lg===3&&x.id!==S.my&&x.id!==t.id),n=S.fx[3].length;
-  const soll=ev('tvGeld')(t)+ev('sponsorBasis')(t)+ev('RFP').sonstiges[3]-Math.round((ev('squad')(t.id).reduce((a,p)=>a+p.sal,0)+ev('stabGehaelter')(t.id))/n)-Math.round(t.cap*RF.betrieb.jePlatz+(t.logen||0)*RF.betrieb.jeLoge)-ev('verwaltungKosten')(t)-RF.jugendKosten[ev('RS').nachwuchs.computerStufe];
+  const soll=ev('tvGeld')(t)+ev('sponsorBasis')(t)+ev('sonstigeEinnahmen')(t)-Math.round((ev('squad')(t.id).reduce((a,p)=>a+p.sal,0)+ev('stabGehaelter')(t.id))/n)-Math.round(t.cap*RF.betrieb.jePlatz+(t.logen||0)*RF.betrieb.jeLoge)-ev('verwaltungKosten')(t)-RF.jugendKosten[ev('RS').nachwuchs.computerStufe];
   let c=t.cash;F.kiFinanzenSpiel(t,{h:o.id,a:t.id});const aus=t.cash-c;c=t.cash;F.kiFinanzenSpiel(t,{h:t.id,a:o.id});const heim=t.cash-c;
   pruef(aus===soll&&heim-aus===ev('kiHeimEinnahmen')(t,o,false)&&heim>aus,'K23b: Computer-Verein bucht Einnahmen und Ausgaben je Spiel, zu Hause mit Zuschauern',`auswärts ${aus} (Soll ${soll}), zu Hause ${heim}`);}
 
@@ -115,5 +115,13 @@ const tagMit=(ev,mmtt)=>{for(let d=0;d<400;d++)if(ev('mmtt')(d)===mmtt)return d;
   arm.cash=-1e9;reich.cash=1e9;t.cash=-1e9;F.kiLizenzPruefen(false);const aufl=arm.lzA===S.season&&reich.lzA==null&&t.lzA==null;F.kiLizenzPruefen(true);
   const gesperrt=arm.lzSperre===S.season+1&&reich.lzSperre==null;S.season++;const jetzt=ev('kiTransferSperre')(arm)&&!ev('kiTransferSperre')(reich)&&!ev('kiTransferSperre')(t);S.season--;
   pruef(aufl&&gesperrt&&jetzt,'K23g: Lizenzprüfung der Computer-Vereine mit Auflagen und Transfersperre',`Auflagen ${aufl}, Sperre ${gesperrt}, nächste Saison gesperrt ${jetzt}`);}
+
+// 20. K25d: Mitglieder aus daten/vereine.js, Beiträge in den sonstigen Einnahmen (Bayern etwa 26 Mio. € je Saison), Schnitt der 1. Liga wie vorher etwa 300.000 € je Ligaspiel,
+//     Mitgliederaktion +2 %
+{const {F,S,ev,t}=welt(),M=ev('RFP').mitglieder,so=ev('sonstigeEinnahmen'),fcb=S.teams.find(x=>x.sh==='FCB'||x.name==='FC Bayern München'),n1=S.fx[1].length;
+  const l1=S.teams.filter(x=>x.lg===1),schnitt=l1.reduce((a,x)=>a+so(x),0)/l1.length,b=fcb?so(fcb)-ev('RFP').sonstiges[1]:0;
+  const m0=t.mitglieder;t.cash=1e8;F.kampagneStarten('mitglieder');const m1=t.mitglieder;
+  pruef(!!fcb&&fcb.mitglieder===432000&&Math.abs(b-Math.round(432000*M.beitrag/n1))<=1&&schnitt>270000&&schnitt<330000&&m0>0&&m1===Math.round(m0*1.02),'K25d: Mitglieder, Beiträge, Schnitt der Liga, Mitgliederaktion',
+    `Bayern ${fcb&&fcb.mitglieder} Mitglieder, Beiträge je Spiel ${b}, Schnitt 1. Liga ${Math.round(schnitt)}, dein Verein ${m0} → ${m1}`);}
 
 console.log(probleme.length?`\n${probleme.length} Problem(e).`:'\nAlles in Ordnung.');process.exitCode=probleme.length?1:0;

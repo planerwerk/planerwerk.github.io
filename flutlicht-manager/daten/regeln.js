@@ -450,12 +450,12 @@ const REGELN={
   // in Richtung ziel, nur nach oben (richtung 1), nur nach unten (−1) oder in beide Richtungen (0). Seit der Prüfung DF1 zieht auch „zurückhaltend“ zur Mitte, sonst sank das Klima
   // in der Automatik (Co-Trainer bei jeder Pressekonferenz −2) immer weiter. mein: Chance auf ein Gerücht über deinen Verein × mein, erfindung: Anteil erfundener Gerüchte über dich × erfindung.
   // klimaWirkung: Medienklima unter 50 macht Gerüchte über dich häufiger und öfter erfunden, darüber seltener, Faktor 1 + klimaWirkung × (50 − Klima)/50.
-  // Exklusivinterview (K29 §6, K29c, 22.11., GESCHÄTZT): höchstens alle tage Tage, Bereich presse. Das gewählte Medium plus, alle anderen andere (Beziehung je Medium in grenzen),
-  // Medienklima klima. Gerüchte über deinen Verein wirken (Stimmung, Fans, Vertrauen) mal 1 − Beziehung/teiler, begrenzt auf wirkung: gewogene Medien schreiben milder, verärgerte schärfer.
-  exklusiv:{tage:28,plus:10,andere:-3,grenzen:[-30,30],klima:2,teiler:60,wirkung:[0.5,1.5]},
   medienpolitik:{standard:'zurueckhaltend',klimaWirkung:0.5,arten:{offen:{name:'offen',text:'Interviews und Einblicke: mehr Berichte über deinen Verein, die Medien mögen dich',mein:1.25,erfindung:0.8,klima:0.5,ziel:70,richtung:1},
     zurueckhaltend:{name:'zurückhaltend',text:'das Übliche, das Klima kehrt langsam zur Mitte zurück',mein:1,erfindung:1,klima:0.5,ziel:50,richtung:0},
     abgeschottet:{name:'abgeschottet',text:'keine Einblicke: weniger Berichte, dafür mehr Erfundenes, die Medien sind verstimmt',mein:0.6,erfindung:1.4,klima:0.5,ziel:30,richtung:-1}}},
+  // Exklusivinterview (K29 §6, K29c, 22.11., GESCHÄTZT): höchstens alle tage Tage, Bereich presse. Das gewählte Medium plus, alle anderen andere (Beziehung je Medium in grenzen),
+  // Medienklima klima. Gerüchte über deinen Verein wirken (Stimmung, Fans, Vertrauen) mal 1 − Beziehung/teiler, begrenzt auf wirkung: gewogene Medien schreiben milder, verärgerte schärfer.
+  exklusiv:{tage:28,plus:10,andere:-3,grenzen:[-30,30],klima:2,teiler:60,wirkung:[0.5,1.5]},
   presse:{budget:20,abstand:4,sperre:21,fragen:[2,3],klimaStart:50,
     anlass:{spitzeBis:4,spitzeAb:10,pokalAb:3,krise:3,hoehenflug:5,fuehrungAb:5,kantersieg:4,auftaktVorher:2},
     wirkung:{rueckendeckung:{team:2,spieler:5,medien:1},ankuendigung:{team:1,fans:2,vorstand:-0.5},kritikTeam:{vorstand:1,medien:1,kaempfer:2,empfindlich:-3,sonst:-1},
@@ -473,7 +473,9 @@ const REGELN={
     kampagnen:{trikot:{name:'Trikot-Kampagne',kosten:150000,tage:28,merch:0.15},fanwerbung:{name:'Fanwerbung in der Region',kosten:200000,tage:56,fans:0.02,werbewert:5},
       camps:{name:'Jugend-Camps',kosten:60000,sommer:1,fans:0.01,stimmung:1},fanarbeit:{name:'Fanarbeit',kosten:50000,tage:120,pfiffe:0.7},
       // K25c (22.11., GESCHÄTZT): Dauerkarten-Aktion in der Vorbereitung, vor dem Verkauf (K27b): Anteil der Dauerkarten + dauerkarten
-      dauerkarten:{name:'Dauerkarten-Aktion',kosten:100000,sommer:1,dauerkarten:0.05}},
+      dauerkarten:{name:'Dauerkarten-Aktion',kosten:100000,sommer:1,dauerkarten:0.05},
+      // K25d (22.11., GESCHÄTZT): Mitgliederaktion, Mitglieder + mitglieder (mal Abnutzung)
+      mitglieder:{name:'Mitgliederaktion',kosten:50000,tage:28,mitglieder:0.02}},
     ligaFaktor:{1:1,2:0.4,3:0.2},abnutzung:[1,0.5,0.25],merch:{liebling:0.05,lieblingMax:0.15},werbewert:{startJeAnsehen:0.5,zurueck:0.02,titel:5},karte:{merchTage:28}}, // karte: Dauer der Wirkung merch aus der Karte „Trikot ausverkauft“ (K25b)
 
   // Europapokal (K37, U19a). plaetze: Bundesliga-Platz je Wettbewerb, nachruecken: wer einspringt, wenn der Pokalsieger schon über die Liga dabei ist.
@@ -511,7 +513,11 @@ const REGELN={
     minSpiele:3,lizenzTag:'03-01',nachweisTag:'05-31',auflage:-5,insolvenz:{monate:2,punkte:9,vertrauen:-30},warnMonate:3,monatTage:30,
     // K23b (§5.5e): sonstiges: Sonstige Einnahmen (Mitglieder, Vermarktung, Stadionvermietung) je Ligaspiel nach Liga, für alle Vereine. Seit K23c (vorläufig) etwa 7 % der Einnahmen
     // ohne Transfers wie in echt (7–11 %): 1. Liga 10,2 Mio. €, 2. Liga 2,7 Mio. €, 3. Liga 1,1 Mio. € je Saison. Vorher 0, 25.000 und 60.000 € als Ausgleich der zu kleinen Werbung.
-    sonstiges:{1:300000,2:80000,3:30000},
+    // Seit K25d (22.11., vorläufig) ohne die Mitgliedsbeiträge: Grundbetrag je Ligaspiel plus Mitglieder × mitglieder.beitrag ÷ Ligaspiele. Der Grundbetrag ist so gewählt, dass der
+    // Schnitt je Liga wie vorher bei 300.000, 80.000 und 30.000 € liegt (Mitglieder im Schnitt etwa 107.000, 24.000 und 7.500, K25 §5.5).
+    sonstiges:{1:110000,2:37000,3:18000},
+    // mitglieder (K25d): beitrag Jahresbeitrag je Mitglied (€), ausFans Anteil der Fans für Vereine ohne Angabe in daten/vereine.js.
+    mitglieder:{beitrag:60,ausFans:0.3},
     // K23d (§5.3, §5.5f): budget: Gehaltsrahmen = gehaltAnteil × erwartete Einnahmen einer Saison (Liga-Modell ohne Transfers). Über sperreAb × Rahmen keine Käufe (du und Computer-Vereine),
     // Transferbudget = Kontostand über einer Reserve von reserve × erwarteten Einnahmen. gehaltAnteil seit K23c 0,75 (vorher 0,85): Nach der Modellrechnung (K23 §5.6b) liegen Gehälter
     // und Stab im Schnitt bei 55 bis 66 % der erwarteten Einnahmen, bei kleinen Drittligisten und Leverkusen (starker Kader) bei 80 bis 84 %. Gesperrt (über 82,5 %) ist anfangs kaum einer.

@@ -43,4 +43,9 @@ const fremd=w=>w.S.pl.find(p=>p.team>=0&&p.team!==VEREIN&&w.S.teams[p.team].lg==
   const l=F.gerS().l,wochen=Math.max(1,Math.floor((W.S.tag)/7));
   pruef(!fehler&&l.length>=wochen&&l.length<=3*wochen+3,'Ablauf: 20 Wochen ohne Fehler, ein bis drei Gerüchte je Woche',fehler||`${l.length} Gerüchte in etwa ${wochen} Wochen, über dich ${l.filter(g=>g.mein).length}`);}
 
+// K29c. Beziehung zu den Medien: Mit allen fünf Medien verärgert (−30) trifft ein Gerücht über dich als Trainer das Vertrauen 1,5-mal so stark, gewogen (+30) halb so stark
+{const w=welt(),{S,F,ev}=w,W=ev('RGR').wirkung,E=ev('REGELN').exklusiv,alle=v=>{S.mb={};['boulevard','fach','tv','portal','lokal'].forEach(k=>S.mb[k]=v);};
+  alle(E.grenzen[0]);S.trust=50;F.gerVeroeffentlichen({art:'trainerAus',tid:S.my,w:0});const boese=S.trust-50;alle(E.grenzen[1]);S.trust=50;F.gerVeroeffentlichen({art:'trainerAus',tid:S.my,w:0});const gut=S.trust-50;
+  pruef(nah(boese,W.vertrauen*E.wirkung[1])&&nah(gut,W.vertrauen*E.wirkung[0]),'Gerücht über dich wirkt nach der Beziehung zum Medium',`verärgert ${boese}, gewogen ${gut} (Grundwert ${W.vertrauen})`);}
+
 console.log(probleme.length?`\n${probleme.length} Problem(e).`:'\nAlles in Ordnung.');process.exitCode=probleme.length?1:0;

@@ -89,6 +89,25 @@ Erlös je Monat = Fans × Kaufkraft × Sortiment × Trikotfaktor × Erfolg × St
 - **Werbewert** 0–100: Start = Ansehen ÷ 2. Kampagnen heben ihn (Fanwerbung +5), Monatsende 2 % zurück Richtung Start, Meisterschaft, Pokalsieg oder Aufstieg +5. Vorerst nur Anzeige, die Wirkung auf Sponsoren gehört zu K24 (Claude).
 - **Lizenz:** neuer Bereich `marketing` (B-Lizenz, mit Automatik: Der Verein nimmt das klassische Trikot und startet keine Kampagnen).
 
+### 5.5 K25d Mitglieder und Mitgliederaktion (22.11.2026, popolupo, vorläufig)
+
+**Recherche (Websuche 22.11.2026):** Mitgliederzahlen aller Vereine der drei Ligen 2025/26, Stand Winterpause 2025/26, aus einer Übersicht von sechzger.de (Januar 2026, dort aus Wikipedia und Vereinsangaben, teils ältere Stände). Fortuna Köln 3.000 aus dem DFB-Datencenter. Für SV Meppen, Würzburger Kickers und SG Sonnenhof Großaspach habe ich keine Zahl gefunden, dort geschätzt (1.700, 2.000, 800). Zweite Mannschaften haben keine eigenen Mitglieder (0).
+
+| Liga 2026/27 im Spiel | Schnitt | Spanne |
+|---|---|---|
+| 1. Liga | etwa 107.000 | RB Leipzig 1.130 bis Bayern 432.000 |
+| 2. Liga | etwa 24.000 | Elversberg 4.607 bis Hertha 60.620 |
+| 3. Liga | etwa 7.500 | Zweite Mannschaften 0 bis Fortuna Düsseldorf 36.000 |
+
+**Regeln (vorläufig):**
+- **Stammdatum** `mitglieder` je Verein in `daten/vereine.js`. Vereine ohne Angabe (Regionalliga): 30 % ihrer Fans.
+- **Beiträge** zählen zu den sonstigen Einnahmen (K23 §3.1): je Ligaspiel Mitglieder × 60 € (Jahresbeitrag Erwachsene bei Bayern und Dortmund etwa 60 €, Ermäßigungen nicht gerechnet) ÷ Zahl der Ligaspiele, dazu ein kleinerer Grundbetrag je Liga (Vermarktung, Stadionvermietung). Der Grundbetrag ist so gewählt, dass der Schnitt je Liga gleich bleibt wie in K23c (300.000, 80.000, 30.000 € je Ligaspiel): neu 110.000, 37.000 und 18.000 €.
+- **Folge:** Mitgliederstarke Vereine bekommen mehr (Bayern etwa 26 Mio. € Beiträge je Saison), mitgliederschwache weniger (Leipzig, Elversberg, Paderborn). Für alle Vereine gleich, auch für dich.
+- **Entwicklung:** Zum Saisonwechsel wachsen oder schrumpfen die Mitglieder im selben Verhältnis wie die Fans (Saisonregeln, Ansehen).
+- **Mitgliederaktion** (Kampagne, Bereich `marketing`): 50.000 € mal Ligafaktor, vier Wochen, Mitglieder +2 % (mit der Abnutzung aus §5.4).
+- **Anzeige:** Mitglieder und Beiträge je Saison im Marketing-Kasten.
+- **Noch nicht:** Mitgliederversammlung (Wahl des Präsidenten, K28), Rabatte für Mitglieder bei Dauerkarten.
+
 ## 6. Hebel des Spielers
 
 | Hebel | Nutzen | Preis |

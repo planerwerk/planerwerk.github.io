@@ -66,7 +66,10 @@ function finanzenKarte(){const t=myT(),L=S.lzp||{},v=S.finV||[],p=finPrognose(fa
 
 // ---------- K23b (§5.2, §5.5e): Computer-Vereine nach denselben Regeln wie du ----------
 // Sonstige Einnahmen (Mitglieder, Vermarktung, K23 §3.1) je Ligaspiel für alle Vereine, nach Liga (seit K23c etwa 7 % der Einnahmen)
-const sonstigeEinnahmen=t=>RFP.sonstiges[t.lg]||0;
+// Seit K25d: Grundbetrag je Liga plus Mitgliedsbeiträge (Mitglieder × Jahresbeitrag ÷ Ligaspiele), gerundet. Alte Spielstände ohne t.mitglieder: Anteil der Fans.
+const mitgliederVon=t=>t&&t.mitglieder!=null?t.mitglieder:Math.round(((t&&t.fans)||0)*RFP.mitglieder.ausFans);
+const mitgliedsBeitraege=t=>Math.round(mitgliederVon(t)*RFP.mitglieder.beitrag/(((S.fx&&S.fx[t.lg])||[]).length||(t.lg===3?38:34)));
+const sonstigeEinnahmen=t=>(RFP.sonstiges[t.lg]||0)+(t.lg<=3?mitgliedsBeitraege(t):0);
 // Verwaltung und Sonstiges (K23c) je Ligaspiel für alle Vereine: Anteil nach Liga an TV, Grundbetrag der Werbung und sonstigen Einnahmen. Für dich zählt der Grundbetrag,
 // nicht deine Verträge: Gut verhandeln lohnt sich also.
 const verwaltungKosten=t=>Math.round((RF.verwaltung[t.lg]||RF.verwaltung[3])*(tvGeld(t)+sponsorBasis(t)+sonstigeEinnahmen(t)));

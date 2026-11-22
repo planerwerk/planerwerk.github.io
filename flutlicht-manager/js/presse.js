@@ -120,7 +120,7 @@ function medienpolitikText(){const M=REGELN.medienpolitik,m=medienpolitik(),aus=
 // Exklusivinterview im Medien-Kasten (K29c): Beziehung je Medium, Knöpfe, solange frei
 function exklusivText(){const E=REGELN.exklusiv,aus=lzAus('presse'),l=Object.keys(PRESSE.medien),f=x=>`${x>0?'+':''}${x}`;
   return`<p class="dim">Beziehungen: ${l.map(k=>`${esc(PRESSE.medien[k].name)} ${f(medienBez(k))}`).join(' · ')}. Gewogene Medien schreiben milder über dich, verärgerte schärfer.</p>
-    ${exklusivFrei()?`<div class="row">${l.map(k=>`<button onclick="exklusivInterview('${k}')"${aus}>Exklusivinterview: ${esc(PRESSE.medien[k].name)}</button>`).join('')}</div>`:`<p class="dim">Das nächste Exklusivinterview geht ${E.tage} Tage nach dem letzten.</p>`}`;}
+    ${exklusivFrei()?`<div class="row">${l.map(k=>`<button onclick="exklusivInterview('${k}')"${aus}>Exklusivinterview: ${esc(PRESSE.medien[k].name)}</button>`).join('')}</div>`:`<p class="dim">Das nächste Exklusivinterview geht in ${E.tage-(absTag(S.tag)-S.exkl)} Tag${E.tage-(absTag(S.tag)-S.exkl)===1?'':'en'}.</p>`}`;}
 function presseKarte(){const P=presseS(),pk=S.pk;
   if(!pk)return`<div class="card"><h3>Medien</h3><p>Medienklima ${Math.round(P.klima)} von 100${(P.n[S.season]||0)?` · ${P.n[S.season]} Pressekonferenz${P.n[S.season]===1?'':'en'} in dieser Saison`:''}.</p>${medienpolitikText()}</div>`;
   const A=PRESSE.anlaesse[pk.art];return`<div class="card"><h3>${esc(A.name)}</h3>${lzHinweis('presse')}<p>${pk.fragen.length} Fragen warten. Medienklima ${Math.round(P.klima)} von 100.</p>
