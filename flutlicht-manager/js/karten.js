@@ -29,6 +29,8 @@ const AUSLOESER={
   // Neuzugang: seit RKT.kabine.neuMin bis neuTage bei dir, einsatzfähig, mindestens so stark wie dein Kader im Schnitt − staerkeMinus, in dieser Saison höchstens kaumMinuten Minuten, ab abSpieltag
   neuzugangDraengt(){const K=RKT.kabine,heute=absTag(S.tag),lvl=teamLevel(S.my);if(meineSpieltage()<K.abSpieltag)return null;
     const l=squad(S.my).filter(p=>p.seit!=null&&heute-p.seit>=K.neuMin&&heute-p.seit<=K.neuTage&&!p.leihe&&avail(p)&&p.str>=lvl-K.staerkeMinus&&!(p.sst&&p.sst.s===S.season&&p.sst.tid===S.my&&p.sst.min>K.kaumMinuten));return l.length?{spieler:pick(l).id}:null;},
+  // Meuterei (K14 §8, K14c): ein Führungsspieler deines Kaders mit Stimmung unter RKT.kabine.meutertUnter
+  meuterei(){const K=RKT.kabine,l=squad(S.my).filter(p=>hatEig(p,'fuehrungsspieler')&&stimmung(p)<K.meutertUnter);return l.length?{spieler:pick(l).id}:null;},
   // Eingewöhnung: aus dem Ausland gekommen (p.ausAb, seit Prüfung DT1), andere Nationalität, seit höchstens RKT.kabine.fremdTage bei dir
   eingewoehnung(){const K=RKT.kabine,heute=absTag(S.tag),l=squad(S.my).filter(p=>p.ausAb!=null&&heute-p.ausAb<=K.fremdTage&&p.nat&&p.nat!==RW.nation.heimat);return l.length?{spieler:pick(l).id}:null;},
   // Ein Talent bis 20 bei einem Verein der 2. oder 3. Liga, dessen Talent mindestens deine Kaderstärke erreicht

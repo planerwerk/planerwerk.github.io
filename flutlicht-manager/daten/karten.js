@@ -39,6 +39,11 @@ const KARTEN=[
     texte:['{spieler} tut sich schwer im neuen Land: Sprache, Wohnung, die Familie ist noch nicht da. Soll der Verein helfen?','Man merkt {spieler} an, dass er noch nicht angekommen ist. Ein Dolmetscher und Hilfe bei der Wohnungssuche würden ihm helfen.'],
     optionen:[{text:'Dolmetscher und Hilfe für die Familie',wirkung:[{art:'geld',wert:-15000},{art:'stimmung',wert:4}],folge:'{spieler} ist dankbar und fühlt sich willkommen.'},
       {text:'Er muss sich allein zurechtfinden',wirkung:[{art:'stimmung',wert:-3}],folge:'{spieler} wirkt im Training abwesend.'}],auto:0},
+  // K14c: Führungsspieler meutert (K14 §8): ein Führungsspieler mit Stimmung unter RKT.kabine.meutertUnter stellt dich vor der Mannschaft in Frage
+  {id:'meuterei',titel:'Führungsspieler meutert',bereich:'K14',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'meuterei',sperrTage:120,
+    texte:['{spieler} stellt dich in der Kabine vor versammelter Mannschaft in Frage. Einige nicken.','Nach dem Training redet {spieler} laut über deine Aufstellung. Die Jungen hören genau zu.'],
+    optionen:[{text:'Sofort unter vier Augen sprechen',wirkung:[{art:'stimmung',wert:6},{art:'stimmungAlle',wert:-2}],folge:'Ihr redet lange. {spieler} beruhigt sich, aber in der Kabine ist etwas hängen geblieben.'},
+      {text:'Vor der Mannschaft durchgreifen',wirkung:[{art:'stimmung',wert:-5},{art:'glaub',wert:3},{art:'stimmungAlle',wert:-3},{art:'zusammenhalt',wert:-2}],folge:'Klare Worte. Wer hier das Sagen hat, ist geklärt, die Stimmung ist es nicht.'}],auto:0},
   {id:'geheimtipp',titel:'Geheimtipp',bereich:'K18',art:'info',stufe:'haeufig',ausloeser:'geheimtipp',sperrTage:365,
     texte:['Ein Bekannter aus dem Unterhaus schwärmt von {spieler} bei {verein}: „Den musst du dir anschauen.“','Am Rande eines Testspiels hört man den Namen {spieler} ({verein}) immer wieder.']},
   // Spielwelt (K32 §8, U18b). Neue Wirkungen: fans (Umfeld der Fanstimmung, K27), verpflichten (Vereinslosen holen, wert = Anteil am üblichen Gehalt),

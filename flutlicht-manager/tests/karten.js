@@ -75,4 +75,9 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   pruef(party&&keineParty&&!!n1&&n1.spieler===p.id&&n2===null&&n3===null&&!!e1&&e1.spieler===p.id&&e2===null,'Kabinen-Karten: Kantersieg, Neuzugang ohne Einsatz, Eingewöhnung',
     `Party ${party}/${keineParty}, Neuzugang ${n1&&n1.spieler===p.id} / mit Einsatz ${n2} / zu lange da ${n3}, Eingewöhnung ${e1&&e1.spieler===p.id} / Inländer ${e2}`);}
 
+// K14c. Führungsspieler meutert (K14 §8): nur ein Führungsspieler mit Stimmung unter 25
+{const {ev}=welt(),A=ev('AUSLOESER'),K=ev('RKT').kabine,sq=ev('squad')(VEREIN);sq.forEach(x=>{ev('stimmung')(x);x.eig=(ev('eigenschaften')(x)||[]).filter(e=>e!=='fuehrungsspieler');x.st=50;});
+  const p=sq[0];p.eig=p.eig.concat(['fuehrungsspieler']);p.st=K.meutertUnter-5;const ja=A.meuterei();p.st=K.meutertUnter+5;const gut=A.meuterei();p.st=10;p.eig=p.eig.filter(e=>e!=='fuehrungsspieler');const ohne=A.meuterei();
+  pruef(!!ja&&ja.spieler===p.id&&gut===null&&ohne===null,'Meuterei: Führungsspieler mit schlechter Stimmung, sonst nicht',`schlecht ${ja&&ja.spieler===p.id}, gut ${gut}, kein Führungsspieler ${ohne}`);}
+
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);
