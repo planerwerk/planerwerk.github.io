@@ -855,7 +855,11 @@ const REGELN={
   saison:{
     ansehen:{faktor:0.6,maxAenderung:5,aufstieg:4,abstieg:-5,min:30,max:99},
     fans:{faktor:0.015,min:3000,maxJePlatz:1.4},
-    karriereende:{abAlter:34,nullAlter:33,jeJahr:0.25,spaetestens:38},
+    // Karriereende (K32 §5.1, 22.11., popolupo, vorläufig, ohne Testlauf): Chance je Saison = Grundwert nach Alter × Niveau × Verletzung × Professionalität, höchstens 1.
+    // grund: [Alter, Chance], dazwischen linear, darunter 0, ab dem letzten Punkt 1. Torhüter rechnen torwartPlus Jahre jünger. Niveau: Stärke mehr als schwachUnter unter dem Schnitt
+    // der Liga (besten 14 je Verein; Vereinslose: Schnitt der 3. Liga) ×schwach, sonst Stammspieler (stammRollen) ×stamm. Kreuzbandriss in den letzten kreuzbandTage Tagen ab kreuzbandAb Jahren
+    // ×kreuzband, Vorbildprofi ×profi. Eigener Strom je Spieler und Saison. Vorher: ab 34 Jahren (Alter − 33) × 25 %, spätestens mit 38. Ziel (K32 §10): Schnitt 33 bis 35, Torhüter 35 bis 37.
+    karriereende:{grund:[[32,0.10],[34,0.25],[36,0.50],[38,0.90],[39,1]],torwartPlus:2,schwachUnter:10,schwach:1.5,stamm:0.7,stammRollen:['schluessel','stamm'],kreuzbandAb:32,kreuzbandTage:365,kreuzband:1.5,profi:0.8},
     vertrag:{verlaengern:0.7,jahre:[1,3]}, // Computer-Vereine verlängern auslaufende Verträge
     neuForm:10,
     nachwuchs:{anzahl:2,positionen:['TW','AB','AB','MF','MF','ST','ST'],alter:17,abschlag:17,streuung:[-3,3],

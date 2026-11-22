@@ -1498,3 +1498,16 @@ Ausführlich in K28 §5.8. Zweig `mitarbeit/popolupo-u12e-zielgespraech`, auf K2
 | CQ3 | **Transferbudget weich:** `zgUeberBudget` steht in `offer` direkt vor der Zahlung der Ablöse. Käufe über die Automatik (Computer-Regeln) laufen nicht durch `offer` und kosten nichts. Vorher konnte man das ganze Konto ausgeben, das geht weiter, nur mit Vertrauen. | ⚠️ im Spiel ansehen, ob die Meldung zu oft kommt (das Budget ist das Konto über 10 % der erwarteten Einnahmen) |
 | CQ4 | **Ruf:** `rufSaison` rechnet „übertroffen“ nach dem Tiefstapeln vom Vorschlag aus, „deutlich verfehlt“ weiter vom verhandelten Ziel. Ein hochgepokertes, erreichtes Ziel bringt den Zuschlag dazu. Alte Spielstände ohne `S.zg`: alles wie bisher. | ✅ |
 | CQ5 | **Vorbereitungsliste (K12b):** Der Punkt „Saisonziel“ heißt jetzt „Saisonziel und Zielgespräch“. Er bleibt ohne Entscheidung „Standard“ (nicht „offen“), damit die Erinnerung vor „Tag beenden“ nicht öfter kommt als bisher. | ✅ |
+
+---
+
+## CR. Nachtrag zum Karriereende nach K32 §5.1 (22. November 2026, popolupo, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-k32-karriereende`, auf U12e. Ausführlich in K32 §5.1 (Umsetzung) und §12 Nr. 27.
+
+| # | Befund | Status |
+|---|---|---|
+| CR1 | **Formel statt Pauschale:** Grundwert nach Alter (32: 10 %, 34: 25 %, 36: 50 %, 38: 90 %, linear dazwischen, ab 39 sicher), Torhüter zwei Jahre später, ×1,5 zu schwach für die Liga, ×0,7 Stammspieler, ×1,5 Kreuzbandriss in zwölf Monaten, ×0,8 Vorbildprofi. | ✅ |
+| CR2 | **Zufall:** vorher im Strom des Saisonwechsels, jetzt eigener Strom je Spieler und Saison. Dadurch verschiebt sich der übrige Zufall des Saisonwechsels einmal gegenüber früheren Läufen (andere Anzahl Würfe). Vergleiche mit alten Läufen gleichen Seeds stimmen ab dem ersten Saisonwechsel nicht mehr. | ⚠️ bekannt |
+| CR3 | **Gleichgewicht (K32 §5.3, K03 §10):** Mit 32 und 33 hören jetzt einige auf, mit 35 bis 37 weniger als vorher. Die Ligen könnten über zehn Saisons etwas jünger und anfangs etwas schwächer werden. | ⚠️ `tests/welt.js` über zehn Saisons ansehen |
+| CR4 | **Auslandspool:** gleiche Chance ohne Niveau, im Strom des Pools. Der Pool verliert ab 32 etwas mehr Spieler, seine eigenen Regeln bleiben. | ⚠️ Größe des Pools über zehn Saisons (K32 §10: ±15 %) |

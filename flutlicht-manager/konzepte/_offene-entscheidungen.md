@@ -616,6 +616,7 @@ Bei der Umsetzung (U18a, 20.11.), ausführlich in K32 §12 Nr. 21–25:
 24. **Ex-Spieler als Trainer** mit 15 % ab 150 Ligaspielen, nur erfundene Spieler.
 25. **Pool mit mindestens 12 freien Trainern.**
 26. **Ereignisse aus §8 als Ereigniskarten** (U18b): Altstar, Abschiedsspiel, Heimweh, England ruft. Das Karriereende nach §5.1 wartet auf einen Testlauf.
+27. **Karriereende nach §5.1 gebaut ohne Testlauf** (22.11., popolupo): Stützstellen linear, Ligaschnitt aus den Kaderstärken, Vereinslose gegen die 3. Liga, „zu schwach“ vor „Stammspieler“, eigener Strom je Spieler, Auslandspool ohne Niveau.
 
 ## K34 – Statistik und Historie
 Datei: `konzepte/K34-statistik.md`

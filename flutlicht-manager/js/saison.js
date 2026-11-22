@@ -7,6 +7,19 @@ function table(lg){const T={};S.teams.filter(t=>t.lg===lg).forEach(t=>T[t.id]={i
 const rank=(lg,id)=>table(lg).findIndex(r=>r.id===id)+1;
 function formPts(id){const r=table(S.teams[id].lg).find(x=>x.id===id);if(!r||!r.last.length)return 1.4;const l=r.last.slice(-5);return l.reduce((a,b)=>a+b,0)/l.length;}
 const topScorers=lg=>S.pl.filter(p=>p.team>=0&&S.teams[p.team].lg===lg&&p.g>0).sort((a,b)=>b.g-a.g).slice(0,15);
+// ---------- Karriereende (K32 §5.1) ----------
+// Schnitt je Liga: Mittel der Kaderstärke (beste 14) aller Vereine der Liga. Vereinslose vergleichen sich mit der 3. Liga.
+function karriereSchnitte(){const s={};LIGEN.forEach(lg=>{const l=S.teams.filter(t=>t.lg===lg);s[lg]=l.length?l.reduce((a,t)=>a+teamLevel(t.id),0)/l.length:null;});return s;}
+// Chance je Saison: Grundwert nach Alter (Torhüter jünger gerechnet, dazwischen linear) × Niveau × Verletzung × Professionalität. sch: Schnitte je Liga oder null (Auslandspool)
+function karriereChance(p,sch){const K=RS.karriereende,G=K.grund,a=p.age-(p.pos==='TW'?K.torwartPlus:0);if(a<G[0][0])return 0;
+  let f=1;for(let i=0;i<G.length;i++)if(a<=G[i][0]){f=i?G[i-1][1]+(G[i][1]-G[i-1][1])*(a-G[i-1][0])/(G[i][0]-G[i-1][0]):G[0][1];break;}
+  const t=p.team>=0?S.teams[p.team]:null,ls=sch?(t&&t.lg<=3?sch[t.lg]:sch[3]):null;
+  if(ls!=null&&p.str<ls-K.schwachUnter)f*=K.schwach;else if(t&&K.stammRollen.includes(kaderRolle(p)))f*=K.stamm;
+  const heute=absTag(S.tag);if(p.age>=K.kreuzbandAb&&((p.vl&&p.vl.art==='kreuzband')||(p.vh||[]).some(x=>x.art==='kreuzband'&&heute-x.ab<=K.kreuzbandTage)))f*=K.kreuzband;
+  if(hatEig(p,'vorbildprofi'))f*=K.profi;return Math.min(1,f);}
+// Hört der Spieler auf? Gewürfelt im eigenen Strom je Spieler und Saison, nur wenn die Chance zwischen 0 und 1 liegt
+function karriereEnde(p,sch){const c=karriereChance(p,sch);return c>=1||(c>0&&mitStrom(strom('karriereende',S.season,p.id),()=>R())<c);}
+
 function seasonEnd(){return mitStrom(strom('saisonende',S.season),seasonEndLauf);}
 function seasonEndLauf(){
   const T={1:table(1),2:table(2),3:table(3)},me=myT(),pos=rank(me.lg,S.my),B=RV;
@@ -68,11 +81,11 @@ function newSeasonLauf(){lizenzNachweis();wechselVollziehen(true);leiheEnde();ve
     if(t.lg<t.lastLg)d+=A.aufstieg;if(t.lg>t.lastLg)d+=A.abstieg;d+=euAnsehen(t.id);t.rep=clamp(Math.round(t.rep+d),A.min,A.max);t.fans=Math.round(clamp(t.fans*(1+d*Z.fans.faktor),Z.fans.min,t.cap*Z.fans.maxJePlatz));});
   zweiteAbstiegSim();marketingNeueSaison(); // Fans-Bonus der Kampagnen (K25 §5.4, K25a)
   // deine Zweite aus der 3. Liga abgestiegen: Spieler bis 23 bleiben als Amateurkader (K08 §5.6)
-  const K=Z.karriereende;
+  const kSchnitt=karriereSchnitte(); // Schnitt je Liga für das Karriereende (K32 §5.1), vor dem Altern
   const vPlan=new Map();S.teams.forEach(t=>{if(aktiv(t)&&stabMacht(t.id,'vertraege'))vPlan.set(t.id,kaderplan(t));}); // Verträge nach Rang (K31 §5.8, U11c): Plan vor dem Altern, ohne Zufall
   S.pl.forEach(p=>{if(p.team<-1)return;p.age++;p.g=0;p.pg=0;if(p.eg)p.eg=0;p.apps=0;disziplinSaison(p);p.form=Z.neuForm;p.sv=0;p.ent=0;eigenschaftenNeu(p);
     if(p.team>=0&&!aktiv(S.teams[p.team])){p.team=-1;p.list=0;}
-    if((p.age>=K.abAlter&&R()<(p.age-K.nullAlter)*K.jeJahr)||p.age>=K.spaetestens){if(p.team===S.my)news(`${p.n} beendet seine Karriere.`);p.team=-2;return;}
+    if(karriereEnde(p,kSchnitt)){if(p.team===S.my)news(`${p.n} beendet seine Karriere.`);p.team=-2;return;} // K32 §5.1, eigener Strom je Spieler
     if(p.team>=0){p.ct--;if(p.ct<=0){const mein=p.team===S.my;if(mein&&!autoB('vertraege')){news(`Vertrag ausgelaufen: ${p.n} verlässt den Verein.`,'bad');p.team=-1;p.list=0;}
       else if(R()<vertragChance(p,vPlan.get(p.team))){p.ct=riA(Z.vertrag.jahre);p.sal=salaryFor(p.str);if(mein)stabMeldung(`Der Verein hat den Vertrag von ${p.n} verlängert (${p.ct} Jahr${p.ct>1?'e':''}).`);}else{if(mein)news(`Vertrag ausgelaufen: ${p.n} verlässt den Verein. Der Verein hat nicht verlängert.`,'bad');p.team=-1;p.list=0;}}}
     if(p.team!==S.my)p.list=0;});

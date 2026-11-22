@@ -89,6 +89,16 @@ Chance je Saison = Grundwert(Alter) × Niveau × Verletzung × Professionalität
 - **Professionalität:** Vorbildprofis ×0,8.
 - Ziel: Karriereende im Schnitt mit etwa 33 bis 34 (Studie: Profis hören im Schnitt mit 33 auf, K03 Quellen). Heute: `saison.karriereende` mit ab 34, 25 % je Jahr, spätestens 38.
 
+**Umsetzung (22.11.2026, popolupo, ohne Testlauf, `karriereChance` und `karriereEnde` in `js/saison.js`):**
+- Grundwert wie oben, zwischen den Stützstellen linear (33 Jahre: 17,5 %, 35: 37,5 %, 37: 70 %), ab 39 sicher. Torhüter rechnen zwei Jahre jünger.
+- **Niveau:** Der Ligaschnitt ist das Mittel der Kaderstärke (beste 14) aller Vereine der Liga, berechnet vor dem Altern. Vereinslose vergleichen sich mit der 3. Liga. Wer mehr als 10 darunter liegt, ×1,5. Sonst Stammspieler (Kaderrolle Schlüssel- oder Stammspieler) ×0,7. Beides zusammen gibt es nicht, „zu schwach“ geht vor.
+- **Verletzung:** laufender Kreuzbandriss oder einer im Verlauf der letzten 365 Tage (`p.vh`, K10), ab 32 Jahren.
+- **Professionalität:** Eigenschaft Vorbildprofi (K03).
+- **Zufall:** eigener Strom je Spieler und Saison (`karriereende`), so verschiebt die neue Formel keinen anderen Zufall des Saisonwechsels.
+- **Auslandspool:** dieselbe Chance ohne Niveau und ohne Rolle. Seine eigenen Regeln (zu schwach für den Verein, ab 31 aus dem Kern) bleiben.
+- **Schnitt nach der Formel** (ohne Faktoren, für Spieler, die 32 werden): Feldspieler etwa 34,8, Torhüter etwa 36,8 (Ziel §10: 33 bis 35 und 35 bis 37). Wer früher aus dem Profifußball fällt, zählt hier nicht mit, darum liegt der echte Schnitt im Spiel tiefer.
+- Folge gegenüber vorher: Mit 32 und 33 hören jetzt einige auf (vorher keiner), mit 35 und 36 weniger (vorher 50 und 75 %). Wie sich das auf die Stärke der Ligen über zehn Saisons auswirkt (§5.3), muss `tests/welt.js` zeigen.
+
 ### 5.2 Neue Spieler in der übrigen Welt
 
 - **Vereine der 1. bis 3. Liga:** Jahrgänge nach K08 (D4: K08 für alle Vereinsjahrgänge, K32 für den Pool und Lücken).
@@ -205,6 +215,7 @@ welt:{
 24. **Ex-Spieler als Trainer** mit 15 % ab 150 Ligaspielen (§3.3b). Ex-Spieler im Stab kommen mit einem späteren Schritt.
 25. **Pool mit mindestens 12 freien Trainern** (§3.3b).
 26. **Ereignisse aus §8 als Ereigniskarten** mit den Schwellen und Werten aus §8 (U18b), alle geschätzt. Das Karriereende nach §5.1 wartet auf einen Testlauf, weil es das Gleichgewicht der Welt verschiebt.
+27. **Karriereende nach §5.1 gebaut ohne Testlauf** (22.11., popolupo, der Nutzer wollte heute nicht auf Tests warten): Stützstellen linear verbunden, Ligaschnitt = Mittel der Kaderstärken, Vereinslose gegen die 3. Liga, „zu schwach“ vor „Stammspieler“, eigener Strom je Spieler. Der Auslandspool nutzt dieselbe Chance ohne Niveau (§5.1).
 
 **Noch zu recherchieren:** Abgänge der Bundesliga ins Ausland je Sommer, durchschnittliches Karriereende von Torhütern.
 

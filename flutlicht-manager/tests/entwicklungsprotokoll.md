@@ -24,6 +24,7 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 | **U19d1** Kaderliste der UEFA | `mitarbeit/popolupo-u19d-kaderliste` (auf K23d) | fertig, ungetestet |
 | **K23c** echte Größenordnungen | `mitarbeit/popolupo-k23c-groessenordnungen` (auf U19d1) | fertig, ungetestet, ohne die Messung, Werte aus einer eigenen Modellrechnung, vorläufig |
 | **U12e** Zielgespräch mit dem Vorstand (K28 §5.8) | `mitarbeit/popolupo-u12e-zielgespraech` (auf K23c) | fertig, ungetestet |
+| **K32 §5.1** Karriereende nach Formel | `mitarbeit/popolupo-k32-karriereende` (auf U12e) | fertig, ungetestet |
 | U19d2 volle Kader der Auslandsvereine in der Engine | danach | Entwurf in K37 §5.7 |
 
 **Die neueste Spitze ist immer der zuletzt genannte Zweig, er enthält alles davor.** K24 ist fertig (Claude).
@@ -57,6 +58,12 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 ---
 
 ## Changelog
+
+### 22.11.2026: Karriereende nach K32 §5.1 (Zweig `mitarbeit/popolupo-k32-karriereende`, auf U12e)
+
+- **Neu:** Chance je Saison = Grundwert nach Alter × Niveau × Verletzung × Professionalität statt „ab 34 je Jahr 25 %, spätestens 38“ (`karriereChance`, `karriereEnde` in `js/saison.js`, Auslandspool in `js/ausland.js`). Eigener Strom je Spieler.
+- **Tests zuerst:** neu `tests/karriereende.js`, dann `tests/welt.js` über zehn Saisons (Stärke der Ligen, Größe des Pools, CR3, CR4) und `tests/spielermodell.js`, falls es Alter oder Karriereende zählt.
+- **Achtung:** Der übrige Zufall im Saisonwechsel verschiebt sich gegenüber alten Läufen (CR2).
 
 ### 22.11.2026: U12e Zielgespräch (Zweig `mitarbeit/popolupo-u12e-zielgespraech`, auf K23c)
 

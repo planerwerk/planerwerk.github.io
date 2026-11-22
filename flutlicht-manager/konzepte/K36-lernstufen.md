@@ -302,6 +302,7 @@ lizenz:{
 60. **U19d1 Kaderliste der UEFA (22.11., popolupo, ohne Testlauf):** keine neue Funktion, kein neuer Bereich. Melden und Streichen gehören zu `aufstellung` (Teamleiter, mit Automatik: der Co-Trainer meldet zur Frist). Ohne Meldung meldet der Verein am selben Tag wie die Automatik (Gleichschritt).
 61. **K23c echte Größenordnungen (22.11., popolupo, ohne Testlauf):** keine neue Funktion, kein neuer Bereich. TV nach dem Säulenmodell, weitere Sponsoren und Verwaltung sind Buchungen ohne Entscheidung. Die TV-Gelder werden zu Saisonbeginn festgelegt, nicht beim ersten Gebrauch, damit beide Läufe im Gleichschritt-Test gleich rechnen.
 62. **U12e Zielgespräch (22.11., popolupo, ohne Testlauf):** neue Funktion, neuer Bereich `zielgespraech` in der Grundlizenz (wie `ruecktritt`, K28 §5.8), ohne Automatik: Ohne Entscheidung gilt der Vorschlag des Vorstands. Gewürfelt wird nur beim Tiefstapeln, also nur nach deinem Eingriff (Gleichschritt unberührt).
+63. **K32 §5.1 Karriereende (22.11., popolupo, ohne Testlauf):** keine neue Funktion, kein neuer Bereich. Eigener Strom je Spieler und Saison, unabhängig von Lizenz und Automatik (Gleichschritt).
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 

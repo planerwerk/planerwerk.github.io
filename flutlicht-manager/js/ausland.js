@@ -73,9 +73,9 @@ function auslandAufbau(){S.ausland={v:AUSLAND.map(([name,land,stufe,rep,fin],i)=
 function auslandWoche(){if(!S.ausland||imUrlaub())return;const A=RW.ausland,F=RP.form;
   S.ausland.pl.forEach(p=>{p.form=Math.round(clamp(p.form+(R()-0.5)*2*A.formZufall+(F.mitte-p.form)*F.ausgleich,F.min,F.max)*100)/100;entwickeln(p,7);p.str=Math.round(p.str*100)/100;});} // zwei Nachkommastellen reichen und halten den Spielstand klein
 // Saisonwechsel (K32 §4.1, eigener Strom): Alter, Karriereende, Abgänge aus dem Kern, Wechsel zu größeren Auslandsvereinen, neue Talente und Kernspieler
-function auslandSaison(){if(!S.ausland)return;const A=RW.ausland,K=RS.karriereende,V=S.ausland.v,weg=new Set();
+function auslandSaison(){if(!S.ausland)return;const A=RW.ausland,V=S.ausland.v,weg=new Set(); // Karriereende wie in den Ligen (K32 §5.1, saison.js karriereChance), ohne Niveau
   S.ausland.pl.forEach(p=>{p.age++;p.form=RS.neuForm;p.sv=0;delete p.eig;const v=avVon(p.team),base=avStaerke(v); // Eigenschaften (Alter, Persönlichkeit) werden bei Bedarf neu berechnet
-    if((p.age>=K.abAlter&&R()<(p.age-K.nullAlter)*K.jeJahr)||p.age>=K.spaetestens||(p.age>=A.rausAbAlter&&p.str<base-A.raus)||(p.age>=A.altRaus.ab&&R()<(p.age-A.altRaus.ab+1)*A.altRaus.jeJahr)){weg.add(p.id);return;}
+    const kc=karriereChance(p,null);if(kc>=1||(kc>0&&R()<kc)||(p.age>=A.rausAbAlter&&p.str<base-A.raus)||(p.age>=A.altRaus.ab&&R()<(p.age-A.altRaus.ab+1)*A.altRaus.jeJahr)){weg.add(p.id);return;}
     p.sp=istTalent(p)?A.praxis.talent:A.praxis.stamm;if(--p.ct<=0){p.ct=riA(RS.vertrag.jahre);p.sal=salaryFor(p.str);} // Spielpraxis nach Rolle, Vertrag verlängert mit neuem Gehalt
     if(p.str>base+A.aufstieg.ab&&R()<A.aufstieg.chance){const ziel=V.filter(x=>x.rep>v.rep&&avStaerke(x)>=p.str-A.aufstieg.fenster&&avStaerke(x)<=p.str+A.aufstieg.fenster);
       if(ziel.length){const z=pick(ziel);if((S.kenntnis||{})[p.id])news(`Wechsel im Ausland: ${p.n} geht von ${v.name} zu ${z.name}.`,'tr');p.team=z.id;}}});
