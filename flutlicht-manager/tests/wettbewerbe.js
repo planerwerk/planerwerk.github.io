@@ -44,5 +44,12 @@ pruef(supercups.length===N-1&&supercups.every(x=>!x.verl&&(x.hg!==x.ag)===!x.pen
   const f0=S2.fin['Supercup']||0;F2.supercupPraemie({h:6,a:b.id},b.id);const mein=(S2.fin['Supercup']||0)-f0===P.verlierer;
   pruef(ki&&mein,'Supercup-Prämie: Sieger und Verlierer, Computer-Vereine und dein Verein',`Computer ${ki}, dein Verein ${mein}`);}
 
+// K13c. Pokalmeldungen: Sensation nur, wenn ein Erstligist gegen einen Amateurverein oder Drittligisten ausscheidet (nicht gegen einen Zweitligisten);
+//       Los des Jahres bei einem Spitzenverein gegen einen Amateurverein
+{const {W:W3,F:F3}=neueWelt();F3.buildWorld(SEED);const S3=W3.S;S3.my=-9;const l1=S3.teams.filter(t=>t.lg===1).sort((a,b)=>b.rep-a.rep),top=l1[0],mid=S3.teams.find(t=>t.lg===2),am=1000;
+  const n=k=>S3.news.filter(x=>x.t.startsWith(k)).length;F3.pokalSensationen([{h:am,a:top.id,hg:2,ag:1},{h:mid.id,a:top.id,hg:0,ag:3}]);const s1=n('Pokalsensation');
+  F3.pokalSensationen([{h:mid.id,a:top.id,hg:2,ag:1}]);const s2=n('Pokalsensation');const los=F3.pokalLosDesJahres([[mid.id,l1[5].id],[am,top.id]]);
+  pruef(s1===1&&s2===1&&!!los&&los[1]===top.id&&n('Pokal-Los des Jahres')===1,'Pokalmeldungen: Sensation nur gegen Amateure oder Drittligisten, Los des Jahres',`Sensationen ${s1}/${s2}, Los ${los&&los.join('–')} (Ansehen ${top.rep})`);}
+
 console.log(`\n${N} Saison(s) in ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

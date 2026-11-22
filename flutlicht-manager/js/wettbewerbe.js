@@ -43,7 +43,7 @@ function spieltageVon(tid,ohne){const s=new Set(),t=tid<1000?S.teams[tid]:null;i
   euTageVon(tid).forEach(x=>s.add(x));return s;}
 function pokalAuslosungTag(d){if(S.phase!=='play'||!S.cup||S.cup.alive.length<2)return;const r=S.cup.hist.length,t=pokalLosTag(r);
   if(t==null||d<t||(S.cup.los&&S.cup.los.r===r))return;
-  S.cup.los={r,am:d,paare:mitStrom(strom('pokallos',S.season,r),()=>pokalAuslosen(r))};(S.cup.spaet=S.cup.spaet||{})[r]=pokalSpaet(r,S.cup.los.paare);pokalVerlegen(r,S.cup.los.paare);
+  S.cup.los={r,am:d,paare:mitStrom(strom('pokallos',S.season,r),()=>pokalAuslosen(r))};pokalLosDesJahres(S.cup.los.paare);(S.cup.spaet=S.cup.spaet||{})[r]=pokalSpaet(r,S.cup.los.paare);pokalVerlegen(r,S.cup.los.paare);
   const m=S.cup.los.paare.find(x=>x.includes(S.my));
   if(m)news(`Auslosung DFB-Pokal, ${POKAL_RUNDEN[r]}: ${tn(m[0])} – ${tn(m[1])}${r===5?' im Finale in Berlin':m[0]===S.my?', ein Heimspiel':', auswärts'} am ${datumKurz(S.plan.pokal[r][0]+(pokalSpaetIst(r,S.my)?1:0))}${pokalSpaetIst(r,S.my)?' (einen Tag später wegen des Europapokals)':''}.`,'good');}
 // Paarungen der Runde: aus der Auslosung, sonst jetzt losen (alte Spielstände)
@@ -74,3 +74,10 @@ function zweiteRegeln(){const out=[];S.teams.forEach(t=>{if(t.zweite<0)return;co
 // Prämien des Supercups (K13 §12 Nr. 12, K13b): Sieger und Verlierer nach RWB.supercup.praemie, für deinen Verein als Buchung „Supercup“, für Computer-Vereine aufs Konto
 function supercupPraemie(r,w){const P=RWB.supercup.praemie;[r.h,r.a].forEach(id=>{const x=id===w?P.sieger:P.verlierer;if(!x||id==null||id<0||id>=1000)return;
   if(id===S.my){money('Supercup',x);news(`Supercup-Prämie: ${fmt(x)}.`,'good');}else if(S.teams[id])S.teams[id].cash+=x;});}
+
+// Pokalmeldungen (K13 §8, K13c), nur Meldungen, ohne Würfel. Pokalsensation: ein Erstligist (nicht dein Verein) scheidet gegen einen Amateurverein oder einen Verein ab der 3. Liga aus.
+// Los des Jahres: bei der Auslosung ein Erstligist mit Ansehen ab RWB.pokal.losTopAb gegen einen Amateurverein.
+function pokalSensationen(list){(list||[]).forEach(r=>{const w=winner(r),l=w===r.h?r.a:r.h;if(l==null||l>=1000||l===S.my||!S.teams[l]||S.teams[l].lg!==1||!amateur(w))return;
+  news(`Pokalsensation: ${tn(w)} wirft ${tn(l)} aus dem DFB-Pokal (${r.hg}:${r.ag}${r.pen?`, i.E. ${r.pen[0]}:${r.pen[1]}`:''}).`,'');});}
+function pokalLosDesJahres(paare){const p=(paare||[]).find(x=>x.some(id=>id!=null&&id<1000&&S.teams[id]&&S.teams[id].lg===1&&S.teams[id].rep>=RWB.pokal.losTopAb)&&x.some(id=>id>=1000));
+  if(p)news(`Pokal-Los des Jahres: ${tn(p[0])} gegen ${tn(p[1])}.`,'');return p||null;}

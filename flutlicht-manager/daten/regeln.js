@@ -767,7 +767,7 @@ const REGELN={
     verlaufTage:730},
   // Wettbewerbe und Spielplan (K13 §11, Welle 2): Pokal-Auslosung, Heimrecht der Amateure (3. Liga und darunter) bis zum Halbfinale (Runde 4), Supercup, 72 Stunden
   // supercup.praemie (K13b, 22.11.2026): Franz-Beckenbauer-Supercup 2025, 3 Mio. € für den Sieger, 2 Mio. € für den Verlierer (Websuche 22.11., Medienberichte, keine offizielle DFL-Quelle)
-  wettbewerbe:{pokal:{auslosungTage:14,profitopfZweite:14,heimrechtBisRunde:4},supercup:{vorSpieltag:6,anstoss:'20:30',praemie:{sieger:3e6,verlierer:2e6}},spielplan:{mindestTage:3}},
+  wettbewerbe:{pokal:{auslosungTage:14,profitopfZweite:14,heimrechtBisRunde:4,losTopAb:80},supercup:{vorSpieltag:6,anstoss:'20:30',praemie:{sieger:3e6,verlierer:2e6}},spielplan:{mindestTage:3}},
   // Testspiele und Trainingslager (K11 §11, Welle 2). Geldbeträge und Zusagen sind Spielwerte (K11 §12 Nr. 4).
   testspiele:{abWoche:3,wechsel:11,frische:0.7,risiko:0.6,praxis:0.6,vertrautheit:2,form:0.3,
     zusage:{grund:0.6,staerker:0.4,schwaecher:1.3,staerkerAb:4,schwaecherAb:4,kalender:0.2,region:1.2,vorbereitung:1.2,saison:0.7,min:0.05,max:0.95},
