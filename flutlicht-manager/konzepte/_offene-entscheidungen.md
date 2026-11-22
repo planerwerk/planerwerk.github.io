@@ -559,6 +559,7 @@ Datei: `konzepte/K29-medien-presse.md`
 - Das Medienklima ist ein eigener Wert und wird vorerst nur angezeigt. Seit K29b (22.11., popolupo, vorläufig) wirkt es auf die Gerüchte über deinen Verein (×1,5 bei 0 bis ×0,5 bei 100), und die Medienpolitik (offen, zurückhaltend, abgeschottet) zieht es je Woche Richtung 70, 50 oder 30.
 - Seit K29c (22.11., popolupo, vorläufig): Beziehung zu den fünf Medien (−30 bis +30), Exklusivinterview alle 28 Tage (+10 für das Medium, −3 für die anderen), Gerüchte über dich wirken nach der Beziehung milder oder schärfer.
 - Seit K29d (22.11., popolupo, vorläufig): Bei schlechtem Medienklima fragen öfter Boulevard und Portal (bei 0 etwa 60 % statt einem Drittel), unter 35 eine Frage mehr. Antworten wirken auf Fans und Vorstand nach der Beziehung zum fragenden Medium und ändern sie um die halbe Wirkung aufs Klima. Beziehungen verblassen je Woche um 0,5.
+- Seit K29e (22.11., popolupo, vorläufig): Computer-Trainer haben ein festes Medienprofil (diplomatisch 40 %, Floskelkönig 25 %, Lautsprecher 20 %, Psychospieler 15 %). Lautsprecher (60 %) und Psychospieler (50 %) sticheln vor Topspielen. Kontern hebt beide Mannschaften um 1, gelassen die eigene um 1, eine unbeantwortete Stichelei kostet −1 oder −2. In der Automatik ohne Wirkung.
 - Zum Start 54 Fragen, 30 Antworten und 22 Schlagzeilen.
 
 **Mit U17b von mir vorläufig entschieden (20.11.2026, K29 §12 Nr. 15 bis 19):**

@@ -6,13 +6,25 @@
 function presseS(){return S.presse||(S.presse={klima:RPK.klimaStart,n:{},letzte:-99,sperre:{},arten:[],aus:{},aussagen:[]});}
 const pkText=(s,c)=>String(s).replace(/\{(\w+)\}/g,(m,k)=>c[k]!=null?c[k]:m);
 const pkOffen=s=>/\{\w+\}/.test(s);
-function pkKontext(pk){const t=myT(),p=pk.pid!=null?PIX.get(pk.pid):null;return{verein:t.name,gegner:pk.gegner!=null?tn(pk.gegner):null,spieler:p?p.n:null,platz:rank(t.lg,S.my),serie:pk.serie!=null?pk.serie:null,trainer:S.mgr||'Der Trainer',liga:ligaName(t.lg),medium:pk.medium&&PRESSE.medien[pk.medium]?PRESSE.medien[pk.medium].name:null};}
+function pkKontext(pk){const t=myT(),p=pk.pid!=null?PIX.get(pk.pid):null;return{verein:t.name,gegner:pk.gegner!=null?tn(pk.gegner):null,spieler:p?p.n:null,platz:rank(t.lg,S.my),serie:pk.serie!=null?pk.serie:null,trainer:S.mgr||'Der Trainer',liga:ligaName(t.lg),medium:pk.medium&&PRESSE.medien[pk.medium]?PRESSE.medien[pk.medium].name:null,
+  gtrainer:pk.gegner!=null?trainerName(pk.gegner):null,zitat:pk.zitat?pkText(pk.zitat,{verein:t.name}):null};} /* gtrainer, zitat: Stichelei (K29e) */
 // Text ohne offene Platzhalter, fest gewählt (k), sonst der erste passende
 function pkWahl(l,c,k){const ok=l.map(x=>pkText(x,c)).filter(x=>!pkOffen(x));return ok.length?ok[k%ok.length]:pkText(l[0],c).replace(/\{\w+\}/g,'');}
 const jMedium=n=>(PRESSE.journalisten.find(j=>j.n===n)||{m:'fach'}).m;
 // Journalist nach Medienklima (K29d): unter 50 kommen Boulevard und Portal öfter, darüber die übrigen. Ein Wurf x wie vorher, bei Klima 50 dieselbe Wahl wie vor K29d.
 function pkJournalist(x){const js=PRESSE.journalisten,K=RPK.klimaFragen,d=(50-presseS().klima)/50*K.gewicht,g=js.map(j=>Math.max(0,1+(K.scharf.includes(j.m)?d:-d))),s=g.reduce((a,b)=>a+b,0);
   let r=x*s;for(let i=0;i<js.length;i++){r-=g[i];if(r<0)return js[i].n;}return js[js.length-1].n;}
+// Medienprofil eines Computer-Trainers (K29 §7, K29e): fest aus seiner Nummer, ohne Zufall, Anteile aus den Regeln
+function medienProfil(x){if(!x)return null;const A=RPK.medienprofil.anteile,k=Object.keys(A),s=k.reduce((a,b)=>a+A[b],0);let r=(Math.imul(x.id+1,2654435761)>>>0)%s;
+  for(const p of k){r-=A[p];if(r<0)return p;}return k[k.length-1];}
+// Stichelei des gegnerischen Trainers vor Topspielen (K29 §7, K29e), im Strom presse: Lautsprecher und Psychospieler mit ihrer Chance, als erste Frage. Andere Profile würfeln nicht.
+function pkStichelei(pk){const M=RPK.medienprofil;if(!M.anlaesse.includes(pk.art)||pk.gegner==null||pk.gegner>=1000)return;const x=trainerVon(pk.gegner);if(!x)return;const pr=medienProfil(x),c=pr&&M.chance[pr]||0;
+  if(!c||R()>=c)return;const l=PRESSE.sticheleien[pr],F=PRESSE.stichelFrage;pk.profil=pr;pk.zitat=l[Math.floor(R()*l.length)];
+  pk.fragen.unshift({t:F[Math.floor(R()*F.length)],o:['humor','provokation','floskel'],sp:0,j:pkJournalist(R()),st:1});
+  news(`${x.n} (${tn(pk.gegner)}) stichelt vor dem Spiel: „${pkText(pk.zitat,{verein:myT().name})}“`);}
+// Stichelei ohne Antwort (Co-Trainer geschickt oder nicht hingegangen, aber ohne Automatik): die eigene Mannschaft grübelt
+function stichelOffen(pk){if(!pk.profil||autoB('presse'))return;const v=RPK.medienprofil.offen[pk.profil]||0;if(!v)return;squad(S.my).forEach(p=>stimmungAendern(p,v));
+  news(`Die Stichelei von ${trainerName(pk.gegner)} blieb unbeantwortet. In der Kabine wird darüber geredet.`,'bad');}
 
 // ---------- Anlass (K29 §4.1) ----------
 function presseAnlass(art,o={}){if(S.phase!=='play'||S.pk||S.fired)return false;const P=presseS(),Q=RPK,heute=absTag(S.tag),A=PRESSE.anlaesse[art];if(!A)return false;
@@ -21,12 +33,12 @@ function presseAnlass(art,o={}){if(S.phase!=='play'||S.pk||S.fired)return false;
     const n=Math.min(l.length,Q.fragen[0]+Math.floor(R()*(Q.fragen[1]-Q.fragen[0]+1))+(P.klima<Q.klimaFragen.bohrenUnter?Q.klimaFragen.bohrenPlus:0)),fr=[]; /* schlechtes Klima: eine Frage mehr (K29d) */
     while(fr.length<n&&l.length)fr.push(l.splice(Math.floor(R()*l.length),1)[0]);
     P.id=(P.id||0)+1;S.pk={id:P.id,art,tag:S.tag,s:S.season,medium:o.medium||null,gegner:o.gegner!=null?o.gegner:null,pid:o.pid!=null?o.pid:null,serie:o.serie!=null?o.serie:null,i:0,
-      fragen:fr.map(f=>({t:f.t,o:f.o,sp:f.sp?1:0,j:pkJournalist(R())})),antw:[]};
+      fragen:fr.map(f=>({t:f.t,o:f.o,sp:f.sp?1:0,j:pkJournalist(R())})),antw:[]};pkStichelei(S.pk);
     P.n[S.season]=(P.n[S.season]||0)+1;P.letzte=heute;P.sperre[art]=heute;
     if(autoB('presse'))presseDelegieren(true);else news(`Pressekonferenz heute: ${A.name}. Im Büro hingehen oder den Co-Trainer schicken.`);return true;});}
 // Co-Trainer schicken (oder automatisch): Floskeln, Medienklima −2
 function presseDelegieren(auto){const pk=S.pk;if(!pk)return;const P=presseS(),A=PRESSE.anlaesse[pk.art];S.pk=null;P.klima=clamp(P.klima+RPK.delegieren,0,100);
-  news(`${A.name}: ${auto?'Der Co-Trainer geht hin':'Du schickst den Co-Trainer'}. ${pkSchlagzeile('delegiert',pk)}`);if(!auto){save();closeOv();render();}}
+  news(`${A.name}: ${auto?'Der Co-Trainer geht hin':'Du schickst den Co-Trainer'}. ${pkSchlagzeile('delegiert',pk)}`);stichelOffen(pk);if(!auto){save();closeOv();render();}}
 function pkSchlagzeile(art,pk){const Z=PRESSE.schlagzeilen[art];if(!Z)return'';return`${PRESSE.medien[Z.m].name}: „${pkWahl(Z.t,pkKontext(pk),pk.id)}“`;}
 
 // ---------- Auslöser ----------
@@ -66,7 +78,7 @@ function pkAntwort(art){const pk=S.pk;if(!pk)return;const o=pkOptionen(pk).find(
 // Wirkung (K29 §5.1 bis §5.3): Streuung im Grundstrom, Abnutzung, Deckel je Pressekonferenz
 const PK_ECHO=['ausraster','kritikSpieler','kritikSchiri','provokation','kritikTeam','angriffMedien','ankuendigung','humor','rueckendeckung','floskel'];
 function pkAbschluss(){const pk=S.pk;if(!pk)return;S.pk=null;const P=presseS(),Q=RPK,W=Q.wirkung,D=Q.deckel,t=myT(),krise=pk.art==='krise'||pk.art==='ultimatum',sum={team:0,spieler:0,fans:0,vorstand:0,medien:0};
-  let kritik=0,bez=0,schiri=null,chronik=null;const st=()=>Q.streuung[0]+R()*(Q.streuung[1]-Q.streuung[0]),X=Q.ausraster;
+  let kritik=0,bez=0,schiri=null,chronik=null,trotz=0;const st=()=>Q.streuung[0]+R()*(Q.streuung[1]-Q.streuung[0]),X=Q.ausraster;
   const mws=pk.fragen.map(f=>medienWirkung(jMedium(f.j))); /* K29d: Faktor je Frage vor den Antworten, so hängt er nicht an der Reihenfolge (Prüfung DM2) */
   pk.antw.forEach((a,i)=>{const l=P.arten,ab=l[l.length-1]===a.art?(l[l.length-2]===a.art?Q.abnutzung[1]:Q.abnutzung[0]):1;P.arten=[...l,a.art].slice(-2);
     const fm=pk.fragen[i]?jMedium(pk.fragen[i].j):null,mw=mws[i]!=null?mws[i]:1,oe=v=>v*(v<0?mw:2-mw); /* K29d: Fans und Vorstand lesen es im Medium des Fragers, gewogen milder, verärgert schärfer */
@@ -74,6 +86,8 @@ function pkAbschluss(){const pk=S.pk;if(!pk)return;S.pk=null;const P=presseS(),Q
       if(x<X.weckruf){sum.team+=X.weckrufTeam;news('Nach dem Ausraster: Die Mannschaft wirkt wachgerüttelt.','good');}
       else if(x<X.weckruf+X.bruch){sum.team+=X.bruchTeam;sum.vorstand+=oe(X.bruchVorstand);news('Nach dem Ausraster: In der Kabine rumort es, der Vorstand ist entsetzt.','bad');}
       else{sum.fans+=oe(X.kultFans);chronik=a;news('Nach dem Ausraster: Die Fans feiern dich, der Satz ist schon Kult.','good');}return;} /* auch der Ausraster über das Medium (DM1) */
+    if(pk.fragen[i]&&pk.fragen[i].st){const M=RPK.medienprofil;if(a.art==='humor')sum.team+=M.gelassen;else if(a.art==='provokation'){sum.team+=M.konterEigen;trotz+=M.konterGegner;}
+      else if(a.art==='floskel')sum.team+=M.ignorieren[pk.profil]||0;} /* Antwort auf die Stichelei (K29e): gelassen, kontern, ignorieren */
     const w=W[a.art]||{},f=st()*ab;['team','spieler','fans','vorstand','medien'].forEach(k=>{if(w[k])sum[k]+=k==='fans'||k==='vorstand'?oe(w[k]*f):w[k]*f;});
     if(fm&&w.medien)medienBezAendern(fm,w.medien*f*REGELN.exklusiv.ausAntwort); /* K29d: Beziehung zum fragenden Medium */
     if(a.art==='humor'&&krise)sum.vorstand+=oe(W.humor.krise*f);if(a.art==='kritikTeam')kritik+=f;if(a.art==='kritikSchiri')schiri=a;
@@ -83,6 +97,7 @@ function pkAbschluss(){const pk=S.pk;if(!pk)return;S.pk=null;const P=presseS(),Q
   const c=(x,k)=>clamp(x,-D[k],D[k]),K=W.kritikTeam;
   squad(S.my).forEach(p=>{const ind=kritik?kritik*(hatEig(p,'kaempfer')?K.kaempfer:(hatEig(p,'diva')||hatEig(p,'nervenschwach'))?K.empfindlich:K.sonst):0,v=c(sum.team+ind,'team');if(Math.abs(v)>=0.05)stimmungAendern(p,v);});
   const sp=pk.pid!=null?PIX.get(pk.pid):null;if(sp&&sp.team===S.my&&sum.spieler)stimmungAendern(sp,c(sum.spieler,'spieler'));
+  if(trotz&&pk.gegner!=null&&pk.gegner<1000)squad(pk.gegner).forEach(p=>stimmungAendern(p,c(trotz,'team'))); /* Trotz beim Gegner nach deinem Konter (K29e) */
   if(sum.fans)fanAnlass(t,'fanU',c(sum.fans,'fans'));if(sum.vorstand)S.trust=clamp(S.trust+c(sum.vorstand,'vorstand'),0,100);P.klima=fanZahl(clamp(P.klima+c(sum.medien,'medien'),0,100));
   if(bez)bezDuAendern(pk.gegner,Math.round(bez),'Provokation in der Pressekonferenz');
   if(schiri&&R()<Q.schiri.verfahren){const L=Q.schiri.strafe[t.lg]||Q.schiri.strafe[3],b=Math.round((L[0]+R()*(L[1]-L[0]))/1000)*1000;money('Strafen',-b);news(`Das Sportgericht bestraft deine Kritik am Schiedsrichter mit ${fmt(b)}.`,'bad');if(!chronik)chronik=schiri;}

@@ -40,12 +40,13 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 | **K25d** Mitglieder und Mitgliederaktion, dazu Kleinigkeiten zu K29c, Korrekturen DL | `mitarbeit/popolupo-k25d-mitglieder` (auf K29c) | fertig, ungetestet |
 | **K29d** Medienklima und Beziehungen in der Pressekonferenz | `mitarbeit/popolupo-k29d-klima-fragen` (auf K25d) | fertig, ungetestet |
 | **U12g** Trainervertrag als Karriere-Statistik (K28 §5.10), dazu Korrekturen DM zu K29d | `mitarbeit/popolupo-u12g-trainervertrag` (auf K29d) | fertig, ungetestet |
+| **K29e** Medienprofil der Computer-Trainer, Sticheleien vor Topspielen | `mitarbeit/popolupo-k29e-trainer-medienprofil` (auf U12g) | fertig, ungetestet |
 | U19d2 volle Kader der Auslandsvereine in der Engine | zurückgestellt | Entwurf in K37 §5.7. Die Engine behandelt Auslandsvereine als Block wie Amateure, viele Stellen schlagen Spieler in `PIX` nach. Erst nach einem Testlauf und der Messung des Faktors 0,93 |
 
 **Die neueste Spitze ist immer der zuletzt genannte Zweig, er enthält alles davor.** K24 ist fertig (Claude).
 
-**Vorschlag für den nächsten Testlauf** (Spitze `mitarbeit/popolupo-u12g-trainervertrag`, alles ungetestet, aber von lesenden Prüf-Agenten durchgesehen, Konsistenzprüfung CS, CX, CZ, DD, DF, DI, DL, DM):
-1. `node tests/code.js`, dann die schnellen Einzeltests der neuen Teile: `finanzen.js` (Nr. 11 bis 20), `geruechte.js`, `schwierigkeit.js`, `werbung.js`, `europapokal.js`, `vorstand.js` (Nr. 10 bis 15), `karriereende.js`, `stadion.js` (Nr. 8 bis 11), `karten.js`, `spielwelt-karten.js`, `fans.js` (K27b), `abwerben.js` (K20b), `transfers.js` (K20c), `presse.js` (K29b, K29c, K29d), `marketing.js` (K25c, K25d).
+**Vorschlag für den nächsten Testlauf** (Spitze `mitarbeit/popolupo-k29e-trainer-medienprofil`, alles ungetestet, aber von lesenden Prüf-Agenten durchgesehen, Konsistenzprüfung CS, CX, CZ, DD, DF, DI, DL, DM):
+1. `node tests/code.js`, dann die schnellen Einzeltests der neuen Teile: `finanzen.js` (Nr. 11 bis 20), `geruechte.js`, `schwierigkeit.js`, `werbung.js`, `europapokal.js`, `vorstand.js` (Nr. 10 bis 15), `karriereende.js`, `stadion.js` (Nr. 8 bis 11), `karten.js`, `spielwelt-karten.js`, `fans.js` (K27b), `abwerben.js` (K20b), `transfers.js` (K20c), `presse.js` (K29b bis K29e), `marketing.js` (K25c, K25d).
 2. `node tests/lizenz.js` (Gleichschritt, neue Bereiche `zielgespraech`).
 3. `node tests/finanzmodell.js 2`: Salden je Liga nach K23c. Erwartet nach der Modellrechnung 1. Liga etwa +11 Mio., 2. Liga etwa 0, 3. Liga etwa −1 Mio. je Verein und Saison ohne Transfers (K23 §5.6b). Weichen sie stark ab, bitte die Zeilen ins Testprotokoll, ich stelle dann `REGELN.finanzen.verwaltung` und `sponsor` nach.
 4. Die langen Läufe: `welt.js` über zehn Saisons (Karriereende CR3, Pool CR4, Bauten CT3, Transfers CP3/CP4), `ui-zwei-saisons.js`, `fuzz-karrieren.js`.
@@ -79,6 +80,16 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 ---
 
 ## Changelog
+
+### 22.11.2026: K29e Medienprofil der Computer-Trainer und Sticheleien (Zweig `mitarbeit/popolupo-k29e-trainer-medienprofil`, auf U12g)
+
+- **Neu (K29 §7, Umsetzung K29e):**
+  - Jeder Computer-Trainer hat ein festes Medienprofil aus seiner Nummer.
+  - Lautsprecher und Psychospieler sticheln vor Topspielen. Die Stichelei kommt als Meldung und als erste Frage der Pressekonferenz.
+  - Deine Antwort wirkt auf beide Mannschaften: Kontern hebt beide, gelassen die eigene. Ignorieren schadet beim Psychospieler, eine unbeantwortete Stichelei schadet immer.
+  - In der Automatik ohne Wirkung.
+- **Tests zuerst:** `tests/presse.js`. Neuer Fall K29e. Die Fälle 2 und K29d zählen die Fragen ohne die Stichelei.
+- **Zu erwarten:** Der Gleichschritt bleibt gleich, weil die Automatik die Stichelei ohne Wirkung lässt.
 
 ### 22.11.2026: Korrekturen nach Prüfung DM zu K29d (Zweig `mitarbeit/popolupo-u12g-trainervertrag`)
 

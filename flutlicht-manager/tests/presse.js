@@ -18,7 +18,7 @@ const gegner=w=>w.S.teams.find(x=>x.lg===w.t.lg&&x.id!==VEREIN).id;
   pruef(!fehler.length,'Katalog: 14 Anlässe, je Frage drei bekannte Antwortarten, keine unbekannten Platzhalter',fehler.slice(0,5).join(' | ')||`${Object.keys(P.anlaesse).length} Anlässe`);}
 
 // 2. Anlass: zwei bis drei Fragen, nur eine offen, Abstand 4 Tage, Sperre 21 Tage je Art, Budget 20
-{const w=welt(false),{F,S}=w,a=F.presseAnlass('derby',{gegner:gegner(w)}),n=S.pk?S.pk.fragen.length:0,b=F.presseAnlass('krise',{serie:3});
+{const w=welt(false),{F,S}=w,a=F.presseAnlass('derby',{gegner:gegner(w)}),n=S.pk?S.pk.fragen.filter(f=>!f.st).length:0,b=F.presseAnlass('krise',{serie:3}); /* n ohne die Stichelei (K29e) */
   S.pk=null;S.tag+=4;const c=F.presseAnlass('derby',{gegner:gegner(w)}),d=F.presseAnlass('krise',{serie:3});
   const P=F.presseS();S.pk=null;P.n[S.season]=20;S.tag+=30;const e=F.presseAnlass('hoehenflug',{serie:5});
   pruef(a&&n>=2&&n<=3&&!b&&!c&&d&&!e,'Anlass: 2 bis 3 Fragen, keine zweite offen, Derby gesperrt für 21 Tage, nach 4 Tagen eine andere Art, Budget 20 je Saison',[a,n,b,c,d,e].join(', '));}
@@ -79,7 +79,7 @@ const gegner=w=>w.S.teams.find(x=>x.lg===w.t.lg&&x.id!==VEREIN).id;
 {const {S,F,ev}=welt(false),P=ev('presseS')(),js=ev('PRESSE').journalisten,K=ev('RPK').klimaFragen,scharf=n=>K.scharf.includes(ev('jMedium')(n));
   P.klima=50;let gleich=true;for(let k=0;k<200;k++){const x=(k+0.5)/200;if(F.pkJournalist(x)!==js[Math.floor(x*js.length)].n)gleich=false;}
   const anteil=kl=>{P.klima=kl;let n=0;for(let k=0;k<1000;k++)if(scharf(F.pkJournalist((k+0.5)/1000)))n++;return n/1000;},a0=anteil(0),a100=anteil(100);
-  const w=welt(false);w.F.presseS().klima=20;w.F.presseAnlass('derby',{gegner:gegner(w)});const n=w.S.pk?w.S.pk.fragen.length:0;
+  const w=welt(false);w.F.presseS().klima=20;w.F.presseAnlass('derby',{gegner:gegner(w)});const n=w.S.pk?w.S.pk.fragen.filter(f=>!f.st).length:0;
   const vorstand=b=>{const v=welt(false);v.S.mb={boulevard:b};v.S.trust=50;v.F.presseAnlass('krise',{serie:3});if(!v.S.pk)return[NaN,NaN];
     v.S.pk.fragen=[{t:'Medien?',o:['rueckendeckung','angriffMedien','floskel'],sp:0,j:'Ralf Kessler'}];v.S.pk.i=0;v.F.pkAntwort('angriffMedien');return[v.S.trust-50,v.S.mb.boulevard];};
   const [df,bf]=vorstand(30),[dh]=vorstand(-30);
@@ -87,5 +87,20 @@ const gegner=w=>w.S.teams.find(x=>x.lg===w.t.lg&&x.id!==VEREIN).id;
   pruef(gleich&&Math.abs(a0-0.6)<0.01&&Math.abs(a100-1.5/10.5)<0.01&&n>=3&&n<=4&&df<0&&Math.abs(dh/df-3)<1e-6&&bf>=27&&bf<=29&&e1==='1.5/-0.7/0'&&e5==='0/0',
     'Medienklima in der Pressekonferenz: Journalisten nach Klima, Frage mehr unter 35, Wirkung und Beziehung über das fragende Medium, Verblassen',
     `gleich ${gleich}, scharf ${a0.toFixed(3)} / ${a100.toFixed(3)}, Fragen ${n}, Vorstand ${df.toFixed(2)} / ${dh.toFixed(2)}, Boulevard danach ${bf}, Verblassen ${e1} → ${e5}`);}
+
+// K29e. Medienprofile der Computer-Trainer (K29 §7): fest aus der Nummer mit etwa 40/25/20/15 %; ein Psychospieler stichelt vor dem Derby in etwa der Hälfte der Fälle (erste Frage,
+//       ohne offene Platzhalter), ein Diplomat nie; Konter hebt die eigene Mannschaft und den Gegner je um 1; Co-Trainer ohne Automatik −2, mit Automatik nichts
+{const {S,F,ev}=welt(false),M=ev('RPK').medienprofil,zahl={};for(let k=0;k<2000;k++){const p=F.medienProfil({id:k});zahl[p]=(zahl[p]||0)+1;}
+  const anteil=Object.keys(M.anteile).every(k=>Math.abs((zahl[k]||0)/2000-M.anteile[k]/100)<0.04),fest=F.medienProfil({id:7})===F.medienProfil({id:7});
+  const w=welt(false),g=gegner(w),zaehle=prof=>{w.ev(`medienProfil=function(){return '${prof}'}`);let n=0,ok=true;for(let k=0;k<30;k++){frei(w);w.S.tag++;w.F.presseAnlass('derby',{gegner:g});const pk=w.S.pk;
+    if(pk&&pk.profil){n++;const f=pk.fragen[0],c=w.ev('pkKontext')(pk);if(!f.st||f.o.join()!=='humor,provokation,floskel'||/\{\w+\}/.test(w.ev('pkText')(f.t,c)))ok=false;}}return[n,ok];};
+  const [np,okp]=zaehle('psycho'),[nd]=zaehle('diplomatisch');
+  w.ev("medienProfil=function(){return 'psycho'}");w.ev('RPK').medienprofil.chance.psycho=1;frei(w);w.S.tag++;w.F.presseAnlass('derby',{gegner:g});const eig=w.ev('squad')(VEREIN),geg=w.ev('squad')(g);
+  eig.forEach(p=>p.st=50);geg.forEach(p=>p.st=50);w.S.pk.fragen=[w.S.pk.fragen[0]];w.S.pk.i=0;w.F.pkAntwort('provokation');const konter=[eig[0].st,geg[0].st].join('/');
+  frei(w);w.S.tag++;w.F.presseAnlass('derby',{gegner:g});eig.forEach(p=>p.st=50);w.F.presseDelegieren(true);const offen=eig[0].st;
+  const a=welt(true);a.ev("medienProfil=function(){return 'psycho'}");a.ev('RPK').medienprofil.chance.psycho=1;const ea=a.ev('squad')(VEREIN);ea.forEach(p=>p.st=50);a.F.presseAnlass('derby',{gegner:gegner(a)});
+  const auto=!a.S.pk&&ea.every(p=>p.st===50);
+  pruef(anteil&&fest&&np>=6&&np<=24&&okp&&nd===0&&konter==='51/51'&&offen===48&&auto,'Medienprofile: Anteile, Stichelei vor dem Derby, Konter wirkt auf beide, offene Stichelei −2, Automatik ohne Wirkung',
+    `Anteile ${JSON.stringify(zahl)}, Psychospieler ${np} von 30 (${okp}), Diplomat ${nd}, Konter ${konter}, offen ${offen}, Automatik ${auto}`);}
 
 console.log(probleme.length?`\n${probleme.length} Problem(e).`:'\nAlles in Ordnung.');process.exitCode=probleme.length?1:0;

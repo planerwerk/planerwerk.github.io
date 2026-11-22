@@ -268,7 +268,27 @@ Das ist der Maßstab für die Verbindung zu K09.
 - **Verblassen:** Montags rückt jede Beziehung um 0,5 Richtung 0. Ein Exklusivinterview (+10) ist nach 20 Wochen vergessen, wer alle vier Wochen eines gibt, hält das Medium oben.
 - **Anzeige:** Bei jeder Frage steht die Beziehung zum Medium des Fragers, im Medien-Kasten der Hinweis auf Klima und Frager.
 - **Zufall:** Der Wurf für den Journalisten bleibt im Strom `presse`, die zusätzliche Frage zieht dort zwei Würfe mehr. Der Grundstrom ist unberührt.
-- **Noch nicht:** Computer-Trainer mit Medienprofil und Provokationen vor Topspielen (§7), Maulkorb und Interviews der Spieler, Interview am Spielfeldrand, Pressekonferenz nach Urteilen des Sportgerichts.
+- **Noch nicht:** Computer-Trainer mit Medienprofil und Provokationen vor Topspielen (§7, seit K29e), Maulkorb und Interviews der Spieler, Interview am Spielfeldrand, Pressekonferenz nach Urteilen des Sportgerichts.
+
+**Umsetzung K29e (22.11.2026, popolupo, ohne Testlauf): Medienprofil der Computer-Trainer und Sticheleien vor Topspielen (§7, Muster 8)**
+- **Medienprofil:** Jeder Computer-Trainer hat ein festes Profil aus seiner Nummer, ohne Zufall.
+  - Die Anteile: diplomatisch 40 %, Floskelkönig 25 %, Lautsprecher 20 %, Psychospieler 15 %.
+  - Anzeige in der Gegneranalyse neben dem Lieblingsstil („vor Mikrofonen …“).
+- **Stichelei:** Vor Derby, Spitzenspiel, Pokal ab dem Viertelfinale und Relegation stichelt der Trainer des Gegners.
+  - Lautsprecher mit 60 % Chance, Psychospieler mit 50 %, die anderen nie. Gewürfelt im Strom `presse`.
+  - Die Stichelei steht als Meldung im Posteingang und als erste Frage in der Pressekonferenz („{Trainer} hat über Ihre Mannschaft gesagt: …“).
+  - Eigene Texte, je Profil drei.
+- **Deine Antwort**, zusätzlich zur normalen Wirkung der Antwortart:
+
+  | Antwort | Wirkung |
+  |---|---|
+  | gelassen (Humor) | eigene Mannschaft +1 |
+  | kontern (Provokation) | eigene Mannschaft +1, die Spieler des Gegners +1 (Trotz) |
+  | ignorieren (Floskel) | beim Psychospieler eigene Mannschaft −1, beim Lautsprecher nichts |
+  | Co-Trainer geschickt oder nicht hingegangen | eigene Mannschaft −1 (Lautsprecher) oder −2 (Psychospieler) |
+
+- **Automatik:** In der Automatik (Bereich `presse`) bleibt die Stichelei ohne Wirkung, der Co-Trainer nimmt sie gelassen. So bleibt der Gleichschritt gleich, denn er vergleicht die Stimmung der Spieler.
+- **Noch nicht:** Aussagen der Computer-Trainer mit Folgen für sie selbst (Strafen, Ärger, Gerüchte), Sticheleien gegen andere Computer-Vereine, Profil bei eigenen Pressekonferenzen der Computer-Trainer.
 
 ## 6. Hebel des Spielers
 

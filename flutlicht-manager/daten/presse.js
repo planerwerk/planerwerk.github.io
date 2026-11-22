@@ -114,6 +114,14 @@ const PRESSE={
     humor:{m:'tv',t:['Lacher bei {verein}: {trainer} in Plauderlaune','{trainer} nimmt es mit Humor']},
     ausraster:{m:'boulevard',t:['WUTREDE! {trainer} explodiert','Ausraster bei {verein}: {trainer} verlässt das Podium']},
     delegiert:{m:'fach',t:['Ohne den Chef: Co-Trainer spricht für {verein}','{trainer} schickt den Co-Trainer']}},
+  // Medienprofile der Computer-Trainer (K29 §7, K29e). Sticheleien vor Topspielen: Platzhalter {verein} dein Verein. Frage dazu: {gtrainer} Trainer des Gegners, {zitat} seine Stichelei.
+  // Antworten auf die Frage: gelassen (Humor), kontern (Provokation), ignorieren (Floskel).
+  profile:{diplomatisch:{name:'diplomatisch',text:'lobt jeden Gegner und sagt wenig'},floskel:{name:'Floskelkönig',text:'redet viel und sagt nichts'},
+    laut:{name:'Lautsprecher',text:'große Worte vor großen Spielen'},psycho:{name:'Psychospieler',text:'stichelt gezielt gegen deine Spieler'}},
+  sticheleien:{
+    laut:['Wir fahren da hin, um zu gewinnen. Alles andere interessiert uns nicht.','Bei allem Respekt: {verein} ist für uns kein Maßstab.','Die sollen erst einmal zeigen, dass sie mit uns mithalten können.'],
+    psycho:['Ich höre, bei {verein} ist die Stimmung nicht die beste. Das wird man morgen sehen.','Wenn {verein} früh hinten liegt, kippt das Spiel. Das wissen die auch.','Die Abwehr von {verein} wackelt, wenn man sie unter Druck setzt.']},
+  stichelFrage:['{gtrainer} hat über Ihre Mannschaft gesagt: „{zitat}“ Was entgegnen Sie?','Ihr Kollege {gtrainer} meint: „{zitat}“ Ihre Antwort?'],
   // Gerüchteküche (K29 §4.3, §5.5, U17b). Platzhalter: {verein} betroffener Verein, {klub} zweiter Verein, {spieler}, {coach} Trainer des betroffenen Vereins.
   // m: Medien, die so etwas bringen (das erste ist am wahrscheinlichsten).
   geruechte:{
