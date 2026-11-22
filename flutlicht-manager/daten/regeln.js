@@ -823,7 +823,7 @@ const REGELN={
     erfolg:{abSpiele:3,platz:25,platzMax:7,serie:1,serieMax:3,zerfall:0.9},
     // Teamprämie (K21 §3.2, K21b, 22.11., popolupo, GESCHÄTZT): vor dem ersten Ligaspiel normal (in den Gehältern) oder hoch. Hoch: je Ligasieg jeSpieler × Kadergröße
     // zusätzlich, Baustein Erfolg der Stimmung + stimmung. Ab der A-Lizenz (Bereich praemien).
-    teampraemie:{stimmung:2,jeSpieler:{1:15000,2:4000,3:1000},stufen:{normal:'normal (in den Gehältern enthalten)',hoch:'hoch (Siegprämie obendrauf)'}},
+    teampraemie:{stimmung:2,jeSpieler:{1:15000,2:4000,3:1000},pokal:{1:20000,2:6000,3:2000},stufen:{normal:'normal (in den Gehältern enthalten)',hoch:'hoch (Sieg- und Pokalprämie obendrauf)'}}, // pokal (K21d, 23.11., GESCHÄTZT): je gewonnene Runde im DFB-Pokal und Spieler
     leistung:0.5,                        // (Form − 10) × 0,5
     vertrag:{unter:0.8,minus:12,ueber:1.15,plus:3,auslaufend:-3,soeldner:1.5,max:-8}, // vorläufig höchstens −8, bis K21 das Gehaltsgefüge baut
     rolle:{zuNiedrig:-4,diva:2,hoeher:1,hoeherMax:2},           // deine Rolle unter seiner Einschätzung: −4 je Stufe (Diva doppelt)

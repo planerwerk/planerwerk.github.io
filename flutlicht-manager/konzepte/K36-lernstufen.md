@@ -388,6 +388,7 @@ lizenz:{
 146. **K16d Arzt widerspricht (22.11., popolupo, ohne Testlauf):** keine neue Funktion. Fitspritzen bleibt im Bereich `medizin`, bei langer Verletzung braucht es einen zweiten Klick.
 147. **K03c Durchbruch und Altersverlust (22.11., popolupo, ohne Testlauf):** keine neue Funktion, zwei Meldungen im Bereich `ereignisse`.
 148. **K07f Eigene Trainingsvorlagen (23.11., popolupo, ohne Testlauf):** im Bereich `vorlage` (wie die Wahl der Vorlage). Mit Automatik des Bereichs plant der Co-Trainer, die eigenen Vorlagen bleiben gespeichert.
+149. **K21d Pokalprämie (23.11., popolupo, ohne Testlauf):** keine neue Funktion, sie gehört zur Teamprämie im Bereich `praemien`.
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 

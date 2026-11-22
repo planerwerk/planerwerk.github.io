@@ -45,7 +45,7 @@ function tagesSpieleAbschliessenLauf(out){const d=out.tag;S.gespielt=d;
         if(e.md+1===RK.vertragsWarnungNachSpieltag){const x=squad(S.my).filter(p=>p.ct<=1);if(x.length)news(`Achtung: ${x.length} Vertrag/Verträge enden zum Saisonende (${x.slice(0,6).map(p=>p.n).join(', ')}${x.length>6?' …':''}). Verlängern: im Kader auf den Spieler klicken.`,'bad');}}
       g.list.forEach(r=>[r.h,r.a].forEach(id=>{if(id!==S.my)kiFinanzenSpiel(S.teams[id],r);}));} // Computer-Vereine nach denselben Regeln wie du statt Pauschale (K23b)
     else if(g.art==='pokal'){const zeilen=g.list.map(r=>[r.h,r.a,r.hg,r.ag,r.pen]),sieger=g.list.map(winner); // geteilte Runde (T8.2): erst nach dem zweiten Tag eintragen
-      if(pokalGeteilt(e.r)&&!e.spaet)S.cup.teil={r:e.r,z:zeilen,s:sieger};else{const T=S.cup.teil&&S.cup.teil.r===e.r?S.cup.teil:{z:[],s:[]};S.cup.hist.push(T.z.concat(zeilen));S.cup.alive=T.s.concat(sieger);delete S.cup.teil;}fansPokal(g.list);pokalSensationen(g.list);
+      if(pokalGeteilt(e.r)&&!e.spaet)S.cup.teil={r:e.r,z:zeilen,s:sieger};else{const T=S.cup.teil&&S.cup.teil.r===e.r?S.cup.teil:{z:[],s:[]};S.cup.hist.push(T.z.concat(zeilen));S.cup.alive=T.s.concat(sieger);delete S.cup.teil;}fansPokal(g.list);pokalSensationen(g.list);teampraemiePokal(g.list);
       if(mg){const won=winner(mg)===S.my,opp=mg.h===S.my?mg.a:mg.h;news(`DFB-Pokal, ${POKAL_RUNDEN[e.r]}: ${tn(mg.h)} – ${tn(mg.a)} ${mg.hg}:${mg.ag}${mg.pen?` (i.E. ${mg.pen[0]}:${mg.pen[1]})`:''} – ${won?(e.r===5?'POKALSIEG!':'weiter!'):'ausgeschieden.'}`,won?'good':'bad');
         if(!won&&(opp>=1000||S.teams[opp].lg>t.lg))S.trust+=RV.pokalAus;if(won)S.trust+=RV.pokalWeiter;
         if(mg.h===S.my&&e.r!==5)heimspielEinnahmen(mg,true);money('Pokalprämien',RF.pokalPraemien[e.r]);}

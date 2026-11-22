@@ -90,4 +90,10 @@ console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
   pruef(gesperrt&&hoch&&mein&&sieg===-ev('squad')(S.my).length*(T.jeSpieler[t.lg]||T.jeSpieler[3])&&remis===0&&fest,'Teamprämie: Lizenz, hoch vor dem ersten Ligaspiel, Kosten je Sieg, Stimmung nur bei dir, danach fest',
     `ohne Lizenz ${gesperrt}, hoch ${hoch}, Stimmung ${mein}, Sieg ${sieg}, Remis ${remis}, nach dem ersten Spiel fest ${fest}`);}
 
+// K21d. Pokalprämie (K21 §4): mit „hoch“ kostet jede gewonnene Pokalrunde Kadergröße × Pokalprämie (auch im Elfmeterschießen), eine Niederlage nichts, mit „normal“ nichts
+{const {S,F,ev}=welt(),T=ev('RKA').teampraemie,t=ev('myT()'),o=S.teams.find(x=>x.lg===t.lg&&x.id!==S.my),n=ev('squad')(S.my).length,je=T.pokal[t.lg]||T.pokal[3];S.phase='play';
+  const k=()=>S.fin['Prämien']||0,lauf=l=>{const f0=k();F.teampraemiePokal(l);return k()-f0;};const normal=lauf([{h:S.my,a:o.id,hg:2,ag:0}]);F.teampraemieSetzen('hoch');
+  const sieg=lauf([{h:o.id,a:S.my,hg:0,ag:1},{h:o.id+1,a:o.id+2,hg:1,ag:0}]),elfer=lauf([{h:S.my,a:o.id,hg:1,ag:1,pen:[5,4]}]),aus=lauf([{h:S.my,a:o.id,hg:0,ag:1}]),fremd=lauf([{h:o.id,a:o.id+1,hg:3,ag:0}]);
+  pruef(normal===0&&sieg===-n*je&&elfer===-n*je&&aus===0&&fremd===0,'Pokalprämie: nur mit hoch, je gewonnene Runde, auch im Elfmeterschießen',`normal ${normal}, Sieg ${sieg}, Elfmeter ${elfer}, raus ${aus}, ohne dich ${fremd}`);}
+
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);
