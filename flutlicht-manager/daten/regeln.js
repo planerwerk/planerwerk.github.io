@@ -601,7 +601,7 @@ const REGELN={
       positionen:1,positionenVielseitig:2},
     verletzung:{basis:0.0016,sprungAb:1.3,sprungJe01:1.5,frischeAb:80,frischeJePunkt:0.05}, // Art und Dauer aus REGELN.medizin (K10)
     last:{akut:7,chronisch:28,grund:2}, // grund: gewohnte Last mindestens 2 pro Tag
-    planErinnerung:{vorschau:7,englischTage:4,sprungAb:1.5,spielerAb:3}, // Erinnerung „Plan passt nicht“ (K07 §5 Nr. 4, K07b, 22.11., GESCHÄTZT)
+    planErinnerung:{vorschau:7,sprungAb:1.5,spielerAb:3,abstandTage:7}, // Erinnerung „Plan passt nicht“ (K07 §5 Nr. 4, K07b, 22.11., GESCHÄTZT)
     spielLast:15,spielKondition:1 // Last und Konditionsreiz eines ganzen Pflichtspiels
   },
 

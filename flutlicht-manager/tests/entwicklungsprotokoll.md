@@ -102,6 +102,15 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 22.11.2026: Korrekturen nach Prüfung DV zu K29h, K14c, K07b, K34c und K29i (Zweig `mitarbeit/popolupo-k18c-gegnerbeobachtung`)
+
+- Ein lesender Prüf-Agent hat die fünf Schritte und die Korrekturen DU durchgesehen (Konsistenzprüfung DV). Er fand keinen blockierenden Fehler.
+- **Behoben:**
+  - DV1: „Plan passt nicht“ kommt nicht mehr unter der Automatik der Vorlage und höchstens einmal je Woche.
+  - DV2, DV3: Der Maulkorb endet beim Jobwechsel. Der Medien-Kasten nennt die Automatik.
+  - DV4, DV5, DV7: Kleinigkeiten.
+- **Offen:** DV6, `kontoAnteil` wird an einer alten Stelle anders gelesen.
+
 ### 22.11.2026: K18c Gegnerbeobachtung (Zweig `mitarbeit/popolupo-k18c-gegnerbeobachtung`, auf U12l)
 
 - **Neu (K18 §4, K07 §5):** Im Fenster vor dem Spiel schickst du einen Scout deines Stabs zum nächsten Gegner. Das kostet einmal 3.000 € Reisekosten.

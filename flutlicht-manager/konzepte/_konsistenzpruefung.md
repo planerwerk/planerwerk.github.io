@@ -1911,3 +1911,20 @@ Ein Agent hat 4659aa2, e418ef8 und f7f7716 gelesen (nichts ausgeführt, `dublett
 | DU5 | **Jobangebot per Karte ohne Wahl:** Jetzt kommen dort die mitnehmbaren Co-Trainer mit. | ✅ behoben |
 | DU6 | Kleinigkeiten: Wahl des Trainerteams über den Jobangeboten, Gelbsperre-Erinnerung nicht unter der Automatik der Aufstellung und nicht für schon Gesperrte, `S.unv` wird beim Jobwechsel geleert. Die Aufschläge in `forderungDu` (Beziehung, Abwerben, Gerüchte, Deadline Day) können den Höchstpreis noch übersteigen, das ist gewollt. | ✅ behoben |
 | DU7 | Ohne Befund: kein Durchsickern in Wechsel unter Computer-Vereinen, Würfe im Markt unverändert, Gleichschritt, Hinweis im Spielerfenster, `askPrice`; nächstes Ligaspiel auch mit Pokal dazwischen, Spitzenspiel wie in der Presse, Menü der Erinnerungen, Derby BVB–S04 im Test; Eigentum, Gehalt, `stabGeaendert`, Aufräumen von `S.mitnehmen`, Tests K19c und K16b. | ✅ |
+
+---
+
+## DV. Prüfung von K29h, K14c, K07b, K34c, K29i und der Korrekturen DU ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat a7ed216, 8eb2597, 7c90478, f6a2692, 8a92d9e und bfb2f69 gelesen (nichts ausgeführt, `dubletten.pl` und `codewaechter.pl` ohne Befund). Kein blockierender Fehler. Korrekturen auf `mitarbeit/popolupo-k18c-gegnerbeobachtung`.
+
+| # | Befund | Status |
+|---|---|---|
+| DV1 | **„Plan passt nicht“ unter Automatik und täglich:** Der Belastungssprung lag in der Vorbereitung bei vielen über 1,5. Die Erinnerung hätte jeden Tag „Tag beenden“ aufgehalten, auch wenn die Vorlage beim Stab liegt. Jetzt nicht unter der Automatik der Vorlage und höchstens einmal je Woche. | ✅ behoben |
+| DV2 | Der Maulkorb blieb beim Jobwechsel bestehen. Jetzt hebt `takeJob` ihn auf. | ✅ behoben |
+| DV3 | Der Medien-Kasten versprach unter der Automatik Interviews. Jetzt steht dort, dass der Co-Trainer die Linie vorgibt. | ✅ behoben |
+| DV4 | Die englische Woche hatte eine eigene Zahl neben `RT.englischBis`. Jetzt gilt dieselbe. | ✅ behoben |
+| DV5 | Ein Kommentar stand an der falschen Zeile. | ✅ behoben |
+| DV6 | `kontoAnteil` wird im Markt bei Spielern auf der Transferliste anders gelesen (Konto über 0,8 × Preis) als im Mitbieter und bei Unverkäuflichen (0,8 × Konto über dem Preis). Die Stelle ist alt, sie bleibt vorerst so und ist hier vermerkt. | offen |
+| DV7 | Überschrift „Torjäger deutscher Vereine“ statt „deutsche Torjäger“. | ✅ behoben |
+| DV8 | Ohne Befund: Ströme in K29i (eigener Strom, keine zusätzlichen Würfe im Wochenstrom), Gleichschritt 5a (Presse in beiden Läufen in der Automatik), K29h, K14c, Korrekturen DU, alle neuen Tests von Hand nachgerechnet. | ✅ |
