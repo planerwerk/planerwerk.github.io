@@ -146,7 +146,7 @@ Zusage = Grundwert × Niveau × Kalender × Region × Phase   (begrenzt auf 0,05
 | Zimmerkollegen werden Freunde | Zimmerbelegung, Zufall | Freundschaft (K14) |
 | Turniersieg | Turnier gewonnen | Pokal in der Vitrine (K34), kleines Selbstvertrauen + |
 
-**Gebaut als Karten** (22.11.2026, popolupo, ohne Testlauf, K30e, Info-Karten mit Wirkung): „Dorfverein im Ausnahmezustand“ (Fans +1) und „Blamage gegen Amateure“ (Vertrauen −1, Fans −1), je bis 7 Tage nach dem Testspiel. Lagerkoller und Ablenkung gibt es als Meldungen im Lager. Die übrigen fehlen noch.
+**Gebaut als Karten** (22.11.2026, popolupo, ohne Testlauf, K30e, Info-Karten mit Wirkung): „Dorfverein im Ausnahmezustand“ (Fans +1) und „Blamage gegen Amateure“ (Vertrauen −1, Fans −1), je bis 7 Tage nach dem Testspiel. Seit K11f „Turniersieg“ (Selbstvertrauen des Kaders +1, bis 7 Tage nach dem gewonnenen Finale des Sommerturniers). Lagerkoller und Ablenkung gibt es als Meldungen im Lager. Die übrigen fehlen noch.
 
 ## 9. Wechselwirkungen
 

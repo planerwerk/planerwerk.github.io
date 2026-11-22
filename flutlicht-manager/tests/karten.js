@@ -303,6 +303,13 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   pruef(halt&&gehalten&&vorbei&&ohne&&!!dorf&&dorf.verein===am&&!!bl&&meldung&&sieg===null,'Info-Karten mit Wirkung: Rückendeckung hält das Vertrauen, Dorfverein und Blamage nach Testspielen',
     `Halt ${halt}, gehalten ${gehalten}, danach frei ${vorbei}, ohne Testspiel ${ohne}, Dorfverein ${dorf&&dorf.verein}, Blamage ${!!bl}, Name in der Meldung ${meldung}, nach Sieg ${sieg}`);}
 
+// K11f. Turniersieg (K11 §8): nur nach einem gewonnenen Sommerturnier dieser Saison, bis 7 Tage nach dem Finale; das Selbstvertrauen des Kaders steigt.
+{const {S,F,ev}=welt(),A=ev('AUSLOESER'),N=ev('RKT').testspiel.nachTage,sq=ev('squad')(S.my),kv=ev('karteVon');S.phase='play';S.turnier=null;const ohne=A.turniersieg();
+  S.turnier={s:S.season,tag:S.tag-3,g:[],platz:2};const zweiter=A.turniersieg();S.turnier.platz=1;const sieg=!!A.turniersieg();S.turnier.tag=S.tag-N-2;const alt=A.turniersieg();
+  S.turnier.tag=S.tag-3;sq.forEach(p=>{p.sv=0;});F.kartenZeigen(kv('turniersieg'),{},S.tag,false);const sv=sq.every(p=>(p.sv||0)>0);
+  pruef(ohne===null&&zweiter===null&&sieg&&alt===null&&sv,'Turniersieg: nur nach dem Sieg und bis 7 Tage nach dem Finale, Selbstvertrauen des Kaders steigt',
+    `ohne ${ohne}, Zweiter ${zweiter}, Sieg ${sieg}, zu alt ${alt}, Selbstvertrauen ${sv}`);}
+
 // U19e. Europapokal-Karten (K37 §8): Auswärtsspiel bei einem Auslandsverein in den nächsten 7 Tagen (kein Heimspiel, nicht später, nicht das Finale), Spiel 1 bis 7 Tage her,
 //       Wunder nach 0:3 im Hinspiel und 4:0 oder 3:0 mit Elfmeterschießen im Rückspiel, nicht nach nur einem Tor Rückstand und nicht beim Ausscheiden. euMeineSpiele ersetzt der Test.
 {const {S,W,ev}=welt(),A=ev('AUSLOESER'),AV=ev('AV0'),me=S.my,d=S.tag;W.ev('euMeineSpiele=function(){return S.testEu||[];}');

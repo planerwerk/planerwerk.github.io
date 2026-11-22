@@ -232,5 +232,9 @@ const KARTEN=[
     wirkung:[{art:'fans',wert:1}]},
   {id:'blamage',titel:'Blamage gegen Amateure',bereich:'K11',art:'info',stufe:'haeufig',chance:0.6,ausloeser:'blamage',sperrTage:60,
     texte:['Die Niederlage gegen {verein} ist das Thema der Woche. „Peinlich“, schreibt die Lokalzeitung.','Gegen {verein} verloren: Der Präsident fragt, ob man so in die Saison gehen will.'],
-    wirkung:[{art:'vertrauen',wert:-1},{art:'fans',wert:-1}]}
+    wirkung:[{art:'vertrauen',wert:-1},{art:'fans',wert:-1}]},
+  // Turniersieg (K11 §8, K11f, 22.11., popolupo): Info mit Wirkung (K30e), Anlasskarte mit Chance 1. Den Pokal in der Vitrine gibt es seit K11b.
+  {id:'turniersieg',titel:'Turniersieg',bereich:'K11',art:'info',stufe:'haeufig',chance:1,ausloeser:'turniersieg',sperrTage:300,
+    texte:['Der Pokal aus dem Sommerturnier steht in der Kabine. Ein kleiner Titel, aber die Mannschaft geht mit breiter Brust in die Saison.','Die Spieler haben den Turnierpokal mit in den Mannschaftsbus genommen. Siegen tut gut, auch im Sommer.'],
+    wirkung:[{art:'svAlle',wert:1}]}
 ];
