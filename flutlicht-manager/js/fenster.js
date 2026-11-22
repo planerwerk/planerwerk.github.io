@@ -87,7 +87,7 @@ function renderConf(){const c=CONF;if(!c)return;if(!document.getElementById('cf-
 function closeConf(){if(CONF)clearInterval(CONF.timer);CONF=null;BUSY=false;weiterUI();}
 function showSummary(){const sm=S.summary;if(!sm)return;const L=ids=>ids.map(id=>esc(tn(id))).join(', ');
   ov(`<h2>Saisonbilanz ${sm.season}/${(sm.season+1)%100}</h2>
-  <div class="facts">${fact('Dein Platz',sm.pos+'. ('+sm.lg+'. Liga)')}${fact('Ziel',sm.ok?'erreicht':'verfehlt')}${fact('Finanzsaldo',fmt(sm.fin))}${fact('Vorstand',Math.round(S.trust)+' %')}</div>
+  <div class="facts">${fact('Dein Platz',sm.pos+'. ('+sm.lg+'. Liga)')}${fact('Ziel',sm.ok?'erreicht':'verfehlt')}${fact('Finanzsaldo',fmt(sm.fin))}${fact('Vorstand',Math.round(S.trust)+' %')}${fact('Verletzungen',verletzungsBilanzText(S.my))}</div>
   <p>Deutscher Meister: <b>${esc(tn(sm.champ))}</b> · Meister 2. Liga: <b>${esc(tn(sm.champ2))}</b> · Meister 3. Liga: <b>${esc(tn(sm.champ3))}</b></p>
   <p><b>1./2. Liga:</b> Absteiger ${L(sm.down)} · Aufsteiger ${L(sm.up)} · Relegation: ${esc(sm.relRes)} → <b>${esc(tn(sm.rw))}</b> spielt in der 1. Liga.</p>
   <p><b>2./3. Liga:</b> Absteiger ${L(sm.down2)} · Aufsteiger ${L(sm.up3)} · Relegation: ${esc(sm.rel2Res)} → <b>${esc(tn(sm.rw2))}</b> spielt in der 2. Liga.</p>

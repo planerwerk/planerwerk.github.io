@@ -67,5 +67,9 @@ pruef(spannen>0&&ehrlich/spannen>=0.85,'Diagnose-Spanne enthält die wahre Dauer
   pruef(!vorher&&kosten===-k&&auf&&einmal,'Zweite Meinung: nach der Diagnose, Kosten nach Liga, Fehldiagnose aufgedeckt, Spanne enthält die wahre Dauer, nur einmal',
     `vor der Diagnose ${vorher}, Kosten ${kosten}, aufgedeckt ${auf}, einmal ${einmal}, Diagnosetag war ${dg}`);}
 
+// K10d. Saisonbilanz (K10 §12 Nr. 15): Text mit Verletzungen und Ausfalltagen deines Vereins und dem Ligaschnitt, ohne Verein leer
+{const b=ev('verletzungsBilanz')(S.my),t=F.verletzungsBilanzText(S.my);
+  pruef(t.startsWith(`${b.n} Verletzungen, ${b.tage} Ausfalltage`)&&t.includes('Ligaschnitt')&&F.verletzungsBilanzText(-1)==='','Saisonbilanz: Verletzungen und Ausfalltage mit Ligaschnitt',t);}
+
 console.log(`\n${N} Saison(s), ${verl.length} Verletzungen, ${alle.filter(x=>x.q==='krankheit').length} Krankheiten, in ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

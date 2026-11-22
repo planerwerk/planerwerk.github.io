@@ -78,5 +78,8 @@ function kiSpritzen(tid){if(tid>=1000||!stabMacht(tid,'medizin'))return;const sq
 // Saisonbilanz je Verein und Ligaschnitt (K10 §4)
 function verletzungsBilanz(tid){const s=(S.vstat||{})[tid]||{n:0,tage:0},t=S.teams[tid],l=S.teams.filter(x=>x.lg===t.lg).map(x=>(S.vstat||{})[x.id]||{n:0,tage:0});
   return{n:s.n,tage:s.tage,krank:s.krankheit||0,schnittN:l.reduce((a,x)=>a+x.n,0)/Math.max(1,l.length),schnittTage:l.reduce((a,x)=>a+x.tage,0)/Math.max(1,l.length)};}
+// Kurztext für die Saisonbilanz (K10 §12 Nr. 15, K10d): Verletzungen und Ausfalltage deines Vereins gegen den Ligaschnitt. S.vstat gilt bis zum Saisonwechsel.
+function verletzungsBilanzText(tid){if(tid==null||tid<0||!S.teams[tid])return'';const b=verletzungsBilanz(tid);
+  return`${b.n} Verletzungen, ${b.tage} Ausfalltage (Ligaschnitt ${Math.round(b.schnittN)} und ${Math.round(b.schnittTage)})`;}
 // Saisonwechsel: alte Einträge der Verletzungsakte bei allen kürzen (T2.5). Bisher geschah das nur bei einer neuen Verletzung, Spieler ohne neue Verletzung behielten alles.
 function verlaufKuerzen(){const heute=absTag(S.tag);[...S.pl,...(S.jg||[]),...(S.zw||[])].forEach(p=>{if(!p.vh)return;p.vh=p.vh.filter(x=>heute-x.ab<=RMD.verlaufTage);if(!p.vh.length)delete p.vh;});}
