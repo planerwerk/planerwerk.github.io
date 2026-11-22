@@ -255,5 +255,14 @@ const KARTEN=[
     texte:['{verein} feiert in diesem Jahr ein rundes Jubiläum. Die Ultras planen eine Choreo über die ganze Kurve und fragen, ob der Verein sich beteiligt.','Ein rundes Jubiläum steht an. Der Fanshop schlägt ein Retro-Trikot vor, die Kurve plant eine Choreo.'],
     optionen:[{text:'Die Choreo bezahlen',wirkung:[{art:'geld',wert:-15000},{art:'fans',wert:3}],folge:'Die Kurve zeigt die Vereinsgeschichte in Bildern. Gänsehaut im ganzen Stadion.'},
       {text:'Ein Retro-Trikot herausbringen',wirkung:[{art:'geld',wert:-30000},{art:'merch',wert:0.25},{art:'fans',wert:1}],folge:'Das Trikot im Stil der Gründerjahre verkauft sich bestens.'},
-      {text:'Im kleinen Rahmen feiern',wirkung:[{art:'fans',wert:1}],folge:'Ein Empfang im Vereinsheim, ein paar Reden, Kuchen.'}],auto:2}
+      {text:'Im kleinen Rahmen feiern',wirkung:[{art:'fans',wert:1}],folge:'Ein Empfang im Vereinsheim, ein paar Reden, Kuchen.'}],auto:2},
+  // Nach deinem Spiel (K05 §8, K05c, 23.11., popolupo): Anlasskarten bis 7 Tage danach. Werte vorläufig.
+  {id:'jokerSticht',titel:'Der Joker sticht',bereich:'K05',art:'info',stufe:'haeufig',chance:0.5,ausloeser:'jokerSticht',sperrTage:120,
+    texte:['Eingewechselt und getroffen: {spieler} ist der Mann des Spieltags. Er strahlt beim Training über das ganze Gesicht.','„Ich wusste, dass meine Chance kommt“, sagt {spieler} nach seinem Tor als Joker.'],
+    wirkung:[{art:'selbstvertrauen',wert:1},{art:'stimmung',wert:2}]},
+  {id:'handschlag',titel:'Handschlag verweigert',bereich:'K05',art:'entscheidung',gross:false,stufe:'haeufig',chance:0.5,ausloeser:'handschlag',sperrTage:180,
+    texte:['Bei seiner frühen Auswechslung ist {spieler} an dir vorbeigegangen, ohne dir die Hand zu geben. Die Kameras haben alles gesehen.','{spieler} hat nach seiner Auswechslung die Trinkflasche weggetreten und dich ignoriert. Die Zeitungen fragen nach.'],
+    optionen:[{text:'Öffentlich zurechtweisen',wirkung:[{art:'stimmung',wert:-3},{art:'glaub',wert:1}],folge:'Du stellst klar, wer entscheidet. {spieler} schmollt.'},
+      {text:'Unter vier Augen klären',wirkung:[{art:'stimmung',wert:1}],folge:'{spieler} entschuldigt sich in der Kabine.'},
+      {text:'Ignorieren',wirkung:[{art:'zusammenhalt',wert:-1}],folge:'Die Mannschaft hat gesehen, dass so etwas folgenlos bleibt.'}],auto:1}
 ];

@@ -56,6 +56,7 @@ function tagesSpieleAbschliessenLauf(out){const d=out.tag;S.gespielt=d;
     else if(g.art==='supercup'){const r=g.list[0],w=winner(r);S.supercup.r={hg:r.hg,ag:r.ag,pen:r.pen||null,sieger:w};supercupPraemie(r,w);
       news(`Supercup: ${tn(r.h)} – ${tn(r.a)} ${r.hg}:${r.ag}${r.pen?` (i.E. ${r.pen[0]}:${r.pen[1]})`:''}. ${tn(w)} holt den Supercup.`,mg?(w===S.my?'good':'bad'):'');}
     else if(g.art==='eu')euNachSpielen(g,mg);} // Europapokal (K37, U19a)
+  letztesSpielMerken(out.mine,d); // Joker und frühe Auswechslungen für Karten (K05c)
   presseNachSpiel(out.mine);spielfeldrandNachSpiel(out.mine); // Interview am Spielfeldrand (K29f). Kampfansagen prüfen, Pressekonferenz nach Krise, Serie, Kantersieg (K29 §5.4, U17a)
   S.trust=clamp(S.trust,0,100);vorstandPruefen();
   return out;}

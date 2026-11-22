@@ -255,7 +255,7 @@ const wb=o.wb||'liga',H=mitWettbewerb(wb,()=>side(hid,true,o.neutral)),A=mitWett
     if(!p||!G.bank[s].includes(einId))return{ok:false,grund:'Dieser Spieler sitzt nicht auf der Bank.'};
     const aus=x.p;x.p=p;fr[p.id]=p.fit;G.minuten[aus.id][1]=G.m;G.minuten[p.id]=[G.m,null];G.bank[s]=G.bank[s].filter(i=>i!==einId);G.raus.add(aus.id);G.ein[s].push(p.id);
     G.wz[s]++;if(!G.pause()&&!G.gel[s].includes(G.m))G.gel[s].push(G.m);G.wechsel.push({s,m:G.m,aus:aus.id,ein:p.id});
-    ev.push({m:G.m,s,t:'S',p:p.id,n:p.n,aus:aus.n});W=werte(G.m);return{ok:true};};
+    ev.push({m:G.m,s,t:'S',p:p.id,n:p.n,aus:aus.n,ausId:aus.id});W=werte(G.m);return{ok:true};};
   // Taktik im Spiel (K05 §5.1): Grundordnung nach 5 Minuten, Ausrichtung und Einsatz nach 2. In der Halbzeit wirken Ausrichtung und Einsatz sofort, mit „Taktik betonen“ auch die Grundordnung.
   G.taktik=(s,{form,tac,ein,stil})=>{const U=RL.umstellung,hz=!!G.pause(),sofortOrdnung=hz&&G.ansp[s]&&G.ansp[s].art==='taktik';
     if(stil&&stil!==Ss[s].stil&&!Ss[s].am)G.plan[s].push({art:'stil',wert:stil,ab:G.m+1+(sofortOrdnung?0:U.ordnung)});

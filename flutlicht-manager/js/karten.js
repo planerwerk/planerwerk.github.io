@@ -102,6 +102,9 @@ const AUSLOESER={
   wettbetrug(){const l=S.pl.filter(p=>p.team>=0&&p.team<1000&&p.team!==S.my&&!p.leihe&&!p.wech&&S.teams[p.team]&&aktiv(S.teams[p.team]));const p=l.length?pick(l):null;return p?{spieler:p.id,verein:p.team}:null;},
   // Jubiläum (K27 §8, K25 §8, K27d): dein Verein wird in diesem Kalenderjahr ein Vielfaches von RKT.jubilaeum.alle Jahre alt (ab ab), Gründungsjahr aus VEREINE (gegr)
   jubilaeum(){const t=myT(),v=VEREINE[S.my],J=RKT.jubilaeum;if(!t||!v||v.kurz!==t.sh||!v.gegr)return null;const j=datumVon(S.tag).getUTCFullYear()-v.gegr;return j>=J.ab&&j%J.alle===0?{verein:S.my}:null;},
+  // Nach deinem Spiel (K05 §8, K05c), bis RKT.spiel.nachTage danach (S.letzt): ein Joker hat getroffen; eine Diva wurde früh ausgewechselt
+  jokerSticht(){const l=kartenLetzt('joker').filter(p=>p.team===S.my);return l.length?{spieler:pick(l).id}:null;},
+  handschlag(){const l=kartenLetzt('frueh').filter(p=>p.team===S.my&&hatEig(p,'diva'));return l.length?{spieler:pick(l).id}:null;},
   // Folgekarte der Kette (nur über kartenKette, mit den Beteiligten der ersten Karte): Der Spieler ist noch beim selben Verein und noch nicht vergeben
   dritterNoch(b){const p=b&&b.spieler!=null?PIX.get(b.spieler):null;return p&&p.team===b.verein&&!p.wech&&!istLeihe(p)&&S.teams[p.team]&&aktiv(S.teams[p.team])?b:null;},
   // Presse (K29 §8, K17 §8, K29k): Medienklima unter RKT.presse.leckUnter; ein Verein deiner Liga mit Beziehung unter RBZ.wirkung.gespraechUnter
@@ -169,6 +172,13 @@ function kartenWoche(d){if(S.phase!=='play'||S.fired)return;const K=karten(),W=k
 const kartenChance=c=>c.chance!=null?c.chance:1/(RKT.seltenheit[c.stufe]*RKT.wochenJeSaison);
 // Veränderung der Stärke seit dem jüngsten Monatseintrag dieser Saison, der mindestens RKT.entwicklung.tage alt ist (K03c); ohne Eintrag 0
 const kartenStaerkePlus=p=>{const T=RKT.entwicklung.tage,a=(p.mvl||[]).filter(e=>e[0]===S.season&&S.tag-e[1]>=T).pop();return a?Math.round(p.str)-a[2]:0;};
+// Merker deines letzten Pflichtspiels für Karten (K05 §8, K05c, ablauf.js nach den Spielen): S.letzt = {s, tag, joker: Eingewechselte, die getroffen haben,
+// frueh: vor RKT.spiel.fruehBis Ausgewechselte}. Testspiele zählen nicht. Kein Würfel.
+function letztesSpielMerken(r,d){if(!r||r.test)return;const s=r.h===S.my?0:1,ein=new Set(r.ev.filter(e=>e.t==='S'&&e.s===s).map(e=>e.p));
+  const joker=[...new Set(r.ev.filter(e=>e.t==='G'&&e.s===s&&e.p!=null&&ein.has(e.p)).map(e=>e.p))],frueh=r.ev.filter(e=>e.t==='S'&&e.s===s&&e.ausId!=null&&e.m<RKT.spiel.fruehBis).map(e=>e.ausId);
+  S.letzt={s:S.season,tag:d,joker,frueh};}
+// Spieler aus S.letzt (Liste k), wenn das Spiel höchstens RKT.spiel.nachTage zurückliegt
+const kartenLetzt=k=>{const L=S.letzt,n=L?S.tag-L.tag:-1;return L&&L.s===S.season&&n>=0&&n<=RKT.spiel.nachTage?(L[k]||[]).map(id=>PIX.get(id)).filter(Boolean):[];};
 const kartenHaltZaehlen=(c,W)=>{W.ent++;if(c.gross)W.gross++;W.ber[c.bereich]=(W.ber[c.bereich]||0)+1;};
 // ---------- Ketten (K30 §3.1, §4 Nr. 5, §8.3, K30c) ----------
 // Eine Option mit kette:{karte, tage:[von,bis]} legt die Folgekarte in S.karten.kette ({id, tag absolut, s Saison, b Beteiligte}), gewürfelt im Strom der ersten Karte.

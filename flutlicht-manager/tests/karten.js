@@ -337,6 +337,17 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   v.gegr=jahr-2*J.alle;const rund=A.jubilaeum();v.gegr=jahr-2*J.alle+1;const krumm=A.jubilaeum();v.gegr=jahr;const neu=A.jubilaeum();v.gegr=g0;
   pruef(!ohne.length&&!!rund&&rund.verein===S.my&&krumm===null&&neu===null,'Jubiläum: Gründungsjahre vollständig, Karte nur in runden Jahren',`ohne Gründungsjahr ${ohne.join(',')||'keiner'}, rund ${!!rund}, krumm ${krumm}, Gründungsjahr ${neu}`);}
 
+// K05c. Nach deinem Spiel (K05 §8): letztesSpielMerken findet Joker (eingewechselt, dann getroffen) und vor der 60. Minute Ausgewechselte, Testspiele zählen nicht;
+//       „Joker sticht“ nur bis 7 Tage danach, „Handschlag verweigert“ nur bei einer Diva.
+{const {S,F,ev}=welt(),A=ev('AUSLOESER'),sq=ev('squad')(S.my),eig=ev('eigenschaften'),N=ev('RKT').spiel;S.phase='play';delete S.letzt;
+  const j=sq[0],a=sq[1],d=sq[2];a.eig=(eig(a)||[]).filter(e=>e!=='diva');d.eig=(eig(d)||[]).filter(e=>e!=='diva');d.eig.push('diva');
+  const ev0=[{m:50,s:0,t:'S',p:j.id,n:j.n,aus:a.n,ausId:a.id},{m:55,s:0,t:'S',p:sq[3].id,n:sq[3].n,aus:d.n,ausId:d.id},{m:70,s:0,t:'G',p:j.id,n:j.n,sc:[1,0]},{m:80,s:1,t:'G',p:null,n:'X',sc:[1,1]}];
+  F.letztesSpielMerken({h:S.my,a:0,hg:1,ag:1,ev:ev0,test:1},S.tag);const test=!S.letzt;
+  F.letztesSpielMerken({h:S.my,a:0,hg:1,ag:1,ev:ev0},S.tag);const L=S.letzt,merk=!!L&&L.joker.join()===String(j.id)&&L.frueh.length===2;
+  const jo=A.jokerSticht(),hs=A.handschlag();S.letzt.tag=S.tag-N.nachTage-1;const alt=A.jokerSticht();
+  pruef(test&&merk&&!!jo&&jo.spieler===j.id&&!!hs&&hs.spieler===d.id&&alt===null,'Nach dem Spiel: Joker und frühe Auswechslungen gemerkt, Handschlag nur bei einer Diva, nicht nach Testspielen',
+    `Testspiel ignoriert ${test}, gemerkt ${merk}, Joker ${jo&&jo.spieler===j.id}, Handschlag ${hs&&hs.spieler===d.id}, zu alt ${alt}`);}
+
 // U19e. Europapokal-Karten (K37 §8): Auswärtsspiel bei einem Auslandsverein in den nächsten 7 Tagen (kein Heimspiel, nicht später, nicht das Finale), Spiel 1 bis 7 Tage her,
 //       Wunder nach 0:3 im Hinspiel und 4:0 oder 3:0 mit Elfmeterschießen im Rückspiel, nicht nach nur einem Tor Rückstand und nicht beim Ausscheiden. euMeineSpiele ersetzt der Test.
 {const {S,W,ev}=welt(),A=ev('AUSLOESER'),AV=ev('AV0'),me=S.my,d=S.tag;W.ev('euMeineSpiele=function(){return S.testEu||[];}');

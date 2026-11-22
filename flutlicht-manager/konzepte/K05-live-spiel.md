@@ -152,6 +152,8 @@ Siehe 5.5. In der Konferenz und bei Spielen ohne dich laufen beide Computer-Trai
 | Spieler verweigert den Handschlag | früh ausgewechselter Spieler mit hohem Ehrgeiz (Diva) | Stimmung (K14), Presse (K29) |
 | Last-Minute-Drama | Tor in der Nachspielzeit, das ein Spiel entscheidet | Ticker hervorgehoben, Presse |
 
+**Gebaut als K05c** (23.11.2026, popolupo, ohne Testlauf, Anlasskarten bis 7 Tage nach deinem Pflichtspiel): „Der Joker sticht“ (Meldung, Selbstvertrauen +1, Stimmung +2; das Lernen „Joker“ fehlt noch) und „Handschlag verweigert“ (Diva vor der 60. Minute ausgewechselt; zurechtweisen, unter vier Augen klären oder ignorieren). Dafür merkt sich das Spiel nach deinem Spiel die Joker und die früh Ausgewechselten (`S.letzt`), der Wechsel im Spielbericht trägt jetzt auch `ausId`.
+
 ## 9. Wechselwirkungen
 
 | Konzept | Zusammenspiel |
