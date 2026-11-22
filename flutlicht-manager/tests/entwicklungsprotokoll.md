@@ -53,11 +53,12 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 | **K25e** Vorkaufsrecht der Mitglieder bei Dauerkarten | `mitarbeit/popolupo-k25e-mitglieder-dauerkarten` (auf U12k) | fertig, ungetestet |
 | **K14b** Kabinen-Karten (Kabinenparty, Neuzugang, Eingewöhnung), dazu Korrekturen DS | `mitarbeit/popolupo-k14b-kabinen-karten` (auf K25e) | fertig, ungetestet |
 | **K19c** Transferstatus „unverkäuflich“ | `mitarbeit/popolupo-k19c-unverkaeuflich` (auf K14b) | fertig, ungetestet |
+| **K09b** Erinnerung „Gelbsperre droht“ | `mitarbeit/popolupo-k09b-gelbsperre-erinnerung` (auf K19c) | fertig, ungetestet |
 | U19d2 volle Kader der Auslandsvereine in der Engine | zurückgestellt | Entwurf in K37 §5.7. Die Engine behandelt Auslandsvereine als Block wie Amateure, viele Stellen schlagen Spieler in `PIX` nach. Erst nach einem Testlauf und der Messung des Faktors 0,93 |
 
 **Die neueste Spitze ist immer der zuletzt genannte Zweig, er enthält alles davor.** K24 ist fertig (Claude).
 
-**Vorschlag für den nächsten Testlauf** (Spitze `mitarbeit/popolupo-k19c-unverkaeuflich`, alles ungetestet, aber von lesenden Prüf-Agenten durchgesehen, Konsistenzprüfung CS, CX, CZ, DD, DF, DI, DL, DM, DN). **Wichtig:** Die Zweige `u12g` und `k29e` laden für sich allein nicht (DN1), bitte die Spitze nehmen:
+**Vorschlag für den nächsten Testlauf** (Spitze `mitarbeit/popolupo-k09b-gelbsperre-erinnerung`, alles ungetestet, aber von lesenden Prüf-Agenten durchgesehen, Konsistenzprüfung CS, CX, CZ, DD, DF, DI, DL, DM, DN). **Wichtig:** Die Zweige `u12g` und `k29e` laden für sich allein nicht (DN1), bitte die Spitze nehmen:
 1. `node tests/code.js`, dann die schnellen Einzeltests der neuen Teile: `finanzen.js` (Nr. 11 bis 20), `geruechte.js`, `schwierigkeit.js`, `werbung.js`, `europapokal.js`, `vorstand.js` (Nr. 10 bis 18), `karriereende.js`, `stadion.js` (Nr. 8 bis 11), `karten.js`, `spielwelt-karten.js`, `fans.js` (K27b), `abwerben.js` (K20b), `transfers.js` (K20c, K20d, K19c), `presse.js` (K29b bis K29g), `marketing.js` (K25c, K25d).
 2. `node tests/lizenz.js` (Gleichschritt, neue Bereiche `zielgespraech`).
 3. `node tests/finanzmodell.js 2`: Salden je Liga nach K23c. Erwartet nach der Modellrechnung 1. Liga etwa +11 Mio., 2. Liga etwa 0, 3. Liga etwa −1 Mio. je Verein und Saison ohne Transfers (K23 §5.6b). Weichen sie stark ab, bitte die Zeilen ins Testprotokoll, ich stelle dann `REGELN.finanzen.verwaltung` und `sponsor` nach.
@@ -92,6 +93,11 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 ---
 
 ## Changelog
+
+### 22.11.2026: K09b Erinnerung „Gelbsperre droht“ (Zweig `mitarbeit/popolupo-k09b-gelbsperre-erinnerung`, auf K19c)
+
+- **Neu (K09 §12 Nr. 14):** Am Ligaspieltag erinnert „Tag beenden“ an Spieler der Startelf, die mit der nächsten Gelben Karte im folgenden Derby oder Spitzenspiel fehlen würden. Im Menü abschaltbar.
+- **Tests zuerst:** neue Datei `tests/erinnerungen.js`.
 
 ### 22.11.2026: K19c Transferstatus „unverkäuflich“ (Zweig `mitarbeit/popolupo-k19c-unverkaeuflich`, auf K14b)
 

@@ -331,6 +331,7 @@ lizenz:{
 89. **K25e Vorkaufsrecht der Mitglieder (22.11., popolupo, ohne Testlauf):** keine neue Funktion, ein weiterer Baustein im Anteil der Dauerkarten (Bereich `preise`). Ohne Zufall, nur dein Verein verkauft Dauerkarten (Gleichschritt unberührt, er vergleicht kein Geld).
 90. **K14b Kabinen-Karten (22.11., popolupo, ohne Testlauf):** drei neue Karten im Bereich `ereignisse` (Kabinenparty, Neuzugang drängt auf Einsatz, Eingewöhnung). Die Wochenkarten sind im Gleichschritt aus.
 91. **K19c Transferstatus unverkäuflich (22.11., popolupo, ohne Testlauf):** neue Schaltfläche im Bereich `transfers` (wie die Transferliste). Die Automatik markiert nichts, der Höchstpreis gilt nur für deine Käufe (Gleichschritt unberührt).
+92. **K09b Erinnerung Gelbsperre (22.11., popolupo, ohne Testlauf):** keine neue Funktion, eine weitere Erinnerung vor „Tag beenden“, im Menü abschaltbar. Ohne Wirkung aufs Spiel.
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 
