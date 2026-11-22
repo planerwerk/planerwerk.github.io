@@ -619,6 +619,7 @@ const REGELN={
         [['kondition','hoch'],['technik','normal'],['kondition','hoch'],['spiel','normal'],['taktik','normal'],['kondition','normal'],['frei','normal']],
         [['kondition','hoch'],['technik','normal'],['taktik','normal'],['spiel','normal'],['kondition','normal'],['technik','normal'],['frei','normal']],
         [['taktik','normal'],['technik','normal'],['spiel','normal'],['standards','normal'],['taktik','normal'],['kondition','normal'],['frei','normal']]]}},
+    eigeneMax:3, // eigene Vorlagen deines Vereins (K07 §6, K07f, 22.11., popolupo, vorläufig): höchstens so viele, Slots wie die festen Vorlagen (p1, p1rest, p2, drei mittlere, m2, m1)
     startVorlage:'auto',blick:14,englischBis:4,pauseAb:9,vorbereitungTage:42,startspielerAb:60,
     kondition:{basis:58,jeReiz:4,max:95},
     // Trainingsfaktor der Entwicklung: 0,6 (kaum Training) bis 1,25, Standardwoche (Reiz 2,5) = 1. Wer platt ist (Frische unter 70), lernt schlechter.

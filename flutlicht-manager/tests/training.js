@@ -62,4 +62,16 @@ const f1=x=>x.toFixed(1),pc=x=>(x*100).toFixed(0)+' %';
   // Ein einzelner Verein hat etwa 14 Trainingsverletzungen je Saison, das Rauschen ist größer als die Wirkung (+12 bis +17 %). Darum trainieren im Vergleichslauf alle Vereine hart.
   pruef(hart.alleT>auto.alleT*1.05,'Dauerhaft hart (Aufbau das ganze Jahr, alle Vereine) kostet mindestens 5 % mehr Trainingsverletzungen als der Co-Trainer-Plan',`${Math.round(hart.alleT)} gegen ${Math.round(auto.alleT)} pro Saison (+${((hart.alleT/auto.alleT-1)*100).toFixed(0)} %)`);}
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
+// K07f. Eigene Vorlagen (K07 §6): nur mit gültigen Einheiten, höchstens RT.eigeneMax; die eingestellte Vorlage bestimmt die Einheiten nach Abstand zum Spiel.
+//       Ein anderer Verein findet sie nicht (plant nach vorlageAuto), Löschen stellt auf den Co-Trainer zurück.
+{const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S,ev=W.ev,RT=ev('RT');S.my=6;S.mgr='T';const t=ev('myT()'),d=S.tag,w={};
+  ev('EIGENE_SLOTS').forEach(([k])=>{w[k]=['technik','hoch'];});w.m1=['vorbereitung','leicht'];w.p1=['regeneration','leicht'];w.mitte1=['kondition','normal'];
+  const falsch=F.eigeneVorlageAus(Object.assign({},w,{p2:['quatsch','normal']}),'X'),k=F.eigeneVorlageSpeichernLauf(F.eigeneVorlageAus(w,'Meine Woche'));t.vorlage=k;
+  const p1=F.einheitFuer({ltag:d-1,lmin:90},t,{last:d-1,next:d+5},d),m1=F.einheitFuer(null,t,{last:d-5,next:d+1},d),mi=F.einheitFuer(null,t,{last:d-4,next:d+4},d);
+  const o=S.teams.find(x=>x.id!==S.my);o.vorlage=k;const fremd=ev('vorlageVon')(o,{last:d-4,next:d+4},d);
+  for(let i=1;i<RT.eigeneMax;i++)F.eigeneVorlageSpeichernLauf(F.eigeneVorlageAus(w,'Kopie '+i));const voll=F.eigeneVorlageSpeichernLauf(F.eigeneVorlageAus(w,'zu viel'));
+  F.eigeneVorlageLoeschenLauf(k);const weg=t.vorlage==='auto'&&!S.eigV[k];
+  pruef(typeof falsch==='string'&&k==='e1'&&p1.join()==='regeneration,leicht'&&m1.join()==='vorbereitung,leicht'&&mi.join()==='kondition,normal'&&fremd!==k&&typeof voll==='string'&&weg,
+    'Eigene Vorlagen: gültig gebaut, nach Abstand zum Spiel, nicht für andere Vereine, Höchstzahl, Löschen',`ungültig ${typeof falsch}, Kennung ${k}, Tag danach ${p1}, Tag davor ${m1}, Mitte ${mi}, anderer Verein ${fremd}, voll ${typeof voll}, gelöscht ${weg}`);}
+
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

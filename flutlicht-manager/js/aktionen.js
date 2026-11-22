@@ -15,7 +15,12 @@ function setUrlaub(w){if(!darf('sommer','sommerplan'))return;if(!RSO.urlaubWoche
   if(t.urlaub>0){const vorbei=(t.urlaubGesamt||t.urlaub)-t.urlaub;t.urlaub=Math.max(1,w*7-vorbei);t.urlaubGesamt=w*7;}save();if(S.phase==='end')showSummary();else render();}
 function setAuftakt(v){if(!darf('sommer','sommerplan'))return;if(!RSO.auftaktVersatz.includes(v))return;S.sommer=Object.assign({},S.sommer||{},{versatz:v});save();if(S.phase==='end')showSummary();else render();}
 // Training (K07): Vorlage des Wochenplans, Umschulung auf eine neue Position (belegt einen Einzeltrainingsplatz)
-function setVorlage(k){if(!darf('vorlage','vorlage'))return;myT().vorlage=k==='auto'||!RT.vorlagen[k]?'auto':k;save();render();}
+function setVorlage(k){if(!darf('vorlage','vorlage'))return;myT().vorlage=k==='auto'||!vorlageDef(k,myT())?'auto':k;save();render();}
+// Eigene Vorlage aus dem Formular im Training (K07f): Auswahlfelder ev_<slot>_e und ev_<slot>_i, Name ev_name. Danach gilt die neue Vorlage.
+function eigeneVorlageSpeichern(){if(!darf('vorlage','vorlage'))return;const w={},g=id=>{const e=document.getElementById(id);return e?e.value:'';};
+  EIGENE_SLOTS.forEach(([k])=>{w[k]=[g(`ev_${k}_e`),g(`ev_${k}_i`)];});const r=eigeneVorlageSpeichernLauf(eigeneVorlageAus(w,g('ev_name')));
+  if(!S.eigV||!S.eigV[r]){toast(r);return;}myT().vorlage=r;news(`Eigene Trainingsvorlage „${S.eigV[r].name}“ gespeichert und eingestellt.`);save();render();}
+function eigeneVorlageLoeschen(k){if(!darf('vorlage','vorlage'))return;eigeneVorlageLoeschenLauf(k);save();render();}
 function setUmschulung(id,pos){if(!darf('umschulung','lernziel'))return;const p=PIX.get(id);if(!p||p.team!==S.my)return;if(!pos){p.um=null;save();openP(id);return;}
   const grund=umschulungGrund(p,pos);if(grund){toast(grund);openP(id);return;}
   if(!p.ls&&!p.um&&squad(S.my).filter(x=>x.ls||x.um).length>=lernPlaetze(S.my)){const frei=squad(S.my).filter(x=>x.ls&&!x.ls.selbst&&!x.um).sort((a,b)=>a.ls.f-b.ls.f)[0];

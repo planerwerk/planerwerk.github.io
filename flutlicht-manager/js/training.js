@@ -11,9 +11,21 @@ function spielAbstand(d){const key=S.season+'/'+d;if(ABSTAND.key===key)return AB
 // Vorlage, die der Co-Trainer (und jeder Computer-Verein) wählt (K07 §7): englische Woche bei höchstens 4 Tagen zwischen zwei Spielen, Aufbau in Pausen, Vorbereitung vor dem ersten Pflichtspiel
 function vorlageAuto(a,d,t){if(!a||a.next==null)return'aufbau';if(a.last==null&&d<auftaktTag(t)+RT.vorbereitungTage)return'vorbereitung';
   const gap=a.last!=null?a.next-a.last:99;return gap<=RT.englischBis?'englisch':a.next-d>RT.pauseAb?'aufbau':'standard';}
-const vorlageVon=(t,a,d)=>t&&t.vorlage&&t.vorlage!=='auto'&&RT.vorlagen[t.vorlage]&&!(t.id===S.my&&autoB('vorlage'))?t.vorlage:vorlageAuto(a,d,t);
+// Eigene Vorlagen (K07 §6, K07f): S.eigV = {e1: {name, p1, p1rest, p2, mitte: [3 × [Einheit, Intensität]], m2, m1}}, höchstens RT.eigeneMax, nur für deinen Verein.
+// Ein anderer Verein (auch dein früherer) findet sie nicht und plant nach vorlageAuto.
+const vorlageDef=(k,t)=>!k?null:RT.vorlagen[k]||(t&&t.id===S.my&&S.eigV&&S.eigV[k])||null;
+const vorlageVon=(t,a,d)=>t&&t.vorlage&&t.vorlage!=='auto'&&vorlageDef(t.vorlage,t)&&!(t.id===S.my&&autoB('vorlage'))?t.vorlage:vorlageAuto(a,d,t);
+const EIGENE_SLOTS=[['p1','Tag nach dem Spiel, Startelf'],['p1rest','Tag nach dem Spiel, übrige'],['p2','zwei Tage danach'],['mitte0','mittlere Tage, 1.'],['mitte1','mittlere Tage, 2.'],['mitte2','mittlere Tage, 3.'],['m2','zwei Tage vor dem Spiel'],['m1','Tag vor dem Spiel']];
+// Eigene Vorlage aus Werten {slot: [Einheit, Intensität]} bauen. Rückgabe: Vorlage oder ein Text mit dem Fehler. Ohne Wirkung auf den Spielstand.
+function eigeneVorlageAus(w,name){const v={name:String(name||'').trim().slice(0,30)||'Eigene Vorlage',mitte:[]};
+  for(const[k,txt]of EIGENE_SLOTS){const x=w&&w[k];if(!x||!RT.einheiten[x[0]]||!RT.intensitaet[x[1]])return`${txt}: Einheit oder Intensität fehlt.`;if(k.startsWith('mitte'))v.mitte.push([x[0],x[1]]);else v[k]=[x[0],x[1]];}
+  return v;}
+// Speichern (erste freie Kennung e1 … eN) oder Text mit dem Grund
+function eigeneVorlageSpeichernLauf(v){if(typeof v==='string')return v;const E=S.eigV||(S.eigV={});let k=null;for(let i=1;i<=RT.eigeneMax;i++)if(!E['e'+i]){k='e'+i;break;}
+  if(!k)return`Höchstens ${RT.eigeneMax} eigene Vorlagen. Lösch erst eine.`;E[k]=v;return k;}
+function eigeneVorlageLoeschenLauf(k){if(!S.eigV||!S.eigV[k])return;delete S.eigV[k];const t=myT();if(t&&t.vorlage===k)t.vorlage='auto';}
 // Einheit eines Spielers an Tag d: [Einheit, Intensität] oder null (Spieltag). MD+1 regenerieren nur Spieler mit mindestens 60 Minuten.
-function einheitFuer(p,t,a,d){a=a||{};if(a.heute)return null;const key=vorlageVon(t,a,d),V=RT.vorlagen[key];
+function einheitFuer(p,t,a,d){a=a||{};if(a.heute)return null;const key=vorlageVon(t,a,d),V=vorlageDef(key,t);
   const L=a.last!=null?d-a.last:null,N=a.next!=null?a.next-d:null;
   if(key==='vorbereitung'){if(N===1)return V.m1;const a0=auftaktTag(t),w=Math.max(0,Math.floor((d-a0)/7)),l=V.wochen[Math.min(w,V.wochen.length-1)];return l[((d-a0)%l.length+l.length)%l.length];}
   if(L===1)return p&&p.ltag===a.last&&p.lmin>=RT.startspielerAb?V.p1:V.p1rest;if(N===1)return V.m1;if(L===2)return V.p2;if(N===2)return V.m2;
