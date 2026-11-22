@@ -283,7 +283,7 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
 //       gegen den Gegner deines nächsten Ligaspiels in höchstens 7 Tagen. Zurückrudern erledigt die Kampfansage (danach weder Kult noch Häme) und kostet Glaubwürdigkeit.
 {const {S,F,ev}=welt(),A=ev('AUSLOESER'),T=ev('RKT').presse,st=ev('statS')(),P=ev('presseS')(),t=ev('myT()');S.phase='play';st.chronik=[];const kein=A.spruchViral();
   F.chronikEintrag('Test','');const viral=!!A.spruchViral();st.chronik[st.chronik.length-1].tag=S.tag-T.viralTage-1;const alt=A.spruchViral();
-  let e=null;for(let d=S.tag+T.vorTage+2;d<S.plan.ende&&!e;d++){const x=F.meinSpiel(d);if(x&&x.art==='liga')e=x;}
+  let e=null;for(let d=S.tag+T.vorTage+2;d<S.plan.ende&&!e;d++){const x=F.meinSpiel(d);let frei=true;for(let y=d-T.vorTage-1;y<d;y++)if(F.meinSpiel(y))frei=false;if(x&&x.art==='liga'&&frei)e=x;} /* EH2: kein anderes eigenes Spiel kurz davor */
   const pa=e&&F.paarung(e),g=pa?(pa[0]===S.my?pa[1]:pa[0]):null;let ohne=null,mit=null,weit=null,zurueck=false;
   if(g!=null&&g<1000){P.aussagen=[];const tag0=S.tag;S.tag=e.tag-3;ohne=A.kampfansageRivale();P.aussagen.push({s:S.season,tag:ev('absTag')(S.tag),art:'ankuendigung',pid:null,gegner:g,txt:'Test'});
     mit=A.kampfansageRivale();S.tag=e.tag-T.vorTage-1;weit=A.kampfansageRivale();S.tag=e.tag-3;
@@ -295,13 +295,14 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
 //       Dorfverein nur nach einem Testspiel beim Amateurverein, Blamage nur nach einer Niederlage gegen ihn; der Name des Amateurvereins steht in der Meldung.
 {const {S,F,ev}=welt(),A=ev('AUSLOESER'),kv=ev('karteVon'),heute=ev('absTag')(S.tag),am=1000;S.phase='play';
   S.trust=85;F.kartenZeigen(kv('rueckendeckung'),{},S.tag,false);const halt=!!S.trustHalt&&S.trustHalt.min===85&&S.trustHalt.bis===heute+30;
-  S.trust=40;F.vorstandPruefen();const gehalten=S.trust===85;S.trustHalt.bis=heute-1;S.trust=40;F.vorstandPruefen();const vorbei=S.trust===40;
+  S.trust=40;F.vorstandPruefen();const gehalten=S.trust===85;S.trustHalt.s=S.season-1;S.trust=40;F.vorstandPruefen();const andereSaison=S.trust===40;S.trustHalt.s=S.season;S.trustHalt.bis=heute-1;S.trust=40;F.vorstandPruefen();const vorbei=S.trust===40;
   S.testspiele=[];const ohne=A.dorfverein()===null&&A.blamage()===null;
   S.testspiele=[{id:1,tag:S.tag-2,gegner:am,heim:false,stand:'gespielt',erg:{hg:2,ag:1,zus:0,geld:0}}];const dorf=A.dorfverein(),bl=A.blamage();
   const name=S.am[0].name;F.kartenZeigen(kv('dorfverein'),dorf||{verein:am},S.tag,false);const meldung=S.news.some(n=>n.t.startsWith('Dorfverein')&&n.t.includes(name));
   S.testspiele[0].erg={hg:0,ag:3,zus:0,geld:0};const sieg=A.blamage();
-  pruef(halt&&gehalten&&vorbei&&ohne&&!!dorf&&dorf.verein===am&&!!bl&&meldung&&sieg===null,'Info-Karten mit Wirkung: Rückendeckung hält das Vertrauen, Dorfverein und Blamage nach Testspielen',
-    `Halt ${halt}, gehalten ${gehalten}, danach frei ${vorbei}, ohne Testspiel ${ohne}, Dorfverein ${dorf&&dorf.verein}, Blamage ${!!bl}, Name in der Meldung ${meldung}, nach Sieg ${sieg}`);}
+  const n0=S.news.length,v0=S.trust;F.kartenZeigen(kv('blamage'),{verein:am},S.tag,false,true);const still=S.news.length===n0&&S.trust<v0; /* EH3 */
+  pruef(halt&&gehalten&&vorbei&&andereSaison&&still&&ohne&&!!dorf&&dorf.verein===am&&!!bl&&meldung&&sieg===null,'Info-Karten mit Wirkung: Rückendeckung hält das Vertrauen, Dorfverein und Blamage nach Testspielen',
+    `Halt ${halt}, gehalten ${gehalten}, andere Saison frei ${andereSaison}, still mit Wirkung ${still}, danach frei ${vorbei}, ohne Testspiel ${ohne}, Dorfverein ${dorf&&dorf.verein}, Blamage ${!!bl}, Name in der Meldung ${meldung}, nach Sieg ${sieg}`);}
 
 // K11f. Turniersieg (K11 §8): nur nach einem gewonnenen Sommerturnier dieser Saison, bis 7 Tage nach dem Finale; das Selbstvertrauen des Kaders steigt.
 {const {S,F,ev}=welt(),A=ev('AUSLOESER'),N=ev('RKT').testspiel.nachTage,sq=ev('squad')(S.my),kv=ev('karteVon');S.phase='play';S.turnier=null;const ohne=A.turniersieg();

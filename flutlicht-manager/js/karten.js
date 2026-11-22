@@ -157,8 +157,8 @@ function kartenWoche(d){if(S.phase!=='play'||S.fired)return;const K=karten(),W=k
     if(c.stufe==='sehrSelten'&&K.einmal[c.id])continue;const f=AUSLOESER[c.ausloeser];if(!f)continue;const b=f();if(!b)continue;
     const key=[c.id,b.spieler!=null?b.spieler:b.stab!=null?'s'+b.stab:'',b.stab==null&&b.verein!=null?b.verein:''].join(':'); /* Mitarbeiter als Beteiligter (Prüfung ED3), je Mitarbeiter ohne den Verein (EE3) */if(K.sp[key]!=null&&heute-K.sp[key]<(c.sperrTage||RKT.sperrTage))continue;
     let halt=false;if(c.art==='entscheidung')halt=entscheidungImBudget(c,W,d);
-    if(halt)kartenHaltZaehlen(c,W);else if(c.art==='info'){if(W.info>=kartenDichte().info)continue;W.info++;} /* Entscheidungen ohne Halt entscheidet der Co-Trainer, sie fallen nicht weg (Prüfung DY8) */
-    K.sp[key]=heute;if(c.stufe==='sehrSelten')K.einmal[c.id]=1;kartenZeigen(c,b,d,halt);}}
+    let stumm=false;if(halt)kartenHaltZaehlen(c,W);else if(c.art==='info'){if(W.info>=kartenDichte().info){if(!c.wirkung)continue;stumm=true;}else W.info++;} /* Entscheidungen ohne Halt entscheidet der Co-Trainer, sie fallen nicht weg (Prüfung DY8) */
+    K.sp[key]=heute;if(c.stufe==='sehrSelten')K.einmal[c.id]=1;kartenZeigen(c,b,d,halt,stumm);}} /* Info mit Wirkung über der Grenze: Wirkung ja, Meldung nein (Prüfung EH3) */
 // Chance je Woche (K30 §5.4, K30d): Anlasskarten mit eigener chance (im Katalog, 0 < chance ≤ 1), sonst nach der Seltenheitsstufe. Ein Würfel je Karte und Woche wie bisher.
 const kartenChance=c=>c.chance!=null?c.chance:1/(RKT.seltenheit[c.stufe]*RKT.wochenJeSaison);
 // Veränderung der Stärke seit dem jüngsten Monatseintrag dieser Saison, der mindestens RKT.entwicklung.tage alt ist (K03c); ohne Eintrag 0
@@ -180,9 +180,9 @@ function kartenText(t,b){const p=b.spieler!=null?PIX.get(b.spieler):null,v=b.ver
     .replace(/\{geld:(-?\d+)\}/g,(m,x)=>fmt(Math.abs(kartenGeld(+x))));} // Betrag nach Liga (K23f)
 // Geldbetrag einer Karte nach der Liga deines Vereins (K23f): Grundwert × RKT.geldLiga, auf 1.000 € gerundet
 const kartenGeld=w=>{const t=S.teams&&S.teams[S.my],f=(RKT.geldLiga||{})[t?t.lg:3]||1;return Math.round(w*f/1000)*1000;};
-function kartenZeigen(c,b,d,halt){const K=karten(),i=K.v[c.id]||0,text=kartenText(c.texte[i%c.texte.length],b);K.v[c.id]=i+1;
+function kartenZeigen(c,b,d,halt,stumm){const K=karten(),i=K.v[c.id]||0,text=kartenText(c.texte[i%c.texte.length],b);K.v[c.id]=i+1;
   if(c.art==='info'){const z=c.wirkung?mitStrom(strom('ereignisse',S.season,d,c.id),()=>c.wirkung.map(w=>kartenWirkung(w,b,c)).filter(Boolean)):[]; /* Info-Karten mit Wirkung (K30e) */
-    news(`${c.titel}: ${text}${z.length?' '+z.map(t=>kartenText(t,b)).join(' '):''}`,'');kartenLog(c,d,null,false);return;}
+    if(!stumm)news(`${c.titel}: ${text}${z.length?' '+z.map(t=>kartenText(t,b)).join(' '):''}`,'');kartenLog(c,d,null,false);return;} /* stumm: über der Info-Grenze nur die Wirkung (EH3) */
   const k={id:c.id,tag:d,s:S.season,b,text};
   if(halt){K.offen.push(k);news(`${c.titel}: ${text} Deine Entscheidung steht im Büro.`,'offer');return;}
   kartenEntscheiden(k,c.auto,true);}
@@ -243,7 +243,7 @@ function kartenWirkung(w,b,c){let wert=w.wert,txt='',erfolg=true;if(w.chance!=nu
     else if(p&&p.team===S.my&&(p.wech||p.leihe))txt=`Bei ${p.n} geht das gerade nicht.`;else if(p&&p.team===S.my){if(S.unv)delete S.unv[p.id];p.list=1;p.ask=Math.max(RM.runden,rundeAb(value(p)*wert));erfolg=true;news(`${p.n} steht für ${fmt(p.ask)} auf der Transferliste.`);}else if(p)txt=`${p.n} ist nicht mehr da.`;} /* K14e: wie setListed, Forderung wert × Marktwert */
   else if(w.art==='zurueckrudern'){let n=0;presseS().aussagen.forEach(a=>{if(!a.ok&&a.art==='ankuendigung'&&a.gegner===b.verein){a.ok=1;n++;}});if(!n){erfolg=false;txt='Die Kampfansage ist schon erledigt.';}} /* K29l: Kampfansage zurückgenommen, nach dem Spiel weder Kult noch Häme */
   else if(w.art==='svAlle')squad(S.my).forEach(x=>svAendern(x,wert)); /* K11f: Selbstvertrauen des ganzen Kaders */
-  else if(w.art==='vertrauenHalt')S.trustHalt={tid:S.my,bis:absTag(S.tag)+wert,min:S.trust}; /* K30e, K28 §8: Vertrauen wert Tage nicht unter dem heutigen (vorstandPruefen) */
+  else if(w.art==='vertrauenHalt')S.trustHalt={tid:S.my,s:S.season,bis:absTag(S.tag)+wert,min:S.trust}; /* K30e, K28 §8: Vertrauen wert Tage nicht unter dem heutigen (vorstandPruefen) */
   if(w.dann&&erfolg&&KARTEN_MIT_ERFOLG.includes(w.art)){const t=w.dann.map(x=>kartenWirkung(x,b,c)).filter(Boolean);txt=[w.gut||'',...t].filter(Boolean).join(' ');}
   return txt;}
 const KARTEN_MIT_ERFOLG=['leihe','gehaltAnpassen','provisionZahlen','spezialist','transferliste','zurueckrudern']; // Wirkungen, die melden, ob sie geklappt haben (für dann)

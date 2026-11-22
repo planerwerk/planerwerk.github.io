@@ -2111,3 +2111,28 @@ Korrekturen auf `mitarbeit/popolupo-eg-korrekturen` (auf K03c).
 | EG2 | Das Gerücht „Thema“ galt als eingetreten, wenn der Spieler zu irgendeinem Verein wechselte. Jetzt zählt nur ein Wechsel zum genannten Verein (auch vereinbart). | ✅ behoben |
 | EG3 | Die Schwelle für Klatsch (−30) war gleich dem Grundwert eines Derbys. Ein einziges entschiedenes Derby hat den Klatsch eingeschaltet. Jetzt zählt die Beziehung ohne ihren Grundwert (vorläufig). | ✅ behoben |
 | EG4 | Test K30c: Die Prüfung des Gegenangebots lief ohne Gegenangebot durch. Jetzt muss es eins geben. Außerdem steht in der README die Dauer von `beziehungen.js` mit 600 Spielen (unter 60 s). | ✅ behoben |
+
+## EH. Prüfung von K29l, K30e, K11f, K16d, K03c und der Korrekturen EG ohne Laufzeit (23. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat b610d0d, d02df69, 9128d11, 1c1c14c, c91b512 und 1f513c3 gelesen (nichts ausgeführt). Kein blockierender und kein mittlerer Fund, drei kleine und eine Kleinigkeit.
+
+**Ohne Befund:**
+
+- K11f, K03c und die Korrekturen EG.
+- Vergleiche mit dem Saisontag sind sicher:
+  - Die Chronik prüft die Saison.
+  - Testspiele und Turnier werden zum Saisonwechsel und beim Vereinswechsel geleert.
+  - `p.mvl` prüft die Saison.
+- `kampfansageRivale` funktioniert für alle Arten von Spielen.
+- `zurueckrudern` verhindert Kult und Häme.
+- Test K16d: Lizenz und Spieltag stimmen.
+- Gleichschritt unverändert.
+
+Korrekturen auf `mitarbeit/popolupo-eh-korrekturen` (auf K13d).
+
+| # | Befund | Status |
+|---|---|---|
+| EH1 | Der Halt aus „Rückendeckung“ galt bis zu einem absoluten Tag, ohne Saison. In einem Jahr, in dem die Karte am letzten Montag kommt, hätte er am ersten Tag der neuen Saison das Vertrauen über die Strafe für das verfehlte Ziel gehoben. Jetzt gilt er nur in derselben Saison (`s`). Test K30e. | ✅ behoben |
+| EH2 | Test K29l: Freiburg (Verein 6) spielt vor dem ersten Ligaspiel die Qualifikation zur Conference League. Die Prüfung „zu früh“ lief über dieses Spiel und nicht über den Abstand. Jetzt nimmt der Test ein Ligaspiel ohne eigenes Spiel in den 8 Tagen davor. | ✅ behoben |
+| EH3 | Info-Karten mit Wirkung fielen über der Info-Grenze der Meldungsdichte ganz weg, mit ihrer Wirkung. So hätte eine Anzeige-Einstellung den Spielstand geändert (gegen K30 §5.1 und DY8). Jetzt wirkt die Karte trotzdem, nur die Meldung entfällt. Test K30e. | ✅ behoben |
+| EH4 | `p.spritzeWarn` merkte den Saisontag, in einer späteren Saison am selben Tag wäre die Warnung ausgefallen. Jetzt der absolute Tag. | ✅ behoben |

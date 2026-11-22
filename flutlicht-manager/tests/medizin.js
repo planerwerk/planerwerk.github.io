@@ -77,7 +77,7 @@ pruef(spannen>0&&ehrlich/spannen>=0.85,'Diagnose-Spanne enthält die wahre Dauer
   let d=0;while(d<S2.plan.ende&&!F2.meinSpiel(d))d++;S2.tag=d;const A=ev2('RMD').spritzen,heute=ev2('absTag')(d),sq=S2.pl.filter(x=>x.team===S2.my&&x.inj<=0&&x.pos!=='TW');
   const setz=(p,sp)=>{p.inj=0;p.vl=null;F2.verletzen(p,'kollision',{art:'prellung',still:true});p.inj=sp[1]+1;Object.assign(p.vl,{ab:heute,dg:heute,sd:sp,sv:sp});};
   const lang=sq[0],kurz=sq[1];setz(lang,[A.arztAb+2,A.arztAb+4]);setz(kurz,[1,2]);
-  F2.medSpritzen(lang.id);const erst=lang.spritze!==d&&lang.spritzeWarn===d;F2.medSpritzen(lang.id);const zweit=lang.spritze===d;F2.medSpritzen(kurz.id);const sofort=kurz.spritze===d;
+  F2.medSpritzen(lang.id);const erst=lang.spritze!==d&&lang.spritzeWarn===heute;F2.medSpritzen(lang.id);const zweit=lang.spritze===d;F2.medSpritzen(kurz.id);const sofort=kurz.spritze===d;
   pruef(d<S2.plan.ende&&erst&&zweit&&sofort,'Arzt widerspricht: bei langer Verletzung erst beim zweiten Klick gespritzt, bei kurzer sofort',`Spieltag ${d}, erster Klick ${erst}, zweiter ${zweit}, kurz ${sofort}`);}
 
 console.log(`\n${N} Saison(s), ${verl.length} Verletzungen, ${alle.filter(x=>x.q==='krankheit').length} Krankheiten, in ${((Date.now()-t0)/1000).toFixed(1)} s`);
