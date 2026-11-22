@@ -178,6 +178,12 @@ Frischefaktor  = 1 über 80 %, darunter +5 % je Punkt
 | Lernziel erreicht | aus K03 | Info, Erinnerung „Lernplatz frei“ |
 | Umschulung abgeschlossen | Eignung 90 % | Info |
 
+**Gebaut als K07c (22.11.2026, popolupo, ohne Testlauf), Karten nach K30:**
+- **Spieler bittet um Pause** (Entscheidung, Voreinstellung Pause): gesunder Spieler deines Kaders mit Frische unter 65 und Professionalität ab 13. Vorläufig ohne „über eine Woche“, die Frische wird nicht über die Zeit gespeichert. Pause: neue Kartenwirkung `pause`, Frische +15, Spielpraxis −5, Stimmung +2. Durchziehen: Stimmung −2, das Risiko liegt in der niedrigen Frische selbst.
+- **Verletzungsserie** (Meldung): mindestens drei Trainingsverletzungen deines Kaders in 14 Tagen (laufende und ausgeheilte, aus `p.vl` und `p.vh`).
+- **Rangelei im Training** gibt es schon in der Kabine (K14, Hitzköpfe, wöchentlich mit Beziehung), darum keine eigene Karte. Offen bleiben „Trainingsweltmeister übertreibt“, „Lernziel erreicht“ und „Umschulung abgeschlossen“.
+- Zahlen in `REGELN.karten.training`. Gleichschritt: Karten sind in `tests/lizenz.js` 5a abgeschaltet.
+
 ## 9. Wechselwirkungen
 
 | Konzept | Zusammenspiel |
@@ -251,7 +257,7 @@ training:{
 11. **„Training wirkt“ wird über die Wirkung geprüft** (Startelf stärker, Kondition höher, nicht mehr Ausfälle), nicht über Punkte: Punkte schwanken über wenige Saisons um ±7 je Saison. Gemessen: Startelf +0,4 bis +0,5 stärker als mit „Schonen“, also etwa +1 Punkt im ersten Jahr und mehr danach.
 12. **Vorbereitung** als Vorlage mit vier Wochen (normal, hart, hart, Taktik). Der Co-Trainer nutzt sie bis zum ersten Pflichtspiel. Doppeleinheiten, Leistungstests und Testspiele kommen mit K11 und K12a.
 13. **Umschulung** belegt einen der fünf Einzeltrainingsplätze. Verwandt heißt: Eignung ohne Fußabzug mindestens 75 %. Der Fuß bleibt nach der Umschulung ein Nachteil (außer bei beidfüßigen). **Geändert am 12.11. nach deiner Entscheidung** (§3.3): nur Nachbarpositionen, entfernte nur sehr jung oder vielseitig, nie Torwart, nach Alter gestaffelt, eine Umschulung je Laufbahn. Vorläufig von mir: was als Nachbar gilt (die verwandten Paare der Eignungstabelle), „sehr jung“ bis 19 Jahre, Torwart auch für sehr junge und vielseitige Spieler ausgeschlossen, die Staffeln für Tempo und Höchstwert, die Grenze von einer Position (zwei mit „vielseitig“), „bestimmtes Talent“ gleich Merkmal „vielseitig“.
-14. **Noch nicht gebaut:** eigene Vorlagen speichern, Ereignisse aus §8, eigenes Torwarttraining (K16). Bonus +2 % mit Gegneranalyse seit K18c (Gegnerbeobachtung durch einen Scout). Die Erinnerung „Plan passt nicht“ gibt es seit K07b (22.11., popolupo, ohne Testlauf): selbst gewählte Standardwoche in einer englischen Woche (zwei Pflichtspiele höchstens 4 Tage auseinander) oder mindestens drei Spieler der Startelf mit Belastungssprung über 1,5. Eine harte Einheit am Tag vor einem Spiel kann keine Vorlage erzeugen (MD-1 ist immer Spielvorbereitung), darum fehlt dieser Fall.
+14. **Noch nicht gebaut:** eigene Vorlagen speichern, Ereignisse aus §8 außer „Spieler bittet um Pause“ und „Verletzungsserie“ (K07c, §8), eigenes Torwarttraining (K16). Bonus +2 % mit Gegneranalyse seit K18c (Gegnerbeobachtung durch einen Scout). Die Erinnerung „Plan passt nicht“ gibt es seit K07b (22.11., popolupo, ohne Testlauf): selbst gewählte Standardwoche in einer englischen Woche (zwei Pflichtspiele höchstens 4 Tage auseinander) oder mindestens drei Spieler der Startelf mit Belastungssprung über 1,5. Eine harte Einheit am Tag vor einem Spiel kann keine Vorlage erzeugen (MD-1 ist immer Spielvorbereitung), darum fehlt dieser Fall.
 
 **Recherchiert:** Anteil der Trainingsverletzungen siehe Nr. 10.
 

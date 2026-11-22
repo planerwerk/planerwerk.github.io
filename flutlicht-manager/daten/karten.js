@@ -74,6 +74,13 @@ const KARTEN=[
     texte:['Das Trikot von {spieler} ist ausverkauft. Der Ausrüster könnte nachproduzieren, das kostet {geld:100000}.','Nach den Toren von {spieler} gibt es im Fanshop kein Trikot mit seiner Nummer mehr. Nachproduzieren würde {geld:100000} kosten.'],
     optionen:[{text:'Nachproduzieren lassen',wirkung:[{art:'geld',wert:-100000},{art:'merch',wert:0.2}],folge:'Die neuen Trikots verkaufen sich gut, vier Wochen lang mehr Fanartikel.'},
       {text:'Nicht nachproduzieren',wirkung:[{art:'fans',wert:-1}],folge:'Wer kein Trikot mehr bekommen hat, ist enttäuscht.'}],auto:0},
+  // Training (K07 §8, K07c, 22.11.). Neue Wirkung pause: Frische des Spielers + wert, Spielpraxis − REGELN.karten.training.pauseSpielpraxis.
+  {id:'pauseBitte',titel:'Spieler bittet um Pause',bereich:'K07',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'pauseBitte',sperrTage:60,
+    texte:['{spieler} kommt nach dem Training zu dir: Die Beine sind schwer, er bittet um zwei freie Tage.','Der Athletiktrainer meldet, {spieler} sei platt. Er selbst würde gern kurz durchschnaufen.'],
+    optionen:[{text:'Zwei Tage Pause',wirkung:[{art:'pause',wert:15},{art:'stimmung',wert:2}],folge:'{spieler} kommt erholt zurück, hat aber ein paar Einheiten verpasst.'},
+      {text:'Er muss durchziehen',wirkung:[{art:'stimmung',wert:-2}],folge:'{spieler} beißt auf die Zähne. Ob das gut geht?'}],auto:0},
+  {id:'verletzungsserie',titel:'Verletzungsserie',bereich:'K07',art:'info',stufe:'haeufig',ausloeser:'verletzungsserie',sperrTage:30,
+    texte:['Schon wieder eine Trainingsverletzung. Der Mannschaftsarzt warnt: Zu große Belastungssprünge machen die Muskeln anfällig.','Drei Verletzte aus dem Training in zwei Wochen. Der Arzt rät, die Intensität langsamer zu steigern.']},
   // Europapokal (K37 §8, U19e, 22.11., Beträge GESCHÄTZT). Fanmarsch und Reisechaos vor einem Auswärtsspiel bei einem Auslandsverein, Pyrotechnik nach einem Europapokalspiel
   // (echte UEFA-Strafen für deutsche Vereine 25.000 bis 80.000 €, Websuche 22.11.; hier 12.000 € in der 3. Liga, in der 1. Liga ×4), Wunder als Meldung nach einer Aufholjagd.
   {id:'fanmarsch',titel:'Fanmarsch',bereich:'K37',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'euAuswaerts',sperrTage:60,

@@ -90,6 +90,17 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   pruef(ohne==='normal'&&vor===1&&luecke===0&&stufe('wenig').info===3&&stufe('normal').info===R0.infoProWoche&&stufe('viel').info===8&&wenigVor===false&&normalVor===probe('normal',0,0)&&normalZweite===false&&vielZweite===frei,
     'Meldungsdichte: wenig, normal, viel verschieben die Grenzen; Vorwoche nur direkt davor; ohne Einstellung normal',`Vorwoche ${vor}/${luecke}, wenig nach einer Entscheidung der Vorwoche ${wenigVor}, viel zweite ${vielZweite} (Halte frei ${frei})`);}
 
+// K07c. Trainingskarten (K07 §8): Pause nur bei Frische unter 65 und Professionalität ab 13; die Wirkung pause hebt die Frische und kostet Spielpraxis;
+//       Verletzungsserie ab drei Trainingsverletzungen in 14 Tagen, ältere zählen nicht
+{const {S,ev}=welt(),A=ev('AUSLOESER'),T=ev('RKT').training,sq=ev('squad')(S.my),heute=ev('absTag')(S.tag);
+  sq.forEach(q=>{q.fit=100;q.inj=0;delete q.vl;delete q.vh;});const p=sq[0];p.ch=Object.assign({},p.ch||{},{pro:T.profiAb});p.fit=T.pauseUnter-5;const ja=A.pauseBitte();
+  p.ch.pro=T.profiAb-1;const unprofi=A.pauseBitte();p.ch.pro=T.profiAb;p.fit=T.pauseUnter+1;const frisch=A.pauseBitte();
+  p.fit=50;p.sp=50;ev('kartenWirkung')({art:'pause',wert:15},{spieler:p.id},{titel:'Test'});const wirkt=p.fit===65&&p.sp===50-T.pauseSpielpraxis;
+  const tv=ab=>[{art:'zerrung',q:'training',ab,t:10}];sq[0].vh=tv(heute-3);sq[1].vh=tv(heute-4);const zwei=A.verletzungsserie();sq[2].vh=tv(heute-5);const drei=A.verletzungsserie();
+  sq[2].vh=tv(heute-T.serieTage-1);const alt=A.verletzungsserie();
+  pruef(!!ja&&ja.spieler===p.id&&unprofi===null&&frisch===null&&wirkt&&zwei===null&&!!drei&&alt===null,'Trainingskarten: Pause nur müde und professionell, Wirkung pause, Verletzungsserie ab drei in 14 Tagen',
+    `Pause ${!!ja}, unprofessionell ${unprofi}, frisch ${frisch}, Wirkung ${wirkt}, zwei ${zwei}, drei ${!!drei}, eine zu alt ${alt}`);}
+
 // U19e. Europapokal-Karten (K37 §8): Auswärtsspiel bei einem Auslandsverein in den nächsten 7 Tagen (kein Heimspiel, nicht später, nicht das Finale), Spiel 1 bis 7 Tage her,
 //       Wunder nach 0:3 im Hinspiel und 4:0 oder 3:0 mit Elfmeterschießen im Rückspiel, nicht nach nur einem Tor Rückstand und nicht beim Ausscheiden. euMeineSpiele ersetzt der Test.
 {const {S,W,ev}=welt(),A=ev('AUSLOESER'),AV=ev('AV0'),me=S.my,d=S.tag;W.ev('euMeineSpiele=function(){return S.testEu||[];}');
