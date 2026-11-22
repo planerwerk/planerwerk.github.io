@@ -33,10 +33,11 @@ function presseAnlass(art,o={}){if(S.phase!=='play'||S.pk||S.fired)return false;
   return mitStrom(strom('presse',S.season,S.tag,art),()=>{let l=A.fragen.filter(f=>(o.pid!=null||!f.sp)&&(o.gegner!=null||!f.t.includes('{gegner}'))&&(o.serie!=null||!f.t.includes('{serie}'))&&(o.medium!=null||!f.t.includes('{medium}'))&&(!f.trainer||o.trainer));if(!l.length)return false;
     const n=Math.min(l.length,Q.fragen[0]+Math.floor(R()*(Q.fragen[1]-Q.fragen[0]+1))+(P.klima<Q.klimaFragen.bohrenUnter?Q.klimaFragen.bohrenPlus:0)),fr=[]; /* schlechtes Klima: eine Frage mehr (K29d) */
     while(fr.length<n&&l.length)fr.push(l.splice(Math.floor(R()*l.length),1)[0]);
-    P.id=(P.id||0)+1;S.pk={id:P.id,art,tag:S.tag+(o.morgen?1:0),s:S.season, /* morgen: nach dem Spiel am Tag danach, mit Halt (Prüfung DR1) */medium:o.medium||null,gegner:o.gegner!=null?o.gegner:null,pid:o.pid!=null?o.pid:null,serie:o.serie!=null?o.serie:null,i:0,
+    const tg=S.tag+(o.morgen&&S.tag+1<S.plan.ende?1:0); /* morgen: nach dem Spiel am Tag danach, mit Halt (Prüfung DR1), nicht über das Saisonende (DS2) */
+    P.id=(P.id||0)+1;S.pk={id:P.id,art,tag:tg,s:S.season,medium:o.medium||null,gegner:o.gegner!=null?o.gegner:null,pid:o.pid!=null?o.pid:null,serie:o.serie!=null?o.serie:null,i:0,
       fragen:fr.map(f=>({t:f.t,o:f.o,sp:f.sp?1:0,j:pkJournalist(R())})),antw:[]};pkStichelei(S.pk);
-    P.n[S.season]=(P.n[S.season]||0)+1;P.letzte=heute;P.sperre[art]=heute;
-    if(autoB('presse'))presseDelegieren(true);else news(`Pressekonferenz ${o.morgen?'morgen':'heute'}: ${A.name}. Im Büro hingehen oder den Co-Trainer schicken.`);return true;});}
+    P.n[S.season]=(P.n[S.season]||0)+1;P.letzte=absTag(tg);P.sperre[art]=absTag(tg); /* Abstand ab dem Tag der Pressekonferenz (DS4) */
+    if(autoB('presse'))presseDelegieren(true);else news(`Pressekonferenz ${tg>S.tag?'morgen':'heute'}: ${A.name}. Im Büro hingehen oder den Co-Trainer schicken.`);return true;});}
 // Co-Trainer schicken (oder automatisch): Floskeln, Medienklima −2
 function presseDelegieren(auto){const pk=S.pk;if(!pk)return;const P=presseS(),A=PRESSE.anlaesse[pk.art];S.pk=null;P.klima=clamp(P.klima+RPK.delegieren,0,100);
   news(`${A.name}: ${auto?'Der Co-Trainer geht hin':'Du schickst den Co-Trainer'}. ${pkSchlagzeile('delegiert',pk)}`);stichelOffen(pk);if(!auto){save();closeOv();render();}}
@@ -44,7 +45,7 @@ function pkSchlagzeile(art,pk){const Z=PRESSE.schlagzeilen[art];if(!Z)return'';r
 
 // ---------- Auslöser ----------
 // Täglich (ablauf.js taeglichLauf): Automatik für gestern, Antritt, Auftakt, Tag vor Derby, Spitzenspiel, Pokal ab Viertelfinale, Relegation, Ultimatum, Wechselwunsch
-function presseTag(d){if(S.phase!=='play')return;if(S.pk&&(S.pk.s!==S.season||S.pk.tag<d))presseDelegieren(true);const P=presseS(),A=RPK.anlass;
+function presseTag(d){if(S.phase!=='play')return;if(S.pk&&S.pk.s!==S.season)S.pk=null;else if(S.pk&&S.pk.tag<d)presseDelegieren(true);const P=presseS(),A=RPK.anlass; /* aus der alten Saison still weg (DS2) */
   if(P.antritt&&presseAnlass('antritt'))P.antritt=0;
   const l=meineLigaspiele();if(l.length&&d===l[0].tag-A.auftaktVorher)presseAnlass('auftakt',{gegner:pkGegner(l[0])});
   const e=meinSpiel(d+1);if(e){const g=pkGegner(e),t=myT();
@@ -55,7 +56,8 @@ function presseTag(d){if(S.phase!=='play')return;if(S.pk&&(S.pk.s!==S.season||S.
   if(S.ult&&S.ult.tid===S.my&&!S.ult.pk&&presseAnlass('ultimatum'))S.ult.pk=1;
   const w=squad(S.my).find(p=>p.ww>=3&&p.ww3s===S.season&&p.pkWW!==S.season);if(w&&presseAnlass('wechselwunsch',{pid:w.id}))w.pkWW=S.season;
   // Urteil des Sportgerichts (K29g): gemerkt in P.urteil, hier nach den Anlässen der Spiele, damit es keine Pressekonferenz vor einem Spiel verdrängt (Prüfung DR2); verfällt nach urteilTage
-  if(P.urteil){const u=P.urteil;if(u.s!==S.season||absTag(d)-u.tag>A.urteilTage)P.urteil=null;else if(presseAnlass('urteil',{pid:u.pid}))P.urteil=null;}}
+  // Nur, solange er dein Spieler ist und die Sperre läuft (DS1); verfällt nach urteilTage Tagen (Tag 0 bis urteilTage − 1)
+  if(P.urteil){const u=P.urteil,p=PIX.get(u.pid);if(u.s!==S.season||absTag(d)-u.tag>=A.urteilTage||!p||p.team!==S.my||sperreIn(p,u.wb||'liga')<=0)P.urteil=null;else if(presseAnlass('urteil',{pid:u.pid}))P.urteil=null;}}
 function pkGegner(e){const f=paarung(e);return f?(f[0]===S.my?f[1]:f[0]):null;}
 // Nach den Spielen des Tages (ablauf.js): Kampfansagen prüfen, Krise, Höhenflug, Tabellenführung, Kantersieg
 function presseNachSpiel(m){if(!m||S.phase!=='play')return;const s=m.h===S.my?0:1,gf=s?m.ag:m.hg,ga=s?m.hg:m.ag,gegner=s?m.h:m.a,A=RPK.anlass,P=presseS(),sq=squad(S.my);

@@ -1863,3 +1863,19 @@ Ein Agent hat 30a8575 und 3ef6aa5 gelesen (nichts ausgeführt, `dubletten.pl` un
 | DR5 | Die Antworten zur Kritik am Urteil sind die Texte der Schiedsrichterkritik. Dokumentiert, eigene Texte später. | offen |
 | DR6 | Test K29f hing am Tag (Frage reihum). Jetzt mit festem Tag. Doku: bei schlechtem Klima bis zu vier Fragen. | ✅ behoben |
 | DR7 | Ohne Befund: Interview für Liga, Pokal (auch geteilte Runden), Supercup, Europapokal und Relegation, nicht für Testspiele; Speichern und Laden, alte Spielstände ohne `einst`, keine Wirkung in der Automatik, keine Würfe, Platzhalter; alle Wege zum Urteil, Ströme, Gleichschritt, Katalog. | ✅ |
+
+---
+
+## DS. Prüfung der Korrektur DR (Ablauf nach dem Abpfiff) ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat ef6619c gelesen und die drei Wege nach dem Abpfiff Schritt für Schritt verfolgt (Konferenz, Live-Spiel, Spiel in `weiter`). Die Korrektur trägt: Die Pressekonferenz nach dem Spiel kommt am Tag danach mit Halt, das Interview steht beim nächsten Halt. Korrekturen auf `mitarbeit/popolupo-k14b-kabinen-karten`.
+
+| # | Befund | Status |
+|---|---|---|
+| DS1 | **Vorgemerktes Urteil ohne Prüfung des Spielers:** Nach einem Verkauf oder Jobwechsel binnen 7 Tagen kam die Pressekonferenz zu einem fremden Spieler (mit Glaubwürdigkeitsverlust nach Rückendeckung). Jetzt nur, solange er dein Spieler ist und die Sperre läuft; `takeJob` löscht die Vormerkung. | ✅ behoben |
+| DS2 | **Saisonende:** Eine Pressekonferenz nach dem letzten Spiel lag bis in die neue Saison und kostete dann 2 Punkte Medienklima. Jetzt nie über das Saisonende hinaus, eine alte aus der Vorsaison fällt still weg. | ✅ behoben |
+| DS3 | **Interview nach einer Entlassung** (alt): Beim neuen Verein stand noch das Interview zum letzten Spiel. `takeJob` löscht es. | ✅ behoben |
+| DS4 | Abstand und Sperre der Pressekonferenzen zählen jetzt ab ihrem Tag, nicht ab dem Spieltag. Die Vormerkung zum Urteil gilt jetzt genau 7 Tage. | ✅ behoben |
+| DS5 | Test Nr. 7 prüft jetzt Tag danach, Halt, Bleiben und Übernahme durch den Co-Trainer. | ✅ behoben |
+| DS6 | Hinweis: `fuzz-karrieren.js` und `ui-zwei-saisons.js` bekommen ein paar Halte mehr je Saison, ihre Grenzen bitte im Blick behalten. | zur Kenntnis |
+| DS7 | Ohne Befund: alle drei Wege, Spiel am Tag danach (ein Halt), Erinnerungen, `naechsterHalt` nach dem Laden, Interview in allen Wegen bis zum nächsten `weiter`, Urteil am selben Tag, Gleichschritt 5a, Test 4 in `lizenz.js`, `schwierigkeit.js`. | ✅ |

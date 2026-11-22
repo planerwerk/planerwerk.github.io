@@ -59,7 +59,7 @@ function sgUrteil(v,n,ausgang,d){const p=PIX.get(v.pid);if(p){const s=sperren(p)
   (S.sgArchiv=S.sgArchiv||[]).unshift({pid:v.pid,n:p?p.n:'?',team:v.team,wb:v.wb,art:v.art,tag:v.tag,antrag:v.antrag,urteil:n,ausgang,am:d,einspruch:!!v.einspruch});
   S.sgArchiv.length=Math.min(S.sgArchiv.length,RD.verfahren.archiv);
   if(p&&p.team===S.my){const rest=sperreIn(p,v.wb);news(`Sportgericht: ${p.n} ist für ${n} ${WB_SPIEL[v.wb]}${n===1?'':'e'} gesperrt (${VERGEHEN[v.art]}, ${AUSGANG[ausgang]}).${rest?` Noch ${rest} offen.`:' Die Sperre ist schon abgesessen.'}`,ausgang==='gemindert'?'good':'bad');
-    if(n>=RPK.anlass.urteilAb&&rest>0)presseS().urteil={pid:p.id,tag:absTag(S.tag),s:S.season};}} /* Pressekonferenz nach dem Urteil (K29 §4.1, K29g): vorgemerkt, presseTag öffnet sie (Prüfung DR2, DR4: nur, solange die Sperre noch läuft) */
+    if(n>=RPK.anlass.urteilAb&&rest>0)presseS().urteil={pid:p.id,tag:absTag(S.tag),s:S.season,wb:v.wb};}} /* Pressekonferenz nach dem Urteil (K29 §4.1, K29g): vorgemerkt, presseTag öffnet sie (Prüfung DR2, DR4: nur, solange die Sperre noch läuft) */
 function sgAnnehmenLauf(v,d){sgUrteil(v,v.antrag,'angenommen',d);}
 function sgEinspruchLauf(v,d){const E=RD.einspruch;v.einspruch=true;v.stand='einspruch';v.kosten=riA(E.kosten);
   v.urteilAm=Math.min(v.tag+RD.verfahren.urteilSpaetestens,d+riA(RD.verfahren.urteilTage));

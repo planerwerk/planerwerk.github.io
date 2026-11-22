@@ -92,6 +92,17 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 22.11.2026: Korrekturen nach Prüfung DS zur Korrektur DR (Zweig `mitarbeit/popolupo-k14b-kabinen-karten`)
+
+- Ein lesender Prüf-Agent hat die Wege nach dem Abpfiff verfolgt (Konsistenzprüfung DS). Die Korrektur DR trägt.
+- **Behoben:**
+  - DS1: Die vorgemerkte Pressekonferenz zum Urteil kommt nur, solange er dein Spieler ist und die Sperre läuft.
+  - DS2: Keine Pressekonferenz über das Saisonende hinaus.
+  - DS3: Kein altes Interview nach einem Jobwechsel.
+  - DS4: Abstand ab dem Tag der Pressekonferenz.
+  - DS5: Test Nr. 7 prüft den Tag danach.
+- **Tests zuerst:** `tests/presse.js` (Nr. 7, K29g), dann `fuzz-karrieren.js` und `ui-zwei-saisons.js` (ein paar Halte mehr).
+
 ### 22.11.2026: K14b Kabinen-Karten (Zweig `mitarbeit/popolupo-k14b-kabinen-karten`, auf K25e)
 
 - **Neu (K14 §8):** drei Ereigniskarten, alle mit Wirkungen, die es schon gibt.

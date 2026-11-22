@@ -55,8 +55,11 @@ const gegner=w=>w.S.teams.find(x=>x.lg===w.t.lg&&x.id!==VEREIN).id;
 
 // 7. Auslöser Krise: drei Liganiederlagen in Folge öffnen die Pressekonferenz mit Serie 3; der Anlass würfelt nicht im Grundstrom
 {const w=welt(false),{F,S,t}=w,g=gegner(w),lg=t.lg;for(let k=0;k<3;k++)S.res[lg].push([VEREIN,g,0,1,k]);const z0=JSON.stringify(S.zufall);
-  F.presseNachSpiel({h:VEREIN,a:g,hg:0,ag:1,lg});const z1=JSON.stringify(S.zufall);
-  pruef(!!S.pk&&S.pk.art==='krise'&&S.pk.serie===3&&z0===z1,'Krise: nach drei Niederlagen in Folge eine Pressekonferenz „Krise“ mit Serie 3, ohne Griff in den Grundstrom',S.pk?`${S.pk.art}, Serie ${S.pk.serie}`:'keine');}
+  F.presseNachSpiel({h:VEREIN,a:g,hg:0,ag:1,lg});const z1=JSON.stringify(S.zufall);const pk=S.pk,d=S.tag;
+  // seit DR1: am Tag danach, mit Halt; am Tag danach bleibt sie, einen Tag später übernimmt der Co-Trainer (Prüfung DS5)
+  const morgen=!!pk&&pk.tag===d+1&&F.haltGrund(d+1)!=='';F.presseTag(d+1);const bleibt=S.pk===pk;F.presseTag(d+2);const weg=!S.pk;
+  pruef(!!pk&&pk.art==='krise'&&pk.serie===3&&z0===z1&&morgen&&bleibt&&weg,'Krise: nach drei Niederlagen in Folge eine Pressekonferenz „Krise“ mit Serie 3 am Tag danach mit Halt, ohne Griff in den Grundstrom',
+    pk?`${pk.art}, Serie ${pk.serie}, Tag ${pk.tag - d}, Halt ${morgen}, bleibt ${bleibt}, danach weg ${weg}`:'keine');}
 
 // K29b. Medienpolitik (K29 §6): offen zieht das Medienklima je Woche bis 70 hoch, abgeschottet bis 30 herunter, zurückhaltend zur Mitte (seit DF1); schlechtes Klima macht Gerüchte über dich
 //       häufiger (Faktor 1,5 bei 0, 0,5 bei 100); mit Lernstufen (Bereich presse in der Automatik) gilt der Standard
