@@ -717,6 +717,9 @@ const REGELN={
     verfahren:{antragTage:[1,2],frist:2,urteilTage:[2,5],urteilSpaetestens:10,archiv:60},
     einspruch:{kosten:[10000,30000],gemindert:0.25,erhoeht:0.10,hart:{gemindert:0.35,erhoeht:0.05},eindeutig:{gemindert:0.10,erhoeht:0.15}},
     ki:{einspruchWichtig:0.6,einspruchSonst:0.1},
+    // Vereinsstrafe nach einem Urteil (K09 §5.2, K14 §6, K09c, 22.11., popolupo, GESCHÄTZT): je Spiel Sperre jeSpiel nach Liga, Antwort binnen tage Tagen.
+    // Verhängen: Stimmung des Spielers stimmung, Glaubwürdigkeit glaub, das Geld kommt in die Vereinskasse. Erlassen: erlassStimmung, erlassGlaub. Ohne Antwort keine Strafe.
+    vereinsstrafe:{jeSpiel:{1:20000,2:8000,3:3000},tage:3,stimmung:-6,glaub:2,erlassStimmung:3,erlassGlaub:-1},
     schiri:{proLiga:24,strenge:[0.85,1.15],elfmeter:[0.9,1.1]}},
   // Medizin (K10 §11, Welle 2). Häufigkeit nach echten Ankern (UEFA-Studie: etwa 50 Verletzungen je 25er-Kader und Saison, 12–14 % des Kaders fehlen im Schnitt).
   // k: Anteil Kontakt (Foul, Zweikampf). Überlastung im Spiel zieht Arten mit Gewicht anteil × (1 − k), Kontakt anteil × k, Training anteil.

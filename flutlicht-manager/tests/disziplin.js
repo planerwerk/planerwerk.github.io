@@ -43,4 +43,16 @@ pruef(ein>0&&ein<urteile.length,'Computer-Vereine legen manchmal Einspruch ein',
   pruef(sp.pokal.rot===1&&sp.pokal.gelb===0&&sp.liga.gelb===0&&p.kt.liga===0,'Saisonwechsel: Gelbe und Gelbsperren verfallen, Rot im Pokal läuft weiter',JSON.stringify(sp));
   sp.pokal.rot=0;}
 console.log(`\n${N} Saison(s), ${sum.spiele} Ligaspiele, in ${((Date.now()-t0)/1000).toFixed(1)} s`);
+// K09c. Vereinsstrafe (K09 §5.2, K14 §6): nach einem Urteil gegen deinen Spieler eine Karte im Büro. Verhängen bringt Geld, drückt seine Stimmung und hebt die
+//       Glaubwürdigkeit, verzichten umgekehrt. Unter der Automatik des Sportgerichts gibt es sie nicht. Eigene Welt, weil F.sgUrteil oben ersetzt ist.
+{const {neueWelt}=require('./sim'),lauf=(ja,auto)=>{const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S,ev=W.ev;S.my=6;S.mgr='Test';F.setTarget();
+    if(auto){F.lizenzStart(true);S.lizenz.auto.sportgericht=1;}const p=ev('squad')(S.my)[0];ev('stimmung')(p);p.st=50;const t=ev('myT()');t.glaub=50;
+    F.sgUrteil({pid:p.id,team:S.my,wb:'liga',art:'grob',tag:S.tag,antrag:2,gesessen:0,vor:0},2,'angenommen',S.tag);const karte=F.vereinsstrafeKarte();
+    if(!karte)return{karte:false};const b=S.vstrafe.betrag,f0=S.fin['Vereinsstrafen']||0;F.vereinsstrafe(ja);
+    return{karte:true,geld:(S.fin['Vereinsstrafen']||0)-f0,b,st:p.st,glaub:ev('glaub')(t),weg:!S.vstrafe,soll:2*(ev('RD').vereinsstrafe.jeSpiel[t.lg]||ev('RD').vereinsstrafe.jeSpiel[3])};};
+  const ja=lauf(1,false),nein=lauf(0,false),au=lauf(1,true);
+  pruef(ja.karte&&ja.geld===ja.b&&ja.b===ja.soll&&ja.st<50&&ja.glaub>50&&ja.weg&&nein.karte&&nein.geld===0&&nein.st>50&&nein.glaub<50&&!au.karte,
+    'Vereinsstrafe: Karte nach dem Urteil, verhängen (Geld, Stimmung runter, Glaubwürdigkeit rauf), verzichten (umgekehrt), keine unter der Automatik',
+    `verhängt ${ja.geld} € (soll ${ja.soll}), Stimmung ${ja.st}, Glaubwürdigkeit ${ja.glaub}; verzichtet Stimmung ${nein.st}, Glaubwürdigkeit ${nein.glaub}; Automatik ${au.karte}`);}
+
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);
