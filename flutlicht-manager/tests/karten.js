@@ -10,7 +10,7 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
 
 // 1. Prüfskript (K30 §10): erlaubte Wirkungen, bekannte Platzhalter, Auslöser vorhanden, Stufe bekannt, Entscheidungen mit 2–3 Optionen und gültiger Voreinstellung
 {const {ev}=welt(),K=ev('KARTEN'),A=ev('AUSLOESER'),erlaubt=ev('KARTEN_WIRKUNGEN'),stufen=Object.keys(ev('RKT').seltenheit),fehler=[],ids=new Set();
-  const platz=t=>(t.match(/\{[a-z]+\}/g)||[]).filter(x=>!['{spieler}','{verein}','{praesident}'].includes(x));
+  const platz=t=>(t.match(/\{[a-z]+\}/g)||[]).filter(x=>!['{spieler}','{verein}','{praesident}','{mitarbeiter}'].includes(x));
   K.forEach(c=>{if(ids.has(c.id))fehler.push(c.id+': doppelt');ids.add(c.id);if(!A[c.ausloeser])fehler.push(c.id+': Auslöser fehlt');if(!stufen.includes(c.stufe))fehler.push(c.id+': Stufe');
     if(!c.texte||!c.texte.length)fehler.push(c.id+': kein Text');(c.texte||[]).forEach(t=>{if(platz(t).length)fehler.push(c.id+': Platzhalter '+platz(t));});
     if(c.art==='entscheidung'){if(!c.optionen||c.optionen.length<2||c.optionen.length>3)fehler.push(c.id+': Optionen');if(!(c.auto>=0&&c.auto<(c.optionen||[]).length))fehler.push(c.id+': Voreinstellung');}
@@ -115,6 +115,16 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   const v=b?S.teams[b.verein]:S.teams.find(x=>x.id!==S.my),c0=v.cash,f0=S.fin['Jugend: Abgänge']||0;wirk({art:'jugendWeg',wert:1},{spieler:p2.id,verein:v.id},{titel:'Test'});
   const geld=(S.fin['Jugend: Abgänge']||0)-f0,weg=p2.team===v.id&&!S.jg.includes(p2)&&!!p2.wvb&&p2.wvb.tid===S.my&&c0-v.cash===geld;
   pruef(ohne===null&&!!b&&hoch&&weg,'Talent gelockt: Auslöser, Profivertrag in den Kader, Wechsel mit Ausbildungsentschädigung und Beteiligung',`ohne Talent ${ohne}, Auslöser ${!!b}, Profivertrag ${hoch}, Wechsel ${weg} (${geld} €)`);}
+
+// K16c. Mitarbeiter abgeworben (K16 §8): Auslöser mit einem guten Mitarbeiter und einem Verein mit mehr Ansehen und freiem Platz; ziehen lassen: er wechselt, Ablöse
+//       ein Jahresgehalt; halten: Gehalt + 20 %; der Platzhalter {mitarbeiter} nennt Name und Rolle
+{const {S,ev,im}=welt(),A=ev('AUSLOESER'),K=ev('RKT').stab,R=ev('RST'),t=ev('myT()');const x=ev('stabNeu')('athletik',K.qAb+2,S.my,t.lg);S.stab.push(x);ev('stabGeaendert')();
+  const b0=im('k16c',()=>A.stabAbgeworben()),wirk=ev('kartenWirkung'),text=ev('kartenText')('{mitarbeiter}',{stab:x.id});
+  const sal0=x.sal;wirk({art:'stabHalten',wert:0.2},{stab:x.id},{titel:'Test'});const halten=x.sal===Math.round(sal0*1.2/1000)*1000&&x.team===S.my;
+  const v=S.teams.find(y=>y.id!==S.my&&ev('aktiv')(y)&&ev('stabVon')(y.id,'athletik').length<R.rollen.athletik.plaetze),f0=S.fin['Stab: Ablöse']||0,c0=v.cash;
+  wirk({art:'stabWeg',wert:1},{stab:x.id,verein:v.id},{titel:'Test'});const geld=(S.fin['Stab: Ablöse']||0)-f0,weg=x.team===v.id&&geld===Math.round(x.sal*K.abloese/1000)*1000&&c0-v.cash===geld;
+  pruef(!!b0&&halten&&weg&&text.includes(x.n)&&text.includes(R.rollen.athletik.name),'Mitarbeiter abgeworben: Auslöser, halten mit mehr Gehalt, wechseln mit Ablöse, Platzhalter',
+    `Auslöser ${!!b0}, halten ${halten}, wechseln ${weg} (${geld} €), Text ${text}`);}
 
 // U19e. Europapokal-Karten (K37 §8): Auswärtsspiel bei einem Auslandsverein in den nächsten 7 Tagen (kein Heimspiel, nicht später, nicht das Finale), Spiel 1 bis 7 Tage her,
 //       Wunder nach 0:3 im Hinspiel und 4:0 oder 3:0 mit Elfmeterschießen im Rückspiel, nicht nach nur einem Tor Rückstand und nicht beim Ausscheiden. euMeineSpiele ersetzt der Test.

@@ -84,6 +84,11 @@ const KARTEN=[
     texte:['{verein} hat ein Auge auf {spieler} aus deiner Jugend geworfen. Sein Berater lässt durchblicken: Ohne Profivertrag ist er weg.','Die Scouts von {verein} saßen bei jedem Jugendspiel von {spieler}. Jetzt liegt ein Angebot auf dem Tisch.'],
     optionen:[{text:'Profivertrag anbieten',wirkung:[{art:'jugendHoch',wert:1},{art:'fans',wert:1}],folge:'{verein} geht leer aus.'},
       {text:'Ziehen lassen',wirkung:[{art:'jugendWeg',wert:1}],folge:''}],auto:0},
+  // Stab (K16 §8, K16c, 22.11.). Neue Wirkungen stabWeg (Wechsel mit Ablöse) und stabHalten (Gehalt + wert), neuer Platzhalter {mitarbeiter}.
+  {id:'stabAbgeworben',titel:'Mitarbeiter abgeworben',bereich:'K16',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'stabAbgeworben',sperrTage:365,
+    texte:['{verein} will {mitarbeiter} aus deinem Stab holen und bietet ihm deutlich mehr Verantwortung.','{mitarbeiter} hat ein Angebot von {verein} auf dem Tisch. Er fragt, ob du ihn ziehen lässt.'],
+    optionen:[{text:'Ziehen lassen',wirkung:[{art:'stabWeg',wert:1}],folge:''},
+      {text:'Mit mehr Gehalt halten',wirkung:[{art:'stabHalten',wert:0.2}],folge:''}],auto:1},
   // Training (K07 §8, K07c, 22.11.). Neue Wirkung pause: Frische des Spielers + wert, Spielpraxis − REGELN.karten.training.pauseSpielpraxis.
   {id:'pauseBitte',titel:'Spieler bittet um Pause',bereich:'K07',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'pauseBitte',sperrTage:60,
     texte:['{spieler} kommt nach dem Training zu dir: Die Beine sind schwer, er bittet um zwei freie Tage.','Der Athletiktrainer meldet, {spieler} sei platt. Er selbst würde gern kurz durchschnaufen.'],

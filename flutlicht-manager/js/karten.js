@@ -54,6 +54,10 @@ const AUSLOESER={
   pauseBitte(){const T=RKT.training,l=squad(S.my).filter(p=>!(p.inj>0)&&p.fit<T.pauseUnter&&profi(p)>=T.profiAb);return l.length?{spieler:pick(l).id}:null;},
   // Jugend (K08 §8, K08b): Talent zum Probetraining, jederzeit in der Saison
   probetraining(){return S.phase==='play'?{}:null;},
+  // Stab (K16 §8, K16c): ein Mitarbeiter deines Stabs ab Qualität RKT.stab.qAb (Pflichtrollen nur, wenn du mehr als einen hast) und ein Verein mit mehr Ansehen und freiem Platz
+  stabAbgeworben(){const K=RKT.stab,t=myT(),l=[];(S.stab||[]).filter(x=>x.team===S.my&&x.q>=K.qAb&&(!RST.rollen[x.r].pflicht||stabVon(S.my,x.r).length>1)).forEach(x=>
+    S.teams.forEach(b=>{if(b.id!==S.my&&aktiv(b)&&b.rep>=t.rep+K.ansehenPlus&&stabVon(b.id,x.r).length<RST.rollen[x.r].plaetze)l.push({stab:x.id,verein:b.id});}));
+    return l.length?pick(l):null;},
   // K08c: ein Talent deiner Jugend ab RKT.jugend.lockAb mit Talent ab deinem Kaderschnitt + lockPlus, dazu ein Verein mit Ansehen ab deinem + grossPlus
   talentGelockt(){const J=RKT.jugend,t=myT(),lvl=teamLevel(S.my);if(S.jgV!==S.my)return null;const l=(S.jg||[]).filter(p=>p.age>=J.lockAb&&p.pot>=lvl+J.lockPlus);
     const v=S.teams.filter(x=>x.id!==S.my&&aktiv(x)&&x.rep>=t.rep+J.grossPlus);return l.length&&v.length?{spieler:pick(l).id,verein:pick(v).id}:null;},
@@ -99,6 +103,7 @@ function kartenWoche(d){if(S.phase!=='play'||S.fired)return;const K=karten(),W=k
 // Text mit Platzhaltern, Varianten reihum
 function kartenText(t,b){const p=b.spieler!=null?PIX.get(b.spieler):null,v=b.verein!=null?(b.verein>=AV0?avVon(b.verein):S.teams[b.verein]):null; // Auslandsverein und Name eines Ehemaligen seit U18b
   return t.replace(/\{spieler\}/g,p?p.n:(b.name||'ein Spieler')).replace(/\{verein\}/g,v?v.name:'ein Verein').replace(/\{praesident\}/g,'der Präsident')
+    .replace(/\{mitarbeiter\}/g,()=>{const x=b.stab!=null?(S.stab||[]).find(y=>y.id===b.stab):null;return x?`${x.n} (${RST.rollen[x.r].name})`:'ein Mitarbeiter';}) /* K16c */
     .replace(/\{geld:(-?\d+)\}/g,(m,x)=>fmt(Math.abs(kartenGeld(+x))));} // Betrag nach Liga (K23f)
 // Geldbetrag einer Karte nach der Liga deines Vereins (K23f): Grundwert × RKT.geldLiga, auf 1.000 € gerundet
 const kartenGeld=w=>{const t=S.teams&&S.teams[S.my],f=(RKT.geldLiga||{})[t?t.lg:3]||1;return Math.round(w*f/1000)*1000;};
@@ -141,9 +146,10 @@ function kartenWirkung(w,b,c){let wert=w.wert,txt='';if(w.chance!=null){const ok
   else if(w.art==='talent'){if(wert>0){jugendKader();const q=jugendNeu(wert);q.age=RKT.jugend.alter;eigenschaftenNeu(q);S.jg.push(q);PIX.set(q.id,q);news(`${q.n} (${q.pos}, ${q.age}) kommt nach dem Probetraining in deine Jugend.`,'good');}} /* K08b: neues Talent mit Plus wert */
   else if(w.art==='jugendHoch'){if(p&&istJugend(p)&&(S.jg||[]).includes(p)){if(squad(S.my).length>=RM.kaderMax)news(`Im Kader ist kein Platz, ${p.n} bleibt vorerst in der Jugend.`,'');else{jugendHoch(p);news(`${p.n} unterschreibt seinen ersten Profivertrag.`,'good');}}} /* K08c */
   else if(w.art==='jugendWeg'){const v=b.verein!=null?S.teams[b.verein]:null;if(p&&v&&aktiv(v)&&istJugend(p)&&(S.jg||[]).includes(p))karteJugendWeg(p,v);} /* K08c: wechselt wirklich zum lockenden Verein */
+  else if(w.art==='stabWeg'||w.art==='stabHalten'){const x=b.stab!=null?(S.stab||[]).find(y=>y.id===b.stab):null,v=b.verein!=null?S.teams[b.verein]:null;if(x&&x.team===S.my)karteStab(x,v,w.art==='stabWeg',wert);} /* K16c */
   else if(w.art==='pause'){if(p&&p.team===S.my){p.fit=Math.min(100,p.fit+wert);p.sp=Math.max(0,(p.sp||0)-RKT.training.pauseSpielpraxis);}} /* K07c: Frische +wert, etwas Spielpraxis weg */
   return txt;}
-const KARTEN_WIRKUNGEN=['stimmung','stimmungAlle','zusammenhalt','glaub','vertrauen','ruf','bezDu','geld','fans','verpflichten','interesse','angebot','maezen','merch','jobwechsel','pause','talent','jugendHoch','jugendWeg'];
+const KARTEN_WIRKUNGEN=['stimmung','stimmungAlle','zusammenhalt','glaub','vertrauen','ruf','bezDu','geld','fans','verpflichten','interesse','angebot','maezen','merch','jobwechsel','pause','talent','jugendHoch','jugendWeg','stabWeg','stabHalten'];
 // Höchstes Ansehen eines Vereins, der dir einen Job anbietet: dieselbe Mitte wie die Jobangebote nach einer Entlassung (saison.js mkJobs) plus jobangebot.rufSpanne
 const jobangebotGrenze=()=>{const J=RV.jobs;return myT().rep-J.ansehenAbschlag+(ruf()-RV.ruf.start)*RV.ruf.jobsJePunkt+RV.jobangebot.rufSpanne;};
 // Vereinswechsel (saison.js takeJob, vor dem Wechsel): offene Karten entscheidet der Co-Trainer noch für den alten Verein, sie wandern nicht mit (Prüfung DQ3)
@@ -160,6 +166,11 @@ function karteVerpflichten(p,f){p.team=S.my;p.list=0;p.ct=1;p.sal=Math.round(sal
 function karteJugendWeg(p,v){const N=RS.nachwuchs,preis=Math.min(jugendPreis(p),Math.max(0,v.cash));S.jg=S.jg.filter(x=>x!==p);p.team=v.id;p.seit=absTag(S.tag);p.abl=preis;p.ej=S.my;p.wvb={tid:S.my,anteil:RJ.verkauf.anteil,von:v.id};p.ct=N.vertrag;p.sal=Math.round(salaryFor(p.str)*N.gehalt/1000)*1000;
   p.sp=RP.startSpielpraxis;delete p.trf;delete p.ent;S.pl.push(p);PIX.set(p.id,p);if(preis){money('Jugend: Abgänge',preis);v.cash-=preis;}neuzugang(p,v.id);kabineInit(p);rollenBerechnen(v.id);
   news(`${p.n} wechselt aus deiner Jugend zu ${v.name}${preis?`, Ausbildungsentschädigung ${fmt(preis)}`:''}.`,'tr');}
+// Mitarbeiter abgeworben (K16c): weg = er wechselt (Ablöse RKT.stab.abloese × Jahresgehalt vom Verein an dich, nur mit freiem Platz dort), sonst bleibt er mit wert mehr Gehalt
+function karteStab(x,v,weg,wert){const K=RKT.stab,rolle=RST.rollen[x.r].name;
+  if(weg){if(!v||!aktiv(v)||stabVon(v.id,x.r).length>=RST.rollen[x.r].plaetze){news(`${x.n} bleibt doch, ${v?v.name:'der Verein'} hat keinen Platz mehr.`,'');return;}
+    const a=Math.round(x.sal*K.abloese/1000)*1000;x.team=v.id;x.wiv=0;if(a){money('Stab: Ablöse',a);v.cash-=a;}stabGeaendert();news(`${x.n} (${rolle}) wechselt zu ${v.name}${a?`, Ablöse ${fmt(a)}`:''}.`,'tr');return;}
+  x.sal=Math.round(x.sal*(1+wert)/1000)*1000;news(`${x.n} (${rolle}) bleibt, für ${fmt(x.sal)} im Jahr.`,'');}
 function kartenLog(c,tag,wahl,auto){const K=karten();K.log.push({id:c.id,s:S.season,tag,wahl,auto});if(K.log.length>RKT.log)K.log.splice(0,K.log.length-RKT.log);}
 
 // ---------- Anzeige im Büro ----------
