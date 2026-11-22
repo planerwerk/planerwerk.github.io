@@ -30,6 +30,7 @@ function vorstandWoche(){const t=myT(),V=RV.vertrauen;
 // Nach jedem Spieltag und jeden Montag. Grenze und Schonfrist aus der Schwierigkeit (K02). Unter der Grenze nach der Schonfrist: Ultimatum über RV.ultimatum.spiele Ligaspiele.
 // Danach wieder an der Grenze: aufgehoben. Sonst Entlassung nach der Geduld des Präsidenten (eigener Strom), sonst ein letztes Ultimatum. Nach dem letzten: Entlassung.
 function vorstandPruefen(){const St=stufe(),U=RV.ultimatum;if(S.fired||S.phase!=='play')return;
+  {const H=S.trustHalt;if(H&&H.tid===S.my&&H.bis>=absTag(S.tag))S.trust=Math.max(S.trust,H.min);} // Rückendeckung (Karte, K28 §8, K30e): einen Monat nicht unter dem Wert des Tages
   if(S.ult&&(S.ult.tid!==S.my||S.ult.s!==S.season))S.ult=null; // Verein oder Saison gewechselt
   const sp=meineSpieltage();
   if(!S.ult){if(S.trust<St.entlassenUnter&&sp>St.schonfrist){S.ult={tid:S.my,s:S.season,ab:sp,n:1};

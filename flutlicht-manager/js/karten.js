@@ -87,6 +87,10 @@ const AUSLOESER={
   spruchViral(){const T=RKT.presse.viralTage,l=((S.stat&&S.stat.chronik)||[]).filter(c=>c.tid===S.my&&c.s===S.season&&S.tag-c.tag>=0&&S.tag-c.tag<=T);return l.length?{}:null;},
   kampfansageRivale(){const e=naechstesSpiel(S.tag+1);if(!e||e.tag-S.tag>RKT.presse.vorTage)return null;const pa=paarung(e);if(!pa)return null;const g=pa[0]===S.my?pa[1]:pa[0];
     return g!=null&&g<1000&&presseS().aussagen.some(a=>!a.ok&&a.art==='ankuendigung'&&a.gegner===g&&a.s===S.season)?{verein:g}:null;},
+  // Testspiele (K11 §8, K30e): in den letzten RKT.testspiel.nachTage Tagen ein Testspiel beim Amateurverein (Dorfverein) oder eine Niederlage gegen einen Amateurverein (Blamage)
+  dorfverein(){const N=RKT.testspiel.nachTage,l=(S.testspiele||[]).filter(x=>x.stand==='gespielt'&&x.gegner>=1000&&x.gegner<AV0&&!x.heim&&S.tag-x.tag>=0&&S.tag-x.tag<=N);return l.length?{verein:l[l.length-1].gegner}:null;},
+  blamage(){const N=RKT.testspiel.nachTage,l=(S.testspiele||[]).filter(x=>x.stand==='gespielt'&&x.erg&&x.gegner>=1000&&x.gegner<AV0&&S.tag-x.tag>=0&&S.tag-x.tag<=N&&(x.heim?x.erg.hg<x.erg.ag:x.erg.ag<x.erg.hg));
+    return l.length?{verein:l[l.length-1].gegner}:null;},
   // Folgekarte der Kette (nur über kartenKette, mit den Beteiligten der ersten Karte): Der Spieler ist noch beim selben Verein und noch nicht vergeben
   dritterNoch(b){const p=b&&b.spieler!=null?PIX.get(b.spieler):null;return p&&p.team===b.verein&&!p.wech&&!istLeihe(p)&&S.teams[p.team]&&aktiv(S.teams[p.team])?b:null;},
   // Presse (K29 §8, K17 §8, K29k): Medienklima unter RKT.presse.leckUnter; ein Verein deiner Liga mit Beziehung unter RBZ.wirkung.gespraechUnter
@@ -163,14 +167,15 @@ function kartenKette(d){const K=S.karten;if(!K||!K.kette||!K.kette.length)return
   faellig.forEach(e=>{if(e.s!==S.season)return;const c=karteVon(e.id),f=c&&AUSLOESER[c.ausloeser],b=f?f(e.b):null;if(!b)return;
     let halt=false;if(c.art==='entscheidung'){halt=entscheidungImBudget(c,W,d);if(halt)kartenHaltZaehlen(c,W);}kartenZeigen(c,b,d,halt);});}
 // Text mit Platzhaltern, Varianten reihum
-function kartenText(t,b){const p=b.spieler!=null?PIX.get(b.spieler):null,v=b.verein!=null?(b.verein>=AV0?avVon(b.verein):S.teams[b.verein]):null; // Auslandsverein und Name eines Ehemaligen seit U18b
+function kartenText(t,b){const p=b.spieler!=null?PIX.get(b.spieler):null,v=b.verein!=null?(b.verein>=AV0?avVon(b.verein):b.verein>=1000?(S.am||[])[b.verein-1000]:S.teams[b.verein]):null; // Auslandsverein und Name eines Ehemaligen seit U18b, Amateurverein seit K30e
   return t.replace(/\{spieler\}/g,p?p.n:(b.name||'ein Spieler')).replace(/\{verein\}/g,v?v.name:'ein Verein').replace(/\{praesident\}/g,'der Präsident')
     .replace(/\{mitarbeiter\}/g,()=>{const x=b.stab!=null?(S.stab||[]).find(y=>y.id===b.stab):null;return x?`${x.n} (${RST.rollen[x.r].name})`:'ein Mitarbeiter';}) /* K16c */
     .replace(/\{geld:(-?\d+)\}/g,(m,x)=>fmt(Math.abs(kartenGeld(+x))));} // Betrag nach Liga (K23f)
 // Geldbetrag einer Karte nach der Liga deines Vereins (K23f): Grundwert × RKT.geldLiga, auf 1.000 € gerundet
 const kartenGeld=w=>{const t=S.teams&&S.teams[S.my],f=(RKT.geldLiga||{})[t?t.lg:3]||1;return Math.round(w*f/1000)*1000;};
 function kartenZeigen(c,b,d,halt){const K=karten(),i=K.v[c.id]||0,text=kartenText(c.texte[i%c.texte.length],b);K.v[c.id]=i+1;
-  if(c.art==='info'){news(`${c.titel}: ${text}`,'');kartenLog(c,d,null,false);return;}
+  if(c.art==='info'){const z=c.wirkung?mitStrom(strom('ereignisse',S.season,d,c.id),()=>c.wirkung.map(w=>kartenWirkung(w,b,c)).filter(Boolean)):[]; /* Info-Karten mit Wirkung (K30e) */
+    news(`${c.titel}: ${text}${z.length?' '+z.map(t=>kartenText(t,b)).join(' '):''}`,'');kartenLog(c,d,null,false);return;}
   const k={id:c.id,tag:d,s:S.season,b,text};
   if(halt){K.offen.push(k);news(`${c.titel}: ${text} Deine Entscheidung steht im Büro.`,'offer');return;}
   kartenEntscheiden(k,c.auto,true);}
@@ -229,10 +234,11 @@ function kartenWirkung(w,b,c){let wert=w.wert,txt='',erfolg=true;if(w.chance!=nu
   else if(w.art==='gruppeStimmung'){const g=p?(grueppchen(S.my).find(l=>l.includes(p))||(p.team===S.my?[p]:[])):[];g.forEach(x=>stimmungAendern(x,wert));} /* K14e: alle im Grüppchen des Beteiligten (zerfallen: nur er) */
   else if(w.art==='transferliste'){erfolg=false;if(!frei('transfers'))txt='Die Transfers führt noch der Verein.';else if(p&&p.team===S.my&&!p.wech&&!p.leihe){if(S.unv)delete S.unv[p.id];p.list=1;p.ask=Math.max(RM.runden,rundeAb(value(p)*wert));erfolg=true;news(`${p.n} steht für ${fmt(p.ask)} auf der Transferliste.`);}else if(p)txt=`${p.n} ist nicht mehr da.`;} /* K14e: wie setListed, Forderung wert × Marktwert */
   else if(w.art==='zurueckrudern'){let n=0;presseS().aussagen.forEach(a=>{if(!a.ok&&a.art==='ankuendigung'&&a.gegner===b.verein){a.ok=1;n++;}});if(!n){erfolg=false;txt='Die Kampfansage ist schon erledigt.';}} /* K29l: Kampfansage zurückgenommen, nach dem Spiel weder Kult noch Häme */
+  else if(w.art==='vertrauenHalt')S.trustHalt={tid:S.my,bis:absTag(S.tag)+wert,min:S.trust}; /* K30e, K28 §8: Vertrauen wert Tage nicht unter dem heutigen (vorstandPruefen) */
   if(w.dann&&erfolg&&KARTEN_MIT_ERFOLG.includes(w.art)){const t=w.dann.map(x=>kartenWirkung(x,b,c)).filter(Boolean);txt=[w.gut||'',...t].filter(Boolean).join(' ');}
   return txt;}
 const KARTEN_MIT_ERFOLG=['leihe','gehaltAnpassen','provisionZahlen','spezialist','transferliste','zurueckrudern']; // Wirkungen, die melden, ob sie geklappt haben (für dann)
-const KARTEN_WIRKUNGEN=['stimmung','stimmungAlle','zusammenhalt','glaub','vertrauen','ruf','bezDu','geld','fans','verpflichten','interesse','angebot','maezen','merch','jobwechsel','pause','talent','jugendHoch','jugendWeg','stabWeg','stabHalten','preisRichtwert','gehaltAnpassen','beraterBez','zuschuss','sonderschicht','leihe','selbstvertrauen','provisionZahlen','dritter','nachlass','hygiene','spezialist','gruppeStimmung','transferliste','zurueckrudern'];
+const KARTEN_WIRKUNGEN=['stimmung','stimmungAlle','zusammenhalt','glaub','vertrauen','ruf','bezDu','geld','fans','verpflichten','interesse','angebot','maezen','merch','jobwechsel','pause','talent','jugendHoch','jugendWeg','stabWeg','stabHalten','preisRichtwert','gehaltAnpassen','beraterBez','zuschuss','sonderschicht','leihe','selbstvertrauen','provisionZahlen','dritter','nachlass','hygiene','spezialist','gruppeStimmung','transferliste','zurueckrudern','vertrauenHalt'];
 // Ausgang des lachenden Dritten (K30 §8.3, K17 §5.4, K30c): Unterschreibt der Spieler bei dir (aktionen.js offer, vor dem Abschluss), sinkt die Beziehung zwischen den beiden
 // anderen Vereinen um RKT.dritter.zwischen, deine zu ihnen um RKT.dritter.du, nach geschicktem Vorgehen (leise) gar nicht. Nur in derselben Saison, vom selben Verein, für deinen Verein.
 function dritterKauf(p,von){const m=p&&p.ld3;if(!m)return;delete p.ld3;if(m.s!==S.season||m.t!==S.my||m.v!==von||!m.mit||m.mit.length<2)return;const L=RKT.dritter,[a,b]=m.mit,g=`lachender Dritter: ${p.n}`;

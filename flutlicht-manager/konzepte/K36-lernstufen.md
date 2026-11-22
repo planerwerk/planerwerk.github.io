@@ -383,6 +383,7 @@ lizenz:{
 141. **K07e Rangelei im Training, K14d Partynacht (22.11., popolupo, ohne Testlauf):** keine neue Funktion, zwei Entscheidungskarten im Bereich `ereignisse`, die zweite als Folgekarte.
 142. **K14e Grüppchenbildung (22.11., popolupo, ohne Testlauf):** keine neue Funktion, eine Entscheidungskarte im Bereich `ereignisse`. Die Transferliste setzt die Karte nur, wenn die Transfers frei sind (sonst „Die Transfers führt noch der Verein“).
 143. **K29l Presse-Karten (22.11., popolupo, ohne Testlauf):** keine neue Funktion, zwei Entscheidungskarten im Bereich `ereignisse`.
+144. **K30e Info-Karten mit Wirkung (22.11., popolupo, ohne Testlauf):** keine neue Funktion. Drei Meldungen im Bereich `ereignisse` wirken jetzt: Rückendeckung, Dorfverein, Blamage.
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 

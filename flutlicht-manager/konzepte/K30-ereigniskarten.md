@@ -251,6 +251,15 @@ Noch nicht gebaut: verzögerte Folgen ohne eigene Karte, die Chronik über alle 
 4. **Keine Lizenzprüfung im Auslöser** (wie bei allen Karten). Das Angebot machst du auf dem Transfermarkt, dort gelten Lizenz und Transfersperre.
 5. **Werte geschätzt** (`REGELN.karten.dritter`, Kosten, Chancen und Nachlass im Katalog).
 
+**Info-Karten mit Wirkung (K30e, 22.11.2026, popolupo, ohne Testlauf):**
+
+- Eine Info-Karte kann `wirkung:[…]` tragen. Die Wirkungen gelten sofort beim Erscheinen, gewürfelt im Strom `ereignisse` von Saison, Tag und Karte. Ihre Texte stehen hinter der Meldung.
+- Bisher:
+  - „Rückendeckung vom Vorstand“ (K28 §8): 30 Tage lang fällt das Vertrauen nicht unter den Wert des Tages (`vertrauenHalt`, `S.trustHalt`, angewandt in `vorstandPruefen`).
+  - „Dorfverein im Ausnahmezustand“ (K11 §8): Fans +1, bis 7 Tage nach einem Testspiel beim Amateurverein.
+  - „Blamage gegen Amateure“ (K11 §8): Vertrauen −1, Fans −1, bis 7 Tage nach einer Niederlage gegen einen Amateurverein.
+- `{verein}` nennt seit K30e auch Amateurvereine beim Namen.
+
 **Folgewirkungen nur bei Erfolg (`dann`, seit Prüfung EE, 22.11.2026):**
 
 - Eine Wirkung kann `dann:[…]` tragen. Diese Wirkungen kommen nur, wenn die erste geklappt hat, dazu ihr Text `gut`. Sonst zeigt die Karte den Grund des Scheiterns.

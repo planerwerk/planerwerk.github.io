@@ -13,6 +13,7 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   const platz=t=>(t.match(/\{[a-z]+\}/g)||[]).filter(x=>!['{spieler}','{verein}','{praesident}','{mitarbeiter}'].includes(x));
   K.forEach(c=>{if(ids.has(c.id))fehler.push(c.id+': doppelt');ids.add(c.id);if(!A[c.ausloeser])fehler.push(c.id+': Auslöser fehlt');if(!stufen.includes(c.stufe))fehler.push(c.id+': Stufe');
     if(c.chance!=null&&!(c.chance>0&&c.chance<=1))fehler.push(c.id+': chance'); /* Anlasskarten (K30d) */
+    (c.wirkung||[]).forEach(w=>{if(!erlaubt.includes(w.art))fehler.push(c.id+': Wirkung '+w.art);});if(c.wirkung&&c.art!=='info')fehler.push(c.id+': wirkung nur an Info-Karten'); /* K30e */
     if(!c.texte||!c.texte.length)fehler.push(c.id+': kein Text');(c.texte||[]).forEach(t=>{if(platz(t).length)fehler.push(c.id+': Platzhalter '+platz(t));});
     if(c.art==='entscheidung'){if(!c.optionen||c.optionen.length<2||c.optionen.length>3)fehler.push(c.id+': Optionen');if(!(c.auto>=0&&c.auto<(c.optionen||[]).length))fehler.push(c.id+': Voreinstellung');}
     else if(c.art!=='info')fehler.push(c.id+': Art');
@@ -289,6 +290,18 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
     const c=ev('karteVon')('kampfansageRivale'),gl=ev('glaub'),g0=gl(t);ev('kartenWirkung')(c.optionen[1].wirkung[0],{verein:g},c);zurueck=P.aussagen[0].ok===1&&A.kampfansageRivale()===null&&gl(t)<g0;S.tag=tag0;}
   pruef(kein===null&&viral&&alt===null&&ohne===null&&!!mit&&mit.verein===g&&weit===null&&zurueck,'Presse-Karten: Spruch viral nach Chronik, Rivale nur vor dem Spiel gegen ihn, Zurückrudern',
     `ohne Chronik ${kein}, viral ${viral}, zu alt ${alt}, Gegner ${g}, ohne Kampfansage ${ohne}, mit ${mit&&mit.verein}, zu früh ${weit}, zurückgerudert ${zurueck}`);}
+
+// K30e. Info-Karten mit Wirkung (K28 §8, K11 §8): Rückendeckung hält das Vertrauen 30 Tage auf dem Wert des Tages (vorstandPruefen hebt es an, danach nicht mehr).
+//       Dorfverein nur nach einem Testspiel beim Amateurverein, Blamage nur nach einer Niederlage gegen ihn; der Name des Amateurvereins steht in der Meldung.
+{const {S,F,ev}=welt(),A=ev('AUSLOESER'),kv=ev('karteVon'),heute=ev('absTag')(S.tag),am=1000;S.phase='play';
+  S.trust=85;F.kartenZeigen(kv('rueckendeckung'),{},S.tag,false);const halt=!!S.trustHalt&&S.trustHalt.min===85&&S.trustHalt.bis===heute+30;
+  S.trust=40;F.vorstandPruefen();const gehalten=S.trust===85;S.trustHalt.bis=heute-1;S.trust=40;F.vorstandPruefen();const vorbei=S.trust===40;
+  S.testspiele=[];const ohne=A.dorfverein()===null&&A.blamage()===null;
+  S.testspiele=[{id:1,tag:S.tag-2,gegner:am,heim:false,stand:'gespielt',erg:{hg:2,ag:1,zus:0,geld:0}}];const dorf=A.dorfverein(),bl=A.blamage();
+  const name=S.am[0].name;F.kartenZeigen(kv('dorfverein'),dorf||{verein:am},S.tag,false);const meldung=S.news.some(n=>n.t.startsWith('Dorfverein')&&n.t.includes(name));
+  S.testspiele[0].erg={hg:0,ag:3,zus:0,geld:0};const sieg=A.blamage();
+  pruef(halt&&gehalten&&vorbei&&ohne&&!!dorf&&dorf.verein===am&&!!bl&&meldung&&sieg===null,'Info-Karten mit Wirkung: Rückendeckung hält das Vertrauen, Dorfverein und Blamage nach Testspielen',
+    `Halt ${halt}, gehalten ${gehalten}, danach frei ${vorbei}, ohne Testspiel ${ohne}, Dorfverein ${dorf&&dorf.verein}, Blamage ${!!bl}, Name in der Meldung ${meldung}, nach Sieg ${sieg}`);}
 
 // U19e. Europapokal-Karten (K37 §8): Auswärtsspiel bei einem Auslandsverein in den nächsten 7 Tagen (kein Heimspiel, nicht später, nicht das Finale), Spiel 1 bis 7 Tage her,
 //       Wunder nach 0:3 im Hinspiel und 4:0 oder 3:0 mit Elfmeterschießen im Rückspiel, nicht nach nur einem Tor Rückstand und nicht beim Ausscheiden. euMeineSpiele ersetzt der Test.

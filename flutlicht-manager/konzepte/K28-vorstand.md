@@ -301,6 +301,8 @@ Nach §8 als Ereigniskarte (K30, `daten/karten.js`, Bereich `ereignisse`).
 | Neuer Präsident | Wahl alle 3–4 Jahre, Zufall | neue Charakterwerte, Ziele werden neu verhandelt |
 | Jobangebot während der Saison (Entscheidung) | Ruf hoch, Verein mit höherem Ansehen | wechseln (Ablöse für den Trainervertrag), bleiben (Vertrauen +), Gespräch publik (Glaubwürdigkeit −) |
 
+**Seit K30e** (22.11.2026, popolupo, ohne Testlauf) wirkt „Rückendeckung vom Vorstand“: 30 Tage lang fällt das Vertrauen nicht unter den Wert des Tages (K30 §5.6).
+
 ## 9. Wechselwirkungen
 
 | Konzept | Zusammenspiel |

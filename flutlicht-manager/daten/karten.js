@@ -17,7 +17,7 @@ const KARTEN=[
       {text:'Bleiben und es öffentlich sagen',wirkung:[{art:'vertrauen',wert:5},{art:'fans',wert:2}],folge:'Der Vorstand und die Fans hören es gern.'},
       {text:'Sich alles anhören und dann absagen',wirkung:[{art:'ruf',wert:1},{art:'vertrauen',wert:0,chance:0.5,schlecht:-8,gut:'Niemand hat etwas von dem Treffen mitbekommen.',schlechtText:'Das Treffen wird publik. Der Vorstand ist verstimmt.'}],folge:''}],auto:1},
   {id:'rueckendeckung',titel:'Rückendeckung vom Vorstand',bereich:'K28',art:'info',stufe:'haeufig',ausloeser:'rueckendeckung',
-    texte:['Der Vorstand stellt sich öffentlich hinter dich: Trotz der Tabelle glaubt man an deinen Weg.','„Der Trainer hat unser volles Vertrauen“, sagt der Präsident, und diesmal meint er es.']},
+    texte:['Der Vorstand stellt sich öffentlich hinter dich: Trotz der Tabelle glaubt man an deinen Weg.','„Der Trainer hat unser volles Vertrauen“, sagt der Präsident, und diesmal meint er es.'],wirkung:[{art:'vertrauenHalt',wert:30}]}, /* K30e: einen Monat stabil (K28 §8) */
   {id:'versoehnung',titel:'Versöhnung',bereich:'K17',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'versoehnung',sperrTage:365,
     texte:['Der Sportdirektor von {verein} meldet sich. Die Funkstille der letzten Monate schadet beiden. Ein Treffen?'],
     optionen:[{text:'Treffen vorschlagen',wirkung:[{art:'bezDu',wert:20,chance:0.6,schlecht:-5,gut:'Das Treffen war gut. Mit {verein} kann man wieder reden.',schlechtText:'Das Treffen endet im Streit.'}]},
@@ -225,5 +225,12 @@ const KARTEN=[
     texte:['Der Trainer von {verein} greift deine Kampfansage auf: „Große Worte. Wir sehen uns auf dem Platz.“ Die Zeitungen warten auf deine Antwort.','Bei {verein} hängt dein Zitat in der Kabine. Ihr Kapitän sagt, das sei die beste Motivation.'],
     optionen:[{text:'Nachlegen',wirkung:[{art:'fans',wert:2},{art:'stimmungAlle',wert:1},{art:'bezDu',wert:-5}],folge:'Die Fans lieben es. Das Spiel ist jetzt ein Duell.'},
       {text:'Zurückrudern',wirkung:[{art:'zurueckrudern',wert:1,dann:[{art:'glaub',wert:-1},{art:'fans',wert:-1}],gut:'Du sprichst von Respekt vor dem Gegner. Die Kampfansage ist vom Tisch.'}],folge:''},
-      {text:'Schweigen',wirkung:[],folge:'Du sagst nichts mehr dazu.'}],auto:2}
+      {text:'Schweigen',wirkung:[],folge:'Du sagst nichts mehr dazu.'}],auto:2},
+  // Testspiele (K11 §8, K30e, 22.11., popolupo): Info-Karten mit Wirkung, Anlasskarten (K30d). Werte vorläufig.
+  {id:'dorfverein',titel:'Dorfverein im Ausnahmezustand',bereich:'K11',art:'info',stufe:'haeufig',chance:0.5,ausloeser:'dorfverein',sperrTage:60,
+    texte:['Beim Testspiel in {verein} war das ganze Dorf auf den Beinen. Die Fotos mit deinen Spielern gehen durch die Region.','{verein} hat für das Spiel gegen euch ein Festzelt aufgebaut. In der Region spricht man noch Tage davon.'],
+    wirkung:[{art:'fans',wert:1}]},
+  {id:'blamage',titel:'Blamage gegen Amateure',bereich:'K11',art:'info',stufe:'haeufig',chance:0.6,ausloeser:'blamage',sperrTage:60,
+    texte:['Die Niederlage gegen {verein} ist das Thema der Woche. „Peinlich“, schreibt die Lokalzeitung.','Gegen {verein} verloren: Der Präsident fragt, ob man so in die Saison gehen will.'],
+    wirkung:[{art:'vertrauen',wert:-1},{art:'fans',wert:-1}]}
 ];
