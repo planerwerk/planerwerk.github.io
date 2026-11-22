@@ -268,6 +268,16 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   pruef(ohne===null&&ohneRivale===null&&!!r&&r.spieler===p.id&&verletzt===null&&a.gelegt&&!a.kam&&a.rest===0&&b.gelegt&&b.kam&&b.rest===0,
     'Rangelei nur mit Hitzkopf und Rivale; Partynacht als Folgekarte nur mit Partylöwe',`ohne ${ohne}, ohne Rivale ${ohneRivale}, Rangelei ${r&&r.spieler===p.id}, Rivale verletzt ${verletzt}, ohne Partylöwe gelegt ${a.gelegt}/gekommen ${a.kam}, mit ${b.gelegt}/${b.kam}`);}
 
+// K14e. Grüppchenbildung (K14 §8): nur mit einem Grüppchen (drei Freunde, Stimmung im Schnitt unter 35), Anführer ist ein Führungsspieler der Gruppe;
+//       die Aussprache wirkt auf alle in der Gruppe, die Transferliste setzt den Anführer mit Marktwert auf die Liste.
+{const {S,ev}=welt(),A=ev('AUSLOESER'),sq=ev('squad')(S.my),eig=ev('eigenschaften'),st=ev('stimmung'),G=ev('RKA').gruppe;S.phase='play';
+  sq.forEach(p=>{p.eig=(eig(p)||[]).filter(e=>e!=='fuehrungsspieler');st(p);p.st=60;p.list=0;});S.bz=[];const ohne=A.kabinenGruppe();
+  const g=sq.slice(0,3);S.bz.push([g[0].id,g[1].id,'F',1],[g[1].id,g[2].id,'F',1]);g.forEach(p=>{p.st=G.unter-10;});g[2].eig.push('fuehrungsspieler');const a=A.kabinenGruppe();
+  const s0=g.map(p=>st(p));ev('kartenWirkung')({art:'gruppeStimmung',wert:4},{spieler:g[2].id},{titel:'Test'});const alle=g.every((p,i)=>st(p)>s0[i]);
+  const c=ev('karteVon')('grueppchen');ev('kartenWirkung')(c.optionen[2].wirkung[0],{spieler:g[2].id},c);const liste=g[2].list===1&&g[2].ask>0;
+  pruef(ohne===null&&!!a&&a.spieler===g[2].id&&alle&&liste,'Grüppchenbildung: nur mit Grüppchen, Führungsspieler als Anführer, Aussprache für alle, Transferliste',
+    `ohne ${ohne}, Anführer ${a&&a.spieler===g[2].id}, alle besser ${alle}, Liste ${liste}`);}
+
 // U19e. Europapokal-Karten (K37 §8): Auswärtsspiel bei einem Auslandsverein in den nächsten 7 Tagen (kein Heimspiel, nicht später, nicht das Finale), Spiel 1 bis 7 Tage her,
 //       Wunder nach 0:3 im Hinspiel und 4:0 oder 3:0 mit Elfmeterschießen im Rückspiel, nicht nach nur einem Tor Rückstand und nicht beim Ausscheiden. euMeineSpiele ersetzt der Test.
 {const {S,W,ev}=welt(),A=ev('AUSLOESER'),AV=ev('AV0'),me=S.my,d=S.tag;W.ev('euMeineSpiele=function(){return S.testEu||[];}');

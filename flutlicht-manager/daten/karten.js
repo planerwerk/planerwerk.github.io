@@ -209,5 +209,11 @@ const KARTEN=[
     texte:['Nach der Kabinenparty hat {spieler} in der Stadt allein weitergefeiert. Zum Training kam er zwei Stunden zu spät.','Die Party ist vorbei, nur nicht für {spieler}: Er wurde morgens um sechs vor einem Club fotografiert.'],
     optionen:[{text:'Geldstrafe verhängen',wirkung:[{art:'geld',wert:5000},{art:'stimmung',wert:-3},{art:'glaub',wert:1}],folge:'{spieler} zahlt und entschuldigt sich bei der Mannschaft.'},
       {text:'Unter vier Augen reden',wirkung:[{art:'stimmung',wert:-1}],folge:'{spieler} verspricht Besserung.'},
-      {text:'Durchgehen lassen',wirkung:[{art:'glaub',wert:-1},{art:'zusammenhalt',wert:-1}],folge:'Die anderen haben genau hingesehen.'}],auto:1}
+      {text:'Durchgehen lassen',wirkung:[{art:'glaub',wert:-1},{art:'zusammenhalt',wert:-1}],folge:'Die anderen haben genau hingesehen.'}],auto:1},
+  // Grüppchenbildung (K14 §8, K14e, 22.11., popolupo): ein Grüppchen mit schlechter Stimmung (K14 §5). Neue Wirkungen gruppeStimmung und transferliste. Werte vorläufig.
+  {id:'grueppchen',titel:'Grüppchenbildung',bereich:'K14',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'kabinenGruppe',sperrTage:120,
+    texte:['In der Kabine hat sich eine Gruppe um {spieler} gebildet. Sie sitzt beim Essen für sich und lästert über die Aufstellung.','Der Kapitän warnt dich: Um {spieler} hat sich ein Grüppchen gebildet, das gegen den Rest der Mannschaft arbeitet.'],
+    optionen:[{text:'Aussprache mit der Gruppe',wirkung:[{art:'gruppeStimmung',wert:4,chance:0.6,schlecht:-2,gut:'Die Gruppe fühlt sich ernst genommen.',schlechtText:'Die Aussprache bringt nichts, die Fronten bleiben.'}]},
+      {text:'Teamevent für alle',wirkung:[{art:'geld',wert:-8000},{art:'zusammenhalt',wert:3},{art:'gruppeStimmung',wert:2}],folge:'Ein Tag im Kletterpark. Die Grenzen verschwimmen ein wenig.'},
+      {text:'Den Anführer auf die Transferliste setzen',wirkung:[{art:'transferliste',wert:1,dann:[{art:'stimmung',wert:-8},{art:'zusammenhalt',wert:2},{art:'glaub',wert:1}],gut:'Die Botschaft ist angekommen.'}],folge:''}],auto:0}
 ];
