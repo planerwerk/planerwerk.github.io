@@ -84,6 +84,11 @@ const KARTEN=[
     texte:['{verein} hat ein Auge auf {spieler} aus deiner Jugend geworfen. Sein Berater lässt durchblicken: Ohne Profivertrag ist er weg.','Die Scouts von {verein} saßen bei jedem Jugendspiel von {spieler}. Jetzt liegt ein Angebot auf dem Tisch.'],
     optionen:[{text:'Profivertrag anbieten',wirkung:[{art:'jugendHoch',wert:1},{art:'fans',wert:1}],folge:'{verein} geht leer aus.'},
       {text:'Ziehen lassen',wirkung:[{art:'jugendWeg',wert:1}],folge:''}],auto:0},
+  // Stadion (K26 §8, K26e, 22.11.). Neue Wirkung zuschuss: wert × Baukosten des laufenden Projekts einmal aufs Konto.
+  {id:'zuschuss',titel:'Stadt bietet Zuschuss',bereich:'K26',art:'entscheidung',gross:true,stufe:'haeufig',ausloeser:'zuschuss',sperrTage:365,
+    texte:['Die Stadt will sich an deinem Bauprojekt beteiligen. Im Gegenzug soll es ein festes Kontingent günstiger Karten für Schulen und Vereine geben.','Der Oberbürgermeister bietet einen Zuschuss für den Ausbau an. Bedingung: bezahlbare Tickets für die Region.'],
+    optionen:[{text:'Zuschuss annehmen',wirkung:[{art:'zuschuss',wert:0.15},{art:'preisRichtwert',wert:1},{art:'fans',wert:1}],folge:'Die Ticketpreise sinken auf den Richtpreis.'},
+      {text:'Ablehnen, wir bleiben unabhängig',wirkung:[],folge:'Die Stadt ist enttäuscht.'}],auto:0},
   // Verträge (K21 §8, K22 §8, K21c, 22.11.). Neue Wirkungen gehaltAnpassen (Gehalt auf wert × Marktgehalt, im Gehaltsrahmen) und beraterBez (Beziehung zum Berater).
   {id:'gehaltsneid',titel:'Gehaltsneid',bereich:'K21',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'gehaltsneid',sperrTage:180,
     texte:['{spieler} hat erfahren, was die anderen verdienen. Er fühlt sich unterbezahlt und sagt das auch.','In der Kabine wird über Gehälter geredet. {spieler} verdient deutlich weniger, als er wert ist, und ist sauer.'],
