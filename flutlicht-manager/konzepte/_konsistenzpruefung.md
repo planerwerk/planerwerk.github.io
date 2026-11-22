@@ -1847,3 +1847,19 @@ Ein Agent hat 86ef44d und a3b1902 gelesen (nichts ausgeführt, `dubletten.pl` un
 | DQ7 | Wahl bei deinem Verein, während du entlassen bist: keine Meldung, kein Vertrauen (im Spiel kaum möglich, Schutz). | ✅ behoben |
 | DQ8 | Hinweis: Jeder neue Präsident bekommt eine andere Geduld (101 × Multiplikator ergibt modulo 20 immer 9). So gewollt, fest. | zur Kenntnis |
 | DQ9 | Ohne Befund: gleiche Werte ohne Wechsel, Wahl vor Auf- und Abstieg mit der fertigen Tabelle, eigener Strom, Zielgespräch und Nebenziele mit dem neuen Präsidenten, „Sommer s+1“, Automatik bleibt immer, Reihenfolge beim Wechsel (Gehalt, Ablöse, Station „gewechselt“), Pressekonferenz, Ultimatum und Vertrag werden zurückgesetzt, Testwerte von Hand, Gleichschritt. | ✅ |
+
+---
+
+## DR. Prüfung von K29f und K29g ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 30a8575 und 3ef6aa5 gelesen (nichts ausgeführt, `dubletten.pl` und `codewaechter.pl` ohne Befund). **Ein schwerer Befund**, dazu ein alter Fehler aus U17a mit derselben Ursache. Korrekturen auf `mitarbeit/popolupo-k29g-urteil`.
+
+| # | Befund | Status |
+|---|---|---|
+| DR1 | **Interview am Spielfeldrand nie sichtbar:** Nach dem Abpfiff ruft das Spiel sofort `weiter()` auf, der Tag springt weiter, die Karte galt nur am Spieltag. Jetzt gilt sie bis zum nächsten Halt (`spielfeldrandWeiter` am Anfang von `weiter`). **Derselbe Fehler seit U17a:** Pressekonferenzen nach dem Spiel (Kantersieg, Krise, Höhenflug, Führung) übernahm im selben Schritt der Co-Trainer, du hast sie nie gesehen (je −2 Medienklima). Jetzt finden sie am Tag danach statt, mit Halt. | ✅ behoben |
+| DR2 | **Urteil verdrängt Spiel-Pressekonferenzen:** Das Sportgericht läuft im Tageslauf vor `presseTag`, die Pressekonferenz zum Urteil blockierte Derby, Spitzenspiel, Pokal oder Saisonauftakt. Jetzt vorgemerkt und in `presseTag` nach diesen Anlässen geöffnet, verfällt nach 7 Tagen. | ✅ behoben |
+| DR3 | **Remis-Frage nach Pokalspielen:** Ein Elfmeterschießen galt als Remis („Zufrieden mit dem Punkt?“). Jetzt zählt der Sieger, ein Remis außerhalb der Liga bekommt eine eigene Frage. | ✅ behoben |
+| DR4 | **Pressekonferenz nach abgesessener Sperre:** Jetzt nur, solange die Sperre noch läuft. | ✅ behoben |
+| DR5 | Die Antworten zur Kritik am Urteil sind die Texte der Schiedsrichterkritik. Dokumentiert, eigene Texte später. | offen |
+| DR6 | Test K29f hing am Tag (Frage reihum). Jetzt mit festem Tag. Doku: bei schlechtem Klima bis zu vier Fragen. | ✅ behoben |
+| DR7 | Ohne Befund: Interview für Liga, Pokal (auch geteilte Runden), Supercup, Europapokal und Relegation, nicht für Testspiele; Speichern und Laden, alte Spielstände ohne `einst`, keine Wirkung in der Automatik, keine Würfe, Platzhalter; alle Wege zum Urteil, Ströme, Gleichschritt, Katalog. | ✅ |

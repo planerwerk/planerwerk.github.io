@@ -33,10 +33,10 @@ function presseAnlass(art,o={}){if(S.phase!=='play'||S.pk||S.fired)return false;
   return mitStrom(strom('presse',S.season,S.tag,art),()=>{let l=A.fragen.filter(f=>(o.pid!=null||!f.sp)&&(o.gegner!=null||!f.t.includes('{gegner}'))&&(o.serie!=null||!f.t.includes('{serie}'))&&(o.medium!=null||!f.t.includes('{medium}'))&&(!f.trainer||o.trainer));if(!l.length)return false;
     const n=Math.min(l.length,Q.fragen[0]+Math.floor(R()*(Q.fragen[1]-Q.fragen[0]+1))+(P.klima<Q.klimaFragen.bohrenUnter?Q.klimaFragen.bohrenPlus:0)),fr=[]; /* schlechtes Klima: eine Frage mehr (K29d) */
     while(fr.length<n&&l.length)fr.push(l.splice(Math.floor(R()*l.length),1)[0]);
-    P.id=(P.id||0)+1;S.pk={id:P.id,art,tag:S.tag,s:S.season,medium:o.medium||null,gegner:o.gegner!=null?o.gegner:null,pid:o.pid!=null?o.pid:null,serie:o.serie!=null?o.serie:null,i:0,
+    P.id=(P.id||0)+1;S.pk={id:P.id,art,tag:S.tag+(o.morgen?1:0),s:S.season, /* morgen: nach dem Spiel am Tag danach, mit Halt (Prüfung DR1) */medium:o.medium||null,gegner:o.gegner!=null?o.gegner:null,pid:o.pid!=null?o.pid:null,serie:o.serie!=null?o.serie:null,i:0,
       fragen:fr.map(f=>({t:f.t,o:f.o,sp:f.sp?1:0,j:pkJournalist(R())})),antw:[]};pkStichelei(S.pk);
     P.n[S.season]=(P.n[S.season]||0)+1;P.letzte=heute;P.sperre[art]=heute;
-    if(autoB('presse'))presseDelegieren(true);else news(`Pressekonferenz heute: ${A.name}. Im Büro hingehen oder den Co-Trainer schicken.`);return true;});}
+    if(autoB('presse'))presseDelegieren(true);else news(`Pressekonferenz ${o.morgen?'morgen':'heute'}: ${A.name}. Im Büro hingehen oder den Co-Trainer schicken.`);return true;});}
 // Co-Trainer schicken (oder automatisch): Floskeln, Medienklima −2
 function presseDelegieren(auto){const pk=S.pk;if(!pk)return;const P=presseS(),A=PRESSE.anlaesse[pk.art];S.pk=null;P.klima=clamp(P.klima+RPK.delegieren,0,100);
   news(`${A.name}: ${auto?'Der Co-Trainer geht hin':'Du schickst den Co-Trainer'}. ${pkSchlagzeile('delegiert',pk)}`);stichelOffen(pk);if(!auto){save();closeOv();render();}}
@@ -53,18 +53,21 @@ function presseTag(d){if(S.phase!=='play')return;if(S.pk&&(S.pk.s!==S.season||S.
     else if(e.art==='pokal'&&e.r>=A.pokalAb)presseAnlass('pokal',{gegner:g});
     else if(e.art==='rel'||e.art==='rel2')presseAnlass('relegation',{gegner:g});}
   if(S.ult&&S.ult.tid===S.my&&!S.ult.pk&&presseAnlass('ultimatum'))S.ult.pk=1;
-  const w=squad(S.my).find(p=>p.ww>=3&&p.ww3s===S.season&&p.pkWW!==S.season);if(w&&presseAnlass('wechselwunsch',{pid:w.id}))w.pkWW=S.season;}
+  const w=squad(S.my).find(p=>p.ww>=3&&p.ww3s===S.season&&p.pkWW!==S.season);if(w&&presseAnlass('wechselwunsch',{pid:w.id}))w.pkWW=S.season;
+  // Urteil des Sportgerichts (K29g): gemerkt in P.urteil, hier nach den Anlässen der Spiele, damit es keine Pressekonferenz vor einem Spiel verdrängt (Prüfung DR2); verfällt nach urteilTage
+  if(P.urteil){const u=P.urteil;if(u.s!==S.season||absTag(d)-u.tag>A.urteilTage)P.urteil=null;else if(presseAnlass('urteil',{pid:u.pid}))P.urteil=null;}}
 function pkGegner(e){const f=paarung(e);return f?(f[0]===S.my?f[1]:f[0]):null;}
 // Nach den Spielen des Tages (ablauf.js): Kampfansagen prüfen, Krise, Höhenflug, Tabellenführung, Kantersieg
 function presseNachSpiel(m){if(!m||S.phase!=='play')return;const s=m.h===S.my?0:1,gf=s?m.ag:m.hg,ga=s?m.hg:m.ag,gegner=s?m.h:m.a,A=RPK.anlass,P=presseS(),sq=squad(S.my);
   kampfansagePruefen(gegner,gf,ga);
   const noten=sq.filter(p=>p.lastG!=null),schlecht=noten.sort((a,b)=>b.lastG-a.lastG)[0],gut=noten.slice().sort((a,b)=>a.lastG-b.lastG)[0];
-  if(gf-ga>=A.kantersieg){presseAnlass('kantersieg',{gegner,pid:gut?gut.id:null});return;}
+  // Alle Anlässe nach dem Spiel finden am Tag danach statt (morgen): Nach dem Spiel geht es sofort weiter, am selben Tag hätte der Co-Trainer sie immer übernommen (Prüfung DR1, seit U17a)
+  if(gf-ga>=A.kantersieg){presseAnlass('kantersieg',{gegner,pid:gut?gut.id:null,morgen:1});return;}
   if(!m.lg)return;const T=table(myT().lg),r=T.find(x=>x.id===S.my);if(!r)return;const l=r.last;
   const serie=(v)=>{let n=0;for(let i=l.length-1;i>=0&&l[i]===v;i--)n++;return n;},nl=serie(0),ns=serie(3);
-  if(nl>=A.krise)presseAnlass('krise',{serie:nl,pid:schlecht?schlecht.id:null});
-  else if(ns>=A.hoehenflug)presseAnlass('hoehenflug',{serie:ns});
-  else if(T[0].id===S.my&&r.sp>=A.fuehrungAb&&P.fue!==S.season&&presseAnlass('fuehrung'))P.fue=S.season;}
+  if(nl>=A.krise)presseAnlass('krise',{serie:nl,pid:schlecht?schlecht.id:null,morgen:1});
+  else if(ns>=A.hoehenflug)presseAnlass('hoehenflug',{serie:ns,morgen:1});
+  else if(T[0].id===S.my&&r.sp>=A.fuehrungAb&&P.fue!==S.season&&presseAnlass('fuehrung',{morgen:1}))P.fue=S.season;}
 
 // ---------- Ablauf im Büro (K29 §4.2) ----------
 function pkOptionen(pk){const f=pk.fragen[pk.i],c=pkKontext(pk),P=presseS(),l=f.o.slice();
@@ -141,10 +144,13 @@ function kampfansagePruefen(gegner,gf,ga){const P=presseS(),G=RPK.gedaechtnis,t=
 // ---------- Interview am Spielfeldrand (K29 §4.1, K29f) ----------
 // S.ifr = {tag, s, g Gegner, gf, ga} nach deinem Spiel (ablauf.js nach presseNachSpiel), gilt nur an diesem Tag. Nicht in der Automatik, nicht neben einer offenen
 // Pressekonferenz, abschaltbar (S.einst.ifrAus). Ohne Zufall, ohne Antwort ohne Folgen.
-const ifrOffen=()=>!!(S.ifr&&S.ifr.s===S.season&&S.ifr.tag===S.tag);
+// Seit Prüfung DR1: gilt bis zum nächsten Halt, den du siehst. Nach dem Spiel geht es sofort weiter (weiter), am Spieltag selbst sähest du die Karte nie.
+// spielfeldrandWeiter (kalender.js weiter, am Anfang) löscht ein Interview von einem früheren Tag. e: Art der Frage (sieg, niederlage, remis nur in der Liga, sonst offen; Elfmeterschießen zählt)
+const ifrOffen=()=>!!(S.ifr&&S.ifr.s===S.season);
 const IFR_ARTEN=['rueckendeckung','kritikTeam','floskel'];
-function spielfeldrandNachSpiel(m){S.ifr=null;if(!m||S.phase!=='play'||S.pk||S.fired||autoB('presse')||!darf('presse')||(S.einst&&S.einst.ifrAus))return;const s=m.h===S.my?0:1;
-  S.ifr={tag:S.tag,s:S.season,g:s?m.h:m.a,gf:s?m.ag:m.hg,ga:s?m.hg:m.ag};}
+function spielfeldrandWeiter(){if(S.ifr&&(S.ifr.s!==S.season||S.ifr.tag<S.tag))S.ifr=null;}
+function spielfeldrandNachSpiel(m){if(!m)return;S.ifr=null;if(S.phase!=='play'||S.pk||S.fired||autoB('presse')||!darf('presse')||(S.einst&&S.einst.ifrAus))return;const s=m.h===S.my?0:1,gf=s?m.ag:m.hg,ga=s?m.hg:m.ag;
+  const e=m.pen?(winner(m)===S.my?'sieg':'niederlage'):gf>ga?'sieg':gf<ga?'niederlage':m.lg?'remis':'offen';S.ifr={tag:S.tag,s:S.season,g:s?m.h:m.a,gf,ga,e};}
 function ifrKontext(){const x=S.ifr,c=pkKontext({gegner:x.g,pid:null,serie:null,medium:null});c.ergebnis=`${x.gf}:${x.ga}`;return c;}
 // Antwort: Wirkung der Antwortart (RPK.wirkung) × spielfeldrand.faktor; Kritik trifft alle wie „sonst“ (ohne Kämpfer und Empfindliche)
 function spielfeldrandAntwort(art){if(!ifrOffen()||!IFR_ARTEN.includes(art)||!darf('presse'))return;const F=RPK.spielfeldrand.faktor,w=RPK.wirkung[art]||{},t=myT(),P=presseS();S.ifr=null;
@@ -152,7 +158,7 @@ function spielfeldrandAntwort(art){if(!ifrOffen()||!IFR_ARTEN.includes(art)||!da
   if(w.fans)fanAnlass(t,'fanU',w.fans*F);if(w.vorstand)S.trust=clamp(S.trust+w.vorstand*F,0,100);if(w.medien)P.klima=fanZahl(clamp(P.klima+w.medien*F,0,100));
   news(`Interview am Spielfeldrand: ${PRESSE.arten[art].name}.`);save();render();}
 function spielfeldrandAus(an){S.einst=S.einst||{aus:{}};S.einst.ifrAus=an?0:1;if(!an)S.ifr=null;save();render();}
-function spielfeldrandKarte(){if(!ifrOffen())return'';const x=S.ifr,c=ifrKontext(),Z=PRESSE.spielfeldrand,l=Z[x.gf>x.ga?'sieg':x.gf<x.ga?'niederlage':'remis'],frage=pkText(l[x.tag%l.length],c);
+function spielfeldrandKarte(){if(!ifrOffen())return'';const x=S.ifr,c=ifrKontext(),Z=PRESSE.spielfeldrand,l=Z[x.e||(x.gf>x.ga?'sieg':x.gf<x.ga?'niederlage':'remis')]||Z.offen,frage=pkText(l[x.tag%l.length],c);
   return`<div class="card"><h3>Interview am Spielfeldrand</h3><p><b>„${esc(frage)}“</b></p><div class="opts">${IFR_ARTEN.map((art,i)=>`<button class="opt" onclick="spielfeldrandAntwort('${art}')"${lzAus('presse')}><b>${PRESSE.arten[art].ton} ${esc(PRESSE.arten[art].name)}</b><span>„${esc(pkWahl(PRESSE.antworten[art].filter(z=>!z.includes('{spieler}')),c,x.tag+i))}“</span></button>`).join('')}</div>
     <p class="dim">Kurz und freiwillig, die Wirkung ist halb so groß wie in einer Pressekonferenz. Ohne Antwort passiert nichts. <button onclick="spielfeldrandAus(false)">Interviews ausschalten</button></p></div>`;}
 

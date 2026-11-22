@@ -131,7 +131,8 @@ const PRESSE={
   // Interview am Spielfeldrand (K29 §4.1, K29f): eine Frage je Ergebnis, Platzhalter {gegner}, {ergebnis} (aus deiner Sicht). Antworten: Rückendeckung, Kritik an der Mannschaft, Floskel.
   spielfeldrand:{sieg:['{ergebnis} gegen {gegner}. Was war heute der Schlüssel?','Ein verdienter Sieg gegen {gegner}?','{ergebnis}. Wie fühlt sich das an?'],
     remis:['{ergebnis} gegen {gegner}. Zufrieden mit dem Punkt?','Ein Punkt gegen {gegner}. Gewonnen oder verloren?'],
-    niederlage:['{ergebnis} gegen {gegner}. Woran hat es gelegen?','Woran hat’s gelegen?','Was fehlt Ihrer Mannschaft nach dem {ergebnis}?']},
+    niederlage:['{ergebnis} gegen {gegner}. Woran hat es gelegen?','Woran hat’s gelegen?','Was fehlt Ihrer Mannschaft nach dem {ergebnis}?'],
+    offen:['{ergebnis} gegen {gegner}. Wie bewerten Sie das?','Unentschieden gegen {gegner}. Können Sie damit leben?']}, // Remis außerhalb der Liga (Hinspiel), seit Prüfung DR3
   // Gerüchteküche (K29 §4.3, §5.5, U17b). Platzhalter: {verein} betroffener Verein, {klub} zweiter Verein, {spieler}, {coach} Trainer des betroffenen Vereins.
   // m: Medien, die so etwas bringen (das erste ist am wahrscheinlichsten).
   geruechte:{

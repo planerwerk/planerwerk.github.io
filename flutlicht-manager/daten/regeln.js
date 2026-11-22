@@ -469,7 +469,7 @@ const REGELN={
     // K29d (22.11., GESCHÄTZT): Beziehungen verblassen je Woche um verblassen Richtung 0, eine Antwort ändert die Beziehung zum fragenden Medium um ihre Wirkung aufs Klima × ausAntwort
     verblassen:0.5,ausAntwort:0.5},
   presse:{budget:20,abstand:4,sperre:21,fragen:[2,3],klimaStart:50,
-    anlass:{spitzeBis:4,spitzeAb:10,pokalAb:3,krise:3,hoehenflug:5,fuehrungAb:5,kantersieg:4,auftaktVorher:2,urteilAb:3}, // urteilAb: Pressekonferenz ab so vielen Spielen Sperre (K29g)
+    anlass:{spitzeBis:4,spitzeAb:10,pokalAb:3,krise:3,hoehenflug:5,fuehrungAb:5,kantersieg:4,auftaktVorher:2,urteilAb:3,urteilTage:7}, // urteilAb: Pressekonferenz ab so vielen Spielen Sperre (K29g), urteilTage: so lange wartet sie auf einen freien Tag (DR2)
     wirkung:{rueckendeckung:{team:2,spieler:5,medien:1},ankuendigung:{team:1,fans:2,vorstand:-0.5},kritikTeam:{vorstand:1,medien:1,kaempfer:2,empfindlich:-3,sonst:-1},
       kritikSpieler:{spieler:-8,medien:1},kritikSchiri:{team:1,fans:3,vorstand:-1},angriffMedien:{team:1,fans:1,vorstand:-1,medien:-4},provokation:{fans:2,medien:1,beziehung:-3},
       floskel:{medien:-1},humor:{team:1,fans:1,medien:1,krise:-1}},

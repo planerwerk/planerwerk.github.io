@@ -106,7 +106,7 @@ function naechsterHalt(){const ende=S.phase==='sommer'?tageDerSaison():S.plan.en
 function tagBeginn(d){taeglich(d);if(wochentag(d)===RK.wochenTag)woechentlich(d);if(S.phase==='play'&&d>=S.plan.ende)seasonEnd();}
 function tagEnde(d){if(S.phase==='play'&&S.gespielt!==d)tagesSpiele(d);}
 // Beendet den heutigen Tag und springt zum nächsten Halt, höchstens RK.maxSprung Tage weit. Am 1. Juli beginnt die neue Saison.
-function weiter(){let n=0;tagEnde(S.tag);
+function weiter(){let n=0;spielfeldrandWeiter();tagEnde(S.tag);
   while(S.phase!=='end'&&!S.fired){S.tag++;n++;S.gespielt=-1;
     if(S.tag>=tageDerSaison()){newSeason();break;}
     tagBeginn(S.tag);if(haltGrund(S.tag)||(n>=RK.maxSprung&&!sommerSprung()))break;tagEnde(S.tag);}

@@ -89,6 +89,17 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 22.11.2026: Korrekturen nach Prüfung DR zu K29f und K29g, dazu ein alter Fehler aus U17a (Zweig `mitarbeit/popolupo-k29g-urteil`)
+
+- Ein lesender Prüf-Agent hat K29f und K29g durchgesehen (Konsistenzprüfung DR).
+- **Wichtig, seit U17a:** Pressekonferenzen nach dem Spiel (Kantersieg, Krise, Höhenflug, Führung) hast du nie gesehen. Nach dem Abpfiff springt das Spiel zum nächsten Tag, dort hat der Co-Trainer sie sofort übernommen (je −2 Medienklima). Jetzt finden sie am Tag nach dem Spiel statt, mit Halt.
+- **Behoben:**
+  - DR1: Das Interview am Spielfeldrand gilt bis zum nächsten Halt (vorher nie sichtbar).
+  - DR2: Die Pressekonferenz zum Urteil wird vorgemerkt und verdrängt keine Pressekonferenz vor einem Spiel mehr.
+  - DR3: Fragen nach Pokalspielen, Elfmeterschießen zählt.
+  - DR4: Keine Pressekonferenz nach einer schon abgesessenen Sperre.
+- **Tests zuerst:** `tests/presse.js` (K29f, K29g, dazu Nr. 7 Krise), dann `ui-zwei-saisons.js`. Neu: Halt „Pressekonferenz“ am Tag nach einem Spiel mit Krise, Kantersieg, Serie oder Tabellenführung, wenn die Presse nicht in der Automatik ist.
+
 ### 22.11.2026: Korrekturen nach Prüfung DQ zu U12i und U12j (Zweig `mitarbeit/popolupo-k29g-urteil`)
 
 - Ein lesender Prüf-Agent hat U12i und U12j durchgesehen (Konsistenzprüfung DQ). Er fand keinen blockierenden Fehler.

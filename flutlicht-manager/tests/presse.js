@@ -104,21 +104,27 @@ const gegner=w=>w.S.teams.find(x=>x.lg===w.t.lg&&x.id!==VEREIN).id;
     `Anteile ${JSON.stringify(zahl)}, Psychospieler ${np} von 30 (${okp}), Diplomat ${nd}, Konter ${konter}, offen ${offen}, Automatik ${auto}`);}
 
 // K29f. Interview am Spielfeldrand (K29 §4.1): nach deinem Spiel eine Frage ohne offene Platzhalter, Rückendeckung hebt die Mannschaft um 1 (halbe Wirkung) und das Klima um 0,5,
-//       gilt nur am Spieltag, abschaltbar, nicht neben einer offenen Pressekonferenz, nicht in der Automatik
-{const {S,F,ev}=welt(false),g=gegner({S,t:ev('myT()')}),sq=ev('squad')(VEREIN),P=ev('presseS')();P.klima=50;sq.forEach(p=>p.st=50);
-  F.spielfeldrandNachSpiel({h:VEREIN,a:g,hg:0,ag:2});const offen=ev('ifrOffen')(),html=F.spielfeldrandKarte(),frage=/Woran|fehlt/.test(html)&&!/\{\w+\}/.test(html)&&html.includes('0:2');
+//       gilt bis zum nächsten Halt (seit DR1: weiter löscht es erst ab dem Tag danach), Pokal-Remis mit eigener Frage, Elfmeterschießen zählt (DR3),
+//       abschaltbar, nicht neben einer offenen Pressekonferenz, nicht in der Automatik
+{const {S,F,ev}=welt(false),g=gegner({S,t:ev('myT()')}),sq=ev('squad')(VEREIN),P=ev('presseS')();P.klima=50;sq.forEach(p=>p.st=50);S.tag=0; /* Frage reihum nach dem Tag: Tag 0 = erste Frage */
+  F.spielfeldrandNachSpiel({h:VEREIN,a:g,hg:0,ag:2,lg:1});const offen=ev('ifrOffen')(),html=F.spielfeldrandKarte(),frage=/Woran|fehlt/.test(html)&&!/\{\w+\}/.test(html)&&html.includes('0:2');
   F.spielfeldrandAntwort('rueckendeckung');const st=sq[0].st,kl=P.klima,weg=!S.ifr;
-  F.spielfeldrandNachSpiel({h:g,a:VEREIN,hg:1,ag:3});S.tag++;const morgen=!ev('ifrOffen')();S.tag--;
-  F.spielfeldrandAus(false);F.spielfeldrandNachSpiel({h:VEREIN,a:g,hg:1,ag:1});const aus=!S.ifr;F.spielfeldrandAus(true);
-  S.pk={art:'derby',fragen:[],i:0,antw:[],s:S.season,tag:S.tag};F.spielfeldrandNachSpiel({h:VEREIN,a:g,hg:1,ag:1});const pk=!S.ifr;S.pk=null;
-  const a=welt(true);a.F.spielfeldrandNachSpiel({h:VEREIN,a:gegner(a),hg:2,ag:0});const auto=!a.S.ifr;
-  pruef(offen&&frage&&st===51&&kl===50.5&&weg&&morgen&&aus&&pk&&auto,'Interview am Spielfeldrand: Frage, halbe Wirkung, nur am Spieltag, abschaltbar, nicht neben Pressekonferenz und Automatik',
-    `offen ${offen}, Frage ${frage}, Stimmung ${st}, Klima ${kl}, morgen weg ${morgen}, aus ${aus}, neben Pressekonferenz ${pk}, Automatik ${auto}`);}
+  F.spielfeldrandNachSpiel({h:g,a:VEREIN,hg:1,ag:3,lg:1});F.spielfeldrandWeiter();const heute=!!S.ifr;F.spielfeldrandNachSpiel(null);const bleibt=!!S.ifr;
+  S.tag++;F.spielfeldrandWeiter();const morgen=!S.ifr;S.tag--;
+  F.spielfeldrandNachSpiel({h:VEREIN,a:g,hg:1,ag:1});const pokal=S.ifr&&S.ifr.e==='offen';F.spielfeldrandNachSpiel({h:VEREIN,a:g,hg:1,ag:1,pen:[4,3]});const elf=S.ifr&&S.ifr.e==='sieg';
+  F.spielfeldrandAus(false);F.spielfeldrandNachSpiel({h:VEREIN,a:g,hg:1,ag:1,lg:1});const aus=!S.ifr;F.spielfeldrandAus(true);
+  S.pk={art:'derby',fragen:[],i:0,antw:[],s:S.season,tag:S.tag};F.spielfeldrandNachSpiel({h:VEREIN,a:g,hg:1,ag:1,lg:1});const pk=!S.ifr;S.pk=null;
+  const a=welt(true);a.F.spielfeldrandNachSpiel({h:VEREIN,a:gegner(a),hg:2,ag:0,lg:1});const auto=!a.S.ifr;
+  pruef(offen&&frage&&st===51&&kl===50.5&&weg&&heute&&bleibt&&morgen&&pokal&&elf&&aus&&pk&&auto,'Interview am Spielfeldrand: Frage, halbe Wirkung, bis zum nächsten Halt, Pokal und Elfmeterschießen, abschaltbar, nicht neben Pressekonferenz und Automatik',
+    `offen ${offen}, Frage ${frage}, Stimmung ${st}, Klima ${kl}, am Spieltag ${heute}/${bleibt}, danach weg ${morgen}, Pokal ${pokal}, Elfmeter ${elf}, aus ${aus}, neben Pressekonferenz ${pk}, Automatik ${auto}`);}
 
-// K29g. Pressekonferenz nach dem Urteil (K29 §4.1): Sperre eines deiner Spieler ab 3 Spielen öffnet sie mit dem Spieler, bei 2 Spielen nicht, bei Spielern anderer Vereine nicht
-{const w=welt(false),{S,F,ev}=w,sq=ev('squad')(VEREIN),p=sq[3],q=S.pl.find(x=>x.team>=0&&x.team<1000&&x.team!==VEREIN),v=(x,n)=>({pid:x.id,wb:'liga',team:x.team,art:'grob',tag:S.tag,antrag:n,vor:0,gesessen:0});
-  F.sgUrteil(v(p,2),2,'angenommen',S.tag);const zwei=!S.pk;frei(w);F.sgUrteil(v(q,4),4,'angenommen',S.tag);const fremd=!S.pk;frei(w);
-  F.sgUrteil(v(p,3),3,'angenommen',S.tag);const ok=!!S.pk&&S.pk.art==='urteil'&&S.pk.pid===p.id&&S.pk.fragen.length>=2;
-  pruef(zwei&&fremd&&ok,'Pressekonferenz nach dem Urteil: ab 3 Spielen Sperre für deinen Spieler, mit ihm als Thema',`2 Spiele ohne ${zwei}, anderer Verein ohne ${fremd}, 3 Spiele ${S.pk?S.pk.art+' mit '+S.pk.fragen.length+' Fragen':'keine'}`);}
+// K29g. Pressekonferenz nach dem Urteil (K29 §4.1): Sperre eines deiner Spieler ab 3 Spielen merkt sie vor, presseTag öffnet sie (seit DR2) mit dem Spieler,
+//       bei 2 Spielen nicht, bei Spielern anderer Vereine nicht; nach urteilTage verfällt die Vormerkung
+{const w=welt(false),{S,F,ev}=w,P=ev('presseS')(),sq=ev('squad')(VEREIN),p=sq[3],q=S.pl.find(x=>x.team>=0&&x.team<1000&&x.team!==VEREIN),v=(x,n)=>({pid:x.id,wb:'liga',team:x.team,art:'grob',tag:S.tag,antrag:n,vor:0,gesessen:0});
+  F.sgUrteil(v(p,2),2,'angenommen',S.tag);const zwei=!P.urteil;F.sgUrteil(v(q,4),4,'angenommen',S.tag);const fremd=!P.urteil;
+  F.sgUrteil(v(p,3),3,'angenommen',S.tag);const vor=!!P.urteil&&!S.pk;F.presseTag(S.tag);const ok=!!S.pk&&S.pk.art==='urteil'&&S.pk.pid===p.id&&S.pk.fragen.length>=2&&!P.urteil;
+  frei(w);P.urteil={pid:p.id,tag:ev('absTag')(S.tag)-ev('RPK').anlass.urteilTage-1,s:S.season};F.presseTag(S.tag);const verfallen=!P.urteil&&!S.pk;
+  pruef(zwei&&fremd&&vor&&ok&&verfallen,'Pressekonferenz nach dem Urteil: ab 3 Spielen Sperre für deinen Spieler, vorgemerkt, im Tageslauf geöffnet, verfällt',
+    `2 Spiele ohne ${zwei}, anderer Verein ohne ${fremd}, vorgemerkt ${vor}, ${S.pk?S.pk.art:'geöffnet '+ok}, verfallen ${verfallen}`);}
 
 console.log(probleme.length?`\n${probleme.length} Problem(e).`:'\nAlles in Ordnung.');process.exitCode=probleme.length?1:0;
