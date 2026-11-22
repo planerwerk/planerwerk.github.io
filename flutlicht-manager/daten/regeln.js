@@ -207,7 +207,10 @@ const REGELN={
       // zwei Jahre). Fans: −5 bei Vertragsschluss, −1 an jedem Monatsersten. Skandal mit 5 % je Saison: Fans −10, danach darfst du kostenlos kündigen. Die Automatik meidet sie (K24 §7).
       umstritten:{faktor:1.3,jahre:2,fans:-5,fansMonat:-1,skandal:0.05,skandalFans:-10,info:'Umstrittener Geldgeber: 30 % mehr, zwei Jahre, die Fans murren',
         namen:['Kronos Kapital','Sandor Energy Group','Vexo Krypto','Ostkap Rohstoffe','Glücksstern Wetten','Bastion Trading']},
-      sponsorentag:{kosten:50000,plus:0.1}, // einmal je Saison, solange Angebote offen sind: offene Angebote 10 % besser (K24 §4.3)
+      // Sponsorentag (K24 §4.3, seit 22.11. nach Wunsch in drei Größen): einmal je Saison, solange Angebote offen sind. Kosten in der 1. Liga, in der 2. Liga die Hälfte, in der 3. ein Viertel.
+      // Der Zuschlag auf alle offenen Angebote wird je Größe in der Spanne gewürfelt (eigener Strom). Du siehst keine Zahl, nur den Text nach der Lage in der Spanne (unteres, mittleres, oberes Drittel).
+      sponsorentag:{stufen:{klein:{name:'klein',adj:'kleiner',kosten:5000,plus:[0.05,0.07]},mittel:{name:'mittel',adj:'mittlerer',kosten:25000,plus:[0.07,0.10]},gross:{name:'groß',adj:'großer',kosten:50000,plus:[0.08,0.11]}},liga:{1:1,2:0.5,3:0.25},
+        texte:['Der Sponsorentag war ein Erfolg. Die Gäste sind zufrieden nach Hause gegangen.','Der Sponsorentag war ein voller Erfolg. Die Gäste sind glücklich nach Hause gegangen und schauen voller Erwartung in die Zukunft.','Der Sponsorentag war ein grandioser Erfolg! Alle sind überglücklich nach Hause gegangen und können es kaum erwarten, mit dir zusammenzuarbeiten.']},
       // K24c (21.11., K24 §5.3 und §3.2, vorläufig): Zufriedenheit je Vertrag 0–100, Start 50, zum Saisonende +5 je Platz über dem Ziel (höchstens ±25), Fanstimmung über ihrem
       // Start × 0,5 (±10), Werbewert über seinem Start × 0,5 (±10), Abstieg −20. Ab 70 bietet der Partner zum Vertragsende eine Verlängerung mit 10 % mehr (zwei Jahre).
       // Abstiegsklausel: Laufende Verträge, die in die nächste Saison reichen, zahlen nach einem Abstieg 40 % weniger.
