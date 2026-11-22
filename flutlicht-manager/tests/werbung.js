@@ -79,11 +79,20 @@ function welt(lernstufen){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;
   const {S:S3,F:F3}=welt(false);F3.werbungWaehlen('aermel',0);ev('render=()=>{};save=()=>{};');const vorher=JSON.stringify(S3.werbung);F3.werbungKuendigen('aermel');
   pruef(JSON.stringify(S3.werbung)===vorher,'Ohne Skandal lässt sich ein Werbevertrag nicht kündigen');}
 
-// 15. Sponsorentag: kostet 50.000 €, hebt alle offenen Angebote um 10 %, nur einmal je Saison, ohne offene Angebote nicht möglich
-{const {S,F,ev}=welt(false),T=ev('RF').werbung.sponsorentag,t=ev('myT()');ev('render=()=>{};save=()=>{};toast=()=>{};');const c0=t.cash,b0=S.sponsOffers[0].base,a0=S.werbOffers.aermel[1].win;
-  F.sponsorenTag();const c1=t.cash,b1=S.sponsOffers[0].base,a1=S.werbOffers.aermel[1].win;F.sponsorenTag();const c2=t.cash;
-  const {S:S2,F:F2,ev:ev2}=welt(false);ev2('render=()=>{};save=()=>{};toast=()=>{};');F2.sponsorWaehlen(0);F2.werbungVorSpiel();const c3=ev2('myT()').cash;F2.sponsorenTag();
-  pruef(c0-c1===T.kosten&&Math.abs(b1-b0*(1+T.plus))<=1000&&Math.abs(a1-a0*(1+T.plus))<=1000&&c2===c1&&S.sponsorTag===S.season&&ev2('myT()').cash===c3,'Sponsorentag: 50.000 €, offene Angebote 10 % besser, nur einmal je Saison, ohne offene Angebote nichts',`Brust ${b0} → ${b1}, Siegprämie Ärmel ${a0} → ${a1}, Konto −${c0-c1}`);}
+// 15. Sponsorentag in drei Größen (seit 22.11.): Kosten nach Größe und Liga, Zuschlag in der Spanne der Größe gewürfelt, alle offenen Angebote mit demselben Zuschlag,
+// nur ein Text als Rückmeldung (passend zur Lage in der Spanne, keine Zahl), nur einmal je Saison, ohne offene Angebote nichts
+{const T=ev0=>ev0('RF').werbung.sponsorentag;let ok=true;const txt=[];
+  for(const k of ['klein','mittel','gross']){const {S,F,ev}=welt(false),St=T(ev).stufen[k],t=ev('myT()');ev('render=()=>{};save=()=>{};toast=()=>{};');const c0=t.cash,b0=S.sponsOffers[0].base,u0=S.werbOffers.ausruester[0].base;
+    F.sponsorenTag(k);const q=S.sponsOffers[0].base/b0,qu=S.werbOffers.ausruester[0].base/u0,e=S.sponsorTagErg,n=S.news[0].t,pos=(q-1-St.plus[0])/(St.plus[1]-St.plus[0]);F.sponsorenTag('klein');
+    const gut=c0-t.cash===St.kosten&&q>=1+St.plus[0]-0.01&&q<=1+St.plus[1]+0.01&&Math.abs(q-qu)<0.02&&n.startsWith(T(ev).texte[e.stufe])&&!/\d+ ?%/.test(n)&&Math.abs(e.stufe-Math.min(2,Math.floor(Math.max(0,Math.min(0.999,pos))*3)))<=1&&S.sponsorTag===S.season;
+    if(!gut)ok=false;txt.push(`${k}: −${c0-t.cash} €, ×${q.toFixed(3)}, „${n.slice(0,40)}…“`);}
+  const {ev:ev3}=welt(false);ev3('myT()').lg=2;const halb=ev3("sponsorTagKosten('gross')");ev3('myT()').lg=3;const viertel=ev3("sponsorTagKosten('gross')");
+  const {S:S2,F:F2,ev:ev2}=welt(false);ev2('render=()=>{};save=()=>{};toast=()=>{};');F2.sponsorWaehlen(0);F2.werbungVorSpiel();const c3=ev2('myT()').cash;F2.sponsorenTag('gross');
+  pruef(ok&&halb===25000&&viertel===13000&&ev2('myT()').cash===c3,'Sponsorentag: drei Größen (5.000, 25.000, 50.000 € in der 1. Liga, 2. Liga die Hälfte, 3. ein Viertel), Zuschlag gewürfelt in der Spanne, nur ein Text ohne Zahl, einmal je Saison, ohne offene Angebote nichts',txt.join(' | ')+`, 2. Liga ${halb}, 3. Liga ${viertel}`);}
+// 15b. Über viele Saisons trifft der Wurf alle drei Texte, und der Zuschlag bleibt in der Spanne
+{const {S,F,ev}=welt(false),St=ev('RF').werbung.sponsorentag.stufen.mittel;ev('render=()=>{};save=()=>{};toast=()=>{};');const stufen=[0,0,0];let min=9,max=0;
+  for(let i=0;i<60;i++){S.season++;S.sponsOffers=[{name:'X',base:1000000,win:0,yrs:1,info:''}];F.sponsorenTag('mittel');const q=S.sponsOffers[0].base/1e6-1;min=Math.min(min,q);max=Math.max(max,q);stufen[S.sponsorTagErg.stufe]++;}
+  pruef(stufen.every(x=>x>=8)&&min>=St.plus[0]-0.001&&max<=St.plus[1]+0.001,'Sponsorentag über 60 Saisons: alle drei Texte kommen vor, der Zuschlag bleibt in der Spanne (mittel 7–10 %)',`Texte ${stufen.join('/')}, Zuschlag ${(min*100).toFixed(1)}–${(max*100).toFixed(1)} %`);}
 
 // 16. Werbewert (K25): über dem Startwert bessere Angebote, darunter schlechtere, höchstens ±15 %, am Startwert neutral
 {const {S,ev}=welt(false),W=ev('RF').werbung.werbewert,start=ev('myT()').rep*ev('RMK').werbewert.startJeAnsehen,f=ww=>{S.mk={s:S.season,ww};return ev('werbFaktor()');};
