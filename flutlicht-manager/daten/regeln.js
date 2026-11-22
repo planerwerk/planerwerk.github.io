@@ -458,6 +458,10 @@ const REGELN={
     // K23b (§5.5e): sonstiges: Sonstige Einnahmen (Mitglieder, Vermarktung) je Ligaspiel nach Liga, für alle Vereine. Aus der Messung BZ7 so gewählt, dass die 2. Liga im Schnitt
     // knapp im Plus und die 3. Liga knapp im Minus liegt (wie in echt). VORLÄUFIG bis K23c.
     sonstiges:{1:0,2:25000,3:60000},
+    // K23d (§5.3, §5.5f): budget: Gehaltsrahmen = gehaltAnteil × erwartete Einnahmen einer Saison (Liga-Modell ohne Transfers). Über sperreAb × Rahmen keine Käufe (du und Computer-Vereine),
+    // Transferbudget = Kontostand über einer Reserve von reserve × erwarteten Einnahmen. gehaltAnteil VORLÄUFIG 0,85 bis K23c: Heute liegen die Gehälter bei 70 bis 85 % der Einnahmen
+    // (Messung BZ7), echt sind es etwa 35 % des Umsatzes mit Transfers. Mit K23c sinkt der Anteil.
+    budget:{gehaltAnteil:0.85,sperreAb:1.1,reserve:0.1},
     // K23e (§5.5d): kredit: Laufzeiten in Jahren, Standard. raten: Anzahlung, Aufschlag auf den Rest, Zahl der Monatsraten. verzicht: Anteil der Gehälter, Dauer in Tagen, Stimmung. GESCHÄTZT.
     kredit:{jahre:[1,2,3,4,5],standard:3},raten:{anzahlung:0.5,aufschlag:0.05,monate:12},verzicht:{anteil:0.15,tage:90,stimmung:-10}},
 
@@ -792,7 +796,7 @@ const REGELN={
     // Vertrauen mit Bausteinen (K28 §5.1, §5.6, U12a). schnell: Gewicht der Werte je Sieg, Remis, Niederlage. Montags um traegheit Richtung Ziel = basis + Sport + Serie + Finanzen + Umfeld.
     // Sport: jePlatz × (Saisonziel − Platz) in sport. Serie wie bei Computer-Vereinen. Finanzen: kontoMinus bei Konto im Minus, kredit mit Kredit, zusammen mindestens finanzMin.
     // Umfeld: bei Glaubwürdigkeit unter glaubUnter linear bis umfeldMin.
-    vertrauen:{schnell:0.5,traegheit:0.2,basis:50,jePlatz:5,sport:[-35,25],serieSpiele:5,serieMitte:1.3,serieFaktor:10,serie:[-15,10],kontoMinus:-15,kredit:-5,finanzMin:-15,glaubUnter:25,umfeldMin:-10},
+    vertrauen:{schnell:0.5,traegheit:0.2,basis:50,jePlatz:5,sport:[-35,25],serieSpiele:5,serieMitte:1.3,serieFaktor:10,serie:[-15,10],kontoMinus:-15,kredit:-5,finanzMin:-15,glaubUnter:25,umfeldMin:-10,gehaltUeber:-5}, // gehaltUeber: Gehälter über dem Rahmen (K23d)
     // Ultimatum statt sofortiger Entlassung (K28 §5.3, U12a): spiele Ligaspiele Zeit, danach Entlassung mit entlassung.basis + jeGeduld × Geduld, sonst ein letztes Ultimatum.
     ultimatum:{spiele:2,entlassung:{basis:0.9,jeGeduld:-0.03}},
     // Ruf als Trainer (K28 §5.4, U12a), 0–100. Zum Saisonende erst vergessen (Richtung start), dann die Anlässe. jobsJePunkt: so viel Ansehen mehr je Punkt Ruf über start bei Jobangeboten.

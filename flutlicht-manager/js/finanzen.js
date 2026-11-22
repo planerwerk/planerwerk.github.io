@@ -58,6 +58,7 @@ function finanzenSaisonende(){const n=finSpiele();if(n>=RFP.minSpiele)S.finSchni
 function finanzenKarte(){const t=myT(),L=S.lzp||{},v=S.finV||[],p=finPrognose(false);
   const lz=transferSperre()?'<p class="neg"><b>Transfersperre in dieser Saison</b> (Lizenzauflagen nicht erfüllt).</p>':L.s===S.season&&L.fehlt&&!L.geprueft?`<p class="neg"><b>Lizenzauflagen:</b> Es fehlen ${fmt(L.fehlt)} bis zum Ende der nächsten Saison. Nachweis bis 31. Mai.</p>`:L.sperre===S.season+1?`<p class="neg">Transfersperre in der nächsten Saison.</p>`:'';
   return`<div class="card"><h3>Monate und Prognose</h3>${lz}<p>Prognose zum Saisonende: <b class="${p<0?'neg':''}">${fmt(p)}</b> <span class="dim">(laufender Saldo je Ligaspiel ${fmt(saldoJeSpiel())}, noch ${restSpiele()} Ligaspiele)</span></p>
+    <p>Gehaltsrahmen des Vorstands: <b>${fmt(gehaltsRahmen(t))}</b>, ausgeschöpft zu <b class="${rahmenAnteil(t)>1?'neg':''}">${Math.round(rahmenAnteil(t)*100)} %</b> · Transferbudget <b>${fmt(transferBudget(t))}</b> <span class="dim">(über ${Math.round(RFP.budget.sperreAb*100)} % gibt der Vorstand keine neuen Gehälter frei, über 100 % sinkt sein Vertrauen)</span></p>
     ${v.length?`<div class="tw"><table><thead><tr><th>Monat</th><th class="num">Einnahmen</th><th class="num">Ausgaben</th><th class="num">Saldo</th><th class="num" title="Kredit aufgenommen (+) oder getilgt (−)">Kredit</th><th class="num">Konto</th></tr></thead><tbody>${v.map(r=>`<tr><td>${esc(monatName(r.mo))}</td><td class="num posv">${fmt(r.ein)}</td><td class="num neg">${fmt(-r.aus)}</td><td class="num ${r.saldo<0?'neg':'posv'}">${fmt(r.saldo)}</td><td class="num">${r.k?fmt(r.k):'–'}</td><td class="num">${fmt(r.cash)}</td></tr>`).join('')}</tbody></table></div>`:'<p class="dim">Der erste Monatsbericht kommt am nächsten Monatsersten.</p>'}
     ${(S.kredite||[]).length?`<p>Kredite: ${S.kredite.map(k=>`${fmt(k.rest)} (Rate ${fmt(k.rate)} im Monat)`).join(', ')}</p>`:''}${(S.raten||[]).length?`<p>Ablösen in Raten: ${S.raten.map(r=>`${esc(r.n||'')} noch ${fmt(r.rest)} (Rate ${fmt(r.rate)})`).join(', ')}</p>`:''}
     ${verzichtAktiv()?`<p class="dim">Gehaltsverzicht läuft (${Math.round(S.verzicht.anteil*100)} %).</p>`:inNot()?`<div class="row"><button onclick="gehaltsverzicht()"${lzAus('kredit')}>Mannschaft um Gehaltsverzicht bitten</button><span class="dim">${Math.round(RFP.verzicht.anteil*100)} % für drei Monate, Stimmung ${RFP.verzicht.stimmung}, einmal je Saison</span></div>`:''}
@@ -67,9 +68,9 @@ function finanzenKarte(){const t=myT(),L=S.lzp||{},v=S.finV||[],p=finPrognose(fa
 // Sonstige Einnahmen (Mitglieder, Vermarktung, K23 §3.1) je Ligaspiel für alle Vereine, vorläufig nach Liga bis K23c
 const sonstigeEinnahmen=t=>RFP.sonstiges[t.lg]||0;
 // Zuschauer im Heimspiel ohne Würfel (Mitte der Spanne) und zum Richtpreis: so verschiebt die Rechnung für Computer-Vereine keinen Zufallsstrom
-function zuschauerErwartung(t,opp,cup){const Z=RF.zuschauer,ff=Z.formBasis+Z.formJePunkt*formPts(t.id),of=Z.gegnerBasis+(opp?opp.rep:Z.gegnerOhne)/100*Z.gegnerFaktor,lf=t.lg===1?1:t.lg===2?Z.liga2:Z.liga3;
+function zuschauerErwartung(t,opp,cup,neutral){const Z=RF.zuschauer,ff=Z.formBasis+Z.formJePunkt*(neutral?1.4:formPts(t.id)),of=Z.gegnerBasis+(opp?opp.rep:Z.gegnerOhne)/100*Z.gegnerFaktor,lf=t.lg===1?1:t.lg===2?Z.liga2:Z.liga3;
   return Math.round(Math.min(t.cap,t.fans*ff*of*lf*(cup?Z.pokal:1)*(Z.zufallBasis+Z.zufallSpanne/2)*fanFaktor(t)));}
-function kiHeimEinnahmen(t,opp,cup){const att=zuschauerErwartung(t,opp,cup);return Math.round(att*richtPreis(t)*zuschauerFaktor(t))+(t.shop?Math.round(att*RF.fanartikel[t.shop]):0)+(t.logen||0)*RF.loge;}
+function kiHeimEinnahmen(t,opp,cup,neutral){const att=zuschauerErwartung(t,opp,cup,neutral);return Math.round(att*richtPreis(t)*zuschauerFaktor(t))+(t.shop?Math.round(att*RF.fanartikel[t.shop]):0)+(t.logen||0)*RF.loge;}
 // Je Ligaspiel (ablauf.js): TV, Sponsor (Ansehen² × Ligawert wie die Angebote an dich), Sonstiges, im Heimspiel Zuschauer, Fanartikel, Logen,
 // minus Gehälter von Kader und Stab, Stadion und Betrieb, Jugendarbeit (Stufe der Computer-Vereine). Ersetzt die Pauschale fremdeEinnahmen.
 function kiFinanzenSpiel(t,r){if(!t||!aktiv(t))return;const n=(S.fx[t.lg]||[]).length||34,heim=r.h===t.id,opp=heim?(S.teams[r.a]||null):null;
@@ -84,6 +85,15 @@ function kiInsolvenzPruefen(){if(S.phase!=='play')return;const I=RFP.insolvenz;
   S.teams.forEach(t=>{if(t.id===S.my||!aktiv(t))return;if(t.cash>=-kreditRahmen(t)){if(t.fu)t.fu=0;return;}t.fu=(t.fu||0)+1;if(t.fu<I.monate||t.fins===S.season)return;
     t.fu=0;t.fins=S.season;const A=S.abzug||(S.abzug={}),a=A[S.season]||(A[S.season]={});a[t.id]=(a[t.id]||0)+I.punkte;t.cash=0;
     news(`Insolvenz: ${t.name} ist zahlungsunfähig. ${I.punkte} Punkte Abzug, die Gläubiger verzichten auf die Schulden.`,'');});}
+
+// ---------- K23d (§5.3, §5.5f): Budgets vom Vorstand ----------
+// Erwartete Einnahmen einer Saison ohne Transfers und Prämien: Liga-Modell wie bei den Computer-Vereinen (TV, Sponsor, Sonstiges, Heimspiele zum Erwartungswert)
+function erwarteteEinnahmen(t){const n=(S.fx[t.lg]||[]).length||34;return Math.round(n*(tvGeld(t)+t.rep*t.rep*(RF.sponsor['liga'+t.lg]||RF.sponsor.liga3)+sonstigeEinnahmen(t))+n/2*kiHeimEinnahmen(t,null,false,true));} // neutrale Form (1,4 Punkte je Spiel), damit der Rahmen nicht von Woche zu Woche schwankt
+const gehaltsRahmen=t=>Math.round(erwarteteEinnahmen(t)*RFP.budget.gehaltAnteil);
+const gehaltsSumme=t=>squad(t.id).reduce((s,p)=>s+p.sal,0)+stabGehaelter(t.id);
+// Anteil am Rahmen (1 = genau ausgeschöpft). Über RFP.budget.sperreAb: keine Käufe (offer, kiMarkt), über 1: Vertrauen sinkt (vorstandWoche)
+const rahmenAnteil=t=>gehaltsSumme(t)/Math.max(1,gehaltsRahmen(t));
+const transferBudget=t=>Math.max(0,t.cash-Math.round(erwarteteEinnahmen(t)*RFP.budget.reserve));
 
 // ---------- K23e (§5.5d): Kredit mit Laufzeit, Raten aus Ablösen, Gehaltsverzicht ----------
 // Kredit in Tranchen: S.kredite = [{rest, rate, bis}], S.loan bleibt die Summe der Reste (Zinsen und Anzeige wie bisher).

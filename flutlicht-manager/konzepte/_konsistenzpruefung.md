@@ -1410,3 +1410,17 @@ Zweig `mitarbeit/popolupo-k23b-computer-finanzen` (auf den Korrekturen zu Lauf 5
 | CK4 | **Insolvenzen der Computer-Vereine** sind selten (Kreditrahmen in der 3. Liga rund 12 Mio.). Erst eine lange Verlustreihe führt dorthin. Bitte über viele Saisons zählen. | ⚠️ messen |
 | CK5 | **Pokal:** Die Pauschale ging an alle Vereine, auch ohne Spiel. Jetzt bekommen nur Teilnehmer Geld, dafür mehr (Rundenprämien 0,2 bis 4,5 Mio.). | ✅ |
 | CK6 | **`tests/finanzen.js` Nr. 11 und 12:** Buchung je Spiel, Insolvenz. Nie gelaufen. | ⚠️ offen |
+
+---
+
+## CL. Nachtrag zu K23d: Budgets vom Vorstand (22. November 2026, popolupo, ohne Testlauf)
+
+Gleicher Zweig wie CK. Konzept: K23 §5.5f, §12 Nr. 19 und 20.
+
+| # | Befund | Status |
+|---|---|---|
+| CL1 | **Kaufstopp über 110 % des Rahmens** trifft Vereine mit hohen Gehältern und kleinem Stadion. Nach BZ7 wäre Leverkusen ein Kandidat. Wer als dein Verein dort startet, muss vielleicht erst verkaufen. | ⚠️ beobachten |
+| CL2 | **Gleichschritt:** Die Regel gilt für deinen Verein in der Automatik genauso wie für Computer-Vereine, ohne Zwischenspeicher, aus dem aktuellen Zustand. Beide Läufe entscheiden gleich. | ✅ entworfen |
+| CL3 | **Stabilisiert K23b:** Ein Computer-Verein mit zu hohen Gehältern kauft nicht mehr nach. Verkäufe und auslaufende Verträge senken die Gehälter mit der Zeit. Schneller geht es erst mit Notverkäufen, die gibt es noch nicht. | 📌 später |
+| CL4 | **Anteil 85 % vorläufig:** Er passt zu den heutigen Größenordnungen (Gehälter bei 70 bis 85 % der Einnahmen). Mit K23c auf echte Werte senken. | 📌 K23c |
+| CL5 | **`tests/finanzen.js` Nr. 13.** Nie gelaufen. | ⚠️ offen |

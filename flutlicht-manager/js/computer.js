@@ -210,7 +210,7 @@ function kiMarkt(){const nr=fensterNr(),vereine=S.teams.filter(t=>aktiv(t)&&stab
   const zugang=(t,tb,c,art)=>{kiWechsel(c.p,t,c.preis,art);tb.a+=c.preis;tb.n++;umzug(c.p,c.von,t.id);if(c.von!=null)kiBudget(S.teams[c.von],nr).b+=Math.round(c.preis*RCV.finanzen.reinvest);};
   // Eine Leihe (U11d1): zählt als Zugang der Woche und zur Obergrenze des Fensters, kostet kein Budget
   const leihe=(t,tb,c)=>{kiLeihe(c.p,t);leihZaehlen(z,c.p,c.von,t.id);tb.n++;umzug(c.p,c.von,t.id);};
-  dran.forEach(t=>{if(t.id===S.my&&transferSperre())return;const tb=kiBudget(t,nr),sq=kader.get(t.id);if(tb.n>=K.jeFenster[nr]||sq.length>=RM.kaeufer.kaderMax)return;
+  dran.forEach(t=>{if(t.id===S.my&&transferSperre())return;if(rahmenAnteil(t)>RFP.budget.sperreAb)return;const tb=kiBudget(t,nr),sq=kader.get(t.id);if(tb.n>=K.jeFenster[nr]||sq.length>=RM.kaeufer.kaderMax)return;
     // Sternejagd zuerst: ehrgeizige Vereine, einmal je Saison im Sommerfenster. Gelingt sie, war das der Zugang dieser Woche.
     if(nr===RCV.sterneJagd.fenster&&!tb.s&&vereinsProfile(t).includes('ehrgeizig')){const c=kiStern(t,plan(t),tb.b-tb.a,kader);if(c){tb.s=1;zugang(t,tb,c,'stern');return;}}
     // Je Lücke: bei „verletzt“ zuerst Leihe, dann Kauf; bei „offen“ zuerst Kauf, sonst Leihe (§5.9). Dein Verein leiht nur in der Automatik (Bereich leihe, seit T1.1).

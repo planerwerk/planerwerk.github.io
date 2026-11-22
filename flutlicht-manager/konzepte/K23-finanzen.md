@@ -151,6 +151,17 @@ Gebaut:
 - **Insolvenz für Computer-Vereine** nach deiner Regel: zwei Monatserste unter dem negativen Kreditrahmen, 9 Punkte Abzug, Schuldenschnitt. Bei einem Kreditrahmen von 12 Mio. für einen Drittligisten kommt das selten und erst nach Jahren.
 - **Noch nicht:** Lizenzprüfung für Computer-Vereine (mit den Budgets in K23d), Säulenmodell der TV-Gelder (§5.1, mit den echten Beträgen in K23c), Zuschauer der Computer-Vereine im Europapokal.
 
+### 5.5f Umsetzung K23d (22.11.2026, popolupo): Budgets vom Vorstand
+
+- **Gehaltsrahmen** = 85 % der erwarteten Einnahmen einer Saison ohne Transfers:
+  - TV, Sponsor und Sonstiges je Ligaspiel, dazu die Heimspiele zum Erwartungswert.
+  - Die Form ist dabei neutral, damit der Rahmen nicht schwankt.
+  - **Vorläufig 85 % statt 50 % (§5.3):** Heute liegen die Gehälter im Spiel bei 70 bis 85 % dieser Einnahmen (BZ7). Mit K23c sinkt der Anteil.
+- **Über 100 %** sinkt das Vertrauen des Vorstands (Baustein Finanzen −5).
+- **Über 110 %** gibt der Vorstand keine neuen Gehälter frei. Das gilt für dich (Angebot) und für Computer-Vereine (kein Kauf im Fenster), damit beide Läufe im Gleichschritt-Test gleich entscheiden.
+- **Transferbudget** = Kontostand über einer Reserve von 10 % der erwarteten Einnahmen. Vorerst nur Anzeige, das Budget der Computer-Vereine bleibt wie bisher ein Anteil des Kontos (K31).
+- **Noch nicht:** Zielgespräch (K28 §5.2), sparsame Profile mit mehr Reserve, Lizenzprüfung für Computer-Vereine.
+
 ### 5.6 Größenordnungen
 
 - Ziel: Erstligisten im Schnitt etwa 280 Mio. € Umsatz (2024/25: 5,12 Mrd. € für 18 Vereine), Zweitligisten etwa 67 Mio. € (1,21 Mrd. €), mit großer Spanne. Der größte Verein liegt nahe einer Milliarde.
@@ -285,6 +296,8 @@ finanzen:{
 16. Sonstige Einnahmen je Ligaspiel nach Liga für alle Vereine (0, 25.000, 60.000 €), vorläufig bis K23c (§5.5e).
 17. Insolvenz für Computer-Vereine nach deiner Regel, Lizenzprüfung für sie erst mit K23d (§5.5e).
 18. Das Säulenmodell der TV-Gelder kommt mit K23c (§5.5e).
+19. K23d vor K23c, weil Budgets Anteile der Einnahmen sind und nicht von den Größenordnungen abhängen (§5.5f).
+20. Gehaltsrahmen 85 % der erwarteten Einnahmen bis K23c, über 110 % keine neuen Gehälter, für dich und Computer-Vereine (§5.5f).
 
 **Quellen der Recherche vom 21.11.2026:**
 - Personalaufwand 2. Liga zum Gesamterlös: https://report.bundesliga.de/2425/de/_assets/downloads/key-bundesliga-2-dfl-er25.pdf

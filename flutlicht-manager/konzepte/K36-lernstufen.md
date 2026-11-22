@@ -298,6 +298,7 @@ lizenz:{
 56. **U19b Prämien und Ansehen im Europapokal (21.11., popolupo, ohne Testlauf):** keine neue Funktion, kein neuer Bereich. Prämien, Ansehen und Vertrauen sind Folgen der Spiele.
 57. **U19c Länderwertung, Interesse, Nebenziel (21.11., popolupo, ohne Testlauf):** keine neue Funktion, kein neuer Bereich. Die Länderwertung ist Information, das Nebenziel gehört zum Vorstand wie die übrigen Nebenziele.
 58. **K25b Karte „Trikot ausverkauft“ (21.11., popolupo, ohne Testlauf):** keine neue Funktion. Die Karte gehört zum Bereich `ereignisse`, der Auslöser schaut nicht auf Lizenzen (Gleichschritt).
+59. **K23b und K23d Finanzen der Computer-Vereine, Budgets (22.11., popolupo, ohne Testlauf):** keine neue Funktion, kein neuer Bereich. Gehaltsrahmen und Transferbudget sind Information, der Kaufstopp über 110 % ist eine Folge und gilt für Automatik und Computer-Vereine gleich (Gleichschritt).
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 

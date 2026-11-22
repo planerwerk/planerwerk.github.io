@@ -436,6 +436,11 @@ Datei: `konzepte/K23-finanzen.md`
 - Insolvenz auch für Computer-Vereine. Die Lizenzprüfung bekommen sie erst mit K23d.
 - Das Säulenmodell der TV-Gelder kommt mit K23c.
 
+**Mit K23d von popolupo vorläufig entschieden (22.11.2026, K23 §12 Nr. 19 und 20):**
+
+- K23d kommt vor K23c.
+- Der Gehaltsrahmen ist 85 % der erwarteten Einnahmen, bis K23c. Über 100 % sinkt das Vertrauen, über 110 % gibt es keine neuen Gehälter, für dich und die Computer-Vereine.
+
 ## K24 – Sponsoren
 Datei: `konzepte/K24-sponsoren.md`
 

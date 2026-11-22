@@ -19,8 +19,9 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 | Schritt | Zweig | Stand |
 |---|---|---|
 | Korrekturen zu Lauf 5 (T5.1 bis T5.5, CH4) | `mitarbeit/popolupo-t5-korrekturen` (auf 0fae7b8) | fertig, ungetestet |
-| **K23b** Computer-Vereine mit Einnahmen und Ausgaben nach dem Modell statt Pauschale (mit den Zahlen aus BZ7) | `mitarbeit/popolupo-k23b-computer-finanzen` (auf den Korrekturen) | **jetzt** |
-| K23c echte Größenordnungen, K23d Budgets vom Vorstand | danach | offen |
+| **K23b** Computer-Vereine mit Einnahmen und Ausgaben nach dem Modell statt Pauschale (mit den Zahlen aus BZ7) | `mitarbeit/popolupo-k23b-computer-finanzen` (auf den Korrekturen) | fertig, ungetestet |
+| **K23d** Budgets vom Vorstand (Gehaltsrahmen, Transferbudget) | derselbe Zweig | fertig, ungetestet |
+| K23c echte Größenordnungen | danach | Plan in K23 §5.6a, wartet auf die Messung von Gehältern und Marktwerten |
 | U19d Kaderliste der UEFA, volle Kader der Auslandsvereine | danach | Entwurf in K37 §5.6, §5.7 |
 
 **Die neueste Spitze ist immer der zuletzt genannte Zweig, er enthält alles davor.** K24 ist fertig (Claude).
@@ -45,6 +46,16 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 ---
 
 ## Changelog
+
+### 22.11.2026: K23d Budgets vom Vorstand (Zweig `mitarbeit/popolupo-k23b-computer-finanzen`)
+
+- **Neu in `js/finanzen.js`:** `erwarteteEinnahmen`, `gehaltsRahmen` (85 % davon, vorläufig), `rahmenAnteil`, `transferBudget`. Anzeige auf der Finanzseite.
+- **Geändert:**
+  - `offer` blockt neue Gehälter über 110 % des Rahmens.
+  - `kiMarkt` lässt Vereine über 110 % nicht kaufen, auch deinen in der Automatik (Gleichschritt).
+  - `vorstandWoche` zieht über 100 % Vertrauen ab.
+- **Zu erwarten:** Teure Vereine mit kleinem Stadion kaufen weniger (CL1). Das bremst die Verluste aus K23b (CL3).
+- **Tests zuerst:** `tests/finanzen.js` (Nr. 13 neu), `tests/lizenz.js` (Gleichschritt), `tests/transfers.js` (Kauf mit neuer Grenze), `tests/vorstand.js`.
 
 ### 22.11.2026: Plan für K23c, Messung erweitert (Zweig `mitarbeit/popolupo-k23b-computer-finanzen`)
 
