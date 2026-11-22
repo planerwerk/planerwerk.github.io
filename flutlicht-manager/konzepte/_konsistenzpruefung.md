@@ -1713,3 +1713,16 @@ Zweig `mitarbeit/popolupo-k26d-dach`, auf K25c. Ausführlich in K26 §5.3.
 | DH1 | **Engine:** `side` setzt `sd.dach` einmal je Spiel (nur für den Gastgeber), `teamWerte` multipliziert den Heimvorteil damit. Seiten, die anderswo gebaut werden, haben kein `dach` und rechnen mit 1. | ✅ |
 | DH2 | **Schätzung der Auslastung:** ohne den konkreten Gegner (die Seite kennt ihn nicht), also etwas vorsichtig. Ohne Würfel. | ✅ |
 | DH3 | **Gleichschritt:** Nur dein Verein kann bauen, die Automatik baut nicht. | ✅ |
+
+---
+
+## DI. Prüfung von K25c und K26d ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 8a94e04 und 0f01091 gelesen (nichts ausgeführt). Korrekturen auf der neuesten Spitze `mitarbeit/popolupo-k26d-dach`. K25c ohne Befund.
+
+| # | Befund | Status |
+|---|---|---|
+| DI1 | **Dach ohne Ticketpreis:** Die Schätzung der Auslastung kam aus dem Modell der Computer-Vereine (Richtpreis). Bei doppeltem Preis bekam ein halb leeres Stadion den Bonus, bei Kampfpreisen ein ausverkauftes keinen. Jetzt mit deinem Preis (`preisFaktor`, dieselbe Formel wie `attendance`). `tests/stadion.js` Nr. 11 prüft beide Fälle. | ✅ behoben |
+| DI2 | **Kommentar:** `dachFaktor` hatte einen ungenutzten Parameter für den Gegner. Entfernt, Kommentar richtig gestellt. | ✅ behoben |
+| DI3 | **Älterer Fehler:** Die Preisvorschau (`zuschauerSpanne`) rechnete die 3. Liga mit dem Faktor der 2. Liga (0,82 statt 0,7) und zeigte etwa 17 % zu viele Zuschauer. Jetzt wie `attendance`. | ✅ behoben |
+| DI4 | Ohne Befund: Bau des Dachs über die allgemeinen Abläufe, Computer-Vereine bauen es nicht, `zuschauerErwartung` aus `side` ohne Zufall und nur mit Dach, Gleichschritt, Tests, K25c. | ✅ |

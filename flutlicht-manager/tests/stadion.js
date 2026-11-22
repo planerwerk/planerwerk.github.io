@@ -64,6 +64,8 @@ function bisFertig(w){const {F,S,ev}=w;let d=S.tag,n=0;while(S.constr&&n<400){d+
 // 11. K26d: Dach: Heimvorteil × 1,005, wenn das Heimspiel voraussichtlich voll ist, sonst nichts; ohne Dach nichts; auswärts nichts
 {const {F,S,ev,t}=welt(),A=ev('RB').anlagen.dach;t.anl=t.anl||{};t.anl.dach=0;const k0=F.side(S.my,true,false).w.K;
   t.anl.dach=1;t.cap=100;const voll=F.dachFaktor(S.my),k1=F.side(S.my,true,false).w.K,aus=F.side(S.my,false,false).dach;t.cap=1e6;const leer=F.dachFaktor(S.my);
-  pruef(Math.abs(voll-(1+A.heim))<1e-12&&Math.abs(k1/k0-(1+A.heim))<1e-9&&aus===1&&leer===1,'K26d: Dach wirkt nur bei vollem Stadion auf den Heimvorteil',`voll ${voll}, Teamwert ${k0.toFixed(3)} → ${k1.toFixed(3)}, auswärts ${aus}, leer ${leer}`);}
+  // DI1: mit deinem Ticketpreis. Zum Richtpreis knapp voll, zum doppelten Preis nicht mehr
+  const d=ev('zuschauerErwartung')(t,null,false,false,true),rp=Math.round(ev('richtPreis')(t));t.cap=Math.floor(d*ev('preisFaktor')(t,rp)*0.97);t.price=rp;const rich=F.dachFaktor(S.my);t.price=rp*2;const teuer=F.dachFaktor(S.my);t.price=rp;
+  pruef(Math.abs(voll-(1+A.heim))<1e-12&&Math.abs(k1/k0-(1+A.heim))<1e-9&&aus===1&&leer===1&&Math.abs(rich-(1+A.heim))<1e-12&&teuer===1,'K26d: Dach wirkt nur bei vollem Stadion auf den Heimvorteil',`voll ${voll}, Teamwert ${k0.toFixed(3)} → ${k1.toFixed(3)}, auswärts ${aus}, leer ${leer}`);}
 
 console.log(probleme.length?`\n${probleme.length} Problem(e).`:'\nAlles in Ordnung.');process.exitCode=probleme.length?1:0;

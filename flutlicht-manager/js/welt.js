@@ -52,7 +52,9 @@ const richtPreis=t=>RF.zuschauer.refBasis+t.rep*RF.zuschauer.refJeAnsehen;
 // Talent als Band aus der Sterne-Stufe: zeigt dieselbe Auskunft wie die Sterne, nur als Regler
 function talentBand(p){const s=Math.round(p.str),st=RP.sterne,n=clamp(sternZahl(p)+sternFehler(p),1,4);const[a,b]=n===4?[st[0],99]:n===3?[st[1],st[0]]:n===2?[st[2],st[1]]:[0,st[2]];return[Math.min(99,s+a),Math.min(99,s+b)];}
 // Vorhersage für den Ticketpreis-Regler: Zuschauer je Ligaheimspiel als Spanne (schwächster bis stärkster Gegner, mit Tageszufall). Würfelt nicht.
-function zuschauerSpanne(t,preis){const Z=RF.zuschauer,ref=Z.refBasis+t.rep*Z.refJeAnsehen,pf=clamp(Math.pow(ref/preis,Z.preisExponent),Z.preisMin,Z.preisMax),ff=Z.formBasis+Z.formJePunkt*formPts(t.id),lf=t.lg===1?1:Z.liga2;
+// Preiswirkung auf die Zuschauer: (Richtpreis / Preis)^Exponent, begrenzt (wie attendance in ablauf.js, seit Prüfung DI1 auch für das Dach)
+const preisFaktor=(t,preis)=>{const Z=RF.zuschauer,ref=Z.refBasis+t.rep*Z.refJeAnsehen;return clamp(Math.pow(ref/preis,Z.preisExponent),Z.preisMin,Z.preisMax);};
+function zuschauerSpanne(t,preis){const Z=RF.zuschauer,pf=preisFaktor(t,preis),ff=Z.formBasis+Z.formJePunkt*formPts(t.id),lf=t.lg===1?1:t.lg===2?Z.liga2:Z.liga3; // 3. Liga mit liga3 wie attendance (DI3)
   const reps=S.teams.filter(x=>x.lg===t.lg&&x.id!==t.id).map(x=>x.rep),f=rep=>t.fans*pf*ff*(Z.gegnerBasis+rep/100*Z.gegnerFaktor)*lf*fanFaktor(t); // Fanstimmung (K27, U16)
   return[Math.round(Math.min(t.cap,f(Math.min(...reps))*Z.zufallBasis)),Math.round(Math.min(t.cap,f(Math.max(...reps))*(Z.zufallBasis+Z.zufallSpanne)))];}
 

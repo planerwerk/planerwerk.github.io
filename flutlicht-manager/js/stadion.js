@@ -4,9 +4,10 @@
 // (eine Baustelle zur Zeit wie bisher; ältere Stände haben {k, bis (Tag der Saison), label}), am Verein t.anl = {training, nlz, reha, catering, tafel}, t.bausumme.
 // Zufall: beim Start einer Baustelle alles auf einmal im eigenen Strom 'bau'.
 const ANLAGEN=['training','nlz','reha','catering','tafel','dach'];
-// Dach (K26d): Heimvorteil × (1 + heim) für den Gastgeber, wenn die erwarteten Zuschauer (ohne Würfel, gegen den Gegner) mindestens abAuslastung der Plätze sind. Engine: side()
-function dachFaktor(tid,gegner){const t=tid>=0&&tid<1000?S.teams[tid]:null,A=RB.anlagen.dach;if(!t||anlage(t,'dach')<1)return 1;
-  const g=gegner!=null&&gegner<1000?S.teams[gegner]:null;return zuschauerErwartung(t,g,false,false)>=t.cap*A.abAuslastung?1+A.heim:1;}
+// Dach (K26d): Heimvorteil × (1 + heim) für den Gastgeber, wenn die erwarteten Zuschauer (ohne Würfel, ohne den konkreten Gegner, Liga) mindestens abAuslastung der Plätze sind.
+// Bei deinem Verein mit deinem Ticketpreis wie in attendance (Prüfung DI1), sonst hätte ein halb leeres Stadion bei teuren Tickets den Bonus bekommen. Engine: side()
+function dachFaktor(tid){const t=tid>=0&&tid<1000?S.teams[tid]:null,A=RB.anlagen.dach;if(!t||anlage(t,'dach')<1)return 1;
+  const n=Math.min(t.cap,zuschauerErwartung(t,null,false,false,true)*(t.id===S.my?preisFaktor(t,t.price):1));return n>=t.cap*A.abAuslastung?1+A.heim:1;}
 // Stufe einer Anlage (Computer-Vereine und alte Stände: Startstufe)
 const anlage=(t,k)=>{const A=RB.anlagen[k];return t&&t.anl&&t.anl[k]!=null?t.anl[k]:A.start;};
 const anlageKosten=(t,k)=>{const A=RB.anlagen[k],st=anlage(t,k);return Math.round(A.kosten*Math.pow(RB.anlagen.faktor,Math.max(0,st-A.start))/1e5)*1e5;};

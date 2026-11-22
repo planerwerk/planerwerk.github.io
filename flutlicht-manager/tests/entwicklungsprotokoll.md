@@ -76,6 +76,12 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 22.11.2026: Korrekturen nach Prüfung DI (Zweig `mitarbeit/popolupo-k26d-dach`)
+
+- Ein lesender Prüf-Agent hat K25c und K26d durchgesehen (Konsistenzprüfung DI).
+- **Behoben:** Dach mit deinem Ticketpreis (DI1), Kommentar und Parameter von `dachFaktor` (DI2), Preisvorschau der 3. Liga mit dem richtigen Ligafaktor (DI3, älterer Fehler).
+- **Tests zuerst:** `tests/stadion.js` (Nr. 11), `tests/fans.js` und `tests/ui-zwei-saisons.js` (Preisvorschau).
+
 ### 22.11.2026: K26d Dach (Zweig `mitarbeit/popolupo-k26d-dach`, auf K25c)
 
 - **Neu (K26 §3.1, §5.3, Konsistenzprüfung DH):** Dach als Anlage (15 Mio. €, 20 Wochen). Heimvorteil × 1,005, wenn das Heimspiel voraussichtlich voll ist (Engine `side`, `dachFaktor`).
