@@ -173,11 +173,17 @@ Gebaut:
 
 | Bereich | 1. Liga echt | 1. Liga Spiel | 2. Liga echt | 2. Liga Spiel | 3. Liga echt | 3. Liga Spiel |
 |---|---|---|---|---|---|---|
-| Umsatz | 267 Mio. (4,80 Mrd. / 18) | 42 Mio. | 59 Mio. (1,07 Mrd. / 18) | 15 Mio. | etwa 16 Mio. (Aufwand 16,8 Mio., Minus etwa 0,6 Mio.) | 6 Mio. |
-| Medien national | etwa 50 Mio. (Topf 1,121 Mrd., 80 % für die 1. Liga) | 10 Mio. | etwa 12,5 Mio. | 3,3 Mio. | nicht recherchiert | 1,4 Mio. |
-| Werbung | 57 Mio. (1,02 Mrd. / 18) | 8 Mio. | nicht recherchiert | 1,7 Mio. | nicht recherchiert | 0,5 Mio. |
-| Spieltag | 29 Mio. (524 Mio. / 18) | 24 Mio. | nicht recherchiert | 10 Mio. | nicht recherchiert | 4,5 Mio. |
-| Personal Spielbetrieb | 93 Mio. (1,67 Mrd. / 18) | 30 Mio. | 16,4 Mio. (296 Mio. / 18) | 12 Mio. | nicht recherchiert | 7 Mio. |
+| Umsatz | 267 Mio. (4,80 Mrd. / 18) | 42 Mio. | 59 Mio. (1,07 Mrd. / 18) | 15 Mio. | 16,2 Mio. (Aufwand 16,8 Mio.) | 6 Mio. |
+| Medien national | etwa 50 Mio. (Topf 1,121 Mrd., 80 % für die 1. Liga) | 10 Mio. | etwa 12,5 Mio. | 3,3 Mio. | 1,3 bis 2,0 Mio. (26,2 Mio. brutto für 20 Vereine) | 1,4 Mio. |
+| Werbung | 57 Mio. (1,02 Mrd. / 18) | 8 Mio. | nicht recherchiert | 1,7 Mio. | etwa 5,8 Mio. | 0,5 Mio. |
+| Spieltag | 29 Mio. (524 Mio. / 18) | 24 Mio. | nicht recherchiert | 10 Mio. | 3,1 Mio. (55,6 Mio. / 18) | 4,5 Mio. |
+| Personal Spielbetrieb | 93 Mio. (1,67 Mrd. / 18) | 30 Mio. | 16,4 Mio. (296 Mio. / 18) | 12 Mio. | 5,5 Mio. (Gruppen 7,0 / 5,4 / 4,0) | 7 Mio. |
+
+**3. Liga im Einzelnen (Nachtrag 22.11.):**
+- TV stimmt schon ungefähr.
+- Werbung ist im Spiel etwa ein Zehntel der echten.
+- Spieltag und Gehälter liegen im Spiel über den echten Werten.
+- Das Minus der Drittligisten im Spiel kommt deshalb vor allem von der zu kleinen Werbung. Die sonstigen Einnahmen aus K23b (§5.5e) sind dafür nur eine Krücke. In K23c ersetzt sie eine Werbung mit Grundbetrag je Liga statt nur Ansehen², danach fallen die sonstigen Einnahmen wieder auf echte 7–11 %.
 
 **Was daraus folgt:**
 - Zuschauer, Pokalprämien und vermutlich auch die Ablösen liegen im Spiel schon nahe an echt.
@@ -200,10 +206,9 @@ Gebaut:
 7. **Reihenfolge:** erst messen, wie Gehälter und Marktwerte im Spiel heute verteilt sind (je Liga Schnitt und Spanne), dann alle Werte in einem Commit, dann ein voller Testlauf.
 
 **Noch zu recherchieren:**
-- TV-Topf der 3. Liga.
-- Werbung und Spieltag der 2. und 3. Liga.
-- Personal der 3. Liga.
+- Werbung und Spieltag der 2. Liga.
 - Echte Gehälter und Marktwerte nach Stärke (zum Beispiel Kaderwert und Gehaltsliste eines Vereins je Liga).
+- Erledigt am 22.11.: TV, Werbung, Spieltag und Personal der 3. Liga (DFB-Saisonreport 2023/24).
 
 ## 6. Hebel des Spielers
 
@@ -307,7 +312,7 @@ finanzen:{
 
 ## Quellen
 
-- Wirtschaftszahlen 2023/24 für den Plan K23c (abgerufen 22.11.2026): [DFL-Wirtschaftsreport, Bundesliga, Gewinn- und Verlustrechnung](https://report.bundesliga.de/2324/en/economic-report/economic-figures/bundesliga/income-statement.html), [DFL, 2. Bundesliga](https://report.bundesliga.de/2324/en/economic-report/economic-figures/bundesliga-2/income-statement.html), [DFL, Lizenzfußball](https://report.bundesliga.de/2324/en/economic-report/economic-figures/licensed-football/revenue-and-expenditure.html), [DFB-Saisonreport 3. Liga 2023/24](https://assets.dfb.de/uploads/000/315/789/original_Saisonreport_3Liga_A4_23_24.pdf), [Stuttgarter Zeitung, Umsatzrekord](https://www.stuttgarter-zeitung.de/sport/dfl-erstmals-ueber-sechs-milliarden-ligen-mit-rekordumsatz-79123089.html)
+- Wirtschaftszahlen 2023/24 für den Plan K23c (abgerufen 22.11.2026): [DFL-Wirtschaftsreport, Bundesliga, Gewinn- und Verlustrechnung](https://report.bundesliga.de/2324/en/economic-report/economic-figures/bundesliga/income-statement.html), [DFL, 2. Bundesliga](https://report.bundesliga.de/2324/en/economic-report/economic-figures/bundesliga-2/income-statement.html), [DFL, Lizenzfußball](https://report.bundesliga.de/2324/en/economic-report/economic-figures/licensed-football/revenue-and-expenditure.html), [DFB-Saisonreport 3. Liga 2023/24](https://assets.dfb.de/uploads/000/315/789/original_Saisonreport_3Liga_A4_23_24.pdf) (Werte aus dem ePaper, Seiten 31 und 41 bis 45, Tabellen nur maschinell gelesen), [DFB, Medienrechte 3. Liga](https://www.dfb.de/news/dfb-schreibt-medienrechte-fuer-3-liga-neu-aus), [Stuttgarter Zeitung, Umsatzrekord](https://www.stuttgarter-zeitung.de/sport/dfl-erstmals-ueber-sechs-milliarden-ligen-mit-rekordumsatz-79123089.html)
 
 - Umsatz 2024/25, Bundesliga und 2. Liga, Kosten, Gewinn: [bundesliga.com](https://www.bundesliga.com/de/bundesliga/news/bundesliga-saison-2024-25-dfl-milliarden-umsatz-rekord-35757), [sportschau.de](https://sportschau.de/fussball/bundesliga/dfl-verkuendet-umsatzrekord-der-bundesligisten,dfl-umsatzrekord-102.html), [DFL Economic Report 24/25](https://report.bundesliga.de/2425/en/economic-report/economic-figures/licensed-football/revenue-and-expenditure.html)
 - Erlösstruktur 2022/23: [DFL-Kennzahlen Bundesliga (PDF)](https://report.bundesliga.de/2425/de/_assets/downloads/key-bundesliga-dfl-er25.pdf)
