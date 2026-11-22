@@ -40,13 +40,14 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 | **K25d** Mitglieder und Mitgliederaktion, dazu Kleinigkeiten zu K29c, Korrekturen DL | `mitarbeit/popolupo-k25d-mitglieder` (auf K29c) | fertig, ungetestet |
 | **K29d** Medienklima und Beziehungen in der Pressekonferenz | `mitarbeit/popolupo-k29d-klima-fragen` (auf K25d) | fertig, ungetestet |
 | **U12g** Trainervertrag als Karriere-Statistik (K28 §5.10), dazu Korrekturen DM zu K29d | `mitarbeit/popolupo-u12g-trainervertrag` (auf K29d) | fertig, ungetestet |
-| **K29e** Medienprofil der Computer-Trainer, Sticheleien vor Topspielen | `mitarbeit/popolupo-k29e-trainer-medienprofil` (auf U12g) | fertig, ungetestet |
+| **K29e** Medienprofil der Computer-Trainer, Sticheleien vor Topspielen | `mitarbeit/popolupo-k29e-trainer-medienprofil` (auf U12g) | fertig, ungetestet. **Lädt allein nicht** (Namenskonflikt aus U12g, DN1), erst die nächste Spitze |
+| **U12h** Ruf wirkt (K28 §5.11), dazu Korrekturen DN zu U12g (Namenskonflikte) | `mitarbeit/popolupo-u12h-ruf-wirkt` (auf K29e) | fertig, ungetestet |
 | U19d2 volle Kader der Auslandsvereine in der Engine | zurückgestellt | Entwurf in K37 §5.7. Die Engine behandelt Auslandsvereine als Block wie Amateure, viele Stellen schlagen Spieler in `PIX` nach. Erst nach einem Testlauf und der Messung des Faktors 0,93 |
 
 **Die neueste Spitze ist immer der zuletzt genannte Zweig, er enthält alles davor.** K24 ist fertig (Claude).
 
-**Vorschlag für den nächsten Testlauf** (Spitze `mitarbeit/popolupo-k29e-trainer-medienprofil`, alles ungetestet, aber von lesenden Prüf-Agenten durchgesehen, Konsistenzprüfung CS, CX, CZ, DD, DF, DI, DL, DM):
-1. `node tests/code.js`, dann die schnellen Einzeltests der neuen Teile: `finanzen.js` (Nr. 11 bis 20), `geruechte.js`, `schwierigkeit.js`, `werbung.js`, `europapokal.js`, `vorstand.js` (Nr. 10 bis 15), `karriereende.js`, `stadion.js` (Nr. 8 bis 11), `karten.js`, `spielwelt-karten.js`, `fans.js` (K27b), `abwerben.js` (K20b), `transfers.js` (K20c), `presse.js` (K29b bis K29e), `marketing.js` (K25c, K25d).
+**Vorschlag für den nächsten Testlauf** (Spitze `mitarbeit/popolupo-u12h-ruf-wirkt`, alles ungetestet, aber von lesenden Prüf-Agenten durchgesehen, Konsistenzprüfung CS, CX, CZ, DD, DF, DI, DL, DM, DN). **Wichtig:** Die Zweige `u12g` und `k29e` laden für sich allein nicht (DN1), bitte die Spitze nehmen:
+1. `node tests/code.js`, dann die schnellen Einzeltests der neuen Teile: `finanzen.js` (Nr. 11 bis 20), `geruechte.js`, `schwierigkeit.js`, `werbung.js`, `europapokal.js`, `vorstand.js` (Nr. 10 bis 16), `karriereende.js`, `stadion.js` (Nr. 8 bis 11), `karten.js`, `spielwelt-karten.js`, `fans.js` (K27b), `abwerben.js` (K20b), `transfers.js` (K20c), `presse.js` (K29b bis K29e), `marketing.js` (K25c, K25d).
 2. `node tests/lizenz.js` (Gleichschritt, neue Bereiche `zielgespraech`).
 3. `node tests/finanzmodell.js 2`: Salden je Liga nach K23c. Erwartet nach der Modellrechnung 1. Liga etwa +11 Mio., 2. Liga etwa 0, 3. Liga etwa −1 Mio. je Verein und Saison ohne Transfers (K23 §5.6b). Weichen sie stark ab, bitte die Zeilen ins Testprotokoll, ich stelle dann `REGELN.finanzen.verwaltung` und `sponsor` nach.
 4. Die langen Läufe: `welt.js` über zehn Saisons (Karriereende CR3, Pool CR4, Bauten CT3, Transfers CP3/CP4), `ui-zwei-saisons.js`, `fuzz-karrieren.js`.
@@ -80,6 +81,17 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 ---
 
 ## Changelog
+
+### 22.11.2026: U12h Ruf wirkt, dazu Korrekturen DN zu U12g (Zweig `mitarbeit/popolupo-u12h-ruf-wirkt`, auf K29e)
+
+- **Korrekturen DN (wichtig):** U12g hatte drei Namen, die es für Spieler schon gab: `abfindung`, `vertragEnde` und `vertragText`.
+  - Der erste Name brach das Laden (SyntaxError). Die anderen beiden hätten still die Spielerfassung ersetzt.
+  - Jetzt heißen sie `trainerAbfindung`, `trainerVertragEnde` und `trainerVertragText`.
+  - Dazu: Die Anzeige liest nur, der Vertrag kommt beim Laden. Der Jobwechsel in `tests/sim.js` läuft wie `takeJob`, „verdient“ enthält die laufende Saison.
+  - Neue Prüfung vor jedem Commit: `dubletten.pl` für doppelte Namen.
+- **Neu U12h (K28 §5.11):** Dein Ruf als Trainer wirkt auf das Interesse von Spielern, auf das Ruf-Gefälle in der Kabine (statt der Trainerjahre) und auf die Glaubwürdigkeit beim neuen Verein.
+- **Tests zuerst:** `tests/vorstand.js` Nr. 15 und 16, dann alle Tests, die über `tests/sim.js` laufen (der Jobwechsel ist neu).
+- **Zu erwarten:** Der Gleichschritt bleibt gleich, denn in 150 Tagen bleibt der Ruf beim Start. `tests/kabine.js` (Ruf-Gefälle): In der ersten Saison gilt derselbe Wert, später hängt er am Erfolg statt an den Jahren.
 
 ### 22.11.2026: K29e Medienprofil der Computer-Trainer und Sticheleien (Zweig `mitarbeit/popolupo-k29e-trainer-medienprofil`, auf U12g)
 

@@ -291,7 +291,8 @@ const REGELN={
     sicher:[0.6,0.02],praemie:{halbAbMinute:46,punktAbMinuten:45,zuNullAbMinuten:60},
     ausstieg:{billigAb:1.5,mittelAb:3,bonus:0.1,chance:0.25},
     ligaklausel:{malus:0.05,ref:0.3,stufen:[0,0.2,0.3,0.5]},
-    interesse:{lage:0.3,lageMitte:55,wechselwunsch:15,bindung:-3,treu:-10,landsleute:3,landsleuteMax:6,geldAb:-10,geldJePunkt:0.03},
+    interesse:{lage:0.3,lageMitte:55,wechselwunsch:15,bindung:-3,treu:-10,landsleute:3,landsleuteMax:6,geldAb:-10,geldJePunkt:0.03,
+      ruf:0.2}, // U12h (K28 §5.4, 22.11., GESCHÄTZT): je Punkt deines Rufs als Trainer über dem Start mehr Interesse, darunter weniger
     vorvertrag:{von:'01-01',bis:'06-30',chance:0.06,ansehenMinus:5},
     bank:{vertragsjahr:1.5,soeldner:2,neuzugang:1.5,neuTage:365,teuerAnteil:0.25}},
 
@@ -754,7 +755,7 @@ const REGELN={
     rolle:{zuNiedrig:-4,diva:2,hoeher:1,hoeherMax:2},           // deine Rolle unter seiner Einschätzung: −4 je Stufe (Diva doppelt)
     trainerZerfall:0.1,                  // Wirkung von Gesprächen im Baustein „Trainer“ verblasst um 10 % pro Woche
     traegheit:0.2,wocheMax:8,sofortMax:10,
-    rufGefaelle:{ab:15,lob:0.5,kritik:2,einsatz:1.5,trainer:[50,0.3,3,95]}, // Ruf des Trainers bis K28: 50 + 0,3 × Ansehen + 3 je Trainerjahr, höchstens 95
+    rufGefaelle:{ab:15,lob:0.5,kritik:2,einsatz:1.5,trainer:[50,0.3,0.5,95]}, // Ruf des Trainers in der Kabine seit U12h (K28 §5.4): 50 + 0,3 × Ansehen + 0,5 je Punkt Ruf über dem Start, höchstens 95 (vorher 3 je Trainerjahr)
     folgen:{leistung:{unter:20,minus:0.03,ueber:85,plus:0.02},lernenUnter:30,lernen:0.7,vertragUnter:[40,25],vertragAufschlag:0.25},
     wechsel:{grummeln:[45,2],gespraech:[40,2],offiziell:4,oeffentlich:4,oeffentlichChance:0.1,oeffentlichDiva:0.3,abloese:0.9,teamMinus:3,zurueckAb:50},
     ansteckung:{fuehrerUnter:35,freunde:-2,fuehrerUeber:70,alleUnter:50,alle:1},
@@ -823,7 +824,8 @@ const REGELN={
     start:{scouts:[[0,1],[60,2],[80,3]],vereinslos:8}},        // Scouts je Verein nach Ansehen, dazu vereinslose
   // Gespräche und Ansprachen (K15 §11, U8): Glaubwürdigkeit, Wirkung, Abnutzung, Versprechen, Mannschaftsansprache
   gespraeche:{proWoche:3,schuetzenSv:0.3,
-    glaubwuerdigkeit:{start:60,faktor:[0.5,0.7],erholungBis:60,erholung:1,gehalten:3,gebrochen:-10,offenAb:4,offenMinus:2,krise:25,krisenVorstand:-3},
+    glaubwuerdigkeit:{start:60,faktor:[0.5,0.7],erholungBis:60,erholung:1,gehalten:3,gebrochen:-10,offenAb:4,offenMinus:2,krise:25,krisenVorstand:-3,
+      jeRuf:0.3,neuGrenzen:[30,90]}, // U12h (K28 §5.4, 22.11., GESCHÄTZT): Start beim neuen Verein = start + jeRuf × (Ruf − Startruf), in neuGrenzen
     wirkung:{rolle:3,einsatz:10,geduld:5,wechsel:8,konkurrent:6,schuetzen:3,lob:4,kritik:-4,unpassend:-0.5,nachStreit:0.5,nachStreitTage:28,trainerAnteil:0.5},
     lage:{lobBis:3,kritikAb:4},           // Lob passt bei einer Note bis 3,0, Kritik ab 4,0 (letztes Spiel)
     abnutzung:{wochen:4,zweites:0.5,danach:0.2},

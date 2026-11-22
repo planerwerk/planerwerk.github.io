@@ -1780,3 +1780,22 @@ Ein Agent hat dc13074 gelesen (nichts ausgeführt). Kein blockierender Fehler. D
 | DM4 | Die zusätzliche Frage stand als 1 im Code, jetzt `klimaFragen.bohrenPlus`. | ✅ behoben |
 | DM5 | **Doku:** „Noch nicht“ von K29c ist veraltet. Die Beziehung steigt auch bei Kritik und Provokation (Klima +1), mit Abnutzung weniger. Im Changelog sind es die Fälle 4, 5 und 6. | ✅ behoben |
 | DM6 | Ohne Befund: gleiche Wahl bei Klima 50 auch an den Grenzen (R() liefert k/2^32, ×9 exakt), Anteile 0,6 und 1/7, Würfe nur im Strom `presse`, Gleichschritt (Co-Trainer sofort, `S.mb` bleibt leer), Zuordnung Antwort zu Frage, Deckel nach dem Faktor, Rundung und −0 beim Verblassen, alle Testwerte von Hand. | ✅ |
+
+---
+
+## DN. Prüfung von U12g ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 3286ff9 gelesen (nichts ausgeführt). **Ein blockierender Fehler.** Die Korrekturen liegen auf `mitarbeit/popolupo-u12h-ruf-wirkt`. Die Zweige `u12g` und `k29e` laden für sich allein nicht, getestet werden soll die Spitze.
+
+| # | Befund | Status |
+|---|---|---|
+| DN1 | **`abfindung` doppelt:** In `aktionen.js` gibt es `const abfindung` für Spieler, U12g legte `function abfindung` dazu. Der Browser meldet einen SyntaxError und lädt `aktionen.js` nicht, die Node-Tests scheitern beim Laden. Jetzt `trainerAbfindung`. | ✅ behoben |
+| DN2 | **`vertragEnde` doppelt:** Die Trainerfassung überschrieb still die Spielerfassung aus `vertraege.js`. Jeder Verkauf hätte eine Trainerabfindung gebucht, und Prämien wie Klauseln wären am Spieler geblieben. Jetzt `trainerVertragEnde`. | ✅ behoben |
+| DN3 | **`vertragText` doppelt:** Das Spielerfenster hätte deinen Trainervertrag gezeigt. Jetzt `trainerVertragText`. | ✅ behoben |
+| DN4 | Die Anzeige legte den Vertrag beim Zeichnen an. Jetzt liest sie nur, alte Spielstände bekommen den Vertrag beim Laden (`vertragUmstellen`). | ✅ behoben |
+| DN5 | Der Jobwechsel in `tests/sim.js` nahm weder Station noch Vertrag mit. Jetzt wie `takeJob` (Station, Vertrag, Glaubwürdigkeit). | ✅ behoben |
+| DN6 | „verdient“ zeigte die laufende Saison erst am Saisonende. Jetzt anteilig bis heute, nur in der Anzeige. | ✅ behoben |
+| DN7 | Ein Kommentar stand an der falschen Stelle. | ✅ behoben |
+| DN8 | Ohne Befund: Ablauf bei Spielbeginn, Jobwechsel in der Saison und nach dem Saisonende, Entlassung in der Saison und am Saisonende, Rücktritt, Verlängerung, Ligaklausel, keine doppelte oder verlorene Buchung, keine anderen Wege aus dem Job, Test Nr. 15 von Hand nachgerechnet, Spaltenzahlen, Zahlen in der Doku. | ✅ |
+
+**Neue Prüfung vor jedem Commit:** `perl C:\Users\siegemund.gerry\projekte\flutlicht-tools\dubletten.pl flutlicht-manager` meldet Namen, die auf oberster Ebene in zwei Dateien deklariert sind. Alle Skripte teilen sich einen Namensraum. Für den Kommentar-Wächter (`tests/code.js`) wäre dieselbe Prüfung nützlich.

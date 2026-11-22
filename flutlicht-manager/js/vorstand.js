@@ -40,7 +40,7 @@ function vorstandPruefen(){const St=stufe(),U=RV.ultimatum;if(S.fired||S.phase!=
     news(`Letztes Ultimatum: Der Präsident hält noch einmal zu dir. Nach ${U.spiele} weiteren Ligaspielen entscheidet der Vorstand endgültig.`,'bad');return;}
   entlassen(`Der Vorstand hat genug: ${myT().name} trennt sich von dir.`);}
 // Entlassung (während der Saison und zum Saisonende): Ruf sinkt, dann Jobangebote nach dem neuen Ruf
-function entlassen(text){if(S.fired)return;vertragEnde(true);S.fired=1;S.ult=null;rufAendern(RV.ruf.entlassung);if(text)news(text,'bad');mkJobs();} /* vertragEnde: Gehalt bis heute und Abfindung in die Karriere (U12g) */
+function entlassen(text){if(S.fired)return;trainerVertragEnde(true);S.fired=1;S.ult=null;rufAendern(RV.ruf.entlassung);if(text)news(text,'bad');mkJobs();} /* trainerVertragEnde: Gehalt bis heute und Abfindung in die Karriere (U12g) */
 // Anzeige im Büro: laufendes Ultimatum (oder leer)
 function ultimatumText(){const u=S.ult;if(!u||u.tid!==S.my||u.s!==S.season||S.phase!=='play')return'';const rest=Math.max(0,RV.ultimatum.spiele-(meineSpieltage()-u.ab));
   return`<p class="neg"><b>${u.n>1?'Letztes Ultimatum':'Ultimatum'}:</b> noch ${rest} Ligaspiel${rest===1?'':'e'}, dann muss das Vertrauen wieder bei mindestens ${stufe().entlassenUnter} liegen.</p>`;}
@@ -148,7 +148,7 @@ function zwischenbilanzKarte(){if(!zbAntragOffen())return'';const Z=RV.zwischenb
 function ruecktrittFragen(){if(!darf('ruecktritt'))return;if(S.fired||S.phase!=='play'){toast('Zurücktreten geht nur während der Saison.');return;}
   ov(`<h2>Zurücktreten?</h2><p>Du verlässt ${esc(myT().name)} sofort. Dein Ruf als Trainer sinkt um ${-RV.ruf.ruecktritt} (bei einer Entlassung wären es ${-RV.ruf.entlassung}). Danach bekommst du Jobangebote nach deinem Ruf.</p>
     <div class="row"><button class="go" onclick="ruecktritt()">Ja, zurücktreten</button><button onclick="closeOv()">Abbrechen</button></div>`);}
-function ruecktritt(){if(!darf('ruecktritt')||S.fired||S.phase!=='play')return;vertragEnde(false);S.fired=1;S.ruecktritt=1;S.ult=null;rufAendern(RV.ruf.ruecktritt);
+function ruecktritt(){if(!darf('ruecktritt')||S.fired||S.phase!=='play')return;trainerVertragEnde(false);S.fired=1;S.ruecktritt=1;S.ult=null;rufAendern(RV.ruf.ruecktritt);
   news(`Du trittst bei ${myT().name} zurück.`,'bad');mkJobs();closeOv();save();render();showFired();}
 
 // ---------- Ruf als Trainer (K28 §5.4) ----------
@@ -177,18 +177,23 @@ function offeneStation(){const l=statS().st,a=l[l.length-1];return a&&a.bis==nul
 function stationVertrag(){const a=offeneStation();if(a)a.geh=S.tvt.geh;}
 // Gehalt vom Tag v.ab bis zum Tag bis anteilig in die Station
 function gehaltBuchen(bis){const v=trainerVertrag(),a=offeneStation(),d=Math.max(0,bis-v.ab);v.ab=Math.max(v.ab,bis);if(a&&d)a.verd=Math.round((a.verd||0)+v.geh*d/RV.vertrag.saisonTage);}
-// Restgehalt × Anteil (entlassen: true): restliche Saisons plus der Rest der laufenden
-function abfindung(){const V=RV.vertrag,v=trainerVertrag(),rest=Math.max(0,v.bis-S.season)+(S.phase==='play'?Math.max(0,1-S.tag/V.saisonTage):0);return Math.round(v.geh*rest*V.abfindung/V.runden)*V.runden;}
-// Entlassung und Rücktritt (vor S.fired): Gehalt bis heute, nach dem Saisonende bis zum Ende der Saison; bei einer Entlassung die Abfindung
-function vertragEnde(entlassung){gehaltBuchen(S.phase==='play'?S.tag:RV.vertrag.saisonTage);if(!entlassung)return;const b=abfindung(),a=offeneStation();
+// Restgehalt × Anteil (entlassen: true): restliche Saisons plus der Rest der laufenden. Name mit „trainer“, abfindung gibt es für Spieler (aktionen.js, Prüfung DN1)
+function trainerAbfindung(){const V=RV.vertrag,v=trainerVertrag(),rest=Math.max(0,v.bis-S.season)+(S.phase==='play'?Math.max(0,1-S.tag/V.saisonTage):0);return Math.round(v.geh*rest*V.abfindung/V.runden)*V.runden;}
+// Entlassung und Rücktritt (vor S.fired): Gehalt bis heute, nach dem Saisonende bis zum Ende der Saison; bei einer Entlassung die Abfindung. vertragEnde gibt es für Spieler (vertraege.js, DN2)
+function trainerVertragEnde(entlassung){gehaltBuchen(S.phase==='play'?S.tag:RV.vertrag.saisonTage);if(!entlassung)return;const b=trainerAbfindung(),a=offeneStation();
   if(a&&b){a.abf=b;news(`Abfindung laut Vertrag: ${fmt(b)}.`);}}
-// Saisonende (saison.js seasonEndLauf, nach der Prüfung auf Entlassung): Gehalt der Saison, dann verlängert der Vorstand einen auslaufenden Vertrag
-function vertragSaisonende(){const V=RV.vertrag,h=S.hist[S.hist.length-1],v=trainerVertrag();if(h&&h.s===S.season)h.geh=v.geh;if(S.fired)return;gehaltBuchen(V.saisonTage);if(v.bis>S.season)return; /* entlassen: Gehalt und Abfindung stehen schon (vertragEnde) */
+// Saisonende (saison.js seasonEndLauf, nach der Prüfung auf Entlassung): Gehalt der Saison, dann verlängert der Vorstand einen auslaufenden Vertrag.
+// Entlassen: Gehalt und Abfindung stehen schon (trainerVertragEnde), nur die Saisonzeile bekommt das Gehalt.
+function vertragSaisonende(){const V=RV.vertrag,h=S.hist[S.hist.length-1],v=trainerVertrag();if(h&&h.s===S.season)h.geh=v.geh;if(S.fired)return;gehaltBuchen(V.saisonTage);if(v.bis>S.season)return;
   if(S.trust>V.verlaengernAb){v.bis=S.season+V.verlaengern;v.geh=trainerGehalt(S.my);v.lg=myT().lg;stationVertrag();news(`Der Vorstand verlängert deinen Vertrag bis ${stSaison(v.bis)}, Gehalt ${fmt(v.geh)} je Saison.`,'good');}
   else{v.bis=S.season+V.bewaehrung;news(`Der Vorstand verlängert deinen Vertrag nur um ${V.bewaehrung===1?'eine Saison':V.bewaehrung+' Saisons'}, zum alten Gehalt. Eine Bewährung.`,'bad');}}
 // Saisonwechsel (saison.js newSeasonLauf, nach Auf- und Abstieg): Ligaklausel, das Gehalt zählt ab dem 1. Juli
 function vertragNeueSaison(){if(S.fired)return;const V=RV.vertrag,v=trainerVertrag(),lg=myT().lg;v.ab=0;if(v.lg===lg)return;
   const f=(V.liga[lg]||V.liga[3])/(V.liga[v.lg]||V.liga[3]);v.geh=Math.max(V.runden,Math.round(v.geh*f/V.runden)*V.runden);v.lg=lg;stationVertrag();
   news(`Ligaklausel in deinem Vertrag: In der ${ligaName(lg)} verdienst du ${fmt(v.geh)} je Saison.`,f>1?'good':'bad');}
-// Anzeige im Büro (Karte Saisonziel)
-function vertragText(){if(S.fired)return'';const v=trainerVertrag();return`<p class="dim">Dein Vertrag läuft bis ${stSaison(v.bis)}, Gehalt ${fmt(v.geh)} je Saison (nur Statistik).</p>`;}
+// Laden eines Spielstands (start.js, fenster.js): Vertrag anlegen, wenn er fehlt (alter Spielstand), damit die Anzeige nur liest (DN4)
+function vertragUmstellen(){if(!S||S.my==null||!S.teams||!S.teams[S.my]||S.fired)return;if(!S.tvt||S.tvt.tid!==S.my)vertragNeu(S.my);}
+// Gehalt seit v.ab in der laufenden Saison, noch nicht in der Station (Anzeige der Karriere, DN6)
+const gehaltLaufend=()=>{const v=S.tvt;return v&&v.tid===S.my&&!S.fired&&S.phase==='play'?Math.round(v.geh*Math.max(0,S.tag-v.ab)/RV.vertrag.saisonTage):0;};
+// Anzeige im Büro (Karte Saisonziel), nur lesend. vertragText gibt es für Spieler (vertraege.js, DN3)
+function trainerVertragText(){const v=S.tvt;if(S.fired||!v||v.tid!==S.my)return'';return`<p class="dim">Dein Vertrag läuft bis ${stSaison(v.bis)}, Gehalt ${fmt(v.geh)} je Saison (nur Statistik).</p>`;}

@@ -1,6 +1,6 @@
 # K28 – Vorstand, Ziele, Karriere
 
-Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12. Teilweise gebaut: Computer-Vereine in U11d2 (§7), Vertrauen, Ultimatum und Ruf für dich in U12a (§5.6), Nebenziele und Rücktritt in U12b (§5.7), beide 20.11., Zielgespräch in U12e (§5.8, 22.11.), Zwischenbilanz im Winter in U12f (§5.9, 22.11.), Trainervertrag als Statistik in U12g (§5.10, 22.11.), alle ohne Testlauf.
+Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12. Teilweise gebaut: Computer-Vereine in U11d2 (§7), Vertrauen, Ultimatum und Ruf für dich in U12a (§5.6), Nebenziele und Rücktritt in U12b (§5.7), beide 20.11., Zielgespräch in U12e (§5.8, 22.11.), Zwischenbilanz im Winter in U12f (§5.9, 22.11.), Trainervertrag als Statistik in U12g (§5.10, 22.11.), Wirkung des Rufs in U12h (§5.11, 22.11.), alle ohne Testlauf.
 Hängt ab von: K02 (Geduld je Stufe), K15 (Gespräche) · Wird gebraucht von: K12b, K14, K19, K23, K29.
 
 ## 1. Ziel und Spielgefühl
@@ -222,6 +222,20 @@ Nach §5.5, nur als Karriere-Statistik (K34). Es fließt kein Geld, das Gehalt s
   - In den Jobangeboten: das Gehalt, das dich dort etwa erwartet.
 - **Lizenz (K36):** keine neue Funktion, nur Anzeige und Statistik.
 - **Noch nicht:** Vertragsgespräch mit eigener Forderung, Abschied bei Vertragsende, Ausstiegsklausel bei Angeboten anderer Vereine, Gehalt als eigenes Wirtschaftsspiel (Community-Wunsch, §5.5).
+- **Nach der Prüfung DN:**
+  - Die Funktionen heißen `trainerAbfindung`, `trainerVertragEnde` und `trainerVertragText`, weil es die kurzen Namen schon für Spieler gab.
+  - Die Anzeige im Büro liest nur. Alte Spielstände bekommen den Vertrag beim Laden.
+  - Die Karriere zählt die laufende Saison anteilig mit.
+
+### 5.11 Umsetzung U12h (22. November 2026, popolupo, ohne Testlauf): Ruf wirkt
+
+Nach §5.4 „Wirkt auf“. Die Jobangebote nutzten den Ruf schon seit U12a, jetzt kommen drei weitere Stellen dazu. Ohne Zufall.
+
+- **Interesse von Spielern (K19 §5.3):** +0,2 je Punkt Ruf über dem Start (30), darunter entsprechend weniger. Ruf 80 bringt +10, Ruf 0 kostet −6.
+- **Ruf-Gefälle in der Kabine (K14 §12 Nr. 11):** Dein Ruf in der Kabine ist 50 + 0,3 × Ansehen des Vereins + 0,5 je Punkt Ruf über dem Start, höchstens 95. Vorher zählten 3 Punkte je Trainerjahr, als Platzhalter bis K28. Wer lange ohne Erfolg trainiert, gewinnt damit kein Ansehen in der Kabine mehr.
+- **Glaubwürdigkeit beim neuen Verein (K15):** Start 60 + 0,3 je Punkt Ruf über dem Start, zwischen 30 und 90. Sie wird beim Jobwechsel gesetzt, auch bei der Rückkehr zu einem früheren Verein.
+- **Lizenz (K36):** keine neue Funktion.
+- **Noch nicht:** Ruf und Presse (K29), zum Beispiel mehr Pressekonferenzen oder ein anderes Medienklima für bekannte Trainer.
 
 ## 6. Hebel des Spielers
 

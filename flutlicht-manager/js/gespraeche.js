@@ -22,6 +22,8 @@ const VERSPRECHEN_STAND={offen:'offen',gehalten:'gehalten',gebrochen:'gebrochen'
 const glaub=t=>{t=t||myT();if(t.glaub==null)t.glaub=RGS.glaubwuerdigkeit.start;return t.glaub;};
 const glaubFaktor=t=>{const G=RGS.glaubwuerdigkeit;return G.faktor[0]+glaub(t)/100*G.faktor[1];};
 function glaubAendern(v){const t=myT();t.glaub=clamp(glaub(t)+v,0,100);}
+// Start beim neuen Verein (saison.js takeJob, K28 §5.4, U12h): nach deinem Ruf als Trainer, in Grenzen
+function glaubNeu(){const G=RGS.glaubwuerdigkeit;return Math.round(clamp(G.start+G.jeRuf*(ruf()-RV.ruf.start),G.neuGrenzen[0],G.neuGrenzen[1]));}
 const offeneVersprechen=()=>(S.vs||[]).filter(v=>v.stand==='offen');
 // Woche: erholt sich bis 60, zu viele offene Versprechen kosten, unter 25 glaubt dir die Kabine nicht mehr (Vorstand wird aufmerksam)
 function glaubwuerdigkeitWoche(){const G=RGS.glaubwuerdigkeit,t=myT();if(!t)return;const g=glaub(t);

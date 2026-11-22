@@ -152,7 +152,7 @@ function torwartDuell(t,sq){const T=RKA.bank.torwart,tw=(sq||squad(t.id)).filter
   if(t.twS&&t.twS[1]>=T.klarNach)return null;if(t.id===S.my&&!autoB('kaderrollen')&&(tw[0].kr||tw[1].kr))return null;return[tw[0],tw[1]];}
 // ---------- Zielstimmung (K14 §5.1) ----------
 // Ruf-Gefälle (K14 §5.2): Ruf des Trainers bis K28 aus dem Ansehen des Vereins und den Trainerjahren, Ruf des Spielers aus der Stärke
-function trainerRuf(){const T=RKA.rufGefaelle.trainer;return Math.min(T[3],T[0]+T[1]*myT().rep+T[2]*(S.hist||[]).length);}
+function trainerRuf(){const T=RKA.rufGefaelle.trainer;return Math.min(T[3],T[0]+T[1]*myT().rep+T[2]*(ruf()-RV.ruf.start));} /* seit U12h dein Ruf als Trainer (K28 §5.4) statt der Trainerjahre */
 const rufGefaelle=p=>p.team===S.my&&p.str-trainerRuf()>=RKA.rufGefaelle.ab;
 // Index der Beziehungen je Spieler, neu aufgebaut, wenn sich die Liste ändert (BZV zählt Änderungen ohne neue Länge)
 let BZI=null,BZV=0;
