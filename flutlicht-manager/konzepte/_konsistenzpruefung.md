@@ -2136,3 +2136,24 @@ Korrekturen auf `mitarbeit/popolupo-eh-korrekturen` (auf K13d).
 | EH2 | Test K29l: Freiburg (Verein 6) spielt vor dem ersten Ligaspiel die Qualifikation zur Conference League. Die Prüfung „zu früh“ lief über dieses Spiel und nicht über den Abstand. Jetzt nimmt der Test ein Ligaspiel ohne eigenes Spiel in den 8 Tagen davor. | ✅ behoben |
 | EH3 | Info-Karten mit Wirkung fielen über der Info-Grenze der Meldungsdichte ganz weg, mit ihrer Wirkung. So hätte eine Anzeige-Einstellung den Spielstand geändert (gegen K30 §5.1 und DY8). Jetzt wirkt die Karte trotzdem, nur die Meldung entfällt. Test K30e. | ✅ behoben |
 | EH4 | `p.spritzeWarn` merkte den Saisontag, in einer späteren Saison am selben Tag wäre die Warnung ausgefallen. Jetzt der absolute Tag. | ✅ behoben |
+
+## EI. Prüfung von K07f, K21d, K21e, K13d und der Korrekturen EH ohne Laufzeit (23. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 1a73ead, 76c57cc, 8c35b79, dae3c5c und 3a436fc gelesen (nichts ausgeführt). Kein blockierender Fehler, ein mittlerer.
+
+**Ohne Befund:**
+
+- **K07f:** Vorlagen nur über `vorlageDef`, Name überall maskiert, Vorbereitung wie bei den festen Vorlagen.
+- **Korrekturen EH:** Eine stumme Karte setzt Sperre und Variante, verbraucht aber keine Info.
+- **Gleichschritt:** unberührt.
+- **Lizenztest:** findet den neuen Bereich `verlegung`.
+
+Korrekturen auf `mitarbeit/popolupo-ei-korrekturen-b` (auf K25e). Davor steht auf `mitarbeit/popolupo-ei-korrekturen` nur der Doku-Abgleich.
+
+| # | Befund | Status |
+|---|---|---|
+| EI1 | **Mittel: Pokal-, Aufstiegs- und Klassenerhaltsprämie liefen als „Prämien“ in die Prognose.** Die Prognose rechnet „Prämien“ als laufende Kosten (`RFP.laufend`). Drei gewonnene Pokalrunden hätten den Saldo je Spiel um etwa 73.000 € gedrückt und die Lizenzprüfung um Millionen zu schlecht gerechnet. Jetzt sind sie einmalig gebucht („Sonderprämien“). Die Siegprämie der Liga bleibt laufend. | ✅ behoben |
+| EI2 | K21e prüft Auf- und Abstieg vor den Regeln für zweite Mannschaften. Eine zweite Mannschaft, die du als Trainer führst, bekam die Prämie. Jetzt nie für zweite Mannschaften. Ein Verein, der wegen einer zweiten Mannschaft doch drinbleibt, bekommt vorläufig keine Klassenerhaltsprämie. | ✅ behoben, Rest vorläufig |
+| EI3 | K13d: Der neue Termin konnte nach dem nächsten Ligaspiel liegen, etwa bei Vereinen im Europapokal. Danach hätten Gelbsperren-Hinweis und Saisonstart das falsche Spiel genommen. Jetzt liegt er vor dem nächsten Ligaspiel beider Vereine, mit drei Tagen Abstand. | ✅ behoben |
+| EI4 | K13d: Kam vorher ein Pokal- oder Europapokalspiel, war das Ligaspiel nie verlegbar. Jetzt sucht die Lage das nächste Ligaspiel in den 7 Tagen. Der neue Termin hält drei Tage Abstand zu deinen Testspielen. | ✅ behoben |
+| EI5 | Test K13d: Der zweite Antrag galt bei jeder Ablehnung als richtig. Jetzt muss der Grund „schon eine Verlegung“ sein. | ✅ behoben |

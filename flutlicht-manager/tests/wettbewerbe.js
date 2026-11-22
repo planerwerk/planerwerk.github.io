@@ -61,7 +61,7 @@ pruef(supercups.length===N-1&&supercups.every(x=>!x.verl&&(x.hg!==x.ag)===!x.pen
   if(e){S4.tag=e.tag-2;const sq=ev4('squad')(S4.my);sq.forEach(p=>{p.inj=0;});const voll=F4.spielVerlegenLauf();let n=sq.length;for(const p of sq){if(n<V.minSpieler)break;if(p.pos!=='TW'){p.inj=10;n--;}}
     const z=S4.plan.zeit[e.lg][e.md][e.i],alt=z[0],[h,a]=S4.fx[e.lg][e.md][e.i],r=F4.spielVerlegenLauf(),neu=z[0],Z=S4.plan.zeit[e.lg],letzter=Math.min(...Z[Z.length-1].map(x=>x[0]));
     const abstand=[h,a].every(id=>[...F4.spieltageVon(id,z)].every(x=>Math.abs(x-neu)>=M)),zweimal=F4.spielVerlegenLauf();
-    ok=typeof voll==='string'&&r===null&&neu>alt&&abstand&&neu<letzter&&ev4('wochentag')(neu)!==1&&typeof zweimal==='string';
+    ok=typeof voll==='string'&&r===null&&neu>alt&&abstand&&neu<letzter&&ev4('wochentag')(neu)!==1&&typeof zweimal==='string'&&zweimal.includes('schon eine Verlegung'); /* EI5 */
     info=`voller Kader ${typeof voll==='string'?'abgelehnt':voll}, Antrag ${r}, ${alt} → ${neu}, Abstand ${abstand}, vor dem letzten Spieltag ${neu<letzter}, zweiter Antrag ${typeof zweimal==='string'?'abgelehnt':zweimal}`;}
   pruef(ok,'Spielverlegung: nur bei Personalnot, neuer Termin mit Abstand, einmal je Saison',info);}
 

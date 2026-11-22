@@ -36,15 +36,17 @@ function ligaVerlegen(d,ids,grund){const M=RWB.spielplan.mindestTage;let n=0;
     if(h===S.my||a===S.my)news(`Wegen ${grund} wird dein Ligaspiel gegen ${tn(h===S.my?a:h)} von ${datumKurz(alt)} auf ${datumKurz(z[0])} verlegt.`);})));
   if(n)TAGINDEX.plan=null;return n;}
 // ---------- Spielverlegung auf Antrag (K13 §13, K13d) ----------
-// Lage für dein nächstes Ligaspiel in höchstens RWB.verlegung.vorTage Tagen: n einsatzfähige Spieler (nicht verletzt oder krank, nicht in der Liga gesperrt), tw: ein Torwart dabei,
+// Lage für dein nächstes Ligaspiel in höchstens RWB.verlegung.vorTage Tagen (ab morgen, auch wenn vorher ein Pokal- oder Europapokalspiel kommt, Prüfung EI4): n einsatzfähige Spieler (nicht verletzt oder krank, nicht in der Liga gesperrt), tw: ein Torwart dabei,
 // grund: weniger als minSpieler oder kein Torwart. Ohne solches Spiel null.
-function verlegungLage(){const V=RWB.verlegung,e=naechstesSpiel(S.tag+1); /* ab morgen, ein Spiel am selben Tag verlegt die Liga nicht mehr */if(!e||e.art!=='liga'||e.i==null||e.tag-S.tag>V.vorTage)return null;
+function verlegungLage(){const V=RWB.verlegung;let e=null;for(let d=S.tag+1;d<=S.tag+V.vorTage&&!e;d++){const x=meinSpiel(d);if(x&&x.art==='liga'&&x.i!=null)e=x;}if(!e)return null;
   const ok=squad(S.my).filter(p=>!(p.inj>0)&&!(sperreIn(p,'liga')>0)),tw=ok.some(p=>p.pos==='TW');return{e,n:ok.length,tw,grund:ok.length<V.minSpieler||!tw};}
 // Neuer Termin: der erste Tag ab dem alten + mindestTage, an dem beide Vereine mindestTage Abstand zu allen ihren Spielen haben, kein Montag,
-// bis sucheTage später und vor dem letzten Spieltag der Liga. Sonst null.
+// bis sucheTage später, vor dem nächsten Ligaspiel beider Vereine (sonst stimmt die Reihenfolge der Spieltage nicht mehr, Prüfung EI3) und vor dem letzten Spieltag,
+// nicht an einem Tag mit deinem Testspiel in der Nähe (EI4). Sonst null.
 function verlegungTag(e){const M=RWB.spielplan.mindestTage,V=RWB.verlegung,Z=S.plan.zeit[e.lg],z=Z[e.md][e.i],[h,a]=S.fx[e.lg][e.md][e.i],belegt=[spieltageVon(h,z),spieltageVon(a,z)];
-  const letzter=Math.min(...Z[Z.length-1].map(x=>x[0])),frei=x=>belegt.every(s=>{for(let j=1-M;j<M;j++)if(s.has(x+j))return false;return true;});
-  for(let x=z[0]+M;x<=z[0]+V.sucheTage&&x<letzter;x++)if(wochentag(x)!==1&&frei(x))return x;return null;}
+  const letzter=Math.min(...Z[Z.length-1].map(x=>x[0])),ts=(S.testspiele||[]).filter(t=>t.stand!=='abgesagt').map(t=>t.tag),
+    weiter=Math.min(Infinity,...[h,a].map(id=>{let m=Infinity;S.fx[e.lg].forEach((md,k)=>{if(k<=e.md)return;md.forEach(([x,y],i)=>{if(x===id||y===id)m=Math.min(m,Z[k][i][0]);});});return m;})),frei=x=>belegt.every(s=>{for(let j=1-M;j<M;j++)if(s.has(x+j))return false;return true;})&&ts.every(t=>Math.abs(t-x)>=M);
+  for(let x=z[0]+M;x<=z[0]+V.sucheTage&&x<letzter&&x<=weiter-M;x++)if(wochentag(x)!==1&&frei(x))return x;return null;}
 // Antrag: Rückgabe null (verlegt, mit Meldung) oder der Grund der Ablehnung. Höchstens proSaison je Saison (S.verlegt = {Saison: Zahl}).
 function spielVerlegenLauf(){const V=RWB.verlegung,l=verlegungLage();if(!l)return'In den nächsten Tagen hast du kein Ligaspiel.';
   if(!l.grund)return`Die Liga lehnt ab: ${l.n} Spieler sind einsatzfähig, darunter ein Torwart.`;if(((S.verlegt||{})[S.season]||0)>=V.proSaison)return'In dieser Saison hast du schon eine Verlegung bekommen.';
