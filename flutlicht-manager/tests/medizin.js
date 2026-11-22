@@ -52,7 +52,7 @@ pruef(spannen>0&&ehrlich/spannen>=0.85,'Diagnose-Spanne enthält die wahre Dauer
 //       am Ende der angezeigten Spanne kommt die Aufklärung mit Meldung; bei Computer-Vereinen nie; mit Chance 0 nie
 {const D=RMD.diagnose.fehl,alt=Object.assign({},D),p=S.pl.find(x=>x.team===S.my&&x.inj<=0),k=S.pl.find(x=>x.team>=0&&x.team!==S.my&&x.inj<=0);
   const neu=x=>{x.inj=0;x.vl=null;return ev('verletzen')(x,'kollision',{art:'faserriss',still:true});};
-  D.ohne=1;D.min=1;const v=neu(p),falsch=!!v&&!!v.fehl&&v.sd[1]<v.t&&!!v.sk,vk=neu(k),kiNie=!!vk&&!vk.fehl;
+  D.ohne=1;D.min=1;const v=neu(p),falsch=!!v&&!!v.fehl&&v.sd[1]<v.t&&!!v.sk&&v.sd[1]>=Math.min(v.t-1,v.sv[0]),vk=neu(k),kiNie=!!vk&&!vk.fehl;
   ev('fehlAufklaeren')(v.ab+v.sd[1]);const auf=!p.vl.fehl&&p.vl.sd[0]<=p.vl.sd[1]&&S.news.some(n=>n.t.startsWith('Rückschlag bei '+p.n));
   D.ohne=0;D.min=0;const v0=neu(p),nie=!!v0&&!v0.fehl;Object.assign(D,alt);[p,k].forEach(x=>{x.inj=0;x.vl=null;});
   pruef(falsch&&kiNie&&auf&&nie,'Fehldiagnose: zu optimistisch nur bei deinem Verein, Aufklärung am Ende der Spanne, mit Chance 0 nie',`falsch ${falsch}, Computer-Verein ${kiNie}, Aufklärung ${auf}, Chance 0 ${nie}`);}

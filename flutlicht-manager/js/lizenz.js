@@ -44,7 +44,7 @@ function lizenzAufstieg(wie){const L=S.lizenz;if(!L||L.stufe>=RLZ.namen.length)r
   news(`Neue Lizenz: ${lizenzName(L.stufe)}${wie==='zeit'?' (mit der Zeit)':wie==='geholt'?' (sofort geholt)':''}. Neu frei: ${neu.map(b=>RLZ.bereiche[b].name).join(', ')}.`,'good');return alt;}
 // Täglich (nicht an einem Tag mit eigenem Spiel, damit die Karte nie vor dem Anpfiff kommt): Gelegenheiten merken, Aufstieg prüfen
 function lizenzTag(d){const L=S.lizenz;if(!L||!L.an||L.stufe>=RLZ.namen.length)return;
-  if(frei('medizin')&&!autoB('medizin')&&!L.gel.medizin&&squad(S.my).some(p=>{if(p.inj<=0)return false;const i=verletzungInfo(p);return i&&((i.phase==='aufbau'&&!i.pflicht)||(i.spritzbar&&!!meinSpiel(d)));}))L.gel.medizin=1;
+  if(frei('medizin')&&!autoB('medizin')&&!L.gel.medizin&&squad(S.my).some(p=>{if(p.inj<=0)return false;const i=verletzungInfo(p);return i&&((i.phase==='aufbau'&&!i.pflicht)||(i.spritzbar&&!!meinSpiel(d))||medZweiteMoeglich(p));}))L.gel.medizin=1;
   if(S.phase==='play'&&meinSpiel(d))return;const st=aufstiegStand();if(st&&st.reif)lizenzAufstieg(st.mindest&&st.ab&&st.aufgabenOk?'nutzung':'zeit');}
 // Nach jedem Pflichtspiel deines Vereins (Liga, Pokal, Relegation, Supercup)
 function lizenzSpiel(){if(S.lizenz&&S.lizenz.an)S.lizenz.spiele++;}

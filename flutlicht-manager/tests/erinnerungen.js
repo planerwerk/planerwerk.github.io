@@ -35,8 +35,8 @@ const SEED=4711;
   let ok=false,info='keine spielfreie Woche in der Saison gefunden';
   if(d!=null){S.tag=d;S.gespielt=-1;delete S.tsEr;const ja=sf(),nochmal=sf();delete S.tsEr;
     const t=ev('testspielTage')().find(y=>y>=von(d)&&y<=bis(d));S.testspiele=[{id:999,tag:t,gegner:1000,heim:false,stand:'zugesagt'}];const mitTest=sf();S.testspiele=[];delete S.tsEr;
-    S.tag=l[1].tag-R0.vorlaufTage-1;const vorSpiel=sf();delete S.tsEr;S.tag=d;F.erinnerungAus('spielfrei',true);const aus=sf();F.erinnerungAus('spielfrei',false);
-    ok=ja&&!nochmal&&!mitTest&&!vorSpiel&&!aus;info=`Tag ${d}: Erinnerung ${ja}, gleich nochmal ${nochmal}, mit Testspiel ${mitTest}, vor einem Spiel ${vorSpiel}, abgeschaltet ${aus}`;}
+    S.tag=l[1].tag-R0.vorlaufTage-1;const vorSpiel=sf();delete S.tsEr;S.cup.alive=S.cup.alive.filter(x=>x!==S.my);S.tag=l[l.length-1].tag;const letzter=sf();delete S.tsEr; /* letzter Spieltag ohne Pokalfinale: keine Erinnerung (DZ1) */S.tag=d;F.erinnerungAus('spielfrei',true);const aus=sf();F.erinnerungAus('spielfrei',false);
+    ok=ja&&!nochmal&&!mitTest&&!vorSpiel&&!letzter&&!aus;info=`Tag ${d}: Erinnerung ${ja}, gleich nochmal ${nochmal}, mit Testspiel ${mitTest}, vor einem Spiel ${vorSpiel}, letzter Spieltag ${letzter}, abgeschaltet ${aus}`;}
   pruef(ok,'Spielfreie Woche ohne Testspiel: Erinnerung in der Saison, einmal je Woche, nicht mit Testspiel, nicht vor einem Spiel, abschaltbar',info);}
 
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

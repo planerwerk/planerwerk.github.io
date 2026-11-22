@@ -112,10 +112,10 @@ function medSpritzen(id){if(!darf('medizin','medizin'))return;const p=PIX.get(id
 const medZweiteMoeglich=p=>{const i=p&&p.team===S.my?verletzungInfo(p):null;return!!i&&i.phase!=='verdacht'&&i.art!=='krankheit'&&!p.vl.zm;};
 function medZweite(id){if(!darf('medizin','medizin'))return;const p=PIX.get(id);if(!medZweiteMoeglich(p))return;const Z=RMD.zweite,v=p.vl,heute=absTag(S.tag),k=Z.kosten[myT().lg]||Z.kosten[3];
   money('Medizin',-k);v.zm=1;const txt=[];if(v.fehl&&v.sk){v.sd=v.sk;delete v.sk;delete v.fehl;txt.push('Die erste Diagnose war zu optimistisch.');}
-  mitStrom(strom('zweiteMeinung',S.season,p.id,heute),()=>{const r=R(),rest=p.inj,seit=heute-v.ab;
-    if(r<Z.besser+Z.schlechter){const d=Math.max(1,Math.round(rest*Z.aenderung))*(r<Z.besser?-1:1),neu=Math.max(1,rest+d),dd=neu-rest;p.inj=neu;v.t+=dd;v.sd=v.sd.map(x=>Math.max(seit+1,x+dd));
-      txt.push(dd<0?'Eine andere Behandlung verkürzt die Pause.':'Der Schaden ist größer als gedacht, die Pause wird länger.');}
-    else{const b=arztBreite(p.team)*RMD.diagnose.genau*Z.enger;v.sd=[Math.max(seit+1,Math.round(v.t*(1-b*R()))),Math.max(seit+1,Math.round(v.t*(1+b*R())))];txt.push('Die Diagnose wird bestätigt und genauer.');}});
+  mitStrom(strom('zweiteMeinung',S.season,p.id,heute),()=>{const r=R(),rest=p.inj,seit=heute-v.ab;v.t=seit+p.inj-1; /* wahre Dauer aus dem Zähler, auch nach einer Spritze (Prüfung DZ3) */
+    const bes=r<Z.besser,schl=!bes&&r<Z.besser+Z.schlechter,d=bes||schl?Math.max(1,Math.round(rest*Z.aenderung))*(bes?-1:1):0,neu=Math.max(1,rest+d),dd=neu-rest;
+    if(dd){p.inj=neu;v.t+=dd;v.sd=v.sd.map(x=>Math.max(seit+1,x+dd));v.sd=[Math.min(v.sd[0],v.t),Math.max(v.sd[1],v.t)];txt.push(dd<0?'Eine andere Behandlung verkürzt die Pause.':'Der Schaden ist größer als gedacht, die Pause wird länger.');}
+    else{const b=arztBreite(p.team)*RMD.diagnose.genau*Z.enger;v.sd=[Math.max(seit+1,Math.round(v.t*(1-b*R()))),Math.max(seit+1,Math.round(v.t*(1+b*R())))];txt.push('Die Diagnose wird bestätigt und genauer.');}}); /* ohne Änderung (auch am letzten Tag) „bestätigt“ (DZ2) */
   const i=verletzungInfo(p);news(`Zweite Meinung zu ${p.n} (${fmt(k)}): ${txt.join(' ')}${i?` Zurück in etwa ${spanneText(i.rest)}.`:''}`,'');save();render();}
 function medFrueher(id){if(!darf('medizin','medizin'))return;const p=PIX.get(id),i=p&&p.team===S.my?verletzungInfo(p):null;if(!i||i.phase!=='aufbau'||i.pflicht)return;p.inj=0;medizinRueckkehr(p,RMD.frueher.frische);news(`${p.n} ist früher zurück, aber noch nicht bei voller Frische.`);save();render();}
 // Testspiele und Trainingslager (K11)

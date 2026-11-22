@@ -106,7 +106,7 @@ function turnierText(){const T=RTS.turnier;if(S.turnier&&S.turnier.s===S.season)
 // und kein Testspiel, aber ein Testspiel wäre möglich. Nicht unter der Automatik der Testspiele, nicht ohne Lizenz dafür, höchstens einmal je abstandTage (S.tsEr).
 function spielfreiOhneTestspiel(d){const E=RTS.spielfrei;if(S.phase!=='play'||autoB('testspiele')||!frei('testspiele')||imUrlaub()||inVorbereitung(d))return null;
   const heute=absTag(d);if(S.tsEr!=null&&heute-S.tsEr<E.abstandTage)return null;const von=d+RTS.vorlaufTage,bis=von+E.tage-1;
-  for(let x=von;x<=bis;x++)if(meinSpiel(x))return null;if(testspielBelegt().some(x=>x>=von&&x<=bis))return null;if(!testspielTage().some(x=>x>=von&&x<=bis))return null;
+  for(let x=von;x<=bis;x++)if(meinSpiel(x))return null;if(!naechstesSpiel(bis+1))return null; /* danach kein Pflichtspiel mehr: Saisonende, nicht erinnern (Prüfung DZ1) */if(testspielBelegt().some(x=>x>=von&&x<=bis))return null;if(!testspielTage().some(x=>x>=von&&x<=bis))return null;
   S.tsEr=heute;return{art:'spielfrei',text:`Vom ${datumKurz(von)} bis ${datumKurz(bis)} hast du kein Pflichtspiel und kein Testspiel. Ein Testspiel hält die Spieler im Rhythmus.`,tab:'training',knopf:'Zu den Testspielen'};}
 
 // ---------- Anfragen der Computer-Vereine (K11 §5, K11c) ----------

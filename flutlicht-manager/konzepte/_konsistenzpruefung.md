@@ -1975,3 +1975,16 @@ Ein Agent hat 78704ea, ffad7fa, 5e3b8a1, f9fea58 und 1a8a508 gelesen (nichts aus
 | DY7 | Der Test K30b setzte die Entscheidungen vor dem Sprung über eine Woche auf 0 und konnte darum nicht scheitern. Jetzt bleibt es 1, erwartet wird trotzdem 0. | ✅ behoben |
 | DY8 | Entscheidungskarten ohne Halt zählten zur Info-Grenze. Unter „wenig“ (3 Infos) konnten sie wegfallen, obwohl der Menütext sagt, die Karten kämen gleich oft. Jetzt zählen nur Info-Karten zur Info-Grenze, Entscheidungen ohne Halt entscheidet der Co-Trainer immer. Das gilt auch für „normal“, die Grenze greift bei etwa 0,13 Karten je Woche aber fast nie. Dazu in den Regeln: `wochen` ist 1 oder 2. | ✅ behoben |
 | DY9 | Der Text der Gegnerbeobachtung nannte „zwei Tage“ fest, jetzt `RTA.vorbereitungTage`. | ✅ behoben |
+
+## DZ. Prüfung von K11d, K10b, K10c, K10d und der Korrekturen DY ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 8702394, fc41bed, 0314438, 684a255 und 5c55511 gelesen (nichts ausgeführt). Kein blockierender Fehler, ein mittlerer. Ohne Befund: Namen, `${}`, Zahlen in den Regeln, keine neuen Würfel in geteilten Strömen, alte Spielstände, Gleichschritt 5a (die Fehldiagnose ändert nur `p.vl.sd/sk/fehl` und Meldungen, keine Entscheidung liest `sd`), die Korrekturen DY. Korrekturen auf `mitarbeit/popolupo-dz-korrekturen`.
+
+| # | Befund | Status |
+|---|---|---|
+| DZ1 | **Mittel: „spielfreie Woche“ am letzten Spieltag.** Nach dem letzten Ligaspiel liegen bis zum Urlaub keine Pflichtspiele, Testspieltage gibt es aber noch. Die Erinnerung kam darum vor dem letzten Spiel fast jeder Saison (auch beim 16. vor einer noch offenen Relegation). Jetzt nur, wenn nach dem Zeitraum noch ein Pflichtspiel kommt. Test K11d prüft den letzten Spieltag ohne Pokalfinale. | ✅ behoben |
+| DZ2 | Zweite Meinung am letzten Tag einer Verletzung: Bei „bessere Behandlung“ und `p.inj` 1 änderte sich nichts, der Text sagte aber „die Pause wird länger“. Jetzt entscheidet die tatsächliche Änderung über den Text, ohne Änderung heißt es „bestätigt“. | ✅ behoben |
+| DZ3 | Nach einer Spritze, die die Verletzung verschlimmert, bleibt `p.inj` beim alten Rest, `v.t` passt nicht mehr. Die zweite Meinung nimmt die wahre Dauer jetzt aus dem Zähler (`seit + p.inj − 1`), die Spanne enthält sie danach immer. Die Ursache in `nachSpritze` bleibt (älter als K10). | ✅ behoben, Ursache dokumentiert |
+| DZ4 | Die Fehldiagnose lag oft ganz unter der ersten Einschätzung und fiel so sofort auf. Jetzt reicht ihre Obergrenze bis zur Untergrenze der ersten Einschätzung (höchstens wahre Dauer − 1). | ✅ behoben |
+| DZ5 | Nach einem Jobwechsel in der Phase „Saisonende“ zeigte die Saisonbilanz die Verletzungen des neuen Vereins. Jetzt hält `seasonEnd` den Text in der Bilanz fest. | ✅ behoben |
+| DZ6 | Die zweite Meinung erfüllt die Lizenzaufgabe `medizin`, die Gelegenheit dafür zählte sie aber nicht. Jetzt zählt eine mögliche zweite Meinung als Gelegenheit. | ✅ behoben |

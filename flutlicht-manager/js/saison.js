@@ -43,7 +43,7 @@ function seasonEndLauf(){
   news(`Aus der Regionalliga steigen auf: ${sm.up4.map(tn).join(', ')}.`);
   S.hist.push({s:S.season,team:me.name,lg:me.lg,pos,ok:sm.ok});
   sm.zw=mitStrom(strom('zweiteErgebnis',S.season),()=>zweiteSaisonEnde(sm)); // zweite Mannschaft (K08 §5.6)
-  S.summary=sm;S.phase='end';
+  sm.verl=verletzungsBilanzText(S.my);S.summary=sm;S.phase='end'; /* Ausfalltage beim Saisonende festhalten (Prüfung DZ5) */
   nebenzieleSaison(); // Nebenziele des Vorstands (K28 §5.7, U12b), vor der Prüfung auf Entlassung
   rufSaison(sm); // Ruf als Trainer (K28 §5.4, U12a), vor einer Entlassung, damit die Jobangebote schon den neuen Ruf sehen
   statistikSaison(sm);trainerSaison(sm);finanzenSaisonende();marketingSaisonende(sm);werbungSaisonende(sm); // Ruf der Computer-Trainer (K32 §3.3b, U18a); Ehrungen, Saisonarchiv, Vitrine, Karrierezeilen (K34, U13), nach dem Ruf (Trainer der Saison +5) und vor einer Entlassung
