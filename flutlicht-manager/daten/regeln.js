@@ -430,7 +430,10 @@ const REGELN={
     deadline:{tage:3,preis:0.15,liste:-0.1,angebote:1.5},bieter:{plus:[0.02,0.10],gierig:0.05,frist:2},
     // Bieterwettstreit beim Kauf (K20 §4.2, K20c, 22.11., GESCHÄTZT): Sagt ein deutscher Verein im offenen Fenster Ja zu deiner Ablöse, bietet mit dieser Chance ein Computer-Verein
     // mit Bedarf mit (einmal je Spieler und Saison): deine Ablöse plus bieter.plus (gieriger Berater + bieter.gierig), höchstens sein Vereinswert. Du hast bieter.frist Tage zum Mitgehen.
-    konkurrenz:{chance:0.25}},
+    konkurrenz:{chance:0.25,
+      // K20d (22.11., GESCHÄTZT): Gehst du nicht mit, lehnt der Spieler den anderen Verein ab, wenn sein Interesse an dir mindestens ab ist: Chance basis + jePunkt je Punkt darüber,
+      // höchstens max, mal besser, wenn der andere Verein mehr Ansehen hat als deiner. Dann nimmt der Verkäufer deine Ablöse.
+      nein:{ab:20,basis:0.25,jePunkt:0.01,max:0.6,besser:0.5}}},
 
   // Fanstimmung (K27 §5.4b, §11, U16), 0–100. Montags traegheit Richtung Ziel = start + Erfolg + Preise + Identifikation + Entscheidungen + Umfeld, je Baustein begrenzt.
   // erfolg: jePlatz × (erwarteter Platz − Platz) ab abSpiel Ligaspielen, serie × (Punkte je Spiel der letzten fünf − serieMitte), Anlässe (derby, pokal, pokalAusTiefer) mit verblassen je Woche.

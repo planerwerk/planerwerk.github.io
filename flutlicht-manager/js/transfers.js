@@ -50,17 +50,22 @@ function konkurrenzKauf(p,fee){const v=verhandlung(p),B=RAW.bieter,K=RAW.konkurr
   if(!kand.length)return null;
   return mitStrom(strom('konkurrenzKauf',S.season,p.id),()=>{if(R()>=K.chance)return null;const b=pick(kand),be=beraterVon(p),gier=be&&be.prof==='gierig'?B.gierig:0;
     const amt=rundeAb(Math.min(fee*(1+B.plus[0]+R()*(B.plus[1]-B.plus[0])+gier),Math.max(fee,value(p)*RTR.maxFaktor),b.cash*RM.angebote.kontoAnteil));if(amt<=fee)return null;
-    v.konk={tid:b.id,amt,bis:S.tag+B.frist};return amt;});}
+    v.konk={tid:b.id,amt,bis:S.tag+B.frist,dein:fee};return amt;});} /* dein: deine angenommene Ablöse (K20d) */
+// Recht des Spielers (K20 §4.2, K20d): Will er unbedingt zu dir, lehnt er den Höchstbietenden ab. Chance nach seinem Interesse an dir, kleiner, wenn der andere Verein
+// mehr Ansehen hat als deiner. Eigener Strom je Spieler und Saison.
+function spielerLehntAb(p,b){const N=RAW.konkurrenz.nein,i=wechselInteresse(p);if(i<N.ab)return false;const c=Math.min(N.max,N.basis+(i-N.ab)*N.jePunkt)*(b.rep>myT().rep?N.besser:1);
+  return mitStrom(strom('konkurrenzNein',S.season,p.id),()=>R()<c);}
 // Täglich (ablauf.js taeglichLauf): Frist vorbei, ohne dass du mitgegangen bist: Der Spieler wechselt zum Konkurrenten, wenn das Fenster noch offen ist.
 // Nicht, wenn du inzwischen einen der beiden Vereine führst (DD3) oder der Verkäufer unter seine Mindestgröße fiele.
 function konkurrenzTag(d){if(!S.verh)return;Object.keys(S.verh).forEach(id=>{const v=S.verh[id],k=v&&v.konk;if(!k||d<=k.bis)return;v.konk=null;const p=PIX.get(+id),b=S.teams[k.tid];
   if(!p||p.team!==v.team||p.team===S.my||k.tid===S.my||p.wech||p.leihe||!fensterOffen(d)||!b||!aktiv(b)||b.cash<k.amt||squad(b.id).length>=RM.kaeufer.kaderMax||squad(p.team).length<=RM.verkaeufer.kaderMin)return;
+  if(k.dein&&spielerLehntAb(p,b)){v.f=k.dein;news(`${p.n} lehnt das Angebot von ${b.name} ab, er will zu ${myT().name}. ${vereinName(p)} nimmt jetzt deine ${fmt(k.dein)}.`,'good');return;} /* K20d: Verkäufer nimmt deine Ablöse */
   delete S.verh[id];kiWechsel(p,b,k.amt);news(`Bieterwettstreit verloren: ${p.n} wechselt für ${fmt(k.amt)} zu ${b.name}.`,'bad');});}
 const schmerzgrenze=p=>rundeAb(forderungDu(p)/RTR.forderung*RTR.schmerzgrenze);
 // Eine Runde: dein Angebot an den Verein. Rückgabe {ok,preis} oder {text,gegen}
 function kaufRunde(p,fee){const T=RTR,v=verhandlung(p),F=forderung(p),sch=schmerzgrenze(p),wer=vereinName(p);
   // Bieterwettstreit (K20c): Solange das Gegenangebot gilt, zählt nur, ob du mitgehst (vor Pause und Beziehung, Prüfung DD2: der Verkäufer hat schon Ja gesagt). Gehst du mit, zieht der andere zurück.
-  if(konkurrenzOffen(v)){if(fee>=v.konk.amt){v.konk=null;return{ok:true,preis:fee};}return{text:`${wer} hat ein höheres Angebot eines anderen Vereins vorliegen: ${fmt(v.konk.amt)}. Bis ${datumKurz(v.konk.bis)} kannst du mitgehen.`,gegen:v.konk.amt};}
+  if(konkurrenzOffen(v)){if(fee>=v.konk.amt){v.konk=null;return{ok:true,preis:fee};}return{text:`${wer} hat ein höheres Angebot eines anderen Vereins vorliegen: ${fmt(v.konk.amt)}. Bis ${datumKurz(v.konk.bis)} kannst du mitgehen. Will ${p.n} unbedingt zu dir, lehnt er das andere Angebot vielleicht ab.`,gegen:v.konk.amt};}
   if(v.pause>S.tag)return{text:`${wer} will bis ${datumKurz(v.pause)} nicht mehr über ${p.n} reden.`};
   // Schlechte Beziehung (K17 §5.2, U12c): Zu Beginn einer Verhandlung lehnt der Verein womöglich jedes Gespräch ab
   if(v.r===0&&bezLehntAb(p.team)){v.pause=S.tag+T.pause;return{text:`${wer} will mit dir nicht über ${p.n} reden (Beziehung ${bezZahl(bezWirk(p.team))}). Frühestens am ${datumKurz(v.pause)} wieder.`};}

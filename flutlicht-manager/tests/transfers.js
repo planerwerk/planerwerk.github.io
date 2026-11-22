@@ -92,5 +92,14 @@ const kaufe=(w,p,fee,yrs=3)=>{const els=w.W.ev('document');els.getElementById('f
   pruef(k>fee&&!!v&&v.konk===null&&zweimal&&f1===k&&!r1.ok&&r1.gegen===k&&!!r2&&r2.ok&&weg&&noch&&q.team===b.id,'K20c: Bieterwettstreit beim Kauf (Gegenangebot, Mitgehen, Frist)',
     `Ablöse ${fee}, Gegenangebot ${k}, Forderung ${f1}, weniger: ${r1.text||''}, Wechsel nach der Frist zu ${q.team===b.id?b.name:'–'}`);}
 
+// K20d. Recht des Spielers (K20 §4.2): Gehst du nicht mit, lehnt ein Spieler mit genug Interesse an dir den anderen Verein ab, dann nimmt der Verkäufer deine Ablöse (Forderung = dein Gebot).
+//       Mit Chance 0 wechselt er wie in K20c; das Gebot merkt sich die Ablöse (dein)
+{const w=welt(),{S,F,ev}=w,N=ev('RAW').konkurrenz.nein,q=S.pl.filter(x=>x.team>=0&&x.team<1000&&x.team!==S.my&&!x.leihe).sort((a,b)=>b.str-a.str)[5];
+  const b=S.teams.find(x=>x.id!==S.my&&x.id!==q.team&&ev('aktiv')(x)&&ev('squad')(x.id).length<30),von=q.team;b.cash=5e8;
+  Object.assign(N,{ab:-999,basis:1,max:1,besser:1});const vq=ev('verhandlung')(q);vq.konk={tid:b.id,amt:2e6,bis:S.tag,dein:15e5};F.konkurrenzTag(S.tag+1);
+  const bleibt=q.team===von&&vq.f===15e5&&!!ev('verhandlungVon')(q)&&ev('forderung')(q)<=15e5;
+  N.max=0;N.basis=0;vq.konk={tid:b.id,amt:2e6,bis:S.tag+1,dein:15e5};F.konkurrenzTag(S.tag+2);const weg=q.team===b.id;
+  pruef(bleibt&&weg,'K20d: Der Spieler lehnt den Höchstbietenden ab und der Verkäufer nimmt deine Ablöse, ohne Chance wechselt er',`bleibt ${bleibt} (Forderung ${ev('forderung')(q)}), ohne Chance gewechselt ${weg}`);}
+
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);
