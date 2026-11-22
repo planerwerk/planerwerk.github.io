@@ -51,7 +51,9 @@ const dkRabatt=()=>{const D=RFS.dauerkarten,d=dkStand();if(d&&d.n!=null)return d
 // Preis je Dauerkarte und Ligaheimspiel: Preis beim Verkauf, höchstens der heutige, mit Catering und Anzeigetafel, abzüglich Rabatt
 const dkPreis=(t,d)=>Math.min(t.price,d.p!=null?d.p:t.price)*zuschauerFaktor(t)*(1-d.r);
 // Anteil der Plätze nach Fanstimmung und Rabatt, höchstens ohne Gästeblock
-function dkAnteil(t,r){const D=RFS.dauerkarten;return clamp(D.basis+D.jeStimmung*fanst(t)/100+D.jeRabatt*(r-D.rabatt)+(t&&t.id===S.my?dkKampagne():0),0,1-D.gaesteblock);}
+function dkAnteil(t,r){const D=RFS.dauerkarten;return clamp(D.basis+D.jeStimmung*fanst(t)/100+D.jeRabatt*(r-D.rabatt)+(t&&t.id===S.my?dkKampagne():0)+dkMitglieder(t),0,1-D.gaesteblock);} /* + Vorkaufsrecht der Mitglieder (K25e) */
+// Vorkaufsrecht der Mitglieder (K25 §5.5, K25e): mehr Mitglieder je Platz, mehr Dauerkarten, höchstens dauerkarten.mitglieder (ab einem Mitglied je Platz)
+function dkMitglieder(t){const D=RFS.dauerkarten;return t&&t.cap>0?D.mitglieder*Math.min(1,mitgliederVon(t)/t.cap):0;}
 // Dauerkarten-Aktion (K25c): in dieser Saison gestartet, mit der Abnutzung aus K25a
 const dkKampagne=()=>{const M=S.mk,e=M&&M.s===S.season&&M.k&&M.k.dauerkarten,C=RMK.kampagnen.dauerkarten;return e&&e.n&&C?C.dauerkarten*(e.w||1):0;};
 function dkVerkauf(t){const r=dkRabatt(),n=Math.round(t.cap*dkAnteil(t,r));S.dk={s:S.season,tid:S.my,r,n,p:t.price};
@@ -63,5 +65,5 @@ function dkRabattSetzen(r){const D=RFS.dauerkarten;if(!darf('preise')||!D.stufen
 function dauerkartenText(t){const D=RFS.dauerkarten,d=dkAktuell(),pct=x=>Math.round(x*100)+' %';
   if(d)return`<p>Dauerkarten: <b>${d.n.toLocaleString('de-DE')}</b> verkauft (${pct(d.r)} Rabatt${d.p!=null?`, Preis beim Verkauf ${d.p} €`:''}), je Ligaheimspiel ${fmt(Math.round(Math.min(d.n,t.cap)*dkPreis(t,d)))}.</p>`;
   const r=dkRabatt();
-  return`<p>Dauerkarten werden beim ersten Ligaheimspiel verkauft, voraussichtlich etwa ${Math.round(t.cap*dkAnteil(t,r)).toLocaleString('de-DE')} (${pct(r)} Rabatt). Mehr Rabatt: mehr Dauerkarten und zufriedenere Fans, aber weniger je Platz.</p>
+  return`<p>Dauerkarten werden beim ersten Ligaheimspiel verkauft, voraussichtlich etwa ${Math.round(t.cap*dkAnteil(t,r)).toLocaleString('de-DE')} (${pct(r)} Rabatt, Vorkaufsrecht der Mitglieder +${pct(dkMitglieder(t))}). Mehr Rabatt: mehr Dauerkarten und zufriedenere Fans, aber weniger je Platz.</p>
     <div class="row">${D.stufen.map(x=>`<button class="${x===r?'go':''}" onclick="dkRabattSetzen(${x})"${lzAus('preise')}>${pct(x)} Rabatt</button>`).join('')}</div>`;}

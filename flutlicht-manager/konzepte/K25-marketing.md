@@ -106,7 +106,8 @@ Erlös je Monat = Fans × Kaufkraft × Sortiment × Trikotfaktor × Erfolg × St
 - **Entwicklung:** Zum Saisonwechsel wachsen oder schrumpfen die Mitglieder mit demselben Faktor wie die Fans (Saisonregeln, Ansehen), aber ohne deren Grenzen (Mindest- und Höchstzahl je Platz). Alte Spielstände bekommen die Mitglieder einmal aus den Stammdaten im Verhältnis ihrer heutigen Fans (Prüfung DL).
 - **Mitgliederaktion** (Kampagne, Bereich `marketing`): 50.000 € mal Ligafaktor, vier Wochen, Mitglieder +2 %, einmal je Saison (Prüfung DL3, sonst ließ sie sich alle vier Wochen wiederholen).
 - **Anzeige:** Mitglieder und Beiträge je Saison im Marketing-Kasten.
-- **Noch nicht:** Rabatte für Mitglieder bei Dauerkarten. Die Mitgliederversammlung mit der Wahl des Präsidenten gibt es seit U12i (K28 §5.12), die Mitglieder zählen dort noch nicht als Stimmen.
+- **Seit K25e (22.11., popolupo, ohne Testlauf): Vorkaufsrecht der Mitglieder.** Der Anteil der Dauerkarten (K27b) steigt um 10 % × Mitglieder je Platz, höchstens um 10 Prozentpunkte (ab einem Mitglied je Platz). Bayern bekommt also die vollen 10 Punkte, ein kleiner Verein mit 5.000 Mitgliedern und 15.000 Plätzen gut 3. Die Mitgliederaktion wirkt so auch auf die Dauerkarten. Die Anzeige vor dem Verkauf nennt den Anteil.
+- **Noch nicht:** eigene Rabatte für Mitglieder (der Rabatt gilt für alle Dauerkarten). Die Mitgliederversammlung mit der Wahl des Präsidenten gibt es seit U12i (K28 §5.12), die Mitglieder zählen dort noch nicht als Stimmen.
 
 ## 6. Hebel des Spielers
 

@@ -483,6 +483,7 @@ sechs Kampagnen, drei Trikotdesigns je Saison, Sortiment in drei Stufen, Online-
 - Dauerkarten-Aktion als Sommer-Kampagne vor dem Verkauf, +5 Prozentpunkte Dauerkarten.
 - Echte Mitgliederzahlen je Verein (Stand Winterpause 2025/26, drei Drittligisten geschätzt), Beiträge 60 € je Jahr in den sonstigen Einnahmen aller Vereine, Grundbetrag je Liga so, dass der Schnitt gleich bleibt.
 - Mitglieder folgen den Fans, Mitgliederaktion +2 %.
+- Seit K25e (22.11., popolupo, vorläufig): Vorkaufsrecht der Mitglieder bei Dauerkarten, Anteil + 10 % × Mitglieder je Platz (höchstens 10 Punkte). Kein eigener Rabatt für Mitglieder.
 
 ## K26 – Stadion und Infrastruktur
 Datei: `konzepte/K26-stadion.md`

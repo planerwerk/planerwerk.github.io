@@ -55,15 +55,20 @@ function welt(lernstufen){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;
 
 // K27b. Dauerkarten (K27 §5.2): Anteil nach Fanstimmung und Rabatt, höchstens ohne Gästeblock; Verkauf beim ersten Ligaheimspiel; die Inhaber zahlen auch bei kleiner Nachfrage;
 //       Rabatt nur vor dem Verkauf wählbar; mehr Rabatt hebt den Baustein Preise der Fanstimmung
-{const {W,F,S,ev,t}=welt(false),D=ev('RFS').dauerkarten;t.fanst=60;const a20=F.dkAnteil(t,0.2),a30=F.dkAnteil(t,0.3);t.fanst=100;const voll=F.dkAnteil(t,1);t.fanst=60; // 0,35 + 0,25 + 0,5 × 0,8 = 1,0, gedeckelt auf 0,9 (Prüfung CZ1)
+{const {W,F,S,ev,t}=welt(false),D=ev('RFS').dauerkarten,mg=F.dkMitglieder(t);t.fanst=60;const a20=F.dkAnteil(t,0.2),a30=F.dkAnteil(t,0.3);t.fanst=100;const voll=F.dkAnteil(t,1);t.fanst=60; // 0,35 + 0,25 + 0,5 × 0,8 = 1,0, gedeckelt auf 0,9 (Prüfung CZ1)
   const p0=F.fanBausteine(t).preise;F.dkRabattSetzen(0.3);const p1=F.fanBausteine(t).preise;
   const o=S.teams.find(x=>x.lg===t.lg&&x.id!==S.my);W.ev('attendance=function(){return 100;}');const f0=S.fin['Dauerkarten']||0,z0=S.fin['Zuschauer']||0;
   F.heimspielEinnahmen({h:S.my,a:o.id,hg:0,ag:0},false);const d=ev('dkAktuell')(),pz=t.price*ev('zuschauerFaktor')(t);
   const dk1=(S.fin['Dauerkarten']||0)-f0,z1=(S.fin['Zuschauer']||0)-z0;F.dkRabattSetzen(0.1);const fest=ev('dkAktuell')().r===0.3;
   // CZ2: Preis danach hochsetzen bringt bei den Dauerkarten nichts (es gilt der Preis beim Verkauf)
   const p0preis=t.price;t.price=150;const f1=S.fin['Dauerkarten']||0;F.heimspielEinnahmen({h:S.my,a:o.id,hg:0,ag:0},false);const dk2=(S.fin['Dauerkarten']||0)-f1;t.price=p0preis;
-  pruef(nah(a20,D.basis+D.jeStimmung*0.6)&&nah(a30,a20+D.jeRabatt*0.1)&&nah(voll,1-D.gaesteblock)&&nah(p1-p0,D.fans)&&!!d&&d.n===Math.round(t.cap*a30)&&d.p===p0preis
+  pruef(nah(a20,D.basis+D.jeStimmung*0.6+mg)&&mg>0&&mg<=D.mitglieder&&nah(a30,a20+D.jeRabatt*0.1)&&nah(voll,1-D.gaesteblock)&&nah(p1-p0,D.fans)&&!!d&&d.n===Math.round(t.cap*a30)&&d.p===p0preis
     &&Math.abs(dk1-Math.min(d.n,t.cap)*pz*0.7)<=1&&dk2===dk1&&z1===0&&fest,
     'Dauerkarten: Anteil, Verkauf beim ersten Ligaheimspiel, Einnahmen auch bei kleiner Nachfrage, Rabatt danach fest, Fanstimmung',`Anteil ${a20.toFixed(3)} / ${a30.toFixed(3)} / ${voll.toFixed(3)}, Preise ${p0.toFixed(2)} → ${p1.toFixed(2)}, verkauft ${d&&d.n}, Dauerkarten ${dk1}, Einzelkarten ${z1}`);}
+
+// K25e. Vorkaufsrecht der Mitglieder (K25 §5.5): Dauerkarten-Anteil + 0,1 × Mitglieder je Platz (höchstens 1), ohne Mitglieder nichts
+{const {F,ev,t}=welt(false),D=ev('RFS').dauerkarten;t.mitglieder=0;const m0=F.dkMitglieder(t);t.mitglieder=Math.round(t.cap/2);const mh=F.dkMitglieder(t);t.mitglieder=t.cap*10;const mv=F.dkMitglieder(t);
+  t.fanst=50;const a=F.dkAnteil(t,D.rabatt);t.mitglieder=0;const b=F.dkAnteil(t,D.rabatt);
+  pruef(m0===0&&nah(mh,D.mitglieder*Math.round(t.cap/2)/t.cap)&&nah(mv,D.mitglieder)&&nah(a-b,D.mitglieder),'Vorkaufsrecht der Mitglieder: Anteil steigt mit den Mitgliedern je Platz, gedeckelt',`${m0} / ${mh.toFixed(3)} / ${mv.toFixed(3)}, Anteil ${b.toFixed(3)} → ${a.toFixed(3)}`);}
 
 console.log(probleme.length?`\n${probleme.length} Problem(e).`:'\nAlles in Ordnung.');process.exitCode=probleme.length?1:0;

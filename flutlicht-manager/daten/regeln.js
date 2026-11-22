@@ -449,7 +449,7 @@ const REGELN={
     // Dauerkarten (K27 §5.2, K27b, 22.11., popolupo, GESCHÄTZT): nur dein Verein, verkauft beim ersten Ligaheimspiel der Saison. Anteil der Plätze = basis + jeStimmung × Fanstimmung/100
     // + jeRabatt × (Rabatt − rabatt), höchstens 1 − gaesteblock. Rabatt wählbar aus stufen (Bereich preise, Automatik: rabatt). Je Ligaheimspiel zahlen alle Inhaber Preis × (1 − Rabatt),
     // auch wenn weniger Zuschauer kommen. Fanstimmung (Baustein Preise): fans je 10 Prozentpunkte Rabatt über oder unter dem Standard.
-    dauerkarten:{basis:0.35,jeStimmung:0.25,rabatt:0.2,stufen:[0.1,0.2,0.3],jeRabatt:0.5,gaesteblock:0.1,fans:2}},
+    dauerkarten:{basis:0.35,jeStimmung:0.25,rabatt:0.2,stufen:[0.1,0.2,0.3],jeRabatt:0.5,gaesteblock:0.1,fans:2,mitglieder:0.1}}, // mitglieder: Vorkaufsrecht, Anteil + mitglieder × Mitglieder je Platz (höchstens 1), K25e, GESCHÄTZT
 
   // Pressekonferenzen (K29 §5.4, §11, U17a). Texte in daten/presse.js. budget: höchstens je Saison, abstand: Tage zwischen zwei, sperre: Tage je Anlass, fragen: [min, max].
   // anlass: Schwellen (spitzeBis Platz, spitzeAb Spieltag, pokalAb Runde, krise Niederlagen, hoehenflug Siege, fuehrungAb Spieltag, kantersieg Tore Abstand, auftaktVorher Tage).
