@@ -76,3 +76,11 @@ function kiOrdnung(t){let best=t.form,bv=-1;const kader=squad(t.id);if(!kader.le
   t.form=best;}
 // Profil-Stil eines Computer-Vereins (bis K31)
 function profilStil(){return waehleGewichtet(Object.assign({},RTA.ki.profil));}
+
+// ---------- „Der Gegner hat dich durchschaut“ (K06 §8, K06b) ----------
+// Dein Lieblingsstil: der häufigste der letzten RTA.ki.rueckblick Spiele (dieselbe Regel wie in kiStil). Nach einem verlorenen Pflichtspiel, in dem du ihn gespielt hast
+// und der Computer-Trainer den Stil wählte, der ihn schlägt: eine Meldung. Nur wenn du den Stil selbst wählst (sonst kontert niemand). Ohne Würfel.
+function lieblingsstil(){const v=(S.stilVerlauf||[]).slice(-RTA.ki.rueckblick);if(!v.length)return null;const z={};v.forEach(x=>z[x]=(z[x]||0)+1);return Object.entries(z).sort((a,b)=>b[1]-a[1])[0][0];}
+function durchschautMeldung(m){if(!m||!m.taktik||autoB('stil'))return;const s=m.h===S.my?0:1,mein=m.taktik[s],geg=m.taktik[1-s],gf=s?m.ag:m.hg,ga=s?m.hg:m.ag,oid=s?m.h:m.a;
+  if(!mein||!geg||gf>=ga||oid>=1000)return;const lieb=lieblingsstil(),gegen=lieb?Object.keys(RTA.kreislauf).find(k=>RTA.kreislauf[k]===lieb):null;
+  if(lieb&&gegen&&mein.stil===lieb&&geg.stil===gegen)news(`Der Gegner hat dich durchschaut: ${tn(oid)} stellte sich mit ${STIL_NAME[gegen]||gegen} auf dein ${STIL_NAME[lieb]||lieb} ein. Wer immer gleich spielt, wird gekontert.`,'');}

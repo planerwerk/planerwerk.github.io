@@ -65,4 +65,12 @@ function bilanz(tid,geg,n,vor){let p=0,gf=0,ga=0,sp=0,bes=[0,0];for(let r=0;r<n;
   for(let k=0;k<N;k++){S.season=7700+k;S.tag=1;for(const g of gegner.slice(0,8)){const x=F.sim(g,X);l+=x.st.wege[0][1];r+=x.st.wege[0][2];}}
   rv.str=alt;pruef(l/(l+r)>=0.55,'Seiten: ein schwacher Rechtsverteidiger zieht mindestens 55 % der Außenangriffe auf seine Seite',pc(l/(l+r)));}
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
+// K06b. „Der Gegner hat dich durchschaut“ (K06 §8): Niederlage mit dem Lieblingsstil gegen den Stil, der ihn schlägt, gibt eine Meldung; ein Sieg, ein anderer eigener Stil
+//       oder ein anderer Stil des Gegners nicht. Eigene Welt, weil oben Taktik-Funktionen ersetzt sind.
+{const {W:W2,F:F2}=neueWelt();F2.buildWorld(SEED);const S2=W2.S,ev=W2.ev;S2.my=6;S2.mgr='Test';F2.setTarget();const K=ev('RTA').kreislauf,lieb=Object.values(K)[0],gegen=Object.keys(K).find(k=>K[k]===lieb),anders=Object.keys(K).concat(['ausgewogen']).find(k=>k!==gegen&&k!==lieb);
+  S2.stilVerlauf=[lieb,lieb,lieb];const o=S2.teams.find(t=>t.id!==6&&t.lg===S2.teams[6].lg).id,n=()=>S2.news.filter(x=>x.t.startsWith('Der Gegner hat dich durchschaut')).length;
+  const spiel=(hg,ag,a,b)=>F2.durchschautMeldung({h:6,a:o,hg,ag,taktik:[{stil:a},{stil:b}]});
+  spiel(0,2,lieb,gegen);const eins=n();spiel(2,0,lieb,gegen);spiel(0,2,anders,gegen);spiel(0,2,lieb,anders);const danach=n();
+  pruef(!!gegen&&eins===1&&danach===1,'Durchschaut: Meldung nur bei Niederlage mit dem Lieblingsstil gegen seinen Konter',`Konter ${gegen}, Meldungen ${eins} / ${danach}`);}
+
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);
