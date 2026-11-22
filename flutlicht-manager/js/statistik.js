@@ -68,6 +68,9 @@ function rekLiga(lg){const L=statS().rek.lg,R0=L[lg]||(L[lg]={}),A=RSTAT.rekord.
   if(!R0.sieg||R0.sieg.n<s||(R0.sieg.n===s&&Math.max(R0.sieg.hg,R0.sieg.ag)<=hoch))R0.sieg={n:s,hg:A.sieg.hg,ag:A.sieg.ag,txt:`${A.sieg.h} – ${A.sieg.a}`,wann:A.sieg.datum,echt:1};
   if(!R0.tore||R0.tore.n<=A.tore.n)R0.tore={n:A.tore.n,txt:`${A.tore.name} (${A.tore.verein})`,wann:A.tore.saison,echt:1};
   if(!R0.serie||R0.serie.n<=A.serie.n)R0.serie={n:A.serie.n,txt:A.serie.verein,wann:A.serie.zeit,echt:1};return R0;}
+// Rekordtransfer der Spielwelt mit dem echten Startwert (K34d, RSTAT.rekord.transfer), auch für alte Spielstände einmal nachträglich (Merker start). Ein Transfer aus dem Spiel bleibt, wenn er teurer ist.
+function rekWelt(){const W=statS().rek.welt,A=RSTAT.rekord.transfer;if(!A||W.start)return W;W.start=1;
+  if(!W.transfer||W.transfer.n<=A.n)W.transfer={n:A.n,txt:`${A.name}, ${A.von} → ${A.nach}`,wann:A.saison,echt:1};return W;}
 // Melden: 1. Liga immer (echte Startwerte), 2. und 3. Liga nur die eigene Liga; ohne echte Startwerte erst ab der zweiten Saison des Spielstands (seit K34 haben beide welche)
 const rekMelden=lg=>lg===1||(lg===myT().lg&&(!!RSTAT.rekord.allzeit[lg]||S.season-statS().ab>=RSTAT.rekord.meldenAb));
 function rekNeu(lg,art,text){if(!rekMelden(lg))return;news(`${lg===1?'Bundesliga-Rekord':'Rekord der '+ligaName(lg)}: ${text}`,'good');}
@@ -90,8 +93,8 @@ function statZuschauer(m,att){vereinsRekord(S.my,'zus',att,{txt:`gegen ${tn(m.a)
 // Transfers mit Ablöse: Rekordtransfer der Spielwelt (Zugang eines deutschen Vereins) und Vereinsrekorde
 function statTransfer(p,fee,von,nach){if(!p||!(fee>0))return;fansAbgang(p,von); // Verkauf eines Publikumslieblings (K27, U16)
   const st=statS(),de0=id=>id!=null&&id>=0&&id<1000&&!!S.teams[id],wann=stSaison(S.season);
-  if(de0(nach)){const a=st.rek.welt.transfer;if(!a||fee>a.n){st.rek.welt.transfer={n:fee,pid:p.id,txt:`${p.n}, ${stVerein(von)} → ${stVerein(nach)}`,wann};
-    if(a&&S.season-st.ab>=RSTAT.rekord.meldenAb)news(`Rekordtransfer: ${p.n} wechselt für ${fmt(fee)} von ${stVerein(von)} zu ${stVerein(nach)}. Bisher: ${a.txt} (${fmt(a.n)}).`,'tr');}
+  if(de0(nach)){const a=rekWelt().transfer;if(!a||fee>a.n){st.rek.welt.transfer={n:fee,pid:p.id,txt:`${p.n}, ${stVerein(von)} → ${stVerein(nach)}`,wann};
+    if(a&&(a.echt||S.season-st.ab>=RSTAT.rekord.meldenAb))news( /* gegen den echten Startwert immer melden (K34d) */`Rekordtransfer: ${p.n} wechselt für ${fmt(fee)} von ${stVerein(von)} zu ${stVerein(nach)}. Bisher: ${a.txt} (${fmt(a.n)}).`,'tr');}
     vereinsRekord(nach,'zu',fee,{txt:`${p.n} von ${stVerein(von)}`,wann});}
   if(de0(von))vereinsRekord(von,'ab',fee,{txt:`${p.n} zu ${stVerein(nach)}`,wann});}
 
@@ -198,8 +201,8 @@ function stAnsichtRekorde(st){const zeile=(k,r,f)=>`<tr><td>${k}</td><td>${r?f(r
   const v=Object.entries(st.rek.v).map(([tid,r])=>`<div class="card"><h3>Vereinsrekorde ${esc(stVerein(+tid))}</h3><table><tbody>${zeile('Zuschauer',r.zus,x=>`<b>${de(x.n)}</b> ${esc(x.txt)}${wann(x)}`)}
     ${zeile('Höchster Sieg',r.sieg,x=>`<b>${x.hg}:${x.ag}</b> ${esc(x.txt)}${wann(x)}`)}${zeile('Teuerster Zugang',r.zu,x=>`<b>${fmt(x.n)}</b> ${esc(x.txt)}${wann(x)}`)}${zeile('Teuerster Abgang',r.ab,x=>`<b>${fmt(x.n)}</b> ${esc(x.txt)}${wann(x)}`)}</tbody></table>
     <p class="dim">Seit Spielbeginn, nur in deiner Zeit als Trainer.</p></div>`).join('');
-  const w=st.rek.welt.transfer;
-  return`<div class="grid">${LIGEN.map(liga).join('')}<div class="card"><h3>Rekordtransfer</h3><p>${w?`<b>${fmt(w.n)}</b> ${esc(w.txt)}${wann(w)}`:'<span class="dim">noch keiner</span>'}</p><p class="dim">Teuerster Zugang eines deutschen Vereins seit Spielbeginn.</p></div>${v}</div>`;}
+  const w=rekWelt().transfer;
+  return`<div class="grid">${LIGEN.map(liga).join('')}<div class="card"><h3>Rekordtransfer</h3><p>${w?`<b>${fmt(w.n)}</b> ${esc(w.txt)}${wann(w)}`:'<span class="dim">noch keiner</span>'}</p><p class="dim">Teuerster Zugang eines deutschen Vereins${w&&w.echt?' (echter Rekord, noch nicht übertroffen)':' seit dem echten Rekord'}.</p></div>${v}</div>`;}
 function stAnsichtArchiv(st){if(!st.arch.length)return`<div class="card"><p>Das Archiv beginnt am Ende der Saison ${stSaison(st.ab)}.</p></div>`;
   const a=st.arch.find(x=>x.s===STARCH)||st.arch[st.arch.length-1],meine=new Set(st.st.map(x=>x.tid)),titel=new Map();
   st.arch.forEach(x=>x.m.forEach((id,i)=>{if(id==null)return;const k=id+':'+(i+1);titel.set(k,(titel.get(k)||0)+1);}));

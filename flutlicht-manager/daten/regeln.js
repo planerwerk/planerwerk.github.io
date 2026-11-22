@@ -414,7 +414,9 @@ const REGELN={
         serie:{n:28,verein:'FC St. Pauli und Arminia Bielefeld',zeit:'1976 bis 1979 und 1979/80'}},
       // 3. Liga: 7:0 gab es viermal, hier der erste (danach Wehen Wiesbaden 2018, Mannheim und Zwickau 2022). 21 Spiele ohne Niederlage auch Saarbrücken 2011 über zwei Saisons.
       3:{sieg:{hg:0,ag:7,h:'FC Carl Zeiss Jena',a:'1. FC Saarbrücken',datum:'11.8.2010'},tore:{n:28,name:'Lars Gindorf',verein:'Alemannia Aachen',saison:'2025/26'},
-        serie:{n:21,verein:'Karlsruher SC',zeit:'2017/18'}}},meldenAb:1},
+        serie:{n:21,verein:'Karlsruher SC',zeit:'2017/18'}}},
+      // transfer: teuerster Zugang eines deutschen Vereins als Startwert des Rekordtransfers (K34d, 22.11.2026, Websuche: Harry Kane 2023 für etwa 95 Mio. €, andere Quellen 100 Mio. plus Boni)
+      transfer:{n:95e6,name:'Harry Kane',von:'Tottenham Hotspur',nach:'FC Bayern München',saison:'2023/24'},meldenAb:1},
     ehemalige:{ligaspiele:150,vereinSpiele:30,max:400},
     euListe:10, // Europapokal in der Saisonstatistik (K37, K34c): so viele deutsche Torjäger
     jubilaeum:{spiele:100,jahre:10},

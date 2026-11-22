@@ -68,4 +68,13 @@ pruef(tore>0&&falsch===0&&vorl/tore>0.55&&vorl/tore<0.9,'Vorlagen: nie für den 
   const a=S.pl.find(p=>p.team===VEREIN),b=S.pl.find(p=>p.team>=0&&p.team<1000&&p.team!==VEREIN);a.eg=1;b.eg=3;const h=F.stEuropaTorjaeger(),ia=h.indexOf(a.n),ib=h.indexOf(b.n);
   pruef(leer&&ia>0&&ib>0&&ib<ia,'Europapokal in der Saisonstatistik: deutsche Torjäger nach Toren',`leer ${leer}, Reihenfolge ${ib<ia}`);}
 
+// K34d. Rekordtransfer mit echtem Startwert (Harry Kane, 95 Mio. €): steht von Anfang an da, ein billigerer Zugang ändert nichts und meldet nichts,
+//       ein teurerer wird Rekord und wird sofort gemeldet. Alter Spielstand mit einem kleineren Rekord aus dem Spiel bekommt den echten.
+{const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREIN;const A=W.ev('RSTAT').rekord.transfer,meld=[],orig=F.news;F.news=function(t,c){if(String(t).startsWith('Rekordtransfer'))meld.push(t);return orig(t,c);};
+  const start=F.rekWelt().transfer,p=S.pl.find(x=>x.team>=0&&x.team!==VEREIN),nach=S.teams.find(x=>x.id!==p.team&&x.lg===1).id;
+  F.statTransfer(p,A.n/2,p.team,nach);const billig=S.stat.rek.welt.transfer.n===A.n&&!meld.length;F.statTransfer(p,A.n+1e6,p.team,nach);const teuer=S.stat.rek.welt.transfer.n===A.n+1e6&&meld.length===1;
+  delete S.stat.rek.welt.start;S.stat.rek.welt.transfer={n:5e6,txt:'Spiel'};const alt=F.rekWelt().transfer;
+  pruef(!!start&&start.n===A.n&&start.echt===1&&billig&&teuer&&alt.n===A.n&&alt.echt===1,'Rekordtransfer: echter Startwert, nur ein teurerer Zugang ersetzt ihn und wird gemeldet, alter Spielstand bekommt ihn',
+    `Start ${start&&start.n}, billiger ${billig}, teurer ${teuer}, alter Spielstand ${alt.n}`);}
+
 console.log(probleme.length?`\n${probleme.length} Problem(e).`:'\nAlles in Ordnung.');process.exitCode=probleme.length?1:0;
