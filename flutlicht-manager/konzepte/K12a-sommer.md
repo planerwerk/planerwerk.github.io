@@ -167,7 +167,7 @@ spieler:{ saisonbelastung:{jeMinuten:45,laenderspiel:2,urlaub:4,pause:1,ab:50,er
 7. **Saisonbelastung wird mitgenommen:** Sie sinkt nur im Urlaub (4 pro Tag) und steigt mit jeder Spielminute. Nach zwei Wochen Urlaub startet ein Stammspieler mit Belastung 90 in die neue Saison mit etwa 26 statt 0 und liegt damit schon im Herbst über 50 (langsamere Erholung, mehr Verletzungen). Die Rechnung in 5.1 („Wirkung im Herbst nur bei Belastung über 74“) ging von einer Wirkung direkt nach dem Urlaub aus, die es mit der Schwelle 50 nie gäbe.
 8. **Urlaubslänge auch im laufenden Urlaub änderbar** (Training und Saisonbilanz). Bereits vergangene Urlaubstage zählen.
 9. **Formänderung je Notenpunkt 2,3 statt 2,5** und 11 % statt 10 % pro Woche zurück zur Mitte. Mit dem neuen Saisonablauf lagen sonst 6,5 % der Spieler bei Form ≤ 4 oder ≥ 16 (Ziel höchstens 5 %).
-10. **Noch nicht gebaut:** Nationalspieler mit Turnier (K13), Ereignisse aus §8, Stimmung aus der Urlaubslänge (K14), Testspiele und Trainingslager (K11).
+10. **Noch nicht gebaut:** Nationalspieler mit Turnier (K13), Ereignisse aus §8. Gebaut sind inzwischen die Stimmung aus der Urlaubslänge (U8, K14 §5.1 Umfeld: vier Wochen +3, zwei Wochen −3 bei hoher Saisonbelastung) sowie Testspiele und Trainingslager (K11, mit Sommerturnier K11b und Anfragen K11c). Berichtigt am 22.11.2026.
 
 
 ## Quellen

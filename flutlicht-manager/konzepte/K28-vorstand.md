@@ -361,7 +361,7 @@ vorstand:{
 9. **Sport gegen das Saisonziel**, nicht gegen den erwarteten Platz wie bei Computer-Vereinen. Dein Ziel ist das, was der Vorstand von dir verlangt (K02 verschiebt es je Stufe).
 10. **Präsident ohne Namen und ohne Wahl,** wie in K31 §12 Nr. 34. Neuwahl und „Präsident mischt sich ein“ kommen mit K30.
 11. **Ruf wirkt zuerst nur auf Jobangebote.** Die anderen Wirkungen brauchen K14, K19 und K29 im Detail.
-12. **Rücktritt** (§5.3) fehlt noch. Er wäre eine neue Funktion mit Lizenz (K36) und kommt mit U12b.
+12. **Rücktritt** (§5.3): gebaut in U12b (§5.7, Bereich `ruecktritt`, Grundlizenz). Der frühere Hinweis „fehlt noch“ war veraltet (berichtigt am 22.11.2026).
 
 **Vorläufig entschieden mit U12b** (20.11., von mir, ohne Rücksprache und ohne Testlauf):
 
