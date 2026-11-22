@@ -70,5 +70,12 @@ const scout=(S,F,q,gebiet,ev=F.__ev)=>{let x;for(let i=0;i<50;i++){x=F.stabNeu('
   pruef(nein===null&&!!b&&b.id!==p.team&&b.id!==S.my&&Math.abs(f1/f0-(1+K.preis))<0.001&&Math.abs(f2-f0)<1,'Konkurrenz am Tisch: anderer Verein mit Bedarf, Forderung + 5 % bis zur Frist',
     `Chance 0 ${nein}, Verein ${b&&b.name}, Forderung ${Math.round(f0)} → ${Math.round(f1)} → ${Math.round(f2)}`);}
 
+// K18e. Scout liegt daneben (K18 §8): Einschätzung beim Kauf 6 über der wahren Stärke gibt eine Meldung, 2 darüber keine; der Merker ist danach weg;
+//       kaufSichtMerken merkt sich bei einem fremden Spieler Mitte und Stärke, bei einem eigenen (genau bekannt) nichts
+{const {S,F,ev}=welt(),sq=ev('squad')(S.my),[p,q]=sq,n=()=>S.news.filter(x=>x.t.startsWith('Scout lag daneben')).length,f=S.pl.find(x=>x.team>=0&&x.team!==S.my);
+  p.kaufSicht={mitte:Math.round(p.str)+6,str:Math.round(p.str)};q.kaufSicht={mitte:Math.round(q.str)+2,str:Math.round(q.str)};F.scoutDanebenWoche();
+  F.kaufSichtMerken(f);F.kaufSichtMerken(p);
+  pruef(n()===1&&!p.kaufSicht&&!q.kaufSicht&&!!f.kaufSicht&&f.kaufSicht.str===Math.round(f.str),'Scout liegt daneben: Meldung ab 5 unter der Einschätzung, Merker beim Kauf',`Meldungen ${n()}, fremder Spieler ${JSON.stringify(f.kaufSicht)}`);}
+
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

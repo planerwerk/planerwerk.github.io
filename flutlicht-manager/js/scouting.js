@@ -73,7 +73,7 @@ function suchWoche(a,x,beob,xi){const C=RSC.suche,k=a.krit,gesehen=new Set(a.ges
   pool.slice(0,C.jeWoche).forEach(p=>{kenntnisPlus(p,x,C.anteil);beob.add(p.id);a.gesehen.push(p.id);});
   a.kand=a.gesehen.map(id=>PIX.get(id)).filter(p=>p&&p.team!==S.my).sort((p,q)=>staerkeSicht(q).mitte-staerkeSicht(p).mitte).slice(0,C.kandidaten[1]).map(p=>p.id);}
 // Woche (montags): Aufträge, Kosten, Berichte; Kenntnis verblasst ohne Beobachtung (2 je Monat)
-function scoutingWoche(){S.kenntnis=S.kenntnis||{};const beob=new Set();let xi=null;
+function scoutingWoche(){S.kenntnis=S.kenntnis||{};scoutDanebenWoche();const beob=new Set();let xi=null;
   (S.auftraege||[]).forEach(a=>{const x=scoutVon(a.scout);if(!x||x.team!==S.my){a.ende=1;return;}
     if(a.art==='spieler'){const p=PIX.get(a.pid);if(!p||p.team===S.my){a.ende=1;return;}money('Scouting',-reiseKosten(istAusland(p)));kenntnisPlus(p,x,1);beob.add(p.id);if(--a.rest<=0){a.ende=1;bericht(p,x);konkurrenzTisch(p);}}
     else{money('Scouting',-reiseKosten(a.krit.region==='ausland'));if(!xi&&a.krit.region!=='ausland'){xi=new Set();S.teams.forEach(t=>{if(aktiv(t))bestXI(t.id,t.form).forEach(id=>xi.add(id));});}suchWoche(a,x,beob,xi);}});
@@ -109,3 +109,10 @@ function konkurrenzTisch(p){const K=RSC.konkurrenz,heute=absTag(S.tag),h=hash32(
   const l=S.teams.filter(b=>b.id!==S.my&&b.id!==p.team&&aktiv(b)&&hatBedarf(b,p));if(!l.length)return null;const b=l[Math.floor(h/10000)%l.length];
   p.kTisch={bis:heute+K.tage,f:1+K.preis,tid:b.id};news(`Konkurrenz am Tisch: Auch ein Scout von ${b.name} hat ${p.n} beobachtet. Sein Verein weiß das und verlangt von dir ${Math.round(K.preis*100)} % mehr.`,'');return b;}
 const konkurrenzTischFaktor=p=>p&&p.kTisch&&absTag(S.tag)<=p.kTisch.bis?p.kTisch.f:1;
+
+// ---------- Scout liegt daneben (K18 §8, K18e) ----------
+// Beim Kauf (aktionen.js) merkt sich das Spiel die Mitte deiner Einschätzung und die wahre Stärke (p.kaufSicht). Ist der Spieler bei dir (montags, scoutingWoche) und lag
+// die Mitte mindestens RSC.daneben.ab über der wahren Stärke beim Kauf, kommt eine Meldung. Danach ist der Merker weg. Nur Anzeige.
+function kaufSichtMerken(p){const s=staerkeSicht(p);if(!s||s.genau)return;p.kaufSicht={mitte:Math.round(s.mitte),str:Math.round(p.str)};}
+function scoutDanebenWoche(){squad(S.my).forEach(p=>{const k=p.kaufSicht;if(!k)return;delete p.kaufSicht;
+  if(k.mitte-k.str>=RSC.daneben.ab)news(`Scout lag daneben: ${p.n} ist schwächer als gedacht. Beim Kauf sah es nach etwa ${k.mitte} aus, tatsächlich waren es ${k.str}.`,'bad');});}
