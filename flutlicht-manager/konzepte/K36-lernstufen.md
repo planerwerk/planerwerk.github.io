@@ -394,6 +394,7 @@ lizenz:{
 151. **K13d Spielverlegung beantragen (23.11., popolupo, ohne Testlauf):** neuer Bereich `verlegung` (A-Lizenz, Büro, ohne Automatik). Damit sind es im Code 54 Bereiche (gezählt in `REGELN.lizenz.bereiche`, die Zählung oben war zuletzt 52).
 152. **K30f Skandale (23.11., popolupo, ohne Testlauf):** keine neue Funktion, zwei Meldungen im Bereich `ereignisse` (K30 §8.4: sichtbar ab der ersten Lizenz).
 153. **K27d Jubiläum (23.11., popolupo, ohne Testlauf):** keine neue Funktion, eine Entscheidungskarte im Bereich `ereignisse`.
+154. **K25e Tradition beim Trikot (23.11., popolupo, ohne Testlauf):** keine neue Funktion, die Reaktion auf das Trikot im Bereich `marketing` hängt jetzt vom Gründungsjahr ab.
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 

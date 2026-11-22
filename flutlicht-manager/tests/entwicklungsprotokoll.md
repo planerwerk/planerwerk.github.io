@@ -123,12 +123,13 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 | **K30f** Skandale (Wettpate, Wettskandal) | `mitarbeit/popolupo-k30f-skandale` (auf den Korrekturen EH) | fertig, ungetestet |
 | Doku-Abgleich (K05, K08, K19, K32), später Korrekturen EI | `mitarbeit/popolupo-ei-korrekturen` (auf K30f) | Doku fertig, Prüfung EI läuft |
 | **K27d** Jubiläum mit Gründungsjahren | `mitarbeit/popolupo-k27d-jubilaeum` (auf dem Doku-Abgleich) | fertig, ungetestet |
+| **K25e** Tradition beim Trikot | `mitarbeit/popolupo-k25e-tradition` (auf K27d) | fertig, ungetestet |
 | U19d2 volle Kader der Auslandsvereine in der Engine | zurückgestellt | Entwurf in K37 §5.7. Die Engine behandelt Auslandsvereine als Block wie Amateure, viele Stellen schlagen Spieler in `PIX` nach. Erst nach einem Testlauf und der Messung des Faktors 0,93 |
 
 **Die neueste Spitze ist immer der zuletzt genannte Zweig, er enthält alles davor.** K24 ist fertig (Claude).
 
-**Vorschlag für den nächsten Testlauf** (Spitze `mitarbeit/popolupo-k27d-jubilaeum`, alles ungetestet, bis auf K07f, K21d, K21e, K13d, die Korrekturen EH, K30f und K27d von lesenden Prüf-Agenten durchgesehen, Konsistenzprüfung CS bis EH). **Wichtig:** Die Zweige `u12g` und `k29e` laden für sich allein nicht (DN1), bitte die Spitze nehmen:
-1. `node tests/code.js`, dann die schnellen Einzeltests der neuen Teile: `finanzen.js` (Nr. 11 bis 20), `geruechte.js` (seit K17d mit Klatsch), `schwierigkeit.js`, `werbung.js`, `europapokal.js`, `vorstand.js` (Nr. 10 bis 19), `karriereende.js`, `stadion.js` (Nr. 8 bis 11), `karten.js`, `spielwelt-karten.js`, `fans.js` (K27b), `abwerben.js` (K20b, K20e), `transfers.js` (K20c, K20d, K19c, K31b, K31c, K19d), `presse.js` (K29b bis K29j), `marketing.js` (K25c, K25d), dazu seit dem Nachmittag des 22.11.: `testspiele.js` (K11b, K11c), `erinnerungen.js` (K09b, K07b, K11d, K07d), `scouting.js` (K18c bis K18e), `medizin.js` (K10b bis K10d, K16d), `disziplin.js` (K09c, EA1 bis EA3), `vertraege.js` (K21b, K21d, K21e), `statistik.js` (K34d), `taktik.js` (K06b, eigene Welt am Ende), `stab.js` (K16b), `wettbewerbe.js` (K13b, K13c, K13d, eigene Welten am Ende), `lizenz.js` (K36c am Ende), und in `karten.js` die neuen Karten (K30b, K07c, K08b, K08c, K16c, K27c, K21c, K26e, K12c, K29k, K17b, K22c, K03b, K30c, K30d, K10e, K07e, K14d, K14e, K29l, K30e, K11f, K03c, K30f, K27d, U19e). Der Katalog in `karten.js` Fall 1 ist mit `kartenpruefung.pl` schon ohne Node geprüft.
+**Vorschlag für den nächsten Testlauf** (Spitze `mitarbeit/popolupo-k25e-tradition`, alles ungetestet, bis auf K30f, K27d und K25e von lesenden Prüf-Agenten durchgesehen, Konsistenzprüfung CS bis EI). **Wichtig:** Die Zweige `u12g` und `k29e` laden für sich allein nicht (DN1), bitte die Spitze nehmen:
+1. `node tests/code.js`, dann die schnellen Einzeltests der neuen Teile: `finanzen.js` (Nr. 11 bis 20), `geruechte.js` (seit K17d mit Klatsch), `schwierigkeit.js`, `werbung.js`, `europapokal.js`, `vorstand.js` (Nr. 10 bis 19), `karriereende.js`, `stadion.js` (Nr. 8 bis 11), `karten.js`, `spielwelt-karten.js`, `fans.js` (K27b), `abwerben.js` (K20b, K20e), `transfers.js` (K20c, K20d, K19c, K31b, K31c, K19d), `presse.js` (K29b bis K29j), `marketing.js` (K25c, K25d, K25e), dazu seit dem Nachmittag des 22.11.: `testspiele.js` (K11b, K11c), `erinnerungen.js` (K09b, K07b, K11d, K07d), `scouting.js` (K18c bis K18e), `medizin.js` (K10b bis K10d, K16d), `disziplin.js` (K09c, EA1 bis EA3), `vertraege.js` (K21b, K21d, K21e), `statistik.js` (K34d), `taktik.js` (K06b, eigene Welt am Ende), `stab.js` (K16b), `wettbewerbe.js` (K13b, K13c, K13d, eigene Welten am Ende), `lizenz.js` (K36c am Ende), und in `karten.js` die neuen Karten (K30b, K07c, K08b, K08c, K16c, K27c, K21c, K26e, K12c, K29k, K17b, K22c, K03b, K30c, K30d, K10e, K07e, K14d, K14e, K29l, K30e, K11f, K03c, K30f, K27d, U19e). Der Katalog in `karten.js` Fall 1 ist mit `kartenpruefung.pl` schon ohne Node geprüft.
 2. `node tests/lizenz.js` (Gleichschritt, neue Bereiche `zielgespraech`; seit K36c am Ende die gesammelten Meldungen des Stabs). Viele neue Teile wirken nur ohne Automatik oder über Karten, darum sollte 5a gleich bleiben.
 3. `node tests/finanzmodell.js 2`: Salden je Liga nach K23c. Erwartet nach der Modellrechnung 1. Liga etwa +11 Mio., 2. Liga etwa 0, 3. Liga etwa −1 Mio. je Verein und Saison ohne Transfers (K23 §5.6b). Weichen sie stark ab, bitte die Zeilen ins Testprotokoll, ich stelle dann `REGELN.finanzen.verwaltung` und `sponsor` nach.
 4. Die langen Läufe: `welt.js` über zehn Saisons (Karriereende CR3, Pool CR4, Bauten CT3, Transfers CP3/CP4), `ui-zwei-saisons.js`, `fuzz-karrieren.js`.
@@ -162,6 +163,11 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 ---
 
 ## Changelog
+
+### 23.11.2026: K25e Tradition beim Trikot (Zweig `mitarbeit/popolupo-k25e-tradition`, auf K27d)
+
+- **Neu (K25 §5.3):** Ein Verein mit Gründungsjahr bis 1910 gilt als Traditionsverein. Dort bringt das klassische Trikot Faktor +0,05 und Fans +1 mehr, das mutige wird nur mit 35 % statt 50 % Kult. Gewürfelt wird gleich oft wie vorher, die Werte sind geschätzt.
+- **Tests zuerst:** `tests/marketing.js`. Fall 1 rechnet jetzt mit der Tradition, denn Freiburg ist ein Traditionsverein. Neu ist Fall K25e.
 
 ### 23.11.2026: K27d Jubiläum (Zweig `mitarbeit/popolupo-k27d-jubilaeum`, auf dem Doku-Abgleich)
 

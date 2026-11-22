@@ -18,10 +18,13 @@ function kampagneStarten(k){if(!darf('marketing'))return;const C=RMK.kampagnen[k
   news(`${C.name} gestartet (${fmt(kosten)})${w<1?`. Zum ${e.n}. Mal in dieser Saison, Wirkung nur noch ${Math.round(w*100)} %`:''}.`);save();render();}
 // Trikot (K25 §5.3): Wahl bis zum ersten Pflichtspiel, Reaktion aus eigenem Strom je Saison (gleich, egal an welchem Tag)
 function trikotWaehlen(d){if(!darf('marketing'))return;const M=mkS();if(M.trikot&&M.trikot.fest){toast('Das Trikot dieser Saison ist schon vorgestellt.');return;}if(!RMK.trikot[d])return;trikotVorstellen(d,false);save();render();}
-function trikotVorstellen(d,auto){const M=mkS(),T=RMK.trikot[d],t=myT();
-  mitStrom(strom('trikot',S.season,S.my),()=>{let f,fs,txt;
-    if(d==='mutig'){const kult=R()<T.kult;f=kult?T.faktor[1]:T.faktor[0];fs=kult?T.fans[1]:T.fans[0];txt=kult?'Das mutige Trikot wird Kult, die Fans reißen es den Händlern aus den Händen.':'Das mutige Trikot spaltet die Fans, in den Netzwerken gibt es Spott.';}
-    else{f=T.faktor[0]+R()*(T.faktor[1]-T.faktor[0]);fs=T.fans;txt=d==='klassisch'?'Das klassische Trikot kommt gut an.':'Das moderne Trikot findet seine Käufer.';}
+// Traditionsverein (K25 §5.3, K25e): Gründungsjahr (VEREINE gegr) bis RMK.tradition.bis. Ohne Gründungsjahr nein.
+const traditionsverein=t=>{const v=t?VEREINE[t.id]:null;return!!(v&&v.kurz===t.sh&&v.gegr&&v.gegr<=RMK.tradition.bis);};
+function trikotVorstellen(d,auto){const M=mkS(),T=RMK.trikot[d],t=myT(),trad=traditionsverein(t),Tr=RMK.tradition;
+  mitStrom(strom('trikot',S.season,S.my),()=>{let f,fs,txt; /* Tradition (K25e): gleich viele Würfel, nur Schwelle und Spanne ändern sich */
+    if(d==='mutig'){const kult=R()<(trad?Tr.mutigKult:T.kult);f=kult?T.faktor[1]:T.faktor[0];fs=kult?T.fans[1]:T.fans[0];txt=kult?'Das mutige Trikot wird Kult, die Fans reißen es den Händlern aus den Händen.':`Das mutige Trikot spaltet die Fans${trad?', in einem Traditionsverein erst recht':''}, in den Netzwerken gibt es Spott.`;}
+    else{const plus=d==='klassisch'&&trad?Tr.klassischPlus:0;f=T.faktor[0]+plus+R()*(T.faktor[1]-T.faktor[0]);fs=T.fans+(d==='klassisch'&&trad?Tr.klassischFans:0);
+      txt=d==='klassisch'?(trad?'Das klassische Trikot trifft den Nerv eines Traditionsvereins.':'Das klassische Trikot kommt gut an.'):'Das moderne Trikot findet seine Käufer.';}
     M.trikot={d,f:Math.round(f*100)/100,fest:1};if(fs)fanAnlass(t,'fanU',fs);
     news(`Trikotvorstellung${auto?' (der Verein wählt)':''}: ${TRIKOT_NAME[d]}. ${txt}`,d==='mutig'?(fs>0?'good':'bad'):'');});}
 // Täglich (ablauf.js taeglichLauf): ohne Wahl am Tag vor dem ersten Pflichtspiel das klassische Trikot (mit und ohne Automatik am selben Tag, Gleichschritt);

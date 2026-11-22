@@ -532,6 +532,8 @@ const REGELN={
   // kampagnen: Kosten in der 1. Liga, Dauer in Tagen (sommer: bis zum ersten Pflichtspiel), Wirkung. ligaFaktor: Kosten je Liga. abnutzung: 1., 2., 3. Mal in der Saison.
   // merch: Publikumslieblinge je Spieler und höchstens. werbewert: Start = Ansehen × startJeAnsehen, Rückgang je Monat Richtung Start, Titel. ALLE WERTE GESCHÄTZT (K25 §12).
   marketing:{trikot:{klassisch:{faktor:[0.95,1.05],fans:1},modern:{faktor:[0.9,1.15],fans:0},mutig:{kult:0.5,faktor:[0.8,1.25],fans:[-3,3]}},
+    // Tradition (K25 §5.3, K25e, 23.11., popolupo, GESCHÄTZT): Traditionsverein bei Gründungsjahr bis bis (daten/vereine.js gegr). Dort klassisch Faktor +klassischPlus und Fans +klassischFans, mutig wird mit mutigKult Kult
+    tradition:{bis:1910,klassischPlus:0.05,klassischFans:1,mutigKult:0.35},
     kampagnen:{trikot:{name:'Trikot-Kampagne',kosten:150000,tage:28,merch:0.15},fanwerbung:{name:'Fanwerbung in der Region',kosten:200000,tage:56,fans:0.02,werbewert:5},
       camps:{name:'Jugend-Camps',kosten:60000,sommer:1,fans:0.01,stimmung:1},fanarbeit:{name:'Fanarbeit',kosten:50000,tage:120,pfiffe:0.7},
       // K25c (22.11., GESCHÄTZT): Dauerkarten-Aktion in der Vorbereitung, vor dem Verkauf (K27b): Anteil der Dauerkarten + dauerkarten
