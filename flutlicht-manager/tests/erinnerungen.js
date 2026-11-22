@@ -39,4 +39,10 @@ const SEED=4711;
     ok=ja&&!nochmal&&!mitTest&&!vorSpiel&&!letzter&&!aus;info=`Tag ${d}: Erinnerung ${ja}, gleich nochmal ${nochmal}, mit Testspiel ${mitTest}, vor einem Spiel ${vorSpiel}, letzter Spieltag ${letzter}, abgeschaltet ${aus}`;}
   pruef(ok,'Spielfreie Woche ohne Testspiel: Erinnerung in der Saison, einmal je Woche, nicht mit Testspiel, nicht vor einem Spiel, abschaltbar',info);}
 
+// K07d. Lernplatz frei (K07 §8): ein freier Platz im Einzeltraining gibt eine Erinnerung, höchstens einmal je Woche; alle Plätze belegt keine; abgeschaltet keine
+{const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S,ev=W.ev;S.my=6;S.mgr='Test';F.setTarget();S.phase='play';const sq=ev('squad')(S.my),n=ev('lernPlaetze')(S.my);
+  const lp=()=>F.erinnerungen().some(e=>e.art==='lernplatz');sq.forEach(p=>{p.ls=null;p.um=null;});delete S.lpEr;const ja=lp(),nochmal=lp();
+  delete S.lpEr;sq.slice(0,n).forEach(p=>{p.ls={k:'test',f:0};});const voll=lp();sq.forEach(p=>{p.ls=null;});delete S.lpEr;F.erinnerungAus('lernplatz',true);const aus=lp();F.erinnerungAus('lernplatz',false);
+  pruef(ja&&!nochmal&&!voll&&!aus,'Lernplatz frei: Erinnerung bei freiem Platz, einmal je Woche, nicht bei vollen Plätzen, abschaltbar',`frei ${ja}, gleich nochmal ${nochmal}, voll ${voll}, abgeschaltet ${aus} (${n} Plätze)`);}
+
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

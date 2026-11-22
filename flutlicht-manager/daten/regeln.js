@@ -28,7 +28,7 @@ const REGELN={
       2:{wochenende:[['Sa','20:30',1],['Fr','18:30',2],['So','13:30',3],['Sa','13:00',3]],mitte:[['Di','18:30',4],['Mi','18:30',5]],letzter:'15:30'},
       3:{wochenende:[['Sa','16:30',1],['Fr','19:00',1],['So','16:30',1],['So','19:30',1],['So','13:30',1],['Sa','14:00',5]],mitte:[['Di','19:00',5],['Mi','19:00',5]],letzter:'13:30'}},
     attraktivZufall:15,              // Zufall bei der Verteilung auf die Anstoßzeiten (in Ansehen-Punkten)
-    erinnerungen:{frist:'Angebot läuft heute ab',aufstellung:'Startelf hat Ausfälle',sponsor:'Kein Sponsor gewählt',vertrag:'Verträge laufen aus',versprechen:'Versprechen droht zu kippen',vorbereitung:'Punkte vor dem Saisonstart offen (höchstens einmal je Woche)',deadline:'Halt am letzten Tag des Transferfensters (Deadline Day)',gelbsperre:'Gelbsperre droht vor einem Derby oder Spitzenspiel',plan:'Trainingsplan passt nicht (englische Woche, Belastungssprung)',spielfrei:'Spielfreie Woche ohne Testspiel (in der Saison)'} // abschaltbar im Menü; vorbereitung seit U14 (K12b)
+    erinnerungen:{frist:'Angebot läuft heute ab',aufstellung:'Startelf hat Ausfälle',sponsor:'Kein Sponsor gewählt',vertrag:'Verträge laufen aus',versprechen:'Versprechen droht zu kippen',vorbereitung:'Punkte vor dem Saisonstart offen (höchstens einmal je Woche)',deadline:'Halt am letzten Tag des Transferfensters (Deadline Day)',gelbsperre:'Gelbsperre droht vor einem Derby oder Spitzenspiel',plan:'Trainingsplan passt nicht (englische Woche, Belastungssprung)',spielfrei:'Spielfreie Woche ohne Testspiel (in der Saison)',lernplatz:'Platz im Einzeltraining frei'} // abschaltbar im Menü; vorbereitung seit U14 (K12b)
   },
 
   welt:{
@@ -616,6 +616,7 @@ const REGELN={
     verletzung:{basis:0.0016,sprungAb:1.3,sprungJe01:1.5,frischeAb:80,frischeJePunkt:0.05}, // Art und Dauer aus REGELN.medizin (K10)
     last:{akut:7,chronisch:28,grund:2}, // grund: gewohnte Last mindestens 2 pro Tag
     planErinnerung:{vorschau:7,sprungAb:1.5,spielerAb:3,abstandTage:7}, // Erinnerung „Plan passt nicht“ (K07 §5 Nr. 4, K07b, 22.11., GESCHÄTZT)
+    lernplatzErinnerung:{abstandTage:7}, // Erinnerung „Lernplatz frei“ (K07 §8, K07d, 22.11.): höchstens einmal je abstandTage
     spielLast:15,spielKondition:1 // Last und Konditionsreiz eines ganzen Pflichtspiels
   },
 

@@ -362,6 +362,7 @@ lizenz:{
 120. **K06b „Der Gegner hat dich durchschaut“ (22.11., popolupo, ohne Testlauf):** keine neue Funktion, nur eine Meldung.
 121. **K18d Konkurrenz am Tisch (22.11., popolupo, ohne Testlauf):** keine neue Funktion, eine Meldung nach dem Scoutbericht und ein Aufschlag auf deine Ablöse.
 122. **K18e Scout liegt daneben (22.11., popolupo, ohne Testlauf):** keine neue Funktion, nur eine Meldung.
+123. **K07d Erinnerung „Lernplatz frei“ (22.11., popolupo, ohne Testlauf):** keine neue Funktion. Nur wenn du Lernziele selbst vergibst.
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 
