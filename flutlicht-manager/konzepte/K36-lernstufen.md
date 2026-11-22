@@ -307,6 +307,7 @@ lizenz:{
 65. **K23f Kartenbeträge nach Liga (22.11., popolupo, ohne Testlauf):** keine neue Funktion, kein neuer Bereich. Nur die Höhe der Geldwirkungen hängt an der Liga deines Vereins.
 66. **K27b Dauerkarten (22.11., popolupo, ohne Testlauf):** neue Funktion (Rabatt der Dauerkarten wählen) im bestehenden Bereich `preise` (A-Lizenz, Automatik: der Verein nimmt 20 %). Kein neuer Bereich, weil es eine Preisentscheidung wie der Eintrittspreis ist. Gleichschritt: In der Automatik ist der Rabatt der Standard, die Fanstimmung bekommt dann +0.
 67. **K20b Preise am Deadline Day (22.11., popolupo, ohne Testlauf):** keine neue Funktion, kein neuer Bereich. Die Schwankung wirkt nur auf Forderungen an dich (`forderung`), die Regeln der Computer-Vereine und der Automatik rechnen ohne sie (Gleichschritt). Angebote an dich kommen ohnehin nur, wenn du die Transfers selbst führst.
+68. **K26c Fanshop und Instandhaltung der Computer-Vereine (22.11., popolupo, ohne Testlauf):** keine neue Funktion, kein neuer Bereich. Nur Computer-Vereine, zum Saisonstart und je Ligaspiel, ohne Zufall.
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 

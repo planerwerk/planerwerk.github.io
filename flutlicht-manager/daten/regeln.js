@@ -979,7 +979,9 @@ const REGELN={
     // Tribüne: Nachfrage (erwartete Zuschauer ohne Deckel gegen einen Gegner mit dem Ansehen des Ligaschnitts, neutrale Form) mindestens vollAb × Plätze in saisons Saisons nacheinander,
     // die neuen Plätze höchstens nachfrageMax × Nachfrage (kein Leerbau), nach dem Bau bleibt mindestens reserveTribuene × Reserve (finanzplan.budget.reserve × erwartete Einnahmen).
     // Sonst höchstens eine Anlage aus der Liste des Profils (ausbildung oder standard), wenn danach mindestens reserveAnlage × Reserve bleibt.
-    computer:{vollAb:0.95,saisons:2,nachfrageMax:1.05,reserveTribuene:1,reserveAnlage:3,anlagen:{standard:['catering','tafel','training'],ausbildung:['training','catering','tafel']}}
+    // Seit K26c (22.11.): shop (Fanshop-Stufe, Kosten fanshop.kosten) steht mit in den Listen, damit Computer-Vereine Fanartikel verkaufen (K23 §3.1: 4 bis 7 % des Umsatzes).
+    // Instandhaltung zahlen sie seit K26c wie du (instandhaltung × Bausumme je Saison, verteilt auf die Ligaspiele).
+    computer:{vollAb:0.95,saisons:2,nachfrageMax:1.05,reserveTribuene:1,reserveAnlage:3,anlagen:{standard:['shop','catering','tafel','training'],ausbildung:['training','shop','catering','tafel']}}
   },
 
   ui:{

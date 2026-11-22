@@ -60,9 +60,11 @@ function kiNachfrage(t){const l=S.teams.filter(x=>x.lg===t.lg),opp={rep:l.reduce
 function kiBauen(t){const B=RB.computer,T=RB.tribuene,n=kiNachfrage(t),res=Math.round(erwarteteEinnahmen(t)*RFP.budget.reserve);
   t.voll=n>=t.cap*B.vollAb?(t.voll||0)+1:0;const neu=t.cap+T.plaetze;
   if(t.voll>=B.saisons&&neu<=T.max&&neu<=n*B.nachfrageMax&&t.cash-T.kosten>=res*B.reserveTribuene){t.cash-=T.kosten;t.cap=neu;t.bausumme=(t.bausumme||0)+T.kosten;t.voll=0;return'cap';}
-  const liste=B.anlagen[vereinsProfile(t).includes('ausbildung')?'ausbildung':'standard'],k=liste.find(x=>anlage(t,x)<RB.anlagen[x].max);if(!k)return null;
-  const kosten=anlageKosten(t,k);if(t.cash-kosten<res*B.reserveAnlage)return null;
-  t.cash-=kosten;t.anl=t.anl||{};t.anl[k]=anlage(t,k)+1;t.bausumme=(t.bausumme||0)+kosten;return k;}
+  // Anlagen und Fanshop (K26c: 'shop' ist die Stufe t.shop mit den Kosten aus RB.fanshop)
+  const stufe=x=>x==='shop'?(t.shop||0):anlage(t,x),max=x=>x==='shop'?RB.fanshop.max:RB.anlagen[x].max;
+  const liste=B.anlagen[vereinsProfile(t).includes('ausbildung')?'ausbildung':'standard'],k=liste.find(x=>stufe(x)<max(x));if(!k)return null;
+  const kosten=k==='shop'?RB.fanshop.kosten[t.shop||0]:anlageKosten(t,k);if(t.cash-kosten<res*B.reserveAnlage)return null;
+  t.cash-=kosten;if(k==='shop')t.shop=(t.shop||0)+1;else{t.anl=t.anl||{};t.anl[k]=anlage(t,k)+1;}t.bausumme=(t.bausumme||0)+kosten;return k;}
 // Alle Computer-Vereine der drei Ligen, Meldung für Tribünen in deiner Liga
 function kiBauenSaison(){const lg=S.teams[S.my]?S.teams[S.my].lg:0;S.teams.forEach(t=>{if(t.id===S.my||!aktiv(t))return;const b=kiBauen(t);
   if(b==='cap'&&t.lg===lg)news(`${t.name} hat in der Sommerpause die Tribüne ausgebaut: jetzt ${t.cap.toLocaleString('de-DE')} Plätze.`);});}

@@ -97,7 +97,8 @@ Hängt ab von: K23 (Finanzen), K27 (Fans) · Wird gebraucht von: K07, K08, K10, 
   - Abweichung von §7: Ausbildungsvereine bauen das Trainingsgelände statt des Nachwuchszentrums, weil das Nachwuchszentrum im Spiel nur auf deine Jugend wirkt (`jugendDeckel`). Das Trainingsgelände wirkt bei allen Vereinen (Entwicklung, Verletzungen).
 - **Meldung:** nur für Tribünen in deiner Liga.
 - **Dein Verein** baut nicht von selbst: Der Bereich `stadion` hat keine Automatik (K36).
-- **Noch nicht:** Instandhaltung der Computer-Vereine (1 % der Bausumme, ihre Bausumme wird aber schon gezählt), Reha-Zentrum und Nachwuchszentrum für sie, Abriss bei dauerhaft leerem Stadion.
+- **Seit K26c (22.11.2026, popolupo, ohne Testlauf):** Der Fanshop (`t.shop`, Kosten nach Stufe wie bei dir) steht vorn in den Listen (bei Ausbildungsvereinen nach dem Trainingsgelände). So verkaufen auch Computer-Vereine Fanartikel. Sie zahlen Instandhaltung wie du (1 % der Bausumme je Saison, verteilt auf die Ligaspiele).
+- **Noch nicht:** Reha-Zentrum und Nachwuchszentrum für sie, Abriss bei dauerhaft leerem Stadion.
 
 ## 6. Hebel des Spielers
 

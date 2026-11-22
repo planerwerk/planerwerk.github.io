@@ -1595,3 +1595,16 @@ Ein Agent hat a764c13, d7b48e2 und e3322cf gelesen (nichts ausgeführt). Korrekt
 | CX5 | **Budget in der Automatik:** Mit Lizenz 1 führt der Verein die Transfers, sein Budget (`kiBudget`) kannte den Faktor aus dem Gespräch nicht. Jetzt schon. Ohne Verhandlung ist der Faktor 1, der Gleichschritt bleibt. | ✅ behoben |
 | CX6 | **Kreuzband bei Vereinslosen:** Ein entlassener Spieler mit Kreuzbandriss behielt `p.vl` für immer und bekam jede Saison ×1,5. Jetzt zählt ein laufender Riss nur mit `p.inj > 0`. | ✅ behoben |
 | CX7 | Ohne Befund: Laufzeitfehler, Regelpfade, alte Spielstände, Fenster des Gesprächs, Formel des Karriereendes, Bauen der Computer-Vereine (K26b), Zufall und Gleichschritt, Kommentare mitten in der Zeile. | ✅ |
+
+---
+
+## CY. Nachtrag zu K26c: Fanshop und Instandhaltung der Computer-Vereine (22. November 2026, popolupo, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-k26c-fanshop-instandhaltung`, auf K20b mit den Korrekturen CX. Erledigt CT5 und einen Teil von CU4.
+
+| # | Befund | Status |
+|---|---|---|
+| CY1 | **Fanshop:** `kiBauen` kennt neben den Anlagen den Eintrag `shop` (Stufe `t.shop`, Kosten `RB.fanshop.kosten`). Die Einnahmen daraus rechnet `kiHeimEinnahmen` schon seit K23b (Zuschauer × Fanartikel je Stufe). Ein Fanshop der Stufe 1 bringt einem Erstligisten etwa 1 Mio. € je Saison und kostet 1,5 Mio. €. | ✅ |
+| CY2 | **Instandhaltung:** `kiFinanzenSpiel` zieht je Ligaspiel 1 % der Bausumme je Saison anteilig ab, wie bei dir monatlich. Gezählt werden nur Bauten ab K26b. | ✅ |
+| CY3 | **Wirkung auf die Salden (K23 §5.6b):** Die Computer-Vereine gewinnen mit dem Fanshop etwas dazu, die Modellrechnung ohne Fanartikel unterschätzt das. Im Testlauf mit `tests/finanzmodell.js` ansehen. | ⚠️ |
+| CY4 | **`tests/stadion.js` Nr. 9** prüft jetzt den Fanshop als erste Anlage, neu Nr. 10 die Instandhaltung. | ✅ ungetestet |

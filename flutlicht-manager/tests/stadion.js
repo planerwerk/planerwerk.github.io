@@ -51,9 +51,14 @@ function bisFertig(w){const {F,S,ev}=w;let d=S.tag,n=0;while(S.constr&&n<400){d+
 
 // 9. K26b: Ohne Tribüne baut ein reicher Computer-Verein höchstens eine Anlage je Saison aus der Liste seines Profils, ein armer keine. Dein Verein baut nicht von selbst.
 {const {F,S,ev,t}=welt(),B=ev('RB'),o=S.teams.find(x=>x.lg===2&&x.id!==S.my);o.cap=1e5;o.voll=0;o.cash=500e6;
-  const liste=B.computer.anlagen[ev('vereinsProfile')(o).includes('ausbildung')?'ausbildung':'standard'],k=F.kiBauen(o),reich=k===liste[0]&&ev('anlage')(o,k)===B.anlagen[k].start+1;
+  const liste=B.computer.anlagen[ev('vereinsProfile')(o).includes('ausbildung')?'ausbildung':'standard'],k=F.kiBauen(o),reich=k===liste[0]&&(k==='shop'?o.shop===1:ev('anlage')(o,k)===B.anlagen[k].start+1); // seit K26c steht der Fanshop vorn
   const p=S.teams.find(x=>x.lg===3&&x.id!==S.my);p.cap=1e5;p.cash=0;const arm=F.kiBauen(p)===null;
   const cap0=t.cap,anl0=JSON.stringify(t.anl||{});t.voll=5;F.kiBauenSaison();const mein=t.cap===cap0&&JSON.stringify(t.anl||{})===anl0;
   pruef(reich&&arm&&mein,'K26b: Anlage nach Profil, nur mit Geld, dein Verein nicht',`reich ${k} (erwartet ${liste[0]}), arm ${arm}, dein Verein unverändert ${mein}`);}
+
+// 10. K26c: Computer-Vereine zahlen Instandhaltung je Ligaspiel (1 % der Bausumme je Saison, verteilt auf die Ligaspiele)
+{const {F,S,ev}=welt(),o=S.teams.find(x=>x.lg===2&&x.id!==S.my),g=S.teams.find(x=>x.lg===2&&x.id!==S.my&&x.id!==o.id),n=S.fx[2].length;
+  o.bausumme=0;let c=o.cash;F.kiFinanzenSpiel(o,{h:g.id,a:o.id});const ohne=o.cash-c;o.bausumme=12e6;c=o.cash;F.kiFinanzenSpiel(o,{h:g.id,a:o.id});const mit=o.cash-c;
+  pruef(ohne-mit===Math.round(12e6*ev('RB').instandhaltung/n),'K26c: Instandhaltung der Computer-Vereine je Ligaspiel',`${ohne} → ${mit}`);}
 
 console.log(probleme.length?`\n${probleme.length} Problem(e).`:'\nAlles in Ordnung.');process.exitCode=probleme.length?1:0;
