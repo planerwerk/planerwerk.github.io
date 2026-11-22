@@ -72,8 +72,9 @@ const sonstigeEinnahmen=t=>RFP.sonstiges[t.lg]||0;
 const verwaltungKosten=t=>Math.round((RF.verwaltung[t.lg]||RF.verwaltung[3])*(tvGeld(t)+sponsorBasis(t)+sonstigeEinnahmen(t)));
 // Zuschauer im Heimspiel ohne Würfel (Mitte der Spanne) und zum Richtpreis: so verschiebt die Rechnung für Computer-Vereine keinen Zufallsstrom
 // neutral (für Budgets): Form 1,4 Punkte je Spiel und Fanstimmung ohne Wirkung, damit der Rahmen nicht schwankt und im Gleichschritt für beide Läufe gleich bleibt
-function zuschauerErwartung(t,opp,cup,neutral){const Z=RF.zuschauer,ff=Z.formBasis+Z.formJePunkt*(neutral?1.4:formPts(t.id)),of=Z.gegnerBasis+(opp?opp.rep:Z.gegnerOhne)/100*Z.gegnerFaktor,lf=t.lg===1?1:t.lg===2?Z.liga2:Z.liga3;
-  return Math.round(Math.min(t.cap,t.fans*ff*of*lf*(cup?Z.pokal:1)*(Z.zufallBasis+Z.zufallSpanne/2)*(neutral?1:fanFaktor(t))));}
+// frei: ohne Deckel durch die Plätze (Nachfrage, K26b)
+function zuschauerErwartung(t,opp,cup,neutral,frei){const Z=RF.zuschauer,ff=Z.formBasis+Z.formJePunkt*(neutral?1.4:formPts(t.id)),of=Z.gegnerBasis+(opp?opp.rep:Z.gegnerOhne)/100*Z.gegnerFaktor,lf=t.lg===1?1:t.lg===2?Z.liga2:Z.liga3;
+  return Math.round(Math.min(frei?Infinity:t.cap,t.fans*ff*of*lf*(cup?Z.pokal:1)*(Z.zufallBasis+Z.zufallSpanne/2)*(neutral?1:fanFaktor(t))));}
 function kiHeimEinnahmen(t,opp,cup,neutral){const att=zuschauerErwartung(t,opp,cup,neutral);return Math.round(att*richtPreis(t)*zuschauerFaktor(t))+(t.shop?Math.round(att*RF.fanartikel[t.shop]):0)+(t.logen||0)*RF.loge;}
 // Je Ligaspiel (ablauf.js): TV, Werbung (ganzer Grundbetrag, bei dir Verträge plus weitere Partner), Sonstiges, im Heimspiel Zuschauer, Fanartikel, Logen,
 // minus Gehälter von Kader und Stab, Stadion und Betrieb, Verwaltung (K23c), Jugendarbeit (Stufe der Computer-Vereine). Ersetzt die Pauschale fremdeEinnahmen.

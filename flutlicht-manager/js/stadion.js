@@ -52,3 +52,17 @@ function anlagenKarte(){const t=myT(),c=S.constr,W={training:`Entwicklung im Tra
     <p class="dim">Jeder Bau braucht erst eine Genehmigung (2 bis 8 Wochen, manchmal mit Auflagen). Etwa ein Drittel der Bauten wird später fertig, manche teurer. Instandhaltung: 1 % der Bausumme im Jahr${t.bausumme?`, zurzeit ${fmt(Math.round(t.bausumme*RB.instandhaltung))}`:''}.</p></div>`;}
 // Fertig-Tag der Baustelle als Tag der Saison (neue Stände rechnen mit absoluten Tagen, alte mit dem Tag der Saison)
 const bauBisTag=c=>c.phase!=null?c.bis-absTag(0):c.bis;
+
+// ---------- K26b (K26 §7): Computer-Vereine bauen ----------
+// Zum Saisonstart (saison.js newSeason), ohne Zufall und ohne Bauzeit. Am Verein: t.voll = Saisons nacheinander mit Nachfrage über RB.computer.vollAb der Plätze.
+// Nachfrage: erwartete Zuschauer eines Ligaheimspiels ohne Deckel, Gegner mit dem Ansehen des Ligaschnitts, neutrale Form (finanzen.js zuschauerErwartung)
+function kiNachfrage(t){const l=S.teams.filter(x=>x.lg===t.lg),opp={rep:l.reduce((a,x)=>a+x.rep,0)/Math.max(1,l.length)};return zuschauerErwartung(t,opp,false,true,true);}
+function kiBauen(t){const B=RB.computer,T=RB.tribuene,n=kiNachfrage(t),res=Math.round(erwarteteEinnahmen(t)*RFP.budget.reserve);
+  t.voll=n>=t.cap*B.vollAb?(t.voll||0)+1:0;const neu=t.cap+T.plaetze;
+  if(t.voll>=B.saisons&&neu<=T.max&&neu<=n*B.nachfrageMax&&t.cash-T.kosten>=res*B.reserveTribuene){t.cash-=T.kosten;t.cap=neu;t.bausumme=(t.bausumme||0)+T.kosten;t.voll=0;return'cap';}
+  const liste=B.anlagen[vereinsProfile(t).includes('ausbildung')?'ausbildung':'standard'],k=liste.find(x=>anlage(t,x)<RB.anlagen[x].max);if(!k)return null;
+  const kosten=anlageKosten(t,k);if(t.cash-kosten<res*B.reserveAnlage)return null;
+  t.cash-=kosten;t.anl=t.anl||{};t.anl[k]=anlage(t,k)+1;t.bausumme=(t.bausumme||0)+kosten;return k;}
+// Alle Computer-Vereine der drei Ligen, Meldung für Tribünen in deiner Liga
+function kiBauenSaison(){const lg=S.teams[S.my]?S.teams[S.my].lg:0;S.teams.forEach(t=>{if(t.id===S.my||!aktiv(t))return;const b=kiBauen(t);
+  if(b==='cap'&&t.lg===lg)news(`${t.name} hat in der Sommerpause die Tribüne ausgebaut: jetzt ${t.cap.toLocaleString('de-DE')} Plätze.`);});}

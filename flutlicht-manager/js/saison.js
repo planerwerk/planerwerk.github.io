@@ -107,7 +107,7 @@ function newSeasonLauf(){lizenzNachweis();wechselVollziehen(true);leiheEnde();ve
   finanzenMonat(tageDerSaison(),true); // Monatsbericht Juni zum 1. Juli, der Tag läuft sonst nie durch taeglich (K23a)
   S.season++;S.plan=planFuer(S.season);S.tag=S.plan.start;S.gespielt=-1;S.relSp=[];S.relSp2=[];S.res={1:[],2:[],3:[]};
   const sp=spielplanFuer(S.season);S.fx=sp.fx;S.plan.zeit=sp.zeit;initCup();supercupAnlegen(sm);europaAnlegen(sm); // Europapokal (K37, U19a), eigener Strom
-  S.fin={};/* TV-Gelder der neuen Saison zu Saisonbeginn festlegen (K23c), so hängen sie nicht davon ab, wann sie zuerst gebraucht werden */tvSaison();finanzenSaisonstart();S.att=[0,0];S.offers=S.offers.filter(o=>PIX.get(o.pid)&&PIX.get(o.pid).team===S.my);S.phase='play';S.summary=null;TDAY=null;TLG=0;LAST=null;
+  S.fin={};/* TV-Gelder der neuen Saison zu Saisonbeginn festlegen (K23c), so hängen sie nicht davon ab, wann sie zuerst gebraucht werden */tvSaison();finanzenSaisonstart();/* Computer-Vereine bauen (K26b) */kiBauenSaison();S.att=[0,0];S.offers=S.offers.filter(o=>PIX.get(o.pid)&&PIX.get(o.pid).team===S.my);S.phase='play';S.summary=null;TDAY=null;TLG=0;LAST=null;
   setTarget();werbungSaison();if(!S.spons)sponsOffers(); /* alle Werbeflächen samt Brust zählen in werbungSaison herunter (K24a, seit K24c auch die Brust) */
   S.lineup=bestXI(S.my,myT().form);kabineNachSaisonwechsel();jubilaeumJahre(); // 10 Jahre im Verein (K34 §8, U13)
   news(`Neue Saison ${S.season}/${(S.season+1)%100} in der ${ligaName(myT().lg)}: Ziel des Vorstands – ${targetText(myT().lg,S.target)}. Trainingsauftakt am ${datumMittel(auftaktTag(myT()))}.`,'good');save();}

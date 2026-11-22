@@ -488,6 +488,13 @@ Datei: `konzepte/K26-stadion.md`
 - Instandhaltung 1 % der Bausumme im Jahr.
 - Computer-Vereine bauen noch nicht.
 
+**Mit K26b von popolupo vorläufig entschieden (22.11.2026, K26 §5.2, §12 Nr. 8 bis 11, ohne Testlauf):**
+
+- Computer-Vereine bauen zum Saisonstart, ohne Zufall und ohne Bauzeit.
+- Tribüne nach zwei Saisons mit Nachfrage über 95 %, höchstens bis 105 % der Nachfrage, nur mit Reserve.
+- Höchstens eine Anlage je Saison nach Profil, Ausbildungsvereine zuerst das Trainingsgelände.
+- Dein Verein baut nicht von selbst.
+
 **Ergänzt 10.11.:** Greenkeeper (Platzwart) im Stab (K16), Rasenqualität 0–100 je Platz mit kleiner Wirkung auf Ballbesitzstile, Verletzungsrisiko und Heimvorteil (K26 3.2a, Spielwerte).
 
 ## K27 – Fans und Zuschauer

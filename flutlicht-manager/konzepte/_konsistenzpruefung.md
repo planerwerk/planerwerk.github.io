@@ -1526,3 +1526,17 @@ Ein Agent hat den Commit cfe0f41 gelesen (nichts ausgeführt). Die Korrekturen l
 | CS4 | **Alte Spielstände:** Vorgemerkte Wechsel (`p.wech.sal`) und deine Werbeverträge blieben auf der alten Größe, während Gehälter und Verwaltung neu rechnen (grob −8 Mio. € je Saison für einen Erstligisten). Jetzt rechnet `k23cUmstellen` beides mit um (Verträge: mal neuer durch alten Grundbetrag der Fläche, alte Werte in `RF.sponsorAlt`). `tests/finanzen.js` Nr. 17 prüft es mit. | ✅ behoben |
 | CS5 | **Nicht geprüft werden konnte:** `tests/transfers.js` Nr. 4, 5 und 9 erkennen „kein Interesse“ am Text. Eine Absage wegen des Gehaltsrahmens würde dort als Erfolg zählen. Nach Schätzung bleibt genug Spielraum. | ⚠️ im Lauf ansehen |
 | CS6 | Ohne Befund: Laufzeitfehler, alte Schlüssel im übrigen Code, Gleichschritt (TV hängt nur an Ansehen, Liga und Wertung, alle vor `tvSaison` gesetzt), Rangfolge der Wertung, Kommentare mitten in der Zeile, die neuen Tests 14 bis 16 und 18 (18 nur grob). | ✅ |
+
+---
+
+## CT. Nachtrag zu K26b: Computer-Vereine bauen (22. November 2026, popolupo, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-k26b-computer-bauen`, auf dem Karriereende. Ausführlich in K26 §5.2.
+
+| # | Befund | Status |
+|---|---|---|
+| CT1 | **Zeitpunkt:** `kiBauenSaison` läuft in `newSeason` nach `tvSaison` und `finanzenSaisonstart`, also mit den Ligen und TV-Geldern der neuen Saison. Ohne Zufall. | ✅ |
+| CT2 | **Nachfrage:** `zuschauerErwartung` hat einen neuen fünften Parameter `frei` (ohne Deckel durch die Plätze). Alle bisherigen Aufrufe bleiben gleich. | ✅ |
+| CT3 | **Geld:** Tribüne 12 Mio. € (K23c), Anlagen nach `anlageKosten`. Gebaut wird nur mit der Reserve aus K23d, Anlagen mit dreifacher Reserve. Das Transferbudget der Computer-Vereine (Anteil des Kontos zum Fensterbeginn, K31) sinkt dadurch im Sommer nach einem Bau. | ⚠️ im Testlauf ansehen: Bauten je Saison, Kontostände, Käufe im Sommer |
+| CT4 | **K36 „Kein Nachteil“:** Nur der Computer-Lauf baut. Ab der zweiten Saison kann er dadurch etwas besser dastehen (Trainingsgelände). Bisher war die Grenze 2 Punkte im Schnitt. | ⚠️ `tests/lizenz.js` Nr. 5 ansehen |
+| CT5 | **Instandhaltung** zahlen Computer-Vereine noch nicht, ihre Bausumme wird aber gezählt. | offen |

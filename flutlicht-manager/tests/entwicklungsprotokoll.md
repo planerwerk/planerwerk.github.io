@@ -24,7 +24,8 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 | **U19d1** Kaderliste der UEFA | `mitarbeit/popolupo-u19d-kaderliste` (auf K23d) | fertig, ungetestet |
 | **K23c** echte Größenordnungen | `mitarbeit/popolupo-k23c-groessenordnungen` (auf U19d1) | fertig, ungetestet, ohne die Messung, Werte aus einer eigenen Modellrechnung, vorläufig |
 | **U12e** Zielgespräch mit dem Vorstand (K28 §5.8) | `mitarbeit/popolupo-u12e-zielgespraech` (auf K23c) | fertig, ungetestet |
-| **K32 §5.1** Karriereende nach Formel | `mitarbeit/popolupo-k32-karriereende` (auf U12e) | fertig, ungetestet |
+| **K32 §5.1** Karriereende nach Formel, dazu Korrekturen zu K23c (CS) | `mitarbeit/popolupo-k32-karriereende` (auf U12e) | fertig, ungetestet |
+| **K26b** Computer-Vereine bauen | `mitarbeit/popolupo-k26b-computer-bauen` (auf dem Karriereende) | fertig, ungetestet |
 | U19d2 volle Kader der Auslandsvereine in der Engine | danach | Entwurf in K37 §5.7 |
 
 **Die neueste Spitze ist immer der zuletzt genannte Zweig, er enthält alles davor.** K24 ist fertig (Claude).
@@ -58,6 +59,11 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 ---
 
 ## Changelog
+
+### 22.11.2026: K26b Computer-Vereine bauen (Zweig `mitarbeit/popolupo-k26b-computer-bauen`, auf dem Karriereende)
+
+- **Neu (K26 §7, §5.2):** Zum Saisonstart bauen Computer-Vereine eine Tribüne (Nachfrage zwei Saisons über 95 %, kein Leerbau, nur mit Reserve) oder höchstens eine Anlage nach Profil (`kiNachfrage`, `kiBauen`, `kiBauenSaison` in `js/stadion.js`). Ohne Zufall.
+- **Tests zuerst:** `tests/stadion.js` (neu Nr. 8, 9), danach `tests/welt.js` über mehrere Saisons (Bauten, Konten) und `tests/lizenz.js` Nr. 5 (CT4).
 
 ### 22.11.2026: Korrekturen zu K23c nach einer Prüfung ohne Laufzeit (Zweig `mitarbeit/popolupo-k32-karriereende`)
 

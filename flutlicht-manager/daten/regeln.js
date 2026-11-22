@@ -965,7 +965,12 @@ const REGELN={
       nlz:{name:'Nachwuchsleistungszentrum',start:0,max:5,kosten:1.5e6,wochen:16,deckelJe:6},
       reha:{name:'Reha-Zentrum',start:0,max:3,kosten:1e6,wochen:8,je:0.03,minFaktor:0.75},
       catering:{name:'Catering',start:0,max:1,kosten:1.5e6,wochen:6,zuschauer:0.05},
-      tafel:{name:'Anzeigetafel',start:0,max:1,kosten:1e6,wochen:4,zuschauer:0.03},faktor:1.6}
+      tafel:{name:'Anzeigetafel',start:0,max:1,kosten:1e6,wochen:4,zuschauer:0.03},faktor:1.6},
+    // Computer-Vereine bauen (K26 §7, K26b, 22.11., popolupo, ALLE WERTE GESCHÄTZT): einmal je Saison zum Saisonstart, ohne Zufall, ohne Bauzeit (fertig in der Sommerpause).
+    // Tribüne: Nachfrage (erwartete Zuschauer ohne Deckel gegen einen Gegner mit dem Ansehen des Ligaschnitts, neutrale Form) mindestens vollAb × Plätze in saisons Saisons nacheinander,
+    // die neuen Plätze höchstens nachfrageMax × Nachfrage (kein Leerbau), nach dem Bau bleibt mindestens reserveTribuene × Reserve (finanzplan.budget.reserve × erwartete Einnahmen).
+    // Sonst höchstens eine Anlage aus der Liste des Profils (ausbildung oder standard), wenn danach mindestens reserveAnlage × Reserve bleibt.
+    computer:{vollAb:0.95,saisons:2,nachfrageMax:1.05,reserveTribuene:1,reserveAnlage:3,anlagen:{standard:['catering','tafel','training'],ausbildung:['training','catering','tafel']}}
   },
 
   ui:{

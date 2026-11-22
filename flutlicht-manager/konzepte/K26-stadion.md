@@ -1,6 +1,6 @@
 # K26 – Stadion und Infrastruktur
 
-Status: **Entwurf** (8. November 2026), nach „weiter, entscheide du“. Vorläufige Entscheidungen stehen in Abschnitt 12. **Teilschritt K26a umgesetzt (21. November 2026, popolupo, §5.1), noch ohne Testlauf.**
+Status: **Entwurf** (8. November 2026), nach „weiter, entscheide du“. Vorläufige Entscheidungen stehen in Abschnitt 12. **Teilschritt K26a umgesetzt (21. November 2026, popolupo, §5.1), K26b Computer-Vereine bauen (22. November 2026, §5.2), beide noch ohne Testlauf.**
 Hängt ab von: K23 (Finanzen), K27 (Fans) · Wird gebraucht von: K07, K08, K10, K24, K25.
 
 ## 1. Ziel und Spielgefühl
@@ -86,6 +86,19 @@ Hängt ab von: K23 (Finanzen), K27 (Fans) · Wird gebraucht von: K07, K08, K10, 
 - **Lizenz:** Bereich `stadion` (wie die Tribünen), kein neuer Bereich.
 - **Noch nicht:** Steh- und Sitzplätze, Business-Seats, Dach, Rasenheizung, Flutlicht, Rasenqualität mit Greenkeeper (§3.2a), Eigentum und Miete (§3.3), neues Stadion als Großprojekt, Karten aus §8, Bauen der Computer-Vereine.
 
+### 5.2 Umsetzung K26b (22.11.2026, popolupo, ohne Testlauf): Computer-Vereine bauen
+
+- **Wann:** einmal je Saison zum Saisonstart (nach Auf- und Abstieg und den TV-Geldern der neuen Saison), ohne Zufall. Gebaut wird ohne Genehmigung und Bauzeit, es ist in der Sommerpause fertig (vereinfacht gegenüber deinem Bauprozess).
+- **Tribüne** (§7): Die Nachfrage ist die erwartete Zuschauerzahl eines Ligaheimspiels ohne Deckel durch die Plätze, gegen einen Gegner mit dem Ansehen des Ligaschnitts, mit neutraler Form (dieselbe Rechnung wie die Einnahmen der Computer-Vereine, K23b). Liegt sie zwei Saisons nacheinander über 95 % der Plätze, kommen 3.000 Plätze dazu, wenn
+  - die neue Zahl höchstens 105 % der Nachfrage ist (kein Leerbau, §10),
+  - danach noch die Reserve des Vorstands bleibt (10 % der erwarteten Einnahmen, K23d) und
+  - höchstens 90.000 Plätze entstehen.
+- **Anlagen** (sonst, höchstens eine je Saison): die erste noch nicht ausgebaute aus der Liste des Profils. Ausbildungsvereine: Trainingsgelände, Catering, Anzeigetafel. Alle anderen: Catering, Anzeigetafel, Trainingsgelände. Nur wenn danach noch dreimal die Reserve bleibt.
+  - Abweichung von §7: Ausbildungsvereine bauen das Trainingsgelände statt des Nachwuchszentrums, weil das Nachwuchszentrum im Spiel nur auf deine Jugend wirkt (`jugendDeckel`). Das Trainingsgelände wirkt bei allen Vereinen (Entwicklung, Verletzungen).
+- **Meldung:** nur für Tribünen in deiner Liga.
+- **Dein Verein** baut nicht von selbst: Der Bereich `stadion` hat keine Automatik (K36).
+- **Noch nicht:** Instandhaltung der Computer-Vereine (1 % der Bausumme, ihre Bausumme wird aber schon gezählt), Reha-Zentrum und Nachwuchszentrum für sie, Abriss bei dauerhaft leerem Stadion.
+
 ## 6. Hebel des Spielers
 
 | Hebel | Nutzen | Preis |
@@ -157,7 +170,14 @@ stadion:{
 4. Reha-Zentrum mit Physio zusammen höchstens −25 % Ausfallzeit (§5.1).
 5. Catering +5 %, Anzeigetafel +3 % auf die Zuschauereinnahmen (§5.1).
 6. Instandhaltung 1 % der Bausumme im Jahr, nur für Bauten ab K26a (§5.1).
-7. Computer-Vereine bauen noch nicht (§5.1).
+7. Computer-Vereine bauen noch nicht (§5.1). Seit K26b bauen sie (§5.2).
+
+**Vorläufig entschieden mit K26b (22.11.2026, popolupo, ohne Testlauf):**
+
+8. Computer-Vereine bauen zum Saisonstart ohne Zufall und ohne Bauzeit (§5.2).
+9. Tribüne nach zwei Saisons mit Nachfrage über 95 %, höchstens bis 105 % der Nachfrage, nur mit Reserve (§5.2).
+10. Höchstens eine Anlage je Saison nach Profil, Ausbildungsvereine zuerst das Trainingsgelände statt des Nachwuchszentrums (§5.2).
+11. Dein Verein baut nicht von selbst, `stadion` bleibt ohne Automatik (§5.2).
 
 ## Quellen
 
