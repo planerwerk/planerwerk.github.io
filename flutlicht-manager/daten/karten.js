@@ -242,5 +242,12 @@ const KARTEN=[
     texte:['{spieler} hat in den letzten Wochen einen großen Schritt gemacht. Im Training fällt er jedem auf.','Die Lokalzeitung nennt {spieler} das Versprechen der Saison. Der Co-Trainer sagt: „So schnell hat sich lange keiner entwickelt.“'],
     wirkung:[{art:'selbstvertrauen',wert:1}]},
   {id:'altersverlust',titel:'Nicht mehr der Schnellste',bereich:'K03',art:'info',stufe:'haeufig',chance:0.5,ausloeser:'altersverlust',sperrTage:365,
-    texte:['Der Co-Trainer meldet: {spieler} verliert die Sprints, die er früher gewonnen hat. Vielleicht ist es Zeit für eine andere Rolle.','{spieler} wirkt in den letzten Wochen einen Schritt langsamer. Er weiß es selbst.']}
+    texte:['Der Co-Trainer meldet: {spieler} verliert die Sprints, die er früher gewonnen hat. Vielleicht ist es Zeit für eine andere Rolle.','{spieler} wirkt in den letzten Wochen einen Schritt langsamer. Er weiß es selbst.']},
+  // Skandale (K30 §8.4, K30f, 23.11., popolupo): Weltereignisse ohne eigene Entscheidung, zusammen etwa einmal in zehn Saisons (zwei Karten „gelegentlich“). Werte vorläufig.
+  {id:'wettpate',titel:'Ein Wettpate meldet sich',bereich:'K30',art:'info',stufe:'gelegentlich',ausloeser:'wettpate',sperrTage:3650,
+    texte:['Ein Unbekannter hat {spieler} Geld geboten, wenn er im nächsten Spiel eine Gelbe Karte sieht. {spieler} hat sofort den Verein und den DFB informiert. Die Presse lobt ihn.','{spieler} wurde in einem Hotel von einem Wettpaten angesprochen und hat die Polizei gerufen. Der DFB bedankt sich öffentlich.'],
+    wirkung:[{art:'stimmung',wert:3},{art:'fans',wert:1}]},
+  {id:'wettbetrug',titel:'Wettskandal',bereich:'K30',art:'info',stufe:'gelegentlich',ausloeser:'wettbetrug',sperrTage:3650,
+    texte:['{spieler} von {verein} hat auf Spiele der eigenen Mannschaft gewettet. Das Sportgericht sperrt ihn für viele Monate, {verein} will ihn loswerden.','Ermittler haben Wetten von {spieler} auf Spiele von {verein} gefunden. Er ist lange gesperrt und steht auf der Transferliste.'],
+    wirkung:[{art:'wettsperre',wert:1}]}
 ];

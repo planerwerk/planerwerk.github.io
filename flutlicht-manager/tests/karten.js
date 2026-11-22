@@ -321,6 +321,15 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   pruef(ohne&&jungEintrag===null&&!!d&&d.spieler===j.id&&!!v&&v.spieler===a.id&&sv,'Entwicklung: Durchbruch und Altersverlust nach dem Monatseintrag, Selbstvertrauen',
     `ohne Eintrag ${ohne}, zu junger Eintrag ${jungEintrag}, Durchbruch ${d&&d.spieler===j.id}, Altersverlust ${v&&v.spieler===a.id}, Selbstvertrauen ${sv}`);}
 
+// K30f. Skandale (K30 §8.4): Der Wettpate findet einen gesunden Spieler deines Kaders (Stimmung steigt). Der Wettbetrug trifft einen Spieler eines Computer-Vereins,
+//       der danach in Liga und Pokal gesperrt ist und auf der Transferliste steht, nie deinen.
+{const {S,F,ev}=welt(),A=ev('AUSLOESER'),K=ev('RKT').skandal,kv=ev('karteVon'),si=ev('sperreIn'),st=ev('stimmung');S.phase='play';
+  const w=A.wettpate(),p=w&&ev('PIX').get(w.spieler);if(p){st(p);p.st=50;}F.kartenZeigen(kv('wettpate'),w||{},S.tag,false);const lob=!!p&&p.team===S.my&&st(p)>50;
+  const b=A.wettbetrug(),q=b&&ev('PIX').get(b.spieler),l0=q?si(q,'liga'):0,k0=q?si(q,'pokal'):0;F.kartenZeigen(kv('wettbetrug'),b||{},S.tag,false);
+  const gesperrt=!!q&&q.team!==S.my&&si(q,'liga')===l0+K.sperreLiga&&si(q,'pokal')===k0+K.sperrePokal&&q.list===1;
+  const mein=ev('squad')(S.my)[0],m0=si(mein,'liga');ev('kartenWirkung')({art:'wettsperre',wert:1},{spieler:mein.id},{titel:'Test'});const nieMein=si(mein,'liga')===m0;
+  pruef(lob&&gesperrt&&nieMein,'Skandale: Wettpate gemeldet (Stimmung steigt), Wettbetrug sperrt einen Spieler eines Computer-Vereins, nie deinen',`Wettpate ${lob}, gesperrt ${gesperrt}, dein Spieler unberührt ${nieMein}`);}
+
 // U19e. Europapokal-Karten (K37 §8): Auswärtsspiel bei einem Auslandsverein in den nächsten 7 Tagen (kein Heimspiel, nicht später, nicht das Finale), Spiel 1 bis 7 Tage her,
 //       Wunder nach 0:3 im Hinspiel und 4:0 oder 3:0 mit Elfmeterschießen im Rückspiel, nicht nach nur einem Tor Rückstand und nicht beim Ausscheiden. euMeineSpiele ersetzt der Test.
 {const {S,W,ev}=welt(),A=ev('AUSLOESER'),AV=ev('AV0'),me=S.my,d=S.tag;W.ev('euMeineSpiele=function(){return S.testEu||[];}');

@@ -189,7 +189,7 @@ Jede Wirkung kann eine Chance haben. Dann wird im Strom `ereignisse` gewürfelt,
 | Ein Spieler heiratet | PLAN §4, K14 | Entscheidung, klein | ein Spieler deines Kaders zwischen 24 und 34 (Sperre je Spieler 2000 Tage) | „Teamausflug zur Feier“: −20.000 €, Zusammenhalt +3, Stimmung des Spielers +5. „Glückwunschkarte“: Stimmung +2 (Voreinstellung) |
 | Geheimtipp | K18 §8 | Info | ein Talent bis 20 bei einem Verein der 2. oder 3. Liga mit großem Talent | keine, nur der Hinweis |
 
-Noch nicht gebaut: verzögerte Folgen ohne eigene Karte, die Chronik über alle Karrieren (§5.4), Skandale (§8.4), Kategorien mit eigener Rate. Ketten und Merker gibt es seit K30c (§5.6).
+Noch nicht gebaut: verzögerte Folgen ohne eigene Karte, die Chronik über alle Karrieren (§5.4), die schweren Skandale (§8.4, die ersten zwei seit K30f), Kategorien mit eigener Rate. Ketten und Merker gibt es seit K30c (§5.6).
 
 ### 5.6 Umsetzung K30c (22. November 2026, popolupo, ohne Testlauf): Ketten und „Der lachende Dritte“
 
@@ -336,6 +336,7 @@ Sehr selten, als Weltereignis: **etwa einmal in zehn Saisons** kommt ein Szenari
 - **Nur als Weltereignis, ohne eigene Entscheidung zum Mitmachen** (vorläufig). Die Idee einer Versuchung (ein Mittelsmann bietet dir an, ein Spiel „zu regeln“) bleibt draußen, solange du sie nicht willst.
 - **Doping kommt nicht ins Spiel** (deine Entscheidung vom 10.11.). „Fit spritzen“ mit Schmerzmitteln bleibt, das ist erlaubt (K10).
 - Sichtbar ab der ersten Lizenz (nur Information, K36).
+- **Gebaut seit K30f** (23.11.2026, popolupo, ohne Testlauf, Info-Karten mit Wirkung, Stufe „gelegentlich“, zusammen etwa einmal in zehn Saisons): „Ein Wettpate meldet sich“ (ein Spieler deines Kaders meldet den Anwerbeversuch, Stimmung +3, Fans +1) und „Wettskandal“ (ein Spieler eines Computer-Vereins ist 20 Liga- und 3 Pokalspiele gesperrt und steht auf der Transferliste). Die schweren Szenarien (Schiedsrichter, Wiederholung, Zwangsabstieg) fehlen noch.
 
 ### 8.3 Beispiel einer Kette: „Der lachende Dritte“
 
