@@ -90,7 +90,7 @@ function kartenWirkung(w,b,c){let wert=w.wert,txt='';if(w.chance!=null){const ok
   else if(w.art==='bezDu'){if(b.verein!=null)bezDuAendern(b.verein,wert,c.titel);}
   else if(w.art==='geld')money('Ereignisse',wert);
   else if(w.art==='fans')fanAnlass(myT(),'fanU',wert); // seit U18b: Fanstimmung (K27), Umfeld
-  else if(w.art==='verpflichten'){if(p&&p.team===-1&&frei('transfers')&&!transferSperre())karteVerpflichten(p,wert);else if(p)news(`${p.n} unterschreibt nicht: Die Transfers führt noch der Verein.`,'');}
+  else if(w.art==='verpflichten'){const ok=p&&rahmenErlaubt(myT(),Math.round(salaryFor(p.str)*wert));if(p&&p.team===-1&&frei('transfers')&&!transferSperre()&&ok)karteVerpflichten(p,wert);else if(p)news(`${p.n} unterschreibt nicht: ${ok?'Die Transfers führt noch der Verein.':'Der Vorstand gibt das Gehalt nicht frei (Gehaltsrahmen).'}`,'');}
   else if(w.art==='interesse'){if(p)p.rkI={s:S.season,v:wert};}
   else if(w.art==='maezen')S.maezen=S.season; // K23e: Präsident mischt sich bis Saisonende ein
   else if(w.art==='merch')mkS().extra={bis:absTag(S.tag)+RMK.karte.merchTage,f:wert}; // K25b: Fanartikel-Erlös für einige Wochen höher

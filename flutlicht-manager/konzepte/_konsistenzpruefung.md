@@ -1438,3 +1438,23 @@ Zweig `mitarbeit/popolupo-u19d-kaderliste` (auf K23d). Konzept: K37 §5.6, §12 
 | CM3 | **Gleichschritt:** Zur Frist meldet der Verein ohne gültige Liste automatisch, mit Automatik immer. Beide Läufe melden am selben Tag dieselbe Liste. | ✅ entworfen |
 | CM4 | **Neuzugänge nach der Frist** dürfen erst nach der Nachmeldung im Europapokal spielen, wie in echt. | ✅ |
 | CM5 | **`tests/europapokal.js` Nr. 10.** Nie gelaufen. | ⚠️ offen |
+| CM6 | **Startkader:** Ohne Laufbahn hätte kein Verein in den ersten Jahren mehr als 21 Spieler auf Liste A gehabt (höchstens 4 lokal Ausgebildete). Jetzt gelten Deutsche der Startkader ohne Wechsel, die zum Spielstart höchstens 21 waren, als vereinsausgebildet. | 📌 vorläufig |
+
+---
+
+## CN. Prüfung der Änderungen vom 22.11. ohne Laufzeit (popolupo)
+
+Dritter Prüf-Agent, nur lesend, über T5-Korrekturen, K23b, K23d und U19d1. Keine Laufzeitfehler, diese Funde:
+
+| # | Befund | Status |
+|---|---|---|
+| CN1 | **Nachmeldung ohne Liste:** Ein Verein ohne Liste (alter Spielstand) hätte zur Nachmeldung nur drei Spieler behalten, alle übrigen wären gesperrt gewesen. Jetzt bekommt er die volle automatische Meldung. | ✅ behoben |
+| CN2 | **Gehaltsrahmen nicht gleich für alle:** Computer-Vereine wurden vor dem Kauf ohne das neue Gehalt geprüft, und ihre Leihen waren ebenfalls gesperrt. Bei dir war die Karte „verpflichten“ ungeprüft. Jetzt gilt überall `rahmenErlaubt(Verein, neues Gehalt)` beim Kauf (Angebot, Karte, `kiMarkt` mit dem Gehalt des Kandidaten). Leihen sind für alle frei. | ✅ behoben |
+| CN3 | **Gleichschritt-Risiko:** Der Rahmen hing an der Fanstimmung, die sich durch die Trikotvorstellung nur bei deinem Verein ändert. Jetzt rechnet er mit neutraler Fanstimmung und Form. | ✅ behoben |
+| CN4 | **Verlegung auf Montag:** Montag abends vor einem Donnerstag wären keine 72 Stunden. Montage sind jetzt keine Kandidaten mehr. | ✅ behoben |
+| CN5 | **Leeres rotes Etikett im Kader** für nicht gemeldete Spieler vor einem Europapokalspiel. `sperrText` nennt jetzt „nicht gemeldet (Europapokal)“ und Europapokal-Sperren. | ✅ behoben |
+| CN6 | **Text nach der Nachmeldung** sprach von einer Nachmeldung in der Vergangenheit. Neue Phase „ko“ mit eigenem Text. | ✅ behoben |
+| CN7 | **Torhüterregel:** Mit nur einem Torhüter außerhalb von Liste B konnte keine Liste gültig werden. Jetzt kommen Torhüter von Liste B auf Liste A, und die Regel verlangt nur so viele Torhüter, wie der Kader hat. | ✅ behoben |
+| CN8 | **Startkader und Liste A** (CM6). | ✅ behoben (Näherung) |
+| CN9 | **`tests/finanzmodell.js`** rechnete die Zeile „nach dem Modell“ anders als das Spiel. Jetzt mit `kiHeimEinnahmen` und `sonstigeEinnahmen`. | ✅ behoben |
+| CN10 | **Anzeige der Gegnerstärke** zeigte den Block mit 0,93 neben deiner ungeteilten Kaderstärke. Jetzt beide auf derselben Skala. | ✅ behoben |

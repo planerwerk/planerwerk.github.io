@@ -210,14 +210,14 @@ function kiMarkt(){const nr=fensterNr(),vereine=S.teams.filter(t=>aktiv(t)&&stab
   const zugang=(t,tb,c,art)=>{kiWechsel(c.p,t,c.preis,art);tb.a+=c.preis;tb.n++;umzug(c.p,c.von,t.id);if(c.von!=null)kiBudget(S.teams[c.von],nr).b+=Math.round(c.preis*RCV.finanzen.reinvest);};
   // Eine Leihe (U11d1): zählt als Zugang der Woche und zur Obergrenze des Fensters, kostet kein Budget
   const leihe=(t,tb,c)=>{kiLeihe(c.p,t);leihZaehlen(z,c.p,c.von,t.id);tb.n++;umzug(c.p,c.von,t.id);};
-  dran.forEach(t=>{if(t.id===S.my&&transferSperre())return;if(rahmenAnteil(t)>RFP.budget.sperreAb)return;const tb=kiBudget(t,nr),sq=kader.get(t.id);if(tb.n>=K.jeFenster[nr]||sq.length>=RM.kaeufer.kaderMax)return;
+  dran.forEach(t=>{if(t.id===S.my&&transferSperre())return;const tb=kiBudget(t,nr),sq=kader.get(t.id);if(tb.n>=K.jeFenster[nr]||sq.length>=RM.kaeufer.kaderMax)return;
     // Sternejagd zuerst: ehrgeizige Vereine, einmal je Saison im Sommerfenster. Gelingt sie, war das der Zugang dieser Woche.
-    if(nr===RCV.sterneJagd.fenster&&!tb.s&&vereinsProfile(t).includes('ehrgeizig')){const c=kiStern(t,plan(t),tb.b-tb.a,kader);if(c){tb.s=1;zugang(t,tb,c,'stern');return;}}
+    if(nr===RCV.sterneJagd.fenster&&!tb.s&&vereinsProfile(t).includes('ehrgeizig')){const c=kiStern(t,plan(t),tb.b-tb.a,kader);if(c&&rahmenErlaubt(t,salaryFor(c.p.str))){tb.s=1;zugang(t,tb,c,'stern');return;}}
     // Je Lücke: bei „verletzt“ zuerst Leihe, dann Kauf; bei „offen“ zuerst Kauf, sonst Leihe (§5.9). Dein Verein leiht nur in der Automatik (Bereich leihe, seit T1.1).
     const senk=kiSenkung(tb),leiht=S.phase==='play'&&stabMacht(t.id,'leihe'); // nicht vor dem Saisonwechsel, sonst endete die Leihe sofort wieder
     for(const n of planBedarf(plan(t))){const zuerst=L.zuerst.includes(n.grund);
       const a=leiht&&zuerst?kiLeihKandidat(t,n,senk,plan,z):null;if(a){leihe(t,tb,a);break;}
-      const c=kiKandidat(t,n,tb.b-tb.a,senk,kader,plan);if(c){zugang(t,tb,c);break;}
+      const c=kiKandidat(t,n,tb.b-tb.a,senk,kader,plan);if(c&&rahmenErlaubt(t,salaryFor(c.p.str))){zugang(t,tb,c);break;} // Gehaltsrahmen wie bei dir (K23d)
       const b=leiht&&!zuerst?kiLeihKandidat(t,n,senk,plan,z):null;if(b){leihe(t,tb,b);break;}}});
   const ende=fensterEnde();
   // Abwanderung ins Ausland einmal je Sommer in der letzten Woche des Fensters (K32 §8, T1.3, js/ausland.js): Die Sternejagd hat davor das ganze Fenster,

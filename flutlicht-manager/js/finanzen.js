@@ -68,8 +68,9 @@ function finanzenKarte(){const t=myT(),L=S.lzp||{},v=S.finV||[],p=finPrognose(fa
 // Sonstige Einnahmen (Mitglieder, Vermarktung, K23 §3.1) je Ligaspiel für alle Vereine, vorläufig nach Liga bis K23c
 const sonstigeEinnahmen=t=>RFP.sonstiges[t.lg]||0;
 // Zuschauer im Heimspiel ohne Würfel (Mitte der Spanne) und zum Richtpreis: so verschiebt die Rechnung für Computer-Vereine keinen Zufallsstrom
+// neutral (für Budgets): Form 1,4 Punkte je Spiel und Fanstimmung ohne Wirkung, damit der Rahmen nicht schwankt und im Gleichschritt für beide Läufe gleich bleibt
 function zuschauerErwartung(t,opp,cup,neutral){const Z=RF.zuschauer,ff=Z.formBasis+Z.formJePunkt*(neutral?1.4:formPts(t.id)),of=Z.gegnerBasis+(opp?opp.rep:Z.gegnerOhne)/100*Z.gegnerFaktor,lf=t.lg===1?1:t.lg===2?Z.liga2:Z.liga3;
-  return Math.round(Math.min(t.cap,t.fans*ff*of*lf*(cup?Z.pokal:1)*(Z.zufallBasis+Z.zufallSpanne/2)*fanFaktor(t)));}
+  return Math.round(Math.min(t.cap,t.fans*ff*of*lf*(cup?Z.pokal:1)*(Z.zufallBasis+Z.zufallSpanne/2)*(neutral?1:fanFaktor(t))));}
 function kiHeimEinnahmen(t,opp,cup,neutral){const att=zuschauerErwartung(t,opp,cup,neutral);return Math.round(att*richtPreis(t)*zuschauerFaktor(t))+(t.shop?Math.round(att*RF.fanartikel[t.shop]):0)+(t.logen||0)*RF.loge;}
 // Je Ligaspiel (ablauf.js): TV, Sponsor (Ansehen² × Ligawert wie die Angebote an dich), Sonstiges, im Heimspiel Zuschauer, Fanartikel, Logen,
 // minus Gehälter von Kader und Stab, Stadion und Betrieb, Jugendarbeit (Stufe der Computer-Vereine). Ersetzt die Pauschale fremdeEinnahmen.
@@ -93,6 +94,8 @@ const gehaltsRahmen=t=>Math.round(erwarteteEinnahmen(t)*RFP.budget.gehaltAnteil)
 const gehaltsSumme=t=>squad(t.id).reduce((s,p)=>s+p.sal,0)+stabGehaelter(t.id);
 // Anteil am Rahmen (1 = genau ausgeschöpft). Über RFP.budget.sperreAb: keine Käufe (offer, kiMarkt), über 1: Vertrauen sinkt (vorstandWoche)
 const rahmenAnteil=t=>gehaltsSumme(t)/Math.max(1,gehaltsRahmen(t));
+// Darf ein Verein ein neues Gehalt dazunehmen? Gleiche Regel für dich (offer, Karte „verpflichten“) und Computer-Vereine (kiMarkt): mit dem neuen Gehalt höchstens sperreAb × Rahmen
+const rahmenErlaubt=(t,neu)=>gehaltsSumme(t)+(neu||0)<=gehaltsRahmen(t)*RFP.budget.sperreAb;
 const transferBudget=t=>Math.max(0,t.cash-Math.round(erwarteteEinnahmen(t)*RFP.budget.reserve));
 
 // ---------- K23e (§5.5d): Kredit mit Laufzeit, Raten aus Ablösen, Gehaltsverzicht ----------

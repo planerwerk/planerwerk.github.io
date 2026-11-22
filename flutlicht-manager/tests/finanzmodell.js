@@ -14,10 +14,9 @@ let F0=null,ergebnis=[];
 saisons({n:N,seed:SEED,verein:VEREIN,
   beiSpielen:(list,S,o)=>{const W=F0.__W,ev=W.ev,RF=ev('RF'),RS=ev('RS'),Z=RF.zuschauer;
     list.forEach(r=>{if(!r.lg)return;[r.h,r.a].forEach((id,s)=>{const t=S.teams[id];if(!t)return;const k=z(id),n=(S.fx[t.lg]||[]).length||34;
-      const tv=ev('tvGeld')(t),sp=t.rep*t.rep*(RF.sponsor['liga'+t.lg]||RF.sponsor.liga3);let tor=0;
-      if(s===0){const opp=S.teams[r.a],preis=ev('richtPreis')(t),ref=Z.refBasis+t.rep*Z.refJeAnsehen,pf=Math.min(Z.preisMax,Math.max(Z.preisMin,Math.pow(ref/preis,Z.preisExponent))),
-          ff=Z.formBasis+Z.formJePunkt*F0.formPts(id),of=Z.gegnerBasis+(opp?opp.rep:Z.gegnerOhne)/100*Z.gegnerFaktor,lf=t.lg===1?1:t.lg===2?Z.liga2:Z.liga3;
-        const att=Math.min(t.cap,t.fans*pf*ff*of*lf*(Z.zufallBasis+Z.zufallSpanne/2));tor=att*preis+att*(RF.fanartikel[t.shop||0]||0)+(t.logen||0)*RF.loge;}
+      // seit K23b dieselbe Rechnung wie im Spiel (kiHeimEinnahmen, sonstigeEinnahmen), Sonstiges zählt hier zum Sponsor
+      const tv=ev('tvGeld')(t),sp=t.rep*t.rep*(RF.sponsor['liga'+t.lg]||RF.sponsor.liga3)+ev('sonstigeEinnahmen')(t);let tor=0;
+      if(s===0)tor=ev('kiHeimEinnahmen')(t,S.teams[r.a]||null,false);
       const geh=(ev('squad')(id).reduce((a,p)=>a+p.sal,0)+ev('stabGehaelter')(id))/n,betr=t.cap*RF.betrieb.jePlatz+(t.logen||0)*RF.betrieb.jeLoge,jug=RF.jugendKosten[RS.nachwuchs.computerStufe];
       k.ein+=tv+sp+tor;k.aus+=geh+betr+jug;k.alt+=t.rep*t.rep*RF.fremdeEinnahmen.liga;k.sp++;k.tv+=tv;k.spons+=sp;k.tor+=tor;k.gehalt+=geh;});});},
   vorher:(F)=>{F0=F;},

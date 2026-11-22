@@ -56,7 +56,7 @@ function offer(id){if(transferSperre()||transferSperreNaechste()){toast(transfer
   // Interesse (K19 §5.3): Fehlt wenig, verlangt er mehr Geld, fehlt viel, will er nicht (U10b)
   const F=gehaltMitInteresse(p,wechselInteresse(p));if(F==null){msg.textContent=`${p.n} hat kein Interesse an einem Wechsel zu ${t.name}.`;return;}
   const vorv=!!from&&p.ct===1&&vorvertragZeit(),o=vtPaket(p,F,yrs,!from);let fee=0;
-  if(gehaltsSumme(t)+o.sal>gehaltsRahmen(t)*RFP.budget.sperreAb){msg.textContent=`Der Vorstand gibt das Gehalt nicht frei: Mit ${p.n} lägen die Gehälter mehr als ${Math.round((RFP.budget.sperreAb-1)*100)} % über dem Rahmen von ${fmt(gehaltsRahmen(t))}. Erst verkaufen.`;return;} // Gehaltsrahmen (K23d)
+  if(!rahmenErlaubt(t,o.sal)){msg.textContent=`Der Vorstand gibt das Gehalt nicht frei: Mit ${p.n} lägen die Gehälter mehr als ${Math.round((RFP.budget.sperreAb-1)*100)} % über dem Rahmen von ${fmt(gehaltsRahmen(t))}. Erst verkaufen.`;return;} // Gehaltsrahmen (K23d)
   // Schritt 1: Ablöse mit dem Verein (K19 §5.2). Im letzten halben Jahr seines Vertrags geht es ohne Ablöse zum Sommer (Vorvertrag, K21 §4.3).
   if(from&&!vorv){const v=verhandlung(p);if(v.einig&&v.einig.bis>=S.tag)fee=v.einig.fee;else{fee=Math.round((+document.getElementById('fee').value||0)*1e6);
       if(t.cash<feeJetzt(fee)+o.hg){msg.textContent='Dafür reicht dein Kontostand nicht.';return;}

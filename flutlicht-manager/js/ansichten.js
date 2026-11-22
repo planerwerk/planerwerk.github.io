@@ -7,7 +7,8 @@ const fact=(k,v)=>`<div><span class="lbl">${k}</span><b>${v}</b></div>`;
 const chip=id=>`<span class="dot" style="background:${S.teams[id].col}"></span>`;
 const avgAtt=()=>S.att[1]?Math.round(S.att[0]/S.att[1]).toLocaleString('de-DE'):'–';
 // Sperren je Wettbewerb (K09): „gesperrt (Liga 2, Pokal 1)“, mit Hinweis auf ein laufendes Verfahren
-const sperrText=p=>{const l=sperreIn(p,'liga'),k=sperreIn(p,'pokal');if(!l&&!k)return'';const v=verfahrenVon(p);return`gesperrt (${[l?`Liga ${l}`:'',k?`Pokal ${k}`:''].filter(Boolean).join(', ')}${v?', Verfahren läuft':''})`;};
+const sperrText=p=>{const l=sperreIn(p,'liga'),k=sperreIn(p,'pokal'),e=sperreIn(p,'eu'),nm=p.team===S.my&&naechsterWb()==='eu'&&!euSpielberechtigt(p);if(!l&&!k&&!e&&!nm)return'';const v=verfahrenVon(p);
+  return`${l||k||e?`gesperrt (${[l?`Liga ${l}`:'',k?`Pokal ${k}`:'',e?`Europapokal ${e}`:''].filter(Boolean).join(', ')}${v?', Verfahren läuft':''})`:''}${nm?`${l||k||e?', ':''}nicht gemeldet (Europapokal)`:''}`;};
 const ausfallText=p=>{if(p.inj>0){const i=verletzungInfo(p);return i?`${i.art==='krankheit'?'krank':'verletzt'} (${i.name}, noch ${spanneText(i.rest)}${gespritzt(p)?', gespritzt':''})`:`verletzt (${p.inj} ${p.inj===1?'Tag':'Tage'})`;}return sperrText(p);};
 // Verletzte und Kranke (K10 §4): Art oder Verdacht, Ursache, Phase, Rückkehr als Spanne, fit spritzen am Spieltag, früher zurückholen aus dem Aufbautraining
 function verletztenKarte(){const l=squad(S.my).filter(p=>p.inj>0).sort((a,b)=>a.inj-b.inj),b=verletzungsBilanz(S.my),spieltag=heuteMeinSpiel();

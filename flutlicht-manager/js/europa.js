@@ -268,19 +268,23 @@ function euRundeFertig(e){const W=S.eu[e.wb];
 // ---------- Kaderliste der UEFA (K37 §5.6, U19d1) ----------
 // S.eu.liste[Verein] = Spieler-Nummern auf Liste A, S.eu.listeLp[Verein] = Stand zur Frist der Ligaphase (Grundlage der Nachmeldung).
 // Lokal ausgebildet als Näherung: vereinsausgebildet = aus der eigenen Jugend (p.ej), verbandsausgebildet = übrige Spieler mit deutscher Nationalität.
-const euVereinsAus=(p,tid)=>p.ej===tid;
-const euVerbandsAus=(p,tid)=>p.ej!==tid&&p.nat===RW.nation.heimat;
+// Spieler der Startkader ohne Wechsel (kein p.seit), mit deutscher Nationalität und zum Spielstart höchstens 21 Jahre alt, gelten als vereinsausgebildet (Näherung, sonst hätte
+// kein Verein in den ersten Jahren mehr als 21 Spieler auf Liste A, Konsistenzprüfung CM6)
+const euVereinsAus=(p,tid)=>p.ej===tid||(p.team===tid&&p.seit==null&&p.nat===RW.nation.heimat&&p.age-(S.season-RW.startSaison)<=21);
+const euVerbandsAus=(p,tid)=>!euVereinsAus(p,tid)&&p.nat===RW.nation.heimat;
 const euListeB=p=>p.age<=REU.liste.bBis&&(p.ej===p.team||(p.seit!=null&&absTag(S.tag)-p.seit>=REU.liste.bTage));
 function euListeStand(ids,tid){const L=REU.liste,ps=ids.map(id=>PIX.get(id)).filter(p=>p&&p.team===tid),c=ps.filter(p=>euVereinsAus(p,tid)).length,a=ps.filter(p=>euVerbandsAus(p,tid)).length,
-    lokal=Math.min(L.lokal,c+Math.min(a,L.verband)),tw=ps.filter(p=>p.pos==='TW').length;
-  return{n:ps.length,lokal,tw,c,a,max:L.max-L.lokal+lokal,ok:ps.length<=L.max&&ps.length-lokal<=L.max-L.lokal&&tw>=L.tw};}
+    lokal=Math.min(L.lokal,c+Math.min(a,L.verband)),tw=ps.filter(p=>p.pos==='TW').length,twMoeglich=Math.min(L.tw,squad(tid).filter(p=>p.pos==='TW').length);
+  return{n:ps.length,lokal,tw,c,a,max:L.max-L.lokal+lokal,ok:ps.length<=L.max&&ps.length-lokal<=L.max-L.lokal&&tw>=twMoeglich};}
 // Automatische Meldung: zuerst zwei Torhüter, dann die Stärksten, solange die Regeln halten (Liste B zählt nicht mit)
 function euListeAuto(tid){const L=REU.liste,sq=squad(tid).filter(p=>!euListeB(p)).sort((x,y)=>y.str-x.str),A=[];
   const passt=id=>{const r=euListeStand([...A,id],tid);return r.n<=L.max&&r.n-r.lokal<=L.max-L.lokal;};
-  sq.filter(p=>p.pos==='TW').slice(0,L.tw).forEach(p=>A.push(p.id));sq.forEach(p=>{if(!A.includes(p.id)&&passt(p.id))A.push(p.id);});return A;}
+  sq.filter(p=>p.pos==='TW').slice(0,L.tw).forEach(p=>A.push(p.id));
+  if(A.length<L.tw)squad(tid).filter(p=>p.pos==='TW'&&euListeB(p)).sort((x,y)=>y.str-x.str).slice(0,L.tw-A.length).forEach(p=>A.push(p.id)); // Torhüter von Liste B, wenn sonst keine zwei da sind
+  sq.forEach(p=>{if(!A.includes(p.id)&&passt(p.id))A.push(p.id);});return A;}
 // Fristen: Meldung bis zum Tag vor dem 1. Spieltag, Nachmeldung nach dem letzten Spieltag der Ligaphase bis zum Tag vor den K.-o.-Play-offs
 const euFristen=wb=>{const p=euPlan()[wb];return{lp:p.liga[0][0]-1,ab:p.liga[p.liga.length-1][1]+1,ko:p.po[0][0]-1};};
-function euListePhase(wb){const F=euFristen(wb),d=S.tag;return d<=F.lp?'frei':d>=F.ab&&d<=F.ko?'nach':'zu';}
+function euListePhase(wb){const F=euFristen(wb),d=S.tag;return d<=F.lp?'frei':d>=F.ab&&d<=F.ko?'nach':d>F.ko?'ko':'zu';} // zu: Ligaphase, ko: nach der Nachmeldung
 // Spielberechtigt im Europapokal (disziplin.js gesperrt): ohne Liste alle (Qualifikation, vor der Frist), sonst Liste A oder Liste B
 function euSpielberechtigt(p){if(!euAktiv()||!S.eu.liste)return true;const l=S.eu.liste[p.team];return!l||l.includes(p.id)||euListeB(p);}
 // Täglich (euTag): Zur Frist melden alle deutschen Teilnehmer ohne gültige Liste automatisch, dein Verein mit Automatik immer (gleicher Tag, Gleichschritt).
@@ -289,10 +293,10 @@ function euListeTag(d){EU_WB.forEach(wb=>{const W=S.eu[wb],F=euFristen(wb),de=W.
   if(d===F.lp)de.forEach(id=>{const mein=id===S.my,auto=mein&&autoB('aufstellung');if(!Li[id]||auto||!euListeStand(Li[id],id).ok){Li[id]=euListeAuto(id);
       if(mein)news(`Kaderliste ${euName(wb)}: ${auto?'Der Co-Trainer':'Der Verein'} meldet ${Li[id].length} Spieler für Liste A.`,'');}
     (S.eu.listeLp||(S.eu.listeLp={}))[id]=Li[id].slice();});
-  if(d===F.ko)de.forEach(id=>{if(id===S.my&&!autoB('aufstellung'))return;const alt=Li[id]||[];let neu=0;Li[id]=euListeAuto(id).filter(x=>alt.includes(x)||(neu<REU.liste.nach&&++neu));});});}
+  if(d===F.ko)de.forEach(id=>{if(id===S.my&&!autoB('aufstellung'))return;if(!Li[id]){Li[id]=euListeAuto(id);return;}const alt=Li[id];let neu=0;Li[id]=euListeAuto(id).filter(x=>alt.includes(x)||(neu<REU.liste.nach&&++neu));});});}
 // Melden und Streichen (Karte im Kader). Beim ersten Mal beginnt die Liste mit dem Vorschlag der automatischen Meldung.
 function euListeUmschalten(id){if(!darf('aufstellung'))return;const wb=euMeinWb();if(!wb||!S.eu[wb].t.includes(S.my))return;const ph=euListePhase(wb),L=REU.liste;
-  if(ph==='zu'){toast('Die Kaderliste ist fest, bis zur Nachmeldung vor den K.-o.-Play-offs.');return;}
+  if(ph==='zu'||ph==='ko'){toast(ph==='zu'?'Die Kaderliste ist fest, bis zur Nachmeldung vor den K.-o.-Play-offs.':'Die Kaderliste ist fest bis zum Ende des Wettbewerbs.');return;}
   const Li=S.eu.liste||(S.eu.liste={}),l=Li[S.my]||(Li[S.my]=euListeAuto(S.my)),i=l.indexOf(id);
   if(i>=0)l.splice(i,1);else{const p=PIX.get(id);if(!p||p.team!==S.my)return;if(euListeB(p)){toast(`${p.n} steht auf Liste B und braucht keine Meldung.`);return;}
     if(ph==='nach'){const lp=(S.eu.listeLp||{})[S.my]||[];if(l.filter(x=>!lp.includes(x)).length>=L.nach){toast(`Zur K.-o.-Phase gehen höchstens ${L.nach} neue Spieler.`);return;}}
@@ -300,8 +304,8 @@ function euListeUmschalten(id){if(!darf('aufstellung'))return;const wb=euMeinWb(
   save();render();}
 // Karte im Kader
 function euListeKarte(){const wb=euMeinWb();if(!wb||!S.eu[wb].t.includes(S.my))return'';const ph=euListePhase(wb),F=euFristen(wb),l=S.eu.liste&&S.eu.liste[S.my],ids=l||euListeAuto(S.my),r=euListeStand(ids,S.my),sq=squad(S.my).sort((a,b)=>b.str-a.str);
-  const knopf=p=>euListeB(p)?'<span class="tag">Liste B</span>':`<button onclick="euListeUmschalten(${p.id})"${lzAus('aufstellung')}${ph==='zu'?' disabled':''}>${ids.includes(p.id)?'gemeldet, streichen':'melden'}</button>`;
-  const frist=ph==='frei'?`Meldung bis ${datumKurz(F.lp)}.`:ph==='nach'?`Nachmeldung bis ${datumKurz(F.ko)}, höchstens ${REU.liste.nach} neue Spieler.`:`Fest, Nachmeldung ab ${datumKurz(F.ab)}.`;
+  const knopf=p=>euListeB(p)?'<span class="tag">Liste B</span>':`<button onclick="euListeUmschalten(${p.id})"${lzAus('aufstellung')}${ph==='zu'||ph==='ko'?' disabled':''}>${ids.includes(p.id)?'gemeldet, streichen':'melden'}</button>`;
+  const frist=ph==='frei'?`Meldung bis ${datumKurz(F.lp)}.`:ph==='nach'?`Nachmeldung bis ${datumKurz(F.ko)}, höchstens ${REU.liste.nach} neue Spieler.`:ph==='ko'?'Fest bis zum Ende des Wettbewerbs.':`Fest, Nachmeldung ab ${datumKurz(F.ab)}.`;
   return`<div class="card"><h3>Kaderliste ${esc(euName(wb))}</h3>${lzHinweis('aufstellung')}<p>${l?'Gemeldet':'Vorschlag'}: <b>${r.n}</b> von höchstens ${r.max} auf Liste A, davon ${r.tw} Torhüter, ${r.lokal} lokal Ausgebildete angerechnet (${r.c} aus der eigenen Jugend, ${r.a} aus Deutschland, davon höchstens ${REU.liste.verband}). ${frist}</p>
     <div class="tw"><table><tbody>${sq.map(p=>`<tr><td><span class="pos ${p.pos}">${p.pos}</span></td><td>${esc(p.n)}${euVereinsAus(p,S.my)?' <span class="dim">(eigene Jugend)</span>':euVerbandsAus(p,S.my)?' <span class="dim">(Deutschland)</span>':''}</td><td class="num">${Math.round(p.str)}</td><td>${knopf(p)}</td></tr>`).join('')}</tbody></table></div>
     <p class="dim">Wer nicht gemeldet ist, darf im Europapokal nicht spielen. Liste B (bis ${REU.liste.bBis} Jahre, aus der eigenen Jugend oder seit zwei Jahren im Verein) braucht keine Meldung. Ohne deine Meldung meldet der Verein zur Frist.</p></div>`;}
@@ -309,7 +313,7 @@ function euListeKarte(){const wb=euMeinWb();if(!wb||!S.eu[wb].t.includes(S.my))r
 // ---------- Ansicht ----------
 // Karte für dein nächstes Europapokalspiel (ansichten.js spielKarte)
 function euSpielKarte(e,f,wann){const home=f[0]===S.my,oid=home?f[1]:f[0],v=avVon(oid),land=v?(nation(v.land)||{name:v.land}).name:null;
-  return`<div class="vs"><span>${wann} · ${esc(euSpielName(e))} · ${e.runde==='fin'?'Finale auf neutralem Platz':home?'Heimspiel':'Auswärtsspiel'}</span><b>${esc(tn(oid))}</b><span>${v?`${esc(land)} · Teamstärke ${de(euStaerke(oid),1)}`:`${S.teams[oid].lg}. Liga · Kaderstärke ${teamLevel(oid).toFixed(1)}`} (deine: ${teamLevel(S.my).toFixed(1)})${e.runde!=='lp'&&(e.leg===1||e.runde==='fin')?' · mit Verlängerung und Elfmeterschießen':''}</span></div>`;}
+  return`<div class="vs"><span>${wann} · ${esc(euSpielName(e))} · ${e.runde==='fin'?'Finale auf neutralem Platz':home?'Heimspiel':'Auswärtsspiel'}</span><b>${esc(tn(oid))}</b><span>${v?`${esc(land)} · Teamstärke ${de(euStaerke(oid)/REU.staerke.faktor,1)}`:`${S.teams[oid].lg}. Liga · Kaderstärke ${teamLevel(oid).toFixed(1)}`} (deine: ${teamLevel(S.my).toFixed(1)})${e.runde!=='lp'&&(e.leg===1||e.runde==='fin')?' · mit Verlängerung und Elfmeterschießen':''}</span></div>`;}
 // Kalendertag (ansichten.js kalTermin)
 function euKalTermin(d){const x=euMeineSpiele().find(y=>y.tag===d);if(!x)return null;const home=x.h===S.my,o=home?x.a:x.h,r={kurz:`${REU.wb[x.wb].kurz} ${o>=AV0?(avVon(o).name.split(' ').pop()).slice(0,6):S.teams[o].sh}`,cls:'sp pk',titel:euSpielName(x)+`: ${home?'gegen':'bei'} ${tn(o)}`};
   if(x.hg!=null){const gf=home?x.hg:x.ag,ga=home?x.ag:x.hg;r.erg=`${x.hg}:${x.ag}${x.pen?' i.E.':''}`;r.cls+=gf>ga?' win':gf<ga?' loss':' draw';}return r;}

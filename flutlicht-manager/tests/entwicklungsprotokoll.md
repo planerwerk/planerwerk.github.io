@@ -48,6 +48,17 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 22.11.2026: Korrekturen nach einer Prüfung ohne Laufzeit (Zweig `mitarbeit/popolupo-u19d-kaderliste`)
+
+- **Konsistenzprüfung CN:**
+  - Nachmeldung ohne Liste (CN1).
+  - Gehaltsrahmen mit derselben Regel für alle beim Kauf (`rahmenErlaubt`, CN2).
+  - Rahmen ohne Fanstimmung und Form (Gleichschritt, CN3).
+  - Keine Verlegung auf Montag (CN4).
+  - Sperrtext „nicht gemeldet“ (CN5), Texte nach der Nachmeldung (CN6), Torhüterregel (CN7), Startkader (CN8), Messskript (CN9), Gegnerstärke (CN10).
+- **Auch:** Claudes Sponsorentag (c50db88) ist per Merge in diesem Zweig, damit das Zusammenführen glatt geht.
+- **Tests zuerst:** wie bei U19d1, dazu `tests/lizenz.js` (Gleichschritt mit dem Rahmen) und `tests/wettbewerbe.js` (72 Stunden).
+
 ### 22.11.2026: U19d1 Kaderliste der UEFA (Zweig `mitarbeit/popolupo-u19d-kaderliste`, auf K23d)
 
 - **Neu in `js/europa.js`:**
