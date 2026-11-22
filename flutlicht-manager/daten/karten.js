@@ -264,5 +264,12 @@ const KARTEN=[
     texte:['Bei seiner frühen Auswechslung ist {spieler} an dir vorbeigegangen, ohne dir die Hand zu geben. Die Kameras haben alles gesehen.','{spieler} hat nach seiner Auswechslung die Trinkflasche weggetreten und dich ignoriert. Die Zeitungen fragen nach.'],
     optionen:[{text:'Öffentlich zurechtweisen',wirkung:[{art:'stimmung',wert:-3},{art:'glaub',wert:1}],folge:'Du stellst klar, wer entscheidet. {spieler} schmollt.'},
       {text:'Unter vier Augen klären',wirkung:[{art:'stimmung',wert:1}],folge:'{spieler} entschuldigt sich in der Kabine.'},
-      {text:'Ignorieren',wirkung:[{art:'zusammenhalt',wert:-1}],folge:'Die Mannschaft hat gesehen, dass so etwas folgenlos bleibt.'}],auto:1}
+      {text:'Ignorieren',wirkung:[{art:'zusammenhalt',wert:-1}],folge:'Die Mannschaft hat gesehen, dass so etwas folgenlos bleibt.'}],auto:1},
+  // Last-Minute-Drama (K05 §8, K05d, 23.11., popolupo): Meldungen mit Wirkung nach einem spät entschiedenen Pflichtspiel. Werte vorläufig.
+  {id:'lastMinuteSieg',titel:'Last-Minute-Drama',bereich:'K05',art:'info',stufe:'haeufig',chance:1,ausloeser:'lastMinuteSieg',sperrTage:30,
+    texte:['Das Siegtor in den letzten Minuten lässt das Stadion beben. Die Fans feiern noch eine halbe Stunde nach dem Abpfiff.','Spät, aber verdient: Der Treffer kurz vor Schluss ist das Video der Woche, die Kabine tanzt.'],
+    wirkung:[{art:'fans',wert:2},{art:'stimmungAlle',wert:1}]},
+  {id:'lastMinuteNiederlage',titel:'Bittere Schlussminuten',bereich:'K05',art:'info',stufe:'haeufig',chance:1,ausloeser:'lastMinuteNiederlage',sperrTage:30,
+    texte:['Das Gegentor in den letzten Minuten sitzt tief. In der Kabine sagt lange keiner etwas.','So kurz vor Schluss alles verloren: Die Spieler liegen nach dem Abpfiff auf dem Rasen.'],
+    wirkung:[{art:'stimmungAlle',wert:-1}]}
 ];

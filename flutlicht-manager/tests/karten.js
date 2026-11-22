@@ -348,6 +348,15 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   pruef(test&&merk&&!!jo&&jo.spieler===j.id&&!!hs&&hs.spieler===d.id&&alt===null,'Nach dem Spiel: Joker und frühe Auswechslungen gemerkt, Handschlag nur bei einer Diva, nicht nach Testspielen',
     `Testspiel ignoriert ${test}, gemerkt ${merk}, Joker ${jo&&jo.spieler===j.id}, Handschlag ${hs&&hs.spieler===d.id}, zu alt ${alt}`);}
 
+// K05d. Last-Minute-Drama (K05 §8): spätes Siegtor (ab Minute spaetAb, ein Tor Unterschied) für dich oder gegen dich; früh entschieden, Remis,
+//       Elfmeterschießen oder zwei Tore Unterschied nicht.
+{const {S,F,ev}=welt(),A=ev('AUSLOESER'),N=ev('RKT').spiel;S.phase='play';
+  const g=(m,s)=>({m,s,t:'G',p:null,n:'X',sc:[0,0]}),lauf=r=>{F.letztesSpielMerken(Object.assign({h:S.my,a:0,ev:[]},r),S.tag);return[!!A.lastMinuteSieg(),!!A.lastMinuteNiederlage()];};
+  const sieg=lauf({hg:2,ag:1,ev:[g(10,0),g(20,1),g(N.spaetAb+1,0)]}),nieder=lauf({hg:1,ag:2,ev:[g(10,0),g(20,1),g(N.spaetAb,1)]}),frueh=lauf({hg:2,ag:1,ev:[g(10,0),g(20,1),g(60,0)]}),
+    remis=lauf({hg:1,ag:1,ev:[g(10,0),g(N.spaetAb+1,1)]}),pen=lauf({hg:1,ag:0,pen:[4,3],ev:[g(N.spaetAb+1,0)]}),hoch=lauf({hg:3,ag:1,ev:[g(10,0),g(20,0),g(30,1),g(N.spaetAb+1,0)]});
+  pruef(sieg[0]&&!sieg[1]&&nieder[1]&&!nieder[0]&&!frueh[0]&&!remis[0]&&!remis[1]&&!pen[0]&&!hoch[0],'Last-Minute-Drama: spätes Siegtor oder Gegentor, nicht früh, nicht beim Remis, Elfmeterschießen oder zwei Toren',
+    `Sieg ${sieg}, Niederlage ${nieder}, früh ${frueh}, Remis ${remis}, Elfmeter ${pen}, zwei Tore ${hoch}`);}
+
 // U19e. Europapokal-Karten (K37 §8): Auswärtsspiel bei einem Auslandsverein in den nächsten 7 Tagen (kein Heimspiel, nicht später, nicht das Finale), Spiel 1 bis 7 Tage her,
 //       Wunder nach 0:3 im Hinspiel und 4:0 oder 3:0 mit Elfmeterschießen im Rückspiel, nicht nach nur einem Tor Rückstand und nicht beim Ausscheiden. euMeineSpiele ersetzt der Test.
 {const {S,W,ev}=welt(),A=ev('AUSLOESER'),AV=ev('AV0'),me=S.my,d=S.tag;W.ev('euMeineSpiele=function(){return S.testEu||[];}');

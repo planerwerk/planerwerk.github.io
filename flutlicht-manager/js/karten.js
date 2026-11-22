@@ -105,6 +105,9 @@ const AUSLOESER={
   // Nach deinem Spiel (K05 §8, K05c), bis RKT.spiel.nachTage danach (S.letzt): ein Joker hat getroffen; eine Diva wurde früh ausgewechselt
   jokerSticht(){const l=kartenLetzt('joker').filter(p=>p.team===S.my);return l.length?{spieler:pick(l).id}:null;},
   handschlag(){const l=kartenLetzt('frueh').filter(p=>p.team===S.my&&hatEig(p,'diva'));return l.length?{spieler:pick(l).id}:null;},
+  // Last-Minute-Drama (K05 §8, K05d): dein letztes Pflichtspiel wurde spät entschieden (S.letzt.spaet), bis RKT.spiel.nachTage danach
+  lastMinuteSieg(){const L=S.letzt,n=L?S.tag-L.tag:-1;return L&&L.s===S.season&&n>=0&&n<=RKT.spiel.nachTage&&L.spaet===1?{}:null;},
+  lastMinuteNiederlage(){const L=S.letzt,n=L?S.tag-L.tag:-1;return L&&L.s===S.season&&n>=0&&n<=RKT.spiel.nachTage&&L.spaet===-1?{}:null;},
   // Folgekarte der Kette (nur über kartenKette, mit den Beteiligten der ersten Karte): Der Spieler ist noch beim selben Verein und noch nicht vergeben
   dritterNoch(b){const p=b&&b.spieler!=null?PIX.get(b.spieler):null;return p&&p.team===b.verein&&!p.wech&&!istLeihe(p)&&S.teams[p.team]&&aktiv(S.teams[p.team])?b:null;},
   // Presse (K29 §8, K17 §8, K29k): Medienklima unter RKT.presse.leckUnter; ein Verein deiner Liga mit Beziehung unter RBZ.wirkung.gespraechUnter
@@ -176,7 +179,9 @@ const kartenStaerkePlus=p=>{const T=RKT.entwicklung.tage,a=(p.mvl||[]).filter(e=
 // frueh: vor RKT.spiel.fruehBis Ausgewechselte}. Testspiele zählen nicht. Kein Würfel.
 function letztesSpielMerken(r,d){if(!r||r.test)return;const s=r.h===S.my?0:1,ein=new Set(r.ev.filter(e=>e.t==='S'&&e.s===s).map(e=>e.p));
   const joker=[...new Set(r.ev.filter(e=>e.t==='G'&&e.s===s&&e.p!=null&&ein.has(e.p)).map(e=>e.p))],frueh=r.ev.filter(e=>e.t==='S'&&e.s===s&&e.ausId!=null&&e.m<RKT.spiel.fruehBis).map(e=>e.ausId);
-  S.letzt={s:S.season,tag:d,joker,frueh};}
+  // spaet (K05d): das letzte Tor ab RKT.spiel.spaetAb entschied ein Spiel mit einem Tor Unterschied, ohne Elfmeterschießen: 1 für dich, −1 gegen dich, sonst 0
+  const tore=r.ev.filter(e=>e.t==='G'),l=tore[tore.length-1],spaet=!r.pen&&l&&l.m>=RKT.spiel.spaetAb&&Math.abs(r.hg-r.ag)===1&&(r.hg>r.ag?0:1)===l.s?(l.s===s?1:-1):0;
+  S.letzt={s:S.season,tag:d,joker,frueh,spaet};}
 // Spieler aus S.letzt (Liste k), wenn das Spiel höchstens RKT.spiel.nachTage zurückliegt
 const kartenLetzt=k=>{const L=S.letzt,n=L?S.tag-L.tag:-1;return L&&L.s===S.season&&n>=0&&n<=RKT.spiel.nachTage?(L[k]||[]).map(id=>PIX.get(id)).filter(Boolean):[];};
 const kartenHaltZaehlen=(c,W)=>{W.ent++;if(c.gross)W.gross++;W.ber[c.bereich]=(W.ber[c.bereich]||0)+1;};
