@@ -68,6 +68,9 @@ function finanzenKarte(){const t=myT(),L=S.lzp||{},v=S.finV||[],p=finPrognose(fa
 // Sonstige Einnahmen (Mitglieder, Vermarktung, K23 §3.1) je Ligaspiel für alle Vereine, nach Liga (seit K23c etwa 7 % der Einnahmen)
 // Seit K25d: Grundbetrag je Liga plus Mitgliedsbeiträge (Mitglieder × Jahresbeitrag ÷ Ligaspiele), gerundet. Alte Spielstände ohne t.mitglieder: Anteil der Fans.
 const mitgliederVon=t=>t&&t.mitglieder!=null?t.mitglieder:Math.round(((t&&t.fans)||0)*RFP.mitglieder.ausFans);
+// Alte Spielstände (vor K25d, Prüfung DL1): Mitglieder einmal aus daten/vereine.js im Verhältnis der heutigen zu den Start-Fans, sonst Anteil der Fans. Aufruf nach dem Laden.
+function mitgliederUmstellen(){if(!S||!S.teams)return;S.teams.forEach(t=>{if(t.mitglieder!=null)return;const c=VEREINE[t.id];
+  t.mitglieder=c&&c.mitglieder!=null&&c.fans>0?Math.round(c.mitglieder*(t.fans||c.fans)/c.fans):Math.round((t.fans||0)*RFP.mitglieder.ausFans);});}
 const mitgliedsBeitraege=t=>Math.round(mitgliederVon(t)*RFP.mitglieder.beitrag/(((S.fx&&S.fx[t.lg])||[]).length||(t.lg===3?38:34)));
 const sonstigeEinnahmen=t=>(RFP.sonstiges[t.lg]||0)+(t.lg<=3?mitgliedsBeitraege(t):0);
 // Verwaltung und Sonstiges (K23c) je Ligaspiel für alle Vereine: Anteil nach Liga an TV, Grundbetrag der Werbung und sonstigen Einnahmen. Für dich zählt der Grundbetrag,

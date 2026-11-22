@@ -9,6 +9,7 @@ const kampagnenKosten=k=>{const t=myT();return Math.round(RMK.kampagnen[k].koste
 function kampagneStarten(k){if(!darf('marketing'))return;const C=RMK.kampagnen[k],t=myT();if(!C)return;const M=mkS();
   if(mkAktiv(k)){toast(`${C.name} läuft schon.`);return;}if(C.sommer&&!vorbereitungAktiv()){toast(`${C.name} gibt es nur in der Vorbereitung.`);return;}
   if(C.dauerkarten&&dkAktuell()){toast('Die Dauerkarten sind schon verkauft.');return;} // Dauerkarten-Aktion nur vor dem Verkauf (K25c)
+  if(C.einmal&&M.k[k]&&M.k[k].n){toast(`${C.name} gibt es nur einmal je Saison.`);return;} // Mitgliederaktion (K25d, DL3)
   const kosten=kampagnenKosten(k);if(t.cash<kosten){toast('Dafür reicht dein Kontostand nicht.');return;}
   const e=M.k[k]||(M.k[k]={n:0,bis:-1,w:1}),w=RMK.abnutzung[Math.min(e.n,RMK.abnutzung.length-1)];e.n++;e.w=w;
   e.bis=C.sommer?absTag(ersterPflichttag(S.my)!=null?ersterPflichttag(S.my):S.tag):absTag(S.tag)+C.tage;money('Marketing',-kosten);

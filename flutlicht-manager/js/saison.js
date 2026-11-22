@@ -78,7 +78,7 @@ function newSeasonLauf(){lizenzNachweis();wechselVollziehen(true);leiheEnde();ve
   vertraegeSaison(); // Ligaklausel nach einem Abstieg (K21, U10b)
   beraterSaison(); // Beziehungen zu Beratern verblassen (K22, U10c)
   S.teams.forEach(t=>{if(t.lastLg>3&&t.lg>3)return;const A=Z.ansehen;let d=t.lastLg<=3?clamp((t.expPos-t.lastPos)*A.faktor,-A.maxAenderung,A.maxAenderung):0;
-    if(t.lg<t.lastLg)d+=A.aufstieg;if(t.lg>t.lastLg)d+=A.abstieg;d+=euAnsehen(t.id);t.rep=clamp(Math.round(t.rep+d),A.min,A.max);const f0=t.fans;t.fans=Math.round(clamp(t.fans*(1+d*Z.fans.faktor),Z.fans.min,t.cap*Z.fans.maxJePlatz));if(f0>0)t.mitglieder=Math.round(mitgliederVon(t)*t.fans/f0);}); /* Mitglieder wie die Fans (K25d) */
+    if(t.lg<t.lastLg)d+=A.aufstieg;if(t.lg>t.lastLg)d+=A.abstieg;d+=euAnsehen(t.id);t.rep=clamp(Math.round(t.rep+d),A.min,A.max);const m0=mitgliederVon(t);t.fans=Math.round(clamp(t.fans*(1+d*Z.fans.faktor),Z.fans.min,t.cap*Z.fans.maxJePlatz));t.mitglieder=Math.round(m0*Math.max(0,1+d*Z.fans.faktor));}); /* Mitglieder wie die Fans, ohne deren Grenzen (K25d, Prüfung DL2) */
   zweiteAbstiegSim();marketingNeueSaison(); // Fans-Bonus der Kampagnen (K25 §5.4, K25a)
   // deine Zweite aus der 3. Liga abgestiegen: Spieler bis 23 bleiben als Amateurkader (K08 §5.6)
   const kSchnitt=karriereSchnitte(); // Schnitt je Liga für das Karriereende (K32 §5.1), vor dem Altern

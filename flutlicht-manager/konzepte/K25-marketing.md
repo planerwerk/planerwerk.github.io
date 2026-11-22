@@ -96,15 +96,15 @@ Erlös je Monat = Fans × Kaufkraft × Sortiment × Trikotfaktor × Erfolg × St
 | Liga 2026/27 im Spiel | Schnitt | Spanne |
 |---|---|---|
 | 1. Liga | etwa 107.000 | RB Leipzig 1.130 bis Bayern 432.000 |
-| 2. Liga | etwa 24.000 | Elversberg 4.607 bis Hertha 60.620 |
+| 2. Liga | etwa 24.000 | Greuther Fürth 4.948 bis Hertha 60.620 |
 | 3. Liga | etwa 7.500 | Zweite Mannschaften 0 bis Fortuna Düsseldorf 36.000 |
 
 **Regeln (vorläufig):**
 - **Stammdatum** `mitglieder` je Verein in `daten/vereine.js`. Vereine ohne Angabe (Regionalliga): 30 % ihrer Fans.
 - **Beiträge** zählen zu den sonstigen Einnahmen (K23 §3.1): je Ligaspiel Mitglieder × 60 € (Jahresbeitrag Erwachsene bei Bayern und Dortmund etwa 60 €, Ermäßigungen nicht gerechnet) ÷ Zahl der Ligaspiele, dazu ein kleinerer Grundbetrag je Liga (Vermarktung, Stadionvermietung). Der Grundbetrag ist so gewählt, dass der Schnitt je Liga gleich bleibt wie in K23c (300.000, 80.000, 30.000 € je Ligaspiel): neu 110.000, 37.000 und 18.000 €.
 - **Folge:** Mitgliederstarke Vereine bekommen mehr (Bayern etwa 26 Mio. € Beiträge je Saison), mitgliederschwache weniger (Leipzig, Elversberg, Paderborn). Für alle Vereine gleich, auch für dich.
-- **Entwicklung:** Zum Saisonwechsel wachsen oder schrumpfen die Mitglieder im selben Verhältnis wie die Fans (Saisonregeln, Ansehen).
-- **Mitgliederaktion** (Kampagne, Bereich `marketing`): 50.000 € mal Ligafaktor, vier Wochen, Mitglieder +2 % (mit der Abnutzung aus §5.4).
+- **Entwicklung:** Zum Saisonwechsel wachsen oder schrumpfen die Mitglieder mit demselben Faktor wie die Fans (Saisonregeln, Ansehen), aber ohne deren Grenzen (Mindest- und Höchstzahl je Platz). Alte Spielstände bekommen die Mitglieder einmal aus den Stammdaten im Verhältnis ihrer heutigen Fans (Prüfung DL).
+- **Mitgliederaktion** (Kampagne, Bereich `marketing`): 50.000 € mal Ligafaktor, vier Wochen, Mitglieder +2 %, einmal je Saison (Prüfung DL3, sonst ließ sie sich alle vier Wochen wiederholen).
 - **Anzeige:** Mitglieder und Beiträge je Saison im Marketing-Kasten.
 - **Noch nicht:** Mitgliederversammlung (Wahl des Präsidenten, K28), Rabatte für Mitglieder bei Dauerkarten.
 

@@ -1749,5 +1749,19 @@ Zweig `mitarbeit/popolupo-k25d-mitglieder`, auf K29c. K25d ausführlich in K25 �
 |---|---|---|
 | DK1 | **Prüfung K29c (Agent, nur lesend):** ohne Fehler. Drei Kleinigkeiten behoben: Die Wirkung der Beziehung auf ein Gerücht hat jetzt einen eigenen Test (`tests/geruechte.js` K29c), der Block `exklusiv` steht in `daten/regeln.js` unter seinem Kommentar und nicht mehr zwischen Kommentar und `medienpolitik`, die Anzeige nennt die verbleibenden Tage bis zum nächsten Interview. | ✅ |
 | DK2 | **Mitglieder (K25d):** Stammdatum aus `daten/vereine.js` (56 Vereine, Quellen dort), Beiträge (60 € je Jahr) in den sonstigen Einnahmen aller Vereine, Grundbetrag je Liga gesenkt, so dass der Schnitt je Liga gleich bleibt. Mitglieder folgen beim Saisonwechsel den Fans, Mitgliederaktion +2 %. | ✅ |
-| DK3 | **Verschiebung innerhalb der Ligen:** Mitgliederstarke Vereine bekommen mehr (Bayern etwa +15 Mio. € je Saison gegenüber K23c), mitgliederschwache weniger (Leipzig, Elversberg, Paderborn etwa −6 Mio. €). Das ändert die Salden aus K23 §5.6b je Verein, nicht im Schnitt. | ⚠️ `tests/finanzmodell.js` ansehen |
+| DK3 | **Verschiebung innerhalb der Ligen:** Mitgliederstarke Vereine bekommen mehr (Bayern etwa +19,5 Mio. € je Saison gegenüber K23c, nach 40 % Verwaltung etwa +11,7 Mio. €), mitgliederschwache weniger (Leipzig, Elversberg, Paderborn etwa −6 Mio. €). Das ändert die Salden aus K23 §5.6b je Verein, nicht im Schnitt. | ⚠️ `tests/finanzmodell.js` ansehen |
 | DK4 | **`tests/finanzen.js` Nr. 11** rechnet die sonstigen Einnahmen jetzt mit `sonstigeEinnahmen` statt dem festen Wert, neu Nr. 20 für Mitglieder und Beiträge. | ✅ |
+
+---
+
+## DL. Prüfung von K25d ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 902200f gelesen (nichts ausgeführt). Korrekturen auf `mitarbeit/popolupo-k25d-mitglieder`.
+
+| # | Befund | Status |
+|---|---|---|
+| DL1 | **Alte Spielstände:** Ohne `t.mitglieder` rechnete das Spiel mit 30 % der Fans, in der 1. Liga liegen die echten Zahlen aber beim 2,5-Fachen der Fans (sonstige Einnahmen etwa 132.000 statt 300.000 € je Ligaspiel). Jetzt rechnet `mitgliederUmstellen` beim Laden einmal aus den Stammdaten um, im Verhältnis der heutigen zu den Start-Fans. | ✅ behoben |
+| DL2 | **Sprung bei kleinen Vereinen:** Großaspach, Havelse und die Zweiten haben weniger Fans als die Mindestzahl, die Mitglieder wären beim ersten Saisonwechsel um 50 % gesprungen. Jetzt folgen die Mitglieder dem Wachstumsfaktor der Fans ohne deren Grenzen. | ✅ behoben |
+| DL3 | **Mitgliederaktion wiederholbar:** alle vier Wochen, mit dauerhafter Wirkung. Jetzt einmal je Saison (`einmal` in den Kampagnen). | ✅ behoben |
+| DL4 | **Doku:** Bayern bekommt gegenüber K23c etwa +19,5 Mio. € (nicht +15), das Minimum der 2. Liga ist Greuther Fürth (nicht Elversberg). | ✅ behoben |
+| DL5 | Ohne Befund: Werte der Tests von Hand nachgerechnet, `S.fx` bei jedem Aufruf vorhanden, Zweite mit 0 Mitgliedern, Zeile in `saison.js`, `vereine.js` (56 Vereine, Zeilenenden), alle Nutzer von `sonstigeEinnahmen`, Gleichschritt, Kommentare. | ✅ |

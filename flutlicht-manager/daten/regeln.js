@@ -474,8 +474,8 @@ const REGELN={
       camps:{name:'Jugend-Camps',kosten:60000,sommer:1,fans:0.01,stimmung:1},fanarbeit:{name:'Fanarbeit',kosten:50000,tage:120,pfiffe:0.7},
       // K25c (22.11., GESCHÄTZT): Dauerkarten-Aktion in der Vorbereitung, vor dem Verkauf (K27b): Anteil der Dauerkarten + dauerkarten
       dauerkarten:{name:'Dauerkarten-Aktion',kosten:100000,sommer:1,dauerkarten:0.05},
-      // K25d (22.11., GESCHÄTZT): Mitgliederaktion, Mitglieder + mitglieder (mal Abnutzung)
-      mitglieder:{name:'Mitgliederaktion',kosten:50000,tage:28,mitglieder:0.02}},
+      // K25d (22.11., GESCHÄTZT): Mitgliederaktion, Mitglieder + mitglieder, einmal je Saison (einmal, Prüfung DL3: sonst ließ sie sich alle vier Wochen wiederholen und wirkte dauerhaft)
+      mitglieder:{name:'Mitgliederaktion',kosten:50000,tage:28,mitglieder:0.02,einmal:1}},
     ligaFaktor:{1:1,2:0.4,3:0.2},abnutzung:[1,0.5,0.25],merch:{liebling:0.05,lieblingMax:0.15},werbewert:{startJeAnsehen:0.5,zurueck:0.02,titel:5},karte:{merchTage:28}}, // karte: Dauer der Wirkung merch aus der Karte „Trikot ausverkauft“ (K25b)
 
   // Europapokal (K37, U19a). plaetze: Bundesliga-Platz je Wettbewerb, nachruecken: wer einspringt, wenn der Pokalsieger schon über die Liga dabei ist.

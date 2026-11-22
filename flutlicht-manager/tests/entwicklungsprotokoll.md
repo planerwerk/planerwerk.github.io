@@ -78,6 +78,12 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 22.11.2026: Korrekturen nach Prüfung DL (Zweig `mitarbeit/popolupo-k25d-mitglieder`)
+
+- Ein lesender Prüf-Agent hat K25d durchgesehen (Konsistenzprüfung DL).
+- **Behoben:** Mitglieder alter Spielstände aus den Stammdaten (DL1), Mitglieder folgen dem Wachstum der Fans ohne deren Grenzen (DL2), Mitgliederaktion einmal je Saison (DL3), zwei Zahlen in der Doku (DL4).
+- **Tests zuerst:** `tests/finanzen.js` Nr. 20.
+
 ### 22.11.2026: K25d Mitglieder, dazu Prüfung von K29c (Zweig `mitarbeit/popolupo-k25d-mitglieder`, auf K29c)
 
 - **Neu (K25 §5.5, Konsistenzprüfung DK):** echte Mitgliederzahlen der 56 Vereine in `daten/vereine.js`, Beiträge (60 € je Jahr) in den sonstigen Einnahmen aller Vereine, Grundbetrag je Liga gesenkt (Schnitt gleich), Mitglieder folgen den Fans, Kampagne „Mitgliederaktion“ (+2 %).
