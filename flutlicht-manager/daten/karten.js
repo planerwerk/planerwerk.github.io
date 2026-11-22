@@ -215,5 +215,15 @@ const KARTEN=[
     texte:['In der Kabine hat sich eine Gruppe um {spieler} gebildet. Sie sitzt beim Essen für sich und lästert über die Aufstellung.','Der Kapitän warnt dich: Um {spieler} hat sich ein Grüppchen gebildet, das gegen den Rest der Mannschaft arbeitet.'],
     optionen:[{text:'Aussprache mit der Gruppe',wirkung:[{art:'gruppeStimmung',wert:4,chance:0.6,schlecht:-2,gut:'Die Gruppe fühlt sich ernst genommen.',schlechtText:'Die Aussprache bringt nichts, die Fronten bleiben.'}]},
       {text:'Teamevent für alle',wirkung:[{art:'geld',wert:-8000},{art:'zusammenhalt',wert:3},{art:'gruppeStimmung',wert:2}],folge:'Ein Tag im Kletterpark. Die Grenzen verschwimmen ein wenig.'},
-      {text:'Den Anführer auf die Transferliste setzen',wirkung:[{art:'transferliste',wert:1,dann:[{art:'stimmung',wert:-8},{art:'zusammenhalt',wert:2},{art:'glaub',wert:1}],gut:'Die Botschaft ist angekommen.'}],folge:''}],auto:0}
+      {text:'Den Anführer auf die Transferliste setzen',wirkung:[{art:'transferliste',wert:1,dann:[{art:'stimmung',wert:-8},{art:'zusammenhalt',wert:2},{art:'glaub',wert:1}],gut:'Die Botschaft ist angekommen.'}],folge:''}],auto:0},
+  // Presse (K29 §8, K29l, 22.11., popolupo): Anlasskarten (K30d). Neue Wirkung zurueckrudern. Werte vorläufig.
+  {id:'spruchViral',titel:'Dein Spruch geht viral',bereich:'K29',art:'entscheidung',gross:false,stufe:'haeufig',chance:0.4,ausloeser:'spruchViral',sperrTage:90,
+    texte:['Dein Satz aus der Pressekonferenz geht im Netz durch die Decke. Der Fanshop fragt, ob er ihn auf ein T-Shirt drucken darf.','Ein Video deiner Pressekonferenz hat über eine Million Aufrufe. Der Fanshop will den Spruch als T-Shirt bringen.'],
+    optionen:[{text:'T-Shirt drucken lassen',wirkung:[{art:'merch',wert:0.1},{art:'fans',wert:1}],folge:'Das T-Shirt ist am ersten Tag ausverkauft.'},
+      {text:'Lieber nicht',wirkung:[],folge:'Du willst aus dem Satz kein Geschäft machen.'}],auto:0},
+  {id:'kampfansageRivale',titel:'Der Rivale antwortet',bereich:'K29',art:'entscheidung',gross:false,stufe:'haeufig',chance:0.5,ausloeser:'kampfansageRivale',sperrTage:60,
+    texte:['Der Trainer von {verein} greift deine Kampfansage auf: „Große Worte. Wir sehen uns auf dem Platz.“ Die Zeitungen warten auf deine Antwort.','Bei {verein} hängt dein Zitat in der Kabine. Ihr Kapitän sagt, das sei die beste Motivation.'],
+    optionen:[{text:'Nachlegen',wirkung:[{art:'fans',wert:2},{art:'stimmungAlle',wert:1},{art:'bezDu',wert:-5}],folge:'Die Fans lieben es. Das Spiel ist jetzt ein Duell.'},
+      {text:'Zurückrudern',wirkung:[{art:'zurueckrudern',wert:1,dann:[{art:'glaub',wert:-1},{art:'fans',wert:-1}],gut:'Du sprichst von Respekt vor dem Gegner. Die Kampfansage ist vom Tisch.'}],folge:''},
+      {text:'Schweigen',wirkung:[],folge:'Du sagst nichts mehr dazu.'}],auto:2}
 ];

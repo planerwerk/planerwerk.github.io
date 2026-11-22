@@ -326,7 +326,7 @@ Das ist der Maßstab für die Verbindung zu K09.
 - Ein Reporter-Versprecher wird zum Running Gag (Muster 7), reine Farbe.
 - Ein Moderator macht nach deinem Ausraster Werbung mit dem Spruch (Muster 2).
 
-**Gebaut als K29k (22.11.2026, popolupo, ohne Testlauf), Karte nach K30:** „Wer war das Leck?“ bei Medienklima unter 45 (Leck suchen: Zusammenhalt −2, Glaubwürdigkeit +2; ignorieren: Glaubwürdigkeit −1). Die übrigen Ereignisse fehlen noch.
+**Gebaut als K29k (22.11.2026, popolupo, ohne Testlauf), Karte nach K30:** „Wer war das Leck?“ bei Medienklima unter 45 (Leck suchen: Zusammenhalt −2, Glaubwürdigkeit +2; ignorieren: Glaubwürdigkeit −1). Seit K29l (22.11.2026, popolupo, ohne Testlauf, Anlasskarten nach K30d): „Dein Spruch geht viral“ bis 7 Tage nach einem Eintrag deines Vereins in der Sprüche-Chronik (T-Shirt: Fanartikel +10 % für vier Wochen, Fans +1) und „Der Rivale antwortet“ bis 7 Tage vor dem Spiel gegen einen Gegner mit offener Kampfansage (nachlegen: Fans +2, Stimmung +1, Beziehung −5; zurückrudern: die Kampfansage ist erledigt, weder Kult noch Häme, Glaubwürdigkeit −1, Fans −1; schweigen). Es fehlen noch das Interview ohne Erlaubnis als Karte (als Ablauf seit K29i), der Running Gag und die Werbung mit dem Ausraster.
 
 ## 9. Wechselwirkungen
 

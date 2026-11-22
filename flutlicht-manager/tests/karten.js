@@ -278,6 +278,18 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   pruef(ohne===null&&!!a&&a.spieler===g[2].id&&alle&&liste,'Grüppchenbildung: nur mit Grüppchen, Führungsspieler als Anführer, Aussprache für alle, Transferliste',
     `ohne ${ohne}, Anführer ${a&&a.spieler===g[2].id}, alle besser ${alle}, Liste ${liste}`);}
 
+// K29l. Presse-Karten (K29 §8): Spruch geht viral bis 7 Tage nach einem Eintrag deines Vereins in der Sprüche-Chronik. Der Rivale antwortet nur auf eine offene Kampfansage
+//       gegen den Gegner deines nächsten Ligaspiels in höchstens 7 Tagen. Zurückrudern erledigt die Kampfansage (danach weder Kult noch Häme) und kostet Glaubwürdigkeit.
+{const {S,F,ev}=welt(),A=ev('AUSLOESER'),T=ev('RKT').presse,st=ev('statS')(),P=ev('presseS')(),t=ev('myT()');S.phase='play';st.chronik=[];const kein=A.spruchViral();
+  F.chronikEintrag('Test','');const viral=!!A.spruchViral();st.chronik[st.chronik.length-1].tag=S.tag-T.viralTage-1;const alt=A.spruchViral();
+  let e=null;for(let d=S.tag+T.vorTage+2;d<S.plan.ende&&!e;d++){const x=F.meinSpiel(d);if(x&&x.art==='liga')e=x;}
+  const pa=e&&F.paarung(e),g=pa?(pa[0]===S.my?pa[1]:pa[0]):null;let ohne=null,mit=null,weit=null,zurueck=false;
+  if(g!=null&&g<1000){P.aussagen=[];const tag0=S.tag;S.tag=e.tag-3;ohne=A.kampfansageRivale();P.aussagen.push({s:S.season,tag:ev('absTag')(S.tag),art:'ankuendigung',pid:null,gegner:g,txt:'Test'});
+    mit=A.kampfansageRivale();S.tag=e.tag-T.vorTage-1;weit=A.kampfansageRivale();S.tag=e.tag-3;
+    const c=ev('karteVon')('kampfansageRivale'),gl=ev('glaub'),g0=gl(t);ev('kartenWirkung')(c.optionen[1].wirkung[0],{verein:g},c);zurueck=P.aussagen[0].ok===1&&A.kampfansageRivale()===null&&gl(t)<g0;S.tag=tag0;}
+  pruef(kein===null&&viral&&alt===null&&ohne===null&&!!mit&&mit.verein===g&&weit===null&&zurueck,'Presse-Karten: Spruch viral nach Chronik, Rivale nur vor dem Spiel gegen ihn, Zurückrudern',
+    `ohne Chronik ${kein}, viral ${viral}, zu alt ${alt}, Gegner ${g}, ohne Kampfansage ${ohne}, mit ${mit&&mit.verein}, zu früh ${weit}, zurückgerudert ${zurueck}`);}
+
 // U19e. Europapokal-Karten (K37 §8): Auswärtsspiel bei einem Auslandsverein in den nächsten 7 Tagen (kein Heimspiel, nicht später, nicht das Finale), Spiel 1 bis 7 Tage her,
 //       Wunder nach 0:3 im Hinspiel und 4:0 oder 3:0 mit Elfmeterschießen im Rückspiel, nicht nach nur einem Tor Rückstand und nicht beim Ausscheiden. euMeineSpiele ersetzt der Test.
 {const {S,W,ev}=welt(),A=ev('AUSLOESER'),AV=ev('AV0'),me=S.my,d=S.tag;W.ev('euMeineSpiele=function(){return S.testEu||[];}');
