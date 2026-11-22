@@ -269,6 +269,7 @@ const REGELN={
     fenster:[['07-01','09-01'],['01-01','02-01']],
     stellenwert:{schluessel:1.5,stamm:1.3,rotation:1,pokal:1,talent:1,ergaenzung:0.8},
     kauf:{besser:1.2,gleich:1,schlechter:0.7,spanne:2},
+    bedarfAnzeige:{max:5}, // K31b (22.11., popolupo): höchstens so viele Vereine mit Bedarf auf der Spielerkarte, der Rest als Zahl
     restlaufzeit:[0.6,0.6,0.85,1],
     finanzlage:{knappUnter:2e6,knapp:0.9,reichAb:60e6,reich:1.1}, // K23c: reich erst ab 60 Mio. € (vorher 20 Mio.), weil die Kontostände gewachsen sind
     forderung:1.15,schmerzgrenze:0.95,maxFaktor:1.8,

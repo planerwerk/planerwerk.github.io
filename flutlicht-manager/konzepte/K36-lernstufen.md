@@ -343,6 +343,7 @@ lizenz:{
 101. **K11b Sommerturnier (22.11., popolupo, ohne Testlauf):** keine neue Funktion, eine Schaltfläche im bestehenden Bereich `testspiele`. Die Automatik meldet kein Turnier an, Testspiele sind im Gleichschritt aus.
 102. **K11c Anfragen der Computer-Vereine zu Testspielen (22.11., popolupo, ohne Testlauf):** keine neue Funktion, Antwort im bestehenden Bereich `testspiele`. Nicht in der Automatik, eigener Strom.
 103. **U19e Europapokal-Karten (22.11., popolupo, ohne Testlauf):** keine neue Funktion. Fanmarsch, Reisechaos und Pyrotechnik sind Entscheidungen im bestehenden Bereich `ereignisse`, das Wunder ist eine Meldung (K37 §8).
+104. **K31b Bedarf anderer Vereine (22.11., popolupo, ohne Testlauf):** keine neue Funktion, reine Information auf der Karte deines Spielers, frei in jeder Lizenz (K31 §12 Nr. 17).
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 

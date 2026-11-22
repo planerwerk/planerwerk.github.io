@@ -110,5 +110,13 @@ const kaufe=(w,p,fee,yrs=3)=>{const els=w.W.ev('document');els.getElementById('f
   pruef(ja&&sg&&f1>=f0&&kurz&&liste&&nr4&&markiert&&aufgehoben,'K19c: unverkäuflich (Schlüsselspieler mit langem Vertrag zum Höchstpreis, eigene markieren und aufheben)',
     `Schlüsselspieler ${ja}, Forderung ${f0} → ${f1}, 1 Jahr ${kurz}, Liste ${liste}, Nummer 4 ${nr4}, eigener markiert ${markiert}, aufgehoben ${aufgehoben}`);}
 
+// K31b. Bedarf der anderen Vereine (K31 §6): genau die deutschen Vereine, die nach market() für ihn auf der Transferliste bieten dürften (Bedarf, Konto, keine Sperre),
+//       die mit einer Lücke zuerst; die Karte gibt es nur für deine eigenen Spieler
+{const {S,F,ev}=welt(),A=ev('RM').angebote,p=ev('squad')(S.my).slice().sort((a,b)=>b.str-a.str)[0];p.list=1;p.ask=ev('value')(p);
+  const B=F.bedarfAndere(p),soll=S.teams.filter(x=>x.id!==S.my&&ev('aktiv')(x)&&!ev('kiTransferSperre')(x)&&x.cash>p.ask*A.kontoAnteil&&ev('hatBedarf')(x,p)).map(x=>x.id).sort((a,b)=>a-b);
+  const ist=B.l.map(x=>x.t.id).sort((a,b)=>a-b),ordnung=B.l.every((x,i)=>i===0||B.l[i-1].luecke>=x.luecke),html=F.bedarfAndereText(p),fremd=S.pl.find(x=>x.team>=0&&x.team!==S.my);
+  pruef(JSON.stringify(ist)===JSON.stringify(soll)&&ordnung&&B.preis===p.ask&&html.includes('Bedarf anderer Vereine')&&F.bedarfAndereText(fremd)==='',
+    'Bedarf anderer Vereine: dieselben Vereine wie die Bieter im Markt, Lücken zuerst, nur für deine Spieler',`${B.l.length} Vereine, davon ${B.l.filter(x=>x.luecke).length} mit Lücke, Ausland ${B.aus}`);}
+
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

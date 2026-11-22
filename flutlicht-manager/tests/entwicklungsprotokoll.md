@@ -64,7 +64,7 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 | **K18c** Gegnerbeobachtung, dazu Korrekturen DV | `mitarbeit/popolupo-k18c-gegnerbeobachtung` (auf U12l) | fertig, ungetestet |
 | **K11b** Sommerturnier | `mitarbeit/popolupo-k11b-sommerturnier` (auf K18c) | fertig, ungetestet |
 | **K11c** Testspiel-Anfragen der Computer-Vereine | `mitarbeit/popolupo-k11c-testspiel-anfragen` (auf K11b) | fertig, ungetestet |
-| **U19e** Europapokal-Karten | `mitarbeit/popolupo-u19e-europa-karten` (auf K11c) | fertig, ungetestet |
+| **U19e** Europapokal-Karten, dazu **K31b** Bedarf anderer Vereine | `mitarbeit/popolupo-u19e-europa-karten` (auf K11c) | fertig, ungetestet |
 | U19d2 volle Kader der Auslandsvereine in der Engine | zurückgestellt | Entwurf in K37 §5.7. Die Engine behandelt Auslandsvereine als Block wie Amateure, viele Stellen schlagen Spieler in `PIX` nach. Erst nach einem Testlauf und der Messung des Faktors 0,93 |
 
 **Die neueste Spitze ist immer der zuletzt genannte Zweig, er enthält alles davor.** K24 ist fertig (Claude).
@@ -104,6 +104,11 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 ---
 
 ## Changelog
+
+### 22.11.2026: K31b Bedarf anderer Vereine (Zweig `mitarbeit/popolupo-u19e-europa-karten`, zweiter Commit)
+
+- **Neu (K31 §6):** Auf der Karte deines Spielers steht, welche deutschen Vereine ihn brauchen und bezahlen könnten. Das sind genau die Vereine, von denen auf der Transferliste Angebote kommen dürfen. Vereine mit einer Lücke zahlen mehr und stehen vorn, dazu die Zahl möglicher Käufer im Ausland. Reine Anzeige, kein Würfel.
+- **Tests zuerst:** `tests/transfers.js` (neuer Fall K31b).
 
 ### 22.11.2026: U19e Europapokal-Karten (Zweig `mitarbeit/popolupo-u19e-europa-karten`, auf K11c)
 

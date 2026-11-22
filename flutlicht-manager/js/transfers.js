@@ -94,6 +94,13 @@ function gebotFuer(b,p,ask){const G=RTR.angebotKI,aus=b.id>=AV0,vw=aus?vwAusland
   return{amt:rundeAb(a),max:rundeAb(Math.max(aus?vw*RTR.auslandMax:vw,a))};}
 // Hat ein Computer-Verein Bedarf? Der Spieler ist mindestens so gut wie sein schwächster Stammspieler auf der Position (K31 kommt mit U11)
 const hatBedarf=(t,p)=>kaufStellenwert(p,t.id)>=RTR.kauf.gleich;
+// Bedarf der anderen Vereine (K31 §6, K31b): deutsche Vereine, die für deinen Spieler auf der Transferliste bieten könnten, mit denselben Bedingungen wie die Angebote
+// in ablauf.js market (aktiv, ohne Transfersperre, Bedarf, Konto über Preis × angebote.kontoAnteil). Preis: deine Forderung, sonst der Marktwert.
+// Vereine mit einer Lücke (Stellenwert besser, sie zahlen mehr, vwKauf) zuerst, dann nach Ansehen. aus: Zahl der Auslandsvereine, die ihn bezahlen könnten. Nur Anzeige, kein Würfel.
+function bedarfAndere(p){const preis=p.list&&p.ask?p.ask:value(p),l=S.teams.filter(t=>t.id!==S.my&&aktiv(t)&&!kiTransferSperre(t)&&t.cash>preis*RM.angebote.kontoAnteil&&hatBedarf(t,p))
+  .map(t=>({t,luecke:kaufStellenwert(p,t.id)>=RTR.kauf.besser})).sort((a,b)=>b.luecke-a.luecke||b.t.rep-a.t.rep||a.t.id-b.t.id);return{preis,l,aus:auslandKaeufer(p,preis).length};}
+function bedarfAndereText(p){if(p.team!==S.my||p.leihe||p.wech)return'';const B=bedarfAndere(p),zeig=B.l.slice(0,RTR.bedarfAnzeige.max);
+  return`<div class="card"><h3>Bedarf anderer Vereine</h3>${B.l.length?`<p>${zeig.map(x=>esc(x.t.name)+(x.luecke?' (Lücke, zahlt mehr)':'')).join(', ')}${B.l.length>zeig.length?` und ${B.l.length-zeig.length} weitere`:''}.</p>`:'<p>Kein deutscher Verein braucht im Moment einen Spieler wie ihn und kann ihn bezahlen.</p>'}${B.aus?`<p class="dim">Dazu ${B.aus} Vereine im Ausland, die ihn bezahlen könnten.</p>`:''}<p class="dim">Gerechnet mit ${p.list&&p.ask?'deiner Forderung':'dem Marktwert'} (${fmt(B.preis)}). Angebote kommen nur von Vereinen mit Bedarf.</p></div>`;}
 // Deine Gegenforderung: Liegt sie im Rahmen des Bieters, nimmt er an. Sonst erhöht er in die Mitte, nach drei Runden zieht er zurück.
 function gegenRunde(o,betrag){const T=RTR,max=o.max||o.amt;o.r=(o.r||0)+1;if(betrag<=max){o.amt=Math.max(o.amt,betrag);return{ok:true};}
   if(o.r>=T.runden.verkauf){S.offers=S.offers.filter(x=>x!==o);return{text:`${tn(o.tid)} zieht das Angebot zurück.`};}
