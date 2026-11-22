@@ -93,7 +93,7 @@ const gegnerBeobachtet=(t,g)=>!!(t&&t.gb&&t.gb.g===g&&S.tag<=t.gb.bis);
 function gbNaechstes(){const e=heuteMeinSpiel()?meinSpiel(S.tag):naechstesSpiel(S.tag+1);if(!e)return null;const g=pkGegner(e);return g==null||g>=1000?null:{g,d:e.tag};}
 // Warum die Beobachtung nichts brächte (Prüfung DW8), sonst '': Der Videoanalyst verdoppelt den Bonus schon, oder am Spieltag fehlt die Spielvorbereitung der letzten zwei Tage (taktik.js)
 function gbOhneWirkung(t,n){if(stabFaktor(S.my,'video')>1)return'Dein Videoanalyst hat den Gegner schon im Blick, die Spielvorbereitung wirkt doppelt.';
-  if(n.d===S.tag&&!vorbereitungWirkt(t))return'Ohne Spielvorbereitung in den letzten zwei Tagen bringt eine Beobachtung nichts mehr.';return'';}
+  if(n.d===S.tag&&!vorbereitungWirkt(t))return`Ohne Spielvorbereitung in den letzten ${RTA.vorbereitungTage} Tagen bringt eine Beobachtung nichts mehr.`;return'';}
 function gegnerBeobachten(){if(!darf('beobachten'))return;const t=myT(),n=gbNaechstes();if(!n||gegnerBeobachtet(t,n.g)||gbOhneWirkung(t,n))return;
   if(!stabVon(S.my,'scout').length){toast('Dafür brauchst du einen Scout im Trainerstab.');return;}
   money('Scouting',-RSC.gegner.kosten);t.gb={g:n.g,bis:n.d};news(`Ein Scout beobachtet ${tn(n.g)} vor dem Spiel am ${datumKurz(n.d)}. Die Spielvorbereitung wirkt doppelt.`);save();render();

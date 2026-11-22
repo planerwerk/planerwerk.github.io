@@ -103,12 +103,12 @@ function naechsterHalt(){const ende=S.phase==='sommer'?tageDerSaison():S.plan.en
   for(let d=S.tag+1;d<=S.tag+RK.maxSprung;d++){if(d>=ende||haltGrund(d)||(S.phase==='play'&&d===auftaktTag(myT())))return Math.min(d,ende);}return S.tag+RK.maxSprung;}
 
 // Tageswechsel
-function tagBeginn(d){S.stabT=S.stabT||[];taeglich(d);if(wochentag(d)===RK.wochenTag)woechentlich(d);if(S.phase==='play'&&d>=S.plan.ende)seasonEnd();stabBericht();} // Meldungen des Stabs gesammelt (K36c)
-function tagEnde(d){S.stabT=S.stabT||[];if(S.phase==='play'&&S.gespielt!==d)tagesSpiele(d);stabBericht();}
+function tagBeginn(d){S.stabT=S.stabT||[];try{taeglich(d);if(wochentag(d)===RK.wochenTag)woechentlich(d);if(S.phase==='play'&&d>=S.plan.ende)seasonEnd();}finally{stabBericht();}} // Meldungen des Stabs gesammelt (K36c)
+function tagEnde(d){S.stabT=S.stabT||[];try{if(S.phase==='play'&&S.gespielt!==d)tagesSpiele(d);}finally{stabBericht();}} // try/finally: kein Sammler bleibt nach einem Fehler liegen (Prüfung DY1)
 // Beendet den heutigen Tag und springt zum nächsten Halt, höchstens RK.maxSprung Tage weit. Am 1. Juli beginnt die neue Saison.
 function weiter(){let n=0;spielfeldrandWeiter();tagEnde(S.tag);
   while(S.phase!=='end'&&!S.fired){S.tag++;n++;S.gespielt=-1;
-    if(S.tag>=tageDerSaison()){newSeason();break;}
+    if(S.tag>=tageDerSaison()){S.stabT=S.stabT||[];try{newSeason();}finally{stabBericht();}break;} /* Verlängerungen des Saisonwechsels gesammelt (DY2) */
     tagBeginn(S.tag);if(haltGrund(S.tag)||(n>=RK.maxSprung&&!sommerSprung()))break;tagEnde(S.tag);}
   save();return n;}
 // Nach der Saisonbilanz: weiter in die Sommerpause (Urlaub bis zum Trainingsauftakt der neuen Saison)

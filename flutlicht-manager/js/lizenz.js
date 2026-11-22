@@ -23,7 +23,7 @@ function darf(b,aufg){if(!S.lizenz)return true;if(!frei(b)){toast(`${bereich(b).
 // Außerhalb (deine Klicks, Spielbeginn) sofort wie bisher.
 function stabMeldung(text,art){if(S.stabT)S.stabT.push([text,art||'']);else news(text,art||'');}
 function stabBericht(){const l=S.stabT;delete S.stabT;if(!l||!l.length)return;if(l.length===1){news(l[0][0],l[0][1]);return;}
-  news(`Der Stab meldet ${l.length} Entscheidungen: ${l.map(x=>x[0]).join(' · ')}`,l.every(x=>x[1]==='good')?'good':'');}
+  news(`Der Stab meldet ${l.length} Entscheidungen: ${l.map(x=>x[0]).join(' · ')}`,l.some(x=>x[1]==='bad')?'bad':l.every(x=>x[1]==='good')?'good':'');} // eine schlechte Meldung färbt die Zeile (Prüfung DY3)
 
 // ---------- Aufstieg (K36 §5.3): Mindestzeit und Aufgaben, oder die späteste Zeit ----------
 function aufstiegStand(){const L=S.lizenz;if(!L||!L.an||L.stufe>=RLZ.namen.length)return null;const A=RLZ.aufstieg[L.stufe],ks=karriereSaison();

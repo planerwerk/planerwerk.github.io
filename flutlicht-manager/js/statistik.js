@@ -94,7 +94,7 @@ function statZuschauer(m,att){vereinsRekord(S.my,'zus',att,{txt:`gegen ${tn(m.a)
 function statTransfer(p,fee,von,nach){if(!p||!(fee>0))return;fansAbgang(p,von); // Verkauf eines Publikumslieblings (K27, U16)
   const st=statS(),de0=id=>id!=null&&id>=0&&id<1000&&!!S.teams[id],wann=stSaison(S.season);
   if(de0(nach)){const a=rekWelt().transfer;if(!a||fee>a.n){st.rek.welt.transfer={n:fee,pid:p.id,txt:`${p.n}, ${stVerein(von)} → ${stVerein(nach)}`,wann};
-    if(a&&(a.echt||S.season-st.ab>=RSTAT.rekord.meldenAb))news( /* gegen den echten Startwert immer melden (K34d) */`Rekordtransfer: ${p.n} wechselt für ${fmt(fee)} von ${stVerein(von)} zu ${stVerein(nach)}. Bisher: ${a.txt} (${fmt(a.n)}).`,'tr');}
+    if(a)news( /* seit K34d gibt es immer einen echten Startwert, also immer melden (Prüfung DY5) */`Rekordtransfer: ${p.n} wechselt für ${fmt(fee)} von ${stVerein(von)} zu ${stVerein(nach)}. Bisher: ${a.txt} (${fmt(a.n)}).`,'tr');}
     vereinsRekord(nach,'zu',fee,{txt:`${p.n} von ${stVerein(von)}`,wann});}
   if(de0(von))vereinsRekord(von,'ab',fee,{txt:`${p.n} zu ${stVerein(nach)}`,wann});}
 

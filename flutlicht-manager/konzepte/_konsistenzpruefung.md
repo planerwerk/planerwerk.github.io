@@ -1959,3 +1959,19 @@ Ein Agent hat a10719d, 832e7f5 und 9d726b3 gelesen (nichts ausgeführt). Kein bl
 | DX4 | Das Changelog zu DW nannte `tests/vorstand.js`, dort fehlte aber ein Fall zu DW5. Jetzt Fall DW5 (Prozente im Zielgespräch nach einem zugesagten Budgetgespräch). | ✅ behoben |
 | DX5 | Die Häufigkeit der Europapokal-Karten stand in K37 §8 für alle gleich. Jetzt je Karte (Pyrotechnik etwa alle 12 bis 15 Saisons, Fanmarsch und Reisechaos 25 bis 30, Wunder fast nie). | ✅ behoben |
 | DX6 | Der Hinweis unter „Bedarf anderer Vereine“ war ungenau (Auslandsvereine bieten ohne Bedarf, unter der Automatik kommen keine Angebote). Jetzt steht beides da. Der Test K31b vergleicht mit einer Kopie des Filters aus `market()`, nicht mit `market()` selbst. Das bleibt so und ist hier vermerkt. | ✅ behoben, Rest dokumentiert |
+
+## DY. Prüfung von K34d, K31c, K30b, K36c und der Korrekturen DX ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 78704ea, ffad7fa, 5e3b8a1, f9fea58 und 1a8a508 gelesen (nichts ausgeführt). Kein blockierender und kein mittlerer Fehler. Ohne Befund: neue Namen nur einmal, `${}` nur in Backticks, `RTA` und Ladereihenfolge, Gleichschritt 5a (keine neuen Würfel, `news` und `S.stabT` ändern nichts, was 5a vergleicht), alte Spielstände, die Korrekturen DX. Korrekturen auf `mitarbeit/popolupo-k10d-ausfall-bilanz`.
+
+| # | Befund | Status |
+|---|---|---|
+| DY1 | `tagBeginn` und `tagEnde` gaben die gesammelten Stab-Meldungen nur am Ende aus. Nach einem Fehler im Tageslauf blieb `S.stabT` liegen, spätere Meldungen (etwa beim Jobwechsel) kamen erst einen Tag später. Jetzt `try`/`finally`, und beim Laden eines Spielstands wird `S.stabT` gelöscht. | ✅ behoben |
+| DY2 | Der Saisonwechsel läuft außerhalb von `tagBeginn`. Die vielen Verlängerungen kamen dort weiter einzeln. Jetzt sammelt `weiter` auch um `newSeason`. | ✅ behoben |
+| DY3 | Eine schlechte Meldung (etwa vom Sportgericht) verlor in der Sammelzeile ihre rote Farbe. Jetzt färbt eine schlechte Meldung die ganze Zeile. | ✅ behoben |
+| DY4 | Der Test K36c prüfte nur, dass der Sammler weg ist. Jetzt zwei Meldungen aus einem echten `tagBeginn` (genau eine Zeile, rot) und eine Meldung vor einem Fehler im Tageslauf. | ✅ behoben |
+| DY5 | Mit dem echten Startwert meldete das Spiel in der ersten Saison nur den ersten neuen Rekordtransfer, einen zweiten nicht mehr (Sperre `meldenAb`). Mit Startwert braucht es die Sperre nicht mehr, jetzt wird jeder neue Rekord gemeldet. | ✅ behoben |
+| DY6 | „Konkurrent rüstet auf“ kam auch, wenn der Rivale unter deiner Automatik der Transfers einen Spieler von dir holte („holt mit deinem Spieler einen Star …“). Jetzt nicht, wenn der Spieler von dir kommt. | ✅ behoben |
+| DY7 | Der Test K30b setzte die Entscheidungen vor dem Sprung über eine Woche auf 0 und konnte darum nicht scheitern. Jetzt bleibt es 1, erwartet wird trotzdem 0. | ✅ behoben |
+| DY8 | Entscheidungskarten ohne Halt zählten zur Info-Grenze. Unter „wenig“ (3 Infos) konnten sie wegfallen, obwohl der Menütext sagt, die Karten kämen gleich oft. Jetzt zählen nur Info-Karten zur Info-Grenze, Entscheidungen ohne Halt entscheidet der Co-Trainer immer. Das gilt auch für „normal“, die Grenze greift bei etwa 0,13 Karten je Woche aber fast nie. Dazu in den Regeln: `wochen` ist 1 oder 2. | ✅ behoben |
+| DY9 | Der Text der Gegnerbeobachtung nannte „zwei Tage“ fest, jetzt `RTA.vorbereitungTage`. | ✅ behoben |

@@ -71,7 +71,7 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 | **K11d** Erinnerung „spielfreie Woche ohne Testspiel“ | `mitarbeit/popolupo-k11d-spielfrei-erinnerung` (auf K36c) | fertig, ungetestet |
 | **K10b** Fehldiagnose | `mitarbeit/popolupo-k10b-fehldiagnose` (auf K11d) | fertig, ungetestet |
 | **K10c** Zweite Meinung | `mitarbeit/popolupo-k10c-zweite-meinung` (auf K10b) | fertig, ungetestet |
-| **K10d** Ausfalltage in der Saisonbilanz | `mitarbeit/popolupo-k10d-ausfall-bilanz` (auf K10c) | fertig, ungetestet |
+| **K10d** Ausfalltage in der Saisonbilanz, dazu Korrekturen DY | `mitarbeit/popolupo-k10d-ausfall-bilanz` (auf K10c) | fertig, ungetestet |
 | U19d2 volle Kader der Auslandsvereine in der Engine | zurückgestellt | Entwurf in K37 §5.7. Die Engine behandelt Auslandsvereine als Block wie Amateure, viele Stellen schlagen Spieler in `PIX` nach. Erst nach einem Testlauf und der Messung des Faktors 0,93 |
 
 **Die neueste Spitze ist immer der zuletzt genannte Zweig, er enthält alles davor.** K24 ist fertig (Claude).
@@ -111,6 +111,17 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 ---
 
 ## Changelog
+
+### 22.11.2026: Korrekturen nach Prüfung DY zu K34d, K31c, K30b und K36c (Zweig `mitarbeit/popolupo-k10d-ausfall-bilanz`, zweiter Commit)
+
+- Ein lesender Prüf-Agent hat K34d, K31c, K30b, K36c und die Korrekturen DX durchgesehen (Konsistenzprüfung DY). Er fand keinen blockierenden und keinen mittleren Fehler.
+- **Behoben:**
+  - DY1 bis DY4 (Stab-Meldungen): `try`/`finally` im Tageslauf, Sammeln auch beim Saisonwechsel, rote Farbe bleibt, besserer Test.
+  - DY5: Jeder neue Rekordtransfer wird gemeldet.
+  - DY6: kein „Konkurrent rüstet auf“ mit deinem eigenen Spieler.
+  - DY7, DY8: Test K30b kann scheitern, Entscheidungskarten ohne Halt fallen nie weg.
+  - DY9: Text der Gegnerbeobachtung nach der Regel.
+- **Tests zuerst:** `tests/lizenz.js` (K36c), `tests/karten.js` (K30b und Fall 7), `tests/statistik.js` (K34d), `tests/transfers.js` (K31c).
 
 ### 22.11.2026: K10d Ausfalltage in der Saisonbilanz (Zweig `mitarbeit/popolupo-k10d-ausfall-bilanz`, auf K10c)
 

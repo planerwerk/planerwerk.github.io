@@ -388,7 +388,7 @@ const REGELN={
   // sperrTage: Standard-Sperre je Karte und Beteiligten. log: so viele Karten bleiben im Protokoll.
   karten:{seltenheit:{haeufig:3,gelegentlich:20,selten:100,sehrSelten:400},wochenJeSaison:40,
     infoProWoche:5,entscheidung:{kleinProWoche:1,grossProMonat:1,jeBereichProWoche:1},halteProWoche:4,sperrTage:120,log:100,
-    // Meldungsdichte (K30 §5.1, K35a, K30b, 22.11., popolupo): Regler in den Einstellungen. Je Stufe ersetzen klein, gross, info die Grenzen oben, wochen: klein gilt für so viele Wochen zusammen.
+    // Meldungsdichte (K30 §5.1, K35a, K30b, 22.11., popolupo): Regler in den Einstellungen. Je Stufe ersetzen klein, gross, info die Grenzen oben, wochen: 1 oder 2, bei 2 zählt die Vorwoche mit (mehr Wochen kennt der Code nicht, Prüfung DY8).
     dichte:{standard:'normal',stufen:{wenig:{name:'wenig (eine Entscheidung alle zwei Wochen)',wochen:2,info:3},normal:{name:'normal (eine je Woche)'},viel:{name:'viel (zwei je Woche)',klein:2,gross:2,info:8}}},
     europa:{vorTage:7,nachTage:7,wunderAb:2}, // Europapokal-Karten (K37 §8, U19e, 22.11., GESCHÄTZT): Auswärtsspiel in den nächsten vorTage Tagen, Spiel höchstens nachTage her, Wunder ab wunderAb Toren Rückstand nach dem Hinspiel
     kabine:{neuMin:14,neuTage:60,kaumMinuten:90,abSpieltag:3,staerkeMinus:2,fremdTage:120,partyTage:7,meutertUnter:25}, // Kabinen-Karten (K14 §8, K14b, 22.11., GESCHÄTZT): Neuzugang von neuMin bis neuTage Tagen, höchstens kaumMinuten, ab abSpieltag; Eingewöhnung bis fremdTage; Party höchstens partyTage nach dem Spiel (DT4, DT5)

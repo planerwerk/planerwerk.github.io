@@ -118,12 +118,16 @@ const punkte=(S,F,id)=>{const lg=S.teams[id].lg,r=F.table(lg).find(x=>x.id===id)
 
 // K36c. Meldungen des Stabs (K36 §8): außerhalb der Tagesläufe sofort; in einem Tageslauf gesammelt, eine als eigene Zeile, mehrere als eine Zeile; danach ist der Sammler weg.
 //       Dazu ein echter Tag mit allem beim Stab: keine Stab-Meldung bleibt liegen.
-{const {S,F,ev}=welt(true),hat=t=>S.news.some(n=>n.t===t),enth=(...l)=>S.news.some(n=>l.every(x=>n.t.includes(x)));
+{const {S,F,ev,W}=welt(true),hat=t=>S.news.some(n=>n.t===t),enth=(...l)=>S.news.some(n=>l.every(x=>n.t.includes(x)));
   F.stabMeldung('Test A');const sofort=hat('Test A');S.stabT=[];F.stabMeldung('Test B');const wartet=!hat('Test B');F.stabBericht();const eine=hat('Test B');
   S.stabT=[];F.stabMeldung('Test C');F.stabMeldung('Test D','good');F.stabBericht();const zwei=enth('2 Entscheidungen','Test C','Test D')&&!hat('Test C');
   ev('tagEnde')(S.tag);S.tag++;S.gespielt=-1;ev('tagBeginn')(S.tag);const leer=!('stabT' in S);
-  pruef(sofort&&wartet&&eine&&zwei&&leer,'Meldungen des Stabs: sofort außerhalb des Tageslaufs, im Tageslauf gesammelt, mehrere in einer Zeile, nichts bleibt liegen',
-    `sofort ${sofort}, gesammelt ${wartet}, eine ${eine}, mehrere ${zwei}, Sammler weg ${leer}`);}
+  // Seit Prüfung DY: zwei Meldungen aus einem echten tagBeginn kommen genau einmal als eine Zeile; nach einem Fehler im Tageslauf ist die Meldung trotzdem da und der Sammler weg
+  while(ev('wochentag')(S.tag)===ev('RK').wochenTag)S.tag++;W.ev('taeglich=function(d){stabMeldung("Probe X1");stabMeldung("Probe X2","bad");}');ev('tagBeginn')(S.tag);
+  const tag2=S.news.filter(n=>n.t.includes('Probe X1')).length===1&&S.news.some(n=>n.t.includes('2 Entscheidungen')&&n.t.includes('Probe X2')&&n.c==='bad');
+  W.ev('taeglich=function(d){stabMeldung("Probe Y");throw new Error("Test");}');let fehler=false;try{ev('tagBeginn')(S.tag);}catch(e){fehler=true;}const nachFehler=fehler&&hat('Probe Y')&&!('stabT' in S);
+  pruef(sofort&&wartet&&eine&&zwei&&leer&&tag2&&nachFehler,'Meldungen des Stabs: sofort außerhalb des Tageslaufs, im Tageslauf gesammelt, mehrere in einer Zeile, nichts bleibt liegen',
+    `sofort ${sofort}, gesammelt ${wartet}, eine ${eine}, mehrere ${zwei}, Sammler weg ${leer}, echter Tag ${tag2}, nach Fehler ${nachFehler}`);}
 
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);
