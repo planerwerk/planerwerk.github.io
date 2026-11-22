@@ -84,6 +84,11 @@ const KARTEN=[
     texte:['{verein} hat ein Auge auf {spieler} aus deiner Jugend geworfen. Sein Berater lässt durchblicken: Ohne Profivertrag ist er weg.','Die Scouts von {verein} saßen bei jedem Jugendspiel von {spieler}. Jetzt liegt ein Angebot auf dem Tisch.'],
     optionen:[{text:'Profivertrag anbieten',wirkung:[{art:'jugendHoch',wert:1},{art:'fans',wert:1}],folge:'{verein} geht leer aus.'},
       {text:'Ziehen lassen',wirkung:[{art:'jugendWeg',wert:1}],folge:''}],auto:0},
+  // Hilfe in der Not (K17 §8, K17b, 22.11.). Neue Wirkung leihe: der beteiligte Spieler kommt per Leihe (leihe.js ausleihen, mit allen Prüfungen).
+  {id:'hilfeInNot',titel:'Hilfe in der Not',bereich:'K17',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'hilfeInNot',sperrTage:120,
+    texte:['Bei dir fallen so viele Spieler aus, dass man es bei {verein} mitbekommen hat. Sie bieten dir {spieler} bis zum Saisonende an.','Ein Anruf von {verein}: „Ihr habt doch gerade Personalnot. {spieler} könnte euch helfen, als Leihe.“'],
+    optionen:[{text:'Leihe annehmen',wirkung:[{art:'leihe',wert:1},{art:'bezDu',wert:5}],folge:''},
+      {text:'Danke, wir kommen zurecht',wirkung:[],folge:'{verein} hat Verständnis.'}],auto:1},
   // Presse (K29 §8, K17 §8, K29k, 22.11.). Nur bekannte Wirkungen.
   {id:'leck',titel:'Wer war das Leck?',bereich:'K29',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'leck',sperrTage:120,
     texte:['Die Zeitung zitiert wörtlich aus deiner Kabinenansprache. Irgendjemand redet mit der Presse.','Interna aus dem Training stehen online, samt Aufstellung. Wer war das?'],

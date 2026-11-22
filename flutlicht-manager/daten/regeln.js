@@ -392,6 +392,7 @@ const REGELN={
     infoProWoche:5,entscheidung:{kleinProWoche:1,grossProMonat:1,jeBereichProWoche:1},halteProWoche:4,sperrTage:120,log:100,
     // Meldungsdichte (K30 §5.1, K35a, K30b, 22.11., popolupo): Regler in den Einstellungen. Je Stufe ersetzen klein, gross, info die Grenzen oben, wochen: 1 oder 2, bei 2 zählt die Vorwoche mit (mehr Wochen kennt der Code nicht, Prüfung DY8).
     dichte:{standard:'normal',stufen:{wenig:{name:'wenig (eine Entscheidung alle zwei Wochen)',wochen:2,info:3},normal:{name:'normal (eine je Woche)'},viel:{name:'viel (zwei je Woche)',klein:2,gross:2,info:8}}},
+    hilfe:{verletzteAb:5,bezAb:40}, // Hilfe in der Not (K17 §8, K17b, 22.11., GESCHÄTZT): ab verletzteAb Verletzten im offenen Fenster bietet ein Verein mit Beziehung über bezAb eine Leihe an
     presse:{leckUnter:45}, // Presse-Karten (K29 §8, K17 §8, K29k, 22.11., GESCHÄTZT): Leck bei Medienklima unter leckUnter; Fehde bei Beziehung unter RBZ.wirkung.gespraechUnter
     sommer:{nachTestTage:14,sonderFrische:15}, // Sommerkarten (K12a §8, K12c, 22.11., GESCHÄTZT): Übergewicht bis nachTestTage nach dem Leistungstest; Sonderschichten kosten sonderFrische Frische
     stadion:{zuschussAb:5e6}, // Stadt bietet Zuschuss (K26 §8, K26e, 22.11., GESCHÄTZT): bei einem Bauprojekt ab zuschussAb Kosten; Anteil in der Karte (Wirkung zuschuss)
