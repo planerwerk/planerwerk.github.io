@@ -42,4 +42,9 @@ function welt(lernstufen){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;
   S.tag+=29;const f2=F.merchFaktor(t);
   pruef(!!mit&&Math.abs(f1/f0-1.2)<1e-9&&Math.abs(f2-f0)<1e-9,'Karte „Trikot ausverkauft“: Auslöser und vier Wochen mehr Fanartikel',`ohne ${!!ohne}, mit ${!!mit}, Faktor ${f0.toFixed(3)} → ${f1.toFixed(3)} → ${f2.toFixed(3)}`);}
 
+// K25c. Dauerkarten-Aktion (Sommer-Kampagne): hebt den Anteil der Dauerkarten (K27b) um 0,05, kostet nach Liga, geht nach dem Verkauf nicht mehr
+{const {S,F,ev,t}=welt(false),C=ev('RMK').kampagnen.dauerkarten,a0=F.dkAnteil(t,0.2),c0=t.cash;F.kampagneStarten('dauerkarten');const a1=F.dkAnteil(t,0.2),kost=c0-t.cash;
+  F.dkVerkauf(t);const c1=t.cash,n1=(S.mk.k.dauerkarten||{}).n;S.mk.k.dauerkarten.bis=-1;F.kampagneStarten('dauerkarten');const danach=t.cash===c1&&S.mk.k.dauerkarten.n===n1;
+  pruef(Math.abs(a1-a0-C.dauerkarten)<1e-9&&kost===ev('kampagnenKosten')('dauerkarten')&&danach,'Dauerkarten-Aktion: Anteil höher, Kosten nach Liga, nach dem Verkauf nicht mehr',`Anteil ${a0.toFixed(3)} → ${a1.toFixed(3)}, Kosten ${kost}, danach gesperrt ${danach}`);}
+
 console.log(probleme.length?`\n${probleme.length} Problem(e).`:'\nAlles in Ordnung.');process.exitCode=probleme.length?1:0;

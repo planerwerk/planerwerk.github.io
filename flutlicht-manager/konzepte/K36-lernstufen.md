@@ -312,6 +312,7 @@ lizenz:{
 70. **U12f Zwischenbilanz im Winter (22.11., popolupo, ohne Testlauf):** neue Funktion (Ziel senken beantragen) im Bereich `zielgespraech` (Grundlizenz), ohne Automatik: Ohne Antrag bleibt das Ziel. Das Anheben durch den Vorstand würfelt nicht.
 71. **K29b Medienpolitik (22.11., popolupo, ohne Testlauf):** neue Funktion (Medienpolitik wählen) im bestehenden Bereich `presse` (C-Lizenz, Automatik: zurückhaltend). Kein neuer Bereich, weil sie zum Umgang mit den Medien gehört. Gleichschritt: In der Automatik ändert sich nichts, die Gerüchteküche ist im Test ohnehin aus.
 72. **K23g Lizenzprüfung der Computer-Vereine (22.11., popolupo, ohne Testlauf):** keine neue Funktion, kein neuer Bereich. Nur Computer-Vereine, am 1. März und 31. Mai, ohne Zufall. Dein Verein hat seine eigene Prüfung. Gleichschritt: außerhalb der 150 Tage. Über mehrere Saisons kann der Computer-Lauf eine Sperre bekommen, wo dein Verein in der Automatik deine Prüfung durchläuft (ähnliche Regel, anderes Modell).
+73. **K25c Dauerkarten-Aktion (22.11., popolupo, ohne Testlauf):** keine neue Funktion, eine weitere Kampagne im Bereich `marketing`. Wirkt nur auf deine Dauerkarten (K27b), ohne Zufall.
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 

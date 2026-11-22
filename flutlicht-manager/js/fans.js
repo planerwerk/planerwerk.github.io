@@ -51,7 +51,9 @@ const dkRabatt=()=>{const D=RFS.dauerkarten,d=dkStand();if(d&&d.n!=null)return d
 // Preis je Dauerkarte und Ligaheimspiel: Preis beim Verkauf, höchstens der heutige, mit Catering und Anzeigetafel, abzüglich Rabatt
 const dkPreis=(t,d)=>Math.min(t.price,d.p!=null?d.p:t.price)*zuschauerFaktor(t)*(1-d.r);
 // Anteil der Plätze nach Fanstimmung und Rabatt, höchstens ohne Gästeblock
-function dkAnteil(t,r){const D=RFS.dauerkarten;return clamp(D.basis+D.jeStimmung*fanst(t)/100+D.jeRabatt*(r-D.rabatt),0,1-D.gaesteblock);}
+function dkAnteil(t,r){const D=RFS.dauerkarten;return clamp(D.basis+D.jeStimmung*fanst(t)/100+D.jeRabatt*(r-D.rabatt)+(t&&t.id===S.my?dkKampagne():0),0,1-D.gaesteblock);}
+// Dauerkarten-Aktion (K25c): in dieser Saison gestartet, mit der Abnutzung aus K25a
+const dkKampagne=()=>{const M=S.mk,e=M&&M.s===S.season&&M.k&&M.k.dauerkarten,C=RMK.kampagnen.dauerkarten;return e&&e.n&&C?C.dauerkarten*(e.w||1):0;};
 function dkVerkauf(t){const r=dkRabatt(),n=Math.round(t.cap*dkAnteil(t,r));S.dk={s:S.season,tid:S.my,r,n,p:t.price};
   news(`Dauerkarten: ${n.toLocaleString('de-DE')} verkauft (${Math.round(r*100)} % Rabatt). Die Inhaber zahlen in jedem Ligaheimspiel, auch wenn weniger kommen.`,'');return S.dk;}
 // Fanstimmung, Baustein Preise (fans.js fanBausteine): mehr Rabatt als der Standard freut die Fans, weniger ärgert sie. Nur dein Verein.

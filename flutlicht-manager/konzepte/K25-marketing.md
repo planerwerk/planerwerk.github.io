@@ -85,6 +85,7 @@ Erlös je Monat = Fans × Kaufkraft × Sortiment × Trikotfaktor × Erfolg × St
 
   Dieselbe Kampagne in derselben Saison wirkt beim zweiten Mal halb, beim dritten Mal ein Viertel. Gleichzeitig läuft jede Art höchstens einmal.
 - **Noch nicht:** Dauerkarten-Aktion (Dauerkarten kommen mit K27 und K23), Mitgliederaktion (Mitglieder und Beiträge mit K23c), Online-Shop, Sortiment in drei Stufen statt Fanshop-Ausbau (K26), Kampagnen der Computer-Vereine.
+- **Seit K25c (22.11.2026, popolupo, ohne Testlauf):** Dauerkarten-Aktion als Kampagne in der Vorbereitung (100.000 € mal Ligafaktor), solange die Dauerkarten (K27b) noch nicht verkauft sind. Sie hebt den Anteil der verkauften Dauerkarten um 5 Prozentpunkte. Bereich `marketing` wie die übrigen Kampagnen.
 - **Werbewert** 0–100: Start = Ansehen ÷ 2. Kampagnen heben ihn (Fanwerbung +5), Monatsende 2 % zurück Richtung Start, Meisterschaft, Pokalsieg oder Aufstieg +5. Vorerst nur Anzeige, die Wirkung auf Sponsoren gehört zu K24 (Claude).
 - **Lizenz:** neuer Bereich `marketing` (B-Lizenz, mit Automatik: Der Verein nimmt das klassische Trikot und startet keine Kampagnen).
 

@@ -1689,3 +1689,15 @@ Ein Agent hat 8fe3f70 und ab898d3 gelesen (nichts ausgeführt). Korrekturen auf 
 | DF2 | **Lücke der Sperre:** Vom 31. Mai bis zum 1. Juli kamen noch Angebote gesperrter Vereine, ein angenommenes führte am 1. Juli zum Wechsel. Jetzt gilt die Sperre ab dem 31. Mai, und `verkaufAbschluss` lehnt Angebote gesperrter Vereine ab. | ✅ behoben |
 | DF3 | **Andere Wege:** Ausstiegsklausel (`vertraege.js`) und Leihe an einen gesperrten Verein (`leihVereine`) gingen noch. Jetzt nicht mehr. Vereinslose zum Auffüllen bleiben bewusst erlaubt. Kaufoption aus einer Leihe und Vorverträge gelten wie bei dir weiter. | ✅ behoben, Rest bewusst |
 | DF4 | Ohne Befund: Laufzeit, Grenzen und Rundung des Klimas, gleich viele Würfe, Modell der Liquidität, Zeitpunkte, Gleichschritt, beide Tests, Kommentare. | ✅ |
+
+---
+
+## DG. Nachtrag zu K25c: Dauerkarten-Aktion (22. November 2026, popolupo, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-k25c-dauerkarten-aktion`, auf K23g mit den Korrekturen DF.
+
+| # | Befund | Status |
+|---|---|---|
+| DG1 | **Kampagne:** neuer Eintrag in `REGELN.marketing.kampagnen` (Sommer, 100.000 € mal Ligafaktor). Die Karte im Marketing listet sie wie die übrigen. Nach dem Verkauf der Dauerkarten lehnt `kampagneStarten` sie ab. | ✅ |
+| DG2 | **Wirkung:** `dkAnteil` addiert für deinen Verein 0,05 mal Abnutzung, wenn die Aktion in dieser Saison lief. Der Deckel von 90 % bleibt. | ✅ |
+| DG3 | **Prüfskript für Tests (neu, außerhalb des Repos):** `testnamen.pl` prüft alle Tests: `F.name(...)` nur für function-Deklarationen, `ev('name')` nur für vorhandene Namen, `ev('name=…')` nicht für const. Über alle Tests 0 Funde. | ✅ |
