@@ -1540,3 +1540,16 @@ Zweig `mitarbeit/popolupo-k26b-computer-bauen`, auf dem Karriereende. Ausführli
 | CT3 | **Geld:** Tribüne 12 Mio. € (K23c), Anlagen nach `anlageKosten`. Gebaut wird nur mit der Reserve aus K23d, Anlagen mit dreifacher Reserve. Das Transferbudget der Computer-Vereine (Anteil des Kontos zum Fensterbeginn, K31) sinkt dadurch im Sommer nach einem Bau. | ⚠️ im Testlauf ansehen: Bauten je Saison, Kontostände, Käufe im Sommer |
 | CT4 | **K36 „Kein Nachteil“:** Nur der Computer-Lauf baut. Ab der zweiten Saison kann er dadurch etwas besser dastehen (Trainingsgelände). Bisher war die Grenze 2 Punkte im Schnitt. | ⚠️ `tests/lizenz.js` Nr. 5 ansehen |
 | CT5 | **Instandhaltung** zahlen Computer-Vereine noch nicht, ihre Bausumme wird aber gezählt. | offen |
+
+---
+
+## CU. Nachtrag zu K23f: Kartenbeträge nach Liga (22. November 2026, popolupo, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-k23f-karten-nach-liga`, auf K26b. Erledigt CP7 zum Teil (Karten), K30 §3.2.
+
+| # | Befund | Status |
+|---|---|---|
+| CU1 | **Beträge:** Die Werte in `daten/karten.js` gelten für die 3. Liga, mal 2 in der 2. und mal 4 in der 1. Liga, auf 1.000 € gerundet. Auch der schlechte Ausgang (Einspruch bei der Steuerprüfung). Ein Ausgang mit 0 € bucht nichts mehr (vorher eine Buchung über 0 €). | ✅ |
+| CU2 | **Texte:** Platzhalter `{geld:Grundwert}`, ersetzt in `kartenText` (auch im Ausgang). Das Prüfskript in `tests/karten.js` erkennt ihn nicht als unbekannten Platzhalter, weil es nur `{wort}` sucht. | ✅ |
+| CU3 | **Tests angepasst:** `tests/karten.js` (Teamausflug), `tests/finanzen.js` (Mäzen), `tests/spielwelt-karten.js` (Abschiedsspiel) rechnen mit `kartenGeld`. Der Testverein spielt in der 1. Liga, die Beträge sind dort viermal so hoch. | ✅ ungetestet |
+| CU4 | **Noch offen aus CP7:** Kampagnen (haben schon einen Ligafaktor, K25a), Fanartikel und Logen, Fanartikel der Computer-Vereine. | offen |

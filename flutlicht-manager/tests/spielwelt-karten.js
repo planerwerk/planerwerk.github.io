@@ -17,7 +17,7 @@ const entscheide=(w,id,b,i)=>w.F.kartenEntscheiden({id,tag:w.S.tag,s:w.S.season,
 // 2. Abschiedsspiel: ein Ehemaliger mit vielen Spielen für deinen Verein, Text mit Namen, 150.000 € und Fans +4
 {const w=welt(),{S,F,ev,A,t}=w;F.statS();S.stat.ehem.push({id:-77,n:'Test Legende',pos:'MF',von:S.season-8,bis:S.season-1,sp:240,t:30,v:20,no:300,ver:{[VEREIN]:180},ehr:0});
   const b=A.abschied(),text=b?ev('kartenText')('{spieler} hat aufgehört.',b):'';t.fanU=0;const g0=S.fin['Ereignisse']||0;if(b)entscheide(w,'abschiedsspiel',b,0);
-  pruef(!!b&&text==='Test Legende hat aufgehört.'&&(S.fin['Ereignisse']||0)-g0===150000&&t.fanU===4,'Abschiedsspiel: Ehemaliger mit 180 Spielen für dich, Name im Text, 150.000 € und Fans +4',text);}
+  pruef(!!b&&text==='Test Legende hat aufgehört.'&&(S.fin['Ereignisse']||0)-g0===ev('kartenGeld')(150000)&&t.fanU===4,'Abschiedsspiel: Ehemaliger mit 180 Spielen für dich, Name im Text, 150.000 € und Fans +4',text);}
 
 // 3. Heimweh: deutscher Spieler im Auslandspool, Kontakt hebt sein Interesse an dir um 15 (bis Saisonende)
 {const w=welt(),{S,F,ev,im,A}=w,pool=ev('auslandSpieler')(),p=pool.find(x=>x.age>=26&&x.age<=33);let ok=false,d=0;

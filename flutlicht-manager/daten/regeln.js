@@ -382,7 +382,10 @@ const REGELN={
   // Dosierung: infoProWoche, Entscheidungen klein je Woche und groß je Monat, je Bereich je Woche, Halte je Woche (eigene Spiele mitgezählt).
   // sperrTage: Standard-Sperre je Karte und Beteiligten. log: so viele Karten bleiben im Protokoll.
   karten:{seltenheit:{haeufig:3,gelegentlich:20,selten:100,sehrSelten:400},wochenJeSaison:40,
-    infoProWoche:5,entscheidung:{kleinProWoche:1,grossProMonat:1,jeBereichProWoche:1},halteProWoche:4,sperrTage:120,log:100},
+    infoProWoche:5,entscheidung:{kleinProWoche:1,grossProMonat:1,jeBereichProWoche:1},halteProWoche:4,sperrTage:120,log:100,
+    // K23f (22.11., popolupo, GESCHÄTZT): Geldbeträge der Karten (Wirkung geld, auch der schlechte Ausgang) mal Faktor nach der Liga deines Vereins, auf 1.000 € gerundet.
+    // Die Beträge in daten/karten.js gelten für die 3. Liga. Seit K23c sind die Einnahmen der 1. Liga etwa 13-mal so groß wie die der 3. Liga, der Faktor bleibt bewusst kleiner.
+    geldLiga:{1:4,2:2,3:1}},
 
   // Statistik und Historie (K34 §5.3 bis §5.9, §11, U13). ALLE ANTEILE UND GEWICHTE GESCHÄTZT (K34 §12).
   // vorlage.anteil: Chance auf eine Vorlage je Art des Tores (keine bei Elfmeter, direktem Freistoß, Eigentor). gewicht: je Position auf dem Platz (linke Form),

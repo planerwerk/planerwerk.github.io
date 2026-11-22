@@ -272,7 +272,7 @@ Gebaut:
 - **Alte Spielstände:** Beim Laden werden die Gehälter einmal auf die neue Kurve umgerechnet, im gleichen Verhältnis zur Kurve wie vorher (`k23cUmstellen`, Merker `S.k23c`). Sonst fühlten sich alle Stars unterbezahlt (Kabine, K14). Kontostände, Sponsorverträge und Kredite bleiben und gleichen sich über die Saisons an.
 
 **Bewusst noch nicht umgestellt** (eigene kleine Schritte nach dem Testlauf):
-- Feste Beträge der Ereigniskarten (Mäzen 1,5 Mio., Steuerprüfung 250.000 €, Abschiedsspiel 150.000 €): Für die 3. Liga passen sie, für die 1. Liga sind sie klein. Eine Staffel nach Liga braucht auch neue Texte.
+- Feste Beträge der Ereigniskarten (Mäzen 1,5 Mio., Steuerprüfung 250.000 €, Abschiedsspiel 150.000 €): Für die 3. Liga passen sie, für die 1. Liga sind sie klein. Eine Staffel nach Liga braucht auch neue Texte. **Erledigt mit K23f (22.11.):** Die Beträge gelten für die 3. Liga, in der 2. Liga mal 2, in der 1. Liga mal 4 (`REGELN.karten.geldLiga`). Die Texte nennen den Betrag über den Platzhalter `{geld:Grundwert}` (K30).
 - Kampagnen (K25, 50.000 bis 200.000 €), Fanartikel je Zuschauer, Logen, übrige Bauten (K26): Spieltag und Merchandising lagen schon nahe an echt.
 - Stab (K16) und Jugendarbeit: unverändert.
 - Fanartikel für Computer-Vereine (sie haben keinen Fanshop): echt 4 bis 7 % des Umsatzes, fehlt im Spiel.

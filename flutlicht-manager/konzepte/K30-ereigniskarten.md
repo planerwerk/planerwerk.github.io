@@ -48,6 +48,7 @@ Karten dürfen nur Werte ändern, die es im Spiel gibt (K35a: Texte beschreiben 
 - **Seit U18b (20.11.2026, K32 §8):** Fans (Baustein Umfeld der Fanstimmung, K27), einen Vereinslosen verpflichten (ein Jahr, Anteil am üblichen Gehalt), Wechselinteresse eines Spielers an dir (K19 §5.3, bis Saisonende), Angebot eines Vereins für deinen Spieler (Vielfaches des Marktwerts, danach wie jedes Angebot, K19 §5.4). Im Code `fans`, `verpflichten`, `interesse`, `angebot`.
 - **Seit K23e (21.11.2026, K23 §8):** Einfluss eines Mäzens (`maezen`): Der Präsident mischt sich bis zum Saisonende auch ohne Ehrgeiz ein (Karte „Der Präsident mischt sich ein“).
 - **Seit K25b (21.11.2026, K25 §8):** Fanartikel (`merch`): Erlös × (1 + Wert) für vier Wochen (Karte „Trikot ausverkauft“).
+- **Seit K23f (22.11.2026, popolupo, ohne Testlauf):** Geld (`geld`, auch der schlechte Ausgang) gilt als Betrag für die 3. Liga und wird mit der Liga deines Vereins mal 2 (2. Liga) oder mal 4 (1. Liga) genommen (`REGELN.karten.geldLiga`, `kartenGeld`). In Texten steht der Betrag als Platzhalter `{geld:Grundwert}` und erscheint umgerechnet. Grund: Seit K23c sind die Einnahmen der 1. Liga etwa 13-mal so groß wie die der 3. Liga.
 
 ### 3.3 Speicherorte
 

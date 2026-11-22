@@ -56,7 +56,7 @@ const tagMit=(ev,mmtt)=>{for(let d=0;d<400;d++)if(ev('mmtt')(d)===mmtt)return d;
 
 // 9. Mäzen: nur in der Not; angenommen bringt Geld, danach mischt sich auch ein Präsident ohne Ehrgeiz ein
 {const {F,S,ev,t}=welt(),A=ev('AUSLOESER');t.cash=1e6;const ohne=A.maezen();t.cash=-1e5;const mit=A.maezen();const g0=S.fin['Ereignisse']||0;F.kartenEntscheiden({id:'maezen',tag:S.tag,s:S.season,b:{},text:''},0,false);
-  pruef(ohne===null&&!!mit&&(S.fin['Ereignisse']||0)-g0===1500000&&S.maezen===S.season,'Mäzen: nur in der Not, 1,5 Mio. €, danach mischt sich der Präsident ein',`Geld ${(S.fin['Ereignisse']||0)-g0}, Merker ${S.maezen}`);}
+  pruef(ohne===null&&!!mit&&(S.fin['Ereignisse']||0)-g0===ev('kartenGeld')(1500000)&&S.maezen===S.season,'Mäzen: nur in der Not, 1,5 Mio. €, danach mischt sich der Präsident ein',`Geld ${(S.fin['Ereignisse']||0)-g0}, Merker ${S.maezen}`);}
 
 // 10. Vereinswechsel (takeJob): Kredite, Raten, Lizenzprüfung und Marketing des alten Vereins gehen nicht mit, der neue Verein zahlt nichts davon
 {const {F,S,ev,t}=welt(),alt=t;F.kreditAufnehmen(2e6,3);(S.raten=S.raten||[]).push({n:'Test',rest:600000,rate:50000});S.lzp={s:S.season,fehlt:1,sperre:S.season};ev('mkS')().ww=99;

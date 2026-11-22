@@ -304,6 +304,7 @@ lizenz:{
 62. **U12e Zielgespräch (22.11., popolupo, ohne Testlauf):** neue Funktion, neuer Bereich `zielgespraech` in der Grundlizenz (wie `ruecktritt`, K28 §5.8), ohne Automatik: Ohne Entscheidung gilt der Vorschlag des Vorstands. Gewürfelt wird nur beim Tiefstapeln, also nur nach deinem Eingriff (Gleichschritt unberührt).
 63. **K32 §5.1 Karriereende (22.11., popolupo, ohne Testlauf):** keine neue Funktion, kein neuer Bereich. Eigener Strom je Spieler und Saison, unabhängig von Lizenz und Automatik (Gleichschritt).
 64. **K26b Computer-Vereine bauen (22.11., popolupo, ohne Testlauf):** keine neue Funktion, kein neuer Bereich. Nur Computer-Vereine bauen, zum Saisonstart. Dein Verein baut nur selbst (Bereich `stadion`, Pro-Lizenz, ohne Automatik). Der Gleichschritt-Test (150 Tage ohne Saisonwechsel) ist nicht berührt. Im Test „Kein Nachteil“ über ganze Saisons kann der Computer-Lauf ab der zweiten Saison etwas besser dastehen, weil nur er baut.
+65. **K23f Kartenbeträge nach Liga (22.11., popolupo, ohne Testlauf):** keine neue Funktion, kein neuer Bereich. Nur die Höhe der Geldwirkungen hängt an der Liga deines Vereins.
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 

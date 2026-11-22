@@ -827,6 +827,7 @@ Im Einzelnen in K30 §5.5 und §12 Nr. 4 bis 9.
 - **Entscheidungen** halten an und stehen im Büro. Ohne Antwort wählt der Co-Trainer vor dem Anpfiff die Voreinstellung. Wer will, schaltet die Automatik ein (neuer Bereich `ereignisse`, Grundlizenz).
 - **Erste fünf Karten:** Der Präsident mischt sich ein, Rückendeckung vom Vorstand, Versöhnung, ein Spieler heiratet, Geheimtipp.
 - **Noch nicht:** Ketten, verzögerte Folgen, Meldungsdichte, Chronik, Skandale.
+- **Seit K23f (22.11., popolupo, vorläufig):** Geldbeträge der Karten gelten für die 3. Liga, mal 2 in der 2. Liga, mal 4 in der 1. Liga. Texte mit Platzhalter `{geld:Grundwert}`.
 
 ## K37 – Europapokal (Entwurf 21.11.2026, popolupo)
 Datei: `konzepte/K37-europapokal.md`

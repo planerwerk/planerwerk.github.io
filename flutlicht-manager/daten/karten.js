@@ -42,16 +42,16 @@ const KARTEN=[
       {text:'Er ist unverkäuflich',wirkung:[{art:'fans',wert:2},{art:'stimmung',wert:-2}],folge:'Die Fans feiern das klare Wort. {spieler} hätte es sich wenigstens anhören wollen.'}],auto:1},
   // Finanzen (K23 §8, K23e). Neue Wirkung maezen: Der Präsident mischt sich bis Saisonende auch ohne Ehrgeiz ein (Auslöser praesidentSerie).
   {id:'maezen',titel:'Ein Mäzen bietet Geld an',bereich:'K23',art:'entscheidung',gross:true,stufe:'gelegentlich',ausloeser:'maezen',sperrTage:365,
-    texte:['Ein Unternehmer aus der Region will helfen: 1,5 Mio. €, sofort. Er möchte dafür „ein bisschen mitreden“.','Der Präsident hat einen Gönner aufgetrieben. Das Geld wäre da, der Gönner will dafür bei der Aufstellung gehört werden.'],
+    texte:['Ein Unternehmer aus der Region will helfen: {geld:1500000}, sofort. Er möchte dafür „ein bisschen mitreden“.','Der Präsident hat einen Gönner aufgetrieben. Das Geld wäre da, der Gönner will dafür bei der Aufstellung gehört werden.'],
     optionen:[{text:'Geld annehmen',wirkung:[{art:'geld',wert:1500000},{art:'maezen',wert:1}],folge:'Das Konto atmet auf. Der Präsident wird sich jetzt öfter melden.'},
       {text:'Ablehnen',wirkung:[{art:'glaub',wert:2}],folge:'Du bleibst unabhängig. In der Kabine hat man das gehört.'}],auto:1},
   // Marketing (K25 §8, K25b). Neue Wirkung merch: Fanartikel-Erlös × (1 + wert) für vier Wochen. Auslöser teenieStar: Spieler bis 20 mit mindestens 3 Ligatoren.
   {id:'trikotAusverkauft',titel:'Trikot ausverkauft',bereich:'K25',art:'entscheidung',gross:false,stufe:'gelegentlich',ausloeser:'teenieStar',sperrTage:365,
-    texte:['Das Trikot von {spieler} ist ausverkauft. Der Ausrüster könnte nachproduzieren, das kostet 100.000 €.','Nach den Toren von {spieler} gibt es im Fanshop kein Trikot mit seiner Nummer mehr. Nachproduzieren würde 100.000 € kosten.'],
+    texte:['Das Trikot von {spieler} ist ausverkauft. Der Ausrüster könnte nachproduzieren, das kostet {geld:100000}.','Nach den Toren von {spieler} gibt es im Fanshop kein Trikot mit seiner Nummer mehr. Nachproduzieren würde {geld:100000} kosten.'],
     optionen:[{text:'Nachproduzieren lassen',wirkung:[{art:'geld',wert:-100000},{art:'merch',wert:0.2}],folge:'Die neuen Trikots verkaufen sich gut, vier Wochen lang mehr Fanartikel.'},
       {text:'Nicht nachproduzieren',wirkung:[{art:'fans',wert:-1}],folge:'Wer kein Trikot mehr bekommen hat, ist enttäuscht.'}],auto:0},
   {id:'steuerpruefung',titel:'Steuerprüfung',bereich:'K23',art:'entscheidung',gross:false,stufe:'selten',ausloeser:'steuer',sperrTage:730,
-    texte:['Das Finanzamt hat die Bücher geprüft und will 250.000 € nachträglich.','Die Betriebsprüfung findet Fehler bei der Abrechnung von Prämien: 250.000 € Nachzahlung.'],
+    texte:['Das Finanzamt hat die Bücher geprüft und will {geld:250000} nachträglich.','Die Betriebsprüfung findet Fehler bei der Abrechnung von Prämien: {geld:250000} Nachzahlung.'],
     optionen:[{text:'Zahlen',wirkung:[{art:'geld',wert:-250000}],folge:'Bezahlt, die Sache ist erledigt.'},
-      {text:'Einspruch einlegen',wirkung:[{art:'geld',wert:0,chance:0.5,schlecht:-400000,gut:'Der Einspruch hat Erfolg.',schlechtText:'Der Einspruch scheitert, mit Zinsen werden es 400.000 €.'}]}],auto:0}
+      {text:'Einspruch einlegen',wirkung:[{art:'geld',wert:0,chance:0.5,schlecht:-400000,gut:'Der Einspruch hat Erfolg.',schlechtText:'Der Einspruch scheitert, mit Zinsen werden es {geld:400000}.'}]}],auto:0}
 ];
