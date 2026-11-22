@@ -1622,3 +1622,16 @@ Ein Agent hat 5559cf4, 183ed6e, ba38849 und 32b75fc gelesen (nichts ausgeführt)
 | CZ3 | **Rabatt nach dem Verkauf:** Wurde danach die Automatik eingeschaltet, rechnete die Fanstimmung mit dem Standardrabatt statt dem verkauften. Jetzt gilt nach dem Verkauf immer der verkaufte Rabatt. | ✅ behoben |
 | CZ4 | **Anzeige:** Der Betrag je Heimspiel zählte während eines Tribünenbaus zu viele Plätze. Jetzt wie die Buchung höchstens die Plätze. | ✅ behoben |
 | CZ5 | Ohne Befund: K23f (Rundung, alle Textwege mit Platzhalter, Tests), K20b (Grenzen, verschachtelter Strom, Gleichschritt, kein anderer Test an einem Deadline-Tag), K26c (Fanshop-Stufen und Kostenliste, Instandhaltung, Tests 9 und 10), Laufzeit, Kommentare mitten in der Zeile. | ✅ |
+
+---
+
+## DB. Nachtrag zu U12f: Zwischenbilanz im Winter (22. November 2026, popolupo, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-u12f-zwischenbilanz`, auf K20c. Ausführlich in K28 §5.9.
+
+| # | Befund | Status |
+|---|---|---|
+| DB1 | **Zeitpunkt:** `zwischenbilanzWoche` läuft montags nach `vorstandWoche`, ab der Hälfte der eigenen Ligaspiele, einmal je Saison und Verein (`S.zb`). Ein Jobwechsel nach der Hälfte bringt beim neuen Verein sofort eine Bilanz. | ✅ |
+| DB2 | **Zusammenspiel mit dem Zielgespräch (U12e):** Anheben verschiebt den Vorschlag mit (der Ruf rechnet vom neuen Ziel), ein zugesagter Antrag erhöht `stufe` wie Tiefstapeln (Budget −15 %, „übertroffen“ vom alten Vorschlag). Ohne Zielgespräch in der Saison (alter Spielstand) ändert sich nur das Ziel. | ✅ |
+| DB3 | **Gleichschritt:** Die Bilanz liegt nach den 150 Tagen des Tests, würfelt nur beim Antrag und ändert nur Ziel und Vertrauen deines Vereins. | ✅ |
+| DB4 | **Kommentar-Wächter:** Ein Kommentar mit `);` am Zeilenende wurde als verschluckter Code gemeldet (Fehlalarm), umformuliert. | ✅ |

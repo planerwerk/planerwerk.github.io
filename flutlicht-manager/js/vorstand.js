@@ -120,6 +120,30 @@ function zielgespraechKarte(){if(!zgOffen())return'';const t=myT(),Z=RV.zielgesp
     <p class="dim">Hochpokern sagt der Vorstand immer zu: mehr Transferbudget und mehr Ruf, wenn du lieferst, aber das Ziel gilt. Tiefstapeln nimmt Druck, kostet Budget und bringt weniger Ruf. Lehnt der Vorstand ab, kühlt das Vertrauen um ${-Z.abgelehnt} ab. Eine Entscheidung je Saison.</p>
     <div class="row"><button class="go" onclick="zielVerhandeln(0)"${aus}>Ziel annehmen</button>${hoch}${tief}</div>${lzHinweis('zielgespraech')}</div>`;}
 
+// ---------- Zwischenbilanz im Winter (K28 §4 Nr. 3, U12f, Bereich zielgespraech) ----------
+// S.zb = {s Saison, tid Verein, sp eigene Ligaspiele bei der Bilanz, pos Platz, art 'hoch' | 'antrag' | 'fest', fertig}. Einmal je Saison und Verein, ohne Zufall (außer beim Antrag).
+// Wöchentlich (ablauf.js): ab der Hälfte deiner Ligaspiele
+function zwischenbilanzWoche(){const t=myT(),n=(S.fx&&S.fx[t.lg]||[]).length,sp=meineSpieltage();
+  if(S.fired||S.phase!=='play'||!n||sp<Math.floor(n/2)||(S.zb&&S.zb.s===S.season&&S.zb.tid===S.my))return;zwischenbilanz(rank(t.lg,S.my),sp);}
+// Bilanz mit Platz pos: anheben (der Ruf rechnet dann vom neuen Ziel, beim Zielgespräch wird der Vorschlag mit verschoben) oder Antrag ermöglichen
+function zwischenbilanz(pos,sp){const t=myT(),Z=RV.zwischenbilanz,z=meinZg();S.zb={s:S.season,tid:S.my,sp,pos,art:'fest'};
+  if(pos<=S.target-Z.abstand){const neu=zgZielGrenze(t.lg,S.target-Z.hoch);if(neu<S.target){const d=neu-S.target;S.target=neu;if(z)z.vorschlag+=d;S.zb.art='hoch';
+      news(`Zwischenbilanz: Der Vorstand ist begeistert (Platz ${pos}) und hebt das Ziel an: ${targetText(t.lg,neu)}.`,'good');return;}}
+  if(pos>=S.target+Z.abstand&&zgZielGrenze(t.lg,S.target+Z.senken)>S.target){S.zb.art='antrag';
+    news(`Zwischenbilanz: Platz ${pos} liegt weit hinter dem Ziel (${targetText(t.lg,S.target)}). Bis zum nächsten Ligaspiel kannst du im Büro beantragen, das Ziel zu senken.`,'bad');return;}
+  news(`Zwischenbilanz: Der Vorstand hält am Ziel fest (${targetText(t.lg,S.target)}, aktuell Platz ${pos}).`,'');}
+const zbAntragOffen=()=>!!(S.zb&&S.zb.s===S.season&&S.zb.tid===S.my&&S.zb.art==='antrag'&&!S.zb.fertig&&!S.fired&&S.phase==='play'&&meineSpieltage()===S.zb.sp);
+function zbChance(){const A=RV.zwischenbilanz.antrag;return clamp(A.basis+A.jeVertrauen*(S.trust-50)+A.jeRuf*(ruf()-RV.ruf.start),A.grenzen[0],A.grenzen[1]);}
+// Antrag: zugesagt wirkt wie Tiefstapeln (Zielgespräch: stufe steigt, Budget sinkt, Ruf rechnet vom Vorschlag), abgelehnt kostet Vertrauen
+function zielSenkenAntrag(){if(!darf('zielgespraech')||!zbAntragOffen())return;const t=myT(),Z=RV.zwischenbilanz,neu=zgZielGrenze(t.lg,S.target+Z.senken);S.zb.fertig=1;
+  if(neu>S.target&&mitStrom(strom('zwischenbilanz',S.season,S.my),()=>R())<zbChance()){const d=neu-S.target,z=meinZg();S.target=neu;if(z)z.stufe+=d;
+    news(`Zwischenbilanz: Der Vorstand senkt das Ziel auf ${targetText(t.lg,neu)}. Weniger Druck, aber auch weniger Transferbudget und Ruf.`,'');}
+  else{S.trust=clamp(S.trust+Z.abgelehnt,0,100);news(`Zwischenbilanz: Der Vorstand lehnt ab. Das Ziel bleibt (${targetText(t.lg,S.target)}).`,'bad');}
+  save();render();}
+function zwischenbilanzKarte(){if(!zbAntragOffen())return'';const Z=RV.zwischenbilanz;
+  return`<div class="card"><h3>Zwischenbilanz</h3><p>Platz ${S.zb.pos}, Ziel ${targetText(myT().lg,S.target)}. Du kannst beantragen, das Ziel um ${Z.senken} Platz zu senken (Zusage etwa ${Math.round(zbChance()*100)} %). Zugesagt kostet es Transferbudget und Ruf wie Tiefstapeln, abgelehnt kühlt das Vertrauen um ${-Z.abgelehnt} ab. Die Möglichkeit gilt bis zum nächsten Ligaspiel.</p>
+    <div class="row"><button onclick="zielSenkenAntrag()"${lzAus('zielgespraech')}>Ziel senken beantragen</button></div>${lzHinweis('zielgespraech')}</div>`;}
+
 // ---------- Rücktritt (K28 §5.3, §5.7, U12b, Bereich ruecktritt) ----------
 function ruecktrittFragen(){if(!darf('ruecktritt'))return;if(S.fired||S.phase!=='play'){toast('Zurücktreten geht nur während der Saison.');return;}
   ov(`<h2>Zurücktreten?</h2><p>Du verlässt ${esc(myT().name)} sofort. Dein Ruf als Trainer sinkt um ${-RV.ruf.ruecktritt} (bei einer Entlassung wären es ${-RV.ruf.entlassung}). Danach bekommst du Jobangebote nach deinem Ruf.</p>

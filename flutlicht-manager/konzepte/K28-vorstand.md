@@ -1,6 +1,6 @@
 # K28 – Vorstand, Ziele, Karriere
 
-Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12. Teilweise gebaut: Computer-Vereine in U11d2 (§7), Vertrauen, Ultimatum und Ruf für dich in U12a (§5.6), Nebenziele und Rücktritt in U12b (§5.7), beide 20.11., Zielgespräch in U12e (§5.8, 22.11.), alle ohne Testlauf.
+Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12. Teilweise gebaut: Computer-Vereine in U11d2 (§7), Vertrauen, Ultimatum und Ruf für dich in U12a (§5.6), Nebenziele und Rücktritt in U12b (§5.7), beide 20.11., Zielgespräch in U12e (§5.8, 22.11.), Zwischenbilanz im Winter in U12f (§5.9, 22.11.), alle ohne Testlauf.
 Hängt ab von: K02 (Geduld je Stufe), K15 (Gespräche) · Wird gebraucht von: K12b, K14, K19, K23, K29.
 
 ## 1. Ziel und Spielgefühl
@@ -187,6 +187,17 @@ Jetzt gibt es Budgets (K23d, K23 §5.5f) und echte Größenordnungen (K23c), dam
 - **Gleichschritt:** Das Gespräch würfelt nur, wenn du tiefstapelst. Ohne Eingriff ändert sich nichts.
 - **Noch nicht:** Zwischenbilanz im Winter (§4 Nr. 3), Sparsamkeit des Präsidenten beim Budget, Nebenziele verhandeln.
 
+### 5.9 Umsetzung U12f (22. November 2026, popolupo, ohne Testlauf): Zwischenbilanz im Winter
+
+- **Wann:** am ersten Montag, nachdem du die Hälfte deiner Ligaspiele gespielt hast (§4 Nr. 3), einmal je Saison und Verein.
+- **Klar besser** (Platz mindestens 4 besser als das Ziel): Der Vorstand hebt das Ziel um einen Platz an. Der Ruf rechnet „übertroffen“ dann vom neuen Ziel, nach einem Zielgespräch wird der Vorschlag mit verschoben. Ohne Zufall.
+- **Klar schlechter** (mindestens 4 schlechter): Bis zum nächsten Ligaspiel kannst du im Büro beantragen, das Ziel um einen Platz zu senken. Zusage mit 50 % + 0,5 % je Punkt Vertrauen über 50 + 0,5 % je Punkt Ruf über 30 (5 bis 95 %, eigener Strom).
+  - Zugesagt wirkt es wie Tiefstapeln: Transferbudget −15 % (wichtig fürs Winterfenster), „übertroffen“ zählt weiter vom alten Vorschlag.
+  - Abgelehnt: Vertrauen −3.
+- **Dazwischen:** Meldung, das Ziel bleibt.
+- **Lizenz (K36):** der Antrag gehört zum Bereich `zielgespraech` (Grundlizenz), ohne Automatik.
+- **Noch nicht:** Der Vorstand senkt nicht von sich aus, Nebenziele werden nicht angepasst.
+
 ## 6. Hebel des Spielers
 
 | Hebel | Nutzen | Preis |
@@ -296,6 +307,11 @@ vorstand:{
 20. **Transferbudget als weiche Grenze:** Kaufen über dem Budget geht, kostet aber Vertrauen (−1 je angefangene 10 % der Ablöse über dem Budget, höchstens −10). Eine harte Sperre hätte viele bestehende Abläufe verändert.
 21. **Prämie als Ruf:** Ein Trainergehalt gibt es nicht. Nach dem Tiefstapeln zählt „übertroffen“ vom Vorschlag aus, ein erreichtes hochgepokertes Ziel bringt +2 Ruf je Platz.
 22. **Zielgespräch in der Grundlizenz** (Bereich `zielgespraech`), wie der Rücktritt.
+
+**Vorläufig entschieden mit U12f** (22.11., popolupo, ohne Testlauf, §5.9):
+
+23. **Zwischenbilanz zur Hälfte der eigenen Ligaspiele** statt an einem festen Datum. So passt sie zu allen Ligen und zu einem Jobwechsel.
+24. **Anheben vom Vorstand, Senken nur auf Antrag**, je ein Platz, Schwelle 4 Plätze Abstand. Ein zugesagter Antrag wirkt wie Tiefstapeln.
 
 **Noch zu recherchieren:** Zahl der Trainerwechsel pro Saison in 1., 2. und 3. Liga.
 

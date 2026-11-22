@@ -31,6 +31,7 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 | **K20b** Preise am Deadline Day, dazu Korrekturen CX | `mitarbeit/popolupo-k20b-deadline-preise` (auf K27b) | fertig, ungetestet |
 | **K26c** Fanshop und Instandhaltung der Computer-Vereine, dazu Korrekturen CZ | `mitarbeit/popolupo-k26c-fanshop-instandhaltung` (auf K20b) | fertig, ungetestet |
 | **K20c** Bieterwettstreit beim Kauf | `mitarbeit/popolupo-k20c-bieter-kauf` (auf K26c) | fertig, ungetestet |
+| **U12f** Zwischenbilanz im Winter | `mitarbeit/popolupo-u12f-zwischenbilanz` (auf K20c) | fertig, ungetestet |
 | U19d2 volle Kader der Auslandsvereine in der Engine | danach | Entwurf in K37 §5.7 |
 
 **Die neueste Spitze ist immer der zuletzt genannte Zweig, er enthält alles davor.** K24 ist fertig (Claude).
@@ -64,6 +65,11 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 ---
 
 ## Changelog
+
+### 22.11.2026: U12f Zwischenbilanz im Winter (Zweig `mitarbeit/popolupo-u12f-zwischenbilanz`, auf K20c)
+
+- **Neu (K28 §4 Nr. 3, §5.9, Konsistenzprüfung DB):** Zur Hälfte deiner Ligaspiele hebt der Vorstand das Ziel bei klar besserem Platz an, bei klar schlechterem kannst du eine Senkung beantragen (wirkt wie Tiefstapeln).
+- **Tests zuerst:** `tests/vorstand.js` (neu Nr. 14), `tests/ui-zwei-saisons.js` (Meldung zur Zwischenbilanz).
 
 ### 22.11.2026: K20c Bieterwettstreit beim Kauf (Zweig `mitarbeit/popolupo-k20c-bieter-kauf`, auf K26c)
 

@@ -814,6 +814,7 @@ Im Einzelnen in K28 §5.8 und §12 Nr. 18 bis 22.
 - **Tiefstapeln:** Zusage nach Vertrauen, Ruf, Plätzen und Ehrgeiz des Präsidenten, dann Budget −15 % je Platz und weniger Ruf. Abgelehnt: Vertrauen −3.
 - **Transferbudget als weiche Grenze:** darüber kaufen kostet Vertrauen, sperrt aber nicht.
 - **Prämie als Ruf,** weil es kein Trainergehalt gibt. Grundlizenz, ohne Automatik.
+- **Seit U12f (K28 §5.9, §12 Nr. 23, 24):** Zwischenbilanz zur Hälfte der eigenen Ligaspiele. Der Vorstand hebt bei 4 Plätzen Vorsprung um einen Platz an, bei 4 Plätzen Rückstand kannst du eine Senkung beantragen (wirkt wie Tiefstapeln).
 
 ## K17 Beziehungen, U12c (20.11.), vorläufig von mir, gebaut ohne Testlauf
 

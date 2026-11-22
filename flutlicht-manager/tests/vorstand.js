@@ -103,4 +103,14 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   const gr=ev('zgZielGrenze'),grenzen=gr(2,1)===B.ziel.unterhalbMindestens&&gr(3,1)===B.ziel.unterhalbMindestens&&gr(1,0)===1; // CX3: 2. und 3. Liga nicht besser als Platz 2
   pruef(grenzen&&nah(r,30+2*(B.ruf.jePlatzUeber+Z.rufHoch))&&nah(b,5e6,2)&&nah(v1,50+Z.ueberBudget*Math.ceil(4e6/(b+4e6)*10))&&w.S.trust===50,'Zielgespräch: Ruf-Zuschlag nach Hochpokern, Vertrauen bei Kauf über dem Budget',`Ruf ${r}, Budget ${b}, Vertrauen ${v1}`);}
 
+// 14. Zwischenbilanz im Winter (K28 §4 Nr. 3, U12f): klar besser → Vorstand hebt an (Vorschlag mit), klar schlechter → Antrag (zugesagt wie Tiefstapeln, abgelehnt Vertrauen −3),
+//     dazwischen bleibt alles, einmal je Saison
+{const B=welt().B.zwischenbilanz,sp=w=>w.ev('meineSpieltage')();
+  const a=welt();a.S.target=10;const v0=a.S.zg.vorschlag;a.F.zwischenbilanz(10-B.abstand,sp(a));const hoch=a.S.target===10-B.hoch&&a.S.zb.art==='hoch'&&a.S.zg.vorschlag===v0-B.hoch&&!a.ev('zbAntragOffen')();
+  const b=welt();b.S.target=5;b.F.zwischenbilanz(5+B.abstand,sp(b));const offen=b.ev('zbAntragOffen')()&&b.F.zwischenbilanzKarte().length>0;b.W.ev('zbChance=function(){return 1;}');b.F.zielSenkenAntrag();
+  const gesenkt=b.S.target===5+B.senken&&b.S.zg.stufe===B.senken&&Math.abs(b.ev('zgBudgetFaktor')()-(1-b.B.zielgespraech.budgetTief*B.senken))<1e-9&&!b.ev('zbAntragOffen')();
+  const c=welt();c.S.target=5;c.S.trust=60;c.F.zwischenbilanz(5+B.abstand,sp(c));c.W.ev('zbChance=function(){return 0;}');c.F.zielSenkenAntrag();const nein=c.S.target===5&&nah(c.S.trust,60+B.abgelehnt);
+  const d=welt();d.S.target=8;d.F.zwischenbilanz(9,sp(d));const fest=d.S.target===8&&d.S.zb.art==='fest';d.S.target=8;d.F.zwischenbilanzWoche();const einmal=d.S.zb.pos===9;
+  pruef(hoch&&offen&&gesenkt&&nein&&fest&&einmal,'Zwischenbilanz: anheben, Antrag mit Zusage und Ablehnung, fest, einmal je Saison',`hoch ${hoch}, Antrag ${offen}, gesenkt ${gesenkt}, abgelehnt ${nein}, fest ${fest}, einmal ${einmal}`);}
+
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);
