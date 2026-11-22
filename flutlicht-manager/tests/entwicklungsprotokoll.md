@@ -63,11 +63,12 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 | **U12l** Budgetgespräch mit dem Vorstand | `mitarbeit/popolupo-u12l-budgetgespraech` (auf K29i) | fertig, ungetestet |
 | **K18c** Gegnerbeobachtung, dazu Korrekturen DV | `mitarbeit/popolupo-k18c-gegnerbeobachtung` (auf U12l) | fertig, ungetestet |
 | **K11b** Sommerturnier | `mitarbeit/popolupo-k11b-sommerturnier` (auf K18c) | fertig, ungetestet |
+| **K11c** Testspiel-Anfragen der Computer-Vereine | `mitarbeit/popolupo-k11c-testspiel-anfragen` (auf K11b) | fertig, ungetestet |
 | U19d2 volle Kader der Auslandsvereine in der Engine | zurückgestellt | Entwurf in K37 §5.7. Die Engine behandelt Auslandsvereine als Block wie Amateure, viele Stellen schlagen Spieler in `PIX` nach. Erst nach einem Testlauf und der Messung des Faktors 0,93 |
 
 **Die neueste Spitze ist immer der zuletzt genannte Zweig, er enthält alles davor.** K24 ist fertig (Claude).
 
-**Vorschlag für den nächsten Testlauf** (Spitze `mitarbeit/popolupo-k11b-sommerturnier`, alles ungetestet, aber von lesenden Prüf-Agenten durchgesehen, Konsistenzprüfung CS, CX, CZ, DD, DF, DI, DL, DM, DN). **Wichtig:** Die Zweige `u12g` und `k29e` laden für sich allein nicht (DN1), bitte die Spitze nehmen:
+**Vorschlag für den nächsten Testlauf** (Spitze `mitarbeit/popolupo-k11c-testspiel-anfragen`, alles ungetestet, aber von lesenden Prüf-Agenten durchgesehen, Konsistenzprüfung CS, CX, CZ, DD, DF, DI, DL, DM, DN). **Wichtig:** Die Zweige `u12g` und `k29e` laden für sich allein nicht (DN1), bitte die Spitze nehmen:
 1. `node tests/code.js`, dann die schnellen Einzeltests der neuen Teile: `finanzen.js` (Nr. 11 bis 20), `geruechte.js`, `schwierigkeit.js`, `werbung.js`, `europapokal.js`, `vorstand.js` (Nr. 10 bis 19), `karriereende.js`, `stadion.js` (Nr. 8 bis 11), `karten.js`, `spielwelt-karten.js`, `fans.js` (K27b), `abwerben.js` (K20b), `transfers.js` (K20c, K20d, K19c), `presse.js` (K29b bis K29i), `marketing.js` (K25c, K25d).
 2. `node tests/lizenz.js` (Gleichschritt, neue Bereiche `zielgespraech`).
 3. `node tests/finanzmodell.js 2`: Salden je Liga nach K23c. Erwartet nach der Modellrechnung 1. Liga etwa +11 Mio., 2. Liga etwa 0, 3. Liga etwa −1 Mio. je Verein und Saison ohne Transfers (K23 §5.6b). Weichen sie stark ab, bitte die Zeilen ins Testprotokoll, ich stelle dann `REGELN.finanzen.verwaltung` und `sponsor` nach.
@@ -102,6 +103,11 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 ---
 
 ## Changelog
+
+### 22.11.2026: K11c Testspiel-Anfragen der Computer-Vereine (Zweig `mitarbeit/popolupo-k11c-testspiel-anfragen`, auf K11b)
+
+- **Neu (K11 §5):** In der Vorbereitung lädt montags mit 35 % ein Verein deines Niveaus dich zu einem Auswärtstestspiel ein. Du sagst im Training binnen 3 Tagen zu oder ab. Nicht in der Automatik, eigener Strom.
+- **Tests zuerst:** `tests/testspiele.js` (neuer Fall K11c).
 
 ### 22.11.2026: K11b Sommerturnier (Zweig `mitarbeit/popolupo-k11b-sommerturnier`, auf K18c)
 

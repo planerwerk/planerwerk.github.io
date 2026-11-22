@@ -57,5 +57,11 @@ if(lager){const f=ev('lagerMoeglich')('schwarzwald',S.tag+1,7);if(f)return{fehle
   const a=lauf(true,true),b=lauf(false,true),lg=welt().ev('myT()').lg;
   pruef(!a.fehler&&a.antritt===(T.antritt[lg]||T.antritt[3])&&a.finale===1&&a.tag2&&a.platz===1&&a.v&&!a.nochmal&&!b.fehler&&b.finale===0&&b.platz===3&&!b.v,
     'Sommerturnier: Anmeldung mit Antrittsgeld, Finale am Tag danach, Turniersieg mit Pokal, Spiel um Platz 3, einmal je Saison',a.fehler||b.fehler||`Platz ${a.platz} und ${b.platz}, Pokal ${a.v}`);}
+// K11c. Anfragen der Computer-Vereine (K11 §5): in der Vorbereitung eine Einladung (Chance hier 1), Zusage ergibt ein Auswärtstestspiel, Absage nichts; in der Automatik keine Anfrage
+{const lauf=(ja,auto)=>{const {F,S,ev}=welt();if(auto){F.lizenzStart(true);}ev('RTS').kiAnfrage.chance=1;const d=ev('auftaktTag')(ev('myT()'))+3*7;S.tag=d;F.kiTestspielAnfrage(d);const a=S.tsKI;
+    if(!a)return{a:null};F.kiTestspielAntwort(ja);const x=(S.testspiele||[]).find(y=>y.gegner===a.tid&&y.tag===a.tag);return{a,x,weg:!S.tsKI};};
+  const j=lauf(1,false),n=lauf(0,false),au=lauf(1,true);
+  pruef(!!j.a&&!!j.x&&j.x.heim===false&&j.x.stand==='zugesagt'&&j.weg&&!!n.a&&!n.x&&n.weg&&!au.a,'Anfragen der Computer-Vereine: Einladung, Zusage als Auswärtsspiel, Absage, keine in der Automatik',
+    `Zusage ${!!j.x}, Absage ${!n.x}, Automatik ${au.a?'Anfrage':'keine'}`);}
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

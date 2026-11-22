@@ -341,6 +341,7 @@ lizenz:{
 99. **U12l Budgetgespräch (22.11., popolupo, ohne Testlauf):** keine neue Funktion, eine weitere Schaltfläche im Bereich `zielgespraech` (Grundlizenz, ohne Automatik).
 100. **K18c Gegnerbeobachtung (22.11., popolupo, ohne Testlauf):** keine neue Funktion, eine Schaltfläche im bestehenden Bereich `beobachten`. Ohne Zufall, die Automatik beobachtet keine Gegner (Gleichschritt unberührt).
 101. **K11b Sommerturnier (22.11., popolupo, ohne Testlauf):** keine neue Funktion, eine Schaltfläche im bestehenden Bereich `testspiele`. Die Automatik meldet kein Turnier an, Testspiele sind im Gleichschritt aus.
+102. **K11c Anfragen der Computer-Vereine zu Testspielen (22.11., popolupo, ohne Testlauf):** keine neue Funktion, Antwort im bestehenden Bereich `testspiele`. Nicht in der Automatik, eigener Strom.
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 

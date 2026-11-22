@@ -26,7 +26,7 @@ function zusageChance(tid,d){const Z=RTS.zusage;if(tid>=1000)return Z.max;const 
 function testspielAnfragen(tid,d){if(!testspielTage().includes(d))return null;(S.testspiele=S.testspiele||[]);S.testId=(S.testId||0)+1;
   const x={id:S.testId,tag:d,gegner:tid,heim:tid<1000,stand:'angefragt',antwortAm:S.tag+riA(RTS.antwortTage)};S.testspiele.push(x);return x;}
 // Jeden Tag: Antworten auf Anfragen, Trainingslager
-function testspieleTag(d){(S.testspiele||[]).forEach(x=>{if(x.stand!=='angefragt'||d<x.antwortAm)return;const ok=R()<zusageChance(x.gegner,x.tag);x.stand=ok?'zugesagt':'abgesagt';
+function testspieleTag(d){if(wochentag(d)===RK.wochenTag)kiTestspielAnfrage(d); /* Anfragen der Computer-Vereine (K11c) */ (S.testspiele||[]).forEach(x=>{if(x.stand!=='angefragt'||d<x.antwortAm)return;const ok=R()<zusageChance(x.gegner,x.tag);x.stand=ok?'zugesagt':'abgesagt';
   news(ok?`Testspiel am ${datumKurz(x.tag)}: ${tn(x.gegner)} sagt zu${x.heim?' und kommt zu dir':', du spielst dort'}.`:`${tn(x.gegner)} sagt das Testspiel am ${datumKurz(x.tag)} ab.`,ok?'good':'');});
   lagerTag(d);}
 const testspielHeute=d=>(S.testspiele||[]).filter(x=>x.stand==='zugesagt'&&x.tag===d);
@@ -95,3 +95,16 @@ function turnierNach(r,x){const U=S.turnier;if(!x||!x.turnier||!U||U.s!==S.seaso
 function turnierText(){const T=RTS.turnier;if(S.turnier&&S.turnier.s===S.season){const U=S.turnier;return`<p class="dim">${T.name} am ${datumKurz(U.tag)} mit ${U.g.map(id=>esc(tn(id))).join(', ')}${U.platz?`: Platz ${U.platz}`:''}.</p>`;}
   const tage=testspielTage().filter(turnierMoeglich);if(!tage.length)return'';
   return`<div class="row" style="margin-top:8px;flex-wrap:wrap;gap:6px"><select id="tu_tag" aria-label="Erster Turniertag">${tage.map(d=>`<option value="${d}">${datumKurz(d)}</option>`).join('')}</select><button onclick="turnierAnmelden(+document.getElementById('tu_tag').value)"${lzAus('testspiele')}>${T.name} (zwei Tage, Antrittsgeld ${fmt(T.antritt[myT().lg]||T.antritt[3])})</button></div>`;}
+
+// ---------- Anfragen der Computer-Vereine (K11 §5, K11c) ----------
+// In der Vorbereitung ab Woche RTS.abWoche fragt montags mit kiAnfrage.chance ein Verein deines Niveaus nach einem Testspiel bei sich (eigener Strom je Saison und Tag).
+// S.tsKI = {tid, tag, bis}: Antwort bis bis, sonst verfällt sie. Nicht in der Automatik der Testspiele (dort plant der Co-Trainer selbst).
+function kiTestspielAnfrage(d){if(S.phase!=='play'||(S.tsKI&&S.tsKI.bis>=d)||autoB('testspiele')||!inVorbereitung(d)||vorbereitungsWoche(d)<RTS.abWoche)return;
+  mitStrom(strom('tsKI',S.season,d),()=>{if(R()>=RTS.kiAnfrage.chance)return;const tage=testspielTage().filter(inVorbereitung);if(!tage.length)return;
+    const pro=testspielGegner(tage[0]).filter(x=>!x.am);if(!pro.length)return;const g=pro[Math.floor(R()*pro.length)].id,tag=tage[Math.floor(R()*tage.length)];
+    S.tsKI={tid:g,tag,bis:d+RTS.kiAnfrage.tage};news(`Testspiel-Anfrage: ${tn(g)} lädt dich am ${datumKurz(tag)} zu sich ein. Antwort im Training bis ${datumKurz(S.tsKI.bis)}.`,'offer');});}
+function kiTestspielAntwort(ja){const a=S.tsKI;if(!a||!darf('testspiele','sommerplan'))return;S.tsKI=null;
+  if(ja&&testspielTage().includes(a.tag)){S.testspiele=S.testspiele||[];S.testId=(S.testId||0)+1;S.testspiele.push({id:S.testId,tag:a.tag,gegner:a.tid,heim:false,stand:'zugesagt'});news(`Testspiel am ${datumKurz(a.tag)} bei ${tn(a.tid)} vereinbart.`,'good');}
+  else if(ja)toast('An diesem Tag geht es nicht mehr.');save();render();}
+function kiTestspielText(){const a=S.tsKI;if(!a||a.bis<S.tag)return'';
+  return`<div class="card"><p>${esc(tn(a.tid))} lädt dich am ${datumKurz(a.tag)} zu einem Testspiel ein (Antwort bis ${datumKurz(a.bis)}).</p><div class="row"><button onclick="kiTestspielAntwort(1)"${lzAus('testspiele')}>Zusagen</button><button onclick="kiTestspielAntwort(0)"${lzAus('testspiele')}>Absagen</button></div></div>`;}
