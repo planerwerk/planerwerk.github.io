@@ -171,7 +171,11 @@ function spielfeldrandKarte(){if(!ifrOffen())return'';const x=S.ifr,c=ifrKontext
 // S.maulkorb = 1: keine Interviews, Mitteilsame verlieren je Woche Stimmung. Montags (presseWoche), nicht in der Automatik, eigener Strom je Saison und Tag.
 const mitteilsam=p=>RPK.interview.mitteilsam.some(k=>hatEig(p,k));
 function spielerInterviewWoche(){if(S.phase!=='play'||S.fired||autoB('presse'))return;const I=RPK.interview,t=myT(),sq=squad(S.my);if(!sq.length)return;
-  if(S.maulkorb){sq.filter(mitteilsam).forEach(p=>stimmungAendern(p,I.maulkorb));return;}
+  if(S.maulkorb){sq.filter(mitteilsam).forEach(p=>stimmungAendern(p,I.maulkorb));
+    // Trotz Maulkorb (K29 §6, K29j): ein unzufriedener Mitteilsamer redet mit I.trotz.chance doch, Wirkung eines schlechten Interviews, deine Glaubwürdigkeit sinkt. Eigener Strom.
+    mitStrom(strom('interview',S.season,S.tag,'trotz'),()=>{const l=sq.filter(p=>mitteilsam(p)&&stimmung(p)<I.fettnapf.unzufriedenUnter);if(!l.length||R()>=I.trotz.chance)return;
+      const p=l[Math.floor(R()*l.length)],W=I.schlecht,P=presseS();if(W.klima)P.klima=fanZahl(clamp(P.klima+W.klima,0,100));if(W.fans)fanAnlass(t,'fanU',W.fans);if(W.zusammenhalt)zusammenhaltAendern(t,W.zusammenhalt);
+      glaubAendern(I.trotz.glaub);news(`Trotz Maulkorb: ${p.n} redet mit der Presse und lässt kein gutes Haar an der Lage im Verein. Deine Autorität leidet.`,'bad');});return;}
   mitStrom(strom('interview',S.season,S.tag),()=>{if(R()>=I.chance)return;const g=sq.map(p=>mitteilsam(p)?I.gewicht:1),s=g.reduce((a,b)=>a+b,0);let x=R()*s,p=sq[sq.length-1];
     for(let i=0;i<sq.length;i++){x-=g[i];if(x<0){p=sq[i];break;}}const F=I.fettnapf,c=Math.min(F.max,F.basis+(mitteilsam(p)?F.mitteilsam:0)+(stimmung(p)<F.unzufriedenUnter?F.unzufrieden:0));
     const schlecht=R()<c,W=schlecht?I.schlecht:I.gut,l=PRESSE.spielerInterview[schlecht?'schlecht':'gut'],txt=pkText(l[Math.floor(R()*l.length)],{spieler:p.n,verein:t.name}),P=presseS();

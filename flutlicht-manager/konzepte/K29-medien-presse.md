@@ -415,4 +415,4 @@ Das ist der Maßstab für die Verbindung zu K09.
 - **Fettnäpfchen:** Chance 30 %, +30 % bei Mitteilsamen, +20 % bei Stimmung unter 40, höchstens 90 %. Dann Medienklima −2, Zusammenhalt −1, Fans −1. Sonst Medienklima +1, Fans +1. Eigene Texte, Meldung im Posteingang.
 - **Maulkorb** im Medien-Kasten: keine Interviews, dafür verlieren Mitteilsame jede Woche 1 Punkt Stimmung.
 - **Automatik:** In der Automatik (Bereich `presse`) gibt es weder Interviews noch Maulkorb, der Gleichschritt bleibt gleich.
-- **Noch nicht:** Interviews der Spieler anderer Vereine, Spieler, die trotz Maulkorb reden.
+- **Noch nicht:** Interviews der Spieler anderer Vereine. Spieler, die trotz Maulkorb reden, gibt es seit K29j (22.11.2026, ohne Testlauf): montags mit 15 % ein unzufriedener Mitteilsamer (Stimmung unter 40), Wirkung eines schlechten Interviews und Glaubwürdigkeit −2, eigener Strom, nicht unter der Automatik.

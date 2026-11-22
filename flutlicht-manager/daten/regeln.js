@@ -507,7 +507,7 @@ const REGELN={
     spielfeldrand:{faktor:0.5},
     // K29i (22.11., GESCHÄTZT): Interviews deiner Spieler, montags mit chance (eigener Strom), Mitteilsame mit gewicht öfter; Fettnäpfchen mit basis (+ mitteilsam, + unzufrieden unter Stimmung
     // unzufriedenUnter, höchstens max). Maulkorb: keine Interviews, Mitteilsame je Woche Stimmung maulkorb. Nicht in der Automatik (Bereich presse).
-    interview:{chance:0.3,mitteilsam:['diva','partyloewe','hitzkopf'],gewicht:3,fettnapf:{basis:0.3,mitteilsam:0.3,unzufrieden:0.2,unzufriedenUnter:40,max:0.9},
+    interview:{chance:0.3,mitteilsam:['diva','partyloewe','hitzkopf'],gewicht:3,trotz:{chance:0.15,glaub:-2},fettnapf:{basis:0.3,mitteilsam:0.3,unzufrieden:0.2,unzufriedenUnter:40,max:0.9},
       schlecht:{klima:-2,zusammenhalt:-1,fans:-1},gut:{klima:1,fans:1},maulkorb:-1}},
 
   // Marketing (K25 §5.4, §11, K25a). trikot: Faktor auf den Fanartikel-Erlös [min, max] und Fanstimmung je Design, mutig: Chance auf Kult, sonst Spott.

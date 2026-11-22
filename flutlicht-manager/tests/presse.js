@@ -144,4 +144,10 @@ const gegner=w=>w.S.teams.find(x=>x.lg===w.t.lg&&x.id!==VEREIN).id;
   const a=welt(true),Pa=a.ev('presseS')();let na=0;for(let k=0;k<20;k++){Pa.klima=50;a.S.tag=k*7;a.F.spielerInterviewWoche();if(Pa.klima!==50)na++;}
   pruef(n>=4&&n<=22&&korb&&na===0,'Interviews der Spieler: etwa jede dritte Woche, Maulkorb kostet Mitteilsame Stimmung, Automatik ohne Interviews',`${n} von 40 Wochen, Maulkorb ${korb}, Automatik ${na}`);}
 
+// K29j. Trotz Maulkorb (K29 §6): mit Chance 1 redet ein unzufriedener Mitteilsamer doch (Meldung, Glaubwürdigkeit −2); ist niemand unzufrieden, passiert nichts
+{const {S,F,ev}=welt(false),sq=ev('squad')(VEREIN),I=ev('RPK').interview,t=ev('myT()');I.trotz.chance=1;sq.forEach(p=>{ev('stimmung')(p);p.st=50;});
+  const d=sq[0];d.eig=(ev('eigenschaften')(d)||[]).concat(['diva']);S.maulkorb=1;t.glaub=50;const n=()=>S.news.filter(x=>x.t.startsWith('Trotz Maulkorb')).length;
+  F.spielerInterviewWoche();const zufrieden=n();d.st=20;S.tag+=7;F.spielerInterviewWoche();const unzufrieden=n(),g=ev('glaub')(t);S.maulkorb=0;
+  pruef(zufrieden===0&&unzufrieden===1&&g===50+I.trotz.glaub,'Trotz Maulkorb: nur ein unzufriedener Mitteilsamer redet, Glaubwürdigkeit sinkt',`zufrieden ${zufrieden}, unzufrieden ${unzufrieden}, Glaubwürdigkeit ${g}`);}
+
 console.log(probleme.length?`\n${probleme.length} Problem(e).`:'\nAlles in Ordnung.');process.exitCode=probleme.length?1:0;
