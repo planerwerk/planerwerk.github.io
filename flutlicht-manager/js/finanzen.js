@@ -65,18 +65,21 @@ function finanzenKarte(){const t=myT(),L=S.lzp||{},v=S.finV||[],p=finPrognose(fa
     <p class="dim">Lizenzprüfung am 1. März für die nächste Saison. Insolvent ist, wer an zwei Monatsersten nacheinander unter dem Kreditrahmen von ${fmt(-kreditRahmen(t))} steht: ${RFP.insolvenz.punkte} Punkte Abzug.</p></div>`;}
 
 // ---------- K23b (§5.2, §5.5e): Computer-Vereine nach denselben Regeln wie du ----------
-// Sonstige Einnahmen (Mitglieder, Vermarktung, K23 §3.1) je Ligaspiel für alle Vereine, vorläufig nach Liga bis K23c
+// Sonstige Einnahmen (Mitglieder, Vermarktung, K23 §3.1) je Ligaspiel für alle Vereine, nach Liga (seit K23c etwa 7 % der Einnahmen)
 const sonstigeEinnahmen=t=>RFP.sonstiges[t.lg]||0;
+// Verwaltung und Sonstiges (K23c) je Ligaspiel für alle Vereine: Anteil nach Liga an TV, Grundbetrag der Werbung und sonstigen Einnahmen. Für dich zählt der Grundbetrag,
+// nicht deine Verträge: Gut verhandeln lohnt sich also.
+const verwaltungKosten=t=>Math.round((RF.verwaltung[t.lg]||RF.verwaltung[3])*(tvGeld(t)+sponsorBasis(t)+sonstigeEinnahmen(t)));
 // Zuschauer im Heimspiel ohne Würfel (Mitte der Spanne) und zum Richtpreis: so verschiebt die Rechnung für Computer-Vereine keinen Zufallsstrom
 // neutral (für Budgets): Form 1,4 Punkte je Spiel und Fanstimmung ohne Wirkung, damit der Rahmen nicht schwankt und im Gleichschritt für beide Läufe gleich bleibt
 function zuschauerErwartung(t,opp,cup,neutral){const Z=RF.zuschauer,ff=Z.formBasis+Z.formJePunkt*(neutral?1.4:formPts(t.id)),of=Z.gegnerBasis+(opp?opp.rep:Z.gegnerOhne)/100*Z.gegnerFaktor,lf=t.lg===1?1:t.lg===2?Z.liga2:Z.liga3;
   return Math.round(Math.min(t.cap,t.fans*ff*of*lf*(cup?Z.pokal:1)*(Z.zufallBasis+Z.zufallSpanne/2)*(neutral?1:fanFaktor(t))));}
 function kiHeimEinnahmen(t,opp,cup,neutral){const att=zuschauerErwartung(t,opp,cup,neutral);return Math.round(att*richtPreis(t)*zuschauerFaktor(t))+(t.shop?Math.round(att*RF.fanartikel[t.shop]):0)+(t.logen||0)*RF.loge;}
-// Je Ligaspiel (ablauf.js): TV, Sponsor (Ansehen² × Ligawert wie die Angebote an dich), Sonstiges, im Heimspiel Zuschauer, Fanartikel, Logen,
-// minus Gehälter von Kader und Stab, Stadion und Betrieb, Jugendarbeit (Stufe der Computer-Vereine). Ersetzt die Pauschale fremdeEinnahmen.
+// Je Ligaspiel (ablauf.js): TV, Werbung (ganzer Grundbetrag, bei dir Verträge plus weitere Partner), Sonstiges, im Heimspiel Zuschauer, Fanartikel, Logen,
+// minus Gehälter von Kader und Stab, Stadion und Betrieb, Verwaltung (K23c), Jugendarbeit (Stufe der Computer-Vereine). Ersetzt die Pauschale fremdeEinnahmen.
 function kiFinanzenSpiel(t,r){if(!t||!aktiv(t))return;const n=(S.fx[t.lg]||[]).length||34,heim=r.h===t.id,opp=heim?(S.teams[r.a]||null):null;
-  const ein=tvGeld(t)+t.rep*t.rep*(RF.sponsor['liga'+t.lg]||RF.sponsor.liga3)+sonstigeEinnahmen(t)+(heim?kiHeimEinnahmen(t,opp,false):0);
-  const aus=Math.round((squad(t.id).reduce((s,p)=>s+p.sal,0)+stabGehaelter(t.id))/n)+Math.round(t.cap*RF.betrieb.jePlatz+(t.logen||0)*RF.betrieb.jeLoge)+RF.jugendKosten[RS.nachwuchs.computerStufe];
+  const ein=tvGeld(t)+sponsorBasis(t)+sonstigeEinnahmen(t)+(heim?kiHeimEinnahmen(t,opp,false):0);
+  const aus=Math.round((squad(t.id).reduce((s,p)=>s+p.sal,0)+stabGehaelter(t.id))/n)+Math.round(t.cap*RF.betrieb.jePlatz+(t.logen||0)*RF.betrieb.jeLoge)+verwaltungKosten(t)+RF.jugendKosten[RS.nachwuchs.computerStufe];
   t.cash+=ein-aus;}
 // Je Pokalspiel: Rundenprämie für beide, Zuschauer für den Gastgeber (nicht im Finale), Siegprämie im Finale. Bisher bekamen alle Vereine eine Pauschale je Runde.
 function kiPokalSpiel(r,runde){[r.h,r.a].forEach(id=>{if(id===S.my||id>=1000)return;const t=S.teams[id];if(!t)return;
@@ -89,7 +92,7 @@ function kiInsolvenzPruefen(){if(S.phase!=='play')return;const I=RFP.insolvenz;
 
 // ---------- K23d (§5.3, §5.5f): Budgets vom Vorstand ----------
 // Erwartete Einnahmen einer Saison ohne Transfers und Prämien: Liga-Modell wie bei den Computer-Vereinen (TV, Sponsor, Sonstiges, Heimspiele zum Erwartungswert)
-function erwarteteEinnahmen(t){const n=(S.fx[t.lg]||[]).length||34;return Math.round(n*(tvGeld(t)+t.rep*t.rep*(RF.sponsor['liga'+t.lg]||RF.sponsor.liga3)+sonstigeEinnahmen(t))+n/2*kiHeimEinnahmen(t,null,false,true));} // neutrale Form (1,4 Punkte je Spiel), damit der Rahmen nicht von Woche zu Woche schwankt
+function erwarteteEinnahmen(t){const n=(S.fx[t.lg]||[]).length||34;return Math.round(n*(tvGeld(t)+sponsorBasis(t)+sonstigeEinnahmen(t))+n/2*kiHeimEinnahmen(t,null,false,true));} // neutrale Form (1,4 Punkte je Spiel), damit der Rahmen nicht von Woche zu Woche schwankt
 const gehaltsRahmen=t=>Math.round(erwarteteEinnahmen(t)*RFP.budget.gehaltAnteil);
 const gehaltsSumme=t=>squad(t.id).reduce((s,p)=>s+p.sal,0)+stabGehaelter(t.id);
 // Anteil am Rahmen (1 = genau ausgeschöpft). Über RFP.budget.sperreAb: keine Käufe (offer, kiMarkt), über 1: Vertrauen sinkt (vorstandWoche)

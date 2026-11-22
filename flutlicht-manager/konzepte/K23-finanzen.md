@@ -103,7 +103,7 @@ K23 ändert fast jede Geldzahl im Spiel. Damit jeder Schritt für sich getestet 
 |---|---|
 | K23a | Monatsbericht, Liquiditätsprognose, Lizenzprüfung im März mit Auflagen, Insolvenz mit Punktabzug, zuerst nur für deinen Verein |
 | K23b | gleiche Einnahmen und Ausgaben für Computer-Vereine statt Pauschale (§5.2). Gebaut am 22.11. (§5.5e). Das Säulenmodell der Medien wandert nach K23c, die Pauschale für die Europapokal-Plätze entfällt, weil es den Europapokal gibt (K37) |
-| K23c | echte Größenordnungen (§5.6) für alle Geldwerte in einem Zug, danach die Sponsorenhöhen aus K24 §5.1 |
+| K23c | echte Größenordnungen (§5.6) für alle Geldwerte in einem Zug, danach die Sponsorenhöhen aus K24 §5.1. Gebaut am 22.11. ohne Messung (§5.6b), mit Säulenmodell der TV-Gelder und den Sponsorenhöhen |
 | K23d | Budgets (§5.3) mit Bezug zum Zielgespräch (K28) |
 | K23e | Raten und Kredit mit Laufzeit (§5.5), Gehaltsverzicht, Karten aus §8 |
 
@@ -210,6 +210,72 @@ Gebaut:
 - Echte Gehälter und Marktwerte nach Stärke (zum Beispiel Kaderwert und Gehaltsliste eines Vereins je Liga).
 - Erledigt am 22.11.: TV, Werbung, Spieltag und Personal der 3. Liga (DFB-Saisonreport 2023/24).
 
+### 5.6b Umsetzung K23c (22.11.2026, popolupo, vorläufig, ungetestet)
+
+**Ohne die Messung aus §5.6a Nr. 7.** Der Nutzer wollte nicht auf Testläufe warten. Statt der Messung habe ich die Welt nachgerechnet: zwei Perl-Skripte außerhalb des Repos lesen `daten/vereine.js` und `daten/spieler.js`, füllen die Kader wie `buildWorld` auf (Streuung mit ihrem Mittelwert) und rechnen je Verein eine Saison ohne Transfers, Pokal und Europapokal. Die Zuschauer schätzen sie aus Plätzen, Auslastung und Richtpreis (Auslastung so gewählt, dass der Schnitt je Liga zu BZ7 passt). Die Zahlen unten stammen aus dieser Rechnung, nicht aus dem Spiel. **Ein voller Testlauf mit `tests/finanzmodell.js` muss sie bestätigen.**
+
+**Gehälter und Marktwerte steiler** (`RP.gehalt`, `RP.marktwert`):
+- Gehalt = 2,5 Mio. × e^(0,16 × (Stärke − 75)), vorher 1 Mio. und 0,1.
+- Marktwert = 7 Mio. × e^(0,2 × (Stärke − 75)) mal Altersfaktor, vorher 8 Mio. und 0,1.
+- Warum steiler: Echt liegen zwischen 1. und 3. Liga beim Personal etwa Faktor 17 und beim Kaderwert etwa Faktor 40. Im Spiel waren es nur Faktor 4. Das Niveau der Ligen liegt nur 14 Stärkepunkte auseinander (76 gegen 62), also muss die Kurve steiler werden.
+- Der Vorschlag aus §5.6a (2,1 Mio., 0,137) hätte die 3. Liga kaum bewegt, die 1. Liga aber nicht genug gehoben.
+
+| je Verein | 1. Liga vorher | 1. Liga jetzt | 2. Liga vorher | 2. Liga jetzt | 3. Liga vorher | 3. Liga jetzt | echt (1./2./3.) |
+|---|---|---|---|---|---|---|---|
+| Gehälter (Kader) | 26 Mio. | 72 Mio. | 11 Mio. | 17 Mio. | 5,9 Mio. | 6,8 Mio. | 93 / 16 / 5,5 Mio. (mit Trainern) |
+| Kaderwert | 206 Mio. | 222 Mio. | 90 Mio. | 37 Mio. | 47 Mio. | 11 Mio. | siehe unten |
+| Spanne Kaderwert | 84 bis 358 Mio. | 35 bis 757 Mio. | 68 bis 128 Mio. | 21 bis 68 Mio. | 30 bis 64 Mio. | 4 bis 20 Mio. | |
+
+- **Stichproben echt** (Websuche 22.11.): Kaderwert Bayern etwa 1,04 Mrd. € nach der Saison 2025/26 (ran.de), Hertha BSC in der 2. Liga 45 bis 63 Mio. € (90min, zwei Stände), die wertvollsten Spieler der 3. Liga 0,3 bis 0,6 Mio. € (footystats). Gesamtwerte je Liga habe ich nicht gefunden. Die neuen Werte liegen deutlich näher an diesen Stichproben als die alten.
+
+**TV-Gelder nach dem Säulenmodell** (§5.1, `RF.tv`, `tvSaison` in `js/welt.js`):
+- Töpfe je Saison: 1. Liga 897 Mio. €, 2. Liga 224 Mio. € (1,121 Mrd. € im Verhältnis 80:20), 3. Liga 26,2 Mio. €.
+- 1. und 2. Liga: 54 % zu gleichen Teilen (Gleichverteilung 50 % plus Nachwuchs 4 %, den es im Spiel noch nicht als Säule gibt), 43 % Leistung, 3 % Interesse nach Ansehen².
+- **Leistung:** Rang in der Fünfjahreswertung innerhalb der Liga, Gewicht = Zahl der Vereine + 3 − Rang. Fünfjahreswertung = Punkte der letzten fünf Saisons, gewichtet 5, 4, 3, 2, 1 (jüngste zuerst). Punkte je Saison = 57 − Gesamtplatz (1. Liga 1 bis 18, 2. Liga 19 bis 36, 3. Liga 37 bis 56). Fehlende Saisons zählen wie der Startplatz nach Liga und Ansehen.
+- Folge: Ein Absteiger bekommt in der 2. Liga das meiste Geld, ein Aufsteiger wächst langsam hinein (wie §5.1 verlangt).
+- 3. Liga: Topf zu gleichen Teilen, 1,31 Mio. € je Verein.
+- Ergebnis: 1. Liga 33 bis 67 Mio. € (Schnitt 50), 2. Liga 8 bis 17 Mio. € (Schnitt 12,5).
+- Berechnet einmal zu Saisonbeginn (und bei einer geänderten Liga), ohne Zufall, gespeichert in `S.tvS`. Ausgezahlt je Ligaspiel wie bisher. Die vier Raten aus §4 kommen später.
+
+**Werbung mit Grundbetrag** (`RF.sponsor`, `sponsorBasis`):
+- Grundbetrag je Ligaspiel = 1,15 Mio. € × e^(0,065 × (Ansehen − 70)) × Ligafaktor (1; 0,65; 0,6). Vorher Ansehen² × 45, 18 oder 8.
+- Warum exponentiell: Mit Ansehen² wachsen die Gehälter der Großen schneller als ihre Werbung, Bayern und Leverkusen lägen tief im Minus. Echt hat Bayern etwa zehnmal so viel Werbung wie Heidenheim.
+- Ergebnis je Saison: 1. Liga 15 bis 200 Mio. € (Schnitt 53, echt 57), 2. Liga Schnitt 8 Mio. €, 3. Liga Schnitt 3,7 Mio. € (echt 5,8).
+- **Aufteilung für dich:** Trikotbrust 38 %, Ausrüster 18 %, Ärmel 7 % (Verträge wie bisher, K24), dazu **weitere Sponsoren** 37 % (Premium-, Logen- und Regionalpartner) je Ligaspiel ohne Verhandlung, Buchung „Weitere Sponsoren“. Bayern bekäme so etwa 75 Mio. € für die Brust (echt etwa 60 Mio., K24 §5.1).
+- Computer-Vereine buchen den ganzen Grundbetrag.
+
+**Verwaltung und Sonstiges** (neu, `RF.verwaltung`, `verwaltungKosten`):
+- Je Ligaspiel 40 % (1. Liga), 55 % (2. Liga) oder 40 % (3. Liga) von TV, Grundbetrag der Werbung und sonstigen Einnahmen. Für alle Vereine, für dich mit dem Grundbetrag, nicht mit deinen Verträgen.
+- Warum: Echt gehen neben dem Personal noch 40 bis 70 % des Umsatzes an Spielbetrieb, Verwaltung, Reisen und Sicherheit. Ohne diesen Posten lägen nach der Umstellung alle Ligen weit im Plus (1. Liga +40 Mio. € je Verein und Saison).
+
+**Sonstige Einnahmen** (`RFP.sonstiges`): 300.000, 80.000 und 30.000 € je Ligaspiel, etwa 7 % der Einnahmen wie in echt. Die Krücke aus K23b entfällt.
+
+**Ergebnis der Modellrechnung** je Verein und Saison, ohne Transfers, Pokal und Europapokal:
+
+| Liga | Einnahmen | davon TV | Werbung | Gehälter | Saldo (Schnitt) | mit Minus | vorher (BZ7 mit K23b) |
+|---|---|---|---|---|---|---|---|
+| 1. Liga | 136 Mio. | 50 Mio. | 53 Mio. | 72 Mio. | +10,6 Mio. | 3 von 18 (Bayern −16, Leverkusen −34 vor dem Europapokal) | +10 bis +12 Mio. |
+| 2. Liga | 33 Mio. | 12,4 Mio. | 8 Mio. | 17 Mio. | 0 | 11 von 18 | etwa +0,5 Mio. |
+| 3. Liga | 10,7 Mio. | 1,3 Mio. | 3,7 Mio. | 6,8 Mio. | −1,0 Mio. | 16 von 20 | etwa −1 Mio. |
+
+- Die Ligen stehen damit im Schnitt wie vorher, nur in echter Größe.
+- **Europapokal mit echten Beträgen** (`REU.geld.faktor` 0,2 → 1): Bayern bekommt in der Champions League etwa 90 Mio. € und liegt damit deutlich im Plus. Leverkusen mit dem teuersten Kader nach Bayern bleibt in der Europa League im Minus. Es hat 62 Mio. € Startkonto und darf nach dem Gehaltsrahmen erst wieder kaufen, wenn die Gehälter gesunken sind.
+
+**Was sonst mitzieht:**
+- **Startkonto** = 25 Mio. € × e^(0,065 × (Ansehen − 70)), etwa ein Fünftel der Jahreseinnahmen. Bayern 127 Mio., Ansehen 71 etwa 27 Mio., 52 etwa 8 Mio., 39 etwa 3 Mio. €. Vorher 0,5 Mio. + Ansehen² × 2.500 €.
+- **Kreditrahmen** (zugleich die Grenze für die Insolvenz) = 20 Mio. € × e^(0,04 × (Ansehen − 70)). Bayern 54 Mio., Ansehen 52 etwa 10 Mio., 39 etwa 6 Mio. €. Vorher 2 Mio. + 250.000 € je Ansehen. Kleine Drittligisten werden damit früher insolvent als vorher (12 Mio. Spielraum vorher, jetzt 4 bis 6 Mio.).
+- **Gehaltsrahmen** (K23d) 75 % statt 85 % der erwarteten Einnahmen. Gehälter und Stab liegen im Modell bei 55 bis 66 % im Schnitt, bei kleinen Drittligisten und Leverkusen bei 80 bis 84 %. Gesperrt (über 82,5 %) ist anfangs kaum einer.
+- **Finanzlage beim Vereinswert** (K19): reich ab 60 Mio. € statt 20 Mio., knapp unter 2 Mio. statt 1,5 Mio.
+- **Auslandsvereine:** Transferbudget Finanzkraft² × 25.000 € statt 12.000 €, weil gute Spieler teurer sind.
+- **Tribüne** (K26): 12 Mio. € für 3.000 Plätze (4.000 € je Platz, echt 3.000 bis 6.000 €) statt 4,5 Mio.
+- **Alte Spielstände:** Beim Laden werden die Gehälter einmal auf die neue Kurve umgerechnet, im gleichen Verhältnis zur Kurve wie vorher (`k23cUmstellen`, Merker `S.k23c`). Sonst fühlten sich alle Stars unterbezahlt (Kabine, K14). Kontostände, Sponsorverträge und Kredite bleiben und gleichen sich über die Saisons an.
+
+**Bewusst noch nicht umgestellt** (eigene kleine Schritte nach dem Testlauf):
+- Feste Beträge der Ereigniskarten (Mäzen 1,5 Mio., Steuerprüfung 250.000 €, Abschiedsspiel 150.000 €): Für die 3. Liga passen sie, für die 1. Liga sind sie klein. Eine Staffel nach Liga braucht auch neue Texte.
+- Kampagnen (K25, 50.000 bis 200.000 €), Fanartikel je Zuschauer, Logen, übrige Bauten (K26): Spieltag und Merchandising lagen schon nahe an echt.
+- Stab (K16) und Jugendarbeit: unverändert.
+- Fanartikel für Computer-Vereine (sie haben keinen Fanshop): echt 4 bis 7 % des Umsatzes, fehlt im Spiel.
+
 ## 6. Hebel des Spielers
 
 | Hebel | Nutzen | Preis |
@@ -304,6 +370,19 @@ finanzen:{
 19. K23d vor K23c, weil Budgets Anteile der Einnahmen sind und nicht von den Größenordnungen abhängen (§5.5f).
 20. Gehaltsrahmen 85 % der erwarteten Einnahmen bis K23c, über 110 % keine neuen Gehälter, für dich und Computer-Vereine (§5.5f).
 
+**Vorläufig entschieden mit K23c (22.11.2026, von mir, ohne Testlauf):**
+
+21. K23c ohne die Messung aus §5.6a Nr. 7, Werte aus einer Modellrechnung der Welt (§5.6b). Ein voller Testlauf soll sie bestätigen.
+22. Gehalt 2,5 Mio. × e^(0,16 × (Stärke − 75)), Marktwert 7 Mio. × e^(0,2 × (Stärke − 75)) (§5.6b).
+23. TV nach dem Säulenmodell: 54 % gleich, 43 % Leistung nach Rang in der Fünfjahreswertung (Gewicht Zahl + 3 − Rang), 3 % Interesse nach Ansehen², 3. Liga gleich. Nachwuchs-Säule in der Gleichverteilung, bis es sie gibt (§5.6b).
+24. Werbung exponentiell im Ansehen mit Ligafaktor, davon 37 % weitere Sponsoren ohne Verhandlung (§5.6b).
+25. Neuer Posten Verwaltung und Sonstiges: 40, 55 oder 40 % von TV, Werbung und Sonstigem (§5.6b).
+26. Sonstige Einnahmen 300.000, 80.000, 30.000 € je Ligaspiel (§5.6b).
+27. Startkonto und Kreditrahmen exponentiell im Ansehen, Gehaltsrahmen 75 % (§5.6b).
+28. Europapokal mit echten Beträgen (Faktor 1, K37 §5.3).
+29. Alte Spielstände: Gehälter einmal umrechnen, alles andere bleibt (§5.6b).
+30. Karten, Kampagnen, Fanartikel, Logen, Stab und die übrigen Bauten erst nach dem Testlauf (§5.6b).
+
 **Quellen der Recherche vom 21.11.2026:**
 - Personalaufwand 2. Liga zum Gesamterlös: https://report.bundesliga.de/2425/de/_assets/downloads/key-bundesliga-2-dfl-er25.pdf
 - Personalaufwand 1. Liga zu den Gesamtaufwendungen: https://report.bundesliga.de/2425/de/_assets/downloads/key-economic-figures-dfl-er25.pdf
@@ -312,6 +391,7 @@ finanzen:{
 
 ## Quellen
 
+- Stichproben Kaderwerte für K23c (Websuche 22.11.2026, nur Auszüge der Suchergebnisse, Seiten nicht geöffnet): [ran.de, Marktwert-Update Bundesliga (Bayern etwa 1,04 Mrd. €)](https://ran.joyn.de/sports/fussball/bundesliga/bundesliga-marktwert-update-michael-olise-stellt-neue-bestmarke-auf-jamal-musiala-faellt-ab-195630), [90min, Marktwert-Update 2. Liga (Hertha 45 bis 63 Mio. €)](https://www.90min.de/marktwert-update-in-der-2-liga-die-wertvollsten-spieler-der-grosste-gewinner), [footystats, Marktwerte 3. Liga](https://footystats.org/germany/3-liga/market-values)
 - Wirtschaftszahlen 2023/24 für den Plan K23c (abgerufen 22.11.2026): [DFL-Wirtschaftsreport, Bundesliga, Gewinn- und Verlustrechnung](https://report.bundesliga.de/2324/en/economic-report/economic-figures/bundesliga/income-statement.html), [DFL, 2. Bundesliga](https://report.bundesliga.de/2324/en/economic-report/economic-figures/bundesliga-2/income-statement.html), [DFL, Lizenzfußball](https://report.bundesliga.de/2324/en/economic-report/economic-figures/licensed-football/revenue-and-expenditure.html), [DFB-Saisonreport 3. Liga 2023/24](https://assets.dfb.de/uploads/000/315/789/original_Saisonreport_3Liga_A4_23_24.pdf) (Werte aus dem ePaper, Seiten 31 und 41 bis 45, Tabellen nur maschinell gelesen), [DFB, Medienrechte 3. Liga](https://www.dfb.de/news/dfb-schreibt-medienrechte-fuer-3-liga-neu-aus), [Stuttgarter Zeitung, Umsatzrekord](https://www.stuttgarter-zeitung.de/sport/dfl-erstmals-ueber-sechs-milliarden-ligen-mit-rekordumsatz-79123089.html)
 
 - Umsatz 2024/25, Bundesliga und 2. Liga, Kosten, Gewinn: [bundesliga.com](https://www.bundesliga.com/de/bundesliga/news/bundesliga-saison-2024-25-dfl-milliarden-umsatz-rekord-35757), [sportschau.de](https://sportschau.de/fussball/bundesliga/dfl-verkuendet-umsatzrekord-der-bundesligisten,dfl-umsatzrekord-102.html), [DFL Economic Report 24/25](https://report.bundesliga.de/2425/en/economic-report/economic-figures/licensed-football/revenue-and-expenditure.html)

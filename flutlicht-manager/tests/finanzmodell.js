@@ -1,7 +1,7 @@
 // Messskript für K23b (K23 §5.2): Was ergäbe das volle Einnahmenmodell für jeden Verein, wenn Computer-Vereine dieselben Einnahmen und Ausgaben buchten wie du?
 // Ändert nichts am Spiel. Spielt N Saisons normal und rechnet je Ligaspiel für jeden Verein nebenher:
-//   Einnahmen: TV (tvGeld), Sponsor (Ansehen² × Ligawert), im Heimspiel Zuschauer (Erwartung ohne Würfel, Preis = Richtpreis), Fanartikel und Logen.
-//   Ausgaben: Gehälter des Kaders und des Stabs je Ligaspiel, Stadion und Betrieb, Jugendarbeit (Stufe der Computer-Vereine).
+//   Einnahmen: TV (tvGeld, seit K23c Säulenmodell), Werbung (seit K23c sponsorBasis) und Sonstiges, im Heimspiel Zuschauer (Erwartung ohne Würfel, Preis = Richtpreis), Fanartikel und Logen.
+//   Ausgaben: Gehälter des Kaders und des Stabs je Ligaspiel, Stadion und Betrieb mit Verwaltung (seit K23c), Jugendarbeit (Stufe der Computer-Vereine).
 //   Zum Vergleich die heutige Pauschale der Computer-Vereine (Ansehen² × fremdeEinnahmen.liga je Ligaspiel).
 // Ausgabe je Liga: Einnahmen, Ausgaben und Saldo je Saison (Schnitt, Spanne), Anteil mit Minus, die drei schwächsten und stärksten Vereine, dazu dein Verein mit den echten Buchungen.
 // Aufruf: node tests/finanzmodell.js [Saisons, Standard 1]. Nur Node.js. Keine Prüfung mit Exit-Code, nur Zahlen für das Testprotokoll.
@@ -15,9 +15,10 @@ saisons({n:N,seed:SEED,verein:VEREIN,
   beiSpielen:(list,S,o)=>{const W=F0.__W,ev=W.ev,RF=ev('RF'),RS=ev('RS'),Z=RF.zuschauer;
     list.forEach(r=>{if(!r.lg)return;[r.h,r.a].forEach((id,s)=>{const t=S.teams[id];if(!t)return;const k=z(id),n=(S.fx[t.lg]||[]).length||34;
       // seit K23b dieselbe Rechnung wie im Spiel (kiHeimEinnahmen, sonstigeEinnahmen), Sonstiges zählt hier zum Sponsor
-      const tv=ev('tvGeld')(t),sp=t.rep*t.rep*(RF.sponsor['liga'+t.lg]||RF.sponsor.liga3)+ev('sonstigeEinnahmen')(t);let tor=0;
+      // seit K23c: Werbung = Grundbetrag (sponsorBasis), Ausgaben mit Verwaltung (verwaltungKosten)
+      const tv=ev('tvGeld')(t),sp=ev('sponsorBasis')(t)+ev('sonstigeEinnahmen')(t);let tor=0;
       if(s===0)tor=ev('kiHeimEinnahmen')(t,S.teams[r.a]||null,false);
-      const geh=(ev('squad')(id).reduce((a,p)=>a+p.sal,0)+ev('stabGehaelter')(id))/n,betr=t.cap*RF.betrieb.jePlatz+(t.logen||0)*RF.betrieb.jeLoge,jug=RF.jugendKosten[RS.nachwuchs.computerStufe];
+      const geh=(ev('squad')(id).reduce((a,p)=>a+p.sal,0)+ev('stabGehaelter')(id))/n,betr=t.cap*RF.betrieb.jePlatz+(t.logen||0)*RF.betrieb.jeLoge+ev('verwaltungKosten')(t),jug=RF.jugendKosten[RS.nachwuchs.computerStufe];
       k.ein+=tv+sp+tor;k.aus+=geh+betr+jug;k.alt+=t.rep*t.rep*RF.fremdeEinnahmen.liga;k.sp++;k.tv+=tv;k.spons+=sp;k.tor+=tor;k.gehalt+=geh;});});},
   vorher:(F)=>{F0=F;},
   beiSaisonende:(S,F)=>{const ev=F.__W.ev,fmt=x=>(x/1e6).toFixed(1)+' Mio';

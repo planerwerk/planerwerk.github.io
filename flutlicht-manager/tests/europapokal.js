@@ -45,7 +45,7 @@ const WB=['cl','el','ecl'];
   pruef(ev('gelbe')(p).eu===3&&ev('gelbe')(p).liga===liga&&sp.eu.gelb===1&&sp.liga.gelb===0&&ev('wbVon')({eu:'cl'})==='eu','Sperren: dritte Gelbe im Europapokal sperrt nur dort',JSON.stringify(sp));}
 
 // 6. Eine Saison im Ablauf: alle Spiele gespielt, Runden vollständig, je Wettbewerb ein Sieger, Ligaspiele deutscher Teilnehmer mit drei Tagen Abstand zum Europapokal
-{let info=null;saisons({n:1,seed:SEED,verein:VEREIN,beiSaisonende:(S,F)=>{const E=S.eu;info={E:JSON.parse(JSON.stringify(E)),abstand:0,de:0,meinGeld:(E.geld&&E.geld[S.my])||0,meinFin:S.fin['Europapokal']||0};
+{let info=null;saisons({n:1,seed:SEED,verein:VEREIN,beiSaisonende:(S,F)=>{const E=S.eu;info={E:JSON.parse(JSON.stringify(E)),abstand:0,de:0,meinGeld:(E.geld&&E.geld[S.my])||0,meinFin:S.fin['Europapokal']||0,faktor:F.__W.ev('REU').geld.faktor};
     const P=S.plan.eu,tage=new Map(),add=(id,d)=>{if(id>=2000)return;if(!tage.has(id))tage.set(id,[]);tage.get(id).push(d);};
     [1,2,3].forEach(lg=>(S.fx[lg]||[]).forEach((md,k)=>md.forEach(([h,a],i)=>{const d=S.plan.zeit[lg][k][i][0];add(h,d);add(a,d);})));
     WB.forEach(wb=>{const W=E[wb],p=P[wb];(W.lp||[]).forEach(m=>{add(m[0],m[3]);add(m[1],m[3]);});
@@ -56,7 +56,7 @@ const WB=['cl','el','ecl'];
   pruef(WB.every(voll)&&WB.every(wb=>E.titel[wb]!=null),'Saison: Ligaphase und alle K.-o.-Runden gespielt, je Wettbewerb ein Sieger',WB.map(wb=>`${wb} ${E.titel[wb]}`).join(', '));
   pruef(info.abstand<=2,'Saison: deutsche Teilnehmer spielen höchstens zweimal mit weniger als drei Tagen Abstand',`${info.abstand} Fälle bei ${info.de} Vereinen`);
   // U19b: Prämien. Jeder deutsche Teilnehmer der Champions League hat mindestens das Startgeld, deine Buchung „Europapokal“ ist gleich deinen Prämien
-  const cl=E.cl.t.filter(id=>id<2000),min=Math.round(18.62e6*0.2/1000)*1000;
+  const cl=E.cl.t.filter(id=>id<2000),min=Math.round(18.62e6*info.faktor/1000)*1000;
   pruef(cl.every(id=>(E.geld[id]||0)>=min)&&info.meinGeld===info.meinFin,'Prämien: Startgeld für alle Deutschen in der Champions League, deine Buchung gleich S.eu.geld',`${cl.map(id=>E.geld[id]).join(', ')} · dein Verein ${info.meinGeld} / ${info.meinFin}`);}
 
 // 8. Geld und Ansehen einzeln (U19b): Startgeld mit Wertsäule nach Rang, Ansehen nach erreichter Runde und Wettbewerb

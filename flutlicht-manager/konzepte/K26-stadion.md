@@ -12,7 +12,7 @@ Hängt ab von: K23 (Finanzen), K27 (Fans) · Wird gebraucht von: K07, K08, K10, 
 ## 2. Vorbilder und Abgrenzung
 
 - **BMH, Anstoss:** Stadionausbau und Platzwart (PLAN §4, Recherche 2.1).
-- **Heute im Spiel:** Tribünen (+3.000 Plätze, 4,5 Mio. €, 6 Wochen), Logen (+10, 2,5 Mio. €, 4 Wochen), Fanshop (3 Stufen). Bleibt die Grundlage.
+- **Heute im Spiel:** Tribünen (+3.000 Plätze, 4,5 Mio. €, seit K23c 12 Mio. €, 6 Wochen), Logen (+10, 2,5 Mio. €, 4 Wochen), Fanshop (3 Stufen). Bleibt die Grundlage.
 - **Bewusst anders:** kein grafischer Editor, sondern Bauteile mit klaren Wirkungen.
 
 ## 3. Begriffe und Daten

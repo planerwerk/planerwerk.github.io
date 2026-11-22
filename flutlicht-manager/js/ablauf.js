@@ -91,9 +91,10 @@ function heimspielEinnahmen(m,cup){const t=myT();if(autoB('preise'))t.price=clam
 // Buchungen je Ligaspieltag des eigenen Vereins
 function finanzenLiga(m){const t=myT();if(m.h===S.my)heimspielEinnahmen(m,false);
   money('TV-Gelder',tvGeld(t));{const so=sonstigeEinnahmen(t);if(so)money('Sonstige Einnahmen',so);} // Mitglieder, Vermarktung (K23 §3.1, K23b)
+  {const wp=Math.round(sponsorBasis(t)*(RF.werbung.partner||0));if(wp)money('Weitere Sponsoren',wp);} // Premium-, Logen- und Regionalpartner ohne Verhandlung (K23c)
   if(S.spons){money('Sponsor',S.spons.base);if(S.spons.win&&winner(m)===S.my&&m.hg!==m.ag)money('Sponsor',S.spons.win);}werbungSpieltag(m); // Ausrüster und Ärmel (K24a)
   const n=S.fx[t.lg].length;money('Gehälter',-Math.round((squad(S.my).reduce((s,p)=>s+p.sal,0)+leiheGehaelter())/n*gehaltFaktor())); /* dazu verliehene Spieler und Profis in der Zweiten (U10d) */if(S.stab)money('Trainerstab',-Math.round(stabGehaelter(S.my)/n));
-  money('Stadion & Betrieb',-Math.round(t.cap*RF.betrieb.jePlatz+t.logen*RF.betrieb.jeLoge));money('Jugendarbeit',-RF.jugendKosten[autoB('jugend')?RS.nachwuchs.computerStufe:t.youth]);{const z=zweiteKosten();if(z)money('Zweite Mannschaft',-z);}
+  money('Stadion & Betrieb',-Math.round(t.cap*RF.betrieb.jePlatz+t.logen*RF.betrieb.jeLoge));money('Verwaltung',-verwaltungKosten(t));money('Jugendarbeit',-RF.jugendKosten[autoB('jugend')?RS.nachwuchs.computerStufe:t.youth]);{const z=zweiteKosten();if(z)money('Zweite Mannschaft',-z);}
   if(S.loan>0)money('Kreditzinsen',-Math.round(S.loan*RF.kreditZins/n));}
 // Woche (K03 §4): Kondition, Form, Selbstvertrauen, Entwicklung für Spieler ohne Pflichtspiel seit 7 Tagen, Wochenbericht des Co-Trainers
 function training(){const T=RT,d=S.tag,bericht=[];lernplaetzeVergeben();if(S.stab)stabWoche();const monat=Math.floor(S.tag/7)%RTA.ki.ordnungAlleWochen===0;S.teams.forEach(t=>{if(!aktiv(t))return;if(stabMacht(t.id,'formation')&&monat){const f0=t.form;kiOrdnung(t);if(t.id===S.my&&t.form!==f0){S.lineup=bestXI(S.my,t.form);stabMeldung(`Der Co-Trainer stellt die Grundordnung auf ${t.form} um.`);}}vertrautheitWoche(t);});

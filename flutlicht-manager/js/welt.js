@@ -8,12 +8,38 @@ function stars(p){const n=clamp(sternZahl(p)+sternFehler(p),1,4);return '★★�
 const teamLevel=tid=>{const s=squad(tid).map(p=>p.str).sort((a,b)=>b-a).slice(0,RP.niveauSpieler);return s.length?s.reduce((a,b)=>a+b,0)/s.length:RP.niveauLeer;};
 function askPrice(p){return forderung(p);} // Forderung des Vereins nach dem Vereinswert (K19 §5.1, U10a), mit dem Stand der Verhandlung
 const extDemand=p=>{const g=RM.gehalt;return Math.round(salaryFor(p.str)*(g.basis+p.seed*g.zufall)*(p.age>=g.altAb?g.altFaktor:1)/1000)*1000;};
-const kreditRahmen=t=>(RF.kreditRahmen.basis+t.rep*RF.kreditRahmen.jeAnsehen)*(t.id===S.my?stufe().kredit:1);
+// Kreditrahmen, Startkonto und Werbung wachsen seit K23c mit e^(steigung × (Ansehen − mitte)), wie die Einnahmen der echten Vereine
+const kreditRahmen=t=>{const K=RF.kreditRahmen;return Math.round(K.basis*Math.exp(K.steigung*(t.rep-K.mitte))/K.runden)*K.runden*(t.id===S.my?stufe().kredit:1);};
+const startKonto=rep=>{const K=RW.konto;return Math.round(K.basis*Math.exp(K.steigung*(rep-K.mitte))/K.runden)*K.runden;};
+// Grundbetrag der Werbung je Ligaspiel (K23c): Grundlage der Angebote für Brust, Ausrüster und Ärmel, der weiteren Partner und der Werbung der Computer-Vereine
+const sponsorBasis=t=>{const P=RF.sponsor;return P.basis*Math.exp(P.steigung*(t.rep-P.mitte))*(P.liga[t.lg]||P.liga[3]);};
 // Schwierigkeit (K02 §5.4): Spielstände ohne Angabe gelten als „Normal“
 const stufe=()=>REGELN.schwierigkeit.stufen[S.stufe]||REGELN.schwierigkeit.stufen[REGELN.schwierigkeit.standard];
 function stufeAnwenden(k){S.stufe=REGELN.schwierigkeit.stufen[k]?k:REGELN.schwierigkeit.standard;const St=stufe(),t=myT();t.cash=Math.round(t.cash*St.konto);
   if(!St.erinnerungen){S.einst=S.einst||{aus:{}};S.einst.aus=S.einst.aus||{};Object.keys(RK.erinnerungen).forEach(e=>S.einst.aus[e]=1);}setTarget();}
-const tvGeld=t=>{const v=RF.tv['liga'+t.lg]||RF.tv.liga3;return v.basis+t.rep*v.jeAnsehen;};
+// TV-Gelder (K23 §5.1, K23c): Säulenmodell, Saisonbetrag je Verein einmal je Saison und Ligazusammensetzung berechnet (S.tvS), ohne Zufall, ausgezahlt je Ligaspiel.
+// Fünfjahreswertung: t.tvw = Punkte der letzten Saisons (jüngste zuerst, saison.js), t.tv0 = Startpunkte nach Liga und Ansehen für fehlende Saisons.
+function tvPunkteStart(){const off={};let n=0;LIGEN.forEach(lg=>{off[lg]=n;n+=lgIds(lg).length;});
+  LIGEN.forEach(lg=>S.teams.filter(t=>t.lg===lg).sort((a,b)=>b.rep-a.rep||a.id-b.id).forEach((t,i)=>{if(t.tv0==null)t.tv0=n-off[lg]-i;}));
+  S.teams.forEach(t=>{if(t.tv0==null)t.tv0=0;});}
+const tvWertung=t=>RF.tv.gewichte.reduce((s,w,i)=>s+w*(t.tvw&&t.tvw[i]!=null?t.tvw[i]:t.tv0||0),0);
+function tvSaison(){const T=RF.tv,c=S.tvS;if(c&&c.s===S.season&&S.teams.every(t=>!aktiv(t)||c.lg[t.id]===t.lg))return c.v;
+  if(S.teams.some(t=>t.tv0==null))tvPunkteStart();
+  const v={},lg={};LIGEN.forEach(l=>{const L=S.teams.filter(t=>t.lg===l),n=L.length,topf=T.topf[l]||0;if(!n)return;
+    if(l>=3){L.forEach(t=>{v[t.id]=Math.round(topf/n);lg[t.id]=l;});return;}
+    let sw=0;for(let i=1;i<=n;i++)sw+=n+T.versatz-i;const sr=L.reduce((s,t)=>s+t.rep*t.rep,0)||1;
+    L.slice().sort((a,b)=>tvWertung(b)-tvWertung(a)||b.rep-a.rep||a.id-b.id).forEach((t,i)=>{v[t.id]=Math.round(topf*(T.gleich/n+T.leistung*(n+T.versatz-(i+1))/sw+T.interesse*t.rep*t.rep/sr));lg[t.id]=l;});});
+  S.tvS={s:S.season,v,lg};return v;}
+const tvSaisonBetrag=t=>tvSaison()[t.id]||0;
+const tvRang=t=>S.teams.filter(x=>x.lg===t.lg).sort((a,b)=>tvWertung(b)-tvWertung(a)||b.rep-a.rep||a.id-b.id).findIndex(x=>x.id===t.id)+1; // Platz in der Leistungssäule (Anzeige)
+const tvGeld=t=>Math.round(tvSaisonBetrag(t)/((S.fx&&S.fx[t.lg]||[]).length||(t.lg===3?38:34)));
+// Spielstände von vor K23c (ohne S.k23c): Gehälter einmal auf die neue Kurve umrechnen (gleiches Verhältnis zum Gehalt nach Stärke wie vorher), damit sich niemand
+// plötzlich unterbezahlt fühlt (kabine.js). Kontostände, Verträge mit Sponsoren und Kredite bleiben, sie gleichen sich über die Saisons an. Aufruf nach dem Laden.
+function k23cUmstellen(){if(!S||S.k23c)return;const A=RP.gehaltAlt,alt=s=>A.basis*Math.exp(A.steigung*(s-A.mitte)),neu=p=>{if(p&&p.sal>0)p.sal=Math.max(1000,Math.round(p.sal*salaryFor(p.str)/alt(p.str)/1000)*1000);};
+  S.pl.forEach(neu);if(S.ausland)S.ausland.pl.forEach(neu);if(S.jg)S.jg.forEach(neu);if(S.zw)S.zw.forEach(neu);S.k23c=1;}
+// Am Saisonende (saison.js): Punkte der Saison in die Fünfjahreswertung, Gesamtplatz aus Liga und Tabellenplatz (t.lastPos)
+function tvWertungEintragen(){if(S.teams.some(t=>t.tv0==null))tvPunkteStart();const off={};let n=0;LIGEN.forEach(lg=>{off[lg]=n;n+=lgIds(lg).length;});
+  S.teams.forEach(t=>{if(!aktiv(t)||!t.lastPos)return;t.tvw=[Math.max(0,n+1-(off[t.lg]+t.lastPos))].concat(t.tvw||[]).slice(0,RF.tv.gewichte.length);});}
 const richtPreis=t=>RF.zuschauer.refBasis+t.rep*RF.zuschauer.refJeAnsehen;
 // Talent als Band aus der Sterne-Stufe: zeigt dieselbe Auskunft wie die Sterne, nur als Regler
 function talentBand(p){const s=Math.round(p.str),st=RP.sterne,n=clamp(sternZahl(p)+sternFehler(p),1,4);const[a,b]=n===4?[st[0],99]:n===3?[st[1],st[0]]:n===2?[st[2],st[1]]:[0,st[2]];return[Math.min(99,s+a),Math.min(99,s+b)];}
@@ -26,12 +52,12 @@ function mkPlayer(o){const age=o.age,str=o.str,T=RP.talent;const p={id:o.id!=nul
 const lgIds=lg=>S.teams.filter(t=>t.lg===lg).map(t=>t.id);
 const grundStaerke=rep=>RW.grund.basis+rep*RW.grund.jeAnsehen;
 function buildWorld(seed){const W=RW;
-  S={v:REGELN.spielstand.version,seed:seed>>>0,zufall:zufallStart(seed),pid:1,season:W.startSaison,tag:0,gespielt:-1,plan:null,relSp:[],relSp2:[],einst:{aus:{}},my:0,mgr:'',teams:[],pl:[],am:[],news:[],offers:[],fin:{},loan:0,trust:W.startVertrauen,train:W.startTraining,target:W.startZiel,hist:[],phase:'play',lineup:[],spons:null,sponsOffers:null,constr:null,res:{1:[],2:[],3:[]},att:[0,0],fired:0};
+  S={v:REGELN.spielstand.version,seed:seed>>>0,zufall:zufallStart(seed),pid:1,season:W.startSaison,tag:0,gespielt:-1,plan:null,relSp:[],relSp2:[],einst:{aus:{}},my:0,mgr:'',teams:[],pl:[],am:[],news:[],offers:[],fin:{},loan:0,trust:W.startVertrauen,train:W.startTraining,target:W.startZiel,hist:[],phase:'play',lineup:[],spons:null,sponsOffers:null,constr:null,res:{1:[],2:[],3:[]},att:[0,0],fired:0,k23c:1};
   S.plan=planFuer(S.season);S.tag=S.plan.start;
   S.am=AMATEURE.map(n=>({name:n,str:riA(W.amateurStaerke)}));
   PIX=new Map();
   VEREINE.forEach((c,i)=>{
-    const t={id:i,name:c.name,sh:c.kurz,lg:c.liga,region:c.region,zweite:c.zweite?VEREINE.findIndex(v=>v.kurz===c.zweite):-1,ewig3:c.ewig3||0,abstieg3:c.abstieg3||0,rep:c.ansehen,cap:c.plaetze,fans:c.fans,col:c.farbe,cash:Math.round(W.konto.basis+c.ansehen*c.ansehen*W.konto.jeAnsehen2),form:pick(W.startFormationen),tac:'N',ein:'N',price:Math.round(W.ticket.basis+c.ansehen*W.ticket.jeAnsehen),logen:0,shop:0,youth:W.startJugend,expPos:W.startZiel,lastPos:W.startZiel};
+    const t={id:i,name:c.name,sh:c.kurz,lg:c.liga,region:c.region,zweite:c.zweite?VEREINE.findIndex(v=>v.kurz===c.zweite):-1,ewig3:c.ewig3||0,abstieg3:c.abstieg3||0,rep:c.ansehen,cap:c.plaetze,fans:c.fans,col:c.farbe,cash:startKonto(c.ansehen),form:pick(W.startFormationen),tac:'N',ein:'N',price:Math.round(W.ticket.basis+c.ansehen*W.ticket.jeAnsehen),logen:0,shop:0,youth:W.startJugend,expPos:W.startZiel,lastPos:W.startZiel};
     S.teams.push(t);if(c.liga>3)return;
     const real=KADER[c.kurz]||[], base=grundStaerke(c.ansehen), quota=real.length>=W.kaderVollAb?W.sollVoll:W.sollDuenn, st=W.stammplaetze, have={TW:0,AB:0,MF:0,ST:0};
     real.forEach(([n,pos,age,str,nat])=>{const p=mkPlayer({n,pos,age,str,team:i,nat});if(age<=W.jungeEchte.bisAlter)p.pot=str+riA(W.jungeEchte.talent);addP(p);have[pos]++;});
@@ -45,6 +71,7 @@ function buildWorld(seed){const W=RW;
   S.teams.forEach(t=>{t.urlaubFertig=true;});S.pl.forEach(p=>{p.koVor=p.ko;});
   mitStrom(strom('stab'),stabAufbau);mitStrom(strom('scouts'),scoutsAufbau);mitStrom(strom('jugendstab'),jugendStabAufbau);kabineStart();mitStrom(strom('ausland'),auslandAufbau); // Auslandspool zuletzt und mit eigenem Strom (K32 §3.1)
   europaAnlegen(null); // Europapokal mit den echten Startern 2026/27 (K37, U19a), eigener Strom
+  tvSaison(); // TV-Gelder der ersten Saison (K23c), ohne Zufall
   // Trainerstab nach Ansehen (K16), Kabine mit Rollen, Kapitän und Startstimmung (K14) // Start Anfang Juli: Urlaub vorbei, Laufplan bis zum Trainingsauftakt (K12a)
 }
 // Neuer Kader für einen Verein, der aus der Regionalliga aufsteigt (alles erfundene Spieler)
@@ -59,7 +86,7 @@ function targetText(lg,t){if(lg===1)return t===1?'Deutsche Meisterschaft':t<=4?'
 function setTarget(){LIGEN.forEach(lg=>S.teams.filter(t=>t.lg===lg).sort((a,b)=>b.rep-a.rep).forEach((t,i)=>t.expPos=i+1));const lg=myT().lg,r=targetFor(myT().expPos,lg);let z=lg>=2?Math.max(RV.ziel.unterhalbMindestens,r):r;
   // Schwierigkeit: Ziel einen Platz leichter oder strenger, nie schlechter als das schlechteste Ziel der Liga und nie besser als das beste (1. Liga Platz 1, sonst Platz 2)
   if(stufe().ziel)z=clamp(z+stufe().ziel,lg>=2?Math.min(z,RV.ziel.unterhalbMindestens):1,Math.max(z,RV.ziel.schlechtester[lg]));S.target=z;nebenzieleSetzen();} // Nebenziele mit dem Saisonziel (K28 §5.7, U12b, js/vorstand.js)
-function sponsOffers(){const t=myT(),SP=RF.sponsor;const b=t.rep*t.rep*(SP['liga'+t.lg]||SP.liga3)*(RF.werbung?RF.werbung.anteil.brust:1)*werbFaktor(); /* Brust: Anteil am bisherigen Betrag, der Rest geht an Ausrüster und Ärmel (K24a); Werbewert (K24b) */const ns=shuffle(SPONSOREN.slice());const r=v=>Math.round(v/1000)*1000;
+function sponsOffers(){const t=myT(),SP=RF.sponsor;const b=sponsorBasis(t)*(RF.werbung?RF.werbung.anteil.brust:1)*werbFaktor(); /* Brust: Anteil am Grundbetrag der Werbung, daneben Ausrüster, Ärmel (K24a) und weitere Partner (K23c); Werbewert (K24b) */const ns=shuffle(SPONSOREN.slice());const r=v=>Math.round(v/1000)*1000;
   S.sponsOffers=[...SP.angebote.map((a,i)=>({name:ns[i],base:r(b*a.fix),win:a.sieg?r(b*a.sieg):0,yrs:a.jahre,info:a.info})),werbUmstritten('brust',b)];werbVerlaengerung('brust',S.sponsOffers);sponsorAuto();werbungOffen();} /* viertes Angebot: umstrittener Geldgeber (K24b) */ // in der Automatik wählt der Verein sofort (K36); freie Werbeflächen bekommen Angebote (K24a)
 function sponsorWaehlen(i){S.spons={...S.sponsOffers[i]};S.sponsOffers=null;news(`Sponsorvertrag unterschrieben: ${S.spons.name}.`,'good');werbUnterschrieben('brust');}
 function pickSponsor(i){if(!darf('sponsor','sponsorOderPreis'))return;sponsorWaehlen(i);save();render();}

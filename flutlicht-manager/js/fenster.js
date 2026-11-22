@@ -112,5 +112,5 @@ function copyExp(){const ta=document.getElementById('exp');const done=()=>toast(
 function importSave(){let d=null;try{d=JSON.parse(document.getElementById('imp').value);}catch(e){}
   if(!d||!d.teams||!d.pl){toast('Der Code ist ungültig.');return;}
   if(d.v!==REGELN.spielstand.version){toast('Dieser Code stammt aus einer älteren Version (Wochenkalender) und passt nicht mehr.');return;}
-  if(LIVE){clearInterval(LIVE.timer);LIVE=null;}S=d;reindex();save();closeOv();TAB='buero';render();toast('Spielstand geladen.');if(S.live)liveFortsetzen();}
+  if(LIVE){clearInterval(LIVE.timer);LIVE=null;}S=d;reindex();k23cUmstellen();save();closeOv();TAB='buero';render();toast('Spielstand geladen.');if(S.live)liveFortsetzen();}
 function confirmNew(){ov(`<h2>Neues Spiel?</h2><p>Der aktuelle Spielstand wird überschrieben, wenn du im neuen Spiel den ersten Schritt machst. Sichere ihn vorher über „Menü“, falls du ihn behalten willst.</p><div class="row"><button class="go" onclick="closeOv();S=null;render()">Ja, neues Spiel</button><button onclick="closeOv()">Abbrechen</button></div>`);}

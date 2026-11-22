@@ -441,6 +441,17 @@ Datei: `konzepte/K23-finanzen.md`
 - K23d kommt vor K23c.
 - Der Gehaltsrahmen ist 85 % der erwarteten Einnahmen, bis K23c. Über 100 % sinkt das Vertrauen, über 110 % gibt es keine neuen Gehälter, für dich und die Computer-Vereine.
 
+**Mit K23c von popolupo vorläufig entschieden (22.11.2026, K23 §5.6b, §12 Nr. 21 bis 30, ohne Testlauf):**
+
+- K23c ohne die Messung, mit Werten aus einer Modellrechnung der Welt. Ein voller Testlauf soll sie bestätigen.
+- Gehälter und Marktwerte steiler (2,5 Mio. und 0,16, 7 Mio. und 0,2), damit die Ligen so weit auseinanderliegen wie in echt.
+- TV-Gelder nach dem Säulenmodell mit echten Töpfen und Fünfjahreswertung. Die Nachwuchs-Säule steckt in der Gleichverteilung.
+- Werbung wächst exponentiell mit dem Ansehen, 37 % davon zahlen weitere Sponsoren ohne Verhandlung.
+- Neuer Posten Verwaltung (40, 55 oder 40 % von TV, Werbung und Sonstigem), sonst lägen alle Ligen weit im Plus.
+- Startkonto und Kreditrahmen wachsen exponentiell mit dem Ansehen, Gehaltsrahmen 75 %, Europapokal mit echten Beträgen.
+- Alte Spielstände: nur die Gehälter werden einmal umgerechnet.
+- Karten, Kampagnen, Fanartikel, Logen, Stab und die übrigen Bauten erst nach dem Testlauf.
+
 ## K24 – Sponsoren
 Datei: `konzepte/K24-sponsoren.md`
 

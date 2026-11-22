@@ -10,7 +10,7 @@ const topScorers=lg=>S.pl.filter(p=>p.team>=0&&S.teams[p.team].lg===lg&&p.g>0).s
 function seasonEnd(){return mitStrom(strom('saisonende',S.season),seasonEndLauf);}
 function seasonEndLauf(){
   const T={1:table(1),2:table(2),3:table(3)},me=myT(),pos=rank(me.lg,S.my),B=RV;
-  S.teams.forEach(t=>{if(aktiv(t))t.lastPos=rank(t.lg,t.id);t.lastLg=t.lg;});
+  S.teams.forEach(t=>{if(aktiv(t))t.lastPos=rank(t.lg,t.id);t.lastLg=t.lg;});tvWertungEintragen(); // Fünfjahreswertung der TV-Gelder (K23c), vor Auf- und Abstieg
   T[3].forEach(r=>{S.teams[r.id].ewig3=(S.teams[r.id].ewig3||0)+r.p;});
   // Relegation (K13 §3.3): fehlt ein Spiel, wird es nachgerechnet, das Rückspiel mit Verlängerung und Elfmeterschießen. Ein Los gibt es nur noch für alte Spielstände.
   const ergebnis=(sp,paar)=>{const a=sp[0]||sim(paar[1],paar[0]),b=sp[1]||sim(paar[0],paar[1],{ko:1,agg:[a.ag,a.hg]}),g0=a.ag+b.hg,g1=a.hg+b.ag,s=relegationSieger([a,b],paar);
@@ -94,7 +94,7 @@ function newSeasonLauf(){lizenzNachweis();wechselVollziehen(true);leiheEnde();ve
   finanzenMonat(tageDerSaison(),true); // Monatsbericht Juni zum 1. Juli, der Tag läuft sonst nie durch taeglich (K23a)
   S.season++;S.plan=planFuer(S.season);S.tag=S.plan.start;S.gespielt=-1;S.relSp=[];S.relSp2=[];S.res={1:[],2:[],3:[]};
   const sp=spielplanFuer(S.season);S.fx=sp.fx;S.plan.zeit=sp.zeit;initCup();supercupAnlegen(sm);europaAnlegen(sm); // Europapokal (K37, U19a), eigener Strom
-  S.fin={};finanzenSaisonstart();S.att=[0,0];S.offers=S.offers.filter(o=>PIX.get(o.pid)&&PIX.get(o.pid).team===S.my);S.phase='play';S.summary=null;TDAY=null;TLG=0;LAST=null;
+  S.fin={};/* TV-Gelder der neuen Saison zu Saisonbeginn festlegen (K23c), so hängen sie nicht davon ab, wann sie zuerst gebraucht werden */tvSaison();finanzenSaisonstart();S.att=[0,0];S.offers=S.offers.filter(o=>PIX.get(o.pid)&&PIX.get(o.pid).team===S.my);S.phase='play';S.summary=null;TDAY=null;TLG=0;LAST=null;
   setTarget();werbungSaison();if(!S.spons)sponsOffers(); /* alle Werbeflächen samt Brust zählen in werbungSaison herunter (K24a, seit K24c auch die Brust) */
   S.lineup=bestXI(S.my,myT().form);kabineNachSaisonwechsel();jubilaeumJahre(); // 10 Jahre im Verein (K34 §8, U13)
   news(`Neue Saison ${S.season}/${(S.season+1)%100} in der ${ligaName(myT().lg)}: Ziel des Vorstands – ${targetText(myT().lg,S.target)}. Trainingsauftakt am ${datumMittel(auftaktTag(myT()))}.`,'good');save();}

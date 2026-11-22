@@ -21,8 +21,8 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 | Korrekturen zu Lauf 5 (T5.1 bis T5.5, CH4) | `mitarbeit/popolupo-t5-korrekturen` (auf 0fae7b8) | fertig, ungetestet |
 | **K23b** Computer-Vereine mit Einnahmen und Ausgaben nach dem Modell statt Pauschale (mit den Zahlen aus BZ7) | `mitarbeit/popolupo-k23b-computer-finanzen` (auf den Korrekturen) | fertig, ungetestet |
 | **K23d** Budgets vom Vorstand (Gehaltsrahmen, Transferbudget) | derselbe Zweig | fertig, ungetestet |
-| K23c echte Größenordnungen | danach | Plan in K23 §5.6a, wartet auf die Messung von Gehältern und Marktwerten |
 | **U19d1** Kaderliste der UEFA | `mitarbeit/popolupo-u19d-kaderliste` (auf K23d) | fertig, ungetestet |
+| **K23c** echte Größenordnungen | `mitarbeit/popolupo-k23c-groessenordnungen` (auf U19d1) | fertig, ungetestet, ohne die Messung, Werte aus einer eigenen Modellrechnung, vorläufig |
 | U19d2 volle Kader der Auslandsvereine in der Engine | danach | Entwurf in K37 §5.7 |
 
 **Die neueste Spitze ist immer der zuletzt genannte Zweig, er enthält alles davor.** K24 ist fertig (Claude).
@@ -56,6 +56,25 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 ---
 
 ## Changelog
+
+### 22.11.2026: K23c echte Größenordnungen (Zweig `mitarbeit/popolupo-k23c-groessenordnungen`, auf U19d1)
+
+- **Ohne die Messung** aus K23 §5.6a (der Nutzer wollte heute nicht auf Testläufe warten). Die Werte kommen aus einer Modellrechnung der Welt (K23 §5.6b), alle vorläufig.
+- **Neu und geändert:**
+  - Gehälter und Marktwerte steiler (`RP.gehalt` 2,5 Mio. und 0,16, `RP.marktwert` 7 Mio. und 0,2).
+  - TV nach dem Säulenmodell mit echten Töpfen und Fünfjahreswertung (`tvSaison`, `tvWertungEintragen`, `S.tvS`, `t.tvw`, `t.tv0` in `js/welt.js`).
+  - Werbung mit Grundbetrag exponentiell im Ansehen (`sponsorBasis`), 37 % davon als „Weitere Sponsoren“ je Ligaspiel.
+  - Neuer Posten „Verwaltung“ für alle Vereine (`verwaltungKosten`).
+  - Sonstige Einnahmen, Startkonto, Kreditrahmen, Gehaltsrahmen (75 %), Finanzlage, Budgets der Auslandsvereine, Europapokal mit Faktor 1, Tribüne 12 Mio.
+  - Alte Spielstände: Gehälter einmal umgerechnet (`k23cUmstellen`).
+- **Tests zuerst:**
+  - `tests/finanzmodell.js` mit **zwei Saisons**: Saldo je Liga (erwartet 1. Liga etwa +11 Mio., 2. Liga etwa 0, 3. Liga etwa −1 Mio. je Verein, ohne Transfers), dazu die Zeilen „Spieler“ und „nach Stärke“.
+  - `tests/finanzen.js` (neu Nr. 14 bis 18), `tests/werbung.js`, `tests/transfers.js`, `tests/europapokal.js`, `tests/lizenz.js` (Gleichschritt).
+  - Danach die langen Läufe (`tests/welt.js`, `tests/ui-zwei-saisons.js`): Transfers je Fenster gegen Lauf 5, Insolvenzen, Kontostände nach zwei Saisons.
+- **Was ich erwarte, das schiefgehen kann:**
+  - Viel weniger oder viel mehr Transfers, weil sich Preise und Budgets anders verschoben haben (CP3, CP4).
+  - Zu viele Insolvenzen in der 3. Liga (Kreditrahmen jetzt 4 bis 6 Mio.).
+  - Tests mit festen Geldbeträgen, die ich übersehen habe.
 
 ### 22.11.2026: Korrekturen zu Lauf 8 (Zweig `mitarbeit/popolupo-u19d-kaderliste`)
 

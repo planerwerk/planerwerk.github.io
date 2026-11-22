@@ -19,7 +19,7 @@ const kaufe=(w,p,fee,yrs=3)=>{const els=w.W.ev('document');els.getElementById('f
 
 // 2. Vereinswert (K19 §5.1): Kaderrolle, Restlaufzeit und Finanzlage wirken, keine Forderung über dem 1,8-Fachen des Marktwerts
 {const {S,ev,T}=welt();const p=S.pl.find(q=>q.team>=0&&q.team!==S.my&&!q.list),t=S.teams[p.team],kr=p.krA,ct=p.ct,cash=t.cash,vw=()=>ev('vwVerkauf')(p);
-  t.cash=5e6;const werte={};for(const r of ['schluessel','stamm','rotation','ergaenzung']){p.krA=r;werte[r]=vw();}p.krA='stamm';p.ct=3;const lang=vw();p.ct=1;const kurz=vw();p.ct=3;t.cash=1e5;const arm=vw();t.cash=5e7;const reich=vw();p.krA=kr;p.ct=ct;t.cash=cash;
+  t.cash=5e6;const werte={};for(const r of ['schluessel','stamm','rotation','ergaenzung']){p.krA=r;werte[r]=vw();}p.krA='stamm';p.ct=3;const lang=vw();p.ct=1;const kurz=vw();p.ct=3;t.cash=1e5;const arm=vw();t.cash=T.finanzlage.reichAb;const reich=vw();p.krA=kr;p.ct=ct;t.cash=cash;
   pruef(werte.schluessel>werte.stamm&&werte.stamm>werte.rotation&&werte.rotation>werte.ergaenzung&&Math.abs(kurz/lang-T.restlaufzeit[1])<1e-9&&Math.abs(arm/lang-T.finanzlage.knapp)<1e-9&&Math.abs(reich/lang-T.finanzlage.reich)<1e-9,
     'Vereinswert: Schlüsselspieler > Stammspieler > Rotation > Ergänzung, ein Jahr Restlaufzeit ×0,6, knappe Kasse ×0,9, reich ×1,1');
   const l=S.pl.filter(q=>q.team>=0&&q.team!==S.my),r=l.map(q=>ev('askPrice')(q)/ev('value')(q)),zuHoch=l.filter(q=>!q.list&&ev('askPrice')(q)>ev('value')(q)*T.maxFaktor+ev('RM').runden);

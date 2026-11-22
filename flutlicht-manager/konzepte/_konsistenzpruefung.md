@@ -1468,3 +1468,19 @@ Dritter Prüf-Agent, nur lesend, über T5-Korrekturen, K23b, K23d und U19d1. Kei
 | CO1 | **T8.2, Donnerstag → Samstag:** In einer Pokalwoche (Europapokal am Donnerstag, Pokal am Dienstag) passt kein Ligaspiel mit drei Tagen Abstand zu beiden. Wie beim DFB spielen solche Vereine den Pokal jetzt einen Tag später, ihre Gegner mit ihnen. In Runde 1 (Samstag) heißt das Sonntag, nach der Qualifikation zur Conference League am Donnerstag. `S.cup.spaet[Runde]` hält die Vereine fest. Die Runde wird erst nach dem zweiten Tag in `S.cup.hist` eingetragen, bis dahin liegt der erste Tag in `S.cup.teil`. | ✅ behoben |
 | CO2 | **Eingriff in den Pokal (K13):** `termineAm`, `meinSpiel`, `spielendeAm`, `kalTermin` und das Eintragen der Runde kennen jetzt zwei Tage. Das Finale und alte Spielstände ohne `S.cup.spaet` spielen wie bisher an einem Tag. | ⚠️ bitte im Browser-Test ansehen |
 | CO3 | **T8.1, T8.3:** nur Tests. `tests/finanzen.js` ohne Entlassung, `tests/training.js` Nr. 4 ohne Europapokal (die englischen Wochen eines Europapokal-Vereins verschieben Kondition und Ausfälle). | ✅ |
+
+---
+
+## CP. Nachtrag zu K23c: echte Größenordnungen (22. November 2026, popolupo, ohne Testlauf)
+
+Ausführlich in K23 §5.6b. Gebaut ohne die Messung aus K23 §5.6a, mit einer eigenen Modellrechnung der Welt (Perl, außerhalb des Repos).
+
+| # | Befund | Status |
+|---|---|---|
+| CP1 | **Alle Geldwerte auf einmal:** Gehälter, Marktwerte, TV (Säulenmodell), Werbung, Sonstiges, neuer Posten Verwaltung, Startkonto, Kreditrahmen, Gehaltsrahmen, Finanzlage beim Vereinswert, Budgets der Auslandsvereine, Europapokal (Faktor 1), Tribüne. Nach der Modellrechnung stehen die Ligen im Schnitt wie vorher (1. Liga etwa +11 Mio., 2. Liga 0, 3. Liga −1 Mio. je Verein und Saison), nur in echter Größe. | ⚠️ bitte mit `tests/finanzmodell.js` (zwei Saisons) nachmessen |
+| CP2 | **Gleichschritt (K36, `tests/lizenz.js` 5a):** Die TV-Gelder hängen vom Ansehen ab. Damit beide Läufe gleich rechnen, werden sie zu Saisonbeginn festgelegt (`tvSaison` in `newSeason` und `buildWorld`), nicht beim ersten Gebrauch. Neu berechnet wird nur, wenn sich eine Liga geändert hat. | ✅ so gebaut |
+| CP3 | **Wer kauft noch?** Der Gehaltsrahmen (75 %) sperrt nach der Modellrechnung anfangs nur Leverkusen und die kleinsten Drittligisten. Leverkusen hat den zweitteuersten Kader, liegt ohne Champions League im Minus und muss erst Gehalt abbauen. | ⚠️ im Testlauf ansehen: Zahl der Käufe je Fenster gegen Lauf 5 |
+| CP4 | **Wirkung auf Transfers:** Gute Spieler werden viel teurer (Stärke 85: 52 statt 22 Mio.), schwache viel billiger (Stärke 60: 0,35 statt 1,8 Mio.). Drittligisten haben im Verhältnis zu den Preisen mehr Geld als vorher, der Gehaltsrahmen bremst sie. Jugendverkäufe bringen weniger. | ⚠️ im Testlauf ansehen |
+| CP5 | **Alte Spielstände:** Gehälter einmal auf die neue Kurve umgerechnet (`k23cUmstellen` beim Laden, Import und Live-Update, Merker `S.k23c`). Kontostände bleiben, die TV-Wertung startet aus Liga und Ansehen. | ✅ |
+| CP6 | **Tests angepasst:** `tests/werbung.js` Nr. 1 (drei Flächen zusammen 63 % des Grundbetrags), `tests/finanzen.js` Nr. 11 (mit Verwaltung) und neu Nr. 14 bis 18, `tests/transfers.js` (reich ab `finanzlage.reichAb`), `tests/europapokal.js` Nr. 6 (Startgeld mit dem Faktor aus den Regeln), `tests/finanzmodell.js` (Werbung und Verwaltung wie im Spiel). | ✅ ungetestet |
+| CP7 | **Noch nicht umgestellt:** feste Beträge der Karten, Kampagnen (K25), Fanartikel, Logen, Stab, übrige Bauten. Fanartikel der Computer-Vereine fehlen ganz. | offen, nach dem Testlauf |

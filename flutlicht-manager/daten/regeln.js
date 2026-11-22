@@ -38,7 +38,9 @@ const REGELN={
     startZiel:9,                     // Platzhalter, wird sofort aus dem Ansehen berechnet
     startJugend:2,                   // Stufe der Jugendarbeit (1–5)
     startFormationen:['4-4-2','4-3-3','4-2-3-1','3-5-2'], // daraus wählt jeder Verein zufällig
-    konto:{basis:5e5,jeAnsehen2:2500},   // Startkonto = basis + Ansehen² × jeAnsehen2
+    // Startkonto = basis × e^(steigung × (Ansehen − mitte)), gerundet (K23c, vorläufig): etwa ein Fünftel der Jahreseinnahmen,
+    // Ansehen 95 etwa 127 Mio. €, 71 etwa 27 Mio. €, 52 etwa 8 Mio. €, 39 etwa 3 Mio. €. Vorher basis + Ansehen² × 2.500 €.
+    konto:{basis:25e6,steigung:0.065,mitte:70,runden:1e5},
     ticket:{basis:15,jeAnsehen:0.25},    // Startpreis = basis + Ansehen × jeAnsehen (€)
     grund:{basis:48,jeAnsehen:0.4},      // Grundstärke erfundener Spieler = basis + Ansehen × jeAnsehen
     kaderVollAb:20,                  // ab so vielen echten Spielern gilt das Soll „voll“
@@ -75,7 +77,7 @@ const REGELN={
       altRaus:{ab:31,jeJahr:0.12},     // im Sommer: ab 31 fällt ein Spieler mit (Alter − 30) × 12 % aus dem Kern (Bank, kleinere Liga), zusätzlich zum Karriereende
       aufstieg:{ab:6,chance:0.5,fenster:3}, // im Sommer: wer mehr als 6 darüber liegt, wechselt mit 50 % zu einem größeren Auslandsverein (dessen Grundstärke höchstens 3 unter seiner Stärke)
       forderung:[0.8,0.6],             // Ablöseforderung = Marktwert × (0,8 + 0,6 × Finanzkraft/100): arme Vereine verkaufen günstiger (K32 §6)
-      budget:12000,                    // Transferbudget eines Auslandsvereins = Finanzkraft² × 12.000 € (Spielwert, K23)
+      budget:25000,                    // Transferbudget eines Auslandsvereins = Finanzkraft² × 25.000 € (Spielwert, seit K23c doppelt so hoch wie vorher, weil gute Spieler teurer sind)
       angebote:{anteil:0.3,niveau:5},  // Anteil der Angebote für deine Spieler, die aus dem Ausland kommen; der Spieler darf höchstens 5 unter der Grundstärke des Käufers liegen
       // Abwanderung (K32 §8 „Bundesliga verliert je Sommer Spieler an reiche Auslandsgruppen“, T1.3, vorläufig): im Sommerfenster je Liga so viele Käufe aus dem Ausland,
       // ab dieser Stärke, bis zu diesem Alter, höchstens jeVerein je Verein, Ablöse = Vereinswert fürs Ausland × preis. Sommer 2025: allein die vier teuersten Zugänge der Premier League kamen aus der Bundesliga.
@@ -166,8 +168,14 @@ const REGELN={
     fuss:{rechts:0.77},
     talentSchaetzung:{fehler:1,genauNachWochen:104}, // Talentsterne bis 1 daneben, nach 2 Jahren im Verein genau (K03, Normal)
     vertrag:[1,4],                   // Restlaufzeit in Jahren
-    gehalt:{basis:1e6,steigung:0.1,mitte:75,runden:1000}, // Gehalt/Jahr = basis × e^(steigung × (Stärke − mitte))
-    marktwert:{basis:8e6,steigung:0.1,mitte:75,jungUnter:24,staerkeAnteil:0.6,talentAnteil:0.4,
+    // Gehalt/Jahr = basis × e^(steigung × (Stärke − mitte)). K23c (vorläufig, Modellrechnung K23 §5.6b): steiler als vorher (basis 1 Mio., steigung 0,1),
+    // damit die Personalkosten je Liga nahe an echt liegen: 1. Liga im Schnitt etwa 72 Mio. €, 2. Liga 17 Mio. €, 3. Liga 7 Mio. € je Verein.
+    // Stärke 60 bekommt 0,23 Mio., 70 1,1 Mio., 75 2,5 Mio., 80 5,6 Mio., 85 12 Mio., 90 28 Mio. €.
+    gehalt:{basis:2.5e6,steigung:0.16,mitte:75,runden:1000},
+    gehaltAlt:{basis:1e6,steigung:0.1,mitte:75},  // Kurve vor K23c, nur zum Umrechnen alter Spielstände (welt.js, k23cUmstellen)
+    // Marktwert ebenso steiler (K23c, vorher basis 8 Mio., steigung 0,1): Kaderwert 1. Liga im Schnitt etwa 220 Mio. €, 2. Liga 37 Mio. €, 3. Liga 11 Mio. €.
+    // Stärke 60 im besten Alter 0,35 Mio., 70 2,6 Mio., 75 7 Mio., 80 19 Mio., 85 52 Mio., 90 140 Mio. €.
+    marktwert:{basis:7e6,steigung:0.2,mitte:75,jungUnter:24,staerkeAnteil:0.6,talentAnteil:0.4,
       alter:[[21,1.5],[24,1.25],[28,1],[30,0.7],[32,0.45]],alterSonst:0.22,minimum:25000,runden:25000},
     sterne:[12,8,4],                 // Talent − Stärke ab diesem Wert: 4, 3 oder 2 Sterne
     niveauSpieler:14,                // Kaderstärke = Schnitt der besten 14
@@ -175,11 +183,22 @@ const REGELN={
   },
 
   finanzen:{
-    tv:{liga1:{basis:120000,jeAnsehen:2500},liga2:{basis:50000,jeAnsehen:900},liga3:{basis:20000,jeAnsehen:400}}, // je Ligaspieltag
+    // TV-Gelder (K23 §5.1, K23c, vorläufig): Säulenmodell mit echten Töpfen je Saison (DFL 1,121 Mrd. € für 1. und 2. Liga im Verhältnis 80:20, DFB 26,2 Mio. € für die 3. Liga).
+    // 1. und 2. Liga: gleich (Gleichverteilung 50 % plus Nachwuchs 4 %, den es im Spiel noch nicht gibt) zu gleichen Teilen, leistung nach dem Rang in der Fünfjahreswertung
+    // innerhalb der Liga (Gewicht n + versatz − Rang), interesse nach Ansehen². Fünfjahreswertung: Punkte je Saison = Zahl der Vereine der drei Ligen + 1 − Gesamtplatz
+    // (1. Liga Platz 1 bis 18, 2. Liga 19 bis 36, 3. Liga ab 37), gewichtet mit gewichte (jüngste Saison zuerst). Fehlende Saisons zählen wie der Startplatz nach Ansehen.
+    // 3. Liga: Topf zu gleichen Teilen. Ausgezahlt je Ligaspiel.
+    tv:{topf:{1:897e6,2:224e6,3:26.2e6},gleich:0.54,leistung:0.43,interesse:0.03,versatz:3,gewichte:[5,4,3,2,1]},
     betrieb:{jePlatz:1,jeLoge:300},  // Stadion und Betrieb je Ligaspieltag
     jugendKosten:[0,20000,40000,70000,110000,160000], // je Ligaspieltag, Index = Stufe
     kreditZins:0.08,                 // pro Saison
-    kreditRahmen:{basis:2e6,jeAnsehen:250000},
+    // Kreditrahmen = basis × e^(steigung × (Ansehen − mitte)), gerundet (K23c, vorläufig, vorher 2 Mio. + 250.000 € je Ansehen): Ansehen 95 etwa 54 Mio. €,
+    // 71 etwa 21 Mio. €, 52 etwa 10 Mio. €, 39 etwa 6 Mio. €. Er ist zugleich die Grenze für die Insolvenz.
+    kreditRahmen:{basis:20e6,steigung:0.04,mitte:70,runden:1e5},
+    // Verwaltung und Sonstiges (K23c, neu, vorläufig): Geschäftsstelle, Reisen, Sicherheit, Vermarktung. Je Ligaspiel dieser Anteil an TV, Werbung (Grundbetrag) und
+    // sonstigen Einnahmen, für alle Vereine. Echt liegen die übrigen Aufwendungen bei 40 bis 70 % des Umsatzes. So gewählt, dass die Ligen im Schnitt wie vorher stehen:
+    // 1. Liga etwa +11 Mio. € je Saison, 2. Liga etwa 0, 3. Liga knapp im Minus (Modellrechnung K23 §5.6b, ohne Transfers und Pokal).
+    verwaltung:{1:0.4,2:0.55,3:0.4},
     pokalPraemien:[2e5,4e5,8e5,1.6e6,3.2e6,4.5e6], // je gespielter Runde
     pokalSieg:3e6,
     pokal:{drittligisten:4,amateure:24}, // DFB-Pokal: 36 aus 1. und 2. Liga, dazu die besten Drittligisten (ohne Zweitmannschaften) und Amateure
@@ -192,15 +211,19 @@ const REGELN={
       gegnerBasis:0.88,gegnerFaktor:0.3,gegnerOhne:40, // Gegner = basis + Ansehen/100 × faktor
       liga2:0.82,liga3:0.7,pokal:1.05,zufallBasis:0.95,zufallSpanne:0.1},
     ticketPreis:{min:5,max:150,standard:20},
-    sponsor:{liga1:45,liga2:18,liga3:8,      // Grundbetrag je Spieltag = Ansehen² × Wert
+    // Werbung (K23c, vorläufig): Grundbetrag je Ligaspiel = basis × e^(steigung × (Ansehen − mitte)) × liga. Vorher Ansehen² × 45, 18 oder 8.
+    // Echt (DFL 2023/24): 1. Liga im Schnitt 57 Mio. € je Saison, 3. Liga 5,8 Mio. €. Im Spiel: 1. Liga etwa 53 Mio. € (Ansehen 95 etwa 200 Mio. €, 55 etwa 15 Mio. €),
+    // 2. Liga etwa 8 Mio. €, 3. Liga etwa 4 Mio. €. Davon teilen sich Trikotbrust, Ausrüster und Ärmel den Anteil werbung.anteil, den Rest (werbung.partner) zahlen weitere Partner.
+    sponsor:{basis:1.15e6,steigung:0.065,mitte:70,liga:{1:1,2:0.65,3:0.6},
       angebote:[
         {fix:1,sieg:0,jahre:1,info:'Festes Geld pro Spieltag, 1 Saison'},
         {fix:0.65,sieg:1.3,jahre:1,info:'Weniger Fixum, dafür Prämie pro Sieg, 1 Saison'},
         {fix:0.92,sieg:0,jahre:3,info:'Langfristig: 3 Saisons feste Summe'}]},
     // Werbeflächen (K24 §3.1, Teilschritt K24a, 21.11.): Trikotbrust, Ausrüster und Ärmel mit je eigenen Angeboten in der Form oben.
-    // Vorläufig geldneutral: Die drei teilen sich den bisherigen Brustbetrag. Verhältnis nach den Zielanteilen in K24 §3.1 (Brust 35–45 %, Ausrüster 15–25 %, Ärmel 5–10 %).
-    // Die Höhe nach K24 §5.1 (Bayern etwa 60 Mio. € für die Brust) kommt erst mit K23, weil sie die ganze Wirtschaft verschiebt. Namen erfunden.
-    werbung:{anteil:{brust:0.6,ausruester:0.29,aermel:0.11},titel:{brust:'Trikotbrust',ausruester:'Ausrüster',aermel:'Ärmel'},
+    // Seit K23c (vorläufig): Anteile am Grundbetrag der Werbung nach den Zielanteilen in K24 §3.1 (Brust 35–45 %, Ausrüster 15–25 %, Ärmel 5–10 %), den Rest (partner)
+    // zahlen weitere Partner (Premium-, Logen- und Regionalpartner) je Ligaspiel ohne Verhandlung. Bayern bekommt so etwa 75 Mio. € für die Brust (echt etwa 60 Mio., K24 §5.1).
+    // Bis K23c teilten sich die drei Flächen den ganzen Grundbetrag (0,6, 0,29, 0,11). Namen erfunden.
+    werbung:{anteil:{brust:0.38,ausruester:0.18,aermel:0.07},partner:0.37,titel:{brust:'Trikotbrust',ausruester:'Ausrüster',aermel:'Ärmel'},
       namen:{ausruester:['Falkner Sport','Sprintwerk','Kranich Teamwear','Nordlicht Athletics','Bergfalke Sport','Tiedemann Sportswear'],
         aermel:['Moorland Versicherung','Weserblick Immobilien','Albtrauf Software','Uferwerk Logistik','Sonnhalde Energie','Grünfeld Mobilfunk']},
       // K24b (21.11., alle Werte aus K24 §5.4, §4.3, vorläufig): je Fläche ein viertes Angebot von einem umstrittenen Geldgeber (30 % über dem besten festen Angebot,
@@ -246,7 +269,7 @@ const REGELN={
     stellenwert:{schluessel:1.5,stamm:1.3,rotation:1,pokal:1,talent:1,ergaenzung:0.8},
     kauf:{besser:1.2,gleich:1,schlechter:0.7,spanne:2},
     restlaufzeit:[0.6,0.6,0.85,1],
-    finanzlage:{knappUnter:1.5e6,knapp:0.9,reichAb:20e6,reich:1.1},
+    finanzlage:{knappUnter:2e6,knapp:0.9,reichAb:60e6,reich:1.1}, // K23c: reich erst ab 60 Mio. € (vorher 20 Mio.), weil die Kontostände gewachsen sind
     forderung:1.15,schmerzgrenze:0.95,maxFaktor:1.8,
     runden:{kauf:4,verkauf:3},geduld:2,spott:0.6,anstaendig:0.8,preisdruck:{prozent:0.03,tage:28},pause:28,
     angebotKI:[0.85,1],auslandMax:1.15},
@@ -440,9 +463,9 @@ const REGELN={
       ecl:{ENG:1,ESP:2,ITA:2,FRA:1,POR:2,NED:3,BEL:3,TUR:3,AUT:3,SUI:3,CZE:1,DEN:2,NOR:2,SWE:3,POL:3,CRO:1}},
     zufall:8,quali:8,auslosung:{versuche:30,ohneHoechstzahl:15,hoechstzahl:2,tausch:3000},
     kurz:{tore:1.4,exp:1.6,heim:1.03,verl:0.33},staerke:{faktor:0.93}, // T5.3: Eine Elf der Stärke S hat in der Engine Teamwerte von etwa 0,93 × S (Zustand, Anteile, Schwächster), der Block sonst die volle Stärke
-    // Geld (K37 §5.3, U19b): echte Beträge 2025/26 (Websuche 21.11.2026), mal faktor bis K23c (dann 1). start: Startgeld, sieg/remis je Spiel der Ligaphase, rang: je Anteil (Platz 1 = 36 Anteile),
+    // Geld (K37 §5.3, U19b): echte Beträge 2025/26 (Websuche 21.11.2026), mal faktor (bis K23c 0,2, seit K23c 1). start: Startgeld, sieg/remis je Spiel der Ligaphase, rang: je Anteil (Platz 1 = 36 Anteile),
     // po bis fin: beim Erreichen der Runde, titel: Sieger zusätzlich, wert: Schnitt der Wertsäule je Teilnehmer (verteilt nach dem Rang des Ansehens). Nicht recherchierte Werte sind 0 (K37 §12).
-    geld:{faktor:0.2,cl:{start:18.62e6,sieg:2.1e6,remis:0.7e6,rang:275000,po:1e6,af:11e6,vf:12.5e6,hf:15e6,fin:18.5e6,titel:6.5e6,wert:24e6},
+    geld:{faktor:1,cl:{start:18.62e6,sieg:2.1e6,remis:0.7e6,rang:275000,po:1e6,af:11e6,vf:12.5e6,hf:15e6,fin:18.5e6,titel:6.5e6,wert:24e6},
       el:{start:4.31e6,sieg:450000,remis:150000,rang:75000,top8:600000,top16:300000,po:0,af:1.75e6,vf:2.5e6,hf:4.2e6,fin:7e6,titel:6e6,wert:5.5e6}, // top8, top16: Bonus nach der Ligaphase für Platz 1–8 und 9–16
       ecl:{start:3.17e6,sieg:400000,remis:133000,rang:28000,top8:400000,top16:200000,po:0,af:800000,vf:1.3e6,hf:2.5e6,fin:4e6,titel:3e6,wert:2.8e6}},
     // Ansehen zum Saisonwechsel (K37 §5.4): erreichte Runde, Anteil je Wettbewerb. vertrauen: Vorstand bei jedem gewonnenen Duell und beim Titel.
@@ -459,15 +482,15 @@ const REGELN={
   // minSpiele: so viele eigene Ligaspiele braucht der Schnitt dieser Saison, sonst gilt der der letzten Saison. lizenzTag, nachweisTag: Datum (MM-TT) der Prüfung und der Frist.
   // auflage: Vertrauen bei Auflagen. insolvenz: so viele Monatserste nacheinander unter dem negativen Kreditrahmen, Punktabzug, Vertrauen. warnMonate: Vorlauf der Warnung.
   // monatTage: Tage je Monat für die Warnung. PUNKTABZUG GESCHÄTZT (K23 §12 Nr. 9).
-  finanzplan:{laufend:['TV-Gelder','Sponsor','Zuschauer','VIP-Logen','Fanartikel','Gehälter','Trainerstab','Prämien','Stadion & Betrieb','Jugendarbeit','Zweite Mannschaft','Kreditzinsen','Scouting','Instandhaltung','Sonstige Einnahmen'],
+  finanzplan:{laufend:['TV-Gelder','Sponsor','Weitere Sponsoren','Zuschauer','VIP-Logen','Fanartikel','Gehälter','Trainerstab','Prämien','Stadion & Betrieb','Verwaltung','Jugendarbeit','Zweite Mannschaft','Kreditzinsen','Scouting','Instandhaltung','Sonstige Einnahmen'],
     minSpiele:3,lizenzTag:'03-01',nachweisTag:'05-31',auflage:-5,insolvenz:{monate:2,punkte:9,vertrauen:-30},warnMonate:3,monatTage:30,
-    // K23b (§5.5e): sonstiges: Sonstige Einnahmen (Mitglieder, Vermarktung) je Ligaspiel nach Liga, für alle Vereine. Aus der Messung BZ7 so gewählt, dass die 2. Liga im Schnitt
-    // knapp im Plus und die 3. Liga knapp im Minus liegt (wie in echt). VORLÄUFIG bis K23c.
-    sonstiges:{1:0,2:25000,3:60000},
+    // K23b (§5.5e): sonstiges: Sonstige Einnahmen (Mitglieder, Vermarktung, Stadionvermietung) je Ligaspiel nach Liga, für alle Vereine. Seit K23c (vorläufig) etwa 7 % der Einnahmen
+    // ohne Transfers wie in echt (7–11 %): 1. Liga 10,2 Mio. €, 2. Liga 2,7 Mio. €, 3. Liga 1,1 Mio. € je Saison. Vorher 0, 25.000 und 60.000 € als Ausgleich der zu kleinen Werbung.
+    sonstiges:{1:300000,2:80000,3:30000},
     // K23d (§5.3, §5.5f): budget: Gehaltsrahmen = gehaltAnteil × erwartete Einnahmen einer Saison (Liga-Modell ohne Transfers). Über sperreAb × Rahmen keine Käufe (du und Computer-Vereine),
-    // Transferbudget = Kontostand über einer Reserve von reserve × erwarteten Einnahmen. gehaltAnteil VORLÄUFIG 0,85 bis K23c: Heute liegen die Gehälter bei 70 bis 85 % der Einnahmen
-    // (Messung BZ7), echt sind es etwa 35 % des Umsatzes mit Transfers. Mit K23c sinkt der Anteil.
-    budget:{gehaltAnteil:0.85,sperreAb:1.1,reserve:0.1},
+    // Transferbudget = Kontostand über einer Reserve von reserve × erwarteten Einnahmen. gehaltAnteil seit K23c 0,75 (vorher 0,85): Nach der Modellrechnung (K23 §5.6b) liegen Gehälter
+    // und Stab im Schnitt bei 55 bis 66 % der erwarteten Einnahmen, bei kleinen Drittligisten und Leverkusen (starker Kader) bei 80 bis 84 %. Gesperrt (über 82,5 %) ist anfangs kaum einer.
+    budget:{gehaltAnteil:0.75,sperreAb:1.1,reserve:0.1},
     // K23e (§5.5d): kredit: Laufzeiten in Jahren, Standard. raten: Anzahlung, Aufschlag auf den Rest, Zahl der Monatsraten. verzicht: Anteil der Gehälter, Dauer in Tagen, Stimmung. GESCHÄTZT.
     kredit:{jahre:[1,2,3,4,5],standard:3},raten:{anzahlung:0.5,aufschlag:0.05,monate:12},verzicht:{anteil:0.15,tage:90,stimmung:-10}},
 
@@ -919,7 +942,7 @@ const REGELN={
   },
 
   stadion:{
-    tribuene:{plaetze:3000,kosten:4.5e6,wochen:6,max:90000},
+    tribuene:{plaetze:3000,kosten:12e6,wochen:6,max:90000}, // K23c: 4.000 € je Platz (echt 3.000 bis 6.000 €, K26 §5.1), vorher 4,5 Mio.
     logen:{anzahl:10,kosten:2.5e6,wochen:4,max:120},
     fanshop:{kosten:[1.5e6,3e6,5e6],wochen:3,max:3},
     // Bauprozess (K26 §4, §5.1, K26a): genehmigung Wochen, auflagen Chance und Mehrkosten, verzoegerung Chance und Wochen, mehrkosten Chance und Anteil. instandhaltung: Anteil der Bausumme je Jahr.

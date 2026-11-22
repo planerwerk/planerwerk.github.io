@@ -17,7 +17,7 @@ function werbFaktor(t=myT()){const W=RF.werbung.werbewert,M=S.mk;if(!W||!M||M.ww
 function werbUmstritten(f,b){const U=RF.werbung.umstritten,best=Math.max(...RF.sponsor.angebote.map(a=>a.fix)),k=werbFlaechenAlle().indexOf(f);
   return{name:U.namen[(S.season+2*k+(S.my||0))%U.namen.length],base:Math.round(b*best*U.faktor/1000)*1000,win:0,yrs:U.jahre,info:U.info,im:'umstritten'};}
 // Grundbetrag je Spieltag für eine Fläche: wie bei der Brust Ansehen² × Ligawert, davon der Anteil der Fläche
-const werbBasis=(f,t=myT())=>t.rep*t.rep*(RF.sponsor['liga'+t.lg]||RF.sponsor.liga3)*RF.werbung.anteil[f];
+const werbBasis=(f,t=myT())=>sponsorBasis(t)*RF.werbung.anteil[f]; // Grundbetrag der Werbung (K23c) mal Anteil der Fläche
 // Angebote für eine freie Fläche, eigener Zufallsstrom (die Namen sind das einzige Zufällige)
 function werbAngebote(f){const b=werbBasis(f)*werbFaktor(),r=v=>Math.round(v/1000)*1000;
   return mitStrom(strom('werbung',S.season,f),()=>{const ns=shuffle(RF.werbung.namen[f].slice());return [...RF.sponsor.angebote.map((a,i)=>({name:ns[i%ns.length],base:r(b*a.fix),win:a.sieg?r(b*a.sieg):0,yrs:a.jahre,info:a.info})),werbUmstritten(f,b)];});}

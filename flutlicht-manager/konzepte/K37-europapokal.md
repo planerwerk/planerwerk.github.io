@@ -101,7 +101,7 @@ Echte Beträge 2025/26 (Websuche 21.11.):
 | Sieger zusätzlich | 6,5 Mio. | 6 Mio. | 3 Mio. (eine Quelle 7 Mio. gesamt) |
 
 - **Wertsäule:** 35 % des Topfs gehen nach Zehnjahreswertung und Marktpool, in der Champions League im Schnitt etwa 24 Mio. je Verein (geschätzt: 35 % von 2,467 Mrd. durch 36). Im Spiel: Schnitt je Wettbewerb (Champions League 24 Mio., Europa League 5,5 Mio., Conference League 2,8 Mio., alle geschätzt), verteilt nach dem Rang des Ansehens unter den Teilnehmern: Rang r von 36 bekommt Schnitt × 2 × (37 − r) / 37.
-- **Spielgeld:** Die Geldwerte im Spiel sind heute kleiner als echt (TV-Gelder für Bayern im Spiel etwa 12 Mio. je Saison, echt rund 61 Mio. national). Bis K23c alle Geldwerte auf echte Größenordnungen bringt, gilt ein Faktor **0,2** auf alle Europapokal-Beträge. Mit K23c wird er 1.
+- **Spielgeld:** Die Geldwerte im Spiel sind heute kleiner als echt (TV-Gelder für Bayern im Spiel etwa 12 Mio. je Saison, echt rund 61 Mio. national). Bis K23c alle Geldwerte auf echte Größenordnungen bringt, gilt ein Faktor **0,2** auf alle Europapokal-Beträge. Mit K23c wird er 1. **Seit K23c (22.11.) ist er 1** (K23 §5.6b), die Beträge sind echt.
 - **Buchung:** „Europapokal“ in `S.fin`, beim Spiel (Sieg, Unentschieden) und beim Erreichen einer Runde. Startgeld und Wertsäule mit der Auslosung der Ligaphase. Zuschauereinnahmen wie bei einem Pokalspiel.
 - **Computer-Vereine** bekommen dasselbe Geld. Das ersetzt die Pauschale für die Europapokal-Plätze, die K23b bis dahin vorsieht.
 
@@ -193,7 +193,7 @@ REGELN.europa = {
 3. Auslandsvereine nach Kontingent, Ansehen und Zufall, weil die Auslandsligen nicht gespielt werden (§5.1).
 4. Spiele mit deutscher Beteiligung in der vollen Engine, Ausland gegen Ausland als Kurzrechnung (§5.2).
 5. Auslandsspieler ohne Folgen aus dem Spiel (§5.2).
-6. Echte Beträge 2025/26 mal Faktor 0,2 bis K23c (§5.3).
+6. Echte Beträge 2025/26 mal Faktor 0,2 bis K23c (§5.3). Seit K23c Faktor 1.
 7. Wertsäule nach Rang des Ansehens unter den Teilnehmern (§5.3).
 8. Finale nach dem Saisonende rückt auf den letzten Spieltag vor (§4.4).
 9. Ein deutscher Titelverteidiger nimmt keinen Bundesliga-Platz weg (§5.1).

@@ -332,4 +332,4 @@ function europaKarte(){if(!euAktiv())return'';const mein=euMeinWb(),wb=mein||'cl
     ${mein&&sp?`<h3>Deine Spiele</h3><ul>${sp}</ul>`:''}${mein?'':`<p class="dim">Hier: ${euName(wb)}.</p>`}${ko}${q}${lp}
     ${euWertungText()}
     ${mein?`<p>Prämien dieser Saison: <b>${fmt((S.eu.geld&&S.eu.geld[S.my])||0)}</b> <span class="dim">(Startgeld, Wertsäule, Siege, Runden, gebucht als „Europapokal“)</span></p>`:''}
-    <p class="dim">Modus seit 2024/25: 36 Vereine in einer Ligaphase (Conference League 6, sonst 8 Spiele), danach Hin- und Rückspiel bis zum Halbfinale und ein Finale. Prämien nach den echten Beträgen 2025/26, im Spielgeld mal ${de(REU.geld.faktor,1)} (K37 §5.3).</p></div>`;}
+    <p class="dim">Modus seit 2024/25: 36 Vereine in einer Ligaphase (Conference League 6, sonst 8 Spiele), danach Hin- und Rückspiel bis zum Halbfinale und ein Finale. Prämien nach den echten Beträgen 2025/26${REU.geld.faktor!==1?`, im Spielgeld mal ${de(REU.geld.faktor,1)}`:''} (K37 §5.3).</p></div>`;}
