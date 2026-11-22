@@ -79,6 +79,11 @@ const KARTEN=[
     texte:['Ein Jugendtrainer aus der Region schwärmt von einem 16-Jährigen. Probetraining bei euch?','Die Eltern eines Talents aus dem Umland fragen an: Ihr Sohn würde gern bei euch vorspielen.'],
     optionen:[{text:'Zum Probetraining einladen',wirkung:[{art:'geld',wert:-5000},{art:'talent',wert:6,chance:0.6,schlecht:0,gut:'Er überzeugt die Trainer.',schlechtText:'Im Probetraining enttäuscht er, ihr lasst ihn ziehen.'}],folge:''},
       {text:'Kein Platz im Jugendkader',wirkung:[],folge:'Der Junge versucht es woanders.'}],auto:1},
+  // K08c: Großer Verein lockt dein Talent. Neue Wirkungen jugendHoch (Profivertrag bei dir) und jugendWeg (Wechsel zum Verein, Ausbildungsentschädigung, Weiterverkaufsbeteiligung).
+  {id:'talentGelockt',titel:'Großer Verein lockt dein Talent',bereich:'K08',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'talentGelockt',sperrTage:365,
+    texte:['{verein} hat ein Auge auf {spieler} aus deiner Jugend geworfen. Sein Berater lässt durchblicken: Ohne Profivertrag ist er weg.','Die Scouts von {verein} saßen bei jedem Jugendspiel von {spieler}. Jetzt liegt ein Angebot auf dem Tisch.'],
+    optionen:[{text:'Profivertrag anbieten',wirkung:[{art:'jugendHoch',wert:1},{art:'fans',wert:1}],folge:'{verein} geht leer aus.'},
+      {text:'Ziehen lassen',wirkung:[{art:'jugendWeg',wert:1}],folge:''}],auto:0},
   // Training (K07 §8, K07c, 22.11.). Neue Wirkung pause: Frische des Spielers + wert, Spielpraxis − REGELN.karten.training.pauseSpielpraxis.
   {id:'pauseBitte',titel:'Spieler bittet um Pause',bereich:'K07',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'pauseBitte',sperrTage:60,
     texte:['{spieler} kommt nach dem Training zu dir: Die Beine sind schwer, er bittet um zwei freie Tage.','Der Athletiktrainer meldet, {spieler} sei platt. Er selbst würde gern kurz durchschnaufen.'],

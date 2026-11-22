@@ -107,6 +107,15 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   pruef(ja&&n1===n0+1&&neu.age===ev('RKT').jugend.alter&&ev('PIX').get(neu.id)===neu&&ev('istJugend')(neu)&&S.jg.length===n1,'Probetraining: neues Talent im Jugendkader, ohne Erfolg niemand',
     `Auslöser ${ja}, Jugendkader ${n0} → ${n1}, Alter ${neu&&neu.age}, Talent ${neu&&neu.pot}`);}
 
+// K08c. Großer Verein lockt dein Talent (K08 §8): Auslöser nur mit einem Talent ab 17 über dem Kaderschnitt; Profivertrag holt ihn in den Kader;
+//       ziehen lassen: er spielt danach beim Verein, Ausbildungsentschädigung fließt, Weiterverkaufsbeteiligung für dich
+{const {S,ev}=welt(),A=ev('AUSLOESER'),J=ev('RKT').jugend;S.phase='play';ev('jugendKader')();const lvl=ev('teamLevel')(S.my);S.jg.forEach(p=>{p.pot=lvl-5;});const ohne=A.talentGelockt();
+  const [p1,p2]=S.jg;p1.age=p2.age=J.lockAb;p1.pot=p2.pot=lvl+J.lockPlus+2;const b=A.talentGelockt(),wirk=ev('kartenWirkung');
+  const k0=ev('squad')(S.my).length;wirk({art:'jugendHoch',wert:1},{spieler:p1.id},{titel:'Test'});const hoch=p1.team===S.my&&!S.jg.includes(p1)&&ev('squad')(S.my).length===k0+1;
+  const v=b?S.teams[b.verein]:S.teams.find(x=>x.id!==S.my),c0=v.cash,f0=S.fin['Jugend: Abgänge']||0;wirk({art:'jugendWeg',wert:1},{spieler:p2.id,verein:v.id},{titel:'Test'});
+  const geld=(S.fin['Jugend: Abgänge']||0)-f0,weg=p2.team===v.id&&!S.jg.includes(p2)&&!!p2.wvb&&p2.wvb.tid===S.my&&c0-v.cash===geld;
+  pruef(ohne===null&&!!b&&hoch&&weg,'Talent gelockt: Auslöser, Profivertrag in den Kader, Wechsel mit Ausbildungsentschädigung und Beteiligung',`ohne Talent ${ohne}, Auslöser ${!!b}, Profivertrag ${hoch}, Wechsel ${weg} (${geld} €)`);}
+
 // U19e. Europapokal-Karten (K37 §8): Auswärtsspiel bei einem Auslandsverein in den nächsten 7 Tagen (kein Heimspiel, nicht später, nicht das Finale), Spiel 1 bis 7 Tage her,
 //       Wunder nach 0:3 im Hinspiel und 4:0 oder 3:0 mit Elfmeterschießen im Rückspiel, nicht nach nur einem Tor Rückstand und nicht beim Ausscheiden. euMeineSpiele ersetzt der Test.
 {const {S,W,ev}=welt(),A=ev('AUSLOESER'),AV=ev('AV0'),me=S.my,d=S.tag;W.ev('euMeineSpiele=function(){return S.testEu||[];}');
