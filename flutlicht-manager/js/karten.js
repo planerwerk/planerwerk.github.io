@@ -217,7 +217,7 @@ function kartenWirkung(w,b,c){let wert=w.wert,txt='',erfolg=true;if(w.chance!=nu
   else if(w.art==='pause'){if(p&&p.team===S.my){p.fit=Math.min(100,p.fit+wert);p.sp=Math.max(0,(p.sp||0)-RKT.training.pauseSpielpraxis);}} /* K07c: Frische +wert, etwas Spielpraxis weg */
   else if(w.art==='dritter'){if(p&&p.team===b.verein&&b.mit){const m=p.ld3&&p.ld3.s===S.season&&p.ld3.t===S.my?p.ld3:null;p.ld3={s:S.season,t:S.my,v:b.verein,mit:b.mit.slice(),leise:Math.max(wert||0,m?m.leise:0)};}} /* K30c: Merker für den Ausgang (dritterKauf) */
   else if(w.art==='nachlass'){if(!p||p.team!==b.verein||p.wech)txt=`${p?p.n:'Der Spieler'} ist nicht mehr zu haben.`; /* K30c: wert > 0 senkt die Forderung um diesen Anteil, wert < 0 (aufgeflogen) kostet Beziehung */
-    else if(wert>0){const v=verhandlung(p),f=rundeAb(forderungDu(p)*(1-wert));v.f=v.f!=null?Math.min(v.f,f):f;if(p.ld3)p.ld3.leise=1;}
+    else if(wert>0){const v=verhandlung(p),f=rundeAb(forderungDu(p)*(1-wert));v.f=v.f!=null?Math.min(v.f,f):f;v.nl=1;if(v.einig)v.einig.fee=Math.min(v.einig.fee,f);if(p.ld3)p.ld3.leise=1;} /* EF3: auch eine schon vereinbarte Ablöse; nl: kein Verhandlungsgerücht nur wegen des Nachlasses (EF1) */
     else if(wert<0){bezDuAendern(b.verein,wert,c.titel);if(p.ld3)p.ld3.leise=0;}}
   else if(w.art==='hygiene'){const t=myT(),h=absTag(S.tag);t.krankBis=Math.min(t.krankBis||0,h-1);t.hygBis=h+wert;} /* K10e: Ansteckung vorbei, wert Tage weniger Krankheiten (RMD.krankheit.hygiene) */
   else if(w.art==='spezialist'){if(p&&p.team===S.my&&p.inj>0&&p.vl&&p.vl.q!=='krankheit')p.vl.rfF=wert;else{erfolg=false;if(p)txt=`${p.n} braucht keine Reha mehr.`;}} /* K10e: Rückfallrisiko nach der Rückkehr × wert */

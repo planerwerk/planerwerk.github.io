@@ -188,7 +188,7 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
 
 // K22c. Berater droht mit Wechsel (K22 §8): nur bei einem Spieler im letzten Vertragsjahr mit gierigem Berater
 //       Seit Prüfung EE5 nur unter dem Marktgehalt; „Nachgeben“ gibt Beziehung und Stimmung nur mit Erhöhung (dann), sonst nennt die Karte den Grund.
-{const {S,ev}=welt(),A=ev('AUSLOESER'),sq=ev('squad')(S.my),bv=ev('beraterVon'),sf=ev('salaryFor');sq.forEach(p=>{p.ct=3;});const ohne=A.beraterDroht();
+{const {S,ev}=welt(),A=ev('AUSLOESER'),sq=ev('squad')(S.my),bv=ev('beraterVon'),sf=ev('salaryFor');sq.forEach(p=>{p.ct=3;p.sal=Math.round(sf(p.str)*0.5);});const ohne=A.beraterDroht(); /* EF5: sicher im Gehaltsrahmen */
   const g=sq.find(p=>(bv(p)||{}).prof==='gierig'),a=sq.find(p=>bv(p)&&bv(p).prof!=='gierig');if(g)g.ct=1;if(a)a.ct=1;let gut=null,mit=null,dann=null,ohneErh=null;
   if(g){g.sal=sf(g.str)*2;gut=A.beraterDroht();g.sal=Math.round(sf(g.str)*0.8/1000)*1000;mit=A.beraterDroht();
     const c=ev('karteVon')('beraterDroht'),w=c.optionen[0].wirkung[0],b0=bv(g).bz,s0=g.sal;const t=ev('kartenWirkung')(w,{spieler:g.id},c);dann=g.sal>s0&&bv(g).bz-b0===5&&!!t;
@@ -212,7 +212,7 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   const p=S.pl.find(p=>p.team>=0&&p.team<1000&&p.team!==S.my&&!p.wech&&!p.leihe&&!(p.inj>0)&&aktiv(S.teams[p.team])&&hb(me,p)&&F.mitbieter(p,S.teams[p.team],val(p)).length>=2);let ok=false,info='kein Spieler mit zwei Mitbietern gefunden';
   if(p){p.list=1;const be=ev('beraterVon')(p);if(be)be.bz=0;L.verwandt=0;const ohne=A.lachenderDritter();L.verwandt=1;const h=A.lachenderDritter();
     const ok1=ohne===null&&!!h&&h.spieler===p.id&&h.verein===p.team&&h.mit.length===2&&h.mit[0]!==h.mit[1]&&!h.mit.includes(p.team)&&!h.mit.includes(S.my);
-    const heute=absTag(S.tag);let ok2=false,frueh=false,kam=false,verfallen=false,nach=null,fd=null,leise=false,auf=null,z=[],da=[],weg=false,e=null;
+    const heute=absTag(S.tag);let ok2=false,frueh=false,kam=false,verfallen=false,nach=null,fd=null,leise=false,gegen=null,einig=false,auf=null,z=[],da=[],weg=false,e=null;
     if(ok1){F.kartenZeigen(ev('karteVon')('dritterTipp'),h,S.tag,true);F.karteWaehlen(S.karten.offen.length-1,0);e=(S.karten.kette||[])[0];
       ok2=S.karten.kette.length===1&&e.id==='dritterTreffen'&&e.tag>=heute+3&&e.tag<=heute+7&&(S.fin.Ereignisse||0)<0&&!!p.ld3&&p.ld3.v===p.team&&p.ld3.leise===0;
       if(ok2){const tagD=S.tag+(e.tag-heute);F.kartenKette(tagD-1);frueh=S.karten.kette.length===1;F.kartenKette(tagD);
@@ -221,7 +221,7 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
       S.karten.kette=[{id:'dritterTreffen',tag:heute,s:S.season,b:{spieler:p.id,verein:h.mit[0],mit:h.mit}},{id:'dritterTreffen',tag:heute,s:S.season-1,b:h}];
       const nOff=S.karten.offen.length,nLog=S.karten.log.length;F.kartenKette(S.tag);verfallen=!S.karten.kette.length&&S.karten.offen.length===nOff&&S.karten.log.length===nLog;
       /* nachlass: Forderung −10 % und leise, aufgeflogen −10 Beziehung zum Verkäufer */
-      F.verhandlung(p).f=null;fd=ev('forderungDu')(p);F.kartenWirkung({art:'nachlass',wert:0.1},h,{titel:'Test'});nach=F.forderung(p);leise=!!p.ld3&&p.ld3.leise===1;
+      F.verhandlung(p).f=null;fd=ev('forderungDu')(p);F.kartenWirkung({art:'nachlass',wert:0.1},h,{titel:'Test'});nach=F.forderung(p);leise=!!p.ld3&&p.ld3.leise===1;p.gerF={f:1.1,bis:absTag(S.tag)+30};const kr=F.kaufRunde(p,ev('rundeAb')(nach*0.8));gegen=kr.ok?null:kr.gegen;delete p.gerF;F.verhandlung(p).einig={fee:fd*2,bis:S.tag+14};F.kartenWirkung({art:'nachlass',wert:0.1},h,{titel:'Test'});einig=F.verhandlung(p).einig.fee<fd*2;delete F.verhandlung(p).einig;
       const du0=F.bezDu(p.team);F.kartenWirkung({art:'nachlass',wert:-10},h,{titel:'Test'});auf=F.bezDu(p.team)-du0;
       /* Ausgang: nicht leise, leise, falscher Verkäufer */
       const [a,b]=h.mit,m=l=>({s:S.season,t:S.my,v:p.team,mit:[a,b],leise:l});z.push(F.bez(a,b));da.push(F.bezDu(a));
@@ -229,8 +229,8 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
       p.ld3=m(0);F.dritterKauf(p,a);z.push(F.bez(a,b));
       /* Vereinswechsel */
       S.karten.kette=[{id:'dritterTreffen',tag:heute+5,s:S.season,b:h}];F.kartenJobwechsel();weg=!S.karten.kette.length;}
-    ok=ok1&&ok2&&frueh&&kam&&verfallen&&nach<=ev('rundeAb')(fd*0.9)&&leise&&auf===-10&&z[1]-z[0]===L.zwischen&&da[1]-da[0]===L.du&&z[2]-z[1]===L.zwischen&&da[2]===da[1]&&z[3]===z[2]&&!p.ld3&&weg;
-    info=`Spieler ${p.n}, ohne Berater und Verwandten ${ohne}, Auslöser ${!!h}, Treffen ${ok2} (${e?e.tag-heute:'-'} Tage), nicht zu früh ${frueh}, gekommen ${kam}, verfallen ${verfallen}, Forderung ${fd} → ${nach}, leise ${leise}, aufgeflogen ${auf}, zwischen ${z[1]-z[0]}/${z[2]-z[1]}/${z[3]-z[2]}, du ${da[1]-da[0]}/${da[2]-da[1]}, Jobwechsel ${weg}`;}
+    ok=ok1&&ok2&&frueh&&kam&&verfallen&&nach<=ev('rundeAb')(fd*0.9)&&leise&&(gegen==null||gegen<=nach)&&einig&&auf===-10&&z[1]-z[0]===L.zwischen&&da[1]-da[0]===L.du&&z[2]-z[1]===L.zwischen&&da[2]===da[1]&&z[3]===z[2]&&!p.ld3&&weg;
+    info=`Spieler ${p.n}, ohne Berater und Verwandten ${ohne}, Auslöser ${!!h}, Treffen ${ok2} (${e?e.tag-heute:'-'} Tage), nicht zu früh ${frueh}, gekommen ${kam}, verfallen ${verfallen}, Forderung ${fd} → ${nach}, Gegenangebot ${gegen}, vereinbart gesenkt ${einig}, leise ${leise}, aufgeflogen ${auf}, zwischen ${z[1]-z[0]}/${z[2]-z[1]}/${z[3]-z[2]}, du ${da[1]-da[0]}/${da[2]-da[1]}, Jobwechsel ${weg}`;}
   pruef(ok,'Der lachende Dritte: Auslöser, Folgekarte nach 3 bis 7 Tagen, Verfall, Nachlass, Ausgang für die beiden Vereine und dich',info);}
 
 // K30d. Anlasskarten (K30 §5.4, K37 §12 Nr. 21): Karten mit chance nehmen diese Chance je Woche statt der Stufe; das Wunder (chance 1) kommt in der Woche nach dem Rückspiel sicher.
@@ -246,15 +246,15 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
 {const {S,F,ev}=welt(),A=ev('AUSLOESER'),M=ev('RKT').medizin,sq=ev('squad')(S.my),t=ev('myT()'),heute=ev('absTag')(S.tag),st=ev('stimmung');S.phase='play';
   sq.forEach(p=>{p.inj=0;p.vl=null;st(p);p.st=50;});const keine=A.grippewelle()===null&&A.langeReha()===null;
   sq.slice(0,M.grippeAb-1).forEach(p=>F.verletzen(p,'krankheit',{still:true}));const zuWenig=A.grippewelle()===null;F.verletzen(sq[M.grippeAb-1],'krankheit',{still:true});const welle=!!A.grippewelle();
-  ev('kartenWirkung')({art:'hygiene',wert:14},{},{titel:'Test'});const hyg=t.krankBis<heute&&t.hygBis===heute+14;
+  ev('kartenWirkung')({art:'hygiene',wert:14},{},{titel:'Test'});const hyg=t.krankBis<heute&&t.hygBis===heute+14;F.verletzen(sq[M.grippeAb],'krankheit',{still:true});const hygNeu=ev('krankFaktor')(t,heute)===ev('RMD').krankheit.hygiene;
   const p=sq[M.grippeAb+1],q=sq[M.grippeAb+2];[p,q].forEach(x=>{F.verletzen(x,'kollision',{art:'kreuzband',still:true});x.vl.dg=heute;});const mit=A.langeReha();
   let bezahlt=false,nochmal=null,halb=false,gesund=false;
   if(mit){const r=ev('PIX').get(mit.spieler),s=r===p?q:p,c=ev('karteVon')('langeReha'),w=c.optionen[0].wirkung[0],f0=S.fin.Ereignisse||0,st0=st(r);ev('kartenWirkung')(w,mit,c);
     bezahlt=(S.fin.Ereignisse||0)<f0&&r.vl.rfF===0.5&&st(r)>st0;nochmal=A.langeReha();const RF=ev('RMD').arten.kreuzband.rueckfall;
     r.inj=0;F.medizinRueckkehr(r);s.inj=0;F.medizinRueckkehr(s);halb=Math.abs(r.rf.w-RF*0.5)<1e-9&&Math.abs(s.rf.w-RF)<1e-9;
     const f1=S.fin.Ereignisse||0;ev('kartenWirkung')(w,{spieler:r.id},c);gesund=(S.fin.Ereignisse||0)===f1&&!r.vl;nochmal=nochmal&&nochmal.spieler===s.id;}
-  pruef(keine&&zuWenig&&welle&&hyg&&!!mit&&bezahlt&&nochmal&&halb&&gesund,'Medizin-Karten: Grippewelle ab drei Kranken, Hygieneplan, lange Reha, Spezialist halbiert den Rückfall und kostet nur mit Verletzung',
-    `ohne Anlass ${keine}, zwei Kranke ${zuWenig}, drei ${welle}, Hygiene ${hyg}, Reha ${!!mit}, bezahlt ${bezahlt}, der andere danach ${nochmal}, Rückfall halb ${halb}, gesund ohne Kosten ${gesund}`);}
+  pruef(keine&&zuWenig&&welle&&hyg&&hygNeu&&!!mit&&bezahlt&&nochmal&&halb&&gesund,'Medizin-Karten: Grippewelle ab drei Kranken, Hygieneplan, lange Reha, Spezialist halbiert den Rückfall und kostet nur mit Verletzung',
+    `ohne Anlass ${keine}, zwei Kranke ${zuWenig}, drei ${welle}, Hygiene ${hyg}, nach neuem Kranken ${hygNeu}, Reha ${!!mit}, bezahlt ${bezahlt}, der andere danach ${nochmal}, Rückfall halb ${halb}, gesund ohne Kosten ${gesund}`);}
 
 // K07e, K14d. Rangelei im Training: nur ein gesunder Hitzkopf mit einem gesunden Rivalen im Kader. Partynacht: Folgekarte nach „Feiern lassen“ (Kabinenparty),
 //       mit einem Partylöwen im Kader; ohne ihn verfällt sie still.

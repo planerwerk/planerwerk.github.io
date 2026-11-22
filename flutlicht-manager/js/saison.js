@@ -84,7 +84,7 @@ function newSeasonLauf(){lizenzNachweis();wechselVollziehen(true);leiheEnde();ve
   // deine Zweite aus der 3. Liga abgestiegen: Spieler bis 23 bleiben als Amateurkader (K08 §5.6)
   const kSchnitt=karriereSchnitte(); // Schnitt je Liga für das Karriereende (K32 §5.1), vor dem Altern
   const vPlan=new Map();S.teams.forEach(t=>{if(aktiv(t)&&stabMacht(t.id,'vertraege'))vPlan.set(t.id,kaderplan(t));}); // Verträge nach Rang (K31 §5.8, U11c): Plan vor dem Altern, ohne Zufall
-  S.pl.forEach(p=>{if(p.team<-1)return;p.age++;p.g=0;p.pg=0;if(p.eg)p.eg=0;p.apps=0;disziplinSaison(p);p.form=Z.neuForm;p.sv=0;p.ent=0;eigenschaftenNeu(p);
+  S.pl.forEach(p=>{delete p.ld3;if(p.team<-1)return;p.age++;p.g=0;p.pg=0;if(p.eg)p.eg=0;p.apps=0;disziplinSaison(p);p.form=Z.neuForm;p.sv=0;p.ent=0;eigenschaftenNeu(p);
     if(p.team>=0&&!aktiv(S.teams[p.team])){p.team=-1;p.list=0;}
     if(karriereEnde(p,kSchnitt)){if(p.team===S.my)news(`${p.n} beendet seine Karriere.`);p.team=-2;return;} // K32 §5.1, eigener Strom je Spieler
     if(p.team>=0){p.ct--;if(p.ct<=0){const mein=p.team===S.my;if(mein&&!autoB('vertraege')){news(`Vertrag ausgelaufen: ${p.n} verlässt den Verein.`,'bad');p.team=-1;p.list=0;}

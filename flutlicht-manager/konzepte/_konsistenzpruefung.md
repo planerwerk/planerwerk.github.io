@@ -2066,3 +2066,28 @@ Korrekturen auf `mitarbeit/popolupo-ee-korrekturen` (auf K30c).
 | EE4 | „Pokal-Los des Jahres“ kam fast jede Saison schon in Runde 1 (dort ziehen alle Profis Amateure) und konnte sich wiederholen. Jetzt nicht in Runde 1 und höchstens einmal je Saison (`S.cup.losJahr`). Test K13c erweitert. | ✅ behoben |
 | EE5 | „Berater droht“: „Nachgeben“ kostete nichts, wenn der Spieler schon das Marktgehalt bekam, und Beziehung und Stimmung kamen auch, wenn der Vorstand ablehnte. Jetzt nur unter dem Marktgehalt, und Beziehung und Stimmung kommen nur mit Erhöhung (`dann`), sonst nennt die Karte den Grund. Ebenso „Gehaltsneid“. Test K22c erweitert. | ✅ behoben |
 | EE6 | „Provisionsstreit“: Die Beziehung +5 kam auch, wenn der Spieler weg war und nichts gezahlt wurde. Jetzt in `dann`. Test K21c erweitert. | ✅ behoben |
+
+## EF. Prüfung von K30c, der Korrekturen EE, K30d und K10e ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 740c1b9, fd53169, 23a16ef und 365d5e6 gelesen (nichts ausgeführt). Kein blockierender Fehler, zwei mittlere.
+
+**Ohne Befund:**
+
+- `mitbieter`: gleiche Bedingung und Reihenfolge wie vorher in `konkurrenzKauf`.
+- Gleichschritt: `kartenKette` nur mit Einträgen und im eigenen Strom, die Faktoren in `medizin.js` ohne Karten genau 1, gleich viele Würfel. `ausleihenGrund` wirkt wie vorher.
+- Halt „Ereignis“ für Folgekarten.
+- Wochenbudget: Die Wochen laufen von Donnerstag bis Mittwoch (`absTag` ab 1.1.1970). Eine Folgekarte 3 bis 7 Tage nach einem Montag liegt immer in der nächsten Woche.
+- Keine Ketten über Saison, Entlassung oder Vereinswechsel hinweg.
+- `else if`-Kette in `kartenWirkung` intakt, `erfolg` in allen Zweigen richtig.
+- K30d ohne Befund.
+
+Korrekturen auf `mitarbeit/popolupo-ef-korrekturen` (auf K14e).
+
+| # | Befund | Status |
+|---|---|---|
+| EF1 | **Mittel: Nach dem Nachlass konnte das Gegenangebot über der eigenen Forderung liegen.** Die Schmerzgrenze rechnet mit der aktuellen Forderung, der Nachlass senkte nur `v.f`. Stieg die Forderung danach (zum Beispiel bekanntes Interesse aus einem Verhandlungsgerücht, das der Nachlass selbst auslöste), lag das Gegenangebot über dem Nachlass, und der Nachlass war weg. Jetzt ist das Gegenangebot in `kaufRunde` höchstens die aktuelle Forderung. Ein Nachlass allein zählt nicht mehr als Verhandlung für die Gerüchteküche (`v.nl`). Test K30c mit Gegenangebot unter bekanntem Interesse. | ✅ behoben |
+| EF2 | **Mittel: Der Hygieneplan endete mit dem ersten neuen Kranken.** Jede neue Krankheit setzte die Ansteckung wieder, dann galt ×2 × 0,5 = 1. Jetzt gilt während des Plans sein Faktor statt der Ansteckung (`krankFaktor`). Test K10e mit einem neuen Kranken. | ✅ behoben |
+| EF3 | Der Nachlass senkte keine schon vereinbarte Ablöse (`v.einig.fee`). Jetzt auch die. Test K30c. | ✅ behoben |
+| EF4 | `dritterKauf` wirkte auch beim Vorvertrag, obwohl der Spieler erst in der nächsten Saison wechselt. Jetzt nicht beim Vorvertrag. Der Merker `p.ld3` fällt beim Saisonwechsel weg. | ✅ behoben |
+| EF5 | Test K22c: Der Gehaltsrahmen konnte die Erhöhung ablehnen. Jetzt verdient der ganze Kader die Hälfte des Marktgehalts, wie in K21c. | ✅ behoben |
+| EF6 | Test: Das Gegenangebot nach dem Nachlass war ungeprüft. Jetzt in K30c (EF1). | ✅ behoben |

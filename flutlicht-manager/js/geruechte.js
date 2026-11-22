@@ -8,7 +8,7 @@ function gerText(art,c,k){const T=PRESSE.geruechte[art].t;return T[k%T.length].r
 function gerMedium(art){const M=PRESSE.geruechte[art].m;return R()<0.6||M.length<2?M[0]:M[1+Math.floor(R()*(M.length-1))];}
 // Anlässe dieser Woche: über deinen Verein (mein) und über andere (fremd)
 function gerKandidaten(){const G=RGR,mein=[],fremd=[],sq=squad(S.my),lvl=new Map();
-  Object.entries(S.verh||{}).forEach(([id,v])=>{const p=PIX.get(+id);if(p&&v&&p.team===v.team&&p.team!==S.my&&p.team>=0&&p.team<1000&&(v.f!=null||v.einig))mein.push({art:'verhandlung',tid:p.team,klub:S.my,pid:p.id,w:1});});
+  Object.entries(S.verh||{}).forEach(([id,v])=>{const p=PIX.get(+id);if(p&&v&&p.team===v.team&&p.team!==S.my&&p.team>=0&&p.team<1000&&(v.f!=null||v.einig)&&!(v.nl&&!v.r&&!v.einig))mein.push({art:'verhandlung',tid:p.team,klub:S.my,pid:p.id,w:1});}); /* nur ein Nachlass aus der Karte (K30c) ist noch keine Verhandlung (Prüfung EF1) */
   sq.forEach(p=>{if((p.ww||0)>=2)mein.push({art:'unzufrieden',tid:S.my,pid:p.id,w:1});});
   sq.slice().sort((a,b)=>b.str-a.str).slice(0,3).forEach(p=>{const b=beraterVon(p);if(b&&b.prof==='gierig')mein.push({art:'interesse',tid:S.my,pid:p.id,w:0.5});});
   if(S.ult&&S.ult.tid===S.my)mein.push({art:'trainer',tid:S.my,w:1});

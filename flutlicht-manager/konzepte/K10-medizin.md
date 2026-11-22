@@ -134,7 +134,7 @@ Hängt ab von: K03 (Frische, Robustheit, Saisonbelastung), K04 (Fouls, Ermüdung
 
 - **Grippewelle** (Entscheidung, Chance 0,5 je Woche mit Anlass, Sperre 60 Tage):
   - Anlass: mindestens drei Kranke im Kader.
-  - „Hygieneplan umsetzen“ (Voreinstellung): 3.000 € (3. Liga, nach Liga mehr). Die Ansteckung endet sofort, und zwei Wochen lang erkranken nur halb so viele (`RMD.krankheit.hygiene`).
+  - „Hygieneplan umsetzen“ (Voreinstellung): 3.000 € (3. Liga, nach Liga mehr). Die Ansteckung endet sofort, und zwei Wochen lang erkranken nur halb so viele (`RMD.krankheit.hygiene`). Seit Prüfung EF2 gilt das auch nach neuen Kranken, die Ansteckung zählt während des Plans nicht (`krankFaktor`).
   - „Normal weitermachen“: nichts.
   - Die Spielverlegung fehlt weiter, sie kommt mit K13 (Stufe 4).
 - **Lange Reha** (Entscheidung, Chance 0,03 je Woche mit Anlass, Sperre 365 Tage). Sie steht statt „Kreuzbandriss“:

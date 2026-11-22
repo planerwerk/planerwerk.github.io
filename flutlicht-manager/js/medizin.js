@@ -66,7 +66,9 @@ function medizinTag(d){const K=RMD.krankheit,heute=absTag(d),winter=K.winterMona
   S.pl.forEach(p=>{if(p.team<0)return;if(p.inj===0&&p.vl)medizinRueckkehr(p);});fehlAufklaeren(heute);
   if(S.phase!=='play')return;
   S.pl.forEach(p=>{if(p.team<0||p.inj>0)return;const t=S.teams[p.team];if(!t||!aktiv(t)||sommerStatus(t)==='urlaub')return;
-    if(R()<K.proTag*(winter?K.winter:1)*((t.krankBis||0)>=heute?K.ansteckung:1)*((t.hygBis||0)>=heute?K.hygiene:1))verletzen(p,'krankheit');});} // Hygieneplan (t.hygBis, nur über die Karte „Grippewelle“, K10e)
+    if(R()<K.proTag*(winter?K.winter:1)*krankFaktor(t,heute))verletzen(p,'krankheit');});}
+// Ansteckung und Hygieneplan (t.hygBis, nur über die Karte „Grippewelle“, K10e): Solange der Plan läuft, gilt sein Faktor statt der Ansteckung, auch nach neuen Kranken (Prüfung EF2)
+const krankFaktor=(t,heute)=>{const K=RMD.krankheit;return(t.hygBis||0)>=heute?K.hygiene:(t.krankBis||0)>=heute?K.ansteckung:1;};
 
 // Fit spritzen (K10 §5.4): nur am Spieltag und nur bei Arten mit „ja“. Wirkung ×0,95, danach mit 15 % Verschlimmerung.
 const gespritzt=p=>p.spritze===S.tag&&p.inj>0&&p.vl&&RMD.arten[p.vl.art].spritzen;

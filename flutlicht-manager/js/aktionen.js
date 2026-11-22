@@ -75,7 +75,7 @@ function offer(id){if(transferSperre()||transferSperreNaechste()){toast(transfer
   {const v=verhandlung(p);if(!v.mc){money('Medizincheck',-RLE.medizin.kosten);const b=medizinBefund(p);v.mc={b:b||''};if(b){const a=medizinAbschlag(p);if(fee){fee=Math.round(fee*(1-a)/RM.runden)*RM.runden;if(v.einig)v.einig.fee=fee;} // Medizincheck (K19 §5.5, U10d)
     msg.textContent=`Medizincheck: Befund, ${b}.${fee?` Der Verein senkt die Ablöse um ${Math.round(a*100)} % auf ${fmt(fee)}.`:''} Noch einmal „${vorv?'Vorvertrag anbieten':from?'Angebot abgeben':'Verpflichten'}“ zum Abschluss, sonst lass es.`;save();return;}}}
   if(fee&&from&&!aus)bezKaufFair(p,from.id,fee); // fairer Kauf verbessert die Beziehung (K17 §5.5, U12c), vor dem Löschen der Verhandlung
-  if(from&&!aus)dritterKauf(p,from.id); // der lachende Dritte (K30c, K17 §5.4): Beziehung zwischen den beiden anderen Vereinen
+  if(from&&!aus&&!vorv)dritterKauf(p,from.id); // der lachende Dritte (K30c, K17 §5.4): Beziehung zwischen den beiden anderen Vereinen; nicht beim Vorvertrag, der Wechsel ist erst in der nächsten Saison (Prüfung EF4)
   if(fee){zgUeberBudget(fee);abloeseZahlen(fee,p.n);if(!aus)from.cash+=fee;} // über dem Transferbudget ist der Vorstand verstimmt (U12e); seit K23e auf Wunsch in Raten (K23 §5.5d)
  if(S.verh)delete S.verh[p.id];if(o.hg)money('Handgelder',-o.hg);beraterAbschluss(p,o.sal,fee,r2.runden); // Provision und Beziehung (K22)
   kaufSichtMerken(p);if(from&&(vorv||!fensterOffen())){wechselVormerken(p,S.my,Object.assign({ct:o.ct,sal:o.sal,preis:fee,vp:o.vp,ak:o.ak,lk:o.lk},vorv?{ab:tageDerSaison()}:{}));S.offers=S.offers.filter(x=>x.pid!==id); // Wechsel zum nächsten Fenster (K19 §5.6) oder zum Sommer (Vorvertrag)

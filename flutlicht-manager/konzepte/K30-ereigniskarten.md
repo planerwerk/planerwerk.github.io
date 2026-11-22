@@ -236,6 +236,12 @@ Noch nicht gebaut: verzögerte Folgen ohne eigene Karte, die Chronik über alle 
 - Die Beziehung zwischen den beiden anderen Vereinen sinkt um 10.
 - Deine Beziehung zu beiden sinkt um 2. Nach erfolgreichem Ausspielen sinkt sie nicht.
 - Wer nur die erste Karte beantwortet (Treffen oder offiziell melden) und dann kauft, bekommt den Ausgang ebenfalls, mit −2.
+- Seit Prüfung EF:
+  - Ein Vorvertrag zählt nicht, der Spieler wechselt erst in der nächsten Saison.
+  - Der Merker fällt beim Saisonwechsel weg.
+  - Der Nachlass senkt auch eine schon vereinbarte Ablöse.
+  - Das Gegenangebot liegt nie über der Forderung.
+  - Ein Nachlass allein bringt kein Verhandlungsgerücht.
 
 **Vorläufig entschieden (von mir, ohne Rücksprache):**
 

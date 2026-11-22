@@ -85,7 +85,7 @@ function kaufRunde(p,fee){const T=RTR,v=verhandlung(p),F=forderung(p),sch=schmer
   if(v.g<=0||v.r>=T.runden.kauf){v.pause=S.tag+T.pause;v.f=null;v.r=0;v.g=T.geduld;return{text:txt+`${wer} bricht die Verhandlung ab. Frühestens am ${datumKurz(v.pause)} wieder.`};}
   let f=Math.max(sch,rundeAb((F+fee)/2));
   if(fee>=F*T.anstaendig&&S.tag-v.druck>=T.preisdruck.tage){f=Math.max(sch,rundeAb(f*(1-T.preisdruck.prozent)));v.druck=S.tag;}
-  v.f=f;return{text:txt+`${wer}: Gegenangebot ${fmt(f)} (Runde ${v.r} von ${T.runden.kauf}).`,gegen:f};}
+  f=Math.min(f,F);v.f=f;return{text:txt+`${wer}: Gegenangebot ${fmt(f)} (Runde ${v.r} von ${T.runden.kauf}).`,gegen:f};} /* nie über der eigenen Forderung, auch wenn die Schmerzgrenze nach einem Nachlass gestiegen ist (Prüfung EF1) */
 
 // ---------- Angebote für deine Spieler (K19 §5.4) und deine Gegenforderung (§4.2) ----------
 // Gebot eines Bieters: 85–100 % seines Vereinswerts, höchstens die Forderung der Transferliste. Obergrenze = sein Vereinswert.
