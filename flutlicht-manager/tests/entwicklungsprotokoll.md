@@ -67,11 +67,12 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 | **U19e** Europapokal-Karten, dazu **K31b** Bedarf anderer Vereine und Korrekturen DW | `mitarbeit/popolupo-u19e-europa-karten` (auf K11c) | fertig, ungetestet |
 | **K34d** Rekordtransfer mit echtem Startwert, dazu **K31c** „Konkurrent rüstet auf“ | `mitarbeit/popolupo-k34d-rekordtransfer` (auf U19e) | fertig, ungetestet |
 | **K30b** Meldungsdichte | `mitarbeit/popolupo-k30b-meldungsdichte` (auf K34d) | fertig, ungetestet |
+| **K36c** Meldungen des Stabs gesammelt | `mitarbeit/popolupo-k36c-stabbericht` (auf K30b) | fertig, ungetestet |
 | U19d2 volle Kader der Auslandsvereine in der Engine | zurückgestellt | Entwurf in K37 §5.7. Die Engine behandelt Auslandsvereine als Block wie Amateure, viele Stellen schlagen Spieler in `PIX` nach. Erst nach einem Testlauf und der Messung des Faktors 0,93 |
 
 **Die neueste Spitze ist immer der zuletzt genannte Zweig, er enthält alles davor.** K24 ist fertig (Claude).
 
-**Vorschlag für den nächsten Testlauf** (Spitze `mitarbeit/popolupo-k30b-meldungsdichte`, alles ungetestet, aber von lesenden Prüf-Agenten durchgesehen, Konsistenzprüfung CS, CX, CZ, DD, DF, DI, DL, DM, DN). **Wichtig:** Die Zweige `u12g` und `k29e` laden für sich allein nicht (DN1), bitte die Spitze nehmen:
+**Vorschlag für den nächsten Testlauf** (Spitze `mitarbeit/popolupo-k36c-stabbericht`, alles ungetestet, aber von lesenden Prüf-Agenten durchgesehen, Konsistenzprüfung CS, CX, CZ, DD, DF, DI, DL, DM, DN). **Wichtig:** Die Zweige `u12g` und `k29e` laden für sich allein nicht (DN1), bitte die Spitze nehmen:
 1. `node tests/code.js`, dann die schnellen Einzeltests der neuen Teile: `finanzen.js` (Nr. 11 bis 20), `geruechte.js`, `schwierigkeit.js`, `werbung.js`, `europapokal.js`, `vorstand.js` (Nr. 10 bis 19), `karriereende.js`, `stadion.js` (Nr. 8 bis 11), `karten.js`, `spielwelt-karten.js`, `fans.js` (K27b), `abwerben.js` (K20b), `transfers.js` (K20c, K20d, K19c), `presse.js` (K29b bis K29i), `marketing.js` (K25c, K25d).
 2. `node tests/lizenz.js` (Gleichschritt, neue Bereiche `zielgespraech`).
 3. `node tests/finanzmodell.js 2`: Salden je Liga nach K23c. Erwartet nach der Modellrechnung 1. Liga etwa +11 Mio., 2. Liga etwa 0, 3. Liga etwa −1 Mio. je Verein und Saison ohne Transfers (K23 §5.6b). Weichen sie stark ab, bitte die Zeilen ins Testprotokoll, ich stelle dann `REGELN.finanzen.verwaltung` und `sponsor` nach.
@@ -106,6 +107,11 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 ---
 
 ## Changelog
+
+### 22.11.2026: K36c Meldungen des Stabs gesammelt (Zweig `mitarbeit/popolupo-k36c-stabbericht`, auf K30b)
+
+- **Neu (K36 §8, Nr. 27):** Meldungen des Stabs aus einem Tageslauf kommen gesammelt. Eine bleibt eine eigene Zeile, mehrere werden eine Zeile „Der Stab meldet n Entscheidungen: …“. Vorläufig je Tageslauf statt je Woche, damit nichts zu spät kommt. Außerhalb der Tagesläufe kommt sie sofort wie bisher.
+- **Tests zuerst:** `tests/lizenz.js` (neuer Fall K36c am Ende, die übrigen Fälle sollten unverändert bleiben, besonders der Sponsor in Fall 3).
 
 ### 22.11.2026: K30b Meldungsdichte (Zweig `mitarbeit/popolupo-k30b-meldungsdichte`, auf K34d)
 

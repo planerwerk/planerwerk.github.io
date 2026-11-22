@@ -103,8 +103,8 @@ function naechsterHalt(){const ende=S.phase==='sommer'?tageDerSaison():S.plan.en
   for(let d=S.tag+1;d<=S.tag+RK.maxSprung;d++){if(d>=ende||haltGrund(d)||(S.phase==='play'&&d===auftaktTag(myT())))return Math.min(d,ende);}return S.tag+RK.maxSprung;}
 
 // Tageswechsel
-function tagBeginn(d){taeglich(d);if(wochentag(d)===RK.wochenTag)woechentlich(d);if(S.phase==='play'&&d>=S.plan.ende)seasonEnd();}
-function tagEnde(d){if(S.phase==='play'&&S.gespielt!==d)tagesSpiele(d);}
+function tagBeginn(d){S.stabT=S.stabT||[];taeglich(d);if(wochentag(d)===RK.wochenTag)woechentlich(d);if(S.phase==='play'&&d>=S.plan.ende)seasonEnd();stabBericht();} // Meldungen des Stabs gesammelt (K36c)
+function tagEnde(d){S.stabT=S.stabT||[];if(S.phase==='play'&&S.gespielt!==d)tagesSpiele(d);stabBericht();}
 // Beendet den heutigen Tag und springt zum nächsten Halt, höchstens RK.maxSprung Tage weit. Am 1. Juli beginnt die neue Saison.
 function weiter(){let n=0;spielfeldrandWeiter();tagEnde(S.tag);
   while(S.phase!=='end'&&!S.fired){S.tag++;n++;S.gespielt=-1;

@@ -18,8 +18,12 @@ function aufgabe(k){if(S.lizenz&&S.lizenz.an&&k)S.lizenz.aufgaben[k]=1;}
 // Prüfung vor jeder Aktion: gesperrt → Hinweis und Abbruch. Frei → der Bereich gehört ab jetzt dir (Automatik aus), die Aufgabe zählt.
 function darf(b,aufg){if(!S.lizenz)return true;if(!frei(b)){toast(`${bereich(b).name}: frei ab der ${lizenzName(bereich(b).ab)}.`);return false;}
   if(S.lizenz.auto[b])delete S.lizenz.auto[b];aufgabe(aufg);return true;}
-// Meldung des Stabs über eine Entscheidung in einem Bereich, den du nicht selbst führst (nur Posteingang, kein Halt, K36 §8)
-function stabMeldung(text,art){news(text,art||'');}
+// Meldung des Stabs über eine Entscheidung in einem Bereich, den du nicht selbst führst (nur Posteingang, kein Halt, K36 §8).
+// Seit K36c während tagBeginn und tagEnde gesammelt (S.stabT gibt es nur dort) und an ihrem Ende ausgegeben (stabBericht): eine Meldung als eigene Zeile, mehrere als eine Zeile.
+// Außerhalb (deine Klicks, Spielbeginn) sofort wie bisher.
+function stabMeldung(text,art){if(S.stabT)S.stabT.push([text,art||'']);else news(text,art||'');}
+function stabBericht(){const l=S.stabT;delete S.stabT;if(!l||!l.length)return;if(l.length===1){news(l[0][0],l[0][1]);return;}
+  news(`Der Stab meldet ${l.length} Entscheidungen: ${l.map(x=>x[0]).join(' · ')}`,l.every(x=>x[1]==='good')?'good':'');}
 
 // ---------- Aufstieg (K36 §5.3): Mindestzeit und Aufgaben, oder die späteste Zeit ----------
 function aufstiegStand(){const L=S.lizenz;if(!L||!L.an||L.stufe>=RLZ.namen.length)return null;const A=RLZ.aufstieg[L.stufe],ks=karriereSaison();

@@ -116,5 +116,14 @@ const punkte=(S,F,id)=>{const lg=S.teams[id].lg,r=F.table(lg).find(x=>x.id===id)
   const dl=d.map(([a,c])=>a-c),diff=mw(dl),se=Math.sqrt(dl.reduce((x,y)=>x+(y-diff)*(y-diff),0)/Math.max(1,dl.length-1)/dl.length);
   pruef(diff+1.64*se>=-2,`Kein Nachteil: Automatik gegen Computer-Verein über ${SEEDS} Seeds, ein Nachteil von mehr als 2 Punkten ist nicht nachweisbar`,`${diff>=0?'+':''}${diff.toFixed(1)} ± ${se.toFixed(1)} Punkte (${d.map(([a,c])=>a+':'+c).join(', ')})`);}
 
+// K36c. Meldungen des Stabs (K36 §8): außerhalb der Tagesläufe sofort; in einem Tageslauf gesammelt, eine als eigene Zeile, mehrere als eine Zeile; danach ist der Sammler weg.
+//       Dazu ein echter Tag mit allem beim Stab: keine Stab-Meldung bleibt liegen.
+{const {S,F,ev}=welt(true),hat=t=>S.news.some(n=>n.t===t),enth=(...l)=>S.news.some(n=>l.every(x=>n.t.includes(x)));
+  F.stabMeldung('Test A');const sofort=hat('Test A');S.stabT=[];F.stabMeldung('Test B');const wartet=!hat('Test B');F.stabBericht();const eine=hat('Test B');
+  S.stabT=[];F.stabMeldung('Test C');F.stabMeldung('Test D','good');F.stabBericht();const zwei=enth('2 Entscheidungen','Test C','Test D')&&!hat('Test C');
+  ev('tagEnde')(S.tag);S.tag++;S.gespielt=-1;ev('tagBeginn')(S.tag);const leer=!('stabT' in S);
+  pruef(sofort&&wartet&&eine&&zwei&&leer,'Meldungen des Stabs: sofort außerhalb des Tageslaufs, im Tageslauf gesammelt, mehrere in einer Zeile, nichts bleibt liegen',
+    `sofort ${sofort}, gesammelt ${wartet}, eine ${eine}, mehrere ${zwei}, Sammler weg ${leer}`);}
+
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);
