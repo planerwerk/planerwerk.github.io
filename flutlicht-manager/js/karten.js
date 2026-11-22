@@ -124,7 +124,7 @@ function kartenJobwechsel(){const K=S.karten;if(!K||!K.offen.length)return;K.off
 // vom neuen an den alten Verein, dann takeJob. Nicht, wenn der Verein nicht mehr aktiv ist, du entlassen bist oder er inzwischen deiner ist.
 function karteJobwechsel(id){const t=S.teams[id],alt=myT();if(!t||!aktiv(t)||S.fired||id===S.my){news('Das Angebot ist nicht mehr zu haben.','');return;}
   const geh=S.tvt&&S.tvt.tid===S.my?S.tvt.geh:trainerGehalt(S.my),a=Math.max(0,Math.min(Math.round(geh*RV.jobangebot.abloese/1000)*1000,Math.max(0,t.cash)));
-  trainerVertragEnde(false);t.cash-=a;alt.cash+=a;news(`${t.name} zahlt ${alt.name} ${fmt(a)} Ablöse für deinen Vertrag.`,'');takeJob(id);}
+  trainerVertragEnde(false);t.cash-=a;alt.cash+=a;news(`${t.name} zahlt ${alt.name} ${fmt(a)} Ablöse für deinen Vertrag.`,'');mitnehmenCoTrainer();takeJob(id);} /* Co-Trainer kommen mit (K16b, Prüfung DU5) */
 // Vereinslosen per Karte holen (Altstar, K32 §8): ein Jahr, Gehalt × f, Kondition −20 (lange ohne Training)
 function karteVerpflichten(p,f){p.team=S.my;p.list=0;p.ct=1;p.sal=Math.round(salaryFor(p.str)*f/1000)*1000;p.seit=absTag(S.tag);p.ko=Math.max(0,(p.ko||50)-20);
   neuzugang(p,S.my);kabineInit(p);rollenBerechnen(S.my);news(`${p.n} unterschreibt für ein Jahr (Gehalt ${fmt(p.sal)}).`,'good');}

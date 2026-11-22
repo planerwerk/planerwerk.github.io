@@ -15,7 +15,7 @@ function gelbe(p){if(!p.kt){p.kt={liga:p.yc||0,pokal:0};delete p.yc;}if(p.kt.eu=
 // ein Derby oder ein Spitzenspiel ist (wie die Pressekonferenzen, RPK.anlass). Rückgabe: Eintrag für erinnerungen (kalender.js) oder null
 function gelbsperreDroht(d){const n=meineLigaspiele().find(e=>e.tag>d);if(!n)return null;const g=pkGegner(n),t=myT(),A=RPK.anlass;if(g==null)return null;
   const derby=istDerby(S.my,g),spitze=n.md+1>=A.spitzeAb&&rank(t.lg,S.my)<=A.spitzeBis&&rank(t.lg,g)<=A.spitzeBis;if(!derby&&!spitze)return null;
-  const G=RD.gelbsperre.liga,xi=new Set(myXI()),l=squad(S.my).filter(p=>xi.has(p.id)&&G.includes((gelbe(p).liga||0)+1));if(!l.length)return null;
+  const G=RD.gelbsperre.liga,xi=new Set(myXI()),l=squad(S.my).filter(p=>xi.has(p.id)&&!(sperreIn(p,'liga')>0)&&G.includes((gelbe(p).liga||0)+1));if(!l.length)return null;
   return{art:'gelbsperre',text:`${l.map(p=>esc(p.n)).join(', ')} ${l.length===1?'fehlt':'fehlen'} mit der nächsten Gelben Karte im ${derby?'Derby':'Spitzenspiel'} gegen ${esc(tn(g))} (${datumKurz(n.tag)}).`,tab:'aufst',knopf:'Zur Aufstellung'};}
 const sperreIn=(p,wb)=>{const s=p.sperre&&p.sperre[wb];return s?s.rot+s.gelb:p.sperre||wb!=='liga'?0:p.sus||0;}; // im Testspiel (wb 'test') gibt es keine Sperren
 const verfahrenVon=(p,wb)=>(S.verfahren||[]).find(v=>v.pid===p.id&&(!wb||v.wb===wb));

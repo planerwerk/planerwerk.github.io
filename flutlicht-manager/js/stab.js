@@ -59,11 +59,15 @@ const mitnehmbar=()=>(S.stab||[]).filter(x=>x.team===S.my&&(x.wiv||0)>=RST.mitne
 function mitnehmenWahl(id,an){const l=(S.mitnehmen||[]).filter(x=>x!==id);if(an&&l.length<RST.mitnehmen.max&&mitnehmbar().some(x=>x.id===id))l.push(id);S.mitnehmen=l;save();showFired();}
 function mitnehmenText(){const l=mitnehmbar();if(!l.length)return'';const w=S.mitnehmen||[];
   return`<div class="card"><h3>Trainerteam mitnehmen</h3><p class="dim">Bis zu ${RST.mitnehmen.max} Mitarbeiter, die mindestens ${RST.mitnehmen.wochen} Wochen bei dir waren, kommen mit. Beim neuen Verein gilt das Gehalt seiner Liga.</p><div class="form">${l.map(x=>`<label class="pick"><input type="checkbox" ${w.includes(x.id)?'checked':''} onchange="mitnehmenWahl(${x.id},this.checked)"> ${esc(RST.rollen[x.r].name)} ${esc(x.n)}</label>`).join('')}</div></div>`;}
-// takeJob (saison.js), nach dem Wechsel von S.my: die gewählten Mitarbeiter des alten Vereins ziehen um. Rückgabe: Zahl
-function stabMitnehmen(altId){const w=S.mitnehmen||[];S.mitnehmen=null;if(!S.stab||!w.length)return 0;const lg=myT().lg;let n=0;
-  w.slice(0,RST.mitnehmen.max).forEach(id=>{const x=S.stab.find(y=>y.id===id&&y.team===altId&&(y.wiv||0)>=RST.mitnehmen.wochen);if(!x)return;
-    const da=S.stab.filter(y=>y.team===S.my&&y.r===x.r).sort((a,b)=>a.q-b.q);if(da.length>=RST.rollen[x.r].plaetze)da[0].team=-1;
-    x.team=S.my;x.sal=stabGehalt(x.r,x.q,lg);x.ct=Math.max(1,x.ct||1);n++;news(`${RST.rollen[x.r].name} ${x.n} kommt mit zu ${myT().name}.`,'good');});
-  if(n)stabGeaendert();return n;}
+// takeJob (saison.js), nach dem Wechsel von S.my: die gewählten Mitarbeiter des alten Vereins ziehen um. Rückgabe: Zahl.
+// Seit Prüfung DU3: Mitgebrachte verdrängen sich nicht gegenseitig. DU4: Die übrigen Mitarbeiter des neuen Vereins beginnen bei 0 Wochen mit dir (wiv), so zählt „bei dir“ wirklich.
+function stabMitnehmen(altId){const w=(S.mitnehmen||[]).slice(0,RST.mitnehmen.max);S.mitnehmen=null;if(!S.stab)return 0;const lg=myT().lg,mit=new Set();let n=0;
+  w.forEach(id=>{const x=S.stab.find(y=>y.id===id&&y.team===altId&&(y.wiv||0)>=RST.mitnehmen.wochen);if(!x)return;
+    const da=S.stab.filter(y=>y.team===S.my&&y.r===x.r&&!mit.has(y.id)).sort((a,b)=>a.q-b.q),voll=S.stab.filter(y=>y.team===S.my&&y.r===x.r).length>=RST.rollen[x.r].plaetze;
+    if(voll&&da.length){da[0].team=-1;news(`${RST.rollen[x.r].name} ${da[0].n} muss bei ${myT().name} gehen, weil ${x.n} mitkommt.`);}
+    x.team=S.my;x.sal=stabGehalt(x.r,x.q,lg);x.ct=Math.max(1,x.ct||1);mit.add(x.id);n++;news(`${RST.rollen[x.r].name} ${x.n} kommt mit zu ${myT().name}.`,'good');});
+  S.stab.forEach(y=>{if(y.team===S.my&&!mit.has(y.id))y.wiv=0;});stabGeaendert();return n;}
+// Jobangebot per Karte (karten.js karteJobwechsel, ohne Fenster zur Wahl): die mitnehmbaren Co-Trainer kommen mit (Prüfung DU5)
+function mitnehmenCoTrainer(){S.mitnehmen=mitnehmbar().filter(x=>x.r==='co').sort((a,b)=>b.q-a.q).slice(0,RST.mitnehmen.max).map(x=>x.id);}
 // Gehälter des eigenen Stabs je Ligaspiel (wie die Spielergehälter)
 const stabGehaelter=tid=>(S.stab||[]).filter(x=>x.team===tid).reduce((a,x)=>a+x.sal,0);

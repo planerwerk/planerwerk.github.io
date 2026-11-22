@@ -100,6 +100,15 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 22.11.2026: Korrekturen nach Prüfung DU zu K19c, K09b und K16b (Zweig `mitarbeit/popolupo-k29i-maulkorb`)
+
+- Ein lesender Prüf-Agent hat K19c, K09b und K16b durchgesehen (Konsistenzprüfung DU). Er fand keinen blockierenden Fehler, aber fünf echte Befunde.
+- **Behoben:**
+  - DU1, DU2: Unverkäufliche Spieler. Angebote kommen wirklich zum Höchstpreis, die Verhandlung geht nicht darunter.
+  - DU3 bis DU5: Trainerteam mitnehmen. Mitgebrachte verdrängen sich nicht gegenseitig, die 30 Wochen zählen ab deinem Antritt, beim Jobangebot per Karte kommen die Co-Trainer mit.
+  - DU6: Kleinigkeiten.
+- **Tests zuerst:** `tests/transfers.js` (K19c erweitert), `tests/stab.js` (K16b), `tests/erinnerungen.js`.
+
 ### 22.11.2026: K29i Interviews der Spieler und Maulkorb (Zweig `mitarbeit/popolupo-k29i-maulkorb`, auf K34c)
 
 - **Neu (K29 §6):** Montags gibt mit 30 % einer deiner Spieler ein Interview. Mitteilsame (Diva, Partylöwe, Hitzkopf) sind öfter dran und treten öfter ins Fettnäpfchen. Maulkorb im Medien-Kasten: keine Interviews, Mitteilsame verlieren jede Woche Stimmung. In der Automatik passiert nichts.

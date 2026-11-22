@@ -1895,3 +1895,19 @@ Ein Agent hat 6fd507f, 9a8696d und 9d4e16d gelesen (nichts ausgeführt, `dublett
 | DT5 | Kabinenparty nur bis 7 Tage nach dem Kantersieg (nicht nach der Winterpause). | ✅ behoben |
 | DT6 | Kleinigkeiten: Kommentare, `gesenkt` in K33, „Prozentpunkte“ in der Anzeige der Dauerkarten. | ✅ behoben |
 | DT7 | Ohne Befund: U12k bei alten Spielständen und am Rand der Liga, Vertrauen danach, Test 18 und 14; K25e bei 0 Mitgliedern und Kapazität 0, Freiburg genau +10 Punkte, Tests K27b und K25e; `S.res` nur Liga, `p.seit` auf allen Wegen, Katalog, Test K14b, Gleichschritt. Hinweis: Fast jeder Erstligist bekommt die vollen 10 Punkte Vorkaufsrecht. | ✅ |
+
+---
+
+## DU. Prüfung von K19c, K09b und K16b ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 4659aa2, e418ef8 und f7f7716 gelesen (nichts ausgeführt, `dubletten.pl` und `codewaechter.pl` ohne Befund). Kein blockierender Fehler, fünf echte Befunde. Korrekturen auf `mitarbeit/popolupo-k29i-maulkorb`.
+
+| # | Befund | Status |
+|---|---|---|
+| DU1 | **Unverkäuflich ohne Angebote:** Ein Überraschungsangebot erreicht höchstens etwa 1,5 × Marktwert, die Grenze 1,8 × also nie. Jetzt hebt der Bieter auf den Höchstpreis, wenn er ihn zahlen kann (ohne zusätzlichen Wurf). | ✅ behoben |
+| DU2 | **Verhandlung unter den Höchstpreis:** Die Schmerzgrenze lag bei etwa 1,49 × Marktwert. Jetzt bei unverkäuflichen Schlüsselspielern gleich dem Höchstpreis. | ✅ behoben |
+| DU3 | **Mitgebrachte verdrängten sich:** Der zweite Mitgebrachte konnte den ersten verdrängen. Jetzt geht nur ein Mitarbeiter, der schon dort war, mit Meldung. | ✅ behoben |
+| DU4 | **„30 Wochen bei dir“ zählte ab Eintritt beim Verein:** `wiv` lief weiter, wenn du kamst. Jetzt beginnen die übrigen Mitarbeiter des neuen Vereins bei 0 Wochen mit dir. | ✅ behoben |
+| DU5 | **Jobangebot per Karte ohne Wahl:** Jetzt kommen dort die mitnehmbaren Co-Trainer mit. | ✅ behoben |
+| DU6 | Kleinigkeiten: Wahl des Trainerteams über den Jobangeboten, Gelbsperre-Erinnerung nicht unter der Automatik der Aufstellung und nicht für schon Gesperrte, `S.unv` wird beim Jobwechsel geleert. Die Aufschläge in `forderungDu` (Beziehung, Abwerben, Gerüchte, Deadline Day) können den Höchstpreis noch übersteigen, das ist gewollt. | ✅ behoben |
+| DU7 | Ohne Befund: kein Durchsickern in Wechsel unter Computer-Vereinen, Würfe im Markt unverändert, Gleichschritt, Hinweis im Spielerfenster, `askPrice`; nächstes Ligaspiel auch mit Pokal dazwischen, Spitzenspiel wie in der Presse, Menü der Erinnerungen, Derby BVB–S04 im Test; Eigentum, Gehalt, `stabGeaendert`, Aufräumen von `S.mitnehmen`, Tests K19c und K16b. | ✅ |

@@ -70,7 +70,7 @@ function konkurrenzTag(d){if(!S.verh)return;Object.keys(S.verh).forEach(id=>{con
   if(!b||!aktiv(b)||b.cash<k.amt||squad(b.id).length>=RM.kaeufer.kaderMax){if(deins)zusage(`Der andere Verein zieht sein Angebot für ${p.n} zurück. ${vereinName(p)} bleibt bei deinen ${fmt(k.dein)}.`);return;}
   if(deins&&spielerLehntAb(p,b)){zusage(`${p.n} lehnt das Angebot von ${b.name} ab, er will zu ${myT().name}. ${vereinName(p)} nimmt jetzt deine ${fmt(k.dein)}.`);return;}
   delete S.verh[id];kiWechsel(p,b,k.amt);news(`Bieterwettstreit verloren: ${p.n} wechselt für ${fmt(k.amt)} zu ${b.name}.`,'bad');});}
-const schmerzgrenze=p=>rundeAb(forderungDu(p)/RTR.forderung*RTR.schmerzgrenze);
+const schmerzgrenze=p=>unverkaeuflichKI(p)?rundeAb(forderungDu(p)):rundeAb(forderungDu(p)/RTR.forderung*RTR.schmerzgrenze); /* unverkäuflich: nicht unter den Höchstpreis (Prüfung DU2) */
 // Eine Runde: dein Angebot an den Verein. Rückgabe {ok,preis} oder {text,gegen}
 function kaufRunde(p,fee){const T=RTR,v=verhandlung(p),F=forderung(p),sch=schmerzgrenze(p),wer=vereinName(p);
   // Bieterwettstreit (K20c): Solange das Gegenangebot gilt, zählt nur, ob du mitgehst (vor Pause und Beziehung, Prüfung DD2: der Verkäufer hat schon Ja gesagt). Gehst du mit, zieht der andere zurück.
