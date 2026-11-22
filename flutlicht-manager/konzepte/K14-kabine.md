@@ -224,7 +224,7 @@ kabine:{
 18. **Neuanfang beim Vereinswechsel:** Wechselwunsch auf null, Stimmung mindestens so hoch wie ein Startwert (60–75).
 19. **Diva und Söldner** sind jetzt sichtbar und wirksam (K03 §3.5).
 20. **Lernstufen (K36):** Stimmung, Wechselwunsch und Kabinenbericht ab Teamleiter (nur Information), Kapitän ab der C-Lizenz, Kaderrollen und Teamevent ab der B-Lizenz. Bis dahin wählt der Co-Trainer Kapitän und Rollen.
-21. **Noch nicht gebaut:** Ereignisse aus §8 außer dem Gesprächswunsch (Kabinenparty, Neuzugang drängt auf Einsatz und Eingewöhnung gibt es seit K14b als Karten, Führungsspieler meutert seit K14c, 22.11.), Prämien (K21), Integration und Heimweh, Integrationsfigur und Mentor, Wochen-Stammelf für Computer-Vereine mit Rotation nach Rollen. Geldstrafen verhängen oder erlassen seit K09c (Vereinsstrafe nach einem Urteil, K09 §12 Nr. 14).
+21. **Noch nicht gebaut:** Ereignisse aus §8 außer dem Gesprächswunsch (Kabinenparty, Neuzugang drängt auf Einsatz und Eingewöhnung gibt es seit K14b als Karten, Führungsspieler meutert seit K14c, 22.11.), Prämien (K21), Integration und Heimweh, Integrationsfigur und Mentor, Wochen-Stammelf für Computer-Vereine mit Rotation nach Rollen. Geldstrafen verhängen oder erlassen seit K09c (Vereinsstrafe nach einem Urteil, K09 §12 Nr. 14). Prämien (K21): die Siegprämie für die Mannschaft seit K21b (Baustein Erfolg +2 bei „hoch“).
 
 ### Bankzeit nach Grund (mit dir entschieden am 10. November 2026, umgesetzt in U8d am 13. November 2026)
 

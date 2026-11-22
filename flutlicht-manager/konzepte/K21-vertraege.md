@@ -48,7 +48,7 @@ Gespeichert am Spieler als `vertrag = {bis, gehalt, praemien, klauseln}`. `ct` u
 
 ### 3.2 Teamprämien
 
-Sieg-, Klassenerhalts-, Aufstiegs- und Pokalprämien legt der Verein für die ganze Mannschaft fest (Saisonbeginn, K12b). Sie wirken auf die Stimmung (K14, Baustein „Erfolg“) und kosten Geld (K23).
+Sieg-, Klassenerhalts-, Aufstiegs- und Pokalprämien legt der Verein für die ganze Mannschaft fest (Saisonbeginn, K12b). Sie wirken auf die Stimmung (K14, Baustein „Erfolg“) und kosten Geld (K23). **Gebaut als K21b** (22.11.2026, popolupo, ohne Testlauf, vorläufig nur die Siegprämie): In der Kabine wählst du bis zum ersten Ligaspiel „normal“ (in den Gehältern enthalten, ohne Wirkung) oder „hoch“. Hoch kostet je Ligasieg 15.000, 4.000 oder 1.000 € je Spieler im Kader (Buchung „Prämien: Mannschaft“) und hebt den Baustein Erfolg deiner Spieler um 2. Ab der A-Lizenz (Bereich `praemien`). Ohne Wahl gilt „normal“, das ist auch die Automatik und das Verhalten der Computer-Vereine, darum bleibt der Gleichschritt. Klassenerhalts-, Aufstiegs- und Pokalprämien fehlen noch.
 
 ## 4. Abläufe
 
@@ -204,7 +204,7 @@ vertraege:{
 
 10. **Kein Liga-Faktor in der Forderung:** Die Gehaltskurve nach Stärke gibt der 2. Liga schon etwa 40 % der Bundesliga (Stärke 68 gegen 77: rund 0,5 gegen 1,2 Mio €). Ein zusätzlicher Faktor 0,45 hätte doppelt gezählt.
 11. **Gehalt und Laufzeit bleiben in `p.sal` und `p.ct`.** Neu am Spieler: `vp` (Prämien), `ak` (Ausstiegsklausel), `lk` (Ligaklausel als Kürzung bei Abstieg), `seit`, `abl`. Das Objekt `vertrag` aus §3.1 ist nicht gebaut, damit alte Spielstände und alle übrigen Stellen weiterlaufen.
-12. **Gebaut sind:** Handgeld bei jeder Unterschrift, Auflauf-, Punkt-, Tor- und Zu-Null-Prämie, Ausstiegsklausel, Ligaklausel (nur Kürzung bei Abstieg). **Nicht gebaut:** Vorlagenprämie (die Engine zählt keine Vorlagen), Aufstiegs-, Klassenerhalts-, Titel- und Treueprämie, Teamprämien (K12b), Abstiegsklausel mit Ausstiegsrecht, Verlängerungsoption, versprochene Rolle als Klausel (es gibt die Zusage im Gespräch, K15), Zielvorgabe, Gehaltsgefüge (§5.3), Berater (U10c).
+12. **Gebaut sind:** Handgeld bei jeder Unterschrift, Auflauf-, Punkt-, Tor- und Zu-Null-Prämie, Ausstiegsklausel, Ligaklausel (nur Kürzung bei Abstieg). **Nicht gebaut:** Vorlagenprämie (die Engine zählt keine Vorlagen), Aufstiegs-, Klassenerhalts-, Titel- und Treueprämie, Teamprämien außer der Siegprämie (K21b, §3.2), Abstiegsklausel mit Ausstiegsrecht, Verlängerungsoption, versprochene Rolle als Klausel (es gibt die Zusage im Gespräch, K15), Zielvorgabe, Gehaltsgefüge (§5.3), Berater (U10c).
 13. **Annahme:** Wert des Pakets je Jahr gegen eine Schwelle, die je Spieler fest um bis zu ±3 % um die Forderung liegt. Du siehst die Zone und nach einer Absage, wie viel ungefähr fehlt. Leere Felder füllt das Spiel mit der oberen Kante der Zone, dann sagt er sicher zu.
 14. **Erwartete Einsätze für die Prämien:** beim eigenen Verein seine Einsatzerwartung (K14), beim Wechsel nach seinem Rang auf der Position (Stammspieler 85 %, Rotation 45 %, sonst 15 %). Punkte je Spiel fest 1,4, Torquote nach Position (Sturm 0,35, Mittelfeld 0,12, Abwehr 0,04), Zu-Null in einem Viertel der Spiele. Sicherheit 0,6 + 0,02 × Druckresistenz.
 15. **Klauseln als Tausch:** Ausstiegsklausel bis 1,5 × Marktwert spart 10 % Gehalt, bis 3 × 5 %. Ligaklausel kostet 5 % je 30 % Kürzung. Laufzeitwunsch: bis 23 je Jahr über drei 3 % mehr, ab 30 je Jahr unter drei 5 % mehr.

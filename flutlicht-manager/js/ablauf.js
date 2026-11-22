@@ -41,7 +41,7 @@ function tagesSpieleAbschliessenLauf(out){const d=out.tag;S.gespielt=d;
   const t=myT(),m=out.mine;
   for(const g of out.gruppen){const e=g.e,mg=g.list.includes(m)?m:null;
     if(g.art==='liga'){g.list.forEach(r=>{S.res[e.lg].push([r.h,r.a,r.hg,r.ag,e.md]);bezDerbySpiel(r);fansDerby(r);}); // Derby mit Sieger: Rivalität wächst (K17, U12c)
-      if(mg){news(`${e.md+1}. Spieltag: ${tn(mg.h)} – ${tn(mg.a)} ${mg.hg}:${mg.ag}`,(mg.h===S.my?mg.hg>mg.ag:mg.ag>mg.hg)?'good':(mg.hg===mg.ag?'':'bad'));finanzenLiga(mg);vorstandLiga(e,mg);fansHeimspiel(mg);
+      if(mg){news(`${e.md+1}. Spieltag: ${tn(mg.h)} – ${tn(mg.a)} ${mg.hg}:${mg.ag}`,(mg.h===S.my?mg.hg>mg.ag:mg.ag>mg.hg)?'good':(mg.hg===mg.ag?'':'bad'));finanzenLiga(mg);teampraemieSpiel(mg);vorstandLiga(e,mg);fansHeimspiel(mg);
         if(e.md+1===RK.vertragsWarnungNachSpieltag){const x=squad(S.my).filter(p=>p.ct<=1);if(x.length)news(`Achtung: ${x.length} Vertrag/Verträge enden zum Saisonende (${x.slice(0,6).map(p=>p.n).join(', ')}${x.length>6?' …':''}). Verlängern: im Kader auf den Spieler klicken.`,'bad');}}
       g.list.forEach(r=>[r.h,r.a].forEach(id=>{if(id!==S.my)kiFinanzenSpiel(S.teams[id],r);}));} // Computer-Vereine nach denselben Regeln wie du statt Pauschale (K23b)
     else if(g.art==='pokal'){const zeilen=g.list.map(r=>[r.h,r.a,r.hg,r.ag,r.pen]),sieger=g.list.map(winner); // geteilte Runde (T8.2): erst nach dem zweiten Tag eintragen

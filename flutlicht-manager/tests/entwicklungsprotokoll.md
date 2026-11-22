@@ -74,11 +74,12 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 | **K10d** Ausfalltage in der Saisonbilanz, dazu Korrekturen DY | `mitarbeit/popolupo-k10d-ausfall-bilanz` (auf K10c) | fertig, ungetestet |
 | **K09c** Vereinsstrafe | `mitarbeit/popolupo-k09c-vereinsstrafe` (auf K10d) | fertig, ungetestet |
 | **K19d** Weiterverkaufsbeteiligung | `mitarbeit/popolupo-k19d-weiterverkauf` (auf K09c) | fertig, ungetestet |
+| **K21b** Teamprämie | `mitarbeit/popolupo-k21b-teampraemie` (auf K19d) | fertig, ungetestet |
 | U19d2 volle Kader der Auslandsvereine in der Engine | zurückgestellt | Entwurf in K37 §5.7. Die Engine behandelt Auslandsvereine als Block wie Amateure, viele Stellen schlagen Spieler in `PIX` nach. Erst nach einem Testlauf und der Messung des Faktors 0,93 |
 
 **Die neueste Spitze ist immer der zuletzt genannte Zweig, er enthält alles davor.** K24 ist fertig (Claude).
 
-**Vorschlag für den nächsten Testlauf** (Spitze `mitarbeit/popolupo-k19d-weiterverkauf`, alles ungetestet, aber von lesenden Prüf-Agenten durchgesehen, Konsistenzprüfung CS, CX, CZ, DD, DF, DI, DL, DM, DN). **Wichtig:** Die Zweige `u12g` und `k29e` laden für sich allein nicht (DN1), bitte die Spitze nehmen:
+**Vorschlag für den nächsten Testlauf** (Spitze `mitarbeit/popolupo-k21b-teampraemie`, alles ungetestet, aber von lesenden Prüf-Agenten durchgesehen, Konsistenzprüfung CS, CX, CZ, DD, DF, DI, DL, DM, DN). **Wichtig:** Die Zweige `u12g` und `k29e` laden für sich allein nicht (DN1), bitte die Spitze nehmen:
 1. `node tests/code.js`, dann die schnellen Einzeltests der neuen Teile: `finanzen.js` (Nr. 11 bis 20), `geruechte.js`, `schwierigkeit.js`, `werbung.js`, `europapokal.js`, `vorstand.js` (Nr. 10 bis 19), `karriereende.js`, `stadion.js` (Nr. 8 bis 11), `karten.js`, `spielwelt-karten.js`, `fans.js` (K27b), `abwerben.js` (K20b), `transfers.js` (K20c, K20d, K19c), `presse.js` (K29b bis K29i), `marketing.js` (K25c, K25d).
 2. `node tests/lizenz.js` (Gleichschritt, neue Bereiche `zielgespraech`).
 3. `node tests/finanzmodell.js 2`: Salden je Liga nach K23c. Erwartet nach der Modellrechnung 1. Liga etwa +11 Mio., 2. Liga etwa 0, 3. Liga etwa −1 Mio. je Verein und Saison ohne Transfers (K23 §5.6b). Weichen sie stark ab, bitte die Zeilen ins Testprotokoll, ich stelle dann `REGELN.finanzen.verwaltung` und `sponsor` nach.
@@ -113,6 +114,11 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 ---
 
 ## Changelog
+
+### 22.11.2026: K21b Teamprämie (Zweig `mitarbeit/popolupo-k21b-teampraemie`, auf K19d mit der Doku-Berichtigung zu K12a und K28)
+
+- **Neu (K21 §3.2):** In der Kabine wählst du bis zum ersten Ligaspiel die Teamprämie „normal“ oder „hoch“ (ab A-Lizenz). Hoch kostet je Ligasieg 15.000/4.000/1.000 € je Spieler und hebt den Baustein Erfolg der Stimmung um 2. Ohne Wahl „normal“ ohne Wirkung, wie bei Automatik und Computer-Vereinen.
+- **Tests zuerst:** `tests/vertraege.js` (neuer Fall K21b), dazu `tests/kabine.js` und `tests/lizenz.js` wie bisher (der Baustein ändert sich ohne Wahl nicht).
 
 ### 22.11.2026: K19d Weiterverkaufsbeteiligung (Zweig `mitarbeit/popolupo-k19d-weiterverkauf`, auf K09c)
 
