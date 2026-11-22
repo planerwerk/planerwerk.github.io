@@ -303,7 +303,7 @@ Bei der Umsetzung (U6c):
 8. **Einstellen geht sofort** (Vertrag zwei Jahre), nicht nach 1–3 Tagen Bedenkzeit. Verlängern: zwei Jahre, 10 % mehr Gehalt. Entlassen: halbes Restgehalt als Abfindung. Ein Co-Trainer ist Pflicht.
 9. **Gehälter** werden wie die Spielergehälter je Ligaspiel gebucht. Ein Erstligist wie Freiburg zahlt so etwa 3 Mio. € pro Jahr, ein kleiner Drittligist mit nur einem Co-Trainer etwa 35.000 €. Spielwerte, Abgleich mit K23 und dem Stab-Budget aus K28.
 10. **Computer-Vereine** besetzen einen fehlenden Co-Trainer wöchentlich aus dem Pool nach und verlängern auslaufende Verträge zu 70 %.
-11. **Noch nicht gebaut:** Automatik mit Rauschen, Haltung und Spezialgebiet (5.1), Modus „Vorschlag“, Bänder für Vorhersagen außer der Qualität selbst, Abwerbung, Mitnehmen beim Vereinswechsel, Ex-Spieler als Mitarbeiter (K32), Ereignisse aus §8.
+11. **Noch nicht gebaut:** Automatik mit Rauschen, Haltung und Spezialgebiet (5.1), Modus „Vorschlag“, Bänder für Vorhersagen außer der Qualität selbst, Abwerbung, Mitnehmen beim Vereinswechsel, Ereignisse aus §8. Ex-Spieler als Mitarbeiter seit K32c.
 
 **Mit dir entschieden (10.11.): Für jeden Bereich lohnt sich gutes Personal**, auch für Verhandlungen.
 12. **Der Verhandler ist der Sportdirektor:** Verhandlungsgeschick (Forderungen bis −8 %, Ablösen ±5 %) und Netzwerk (Kontakte zu zwei bis sechs Beratern).
@@ -640,7 +640,7 @@ Bei der Umsetzung (U18a, 20.11.), ausführlich in K32 §12 Nr. 21–25:
 21. **Erfundene Cheftrainer** für alle Computer-Vereine, keine echten.
 22. **Nachfolger ohne Zufall** nach dem Ruf, der zum Ansehen passt.
 23. **Ruf der Computer-Trainer** zum Saisonende nach Platz gegen Erwartung, Meister und Abstieg.
-24. **Ex-Spieler als Trainer** mit 15 % ab 150 Ligaspielen, nur erfundene Spieler.
+24. **Ex-Spieler als Trainer** mit 15 % ab 150 Ligaspielen, nur erfundene Spieler. Seit K32c (22.11., popolupo, vorläufig) auch im Stab: ab 100 Ligaspielen mit 25 % als vereinsloser Mitarbeiter, hier auch echte Spieler, weil Mitarbeiter nicht in Pressekonferenzen reden.
 25. **Pool mit mindestens 12 freien Trainern.**
 26. **Ereignisse aus §8 als Ereigniskarten** (U18b): Altstar, Abschiedsspiel, Heimweh, England ruft. Das Karriereende nach §5.1 wartet auf einen Testlauf.
 27. **Karriereende nach §5.1 gebaut ohne Testlauf** (22.11., popolupo): Stützstellen linear, Ligaschnitt aus den Kaderstärken, Vereinslose gegen die 3. Liga, „zu schwach“ vor „Stammspieler“, eigener Strom je Spieler, Auslandspool ohne Niveau.
