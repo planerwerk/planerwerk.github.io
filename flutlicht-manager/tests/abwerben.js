@@ -51,4 +51,14 @@ function W0(w){return w.ev('myT()').cash;}
   const l=S.offers.filter(o=>o.pid===p.id),top=Math.max(...l.map(o=>o.amt)),ok=l.every(o=>o.amt<=o.max&&o.bis>=S.tag+2),nachher=F.bieterMoeglich(p.id);
   pruef(vorher&&top>1.2e6&&ok&&!nachher,'Bieterrunde: höchstes Gebot steigt, niemand über seiner Grenze, Fristen mindestens 2 Tage, danach nicht noch einmal',`${l.map(o=>o.amt).join(' / ')}`);}
 
+// K20b. Deadline Day (K20 §4.3): Die Forderung eines Computer-Vereins schwankt in den letzten Tagen des Fensters um höchstens ±15 %, am selben Tag gleich,
+//       vorher nicht; ein Spieler auf seiner Transferliste ist im Schnitt billiger
+{const w=welt(false),{F,S,ev}=w,D=ev('RAW').deadline,d0=S.tag;let tage=[];for(let d=S.tag;d<S.tag+120&&tage.length<D.tage;d++)if(ev('deadlineTage')(d))tage.push(d);
+  const p=S.pl.find(q=>q.team>=0&&q.team<1000&&q.team!==S.my&&!q.list&&ev('forderungBasis')(q)>0),f=x=>ev('deadlinePreis')(p);
+  S.tag=d0;const vorher=f();const fs=tage.map(d=>{S.tag=d;return f();}),gleich=tage.every((d,i)=>{S.tag=d;return f()===fs[i];});
+  const viele=S.pl.filter(q=>q.team>=0&&q.team<1000&&q.team!==S.my).slice(0,200);S.tag=tage[0];const mit=viele.map(q=>{q.list=0;return ev('deadlinePreis')(q);}),liste=viele.map(q=>{q.list=1;const x=ev('deadlinePreis')(q);q.list=0;return x;});
+  const schnitt=a=>a.reduce((s,x)=>s+x,0)/a.length;
+  pruef(tage.length===D.tage&&vorher===1&&gleich&&fs.every(x=>x>=1-D.preis&&x<=1+D.preis)&&new Set(fs).size>1&&schnitt(liste)<schnitt(mit),'Deadline Day: Forderung schwankt fest je Tag, vorher nicht, Transferliste billiger',
+    `Faktoren ${fs.map(x=>x.toFixed(3)).join(' / ')}, ohne Liste ${schnitt(mit).toFixed(3)}, mit Liste ${schnitt(liste).toFixed(3)}`);}
+
 console.log(probleme.length?`\n${probleme.length} Problem(e).`:'\nAlles in Ordnung.');process.exitCode=probleme.length?1:0;

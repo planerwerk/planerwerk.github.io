@@ -28,6 +28,7 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 | **K26b** Computer-Vereine bauen | `mitarbeit/popolupo-k26b-computer-bauen` (auf dem Karriereende) | fertig, ungetestet |
 | **K23f** Kartenbeträge nach Liga | `mitarbeit/popolupo-k23f-karten-nach-liga` (auf K26b) | fertig, ungetestet |
 | **K27b** Dauerkarten | `mitarbeit/popolupo-k27b-dauerkarten` (auf K23f) | fertig, ungetestet |
+| **K20b** Preise am Deadline Day | `mitarbeit/popolupo-k20b-deadline-preise` (auf K27b) | fertig, ungetestet |
 | U19d2 volle Kader der Auslandsvereine in der Engine | danach | Entwurf in K37 §5.7 |
 
 **Die neueste Spitze ist immer der zuletzt genannte Zweig, er enthält alles davor.** K24 ist fertig (Claude).
@@ -61,6 +62,11 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 ---
 
 ## Changelog
+
+### 22.11.2026: K20b Preise am Deadline Day (Zweig `mitarbeit/popolupo-k20b-deadline-preise`, auf K27b)
+
+- **Neu (K20 §4.3, Konsistenzprüfung CW):** In den letzten drei Tagen eines Fensters schwankt die Forderung deutscher Computer-Vereine an dich um bis zu ±15 % (fest je Spieler und Tag), Spieler auf ihrer Transferliste kosten 10 % weniger, Angebote für deine gelisteten Spieler kommen 1,5-mal so oft. Hinweis in der Deadline-Karte.
+- **Tests zuerst:** `tests/abwerben.js` (neu K20b), `tests/transfers.js` (Forderung außerhalb des Deadline Days unverändert), `tests/lizenz.js`.
 
 ### 22.11.2026: K27b Dauerkarten (Zweig `mitarbeit/popolupo-k27b-dauerkarten`, auf K23f)
 

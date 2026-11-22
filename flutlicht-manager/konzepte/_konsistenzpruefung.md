@@ -1566,3 +1566,16 @@ Zweig `mitarbeit/popolupo-k27b-dauerkarten`, auf K23f. Ausführlich in K27 §5.2
 | CV2 | **Gleichschritt:** In der Automatik gilt der Standardrabatt, der Baustein der Fanstimmung bekommt +0. Der Würfel der Zuschauer bleibt (ein Wurf je Heimspiel wie vorher). Nur das Geld deines Vereins ändert sich, und das trennt die Läufe ohnehin. | ✅ |
 | CV3 | **Computer-Vereine** haben keine Dauerkarten. Ihre Einnahmen sind ohnehin der Erwartungswert ohne Würfel (K23b). | bewusst |
 | CV4 | **Alte Spielstände:** ohne `S.dk` verkauft der Verein beim nächsten Ligaheimspiel, auch mitten in der Saison. | ✅ |
+
+---
+
+## CW. Nachtrag zu K20b: Preise am Deadline Day (22. November 2026, popolupo, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-k20b-deadline-preise`, auf K27b. Erledigt den offenen Punkt aus K20 §4.3.
+
+| # | Befund | Status |
+|---|---|---|
+| CW1 | **Forderung:** `deadlinePreis` steckt in `forderungDu`, also nur in Forderungen deutscher Computer-Vereine an dich. Fest je Spieler und Tag (Strom `deadlinePreis`), darum zeigt jede Ansicht am selben Tag denselben Preis. Laufende Verhandlungen behalten ihre niedrigere Forderung (`Math.min` mit `v.f`). | ✅ |
+| CW2 | **Angebote an dich:** Die Chance je Markttag für Spieler auf deiner Transferliste ist in den letzten drei Tagen 1,5-mal so hoch. Gleich viele Würfe wie vorher, nur die Schwelle ändert sich. | ✅ |
+| CW3 | **Gleichschritt:** Die Regeln der Computer-Vereine (`kiPreis`, `kiZahlt`, `kiSternPreis`) und die Automatik rechnen ohne Schwankung. | ✅ |
+| CW4 | **Noch nicht:** Computer-Vereine untereinander mit Schwankung, Bieterwettstreit beim Kauf (K20 §4.2). | offen |

@@ -97,7 +97,7 @@ Keine Geldstrafe, kein Verbandsverfahren.
 - Die letzten drei Tage eines Fensters. Im Büro eine Übersicht: offene Verhandlungen, Angebote für deine Spieler, Lücken im Kader.
 - **Halt am letzten Tag** („Deadline Day“), abschaltbar im Menü bei den Erinnerungen.
 - **Computer-Vereine:** am letzten Tag ein zusätzlicher Markttag (eigener Strom `deadline`). Die Obergrenzen je Fenster gelten weiter.
-- **Noch nicht:** Preise ±15 % und Antworten am selben Tag. Antworten kommen schon heute sofort (U10a), die Preisschwankung wartet auf K23.
+- **Seit K20b (22.11.2026, popolupo, ohne Testlauf):** In den letzten drei Tagen schwankt die Forderung deutscher Computer-Vereine an dich um bis zu ±15 %, fest je Spieler und Tag (eigener Strom `deadlinePreis`). Spieler auf ihrer Transferliste kosten 10 % weniger (höchstens −25 %). Angebote für deine Spieler auf der Transferliste kommen 1,5-mal so oft. Antworten kommen schon seit U10a sofort.
 
 **Bieterrunde (§4.2), nur wenn du verkaufst:**
 

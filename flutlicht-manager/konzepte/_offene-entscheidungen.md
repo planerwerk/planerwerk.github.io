@@ -371,7 +371,7 @@ Datei: `konzepte/K20-transfers-2.md`
 - Feste Kosten je Ort.
 - Berater-Profile aus K22 zugeordnet. Ohne Berater ist es etwas riskanter.
 - Fliegt es auf, steigt die Ablöse bis zum Saisonende um 15 %, und das Abwerben dieses Spielers ist für die Saison vorbei.
-- Deadline Day mit Übersicht, Halt am letzten Tag und einem zusätzlichen Markttag. Die Preise schwanken noch nicht.
+- Deadline Day mit Übersicht, Halt am letzten Tag und einem zusätzlichen Markttag. Die Preise schwanken noch nicht. Seit K20b (22.11., popolupo, vorläufig) schwanken die Forderungen an dich um bis zu ±15 % je Tag, die Transferliste ist 10 % billiger, Angebote für deine Spieler kommen 1,5-mal so oft.
 - Bieterrunde nur beim Verkauf.
 - Computer-Vereine werben noch nicht ab.
 

@@ -30,7 +30,10 @@ function forderungBasis(p){if(p.team<0)return 0;if(istAusland(p))return auslandP
 function verhandlung(p){S.verh=S.verh||{};let v=S.verh[p.id];if(!v||v.team!==p.team)v=S.verh[p.id]={team:p.team,f:null,r:0,g:RTR.geduld,pause:-1,druck:-999};return v;}
 const verhandlungVon=p=>{const v=S.verh&&S.verh[p.id];return v&&v.team===p.team?v:null;};
 // Grundforderung an dich: mit deiner Beziehung zum Verein (K17 §5.2, U12c, nur inländische Vereine). Preise unter Computer-Vereinen nutzen forderungBasis ohne Beziehung.
-const forderungDu=p=>forderungBasis(p)*(p.team>=0&&p.team<AV0&&S.teams[p.team]?bezAbloese(p.team):1)*abwFaktor(p)*gerFaktor(p); // aufgeflogenes Abwerben +15 % (K20 §5.4, U15), bekanntes Interesse aus der Gerüchteküche (K29 §5.5, U17b)
+// Deadline Day (K20 §4.3, K20b): Forderung deutscher Computer-Vereine schwankt in den letzten Tagen des Fensters, fest je Spieler und Tag (eigener Strom), Transferliste billiger
+function deadlinePreis(p){const D=RAW.deadline;if(!D.preis||!(p.team>=0&&p.team<1000&&p.team!==S.my)||!deadlineTage())return 1;const u=mitStrom(strom('deadlinePreis',S.season,absTag(S.tag),p.id),()=>R());
+  return clamp(1+D.preis*(2*u-1)+(p.list?D.liste:0),1-D.preis+Math.min(0,D.liste),1+D.preis);}
+const forderungDu=p=>forderungBasis(p)*(p.team>=0&&p.team<AV0&&S.teams[p.team]?bezAbloese(p.team):1)*abwFaktor(p)*gerFaktor(p)*deadlinePreis(p); // aufgeflogenes Abwerben +15 % (K20 §5.4, U15), bekanntes Interesse aus der Gerüchteküche (K29 §5.5, U17b)
 // Aktuelle Forderung: Grundforderung oder das letzte Gegenangebot
 function forderung(p){const b=rundeAb(forderungDu(p)),v=verhandlungVon(p);return v&&v.f!=null?Math.min(b,v.f):b;}
 const schmerzgrenze=p=>rundeAb(forderungDu(p)/RTR.forderung*RTR.schmerzgrenze);

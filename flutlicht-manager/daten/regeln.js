@@ -418,7 +418,9 @@ const REGELN={
     bereitschaft:{basis:10,jeInteresse:0.1,interesse:[-50,100],berater:{gierig:1.2,strippenzieher:1.2},stimmung:{unter:[40,1.3],ueber:[70,0.7]},treu:0.4,ab:70},
     risiko:{basis:0.08,bekanntAb:80,bekannt:1.5,berater:{verschwiegen:0.4,familie:0.8,serioes:1,strippenzieher:1.2,gierig:1.5},ohneBerater:1.1,jeTreffen:0.2,petzen:0.3},
     folgen:{beziehung:[-30,-15],forderung:1.15,stimmung:-10,vertrauen:-3},
-    deadline:{tage:3},bieter:{plus:[0.02,0.10],gierig:0.05,frist:2}},
+    // Deadline Day (K20 §4.3, K20b 22.11., GESCHÄTZT): in den letzten tage Tagen eines Fensters schwankt die Forderung deutscher Computer-Vereine an dich um bis zu ±preis
+    // (fest je Spieler und Tag), für Spieler auf ihrer Transferliste um liste verschoben. Angebote für deine Spieler auf der Transferliste kommen angebote-mal so oft.
+    deadline:{tage:3,preis:0.15,liste:-0.1,angebote:1.5},bieter:{plus:[0.02,0.10],gierig:0.05,frist:2}},
 
   // Fanstimmung (K27 §5.4b, §11, U16), 0–100. Montags traegheit Richtung Ziel = start + Erfolg + Preise + Identifikation + Entscheidungen + Umfeld, je Baustein begrenzt.
   // erfolg: jePlatz × (erwarteter Platz − Platz) ab abSpiel Ligaspielen, serie × (Punkte je Spiel der letzten fünf − serieMitte), Anlässe (derby, pokal, pokalAusTiefer) mit verblassen je Woche.
