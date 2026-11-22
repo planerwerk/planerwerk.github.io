@@ -3,7 +3,10 @@
 // Im Spielstand: S.constr = {k, label, phase ('genehmigung' | 'bau'), ab (absoluter Tag Baubeginn), bis (absoluter Tag fertig), kosten, auflage, verzug, mehr, gemeldet}
 // (eine Baustelle zur Zeit wie bisher; ältere Stände haben {k, bis (Tag der Saison), label}), am Verein t.anl = {training, nlz, reha, catering, tafel}, t.bausumme.
 // Zufall: beim Start einer Baustelle alles auf einmal im eigenen Strom 'bau'.
-const ANLAGEN=['training','nlz','reha','catering','tafel'];
+const ANLAGEN=['training','nlz','reha','catering','tafel','dach'];
+// Dach (K26d): Heimvorteil × (1 + heim) für den Gastgeber, wenn die erwarteten Zuschauer (ohne Würfel, gegen den Gegner) mindestens abAuslastung der Plätze sind. Engine: side()
+function dachFaktor(tid,gegner){const t=tid>=0&&tid<1000?S.teams[tid]:null,A=RB.anlagen.dach;if(!t||anlage(t,'dach')<1)return 1;
+  const g=gegner!=null&&gegner<1000?S.teams[gegner]:null;return zuschauerErwartung(t,g,false,false)>=t.cap*A.abAuslastung?1+A.heim:1;}
 // Stufe einer Anlage (Computer-Vereine und alte Stände: Startstufe)
 const anlage=(t,k)=>{const A=RB.anlagen[k];return t&&t.anl&&t.anl[k]!=null?t.anl[k]:A.start;};
 const anlageKosten=(t,k)=>{const A=RB.anlagen[k],st=anlage(t,k);return Math.round(A.kosten*Math.pow(RB.anlagen.faktor,Math.max(0,st-A.start))/1e5)*1e5;};
@@ -45,7 +48,7 @@ function bauAbgeben(){const c=S.constr;if(c)bauWirkung(c,myT());S.constr=null;}
 function instandhaltung(){const t=myT();if(t.bausumme>0)money('Instandhaltung',-Math.round(t.bausumme*RB.instandhaltung/12));}
 // Karte im Stadion: Anlagen und Baustelle
 function anlagenKarte(){const t=myT(),c=S.constr,W={training:`Entwicklung im Training × ${de(gelaendeFaktor(S.my),2)}, Verletzungsrisiko × ${de(gelaendeRisiko(S.my),2)}`,nlz:`Deckel des Jugendniveaus ${jugendDeckel()}`,
-    reha:`Ausfallzeit × ${de(rehaFaktor(S.my),2)}`,catering:anlage(t,'catering')?'Zuschauereinnahmen +5 %':'Zuschauereinnahmen +5 % nach dem Bau',tafel:anlage(t,'tafel')?'Zuschauereinnahmen +3 %':'Zuschauereinnahmen +3 % nach dem Bau'};
+    reha:`Ausfallzeit × ${de(rehaFaktor(S.my),2)}`,dach:`Heimvorteil +${de(RB.anlagen.dach.heim*100,1)} %, wenn das Stadion voll ist${anlage(t,'dach')?'':' (nach dem Bau)'}`,catering:anlage(t,'catering')?'Zuschauereinnahmen +5 %':'Zuschauereinnahmen +5 % nach dem Bau',tafel:anlage(t,'tafel')?'Zuschauereinnahmen +3 %':'Zuschauereinnahmen +3 % nach dem Bau'};
   const bau=c?(c.phase==='genehmigung'?`<p><b>Baustelle:</b> ${esc(c.label)}, Genehmigung läuft, Baubeginn etwa am ${esc(datumKurz(c.ab-absTag(0)))}.</p>`:`<p><b>Baustelle:</b> ${esc(c.label||'')}, fertig am ${esc(datumKurz((c.phase?c.bis-absTag(0):c.bis)))}.</p>`):'';
   return`<div class="card"><h2>Anlagen</h2>${lzHinweis('stadion')}${bau}<table><tbody>${ANLAGEN.map(k=>{const A=RB.anlagen[k],st=anlage(t,k),voll=st>=A.max;
     return`<tr><td><b>${esc(A.name)}</b> <span class="dim">Stufe ${st} von ${A.max}</span><br><span class="dim">${esc(W[k])}</span></td><td>${voll?'<span class="dim">ganz ausgebaut</span>':`<button onclick="startBuild('${k}')"${lzAus('stadion')}${c?' disabled':''}>Ausbauen (${fmt(anlageKosten(t,k))}, ${A.wochen} Wochen)</button>`}</td></tr>`;}).join('')}</tbody></table>

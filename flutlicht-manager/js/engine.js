@@ -42,7 +42,7 @@ function teamWerte(sd,fr,off,lage){const T=RE.team,k=RE.staerke,acc={K:[],AM:[],
   const wert=l0=>{const l=daempfen(l0),sa=l.reduce((s,x)=>s+x[0],0);if(sa<=0)return k.leererPlatz;const m=l.reduce((s,x)=>s+x[0]*x[1],0)/sa,st=l.filter(x=>x[0]>=T.mindestAnteil).map(x=>x[1]);
     const v=st.length?(1-T.schwaechstes)*m+T.schwaechstes*Math.min(...st):m;return v*Math.min(T.anzahlMax,T.anzahl[0]+T.anzahl[1]*sa);};
   const w={TW:tw};for(const key in acc)w[key]=wert(acc[key]);
-  const ta=RE.ausrichtung[sd.tac],ei=RE.einsatz[sd.ein],hm=sd.heim?RE.heim.alle:1;
+  const ta=RE.ausrichtung[sd.tac],ei=RE.einsatz[sd.ein],hm=sd.heim?RE.heim.alle*(sd.dach||1):1;
   ['AM','AL','AR'].forEach(q=>w[q]*=(ta?ta.A:1)*(ei?ei.A:1)*hm);['DM','DL','DR'].forEach(q=>w[q]*=(ta?ta.D:1)*(ei?ei.D:1)*hm);w.K*=hm;w.TW*=hm;
   if(sd.stilF){w.K*=sd.stilF.kontrolle;['DM','DL','DR'].forEach(q=>w[q]*=sd.stilF.abwehr);}if(sd.mult&&sd.mult!==1)for(const k in w)w[k]*=sd.mult;
   return w;}
@@ -52,7 +52,7 @@ function side(tid,home,neutral){
   if(tid>=1000){const a=S.am[tid-1000],v=a.str*(home&&!neutral?RE.heim.amateure:1),w={K:v,AM:v,AL:v,AR:v,DM:v,DL:v,DR:v,TW:v};return{id:tid,am:true,w,A:v,D:v,red:0,xp:[],xi:[],ein:'N',tac:'N'};}
   const t=S.teams[tid],sl=slotsVerein(t),xi=tid===S.my?myXI():bestXI(tid,t.form),xp=[];
   xi.forEach((id,i)=>{const p=id!=null?PIX.get(id):null;if(p)xp.push({p,pos:sl[i]});});
-  const sd={id:tid,xp,xi:xi.filter(x=>x!=null),ein:t.ein,tac:RE.ausrichtung[t.tac]?t.tac:'N',form:t.form,heim:home&&!neutral,red:0};sd.w=teamWerte(sd);
+  const sd={id:tid,xp,xi:xi.filter(x=>x!=null),ein:t.ein,tac:RE.ausrichtung[t.tac]?t.tac:'N',form:t.form,heim:home&&!neutral,dach:home&&!neutral?dachFaktor(tid):1,red:0};sd.w=teamWerte(sd); /* Dach (K26d) */
   sd.A=0.5*sd.w.AM+0.25*(sd.w.AL+sd.w.AR);sd.D=0.4*sd.w.DM+0.2*(sd.w.DL+sd.w.DR)+0.2*sd.w.TW;return sd;}
 
 // ---------- Hilfen für Szenen ----------

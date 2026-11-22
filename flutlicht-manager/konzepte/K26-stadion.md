@@ -100,6 +100,13 @@ Hängt ab von: K23 (Finanzen), K27 (Fans) · Wird gebraucht von: K07, K08, K10, 
 - **Seit K26c (22.11.2026, popolupo, ohne Testlauf):** Der Fanshop (`t.shop`, Kosten nach Stufe wie bei dir) steht vorn in den Listen (bei Ausbildungsvereinen nach dem Trainingsgelände). So verkaufen auch Computer-Vereine Fanartikel. Sie zahlen Instandhaltung wie du (1 % der Bausumme je Saison, verteilt auf die Ligaspiele).
 - **Noch nicht:** Reha-Zentrum und Nachwuchszentrum für sie, Abriss bei dauerhaft leerem Stadion.
 
+### 5.3 Umsetzung K26d (22.11.2026, popolupo, ohne Testlauf): Dach
+
+- **Dach** als weitere Anlage (§3.1): eine Stufe, 15 Mio. €, 20 Wochen Bauzeit, mit dem Bauprozess aus §5.1.
+- **Wirkung:** Heimvorteil × 1,005 im Heimspiel, wenn das Stadion voraussichtlich mindestens zu 95 % voll ist. Die Schätzung nimmt die erwarteten Zuschauer ohne Würfel und ohne den konkreten Gegner (Engine `side`, `dachFaktor`).
+- **Nicht** für Computer-Vereine (nicht in ihren Baulisten aus K26b), kein Schutz vor Wetter, weil es im Spiel kein Wetter gibt.
+- **Lizenz:** Bereich `stadion` wie die übrigen Bauten.
+
 ## 6. Hebel des Spielers
 
 | Hebel | Nutzen | Preis |

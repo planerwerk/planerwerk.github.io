@@ -1701,3 +1701,15 @@ Zweig `mitarbeit/popolupo-k25c-dauerkarten-aktion`, auf K23g mit den Korrekturen
 | DG1 | **Kampagne:** neuer Eintrag in `REGELN.marketing.kampagnen` (Sommer, 100.000 € mal Ligafaktor). Die Karte im Marketing listet sie wie die übrigen. Nach dem Verkauf der Dauerkarten lehnt `kampagneStarten` sie ab. | ✅ |
 | DG2 | **Wirkung:** `dkAnteil` addiert für deinen Verein 0,05 mal Abnutzung, wenn die Aktion in dieser Saison lief. Der Deckel von 90 % bleibt. | ✅ |
 | DG3 | **Prüfskript für Tests (neu, außerhalb des Repos):** `testnamen.pl` prüft alle Tests: `F.name(...)` nur für function-Deklarationen, `ev('name')` nur für vorhandene Namen, `ev('name=…')` nicht für const. Über alle Tests 0 Funde. | ✅ |
+
+---
+
+## DH. Nachtrag zu K26d: Dach (22. November 2026, popolupo, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-k26d-dach`, auf K25c. Ausführlich in K26 §5.3.
+
+| # | Befund | Status |
+|---|---|---|
+| DH1 | **Engine:** `side` setzt `sd.dach` einmal je Spiel (nur für den Gastgeber), `teamWerte` multipliziert den Heimvorteil damit. Seiten, die anderswo gebaut werden, haben kein `dach` und rechnen mit 1. | ✅ |
+| DH2 | **Schätzung der Auslastung:** ohne den konkreten Gegner (die Seite kennt ihn nicht), also etwas vorsichtig. Ohne Würfel. | ✅ |
+| DH3 | **Gleichschritt:** Nur dein Verein kann bauen, die Automatik baut nicht. | ✅ |
