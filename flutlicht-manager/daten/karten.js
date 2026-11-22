@@ -177,5 +177,16 @@ const KARTEN=[
   {id:'steuerpruefung',titel:'Steuerprüfung',bereich:'K23',art:'entscheidung',gross:false,stufe:'selten',ausloeser:'steuer',sperrTage:730,
     texte:['Das Finanzamt hat die Bücher geprüft und will {geld:250000} nachträglich.','Die Betriebsprüfung findet Fehler bei der Abrechnung von Prämien: {geld:250000} Nachzahlung.'],
     optionen:[{text:'Zahlen',wirkung:[{art:'geld',wert:-250000}],folge:'Bezahlt, die Sache ist erledigt.'},
-      {text:'Einspruch einlegen',wirkung:[{art:'geld',wert:0,chance:0.5,schlecht:-400000,gut:'Der Einspruch hat Erfolg.',schlechtText:'Der Einspruch scheitert, mit Zinsen werden es {geld:400000}.'}]}],auto:0}
+      {text:'Einspruch einlegen',wirkung:[{art:'geld',wert:0,chance:0.5,schlecht:-400000,gut:'Der Einspruch hat Erfolg.',schlechtText:'Der Einspruch scheitert, mit Zinsen werden es {geld:400000}.'}]}],auto:0},
+  // Der lachende Dritte (K30 §8.3, K17 §5.4, K30c, 22.11., popolupo): die erste Kette. Karte 1 im Wochenlauf, Karte 2 (nurKette) drei bis sieben Tage nach dem Treffen.
+  // Den Ausgang rechnet dritterKauf, wenn der Spieler bei dir unterschreibt (Merker p.ld3 aus den Wirkungen dritter und nachlass). Werte vorläufig.
+  {id:'dritterTipp',titel:'Der lachende Dritte',bereich:'K17',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'lachenderDritter',sperrTage:365,
+    texte:['Über einen alten Bekannten kommst du an den Berater von {spieler} heran. Zwei Vereine verhandeln schon mit {verein} über ihn.','Ein entfernter Verwandter kennt den Berater von {spieler}. Um den Spieler von {verein} streiten sich gerade zwei andere Vereine.'],
+    optionen:[{text:'Treffen mit dem Berater',wirkung:[{art:'geld',wert:-5000},{art:'dritter',wert:0},{art:'bezDu',wert:0,chance:0.8,schlecht:-5,schlechtText:'Das Treffen spricht sich herum. {verein} ist verärgert.'}],kette:{karte:'dritterTreffen',tage:[3,7]},folge:'Du triffst dich mit dem Berater. Er will mit {spieler} reden und meldet sich wieder.'},
+      {text:'Offiziell beim Verein melden',wirkung:[{art:'dritter',wert:0},{art:'beraterBez',wert:3}],folge:'{verein} weiß jetzt, dass du an {spieler} interessiert bist. Ein Angebot machst du auf dem Transfermarkt.'},
+      {text:'Nicht einmischen',wirkung:[],folge:'Du hältst dich heraus.'}],auto:2},
+  {id:'dritterTreffen',titel:'Der lachende Dritte',bereich:'K17',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'dritterNoch',nurKette:true,
+    texte:['Der Berater meldet sich wieder: {spieler} würde gern zu dir wechseln. {verein} verhandelt aber noch mit den beiden anderen Vereinen.'],
+    optionen:[{text:'Schnell bieten',wirkung:[{art:'interesse',wert:10}],folge:'{spieler} weiß, dass du es ernst meinst. Ein Angebot machst du auf dem Transfermarkt.'},
+      {text:'Die Vereine gegeneinander ausspielen',wirkung:[{art:'nachlass',wert:0.1,chance:0.6,schlecht:-10,gut:'Es klappt: {verein} senkt die Forderung für {spieler}, und keiner ahnt, woher der Wind weht.',schlechtText:'Es fliegt auf. {verein} fühlt sich vorgeführt.'}]}],auto:0}
 ];

@@ -16,7 +16,11 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
     if(c.art==='entscheidung'){if(!c.optionen||c.optionen.length<2||c.optionen.length>3)fehler.push(c.id+': Optionen');if(!(c.auto>=0&&c.auto<(c.optionen||[]).length))fehler.push(c.id+': Voreinstellung');}
     else if(c.art!=='info')fehler.push(c.id+': Art');
     (c.optionen||[]).forEach(o=>{(o.wirkung||[]).forEach(w=>{if(!erlaubt.includes(w.art))fehler.push(c.id+': Wirkung '+w.art);});[o.folge,...(o.wirkung||[]).map(w=>w.gut),...(o.wirkung||[]).map(w=>w.schlechtText)].filter(Boolean).forEach(t=>{if(platz(t).length)fehler.push(c.id+': Platzhalter '+platz(t));});});});
-  pruef(!fehler.length&&K.length>=5,'Katalog: nur erlaubte Wirkungen und Platzhalter, jeder Auslöser vorhanden, Entscheidungen mit 2–3 Optionen und gültiger Voreinstellung',fehler.join('; ')||`${K.length} Karten`);}
+  /* Ketten (K30c, K30 §10): jede Folgekarte existiert und kommt nur über die Kette, jede nurKette-Karte hat einen Vorgänger, tage gültig */
+  const ziele=new Set();K.forEach(c=>(c.optionen||[]).forEach(o=>{if(!o.kette)return;const z=K.find(x=>x.id===o.kette.karte),t=o.kette.tage;ziele.add(o.kette.karte);
+    if(!z)fehler.push(c.id+': Folgekarte '+o.kette.karte+' fehlt');else if(!z.nurKette)fehler.push(o.kette.karte+': Folgekarte ohne nurKette');if(!Array.isArray(t)||!(t[0]>=1&&t[1]>=t[0]))fehler.push(c.id+': Kette ohne gültige tage');}));
+  K.forEach(c=>{if(c.nurKette&&!ziele.has(c.id))fehler.push(c.id+': nurKette ohne Vorgänger');});
+  pruef(!fehler.length&&K.length>=5,'Katalog: nur erlaubte Wirkungen und Platzhalter, jeder Auslöser vorhanden, Entscheidungen mit 2–3 Optionen und gültiger Voreinstellung, Folgekarten vorhanden',fehler.join('; ')||`${K.length} Karten`);}
 
 // 2. Auslöser: Hochzeit findet einen Spieler zwischen 24 und 34. Der Präsident mischt sich nur bei Ehrgeiz ab 14 und drei Niederlagen ein, und er will einen, der nicht in der Elf steht.
 {const {S,F,ev,im}=welt(),A=ev('AUSLOESER'),h=im('a1',()=>A.hochzeit()),p=h&&S.pl.find(x=>x.id===h.spieler);
@@ -181,6 +185,36 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   const p=sq[0],q=sq[1];p.form=FK.kriseBis;q.form=FK.hochAb;const k=A.formkrise(),h=A.formhoch();p.inj=5;const verletzt=A.formkrise();p.inj=0;
   const sv0=p.sv||0;ev('kartenWirkung')({art:'selbstvertrauen',wert:2},{spieler:p.id},{titel:'Test'});const sv=(p.sv||0)-sv0;
   pruef(keine&&!!k&&k.spieler===p.id&&!!h&&h.spieler===q.id&&verletzt===null&&sv>0,'Formkarten: Krise und Hoch nach Form, nicht verletzt, Selbstvertrauen wirkt',`ohne ${keine}, Krise ${k&&k.spieler===p.id}, Hoch ${h&&h.spieler===q.id}, verletzt ${verletzt}, Selbstvertrauen +${sv}`);}
+
+// K30c. Ketten und „Der lachende Dritte“ (K30 §3.1, §8.3, K17 §5.4): Der Auslöser braucht das offene Fenster, zwei Mitbieter und den Berater oder einen Verwandten.
+//       Das Treffen kostet Geld, setzt den Merker und legt die Folgekarte auf drei bis sieben Tage später. kartenKette zeigt sie erst am fälligen Tag und lässt sie still verfallen,
+//       wenn der Spieler weg ist oder die Saison vorbei. nachlass senkt die Forderung oder kostet Beziehung. dritterKauf: zwischen den beiden −10, du −2 (leise 0), nur beim selben
+//       Verkäufer. Der Vereinswechsel löscht die Ketten.
+{const {S,F,ev}=welt(),A=ev('AUSLOESER'),L=ev('RKT').dritter,me=ev('myT()'),aktiv=ev('aktiv'),hb=ev('hatBedarf'),val=ev('value'),absTag=ev('absTag');S.phase='play';
+  let n=0;while(!ev('fensterOffen')()&&n++<400)S.tag++;S.pl.forEach(p=>{p.list=0;});
+  const p=S.pl.find(p=>p.team>=0&&p.team<1000&&p.team!==S.my&&!p.wech&&!p.leihe&&!(p.inj>0)&&aktiv(S.teams[p.team])&&hb(me,p)&&F.mitbieter(p,S.teams[p.team],val(p)).length>=2);let ok=false,info='kein Spieler mit zwei Mitbietern gefunden';
+  if(p){p.list=1;const be=ev('beraterVon')(p);if(be)be.bz=0;L.verwandt=0;const ohne=A.lachenderDritter();L.verwandt=1;const h=A.lachenderDritter();
+    const ok1=ohne===null&&!!h&&h.spieler===p.id&&h.verein===p.team&&h.mit.length===2&&h.mit[0]!==h.mit[1]&&!h.mit.includes(p.team)&&!h.mit.includes(S.my);
+    const heute=absTag(S.tag);let ok2=false,frueh=false,kam=false,verfallen=false,nach=null,fd=null,leise=false,auf=null,z=[],da=[],weg=false,e=null;
+    if(ok1){F.kartenZeigen(ev('karteVon')('dritterTipp'),h,S.tag,true);F.karteWaehlen(S.karten.offen.length-1,0);e=(S.karten.kette||[])[0];
+      ok2=S.karten.kette.length===1&&e.id==='dritterTreffen'&&e.tag>=heute+3&&e.tag<=heute+7&&(S.fin.Ereignisse||0)<0&&!!p.ld3&&p.ld3.v===p.team&&p.ld3.leise===0;
+      if(ok2){const tagD=S.tag+(e.tag-heute);F.kartenKette(tagD-1);frueh=S.karten.kette.length===1;F.kartenKette(tagD);
+        kam=!S.karten.kette.length&&(S.karten.offen.some(k=>k.id==='dritterTreffen')||S.karten.log.some(l=>l.id==='dritterTreffen'));}
+      /* Verfall: Spieler nicht mehr beim Verein der Karte, Eintrag aus der Vorsaison */
+      S.karten.kette=[{id:'dritterTreffen',tag:heute,s:S.season,b:{spieler:p.id,verein:h.mit[0],mit:h.mit}},{id:'dritterTreffen',tag:heute,s:S.season-1,b:h}];
+      const nOff=S.karten.offen.length,nLog=S.karten.log.length;F.kartenKette(S.tag);verfallen=!S.karten.kette.length&&S.karten.offen.length===nOff&&S.karten.log.length===nLog;
+      /* nachlass: Forderung −10 % und leise, aufgeflogen −10 Beziehung zum Verkäufer */
+      F.verhandlung(p).f=null;fd=ev('forderungDu')(p);F.kartenWirkung({art:'nachlass',wert:0.1},h,{titel:'Test'});nach=F.forderung(p);leise=!!p.ld3&&p.ld3.leise===1;
+      const du0=F.bezDu(p.team);F.kartenWirkung({art:'nachlass',wert:-10},h,{titel:'Test'});auf=F.bezDu(p.team)-du0;
+      /* Ausgang: nicht leise, leise, falscher Verkäufer */
+      const [a,b]=h.mit,m=l=>({s:S.season,t:S.my,v:p.team,mit:[a,b],leise:l});z.push(F.bez(a,b));da.push(F.bezDu(a));
+      p.ld3=m(0);F.dritterKauf(p,p.team);z.push(F.bez(a,b));da.push(F.bezDu(a));p.ld3=m(1);F.dritterKauf(p,p.team);z.push(F.bez(a,b));da.push(F.bezDu(a));
+      p.ld3=m(0);F.dritterKauf(p,a);z.push(F.bez(a,b));
+      /* Vereinswechsel */
+      S.karten.kette=[{id:'dritterTreffen',tag:heute+5,s:S.season,b:h}];F.kartenJobwechsel();weg=!S.karten.kette.length;}
+    ok=ok1&&ok2&&frueh&&kam&&verfallen&&nach<=ev('rundeAb')(fd*0.9)&&leise&&auf===-10&&z[1]-z[0]===L.zwischen&&da[1]-da[0]===L.du&&z[2]-z[1]===L.zwischen&&da[2]===da[1]&&z[3]===z[2]&&!p.ld3&&weg;
+    info=`Spieler ${p.n}, ohne Berater und Verwandten ${ohne}, Auslöser ${!!h}, Treffen ${ok2} (${e?e.tag-heute:'-'} Tage), nicht zu früh ${frueh}, gekommen ${kam}, verfallen ${verfallen}, Forderung ${fd} → ${nach}, leise ${leise}, aufgeflogen ${auf}, zwischen ${z[1]-z[0]}/${z[2]-z[1]}/${z[3]-z[2]}, du ${da[1]-da[0]}/${da[2]-da[1]}, Jobwechsel ${weg}`;}
+  pruef(ok,'Der lachende Dritte: Auslöser, Folgekarte nach 3 bis 7 Tagen, Verfall, Nachlass, Ausgang für die beiden Vereine und dich',info);}
 
 // U19e. Europapokal-Karten (K37 §8): Auswärtsspiel bei einem Auslandsverein in den nächsten 7 Tagen (kein Heimspiel, nicht später, nicht das Finale), Spiel 1 bis 7 Tage her,
 //       Wunder nach 0:3 im Hinspiel und 4:0 oder 3:0 mit Elfmeterschießen im Rückspiel, nicht nach nur einem Tor Rückstand und nicht beim Ausscheiden. euMeineSpiele ersetzt der Test.

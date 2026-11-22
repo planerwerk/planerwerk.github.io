@@ -1,7 +1,8 @@
 // Ereigniskarten (Konzept K30 §5.5, U12d): Prüfen, Auswählen, Dosierung, Sperren, Entscheidungen mit Halt und Automatik, erlaubte Wirkungen.
 // Katalog in daten/karten.js (KARTEN), Zahlen in daten/regeln.js unter REGELN.karten (Kurzform RKT). Zufall im Strom „ereignisse“.
 // ACHTUNG: U12d entstand ohne Testlauf (tests/karten.js ist noch nie gelaufen).
-// Spielstand S.karten = {sp: {Karte:Spieler:Verein → Tag}, w: Zähler der Woche und des Monats, offen: [{id, tag, s, b, text}], v: {Karte → Variante}, log: [...], einmal: {Karte → 1}}
+// Spielstand S.karten = {sp: {Karte:Spieler:Verein → Tag}, w: Zähler der Woche und des Monats, offen: [{id, tag, s, b, text}], v: {Karte → Variante}, log: [...], einmal: {Karte → 1},
+//   kette: [{id Folgekarte, tag absolut, s, b}] seit K30c (fehlt in alten Spielständen)}. Merker am Spieler: p.ld3 = {s, t Verein, v Verkäufer, mit [zwei Vereine], leise} (lachender Dritter, K30c).
 
 function karten(){if(!S.karten)S.karten={sp:{},w:{},offen:[],v:{},log:[],einmal:{}};return S.karten;}
 const karteVon=id=>KARTEN.find(c=>c.id===id);
@@ -63,6 +64,15 @@ const AUSLOESER={
   hilfeInNot(){const H=RKT.hilfe;if(!fensterOffen()||squad(S.my).filter(p=>p.inj>0).length<H.verletzteAb)return null;const l=[];
     S.teams.forEach(b=>{if(b.id===S.my||!aktiv(b)||bezWirk(b.id)<=H.bezAb)return;squad(b.id).forEach(p=>{if(!p.wech&&!p.leihe&&!(p.inj>0)&&RLE.holenRollen.includes(kaderRolle(p)))l.push({spieler:p.id,verein:b.id});});});
     return l.length?pick(l):null;},
+  // Der lachende Dritte (K30 §8.3, K17 §5.4, K30c): im offenen Fenster ein Spieler auf der Transferliste eines Computer-Vereins, für den mindestens zwei andere Computer-Vereine
+  // mitbieten könnten (mitbieter, wie im Bieterwettstreit K20c) und der in deinen Kader passt (hatBedarf). Du kennst seinen Berater (Beziehung ab RKT.dritter.beraterAb)
+  // oder hast mit Glück einen Verwandten, der ihn kennt (RKT.dritter.verwandt). mit: die beiden Vereine, die um ihn streiten (die ersten beiden der gemischten Liste).
+  lachenderDritter(){const L=RKT.dritter,me=myT();if(!fensterOffen())return null;const l=[];
+    S.pl.forEach(p=>{if(!p.list||p.team<0||p.team>=1000||p.team===S.my||p.wech||istLeihe(p)||(p.inj||0)>0)return;const von=S.teams[p.team];if(!von||!aktiv(von)||!hatBedarf(me,p))return;
+      const be=beraterVon(p);if(!(be&&be.bz>=L.beraterAb)&&!(R()<L.verwandt))return;const m=mitbieter(p,von,value(p));if(m.length>=2)l.push({p,m});});
+    if(!l.length)return null;const x=pick(l),m=shuffle(x.m.slice());return{spieler:x.p.id,verein:x.p.team,mit:[m[0].id,m[1].id]};},
+  // Folgekarte der Kette (nur über kartenKette, mit den Beteiligten der ersten Karte): Der Spieler ist noch beim selben Verein und noch nicht vergeben
+  dritterNoch(b){const p=b&&b.spieler!=null?PIX.get(b.spieler):null;return p&&p.team===b.verein&&!p.wech&&!istLeihe(p)&&S.teams[p.team]&&aktiv(S.teams[p.team])?b:null;},
   // Presse (K29 §8, K17 §8, K29k): Medienklima unter RKT.presse.leckUnter; ein Verein deiner Liga mit Beziehung unter RBZ.wirkung.gespraechUnter
   leck(){return presseS().klima<RKT.presse.leckUnter?{}:null;},
   fehde(){const t=myT(),l=S.teams.filter(x=>x.id!==S.my&&aktiv(x)&&x.lg===t.lg&&bezWirk(x.id)<RBZ.wirkung.gespraechUnter);return l.length?{verein:pick(l).id}:null;},
@@ -118,12 +128,22 @@ function entscheidungImBudget(c,W,d){const E=RKT.entscheidung,D=kartenDichte();i
 // ---------- Woche (montags, eigener Strom, am Ende von woechentlichLauf) ----------
 // Gemischte Reihenfolge, erst der Würfel (gleich viele Würfe jede Woche), dann Auslöser, Sperre und Budget.
 function kartenWoche(d){if(S.phase!=='play'||S.fired)return;const K=karten(),W=kartenBudget(d),heute=absTag(d);
-  for(const c of shuffle(KARTEN.slice())){const hit=R()<1/(RKT.seltenheit[c.stufe]*RKT.wochenJeSaison);if(!hit)continue;
+  for(const c of shuffle(KARTEN.filter(c=>!c.nurKette))){const hit=R()<1/(RKT.seltenheit[c.stufe]*RKT.wochenJeSaison);if(!hit)continue; /* Folgekarten kommen nur über kartenKette (K30c) */
     if(c.stufe==='sehrSelten'&&K.einmal[c.id])continue;const f=AUSLOESER[c.ausloeser];if(!f)continue;const b=f();if(!b)continue;
     const key=[c.id,b.spieler!=null?b.spieler:b.stab!=null?'s'+b.stab:'',b.verein!=null?b.verein:''].join(':'); /* Mitarbeiter als Beteiligter (Prüfung ED3) */if(K.sp[key]!=null&&heute-K.sp[key]<(c.sperrTage||RKT.sperrTage))continue;
     let halt=false;if(c.art==='entscheidung')halt=entscheidungImBudget(c,W,d);
-    if(halt){W.ent++;if(c.gross)W.gross++;W.ber[c.bereich]=(W.ber[c.bereich]||0)+1;}else if(c.art==='info'){if(W.info>=kartenDichte().info)continue;W.info++;} /* Entscheidungen ohne Halt entscheidet der Co-Trainer, sie fallen nicht weg (Prüfung DY8) */
+    if(halt)kartenHaltZaehlen(c,W);else if(c.art==='info'){if(W.info>=kartenDichte().info)continue;W.info++;} /* Entscheidungen ohne Halt entscheidet der Co-Trainer, sie fallen nicht weg (Prüfung DY8) */
     K.sp[key]=heute;if(c.stufe==='sehrSelten')K.einmal[c.id]=1;kartenZeigen(c,b,d,halt);}}
+const kartenHaltZaehlen=(c,W)=>{W.ent++;if(c.gross)W.gross++;W.ber[c.bereich]=(W.ber[c.bereich]||0)+1;};
+// ---------- Ketten (K30 §3.1, §4 Nr. 5, §8.3, K30c) ----------
+// Eine Option mit kette:{karte, tage:[von,bis]} legt die Folgekarte in S.karten.kette ({id, tag absolut, s Saison, b Beteiligte}), gewürfelt im Strom der ersten Karte.
+// Täglich (ablauf.js taeglichLauf, eigener Strom): Fällige Folgekarten kommen, wenn ihr Auslöser die Beteiligten noch bestätigt (Auslöser mit Argument b), sonst verfallen sie still.
+// Budget wie montags, aber ohne Info-Grenze und ohne Sperre: Eine Kette läuft zu Ende oder verfällt. Ketten enden mit der Saison, bei Entlassung und beim Vereinswechsel.
+function kartenKetteLegen(ke,b,k){const K=karten(),t=ke.tage||[1,1],ab=k.s===S.season?absTag(k.tag):absTag(S.tag);(K.kette=K.kette||[]).push({id:ke.karte,tag:ab+ri(t[0],t[1]),s:S.season,b});}
+function kartenKette(d){const K=S.karten;if(!K||!K.kette||!K.kette.length)return;if(S.fired){K.kette=[];return;}if(S.phase!=='play')return;
+  const heute=absTag(d),faellig=K.kette.filter(e=>e.tag<=heute||e.s!==S.season);if(!faellig.length)return;K.kette=K.kette.filter(e=>!faellig.includes(e));const W=kartenBudget(d);
+  faellig.forEach(e=>{if(e.s!==S.season)return;const c=karteVon(e.id),f=c&&AUSLOESER[c.ausloeser],b=f?f(e.b):null;if(!b)return;
+    let halt=false;if(c.art==='entscheidung'){halt=entscheidungImBudget(c,W,d);if(halt)kartenHaltZaehlen(c,W);}kartenZeigen(c,b,d,halt);});}
 // Text mit Platzhaltern, Varianten reihum
 function kartenText(t,b){const p=b.spieler!=null?PIX.get(b.spieler):null,v=b.verein!=null?(b.verein>=AV0?avVon(b.verein):S.teams[b.verein]):null; // Auslandsverein und Name eines Ehemaligen seit U18b
   return t.replace(/\{spieler\}/g,p?p.n:(b.name||'ein Spieler')).replace(/\{verein\}/g,v?v.name:'ein Verein').replace(/\{praesident\}/g,'der Präsident')
@@ -140,7 +160,7 @@ function kartenZeigen(c,b,d,halt){const K=karten(),i=K.v[c.id]||0,text=kartenTex
 // ---------- Entscheiden ----------
 // i: Index der Option. auto: der Co-Trainer entscheidet (Budget voll, Automatik oder keine Antwort bis zum Spieltag). Würfel je Karte und Tag (gleich, egal wann entschieden wird).
 function kartenEntscheiden(k,i,auto){const c=karteVon(k.id),o=c&&c.optionen&&c.optionen[i];if(!o)return;const K=karten();K.offen=K.offen.filter(x=>x!==k);
-  const zus=mitStrom(strom('ereignisse',k.s,k.tag,k.id),()=>o.wirkung.map(w=>kartenWirkung(w,k.b,c)).filter(Boolean));
+  const zus=mitStrom(strom('ereignisse',k.s,k.tag,k.id),()=>{const z=o.wirkung.map(w=>kartenWirkung(w,k.b,c)).filter(Boolean);if(o.kette)kartenKetteLegen(o.kette,k.b,k);return z;}); /* Folgekarte (K30c) nach den Wirkungen, im selben Strom */
   const folge=[o.folge?kartenText(o.folge,k.b):'',...zus.map(t=>kartenText(t,k.b))].filter(Boolean).join(' ');
   news(`${c.titel}: ${auto?`${auto===true?'Der Co-Trainer entscheidet':'Ohne deine Antwort entscheidet der Co-Trainer'}: „${o.text}“.`:`Du entscheidest: „${o.text}“.`}${folge?' '+folge:''}`,auto?'':'good');
   kartenLog(c,k.tag,i,!!auto);}
@@ -180,12 +200,21 @@ function kartenWirkung(w,b,c){let wert=w.wert,txt='';if(w.chance!=null){const ok
   else if(w.art==='leihe'){if(p&&b.verein!=null&&p.team===b.verein){const f=ausleihen(p);if(f)txt=f;}} /* K17b: Leihe über ausleihen (leihe.js), mit allen ihren Prüfungen */
   else if(w.art==='selbstvertrauen'){if(p&&p.team===S.my)svAendern(p,wert);} /* K03b */
   else if(w.art==='pause'){if(p&&p.team===S.my){p.fit=Math.min(100,p.fit+wert);p.sp=Math.max(0,(p.sp||0)-RKT.training.pauseSpielpraxis);}} /* K07c: Frische +wert, etwas Spielpraxis weg */
+  else if(w.art==='dritter'){if(p&&p.team===b.verein&&b.mit){const m=p.ld3&&p.ld3.s===S.season&&p.ld3.t===S.my?p.ld3:null;p.ld3={s:S.season,t:S.my,v:b.verein,mit:b.mit.slice(),leise:Math.max(wert||0,m?m.leise:0)};}} /* K30c: Merker für den Ausgang (dritterKauf) */
+  else if(w.art==='nachlass'){if(!p||p.team!==b.verein||p.wech)txt=`${p?p.n:'Der Spieler'} ist nicht mehr zu haben.`; /* K30c: wert > 0 senkt die Forderung um diesen Anteil, wert < 0 (aufgeflogen) kostet Beziehung */
+    else if(wert>0){const v=verhandlung(p),f=rundeAb(forderungDu(p)*(1-wert));v.f=v.f!=null?Math.min(v.f,f):f;if(p.ld3)p.ld3.leise=1;}
+    else if(wert<0){bezDuAendern(b.verein,wert,c.titel);if(p.ld3)p.ld3.leise=0;}}
   return txt;}
-const KARTEN_WIRKUNGEN=['stimmung','stimmungAlle','zusammenhalt','glaub','vertrauen','ruf','bezDu','geld','fans','verpflichten','interesse','angebot','maezen','merch','jobwechsel','pause','talent','jugendHoch','jugendWeg','stabWeg','stabHalten','preisRichtwert','gehaltAnpassen','beraterBez','zuschuss','sonderschicht','leihe','selbstvertrauen','provisionZahlen'];
+const KARTEN_WIRKUNGEN=['stimmung','stimmungAlle','zusammenhalt','glaub','vertrauen','ruf','bezDu','geld','fans','verpflichten','interesse','angebot','maezen','merch','jobwechsel','pause','talent','jugendHoch','jugendWeg','stabWeg','stabHalten','preisRichtwert','gehaltAnpassen','beraterBez','zuschuss','sonderschicht','leihe','selbstvertrauen','provisionZahlen','dritter','nachlass'];
+// Ausgang des lachenden Dritten (K30 §8.3, K17 §5.4, K30c): Unterschreibt der Spieler bei dir (aktionen.js offer, vor dem Abschluss), sinkt die Beziehung zwischen den beiden
+// anderen Vereinen um RKT.dritter.zwischen, deine zu ihnen um RKT.dritter.du, nach geschicktem Vorgehen (leise) gar nicht. Nur in derselben Saison, vom selben Verein, für deinen Verein.
+function dritterKauf(p,von){const m=p&&p.ld3;if(!m)return;delete p.ld3;if(m.s!==S.season||m.t!==S.my||m.v!==von||!m.mit||m.mit.length<2)return;const L=RKT.dritter,[a,b]=m.mit,g=`lachender Dritter: ${p.n}`;
+  bezAendern(a,b,L.zwischen,g);if(!m.leise){bezDuAendern(a,L.du,g);bezDuAendern(b,L.du,g);}
+  news(`Der lachende Dritte: ${p.n} unterschreibt bei dir. ${tn(a)} und ${tn(b)} geben sich gegenseitig die Schuld.${m.leise?' Von deiner Rolle ahnt keiner etwas.':' Auf dich sind beide nicht gut zu sprechen.'}`,'');}
 // Höchstes Ansehen eines Vereins, der dir einen Job anbietet: dieselbe Mitte wie die Jobangebote nach einer Entlassung (saison.js mkJobs) plus jobangebot.rufSpanne
 const jobangebotGrenze=()=>{const J=RV.jobs;return myT().rep-J.ansehenAbschlag+(ruf()-RV.ruf.start)*RV.ruf.jobsJePunkt+RV.jobangebot.rufSpanne;};
 // Vereinswechsel (saison.js takeJob, vor dem Wechsel): offene Karten entscheidet der Co-Trainer noch für den alten Verein, sie wandern nicht mit (Prüfung DQ3)
-function kartenJobwechsel(){const K=S.karten;if(!K||!K.offen.length)return;K.offen.slice().forEach(k=>{const c=karteVon(k.id);if(c)kartenEntscheiden(k,c.auto,'spaet');});K.offen=[];}
+function kartenJobwechsel(){const K=S.karten;if(!K)return;K.offen.slice().forEach(k=>{const c=karteVon(k.id);if(c)kartenEntscheiden(k,c.auto,'spaet');});K.offen=[];K.kette=[];} /* Ketten enden mit dem Verein (K30c) */
 // Jobwechsel per Karte (K28 §8, U12j): Gehalt bis heute in die Karriere, Ablöse für deinen Vertrag (Gehalt je Saison × jobangebot.abloese, höchstens das Konto des neuen Vereins)
 // vom neuen an den alten Verein, dann takeJob. Nicht, wenn der Verein nicht mehr aktiv ist, du entlassen bist oder er inzwischen deiner ist.
 function karteJobwechsel(id){const t=S.teams[id],alt=myT();if(!t||!aktiv(t)||S.fired||id===S.my){news('Das Angebot ist nicht mehr zu haben.','');return;}

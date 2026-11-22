@@ -184,7 +184,61 @@ Jede Wirkung kann eine Chance haben. Dann wird im Strom `ereignisse` gewürfelt,
 | Ein Spieler heiratet | PLAN §4, K14 | Entscheidung, klein | ein Spieler deines Kaders zwischen 24 und 34 (Sperre je Spieler 2000 Tage) | „Teamausflug zur Feier“: −20.000 €, Zusammenhalt +3, Stimmung des Spielers +5. „Glückwunschkarte“: Stimmung +2 (Voreinstellung) |
 | Geheimtipp | K18 §8 | Info | ein Talent bis 20 bei einem Verein der 2. oder 3. Liga mit großem Talent | keine, nur der Hinweis |
 
-Noch nicht gebaut: verzögerte Folgen und Ketten (§3.1, §8.3), Merker, die Chronik über alle Karrieren (§5.4), Skandale (§8.4), Kategorien mit eigener Rate.
+Noch nicht gebaut: verzögerte Folgen ohne eigene Karte, die Chronik über alle Karrieren (§5.4), Skandale (§8.4), Kategorien mit eigener Rate. Ketten und Merker gibt es seit K30c (§5.6).
+
+### 5.6 Umsetzung K30c (22. November 2026, popolupo, ohne Testlauf): Ketten und „Der lachende Dritte“
+
+**Ketten (§3.1, §4 Nr. 5):**
+
+- Eine Option kann eine Folgekarte anstoßen: `kette:{karte, tage:[von, bis]}` in `daten/karten.js`.
+- Wird die Option gewählt (von dir oder vom Co-Trainer), legt das Spiel die Folgekarte in `S.karten.kette`.
+  - Sie kommt nach `von` bis `bis` Tagen.
+  - Gezählt wird ab dem Tag der ersten Karte, nicht ab dem Tag der Antwort.
+  - Gewürfelt wird im Strom der ersten Karte, nach ihren Wirkungen. Wann du antwortest, ändert also nichts.
+- **Folgekarten** tragen `nurKette:true`. Im Wochenlauf werden sie nicht gezogen.
+- Ihr Auslöser bekommt die Beteiligten der ersten Karte und bestätigt sie oder gibt `null` zurück. Zum Beispiel: Ist der Spieler noch beim selben Verein?
+- **Täglich** (`kartenKette`, eigener Strom) kommen die fälligen Folgekarten:
+  - Ist der Auslöser nicht mehr erfüllt, verfällt die Folgekarte still.
+  - Es gilt das Budget für Entscheidungen wie montags. Passt die Karte nicht hinein, entscheidet der Co-Trainer.
+  - Sperre und Info-Grenze gelten nicht. Eine Kette läuft zu Ende oder verfällt (§5.2: Ketten vor den übrigen Karten).
+- **Ketten enden** mit der Saison, bei der Entlassung und beim Vereinswechsel.
+- **Merker** stehen dort, wo sie gebraucht werden. Beim lachenden Dritten ist das der Spieler (`p.ld3`).
+- Das Prüfskript (`tests/karten.js` Fall 1 und `kartenpruefung.pl`) prüft:
+  - Jede Folgekarte existiert und hat `nurKette`.
+  - Jede `nurKette`-Karte hat einen Vorgänger.
+  - `tage` ist gültig.
+
+**Der lachende Dritte (§8.3, K17 §5.4), Karte 1 „dritterTipp“** (Entscheidung, klein, häufig, Sperre 365 Tage):
+
+- **Auslöser:** im offenen Fenster ein Spieler auf der Transferliste eines Computer-Vereins, dazu:
+  - Er passt in deinen Kader (wie der Bedarf der Computer-Vereine).
+  - Mindestens zwei andere Computer-Vereine könnten mitbieten. Dafür gelten dieselben Bedingungen wie im Bieterwettstreit K20c: Bedarf, Ansehen, Alter, Konto, Gehaltsrahmen, Beziehung zum Verkäufer und Kaderplatz (`mitbieter`, aus `konkurrenzKauf` herausgelöst).
+  - Du kennst seinen Berater (Beziehung ab 20), oder du hast mit 5 % Glück einen Verwandten, der ihn kennt.
+- **Treffen mit dem Berater:** 5.000 € (3. Liga, nach Liga mehr). Mit 20 % spricht es sich herum: Beziehung zum Verkäufer −5. Folgekarte nach 3 bis 7 Tagen.
+- **Offiziell beim Verein melden:** Beziehung zum Berater +3.
+- **Nicht einmischen** (Voreinstellung).
+
+**Karte 2 „dritterTreffen“** (nur als Folgekarte):
+
+- **Schnell bieten** (Voreinstellung): Wechselinteresse des Spielers an dir +10 bis Saisonende.
+- **Die Vereine gegeneinander ausspielen:**
+  - Mit 60 % senkt der Verkäufer seine Forderung um 10 %. Das ist ein Gegenangebot in der Verhandlung, es gilt bis zum nächsten Abbruch.
+  - Sonst fliegt es auf: Beziehung zum Verkäufer −10.
+
+**Ausgang** (`dritterKauf`, beim Abschluss deines Kaufs):
+
+- Gilt nur, wenn der Spieler in derselben Saison vom selben Verein zu deinem Verein wechselt.
+- Die Beziehung zwischen den beiden anderen Vereinen sinkt um 10.
+- Deine Beziehung zu beiden sinkt um 2. Nach erfolgreichem Ausspielen sinkt sie nicht.
+- Wer nur die erste Karte beantwortet (Treffen oder offiziell melden) und dann kauft, bekommt den Ausgang ebenfalls, mit −2.
+
+**Vorläufig entschieden (von mir, ohne Rücksprache):**
+
+1. **Die beiden Vereine** sind zwei zufällige der möglichen Mitbieter. Echte laufende Verhandlungen unter Computer-Vereinen gibt es nicht, sie kaufen zum Listenpreis (K31).
+2. **Kosten und Risiko** des Treffens sind kleiner als beim Abwerben (K20). Es geht um ein Gespräch mit dem Berater, nicht mit dem Spieler eines anderen Vereins.
+3. **„Geschickt“ heißt: Ausspielen hat geklappt.** Nur dann bleibt deine Beziehung zu den beiden unverändert (K17 §5.4).
+4. **Keine Lizenzprüfung im Auslöser** (wie bei allen Karten). Das Angebot machst du auf dem Transfermarkt, dort gelten Lizenz und Transfersperre.
+5. **Werte geschätzt** (`REGELN.karten.dritter`, Kosten, Chancen und Nachlass im Katalog).
 
 ## 6. Hebel des Spielers
 
@@ -308,7 +362,7 @@ karten:{
 5. **Chance je Woche = 1 / (Saisons der Stufe × 40).** Gilt nur in Wochen, in denen die Bedingungen erfüllt sind. Die Raten in §5.4 sind damit Obergrenzen.
 6. **Keine Antwort heißt Automatik am nächsten Tag,** wie bei den Fristen des Sportgerichts.
 7. **Bereich `ereignisse` mit Automatik in der Grundlizenz.** Er ist sofort frei, und die Automatik lässt alle Karten vom Co-Trainer entscheiden.
-8. **Erste fünf Karten** nur mit Wirkungen, die es schon gibt. Ketten und verzögerte Folgen kommen mit der nächsten Karte, die sie braucht (der lachende Dritte, §8.3).
+8. **Erste fünf Karten** nur mit Wirkungen, die es schon gibt. Ketten und verzögerte Folgen kommen mit der nächsten Karte, die sie braucht (der lachende Dritte, §8.3). Ketten gibt es seit K30c (§5.6).
 9. **Geld aus Karten bucht als „Ereignisse“** in den Finanzen.
 
 **Vorläufig dazu:** Kategorie, Szenario und Varianten als drei Ebenen, vier Seltenheitsstufen (5.4), sehr seltene Szenarien höchstens einmal je Karriere, keine eigene Entscheidung zum Mitmachen bei Manipulation, eine Sammlung erlebter Szenarien über alle Karrieren.

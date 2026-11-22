@@ -393,6 +393,9 @@ const REGELN={
     // Meldungsdichte (K30 §5.1, K35a, K30b, 22.11., popolupo): Regler in den Einstellungen. Je Stufe ersetzen klein, gross, info die Grenzen oben, wochen: 1 oder 2, bei 2 zählt die Vorwoche mit (mehr Wochen kennt der Code nicht, Prüfung DY8).
     dichte:{standard:'normal',stufen:{wenig:{name:'wenig (eine Entscheidung alle zwei Wochen)',wochen:2,info:3},normal:{name:'normal (eine je Woche)'},viel:{name:'viel (zwei je Woche)',klein:2,gross:2,info:8}}},
     form:{kriseBis:4,hochAb:16}, // Formkarten (K03 §8, K03b, 22.11., GESCHÄTZT): Formkrise bei Form bis kriseBis, Formhoch ab hochAb (Form 0–20)
+    // Der lachende Dritte (K30 §8.3, K17 §5.4, K30c, 22.11., popolupo, GESCHÄTZT): Du kennst den Berater ab Beziehung beraterAb, sonst mit Glück einen Verwandten (verwandt je Prüfung).
+    // Unterschreibt der Spieler bei dir, sinkt die Beziehung zwischen den beiden anderen Vereinen um zwischen, deine zu ihnen um du (bei geschicktem Vorgehen gar nicht)
+    dritter:{beraterAb:20,verwandt:0.05,zwischen:-10,du:-2},
     hilfe:{verletzteAb:5,bezAb:40}, // Hilfe in der Not (K17 §8, K17b, 22.11., GESCHÄTZT): ab verletzteAb Verletzten im offenen Fenster bietet ein Verein mit Beziehung über bezAb eine Leihe an
     presse:{leckUnter:45}, // Presse-Karten (K29 §8, K17 §8, K29k, 22.11., GESCHÄTZT): Leck bei Medienklima unter leckUnter; Fehde bei Beziehung unter RBZ.wirkung.gespraechUnter
     sommer:{nachTestTage:14,sonderFrische:15}, // Sommerkarten (K12a §8, K12c, 22.11., GESCHÄTZT): Übergewicht bis nachTestTage nach dem Leistungstest; Sonderschichten kosten sonderFrische Frische

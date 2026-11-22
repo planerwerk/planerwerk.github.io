@@ -76,6 +76,7 @@ Hängt ab von: – · Wird gebraucht von: K11, K19, K20, K22, K29, K30, K31.
 
 - Bieten zwei Vereine um denselben Spieler und gewinnst du ihn, sinkt die Beziehung **zwischen den beiden** um 10, deine zu ihnen nur um 2.
 - Mit einer Ereigniskarte (K30) und geschicktem Vorgehen auch 0.
+- **Gebaut seit K30c** (22.11.2026, popolupo, ohne Testlauf) als Kette „Der lachende Dritte“ (K30 §5.6). Die Werte stehen in `REGELN.karten.dritter`. „Geschickt“ heißt: Du hast die beiden Vereine erfolgreich gegeneinander ausgespielt.
 
 ### 5.5 Umsetzung U12c (20. November 2026, ohne Testlauf)
 
@@ -108,7 +109,7 @@ Partnervereine (+30) gibt es noch keine. Dazu bräuchte es eine Quelle.
 | Wechsel unter Computer-Vereinen (immer zum Listenpreis) | Verein–Verein | +5 |
 | Derby mit Sieger (jede Liga, alle Vereine) | Verein–Verein | −2 |
 
-Noch nicht gebaut: Abwerben (K20), Presse und Gerüchte (K29), Vorfälle im Spiel (K09), Hilfe in der Not und lachender Dritter (Ereigniskarten, K30).
+Noch nicht gebaut: Abwerben (K20), Presse und Gerüchte (K29), Vorfälle im Spiel (K09). Hilfe in der Not gibt es seit K17b als Karte, den lachenden Dritten seit K30c als Kette (K30 §5.6).
 
 **Wirkungen (§5.2), gebaut:**
 
