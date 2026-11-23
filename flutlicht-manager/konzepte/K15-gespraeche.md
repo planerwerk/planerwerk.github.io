@@ -137,7 +137,7 @@ K05 regelt Ablauf und Zeitpunkt, K15 die Wirkung (Konsistenzprüfung D2). Ab Wel
 | Kabine glaubt dir nicht mehr | Glaubwürdigkeit unter 25 | Ansprachen wirken kaum, Vorstand wird aufmerksam (K28) |
 
 **Gebaut als K15e** (23.11.2026, popolupo, ohne Testlauf, Werte vorläufig): „Streit nach Kritik“ als Entscheidungskarte (Anlasskarte, Chance 0,6 je Woche).
-- **Auslöser:** Ein Spieler deines Kaders hat sich in den letzten 7 Tagen im Einzelgespräch mit dir gestritten, und das Gespräch war eine Kritik (`p.streit`, `p.gs`). Streiten kann man sich nach Kritik heute mit einem Hitzkopf (`streitKritik`) und, bei bestimmter Haltung, mit einer Diva oder einem Hitzkopf (`streitB`). Darum gilt die Spalte „Hitzkopf, Diva“ über den Streit selbst.
+- **Auslöser:** Ein Spieler deines Kaders hat sich in den letzten 7 Tagen im Einzelgespräch mit dir gestritten, und das Gespräch war eine Kritik (`p.streit`, seit Prüfung EO3 mit dem Thema des Streits `p.streitT`; vorher nur über das Datum in `p.gs`, das verwechselte Kritik und Lob am selben Tag). Streiten kann man sich nach Kritik heute mit einem Hitzkopf (`streitKritik`) und, bei bestimmter Haltung, mit einer Diva oder einem Hitzkopf (`streitB`). Darum gilt die Spalte „Hitzkopf, Diva“ über den Streit selbst.
 - **Wahl:**
   - Aussprechen: mit 60 % Stimmung +4, sonst −1.
   - Hart bleiben: Stimmung −3, Glaubwürdigkeit +1, Zusammenhalt −1.

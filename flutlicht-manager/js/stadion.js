@@ -1,6 +1,7 @@
 // Stadion und Anlagen (K26 §3.2, §4, §5.1, K26a): Bauprozess mit Genehmigung, Auflagen, Verzögerung und Mehrkosten für alle Bauten,
 // Anlagen (Trainingsgelände, Nachwuchsleistungszentrum, Reha-Zentrum, Catering, Anzeigetafel), Instandhaltung. Zuerst nur dein Verein.
-// Im Spielstand: S.constr = {k, label, phase ('genehmigung' | 'bau'), ab (absoluter Tag Baubeginn), bis (absoluter Tag fertig), kosten, auflage, verzug, mehr, gemeldet}
+// Im Spielstand: S.constr = {k, label, phase ('genehmigung' | 'bau'), ab (absoluter Tag Baubeginn, zugleich Kennung des Projekts), bis (absoluter Tag fertig), kosten, auflage, verzug, mehr, gemeldet,
+//   zuschuss (K26e: Betrag der Stadt), klage (K26f: Wochen, um die sich die Genehmigung durch die Klage verschiebt)}
 // (eine Baustelle zur Zeit wie bisher; ältere Stände haben {k, bis (Tag der Saison), label}), am Verein t.anl = {training, nlz, reha, catering, tafel}, t.bausumme.
 // Zufall: beim Start einer Baustelle alles auf einmal im eigenen Strom 'bau'.
 const ANLAGEN=['training','nlz','reha','catering','tafel','dach'];

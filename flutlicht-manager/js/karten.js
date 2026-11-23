@@ -115,7 +115,7 @@ const AUSLOESER={
   // Spieler hadert mit seiner Position (K06 §8, K06d): mindestens RKT.spiel.positionSpiele Einsätze in Folge auf einer Position mit geringer Eignung (p.pfal)
   positionHadern(){const SP=RKT.spiel,h=absTag(S.tag),l=squad(S.my).filter(p=>(p.pfal||0)>=SP.positionSpiele&&p.pfalT!=null&&h-p.pfalT<=SP.positionTage); /* EK7 */return l.length?{spieler:pick(l).id}:null;},
   // Streit nach Kritik (K15 §8, K15e): ein Spieler deines Kaders hat sich in den letzten RKT.gespraech.streitTage Tagen im Einzelgespräch nach deiner Kritik mit dir gestritten
-  streitNachKritik(){const h=absTag(S.tag),T=RKT.gespraech.streitTage,l=squad(S.my).filter(p=>p.streit!=null&&h-p.streit>=0&&h-p.streit<=T&&(p.gs||[]).some(([d,k])=>d===p.streit&&k==='kritik'));return l.length?{spieler:pick(l).id}:null;},
+  streitNachKritik(){const h=absTag(S.tag),T=RKT.gespraech.streitTage,l=squad(S.my).filter(p=>p.streit!=null&&h-p.streit>=0&&h-p.streit<=T&&p.streitT==='kritik'); /* Thema des Streits seit Prüfung EO3 (gespraeche.js), vorher nur das Datum */return l.length?{spieler:pick(l).id}:null;},
   // Standard-Spezialisten (K06 §8, K06e): in der laufenden Halbserie auffällig viele Ligatore nach Standards (S.std aus letztesSpielMerken), einmal je Halbserie
   standardSpezialisten(){const A=S.std,St=RKT.standard;return A&&A.s===S.season&&A.t===S.my&&!A.k&&A.sp>=St.abSpiele&&A.n>=St.ab&&A.g>0&&A.n/A.g>=St.anteil?{}:null;},
   // Folgekarte der Kette (nur über kartenKette, mit den Beteiligten der ersten Karte): Der Spieler ist noch beim selben Verein und noch nicht vergeben
@@ -130,7 +130,7 @@ const AUSLOESER={
   // Stadion (K26 §8, K26e): ein laufendes Bauprojekt ab RKT.stadion.zuschussAb Kosten, noch ohne Zuschuss
   zuschuss(){const c=S.constr;return c&&c.phase!=null&&!c.zuschuss&&c.kosten>=RKT.stadion.zuschussAb?{bau:c.ab}:null;},
   // Anwohner klagen (K26 §8, K26f): Tribüne oder Dach wartet noch mindestens eine Woche auf die Genehmigung, noch keine Klage bei diesem Projekt
-  anwohnerKlagen(){const c=S.constr;return c&&c.phase==='genehmigung'&&!c.klage&&RKT.stadion.anwohner.includes(c.k)&&c.ab-absTag(S.tag)>=7?{bau:c.ab}:null;},
+  anwohnerKlagen(){const c=S.constr;return c&&c.phase==='genehmigung'&&!c.klage&&RKT.stadion.anwohner.includes(c.k)&&c.ab-absTag(S.tag)>=RKT.stadion.anwohnerRest?{bau:c.ab}:null;},
   // Ehemaliger Kapitän kehrt zurück (K16 §8, K16e): ein Ex-Spieler (K32c) mit den meisten Spielen für deinen Verein, mindestens RST.exSpieler.vereinAb, ist vereinslos,
   // seit höchstens einer Saison, noch nicht gefragt, und in seiner Rolle hast du einen freien Platz
   exKapitaen(){const E=RST.exSpieler,l=(S.stab||[]).filter(x=>x.team<0&&x.ex&&x.exV===S.my&&(x.exVsp||0)>=E.vereinAb&&!x.gefragt&&x.exS!=null&&S.season-x.exS<=1&&stabVon(S.my,x.r).length<RST.rollen[x.r].plaetze);
@@ -206,11 +206,11 @@ function letztesSpielMerken(r,d){if(!r||r.test)return;const SP=RKT.spiel,s=r.h==
     coup=!autoB('stil')&&gf>ga&&gegner<1000&&!!mein&&!!geg&&RTA.kreislauf[mein.stil]===geg.stil&&teamLevel(gegner)-teamLevel(S.my)>=SP.coupAb;
   S.letzt={s:S.season,t:S.my,tag:d,joker,frueh,spaet,gegner,derby:gegner<1000&&istDerby(r.h,r.a),rot:r.ev.some(e=>e.t==='R'),coup};
   S.letzte=[...(S.letzte||[]).filter(L=>L&&L.s===S.season&&L.t===S.my&&d-L.tag<=SP.nachTage),S.letzt].slice(-SP.merken);
-  // K06d: Einsätze in Folge auf einer Position mit Eignung unter positionUnter (p.pfal, Tag p.pfalT), ab der Mindestzeit für eine Note (EK7). Passende Position setzt zurück,
-  // ein Zähler älter als positionTage beginnt neu. Wer nicht oder zu kurz spielte, behält seinen Zähler.
   // K06e: Tore nach Standards (RKT.standard.arten) in deinen Ligaspielen der laufenden Halbserie, S.std = {s, t, h Halbserie, sp Spiele, g Tore, n Standardtore, k Karte schon da}
   if(r.lg!=null&&!r.rel){const N=(S.fx[r.lg]||[]).length,gesp=(S.res[r.lg]||[]).filter(x=>x[0]===S.my||x[1]===S.my).length,h=gesp>N/2?1:0;let A=S.std;
     if(!A||A.s!==S.season||A.t!==S.my||A.h!==h)A=S.std={s:S.season,t:S.my,h,sp:0,g:0,n:0,k:0};A.sp++;(r.ev||[]).forEach(e=>{if(e.t==='G'&&e.s===s){A.g++;if(RKT.standard.arten.includes(e.art))A.n++;}});}
+  // K06d: Einsätze in Folge auf einer Position mit Eignung unter positionUnter (p.pfal, Tag p.pfalT), ab der Mindestzeit für eine Note (EK7). Passende Position setzt zurück,
+  // ein Zähler älter als positionTage beginnt neu. Wer nicht oder zu kurz spielte, behält seinen Zähler. (Reihenfolge der Kommentare seit Prüfung EO6)
   const heute=absTag(d);((r.xpo||[])[s]||[]).forEach(([id,pos,,min])=>{const p=PIX.get(id);if(!p||p.team!==S.my||!pos||(min!=null&&min<RE.note.mindestMinuten))return;
     const alt=p.pfalT!=null&&heute-p.pfalT<=SP.positionTage?(p.pfal||0):0;p.pfal=eignung(p,pos)<SP.positionUnter?alt+1:0;p.pfalT=heute;});}
 // Deine Pflichtspiele der letzten RKT.spiel.nachTage Tage (S.letzte), dein Verein, diese Saison. Alte Spielstände ohne S.letzte oder mit Merkern ohne Verein (vor EK3):
@@ -300,6 +300,7 @@ function kartenWirkung(w,b,c){let wert=w.wert,txt='',erfolg=true;if(w.chance!=nu
   else if(w.art==='zurueckrudern'){let n=0;presseS().aussagen.forEach(a=>{if(!a.ok&&a.art==='ankuendigung'&&a.gegner===b.verein){a.ok=1;n++;}});if(!n){erfolg=false;txt='Die Kampfansage ist schon erledigt.';}} /* K29l: Kampfansage zurückgenommen, nach dem Spiel weder Kult noch Häme */
   else if(w.art==='svAlle')squad(S.my).forEach(x=>svAendern(x,wert)); /* K11f: Selbstvertrauen des ganzen Kaders */
   else if(w.art==='stabHolen'){const x=(S.stab||[]).find(y=>y.id===b.stab);if(x){x.gefragt=1;if(wert>0){if(x.team<0&&stabVon(S.my,x.r).length<RST.rollen[x.r].plaetze){x.team=S.my;x.sal=stabGehalt(x.r,x.q,myT().lg);x.ct=2;x.wiv=0;stabGeaendert();txt=`${x.n} ist jetzt ${RST.rollen[x.r].name} (${fmt(x.sal)} pro Jahr).`;news(`${RST.rollen[x.r].name} ${x.n} kommt (${fmt(x.sal)} pro Jahr).`,'good');}else{erfolg=false;txt=`Der Platz als ${RST.rollen[x.r].name} ist inzwischen besetzt.`;}}}} /* K16e: wert 1 holt den Ex-Spieler in deinen Stab wie stabEinstellen (zwei Jahre), wert 0 fragt nur; beides merkt x.gefragt */
+  else if(w.art==='bauAuflage'){const c=S.constr;if(c&&c.phase==='genehmigung'&&(b.bau==null||c.ab===b.bau))c.auflage=wert;} /* K26f, Prüfung EO4: Lärmschutz bezahlt, die Auflagen beim Baubeginn (Anteil der Kosten) werden wert, also 0 */
   else if(w.art==='bauVerzug'){const c=S.constr;if(c&&c.phase==='genehmigung'&&wert>0&&(b.bau==null||c.ab===b.bau)){c.klage=(c.klage||0)+wert;c.bis+=wert*7;}} /* K26f: Genehmigung wert Wochen später (c.klage, stadion.js), nur das Projekt, um das es ging */
   else if(w.art==='standardGegner'){S.stdGegen={tid:S.my,bis:absTag(S.tag)+RKT.standard.tage};if(S.std&&S.std.t===S.my)S.std.k=1;} /* K06e: Gegner stellen sich auf deine Standards ein (taktik.js), einmal je Halbserie */
   else if(w.art==='wettsperre'){if(p&&p.team>=0&&p.team<1000&&p.team!==S.my&&!p.zwP){const s=sperren(p),K=RKT.skandal;s.liga.rot+=K.sperreLiga;s.pokal.rot+=K.sperrePokal;}} /* K30f: Sperre. Nie ein Spieler deines Kaders in der Zweiten (zwP, Prüfung EJ2). Ohne Transferliste, die räumte der Markt nach einer Woche (EJ1) */
@@ -307,7 +308,7 @@ function kartenWirkung(w,b,c){let wert=w.wert,txt='',erfolg=true;if(w.chance!=nu
   if(w.dann&&erfolg&&KARTEN_MIT_ERFOLG.includes(w.art)){const t=w.dann.map(x=>kartenWirkung(x,b,c)).filter(Boolean);txt=[w.gut||'',...t].filter(Boolean).join(' ');}
   return txt;}
 const KARTEN_MIT_ERFOLG=['leihe','gehaltAnpassen','provisionZahlen','spezialist','transferliste','zurueckrudern','stabHolen']; // Wirkungen, die melden, ob sie geklappt haben (für dann)
-const KARTEN_WIRKUNGEN=['stimmung','stimmungAlle','zusammenhalt','glaub','vertrauen','ruf','bezDu','geld','fans','verpflichten','interesse','angebot','maezen','merch','jobwechsel','pause','talent','jugendHoch','jugendWeg','stabWeg','stabHalten','preisRichtwert','gehaltAnpassen','beraterBez','zuschuss','sonderschicht','leihe','selbstvertrauen','provisionZahlen','dritter','nachlass','hygiene','spezialist','gruppeStimmung','transferliste','zurueckrudern','vertrauenHalt','svAlle','wettsperre','standardGegner','bauVerzug','stabHolen'];
+const KARTEN_WIRKUNGEN=['stimmung','stimmungAlle','zusammenhalt','glaub','vertrauen','ruf','bezDu','geld','fans','verpflichten','interesse','angebot','maezen','merch','jobwechsel','pause','talent','jugendHoch','jugendWeg','stabWeg','stabHalten','preisRichtwert','gehaltAnpassen','beraterBez','zuschuss','sonderschicht','leihe','selbstvertrauen','provisionZahlen','dritter','nachlass','hygiene','spezialist','gruppeStimmung','transferliste','zurueckrudern','vertrauenHalt','svAlle','wettsperre','standardGegner','bauVerzug','stabHolen','bauAuflage'];
 // Standard-Spezialisten (K06e, taktik.js taktikWirkung): Faktor auf Tore nach Ecken und Freistoßflanken deines Vereins, solange sich die Gegner darauf eingestellt haben
 const standardGegnerFaktor=t=>t&&t.id===S.my&&S.stdGegen&&S.stdGegen.tid===S.my&&S.stdGegen.bis>=absTag(S.tag)?RKT.standard.faktor:1;
 // Ausgang des lachenden Dritten (K30 §8.3, K17 §5.4, K30c): Unterschreibt der Spieler bei dir (aktionen.js offer, vor dem Abschluss), sinkt die Beziehung zwischen den beiden

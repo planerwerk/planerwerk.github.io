@@ -2268,3 +2268,31 @@ Korrekturen auf `mitarbeit/popolupo-en-korrekturen` (auf K26f).
 | EN3 | Der Fall K27e nahm Union, das genau auf 80 liegt (roh 79,96). Jetzt Dortmund (100). | ✅ behoben |
 | EN4 | **Schon seit U16:** Anlässe der Fanstimmung verblassten nie ganz (Rundung auf eine Stelle blieb bei −0,4 oder 0,5 hängen). Mit K27e stand dann der Faktor der Fankultur für immer in der Anzeige. Jetzt geht ein Anlass bis ±0,5 auf 0 (`RFS.anlassMin`). Getestet in Fall K27e. | ✅ behoben |
 | EN5 | K27 §5.4b sagte, die Fanstimmung der Computer-Vereine wirke nirgends. Seit K23b/K23c wirkt sie auf ihre Heimeinnahmen, seit U12i auf die Präsidentenwahl. K20 §5.3 nannte K27e nicht. Beides berichtigt. | ✅ behoben |
+
+## EO. Prüfung von K06e, K15e, K26f und der Korrekturen EN ohne Laufzeit (23. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 9e16a38, 6294b81, 4bd2343 und 7ae50b5 gelesen (nichts ausgeführt). Kein hoher oder mittlerer Fund, sieben niedrige.
+
+**Ohne Befund (im Code nachgeprüft):**
+
+- **Tore in der Engine:** `art` ist `ecke`, `freistossFlanke`, `freistoss`, `elfmeter` oder der Schusstyp. Eigentore gibt es nicht, das Elfmeterschießen zählt nicht.
+- **Zählung K06e:** Nur Ligaspiele haben `r.lg`, auch live. Die Halbserie wechselt nach Spiel 17 (bei 34 Spieltagen). Jobwechsel, neue Saison und alte Spielstände sind abgedeckt.
+- **Klage K26f:**
+  - `ab` bleibt die Kennung des Projekts.
+  - Alle Leser von `ab` und `bis` rechnen die Klage mit.
+  - Der Vereinswechsel räumt die Baustelle.
+- **`fanVerblasst`:** gleich für alle Vereine. Die Fälle 3, 5 und 10 halten.
+- **Gleichschritt:** unberührt.
+- **Tests:** Alle neuen Tests scheitern mit dem alten Code.
+
+Korrekturen auf `mitarbeit/popolupo-eo-korrekturen` (auf K19e).
+
+| # | Befund | Status |
+|---|---|---|
+| EO1 | In K33 stand „VerzÃ¶gerung“, ein Kodierungsfehler aus einem Perl-Einzeiler. | ✅ behoben |
+| EO2 | Die Schwelle „mindestens eine Woche Genehmigung übrig“ stand als 7 im Code. Jetzt `REGELN.karten.stadion.anwohnerRest`. | ✅ behoben |
+| EO3 | „Streit nach Kritik“ erkannte die Kritik nur am Datum. Kritik ohne Streit und danach Streit nach Lob am selben Tag hätte die Karte ausgelöst. Jetzt merkt das Gespräch das Thema des Streits (`p.streitT`). Test K15e. | ✅ behoben |
+| EO4 | „Lärmschutz bezahlen“ änderte am Bau nichts. Beim Baubeginn konnten trotzdem Auflagen für Lärmschutz kommen, man hätte doppelt bezahlt. Zudem zahlte die Automatik ungefragt. Jetzt entfallen die Auflagen (`bauAuflage`), und die Automatik lässt es auf die Klage ankommen. Test K26f. | ✅ behoben |
+| EO5 | Test K06e prüfte nur den Faktor, nicht die Wirkung im Spiel. Jetzt prüft er `stdF` in `spielAnlegen`: dein Verein 0,95, der Gegner 1. | ✅ behoben |
+| EO6 | In `letztesSpielMerken` stand der K06e-Block zwischen dem Kommentar zu K06d und dessen Code. Umgestellt. | ✅ behoben |
+| EO7 | Die Feldliste von `S.constr` in `stadion.js` nannte `zuschuss` und `klage` nicht. Die README nannte die Freiburg-Prüfung aus EN2 nicht. Beides ergänzt. | ✅ behoben |

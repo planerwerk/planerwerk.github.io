@@ -409,16 +409,18 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   sp([G(10,'freistoss'),G(30,'elfmeter')]);const n=S.std.n,g=S.std.g,karte=A.standardSpezialisten(); /* abSpiele Standardtore von 2 × abSpiele Toren, der Elfmeter zählt nur als Tor */
   const wenig=(()=>{const alt=S.std;S.std=Object.assign({},alt,{g:Math.ceil(alt.n/St.anteil)+5});const x=A.standardSpezialisten();S.std=alt;return x;})();
   ev('kartenWirkung')({art:'standardGegner',wert:1},{},{titel:'Test'});const f1=gf(t),fremd=gf(S.teams.find(x=>x.id!==S.my)),danach=A.standardSpezialisten();
+  /* Prüfung EO5: die Wirkung im Spiel selbst (taktikWirkung setzt stdF), ohne Standard-Einheit in den letzten 7 Tagen */t.stdTag=null;const GS=F.spielAnlegen(S.my,S.teams.find(x=>x.id!==S.my&&x.lg===t.lg).id,{auto:[true,true]}).Ss,imSpiel=Math.abs(GS[0].stdF-St.faktor)<1e-9&&GS[1].stdF===1;
   S.tag+=St.tage+1;const f2=gf(t);S.tag-=St.tage+1;
   const N=S.fx[t.lg].length;for(let i=0;i<=N/2;i++)S.res[t.lg].push([S.my,0,0,0,i]);sp([G(10,'ecke')]);const neu=S.std.h===1&&S.std.sp===1&&S.std.k===0;
-  pruef(frueh===null&&n===St.abSpiele&&g===2*St.abSpiele&&!!karte&&wenig===null&&f1===St.faktor&&fremd===1&&danach===null&&f2===1&&neu,
+  pruef(frueh===null&&n===St.abSpiele&&g===2*St.abSpiele&&!!karte&&wenig===null&&f1===St.faktor&&fremd===1&&danach===null&&f2===1&&neu&&imSpiel,
     'Standard-Spezialisten: Karte ab genug Standardtoren, Elfmeter zählen nicht, Gegner stellen sich vier Wochen ein, zweite Halbserie zählt neu',
-    `vor ${St.abSpiele} Spielen ${frueh}, Standardtore ${n} von ${g}, Karte ${!!karte}, zu kleiner Anteil ${wenig}, Faktor ${f1} (anderer Verein ${fremd}), noch einmal ${danach}, nach ${St.tage} Tagen ${f2}, neue Halbserie ${neu}`);}
+    `vor ${St.abSpiele} Spielen ${frueh}, Standardtore ${n} von ${g}, Karte ${!!karte}, zu kleiner Anteil ${wenig}, Faktor ${f1} (anderer Verein ${fremd}), noch einmal ${danach}, nach ${St.tage} Tagen ${f2}, neue Halbserie ${neu}, im Spiel ${imSpiel}`);}
 
 // K15e. Streit nach Kritik (K15 §8): nur nach einem Streit im Einzelgespräch, das eine Kritik war, und höchstens streitTage her; ein Streit nach einem anderen Thema zählt nicht.
-{const {S,ev}=welt(),A=ev('AUSLOESER'),T=ev('RKT').gespraech.streitTage,sq=ev('squad')(S.my),h=ev('absTag')(S.tag),p=sq[0];S.phase='play';sq.forEach(x=>{delete x.streit;x.gs=[];});
-  p.streit=h-2;p.gs=[[h-2,'kritik']];const kritik=A.streitNachKritik();p.gs=[[h-2,'lob']];const lob=A.streitNachKritik();
-  p.streit=h-T-1;p.gs=[[h-T-1,'kritik']];const alt=A.streitNachKritik();delete p.streit;const ohne=A.streitNachKritik();
+//       Seit Prüfung EO3 merkt das Gespräch das Thema des Streits (p.streitT): Kritik ohne Streit, dann Streit nach Lob am selben Tag zählt nicht.
+{const {S,ev}=welt(),A=ev('AUSLOESER'),T=ev('RKT').gespraech.streitTage,sq=ev('squad')(S.my),h=ev('absTag')(S.tag),p=sq[0];S.phase='play';sq.forEach(x=>{delete x.streit;delete x.streitT;x.gs=[];});
+  p.streit=h-2;p.streitT='kritik';p.gs=[[h-2,'kritik']];const kritik=A.streitNachKritik();p.streitT='lob';p.gs=[[h-2,'kritik'],[h-2,'lob']];const lob=A.streitNachKritik();
+  p.streit=h-T-1;p.streitT='kritik';p.gs=[[h-T-1,'kritik']];const alt=A.streitNachKritik();delete p.streit;const ohne=A.streitNachKritik();
   pruef(!!kritik&&kritik.spieler===p.id&&lob===null&&alt===null&&ohne===null,'Streit nach Kritik: nur nach Kritik, nur bis streitTage danach',`nach Kritik ${kritik&&kritik.spieler===p.id}, nach Lob ${lob}, zu alt ${alt}, ohne Streit ${ohne}`);}
 
 // K26f. Anwohner klagen (K26 §8): nur bei Tribüne oder Dach in der Genehmigung mit mindestens einer Woche Rest; verlorene Klage verschiebt Baubeginn und Ende um 3 Wochen,
@@ -427,8 +429,9 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   S.constr={k:'cap',label:'Tribüne',phase:'genehmigung',ab:h+21,bis:h+21+70,kosten:5e6,auflage:0,verzug:0,mehr:0,gemeldet:0};const c=S.constr,da=A.anwohnerKlagen();
   c.k='logen';const logen=A.anwohnerKlagen();c.k='cap';c.ab=h+3;const knapp=A.anwohnerKlagen();c.ab=h+21;
   kw({art:'bauVerzug',wert:3},{bau:h+99},{titel:'Test'});const fremd=!c.klage&&c.bis===h+91;kw({art:'bauVerzug',wert:3},{bau:h+21},{titel:'Test'});const verschoben=c.klage===3&&c.bis===h+112,nochmal=A.anwohnerKlagen();
+  c.auflage=0.05;kw({art:'bauAuflage',wert:0},{bau:h+21},{titel:'Test'});const erlassen=c.auflage===0; /* Prüfung EO4: Lärmschutz bezahlt, keine Auflage beim Baubeginn */
   F.bauTag(S.tag+21);const nochNicht=c.phase==='genehmigung';F.bauTag(S.tag+42);const beginn=c.phase==='bau';S.constr=null;
-  pruef(!!da&&da.bau===h+21&&logen===null&&knapp===null&&fremd&&verschoben&&nochmal===null&&nochNicht&&beginn,'Anwohner klagen: nur Tribüne oder Dach in der Genehmigung, verlorene Klage verschiebt um 3 Wochen, nur dieses Projekt',
+  pruef(!!da&&da.bau===h+21&&logen===null&&knapp===null&&fremd&&verschoben&&nochmal===null&&erlassen&&nochNicht&&beginn,'Anwohner klagen: nur Tribüne oder Dach in der Genehmigung, verlorene Klage verschiebt um 3 Wochen, nur dieses Projekt',
     `Auslöser ${!!da}, Logen ${logen}, knapp ${knapp}, anderes Projekt unberührt ${fremd}, verschoben ${verschoben}, zweite Klage ${nochmal}, am alten Termin noch Genehmigung ${nochNicht}, 3 Wochen später Baubeginn ${beginn}`);}
 
 // K16e. Ehemaliger Kapitän kehrt zurück (K16 §8): nur ein vereinsloser Ex-Spieler mit mindestens vereinAb Spielen für deinen Verein, frischer Platz in seiner Rolle;
