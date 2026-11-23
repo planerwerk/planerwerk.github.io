@@ -350,6 +350,27 @@ Sehr selten, als Weltereignis: **etwa einmal in zehn Saisons** kommt ein Szenari
 3. **Karte 2 (nach 3–7 Tagen, wenn Treffen):** Der Spieler ist interessiert. Optionen: schnell bieten (Preis normal), die beiden Vereine gegeneinander ausspielen (Preis niedriger, Risiko, dass es auffliegt).
 4. **Ausgang:** Unterschreibt er bei dir, sinkt die Beziehung zwischen den beiden anderen Vereinen um 10, deine zu ihnen nur um 2, bei geschicktem Vorgehen gar nicht (K17 §5.4).
 
+### 8.4 Stand am 23.11.2026 (popolupo, ohne Testlauf)
+
+- **Im Katalog** (`daten/karten.js`): 79 Karten. Die meisten Zeilen aus den Tabellen in §8 der Konzepte sind gebaut, entweder als Karte oder als Meldung in der Wochen- und Spiellogik. Beispiele für Meldungen statt Karten:
+  - Goldener Jahrgang (K08) beim neuen Jahrgang.
+  - Berater bietet an (K22) in `beraterWoche`.
+  - Vorvertrag woanders und Ausstiegsklausel (K21) in der Vertragswoche.
+  - Liquiditätswarnung und Auflagen bei der Lizenz (K23) im Finanzplan.
+  - Einspruch (K09) im Verfahren nach der Roten Karte.
+  - Neuer Präsident (K28) als Wahl (U12i).
+  - Fan-Proteste gegen den Verkauf eines Lieblings (K19) als Wirkung auf die Fanstimmung (K27e).
+- **Bewusst noch nicht gebaut:**
+
+| Ereignis | Konzept | Grund |
+|---|---|---|
+| Rasen nach Frost kaputt | K26 | Die Rasenqualität mit Greenkeeper ist zurückgestellt (K26 §3.2a). |
+| Spieler will Urlaub verlängern | K12a | Braucht Urlaub je Spieler und Nationalspieler, beides gibt es nicht. |
+| Anruf des Bundestrainers, Länderspiel-Verletzung | K13 | Keine Nationalmannschaften im Spiel. |
+| Traumtor des Neuzugangs, Zimmerkollegen werden Freunde | K11 | Braucht die Integration (K03 §5.5, wartet auf einen Testlauf) und eine Zimmerbelegung. |
+| Notverkauf | K31 | Greift in die Finanzen der Computer-Vereine ein, erst nach einem Testlauf. |
+| Sponsor-Karten | K24 | Bereich des anderen Claude. |
+
 ## 9. Wechselwirkungen
 
 Alle Konzepte mit Abschnitt 8 liefern Karten. K30 regelt nur Aufbau, Auswahl und Dosierung. Die Presse (K29) macht Karten von Computer-Vereinen sichtbar.
