@@ -41,7 +41,10 @@ function unverkaeuflichKI(p){const U=RTR.unverkaeuflich;if(!p||p.team<0||p.team>
 const unverkaeuflichDu=p=>!!(p&&S.unv&&S.unv[p.id]&&p.team===S.my);
 const forderungDu=p=>(unverkaeuflichKI(p)?value(p)*RTR.maxFaktor:forderungBasis(p))*(p.team>=0&&p.team<AV0&&S.teams[p.team]?bezAbloese(p.team):1)*abwFaktor(p)*gerFaktor(p)*deadlinePreis(p)*konkurrenzTischFaktor(p); // aufgeflogenes Abwerben +15 % (K20 §5.4, U15), bekanntes Interesse aus der Gerüchteküche (K29 §5.5, U17b)
 // Aktuelle Forderung: Grundforderung oder das letzte Gegenangebot
-function forderung(p){const b=rundeAb(forderungDu(p)),v=verhandlungVon(p),f=v&&v.f!=null?Math.min(b,v.f):b;return konkurrenzOffen(v)?Math.max(f,v.konk.amt):f;} // Gegenangebot eines anderen Vereins (K20c)
+// Nachlass aus einer Karte (K30c, K19f, Prüfung FA1): Anteil v.nlF bis zum absoluten Tag v.nlBis, nur für den Verein, für den du ihn bekommen hast (v.nlMy).
+// Er übersteht einen Abbruch der Verhandlung und verfällt mit der Frist. Vorher stand ein fester Betrag in v.f, der nie verfiel.
+const nachlassFaktor=v=>v&&v.nlF>0&&v.nlMy===S.my&&v.nlBis!=null&&absTag(S.tag)<=v.nlBis?1-v.nlF:1;
+function forderung(p){const v=verhandlungVon(p),b=rundeAb(forderungDu(p)*nachlassFaktor(v)),f=v&&v.f!=null?Math.min(b,v.f):b;return konkurrenzOffen(v)?Math.max(f,v.konk.amt):f;} // Gegenangebot eines anderen Vereins (K20c)
 // ---------- Bieterwettstreit beim Kauf (K20 §4.2, K20c) ----------
 // In der Verhandlung v: kg = Saison der einmaligen Prüfung, konk = {tid Konkurrent, amt Gebot, bis Frist (Tag)} solange offen. Gewürfelt im eigenen Strom je Spieler und Saison.
 const konkurrenzOffen=v=>!!(v&&v.konk&&v.konk.bis>=S.tag);

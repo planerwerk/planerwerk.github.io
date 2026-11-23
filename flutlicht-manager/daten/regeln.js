@@ -400,6 +400,8 @@ const REGELN={
     // Der lachende Dritte (K30 §8.3, K17 §5.4, K30c, 22.11., popolupo, GESCHÄTZT): Du kennst den Berater ab Beziehung beraterAb, sonst mit Glück einen Verwandten (verwandt je Prüfung).
     // Unterschreibt der Spieler bei dir, sinkt die Beziehung zwischen den beiden anderen Vereinen um zwischen, deine zu ihnen um du (bei geschicktem Vorgehen gar nicht)
     dritter:{beraterAb:20,verwandt:0.05,zwischen:-10,du:-2},
+    // nachlass (Prüfung FA1, 23.11., GESCHÄTZT): Ein Nachlass aus einer Karte (Wirkung nachlass) gilt so viele Tage, etwa ein Transferfenster
+    nachlass:{tage:60},
     entwicklung:{jungBis:21,altAb:30,tage:21,punkte:2}, // Durchbruch und Altersverlust (K03 §8, K03c, 22.11., GESCHÄTZT): Stärke seit dem Monatseintrag (p.mvl, K34) mindestens tage alt um punkte gestiegen (bis jungBis Jahre) oder gefallen (ab altAb)
     spiel:{nachTage:7,fruehBis:60,spaetAb:88,spaetVerlAb:118,coupAb:2,positionUnter:0.8,positionSpiele:3,positionTage:28,merken:4}, // Karten nach deinem Spiel (K05 §8, K05c, K05d, K06c: Taktik-Coup als Außenseiter mit mindestens coupAb Niveau Abstand, K06d: positionSpiele Einsätze in Folge mit Eignung unter positionUnter, seit Prüfung EK: spaetVerlAb in der Verlängerung, positionTage höchstens seit dem letzten gezählten Einsatz, merken: so viele Spiele der letzten nachTage Tage, 23.11., GESCHÄTZT): bis nachTage danach; früh ausgewechselt vor Minute fruehBis; spätes Siegtor ab Minute spaetAb (die Nachspielzeit steht nicht eigens im Spielbericht)
     jubilaeum:{ab:25,alle:25}, // Jubiläum (K27 §8, K25 §8, K27d, 23.11.): ab ab Jahren alle alle Jahre, im Kalenderjahr des Jubiläums (Gründungsjahr gegr in daten/vereine.js)

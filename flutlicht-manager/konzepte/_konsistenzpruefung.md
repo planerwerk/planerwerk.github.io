@@ -2525,3 +2525,18 @@ Korrekturen auf `mitarbeit/popolupo-ez-korrekturen` (auf U12n).
 | EZ6 | Tests: Die Einzeltrainingsplätze im Streit waren ungeprüft. Der Gehaltsrahmen war im Test nicht erzwungen, „ohne Freigabe geht er“ und „Auf den Vertrag pochen“ fehlten. Alles ergänzt. | ✅ behoben |
 
 Nebenbei geprüft: Eine Warteliste für Dauerkarten (K27 „Noch nicht“) käme mit den heutigen Werten nie vor, die Nachfrage erreicht höchstens 80 % der Plätze. Zurückgestellt, Begründung in K27 §5.2.
+
+## FA. Prüfung von K19f, U12n und der Korrekturen EZ ohne Laufzeit (23. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat c90038f, 5256099 und 7b89219 gelesen, nichts ausgeführt. Ein mittlerer und fünf niedrige Funde. Ohne Befund: die Kaufbarkeit bei K19f (Ausland, Leihe, vereinbarte Wechsel, Jugend), die Laufzeit des Auslösers, alle Folgen des Wechsels bei U12n (Station, keine Abfindung, kein Rufverlust, das Ultimatum endet), kein offenes Angebot nach Entlassung oder Saisonende, `KARTEN_ZIEL` mit try/finally, der Gleichschritt, die Namen in den Tests.
+
+Korrekturen auf `mitarbeit/popolupo-fa-korrekturen` (auf K07g).
+
+| # | Befund | Status |
+|---|---|---|
+| FA1 | Der Nachlass aus einer Karte stand als fester Betrag in der Verhandlung und verfiel nie, auch nicht nach Jahren oder einem Jobwechsel. Jetzt ein Anteil mit Frist (60 Tage) und Verein (`nlF`, `nlBis`, `nlMy`), angewandt in `forderung`. Gilt auch für den lachenden Dritten (K30c). | ✅ behoben |
+| FA2 | „Spieler will nur zu dir“ konnte einen Spieler deiner eigenen Zweiten nennen. Jetzt nicht die eigene Zweite und keine dorthin abgestellten Profis. | ✅ behoben |
+| FA3 | Der Schutz aus EZ3 fehlte bei „Mitarbeiter abgeworben“ (K16c). Jetzt auch dort. | ✅ behoben |
+| FA4 | Mit Transfersperre kam „Spieler will nur zu dir“ trotzdem. Jetzt nicht. | ✅ behoben |
+| FA5 | Tests: `x4` fehlte in der Bedingung, der Schlüssel der Sperre war ungeprüft, der Nachlass nach einem Abbruch auch. Der Schlüssel ist jetzt eine eigene Funktion (`kartenSchluessel`) und geprüft. Der Test zum lachenden Dritten vergleicht das Gegenangebot mit der Forderung im Moment des Angebots. | ✅ behoben |
+| FA6 | K28 führte die Rettung noch unter „Noch nicht“, zwei Kommentare nannten §5.13 statt §5.13a. Berichtigt. Dazu K16 §11 und K12b auf den Stand gebracht. | ✅ behoben |

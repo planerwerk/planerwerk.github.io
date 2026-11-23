@@ -178,8 +178,9 @@ const AUSLOESER={
   ticketProtest(){const F=RKT.fans,t=myT();return S.phase==='play'&&t.price>richtPreis(t)*F.preisFaktor&&fanst(t)<F.protestUnter?{}:null;},
   // Spieler will nur zu dir (K19 §8, K19f): im Transferfenster ein Spieler eines Computer-Vereins (1. bis 3. Liga, nicht verliehen, kein vereinbarter Wechsel) mit Wechselwunsch ab Stufe 3,
   // stark genug für dich (teamLevel − RKT.nurZuDir.staerkeUnter) und mit hohem Interesse an deinem Verein (ab RAW.konkurrenz.nein.ab wie in K20d)
-  nurZuDir(){if(!fensterOffen())return null;const ab=RAW.konkurrenz.nein.ab,min=teamLevel(S.my)-RKT.nurZuDir.staerkeUnter,l=[];
-    S.teams.forEach(t=>{if(t.id===S.my||!aktiv(t)||t.lg>3)return;squad(t.id).forEach(p=>{if((p.ww||0)>=3&&!p.wech&&!p.leihe&&p.str>=min&&wechselInteresse(p)>=ab)l.push(p);});});
+  /* Prüfung FA2: nicht deine eigene Zweite und keine Profis, die dorthin abgestellt sind (zwP); FA4: nicht mit Transfersperre */
+  nurZuDir(){if(!fensterOffen()||transferSperre())return null;const ab=RAW.konkurrenz.nein.ab,min=teamLevel(S.my)-RKT.nurZuDir.staerkeUnter,l=[];
+    S.teams.forEach(t=>{if(t.id===S.my||t.zweite===S.my||!aktiv(t)||t.lg>3)return;squad(t.id).forEach(p=>{if((p.ww||0)>=3&&!p.wech&&!p.leihe&&!p.zwP&&p.str>=min&&wechselInteresse(p)>=ab)l.push(p);});});
     if(!l.length)return null;const p=pick(l);return{spieler:p.id,verein:p.team};},
   // Fans wollen reden (K27 §8, K27h): Fanstimmung unter RKT.fans.redenUnter und das Fan-Gespräch des Monats ist noch frei (fanGespraechFrei)
   fansReden(){return fanst(myT())<RKT.fans.redenUnter&&fanGespraechFrei()?{}:null;},
@@ -226,7 +227,7 @@ function entscheidungImBudget(c,W,d){const E=RKT.entscheidung,D=kartenDichte();i
 function kartenWoche(d){if(S.phase!=='play'||S.fired)return;const K=karten(),W=kartenBudget(d),heute=absTag(d);
   for(const c of shuffle(KARTEN.filter(c=>!c.nurKette))){const hit=R()<kartenChance(c);if(!hit)continue; /* Folgekarten kommen nur über kartenKette (K30c) */
     if(c.stufe==='sehrSelten'&&K.einmal[c.id])continue;const f=AUSLOESER[c.ausloeser];if(!f)continue;const b=f();if(!b)continue;
-    const key=[c.id,b.spieler!=null?b.spieler:b.stab!=null?'s'+b.stab+(b.stab2!=null?'+'+b.stab2:''):'',b.stab==null&&b.verein!=null?b.verein:''].join(':'); /* Mitarbeiter als Beteiligter (Prüfung ED3), je Mitarbeiter ohne den Verein (EE3) */if(K.sp[key]!=null&&heute-K.sp[key]<(c.sperrTage||RKT.sperrTage))continue;
+    const key=kartenSchluessel(c,b); /* Mitarbeiter als Beteiligter (Prüfung ED3), je Mitarbeiter ohne den Verein (EE3) */if(K.sp[key]!=null&&heute-K.sp[key]<(c.sperrTage||RKT.sperrTage))continue;
     let halt=false;if(c.art==='entscheidung')halt=entscheidungImBudget(c,W,d);
     let stumm=false;if(halt)kartenHaltZaehlen(c,W);else if(c.art==='info'){if(W.info>=kartenDichte().info&&!c.immer){if(!c.wirkung)continue;stumm=true;}else W.info++;} /* immer: Meldung auch über der Grenze (Prüfung ER3, Punktabzug) */ /* Entscheidungen ohne Halt entscheidet der Co-Trainer, sie fallen nicht weg (Prüfung DY8) */
     K.sp[key]=heute;if(c.stufe==='sehrSelten')K.einmal[c.id]=1;kartenZeigen(c,b,d,halt,stumm);}} /* Info mit Wirkung über der Grenze: Wirkung ja, Meldung nein (Prüfung EH3) */
@@ -335,7 +336,7 @@ function kartenWirkung(w,b,c){let wert=w.wert,txt='',erfolg=true;if(w.chance!=nu
   else if(w.art==='pause'){if(p&&p.team===S.my){p.fit=Math.min(100,p.fit+wert);p.sp=Math.max(0,(p.sp||0)-RKT.training.pauseSpielpraxis);}} /* K07c: Frische +wert, etwas Spielpraxis weg */
   else if(w.art==='dritter'){if(p&&p.team===b.verein&&b.mit){const m=p.ld3&&p.ld3.s===S.season&&p.ld3.t===S.my?p.ld3:null;p.ld3={s:S.season,t:S.my,v:b.verein,mit:b.mit.slice(),leise:Math.max(wert||0,m?m.leise:0)};}} /* K30c: Merker für den Ausgang (dritterKauf) */
   else if(w.art==='nachlass'){if(!p||p.team!==b.verein||p.wech)txt=`${p?p.n:'Der Spieler'} ist nicht mehr zu haben.`; /* K30c: wert > 0 senkt die Forderung um diesen Anteil, wert < 0 (aufgeflogen) kostet Beziehung */
-    else if(wert>0){const v=verhandlung(p),f=rundeAb(forderungDu(p)*(1-wert));v.f=v.f!=null?Math.min(v.f,f):f;v.nl=1;if(v.einig)v.einig.fee=Math.min(v.einig.fee,f);if(p.ld3)p.ld3.leise=1;} /* EF3: auch eine schon vereinbarte Ablöse; nl: kein Verhandlungsgerücht nur wegen des Nachlasses (EF1) */
+    else if(wert>0){const v=verhandlung(p),f=rundeAb(forderungDu(p)*(1-wert)),h=absTag(S.tag);v.nlF=Math.max(nachlassFaktor(v)<1?1-nachlassFaktor(v):0,wert);v.nlBis=h+RKT.nachlass.tage;v.nlMy=S.my;v.nl=1; /* Prüfung FA1: Faktor mit Frist und Verein statt eines festen Betrags */if(v.einig)v.einig.fee=Math.min(v.einig.fee,f);if(p.ld3)p.ld3.leise=1;} /* EF3: auch eine schon vereinbarte Ablöse; nl: kein Verhandlungsgerücht nur wegen des Nachlasses (EF1) */
     else if(wert<0){bezDuAendern(b.verein,wert,c.titel);if(p.ld3)p.ld3.leise=0;}}
   else if(w.art==='hygiene'){const t=myT(),h=absTag(S.tag);t.krankBis=Math.min(t.krankBis||0,h-1);t.hygBis=h+wert;} /* K10e: Ansteckung vorbei, wert Tage weniger Krankheiten (RMD.krankheit.hygiene) */
   else if(w.art==='spezialist'){if(p&&p.team===S.my&&p.inj>0&&p.vl&&p.vl.q!=='krankheit')p.vl.rfF=wert;else{erfolg=false;if(p)txt=`${p.n} braucht keine Reha mehr.`;}} /* K10e: Rückfallrisiko nach der Rückkehr × wert */
@@ -372,6 +373,8 @@ function dritterKauf(p,von){const m=p&&p.ld3;if(!m)return;delete p.ld3;if(m.s!==
 // Höchstes Ansehen eines Vereins, der dir einen Job anbietet: dieselbe Mitte wie die Jobangebote nach einer Entlassung (saison.js mkJobs) plus jobangebot.rufSpanne
 const jobangebotGrenze=()=>{const J=RV.jobs;return myT().rep-J.ansehenAbschlag+(ruf()-RV.ruf.start)*RV.ruf.jobsJePunkt+RV.jobangebot.rufSpanne;};
 // Vereinswechsel (saison.js takeJob, vor dem Wechsel): offene Karten entscheidet der Co-Trainer noch für den alten Verein, sie wandern nicht mit (Prüfung DQ3)
+// Schlüssel der Sperre je Karte: Spieler, sonst Mitarbeiter (mit stab2 das ganze Paar, Prüfung EZ1), sonst Verein (Prüfung ED3, EE3). Als Funktion seit Prüfung FA5, damit der Test ihn prüfen kann.
+const kartenSchluessel=(c,b)=>[c.id,b.spieler!=null?b.spieler:b.stab!=null?'s'+b.stab+(b.stab2!=null?'+'+b.stab2:''):'',b.stab==null&&b.verein!=null?b.verein:''].join(':');
 /* ziel: der Verein, zu dem du wechselst. Ein offenes Angebot genau dieses Vereins (K16g) gilt dann nicht mehr (Prüfung EZ3) */
 let KARTEN_ZIEL=null;
 function kartenJobwechsel(ziel){const K=S.karten;if(!K)return;KARTEN_ZIEL=ziel==null?null:ziel;try{K.offen.slice().forEach(k=>{const c=karteVon(k.id);if(c)kartenEntscheiden(k,c.auto,'spaet');});}finally{KARTEN_ZIEL=null;}K.offen=[];K.kette=[];} /* Ketten enden mit dem Verein (K30c) */
@@ -390,6 +393,7 @@ function karteJugendWeg(p,v){const N=RS.nachwuchs,preis=Math.min(jugendPreis(p),
 // Mitarbeiter abgeworben (K16c): weg = er wechselt (Ablöse RKT.stab.abloese × Jahresgehalt vom Verein an dich, nur mit freiem Platz dort), sonst bleibt er mit wert mehr Gehalt
 function karteStab(x,v,weg,wert){const K=RKT.stab,R0=RST.rollen[x.r],rolle=R0.name;
   if(weg){if(R0.pflicht&&stabVon(S.my,x.r).length<=1){news(`${x.n} bleibt, ohne ihn hättest du keinen ${rolle} mehr.`,'');return;} /* Pflichtrolle erst beim Entscheiden prüfen (Prüfung ED4) */
+    if(v&&v.id===KARTEN_ZIEL){news(`${x.n} bleibt, du wechselst selbst zu ${v.name}.`,'');return;} /* Prüfung FA3 wie EZ3 */
     if(!v||!aktiv(v)||stabVon(v.id,x.r).length>=R0.plaetze){news(`${x.n} bleibt doch, ${v?v.name:'der Verein'} hat keinen Platz mehr.`,'');return;}
     const a=Math.min(Math.round(x.sal*K.abloese/1000)*1000,Math.max(0,v.cash));x.team=v.id;x.wiv=0;if(a){money('Stab: Ablöse',a);v.cash-=a;}stabGeaendert();news(`${x.n} (${rolle}) wechselt zu ${v.name}${a?`, Ablöse ${fmt(a)}`:''}.`,'tr');return;}
   const neu=Math.round(x.sal*(1+wert)/1000)*1000;if(!rahmenErlaubt(myT(),neu-x.sal)){news(`Der Vorstand gibt die Gehaltserhöhung für ${x.n} nicht frei (Gehaltsrahmen).`,'');karteStab(x,v,true,0);return;} /* ED4 */

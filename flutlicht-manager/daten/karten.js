@@ -16,7 +16,7 @@ const KARTEN=[
     optionen:[{text:'Wechseln',wirkung:[{art:'jobwechsel',wert:1}],folge:''},
       {text:'Bleiben und es öffentlich sagen',wirkung:[{art:'vertrauen',wert:5},{art:'fans',wert:2}],folge:'Der Vorstand und die Fans hören es gern.'},
       {text:'Sich alles anhören und dann absagen',wirkung:[{art:'ruf',wert:1},{art:'vertrauen',wert:0,chance:0.5,schlecht:-8,gut:'Niemand hat etwas von dem Treffen mitbekommen.',schlechtText:'Das Treffen wird publik. Der Vorstand ist verstimmt.'}],folge:''}],auto:1},
-  // U12n (K28 §5.13, 23.11., popolupo): Rettungsangebot im Ultimatum, Wechsel wie beim Jobangebot (jobwechsel). Werte vorläufig.
+  // U12n (K28 §5.13a, 23.11., popolupo): Rettungsangebot im Ultimatum, Wechsel wie beim Jobangebot (jobwechsel). Werte vorläufig.
   {id:'rettung',titel:'Ein Ausweg',bereich:'K28',art:'entscheidung',gross:true,stufe:'haeufig',chance:0.25,ausloeser:'rettung',sperrTage:365,
     texte:['{verein} hat von deinem Ultimatum gehört. Der Präsident ruft an: Bei ihm hättest du Ruhe und einen neuen Anfang, bevor es hier zu spät ist.','Ein Berater meldet sich: {verein} sucht einen Trainer und würde dich sofort nehmen. Es wäre ein Schritt zurück, aber ohne Entlassung.'],
     optionen:[{text:'Wechseln',wirkung:[{art:'jobwechsel',wert:1}],folge:''},

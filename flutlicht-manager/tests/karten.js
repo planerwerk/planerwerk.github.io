@@ -73,7 +73,7 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
     'Jobangebot: Bedingungen, Grenze, ein Angebot je Jahr, Wechsel mit Ablöse und Station, offene Karten bleiben beim alten Verein, Voreinstellung bleiben',
     `ohne Ruf ${ohneRuf}, zu früh ${frueh}, Angebot ${z&&z.name} (${z&&z.rep}, Grenze ${grenze}), gesperrt ${gesperrt}, offene Karten ${offenWeg}, Ablöse ${a}, jetzt Verein ${S.my}, Station ${alt&&alt.g}`);}
 
-// U12n. Ein Ausweg (K28 §5.13): nur im Ultimatum deines Vereins und ab Ruf rettung.rufAb; ein Verein derselben oder einer tieferen Profiliga mit höchstens deinem Ansehen
+// U12n. Ein Ausweg (K28 §5.13a): nur im Ultimatum deines Vereins und ab Ruf rettung.rufAb; ein Verein derselben oder einer tieferen Profiliga mit höchstens deinem Ansehen
 //       (höchstens rettung.abstand darunter); höchstens einer je Jahr; „Wechseln“ übernimmt den Verein wie beim Jobangebot, das Ultimatum ist danach weg; Voreinstellung bleiben.
 {const {S,F,ev}=welt(),R0=ev('RV').rettung,A=ev('AUSLOESER'),t=ev('myT()'),c=ev('karteVon')('rettung');S.ruf=60;
   const ohneUlt=A.rettung();S.ult={tid:S.my,s:S.season,ab:5,n:1};S.ruf=R0.rufAb-1;const ohneRuf=A.rettung();S.ruf=60;const b=A.rettung(),z=b?S.teams[b.verein]:null;
@@ -223,7 +223,7 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   const p=S.pl.find(p=>p.team>=0&&p.team<1000&&p.team!==S.my&&!p.wech&&!p.leihe&&!(p.inj>0)&&aktiv(S.teams[p.team])&&hb(me,p)&&F.mitbieter(p,S.teams[p.team],val(p)).length>=2);let ok=false,info='kein Spieler mit zwei Mitbietern gefunden';
   if(p){p.list=1;const be=ev('beraterVon')(p);if(be)be.bz=0;L.verwandt=0;const ohne=A.lachenderDritter();L.verwandt=1;const h=A.lachenderDritter();
     const ok1=ohne===null&&!!h&&h.spieler===p.id&&h.verein===p.team&&h.mit.length===2&&h.mit[0]!==h.mit[1]&&!h.mit.includes(p.team)&&!h.mit.includes(S.my);
-    const heute=absTag(S.tag);let ok2=false,frueh=false,kam=false,verfallen=false,nach=null,fd=null,leise=false,gegen=null,einig=false,auf=null,z=[],da=[],weg=false,e=null;
+    const heute=absTag(S.tag);let ok2=false,frueh=false,kam=false,verfallen=false,nach=null,fd=null,leise=false,gegen=null,gegenF=null,einig=false,auf=null,z=[],da=[],weg=false,e=null;
     if(ok1){F.kartenZeigen(ev('karteVon')('dritterTipp'),h,S.tag,true);F.karteWaehlen(S.karten.offen.length-1,0);e=(S.karten.kette||[])[0];
       ok2=S.karten.kette.length===1&&e.id==='dritterTreffen'&&e.tag>=heute+3&&e.tag<=heute+7&&(S.fin.Ereignisse||0)<0&&!!p.ld3&&p.ld3.v===p.team&&p.ld3.leise===0;
       if(ok2){const tagD=S.tag+(e.tag-heute);F.kartenKette(tagD-1);frueh=S.karten.kette.length===1;F.kartenKette(tagD);
@@ -232,7 +232,7 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
       S.karten.kette=[{id:'dritterTreffen',tag:heute,s:S.season,b:{spieler:p.id,verein:h.mit[0],mit:h.mit}},{id:'dritterTreffen',tag:heute,s:S.season-1,b:h}];
       const nOff=S.karten.offen.length,nLog=S.karten.log.length;F.kartenKette(S.tag);verfallen=!S.karten.kette.length&&S.karten.offen.length===nOff&&S.karten.log.length===nLog;
       /* nachlass: Forderung −10 % und leise, aufgeflogen −10 Beziehung zum Verkäufer */
-      F.verhandlung(p).f=null;fd=ev('forderungDu')(p);F.kartenWirkung({art:'nachlass',wert:0.1},h,{titel:'Test'});nach=F.forderung(p);leise=!!p.ld3&&p.ld3.leise===1;p.gerF={f:1.1,bis:absTag(S.tag)+30};const kr=F.kaufRunde(p,ev('rundeAb')(nach*0.8));gegen=kr.ok?null:kr.gegen;delete p.gerF;F.verhandlung(p).einig={fee:fd*2,bis:S.tag+14};F.kartenWirkung({art:'nachlass',wert:0.1},h,{titel:'Test'});einig=F.verhandlung(p).einig.fee<fd*2;delete F.verhandlung(p).einig;
+      F.verhandlung(p).f=null;fd=ev('forderungDu')(p);F.kartenWirkung({art:'nachlass',wert:0.1},h,{titel:'Test'});nach=F.forderung(p);leise=!!p.ld3&&p.ld3.leise===1;p.gerF={f:1.1,bis:absTag(S.tag)+30};gegenF=F.forderung(p);const kr=F.kaufRunde(p,ev('rundeAb')(nach*0.8));gegen=kr.ok?null:kr.gegen;delete p.gerF;F.verhandlung(p).einig={fee:fd*2,bis:S.tag+14};F.kartenWirkung({art:'nachlass',wert:0.1},h,{titel:'Test'});einig=F.verhandlung(p).einig.fee<fd*2;delete F.verhandlung(p).einig;
       const du0=F.bezDu(p.team);F.kartenWirkung({art:'nachlass',wert:-10},h,{titel:'Test'});auf=F.bezDu(p.team)-du0;
       /* Ausgang: nicht leise, leise, falscher Verkäufer */
       const [a,b]=h.mit,m=l=>({s:S.season,t:S.my,v:p.team,mit:[a,b],leise:l});z.push(F.bez(a,b));da.push(F.bezDu(a));
@@ -240,8 +240,8 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
       p.ld3=m(0);F.dritterKauf(p,a);z.push(F.bez(a,b));
       /* Vereinswechsel */
       S.karten.kette=[{id:'dritterTreffen',tag:heute+5,s:S.season,b:h}];F.kartenJobwechsel();weg=!S.karten.kette.length;}
-    ok=ok1&&ok2&&frueh&&kam&&verfallen&&nach<=ev('rundeAb')(fd*0.9)&&leise&&gegen!=null&&gegen<=nach&&einig&&auf===-10&&z[1]-z[0]===L.zwischen&&da[1]-da[0]===L.du&&z[2]-z[1]===L.zwischen&&da[2]===da[1]&&z[3]===z[2]&&!p.ld3&&weg;
-    info=`Spieler ${p.n}, ohne Berater und Verwandten ${ohne}, Auslöser ${!!h}, Treffen ${ok2} (${e?e.tag-heute:'-'} Tage), nicht zu früh ${frueh}, gekommen ${kam}, verfallen ${verfallen}, Forderung ${fd} → ${nach}, Gegenangebot ${gegen}, vereinbart gesenkt ${einig}, leise ${leise}, aufgeflogen ${auf}, zwischen ${z[1]-z[0]}/${z[2]-z[1]}/${z[3]-z[2]}, du ${da[1]-da[0]}/${da[2]-da[1]}, Jobwechsel ${weg}`;}
+    ok=ok1&&ok2&&frueh&&kam&&verfallen&&nach<=ev('rundeAb')(fd*0.9)&&leise&&gegen!=null&&gegen<=gegenF&&einig&&auf===-10&&z[1]-z[0]===L.zwischen&&da[1]-da[0]===L.du&&z[2]-z[1]===L.zwischen&&da[2]===da[1]&&z[3]===z[2]&&!p.ld3&&weg;
+    info=`Spieler ${p.n}, ohne Berater und Verwandten ${ohne}, Auslöser ${!!h}, Treffen ${ok2} (${e?e.tag-heute:'-'} Tage), nicht zu früh ${frueh}, gekommen ${kam}, verfallen ${verfallen}, Forderung ${fd} → ${nach}, Gegenangebot ${gegen} (Forderung ${gegenF}), vereinbart gesenkt ${einig}, leise ${leise}, aufgeflogen ${auf}, zwischen ${z[1]-z[0]}/${z[2]-z[1]}/${z[3]-z[2]}, du ${da[1]-da[0]}/${da[2]-da[1]}, Jobwechsel ${weg}`;}
   pruef(ok,'Der lachende Dritte: Auslöser, Folgekarte nach 3 bis 7 Tagen, Verfall, Nachlass, Ausgang für die beiden Vereine und dich',info);}
 
 // K30d. Anlasskarten (K30 §5.4, K37 §12 Nr. 21): Karten mit chance nehmen diese Chance je Woche statt der Stufe; das Wunder (chance 1) kommt in der Woche nach dem Rückspiel sicher.
@@ -575,9 +575,15 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   const t3=S.teams.filter(t=>t.lg===3&&ev('aktiv')(t)).sort((a,b)=>a.rep-b.rep)[0],p=sq(t3.id).filter(q=>!q.leihe&&!q.wech)[0];p.ww=3;p.str=Math.max(p.str,lvl);const i=wi(p);
   S.tag=auf;const b=A.nurZuDir(),passt=!!b&&b.spieler===p.id&&b.verein===t3.id;S.tag=zu;const geschlossen=A.nurZuDir();S.tag=auf;
   p.ww=2;const ohneWunsch=A.nurZuDir();p.ww=3;p.leihe={von:t3.id};const geliehen=A.nurZuDir();delete p.leihe;
-  const f=ev('rundeAb')(ev('forderungDu')(p)*0.85);ev('kartenWirkung')({art:'nachlass',wert:0.15},b||{spieler:p.id,verein:t3.id},{titel:'Test'});const billiger=ev('verhandlung')(p).f===f;S.tag=d0;
-  pruef(i>=ab&&passt&&geschlossen===null&&ohneWunsch===null&&geliehen===null&&billiger,'Spieler will nur zu dir: im Fenster, mit Wechselwunsch und hohem Interesse, nicht verliehen; Gespräche senken die Forderung um 15 %',
-    `Interesse ${Math.round(i)} (ab ${ab}), Auslöser ${passt}, Fenster zu ${geschlossen}, ohne Wunsch ${ohneWunsch}, verliehen ${geliehen}, Forderung ${billiger}`);}
+  const fd=ev('forderungDu'),rA=ev('rundeAb'),fq=ev('forderung');ev('kartenWirkung')({art:'nachlass',wert:0.15},b||{spieler:p.id,verein:t3.id},{titel:'Test'});const billiger=fq(p)===rA(fd(p)*0.85);
+  /* Prüfung FA1: Der Nachlass übersteht einen Abbruch der Verhandlung, gilt nicht für einen anderen eigenen Verein und verfällt mit der Frist */
+  const v=ev('verhandlung')(p);v.f=null;v.r=0;const nachAbbruch=fq(p)===rA(fd(p)*0.85),my0=v.nlMy;v.nlMy=-5;const fremd=fq(p)===rA(fd(p));v.nlMy=my0;
+  S.tag+=ev('RKT').nachlass.tage+1;const verfallen=fq(p)===rA(fd(p));S.tag=auf;
+  /* FA2/FA4: nicht mit Transfersperre */
+  S.lzp=Object.assign(S.lzp||{},{sperre:S.season});const gesperrt=A.nurZuDir();S.lzp.sperre=null;S.tag=d0;
+  pruef(i>=ab&&passt&&geschlossen===null&&ohneWunsch===null&&geliehen===null&&billiger&&nachAbbruch&&fremd&&verfallen&&gesperrt===null,
+    'Spieler will nur zu dir: im Fenster, mit Wechselwunsch und hohem Interesse, nicht verliehen, nicht mit Transfersperre; Gespräche senken die Forderung um 15 %, bis zur Frist',
+    `Interesse ${Math.round(i)} (ab ${ab}), Auslöser ${passt}, Fenster zu ${geschlossen}, ohne Wunsch ${ohneWunsch}, verliehen ${geliehen}, Forderung ${billiger}, nach Abbruch ${nachAbbruch}, anderer Verein ${fremd}, verfallen ${verfallen}, Transfersperre ${gesperrt}`);}
 
 // K16f. Streit im Stab (K16 §8): nur zwischen zwei hitzigen Mitarbeitern deines Stabs; „Laufen lassen“ macht beide 28 Tage schwächer (Qualität × 0,9 in stabQ), danach wieder normal.
 {const {S,F,ev}=welt(),A=ev('AUSLOESER'),hz=ev('stabHitzig'),sf=ev('stabStreitFaktor'),M=ev('RST').streit,sg=ev('stabGeaendert');S.phase='play';if(!S.stab)F.stabAufbau();
@@ -597,8 +603,9 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   /* EY1: nur hitzige Scouts, sonst niemand: keine Karte */
   const mein=S.stab.filter(y=>y.team===S.my);mein.forEach(y=>{y.team=-1;});sg();const sc=[];for(let i=0;i<120&&sc.length<2;i++){const x=F.stabNeu('scout',10,S.my,1);if(hz(x)){S.stab.push(x);sc.push(x);}}sg();
   const scouts=sc.length===2&&A.stabStreit()===null;S.stab=S.stab.filter(y=>!sc.includes(y));mein.forEach(y=>{y.team=S.my;});sg();
-  pruef(!!x1&&!!x2&&beide&&schwach&&ohne&&wieder&&qOk&&sortiert&&fremd&&scouts&&plaetze,'Streit im Stab: zwei hitzige Mitarbeiter, beide 28 Tage schwächer (auch in stabQ), danach normal, nur dein Stab, keine Scouts',
-    `hitzige gefunden ${!!x1&&!!x2}, Auslöser ${beide}, schwächer ${schwach}, nicht noch einmal ${ohne}, danach normal ${wieder}, stabQ ${qS} statt ${qE}, sortiert ${sortiert}, anderer Verein ${fremd}, Scouts ${scouts}, Plätze ${pl0} → ${pl1}`);}
+  const ks=ev('kartenSchluessel'),cs={id:'stabStreit'},paar=ks(cs,{stab:1,stab2:2})!==ks(cs,{stab:1,stab2:3})&&ks(cs,{stab:1,stab2:2})==='stabStreit:s1+2:'&&ks({id:'x'},{stab:4})==='x:s4:'&&ks({id:'x'},{spieler:7,verein:3})==='x:7:'&&ks({id:'x'},{verein:3})==='x::3'; /* Prüfung EZ1/FA5: Schlüssel der Sperre */
+  pruef(!!x1&&!!x2&&beide&&schwach&&ohne&&wieder&&qOk&&sortiert&&fremd&&scouts&&plaetze&&paar,'Streit im Stab: zwei hitzige Mitarbeiter, beide 28 Tage schwächer (auch in stabQ), danach normal, nur dein Stab, keine Scouts',
+    `hitzige gefunden ${!!x1&&!!x2}, Auslöser ${beide}, schwächer ${schwach}, nicht noch einmal ${ohne}, danach normal ${wieder}, stabQ ${qS} statt ${qE}, sortiert ${sortiert}, anderer Verein ${fremd}, Scouts ${scouts}, Plätze ${pl0} → ${pl1}, Schlüssel ${paar}`);}
 
 // K16g. Co-Trainer wird Cheftrainer (K16 §8): nur nach einem Trainerwechsel eines Computer-Vereins vor höchstens chef.tage Tagen, nur mit zwei Co-Trainern,
 //       einer davon ehrgeizig und ab chef.qAb. Ziehen lassen: Ablöse, er ist dort Cheftrainer, der Nachfolger aus dem Pool ist wieder frei. Halten: Gehalt + 30 %.
@@ -617,7 +624,7 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   B.sperreAb=1e9;const s0=x2.sal,s1=Math.round(s0*1.3/1000)*1000;wirk({art:'chefHalten',wert:0.3},{stab:x2.id,verein:v2.id},{titel:'Test'});const halten=x2.team===S.my&&x2.sal===s1;
   B.sperreAb=0;wirk({art:'chefHalten',wert:0.3},{stab:x2.id,verein:v2.id},{titel:'Test'});const ohneFreigabe=!S.stab.includes(x2)&&!!tv(v2.id)&&tv(v2.id).n===x2.n;B.sperreAb=sp0;
   wirk({art:'stabStreit',wert:60},{stab:x3.id},{titel:'Test'});const pochen=Math.abs(ev('stabStreitFaktor')(x3)-(1-ev('RST').streit.malus))<1e-9&&x3.team===S.my;
-  pruef(!!x1&&!!x2&&!!x3&&ohneWechsel===null&&passt&&zuSpaet===null&&einer===null&&weg&&zweites===null&&halten&&ohneFreigabe&&pochen,
+  pruef(!!x1&&!!x2&&!!x3&&!!x4&&ohneWechsel===null&&passt&&zuSpaet===null&&einer===null&&weg&&zweites===null&&halten&&ohneFreigabe&&pochen,
     'Co-Trainer wird Cheftrainer: nur nach einem frischen Trainerwechsel, nur der ehrgeizige, nicht als einziger Co-Trainer, kein zweites Mal; ziehen lassen mit Ablöse, halten mit mehr Gehalt, ohne Freigabe geht er, pochen schwächt ihn',
     `ehrgeizig gefunden ${!!x1}, nicht ehrgeizig ${!!x2}/${!!x3}, ohne Wechsel ${ohneWechsel}, Auslöser ${passt}, zu spät ${zuSpaet}, einziger ${einer}, ziehen lassen ${weg} (Ablöse ${a}), zweites Angebot ${zweites}, halten ${halten}, ohne Freigabe ${ohneFreigabe}, pochen ${pochen}`);}
 

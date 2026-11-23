@@ -271,7 +271,7 @@ Nach §8 als Ereigniskarte (K30, `daten/karten.js`, Bereich `ereignisse`).
   - Kredite und Raten bleiben wie bei jedem Jobwechsel beim alten Verein, ohne Buchung (Computer-Vereine führen keine Kredite). Die Ablöse steht nur in der Meldung, nicht in den Finanzen (DQ4, DQ5).
 - **Bleiben und es öffentlich sagen:** Vertrauen +5, Fans +2. Das ist auch die Voreinstellung, der Co-Trainer wechselt nie für dich.
 - **Sich alles anhören und dann absagen:** Ruf +1. Mit 50 % wird das Treffen publik, dann Vertrauen −8.
-- **Noch nicht:** Ausstiegsklausel im Trainervertrag, Angebot während des Ultimatums als Rettung (seit U12n, §5.13a), Angebote aus dem Ausland.
+- **Noch nicht:** Ausstiegsklausel im Trainervertrag, Angebote aus dem Ausland. Das Angebot während des Ultimatums gibt es seit U12n (§5.13a).
 
 ### 5.13a Umsetzung U12n (23. November 2026, popolupo, ohne Testlauf, Werte vorläufig): Ein Ausweg im Ultimatum
 Eigene Entscheidungskarte „Ein Ausweg“ (Anlasskarte, Chance 0,25 je Woche, große Karte mit Halt wie das Jobangebot).

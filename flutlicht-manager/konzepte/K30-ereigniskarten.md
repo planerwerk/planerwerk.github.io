@@ -243,6 +243,7 @@ Noch nicht gebaut: verzögerte Folgen ohne eigene Karte, die Chronik über alle 
   - Der Nachlass senkt auch eine schon vereinbarte Ablöse.
   - Das Gegenangebot liegt nie über der Forderung.
   - Ein Nachlass allein bringt kein Verhandlungsgerücht.
+- Seit Prüfung FA1 (23.11.2026): Der Nachlass ist ein Anteil mit Frist (60 Tage, `RKT.nachlass.tage`), kein fester Betrag mehr. Er übersteht einen Abbruch der Verhandlung, verfällt mit der Frist und gilt nur für den Verein, den du gerade trainierst. Ein Gerücht, das den Preis hebt, wirkt auf die Forderung vor dem Nachlass.
 
 **Vorläufig entschieden (von mir, ohne Rücksprache):**
 

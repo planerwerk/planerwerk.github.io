@@ -163,6 +163,8 @@ Interesse = Perspektive + Geld + Verein + Trainer + Lage + Heimat − Bindung
   - Sein Interesse an deinem Verein ist hoch: mindestens 20, dieselbe Grenze, ab der er in K20d das höhere Angebot eines anderen Vereins ablehnen kann (`abwerben.konkurrenz.nein.ab`). Keine eigene Zahl.
 - **Wahl:**
   - Gespräche aufnehmen: Die Forderung seines Vereins sinkt um 15 % (Kartenwirkung `nachlass` aus K30c, gilt auch für eine schon vereinbarte Ablöse). Kaufen musst du ihn danach selbst.
+    - Seit Prüfung FA1 ist der Nachlass ein Anteil mit Frist: Er gilt 60 Tage (`RKT.nachlass.tage`), auch nach einem Abbruch der Verhandlung, und nur für den Verein, den du gerade trainierst. Vorher stand ein fester Betrag in der Verhandlung, der nie verfiel. Ein Talent, dessen Wert inzwischen gestiegen war, hätte man so noch Jahre später zum alten Preis bekommen.
+  - Nicht für Spieler deiner eigenen Zweiten und nicht für Profis, die dorthin abgestellt sind (Prüfung FA2). Nicht mit Transfersperre aus der Lizenzprüfung (FA4).
   - Kein Bedarf: nichts.
   - Die Automatik wählt „Kein Bedarf“. Sie soll keine Verhandlung anstoßen, um die du nicht gebeten hast.
 - **Bewusst weggelassen (vorläufig):** „Stimmung beim alten Verein“ aus der Tabelle. Sein Wechselwunsch steht schon für die schlechte Stimmung, eine zweite Strafe für den Computer-Verein bringt dem Spiel nichts.
