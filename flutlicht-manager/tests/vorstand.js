@@ -147,11 +147,11 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
 {const {S,F,ev,B}=welt(),W=B.praesident.wahl,t=ev('myT()'),alle=S.teams.filter(x=>ev('aktiv')(x)),p0=JSON.stringify(F.praesident(t));
   const gleich=JSON.stringify(F.praesident(Object.assign({},t,{prw:0})))===p0,anders=alle.filter(x=>JSON.stringify(F.praesident(x))!==JSON.stringify(F.praesident(Object.assign({},x,{prw:1})))).length;
   const takt=alle.every(x=>{let n=0;for(let s=S.season;s<S.season+12;s++)if(ev('wahlFaellig')(x,s))n++;return n===12/ev('wahlJahre')(x);});
-  t.fanst=50;const c0=F.wahlChance(t,null),cAuf=F.wahlChance(t,{up:[VEREIN]}),cAb=F.wahlChance(t,{down:[VEREIN]});t.fanst=90;const cFans=F.wahlChance(t,null);t.fanst=50;
+  t.fanst=50;const c0=F.wahlChance(t,null),cAuf=F.wahlChance(t,{up:[VEREIN]}),cAb=F.wahlChance(t,{down:[VEREIN]});t.fanst=80;const cFans=F.wahlChance(t,null);t.fanst=50; /* 80 statt 90: mit dem Gewicht 1,5 (U12m) läge 90 an der Obergrenze 0,95 */
   while(!ev('wahlFaellig')(t,S.season))S.season++;const faellig=alle.filter(x=>ev('wahlFaellig')(x,S.season)).length;
   Object.assign(W,{grenzen:[0,0]});S.trust=80;const n1=F.praesidentenWahlen(null),trust1=S.trust,prw1=t.prw;
   Object.assign(W,{grenzen:[1,1]});const n2=F.praesidentenWahlen(null);
-  pruef(gleich&&anders>=alle.length*0.9&&takt&&Math.abs(c0-W.bleiben)<1e-9&&Math.abs(cAuf-c0-W.aufstieg)<1e-9&&Math.abs(cAb-c0-W.abstieg)<1e-9&&Math.abs(cFans-c0-40*W.fans)<1e-9
+  pruef(gleich&&anders>=alle.length*0.9&&takt&&Math.abs(c0-W.bleiben)<1e-9&&Math.abs(cAuf-c0-W.aufstieg)<1e-9&&Math.abs(cAb-c0-W.abstieg)<1e-9&&Math.abs(cFans-c0-30*W.fans*ev('wahlFansGewicht')(t))<1e-9 /* seit U12m mit dem Gewicht nach Mitgliedern je Platz */
     &&n1===faellig&&prw1===1&&trust1===65&&n2===0&&t.prw===1&&S.trust===65,
     'Präsidentenwahl: Werte, Takt, Chance, Abwahl mit Vertrauen zur Mitte, Wiederwahl ohne Folgen',
     `andere Werte bei ${anders} von ${alle.length}, Takt ${takt}, Chance ${c0.toFixed(2)} / Aufstieg ${cAuf.toFixed(2)} / Abstieg ${cAb.toFixed(2)} / Fans 90 ${cFans.toFixed(2)}, abgewählt ${n1} von ${faellig}, Vertrauen ${trust1}, danach ${n2}`);}
@@ -174,5 +174,12 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   const b=welt();b.S.trust=50;b.W.ev('bgChance=function(){return 0;}');b.F.budgetGespraech();const nein=b.S.bg&&b.S.bg.ok===0&&b.S.trust===50+B.abgelehnt&&b.ev('zgBudgetFaktor')()===1;
   pruef(Math.abs(c0-B.basis)<1e-9&&Math.abs(c1-B.basis*B.glaubFaktor)<1e-9&&ja&&einmal&&nein,'Budgetgespräch: Chance, Zusage mit mehr Budget, einmal je Saison, Ablehnung kostet Vertrauen',
     `Chance ${c0.toFixed(2)} / bei wenig Glaubwürdigkeit ${c1.toFixed(2)}, zugesagt ${ja}, einmal ${einmal}, abgelehnt ${nein}`);}
+
+// U12m. Mitglieder als Stimmen (K28 §5.12): Die Fanstimmung zählt bei der Präsidentenwahl ohne Mitglieder halb, bei einem Mitglied je Platz einfach,
+//       ab zwei je Platz anderthalbfach (höchstens). Wirkung: Unterschied der Chance zwischen Fanstimmung 70 und 50.
+{const {F,ev,B}=welt(),W=B.praesident.wahl,t=ev('myT()'),m0=t.mitglieder,d=m=>{t.mitglieder=m;t.fanst=70;const a=F.wahlChance(t,null);t.fanst=50;const b=F.wahlChance(t,null);return a-b;};
+  const ohne=d(0),eins=d(t.cap),viele=d(t.cap*5);t.mitglieder=m0;
+  pruef(Math.abs(ohne-20*W.fans*W.mitglieder[0])<1e-9&&Math.abs(eins-20*W.fans)<1e-9&&Math.abs(viele-20*W.fans*W.mitglieder[1])<1e-9,'Mitglieder als Stimmen: Gewicht der Fanstimmung 0,5 / 1 / 1,5 nach Mitgliedern je Platz',
+    `Fanstimmung +20 bringt ${ohne.toFixed(3)} / ${eins.toFixed(3)} / ${viele.toFixed(3)}`);}
 
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

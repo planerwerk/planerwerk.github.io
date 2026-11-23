@@ -1001,7 +1001,9 @@ const REGELN={
     praesident:{min:1,max:20, // Geduld, Ehrgeiz, Sparsamkeit des Präsidenten (K28 §3), fest aus der Vereinsnummer und der Zahl der Wechsel (versatz je Wechsel)
       // Präsidentenwahl (K28 §8, K25 §5.5, U12i, 22.11., GESCHÄTZT): Mitgliederversammlung im Sommer alle jahre (je nach Vereinsnummer). Der Präsident bleibt mit bleiben
       // + jePunkt × (Punkte je Spiel − mitte) + aufstieg/abstieg + fans × (Fanstimmung − 50), in grenzen. Sonst ein neuer; bei dir rückt das Vertrauen um vertrauen Richtung 50.
-      versatz:101,wahl:{jahre:[3,4],bleiben:0.65,mitte:1.35,jePunkt:0.3,aufstieg:0.15,abstieg:-0.25,fans:0.005,grenzen:[0.2,0.95],vertrauen:0.5}},
+      // U12m (K28 §5.12 „Mitglieder als Stimmen“, 23.11., popolupo, GESCHÄTZT): Das Gewicht der Fanstimmung wächst mit den Mitgliedern je Platz, linear von mitglieder[0]
+      // (keine Mitglieder) bis mitglieder[1] (ab mitgliederVoll je Platz), ein Mitglied je Platz ergibt 1 wie bisher
+      versatz:101,wahl:{jahre:[3,4],bleiben:0.65,mitte:1.35,jePunkt:0.3,aufstieg:0.15,abstieg:-0.25,fans:0.005,grenzen:[0.2,0.95],vertrauen:0.5,mitglieder:[0.5,1.5],mitgliederVoll:2}},
     jobs:{ansehenAbschlag:4,kandidaten:8,angebote:4},
     // Jobangebot während der Saison (K28 §8, U12j, 22.11., GESCHÄTZT): Karte ab Ruf rufAb, Verein mit mindestens abstand mehr Ansehen und höchstens Ruf + rufSpanne;
     // beim Wechsel zahlt der neue Verein dem alten abloese × dein Gehalt je Saison

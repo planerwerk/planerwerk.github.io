@@ -253,6 +253,10 @@ Nach §8 („Neuer Präsident: Wahl alle 3–4 Jahre“) und K25 §5.5 (Mitglied
   - Bei dir wirkt sie auf Nebenziele, Tiefstapeln und die Vertragslaufzeit beim nächsten Vertrag. Dein Vertrauen rückt zur Hälfte Richtung 50, denn der Neue muss sich erst ein Bild machen. Du bekommst eine Meldung, auch bei einer Wiederwahl.
 - **Lizenz (K36):** keine neue Funktion.
 - **Noch nicht:** Namen der Präsidenten, Kandidaten mit Programm, Einfluss des Trainers auf die Wahl, Mitglieder als Stimmen (K25d), neue Ziele direkt nach der Wahl (gilt erst mit dem Saisonziel der neuen Saison).
+- **Seit U12m (23.11.2026, popolupo, ohne Testlauf, vorläufig): Mitglieder als Stimmen.** Die Mitglieder wählen, also zählt ihre Stimmung mehr, je mehr Mitglieder ein Verein je Platz hat. Das Gewicht der Fanstimmung in der Wahl geht linear von 0,5 (keine Mitglieder) über 1 (ein Mitglied je Platz, wie bisher) bis 1,5 (ab zwei je Platz).
+  - Beispiele: Union, Schalke oder Köln wählen mit 1,5. Leipzig mit 0,5, dort entscheidet der Geldgeber, nicht die Kurve.
+  - Das gilt für alle Vereine, ohne Zufall. Die Mitgliederaktion (K25d) wirkt damit auch hier.
+  - Das Büro nennt das Gewicht neben dem Termin der nächsten Wahl, wenn es von 1 abweicht.
 
 ### 5.13 Umsetzung U12j (22. November 2026, popolupo, ohne Testlauf): Jobangebot während der Saison
 
