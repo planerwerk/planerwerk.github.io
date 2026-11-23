@@ -161,7 +161,7 @@ const AUSLOESER={
   // du hast mindestens zwei Co-Trainer, einer davon ab Qualität chef.qAb und ehrgeizig (stabEhrgeizig). Der Verein will ihn statt des Nachfolgers aus dem Pool.
   coChef(){if(!S.stab||!S.trainerWechsel)return null;const C=RKT.stab.chef,h=absTag(S.tag),co=stabVon(S.my,'co');if(co.length<2)return null;
     const l=co.filter(x=>x.q>=C.qAb&&stabEhrgeizig(x));if(!l.length)return null;
-    const w=S.trainerWechsel.filter(e=>e.a!=null&&h-e.a>=0&&h-e.a<=C.tage&&e.t!==S.my&&S.teams[e.t]&&aktiv(S.teams[e.t]));
+    const w=S.trainerWechsel.filter(e=>e.a!=null&&h-e.a>=0&&h-e.a<=C.tage&&e.t!==S.my&&S.teams[e.t]&&aktiv(S.teams[e.t])&&!(trainerVon(e.t)||{}).co); /* EZ2: nicht, wenn dort schon dein früherer Co-Trainer sitzt */
     return w.length?{stab:pick(l).id,verein:w[w.length-1].t}:null;},
   /* Prüfung EY1: ohne Scouts, sie wirken einzeln über x.q und sind unterwegs; EY2: das Paar sortiert, damit die Sperre am Paar hängt und nicht an der Reihenfolge des Würfels */
   stabStreit(){if(!S.stab)return null;const h=absTag(S.tag),l=S.stab.filter(x=>x.team===S.my&&x.r!=='scout'&&stabHitzig(x)&&!(x.streitBis>=h));if(l.length<2)return null;const a=pick(l),b=pick(l.filter(x=>x!==a)),[u,v]=[a.id,b.id].sort((x,y)=>x-y);return{stab:u,stab2:v};},
@@ -226,7 +226,7 @@ function entscheidungImBudget(c,W,d){const E=RKT.entscheidung,D=kartenDichte();i
 function kartenWoche(d){if(S.phase!=='play'||S.fired)return;const K=karten(),W=kartenBudget(d),heute=absTag(d);
   for(const c of shuffle(KARTEN.filter(c=>!c.nurKette))){const hit=R()<kartenChance(c);if(!hit)continue; /* Folgekarten kommen nur über kartenKette (K30c) */
     if(c.stufe==='sehrSelten'&&K.einmal[c.id])continue;const f=AUSLOESER[c.ausloeser];if(!f)continue;const b=f();if(!b)continue;
-    const key=[c.id,b.spieler!=null?b.spieler:b.stab!=null?'s'+b.stab:'',b.stab==null&&b.verein!=null?b.verein:''].join(':'); /* Mitarbeiter als Beteiligter (Prüfung ED3), je Mitarbeiter ohne den Verein (EE3) */if(K.sp[key]!=null&&heute-K.sp[key]<(c.sperrTage||RKT.sperrTage))continue;
+    const key=[c.id,b.spieler!=null?b.spieler:b.stab!=null?'s'+b.stab+(b.stab2!=null?'+'+b.stab2:''):'',b.stab==null&&b.verein!=null?b.verein:''].join(':'); /* Mitarbeiter als Beteiligter (Prüfung ED3), je Mitarbeiter ohne den Verein (EE3) */if(K.sp[key]!=null&&heute-K.sp[key]<(c.sperrTage||RKT.sperrTage))continue;
     let halt=false;if(c.art==='entscheidung')halt=entscheidungImBudget(c,W,d);
     let stumm=false;if(halt)kartenHaltZaehlen(c,W);else if(c.art==='info'){if(W.info>=kartenDichte().info&&!c.immer){if(!c.wirkung)continue;stumm=true;}else W.info++;} /* immer: Meldung auch über der Grenze (Prüfung ER3, Punktabzug) */ /* Entscheidungen ohne Halt entscheidet der Co-Trainer, sie fallen nicht weg (Prüfung DY8) */
     K.sp[key]=heute;if(c.stufe==='sehrSelten')K.einmal[c.id]=1;kartenZeigen(c,b,d,halt,stumm);}} /* Info mit Wirkung über der Grenze: Wirkung ja, Meldung nein (Prüfung EH3) */
@@ -372,7 +372,9 @@ function dritterKauf(p,von){const m=p&&p.ld3;if(!m)return;delete p.ld3;if(m.s!==
 // Höchstes Ansehen eines Vereins, der dir einen Job anbietet: dieselbe Mitte wie die Jobangebote nach einer Entlassung (saison.js mkJobs) plus jobangebot.rufSpanne
 const jobangebotGrenze=()=>{const J=RV.jobs;return myT().rep-J.ansehenAbschlag+(ruf()-RV.ruf.start)*RV.ruf.jobsJePunkt+RV.jobangebot.rufSpanne;};
 // Vereinswechsel (saison.js takeJob, vor dem Wechsel): offene Karten entscheidet der Co-Trainer noch für den alten Verein, sie wandern nicht mit (Prüfung DQ3)
-function kartenJobwechsel(){const K=S.karten;if(!K)return;K.offen.slice().forEach(k=>{const c=karteVon(k.id);if(c)kartenEntscheiden(k,c.auto,'spaet');});K.offen=[];K.kette=[];} /* Ketten enden mit dem Verein (K30c) */
+/* ziel: der Verein, zu dem du wechselst. Ein offenes Angebot genau dieses Vereins (K16g) gilt dann nicht mehr (Prüfung EZ3) */
+let KARTEN_ZIEL=null;
+function kartenJobwechsel(ziel){const K=S.karten;if(!K)return;KARTEN_ZIEL=ziel==null?null:ziel;try{K.offen.slice().forEach(k=>{const c=karteVon(k.id);if(c)kartenEntscheiden(k,c.auto,'spaet');});}finally{KARTEN_ZIEL=null;}K.offen=[];K.kette=[];} /* Ketten enden mit dem Verein (K30c) */
 // Jobwechsel per Karte (K28 §8, U12j): Gehalt bis heute in die Karriere, Ablöse für deinen Vertrag (Gehalt je Saison × jobangebot.abloese, höchstens das Konto des neuen Vereins)
 // vom neuen an den alten Verein, dann takeJob. Nicht, wenn der Verein nicht mehr aktiv ist, du entlassen bist oder er inzwischen deiner ist.
 function karteJobwechsel(id){const t=S.teams[id],alt=myT();if(!t||!aktiv(t)||S.fired||id===S.my){news('Das Angebot ist nicht mehr zu haben.','');return;}
@@ -398,8 +400,8 @@ function karteChef(x,v,weg,wert){const K=RKT.stab,C=K.chef,rolle=RST.rollen[x.r]
   if(!weg){const neu=Math.round(x.sal*(1+wert)/1000)*1000;if(rahmenErlaubt(myT(),neu-x.sal)){x.sal=neu;news(`${x.n} (${rolle}) bleibt, für ${fmt(x.sal)} im Jahr.`,'');return;}
     news(`Der Vorstand gibt die Gehaltserhöhung für ${x.n} nicht frei (Gehaltsrahmen).`,'');}
   if(stabVon(S.my,x.r).length<=1){news(`${x.n} bleibt, ohne ihn hättest du keinen ${rolle} mehr.`,'');return;}
-  if(!v||v.id===S.my||!aktiv(v)){news(`${x.n} bleibt, das Angebot gilt nicht mehr.`,'');return;}
-  trainerS();const alt=trainerGeht(v,0),c=mitStrom(strom('trainerpool',S.season,S.tag,'co',x.id),()=>trainerNeu(v.rep-C.rufAbschlag,v.id));c.n=x.n;c.co=1;v.chef=c.id;v.stil=c.stil;
+  if(!v||v.id===S.my||!aktiv(v)||v.id===KARTEN_ZIEL){news(`${x.n} bleibt, das Angebot gilt nicht mehr.`,'');return;} /* EZ3: du wechselst selbst zu diesem Verein */
+  trainerS();const alt=trainerGeht(v,0),c=mitStrom(strom('trainerpool',S.season,S.tag,'co',x.id),()=>trainerNeu(v.rep-C.rufAbschlag,v.id));c.n=x.n;c.co=1;if(x.age!=null)c.alter=x.age;v.chef=c.id;v.stil=c.stil; /* EZ5: sein Alter */
   const a=Math.min(Math.round(x.sal*K.abloese/1000)*1000,Math.max(0,v.cash));if(a){money('Stab: Ablöse',a);v.cash-=a;}S.stab=S.stab.filter(y=>y!==x);stabGeaendert();
   news(`${x.n} wird Cheftrainer bei ${v.name}${a?`, Ablöse ${fmt(a)}`:''}.${alt?` ${alt.n} war dort nur wenige Tage im Amt.`:''}`,'tr');}
 function kartenLog(c,tag,wahl,auto){const K=karten();K.log.push({id:c.id,s:S.season,tag,wahl,auto});if(K.log.length>RKT.log)K.log.splice(0,K.log.length-RKT.log);}

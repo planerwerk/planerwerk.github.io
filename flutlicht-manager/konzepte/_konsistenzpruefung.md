@@ -2508,3 +2508,20 @@ Korrekturen auf `mitarbeit/popolupo-ey-korrekturen` (auf K27h).
 | EY2 | Die Sperre hing am zuerst gezogenen Mitarbeiter. Dasselbe Paar konnte nach einem gelungenen Gespräch gleich wieder streiten, wenn der Würfel den anderen zuerst zog. Jetzt kommt das Paar sortiert. | ✅ behoben |
 | EY3 | Der Faktor galt für jeden Verein. Nach einem Jobwechsel (offene Karte automatisch entschieden) oder einem Wechsel über K16c war der Stab eines Computer-Vereins schwächer. Jetzt nur bei `x.team===S.my`. | ✅ behoben |
 | EY4 | Der Kommentar zum Platzsturm nannte noch den alten Strich, die Tabelle in K16 §8 „−10 %“. Beides angepasst, K16f erklärt die kleinere Wirkung (Sockel und Schwellen). | ✅ behoben |
+
+## EZ. Prüfung von K16g, K27h und der Korrekturen EY ohne Laufzeit (23. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 2ba03b1, b695aa0 und 64ea61e gelesen, nichts ausgeführt. Sechs niedrige Funde. Ohne Befund: der absolute Tag im Protokoll der Trainerwechsel (auch im Sommer), der eigene Strom für den neuen Cheftrainer, Trainerpool, Lieblingsstil und Ablöse, der Gehaltsrahmen mit dem Stab, offene Karten mit einem Mitarbeiter, der weg ist, das Fan-Gespräch mit Lernstufe und ohne doppeltes Gespräch, Computer-Vereine und K16c nach EY3, alle Namen in den Tests.
+
+Korrekturen auf `mitarbeit/popolupo-ez-korrekturen` (auf U12n).
+
+| # | Befund | Status |
+|---|---|---|
+| EZ1 | Seit EY2 hing die Sperre an der kleineren Nummer des Paars, nicht am Paar. Jetzt stehen beide Nummern im Schlüssel. | ✅ behoben |
+| EZ2 | Nach „Ziehen lassen“ konnte für denselben Trainerwechsel noch ein Angebot kommen, das deinen früheren Co-Trainer nach wenigen Tagen wieder in den Pool schickte. Jetzt nicht, wenn dort schon dein früherer Co-Trainer sitzt. | ✅ behoben |
+| EZ3 | Wechselst du selbst zu dem Verein, entschied der Jobwechsel die offene Karte noch für den alten Verein. Ohne Freigabe ging der Co-Trainer zum Verein, der dich gerade holt, und landete gleich im Pool. Jetzt kennt der Jobwechsel sein Ziel, das Angebot gilt dann nicht mehr. | ✅ behoben |
+| EZ4 | Ein mitgenommener Mitarbeiter trug den Streit zum neuen Verein. Jetzt endet er beim Mitnehmen. Dass der Partner allein weiterstreitet, wenn einer über K16c oder K16g geht, steht in K16. | ✅ behoben |
+| EZ5 | Der neue Cheftrainer bekam ein zufälliges Alter statt seines Alters aus dem Stab. | ✅ behoben |
+| EZ6 | Tests: Die Einzeltrainingsplätze im Streit waren ungeprüft. Der Gehaltsrahmen war im Test nicht erzwungen, „ohne Freigabe geht er“ und „Auf den Vertrag pochen“ fehlten. Alles ergänzt. | ✅ behoben |
+
+Nebenbei geprüft: Eine Warteliste für Dauerkarten (K27 „Noch nicht“) käme mit den heutigen Werten nie vor, die Nachfrage erreicht höchstens 80 % der Plätze. Zurückgestellt, Begründung in K27 §5.2.

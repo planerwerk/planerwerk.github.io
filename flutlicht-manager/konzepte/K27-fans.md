@@ -67,6 +67,7 @@ Ziel = 60 + Erfolg + Preise + Identifikation + Entscheidungen + Umfeld     (0–
 - **Fanstimmung:** Baustein Preise +2 je 10 Prozentpunkte Rabatt über dem Standard, −2 darunter.
 - **Rechnung:** Bei 20 % Rabatt und einem vollen Stadion bringen Dauerkarten weniger als Einzelkarten. In einer Krise (Nachfrage unter der Zahl der Dauerkarten) bringen sie mehr. Das ist der Hebel aus §6.
 - **Noch nicht:** Gästeblock als eigene Plätze, Dauerkarten der Computer-Vereine, Warteliste.
+  - **Warteliste geprüft (23.11.2026, popolupo):** Mit den heutigen Werten erreicht die Nachfrage höchstens 80 % der Plätze (0,35 + 0,25 Fanstimmung + 0,05 Rabatt + 0,1 Mitglieder + 0,05 Aktion), die Grenze liegt bei 90 %. Eine Warteliste käme also nie vor. Sinnvoll wird sie erst mit einem Kontingent, wie es echte Vereine festlegen (etwa zwei Drittel der Plätze). Das würde aber die Einnahmen aus K27b verschieben. Darum zurückgestellt, bis ein Testlauf die Einnahmen zeigt.
 
 ### 5.3 Nachfrage
 

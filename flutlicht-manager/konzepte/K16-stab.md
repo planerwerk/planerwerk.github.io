@@ -169,7 +169,8 @@ Bandbreite = Grundbreite × (1,5 − 0,05 × Qualität) × Schwierigkeitsfaktor 
 - **Schwächer** heißt: Qualität × 0,9 in allen Wirkungen des Stabs (`stabQ`, `x.streitBis`), seit Prüfung EY1 auch in den Einzeltrainingsplätzen der Co-Trainer (`stabPlaetze`). Das gilt nur für deinen Stab, seit EY3 auch im Code: Nach einem Jobwechsel oder einem Wechsel über K16c wirkt ein alter Streit beim anderen Verein nicht weiter.
   - Die Wirkung ist kleiner als 10 %, weil die Formeln einen Sockel oder Schwellen haben. Ein Co-Trainer mit Qualität 15 wirkt mit 1,0525 statt 1,075, also etwa 2 % schwächer. Ein Videoanalyst mit Qualität 10 fällt unter die Schwelle und verliert seinen Bonus ganz. So gewollt (vorläufig): Der Streit soll spürbar, aber nicht teuer sein.
 - **Ohne Scouts** (Prüfung EY1): Scouts sind unterwegs und wirken einzeln über ihre Qualität, nicht über `stabQ`. Sie streiten in dieser Karte nicht mit.
-- **Sperre** (Prüfung EY2): Das Paar kommt sortiert aus dem Auslöser. Die Sperre von 90 Tagen hängt so am Paar und nicht daran, wen der Würfel zuerst zieht.
+- **Sperre** (Prüfung EY2): Das Paar kommt sortiert aus dem Auslöser. Seit Prüfung EZ1 stehen beide Nummern im Schlüssel der Sperre. Die Sperre von 90 Tagen hängt so wirklich am Paar: Nach einem Streit A–B kann A–C trotzdem kommen.
+- **Jobwechsel** (Prüfung EZ4): Wer mit dir zum neuen Verein kommt, lässt den Streit beim alten Verein. Geht einer der beiden über K16c oder K16g, trägt der andere den Streit bis zum Ende allein. Das ist vorläufig so gewollt.
 - Die Automatik führt das Gespräch.
 
 **Gebaut als K16g** (23.11.2026, popolupo, ohne Testlauf, Werte vorläufig): „Co-Trainer wird Cheftrainer“ als Entscheidungskarte (Anlasskarte, Chance 0,3 je Woche).
@@ -183,6 +184,10 @@ Bandbreite = Grundbreite × (1,5 − 0,05 × Qualität) × Schwierigkeitsfaktor 
   - **Mit deutlich mehr Gehalt halten:** Gehalt + 30 %. Gibt der Vorstand das nicht frei (Gehaltsrahmen), geht er doch.
   - **Auf den Vertrag pochen:** Er bleibt, wirkt aber 60 Tage schwächer, so wie im Streit aus K16f (`streitBis`, Qualität × 0,9).
   - Die Automatik hält ihn mit mehr Gehalt (wie K16c).
+- **Nach der Prüfung EZ:**
+  - Sitzt bei dem Verein schon dein früherer Co-Trainer, kommt für diesen Wechsel kein zweites Angebot (EZ2).
+  - Wechselst du selbst zu dem Verein, während die Karte offen ist, gilt das Angebot nicht mehr. Der Co-Trainer bleibt und kann mitkommen (EZ3).
+  - Der neue Cheftrainer behält sein Alter aus dem Stab (EZ5).
 - **Bewusst einfach (vorläufig):** Die Karte kommt nur für deinen Stab. Computer-Vereine werben keine Co-Trainer anderer Computer-Vereine als Cheftrainer ab. Ein Co-Trainer, der als Cheftrainer scheitert, kommt nicht als Mitarbeiter zurück, er bleibt im Trainerpool.
 - **Regelwerte:** `REGELN.karten.stab.chef` (`tage`, `qAb`, `ehrgeizProzent`, `rufAbschlag`). Das Protokoll der Trainerwechsel trägt jetzt den absoluten Tag (`a`), damit auch Wechsel im Sommer über den Saisonwechsel hinweg zählen. Ältere Einträge ohne `a` zählen nicht.
 

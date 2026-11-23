@@ -74,7 +74,7 @@ function stabMitnehmen(altId){const w=(S.mitnehmen||[]).slice(0,RST.mitnehmen.ma
   w.forEach(id=>{const x=S.stab.find(y=>y.id===id&&y.team===altId&&(y.wiv||0)>=RST.mitnehmen.wochen);if(!x)return;
     const da=S.stab.filter(y=>y.team===S.my&&y.r===x.r&&!mit.has(y.id)).sort((a,b)=>a.q-b.q),voll=S.stab.filter(y=>y.team===S.my&&y.r===x.r).length>=RST.rollen[x.r].plaetze;
     if(voll&&da.length){da[0].team=-1;news(`${RST.rollen[x.r].name} ${da[0].n} muss bei ${myT().name} gehen, weil ${x.n} mitkommt.`);}
-    x.team=S.my;x.sal=stabGehalt(x.r,x.q,lg);x.ct=Math.max(1,x.ct||1);mit.add(x.id);n++;news(`${RST.rollen[x.r].name} ${x.n} kommt mit zu ${myT().name}.`,'good');});
+    x.team=S.my;x.sal=stabGehalt(x.r,x.q,lg);x.ct=Math.max(1,x.ct||1);delete x.streitBis;mit.add(x.id); /* Prüfung EZ4: der Streit bleibt beim alten Verein */n++;news(`${RST.rollen[x.r].name} ${x.n} kommt mit zu ${myT().name}.`,'good');});
   S.stab.forEach(y=>{if(y.team===S.my&&!mit.has(y.id))y.wiv=0;});stabGeaendert();return n;}
 // Jobangebot per Karte (karten.js karteJobwechsel, ohne Fenster zur Wahl): die mitnehmbaren Co-Trainer kommen mit (Prüfung DU5)
 function mitnehmenCoTrainer(){S.mitnehmen=mitnehmbar().filter(x=>x.r==='co').sort((a,b)=>b.q-a.q).slice(0,RST.mitnehmen.max).map(x=>x.id);}

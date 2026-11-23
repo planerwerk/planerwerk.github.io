@@ -590,11 +590,15 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   const qS=ev('stabQ')(S.my,r),qE=Math.max(...[xa,xb].filter(y=>y.r===r).map(y=>y.q))*(1-M.malus),qOk=Math.abs(qS-qE)<1e-9;andere.forEach(y=>{y.team=S.my;});sg();
   const sortiert=b.stab<b.stab2,tm=xa.team;xa.team=S.teams.find(t=>t.id!==S.my).id;const fremd=sf(xa)===1;xa.team=tm;
   S.tag+=29;const wieder=sf(xa)===1&&sf(xb)===1;S.tag-=29;
+  /* Prüfung EZ6: auch die Einzeltrainingsplätze (EY1), mit einem einzigen Co-Trainer der Qualität 13 (3 + 2,6 = 5,6 → 6, im Streit 3 + 2,34 → 5) */
+  const cos=S.stab.filter(y=>y.team===S.my&&y.r==='co');cos.forEach(y=>{y.team=-1;});const xc=F.stabNeu('co',13,S.my,1);S.stab.push(xc);sg();const CP=ev('RST').wirkung.coPlaetze;
+  const pl0=F.stabPlaetze(S.my);xc.streitBis=ev('absTag')(S.tag)+10;const pl1=F.stabPlaetze(S.my);S.stab=S.stab.filter(y=>y!==xc);cos.forEach(y=>{y.team=S.my;});sg();
+  const plaetze=pl0===Math.round(CP.basis+CP.jeQualitaet*13)&&pl1===Math.round(CP.basis+CP.jeQualitaet*13*(1-M.malus))&&pl1<pl0;
   /* EY1: nur hitzige Scouts, sonst niemand: keine Karte */
   const mein=S.stab.filter(y=>y.team===S.my);mein.forEach(y=>{y.team=-1;});sg();const sc=[];for(let i=0;i<120&&sc.length<2;i++){const x=F.stabNeu('scout',10,S.my,1);if(hz(x)){S.stab.push(x);sc.push(x);}}sg();
   const scouts=sc.length===2&&A.stabStreit()===null;S.stab=S.stab.filter(y=>!sc.includes(y));mein.forEach(y=>{y.team=S.my;});sg();
-  pruef(!!x1&&!!x2&&beide&&schwach&&ohne&&wieder&&qOk&&sortiert&&fremd&&scouts,'Streit im Stab: zwei hitzige Mitarbeiter, beide 28 Tage schwächer (auch in stabQ), danach normal, nur dein Stab, keine Scouts',
-    `hitzige gefunden ${!!x1&&!!x2}, Auslöser ${beide}, schwächer ${schwach}, nicht noch einmal ${ohne}, danach normal ${wieder}, stabQ ${qS} statt ${qE}, sortiert ${sortiert}, anderer Verein ${fremd}, Scouts ${scouts}`);}
+  pruef(!!x1&&!!x2&&beide&&schwach&&ohne&&wieder&&qOk&&sortiert&&fremd&&scouts&&plaetze,'Streit im Stab: zwei hitzige Mitarbeiter, beide 28 Tage schwächer (auch in stabQ), danach normal, nur dein Stab, keine Scouts',
+    `hitzige gefunden ${!!x1&&!!x2}, Auslöser ${beide}, schwächer ${schwach}, nicht noch einmal ${ohne}, danach normal ${wieder}, stabQ ${qS} statt ${qE}, sortiert ${sortiert}, anderer Verein ${fremd}, Scouts ${scouts}, Plätze ${pl0} → ${pl1}`);}
 
 // K16g. Co-Trainer wird Cheftrainer (K16 §8): nur nach einem Trainerwechsel eines Computer-Vereins vor höchstens chef.tage Tagen, nur mit zwei Co-Trainern,
 //       einer davon ehrgeizig und ab chef.qAb. Ziehen lassen: Ablöse, er ist dort Cheftrainer, der Nachfolger aus dem Pool ist wieder frei. Halten: Gehalt + 30 %.
@@ -606,10 +610,16 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   x2.team=-1;sg();const einer=A.coChef();x2.team=S.my;sg();
   const f0=S.fin['Stab: Ablöse']||0,c0=v.cash,a=Math.min(Math.round(x1.sal*K.abloese/1000)*1000,Math.max(0,c0));wirk({art:'chefWeg',wert:1},b,{titel:'Test'});const chef=tv(v.id);
   const weg=!S.stab.includes(x1)&&!!chef&&chef.n===x1.n&&chef.tid===v.id&&v.stil===chef.stil&&!!nachfolger&&nachfolger.tid==null&&(S.fin['Stab: Ablöse']||0)-f0===a&&c0-v.cash===a;
-  const s0=x2.sal,s1=Math.round(s0*1.3/1000)*1000,erlaubt=ev('rahmenErlaubt')(ev('myT()'),s1-s0);wirk({art:'chefHalten',wert:0.3},{stab:x2.id,verein:v.id},{titel:'Test'});
-  const halten=x2.team===S.my&&x2.sal===(erlaubt?s1:s0); /* ohne Freigabe ginge er, als einziger Co-Trainer bleibt er aber */
-  pruef(!!x1&&!!x2&&ohneWechsel===null&&passt&&zuSpaet===null&&einer===null&&weg&&halten,'Co-Trainer wird Cheftrainer: nur nach einem frischen Trainerwechsel, nur der ehrgeizige, nicht als einziger Co-Trainer; ziehen lassen mit Ablöse, halten mit mehr Gehalt',
-    `ehrgeizig gefunden ${!!x1}, nicht ehrgeizig ${!!x2}, ohne Wechsel ${ohneWechsel}, Auslöser ${passt}, zu spät ${zuSpaet}, einziger ${einer}, ziehen lassen ${weg} (Ablöse ${a}), halten ${halten} (Freigabe ${erlaubt})`);}
+  /* Prüfung EZ2: Dort sitzt jetzt dein früherer Co-Trainer, also kein zweites Angebot für denselben Wechsel, auch mit einem neuen ehrgeizigen Co-Trainer */
+  const x4=neu(true),zweites=A.coChef();if(x4){x4.team=-1;sg();}
+  /* EZ6: Gehaltsrahmen in beide Richtungen erzwungen (sperreAb), dazu ein dritter Co-Trainer, damit „nicht freigegeben“ wirklich gehen lässt; „Auf den Vertrag pochen“ */
+  const B=ev('RFP').budget,sp0=B.sperreAb,x3=neu(false),v2=S.teams.find(t=>t.id!==S.my&&t.id!==v.id&&ev('aktiv')(t)&&t.lg<=3);
+  B.sperreAb=1e9;const s0=x2.sal,s1=Math.round(s0*1.3/1000)*1000;wirk({art:'chefHalten',wert:0.3},{stab:x2.id,verein:v2.id},{titel:'Test'});const halten=x2.team===S.my&&x2.sal===s1;
+  B.sperreAb=0;wirk({art:'chefHalten',wert:0.3},{stab:x2.id,verein:v2.id},{titel:'Test'});const ohneFreigabe=!S.stab.includes(x2)&&!!tv(v2.id)&&tv(v2.id).n===x2.n;B.sperreAb=sp0;
+  wirk({art:'stabStreit',wert:60},{stab:x3.id},{titel:'Test'});const pochen=Math.abs(ev('stabStreitFaktor')(x3)-(1-ev('RST').streit.malus))<1e-9&&x3.team===S.my;
+  pruef(!!x1&&!!x2&&!!x3&&ohneWechsel===null&&passt&&zuSpaet===null&&einer===null&&weg&&zweites===null&&halten&&ohneFreigabe&&pochen,
+    'Co-Trainer wird Cheftrainer: nur nach einem frischen Trainerwechsel, nur der ehrgeizige, nicht als einziger Co-Trainer, kein zweites Mal; ziehen lassen mit Ablöse, halten mit mehr Gehalt, ohne Freigabe geht er, pochen schwächt ihn',
+    `ehrgeizig gefunden ${!!x1}, nicht ehrgeizig ${!!x2}/${!!x3}, ohne Wechsel ${ohneWechsel}, Auslöser ${passt}, zu spät ${zuSpaet}, einziger ${einer}, ziehen lassen ${weg} (Ablöse ${a}), zweites Angebot ${zweites}, halten ${halten}, ohne Freigabe ${ohneFreigabe}, pochen ${pochen}`);}
 
 // U19e. Europapokal-Karten (K37 §8): Auswärtsspiel bei einem Auslandsverein in den nächsten 7 Tagen (kein Heimspiel, nicht später, nicht das Finale), Spiel 1 bis 7 Tage her,
 //       Wunder nach 0:3 im Hinspiel und 4:0 oder 3:0 mit Elfmeterschießen im Rückspiel, nicht nach nur einem Tor Rückstand und nicht beim Ausscheiden. euMeineSpiele ersetzt der Test.
