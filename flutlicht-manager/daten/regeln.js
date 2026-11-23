@@ -656,7 +656,8 @@ const REGELN={
     // gehen nur bei sehr jungen Spielern (bis jungBis) oder mit dem Merkmal „vielseitig“. Torwart ist ausgeschlossen, in beide Richtungen.
     // Punkte je Woche: verwandt (Startwert ab verwandtAb) oder fremd, mal Tempo nach Alter. Höchstwert: max (vielseitig maxVielseitig, entfernte Position fernMax)
     // plus Abzug nach Alter. Ein Spieler lernt in seiner Laufbahn höchstens so viele Positionen dazu (positionen, mit „vielseitig“ positionenVielseitig).
-    umschulung:{verwandt:4,fremd:2,verwandtAb:75,max:90,maxVielseitig:95,fernMax:85,jungBis:19,
+    // einsatzMinuten, einsatzTage (K07g, 23.11., GESCHÄTZT): Ein Einsatz auf der neuen Position ab einsatzMinuten zählt wie eine Trainingswoche zusätzlich, höchstens einmal in einsatzTage Tagen
+    umschulung:{einsatzMinuten:45,einsatzTage:7,verwandt:4,fremd:2,verwandtAb:75,max:90,maxVielseitig:95,fernMax:85,jungBis:19,
       tempo:[[19,1.25],[23,1],[27,0.8],[30,0.6]],tempoSonst:0.4,
       maxAlter:[[23,0],[27,-2],[30,-5]],maxAlterSonst:-8,
       positionen:1,positionenVielseitig:2},

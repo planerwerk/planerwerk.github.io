@@ -103,6 +103,10 @@ function umschulungHinweis(p){const U=RT.umschulung,gel=umgeschult(p);if(p.pos==
   else teile.push(hatMk(p,'vielseitig')?'Vielseitig: auch entfernte Positionen und eine zweite Umschulung sind möglich.':p.age<=U.jungBis?`Bis ${U.jungBis} Jahre sind auch entfernte Positionen möglich, danach nur noch Nachbarpositionen.`:'Möglich sind nur Nachbarpositionen. Torwart nie.');
   const t=umschulungTempo(p);teile.push(t>1?'Er lernt schnell.':t<0.7?'In seinem Alter lernt er langsam und erreicht weniger.':'');return teile.filter(Boolean).join(' ');}
 const umschulungZiele=p=>Object.keys(RP.positionsNamen).filter(x=>!umschulungGrund(p,x));
+// Einsatz auf der neuen Position (K07 §3.3, K07g): zählt wie eine Trainingswoche zusätzlich, ab RT.umschulung.einsatzMinuten Minuten,
+// höchstens einmal in einsatzTage Tagen (p.umE: absoluter Tag des letzten gezählten Einsatzes), damit eine englische Woche nicht doppelt zählt. Ohne Zufall.
+function umschulungEinsatz(p,pos,min){const U=RT.umschulung;if(!p||!p.um||pos!==p.um||!(min>=U.einsatzMinuten))return false;const h=absTag(S.tag);
+  if(p.umE!=null&&h-p.umE<U.einsatzTage)return false;p.umE=h;umschulungWoche(p);return true;}
 function umschulungWoche(p){if(!p.um||p.team<0||p.inj>0)return;const U=RT.umschulung,pos=p.um;if(umschulungGrund(p,pos)){p.um=null;return;}
   const max=umschulungMax(p,pos),basis=eignungOhneTraining(p,pos);p.ue=p.ue||{};
   // ohne Fußabzug: verwandt ist, was nah beieinander liegt

@@ -81,7 +81,12 @@ Der Plan ist eine Tabelle **„Tage bis zum nächsten Spiel / Tage seit dem letz
   - **Tempo:** 4 Punkte pro Woche bei Positionen mit Startwert ab 75 %, sonst 2 Punkte, mal Alter: bis 19 Jahre ×1,25, bis 23 ×1, bis 27 ×0,8, bis 30 ×0,6, darüber ×0,4.
   - **Höchstwert:** Nachbarposition 90 % (mit „vielseitig“ 95 %), entfernte Position 85 %. Nach Alter weniger: bis 23 Jahre voll, bis 27 Jahre −2, bis 30 Jahre −5, darüber −8. Liegt der Höchstwert nicht über dem, was er dort schon kann, gibt es keine Umschulung.
   - **Selten:** Ein Spieler lernt in seiner Laufbahn eine Position dazu, mit „vielseitig“ zwei. Die Umschulung belegt einen Einzeltrainingsplatz. Computer-Vereine schulen nicht um.
-  - Einsätze auf der neuen Position zählen wie eine Trainingswoche zusätzlich (noch nicht gebaut).
+  - Einsätze auf der neuen Position zählen wie eine Trainingswoche zusätzlich. **Gebaut als K07g** (23.11.2026, popolupo, ohne Testlauf, Werte vorläufig):
+    - Ab 45 Minuten auf genau der Position, auf die er umschult, gleich in welchem Spiel (auch Testspiele).
+    - Höchstens einmal in 7 Tagen (`p.umE`), sonst brächte eine englische Woche drei Wochen Fortschritt.
+    - Gerechnet wird wie in der Trainingswoche, also mit Alter, Co-Trainer und genug Training. Ohne Zufall.
+    - Nur wer eine Umschulung hat. Die setzt nur der Spieler von Hand, Computer-Vereine schulen nicht um. Der Gleichschritt bleibt darum gleich.
+    - Regelwerte: `RT.umschulung.einsatzMinuten` und `einsatzTage`.
 - **Plätze:** Wie viele Spieler gleichzeitig Einzeltraining haben, hängt vom Stab ab (K16). Bis dahin 5 Plätze im Kader.
 - Gespeichert am Spieler: Lernziele `ls` (K03), trainierte Eignungen `ue = {Position: Wert}` (bis UL irrtümlich im Feld `eig`), abgeschlossene Umschulungen `uf`.
 

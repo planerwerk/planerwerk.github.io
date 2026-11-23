@@ -418,6 +418,7 @@ lizenz:{
 175. **K19f Spieler will nur zu dir (23.11., popolupo, ohne Testlauf):** keine neue Funktion, eine Entscheidungskarte im Bereich `ereignisse`. Der Nachlass liegt nur in der Verhandlung. Kaufen kann man erst mit dem Bereich `transfers` wie sonst auch.
 176. **U12n Ein Ausweg im Ultimatum (23.11., popolupo, ohne Testlauf):** keine neue Funktion, eine Entscheidungskarte im Bereich `ereignisse`, wie das Jobangebot (Nr. 85). Den Trainerjob wechselst du in jeder Lernstufe selbst.
 177. **K29m Sticheleien unter Computer-Trainern (23.11., popolupo, ohne Testlauf):** keine neue Funktion, nur Meldungen aus der Welt. Sie hängen an keinem Bereich.
+178. **K07g Einsätze auf der Umschulungsposition (23.11., popolupo, ohne Testlauf):** keine neue Funktion. Eine Umschulung gibt es erst mit dem Bereich `umschulung`, die Einsätze zählen dann von selbst.
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 

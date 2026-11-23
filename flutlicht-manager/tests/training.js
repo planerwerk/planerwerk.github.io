@@ -74,4 +74,13 @@ console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
   pruef(typeof falsch==='string'&&k==='e1'&&p1.join()==='regeneration,leicht'&&m1.join()==='vorbereitung,leicht'&&mi.join()==='kondition,normal'&&fremd!==k&&typeof voll==='string'&&weg,
     'Eigene Vorlagen: gültig gebaut, nach Abstand zum Spiel, nicht für andere Vereine, Höchstzahl, Löschen',`ungültig ${typeof falsch}, Kennung ${k}, Tag danach ${p1}, Tag davor ${m1}, Mitte ${mi}, anderer Verein ${fremd}, voll ${typeof voll}, gelöscht ${weg}`);}
 
+// K07g. Einsatz auf der neuen Position (K07 §3.3): zählt wie eine Trainingswoche zusätzlich, ab 45 Minuten, höchstens einmal in 7 Tagen; andere Position, kurzer Einsatz
+//       oder ohne Umschulung nichts. Ein Innenverteidiger schult auf Linksverteidiger um (wie im ersten Umschulungsfall).
+{const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S,ev=W.ev,U=ev('RT').umschulung,ein=ev('umschulungEinsatz');
+  const p=S.pl.find(x=>x.team>=0&&x.fp==='IV'&&!x.mk.vielseitig&&!(x.inj>0));p.age=22;p.ue={};p.uf=[];p.um='LV';p.wt=5;delete p.umE;
+  const w=()=>(p.ue&&p.ue.LV)||0,kurz=ein(p,'LV',U.einsatzMinuten-1),anders=ein(p,'IV',90),v0=w(),erst=ein(p,'LV',90),v1=w(),gleich=ein(p,'LV',90),v2=w();
+  S.tag+=U.einsatzTage;p.wt=5;const spaeter=ein(p,'LV',U.einsatzMinuten),v3=w();p.um=null;const ohne=ein(p,'LV',90);
+  pruef(!kurz&&!anders&&erst&&v1>v0&&!gleich&&v2===v1&&spaeter&&v3>v2&&!ohne,'Umschulung: Einsatz auf der neuen Position zählt wie eine Trainingswoche, einmal in 7 Tagen, nicht zu kurz, nicht auf anderer Position',
+    `zu kurz ${kurz}, andere Position ${anders}, erster Einsatz ${erst} (${v0} → ${v1}), gleiche Woche ${gleich}, eine Woche später ${spaeter} (${v3}), ohne Umschulung ${ohne}`);}
+
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

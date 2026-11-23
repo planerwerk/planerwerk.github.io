@@ -330,7 +330,7 @@ function applyMatch(r,cup){return mitStrom(strom('nachspiel',S.season,S.tag,r.h,
 function applyMatchLauf(r,cup){const N=RE.note,V=RP.selbstvertrauen;
   [0,1].forEach(s=>{const tid=s?r.a:r.h;if(tid>=1000)return;const gf=s?r.ag:r.hg,ga=s?r.hg:r.ag,res=gf>ga?1:gf<ga?-1:0;
     const xgF=r.xg0[s],E=erwartung(xgF,r.xg0[1-s]),eres=E.sieg-E.niederlage;
-    r.xpo[s].forEach(([id,,anteil,min=90])=>{const p=PIX.get(id);if(!p)return;p.apps++;nachSpiel(p,min);
+    r.xpo[s].forEach(([id,pos,anteil,min=90])=>{const p=PIX.get(id);if(!p)return;p.apps++;nachSpiel(p,min);if(p.um)umschulungEinsatz(p,pos,min); /* K07g */
       const goals=r.ev.filter(e=>e.t==='G'&&e.p===id).length;if(cup)p.pg=(p.pg||0)+goals;else if(r.eu)p.eg=(p.eg||0)+goals;else if(!r.rel&&!r.supercup)p.g+=goals;if(min<N.mindestMinuten){p.played=1;return;} // Kurzeinsatz: keine Note
       const fest=N.basis-(p.str-N.staerkeMitte)/N.staerkeTeiler;
       let gr=fest-res*N.ergebnis-goals*N.tor+(R()-0.5)*N.zufall;if(r.off.includes(id))gr+=N.platzverweis;gr=clamp(Math.round(gr*2)/2,N.min,N.max);
