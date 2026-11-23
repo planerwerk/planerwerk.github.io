@@ -148,6 +148,15 @@ Zusage = Grundwert × Niveau × Kalender × Region × Phase   (begrenzt auf 0,05
 
 **Gebaut als Karten** (22.11.2026, popolupo, ohne Testlauf, K30e, Info-Karten mit Wirkung): „Dorfverein im Ausnahmezustand“ (Fans +1) und „Blamage gegen Amateure“ (Vertrauen −1, Fans −1), je bis 7 Tage nach dem Testspiel. Seit K11f „Turniersieg“ (Selbstvertrauen des Kaders +1, bis 7 Tage nach dem gewonnenen Finale des Sommerturniers). Lagerkoller und Ablenkung gibt es als Meldungen im Lager. Die übrigen fehlen noch.
 
+**Gebaut als K11g** (23.11.2026, popolupo, ohne Testlauf, Werte vorläufig): Die Meldungen bleiben, dazu kommen zwei Entscheidungskarten. Es sind Anlasskarten, sie kommen montags.
+- **Lagerkoller:** Chance 0,6, im laufenden Lager nach einem Koller (`l.koller`).
+  - Freier Abend: Stimmung des Kaders +2, Glaubwürdigkeit −1.
+  - Durchziehen: Stimmung −1, Glaubwürdigkeit +1. Das ist die Voreinstellung.
+  - Früher abreisen: Das Lager endet heute, bezahlt ist es schon. Neue Kartenwirkung `lagerEnde`, Stimmung +1.
+- **Ausflug ins Nachtleben:** Chance 0,8, nachdem ein Partylöwe im Lager mit Ablenkung nachts gesehen wurde (`l.gesehen`).
+  - Geldstrafe (wie bei der Partynacht), Gespräch (Voreinstellung) oder ignorieren.
+- Zimmerkollegen und das Traumtor des Neuzugangs fehlen weiter. Dafür bräuchte es Zimmerbelegung und Integration.
+
 ## 9. Wechselwirkungen
 
 | Konzept | Zusammenspiel |

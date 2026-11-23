@@ -409,6 +409,7 @@ lizenz:{
 166. **K18f Talent aus dem Nichts (23.11., popolupo, ohne Testlauf):** keine neue Funktion, eine Entscheidungskarte im Bereich `ereignisse`. Die Automatik sagt ab.
 167. **K30g Manipulation in der 3. Liga (23.11., popolupo, ohne Testlauf):** keine neue Funktion, eine Meldung mit Wirkung im Bereich `ereignisse`.
 168. **U12m Mitglieder als Stimmen (23.11., popolupo, ohne Testlauf):** keine neue Funktion, kein neuer Bereich. Die Präsidentenwahl läuft ohne Automatik, für alle Vereine gleich.
+169. **K11g Lager-Ereignisse (23.11., popolupo, ohne Testlauf):** keine neue Funktion, zwei Entscheidungskarten im Bereich `ereignisse`. Ein Trainingslager gibt es ohnehin erst mit dem Bereich `lager`.
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 

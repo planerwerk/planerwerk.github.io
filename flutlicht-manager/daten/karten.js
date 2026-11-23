@@ -255,6 +255,17 @@ const KARTEN=[
   {id:'wettbetrug',titel:'Wettskandal',bereich:'K30',art:'info',stufe:'gelegentlich',ausloeser:'wettbetrug',sperrTage:3650,
     texte:['{spieler} von {verein} hat auf Spiele der eigenen Mannschaft gewettet. Das Sportgericht sperrt ihn für viele Monate.','Ermittler haben Wetten von {spieler} auf Spiele von {verein} gefunden. Er ist für viele Monate gesperrt.'],
     wirkung:[{art:'wettsperre',wert:1}]},
+  // Trainingslager (K11 §8, K11g, 23.11., popolupo): Entscheidungen zu Lagerkoller und Ablenkung (die Meldungen aus dem Lager bleiben). Werte vorläufig.
+  {id:'lagerkoller',titel:'Lagerkoller',bereich:'K11',art:'entscheidung',gross:false,stufe:'haeufig',chance:0.6,ausloeser:'lagerkoller',sperrTage:30,
+    texte:['Nach vielen Tagen im Lager liegen die Nerven blank. Der Kapitän fragt, ob die Mannschaft einen Abend frei bekommt.','Im Lager wird gemeckert: immer dasselbe Hotel, dieselben Gesichter, dieselben Einheiten. Die Spieler wollen raus.'],
+    optionen:[{text:'Einen freien Abend geben',wirkung:[{art:'stimmungAlle',wert:2},{art:'glaub',wert:-1}],folge:'Die Mannschaft geht gemeinsam essen. Am nächsten Morgen sind nicht alle ganz frisch.'},
+      {text:'Durchziehen',wirkung:[{art:'stimmungAlle',wert:-1},{art:'glaub',wert:1}],folge:'Der Plan bleibt. Einige murren, aber die Einheiten laufen.'},
+      {text:'Früher abreisen',wirkung:[{art:'lagerEnde',wert:1},{art:'stimmungAlle',wert:1}],folge:'Das Lager endet heute. Die Kosten sind schon bezahlt, die Spieler freuen sich auf zu Hause.'}],auto:1},
+  {id:'nachtleben',titel:'Ausflug ins Nachtleben',bereich:'K11',art:'entscheidung',gross:false,stufe:'haeufig',chance:0.8,ausloeser:'nachtleben',sperrTage:30,
+    texte:['{spieler} ist im Trainingslager nachts durch die Bars gezogen. Ein Foto davon macht die Runde.','Der Hotelportier hat {spieler} um vier Uhr morgens hereingelassen. Die Mannschaft weiß Bescheid.'],
+    optionen:[{text:'Geldstrafe verhängen',wirkung:[{art:'geld',wert:5000},{art:'stimmung',wert:-3},{art:'glaub',wert:1}],folge:'{spieler} zahlt und entschuldigt sich vor der Mannschaft.'},
+      {text:'Unter vier Augen reden',wirkung:[{art:'stimmung',wert:-1}],folge:'{spieler} verspricht, sich für den Rest des Lagers zurückzuhalten.'},
+      {text:'Ignorieren',wirkung:[{art:'glaub',wert:-1},{art:'zusammenhalt',wert:-1}],folge:'Die anderen haben genau hingesehen.'}],auto:1},
   // Manipulation in der 3. Liga (K30 §8.4, K30g, 23.11., popolupo): Weltereignis, Sperre wie beim Wettskandal und Punktabzug für den Verein. Werte vorläufig.
   {id:'manipulation3',titel:'Manipulation in der 3. Liga',bereich:'K30',art:'info',stufe:'selten',ausloeser:'manipulation3',sperrTage:3650,immer:true, /* immer gemeldet, auch über der Info-Grenze (Prüfung ER3) */
     texte:['Ermittler decken auf: {spieler} von {verein} hat Spiele gegen Geld beeinflusst. Er ist für viele Monate gesperrt, {verein} bekommt 3 Punkte abgezogen.','Wettskandal in der 3. Liga: {spieler} hat für eine Wettmafia Spiele von {verein} verschoben. Das Sportgericht sperrt ihn und zieht {verein} 3 Punkte ab.'],

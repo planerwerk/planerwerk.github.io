@@ -469,6 +469,13 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   pruef(ok&&abzug&&nieMein&&gesperrt&&wieder&&fertig,'Manipulation in der 3. Liga: Spieler eines Drittligisten gesperrt, Punktabzug für seinen Verein, nie für deinen, höchstens einmal in zehn Saisons, nicht nach dem letzten Spieltag',
     `Verein ${t&&t.name}, Punkte ${p0} → ${pkt()}, gesperrt ${p?si(p,'liga')>l0:'-'}, dein Verein unberührt ${nieMein}, gleich danach ${gesperrt}, nach ${SK.abstand} Saisons ${wieder}, Liga fertig ${fertig}`);}
 
+// K11g. Lager-Ereignisse (K11 §8): Lagerkoller nur im laufenden Lager nach einem Koller, Nachtleben nur nach einer Sichtung (l.gesehen); „Früher abreisen“ beendet das Lager heute.
+{const {S,F,ev}=welt(),A=ev('AUSLOESER'),kw=ev('kartenWirkung');S.phase='play';S.lager=[];F.lagerBuchenLauf('riviera',S.tag-2,8);const l=S.lager[0];
+  const ohneKoller=A.lagerkoller(),ohneSicht=A.nachtleben();l.koller=1;const koller=A.lagerkoller();const p=ev('squad')(S.my)[0];l.gesehen=[p.id];const nacht=A.nachtleben();
+  kw({art:'lagerEnde',wert:1},{lager:l.von},{titel:'Test'});const ende=l.bis===S.tag&&A.lagerkoller()===null&&ev('lagerAktiv')(S.tag+1)===null;
+  pruef(ohneKoller===null&&ohneSicht===null&&!!koller&&koller.lager===l.von&&!!nacht&&nacht.spieler===p.id&&ende,'Lager-Ereignisse: Koller und Nachtleben nur mit Anlass, früher abreisen beendet das Lager',
+    `ohne Koller ${ohneKoller}, ohne Sichtung ${ohneSicht}, Koller ${!!koller}, Nachtleben ${!!nacht&&nacht.spieler===p.id}, Ende ${ende}`);}
+
 // U19e. Europapokal-Karten (K37 §8): Auswärtsspiel bei einem Auslandsverein in den nächsten 7 Tagen (kein Heimspiel, nicht später, nicht das Finale), Spiel 1 bis 7 Tage her,
 //       Wunder nach 0:3 im Hinspiel und 4:0 oder 3:0 mit Elfmeterschießen im Rückspiel, nicht nach nur einem Tor Rückstand und nicht beim Ausscheiden. euMeineSpiele ersetzt der Test.
 {const {S,W,ev}=welt(),A=ev('AUSLOESER'),AV=ev('AV0'),me=S.my,d=S.tag;W.ev('euMeineSpiele=function(){return S.testEu||[];}');
