@@ -403,6 +403,7 @@ lizenz:{
 160. **K27e Fankultur bei Fans und Vorstand (23.11., popolupo, ohne Testlauf):** keine neue Funktion, kein neuer Bereich. Die Fanstimmung wird ohne Automatik gerechnet. Das Abwerben (Bereich `abwerben`, ohne Automatik) kostet beim Auffliegen je nach Fankultur mehr Vertrauen.
 161. **K06e Standard-Spezialisten (23.11., popolupo, ohne Testlauf):** keine neue Funktion, eine Meldung mit Wirkung im Bereich `ereignisse`.
 162. **K15e Streit nach Kritik (23.11., popolupo, ohne Testlauf):** keine neue Funktion, eine Entscheidungskarte im Bereich `ereignisse`.
+163. **K26f Anwohner klagen (23.11., popolupo, ohne Testlauf):** keine neue Funktion, eine Entscheidungskarte im Bereich `ereignisse`. Bauen kann man ohnehin erst mit der Freigabe des Bereichs `stadion`.
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 

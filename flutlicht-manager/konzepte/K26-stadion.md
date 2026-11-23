@@ -134,6 +134,14 @@ Bauen nach Nachfrage und Budget: Tribünen, wenn die Auslastung zwei Saisons üb
 
 **Stand 22.11.2026:** Bauverzögerung, Auflagen (Lärmschutz, Verkehr) und Mehrkosten kommen seit K26a als Meldungen im Bauablauf. „Stadt bietet Zuschuss“ seit K26e (ohne Testlauf) als große Entscheidungskarte bei einem Bauprojekt ab 5 Mio. €: annehmen bringt 15 % der Baukosten (neue Kartenwirkung `zuschuss`), dafür sinkt der Ticketpreis auf den Richtpreis. Seit Prüfung ED1 sinkt er höchstens auf den Richtpreis, ein niedrigerer Preis bleibt. „Rasen nach Frost kaputt“ fehlt (Rasenqualität ist zurückgestellt).
 
+**Gebaut als K26f** (23.11.2026, popolupo, ohne Testlauf, Werte vorläufig): „Anwohner klagen“ als Entscheidungskarte (Anlasskarte, Chance 0,1 je Woche).
+- **Auslöser:** Tribünenausbau oder Dach wartet noch mindestens eine Woche auf die Genehmigung, bei diesem Projekt gab es noch keine Klage.
+- **Wahl:**
+  - Reden und Lärmschutz bezahlen: 150.000 € in der 1. Liga, nach Liga wie alle Kartenbeträge (K23f).
+  - Es auf die Klage ankommen lassen: mit 50 % weist das Gericht sie ab, sonst kommt die Genehmigung 3 Wochen später.
+- **Verzögerung:** Baubeginn und Fertigstellung verschieben sich (`S.constr.klage` in Wochen, das Ende `bis` um dieselbe Zeit). `ab` bleibt als Kennung des Projekts, wie beim Zuschuss (Prüfung ED6). Die Baustelle zeigt „Anwohner haben geklagt“.
+- Nur dein Verein, Karten sind im Gleichschritt aus.
+
 ## 9. Wechselwirkungen
 
 K04 (Heimvorteil), K07 (Trainingsgelände), K08 (Nachwuchszentrum), K10 (Reha), K13 (Spielverlegung), K16 (Platzwart, Physio), K23 (Kosten, Kredit), K24 (Namensrechte, Logen), K25 (Fanshop), K27 (Kapazität, Stehplätze, Stimmung).

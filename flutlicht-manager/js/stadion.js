@@ -33,7 +33,7 @@ function bauStarten(k){if(!darf('stadion'))return;const t=myT();if(S.constr){toa
 // Täglich (ablauf.js taeglichLauf, statt der alten Prüfung): Baubeginn, Verzögerung, Ende
 function bauTag(d){const c=S.constr;if(!c)return;const t=myT(),heute=absTag(d);
   if(c.phase==null){if(d>=c.bis)bauFertig(c,t);return;} // alter Stand: Tag der Saison wie bisher
-  if(c.phase==='genehmigung'&&heute>=c.ab){c.phase='bau';let txt=`Baubeginn: ${c.label}.`;
+  if(c.phase==='genehmigung'&&heute>=c.ab+(c.klage||0)*7){c.phase='bau'; /* Klage der Anwohner verzögert die Genehmigung (K26f, c.klage Wochen) */let txt=`Baubeginn: ${c.label}.`;
     if(c.auflage){const x=Math.round(c.kosten*c.auflage/1000)*1000;money('Stadionbau',-x);c.kosten+=x;txt+=` Die Genehmigung kommt mit Auflagen (Lärmschutz, Verkehr): ${fmt(x)} mehr.`;}
     if(c.k==='cap'){t.cap=Math.max(0,t.cap-RB.tribuene.plaetze);txt+=` Während des Baus fehlen ${RB.tribuene.plaetze.toLocaleString('de-DE')} Plätze.`;}news(txt+` Fertig am ${datumKurz(c.bis-absTag(0))}.`);}
   if(c.phase==='bau'&&heute>=c.bis){if(c.verzug&&!c.gemeldet){c.gemeldet=1;c.bis+=c.verzug*7;news(`Bauverzögerung: ${c.label} wird ${c.verzug} Woche${c.verzug>1?'n':''} später fertig, am ${datumKurz(c.bis-absTag(0))}.`,'bad');return;}bauFertig(c,t);}}
@@ -50,7 +50,7 @@ function instandhaltung(){const t=myT();if(t.bausumme>0)money('Instandhaltung',-
 // Karte im Stadion: Anlagen und Baustelle
 function anlagenKarte(){const t=myT(),c=S.constr,W={training:`Entwicklung im Training × ${de(gelaendeFaktor(S.my),2)}, Verletzungsrisiko × ${de(gelaendeRisiko(S.my),2)}`,nlz:`Deckel des Jugendniveaus ${jugendDeckel()}`,
     reha:`Ausfallzeit × ${de(rehaFaktor(S.my),2)}`,dach:`Heimvorteil +${de(RB.anlagen.dach.heim*100,1)} %, wenn das Stadion voll ist${anlage(t,'dach')?'':' (nach dem Bau)'}`,catering:anlage(t,'catering')?'Zuschauereinnahmen +5 %':'Zuschauereinnahmen +5 % nach dem Bau',tafel:anlage(t,'tafel')?'Zuschauereinnahmen +3 %':'Zuschauereinnahmen +3 % nach dem Bau'};
-  const bau=c?(c.phase==='genehmigung'?`<p><b>Baustelle:</b> ${esc(c.label)}, Genehmigung läuft, Baubeginn etwa am ${esc(datumKurz(c.ab-absTag(0)))}.</p>`:`<p><b>Baustelle:</b> ${esc(c.label||'')}, fertig am ${esc(datumKurz((c.phase?c.bis-absTag(0):c.bis)))}.</p>`):'';
+  const bau=c?(c.phase==='genehmigung'?`<p><b>Baustelle:</b> ${esc(c.label)}, Genehmigung läuft${c.klage?', Anwohner haben geklagt':''}, Baubeginn etwa am ${esc(datumKurz(c.ab+(c.klage||0)*7-absTag(0)))}.</p>`:`<p><b>Baustelle:</b> ${esc(c.label||'')}, fertig am ${esc(datumKurz((c.phase?c.bis-absTag(0):c.bis)))}.</p>`):'';
   return`<div class="card"><h2>Anlagen</h2>${lzHinweis('stadion')}${bau}<table><tbody>${ANLAGEN.map(k=>{const A=RB.anlagen[k],st=anlage(t,k),voll=st>=A.max;
     return`<tr><td><b>${esc(A.name)}</b> <span class="dim">Stufe ${st} von ${A.max}</span><br><span class="dim">${esc(W[k])}</span></td><td>${voll?'<span class="dim">ganz ausgebaut</span>':`<button onclick="startBuild('${k}')"${lzAus('stadion')}${c?' disabled':''}>Ausbauen (${fmt(anlageKosten(t,k))}, ${A.wochen} Wochen)</button>`}</td></tr>`;}).join('')}</tbody></table>
     <p class="dim">Jeder Bau braucht erst eine Genehmigung (2 bis 8 Wochen, manchmal mit Auflagen). Etwa ein Drittel der Bauten wird später fertig, manche teurer. Instandhaltung: 1 % der Bausumme im Jahr${t.bausumme?`, zurzeit ${fmt(Math.round(t.bausumme*RB.instandhaltung))}`:''}.</p></div>`;}

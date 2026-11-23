@@ -298,5 +298,10 @@ const KARTEN=[
     texte:['{spieler} hat den Streit nach deiner Kritik nicht vergessen. In der Kabine redet er schlecht über dich.','Seit dem lauten Gespräch mit {spieler} ist die Stimmung in der Kabine angespannt. Die Mannschaft wartet, wie du reagierst.'],
     optionen:[{text:'Die Hand reichen und sich aussprechen',wirkung:[{art:'stimmung',wert:4,chance:0.6,schlecht:-1,gut:'Ihr redet in Ruhe. {spieler} gibt zu, dass er überreagiert hat.',schlechtText:'{spieler} nimmt die Hand, aber das Eis bleibt dünn.'}]},
       {text:'Hart bleiben, die Kritik gilt',wirkung:[{art:'stimmung',wert:-3},{art:'glaub',wert:1},{art:'zusammenhalt',wert:-1}],folge:'Du bleibst bei deiner Kritik. {spieler} schweigt, die Kabine hat es registriert.'},
-      {text:'Es aussitzen',wirkung:[{art:'glaub',wert:-1},{art:'vertrauen',wert:-1}],folge:'{spieler} erzählt einem Reporter von eurem Streit. Die Zeitung macht eine Geschichte daraus, der Vorstand liest mit.'}],auto:0}
+      {text:'Es aussitzen',wirkung:[{art:'glaub',wert:-1},{art:'vertrauen',wert:-1}],folge:'{spieler} erzählt einem Reporter von eurem Streit. Die Zeitung macht eine Geschichte daraus, der Vorstand liest mit.'}],auto:0},
+  // Anwohner klagen (K26 §8, K26f, 23.11., popolupo): Anlasskarte, solange Tribüne oder Dach auf die Genehmigung warten (REGELN.karten.stadion.anwohner). Werte vorläufig.
+  {id:'anwohnerKlagen',titel:'Anwohner klagen',bereich:'K26',art:'entscheidung',gross:false,stufe:'haeufig',chance:0.1,ausloeser:'anwohnerKlagen',sperrTage:365,
+    texte:['Eine Bürgerinitiative klagt gegen deinen Stadionausbau: mehr Lärm, mehr Verkehr, mehr Licht. Die Genehmigung könnte sich verzögern.','Anwohner haben beim Verwaltungsgericht Klage gegen den Ausbau eingereicht. Der Anwalt des Vereins rät zu einem Gespräch.'],
+    optionen:[{text:'Mit den Anwohnern reden und Lärmschutz bezahlen',wirkung:[{art:'geld',wert:-150000}],folge:'Neue Schallschutzwände und ein Parkkonzept: Die Anwohner ziehen die Klage zurück.'},
+      {text:'Es auf die Klage ankommen lassen',wirkung:[{art:'bauVerzug',wert:0,chance:0.5,schlecht:3,gut:'Das Verwaltungsgericht weist die Klage ab. Der Bau beginnt wie geplant.',schlechtText:'Das Gericht gibt den Anwohnern teilweise recht: Die Genehmigung kommt drei Wochen später.'}]}],auto:0}
 ];

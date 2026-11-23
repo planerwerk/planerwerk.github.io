@@ -412,7 +412,7 @@ const REGELN={
     presse:{leckUnter:45,viralTage:7,vorTage:7}, // Presse-Karten (K29 §8, K17 §8, K29k, 22.11., GESCHÄTZT): Leck bei Medienklima unter leckUnter; Fehde bei Beziehung unter RBZ.wirkung.gespraechUnter.
     // Seit K29l: „Spruch geht viral“ bis viralTage nach einem Eintrag in der Sprüche-Chronik; „Rivale greift deine Kampfansage auf“ bis vorTage vor dem Spiel gegen ihn
     sommer:{nachTestTage:14,sonderFrische:15}, // Sommerkarten (K12a §8, K12c, 22.11., GESCHÄTZT): Übergewicht bis nachTestTage nach dem Leistungstest; Sonderschichten kosten sonderFrische Frische
-    stadion:{zuschussAb:5e6}, // Stadt bietet Zuschuss (K26 §8, K26e, 22.11., GESCHÄTZT): bei einem Bauprojekt ab zuschussAb Kosten; Anteil in der Karte (Wirkung zuschuss)
+    stadion:{zuschussAb:5e6,anwohner:['cap','dach']}, // anwohner: Bauten, gegen die Anwohner klagen können (K26f, 23.11.). Stadt bietet Zuschuss (K26 §8, K26e, 22.11., GESCHÄTZT): bei einem Bauprojekt ab zuschussAb Kosten; Anteil in der Karte (Wirkung zuschuss)
     vertrag:{neidUnter:0.7,neidStimmung:55,provisionTage:60}, // Vertragskarten (K21 §8, K22 §8, K21c, 22.11., GESCHÄTZT): Gehaltsneid unter neidUnter × Marktgehalt und Stimmung unter neidStimmung; Provisionsstreit bis provisionTage nach dem Wechsel
     fans:{preisFaktor:1.3,protestUnter:50,wwAb:3}, // Fan-Karten (K27 §8, K27c, 22.11., GESCHÄTZT): Protest ab Preis × preisFaktor über dem Richtpreis bei Fanstimmung unter protestUnter; Pfiffe gegen Spieler ab Wechselwunsch wwAb
     stab:{qAb:14,ansehenPlus:5,abloese:1}, // Mitarbeiter abgeworben (K16 §8, K16c, 22.11., GESCHÄTZT): Qualität ab qAb, Verein mit Ansehen ab deinem + ansehenPlus und freiem Platz; Ablöse abloese × Jahresgehalt, halten: Gehalt + wert aus der Karte

@@ -421,6 +421,16 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   p.streit=h-T-1;p.gs=[[h-T-1,'kritik']];const alt=A.streitNachKritik();delete p.streit;const ohne=A.streitNachKritik();
   pruef(!!kritik&&kritik.spieler===p.id&&lob===null&&alt===null&&ohne===null,'Streit nach Kritik: nur nach Kritik, nur bis streitTage danach',`nach Kritik ${kritik&&kritik.spieler===p.id}, nach Lob ${lob}, zu alt ${alt}, ohne Streit ${ohne}`);}
 
+// K26f. Anwohner klagen (K26 §8): nur bei Tribüne oder Dach in der Genehmigung mit mindestens einer Woche Rest; verlorene Klage verschiebt Baubeginn und Ende um 3 Wochen,
+//       nur beim Projekt, um das es ging.
+{const {S,F,ev}=welt(),A=ev('AUSLOESER'),h=ev('absTag')(S.tag),kw=ev('kartenWirkung');S.phase='play';
+  S.constr={k:'cap',label:'Tribüne',phase:'genehmigung',ab:h+21,bis:h+21+70,kosten:5e6,auflage:0,verzug:0,mehr:0,gemeldet:0};const c=S.constr,da=A.anwohnerKlagen();
+  c.k='logen';const logen=A.anwohnerKlagen();c.k='cap';c.ab=h+3;const knapp=A.anwohnerKlagen();c.ab=h+21;
+  kw({art:'bauVerzug',wert:3},{bau:h+99},{titel:'Test'});const fremd=!c.klage&&c.bis===h+91;kw({art:'bauVerzug',wert:3},{bau:h+21},{titel:'Test'});const verschoben=c.klage===3&&c.bis===h+112,nochmal=A.anwohnerKlagen();
+  F.bauTag(S.tag+21);const nochNicht=c.phase==='genehmigung';F.bauTag(S.tag+42);const beginn=c.phase==='bau';S.constr=null;
+  pruef(!!da&&da.bau===h+21&&logen===null&&knapp===null&&fremd&&verschoben&&nochmal===null&&nochNicht&&beginn,'Anwohner klagen: nur Tribüne oder Dach in der Genehmigung, verlorene Klage verschiebt um 3 Wochen, nur dieses Projekt',
+    `Auslöser ${!!da}, Logen ${logen}, knapp ${knapp}, anderes Projekt unberührt ${fremd}, verschoben ${verschoben}, zweite Klage ${nochmal}, am alten Termin noch Genehmigung ${nochNicht}, 3 Wochen später Baubeginn ${beginn}`);}
+
 // U19e. Europapokal-Karten (K37 §8): Auswärtsspiel bei einem Auslandsverein in den nächsten 7 Tagen (kein Heimspiel, nicht später, nicht das Finale), Spiel 1 bis 7 Tage her,
 //       Wunder nach 0:3 im Hinspiel und 4:0 oder 3:0 mit Elfmeterschießen im Rückspiel, nicht nach nur einem Tor Rückstand und nicht beim Ausscheiden. euMeineSpiele ersetzt der Test.
 {const {S,W,ev}=welt(),A=ev('AUSLOESER'),AV=ev('AV0'),me=S.my,d=S.tag;W.ev('euMeineSpiele=function(){return S.testEu||[];}');
