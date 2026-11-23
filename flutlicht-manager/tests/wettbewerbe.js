@@ -59,10 +59,12 @@ pruef(supercups.length===N-1&&supercups.every(x=>!x.verl&&(x.hg!==x.ag)===!x.pen
   let e=null;for(let d=S4.tag+1;d<S4.plan.ende&&!e;d++){const x=F4.meinSpiel(d);if(x&&x.art==='liga')e=x;}
   let ok=false,info='kein Ligaspiel gefunden';
   if(e){S4.tag=e.tag-2;const sq=ev4('squad')(S4.my);sq.forEach(p=>{p.inj=0;});const voll=F4.spielVerlegenLauf();let n=sq.length;for(const p of sq){if(n<V.minSpieler)break;if(p.pos!=='TW'){p.inj=10;n--;}}
+    /* EI3, EI4 (Prüfung EJ): Termin vor dem nächsten eigenen Ligaspiel, Abstand zu einem Testspiel */const x0=F4.verlegungTag(e);let nl=Infinity;S4.fx[e.lg].forEach((md,k)=>{if(k<=e.md)return;md.forEach(([x,y],i)=>{if(x===S4.my||y===S4.my)nl=Math.min(nl,S4.plan.zeit[e.lg][k][i][0]);});});
+    S4.testspiele=[{id:99,tag:x0,gegner:1000,stand:'zugesagt'}];const mitTs=F4.verlegungTag(e);S4.testspiele=[];const vorNaechstem=x0!=null&&x0+M<=nl,tsAbstand=mitTs==null||Math.abs(mitTs-x0)>=M;
     const z=S4.plan.zeit[e.lg][e.md][e.i],alt=z[0],[h,a]=S4.fx[e.lg][e.md][e.i],r=F4.spielVerlegenLauf(),neu=z[0],Z=S4.plan.zeit[e.lg],letzter=Math.min(...Z[Z.length-1].map(x=>x[0]));
     const abstand=[h,a].every(id=>[...F4.spieltageVon(id,z)].every(x=>Math.abs(x-neu)>=M)),zweimal=F4.spielVerlegenLauf();
-    ok=typeof voll==='string'&&r===null&&neu>alt&&abstand&&neu<letzter&&ev4('wochentag')(neu)!==1&&typeof zweimal==='string'&&zweimal.includes('schon eine Verlegung'); /* EI5 */
-    info=`voller Kader ${typeof voll==='string'?'abgelehnt':voll}, Antrag ${r}, ${alt} → ${neu}, Abstand ${abstand}, vor dem letzten Spieltag ${neu<letzter}, zweiter Antrag ${typeof zweimal==='string'?'abgelehnt':zweimal}`;}
+    ok=typeof voll==='string'&&vorNaechstem&&tsAbstand&&r===null&&neu>alt&&abstand&&neu<letzter&&ev4('wochentag')(neu)!==1&&typeof zweimal==='string'&&zweimal.includes('schon eine Verlegung'); /* EI5 */
+    info=`voller Kader ${typeof voll==='string'?'abgelehnt':voll}, vor dem nächsten Ligaspiel ${vorNaechstem}, Abstand zum Testspiel ${tsAbstand}, Antrag ${r}, ${alt} → ${neu}, Abstand ${abstand}, vor dem letzten Spieltag ${neu<letzter}, zweiter Antrag ${typeof zweimal==='string'?'abgelehnt':zweimal}`;}
   pruef(ok,'Spielverlegung: nur bei Personalnot, neuer Termin mit Abstand, einmal je Saison',info);}
 
 console.log(`\n${N} Saison(s) in ${((Date.now()-t0)/1000).toFixed(1)} s`);

@@ -73,7 +73,7 @@ Erlös je Monat = Fans × Kaufkraft × Sortiment × Trikotfaktor × Erfolg × St
   - modern: Faktor 0,9 bis 1,15
   - mutig: halb und halb Kult (Faktor 1,25, Fanstimmung +3) oder Spott (Faktor 0,8, Fanstimmung −3), mit Meldung
   - Ohne Wahl nimmt der Verein vor dem ersten Pflichtspiel das klassische.
-  Tradition (K27) fehlt als Stammdatum, darum ist die Erwartung für alle gleich. Seit K25e (23.11.2026, popolupo, ohne Testlauf) gilt ein Verein mit Gründungsjahr bis 1910 (`gegr`, K27d) als Traditionsverein: Das klassische Trikot bringt dort Faktor +0,05 und Fans +1 mehr, das mutige wird nur mit 35 % statt 50 % Kult (geschätzt, vorläufig).
+  Tradition (K27) fehlt als Stammdatum, darum ist die Erwartung für alle gleich. Seit K25e (23.11.2026, popolupo, ohne Testlauf) gilt ein Verein mit Gründungsjahr bis 1910 (`gegr`, K27d) als Traditionsverein: Das klassische Trikot bringt dort Faktor +0,05 und Fans +1 mehr, das mutige wird nur mit 35 % statt 50 % Kult (geschätzt, vorläufig). Seit Prüfung EJ4 gelten Hoffenheim und Leverkusen trotz frühem Gründungsjahr nicht als Traditionsvereine (`tradition:false` in `VEREINE`, vorläufig).
 - **Kampagnen** (§5.1), Kosten in der 1. Liga, 2. Liga × 0,4, 3. Liga × 0,2:
 
   | Kampagne | Kosten | Dauer | Wirkung |

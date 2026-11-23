@@ -2158,6 +2158,27 @@ Korrekturen auf `mitarbeit/popolupo-ei-korrekturen-b` (auf K25e). Davor steht au
 | EI4 | K13d: Kam vorher ein Pokal- oder Europapokalspiel, war das Ligaspiel nie verlegbar. Jetzt sucht die Lage das nächste Ligaspiel in den 7 Tagen. Der neue Termin hält drei Tage Abstand zu deinen Testspielen. | ✅ behoben |
 | EI5 | Test K13d: Der zweite Antrag galt bei jeder Ablehnung als richtig. Jetzt muss der Grund „schon eine Verlegung“ sein. | ✅ behoben |
 
+## EJ. Prüfung von K30f, dem Doku-Abgleich, K27d, K25e und der Korrekturen EI ohne Laufzeit (23. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 4c5af2a, 5cedb2c, 6b57f75, ef4195a und 63acbe0 gelesen (nichts ausgeführt, zweiter Anlauf nach einem Netzwerkfehler). Kein blockierender Fehler, ein mittlerer.
+
+**Ohne Befund:**
+
+- **K27d:** Kennungen der Vereine sind die Indizes von `VEREINE`, `t.sh` ist das Kürzel. Zweite Mannschaften und Regionalliga ohne Jubiläum.
+- **Korrekturen EI:** „Sonderprämien“ stehen in Finanzansicht, Vorstand und Saisonbilanz, nicht in der Prognose. Die Grenze `weiter` stimmt. K13d findet für Freiburg den Mittwoch 2. September.
+- **K25e:** gleich viele Würfel, Fall 1 hält für Freiburg.
+- **Gleichschritt:** unberührt.
+
+Korrekturen auf `mitarbeit/popolupo-ej-korrekturen` (auf den Korrekturen EK).
+
+| # | Befund | Status |
+|---|---|---|
+| EJ1 | **Mittel: Die Transferliste aus dem Wettskandal hielt nur eine Woche.** `kiListe` räumt montags alle, die nicht im Abgabeplan stehen. Computer-Käufer nahmen ihn ohnehin nicht. Jetzt gibt es nur die Sperre, die Texte sprechen nicht mehr von der Transferliste. | ✅ behoben |
+| EJ2 | Der Skandal konnte einen Spieler deines Kaders treffen, der in der zweiten Mannschaft spielt (`zwP`, eigener Verein in der 3. Liga). Jetzt nie. Test K30f. | ✅ behoben |
+| EJ3 | Der Doku-Abgleich zu K05 Nr. 16 war falsch: Gemeint ist das Zuschauen vorher, gebaut ist nur der Endstand. Berichtigt, dazu der Hinweis auf die Live-Ansicht. | ✅ behoben |
+| EJ4 | Nach dem Gründungsjahr wären Hoffenheim (1899) und Leverkusen (1904) Traditionsvereine. In der Fankultur gelten sie als Gegenbeispiele. Jetzt `tradition:false` in `VEREINE` (vorläufig). Test K25e. | ✅ behoben, vorläufig |
+| EJ5 | Test K13d konnte EI3 und EI4 nicht vom alten Code unterscheiden. Jetzt prüft er den Termin vor dem nächsten eigenen Ligaspiel und den Abstand zu einem Testspiel. Hinweis zum Entwurf: In einer normalen Woche bleiben nur Dienstag und Mittwoch, mit Spielen unter der Woche gibt es oft keinen Ersatztermin. Das bleibt so, bis die Reihenfolge der Spieltage nach Datum gilt. | ✅ behoben, 📌 Entwurf |
+
 ## EK. Prüfung von K05c, K05d, K06c/K09e und K06d ohne Laufzeit (23. November 2026, popolupo, Prüf-Agent nur lesend)
 
 Ein Agent hat 066a25b, f74e03d, 50542cb und c1ef342 gelesen (nichts ausgeführt). Kein blockierender Fehler, zwei mittlere. Prüfung EJ (K30f bis zu den Korrekturen EI) war am 23.11. an einem Netzwerkfehler abgebrochen und läuft neu.

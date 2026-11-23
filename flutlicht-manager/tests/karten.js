@@ -326,9 +326,9 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
 {const {S,F,ev}=welt(),A=ev('AUSLOESER'),K=ev('RKT').skandal,kv=ev('karteVon'),si=ev('sperreIn'),st=ev('stimmung');S.phase='play';
   const w=A.wettpate(),p=w&&ev('PIX').get(w.spieler);if(p){st(p);p.st=50;}F.kartenZeigen(kv('wettpate'),w||{},S.tag,false);const lob=!!p&&p.team===S.my&&st(p)>50;
   const b=A.wettbetrug(),q=b&&ev('PIX').get(b.spieler),l0=q?si(q,'liga'):0,k0=q?si(q,'pokal'):0;F.kartenZeigen(kv('wettbetrug'),b||{},S.tag,false);
-  const gesperrt=!!q&&q.team!==S.my&&si(q,'liga')===l0+K.sperreLiga&&si(q,'pokal')===k0+K.sperrePokal&&q.list===1;
-  const mein=ev('squad')(S.my)[0],m0=si(mein,'liga');ev('kartenWirkung')({art:'wettsperre',wert:1},{spieler:mein.id},{titel:'Test'});const nieMein=si(mein,'liga')===m0;
-  pruef(lob&&gesperrt&&nieMein,'Skandale: Wettpate gemeldet (Stimmung steigt), Wettbetrug sperrt einen Spieler eines Computer-Vereins, nie deinen',`Wettpate ${lob}, gesperrt ${gesperrt}, dein Spieler unberührt ${nieMein}`);}
+  const gesperrt=!!q&&q.team!==S.my&&si(q,'liga')===l0+K.sperreLiga&&si(q,'pokal')===k0+K.sperrePokal;
+  const mein=ev('squad')(S.my)[0],m0=si(mein,'liga');ev('kartenWirkung')({art:'wettsperre',wert:1},{spieler:mein.id},{titel:'Test'});const nieMein=si(mein,'liga')===m0; /* EJ2: auch nicht in der Zweiten */const zw=ev('squad')(S.my)[1],z0=si(zw,'liga'),t0=zw.team;zw.zwP=1;zw.team=S.teams.find(t=>t.id!==S.my).id;ev('kartenWirkung')({art:'wettsperre',wert:1},{spieler:zw.id},{titel:'Test'});const nieZweite=si(zw,'liga')===z0;zw.team=t0;delete zw.zwP;
+  pruef(lob&&gesperrt&&nieMein&&nieZweite,'Skandale: Wettpate gemeldet (Stimmung steigt), Wettbetrug sperrt einen Spieler eines Computer-Vereins, nie deinen',`Wettpate ${lob}, gesperrt ${gesperrt}, dein Spieler unberührt ${nieMein}, in der Zweiten unberührt ${nieZweite}`);}
 
 // K27d. Jubiläum (K27 §8): Alle Vereine der drei Profiligen (ohne zweite Mannschaften) haben ein Gründungsjahr; die Karte kommt nur im Kalenderjahr eines Vielfachen
 //       von 25 Jahren (ab 25), nicht im Gründungsjahr selbst und nicht in krummen Jahren.

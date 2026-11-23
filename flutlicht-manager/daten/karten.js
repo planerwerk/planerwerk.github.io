@@ -248,7 +248,7 @@ const KARTEN=[
     texte:['Ein Unbekannter hat {spieler} Geld geboten, wenn er im nächsten Spiel eine Gelbe Karte sieht. {spieler} hat sofort den Verein und den DFB informiert. Die Presse lobt ihn.','{spieler} wurde in einem Hotel von einem Wettpaten angesprochen und hat die Polizei gerufen. Der DFB bedankt sich öffentlich.'],
     wirkung:[{art:'stimmung',wert:3},{art:'fans',wert:1}]},
   {id:'wettbetrug',titel:'Wettskandal',bereich:'K30',art:'info',stufe:'gelegentlich',ausloeser:'wettbetrug',sperrTage:3650,
-    texte:['{spieler} von {verein} hat auf Spiele der eigenen Mannschaft gewettet. Das Sportgericht sperrt ihn für viele Monate, {verein} will ihn loswerden.','Ermittler haben Wetten von {spieler} auf Spiele von {verein} gefunden. Er ist lange gesperrt und steht auf der Transferliste.'],
+    texte:['{spieler} von {verein} hat auf Spiele der eigenen Mannschaft gewettet. Das Sportgericht sperrt ihn für viele Monate.','Ermittler haben Wetten von {spieler} auf Spiele von {verein} gefunden. Er ist für viele Monate gesperrt.'],
     wirkung:[{art:'wettsperre',wert:1}]},
   // Jubiläum (K27 §8 Fan-Choreo, K25 §8 Retro-Trikot, K27d, 23.11., popolupo): Anlasskarte im Jubiläumsjahr, einmal je Jubiläum. Werte vorläufig.
   {id:'jubilaeum',titel:'Rundes Jubiläum',bereich:'K27',art:'entscheidung',gross:false,stufe:'haeufig',chance:0.25,ausloeser:'jubilaeum',sperrTage:400,

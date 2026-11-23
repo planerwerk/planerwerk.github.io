@@ -336,7 +336,7 @@ Sehr selten, als Weltereignis: **etwa einmal in zehn Saisons** kommt ein Szenari
 - **Nur als Weltereignis, ohne eigene Entscheidung zum Mitmachen** (vorläufig). Die Idee einer Versuchung (ein Mittelsmann bietet dir an, ein Spiel „zu regeln“) bleibt draußen, solange du sie nicht willst.
 - **Doping kommt nicht ins Spiel** (deine Entscheidung vom 10.11.). „Fit spritzen“ mit Schmerzmitteln bleibt, das ist erlaubt (K10).
 - Sichtbar ab der ersten Lizenz (nur Information, K36).
-- **Gebaut seit K30f** (23.11.2026, popolupo, ohne Testlauf, Info-Karten mit Wirkung, Stufe „gelegentlich“, zusammen etwa einmal in zehn Saisons): „Ein Wettpate meldet sich“ (ein Spieler deines Kaders meldet den Anwerbeversuch, Stimmung +3, Fans +1) und „Wettskandal“ (ein Spieler eines Computer-Vereins ist 20 Liga- und 3 Pokalspiele gesperrt und steht auf der Transferliste). Die schweren Szenarien (Schiedsrichter, Wiederholung, Zwangsabstieg) fehlen noch.
+- **Gebaut seit K30f** (23.11.2026, popolupo, ohne Testlauf, Info-Karten mit Wirkung, Stufe „gelegentlich“, zusammen etwa einmal in zehn Saisons): „Ein Wettpate meldet sich“ (ein Spieler deines Kaders meldet den Anwerbeversuch, Stimmung +3, Fans +1) und „Wettskandal“ (ein Spieler eines Computer-Vereins, nie einer deines Kaders in der Zweiten, ist 20 Liga- und 3 Pokalspiele gesperrt; die Transferliste ist seit Prüfung EJ1 weg, der Markt räumte sie nach einer Woche). Die schweren Szenarien (Schiedsrichter, Wiederholung, Zwangsabstieg) fehlen noch.
 
 ### 8.3 Beispiel einer Kette: „Der lachende Dritte“
 

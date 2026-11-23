@@ -14,8 +14,8 @@ function welt(lernstufen){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;
   pruef(k&&k.d==='klassisch'&&k.f>=0.95+pl-1e-9&&k.f<=1.05+pl+1e-9&&fu===1+fp&&fest&&m&&(m.f===0.8&&w.t.fanU===-3||m.f===1.25&&w.t.fanU===3),'Trikot: klassisch 0,95–1,05 und Fans +1, danach fest, mutig 0,8 oder 1,25 mit Fans ±3',`klassisch ${k&&k.f}, mutig ${m&&m.f}/${w.t.fanU}`);}
 
 // K25e. Tradition (K25 §5.3): Freiburg (gegründet 1904) ist ein Traditionsverein, RB Leipzig (2009) nicht; dort bleibt das klassische Trikot bei 0,95–1,05 und Fans +1
-{const w=welt(false),V=w.ev('VEREINE'),tv=w.ev('traditionsverein'),rb=V.findIndex(v=>v.kurz==='RBL'),scf=tv(w.t);w.S.my=rb;const t2=w.ev('myT()');t2.fanU=0;w.S.mk=null;w.F.trikotWaehlen('klassisch');const k2=w.S.mk.trikot;
-  pruef(scf&&rb>=0&&!tv(t2)&&!!k2&&k2.f>=0.95&&k2.f<=1.05&&t2.fanU===1,'Tradition: Freiburg ja, RB Leipzig nein, dort klassisch ohne Zuschlag',`Freiburg ${scf}, RB Leipzig ${tv(t2)}, Faktor ${k2&&k2.f}, Fans ${t2.fanU}`);}
+{const w=welt(false),V=w.ev('VEREINE'),tv=w.ev('traditionsverein'),rb=V.findIndex(v=>v.kurz==='RBL'),scf=tv(w.t);const lev=tv(w.S.teams[V.findIndex(v=>v.kurz==='B04')]); /* EJ4: Leverkusen trotz 1904 nicht */w.S.my=rb;const t2=w.ev('myT()');t2.fanU=0;w.S.mk=null;w.F.trikotWaehlen('klassisch');const k2=w.S.mk.trikot;
+  pruef(scf&&!lev&&rb>=0&&!tv(t2)&&!!k2&&k2.f>=0.95&&k2.f<=1.05&&t2.fanU===1,'Tradition: Freiburg ja, RB Leipzig nein, dort klassisch ohne Zuschlag',`Freiburg ${scf}, Leverkusen ${lev}, RB Leipzig ${tv(t2)}, Faktor ${k2&&k2.f}, Fans ${t2.fanU}`);}
 
 // 2. Ohne Wahl: am Tag vor dem ersten Pflichtspiel nimmt der Verein das klassische
 {const {F,S}=welt(false),e=F.ersterPflichttag(VEREIN);F.marketingTag(e-2);const vorher=!S.mk.trikot;F.marketingTag(e-1);

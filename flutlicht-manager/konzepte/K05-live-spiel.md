@@ -220,7 +220,7 @@ live:{
 13. **Elfmeter halten erst nach der Ausführung an** (Treffer über „Tor“, Fehlschuss über „Elfmeter“). Den Schützen vorher zu ändern, braucht die Schützenliste aus K06 (U5).
 14. **Gelb-Rot-Gefahr** hält nur bei verwarnten Abwehrspielern, Sechsern, Ungestümen und Hitzköpfen an. Mit jeder Gelben Karte wären es im Schnitt 6 Halte pro Spiel, jetzt etwa 5,5 (Ziel 3–6).
 15. **Halbzeit-Einschätzung des Co-Trainers:** schwächster und stärkster Bereich im Vergleich zum Gegner und wer schon platt ist, immer zutreffend, bis K16 die Genauigkeit an seine Qualität bindet.
-16. **Frühere Spiele des Tages als Zuschauer** (4.1): Sie erscheinen in der Konferenz mit Endstand, spätere ohne Ergebnis (gebaut mit der Konferenz nach Anstoßzeit, `omKonf`; der Hinweis „noch nicht gebaut“ war veraltet, berichtigt am 23.11.2026).
+16. **Frühere Spiele des Tages als Zuschauer** (4.1) sind noch nicht gebaut: Sie vorher im Schnelldurchlauf anzusehen, geht nicht. Gebaut ist nur die Notlösung: In der Konferenz erscheinen frühere Spiele mit Endstand, spätere ohne Ergebnis (`omKonf`). Die Live-Ansicht lässt weiter alle Spiele des Tages gleichzeitig laufen (`liveKonf`). (Berichtigt nach Prüfung EJ3, 23.11.2026.)
 17. **Elfmeterschießen** endet, sobald eine Mannschaft uneinholbar führt (wie im echten Spiel). Vorher wurden immer fünf Schüsse je Seite gerechnet.
 
 **Noch zu recherchieren:** Größe der Ersatzbank in der Bundesliga, zusätzlicher Wechsel in der Verlängerung im DFB-Pokal.
