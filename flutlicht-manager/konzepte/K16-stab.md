@@ -158,7 +158,16 @@ Bandbreite = Grundbreite × (1,5 − 0,05 × Qualität) × Schwierigkeitsfaktor 
   - Das prüft die Wirkung, nicht der Auslöser, sonst bräche der Gleichschritt.
   - Eingestellt wird über dieselbe Funktion wie von Hand (`stabAnstellen`, Vertrag `einstellenJahre`).
 - **Grenze (Prüfung EP6):** Die 60 Spiele sind die Grenze des Publikumslieblings (`fanstimmung.ident.lieblingSpiele`), keine eigene Zahl. Die Karte kommt bis `kapitaenSaisons` (1) Saison nach dem Karriereende.
-- **Noch nicht:** „Co-Trainer wird Cheftrainer“ (ähnlich der Abwerbung aus K16c) und „Streit im Stab“. Für den Streit fehlt das Temperament der Mitarbeiter.
+- **Noch nicht:** „Co-Trainer wird Cheftrainer“ (ähnlich der Abwerbung aus K16c).
+
+**Gebaut als K16f** (23.11.2026, popolupo, ohne Testlauf, Werte vorläufig): „Streit im Stab“ als Entscheidungskarte (Anlasskarte, Chance 0,2 je Woche).
+- **Temperament:** 30 % der Mitarbeiter sind hitzig, fest aus ihrer Nummer (`stabHitzig`, ohne Zufall, wie das Spezialgebiet der Scouts).
+- **Auslöser:** Zwei hitzige Mitarbeiter deines Stabs, keiner gerade im Streit.
+- **Wahl:**
+  - Gespräch: mit 60 % ist es erledigt, sonst sind beide 14 Tage schwächer.
+  - Laufen lassen: beide 28 Tage schwächer.
+- **Schwächer** heißt: Qualität × 0,9 in allen Wirkungen des Stabs (`stabQ`, `x.streitBis`). Das gilt nur für deinen Stab.
+- Die Automatik führt das Gespräch.
 
 ## 9. Wechselwirkungen
 

@@ -514,6 +514,15 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   pruef(!!meister&&verloren===null&&(mitte===null||unten===(lg===3?20-ev('RS').abstieg3:15)),'Platzsturm: als Meister nach dem letzten Heimspiel, nicht nach einer Heimniederlage, nicht auf einem gewöhnlichen Platz',
     `Meister ${!!meister}, Heimniederlage ${verloren}, Platz ${unten}: ${mitte}`);}
 
+// K16f. Streit im Stab (K16 §8): nur zwischen zwei hitzigen Mitarbeitern deines Stabs; „Laufen lassen“ macht beide 28 Tage schwächer (Qualität × 0,9 in stabQ), danach wieder normal.
+{const {S,F,ev}=welt(),A=ev('AUSLOESER'),hz=ev('stabHitzig'),sf=ev('stabStreitFaktor'),M=ev('RST').streit,sg=ev('stabGeaendert');S.phase='play';if(!S.stab)F.stabAufbau();
+  const neu=()=>{for(let i=0;i<60;i++){const x=F.stabNeu('jugend',10,S.my,1);if(hz(x)){S.stab.push(x);sg();return x;}}return null;},x1=neu(),x2=neu();
+  const b=A.stabStreit(),beide=!!b&&b.stab!==b.stab2&&[b.stab,b.stab2].every(id=>{const x=S.stab.find(y=>y.id===id);return x&&x.team===S.my&&hz(x);});
+  const xa=S.stab.find(y=>y.id===b.stab),xb=S.stab.find(y=>y.id===b.stab2);ev('kartenWirkung')({art:'stabStreit',wert:28},b,{titel:'Test'});
+  const schwach=Math.abs(sf(xa)-(1-M.malus))<1e-9&&Math.abs(sf(xb)-(1-M.malus))<1e-9,nachher=A.stabStreit(),ohne=!nachher||![nachher.stab,nachher.stab2].some(id=>id===xa.id||id===xb.id);
+  S.tag+=29;const wieder=sf(xa)===1&&sf(xb)===1;S.tag-=29;
+  pruef(!!x1&&!!x2&&beide&&schwach&&ohne&&wieder,'Streit im Stab: zwei hitzige Mitarbeiter, beide 28 Tage schwächer, danach normal',`hitzige gefunden ${!!x1&&!!x2}, Auslöser ${beide}, schwächer ${schwach}, nicht noch einmal ${ohne}, danach normal ${wieder}`);}
+
 // U19e. Europapokal-Karten (K37 §8): Auswärtsspiel bei einem Auslandsverein in den nächsten 7 Tagen (kein Heimspiel, nicht später, nicht das Finale), Spiel 1 bis 7 Tage her,
 //       Wunder nach 0:3 im Hinspiel und 4:0 oder 3:0 mit Elfmeterschießen im Rückspiel, nicht nach nur einem Tor Rückstand und nicht beim Ausscheiden. euMeineSpiele ersetzt der Test.
 {const {S,W,ev}=welt(),A=ev('AUSLOESER'),AV=ev('AV0'),me=S.my,d=S.tag;W.ev('euMeineSpiele=function(){return S.testEu||[];}');
