@@ -208,9 +208,10 @@ Noch nicht gebaut: verzögerte Folgen ohne eigene Karte, die Chronik über alle 
   - Sperre und Info-Grenze gelten nicht. Eine Kette läuft zu Ende oder verfällt (§5.2: Ketten vor den übrigen Karten).
 - **Ketten enden** mit der Saison, bei der Entlassung und beim Vereinswechsel.
 - **Merker** stehen dort, wo sie gebraucht werden. Beim lachenden Dritten ist das der Spieler (`p.ld3`).
+- **Folgekarten aus dem Spielablauf** (seit K11g, Prüfung EU1 und EV2): Karten mit `nurKette:true` und `ausSpiel:true` haben keine Vorgänger-Karte. Das Spiel selbst legt sie über `kartenKetteHeute(id, b, d)` für denselben Tag in die Kette, ohne Zufall, etwa `lagerTag` beim Lagerkoller. Das ist der Weg für alles, was nur in einem kurzen Zeitfenster passt (Lager, Spieltag), denn montags käme die Karte zu spät oder gar nicht. Doppelte verhindert ein Merker am Anlass (`l.kollerK`), denn die Kette prüft keine Sperre.
 - Das Prüfskript (`tests/karten.js` Fall 1 und `kartenpruefung.pl`) prüft:
   - Jede Folgekarte existiert und hat `nurKette`.
-  - Jede `nurKette`-Karte hat einen Vorgänger.
+  - Jede `nurKette`-Karte hat einen Vorgänger, außer sie hat `ausSpiel`.
   - `tage` ist gültig.
 
 **Der lachende Dritte (§8.3, K17 §5.4), Karte 1 „dritterTipp“** (Entscheidung, klein, häufig, Sperre 365 Tage):

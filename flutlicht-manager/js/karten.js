@@ -102,7 +102,7 @@ const AUSLOESER={
   // Trainingslager (K11 §8, K11g): Folgekarten aus dem Spielablauf (Prüfung EU1), lagerTag legt sie beim Koller und bei einer Sichtung für denselben Tag in die Kette.
   // Hier nur die Prüfung, ob es noch passt: dasselbe Lager läuft (beim Koller nicht am letzten Tag), der Spieler ist noch bei dir
   lagerkoller(b){const l=lagerAktiv(S.tag);return b&&l&&l.von===b.lager&&S.tag<l.bis?b:null;},
-  nachtleben(b){const l=lagerAktiv(S.tag),p=b&&b.spieler!=null?PIX.get(b.spieler):null;return l&&l.von===b.lager&&p&&p.team===S.my?b:null;},
+  nachtleben(b){const l=lagerAktiv(S.tag),p=b&&b.spieler!=null?PIX.get(b.spieler):null;return b&&l&&l.von===b.lager&&p&&p.team===S.my?b:null;}, /* b&& seit Prüfung EV5 */
   // Manipulation in der 3. Liga fliegt auf (K30 §8.4, K30g): ein Spieler eines Computer-Vereins der 3. Liga (keine zweite Mannschaft, nicht verliehen, kein vereinbarter Wechsel)
   // Prüfung ER1: nicht mehr nach dem letzten Spieltag (sonst zwischen den Relegationsspielen), ER2: höchstens einmal in RKT.skandal.abstand Saisons (S.skandal3)
   manipulation3(){if(ligaFertig(3)||(S.skandal3!=null&&S.season-S.skandal3<RKT.skandal.abstand))return null;const l=S.pl.filter(p=>{const t=p.team>=0&&p.team<1000?S.teams[p.team]:null;return t&&t.id!==S.my&&t.lg===3&&!(t.zweite>=0)&&aktiv(t)&&!p.leihe&&!p.wech&&!p.zwP;});const p=l.length?pick(l):null;return p?{spieler:p.id,verein:p.team}:null;},

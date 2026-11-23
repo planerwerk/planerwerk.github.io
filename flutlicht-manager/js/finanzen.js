@@ -38,7 +38,7 @@ function finanzenMonat(d,ohneZahlungen){const t=myT();let M=S.finM||{s:S.season,
 // Saisonwechsel (saison.js newSeasonLauf, nach S.fin={}): Stand für den Juli, dann Tilgung, Raten und Instandhaltung des 1. Juli in der neuen Saison
 function finanzenSaisonstart(){S.finM={s:S.season,mo:'07',fin:{},cash:myT().cash,k:0};monatsRaten();instandhaltung();}
 // Insolvenz (K23 §5.4): an zwei Monatsersten nacheinander unter dem negativen Kreditrahmen. Punktabzug, Vertrauen, Schuldenschnitt, höchstens einmal je Saison.
-function insolvenzPruefen(){const t=myT(),L=lzpS(),I=RFP.insolvenz;if(t.cash<-kreditRahmen(t))t.fu=(t.fu||0)+1;else t.fu=0; /* Zähler am Verein wie bei den Computer-Vereinen, überlebt einen Jobwechsel (Prüfung EU2, vorher S.lzp.unter) */
+function insolvenzPruefen(){const t=myT(),L=lzpS(),I=RFP.insolvenz;if(L.unter!=null){t.fu=L.unter;delete L.unter;} /* alter Spielstand: Zähler einmal übernehmen (Prüfung EV1) */if(t.cash<-kreditRahmen(t))t.fu=(t.fu||0)+1;else t.fu=0; /* Zähler am Verein wie bei den Computer-Vereinen, überlebt einen Jobwechsel (Prüfung EU2, vorher S.lzp.unter) */
   if((t.fu||0)<I.monate||L.ins===S.season||t.fins===S.season||S.phase!=='play')return; /* t.fins: Sperre am Verein, überlebt einen Jobwechsel (Prüfung ET1) */
   /* Nach dem letzten Spieltag der eigenen Liga gilt der Abzug für die neue Saison (Prüfung ER1: sonst zwischen den Relegationsspielen; ES1: sofort gebucht statt aufgeschoben) */
   const s=insolvenzSaison(t);L.ins=s;t.fins=s;t.fu=0;

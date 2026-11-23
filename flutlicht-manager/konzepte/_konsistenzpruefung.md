@@ -2438,3 +2438,29 @@ Korrekturen auf `mitarbeit/popolupo-eu-korrekturen` (auf K11g).
 | EU2 | **Schon seit K23b:** Der Zähler der Monatserste unter dem Rahmen stand bei deinem Verein in `S.lzp.unter`, bei Computer-Vereinen in `t.fu`. Nach einem Jobwechsel stimmten beide nicht mehr, eine Insolvenz konnte nach einem Monat kommen. Jetzt zählt `t.fu` für alle Vereine. | ✅ behoben |
 | EU3 | Die Tests prüften nicht, ob die Sperre aus ET1 eine zweite Insolvenz nach einem Jobwechsel verhindert, und ET3 (Fankultur beim Bau) gar nicht. Beides ergänzt (`tests/finanzen.js`, `tests/marketing.js`). | ✅ behoben |
 | EU4 | K11 Nr. 11 nannte die Lager-Ereignisse noch als fehlend. K33 erklärte `fins` durch sich selbst. Die README nannte die ET5-Fälle nicht. Berichtigt. | ✅ behoben |
+
+## EV. Prüfung der Korrekturen EU ohne Laufzeit (23. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 3637fe6 gelesen, nichts ausgeführt. Kein hoher oder mittlerer Fund, acht niedrige.
+
+**Ohne Befund:**
+
+- **Reihenfolge:** `lagerTag` läuft vor `kartenKette` am selben Tag, `kartenKetteHeute` würfelt nicht.
+- **Budget und Halt:** wie bei allen Ketten.
+- **„Früher abreisen“:** lässt keine Einträge übrig.
+- **Wochenpool:** filtert `nurKette` weiter heraus.
+- **`t.fu`:** keine Doppelzählung, sonst las niemand `lzp.unter`.
+- **Gleichschritt:** In 5a gibt es kein Lager. `kartenKette` läuft zwar, bekommt aber keine Einträge.
+
+Korrekturen auf `mitarbeit/popolupo-ev-korrekturen` (auf den Korrekturen EU).
+
+| # | Befund | Status |
+|---|---|---|
+| EV1 | Alte Spielstände: `S.lzp.unter` wurde mit EU2 ignoriert, `t.fu` deines Vereins konnte noch aus seiner Zeit als Computer-Verein stammen. Jetzt wird `L.unter` einmal nach `t.fu` übernommen. | ✅ behoben |
+| EV2 | K30 §5.6 nannte die Ausnahme `ausSpiel` und den Weg über `kartenKetteHeute` nicht. Ergänzt. | ✅ behoben |
+| EV3 | `kartenpruefung.pl` führte `ausSpiel`-Karten nicht als `nurKette`. Wäre so eine Karte Ziel einer Kette geworden, hätte das Werkzeug fälschlich gemeldet. Jetzt wird nur die Vorgänger-Prüfung übersprungen, wie im Katalogtest. | ✅ behoben |
+| EV4 | Der Test K11g prüfte nur, dass die Karte gelegt wird, nicht, dass sie am selben Tag kommt. Die Nachtleben-Karte war ungetestet. Ein unvollständiges `S.karten` hätte `kartenKette` abbrechen lassen. Jetzt mit `karten()`, `kartenKette` und einem eigenen Nachtleben-Fall. | ✅ behoben |
+| EV5 | `nachtleben(b)` las `b.lager` ohne Schutz. Jetzt `b&&`. | ✅ behoben |
+| EV6 | `sperrTage` wirkt bei Kettenkarten nicht. Kommentar im Katalog. | ✅ behoben |
+| EV7 | **Schon seit K11:** Beim Vereinswechsel blieb ein gebuchtes oder laufendes Trainingslager stehen und lief für den neuen Verein weiter. Jetzt räumt `takeJob` laufende und künftige Lager der Saison. | ✅ behoben |
+| EV8 | Die README nannte den neuen Marketing-Fall nicht. Ergänzt. | ✅ behoben |

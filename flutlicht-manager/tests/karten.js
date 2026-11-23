@@ -472,11 +472,19 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
 // K11g. Lager-Ereignisse (K11 §8): Seit Prüfung EU1 Folgekarten aus dem Spielablauf. lagerTag legt beim Koller (ab Tag kollerAb, nicht am letzten Tag) eine Karte für heute
 //       in die Kette, je Lager einmal; der Auslöser prüft nur, ob dasselbe Lager noch läuft (Nachtleben: der Spieler ist noch bei dir). „Früher abreisen“ beendet das Lager heute.
 {const {S,F,ev}=welt(),A=ev('AUSLOESER'),kw=ev('kartenWirkung'),RL=ev('RLA');S.phase='play';S.lager=[];F.lagerBuchenLauf('schwarzwald',S.tag-RL.kollerAb,RL.kollerAb+3);const l=S.lager[0];
-  const k0=RL.koller;RL.koller=1;S.karten=S.karten||{};S.karten.kette=[];F.lagerTag(S.tag);F.lagerTag(S.tag);RL.koller=k0;const gelegt=S.karten.kette.filter(e=>e.id==='lagerkoller'&&e.b.lager===l.von).length;
+  const k0=RL.koller;RL.koller=1;const KA=ev('karten')();KA.kette=[];F.lagerTag(S.tag);F.lagerTag(S.tag);RL.koller=k0;const gelegt=KA.kette.filter(e=>e.id==='lagerkoller'&&e.b.lager===l.von).length;
+  /* Prüfung EV4: die Karte kommt noch am selben Tag über kartenKette (offen oder im Log) */F.kartenKette(S.tag);const da=id=>(KA.offen||[]).some(o=>o.id===id)||(KA.log||[]).some(x=>x.id===id);const kam=da('lagerkoller')&&KA.kette.length===0;
   const koller=A.lagerkoller({lager:l.von}),fremd=A.lagerkoller({lager:l.von+1});const p=ev('squad')(S.my)[0],nacht=A.nachtleben({spieler:p.id,lager:l.von});
   kw({art:'lagerEnde',wert:1},{lager:l.von},{titel:'Test'});const ende=l.bis===S.tag&&A.lagerkoller({lager:l.von})===null&&ev('lagerAktiv')(S.tag+1)===null;
-  pruef(gelegt===1&&!!koller&&fremd===null&&!!nacht&&nacht.spieler===p.id&&ende,'Lager-Ereignisse: Koller legt die Karte für heute in die Kette (einmal je Lager), Auslöser nur im selben Lager, früher abreisen beendet das Lager',
-    `Karten in der Kette ${gelegt}, Koller ${!!koller}, anderes Lager ${fremd}, Nachtleben ${!!nacht&&nacht.spieler===p.id}, Ende ${ende}`);}
+  pruef(gelegt===1&&kam&&!!koller&&fremd===null&&!!nacht&&nacht.spieler===p.id&&ende,'Lager-Ereignisse: Koller legt die Karte für heute in die Kette (einmal je Lager) und sie kommt am selben Tag, Auslöser nur im selben Lager, früher abreisen beendet das Lager',
+    `Karten in der Kette ${gelegt}, am selben Tag gekommen ${kam}, Koller ${!!koller}, anderes Lager ${fremd}, Nachtleben ${!!nacht&&nacht.spieler===p.id}, Ende ${ende}`);}
+
+// K11g, Prüfung EV4: Nachtleben im Lager mit Ablenkung (Riviera). Ein Partylöwe wird gesehen, die Karte kommt am selben Tag, je Lager einmal.
+{const {S,F,ev}=welt(),RL=ev('RLA'),eig=ev('eigenschaften'),sq=ev('squad')(S.my).filter(p=>!(p.inj>0));S.phase='play';S.lager=[];
+  sq.forEach(p=>{p.eig=(eig(p)||[]).filter(e=>e!=='partyloewe');});const pl=sq[0];pl.eig.push('partyloewe');F.lagerBuchenLauf('riviera',S.tag-1,6);const l=S.lager[0];
+  const a0=RL.ablenkung,k0=RL.koller;RL.ablenkung=100;RL.koller=0;const KA=ev('karten')();KA.kette=[];F.lagerTag(S.tag);F.lagerTag(S.tag);RL.ablenkung=a0;RL.koller=k0;
+  const gelegt=KA.kette.filter(e=>e.id==='nachtleben'&&e.b.spieler===pl.id).length;F.kartenKette(S.tag);const kam=(KA.offen||[]).some(o=>o.id==='nachtleben')||(KA.log||[]).some(x=>x.id==='nachtleben');
+  pruef(gelegt===1&&kam&&l.nachtK===1,'Nachtleben: Sichtung eines Partylöwen legt die Karte, sie kommt am selben Tag, einmal je Lager',`gelegt ${gelegt}, gekommen ${kam}`);}
 
 // U19e. Europapokal-Karten (K37 §8): Auswärtsspiel bei einem Auslandsverein in den nächsten 7 Tagen (kein Heimspiel, nicht später, nicht das Finale), Spiel 1 bis 7 Tage her,
 //       Wunder nach 0:3 im Hinspiel und 4:0 oder 3:0 mit Elfmeterschießen im Rückspiel, nicht nach nur einem Tor Rückstand und nicht beim Ausscheiden. euMeineSpiele ersetzt der Test.
