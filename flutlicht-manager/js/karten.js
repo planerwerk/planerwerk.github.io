@@ -107,7 +107,11 @@ const AUSLOESER={
   // direkter Aufstieg (2. und 3. Liga) oder gerade noch gerettet (letzter Platz vor Relegation oder Abstieg)
   platzsturm(){const t=myT(),lg=t.lg;if(!ligaFertig(lg))return null;const L=meineLigaspiele(),n=L[L.length-1];if(!n||S.tag-n.tag<0||S.tag-n.tag>RKT.spiel.nachTage)return null;
     const r=(S.res[lg]||[]).find(x=>x[4]===n.md&&(x[0]===S.my||x[1]===S.my));if(!r||r[0]!==S.my||r[2]<r[3])return null;
-    const pl=rank(lg,S.my),anz=table(lg).length,sicher=lg===3?anz-RS.abstieg3:anz-3;return pl===1||(lg>1&&pl<=2)||pl===sicher?{verein:r[1]}:null;},
+    const P=RKT.fans.platzsturm,pl=rank(lg,S.my),anz=table(lg).length,sicher=lg===3?anz-RS.abstieg3:anz-P.unterStrich;
+    /* Aufstieg in der 3. Liga nach der Reihe ohne zweite Mannschaften (Prüfung EX2); gerettet heißt: vor dem letzten Spieltag unter dem Strich, danach darüber (EX3) */
+    const auf=lg===2?pl<=P.aufstieg:lg===3?!(t.zweite>=0)&&aufstiegsReihe3().slice(0,P.aufstieg).includes(S.my):false;
+    const r0=S.res[lg];S.res[lg]=r0.filter(x=>x[4]!==n.md);const vorher=rank(lg,S.my);S.res[lg]=r0;const gerettet=pl<=sicher&&vorher>sicher;
+    return pl===1||auf||gerettet?{verein:r[1]}:null;},
   // Trainingslager (K11 §8, K11g): Folgekarten aus dem Spielablauf (Prüfung EU1), lagerTag legt sie beim Koller und bei einer Sichtung für denselben Tag in die Kette.
   // Hier nur die Prüfung, ob es noch passt: dasselbe Lager läuft (beim Koller nicht am letzten Tag), der Spieler ist noch bei dir
   lagerkoller(b){const l=lagerAktiv(S.tag);return b&&l&&l.von===b.lager&&S.tag<l.bis?b:null;},

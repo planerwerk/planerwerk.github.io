@@ -107,10 +107,14 @@ Aus §5.4 („Platzsturm: Aufstieg, Klassenerhalt am letzten Spieltag, Feier, kl
 - **Auslöser:** Info-Karte mit Wirkung, sicher (Chance 1), einmal je Saison. Bedingungen:
   - Die Liga ist fertig, dein letztes Ligaspiel ist höchstens 7 Tage her (`RKT.spiel.nachTage`).
   - Es war ein Heimspiel, das du nicht verloren hast.
-  - Du bist Meister, direkter Aufsteiger (Platz 1 oder 2 in der 2. und 3. Liga) oder gerade noch gerettet: in der 1. und 2. Liga Platz 15, in der 3. Liga der letzte Platz vor den Absteigern.
+  - Du bist Meister, direkter Aufsteiger oder gerade noch gerettet:
+    - Aufsteiger in der 2. Liga: Platz 1 oder 2.
+    - Aufsteiger in der 3. Liga: die ersten zwei der Aufstiegsreihe ohne zweite Mannschaften (`aufstiegsReihe3`, wie beim Saisonende). Eine zweite Mannschaft steigt nie auf. Seit Prüfung EX2.
+    - Gerettet: vor dem letzten Spieltag unter dem Strich, danach darüber. Der Strich liegt in der 1. und 2. Liga nach Platz 15, in der 3. Liga vor den Absteigern. Seit Prüfung EX3, vorher nur genau Platz 15.
   - Die Relegation zählt nicht mit, sie kommt erst danach.
 - **Wirkung:** Fanstimmung +2, Geldstrafe 20.000 € in der 3. Liga, nach Liga skaliert (in der 1. Liga 80.000 €).
-- **Ohne neue Regelwerte.**
+- **Meldung:** Die Karte erscheint immer (`immer:true`), auch über der Grenze für Info-Karten der Woche. Die Strafe soll nicht still abgehen. Seit Prüfung EX4.
+- **Regelwerte:** `REGELN.karten.fans.platzsturm` mit `aufstieg` (2 direkte Aufstiegsplätze) und `unterStrich` (3 Plätze unter dem Strich in der 1. und 2. Liga: zwei Absteiger und die Relegation). Seit Prüfung EX3.
 
 ### 5.4d K27f Choreo in der Kurve (23.11.2026, popolupo, vorläufig)
 

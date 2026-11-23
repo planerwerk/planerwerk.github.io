@@ -2480,3 +2480,18 @@ Korrekturen auf `mitarbeit/popolupo-ew-korrekturen` (auf K27g).
 | EW5 | EV1 und EV7 waren ungetestet. Zwei neue Fälle in `tests/finanzen.js`. | ✅ behoben |
 | EW6 | In K33 stand der K27f-Satz mitten im K11g-Satz. Umgestellt, dazu EV1 genannt. | ✅ behoben |
 | EW7 | K27 nannte die Choreo noch als „noch nicht“. §5.4d sagte nichts zur fehlenden Presse, K11 nichts zum Lager beim Vereinswechsel. Ergänzt. | ✅ behoben |
+
+## EX. Prüfung von K27g und der Korrekturen EW ohne Laufzeit (23. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat d6fdf25 und 302bbf2 gelesen, nichts ausgeführt. Ein mittlerer und fünf niedrige Funde. Ohne Befund: der letzte Spieltag (verlegte Spiele behalten ihren Spieltag, er ist zeitgleich), die Sperre einmal je Saison, die Wirkung und ihr Betrag nach Liga.
+
+Korrekturen auf `mitarbeit/popolupo-ex-korrekturen` (auf K16f).
+
+| # | Befund | Status |
+|---|---|---|
+| EX1 | Der Spitzenspiel-Fall aus EW3 prüfte in der Testwelt nie etwas. FCB empfängt BVB schon am 8. Spieltag, vor `spitzeAb`, und der Fall galt dann als „übersprungen“. Jetzt sucht er alle Paare der oberen Plätze ohne Derby und scheitert, wenn er keines findet. | ✅ behoben |
+| EX2 | In der 3. Liga zählte der rohe Tabellenplatz. Ein Dritter hinter einer zweiten Mannschaft bekam keine Karte, eine zweite Mannschaft auf Platz 2 schon. Jetzt gilt die Aufstiegsreihe ohne zweite Mannschaften (`aufstiegsReihe3`), eine zweite Mannschaft steigt nie auf. | ✅ behoben |
+| EX3 | „Gerade noch gerettet“ hieß nur genau Platz 15 (3. Liga: 16). Wer am letzten Spieltag von Platz 17 auf 14 sprang, bekam nichts, wer seit Wochen auf 15 stand, schon. Jetzt: vor dem letzten Spieltag unter dem Strich, danach darüber. Neue Regelwerte `REGELN.karten.fans.platzsturm` (`aufstieg`, `unterStrich`). | ✅ behoben |
+| EX4 | Über der Grenze für Info-Karten der Woche lief der Platzsturm stumm, in der 1. Liga gingen 80.000 € ohne Meldung ab. Jetzt `immer:true` wie bei `manipulation3`. | ✅ behoben |
+| EX5 | Der Test K27g prüfte als „Mitte“ nur Platz 18 und hatte keinen positiven Fall für „gerettet“. Neu in der 1. Liga: gerettet, unten geblieben, echte Mitte, Liga nicht fertig, zu spät. Neu in der 3. Liga: Dritter mit und ohne zweite Mannschaft davor, zweite Mannschaft auf Platz 2. | ✅ behoben |
+| EX6 | Der Lager-Test aus EW5 bestand auch mit dem alten Filter, weil das Lager noch nicht beendet war. Jetzt mit einem beendeten Lager dieser Saison und einem aus der Vorsaison, das bleiben muss. Dazu ein Fall für EW2: ein Heimspiel ohne Anlass zwei Tage vor dem Heim-Derby verdeckt die Choreo nicht. | ✅ behoben |

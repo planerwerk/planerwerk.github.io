@@ -95,8 +95,11 @@ const tagMit=(ev,mmtt)=>{for(let d=0;d<400;d++)if(ev('mmtt')(d)===mmtt)return d;
   pruef(ab===9&&S.lzp.unter===undefined,'Alter Spielstand: Insolvenz-Zähler aus S.lzp.unter übernommen (EV1)',`Abzug ${ab}, unter ${S.lzp.unter}`);}
 
 // Prüfung EW5: Ein Vereinswechsel räumt die Trainingslager der Saison, auch ein gebuchtes künftiges (EV7, EW1).
-{const {F,S,ev}=welt();S.lager=[];F.lagerBuchenLauf('heimat',S.tag+5,5);const neu=S.teams.find(x=>x.lg===1&&x.id!==S.my).id;F.takeJob(neu);
-  pruef(!(S.lager||[]).length&&ev('lagerAktiv')(S.tag+6)===null,'Vereinswechsel räumt die Trainingslager der Saison (EV7, EW1)',`Lager danach ${(S.lager||[]).length}`);}
+//   Prüfung EX6: auch ein schon beendetes Lager dieser Saison; ein Lager einer früheren Saison bleibt stehen.
+{const {F,S,ev}=welt();S.lager=[{ort:'heimat',von:1,bis:3,saison:S.season-1,kosten:0,tag:0,koller:0}];F.lagerBuchenLauf('heimat',S.tag-10,5);F.lagerBuchenLauf('heimat',S.tag+5,5);
+  const neu=S.teams.find(x=>x.lg===1&&x.id!==S.my).id;F.takeJob(neu);const L=S.lager||[];
+  pruef(L.length===1&&L[0].saison===S.season-1&&ev('lagerAktiv')(S.tag+6)===null,'Vereinswechsel räumt die Trainingslager der Saison, beendete und künftige; frühere Saisons bleiben (EV7, EW1, EX6)',
+    `Lager danach ${L.length}: ${L.map(l=>l.saison+'/'+l.bis).join(', ')}`);}
 
 // 13. K23d: Gehaltsrahmen = gehaltAnteil (seit K23c 75 %) der erwarteten Einnahmen, Anteil steigt mit den Gehältern, Transferbudget = Konto über 10 % Reserve, über 110 % kauft niemand
 {const {F,S,ev,t}=welt(),B=ev('RFP').budget,E=ev('erwarteteEinnahmen')(t),r0=ev('rahmenAnteil')(t);ev('squad')(S.my).forEach(p=>{p.sal*=5;});const r1=ev('rahmenAnteil')(t);t.cash=E;

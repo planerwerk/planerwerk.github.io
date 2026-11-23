@@ -498,21 +498,55 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   pruef(ok,'Choreo: vor einem Heim-Derby mit großer Fankultur, nur im Fenster, nicht mit wenig Fankultur, nicht auswärts',info);}
 
 // K27f, Prüfung EW3: auch vor einem Spitzenspiel (beide in den oberen Plätzen, ab Spieltag spitzeAb), ohne Derby. Zu Saisonbeginn ordnet die Tabelle nach dem Ansehen.
-{const {S,ev}=welt(),A=ev('AUSLOESER'),dz=ev('istDerby'),P=ev('RPK').anlass;S.phase='play';const lg=1,T=ev('table')(lg),x=S.teams[T[0].id],y=T.slice(1,P.spitzeBis).map(r=>S.teams[r.id]).find(o=>!dz(x.id,o.id));let tag=null;
-  if(y)S.fx[lg].forEach((md,k)=>md.forEach(([h,g],i)=>{if(tag==null&&k+1>=P.spitzeAb&&h===x.id&&g===y.id)tag=S.plan.zeit[lg][k][i][0];}));
-  let ok=true,info='kein passendes Heimspiel gegen einen Verein der oberen Plätze ohne Derby, Fall übersprungen';
+{const {S,ev}=welt(),A=ev('AUSLOESER'),dz=ev('istDerby'),P=ev('RPK').anlass;S.phase='play';const lg=1,T=ev('table')(lg).slice(0,P.spitzeBis).map(r=>S.teams[r.id]);let x=null,y=null,tag=null;
+  /* Prüfung EX1: alle Paare der oberen Plätze durchsuchen (nicht nur den Ersten gegen den ersten Gegner ohne Derby); ohne Treffer schlägt der Fall fehl, statt still zu überspringen */
+  for(const a of T)for(const b of T){if(tag!=null||a===b||dz(a.id,b.id))continue;
+    S.fx[lg].forEach((md,k)=>md.forEach(([h,g],i)=>{if(tag==null&&k+1>=P.spitzeAb&&h===a.id&&g===b.id){tag=S.plan.zeit[lg][k][i][0];x=a;y=b;}}));}
+  let ok=false,info='kein Heimspiel zweier Vereine der oberen Plätze ohne Derby ab Spieltag spitzeAb gefunden';
   if(tag!=null){const m0=[x.fans,x.mitglieder];x.fans=x.cap;x.mitglieder=x.cap*3;S.my=x.id;S.tag=tag-1;const c=A.choreo();[x.fans,x.mitglieder]=m0;ok=!!c&&c.verein===y.id;info=`${x.name} – ${y.name}: ${!!c}`;}
   pruef(ok,'Choreo: auch vor einem Heim-Spitzenspiel',info);}
 
-// K27g. Platzsturm (K27 §5.4): nach dem letzten Ligaspiel, zu Hause nicht verloren, als Meister (oder Aufsteiger, gerade noch gerettet); nicht nach einer Heimniederlage
-//       und nicht auf einem Platz dazwischen. Die Saison wird dafür mit Ergebnissen gefüllt.
-{const {S,ev}=welt(),A=ev('AUSLOESER');S.phase='play';const lg=ev('myT()').lg,M=S.fx[lg].length-1,[h0]=S.fx[lg][M][0];S.my=h0;
-  const fuellen=(sieg,letzteNiederlage)=>{S.res[lg]=[];S.fx[lg].forEach((md,k)=>md.forEach(([h,a])=>{let hg=1,ag=1;if(h===S.my){hg=sieg?3:0;ag=sieg?0:3;}else if(a===S.my){hg=sieg?0:3;ag=sieg?3:0;}
-    if(k===M&&h===S.my){hg=letzteNiederlage?0:2;ag=letzteNiederlage?1:0;}S.res[lg].push([h,a,hg,ag,k]);}));};
-  const letzt=ev('meineLigaspiele')().slice(-1)[0];S.tag=letzt.tag+2;
-  fuellen(true,false);const meister=A.platzsturm();fuellen(true,true);const verloren=A.platzsturm();fuellen(false,false);const unten=ev('rank')(lg,S.my),mitte=A.platzsturm();S.res[lg]=[];
-  pruef(!!meister&&verloren===null&&(mitte===null||unten===(lg===3?20-ev('RS').abstieg3:15)),'Platzsturm: als Meister nach dem letzten Heimspiel, nicht nach einer Heimniederlage, nicht auf einem gewöhnlichen Platz',
-    `Meister ${!!meister}, Heimniederlage ${verloren}, Platz ${unten}: ${mitte}`);}
+// K27f, Prüfung EW2/EX6: englische Woche. Ein Heimspiel ohne Anlass zwei Tage vor dem Heim-Derby verdeckt die Choreo nicht (der Termin des früheren Spiels wird dafür verlegt).
+{const {S,ev}=welt(),A=ev('AUSLOESER'),dz=ev('istDerby'),P=ev('RPK').anlass;S.phase='play';let ok=false,info='kein Heim-Derby mit einem früheren Heimspiel ohne Anlass gefunden';
+  for(const a of S.teams.filter(t=>t.lg<=3&&!(t.zweite>=0))){const lg=a.lg;let dk=null,di=null,b=null,vk=null,vi=null;
+    S.fx[lg].forEach((md,k)=>md.forEach(([h,g],i)=>{if(h===a.id&&dz(a.id,g)){dk=k;di=i;b=S.teams[g];}})); /* das letzte Heim-Derby */
+    if(dk!=null)S.fx[lg].forEach((md,k)=>md.forEach(([h,g],i)=>{if(vk==null&&k<dk&&k+1<P.spitzeAb&&h===a.id&&!dz(a.id,g)){vk=k;vi=i;}}));if(vk==null)continue;
+    const Z=S.plan.zeit[lg],T=Z[dk][di][0],z0=Z[vk][vi][0],m0=[a.fans,a.mitglieder];Z[vk][vi][0]=T-2;a.fans=a.cap;a.mitglieder=a.cap*3;S.my=a.id;S.tag=T-3;
+    const c=A.choreo();Z[vk][vi][0]=z0;[a.fans,a.mitglieder]=m0;ok=!!c&&(c.verein===b.id||dz(a.id,c.verein));info=`${a.name}: Heimspiel ohne Anlass am Tag ${T-2}, Derby gegen ${b.name} am Tag ${T}: ${c?c.verein:null}`;break;}
+  pruef(ok,'Choreo: zwei Heimspiele im Fenster, das Derby zählt auch hinter einem Spiel ohne Anlass (EW2)',info);}
+
+// K27g. Platzsturm (K27 §5.4): nach dem letzten Ligaspiel, zu Hause nicht verloren, als Meister, Aufsteiger oder gerade noch gerettet; nicht nach einer Heimniederlage,
+//       nicht unten geblieben, nicht auf einem Platz dazwischen, nicht vor Saisonende und nicht später als nachTage. Die Saison wird dafür mit Ergebnissen gefüllt (1. Liga).
+//       Prüfung EX5: „gerettet“ heißt vor dem letzten Spieltag unter dem Strich, danach darüber (EX3).
+{const {S,ev}=welt(),A=ev('AUSLOESER'),rk=ev('rank'),K=ev('RKT');S.phase='play';const lg=1,M=S.fx[lg].length-1,[h0,L]=S.fx[lg][M][0];S.my=h0;
+  /* erg(h,a,k) gibt [Heimtore, Auswärtstore] oder null (dann 1:1) */
+  const fuellen=erg=>{S.res[lg]=[];S.fx[lg].forEach((md,k)=>md.forEach(([h,a])=>{const [hg,ag]=erg(h,a,k)||[1,1];S.res[lg].push([h,a,hg,ag,k]);}));};
+  const mein=(h,a)=>h===S.my||a===S.my,fuer=(h,ich,du)=>h===S.my?[ich,du]:[du,ich],sp=ev('meineLigaspiele')(),letzt=sp[sp.length-1],erst=sp[0];S.tag=letzt.tag+2;
+  const sicher=ev('table')(lg).length-K.fans.platzsturm.unterStrich;
+  fuellen((h,a)=>mein(h,a)?fuer(h,3,0):null);const meister=A.platzsturm();
+  fuellen((h,a,k)=>mein(h,a)?(k===M?[0,1]:fuer(h,3,0)):null);const verloren=A.platzsturm();
+  fuellen((h,a,k)=>mein(h,a)?(k===M?[2,0]:fuer(h,0,3)):null);const untenPl=rk(lg,S.my),unten=A.platzsturm();
+  /* gerettet: sonst alles 1:1, ein frühes eigenes Spiel 0:1 verloren (vor dem letzten Spieltag unten), das letzte Heimspiel 2:0; ein fremdes Spiel ohne dich und ohne den letzten Gegner endet 1:0, damit du nicht Erster wirst */
+  const fremd=S.fx[lg].flatMap((md,k)=>md.map(([h,a])=>[h,a,k])).find(([h,a,k])=>k!==M&&k!==erst.md&&![S.my,L].includes(h)&&![S.my,L].includes(a));
+  fuellen((h,a,k)=>mein(h,a)?(k===M?[2,0]:k===erst.md?fuer(h,0,1):null):fremd&&k===fremd[2]&&h===fremd[0]&&a===fremd[1]?[1,0]:null);
+  const r0=S.res[lg];S.res[lg]=r0.filter(x=>x[4]!==M);const vorher=rk(lg,S.my);S.res[lg]=r0;const gerettetPl=rk(lg,S.my),gerettet=A.platzsturm();
+  /* Mitte: unter den übrigen gewinnt immer der Verein mit der kleineren Nummer 1:0, du spielst immer 1:1 und gewinnst nur das letzte Heimspiel */
+  fuellen((h,a,k)=>mein(h,a)?(k===M?[2,0]:null):h<a?[1,0]:[0,1]);const mittePl=rk(lg,S.my),mitte=A.platzsturm();
+  fuellen((h,a)=>mein(h,a)?fuer(h,3,0):null);S.res[lg].splice(0,1);const offen=A.platzsturm();
+  fuellen((h,a)=>mein(h,a)?fuer(h,3,0):null);S.tag=letzt.tag+K.spiel.nachTage+1;const spaet=A.platzsturm();S.tag=letzt.tag+2;S.res[lg]=[];
+  pruef(!!meister&&verloren===null&&unten===null&&untenPl>sicher&&!!fremd&&!!gerettet&&vorher>sicher&&gerettetPl>1&&gerettetPl<=sicher&&mitte===null&&mittePl>1&&mittePl<=sicher&&offen===null&&spaet===null,
+    'Platzsturm: als Meister und gerade noch gerettet; nicht nach einer Heimniederlage, nicht unten geblieben, nicht in der Mitte, nicht vor Saisonende, nicht zu spät',
+    `Meister ${!!meister}, Heimniederlage ${verloren}, unten (Platz ${untenPl}) ${unten}, gerettet (Platz ${vorher} → ${gerettetPl}) ${!!gerettet}, Mitte (Platz ${mittePl}) ${mitte}, offen ${offen}, zu spät ${spaet}`);}
+
+// K27g, Prüfung EX2/EX5: in der 3. Liga zählt die Aufstiegsreihe ohne zweite Mannschaften. Die Saison wird nach einer festen Reihenfolge gefüllt (wer vorn steht, gewinnt 1:0).
+{const {S,ev}=welt(),A=ev('AUSLOESER');S.phase='play';const lg=3,M=S.fx[lg].length-1,[h0,L]=S.fx[lg][M][0];S.my=h0;
+  const [a1,b1]=S.teams.filter(t=>t.lg===lg&&t.id!==h0&&t.id!==L).map(t=>t.id),z0=[a1,b1,h0].map(id=>S.teams[id].zweite),mutter=S.teams.find(t=>t.lg===1).id;
+  const fuellen=reihe=>{const pos=id=>{const i=reihe.indexOf(id);return i<0?reihe.length+id:i;};S.res[lg]=[];S.fx[lg].forEach((md,k)=>md.forEach(([h,a])=>S.res[lg].push(pos(h)<pos(a)?[h,a,1,0,k]:[h,a,0,1,k])));};
+  const zw=(a,b,c)=>{S.teams[a1].zweite=a;S.teams[b1].zweite=b;S.teams[h0].zweite=c;};S.tag=ev('meineLigaspiele')().slice(-1)[0].tag+2;
+  fuellen([a1,b1,h0]);zw(-1,-1,-1);const pl3=ev('rank')(lg,S.my),dritter=A.platzsturm();zw(mutter,-1,-1);const hinterZweiter=A.platzsturm();
+  fuellen([a1,h0,b1]);zw(-1,-1,mutter);const pl2=ev('rank')(lg,S.my),selbstZweite=A.platzsturm();zw(...z0);S.res[lg]=[];
+  pruef(pl3===3&&dritter===null&&!!hinterZweiter&&pl2===2&&selbstZweite===null,'Platzsturm 3. Liga: Dritter hinter einer zweiten Mannschaft steigt auf, sonst nicht; eine zweite Mannschaft steigt nie auf',
+    `Platz ${pl3}: ohne zweite ${dritter}, hinter einer zweiten ${!!hinterZweiter}; Platz ${pl2} als zweite Mannschaft ${selbstZweite}`);}
 
 // K16f. Streit im Stab (K16 §8): nur zwischen zwei hitzigen Mitarbeitern deines Stabs; „Laufen lassen“ macht beide 28 Tage schwächer (Qualität × 0,9 in stabQ), danach wieder normal.
 {const {S,F,ev}=welt(),A=ev('AUSLOESER'),hz=ev('stabHitzig'),sf=ev('stabStreitFaktor'),M=ev('RST').streit,sg=ev('stabGeaendert');S.phase='play';if(!S.stab)F.stabAufbau();
