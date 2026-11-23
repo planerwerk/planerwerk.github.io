@@ -149,6 +149,11 @@ Interesse = Perspektive + Geld + Verein + Trainer + Lage + Heimat − Bindung
 | Fan-Proteste gegen Verkauf | Publikumsliebling verkauft (K27) | Fanstimmung, Presse |
 | Rückkehr des verlorenen Sohns | ehemaliger Spieler, Heimat | Interesse hoch, Fans freuen sich |
 
+**Gebaut als K19e** (23.11.2026, popolupo, ohne Testlauf, Werte geschätzt): „Rückkehr des verlorenen Sohns“ ohne eigene Karte.
+- **Auslöser:** Ein Spieler hat mindestens 60 Pflichtspiele für deinen Verein gemacht, wie ein Publikumsliebling (`vereinsSpiele`, Statistik K34 samt Karriere vor dem Spielstand).
+- **Interesse:** +10 beim Wechselinteresse (`heimkehrVerein`). Das gilt beim Kauf, beim Abwerben und in der Anzeige. Zum Vergleich: Ein Deutscher im Ausland hat bei der Heimkehr ebenfalls +10.
+- **Fans:** Kommt er zu dir, steigt die Fanstimmung (Umfeld) um 2, mit der Meldung „… kehrt zurück!“. Das gilt beim Kauf und bei der Leihe, für jeden Neuzugang über `neuzugang`.
+- **Gleichschritt:** Das Interesse rechnet nur für deinen Verein. Die Fanstimmung zählt im Vergleich aus 5a nicht.
 ## 9. Wechselwirkungen
 
 | Konzept | Zusammenspiel |

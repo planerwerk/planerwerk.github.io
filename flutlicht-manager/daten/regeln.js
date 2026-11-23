@@ -298,6 +298,9 @@ const REGELN={
     ausstieg:{billigAb:1.5,mittelAb:3,bonus:0.1,chance:0.25},
     ligaklausel:{malus:0.05,ref:0.3,stufen:[0,0.2,0.3,0.5]},
     interesse:{lage:0.3,lageMitte:55,wechselwunsch:15,bindung:-3,treu:-10,landsleute:3,landsleuteMax:6,geldAb:-10,geldJePunkt:0.03,
+      // heimkehrVerein (K19 §8, K19e, 23.11., popolupo, GESCHÄTZT): Rückkehr des verlorenen Sohns, mehr Interesse ab heimkehrAb Pflichtspielen für deinen Verein (wie ein Publikumsliebling),
+      // beim Wechsel zu dir Fanstimmung (Umfeld) + heimkehrFans
+      heimkehrVerein:10,heimkehrAb:60,heimkehrFans:2,
       ruf:0.2}, // U12h (K28 §5.4, 22.11., GESCHÄTZT): je Punkt deines Rufs als Trainer über dem Start mehr Interesse, darunter weniger
     vorvertrag:{von:'01-01',bis:'06-30',chance:0.06,ansehenMinus:5},
     bank:{vertragsjahr:1.5,soeldner:2,neuzugang:1.5,neuTage:365,teuerAnteil:0.25}},

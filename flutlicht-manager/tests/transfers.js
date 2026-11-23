@@ -137,5 +137,12 @@ const kaufe=(w,p,fee,yrs=3)=>{const els=w.W.ev('document');els.getElementById('f
   pruef(erhalten===soll&&hat&&wv===Math.round(2e6*W.anteil)&&bAbzug===wv&&danach===0&&fremd&&zurueck,'Weiterverkaufsbeteiligung: Abschlag beim Verkauf, Anteil beim nächsten Verkauf des Käufers, danach erledigt, nichts bei fremdem Verkauf oder Rückkauf',
     `erhalten ${erhalten} (soll ${soll}), Klausel ${hat}, Anteil ${wv}, Abzug beim Käufer ${bAbzug}, dritter Verkauf ${danach}, fremder Verkauf ${fremd}, Rückkauf ${zurueck}`);}
 
+// K19e. Rückkehr des verlorenen Sohns (K19 §8): Ein Spieler eines anderen Vereins mit mindestens heimkehrAb Pflichtspielen für deinen Verein hat heimkehrVerein mehr Interesse;
+//       kommt er zu dir, steigt die Fanstimmung (Umfeld) um heimkehrFans, mit Meldung. Ohne diese Spiele bleibt alles wie bisher.
+{const {S,F,ev,t}=welt(),IV=ev('RVT').interesse,KZ=ev('KZ'),wi=ev('wechselInteresse'),p=S.pl.find(x=>x.team>=0&&x.team<1000&&x.team!==S.my&&!x.leihe&&!x.wech&&F.vereinsSpiele(x,S.my)===0);
+  const i0=wi(p),z=[];z[KZ.s]=S.season-2;z[KZ.tid]=S.my;z[KZ.lg]=t.lg;z[KZ.sp]=IV.heimkehrAb;z[KZ.min]=5000;for(let i=0;i<=KZ.mw;i++)if(z[i]==null)z[i]=0;p.kar=[...(p.kar||[]),z];const i1=wi(p);
+  const fu0=t.fanU||0;p.team=S.my;F.neuzugang(p,S.my);const meldung=S.news.some(x=>String(x.t).includes(p.n+' kehrt zurück'));
+  pruef(Math.abs(i1-i0-IV.heimkehrVerein)<1e-9&&(t.fanU||0)===fu0+IV.heimkehrFans&&meldung,'Rückkehr des verlorenen Sohns: mehr Interesse, die Fans freuen sich',`Interesse ${i0.toFixed(1)} → ${i1.toFixed(1)}, Umfeld ${fu0} → ${t.fanU}, Meldung ${meldung}`);}
+
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

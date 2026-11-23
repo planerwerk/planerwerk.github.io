@@ -18,6 +18,10 @@ const vtVorschlag=F=>Math.ceil(F*(1+RVT.zone)/1000)*1000;
 // ---------- Interesse beim Wechsel (K19 §5.3) ----------
 // Verein (Ansehen, Liga), Perspektive (Stärke gegen deine Kaderstärke), Alter, Zufall, Ausland (wie bisher), dazu neu: Lage beim alten Verein (Stimmung, Wechselwunsch),
 // Bindung (Restlaufzeit, vereinstreu) und Heimat (Landsleute in deinem Kader). Geld gleicht ein wenig fehlendes Interesse aus (gehaltMitInteresse).
+// Rückkehr des verlorenen Sohns (K19 §8, K19e): mindestens RVT.interesse.heimkehrAb Pflichtspiele für deinen Verein (Statistik K34, mit der Karriere vor dem Spielstand)
+const heimkehrer=p=>vereinsSpiele(p,S.my)>=RVT.interesse.heimkehrAb;
+// Beim Wechsel zu dir (taktik.js neuzugang): die Fans freuen sich, Fanstimmung (Umfeld) + heimkehrFans, mit Meldung. Ohne Zufall.
+function heimkehrFans(p){if(!heimkehrer(p))return;fanAnlass(myT(),'fanU',RVT.interesse.heimkehrFans);news(`${p.n} kehrt zurück! Die Fans feiern die Heimkehr eines alten Bekannten.`,'good');}
 function wechselInteresse(p){const t=myT(),I=RM.interesse,IV=RVT.interesse,IA=RW.ausland.interesse,aus=istAusland(p),from=aus?avVon(p.team):p.team>=0?S.teams[p.team]:null,lvl=teamLevel(S.my);
   let x=(t.rep-(from?from.rep:t.rep-I.vereinslosAbstand))+(lvl-p.str)*I.niveauFaktor+I.basis+(t.lg===1?I.liga1:t.lg===2?I.liga2:I.liga3)+(p.age>=I.altAb?I.altPlus:0)+((p.seed||0.5)-0.5)*I.zufall
     +(aus?(p.nat===RW.nation.heimat?IA.heimkehr:IA.fremd):0);
@@ -26,6 +30,7 @@ function wechselInteresse(p){const t=myT(),I=RM.interesse,IV=RVT.interesse,IA=RW
   if(from&&hatEig(p,'vereinstreu'))x+=IV.treu;
   if(p.nat)x+=Math.min(IV.landsleuteMax,squad(S.my).filter(q=>q.nat===p.nat).length*IV.landsleute)*(p.nat===RW.nation.heimat?0:1);
   if(p.rkI&&p.rkI.s===S.season)x+=p.rkI.v; // Heimweh, Kontakt über eine Ereigniskarte (K32 §8, U18b)
+  if(p.team!==S.my&&heimkehrer(p))x+=IV.heimkehrVerein; // Rückkehr des verlorenen Sohns (K19 §8, K19e)
   x+=(ruf()-RV.ruf.start)*IV.ruf; // dein Ruf als Trainer (K28 §5.4, U12h)
   return x+beraterInteresse(p);} // ab +60 rät sein Berater ihm zu dir (K22)
 // Fehlt etwas Interesse (bis −10), will er mehr Geld: je Punkt 3 % mehr. Darunter hilft kein Geld.
