@@ -155,6 +155,13 @@ const KARTEN=[
     texte:['{verein} will {mitarbeiter} aus deinem Stab holen und bietet ihm deutlich mehr Verantwortung.','{mitarbeiter} hat ein Angebot von {verein} auf dem Tisch. Er fragt, ob du ihn ziehen lässt.'],
     optionen:[{text:'Ziehen lassen',wirkung:[{art:'stabWeg',wert:1}],folge:''},
       {text:'Mit mehr Gehalt halten',wirkung:[{art:'stabHalten',wert:0.2}],folge:''}],auto:1},
+  // K16g (K16 §8, 23.11.): Co-Trainer wird Cheftrainer nach einem Trainerwechsel eines Computer-Vereins. Neue Wirkungen chefWeg (er übernimmt den Verein, Ablöse) und chefHalten (Gehalt + wert),
+  // „Auf den Vertrag pochen“ nutzt stabStreit: Er bleibt, wirkt aber wert Tage schwächer wie im Streit (K16f).
+  {id:'coChef',titel:'Co-Trainer wird Cheftrainer',bereich:'K16',art:'entscheidung',gross:false,stufe:'haeufig',chance:0.3,ausloeser:'coChef',sperrTage:365,
+    texte:['{verein} hat gerade den Trainer gewechselt und will lieber {mitarbeiter}. Dein Co-Trainer soll dort Cheftrainer werden.','{mitarbeiter} kommt zu dir: {verein} bietet ihm den Posten als Cheftrainer. So eine Gelegenheit kommt vielleicht nicht wieder.'],
+    optionen:[{text:'Ziehen lassen',wirkung:[{art:'chefWeg',wert:1}],folge:''},
+      {text:'Mit deutlich mehr Gehalt halten',wirkung:[{art:'chefHalten',wert:0.3}],folge:''},
+      {text:'Auf den Vertrag pochen',wirkung:[{art:'stabStreit',wert:60}],folge:'{mitarbeiter} bleibt, aber mit dem Kopf ist er woanders.'}],auto:1},
   // Training (K07 §8, K07c, 22.11.). Neue Wirkung pause: Frische des Spielers + wert, Spielpraxis − REGELN.karten.training.pauseSpielpraxis.
   {id:'pauseBitte',titel:'Spieler bittet um Pause',bereich:'K07',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'pauseBitte',sperrTage:60,
     texte:['{spieler} kommt nach dem Training zu dir: Die Beine sind schwer, er bittet um zwei freie Tage.','Der Athletiktrainer meldet, {spieler} sei platt. Er selbst würde gern kurz durchschnaufen.'],

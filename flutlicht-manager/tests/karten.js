@@ -557,6 +557,21 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   S.tag+=29;const wieder=sf(xa)===1&&sf(xb)===1;S.tag-=29;
   pruef(!!x1&&!!x2&&beide&&schwach&&ohne&&wieder,'Streit im Stab: zwei hitzige Mitarbeiter, beide 28 Tage schwächer, danach normal',`hitzige gefunden ${!!x1&&!!x2}, Auslöser ${beide}, schwächer ${schwach}, nicht noch einmal ${ohne}, danach normal ${wieder}`);}
 
+// K16g. Co-Trainer wird Cheftrainer (K16 §8): nur nach einem Trainerwechsel eines Computer-Vereins vor höchstens chef.tage Tagen, nur mit zwei Co-Trainern,
+//       einer davon ehrgeizig und ab chef.qAb. Ziehen lassen: Ablöse, er ist dort Cheftrainer, der Nachfolger aus dem Pool ist wieder frei. Halten: Gehalt + 30 %.
+{const {S,F,ev}=welt(),A=ev('AUSLOESER'),C=ev('RKT').stab.chef,K=ev('RKT').stab,eg=ev('stabEhrgeizig'),sg=ev('stabGeaendert'),wirk=ev('kartenWirkung'),tv=ev('trainerVon');
+  S.phase='play';if(!S.stab)F.stabAufbau();S.stab.filter(x=>x.team===S.my&&x.r==='co').forEach(x=>{x.team=-1;});sg(); /* eigene Co-Trainer frei, dann zwei bekannte */
+  const neu=ehr=>{for(let i=0;i<80;i++){const x=F.stabNeu('co',C.qAb+2,S.my,1);if(eg(x)===ehr){S.stab.push(x);sg();return x;}}return null;},x1=neu(true),x2=neu(false);
+  const v=S.teams.find(t=>t.id!==S.my&&ev('aktiv')(t)&&t.lg<=3);S.trainerWechsel=[];const ohneWechsel=A.coChef();F.kiTrainerWechsel(v,0);const nachfolger=tv(v.id);
+  const b=A.coChef(),passt=!!b&&b.stab===x1.id&&b.verein===v.id;S.tag+=C.tage+1;const zuSpaet=A.coChef();S.tag-=C.tage+1;
+  x2.team=-1;sg();const einer=A.coChef();x2.team=S.my;sg();
+  const f0=S.fin['Stab: Ablöse']||0,c0=v.cash,a=Math.min(Math.round(x1.sal*K.abloese/1000)*1000,Math.max(0,c0));wirk({art:'chefWeg',wert:1},b,{titel:'Test'});const chef=tv(v.id);
+  const weg=!S.stab.includes(x1)&&!!chef&&chef.n===x1.n&&chef.tid===v.id&&v.stil===chef.stil&&!!nachfolger&&nachfolger.tid==null&&(S.fin['Stab: Ablöse']||0)-f0===a&&c0-v.cash===a;
+  const s0=x2.sal,s1=Math.round(s0*1.3/1000)*1000,erlaubt=ev('rahmenErlaubt')(ev('myT()'),s1-s0);wirk({art:'chefHalten',wert:0.3},{stab:x2.id,verein:v.id},{titel:'Test'});
+  const halten=x2.team===S.my&&x2.sal===(erlaubt?s1:s0); /* ohne Freigabe ginge er, als einziger Co-Trainer bleibt er aber */
+  pruef(!!x1&&!!x2&&ohneWechsel===null&&passt&&zuSpaet===null&&einer===null&&weg&&halten,'Co-Trainer wird Cheftrainer: nur nach einem frischen Trainerwechsel, nur der ehrgeizige, nicht als einziger Co-Trainer; ziehen lassen mit Ablöse, halten mit mehr Gehalt',
+    `ehrgeizig gefunden ${!!x1}, nicht ehrgeizig ${!!x2}, ohne Wechsel ${ohneWechsel}, Auslöser ${passt}, zu spät ${zuSpaet}, einziger ${einer}, ziehen lassen ${weg} (Ablöse ${a}), halten ${halten} (Freigabe ${erlaubt})`);}
+
 // U19e. Europapokal-Karten (K37 §8): Auswärtsspiel bei einem Auslandsverein in den nächsten 7 Tagen (kein Heimspiel, nicht später, nicht das Finale), Spiel 1 bis 7 Tage her,
 //       Wunder nach 0:3 im Hinspiel und 4:0 oder 3:0 mit Elfmeterschießen im Rückspiel, nicht nach nur einem Tor Rückstand und nicht beim Ausscheiden. euMeineSpiele ersetzt der Test.
 {const {S,W,ev}=welt(),A=ev('AUSLOESER'),AV=ev('AV0'),me=S.my,d=S.tag;W.ev('euMeineSpiele=function(){return S.testEu||[];}');

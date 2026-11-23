@@ -163,7 +163,7 @@ function kiVorstandWoche(){if(S.phase!=='play')return;const V=RCV.vorstand,tab={
 // Schonfrist ab sp Ligaspielen. Die Grundordnung wählt der Computer-Trainer wie bisher jeden Monat (kiOrdnung in training). Meldung nur aus deiner Liga („Großer Umbruch“, §8).
 function kiTrainerWechsel(t,sp){const V=RCV.vorstand,w=trainerWechseln(t);t.stil=w.neu.stil; // Nachfolger aus dem Trainerpool mit seinem Lieblingsstil (K32 §3.3b, U18a)
   squad(t.id).forEach(p=>stimmungAendern(p,V.schub));t.vor={v:V.start,u:null,n:0,ab:sp};
-  const l=S.trainerWechsel||(S.trainerWechsel=[]);l.push({s:S.season,tag:S.tag,t:t.id,lg:t.lg});if(l.length>V.protokoll)l.splice(0,l.length-V.protokoll);
+  const l=S.trainerWechsel||(S.trainerWechsel=[]);l.push({s:S.season,tag:S.tag,a:absTag(S.tag),t:t.id,lg:t.lg}); /* a: absoluter Tag, auch über den Saisonwechsel vergleichbar (K16g) */if(l.length>V.protokoll)l.splice(0,l.length-V.protokoll);
   if(t.lg===myT().lg)news(`Großer Umbruch: ${t.name} trennt sich von ${w.alt?w.alt.n:'seinem Trainer'}. Nachfolger ${w.neu.n} setzt auf ${STIL_NAME[t.stil]||t.stil}.`,'tr');}
 // Saisonwechsel (eigener Strom, vor Auf- und Abstieg): erwarteten Platz deutlich verfehlt und wenig Vertrauen, dann Wechsel im Sommer.
 // Danach für alle: Vertrauen halb zurück zum Start, kein Ultimatum, Schonfrist neu (die Tabelle beginnt bei null).

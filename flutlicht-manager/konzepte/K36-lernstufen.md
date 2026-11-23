@@ -413,6 +413,7 @@ lizenz:{
 170. **K27f Choreo in der Kurve (23.11., popolupo, ohne Testlauf):** keine neue Funktion, eine Meldung mit Wirkung im Bereich `ereignisse`.
 171. **K27g Platzsturm (23.11., popolupo, ohne Testlauf):** keine neue Funktion, eine Meldung mit Wirkung im Bereich `ereignisse`.
 172. **K16f Streit im Stab (23.11., popolupo, ohne Testlauf):** keine neue Funktion, eine Entscheidungskarte im Bereich `ereignisse`.
+173. **K16g Co-Trainer wird Cheftrainer (23.11., popolupo, ohne Testlauf):** keine neue Funktion, eine Entscheidungskarte im Bereich `ereignisse`. Wie „Mitarbeiter abgeworben“ (K16c) prüft sie den Bereich `stab` nicht: Ein Angebot von außen kommt auch, wenn der Verein den Stab noch führt.
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 

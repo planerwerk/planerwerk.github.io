@@ -158,7 +158,7 @@ Bandbreite = Grundbreite × (1,5 − 0,05 × Qualität) × Schwierigkeitsfaktor 
   - Das prüft die Wirkung, nicht der Auslöser, sonst bräche der Gleichschritt.
   - Eingestellt wird über dieselbe Funktion wie von Hand (`stabAnstellen`, Vertrag `einstellenJahre`).
 - **Grenze (Prüfung EP6):** Die 60 Spiele sind die Grenze des Publikumslieblings (`fanstimmung.ident.lieblingSpiele`), keine eigene Zahl. Die Karte kommt bis `kapitaenSaisons` (1) Saison nach dem Karriereende.
-- **Noch nicht:** „Co-Trainer wird Cheftrainer“ (ähnlich der Abwerbung aus K16c).
+- **Noch nicht:** „Co-Trainer wird Cheftrainer“ (ähnlich der Abwerbung aus K16c). Seit K16g gebaut.
 
 **Gebaut als K16f** (23.11.2026, popolupo, ohne Testlauf, Werte vorläufig): „Streit im Stab“ als Entscheidungskarte (Anlasskarte, Chance 0,2 je Woche).
 - **Temperament:** 30 % der Mitarbeiter sind hitzig, fest aus ihrer Nummer (`stabHitzig`, ohne Zufall, wie das Spezialgebiet der Scouts).
@@ -168,6 +168,20 @@ Bandbreite = Grundbreite × (1,5 − 0,05 × Qualität) × Schwierigkeitsfaktor 
   - Laufen lassen: beide 28 Tage schwächer.
 - **Schwächer** heißt: Qualität × 0,9 in allen Wirkungen des Stabs (`stabQ`, `x.streitBis`). Das gilt nur für deinen Stab.
 - Die Automatik führt das Gespräch.
+
+**Gebaut als K16g** (23.11.2026, popolupo, ohne Testlauf, Werte vorläufig): „Co-Trainer wird Cheftrainer“ als Entscheidungskarte (Anlasskarte, Chance 0,3 je Woche).
+- **Auslöser:**
+  - Ein Computer-Verein hat vor höchstens 21 Tagen den Trainer gewechselt (Protokoll `S.trainerWechsel`, U11d2). Das ist der echte Anlass: Der Verein sucht gerade, und dein Co-Trainer ist ihm lieber als der Nachfolger aus dem Pool.
+  - Du hast mindestens zwei Co-Trainer (der Co-Trainer ist Pflicht, K16c/ED4).
+  - Einer davon hat mindestens Qualität 12 und ist ehrgeizig. Ehrgeiz ist wie das Temperament (K16f) fest aus seiner Nummer, 40 % der Mitarbeiter (`stabEhrgeizig`).
+  - Zufall nur bei der Wahl des Co-Trainers, falls zwei passen (Kartenstrom).
+- **Wahl:**
+  - **Ziehen lassen:** Er übernimmt den Verein als Cheftrainer im Trainerpool (K32 §3.3b, U18a), mit Ruf = Ansehen des Vereins − 5 und einem neuen Lieblingsstil (eigener Strom `trainerpool`). Der Verein spielt danach diesen Stil, wie nach jedem Trainerwechsel. Der Nachfolger aus dem Pool war nur wenige Tage im Amt und ist wieder frei. Du bekommst eine Ablöse von einem Jahresgehalt wie in K16c, höchstens das Konto des Vereins. Er verlässt den Stab ganz.
+  - **Mit deutlich mehr Gehalt halten:** Gehalt + 30 %. Gibt der Vorstand das nicht frei (Gehaltsrahmen), geht er doch.
+  - **Auf den Vertrag pochen:** Er bleibt, wirkt aber 60 Tage schwächer, so wie im Streit aus K16f (`streitBis`, Qualität × 0,9).
+  - Die Automatik hält ihn mit mehr Gehalt (wie K16c).
+- **Bewusst einfach (vorläufig):** Die Karte kommt nur für deinen Stab. Computer-Vereine werben keine Co-Trainer anderer Computer-Vereine als Cheftrainer ab. Ein Co-Trainer, der als Cheftrainer scheitert, kommt nicht als Mitarbeiter zurück, er bleibt im Trainerpool.
+- **Regelwerte:** `REGELN.karten.stab.chef` (`tage`, `qAb`, `ehrgeizProzent`, `rufAbschlag`). Das Protokoll der Trainerwechsel trägt jetzt den absoluten Tag (`a`), damit auch Wechsel im Sommer über den Saisonwechsel hinweg zählen. Ältere Einträge ohne `a` zählen nicht.
 
 ## 9. Wechselwirkungen
 

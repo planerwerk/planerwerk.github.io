@@ -10,6 +10,8 @@ const stabVon=(tid,r)=>stabIndex().get(tid+'/'+r)||[];
 const stabQ=(tid,r)=>{const l=stabVon(tid,r);return l.length?Math.max(...l.map(x=>x.q*stabStreitFaktor(x))):RST.ohne;}; /* Streit im Stab (K16f): Qualität × (1 − malus) bis x.streitBis */
 // Streit im Stab (K16 §8, K16f): hitziges Temperament fest aus der Nummer (ohne Zufall), Anteil RST.streit.hitzigProzent; während eines Streits wirkt der Mitarbeiter schwächer
 const stabHitzig=x=>hash32('tp|'+x.id)%100<RST.streit.hitzigProzent;
+// Ehrgeiz (K16 §8, K16g): fest aus der Nummer wie das Temperament, Anteil RKT.stab.chef.ehrgeizProzent; nur ehrgeizige Co-Trainer wollen Cheftrainer werden
+const stabEhrgeizig=x=>hash32('eh|'+x.id)%100<RKT.stab.chef.ehrgeizProzent;
 const stabStreitFaktor=x=>x.streitBis!=null&&x.streitBis>=absTag(S.tag)?1-RST.streit.malus:1;
 // Wirkung je Bereich (K16 §5.3). art: co (Lernen, Umschulung, Vertrautheit), athletik (Risiko im Training), kondition, torwart, physio (Ausfallzeit), standard, video, psycho
 function stabFaktor(tid,art){if(tid==null||tid<0||!S.stab)return 1;const W=RST.wirkung;

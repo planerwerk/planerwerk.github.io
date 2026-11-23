@@ -152,6 +152,12 @@ const AUSLOESER={
   // Anwohner klagen (K26 §8, K26f): Tribüne oder Dach wartet noch mindestens eine Woche auf die Genehmigung, noch keine Klage bei diesem Projekt
   anwohnerKlagen(){const c=S.constr;return c&&c.phase==='genehmigung'&&!c.klage&&RKT.stadion.anwohner.includes(c.k)&&c.ab-absTag(S.tag)>=RKT.stadion.anwohnerRest?{bau:c.ab}:null;},
   // Streit im Stab (K16 §8, K16f): zwei hitzige Mitarbeiter deines Stabs (stabHitzig), keiner gerade im Streit
+  // Co-Trainer wird Cheftrainer (K16 §8, K16g): ein Computer-Verein hat vor höchstens RKT.stab.chef.tage Tagen den Trainer gewechselt (S.trainerWechsel),
+  // du hast mindestens zwei Co-Trainer, einer davon ab Qualität chef.qAb und ehrgeizig (stabEhrgeizig). Der Verein will ihn statt des Nachfolgers aus dem Pool.
+  coChef(){if(!S.stab||!S.trainerWechsel)return null;const C=RKT.stab.chef,h=absTag(S.tag),co=stabVon(S.my,'co');if(co.length<2)return null;
+    const l=co.filter(x=>x.q>=C.qAb&&stabEhrgeizig(x));if(!l.length)return null;
+    const w=S.trainerWechsel.filter(e=>e.a!=null&&h-e.a>=0&&h-e.a<=C.tage&&e.t!==S.my&&S.teams[e.t]&&aktiv(S.teams[e.t]));
+    return w.length?{stab:pick(l).id,verein:w[w.length-1].t}:null;},
   stabStreit(){if(!S.stab)return null;const h=absTag(S.tag),l=S.stab.filter(x=>x.team===S.my&&stabHitzig(x)&&!(x.streitBis>=h));if(l.length<2)return null;const a=pick(l),b=pick(l.filter(x=>x!==a));return{stab:a.id,stab2:b.id};},
   // Talent aus dem Nichts (K18 §8, K18f): du hast einen Scout mit dem Spezialgebiet Jugend ab Qualität RKT.jugend.scoutAb, er hat einen 16-Jährigen entdeckt
   talentEntdeckt(){if(!S.stab)return null; /* alte Spielstände ohne Stab (Prüfung EQ5) */const l=meineScouts().filter(x=>scoutGebiet(x)==='jugend'&&x.q>=RKT.jugend.scoutAb);return l.length?{stab:pick(l).id}:null;},
@@ -330,6 +336,7 @@ function kartenWirkung(w,b,c){let wert=w.wert,txt='',erfolg=true;if(w.chance!=nu
     else if(stabVon(S.my,x.r).length>=RST.rollen[x.r].plaetze){erfolg=false;txt=`Der Platz als ${RST.rollen[x.r].name} ist inzwischen besetzt.`;}
     else{if(S.lizenz&&S.lizenz.auto&&S.lizenz.auto.stab)delete S.lizenz.auto.stab;aufgabe('vertragOderStab');x.gefragt=1;stabAnstellen(x); /* Lizenz-Aufgabe zählt wie beim Einstellen von Hand (ER5) */txt=`${x.n} ist jetzt ${RST.rollen[x.r].name} (${fmt(x.sal)} pro Jahr).`;}}}} /* gefragt nur nach einer Antwort, die ihn nicht mehr betrifft (EQ1) */ /* K16e: wert 1 holt den Ex-Spieler in deinen Stab wie stabEinstellen (zwei Jahre), wert 0 fragt nur; beides merkt x.gefragt */
   else if(w.art==='stabStreit'){if(wert>0)[b.stab,b.stab2].forEach(id=>{const x=(S.stab||[]).find(y=>y.id===id);if(x&&x.team===S.my)x.streitBis=absTag(S.tag)+wert;});} /* K16f: beide wert Tage schwächer (stabStreitFaktor) */
+  else if(w.art==='chefWeg'||w.art==='chefHalten'){const x=(S.stab||[]).find(y=>y.id===b.stab),v=b.verein!=null?S.teams[b.verein]:null;if(x&&x.team===S.my)karteChef(x,v,w.art==='chefWeg',wert);} /* K16g */
   else if(w.art==='lagerEnde'){const l=lagerAktiv(S.tag);if(l&&(b.lager==null||l.von===b.lager)&&l.bis>S.tag)l.bis=S.tag;} /* K11g: früher abreisen, das Lager endet heute, bezahlt ist es schon */
   else if(w.art==='punktabzug'){const tid=b.verein;if(tid!=null&&tid!==S.my&&S.teams[tid]&&wert>0){const A=S.abzug||(S.abzug={}),a=A[S.season]||(A[S.season]={});a[tid]=(a[tid]||0)+wert;S.skandal3=S.season;}} /* S.skandal3: Saison des letzten Abzugs (ER2) */ /* K30g: Punktabzug in dieser Saison wie nach einer Insolvenz (S.abzug, saison.js table), nie dein Verein */
   else if(w.art==='bauAuflage'){const c=S.constr;if(c&&c.phase==='genehmigung'&&(b.bau==null||c.ab===b.bau))c.auflage=wert;} /* K26f, Prüfung EO4: Lärmschutz bezahlt, die Auflagen beim Baubeginn (Anteil der Kosten) werden wert, also 0 */
@@ -340,7 +347,7 @@ function kartenWirkung(w,b,c){let wert=w.wert,txt='',erfolg=true;if(w.chance!=nu
   if(w.dann&&erfolg&&KARTEN_MIT_ERFOLG.includes(w.art)){const t=w.dann.map(x=>kartenWirkung(x,b,c)).filter(Boolean);txt=[w.gut||'',...t].filter(Boolean).join(' ');}
   return txt;}
 const KARTEN_MIT_ERFOLG=['leihe','gehaltAnpassen','provisionZahlen','spezialist','transferliste','zurueckrudern','stabHolen']; // Wirkungen, die melden, ob sie geklappt haben (für dann)
-const KARTEN_WIRKUNGEN=['stimmung','stimmungAlle','zusammenhalt','glaub','vertrauen','ruf','bezDu','geld','fans','verpflichten','interesse','angebot','maezen','merch','jobwechsel','pause','talent','jugendHoch','jugendWeg','stabWeg','stabHalten','preisRichtwert','gehaltAnpassen','beraterBez','zuschuss','sonderschicht','leihe','selbstvertrauen','provisionZahlen','dritter','nachlass','hygiene','spezialist','gruppeStimmung','transferliste','zurueckrudern','vertrauenHalt','svAlle','wettsperre','standardGegner','bauVerzug','stabHolen','bauAuflage','punktabzug','lagerEnde','stabStreit'];
+const KARTEN_WIRKUNGEN=['stimmung','stimmungAlle','zusammenhalt','glaub','vertrauen','ruf','bezDu','geld','fans','verpflichten','interesse','angebot','maezen','merch','jobwechsel','pause','talent','jugendHoch','jugendWeg','stabWeg','stabHalten','preisRichtwert','gehaltAnpassen','beraterBez','zuschuss','sonderschicht','leihe','selbstvertrauen','provisionZahlen','dritter','nachlass','hygiene','spezialist','gruppeStimmung','transferliste','zurueckrudern','vertrauenHalt','svAlle','wettsperre','standardGegner','bauVerzug','stabHolen','bauAuflage','punktabzug','lagerEnde','stabStreit','chefWeg','chefHalten'];
 // Standard-Spezialisten (K06e, taktik.js taktikWirkung): Faktor auf Tore nach Ecken und Freistoßflanken deines Vereins, solange sich die Gegner darauf eingestellt haben
 const standardGegnerFaktor=t=>t&&t.id===S.my&&S.stdGegen&&S.stdGegen.tid===S.my&&S.stdGegen.bis>=absTag(S.tag)?RKT.standard.faktor:1;
 // Ausgang des lachenden Dritten (K30 §8.3, K17 §5.4, K30c): Unterschreibt der Spieler bei dir (aktionen.js offer, vor dem Abschluss), sinkt die Beziehung zwischen den beiden
@@ -371,6 +378,16 @@ function karteStab(x,v,weg,wert){const K=RKT.stab,R0=RST.rollen[x.r],rolle=R0.na
     const a=Math.min(Math.round(x.sal*K.abloese/1000)*1000,Math.max(0,v.cash));x.team=v.id;x.wiv=0;if(a){money('Stab: Ablöse',a);v.cash-=a;}stabGeaendert();news(`${x.n} (${rolle}) wechselt zu ${v.name}${a?`, Ablöse ${fmt(a)}`:''}.`,'tr');return;}
   const neu=Math.round(x.sal*(1+wert)/1000)*1000;if(!rahmenErlaubt(myT(),neu-x.sal)){news(`Der Vorstand gibt die Gehaltserhöhung für ${x.n} nicht frei (Gehaltsrahmen).`,'');karteStab(x,v,true,0);return;} /* ED4 */
   x.sal=neu;news(`${x.n} (${rolle}) bleibt, für ${fmt(x.sal)} im Jahr.`,'');}
+// Co-Trainer wird Cheftrainer (K16g): weg = ziehen lassen (Ablöse wie K16c, er übernimmt den Verein, dessen Nachfolger geht zurück in den Pool),
+// sonst halten mit Gehalt + wert (Gehaltsrahmen; gibt der Vorstand es nicht frei, geht er doch). Ohne zweiten Co-Trainer oder ohne gültiges Angebot bleibt er.
+function karteChef(x,v,weg,wert){const K=RKT.stab,C=K.chef,rolle=RST.rollen[x.r].name;
+  if(!weg){const neu=Math.round(x.sal*(1+wert)/1000)*1000;if(rahmenErlaubt(myT(),neu-x.sal)){x.sal=neu;news(`${x.n} (${rolle}) bleibt, für ${fmt(x.sal)} im Jahr.`,'');return;}
+    news(`Der Vorstand gibt die Gehaltserhöhung für ${x.n} nicht frei (Gehaltsrahmen).`,'');}
+  if(stabVon(S.my,x.r).length<=1){news(`${x.n} bleibt, ohne ihn hättest du keinen ${rolle} mehr.`,'');return;}
+  if(!v||v.id===S.my||!aktiv(v)){news(`${x.n} bleibt, das Angebot gilt nicht mehr.`,'');return;}
+  trainerS();const alt=trainerGeht(v,0),c=mitStrom(strom('trainerpool',S.season,S.tag,'co',x.id),()=>trainerNeu(v.rep-C.rufAbschlag,v.id));c.n=x.n;c.co=1;v.chef=c.id;v.stil=c.stil;
+  const a=Math.min(Math.round(x.sal*K.abloese/1000)*1000,Math.max(0,v.cash));if(a){money('Stab: Ablöse',a);v.cash-=a;}S.stab=S.stab.filter(y=>y!==x);stabGeaendert();
+  news(`${x.n} wird Cheftrainer bei ${v.name}${a?`, Ablöse ${fmt(a)}`:''}.${alt?` ${alt.n} war dort nur wenige Tage im Amt.`:''}`,'tr');}
 function kartenLog(c,tag,wahl,auto){const K=karten();K.log.push({id:c.id,s:S.season,tag,wahl,auto});if(K.log.length>RKT.log)K.log.splice(0,K.log.length-RKT.log);}
 
 // ---------- Anzeige im Büro ----------
