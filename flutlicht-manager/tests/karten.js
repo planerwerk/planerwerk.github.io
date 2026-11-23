@@ -431,6 +431,16 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   pruef(!!da&&da.bau===h+21&&logen===null&&knapp===null&&fremd&&verschoben&&nochmal===null&&nochNicht&&beginn,'Anwohner klagen: nur Tribüne oder Dach in der Genehmigung, verlorene Klage verschiebt um 3 Wochen, nur dieses Projekt',
     `Auslöser ${!!da}, Logen ${logen}, knapp ${knapp}, anderes Projekt unberührt ${fremd}, verschoben ${verschoben}, zweite Klage ${nochmal}, am alten Termin noch Genehmigung ${nochNicht}, 3 Wochen später Baubeginn ${beginn}`);}
 
+// K16e. Ehemaliger Kapitän kehrt zurück (K16 §8): nur ein vereinsloser Ex-Spieler mit mindestens vereinAb Spielen für deinen Verein, frischer Platz in seiner Rolle;
+//       „In den Stab holen“ stellt ihn ein (dann Fans +2), „Alles Gute“ fragt nur; danach keine Karte mehr für ihn.
+{const {S,F,ev}=welt(),A=ev('AUSLOESER'),E=ev('RST').exSpieler,RO=ev('RST').rollen,sv=ev('stabVon');S.phase='play';if(!S.stab)F.stabAufbau();
+  const r=['jugend','standard','co','athletik'].find(k=>RO[k]&&sv(S.my,k).length<RO[k].plaetze),neu=()=>{const x=F.stabNeu(r,10,-1,1);Object.assign(x,{ex:120,exS:S.season,exV:S.my,exVsp:E.vereinAb+20});S.stab.push(x);ev('stabGeaendert')();return x;};
+  S.stab.forEach(x=>{if(x.team<0)x.gefragt=1;});const x=neu(),da=A.exKapitaen();x.exVsp=E.vereinAb-1;const wenig=A.exKapitaen();x.exVsp=E.vereinAb+20;x.exV=S.teams.find(t=>t.id!==S.my).id;const fremd=A.exKapitaen();x.exV=S.my;
+  const t=ev('myT()'),fu0=t.fanU||0,kw=ev('kartenWirkung');kw({art:'stabHolen',wert:1,dann:[{art:'fans',wert:2}]},{stab:x.id},{titel:'Test'});const geholt=x.team===S.my&&x.gefragt===1&&(t.fanU||0)>fu0,danach=A.exKapitaen();
+  const y=neu();kw({art:'stabHolen',wert:0},{stab:y.id},{titel:'Test'});const nurGefragt=y.team<0&&y.gefragt===1&&A.exKapitaen()===null;
+  pruef(!!r&&!!da&&da.stab===x.id&&wenig===null&&fremd===null&&geholt&&danach===null&&nurGefragt,'Ehemaliger Kapitän: nur verdiente Ex-Spieler deines Vereins, Einstellen mit Fans +2, danach keine Karte mehr',
+    `Rolle ${r}, Auslöser ${!!da}, zu wenig Spiele ${wenig}, anderer Verein ${fremd}, geholt ${geholt}, danach ${danach}, nur gefragt ${nurGefragt}`);}
+
 // U19e. Europapokal-Karten (K37 §8): Auswärtsspiel bei einem Auslandsverein in den nächsten 7 Tagen (kein Heimspiel, nicht später, nicht das Finale), Spiel 1 bis 7 Tage her,
 //       Wunder nach 0:3 im Hinspiel und 4:0 oder 3:0 mit Elfmeterschießen im Rückspiel, nicht nach nur einem Tor Rückstand und nicht beim Ausscheiden. euMeineSpiele ersetzt der Test.
 {const {S,W,ev}=welt(),A=ev('AUSLOESER'),AV=ev('AV0'),me=S.my,d=S.tag;W.ev('euMeineSpiele=function(){return S.testEu||[];}');

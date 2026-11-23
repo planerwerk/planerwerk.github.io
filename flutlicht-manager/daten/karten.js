@@ -303,5 +303,10 @@ const KARTEN=[
   {id:'anwohnerKlagen',titel:'Anwohner klagen',bereich:'K26',art:'entscheidung',gross:false,stufe:'haeufig',chance:0.1,ausloeser:'anwohnerKlagen',sperrTage:365,
     texte:['Eine Bürgerinitiative klagt gegen deinen Stadionausbau: mehr Lärm, mehr Verkehr, mehr Licht. Die Genehmigung könnte sich verzögern.','Anwohner haben beim Verwaltungsgericht Klage gegen den Ausbau eingereicht. Der Anwalt des Vereins rät zu einem Gespräch.'],
     optionen:[{text:'Mit den Anwohnern reden und Lärmschutz bezahlen',wirkung:[{art:'geld',wert:-150000}],folge:'Neue Schallschutzwände und ein Parkkonzept: Die Anwohner ziehen die Klage zurück.'},
-      {text:'Es auf die Klage ankommen lassen',wirkung:[{art:'bauVerzug',wert:0,chance:0.5,schlecht:3,gut:'Das Verwaltungsgericht weist die Klage ab. Der Bau beginnt wie geplant.',schlechtText:'Das Gericht gibt den Anwohnern teilweise recht: Die Genehmigung kommt drei Wochen später.'}]}],auto:0}
+      {text:'Es auf die Klage ankommen lassen',wirkung:[{art:'bauVerzug',wert:0,chance:0.5,schlecht:3,gut:'Das Verwaltungsgericht weist die Klage ab. Der Bau beginnt wie geplant.',schlechtText:'Das Gericht gibt den Anwohnern teilweise recht: Die Genehmigung kommt drei Wochen später.'}]}],auto:0},
+  // Ehemaliger Kapitän kehrt zurück (K16 §8, K16e, 23.11., popolupo): ein verdienter Ex-Spieler deines Vereins ist als Mitarbeiter frei (K32c). Werte vorläufig.
+  {id:'exKapitaen',titel:'Ehemaliger Kapitän kehrt zurück',bereich:'K16',art:'entscheidung',gross:false,stufe:'haeufig',chance:0.5,ausloeser:'exKapitaen',sperrTage:60,
+    texte:['Er hat seine Karriere beendet, jetzt sucht {mitarbeiter} eine neue Aufgabe. In der Kurve hängt schon ein Banner: „Komm nach Hause!“','{mitarbeiter} war jahrelang einer von euch. Nach dem Karriereende wäre er bereit, im Verein anzufangen.'],
+    optionen:[{text:'Ihn in den Stab holen',wirkung:[{art:'stabHolen',wert:1,dann:[{art:'fans',wert:2}],gut:'Die Fans feiern die Rückkehr eines der ihren.'}],folge:''},
+      {text:'Ihm alles Gute wünschen',wirkung:[{art:'stabHolen',wert:0},{art:'fans',wert:-1}],folge:'Er sucht sich anderswo eine Aufgabe. In der Kurve sind einige enttäuscht.'}],auto:1}
 ];

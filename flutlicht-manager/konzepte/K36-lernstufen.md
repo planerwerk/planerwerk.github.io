@@ -404,6 +404,7 @@ lizenz:{
 161. **K06e Standard-Spezialisten (23.11., popolupo, ohne Testlauf):** keine neue Funktion, eine Meldung mit Wirkung im Bereich `ereignisse`.
 162. **K15e Streit nach Kritik (23.11., popolupo, ohne Testlauf):** keine neue Funktion, eine Entscheidungskarte im Bereich `ereignisse`.
 163. **K26f Anwohner klagen (23.11., popolupo, ohne Testlauf):** keine neue Funktion, eine Entscheidungskarte im Bereich `ereignisse`. Bauen kann man ohnehin erst mit der Freigabe des Bereichs `stadion`.
+164. **K16e Ehemaliger Kapitän kehrt zurück (23.11., popolupo, ohne Testlauf):** keine neue Funktion, eine Entscheidungskarte im Bereich `ereignisse`. Die Automatik wählt „alles Gute“ und stellt niemanden ein.
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 

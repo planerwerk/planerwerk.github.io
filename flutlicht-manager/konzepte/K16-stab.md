@@ -145,6 +145,15 @@ Bandbreite = Grundbreite × (1,5 − 0,05 × Qualität) × Schwierigkeitsfaktor 
 | Arzt widerspricht | du willst fit spritzen, der vorsichtige Arzt rät ab | Hinweis mit Risiko, du entscheidest |
 | Ehemaliger Kapitän kehrt zurück | Karriereende eines verdienten Spielers | Angebot als Co-Trainer oder Jugendtrainer, Fans freuen sich (K27) |
 
+**Gebaut als K16e** (23.11.2026, popolupo, ohne Testlauf, Werte vorläufig): „Ehemaliger Kapitän kehrt zurück“ als Entscheidungskarte (Anlasskarte, Chance 0,5 je Woche).
+- **Auslöser:** Ein Ex-Spieler aus K32c ist vereinsloser Mitarbeiter, seit höchstens einer Saison. Er hat für deinen Verein die meisten Pflichtspiele gemacht, mindestens 60 (wie ein Publikumsliebling). In seiner Rolle hast du einen freien Platz. Die Rolle kommt aus K32c: Co-, Jugend- oder Standardtrainer, Torhüter werden Torwarttrainer.
+- **Wahl:**
+  - In den Stab holen: wie „Einstellen“, zwei Jahre, Gehalt nach deiner Liga. Nur wenn das klappt, kommt Fans +2.
+  - Alles Gute wünschen: Fans −1.
+  - Danach kommt für ihn keine Karte mehr (`gefragt`).
+- **Automatik:** wünscht alles Gute und stellt niemanden ein.
+- **Noch nicht:** „Co-Trainer wird Cheftrainer“ (ähnlich der Abwerbung aus K16c) und „Streit im Stab“. Für den Streit fehlt das Temperament der Mitarbeiter.
+
 ## 9. Wechselwirkungen
 
 | Konzept | Zusammenspiel |

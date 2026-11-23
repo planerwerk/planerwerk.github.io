@@ -50,7 +50,8 @@ function stabExSpieler(abgaenge){if(!S.stab)return 0;const E=RST.exSpieler;let n
   (abgaenge||[]).forEach(p=>{const a=statSumme(p);if(a.sp<E.ab||(S.trainer||[]).some(x=>x.ex&&x.n===p.n&&x.seit===S.season))return;
     mitStrom(strom('stab',S.season,'ex',p.id),()=>{if(R()>=E.chance)return;let r='torwart';
       if(p.pos!=='TW'){const W=E.rollen,ks=Object.keys(W);let z=R()*ks.reduce((s,k)=>s+W[k],0);r=ks[ks.length-1];for(const k of ks){z-=W[k];if(z<0){r=k;break;}}}
-      const x=stabNeu(r,E.basis+a.sp/E.jeSpiele+(p.ehj!=null?E.ehrung:0)+ri(E.streuung[0],E.streuung[1]),-1,2);x.n=p.n;x.age=p.age;x.ex=a.sp;x.exS=S.season;S.stab.push(x);n++;
+      const x=stabNeu(r,E.basis+a.sp/E.jeSpiele+(p.ehj!=null?E.ehrung:0)+ri(E.streuung[0],E.streuung[1]),-1,2);x.n=p.n;x.age=p.age;x.ex=a.sp;x.exS=S.season;
+      /* Verein mit den meisten Spielen (K16e) */const top=Object.keys(a.ver).sort((u,v)=>a.ver[v]-a.ver[u])[0];if(top!=null){x.exV=+top;x.exVsp=a.ver[top];}S.stab.push(x);n++;
       if(a.ver[S.my])news(`${p.n} beendet seine Karriere und steht als ${RST.rollen[r].name} zur Verfügung (${a.sp} Ligaspiele).`);});});
   if(n)stabGeaendert();return n;}
 // Trainerteam mitnehmen (K16 §5, §12 Nr. 4, K16b): beim Jobwechsel bis zu mitnehmen.max Mitarbeiter, die mindestens mitnehmen.wochen bei dir waren (wiv).
