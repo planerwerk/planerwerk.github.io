@@ -73,6 +73,16 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
     'Jobangebot: Bedingungen, Grenze, ein Angebot je Jahr, Wechsel mit Ablöse und Station, offene Karten bleiben beim alten Verein, Voreinstellung bleiben',
     `ohne Ruf ${ohneRuf}, zu früh ${frueh}, Angebot ${z&&z.name} (${z&&z.rep}, Grenze ${grenze}), gesperrt ${gesperrt}, offene Karten ${offenWeg}, Ablöse ${a}, jetzt Verein ${S.my}, Station ${alt&&alt.g}`);}
 
+// U12n. Ein Ausweg (K28 §5.13): nur im Ultimatum deines Vereins und ab Ruf rettung.rufAb; ein Verein derselben oder einer tieferen Profiliga mit höchstens deinem Ansehen
+//       (höchstens rettung.abstand darunter); höchstens einer je Jahr; „Wechseln“ übernimmt den Verein wie beim Jobangebot, das Ultimatum ist danach weg; Voreinstellung bleiben.
+{const {S,F,ev}=welt(),R0=ev('RV').rettung,A=ev('AUSLOESER'),t=ev('myT()'),c=ev('karteVon')('rettung');S.ruf=60;
+  const ohneUlt=A.rettung();S.ult={tid:S.my,s:S.season,ab:5,n:1};S.ruf=R0.rufAb-1;const ohneRuf=A.rettung();S.ruf=60;const b=A.rettung(),z=b?S.teams[b.verein]:null;
+  const passt=!!z&&z.id!==S.my&&z.lg>=t.lg&&z.lg<=3&&z.rep<=t.rep&&z.rep>=t.rep-R0.abstand;
+  const K=ev('karten')(),key='rettung::999';K.sp[key]=ev('absTag')(S.tag);const gesperrt=A.rettung()===null;delete K.sp[key];
+  ev('statS')();if(z)F.kartenEntscheiden({id:'rettung',tag:S.tag,s:S.season,b,text:''},0,false);
+  pruef(ohneUlt===null&&ohneRuf===null&&passt&&gesperrt&&c.auto===1&&S.my===(z&&z.id)&&S.ult==null,'Ein Ausweg: nur im Ultimatum und mit Ruf, ein gleich großer oder kleinerer Verein, einer je Jahr, Wechsel beendet das Ultimatum',
+    `ohne Ultimatum ${ohneUlt}, ohne Ruf ${ohneRuf}, Angebot ${z&&z.name} (Liga ${z&&z.lg}, Ansehen ${z&&z.rep} gegen ${t.rep}), gesperrt ${gesperrt}, jetzt Verein ${S.my}, Ultimatum ${JSON.stringify(S.ult)}`);}
+
 // K14b. Kabinen-Karten (K14 §8): Kantersieg im letzten Ligaspiel, Neuzugang mit kaum Einsatz ab dem 3. Ligaspiel, Eingewöhnung eines Spielers aus dem Ausland
 {const {S,ev}=welt(),A=ev('AUSLOESER'),t=ev('myT()'),K=ev('RKT').kabine,g=S.teams.find(x=>x.lg===t.lg&&x.id!==VEREIN).id,heute=()=>ev('absTag')(S.tag);
   S.res[t.lg].push([VEREIN,g,4,0,0]);const party=!!A.kantersieg();S.res[t.lg].push([g,VEREIN,1,0,1]);const keineParty=A.kantersieg()===null;

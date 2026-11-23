@@ -271,7 +271,16 @@ Nach §8 als Ereigniskarte (K30, `daten/karten.js`, Bereich `ereignisse`).
   - Kredite und Raten bleiben wie bei jedem Jobwechsel beim alten Verein, ohne Buchung (Computer-Vereine führen keine Kredite). Die Ablöse steht nur in der Meldung, nicht in den Finanzen (DQ4, DQ5).
 - **Bleiben und es öffentlich sagen:** Vertrauen +5, Fans +2. Das ist auch die Voreinstellung, der Co-Trainer wechselt nie für dich.
 - **Sich alles anhören und dann absagen:** Ruf +1. Mit 50 % wird das Treffen publik, dann Vertrauen −8.
-- **Noch nicht:** Ausstiegsklausel im Trainervertrag, Angebot während des Ultimatums als Rettung, Angebote aus dem Ausland.
+- **Noch nicht:** Ausstiegsklausel im Trainervertrag, Angebot während des Ultimatums als Rettung (seit U12n, §5.13a), Angebote aus dem Ausland.
+
+### 5.13a Umsetzung U12n (23. November 2026, popolupo, ohne Testlauf, Werte vorläufig): Ein Ausweg im Ultimatum
+Eigene Entscheidungskarte „Ein Ausweg“ (Anlasskarte, Chance 0,25 je Woche, große Karte mit Halt wie das Jobangebot).
+- **Wann:** Du stehst bei deinem Verein im Ultimatum (§5.3) und bist nicht entlassen. Dein Ruf ist mindestens 40 (`RV.rettung.rufAb`). Höchstens ein Angebot je Jahr über alle Vereine, wie beim Jobangebot.
+- **Wer:** ein Verein derselben oder einer tieferen Profiliga mit höchstens deinem Ansehen und höchstens 15 darunter (`rettung.abstand`). Es ist ein Schritt zurück, kein Aufstieg.
+- **Wechseln:** genau wie beim Jobangebot (§5.13, Kartenwirkung `jobwechsel`): Station „gewechselt“ statt „entlassen“, Ablöse an den alten Verein, Co-Trainer kommen mit, offene Karten entscheidet der Co-Trainer. Das Ultimatum endet mit dem Jobwechsel.
+- **Bleiben und kämpfen:** Vertrauen +3. Das Ultimatum läuft weiter.
+- **Voreinstellung:** bleiben. Der Co-Trainer wechselt nie für dich.
+- **Warum:** Wer kurz vor der Entlassung steht, bekommt im echten Fußball manchmal einen Ausweg. Der Preis ist der kleinere Verein. Dafür steht in der Karriere „gewechselt“, und der Ruf leidet nicht wie bei einer Entlassung.
 
 ## 6. Hebel des Spielers
 

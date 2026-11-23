@@ -1015,6 +1015,8 @@ const REGELN={
     jobs:{ansehenAbschlag:4,kandidaten:8,angebote:4},
     // Jobangebot während der Saison (K28 §8, U12j, 22.11., GESCHÄTZT): Karte ab Ruf rufAb, Verein mit mindestens abstand mehr Ansehen und höchstens Ruf + rufSpanne;
     // beim Wechsel zahlt der neue Verein dem alten abloese × dein Gehalt je Saison
+    // rettung (U12n, K28 §5.13, 23.11., GESCHÄTZT): Rettungsangebot im Ultimatum ab Ruf rufAb, von einem Verein derselben oder einer tieferen Liga mit höchstens deinem Ansehen und höchstens abstand darunter
+    rettung:{rufAb:40,abstand:15},
     jobangebot:{rufAb:55,abstand:8,rufSpanne:10,abloese:1}, // rufSpanne: über der Mitte der Jobangebote (mkJobs), seit Prüfung DQ1 (vorher Ruf + 40, das hat nichts begrenzt)
     // Budgetgespräch (K28, K15 §12 Nr. 20, U12l, 22.11., GESCHÄTZT): einmal je Saison mehr Transferbudget beantragen. Zusage mit basis + jeVertrauen × (Vertrauen − 50)
     // + jeRuf × (Ruf − Startruf) − jeSparsam × (Sparsamkeit des Präsidenten − 10), bei Glaubwürdigkeit unter glaubUnter × glaubFaktor, in grenzen (eigener Strom).

@@ -18,6 +18,11 @@ const AUSLOESER={
   jobangebot(){const J=RV.jobangebot,t=myT(),K=karten(),heute=absTag(S.tag),sp=(karteVon('jobangebot')||{}).sperrTage||RKT.sperrTage;
     if(ruf()<J.rufAb||meineSpieltage()<RV.platzAbSpieltag||S.ult||Object.keys(K.sp).some(k=>k.startsWith('jobangebot:')&&heute-K.sp[k]<sp))return null;
     const l=S.teams.filter(x=>x.id!==S.my&&aktiv(x)&&x.lg<=t.lg&&x.rep>=t.rep+J.abstand&&x.rep<=jobangebotGrenze());return l.length?{verein:pick(l).id}:null;},
+  // Rettungsangebot (K28 §5.13, U12n): du stehst im Ultimatum, Ruf ab RV.rettung.rufAb, höchstens eins je sperrTage über alle Vereine (wie beim Jobangebot).
+  // Ein Verein derselben oder einer tieferen Profiliga mit höchstens deinem Ansehen und höchstens rettung.abstand darunter: ein Schritt zurück statt der Entlassung
+  rettung(){const R0=RV.rettung,t=myT(),K=karten(),heute=absTag(S.tag),sp=(karteVon('rettung')||{}).sperrTage||RKT.sperrTage;
+    if(!S.ult||S.ult.tid!==S.my||S.fired||ruf()<R0.rufAb||Object.keys(K.sp).some(k=>k.startsWith('rettung:')&&heute-K.sp[k]<sp))return null;
+    const l=S.teams.filter(x=>x.id!==S.my&&aktiv(x)&&x.lg>=t.lg&&x.lg<=3&&x.rep<=t.rep&&x.rep>=t.rep-R0.abstand);return l.length?{verein:pick(l).id}:null;},
   // Vertrauen ab 80, obwohl du unter dem Saisonziel stehst (ab dem 5. Ligaspiel)
   rueckendeckung(){if(S.trust<80||meineSpieltage()<RV.platzAbSpieltag)return null;return rank(myT().lg,S.my)>S.target?{}:null;},
   // Ein Verein, zu dem deine Beziehung unter −50 liegt (K17)
