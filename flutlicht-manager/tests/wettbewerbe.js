@@ -61,10 +61,15 @@ pruef(supercups.length===N-1&&supercups.every(x=>!x.verl&&(x.hg!==x.ag)===!x.pen
   if(e){S4.tag=e.tag-2;const sq=ev4('squad')(S4.my);sq.forEach(p=>{p.inj=0;});const voll=F4.spielVerlegenLauf();let n=sq.length;for(const p of sq){if(n<V.minSpieler)break;if(p.pos!=='TW'){p.inj=10;n--;}}
     /* EI3, EI4 (Prüfung EJ): Termin vor dem nächsten eigenen Ligaspiel, Abstand zu einem Testspiel */const x0=F4.verlegungTag(e);let nl=Infinity;S4.fx[e.lg].forEach((md,k)=>{if(k<=e.md)return;md.forEach(([x,y],i)=>{if(x===S4.my||y===S4.my)nl=Math.min(nl,S4.plan.zeit[e.lg][k][i][0]);});});
     S4.testspiele=[{id:99,tag:x0,gegner:1000,stand:'zugesagt'}];const mitTs=F4.verlegungTag(e);S4.testspiele=[];const vorNaechstem=x0!=null&&x0+M<=nl,tsAbstand=mitTs==null||Math.abs(mitTs-x0)>=M;
+    /* Prüfung EL1: EI3 unterscheidbar. Rückt das nächste eigene Ligaspiel auf alt + M + 1, bleibt davor kein Tag (der Code vor EI3 fände einen danach). EI4, Lage: ein Supercup
+       am Vortag versperrt das Ligaspiel nicht (der Code vor EI4 sah nur das nächste Spiel) */
+    let nk=null;S4.fx[e.lg].forEach((md,k)=>{if(k<=e.md||nk)return;md.forEach(([x,y],i)=>{if(!nk&&(x===S4.my||y===S4.my))nk=S4.plan.zeit[e.lg][k][i];});});
+    const nk0=nk?nk[0]:null;if(nk)nk[0]=S4.plan.zeit[e.lg][e.md][e.i][0]+M+1;const ohneTag=nk?F4.verlegungTag(e):'kein weiteres Ligaspiel';if(nk)nk[0]=nk0;
+    const sc0=S4.supercup;S4.supercup={h:S4.my,a:S4.teams.find(t=>t.id!==S4.my).id,tag:e.tag-1};const lageMit=F4.verlegungLage();S4.supercup=sc0;const lageOk=!!lageMit&&lageMit.e.tag===e.tag;
     const z=S4.plan.zeit[e.lg][e.md][e.i],alt=z[0],[h,a]=S4.fx[e.lg][e.md][e.i],r=F4.spielVerlegenLauf(),neu=z[0],Z=S4.plan.zeit[e.lg],letzter=Math.min(...Z[Z.length-1].map(x=>x[0]));
     const abstand=[h,a].every(id=>[...F4.spieltageVon(id,z)].every(x=>Math.abs(x-neu)>=M)),zweimal=F4.spielVerlegenLauf();
-    ok=typeof voll==='string'&&vorNaechstem&&tsAbstand&&r===null&&neu>alt&&abstand&&neu<letzter&&ev4('wochentag')(neu)!==1&&typeof zweimal==='string'&&zweimal.includes('schon eine Verlegung'); /* EI5 */
-    info=`voller Kader ${typeof voll==='string'?'abgelehnt':voll}, vor dem nächsten Ligaspiel ${vorNaechstem}, Abstand zum Testspiel ${tsAbstand}, Antrag ${r}, ${alt} → ${neu}, Abstand ${abstand}, vor dem letzten Spieltag ${neu<letzter}, zweiter Antrag ${typeof zweimal==='string'?'abgelehnt':zweimal}`;}
+    ok=typeof voll==='string'&&vorNaechstem&&tsAbstand&&ohneTag===null&&lageOk&&r===null&&neu>alt&&abstand&&neu<letzter&&ev4('wochentag')(neu)!==1&&typeof zweimal==='string'&&zweimal.includes('schon eine Verlegung'); /* EI5 */
+    info=`voller Kader ${typeof voll==='string'?'abgelehnt':voll}, vor dem nächsten Ligaspiel ${vorNaechstem}, Abstand zum Testspiel ${tsAbstand}, ohne Tag davor ${ohneTag}, Lage trotz Supercup ${lageOk}, Antrag ${r}, ${alt} → ${neu}, Abstand ${abstand}, vor dem letzten Spieltag ${neu<letzter}, zweiter Antrag ${typeof zweimal==='string'?'abgelehnt':zweimal}`;}
   pruef(ok,'Spielverlegung: nur bei Personalnot, neuer Termin mit Abstand, einmal je Saison',info);}
 
 console.log(`\n${N} Saison(s) in ${((Date.now()-t0)/1000).toFixed(1)} s`);

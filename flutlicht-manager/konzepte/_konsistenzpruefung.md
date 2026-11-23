@@ -2204,3 +2204,24 @@ Korrekturen auf `mitarbeit/popolupo-ek-korrekturen` (auf K06d).
 | EK5 | Bei Hin- und Rückspiel sagt das einzelne Spiel nichts über das Weiterkommen. Last-Minute-Drama jetzt vorläufig nicht in Relegation und Europapokal. | ✅ behoben, vorläufig |
 | EK6 | Der Taktik-Coup zählte auch einen Stil, den der Co-Trainer gewählt hatte. Jetzt nur ohne Automatik des Stils. | ✅ behoben |
 | EK7 | Der Zähler `p.pfal` veraltete und zählte auch Kurzeinsätze. Jetzt erst ab der Mindestzeit für eine Note. Ein Zähler älter als 28 Tage beginnt neu (`p.pfalT`), die Karte verlangt einen frischen Zähler. Nicht behoben: Bei einer Kette von Wechseln (A für B, dann B für C) bekommt A in `xpo` die Position „ZM“ (vorhandener Fehler in der Engine). Die Korrektur verschiebt die Anteile in `xpo` für alle Vereine und gehört zu einem Schritt mit Testlauf. | teils, 📌 Engine nach Testlauf |
+
+## EL. Prüfung der Korrekturen EK und EJ ohne Laufzeit (23. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat ba1811d und 994a64c gelesen (nichts ausgeführt). Kein Fehler in der Spiellogik. Ein mittlerer Fund in einem Test, drei niedrige.
+
+**Ohne Befund (im Code nachgeprüft):**
+
+- **EK1 bis EK5:** Jeder Test würde mit dem alten Code scheitern.
+- **EK2:** Die Karten prüfen vor den Spielen des Tages, jedes Spiel zählt genau einmal.
+- **EK6, EK7:** Der Bereich `stil` existiert. `xpo[3]` sind die Minuten.
+- **EJ1 bis EJ4:** stimmen, auch der Index von `S.teams` gleich `VEREINE`.
+- **Gleichschritt und Projektregeln:** unberührt.
+
+Korrekturen auf `mitarbeit/popolupo-el-korrekturen` (auf K25f).
+
+| # | Befund | Status |
+|---|---|---|
+| EL1 | **Mittel: Der Test K13d unterschied EI3 immer noch nicht vom alten Code.** Findet der neue Code einen Tag, findet der alte denselben. Jetzt rückt der Test das nächste eigene Ligaspiel auf drei Tage plus einen nach dem alten Termin und erwartet „kein Ersatztermin“. Neu geprüft wird auch die Lage aus EI4: Ein Supercup am Vortag versperrt das Ligaspiel nicht mehr. | ✅ behoben |
+| EL2 | K06 §8 nannte die Bedingungen aus EK6 (nur ohne Stil-Automatik) und EK7 (ab 20 Minuten, Verfall nach 28 Tagen) nicht. Ergänzt. | ✅ behoben |
+| EL3 | Kommentare nannten noch `S.letzt` statt `S.letzte` und beim Wettskandal noch die Transferliste. Der Rückfall auf `S.letzt` aus alten Spielständen griff wegen des Filters auf den Verein nie und ist gestrichen. In der laufenden Woche fehlen dann die Spielkarten, harmlos. | ✅ behoben |
+| EL4 | Testlücken: EK6 (Stil-Automatik) und die 28-Tage-Grenze aus EK7 waren ungetestet, `tests/README.md` nannte den Fall EK nicht. Neuer Fall EL in `tests/karten.js`, README ergänzt. | ✅ behoben |

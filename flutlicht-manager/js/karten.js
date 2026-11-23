@@ -102,13 +102,13 @@ const AUSLOESER={
   wettbetrug(){const l=S.pl.filter(p=>p.team>=0&&p.team<1000&&p.team!==S.my&&!p.leihe&&!p.wech&&!p.zwP&&S.teams[p.team]&&aktiv(S.teams[p.team]));const p=l.length?pick(l):null;return p?{spieler:p.id,verein:p.team}:null;},
   // Jubiläum (K27 §8, K25 §8, K27d): dein Verein wird in diesem Kalenderjahr ein Vielfaches von RKT.jubilaeum.alle Jahre alt (ab ab), Gründungsjahr aus VEREINE (gegr)
   jubilaeum(){const t=myT(),v=VEREINE[S.my],J=RKT.jubilaeum;if(!t||!v||v.kurz!==t.sh||!v.gegr)return null;const j=datumVon(S.tag).getUTCFullYear()-v.gegr;return j>=J.ab&&j%J.alle===0?{verein:S.my}:null;},
-  // Nach deinem Spiel (K05 §8, K05c), bis RKT.spiel.nachTage danach (S.letzt): ein Joker hat getroffen; eine Diva wurde früh ausgewechselt
+  // Nach deinen Spielen der letzten RKT.spiel.nachTage Tage (K05 §8, K05c, S.letzte, Prüfung EK2): ein Joker hat getroffen; eine Diva wurde früh ausgewechselt
   jokerSticht(){const l=kartenLetzt('joker').filter(p=>p.team===S.my);return l.length?{spieler:pick(l).id}:null;},
   handschlag(){const l=kartenLetzt('frueh').filter(p=>p.team===S.my&&hatEig(p,'diva'));return l.length?{spieler:pick(l).id}:null;},
-  // Last-Minute-Drama (K05 §8, K05d): dein letztes Pflichtspiel wurde spät entschieden (S.letzt.spaet), bis RKT.spiel.nachTage danach
+  // Last-Minute-Drama (K05 §8, K05d): eines deiner Pflichtspiele der letzten RKT.spiel.nachTage Tage wurde spät entschieden (spaet in S.letzte, das jüngste zählt)
   lastMinuteSieg(){return kartenLetztSpiel(L=>L.spaet===1)?{}:null;},
   lastMinuteNiederlage(){return kartenLetztSpiel(L=>L.spaet===-1)?{}:null;},
-  // Taktik-Coup (K06 §8, K06c), Pyrotechnik und Rudelbildung im Derby (K09 §8, K09e): nach deinem letzten Pflichtspiel (S.letzt), bis RKT.spiel.nachTage danach
+  // Taktik-Coup (K06 §8, K06c), Pyrotechnik und Rudelbildung im Derby (K09 §8, K09e): nach deinen Pflichtspielen der letzten RKT.spiel.nachTage Tage (S.letzte, das jüngste passende)
   taktikCoup(){const L=kartenLetztSpiel(L=>L.coup);return L?{verein:L.gegner}:null;},
   derbyPyro(){const L=kartenLetztSpiel(L=>L.derby);return L?{verein:L.gegner}:null;},
   rudelbildung(){const L=kartenLetztSpiel(L=>L.derby&&L.rot);return L?{verein:L.gegner}:null;},
@@ -200,8 +200,9 @@ function letztesSpielMerken(r,d){if(!r||r.test)return;const SP=RKT.spiel,s=r.h==
   // ein Zähler älter als positionTage beginnt neu. Wer nicht oder zu kurz spielte, behält seinen Zähler.
   const heute=absTag(d);((r.xpo||[])[s]||[]).forEach(([id,pos,,min])=>{const p=PIX.get(id);if(!p||p.team!==S.my||!pos||(min!=null&&min<RE.note.mindestMinuten))return;
     const alt=p.pfalT!=null&&heute-p.pfalT<=SP.positionTage?(p.pfal||0):0;p.pfal=eignung(p,pos)<SP.positionUnter?alt+1:0;p.pfalT=heute;});}
-// Deine Pflichtspiele der letzten RKT.spiel.nachTage Tage (mit altem Merker S.letzt aus alten Spielständen), dein Verein, diese Saison
-const kartenLetzteSpiele=()=>{const N=RKT.spiel.nachTage,l=S.letzte||(S.letzt?[S.letzt]:[]);return l.filter(L=>L&&L.s===S.season&&L.t===S.my&&S.tag-L.tag>=0&&S.tag-L.tag<=N);};
+// Deine Pflichtspiele der letzten RKT.spiel.nachTage Tage (S.letzte), dein Verein, diese Saison. Alte Spielstände ohne S.letzte oder mit Merkern ohne Verein (vor EK3):
+// in der laufenden Woche keine Spielkarten, harmlos (Prüfung EL3, der frühere Rückfall auf S.letzt griff wegen des Filters auf t nie)
+const kartenLetzteSpiele=()=>{const N=RKT.spiel.nachTage,l=S.letzte||[];return l.filter(L=>L&&L.s===S.season&&L.t===S.my&&S.tag-L.tag>=0&&S.tag-L.tag<=N);};
 // Das jüngste dieser Spiele, für das f gilt, oder null; Spieler aus der Liste k aller dieser Spiele
 const kartenLetztSpiel=f=>kartenLetzteSpiele().filter(f).pop()||null;
 const kartenLetzt=k=>[...new Set(kartenLetzteSpiele().flatMap(L=>L[k]||[]))].map(id=>PIX.get(id)).filter(Boolean);

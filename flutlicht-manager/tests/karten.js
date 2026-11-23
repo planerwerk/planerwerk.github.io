@@ -322,7 +322,7 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
     `ohne Eintrag ${ohne}, zu junger Eintrag ${jungEintrag}, Durchbruch ${d&&d.spieler===j.id}, Altersverlust ${v&&v.spieler===a.id}, Selbstvertrauen ${sv}`);}
 
 // K30f. Skandale (K30 §8.4): Der Wettpate findet einen gesunden Spieler deines Kaders (Stimmung steigt). Der Wettbetrug trifft einen Spieler eines Computer-Vereins,
-//       der danach in Liga und Pokal gesperrt ist und auf der Transferliste steht, nie deinen.
+//       der danach in Liga und Pokal gesperrt ist (seit Prüfung EJ1 ohne Transferliste), nie deinen, auch nicht einen deiner Spieler in der Zweiten (EJ2).
 {const {S,F,ev}=welt(),A=ev('AUSLOESER'),K=ev('RKT').skandal,kv=ev('karteVon'),si=ev('sperreIn'),st=ev('stimmung');S.phase='play';
   const w=A.wettpate(),p=w&&ev('PIX').get(w.spieler);if(p){st(p);p.st=50;}F.kartenZeigen(kv('wettpate'),w||{},S.tag,false);const lob=!!p&&p.team===S.my&&st(p)>50;
   const b=A.wettbetrug(),q=b&&ev('PIX').get(b.spieler),l0=q?si(q,'liga'):0,k0=q?si(q,'pokal'):0;F.kartenZeigen(kv('wettbetrug'),b||{},S.tag,false);
@@ -390,6 +390,16 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   const p=sq.find(x=>x.pos!=='TW');p.pfal=0;delete p.pfalT;F.letztesSpielMerken({h:S.my,a:0,hg:0,ag:0,ev:[],xpo:[[[p.id,'TW',0,1]],[]]},S.tag);const kurz=(p.pfal||0)===0;
   pruef(verletzt&&beide&&fremd&&!v95&&v119&&!eu&&kurz,'Korrekturen EK: Verletzte nicht früh, Pokal unter der Woche bleibt, nur dein Verein, Verlängerung, Europapokal, kurze Einsätze',
     `verletzt ${verletzt}, beide Spiele ${beide}, anderer Verein ${fremd}, 95. Minute ${v95}, ab spaetVerlAb ${v119}, Europapokal ${eu}, kurz ${kurz}`);}
+
+// EL. Prüfung EL4: kein Taktik-Coup, wenn die Automatik den Stil wählt (EK6); ein Positions-Zähler älter als positionTage bringt keine Karte und beginnt neu (EK7),
+//     ein frischer schon.
+{const {S,F,ev}=welt(),A=ev('AUSLOESER'),K=ev('RTA').kreislauf,tl=ev('teamLevel'),N=ev('RKT').spiel,sq=ev('squad')(S.my),h=ev('absTag')(S.tag);S.phase='play';sq.forEach(p=>{p.pfal=0;});
+  const geg=S.teams.filter(t=>t.id!==S.my&&ev('aktiv')(t)).sort((a,b)=>tl(b.id)-tl(a.id))[0],st='pressing',m=()=>{S.letzte=[];F.letztesSpielMerken({h:S.my,a:geg.id,hg:1,ag:0,ev:[],taktik:[{stil:st},{stil:K[st]}]},S.tag);};
+  m();const selbst=!!A.taktikCoup();F.lizenzStart(false);S.lizenz.auto.stil=1;const istAuto=ev('autoB')('stil');m();const auto=A.taktikCoup()===null;delete S.lizenz;
+  const p=sq.find(x=>x.pos!=='TW');p.pfal=N.positionSpiele;p.pfalT=h;const frisch=(A.positionHadern()||{}).spieler===p.id;
+  p.pfalT=h-N.positionTage-1;const alt=A.positionHadern()===null;F.letztesSpielMerken({h:S.my,a:0,hg:0,ag:0,ev:[],xpo:[[[p.id,'TW',0,90]],[]]},S.tag);const neu=p.pfal===1;
+  pruef(selbst&&istAuto&&auto&&frisch&&alt&&neu,'Korrekturen EL: kein Coup mit Stil-Automatik, alter Positions-Zähler verfällt und beginnt neu',
+    `Coup selbst ${selbst}, Automatik an ${istAuto}, Coup mit Automatik ${!auto?'ja':'nein'}, frischer Zähler ${frisch}, alter Zähler ohne Karte ${alt}, Neustart bei 1 ${neu}`);}
 
 // U19e. Europapokal-Karten (K37 §8): Auswärtsspiel bei einem Auslandsverein in den nächsten 7 Tagen (kein Heimspiel, nicht später, nicht das Finale), Spiel 1 bis 7 Tage her,
 //       Wunder nach 0:3 im Hinspiel und 4:0 oder 3:0 mit Elfmeterschießen im Rückspiel, nicht nach nur einem Tor Rückstand und nicht beim Ausscheiden. euMeineSpiele ersetzt der Test.
