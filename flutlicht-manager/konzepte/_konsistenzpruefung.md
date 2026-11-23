@@ -2320,3 +2320,28 @@ Korrekturen auf `mitarbeit/popolupo-ep-korrekturen` (auf K18f).
 | EP4 | Im Test K26f stand `erlassen` nicht in der Meldung. Ergänzt. | ✅ behoben |
 | EP5 | K19 und `vertraege.js` sprachen von einer „Karriere vor dem Spielstand“, die gibt es nicht. Gezählt wird ab Spielbeginn. Dazu nennt K19 jetzt `spielerLehntAb`, und der Kommentar zu `gespraech` in den Regeln nennt `p.streitT`. | ✅ behoben |
 | EP6 | `heimkehrAb` und `exSpieler.vereinAb` waren Kopien der 60 Spiele des Publikumslieblings. Jetzt gilt `fanstimmung.ident.lieblingSpiele` direkt. Die 1 Saison der Karte steht als `kapitaenSaisons` in den Regeln. | ✅ behoben |
+
+## EQ. Prüfung von K18f und der Korrekturen EP ohne Laufzeit (23. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 44e47a8 und f84c6af gelesen, nichts ausgeführt. Ein mittlerer Fund (aus der Korrektur EP1), sieben niedrige.
+
+**Ohne Befund:**
+
+- **Auslöser und Karte K18f:** stimmen. Die Schleife im Test endet, die längste Folge ohne Jugendscout ist 6 lang.
+- **`stabAnstellen`:** verhält sich wie vorher.
+- **`neuzugang`:** Nur `leiheEnde` braucht `ausLeihe`.
+- **Reste von `heimkehrAb` und `vereinAb`:** keine im Code.
+- **Gleichschritt:** unberührt.
+
+Korrekturen auf `mitarbeit/popolupo-eq-korrekturen` (auf den Korrekturen EP).
+
+| # | Befund | Status |
+|---|---|---|
+| EQ1 | **Mittel: Die Korrektur EP1 lehnte auch bei freiem Stab in der Automatik ab.** Nach dem Aufstieg steht jeder neu freie Bereich zunächst in der Automatik. Die Karte lehnte dann ab, setzte aber `gefragt`, und der Ex-Spieler war für immer weg. Jetzt wie `darf`: Nur ein gesperrter Bereich verhindert das Einstellen, die Automatik wird ausgeschaltet. `gefragt` gibt es nur nach einer endgültigen Antwort. Test K16e. | ✅ behoben |
+| EQ2 | K18 und K26 nannten die Kartenbeträge als Beträge der 1. Liga. Der Katalog gilt aber für die 3. Liga (× 4 in der 1. Liga). Der Lärmschutz kostet jetzt 50.000 € in der 3. Liga (200.000 € in der 1.) statt 150.000 € (600.000 €). | ✅ behoben |
+| EQ3 | Der Test K18f prüfte einen guten Scout eines anderen Gebiets und einen schwachen Jugendscout nicht wirklich. Jetzt nacheinander: kein guter Scout, guter Inlandsscout, schwacher Jugendscout (alle ohne Karte), dann der gute. | ✅ behoben |
+| EQ4 | Der Fall EP2 in `tests/leihe.js` prüfte nicht, ob das Verleihen geklappt hat. Ergänzt. | ✅ behoben |
+| EQ5 | `talentEntdeckt` stürzte bei sehr alten Spielständen ohne `S.stab` ab. Jetzt `null`. | ✅ behoben |
+| EQ6 | Der Testplan nannte `leihe.js` nicht, die README nannte EP2 und die Sperre bei K16e nicht. Ergänzt. | ✅ behoben |
+| EQ7 | `stabEinstellen` hatte eine ungenutzte Variable. Schon vorher: `stabVerlaengern` rechnete mit festen Zahlen. Jetzt `einstellenJahre` und `verlaengernGehalt` aus den Regeln. | ✅ behoben |
+| EQ8 | Der Kartentext „Dein Jugendscout {mitarbeiter}“ wurde zu „Dein Jugendscout Name (Scout)“. Jetzt „Dein Scout {mitarbeiter}“. | ✅ behoben |

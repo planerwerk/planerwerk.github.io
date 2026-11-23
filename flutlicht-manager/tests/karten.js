@@ -443,15 +443,19 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   const t=ev('myT()'),fu0=t.fanU||0,kw=ev('kartenWirkung');kw({art:'stabHolen',wert:1,dann:[{art:'fans',wert:2}]},{stab:x.id},{titel:'Test'});const geholt=x.team===S.my&&x.gefragt===1&&(t.fanU||0)>fu0;
   x.team=-1;sg();const danach=A.exKapitaen(); /* Platz wieder frei: x ist gefragt, also keine Karte */
   const y=neu(),yDa=A.exKapitaen();kw({art:'stabHolen',wert:0},{stab:y.id},{titel:'Test'});const nurGefragt=!!yDa&&yDa.stab===y.id&&y.team<0&&y.gefragt===1&&A.exKapitaen()===null;
-  const z=neu();F.lizenzStart(true);kw({art:'stabHolen',wert:1},{stab:z.id},{titel:'Test'});const gesperrt=z.team<0;delete S.lizenz;
-  pruef(!!r&&!!da&&da.stab===x.id&&wenig===null&&fremd===null&&geholt&&danach===null&&nurGefragt&&gesperrt,'Ehemaliger Kapitän: nur verdiente Ex-Spieler deines Vereins, Einstellen mit Fans +2, danach keine Karte mehr, nicht bei gesperrtem Stab',
-    `Rolle ${r}, Auslöser ${!!da}, zu wenig Spiele ${wenig}, anderer Verein ${fremd}, geholt ${geholt}, danach ${danach}, nur gefragt ${nurGefragt}, Stab gesperrt ${gesperrt}`);}
+  const z=neu();F.lizenzStart(true);kw({art:'stabHolen',wert:1},{stab:z.id},{titel:'Test'});const gesperrt=z.team<0&&!z.gefragt;delete S.lizenz;
+  /* Prüfung EQ1: frei, aber in der Automatik (Zustand nach dem Aufstieg): Einstellen klappt, die Automatik ist danach aus, wie beim Einstellen von Hand */
+  F.lizenzStart(false);S.lizenz.auto.stab=1;kw({art:'stabHolen',wert:1},{stab:z.id},{titel:'Test'});const auto=z.team===S.my&&!S.lizenz.auto.stab;delete S.lizenz;
+  pruef(!!r&&!!da&&da.stab===x.id&&wenig===null&&fremd===null&&geholt&&danach===null&&nurGefragt&&gesperrt&&auto,'Ehemaliger Kapitän: nur verdiente Ex-Spieler deines Vereins, Einstellen mit Fans +2, danach keine Karte mehr, nicht bei gesperrtem Stab, aber bei Automatik',
+    `Rolle ${r}, Auslöser ${!!da}, zu wenig Spiele ${wenig}, anderer Verein ${fremd}, geholt ${geholt}, danach ${danach}, nur gefragt ${nurGefragt}, Stab gesperrt ${gesperrt}, frei mit Automatik ${auto}`);}
 
 // K18f. Talent aus dem Nichts (K18 §8): nur mit einem eigenen Scout mit Spezialgebiet Jugend ab Qualität scoutAb; ein Inlands- oder schwacher Jugendscout reicht nicht.
 {const {S,F,ev}=welt(),A=ev('AUSLOESER'),J=ev('RKT').jugend,gb=ev('scoutGebiet'),sg=ev('stabGeaendert'),meine=()=>ev('meineScouts')();S.phase='play';
-  meine().forEach(x=>{x.q=1;});sg();const schwach=A.talentEntdeckt();let x=null;for(let i=0;i<40&&!x;i++){const y=F.stabNeu('scout',J.scoutAb+2,S.my,1);if(gb(y)==='jugend')x=y;else if(i===0){y.q=J.scoutAb+2;S.stab.push(y);}}
-  S.stab.push(x);sg();const da=A.talentEntdeckt();
-  pruef(schwach===null&&!!x&&!!da&&da.stab===x.id,'Talent aus dem Nichts: nur mit einem guten Jugendscout',`ohne guten Jugendscout ${schwach}, mit ${!!da&&da.stab===(x&&x.id)}`);}
+  meine().forEach(x=>{x.q=1;});sg();const schwach=A.talentEntdeckt();
+  /* Prüfung EQ3: ein guter Scout eines anderen Gebiets und ein schwacher Jugendscout reichen jeweils nicht, erst ein guter Jugendscout */
+  let inland=null,x=null;for(let i=0;i<40&&(!x||!inland);i++){const y=F.stabNeu('scout',J.scoutAb+2,S.my,1);if(gb(y)==='jugend'){if(!x)x=y;}else if(!inland)inland=y;}
+  S.stab.push(inland);sg();const mitInland=A.talentEntdeckt();x.q=J.scoutAb-1;S.stab.push(x);sg();const mitSchwach=A.talentEntdeckt();x.q=J.scoutAb;sg();const da=A.talentEntdeckt();
+  pruef(schwach===null&&mitInland===null&&mitSchwach===null&&!!da&&da.stab===x.id,'Talent aus dem Nichts: nur mit einem guten Jugendscout',`ohne guten Scout ${schwach}, guter Scout anderer Gebiete ${mitInland}, schwacher Jugendscout ${mitSchwach}, guter Jugendscout ${!!da&&da.stab===x.id}`);}
 
 // U19e. Europapokal-Karten (K37 §8): Auswärtsspiel bei einem Auslandsverein in den nächsten 7 Tagen (kein Heimspiel, nicht später, nicht das Finale), Spiel 1 bis 7 Tage her,
 //       Wunder nach 0:3 im Hinspiel und 4:0 oder 3:0 mit Elfmeterschießen im Rückspiel, nicht nach nur einem Tor Rückstand und nicht beim Ausscheiden. euMeineSpiele ersetzt der Test.

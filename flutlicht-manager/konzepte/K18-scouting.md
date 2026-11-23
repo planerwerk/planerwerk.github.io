@@ -112,7 +112,7 @@ Kenntnis je Woche Beobachtung = 12 × (0,6 + 0,03 × Qualität) × Spezialgebiet
 
 **Gebaut als K18f** (23.11.2026, popolupo, ohne Testlauf, Werte vorläufig): „Talent aus dem Nichts“ als Entscheidungskarte (Anlasskarte, Chance 0,1 je Woche).
 - **Auslöser:** Du hast einen Scout mit dem Spezialgebiet Jugend (`scoutGebiet`) ab Qualität 8.
-- **Wahl:** Wie beim Probetraining aus K08b, aber das Talent ist besser: Talent des Jahrgangs +8 statt +6, mit 70 % statt 60 %. Es kostet 5.000 € in der 1. Liga, nach Liga skaliert. Absagen kostet nichts, die Automatik sagt ab.
+- **Wahl:** Wie beim Probetraining aus K08b, aber das Talent ist besser: Talent des Jahrgangs +8 statt +6, mit 70 % statt 60 %. Es kostet 5.000 € in der 3. Liga, nach Liga skaliert (in der 1. Liga 20.000 €, berichtigt in Prüfung EQ2). Absagen kostet nichts, die Automatik sagt ab.
 - Die Zufallskarte aus K08b bleibt. Mit einem Jugendscout kommen also Talente aus zwei Quellen.
 ## 9. Wechselwirkungen
 

@@ -137,7 +137,7 @@ Bauen nach Nachfrage und Budget: Tribünen, wenn die Auslastung zwei Saisons üb
 **Gebaut als K26f** (23.11.2026, popolupo, ohne Testlauf, Werte vorläufig): „Anwohner klagen“ als Entscheidungskarte (Anlasskarte, Chance 0,1 je Woche).
 - **Auslöser:** Tribünenausbau oder Dach wartet noch mindestens eine Woche auf die Genehmigung, bei diesem Projekt gab es noch keine Klage.
 - **Wahl:**
-  - Reden und Lärmschutz bezahlen: 150.000 € in der 1. Liga, nach Liga wie alle Kartenbeträge (K23f). Seit Prüfung EO4 entfallen dafür die Auflagen beim Baubeginn (`auflage` 0, neue Kartenwirkung `bauAuflage`), sonst hätte man den Lärmschutz zweimal bezahlt.
+  - Reden und Lärmschutz bezahlen: 50.000 € in der 3. Liga, nach Liga wie alle Kartenbeträge (K23f), in der 1. Liga also 200.000 €. Bis Prüfung EQ2 stand hier „150.000 € in der 1. Liga“. Die Beträge im Katalog gelten aber für die 3. Liga, das wären in der 1. Liga 600.000 € gewesen. Seit Prüfung EO4 entfallen dafür die Auflagen beim Baubeginn (`auflage` 0, neue Kartenwirkung `bauAuflage`), sonst hätte man den Lärmschutz zweimal bezahlt.
   - Es auf die Klage ankommen lassen: mit 50 % weist das Gericht sie ab, sonst kommt die Genehmigung 3 Wochen später. Seit EO4 wählt die Automatik diese Möglichkeit, damit sie nicht ungefragt Geld ausgibt.
 - **Verzögerung:** Baubeginn und Fertigstellung verschieben sich (`S.constr.klage` in Wochen, das Ende `bis` um dieselbe Zeit). `ab` bleibt als Kennung des Projekts, wie beim Zuschuss (Prüfung ED6). Die Baustelle zeigt „Anwohner haben geklagt“.
 - Nur dein Verein, Karten sind im Gleichschritt aus.

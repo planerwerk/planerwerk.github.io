@@ -152,7 +152,11 @@ Bandbreite = Grundbreite × (1,5 − 0,05 × Qualität) × Schwierigkeitsfaktor 
   - Alles Gute wünschen: Fans −1.
   - Danach kommt für ihn keine Karte mehr (`gefragt`).
 - **Automatik:** wünscht alles Gute und stellt niemanden ein.
-- **Lernstufe (Prüfung EP1):** Ist der Bereich `stab` noch gesperrt oder in der Automatik, stellt die Karte niemanden ein („Den Trainerstab führt noch der Verein“). Das prüft die Wirkung, nicht der Auslöser, sonst bräche der Gleichschritt. Eingestellt wird über dieselbe Funktion wie von Hand (`stabAnstellen`, Vertrag `einstellenJahre`).
+- **Lernstufe (Prüfung EP1, berichtigt in EQ1):**
+  - Ist der Bereich `stab` noch gesperrt, stellt die Karte niemanden ein („Den Trainerstab führt noch der Verein“). Der Ex-Spieler bleibt dann ungefragt, die Karte kann nach ihrer Sperre wiederkommen.
+  - Ist der Bereich frei, aber in der Automatik, stellt sie ein und schaltet die Automatik aus, genau wie das Einstellen von Hand (`darf`). Nach dem Aufstieg in eine Lizenz steht jeder neu freie Bereich zunächst in der Automatik. Mit EP1 hatte die Karte in diesem Fall abgelehnt, und der Ex-Spieler war für immer weg.
+  - Das prüft die Wirkung, nicht der Auslöser, sonst bräche der Gleichschritt.
+  - Eingestellt wird über dieselbe Funktion wie von Hand (`stabAnstellen`, Vertrag `einstellenJahre`).
 - **Grenze (Prüfung EP6):** Die 60 Spiele sind die Grenze des Publikumslieblings (`fanstimmung.ident.lieblingSpiele`), keine eigene Zahl. Die Karte kommt bis `kapitaenSaisons` (1) Saison nach dem Karriereende.
 - **Noch nicht:** „Co-Trainer wird Cheftrainer“ (ähnlich der Abwerbung aus K16c) und „Streit im Stab“. Für den Streit fehlt das Temperament der Mitarbeiter.
 

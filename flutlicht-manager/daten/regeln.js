@@ -748,7 +748,8 @@ const REGELN={
     ohne:3,gehalt:{basis:{1:300000,2:120000,3:50000},steigung:0.15,runden:5000},
     start:{qualitaetJeAnsehen:0.2,streuung:[-3,3],zweiterCoAb:70,vereinslosQ:[3,16],rolleAbAnsehen:{arzt:30,physio:30,torwart:35,athletik:40,jugend:45,video:55,standard:60,psycho:65}},
     vereinslos:40,vertrag:[1,3],alter:[32,58],rente:68,verlaengern:0.7,abfindung:0.5,unschaerfe:3,genauNachWochen:6,
-    einstellenJahre:2, // Vertrag beim Einstellen (von Hand und über die Karte „Ehemaliger Kapitän“, K16e, Prüfung EP1)
+    einstellenJahre:2, // Vertrag beim Einstellen (von Hand und über die Karte „Ehemaliger Kapitän“, K16e, Prüfung EP1), auch die Jahre beim Verlängern (EQ7)
+    verlaengernGehalt:1.1, // Gehalt beim Verlängern von Hand (K16, seit Prüfung EQ7 aus den Regeln statt fest im Code)
     // Ex-Spieler im Stab (K32 §3.3b, K16 §10, K32c, 22.11., GESCHÄTZT): ab Ligaspielen mit chance vereinsloser Mitarbeiter, Torhüter als Torwarttrainer, sonst nach Gewicht rollen;
     // Qualität basis + Ligaspiele/jeSpiele (+ehrung bei einer Ehrung) + streuung. Ziel K16 §10: 5 bis 15 je Saison in der ganzen Welt.
     // kapitaenSaisons (K16 §8, K16e, 23.11., popolupo, GESCHÄTZT): Die Karte „Ehemaliger Kapitän kehrt zurück“ kommt bis so viele Saisons nach dem Karriereende,
