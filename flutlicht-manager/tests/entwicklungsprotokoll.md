@@ -160,11 +160,12 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 | Korrekturen EX | `mitarbeit/popolupo-ex-korrekturen` (auf K16f) | fertig, ungetestet |
 | **K16g** Co-Trainer wird Cheftrainer | `mitarbeit/popolupo-k16g-co-chef` (auf den Korrekturen EX) | fertig, ungetestet |
 | **K27h** Fans wollen reden | `mitarbeit/popolupo-k27h-fans-reden` (auf K16g) | fertig, ungetestet |
+| Korrekturen EY | `mitarbeit/popolupo-ey-korrekturen` (auf K27h) | fertig, ungetestet |
 | U19d2 volle Kader der Auslandsvereine in der Engine | zurückgestellt | Entwurf in K37 §5.7. Die Engine behandelt Auslandsvereine als Block wie Amateure, viele Stellen schlagen Spieler in `PIX` nach. Erst nach einem Testlauf und der Messung des Faktors 0,93 |
 
 **Die neueste Spitze ist immer der zuletzt genannte Zweig, er enthält alles davor.** K24 ist fertig (Claude).
 
-**Vorschlag für den nächsten Testlauf** (Spitze `mitarbeit/popolupo-k27h-fans-reden`, alles ungetestet, bis auf K16f, die Korrekturen EX, K16g und K27h von lesenden Prüf-Agenten durchgesehen, Konsistenzprüfung CS bis EX). **Wichtig:** Die Zweige `u12g` und `k29e` laden für sich allein nicht (DN1), bitte die Spitze nehmen:
+**Vorschlag für den nächsten Testlauf** (Spitze `mitarbeit/popolupo-ey-korrekturen`, alles ungetestet, bis auf K16g, K27h und die Korrekturen EY von lesenden Prüf-Agenten durchgesehen, Konsistenzprüfung CS bis EY). **Wichtig:** Die Zweige `u12g` und `k29e` laden für sich allein nicht (DN1), bitte die Spitze nehmen:
 1. `node tests/code.js`, dann die schnellen Einzeltests der neuen Teile: `finanzen.js` (Nr. 11 bis 20), `geruechte.js` (seit K17d mit Klatsch), `schwierigkeit.js`, `werbung.js`, `europapokal.js`, `vorstand.js` (Nr. 10 bis 19, dazu U12m am Ende), `karriereende.js`, `stadion.js` (Nr. 8 bis 11), `karten.js`, `spielwelt-karten.js`, `fans.js` (K27b, K27e), `abwerben.js` (K20b, K20e), `transfers.js` (K20c, K20d, K19c, K31b, K31c, K19d, K19e), `presse.js` (K29b bis K29j), `marketing.js` (K25c, K25d, K25e, K25f), dazu seit dem Nachmittag des 22.11.: `testspiele.js` (K11b, K11c), `erinnerungen.js` (K09b, K07b, K11d, K07d), `scouting.js` (K18c bis K18e), `medizin.js` (K10b bis K10d, K16d), `disziplin.js` (K09c, EA1 bis EA3), `vertraege.js` (K21b, K21d, K21e), `statistik.js` (K34d), `taktik.js` (K06b, eigene Welt am Ende), `stab.js` (K16b), `wettbewerbe.js` (K13b, K13c, K13d, eigene Welten am Ende), `lizenz.js` (K36c am Ende), `leihe.js` (am Ende der Fall EP2, Rückkehr aus der Leihe ohne Heimkehr), und in `karten.js` die neuen Karten (K30b, K07c, K08b, K08c, K16c, K27c, K21c, K26e, K12c, K29k, K17b, K22c, K03b, K30c, K30d, K10e, K07e, K14d, K14e, K29l, K30e, K11f, K03c, K30f, K27d, K05c, K05d, K06c, K09e, K06d, K06e, K15e, K26f, K16e, K18f, K30g, K11g, K27f, K27g, K16f, K16g, K27h, U19e, dazu die Fälle EK und EL). Der Katalog in `karten.js` Fall 1 ist mit `kartenpruefung.pl` schon ohne Node geprüft.
 2. `node tests/lizenz.js` (Gleichschritt, neue Bereiche `zielgespraech`; seit K36c am Ende die gesammelten Meldungen des Stabs). Viele neue Teile wirken nur ohne Automatik oder über Karten, darum sollte 5a gleich bleiben.
 3. `node tests/finanzmodell.js 2`: Salden je Liga nach K23c. Erwartet nach der Modellrechnung 1. Liga etwa +11 Mio., 2. Liga etwa 0, 3. Liga etwa −1 Mio. je Verein und Saison ohne Transfers (K23 §5.6b). Weichen sie stark ab, bitte die Zeilen ins Testprotokoll, ich stelle dann `REGELN.finanzen.verwaltung` und `sponsor` nach.
@@ -199,6 +200,16 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 ---
 
 ## Changelog
+
+### 23.11.2026: Korrekturen nach Prüfung EY zu K16f und den Korrekturen EX (Zweig `mitarbeit/popolupo-ey-korrekturen`, auf K27h)
+
+- Ein lesender Prüf-Agent hat K16f und die Korrekturen EX durchgesehen (Konsistenzprüfung EY). Ein mittlerer und drei niedrige Funde.
+- **Behoben:**
+  - EY1: Scouts streiten in der Karte nicht mit, die Einzeltrainingsplätze rechnen den Streit ein.
+  - EY2: Die Sperre hängt am Paar, nicht an der Reihenfolge des Würfels.
+  - EY3: Der Streit wirkt nur in deinem Stab, auch nach einem Jobwechsel.
+  - EY4: Kommentar und Doku.
+- **Tests zuerst:** `tests/karten.js` (K16f erweitert: `stabQ`, Paar sortiert, anderer Verein, nur Scouts).
 
 ### 23.11.2026: K27h Fans wollen reden (Zweig `mitarbeit/popolupo-k27h-fans-reden`, auf K16g)
 

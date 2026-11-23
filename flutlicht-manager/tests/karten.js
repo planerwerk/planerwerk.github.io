@@ -563,8 +563,16 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   const b=A.stabStreit(),beide=!!b&&b.stab!==b.stab2&&[b.stab,b.stab2].every(id=>{const x=S.stab.find(y=>y.id===id);return x&&x.team===S.my&&hz(x);});
   const xa=S.stab.find(y=>y.id===b.stab),xb=S.stab.find(y=>y.id===b.stab2);ev('kartenWirkung')({art:'stabStreit',wert:28},b,{titel:'Test'});
   const schwach=Math.abs(sf(xa)-(1-M.malus))<1e-9&&Math.abs(sf(xb)-(1-M.malus))<1e-9,nachher=A.stabStreit(),ohne=!nachher||![nachher.stab,nachher.stab2].some(id=>id===xa.id||id===xb.id);
+  /* Prüfung EY1: stabQ der Rolle sinkt wirklich; EY2: das Paar kommt sortiert; EY3: bei einem anderen Verein wirkt der Streit nicht */
+  const r=xa.r,andere=S.stab.filter(y=>y.team===S.my&&y.r===r&&y!==xa&&y!==xb);andere.forEach(y=>{y.team=-1;});sg();
+  const qS=ev('stabQ')(S.my,r),qE=Math.max(...[xa,xb].filter(y=>y.r===r).map(y=>y.q))*(1-M.malus),qOk=Math.abs(qS-qE)<1e-9;andere.forEach(y=>{y.team=S.my;});sg();
+  const sortiert=b.stab<b.stab2,tm=xa.team;xa.team=S.teams.find(t=>t.id!==S.my).id;const fremd=sf(xa)===1;xa.team=tm;
   S.tag+=29;const wieder=sf(xa)===1&&sf(xb)===1;S.tag-=29;
-  pruef(!!x1&&!!x2&&beide&&schwach&&ohne&&wieder,'Streit im Stab: zwei hitzige Mitarbeiter, beide 28 Tage schwächer, danach normal',`hitzige gefunden ${!!x1&&!!x2}, Auslöser ${beide}, schwächer ${schwach}, nicht noch einmal ${ohne}, danach normal ${wieder}`);}
+  /* EY1: nur hitzige Scouts, sonst niemand: keine Karte */
+  const mein=S.stab.filter(y=>y.team===S.my);mein.forEach(y=>{y.team=-1;});sg();const sc=[];for(let i=0;i<120&&sc.length<2;i++){const x=F.stabNeu('scout',10,S.my,1);if(hz(x)){S.stab.push(x);sc.push(x);}}sg();
+  const scouts=sc.length===2&&A.stabStreit()===null;S.stab=S.stab.filter(y=>!sc.includes(y));mein.forEach(y=>{y.team=S.my;});sg();
+  pruef(!!x1&&!!x2&&beide&&schwach&&ohne&&wieder&&qOk&&sortiert&&fremd&&scouts,'Streit im Stab: zwei hitzige Mitarbeiter, beide 28 Tage schwächer (auch in stabQ), danach normal, nur dein Stab, keine Scouts',
+    `hitzige gefunden ${!!x1&&!!x2}, Auslöser ${beide}, schwächer ${schwach}, nicht noch einmal ${ohne}, danach normal ${wieder}, stabQ ${qS} statt ${qE}, sortiert ${sortiert}, anderer Verein ${fremd}, Scouts ${scouts}`);}
 
 // K16g. Co-Trainer wird Cheftrainer (K16 §8): nur nach einem Trainerwechsel eines Computer-Vereins vor höchstens chef.tage Tagen, nur mit zwei Co-Trainern,
 //       einer davon ehrgeizig und ab chef.qAb. Ziehen lassen: Ablöse, er ist dort Cheftrainer, der Nachfolger aus dem Pool ist wieder frei. Halten: Gehalt + 30 %.

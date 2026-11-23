@@ -141,7 +141,7 @@ Bandbreite = Grundbreite × (1,5 − 0,05 × Qualität) × Schwierigkeitsfaktor 
 | Karte | Auslöser | Folge |
 |---|---|---|
 | Co-Trainer wird Cheftrainer (Entscheidung) | ehrgeiziger Co-Trainer, Angebot eines anderen Vereins | ziehen lassen (Ablöse für den Vertrag), halten (mehr Gehalt, Stimmung) |
-| Streit im Stab | Temperament hoch bei zwei Mitarbeitern | Wirkung beider −10 % für einen Monat, Gespräch (K15) |
+| Streit im Stab | Temperament hoch bei zwei Mitarbeitern | Qualität beider × 0,9 für einen Monat (gebaut, siehe K16f), Gespräch (K15) |
 | Arzt widerspricht | du willst fit spritzen, der vorsichtige Arzt rät ab | Hinweis mit Risiko, du entscheidest |
 | Ehemaliger Kapitän kehrt zurück | Karriereende eines verdienten Spielers | Angebot als Co-Trainer oder Jugendtrainer, Fans freuen sich (K27) |
 
@@ -166,7 +166,10 @@ Bandbreite = Grundbreite × (1,5 − 0,05 × Qualität) × Schwierigkeitsfaktor 
 - **Wahl:**
   - Gespräch: mit 60 % ist es erledigt, sonst sind beide 14 Tage schwächer.
   - Laufen lassen: beide 28 Tage schwächer.
-- **Schwächer** heißt: Qualität × 0,9 in allen Wirkungen des Stabs (`stabQ`, `x.streitBis`). Das gilt nur für deinen Stab.
+- **Schwächer** heißt: Qualität × 0,9 in allen Wirkungen des Stabs (`stabQ`, `x.streitBis`), seit Prüfung EY1 auch in den Einzeltrainingsplätzen der Co-Trainer (`stabPlaetze`). Das gilt nur für deinen Stab, seit EY3 auch im Code: Nach einem Jobwechsel oder einem Wechsel über K16c wirkt ein alter Streit beim anderen Verein nicht weiter.
+  - Die Wirkung ist kleiner als 10 %, weil die Formeln einen Sockel oder Schwellen haben. Ein Co-Trainer mit Qualität 15 wirkt mit 1,0525 statt 1,075, also etwa 2 % schwächer. Ein Videoanalyst mit Qualität 10 fällt unter die Schwelle und verliert seinen Bonus ganz. So gewollt (vorläufig): Der Streit soll spürbar, aber nicht teuer sein.
+- **Ohne Scouts** (Prüfung EY1): Scouts sind unterwegs und wirken einzeln über ihre Qualität, nicht über `stabQ`. Sie streiten in dieser Karte nicht mit.
+- **Sperre** (Prüfung EY2): Das Paar kommt sortiert aus dem Auslöser. Die Sperre von 90 Tagen hängt so am Paar und nicht daran, wen der Würfel zuerst zieht.
 - Die Automatik führt das Gespräch.
 
 **Gebaut als K16g** (23.11.2026, popolupo, ohne Testlauf, Werte vorläufig): „Co-Trainer wird Cheftrainer“ als Entscheidungskarte (Anlasskarte, Chance 0,3 je Woche).

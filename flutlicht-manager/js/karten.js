@@ -104,7 +104,7 @@ const AUSLOESER={
     for(const n of meineLigaspiele().filter(e=>e.tag>S.tag&&e.tag-S.tag<=F.choreoTage)){const f=S.fx[n.lg][n.md][n.i],g=pkGegner(n);if(!f||f[0]!==S.my||g==null)continue;
       if(istDerby(S.my,g)||(n.md+1>=A.spitzeAb&&rank(t.lg,S.my)<=A.spitzeBis&&rank(t.lg,g)<=A.spitzeBis))return{verein:g};}return null;},
   // Platzsturm (K27 §5.4, K27g): nach dem letzten Ligaspiel (Liga fertig, höchstens RKT.spiel.nachTage her), zu Hause nicht verloren, und Meister,
-  // direkter Aufstieg (2. und 3. Liga) oder gerade noch gerettet (letzter Platz vor Relegation oder Abstieg)
+  // direkter Aufstieg (2. Liga nach Platz, 3. Liga nach aufstiegsReihe3) oder gerade noch gerettet (vor dem letzten Spieltag unter dem Strich, danach darüber, Prüfung EX3/EY4)
   platzsturm(){const t=myT(),lg=t.lg;if(!ligaFertig(lg))return null;const L=meineLigaspiele(),n=L[L.length-1];if(!n||S.tag-n.tag<0||S.tag-n.tag>RKT.spiel.nachTage)return null;
     const r=(S.res[lg]||[]).find(x=>x[4]===n.md&&(x[0]===S.my||x[1]===S.my));if(!r||r[0]!==S.my||r[2]<r[3])return null;
     const P=RKT.fans.platzsturm,pl=rank(lg,S.my),anz=table(lg).length,sicher=lg===3?anz-RS.abstieg3:anz-P.unterStrich;
@@ -158,7 +158,8 @@ const AUSLOESER={
     const l=co.filter(x=>x.q>=C.qAb&&stabEhrgeizig(x));if(!l.length)return null;
     const w=S.trainerWechsel.filter(e=>e.a!=null&&h-e.a>=0&&h-e.a<=C.tage&&e.t!==S.my&&S.teams[e.t]&&aktiv(S.teams[e.t]));
     return w.length?{stab:pick(l).id,verein:w[w.length-1].t}:null;},
-  stabStreit(){if(!S.stab)return null;const h=absTag(S.tag),l=S.stab.filter(x=>x.team===S.my&&stabHitzig(x)&&!(x.streitBis>=h));if(l.length<2)return null;const a=pick(l),b=pick(l.filter(x=>x!==a));return{stab:a.id,stab2:b.id};},
+  /* Prüfung EY1: ohne Scouts, sie wirken einzeln über x.q und sind unterwegs; EY2: das Paar sortiert, damit die Sperre am Paar hängt und nicht an der Reihenfolge des Würfels */
+  stabStreit(){if(!S.stab)return null;const h=absTag(S.tag),l=S.stab.filter(x=>x.team===S.my&&x.r!=='scout'&&stabHitzig(x)&&!(x.streitBis>=h));if(l.length<2)return null;const a=pick(l),b=pick(l.filter(x=>x!==a)),[u,v]=[a.id,b.id].sort((x,y)=>x-y);return{stab:u,stab2:v};},
   // Talent aus dem Nichts (K18 §8, K18f): du hast einen Scout mit dem Spezialgebiet Jugend ab Qualität RKT.jugend.scoutAb, er hat einen 16-Jährigen entdeckt
   talentEntdeckt(){if(!S.stab)return null; /* alte Spielstände ohne Stab (Prüfung EQ5) */const l=meineScouts().filter(x=>scoutGebiet(x)==='jugend'&&x.q>=RKT.jugend.scoutAb);return l.length?{stab:pick(l).id}:null;},
   // Ehemaliger Kapitän kehrt zurück (K16 §8, K16e): ein Ex-Spieler (K32c) mit den meisten Spielen für deinen Verein, mindestens so viele wie ein Publikumsliebling (Prüfung EP6),

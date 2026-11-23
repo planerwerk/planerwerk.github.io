@@ -2495,3 +2495,16 @@ Korrekturen auf `mitarbeit/popolupo-ex-korrekturen` (auf K16f).
 | EX4 | Über der Grenze für Info-Karten der Woche lief der Platzsturm stumm, in der 1. Liga gingen 80.000 € ohne Meldung ab. Jetzt `immer:true` wie bei `manipulation3`. | ✅ behoben |
 | EX5 | Der Test K27g prüfte als „Mitte“ nur Platz 18 und hatte keinen positiven Fall für „gerettet“. Neu in der 1. Liga: gerettet, unten geblieben, echte Mitte, Liga nicht fertig, zu spät. Neu in der 3. Liga: Dritter mit und ohne zweite Mannschaft davor, zweite Mannschaft auf Platz 2. | ✅ behoben |
 | EX6 | Der Lager-Test aus EW5 bestand auch mit dem alten Filter, weil das Lager noch nicht beendet war. Jetzt mit einem beendeten Lager dieser Saison und einem aus der Vorsaison, das bleiben muss. Dazu ein Fall für EW2: ein Heimspiel ohne Anlass zwei Tage vor dem Heim-Derby verdeckt die Choreo nicht. | ✅ behoben |
+
+## EY. Prüfung von K16f und der Korrekturen EX ohne Laufzeit (23. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 8e67149 und edd3c22 gelesen, nichts ausgeführt. Ein mittlerer und drei niedrige Funde. Ohne Befund: der Platzsturm in allen drei Ligen (Strich wie beim Saisonende, Punktabzug in beiden Tabellen gleich, verlegte Spiele, 3. Liga nach `aufstiegsReihe3`, `immer`), die neuen Tests (Tabellen nachgerechnet, die Fälle englische Woche und Lager fielen mit dem alten Code durch), ein Streit mit einem Mitarbeiter, der nicht mehr da ist, der Gleichschritt.
+
+Korrekturen auf `mitarbeit/popolupo-ey-korrekturen` (auf K27h).
+
+| # | Befund | Status |
+|---|---|---|
+| EY1 | Der Streit traf auch Scouts, die nicht über `stabQ` wirken, und die Einzeltrainingsplätze rechneten ohne den Streit. Jetzt streiten Scouts in der Karte nicht mit, `stabPlaetze` rechnet den Streit ein. Der Test prüft jetzt auch `stabQ`. | ✅ behoben |
+| EY2 | Die Sperre hing am zuerst gezogenen Mitarbeiter. Dasselbe Paar konnte nach einem gelungenen Gespräch gleich wieder streiten, wenn der Würfel den anderen zuerst zog. Jetzt kommt das Paar sortiert. | ✅ behoben |
+| EY3 | Der Faktor galt für jeden Verein. Nach einem Jobwechsel (offene Karte automatisch entschieden) oder einem Wechsel über K16c war der Stab eines Computer-Vereins schwächer. Jetzt nur bei `x.team===S.my`. | ✅ behoben |
+| EY4 | Der Kommentar zum Platzsturm nannte noch den alten Strich, die Tabelle in K16 §8 „−10 %“. Beides angepasst, K16f erklärt die kleinere Wirkung (Sockel und Schwellen). | ✅ behoben |

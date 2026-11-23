@@ -12,7 +12,8 @@ const stabQ=(tid,r)=>{const l=stabVon(tid,r);return l.length?Math.max(...l.map(x
 const stabHitzig=x=>hash32('tp|'+x.id)%100<RST.streit.hitzigProzent;
 // Ehrgeiz (K16 §8, K16g): fest aus der Nummer wie das Temperament, Anteil RKT.stab.chef.ehrgeizProzent; nur ehrgeizige Co-Trainer wollen Cheftrainer werden
 const stabEhrgeizig=x=>hash32('eh|'+x.id)%100<RKT.stab.chef.ehrgeizProzent;
-const stabStreitFaktor=x=>x.streitBis!=null&&x.streitBis>=absTag(S.tag)?1-RST.streit.malus:1;
+/* nur dein Stab (Prüfung EY3): Nach einem Jobwechsel oder einem Wechsel über K16c wirkt ein alter Streit beim anderen Verein nicht weiter */
+const stabStreitFaktor=x=>x.team===S.my&&x.streitBis!=null&&x.streitBis>=absTag(S.tag)?1-RST.streit.malus:1;
 // Wirkung je Bereich (K16 §5.3). art: co (Lernen, Umschulung, Vertrautheit), athletik (Risiko im Training), kondition, torwart, physio (Ausfallzeit), standard, video, psycho
 function stabFaktor(tid,art){if(tid==null||tid<0||!S.stab)return 1;const W=RST.wirkung;
   if(art==='co'){const q=stabQ(tid,'co');return W.co[0]+W.co[1]*q;}
@@ -25,7 +26,7 @@ function stabFaktor(tid,art){if(tid==null||tid<0||!S.stab)return 1;const W=RST.w
   if(art==='psycho')return stabQ(tid,'psycho');
   return 1;}
 // Einzeltrainingsplätze: 3 + Qualität/5 je Co-Trainer, höchstens 10 (ohne Stab: 5 wie bisher)
-function stabPlaetze(tid){if(!S.stab)return RP.lernen.plaetze;const l=stabVon(tid,'co'),P=RST.wirkung.coPlaetze;if(!l.length)return P.basis;return Math.min(P.max,Math.round(l.reduce((a,x)=>a+P.basis+P.jeQualitaet*x.q,0)));}
+function stabPlaetze(tid){if(!S.stab)return RP.lernen.plaetze;const l=stabVon(tid,'co'),P=RST.wirkung.coPlaetze;if(!l.length)return P.basis;return Math.min(P.max,Math.round(l.reduce((a,x)=>a+P.basis+P.jeQualitaet*x.q*stabStreitFaktor(x),0)));} /* Streit (K16f, Prüfung EY1) auch hier */
 // Ausfallzeit einer Verletzung in Tagen mit Physiotherapeut (K16 §5.3)
 const ausfallTage=(tid,wochen)=>Math.max(1,Math.round(wochen*7*stabFaktor(tid,'physio')))+1;
 
