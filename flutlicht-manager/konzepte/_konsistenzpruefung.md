@@ -2416,3 +2416,25 @@ Korrekturen auf `mitarbeit/popolupo-et-korrekturen` (auf den Korrekturen ES).
 | ET3 | ES5 war unvollständig. Auch die Fankultur (`fankulturTeile`) und die Obergrenze der Fans beim Saisonwechsel (`saison.js`) rechneten mit den Plätzen ohne Bau. Jetzt beide mit `kapOhneBau`. | ✅ behoben |
 | ET4 | `ins` und `fins` hießen „Saison der letzten Insolvenz“, gemeint ist jetzt die Saison des Abzugs. Kommentar und K33 angepasst. | ✅ behoben |
 | ET5 | ES5 und der Weg über deinen Verein in ES1 waren ungetestet. Neue Fälle in `tests/vorstand.js` (U12m) und `tests/finanzen.js`. | ✅ behoben |
+
+## EU. Prüfung der Korrekturen ET und von K11g ohne Laufzeit (23. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 74a07e5 und a41a498 gelesen, nichts ausgeführt. Ein mittlerer Fund, drei niedrige.
+
+**Ohne Befund:**
+
+- **`kapOhneBau`:** wird beim Laden nicht aufgerufen. Im Saisonwechsel ist `S.constr` noch dein Bau.
+- **Vertrauen bei der Insolvenz:** 60 → 30 stimmt.
+- **Leser von `l.bis`:** alle ohne Fehler. Rückzahlung gibt es keine.
+- **`l.gesehen`:** kein zusätzlicher Zufall.
+- **Karten:** Voreinstellungen, Geldstrafe und Sperrschlüssel stimmen.
+- **Gleichschritt:** unberührt, ein Lager bucht nur die Oberfläche.
+
+Korrekturen auf `mitarbeit/popolupo-eu-korrekturen` (auf K11g).
+
+| # | Befund | Status |
+|---|---|---|
+| EU1 | **Mittel: Die Karte „Lagerkoller“ kam fast nie.** Ein Lager dauert 5 bis 10 Tage, der Koller beginnt erst an Tag 8, Karten kommen montags. Bei 7 Tagen (Voreinstellung) nie, bei 10 Tagen in etwa 3 % der Lager. Jetzt legt `lagerTag` die Karte am Tag des Kollers oder der Sichtung in die tägliche Kette (`kartenKetteHeute`), je Lager einmal (`kollerK`, `nachtK`). Die Karten sind Folgekarten aus dem Spielablauf (`nurKette`, `ausSpiel`). Katalogtest und `kartenpruefung.pl` erlauben dafür Folgekarten ohne Vorgänger. | ✅ behoben |
+| EU2 | **Schon seit K23b:** Der Zähler der Monatserste unter dem Rahmen stand bei deinem Verein in `S.lzp.unter`, bei Computer-Vereinen in `t.fu`. Nach einem Jobwechsel stimmten beide nicht mehr, eine Insolvenz konnte nach einem Monat kommen. Jetzt zählt `t.fu` für alle Vereine. | ✅ behoben |
+| EU3 | Die Tests prüften nicht, ob die Sperre aus ET1 eine zweite Insolvenz nach einem Jobwechsel verhindert, und ET3 (Fankultur beim Bau) gar nicht. Beides ergänzt (`tests/finanzen.js`, `tests/marketing.js`). | ✅ behoben |
+| EU4 | K11 Nr. 11 nannte die Lager-Ereignisse noch als fehlend. K33 erklärte `fins` durch sich selbst. Die README nannte die ET5-Fälle nicht. Berichtigt. | ✅ behoben |

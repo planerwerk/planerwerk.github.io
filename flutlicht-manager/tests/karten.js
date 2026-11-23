@@ -22,7 +22,7 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   /* Ketten (K30c, K30 §10): jede Folgekarte existiert und kommt nur über die Kette, jede nurKette-Karte hat einen Vorgänger, tage gültig */
   const ziele=new Set();K.forEach(c=>(c.optionen||[]).forEach(o=>{if(!o.kette)return;const z=K.find(x=>x.id===o.kette.karte),t=o.kette.tage;ziele.add(o.kette.karte);
     if(!z)fehler.push(c.id+': Folgekarte '+o.kette.karte+' fehlt');else if(!z.nurKette)fehler.push(o.kette.karte+': Folgekarte ohne nurKette');if(!Array.isArray(t)||!(t[0]>=1&&t[1]>=t[0]))fehler.push(c.id+': Kette ohne gültige tage');}));
-  K.forEach(c=>{if(c.nurKette&&!ziele.has(c.id))fehler.push(c.id+': nurKette ohne Vorgänger');});
+  K.forEach(c=>{if(c.nurKette&&!ziele.has(c.id)&&!c.ausSpiel)fehler.push(c.id+': nurKette ohne Vorgänger');}); /* ausSpiel: Folgekarte aus dem Spielablauf, ohne Vorgänger-Karte (K11g, Prüfung EU1) */
   pruef(!fehler.length&&K.length>=5,'Katalog: nur erlaubte Wirkungen und Platzhalter, jeder Auslöser vorhanden, Entscheidungen mit 2–3 Optionen und gültiger Voreinstellung, Folgekarten vorhanden',fehler.join('; ')||`${K.length} Karten`);}
 
 // 2. Auslöser: Hochzeit findet einen Spieler zwischen 24 und 34. Der Präsident mischt sich nur bei Ehrgeiz ab 14 und drei Niederlagen ein, und er will einen, der nicht in der Elf steht.
@@ -469,12 +469,14 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   pruef(ok&&abzug&&nieMein&&gesperrt&&wieder&&fertig,'Manipulation in der 3. Liga: Spieler eines Drittligisten gesperrt, Punktabzug für seinen Verein, nie für deinen, höchstens einmal in zehn Saisons, nicht nach dem letzten Spieltag',
     `Verein ${t&&t.name}, Punkte ${p0} → ${pkt()}, gesperrt ${p?si(p,'liga')>l0:'-'}, dein Verein unberührt ${nieMein}, gleich danach ${gesperrt}, nach ${SK.abstand} Saisons ${wieder}, Liga fertig ${fertig}`);}
 
-// K11g. Lager-Ereignisse (K11 §8): Lagerkoller nur im laufenden Lager nach einem Koller, Nachtleben nur nach einer Sichtung (l.gesehen); „Früher abreisen“ beendet das Lager heute.
-{const {S,F,ev}=welt(),A=ev('AUSLOESER'),kw=ev('kartenWirkung');S.phase='play';S.lager=[];F.lagerBuchenLauf('riviera',S.tag-2,8);const l=S.lager[0];
-  const ohneKoller=A.lagerkoller(),ohneSicht=A.nachtleben();l.koller=1;const koller=A.lagerkoller();const p=ev('squad')(S.my)[0];l.gesehen=[p.id];const nacht=A.nachtleben();
-  kw({art:'lagerEnde',wert:1},{lager:l.von},{titel:'Test'});const ende=l.bis===S.tag&&A.lagerkoller()===null&&ev('lagerAktiv')(S.tag+1)===null;
-  pruef(ohneKoller===null&&ohneSicht===null&&!!koller&&koller.lager===l.von&&!!nacht&&nacht.spieler===p.id&&ende,'Lager-Ereignisse: Koller und Nachtleben nur mit Anlass, früher abreisen beendet das Lager',
-    `ohne Koller ${ohneKoller}, ohne Sichtung ${ohneSicht}, Koller ${!!koller}, Nachtleben ${!!nacht&&nacht.spieler===p.id}, Ende ${ende}`);}
+// K11g. Lager-Ereignisse (K11 §8): Seit Prüfung EU1 Folgekarten aus dem Spielablauf. lagerTag legt beim Koller (ab Tag kollerAb, nicht am letzten Tag) eine Karte für heute
+//       in die Kette, je Lager einmal; der Auslöser prüft nur, ob dasselbe Lager noch läuft (Nachtleben: der Spieler ist noch bei dir). „Früher abreisen“ beendet das Lager heute.
+{const {S,F,ev}=welt(),A=ev('AUSLOESER'),kw=ev('kartenWirkung'),RL=ev('RLA');S.phase='play';S.lager=[];F.lagerBuchenLauf('schwarzwald',S.tag-RL.kollerAb,RL.kollerAb+3);const l=S.lager[0];
+  const k0=RL.koller;RL.koller=1;S.karten=S.karten||{};S.karten.kette=[];F.lagerTag(S.tag);F.lagerTag(S.tag);RL.koller=k0;const gelegt=S.karten.kette.filter(e=>e.id==='lagerkoller'&&e.b.lager===l.von).length;
+  const koller=A.lagerkoller({lager:l.von}),fremd=A.lagerkoller({lager:l.von+1});const p=ev('squad')(S.my)[0],nacht=A.nachtleben({spieler:p.id,lager:l.von});
+  kw({art:'lagerEnde',wert:1},{lager:l.von},{titel:'Test'});const ende=l.bis===S.tag&&A.lagerkoller({lager:l.von})===null&&ev('lagerAktiv')(S.tag+1)===null;
+  pruef(gelegt===1&&!!koller&&fremd===null&&!!nacht&&nacht.spieler===p.id&&ende,'Lager-Ereignisse: Koller legt die Karte für heute in die Kette (einmal je Lager), Auslöser nur im selben Lager, früher abreisen beendet das Lager',
+    `Karten in der Kette ${gelegt}, Koller ${!!koller}, anderes Lager ${fremd}, Nachtleben ${!!nacht&&nacht.spieler===p.id}, Ende ${ende}`);}
 
 // U19e. Europapokal-Karten (K37 §8): Auswärtsspiel bei einem Auslandsverein in den nächsten 7 Tagen (kein Heimspiel, nicht später, nicht das Finale), Spiel 1 bis 7 Tage her,
 //       Wunder nach 0:3 im Hinspiel und 4:0 oder 3:0 mit Elfmeterschießen im Rückspiel, nicht nach nur einem Tor Rückstand und nicht beim Ausscheiden. euMeineSpiele ersetzt der Test.

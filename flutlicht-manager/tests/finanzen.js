@@ -85,7 +85,10 @@ const tagMit=(ev,mmtt)=>{for(let d=0;d<400;d++)if(ev('mmtt')(d)===mmtt)return d;
 {const {F,S,ev,t}=welt(),lg=t.lg,r0=S.res[lg].slice(),n=S.fx[lg].reduce((s,md)=>s+md.length,0),[h,a]=S.fx[lg][0][0];while(S.res[lg].length<n)S.res[lg].push([h,a,0,0,0]);
   t.cash=-ev('kreditRahmen')(t)-1e6;S.trust=60;F.insolvenzPruefen();F.insolvenzPruefen();S.res[lg]=r0;
   const jetzt=((S.abzug||{})[S.season]||{})[S.my]||0,neu=((S.abzug||{})[S.season+1]||{})[S.my]||0,sperre=S.lzp.ins===S.season+1&&t.fins===S.season+1;
-  pruef(jetzt===0&&neu===9&&sperre&&S.trust===30,'Insolvenz deines Vereins nach dem letzten Spieltag: Abzug in der neuen Saison, Sperre auch am Verein (ET1)',`laufende Saison ${jetzt}, neue Saison ${neu}, ins ${S.lzp.ins}, fins ${t.fins}, Vertrauen ${S.trust}`);}
+  pruef(jetzt===0&&neu===9&&sperre&&S.trust===30,'Insolvenz deines Vereins nach dem letzten Spieltag: Abzug in der neuen Saison, Sperre auch am Verein (ET1)',`laufende Saison ${jetzt}, neue Saison ${neu}, ins ${S.lzp.ins}, fins ${t.fins}, Vertrauen ${S.trust}`);
+  /* Prüfung EU3: Die Sperre wirkt nach einem Jobwechsel (S.lzp gelöscht) in der neuen Saison weiter: keine zweite Insolvenz, 9 statt 18 Punkte. EU2: Zähler am Verein (t.fu) */
+  F.finanzenJobwechsel();S.season++;t.cash=-ev('kreditRahmen')(t)-1e6;F.insolvenzPruefen();const fu1=t.fu;F.insolvenzPruefen();const zweite=((S.abzug||{})[S.season]||{})[S.my]||0;S.season--;
+  pruef(zweite===9&&fu1===1,'Insolvenz: nach Jobwechsel keine zweite in derselben Saison, Zähler am Verein (EU2, EU3)',`Abzug in der Saison ${zweite}, Zähler nach dem ersten Monatsersten ${fu1}`);}
 
 // 13. K23d: Gehaltsrahmen = gehaltAnteil (seit K23c 75 %) der erwarteten Einnahmen, Anteil steigt mit den Gehältern, Transferbudget = Konto über 10 % Reserve, über 110 % kauft niemand
 {const {F,S,ev,t}=welt(),B=ev('RFP').budget,E=ev('erwarteteEinnahmen')(t),r0=ev('rahmenAnteil')(t);ev('squad')(S.my).forEach(p=>{p.sal*=5;});const r1=ev('rahmenAnteil')(t);t.cash=E;

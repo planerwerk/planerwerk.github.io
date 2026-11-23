@@ -256,12 +256,13 @@ const KARTEN=[
     texte:['{spieler} von {verein} hat auf Spiele der eigenen Mannschaft gewettet. Das Sportgericht sperrt ihn für viele Monate.','Ermittler haben Wetten von {spieler} auf Spiele von {verein} gefunden. Er ist für viele Monate gesperrt.'],
     wirkung:[{art:'wettsperre',wert:1}]},
   // Trainingslager (K11 §8, K11g, 23.11., popolupo): Entscheidungen zu Lagerkoller und Ablenkung (die Meldungen aus dem Lager bleiben). Werte vorläufig.
-  {id:'lagerkoller',titel:'Lagerkoller',bereich:'K11',art:'entscheidung',gross:false,stufe:'haeufig',chance:0.6,ausloeser:'lagerkoller',sperrTage:30,
+  // Seit Prüfung EU1 Folgekarten aus dem Spielablauf (nurKette, ausSpiel): lagerTag legt sie am Tag des Kollers oder der Sichtung in die Kette, je Lager höchstens einmal.
+  {id:'lagerkoller',titel:'Lagerkoller',bereich:'K11',art:'entscheidung',gross:false,stufe:'haeufig',nurKette:true,ausSpiel:true,ausloeser:'lagerkoller',sperrTage:30,
     texte:['Nach vielen Tagen im Lager liegen die Nerven blank. Der Kapitän fragt, ob die Mannschaft einen Abend frei bekommt.','Im Lager wird gemeckert: immer dasselbe Hotel, dieselben Gesichter, dieselben Einheiten. Die Spieler wollen raus.'],
     optionen:[{text:'Einen freien Abend geben',wirkung:[{art:'stimmungAlle',wert:2},{art:'glaub',wert:-1}],folge:'Die Mannschaft geht gemeinsam essen. Am nächsten Morgen sind nicht alle ganz frisch.'},
       {text:'Durchziehen',wirkung:[{art:'stimmungAlle',wert:-1},{art:'glaub',wert:1}],folge:'Der Plan bleibt. Einige murren, aber die Einheiten laufen.'},
       {text:'Früher abreisen',wirkung:[{art:'lagerEnde',wert:1},{art:'stimmungAlle',wert:1}],folge:'Das Lager endet heute. Die Kosten sind schon bezahlt, die Spieler freuen sich auf zu Hause.'}],auto:1},
-  {id:'nachtleben',titel:'Ausflug ins Nachtleben',bereich:'K11',art:'entscheidung',gross:false,stufe:'haeufig',chance:0.8,ausloeser:'nachtleben',sperrTage:30,
+  {id:'nachtleben',titel:'Ausflug ins Nachtleben',bereich:'K11',art:'entscheidung',gross:false,stufe:'haeufig',nurKette:true,ausSpiel:true,ausloeser:'nachtleben',sperrTage:30,
     texte:['{spieler} ist im Trainingslager nachts durch die Bars gezogen. Ein Foto davon macht die Runde.','Der Hotelportier hat {spieler} um vier Uhr morgens hereingelassen. Die Mannschaft weiß Bescheid.'],
     optionen:[{text:'Geldstrafe verhängen',wirkung:[{art:'geld',wert:5000},{art:'stimmung',wert:-3},{art:'glaub',wert:1}],folge:'{spieler} zahlt und entschuldigt sich vor der Mannschaft.'},
       {text:'Unter vier Augen reden',wirkung:[{art:'stimmung',wert:-1}],folge:'{spieler} verspricht, sich für den Rest des Lagers zurückzuhalten.'},

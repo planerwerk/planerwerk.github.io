@@ -99,9 +99,10 @@ const AUSLOESER={
   // Skandale (K30 §8.4, K30f), Weltereignisse: ein Wettpate spricht einen gesunden Spieler deines Kaders an (er meldet es);
   // ein Spieler eines Computer-Vereins der drei Profiligen wettet auf eigene Spiele (nicht ausgeliehen, kein vereinbarter Wechsel)
   wettpate(){const l=squad(S.my).filter(p=>!(p.inj>0));return l.length?{spieler:pick(l).id}:null;},
-  // Trainingslager (K11 §8, K11g): Lagerkoller im laufenden Lager (l.koller aus lagerTag), Ausflug ins Nachtleben (l.gesehen, Partylöwe im Lager mit Ablenkung)
-  lagerkoller(){const l=lagerAktiv(S.tag);return l&&l.koller>0&&S.tag<l.bis?{lager:l.von}:null;},
-  nachtleben(){const l=lagerAktiv(S.tag),id=l&&(l.gesehen||[]).slice(-1)[0],p=id!=null?PIX.get(id):null;return p&&p.team===S.my?{spieler:p.id,lager:l.von}:null;},
+  // Trainingslager (K11 §8, K11g): Folgekarten aus dem Spielablauf (Prüfung EU1), lagerTag legt sie beim Koller und bei einer Sichtung für denselben Tag in die Kette.
+  // Hier nur die Prüfung, ob es noch passt: dasselbe Lager läuft (beim Koller nicht am letzten Tag), der Spieler ist noch bei dir
+  lagerkoller(b){const l=lagerAktiv(S.tag);return b&&l&&l.von===b.lager&&S.tag<l.bis?b:null;},
+  nachtleben(b){const l=lagerAktiv(S.tag),p=b&&b.spieler!=null?PIX.get(b.spieler):null;return l&&l.von===b.lager&&p&&p.team===S.my?b:null;},
   // Manipulation in der 3. Liga fliegt auf (K30 §8.4, K30g): ein Spieler eines Computer-Vereins der 3. Liga (keine zweite Mannschaft, nicht verliehen, kein vereinbarter Wechsel)
   // Prüfung ER1: nicht mehr nach dem letzten Spieltag (sonst zwischen den Relegationsspielen), ER2: höchstens einmal in RKT.skandal.abstand Saisons (S.skandal3)
   manipulation3(){if(ligaFertig(3)||(S.skandal3!=null&&S.season-S.skandal3<RKT.skandal.abstand))return null;const l=S.pl.filter(p=>{const t=p.team>=0&&p.team<1000?S.teams[p.team]:null;return t&&t.id!==S.my&&t.lg===3&&!(t.zweite>=0)&&aktiv(t)&&!p.leihe&&!p.wech&&!p.zwP;});const p=l.length?pick(l):null;return p?{spieler:p.id,verein:p.team}:null;},
@@ -232,6 +233,8 @@ const kartenHaltZaehlen=(c,W)=>{W.ent++;if(c.gross)W.gross++;W.ber[c.bereich]=(W
 // Eine Option mit kette:{karte, tage:[von,bis]} legt die Folgekarte in S.karten.kette ({id, tag absolut, s Saison, b Beteiligte}), gewürfelt im Strom der ersten Karte.
 // Täglich (ablauf.js taeglichLauf, eigener Strom): Fällige Folgekarten kommen, wenn ihr Auslöser die Beteiligten noch bestätigt (Auslöser mit Argument b), sonst verfallen sie still.
 // Budget wie montags, aber ohne Info-Grenze und ohne Sperre: Eine Kette läuft zu Ende oder verfällt. Ketten enden mit der Saison, bei Entlassung und beim Vereinswechsel.
+// Folgekarte aus dem Spielablauf für heute (Karten mit ausSpiel, K11g, Prüfung EU1): fällig am Tag d, kommt noch am selben Tag über kartenKette (ablauf.js), ohne Zufall
+function kartenKetteHeute(id,b,d){const K=karten();(K.kette=K.kette||[]).push({id,tag:absTag(d),s:S.season,b});}
 function kartenKetteLegen(ke,b,k){const K=karten(),t=ke.tage||[1,1],ab=k.s===S.season?absTag(k.tag):absTag(S.tag);(K.kette=K.kette||[]).push({id:ke.karte,tag:ab+ri(t[0],t[1]),s:S.season,b});}
 function kartenKette(d){const K=S.karten;if(!K||!K.kette||!K.kette.length)return;if(S.fired){K.kette=[];return;}if(S.phase!=='play')return;
   const heute=absTag(d),faellig=K.kette.filter(e=>e.tag<=heute||e.s!==S.season);if(!faellig.length)return;K.kette=K.kette.filter(e=>!faellig.includes(e));const W=kartenBudget(d);

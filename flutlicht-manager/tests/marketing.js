@@ -57,4 +57,8 @@ function welt(lernstufen){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;
   F.dkVerkauf(t);const c1=t.cash,n1=(S.mk.k.dauerkarten||{}).n;S.mk.k.dauerkarten.bis=-1;F.kampagneStarten('dauerkarten');const danach=t.cash===c1&&S.mk.k.dauerkarten.n===n1;
   pruef(Math.abs(a1-a0-C.dauerkarten)<1e-9&&kost===ev('kampagnenKosten')('dauerkarten')&&danach,'Dauerkarten-Aktion: Anteil höher, Kosten nach Liga, nach dem Verkauf nicht mehr',`Anteil ${a0.toFixed(3)} → ${a1.toFixed(3)}, Kosten ${kost}, danach gesperrt ${danach}`);}
 
+// Prüfung ET3, EU3: Während eines Tribünenbaus (bauTag zieht Plätze ab) bleibt die Fankultur deines Vereins gleich, sie rechnet mit den Plätzen ohne Bau-Abzug (kapOhneBau)
+{const w=welt(false),fk=w.ev('fankultur'),t=w.t,P=w.ev('RB').tribuene.plaetze,f0=fk(t);w.S.constr={k:'cap',phase:'bau'};t.cap-=P;const f1=fk(t);t.cap+=P;w.S.constr=null;
+  pruef(f1===f0,'Fankultur während eines Tribünenbaus unverändert (ET3)',`${f0} → ${f1}`);}
+
 console.log(probleme.length?`\n${probleme.length} Problem(e).`:'\nAlles in Ordnung.');process.exitCode=probleme.length?1:0;

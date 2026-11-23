@@ -1,8 +1,8 @@
 // Finanzplan (K23 §5.5c, K23a): Monatsbericht, Liquiditätsprognose, Lizenzprüfung im März mit Auflagen und Transfersperre, Insolvenz mit Punktabzug.
 // Zuerst nur für deinen Verein, die Computer-Vereine folgen mit K23b (heute buchen sie keine Ausgaben). Die Buchungen bleiben je Spieltag (S.fin je Saison und Art).
 // Im Spielstand: S.finM = {s, mo, fin, cash} (Stand am letzten Monatsersten), S.finV = [{mo, ein, aus, saldo, cash, prog}] (Monate der laufenden Saison),
-// S.finSchnitt = laufender Saldo je Ligaspiel der letzten Saison, S.lzp = {s, fehlt, geprueft, sperre (Saison der Transfersperre), unter (Monatserste unter dem Rahmen), ins (Saison des Abzugs der letzten Insolvenz, nach dem letzten Spieltag die nächste, Prüfung ET4)},
-// S.abzug = {Saison: {Verein: Punkte}} (saison.js table). Am Verein t.fins: Saison des Abzugs der letzten Insolvenz (dein Verein und Computer-Vereine, sperrt eine zweite, ET1). Ohne Zufall.
+// S.finSchnitt = laufender Saldo je Ligaspiel der letzten Saison, S.lzp = {s, fehlt, geprueft, sperre (Saison der Transfersperre), unter (bis Prüfung EU2: Monatserste unter dem Rahmen, jetzt t.fu am Verein), ins (Saison des Abzugs der letzten Insolvenz, nach dem letzten Spieltag die nächste, Prüfung ET4)},
+// S.abzug = {Saison: {Verein: Punkte}} (saison.js table). Am Verein t.fu: Monatserste in Folge unter dem Rahmen (alle Vereine, seit EU2 auch deiner), t.fins: Saison des Abzugs der letzten Insolvenz (dein Verein und Computer-Vereine, sperrt eine zweite, ET1). Ohne Zufall.
 const finLaufend=()=>Object.entries(S.fin||{}).filter(([k])=>RFP.laufend.includes(k)).reduce((a,[,v])=>a+v,0);
 // Laufender Saldo je eigenem Ligaspiel: Schnitt dieser Saison, vor minSpiele der der letzten Saison, sonst 0
 function saldoJeSpiel(){const n=finSpiele();if(n>=RFP.minSpiele)return finLaufend()/n;return S.finSchnitt!=null?S.finSchnitt:0;}
@@ -38,10 +38,10 @@ function finanzenMonat(d,ohneZahlungen){const t=myT();let M=S.finM||{s:S.season,
 // Saisonwechsel (saison.js newSeasonLauf, nach S.fin={}): Stand für den Juli, dann Tilgung, Raten und Instandhaltung des 1. Juli in der neuen Saison
 function finanzenSaisonstart(){S.finM={s:S.season,mo:'07',fin:{},cash:myT().cash,k:0};monatsRaten();instandhaltung();}
 // Insolvenz (K23 §5.4): an zwei Monatsersten nacheinander unter dem negativen Kreditrahmen. Punktabzug, Vertrauen, Schuldenschnitt, höchstens einmal je Saison.
-function insolvenzPruefen(){const t=myT(),L=lzpS(),I=RFP.insolvenz;if(t.cash<-kreditRahmen(t))L.unter=(L.unter||0)+1;else L.unter=0;
-  if(L.unter<I.monate||L.ins===S.season||t.fins===S.season||S.phase!=='play')return; /* t.fins: Sperre am Verein, überlebt einen Jobwechsel (Prüfung ET1) */
+function insolvenzPruefen(){const t=myT(),L=lzpS(),I=RFP.insolvenz;if(t.cash<-kreditRahmen(t))t.fu=(t.fu||0)+1;else t.fu=0; /* Zähler am Verein wie bei den Computer-Vereinen, überlebt einen Jobwechsel (Prüfung EU2, vorher S.lzp.unter) */
+  if((t.fu||0)<I.monate||L.ins===S.season||t.fins===S.season||S.phase!=='play')return; /* t.fins: Sperre am Verein, überlebt einen Jobwechsel (Prüfung ET1) */
   /* Nach dem letzten Spieltag der eigenen Liga gilt der Abzug für die neue Saison (Prüfung ER1: sonst zwischen den Relegationsspielen; ES1: sofort gebucht statt aufgeschoben) */
-  const s=insolvenzSaison(t);L.ins=s;t.fins=s;L.unter=0;
+  const s=insolvenzSaison(t);L.ins=s;t.fins=s;t.fu=0;
   const A=S.abzug||(S.abzug={}),a=A[s]||(A[s]={});a[S.my]=(a[S.my]||0)+I.punkte;S.trust=clamp(S.trust+I.vertrauen,0,100);money('Schuldenschnitt',-t.cash);
   news(`Insolvenz: ${t.name} ist zahlungsunfähig. ${I.punkte} Punkte Abzug${s>S.season?' in der neuen Saison':''}, die Gläubiger verzichten auf die Schulden, der Kredit bleibt. Der Vorstand ist entsetzt.`,'bad');}
 // Saison des Punktabzugs: die laufende, nach dem letzten Spieltag der eigenen Liga die nächste (ER1, ES1)

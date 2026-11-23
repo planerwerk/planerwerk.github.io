@@ -71,8 +71,10 @@ function lagerTag(d){const l=lagerAktiv(d);if(!l)return;const O=RLA.orte[l.ort],
   if(l.tag===1)news(`Trainingslager in ${O.name} beginnt (${l.bis-l.von+1} Tage).`);
   if(O.wetter&&R()<O.wetter){l.ausfall=d;news(`Trainingslager: Wegen des Wetters fällt das Training heute aus.`);}
   if(l.tag<=RLA.zusammenhaltBis)zusammenhaltAendern(myT(),RLA.zusammenhalt); // Zusammenhalt +1 pro Tag bis zum 7. Tag (K14 §5.6)
-  if(l.tag>=RLA.kollerAb&&R()<RLA.koller){l.koller++;const n=Math.min(sq.length,ri(3,5));shuffle(sq.slice()).slice(0,n).forEach(p=>svAendern(p,RLA.kollerSv));news('Lagerkoller: Die Stimmung im Lager kippt, einige Spieler wollen nach Hause.','bad');}
-  if(O.ablenkung)sq.filter(p=>hatEig(p,'partyloewe')).forEach(p=>{if(R()<RLA.ablenkung/(l.bis-l.von+1)){svAendern(p,RLA.ablenkungSv);(l.gesehen=l.gesehen||[]).push(p.id);news(`Trainingslager: ${p.n} wurde nachts in der Stadt gesehen.`,'bad');}}); /* l.gesehen für die Karte „Ausflug ins Nachtleben“ (K11g) */
+  if(l.tag>=RLA.kollerAb&&R()<RLA.koller){l.koller++;const n=Math.min(sq.length,ri(3,5));shuffle(sq.slice()).slice(0,n).forEach(p=>svAendern(p,RLA.kollerSv));news('Lagerkoller: Die Stimmung im Lager kippt, einige Spieler wollen nach Hause.','bad');
+    if(!l.kollerK&&d<l.bis){l.kollerK=1;kartenKetteHeute('lagerkoller',{lager:l.von},d);}} /* Karte „Lagerkoller“ noch heute, einmal je Lager (K11g, Prüfung EU1) */
+  if(O.ablenkung)sq.filter(p=>hatEig(p,'partyloewe')).forEach(p=>{if(R()<RLA.ablenkung/(l.bis-l.von+1)){svAendern(p,RLA.ablenkungSv);news(`Trainingslager: ${p.n} wurde nachts in der Stadt gesehen.`,'bad');
+    if(!l.nachtK){l.nachtK=1;kartenKetteHeute('nachtleben',{spieler:p.id,lager:l.von},d);}}}); /* Karte „Ausflug ins Nachtleben“ noch heute, einmal je Lager (K11g, EU1) */
   if(d===l.bis)news(`Trainingslager in ${O.name} beendet. Der Co-Trainer ist zufrieden mit Kondition und Abläufen.`,'good');}
 
 // ---------- Sommerturnier (K11 §3, K11b) ----------
