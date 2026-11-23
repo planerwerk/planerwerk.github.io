@@ -189,7 +189,7 @@ Jede Wirkung kann eine Chance haben. Dann wird im Strom `ereignisse` gewürfelt,
 | Ein Spieler heiratet | PLAN §4, K14 | Entscheidung, klein | ein Spieler deines Kaders zwischen 24 und 34 (Sperre je Spieler 2000 Tage) | „Teamausflug zur Feier“: −20.000 €, Zusammenhalt +3, Stimmung des Spielers +5. „Glückwunschkarte“: Stimmung +2 (Voreinstellung) |
 | Geheimtipp | K18 §8 | Info | ein Talent bis 20 bei einem Verein der 2. oder 3. Liga mit großem Talent | keine, nur der Hinweis |
 
-Noch nicht gebaut: verzögerte Folgen ohne eigene Karte, die Chronik über alle Karrieren (§5.4), die schweren Skandale (§8.4, die ersten zwei seit K30f), Kategorien mit eigener Rate. Ketten und Merker gibt es seit K30c (§5.6).
+Noch nicht gebaut: verzögerte Folgen ohne eigene Karte, die Chronik über alle Karrieren (§5.4), die schweren Skandale (§8.4, die ersten zwei seit K30f, die Manipulation in der 3. Liga seit K30g), Kategorien mit eigener Rate. Ketten und Merker gibt es seit K30c (§5.6).
 
 ### 5.6 Umsetzung K30c (22. November 2026, popolupo, ohne Testlauf): Ketten und „Der lachende Dritte“
 
@@ -333,6 +333,10 @@ Sehr selten, als Weltereignis: **etwa einmal in zehn Saisons** kommt ein Szenari
 | Ein Spiel deines Vereins wird deshalb wiederholt | sehr selten | neuer Termin, Ergebnis gestrichen, Tabelle ändert sich |
 | Großer Skandal mit mehreren Vereinen wie 1971 | sehr selten | Lizenzentzug oder Zwangsabstieg, viele Sperren, Ansehen der Liga sinkt für eine Saison |
 
+- **Gebaut als K30g** (23.11.2026, popolupo, ohne Testlauf, Werte vorläufig): „Wettbetrug in der 3. Liga fliegt auf“ als Info-Karte (Stufe selten, höchstens einmal in zehn Jahren).
+  - Ein Spieler eines Computer-Vereins der 3. Liga (keine zweite Mannschaft) wird gesperrt wie beim Wettskandal (K30f).
+  - Sein Verein bekommt in dieser Saison 3 Punkte abgezogen, über denselben Weg wie nach einer Insolvenz (`S.abzug`, K23a). Das gilt auch, wenn du in der 3. Liga spielst. Dein eigener Verein ist nie betroffen.
+  - Die Regionalliga hat keine Kader im Spiel, darum nur die 3. Liga. Schiedsrichter, wiederholte Spiele und der große Skandal fehlen weiter.
 - **Nur als Weltereignis, ohne eigene Entscheidung zum Mitmachen** (vorläufig). Die Idee einer Versuchung (ein Mittelsmann bietet dir an, ein Spiel „zu regeln“) bleibt draußen, solange du sie nicht willst.
 - **Doping kommt nicht ins Spiel** (deine Entscheidung vom 10.11.). „Fit spritzen“ mit Schmerzmitteln bleibt, das ist erlaubt (K10).
 - Sichtbar ab der ersten Lizenz (nur Information, K36).

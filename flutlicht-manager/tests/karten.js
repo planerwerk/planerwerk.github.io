@@ -457,6 +457,14 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   S.stab.push(inland);sg();const mitInland=A.talentEntdeckt();x.q=J.scoutAb-1;S.stab.push(x);sg();const mitSchwach=A.talentEntdeckt();x.q=J.scoutAb;sg();const da=A.talentEntdeckt();
   pruef(schwach===null&&mitInland===null&&mitSchwach===null&&!!da&&da.stab===x.id,'Talent aus dem Nichts: nur mit einem guten Jugendscout',`ohne guten Scout ${schwach}, guter Scout anderer Gebiete ${mitInland}, schwacher Jugendscout ${mitSchwach}, guter Jugendscout ${!!da&&da.stab===x.id}`);}
 
+// K30g. Manipulation in der 3. Liga (K30 §8.4): Der Auslöser trifft einen Spieler eines Computer-Vereins der 3. Liga (keine zweite Mannschaft), die Wirkung sperrt ihn
+//       und zieht seinem Verein in dieser Saison 3 Punkte ab (Tabelle), nie deinem Verein.
+{const {S,ev}=welt(),A=ev('AUSLOESER'),kw=ev('kartenWirkung'),tab=ev('table'),si=ev('sperreIn');S.phase='play';
+  const b=A.manipulation3(),p=b&&ev('PIX').get(b.spieler),t=b&&S.teams[b.verein],ok=!!t&&t.lg===3&&!(t.zweite>=0)&&t.id!==S.my&&p.team===t.id;
+  const pkt=()=>(tab(3).find(r=>r.id===t.id)||{}).p,p0=pkt(),l0=si(p,'liga');kw({art:'wettsperre',wert:1},b,{titel:'Test'});kw({art:'punktabzug',wert:3},b,{titel:'Test'});
+  const abzug=pkt()===p0-3&&si(p,'liga')>l0,a0=((S.abzug||{})[S.season]||{})[S.my]||0;kw({art:'punktabzug',wert:3},{verein:S.my},{titel:'Test'});const nieMein=(((S.abzug||{})[S.season]||{})[S.my]||0)===a0;
+  pruef(ok&&abzug&&nieMein,'Manipulation in der 3. Liga: Spieler eines Drittligisten gesperrt, Punktabzug für seinen Verein, nie für deinen',`Verein ${t&&t.name}, Punkte ${p0} → ${pkt()}, gesperrt ${si(p,'liga')>l0}, dein Verein unberührt ${nieMein}`);}
+
 // U19e. Europapokal-Karten (K37 §8): Auswärtsspiel bei einem Auslandsverein in den nächsten 7 Tagen (kein Heimspiel, nicht später, nicht das Finale), Spiel 1 bis 7 Tage her,
 //       Wunder nach 0:3 im Hinspiel und 4:0 oder 3:0 mit Elfmeterschießen im Rückspiel, nicht nach nur einem Tor Rückstand und nicht beim Ausscheiden. euMeineSpiele ersetzt der Test.
 {const {S,W,ev}=welt(),A=ev('AUSLOESER'),AV=ev('AV0'),me=S.my,d=S.tag;W.ev('euMeineSpiele=function(){return S.testEu||[];}');

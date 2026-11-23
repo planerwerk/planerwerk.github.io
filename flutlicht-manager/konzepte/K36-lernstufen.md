@@ -407,6 +407,7 @@ lizenz:{
 164. **K16e Ehemaliger Kapitän kehrt zurück (23.11., popolupo, ohne Testlauf):** keine neue Funktion, eine Entscheidungskarte im Bereich `ereignisse`. Die Automatik wählt „alles Gute“ und stellt niemanden ein. Seit Prüfung EP1 und EQ1 stellt die Karte nur ein, wenn der Bereich `stab` frei ist. Steht er in der Automatik, schaltet das Einstellen sie aus, wie beim Einstellen von Hand (`darf`).
 165. **K19e Rückkehr des verlorenen Sohns (23.11., popolupo, ohne Testlauf):** keine neue Funktion, kein neuer Bereich. Mehr Interesse beim Kauf (Bereich `transfers`) und Fanstimmung beim Neuzugang.
 166. **K18f Talent aus dem Nichts (23.11., popolupo, ohne Testlauf):** keine neue Funktion, eine Entscheidungskarte im Bereich `ereignisse`. Die Automatik sagt ab.
+167. **K30g Manipulation in der 3. Liga (23.11., popolupo, ohne Testlauf):** keine neue Funktion, eine Meldung mit Wirkung im Bereich `ereignisse`.
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 
