@@ -150,6 +150,11 @@ const KARTEN=[
     texte:['Seit {spieler} wechseln will, pfeifen ihn die eigenen Fans bei jeder Ballberührung aus.','„Söldner!“ steht auf einem Plakat in der Kurve. Gemeint ist {spieler}, der den Verein verlassen will.'],
     optionen:[{text:'Ihn öffentlich in Schutz nehmen',wirkung:[{art:'stimmung',wert:3},{art:'fans',wert:-1}],folge:'{spieler} dankt es dir. Ein Teil der Kurve ist sauer.'},
       {text:'Schweigen',wirkung:[{art:'stimmung',wert:-3}],folge:'{spieler} fühlt sich allein gelassen.'}],auto:0},
+  // K19f (K19 §8, 23.11., popolupo): Spieler will nur zu dir. Wirkung nachlass aus K30c senkt die Forderung seines Vereins. Werte vorläufig.
+  {id:'nurZuDir',titel:'Spieler will nur zu dir',bereich:'K19',art:'entscheidung',gross:false,stufe:'haeufig',chance:0.3,ausloeser:'nurZuDir',sperrTage:180,
+    texte:['{spieler} will weg von {verein}, und er sagt es offen: Er will nur zu dir. Sein Verein weiß, dass er kaum noch zu halten ist.','Der Berater von {spieler} meldet sich: Sein Mandant will {verein} verlassen, am liebsten Richtung deines Vereins. Andere Angebote interessieren ihn nicht.'],
+    optionen:[{text:'Gespräche aufnehmen',wirkung:[{art:'nachlass',wert:0.15}],folge:'{verein} kennt die Lage. Die Ablöse für {spieler} sinkt.'},
+      {text:'Kein Bedarf',wirkung:[],folge:'{spieler} muss sich nach einem anderen Verein umsehen.'}],auto:1},
   // K27h (K27 §8, 23.11., popolupo): Fans wollen reden bei Fanstimmung unter RKT.fans.redenUnter. Neue Wirkung fanGespraech: das Fan-Gespräch aus dem Stadion (Lernstufe wie dort). Werte vorläufig.
   {id:'fansReden',titel:'Fans wollen reden',bereich:'K27',art:'entscheidung',gross:false,stufe:'haeufig',chance:0.4,ausloeser:'fansReden',sperrTage:45,
     texte:['Die Fanclubs bitten um ein Treffen. Die Stimmung in der Kurve ist auf dem Tiefpunkt, sie wollen wissen, wie es weitergeht.','Vor dem Trainingsgelände warten Vertreter der Kurve. Sie wollen mit dir reden, nicht mit der Pressestelle.'],

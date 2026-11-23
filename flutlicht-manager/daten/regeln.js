@@ -416,6 +416,8 @@ const REGELN={
     // Seit K29l: „Spruch geht viral“ bis viralTage nach einem Eintrag in der Sprüche-Chronik; „Rivale greift deine Kampfansage auf“ bis vorTage vor dem Spiel gegen ihn
     sommer:{nachTestTage:14,sonderFrische:15}, // Sommerkarten (K12a §8, K12c, 22.11., GESCHÄTZT): Übergewicht bis nachTestTage nach dem Leistungstest; Sonderschichten kosten sonderFrische Frische
     stadion:{zuschussAb:5e6,anwohner:['cap','dach'],anwohnerRest:7}, // anwohner: Bauten, gegen die Anwohner klagen können, anwohnerRest: Tage Genehmigung mindestens noch (K26f, 23.11., Prüfung EO2). Stadt bietet Zuschuss (K26 §8, K26e, 22.11., GESCHÄTZT): bei einem Bauprojekt ab zuschussAb Kosten; Anteil in der Karte (Wirkung zuschuss)
+    // nurZuDir (K19f, 23.11., GESCHÄTZT): Spieler will nur zu dir ab Stärke teamLevel − staerkeUnter; „hohes Interesse“ ist die Grenze aus K20d (abwerben.konkurrenz.nein.ab)
+    nurZuDir:{staerkeUnter:3},
     vertrag:{neidUnter:0.7,neidStimmung:55,provisionTage:60}, // Vertragskarten (K21 §8, K22 §8, K21c, 22.11., GESCHÄTZT): Gehaltsneid unter neidUnter × Marktgehalt und Stimmung unter neidStimmung; Provisionsstreit bis provisionTage nach dem Wechsel
     // choreoTage, choreoAb (K27f, 23.11., GESCHÄTZT): Karte „Choreo in der Kurve“ vor einem Heim-Derby oder Spitzenspiel in höchstens choreoTage Tagen, Wirkung der Fankultur ab choreoAb
     // platzsturm (K27g, Prüfung EX3): direkte Aufstiegsplätze (2. und 3. Liga, in der 3. Liga ohne zweite Mannschaften) und Plätze unter dem Strich in der 1. und 2. Liga (zwei Absteiger + Relegation)

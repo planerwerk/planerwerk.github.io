@@ -557,6 +557,18 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   pruef(gut===null&&!!schlecht&&kurz===null&&gesperrt&&geredet,'Fans wollen reden: nur bei schlechter Fanstimmung und freiem Gespräch, Einladen ist das Fan-Gespräch des Monats, nicht mit gesperrtem Bereich',
     `gute Stimmung ${gut}, schlechte ${!!schlecht}, kurz nach einem Gespräch ${kurz}, gesperrt ${gesperrt}, geredet ${geredet} (Umfeld ${t.fanU})`);}
 
+// K19f. Spieler will nur zu dir (K19 §8): nur im Transferfenster, nur mit Wechselwunsch ab Stufe 3 und hohem Interesse an dir (Grenze aus K20d), nicht verliehen;
+//       „Gespräche aufnehmen“ senkt die Forderung seines Vereins um 15 % (Wirkung nachlass). Der Spieler kommt vom schwächsten Verein der 3. Liga, damit das Interesse hoch ist.
+{const {S,ev}=welt(),A=ev('AUSLOESER'),fo=ev('fensterOffen'),wi=ev('wechselInteresse'),ab=ev('RAW').konkurrenz.nein.ab,sq=ev('squad'),lvl=ev('teamLevel')(S.my),d0=S.tag;S.phase='play';
+  let auf=0;while(auf<400&&!fo(auf))auf++;let zu=0;while(zu<400&&fo(zu))zu++;
+  S.teams.filter(t=>t.id!==S.my).forEach(t=>sq(t.id).forEach(p=>{p.ww=0;})); /* nur der Testspieler will weg */
+  const t3=S.teams.filter(t=>t.lg===3&&ev('aktiv')(t)).sort((a,b)=>a.rep-b.rep)[0],p=sq(t3.id).filter(q=>!q.leihe&&!q.wech)[0];p.ww=3;p.str=Math.max(p.str,lvl);const i=wi(p);
+  S.tag=auf;const b=A.nurZuDir(),passt=!!b&&b.spieler===p.id&&b.verein===t3.id;S.tag=zu;const geschlossen=A.nurZuDir();S.tag=auf;
+  p.ww=2;const ohneWunsch=A.nurZuDir();p.ww=3;p.leihe={von:t3.id};const geliehen=A.nurZuDir();delete p.leihe;
+  const f=ev('rundeAb')(ev('forderungDu')(p)*0.85);ev('kartenWirkung')({art:'nachlass',wert:0.15},b||{spieler:p.id,verein:t3.id},{titel:'Test'});const billiger=ev('verhandlung')(p).f===f;S.tag=d0;
+  pruef(i>=ab&&passt&&geschlossen===null&&ohneWunsch===null&&geliehen===null&&billiger,'Spieler will nur zu dir: im Fenster, mit Wechselwunsch und hohem Interesse, nicht verliehen; Gespräche senken die Forderung um 15 %',
+    `Interesse ${Math.round(i)} (ab ${ab}), Auslöser ${passt}, Fenster zu ${geschlossen}, ohne Wunsch ${ohneWunsch}, verliehen ${geliehen}, Forderung ${billiger}`);}
+
 // K16f. Streit im Stab (K16 §8): nur zwischen zwei hitzigen Mitarbeitern deines Stabs; „Laufen lassen“ macht beide 28 Tage schwächer (Qualität × 0,9 in stabQ), danach wieder normal.
 {const {S,F,ev}=welt(),A=ev('AUSLOESER'),hz=ev('stabHitzig'),sf=ev('stabStreitFaktor'),M=ev('RST').streit,sg=ev('stabGeaendert');S.phase='play';if(!S.stab)F.stabAufbau();
   const neu=()=>{for(let i=0;i<60;i++){const x=F.stabNeu('jugend',10,S.my,1);if(hz(x)){S.stab.push(x);sg();return x;}}return null;},x1=neu(),x2=neu();

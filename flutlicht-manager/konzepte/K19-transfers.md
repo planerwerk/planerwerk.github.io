@@ -154,6 +154,19 @@ Interesse = Perspektive + Geld + Verein + Trainer + Lage + Heimat − Bindung
 - **Interesse:** +10 beim Wechselinteresse (`heimkehrVerein`). Das gilt beim Kauf, beim Abwerben, in der Anzeige und bei der Frage, ob er das höchste Angebot eines anderen Vereins ablehnt (K20d, `spielerLehntAb`). Zum Vergleich: Ein Deutscher im Ausland hat bei der Heimkehr ebenfalls +10.
 - **Fans:** Kommt er zu dir, steigt die Fanstimmung (Umfeld) um 2, mit der Meldung „… kehrt zurück!“. Das gilt beim Kauf und bei der Leihe, für jeden Neuzugang über `neuzugang`. Ausgenommen ist dein eigener verliehener Spieler, der zum Saisonende zurückkommt (Prüfung EP2).
 - **Gleichschritt:** Das Interesse rechnet nur für deinen Verein. Die Fanstimmung zählt im Vergleich aus 5a nicht.
+
+**Gebaut als K19f** (23.11.2026, popolupo, ohne Testlauf, Werte vorläufig): „Spieler will nur zu dir“ als Entscheidungskarte (Anlasskarte, Chance 0,3 je Woche, je Spieler höchstens alle 180 Tage).
+- **Auslöser:**
+  - Das Transferfenster ist offen.
+  - Ein Spieler eines Computer-Vereins der 1. bis 3. Liga hat offiziell um den Wechsel gebeten (Wechselwunsch ab Stufe 3, K14). Er ist nicht verliehen und hat keinen vereinbarten Wechsel.
+  - Er ist stark genug für dich: mindestens dein Mannschaftsniveau − 3 (`RKT.nurZuDir.staerkeUnter`).
+  - Sein Interesse an deinem Verein ist hoch: mindestens 20, dieselbe Grenze, ab der er in K20d das höhere Angebot eines anderen Vereins ablehnen kann (`abwerben.konkurrenz.nein.ab`). Keine eigene Zahl.
+- **Wahl:**
+  - Gespräche aufnehmen: Die Forderung seines Vereins sinkt um 15 % (Kartenwirkung `nachlass` aus K30c, gilt auch für eine schon vereinbarte Ablöse). Kaufen musst du ihn danach selbst.
+  - Kein Bedarf: nichts.
+  - Die Automatik wählt „Kein Bedarf“. Sie soll keine Verhandlung anstoßen, um die du nicht gebeten hast.
+- **Bewusst weggelassen (vorläufig):** „Stimmung beim alten Verein“ aus der Tabelle. Sein Wechselwunsch steht schon für die schlechte Stimmung, eine zweite Strafe für den Computer-Verein bringt dem Spiel nichts.
+- **Gleichschritt:** Karten sind in 5a aus. Der Auslöser liest nur.
 ## 9. Wechselwirkungen
 
 | Konzept | Zusammenspiel |

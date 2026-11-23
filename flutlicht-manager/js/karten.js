@@ -171,6 +171,11 @@ const AUSLOESER={
   provision(){const V=RKT.vertrag,heute=absTag(S.tag),l=squad(S.my).filter(p=>p.seit!=null&&heute-p.seit<=V.provisionTage&&!!beraterVon(p));return l.length?{spieler:pick(l).id}:null;},
   // Fans (K27 §8, K27c): Ticketpreis über Richtpreis × RKT.fans.preisFaktor bei Fanstimmung unter protestUnter; ein Spieler deines Kaders mit Wechselwunsch ab wwAb
   ticketProtest(){const F=RKT.fans,t=myT();return S.phase==='play'&&t.price>richtPreis(t)*F.preisFaktor&&fanst(t)<F.protestUnter?{}:null;},
+  // Spieler will nur zu dir (K19 §8, K19f): im Transferfenster ein Spieler eines Computer-Vereins (1. bis 3. Liga, nicht verliehen, kein vereinbarter Wechsel) mit Wechselwunsch ab Stufe 3,
+  // stark genug für dich (teamLevel − RKT.nurZuDir.staerkeUnter) und mit hohem Interesse an deinem Verein (ab RAW.konkurrenz.nein.ab wie in K20d)
+  nurZuDir(){if(!fensterOffen())return null;const ab=RAW.konkurrenz.nein.ab,min=teamLevel(S.my)-RKT.nurZuDir.staerkeUnter,l=[];
+    S.teams.forEach(t=>{if(t.id===S.my||!aktiv(t)||t.lg>3)return;squad(t.id).forEach(p=>{if((p.ww||0)>=3&&!p.wech&&!p.leihe&&p.str>=min&&wechselInteresse(p)>=ab)l.push(p);});});
+    if(!l.length)return null;const p=pick(l);return{spieler:p.id,verein:p.team};},
   // Fans wollen reden (K27 §8, K27h): Fanstimmung unter RKT.fans.redenUnter und das Fan-Gespräch des Monats ist noch frei (fanGespraechFrei)
   fansReden(){return fanst(myT())<RKT.fans.redenUnter&&fanGespraechFrei()?{}:null;},
   pfiffe(){const l=squad(S.my).filter(p=>(p.ww||0)>=RKT.fans.wwAb);return l.length?{spieler:pick(l).id}:null;},
