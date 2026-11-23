@@ -369,6 +369,14 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
     'Taktik-Coup als Außenseiter mit dem passenden Stil, Pyrotechnik nach dem Derby, Rudelbildung nur mit Roter Karte',
     `Außenseiter ${stark}, Coup ${coup&&coup.verein}, gleicher Stil ${falscherStil}, verloren ${verloren}, kein Derby ${keinDerby}, Pyro ${pyro&&pyro.verein}, ohne Rot ${ohneRot}, Rudel ${!!rudel}`);}
 
+// K06d. Spieler hadert mit seiner Position (K06 §8): Der Zähler steigt nur bei Einsätzen mit Eignung unter 80 % und fällt auf 0 bei passender Position;
+//       ab drei Einsätzen in Folge kommt die Karte.
+{const {S,F,ev}=welt(),A=ev('AUSLOESER'),N=ev('RKT').spiel,el=ev('eignung'),sq=ev('squad')(S.my);S.phase='play';sq.forEach(p=>{p.pfal=0;});
+  const p=sq.find(x=>x.pos!=='TW'),recht=p.fp||ev('STD_POS')[p.pos],spiel=pos=>F.letztesSpielMerken({h:S.my,a:0,hg:0,ag:0,ev:[],xpo:[[[p.id,pos,0,90]],[]]},S.tag);
+  spiel('TW');spiel('TW');const zwei=A.positionHadern();spiel('TW');const drei=A.positionHadern();spiel(recht);const zurueck=p.pfal===0&&A.positionHadern()===null;
+  pruef(el(p,'TW')<N.positionUnter&&zwei===null&&!!drei&&drei.spieler===p.id&&zurueck,'Position: drei Einsätze in Folge falsch eingesetzt bringen die Karte, passende Position setzt zurück',
+    `Eignung als Torwart ${el(p,'TW').toFixed(2)}, nach zwei ${zwei}, nach drei ${drei&&drei.spieler===p.id}, zurück ${zurueck}`);}
+
 // U19e. Europapokal-Karten (K37 §8): Auswärtsspiel bei einem Auslandsverein in den nächsten 7 Tagen (kein Heimspiel, nicht später, nicht das Finale), Spiel 1 bis 7 Tage her,
 //       Wunder nach 0:3 im Hinspiel und 4:0 oder 3:0 mit Elfmeterschießen im Rückspiel, nicht nach nur einem Tor Rückstand und nicht beim Ausscheiden. euMeineSpiele ersetzt der Test.
 {const {S,W,ev}=welt(),A=ev('AUSLOESER'),AV=ev('AV0'),me=S.my,d=S.tag;W.ev('euMeineSpiele=function(){return S.testEu||[];}');

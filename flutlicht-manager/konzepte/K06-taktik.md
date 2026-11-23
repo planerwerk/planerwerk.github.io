@@ -208,7 +208,7 @@ Es gibt keine Höchstzahl. Wer „Spiel der Saison“ ständig nutzt, spielt in 
 | Der Gegner hat dich durchschaut | ein Computer-Trainer kontert deinen Lieblingsstil und gewinnt | Info, Hinweis im Spielbericht |
 | Standard-Spezialisten | auffällig viele Standardtore in einer Halbserie | Presse, Gegner stellen sich darauf ein (Ecken gegen dich ×0,95 für einen Monat) |
 
-**Gebaut als K06c** (23.11.2026, popolupo, ohne Testlauf, Meldung mit Wirkung nach deinem Pflichtspiel): „Taktik-Coup“, wenn du als Außenseiter (Niveau des Gegners mindestens 2 höher) mit dem Stil gewinnst, der den des Gegners im Kreislauf schlägt. Ruf +1, Fans +1. „Spieler hadert mit seiner Position“ und „Standard-Spezialisten“ fehlen noch.
+**Gebaut als K06c** (23.11.2026, popolupo, ohne Testlauf, Meldung mit Wirkung nach deinem Pflichtspiel): „Taktik-Coup“, wenn du als Außenseiter (Niveau des Gegners mindestens 2 höher) mit dem Stil gewinnst, der den des Gegners im Kreislauf schlägt. Ruf +1, Fans +1. Seit K06d „Spieler hadert mit seiner Position“ (Entscheidung, Chance 0,5) nach drei Einsätzen in Folge auf einer Position mit Eignung unter 80 % (Zähler `p.pfal`): erklären (mit 60 % Stimmung +2, sonst −1) oder hart bleiben (Stimmung −3, Glaubwürdigkeit +1). Die Umschulung bietet die Karte nicht an, sie geht wie bisher im Training. „Standard-Spezialisten“ fehlt noch.
 
 ## 9. Wechselwirkungen
 

@@ -283,5 +283,10 @@ const KARTEN=[
       {text:'Einspruch einlegen',wirkung:[{art:'geld',wert:-4000,chance:0.3,schlecht:-16000,gut:'Das Sportgericht senkt die Strafe auf {geld:4000}.',schlechtText:'Der Einspruch scheitert, mit den Kosten werden es {geld:16000}.'}]}],auto:1},
   {id:'rudelbildung',titel:'Rudelbildung',bereich:'K09',art:'info',stufe:'haeufig',chance:0.5,ausloeser:'rudelbildung',sperrTage:60,
     texte:['Nach der Roten Karte im Derby gegen {verein} gingen beide Mannschaften aufeinander los. Das Sportgericht verhängt {geld:6000} gegen deinen Verein.','Die Rudelbildung im Derby gegen {verein} kostet deinen Verein {geld:6000}.'],
-    wirkung:[{art:'geld',wert:-6000}]}
+    wirkung:[{art:'geld',wert:-6000}]},
+  // Spieler hadert mit seiner Position (K06 §8, K06d, 23.11., popolupo): Entscheidung, Werte vorläufig. Die Aufstellung änderst du selbst.
+  {id:'positionHadern',titel:'Spieler hadert mit seiner Position',bereich:'K06',art:'entscheidung',gross:false,stufe:'haeufig',chance:0.5,ausloeser:'positionHadern',sperrTage:120,
+    texte:['{spieler} spielt seit Wochen auf einer Position, die ihm nicht liegt. Er will mit dir reden.','„Das ist nicht meine Position“, sagt {spieler} in der Kabine. Er fühlt sich falsch eingesetzt.'],
+    optionen:[{text:'Ihm erklären, warum er dort spielt',wirkung:[{art:'stimmung',wert:2,chance:0.6,schlecht:-1,gut:'{spieler} versteht es und will helfen.',schlechtText:'{spieler} nickt, überzeugt ist er nicht.'}]},
+      {text:'Ihm sagen, dass es so bleibt',wirkung:[{art:'stimmung',wert:-3},{art:'glaub',wert:1}],folge:'Du bleibst hart. {spieler} geht ohne ein Wort.'}],auto:0}
 ];

@@ -112,6 +112,8 @@ const AUSLOESER={
   taktikCoup(){const L=kartenLetztSpiel();return L&&L.coup?{verein:L.gegner}:null;},
   derbyPyro(){const L=kartenLetztSpiel();return L&&L.derby?{verein:L.gegner}:null;},
   rudelbildung(){const L=kartenLetztSpiel();return L&&L.derby&&L.rot?{verein:L.gegner}:null;},
+  // Spieler hadert mit seiner Position (K06 §8, K06d): mindestens RKT.spiel.positionSpiele Einsätze in Folge auf einer Position mit geringer Eignung (p.pfal)
+  positionHadern(){const l=squad(S.my).filter(p=>(p.pfal||0)>=RKT.spiel.positionSpiele);return l.length?{spieler:pick(l).id}:null;},
   // Folgekarte der Kette (nur über kartenKette, mit den Beteiligten der ersten Karte): Der Spieler ist noch beim selben Verein und noch nicht vergeben
   dritterNoch(b){const p=b&&b.spieler!=null?PIX.get(b.spieler):null;return p&&p.team===b.verein&&!p.wech&&!istLeihe(p)&&S.teams[p.team]&&aktiv(S.teams[p.team])?b:null;},
   // Presse (K29 §8, K17 §8, K29k): Medienklima unter RKT.presse.leckUnter; ein Verein deiner Liga mit Beziehung unter RBZ.wirkung.gespraechUnter
@@ -188,7 +190,9 @@ function letztesSpielMerken(r,d){if(!r||r.test)return;const s=r.h===S.my?0:1,ein
   // gegner, derby und rot für K09e (Derby mit Roter Karte), coup für K06c: gewonnen als Außenseiter (Niveau des Gegners mindestens RKT.spiel.coupAb höher) mit dem Stil, der den des Gegners schlägt
   const gegner=s?r.h:r.a,gf=s?r.ag:r.hg,ga=s?r.hg:r.ag,tk=r.taktik||[],mein=tk[s],geg=tk[1-s],
     coup=gf>ga&&gegner<1000&&!!mein&&!!geg&&RTA.kreislauf[mein.stil]===geg.stil&&teamLevel(gegner)-teamLevel(S.my)>=RKT.spiel.coupAb;
-  S.letzt={s:S.season,tag:d,joker,frueh,spaet,gegner,derby:gegner<1000&&istDerby(r.h,r.a),rot:r.ev.some(e=>e.t==='R'),coup};}
+  S.letzt={s:S.season,tag:d,joker,frueh,spaet,gegner,derby:gegner<1000&&istDerby(r.h,r.a),rot:r.ev.some(e=>e.t==='R'),coup};
+  // K06d: Einsätze in Folge auf einer Position mit Eignung unter RKT.spiel.positionUnter (p.pfal), sonst zurück auf 0. Wer nicht spielte, behält seinen Zähler.
+  ((r.xpo||[])[s]||[]).forEach(([id,pos])=>{const p=PIX.get(id);if(!p||p.team!==S.my||!pos)return;p.pfal=eignung(p,pos)<RKT.spiel.positionUnter?(p.pfal||0)+1:0;});}
 // Spieler aus S.letzt (Liste k), wenn das Spiel höchstens RKT.spiel.nachTage zurückliegt
 const kartenLetztSpiel=()=>{const L=S.letzt,n=L?S.tag-L.tag:-1;return L&&L.s===S.season&&n>=0&&n<=RKT.spiel.nachTage?L:null;};
 const kartenLetzt=k=>{const L=S.letzt,n=L?S.tag-L.tag:-1;return L&&L.s===S.season&&n>=0&&n<=RKT.spiel.nachTage?(L[k]||[]).map(id=>PIX.get(id)).filter(Boolean):[];};
