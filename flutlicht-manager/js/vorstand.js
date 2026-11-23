@@ -209,7 +209,7 @@ const wahlFaellig=(t,s)=>(s+t.id)%wahlJahre(t)===0;
 function naechsteWahl(t){let s=S.season;while(!wahlFaellig(t,s))s++;return s;}
 // Chance, dass der Präsident bleibt: Punkte je Spiel der Saison, Auf- oder Abstieg (sm), Fanstimmung, in Grenzen. Ohne Zufall.
 // Mitglieder als Stimmen (U12m): Gewicht der Fanstimmung nach Mitgliedern je Platz (wahlFansGewicht)
-const wahlFansGewicht=t=>{const W=RV.praesident.wahl,M=W.mitglieder,mp=t&&t.cap>0?mitgliederVon(t)/t.cap:0;return M[0]+(M[1]-M[0])*Math.min(1,mp/W.mitgliederVoll);};
+const wahlFansGewicht=t=>{const W=RV.praesident.wahl,M=W.mitglieder,k=t?kapOhneBau(t):0,mp=k>0?mitgliederVon(t)/k:0; /* Plätze ohne Bau-Abzug (ES5) */return M[0]+(M[1]-M[0])*Math.min(1,mp/W.mitgliederVoll);};
 function wahlChance(t,sm){const W=RV.praesident.wahl,r=table(t.lg).find(x=>x.id===t.id),ppg=r&&r.sp?r.p/r.sp:W.mitte;let c=W.bleiben+(ppg-W.mitte)*W.jePunkt+(fanst(t)-50)*W.fans*wahlFansGewicht(t);
   if(sm){const id=t.id,relAuf=(r,w)=>!!r&&w===id&&r[1]===id,relAb=(r,w)=>!!r&&w!=null&&w!==id&&r[0]===id; /* Relegation wie in rufSaison (Prüfung DQ6) */
     if([...(sm.up||[]),...(sm.up3||[]),...(sm.up4||[])].includes(id)||relAuf(sm.rel,sm.rw)||relAuf(sm.rel2,sm.rw2))c+=W.aufstieg;
@@ -224,7 +224,7 @@ function praesidentenWahlen(sm){const W=RV.praesident.wahl;let n=0;
     else{S.trust=clamp(50+(S.trust-50)*W.vertrauen,0,100);news(`Mitgliederversammlung: Der Präsident wird abgewählt. Der neue ist ${praesidentText(t)}${praesident(t).ehrgeiz>=RV.nebenziele.ehrgeizigAb?' und ehrgeizig':''}. Er muss sich erst ein Bild von dir machen.`,'bad');}});
   return n;}
 // Anzeige im Büro (Karte Saisonziel)
-function wahlText(t){const s=naechsteWahl(t),g=wahlFansGewicht(t);return`Nächste Präsidentenwahl auf der Mitgliederversammlung im Sommer ${s+1}.${Math.abs(g-1)>=0.05?` Die Fanstimmung zählt dort × ${de(g,2)}, ${g>1?'viele':'wenige'} Mitglieder je Platz (U12m).`:''}`;}
+function wahlText(t){const s=naechsteWahl(t),g=wahlFansGewicht(t);return`Nächste Präsidentenwahl auf der Mitgliederversammlung im Sommer ${s+1}.${Math.abs(g-1)>=RV.praesident.wahl.anzeigeAb?` Die Fanstimmung zählt dort × ${de(g,2)}, ${g>1?'viele':'wenige'} Mitglieder je Platz (U12m).`:''}`;}
 
 // ---------- Budgetgespräch (K28, K15 §12 Nr. 20, U12l) ----------
 // S.bg = {s, tid, ok (1 zugesagt, 0 abgelehnt)}: einmal je Saison und Verein, nur während der Saison, Bereich zielgespraech. Zugesagt: Transferbudget × (1 + plus) bis Saisonende.

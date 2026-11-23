@@ -57,6 +57,8 @@ function anlagenKarte(){const t=myT(),c=S.constr,W={training:`Entwicklung im Tra
     <p class="dim">Jeder Bau braucht erst eine Genehmigung (2 bis 8 Wochen, manchmal mit Auflagen). Etwa ein Drittel der Bauten wird später fertig, manche teurer. Instandhaltung: 1 % der Bausumme im Jahr${t.bausumme?`, zurzeit ${fmt(Math.round(t.bausumme*RB.instandhaltung))}`:''}.</p></div>`;}
 // Fertig-Tag der Baustelle als Tag der Saison (neue Stände rechnen mit absoluten Tagen, alte mit dem Tag der Saison)
 const bauBisTag=c=>c.phase!=null?c.bis-absTag(0):c.bis;
+// Plätze ohne den Abzug während eines Tribünenbaus (bauTag zieht RB.tribuene.plaetze ab), für Verhältnisse wie Mitglieder je Platz (Prüfung ES5)
+const kapOhneBau=t=>t.cap+(t.id===S.my&&S.constr&&S.constr.k==='cap'&&S.constr.phase==='bau'?RB.tribuene.plaetze:0);
 
 // ---------- K26b (K26 §7): Computer-Vereine bauen ----------
 // Zum Saisonstart (saison.js newSeason), ohne Zufall und ohne Bauzeit. Am Verein: t.voll = Saisons nacheinander mit Nachfrage über RB.computer.vollAb der Plätze.

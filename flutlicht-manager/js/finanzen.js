@@ -39,9 +39,13 @@ function finanzenMonat(d,ohneZahlungen){const t=myT();let M=S.finM||{s:S.season,
 function finanzenSaisonstart(){S.finM={s:S.season,mo:'07',fin:{},cash:myT().cash,k:0};monatsRaten();instandhaltung();}
 // Insolvenz (K23 §5.4): an zwei Monatsersten nacheinander unter dem negativen Kreditrahmen. Punktabzug, Vertrauen, Schuldenschnitt, höchstens einmal je Saison.
 function insolvenzPruefen(){const t=myT(),L=lzpS(),I=RFP.insolvenz;if(t.cash<-kreditRahmen(t))L.unter=(L.unter||0)+1;else L.unter=0;
-  if(L.unter<I.monate||L.ins===S.season||S.phase!=='play'||ligaFertig(t.lg))return;L.ins=S.season;L.unter=0; /* nach dem letzten Spieltag erst am nächsten Monatsersten, also mit Abzug in der neuen Saison (Prüfung ER1: sonst zwischen den Relegationsspielen) */
-  const A=S.abzug||(S.abzug={}),a=A[S.season]||(A[S.season]={});a[S.my]=(a[S.my]||0)+I.punkte;S.trust=clamp(S.trust+I.vertrauen,0,100);money('Schuldenschnitt',-t.cash);
-  news(`Insolvenz: ${t.name} ist zahlungsunfähig. ${I.punkte} Punkte Abzug, die Gläubiger verzichten auf die Schulden, der Kredit bleibt. Der Vorstand ist entsetzt.`,'bad');}
+  if(L.unter<I.monate||L.ins===S.season||S.phase!=='play')return;
+  /* Nach dem letzten Spieltag der eigenen Liga gilt der Abzug für die neue Saison (Prüfung ER1: sonst zwischen den Relegationsspielen; ES1: sofort gebucht statt aufgeschoben) */
+  const s=insolvenzSaison(t);L.ins=s;L.unter=0;
+  const A=S.abzug||(S.abzug={}),a=A[s]||(A[s]={});a[S.my]=(a[S.my]||0)+I.punkte;S.trust=clamp(S.trust+I.vertrauen,0,100);money('Schuldenschnitt',-t.cash);
+  news(`Insolvenz: ${t.name} ist zahlungsunfähig. ${I.punkte} Punkte Abzug${s>S.season?' in der neuen Saison':''}, die Gläubiger verzichten auf die Schulden, der Kredit bleibt. Der Vorstand ist entsetzt.`,'bad');}
+// Saison des Punktabzugs: die laufende, nach dem letzten Spieltag der eigenen Liga die nächste (ER1, ES1)
+const insolvenzSaison=t=>ligaFertig(t.lg)?S.season+1:S.season;
 // Lizenzprüfung (1. März): Liquidität am Ende der nächsten Saison nach der Prognose. Liquidität = Kontostand + nicht genutzter Kreditrahmen.
 const liquiditaet=c=>c+Math.max(0,kreditRahmen(myT())-(S.loan||0));
 function lizenzPruefung(){const L=lzpS(),p=finPrognose(true),liq=liquiditaet(p);L.s=S.season;L.geprueft=0;
@@ -93,9 +97,9 @@ function kiPokalSpiel(r,runde){[r.h,r.a].forEach(id=>{if(id===S.my||id>=1000)ret
   t.cash+=RF.pokalPraemien[runde]+(id===r.h&&runde!==5?kiHeimEinnahmen(t,r.a<1000?S.teams[r.a]:null,true):0)+(runde===5&&winner(r)===id?RF.pokalSieg:0);});}
 // Insolvenz der Computer-Vereine (am Monatsersten, Regel wie insolvenzPruefen): zwei Monatserste unter dem negativen Kreditrahmen, Punktabzug, Schuldenschnitt
 function kiInsolvenzPruefen(){if(S.phase!=='play')return;const I=RFP.insolvenz;
-  S.teams.forEach(t=>{if(t.id===S.my||!aktiv(t))return;if(t.cash>=-kreditRahmen(t)){if(t.fu)t.fu=0;return;}t.fu=(t.fu||0)+1;if(t.fu<I.monate||t.fins===S.season||ligaFertig(t.lg))return; /* nach dem letzten Spieltag aufgeschoben, Zähler bleibt (ER1) */
-    t.fu=0;t.fins=S.season;const A=S.abzug||(S.abzug={}),a=A[S.season]||(A[S.season]={});a[t.id]=(a[t.id]||0)+I.punkte;t.cash=0;
-    news(`Insolvenz: ${t.name} ist zahlungsunfähig. ${I.punkte} Punkte Abzug, die Gläubiger verzichten auf die Schulden.`,'');});}
+  S.teams.forEach(t=>{if(t.id===S.my||!aktiv(t))return;if(t.cash>=-kreditRahmen(t)){if(t.fu)t.fu=0;return;}t.fu=(t.fu||0)+1;if(t.fu<I.monate||t.fins===S.season)return;
+    const s=insolvenzSaison(t);t.fu=0;t.fins=s;const A=S.abzug||(S.abzug={}),a=A[s]||(A[s]={});a[t.id]=(a[t.id]||0)+I.punkte;t.cash=0; /* nach dem letzten Spieltag Abzug in der neuen Saison (ER1, ES1) */
+    news(`Insolvenz: ${t.name} ist zahlungsunfähig. ${I.punkte} Punkte Abzug${s>S.season?' in der neuen Saison':''}, die Gläubiger verzichten auf die Schulden.`,'');});}
 
 // ---------- K23g (§5.4, §5.5c): Lizenzprüfung der Computer-Vereine ----------
 // Erwarteter Saldo je Ligaspiel nach dem Modell von kiFinanzenSpiel: halb zu Hause, Heimspiel zum Erwartungswert mit neutraler Form

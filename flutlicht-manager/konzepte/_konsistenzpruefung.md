@@ -2362,9 +2362,34 @@ Korrekturen auf `mitarbeit/popolupo-er-korrekturen` (auf U12m).
 
 | # | Befund | Status |
 |---|---|---|
-| ER1 | Der Punktabzug konnte zwischen den Relegationsspielen 2./3. Liga kommen. Dann hätte das Rückspiel ein anderer Verein bestritten als das Hinspiel. Jetzt nicht mehr nach dem letzten Spieltag der 3. Liga (`ligaFertig(3)`). Bei der Insolvenz am 1.6. gab es dasselbe schon länger. Seit dem Nachtrag wartet sie nach dem letzten Spieltag bis zum nächsten Monatsersten, bei dir und bei den Computer-Vereinen (Test in `tests/finanzen.js`). | ✅ behoben |
+| ER1 | Der Punktabzug konnte zwischen den Relegationsspielen 2./3. Liga kommen. Dann hätte das Rückspiel ein anderer Verein bestritten als das Hinspiel. Jetzt nicht mehr nach dem letzten Spieltag der 3. Liga (`ligaFertig(3)`). Bei der Insolvenz am 1.6. gab es dasselbe schon länger. Seit dem Nachtrag gilt ihr Abzug nach dem letzten Spieltag für die neue Saison, bei dir und bei den Computer-Vereinen (Test in `tests/finanzen.js`, seit ES1 sofort gebucht statt aufgeschoben). | ✅ behoben |
 | ER2 | „Höchstens einmal in zehn Jahren“ stimmte nicht. `sperrTage` sperrt nur denselben Spieler beim selben Verein. Jetzt sperrt `S.skandal3` mit `RKT.skandal.abstand` (10 Saisons) für alle. Die Stufe selten ergibt etwa einmal in 100 Saisons. | ✅ behoben |
 | ER3 | Über der Info-Grenze der Woche wurde der Abzug ohne Meldung gebucht. Neues Katalogfeld `immer`, die Karte wird immer gemeldet. | ✅ behoben |
 | ER4 | Der Test K30g stürzte ab, wenn der Auslöser nichts fand, und prüfte den Katalogeintrag nicht. Jetzt über `kartenZeigen`, abgesichert, dazu ER1 und ER2. | ✅ behoben |
 | ER5 | Die Karte „Ehemaliger Kapitän“ zählte die Lizenz-Aufgabe „Mitarbeiter eingestellt“ nicht. Jetzt wie beim Einstellen von Hand. | ✅ behoben |
 | ER6 | Wer den Ex-Spieler vorher von Hand eingestellt hatte, bekam „hat anderswo zugesagt“. Jetzt „ist schon in deinem Stab“. | ✅ behoben |
+
+## ES. Prüfung von U12m, der Korrekturen ER und des Aufschubs der Insolvenz ohne Laufzeit (23. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat c6bf417, 0e4656a und 7823165 gelesen, nichts ausgeführt. Ein mittlerer Fund, vier niedrige.
+
+**Ohne Befund:**
+
+- **U12m:** Formel und Beispiele stimmen: Union 3,24, Schalke 3,28 und Köln 3,10 Mitglieder je Platz ergeben 1,5, Leipzig 0,51.
+- **Testwerte:** bleiben in den Grenzen.
+- **`manipulation3`:** Die Wächter stehen vor dem Würfel.
+- **Feld `immer`:** stimmt.
+- **`stabHolen` mit `aufgabe`:** wie `darf`.
+- **Test K30g:** stimmt.
+- **`ligaFertig`:** bekommt nie Liga 4.
+- **Gleichschritt:** unberührt.
+
+Korrekturen auf `mitarbeit/popolupo-es-korrekturen` (auf den Korrekturen ER).
+
+| # | Befund | Status |
+|---|---|---|
+| ES1 | **Mittel: Der Aufschub der Insolvenz aus ER1 konnte einfrieren.** Ein Drittligist mit Aufschub, der in die Regionalliga absteigt, wird dort nicht mehr geprüft. Zähler und Schulden blieben stehen, Jahre später nach dem Wiederaufstieg kam sofort der Abzug. Jetzt kein Aufschub mehr: Nach dem letzten Spieltag kommt die Insolvenz wie sonst, mit sofortigem Schuldenschnitt, nur der Abzug geht in `S.abzug` der nächsten Saison (`insolvenzSaison`). Test angepasst. | ✅ behoben |
+| ES2 | Die Doku sprach vom „nächsten Monatsersten“, tatsächlich wäre es erst der 1. August gewesen. Mit ES1 entfällt der Aufschub, die Texte nennen jetzt den Abzug in der neuen Saison. | ✅ behoben |
+| ES3 | Die Anzeigegrenze 0,05 für das Wahlgewicht stand im Code. Jetzt `wahl.anzeigeAb`. | ✅ behoben |
+| ES4 | Der Testtext sagte „Fans 90“, gerechnet wird mit 80. | ✅ behoben |
+| ES5 | Während eines Tribünenbaus fehlen 3.000 Plätze in `t.cap`, das hob kurz die Mitglieder je Platz (Wahlgewicht, auch Dauerkarten-Vorkaufsrecht). Neu `kapOhneBau` für beide. | ✅ behoben |

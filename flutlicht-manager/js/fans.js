@@ -56,7 +56,7 @@ const dkPreis=(t,d)=>Math.min(t.price,d.p!=null?d.p:t.price)*zuschauerFaktor(t)*
 // Anteil der Plätze nach Fanstimmung und Rabatt, höchstens ohne Gästeblock
 function dkAnteil(t,r){const D=RFS.dauerkarten;return clamp(D.basis+D.jeStimmung*fanst(t)/100+D.jeRabatt*(r-D.rabatt)+(t&&t.id===S.my?dkKampagne():0)+dkMitglieder(t),0,1-D.gaesteblock);} /* + Vorkaufsrecht der Mitglieder (K25e) */
 // Vorkaufsrecht der Mitglieder (K25 §5.5, K25e): mehr Mitglieder je Platz, mehr Dauerkarten, höchstens dauerkarten.mitglieder (ab einem Mitglied je Platz)
-function dkMitglieder(t){const D=RFS.dauerkarten;return t&&t.cap>0?D.mitglieder*Math.min(1,mitgliederVon(t)/t.cap):0;}
+function dkMitglieder(t){const D=RFS.dauerkarten,k=t?kapOhneBau(t):0;return k>0?D.mitglieder*Math.min(1,mitgliederVon(t)/k):0;} /* Plätze ohne Bau-Abzug (Prüfung ES5) */
 // Dauerkarten-Aktion (K25c): in dieser Saison gestartet, mit der Abnutzung aus K25a
 const dkKampagne=()=>{const M=S.mk,e=M&&M.s===S.season&&M.k&&M.k.dauerkarten,C=RMK.kampagnen.dauerkarten;return e&&e.n&&C?C.dauerkarten*(e.w||1):0;};
 function dkVerkauf(t){const r=dkRabatt(),n=Math.round(t.cap*dkAnteil(t,r));S.dk={s:S.season,tid:S.my,r,n,p:t.price};

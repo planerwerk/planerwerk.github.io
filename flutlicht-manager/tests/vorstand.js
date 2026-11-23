@@ -154,7 +154,7 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   pruef(gleich&&anders>=alle.length*0.9&&takt&&Math.abs(c0-W.bleiben)<1e-9&&Math.abs(cAuf-c0-W.aufstieg)<1e-9&&Math.abs(cAb-c0-W.abstieg)<1e-9&&Math.abs(cFans-c0-30*W.fans*ev('wahlFansGewicht')(t))<1e-9 /* seit U12m mit dem Gewicht nach Mitgliedern je Platz */
     &&n1===faellig&&prw1===1&&trust1===65&&n2===0&&t.prw===1&&S.trust===65,
     'Präsidentenwahl: Werte, Takt, Chance, Abwahl mit Vertrauen zur Mitte, Wiederwahl ohne Folgen',
-    `andere Werte bei ${anders} von ${alle.length}, Takt ${takt}, Chance ${c0.toFixed(2)} / Aufstieg ${cAuf.toFixed(2)} / Abstieg ${cAb.toFixed(2)} / Fans 90 ${cFans.toFixed(2)}, abgewählt ${n1} von ${faellig}, Vertrauen ${trust1}, danach ${n2}`);}
+    `andere Werte bei ${anders} von ${alle.length}, Takt ${takt}, Chance ${c0.toFixed(2)} / Aufstieg ${cAuf.toFixed(2)} / Abstieg ${cAb.toFixed(2)} / Fans 80 ${cFans.toFixed(2)}, abgewählt ${n1} von ${faellig}, Vertrauen ${trust1}, danach ${n2}`);}
 
 // 18. Vorstand senkt von sich aus (K28 §5.9, U12k): mindestens 6 Plätze hinter dem Ziel und ein geduldiger Präsident → Ziel um 1 schlechter, ohne Antrag und ohne Budgetabzug,
 //     der Vorschlag rückt mit; ungeduldig oder nur 4 Plätze dahinter → Antrag wie bisher

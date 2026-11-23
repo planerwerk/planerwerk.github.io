@@ -148,11 +148,12 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 | **K30g** Manipulation in der 3. Liga | `mitarbeit/popolupo-k30g-manipulation` (auf den Korrekturen EQ) | fertig, ungetestet |
 | **U12m** Mitglieder als Stimmen bei der Präsidentenwahl | `mitarbeit/popolupo-u12m-mitgliederstimmen` (auf K30g) | fertig, ungetestet |
 | Korrekturen ER | `mitarbeit/popolupo-er-korrekturen` (auf U12m) | fertig, ungetestet |
+| Korrekturen ES | `mitarbeit/popolupo-es-korrekturen` (auf den Korrekturen ER) | fertig, ungetestet |
 | U19d2 volle Kader der Auslandsvereine in der Engine | zurückgestellt | Entwurf in K37 §5.7. Die Engine behandelt Auslandsvereine als Block wie Amateure, viele Stellen schlagen Spieler in `PIX` nach. Erst nach einem Testlauf und der Messung des Faktors 0,93 |
 
 **Die neueste Spitze ist immer der zuletzt genannte Zweig, er enthält alles davor.** K24 ist fertig (Claude).
 
-**Vorschlag für den nächsten Testlauf** (Spitze `mitarbeit/popolupo-er-korrekturen`, alles ungetestet, bis auf U12m und die Korrekturen ER von lesenden Prüf-Agenten durchgesehen, Konsistenzprüfung CS bis ER). **Wichtig:** Die Zweige `u12g` und `k29e` laden für sich allein nicht (DN1), bitte die Spitze nehmen:
+**Vorschlag für den nächsten Testlauf** (Spitze `mitarbeit/popolupo-es-korrekturen`, alles ungetestet, bis auf die Korrekturen ES von lesenden Prüf-Agenten durchgesehen, Konsistenzprüfung CS bis ES). **Wichtig:** Die Zweige `u12g` und `k29e` laden für sich allein nicht (DN1), bitte die Spitze nehmen:
 1. `node tests/code.js`, dann die schnellen Einzeltests der neuen Teile: `finanzen.js` (Nr. 11 bis 20), `geruechte.js` (seit K17d mit Klatsch), `schwierigkeit.js`, `werbung.js`, `europapokal.js`, `vorstand.js` (Nr. 10 bis 19, dazu U12m am Ende), `karriereende.js`, `stadion.js` (Nr. 8 bis 11), `karten.js`, `spielwelt-karten.js`, `fans.js` (K27b, K27e), `abwerben.js` (K20b, K20e), `transfers.js` (K20c, K20d, K19c, K31b, K31c, K19d, K19e), `presse.js` (K29b bis K29j), `marketing.js` (K25c, K25d, K25e, K25f), dazu seit dem Nachmittag des 22.11.: `testspiele.js` (K11b, K11c), `erinnerungen.js` (K09b, K07b, K11d, K07d), `scouting.js` (K18c bis K18e), `medizin.js` (K10b bis K10d, K16d), `disziplin.js` (K09c, EA1 bis EA3), `vertraege.js` (K21b, K21d, K21e), `statistik.js` (K34d), `taktik.js` (K06b, eigene Welt am Ende), `stab.js` (K16b), `wettbewerbe.js` (K13b, K13c, K13d, eigene Welten am Ende), `lizenz.js` (K36c am Ende), `leihe.js` (am Ende der Fall EP2, Rückkehr aus der Leihe ohne Heimkehr), und in `karten.js` die neuen Karten (K30b, K07c, K08b, K08c, K16c, K27c, K21c, K26e, K12c, K29k, K17b, K22c, K03b, K30c, K30d, K10e, K07e, K14d, K14e, K29l, K30e, K11f, K03c, K30f, K27d, K05c, K05d, K06c, K09e, K06d, K06e, K15e, K26f, K16e, K18f, K30g, U19e, dazu die Fälle EK und EL). Der Katalog in `karten.js` Fall 1 ist mit `kartenpruefung.pl` schon ohne Node geprüft.
 2. `node tests/lizenz.js` (Gleichschritt, neue Bereiche `zielgespraech`; seit K36c am Ende die gesammelten Meldungen des Stabs). Viele neue Teile wirken nur ohne Automatik oder über Karten, darum sollte 5a gleich bleiben.
 3. `node tests/finanzmodell.js 2`: Salden je Liga nach K23c. Erwartet nach der Modellrechnung 1. Liga etwa +11 Mio., 2. Liga etwa 0, 3. Liga etwa −1 Mio. je Verein und Saison ohne Transfers (K23 §5.6b). Weichen sie stark ab, bitte die Zeilen ins Testprotokoll, ich stelle dann `REGELN.finanzen.verwaltung` und `sponsor` nach.
@@ -187,6 +188,17 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 ---
 
 ## Changelog
+
+### 23.11.2026: Korrekturen nach Prüfung ES zu U12m, den Korrekturen ER und dem Aufschub der Insolvenz (Zweig `mitarbeit/popolupo-es-korrekturen`, auf den Korrekturen ER)
+
+- Ein lesender Prüf-Agent hat U12m, die Korrekturen ER und den Aufschub der Insolvenz durchgesehen (Konsistenzprüfung ES). Ein mittlerer Fund, vier niedrige.
+- **Behoben:**
+  - ES1: Die Insolvenz nach dem letzten Spieltag wird nicht mehr aufgeschoben. Sie kommt wie sonst, mit sofortigem Schuldenschnitt, nur der Punktabzug gilt für die neue Saison. Der Aufschub konnte bei einem Abstieg in die Regionalliga einfrieren.
+  - ES2: Doku dazu.
+  - ES3: Anzeigegrenze in den Regeln.
+  - ES4: Testtext.
+  - ES5: Mitglieder je Platz ohne den Bau-Abzug (`kapOhneBau`), auch beim Dauerkarten-Vorkaufsrecht.
+- **Tests zuerst:** `tests/finanzen.js` (Fall nach Nr. 12 angepasst), `tests/vorstand.js`, `tests/fans.js` (K25e wie bisher).
 
 ### 23.11.2026: Korrekturen nach Prüfung ER zu den Korrekturen EQ und K30g (Zweig `mitarbeit/popolupo-er-korrekturen`, auf U12m)
 
