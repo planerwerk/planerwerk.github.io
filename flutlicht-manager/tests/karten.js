@@ -401,6 +401,20 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   pruef(selbst&&istAuto&&auto&&frisch&&alt&&neu,'Korrekturen EL: kein Coup mit Stil-Automatik, alter Positions-Zähler verfällt und beginnt neu',
     `Coup selbst ${selbst}, Automatik an ${istAuto}, Coup mit Automatik ${!auto?'ja':'nein'}, frischer Zähler ${frisch}, alter Zähler ohne Karte ${alt}, Neustart bei 1 ${neu}`);}
 
+// K06e. Standard-Spezialisten (K06 §8): ab abSpiele Ligaspielen der Halbserie mit mindestens ab Toren nach Ecken und Freistößen (Elfmeter zählen nicht) und Anteil ab anteil;
+//       danach Tore nach Ecken und Freistoßflanken × faktor für tage Tage, nur dein Verein, einmal je Halbserie; die zweite Halbserie zählt neu.
+{const {S,F,ev}=welt(),A=ev('AUSLOESER'),St=ev('RKT').standard,t=ev('myT()'),gf=ev('standardGegnerFaktor');S.phase='play';delete S.std;delete S.stdGegen;
+  const G=(m,art)=>({m,s:0,t:'G',p:null,n:'X',sc:[0,0],art}),sp=evs=>F.letztesSpielMerken({h:S.my,a:0,hg:evs.length,ag:0,lg:t.lg,ev:evs},S.tag);
+  for(let i=0;i<St.abSpiele-1;i++)sp([G(10,'ecke'),G(20,'gross')]);const frueh=A.standardSpezialisten();
+  sp([G(10,'freistoss'),G(30,'elfmeter')]);const n=S.std.n,g=S.std.g,karte=A.standardSpezialisten(); /* abSpiele Standardtore von 2 × abSpiele Toren, der Elfmeter zählt nur als Tor */
+  const wenig=(()=>{const alt=S.std;S.std=Object.assign({},alt,{g:Math.ceil(alt.n/St.anteil)+5});const x=A.standardSpezialisten();S.std=alt;return x;})();
+  ev('kartenWirkung')({art:'standardGegner',wert:1},{},{titel:'Test'});const f1=gf(t),fremd=gf(S.teams.find(x=>x.id!==S.my)),danach=A.standardSpezialisten();
+  S.tag+=St.tage+1;const f2=gf(t);S.tag-=St.tage+1;
+  const N=S.fx[t.lg].length;for(let i=0;i<=N/2;i++)S.res[t.lg].push([S.my,0,0,0,i]);sp([G(10,'ecke')]);const neu=S.std.h===1&&S.std.sp===1&&S.std.k===0;
+  pruef(frueh===null&&n===St.abSpiele&&g===2*St.abSpiele&&!!karte&&wenig===null&&f1===St.faktor&&fremd===1&&danach===null&&f2===1&&neu,
+    'Standard-Spezialisten: Karte ab genug Standardtoren, Elfmeter zählen nicht, Gegner stellen sich vier Wochen ein, zweite Halbserie zählt neu',
+    `vor ${St.abSpiele} Spielen ${frueh}, Standardtore ${n} von ${g}, Karte ${!!karte}, zu kleiner Anteil ${wenig}, Faktor ${f1} (anderer Verein ${fremd}), noch einmal ${danach}, nach ${St.tage} Tagen ${f2}, neue Halbserie ${neu}`);}
+
 // U19e. Europapokal-Karten (K37 §8): Auswärtsspiel bei einem Auslandsverein in den nächsten 7 Tagen (kein Heimspiel, nicht später, nicht das Finale), Spiel 1 bis 7 Tage her,
 //       Wunder nach 0:3 im Hinspiel und 4:0 oder 3:0 mit Elfmeterschießen im Rückspiel, nicht nach nur einem Tor Rückstand und nicht beim Ausscheiden. euMeineSpiele ersetzt der Test.
 {const {S,W,ev}=welt(),A=ev('AUSLOESER'),AV=ev('AV0'),me=S.my,d=S.tag;W.ev('euMeineSpiele=function(){return S.testEu||[];}');

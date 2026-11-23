@@ -114,6 +114,8 @@ const AUSLOESER={
   rudelbildung(){const L=kartenLetztSpiel(L=>L.derby&&L.rot);return L?{verein:L.gegner}:null;},
   // Spieler hadert mit seiner Position (K06 §8, K06d): mindestens RKT.spiel.positionSpiele Einsätze in Folge auf einer Position mit geringer Eignung (p.pfal)
   positionHadern(){const SP=RKT.spiel,h=absTag(S.tag),l=squad(S.my).filter(p=>(p.pfal||0)>=SP.positionSpiele&&p.pfalT!=null&&h-p.pfalT<=SP.positionTage); /* EK7 */return l.length?{spieler:pick(l).id}:null;},
+  // Standard-Spezialisten (K06 §8, K06e): in der laufenden Halbserie auffällig viele Ligatore nach Standards (S.std aus letztesSpielMerken), einmal je Halbserie
+  standardSpezialisten(){const A=S.std,St=RKT.standard;return A&&A.s===S.season&&A.t===S.my&&!A.k&&A.sp>=St.abSpiele&&A.n>=St.ab&&A.g>0&&A.n/A.g>=St.anteil?{}:null;},
   // Folgekarte der Kette (nur über kartenKette, mit den Beteiligten der ersten Karte): Der Spieler ist noch beim selben Verein und noch nicht vergeben
   dritterNoch(b){const p=b&&b.spieler!=null?PIX.get(b.spieler):null;return p&&p.team===b.verein&&!p.wech&&!istLeihe(p)&&S.teams[p.team]&&aktiv(S.teams[p.team])?b:null;},
   // Presse (K29 §8, K17 §8, K29k): Medienklima unter RKT.presse.leckUnter; ein Verein deiner Liga mit Beziehung unter RBZ.wirkung.gespraechUnter
@@ -198,6 +200,9 @@ function letztesSpielMerken(r,d){if(!r||r.test)return;const SP=RKT.spiel,s=r.h==
   S.letzte=[...(S.letzte||[]).filter(L=>L&&L.s===S.season&&L.t===S.my&&d-L.tag<=SP.nachTage),S.letzt].slice(-SP.merken);
   // K06d: Einsätze in Folge auf einer Position mit Eignung unter positionUnter (p.pfal, Tag p.pfalT), ab der Mindestzeit für eine Note (EK7). Passende Position setzt zurück,
   // ein Zähler älter als positionTage beginnt neu. Wer nicht oder zu kurz spielte, behält seinen Zähler.
+  // K06e: Tore nach Standards (RKT.standard.arten) in deinen Ligaspielen der laufenden Halbserie, S.std = {s, t, h Halbserie, sp Spiele, g Tore, n Standardtore, k Karte schon da}
+  if(r.lg!=null&&!r.rel){const N=(S.fx[r.lg]||[]).length,gesp=(S.res[r.lg]||[]).filter(x=>x[0]===S.my||x[1]===S.my).length,h=gesp>N/2?1:0;let A=S.std;
+    if(!A||A.s!==S.season||A.t!==S.my||A.h!==h)A=S.std={s:S.season,t:S.my,h,sp:0,g:0,n:0,k:0};A.sp++;(r.ev||[]).forEach(e=>{if(e.t==='G'&&e.s===s){A.g++;if(RKT.standard.arten.includes(e.art))A.n++;}});}
   const heute=absTag(d);((r.xpo||[])[s]||[]).forEach(([id,pos,,min])=>{const p=PIX.get(id);if(!p||p.team!==S.my||!pos||(min!=null&&min<RE.note.mindestMinuten))return;
     const alt=p.pfalT!=null&&heute-p.pfalT<=SP.positionTage?(p.pfal||0):0;p.pfal=eignung(p,pos)<SP.positionUnter?alt+1:0;p.pfalT=heute;});}
 // Deine Pflichtspiele der letzten RKT.spiel.nachTage Tage (S.letzte), dein Verein, diese Saison. Alte Spielstände ohne S.letzte oder mit Merkern ohne Verein (vor EK3):
@@ -286,12 +291,15 @@ function kartenWirkung(w,b,c){let wert=w.wert,txt='',erfolg=true;if(w.chance!=nu
     else if(p&&p.team===S.my&&(p.wech||p.leihe))txt=`Bei ${p.n} geht das gerade nicht.`;else if(p&&p.team===S.my){if(S.unv)delete S.unv[p.id];p.list=1;p.ask=Math.max(RM.runden,rundeAb(value(p)*wert));erfolg=true;news(`${p.n} steht für ${fmt(p.ask)} auf der Transferliste.`);}else if(p)txt=`${p.n} ist nicht mehr da.`;} /* K14e: wie setListed, Forderung wert × Marktwert */
   else if(w.art==='zurueckrudern'){let n=0;presseS().aussagen.forEach(a=>{if(!a.ok&&a.art==='ankuendigung'&&a.gegner===b.verein){a.ok=1;n++;}});if(!n){erfolg=false;txt='Die Kampfansage ist schon erledigt.';}} /* K29l: Kampfansage zurückgenommen, nach dem Spiel weder Kult noch Häme */
   else if(w.art==='svAlle')squad(S.my).forEach(x=>svAendern(x,wert)); /* K11f: Selbstvertrauen des ganzen Kaders */
+  else if(w.art==='standardGegner'){S.stdGegen={tid:S.my,bis:absTag(S.tag)+RKT.standard.tage};if(S.std&&S.std.t===S.my)S.std.k=1;} /* K06e: Gegner stellen sich auf deine Standards ein (taktik.js), einmal je Halbserie */
   else if(w.art==='wettsperre'){if(p&&p.team>=0&&p.team<1000&&p.team!==S.my&&!p.zwP){const s=sperren(p),K=RKT.skandal;s.liga.rot+=K.sperreLiga;s.pokal.rot+=K.sperrePokal;}} /* K30f: Sperre. Nie ein Spieler deines Kaders in der Zweiten (zwP, Prüfung EJ2). Ohne Transferliste, die räumte der Markt nach einer Woche (EJ1) */
   else if(w.art==='vertrauenHalt')S.trustHalt={tid:S.my,s:S.season,bis:absTag(S.tag)+wert,min:S.trust}; /* K30e, K28 §8: Vertrauen wert Tage nicht unter dem heutigen (vorstandPruefen) */
   if(w.dann&&erfolg&&KARTEN_MIT_ERFOLG.includes(w.art)){const t=w.dann.map(x=>kartenWirkung(x,b,c)).filter(Boolean);txt=[w.gut||'',...t].filter(Boolean).join(' ');}
   return txt;}
 const KARTEN_MIT_ERFOLG=['leihe','gehaltAnpassen','provisionZahlen','spezialist','transferliste','zurueckrudern']; // Wirkungen, die melden, ob sie geklappt haben (für dann)
-const KARTEN_WIRKUNGEN=['stimmung','stimmungAlle','zusammenhalt','glaub','vertrauen','ruf','bezDu','geld','fans','verpflichten','interesse','angebot','maezen','merch','jobwechsel','pause','talent','jugendHoch','jugendWeg','stabWeg','stabHalten','preisRichtwert','gehaltAnpassen','beraterBez','zuschuss','sonderschicht','leihe','selbstvertrauen','provisionZahlen','dritter','nachlass','hygiene','spezialist','gruppeStimmung','transferliste','zurueckrudern','vertrauenHalt','svAlle','wettsperre'];
+const KARTEN_WIRKUNGEN=['stimmung','stimmungAlle','zusammenhalt','glaub','vertrauen','ruf','bezDu','geld','fans','verpflichten','interesse','angebot','maezen','merch','jobwechsel','pause','talent','jugendHoch','jugendWeg','stabWeg','stabHalten','preisRichtwert','gehaltAnpassen','beraterBez','zuschuss','sonderschicht','leihe','selbstvertrauen','provisionZahlen','dritter','nachlass','hygiene','spezialist','gruppeStimmung','transferliste','zurueckrudern','vertrauenHalt','svAlle','wettsperre','standardGegner'];
+// Standard-Spezialisten (K06e, taktik.js taktikWirkung): Faktor auf Tore nach Ecken und Freistoßflanken deines Vereins, solange sich die Gegner darauf eingestellt haben
+const standardGegnerFaktor=t=>t&&t.id===S.my&&S.stdGegen&&S.stdGegen.tid===S.my&&S.stdGegen.bis>=absTag(S.tag)?RKT.standard.faktor:1;
 // Ausgang des lachenden Dritten (K30 §8.3, K17 §5.4, K30c): Unterschreibt der Spieler bei dir (aktionen.js offer, vor dem Abschluss), sinkt die Beziehung zwischen den beiden
 // anderen Vereinen um RKT.dritter.zwischen, deine zu ihnen um RKT.dritter.du, nach geschicktem Vorgehen (leise) gar nicht. Nur in derselben Saison, vom selben Verein, für deinen Verein.
 function dritterKauf(p,von){const m=p&&p.ld3;if(!m)return;delete p.ld3;if(m.s!==S.season||m.t!==S.my||m.v!==von||!m.mit||m.mit.length<2)return;const L=RKT.dritter,[a,b]=m.mit,g=`lachender Dritter: ${p.n}`;

@@ -288,5 +288,9 @@ const KARTEN=[
   {id:'positionHadern',titel:'Spieler hadert mit seiner Position',bereich:'K06',art:'entscheidung',gross:false,stufe:'haeufig',chance:0.5,ausloeser:'positionHadern',sperrTage:120,
     texte:['{spieler} spielt seit Wochen auf einer Position, die ihm nicht liegt. Er will mit dir reden.','„Das ist nicht meine Position“, sagt {spieler} in der Kabine. Er fühlt sich falsch eingesetzt.'],
     optionen:[{text:'Ihm erklären, warum er dort spielt',wirkung:[{art:'stimmung',wert:2,chance:0.6,schlecht:-1,gut:'{spieler} versteht es und will helfen.',schlechtText:'{spieler} nickt, überzeugt ist er nicht.'}]},
-      {text:'Ihm sagen, dass es so bleibt',wirkung:[{art:'stimmung',wert:-3},{art:'glaub',wert:1}],folge:'Du bleibst hart. {spieler} geht ohne ein Wort.'}],auto:0}
+      {text:'Ihm sagen, dass es so bleibt',wirkung:[{art:'stimmung',wert:-3},{art:'glaub',wert:1}],folge:'Du bleibst hart. {spieler} geht ohne ein Wort.'}],auto:0},
+  // Standard-Spezialisten (K06 §8, K06e, 23.11., popolupo): Info-Karte mit Wirkung (K30e). Die Presse lobt, die Gegner stellen sich vier Wochen auf deine Standards ein (REGELN.karten.standard)
+  {id:'standardSpezialisten',titel:'Standard-Spezialisten',bereich:'K06',art:'info',stufe:'haeufig',chance:1,ausloeser:'standardSpezialisten',sperrTage:60,
+    texte:['Ecken, Freistöße, Kopfbälle: Kaum eine Mannschaft trifft in dieser Halbserie so oft nach Standards wie deine. Die Gegner werden sich darauf einstellen.','„Die Standard-Könige der Liga“, titelt die Fachpresse. Die nächsten Gegner werden deine Ecken genau studieren.'],
+    wirkung:[{art:'ruf',wert:1},{art:'standardGegner',wert:1}]}
 ];
