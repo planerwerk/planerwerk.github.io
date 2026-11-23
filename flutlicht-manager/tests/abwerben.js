@@ -29,10 +29,10 @@ const ziel=(w,f)=>w.S.pl.find(p=>p.team>=0&&p.team!==VEREIN&&p.team<1000&&w.S.te
   pruef(!doppelt&&a.ok===1&&a.b>=70&&p.ww===3&&p.list===1&&kosten===a.n*O.kosten,'Treffen: einmal je Woche, je Treffen 15.000 €, ab 70 Bereitschaft Wechselwunsch Stufe 3 und Transferliste',`${a.n} Treffen, Bereitschaft ${Math.round(a.b)}, ww ${p.ww}, Liste ${p.list}, Kosten ${kosten}`);}
 function W0(w){return w.ev('myT()').cash;}
 
-// 4. Aufgeflogen: Beziehung −15 bis −30, Ablöse +15 % bis Saisonende, Vertrauen −3, danach keine Treffen mehr
-{const w=welt(false),{F,S}=w,p=ziel(w),tid=p.team;F.abwRisiko=()=>1;S.trust=50;const bez0=F.bezDu(tid);F.abwTreffen(p.id,'restaurant');
+// 4. Aufgeflogen: Beziehung −15 bis −30, Ablöse +15 % bis Saisonende, Vertrauen −3 (seit K27e × (1 + Wirkung der Fankultur), Freiburg etwa −5,5), danach keine Treffen mehr
+{const w=welt(false),{F,S}=w,p=ziel(w),tid=p.team,FO=w.ev('RAW').folgen,wk=w.ev('fankulturWirkung')(w.ev('myT()')),vSoll=50+FO.vertrauen*(1+wk*FO.fankultur);F.abwRisiko=()=>1;S.trust=50;const bez0=F.bezDu(tid);F.abwTreffen(p.id,'restaurant');
   const a=S.abw[p.id],bez=F.bezDu(tid)-bez0,soll=F.forderungBasis(p)*w.ev('bezAbloese')(tid)*1.15,ist=w.ev('forderungDu')(p);S.tag+=7;const n=a.n;F.abwTreffen(p.id,'hotel');
-  pruef(a.auf===1&&bez<=-15&&bez>=-30&&nah(ist,soll)&&S.trust===47&&a.n===n,'Aufgeflogen: Beziehung −15 bis −30, Ablöse +15 % (mit Beziehung), Vertrauen −3, kein weiteres Treffen in dieser Saison',`Beziehung ${bez}, Forderung ${Math.round(ist)} (soll ${Math.round(soll)}), Vertrauen ${S.trust}`);}
+  pruef(a.auf===1&&bez<=-15&&bez>=-30&&nah(ist,soll)&&Math.abs(S.trust-vSoll)<1e-9&&wk>0&&S.trust<47&&a.n===n,'Aufgeflogen: Beziehung −15 bis −30, Ablöse +15 % (mit Beziehung), Vertrauen −3 mal Fankultur, kein weiteres Treffen in dieser Saison',`Beziehung ${bez}, Forderung ${Math.round(ist)} (soll ${Math.round(soll)}), Vertrauen ${S.trust} (soll ${vSoll}, Wirkung der Fankultur ${wk.toFixed(2)})`);}
 
 // 5. Lizenz: mit Lernstufen in der ersten Stufe gesperrt, kein Geld weg
 {const w=welt(true),{F,S}=w,p=ziel(w),c=W0(w);F.abwTreffen(p.id,'hotel');

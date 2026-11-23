@@ -89,7 +89,7 @@ Keine Geldstrafe, kein Verbandsverfahren.
 - **Wechselbereitschaft je Treffen:** (10 + Interesse/10) × Berater × Stimmung × treu. Interesse aus K19 §5.3 (`wechselInteresse`), begrenzt auf −50 bis 100. Berater: gierig und Strippenzieher ×1,2, sonst ×1. Stimmung beim alten Verein unter 40 ×1,3, über 70 ×0,7. Vereinstreue Spieler ×0,4.
 - **Auffliegen je Treffen:** 8 % × Bekanntheit (Stärke über 80 ×1,5) × Berater (verschwiegen 0,4, Familie 0,8, seriös 1, Strippenzieher 1,2, gierig 1,5, ohne Berater 1,1) × Ort (Hotel 0,6, Restaurant 1,2, Berater 0,8) × (1 + 0,2 × bisherige Treffen). Vereinstreue petzen zusätzlich mit 30 %. Nationalspieler (×1,3) fehlen, das Spiel kennt keine Nationalmannschaft.
 - **Ab 70 Bereitschaft:** Er bittet offiziell um den Wechsel (Wechselwunsch Stufe 3, K14, Ablöse −10 %) und sein Verein setzt ihn auf die Transferliste. Danach der normale Kauf nach K19.
-- **Aufgeflogen:** Beziehung zu seinem Verein −15 bis −30 (K17), Ablöseforderung dieses Vereins für ihn +15 % bis zum Saisonende, seine Stimmung −10, Vertrauen deines Vorstands −3. Für diesen Spieler ist das Abwerben in dieser Saison vorbei. Fans (K27) und Presse (K29) fehlen noch, es gibt eine Meldung.
+- **Aufgeflogen:** Beziehung zu seinem Verein −15 bis −30 (K17), Ablöseforderung dieses Vereins für ihn +15 % bis zum Saisonende, seine Stimmung −10, Vertrauen deines Vorstands −3, seit K27e (23.11., ohne Testlauf) × (1 + Wirkung der Fankultur), also bis −6 statt „bei Traditionsvereinen −6“ (K27 §5.4c). Für diesen Spieler ist das Abwerben in dieser Saison vorbei. Fans (K27) und Presse (K29) fehlen noch, es gibt eine Meldung.
 - **Zufall:** im Grundstrom, weil es deine Handlung ist (wie bei K17).
 
 **Deadline Day (§4.3):**

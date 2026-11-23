@@ -160,7 +160,7 @@ Gewürfelt wird gleich oft wie vorher. Die Meldung spricht von der Kurve statt v
 - **Gründungsjahr:** `gegr` bleibt für Jubiläen (K27d). `tradition:false` aus Prüfung EJ4 fällt weg.
 
 **Später:**
-- Fankultur auch beim Vorstand (K20: Verkauf eines Lieblings), beim Stadionnamen (K24), bei den Dauerkarten selbst und bei der Fanstimmung (K27).
+- Fankultur auch beim Vorstand (K20: Verkauf eines Lieblings), beim Stadionnamen (K24), bei den Dauerkarten selbst und bei der Fanstimmung (K27). Seit K27e (K27 §5.4c) wirkt sie auf den Baustein Entscheidungen der Fanstimmung und auf den Vorstand, wenn ein Abwerbeversuch auffliegt.
 - Echte Dauerkarten- oder Zuschauerzahlen über mehrere Jahre als Stammdatum, sobald es eine Quelle gibt.
 
 ## 6. Hebel des Spielers

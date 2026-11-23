@@ -101,6 +101,21 @@ Ziel = 60 + Erfolg + Preise + Identifikation + Entscheidungen + Umfeld     (0–
 - **Computer-Vereine:** gleiche Stimmung, wirkt aber noch nirgends (ihre Einnahmen kommen aus einer Formel ohne Zuschauer, ihr Vorstand aus U11d2 bleibt unverändert).
 - **Noch nicht:** Dauerkarten und Gästeblock (warten auf K23), Ultras und Tradition als Stammdaten (dafür fehlen Quellen je Verein), Choreo, Pyrotechnik und Platzsturm (K09, K30), Heimvorteil durch Fans (würde die Kalibrierung der Engine ändern).
 
+### 5.4c K27e Fankultur statt Tradition (23.11.2026, popolupo, vorläufig)
+
+Tradition als Stammdatum (0–3) fehlt weiter. Seit K25f gibt es dafür die Fankultur (0–100, K25 §5.6). Sie kommt aus Stadion, Mitgliedern und Zugkraft und wurde nach der Rückmeldung des Nutzers vom 23.11. gebaut. Ihre Wirkung ist stufenlos: bis 50 keine, ab 80 die volle (`fankulturWirkung`, 0 bis 1). Hier ersetzt sie die Tradition aus §5.1:
+
+- **Baustein Entscheidungen:** „Tradition verstärkt den Baustein Entscheidungen“ wird zu: Entscheidungen × (1 + Wirkung × 0,5).
+  - Bei voller Fankultur wiegt der Verkauf eines Publikumslieblings −12 statt −8. Dasselbe gilt für einen umstrittenen Sponsor (K24).
+  - Gerechnet wird beim Ziel, nicht beim Anlass. Darum folgt der Baustein der heutigen Fankultur, und das Gedächtnis `t.fanD` bleibt unverändert.
+  - Die Grenzen −15 bis +5 gelten weiter. Das gilt für alle Vereine, ohne Zufall.
+  - Die Anzeige im Stadion nennt den Faktor.
+- **Vorstand beim Abwerben** (K20 §5.3: „bei Traditionsvereinen −6“): Fliegt ein Abwerbeversuch auf, sinkt das Vertrauen um 3 × (1 + Wirkung). Das sind −3 bis −6, bei Freiburg etwa −5,5.
+- **Noch nicht:**
+  - Ultras als Stammdatum.
+  - Fankultur bei den Dauerkarten: Mitglieder je Platz stecken schon in beiden, das zählte doppelt.
+  - Stadionname (K24, Claude).
+
 ### 5.5 Größenordnungen
 
 - **Echte Werte 2024/25:** Auslastung in der 1. Liga 95,9 %, in der 2. Liga nach der Hinrunde 84,3 % bei etwa 29.800 Zuschauern im Schnitt. Die 36 Vereine der 1. und 2. Liga verkauften zusammen knapp 21 Mio. Tickets (Quellen).

@@ -458,7 +458,7 @@ const REGELN={
   abwerben:{ort:{hotel:{name:'Hotel in einer anderen Stadt',kosten:15000,risiko:0.6},restaurant:{name:'Restaurant',kosten:5000,risiko:1.2},berater:{name:'beim Berater',kosten:10000,risiko:0.8}},
     bereitschaft:{basis:10,jeInteresse:0.1,interesse:[-50,100],berater:{gierig:1.2,strippenzieher:1.2},stimmung:{unter:[40,1.3],ueber:[70,0.7]},treu:0.4,ab:70},
     risiko:{basis:0.08,bekanntAb:80,bekannt:1.5,berater:{verschwiegen:0.4,familie:0.8,serioes:1,strippenzieher:1.2,gierig:1.5},ohneBerater:1.1,jeTreffen:0.2,petzen:0.3},
-    folgen:{beziehung:[-30,-15],forderung:1.15,stimmung:-10,vertrauen:-3},
+    folgen:{beziehung:[-30,-15],forderung:1.15,stimmung:-10,vertrauen:-3,fankultur:1}, // fankultur (K27e, GESCHÄTZT): Vertrauen × (1 + Wirkung der Fankultur × fankultur), K20 §5.3 „Traditionsvereine −6“
     // Computer-Vereine werben deine Spieler ab (K20 §7, K20e, 22.11., popolupo, GESCHÄTZT): montags mit chance ein Verein mit Bedarf, Ansehen ab deinem − ansehenMinus,
     // Konto über dem Marktwert; der Spieler (Stärke ab deinem Kaderschnitt + staerkePlus, bis alterMax) wird unruhig (Wechselwunsch eine Stufe höher). Mit aufflieg fliegt es auf:
     // Entscheidung binnen frist Tagen (zur Rede stellen: stimmung, glaub; öffentlich: beziehung, fans; Preis hoch: unverkäuflich). Nur, wenn du die Transfers selbst führst.
@@ -481,7 +481,8 @@ const REGELN={
   fanstimmung:{start:60,traegheit:0.15,
     erfolg:{spanne:[-20,20],jePlatz:2,abSpiel:5,serie:10,serieMitte:1.3,derby:6,pokal:2,pokalAusTiefer:-4,verblassen:0.2},
     preise:{spanne:[-15,5],faktor:30},ident:{spanne:[-5,10],basis:0,jeLiebling:2,lieblingSpiele:60,lieblingEigen:20},
-    entscheid:{spanne:[-15,5],lieblingVerkauf:-8,verblassen:0.1},umfeld:{spanne:[-5,5],eroeffnung:3,gespraech:[3,8],leer:-5,leerUnter:25,verblassen:0.1},
+    // entscheid.fankultur (K27e, GESCHÄTZT): Baustein Entscheidungen × (1 + Wirkung der Fankultur × fankultur), K27 §5.4c
+    entscheid:{spanne:[-15,5],lieblingVerkauf:-8,verblassen:0.1,fankultur:0.5},umfeld:{spanne:[-5,5],eroeffnung:3,gespraech:[3,8],leer:-5,leerUnter:25,verblassen:0.1},
     nachfrage:[0.85,1,1.10],vorstand:{zone:[45,75],teilerUnten:3,minUnten:-10,teilerOben:5,maxOben:5},
     protestUnter:30,pfiffeSv:-0.2,gespraechTage:30,
     // Dauerkarten (K27 §5.2, K27b, 22.11., popolupo, GESCHÄTZT): nur dein Verein, verkauft beim ersten Ligaheimspiel der Saison. Anteil der Plätze = basis + jeStimmung × Fanstimmung/100

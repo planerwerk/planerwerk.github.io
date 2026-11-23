@@ -9,7 +9,8 @@ function fanBausteine(t){const F=RFS,E=F.erfolg,c=(x,s)=>clamp(x,s[0],s[1]);let 
   const tab=table(t.lg),i=tab.findIndex(r=>r.id===t.id),r=tab[i];
   if(r&&r.sp>=E.abSpiel){erfolg+=E.jePlatz*((t.expPos||i+1)-(i+1));const l=r.last.slice(-5);if(l.length)erfolg+=E.serie*(l.reduce((a,b)=>a+b,0)/l.length-E.serieMitte);}
   const rp=richtPreis(t),preise=(t.price&&rp>0?F.preise.faktor*(1-t.price/rp):0)+dkFans(t),lieb=squad(t.id).filter(p=>istLiebling(p,t.id)); // dazu der Dauerkartenrabatt (K27b)
-  return{erfolg:c(erfolg,E.spanne),preise:c(preise,F.preise.spanne),ident:c(F.ident.basis+F.ident.jeLiebling*lieb.length,F.ident.spanne),entscheid:c(t.fanD||0,F.entscheid.spanne),umfeld:c(t.fanU||0,F.umfeld.spanne),lieb};}
+  /* Fankultur (K27 §5.4c, K27e): Entscheidungen wiegen bei großer Fankultur schwerer, nur mit Anlass gerechnet */const fkF=t.fanD?1+fankulturWirkung(t)*F.entscheid.fankultur:1;
+  return{erfolg:c(erfolg,E.spanne),preise:c(preise,F.preise.spanne),ident:c(F.ident.basis+F.ident.jeLiebling*lieb.length,F.ident.spanne),entscheid:c((t.fanD||0)*fkF,F.entscheid.spanne),fkF,umfeld:c(t.fanU||0,F.umfeld.spanne),lieb};}
 function fanZiel(t){const b=fanBausteine(t);return clamp(RFS.start+b.erfolg+b.preise+b.ident+b.entscheid+b.umfeld,0,100);}
 // Montags (ablauf.js woechentlichLauf, vor dem Vorstand): Richtung Ziel, Anlässe verblassen
 function fansWoche(){const F=RFS;S.teams.forEach(t=>{if(!aktiv(t))return;const v=fanst(t);t.fanst=fanZahl(v+(fanZiel(t)-v)*F.traegheit);
@@ -37,7 +38,7 @@ function fanGespraech(){if(!darf('fangespraech'))return;if(!fanGespraechFrei()){
 // Karte im Stadion
 function fansKarte(){const t=myT(),b=fanBausteine(t),v=fanst(t),z=fanZiel(t),f=x=>`${x>0?'+':''}${de(x,1)}`;
   return`<div class="card rgs"><h2>Fans</h2>${rgAnzeige({label:'Fanstimmung',sub:'0–100, wirkt auf Zuschauer und Vorstand',min:0,max:100,wert:Math.round(v),marker:[{v:Math.round(z),t:'Ziel '+Math.round(z)}],zonen:[{von:0,bis:RFS.protestUnter,art:'bad',text:'Protest: Pfiffe in Heimspielen'},{von:RFS.vorstand.zone[1],bis:100,art:'good',text:'Rückenwind'}]})}
-    <p class="dim">Bausteine des Ziels (montags 15 % Richtung Ziel): Erfolg ${f(b.erfolg)}, Preise ${f(b.preise)}, Identifikation ${f(b.ident)}${b.lieb.length?` (Lieblinge: ${b.lieb.slice(0,5).map(p=>esc(p.n)).join(', ')}${b.lieb.length>5?' …':''})`:''}, Entscheidungen ${f(b.entscheid)}, Umfeld ${f(b.umfeld)}. Zuschauer × ${de(fanFaktor(t),2)}.</p>
+    <p class="dim">Bausteine des Ziels (montags 15 % Richtung Ziel): Erfolg ${f(b.erfolg)}, Preise ${f(b.preise)}, Identifikation ${f(b.ident)}${b.lieb.length?` (Lieblinge: ${b.lieb.slice(0,5).map(p=>esc(p.n)).join(', ')}${b.lieb.length>5?' …':''})`:''}, Entscheidungen ${f(b.entscheid)}${b.fkF>1?` (× ${de(b.fkF,2)} nach der Fankultur)`:''}, Umfeld ${f(b.umfeld)}. Zuschauer × ${de(fanFaktor(t),2)}.</p>
     ${lzHinweis('fangespraech')}<div class="row"><button onclick="fanGespraech()"${lzAus('fangespraech')}${fanGespraechFrei()?'':' disabled'}>Fan-Gespräch</button><span class="dim">einmal im Monat, wirkt nach deiner Glaubwürdigkeit (${Math.round(glaub(t))})</span></div></div>`;}
 
 // ---------- Dauerkarten (K27 §5.2, K27b, 22.11., popolupo) ----------
