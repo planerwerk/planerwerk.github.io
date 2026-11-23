@@ -18,13 +18,21 @@ function kampagneStarten(k){if(!darf('marketing'))return;const C=RMK.kampagnen[k
   news(`${C.name} gestartet (${fmt(kosten)})${w<1?`. Zum ${e.n}. Mal in dieser Saison, Wirkung nur noch ${Math.round(w*100)} %`:''}.`);save();render();}
 // Trikot (K25 §5.3): Wahl bis zum ersten Pflichtspiel, Reaktion aus eigenem Strom je Saison (gleich, egal an welchem Tag)
 function trikotWaehlen(d){if(!darf('marketing'))return;const M=mkS();if(M.trikot&&M.trikot.fest){toast('Das Trikot dieser Saison ist schon vorgestellt.');return;}if(!RMK.trikot[d])return;trikotVorstellen(d,false);save();render();}
-// Traditionsverein (K25 §5.3, K25e): Gründungsjahr (VEREINE gegr) bis RMK.tradition.bis. Ohne Gründungsjahr nein.
-const traditionsverein=t=>{const v=t?VEREINE[t.id]:null;return!!(v&&v.kurz===t.sh&&v.tradition!==false&&v.gegr&&v.gegr<=RMK.tradition.bis);}; // tradition:false in VEREINE schließt aus (Prüfung EJ4)
-function trikotVorstellen(d,auto){const M=mkS(),T=RMK.trikot[d],t=myT(),trad=traditionsverein(t),Tr=RMK.tradition;
-  mitStrom(strom('trikot',S.season,S.my),()=>{let f,fs,txt; /* Tradition (K25e): gleich viele Würfel, nur Schwelle und Spanne ändern sich */
-    if(d==='mutig'){const kult=R()<(trad?Tr.mutigKult:T.kult);f=kult?T.faktor[1]:T.faktor[0];fs=kult?T.fans[1]:T.fans[0];txt=kult?'Das mutige Trikot wird Kult, die Fans reißen es den Händlern aus den Händen.':`Das mutige Trikot spaltet die Fans${trad?', in einem Traditionsverein erst recht':''}, in den Netzwerken gibt es Spott.`;}
-    else{const plus=d==='klassisch'&&trad?Tr.klassischPlus:0;f=T.faktor[0]+plus+R()*(T.faktor[1]-T.faktor[0]);fs=T.fans+(d==='klassisch'&&trad?Tr.klassischFans:0);
-      txt=d==='klassisch'?(trad?'Das klassische Trikot trifft den Nerv eines Traditionsvereins.':'Das klassische Trikot kommt gut an.'):'Das moderne Trikot findet seine Käufer.';}
+// Fankultur (K25 §5.6, K25f, ersetzt das Gründungsjahr aus K25e): 0–100 aus Stadion (Fans ÷ Plätze), Mitgliedern je Platz und Zugkraft (Fans gemessen am Ansehen, je im Ligaschnitt
+// ohne zweite Mannschaften). Aus den heutigen Werten des Vereins, also im Spiel veränderlich (Stadionausbau, Fans, Mitglieder, Ansehen). Kein Zufall, kein eigener Spielstand.
+function fankulturTeile(t){const K=RMK.fankultur,lin=(x,[a,b])=>clamp((x-a)/(b-a),0,1),liga=S.teams.filter(o=>o.lg===t.lg&&!(o.zweite>=0)&&o.cap>0),
+    schnitt=k=>liga.reduce((s,o)=>s+(o[k]||0),0)/Math.max(1,liga.length),sf=schnitt('fans'),sa=schnitt('rep');
+  const aus=Math.min(1,(t.fans||0)/t.cap),mp=mitgliederVon(t)/t.cap,zug=sf>0&&sa>0&&t.rep>0?((t.fans||0)/sf)/(t.rep/sa):1;
+  let z=lin(zug,K.zugkraft);if(aus>=K.ausverkauft)z=Math.max(z,K.ausverkauftMin); // ausverkauft: das volle Stadion verdeckt die Nachfrage
+  return{aus,mp,zug,wert:Math.round(100*(K.gewicht.auslastung*lin(aus,K.auslastung)+K.gewicht.mitglieder*lin(mp,K.mitglieder)+K.gewicht.zugkraft*z))};}
+const fankultur=t=>t&&t.cap>0?fankulturTeile(t).wert:0;
+// Anteil der Wirkung beim Trikot: bis wirkung[0] keine, ab wirkung[1] volle
+const fankulturWirkung=t=>{const W=RMK.fankultur.wirkung;return clamp((fankultur(t)-W[0])/(W[1]-W[0]),0,1);};
+function trikotVorstellen(d,auto){const M=mkS(),T=RMK.trikot[d],t=myT(),K=RMK.fankultur,w=fankulturWirkung(t),kurve=w>=0.5;
+  mitStrom(strom('trikot',S.season,S.my),()=>{let f,fs,txt; /* Fankultur (K25f): gleich viele Würfel, nur Schwelle und Spanne ändern sich, stufenlos mit w */
+    if(d==='mutig'){const kult=R()<T.kult+w*(K.mutigKult-T.kult);f=kult?T.faktor[1]:T.faktor[0];fs=kult?T.fans[1]:T.fans[0];txt=kult?'Das mutige Trikot wird Kult, die Fans reißen es den Händlern aus den Händen.':`Das mutige Trikot spaltet die Fans${kurve?', in dieser Kurve erst recht':''}, in den Netzwerken gibt es Spott.`;}
+    else{const plus=d==='klassisch'?w*K.klassischPlus:0;f=T.faktor[0]+plus+R()*(T.faktor[1]-T.faktor[0]);fs=T.fans+(d==='klassisch'?Math.round(w*K.klassischFans):0);
+      txt=d==='klassisch'?(kurve?'Das klassische Trikot trifft den Nerv der Kurve.':'Das klassische Trikot kommt gut an.'):'Das moderne Trikot findet seine Käufer.';}
     M.trikot={d,f:Math.round(f*100)/100,fest:1};if(fs)fanAnlass(t,'fanU',fs);
     news(`Trikotvorstellung${auto?' (der Verein wählt)':''}: ${TRIKOT_NAME[d]}. ${txt}`,d==='mutig'?(fs>0?'good':'bad'):'');});}
 // Täglich (ablauf.js taeglichLauf): ohne Wahl am Tag vor dem ersten Pflichtspiel das klassische Trikot (mit und ohne Automatik am selben Tag, Gleichschritt);
@@ -43,9 +51,10 @@ function marketingNeueSaison(){const M=S.mk,t=myT();if(!M||M.s!==S.season||!M.fa
 // Vereinswechsel (saison.js takeJob): Trikot, Kampagnen und Werbewert gehören dem alten Verein, beim neuen beginnt alles mit seinem Ansehen
 function marketingJobwechsel(){S.mk=null;}
 // Karte im Stadion
-function marketingKarte(){const t=myT(),M=mkS(),C=RMK.kampagnen,tr=M.trikot,offen=!tr||!tr.fest;
+function marketingKarte(){const t=myT(),M=mkS(),C=RMK.kampagnen,tr=M.trikot,offen=!tr||!tr.fest,fk=t.cap>0?fankulturTeile(t):null;
   return`<div class="card"><h2>Marketing</h2>${lzHinweis('marketing')}<p>Werbewert ${Math.round(M.ww)} von 100 <span class="dim">(wie bekannt der Verein ist, wirkt später auf Sponsoren)</span></p>
     <p>Mitglieder ${mitgliederVon(t).toLocaleString('de-DE')} <span class="dim">(Beiträge etwa ${fmt(mitgliederVon(t)*RFP.mitglieder.beitrag)} je Saison, wachsen und schrumpfen mit den Fans, K25d)</span></p>
+    ${fk?`<p>Fankultur ${fk.wert} von 100 <span class="dim">(Fans für ${Math.round(fk.aus*100)} % der Plätze, ${de(fk.mp,1)} Mitglieder je Platz, Zugkraft ${de(fk.zug,2)} gemessen am Ansehen im Ligaschnitt; ab ${RMK.fankultur.wirkung[0]} mögen die Fans das klassische Trikot mehr, K25f)</span></p>`:''}
     <h3>Trikot ${stSaison(S.season)}</h3>${tr?`<p>${esc(TRIKOT_NAME[tr.d])}, Fanartikel × ${de(tr.f,2)}</p>`:offen&&vorbereitungAktiv()?`<div class="row">${Object.keys(RMK.trikot).map(d=>`<button onclick="trikotWaehlen('${d}')"${lzAus('marketing')}>${esc(TRIKOT_NAME[d])}</button>`).join('')}</div><p class="dim">Klassisch ist sicher, mutig wird Kult oder Spott. Ohne Wahl nimmt der Verein vor dem ersten Pflichtspiel das klassische.</p>`:'<p class="dim">Das Trikot wird in der Vorbereitung vorgestellt.</p>'}
     <h3>Kampagnen</h3><table><tbody>${Object.entries(C).map(([k,c])=>{const e=M.k[k],aktiv=mkAktiv(k);return`<tr><td><b>${esc(c.name)}</b><br><span class="dim">${fmt(kampagnenKosten(k))}${c.sommer?', nur in der Vorbereitung':`, ${Math.round(c.tage/7)} Wochen`}${e&&e.n?`, in dieser Saison ${e.n}×`:''}</span></td>
       <td>${aktiv?'läuft':`<button onclick="kampagneStarten('${k}')"${lzAus('marketing')}>Starten</button>`}</td></tr>`;}).join('')}</tbody></table>

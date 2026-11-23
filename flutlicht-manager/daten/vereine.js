@@ -9,7 +9,6 @@
 //   Dynamo Dresden 1953 (RSSSF 1990, Neugründung als e. V.). Bei RSSSF nicht gefunden, nach Vereinsangabe (im Vereinsnamen oder Gründungsdatum), UNGEPRÜFT:
 //   RB Leipzig 2009, Hoffenheim 1899, Elversberg 1907, Paderborn 1907 (heutiger Verein 1985), Heidenheim 1846, Holstein Kiel 1900, Jahn Regensburg 1907,
 //   Ingolstadt 2004, Viktoria Köln 1904, Würzburger Kickers 1907, Großaspach 1994, Havelse 1912. Nur Vereine der drei Profiligen, ohne zweite Mannschaften.
-// tradition:false (K25e, Prüfung EJ4, vorläufig): trotz frühem Gründungsjahr kein Traditionsverein im Sinn der Fankultur (Hoffenheim, Leverkusen).
 // liga: 1, 2, 3 oder 4 (4 = Regionalliga, ohne Kader und ohne Spielbetrieb im Spiel).
 // ewig3: Punkte in der ewigen Tabelle der 3. Liga (Wikipedia, Stand 6.11.2026, Drei-Punkte-Regel). abstieg3: Saison, nach der der Verein aus der 3. Liga abstieg.
 // zw: Liga der zweiten Mannschaft 2026/27 (4 = Regionalliga, Staffel wie region; 5 = Oberliga, Name in ol). Ohne zw keine Zweite im Spiel
@@ -21,12 +20,12 @@
 const VEREINE=[
   {name:"FC Bayern München",kurz:"FCB",gegr:1900,liga:1,ansehen:95,plaetze:75000,fans:75000,mitglieder:432000,farbe:"#dc052d",region:"Bayern",zw:4,ewig3:0},
   {name:"Borussia Dortmund",kurz:"BVB",gegr:1909,liga:1,ansehen:86,plaetze:81365,fans:81000,mitglieder:238109,farbe:"#fde100",region:"West",zw:4,ewig3:0},
-  {name:"Bayer 04 Leverkusen",kurz:"B04",gegr:1904,tradition:false,liga:1,ansehen:84,plaetze:30210,fans:30000,mitglieder:70000,farbe:"#e32221",region:"West",ewig3:0},
+  {name:"Bayer 04 Leverkusen",kurz:"B04",gegr:1904,liga:1,ansehen:84,plaetze:30210,fans:30000,mitglieder:70000,farbe:"#e32221",region:"West",ewig3:0},
   {name:"RB Leipzig",kurz:"RBL",gegr:2009,liga:1,ansehen:80,plaetze:47069,fans:42000,mitglieder:1130,farbe:"#dd0741",region:"Nordost",ewig3:79},
   {name:"VfB Stuttgart",kurz:"VFB",gegr:1893,liga:1,ansehen:78,plaetze:60058,fans:58000,mitglieder:126000,farbe:"#e32219",region:"Südwest",ewig3:0},
   {name:"Eintracht Frankfurt",kurz:"SGE",gegr:1899,liga:1,ansehen:77,plaetze:58000,fans:56000,mitglieder:155000,farbe:"#e1000f",region:"Südwest",zw:4,ewig3:0},
   {name:"SC Freiburg",kurz:"SCF",gegr:1904,liga:1,ansehen:72,plaetze:34700,fans:33500,mitglieder:79000,farbe:"#c8102e",region:"Südwest",zw:4,ewig3:0},
-  {name:"TSG Hoffenheim",kurz:"TSG",gegr:1899,tradition:false,liga:1,ansehen:70,plaetze:30150,fans:25000,mitglieder:11500,farbe:"#1961b5",region:"Südwest",ewig3:0},
+  {name:"TSG Hoffenheim",kurz:"TSG",gegr:1899,liga:1,ansehen:70,plaetze:30150,fans:25000,mitglieder:11500,farbe:"#1961b5",region:"Südwest",ewig3:0},
   {name:"1. FSV Mainz 05",kurz:"M05",gegr:1905,liga:1,ansehen:68,plaetze:33305,fans:31000,mitglieder:27000,farbe:"#ed1c24",region:"Südwest",zw:4,ewig3:0},
   {name:"Borussia Mönchengladbach",kurz:"BMG",gegr:1900,liga:1,ansehen:68,plaetze:54042,fans:50000,mitglieder:110000,farbe:"#1c1c1c",region:"West",zw:4,ewig3:0},
   {name:"SV Werder Bremen",kurz:"SVW",gegr:1899,liga:1,ansehen:67,plaetze:42100,fans:41000,mitglieder:68000,farbe:"#1d9053",region:"Nord",zw:4,ewig3:0},
