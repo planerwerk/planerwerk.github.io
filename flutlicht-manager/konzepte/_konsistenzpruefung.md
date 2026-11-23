@@ -2246,3 +2246,25 @@ Korrekturen auf `mitarbeit/popolupo-em-korrekturen` (auf den Korrekturen EL).
 | EM1 | **Hoch: Syntaxfehler in `tests/marketing.js`.** Fall 1 deklarierte `w` zweimal im selben Block (Wirkung und zweite Welt), Node hätte die ganze Datei abgelehnt. Die Wirkung heißt jetzt `wk`. | ✅ behoben |
 | EM2 | An der Grenze „ausverkauft“ (97 %) sprang die Fankultur hart: Freiburg (96,5 %) mit 170 Fans mehr von 69 auf 78. Die Karte zeigte gerundet „97 %“, obwohl die Grenze nicht erreicht war. Jetzt steigt die Untergrenze der Zugkraft stufenlos von 93 % bis 97 % (`ausverkauft:[0.93,0.97]`). Die Karte rundet ab und schreibt ab 97 % „ausverkauft“. Neue Werte: Freiburg 75, Heidenheim 59, Kiel 56, Osnabrück 46 (vorher 69, 42, 43, 42), die übrigen unverändert. | ✅ behoben, vorläufig |
 | EM3 | Die Schwelle 0,5 für die Meldung „Kurve“ stand als Zahl im Code. Jetzt `RMK.fankultur.kurve`. | ✅ behoben |
+
+## EN. Prüfung der Korrekturen EM und von K27e ohne Laufzeit (23. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat db519e4 und b07996e gelesen, nichts ausgeführt. Die Fankultur hat er mit einem eigenen Perl-Skript nachgerechnet. Kein Fehler in der Spiellogik, fünf niedrige Funde.
+
+**Ohne Befund:**
+
+- **Werte nach EM2 stimmen:** Freiburg 75 (Abwerben −5,5), Heidenheim 59, Kiel 56, Osnabrück 46, alle anderen unverändert.
+- **`daten/regeln.js`:** Kein Kommentar schluckt Code.
+- **K27e:** gerechnet beim Ziel, das Gedächtnis bleibt unverändert, Grenzen nach der Multiplikation.
+- **Tests:** Die neuen Tests scheitern mit dem alten Code.
+- **Gleichschritt:** unberührt.
+
+Korrekturen auf `mitarbeit/popolupo-en-korrekturen` (auf K26f).
+
+| # | Befund | Status |
+|---|---|---|
+| EN1 | Im Marketing-Kasten fehlte seit EM2 das Leerzeichen nach dem Komma („der Plätze,2,3 Mitglieder“). | ✅ behoben |
+| EN2 | Die stufenlose Grenze aus EM2 war ungetestet. Fall K25f prüft jetzt Freiburg zwischen 72 und 77 und dass 170 Fans mehr höchstens 4 Punkte ändern, mit harter Grenze waren es 9. | ✅ behoben |
+| EN3 | Der Fall K27e nahm Union, das genau auf 80 liegt (roh 79,96). Jetzt Dortmund (100). | ✅ behoben |
+| EN4 | **Schon seit U16:** Anlässe der Fanstimmung verblassten nie ganz (Rundung auf eine Stelle blieb bei −0,4 oder 0,5 hängen). Mit K27e stand dann der Faktor der Fankultur für immer in der Anzeige. Jetzt geht ein Anlass bis ±0,5 auf 0 (`RFS.anlassMin`). Getestet in Fall K27e. | ✅ behoben |
+| EN5 | K27 §5.4b sagte, die Fanstimmung der Computer-Vereine wirke nirgends. Seit K23b/K23c wirkt sie auf ihre Heimeinnahmen, seit U12i auf die Präsidentenwahl. K20 §5.3 nannte K27e nicht. Beides berichtigt. | ✅ behoben |

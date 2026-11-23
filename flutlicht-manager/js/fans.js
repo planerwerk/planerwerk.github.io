@@ -14,7 +14,9 @@ function fanBausteine(t){const F=RFS,E=F.erfolg,c=(x,s)=>clamp(x,s[0],s[1]);let 
 function fanZiel(t){const b=fanBausteine(t);return clamp(RFS.start+b.erfolg+b.preise+b.ident+b.entscheid+b.umfeld,0,100);}
 // Montags (ablauf.js woechentlichLauf, vor dem Vorstand): Richtung Ziel, Anlässe verblassen
 function fansWoche(){const F=RFS;S.teams.forEach(t=>{if(!aktiv(t))return;const v=fanst(t);t.fanst=fanZahl(v+(fanZiel(t)-v)*F.traegheit);
-  if(t.fanE)t.fanE=fanZahl(t.fanE*(1-F.erfolg.verblassen));if(t.fanD)t.fanD=fanZahl(t.fanD*(1-F.entscheid.verblassen));if(t.fanU)t.fanU=fanZahl(t.fanU*(1-F.umfeld.verblassen));});}
+  if(t.fanE)t.fanE=fanVerblasst(t.fanE,F.erfolg.verblassen);if(t.fanD)t.fanD=fanVerblasst(t.fanD,F.entscheid.verblassen);if(t.fanU)t.fanU=fanVerblasst(t.fanU,F.umfeld.verblassen);});}
+// Anlass verblasst um den Anteil v; bis RFS.anlassMin ganz auf 0, sonst blieb das Runden auf eine Stelle bei ±0,4 oder 0,5 hängen (Prüfung EN4)
+const fanVerblasst=(x,v)=>{const y=fanZahl(x*(1-v));return Math.abs(y)<=RFS.anlassMin?0:y;};
 const fanAnlass=(t,k,v)=>{if(t)t[k]=fanZahl((t[k]||0)+v);};
 // Ligaspiel (ablauf.js): Derby mit Sieger doppelt
 function fansDerby(r){if(r.hg===r.ag||!istDerby(r.h,r.a))return;const w=r.hg>r.ag?r.h:r.a,l=w===r.h?r.a:r.h,D=RFS.erfolg.derby;fanAnlass(S.teams[w],'fanE',D);fanAnlass(S.teams[l],'fanE',-D);}

@@ -75,7 +75,7 @@ Risiko je Treffen = 8 % × Bekanntheit × Berater × Ort × (1 + 0,2 × bisherig
 | abgebender Verein | Beziehung −15 bis −30 (K17). Unter −50 verhandelt er für den Rest der Saison oft gar nicht (50 %). Ablöseforderung +15 %. |
 | Spieler | Ungnade beim Verein: Stimmung −10 (K14). Kann dir nützen: Er drängt auf den Wechsel, der Preis sinkt eventuell. |
 | Presse | Gerücht (K29), Klatsch über deinen Verein (K17 §5.3) |
-| dein Vorstand | Vertrauen −3, bei Traditionsvereinen −6 (K28) |
+| dein Vorstand | Vertrauen −3, bei Traditionsvereinen −6 (K28). Seit K27e −3 × (1 + Wirkung der Fankultur), also −3 bis −6 (§5.4) |
 | deine Fans | je nach Rivalität: gegen den Derby-Rivalen sogar +3 (K27) |
 
 Keine Geldstrafe, kein Verbandsverfahren.

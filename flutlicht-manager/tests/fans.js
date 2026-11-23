@@ -71,11 +71,13 @@ function welt(lernstufen){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;
   t.fanst=50;const a=F.dkAnteil(t,D.rabatt);t.mitglieder=0;const b=F.dkAnteil(t,D.rabatt);
   pruef(m0===0&&nah(mh,D.mitglieder*Math.round(t.cap/2)/t.cap)&&nah(mv,D.mitglieder)&&nah(a-b,D.mitglieder),'Vorkaufsrecht der Mitglieder: Anteil steigt mit den Mitgliedern je Platz, gedeckelt',`${m0} / ${mh.toFixed(3)} / ${mv.toFixed(3)}, Anteil ${b.toFixed(3)} → ${a.toFixed(3)}`);}
 
-// K27e. Fankultur statt Tradition (K27 §5.4c): Der Baustein Entscheidungen wiegt bei voller Fankultur × 1,5 (Union: Liebling verkauft −12 statt −8),
-//       ohne Fankultur einfach (Hoffenheim −8). Das Gedächtnis t.fanD bleibt unverändert, die Grenze −15 gilt weiter.
-{const {F,S,ev}=welt(false),V=ev('VEREINE'),T=k=>S.teams[V.findIndex(v=>v.kurz===k)],fw=ev('fankulturWirkung'),E=ev('RFS').entscheid,fcu=T('FCU'),tsg=T('TSG');
-  fcu.fanD=E.lieblingVerkauf;tsg.fanD=E.lieblingVerkauf;const bu=F.fanBausteine(fcu),bt=F.fanBausteine(tsg);fcu.fanD=-20;const grenze=F.fanBausteine(fcu).entscheid;fcu.fanD=0;const ohne=F.fanBausteine(fcu);
-  pruef(fw(fcu)===1&&fw(tsg)===0&&nah(bu.entscheid,E.lieblingVerkauf*(1+E.fankultur))&&nah(bt.entscheid,E.lieblingVerkauf)&&grenze===E.spanne[0]&&ohne.entscheid===0&&ohne.fkF===1,
-    'Fankultur: Entscheidungen bei Union × 1,5, bei Hoffenheim einfach, Grenze −15, ohne Anlass nichts',`Wirkung Union ${fw(fcu)}, Hoffenheim ${fw(tsg)}; Entscheidungen ${bu.entscheid} / ${bt.entscheid}, bei −20 ${grenze}, ohne Anlass ${ohne.entscheid}`);}
+// K27e. Fankultur statt Tradition (K27 §5.4c): Der Baustein Entscheidungen wiegt bei voller Fankultur × 1,5 (Dortmund: Liebling verkauft −12 statt −8),
+//       ohne Fankultur einfach (Hoffenheim −8). Das Gedächtnis t.fanD bleibt unverändert, die Grenze −15 gilt weiter. Dortmund statt Union (Prüfung EN3: Union liegt genau auf 80).
+//       Seit EN4 verblasst ein Anlass unter RFS.anlassMin ganz auf 0 (vorher blieb −0,4 für immer stehen).
+{const {F,S,ev}=welt(false),V=ev('VEREINE'),T=k=>S.teams[V.findIndex(v=>v.kurz===k)],fw=ev('fankulturWirkung'),R=ev('RFS'),E=R.entscheid,bvb=T('BVB'),tsg=T('TSG');
+  bvb.fanD=E.lieblingVerkauf;tsg.fanD=E.lieblingVerkauf;const bu=F.fanBausteine(bvb),bt=F.fanBausteine(tsg);bvb.fanD=-20;const grenze=F.fanBausteine(bvb).entscheid;bvb.fanD=0;const ohne=F.fanBausteine(bvb);
+  bvb.fanD=-0.4;tsg.fanD=0.5;F.fansWoche();const weg=bvb.fanD===0&&tsg.fanD===0;
+  pruef(fw(bvb)===1&&fw(tsg)===0&&nah(bu.entscheid,E.lieblingVerkauf*(1+E.fankultur))&&nah(bt.entscheid,E.lieblingVerkauf)&&grenze===E.spanne[0]&&ohne.entscheid===0&&ohne.fkF===1&&weg,
+    'Fankultur: Entscheidungen bei Dortmund × 1,5, bei Hoffenheim einfach, Grenze −15, ohne Anlass nichts, kleine Anlässe verblassen ganz',`Wirkung Dortmund ${fw(bvb)}, Hoffenheim ${fw(tsg)}; Entscheidungen ${bu.entscheid} / ${bt.entscheid}, bei −20 ${grenze}, ohne Anlass ${ohne.entscheid}, nach dem Verblassen ${bvb.fanD} / ${tsg.fanD}`);}
 
 console.log(probleme.length?`\n${probleme.length} Problem(e).`:'\nAlles in Ordnung.');process.exitCode=probleme.length?1:0;

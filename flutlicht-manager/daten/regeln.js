@@ -490,6 +490,7 @@ const REGELN={
     entscheid:{spanne:[-15,5],lieblingVerkauf:-8,verblassen:0.1,fankultur:0.5},umfeld:{spanne:[-5,5],eroeffnung:3,gespraech:[3,8],leer:-5,leerUnter:25,verblassen:0.1},
     nachfrage:[0.85,1,1.10],vorstand:{zone:[45,75],teilerUnten:3,minUnten:-10,teilerOben:5,maxOben:5},
     protestUnter:30,pfiffeSv:-0.2,gespraechTage:30,
+    anlassMin:0.5, // Prüfung EN4 (23.11.): Anlässe (fanE, fanD, fanU) verblassen bis zu diesem Betrag ganz auf 0
     // Dauerkarten (K27 §5.2, K27b, 22.11., popolupo, GESCHÄTZT): nur dein Verein, verkauft beim ersten Ligaheimspiel der Saison. Anteil der Plätze = basis + jeStimmung × Fanstimmung/100
     // + jeRabatt × (Rabatt − rabatt), höchstens 1 − gaesteblock. Rabatt wählbar aus stufen (Bereich preise, Automatik: rabatt). Je Ligaheimspiel zahlen alle Inhaber Preis × (1 − Rabatt),
     // auch wenn weniger Zuschauer kommen. Fanstimmung (Baustein Preise): fans je 10 Prozentpunkte Rabatt über oder unter dem Standard.

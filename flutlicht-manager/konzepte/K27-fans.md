@@ -98,7 +98,7 @@ Ziel = 60 + Erfolg + Preise + Identifikation + Entscheidungen + Umfeld     (0–
 - **Protest** (§5.4): Unter 30 pfeifen die Fans in deinen Ligaheimspielen. Selbstvertrauen deiner eingesetzten Spieler −0,2, mit Meldung.
 - **Fan-Gespräch** (§5.4): höchstens einmal im Monat, Stimmung im Baustein Umfeld +3 bis +8 nach deiner Glaubwürdigkeit (K15). Unter 25 Glaubwürdigkeit nennen die Fans es leere Versprechen: −5. Lizenz-Bereich `fangespraech` ab der C-Lizenz, ohne Automatik.
 - **Anzeige:** im Stadion die Fanstimmung als Regler mit den Bausteinen und das Fan-Gespräch.
-- **Computer-Vereine:** gleiche Stimmung, wirkt aber noch nirgends (ihre Einnahmen kommen aus einer Formel ohne Zuschauer, ihr Vorstand aus U11d2 bleibt unverändert).
+- **Computer-Vereine:** gleiche Stimmung, wirkt aber noch nirgends (ihre Einnahmen kommen aus einer Formel ohne Zuschauer, ihr Vorstand aus U11d2 bleibt unverändert). Seit Prüfung EN5 (23.11.) berichtigt: Seit K23b/K23c rechnen ihre Heimeinnahmen mit `zuschauerErwartung` und damit mit dem Zuschauerfaktor der Fanstimmung. Seit U12i hängt die Präsidentenwahl (`wahlChance`) bei allen Vereinen von der Fanstimmung ab. K27e verstärkt beides leicht bei hoher Fankultur nach dem Verkauf eines Lieblings, ohne Zufall.
 - **Noch nicht:** Dauerkarten und Gästeblock (warten auf K23), Ultras und Tradition als Stammdaten (dafür fehlen Quellen je Verein), Choreo, Pyrotechnik und Platzsturm (K09, K30), Heimvorteil durch Fans (würde die Kalibrierung der Engine ändern).
 
 ### 5.4c K27e Fankultur statt Tradition (23.11.2026, popolupo, vorläufig)
@@ -109,6 +109,7 @@ Tradition als Stammdatum (0–3) fehlt weiter. Seit K25f gibt es dafür die Fank
   - Bei voller Fankultur wiegt der Verkauf eines Publikumslieblings −12 statt −8. Dasselbe gilt für einen umstrittenen Sponsor (K24).
   - Gerechnet wird beim Ziel, nicht beim Anlass. Darum folgt der Baustein der heutigen Fankultur, und das Gedächtnis `t.fanD` bleibt unverändert.
   - Die Grenzen −15 bis +5 gelten weiter. Das gilt für alle Vereine, ohne Zufall.
+  - Seit Prüfung EN4 verblassen alle Anlässe (Erfolg, Entscheidungen, Umfeld) bis ±0,5 ganz auf 0 (`anlassMin`). Vorher blieb das Runden auf eine Stelle bei −0,4 oder 0,5 hängen, und der Faktor stand für immer in der Anzeige.
   - Die Anzeige im Stadion nennt den Faktor.
 - **Vorstand beim Abwerben** (K20 §5.3: „bei Traditionsvereinen −6“): Fliegt ein Abwerbeversuch auf, sinkt das Vertrauen um 3 × (1 + Wirkung). Das sind −3 bis −6, bei Freiburg etwa −5,5.
 - **Noch nicht:**

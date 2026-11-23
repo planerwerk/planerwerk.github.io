@@ -18,9 +18,10 @@ function welt(lernstufen){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;
 {const w=welt(false),V=w.ev('VEREINE'),fk=w.ev('fankultur'),T=k=>w.S.teams[V.findIndex(v=>v.kurz===k)],wert=k=>fk(T(k));
   const hoch=['FCU','STP','FCK'].every(k=>wert(k)>60),tief=['WOB','TSG','RBL'].every(k=>wert(k)<50),rbVor=wert('RBL')>wert('WOB')&&wert('RBL')>wert('TSG');
   const fck=T('FCK'),cap0=fck.cap,m0=fck.mitglieder,f0=fk(fck);fck.cap=cap0*2;const fGross=fk(fck);fck.cap=cap0;fck.mitglieder=m0*2;const fMitgl=fk(fck);fck.mitglieder=m0;
+  /* Prüfung EN2: fast ausverkauft (EM2), Freiburg 75 statt 69 mit harter Grenze; 170 Fans mehr ändern höchstens 4 Punkte (gerechnet 75 → 78) statt 9 */const scf=T('SCF'),fs0=scf.fans,fScf=fk(scf);scf.fans=fs0+170;const fScf2=fk(scf);scf.fans=fs0;const weich=fScf>=72&&fScf<=77&&Math.abs(fScf2-fScf)<=4;
   const rb=V.findIndex(v=>v.kurz==='RBL');w.S.my=rb;const t2=w.ev('myT()');t2.fanU=0;w.S.mk=null;w.F.trikotWaehlen('klassisch');const k2=w.S.mk.trikot;
-  pruef(hoch&&tief&&rbVor&&fGross<f0&&fMitgl>f0&&w.ev('fankulturWirkung')(t2)===0&&!!k2&&k2.f>=0.95&&k2.f<=1.05&&t2.fanU===1,'Fankultur: Union, St. Pauli, Kaiserslautern hoch, Wolfsburg, Hoffenheim, Leipzig tief, Stadion und Mitglieder wirken, Leipzig ohne Zuschlag',
-    `${['FCU','STP','FCK','B04','SCF','RBL','WOB','TSG'].map(k=>k+' '+wert(k)).join(', ')}; Kaiserslautern ${f0}, doppeltes Stadion ${fGross}, doppelte Mitglieder ${fMitgl}; Leipzig Faktor ${k2&&k2.f}, Fans ${t2.fanU}`);}
+  pruef(hoch&&tief&&rbVor&&fGross<f0&&fMitgl>f0&&weich&&w.ev('fankulturWirkung')(t2)===0&&!!k2&&k2.f>=0.95&&k2.f<=1.05&&t2.fanU===1,'Fankultur: Union, St. Pauli, Kaiserslautern hoch, Wolfsburg, Hoffenheim, Leipzig tief, Stadion und Mitglieder wirken, Leipzig ohne Zuschlag',
+    `${['FCU','STP','FCK','B04','SCF','RBL','WOB','TSG'].map(k=>k+' '+wert(k)).join(', ')}; Kaiserslautern ${f0}, doppeltes Stadion ${fGross}, doppelte Mitglieder ${fMitgl}; Freiburg ${fScf}, mit 170 Fans mehr ${fScf2}; Leipzig Faktor ${k2&&k2.f}, Fans ${t2.fanU}`);}
 
 // 2. Ohne Wahl: am Tag vor dem ersten Pflichtspiel nimmt der Verein das klassische
 {const {F,S}=welt(false),e=F.ersterPflichttag(VEREIN);F.marketingTag(e-2);const vorher=!S.mk.trikot;F.marketingTag(e-1);
