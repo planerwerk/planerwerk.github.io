@@ -459,11 +459,15 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
 
 // K30g. Manipulation in der 3. Liga (K30 §8.4): Der Auslöser trifft einen Spieler eines Computer-Vereins der 3. Liga (keine zweite Mannschaft), die Wirkung sperrt ihn
 //       und zieht seinem Verein in dieser Saison 3 Punkte ab (Tabelle), nie deinem Verein.
-{const {S,ev}=welt(),A=ev('AUSLOESER'),kw=ev('kartenWirkung'),tab=ev('table'),si=ev('sperreIn');S.phase='play';
-  const b=A.manipulation3(),p=b&&ev('PIX').get(b.spieler),t=b&&S.teams[b.verein],ok=!!t&&t.lg===3&&!(t.zweite>=0)&&t.id!==S.my&&p.team===t.id;
-  const pkt=()=>(tab(3).find(r=>r.id===t.id)||{}).p,p0=pkt(),l0=si(p,'liga');kw({art:'wettsperre',wert:1},b,{titel:'Test'});kw({art:'punktabzug',wert:3},b,{titel:'Test'});
-  const abzug=pkt()===p0-3&&si(p,'liga')>l0,a0=((S.abzug||{})[S.season]||{})[S.my]||0;kw({art:'punktabzug',wert:3},{verein:S.my},{titel:'Test'});const nieMein=(((S.abzug||{})[S.season]||{})[S.my]||0)===a0;
-  pruef(ok&&abzug&&nieMein,'Manipulation in der 3. Liga: Spieler eines Drittligisten gesperrt, Punktabzug für seinen Verein, nie für deinen',`Verein ${t&&t.name}, Punkte ${p0} → ${pkt()}, gesperrt ${si(p,'liga')>l0}, dein Verein unberührt ${nieMein}`);}
+//       Seit Prüfung ER4 über die Karte selbst (kartenZeigen) und ohne Absturz, wenn der Auslöser nichts findet; ER1: nicht nach dem letzten Spieltag; ER2: höchstens einmal in abstand Saisons.
+{const {S,F,ev}=welt(),A=ev('AUSLOESER'),kv=ev('karteVon'),kw=ev('kartenWirkung'),tab=ev('table'),si=ev('sperreIn'),SK=ev('RKT').skandal;S.phase='play';
+  const b=A.manipulation3()||{},p=b.spieler!=null?ev('PIX').get(b.spieler):null,t=b.verein!=null?S.teams[b.verein]:null,ok=!!t&&!!p&&t.lg===3&&!(t.zweite>=0)&&t.id!==S.my&&p.team===t.id;
+  const pkt=()=>t?(tab(3).find(r=>r.id===t.id)||{}).p:null,p0=pkt(),l0=p?si(p,'liga'):0;if(ok)F.kartenZeigen(kv('manipulation3'),b,S.tag,false);
+  const abzug=ok&&pkt()===p0-3&&si(p,'liga')>l0&&S.skandal3===S.season,a0=((S.abzug||{})[S.season]||{})[S.my]||0;kw({art:'punktabzug',wert:3},{verein:S.my},{titel:'Test'});const nieMein=(((S.abzug||{})[S.season]||{})[S.my]||0)===a0;
+  const gesperrt=A.manipulation3()===null;S.skandal3=S.season-SK.abstand;const wieder=!!A.manipulation3();
+  const r0=S.res[3].slice(),n=S.fx[3].reduce((s,md)=>s+md.length,0),[h0,a1]=S.fx[3][0][0];while(S.res[3].length<n)S.res[3].push([h0,a1,0,0,0]);const fertig=A.manipulation3()===null;S.res[3]=r0;
+  pruef(ok&&abzug&&nieMein&&gesperrt&&wieder&&fertig,'Manipulation in der 3. Liga: Spieler eines Drittligisten gesperrt, Punktabzug für seinen Verein, nie für deinen, höchstens einmal in zehn Saisons, nicht nach dem letzten Spieltag',
+    `Verein ${t&&t.name}, Punkte ${p0} → ${pkt()}, gesperrt ${p?si(p,'liga')>l0:'-'}, dein Verein unberührt ${nieMein}, gleich danach ${gesperrt}, nach ${SK.abstand} Saisons ${wieder}, Liga fertig ${fertig}`);}
 
 // U19e. Europapokal-Karten (K37 §8): Auswärtsspiel bei einem Auslandsverein in den nächsten 7 Tagen (kein Heimspiel, nicht später, nicht das Finale), Spiel 1 bis 7 Tage her,
 //       Wunder nach 0:3 im Hinspiel und 4:0 oder 3:0 mit Elfmeterschießen im Rückspiel, nicht nach nur einem Tor Rückstand und nicht beim Ausscheiden. euMeineSpiele ersetzt der Test.

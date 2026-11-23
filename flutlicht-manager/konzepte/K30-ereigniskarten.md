@@ -333,7 +333,7 @@ Sehr selten, als Weltereignis: **etwa einmal in zehn Saisons** kommt ein Szenari
 | Ein Spiel deines Vereins wird deshalb wiederholt | sehr selten | neuer Termin, Ergebnis gestrichen, Tabelle ändert sich |
 | Großer Skandal mit mehreren Vereinen wie 1971 | sehr selten | Lizenzentzug oder Zwangsabstieg, viele Sperren, Ansehen der Liga sinkt für eine Saison |
 
-- **Gebaut als K30g** (23.11.2026, popolupo, ohne Testlauf, Werte vorläufig): „Wettbetrug in der 3. Liga fliegt auf“ als Info-Karte (Stufe selten, höchstens einmal in zehn Jahren).
+- **Gebaut als K30g** (23.11.2026, popolupo, ohne Testlauf, Werte vorläufig): „Wettbetrug in der 3. Liga fliegt auf“ als Info-Karte. Sie hat die Stufe selten, kommt also etwa einmal in 100 Saisons, und höchstens einmal in zehn Saisons (`RKT.skandal.abstand`, `S.skandal3`, seit Prüfung ER2; vorher sperrte `sperrTage` nur denselben Spieler). Nicht mehr nach dem letzten Spieltag der 3. Liga, sonst könnte sich zwischen den Relegationsspielen die Paarung ändern (ER1). Sie wird immer gemeldet, auch über der Info-Grenze der Woche (`immer`, ER3).
   - Ein Spieler eines Computer-Vereins der 3. Liga (keine zweite Mannschaft) wird gesperrt wie beim Wettskandal (K30f).
   - Sein Verein bekommt in dieser Saison 3 Punkte abgezogen, über denselben Weg wie nach einer Insolvenz (`S.abzug`, K23a). Das gilt auch, wenn du in der 3. Liga spielst. Dein eigener Verein ist nie betroffen.
   - Die Regionalliga hat keine Kader im Spiel, darum nur die 3. Liga. Schiedsrichter, wiederholte Spiele und der große Skandal fehlen weiter.

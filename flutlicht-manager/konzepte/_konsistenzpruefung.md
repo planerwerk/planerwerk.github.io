@@ -2345,3 +2345,26 @@ Korrekturen auf `mitarbeit/popolupo-eq-korrekturen` (auf den Korrekturen EP).
 | EQ6 | Der Testplan nannte `leihe.js` nicht, die README nannte EP2 und die Sperre bei K16e nicht. Ergänzt. | ✅ behoben |
 | EQ7 | `stabEinstellen` hatte eine ungenutzte Variable. Schon vorher: `stabVerlaengern` rechnete mit festen Zahlen. Jetzt `einstellenJahre` und `verlaengernGehalt` aus den Regeln. | ✅ behoben |
 | EQ8 | Der Kartentext „Dein Jugendscout {mitarbeiter}“ wurde zu „Dein Jugendscout Name (Scout)“. Jetzt „Dein Scout {mitarbeiter}“. | ✅ behoben |
+
+## ER. Prüfung der Korrekturen EQ und von K30g ohne Laufzeit (23. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 935189f und 3e0dcea gelesen, nichts ausgeführt. Kein hoher oder mittlerer Fund, sechs niedrige.
+
+**Ohne Befund:**
+
+- **Klammern in `stabHolen`:** mit einem Perl-Zähler nachgezählt.
+- **`gefragt`:** Die Karte kommt bei gesperrtem Stab nur bis `kapitaenSaisons` wieder.
+- **Tests K16e, K18f und EP2:** Sie scheitern mit dem alten Code, die Schleife endet.
+- **Punktabzug:** Er wird nur in `table()` gelesen und gilt für das Archiv, die ewige Tabelle sowie Auf- und Abstieg vor dem Saisonwechsel. Er hängt an der Saison.
+- **Gleichschritt:** unberührt.
+
+Korrekturen auf `mitarbeit/popolupo-er-korrekturen` (auf U12m).
+
+| # | Befund | Status |
+|---|---|---|
+| ER1 | Der Punktabzug konnte zwischen den Relegationsspielen 2./3. Liga kommen. Dann hätte das Rückspiel ein anderer Verein bestritten als das Hinspiel. Jetzt nicht mehr nach dem letzten Spieltag der 3. Liga (`ligaFertig(3)`). Bei der Insolvenz der Computer-Vereine am 1.6. gibt es dasselbe schon länger, das steht noch offen. | ✅ behoben, 📌 Insolvenz |
+| ER2 | „Höchstens einmal in zehn Jahren“ stimmte nicht. `sperrTage` sperrt nur denselben Spieler beim selben Verein. Jetzt sperrt `S.skandal3` mit `RKT.skandal.abstand` (10 Saisons) für alle. Die Stufe selten ergibt etwa einmal in 100 Saisons. | ✅ behoben |
+| ER3 | Über der Info-Grenze der Woche wurde der Abzug ohne Meldung gebucht. Neues Katalogfeld `immer`, die Karte wird immer gemeldet. | ✅ behoben |
+| ER4 | Der Test K30g stürzte ab, wenn der Auslöser nichts fand, und prüfte den Katalogeintrag nicht. Jetzt über `kartenZeigen`, abgesichert, dazu ER1 und ER2. | ✅ behoben |
+| ER5 | Die Karte „Ehemaliger Kapitän“ zählte die Lizenz-Aufgabe „Mitarbeiter eingestellt“ nicht. Jetzt wie beim Einstellen von Hand. | ✅ behoben |
+| ER6 | Wer den Ex-Spieler vorher von Hand eingestellt hatte, bekam „hat anderswo zugesagt“. Jetzt „ist schon in deinem Stab“. | ✅ behoben |

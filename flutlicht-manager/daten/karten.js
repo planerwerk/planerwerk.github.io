@@ -256,7 +256,7 @@ const KARTEN=[
     texte:['{spieler} von {verein} hat auf Spiele der eigenen Mannschaft gewettet. Das Sportgericht sperrt ihn für viele Monate.','Ermittler haben Wetten von {spieler} auf Spiele von {verein} gefunden. Er ist für viele Monate gesperrt.'],
     wirkung:[{art:'wettsperre',wert:1}]},
   // Manipulation in der 3. Liga (K30 §8.4, K30g, 23.11., popolupo): Weltereignis, Sperre wie beim Wettskandal und Punktabzug für den Verein. Werte vorläufig.
-  {id:'manipulation3',titel:'Manipulation in der 3. Liga',bereich:'K30',art:'info',stufe:'selten',ausloeser:'manipulation3',sperrTage:3650,
+  {id:'manipulation3',titel:'Manipulation in der 3. Liga',bereich:'K30',art:'info',stufe:'selten',ausloeser:'manipulation3',sperrTage:3650,immer:true, /* immer gemeldet, auch über der Info-Grenze (Prüfung ER3) */
     texte:['Ermittler decken auf: {spieler} von {verein} hat Spiele gegen Geld beeinflusst. Er ist für viele Monate gesperrt, {verein} bekommt 3 Punkte abgezogen.','Wettskandal in der 3. Liga: {spieler} hat für eine Wettmafia Spiele von {verein} verschoben. Das Sportgericht sperrt ihn und zieht {verein} 3 Punkte ab.'],
     wirkung:[{art:'wettsperre',wert:1},{art:'punktabzug',wert:3}]},
   // Jubiläum (K27 §8 Fan-Choreo, K25 §8 Retro-Trikot, K27d, 23.11., popolupo): Anlasskarte im Jubiläumsjahr, einmal je Jubiläum. Werte vorläufig.
