@@ -491,10 +491,18 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   for(const a of S.teams.filter(t=>t.lg<=3&&!(t.zweite>=0))){const b=S.teams.find(x=>x.id!==a.id&&x.lg===a.lg&&dz(a.id,x.id));if(!b)continue;
     S.fx[a.lg].forEach((md,k)=>md.forEach(([h,g],i)=>{if(tag==null&&h===a.id&&g===b.id)tag=S.plan.zeit[a.lg][k][i][0];}));if(tag!=null){paar=[a,b];break;}}
   let ok=false,info='kein Derby in einer Liga gefunden';
-  if(paar){const [a,b]=paar,hoch=t=>{t.fans=t.cap;t.mitglieder=t.cap*3;},m0=[a.fans,a.mitglieder,b.fans,b.mitglieder];hoch(a);hoch(b);S.my=a.id;S.tag=tag-1;const heim=A.choreo();
+  if(paar){const [a,b]=paar,K=ev('RKT').fans,hoch=t=>{t.fans=t.cap;t.mitglieder=t.cap*3;},m0=[a.fans,a.mitglieder,b.fans,b.mitglieder];hoch(a);hoch(b);S.my=a.id;S.tag=tag-1;const heim=A.choreo();
+    /* Prüfung EW3: Fenster choreoTage und Schwelle choreoAb */S.tag=tag-K.choreoTage-1;const weit=A.choreo(),zuWeit=weit===null||weit.verein!==b.id;S.tag=tag-1;const ab0=K.choreoAb;K.choreoAb=1.01;const schwelle=A.choreo()===null;K.choreoAb=ab0;
     a.fans=Math.round(a.cap*0.5);a.mitglieder=0;const wenig=A.choreo();hoch(a);S.my=b.id;const aus=A.choreo();[a.fans,a.mitglieder,b.fans,b.mitglieder]=m0;
-    ok=!!heim&&heim.verein===b.id&&wenig===null&&aus===null;info=`${a.name} – ${b.name}: Heim ${!!heim}, wenig Fankultur ${wenig}, auswärts ${aus}`;}
-  pruef(ok,'Choreo: vor einem Heim-Derby mit großer Fankultur, nicht mit wenig Fankultur, nicht auswärts',info);}
+    ok=!!heim&&heim.verein===b.id&&zuWeit&&schwelle&&wenig===null&&aus===null;info=`${a.name} – ${b.name}: Heim ${!!heim}, zu weit weg ${zuWeit}, über der Schwelle ${schwelle}, wenig Fankultur ${wenig}, auswärts ${aus}`;}
+  pruef(ok,'Choreo: vor einem Heim-Derby mit großer Fankultur, nur im Fenster, nicht mit wenig Fankultur, nicht auswärts',info);}
+
+// K27f, Prüfung EW3: auch vor einem Spitzenspiel (beide in den oberen Plätzen, ab Spieltag spitzeAb), ohne Derby. Zu Saisonbeginn ordnet die Tabelle nach dem Ansehen.
+{const {S,ev}=welt(),A=ev('AUSLOESER'),dz=ev('istDerby'),P=ev('RPK').anlass;S.phase='play';const lg=1,T=ev('table')(lg),x=S.teams[T[0].id],y=T.slice(1,P.spitzeBis).map(r=>S.teams[r.id]).find(o=>!dz(x.id,o.id));let tag=null;
+  if(y)S.fx[lg].forEach((md,k)=>md.forEach(([h,g],i)=>{if(tag==null&&k+1>=P.spitzeAb&&h===x.id&&g===y.id)tag=S.plan.zeit[lg][k][i][0];}));
+  let ok=true,info='kein passendes Heimspiel gegen einen Verein der oberen Plätze ohne Derby, Fall übersprungen';
+  if(tag!=null){const m0=[x.fans,x.mitglieder];x.fans=x.cap;x.mitglieder=x.cap*3;S.my=x.id;S.tag=tag-1;const c=A.choreo();[x.fans,x.mitglieder]=m0;ok=!!c&&c.verein===y.id;info=`${x.name} – ${y.name}: ${!!c}`;}
+  pruef(ok,'Choreo: auch vor einem Heim-Spitzenspiel',info);}
 
 // K27g. Platzsturm (K27 §5.4): nach dem letzten Ligaspiel, zu Hause nicht verloren, als Meister (oder Aufsteiger, gerade noch gerettet); nicht nach einer Heimniederlage
 //       und nicht auf einem Platz dazwischen. Die Saison wird dafür mit Ergebnissen gefüllt.

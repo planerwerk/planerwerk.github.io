@@ -2464,3 +2464,19 @@ Korrekturen auf `mitarbeit/popolupo-ev-korrekturen` (auf den Korrekturen EU).
 | EV6 | `sperrTage` wirkt bei Kettenkarten nicht. Kommentar im Katalog. | ✅ behoben |
 | EV7 | **Schon seit K11:** Beim Vereinswechsel blieb ein gebuchtes oder laufendes Trainingslager stehen und lief für den neuen Verein weiter. Jetzt räumt `takeJob` laufende und künftige Lager der Saison. | ✅ behoben |
 | EV8 | Die README nannte den neuen Marketing-Fall nicht. Ergänzt. | ✅ behoben |
+
+## EW. Prüfung der Korrekturen EV und von K27f ohne Laufzeit (23. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat e05bb44 und eaba5a3 gelesen, nichts ausgeführt. Sieben niedrige Funde. Ohne Befund: EV1 (einmalige Übernahme), die übrigen Folgen von EV7 (Kette beim Jobwechsel leer, Kosten bezahlt), die Tests K11g und Nachtleben (`inj:0` aus `mkPlayer`), der Test K27f (Derbys innerhalb einer Liga gibt es), die Regeln.
+
+Korrekturen auf `mitarbeit/popolupo-ew-korrekturen` (auf K27g).
+
+| # | Befund | Status |
+|---|---|---|
+| EW1 | EV7 ließ beendete Lager der Saison stehen. Sie sperrten beim neuen Verein dieselbe Pause. Jetzt fallen alle Lager der Saison weg. | ✅ behoben |
+| EW2 | Die Choreo prüfte nur das nächste Ligaspiel. Nach einer englischen Woche verdeckte das Spiel am Dienstag das Derby am Samstag. Jetzt zählen alle Heimspiele im Fenster. | ✅ behoben |
+| EW3 | Der Test K27f prüfte nur die Extreme. Ergänzt: Fenster `choreoTage`, Schwelle `choreoAb`, ein Spitzenspiel ohne Derby. | ✅ behoben |
+| EW4 | Der Test K11g ruft `kartenKette` von Hand auf und hängt so nicht an der Reihenfolge in `taeglichLauf`. Bewusst so gelassen: Ein ganzer Tageslauf im Kartentest wäre schwer und anfällig. Die Reihenfolge steht in K30 §5.6. | 📌 bewusst offen |
+| EW5 | EV1 und EV7 waren ungetestet. Zwei neue Fälle in `tests/finanzen.js`. | ✅ behoben |
+| EW6 | In K33 stand der K27f-Satz mitten im K11g-Satz. Umgestellt, dazu EV1 genannt. | ✅ behoben |
+| EW7 | K27 nannte die Choreo noch als „noch nicht“. §5.4d sagte nichts zur fehlenden Presse, K11 nichts zum Lager beim Vereinswechsel. Ergänzt. | ✅ behoben |

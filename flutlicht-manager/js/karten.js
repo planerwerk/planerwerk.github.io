@@ -100,8 +100,9 @@ const AUSLOESER={
   // ein Spieler eines Computer-Vereins der drei Profiligen wettet auf eigene Spiele (nicht ausgeliehen, kein vereinbarter Wechsel)
   wettpate(){const l=squad(S.my).filter(p=>!(p.inj>0));return l.length?{spieler:pick(l).id}:null;},
   // Choreo (K27 §5.4, K27f): dein nächstes Ligaspiel ist ein Heimspiel in höchstens RKT.fans.choreoTage Tagen, ein Derby oder Spitzenspiel (wie RPK.anlass), und deine Fankultur wirkt ab choreoAb
-  choreo(){const F=RKT.fans,t=myT(),n=meineLigaspiele().find(e=>e.tag>S.tag);if(!n||n.tag-S.tag>F.choreoTage||fankulturWirkung(t)<F.choreoAb)return null;const f=S.fx[n.lg][n.md][n.i],g=pkGegner(n),A=RPK.anlass;
-    if(!f||f[0]!==S.my||g==null)return null;const derby=istDerby(S.my,g),spitze=n.md+1>=A.spitzeAb&&rank(t.lg,S.my)<=A.spitzeBis&&rank(t.lg,g)<=A.spitzeBis;return derby||spitze?{verein:g}:null;},
+  choreo(){const F=RKT.fans,t=myT(),A=RPK.anlass;if(fankulturWirkung(t)<F.choreoAb)return null; /* alle Heim-Ligaspiele im Fenster, nicht nur das nächste (Prüfung EW2: englische Woche) */
+    for(const n of meineLigaspiele().filter(e=>e.tag>S.tag&&e.tag-S.tag<=F.choreoTage)){const f=S.fx[n.lg][n.md][n.i],g=pkGegner(n);if(!f||f[0]!==S.my||g==null)continue;
+      if(istDerby(S.my,g)||(n.md+1>=A.spitzeAb&&rank(t.lg,S.my)<=A.spitzeBis&&rank(t.lg,g)<=A.spitzeBis))return{verein:g};}return null;},
   // Platzsturm (K27 §5.4, K27g): nach dem letzten Ligaspiel (Liga fertig, höchstens RKT.spiel.nachTage her), zu Hause nicht verloren, und Meister,
   // direkter Aufstieg (2. und 3. Liga) oder gerade noch gerettet (letzter Platz vor Relegation oder Abstieg)
   platzsturm(){const t=myT(),lg=t.lg;if(!ligaFertig(lg))return null;const L=meineLigaspiele(),n=L[L.length-1];if(!n||S.tag-n.tag<0||S.tag-n.tag>RKT.spiel.nachTage)return null;

@@ -156,6 +156,7 @@ Zusage = Grundwert × Niveau × Kalender × Region × Phase   (begrenzt auf 0,05
 - **Ausflug ins Nachtleben:** nach der ersten Sichtung eines Partylöwen im Lager mit Ablenkung.
   - Geldstrafe (wie bei der Partynacht), Gespräch (Voreinstellung) oder ignorieren.
 - Zimmerkollegen und das Traumtor des Neuzugangs fehlen weiter. Dafür bräuchte es Zimmerbelegung und Integration.
+- **Vereinswechsel (Prüfung EV7, EW1):** Alle Trainingslager der Saison gehören dem alten Verein und fallen beim Wechsel weg: gebuchte, laufende und beendete. Bezahlt hat sie der alte Verein. Beim neuen Verein kannst du in jeder Pause neu buchen.
 
 ## 9. Wechselwirkungen
 

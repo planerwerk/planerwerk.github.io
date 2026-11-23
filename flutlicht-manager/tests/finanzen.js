@@ -90,6 +90,14 @@ const tagMit=(ev,mmtt)=>{for(let d=0;d<400;d++)if(ev('mmtt')(d)===mmtt)return d;
   F.finanzenJobwechsel();S.season++;t.cash=-ev('kreditRahmen')(t)-1e6;F.insolvenzPruefen();const fu1=t.fu;F.insolvenzPruefen();const zweite=((S.abzug||{})[S.season]||{})[S.my]||0;S.season--;
   pruef(zweite===9&&fu1===1,'Insolvenz: nach Jobwechsel keine zweite in derselben Saison, Zähler am Verein (EU2, EU3)',`Abzug in der Saison ${zweite}, Zähler nach dem ersten Monatsersten ${fu1}`);}
 
+// Prüfung EW5: alter Spielstand mit S.lzp.unter=1 und t.fu=0. Der Zähler wird übernommen, der nächste Monatserste unter dem Rahmen bringt die Insolvenz (EV1).
+{const {F,S,ev,t}=welt();S.lzp={unter:1};t.fu=0;t.cash=-ev('kreditRahmen')(t)-1e6;F.insolvenzPruefen();const ab=((S.abzug||{})[S.season]||{})[S.my]||0;
+  pruef(ab===9&&S.lzp.unter===undefined,'Alter Spielstand: Insolvenz-Zähler aus S.lzp.unter übernommen (EV1)',`Abzug ${ab}, unter ${S.lzp.unter}`);}
+
+// Prüfung EW5: Ein Vereinswechsel räumt die Trainingslager der Saison, auch ein gebuchtes künftiges (EV7, EW1).
+{const {F,S,ev}=welt();S.lager=[];F.lagerBuchenLauf('heimat',S.tag+5,5);const neu=S.teams.find(x=>x.lg===1&&x.id!==S.my).id;F.takeJob(neu);
+  pruef(!(S.lager||[]).length&&ev('lagerAktiv')(S.tag+6)===null,'Vereinswechsel räumt die Trainingslager der Saison (EV7, EW1)',`Lager danach ${(S.lager||[]).length}`);}
+
 // 13. K23d: Gehaltsrahmen = gehaltAnteil (seit K23c 75 %) der erwarteten Einnahmen, Anteil steigt mit den Gehältern, Transferbudget = Konto über 10 % Reserve, über 110 % kauft niemand
 {const {F,S,ev,t}=welt(),B=ev('RFP').budget,E=ev('erwarteteEinnahmen')(t),r0=ev('rahmenAnteil')(t);ev('squad')(S.my).forEach(p=>{p.sal*=5;});const r1=ev('rahmenAnteil')(t);t.cash=E;
   pruef(ev('gehaltsRahmen')(t)===Math.round(E*B.gehaltAnteil)&&r1>r0*4&&r1>B.sperreAb&&ev('transferBudget')(t)===E-Math.round(E*B.reserve),'K23d: Gehaltsrahmen, Anteil und Transferbudget',`Rahmen ${ev('gehaltsRahmen')(t)}, Anteil ${r0.toFixed(2)} → ${r1.toFixed(2)}, Budget ${ev('transferBudget')(t)}`);}

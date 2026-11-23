@@ -99,7 +99,7 @@ Ziel = 60 + Erfolg + Preise + Identifikation + Entscheidungen + Umfeld     (0–
 - **Fan-Gespräch** (§5.4): höchstens einmal im Monat, Stimmung im Baustein Umfeld +3 bis +8 nach deiner Glaubwürdigkeit (K15). Unter 25 Glaubwürdigkeit nennen die Fans es leere Versprechen: −5. Lizenz-Bereich `fangespraech` ab der C-Lizenz, ohne Automatik.
 - **Anzeige:** im Stadion die Fanstimmung als Regler mit den Bausteinen und das Fan-Gespräch.
 - **Computer-Vereine:** gleiche Stimmung, wirkt aber noch nirgends (ihre Einnahmen kommen aus einer Formel ohne Zuschauer, ihr Vorstand aus U11d2 bleibt unverändert). Seit Prüfung EN5 (23.11.) berichtigt: Seit K23b/K23c rechnen ihre Heimeinnahmen mit `zuschauerErwartung` und damit mit dem Zuschauerfaktor der Fanstimmung. Seit U12i hängt die Präsidentenwahl (`wahlChance`) bei allen Vereinen von der Fanstimmung ab. K27e verstärkt beides leicht bei hoher Fankultur nach dem Verkauf eines Lieblings, ohne Zufall.
-- **Noch nicht:** Dauerkarten und Gästeblock (warten auf K23), Ultras und Tradition als Stammdaten (dafür fehlen Quellen je Verein), Choreo, Pyrotechnik und Platzsturm (K09, K30), Heimvorteil durch Fans (würde die Kalibrierung der Engine ändern).
+- **Noch nicht:** Dauerkarten und Gästeblock (warten auf K23), Ultras und Tradition als Stammdaten (dafür fehlen Quellen je Verein), Choreo, Pyrotechnik und Platzsturm (K09, K30), Heimvorteil durch Fans (würde die Kalibrierung der Engine ändern). Seit 23.11.: Dauerkarten (K27b), Fankultur statt Tradition (K25f, K27e), Pyrotechnik im Derby (K09e), Choreo (K27f, §5.4d), Platzsturm (K27g, §5.4e).
 
 ### 5.4e K27g Platzsturm (23.11.2026, popolupo, vorläufig)
 
@@ -115,9 +115,9 @@ Aus §5.4 („Platzsturm: Aufstieg, Klassenerhalt am letzten Spieltag, Feier, kl
 ### 5.4d K27f Choreo in der Kurve (23.11.2026, popolupo, vorläufig)
 
 Aus §5.4 („Choreografie bei Derby, Jubiläum, Spitzenspiel, Ultras ≥ 1“):
-- **Auslöser:** Info-Karte mit Wirkung, Anlasskarte mit Chance 0,6 je Woche. Dein nächstes Ligaspiel ist ein Heimspiel in höchstens 7 Tagen und ein Derby oder Spitzenspiel (wie bei der Pressekonferenz, `RPK.anlass`). Die Wirkung deiner Fankultur (K25f) beträgt mindestens 0,5, also etwa ab Fankultur 65. Ultras gibt es nicht als Stammdatum, die Fankultur steht dafür. Zum Jubiläum bietet die Karte aus K27d schon eine Choreo an.
+- **Auslöser:** Info-Karte mit Wirkung, Anlasskarte mit Chance 0,6 je Woche. Unter deinen Ligaspielen der nächsten 7 Tage ist ein Heimspiel, das ein Derby oder Spitzenspiel ist (wie bei der Pressekonferenz, `RPK.anlass`). Seit Prüfung EW2 zählen alle Heimspiele im Fenster, nicht nur das nächste Spiel, sonst verdeckte ein Spiel am Dienstag das Derby am Samstag. Die Wirkung deiner Fankultur (K25f) beträgt mindestens 0,5, also etwa ab Fankultur 65. Ultras gibt es nicht als Stammdatum, die Fankultur steht dafür. Zum Jubiläum bietet die Karte aus K27d schon eine Choreo an.
 - **Wirkung:** Stimmung des Kaders +3, wie in §5.4, dazu Zusammenhalt +1.
-- **Noch nicht:** Heimvorteil +0,5 %. Er würde die Kalibrierung der Engine verschieben, wie schon in §5.4b.
+- **Noch nicht:** Heimvorteil +0,5 %. Er würde die Kalibrierung der Engine verschieben, wie schon in §5.4b. Die Presse aus der Tabelle in §5.4 fehlt auch. Die Karte ist ihre eigene Meldung, eine Wirkung auf das Medienklima (K29) gibt es nicht.
 
 ### 5.4c K27e Fankultur statt Tradition (23.11.2026, popolupo, vorläufig)
 
@@ -207,7 +207,7 @@ fans:{
 5. Zuschauerfaktor neutral bei 60, damit sich am Start nichts ändert.
 6. Vorstand mit toter Zone von 45 bis 75, damit kleine Schwankungen das Vertrauen nicht bewegen.
 7. Fan-Gespräch ab der C-Lizenz, einmal im Monat.
-8. Dauerkarten, Gästeblock, Ultras, Tradition, Choreo, Pyro, Platzsturm und Heimvorteil verschoben (§5.4b).
+8. Dauerkarten, Gästeblock, Ultras, Tradition, Choreo, Pyro, Platzsturm und Heimvorteil verschoben (§5.4b). Inzwischen gebaut: Dauerkarten, Fankultur statt Tradition, Pyro, Choreo und Platzsturm (siehe §5.4 bis §5.4e).
 9. **Dauerkarten gebaut mit K27b** (22.11., popolupo, ohne Testlauf, §5.2): nur dein Verein, Verkauf beim ersten Ligaheimspiel, Rabatt 10, 20 oder 30 % im Bereich `preise`, Zahlung je Ligaheimspiel statt auf einmal (so stimmt die Prognose aus K23a), Fanstimmung ±2 je 10 Prozentpunkte Rabatt.
 
 ## Quellen
