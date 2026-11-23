@@ -536,7 +536,8 @@ const REGELN={
     // K29e (22.11., GESCHÄTZT): Medienprofile der Computer-Trainer, Anteile in Prozent, fest aus der Trainernummer. Vor den Anlässen in anlaesse stichelt ein Trainer mit dem Profil laut oder psycho
     // mit chance (Strom presse). Antwort auf die Stichelei, zusätzlich zur normalen Wirkung: gelassen (Humor) eigene Mannschaft +gelassen, kontern (Provokation) eigene +konterEigen und die Spieler des Gegners
     // +konterGegner (Trotz), ignorieren (Floskel) eigene +ignorieren[Profil]; nicht hingegangen (ohne Automatik) eigene +offen[Profil]
-    medienprofil:{anteile:{diplomatisch:40,floskel:25,laut:20,psycho:15},anlaesse:['derby','spitze','pokal','relegation'],chance:{laut:0.6,psycho:0.5},
+    // ki (K29m, 23.11., GESCHÄTZT): Sticheleien unter Computer-Trainern vor Derbys und Spitzenspielen deiner Liga in den nächsten tage Tagen, höchstens max je Woche, Beziehung der Vereine + bez
+    medienprofil:{anteile:{diplomatisch:40,floskel:25,laut:20,psycho:15},anlaesse:['derby','spitze','pokal','relegation'],chance:{laut:0.6,psycho:0.5},ki:{tage:7,max:1,bez:-2},
       gelassen:1,konterEigen:1,konterGegner:1,ignorieren:{laut:0,psycho:-1},offen:{laut:-1,psycho:-2}},
     // K29f (22.11., GESCHÄTZT): Interview am Spielfeldrand nach deinem Spiel, Wirkung der Antwortart × faktor, ohne Streuung, Abnutzung und Deckel
     spielfeldrand:{faktor:0.5},

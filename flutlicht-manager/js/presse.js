@@ -22,6 +22,14 @@ function pkStichelei(pk){const M=RPK.medienprofil;if(!M.anlaesse.includes(pk.art
   if(!c||R()>=c)return;const l=PRESSE.sticheleien[pr],F=PRESSE.stichelFrage;pk.profil=pr;pk.zitat=l[Math.floor(R()*l.length)];
   pk.fragen.unshift({t:F[Math.floor(R()*F.length)],o:['humor','provokation','floskel'],sp:0,j:pkJournalist(R()),st:1});
   news(`${x.n} (${tn(pk.gegner)}) stichelt vor dem Spiel: „${pkText(pk.zitat,{verein:myT().name})}“`);}
+// Sticheleien unter Computer-Trainern (K29 §7, K29m), wöchentlich im Strom presse/ki: Derbys und Spitzenspiele deiner Liga ohne deinen Verein in den nächsten
+// RPK.medienprofil.ki.tage Tagen. Erst der Heimtrainer, dann der Gast, Lautsprecher und Psychospieler mit ihrer Chance; höchstens ki.max Meldungen; Beziehung der Vereine + ki.bez (K17)
+function kiSticheleienWoche(d){if(S.phase!=='play')return;const M=RPK.medienprofil,K=M.ki,A=RPK.anlass,lg=myT().lg,Z=S.plan.zeit[lg];if(!S.fx[lg]||!Z)return;
+  const T=table(lg),pl=id=>T.findIndex(r=>r.id===id)+1;let n=0;
+  S.fx[lg].forEach((md,k)=>md.forEach(([h,a],i)=>{if(n>=K.max||h===S.my||a===S.my)return;const tag=Z[k]&&Z[k][i]?Z[k][i][0]:null;if(tag==null||tag<=d||tag-d>K.tage)return;
+    const derby=istDerby(h,a),spitze=k+1>=A.spitzeAb&&pl(h)<=A.spitzeBis&&pl(a)<=A.spitzeBis;if(!derby&&!spitze)return;
+    for(const [von,ziel] of [[h,a],[a,h]]){const x=trainerVon(von),pr=medienProfil(x),c=pr&&M.chance[pr]||0;if(!c||R()>=c)continue;const l=PRESSE.sticheleien[pr];
+      news(`${x.n} (${tn(von)}) stichelt vor ${derby?'dem Derby':'dem Spitzenspiel'} gegen ${tn(ziel)}: „${pkText(l[Math.floor(R()*l.length)],{verein:tn(ziel)})}“`);bezAendern(von,ziel,K.bez,'Stichelei vor dem Spiel');n++;break;}}));}
 // Stichelei ohne Antwort (Co-Trainer geschickt oder nicht hingegangen, aber ohne Automatik): die eigene Mannschaft grübelt. Nicht, wenn die erste Frage
 // (die Stichelei) schon beantwortet ist, nach einer Entlassung oder in einer neuen Saison (Prüfung DO1)
 function stichelOffen(pk){if(!pk.profil||pk.i>0||S.fired||pk.s!==S.season||autoB('presse'))return;const v=RPK.medienprofil.offen[pk.profil]||0;if(!v)return;squad(S.my).forEach(p=>stimmungAendern(p,v));

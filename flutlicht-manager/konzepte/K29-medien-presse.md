@@ -288,7 +288,18 @@ Das ist der Maßstab für die Verbindung zu K09.
   | Co-Trainer geschickt oder nicht hingegangen | eigene Mannschaft −1 (Lautsprecher) oder −2 (Psychospieler) |
 
 - **Automatik:** In der Automatik (Bereich `presse`) bleibt die Stichelei ohne Wirkung, der Co-Trainer nimmt sie gelassen. So bleibt der Gleichschritt gleich, denn er vergleicht die Stimmung der Spieler.
-- **Noch nicht:** Aussagen der Computer-Trainer mit Folgen für sie selbst (Strafen, Ärger, Gerüchte), Sticheleien gegen andere Computer-Vereine, Profil bei eigenen Pressekonferenzen der Computer-Trainer.
+- **Noch nicht:** Aussagen der Computer-Trainer mit Folgen für sie selbst (Strafen, Ärger, Gerüchte), Sticheleien gegen andere Computer-Vereine (seit K29m, siehe unten), Profil bei eigenen Pressekonferenzen der Computer-Trainer.
+
+**Gebaut als K29m** (23.11.2026, popolupo, ohne Testlauf, Werte vorläufig): Sticheleien unter Computer-Trainern.
+- **Wann:** jeden Montag im Strom `presse`/`ki`. Betrachtet werden Derbys und Spitzenspiele deiner Liga ohne deinen Verein in den nächsten 7 Tagen. Ein Spitzenspiel ist es wie in K29e: ab dem 10. Spieltag, beide unter den ersten vier.
+- **Wer:** erst der Heimtrainer, dann der Gast. Lautsprecher sticheln mit 60 %, Psychospieler mit 50 %, die anderen nie (dieselben Chancen wie gegen dich). Höchstens eine Meldung je Woche, damit der Posteingang nicht vollläuft.
+- **Folge:**
+  - Eine Meldung mit einem der Sätze aus K29e, gemünzt auf den anderen Verein.
+  - Die Beziehung der beiden Vereine sinkt um 2 (K17, mit dem Grund „Stichelei vor dem Spiel“). Sie verblasst wie jede andere.
+  - Keine Wirkung auf Spieler oder Ergebnis. Die Stimmung der Computer-Vereine bleibt unberührt, so verschiebt sich keine Kalibrierung.
+- **Nur deine Liga:** Aus den anderen Ligen hört man in der Zeitung zu wenig, und die Meldungen sollen dich betreffen.
+- **Gleichschritt:** Die Sticheleien hängen weder an der Lizenz noch an der Automatik und laufen in einem eigenen Strom. In beiden Welten aus 5a passiert dasselbe.
+- **Regelwerte:** `RPK.medienprofil.ki` (`tage`, `max`, `bez`).
 
 **Umsetzung K29f (22.11.2026, popolupo, ohne Testlauf): Interview am Spielfeldrand (§4.1, Muster 6)**
 - **Wann:** nach jedem deiner Pflichtspiele, bis zum nächsten Halt, an dem du im Büro bist. Nach dem Abpfiff geht es sofort weiter, darum gilt die Karte nicht nur am Spieltag (seit Prüfung DR1). Nicht, wenn gerade eine Pressekonferenz offen ist, und nicht in der Automatik (Bereich `presse`). Remis außerhalb der Liga bekommen eine eigene Frage, ein Elfmeterschießen zählt als Sieg oder Niederlage (DR3).

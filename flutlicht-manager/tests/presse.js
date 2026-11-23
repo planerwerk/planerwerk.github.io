@@ -150,4 +150,16 @@ const gegner=w=>w.S.teams.find(x=>x.lg===w.t.lg&&x.id!==VEREIN).id;
   F.spielerInterviewWoche();const zufrieden=n();d.st=20;S.tag+=7;F.spielerInterviewWoche();const unzufrieden=n(),g=ev('glaub')(t);S.maulkorb=0;
   pruef(zufrieden===0&&unzufrieden===1&&g===50+I.trotz.glaub,'Trotz Maulkorb: nur ein unzufriedener Mitteilsamer redet, Glaubwürdigkeit sinkt',`zufrieden ${zufrieden}, unzufrieden ${unzufrieden}, Glaubwürdigkeit ${g}`);}
 
+// K29m. Sticheleien unter Computer-Trainern (K29 §7): vor einem Derby deiner Liga ohne deinen Verein in den nächsten 7 Tagen stichelt ein Lautsprecher (Chance im Test 1);
+//        eine Meldung, Beziehung der beiden Vereine −2; diplomatische Trainer schweigen; zu früh nichts. medienProfil wird im Test ersetzt (Funktionsdeklaration).
+{const {S,W,ev}=welt(false),M=ev('RPK').medienprofil,dz=ev('istDerby'),lg=ev('myT()').lg,wo=ev('kiSticheleienWoche'),bz=ev('bez');let f=null;
+  S.fx[lg].forEach((md,k)=>md.forEach(([h,a],i)=>{if(!f&&h!==S.my&&a!==S.my&&dz(h,a))f={h,a,k,tag:S.plan.zeit[lg][k][i][0]};}));
+  let ok=false,info='kein Derby ohne deinen Verein in deiner Liga';
+  if(f){const b0=bz(f.h,f.a),neu=()=>S.news[0]&&S.news[0].t.includes('stichelt'),c0=M.chance.laut;S.news.unshift({t:'Start',c:'',w:''});
+    W.ev('medienProfil=function(){return "diplomatisch";}');S.tag=f.tag-1;wo(S.tag);const still=!neu();
+    W.ev('medienProfil=function(){return "laut";}');M.chance.laut=1;S.tag=f.tag-M.ki.tage-1;wo(S.tag);const zuFrueh=!neu();
+    S.tag=f.tag-1;wo(S.tag);const gemeldet=neu(),b1=bz(f.h,f.a);M.chance.laut=c0;
+    ok=still&&zuFrueh&&gemeldet&&b1===b0+M.ki.bez;info=`Derby am Spieltag ${f.k+1}: diplomatisch still ${still}, zu früh ${zuFrueh}, gemeldet ${gemeldet}, Beziehung ${b0} → ${b1}`;}
+  pruef(ok,'Sticheleien unter Computer-Trainern: vor dem Derby eine Meldung, Beziehung −2, nicht von diplomatischen Trainern, nicht zu früh',info);}
+
 console.log(probleme.length?`\n${probleme.length} Problem(e).`:'\nAlles in Ordnung.');process.exitCode=probleme.length?1:0;
