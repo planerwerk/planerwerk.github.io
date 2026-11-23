@@ -129,11 +129,12 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 | **K05d** Last-Minute-Drama | `mitarbeit/popolupo-k05d-last-minute` (auf K05c) | fertig, ungetestet |
 | **K06c** Taktik-Coup, **K09e** Pyrotechnik und Rudelbildung im Derby | `mitarbeit/popolupo-k06c-k09e-coup-derby` (auf K05d) | fertig, ungetestet |
 | **K06d** Spieler hadert mit seiner Position | `mitarbeit/popolupo-k06d-position-hadern` (auf K06c/K09e) | fertig, ungetestet |
+| Korrekturen EK | `mitarbeit/popolupo-ek-korrekturen` (auf K06d) | fertig, ungetestet |
 | U19d2 volle Kader der Auslandsvereine in der Engine | zurückgestellt | Entwurf in K37 §5.7. Die Engine behandelt Auslandsvereine als Block wie Amateure, viele Stellen schlagen Spieler in `PIX` nach. Erst nach einem Testlauf und der Messung des Faktors 0,93 |
 
 **Die neueste Spitze ist immer der zuletzt genannte Zweig, er enthält alles davor.** K24 ist fertig (Claude).
 
-**Vorschlag für den nächsten Testlauf** (Spitze `mitarbeit/popolupo-k06d-position-hadern`, alles ungetestet, bis auf K30f, K27d, K25e, die Korrekturen EI, K05c, K05d, K06c, K09e und K06d von lesenden Prüf-Agenten durchgesehen, Konsistenzprüfung CS bis EI). **Wichtig:** Die Zweige `u12g` und `k29e` laden für sich allein nicht (DN1), bitte die Spitze nehmen:
+**Vorschlag für den nächsten Testlauf** (Spitze `mitarbeit/popolupo-ek-korrekturen`, alles ungetestet, bis auf K30f, K27d, K25e, die Korrekturen EI und EK von lesenden Prüf-Agenten durchgesehen, Konsistenzprüfung CS bis EK, EJ läuft). **Wichtig:** Die Zweige `u12g` und `k29e` laden für sich allein nicht (DN1), bitte die Spitze nehmen:
 1. `node tests/code.js`, dann die schnellen Einzeltests der neuen Teile: `finanzen.js` (Nr. 11 bis 20), `geruechte.js` (seit K17d mit Klatsch), `schwierigkeit.js`, `werbung.js`, `europapokal.js`, `vorstand.js` (Nr. 10 bis 19), `karriereende.js`, `stadion.js` (Nr. 8 bis 11), `karten.js`, `spielwelt-karten.js`, `fans.js` (K27b), `abwerben.js` (K20b, K20e), `transfers.js` (K20c, K20d, K19c, K31b, K31c, K19d), `presse.js` (K29b bis K29j), `marketing.js` (K25c, K25d, K25e), dazu seit dem Nachmittag des 22.11.: `testspiele.js` (K11b, K11c), `erinnerungen.js` (K09b, K07b, K11d, K07d), `scouting.js` (K18c bis K18e), `medizin.js` (K10b bis K10d, K16d), `disziplin.js` (K09c, EA1 bis EA3), `vertraege.js` (K21b, K21d, K21e), `statistik.js` (K34d), `taktik.js` (K06b, eigene Welt am Ende), `stab.js` (K16b), `wettbewerbe.js` (K13b, K13c, K13d, eigene Welten am Ende), `lizenz.js` (K36c am Ende), und in `karten.js` die neuen Karten (K30b, K07c, K08b, K08c, K16c, K27c, K21c, K26e, K12c, K29k, K17b, K22c, K03b, K30c, K30d, K10e, K07e, K14d, K14e, K29l, K30e, K11f, K03c, K30f, K27d, K05c, K05d, K06c, K09e, K06d, U19e). Der Katalog in `karten.js` Fall 1 ist mit `kartenpruefung.pl` schon ohne Node geprüft.
 2. `node tests/lizenz.js` (Gleichschritt, neue Bereiche `zielgespraech`; seit K36c am Ende die gesammelten Meldungen des Stabs). Viele neue Teile wirken nur ohne Automatik oder über Karten, darum sollte 5a gleich bleiben.
 3. `node tests/finanzmodell.js 2`: Salden je Liga nach K23c. Erwartet nach der Modellrechnung 1. Liga etwa +11 Mio., 2. Liga etwa 0, 3. Liga etwa −1 Mio. je Verein und Saison ohne Transfers (K23 §5.6b). Weichen sie stark ab, bitte die Zeilen ins Testprotokoll, ich stelle dann `REGELN.finanzen.verwaltung` und `sponsor` nach.
@@ -168,6 +169,20 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 ---
 
 ## Changelog
+
+### 23.11.2026: Korrekturen nach Prüfung EK zu K05c bis K06d (Zweig `mitarbeit/popolupo-ek-korrekturen`, auf K06d)
+
+- Ein lesender Prüf-Agent hat K05c, K05d, K06c/K09e und K06d durchgesehen (Konsistenzprüfung EK). Zwei mittlere Funde.
+- **Behoben:**
+  - EK1: Verletzt Ausgewechselte zählen nicht als früh ausgewechselt.
+  - EK2: Die Karten sehen alle Pflichtspiele der letzten 7 Tage (`S.letzte`), auch Pokal und Europapokal unter der Woche.
+  - EK3: Der Merker gilt nur für deinen Verein.
+  - EK4: In der Verlängerung gilt ein Tor erst ab Minute 118 als spät.
+  - EK5: Kein Last-Minute-Drama in Relegation und Europapokal (vorläufig).
+  - EK6: Kein Taktik-Coup, wenn der Co-Trainer den Stil wählt.
+  - EK7: Positionszähler erst ab der Mindestzeit, nach 28 Tagen neu.
+- **Offen:** EK7 Kettenwechsel in `xpo` (Engine), erst nach einem Testlauf.
+- **Tests zuerst:** `tests/karten.js` (K05d, K06c/K09e angepasst, neuer Fall EK).
 
 ### 23.11.2026: K06d Spieler hadert mit seiner Position (Zweig `mitarbeit/popolupo-k06d-position-hadern`, auf K06c/K09e)
 

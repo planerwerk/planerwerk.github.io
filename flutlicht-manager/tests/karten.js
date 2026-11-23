@@ -351,7 +351,7 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
 // K05d. Last-Minute-Drama (K05 §8): spätes Siegtor (ab Minute spaetAb, ein Tor Unterschied) für dich oder gegen dich; früh entschieden, Remis,
 //       Elfmeterschießen oder zwei Tore Unterschied nicht.
 {const {S,F,ev}=welt(),A=ev('AUSLOESER'),N=ev('RKT').spiel;S.phase='play';
-  const g=(m,s)=>({m,s,t:'G',p:null,n:'X',sc:[0,0]}),lauf=r=>{F.letztesSpielMerken(Object.assign({h:S.my,a:0,ev:[]},r),S.tag);return[!!A.lastMinuteSieg(),!!A.lastMinuteNiederlage()];};
+  const g=(m,s)=>({m,s,t:'G',p:null,n:'X',sc:[0,0]}),lauf=r=>{S.letzte=[];F.letztesSpielMerken(Object.assign({h:S.my,a:0,ev:[]},r),S.tag);return[!!A.lastMinuteSieg(),!!A.lastMinuteNiederlage()];};
   const sieg=lauf({hg:2,ag:1,ev:[g(10,0),g(20,1),g(N.spaetAb+1,0)]}),nieder=lauf({hg:1,ag:2,ev:[g(10,0),g(20,1),g(N.spaetAb,1)]}),frueh=lauf({hg:2,ag:1,ev:[g(10,0),g(20,1),g(60,0)]}),
     remis=lauf({hg:1,ag:1,ev:[g(10,0),g(N.spaetAb+1,1)]}),pen=lauf({hg:1,ag:0,pen:[4,3],ev:[g(N.spaetAb+1,0)]}),hoch=lauf({hg:3,ag:1,ev:[g(10,0),g(20,0),g(30,1),g(N.spaetAb+1,0)]});
   pruef(sieg[0]&&!sieg[1]&&nieder[1]&&!nieder[0]&&!frueh[0]&&!remis[0]&&!remis[1]&&!pen[0]&&!hoch[0],'Last-Minute-Drama: spätes Siegtor oder Gegentor, nicht früh, nicht beim Remis, Elfmeterschießen oder zwei Toren',
@@ -361,10 +361,10 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
 //       Rudelbildung nur nach einem Derby mit Roter Karte.
 {const {S,F,ev}=welt(),A=ev('AUSLOESER'),K=ev('RTA').kreislauf,tl=ev('teamLevel'),N=ev('RKT').spiel;S.phase='play';
   const geg=S.teams.filter(t=>t.id!==S.my&&ev('aktiv')(t)).sort((a,b)=>tl(b.id)-tl(a.id))[0],stark=tl(geg.id)-tl(S.my)>=N.coupAb,st='pressing';
-  const r=o=>Object.assign({h:S.my,a:geg.id,hg:1,ag:0,ev:[],taktik:[{stil:st},{stil:K[st]}]},o),m=o=>F.letztesSpielMerken(r(o),S.tag);
+  const r=o=>Object.assign({h:S.my,a:geg.id,hg:1,ag:0,ev:[],taktik:[{stil:st},{stil:K[st]}]},o),m=o=>{S.letzte=[];F.letztesSpielMerken(r(o),S.tag);};
   m({});const coup=A.taktikCoup();m({taktik:[{stil:st},{stil:st}]});const falscherStil=A.taktikCoup();m({hg:0,ag:1});const verloren=A.taktikCoup(),keinDerby=A.derbyPyro();
-  const ksc=S.teams.find(t=>t.sh==='KSC');F.letztesSpielMerken({h:S.my,a:ksc.id,hg:1,ag:1,ev:[]},S.tag);const pyro=A.derbyPyro(),ohneRot=A.rudelbildung();
-  F.letztesSpielMerken({h:S.my,a:ksc.id,hg:1,ag:1,ev:[{m:30,s:1,t:'R',p:null}]},S.tag);const rudel=A.rudelbildung();
+  const ksc=S.teams.find(t=>t.sh==='KSC');S.letzte=[];F.letztesSpielMerken({h:S.my,a:ksc.id,hg:1,ag:1,ev:[]},S.tag);const pyro=A.derbyPyro(),ohneRot=A.rudelbildung();
+  S.letzte=[];F.letztesSpielMerken({h:S.my,a:ksc.id,hg:1,ag:1,ev:[{m:30,s:1,t:'R',p:null}]},S.tag);const rudel=A.rudelbildung();
   pruef(stark&&!!coup&&coup.verein===geg.id&&falscherStil===null&&verloren===null&&keinDerby===null&&!!pyro&&pyro.verein===ksc.id&&ohneRot===null&&!!rudel,
     'Taktik-Coup als Außenseiter mit dem passenden Stil, Pyrotechnik nach dem Derby, Rudelbildung nur mit Roter Karte',
     `Außenseiter ${stark}, Coup ${coup&&coup.verein}, gleicher Stil ${falscherStil}, verloren ${verloren}, kein Derby ${keinDerby}, Pyro ${pyro&&pyro.verein}, ohne Rot ${ohneRot}, Rudel ${!!rudel}`);}
@@ -376,6 +376,20 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   spiel('TW');spiel('TW');const zwei=A.positionHadern();spiel('TW');const drei=A.positionHadern();spiel(recht);const zurueck=p.pfal===0&&A.positionHadern()===null;
   pruef(el(p,'TW')<N.positionUnter&&zwei===null&&!!drei&&drei.spieler===p.id&&zurueck,'Position: drei Einsätze in Folge falsch eingesetzt bringen die Karte, passende Position setzt zurück',
     `Eignung als Torwart ${el(p,'TW').toFixed(2)}, nach zwei ${zwei}, nach drei ${drei&&drei.spieler===p.id}, zurück ${zurueck}`);}
+
+// EK. Korrekturen nach Prüfung EK: Verletzt Ausgewechselte zählen nicht als früh (EK1); ein spät gewonnenes Pokalspiel unter der Woche bleibt neben dem Ligaspiel danach
+//     erhalten (EK2); der Merker gilt nur für deinen Verein (EK3); ein Tor in der 95. Minute ist nicht spät, eines ab spaetVerlAb schon (EK4); Europapokal ohne Last-Minute (EK5);
+//     kurze Einsätze zählen nicht für die Position (EK7).
+{const {S,F,ev}=welt(),A=ev('AUSLOESER'),N=ev('RKT').spiel,sq=ev('squad')(S.my),eig=ev('eigenschaften');S.phase='play';S.letzte=[];delete S.letzt;
+  const d=sq[2];d.eig=(eig(d)||[]).filter(e=>e!=='diva');d.eig.push('diva');
+  F.letztesSpielMerken({h:S.my,a:0,hg:0,ag:0,ev:[{m:30,s:0,t:'S',p:sq[3].id,n:'x',aus:d.n,ausId:d.id}],inj:[{id:d.id}]},S.tag);const verletzt=A.handschlag()===null;
+  const g=(m,s)=>({m,s,t:'G',p:null,n:'X',sc:[0,0]});S.letzte=[];F.letztesSpielMerken({h:S.my,a:0,hg:2,ag:1,ev:[g(10,0),g(20,1),g(N.spaetAb+1,0)]},S.tag-3);
+  F.letztesSpielMerken({h:S.my,a:0,hg:0,ag:0,ev:[]},S.tag-1);const beide=!!A.lastMinuteSieg(),my0=S.my;S.my=S.teams.find(t=>t.id!==my0).id;const fremd=A.lastMinuteSieg()===null;S.my=my0;
+  const spaet=(m,o)=>{S.letzte=[];F.letztesSpielMerken(Object.assign({h:S.my,a:0,hg:2,ag:1,ev:[g(10,0),g(20,1),g(m,0)]},o||{}),S.tag);return !!A.lastMinuteSieg();};
+  const v95=spaet(95),v119=spaet(N.spaetVerlAb+1),eu=spaet(N.spaetAb+1,{eu:'el'});
+  const p=sq.find(x=>x.pos!=='TW');p.pfal=0;delete p.pfalT;F.letztesSpielMerken({h:S.my,a:0,hg:0,ag:0,ev:[],xpo:[[[p.id,'TW',0,1]],[]]},S.tag);const kurz=(p.pfal||0)===0;
+  pruef(verletzt&&beide&&fremd&&!v95&&v119&&!eu&&kurz,'Korrekturen EK: Verletzte nicht früh, Pokal unter der Woche bleibt, nur dein Verein, Verlängerung, Europapokal, kurze Einsätze',
+    `verletzt ${verletzt}, beide Spiele ${beide}, anderer Verein ${fremd}, 95. Minute ${v95}, ab spaetVerlAb ${v119}, Europapokal ${eu}, kurz ${kurz}`);}
 
 // U19e. Europapokal-Karten (K37 §8): Auswärtsspiel bei einem Auslandsverein in den nächsten 7 Tagen (kein Heimspiel, nicht später, nicht das Finale), Spiel 1 bis 7 Tage her,
 //       Wunder nach 0:3 im Hinspiel und 4:0 oder 3:0 mit Elfmeterschießen im Rückspiel, nicht nach nur einem Tor Rückstand und nicht beim Ausscheiden. euMeineSpiele ersetzt der Test.

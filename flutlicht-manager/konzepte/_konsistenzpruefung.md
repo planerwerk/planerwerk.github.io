@@ -2157,3 +2157,29 @@ Korrekturen auf `mitarbeit/popolupo-ei-korrekturen-b` (auf K25e). Davor steht au
 | EI3 | K13d: Der neue Termin konnte nach dem nächsten Ligaspiel liegen, etwa bei Vereinen im Europapokal. Danach hätten Gelbsperren-Hinweis und Saisonstart das falsche Spiel genommen. Jetzt liegt er vor dem nächsten Ligaspiel beider Vereine, mit drei Tagen Abstand. | ✅ behoben |
 | EI4 | K13d: Kam vorher ein Pokal- oder Europapokalspiel, war das Ligaspiel nie verlegbar. Jetzt sucht die Lage das nächste Ligaspiel in den 7 Tagen. Der neue Termin hält drei Tage Abstand zu deinen Testspielen. | ✅ behoben |
 | EI5 | Test K13d: Der zweite Antrag galt bei jeder Ablehnung als richtig. Jetzt muss der Grund „schon eine Verlegung“ sein. | ✅ behoben |
+
+## EK. Prüfung von K05c, K05d, K06c/K09e und K06d ohne Laufzeit (23. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 066a25b, f74e03d, 50542cb und c1ef342 gelesen (nichts ausgeführt). Kein blockierender Fehler, zwei mittlere. Prüfung EJ (K30f bis zu den Korrekturen EI) war am 23.11. an einem Netzwerkfehler abgebrochen und läuft neu.
+
+**Ohne Befund:**
+
+- Testspiele kommen nie bei `out.mine` an.
+- Die eigene Seite stimmt auswärts und im Finale.
+- `r.taktik` gibt es auch im Live-Spiel.
+- Die Richtung des Kreislaufs beim Coup stimmt.
+- `xpo` hat die Positionscodes, die `eignung` erwartet.
+- Gleichschritt unberührt. `ausId` steht in beiden verglichenen Läufen.
+- Alte Spielstände sind sicher.
+
+Korrekturen auf `mitarbeit/popolupo-ek-korrekturen` (auf K06d).
+
+| # | Befund | Status |
+|---|---|---|
+| EK1 | **Mittel: Verletzte zählten als früh ausgewechselt.** Der Co-Trainer nimmt Verletzte sofort vom Platz, „Handschlag verweigert“ hätte dann von einer Diva erzählt, die verletzt ging. Jetzt zählen Verletzte (`r.inj`) nicht. | ✅ behoben |
+| EK2 | **Mittel: Spiele unter der Woche gingen verloren.** Der Merker hielt nur das letzte Spiel, die Karten prüfen montags. Das Ligaspiel am Wochenende überschrieb Pokal- und Europapokalspiele. Jetzt hält `S.letzte` die Spiele der letzten 7 Tage (höchstens 4), die Auslöser schauen in alle. | ✅ behoben |
+| EK3 | Der Merker überlebte einen Vereinswechsel. Jetzt trägt er deinen Verein (`t`) und gilt nur für ihn. | ✅ behoben |
+| EK4 | Jedes Tor der Verlängerung galt als „spät“. Jetzt ab Minute 88 bis 90 oder ab Minute 118. | ✅ behoben |
+| EK5 | Bei Hin- und Rückspiel sagt das einzelne Spiel nichts über das Weiterkommen. Last-Minute-Drama jetzt vorläufig nicht in Relegation und Europapokal. | ✅ behoben, vorläufig |
+| EK6 | Der Taktik-Coup zählte auch einen Stil, den der Co-Trainer gewählt hatte. Jetzt nur ohne Automatik des Stils. | ✅ behoben |
+| EK7 | Der Zähler `p.pfal` veraltete und zählte auch Kurzeinsätze. Jetzt erst ab der Mindestzeit für eine Note. Ein Zähler älter als 28 Tage beginnt neu (`p.pfalT`), die Karte verlangt einen frischen Zähler. Nicht behoben: Bei einer Kette von Wechseln (A für B, dann B für C) bekommt A in `xpo` die Position „ZM“ (vorhandener Fehler in der Engine). Die Korrektur verschiebt die Anteile in `xpo` für alle Vereine und gehört zu einem Schritt mit Testlauf. | teils, 📌 Engine nach Testlauf |
