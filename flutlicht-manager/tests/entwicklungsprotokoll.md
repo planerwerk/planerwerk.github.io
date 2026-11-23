@@ -133,11 +133,12 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 | Korrekturen EJ | `mitarbeit/popolupo-ej-korrekturen` (auf den Korrekturen EK) | fertig, ungetestet |
 | **K25f** Fankultur statt Gründungsjahr (Rückmeldung des Nutzers) | `mitarbeit/popolupo-k25f-fankultur` (auf den Korrekturen EJ) | fertig, ungetestet |
 | Korrekturen EL | `mitarbeit/popolupo-el-korrekturen` (auf K25f) | fertig, ungetestet |
+| Korrekturen EM | `mitarbeit/popolupo-em-korrekturen` (auf den Korrekturen EL) | fertig, ungetestet |
 | U19d2 volle Kader der Auslandsvereine in der Engine | zurückgestellt | Entwurf in K37 §5.7. Die Engine behandelt Auslandsvereine als Block wie Amateure, viele Stellen schlagen Spieler in `PIX` nach. Erst nach einem Testlauf und der Messung des Faktors 0,93 |
 
 **Die neueste Spitze ist immer der zuletzt genannte Zweig, er enthält alles davor.** K24 ist fertig (Claude).
 
-**Vorschlag für den nächsten Testlauf** (Spitze `mitarbeit/popolupo-el-korrekturen`, alles ungetestet, bis auf K25f und die Korrekturen EL von lesenden Prüf-Agenten durchgesehen, Konsistenzprüfung CS bis EL). **Wichtig:** Die Zweige `u12g` und `k29e` laden für sich allein nicht (DN1), bitte die Spitze nehmen:
+**Vorschlag für den nächsten Testlauf** (Spitze `mitarbeit/popolupo-em-korrekturen`, alles ungetestet, bis auf die Korrekturen EM von lesenden Prüf-Agenten durchgesehen, Konsistenzprüfung CS bis EM). **Wichtig:** Die Zweige `u12g` und `k29e` laden für sich allein nicht (DN1), bitte die Spitze nehmen:
 1. `node tests/code.js`, dann die schnellen Einzeltests der neuen Teile: `finanzen.js` (Nr. 11 bis 20), `geruechte.js` (seit K17d mit Klatsch), `schwierigkeit.js`, `werbung.js`, `europapokal.js`, `vorstand.js` (Nr. 10 bis 19), `karriereende.js`, `stadion.js` (Nr. 8 bis 11), `karten.js`, `spielwelt-karten.js`, `fans.js` (K27b), `abwerben.js` (K20b, K20e), `transfers.js` (K20c, K20d, K19c, K31b, K31c, K19d), `presse.js` (K29b bis K29j), `marketing.js` (K25c, K25d, K25e, K25f), dazu seit dem Nachmittag des 22.11.: `testspiele.js` (K11b, K11c), `erinnerungen.js` (K09b, K07b, K11d, K07d), `scouting.js` (K18c bis K18e), `medizin.js` (K10b bis K10d, K16d), `disziplin.js` (K09c, EA1 bis EA3), `vertraege.js` (K21b, K21d, K21e), `statistik.js` (K34d), `taktik.js` (K06b, eigene Welt am Ende), `stab.js` (K16b), `wettbewerbe.js` (K13b, K13c, K13d, eigene Welten am Ende), `lizenz.js` (K36c am Ende), und in `karten.js` die neuen Karten (K30b, K07c, K08b, K08c, K16c, K27c, K21c, K26e, K12c, K29k, K17b, K22c, K03b, K30c, K30d, K10e, K07e, K14d, K14e, K29l, K30e, K11f, K03c, K30f, K27d, K05c, K05d, K06c, K09e, K06d, U19e, dazu die Fälle EK und EL). Der Katalog in `karten.js` Fall 1 ist mit `kartenpruefung.pl` schon ohne Node geprüft.
 2. `node tests/lizenz.js` (Gleichschritt, neue Bereiche `zielgespraech`; seit K36c am Ende die gesammelten Meldungen des Stabs). Viele neue Teile wirken nur ohne Automatik oder über Karten, darum sollte 5a gleich bleiben.
 3. `node tests/finanzmodell.js 2`: Salden je Liga nach K23c. Erwartet nach der Modellrechnung 1. Liga etwa +11 Mio., 2. Liga etwa 0, 3. Liga etwa −1 Mio. je Verein und Saison ohne Transfers (K23 §5.6b). Weichen sie stark ab, bitte die Zeilen ins Testprotokoll, ich stelle dann `REGELN.finanzen.verwaltung` und `sponsor` nach.
@@ -172,6 +173,15 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 ---
 
 ## Changelog
+
+### 23.11.2026: Korrekturen nach Prüfung EM zu K25f und den Korrekturen EL (Zweig `mitarbeit/popolupo-em-korrekturen`, auf den Korrekturen EL)
+
+- Ein lesender Prüf-Agent hat K25f und die Korrekturen EL durchgesehen (Konsistenzprüfung EM). Die Werte der Fankultur in K25 §5.6 hat er von Hand nachgerechnet, sie stimmen.
+- **Behoben:**
+  - EM1 (hoch): `tests/marketing.js` hatte einen Syntaxfehler (`w` doppelt), die ganze Datei wäre nicht gelaufen.
+  - EM2: Die Untergrenze der Zugkraft bei vollem Stadion steigt jetzt stufenlos von 93 % bis 97 % statt hart bei 97 %. Neue Werte: Freiburg 75, Heidenheim 59, Kiel 56, Osnabrück 46. Die Karte schreibt ab 97 % „ausverkauft“.
+  - EM3: Die Schwelle für die Meldung „Kurve“ steht in `REGELN.marketing.fankultur.kurve`.
+- **Tests zuerst:** `tests/marketing.js` (Fall 1 und K25f).
 
 ### 23.11.2026: Korrekturen nach Prüfung EL zu den Korrekturen EK und EJ (Zweig `mitarbeit/popolupo-el-korrekturen`, auf K25f)
 

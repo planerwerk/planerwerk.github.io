@@ -535,10 +535,11 @@ const REGELN={
   marketing:{trikot:{klassisch:{faktor:[0.95,1.05],fans:1},modern:{faktor:[0.9,1.15],fans:0},mutig:{kult:0.5,faktor:[0.8,1.25],fans:[-3,3]}},
     // Fankultur (K25 §5.6, K25f, 23.11., popolupo, GESCHÄTZT, ersetzt die Tradition nach Gründungsjahr aus K25e): 0–100 = 100 × Summe gewicht × Teil, jeder Teil linear von [0, voll] auf 0–1.
     // auslastung: Fans ÷ Plätze (höchstens 1); mitglieder: Mitglieder je Platz; zugkraft: (Fans ÷ Ligaschnitt) ÷ (Ansehen ÷ Ligaschnitt), Liga ohne zweite Mannschaften,
-    // ab ausverkauft Auslastung mindestens ausverkauftMin. Wirkung beim Trikot stufenlos von wirkung[0] (keine) bis wirkung[1] (voll): klassisch Faktor +klassischPlus,
-    // Fans +klassischFans (gerundet), mutig wird mit mutigKult statt trikot.mutig.kult Kult
-    fankultur:{gewicht:{auslastung:0.3,mitglieder:0.3,zugkraft:0.4},auslastung:[0.6,1],mitglieder:[0,2],zugkraft:[0.5,1.5],ausverkauft:0.97,ausverkauftMin:0.5,
-      wirkung:[50,80],klassischPlus:0.05,klassischFans:1,mutigKult:0.35},
+    // Untergrenze der Zugkraft bei (fast) vollem Stadion: ausverkauftMin × Anteil der Auslastung zwischen ausverkauft[0] und ausverkauft[1] (stufenlos, Prüfung EM2).
+    // Wirkung beim Trikot stufenlos von wirkung[0] (keine) bis wirkung[1] (voll): klassisch Faktor +klassischPlus, Fans +klassischFans (gerundet),
+    // mutig wird mit mutigKult statt trikot.mutig.kult Kult. Meldung „Kurve“ ab kurve (Anteil der Wirkung, EM3)
+    fankultur:{gewicht:{auslastung:0.3,mitglieder:0.3,zugkraft:0.4},auslastung:[0.6,1],mitglieder:[0,2],zugkraft:[0.5,1.5],ausverkauft:[0.93,0.97],ausverkauftMin:0.5,
+      wirkung:[50,80],klassischPlus:0.05,klassischFans:1,mutigKult:0.35,kurve:0.5},
     kampagnen:{trikot:{name:'Trikot-Kampagne',kosten:150000,tage:28,merch:0.15},fanwerbung:{name:'Fanwerbung in der Region',kosten:200000,tage:56,fans:0.02,werbewert:5},
       camps:{name:'Jugend-Camps',kosten:60000,sommer:1,fans:0.01,stimmung:1},fanarbeit:{name:'Fanarbeit',kosten:50000,tage:120,pfiffe:0.7},
       // K25c (22.11., GESCHÄTZT): Dauerkarten-Aktion in der Vorbereitung, vor dem Verkauf (K27b): Anteil der Dauerkarten + dauerkarten

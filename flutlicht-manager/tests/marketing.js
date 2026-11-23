@@ -9,7 +9,7 @@ function welt(lernstufen){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;
   S.lineup=F.bestXI(VEREIN,W.ev('myT()').form);S.phase='play';W.ev('myT()').cash=20e6;return{W,F,S,ev:W.ev,t:W.ev('myT()')};}
 
 // 1. Trikot: klassisch mit Faktor 0,95–1,05 und Fanstimmung +1, danach fest; mutig ergibt 0,8 oder 1,25 mit ±3
-{const {F,S,t,ev}=welt(false),K=ev('RMK').fankultur,w=ev('fankulturWirkung')(t),pl=w*K.klassischPlus,fp=Math.round(w*K.klassischFans);t.fanU=0;F.trikotWaehlen('klassisch'); /* seit K25f mit Fankultur (vorher K25e Tradition) */const k=S.mk.trikot,fu=t.fanU;F.trikotWaehlen('mutig');const fest=S.mk.trikot.d==='klassisch';
+{const {F,S,t,ev}=welt(false),K=ev('RMK').fankultur,wk=ev('fankulturWirkung')(t),pl=wk*K.klassischPlus,fp=Math.round(wk*K.klassischFans); /* wk, nicht w: w ist unten die zweite Welt (Prüfung EM1) */t.fanU=0;F.trikotWaehlen('klassisch'); /* seit K25f mit Fankultur (vorher K25e Tradition) */const k=S.mk.trikot,fu=t.fanU;F.trikotWaehlen('mutig');const fest=S.mk.trikot.d==='klassisch';
   const w=welt(false);w.t.fanU=0;w.F.trikotWaehlen('mutig');const m=w.S.mk.trikot;
   pruef(k&&k.d==='klassisch'&&k.f>=0.95+pl-0.005-1e-9&&k.f<=1.05+pl+0.005+1e-9&&fu===1+fp /* ± 0,005: der Faktor wird auf zwei Stellen gerundet, der Zuschlag ist seit K25f stufenlos */&&fest&&m&&(m.f===0.8&&w.t.fanU===-3||m.f===1.25&&w.t.fanU===3),'Trikot: klassisch 0,95–1,05 und Fans +1, danach fest, mutig 0,8 oder 1,25 mit Fans ±3',`klassisch ${k&&k.f}, mutig ${m&&m.f}/${w.t.fanU}`);}
 

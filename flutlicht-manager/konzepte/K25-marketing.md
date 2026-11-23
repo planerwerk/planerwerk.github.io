@@ -127,7 +127,7 @@ Erlös je Monat = Fans × Kaufkraft × Sortiment × Trikotfaktor × Erfolg × St
 | Zugkraft | (Fans ÷ Ligaschnitt der Fans) ÷ (Ansehen ÷ Ligaschnitt des Ansehens) | 0,5 | 1,5 | 40 % |
 
 - **Zugkraft** setzt „Jahre in der Bundesliga gegen Verkaufszahlen“ um. Die Jahre in der Bundesliga stehen nicht in den Stammdaten, das Ansehen ist der nächste Wert für den sportlichen Stand. Wer mehr Zuschauer hat, als sein Ansehen in dieser Liga erwarten lässt, hat eine starke Kultur, etwa Kaiserslautern in der 2. Liga. Wer weniger hat, hat eine schwache, etwa Wolfsburg.
-- **Ausverkauft** (ab 97 % Auslastung): Die Zugkraft zählt mindestens halb. Ein volles Stadion verdeckt die echte Nachfrage, etwa bei Union und St. Pauli.
+- **Ausverkauft** (ab 97 % Auslastung): Die Zugkraft zählt mindestens halb. Ein volles Stadion verdeckt die echte Nachfrage, etwa bei Union und St. Pauli. Seit Prüfung EM2 steigt diese Untergrenze stufenlos von 93 % (0) bis 97 % (halb). Vorher sprang Freiburg mit 170 Fans mehr von 69 auf 78.
 - **Ligaschnitt:** alle Vereine derselben Liga ohne zweite Mannschaften.
 - **Dauerkarten:** Echte Dauerkartenzahlen stehen nicht in den Stammdaten. Im Spiel zählen Dauerkarten als Zuschauer, und ihr Anteil hängt von den Mitgliedern je Platz ab (Vorkaufsrecht, §5.5). So stecken sie in den Teilen Stadion und Mitglieder.
 - **Im Spiel veränderlich:** Weil die Teile aus den heutigen Werten kommen, ändert sich die Fankultur mit. Ein größeres Stadion, das nicht voll wird, senkt sie. Mehr Fans und Mitglieder heben sie, etwa durch Kampagnen oder Erfolg. Steigt das Ansehen ohne mehr Fans, sinkt die Zugkraft.
@@ -147,7 +147,7 @@ Gewürfelt wird gleich oft wie vorher. Die Meldung spricht von der Kurve statt v
 | Leverkusen | 0,99 | 2,3 | 0,60, ausverkauft | 79 |
 | St. Pauli | 0,98 | 1,8 | 1,04 | 77 |
 | Kaiserslautern | 0,85 | 0,8 | 1,58 | 71 |
-| Freiburg | 0,97 | 2,3 | 0,78 | 69 |
+| Freiburg | 0,965 | 2,3 | 0,78, fast ausverkauft | 75 |
 | RB Leipzig | 0,89 | 0,02 | 0,88 | 38 |
 | Wolfsburg | 0,73 | 0,7 | 0,73 | 30 |
 | Hoffenheim | 0,83 | 0,4 | 0,60 | 27 |
@@ -155,6 +155,7 @@ Gewürfelt wird gleich oft wie vorher. Die Meldung spricht von der Kurve statt v
 - **Ganz oben und ganz unten:** Bei 90 und mehr liegen Dortmund, Schalke, der HSV, Bayern und Köln. Unter 5 liegen Wehen Wiesbaden, Großaspach, Würzburg, Ingolstadt, Havelse und Verl, dazu die zweiten Mannschaften.
 - **Leverkusen** landet weit oben, weil das Stadion voll ist und der Verein viele Mitglieder hat. Nur die Zugkraft, gemessen am Ansehen, ist schwach. Das passt zu „kein Traditionsverein, aber fest etabliert“. Soll Leverkusen tiefer liegen, bekommt die Zugkraft mehr Gewicht.
 - **Große Stadien in der 2. Liga** liegen knapp über 50, weil das Stadion nicht voll wird: Hertha 53, Hannover 51, Nürnberg 56.
+- **Kleine, fast volle Stadien** heben die stufenlose Untergrenze (EM2) etwas: Heidenheim 59, Kiel 56, Osnabrück 46. Ohne sie waren es 42, 43 und 42.
 - **Regionalliga:** Die Werte dort sind grob, weil Plätze und Fans geschätzt sind.
 - **Gründungsjahr:** `gegr` bleibt für Jubiläen (K27d). `tradition:false` aus Prüfung EJ4 fällt weg.
 

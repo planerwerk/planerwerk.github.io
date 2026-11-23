@@ -2225,3 +2225,24 @@ Korrekturen auf `mitarbeit/popolupo-el-korrekturen` (auf K25f).
 | EL2 | K06 §8 nannte die Bedingungen aus EK6 (nur ohne Stil-Automatik) und EK7 (ab 20 Minuten, Verfall nach 28 Tagen) nicht. Ergänzt. | ✅ behoben |
 | EL3 | Kommentare nannten noch `S.letzt` statt `S.letzte` und beim Wettskandal noch die Transferliste. Der Rückfall auf `S.letzt` aus alten Spielständen griff wegen des Filters auf den Verein nie und ist gestrichen. In der laufenden Woche fehlen dann die Spielkarten, harmlos. | ✅ behoben |
 | EL4 | Testlücken: EK6 (Stil-Automatik) und die 28-Tage-Grenze aus EK7 waren ungetestet, `tests/README.md` nannte den Fall EK nicht. Neuer Fall EL in `tests/karten.js`, README ergänzt. | ✅ behoben |
+
+## EM. Prüfung von K25f und der Korrekturen EL ohne Laufzeit (23. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 524411c und bda526c gelesen (nichts ausgeführt). Ein hoher Fund, ein Syntaxfehler im Test, dazu zwei niedrige.
+
+**Ohne Befund:**
+
+- **Formel gegen K25 §5.6:** Bereiche, Gewichte, Ligaschnitt ohne zweite Mannschaften und Rundung stimmen.
+- **Tabelle in §5.6:** Alle Werte und Aussagen sind von Hand nachgerechnet.
+- **Würfel und Gleichschritt:** Die Zahl der Würfe bleibt gleich, der Gleichschritt ist unberührt.
+- **Randfälle:** Plätze 0, Ligaschnitt 0 und alte Spielstände sind abgesichert.
+- **Reste:** Keine Reste von `traditionsverein` oder `tradition:false` im Code.
+- **Korrekturen EL:** Die Tests unterscheiden jetzt wirklich vom alten Code, die Kommentare stimmen.
+
+Korrekturen auf `mitarbeit/popolupo-em-korrekturen` (auf den Korrekturen EL).
+
+| # | Befund | Status |
+|---|---|---|
+| EM1 | **Hoch: Syntaxfehler in `tests/marketing.js`.** Fall 1 deklarierte `w` zweimal im selben Block (Wirkung und zweite Welt), Node hätte die ganze Datei abgelehnt. Die Wirkung heißt jetzt `wk`. | ✅ behoben |
+| EM2 | An der Grenze „ausverkauft“ (97 %) sprang die Fankultur hart: Freiburg (96,5 %) mit 170 Fans mehr von 69 auf 78. Die Karte zeigte gerundet „97 %“, obwohl die Grenze nicht erreicht war. Jetzt steigt die Untergrenze der Zugkraft stufenlos von 93 % bis 97 % (`ausverkauft:[0.93,0.97]`). Die Karte rundet ab und schreibt ab 97 % „ausverkauft“. Neue Werte: Freiburg 75, Heidenheim 59, Kiel 56, Osnabrück 46 (vorher 69, 42, 43, 42), die übrigen unverändert. | ✅ behoben, vorläufig |
+| EM3 | Die Schwelle 0,5 für die Meldung „Kurve“ stand als Zahl im Code. Jetzt `RMK.fankultur.kurve`. | ✅ behoben |
