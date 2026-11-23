@@ -35,8 +35,10 @@ function fansHeimspiel(m){if(!m||m.h!==S.my||fanst(myT())>=RFS.protestUnter)retu
 // Fan-Gespräch (K27 §5.4): einmal im Monat, Wirkung nach Glaubwürdigkeit
 const fanGespraechFrei=()=>S.fanG==null||absTag(S.tag)-S.fanG>=RFS.gespraechTage;
 function fanGespraech(){if(!darf('fangespraech'))return;if(!fanGespraechFrei()){toast(`Das nächste Fan-Gespräch geht erst wieder am ${datumKurz(S.fanG+RFS.gespraechTage-absTag(0))}.`);return;}
-  const t=myT(),U=RFS.umfeld,g=glaub(t),d=g<U.leerUnter?U.leer:U.gespraech[0]+(U.gespraech[1]-U.gespraech[0])*g/100;S.fanG=absTag(S.tag);fanAnlass(t,'fanU',d);
-  news(d<0?`Fan-Gespräch: Die Fans glauben dir nicht mehr und sprechen von leeren Versprechen.`:`Fan-Gespräch: Die Fans fühlen sich ernst genommen.`,d<0?'bad':'good');save();render();}
+  const d=fanGespraechWirkung(myT());news(fanGespraechText(d),d<0?'bad':'good');save();render();}
+// Wirkung des Gesprächs, auch für die Karte „Fans wollen reden“ (K27h): zählt als Gespräch des Monats, Umfeld nach Glaubwürdigkeit
+function fanGespraechWirkung(t){const U=RFS.umfeld,g=glaub(t),d=g<U.leerUnter?U.leer:U.gespraech[0]+(U.gespraech[1]-U.gespraech[0])*g/100;S.fanG=absTag(S.tag);fanAnlass(t,'fanU',d);return d;}
+const fanGespraechText=d=>d<0?'Fan-Gespräch: Die Fans glauben dir nicht mehr und sprechen von leeren Versprechen.':'Fan-Gespräch: Die Fans fühlen sich ernst genommen.';
 // Karte im Stadion
 function fansKarte(){const t=myT(),b=fanBausteine(t),v=fanst(t),z=fanZiel(t),f=x=>`${x>0?'+':''}${de(x,1)}`;
   return`<div class="card rgs"><h2>Fans</h2>${rgAnzeige({label:'Fanstimmung',sub:'0–100, wirkt auf Zuschauer und Vorstand',min:0,max:100,wert:Math.round(v),marker:[{v:Math.round(z),t:'Ziel '+Math.round(z)}],zonen:[{von:0,bis:RFS.protestUnter,art:'bad',text:'Protest: Pfiffe in Heimspielen'},{von:RFS.vorstand.zone[1],bis:100,art:'good',text:'Rückenwind'}]})}

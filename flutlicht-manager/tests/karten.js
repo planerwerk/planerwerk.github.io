@@ -548,6 +548,15 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   pruef(pl3===3&&dritter===null&&!!hinterZweiter&&pl2===2&&selbstZweite===null,'Platzsturm 3. Liga: Dritter hinter einer zweiten Mannschaft steigt auf, sonst nicht; eine zweite Mannschaft steigt nie auf',
     `Platz ${pl3}: ohne zweite ${dritter}, hinter einer zweiten ${!!hinterZweiter}; Platz ${pl2} als zweite Mannschaft ${selbstZweite}`);}
 
+// K27h. Fans wollen reden (K27 §8): nur bei Fanstimmung unter redenUnter und freiem Fan-Gespräch. Einladen wirkt wie das Fan-Gespräch im Stadion und zählt als Gespräch
+//       des Monats; mit gesperrtem Bereich fangespraech passiert nichts.
+{const {S,ev}=welt(),A=ev('AUSLOESER'),F=ev('RKT').fans,t=ev('myT()'),wirk=ev('kartenWirkung'),heute=ev('absTag')(S.tag),c={titel:'Test'};
+  t.fanst=F.redenUnter+10;S.fanG=null;const gut=A.fansReden();t.fanst=F.redenUnter-5;const schlecht=A.fansReden();S.fanG=heute-1;const kurz=A.fansReden();S.fanG=null;t.fanU=0;
+  const L0=S.lizenz;S.lizenz={an:true,stufe:0};wirk({art:'fanGespraech',wert:1},{},c);const gesperrt=S.fanG==null&&t.fanU===0;S.lizenz=L0;
+  wirk({art:'fanGespraech',wert:1},{},c);const geredet=S.fanG===heute&&t.fanU!==0&&!ev('fanGespraechFrei')()&&A.fansReden()===null;
+  pruef(gut===null&&!!schlecht&&kurz===null&&gesperrt&&geredet,'Fans wollen reden: nur bei schlechter Fanstimmung und freiem Gespräch, Einladen ist das Fan-Gespräch des Monats, nicht mit gesperrtem Bereich',
+    `gute Stimmung ${gut}, schlechte ${!!schlecht}, kurz nach einem Gespräch ${kurz}, gesperrt ${gesperrt}, geredet ${geredet} (Umfeld ${t.fanU})`);}
+
 // K16f. Streit im Stab (K16 §8): nur zwischen zwei hitzigen Mitarbeitern deines Stabs; „Laufen lassen“ macht beide 28 Tage schwächer (Qualität × 0,9 in stabQ), danach wieder normal.
 {const {S,F,ev}=welt(),A=ev('AUSLOESER'),hz=ev('stabHitzig'),sf=ev('stabStreitFaktor'),M=ev('RST').streit,sg=ev('stabGeaendert');S.phase='play';if(!S.stab)F.stabAufbau();
   const neu=()=>{for(let i=0;i<60;i++){const x=F.stabNeu('jugend',10,S.my,1);if(hz(x)){S.stab.push(x);sg();return x;}}return null;},x1=neu(),x2=neu();

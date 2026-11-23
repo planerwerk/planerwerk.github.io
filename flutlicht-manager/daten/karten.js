@@ -150,6 +150,11 @@ const KARTEN=[
     texte:['Seit {spieler} wechseln will, pfeifen ihn die eigenen Fans bei jeder Ballberührung aus.','„Söldner!“ steht auf einem Plakat in der Kurve. Gemeint ist {spieler}, der den Verein verlassen will.'],
     optionen:[{text:'Ihn öffentlich in Schutz nehmen',wirkung:[{art:'stimmung',wert:3},{art:'fans',wert:-1}],folge:'{spieler} dankt es dir. Ein Teil der Kurve ist sauer.'},
       {text:'Schweigen',wirkung:[{art:'stimmung',wert:-3}],folge:'{spieler} fühlt sich allein gelassen.'}],auto:0},
+  // K27h (K27 §8, 23.11., popolupo): Fans wollen reden bei Fanstimmung unter RKT.fans.redenUnter. Neue Wirkung fanGespraech: das Fan-Gespräch aus dem Stadion (Lernstufe wie dort). Werte vorläufig.
+  {id:'fansReden',titel:'Fans wollen reden',bereich:'K27',art:'entscheidung',gross:false,stufe:'haeufig',chance:0.4,ausloeser:'fansReden',sperrTage:45,
+    texte:['Die Fanclubs bitten um ein Treffen. Die Stimmung in der Kurve ist auf dem Tiefpunkt, sie wollen wissen, wie es weitergeht.','Vor dem Trainingsgelände warten Vertreter der Kurve. Sie wollen mit dir reden, nicht mit der Pressestelle.'],
+    optionen:[{text:'Zum Gespräch einladen',wirkung:[{art:'fanGespraech',wert:1}],folge:''},
+      {text:'Absagen',wirkung:[{art:'fans',wert:-2}],folge:'Die Fans fühlen sich übergangen. Beim nächsten Heimspiel hängt ein Banner gegen die Vereinsführung.'}],auto:0},
   // Stab (K16 §8, K16c, 22.11.). Neue Wirkungen stabWeg (Wechsel mit Ablöse) und stabHalten (Gehalt + wert), neuer Platzhalter {mitarbeiter}.
   {id:'stabAbgeworben',titel:'Mitarbeiter abgeworben',bereich:'K16',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'stabAbgeworben',sperrTage:365,
     texte:['{verein} will {mitarbeiter} aus deinem Stab holen und bietet ihm deutlich mehr Verantwortung.','{mitarbeiter} hat ein Angebot von {verein} auf dem Tisch. Er fragt, ob du ihn ziehen lässt.'],
