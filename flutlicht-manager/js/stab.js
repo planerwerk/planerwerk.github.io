@@ -44,6 +44,8 @@ function stabSaison(){(S.stab||[]).forEach(x=>{x.age++;if(x.team<0)return;x.ct--
     if(stabMacht(x.team,'stab')&&R()<RST.verlaengern){x.ct=riA(RST.vertrag);if(x.team===S.my)stabMeldung(`Der Verein hat den Vertrag von ${RST.rollen[x.r].name} ${x.n} verlängert.`);return;}if(x.team===S.my)news(`${RST.rollen[x.r].name} ${x.n} verlässt den Verein (Vertrag ausgelaufen).`,'bad');x.team=-1;});
   /* Ex-Spieler ohne Job gehen nach exSpieler.freiSaisons und zählen beim Auffüllen nicht mit (K32c, Prüfung DP5) */
   S.stab=S.stab.filter(x=>x.team>=0||(x.age<RST.rente&&!(x.ex&&x.exS!=null&&S.season-x.exS>=RST.exSpieler.freiSaisons)));while(S.stab.filter(x=>x.team<0&&!x.ex).length<RST.vereinslos){const r=pick(STAB_ROLLEN());S.stab.push(stabNeu(r,riA(RST.start.vereinslosQ),-1,2));}stabGeaendert();auftraegeAufraeumen();}
+// Einstellen bei deinem Verein (aktionen.js stabEinstellen, Karte „Ehemaliger Kapitän“ K16e): Gehalt nach deiner Liga, Vertrag RST.einstellenJahre, mit Meldung (Prüfung EP1)
+function stabAnstellen(x){x.team=S.my;x.sal=stabGehalt(x.r,x.q,myT().lg);x.ct=RST.einstellenJahre;x.wiv=0;stabGeaendert();news(`${RST.rollen[x.r].name} ${x.n} kommt (${fmt(x.sal)} pro Jahr).`,'good');}
 // Ex-Spieler im Stab (K32 §3.3b, K16 §10, K32c), Saisonwechsel nach dem Trainerpool (saison.js newSeasonLauf): Wer mit mindestens ab Ligaspielen aufhört und nicht gerade
 // Trainer im Pool geworden ist, kommt mit chance als vereinsloser Mitarbeiter dazu. Eigener Strom je Spieler. Rückgabe: Zahl der neuen Mitarbeiter.
 function stabExSpieler(abgaenge){if(!S.stab)return 0;const E=RST.exSpieler;let n=0;

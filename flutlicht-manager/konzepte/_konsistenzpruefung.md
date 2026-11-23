@@ -2296,3 +2296,27 @@ Korrekturen auf `mitarbeit/popolupo-eo-korrekturen` (auf K19e).
 | EO5 | Test K06e prüfte nur den Faktor, nicht die Wirkung im Spiel. Jetzt prüft er `stdF` in `spielAnlegen`: dein Verein 0,95, der Gegner 1. | ✅ behoben |
 | EO6 | In `letztesSpielMerken` stand der K06e-Block zwischen dem Kommentar zu K06d und dessen Code. Umgestellt. | ✅ behoben |
 | EO7 | Die Feldliste von `S.constr` in `stadion.js` nannte `zuschuss` und `klage` nicht. Die README nannte die Freiburg-Prüfung aus EN2 nicht. Beides ergänzt. | ✅ behoben |
+
+## EP. Prüfung von K16e, K19e und der Korrekturen EO ohne Laufzeit (23. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat b957f3b, 2ddcb86 und ba0974c gelesen, nichts ausgeführt. Kein hoher Fund, zwei mittlere, vier niedrige.
+
+**Ohne Befund:**
+
+- **Saisonzählung K16e:** `stabExSpieler` läuft vor `S.season++`. Damit passt „seit höchstens einer Saison“.
+- **`statSumme().ver`:** ohne Zufall.
+- **K19e:** Alle Aufrufer von `wechselInteresse` gehören nur zu deinem Verein. Computer- und Automatik-Käufe nutzen es nicht.
+- **Gleichschritt:** In 5a ist niemand 60 Spiele beim Verein.
+- **`spielAnlegen`:** gibt `G.Ss` zurück, `stdF` wird beim Anlegen gesetzt.
+- **EO-Korrekturen:** stimmen.
+
+Korrekturen auf `mitarbeit/popolupo-ep-korrekturen` (auf K18f).
+
+| # | Befund | Status |
+|---|---|---|
+| EP1 | **Mittel: „Ihn in den Stab holen“ prüfte die Lernstufe nicht.** Der Bereich `stab` ist erst ab Stufe 3 frei, Karten kommen ab Stufe 1. Jetzt stellt die Wirkung nur ein, wenn der Bereich frei und nicht in der Automatik ist. Eingestellt wird über `stabAnstellen`, das auch das Einstellen von Hand nutzt. Der Vertrag steht als `einstellenJahre` in den Regeln. Ist der Ex-Spieler inzwischen woanders angestellt, sagt die Meldung das jetzt richtig. Test K16e. | ✅ behoben |
+| EP2 | **Mittel: Rückkehr aus der eigenen Leihe galt als Heimkehr.** `leiheEnde` ruft `neuzugang` auch für deinen verliehenen Spieler auf. Ein Stammspieler mit 60 Spielen brachte nach der Leihe „… kehrt zurück!“ und Fans +2. Jetzt übergibt `leiheEnde` `ausLeihe`, dann keine Heimkehr. Neuer Fall in `tests/leihe.js`. | ✅ behoben |
+| EP3 | Im Test K16e war die Rolle nach dem Einstellen voll. Die Sperre über `gefragt` wurde deshalb nie wirklich geprüft. Jetzt wird der Platz vorher wieder frei. | ✅ behoben |
+| EP4 | Im Test K26f stand `erlassen` nicht in der Meldung. Ergänzt. | ✅ behoben |
+| EP5 | K19 und `vertraege.js` sprachen von einer „Karriere vor dem Spielstand“, die gibt es nicht. Gezählt wird ab Spielbeginn. Dazu nennt K19 jetzt `spielerLehntAb`, und der Kommentar zu `gespraech` in den Regeln nennt `p.streitT`. | ✅ behoben |
+| EP6 | `heimkehrAb` und `exSpieler.vereinAb` waren Kopien der 60 Spiele des Publikumslieblings. Jetzt gilt `fanstimmung.ident.lieblingSpiele` direkt. Die 1 Saison der Karte steht als `kapitaenSaisons` in den Regeln. | ✅ behoben |

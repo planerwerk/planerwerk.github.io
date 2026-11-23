@@ -18,8 +18,9 @@ const vtVorschlag=F=>Math.ceil(F*(1+RVT.zone)/1000)*1000;
 // ---------- Interesse beim Wechsel (K19 §5.3) ----------
 // Verein (Ansehen, Liga), Perspektive (Stärke gegen deine Kaderstärke), Alter, Zufall, Ausland (wie bisher), dazu neu: Lage beim alten Verein (Stimmung, Wechselwunsch),
 // Bindung (Restlaufzeit, vereinstreu) und Heimat (Landsleute in deinem Kader). Geld gleicht ein wenig fehlendes Interesse aus (gehaltMitInteresse).
-// Rückkehr des verlorenen Sohns (K19 §8, K19e): mindestens RVT.interesse.heimkehrAb Pflichtspiele für deinen Verein (Statistik K34, mit der Karriere vor dem Spielstand)
-const heimkehrer=p=>vereinsSpiele(p,S.my)>=RVT.interesse.heimkehrAb;
+// Rückkehr des verlorenen Sohns (K19 §8, K19e): mindestens so viele Pflichtspiele für deinen Verein wie ein Publikumsliebling (RFS.ident.lieblingSpiele, Prüfung EP6),
+// gezählt ab Spielbeginn (Statistik K34, Prüfung EP5: eine Karriere vor dem Spielstand gibt es nicht)
+const heimkehrer=p=>vereinsSpiele(p,S.my)>=RFS.ident.lieblingSpiele;
 // Beim Wechsel zu dir (taktik.js neuzugang): die Fans freuen sich, Fanstimmung (Umfeld) + heimkehrFans, mit Meldung. Ohne Zufall.
 function heimkehrFans(p){if(!heimkehrer(p))return;fanAnlass(myT(),'fanU',RVT.interesse.heimkehrFans);news(`${p.n} kehrt zurück! Die Fans feiern die Heimkehr eines alten Bekannten.`,'good');}
 function wechselInteresse(p){const t=myT(),I=RM.interesse,IV=RVT.interesse,IA=RW.ausland.interesse,aus=istAusland(p),from=aus?avVon(p.team):p.team>=0?S.teams[p.team]:null,lvl=teamLevel(S.my);

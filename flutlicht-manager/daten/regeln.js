@@ -298,9 +298,9 @@ const REGELN={
     ausstieg:{billigAb:1.5,mittelAb:3,bonus:0.1,chance:0.25},
     ligaklausel:{malus:0.05,ref:0.3,stufen:[0,0.2,0.3,0.5]},
     interesse:{lage:0.3,lageMitte:55,wechselwunsch:15,bindung:-3,treu:-10,landsleute:3,landsleuteMax:6,geldAb:-10,geldJePunkt:0.03,
-      // heimkehrVerein (K19 §8, K19e, 23.11., popolupo, GESCHÄTZT): Rückkehr des verlorenen Sohns, mehr Interesse ab heimkehrAb Pflichtspielen für deinen Verein (wie ein Publikumsliebling),
-      // beim Wechsel zu dir Fanstimmung (Umfeld) + heimkehrFans
-      heimkehrVerein:10,heimkehrAb:60,heimkehrFans:2,
+      // heimkehrVerein (K19 §8, K19e, 23.11., popolupo, GESCHÄTZT): Rückkehr des verlorenen Sohns, mehr Interesse ab den Pflichtspielen eines Publikumslieblings für deinen Verein
+      // (fanstimmung.ident.lieblingSpiele, seit Prüfung EP6 keine eigene Zahl mehr), beim Wechsel zu dir Fanstimmung (Umfeld) + heimkehrFans
+      heimkehrVerein:10,heimkehrFans:2,
       ruf:0.2}, // U12h (K28 §5.4, 22.11., GESCHÄTZT): je Punkt deines Rufs als Trainer über dem Start mehr Interesse, darunter weniger
     vorvertrag:{von:'01-01',bis:'06-30',chance:0.06,ansehenMinus:5},
     bank:{vertragsjahr:1.5,soeldner:2,neuzugang:1.5,neuTage:365,teuerAnteil:0.25}},
@@ -407,7 +407,7 @@ const REGELN={
     // mindestens abSpiele Ligaspiele, mindestens ab Tore nach arten (ohne Elfmeter) und Anteil an allen Ligatoren mindestens anteil. Danach stellen sich die Gegner tage Tage
     // darauf ein: Tore nach Ecken und Freistoßflanken × faktor (wie der Bonus der Standard-Einheit, K07 §5.3). Einmal je Halbserie.
     standard:{arten:['ecke','freistoss','freistossFlanke'],abSpiele:8,ab:7,anteil:0.4,tage:28,faktor:0.95},
-    gespraech:{streitTage:7}, // Streit nach Kritik (K15 §8, K15e, 23.11., popolupo, GESCHÄTZT): Streit im Einzelgespräch nach Kritik (p.streit, p.gs) höchstens streitTage her
+    gespraech:{streitTage:7}, // Streit nach Kritik (K15 §8, K15e, 23.11., popolupo, GESCHÄTZT): Streit im Einzelgespräch nach Kritik (p.streit, Thema p.streitT seit Prüfung EO3) höchstens streitTage her
     skandal:{sperreLiga:20,sperrePokal:3}, // Skandale (K30 §8.4, K30f, 23.11., GESCHÄTZT): Wettbetrug eines Spielers eines Computer-Vereins, Sperre in Liga- und Pokalspielen
     testspiel:{nachTage:7}, // Testspiel-Karten (K11 §8, K30e, 22.11., GESCHÄTZT): bis nachTage nach dem Testspiel beim Amateurverein oder der Niederlage gegen ihn
     medizin:{grippeAb:3,rehaAb:60,restAb:30}, // Medizin-Karten (K10 §8, K10e, 22.11., GESCHÄTZT): Grippewelle ab grippeAb Kranken im Kader; lange Reha bei einer Verletzung ab rehaAb Tagen mit noch mindestens restAb Tagen
@@ -748,10 +748,12 @@ const REGELN={
     ohne:3,gehalt:{basis:{1:300000,2:120000,3:50000},steigung:0.15,runden:5000},
     start:{qualitaetJeAnsehen:0.2,streuung:[-3,3],zweiterCoAb:70,vereinslosQ:[3,16],rolleAbAnsehen:{arzt:30,physio:30,torwart:35,athletik:40,jugend:45,video:55,standard:60,psycho:65}},
     vereinslos:40,vertrag:[1,3],alter:[32,58],rente:68,verlaengern:0.7,abfindung:0.5,unschaerfe:3,genauNachWochen:6,
+    einstellenJahre:2, // Vertrag beim Einstellen (von Hand und über die Karte „Ehemaliger Kapitän“, K16e, Prüfung EP1)
     // Ex-Spieler im Stab (K32 §3.3b, K16 §10, K32c, 22.11., GESCHÄTZT): ab Ligaspielen mit chance vereinsloser Mitarbeiter, Torhüter als Torwarttrainer, sonst nach Gewicht rollen;
     // Qualität basis + Ligaspiele/jeSpiele (+ehrung bei einer Ehrung) + streuung. Ziel K16 §10: 5 bis 15 je Saison in der ganzen Welt.
-    // vereinAb (K16 §8, K16e, 23.11., popolupo, GESCHÄTZT): ab so vielen Pflichtspielen für deinen Verein kommt die Karte „Ehemaliger Kapitän kehrt zurück“ (wie ein Publikumsliebling)
-    exSpieler:{ab:100,chance:0.25,basis:4,jeSpiele:60,ehrung:2,streuung:[-2,2],rollen:{co:5,jugend:3,standard:2},freiSaisons:5,vereinAb:60},
+    // kapitaenSaisons (K16 §8, K16e, 23.11., popolupo, GESCHÄTZT): Die Karte „Ehemaliger Kapitän kehrt zurück“ kommt bis so viele Saisons nach dem Karriereende,
+    // ab den Pflichtspielen eines Publikumslieblings für deinen Verein (fanstimmung.ident.lieblingSpiele, seit Prüfung EP6 keine eigene Zahl mehr)
+    exSpieler:{ab:100,chance:0.25,basis:4,jeSpiele:60,ehrung:2,streuung:[-2,2],rollen:{co:5,jugend:3,standard:2},freiSaisons:5,kapitaenSaisons:1},
     mitnehmen:{max:2,wochen:30}}, // mitnehmen (K16 §5, K16b, GESCHÄTZT): beim Jobwechsel bis zu max Mitarbeiter, die mindestens wochen bei dir waren. freiSaisons: so lange bleibt ein Ex-Spieler ohne Job in der Liste (DP5)
   // Disziplin und Sportgericht (K09 §11, Welle 2). Anteile und Kartenquoten der Foularten sind auf die echten Häufigkeiten kalibriert (K09 §10),
   // nicht die Rohwerte aus §3.1: sonst gäbe es doppelt so viele Rote Karten. art: Vergehen vor dem Sportgericht.

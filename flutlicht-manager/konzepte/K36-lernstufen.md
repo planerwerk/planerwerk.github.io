@@ -404,7 +404,7 @@ lizenz:{
 161. **K06e Standard-Spezialisten (23.11., popolupo, ohne Testlauf):** keine neue Funktion, eine Meldung mit Wirkung im Bereich `ereignisse`.
 162. **K15e Streit nach Kritik (23.11., popolupo, ohne Testlauf):** keine neue Funktion, eine Entscheidungskarte im Bereich `ereignisse`.
 163. **K26f Anwohner klagen (23.11., popolupo, ohne Testlauf):** keine neue Funktion, eine Entscheidungskarte im Bereich `ereignisse`. Bauen kann man ohnehin erst mit der Freigabe des Bereichs `stadion`.
-164. **K16e Ehemaliger Kapitän kehrt zurück (23.11., popolupo, ohne Testlauf):** keine neue Funktion, eine Entscheidungskarte im Bereich `ereignisse`. Die Automatik wählt „alles Gute“ und stellt niemanden ein.
+164. **K16e Ehemaliger Kapitän kehrt zurück (23.11., popolupo, ohne Testlauf):** keine neue Funktion, eine Entscheidungskarte im Bereich `ereignisse`. Die Automatik wählt „alles Gute“ und stellt niemanden ein. Seit Prüfung EP1 stellt die Karte nur ein, wenn der Bereich `stab` frei und nicht in der Automatik ist, wie das Einstellen von Hand.
 165. **K19e Rückkehr des verlorenen Sohns (23.11., popolupo, ohne Testlauf):** keine neue Funktion, kein neuer Bereich. Mehr Interesse beim Kauf (Bereich `transfers`) und Fanstimmung beim Neuzugang.
 166. **K18f Talent aus dem Nichts (23.11., popolupo, ohne Testlauf):** keine neue Funktion, eine Entscheidungskarte im Bereich `ereignisse`. Die Automatik sagt ab.
 

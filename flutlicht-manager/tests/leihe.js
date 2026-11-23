@@ -51,5 +51,12 @@ const welt=(id=9)=>{const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S,ev=W.e
   saisons({n:2,seed:SEED,verein:9,beiSaisonstart:(S,F)=>{const ev=F;},beiSaisonende:S=>{const l=S.pl.filter(p=>p.leihe);geliehen+=l.length;l.forEach(p=>{if(p.leihe.von===p.team)fehler.push('Leihe beim eigenen Verein');});}});
   pruef(!fehler.length,'Zwei Saisons: keine kaputten Leihen',fehler[0]||null);}
 
+// Prüfung EP2 (K19e): Ein eigener verliehener Spieler mit vielen Spielen für dich, der zum Saisonende zurückkommt, ist keine „Rückkehr des verlorenen Sohns“: keine Meldung, keine Fanstimmung.
+{const {S,ev,t}=welt();const KZ=ev('KZ'),a=ev('squad')(S.my).filter(q=>q.pos==='MF').sort((x,y)=>x.str-y.str)[0],z=[];S.tag=10;
+  z[KZ.s]=S.season-1;z[KZ.tid]=S.my;z[KZ.lg]=t.lg;z[KZ.sp]=ev('RFS').ident.lieblingSpiele+10;z[KZ.min]=5000;for(let i=0;i<=KZ.mw;i++)if(z[i]==null)z[i]=0;a.kar=[z];
+  const ta=ev('leihVereine')(a)[0];ev('verleihen')(a,{tid:ta.id,anteil:0});const fu0=t.fanU||0;ev('leiheEnde')();
+  const meldung=S.news.some(x=>String(x.t).includes(a.n+' kehrt zurück'));
+  pruef(a.team===S.my&&ev('heimkehrer')(a)&&!meldung&&(t.fanU||0)===fu0,'Leihe zurück: keine Heimkehr-Freude für einen eigenen Spieler (EP2)',`zurück ${a.team===S.my}, Heimkehrer ${ev('heimkehrer')(a)}, Meldung ${meldung}, Umfeld ${fu0} → ${t.fanU}`);}
+
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

@@ -152,6 +152,8 @@ Bandbreite = Grundbreite × (1,5 − 0,05 × Qualität) × Schwierigkeitsfaktor 
   - Alles Gute wünschen: Fans −1.
   - Danach kommt für ihn keine Karte mehr (`gefragt`).
 - **Automatik:** wünscht alles Gute und stellt niemanden ein.
+- **Lernstufe (Prüfung EP1):** Ist der Bereich `stab` noch gesperrt oder in der Automatik, stellt die Karte niemanden ein („Den Trainerstab führt noch der Verein“). Das prüft die Wirkung, nicht der Auslöser, sonst bräche der Gleichschritt. Eingestellt wird über dieselbe Funktion wie von Hand (`stabAnstellen`, Vertrag `einstellenJahre`).
+- **Grenze (Prüfung EP6):** Die 60 Spiele sind die Grenze des Publikumslieblings (`fanstimmung.ident.lieblingSpiele`), keine eigene Zahl. Die Karte kommt bis `kapitaenSaisons` (1) Saison nach dem Karriereende.
 - **Noch nicht:** „Co-Trainer wird Cheftrainer“ (ähnlich der Abwerbung aus K16c) und „Streit im Stab“. Für den Streit fehlt das Temperament der Mitarbeiter.
 
 ## 9. Wechselwirkungen

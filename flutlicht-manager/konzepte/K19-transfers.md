@@ -150,9 +150,9 @@ Interesse = Perspektive + Geld + Verein + Trainer + Lage + Heimat − Bindung
 | Rückkehr des verlorenen Sohns | ehemaliger Spieler, Heimat | Interesse hoch, Fans freuen sich |
 
 **Gebaut als K19e** (23.11.2026, popolupo, ohne Testlauf, Werte geschätzt): „Rückkehr des verlorenen Sohns“ ohne eigene Karte.
-- **Auslöser:** Ein Spieler hat mindestens 60 Pflichtspiele für deinen Verein gemacht, wie ein Publikumsliebling (`vereinsSpiele`, Statistik K34 samt Karriere vor dem Spielstand).
-- **Interesse:** +10 beim Wechselinteresse (`heimkehrVerein`). Das gilt beim Kauf, beim Abwerben und in der Anzeige. Zum Vergleich: Ein Deutscher im Ausland hat bei der Heimkehr ebenfalls +10.
-- **Fans:** Kommt er zu dir, steigt die Fanstimmung (Umfeld) um 2, mit der Meldung „… kehrt zurück!“. Das gilt beim Kauf und bei der Leihe, für jeden Neuzugang über `neuzugang`.
+- **Auslöser:** Ein Spieler hat mindestens 60 Pflichtspiele für deinen Verein gemacht, wie ein Publikumsliebling (`vereinsSpiele`, dieselbe Grenze `fanstimmung.ident.lieblingSpiele` seit Prüfung EP6). Gezählt wird ab Spielbeginn (Statistik K34). Eine Karriere vor dem Spielstand gibt es nicht (berichtigt in Prüfung EP5). In den ersten Saisons eines neuen Spielstands gibt es also noch keine Heimkehrer.
+- **Interesse:** +10 beim Wechselinteresse (`heimkehrVerein`). Das gilt beim Kauf, beim Abwerben, in der Anzeige und bei der Frage, ob er das höchste Angebot eines anderen Vereins ablehnt (K20d, `spielerLehntAb`). Zum Vergleich: Ein Deutscher im Ausland hat bei der Heimkehr ebenfalls +10.
+- **Fans:** Kommt er zu dir, steigt die Fanstimmung (Umfeld) um 2, mit der Meldung „… kehrt zurück!“. Das gilt beim Kauf und bei der Leihe, für jeden Neuzugang über `neuzugang`. Ausgenommen ist dein eigener verliehener Spieler, der zum Saisonende zurückkommt (Prüfung EP2).
 - **Gleichschritt:** Das Interesse rechnet nur für deinen Verein. Die Fanstimmung zählt im Vergleich aus 5a nicht.
 ## 9. Wechselwirkungen
 

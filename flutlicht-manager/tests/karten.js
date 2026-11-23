@@ -431,18 +431,21 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   kw({art:'bauVerzug',wert:3},{bau:h+99},{titel:'Test'});const fremd=!c.klage&&c.bis===h+91;kw({art:'bauVerzug',wert:3},{bau:h+21},{titel:'Test'});const verschoben=c.klage===3&&c.bis===h+112,nochmal=A.anwohnerKlagen();
   c.auflage=0.05;kw({art:'bauAuflage',wert:0},{bau:h+21},{titel:'Test'});const erlassen=c.auflage===0; /* Prüfung EO4: Lärmschutz bezahlt, keine Auflage beim Baubeginn */
   F.bauTag(S.tag+21);const nochNicht=c.phase==='genehmigung';F.bauTag(S.tag+42);const beginn=c.phase==='bau';S.constr=null;
-  pruef(!!da&&da.bau===h+21&&logen===null&&knapp===null&&fremd&&verschoben&&nochmal===null&&erlassen&&nochNicht&&beginn,'Anwohner klagen: nur Tribüne oder Dach in der Genehmigung, verlorene Klage verschiebt um 3 Wochen, nur dieses Projekt',
-    `Auslöser ${!!da}, Logen ${logen}, knapp ${knapp}, anderes Projekt unberührt ${fremd}, verschoben ${verschoben}, zweite Klage ${nochmal}, am alten Termin noch Genehmigung ${nochNicht}, 3 Wochen später Baubeginn ${beginn}`);}
+  pruef(!!da&&da.bau===h+21&&logen===null&&knapp===null&&fremd&&verschoben&&nochmal===null&&erlassen&&nochNicht&&beginn,'Anwohner klagen: nur Tribüne oder Dach in der Genehmigung, verlorene Klage verschiebt um 3 Wochen, nur dieses Projekt, bezahlter Lärmschutz erlässt die Auflage',
+    `Auslöser ${!!da}, Logen ${logen}, knapp ${knapp}, anderes Projekt unberührt ${fremd}, verschoben ${verschoben}, zweite Klage ${nochmal}, Auflage erlassen ${erlassen}, am alten Termin noch Genehmigung ${nochNicht}, 3 Wochen später Baubeginn ${beginn}`);}
 
-// K16e. Ehemaliger Kapitän kehrt zurück (K16 §8): nur ein vereinsloser Ex-Spieler mit mindestens vereinAb Spielen für deinen Verein, frischer Platz in seiner Rolle;
-//       „In den Stab holen“ stellt ihn ein (dann Fans +2), „Alles Gute“ fragt nur; danach keine Karte mehr für ihn.
-{const {S,F,ev}=welt(),A=ev('AUSLOESER'),E=ev('RST').exSpieler,RO=ev('RST').rollen,sv=ev('stabVon');S.phase='play';if(!S.stab)F.stabAufbau();
-  const r=['jugend','standard','co','athletik'].find(k=>RO[k]&&sv(S.my,k).length<RO[k].plaetze),neu=()=>{const x=F.stabNeu(r,10,-1,1);Object.assign(x,{ex:120,exS:S.season,exV:S.my,exVsp:E.vereinAb+20});S.stab.push(x);ev('stabGeaendert')();return x;};
-  S.stab.forEach(x=>{if(x.team<0)x.gefragt=1;});const x=neu(),da=A.exKapitaen();x.exVsp=E.vereinAb-1;const wenig=A.exKapitaen();x.exVsp=E.vereinAb+20;x.exV=S.teams.find(t=>t.id!==S.my).id;const fremd=A.exKapitaen();x.exV=S.my;
-  const t=ev('myT()'),fu0=t.fanU||0,kw=ev('kartenWirkung');kw({art:'stabHolen',wert:1,dann:[{art:'fans',wert:2}]},{stab:x.id},{titel:'Test'});const geholt=x.team===S.my&&x.gefragt===1&&(t.fanU||0)>fu0,danach=A.exKapitaen();
-  const y=neu();kw({art:'stabHolen',wert:0},{stab:y.id},{titel:'Test'});const nurGefragt=y.team<0&&y.gefragt===1&&A.exKapitaen()===null;
-  pruef(!!r&&!!da&&da.stab===x.id&&wenig===null&&fremd===null&&geholt&&danach===null&&nurGefragt,'Ehemaliger Kapitän: nur verdiente Ex-Spieler deines Vereins, Einstellen mit Fans +2, danach keine Karte mehr',
-    `Rolle ${r}, Auslöser ${!!da}, zu wenig Spiele ${wenig}, anderer Verein ${fremd}, geholt ${geholt}, danach ${danach}, nur gefragt ${nurGefragt}`);}
+// K16e. Ehemaliger Kapitän kehrt zurück (K16 §8): nur ein vereinsloser Ex-Spieler mit mindestens so vielen Spielen für deinen Verein wie ein Publikumsliebling, freier Platz in seiner Rolle;
+//       „In den Stab holen“ stellt ihn ein (dann Fans +2), „Alles Gute“ fragt nur; danach keine Karte mehr für ihn. Seit Prüfung EP3 wird der Platz vor dem zweiten Ex-Spieler wieder frei,
+//       damit die Sperre über gefragt wirklich geprüft wird; seit EP1 stellt die Karte bei gesperrtem Stab (Lernstufe) niemanden ein.
+{const {S,F,ev}=welt(),A=ev('AUSLOESER'),LS=ev('RFS').ident.lieblingSpiele,RO=ev('RST').rollen,sv=ev('stabVon'),sg=ev('stabGeaendert');S.phase='play';if(!S.stab)F.stabAufbau();
+  const r=['jugend','standard','co','athletik'].find(k=>RO[k]&&sv(S.my,k).length<RO[k].plaetze),neu=()=>{const x=F.stabNeu(r,10,-1,1);Object.assign(x,{ex:120,exS:S.season,exV:S.my,exVsp:LS+20});S.stab.push(x);sg();return x;};
+  S.stab.forEach(x=>{if(x.team<0)x.gefragt=1;});const x=neu(),da=A.exKapitaen();x.exVsp=LS-1;const wenig=A.exKapitaen();x.exVsp=LS+20;x.exV=S.teams.find(t=>t.id!==S.my).id;const fremd=A.exKapitaen();x.exV=S.my;
+  const t=ev('myT()'),fu0=t.fanU||0,kw=ev('kartenWirkung');kw({art:'stabHolen',wert:1,dann:[{art:'fans',wert:2}]},{stab:x.id},{titel:'Test'});const geholt=x.team===S.my&&x.gefragt===1&&(t.fanU||0)>fu0;
+  x.team=-1;sg();const danach=A.exKapitaen(); /* Platz wieder frei: x ist gefragt, also keine Karte */
+  const y=neu(),yDa=A.exKapitaen();kw({art:'stabHolen',wert:0},{stab:y.id},{titel:'Test'});const nurGefragt=!!yDa&&yDa.stab===y.id&&y.team<0&&y.gefragt===1&&A.exKapitaen()===null;
+  const z=neu();F.lizenzStart(true);kw({art:'stabHolen',wert:1},{stab:z.id},{titel:'Test'});const gesperrt=z.team<0;delete S.lizenz;
+  pruef(!!r&&!!da&&da.stab===x.id&&wenig===null&&fremd===null&&geholt&&danach===null&&nurGefragt&&gesperrt,'Ehemaliger Kapitän: nur verdiente Ex-Spieler deines Vereins, Einstellen mit Fans +2, danach keine Karte mehr, nicht bei gesperrtem Stab',
+    `Rolle ${r}, Auslöser ${!!da}, zu wenig Spiele ${wenig}, anderer Verein ${fremd}, geholt ${geholt}, danach ${danach}, nur gefragt ${nurGefragt}, Stab gesperrt ${gesperrt}`);}
 
 // K18f. Talent aus dem Nichts (K18 §8): nur mit einem eigenen Scout mit Spezialgebiet Jugend ab Qualität scoutAb; ein Inlands- oder schwacher Jugendscout reicht nicht.
 {const {S,F,ev}=welt(),A=ev('AUSLOESER'),J=ev('RKT').jugend,gb=ev('scoutGebiet'),sg=ev('stabGeaendert'),meine=()=>ev('meineScouts')();S.phase='play';
