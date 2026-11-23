@@ -444,6 +444,12 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   pruef(!!r&&!!da&&da.stab===x.id&&wenig===null&&fremd===null&&geholt&&danach===null&&nurGefragt,'Ehemaliger Kapitän: nur verdiente Ex-Spieler deines Vereins, Einstellen mit Fans +2, danach keine Karte mehr',
     `Rolle ${r}, Auslöser ${!!da}, zu wenig Spiele ${wenig}, anderer Verein ${fremd}, geholt ${geholt}, danach ${danach}, nur gefragt ${nurGefragt}`);}
 
+// K18f. Talent aus dem Nichts (K18 §8): nur mit einem eigenen Scout mit Spezialgebiet Jugend ab Qualität scoutAb; ein Inlands- oder schwacher Jugendscout reicht nicht.
+{const {S,F,ev}=welt(),A=ev('AUSLOESER'),J=ev('RKT').jugend,gb=ev('scoutGebiet'),sg=ev('stabGeaendert'),meine=()=>ev('meineScouts')();S.phase='play';
+  meine().forEach(x=>{x.q=1;});sg();const schwach=A.talentEntdeckt();let x=null;for(let i=0;i<40&&!x;i++){const y=F.stabNeu('scout',J.scoutAb+2,S.my,1);if(gb(y)==='jugend')x=y;else if(i===0){y.q=J.scoutAb+2;S.stab.push(y);}}
+  S.stab.push(x);sg();const da=A.talentEntdeckt();
+  pruef(schwach===null&&!!x&&!!da&&da.stab===x.id,'Talent aus dem Nichts: nur mit einem guten Jugendscout',`ohne guten Jugendscout ${schwach}, mit ${!!da&&da.stab===(x&&x.id)}`);}
+
 // U19e. Europapokal-Karten (K37 §8): Auswärtsspiel bei einem Auslandsverein in den nächsten 7 Tagen (kein Heimspiel, nicht später, nicht das Finale), Spiel 1 bis 7 Tage her,
 //       Wunder nach 0:3 im Hinspiel und 4:0 oder 3:0 mit Elfmeterschießen im Rückspiel, nicht nach nur einem Tor Rückstand und nicht beim Ausscheiden. euMeineSpiele ersetzt der Test.
 {const {S,W,ev}=welt(),A=ev('AUSLOESER'),AV=ev('AV0'),me=S.my,d=S.tag;W.ev('euMeineSpiele=function(){return S.testEu||[];}');

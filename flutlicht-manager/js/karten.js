@@ -131,6 +131,8 @@ const AUSLOESER={
   zuschuss(){const c=S.constr;return c&&c.phase!=null&&!c.zuschuss&&c.kosten>=RKT.stadion.zuschussAb?{bau:c.ab}:null;},
   // Anwohner klagen (K26 §8, K26f): Tribüne oder Dach wartet noch mindestens eine Woche auf die Genehmigung, noch keine Klage bei diesem Projekt
   anwohnerKlagen(){const c=S.constr;return c&&c.phase==='genehmigung'&&!c.klage&&RKT.stadion.anwohner.includes(c.k)&&c.ab-absTag(S.tag)>=RKT.stadion.anwohnerRest?{bau:c.ab}:null;},
+  // Talent aus dem Nichts (K18 §8, K18f): du hast einen Scout mit dem Spezialgebiet Jugend ab Qualität RKT.jugend.scoutAb, er hat einen 16-Jährigen entdeckt
+  talentEntdeckt(){const l=meineScouts().filter(x=>scoutGebiet(x)==='jugend'&&x.q>=RKT.jugend.scoutAb);return l.length?{stab:pick(l).id}:null;},
   // Ehemaliger Kapitän kehrt zurück (K16 §8, K16e): ein Ex-Spieler (K32c) mit den meisten Spielen für deinen Verein, mindestens RST.exSpieler.vereinAb, ist vereinslos,
   // seit höchstens einer Saison, noch nicht gefragt, und in seiner Rolle hast du einen freien Platz
   exKapitaen(){const E=RST.exSpieler,l=(S.stab||[]).filter(x=>x.team<0&&x.ex&&x.exV===S.my&&(x.exVsp||0)>=E.vereinAb&&!x.gefragt&&x.exS!=null&&S.season-x.exS<=1&&stabVon(S.my,x.r).length<RST.rollen[x.r].plaetze);

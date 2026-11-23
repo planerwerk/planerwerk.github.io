@@ -79,6 +79,11 @@ const KARTEN=[
     texte:['Ein Jugendtrainer aus der Region schwärmt von einem 16-Jährigen. Probetraining bei euch?','Die Eltern eines Talents aus dem Umland fragen an: Ihr Sohn würde gern bei euch vorspielen.'],
     optionen:[{text:'Zum Probetraining einladen',wirkung:[{art:'geld',wert:-5000},{art:'talent',wert:6,chance:0.6,schlecht:0,gut:'Er überzeugt die Trainer.',schlechtText:'Im Probetraining enttäuscht er, ihr lasst ihn ziehen.'}],folge:''},
       {text:'Kein Platz im Jugendkader',wirkung:[],folge:'Der Junge versucht es woanders.'}],auto:1},
+  // Talent aus dem Nichts (K18 §8, K18f, 23.11., popolupo): Anlasskarte mit einem Jugendscout (REGELN.karten.jugend.scoutAb). Das Talent ist besser als beim Probetraining oben (+8 statt +6). Werte vorläufig.
+  {id:'talentEntdeckt',titel:'Talent aus dem Nichts',bereich:'K18',art:'entscheidung',gross:false,stufe:'haeufig',chance:0.1,ausloeser:'talentEntdeckt',sperrTage:120,
+    texte:['Dein Jugendscout {mitarbeiter} war bei einem Dorfverein. Ein 16-Jähriger dort sei „das Beste, was ich seit Jahren gesehen habe“.','{mitarbeiter} ruft aufgeregt an: Bei einem Jugendturnier in der Provinz ist ihm ein 16-Jähriger aufgefallen, den noch niemand auf dem Zettel hat.'],
+    optionen:[{text:'Zum Probetraining einladen',wirkung:[{art:'geld',wert:-5000},{art:'talent',wert:8,chance:0.7,schlecht:0,gut:'Er überzeugt die Trainer. Dein Scout hat ein gutes Auge.',schlechtText:'Im Probetraining ist er zu nervös. Ihr lasst ihn ziehen.'}],folge:''},
+      {text:'Kein Platz im Jugendkader',wirkung:[],folge:'Der Junge geht zu einem anderen Verein.'}],auto:1},
   // K08c: Großer Verein lockt dein Talent. Neue Wirkungen jugendHoch (Profivertrag bei dir) und jugendWeg (Wechsel zum Verein, Ausbildungsentschädigung, Weiterverkaufsbeteiligung).
   {id:'talentGelockt',titel:'Großer Verein lockt dein Talent',bereich:'K08',art:'entscheidung',gross:false,stufe:'haeufig',ausloeser:'talentGelockt',sperrTage:365,
     texte:['{verein} hat ein Auge auf {spieler} aus deiner Jugend geworfen. Sein Berater lässt durchblicken: Ohne Profivertrag ist er weg.','Die Scouts von {verein} saßen bei jedem Jugendspiel von {spieler}. Jetzt liegt ein Angebot auf dem Tisch.'],
