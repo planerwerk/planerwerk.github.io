@@ -74,6 +74,12 @@ const pokalLosHeute=d=>S.phase==='play'&&S.cup&&S.cup.alive.includes(S.my)&&poka
 
 // Supercup (K13 §5.2): Meister gegen Pokalsieger am Samstag vor dem 1. Spieltag beim Meister. Holt ein Verein beides, spielt der Vizemeister.
 // Bei Gleichstand direkt Elfmeterschießen (seit 2010 keine Verlängerung). In der ersten Saison gibt es keinen, weil die Vorsaison fehlt.
+// Pokal-Rotation rächt sich (K13 §8, K13e): Du scheidest als Favorit aus (Amateur oder Niveau mindestens RWB.pokal.rotation.favorit unter deinem) und hast gegenüber
+// deinem letzten Ligaspiel (S.ligaXI aus letztesSpielMerken) mindestens rotation.wechsel Spieler der Startelf getauscht. Nur eine Meldung, ohne weitere Wirkung. Gibt die Zahl der Wechsel zurück.
+function pokalRotation(mg){if(!mg)return 0;const P=RWB.pokal.rotation,L=S.ligaXI,s=mg.h===S.my?0:1,opp=s?mg.h:mg.a;
+  if(winner(mg)===S.my||!L||L.t!==S.my||L.s!==S.season||!mg.xi||!mg.xi[s])return 0;
+  if(opp<1000&&teamLevel(S.my)-teamLevel(opp)<P.favorit)return 0;const alt=new Set(L.ids),n=mg.xi[s].filter(id=>!alt.has(id)).length;if(n<P.wechsel)return 0;
+  news(`Die Rotation rächt sich: Gegenüber dem letzten Ligaspiel standen ${n} neue Spieler in der Startelf. Die Zeitungen fragen, ob der Pokal zu leicht genommen wurde.`,'bad');return n;}
 function supercupAnlegen(sm){S.supercup=null;if(!sm||sm.champ==null)return;const g=sm.cup!=null&&sm.cup<1000&&sm.cup!==sm.champ?sm.cup:sm.vize;if(g==null)return;
   const z=S.plan.zeit[1];if(!z||!z[0])return;let d=Math.min(...z[0].map(x=>x[0]))-RWB.supercup.vorSpieltag;while(wochentag(d)!==6)d--;
   // 72 Stunden (K13): Abstand zur ersten Pokalrunde und zu den Ligaspielen beider Teilnehmer. Ein Pokalsieger aus der 2. Liga hat da schon Spieltage, dann rückt der Supercup wochenweise vor.

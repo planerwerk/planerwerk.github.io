@@ -72,5 +72,15 @@ pruef(supercups.length===N-1&&supercups.every(x=>!x.verl&&(x.hg!==x.ag)===!x.pen
     info=`voller Kader ${typeof voll==='string'?'abgelehnt':voll}, vor dem nächsten Ligaspiel ${vorNaechstem}, Abstand zum Testspiel ${tsAbstand}, ohne Tag davor ${ohneTag}, Lage trotz Supercup ${lageOk}, Antrag ${r}, ${alt} → ${neu}, Abstand ${abstand}, vor dem letzten Spieltag ${neu<letzter}, zweiter Antrag ${typeof zweimal==='string'?'abgelehnt':zweimal}`;}
   pruef(ok,'Spielverlegung: nur bei Personalnot, neuer Termin mit Abstand, einmal je Saison',info);}
 
+// K13e. Pokal-Rotation rächt sich (K13 §8): Aus als Favorit (gegen Amateure oder ein Niveau mindestens rotation.favorit darunter) mit mindestens rotation.wechsel
+//       getauschten Spielern gegenüber dem letzten Ligaspiel gibt eine Meldung; nicht bei wenigen Wechseln, nicht gegen einen gleich starken Gegner, nicht nach einem Sieg.
+{const {W:W4,F:F4}=neueWelt();F4.buildWorld(SEED);const S4=W4.S,ev4=W4.ev;S4.my=6;S4.mgr='Test';S4.phase='play';const P=ev4('RWB').pokal.rotation,sq=ev4('squad')(6).map(p=>p.id);
+  const alt=sq.slice(0,11),neu=[...sq.slice(0,11-P.wechsel),...sq.slice(11,11+P.wechsel)],wenig=[...sq.slice(0,12-P.wechsel),...sq.slice(11,10+P.wechsel)];S4.ligaXI={s:S4.season,t:6,ids:alt};
+  const lv=ev4('teamLevel'),gleich=S4.teams.filter(t=>t.id!==6&&t.lg===1).sort((a,b)=>Math.abs(lv(a.id)-lv(6))-Math.abs(lv(b.id)-lv(6)))[0].id,spiel=(a,xi,hg,ag)=>({h:6,a,hg,ag,pen:null,xi:[xi,[]]});
+  const amateur=F4.pokalRotation(spiel(1000,neu,0,1)),zuWenig=F4.pokalRotation(spiel(1000,wenig,0,1)),gegenGleich=Math.abs(lv(gleich)-lv(6))<P.favorit?F4.pokalRotation(spiel(gleich,neu,0,1)):0,sieg=F4.pokalRotation(spiel(1000,neu,2,1));
+  S4.ligaXI.s=S4.season-1;const altesXI=F4.pokalRotation(spiel(1000,neu,0,1));
+  pruef(amateur===P.wechsel&&zuWenig===0&&gegenGleich===0&&sieg===0&&altesXI===0&&sq.length>=11+P.wechsel,'Pokal-Rotation: Meldung nach dem Aus als Favorit mit vielen Wechseln, nicht bei wenigen, nicht gegen Gleichstarke, nicht nach Sieg, nicht mit der Elf der Vorsaison',
+    `gegen Amateure ${amateur}, zu wenig ${zuWenig}, gegen Gleichstarke ${gegenGleich}, nach Sieg ${sieg}, alte Elf ${altesXI}`);}
+
 console.log(`\n${N} Saison(s) in ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

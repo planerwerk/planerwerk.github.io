@@ -251,7 +251,7 @@ function letztesSpielMerken(r,d){if(!r||r.test)return;const SP=RKT.spiel,s=r.h==
   S.letzt={s:S.season,t:S.my,tag:d,joker,frueh,spaet,gegner,derby:gegner<1000&&istDerby(r.h,r.a),rot:r.ev.some(e=>e.t==='R'),coup};
   S.letzte=[...(S.letzte||[]).filter(L=>L&&L.s===S.season&&L.t===S.my&&d-L.tag<=SP.nachTage),S.letzt].slice(-SP.merken);
   // K06e: Tore nach Standards (RKT.standard.arten) in deinen Ligaspielen der laufenden Halbserie, S.std = {s, t, h Halbserie, sp Spiele, g Tore, n Standardtore, k Karte schon da}
-  if(r.lg!=null&&!r.rel){const N=(S.fx[r.lg]||[]).length,gesp=(S.res[r.lg]||[]).filter(x=>x[0]===S.my||x[1]===S.my).length,h=gesp>N/2?1:0;let A=S.std;
+  if(r.lg!=null&&!r.rel){S.ligaXI={s:S.season,t:S.my,ids:((r.xi||[])[s]||[]).slice()}; /* Startelf deines letzten Ligaspiels für die Pokal-Rotation (K13e) */const N=(S.fx[r.lg]||[]).length,gesp=(S.res[r.lg]||[]).filter(x=>x[0]===S.my||x[1]===S.my).length,h=gesp>N/2?1:0;let A=S.std;
     if(!A||A.s!==S.season||A.t!==S.my||A.h!==h)A=S.std={s:S.season,t:S.my,h,sp:0,g:0,n:0,k:0};A.sp++;(r.ev||[]).forEach(e=>{if(e.t==='G'&&e.s===s){A.g++;if(RKT.standard.arten.includes(e.art))A.n++;}});}
   // K06d: Einsätze in Folge auf einer Position mit Eignung unter positionUnter (p.pfal, Tag p.pfalT), ab der Mindestzeit für eine Note (EK7). Passende Position setzt zurück,
   // ein Zähler älter als positionTage beginnt neu. Wer nicht oder zu kurz spielte, behält seinen Zähler. (Reihenfolge der Kommentare seit Prüfung EO6)

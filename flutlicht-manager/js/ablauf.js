@@ -47,7 +47,7 @@ function tagesSpieleAbschliessenLauf(out){const d=out.tag;S.gespielt=d;
     else if(g.art==='pokal'){const zeilen=g.list.map(r=>[r.h,r.a,r.hg,r.ag,r.pen]),sieger=g.list.map(winner); // geteilte Runde (T8.2): erst nach dem zweiten Tag eintragen
       if(pokalGeteilt(e.r)&&!e.spaet)S.cup.teil={r:e.r,z:zeilen,s:sieger};else{const T=S.cup.teil&&S.cup.teil.r===e.r?S.cup.teil:{z:[],s:[]};S.cup.hist.push(T.z.concat(zeilen));S.cup.alive=T.s.concat(sieger);delete S.cup.teil;}fansPokal(g.list);pokalSensationen(g.list);teampraemiePokal(g.list);
       if(mg){const won=winner(mg)===S.my,opp=mg.h===S.my?mg.a:mg.h;news(`DFB-Pokal, ${POKAL_RUNDEN[e.r]}: ${tn(mg.h)} – ${tn(mg.a)} ${mg.hg}:${mg.ag}${mg.pen?` (i.E. ${mg.pen[0]}:${mg.pen[1]})`:''} – ${won?(e.r===5?'POKALSIEG!':'weiter!'):'ausgeschieden.'}`,won?'good':'bad');
-        if(!won&&(opp>=1000||S.teams[opp].lg>t.lg))S.trust+=RV.pokalAus;if(won)S.trust+=RV.pokalWeiter;
+        if(!won)pokalRotation(mg); /* K13e */if(!won&&(opp>=1000||S.teams[opp].lg>t.lg))S.trust+=RV.pokalAus;if(won)S.trust+=RV.pokalWeiter;
         if(mg.h===S.my&&e.r!==5)heimspielEinnahmen(mg,true);money('Pokalprämien',RF.pokalPraemien[e.r]);}
       if(e.r===5){const cw=S.cup.alive[0];news(`${tn(cw)} gewinnt den DFB-Pokal!`,'good');if(cw===S.my){money('Pokalprämien',RF.pokalSieg);S.trust+=RV.pokalSieg;}}
       g.list.forEach(r=>kiPokalSpiel(r,e.r));} // Computer-Vereine: Rundenprämie und Zuschauer wie du statt Pauschale für alle (K23b)

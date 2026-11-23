@@ -819,7 +819,8 @@ const REGELN={
     verlaufTage:730},
   // Wettbewerbe und Spielplan (K13 §11, Welle 2): Pokal-Auslosung, Heimrecht der Amateure (3. Liga und darunter) bis zum Halbfinale (Runde 4), Supercup, 72 Stunden
   // supercup.praemie (K13b, 22.11.2026): Franz-Beckenbauer-Supercup 2025, 3 Mio. € für den Sieger, 2 Mio. € für den Verlierer (Websuche 22.11., Medienberichte, keine offizielle DFL-Quelle)
-  wettbewerbe:{pokal:{auslosungTage:14,profitopfZweite:14,heimrechtBisRunde:4,losTopAb:80},supercup:{vorSpieltag:6,anstoss:'20:30',praemie:{sieger:3e6,verlierer:2e6}},spielplan:{mindestTage:3},
+  // pokal.rotation (K13e, 23.11., GESCHÄTZT): Pokal-Rotation rächt sich, wenn du als Favorit (Amateur oder Niveau mindestens favorit unter deinem) ausscheidest und mindestens wechsel Spieler der Startelf des letzten Ligaspiels getauscht hast
+  wettbewerbe:{pokal:{auslosungTage:14,profitopfZweite:14,heimrechtBisRunde:4,losTopAb:80,rotation:{favorit:5,wechsel:4}},supercup:{vorSpieltag:6,anstoss:'20:30',praemie:{sieger:3e6,verlierer:2e6}},spielplan:{mindestTage:3},
     // Spielverlegung auf Antrag (K13 §13, K13d, 23.11., popolupo, vorläufig): wie die Regel der DFL aus der Corona-Zeit, mindestens minSpieler einsatzfähige Spieler, darunter ein Torwart, sonst Verlegung möglich.
     // Für dein Ligaspiel in höchstens vorTage Tagen, höchstens proSaison je Saison, neuer Termin bis sucheTage später und vor dem letzten Spieltag deiner Liga.
     verlegung:{minSpieler:16,vorTage:7,proSaison:1,sucheTage:60}},
