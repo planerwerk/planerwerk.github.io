@@ -2393,3 +2393,26 @@ Korrekturen auf `mitarbeit/popolupo-es-korrekturen` (auf den Korrekturen ER).
 | ES3 | Die Anzeigegrenze 0,05 für das Wahlgewicht stand im Code. Jetzt `wahl.anzeigeAb`. | ✅ behoben |
 | ES4 | Der Testtext sagte „Fans 90“, gerechnet wird mit 80. | ✅ behoben |
 | ES5 | Während eines Tribünenbaus fehlen 3.000 Plätze in `t.cap`, das hob kurz die Mitglieder je Platz (Wahlgewicht, auch Dauerkarten-Vorkaufsrecht). Neu `kapOhneBau` für beide. | ✅ behoben |
+
+## ET. Prüfung der Korrekturen ES ohne Laufzeit (23. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 6d359b5 gelesen, nichts ausgeführt. Fünf niedrige Funde.
+
+**Ohne Befund:**
+
+- **„Einmal je Saison“ ohne Jobwechsel:** Nach dem letzten Spieltag liegt nur der 1.6., eine zweite Insolvenz ist unmöglich.
+- **Auf- und Abstieg:** Der Abzug wirkt in der neuen Liga.
+- **Phase:** Geprüft wird nur in der Phase `play`.
+- **Ladereihenfolge:** keine Probleme.
+- **`kapOhneBau`:** Nur dein Verein baut mit Bauzeit, ein Abriss existiert nicht.
+- **Gleichschritt:** unberührt.
+
+Korrekturen auf `mitarbeit/popolupo-et-korrekturen` (auf den Korrekturen ES).
+
+| # | Befund | Status |
+|---|---|---|
+| ET1 | Bei deinem Verein stand die Sperre „einmal je Saison“ nur in `S.lzp.ins`, und das löscht der Jobwechsel. Seit ES1 bucht der 1.6. schon in die nächste Saison. Übernimmst du dann einen Verein, der am 1.6. insolvent wurde, war eine zweite Insolvenz in derselben Saison möglich, auch umgekehrt. Jetzt setzt und prüft auch `insolvenzPruefen` `t.fins`. | ✅ behoben |
+| ET2 | Bei einem Abstieg in die Regionalliga verfällt ein Abzug für die neue Saison, denn dort gibt es keine Tabelle. In K23 festgehalten, vorläufig hingenommen. | ✅ dokumentiert, vorläufig |
+| ET3 | ES5 war unvollständig. Auch die Fankultur (`fankulturTeile`) und die Obergrenze der Fans beim Saisonwechsel (`saison.js`) rechneten mit den Plätzen ohne Bau. Jetzt beide mit `kapOhneBau`. | ✅ behoben |
+| ET4 | `ins` und `fins` hießen „Saison der letzten Insolvenz“, gemeint ist jetzt die Saison des Abzugs. Kommentar und K33 angepasst. | ✅ behoben |
+| ET5 | ES5 und der Weg über deinen Verein in ES1 waren ungetestet. Neue Fälle in `tests/vorstand.js` (U12m) und `tests/finanzen.js`. | ✅ behoben |

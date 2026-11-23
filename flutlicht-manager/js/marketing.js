@@ -22,7 +22,7 @@ function trikotWaehlen(d){if(!darf('marketing'))return;const M=mkS();if(M.trikot
 // ohne zweite Mannschaften). Aus den heutigen Werten des Vereins, also im Spiel veränderlich (Stadionausbau, Fans, Mitglieder, Ansehen). Kein Zufall, kein eigener Spielstand.
 function fankulturTeile(t){const K=RMK.fankultur,lin=(x,[a,b])=>clamp((x-a)/(b-a),0,1),liga=S.teams.filter(o=>o.lg===t.lg&&!(o.zweite>=0)&&o.cap>0),
     schnitt=k=>liga.reduce((s,o)=>s+(o[k]||0),0)/Math.max(1,liga.length),sf=schnitt('fans'),sa=schnitt('rep');
-  const aus=Math.min(1,(t.fans||0)/t.cap),mp=mitgliederVon(t)/t.cap,zug=sf>0&&sa>0&&t.rep>0?((t.fans||0)/sf)/(t.rep/sa):1;
+  const kap=kapOhneBau(t),aus=Math.min(1,(t.fans||0)/kap),mp=mitgliederVon(t)/kap, /* Plätze ohne Bau-Abzug (Prüfung ET3) */zug=sf>0&&sa>0&&t.rep>0?((t.fans||0)/sf)/(t.rep/sa):1;
   const z=Math.max(lin(zug,K.zugkraft),K.ausverkauftMin*lin(aus,K.ausverkauft)); // (fast) ausverkauft: das volle Stadion verdeckt die Nachfrage, stufenlos (Prüfung EM2)
   return{aus,mp,zug,wert:Math.round(100*(K.gewicht.auslastung*lin(aus,K.auslastung)+K.gewicht.mitglieder*lin(mp,K.mitglieder)+K.gewicht.zugkraft*z))};}
 const fankultur=t=>t&&t.cap>0?fankulturTeile(t).wert:0;

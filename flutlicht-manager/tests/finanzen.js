@@ -80,6 +80,13 @@ const tagMit=(ev,mmtt)=>{for(let d=0;d<400;d++)if(ev('mmtt')(d)===mmtt)return d;
   const jetzt=((S.abzug||{})[S.season]||{})[t.id]||0,neu=((S.abzug||{})[S.season+1]||{})[t.id]||0,sofort=t.fu===0&&t.cash===0&&t.fins===S.season+1;
   pruef(jetzt===0&&neu===9&&sofort,'Insolvenz nach dem letzten Spieltag: Abzug in der neuen Saison, Schuldenschnitt sofort (ER1, ES1)',`laufende Saison ${jetzt}, neue Saison ${neu}, Zähler ${t.fu}, Konto ${t.cash}`);}
 
+// Prüfung ET1, ET5: derselbe Fall für deinen Verein. Der Abzug geht in die nächste Saison, die Sperre steht auch am Verein (t.fins), damit nach einem Jobwechsel
+//       keine zweite Insolvenz in derselben Saison kommt.
+{const {F,S,ev,t}=welt(),lg=t.lg,r0=S.res[lg].slice(),n=S.fx[lg].reduce((s,md)=>s+md.length,0),[h,a]=S.fx[lg][0][0];while(S.res[lg].length<n)S.res[lg].push([h,a,0,0,0]);
+  t.cash=-ev('kreditRahmen')(t)-1e6;S.trust=60;F.insolvenzPruefen();F.insolvenzPruefen();S.res[lg]=r0;
+  const jetzt=((S.abzug||{})[S.season]||{})[S.my]||0,neu=((S.abzug||{})[S.season+1]||{})[S.my]||0,sperre=S.lzp.ins===S.season+1&&t.fins===S.season+1;
+  pruef(jetzt===0&&neu===9&&sperre&&S.trust===30,'Insolvenz deines Vereins nach dem letzten Spieltag: Abzug in der neuen Saison, Sperre auch am Verein (ET1)',`laufende Saison ${jetzt}, neue Saison ${neu}, ins ${S.lzp.ins}, fins ${t.fins}, Vertrauen ${S.trust}`);}
+
 // 13. K23d: Gehaltsrahmen = gehaltAnteil (seit K23c 75 %) der erwarteten Einnahmen, Anteil steigt mit den Gehältern, Transferbudget = Konto über 10 % Reserve, über 110 % kauft niemand
 {const {F,S,ev,t}=welt(),B=ev('RFP').budget,E=ev('erwarteteEinnahmen')(t),r0=ev('rahmenAnteil')(t);ev('squad')(S.my).forEach(p=>{p.sal*=5;});const r1=ev('rahmenAnteil')(t);t.cash=E;
   pruef(ev('gehaltsRahmen')(t)===Math.round(E*B.gehaltAnteil)&&r1>r0*4&&r1>B.sperreAb&&ev('transferBudget')(t)===E-Math.round(E*B.reserve),'K23d: Gehaltsrahmen, Anteil und Transferbudget',`Rahmen ${ev('gehaltsRahmen')(t)}, Anteil ${r0.toFixed(2)} → ${r1.toFixed(2)}, Budget ${ev('transferBudget')(t)}`);}

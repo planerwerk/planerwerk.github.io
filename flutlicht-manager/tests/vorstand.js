@@ -179,7 +179,10 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
 //       ab zwei je Platz anderthalbfach (höchstens). Wirkung: Unterschied der Chance zwischen Fanstimmung 70 und 50.
 {const {F,ev,B}=welt(),W=B.praesident.wahl,t=ev('myT()'),m0=t.mitglieder,d=m=>{t.mitglieder=m;t.fanst=70;const a=F.wahlChance(t,null);t.fanst=50;const b=F.wahlChance(t,null);return a-b;};
   const ohne=d(0),eins=d(t.cap),viele=d(t.cap*5);t.mitglieder=m0;
-  pruef(Math.abs(ohne-20*W.fans*W.mitglieder[0])<1e-9&&Math.abs(eins-20*W.fans)<1e-9&&Math.abs(viele-20*W.fans*W.mitglieder[1])<1e-9,'Mitglieder als Stimmen: Gewicht der Fanstimmung 0,5 / 1 / 1,5 nach Mitgliedern je Platz',
-    `Fanstimmung +20 bringt ${ohne.toFixed(3)} / ${eins.toFixed(3)} / ${viele.toFixed(3)}`);}
+  /* Prüfung ES5, ET5: Während eines Tribünenbaus (bauTag zieht Plätze ab) bleiben Wahlgewicht und Vorkaufsrecht der Mitglieder gleich (kapOhneBau) */
+  t.mitglieder=Math.round(t.cap*0.8);const g0=ev('wahlFansGewicht')(t),k0=F.dkMitglieder(t),P=ev('RB').tribuene.plaetze,S=ev('S');S.constr={k:'cap',phase:'bau'};t.cap-=P;
+  const bau=Math.abs(ev('wahlFansGewicht')(t)-g0)<1e-9&&Math.abs(F.dkMitglieder(t)-k0)<1e-9;t.cap+=P;S.constr=null;t.mitglieder=m0;
+  pruef(Math.abs(ohne-20*W.fans*W.mitglieder[0])<1e-9&&Math.abs(eins-20*W.fans)<1e-9&&Math.abs(viele-20*W.fans*W.mitglieder[1])<1e-9&&bau,'Mitglieder als Stimmen: Gewicht der Fanstimmung 0,5 / 1 / 1,5 nach Mitgliedern je Platz, unverändert während eines Tribünenbaus',
+    `Fanstimmung +20 bringt ${ohne.toFixed(3)} / ${eins.toFixed(3)} / ${viele.toFixed(3)}, Bau ohne Einfluss ${bau}`);}
 
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);
