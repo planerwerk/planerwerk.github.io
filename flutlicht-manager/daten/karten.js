@@ -259,6 +259,10 @@ const KARTEN=[
   {id:'choreo',titel:'Choreo in der Kurve',bereich:'K27',art:'info',stufe:'haeufig',chance:0.6,ausloeser:'choreo',sperrTage:30,
     texte:['Die Kurve bereitet für das Spiel gegen {verein} eine Choreo über die ganze Tribüne vor. Die Mannschaft hat davon gehört und brennt auf das Spiel.','Fahnen, Pappen, ein riesiges Banner: Für das Spiel gegen {verein} plant die Kurve eine Choreo. In der Kabine spricht man von nichts anderem.'],
     wirkung:[{art:'stimmungAlle',wert:3},{art:'zusammenhalt',wert:1}]},
+  // Platzsturm (K27 §5.4, K27g, 23.11., popolupo): Info-Karte mit Wirkung nach dem letzten Heimspiel mit Meisterschaft, Aufstieg oder Rettung. Beträge für die 3. Liga (× Ligafaktor). Werte vorläufig.
+  {id:'platzsturm',titel:'Platzsturm',bereich:'K27',art:'info',stufe:'haeufig',chance:1,ausloeser:'platzsturm',sperrTage:300,
+    texte:['Nach dem Schlusspfiff gegen {verein} stürmen die Fans den Rasen. Gefeiert wird bis in die Nacht, der DFB schickt eine Rechnung über {geld:20000}.','Tausende auf dem Rasen, die Spieler auf den Schultern der Fans: ein Saisonende für die Geschichtsbücher. Das Sportgericht verhängt {geld:20000} Strafe.'],
+    wirkung:[{art:'fans',wert:2},{art:'geld',wert:-20000}]},
   // Trainingslager (K11 §8, K11g, 23.11., popolupo): Entscheidungen zu Lagerkoller und Ablenkung (die Meldungen aus dem Lager bleiben). Werte vorläufig.
   // Seit Prüfung EU1 Folgekarten aus dem Spielablauf (nurKette, ausSpiel): lagerTag legt sie am Tag des Kollers oder der Sichtung in die Kette, je Lager höchstens einmal.
   // sperrTage wirkt bei Kettenkarten nicht (kartenKette prüft keine Sperre), Doppelte verhindern l.kollerK und l.nachtK (Prüfung EV6). Die Felder bleiben für den Katalog.

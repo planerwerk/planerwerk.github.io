@@ -102,6 +102,11 @@ const AUSLOESER={
   // Choreo (K27 §5.4, K27f): dein nächstes Ligaspiel ist ein Heimspiel in höchstens RKT.fans.choreoTage Tagen, ein Derby oder Spitzenspiel (wie RPK.anlass), und deine Fankultur wirkt ab choreoAb
   choreo(){const F=RKT.fans,t=myT(),n=meineLigaspiele().find(e=>e.tag>S.tag);if(!n||n.tag-S.tag>F.choreoTage||fankulturWirkung(t)<F.choreoAb)return null;const f=S.fx[n.lg][n.md][n.i],g=pkGegner(n),A=RPK.anlass;
     if(!f||f[0]!==S.my||g==null)return null;const derby=istDerby(S.my,g),spitze=n.md+1>=A.spitzeAb&&rank(t.lg,S.my)<=A.spitzeBis&&rank(t.lg,g)<=A.spitzeBis;return derby||spitze?{verein:g}:null;},
+  // Platzsturm (K27 §5.4, K27g): nach dem letzten Ligaspiel (Liga fertig, höchstens RKT.spiel.nachTage her), zu Hause nicht verloren, und Meister,
+  // direkter Aufstieg (2. und 3. Liga) oder gerade noch gerettet (letzter Platz vor Relegation oder Abstieg)
+  platzsturm(){const t=myT(),lg=t.lg;if(!ligaFertig(lg))return null;const L=meineLigaspiele(),n=L[L.length-1];if(!n||S.tag-n.tag<0||S.tag-n.tag>RKT.spiel.nachTage)return null;
+    const r=(S.res[lg]||[]).find(x=>x[4]===n.md&&(x[0]===S.my||x[1]===S.my));if(!r||r[0]!==S.my||r[2]<r[3])return null;
+    const pl=rank(lg,S.my),anz=table(lg).length,sicher=lg===3?anz-RS.abstieg3:anz-3;return pl===1||(lg>1&&pl<=2)||pl===sicher?{verein:r[1]}:null;},
   // Trainingslager (K11 §8, K11g): Folgekarten aus dem Spielablauf (Prüfung EU1), lagerTag legt sie beim Koller und bei einer Sichtung für denselben Tag in die Kette.
   // Hier nur die Prüfung, ob es noch passt: dasselbe Lager läuft (beim Koller nicht am letzten Tag), der Spieler ist noch bei dir
   lagerkoller(b){const l=lagerAktiv(S.tag);return b&&l&&l.von===b.lager&&S.tag<l.bis?b:null;},

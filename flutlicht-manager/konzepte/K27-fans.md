@@ -101,6 +101,17 @@ Ziel = 60 + Erfolg + Preise + Identifikation + Entscheidungen + Umfeld     (0–
 - **Computer-Vereine:** gleiche Stimmung, wirkt aber noch nirgends (ihre Einnahmen kommen aus einer Formel ohne Zuschauer, ihr Vorstand aus U11d2 bleibt unverändert). Seit Prüfung EN5 (23.11.) berichtigt: Seit K23b/K23c rechnen ihre Heimeinnahmen mit `zuschauerErwartung` und damit mit dem Zuschauerfaktor der Fanstimmung. Seit U12i hängt die Präsidentenwahl (`wahlChance`) bei allen Vereinen von der Fanstimmung ab. K27e verstärkt beides leicht bei hoher Fankultur nach dem Verkauf eines Lieblings, ohne Zufall.
 - **Noch nicht:** Dauerkarten und Gästeblock (warten auf K23), Ultras und Tradition als Stammdaten (dafür fehlen Quellen je Verein), Choreo, Pyrotechnik und Platzsturm (K09, K30), Heimvorteil durch Fans (würde die Kalibrierung der Engine ändern).
 
+### 5.4e K27g Platzsturm (23.11.2026, popolupo, vorläufig)
+
+Aus §5.4 („Platzsturm: Aufstieg, Klassenerhalt am letzten Spieltag, Feier, kleine Geldstrafe (K09)“):
+- **Auslöser:** Info-Karte mit Wirkung, sicher (Chance 1), einmal je Saison. Bedingungen:
+  - Die Liga ist fertig, dein letztes Ligaspiel ist höchstens 7 Tage her (`RKT.spiel.nachTage`).
+  - Es war ein Heimspiel, das du nicht verloren hast.
+  - Du bist Meister, direkter Aufsteiger (Platz 1 oder 2 in der 2. und 3. Liga) oder gerade noch gerettet: in der 1. und 2. Liga Platz 15, in der 3. Liga der letzte Platz vor den Absteigern.
+  - Die Relegation zählt nicht mit, sie kommt erst danach.
+- **Wirkung:** Fanstimmung +2, Geldstrafe 20.000 € in der 3. Liga, nach Liga skaliert (in der 1. Liga 80.000 €).
+- **Ohne neue Regelwerte.**
+
 ### 5.4d K27f Choreo in der Kurve (23.11.2026, popolupo, vorläufig)
 
 Aus §5.4 („Choreografie bei Derby, Jubiläum, Spitzenspiel, Ultras ≥ 1“):

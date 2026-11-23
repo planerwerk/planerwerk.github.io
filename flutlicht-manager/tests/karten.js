@@ -496,6 +496,16 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
     ok=!!heim&&heim.verein===b.id&&wenig===null&&aus===null;info=`${a.name} – ${b.name}: Heim ${!!heim}, wenig Fankultur ${wenig}, auswärts ${aus}`;}
   pruef(ok,'Choreo: vor einem Heim-Derby mit großer Fankultur, nicht mit wenig Fankultur, nicht auswärts',info);}
 
+// K27g. Platzsturm (K27 §5.4): nach dem letzten Ligaspiel, zu Hause nicht verloren, als Meister (oder Aufsteiger, gerade noch gerettet); nicht nach einer Heimniederlage
+//       und nicht auf einem Platz dazwischen. Die Saison wird dafür mit Ergebnissen gefüllt.
+{const {S,ev}=welt(),A=ev('AUSLOESER');S.phase='play';const lg=ev('myT()').lg,M=S.fx[lg].length-1,[h0]=S.fx[lg][M][0];S.my=h0;
+  const fuellen=(sieg,letzteNiederlage)=>{S.res[lg]=[];S.fx[lg].forEach((md,k)=>md.forEach(([h,a])=>{let hg=1,ag=1;if(h===S.my){hg=sieg?3:0;ag=sieg?0:3;}else if(a===S.my){hg=sieg?0:3;ag=sieg?3:0;}
+    if(k===M&&h===S.my){hg=letzteNiederlage?0:2;ag=letzteNiederlage?1:0;}S.res[lg].push([h,a,hg,ag,k]);}));};
+  const letzt=ev('meineLigaspiele')().slice(-1)[0];S.tag=letzt.tag+2;
+  fuellen(true,false);const meister=A.platzsturm();fuellen(true,true);const verloren=A.platzsturm();fuellen(false,false);const unten=ev('rank')(lg,S.my),mitte=A.platzsturm();S.res[lg]=[];
+  pruef(!!meister&&verloren===null&&(mitte===null||unten===(lg===3?20-ev('RS').abstieg3:15)),'Platzsturm: als Meister nach dem letzten Heimspiel, nicht nach einer Heimniederlage, nicht auf einem gewöhnlichen Platz',
+    `Meister ${!!meister}, Heimniederlage ${verloren}, Platz ${unten}: ${mitte}`);}
+
 // U19e. Europapokal-Karten (K37 §8): Auswärtsspiel bei einem Auslandsverein in den nächsten 7 Tagen (kein Heimspiel, nicht später, nicht das Finale), Spiel 1 bis 7 Tage her,
 //       Wunder nach 0:3 im Hinspiel und 4:0 oder 3:0 mit Elfmeterschießen im Rückspiel, nicht nach nur einem Tor Rückstand und nicht beim Ausscheiden. euMeineSpiele ersetzt der Test.
 {const {S,W,ev}=welt(),A=ev('AUSLOESER'),AV=ev('AV0'),me=S.my,d=S.tag;W.ev('euMeineSpiele=function(){return S.testEu||[];}');
