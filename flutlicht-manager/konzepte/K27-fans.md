@@ -101,6 +101,13 @@ Ziel = 60 + Erfolg + Preise + Identifikation + Entscheidungen + Umfeld     (0–
 - **Computer-Vereine:** gleiche Stimmung, wirkt aber noch nirgends (ihre Einnahmen kommen aus einer Formel ohne Zuschauer, ihr Vorstand aus U11d2 bleibt unverändert). Seit Prüfung EN5 (23.11.) berichtigt: Seit K23b/K23c rechnen ihre Heimeinnahmen mit `zuschauerErwartung` und damit mit dem Zuschauerfaktor der Fanstimmung. Seit U12i hängt die Präsidentenwahl (`wahlChance`) bei allen Vereinen von der Fanstimmung ab. K27e verstärkt beides leicht bei hoher Fankultur nach dem Verkauf eines Lieblings, ohne Zufall.
 - **Noch nicht:** Dauerkarten und Gästeblock (warten auf K23), Ultras und Tradition als Stammdaten (dafür fehlen Quellen je Verein), Choreo, Pyrotechnik und Platzsturm (K09, K30), Heimvorteil durch Fans (würde die Kalibrierung der Engine ändern).
 
+### 5.4d K27f Choreo in der Kurve (23.11.2026, popolupo, vorläufig)
+
+Aus §5.4 („Choreografie bei Derby, Jubiläum, Spitzenspiel, Ultras ≥ 1“):
+- **Auslöser:** Info-Karte mit Wirkung, Anlasskarte mit Chance 0,6 je Woche. Dein nächstes Ligaspiel ist ein Heimspiel in höchstens 7 Tagen und ein Derby oder Spitzenspiel (wie bei der Pressekonferenz, `RPK.anlass`). Die Wirkung deiner Fankultur (K25f) beträgt mindestens 0,5, also etwa ab Fankultur 65. Ultras gibt es nicht als Stammdatum, die Fankultur steht dafür. Zum Jubiläum bietet die Karte aus K27d schon eine Choreo an.
+- **Wirkung:** Stimmung des Kaders +3, wie in §5.4, dazu Zusammenhalt +1.
+- **Noch nicht:** Heimvorteil +0,5 %. Er würde die Kalibrierung der Engine verschieben, wie schon in §5.4b.
+
 ### 5.4c K27e Fankultur statt Tradition (23.11.2026, popolupo, vorläufig)
 
 Tradition als Stammdatum (0–3) fehlt weiter. Seit K25f gibt es dafür die Fankultur (0–100, K25 §5.6). Sie kommt aus Stadion, Mitgliedern und Zugkraft und wurde nach der Rückmeldung des Nutzers vom 23.11. gebaut. Ihre Wirkung ist stufenlos: bis 50 keine, ab 80 die volle (`fankulturWirkung`, 0 bis 1). Hier ersetzt sie die Tradition aus §5.1:

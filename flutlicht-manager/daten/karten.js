@@ -255,6 +255,10 @@ const KARTEN=[
   {id:'wettbetrug',titel:'Wettskandal',bereich:'K30',art:'info',stufe:'gelegentlich',ausloeser:'wettbetrug',sperrTage:3650,
     texte:['{spieler} von {verein} hat auf Spiele der eigenen Mannschaft gewettet. Das Sportgericht sperrt ihn für viele Monate.','Ermittler haben Wetten von {spieler} auf Spiele von {verein} gefunden. Er ist für viele Monate gesperrt.'],
     wirkung:[{art:'wettsperre',wert:1}]},
+  // Choreo vor dem Derby (K27 §5.4, K27f, 23.11., popolupo): Info-Karte mit Wirkung (K30e), nur mit großer Fankultur (K25f). Heimvorteil durch die Choreo fehlt (Engine). Werte vorläufig.
+  {id:'choreo',titel:'Choreo in der Kurve',bereich:'K27',art:'info',stufe:'haeufig',chance:0.6,ausloeser:'choreo',sperrTage:30,
+    texte:['Die Kurve bereitet für das Spiel gegen {verein} eine Choreo über die ganze Tribüne vor. Die Mannschaft hat davon gehört und brennt auf das Spiel.','Fahnen, Pappen, ein riesiges Banner: Für das Spiel gegen {verein} plant die Kurve eine Choreo. In der Kabine spricht man von nichts anderem.'],
+    wirkung:[{art:'stimmungAlle',wert:3},{art:'zusammenhalt',wert:1}]},
   // Trainingslager (K11 §8, K11g, 23.11., popolupo): Entscheidungen zu Lagerkoller und Ablenkung (die Meldungen aus dem Lager bleiben). Werte vorläufig.
   // Seit Prüfung EU1 Folgekarten aus dem Spielablauf (nurKette, ausSpiel): lagerTag legt sie am Tag des Kollers oder der Sichtung in die Kette, je Lager höchstens einmal.
   // sperrTage wirkt bei Kettenkarten nicht (kartenKette prüft keine Sperre), Doppelte verhindern l.kollerK und l.nachtK (Prüfung EV6). Die Felder bleiben für den Katalog.

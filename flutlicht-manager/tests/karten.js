@@ -486,6 +486,16 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   const gelegt=KA.kette.filter(e=>e.id==='nachtleben'&&e.b.spieler===pl.id).length;F.kartenKette(S.tag);const kam=(KA.offen||[]).some(o=>o.id==='nachtleben')||(KA.log||[]).some(x=>x.id==='nachtleben');
   pruef(gelegt===1&&kam&&l.nachtK===1,'Nachtleben: Sichtung eines Partylöwen legt die Karte, sie kommt am selben Tag, einmal je Lager',`gelegt ${gelegt}, gekommen ${kam}`);}
 
+// K27f. Choreo in der Kurve (K27 §5.4): nur vor einem Heim-Derby (oder Spitzenspiel) in höchstens choreoTage Tagen und nur mit großer Fankultur; auswärts nicht.
+{const {S,ev}=welt(),A=ev('AUSLOESER'),dz=ev('istDerby');S.phase='play';let paar=null,tag=null;
+  for(const a of S.teams.filter(t=>t.lg<=3&&!(t.zweite>=0))){const b=S.teams.find(x=>x.id!==a.id&&x.lg===a.lg&&dz(a.id,x.id));if(!b)continue;
+    S.fx[a.lg].forEach((md,k)=>md.forEach(([h,g],i)=>{if(tag==null&&h===a.id&&g===b.id)tag=S.plan.zeit[a.lg][k][i][0];}));if(tag!=null){paar=[a,b];break;}}
+  let ok=false,info='kein Derby in einer Liga gefunden';
+  if(paar){const [a,b]=paar,hoch=t=>{t.fans=t.cap;t.mitglieder=t.cap*3;},m0=[a.fans,a.mitglieder,b.fans,b.mitglieder];hoch(a);hoch(b);S.my=a.id;S.tag=tag-1;const heim=A.choreo();
+    a.fans=Math.round(a.cap*0.5);a.mitglieder=0;const wenig=A.choreo();hoch(a);S.my=b.id;const aus=A.choreo();[a.fans,a.mitglieder,b.fans,b.mitglieder]=m0;
+    ok=!!heim&&heim.verein===b.id&&wenig===null&&aus===null;info=`${a.name} – ${b.name}: Heim ${!!heim}, wenig Fankultur ${wenig}, auswärts ${aus}`;}
+  pruef(ok,'Choreo: vor einem Heim-Derby mit großer Fankultur, nicht mit wenig Fankultur, nicht auswärts',info);}
+
 // U19e. Europapokal-Karten (K37 §8): Auswärtsspiel bei einem Auslandsverein in den nächsten 7 Tagen (kein Heimspiel, nicht später, nicht das Finale), Spiel 1 bis 7 Tage her,
 //       Wunder nach 0:3 im Hinspiel und 4:0 oder 3:0 mit Elfmeterschießen im Rückspiel, nicht nach nur einem Tor Rückstand und nicht beim Ausscheiden. euMeineSpiele ersetzt der Test.
 {const {S,W,ev}=welt(),A=ev('AUSLOESER'),AV=ev('AV0'),me=S.my,d=S.tag;W.ev('euMeineSpiele=function(){return S.testEu||[];}');

@@ -99,6 +99,9 @@ const AUSLOESER={
   // Skandale (K30 §8.4, K30f), Weltereignisse: ein Wettpate spricht einen gesunden Spieler deines Kaders an (er meldet es);
   // ein Spieler eines Computer-Vereins der drei Profiligen wettet auf eigene Spiele (nicht ausgeliehen, kein vereinbarter Wechsel)
   wettpate(){const l=squad(S.my).filter(p=>!(p.inj>0));return l.length?{spieler:pick(l).id}:null;},
+  // Choreo (K27 §5.4, K27f): dein nächstes Ligaspiel ist ein Heimspiel in höchstens RKT.fans.choreoTage Tagen, ein Derby oder Spitzenspiel (wie RPK.anlass), und deine Fankultur wirkt ab choreoAb
+  choreo(){const F=RKT.fans,t=myT(),n=meineLigaspiele().find(e=>e.tag>S.tag);if(!n||n.tag-S.tag>F.choreoTage||fankulturWirkung(t)<F.choreoAb)return null;const f=S.fx[n.lg][n.md][n.i],g=pkGegner(n),A=RPK.anlass;
+    if(!f||f[0]!==S.my||g==null)return null;const derby=istDerby(S.my,g),spitze=n.md+1>=A.spitzeAb&&rank(t.lg,S.my)<=A.spitzeBis&&rank(t.lg,g)<=A.spitzeBis;return derby||spitze?{verein:g}:null;},
   // Trainingslager (K11 §8, K11g): Folgekarten aus dem Spielablauf (Prüfung EU1), lagerTag legt sie beim Koller und bei einer Sichtung für denselben Tag in die Kette.
   // Hier nur die Prüfung, ob es noch passt: dasselbe Lager läuft (beim Koller nicht am letzten Tag), der Spieler ist noch bei dir
   lagerkoller(b){const l=lagerAktiv(S.tag);return b&&l&&l.von===b.lager&&S.tag<l.bis?b:null;},
