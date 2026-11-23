@@ -292,5 +292,11 @@ const KARTEN=[
   // Standard-Spezialisten (K06 §8, K06e, 23.11., popolupo): Info-Karte mit Wirkung (K30e). Die Presse lobt, die Gegner stellen sich vier Wochen auf deine Standards ein (REGELN.karten.standard)
   {id:'standardSpezialisten',titel:'Standard-Spezialisten',bereich:'K06',art:'info',stufe:'haeufig',chance:1,ausloeser:'standardSpezialisten',sperrTage:60,
     texte:['Ecken, Freistöße, Kopfbälle: Kaum eine Mannschaft trifft in dieser Halbserie so oft nach Standards wie deine. Die Gegner werden sich darauf einstellen.','„Die Standard-Könige der Liga“, titelt die Fachpresse. Die nächsten Gegner werden deine Ecken genau studieren.'],
-    wirkung:[{art:'ruf',wert:1},{art:'standardGegner',wert:1}]}
+    wirkung:[{art:'ruf',wert:1},{art:'standardGegner',wert:1}]},
+  // Streit nach Kritik (K15 §8, K15e, 23.11., popolupo): Anlasskarte (K30d) nach einem Streit im Einzelgespräch nach Kritik. Werte vorläufig.
+  {id:'streitNachKritik',titel:'Streit nach Kritik',bereich:'K15',art:'entscheidung',gross:false,stufe:'haeufig',chance:0.6,ausloeser:'streitNachKritik',sperrTage:60,
+    texte:['{spieler} hat den Streit nach deiner Kritik nicht vergessen. In der Kabine redet er schlecht über dich.','Seit dem lauten Gespräch mit {spieler} ist die Stimmung in der Kabine angespannt. Die Mannschaft wartet, wie du reagierst.'],
+    optionen:[{text:'Die Hand reichen und sich aussprechen',wirkung:[{art:'stimmung',wert:4,chance:0.6,schlecht:-1,gut:'Ihr redet in Ruhe. {spieler} gibt zu, dass er überreagiert hat.',schlechtText:'{spieler} nimmt die Hand, aber das Eis bleibt dünn.'}]},
+      {text:'Hart bleiben, die Kritik gilt',wirkung:[{art:'stimmung',wert:-3},{art:'glaub',wert:1},{art:'zusammenhalt',wert:-1}],folge:'Du bleibst bei deiner Kritik. {spieler} schweigt, die Kabine hat es registriert.'},
+      {text:'Es aussitzen',wirkung:[{art:'glaub',wert:-1},{art:'vertrauen',wert:-1}],folge:'{spieler} erzählt einem Reporter von eurem Streit. Die Zeitung macht eine Geschichte daraus, der Vorstand liest mit.'}],auto:0}
 ];

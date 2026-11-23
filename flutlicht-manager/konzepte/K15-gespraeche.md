@@ -136,6 +136,14 @@ K05 regelt Ablauf und Zeitpunkt, K15 die Wirkung (Konsistenzprüfung D2). Ab Wel
 | Streit nach Kritik | Hitzkopf, Diva | Stimmung beider Seiten, eventuell Presse (K29) |
 | Kabine glaubt dir nicht mehr | Glaubwürdigkeit unter 25 | Ansprachen wirken kaum, Vorstand wird aufmerksam (K28) |
 
+**Gebaut als K15e** (23.11.2026, popolupo, ohne Testlauf, Werte vorläufig): „Streit nach Kritik“ als Entscheidungskarte (Anlasskarte, Chance 0,6 je Woche).
+- **Auslöser:** Ein Spieler deines Kaders hat sich in den letzten 7 Tagen im Einzelgespräch mit dir gestritten, und das Gespräch war eine Kritik (`p.streit`, `p.gs`). Streiten kann man sich nach Kritik heute mit einem Hitzkopf (`streitKritik`) und, bei bestimmter Haltung, mit einer Diva oder einem Hitzkopf (`streitB`). Darum gilt die Spalte „Hitzkopf, Diva“ über den Streit selbst.
+- **Wahl:**
+  - Aussprechen: mit 60 % Stimmung +4, sonst −1.
+  - Hart bleiben: Stimmung −3, Glaubwürdigkeit +1, Zusammenhalt −1.
+  - Aussitzen: Er erzählt es der Presse, Glaubwürdigkeit −1 und Vertrauen des Vorstands −1. Eine eigene Pressewirkung (K29) fehlt, die Meldung nennt es.
+- Die Karten „Versprechen kippt“, „Spieler fordert Versprechen ein“ und „Kabine glaubt dir nicht mehr“ bleiben Erinnerung und Meldungen wie bisher (Nr. 17, gebrochene Versprechen, Glaubwürdigkeitskrise).
+
 ## 9. Wechselwirkungen
 
 | Konzept | Zusammenspiel |
@@ -201,7 +209,7 @@ gespraeche:{
 17. **Erinnerung** „Versprechen droht zu kippen“ am Spieltag (abschaltbar), wenn der Spieler nicht in der Startelf steht und die restlichen Spiele kaum noch reichen.
 18. **Vereinswechsel:** Offene Zusagen beim alten Verein sind hinfällig, ohne Folgen.
 19. **Lernstufen (K36):** Einzelgespräche ohne Zusagen und Mannschaftsansprache ab der C-Lizenz, Zusagen (Versprechen) ab der B-Lizenz. Bis dahin führt der Co-Trainer das Gespräch beim Gesprächswunsch nach der Regel der Computer-Vereine (kommt mit UL).
-20. **Noch nicht gebaut:** öffentliche Kritik und Presse (K29), Karten aus §8 als eigene Ereignisse (gebrochene Versprechen und Glaubwürdigkeitskrise kommen als Nachricht). Gespräche mit dem Vorstand: das Budgetgespräch seit U12l (K28 §5.14), die Glaubwürdigkeit halbiert dort die Zusage.
+20. **Noch nicht gebaut:** öffentliche Kritik und Presse (K29), Karten aus §8 als eigene Ereignisse (gebrochene Versprechen und Glaubwürdigkeitskrise kommen als Nachricht). „Streit nach Kritik“ seit K15e als Karte (§8). Gespräche mit dem Vorstand: das Budgetgespräch seit U12l (K28 §5.14), die Glaubwürdigkeit halbiert dort die Zusage.
 21. **Thema „Druck nehmen“ (U9c, K08 §5.3):** für Spieler bis 21 nach einem prägenden oder schwachen Spiel, bei negativem Selbstvertrauen oder zu hoher Belastung. Wirkung 3, ohne Zusage, dazu +0,3 Selbstvertrauen, wenn es negativ ist. In den drei Tagen nach einem prägenden Spiel zählt das Gespräch als Umgang (Lob, Kritik oder Druck nehmen).
 
 ## Quellen

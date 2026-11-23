@@ -114,6 +114,8 @@ const AUSLOESER={
   rudelbildung(){const L=kartenLetztSpiel(L=>L.derby&&L.rot);return L?{verein:L.gegner}:null;},
   // Spieler hadert mit seiner Position (K06 §8, K06d): mindestens RKT.spiel.positionSpiele Einsätze in Folge auf einer Position mit geringer Eignung (p.pfal)
   positionHadern(){const SP=RKT.spiel,h=absTag(S.tag),l=squad(S.my).filter(p=>(p.pfal||0)>=SP.positionSpiele&&p.pfalT!=null&&h-p.pfalT<=SP.positionTage); /* EK7 */return l.length?{spieler:pick(l).id}:null;},
+  // Streit nach Kritik (K15 §8, K15e): ein Spieler deines Kaders hat sich in den letzten RKT.gespraech.streitTage Tagen im Einzelgespräch nach deiner Kritik mit dir gestritten
+  streitNachKritik(){const h=absTag(S.tag),T=RKT.gespraech.streitTage,l=squad(S.my).filter(p=>p.streit!=null&&h-p.streit>=0&&h-p.streit<=T&&(p.gs||[]).some(([d,k])=>d===p.streit&&k==='kritik'));return l.length?{spieler:pick(l).id}:null;},
   // Standard-Spezialisten (K06 §8, K06e): in der laufenden Halbserie auffällig viele Ligatore nach Standards (S.std aus letztesSpielMerken), einmal je Halbserie
   standardSpezialisten(){const A=S.std,St=RKT.standard;return A&&A.s===S.season&&A.t===S.my&&!A.k&&A.sp>=St.abSpiele&&A.n>=St.ab&&A.g>0&&A.n/A.g>=St.anteil?{}:null;},
   // Folgekarte der Kette (nur über kartenKette, mit den Beteiligten der ersten Karte): Der Spieler ist noch beim selben Verein und noch nicht vergeben

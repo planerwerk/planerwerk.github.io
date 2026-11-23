@@ -404,6 +404,7 @@ const REGELN={
     // mindestens abSpiele Ligaspiele, mindestens ab Tore nach arten (ohne Elfmeter) und Anteil an allen Ligatoren mindestens anteil. Danach stellen sich die Gegner tage Tage
     // darauf ein: Tore nach Ecken und Freistoßflanken × faktor (wie der Bonus der Standard-Einheit, K07 §5.3). Einmal je Halbserie.
     standard:{arten:['ecke','freistoss','freistossFlanke'],abSpiele:8,ab:7,anteil:0.4,tage:28,faktor:0.95},
+    gespraech:{streitTage:7}, // Streit nach Kritik (K15 §8, K15e, 23.11., popolupo, GESCHÄTZT): Streit im Einzelgespräch nach Kritik (p.streit, p.gs) höchstens streitTage her
     skandal:{sperreLiga:20,sperrePokal:3}, // Skandale (K30 §8.4, K30f, 23.11., GESCHÄTZT): Wettbetrug eines Spielers eines Computer-Vereins, Sperre in Liga- und Pokalspielen
     testspiel:{nachTage:7}, // Testspiel-Karten (K11 §8, K30e, 22.11., GESCHÄTZT): bis nachTage nach dem Testspiel beim Amateurverein oder der Niederlage gegen ihn
     medizin:{grippeAb:3,rehaAb:60,restAb:30}, // Medizin-Karten (K10 §8, K10e, 22.11., GESCHÄTZT): Grippewelle ab grippeAb Kranken im Kader; lange Reha bei einer Verletzung ab rehaAb Tagen mit noch mindestens restAb Tagen

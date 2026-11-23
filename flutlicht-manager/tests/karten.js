@@ -415,6 +415,12 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
     'Standard-Spezialisten: Karte ab genug Standardtoren, Elfmeter zählen nicht, Gegner stellen sich vier Wochen ein, zweite Halbserie zählt neu',
     `vor ${St.abSpiele} Spielen ${frueh}, Standardtore ${n} von ${g}, Karte ${!!karte}, zu kleiner Anteil ${wenig}, Faktor ${f1} (anderer Verein ${fremd}), noch einmal ${danach}, nach ${St.tage} Tagen ${f2}, neue Halbserie ${neu}`);}
 
+// K15e. Streit nach Kritik (K15 §8): nur nach einem Streit im Einzelgespräch, das eine Kritik war, und höchstens streitTage her; ein Streit nach einem anderen Thema zählt nicht.
+{const {S,ev}=welt(),A=ev('AUSLOESER'),T=ev('RKT').gespraech.streitTage,sq=ev('squad')(S.my),h=ev('absTag')(S.tag),p=sq[0];S.phase='play';sq.forEach(x=>{delete x.streit;x.gs=[];});
+  p.streit=h-2;p.gs=[[h-2,'kritik']];const kritik=A.streitNachKritik();p.gs=[[h-2,'lob']];const lob=A.streitNachKritik();
+  p.streit=h-T-1;p.gs=[[h-T-1,'kritik']];const alt=A.streitNachKritik();delete p.streit;const ohne=A.streitNachKritik();
+  pruef(!!kritik&&kritik.spieler===p.id&&lob===null&&alt===null&&ohne===null,'Streit nach Kritik: nur nach Kritik, nur bis streitTage danach',`nach Kritik ${kritik&&kritik.spieler===p.id}, nach Lob ${lob}, zu alt ${alt}, ohne Streit ${ohne}`);}
+
 // U19e. Europapokal-Karten (K37 §8): Auswärtsspiel bei einem Auslandsverein in den nächsten 7 Tagen (kein Heimspiel, nicht später, nicht das Finale), Spiel 1 bis 7 Tage her,
 //       Wunder nach 0:3 im Hinspiel und 4:0 oder 3:0 mit Elfmeterschießen im Rückspiel, nicht nach nur einem Tor Rückstand und nicht beim Ausscheiden. euMeineSpiele ersetzt der Test.
 {const {S,W,ev}=welt(),A=ev('AUSLOESER'),AV=ev('AV0'),me=S.my,d=S.tag;W.ev('euMeineSpiele=function(){return S.testEu||[];}');
