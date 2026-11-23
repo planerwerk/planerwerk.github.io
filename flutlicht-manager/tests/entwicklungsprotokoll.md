@@ -192,13 +192,13 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 - Ein lesender Prüf-Agent hat die Korrekturen EQ und K30g durchgesehen (Konsistenzprüfung ER). Sechs niedrige Funde.
 - **Behoben:**
-  - ER1: Kein Punktabzug mehr nach dem letzten Spieltag, also nicht zwischen den Relegationsspielen. Bei der Insolvenz der Computer-Vereine gibt es dieselbe Lücke schon länger. Sie bleibt offen und steht in der Konsistenzprüfung.
+  - ER1: Kein Punktabzug mehr nach dem letzten Spieltag, also nicht zwischen den Relegationsspielen. Nachtrag im selben Zweig: Auch die Insolvenz wartet nach dem letzten Spieltag bis zum nächsten Monatsersten, bei dir und bei den Computer-Vereinen. Der Abzug gilt dann für die neue Saison. Dazu ein neuer Fall in `tests/finanzen.js`.
   - ER2: höchstens einmal in zehn Saisons für alle Vereine. Die Angabe weiter unten zu K30g stimmte nicht.
   - ER3: Die Karte wird immer gemeldet (neues Katalogfeld `immer`).
   - ER4: Test K30g über die Karte selbst.
   - ER5: Die Lizenz-Aufgabe zählt auch über die Karte.
   - ER6: Meldung „ist schon in deinem Stab“.
-- **Tests zuerst:** `tests/karten.js` (K30g).
+- **Tests zuerst:** `tests/karten.js` (K30g), `tests/finanzen.js` (Insolvenz am Saisonende, neuer Fall am Ende von Nr. 12).
 
 ### 23.11.2026: U12m Mitglieder als Stimmen (Zweig `mitarbeit/popolupo-u12m-mitgliederstimmen`, auf K30g)
 

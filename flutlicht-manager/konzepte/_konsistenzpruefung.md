@@ -2362,7 +2362,7 @@ Korrekturen auf `mitarbeit/popolupo-er-korrekturen` (auf U12m).
 
 | # | Befund | Status |
 |---|---|---|
-| ER1 | Der Punktabzug konnte zwischen den Relegationsspielen 2./3. Liga kommen. Dann hätte das Rückspiel ein anderer Verein bestritten als das Hinspiel. Jetzt nicht mehr nach dem letzten Spieltag der 3. Liga (`ligaFertig(3)`). Bei der Insolvenz der Computer-Vereine am 1.6. gibt es dasselbe schon länger, das steht noch offen. | ✅ behoben, 📌 Insolvenz |
+| ER1 | Der Punktabzug konnte zwischen den Relegationsspielen 2./3. Liga kommen. Dann hätte das Rückspiel ein anderer Verein bestritten als das Hinspiel. Jetzt nicht mehr nach dem letzten Spieltag der 3. Liga (`ligaFertig(3)`). Bei der Insolvenz am 1.6. gab es dasselbe schon länger. Seit dem Nachtrag wartet sie nach dem letzten Spieltag bis zum nächsten Monatsersten, bei dir und bei den Computer-Vereinen (Test in `tests/finanzen.js`). | ✅ behoben |
 | ER2 | „Höchstens einmal in zehn Jahren“ stimmte nicht. `sperrTage` sperrt nur denselben Spieler beim selben Verein. Jetzt sperrt `S.skandal3` mit `RKT.skandal.abstand` (10 Saisons) für alle. Die Stufe selten ergibt etwa einmal in 100 Saisons. | ✅ behoben |
 | ER3 | Über der Info-Grenze der Woche wurde der Abzug ohne Meldung gebucht. Neues Katalogfeld `immer`, die Karte wird immer gemeldet. | ✅ behoben |
 | ER4 | Der Test K30g stürzte ab, wenn der Auslöser nichts fand, und prüfte den Katalogeintrag nicht. Jetzt über `kartenZeigen`, abgesichert, dazu ER1 und ER2. | ✅ behoben |

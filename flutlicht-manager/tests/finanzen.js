@@ -73,6 +73,12 @@ const tagMit=(ev,mmtt)=>{for(let d=0;d<400;d++)if(ev('mmtt')(d)===mmtt)return d;
 {const {F,S,ev}=welt(),t=S.teams.find(x=>x.lg===2&&x.id!==S.my);t.cash=-ev('kreditRahmen')(t)-1;F.kiInsolvenzPruefen();const nachEinem=(S.abzug&&S.abzug[S.season]||{})[t.id]||0;t.cash=-ev('kreditRahmen')(t)-1;F.kiInsolvenzPruefen();
   pruef(nachEinem===0&&S.abzug[S.season][t.id]===9&&t.cash===0,'K23b: Insolvenz eines Computer-Vereins mit Punktabzug und Schuldenschnitt',`Abzug ${S.abzug&&S.abzug[S.season]&&S.abzug[S.season][t.id]}, Konto ${t.cash}`);}
 
+// Prüfung ER1: Nach dem letzten Spieltag der Liga (Relegation läuft noch) wartet die Insolvenz eines Computer-Vereins bis zum nächsten Monatsersten, der Zähler bleibt stehen
+{const {F,S,ev}=welt(),t=S.teams.find(x=>x.lg===3&&!(x.zweite>=0)&&x.id!==S.my),lg=t.lg,r0=S.res[lg].slice(),n=S.fx[lg].reduce((s,md)=>s+md.length,0),[h,a]=S.fx[lg][0][0];
+  while(S.res[lg].length<n)S.res[lg].push([h,a,0,0,0]);t.cash=-ev('kreditRahmen')(t)-1;F.kiInsolvenzPruefen();t.cash=-ev('kreditRahmen')(t)-1;F.kiInsolvenzPruefen();
+  const wartet=!((S.abzug||{})[S.season]||{})[t.id]&&t.fu>=2;S.res[lg]=r0;t.cash=-ev('kreditRahmen')(t)-1;F.kiInsolvenzPruefen();const danach=((S.abzug||{})[S.season]||{})[t.id]===9;
+  pruef(wartet&&danach,'Insolvenz nach dem letzten Spieltag aufgeschoben, danach am nächsten Monatsersten (ER1)',`wartet ${wartet}, danach ${danach}`);}
+
 // 13. K23d: Gehaltsrahmen = gehaltAnteil (seit K23c 75 %) der erwarteten Einnahmen, Anteil steigt mit den Gehältern, Transferbudget = Konto über 10 % Reserve, über 110 % kauft niemand
 {const {F,S,ev,t}=welt(),B=ev('RFP').budget,E=ev('erwarteteEinnahmen')(t),r0=ev('rahmenAnteil')(t);ev('squad')(S.my).forEach(p=>{p.sal*=5;});const r1=ev('rahmenAnteil')(t);t.cash=E;
   pruef(ev('gehaltsRahmen')(t)===Math.round(E*B.gehaltAnteil)&&r1>r0*4&&r1>B.sperreAb&&ev('transferBudget')(t)===E-Math.round(E*B.reserve),'K23d: Gehaltsrahmen, Anteil und Transferbudget',`Rahmen ${ev('gehaltsRahmen')(t)}, Anteil ${r0.toFixed(2)} → ${r1.toFixed(2)}, Budget ${ev('transferBudget')(t)}`);}
