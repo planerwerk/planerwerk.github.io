@@ -209,7 +209,7 @@ gespraeche:{
 17. **Erinnerung** „Versprechen droht zu kippen“ am Spieltag (abschaltbar), wenn der Spieler nicht in der Startelf steht und die restlichen Spiele kaum noch reichen.
 18. **Vereinswechsel:** Offene Zusagen beim alten Verein sind hinfällig, ohne Folgen.
 19. **Lernstufen (K36):** Einzelgespräche ohne Zusagen und Mannschaftsansprache ab der C-Lizenz, Zusagen (Versprechen) ab der B-Lizenz. Bis dahin führt der Co-Trainer das Gespräch beim Gesprächswunsch nach der Regel der Computer-Vereine (kommt mit UL).
-20. **Noch nicht gebaut:** öffentliche Kritik und Presse (K29), Karten aus §8 als eigene Ereignisse (gebrochene Versprechen und Glaubwürdigkeitskrise kommen als Nachricht). „Streit nach Kritik“ seit K15e als Karte (§8). Gespräche mit dem Vorstand: das Budgetgespräch seit U12l (K28 §5.14), die Glaubwürdigkeit halbiert dort die Zusage.
+20. **Noch nicht gebaut:** Karten aus §8 als eigene Ereignisse (gebrochene Versprechen und Glaubwürdigkeitskrise kommen als Nachricht). „Streit nach Kritik“ seit K15e als Karte (§8). Gespräche mit dem Vorstand: das Budgetgespräch seit U12l (K28 §5.14), die Glaubwürdigkeit halbiert dort die Zusage. Öffentliche Kritik gibt es seit U17a in der Pressekonferenz (K29: Kritik an der Mannschaft, Kritik an einem Spieler, `REGELN.presse.wirkung.kritikTeam` und `kritikSpieler`; nachgetragen am 24.11.2026).
 21. **Thema „Druck nehmen“ (U9c, K08 §5.3):** für Spieler bis 21 nach einem prägenden oder schwachen Spiel, bei negativem Selbstvertrauen oder zu hoher Belastung. Wirkung 3, ohne Zusage, dazu +0,3 Selbstvertrauen, wenn es negativ ist. In den drei Tagen nach einem prägenden Spiel zählt das Gespräch als Umgang (Lob, Kritik oder Druck nehmen).
 
 ## Quellen

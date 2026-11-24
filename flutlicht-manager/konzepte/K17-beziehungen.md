@@ -108,8 +108,12 @@ Partnervereine (+30) gibt es noch keine. Dazu bräuchte es eine Quelle.
 | Leihe zurück: Absprache gehalten / nicht gehalten | du–Leihverein | +5 / −5 |
 | Wechsel unter Computer-Vereinen (immer zum Listenpreis) | Verein–Verein | +5 |
 | Derby mit Sieger (jede Liga, alle Vereine) | Verein–Verein | −2 |
+| Abwerbeversuch aufgeflogen (K20 §5.3) | du–Verein des Spielers | −15 bis −30 |
+| Abwerbeversuch eines Computer-Vereins öffentlich gemacht (K20e) | du–abwerbender Verein | −15 |
+| Provokation in der Pressekonferenz (K29) | du–Gegner | −3 je Provokation |
+| Stichelei unter Computer-Trainern vor Derby oder Spitzenspiel (K29m) | Verein–Verein | −2 |
 
-Noch nicht gebaut: Abwerben (K20), Presse und Gerüchte (K29), Vorfälle im Spiel (K09). Hilfe in der Not gibt es seit K17b als Karte, den lachenden Dritten seit K30c als Kette (K30 §5.6).
+Nachgetragen am 24.11.2026 (Abgleich mit dem Code): Die vier Zeilen darüber sind mit K20, K20e, K29 und K29m gebaut, Werte in `REGELN.abwerben.folgen.beziehung`, `REGELN.abwerben.ki.beziehung`, `REGELN.presse.wirkung.provokation.beziehung` und `REGELN.presse.medienprofil.ki.bez`. Gerüchte ändern keine Beziehung, sie hängen umgekehrt an ihr (Klatsch, unten). Noch nicht gebaut: Vorfälle im Spiel (K09). Hilfe in der Not gibt es seit K17b als Karte, den lachenden Dritten seit K30c als Kette (K30 §5.6).
 
 **Wirkungen (§5.2), gebaut:**
 
