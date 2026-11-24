@@ -137,5 +137,15 @@ const punkte=(S,F,id)=>{const lg=S.teams[id].lg,r=F.table(lg).find(x=>x.id===id)
   pruef(!fehlt.length&&!!v1&&v1.k==='startelf'&&!!v2&&v2.k==='liveBisEnde'&&zeigt&&weg&&neu&&aus,'Kleine Aufgabe: Ort für jede Aufgabe, Vorschlag ist die erste offene, gemerkt im Büro bis erledigt, die nächste Lizenz löscht sie',
     `ohne Ort ${fehlt.join(',')||'keine'}, Vorschlag ${v1&&v1.k} dann ${v2&&v2.k}, Karte ${zeigt}, erledigt weg ${weg}, nach Aufstieg ${neu}, ohne Lernstufen ${aus}`);}
 
+// Prüfung FE2, FE3: Aufgaben, die einen Anlass brauchen (ohneGelegenheit), schlägt die Karte erst vor, wenn keine andere offen ist. Ohne Lernstufen (aus oder S.lizenz null)
+//       gibt es weder Vorschlag noch Merkkarte, mit ihnen zeigt die Merkkarte eine gemerkte offene Aufgabe (Gegenprobe).
+{const {S,F,ev}=welt(true),R=ev('RLZ'),og=R.ohneGelegenheit,L=S.lizenz,i=R.aufstieg.findIndex(A=>!!A&&A.aufgaben.some(k=>og.includes(k))&&A.aufgaben.some(k=>!og.includes(k)));
+  L.stufe=i;L.aufgaben={};L.gel=Object.fromEntries(og.map(k=>[k,1]));L.karte=null; /* gel: es gab Gelegenheit, die Anlass-Aufgaben bleiben offen */
+  const v=ev('lizenzVorschlag')();R.aufstieg[i].aufgaben.forEach(k=>{if(!og.includes(k))L.aufgaben[k]=1;});const w=ev('lizenzVorschlag')();
+  const k0=R.aufstieg[i].aufgaben.find(k=>!og.includes(k));L.aufgaben={};F.lizenzMerken(k0);const mitAn=F.lizenzMerkKarte()!=='';
+  L.an=false;const ohneAn=F.lizenzMerkKarte()===''&&ev('lizenzVorschlag')()===null;S.lizenz=null;const ohneL=F.lizenzMerkKarte()===''&&ev('lizenzVorschlag')()===null&&F.lizenzKarte()==='';
+  pruef(i>=0&&!!v&&!og.includes(v.k)&&!!w&&og.includes(w.k)&&mitAn&&ohneAn&&ohneL,'Kleine Aufgabe: Anlass-Aufgaben zuletzt, ohne Lernstufen weder Vorschlag noch Merkkarte',
+    `Stufe ${i}, Vorschlag ${v&&v.k}, wenn nur noch Anlass-Aufgaben offen ${w&&w.k}, Merkkarte mit Lernstufen ${mitAn}, Lernstufen aus ${ohneAn}, ohne S.lizenz ${ohneL}`);}
+
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

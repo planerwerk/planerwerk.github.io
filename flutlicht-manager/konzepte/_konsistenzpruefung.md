@@ -2588,3 +2588,16 @@ Korrekturen auf `mitarbeit/popolupo-fd-korrekturen` (auf K09h).
 | FD3 | Die Pokal-Rotation verglich mit der besten Elf nach dem Spiel (müde, verletzt, gesperrt) und meldete Rotation, wo keine war. Die Vergleichself wird jetzt vor dem Anpfiff festgehalten (`pokalBezugsElf`, `bxi` im Ergebnis). | ✅ behoben |
 | FD4 | Das Fenster der letzten Bieterrunde (`p.bieterF`, Saisontag) sperrte dasselbe Fenster in allen späteren Saisons. Rückt jetzt mit. | ✅ behoben |
 | FD5 | Standardtraining (`t.stdTag`) und Gegnerbeobachtung (`t.gb.bis`) wirkten in die nächste Saison hinein. Rücken jetzt mit. | ✅ behoben |
+
+## FE. Prüfung von K09f und K36d ohne Laufzeit (24. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 32c234b..fc1ebbe gelesen, nichts ausgeführt. Vier niedrige Funde, kein Laufzeitfehler. Ohne Befund: absolute Tage in `S.kontrolle` (halten über den Saisonwechsel), alte Spielstände, Import, mehrere Tage am Stück, Entlassung, die Zählung über zwölf Monate, Zufall nur in eigenen Strömen (Gleichschritt 5a unberührt), Test presse Fall 5, für K36d alle 16 Aufgaben mit Ort und existierendem Bereich, ohne `S.lizenz`, letzte Lizenz, Import.
+
+Korrekturen auf `mitarbeit/popolupo-fe-korrekturen` (auf den Korrekturen FD).
+
+| # | Befund | Status |
+|---|---|---|
+| FE1 | Nach einem Jobwechsel vor dem Urteil zahlte niemand, obwohl Meldung und K09 „der alte Verein“ sagen, und die Chronik (samt Karte „Dein Spruch geht viral“) landete beim neuen Verein. Jetzt zahlt der alte Verein von seinem Konto, `chronikEintrag` nimmt den Verein mit. | ✅ behoben |
+| FE2 | Auf dem Weg zur A-Lizenz schlug die Karte immer „Sportgerichtsverfahren selbst entschieden“ vor, das du nicht selbst angehen kannst. Aufgaben aus `ohneGelegenheit` kommen jetzt zuletzt. | ✅ behoben |
+| FE3 | Der Testteil „ohne Lernstufen“ war immer grün (nach dem Aufstieg war die Merkkarte ohnehin leer). Neuer Fall mit Gegenprobe, `S.lizenz=null` und Vorschlag. | ✅ behoben |
+| FE4 | Entwicklungsprotokoll nannte presse.js Fall 3 statt Fall 5, K29 den alten Strafrahmen, Kommentare den Faktor der Wiederholung ungenau. Berichtigt. | ✅ behoben |

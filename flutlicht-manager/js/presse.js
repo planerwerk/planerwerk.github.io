@@ -120,7 +120,7 @@ function pkAbschluss(){const pk=S.pk;if(!pk)return;S.pk=null;const P=presseS(),Q
   const echo=PK_ECHO.find(x=>pk.antw.some(a=>a.art===x));if(echo)news(`Zeitungsecho, ${pkSchlagzeile(echo,pk)}`);
   if(schiri&&R()<Q.schiri.verfahren)kontrolleEroeffnen(pk.art==='urteil',schiri.txt,echo?pkSchlagzeile(echo,pk):''); /* K09f: der Kontrollausschuss ermittelt, das Urteil kommt in kontrolleTag */
   if(chronik)chronikEintrag(chronik.txt,echo?pkSchlagzeile(echo,pk):'');}
-function chronikEintrag(txt,kopf){const st=statS(),l=st.chronik||(st.chronik=[]);l.push({s:S.season,tag:S.tag,tid:S.my,txt,kopf});if(l.length>RPK.chronikMax)l.splice(0,l.length-RPK.chronikMax);}
+function chronikEintrag(txt,kopf,tid){const st=statS(),l=st.chronik||(st.chronik=[]);l.push({s:S.season,tag:S.tag,tid:tid!=null?tid:S.my,txt,kopf});if(l.length>RPK.chronikMax)l.splice(0,l.length-RPK.chronikMax);} /* tid: Verein des Eintrags, sonst deiner (Prüfung FE1) */
 
 // ---------- Gedächtnis (K29 §5.2) ----------
 // Montags: Rückendeckung und vier Wochen später verkauft kostet Glaubwürdigkeit

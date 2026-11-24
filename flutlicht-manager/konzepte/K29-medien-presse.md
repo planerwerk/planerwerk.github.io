@@ -201,7 +201,7 @@ Das ist der Maßstab für die Verbindung zu K09.
   | Kampfansage | ＋ | +1 | 0 | +2 | −0,5 | 0 | Gedächtnis: Sieg im nächsten Spiel gegen den Gegner wird Kult (Chronik, Fans +2), Niederlage Häme (Glaubwürdigkeit −3, Fans −2) |
   | Kritik an der Mannschaft | − | Kämpfer +2, Diven und Nervenschwache −3, sonst −1 | 0 | 0 | +1 | +1 | |
   | Kritik an einem Spieler | − | 0 | −8 | 0 | 0 | +1 | |
-  | Kritik am Schiedsrichter | − | +1 | 0 | +3 | −1 | 0 | Verfahren mit 30 %: Geldstrafe 5.000 bis 50.000 € je nach Liga (§3.2) |
+  | Kritik am Schiedsrichter | − | +1 | 0 | +3 | −1 | 0 | Verfahren mit 30 %, Urteil des Kontrollausschusses nach 3 bis 7 Tagen (seit K09f): beim ersten Fall in zwölf Monaten mit 50 % nur eine Verwarnung, sonst Geldstrafe 5.000 bis 50.000 € je nach Liga, bei Wiederholung bis doppelt so viel (bis 100.000 €, K09 Nr. 14) |
   | Angriff auf die Medien | − | +1 | 0 | +1 | −1 | −4 | |
   | Provokation des Gegners | − | 0 | 0 | +2 | 0 | +1 | Beziehung zum Gegner −3 (K17) |
   | Floskel | ○ | 0 | 0 | 0 | 0 | −1 | |

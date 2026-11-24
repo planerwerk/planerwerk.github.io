@@ -63,7 +63,9 @@ function lizenzAllesSelbst(){const L=S.lizenz;if(!L)return;Object.keys(L.auto).f
 function lizenzKarteZu(ansehen){if(S.lizenz)S.lizenz.karte=null;save();render();if(ansehen)showLizenz();}
 // Kleine Aufgabe (K36 §8, K36d): Die Aufstiegskarte schlägt die erste offene Aufgabe der nächsten Lizenz vor, mit Ort und einem Satz, wie es geht (RLZ.aufgabenOrt).
 // „Merken“ legt sie als kleine Karte ins Büro (S.lizenz.merk), bis sie erledigt ist, du sie wegklickst oder die nächste Lizenz kommt. Kein Halt, keine Wirkung auf den Aufstieg.
-const lizenzVorschlag=()=>{const st=aufstiegStand();if(!st)return null;const x=st.liste.find(a=>!a.ok&&RLZ.aufgabenOrt[a.k]);return x?{k:x.k,name:x.name,wie:RLZ.aufgabenOrt[x.k][1]}:null;};
+// Aufgaben, die einen Anlass brauchen (RLZ.ohneGelegenheit: Rote Karte, Verletzung), nur, wenn sonst keine offen ist: angehen kannst du sie nicht selbst (Prüfung FE2).
+const lizenzVorschlag=()=>{const st=aufstiegStand();if(!st)return null;const offen=st.liste.filter(a=>!a.ok&&RLZ.aufgabenOrt[a.k]),og=RLZ.ohneGelegenheit||[];
+  const x=offen.find(a=>!og.includes(a.k))||offen[0];return x?{k:x.k,name:x.name,wie:RLZ.aufgabenOrt[x.k][1]}:null;};
 const aufgabeTab=k=>{const O=RLZ.aufgabenOrt[k];return O&&O[0]&&RLZ.bereiche[O[0]]?RLZ.bereiche[O[0]].tab:'buero';};
 function lizenzMerken(k){const L=S.lizenz;if(!L)return;L.merk=k&&RLZ.aufgabenOrt[k]?k:null;save();render();}
 function lizenzMerkKarte(){const L=S.lizenz;if(!L||!L.an||!L.merk||L.karte)return'';const st=aufstiegStand(),x=st&&st.liste.find(a=>a.k===L.merk);if(!x||x.ok)return'';

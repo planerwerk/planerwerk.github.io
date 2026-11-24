@@ -50,6 +50,12 @@ const gegner=w=>w.S.teams.find(x=>x.lg===w.t.lg&&x.id!==VEREIN).id;
   pruef(n>=4&&n<=22&&frist&&!ausser&&warn<=1,'Schiedsrichterkritik: Kontrollausschuss in 4 bis 22 von 40 Fällen, Urteil nach 3 bis 7 Tagen, höchstens der erste Fall nur verwarnt, sonst Strafe im Rahmen der Liga, bei Wiederholung höher',
     `${n} Verfahren, Frist ${frist}, ${warn} Verwarnung(en), ${ausser} außerhalb`);}
 
+// Prüfung FE1: Nach einem Jobwechsel zahlt der alte Verein von seinem Konto, deine Kasse bleibt gleich, die Chronik bekommt den Eintrag beim alten Verein.
+{const w=welt(false),{S,ev,t}=w,abs=ev('absTag'),alt=S.teams.find(x=>x.id!==S.my&&x.lg===t.lg),chr=()=>ev('statS')().chronik||[];
+  S.kontrolle={f:[{tid:alt.id,urteil:abs(S.tag),uk:0,txt:'Test',kopf:''}],alt:[abs(S.tag)-10]};const c0=alt.cash,m0=t.cash,n0=chr().length; /* ein früherer Fall: keine Verwarnung */
+  ev('kontrolleTag')(S.tag);const l=chr(),e=l[l.length-1];
+  pruef(alt.cash<c0&&t.cash===m0&&l.length===n0+1&&!!e&&e.tid===alt.id,'Kontrollausschuss nach Jobwechsel: der alte Verein zahlt, die Chronik gehört ihm',`Konto alt ${c0} → ${alt.cash}, deins ${m0} → ${t.cash}, Chronik bei ${e&&e.tid}`);}
+
 // 6. Gedächtnis: Rückendeckung und Verkauf kostet Glaubwürdigkeit 5, Kampfansage eingelöst kommt in die Chronik, verloren kostet 3
 {const w=welt(false),{F,S,ev,t}=w,p=ev('squad')(VEREIN)[2],g=gegner(w);F.presseAnlass('wechselwunsch',{pid:p.id});
   S.pk.fragen=[{t:'{spieler}?',o:['rueckendeckung','kritikSpieler','floskel'],sp:1,j:'Holger Vogt'}];S.pk.i=0;F.pkAntwort('rueckendeckung');
