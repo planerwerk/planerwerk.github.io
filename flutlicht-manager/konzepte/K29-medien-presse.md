@@ -311,7 +311,7 @@ Das ist der Maßstab für die Verbindung zu K09.
 **Umsetzung K29g (22.11.2026, popolupo, ohne Testlauf): Pressekonferenz nach dem Urteil (§4.1 „Ereignis“)**
 - **Wann:** Das Sportgericht sperrt einen deiner Spieler für mindestens 3 Spiele (angenommen, nach Einspruch oder automatisch) und die Sperre läuft noch (DR4). Die Pressekonferenz wird vorgemerkt und im Tageslauf nach den Anlässen vor einem Spiel geöffnet, sie verdrängt also kein Derby (DR2). Findet sie binnen 7 Tagen keinen freien Tag, verfällt sie. Es gelten die üblichen Grenzen: Budget, 4 Tage Abstand, 21 Tage Sperre je Anlass, Automatik schickt den Co-Trainer. Bei wenig Medienklima (unter 35) sind es bis zu vier Fragen.
 - **Fragen** (eigene Texte, fünf, zwei oder drei davon): gerecht oder nicht, hat er der Mannschaft geschadet, wie den Ausfall auffangen, schon mit ihm gesprochen, wird jetzt über Disziplin geredet.
-- **Kritik am Urteil** ist die Antwortart Schiedsrichterkritik: Fans +3, Mannschaft +1, Vorstand −1 und mit 30 % eine Geldstrafe vom Sportgericht. Seit K29h (Prüfung DR5) heißt sie dort „Kritik am Urteil“ und hat eigene Texte, eine eigene Schlagzeile und eine eigene Meldung zur Strafe.
+- **Kritik am Urteil** ist die Antwortart Schiedsrichterkritik: Fans +3, Mannschaft +1, Vorstand −1 und mit 30 % ein Verfahren des Kontrollausschusses (seit K09f: Urteil nach 3 bis 7 Tagen, beim ersten Mal womöglich nur eine Verwarnung, bei Wiederholung höhere Strafe, K09 Nr. 14). Seit K29h (Prüfung DR5) heißt sie dort „Kritik am Urteil“ und hat eigene Texte, eine eigene Schlagzeile und eine eigene Meldung zur Strafe.
 - **Rückendeckung** merkt sich die Presse wie sonst, wird er danach verkauft, kostet es Glaubwürdigkeit (§5.2).
 
 ## 6. Hebel des Spielers

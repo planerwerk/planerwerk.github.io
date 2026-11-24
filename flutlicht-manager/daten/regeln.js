@@ -531,7 +531,9 @@ const REGELN={
       floskel:{medien:-1},humor:{team:1,fans:1,medien:1,krise:-1}},
     streuung:[0.5,1.5],deckel:{team:6,spieler:10,fans:6,vorstand:4,medien:8},abnutzung:[0.5,0.25],
     ausraster:{weckruf:0.35,bruch:0.35,kult:0.3,proSaison:2,weckrufTeam:4,bruchTeam:-5,bruchVorstand:-3,kultFans:6},
-    schiri:{verfahren:0.3,strafe:{1:[20000,50000],2:[10000,25000],3:[5000,12000]}},
+    // Kontrollausschuss nach Schiedsrichterkritik (K09 §4.3, §5.4, K09f): Urteil nach tage Tagen; ohne frühere Fälle in gedaechtnis Tagen mit verwarnung nur eine Verwarnung,
+    // sonst Geldstrafe aus strafe je Liga, je früherem Fall × (1 + wiederholung), höchstens × wiederholungMax
+    schiri:{verfahren:0.3,strafe:{1:[20000,50000],2:[10000,25000],3:[5000,12000]},tage:[3,7],verwarnung:0.5,wiederholung:0.5,wiederholungMax:2,gedaechtnis:365},
     gedaechtnis:{rueckendeckungTage:28,rueckendeckungGlaub:-5,kultFans:2,haemeGlaub:-3,haemeFans:-2,aussagen:40},delegieren:-2,chronikHumor:0.3,chronikMax:100,
     // K29d (22.11., GESCHÄTZT): Medienklima in der Pressekonferenz. Gewicht der scharfen Medien 1 + gewicht × (50 − Klima)/50, der übrigen 1 − …; unter bohrenUnter eine Frage mehr
     klimaFragen:{scharf:['boulevard','portal'],gewicht:0.5,bohrenUnter:35,bohrenPlus:1},

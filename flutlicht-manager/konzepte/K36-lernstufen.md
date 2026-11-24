@@ -420,6 +420,7 @@ lizenz:{
 177. **K29m Sticheleien unter Computer-Trainern (23.11., popolupo, ohne Testlauf):** keine neue Funktion, nur Meldungen aus der Welt. Sie hängen an keinem Bereich.
 178. **K07g Einsätze auf der Umschulungsposition (23.11., popolupo, ohne Testlauf):** keine neue Funktion. Eine Umschulung gibt es erst mit dem Bereich `umschulung`, die Einsätze zählen dann von selbst.
 179. **K13e Pokal-Rotation rächt sich (23.11., popolupo, ohne Testlauf):** keine neue Funktion, nur eine Meldung nach dem Pokal-Aus. Sie hängt an keinem Bereich.
+180. **K09f Kontrollausschuss nach Äußerungen (24.11., popolupo, ohne Testlauf):** keine neue Funktion. Das Verfahren folgt aus deiner Antwort in der Pressekonferenz (Bereich `presse`), Urteil und Strafe kommen ohne Entscheidung und ohne Halt. Delegierst du die Pressekonferenz, kritisiert der Co-Trainer den Schiedsrichter nie.
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 

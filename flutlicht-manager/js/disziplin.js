@@ -102,5 +102,23 @@ function sportgerichtTag(d){if(!S.verfahren||!S.verfahren.length)return;
   S.verfahren=S.verfahren.filter(v=>v.stand!=='erledigt');}
 const meineVerfahren=()=>(S.verfahren||[]).filter(v=>{const p=PIX.get(v.pid);return p&&p.team===S.my;});
 
+// ---------- Äußerungen (K09 §4.3, §5.4, K09f) ----------
+// Schiedsrichterkritik in der Pressekonferenz (K29, auch Kritik am Urteil, K29h): Der Kontrollausschuss ermittelt (Chance RPK.schiri.verfahren beim Abschluss der
+// Pressekonferenz), das Urteil kommt nach RPK.schiri.tage Tagen. Ohne frühere Fälle in gedaechtnis Tagen gibt es mit verwarnung nur eine Verwarnung, sonst eine
+// Geldstrafe nach Liga, je früherem Fall × (1 + wiederholung), höchstens × wiederholungMax. Gezahlt wird nur, wenn du noch beim selben Verein bist.
+// Ohne Halt, eigene Ströme. Innenraumverbot (Trainer auf der Tribüne) ist noch nicht gebaut.
+// S.kontrolle = {f: offene Fälle [{tid, urteil (absoluter Tag), uk (Kritik am Urteil), txt, kopf}], alt: absolute Tage früherer Urteile}
+const kontrolleS=()=>S.kontrolle||(S.kontrolle={f:[],alt:[]});
+function kontrolleEroeffnen(urteilKritik,txt,kopf){const K=RPK.schiri,heute=absTag(S.tag),n=mitStrom(strom('kontrolle',S.season,heute,kontrolleS().f.length),()=>riA(K.tage));
+  kontrolleS().f.push({tid:S.my,urteil:heute+n,uk:urteilKritik?1:0,txt:txt||'',kopf:kopf||''});
+  news(`Der Kontrollausschuss des DFB ermittelt wegen deiner Kritik ${urteilKritik?'am Urteil des Sportgerichts':'am Schiedsrichter'}. Das Ergebnis kommt in den nächsten Tagen.`,'bad');}
+function kontrolleTag(d){const k=S.kontrolle;if(!k||!k.f.length)return;const K=RPK.schiri,heute=absTag(d);k.alt=(k.alt||[]).filter(a=>heute-a<K.gedaechtnis);
+  k.f.filter(c=>heute>=c.urteil).forEach(c=>{k.f=k.f.filter(x=>x!==c);const vor=k.alt.length;k.alt.push(heute);const was=c.uk?'deine Kritik am Urteil':'deine Kritik am Schiedsrichter';
+    mitStrom(strom('kontrolleUrteil',S.season,c.urteil,vor),()=>{
+      if(!vor&&R()<K.verwarnung){news(`Kontrollausschuss: Für ${was} gibt es eine Verwarnung. Beim nächsten Mal wird es teuer.`,'');return;}
+      const t=S.teams[c.tid],L=K.strafe[t?t.lg:3]||K.strafe[3],f=Math.min(K.wiederholungMax,1+K.wiederholung*vor),b=Math.round((L[0]+R()*(L[1]-L[0]))*f/1000)*1000,mein=c.tid===S.my;
+      if(mein)money('Strafen',-b);news(`Kontrollausschuss: Das Sportgericht bestraft ${was} mit ${fmt(b)}${vor?` (${vor+1}. Fall in zwölf Monaten)`:''}.${mein?'':` Zahlen muss ${tn(c.tid)}.`}`,'bad');
+      chronikEintrag(c.txt,c.kopf);});});}
+
 // Saisonwechsel: Gelbe Karten und Gelbsperren verfallen, Rot- und Gelb-Rot-Sperren laufen weiter (K09 §3.2, auch im Pokal)
 function disziplinSaison(p){if(p.kt)p.kt={liga:0,pokal:0,eu:0};else delete p.yc;if(p.sperre)WETTBEWERBE.forEach(wb=>{if(p.sperre[wb])p.sperre[wb].gelb=0;});}

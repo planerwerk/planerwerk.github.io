@@ -117,8 +117,8 @@ function pkAbschluss(){const pk=S.pk;if(!pk)return;S.pk=null;const P=presseS(),Q
   if(trotz&&pk.gegner!=null&&pk.gegner<1000)squad(pk.gegner).forEach(p=>stimmungAendern(p,c(trotz,'team'))); /* Trotz beim Gegner nach deinem Konter (K29e) */
   if(sum.fans)fanAnlass(t,'fanU',c(sum.fans,'fans'));if(sum.vorstand)S.trust=clamp(S.trust+c(sum.vorstand,'vorstand'),0,100);P.klima=fanZahl(clamp(P.klima+c(sum.medien,'medien'),0,100));
   if(bez)bezDuAendern(pk.gegner,Math.round(bez),'Provokation in der Pressekonferenz');
-  if(schiri&&R()<Q.schiri.verfahren){const L=Q.schiri.strafe[t.lg]||Q.schiri.strafe[3],b=Math.round((L[0]+R()*(L[1]-L[0]))/1000)*1000;money('Strafen',-b);news(`Das Sportgericht bestraft deine Kritik ${pk.art==='urteil'?'an seinem Urteil':'am Schiedsrichter'} mit ${fmt(b)}.`,'bad');if(!chronik)chronik=schiri;}
   const echo=PK_ECHO.find(x=>pk.antw.some(a=>a.art===x));if(echo)news(`Zeitungsecho, ${pkSchlagzeile(echo,pk)}`);
+  if(schiri&&R()<Q.schiri.verfahren)kontrolleEroeffnen(pk.art==='urteil',schiri.txt,echo?pkSchlagzeile(echo,pk):''); /* K09f: der Kontrollausschuss ermittelt, das Urteil kommt in kontrolleTag */
   if(chronik)chronikEintrag(chronik.txt,echo?pkSchlagzeile(echo,pk):'');}
 function chronikEintrag(txt,kopf){const st=statS(),l=st.chronik||(st.chronik=[]);l.push({s:S.season,tag:S.tag,tid:S.my,txt,kopf});if(l.length>RPK.chronikMax)l.splice(0,l.length-RPK.chronikMax);}
 

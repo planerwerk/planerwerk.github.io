@@ -38,10 +38,17 @@ const gegner=w=>w.S.teams.find(x=>x.lg===w.t.lg&&x.id!==VEREIN).id;
   pruef(ok&&!S.pk&&dp<=-3.9&&dp>=-10&&dq>0&&Math.abs(dk)<=8,'Antworten: Kritik am Spieler kostet ihn 4 bis 10 Stimmung, Rückendeckung hebt die Mannschaft, Medienklima höchstens ±8 je Pressekonferenz',`Spieler ${dp.toFixed(1)}, Mitspieler ${dq.toFixed(1)}, Klima ${dk}`);}
 
 // 5. Schiedsrichterkritik: in rund 30 % der Fälle eine Geldstrafe im Rahmen der Liga
-{const w=welt(false),{F,S,t}=w,L=w.ev('RPK').schiri.strafe[t.lg];let n=0,ausser=0;
+// Seit K09f: Der Kontrollausschuss ermittelt (in 4 bis 22 von 40 Fällen), das Urteil kommt nach 3 bis 7 Tagen. Höchstens der erste Fall in zwölf Monaten endet mit einer
+// Verwarnung, sonst Geldstrafe im Rahmen der Liga, je früherem Fall × 1,5, höchstens doppelt. Die Urteile werden einzeln gesprochen (alle Fälle liegen auf einem Tag).
+{const w=welt(false),{F,S,t,ev}=w,K=ev('RPK').schiri,L=K.strafe[t.lg],abs=ev('absTag');let n=0,frist=true;
   for(let k=0;k<40;k++){frei(w);F.presseAnlass('krise',{serie:3});if(!S.pk)continue;S.pk.fragen=[{t:'Schiri?',o:['floskel','kritikSchiri','humor'],sp:0,j:'Ralf Kessler'}];S.pk.i=0;
-    const vor=S.fin['Strafen']||0;F.pkAntwort('kritikSchiri');const b=vor-(S.fin['Strafen']||0);if(b>0){n++;if(b<L[0]||b>L[1])ausser++;}}
-  pruef(n>=4&&n<=22&&!ausser,'Schiedsrichterkritik: Geldstrafe in 4 bis 22 von 40 Fällen, immer im Rahmen der Liga',`${n} Strafen, ${ausser} außerhalb`);}
+    const vor=S.kontrolle?S.kontrolle.f.length:0,g0=S.fin['Strafen']||0;F.pkAntwort('kritikSchiri');const f=S.kontrolle?S.kontrolle.f:[];if((S.fin['Strafen']||0)!==g0)frist=false; /* keine Strafe mehr sofort */
+    if(f.length>vor){n++;const dt=f[f.length-1].urteil-abs(S.tag);if(dt<K.tage[0]||dt>K.tage[1])frist=false;}}
+  const faelle=S.kontrolle?S.kontrolle.f.slice():[];if(S.kontrolle){S.kontrolle.f=[];S.kontrolle.alt=[];}let warn=0,ausser=0,i=0;
+  for(const c of faelle){S.kontrolle.f=[c];const g0=S.fin['Strafen']||0;ev('kontrolleTag')(S.tag+(c.urteil-abs(S.tag)));const b=g0-(S.fin['Strafen']||0),fk=Math.min(K.wiederholungMax,1+K.wiederholung*i);
+    if(b===0)warn++;if(S.kontrolle.f.length||(b===0&&i>0)||(b>0&&(b<L[0]*fk-1000||b>L[1]*fk+1000)))ausser++;i++;}
+  pruef(n>=4&&n<=22&&frist&&!ausser&&warn<=1,'Schiedsrichterkritik: Kontrollausschuss in 4 bis 22 von 40 Fällen, Urteil nach 3 bis 7 Tagen, höchstens der erste Fall nur verwarnt, sonst Strafe im Rahmen der Liga, bei Wiederholung höher',
+    `${n} Verfahren, Frist ${frist}, ${warn} Verwarnung(en), ${ausser} außerhalb`);}
 
 // 6. Gedächtnis: Rückendeckung und Verkauf kostet Glaubwürdigkeit 5, Kampfansage eingelöst kommt in die Chronik, verloren kostet 3
 {const w=welt(false),{F,S,ev,t}=w,p=ev('squad')(VEREIN)[2],g=gegner(w);F.presseAnlass('wechselwunsch',{pid:p.id});
