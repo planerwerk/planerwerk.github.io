@@ -160,9 +160,9 @@ function verkaufAbschluss(o,wv){const p=o&&PIX.get(o.pid);if(!p||p.team!==S.my||
     kabineAbgang(p,S.my);vertragEnde(p);insAusland(p,v.id);statTransfer(p,o.amt,S.my,v.id);news(`Verkauft: ${p.n} wechselt für ${fmt(o.amt)} zu ${v.name} (${land}).`,'good');return;} // Verkauf ins Ausland (K32): Der Spieler zieht in den Pool um
   const b=S.teams[o.tid];if(!b||!aktiv(b)){S.offers=S.offers.filter(x=>x!==o);toast(`${b?b.name:'Der Verein'} spielt nicht mehr in den Profiligen, das Angebot ist hinfällig.`);return;}
   if(wv&&!wvbBindet(p)){const W=RTR.weiterverkauf;o.amt=Math.round(o.amt*(1-W.bewertung*W.anteil)/1000)*1000;p.wvb={tid:S.my,anteil:W.anteil,von:b.id};} /* erst nach allen Abbrüchen (K19d) */
-  money('Transfers',o.amt);b.cash-=o.amt;weg();if((o.r||0)<=RBZ.fairRunden)bezDuAendern(b.id,RBZ.anlass.fair,`fairer Transfer: ${p.n}`); // Angebot ohne Gegenforderung angenommen (K17, U12c)
-  if(!offen){wechselVormerken(p,b.id,{ct:riA(RM.neuerVertrag),preis:o.amt});news(`Einigung: ${p.n} wechselt für ${fmt(o.amt)} zu ${b.name}, mit dem Transferfenster am ${datumKurz(p.wech.ab)}.`,'good');return;}
-  kabineAbgang(p,S.my);vertragEnde(p);p.seit=absTag(S.tag);p.abl=o.amt;p.team=b.id;p.list=0;p.ct=riA(RM.neuerVertrag);statTransfer(p,o.amt,S.my,b.id);news(`Verkauft: ${p.n} wechselt für ${fmt(o.amt)} zu ${b.name}.`,'good');}
+  money('Transfers',o.amt);b.cash-=o.amt;weg();if(o.bo)bonusEinVereinbaren(p,b.id,o.bo); /* Bonus im Angebot (K19k) */ if((o.r||0)<=RBZ.fairRunden)bezDuAendern(b.id,RBZ.anlass.fair,`fairer Transfer: ${p.n}`); // Angebot ohne Gegenforderung angenommen (K17, U12c)
+  if(!offen){wechselVormerken(p,b.id,{ct:riA(RM.neuerVertrag),preis:o.amt});news(`Einigung: ${p.n} wechselt für ${angebotBetrag(o)} zu ${b.name}, mit dem Transferfenster am ${datumKurz(p.wech.ab)}.`,'good');return;}
+  kabineAbgang(p,S.my);vertragEnde(p);p.seit=absTag(S.tag);p.abl=o.amt;p.team=b.id;p.list=0;p.ct=riA(RM.neuerVertrag);statTransfer(p,o.amt,S.my,b.id);news(`Verkauft: ${p.n} wechselt für ${angebotBetrag(o)} zu ${b.name}.`,'good');}
 
 // ---------- Wechsel zum nächsten Fensterbeginn ----------
 // p.wech = {nach, von, ct, sal, preis, ab}. Die Ablöse fließt bei der Einigung, der Spieler bleibt bis zum Fensterbeginn bei seinem Verein.
@@ -207,6 +207,28 @@ function boniWoche(){const l=S.boni;if(!l||!l.length)return;const B=RTR.boni,t=m
       if(ok){money('Transfers: Boni',-x.b);const v=S.teams[x.tid];if(v)v.cash+=x.b;news(`Bonus fällig: ${p.n} ${B.arten[x.art].erfuellt}. ${fmt(x.b)} gehen an ${tn(x.tid)}.`,'');return false;}}
     if(S.season-x.s0>=B.saisons){news(`Der Bonus für ${n} an ${tn(x.tid)} ist verfallen, die Bedingung trat nicht ein.`,'');return false;}
     if(!da&&!unterwegs){if(p)news(`${p.n} hat deinen Verein verlassen, der Bonus an ${tn(x.tid)} entfällt.`,'');return false;}
+    return true;});}
+// ---------- Boni in Angeboten der Computer-Vereine für deine Spieler (K19 §5.2, K19k) ----------
+// Ein deutscher Computer-Verein legt mit boni.ki.chance (fest aus dem Seed, ohne R()) ki.anteil seines Gebots als Bonus an: g.bo = {art, b}. Die feste Ablöse und sein
+// Rahmen für Gegenforderungen sinken um wert × b, so bleibt das Gebot für ihn gleich viel wert. Art aufstieg mit ki.aufstieg, wenn der Käufer nicht in der 1. Liga spielt
+// und seine Liga noch läuft, sonst spiele (arten.spiele.n Pflichtspiele für ihn). Nach dem Verkauf steht er in S.boniEin = [{pid, tid Käufer, art, b, s0 Saison,
+// lg0 Liga des Käufers, my dein Verein, st Pflichtspiele für den Käufer bei der Einigung}]. Montags (boniEinWoche, ohne Zufall) wie boniWoche: erst die Bedingung,
+// dann der Verfall nach saisons Saisons, dann der Abgang beim Käufer. Er gehört deinem Verein (finanzenJobwechsel leert S.boniEin). Angebote gibt es nur, wenn du die
+// Transfers selbst führst, also nicht im Gleichschritt.
+function bonusKI(b,p,g){const K=RTR.boni.ki,h=k=>hash32([k,S.seed,p.id,b?b.id:-1,S.tag].join('|'))%1000;if(!b||b.id>=AV0||!(g.amt>0)||h('bonusKI')>=K.chance*1000)return;
+  const x=rundeAb(g.amt*K.anteil),ab=rundeAb(x*RTR.boni.wert);if(!(x>0)||ab>=g.amt)return;
+  const auf=b.lg>1&&!ligaFertig(b.lg)&&h('bonusKIArt')<K.aufstieg*1000;
+  g.amt-=ab;g.max=Math.max(g.amt,(g.max||g.amt+ab)-ab);g.bo={art:auf?'aufstieg':'spiele',b:x};}
+const bonusKIBedingung=(x,tid)=>x.art==='aufstieg'?`bei einem Aufstieg von ${tn(tid)}`:`nach ${RTR.boni.arten.spiele.n} Pflichtspielen für ${tn(tid)}`;
+const angebotBetrag=o=>`${fmt(o.amt)}${o.bo&&o.bo.b>0?` + ${fmt(o.bo.b)} Bonus ${bonusKIBedingung(o.bo,o.tid)}`:''}`;
+function bonusEinVereinbaren(p,tid,x){if(!x||!(x.b>0)||!S.teams[tid])return;(S.boniEin=S.boniEin||[]).push({pid:p.id,tid,art:x.art,b:x.b,s0:S.season,lg0:S.teams[tid].lg,my:S.my,st:vereinsSpiele(p,tid)});}
+function boniEinWoche(){const l=S.boniEin;if(!l||!l.length)return;const B=RTR.boni;
+  S.boniEin=l.filter(x=>{if(!x||x.my!==S.my)return false;const p=PIX.get(x.pid),t=S.teams[x.tid],wer=tn(x.tid),n=p?p.n:'einen früheren Spieler';
+    const da=!!p&&!!t&&(p.team===x.tid||(!!p.leihe&&p.leihe.von===x.tid)),unterwegs=!!p&&!!p.wech&&p.wech.nach===x.tid;
+    if(da){const ok=x.art==='spiele'?vereinsSpiele(p,x.tid)-x.st>=B.arten.spiele.n:x.art==='aufstieg'?t.lg<x.lg0:false;
+      if(ok){t.cash-=x.b;money('Transfers: Boni',x.b);news(`Bonus fällig: ${p.n} ${x.art==='spiele'?`hat ${B.arten.spiele.n} Pflichtspiele für ${wer} bestritten`:`ist mit ${wer} aufgestiegen`}. ${wer} zahlt dir ${fmt(x.b)}.`,'good');return false;}}
+    if(S.season-x.s0>=B.saisons){news(`Der Bonus von ${wer} für ${n} ist verfallen, die Bedingung trat nicht ein.`,'');return false;}
+    if(!da&&!unterwegs){if(p)news(`${p.n} hat ${wer} verlassen, dein Bonus entfällt.`,'');return false;}
     return true;});}
 // Betrag für das Ablösefeld in Mio €, auf 0,01 aufgerundet (Prüfung FH6: abgerundet lag der Vorschlag knapp unter der Forderung)
 const mioAuf=x=>(Math.ceil(Math.round(x)/1e4)/100).toFixed(2);

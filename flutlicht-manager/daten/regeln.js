@@ -281,8 +281,11 @@ const REGELN={
     // Boni als Teil der Ablöse beim Kauf (K19 §5.2, K19i, 24.11., popolupo, vorläufig): Der Verkäufer rechnet einen Bonus mit wert seines Betrags an. Höchstens maxAnteil der
     // festen Ablöse, nur bei Käufen von deutschen Vereinen. Fällig, wenn die Bedingung binnen saisons Saisons eintritt (spiele: so viele Pflichtspiele für dich; aufstieg:
     // dein Verein spielt in einer höheren Liga als beim Kauf), sonst verfällt er; verlässt der Spieler dich vorher, entfällt er.
+    // Seit K19k (24.11., popolupo, vorläufig) auch in Angeboten deutscher Computer-Vereine für deine Spieler: mit ki.chance (fest aus dem Seed) ist ki.anteil des Gebots ein
+    // Bonus, die feste Ablöse sinkt um wert × Bonus. Aufstiegsbonus mit ki.aufstieg, wenn der Käufer nicht in der 1. Liga spielt, sonst nach arten.spiele.n Pflichtspielen für ihn.
     boni:{wert:0.5,maxAnteil:0.5,saisons:2,arten:{spiele:{n:25,name:'nach 25 Pflichtspielen für dich',erfuellt:'hat 25 Pflichtspiele für dich bestritten'},
-      aufstieg:{name:'bei einem Aufstieg deines Vereins',erfuellt:'ist mit dir aufgestiegen',platz:6,sonst:0.2}}}, /* Aufstieg: voller wert nur bis Platz platz, sonst × sonst (Prüfung FH3) */
+      aufstieg:{name:'bei einem Aufstieg deines Vereins',erfuellt:'ist mit dir aufgestiegen',platz:6,sonst:0.2}}, /* Aufstieg: voller wert nur bis Platz platz, sonst × sonst (Prüfung FH3) */
+      ki:{chance:0.3,anteil:0.2,aufstieg:0.5}},
     // Spielertausch beim Kauf (K19 §4.3, K19j, 24.11., popolupo, vorläufig): Ein eigener Spieler als Teil des Angebots zählt beim Verkäufer mit wert × seinem Vereinswert
     // als Käufer (vwKauf). Er geht nur mit, wenn der Verein höchstens ansehenMinus weniger Ansehen hat als deiner oder er wechseln will (Wechselwunsch), und nur, wenn
     // der Verkäufer unter kaeufer.kaderMax Spieler hat. Nur bei Käufen von deutschen Vereinen.

@@ -243,5 +243,27 @@ const kaufe=(w,p,fee,yrs=3)=>{const els=w.W.ev('document');els.getElementById('f
   pruef(aus&&ok&&unter,'Notverkauf: nur mit Schalter und über dem Gehaltsrahmen, teuerster Nicht-Schlüsselspieler unter Wert, eine Meldung je Saison',
     `aus ${aus}, Notverkauf ${ok}${p?` (${p.n}, ${p.ask})`:''}, unter dem Rahmen ${unter}`);}
 
+// K19k. Boni in Angeboten der Computer-Vereine (K19 §5.2): bonusKI legt fest aus dem Seed ki.anteil des Gebots als Bonus an und senkt feste Ablöse und Rahmen um
+//       wert × Bonus, nie bei Auslandsvereinen. Ein Verkauf mit Bonus legt ihn in S.boniEin; fällig nach 25 Pflichtspielen für den Käufer (er zahlt, dein Konto bekommt es)
+//       oder bei seinem Aufstieg, verfällt nach saisons Saisons, entfällt, wenn der Spieler den Käufer verlassen hat; der Jobwechsel leert die Liste.
+{const {S,F,ev,t}=welt(),B=ev('RTR').boni,K=B.ki,akt=ev('aktiv'),rab=ev('rundeAb'),b=S.teams.find(x=>x.id!==S.my&&akt(x)&&x.lg>1),p=ev('squad')(S.my).find(x=>!x.wech&&!x.leihe);
+  const c0=K.chance;K.chance=1;const g={amt:10e6,max:12e6};F.bonusKI(b,p,g);const x=rab(10e6*K.anteil),ab=rab(x*B.wert);
+  const mit=!!g.bo&&g.bo.b===x&&g.amt===10e6-ab&&g.max===12e6-ab&&(g.bo.art==='spiele'||g.bo.art==='aufstieg');
+  const ga={amt:10e6,max:12e6};F.bonusKI({id:ev('AV0'),lg:2},p,ga);const ausl=!ga.bo&&ga.amt===10e6;
+  K.chance=0;const g0={amt:10e6,max:12e6};F.bonusKI(b,p,g0);const ohne=!g0.bo&&g0.amt===10e6;K.chance=c0;
+  const text=ev('angebotBetrag')({amt:1e6,tid:b.id,bo:{art:'spiele',b:2e5}}).includes(`Bonus nach ${B.arten.spiele.n} Pflichtspielen`);
+  let d=0;while(d<400&&!ev('fensterOffen')(d))d++;S.tag=d;
+  const o={pid:p.id,tid:b.id,amt:g.amt,max:g.max,r:0,bis:S.tag+5,bo:{art:'spiele',b:x}};S.offers.push(o);F.verkaufAbschluss(o);
+  const e=(S.boniEin||[]).find(y=>y.pid===p.id),verkauft=p.team===b.id&&!!e&&e.tid===b.id&&e.b===x&&e.art==='spiele'&&e.my===S.my&&e.lg0===b.lg&&typeof e.st==='number';
+  let wartet=false,faellig=false;if(e){F.boniEinWoche();wartet=S.boniEin.includes(e);
+    e.st-=B.arten.spiele.n;const c1=t.cash,v1=b.cash;F.boniEinWoche();faellig=!S.boniEin.includes(e)&&t.cash===c1+x&&b.cash===v1-x&&String(S.news[0].t).includes('Bonus fällig');}
+  const q=S.pl.find(y=>y.team>=0&&y.team<1000&&y.team!==b.id&&y.team!==S.my&&!y.wech&&!y.leihe);
+  const alt={pid:p.id,tid:b.id,art:'aufstieg',b:1e6,s0:S.season-B.saisons,lg0:b.lg,my:S.my,st:0},weg={pid:q.id,tid:b.id,art:'spiele',b:1e6,s0:S.season,lg0:b.lg,my:S.my,st:0},
+    auf={pid:p.id,tid:b.id,art:'aufstieg',b:1e6,s0:S.season-B.saisons,lg0:b.lg+1,my:S.my,st:0};
+  const c2=t.cash;S.boniEin=[alt,weg,auf];F.boniEinWoche();const aufgeraeumt=S.boniEin.length===0&&t.cash===c2+1e6;
+  S.boniEin=[weg];F.finanzenJobwechsel();const job=S.boniEin.length===0;
+  pruef(mit&&ausl&&ohne&&text&&verkauft&&wartet&&faellig&&aufgeraeumt&&job,'Boni in Angeboten der Computer-Vereine: Gebot geteilt, Verkauf merkt den Bonus, fällig, verfallen, entfallen, Jobwechsel',
+    `Gebot ${mit}, Ausland ${ausl}, ohne ${ohne}, Text ${text}, Verkauf ${verkauft}, wartet ${wartet}, fällig ${faellig}, verfallen/entfallen/Aufstieg ${aufgeraeumt}, Jobwechsel ${job}`);}
+
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

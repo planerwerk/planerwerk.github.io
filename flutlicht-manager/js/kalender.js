@@ -117,7 +117,7 @@ function sommerpause(){if(S.phase==='end'&&!S.fired){S.phase='sommer';save();}}
 // Erinnerungen vor „Tag beenden“: nur, wenn wirklich etwas offen ist. Jede Art ist im Menü abschaltbar.
 const erinnerungAn=k=>!(S.einst&&S.einst.aus&&S.einst.aus[k]);
 function erinnerungen(){const E=[],d=S.tag,m=heuteMeinSpiel()?meinSpiel(d):null;
-  if(erinnerungAn('frist'))S.offers.filter(o=>o.bis===d).forEach(o=>{const p=PIX.get(o.pid);if(p)E.push({art:'frist',text:`Das Angebot von ${esc(tn(o.tid))} für ${esc(p.n)} (${fmt(o.amt)}) gilt nur noch heute.`,tab:'buero',knopf:'Zum Angebot'});});
+  if(erinnerungAn('frist'))S.offers.filter(o=>o.bis===d).forEach(o=>{const p=PIX.get(o.pid);if(p)E.push({art:'frist',text:`Das Angebot von ${esc(tn(o.tid))} für ${esc(p.n)} (${esc(angebotBetrag(o))}) gilt nur noch heute.`,tab:'buero',knopf:'Zum Angebot'});});
   if(erinnerungAn('frist')&&!autoB('sportgericht'))meineVerfahren().filter(v=>v.stand==='antrag'&&v.frist===d).forEach(v=>{const p=PIX.get(v.pid);E.push({art:'frist',text:`Sportgericht: Die Frist für ${esc(p.n)} (Antrag ${v.antrag} Spiel${v.antrag===1?'':'e'}) endet heute. Ohne Antwort gilt der Antrag als angenommen.`,tab:'buero',knopf:'Zum Sportgericht'});});
   if(m&&erinnerungAn('aufstellung')){const aus=(S.lineup||[]).map(id=>PIX.get(id)).filter(p=>p&&p.team===S.my&&!avail(p));
     if(aus.length)E.push({art:'aufstellung',text:`In deiner Startelf fehlen ${aus.map(p=>esc(p.n)).join(', ')}. Ohne Änderung stellt das Spiel automatisch Ersatz auf.`,tab:'aufst',knopf:'Zur Aufstellung'});}
