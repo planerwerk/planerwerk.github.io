@@ -49,7 +49,7 @@ function paketWert(p,tid,o,F){const V=RVT,sicher=V.sicher[0]+V.sicher[1]*(p.ch?p
   let w=o.sal+(o.hg||0)/Math.max(1,o.ct)+pr.erw*sicher;
   if(o.ak){const r=o.ak/Math.max(1,value(p)),A=V.ausstieg;w+=F*(r<=A.billigAb?A.bonus:r<=A.mittelAb?A.bonus/2:0);}
   if(o.lk)w-=F*V.ligaklausel.malus*(o.lk/V.ligaklausel.ref);
-  if(o.zv)w+=F*V.zielvorgabe.wert; /* Zielvorgabe (K21f): so viel weniger Gehalt akzeptiert er */
+  {const lauf=!!p.zv&&p.team===S.my;if(o.zv&&!lauf)w+=F*V.zielvorgabe.wert;else if(!o.zv&&lauf)w-=F*V.zielvorgabe.wert;} /* Zielvorgabe (K21f); FL6: eine laufende bleibt ohne neuen Nachlass, wer sie streicht, zahlt dafür */
   const L=V.laufzeit;w-=F*(p.age<=L.jungBis?Math.max(0,o.ct-L.mitte)*L.jung:p.age>=L.altAb?Math.max(0,L.mitte-o.ct)*L.alt:0);
   return w;}
 
@@ -76,7 +76,7 @@ function vtPaket(p,F,ct,vereinslos){const el=id=>(document.getElementById(id)||{
 function vtUnterschrift(p,o,neu){p.ct=o.ct;p.sal=o.sal;if(o.vp)p.vp=o.vp;else delete p.vp;if(o.ak)p.ak=o.ak;else delete p.ak;if(o.lk)p.lk=o.lk;else delete p.lk;zielvorgabeSetzen(p,o.zv);if(o.hg)money('Handgelder',-o.hg);if(neu)p.seit=absTag(S.tag);}
 // Zielvorgabe (K21 §3.1, §8, K21f): p.zv = {n Pflichtspiele, plus Gehaltsaufschlag, st Pflichtspiele für deinen Verein bei der Unterschrift}. Gezählt ab der Unterschrift
 // (bei einem Wechsel zum Fenster ab der Ankunft, transfers.js wechselVollziehen). Montags (zielvorgabenWoche, ohne Zufall): erreicht, steigt das Gehalt, die Vorgabe ist erfüllt.
-function zielvorgabeSetzen(p,zv){if(zv)p.zv={n:zv.n,plus:zv.plus,st:vereinsSpiele(p,S.my)};else delete p.zv;}
+function zielvorgabeSetzen(p,zv){if(zv&&p.zv&&p.team===S.my)return; /* FL6: laufende Vorgabe zählt weiter */if(zv)p.zv={n:zv.n,plus:zv.plus,st:vereinsSpiele(p,S.my)};else delete p.zv;}
 function zielvorgabenWoche(){squad(S.my).forEach(p=>{const z=p.zv;if(!z||vereinsSpiele(p,S.my)-(z.st||0)<z.n)return;p.sal=Math.round(p.sal*(1+z.plus)/1000)*1000;delete p.zv;
   news(`Zielvorgabe erreicht: ${p.n} hat ${z.n} Pflichtspiele für dich bestritten, sein Gehalt steigt um ${Math.round(z.plus*100)} % auf ${fmt(p.sal)} im Jahr.`,'');});}
 // Vertrag endet (Verkauf, Auflösung): Prämien und Klauseln gelten nicht beim neuen Verein

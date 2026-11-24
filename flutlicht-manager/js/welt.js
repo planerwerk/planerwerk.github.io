@@ -46,6 +46,9 @@ function tvRatenTag(d){const R0=RF.tv.raten;if(!tvRatenAn()||!R0.tage.includes(m
 function tvRatenOffen(bis){const R0=RF.tv.raten;if(!tvRatenAn())return 0;const ende=Math.min(bis!=null?bis:Infinity,S.plan?S.plan.ende:S.tag);let n=0;
   for(let d=S.tvRT===S.tag?S.tag+1:S.tag;d<=ende;d++)if(R0.tage.includes(mmtt(d)))n++;return n;}
 const tvOffen=(t,bis)=>t?tvRatenOffen(bis)*Math.round(tvSaisonBetrag(t)/RF.tv.raten.tage.length):0;
+// Die heute fällige, noch nicht gebuchte Rate (Prüfung FL2): Die Ratentage sind Monatserste, gebucht wird nach dem Monatsbericht; die Insolvenzprüfung davor zählt sie mit,
+// sonst träfe sie jeden Verein am Tiefpunkt des Quartals. Mit Schalter aus 0.
+const tvHeute=t=>tvRatenAn()&&!!t&&RF.tv.raten.tage.includes(mmtt(S.tag))&&S.tvRT!==S.tag?Math.round(tvSaisonBetrag(t)/RF.tv.raten.tage.length):0;
 // Spielstände von vor K23c (ohne S.k23c): Gehälter einmal auf die neue Kurve umrechnen (gleiches Verhältnis zum Gehalt nach Stärke wie vorher), damit sich niemand
 // plötzlich unterbezahlt fühlt (kabine.js). Kontostände, Verträge mit Sponsoren und Kredite bleiben, sie gleichen sich über die Saisons an. Aufruf nach dem Laden.
 // Dazu vorgemerkte Wechsel (p.wech.sal) und deine Werbeverträge (Brust, Ausrüster, Ärmel: Betrag mal neuer durch alten Grundbetrag der Fläche, Prüfung CS4).
@@ -91,7 +94,7 @@ function buildWorld(seed){const W=RW;
   const sp=spielplanFuer(S.season);S.fx=sp.fx;S.plan.zeit=sp.zeit;initCup();
   mitStrom(strom('profil'),()=>S.teams.forEach(t=>{t.stil=profilStil();})); // Lieblingsstil jedes Vereins (K06 §7, bis K31)
   mitStrom(strom('vereinsprofil'),profileAufbau); // zweites Vereinsprofil (K31 §3.2, U11b), eigener Strom
-  S.teams.forEach(t=>{t.urlaubFertig=true;});S.pl.forEach(p=>{p.koVor=p.ko;});
+  S.teams.forEach(t=>{t.urlaubFertig=true;});S.pl.forEach(p=>{p.koVor=p.ko;if(p.team>=0&&p.de==null&&deutschVon(p)<100)p.de=deutschVon(p);}); /* Deutsch der Startkader schon jetzt (Prüfung FL4), ohne Zufall */
   mitStrom(strom('stab'),stabAufbau);mitStrom(strom('scouts'),scoutsAufbau);mitStrom(strom('jugendstab'),jugendStabAufbau);kabineStart();mitStrom(strom('ausland'),auslandAufbau); // Auslandspool zuletzt und mit eigenem Strom (K32 §3.1)
   europaAnlegen(null); // Europapokal mit den echten Startern 2026/27 (K37, U19a), eigener Strom
   tvSaison(); // TV-Gelder der ersten Saison (K23c), ohne Zufall

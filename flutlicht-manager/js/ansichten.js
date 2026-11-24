@@ -155,6 +155,9 @@ function suchKarte(){const sc=meineScouts(),su=(S.auftraege||[]).filter(a=>a.art
       <button onclick="sucheStarten()"${lzAus('suchauftrag')}>Suchauftrag starten</button></div>`:sc.length?'<p class="dim">Alle Scouts sind beschäftigt.</p>':''}
     <p class="dim">Der Scout sieht sich jede Woche vier neue Namen an und hält die besten acht nach seiner Einschätzung auf der Liste. ${fmt(RSC.kosten.inland)} je Woche, im Ausland ${fmt(RSC.kosten.ausland)}.</p></div>`;}
 const fitArt=f=>{const z=RU.zonenFitness.find(q=>f>=q.von&&f<=q.bis);return z&&z.art!=='good'?z.art:'';};
+// Aufstellung: wer mit dieser Startelf auf der Bank säße (dieselbe Wahl wie im Spiel), fest gesetzte mit Stern (K05e; seit Prüfung FL1 hier statt in aktionen.js, eine Anzeige)
+function bankAnzeige(xi){const ids=bankWaehlen({id:S.my,xi:(xi||[]).filter(x=>x!=null),am:false});if(!ids.length)return'';const n=ids.filter(id=>PIX.get(id)&&PIX.get(id).bankF).length;
+  return`<p class="dim" style="margin-top:8px">Bank: ${ids.map(id=>{const p=PIX.get(id);return p?`${esc(p.n)}${p.bankF?' ★':''}`:'';}).join(', ')}${n?'. ★ fest gesetzt (Spielerkarte).':'. Fest setzen kannst du Spieler an der Spielerkarte.'}</p>`;}
 // Tauziehen gegen den Gegner deines nächsten Spiels (nur wenn er feststeht)
 function tauziehenNaechstes(){const e=heuteMeinSpiel()?meinSpiel(S.tag):naechstesSpiel(S.tag+1),f=e&&paarung(e);if(!f)return'';
   const home=f[0]===S.my,o=home?f[1]:f[0],me=side(S.my,home,false),op=side(o,!home,false);

@@ -91,11 +91,11 @@ function eigenschaftenBerechnen(p){if(!p.ch)return[];const EL=EIGENSCHAFT_LISTE|
 const hatEig=(p,k)=>eigenschaften(p).includes(k);
 // Was du über einen Spieler weißt: Eigenschaften eigener Spieler nach einigen Wochen, nur solche, die im Spiel wirken
 function bekannteEigenschaften(p){if(p.team!==S.my||p.wiv<p.ekw)return[];return eigenschaften(p).filter(k=>RP.eigenschaftenWirksam.includes(k));}
-const sichtbareMerkmale=p=>Object.keys(p.mk||{}).filter(k=>RP.merkmaleWirksam.includes(k));
+const sichtbareMerkmale=p=>Object.keys(p.mk||{}).filter(k=>RP.merkmaleWirksam.includes(k)||!!(RP.merkmale[k]&&RP.merkmale[k].zeigen)); /* zeigen: auch ohne Wirkung sichtbar (Joker, Prüfung FL3) */
 const hatMk=(p,k)=>!!(p.mk&&p.mk[k]);
 // Lernen (K03 §5.6): ein Lernziel, Fortschritt pro Woche
 function lernbar(p,k){const m=RP.merkmale[k];if(!m||m.schwaeche||hatMk(p,k)||!m.g.includes(p.pos))return false;if(m.bis&&p.age>m.bis)return false;
-  if(Object.keys(p.mk||{}).filter(x=>!RP.merkmale[x].schwaeche).length>=platzStaerken(p))return false;return true;}
+  if(m.platz!==false&&Object.keys(p.mk||{}).filter(x=>!RP.merkmale[x].schwaeche&&RP.merkmale[x].platz!==false).length>=platzStaerken(p))return false;return true;} /* Joker ohne Platz (Prüfung FL3) */
 // Platz für Stärken: mit der Klasse wächst das Repertoire (bis 64: 1, bis 74: 2, bis 84: 3, sonst 4)
 const platzStaerken=p=>{const t=RP.lernen.platz.find(x=>p.str<=x[0]);return Math.min(RP.lernen.maxStaerken,t?t[1]:RP.lernen.maxStaerken);};
 const lernOptionen=p=>RP.merkmaleWirksam.filter(k=>lernbar(p,k));

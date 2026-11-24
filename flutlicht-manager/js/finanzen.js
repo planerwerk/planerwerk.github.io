@@ -39,7 +39,7 @@ function finanzenMonat(d,ohneZahlungen){const t=myT();let M=S.finM||{s:S.season,
 // Saisonwechsel (saison.js newSeasonLauf, nach S.fin={}): Stand für den Juli, dann Tilgung, Raten und Instandhaltung des 1. Juli in der neuen Saison
 function finanzenSaisonstart(){S.finM={s:S.season,mo:'07',fin:{},cash:myT().cash,k:0};monatsRaten();instandhaltung();}
 // Insolvenz (K23 §5.4): an zwei Monatsersten nacheinander unter dem negativen Kreditrahmen. Punktabzug, Vertrauen, Schuldenschnitt, höchstens einmal je Saison.
-function insolvenzPruefen(){const t=myT(),L=lzpS(),I=RFP.insolvenz;if(L.unter!=null){t.fu=L.unter;delete L.unter;} /* alter Spielstand: Zähler einmal übernehmen (Prüfung EV1) */if(t.cash<-kreditRahmen(t))t.fu=(t.fu||0)+1;else t.fu=0; /* Zähler am Verein wie bei den Computer-Vereinen, überlebt einen Jobwechsel (Prüfung EU2, vorher S.lzp.unter) */
+function insolvenzPruefen(){const t=myT(),L=lzpS(),I=RFP.insolvenz;if(L.unter!=null){t.fu=L.unter;delete L.unter;} /* alter Spielstand: Zähler einmal übernehmen (Prüfung EV1) */if(t.cash+tvHeute(t)<-kreditRahmen(t))t.fu=(t.fu||0)+1;else t.fu=0; /* Zähler am Verein wie bei den Computer-Vereinen, überlebt einen Jobwechsel (Prüfung EU2, vorher S.lzp.unter) */
   if((t.fu||0)<I.monate||L.ins===S.season||t.fins===S.season||S.phase!=='play')return; /* t.fins: Sperre am Verein, überlebt einen Jobwechsel (Prüfung ET1) */
   /* Nach dem letzten Spieltag der eigenen Liga gilt der Abzug für die neue Saison (Prüfung ER1: sonst zwischen den Relegationsspielen; ES1: sofort gebucht statt aufgeschoben) */
   const s=insolvenzSaison(t);L.ins=s;t.fins=s;t.fu=0;
@@ -98,7 +98,7 @@ function kiPokalSpiel(r,runde){[r.h,r.a].forEach(id=>{if(id===S.my||id>=1000)ret
   t.cash+=RF.pokalPraemien[runde]+(id===r.h&&runde!==5?kiHeimEinnahmen(t,r.a<1000?S.teams[r.a]:null,true):0)+(runde===5&&winner(r)===id?RF.pokalSieg:0);});}
 // Insolvenz der Computer-Vereine (am Monatsersten, Regel wie insolvenzPruefen): zwei Monatserste unter dem negativen Kreditrahmen, Punktabzug, Schuldenschnitt
 function kiInsolvenzPruefen(){if(S.phase!=='play')return;const I=RFP.insolvenz;
-  S.teams.forEach(t=>{if(t.id===S.my||!aktiv(t))return;if(t.cash>=-kreditRahmen(t)){if(t.fu)t.fu=0;return;}t.fu=(t.fu||0)+1;if(t.fu<I.monate||t.fins===S.season)return;
+  S.teams.forEach(t=>{if(t.id===S.my||!aktiv(t))return;if(t.cash+tvHeute(t)>=-kreditRahmen(t)){if(t.fu)t.fu=0;return;}t.fu=(t.fu||0)+1;if(t.fu<I.monate||t.fins===S.season)return;
     const s=insolvenzSaison(t);t.fu=0;t.fins=s;const A=S.abzug||(S.abzug={}),a=A[s]||(A[s]={});a[t.id]=(a[t.id]||0)+I.punkte;t.cash=0; /* nach dem letzten Spieltag Abzug in der neuen Saison (ER1, ES1) */
     news(`Insolvenz: ${t.name} ist zahlungsunfähig. ${I.punkte} Punkte Abzug${s>S.season?' in der neuen Saison':''}, die Gläubiger verzichten auf die Schulden.`,'');});}
 
