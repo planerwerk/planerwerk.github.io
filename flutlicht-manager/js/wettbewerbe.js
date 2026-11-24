@@ -78,11 +78,12 @@ const pokalLosHeute=d=>S.phase==='play'&&S.cup&&S.cup.alive.includes(S.my)&&poka
 // deinem letzten Ligaspiel (S.ligaXI aus letztesSpielMerken) mindestens rotation.wechsel Spieler der Startelf getauscht. Nur eine Meldung, ohne weitere Wirkung. Gibt die Zahl der Wechsel zurück.
 // Ohne Ligaspiel dieser Saison bei deinem Verein (1. Liga: Pokalrunde 1 liegt vor dem Ligastart; nach einem Jobwechsel) zählt die beste Elf (bestXI, ohne Zufall) als Vergleich (Prüfung FC6).
 // Seit Prüfung FD3 die beste Elf vor dem Anpfiff (mg.bxi aus pokalBezugsElf in tagesSpieleVorbereiten): nach dem Spiel sind die Stammspieler müde, verletzt oder gesperrt,
-// dann wären ausgeruhte Ersatzspieler „besser“. Fehlt bxi (Test, alter Stand), wird wie bisher jetzt gerechnet.
-const pokalBezugsElf=pl=>{const L=S.ligaXI;if(!pl.some(([h,a])=>h===S.my||a===S.my)||(L&&L.t===S.my&&L.s===S.season))return null;return bestXI(S.my,myT().form);};
+// dann wären ausgeruhte Ersatzspieler „besser“. Fehlt bxi (Test, alter Stand), wird wie bisher jetzt gerechnet. Seit Prüfung FF1 mit den Sperren des Pokals
+// (mitWettbewerb, sonst zählten Liga-Sperren) und nach dem Fitspritzen (Aufruf im Helfer spiel von tagesSpieleVorbereiten).
+const pokalBezugsElf=pl=>{const L=S.ligaXI;if(!pl.some(([h,a])=>h===S.my||a===S.my)||(L&&L.t===S.my&&L.s===S.season))return null;return mitWettbewerb('pokal',()=>bestXI(S.my,myT().form));};
 function pokalRotation(mg){if(!mg)return 0;const P=RWB.pokal.rotation,L=S.ligaXI,s=mg.h===S.my?0:1,opp=s?mg.h:mg.a;
   if(winner(mg)===S.my||!mg.xi||!mg.xi[s])return 0;
-  if(opp<1000&&teamLevel(S.my)-teamLevel(opp)<P.favorit)return 0;const liga=!!L&&L.t===S.my&&L.s===S.season,alt=new Set(liga?L.ids:(mg.bxi||bestXI(S.my,myT().form))),n=mg.xi[s].filter(id=>!alt.has(id)).length;if(n<P.wechsel)return 0;
+  if(opp<1000&&teamLevel(S.my)-teamLevel(opp)<P.favorit)return 0;const liga=!!L&&L.t===S.my&&L.s===S.season,alt=new Set(liga?L.ids:(mg.bxi||mitWettbewerb('pokal',()=>bestXI(S.my,myT().form)))),n=mg.xi[s].filter(id=>!alt.has(id)).length;if(n<P.wechsel)return 0;
   news(`Die Rotation rächt sich: Gegenüber ${liga?'dem letzten Ligaspiel':'deiner besten Elf'} standen ${n} neue Spieler in der Startelf. Die Zeitungen fragen, ob der Pokal zu leicht genommen wurde.`,'bad');return n;}
 function supercupAnlegen(sm){S.supercup=null;if(!sm||sm.champ==null)return;const g=sm.cup!=null&&sm.cup<1000&&sm.cup!==sm.champ?sm.cup:sm.vize;if(g==null)return;
   const z=S.plan.zeit[1];if(!z||!z[0])return;let d=Math.min(...z[0].map(x=>x[0]))-RWB.supercup.vorSpieltag;while(wochentag(d)!==6)d--;

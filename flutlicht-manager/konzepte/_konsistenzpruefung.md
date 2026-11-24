@@ -2601,3 +2601,17 @@ Korrekturen auf `mitarbeit/popolupo-fe-korrekturen` (auf den Korrekturen FD).
 | FE2 | Auf dem Weg zur A-Lizenz schlug die Karte immer „Sportgerichtsverfahren selbst entschieden“ vor, das du nicht selbst angehen kannst. Aufgaben aus `ohneGelegenheit` kommen jetzt zuletzt. | ✅ behoben |
 | FE3 | Der Testteil „ohne Lernstufen“ war immer grün (nach dem Aufstieg war die Merkkarte ohnehin leer). Neuer Fall mit Gegenprobe, `S.lizenz=null` und Vorschlag. | ✅ behoben |
 | FE4 | Entwicklungsprotokoll nannte presse.js Fall 3 statt Fall 5, K29 den alten Strafrahmen, Kommentare den Faktor der Wiederholung ungenau. Berichtigt. | ✅ behoben |
+
+## FF. Prüfung von K09h und der Korrekturen FD ohne Laufzeit (24. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat fc1ebbe..854f95b gelesen, nichts ausgeführt. Fünf niedrige Funde, kein Laufzeitfehler. Ohne Befund: `zuschauerVorfall` läuft je Karte genau einmal (auch mit Automatik, Co-Trainer, Einspruch), `wurf` und `platzsturm` sind nie stumm, `m.eu` ist live und simuliert gesetzt, Zuschlag immer vom Grundwert, alte Spielstände, Import, Saisonwechsel und Entlassung bei `S.zv`/`S.ausschluss`, die Tests K09h, FD und FD3, Gleichschritt 5a, `bxi` wird nicht gespeichert.
+
+Korrekturen auf `mitarbeit/popolupo-ff-korrekturen` (auf K16h).
+
+| # | Befund | Status |
+|---|---|---|
+| FF1 | Die Vergleichself der Pokal-Rotation sah die Sperren des nächsten Wettbewerbs (Liga) statt des Pokals und entstand vor dem Fitspritzen. Jetzt `mitWettbewerb('pokal')`, berechnet im Helfer `spiel` nach `kiSpritzen`. | ✅ behoben |
+| FF2 | Doku und Kommentar sagten, der Teilausschluss treffe auch Dauerkarten. Die gibt es höchstens für 90 % der Plätze, der Block kommt aus dem Rest. Berichtigt. | ✅ behoben |
+| FF3 | „Wurfgeschosse“ nach dem Pokalfinale (neutraler Platz) als „Heimniederlage“, Zuschauer-Vergehen nach Europapokalspielen beim DFB. Das Pokalfinale trägt jetzt `neutral`, der Merker `eu`, beide Karten kommen dort nicht. | ✅ behoben |
+| FF4 | `bieterF` rückte nur in `S.pl` mit, nicht in der Zweiten und im Ausland. Jetzt alle, jeder Spieler einmal. | ✅ behoben |
+| FF5 | Spielstände mit einem Saisonwechsel vor FD behielten falsche Fristen. `fristenAltstand` (in `verhUmstellen`, also beim Laden und Import) räumt zu weit voraus liegende Werte ab. | ✅ behoben |

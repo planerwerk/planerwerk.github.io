@@ -9,13 +9,13 @@ function tagesSpieleVorbereiten(d,live){kartenAuto(d); // unbeantwortete Ereigni
   if(S.sponsOffers&&meinSpiel(d))sponsorWaehlen(0);if(werbungAusstehend()&&meinSpiel(d))werbungVorSpiel(); // freie Werbeflächen: erstes Angebot (K24a)
   const spiel=(h,a,o,meta,g)=>{const i=g.list.length;if(o.wichtig){kiSpritzen(h);kiSpritzen(a);} // fit spritzen nur in wichtigen Spielen (K10 §7)
     if(!o.test&&(h===S.my||a===S.my))trainerVorSpiel(d); /* gesperrt: heute auf der Tribüne (K09g) */
+    if(meta.cup&&(h===S.my||a===S.my)){const bxi=pokalBezugsElf([[h,a]]);if(bxi)meta=Object.assign({},meta,{bxi});} /* Vergleichself der Pokal-Rotation vor dem Anpfiff, nach dem Fitspritzen (K13e, FD3, FF1) */
     if(live&&!o.test&&(h===S.my||a===S.my)){G=spielAnlegen(h,a,Object.assign({},o,{auto:[h!==S.my,a!==S.my]}));platz={meta,g,i};g.list.push(null);return;}g.list.push(Object.assign(sim(h,a,o),meta));};
   testspielHeute(d).forEach(x=>{const g={titel:'Testspiel',art:'test',e:{art:'test'},x,list:[]},hg=x.heim?[S.my,x.gegner]:[x.gegner,S.my];spiel(hg[0],hg[1],{test:1,wb:'test'},{test:1},g);out.gruppen.push(g);}); // Testspiele ohne Halt (K11)
   for(const e of termineAm(d)){
     if(e.art==='liga'){const g={titel:`${ligaName(e.lg)} · ${e.md+1}. Spieltag`,art:'liga',e,list:[]};e.idx.forEach(i=>{const[h,a]=S.fx[e.lg][e.md][i];spiel(h,a,{},{lg:e.lg,min:S.plan.zeit[e.lg][e.md][i][1]},g);});out.gruppen.push(g);}
     else if(e.art==='pokal'){if(S.cup.hist.length!==e.r)continue;const fin=e.r===5,g={titel:`DFB-Pokal · ${POKAL_RUNDEN[e.r]}`,art:'pokal',e,list:[]},pl=pokalPaareAm(e);if(!pl.length)continue;
-      const bxi=pokalBezugsElf(pl); /* Vergleichself der Pokal-Rotation vor dem Anpfiff (K13e, Prüfung FD3), nur für dein Spiel, ohne Zufall */
-      pl.forEach(([h,a])=>spiel(h,a,{wb:'pokal',ko:1,neutral:fin,wichtig:e.r>=RTA.ki.wichtigAbRunde},Object.assign({cup:1,min:e.min},bxi&&(h===S.my||a===S.my)?{bxi}:{}),g));out.gruppen.push(g);}
+      pl.forEach(([h,a])=>spiel(h,a,{wb:'pokal',ko:1,neutral:fin,wichtig:e.r>=RTA.ki.wichtigAbRunde},Object.assign({cup:1,min:e.min},fin?{neutral:1}:{}),g));out.gruppen.push(g);} /* neutral: Finale (Prüfung FF3) */
     else if(e.art==='supercup'){const x=S.supercup,g={titel:'Supercup',art:'supercup',e,list:[]};spiel(x.h,x.a,{wb:'pokal',ko:1,elfDirekt:1,wichtig:true},{supercup:1,min:e.min},g);out.gruppen.push(g);}
     else if(e.art==='eu'){const L=euSpieleAm(e);if(!L.length)continue;const g={titel:euSpielName(e),art:'eu',e,list:[],kurz:[]}; // Europapokal (K37, U19a): Ausland gegen Ausland als Kurzrechnung im eigenen Strom
       mitStrom(strom('eukurz',S.season,d,e.wb,e.runde,e.leg,e.md==null?-1:e.md),()=>L.forEach(m=>{if(!euDe(m.h)&&!euDe(m.a))g.kurz.push(Object.assign(euKurz(m.h,m.a,m.o),{i:m.i}));}));
@@ -93,7 +93,8 @@ function woechentlichLauf(d){if(!imUrlaub())mitStrom(strom('training',S.season,d
 
 function attendance(t,opp,cup){const Z=RF.zuschauer,ref=Z.refBasis+t.rep*Z.refJeAnsehen,pf=clamp(Math.pow(ref/t.price,Z.preisExponent),Z.preisMin,Z.preisMax),ff=Z.formBasis+Z.formJePunkt*formPts(t.id),of=Z.gegnerBasis+(opp?opp.rep:Z.gegnerOhne)/100*Z.gegnerFaktor,lf=t.lg===1?1:t.lg===2?Z.liga2:Z.liga3;return Math.round(Math.min(t.cap,t.fans*pf*ff*of*lf*(cup?Z.pokal:1)*(Z.zufallBasis+R()*Z.zufallSpanne)*fanFaktor(t)));} // Fanstimmung (K27 §5.4b, U16)
 function heimspielEinnahmen(m,cup){const t=myT();if(autoB('preise'))t.price=clamp(Math.round(richtPreis(t)),RF.ticketPreis.min,RF.ticketPreis.max); // Automatik: Richtpreis (K36)
-  /* Teilausschluss nach Zuschauer-Vergehen (K09h): ein Block mit dem Anteil A.anteil der Plätze bleibt leer, auch für Dauerkarten, einmal, nicht im Europapokal (UEFA).
+  /* Teilausschluss nach Zuschauer-Vergehen (K09h): ein Block mit dem Anteil A.anteil der Plätze bleibt leer, einmal, nicht im Europapokal (UEFA). Es fallen Einzelkarten weg:
+     Dauerkarten gibt es höchstens für 1 − Gästeblock der Plätze (dkAnteil), bei block 0,1 also nie im gesperrten Block (Prüfung FF2).
      Nach einem Jobwechsel verfällt er (er galt dem alten Verein). */
   if(S.ausschluss&&S.ausschluss.tid!==S.my)S.ausschluss=null;
   const A=S.ausschluss&&!m.eu?S.ausschluss:null,cap=A?Math.round(t.cap*(1-A.anteil)):t.cap;

@@ -177,11 +177,12 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 | Korrekturen FE | `mitarbeit/popolupo-fe-korrekturen` (auf den Korrekturen FD) | fertig, ungetestet |
 | **K09g** Trainer-Karten und Tribüne | `mitarbeit/popolupo-k09g-tribuene` (auf den Korrekturen FE) | fertig, ungetestet |
 | **K16h** Vorschlag des Co-Trainers | `mitarbeit/popolupo-k16h-vorschlag` (auf K09g) | fertig, ungetestet |
+| Korrekturen FF | `mitarbeit/popolupo-ff-korrekturen` (auf K16h) | fertig, ungetestet |
 | U19d2 volle Kader der Auslandsvereine in der Engine | zurückgestellt | Entwurf in K37 §5.7. Die Engine behandelt Auslandsvereine als Block wie Amateure, viele Stellen schlagen Spieler in `PIX` nach. Erst nach einem Testlauf und der Messung des Faktors 0,93 |
 
 **Die neueste Spitze ist immer der zuletzt genannte Zweig, er enthält alles davor.** K24 ist fertig (Claude).
 
-**Vorschlag für den nächsten Testlauf** (Spitze `mitarbeit/popolupo-k16h-vorschlag`, alles ungetestet, bis auf K09h, die Korrekturen FD und FE, K09g und K16h von lesenden Prüf-Agenten durchgesehen, Konsistenzprüfung CS bis FE). **Wichtig:** Die Zweige `u12g` und `k29e` laden für sich allein nicht (DN1), bitte die Spitze nehmen:
+**Vorschlag für den nächsten Testlauf** (Spitze `mitarbeit/popolupo-ff-korrekturen`, alles ungetestet, bis auf die Korrekturen FE und FF, K09g und K16h von lesenden Prüf-Agenten durchgesehen, Konsistenzprüfung CS bis FF). **Wichtig:** Die Zweige `u12g` und `k29e` laden für sich allein nicht (DN1), bitte die Spitze nehmen:
 1. `node tests/code.js`, dann die schnellen Einzeltests der neuen Teile: `finanzen.js` (Nr. 11 bis 20), `geruechte.js` (seit K17d mit Klatsch), `schwierigkeit.js`, `werbung.js`, `europapokal.js`, `vorstand.js` (Nr. 10 bis 19, dazu U12m am Ende), `karriereende.js`, `stadion.js` (Nr. 8 bis 11), `karten.js`, `spielwelt-karten.js`, `fans.js` (K27b, K27e), `abwerben.js` (K20b, K20e), `transfers.js` (K20c, K20d, K19c, K31b, K31c, K19d, K19e, FC1/FC3/FC4 und FD am Ende), `presse.js` (K29b bis K29j, K29m, Fall 5 seit K09f, dazu FE1), `marketing.js` (K25c, K25d, K25e, K25f), dazu seit dem Nachmittag des 22.11.: `testspiele.js` (K11b, K11c, Fall 2b), `erinnerungen.js` (K09b, K07b, K11d, K07d), `scouting.js` (K18c bis K18e), `medizin.js` (K10b bis K10d, K16d), `disziplin.js` (K09c, EA1 bis EA3, K09g am Ende), `vertraege.js` (K21b, K21d, K21e), `statistik.js` (K34d), `taktik.js` (K06b, eigene Welt am Ende), `training.js` (K07g und FB6 am Ende), `stab.js` (K16b, K16h am Ende), `wettbewerbe.js` (K13b, K13c, K13d, K13e mit FD3, eigene Welten am Ende), `lizenz.js` (K36c am Ende), `leihe.js` (am Ende der Fall EP2, Rückkehr aus der Leihe ohne Heimkehr), und in `karten.js` die neuen Karten (K30b, K07c, K08b, K08c, K16c, K27c, K21c, K26e, K12c, K29k, K17b, K22c, K03b, K30c, K30d, K10e, K07e, K14d, K14e, K29l, K30e, K11f, K03c, K30f, K27d, K05c, K05d, K06c, K09e, K06d, K06e, K15e, K26f, K16e, K18f, K30g, K11g, K27f, K27g, K16f, K16g, K27h, K19f, U12n, U19e, K09h am Ende, dazu die Fälle EK und EL). Der Katalog in `karten.js` Fall 1 ist mit `kartenpruefung.pl` schon ohne Node geprüft.
 2. `node tests/lizenz.js` (Gleichschritt, neue Bereiche `zielgespraech`; seit K36c am Ende die gesammelten Meldungen des Stabs, seit K36d die kleine Aufgabe). Viele neue Teile wirken nur ohne Automatik oder über Karten, darum sollte 5a gleich bleiben.
 3. `node tests/finanzmodell.js 2`: Salden je Liga nach K23c. Erwartet nach der Modellrechnung 1. Liga etwa +11 Mio., 2. Liga etwa 0, 3. Liga etwa −1 Mio. je Verein und Saison ohne Transfers (K23 §5.6b). Weichen sie stark ab, bitte die Zeilen ins Testprotokoll, ich stelle dann `REGELN.finanzen.verwaltung` und `sponsor` nach.
@@ -216,6 +217,15 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 ---
 
 ## Changelog
+
+### 24.11.2026: Korrekturen nach Prüfung FF zu K09h und den Korrekturen FD (Zweig `mitarbeit/popolupo-ff-korrekturen`, auf K16h)
+
+- **Weckruf:** kein neuer Testlauf (Testprotokoll weiter bei Lauf 8).
+- **FF1:** Die Vergleichself der Pokal-Rotation nimmt die Sperren des Pokals und entsteht nach dem Fitspritzen.
+- **FF3:** „Wurfgeschosse“ nicht nach dem Pokalfinale (neutraler Platz), Zuschauer-Vergehen nicht nach Europapokalspielen.
+- **FF4, FF5:** Bieterrunde auch in der Zweiten und im Ausland, Spielstände mit einem Saisonwechsel vor FD werden beim Laden umgestellt (`fristenAltstand`).
+- **FF2:** Doku zum Teilausschluss berichtigt (trifft keine Dauerkarten).
+- **Tests:** `tests/karten.js` (K09h erweitert), `tests/transfers.js` (neuer Fall FF4/FF5), `tests/wettbewerbe.js` (K13e erweitert).
 
 ### 24.11.2026: K16h Vorschlag des Co-Trainers (Zweig `mitarbeit/popolupo-k16h-vorschlag`, auf K09g)
 

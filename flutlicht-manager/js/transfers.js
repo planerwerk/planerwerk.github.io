@@ -31,7 +31,13 @@ function verhandlung(p){S.verh=S.verh||{};let v=S.verh[p.id];if(!v||v.team!==p.t
 const verhandlungVon=p=>{const v=S.verh&&S.verh[p.id];return v&&v.team===p.team?v:null;};
 // Alter Spielstand (Prüfung FB3): Ein Nachlass aus einer Karte stand vor FA1 als fester Betrag in v.f (nl ohne nlF, noch keine Runde). Beim Laden fällt er weg.
 // Gegenangebote aus Spielständen vor FB tragen weder fMy noch fNl (Prüfung FC4): Sie gelten für den Verein beim Laden und, wenn gerade ein Nachlass läuft, nur mit ihm.
-function verhUmstellen(){Object.values(S.verh||{}).forEach(v=>{if(!v)return;if(v.nl&&v.nlF==null&&!v.r)v.f=null;if(v.f!=null&&v.fMy==null){v.fMy=S.my;v.fNl=v.nlF>0?1:0;}});}
+function verhUmstellen(){Object.values(S.verh||{}).forEach(v=>{if(!v)return;if(v.nl&&v.nlF==null&&!v.r)v.f=null;if(v.f!=null&&v.fMy==null){v.fMy=S.my;v.fNl=v.nlF>0?1:0;}});fristenAltstand();}
+// Spielstände, die vor Prüfung FD schon einen Saisonwechsel hatten (Prüfung FF5): Fristen, die zu weit in der Zukunft liegen, stammen aus der Vorsaison.
+// Kater mehr als katerTage voraus und Standardtraining in der Zukunft fallen weg, eine Gegnerbeobachtung mehr als 60 Tage voraus auch, Angebote für deine Spieler
+// gelten höchstens noch angebotTage. Beim Laden (verhUmstellen), ohne Zufall; bei Ständen nach FD ändert sich nichts.
+function fristenAltstand(){const K=RTA.einstellung.saison.katerTage,h=S.tag;
+  [...(S.teams||[]),...((S.ausland&&S.ausland.v)||[])].forEach(t=>{if(!t)return;if(t.kater!=null&&t.kater-h>K)delete t.kater;if(t.stdTag!=null&&t.stdTag>h)delete t.stdTag;if(t.gb&&t.gb.bis-h>60)t.gb=null;});
+  (S.offers||[]).forEach(o=>{if(o&&o.bis!=null&&o.bis-h>RK.angebotTage)o.bis=h+RK.angebotTage;});}
 // Fristen in Saisontagen (Prüfung FC1): S.tag beginnt jede Saison neu. Beim Saisonwechsel rücken Pause, Preisdruck, Einigung und Bieterfrist der Verhandlungen,
 // die Vertagung der Vertragsgespräche (S.vt) und der Tag des letzten Vertragsgesprächs (S.vtGespr) um dt Tage (Länge der alten Saison) zurück.
 // Sonst sperrte ein Abbruch im Mai die ganze nächste Saison, und eine alte Einigung lebte wieder auf.
@@ -43,7 +49,7 @@ function fristenSaisonwechsel(dt){const z=x=>x==null?x:x-dt;
   if(S.vtGespr)Object.keys(S.vtGespr).forEach(id=>{S.vtGespr[id]=z(S.vtGespr[id]);});
   [...(S.teams||[]),...((S.ausland&&S.ausland.v)||[])].forEach(t=>{if(!t)return;if(t.kater!=null)t.kater=z(t.kater);if(t.stdTag!=null)t.stdTag=z(t.stdTag);if(t.gb&&t.gb.bis!=null)t.gb.bis=z(t.gb.bis);});
   (S.offers||[]).forEach(o=>{if(o&&o.bis!=null)o.bis=z(o.bis);});
-  (S.pl||[]).forEach(p=>{if(p.bieterF!=null)p.bieterF=z(p.bieterF);});}
+  const gesehen=new Set();[...(S.pl||[]),...(S.zw||[]),...((S.ausland&&S.ausland.pl)||[])].forEach(p=>{if(!p||gesehen.has(p))return;gesehen.add(p);if(p.bieterF!=null)p.bieterF=z(p.bieterF);});} /* auch Zweite und Ausland (Prüfung FF4), jeder Spieler einmal */
 // Jobwechsel (Prüfung FC3): Einigungen über eine Ablöse galten für den alten Verein (womöglich samt dessen Nachlass), sie verfallen.
 function verhJobwechsel(){Object.values(S.verh||{}).forEach(v=>{if(v)v.einig=null;});}
 // Grundforderung an dich: mit deiner Beziehung zum Verein (K17 §5.2, U12c, nur inländische Vereine). Preise unter Computer-Vereinen nutzen forderungBasis ohne Beziehung.

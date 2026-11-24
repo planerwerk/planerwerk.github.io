@@ -113,7 +113,7 @@ Aus §5.4 („Platzsturm: Aufstieg, Klassenerhalt am letzten Spieltag, Feier, kl
     - Aufsteiger in der 3. Liga: die ersten zwei der Aufstiegsreihe ohne zweite Mannschaften (`aufstiegsReihe3`, wie beim Saisonende). Eine zweite Mannschaft steigt nie auf. Seit Prüfung EX2.
     - Gerettet: vor dem letzten Spieltag unter dem Strich, danach darüber. Der Strich liegt in der 1. und 2. Liga nach Platz 15, in der 3. Liga vor den Absteigern. Seit Prüfung EX3, vorher nur genau Platz 15.
   - Die Relegation zählt nicht mit, sie kommt erst danach.
-- **Wirkung:** Fanstimmung +2, Geldstrafe 20.000 € in der 3. Liga, nach Liga skaliert (in der 1. Liga 80.000 €).
+- **Wirkung:** Fanstimmung +2, Geldstrafe 20.000 € in der 3. Liga, nach Liga skaliert (in der 1. Liga 80.000 €). Seit K09h zählt der Platzsturm als Zuschauer-Vergehen (Zuschlag und Teilausschluss bei Wiederholung, K09 Nr. 14).
 - **Meldung:** Die Karte erscheint immer (`immer:true`), auch über der Grenze für Info-Karten der Woche. Die Strafe soll nicht still abgehen. Seit Prüfung EX4.
 - **Regelwerte:** `REGELN.karten.fans.platzsturm` mit `aufstieg` (2 direkte Aufstiegsplätze) und `unterStrich` (3 Plätze unter dem Strich in der 1. und 2. Liga: zwei Absteiger und die Relegation). Seit Prüfung EX3.
 

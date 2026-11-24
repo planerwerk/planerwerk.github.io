@@ -135,10 +135,10 @@ const AUSLOESER={
   lastMinuteNiederlage(){return kartenLetztSpiel(L=>L.spaet===-1)?{}:null;},
   // Taktik-Coup (K06 §8, K06c), Pyrotechnik und Rudelbildung im Derby (K09 §8, K09e): nach deinen Pflichtspielen der letzten RKT.spiel.nachTage Tage (S.letzte, das jüngste passende)
   taktikCoup(){const L=kartenLetztSpiel(L=>L.coup);return L?{verein:L.gegner}:null;},
-  derbyPyro(){const L=kartenLetztSpiel(L=>L.derby);return L?{verein:L.gegner}:null;},
+  derbyPyro(){const L=kartenLetztSpiel(L=>L.derby&&!L.eu);return L?{verein:L.gegner}:null;}, /* nicht im Europapokal, dort zählt die UEFA (Prüfung FF3) */
   rudelbildung(){const L=kartenLetztSpiel(L=>L.derby&&L.rot);return L?{verein:L.gegner}:null;},
   // Wurfgeschosse (K09 §4.4, K09h): nach einer Heimniederlage in einem Pflichtspiel der letzten RKT.spiel.nachTage Tage (heim, nl in S.letzte)
-  wurf(){const L=kartenLetztSpiel(L=>L.heim&&L.nl&&L.gegner<1000);return L?{verein:L.gegner}:null;},
+  wurf(){const L=kartenLetztSpiel(L=>L.heim&&L.nl&&L.gegner<1000&&!L.eu);return L?{verein:L.gegner}:null;}, /* nicht im Europapokal (Prüfung FF3) */
   // Spieler hadert mit seiner Position (K06 §8, K06d): mindestens RKT.spiel.positionSpiele Einsätze in Folge auf einer Position mit geringer Eignung (p.pfal)
   positionHadern(){const SP=RKT.spiel,h=absTag(S.tag),l=squad(S.my).filter(p=>(p.pfal||0)>=SP.positionSpiele&&p.pfalT!=null&&h-p.pfalT<=SP.positionTage); /* EK7 */return l.length?{spieler:pick(l).id}:null;},
   // Streit nach Kritik (K15 §8, K15e): ein Spieler deines Kaders hat sich in den letzten RKT.gespraech.streitTage Tagen im Einzelgespräch nach deiner Kritik mit dir gestritten
@@ -251,7 +251,7 @@ function letztesSpielMerken(r,d){if(!r||r.test)return;const SP=RKT.spiel,s=r.h==
   // nur wenn du den Stil selbst wählst (EK6)
   const gegner=s?r.h:r.a,gf=s?r.ag:r.hg,ga=s?r.hg:r.ag,tk=r.taktik||[],mein=tk[s],geg=tk[1-s],
     coup=!autoB('stil')&&gf>ga&&gegner<1000&&!!mein&&!!geg&&RTA.kreislauf[mein.stil]===geg.stil&&teamLevel(gegner)-teamLevel(S.my)>=SP.coupAb;
-  S.letzt={s:S.season,t:S.my,tag:d,joker,frueh,spaet,gegner,derby:gegner<1000&&istDerby(r.h,r.a),rot:r.ev.some(e=>e.t==='R'),coup,heim:s===0,nl:gf<ga}; /* heim, nl (Niederlage) seit K09h für die Karte Wurfgeschosse */
+  S.letzt={s:S.season,t:S.my,tag:d,joker,frueh,spaet,gegner,derby:gegner<1000&&istDerby(r.h,r.a),rot:r.ev.some(e=>e.t==='R'),coup,heim:s===0&&!r.neutral,nl:gf<ga,eu:!!r.eu}; /* heim (nicht auf neutralem Platz, Prüfung FF3), nl (Niederlage), eu seit K09h für Zuschauer-Vergehen */
   S.letzte=[...(S.letzte||[]).filter(L=>L&&L.s===S.season&&L.t===S.my&&d-L.tag<=SP.nachTage),S.letzt].slice(-SP.merken);
   // K06e: Tore nach Standards (RKT.standard.arten) in deinen Ligaspielen der laufenden Halbserie, S.std = {s, t, h Halbserie, sp Spiele, g Tore, n Standardtore, k Karte schon da}
   if(r.lg!=null&&!r.rel){S.ligaXI={s:S.season,t:S.my,ids:((r.xi||[])[s]||[]).slice()}; /* Startelf deines letzten Ligaspiels für die Pokal-Rotation (K13e) */const N=(S.fx[r.lg]||[]).length,gesp=(S.res[r.lg]||[]).filter(x=>x[0]===S.my||x[1]===S.my).length,h=gesp>N/2?1:0;let A=S.std;

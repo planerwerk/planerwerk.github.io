@@ -167,5 +167,15 @@ const kaufe=(w,p,fee,yrs=3)=>{const els=w.W.ev('document');els.getElementById('f
   pruef(ok&&!katerA&&katerB&&!beobachtet,'Saisonwechsel: Kater, Standardtraining, Gegnerbeobachtung, Angebote und Bieterrunde rücken mit',
     `verschoben ${ok} (Kater ${a.kater}/${b.kater}, Standards ${a.stdTag}, Beobachtung bis ${a.gb.bis}, Angebot bis ${S.offers[0].bis}, Bieterfenster ${p.bieterF}), am 1.7.: Kater alt ${katerA}, Kater jung ${katerB}, Beobachtung ${beobachtet}`);}
 
+// Prüfung FF4, FF5: Das Fenster der letzten Bieterrunde rückt auch bei Spielern der Zweiten und im Ausland mit, jeder Spieler nur einmal. Beim Laden (verhUmstellen) stellt
+// fristenAltstand Fristen aus Spielständen vor FD um: zu weit voraus liegender Kater, Standardtraining und Gegnerbeobachtung fallen weg, Angebote gelten höchstens
+// angebotTage. Frische Werte bleiben.
+{const {S,ev}=welt(),a=S.teams.find(t=>t.id!==S.my&&t.lg===1),p=ev('squad')(S.my)[1],q={id:-77,bieterF:184},au=((S.ausland&&S.ausland.pl)||[])[0];
+  S.zw=[q,p];p.bieterF=365;if(au)au.bieterF=184;ev('fristenSaisonwechsel')(365);const zw=q.bieterF===184-365&&p.bieterF===0&&(!au||au.bieterF===184-365);
+  const h=S.tag,AT=ev('RK').angebotTage,K=ev('RTA').einstellung.saison.katerTage,b=S.teams.find(t=>t.id!==S.my&&t.id!==a.id);
+  a.kater=h+200;a.stdTag=h+100;a.gb={g:0,bis:h+300};b.kater=h+K;b.stdTag=h-3;const frisch={pid:p.id,tid:a.id,bis:h+AT},alt={pid:p.id,tid:a.id,bis:h+300};S.offers=[frisch,alt];
+  ev('verhUmstellen')();const ok=a.kater===undefined&&a.stdTag===undefined&&a.gb===null&&frisch.bis===h+AT&&alt.bis===h+AT&&b.kater===h+K&&b.stdTag===h-3;
+  pruef(zw&&ok,'Fristen: Bieterrunde auch in der Zweiten und im Ausland, alte Spielstände werden beim Laden umgestellt',`Zweite/Ausland ${zw}, Umstellung ${ok} (Kater ${a.kater}, Angebot alt bis ${alt.bis})`);}
+
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

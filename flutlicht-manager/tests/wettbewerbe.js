@@ -84,7 +84,7 @@ pruef(supercups.length===N-1&&supercups.every(x=>!x.verl&&(x.hg!==x.ag)===!x.pen
   /* Prüfung FD3: Die beste Elf von vor dem Anpfiff (bxi im Ergebnis) gilt, nicht die nach dem Spiel; pokalBezugsElf nur für dein Spiel und ohne Ligaspiel dieser Saison */
   const andere=[...b.slice(0,b.length-P.wechsel),...rest.slice(0,P.wechsel)],vorher=F4.pokalRotation(Object.assign(spiel(1000,andere.slice(),0,1),{bxi:andere.slice()})),be=ev4('pokalBezugsElf');
   const fremd=be([[S4.teams.find(t=>t.id!==6).id,1000]]),eigen=be([[6,1000]]);S4.ligaXI.s=S4.season;const mitLiga=be([[6,1000]]);S4.ligaXI.s=S4.season-1;
-  const fd3=vorher===0&&fremd===null&&Array.isArray(eigen)&&eigen.length===b.length&&mitLiga===null;
+  const fd3=vorher===0&&fremd===null&&Array.isArray(eigen)&&eigen.length===b.length&&mitLiga===null&&/mitWettbewerb\('pokal'/.test(String(be)); /* FF1: mit den Sperren des Pokals */
   pruef(amateur===P.wechsel&&zuWenig===0&&gegenGleich===0&&sieg===0&&mitBester===0&&ohneBeste===P.wechsel&&text&&sq.length>=11+P.wechsel&&fd3,
     'Pokal-Rotation: Meldung nach dem Aus als Favorit mit vielen Wechseln, nicht bei wenigen, nicht gegen Gleichstarke, nicht nach Sieg; vor dem ersten Ligaspiel gegenüber der besten Elf (vor dem Anpfiff, FD3)',
     `gegen Amateure ${amateur}, zu wenig ${zuWenig}, gegen Gleichstarke ${gegenGleich}, nach Sieg ${sieg}, beste Elf ${mitBester}, ohne die beste Elf ${ohneBeste} (Meldung ${text}), FD3: Elf vor dem Anpfiff ${vorher}, fremdes Spiel ${fremd}, eigenes ${eigen&&eigen.length}, mit Ligaspiel ${mitLiga}`);}
