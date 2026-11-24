@@ -427,6 +427,7 @@ lizenz:{
 184. **K16h Vorschlag des Co-Trainers (24.11., popolupo, ohne Testlauf):** Zwischen „selbst“ und „Automatik“ (Nr. 12, `L.auto`) liegt jetzt der Modus „Vorschlag“ für `aufstellung` und `vorlage`. Er ist nur eine Anzeige: Übernehmen läuft über die bestehenden Knöpfe mit ihren Prüfungen (`darf`), unter der Automatik gibt es keinen Vorschlag. Gleichschritt unberührt.
 185. **K19i Boni als Teil der Ablöse (24.11., popolupo, ohne Testlauf):** keine neue Funktion. Der Bonus ist ein Feld im Transferangebot (Bereich `transfers`), ausgezahlt wird ohne Entscheidung und ohne Halt. Die Automatik der Transfers kauft ohne Bonus.
 186. **K19j Spielertausch (24.11., popolupo, ohne Testlauf):** keine neue Funktion. Der Tausch ist ein Feld im Transferangebot (Bereich `transfers`). Die Automatik der Transfers tauscht nicht.
+187. **K23h TV-Gelder in vier Raten und K31d Notverkauf (24.11., popolupo, ohne Testlauf, beide mit Schalter aus):** keine neue Funktion, nur Abläufe der Welt. Eingeschaltet wirken sie in beiden Welten des Gleichschritts gleich.
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 

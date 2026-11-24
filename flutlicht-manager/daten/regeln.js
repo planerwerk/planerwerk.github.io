@@ -360,6 +360,9 @@ const REGELN={
     qualitaet:{stamm:3,herausforderer:6,ergaenzung:10},
     bedarf:{stammUnterZiel:3,verletztTage:56,budgetRestAb:0.4,endspurtWochen:3,anspruchJeWoche:1},
     verkauf:{unterPlanstelle:6,angebotAb:1.5}, // angebotAb: außergewöhnliches Angebot (× Marktwert), dafür gibt ein Verein auch ohne Grund ab (Sternejagd)
+    // Notverkauf (K31 §8, K31d, 24.11., popolupo): Liegen die Gehälter eines Computer-Vereins über ueberRahmen × Gehaltsrahmen (K23d), setzt er den Spieler mit dem höchsten
+    // Gehalt außer den Schlüsselspielern für preis × seinen üblichen Preis (kiPreis) auf die Liste. Vorerst aus (an): ändert die Verkäufe aller Vereine, erst messen.
+    notverkauf:{an:false,ueberRahmen:1.1,preis:0.75},
     // Vereinsprofile (K31 §3.2, §5.7, U11b). „ehrgeizig“ folgt aus der Lage: unter den ersten ehrgeizigBis nach Ansehen in der Liga oder gerade aufgestiegen.
     // Das zweite Profil wird beim Aufbau der Welt nach gewichte gelost (oder steht als profil in daten/vereine.js). werte: was ein Profil am Standard ändert.
     // qualitaet: Aufschlag auf alle Qualitätsziele (−1 = strenger). budget: Faktor auf den Anteil des Kontos. zahlt: Faktor auf den Vereinswert des Käufers.

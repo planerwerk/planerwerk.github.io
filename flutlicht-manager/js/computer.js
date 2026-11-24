@@ -78,6 +78,12 @@ const kiSternPreis=p=>Math.max(RP.marktwert.minimum,rundeAb(Math.max(forderungBa
 // Nicht angefasst werden vereinbarte Wechsel, geliehene Spieler und Profis, die ein anderer Verein in seine Zweite abgestellt hat.
 function kiListe(P){const klein=P.alle.length<=RM.verkaeufer.kaderMin;
   P.alle.forEach(p=>{if(p.wech||p.leihe||p.zwP)return;if(!klein&&P.abgabe.has(p.id)){p.list=1;p.ask=kiPreis(p);}else if(p.list){p.list=0;p.ask=0;}});}
+// Notverkauf (K31 §8, K31d, nur mit RCV.notverkauf.an): nach kiListe jede Woche, ohne Zufall. Über dem Gehaltsrahmen kommt der Spieler mit dem höchsten Gehalt (keine
+// Schlüsselspieler, keine vereinbarten Wechsel, Leihen oder Zweite) unter Wert auf die Liste. Meldung einmal je Verein und Saison (t.nvS). Gibt den Spieler zurück.
+function kiNotverkauf(t,P){const N=RCV.notverkauf;if(!N||!N.an||!t||t.id===S.my||P.alle.length<=RM.verkaeufer.kaderMin||gehaltsSumme(t)<=gehaltsRahmen(t)*N.ueberRahmen)return null;
+  const p=P.alle.filter(x=>!x.wech&&!x.leihe&&!x.zwP&&kaderRolle(x)!=='schluessel').sort((a,b)=>b.sal-a.sal||a.id-b.id)[0];if(!p)return null;
+  p.list=1;p.ask=Math.max(RP.marktwert.minimum,rundeAb(kiPreis(p)*N.preis));
+  if(t.nvS!==S.season){t.nvS=S.season;news(`Notverkauf: ${t.name} muss Gehalt sparen. ${p.n} steht für ${fmt(p.ask)} auf der Transferliste.`,'tr');}return p;}
 
 // ---------- Kauf (K31 §5.3) ----------
 // Bester Kandidat für eine Lücke: Vereinslose und Spieler der Transferliste anderer Vereine. Er passt in die Gruppe, hat die gesuchte Stärke, will zu diesem Verein,
@@ -200,7 +206,7 @@ function kiVertraegeFrueh(kader){const V=RCV.vertrag,F=V.frueh,k=mmtt(S.tag);if(
 function kiMarkt(){const nr=fensterNr(),vereine=S.teams.filter(t=>aktiv(t)&&stabMacht(t.id,'transfers')),kader=new Map(S.teams.map(t=>[t.id,[]])),plaene=new Map();
   S.pl.forEach(p=>{const l=kader.get(p.team);if(l)l.push(p);});
   const plan=t=>{let x=plaene.get(t.id);if(!x){x=kaderplan(t,kader.get(t.id));plaene.set(t.id,x);}return x;};
-  vereine.forEach(t=>kiListe(plan(t)));
+  vereine.forEach(t=>{kiListe(plan(t));kiNotverkauf(t,plan(t));}); /* Notverkauf nur mit Schalter (K31d) */
   kiVertraegeFrueh(kader); // Herbst: Verträge der Gebrauchten früh verlängern (U11c), ändert keinen Kader
   if(nr<0)return;
   vereine.forEach(t=>kiBudget(t,nr)); // Budget aller Vereine vor dem ersten Wechsel des Fensters festlegen (nicht erst, wenn ein Verein an der Reihe ist oder verkauft)

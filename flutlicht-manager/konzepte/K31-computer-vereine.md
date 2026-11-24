@@ -311,7 +311,7 @@ Das ganze Konzept.
 - „Großer Umbruch“ seit U11d2.
 - „Rekordtransfer“ seit U13, seit K34d mit echtem Startwert.
 - **„Konkurrent rüstet auf“ seit K31c (ohne Testlauf):** Gelingt einem Verein deiner Liga die Sternejagd (§5.7), steht es als Meldung da. Nur eine Meldung, ohne Presse und Fans. Eine Wirkung auf deinen Verein gäbe es nur in deiner Welt, nicht beim selben Verein als Computer-Verein, und das bricht den Gleichschritt in `tests/lizenz.js`. Presse und Fans kommen, wenn es dafür eine Karte gibt (K30).
-- **„Notverkauf“ fehlt noch:** Er ändert die Verkaufsregeln aller Vereine und gehört zu einem Schritt mit Testlauf.
+- **„Notverkauf“ seit K31d (24.11.2026, popolupo, ohne Testlauf, Schalter aus):** Liegen die Gehälter eines Computer-Vereins (Kader und Stab) über 110 % seines Gehaltsrahmens (K23d), setzt er jede Woche den Spieler mit dem höchsten Gehalt, der kein Schlüsselspieler ist, für 75 % seines üblichen Preises auf die Transferliste, mit einer Meldung je Verein und Saison (`kiNotverkauf` nach `kiListe`, ohne Zufall). Er ändert die Verkäufe aller Vereine, darum ist er vorerst abgeschaltet (`REGELN.computer.notverkauf.an = false`) und wird erst nach einer Messung eingeschaltet.
 
 ## 9. Wechselwirkungen
 

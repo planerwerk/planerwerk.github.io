@@ -232,5 +232,15 @@ const kaufe=(w,p,fee,yrs=3)=>{const els=w.W.ev('document');els.getElementById('f
   pruef(mit&&ohne&&gesperrt&&frei&&rund&&simZw&&ohneZwP,'Bieterwettstreit mit Bonus und Tausch, kein Tausch mit gesperrtem Verein, Ablösefeld aufgerundet, simulierte Zweite',
     `mit Teilen ${mit}, ohne ${ohne}, Sperre ${gesperrt}/${frei}, Rundung ${rund} (${mio(1525000)}, ${mio(2512500)}), simulierte Zweite ${simZw}/${ohneZwP}`);}
 
+// K31d. Notverkauf (K31 §8), nur mit Schalter RCV.notverkauf.an: Über dem Gehaltsrahmen kommt der Spieler mit dem höchsten Gehalt (kein Schlüsselspieler) für preis × kiPreis
+//       auf die Liste, mit einer Meldung je Verein und Saison. Ausgeschaltet oder unter dem Rahmen passiert nichts.
+{const {S,ev}=welt(),N=ev('RCV').notverkauf,t=S.teams.find(x=>x.id!==S.my&&ev('aktiv')(x)&&x.lg===1),P=ev('kaderplan')(t),nv=ev('kiNotverkauf'),sq=ev('squad')(t.id);
+  sq.forEach(p=>{p.sal0=p.sal;p.sal*=10;});const aus=nv(t,P)===null;N.an=true;
+  const p=nv(t,P),m1=!!S.news[0]&&String(S.news[0].t).includes('Notverkauf');S.news.unshift({t:'x'});const q=nv(t,P),m2=S.news[0].t==='x';
+  const ok=!!p&&p.list===1&&p.ask===Math.max(ev('RP').marktwert.minimum,ev('rundeAb')(ev('kiPreis')(p)*N.preis))&&ev('kaderRolle')(p)!=='schluessel'&&m1&&q===p&&m2;
+  sq.forEach(x=>{x.sal=x.sal0;delete x.sal0;});delete t.nvS;const unter=ev('gehaltsSumme')(t)<=ev('gehaltsRahmen')(t)*N.ueberRahmen?nv(t,P)===null:true;N.an=false;
+  pruef(aus&&ok&&unter,'Notverkauf: nur mit Schalter und über dem Gehaltsrahmen, teuerster Nicht-Schlüsselspieler unter Wert, eine Meldung je Saison',
+    `aus ${aus}, Notverkauf ${ok}${p?` (${p.n}, ${p.ask})`:''}, unter dem Rahmen ${unter}`);}
+
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);
