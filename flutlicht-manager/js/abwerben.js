@@ -40,9 +40,9 @@ const deadlineLetzter=(d=S.tag)=>fensterOffen(d)&&!fensterOffen(d+1);
 // Täglich (ablauf.js taeglichLauf): am letzten Tag ein zusätzlicher Markttag der Computer-Vereine
 function deadlineTag(d){if(S.phase!=='play'||!deadlineLetzter(d))return;mitStrom(strom('deadline',S.season,d),market);news('Deadline Day: Heute schließt das Transferfenster. Die Vereine machen noch schnell Geschäfte.','tr');}
 function deadlineKarte(){if(S.phase!=='play'||!deadlineTage())return'';const e=fensterEnde(),soll=RS.kaderSoll,sq=squad(S.my),fehlt=Object.keys(soll).map(pos=>[pos,soll[pos]-sq.filter(p=>p.pos===pos).length]).filter(x=>x[1]>0);
-  const v=Object.entries(S.verh||{}).map(([id,x])=>[PIX.get(+id),x]).filter(([p,x])=>p&&p.team===x.team&&p.team!==S.my&&(x.f!=null||(x.einig&&x.einig.bis>=S.tag)));
+  const v=Object.entries(S.verh||{}).map(([id,x])=>[PIX.get(+id),x]).filter(([p,x])=>p&&p.team===x.team&&p.team!==S.my&&(gegenGilt(x)||(x.einig&&x.einig.bis>=S.tag)));
   return`<div class="card"><h3>Deadline Day</h3><p>Das Transferfenster schließt am ${esc(datumKurz(e))}. Danach gelten Einigungen erst ab dem nächsten Fenster.</p><p class="dim">Bis dahin schwanken die Forderungen der Vereine täglich um bis zu ±${Math.round(RAW.deadline.preis*100)} %, wer auf ihrer Transferliste steht, ist billiger. Für deine Spieler auf der Transferliste kommen öfter Angebote.</p><ul>
-    <li>Offene Verhandlungen: ${v.length?v.map(([p,x])=>`<a href="#" onclick="openP(${p.id});return false">${esc(p.n)}</a> <span class="dim">(${esc(tn(p.team))}${x.einig&&x.einig.bis>=S.tag?`, einig über ${fmt(x.einig.fee)}`:x.f!=null?`, Gegenangebot ${fmt(x.f)}`:''})</span>`).join(', '):'keine'}</li>
+    <li>Offene Verhandlungen: ${v.length?v.map(([p,x])=>`<a href="#" onclick="openP(${p.id});return false">${esc(p.n)}</a> <span class="dim">(${esc(tn(p.team))}${x.einig&&x.einig.bis>=S.tag?`, einig über ${fmt(x.einig.fee)}`:gegenGilt(x)?`, Gegenangebot ${fmt(x.f)}`:''})</span>`).join(', '):'keine'}</li>
     <li>Angebote für deine Spieler: ${S.offers.length||'keine'}</li><li>Lücken im Kader: ${fehlt.length?fehlt.map(([pos,n])=>`${n} ${pos}`).join(', '):'keine'}</li></ul></div>`;}
 
 // ---------- Bieterrunde beim Verkauf (K20 §4.2) ----------

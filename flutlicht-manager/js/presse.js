@@ -28,7 +28,7 @@ function kiSticheleienWoche(d){if(S.phase!=='play')return;const M=RPK.medienprof
   const T=table(lg),pl=id=>T.findIndex(r=>r.id===id)+1;let n=0;
   S.fx[lg].forEach((md,k)=>md.forEach(([h,a],i)=>{if(n>=K.max||h===S.my||a===S.my)return;const tag=Z[k]&&Z[k][i]?Z[k][i][0]:null;if(tag==null||tag<=d||tag-d>K.tage)return;
     const derby=istDerby(h,a),spitze=k+1>=A.spitzeAb&&pl(h)<=A.spitzeBis&&pl(a)<=A.spitzeBis;if(!derby&&!spitze)return;
-    for(const [von,ziel] of [[h,a],[a,h]]){const x=trainerVon(von),pr=medienProfil(x),c=pr&&M.chance[pr]||0;if(!c||R()>=c)continue;const l=PRESSE.sticheleien[pr];
+    for(const [von,ziel] of [[h,a],[a,h]]){const x=trainerVon(von),pr=medienProfil(x),c=pr&&M.chance[pr]||0;if(!c||R()>=c)continue;const l=PRESSE.kiSticheleien[pr];
       news(`${x.n} (${tn(von)}) stichelt vor ${derby?'dem Derby':'dem Spitzenspiel'} gegen ${tn(ziel)}: „${pkText(l[Math.floor(R()*l.length)],{verein:tn(ziel)})}“`);bezAendern(von,ziel,K.bez,'Stichelei vor dem Spiel');n++;break;}}));}
 // Stichelei ohne Antwort (Co-Trainer geschickt oder nicht hingegangen, aber ohne Automatik): die eigene Mannschaft grübelt. Nicht, wenn die erste Frage
 // (die Stichelei) schon beantwortet ist, nach einer Entlassung oder in einer neuen Saison (Prüfung DO1)

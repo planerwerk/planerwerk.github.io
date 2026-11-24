@@ -73,7 +73,7 @@ function vtPaket(p,F,ct,vereinslos){const el=id=>(document.getElementById(id)||{
 // Vertrag eintragen: Laufzeit, Gehalt, Prämien, Klauseln, Handgeld buchen
 function vtUnterschrift(p,o,neu){p.ct=o.ct;p.sal=o.sal;if(o.vp)p.vp=o.vp;else delete p.vp;if(o.ak)p.ak=o.ak;else delete p.ak;if(o.lk)p.lk=o.lk;else delete p.lk;if(o.hg)money('Handgelder',-o.hg);if(neu)p.seit=absTag(S.tag);}
 // Vertrag endet (Verkauf, Auflösung): Prämien und Klauseln gelten nicht beim neuen Verein
-function vertragEnde(p){delete p.vp;delete p.ak;delete p.lk;if(S.vt)delete S.vt[p.id];}
+function vertragEnde(p){delete p.vp;delete p.ak;delete p.lk;p.um=null;delete p.umE; /* Prüfung FB6: wer geht, schult nicht weiter um */if(S.vt)delete S.vt[p.id];}
 
 // ---------- Prämien je Pflichtspiel (K21 §3.1) ----------
 function praemienNachSpiel(list){const P=RVT.praemie;let summe=0;

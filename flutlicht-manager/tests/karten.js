@@ -578,12 +578,16 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   const fd=ev('forderungDu'),rA=ev('rundeAb'),fq=ev('forderung');ev('kartenWirkung')({art:'nachlass',wert:0.15},b||{spieler:p.id,verein:t3.id},{titel:'Test'});const billiger=fq(p)===rA(fd(p)*0.85);
   /* Prüfung FA1: Der Nachlass übersteht einen Abbruch der Verhandlung, gilt nicht für einen anderen eigenen Verein und verfällt mit der Frist */
   const v=ev('verhandlung')(p);v.f=null;v.r=0;const nachAbbruch=fq(p)===rA(fd(p)*0.85),my0=v.nlMy;v.nlMy=-5;const fremd=fq(p)===rA(fd(p));v.nlMy=my0;
+  /* Prüfung FB2: Ein Gegenangebot unter dem Nachlass gilt bis zur Frist und nur für deinen Verein; „verfallen“ prüft danach, dass es mit dem Nachlass wegfällt.
+     v.f wird nach der Runde niedriger gesetzt, damit die Fälle sich unterscheiden (die Runde selbst kann genau die Forderung zurückgeben) */
+  v.pause=-1;v.konk=null;v.g=ev('RTR').geduld;const kr=ev('kaufRunde')(p,rA(fq(p)*0.9)),markiert=kr.gegen!=null&&v.fNl===1&&v.fMy===S.my;v.f=rA(fd(p)*0.5);
+  const gegenDa=fq(p)===v.f;v.fMy=-5;const gegenFremd=fq(p)===rA(fd(p)*0.85);v.fMy=S.my;
   S.tag+=ev('RKT').nachlass.tage+1;const verfallen=fq(p)===rA(fd(p));S.tag=auf;
   /* FA2/FA4: nicht mit Transfersperre */
   S.lzp=Object.assign(S.lzp||{},{sperre:S.season});const gesperrt=A.nurZuDir();S.lzp.sperre=null;S.tag=d0;
-  pruef(i>=ab&&passt&&geschlossen===null&&ohneWunsch===null&&geliehen===null&&billiger&&nachAbbruch&&fremd&&verfallen&&gesperrt===null,
-    'Spieler will nur zu dir: im Fenster, mit Wechselwunsch und hohem Interesse, nicht verliehen, nicht mit Transfersperre; Gespräche senken die Forderung um 15 %, bis zur Frist',
-    `Interesse ${Math.round(i)} (ab ${ab}), Auslöser ${passt}, Fenster zu ${geschlossen}, ohne Wunsch ${ohneWunsch}, verliehen ${geliehen}, Forderung ${billiger}, nach Abbruch ${nachAbbruch}, anderer Verein ${fremd}, verfallen ${verfallen}, Transfersperre ${gesperrt}`);}
+  pruef(i>=ab&&passt&&geschlossen===null&&ohneWunsch===null&&geliehen===null&&billiger&&nachAbbruch&&fremd&&markiert&&gegenDa&&gegenFremd&&verfallen&&gesperrt===null,
+    'Spieler will nur zu dir: im Fenster, mit Wechselwunsch und hohem Interesse, nicht verliehen, nicht mit Transfersperre; Gespräche senken die Forderung um 15 %, bis zur Frist, ein Gegenangebot darunter verfällt mit',
+    `Interesse ${Math.round(i)} (ab ${ab}), Auslöser ${passt}, Fenster zu ${geschlossen}, ohne Wunsch ${ohneWunsch}, verliehen ${geliehen}, Forderung ${billiger}, nach Abbruch ${nachAbbruch}, anderer Verein ${fremd}, Gegenangebot markiert ${markiert} (${kr.text||'angenommen'}), gilt ${gegenDa}, nicht für anderen Verein ${gegenFremd}, verfallen ${verfallen}, Transfersperre ${gesperrt}`);}
 
 // K16f. Streit im Stab (K16 §8): nur zwischen zwei hitzigen Mitarbeitern deines Stabs; „Laufen lassen“ macht beide 28 Tage schwächer (Qualität × 0,9 in stabQ), danach wieder normal.
 {const {S,F,ev}=welt(),A=ev('AUSLOESER'),hz=ev('stabHitzig'),sf=ev('stabStreitFaktor'),M=ev('RST').streit,sg=ev('stabGeaendert');S.phase='play';if(!S.stab)F.stabAufbau();
@@ -603,7 +607,7 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   /* EY1: nur hitzige Scouts, sonst niemand: keine Karte */
   const mein=S.stab.filter(y=>y.team===S.my);mein.forEach(y=>{y.team=-1;});sg();const sc=[];for(let i=0;i<120&&sc.length<2;i++){const x=F.stabNeu('scout',10,S.my,1);if(hz(x)){S.stab.push(x);sc.push(x);}}sg();
   const scouts=sc.length===2&&A.stabStreit()===null;S.stab=S.stab.filter(y=>!sc.includes(y));mein.forEach(y=>{y.team=S.my;});sg();
-  const ks=ev('kartenSchluessel'),cs={id:'stabStreit'},paar=ks(cs,{stab:1,stab2:2})!==ks(cs,{stab:1,stab2:3})&&ks(cs,{stab:1,stab2:2})==='stabStreit:s1+2:'&&ks({id:'x'},{stab:4})==='x:s4:'&&ks({id:'x'},{spieler:7,verein:3})==='x:7:'&&ks({id:'x'},{verein:3})==='x::3'; /* Prüfung EZ1/FA5: Schlüssel der Sperre */
+  const ks=ev('kartenSchluessel'),cs={id:'stabStreit'},paar=ks(cs,{stab:1,stab2:2})!==ks(cs,{stab:1,stab2:3})&&ks(cs,{stab:1,stab2:2})==='stabStreit:s1+2:'&&ks({id:'x'},{stab:4})==='x:s4:'&&ks({id:'x'},{spieler:7,verein:3})==='x:7:3'&&ks({id:'x'},{verein:3})==='x::3'; /* Prüfung EZ1/FA5: Schlüssel der Sperre */
   pruef(!!x1&&!!x2&&beide&&schwach&&ohne&&wieder&&qOk&&sortiert&&fremd&&scouts&&plaetze&&paar,'Streit im Stab: zwei hitzige Mitarbeiter, beide 28 Tage schwächer (auch in stabQ), danach normal, nur dein Stab, keine Scouts',
     `hitzige gefunden ${!!x1&&!!x2}, Auslöser ${beide}, schwächer ${schwach}, nicht noch einmal ${ohne}, danach normal ${wieder}, stabQ ${qS} statt ${qE}, sortiert ${sortiert}, anderer Verein ${fremd}, Scouts ${scouts}, Plätze ${pl0} → ${pl1}, Schlüssel ${paar}`);}
 

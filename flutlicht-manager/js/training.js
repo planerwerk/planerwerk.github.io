@@ -105,10 +105,11 @@ function umschulungHinweis(p){const U=RT.umschulung,gel=umgeschult(p);if(p.pos==
 const umschulungZiele=p=>Object.keys(RP.positionsNamen).filter(x=>!umschulungGrund(p,x));
 // Einsatz auf der neuen Position (K07 §3.3, K07g): zählt wie eine Trainingswoche zusätzlich, ab RT.umschulung.einsatzMinuten Minuten,
 // höchstens einmal in einsatzTage Tagen (p.umE: absoluter Tag des letzten gezählten Einsatzes), damit eine englische Woche nicht doppelt zählt. Ohne Zufall.
-function umschulungEinsatz(p,pos,min){const U=RT.umschulung;if(!p||!p.um||pos!==p.um||!(min>=U.einsatzMinuten))return false;const h=absTag(S.tag);
-  if(p.umE!=null&&h-p.umE<U.einsatzTage)return false;p.umE=h;umschulungWoche(p);return true;}
-function umschulungWoche(p){if(!p.um||p.team<0||p.inj>0)return;const U=RT.umschulung,pos=p.um;if(umschulungGrund(p,pos)){p.um=null;return;}
+// Prüfung FB5: Die Sperre zählt nur, wenn der Einsatz wirklich etwas bringt (nicht verletzt, Umschulung noch möglich), und der Einsatz zählt voll, unabhängig vom Training der Woche.
+function umschulungEinsatz(p,pos,min){const U=RT.umschulung;if(!p||!p.um||pos!==p.um||!(min>=U.einsatzMinuten)||p.team<0||p.inj>0||umschulungGrund(p,pos))return false;const h=absTag(S.tag);
+  if(p.umE!=null&&h-p.umE<U.einsatzTage)return false;p.umE=h;umschulungWoche(p,true);return true;}
+function umschulungWoche(p,voll){if(!p.um||p.team<0||p.inj>0)return;const U=RT.umschulung,pos=p.um;if(umschulungGrund(p,pos)){p.um=null;return;}
   const max=umschulungMax(p,pos),basis=eignungOhneTraining(p,pos);p.ue=p.ue||{};
   // ohne Fußabzug: verwandt ist, was nah beieinander liegt
-  const akt=Math.max(p.ue[pos]||0,basis),plus=(basis>=U.verwandtAb?U.verwandt:U.fremd)*umschulungTempo(p)*stabFaktor(p.team,'co')*(genugTraining(p)?1:0.5);
+  const akt=Math.max(p.ue[pos]||0,basis),plus=(basis>=U.verwandtAb?U.verwandt:U.fremd)*umschulungTempo(p)*stabFaktor(p.team,'co')*(voll||genugTraining(p)?1:0.5);
   p.ue[pos]=Math.min(max,akt+plus);if(p.ue[pos]>=max){p.uf=[...umgeschult(p),pos];if(p.team===S.my)news(`Umschulung abgeschlossen: ${p.n} kann jetzt ${RP.positionsNamen[pos]||pos} (${max} %).`,'good');p.um=null;}}

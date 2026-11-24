@@ -127,6 +127,10 @@ const PRESSE={
   sticheleien:{
     laut:['Wir fahren da hin, um zu gewinnen. Alles andere interessiert uns nicht.','Bei allem Respekt: {verein} ist für uns kein Maßstab.','Die sollen erst einmal zeigen, dass sie mit uns mithalten können.'],
     psycho:['Ich höre, bei {verein} ist die Stimmung nicht die beste. Das wird man morgen sehen.','Wenn {verein} früh hinten liegt, kippt das Spiel. Das wissen die auch.','Die Abwehr von {verein} wackelt, wenn man sie unter Druck setzt.']},
+  // Sticheleien unter Computer-Trainern (K29m, Prüfung FB8): ohne „morgen“ und ohne „hinfahren“, weil das Spiel bis zu 7 Tage entfernt ist und der Heimtrainer zuerst spricht
+  kiSticheleien:{
+    laut:['Gegen {verein} wollen wir gewinnen, alles andere interessiert uns nicht.','Bei allem Respekt: {verein} ist für uns kein Maßstab.','{verein} soll erst einmal zeigen, dass sie mit uns mithalten können.'],
+    psycho:['Ich höre, bei {verein} ist die Stimmung nicht die beste. Das wird man im Spiel sehen.','Wenn {verein} früh hinten liegt, kippt das Spiel. Das wissen die auch.','Die Abwehr von {verein} wackelt, wenn man sie unter Druck setzt.']},
   stichelFrage:['{gtrainer} hat über Ihre Mannschaft gesagt: „{zitat}“ Was entgegnen Sie?','Ihr Kollege {gtrainer} meint: „{zitat}“ Ihre Antwort?'],
   // Pressekonferenz nach dem Urteil (K29g, K29h): die Antwortart Schiedsrichterkritik heißt dort „Kritik am Urteil“, mit eigenen Texten und eigener Schlagzeile (Prüfung DR5)
   urteil:{name:'Kritik am Urteil',antworten:['Dieses Urteil ist ein Witz. {spieler} hat den Ball gespielt, das sieht jeder.','Wir akzeptieren das, aber verstehen tun wir es nicht. Das ist viel zu hart.','Andere bekommen für dasselbe ein Spiel. Bei uns sind es gleich mehrere. Das muss man sich fragen.'],

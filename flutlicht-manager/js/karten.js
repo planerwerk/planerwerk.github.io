@@ -373,7 +373,7 @@ function dritterKauf(p,von){const m=p&&p.ld3;if(!m)return;delete p.ld3;if(m.s!==
 // Höchstes Ansehen eines Vereins, der dir einen Job anbietet: dieselbe Mitte wie die Jobangebote nach einer Entlassung (saison.js mkJobs) plus jobangebot.rufSpanne
 const jobangebotGrenze=()=>{const J=RV.jobs;return myT().rep-J.ansehenAbschlag+(ruf()-RV.ruf.start)*RV.ruf.jobsJePunkt+RV.jobangebot.rufSpanne;};
 // Vereinswechsel (saison.js takeJob, vor dem Wechsel): offene Karten entscheidet der Co-Trainer noch für den alten Verein, sie wandern nicht mit (Prüfung DQ3)
-// Schlüssel der Sperre je Karte: Spieler, sonst Mitarbeiter (mit stab2 das ganze Paar, Prüfung EZ1), sonst Verein (Prüfung ED3, EE3). Als Funktion seit Prüfung FA5, damit der Test ihn prüfen kann.
+// Schlüssel der Sperre je Karte: Spieler (mit dem Verein dazu, also Karte:Spieler:Verein, Prüfung FB1), sonst Mitarbeiter (mit stab2 das ganze Paar, Prüfung EZ1), sonst Verein (Prüfung ED3, EE3). Als Funktion seit Prüfung FA5, damit der Test ihn prüfen kann.
 const kartenSchluessel=(c,b)=>[c.id,b.spieler!=null?b.spieler:b.stab!=null?'s'+b.stab+(b.stab2!=null?'+'+b.stab2:''):'',b.stab==null&&b.verein!=null?b.verein:''].join(':');
 /* ziel: der Verein, zu dem du wechselst. Ein offenes Angebot genau dieses Vereins (K16g) gilt dann nicht mehr (Prüfung EZ3) */
 let KARTEN_ZIEL=null;

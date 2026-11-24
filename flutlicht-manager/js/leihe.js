@@ -23,6 +23,7 @@ function leihVereine(p){const z=leihZaehler();return S.teams.filter(t=>t.id!==S.
 function verleihen(p,o){if(!p||p.team!==S.my||p.wech||istLeihe(p))return'Er kann nicht verliehen werden.';if(!fensterOffen())return'Leihen geht nur im Transferfenster.';
   const t=S.teams[o.tid];if(t&&!leihErlaubt(p,S.my,t.id))return leihKontingentText();
   if(!t||!leihVereine(p).includes(t))return`${t?t.name:'Der Verein'} hat keinen Bedarf.`;if(o.anteil>zahlBereit(p,t.id))return`${t.name} übernimmt höchstens ${Math.round(zahlBereit(p,t.id)*100)} % seines Gehalts.`;
+  p.um=null;delete p.umE; /* Prüfung FB6: verliehen ohne Umschulung */
   kabineAbgang(p,S.my);S.offers=S.offers.filter(x=>x.pid!==p.id);p.leihe={von:S.my,anteil:o.anteil,rolle:o.rolle==='stamm'?'stamm':'rotation',rueckruf:!!o.rueckruf,option:o.option>0?o.option:0,start:absTag(S.tag)};
   p.team=t.id;p.list=0;neuzugang(p,t.id);news(`Leihe: ${p.n} spielt bis zum Saisonende bei ${t.name} (${t.name} zahlt ${Math.round(o.anteil*100)} % seines Gehalts${o.option?`, Kaufoption ${fmt(o.option)}`:''}).`,'tr');return null;}
 // Zurückholen: im Winterfenster, wenn ein Rückruf vereinbart ist
