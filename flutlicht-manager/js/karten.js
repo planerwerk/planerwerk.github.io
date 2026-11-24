@@ -147,6 +147,10 @@ const AUSLOESER={
   uebertreibt(){const t=myT(),a=auftaktTag(t),vorb=S.tag>=a&&S.tag<a+RT.vorbereitungTage;
     const l=squad(S.my).filter(p=>p.inj<=0&&(hatEig(p,'trainingsweltmeister')||hatEig(p,'vorbildprofi'))&&(vorb||lastQuote(p)>RT.verletzung.sprungAb));return l.length?{spieler:pick(l).id}:null;},
   traumtor(){const L=S.letztTest;if(!L||L.s!==S.season||S.tag-L.tag<0||S.tag-L.tag>RKT.spiel.nachTage)return null;const l=(L.tore||[]).map(id=>PIX.get(id)).filter(p=>p&&p.team===S.my&&p.int!=null);return l.length?{spieler:pick(l).id}:null;},
+  // Länderspiele (K13 §8, K13g): nur mit RWB.laenderspiele.an, sonst gibt es keine Abstellung. Erste Nominierung (p.lspN 1, gerade bei der Nationalmannschaft);
+  // verletzt zurück (p.lspV: absoluter Tag der Rückkehr mit Verletzung) in den letzten RKT.spiel.nachTage Tagen und noch verletzt
+  bundestrainer(){const l=squad(S.my).filter(p=>beiNationalteam(p)&&p.lspN===1&&p.age<=RWB.laenderspiele.ersteBis);return l.length?{spieler:pick(l).id}:null;},
+  lsVerletzung(){const a=absTag(S.tag),l=squad(S.my).filter(p=>p.lspV!=null&&a-p.lspV>=0&&a-p.lspV<=RKT.spiel.nachTage&&p.inj>0);return l.length?{spieler:pick(l).id}:null;},
   // Spieler hadert mit seiner Position (K06 §8, K06d): mindestens RKT.spiel.positionSpiele Einsätze in Folge auf einer Position mit geringer Eignung (p.pfal)
   positionHadern(){const SP=RKT.spiel,h=absTag(S.tag),l=squad(S.my).filter(p=>(p.pfal||0)>=SP.positionSpiele&&p.pfalT!=null&&h-p.pfalT<=SP.positionTage); /* EK7 */return l.length?{spieler:pick(l).id}:null;},
   // Streit nach Kritik (K15 §8, K15e): ein Spieler deines Kaders hat sich in den letzten RKT.gespraech.streitTage Tagen im Einzelgespräch nach deiner Kritik mit dir gestritten

@@ -703,4 +703,15 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   pruef(gezaehlt&&ansicht&&kaputt&&weiter,'Sammlung: zählt erlebte Karten im Browser, nicht im Spielstand, Anzeige erlebt von allen, kaputter Speicher bricht nichts',
     `gezählt ${gezaehlt} (${JSON.stringify(m)}), Anzeige ${ansicht}, kaputter Speicher ${kaputt}, danach weiter ${weiter}`);}
 
+// K13g. Länderspiel-Karten (K13 §8): „Anruf des Nationaltrainers“ nur bei der ersten Nominierung eines Spielers bis ersteBis, solange er abgestellt ist;
+//       „Verletzt zurück“ nur nach einer Rückkehr mit Verletzung in den letzten nachTage Tagen und solange er verletzt ist. Ohne Merker (Schalter aus) keine.
+{const {S,ev}=welt(),A=ev('AUSLOESER'),L=ev('RWB').laenderspiele,N=ev('RKT').spiel,abs=ev('absTag'),sq=ev('squad')(S.my);sq.forEach(x=>{delete x.lsp;delete x.lspN;delete x.lspV;x.inj=0;});
+  const p=sq.find(x=>x.age<=L.ersteBis)||sq[0],age0=p.age;p.age=Math.min(p.age,L.ersteBis);const a=abs(S.tag),ohne=A.bundestrainer()===null&&A.lsVerletzung()===null;
+  p.lsp={von:a,bis:a+5,n:2,st:1};p.lspN=1;const erste=A.bundestrainer();p.lspN=2;const zweite=A.bundestrainer();p.lspN=1;p.age=L.ersteBis+1;const alt=A.bundestrainer();p.age=Math.min(age0,L.ersteBis);
+  delete p.lsp;const weg=A.bundestrainer();
+  p.lspV=a-1;p.inj=10;const verl=A.lsVerletzung();p.inj=0;const heil=A.lsVerletzung();p.inj=10;p.lspV=a-N.nachTage-1;const lange=A.lsVerletzung();p.inj=0;p.age=age0;
+  pruef(ohne&&!!erste&&erste.spieler===p.id&&zweite===null&&alt===null&&weg===null&&!!verl&&verl.spieler===p.id&&heil===null&&lange===null,
+    'Länderspiel-Karten: Anruf nur bei der ersten Nominierung eines jungen Spielers, Verletzung nur kurz nach der Rückkehr und solange verletzt',
+    `ohne Merker ${ohne}, erste ${!!erste}, zweite ${zweite}, zu alt ${alt}, nicht mehr abgestellt ${weg}, verletzt ${!!verl}, geheilt ${heil}, zu lange her ${lange}`);}
+
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

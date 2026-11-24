@@ -348,6 +348,14 @@ const KARTEN=[
   {id:'traumtor',titel:'Traumtor des Neuzugangs',bereich:'K11',art:'info',stufe:'haeufig',chance:0.5,ausloeser:'traumtor',sperrTage:120,
     texte:['Was für ein Einstand: {spieler} trifft im Testspiel per Fallrückzieher. Die Mitspieler feiern ihn, die Fans singen schon seinen Namen.','{spieler} zirkelt den Ball im Testspiel in den Winkel. Ein Tor, das ihm die Ankunft leichter macht.'],
     wirkung:[{art:'integration',wert:5},{art:'fans',wert:1}]},
+  // Länderspiele (K13 §8, K13g, 24.11., popolupo): nur mit Länderspielen (Schalter REGELN.wettbewerbe.laenderspiele.an oder im Menü). Erste Nominierung: Stolz, Stimmung +3.
+  // Verletzt von der Nationalmannschaft zurück: Info, Fans −1 (Ärger über den Verband, K17 später). Werte vorläufig.
+  {id:'bundestrainer',titel:'Anruf des Nationaltrainers',bereich:'K13',art:'info',stufe:'haeufig',chance:1,ausloeser:'bundestrainer',sperrTage:365,
+    texte:['{spieler} ist zum ersten Mal für seine Nationalmannschaft nominiert. Der Nationaltrainer hat persönlich angerufen, in der Kabine gibt es Applaus.','Erste Nominierung für {spieler}. Er hat es erst geglaubt, als der Brief vom Verband auf dem Tisch lag.'],
+    wirkung:[{art:'stimmung',wert:3}]},
+  {id:'lsVerletzung',titel:'Verletzt von der Nationalmannschaft zurück',bereich:'K13',art:'info',stufe:'haeufig',chance:1,ausloeser:'lsVerletzung',sperrTage:60,
+    texte:['{spieler} kommt verletzt von der Länderspielreise zurück. Im Verein ist man verärgert, der Verband verweist auf das normale Risiko.','Schlechte Nachricht aus dem Länderspiel: {spieler} fällt aus. Die Fans schimpfen über die Belastung.'],
+    wirkung:[{art:'fans',wert:-1}]},
   // Trainingsweltmeister übertreibt (K03 §8, K07 §8, K07h, 24.11., popolupo): Info mit Wirkung, mit 70 % Lob vom Co-Trainer (Selbstvertrauen +1, Stimmung +2), sonst eine Zerrung. Werte vorläufig.
   {id:'uebertreibt',titel:'Der Trainingsweltmeister übertreibt',bereich:'K07',art:'info',stufe:'haeufig',chance:0.1,ausloeser:'uebertreibt',sperrTage:90,immer:true,
     texte:['{spieler} hängt nach dem Training noch eine Stunde Sprints dran. Der Co-Trainer schaut zu.','{spieler} ist wie immer der Letzte auf dem Platz und gibt bei jeder Übung alles.'],
