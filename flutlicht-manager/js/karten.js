@@ -137,6 +137,8 @@ const AUSLOESER={
   taktikCoup(){const L=kartenLetztSpiel(L=>L.coup);return L?{verein:L.gegner}:null;},
   derbyPyro(){const L=kartenLetztSpiel(L=>L.derby);return L?{verein:L.gegner}:null;},
   rudelbildung(){const L=kartenLetztSpiel(L=>L.derby&&L.rot);return L?{verein:L.gegner}:null;},
+  // Wurfgeschosse (K09 §4.4, K09h): nach einer Heimniederlage in einem Pflichtspiel der letzten RKT.spiel.nachTage Tage (heim, nl in S.letzte)
+  wurf(){const L=kartenLetztSpiel(L=>L.heim&&L.nl&&L.gegner<1000);return L?{verein:L.gegner}:null;},
   // Spieler hadert mit seiner Position (K06 §8, K06d): mindestens RKT.spiel.positionSpiele Einsätze in Folge auf einer Position mit geringer Eignung (p.pfal)
   positionHadern(){const SP=RKT.spiel,h=absTag(S.tag),l=squad(S.my).filter(p=>(p.pfal||0)>=SP.positionSpiele&&p.pfalT!=null&&h-p.pfalT<=SP.positionTage); /* EK7 */return l.length?{spieler:pick(l).id}:null;},
   // Streit nach Kritik (K15 §8, K15e): ein Spieler deines Kaders hat sich in den letzten RKT.gespraech.streitTage Tagen im Einzelgespräch nach deiner Kritik mit dir gestritten
@@ -232,7 +234,8 @@ function kartenWoche(d){if(S.phase!=='play'||S.fired)return;const K=karten(),W=k
     let stumm=false;if(halt)kartenHaltZaehlen(c,W);else if(c.art==='info'){if(W.info>=kartenDichte().info&&!c.immer){if(!c.wirkung)continue;stumm=true;}else W.info++;} /* immer: Meldung auch über der Grenze (Prüfung ER3, Punktabzug) */ /* Entscheidungen ohne Halt entscheidet der Co-Trainer, sie fallen nicht weg (Prüfung DY8) */
     K.sp[key]=heute;if(c.stufe==='sehrSelten')K.einmal[c.id]=1;kartenZeigen(c,b,d,halt,stumm);}} /* Info mit Wirkung über der Grenze: Wirkung ja, Meldung nein (Prüfung EH3) */
 // Chance je Woche (K30 §5.4, K30d): Anlasskarten mit eigener chance (im Katalog, 0 < chance ≤ 1), sonst nach der Seltenheitsstufe. Ein Würfel je Karte und Woche wie bisher.
-const kartenChance=c=>c.chance!=null?c.chance:1/(RKT.seltenheit[c.stufe]*RKT.wochenJeSaison);
+// Karten mit fanarbeit:true (Zuschauer-Vergehen, K09h, K25 §5) werden bei laufender Fanarbeit seltener (fanarbeitVergehen, marketing.js). Der Würfel bleibt derselbe.
+const kartenChance=c=>(c.chance!=null?c.chance:1/(RKT.seltenheit[c.stufe]*RKT.wochenJeSaison))*(c.fanarbeit?fanarbeitVergehen():1);
 // Veränderung der Stärke seit dem jüngsten Monatseintrag dieser Saison, der mindestens RKT.entwicklung.tage alt ist (K03c); ohne Eintrag 0
 const kartenStaerkePlus=p=>{const T=RKT.entwicklung.tage,a=(p.mvl||[]).filter(e=>e[0]===S.season&&S.tag-e[1]>=T).pop();return a?Math.round(p.str)-a[2]:0;};
 // Merker deiner letzten Pflichtspiele für Karten (K05 §8, K05c, ablauf.js nach den Spielen). S.letzt = das letzte, S.letzte = die Spiele der letzten RKT.spiel.nachTage Tage
@@ -248,7 +251,7 @@ function letztesSpielMerken(r,d){if(!r||r.test)return;const SP=RKT.spiel,s=r.h==
   // nur wenn du den Stil selbst wählst (EK6)
   const gegner=s?r.h:r.a,gf=s?r.ag:r.hg,ga=s?r.hg:r.ag,tk=r.taktik||[],mein=tk[s],geg=tk[1-s],
     coup=!autoB('stil')&&gf>ga&&gegner<1000&&!!mein&&!!geg&&RTA.kreislauf[mein.stil]===geg.stil&&teamLevel(gegner)-teamLevel(S.my)>=SP.coupAb;
-  S.letzt={s:S.season,t:S.my,tag:d,joker,frueh,spaet,gegner,derby:gegner<1000&&istDerby(r.h,r.a),rot:r.ev.some(e=>e.t==='R'),coup};
+  S.letzt={s:S.season,t:S.my,tag:d,joker,frueh,spaet,gegner,derby:gegner<1000&&istDerby(r.h,r.a),rot:r.ev.some(e=>e.t==='R'),coup,heim:s===0,nl:gf<ga}; /* heim, nl (Niederlage) seit K09h für die Karte Wurfgeschosse */
   S.letzte=[...(S.letzte||[]).filter(L=>L&&L.s===S.season&&L.t===S.my&&d-L.tag<=SP.nachTage),S.letzt].slice(-SP.merken);
   // K06e: Tore nach Standards (RKT.standard.arten) in deinen Ligaspielen der laufenden Halbserie, S.std = {s, t, h Halbserie, sp Spiele, g Tore, n Standardtore, k Karte schon da}
   if(r.lg!=null&&!r.rel){S.ligaXI={s:S.season,t:S.my,ids:((r.xi||[])[s]||[]).slice()}; /* Startelf deines letzten Ligaspiels für die Pokal-Rotation (K13e) */const N=(S.fx[r.lg]||[]).length,gesp=(S.res[r.lg]||[]).filter(x=>x[0]===S.my||x[1]===S.my).length,h=gesp>N/2?1:0;let A=S.std;

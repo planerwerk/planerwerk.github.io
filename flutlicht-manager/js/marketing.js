@@ -45,6 +45,8 @@ function merchFaktor(t){if(!t||t.id!==S.my)return 1;const M=mkS(),E=RMK.merch;le
   if(mkAktiv('trikot'))f*=1+RMK.kampagnen.trikot.merch*(M.k.trikot.w||1);if(M.extra&&M.extra.bis>=absTag(S.tag))f*=1+M.extra.f;return f;} // extra: Karte „Trikot ausverkauft“ (K25b)
 // Pfiffe bei Protest (fans.js fansHeimspiel): mit laufender Fanarbeit schwächer
 const fanarbeitFaktor=()=>mkAktiv('fanarbeit')?RMK.kampagnen.fanarbeit.pfiffe:1;
+// Zuschauer-Vergehen (K09h, karten.js kartenChance für Karten mit fanarbeit:true): mit laufender Fanarbeit seltener
+const fanarbeitVergehen=()=>mkAktiv('fanarbeit')?RMK.kampagnen.fanarbeit.vergehen:1;
 // Saisonende (saison.js seasonEndLauf): Titel heben den Werbewert. Saisonwechsel (newSeasonLauf, vor S.season++): Fans-Bonus der Kampagnen
 function marketingSaisonende(sm){const M=mkS(),W=RMK.werbewert;const titel=[sm.champ,sm.champ2,sm.champ3,sm.cup].includes(S.my)||[...sm.up,...sm.up3,...sm.up4].includes(S.my);if(titel)M.ww=clamp(Math.round(M.ww+W.titel),0,100);}
 function marketingNeueSaison(){const M=S.mk,t=myT();if(!M||M.s!==S.season||!M.fans)return;t.fans=Math.round(t.fans*(1+M.fans));news(`Die Kampagnen der Saison bringen ${Math.round(M.fans*100)} % mehr Anhänger.`,'good');}

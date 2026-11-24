@@ -282,9 +282,10 @@ const KARTEN=[
     texte:['Die Kurve bereitet für das Spiel gegen {verein} eine Choreo über die ganze Tribüne vor. Die Mannschaft hat davon gehört und brennt auf das Spiel.','Fahnen, Pappen, ein riesiges Banner: Für das Spiel gegen {verein} plant die Kurve eine Choreo. In der Kabine spricht man von nichts anderem.'],
     wirkung:[{art:'stimmungAlle',wert:3},{art:'zusammenhalt',wert:1}]},
   // Platzsturm (K27 §5.4, K27g, 23.11., popolupo): Info-Karte mit Wirkung nach dem letzten Heimspiel mit Meisterschaft, Aufstieg oder Rettung. Beträge für die 3. Liga (× Ligafaktor). Werte vorläufig.
+  // Seit K09h zählt er als Zuschauer-Vergehen (Wirkung zuschauer). Fanarbeit ändert hier nichts, der Platzsturm kommt aus Freude.
   {id:'platzsturm',titel:'Platzsturm',bereich:'K27',art:'info',stufe:'haeufig',chance:1,ausloeser:'platzsturm',sperrTage:300,immer:true, /* immer gemeldet, die Strafe soll nicht still abgehen (Prüfung EX4) */
     texte:['Nach dem Schlusspfiff gegen {verein} stürmen die Fans den Rasen. Gefeiert wird bis in die Nacht, der DFB schickt eine Rechnung über {geld:20000}.','Tausende auf dem Rasen, die Spieler auf den Schultern der Fans: ein Saisonende für die Geschichtsbücher. Das Sportgericht verhängt {geld:20000} Strafe.'],
-    wirkung:[{art:'fans',wert:2},{art:'geld',wert:-20000}]},
+    wirkung:[{art:'fans',wert:2},{art:'geld',wert:-20000},{art:'zuschauer',wert:20000}]},
   // Trainingslager (K11 §8, K11g, 23.11., popolupo): Entscheidungen zu Lagerkoller und Ablenkung (die Meldungen aus dem Lager bleiben). Werte vorläufig.
   // Seit Prüfung EU1 Folgekarten aus dem Spielablauf (nurKette, ausSpiel): lagerTag legt sie am Tag des Kollers oder der Sichtung in die Kette, je Lager höchstens einmal.
   // sperrTage wirkt bei Kettenkarten nicht (kartenKette prüft keine Sperre), Doppelte verhindern l.kollerK und l.nachtK (Prüfung EV6). Die Felder bleiben für den Katalog.
@@ -328,11 +329,16 @@ const KARTEN=[
   {id:'taktikCoup',titel:'Taktik-Coup',bereich:'K06',art:'info',stufe:'haeufig',chance:1,ausloeser:'taktikCoup',sperrTage:60,
     texte:['Die Presse feiert deinen Plan gegen {verein}: Der Außenseiter hat den Favoriten mit seinen eigenen Waffen geschlagen.','„Ein taktisches Meisterstück“, schreibt die Fachpresse nach dem Sieg gegen {verein}.'],
     wirkung:[{art:'ruf',wert:1},{art:'fans',wert:1}]},
-  {id:'derbyPyro',titel:'Pyrotechnik im Derby',bereich:'K09',art:'entscheidung',gross:false,stufe:'haeufig',chance:0.3,ausloeser:'derbyPyro',sperrTage:60,
+  // Seit K09h zählt jede Wahl als Zuschauer-Vergehen (Wirkung zuschauer, Grundwert für den Zuschlag 12.000 €), und Fanarbeit (K25) senkt die Chance (fanarbeit:true).
+  {id:'derbyPyro',titel:'Pyrotechnik im Derby',bereich:'K09',art:'entscheidung',gross:false,stufe:'haeufig',chance:0.3,ausloeser:'derbyPyro',sperrTage:60,fanarbeit:true,
     texte:['Im Derby gegen {verein} brannten in deiner Kurve Bengalos. Der DFB-Kontrollausschuss beantragt {geld:12000} Geldstrafe.','Nach den Rauchbomben im Derby gegen {verein} will das Sportgericht {geld:12000}.'],
-    optionen:[{text:'Zahlen und die Täter ermitteln',wirkung:[{art:'geld',wert:-12000},{art:'vertrauen',wert:1},{art:'fans',wert:-1}],folge:'Der Vorstand lobt die klare Linie. Die Kurve findet das weniger gut.'},
-      {text:'Zahlen und schweigen',wirkung:[{art:'geld',wert:-12000},{art:'vertrauen',wert:-1}],folge:'Bezahlt. Der Vorstand hätte sich ein deutlicheres Wort gewünscht.'},
-      {text:'Einspruch einlegen',wirkung:[{art:'geld',wert:-4000,chance:0.3,schlecht:-16000,gut:'Das Sportgericht senkt die Strafe auf {geld:4000}.',schlechtText:'Der Einspruch scheitert, mit den Kosten werden es {geld:16000}.'}]}],auto:1},
+    optionen:[{text:'Zahlen und die Täter ermitteln',wirkung:[{art:'geld',wert:-12000},{art:'vertrauen',wert:1},{art:'fans',wert:-1},{art:'zuschauer',wert:12000}],folge:'Der Vorstand lobt die klare Linie. Die Kurve findet das weniger gut.'},
+      {text:'Zahlen und schweigen',wirkung:[{art:'geld',wert:-12000},{art:'vertrauen',wert:-1},{art:'zuschauer',wert:12000}],folge:'Bezahlt. Der Vorstand hätte sich ein deutlicheres Wort gewünscht.'},
+      {text:'Einspruch einlegen',wirkung:[{art:'geld',wert:-4000,chance:0.3,schlecht:-16000,gut:'Das Sportgericht senkt die Strafe auf {geld:4000}.',schlechtText:'Der Einspruch scheitert, mit den Kosten werden es {geld:16000}.'},{art:'zuschauer',wert:12000}]}],auto:1},
+  // Wurfgeschosse (K09 §4.4, K09h, 24.11., popolupo): nach einer Heimniederlage, Info-Karte mit Wirkung, zählt als Zuschauer-Vergehen. Fanarbeit senkt die Chance. Werte vorläufig.
+  {id:'wurf',titel:'Wurfgeschosse',bereich:'K09',art:'info',stufe:'haeufig',chance:0.05,ausloeser:'wurf',sperrTage:60,immer:true,fanarbeit:true, /* immer: die Strafe soll nicht still abgehen (wie Platzsturm, EX4) */
+    texte:['Nach der Heimniederlage gegen {verein} flogen Becher und Feuerzeuge auf den Rasen. Das Sportgericht verhängt {geld:5000} Strafe.','Ein Feuerzeug trifft den Linienrichter, das Spiel gegen {verein} stand kurz vor dem Abbruch. Der DFB will {geld:5000}.'],
+    wirkung:[{art:'geld',wert:-5000},{art:'zuschauer',wert:5000}]},
   {id:'rudelbildung',titel:'Rudelbildung',bereich:'K09',art:'info',stufe:'haeufig',chance:0.5,ausloeser:'rudelbildung',sperrTage:60,
     texte:['Nach der Roten Karte im Derby gegen {verein} gingen beide Mannschaften aufeinander los. Das Sportgericht verhängt {geld:6000} gegen deinen Verein.','Die Rudelbildung im Derby gegen {verein} kostet deinen Verein {geld:6000}.'],
     wirkung:[{art:'geld',wert:-6000}]},

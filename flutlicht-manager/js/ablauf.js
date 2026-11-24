@@ -89,8 +89,10 @@ function woechentlichLauf(d){if(!imUrlaub())mitStrom(strom('training',S.season,d
 
 function attendance(t,opp,cup){const Z=RF.zuschauer,ref=Z.refBasis+t.rep*Z.refJeAnsehen,pf=clamp(Math.pow(ref/t.price,Z.preisExponent),Z.preisMin,Z.preisMax),ff=Z.formBasis+Z.formJePunkt*formPts(t.id),of=Z.gegnerBasis+(opp?opp.rep:Z.gegnerOhne)/100*Z.gegnerFaktor,lf=t.lg===1?1:t.lg===2?Z.liga2:Z.liga3;return Math.round(Math.min(t.cap,t.fans*pf*ff*of*lf*(cup?Z.pokal:1)*(Z.zufallBasis+R()*Z.zufallSpanne)*fanFaktor(t)));} // Fanstimmung (K27 §5.4b, U16)
 function heimspielEinnahmen(m,cup){const t=myT();if(autoB('preise'))t.price=clamp(Math.round(richtPreis(t)),RF.ticketPreis.min,RF.ticketPreis.max); // Automatik: Richtpreis (K36)
-  /* Teilausschluss nach Zuschauer-Vergehen (K09h): ein Block mit dem Anteil A.anteil der Plätze bleibt leer, auch für Dauerkarten, einmal */
-  const A=S.ausschluss&&S.ausschluss.tid===S.my?S.ausschluss:null,cap=A?Math.round(t.cap*(1-A.anteil)):t.cap;
+  /* Teilausschluss nach Zuschauer-Vergehen (K09h): ein Block mit dem Anteil A.anteil der Plätze bleibt leer, auch für Dauerkarten, einmal, nicht im Europapokal (UEFA).
+     Nach einem Jobwechsel verfällt er (er galt dem alten Verein). */
+  if(S.ausschluss&&S.ausschluss.tid!==S.my)S.ausschluss=null;
+  const A=S.ausschluss&&!m.eu?S.ausschluss:null,cap=A?Math.round(t.cap*(1-A.anteil)):t.cap;
   const att0=Math.min(cap,attendance(t,m.a>=AV0?avVon(m.a):m.a>=1000?null:S.teams[m.a],cup)),pz=t.price*zuschauerFaktor(t);
   if(A){S.ausschluss=null;news(`Teilausschluss: Ein Block blieb leer, ${(t.cap-cap).toLocaleString('de-DE')} Plätze weniger.`,'');}
   /* Dauerkarten (K27b): in der Liga zählen alle Inhaber als Zuschauer und zahlen Preis × (1 − Rabatt), die übrige Nachfrage kauft Einzelkarten */

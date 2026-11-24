@@ -562,7 +562,7 @@ const REGELN={
     fankultur:{gewicht:{auslastung:0.3,mitglieder:0.3,zugkraft:0.4},auslastung:[0.6,1],mitglieder:[0,2],zugkraft:[0.5,1.5],ausverkauft:[0.93,0.97],ausverkauftMin:0.5,
       wirkung:[50,80],klassischPlus:0.05,klassischFans:1,mutigKult:0.35,kurve:0.5},
     kampagnen:{trikot:{name:'Trikot-Kampagne',kosten:150000,tage:28,merch:0.15},fanwerbung:{name:'Fanwerbung in der Region',kosten:200000,tage:56,fans:0.02,werbewert:5},
-      camps:{name:'Jugend-Camps',kosten:60000,sommer:1,fans:0.01,stimmung:1},fanarbeit:{name:'Fanarbeit',kosten:50000,tage:120,pfiffe:0.7},
+      camps:{name:'Jugend-Camps',kosten:60000,sommer:1,fans:0.01,stimmung:1},fanarbeit:{name:'Fanarbeit',kosten:50000,tage:120,pfiffe:0.7,vergehen:0.7}, /* vergehen: Chance der Karten zu Zuschauer-Vergehen (K09h, K25 −30 %) */
       // K25c (22.11., GESCHÄTZT): Dauerkarten-Aktion in der Vorbereitung, vor dem Verkauf (K27b): Anteil der Dauerkarten + dauerkarten
       dauerkarten:{name:'Dauerkarten-Aktion',kosten:100000,sommer:1,dauerkarten:0.05},
       // K25d (22.11., GESCHÄTZT): Mitgliederaktion, Mitglieder + mitglieder, einmal je Saison (einmal, Prüfung DL3: sonst ließ sie sich alle vier Wochen wiederholen und wirkte dauerhaft)

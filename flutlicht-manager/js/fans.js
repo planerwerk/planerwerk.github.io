@@ -72,9 +72,10 @@ function dauerkartenText(t){const D=RFS.dauerkarten,d=dkAktuell(),pct=x=>Math.ro
   const r=dkRabatt();
   return`<p>Dauerkarten werden beim ersten Ligaheimspiel verkauft, voraussichtlich etwa ${Math.round(t.cap*dkAnteil(t,r)).toLocaleString('de-DE')} (${pct(r)} Rabatt, Vorkaufsrecht der Mitglieder +${Math.round(dkMitglieder(t)*100)} Prozentpunkte). Mehr Rabatt: mehr Dauerkarten und zufriedenere Fans, aber weniger je Platz.</p>
     <div class="row">${D.stufen.map(x=>`<button class="${x===r?'go':''}" onclick="dkRabattSetzen(${x})"${lzAus('preise')}>${pct(x)} Rabatt</button>`).join('')}</div>`;}
-// Zuschauer-Vergehen (K09 §4.4, §5.5, K09h): Vorfälle deines Vereins (Karten mit der Wirkung zuschauer: Pyrotechnik im Derby, Platzsturm) in S.zv, absolute Tage,
-// nur die letzten RD.zuschauer.tage. Ab dem zweiten Vorfall ein Zuschlag in Höhe der Strafe (basis: Grundwert der 3. Liga, nach Liga wie das Kartengeld),
-// ab dem dritten ein Teilausschluss beim nächsten Heimspiel (S.ausschluss, in heimspielEinnahmen). Ohne Zufall, ohne Halt.
-function zuschauerVorfall(basis){const Z=RD.zuschauer,heute=absTag(S.tag),l=(S.zv||[]).filter(a=>heute-a<Z.tage);l.push(heute);S.zv=l;const n=l.length;if(n<2)return;
-  const b=kartenGeld((basis||0)*Z.zuschlag);if(b>0){money('Strafen',-b);news(`Wiederholungstäter: das ${n}. Zuschauer-Vergehen in zwölf Monaten. Das Sportgericht verdoppelt die Strafe, ${fmt(b)} kommen dazu.`,'bad');}
-  if(n>=Z.ausschlussAb){S.ausschluss={tid:S.my,anteil:Z.block};news(`Teilausschluss: Beim nächsten Heimspiel bleibt ein Block leer (${Math.round(Z.block*100)} % der Plätze).`,'bad');}}
+// Zuschauer-Vergehen (K09 §4.4, §5.5, K09h): Vorfälle deines Vereins (Karten mit der Wirkung zuschauer: Pyrotechnik im Derby, Wurfgeschosse, Platzsturm; nicht die
+// UEFA-Karte, die UEFA führt ihr eigenes Register) in S.zv = [{tid, a absoluter Tag}], nur die letzten RD.zuschauer.tage und nur die des Vereins, den du gerade trainierst.
+// Ab dem zweiten Vorfall ein Zuschlag in Höhe der Strafe × zuschlag (basis: Grundwert der 3. Liga, nach Liga wie das Kartengeld), ab dem ausschlussAb-ten
+// ein Teilausschluss beim nächsten Heimspiel in Liga oder Pokal (S.ausschluss, in heimspielEinnahmen). Ohne Zufall, ohne Halt.
+function zuschauerVorfall(basis){const Z=RD.zuschauer,heute=absTag(S.tag),l=(S.zv||[]).filter(x=>x&&x.tid===S.my&&heute-x.a<Z.tage);l.push({tid:S.my,a:heute});S.zv=l;const n=l.length;if(n<2)return;
+  const b=kartenGeld((basis||0)*Z.zuschlag);if(b>0){money('Strafen',-b);news(`Wiederholungstäter: das ${n}. Zuschauer-Vergehen in zwölf Monaten. Das Sportgericht erhöht die Strafe um ${fmt(b)}.`,'bad');}
+  if(n>=Z.ausschlussAb){S.ausschluss={tid:S.my,anteil:Z.block};news(`Teilausschluss: Beim nächsten Heimspiel in Liga oder Pokal bleibt ein Block leer (${Math.round(Z.block*100)} % der Plätze).`,'bad');}}

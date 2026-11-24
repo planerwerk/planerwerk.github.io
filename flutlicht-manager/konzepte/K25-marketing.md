@@ -81,7 +81,7 @@ Erlös je Monat = Fans × Kaufkraft × Sortiment × Trikotfaktor × Erfolg × St
   | Trikot-Kampagne | 150.000 € | 4 Wochen | Fanartikel +15 % |
   | Fanwerbung in der Region | 200.000 € | 8 Wochen | Fans +2 % zum Saisonende, Werbewert +5 |
   | Jugend-Camps | 60.000 € | nur im Sommer (bis zum ersten Pflichtspiel) | Fans +1 % zum Saisonende, Fanstimmung +1 |
-  | Fanarbeit | 50.000 € | eine Halbserie (120 Tage) | Pfiffe bei Protest wirken nur zu 70 % (K27) |
+  | Fanarbeit | 50.000 € | eine Halbserie (120 Tage) | Pfiffe bei Protest wirken nur zu 70 % (K27), seit K09h kommen die Karten „Pyrotechnik im Derby“ und „Wurfgeschosse“ um 30 % seltener (K09 Nr. 14) |
 
   Dieselbe Kampagne in derselben Saison wirkt beim zweiten Mal halb, beim dritten Mal ein Viertel. Gleichzeitig läuft jede Art höchstens einmal.
 - **Noch nicht:** Dauerkarten-Aktion (Dauerkarten kommen mit K27 und K23), Mitgliederaktion (Mitglieder und Beiträge mit K23c), Online-Shop, Sortiment in drei Stufen statt Fanshop-Ausbau (K26), Kampagnen der Computer-Vereine.
@@ -220,7 +220,7 @@ marketing:{
 1. Geldneutral: Faktoren auf den heutigen Fanartikel-Erlös statt der neuen Formel, die kommt mit K23c (§5.4).
 2. Trikot mit Reaktion aus eigenem Strom, ohne Tradition, klassisch als Voreinstellung (§5.4).
 3. Vier von sechs Kampagnen, Dauerkarten und Mitglieder warten auf K27 und K23 (§5.4).
-4. Fanarbeit wirkt auf die Pfiffe aus K27, bis es Pyrotechnik gibt (§5.4).
+4. Fanarbeit wirkt auf die Pfiffe aus K27, bis es Pyrotechnik gibt (§5.4). Seit K09h (24.11.) wirkt sie zusätzlich auf die Karten zu Zuschauer-Vergehen (−30 %), die Pfiffe bleiben.
 5. Werbewert als Wert ohne Wirkung, für K24 vorbereitet (§5.4).
 6. Bereich `marketing` ab der B-Lizenz mit Automatik (§5.4).
 

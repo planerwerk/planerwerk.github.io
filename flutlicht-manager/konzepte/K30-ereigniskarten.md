@@ -137,7 +137,8 @@ Nachgerechnet mit einem kleinen Simulationsskript: Mit diesen Stufen sind nach 1
    - Das gilt für Karten, deren Anlass selbst selten ist und nur wenige Wochen besteht, etwa ein Auswärtsspiel im Europapokal oder eine Aufholjagd. Mit 1 zu 120 kämen sie praktisch nie (K37 §12 Nr. 21).
    - Es bleibt ein Würfel je Karte und Woche. Budget, Sperre und Info-Grenze gelten wie für alle Karten.
    - Seltenheit nach §5.4 bleibt für Karten ohne festen Anlass. Die Raten in §5.4 zählen Anlasskarten nicht mit.
-   - Gesetzt sind bisher: Fanmarsch 0,15, Reisechaos 0,1, Pyrotechnik 0,1, Wunder 1 (eine Aufholjagd wird immer gemeldet). Seit K10e auch Grippewelle 0,5 und lange Reha 0,03.
+   - Gesetzt sind bisher: Fanmarsch 0,15, Reisechaos 0,1, Pyrotechnik 0,1, Wunder 1 (eine Aufholjagd wird immer gemeldet). Seit K10e auch Grippewelle 0,5 und lange Reha 0,03. Seit K09h Wurfgeschosse 0,05.
+   - Seit K09h kann eine Karte `fanarbeit:true` tragen: Läuft die Fanarbeit (K25), gilt ihre Chance × 0,7 (`REGELN.marketing.kampagnen.fanarbeit.vergehen`). Der Würfel bleibt derselbe.
 4. Der Regler Meldungsdichte ist seit K30b gebaut (22.11.2026, popolupo, ohne Testlauf): im Menü wenig, normal oder viel. „Wenig“ erlaubt eine kleine Entscheidung mit Halt je zwei Wochen und 3 Karten-Infos je Woche, „viel“ zwei kleine je Woche, zwei große je Monat und 8 Infos. Die Karten kommen gleich oft (gleiche Würfel), was nicht ins Budget passt, entscheidet der Co-Trainer. Seit Prüfung DY8 zählen Entscheidungen ohne Halt nicht mehr zur Info-Grenze, sie fallen also nie weg. Die Grenze von 4 Halten je Woche (Spiele mitgezählt) gilt in jeder Stufe. Ohne Einstellung „normal“.
 
 **Dosierung (§5.1):**

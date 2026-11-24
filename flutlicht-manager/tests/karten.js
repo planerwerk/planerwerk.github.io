@@ -646,4 +646,24 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
     'Europapokal-Karten: Auswärtsspiel bald, Spiel kürzlich, Wunder nur nach zwei Toren Rückstand und Weiterkommen',
     `auswärts ${!!aus}, heim ${heim}, später ${spaet}, Finale ${fin}, nach dem Spiel ${!!nach} / zu lange her ${alt}, Wunder ${!!w1} / i.E. ${!!w2} / ein Tor ${w3} / raus ${w4}`);}
 
+// K09h. Zuschauer-Vergehen (K09 §4.4, §5.5): Pyrotechnik im Derby (jede Wahl), Wurfgeschosse und Platzsturm zählen, die UEFA-Karte nicht. Wurfgeschosse nur nach einer Heimniederlage.
+//       Fanarbeit senkt die Chance der Karten mit fanarbeit:true (× vergehen), den Platzsturm nicht. Erster Vorfall ohne Zuschlag, zweiter mit Zuschlag = Grundwert nach Liga,
+//       dritter dazu Teilausschluss beim nächsten Heimspiel in Liga oder Pokal, nicht im Europapokal, nach einem Jobwechsel verfallen. Alte und fremde Vorfälle zählen nicht.
+{const {S,F,ev}=welt(),Z=ev('RD').zuschauer,kv=ev('karteVon'),A=ev('AUSLOESER'),t=ev('myT()'),heute=()=>ev('absTag')(S.tag),hat=w=>(w||[]).some(x=>x.art==='zuschauer');
+  const katalog=kv('derbyPyro').optionen.every(o=>hat(o.wirkung))&&hat(kv('platzsturm').wirkung)&&hat(kv('wurf').wirkung)&&!kv('pyrotechnik').optionen.some(o=>hat(o.wirkung));
+  S.phase='play';const geg=S.teams.find(x=>x.id!==S.my&&x.lg===t.lg).id,m=o=>{S.letzte=[];F.letztesSpielMerken(Object.assign({h:S.my,a:geg,hg:0,ag:1,ev:[]},o),S.tag);return A.wurf();};
+  const wHeim=m({}),wAus=m({h:geg,a:S.my,hg:1,ag:0}),wRemis=m({hg:1,ag:1}),wSieg=m({hg:2,ag:0});
+  const kc=ev('kartenChance'),ohne=kc(kv('wurf')),platz0=kc(kv('platzsturm'));ev('mkS')();S.mk.k.fanarbeit={bis:heute()+10};
+  const mitFa=kc(kv('wurf')),platz1=kc(kv('platzsturm'));S.mk.k={};const fa=Math.abs(mitFa-ohne*ev('RMK').kampagnen.fanarbeit.vergehen)<1e-9&&mitFa<ohne&&platz1===platz0;
+  S.zv=[{tid:S.my,a:heute()-Z.tage-1},{tid:geg,a:heute()-5}];S.ausschluss=null;const f0=S.fin['Strafen']||0,kg=ev('kartenGeld');
+  F.zuschauerVorfall(12000);const eins=(S.fin['Strafen']||0)===f0&&S.zv.length===1&&!S.ausschluss;
+  F.zuschauerVorfall(12000);const z1=kg(12000*Z.zuschlag),zwei=(S.fin['Strafen']||0)===f0-z1&&S.news[0].t.includes('Wiederholungstäter')&&!S.ausschluss;
+  F.zuschauerVorfall(5000);const drei=!!S.ausschluss&&S.ausschluss.tid===S.my&&S.ausschluss.anteil===Z.block&&S.zv.length===3&&(S.fin['Strafen']||0)===f0-z1-kg(5000*Z.zuschlag);
+  const o=S.teams.find(x=>x.id!==S.my&&x.lg===t.lg).id;t.fans=t.cap*100;const heim=x=>{const r=Object.assign({h:S.my,a:o,hg:0,ag:0},x||{});F.heimspielEinnahmen(r,true);return r.att;};
+  const eu=heim({eu:'cl'}),euBleibt=!!S.ausschluss,teil=heim(),danach=heim();S.ausschluss={tid:geg,anteil:Z.block};const nachJob=heim(),jobWeg=S.ausschluss===null;
+  pruef(katalog&&!!wHeim&&wHeim.verein===geg&&wAus===null&&wRemis===null&&wSieg===null&&fa&&eins&&zwei&&drei&&eu===t.cap&&euBleibt&&teil===Math.round(t.cap*(1-Z.block))&&danach===t.cap&&nachJob===t.cap&&jobWeg,
+    'Zuschauer-Vergehen: richtige Karten zählen, Würfe nur nach Heimniederlage, Fanarbeit senkt die Chance, Zuschlag ab dem zweiten, Teilausschluss ab dem dritten einmal in Liga oder Pokal',
+    `Katalog ${katalog}, Würfe heim ${!!wHeim} / auswärts ${wAus} / remis ${wRemis} / Sieg ${wSieg}, Fanarbeit ${fa} (${ohne} → ${mitFa}), Vorfälle ${eins}/${zwei}/${drei}, `+
+    `Zuschauer Europapokal ${eu} (bleibt ${euBleibt}), Teilausschluss ${teil}, danach ${danach}, nach Jobwechsel ${nachJob} (weg ${jobWeg}), Plätze ${t.cap}`);}
+
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);
