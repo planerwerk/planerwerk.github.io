@@ -315,6 +315,6 @@ function teameventLauf(){const T=RKA.teamevent,t=myT(),{kosten,abn}=teameventMoe
   squad(S.my).forEach(p=>stimmungAendern(p,T.stimmung*abn));zusammenhaltAendern(t,T.zh*abn);t.tev=[...(t.tev||[]).filter(x=>x>absTag(S.tag)-T.wochen*7),absTag(S.tag)];
   news(`Teamevent: Die Mannschaft verbringt einen Tag zusammen (${fmt(kosten)}).${abn<1?' Die Spieler kennen das schon, es wirkt schwächer.':''}`,'good');return abn;}
 // Neuer Verein (Transfer, K14): Neuanfang beim Wechselwunsch, Einsatzzeit neu, alte Rolle und Gespräche vergessen. Zählt als neuer Stammspieler für den Zusammenhalt, sobald er in der Startelf steht.
-function neuAnfang(p,tid){kabineInit(p);S.gw=(S.gw||[]).filter(g=>g.pid!==p.id);p.ww=0;p.wws=0;p.wu=0;p.wv=0;p.st=Math.max(p.st,stimmungStart(p));['ea','tb','kr','gs','streit','trib','pate','prO','vz','krOk',...BANK_ZAEHLER].forEach(k=>delete p[k]);p.zhNeu=tid;}
+function neuAnfang(p,tid){kabineInit(p);S.gw=(S.gw||[]).filter(g=>g.pid!==p.id);p.ww=0;p.wws=0;p.wu=0;p.wv=0;p.st=Math.max(p.st,stimmungStart(p));['ea','tb','kr','gs','streit','trib','bankF','pate','prO','vz','krOk',...BANK_ZAEHLER].forEach(k=>delete p[k]);p.zhNeu=tid;} /* bankF: fest auf der Bank (K05e) */
 // Beim Aufbau der Welt: Rollen, Kapitän, Startstimmung und Einsatzzeit nach der erwarteten Rolle, damit die ersten Spiele keinen Sprung machen
 function kabineStart(){S.bz=S.bz||[];S.teams.forEach(t=>{t.kst={ww3:0};if(!aktiv(t))return;rollenBerechnen(t.id);kapitaenPruefen(t);t.zh=zusammenhalt(t);squad(t.id).forEach(p=>{kabineInit(p);p.ea=erwartungEinsatz(p);});});}

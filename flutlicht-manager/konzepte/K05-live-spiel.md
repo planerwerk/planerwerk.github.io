@@ -41,7 +41,7 @@ Hängt ab von: K04 (Engine), K06 (Taktik), K02 (Zufallsströme) · Wird gebrauch
 - **5 Wechsel** in höchstens **3 Gelegenheiten** während des Spiels. Wechsel in der Halbzeitpause zählen nicht als Gelegenheit. So gilt es in der Bundesliga dauerhaft seit 2022 (Quellen).
 - **Verlängerung:** ein zusätzlicher Wechsel (Regel für den DFB-Pokal prüfen).
 - **Gehirnerschütterung:** Das IFAB erlaubt seit Juli 2024 zusätzliche dauerhafte Wechsel bei Gehirnerschütterung, die Wettbewerbe entscheiden selbst. Für die Bundesliga habe ich keine Einführung gefunden. 2021 hatte die DFL sie wegen der fünf Wechsel abgelehnt. Vorläufig **nicht** aktiv, als Stellschraube vorhanden.
-- **Bank:** 9 Auswechselspieler (Zahl prüfen). Der Co-Trainer wählt sie: ein Torwart, je Gruppe die zwei Stärksten, dann nach Stärke. Seit U8d kannst du einzelne Spieler an der Spielerkarte auf die Tribüne setzen (K14 §12 Nr. 31). Eine eigene Bankwahl fehlt noch.
+- **Bank:** 9 Auswechselspieler (Zahl prüfen). Der Co-Trainer wählt sie: ein Torwart, je Gruppe die zwei Stärksten, dann nach Stärke. Seit U8d kannst du einzelne Spieler an der Spielerkarte auf die Tribüne setzen (K14 §12 Nr. 31). Seit K05e (24.11.2026, popolupo, ohne Testlauf) auch „fest auf die Bank“ (`p.bankF`): Wer nicht in der Startelf steht, sitzt dann zuerst auf der Bank, den Rest füllt der Co-Trainer wie bisher (ein Torwart nur, wenn noch keiner dabei ist). Bank und Tribüne schließen sich aus, unter der Automatik der Aufstellung zählt die Markierung nicht, ein Vereinswechsel löscht sie. Die Aufstellung zeigt, wer auf der Bank säße.
 
 ### 3.3 Spielstand während des Spiels
 

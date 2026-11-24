@@ -312,8 +312,9 @@ const wb=o.wb||'liga',H=mitWettbewerb(wb,()=>side(hid,true,o.neutral)),A=mitWett
   return G;}
 // Bank (K05 §3.2): 9 Spieler, darunter ein Torwart, sonst die stärksten verfügbaren aus jeder Gruppe. Wen du auf die Tribüne gesetzt hast (p.trib, K14 §12), bleibt draußen.
 const ZURUFE=['druck','ruhe','konzentration','zeit'],ANSPRACHEN=['loben','motivieren','fordern','beruhigen','taktik','schweigen','augenzwinkernd'];
-function bankWaehlen(sd){if(sd.am)return[];const imXI=new Set(sd.xi),ohne=sd.id===S.my&&!autoB('aufstellung'),pool=squad(sd.id).filter(p=>avail(p)&&!imXI.has(p.id)&&!(ohne&&p.trib)).sort((a,b)=>b.str-a.str),n=RL.wechsel.bank,b=[];
-  const tw=pool.find(p=>p.pos==='TW');if(tw)b.push(tw);['AB','MF','ST'].forEach(g=>pool.filter(p=>p.pos===g).slice(0,2).forEach(p=>{if(b.length<n&&!b.includes(p))b.push(p);}));
+// Seit K05e: Wen du fest auf die Bank gesetzt hast (p.bankF), sitzt zuerst dort (höchstens n), dann füllt der Co-Trainer wie bisher; ein Torwart nur, wenn noch keiner dabei ist.
+function bankWaehlen(sd){if(sd.am)return[];const imXI=new Set(sd.xi),ohne=sd.id===S.my&&!autoB('aufstellung'),pool=squad(sd.id).filter(p=>avail(p)&&!imXI.has(p.id)&&!(ohne&&p.trib)).sort((a,b)=>b.str-a.str),n=RL.wechsel.bank,b=ohne?pool.filter(p=>p.bankF).slice(0,n):[];
+  const tw=pool.find(p=>p.pos==='TW');if(tw&&b.length<n&&!b.some(p=>p.pos==='TW'))b.push(tw);['AB','MF','ST'].forEach(g=>pool.filter(p=>p.pos===g).slice(0,2).forEach(p=>{if(b.length<n&&!b.includes(p))b.push(p);}));
   pool.forEach(p=>{if(b.length<n&&!b.includes(p)&&p.pos!=='TW')b.push(p);});return b.map(p=>p.id);}
 // Erwartung gegen Amateurklubs: Verhältnis der Teamwerte
 function amateurErwartung(H,A){const q=(H.am?H.w.AM:H.A)/(A.am?A.w.DM:A.D);return[clamp(1.4*Math.pow(q,1.6),0.2,5),clamp(1.4*Math.pow(1/q,1.6),0.1,5)];}

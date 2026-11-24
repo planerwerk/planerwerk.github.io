@@ -67,5 +67,17 @@ const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S,ev=W.ev;
   const train=tv.includes(e2('vorlageDef')(k,t).name)&&tv.includes(`setVorlage('auto')`)&&F2.vorschlagVorlageText(t,'auto')===''&&F2.vorschlagVorlageText(t,k)===''; /* FG5: ihn planen lassen */
   pruef(gleich&&diff&&uebernommen&&tribOk&&tribAuto&&tribForm&&eineLuecke&&aus&&wieder&&auto&&train,'Vorschlag des Co-Trainers: Unterschied zur besten Elf, übernehmen, Tribüne beachtet, ausblenden, nicht unter der Automatik, Vorlage im Trainingsplan',
     `gleich ${gleich}, Unterschied ${diff}, übernommen ${uebernommen}, Tribüne ${tribOk}/${tribAuto}/${tribForm}/${eineLuecke}, ausgeblendet ${aus}, wieder an ${wieder}, Automatik ${auto}, Training ${train} (${k} statt ${andere})`);}
+
+// K05e. Eigene Bankwahl (K05 §3.2): Wen du fest auf die Bank setzt, sitzt dort, wenn er nicht in der Startelf steht, die Bank bleibt gleich groß. Tribüne und Bank schließen
+//       sich aus. Unter der Automatik der Aufstellung zählt die Markierung nicht, und ohne Markierung ist die Bank wie bisher.
+{const {W:W3,F:F3}=neueWelt();F3.buildWorld(SEED);const S3=W3.S,e3=W3.ev;S3.my=6;S3.mgr='Test';F3.setTarget();S3.phase='play';W3.ev('openP=function(){}');
+  const t=e3('myT()'),bw=e3('bankWaehlen'),xi=F3.bestXI(6,t.form),sd={id:6,xi,am:false},vorher=bw(sd);
+  const drauf=e3('squad')(6).filter(p=>e3('avail')(p)&&!xi.includes(p.id)&&!vorher.includes(p.id)&&p.pos!=='TW').sort((a,b)=>a.str-b.str)[0];
+  F3.setBankFest(drauf.id);const mit=bw(sd),fest=mit.includes(drauf.id)&&mit.length===vorher.length&&mit.filter(id=>e3('PIX').get(id).pos==='TW').length>=1;
+  F3.setTribuene(drauf.id);const trib=!drauf.bankF&&drauf.trib===1&&!bw(sd).includes(drauf.id);F3.setBankFest(drauf.id);const zurueck=!drauf.trib&&drauf.bankF===1;
+  F3.lizenzStart(true);S3.lizenz.auto.aufstellung=1;const auto=!bw(sd).includes(drauf.id);S3.lizenz=null;delete drauf.bankF;const gleich=JSON.stringify(bw(sd))===JSON.stringify(vorher);
+  const anzeige=F3.bankAnzeige(xi).includes('Bank:');
+  pruef(!!drauf&&fest&&trib&&zurueck&&auto&&gleich&&anzeige,'Eigene Bankwahl: fest gesetzte Spieler auf der Bank, schließt die Tribüne aus, nicht unter der Automatik, sonst wie bisher',
+    `fest ${fest}, Tribüne ${trib}, zurück ${zurueck}, Automatik ${auto}, unverändert ${gleich}, Anzeige ${anzeige}`);}
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

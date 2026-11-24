@@ -122,6 +122,7 @@ function stimmungKarte(p){const B=bausteine(p),z=zielStimmung(p),e=erwartungEins
     ${bankHinweis(p)}${jugendHinweis(p)}
     <label>Kaderrolle <select id="krsel" onchange="setKaderrolle(${p.id},this.value)"${lzAus('kaderrollen')}><option value="">Co-Trainer: ${esc(KR_NAME[p.krA||'ergaenzung'])}</option>${KR_LISTE.filter(k=>k!=='pokal'||p.kr==='pokal'||imPokal(S.my)).map(k=>`<option value="${k}" ${p.kr===k?'selected':''}>${KR_NAME[k]}</option>`).join('')}</select></label>
     <label style="grid-auto-flow:column;align-items:center;justify-content:start;gap:6px"><input type="checkbox" id="tribchk" ${p.trib?'checked':''} onchange="setTribuene(${p.id})"${lzAus('aufstellung')}> Tribüne: nicht in den Spieltagskader</label>
+    <label style="grid-auto-flow:column;align-items:center;justify-content:start;gap:6px"><input type="checkbox" id="bankchk" ${p.bankF?'checked':''} onchange="setBankFest(${p.id})"${lzAus('aufstellung')}> Fest auf die Bank, wenn er nicht in der Startelf steht</label>
     ${f.length||r.length?`<p class="dim">${f.length?'Freunde: '+f.map(q=>esc(q.n)).join(', '):''}${f.length&&r.length?' · ':''}${r.length?'Rivale um den Platz: '+r.map(q=>esc(q.n)).join(', '):''}</p>`:''}
     ${vs.length?`<p><b>Zusagen:</b> ${vs.map(v=>esc(versprechenText(v))).join('; ')}</p>`:''}
     <div class="form"><label>Thema <select id="gthema">${anlass.map(([k,a])=>`<option value="${k}" title="${esc(THEMA_HILFE[k])}">${THEMEN[k]}${a?' (kein Anlass)':''}</option>`).join('')}</select></label>
@@ -170,6 +171,7 @@ V.aufst=()=>{const t=myT(),sl=slotsVerein(t),xi=myXI();const sq=squad(S.my).sort
   ${['aufstellung','formation','ausrichtung5','stil','einstellung','rollen'].map(lzHinweis).join('')}
   ${taktikInfo(t,sd,stil)}<hr>
   <h3>Startelf</h3><div class="slots">${sl.map((pos,i)=>`<label class="slot ${rolleWaehlbar(slots(t.form)[i])?'rolle':''}"><span class="pos ${posGruppe(pos)}">${pos}</span>${rolleWahl(t,i)}<select id="slot${i}" onchange="setSlot(${i},this.value)">${xi[i]==null?'<option>– niemand verfügbar –</option>':''}${sq.map(p=>`<option value="${p.id}" ${xi[i]===p.id?'selected':''} ${avail(p)?'':'disabled'}>${esc(p.n)} · ${p.fp||p.pos} · ${Math.round(eff(p,pos)*10)/10} · ${Math.round(p.fit)}%${p.inj>0?' · verletzt':p.sus>0?' · gesperrt':''}</option>`).join('')}</select></label>`).join('')}</div>
+  ${bankAnzeige(xi)}
   <p class="dim" style="margin-top:8px">Offensiv: mehr Tore, mehr Gegentore. Hart: etwas stärker, aber mehr Karten und Verletzungen. Spieler auf fremder Position verlieren deutlich an Stärke. Rollen im Mittelfeld und Sturm (DM, ZM, SM, OM, MS, HS) wählst du links am Platz, höchstens ein Spielmacher.</p>
   ${schuetzenKarte(t,xi)}</div>${vorschlagAufstellungKarte()}</div>`;};
 // Umsetzung, Vertrautheit und Kreislauf (K06 §5.2–5.4)

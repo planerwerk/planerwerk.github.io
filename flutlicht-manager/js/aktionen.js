@@ -147,7 +147,12 @@ function setKaderrolle(id,k){if(!darf('kaderrollen','kaderrolleOderVersprechen')
   if((alt==='pokal')!==(kaderRolle(p)==='pokal'))p.ea=erwartungEinsatz(p); // Rolle „spielt im Pokal“ misst nur Pokalspiele: Die Einsatzzeit beginnt bei der neuen Erwartung
   save();openP(id);render();}
 // Tribüne (K14 §12): Der Spieler kommt nicht in den Spieltagskader, bis du es zurücknimmst. Etablierte nehmen das übel.
-function setTribuene(id){if(!darf('aufstellung'))return;const p=PIX.get(id);if(!p||p.team!==S.my)return;if(p.trib)delete p.trib;else{p.trib=1;if(S.lineup)S.lineup=S.lineup.map(x=>x===id?null:x);}save();openP(id);render();}
+function setTribuene(id){if(!darf('aufstellung'))return;const p=PIX.get(id);if(!p||p.team!==S.my)return;if(p.trib)delete p.trib;else{p.trib=1;delete p.bankF;if(S.lineup)S.lineup=S.lineup.map(x=>x===id?null:x);}save();openP(id);render();}
+// Fest auf die Bank (K05 §3.2, K05e): Steht er nicht in der Startelf, sitzt er auf der Bank (engine.js bankWaehlen), die übrigen Plätze füllt der Co-Trainer. Schließt die Tribüne aus.
+function setBankFest(id){if(!darf('aufstellung'))return;const p=PIX.get(id);if(!p||p.team!==S.my)return;if(p.bankF)delete p.bankF;else{p.bankF=1;delete p.trib;}save();openP(id);render();}
+// Aufstellung: wer mit dieser Startelf auf der Bank säße (dieselbe Wahl wie im Spiel), fest gesetzte mit Stern
+function bankAnzeige(xi){const ids=bankWaehlen({id:S.my,xi:(xi||[]).filter(x=>x!=null),am:false});if(!ids.length)return'';const n=ids.filter(id=>PIX.get(id)&&PIX.get(id).bankF).length;
+  return`<p class="dim" style="margin-top:8px">Bank: ${ids.map(id=>{const p=PIX.get(id);return p?`${esc(p.n)}${p.bankF?' ★':''}`:'';}).join(', ')}${n?'. ★ fest gesetzt (Spielerkarte).':'. Fest setzen kannst du Spieler an der Spielerkarte.'}</p>`;}
 function setKapitaen(v){if(!darf('kapitaen'))return;const t=myT(),id=+v,neu=PIX.get(id);if(!neu||neu.team!==S.my||id===t.kap)return;const alt=PIX.get(t.kap),K=RKA.kapitaen,f=S.kapFrei;
   const frei=f?(f.s===S.season&&S.tag<=f.bis):(S.season===RW.startSaison&&S.tag<=14);
   if(alt&&alt.team===S.my&&!frei){stimmungAendern(alt,K.absetzen);freundeVon(alt).forEach(q=>{if(q.team===S.my)stimmungAendern(q,K.absetzenFreunde);});news(`${alt.n} ist nicht mehr Kapitän und enttäuscht. Neuer Kapitän: ${neu.n}.`,'bad');}
