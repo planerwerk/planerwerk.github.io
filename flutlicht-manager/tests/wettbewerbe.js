@@ -78,9 +78,12 @@ pruef(supercups.length===N-1&&supercups.every(x=>!x.verl&&(x.hg!==x.ag)===!x.pen
   const alt=sq.slice(0,11),neu=[...sq.slice(0,11-P.wechsel),...sq.slice(11,11+P.wechsel)],wenig=[...sq.slice(0,12-P.wechsel),...sq.slice(11,10+P.wechsel)];S4.ligaXI={s:S4.season,t:6,ids:alt};
   const lv=ev4('teamLevel'),gleich=S4.teams.filter(t=>t.id!==6&&t.lg===1).sort((a,b)=>Math.abs(lv(a.id)-lv(6))-Math.abs(lv(b.id)-lv(6)))[0].id,spiel=(a,xi,hg,ag)=>({h:6,a,hg,ag,pen:null,xi:[xi,[]]});
   const amateur=F4.pokalRotation(spiel(1000,neu,0,1)),zuWenig=F4.pokalRotation(spiel(1000,wenig,0,1)),gegenGleich=Math.abs(lv(gleich)-lv(6))<P.favorit?F4.pokalRotation(spiel(gleich,neu,0,1)):0,sieg=F4.pokalRotation(spiel(1000,neu,2,1));
-  S4.ligaXI.s=S4.season-1;const altesXI=F4.pokalRotation(spiel(1000,neu,0,1));
-  pruef(amateur===P.wechsel&&zuWenig===0&&gegenGleich===0&&sieg===0&&altesXI===0&&sq.length>=11+P.wechsel,'Pokal-Rotation: Meldung nach dem Aus als Favorit mit vielen Wechseln, nicht bei wenigen, nicht gegen Gleichstarke, nicht nach Sieg, nicht mit der Elf der Vorsaison',
-    `gegen Amateure ${amateur}, zu wenig ${zuWenig}, gegen Gleichstarke ${gegenGleich}, nach Sieg ${sieg}, alte Elf ${altesXI}`);}
+  /* Prüfung FC6: Ohne Ligaspiel dieser Saison (Elf der Vorsaison) zählt die beste Elf: mit ihr keine Meldung, mit rotation.wechsel anderen Spielern die Meldung */
+  S4.ligaXI.s=S4.season-1;const b=ev4('bestXI')(6,ev4('myT()').form),rest=sq.filter(id=>!b.includes(id)),mitBester=F4.pokalRotation(spiel(1000,b.slice(),0,1));
+  const ohneBeste=F4.pokalRotation(spiel(1000,[...b.slice(0,b.length-P.wechsel),...rest.slice(0,P.wechsel)],0,1)),text=S4.news[0]&&String(S4.news[0].t).includes('besten Elf');
+  pruef(amateur===P.wechsel&&zuWenig===0&&gegenGleich===0&&sieg===0&&mitBester===0&&ohneBeste===P.wechsel&&text&&sq.length>=11+P.wechsel,
+    'Pokal-Rotation: Meldung nach dem Aus als Favorit mit vielen Wechseln, nicht bei wenigen, nicht gegen Gleichstarke, nicht nach Sieg; vor dem ersten Ligaspiel gegenüber der besten Elf',
+    `gegen Amateure ${amateur}, zu wenig ${zuWenig}, gegen Gleichstarke ${gegenGleich}, nach Sieg ${sieg}, beste Elf ${mitBester}, ohne die beste Elf ${ohneBeste} (Meldung ${text})`);}
 
 console.log(`\n${N} Saison(s) in ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

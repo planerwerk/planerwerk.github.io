@@ -86,7 +86,7 @@ Der Plan ist eine Tabelle **„Tage bis zum nächsten Spiel / Tage seit dem letz
     - Höchstens einmal in 7 Tagen (`p.umE`), sonst brächte eine englische Woche drei Wochen Fortschritt. Die 7 Tage beginnen nur, wenn der Einsatz wirklich etwas bringt: nicht verletzt, Umschulung noch möglich (Prüfung FB5).
     - Gerechnet wird wie in der Trainingswoche mit Alter und Co-Trainer, aber immer voll: Das Training der laufenden Woche zählt beim Einsatz nicht, sonst wäre ein Einsatz am Dienstag halb so viel wert wie einer am Samstag (Prüfung FB5). Ohne Zufall.
     - Nur wer eine Umschulung hat. Die setzt nur der Spieler von Hand, Computer-Vereine schulen nicht um. Der Gleichschritt bleibt darum gleich.
-    - Wer geht, schult nicht weiter um: Vertragsende (Verkauf, Auflösung, `vertragEnde`) und Verleihen (`verleihen`) löschen `p.um` und `p.umE`, wie schon das Abstellen in die Zweite (Prüfung FB6).
+    - Wer geht, schult nicht weiter um: Vertragsende (Verkauf, Auflösung, `vertragEnde`) und Verleihen (`verleihen`) löschen `p.um` und `p.umE`, wie schon das Abstellen in die Zweite (Prüfung FB6). Für alle anderen Wege (Vertrag ausgelaufen, Leihe zurück, dein Jobwechsel) löscht die Woche (`wocheVerein`) beides bei jedem, der nicht bei dir ist, und Einsätze zählen nur bei dir (Prüfung FC2).
     - Regelwerte: `RT.umschulung.einsatzMinuten` und `einsatzTage`.
 - **Plätze:** Wie viele Spieler gleichzeitig Einzeltraining haben, hängt vom Stab ab (K16). Bis dahin 5 Plätze im Kader.
 - Gespeichert am Spieler: Lernziele `ls` (K03), trainierte Eignungen `ue = {Position: Wert}` (bis UL irrtümlich im Feld `eig`), abgeschlossene Umschulungen `uf`.

@@ -2558,3 +2558,19 @@ Korrekturen auf `mitarbeit/popolupo-fb-korrekturen` (auf K13e). Die Sitzung brac
 | FB7 | K29 und das Entwicklungsprotokoll sagten, in beiden Welten aus 5a passiere dasselbe. Die Sticheleien laufen dort aber in verschiedenen Ligen. Umformuliert: `bild` bleibt trotzdem gleich. | ✅ behoben |
 | FB8 | Die Sätze passten unter Computer-Trainern nicht („morgen“ bei bis zu 7 Tagen, „Wir fahren da hin“ vom Heimtrainer). Eigene Sätze in `PRESSE.kiSticheleien`. | ✅ behoben |
 | FB9 | Der Test K29m konnte an anderen Spielen im Zeitfenster scheitern. Jetzt zählt nur die Meldung zu genau diesem Derby, `ki.max` ist im Test hoch. | ✅ behoben |
+
+## FC. Prüfung von K13e und der Korrekturen FB ohne Laufzeit (24. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat b1a0cec..ca8c6bc gelesen, nichts ausgeführt. Ein mittlerer Fund (älter als der Diff) und sechs niedrige, kein Laufzeitfehler. Ohne Befund: der Ablauf von K13e (`pokalRotation` vor `letztesSpielMerken`, nur Ligaspiele setzen `S.ligaXI`, `xi` auch im Live-Spiel), alle Stellen, die `v.f` lesen oder setzen, die Tests der Korrekturen FB (Zahlen nachgerechnet), der Gleichschritt 5a, Namen, Zufall und Zahlen.
+
+Korrekturen auf `mitarbeit/popolupo-fc-korrekturen` (auf den Korrekturen FB).
+
+| # | Befund | Status |
+|---|---|---|
+| FC1 | Älter als der Diff: Die Fristen der Verhandlungen (`pause`, `druck`, `einig.bis`, `konk.bis`), die Vertagung der Vertragsgespräche und der Tag des letzten Vertragsgesprächs stehen in Saisontagen, `S.tag` beginnt jede Saison neu. Ein Abbruch im Mai sperrte so die ganze nächste Saison, eine alte Einigung lebte wieder auf. Jetzt rücken sie beim Saisonwechsel um die Länge der alten Saison zurück (`fristenSaisonwechsel`). | ✅ behoben |
+| FC2 | FB6 war lückenhaft: Nach einem ausgelaufenen Vertrag, einer beendeten Leihe und deinem Jobwechsel schulte der Spieler weiter um. Jetzt löscht die Woche die Umschulung bei jedem, der nicht bei dir ist, und Einsätze zählen nur bei dir. | ✅ behoben |
+| FC3 | Eine Einigung über die Ablöse galt nach deinem Jobwechsel weiter, samt Nachlass des alten Vereins. Sie verfällt jetzt beim Jobwechsel (`verhJobwechsel`). | ✅ behoben |
+| FC4 | Der Import eines Spielstands rief `verhUmstellen` nicht auf, und Gegenangebote aus Spielständen vor FB galten ohne Bindung. Beides ergänzt. | ✅ behoben |
+| FC5 | Ein Gegenangebot unter dem Nachlass überschrieb ein älteres ohne Nachlass, nach der Frist galt die volle Forderung. Jetzt gilt danach wieder das ältere (`fAlt`). | ✅ behoben |
+| FC6 | In der 1. Liga liegt die 1. Pokalrunde vor dem Ligastart, die Rotation griff dort nie. Ohne Ligaspiel dieser Saison zählt jetzt die beste Elf. | ✅ behoben |
+| FC7 | Drei Sätze in K29 und K13 passten nicht mehr zum Code. Berichtigt. | ✅ behoben |

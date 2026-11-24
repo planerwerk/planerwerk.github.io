@@ -132,12 +132,13 @@ nominiert, wenn Stärke ≥ Schwelle, höchstens die 26 Stärksten je Nation
 | Überraschungs-Aus | Bundesligist scheidet gegen Amateure aus | Presse, Vorstand (K28) |
 | Pokal-Rotation rächt sich | Favorit rotiert und verliert | Spielbericht erwähnt es |
 
-**Gebaut als K13c (22.11.2026, popolupo, ohne Testlauf), als Meldungen ohne Würfel:** „Pokalsensation“ (ein Erstligist, nicht dein Verein, scheidet gegen einen Amateurverein oder einen Verein ab der 3. Liga aus) und „Pokal-Los des Jahres“ (bei der Auslosung ein Erstligist mit Ansehen ab 80 gegen einen Amateurverein; seit Prüfung EE4 nicht in der 1. Runde, wo alle Profis Amateure ziehen, und höchstens einmal je Saison). Die übrigen Meldungen brauchen Länderspiele oder Rotation und fehlen noch.
+**Gebaut als K13c (22.11.2026, popolupo, ohne Testlauf), als Meldungen ohne Würfel:** „Pokalsensation“ (ein Erstligist, nicht dein Verein, scheidet gegen einen Amateurverein oder einen Verein ab der 3. Liga aus) und „Pokal-Los des Jahres“ (bei der Auslosung ein Erstligist mit Ansehen ab 80 gegen einen Amateurverein; seit Prüfung EE4 nicht in der 1. Runde, wo alle Profis Amateure ziehen, und höchstens einmal je Saison). Die übrigen Meldungen brauchen Länderspiele und fehlen noch. Die Rotation gibt es seit K13e (unten).
 
 **Gebaut als K13e** (23.11.2026, popolupo, ohne Testlauf, Werte vorläufig): „Pokal-Rotation rächt sich“ als Meldung nach deinem Pokal-Aus.
 - **Wann:** Du scheidest als Favorit aus. Favorit heißt: Der Gegner ist ein Amateurverein, oder sein Niveau liegt mindestens 5 unter deinem (`RWB.pokal.rotation.favorit`).
 - **Rotation:** Mindestens 4 Spieler der Startelf (`rotation.wechsel`) standen im letzten Ligaspiel dieser Saison nicht in der Startelf. Dafür merkt sich das Spiel die Startelf jedes deiner Ligaspiele (`S.ligaXI`).
-- **Folge:** nur die Meldung, so wie die Tabelle in §8 es vorsieht. Den Vorstand trifft das Aus ohnehin schon (K28, Pokal-Aus gegen einen tieferen Verein).
+  - Gab es bei deinem Verein in dieser Saison noch kein Ligaspiel, zählt die beste Elf (`bestXI`, ohne Zufall). Das betrifft vor allem die 1. Liga: Die 1. Pokalrunde liegt vor dem Ligastart, und gerade dort spielt man gegen Amateure (Prüfung FC6). Ebenso nach einem Jobwechsel.
+- **Folge:** nur die Meldung, so wie die Tabelle in §8 es vorsieht. Gegen Amateure und Vereine tieferer Ligen bestraft der Vorstand das Aus schon (K28). Gegen einen schwächeren Verein derselben Liga bleibt es bei der Meldung (Prüfung FC7).
 - Nur dein Verein, ohne Zufall. Der Gleichschritt vergleicht keine Meldungen.
 
 ## 9. Wechselwirkungen

@@ -30,7 +30,17 @@ function forderungBasis(p){if(p.team<0)return 0;if(istAusland(p))return auslandP
 function verhandlung(p){S.verh=S.verh||{};let v=S.verh[p.id];if(!v||v.team!==p.team)v=S.verh[p.id]={team:p.team,f:null,r:0,g:RTR.geduld,pause:-1,druck:-999};return v;}
 const verhandlungVon=p=>{const v=S.verh&&S.verh[p.id];return v&&v.team===p.team?v:null;};
 // Alter Spielstand (Prüfung FB3): Ein Nachlass aus einer Karte stand vor FA1 als fester Betrag in v.f (nl ohne nlF, noch keine Runde). Beim Laden fällt er weg.
-function verhUmstellen(){Object.values(S.verh||{}).forEach(v=>{if(v&&v.nl&&v.nlF==null&&!v.r)v.f=null;});}
+// Gegenangebote aus Spielständen vor FB tragen weder fMy noch fNl (Prüfung FC4): Sie gelten für den Verein beim Laden und, wenn gerade ein Nachlass läuft, nur mit ihm.
+function verhUmstellen(){Object.values(S.verh||{}).forEach(v=>{if(!v)return;if(v.nl&&v.nlF==null&&!v.r)v.f=null;if(v.f!=null&&v.fMy==null){v.fMy=S.my;v.fNl=v.nlF>0?1:0;}});}
+// Fristen in Saisontagen (Prüfung FC1): S.tag beginnt jede Saison neu. Beim Saisonwechsel rücken Pause, Preisdruck, Einigung und Bieterfrist der Verhandlungen,
+// die Vertagung der Vertragsgespräche (S.vt) und der Tag des letzten Vertragsgesprächs (S.vtGespr) um dt Tage (Länge der alten Saison) zurück.
+// Sonst sperrte ein Abbruch im Mai die ganze nächste Saison, und eine alte Einigung lebte wieder auf.
+function fristenSaisonwechsel(dt){const z=x=>x==null?x:x-dt;
+  Object.values(S.verh||{}).forEach(v=>{if(!v)return;v.pause=z(v.pause);v.druck=z(v.druck);if(v.einig)v.einig.bis=z(v.einig.bis);if(v.konk)v.konk.bis=z(v.konk.bis);});
+  Object.values(S.vt||{}).forEach(v=>{if(v&&v.pause!=null)v.pause=z(v.pause);});
+  if(S.vtGespr)Object.keys(S.vtGespr).forEach(id=>{S.vtGespr[id]=z(S.vtGespr[id]);});}
+// Jobwechsel (Prüfung FC3): Einigungen über eine Ablöse galten für den alten Verein (womöglich samt dessen Nachlass), sie verfallen.
+function verhJobwechsel(){Object.values(S.verh||{}).forEach(v=>{if(v)v.einig=null;});}
 // Grundforderung an dich: mit deiner Beziehung zum Verein (K17 §5.2, U12c, nur inländische Vereine). Preise unter Computer-Vereinen nutzen forderungBasis ohne Beziehung.
 // Deadline Day (K20 §4.3, K20b): Forderung deutscher Computer-Vereine schwankt in den letzten Tagen des Fensters, fest je Spieler und Tag (eigener Strom), Transferliste billiger
 function deadlinePreis(p){const D=RAW.deadline;if(!D.preis||!(p.team>=0&&p.team<1000&&p.team!==S.my)||!deadlineTage())return 1;const u=mitStrom(strom('deadlinePreis',S.season,absTag(S.tag),p.id),()=>R());
@@ -46,8 +56,10 @@ const forderungDu=p=>(unverkaeuflichKI(p)?value(p)*RTR.maxFaktor:forderungBasis(
 // Nachlass aus einer Karte (K30c, K19f, Prüfung FA1): Anteil v.nlF bis zum absoluten Tag v.nlBis, nur für den Verein, für den du ihn bekommen hast (v.nlMy).
 // Er übersteht einen Abbruch der Verhandlung und verfällt mit der Frist. Vorher stand ein fester Betrag in v.f, der nie verfiel.
 const nachlassFaktor=v=>v&&v.nlF>0&&v.nlMy===S.my&&v.nlBis!=null&&absTag(S.tag)<=v.nlBis?1-v.nlF:1;
-// Gegenangebot v.f gilt nur für den Verein, für den es kam (fMy), und eines unter einem Nachlass verfällt mit ihm (fNl, Prüfung FB2)
-const gegenGilt=v=>!!v&&v.f!=null&&(v.fMy==null||v.fMy===S.my)&&!(v.fNl&&nachlassFaktor(v)===1);
+// Gegenangebot v.f gilt nur für den Verein, für den es kam (fMy), und eines unter einem Nachlass verfällt mit ihm (fNl, Prüfung FB2).
+// Hat es ein älteres Gegenangebot ohne Nachlass ersetzt (v.fAlt = {f, my}), gilt danach wieder das ältere (Prüfung FC5).
+function gegenFrist(v){if(!v||!v.fNl||v.f==null||nachlassFaktor(v)<1)return;const a=v.fAlt;v.f=a?a.f:null;v.fMy=a?a.my:null;v.fNl=0;delete v.fAlt;}
+const gegenGilt=v=>{gegenFrist(v);return !!v&&v.f!=null&&(v.fMy==null||v.fMy===S.my);};
 function forderung(p){const v=verhandlungVon(p),b=rundeAb(forderungDu(p)*nachlassFaktor(v)),f=gegenGilt(v)?Math.min(b,v.f):b;return konkurrenzOffen(v)?Math.max(f,v.konk.amt):f;} // Gegenangebot eines anderen Vereins (K20c)
 // ---------- Bieterwettstreit beim Kauf (K20 §4.2, K20c) ----------
 // In der Verhandlung v: kg = Saison der einmaligen Prüfung, konk = {tid Konkurrent, amt Gebot, bis Frist (Tag)} solange offen. Gewürfelt im eigenen Strom je Spieler und Saison.
@@ -75,7 +87,7 @@ function spielerLehntAb(p,b){const N=RAW.konkurrenz.nein,i=wechselInteresse(p);i
 // K20d: Lehnt der Spieler ab oder kann der andere Verein nicht mehr kaufen, bleibt der Verkäufer bei deinem Gebot (Einigung wie nach einem Ja, 14 Tage, Prüfung DP1 und DP2).
 function konkurrenzTag(d){if(!S.verh)return;Object.keys(S.verh).forEach(id=>{const v=S.verh[id],k=v&&v.konk;if(!k||d<=k.bis)return;v.konk=null;const p=PIX.get(+id),b=S.teams[k.tid];
   if(!p||p.team!==v.team||p.team===S.my||k.tid===S.my||p.wech||p.leihe||!fensterOffen(d)||squad(p.team).length<=RM.verkaeufer.kaderMin)return;
-  const deins=k.dein!=null&&(k.my==null||k.my===S.my),zusage=txt=>{v.f=k.dein;v.fMy=S.my;v.fNl=0;v.einig={fee:k.dein,bis:d+RAW.konkurrenz.zusageTage};news(txt,'good');};
+  const deins=k.dein!=null&&(k.my==null||k.my===S.my),zusage=txt=>{v.f=k.dein;v.fMy=S.my;v.fNl=0;delete v.fAlt;v.einig={fee:k.dein,bis:d+RAW.konkurrenz.zusageTage};news(txt,'good');};
   if(!b||!aktiv(b)||b.cash<k.amt||squad(b.id).length>=RM.kaeufer.kaderMax){if(deins)zusage(`Der andere Verein zieht sein Angebot für ${p.n} zurück. ${vereinName(p)} bleibt bei deinen ${fmt(k.dein)}.`);return;}
   if(deins&&spielerLehntAb(p,b)){zusage(`${p.n} lehnt das Angebot von ${b.name} ab, er will zu ${myT().name}. ${vereinName(p)} nimmt jetzt deine ${fmt(k.dein)}.`);return;}
   delete S.verh[id];kiWechsel(p,b,k.amt);news(`Bieterwettstreit verloren: ${p.n} wechselt für ${fmt(k.amt)} zu ${b.name}.`,'bad');});}
@@ -89,10 +101,11 @@ function kaufRunde(p,fee){const T=RTR,v=verhandlung(p),F=forderung(p),sch=schmer
   if(v.r===0&&bezLehntAb(p.team)){v.pause=S.tag+T.pause;return{text:`${wer} will mit dir nicht über ${p.n} reden (Beziehung ${bezZahl(bezWirk(p.team))}). Frühestens am ${datumKurz(v.pause)} wieder.`};}
   if(fee>=F)return{ok:true,preis:fee};
   v.r++;let txt='';if(fee<F*T.spott){v.g--;txt=`${wer} nimmt das als Spottangebot. `;bezDuAendern(p.team,RBZ.anlass.spott,`Spottangebot für ${p.n}`);}
-  if(v.g<=0||v.r>=T.runden.kauf){v.pause=S.tag+T.pause;v.f=null;v.r=0;v.g=T.geduld;return{text:txt+`${wer} bricht die Verhandlung ab. Frühestens am ${datumKurz(v.pause)} wieder.`};}
+  if(v.g<=0||v.r>=T.runden.kauf){v.pause=S.tag+T.pause;v.f=null;delete v.fAlt;v.r=0;v.g=T.geduld;return{text:txt+`${wer} bricht die Verhandlung ab. Frühestens am ${datumKurz(v.pause)} wieder.`};}
   let f=Math.max(sch,rundeAb((F+fee)/2));
   if(fee>=F*T.anstaendig&&S.tag-v.druck>=T.preisdruck.tage){f=Math.max(sch,rundeAb(f*(1-T.preisdruck.prozent)));v.druck=S.tag;}
-  f=Math.min(f,F);v.f=f;v.fMy=S.my;v.fNl=nachlassFaktor(v)<1?1:0;return{text:txt+`${wer}: Gegenangebot ${fmt(f)} (Runde ${v.r} von ${T.runden.kauf}).`,gegen:f};} /* nie über der eigenen Forderung, auch wenn die Schmerzgrenze nach einem Nachlass gestiegen ist (Prüfung EF1) */
+  const nl=nachlassFaktor(v)<1;if(!nl)delete v.fAlt;else if(!v.fNl&&gegenGilt(v))v.fAlt={f:v.f,my:v.fMy}; /* Prüfung FC5: das ältere Gegenangebot ohne Nachlass merken */
+  f=Math.min(f,F);v.f=f;v.fMy=S.my;v.fNl=nl?1:0;return{text:txt+`${wer}: Gegenangebot ${fmt(f)} (Runde ${v.r} von ${T.runden.kauf}).`,gegen:f};} /* nie über der eigenen Forderung, auch wenn die Schmerzgrenze nach einem Nachlass gestiegen ist (Prüfung EF1) */
 
 // ---------- Angebote für deine Spieler (K19 §5.4) und deine Gegenforderung (§4.2) ----------
 // Gebot eines Bieters: 85–100 % seines Vereinswerts, höchstens die Forderung der Transferliste. Obergrenze = sein Vereinswert.

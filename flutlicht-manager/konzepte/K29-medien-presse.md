@@ -294,7 +294,7 @@ Das ist der Maßstab für die Verbindung zu K09.
 - **Wann:** jeden Montag im Strom `presse`/`ki`. Betrachtet werden Derbys und Spitzenspiele deiner Liga ohne deinen Verein in den nächsten 7 Tagen. Ein Spitzenspiel ist es wie in K29e: ab dem 10. Spieltag, beide unter den ersten vier.
 - **Wer:** erst der Heimtrainer, dann der Gast. Lautsprecher sticheln mit 60 %, Psychospieler mit 50 %, die anderen nie (dieselben Chancen wie gegen dich). Höchstens eine Meldung je Woche, damit der Posteingang nicht vollläuft.
 - **Folge:**
-  - Eine Meldung mit einem der Sätze aus K29e, gemünzt auf den anderen Verein.
+  - Eine Meldung mit einem eigenen Satz je Profil (`PRESSE.kiSticheleien`, seit Prüfung FB8: ohne „morgen“ und ohne „Wir fahren da hin“), gemünzt auf den anderen Verein.
   - Die Beziehung der beiden Vereine sinkt um 2 (K17, mit dem Grund „Stichelei vor dem Spiel“). Sie verblasst wie jede andere.
   - Keine Wirkung auf Spieler oder Ergebnis. Die Stimmung der Computer-Vereine bleibt unberührt, so verschiebt sich keine Kalibrierung.
 - **Nur deine Liga:** Aus den anderen Ligen hört man in der Zeitung zu wenig, und die Meldungen sollen dich betreffen.

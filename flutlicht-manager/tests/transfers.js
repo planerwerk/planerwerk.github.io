@@ -144,5 +144,18 @@ const kaufe=(w,p,fee,yrs=3)=>{const els=w.W.ev('document');els.getElementById('f
   const fu0=t.fanU||0;p.team=S.my;F.neuzugang(p,S.my);const meldung=S.news.some(x=>String(x.t).includes(p.n+' kehrt zurück'));
   pruef(Math.abs(i1-i0-IV.heimkehrVerein)<1e-9&&(t.fanU||0)===fu0+IV.heimkehrFans&&meldung,'Rückkehr des verlorenen Sohns: mehr Interesse, die Fans freuen sich',`Interesse ${i0.toFixed(1)} → ${i1.toFixed(1)}, Umfeld ${fu0} → ${t.fanU}, Meldung ${meldung}`);}
 
+// Prüfung FC1, FC3, FC4: Fristen der Verhandlungen in Saisontagen rücken beim Saisonwechsel mit (newSeasonLauf ruft fristenSaisonwechsel mit der Länge der alten Saison auf),
+// Einigungen verfallen beim Jobwechsel (takeJob ruft verhJobwechsel auf), Gegenangebote aus alten Spielständen werden beim Laden (auch beim Import) an deinen Verein und,
+// mit laufendem Nachlass, an ihn gebunden.
+{const {S,ev}=welt();const p=ev('squad')(S.teams.find(t=>t.id!==S.my&&t.lg===1).id)[0],v=ev('verhandlung')(p);
+  v.pause=300;v.druck=290;v.einig={fee:1e6,bis:310};v.konk={tid:1,amt:1,bis:305};S.vt={[p.id]:{pause:320}};S.vtGespr={[p.id]:300};
+  ev('fristenSaisonwechsel')(365);const ruecken=v.pause===-65&&v.druck===-75&&v.einig.bis===-55&&v.konk.bis===-60&&S.vt[p.id].pause===-45&&S.vtGespr[p.id]===-65;delete v.konk;
+  const aufruf=/fristenSaisonwechsel\(absTag\(0\)-tag0\)/.test(String(ev('newSeasonLauf')));
+  v.einig={fee:1e6,bis:S.tag+10};ev('verhJobwechsel')();const job=v.einig===null&&/verhJobwechsel\(\)/.test(String(ev('takeJob')));
+  v.f=2e6;delete v.fMy;delete v.fNl;v.nlF=0.1;v.nlMy=S.my;v.nlBis=ev('absTag')(S.tag)+30;ev('verhUmstellen')();const alt=v.fMy===S.my&&v.fNl===1;
+  const imp=/verhUmstellen\(\)/.test(String(ev('importSave')));
+  pruef(ruecken&&aufruf&&job&&alt&&imp,'Verhandlungen: Fristen rücken beim Saisonwechsel mit, Einigungen verfallen beim Jobwechsel, alte Gegenangebote werden beim Laden gebunden',
+    `Fristen ${ruecken} (Pause ${v.pause}), Aufruf im Saisonwechsel ${aufruf}, Jobwechsel ${job}, altes Gegenangebot ${alt}, Import ${imp}`);}
+
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

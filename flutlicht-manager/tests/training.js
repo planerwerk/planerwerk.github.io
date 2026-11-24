@@ -89,11 +89,15 @@ console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
     'Umschulung: Einsatz auf der neuen Position zählt wie eine Trainingswoche, voll, einmal in 7 Tagen, nicht zu kurz, nicht auf anderer Position, verletzt nicht und ohne die Sperre zu verbrauchen',
     `zu kurz ${kurz}, andere Position ${anders}, erster Einsatz ${erst} (${v0} → ${v1}), gleiche Woche ${gleich}, eine Woche später ${spaeter} (${v3}), ohne Training ${wenig} (${v4}, wie ${v1}), verletzt ${verletzt}, Sperre frei ${sperreFrei}, gesund ${gesund}, ohne Umschulung ${ohne}`);}
 
-// Prüfung FB6: Wer verkauft wird, ausläuft oder verliehen wird, schult nicht weiter um (vertragEnde und verleihen löschen p.um und p.umE).
+// Prüfung FB6, FC2: Wer geht, schult nicht weiter um. vertragEnde (Verkauf, Auflösung) und verleihen löschen p.um und p.umE sofort; die Woche (wocheVerein) löscht sie
+// bei jedem, der nicht bei dir ist (Vertrag ausgelaufen, Leihe zurück, Jobwechsel), dein eigener Spieler schult weiter um.
 // verleihen prüft vorher Fenster, Bedarf und Gehaltsanteil; hier zählt nur, dass die Umschulung vor dem Wechsel endet (die Zeile steht vor kabineAbgang).
-{const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S,ev=W.ev;
+{const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S,ev=W.ev;S.my=6;
   const p=S.pl.find(x=>x.team>=0&&x.fp==='IV');p.um='LV';p.umE=5;ev('vertragEnde')(p);const ende=p.um==null&&!('umE' in p);
   const leihe=/p\.um=null;delete p\.umE;[^]*kabineAbgang/.test(String(ev('verleihen')));
-  pruef(ende&&leihe,'Umschulung: Vertragsende und Verleihen beenden sie',`Vertragsende ${ende}, Verleihen ${leihe}`);}
+  const q=S.pl.find(x=>x.team>=0&&x.team!==S.my&&x.fp==='IV'),m=S.pl.find(x=>x.team===S.my&&x.fp==='IV'&&!ev('umschulungGrund')(x,'LV'));
+  q.um='LV';q.umE=5;ev('wocheVerein')(q);const fremd=q.um==null&&!('umE' in q);let mein=false;if(m){m.um='LV';m.wt=5;ev('wocheVerein')(m);mein=m.um==='LV'||(m.uf||[]).includes('LV');}
+  pruef(ende&&leihe&&fremd&&mein,'Umschulung: Vertragsende und Verleihen beenden sie, die Woche bei jedem, der nicht bei dir ist; bei dir läuft sie weiter',
+    `Vertragsende ${ende}, Verleihen ${leihe}, anderer Verein ${fremd}, dein Spieler ${m?mein:'kein Innenverteidiger mit Ziel LV'}`);}
 
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

@@ -144,6 +144,7 @@ function lernplaetzeVergeben(){const nach=new Map();S.pl.forEach(p=>{if(p.team>=
     for(const p of sq.filter(p=>!p.ls&&p.inj<=0).sort((a,b)=>a.age-b.age||b.str-a.str)){if(frei<=0)break;if(lernAutomatik(p))frei--;}});}
 // Woche: Zeit im Verein, neue Spieler (Talentschätzung neu), Lernen
 function wocheVerein(p){if(p.team!==p.vt){p.vt=p.team;p.wiv=0;p.ekw=riA(RP.entdeckenWochen);p.tf=ri(-RP.talentSchaetzung.fehler,RP.talentSchaetzung.fehler);}else p.wiv=(p.wiv||0)+1;
+  if(p.um&&p.team!==S.my){p.um=null;delete p.umE;} /* Prüfung FC2: umgeschult wird nur bei dir (ausgelaufen, Leihe zurück, Jobwechsel) */
   lernWoche(p);umschulungWoche(p);merkmaleWoche(p);p.wt=0;p.wl=0;}
 // Talentsterne mit Schätzfehler (K03, K02): bis zu einem Stern daneben, nach zwei Jahren im Verein genau
 // Talentsterne: genau nach zwei Jahren, mit gutem Co-Trainer früher (K16 §5.2: Faktor 1,5 − 0,05 × Qualität)

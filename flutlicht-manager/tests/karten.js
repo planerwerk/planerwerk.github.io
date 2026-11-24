@@ -580,14 +580,16 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   const v=ev('verhandlung')(p);v.f=null;v.r=0;const nachAbbruch=fq(p)===rA(fd(p)*0.85),my0=v.nlMy;v.nlMy=-5;const fremd=fq(p)===rA(fd(p));v.nlMy=my0;
   /* Prüfung FB2: Ein Gegenangebot unter dem Nachlass gilt bis zur Frist und nur für deinen Verein; „verfallen“ prüft danach, dass es mit dem Nachlass wegfällt.
      v.f wird nach der Runde niedriger gesetzt, damit die Fälle sich unterscheiden (die Runde selbst kann genau die Forderung zurückgeben) */
-  v.pause=-1;v.konk=null;v.g=ev('RTR').geduld;const kr=ev('kaufRunde')(p,rA(fq(p)*0.9)),markiert=kr.gegen!=null&&v.fNl===1&&v.fMy===S.my;v.f=rA(fd(p)*0.5);
+  /* Prüfung FC5: Vorher stand ein Gegenangebot ohne Nachlass (70 % der Grundforderung). Das neue unter dem Nachlass merkt es sich, nach der Frist gilt es wieder (altWieder) */
+  const vAlt=rA(fd(p)*0.7);v.f=vAlt;v.fMy=S.my;v.fNl=0;delete v.fAlt;
+  v.pause=-1;v.konk=null;v.g=ev('RTR').geduld;const kr=ev('kaufRunde')(p,rA(fq(p)*0.9)),markiert=kr.gegen!=null&&v.fNl===1&&v.fMy===S.my&&!!v.fAlt&&v.fAlt.f===vAlt;v.f=rA(fd(p)*0.5);
   const gegenDa=fq(p)===v.f;v.fMy=-5;const gegenFremd=fq(p)===rA(fd(p)*0.85);v.fMy=S.my;
-  S.tag+=ev('RKT').nachlass.tage+1;const verfallen=fq(p)===rA(fd(p));S.tag=auf;
+  S.tag+=ev('RKT').nachlass.tage+1;const altWieder=fq(p)===vAlt&&v.fNl===0;v.f=null;const verfallen=fq(p)===rA(fd(p));S.tag=auf;
   /* FA2/FA4: nicht mit Transfersperre */
   S.lzp=Object.assign(S.lzp||{},{sperre:S.season});const gesperrt=A.nurZuDir();S.lzp.sperre=null;S.tag=d0;
-  pruef(i>=ab&&passt&&geschlossen===null&&ohneWunsch===null&&geliehen===null&&billiger&&nachAbbruch&&fremd&&markiert&&gegenDa&&gegenFremd&&verfallen&&gesperrt===null,
+  pruef(i>=ab&&passt&&geschlossen===null&&ohneWunsch===null&&geliehen===null&&billiger&&nachAbbruch&&fremd&&markiert&&gegenDa&&gegenFremd&&altWieder&&verfallen&&gesperrt===null,
     'Spieler will nur zu dir: im Fenster, mit Wechselwunsch und hohem Interesse, nicht verliehen, nicht mit Transfersperre; Gespräche senken die Forderung um 15 %, bis zur Frist, ein Gegenangebot darunter verfällt mit',
-    `Interesse ${Math.round(i)} (ab ${ab}), Auslöser ${passt}, Fenster zu ${geschlossen}, ohne Wunsch ${ohneWunsch}, verliehen ${geliehen}, Forderung ${billiger}, nach Abbruch ${nachAbbruch}, anderer Verein ${fremd}, Gegenangebot markiert ${markiert} (${kr.text||'angenommen'}), gilt ${gegenDa}, nicht für anderen Verein ${gegenFremd}, verfallen ${verfallen}, Transfersperre ${gesperrt}`);}
+    `Interesse ${Math.round(i)} (ab ${ab}), Auslöser ${passt}, Fenster zu ${geschlossen}, ohne Wunsch ${ohneWunsch}, verliehen ${geliehen}, Forderung ${billiger}, nach Abbruch ${nachAbbruch}, anderer Verein ${fremd}, Gegenangebot markiert ${markiert} (${kr.text||'angenommen'}), gilt ${gegenDa}, nicht für anderen Verein ${gegenFremd}, älteres Gegenangebot wieder ${altWieder}, verfallen ${verfallen}, Transfersperre ${gesperrt}`);}
 
 // K16f. Streit im Stab (K16 §8): nur zwischen zwei hitzigen Mitarbeitern deines Stabs; „Laufen lassen“ macht beide 28 Tage schwächer (Qualität × 0,9 in stabQ), danach wieder normal.
 {const {S,F,ev}=welt(),A=ev('AUSLOESER'),hz=ev('stabHitzig'),sf=ev('stabStreitFaktor'),M=ev('RST').streit,sg=ev('stabGeaendert');S.phase='play';if(!S.stab)F.stabAufbau();
