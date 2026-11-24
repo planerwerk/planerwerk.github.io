@@ -1134,6 +1134,15 @@ const REGELN={
       stil:'Spielstil gewählt',vorlage:'Trainingsvorlage selbst gesetzt',zuruf:'Zuruf oder Halbzeitansprache',gespraechOderTransfer:'Einzelgespräch geführt oder Transferangebot abgegeben',
       rolleOderSchuetze:'Rolle oder Schütze festgelegt',lernziel:'Lernziel oder Umschulung',sommerplan:'Testspiel, Trainingslager oder Urlaubslänge selbst gewählt',vertragOderStab:'Vertrag verlängert oder Mitarbeiter eingestellt',kaderrolleOderVersprechen:'Kaderrolle oder Zusage',
       sportgericht:'Sportgerichtsverfahren selbst entschieden',medizin:'fit gespritzt oder früher zurückgeholt',sponsorOderPreis:'Sponsor oder Eintrittspreis selbst gewählt'},
+    // Kleine Aufgabe auf der Aufstiegskarte (K36 §8, K36d): je Aufgabe der Bereich (für den Ort, „Hingehen“) und ein Satz, wie es geht
+    aufgabenOrt:{startelf:['aufstellung','In der Aufstellung einen Spieler tauschen.'],liveBisEnde:['live','Das nächste Pflichtspiel live ansehen, ohne ans Ende zu springen.'],
+      wechsel:['wechsel','Im Live-Spiel einen Spieler auswechseln.'],ordnung:['formation','In der Aufstellung die Grundordnung oder die Ausrichtung ändern.'],
+      stil:['stil','In der Aufstellung den Spielstil gegen den nächsten Gegner wählen.'],vorlage:['vorlage','Im Training eine Wochenvorlage selbst setzen.'],
+      zuruf:['zurufe','Im Live-Spiel einen Zuruf geben oder in der Halbzeit zur Mannschaft sprechen.'],gespraechOderTransfer:['gespraeche','Mit einem Spieler ein Einzelgespräch führen oder ein Transferangebot abgeben.'],
+      rolleOderSchuetze:['rollen','In der Aufstellung eine Rolle oder einen Standardschützen festlegen.'],lernziel:['lernziel','Einem Spieler ein Lernziel oder eine Umschulung geben.'],
+      sommerplan:['testspiele','Ein Testspiel anfragen, ein Trainingslager buchen oder die Urlaubslänge wählen.'],vertragOderStab:['vertraege','Einen Vertrag verlängern oder einen Mitarbeiter einstellen.'],
+      kaderrolleOderVersprechen:['kaderrollen','In der Kabine eine Kaderrolle vergeben oder eine Zusage machen.'],sportgericht:['sportgericht','Bei einem Verfahren selbst annehmen oder Einspruch einlegen.'],
+      medizin:['medizin','Einen Verletzten fit spritzen oder früher zurückholen.'],sponsorOderPreis:['preise','Einen Werbevertrag oder den Eintrittspreis selbst wählen.']},
     ohneGelegenheit:['sportgericht','medizin'], // zählen als erledigt, wenn es seit dem Aufstieg bis zur Mindestzeit keine Gelegenheit gab
     testspieleAuto:2,testspielAbstand:6          // Automatik: so viele Testspiele je Vorbereitung, mit mindestens so vielen Tagen Abstand
   },

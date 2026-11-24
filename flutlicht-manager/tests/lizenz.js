@@ -129,5 +129,13 @@ const punkte=(S,F,id)=>{const lg=S.teams[id].lg,r=F.table(lg).find(x=>x.id===id)
   pruef(sofort&&wartet&&eine&&zwei&&leer&&tag2&&nachFehler,'Meldungen des Stabs: sofort außerhalb des Tageslaufs, im Tageslauf gesammelt, mehrere in einer Zeile, nichts bleibt liegen',
     `sofort ${sofort}, gesammelt ${wartet}, eine ${eine}, mehrere ${zwei}, Sammler weg ${leer}, echter Tag ${tag2}, nach Fehler ${nachFehler}`);}
 
+// K36d. Kleine Aufgabe auf der Aufstiegskarte (K36 §8): Jede Aufgabe aller Lizenzen hat einen Ort mit bekanntem Bereich. Vorschlag ist die erste offene Aufgabe der nächsten Lizenz;
+//       gemerkt steht sie im Büro, bis sie erledigt ist; die nächste Lizenz löscht sie; ohne Lernstufen kein Vorschlag.
+{const {S,F,ev}=welt(true),R=ev('RLZ'),fehlt=[];R.aufstieg.forEach(A=>{if(A)A.aufgaben.forEach(k=>{const O=R.aufgabenOrt[k];if(!O||!R.bereiche[O[0]]||!O[1])fehlt.push(k);});});
+  const L=S.lizenz,v1=ev('lizenzVorschlag')();L.aufgaben.startelf=1;const v2=ev('lizenzVorschlag')();F.lizenzMerken(v2&&v2.k);const karte=F.lizenzMerkKarte(),zeigt=karte.includes(R.aufgabenNamen.liveBisEnde)&&karte.includes("tab('buero')");
+  L.aufgaben.liveBisEnde=1;const weg=F.lizenzMerkKarte()==='';F.lizenzMerken('wechsel');F.lizenzAufstieg('geholt');const neu=L.merk===null;L.an=false;const aus=F.lizenzMerkKarte()===''&&ev('lizenzVorschlag')()===null;
+  pruef(!fehlt.length&&!!v1&&v1.k==='startelf'&&!!v2&&v2.k==='liveBisEnde'&&zeigt&&weg&&neu&&aus,'Kleine Aufgabe: Ort für jede Aufgabe, Vorschlag ist die erste offene, gemerkt im Büro bis erledigt, die nächste Lizenz löscht sie',
+    `ohne Ort ${fehlt.join(',')||'keine'}, Vorschlag ${v1&&v1.k} dann ${v2&&v2.k}, Karte ${zeigt}, erledigt weg ${weg}, nach Aufstieg ${neu}, ohne Lernstufen ${aus}`);}
+
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);
