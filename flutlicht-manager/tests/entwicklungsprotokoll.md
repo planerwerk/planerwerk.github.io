@@ -234,7 +234,7 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 ### 24.11.2026: K05f Merkmal Joker lernen (Zweig `mitarbeit/popolupo-k05f-joker-lernen`, auf K05e)
 
 - **Weckruf:** kein neuer Testlauf (Testprotokoll weiter bei Lauf 8).
-- **Neu (K03 §5.6, K05c):** Jedes Tor nach Einwechslung zahlt 15 auf das Merkmal „Joker“ ein (Szene `joker` aus `r.ev` und `r.ein` in `lernenImSpiel`), bei allen Vereinen, ohne Zufall. Das Merkmal hat in der Engine noch keine Wirkung, also keine Verschiebung der Spielstärke.
+- **Neu (K03 §5.6, K05c):** Jedes Tor nach Einwechslung zahlt 15 auf das Merkmal „Joker“ ein (Szene `joker` aus `r.ev` und `r.ein` in `lernenImSpiel`), bei allen Vereinen, ohne Zufall. Das Merkmal hat in der Engine noch keine Wirkung. Es belegt aber einen der Plätze für Stärken (K03 §5.6) und kann so auf lange Sicht ein anderes Merkmal verdrängen; über mehrere Saisons (`tests/welt.js`, `tests/spielermodell.js`) bitte darauf achten.
 - **Tests zuerst:** `tests/spielermodell.js` (neuer Fall K05f am Ende).
 
 ### 24.11.2026: K05e Eigene Bankwahl (Zweig `mitarbeit/popolupo-k05e-bankwahl`, auf K03e)
