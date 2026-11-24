@@ -693,4 +693,14 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   pruef(ohne===null&&!!sprung&&sprung.spieler===p.id&&!!vorb&&verletzt===null&&lob&&zerrung&&meldung,'Trainingsweltmeister übertreibt: nur in der Vorbereitung oder mit Belastungssprung, Lob oder Zerrung; Neuzugänge beim Trainingsauftakt',
     `ohne Anlass ${ohne}, Belastungssprung ${!!sprung}, Vorbereitung ${!!vorb}, verletzt ${verletzt}, Lob ${lob}, Zerrung ${zerrung}, Meldung ${meldung}`);}
 
+// K30h. Sammlung über alle Karrieren (K30 §5.4): kartenLog zählt jede Karte im Browser-Speicher unter RKT.sammlung.schluessel, nicht im Spielstand; die Seite in der
+//       Statistik nennt erlebt von allen und die erlebten Titel; ein kaputter Eintrag im Speicher bricht nichts.
+{const {S,F,ev}=welt(),R=ev('RKT'),LS=ev('localStorage'),K=ev('KARTEN'),c=K[0],d=K[1];
+  F.kartenLog(c,S.tag,null,false);F.kartenLog(c,S.tag,null,true);F.kartenLog(d,S.tag,0,false);
+  const m=JSON.parse(LS.getItem(R.sammlung.schluessel)||'{}'),gezaehlt=m[c.id]===2&&m[d.id]===1&&!('sammlung' in S)&&!JSON.stringify(S).includes(R.sammlung.schluessel);
+  const html=F.sammlungAnsicht(),ansicht=html.includes(`2 von ${K.length}`)&&html.includes(c.titel)&&html.includes('2×');
+  ev('SAMMLUNG=null');LS.setItem(R.sammlung.schluessel,'{kaputt');const kaputt=Object.keys(F.sammlungLaden()).length===0;F.kartenLog(c,S.tag,null,false);const weiter=F.sammlungLaden()[c.id]===1;
+  pruef(gezaehlt&&ansicht&&kaputt&&weiter,'Sammlung: zählt erlebte Karten im Browser, nicht im Spielstand, Anzeige erlebt von allen, kaputter Speicher bricht nichts',
+    `gezählt ${gezaehlt} (${JSON.stringify(m)}), Anzeige ${ansicht}, kaputter Speicher ${kaputt}, danach weiter ${weiter}`);}
+
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

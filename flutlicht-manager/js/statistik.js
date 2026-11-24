@@ -164,10 +164,10 @@ function statSaisonSumme(p,s){const a={sp:0,t:0,v:0,ns:0,nz:0};statZeilen(p).for
 // ---------- Ansicht (K34 §5.9) ----------
 // Zustand der Ansicht (nicht im Spielstand): Unterseite, Liga, Archiv-Saison, gemerkte Spieler für den Vergleich
 let STV='saison',STLG=0,STARCH=null,VGL=[];
-const ST_SEITEN=[['saison','Saison'],['ehrungen','Ehrungen'],['rekorde','Rekorde'],['archiv','Archiv'],['karriere','Karriere']];
+const ST_SEITEN=[['saison','Saison'],['ehrungen','Ehrungen'],['rekorde','Rekorde'],['archiv','Archiv'],['karriere','Karriere'],['sammlung','Sammlung']]; /* Sammlung der Ereigniskarten (K30h) */
 const stLigaWahl=lg=>`<div class="row">${LIGEN.map(l=>`<button class="${l===lg?'go':''}" aria-pressed="${l===lg}" onclick="STLG=${l};render()">${l}. Liga</button>`).join('')}</div>`;
 const stLink=e=>e?`<a href="#" onclick="openP(${e[0]});return false">${esc(e[1])}</a> <span class="dim">(${esc(stVerein(e[2]))})</span>`:'–';
-function statistikAnsicht(){const st=statS(),f={saison:stAnsichtSaison,ehrungen:stAnsichtEhrungen,rekorde:stAnsichtRekorde,archiv:stAnsichtArchiv,karriere:stAnsichtKarriere}[STV]||stAnsichtSaison;
+function statistikAnsicht(){const st=statS(),f={saison:stAnsichtSaison,ehrungen:stAnsichtEhrungen,rekorde:stAnsichtRekorde,archiv:stAnsichtArchiv,karriere:stAnsichtKarriere,sammlung:sammlungAnsicht}[STV]||stAnsichtSaison;
   return`<div class="card"><div class="row between"><h2>Statistik</h2><div class="row">${ST_SEITEN.map(([k,l])=>`<button class="${STV===k?'go':''}" aria-pressed="${STV===k}" onclick="STV='${k}';render()">${l}</button>`).join('')}</div></div>
     <p class="dim">Alle Zahlen seit Beginn deines Spielstands (Saison ${stSaison(st.ab)}). Frühere Spiele zählen nicht.</p></div>${stVergleich()}${f(st)}`;}
 // Europapokal in der Saisonstatistik (K37 „Noch nicht“, K34c): Torjäger der deutschen Vereine im Europapokal dieser Saison (p.eg, am Saisonwechsel auf 0)

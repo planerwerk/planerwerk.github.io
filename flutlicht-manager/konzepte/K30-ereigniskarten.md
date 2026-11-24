@@ -116,6 +116,7 @@ Nachgerechnet mit einem kleinen Simulationsskript: Mit diesen Stufen sind nach 1
 - Zufall aus dem eigenen Strom „ereignisse“ (K02), Neuladen bringt keine andere Karte.
 - **Inhalte wachsen nach und nach** als Daten (`daten/ereignisse.js`): Vorlagen mit Platzhaltern für Beteiligte, Varianten und Folgen. 1000 Szenarien sind ein Ziel über viele Schritte, kein Startumfang.
 - **Sammlung (Idee, vorläufig):** Das Spiel merkt sich über alle Karrieren im Browser, welche Szenarien du schon erlebt hast („Chronik: 137 von 1000“), getrennt vom Spielstand. Seltene Funde sind so eine kleine Belohnung.
+  - **Gebaut als K30h (24.11.2026, popolupo, ohne Testlauf, vorläufig):** Jede Karte, die in dein Kartenprotokoll kommt (auch die der Automatik), zählt in der Sammlung (`kartenLog` → `sammlungMerken`, Browser-Speicher `flutlicht-manager-sammlung`, `{Karte: Zahl}`). Die Statistik hat dafür die Seite „Sammlung“: erlebt von allen, je Seltenheitsstufe, und die erlebten Karten mit Titel, Stufe, Bereich und Zahl. Unbekannte Karten bleiben verborgen. Keine Meldung beim ersten Mal, kein Zufall, nichts im Spielstand. Ohne Browser-Speicher (privates Fenster) gilt sie nur bis zum Neuladen.
 
 ### 5.5 Umsetzung U12d (20. November 2026, ohne Testlauf): das Gerüst und die ersten fünf Karten
 
@@ -190,7 +191,7 @@ Jede Wirkung kann eine Chance haben. Dann wird im Strom `ereignisse` gewürfelt,
 | Ein Spieler heiratet | PLAN §4, K14 | Entscheidung, klein | ein Spieler deines Kaders zwischen 24 und 34 (Sperre je Spieler 2000 Tage) | „Teamausflug zur Feier“: −20.000 €, Zusammenhalt +3, Stimmung des Spielers +5. „Glückwunschkarte“: Stimmung +2 (Voreinstellung) |
 | Geheimtipp | K18 §8 | Info | ein Talent bis 20 bei einem Verein der 2. oder 3. Liga mit großem Talent | keine, nur der Hinweis |
 
-Noch nicht gebaut: verzögerte Folgen ohne eigene Karte, die Chronik über alle Karrieren (§5.4), die schweren Skandale (§8.4, die ersten zwei seit K30f, die Manipulation in der 3. Liga seit K30g), Kategorien mit eigener Rate. Ketten und Merker gibt es seit K30c (§5.6).
+Noch nicht gebaut: verzögerte Folgen ohne eigene Karte, die schweren Skandale (§8.4, die ersten zwei seit K30f, die Manipulation in der 3. Liga seit K30g), Kategorien mit eigener Rate. Ketten und Merker gibt es seit K30c (§5.6), die Sammlung über alle Karrieren (§5.4) seit K30h.
 
 ### 5.6 Umsetzung K30c (22. November 2026, popolupo, ohne Testlauf): Ketten und „Der lachende Dritte“
 

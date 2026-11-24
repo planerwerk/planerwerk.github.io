@@ -423,7 +423,19 @@ function karteChef(x,v,weg,wert){const K=RKT.stab,C=K.chef,rolle=RST.rollen[x.r]
   trainerS();const alt=trainerGeht(v,0),c=mitStrom(strom('trainerpool',S.season,S.tag,'co',x.id),()=>trainerNeu(v.rep-C.rufAbschlag,v.id));c.n=x.n;c.co=1;if(x.age!=null)c.alter=x.age;v.chef=c.id;v.stil=c.stil; /* EZ5: sein Alter */
   const a=Math.min(Math.round(x.sal*K.abloese/1000)*1000,Math.max(0,v.cash));if(a){money('Stab: Ablöse',a);v.cash-=a;}S.stab=S.stab.filter(y=>y!==x);stabGeaendert();
   news(`${x.n} wird Cheftrainer bei ${v.name}${a?`, Ablöse ${fmt(a)}`:''}.${alt?` ${alt.n} war dort nur wenige Tage im Amt.`:''}`,'tr');}
-function kartenLog(c,tag,wahl,auto){const K=karten();K.log.push({id:c.id,s:S.season,tag,wahl,auto});if(K.log.length>RKT.log)K.log.splice(0,K.log.length-RKT.log);}
+function kartenLog(c,tag,wahl,auto){const K=karten();K.log.push({id:c.id,s:S.season,tag,wahl,auto});if(K.log.length>RKT.log)K.log.splice(0,K.log.length-RKT.log);sammlungMerken(c);}
+// ---------- Sammlung über alle Karrieren (K30 §5.4, K30h) ----------
+// Welche Karten du schon erlebt hast, im Browser unter RKT.sammlung.schluessel, getrennt vom Spielstand und über alle Karrieren: {id: Zahl}. Gezählt wird jede Karte,
+// die in dein Kartenprotokoll kommt (auch die der Automatik). Ohne Browser-Speicher (privates Fenster) gilt sie nur bis zum Neuladen. Kein Zufall, keine Meldung, kein Spielstand.
+let SAMMLUNG=null;
+function sammlungLaden(){if(SAMMLUNG)return SAMMLUNG;try{const x=JSON.parse(localStorage.getItem(RKT.sammlung.schluessel)||'{}');SAMMLUNG=x&&typeof x==='object'?x:{};}catch(e){SAMMLUNG={};}return SAMMLUNG;}
+function sammlungMerken(c){if(!c||!c.id)return;const m=sammlungLaden();m[c.id]=(m[c.id]||0)+1;try{localStorage.setItem(RKT.sammlung.schluessel,JSON.stringify(m));}catch(e){}}
+// Anzeige (Statistik, Seite Sammlung): erlebt von allen je Seltenheitsstufe, die erlebten Karten mit Titel, Bereich und Zahl. Unbekannte bleiben verborgen.
+function sammlungAnsicht(){const m=sammlungLaden(),N=RKT.sammlung.stufen,st=c=>c.stufe&&N[c.stufe]?c.stufe:'haeufig',alle=KARTEN,da=alle.filter(c=>m[c.id]);
+  const zeilen=Object.keys(N).map(k=>{const l=alle.filter(c=>st(c)===k),e=l.filter(c=>m[c.id]).length;return l.length?`<tr><td>${esc(N[k])}</td><td class="num">${e} von ${l.length}</td></tr>`:'';}).join('');
+  const liste=da.slice().sort((a,b)=>Object.keys(N).indexOf(st(b))-Object.keys(N).indexOf(st(a))||a.titel.localeCompare(b.titel,'de')).map(c=>`<tr><td>${esc(c.titel)}</td><td class="dim">${esc(N[st(c)])}${c.bereich?`, ${esc(c.bereich)}`:''}</td><td class="num">${m[c.id]}×</td></tr>`).join('');
+  return`<div class="grid"><div class="card"><h3>Sammlung: ${da.length} von ${alle.length} Ereignissen erlebt</h3><p class="dim">Über alle Karrieren in diesem Browser, getrennt vom Spielstand. Gelegentliche kommen etwa alle ${RKT.seltenheit.gelegentlich} Saisons, seltene alle ${RKT.seltenheit.selten}, sehr seltene alle ${RKT.seltenheit.sehrSelten}.</p>
+    <table><tbody>${zeilen}</tbody></table></div><div class="card"><h3>Schon erlebt</h3>${liste?`<div class="tw"><table><tbody>${liste}</tbody></table></div>`:'<p class="dim">Noch keine Ereigniskarte.</p>'}</div></div>`;}
 
 // ---------- Anzeige im Büro ----------
 function kartenKarte(){const K=S.karten;if(!K||!K.offen.length||S.fired)return'';

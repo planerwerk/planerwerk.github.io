@@ -419,6 +419,8 @@ const REGELN={
   // Anlasskarten (K30d, 22.11., popolupo, vorläufig) tragen im Katalog statt der Stufe eine eigene chance je Woche, in der ihr Anlass besteht (0 < chance ≤ 1)
   karten:{seltenheit:{haeufig:3,gelegentlich:20,selten:100,sehrSelten:400},wochenJeSaison:40,
     infoProWoche:5,entscheidung:{kleinProWoche:1,grossProMonat:1,jeBereichProWoche:1},halteProWoche:4,sperrTage:120,log:100,
+    // Sammlung über alle Karrieren (K30 §5.4, K30h, 24.11., popolupo, vorläufig): erlebte Karten im Browser unter schluessel, getrennt vom Spielstand; stufen: Namen in der Anzeige
+    sammlung:{schluessel:'flutlicht-manager-sammlung',stufen:{haeufig:'häufig',gelegentlich:'gelegentlich',selten:'selten',sehrSelten:'sehr selten'}},
     // Meldungsdichte (K30 §5.1, K35a, K30b, 22.11., popolupo): Regler in den Einstellungen. Je Stufe ersetzen klein, gross, info die Grenzen oben, wochen: 1 oder 2, bei 2 zählt die Vorwoche mit (mehr Wochen kennt der Code nicht, Prüfung DY8).
     dichte:{standard:'normal',stufen:{wenig:{name:'wenig (eine Entscheidung alle zwei Wochen)',wochen:2,info:3},normal:{name:'normal (eine je Woche)'},viel:{name:'viel (zwei je Woche)',klein:2,gross:2,info:8}}},
     form:{kriseBis:4,hochAb:16}, // Formkarten (K03 §8, K03b, 22.11., GESCHÄTZT): Formkrise bei Form bis kriseBis, Formhoch ab hochAb (Form 0–20)
