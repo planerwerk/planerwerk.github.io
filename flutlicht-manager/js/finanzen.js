@@ -89,7 +89,7 @@ function kiHeimEinnahmen(t,opp,cup,neutral){const att=zuschauerErwartung(t,opp,c
 // Je Ligaspiel (ablauf.js): TV, Werbung (ganzer Grundbetrag, bei dir Verträge plus weitere Partner), Sonstiges, im Heimspiel Zuschauer, Fanartikel, Logen,
 // minus Gehälter von Kader und Stab, Stadion und Betrieb, Verwaltung (K23c), Jugendarbeit (Stufe der Computer-Vereine). Ersetzt die Pauschale fremdeEinnahmen.
 function kiFinanzenSpiel(t,r){if(!t||!aktiv(t))return;const n=(S.fx[t.lg]||[]).length||34,heim=r.h===t.id,opp=heim?(S.teams[r.a]||null):null;
-  const ein=tvGeld(t)+sponsorBasis(t)+sonstigeEinnahmen(t)+(heim?kiHeimEinnahmen(t,opp,false):0);
+  const ein=tvJeSpiel(t)+sponsorBasis(t)+sonstigeEinnahmen(t)+(heim?kiHeimEinnahmen(t,opp,false):0); /* TV je Spiel, mit Raten 0 (K23h, tvRatenTag) */
   const aus=Math.round((squad(t.id).reduce((s,p)=>s+p.sal,0)+stabGehaelter(t.id))/n)+Math.round(t.cap*RF.betrieb.jePlatz+(t.logen||0)*RF.betrieb.jeLoge)+verwaltungKosten(t)+RF.jugendKosten[RS.nachwuchs.computerStufe]+Math.round((t.bausumme||0)*RB.instandhaltung/n); // Instandhaltung ihrer Bauten (K26c)
   t.cash+=ein-aus;}
 // Je Pokalspiel: Rundenprämie für beide, Zuschauer für den Gastgeber (nicht im Finale), Siegprämie im Finale. Bisher bekamen alle Vereine eine Pauschale je Runde.

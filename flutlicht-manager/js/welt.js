@@ -33,6 +33,13 @@ function tvSaison(){const T=RF.tv,c=S.tvS;if(c&&c.s===S.season&&S.teams.every(t=
 const tvSaisonBetrag=t=>tvSaison()[t.id]||0;
 const tvRang=t=>S.teams.filter(x=>x.lg===t.lg).sort((a,b)=>tvWertung(b)-tvWertung(a)||b.rep-a.rep||a.id-b.id).findIndex(x=>x.id===t.id)+1; // Platz in der Leistungssäule (Anzeige)
 const tvGeld=t=>Math.round(tvSaisonBetrag(t)/((S.fx&&S.fx[t.lg]||[]).length||(t.lg===3?38:34)));
+// Auszahlung (K23 §4, K23h): je Ligaspiel tvGeld, mit RF.tv.raten.an stattdessen vier Raten (tvRatenTag). tvGeld bleibt der Maßstab für Verwaltung und Prognosen.
+const tvRatenAn=()=>!!(RF.tv.raten&&RF.tv.raten.an);
+const tvJeSpiel=t=>tvRatenAn()?0:tvGeld(t);
+// Täglich (ablauf.js taeglichLauf): an den Ratentagen ein Viertel des Saisonbetrags an jeden aktiven Verein, ohne Zufall. Dein Verein mit Buchung „TV-Gelder“.
+function tvRatenTag(d){const R0=RF.tv.raten;if(!tvRatenAn()||!R0.tage.includes(mmtt(d)))return;let mein=0;
+  S.teams.forEach(t=>{if(!aktiv(t))return;const b=Math.round(tvSaisonBetrag(t)/R0.tage.length);if(!b)return;if(t.id===S.my){money('TV-Gelder',b);mein=b;}else t.cash+=b;});
+  if(mein)news(`TV-Gelder: Die ${R0.tage.indexOf(mmtt(d))+1}. Rate ist da, ${fmt(mein)} für deinen Verein.`,'');}
 // Spielstände von vor K23c (ohne S.k23c): Gehälter einmal auf die neue Kurve umrechnen (gleiches Verhältnis zum Gehalt nach Stärke wie vorher), damit sich niemand
 // plötzlich unterbezahlt fühlt (kabine.js). Kontostände, Verträge mit Sponsoren und Kredite bleiben, sie gleichen sich über die Saisons an. Aufruf nach dem Laden.
 // Dazu vorgemerkte Wechsel (p.wech.sal) und deine Werbeverträge (Brust, Ausrüster, Ärmel: Betrag mal neuer durch alten Grundbetrag der Fläche, Prüfung CS4).

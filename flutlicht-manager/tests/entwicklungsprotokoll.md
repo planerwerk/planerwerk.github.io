@@ -184,11 +184,12 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 | Korrekturen FH | `mitarbeit/popolupo-fh-korrekturen` (auf den Korrekturen FG) | fertig, ungetestet |
 | Korrekturen FI | `mitarbeit/popolupo-fi-korrekturen` (auf den Korrekturen FH) | fertig, ungetestet |
 | Engine: Kettenwechsel in `xpo` (EK7) | `mitarbeit/popolupo-engine-kettenwechsel` (auf den Korrekturen FI) | fertig, ungetestet |
+| **K23h** TV-Gelder in vier Raten (Schalter aus) | `mitarbeit/popolupo-k23h-tv-raten` (auf dem Kettenwechsel) | fertig, ungetestet |
 | U19d2 volle Kader der Auslandsvereine in der Engine | zurückgestellt | Entwurf in K37 §5.7. Die Engine behandelt Auslandsvereine als Block wie Amateure, viele Stellen schlagen Spieler in `PIX` nach. Erst nach einem Testlauf und der Messung des Faktors 0,93 |
 
 **Die neueste Spitze ist immer der zuletzt genannte Zweig, er enthält alles davor.** K24 ist fertig (Claude).
 
-**Vorschlag für den nächsten Testlauf** (Spitze `mitarbeit/popolupo-engine-kettenwechsel`, alles ungetestet, bis auf die Korrekturen FI und den Kettenwechsel von lesenden Prüf-Agenten durchgesehen, Konsistenzprüfung CS bis FI). **Wichtig:** Die Zweige `u12g` und `k29e` laden für sich allein nicht (DN1), bitte die Spitze nehmen:
+**Vorschlag für den nächsten Testlauf** (Spitze `mitarbeit/popolupo-k23h-tv-raten`, alles ungetestet, bis auf die Korrekturen FI, den Kettenwechsel und K23h von lesenden Prüf-Agenten durchgesehen, Konsistenzprüfung CS bis FI). **Neu: Schalter.** Was die Kalibrierung aller Vereine ändern würde, steht hinter einem Schalter in `REGELN`, der aus ist (seit K23h `REGELN.finanzen.tv.raten.an`). Bitte einmal mit und einmal ohne messen (`tests/finanzmodell.js 2`, `tests/welt.js`), dann schalte ich ein oder stelle nach. **Wichtig:** Die Zweige `u12g` und `k29e` laden für sich allein nicht (DN1), bitte die Spitze nehmen:
 1. `node tests/code.js`, dann die schnellen Einzeltests der neuen Teile: `finanzen.js` (Nr. 11 bis 20), `geruechte.js` (seit K17d mit Klatsch), `schwierigkeit.js`, `werbung.js`, `europapokal.js`, `vorstand.js` (Nr. 10 bis 19, dazu U12m am Ende), `karriereende.js`, `stadion.js` (Nr. 8 bis 11), `karten.js`, `spielwelt-karten.js`, `fans.js` (K27b, K27e), `abwerben.js` (K20b, K20e), `transfers.js` (K20c, K20d, K19c, K31b, K31c, K19d, K19e, FC1/FC3/FC4, FD, FF4/FF5, K19i, K19j und FH/FI am Ende), `presse.js` (K29b bis K29j, K29m, Fall 5 seit K09f, dazu FE1), `marketing.js` (K25c, K25d, K25e, K25f), dazu seit dem Nachmittag des 22.11.: `testspiele.js` (K11b, K11c, Fall 2b), `erinnerungen.js` (K09b, K07b, K11d, K07d), `scouting.js` (K18c bis K18e), `medizin.js` (K10b bis K10d, K16d), `disziplin.js` (K09c, EA1 bis EA3, K09g am Ende), `vertraege.js` (K21b, K21d, K21e), `statistik.js` (K34d), `taktik.js` (K06b, eigene Welt am Ende), `training.js` (K07g und FB6 am Ende), `stab.js` (K16b, K16h am Ende), `wettbewerbe.js` (K13b, K13c, K13d, K13e mit FD3, eigene Welten am Ende), `lizenz.js` (K36c am Ende), `leihe.js` (am Ende der Fall EP2, Rückkehr aus der Leihe ohne Heimkehr), und in `karten.js` die neuen Karten (K30b, K07c, K08b, K08c, K16c, K27c, K21c, K26e, K12c, K29k, K17b, K22c, K03b, K30c, K30d, K10e, K07e, K14d, K14e, K29l, K30e, K11f, K03c, K30f, K27d, K05c, K05d, K06c, K09e, K06d, K06e, K15e, K26f, K16e, K18f, K30g, K11g, K27f, K27g, K16f, K16g, K27h, K19f, U12n, U19e, K09h am Ende, dazu die Fälle EK und EL). Der Katalog in `karten.js` Fall 1 ist mit `kartenpruefung.pl` schon ohne Node geprüft.
 2. `node tests/lizenz.js` (Gleichschritt, neue Bereiche `zielgespraech`; seit K36c am Ende die gesammelten Meldungen des Stabs, seit K36d die kleine Aufgabe). Viele neue Teile wirken nur ohne Automatik oder über Karten, darum sollte 5a gleich bleiben.
 3. `node tests/finanzmodell.js 2`: Salden je Liga nach K23c. Erwartet nach der Modellrechnung 1. Liga etwa +11 Mio., 2. Liga etwa 0, 3. Liga etwa −1 Mio. je Verein und Saison ohne Transfers (K23 §5.6b). Weichen sie stark ab, bitte die Zeilen ins Testprotokoll, ich stelle dann `REGELN.finanzen.verwaltung` und `sponsor` nach.
@@ -223,6 +224,13 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 ---
 
 ## Changelog
+
+### 24.11.2026: K23h TV-Gelder in vier Raten, Schalter aus (Zweig `mitarbeit/popolupo-k23h-tv-raten`, auf dem Kettenwechsel)
+
+- **Weckruf:** kein neuer Testlauf (Testprotokoll weiter bei Lauf 8).
+- **Neu (K23 §4, §5.6b):** TV-Gelder in vier Raten (1. August, 1. November, 1. Februar, 1. Mai) an alle Vereine der Profiligen statt je Ligaspiel (`tvRatenTag`, `tvJeSpiel`).
+- **Schalter aus** (`REGELN.finanzen.tv.raten.an = false`): Ohne Schalter ändert sich nichts. Eingeschaltet kommt im Juli kein TV-Geld, das verschiebt die Sommerkäufe der Computer-Vereine. Bitte mit und ohne messen.
+- **Tests zuerst:** `tests/finanzen.js` (neuer Fall K23h am Ende).
 
 ### 24.11.2026: Engine, Kettenwechsel in `xpo` (Zweig `mitarbeit/popolupo-engine-kettenwechsel`, auf den Korrekturen FI)
 

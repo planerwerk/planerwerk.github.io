@@ -67,7 +67,7 @@ function tagesSpieleAbschliessenLauf(out){const d=out.tag;S.gespielt=d;
 
 // Werte pro Tag: Ausfalltage zählen herunter, Frische erholt sich, Fristen laufen ab, Bau wird fertig.
 function taeglich(d){return mitStrom(strom('tag',S.season,d),()=>taeglichLauf(d));}
-function taeglichLauf(d){const T=RT;praegungTag(d);wechselTag(d);konkurrenzTag(d); // vereinbarte Wechsel zum Winterfenster (K19, U10a), Frist im Bieterwettstreit (K20c)
+function taeglichLauf(d){const T=RT;praegungTag(d);wechselTag(d);konkurrenzTag(d);tvRatenTag(d); // vereinbarte Wechsel zum Winterfenster (K19, U10a), Frist im Bieterwettstreit (K20c), TV-Raten (K23h, nur mit Schalter)
   if(S.phase==='play')testspieleTag(d);
   const ab=S.phase==='play'?spielAbstand(d):new Map(),status=new Map();
   S.teams.forEach(t=>{if(!aktiv(t))return;sommerTag(t,ab.get(t.id),d);const st=sommerStatus(t);status.set(t.id,st);
@@ -105,7 +105,7 @@ function heimspielEinnahmen(m,cup){const t=myT();if(autoB('preise'))t.price=clam
   m.att=att;S.att[0]+=att;S.att[1]++;statZuschauer(m,att);if(n)money('Dauerkarten',Math.round(n*dkPreis(t,dk)));money('Zuschauer',Math.round(Math.max(0,att0-n)*pz));if(t.shop)money('Fanartikel',Math.round(att*RF.fanartikel[t.shop]*merchFaktor(t)));if(t.logen)money('VIP-Logen',t.logen*RF.loge);}
 // Buchungen je Ligaspieltag des eigenen Vereins
 function finanzenLiga(m){const t=myT();if(m.h===S.my)heimspielEinnahmen(m,false);
-  money('TV-Gelder',tvGeld(t));{const so=sonstigeEinnahmen(t);if(so)money('Sonstige Einnahmen',so);} // Mitglieder, Vermarktung (K23 §3.1, K23b)
+  {const tv=tvJeSpiel(t);if(tv)money('TV-Gelder',tv);} /* mit TV-Raten 0 (K23h) */{const so=sonstigeEinnahmen(t);if(so)money('Sonstige Einnahmen',so);} // Mitglieder, Vermarktung (K23 §3.1, K23b)
   {const wp=Math.round(sponsorBasis(t)*(RF.werbung.partner||0));if(wp)money('Weitere Sponsoren',wp);} // Premium-, Logen- und Regionalpartner ohne Verhandlung (K23c)
   if(S.spons){money('Sponsor',S.spons.base);if(S.spons.win&&winner(m)===S.my&&m.hg!==m.ag)money('Sponsor',S.spons.win);}werbungSpieltag(m); // Ausrüster und Ärmel (K24a)
   const n=S.fx[t.lg].length;money('Gehälter',-Math.round((squad(S.my).reduce((s,p)=>s+p.sal,0)+leiheGehaelter())/n*gehaltFaktor())); /* dazu verliehene Spieler und Profis in der Zweiten (U10d) */if(S.stab)money('Trainerstab',-Math.round(stabGehaelter(S.my)/n));

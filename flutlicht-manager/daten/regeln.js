@@ -187,8 +187,9 @@ const REGELN={
     // 1. und 2. Liga: gleich (Gleichverteilung 50 % plus Nachwuchs 4 %, den es im Spiel noch nicht gibt) zu gleichen Teilen, leistung nach dem Rang in der Fünfjahreswertung
     // innerhalb der Liga (Gewicht n + versatz − Rang), interesse nach Ansehen². Fünfjahreswertung: Punkte je Saison = Zahl der Vereine der drei Ligen + 1 − Gesamtplatz
     // (1. Liga Platz 1 bis 18, 2. Liga 19 bis 36, 3. Liga ab 37), gewichtet mit gewichte (jüngste Saison zuerst). Fehlende Saisons zählen wie der Startplatz nach Ansehen.
-    // 3. Liga: Topf zu gleichen Teilen. Ausgezahlt je Ligaspiel.
-    tv:{topf:{1:897e6,2:224e6,3:26.2e6},gleich:0.54,leistung:0.43,interesse:0.03,versatz:3,gewichte:[5,4,3,2,1]},
+    // 3. Liga: Topf zu gleichen Teilen. Ausgezahlt je Ligaspiel. Seit K23h (24.11., popolupo, K23 §4): mit raten.an in vier gleichen Raten an den Tagen raten.tage
+    // (August, November, Februar, Mai) an alle Vereine der Profiligen statt je Spiel. Vorerst aus: verschiebt den Zeitpunkt des Geldes aller Vereine, erst messen.
+    tv:{topf:{1:897e6,2:224e6,3:26.2e6},gleich:0.54,leistung:0.43,interesse:0.03,versatz:3,gewichte:[5,4,3,2,1],raten:{an:false,tage:['08-01','11-01','02-01','05-01']}},
     betrieb:{jePlatz:1,jeLoge:300},  // Stadion und Betrieb je Ligaspieltag
     jugendKosten:[0,20000,40000,70000,110000,160000], // je Ligaspieltag, Index = Stufe
     kreditZins:0.08,                 // pro Saison

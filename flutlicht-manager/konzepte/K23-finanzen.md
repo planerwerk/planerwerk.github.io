@@ -246,6 +246,7 @@ Gebaut:
 - 3. Liga: Topf zu gleichen Teilen, 1,31 Mio. € je Verein.
 - Ergebnis: 1. Liga 33 bis 67 Mio. € (Schnitt 50), 2. Liga 8 bis 17 Mio. € (Schnitt 12,5).
 - Berechnet einmal zu Saisonbeginn (und bei einer geänderten Liga), ohne Zufall, gespeichert in `S.tvS`. Ausgezahlt je Ligaspiel wie bisher. Die vier Raten aus §4 kommen später.
+- **K23h (24.11.2026, popolupo, ohne Testlauf, Schalter aus):** Die vier Raten aus §4 sind gebaut, aber abgeschaltet (`REGELN.finanzen.tv.raten.an = false`). Eingeschaltet zahlt `tvRatenTag` am 1. August, 1. November, 1. Februar und 1. Mai je ein Viertel des Saisonbetrags an jeden Verein der Profiligen (dein Verein mit Buchung „TV-Gelder“ und Meldung), je Ligaspiel gibt es dann kein TV-Geld (`tvJeSpiel`). Verwaltungskosten und Prognosen rechnen weiter mit dem Betrag je Spiel (`tvGeld`). Übers Jahr kommt gleich viel Geld, aber früher oder später: Im Juli und in den Sommertransfers fehlt das TV-Geld bis August, danach kommt es in Blöcken. Das verschiebt das Kaufverhalten der Computer-Vereine, darum erst nach einer Messung einschalten (`tests/finanzmodell.js`, `tests/welt.js`).
 
 **Werbung mit Grundbetrag** (`RF.sponsor`, `sponsorBasis`):
 - Grundbetrag je Ligaspiel = 1,15 Mio. € × e^(0,065 × (Ansehen − 70)) × Ligafaktor (1; 0,65; 0,6). Vorher Ansehen² × 45, 18 oder 8.
