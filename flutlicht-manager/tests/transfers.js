@@ -239,9 +239,13 @@ const kaufe=(w,p,fee,yrs=3)=>{const els=w.W.ev('document');els.getElementById('f
   sq.forEach(p=>{p.sal0=p.sal;p.sal*=10;});const aus=nv(t,P)===null;N.an=true;
   const p=nv(t,P),m1=!!S.news[0]&&String(S.news[0].t).includes('Notverkauf');S.news.unshift({t:'x'});const q=nv(t,P),m2=S.news[0].t==='x';
   const ok=!!p&&p.list===1&&p.ask===Math.max(ev('RP').marktwert.minimum,ev('rundeAb')(ev('kiPreis')(p)*N.preis))&&ev('kaderRolle')(p)!=='schluessel'&&m1&&q===p&&m2;
+  /* Prüfung FK1: Merker p.nv für den Kauf ohne Abgabegrund, kiListe löscht ihn; auch dein Verein, wenn ihn kiMarkt führt (Automatik der Transfers) */
+  const merk=!!p&&p.nv===S.season;ev('kiListe')(P);const geloescht=!!p&&p.nv===undefined;
+  const mt=S.teams[S.my],ich=ev('squad')(S.my);ich.forEach(x=>{x.sal0=x.sal;x.sal*=10;});const pm=nv(mt,ev('kaderplan')(mt)),meinV=!!pm&&pm.nv===S.season;
+  ich.forEach(x=>{x.sal=x.sal0;delete x.sal0;if(x.nv){delete x.nv;x.list=0;x.ask=0;}});delete mt.nvS;
   sq.forEach(x=>{x.sal=x.sal0;delete x.sal0;});delete t.nvS;const unter=ev('gehaltsSumme')(t)<=ev('gehaltsRahmen')(t)*N.ueberRahmen?nv(t,P)===null:true;N.an=false;
-  pruef(aus&&ok&&unter,'Notverkauf: nur mit Schalter und über dem Gehaltsrahmen, teuerster Nicht-Schlüsselspieler unter Wert, eine Meldung je Saison',
-    `aus ${aus}, Notverkauf ${ok}${p?` (${p.n}, ${p.ask})`:''}, unter dem Rahmen ${unter}`);}
+  pruef(aus&&ok&&merk&&geloescht&&meinV&&unter,'Notverkauf: nur mit Schalter und über dem Gehaltsrahmen, teuerster Nicht-Schlüsselspieler unter Wert, eine Meldung je Saison, Merker für den Kauf',
+    `aus ${aus}, Notverkauf ${ok}${p?` (${p.n}, ${p.ask})`:''}, Merker ${merk}/${geloescht}, dein Verein ${meinV}, unter dem Rahmen ${unter}`);}
 
 // K19k. Boni in Angeboten der Computer-Vereine (K19 §5.2): bonusKI legt fest aus dem Seed ki.anteil des Gebots als Bonus an und senkt feste Ablöse und Rahmen um
 //       wert × Bonus, nie bei Auslandsvereinen. Ein Verkauf mit Bonus legt ihn in S.boniEin; fällig nach 25 Pflichtspielen für den Käufer (er zahlt, dein Konto bekommt es)

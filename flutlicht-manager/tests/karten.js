@@ -672,11 +672,15 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   sq.forEach(x=>{delete x.int;});const p=sq.find(x=>x.pos!=='TW');p.nat='BRA';p.de=20;p.eig=[...ev('eigenschaften')(p).filter(e=>e!=='heimweh'),'heimweh'];p.wiv=H.heimwehWochen;
   p.int=H.heimwehUnter-5;const ja=A.heimweh();p.wiv=H.heimwehWochen-1;const frueh=A.heimweh();p.wiv=H.heimwehWochen;p.int=H.heimwehUnter+5;const gut=A.heimweh();
   p.int=H.heimwehUnter-5;p.de=100;const deutsch=A.heimweh();p.de=20;
+  /* Prüfung FK2: der Zustand entsteht auch im Spiel, über integrationStart und echte Wochenschritte (ohne Einsatz, ohne Landsmann), nicht nur von Hand gesetzt */
+  const nat=['BRA','JPN','KOR','USA','MEX','ARG'].find(n=>!sq.some(q=>q!==p&&q.nat===n));let echt=false;
+  if(nat){p.nat=nat;p.ch=Object.assign({},p.ch,{anp:2});delete p.de;delete p.int;ev('integrationStart')(p);for(let i=0;i<=H.heimwehWochen;i++)ev('integrationWoche')(p);
+    p.wiv=H.heimwehWochen;echt=p.int<H.heimwehUnter&&!!A.heimweh();p.nat='BRA';p.de=20;p.int=H.heimwehUnter-5;}
   const i0=p.int;wirk({art:'integration',wert:8},{spieler:p.id},c);wirk({art:'deutsch',wert:10},{spieler:p.id},c);const wk=p.int===i0+8&&p.de===30;p.int=97;wirk({art:'integration',wert:8},{spieler:p.id},c);const voll=p.int==null;
   p.int=50;S.letztTest={s:S.season,tag:S.tag,tore:[p.id]};const tt=A.traumtor();S.letztTest.tag=S.tag-N.nachTage-1;const alt=A.traumtor();S.letztTest.tag=S.tag;delete p.int;const integriert=A.traumtor();
-  pruef(!!ja&&ja.spieler===p.id&&frueh===null&&gut===null&&deutsch===null&&wk&&voll&&!!tt&&tt.spieler===p.id&&alt===null&&integriert===null,
+  pruef(!!ja&&ja.spieler===p.id&&frueh===null&&gut===null&&deutsch===null&&echt&&wk&&voll&&!!tt&&tt.spieler===p.id&&alt===null&&integriert===null,
     'Integration: Heimweh nur bei schlechter Integration nach Wochen, Wirkungen integration und deutsch, Traumtor nur für Neuzugänge kurz nach dem Testspiel',
-    `Heimweh ${!!ja}, zu früh ${frueh}, gut integriert ${gut}, deutschsprachig ${deutsch}, Wirkungen ${wk}, voll ${voll}, Traumtor ${!!tt}, zu lange her ${alt}, integriert ${integriert}`);}
+    `Heimweh ${!!ja}, zu früh ${frueh}, gut integriert ${gut}, deutschsprachig ${deutsch}, im Spiel erreichbar ${echt}, Wirkungen ${wk}, voll ${voll}, Traumtor ${!!tt}, zu lange her ${alt}, integriert ${integriert}`);}
 
 // K07h. Trainingsweltmeister übertreibt (K03 §8, K07 §8): nur Trainingsweltmeister oder Vorbildprofis, gesund, in der Vorbereitung oder mit Belastungssprung. Wirkung
 //       uebertrieben: Lob (Selbstvertrauen +1) oder Zerrung. Dazu die Meldung der Neuzugänge beim Trainingsauftakt (K12a §8).

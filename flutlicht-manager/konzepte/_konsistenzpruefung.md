@@ -2670,3 +2670,19 @@ Korrekturen auf `mitarbeit/popolupo-fj-korrekturen` (auf K03d).
 | # | Befund | Status |
 |---|---|---|
 | FJ1 | **Mittel, Test:** Der Fall FI1 in `tests/transfers.js` suchte einen Verein mit `zweite==null`, `buildWorld` setzt dort aber −1. Das `find` fand nichts, der Test stürzte ab und nahm FH1, FH5 und FH6 mit. Jetzt `!(zweite>=0)` und −1 zurückschreiben. Nebenbei die Meldung beim verworfenen Tausch ohne doppelten Punkt. | ✅ behoben |
+
+## FK. Prüfung von Kettenwechsel, K23h, K31d, K03d, den Korrekturen FJ und K03e ohne Laufzeit (24. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 62a41f3..c395a88 gelesen, nichts ausgeführt. Kein Laufzeitfehler, kein doppelter Name, Ladereihenfolge in Ordnung, ausgeschaltete Schalter ändern weder Verhalten noch Zufall. Ohne Befund: der Kettenwechsel (rückwärts ist für jede Kette gültig, Test EK7 wäre mit dem alten Code rot), die Startkader ohne Integration, die Kosten von `integrationWoche`, Zeitpunkt und Summe der TV-Raten, die Auslöser von K03e. Drei mittlere, vier niedrige Funde.
+
+Korrekturen auf `mitarbeit/popolupo-fk-korrekturen` (auf K19k).
+
+| # | Befund | Status |
+|---|---|---|
+| FK1 | **Mittel, nur mit Schalter:** Den Spieler aus dem Notverkauf kaufte kein Computer-Verein, `kiKandidat` nahm nur Spieler mit Abgabegrund und zahlte `kiPreis`. Jetzt Merker `p.nv` (Saison, von `kiListe` jede Woche gelöscht, vom Notverkauf neu gesetzt), `kiKandidat` kauft ihn auch ohne Abgabegrund zum Notpreis `p.ask`. Der Notverkauf gilt wie `kiListe` auch für deinen Verein, wenn dein Stab die Transfers führt; so stimmt K36 Nr. 187 (in beiden Welten von 5a gleich). Test K31d prüft den Merker und deinen Verein. | ✅ behoben |
+| FK2 | **Mittel:** Die Heimweh-Karte konnte nie kommen: Ein Heimweh-Typ startet bei 22 bis 26 und gewinnt je Woche mindestens 3, nach 8 Wochen lag er nie unter 40. Jetzt unter 45 nach 4 Wochen (trifft Heimweh-Typen ohne Einsatz und ohne Landsmann). Der Test K03e stellt den Zustand zusätzlich über `integrationStart` und echte Wochenschritte her. | ✅ behoben |
+| FK3 | **Mittel, nur mit Schalter:** Die TV-Raten zählten im Saldo je Ligaspiel mit (die Rate vom 1. August kommt vor dem ersten Spiel), die Prognose lag in der 1. Liga nach dem dritten Spieltag rund 84 Mio. zu hoch, zur Lizenzprüfung etwa 11 Mio. Jetzt Buchung „TV-Raten“ außerhalb von `laufend`; `finPrognose`, Warnung vor dem Kreditrahmen und `kiLiquiditaet` setzen die offenen Raten an (`tvOffen`, `tvRatenOffen`, `S.tvRT`). Die Rate wird nach dem Monatsbericht gebucht, die Finanzansicht zeigt „in 4 Raten je …“. Die Begründung in K23 und im Entwicklungsprotokoll („im Juli fehlt das TV-Geld“) ist berichtigt. | ✅ behoben |
+| FK4 | **Niedrig:** Ausländer der Startkader ohne `p.de` lernten nie Deutsch und standen bei 20. Jetzt gelten Fremdsprachige deutscher Vereine ohne eigenen Wert und ohne laufende Integration mit `deutsch.kader` 60 und lernen weiter (im Ausland nicht). Beim Zugang gilt ohne Wert weiter 20. | ✅ behoben |
+| FK5 | **Niedrig:** Nach einer Leihe behielt der Spieler die Integration des Leihvereins. Jetzt merkt `neuzugang` beim Verleihen den alten Stand in `p.leihe.i0`, `leiheEnde` und `zurueckholen` schreiben ihn zurück (angekommen bleibt angekommen). | ✅ behoben |
+| FK6 | **Niedrig:** Vereinslose aus `kaderAuffuellen` bekamen keine Integration. Jetzt `integrationStart` wie bei `planAuffuellen`, ohne Zufall. | ✅ behoben |
+| FK7 | **Niedrig, Doku:** K03 §5.5 führte die Heimweh-Karte noch unter „Noch nicht“, K11 widersprach sich zum Traumtor, Schritt 1 des Testlaufs im Entwicklungsprotokoll nannte die neuen Fälle nicht. Alles angepasst. | ✅ behoben |

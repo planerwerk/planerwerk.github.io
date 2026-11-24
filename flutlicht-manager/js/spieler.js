@@ -153,19 +153,25 @@ function wocheVerein(p){if(p.team!==p.vt){p.vt=p.team;p.wiv=0;p.ekw=riA(RP.entde
 // Start beim Zugang (neuzugang in taktik.js, nicht bei Rückkehr aus der Leihe und nicht beim Wechsel in die Zweite): deutschsprachig start.deutsch, sonst start.fremd,
 // ± start.anpassung je 10 Punkte Anpassungsfähigkeit (ch.anp 1–20) über oder unter 10. Woche (wocheVerein): siehe RP.integration.woche. Alles ohne Zufall.
 // Wirkung im Spiel (zustand): nur mit RP.integration.wirkung.an, vorerst aus, weil sie die Stärke aller Neuzugänge senkt (erst messen).
-const deutschVon=p=>p.de!=null?p.de:(nation(p.nat)&&nation(p.nat).sprache==='de'?100:RP.integration.deutsch.start);
+// Seit Prüfung FK4: Fehlt p.de bei einem fremdsprachigen Spieler eines deutschen Vereins ohne laufende Integration (Startkader, längst angekommen), gilt deutsch.kader
+// statt deutsch.start, und er lernt von dort weiter (integrationWoche setzt dann p.de). Beim Zugang (integrationStart) gilt ohne p.de weiter deutsch.start.
+const deutschMutter=p=>!!nation(p.nat)&&nation(p.nat).sprache==='de';
+const deutschVon=p=>p.de!=null?p.de:deutschMutter(p)?100:(p.team>=0&&p.team<AV0&&p.int==null?RP.integration.deutsch.kader:RP.integration.deutsch.start);
+// Seit Prüfung FK5: Beim Verleihen merkt p.leihe den alten Stand (i0 Integration, null = angekommen), bei der Rückkehr (Ende oder Rückruf) gilt er wieder
+const leiheIntegrationMerken=p=>{if(p.leihe&&p.leihe.i0===undefined)p.leihe.i0=p.int!=null?p.int:null;};
+function leiheIntegrationZurueck(p,l){if(!l||l.i0===undefined)return;if(l.i0==null){delete p.int;delete p.intA;}else{p.int=l.i0;p.intA=p.apps||0;}}
 const integrationVon=p=>p.int!=null?p.int:100;
 const integrationFaktor=p=>{const W=RP.integration.wirkung;return W.an&&p.int!=null?W.min+(1-W.min)*p.int/100:1;};
 // Neuzugang beim Trainingsauftakt (K12a §8, mit K07h): eine Meldung mit den Neuzugängen deines Kaders und ihrer Integration (ablauf.js am Auftakttag), ohne Zufall
 function neuzugaengeAuftakt(){const l=squad(S.my).filter(p=>p.int!=null);if(!l.length)return;
   news(`Neu beim Trainingsauftakt: ${l.map(p=>`${p.n} (Integration ${Math.round(p.int)} %)`).join(', ')}. Die Mitspieler nehmen ${l.length===1?'ihn':'sie'} in ihre Mitte.`,'');}
-function integrationStart(p){const I=RP.integration,a=((p.ch&&p.ch.anp)||10)-10,de=deutschVon(p);if(p.de==null&&de<100)p.de=de;
+function integrationStart(p){const I=RP.integration,a=((p.ch&&p.ch.anp)||10)-10,de=p.de!=null?p.de:deutschMutter(p)?100:I.deutsch.start;if(p.de==null&&de<100)p.de=de;
   p.int=clamp(Math.round((de>=100?I.start.deutsch:I.start.fremd)+I.start.anpassung*a/10),5,99);p.intA=p.apps||0;}
-function integrationWoche(p){if(p.team<0)return;const offen=p.int!=null,lernt=p.de!=null&&p.de<100;if(!offen&&!lernt)return;
+function integrationWoche(p){if(p.team<0)return;const offen=p.int!=null,lernt=p.de!=null?p.de<100:p.team<AV0&&deutschVon(p)<100;if(!offen&&!lernt)return; /* FK4: auch ohne p.de bei deutschen Vereinen */
   const sq=squad(p.team).filter(q=>q!==p),lands=sq.filter(q=>landsleute(p,q)).length;
   if(offen){const W=RP.integration.woche;let w=W.basis;if((p.apps||0)>(p.intA||0))w+=W.einsatz;if(deutschVon(p)>=W.deutschAb)w+=W.deutsch;if(sq.some(q=>hatEig(q,'integrationsfigur')))w+=W.figur;if(lands)w+=W.landsleute;
     p.int=Math.min(100,p.int+Math.min(W.max,w));p.intA=p.apps||0;if(p.int>=100){delete p.int;delete p.intA;}}
-  if(lernt){const D=RP.integration.deutsch,a=(p.ch&&p.ch.anp)||10;p.de=Math.min(100,Math.round((p.de+(D.min+(D.max-D.min)*(a-1)/19)*(lands>=2?0.5:1))*10)/10);}}
+  if(lernt){const D=RP.integration.deutsch,a=(p.ch&&p.ch.anp)||10;p.de=Math.min(100,Math.round((deutschVon(p)+(D.min+(D.max-D.min)*(a-1)/19)*(lands>=2?0.5:1))*10)/10);}}
 // Talentsterne mit Schätzfehler (K03, K02): bis zu einem Stern daneben, nach zwei Jahren im Verein genau
 // Talentsterne: genau nach zwei Jahren, mit gutem Co-Trainer früher (K16 §5.2: Faktor 1,5 − 0,05 × Qualität)
 const sternFehler=p=>p.team===S.my&&(stufe().sterneGenau||p.wiv>=RP.talentSchaetzung.genauNachWochen*stufe().sterneWochen*(S.stab?1.5-0.05*stabQ(S.my,'co'):1))?0:(p.tf||0);

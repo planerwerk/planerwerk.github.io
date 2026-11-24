@@ -288,7 +288,8 @@ Schritt = ( Wachstum(Alter)        × Talentrest × Form_auf × Praxis_auf × Tr
   - **Vereinfacht:** Der Start hängt nicht von der Herkunft (gleiche Liga, andere Liga, Ausland) ab, sondern von der Sprache: deutschsprachig 70, sonst 35, ± 15 je 10 Punkte Anpassungsfähigkeit. Nicht nach der eigenen Leihe und nicht beim Wechsel in die Zweite. Startkader und Eigengewächse haben keinen Wert (gilt 100).
   - **Woche:** 3, mit einem Spiel in der Woche +2, ab Deutsch 60 +1, mit einer Integrationsfigur im Kader +1, mit einem Landsmann +1, höchstens 8. Bei 100 fällt der Wert weg. Deutsch steigt je Woche um 1 bis 3 nach Anpassungsfähigkeit, mit zwei Landsleuten halb so schnell.
   - **Wirkung im Spiel ist abgeschaltet** (`REGELN.spieler.integration.wirkung.an = false`): Sie senkt die Stärke aller Neuzugänge aller Vereine und gehört erst nach einer Messung eingeschaltet. Die Werte stehen schon auf der Spielerkarte.
-  - **Noch nicht:** Heimweh-Karte (§8), Grüppchen nach Sprache (K14), Wirkung von Deutsch auf Beziehungen.
+  - **Seit Prüfung FK (24.11.2026, popolupo, ohne Testlauf):** Fremdsprachige deutscher Vereine ohne eigenen Deutsch-Wert und ohne laufende Integration (Startkader) gelten mit Deutsch 60 (`deutsch.kader`) und lernen von dort weiter, Spieler im Ausland nicht (FK4). Nach einer Leihe gilt bei der Rückkehr oder beim Rückruf wieder die Integration von vorher, wer angekommen war, bleibt angekommen (FK5, `p.leihe.i0`). Vereinslose, die beim Saisonwechsel einen Kader auffüllen, bekommen wie alle Neuzugänge eine Integration (FK6).
+  - **Noch nicht:** Grüppchen nach Sprache (K14), Wirkung von Deutsch auf Beziehungen. Die Heimweh-Karte gibt es seit K03e (§8), seit Prüfung FK2 mit Integration unter 45 nach 4 Wochen (vorher unter 40 nach 8, das kam nie vor).
 
 ### 5.6 Merkmale lernen und verlieren
 
@@ -399,7 +400,7 @@ Ereigniskarten nach K30. Die meisten landen nur im Posteingang. Entscheidungen s
 
 Dosierung nach dem Gesamtbudget (Konsistenzprüfung B1): höchstens eine Karte aus K03 mit Entscheidung pro Woche.
 
-**Heimweh gebaut als K03e** (24.11.2026, popolupo, ohne Testlauf, vorläufig): Entscheidung mit Chance 0,25 je Woche für einen fremdsprachigen Heimweh-Typ deines Kaders, der nach mindestens 8 Wochen bei dir unter 40 % Integration liegt (`RKT.integration`). Familie nachholen (Geld, Integration +20, Stimmung +5), Sprachkurs und Pate (wenig Geld, Deutsch +10, Integration +8, Voreinstellung) oder Geduld (Stimmung −4). „Landsmann verpflichten“ ist kein Knopf, weil ein Kauf über die Karte am Transferfenster, Budget und Interesse hängt; ein Landsmann hilft ohnehin über die Wochenrechnung (§5.5). Neue Kartenwirkungen `integration` und `deutsch`.
+**Heimweh gebaut als K03e** (24.11.2026, popolupo, ohne Testlauf, vorläufig): Entscheidung mit Chance 0,25 je Woche für einen fremdsprachigen Heimweh-Typ deines Kaders, der nach mindestens 4 Wochen bei dir unter 45 % Integration liegt (`RKT.integration`; seit Prüfung FK2, vorher 8 Wochen und 40 %, das kam bei mindestens +3 je Woche nie vor; jetzt trifft es Heimweh-Typen, die kaum spielen und keinen Landsmann haben). Familie nachholen (Geld, Integration +20, Stimmung +5), Sprachkurs und Pate (wenig Geld, Deutsch +10, Integration +8, Voreinstellung) oder Geduld (Stimmung −4). „Landsmann verpflichten“ ist kein Knopf, weil ein Kauf über die Karte am Transferfenster, Budget und Interesse hängt; ein Landsmann hilft ohnehin über die Wochenrechnung (§5.5). Neue Kartenwirkungen `integration` und `deutsch`.
 
 ## 9. Wechselwirkungen
 

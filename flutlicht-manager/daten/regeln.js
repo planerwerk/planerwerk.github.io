@@ -113,7 +113,8 @@ const REGELN={
     // Integration und Deutsch (K03 §5.5, K03d, 24.11., popolupo, vorläufig): Start beim Zugang deutsch (deutschsprachig) oder fremd, ± anpassung je 10 Punkte Anpassungsfähigkeit.
     // Woche: basis, + einsatz mit einem Spiel, + deutsch ab deutschAb, + figur mit Integrationsfigur, + landsleute mit einem Landsmann, höchstens max. Deutsch: Start start,
     // je Woche min bis max nach Anpassungsfähigkeit, mit zwei Landsleuten halb so schnell. Wirkung im Spiel min + (1 − min) × Integration, nur mit wirkung.an (vorerst aus).
-    integration:{start:{deutsch:70,fremd:35,anpassung:15},woche:{basis:3,einsatz:2,deutsch:1,deutschAb:60,figur:1,landsleute:1,max:8},deutsch:{start:20,min:1,max:3},wirkung:{an:false,min:0.92}},
+    // Seit Prüfung FK4: kader für Fremdsprachige deutscher Vereine ohne eigenen Wert und ohne laufende Integration (Startkader), sie lernen von dort weiter.
+    integration:{start:{deutsch:70,fremd:35,anpassung:15},woche:{basis:3,einsatz:2,deutsch:1,deutschAb:60,figur:1,landsleute:1,max:8},deutsch:{start:20,kader:60,min:1,max:3},wirkung:{an:false,min:0.92}},
     // Persönlichkeit (K03 §3.3): 8 verdeckte Werte 1–20, ausgewürfelt je Karriere
     persoenlichkeit:{mitte:10,streuung:3.5,min:1,max:20,werte:['pro','ehr','loy','tem','dru','anp','fue','rob']},
     // Eigenschaften (K03 §3.5) entstehen aus der Persönlichkeit. Angezeigt nur, wenn ihre Wirkung im Spiel gebaut ist (wirksam).
@@ -427,7 +428,9 @@ const REGELN={
     // nachlass (Prüfung FA1, 23.11., GESCHÄTZT): Ein Nachlass aus einer Karte (Wirkung nachlass) gilt so viele Tage, etwa ein Transferfenster
     nachlass:{tage:60},
     entwicklung:{jungBis:21,altAb:30,tage:21,punkte:2}, // Durchbruch und Altersverlust (K03 §8, K03c, 22.11., GESCHÄTZT): Stärke seit dem Monatseintrag (p.mvl, K34) mindestens tage alt um punkte gestiegen (bis jungBis Jahre) oder gefallen (ab altAb)
-    integration:{heimwehUnter:40,heimwehWochen:8}, // Heimweh-Karte (K03 §8, K03e, 24.11., popolupo): Heimweh-Typ, fremdsprachig, Integration unter heimwehUnter nach heimwehWochen Wochen bei dir
+    // Seit Prüfung FK2: 45 nach 4 Wochen. Ein Heimweh-Typ (anp 1–4) startet fremdsprachig bei 22–26 und gewinnt je Woche mindestens 3; nach 8 Wochen lag er nie unter 40.
+    // So trifft es Heimweh-Typen, die kaum spielen und keinen Landsmann haben (nach 4 Wochen 37–41, mit Einsatz jede Woche 47 und mehr).
+    integration:{heimwehUnter:45,heimwehWochen:4}, // Heimweh-Karte (K03 §8, K03e, 24.11., popolupo): Heimweh-Typ, fremdsprachig, Integration unter heimwehUnter nach heimwehWochen Wochen bei dir
     spiel:{nachTage:7,fruehBis:60,spaetAb:88,spaetVerlAb:118,coupAb:2,positionUnter:0.8,positionSpiele:3,positionTage:28,merken:4}, // Karten nach deinem Spiel (K05 §8, K05c, K05d, K06c: Taktik-Coup als Außenseiter mit mindestens coupAb Niveau Abstand, K06d: positionSpiele Einsätze in Folge mit Eignung unter positionUnter, seit Prüfung EK: spaetVerlAb in der Verlängerung, positionTage höchstens seit dem letzten gezählten Einsatz, merken: so viele Spiele der letzten nachTage Tage, 23.11., GESCHÄTZT): bis nachTage danach; früh ausgewechselt vor Minute fruehBis; spätes Siegtor ab Minute spaetAb (die Nachspielzeit steht nicht eigens im Spielbericht)
     jubilaeum:{ab:25,alle:25}, // Jubiläum (K27 §8, K25 §8, K27d, 23.11.): ab ab Jahren alle alle Jahre, im Kalenderjahr des Jubiläums (Gründungsjahr gegr in daten/vereine.js)
     // Standard-Spezialisten (K06 §8, K06e, 23.11., popolupo, GESCHÄTZT, nach einem Testlauf eichen): in der laufenden Halbserie (eigene Ligaspiele bis zur Hälfte der Spieltage, danach neu)

@@ -154,12 +154,16 @@ const tagMit=(ev,mmtt)=>{for(let d=0;d<400;d++)if(ev('mmtt')(d)===mmtt)return d;
     `Bayern ${fcb&&fcb.mitglieder} Mitglieder nach der Umrechnung, Beiträge je Spiel ${b}, Schnitt 1. Liga ${Math.round(schnitt)}, dein Verein ${m0} → ${m1}, einmal ${einmal}`);}
 
 // K23h. TV-Gelder in vier Raten (K23 §4), nur mit Schalter RF.tv.raten.an: aus wie bisher je Spiel und kein Geld an Ratentagen; an je Spiel nichts, am Ratentag ein Viertel
-//       des Saisonbetrags an jeden aktiven Verein (deiner mit Buchung „TV-Gelder“), an anderen Tagen nichts. Übers Jahr gleich viel wie je Spiel.
+//       des Saisonbetrags an jeden aktiven Verein (deiner seit Prüfung FK3 mit Buchung „TV-Raten“), an anderen Tagen nichts. Übers Jahr gleich viel wie je Spiel.
+//       FK3: „TV-Raten“ zählt nicht im Saldo je Ligaspiel; die Prognosen setzen die offenen Raten an, die heutige nur, solange sie nicht gezahlt ist; ausgeschaltet 0.
 {const {F,S,ev,t}=welt(),R0=ev('RF').tv.raten,d=tagMit(ev,R0.tage[0]),k=S.teams.find(x=>x.id!==S.my&&ev('aktiv')(x)),je=ev('tvJeSpiel'),bt=ev('tvSaisonBetrag');
   const aus=!R0.an&&je(t)===ev('tvGeld')(t);let c0=k.cash;F.tvRatenTag(d);const ausTag=k.cash===c0;
-  R0.an=true;const anSpiel=je(t)===0&&je(k)===0;c0=k.cash;const f0=S.fin['TV-Gelder']||0;F.tvRatenTag(d);const rate=k.cash===c0+Math.round(bt(k)/R0.tage.length)&&(S.fin['TV-Gelder']||0)===f0+Math.round(bt(t)/R0.tage.length);
+  R0.an=true;const anSpiel=je(t)===0&&je(k)===0;c0=k.cash;const f0=S.fin['TV-Raten']||0;F.tvRatenTag(d);const rate=k.cash===c0+Math.round(bt(k)/R0.tage.length)&&(S.fin['TV-Raten']||0)===f0+Math.round(bt(t)/R0.tage.length);
   c0=k.cash;F.tvRatenTag(d+1);const sonst=k.cash===c0;R0.an=false;
   const summe=Math.abs(R0.tage.length*Math.round(bt(t)/R0.tage.length)-ev('tvGeld')(t)*((S.fx[t.lg]||[]).length))<=R0.tage.length+(S.fx[t.lg]||[]).length;
-  pruef(aus&&ausTag&&anSpiel&&rate&&sonst&&summe,'TV-Gelder in vier Raten: nur mit Schalter, ein Viertel am Ratentag, sonst nichts, übers Jahr gleich viel',`aus ${aus}/${ausTag}, an ${anSpiel}/${rate}/${sonst}, Summe ${summe}`);}
+  const lauf=!ev('RFP').laufend.includes('TV-Raten');R0.an=true;S.tag=d;delete S.tvRT;const q=Math.round(bt(t)/R0.tage.length),offen=F.tvRatenOffen()===R0.tage.length&&ev('tvOffen')(t)===R0.tage.length*q;
+  F.tvRatenTag(d);const bezahlt=F.tvRatenOffen()===R0.tage.length-1;R0.an=false;const ausOffen=ev('tvOffen')(t)===0;
+  pruef(aus&&ausTag&&anSpiel&&rate&&sonst&&summe&&lauf&&offen&&bezahlt&&ausOffen,'TV-Gelder in vier Raten: nur mit Schalter, ein Viertel am Ratentag, sonst nichts, übers Jahr gleich viel, offene Raten in der Prognose',
+    `aus ${aus}/${ausTag}, an ${anSpiel}/${rate}/${sonst}, Summe ${summe}, nicht laufend ${lauf}, offen ${offen}, nach der Zahlung ${bezahlt}, aus ${ausOffen}`);}
 
 console.log(probleme.length?`\n${probleme.length} Problem(e).`:'\nAlles in Ordnung.');process.exitCode=probleme.length?1:0;

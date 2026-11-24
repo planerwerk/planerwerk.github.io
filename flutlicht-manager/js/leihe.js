@@ -28,7 +28,7 @@ function verleihen(p,o){if(!p||p.team!==S.my||p.wech||istLeihe(p))return'Er kann
   p.team=t.id;p.list=0;neuzugang(p,t.id);news(`Leihe: ${p.n} spielt bis zum Saisonende bei ${t.name} (${t.name} zahlt ${Math.round(o.anteil*100)} % seines Gehalts${o.option?`, Kaufoption ${fmt(o.option)}`:''}).`,'tr');return null;}
 // Zurückholen: im Winterfenster, wenn ein Rückruf vereinbart ist
 function zurueckholen(p){if(!istLeihe(p)||p.leihe.von!==S.my)return'Er ist nicht von dir verliehen.';if(!p.leihe.rueckruf)return'Ein Rückruf ist nicht vereinbart.';if(!fensterOffen())return'Zurückholen geht nur im Transferfenster.';
-  const von=p.team;kabineAbgang(p,von);delete p.leihe;p.team=S.my;kabineInit(p);rollenBerechnen(S.my);news(`${p.n} kommt vorzeitig von ${tn(von)} zurück.`);return null;}
+  const von=p.team,l=p.leihe;kabineAbgang(p,von);delete p.leihe;leiheIntegrationZurueck(p,l);p.team=S.my;kabineInit(p);rollenBerechnen(S.my);news(`${p.n} kommt vorzeitig von ${tn(von)} zurück.`);return null;}
 
 // ---------- Leihe holen ----------
 // Ein Verein gibt nur Spieler ab, die bei ihm nicht Stamm- oder Schlüsselspieler sind. Der Spieler will Einsatzzeit: bei dir mindestens Rotation.
@@ -54,7 +54,7 @@ function leiheEnde(){S.pl.forEach(p=>{if(!p.leihe)return;const l=p.leihe,bei=S.t
     if(l.von===S.my&&bei&&bei.id!==S.my)bezDuAendern(bei.id,l.gemeldet?RBZ.anlass.leiheSchlecht:RBZ.anlass.leiheGut,`Leihe von ${p.n}: Absprache ${l.gemeldet?'nicht ':''}gehalten`); // K17, U12c
     if(l.option&&bei&&aktiv(bei)&&bei.id!==l.von&&bei.cash>=l.option&&l.option<=vwKauf(p,bei.id)){if(l.von===S.my){money('Transfers',l.option);vertragEnde(p);}else if(heim)heim.cash+=l.option;bei.cash-=l.option;
       delete p.leihe;p.ct=riA(RM.neuerVertrag)+1;p.seit=absTag(S.tag);p.abl=l.option;statTransfer(p,l.option,l.von,bei.id);if(l.von===S.my)news(`Kaufoption gezogen: ${p.n} bleibt für ${fmt(l.option)} bei ${bei.name}.`,'good');return;}
-    const von=p.team;kabineAbgang(p,von);delete p.leihe;p.team=l.von;if(heim)neuzugang(p,l.von,true); /* true: Rückkehr aus der Leihe, keine Heimkehr-Freude der Fans (K19e, Prüfung EP2) */if(l.von===S.my){kabineInit(p);news(`Leihe beendet: ${p.n} ist von ${tn(von)} zurück.`);}});}
+    const von=p.team;kabineAbgang(p,von);delete p.leihe;leiheIntegrationZurueck(p,l);p.team=l.von;if(heim)neuzugang(p,l.von,true); /* true: Rückkehr aus der Leihe, keine Heimkehr-Freude der Fans (K19e, Prüfung EP2) */if(l.von===S.my){kabineInit(p);news(`Leihe beendet: ${p.n} ist von ${tn(von)} zurück.`);}});}
 
 // ---------- Profis in die Zweite (K08 §12 Nr. 29) ----------
 // Bis 23 Jahre: Er behält Vertrag und Gehalt, spielt in der Zweiten und sammelt Spielpraxis. Zurück mit „Aufrücken“ (Vertrag bleibt) oder automatisch mit 24.

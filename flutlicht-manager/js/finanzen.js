@@ -12,8 +12,9 @@ function finanzenStart(){S.finSp0={s:S.season,n:meineSpieltage()};}
 const restSpiele=(bis)=>meineLigaspiele().filter(e=>(e.tag>S.tag||(e.tag===S.tag&&S.gespielt!==e.tag))&&(bis==null||e.tag<=bis)).length;
 // Prognose des Kontostands: bis Saisonende, mit naechste zusätzlich eine ganze nächste Saison mit demselben Schnitt
 // Seit K23e abzüglich der festen Zahlungen (Tilgung, Raten aus Ablösen) in den verbleibenden Monaten
+// Seit Prüfung FK3 mit TV-Raten (Schalter): der Schnitt je Spiel ist ohne TV, dazu die offenen Raten dieser Saison und für die nächste der ganze Saisonbetrag
 function finPrognose(naechste){const t=myT(),s=saldoJeSpiel(),mon=Math.max(0,Math.ceil(((S.plan?S.plan.ende:S.tag)-S.tag)/RFP.monatTage));
-  let c=t.cash+s*restSpiele()-festeZahlungen(mon);if(naechste)c+=s*((S.fx&&S.fx[t.lg]||[]).length)-(festeZahlungen(mon+12)-festeZahlungen(mon));return Math.round(c);}
+  let c=t.cash+s*restSpiele()+tvOffen(t)-festeZahlungen(mon);if(naechste)c+=s*((S.fx&&S.fx[t.lg]||[]).length)+(tvRatenAn()?tvSaisonBetrag(t):0)-(festeZahlungen(mon+12)-festeZahlungen(mon));return Math.round(c);}
 const lzpS=()=>S.lzp||(S.lzp={});
 const transferSperre=()=>!!S.lzp&&S.lzp.sperre===S.season;
 // Sperre für die nächste Saison steht schon fest (ab dem Nachweis am 31. Mai): keine Käufe mehr, die erst zum Saisonwechsel vollzogen würden
@@ -30,7 +31,7 @@ function finanzenMonat(d,ohneZahlungen){const t=myT();let M=S.finM||{s:S.season,
   if(M&&M.s!==S.season){M={s:S.season,mo:M.mo,fin:{},cash:M.cash,k:0};S.finV=[];} // neue Saison: S.fin und die Kreditflüsse beginnen bei null
   insolvenzPruefen();const fin=S.fin||{};
   if(M){let ein=0,aus=0;for(const k of new Set([...Object.keys(fin),...Object.keys(M.fin)])){const v=(fin[k]||0)-(M.fin[k]||0);if(v>0)ein+=v;else aus+=v;}
-    const k=kreditNetto()-(M.k||0),prog=finPrognose(false),R0=-kreditRahmen(t),bald=t.cash+saldoJeSpiel()*restSpiele(S.tag+RFP.warnMonate*RFP.monatTage)-festeZahlungen(RFP.warnMonate);
+    const k=kreditNetto()-(M.k||0),prog=finPrognose(false),R0=-kreditRahmen(t),bald=t.cash+saldoJeSpiel()*restSpiele(S.tag+RFP.warnMonate*RFP.monatTage)+tvOffen(t,S.tag+RFP.warnMonate*RFP.monatTage)-festeZahlungen(RFP.warnMonate);
     (S.finV=S.finV||[]).push({mo:M.mo,ein,aus,saldo:ein+aus,k,cash:t.cash,prog});
     const warn=bald<R0?` Achtung: Nach der Prognose fällt der Kontostand in den nächsten drei Monaten unter den Kreditrahmen (${fmt(R0)}). Dann droht die Insolvenz.`:'';
     news(`Monatsbericht ${monatName(M.mo)}: Einnahmen ${fmt(ein)}, Ausgaben ${fmt(-aus)}, Saldo ${fmt(ein+aus)}.${k?` Kredit ${k>0?'aufgenommen':'getilgt'}: ${fmt(Math.abs(k))}.`:''} Kontostand ${fmt(t.cash)}, Prognose zum Saisonende ${fmt(prog)}.${warn}`,warn||ein+aus<0?'bad':'');}
@@ -61,7 +62,7 @@ function finanzenSaisonende(){const n=finSpiele();if(n>=RFP.minSpiele)S.finSchni
 // Karte auf der Finanzseite
 function finanzenKarte(){const t=myT(),L=S.lzp||{},v=S.finV||[],p=finPrognose(false);
   const lz=transferSperre()?'<p class="neg"><b>Transfersperre in dieser Saison</b> (Lizenzauflagen nicht erfüllt).</p>':L.s===S.season&&L.fehlt&&!L.geprueft?`<p class="neg"><b>Lizenzauflagen:</b> Es fehlen ${fmt(L.fehlt)} bis zum Ende der nächsten Saison. Nachweis bis 31. Mai.</p>`:L.sperre===S.season+1?`<p class="neg">Transfersperre in der nächsten Saison.</p>`:'';
-  return`<div class="card"><h3>Monate und Prognose</h3>${lz}<p>Prognose zum Saisonende: <b class="${p<0?'neg':''}">${fmt(p)}</b> <span class="dim">(laufender Saldo je Ligaspiel ${fmt(saldoJeSpiel())}, noch ${restSpiele()} Ligaspiele)</span></p>
+  return`<div class="card"><h3>Monate und Prognose</h3>${lz}<p>Prognose zum Saisonende: <b class="${p<0?'neg':''}">${fmt(p)}</b> <span class="dim">(laufender Saldo je Ligaspiel ${fmt(saldoJeSpiel())}${tvRatenAn()?`, ohne TV-Raten, offen noch ${fmt(tvOffen(t))}`:''}, noch ${restSpiele()} Ligaspiele)</span></p>
     <p>Gehaltsrahmen des Vorstands: <b>${fmt(gehaltsRahmen(t))}</b>, ausgeschöpft zu <b class="${rahmenAnteil(t)>1?'neg':''}">${Math.round(rahmenAnteil(t)*100)} %</b> · Transferbudget <b>${fmt(transferBudget(t))}</b> <span class="dim">(über ${Math.round(RFP.budget.sperreAb*100)} % gibt der Vorstand keine neuen Gehälter frei, über 100 % sinkt sein Vertrauen)</span></p>
     ${v.length?`<div class="tw"><table><thead><tr><th>Monat</th><th class="num">Einnahmen</th><th class="num">Ausgaben</th><th class="num">Saldo</th><th class="num" title="Kredit aufgenommen (+) oder getilgt (−)">Kredit</th><th class="num">Konto</th></tr></thead><tbody>${v.map(r=>`<tr><td>${esc(monatName(r.mo))}</td><td class="num posv">${fmt(r.ein)}</td><td class="num neg">${fmt(-r.aus)}</td><td class="num ${r.saldo<0?'neg':'posv'}">${fmt(r.saldo)}</td><td class="num">${r.k?fmt(r.k):'–'}</td><td class="num">${fmt(r.cash)}</td></tr>`).join('')}</tbody></table></div>`:'<p class="dim">Der erste Monatsbericht kommt am nächsten Monatsersten.</p>'}
     ${(S.kredite||[]).length?`<p>Kredite: ${S.kredite.map(k=>`${fmt(k.rest)} (Rate ${fmt(k.rate)} im Monat)`).join(', ')}</p>`:''}${(S.raten||[]).length?`<p>Ablösen in Raten: ${S.raten.map(r=>`${esc(r.n||'')} noch ${fmt(r.rest)} (Rate ${fmt(r.rate)})`).join(', ')}</p>`:''}${(S.boni||[]).filter(x=>x&&x.my===S.my).length?`<p>Mögliche Boni aus Ablösen (K19i): ${S.boni.filter(x=>x&&x.my===S.my).map(x=>{const p=PIX.get(x.pid);return`${esc(p?p.n:'?')} an ${esc(tn(x.tid))}: ${esc(bonusText(x))}`;}).join(', ')}</p>`:''}${(S.boniEin||[]).filter(x=>x&&x.my===S.my).length?`<p>Mögliche Boni aus Verkäufen (K19k): ${S.boniEin.filter(x=>x&&x.my===S.my).map(x=>{const p=PIX.get(x.pid);return`${esc(p?p.n:'?')} von ${esc(tn(x.tid))}: ${esc(fmt(x.b)+' '+bonusKIBedingung(x,x.tid))}`;}).join(', ')}</p>`:''}
@@ -107,7 +108,9 @@ function kiSaldoJeSpiel(t){const n=(S.fx[t.lg]||[]).length||34;
   return tvGeld(t)+sponsorBasis(t)+sonstigeEinnahmen(t)+kiHeimEinnahmen(t,null,false,true)/2-(squad(t.id).reduce((s,p)=>s+p.sal,0)+stabGehaelter(t.id))/n
     -(t.cap*RF.betrieb.jePlatz+(t.logen||0)*RF.betrieb.jeLoge)-verwaltungKosten(t)-RF.jugendKosten[RS.nachwuchs.computerStufe]-(t.bausumme||0)*RB.instandhaltung/n;}
 // Liquidität am Ende der nächsten Saison: Konto + Saldo × (restliche Ligaspiele dieser Saison + eine ganze Saison) + Kreditrahmen (wie liquiditaet bei dir). tab: Tabellen je Liga
-function kiLiquiditaet(t,tab){const n=(S.fx[t.lg]||[]).length||34,r=(tab&&tab[t.lg]||table(t.lg)).find(x=>x.id===t.id),rest=Math.max(0,n-(r?r.sp:0));return t.cash+kiSaldoJeSpiel(t)*(rest+n)+kreditRahmen(t);}
+// Seit Prüfung FK3 mit TV-Raten (Schalter): für die restlichen Spiele dieser Saison die offenen Raten statt TV je Spiel (das Konto hat die gezahlten schon)
+function kiLiquiditaet(t,tab){const n=(S.fx[t.lg]||[]).length||34,r=(tab&&tab[t.lg]||table(t.lg)).find(x=>x.id===t.id),rest=Math.max(0,n-(r?r.sp:0));
+  return t.cash+kiSaldoJeSpiel(t)*(rest+n)+(tvRatenAn()?tvOffen(t)-tvGeld(t)*rest:0)+kreditRahmen(t);}
 // 1. März (nachweis false): Auflagen bei negativer Liquidität (t.lzA = Saison). 31. Mai (nachweis true): mit Auflagen und noch negativ: Transfersperre für die nächste Saison (t.lzSperre).
 // Ohne Gespräch und ohne Zufall. Gilt nicht für deinen Verein, der hat seine eigene Prüfung (lizenzPruefung).
 function kiLizenzPruefen(nachweis){const tab={},me=S.teams[S.my];LIGEN.forEach(lg=>tab[lg]=table(lg));

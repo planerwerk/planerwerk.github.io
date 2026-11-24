@@ -77,12 +77,14 @@ const kiSternPreis=p=>Math.max(RP.marktwert.minimum,rundeAb(Math.max(forderungBa
 // Auf der Liste steht, wer Grund A hat und wessen Gruppe danach noch voll ist (Regel B). Alle anderen kommen von der Liste.
 // Nicht angefasst werden vereinbarte Wechsel, geliehene Spieler und Profis, die ein anderer Verein in seine Zweite abgestellt hat.
 function kiListe(P){const klein=P.alle.length<=RM.verkaeufer.kaderMin;
-  P.alle.forEach(p=>{if(p.wech||p.leihe||p.zwP)return;if(!klein&&P.abgabe.has(p.id)){p.list=1;p.ask=kiPreis(p);}else if(p.list){p.list=0;p.ask=0;}});}
+  P.alle.forEach(p=>{if(p.wech||p.leihe||p.zwP)return;if(p.nv)delete p.nv;if(!klein&&P.abgabe.has(p.id)){p.list=1;p.ask=kiPreis(p);}else if(p.list){p.list=0;p.ask=0;}});}
 // Notverkauf (K31 §8, K31d, nur mit RCV.notverkauf.an): nach kiListe jede Woche, ohne Zufall. Über dem Gehaltsrahmen kommt der Spieler mit dem höchsten Gehalt (keine
 // Schlüsselspieler, keine vereinbarten Wechsel, Leihen oder Zweite) unter Wert auf die Liste. Meldung einmal je Verein und Saison (t.nvS). Gibt den Spieler zurück.
-function kiNotverkauf(t,P){const N=RCV.notverkauf;if(!N||!N.an||!t||t.id===S.my||P.alle.length<=RM.verkaeufer.kaderMin||gehaltsSumme(t)<=gehaltsRahmen(t)*N.ueberRahmen)return null;
+// Seit Prüfung FK1: Merker p.nv (Saison, kiListe löscht ihn jede Woche, der Notverkauf setzt ihn neu), damit kiKandidat ihn auch ohne Abgabegrund zum Notpreis p.ask
+// kauft. Wie kiListe auch für deinen Verein, wenn dein Stab die Transfers führt (kiMarkt nimmt nur solche Vereine), so wirkt der Schalter in beiden Welten von 5a gleich.
+function kiNotverkauf(t,P){const N=RCV.notverkauf;if(!N||!N.an||!t||P.alle.length<=RM.verkaeufer.kaderMin||gehaltsSumme(t)<=gehaltsRahmen(t)*N.ueberRahmen)return null;
   const p=P.alle.filter(x=>!x.wech&&!x.leihe&&!x.zwP&&kaderRolle(x)!=='schluessel').sort((a,b)=>b.sal-a.sal||a.id-b.id)[0];if(!p)return null;
-  p.list=1;p.ask=Math.max(RP.marktwert.minimum,rundeAb(kiPreis(p)*N.preis));
+  p.list=1;p.ask=Math.max(RP.marktwert.minimum,rundeAb(kiPreis(p)*N.preis));p.nv=S.season;
   if(t.nvS!==S.season){t.nvS=S.season;news(`Notverkauf: ${t.name} muss Gehalt sparen. ${p.n} steht für ${fmt(p.ask)} auf der Transferliste.`,'tr');}return p;}
 
 // ---------- Kauf (K31 §5.3) ----------
@@ -101,8 +103,8 @@ function kiKandidat(t,n,rest,senk,kader,plan){const K=RCV.kauf,min=n.min-senk,al
     let preis=0;
     if(von){if(von.rep-t.rep>K.ansehenMinus&&(p.ww||0)<3)continue; // er geht nicht weit nach unten, außer er will weg
       if(bez(t.id,von.id)<RBZ.wirkung.gespraechUnter)continue; // mit diesem Verein redet der Käufer nicht (K17 §7, U12c)
-      if(kader.get(von.id).length<=RM.verkaeufer.kaderMin||!plan(von).abgabe.has(p.id))continue;
-      preis=kiPreis(p);if(preis>rest||preis>kiZahlt(p,t,n))continue;}
+      if(kader.get(von.id).length<=RM.verkaeufer.kaderMin||!(plan(von).abgabe.has(p.id)||p.nv===S.season))continue; /* Notverkauf ohne Abgabegrund (Prüfung FK1) */
+      preis=p.nv===S.season?p.ask:kiPreis(p);if(preis>rest||preis>kiZahlt(p,t,n))continue;}
     const v=(n.grund==='talent'?p.pot:p.str+(p.age<=K.jungBis?(p.pot-p.str)*talentGewicht:0)-Math.max(0,p.age-K.altAb)*altMalus)+(R()-0.5)*2*RCV.schaetzFehler;
     if(v>bv){bv=v;best={p,preis,von:von?von.id:null};}}
   return best;}
