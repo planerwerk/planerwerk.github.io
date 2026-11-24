@@ -71,6 +71,21 @@ const scout=(S,F,q,gebiet,ev=F.__ev)=>{let x;for(let i=0;i<50;i++){x=F.stabNeu('
   pruef(nein===null&&!!b&&b.id!==p.team&&b.id!==S.my&&Math.abs(f1/f0-(1+K.preis))<0.001&&Math.abs(f2-f0)<1&&woanders,'Konkurrenz am Tisch: anderer Verein mit Bedarf, Forderung + 5 % bis zur Frist, nur beim selben Verein',
     `Chance 0 ${nein}, Verein ${b&&b.name}, Forderung ${Math.round(f0)} → ${Math.round(f1)} → ${Math.round(f2)}`);}
 
+// K18g. Scoutbericht (K18 §5 Nr. 3): kiStil ohne Reaktion ist kiStilWahl, mit Reaktion der Stil gegen deinen Lieblingsstil (stilLiebling, nur wenn du den Stil wählst).
+//       Der Bericht nennt Verein, wahrscheinlichen Stil und einen verletzten Stammspieler; die Vorschau zeigt ihn erst nach der Beobachtung.
+{const {F,S,ev}=welt(),t=ev('myT()'),l=ev('meineLigaspiele')(),K=ev('RTA').ki,SN=ev('STIL_NAME'),side=ev('side'),ns=ev('naechstesSpiel');
+  let i=3;while(i<l.length-1&&(ns(l[i].tag-1)||{}).tag!==l[i].tag)i++; /* ein Ligaspiel, vor dem kein anderes Spiel liegt */S.tag=l[i].tag-2;S.gespielt=-1;
+  const f=ev('paarung')(l[i]),home=f[0]===S.my,o=home?f[1]:f[0],mich=()=>Object.assign(side(S.my,home,false),{stil:'ausgewogen'});t.stil='ausgewogen';
+  const r0=K.reaktion;K.reaktion=0;const op=side(o,!home,false),gleich=F.kiStil(op,mich())===F.kiStilWahl(op,mich());
+  S.stilVerlauf=['ballbesitz','ballbesitz','pressing'];const L=F.stilLiebling(),lieb=!!L&&L.lieb==='ballbesitz'&&ev('RTA').kreislauf[L.gegen]==='ballbesitz';
+  K.reaktion=1;const op2=side(o,!home,false),re=ev('autoB')('stil')?true:F.kiStil(op2,mich())===L.gegen&&op2.konter===1;K.reaktion=r0;
+  const v=ev('squad')(o).slice().sort((a,b)=>b.str-a.str)[0],inj0=v.inj;v.inj=10;const b=F.scoutBericht(o,home),stil=F.kiStilWahl(side(o,!home,false),mich());v.inj=inj0;
+  const bericht=b.includes('Scoutbericht')&&b.includes(S.teams[o].name)&&b.includes(SN[stil]||stil)&&b.includes(v.n+' (verletzt)');
+  S.stab=S.stab.filter(x=>!(x.team===S.my&&(x.r==='scout'||x.r==='video')));S.stab.push(ev('stabNeu')('scout',10,S.my,t.lg));ev('stabGeaendert')();delete t.gb;
+  const ohne=!F.gegnerBeobachtenText().includes('Scoutbericht');F.gegnerBeobachten();const mit=!!t.gb&&F.gegnerBeobachtenText().includes('Scoutbericht');
+  pruef(gleich&&lieb&&re&&bericht&&ohne&&mit,'Scoutbericht: wahrscheinlicher Stil wie die Wahl im Spiel, Reaktion auf deinen Lieblingsstil, Ausfälle, erst nach der Beobachtung',
+    `ohne Reaktion gleich ${gleich}, Lieblingsstil ${lieb}, Reaktion ${re}, Bericht ${bericht} („${b}“), Vorschau ohne/mit ${ohne}/${mit}`);}
+
 // K18e. Scout liegt daneben (K18 §8): Einschätzung beim Kauf 6 über der wahren Stärke gibt eine Meldung, 2 darüber keine; der Merker ist danach weg;
 //       kaufSichtMerken merkt sich bei einem fremden Spieler Mitte und Stärke, bei einem eigenen (genau bekannt) nichts
 {const {S,F,ev}=welt(),sq=ev('squad')(S.my),[p,q]=sq,n=()=>S.news.filter(x=>x.t.startsWith('Scout lag daneben')).length,f=S.pl.find(x=>x.team>=0&&x.team!==S.my);

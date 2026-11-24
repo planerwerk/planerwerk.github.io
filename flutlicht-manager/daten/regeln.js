@@ -971,7 +971,9 @@ const REGELN={
     fehler:{je:0.15,lieblingstyp:[1,3],lieblingsChance:0.3},   // Grundfehler eines Scouts: Streuung 0,15 × (21 − Qualität)
     verblassen:2,                                             // je Monat ohne Beobachtung, nicht unter die Grundkenntnis
     kosten:{inland:3000,ausland:15000},                       // je Beobachtungswoche (Spielwerte, K23)
-    gegner:{kosten:3000}, // Gegnerbeobachtung vor dem nächsten Pflichtspiel (K18c, 22.11., GESCHÄTZT): Reisekosten einmal
+    // Seit K18g (24.11., popolupo, vorläufig) mit Scoutbericht in der Vorschau: wahrscheinlicher Stil, Reaktion auf deinen Lieblingsstil, die drei Stärksten der Elf
+    // und wer von den bericht.top Stärksten des Kaders fehlt (verletzt oder gesperrt). Nur Anzeige.
+    gegner:{kosten:3000,bericht:{top:14}}, // Gegnerbeobachtung vor dem nächsten Pflichtspiel (K18c, 22.11., GESCHÄTZT): Reisekosten einmal
     daneben:{ab:5}, // Scout liegt daneben (K18 §8, K18e, 22.11.): gekaufter Spieler mindestens ab unter der Mitte der Einschätzung beim Kauf
     konkurrenz:{chance:0.25,preis:0.05,tage:60}, // Konkurrenz am Tisch (K18 §8, K18d, 22.11., GESCHÄTZT): nach einem Scoutbericht mit chance ein Verein mit Bedarf, Forderung an dich + preis für tage Tage
     suche:{kandidaten:[3,8],jeWoche:4,anteil:0.5},             // Suchauftrag: je Woche vier neue Namen, Beobachtung mit halber Wirkung
