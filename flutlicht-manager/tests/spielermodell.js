@@ -68,4 +68,18 @@ pruef(Math.abs(mS-mW)<=1.5,'Keine Formspirale: die vier stärksten Kader der 1. 
 // Seit U9c kann ein Schub das Talent während der Saison heben (K08 §5.3). Verglichen wird deshalb mit dem höheren Wert aus Saisonbeginn und Saisonende.
 pruef(talentVerletzt===0,'Niemand überschreitet sein Talent (ein Schub darf es heben)',talentVerletzt);
 if(staerkenJeSpieler.length>=2){const sp=Math.max(...staerkenJeSpieler)-Math.min(...staerkenJeSpieler);pruef(sp<=0.4,'Merkmale stabil: Stärken je Spieler schwanken über die Saisons höchstens um 0,4',staerkenJeSpieler.map(f2).join(' → '));}
+// K03d. Integration und Deutsch (K03 §5.5): Der Startkader hat keinen Wert (gilt 100). Neuzugang: deutschsprachig 70, sonst 35, ± 15 je 10 Punkte Anpassungsfähigkeit,
+//       nicht nach der eigenen Leihe. Je Woche 3 bis 8 mehr, mit Einsatz mindestens basis + einsatz; bei 100 fällt der Wert weg. Deutsch steigt bei Fremdsprachigen.
+//       Wirkung im Spiel nur mit Schalter: aus ist der Zustand gleich, an × (0,92 + 0,08 × Integration).
+{const {W,F}=neueWelt();F.buildWorld(1);const S=W.S,ev=W.ev;S.my=0;S.phase='play';const I=ev('RP').integration,dv=ev('deutschVon');
+  const leer=S.pl.filter(p=>p.team>=0).every(p=>p.int==null),dt=S.pl.find(p=>p.team>=0&&p.team<1000&&dv(p)>=100),fr=S.pl.find(p=>p.team>=0&&p.team<1000&&dv(p)<100);
+  dt.ch.anp=10;fr.ch.anp=20;F.integrationStart(dt);F.integrationStart(fr);const start=dt.int===I.start.deutsch&&fr.int===I.start.fremd+I.start.anpassung&&fr.de===I.deutsch.start&&dt.de==null;
+  const i0=fr.int,de0=fr.de;fr.apps=(fr.intA||0)+1;F.integrationWoche(fr);const plus=fr.int-i0,woche=plus>=I.woche.basis+I.woche.einsatz&&plus<=I.woche.max&&fr.de>de0;
+  fr.int=98;F.integrationWoche(fr);const voll=fr.int==null;
+  delete dt.int;F.neuzugang(dt,dt.team,true);const leihe=dt.int==null;
+  fr.int=35;const z=ev('zustand'),Z=ev('RP').zustand,zAus=z(fr),zOhne=(()=>{const x=fr.int;delete fr.int;const r=z(fr);fr.int=x;return r;})();I.wirkung.an=true;const zAn=z(fr);I.wirkung.an=false;
+  const wirkung=Math.abs(zAus-zOhne)<1e-12&&Math.abs(zAn-Math.min(Z.max,Math.max(Z.min,zOhne/1*(I.wirkung.min+(1-I.wirkung.min)*0.35))))<0.02;
+  pruef(leer&&start&&woche&&voll&&leihe&&wirkung,'Integration und Deutsch: Start nach Sprache und Anpassungsfähigkeit, Anstieg je Woche, Wirkung nur mit Schalter',
+    `Startkader leer ${leer}, Start ${dt.int}/${I.start.deutsch} und ${I.start.fremd+I.start.anpassung}, Woche +${plus} (Deutsch ${de0} → ${fr.de}), voll ${voll}, Leihe ${leihe}, Wirkung ${wirkung} (${zAus.toFixed(3)} / ${zAn.toFixed(3)})`);}
+
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

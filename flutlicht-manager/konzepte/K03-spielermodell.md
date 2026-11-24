@@ -284,6 +284,11 @@ Schritt = ( Wachstum(Alter)        × Talentrest × Form_auf × Praxis_auf × Tr
 - **Anstieg pro Woche:** 3–8 Punkte, mehr mit Einsatzzeit, Deutschkenntnissen, einer Integrationsfigur im Kader und Landsleuten.
 - **Deutsch:** steigt pro Woche um 1–3 Punkte nach Anpassungsfähigkeit. Mit mehreren Landsleuten im Kader nur halb so schnell (Anstoss).
 - **Wirkung im Spiel:** `0,92 + 0,08 × Integration`, also bis −8 %.
+- **Gebaut als K03d (24.11.2026, popolupo, ohne Testlauf, vorläufig):** Integration (`p.int`) und Deutsch (`p.de`) für alle Neuzugänge aller Vereine, ohne Zufall (`integrationStart` in `neuzugang`, `integrationWoche` im Wochenschritt der Spieler, Werte in `REGELN.spieler.integration`).
+  - **Vereinfacht:** Der Start hängt nicht von der Herkunft (gleiche Liga, andere Liga, Ausland) ab, sondern von der Sprache: deutschsprachig 70, sonst 35, ± 15 je 10 Punkte Anpassungsfähigkeit. Nicht nach der eigenen Leihe und nicht beim Wechsel in die Zweite. Startkader und Eigengewächse haben keinen Wert (gilt 100).
+  - **Woche:** 3, mit einem Spiel in der Woche +2, ab Deutsch 60 +1, mit einer Integrationsfigur im Kader +1, mit einem Landsmann +1, höchstens 8. Bei 100 fällt der Wert weg. Deutsch steigt je Woche um 1 bis 3 nach Anpassungsfähigkeit, mit zwei Landsleuten halb so schnell.
+  - **Wirkung im Spiel ist abgeschaltet** (`REGELN.spieler.integration.wirkung.an = false`): Sie senkt die Stärke aller Neuzugänge aller Vereine und gehört erst nach einer Messung eingeschaltet. Die Werte stehen schon auf der Spielerkarte.
+  - **Noch nicht:** Heimweh-Karte (§8), Grüppchen nach Sprache (K14), Wirkung von Deutsch auf Beziehungen.
 
 ### 5.6 Merkmale lernen und verlieren
 
@@ -497,7 +502,7 @@ Die bisherigen Einträge `training.wachstum`, `training.zufall`, `training.fitne
 - **Entwicklung der Stärke** in kleinen Schritten an jedem Spieltag. Die Form beschleunigt oder bremst sie: Tore in Serie, Paraden, Siegesserien gegen die Erwartung, und genauso umgekehrt (5.1, 5.2).
 - **Lernen im Spiel:** Szenen wie Ecken mit Torfolge zahlen auf Merkmale ein, Fehlschläge auf Schwächen (5.6).
 - **Charakter:** Bei echten Spielern wird abgeleitet, was sich aus Fakten belegen lässt, sonst Zufall. Später erzeugte Spieler bekommen nur Zufall (5.9).
-- **Nationalität** wird festgelegt (Feld `nat`). Wann die Daten nachgetragen werden, ist egal. **Nachgetragen in U9b (11.11.):** Alle Spieler haben das Feld `nat` (FIFA-Kürzel, Tabelle in `daten/nationen.js`). Echte Spieler: fünfte Spalte in `daten/spieler.js`, aus den Kadertabellen der Wikipedia. Erfundene Spieler der deutschen Vereine: aus dem Nachnamen abgeleitet. Auslandspool: nach Land des Vereins (K32 §12 Nr. 12, 15, 16). Die Nationalität steht auf der Spielerkarte und im Transfermarkt. Deutschkenntnisse (`de`), Integration und Landsleute (3.4, 5.5) sind noch nicht gebaut, `landsleute()` und `gleicheSprache()` stehen dafür bereit.
+- **Nationalität** wird festgelegt (Feld `nat`). Wann die Daten nachgetragen werden, ist egal. **Nachgetragen in U9b (11.11.):** Alle Spieler haben das Feld `nat` (FIFA-Kürzel, Tabelle in `daten/nationen.js`). Echte Spieler: fünfte Spalte in `daten/spieler.js`, aus den Kadertabellen der Wikipedia. Erfundene Spieler der deutschen Vereine: aus dem Nachnamen abgeleitet. Auslandspool: nach Land des Vereins (K32 §12 Nr. 12, 15, 16). Die Nationalität steht auf der Spielerkarte und im Transfermarkt. Deutschkenntnisse (`de`), Integration und Landsleute (3.4, 5.5) sind noch nicht gebaut, `landsleute()` und `gleicheSprache()` stehen dafür bereit. Seit K03d gebaut, die Wirkung im Spiel mit Schalter aus (§5.5).
 - **Positionen:** 14 feine Positionen in vier Gruppen, ergänzt um zentrales Mittelfeld, hängende Spitze und die Seiten (3.1a). Kein Libero.
 - **Fuß:** rechts oder links, deutlich mehr Rechtsfüße (77 %). „beidfüßig“ ist ein Merkmal.
 - **„Trainingsweltmeister“** in der umgangssprachlichen Bedeutung.

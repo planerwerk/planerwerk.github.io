@@ -110,6 +110,10 @@ const REGELN={
     selbstvertrauen:{min:-3,max:3,tor:0.5,guteNote:0.3,schlechteNote:-0.3,ausgleich:0.15},
     spielpraxis:{zerfall:0.97,jeSpiel:25,wirkungUnter:50,wirkungMax:0.04}, // Trainingsspiele geben zusätzlich Spielpraxis (K07)
     zustand:{min:0.80,max:1.08},    // Deckel für Form, Frische und Spielpraxis zusammen (K03 §5.8)
+    // Integration und Deutsch (K03 §5.5, K03d, 24.11., popolupo, vorläufig): Start beim Zugang deutsch (deutschsprachig) oder fremd, ± anpassung je 10 Punkte Anpassungsfähigkeit.
+    // Woche: basis, + einsatz mit einem Spiel, + deutsch ab deutschAb, + figur mit Integrationsfigur, + landsleute mit einem Landsmann, höchstens max. Deutsch: Start start,
+    // je Woche min bis max nach Anpassungsfähigkeit, mit zwei Landsleuten halb so schnell. Wirkung im Spiel min + (1 − min) × Integration, nur mit wirkung.an (vorerst aus).
+    integration:{start:{deutsch:70,fremd:35,anpassung:15},woche:{basis:3,einsatz:2,deutsch:1,deutschAb:60,figur:1,landsleute:1,max:8},deutsch:{start:20,min:1,max:3},wirkung:{an:false,min:0.92}},
     // Persönlichkeit (K03 §3.3): 8 verdeckte Werte 1–20, ausgewürfelt je Karriere
     persoenlichkeit:{mitte:10,streuung:3.5,min:1,max:20,werte:['pro','ehr','loy','tem','dru','anp','fue','rob']},
     // Eigenschaften (K03 §3.5) entstehen aus der Persönlichkeit. Angezeigt nur, wenn ihre Wirkung im Spiel gebaut ist (wirksam).

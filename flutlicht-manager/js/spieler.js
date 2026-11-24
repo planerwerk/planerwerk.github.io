@@ -4,7 +4,7 @@
 // Zustandsfaktor (K03 §5.8): Frische, Form und Spielpraxis zusammen, gedeckelt. Die Stärke bleibt der Hauptwert.
 function zustand(p){const Z=RP.zustand,F=RP.form,P=RP.spielpraxis,k=RE.staerke;
   const fr=k.fitBasis+k.fitAnteil*p.fit/100,fo=1+(p.form-F.mitte)*F.wirkung,pr=p.sp<P.wirkungUnter?1-P.wirkungMax*(P.wirkungUnter-p.sp)/P.wirkungUnter:1;
-  return clamp(fr*fo*pr*stimmungFaktor(p),Z.min,Z.max);} // Stimmung (K14 §5.3): unter 20 bis −3 %, über 85 bis +2 %
+  return clamp(fr*fo*pr*stimmungFaktor(p)*integrationFaktor(p),Z.min,Z.max);} // Stimmung (K14 §5.3): unter 20 bis −3 %, über 85 bis +2 %; Integration nur mit Schalter (K03d)
 
 // Frische-Erholung pro Tag (K03 §5.3): Wer müde ist, erholt sich anfangs schneller
 function erholung(p){const F=RP.frische,a=F.alter.find(x=>p.age<=x[0]);return(F.erholung[0]+F.erholung[1]*(100-p.fit))*(a?a[1]:F.alterSonst)*(F.koErholung[0]+F.koErholung[1]*p.ko)*belastungErholung(p);}
@@ -145,7 +145,22 @@ function lernplaetzeVergeben(){const nach=new Map();S.pl.forEach(p=>{if(p.team>=
 // Woche: Zeit im Verein, neue Spieler (Talentschätzung neu), Lernen
 function wocheVerein(p){if(p.team!==p.vt){p.vt=p.team;p.wiv=0;p.ekw=riA(RP.entdeckenWochen);p.tf=ri(-RP.talentSchaetzung.fehler,RP.talentSchaetzung.fehler);}else p.wiv=(p.wiv||0)+1;
   if(p.um&&p.team!==S.my){p.um=null;delete p.umE;} /* Prüfung FC2: umgeschult wird nur bei dir (ausgelaufen, Leihe zurück, Jobwechsel) */
-  lernWoche(p);umschulungWoche(p);merkmaleWoche(p);p.wt=0;p.wl=0;}
+  lernWoche(p);umschulungWoche(p);merkmaleWoche(p);integrationWoche(p);p.wt=0;p.wl=0;}
+// ---------- Integration und Deutsch (K03 §5.5, K03d) ----------
+// p.int (0–100) nur bei Neuzugängen, fehlt = 100 (Startkader, Eigengewächse). p.de Deutschkenntnisse, fehlt = nach der Sprache der Nation (deutschsprachig 100, sonst deutsch.start).
+// Start beim Zugang (neuzugang in taktik.js, nicht bei Rückkehr aus der Leihe und nicht beim Wechsel in die Zweite): deutschsprachig start.deutsch, sonst start.fremd,
+// ± start.anpassung je 10 Punkte Anpassungsfähigkeit (ch.anp 1–20) über oder unter 10. Woche (wocheVerein): siehe RP.integration.woche. Alles ohne Zufall.
+// Wirkung im Spiel (zustand): nur mit RP.integration.wirkung.an, vorerst aus, weil sie die Stärke aller Neuzugänge senkt (erst messen).
+const deutschVon=p=>p.de!=null?p.de:(nation(p.nat)&&nation(p.nat).sprache==='de'?100:RP.integration.deutsch.start);
+const integrationVon=p=>p.int!=null?p.int:100;
+const integrationFaktor=p=>{const W=RP.integration.wirkung;return W.an&&p.int!=null?W.min+(1-W.min)*p.int/100:1;};
+function integrationStart(p){const I=RP.integration,a=((p.ch&&p.ch.anp)||10)-10,de=deutschVon(p);if(p.de==null&&de<100)p.de=de;
+  p.int=clamp(Math.round((de>=100?I.start.deutsch:I.start.fremd)+I.start.anpassung*a/10),5,99);p.intA=p.apps||0;}
+function integrationWoche(p){if(p.team<0)return;const offen=p.int!=null,lernt=p.de!=null&&p.de<100;if(!offen&&!lernt)return;
+  const sq=squad(p.team).filter(q=>q!==p),lands=sq.filter(q=>landsleute(p,q)).length;
+  if(offen){const W=RP.integration.woche;let w=W.basis;if((p.apps||0)>(p.intA||0))w+=W.einsatz;if(deutschVon(p)>=W.deutschAb)w+=W.deutsch;if(sq.some(q=>hatEig(q,'integrationsfigur')))w+=W.figur;if(lands)w+=W.landsleute;
+    p.int=Math.min(100,p.int+Math.min(W.max,w));p.intA=p.apps||0;if(p.int>=100){delete p.int;delete p.intA;}}
+  if(lernt){const D=RP.integration.deutsch,a=(p.ch&&p.ch.anp)||10;p.de=Math.min(100,Math.round((p.de+(D.min+(D.max-D.min)*(a-1)/19)*(lands>=2?0.5:1))*10)/10);}}
 // Talentsterne mit Schätzfehler (K03, K02): bis zu einem Stern daneben, nach zwei Jahren im Verein genau
 // Talentsterne: genau nach zwei Jahren, mit gutem Co-Trainer früher (K16 §5.2: Faktor 1,5 − 0,05 × Qualität)
 const sternFehler=p=>p.team===S.my&&(stufe().sterneGenau||p.wiv>=RP.talentSchaetzung.genauNachWochen*stufe().sterneWochen*(S.stab?1.5-0.05*stabQ(S.my,'co'):1))?0:(p.tf||0);
