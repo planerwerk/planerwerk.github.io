@@ -788,6 +788,9 @@ const REGELN={
     // Vereinsstrafe nach einem Urteil (K09 §5.2, K14 §6, K09c, 22.11., popolupo, GESCHÄTZT): je Spiel Sperre jeSpiel nach Liga, Antwort binnen tage Tagen.
     // Verhängen: Stimmung des Spielers stimmung, Glaubwürdigkeit glaub, das Geld kommt in die Vereinskasse. Erlassen: erlassStimmung, erlassGlaub. Ohne Antwort keine Strafe.
     vereinsstrafe:{jeSpiel:{1:20000,2:8000,3:3000},tage:3,stimmung:-6,glaub:2,erlassStimmung:3,erlassGlaub:-1},
+    // Zuschauer-Vergehen deines Vereins (K09 §4.4, §5.5, K09h): Vorfälle der letzten tage Tage. Ab dem zweiten kommt ein Zuschlag in Höhe der Strafe (× zuschlag, also verdoppelt),
+    // ab dem ausschlussAb-ten bleibt beim nächsten Heimspiel ein Block mit dem Anteil block der Plätze leer (Teilausschluss). Werte vorläufig.
+    zuschauer:{tage:365,zuschlag:1,ausschlussAb:3,block:0.1},
     schiri:{proLiga:24,strenge:[0.85,1.15],elfmeter:[0.9,1.1]}},
   // Medizin (K10 §11, Welle 2). Häufigkeit nach echten Ankern (UEFA-Studie: etwa 50 Verletzungen je 25er-Kader und Saison, 12–14 % des Kaders fehlen im Schnitt).
   // k: Anteil Kontakt (Foul, Zweikampf). Überlastung im Spiel zieht Arten mit Gewicht anteil × (1 − k), Kontakt anteil × k, Training anteil.

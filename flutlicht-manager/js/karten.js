@@ -313,6 +313,7 @@ function kartenWirkung(w,b,c){let wert=w.wert,txt='',erfolg=true;if(w.chance!=nu
   else if(w.art==='ruf')rufAendern(wert);
   else if(w.art==='bezDu'){if(b.verein!=null)bezDuAendern(b.verein,wert,c.titel);}
   else if(w.art==='geld'){if(wert)money('Ereignisse',kartenGeld(wert));} // nach Liga (K23f)
+  else if(w.art==='zuschauer')zuschauerVorfall(w.wert); // Zuschauer-Vergehen (K09h): Vorfall zählen, Zuschlag für Wiederholungstäter, Teilausschluss
   else if(w.art==='fans')fanAnlass(myT(),'fanU',wert); // seit U18b: Fanstimmung (K27), Umfeld
   else if(w.art==='verpflichten'){const ok=p&&rahmenErlaubt(myT(),Math.round(salaryFor(p.str)*wert));if(p&&p.team===-1&&frei('transfers')&&!transferSperre()&&ok)karteVerpflichten(p,wert);else if(p)news(`${p.n} unterschreibt nicht: ${ok?'Die Transfers führt noch der Verein.':'Der Vorstand gibt das Gehalt nicht frei (Gehaltsrahmen).'}`,'');}
   else if(w.art==='interesse'){if(p)p.rkI={s:S.season,v:wert};}
@@ -362,7 +363,7 @@ function kartenWirkung(w,b,c){let wert=w.wert,txt='',erfolg=true;if(w.chance!=nu
   if(w.dann&&erfolg&&KARTEN_MIT_ERFOLG.includes(w.art)){const t=w.dann.map(x=>kartenWirkung(x,b,c)).filter(Boolean);txt=[w.gut||'',...t].filter(Boolean).join(' ');}
   return txt;}
 const KARTEN_MIT_ERFOLG=['leihe','gehaltAnpassen','provisionZahlen','spezialist','transferliste','zurueckrudern','stabHolen']; // Wirkungen, die melden, ob sie geklappt haben (für dann)
-const KARTEN_WIRKUNGEN=['stimmung','stimmungAlle','zusammenhalt','glaub','vertrauen','ruf','bezDu','geld','fans','verpflichten','interesse','angebot','maezen','merch','jobwechsel','pause','talent','jugendHoch','jugendWeg','stabWeg','stabHalten','preisRichtwert','gehaltAnpassen','beraterBez','zuschuss','sonderschicht','leihe','selbstvertrauen','provisionZahlen','dritter','nachlass','hygiene','spezialist','gruppeStimmung','transferliste','zurueckrudern','vertrauenHalt','svAlle','wettsperre','standardGegner','bauVerzug','stabHolen','bauAuflage','punktabzug','lagerEnde','stabStreit','chefWeg','chefHalten','fanGespraech'];
+const KARTEN_WIRKUNGEN=['stimmung','stimmungAlle','zusammenhalt','glaub','vertrauen','ruf','bezDu','geld','fans','verpflichten','interesse','angebot','maezen','merch','jobwechsel','pause','talent','jugendHoch','jugendWeg','stabWeg','stabHalten','preisRichtwert','gehaltAnpassen','beraterBez','zuschuss','sonderschicht','leihe','selbstvertrauen','provisionZahlen','dritter','nachlass','hygiene','spezialist','gruppeStimmung','transferliste','zurueckrudern','vertrauenHalt','svAlle','wettsperre','standardGegner','bauVerzug','stabHolen','bauAuflage','punktabzug','lagerEnde','stabStreit','chefWeg','chefHalten','fanGespraech','zuschauer'];
 // Standard-Spezialisten (K06e, taktik.js taktikWirkung): Faktor auf Tore nach Ecken und Freistoßflanken deines Vereins, solange sich die Gegner darauf eingestellt haben
 const standardGegnerFaktor=t=>t&&t.id===S.my&&S.stdGegen&&S.stdGegen.tid===S.my&&S.stdGegen.bis>=absTag(S.tag)?RKT.standard.faktor:1;
 // Ausgang des lachenden Dritten (K30 §8.3, K17 §5.4, K30c): Unterschreibt der Spieler bei dir (aktionen.js offer, vor dem Abschluss), sinkt die Beziehung zwischen den beiden

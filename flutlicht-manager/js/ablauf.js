@@ -89,9 +89,12 @@ function woechentlichLauf(d){if(!imUrlaub())mitStrom(strom('training',S.season,d
 
 function attendance(t,opp,cup){const Z=RF.zuschauer,ref=Z.refBasis+t.rep*Z.refJeAnsehen,pf=clamp(Math.pow(ref/t.price,Z.preisExponent),Z.preisMin,Z.preisMax),ff=Z.formBasis+Z.formJePunkt*formPts(t.id),of=Z.gegnerBasis+(opp?opp.rep:Z.gegnerOhne)/100*Z.gegnerFaktor,lf=t.lg===1?1:t.lg===2?Z.liga2:Z.liga3;return Math.round(Math.min(t.cap,t.fans*pf*ff*of*lf*(cup?Z.pokal:1)*(Z.zufallBasis+R()*Z.zufallSpanne)*fanFaktor(t)));} // Fanstimmung (K27 §5.4b, U16)
 function heimspielEinnahmen(m,cup){const t=myT();if(autoB('preise'))t.price=clamp(Math.round(richtPreis(t)),RF.ticketPreis.min,RF.ticketPreis.max); // Automatik: Richtpreis (K36)
-  const att0=attendance(t,m.a>=AV0?avVon(m.a):m.a>=1000?null:S.teams[m.a],cup),pz=t.price*zuschauerFaktor(t);
+  /* Teilausschluss nach Zuschauer-Vergehen (K09h): ein Block mit dem Anteil A.anteil der Plätze bleibt leer, auch für Dauerkarten, einmal */
+  const A=S.ausschluss&&S.ausschluss.tid===S.my?S.ausschluss:null,cap=A?Math.round(t.cap*(1-A.anteil)):t.cap;
+  const att0=Math.min(cap,attendance(t,m.a>=AV0?avVon(m.a):m.a>=1000?null:S.teams[m.a],cup)),pz=t.price*zuschauerFaktor(t);
+  if(A){S.ausschluss=null;news(`Teilausschluss: Ein Block blieb leer, ${(t.cap-cap).toLocaleString('de-DE')} Plätze weniger.`,'');}
   /* Dauerkarten (K27b): in der Liga zählen alle Inhaber als Zuschauer und zahlen Preis × (1 − Rabatt), die übrige Nachfrage kauft Einzelkarten */
-  const dk=cup?null:(dkAktuell()||dkVerkauf(t)),n=dk?Math.min(dk.n,t.cap):0,att=Math.max(att0,n);
+  const dk=cup?null:(dkAktuell()||dkVerkauf(t)),n=dk?Math.min(dk.n,cap):0,att=Math.max(att0,n);
   m.att=att;S.att[0]+=att;S.att[1]++;statZuschauer(m,att);if(n)money('Dauerkarten',Math.round(n*dkPreis(t,dk)));money('Zuschauer',Math.round(Math.max(0,att0-n)*pz));if(t.shop)money('Fanartikel',Math.round(att*RF.fanartikel[t.shop]*merchFaktor(t)));if(t.logen)money('VIP-Logen',t.logen*RF.loge);}
 // Buchungen je Ligaspieltag des eigenen Vereins
 function finanzenLiga(m){const t=myT();if(m.h===S.my)heimspielEinnahmen(m,false);
