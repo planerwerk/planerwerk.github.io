@@ -71,6 +71,13 @@ Heute zieht alles aus einem einzigen Strom (`S.zufall`). Das hat zwei Nachteile:
 - Beim Start einer Karriere, Standard „Normal“.
 - **Änderbar** zum Saisonwechsel, leichter jederzeit. Die Stufe steht in der Karriere-Statistik (K34), damit Rekorde vergleichbar bleiben.
 
+### 4.4 Neue Regeln ausprobieren (K02a, 24.11.2026, popolupo, ohne Testlauf, vorläufig)
+
+- Regeln, die fertig sind, aber die Kalibrierung aller Vereine verschieben würden, stehen hinter einem Schalter in `REGELN`, der aus ist, bis ein Testlauf sie vermessen hat (zurzeit TV-Gelder in Raten K23h, Notverkauf K31d, Wirkung der Integration K03d, Länderspiele K13f).
+- Im Menü kannst du sie unter „Neue Regeln ausprobieren“ für deinen Spielstand einschalten. Sie gelten dann für alle Vereine, nur in diesem Spielstand, und lassen sich wieder ausschalten. Gespeichert in `S.einst.exp`, die Liste steht in `REGELN.experimente` (Schlüssel, Pfad zum Schalter, Name, Erklärung).
+- `experimenteAnwenden` setzt die Schalter nach dem Laden, beim neuen Spiel und beim Umschalten. Aus schaltet es nur, was es selbst eingeschaltet hat, damit Tests, die einen Schalter vor dem Aufbau der Welt setzen, unberührt bleiben.
+- Wird ein Schalter nach der Messung standardmäßig eingeschaltet, verschwindet er aus der Liste.
+
 ## 5. Regeln und Formeln
 
 ### 5.1 Grundsatz „Erwartung plus Zufall“

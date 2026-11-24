@@ -14,7 +14,7 @@ function renderStart(){
   <p class="dim">Kader aller 36 Vereine: deutsche Wikipedia, Stand Ende August bis Ende Oktober 2026. Die Stärkewerte sind geschätzt. Korrekturen gehören in die Datei daten/spieler.js, nicht ins Spiel. Nachwuchsspieler, Vereinslose, die Kader der 3. Liga und die Amateurklubs im Pokal sind erfunden. Die 208 Auslandsvereine tragen echte Namen (höchste Ligen 2026/27), ihre Spieler sind erfunden. Die 3. Liga erreichst du per Abstieg oder Jobwechsel.</p></div>`;}
 // Spielstände älterer Testversionen passen nicht mehr und werden gelöscht
 try{REGELN.spielstand.alteSchluessel.forEach(k=>localStorage.removeItem(k));}catch(e){}
-function loadLocal(){try{const s=localStorage.getItem(REGELN.spielstand.schluessel);if(s){const d=JSON.parse(s);if(d.v!==REGELN.spielstand.version){toast('Der gespeicherte Spielstand passt nicht zu dieser Version.');return;}S=d;delete S.stabT;reindex();verhUmstellen();k23cUmstellen();mitgliederUmstellen();vertragUmstellen();TAB='buero';render();if(S.live)liveFortsetzen();}}catch(e){toast('Spielstand konnte nicht geladen werden.');}}
+function loadLocal(){try{const s=localStorage.getItem(REGELN.spielstand.schluessel);if(s){const d=JSON.parse(s);if(d.v!==REGELN.spielstand.version){toast('Der gespeicherte Spielstand passt nicht zu dieser Version.');return;}S=d;delete S.stabT;reindex();verhUmstellen();k23cUmstellen();mitgliederUmstellen();vertragUmstellen();experimenteAnwenden();TAB='buero';render();if(S.live)liveFortsetzen();}}catch(e){toast('Spielstand konnte nicht geladen werden.');}}
 function newGame(){const id=+document.getElementById('club').value,name=(document.getElementById('mgr').value||'Trainer').trim().slice(0,30)||'Trainer';
   const se=(document.getElementById('seed')||{}).value,seed=se&&/^\d+$/.test(se.trim())?(+se.trim())>>>0:neuerSeed();
   buildWorld(seed);S.my=id;S.mgr=name;stufeAnwenden((document.getElementById('stufe')||{}).value);statS();presseS().antritt=1; // Statistik ab Spielbeginn, erste Station des Trainers (K34, U13), Antrittspressekonferenz (K29, U17a)
@@ -23,11 +23,23 @@ function newGame(){const id=+document.getElementById('club').value,name=(documen
   news(`Tipp: Kader und Aufstellung prüfen, Sponsor wählen, dann oben auf „Tag beenden ▶“ klicken. Dein erstes Pflichtspiel ist am ${datumMittel(ersterPflichttermin())}.`);
   news(`Willkommen, ${name}! Der Vorstand von ${myT().name} erwartet: ${targetText(myT().lg,S.target)}.`,'good');
   if(S.lizenz.an)news(`Du beginnst als ${lizenzName(1)}: Aufstellung, Grundordnung, Ausrichtung und dein Spiel gehören dir. Alles andere erledigt der Stab, bis du die nächste Lizenz hast. Oben steht deine Lizenz, ein Klick zeigt den Weg.`);
-  save();TAB='buero';render();}
+  experimenteAnwenden();save();TAB='buero';render();} /* neue Regeln nach dem Spielstand (K02a): ein neues Spiel beginnt ohne */
+
+// ---------- Neue Regeln ausprobieren (K02 §4.4, K02a) ----------
+// Regeln hinter einem Schalter (REGELN.experimente: k, pfad zum Objekt mit dem Feld an, name, text) kannst du im Menü für deinen Spielstand einschalten
+// (S.einst.exp = {k: true}). experimenteAnwenden setzt sie nach dem Laden, beim neuen Spiel und beim Umschalten: an, was der Spielstand will; aus nur, was es
+// selbst eingeschaltet hat (EXP_AN). So bleiben Tests unberührt, die einen Schalter vor dem Aufbau der Welt setzen. Ohne Zufall.
+let EXP_AN=new Set();
+const expObjekt=pfad=>String(pfad).split('.').reduce((o,k)=>o&&o[k],REGELN);
+function experimenteAnwenden(){const w=(S&&S.einst&&S.einst.exp)||{};(REGELN.experimente||[]).forEach(x=>{const o=expObjekt(x.pfad);if(!o)return;
+  if(w[x.k]){o.an=true;EXP_AN.add(x.k);}else if(EXP_AN.has(x.k)){o.an=false;EXP_AN.delete(x.k);}});}
+function experimentSetzen(k,an){if(!S||!(REGELN.experimente||[]).some(x=>x.k===k))return;S.einst=S.einst||{aus:{}};const e=Object.assign({},S.einst.exp);
+  if(an)e[k]=true;else delete e[k];S.einst.exp=e;experimenteAnwenden();save();}
+const experimentAn=k=>!!(S&&S.einst&&S.einst.exp&&S.einst.exp[k]);
 
 // Test- und Fehlersuch-Zugang
 window.FM={get S(){return S;},buildWorld,weiter,sommerpause,tagesSpiele,meinSpiel,heuteMeinSpiel,seasonEnd,newSeason,takeJob,render,V,tab,table};
 // Start, mit Erhalt des Spielstands bei Live-Updates
 try{window.claude?.hot?.snapshot?.(()=>({S,TAB}));}catch(e){}
-function start(d){if(d&&d.S&&d.S.v===REGELN.spielstand.version){S=d.S;TAB=d.TAB||'buero';reindex();verhUmstellen();k23cUmstellen();mitgliederUmstellen();vertragUmstellen();}render();if(S&&S.live)liveFortsetzen();}
+function start(d){if(d&&d.S&&d.S.v===REGELN.spielstand.version){S=d.S;TAB=d.TAB||'buero';reindex();verhUmstellen();k23cUmstellen();mitgliederUmstellen();vertragUmstellen();experimenteAnwenden();}render();if(S&&S.live)liveFortsetzen();}
 try{window.claude?.hot?.ready?window.claude.hot.ready(start):start(window.claude?.hot?.data??{});}catch(e){start({});}

@@ -28,4 +28,15 @@ for(const k of ['leicht','schwer']){const {W,S}=R[k],ls=W.ev('meineLigaspiele()'
     if(a.W.S.tag===b.W.S.tag){verglichen++;if(JSON.stringify(a.W.S.res)!==JSON.stringify(b.W.S.res)){gleich=false;break;}}}
   const sp=Object.values(a.W.S.res).reduce((s,l)=>s+l.length,0);
   pruef(gleich&&sp>=100,'Gleiche Ergebnisse auf Leicht und Schwer (gleicher Seed, ohne Eingriffe)',`${sp} Ergebnisse verglichen${b.S.fired?', Schwer: entlassen an Tag '+b.S.tag:''}`);}
+
+// K02a. Neue Regeln ausprobieren (K02 §4.4): Jeder Eintrag in REGELN.experimente zeigt auf einen Schalter, der aus ist. experimentSetzen schaltet ihn für diesen
+//       Spielstand ein (S.einst.exp) und wieder aus; experimenteAnwenden schaltet nur aus, was es selbst eingeschaltet hat (ein von außen gesetzter Schalter bleibt).
+{const {W,F,S}=welt('normal'),ev=W.ev,X=ev('REGELN').experimente,o=x=>ev('expObjekt')(x.pfad);
+  const alleAus=X.length>=4&&X.every(x=>!!o(x)&&o(x).an===false);
+  F.experimentSetzen(X[0].k,true);const an=o(X[0]).an===true&&S.einst.exp[X[0].k]===true&&ev('experimentAn')(X[0].k);
+  F.experimentSetzen(X[0].k,false);const aus=o(X[0]).an===false&&!S.einst.exp[X[0].k];
+  o(X[1]).an=true;F.experimenteAnwenden();const fremd=o(X[1]).an===true;o(X[1]).an=false;
+  S.einst.exp={[X[2].k]:true};F.experimenteAnwenden();const laden=o(X[2]).an===true;delete S.einst.exp[X[2].k];F.experimenteAnwenden();const wieder=o(X[2]).an===false;
+  pruef(alleAus&&an&&aus&&fremd&&laden&&wieder,'Neue Regeln ausprobieren: alle Schalter aus, ein und aus je Spielstand, von außen gesetzte Schalter bleiben',
+    `aus ${alleAus}, an ${an}, wieder aus ${aus}, von außen ${fremd}, Laden ${laden}/${wieder}`);}
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

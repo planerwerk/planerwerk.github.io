@@ -12,6 +12,13 @@ const REGELN={
     alteSchluessel:['flutlicht-manager-v1','flutlicht-manager-v2','flutlicht-manager-v3'], // Spielstände älterer Testversionen, werden beim Start gelöscht
     nachrichtenMax:80                // so viele Nachrichten bleiben im Posteingang
   },
+  // Neue Regeln ausprobieren (K02 §4.4, K02a, 24.11., popolupo, vorläufig): Schalter, die noch aus sind, weil sie die Kalibrierung aller Vereine verschieben.
+  // Im Menü je Spielstand einschaltbar (S.einst.exp). pfad: Objekt in REGELN mit dem Feld an.
+  experimente:[
+    {k:'tvRaten',pfad:'finanzen.tv.raten',name:'TV-Gelder in vier Raten',text:'Statt je Ligaspiel kommt das TV-Geld am 1. August, 1. November, 1. Februar und 1. Mai für alle Vereine (K23h).'},
+    {k:'notverkauf',pfad:'computer.notverkauf',name:'Notverkauf bei Computer-Vereinen',text:'Wer über seinem Gehaltsrahmen liegt, setzt seinen teuersten Spieler unter Wert auf die Transferliste (K31d).'},
+    {k:'integration',pfad:'spieler.integration.wirkung',name:'Integration wirkt im Spiel',text:'Neuzugänge aller Vereine spielen schwächer, bis sie integriert sind (bis 8 %, K03d).'},
+    {k:'laenderspiele',pfad:'wettbewerbe.laenderspiele',name:'Länderspiele',text:'Nationalspieler aller Vereine fehlen in den Länderspielpausen und kommen müde zurück (K13f).'}],
 
   kalender:{
     maxSprung:7,                     // „Tag beenden“ springt höchstens so viele Tage weit
