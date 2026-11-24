@@ -62,4 +62,26 @@ console.log(`\n${N} Saison(s), ${sum.spiele} Ligaspiele, in ${((Date.now()-t0)/1
   const bis=offen[0].bis,frist=ev('vereinsstrafeFrist')(bis)&&!ev('vereinsstrafeFrist')(bis-1),karten=(F.vereinsstrafeKarte().match(/<h3>Vereinsstrafe<\/h3>/g)||[]).length===2;
   pruef(zwei&&karten&&frist,'Vereinsstrafe: mehrere Karten, Halt am letzten Tag, keine für eine Rote Karte bei einem anderen Verein',`offen ${offen.length}, Karten ${karten}, Halt ${frist}`);}
 
+// K09g. Trainer-Karten und Tribüne (K09 §5.4): Jede vierte Gelbe sperrt ein Spiel. Die Sperre gilt ab dem nächsten Pflichtspiel (nicht in dem, in dem sie entstand) und läuft
+//       dort ab, Testspiele zählen nicht. Die Gelben verfallen zum Saisonende, die Sperre nicht. Innenraumverbot nach wiederholter Schiedsrichterkritik (1, dann 2 Spiele).
+//       Protest nur nach einem Anlass; die zweite Gelbe im selben Spiel ist Gelb-Rot mit Tribüne und Sperre. Auf der Tribüne spricht in der Halbzeit der Co-Trainer.
+{const {neueWelt}=require('./sim'),{W,F}=neueWelt();F.buildWorld(SEED);const S=W.S,ev=W.ev;S.my=6;S.mgr='Test';F.setTarget();S.phase='play';S.lineup=F.bestXI(6,ev('myT()').form);
+  const T=ev('RD').trainer,abs=ev('absTag'),d=S.tag,geg=S.teams.find(t=>t.id!==6&&t.lg===S.teams[6].lg).id,spiel=o=>Object.assign({h:6,a:geg,ev:[]},o||{});
+  for(let i=1;i<T.sperreJe;i++)F.trainerGelb();const vorher=S.trainerK.sp===0;F.trainerGelb();const nachVier=S.trainerK.sp===T.sperreSpiele&&S.trainerK.g===T.sperreJe;
+  F.trainerNachSpiel(spiel(),d);const nichtGleich=S.trainerK.sp===T.sperreSpiele; /* im Spiel entstanden: noch nicht abgesessen */
+  F.trainerVorSpiel(d);const trib=ev('trainerTribuene')();F.trainerNachSpiel(spiel({test:1}),d);const test=S.trainerK.sp===T.sperreSpiele;
+  F.trainerNachSpiel(spiel(),d);const ab=S.trainerK.sp===0&&S.trainerK.heute===null&&!ev('trainerTribuene')();
+  F.trainerSperre(1,'Test');S.season++;const saison=ev('trainerKS')().g===0&&S.trainerK.sp===1;S.season--;S.trainerK.s=S.season;S.trainerK.sp=0;
+  S.kontrolle={f:[{tid:6,urteil:abs(d),uk:0,txt:'',kopf:''}],alt:[abs(d)-10]};F.kontrolleTag(d);const iv1=S.trainerK.sp===1;S.trainerK.sp=0;
+  S.kontrolle={f:[{tid:6,urteil:abs(d),uk:0,txt:'',kopf:''}],alt:[abs(d)-20,abs(d)-10]};F.kontrolleTag(d);const iv2=S.trainerK.sp===Math.min(T.innenraum.max,2);S.trainerK.sp=0;
+  const pa=ev('protestAnlass'),anlass=pa({t:'G',art:'elfmeter',s:1},0)&&pa({t:'C',art:'elfmeter',s:1},0)&&pa({t:'R',s:0},0)&&!pa({t:'G',art:'elfmeter',s:0},0)&&!pa({t:'R',s:1},0)&&!pa({t:'G',art:'spiel',s:1},0);
+  W.ev('liveRender=function(){};liveSichern=function(){};');const G=F.spielAnlegen(6,geg,{}),L={G,s:0,ende:false,anlass:null,protestiert:false,meldung:''};ev('(function(x){LIVE=x;})')(L);
+  S.live={tag:S.tag,eing:[],m:0,k:0};const g0=S.trainerK.g;F.liveProtest();const ohneAnlass=!S.live.prot;
+  let n=0;while(!S.live.trib&&n<60){L.anlass=G.m;L.protestiert=false;F.liveProtest();n++;}
+  const gelbRot=S.live.trib===1&&S.live.tg===2&&S.trainerK.g===g0+1&&S.trainerK.sp===T.gelbRotSpiele&&ev('liveTribuene')()&&!ev('protestOffen')(Object.assign(L,{anlass:G.m,protestiert:false}))&&S.live.eing.some(e=>e.a==='zuruf');
+  while(G.m<45)G.minute();F.liveAnsprache('loben');const co=!!L.ansprache&&L.anspPasst===null&&S.live.eing.some(e=>e.a==='ansprache')&&String(L.meldung).includes('Co-Trainer');
+  pruef(vorher&&nachVier&&nichtGleich&&trib&&test&&ab&&saison&&iv1&&iv2&&anlass&&ohneAnlass&&gelbRot&&co,'Trainer-Karten: Sperre nach der vierten Gelben ab dem nächsten Pflichtspiel, Innenraumverbot, Protest mit Gelb-Rot und Tribüne, Ansprache des Co-Trainers',
+    `vier Gelbe ${vorher}/${nachVier}, nicht im selben Spiel ${nichtGleich}, Tribüne ${trib}, Testspiel ${test}, abgesessen ${ab}, Saisonwechsel ${saison}, Innenraum ${iv1}/${iv2}, Anlässe ${anlass}, `+
+    `ohne Anlass ${ohneAnlass}, Gelb-Rot nach ${n} Protesten ${gelbRot}, Co-Trainer ${co} (${L.ansprache})`);}
+
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

@@ -11,7 +11,7 @@ function liveEinstSetzen(k,v){S.einst=S.einst||{aus:{}};S.einst.live=S.einst.liv
 function kickoffLive(){if(BUSY||CONF||LIVE)return;BUSY=true;let v=null;
   try{v=tagesSpieleVorbereiten(S.tag,true);}catch(e){console.error(e);toast('Fehler: '+e.message);}finally{BUSY=false;}
   if(!v)return;if(!v.G){LAST=tagesSpieleAbschliessen(v.out);save();if(LAST.list.length)showConf(LAST);else weiterUI();return;}
-  S.live={tag:S.tag,eing:[],m:0,k:0};liveAufbauen(v,'');liveStart();}
+  S.live={tag:S.tag,eing:[],m:0,k:0};liveAufbauen(v,trainerTribuene()?'Du bist gesperrt und sitzt heute auf der Tribüne. Wechsel und Taktik gibst du per Telefon durch, Zurufe gibt es nicht, die Halbzeitansprache hält der Co-Trainer.':'');liveStart();}
 function liveAufbauen(v,meldung){const G=v.G,s=G.hid===S.my?0:1;
   LIVE={v,G,s,lauf:false,timer:null,evN:G.ev.length,gewarnt:new Set(),hz:G.m>=45,verl:G.m>=90,ende:G.ende,raus:null,meldung,ansprache:(S.live&&S.live.ansprache)||null,anspPasst:S.live?S.live.anspPasst:null,tab:'spiel'};
   liveFrame();liveRender();}
@@ -51,11 +51,11 @@ function liveTick(){const L=LIVE;if(!L)return;const G=L.G;if(G.ende){liveAbpfiff
   if(G.ende){liveAbpfiff();return;}
   if(G.m%10===0&&!G.elf)liveSichern();
   const p=G.pause();
-  if(p==='elfmeter'){liveStop();L.meldung='Auch nach 120 Minuten unentschieden: Elfmeterschießen! Lege die Reihenfolge deiner Schützen fest.';liveRender();return;}if(p==='halbzeit'&&!L.hz){L.hz=true;liveStop();L.meldung='Halbzeit. Ansprache, Wechsel und Umstellungen sind jetzt möglich.';liveRender();return;}
+  if(p==='elfmeter'){liveStop();L.meldung='Auch nach 120 Minuten unentschieden: Elfmeterschießen! Lege die Reihenfolge deiner Schützen fest.';liveRender();return;}if(p==='halbzeit'&&!L.hz){L.hz=true;liveStop();L.meldung='Halbzeit. Ansprache, Wechsel und Umstellungen sind jetzt möglich.';if(liveTribuene())liveCoAnsprache();liveRender();return;}
   if(p==='verlaengerung'&&!L.verl){L.verl=true;liveStop();L.meldung='Unentschieden nach 90 Minuten: Es gibt Verlängerung. In der Verlängerung ist ein weiterer Wechsel erlaubt.';liveRender();return;}
   if(halt){liveStop();L.meldung=halt;liveRender();}}
 function liveHalte(){const L=LIVE,G=L.G,A=liveEinst().anhalten,neu=G.ev.slice(L.evN);L.evN=G.ev.length;let t=null;
-  for(const e of neu){const mein=e.s===L.s;
+  for(const e of neu){const mein=e.s===L.s;if(protestAnlass(e,L.s)){L.anlass=e.m;L.protestiert=false;} /* Protest an der Seitenlinie möglich (K09g) */
     if(e.t==='G'&&A.tor)t=`Tor! ${e.n} trifft zum ${e.sc.join(':')}.`;
     else if(e.t==='R'&&A.rot)t=`${e.x||`${e.gy?'Gelb-Rot':'Rot'} für ${e.n}`}${mein?' – du bist in Unterzahl.':'.'}`;
     else if(e.t==='I'&&mein&&A.verletzung)t=`${e.n} ist verletzt (${URSACHE[e.q]||'Verletzung'}) und humpelt nur noch. Wechseln?`;
@@ -69,12 +69,13 @@ function gelbRotGefahr(G,s,id){const x=G.Ss[s].xp.find(y=>y.p.id===id);if(!x)ret
 // Vorspulen: der Co-Trainer übernimmt bis zur Halbzeit oder bis zum Ende
 function liveSpulen(bis){const L=LIVE;if(!L||L.ende)return;if(bis==='ende')L.vorgespult=1;liveStop();const G=L.G,alt=G.auto[L.s],m0=G.m,k0=G.elf?G.elf.k:null;G.auto[L.s]=true;
   while(!G.ende&&!(bis==='hz'&&G.m>=45)){G.minute();}
-  G.auto[L.s]=alt;if(S.live){S.live.eing.push({m:m0,k:k0,a:'spulen',x:[G.m]});}L.evN=G.ev.length;if(bis==='hz'&&G.m===45){L.hz=true;L.meldung='Halbzeit. Der Co-Trainer hat bis hierher entschieden.';}
+  G.auto[L.s]=alt;if(S.live){S.live.eing.push({m:m0,k:k0,a:'spulen',x:[G.m]});}L.evN=G.ev.length;L.anlass=null;if(bis==='hz'&&G.m===45){L.hz=true;L.meldung='Halbzeit. Der Co-Trainer hat bis hierher entschieden.';if(liveTribuene())liveCoAnsprache();}
   liveSichern();liveRender();if(G.ende)liveAbpfiff();}
 function liveBisEnde(){liveSpulen('ende');}
 function liveSteuer(){const L=LIVE,el=document.getElementById('lv-steuer');if(!el||!L)return;
   if(L.ende){el.innerHTML=`<button class="go" id="lv-weiter" onclick="liveWeiter()">Weiter</button>`;const b=document.getElementById('lv-weiter');if(b)b.focus();return;}
   el.innerHTML=`${L.lauf?`<button id="lv-pause-btn" onclick="liveStop()">Pause</button>`:`<button class="go" id="lv-los" onclick="LIVE.meldung='';liveStart()">${L.G.m===0?'Anpfiff':L.G.m===45?'2. Halbzeit':'Weiter'}</button>`}
+    ${protestOffen(L)?`<button onclick="liveProtest()"${lzAus('zurufe')} title="Weckt die Mannschaft auf, kann dir Gelb bringen">Protestieren</button>`:''}
     ${L.G.m<45?`<button onclick="liveSpulen('hz')">Bis zur Halbzeit</button>`:''}<button onclick="liveBisEnde()">${L.G.elf?'Alle Elfmeter':'Zum Abpfiff'}</button>`;}
 function liveAbpfiff(){const L=LIVE;if(!L||L.ende)return;liveStop();L.ende=true;const G=L.G;L.meldung=G.pen?`Elfmeterschießen ${G.pen[0]}:${G.pen[1]}.`:'Abpfiff.';liveRender();liveSteuer();}
 // Ergebnis eintragen und den Tag abschließen
@@ -85,18 +86,39 @@ function liveWeiter(){const L=LIVE;if(!L||!L.ende)return;BUSY=true;let out=null;
   LIVE=null;closeOv();weiterUI();}
 
 // ---------- Eingriffe ----------
-function liveZuruf(art){if(!darf('zurufe','zuruf'))return;const L=LIVE;if(!L||L.ende)return;const r=L.G.zuruf(L.s,art);if(r.ok)liveMerken('zuruf',[art]);
+function liveZuruf(art){if(!darf('zurufe','zuruf'))return;const L=LIVE;if(!L||L.ende)return;if(liveTribuene()){L.meldung=TRIBUENE_TEXT;liveRender();return;}const r=L.G.zuruf(L.s,art);if(r.ok)liveMerken('zuruf',[art]);
   L.meldung=r.ok?(r.w===1?`„${ZURUF_TEXT[art]}“ – die Mannschaft reagiert.`:r.w>0?`„${ZURUF_TEXT[art]}“ – schon wieder? Wirkt nur noch halb.`:`„${ZURUF_TEXT[art]}“ – keiner hört mehr hin.`):r.grund;liveRender();}
-function liveSpielerZuruf(id,art){if(!darf('schuetzen'))return;const L=LIVE;if(!L||L.ende)return;const p=PIX.get(id),r=L.G.spielerZuruf(L.s,id,art);if(r.ok)liveMerken('spieler',[id,art]);if(r.ok)L.meldung=`${art==='loben'?'Lob':'Kritik'} für ${p.n}: ${r.text}.`;liveRender();}
+function liveSpielerZuruf(id,art){if(!darf('schuetzen'))return;const L=LIVE;if(!L||L.ende)return;if(liveTribuene()){L.meldung=TRIBUENE_TEXT;liveRender();return;}const p=PIX.get(id),r=L.G.spielerZuruf(L.s,id,art);if(r.ok)liveMerken('spieler',[id,art]);if(r.ok)L.meldung=`${art==='loben'?'Lob':'Kritik'} für ${p.n}: ${r.text}.`;liveRender();}
 function liveTaktik(k,v){if(!darf(k==='form'?'formation':k==='stil'?'stil':k==='ein'?'einstellung':v==='SD'||v==='SO'?'ausrichtung5':'ausrichtung3',k==='stil'?'stil':k==='ein'?null:'ordnung'))return;const L=LIVE;if(!L||L.ende)return;const o={};o[k]=v;L.G.taktik(L.s,o);liveMerken('taktik',[o]);const pl=L.G.plan[L.s].filter(x=>x.art===k).pop();
   L.meldung=pl?(pl.ab<=L.G.m+1?'Die Umstellung gilt ab sofort.':`Die Umstellung greift ab der ${pl.ab}. Minute.`):'Unverändert.';liveRender();}
 function liveRaus(id){const L=LIVE;if(!L)return;L.raus=L.raus===id?null:id;liveRender();}
 function liveRein(id){const L=LIVE;if(!L||!L.raus)return;const aus=PIX.get(L.raus),ein=PIX.get(id),ausId=L.raus,r=L.G.wechseln(L.s,L.raus,id);if(r.ok){liveMerken('wechsel',[ausId,id]);aufgabe('wechsel');}
   L.meldung=r.ok?`Wechsel: ${ein.n} kommt für ${aus.n}.`:r.grund;L.raus=null;L.evN=L.G.ev.length;liveRender();}
-function liveAnsprache(art){if(!darf('zurufe','zuruf'))return;const L=LIVE;if(!L||L.G.m!==45||L.ansprache)return;const T=myT(),alt=(T.ansp||[]).slice(-(RL.ansprache.abnutzungSpiele-1));
+function liveAnsprache(art){if(!darf('zurufe','zuruf'))return;const L=LIVE;if(!L||L.G.m!==45||L.ansprache)return;if(liveTribuene()){liveCoAnsprache();liveRender();return;}const T=myT(),alt=(T.ansp||[]).slice(-(RL.ansprache.abnutzungSpiele-1));
   // Glaubwürdigkeit (K15 §5.5): Die Wirkung hängt davon ab, wie sehr die Mannschaft dir glaubt. Nur Ansprachen mit Anlass verändern danach die Glaubwürdigkeit.
   const abn=(alt.length===RL.ansprache.abnutzungSpiele-1&&alt.every(a=>a===art)&&art!=='schweigen'?0.5:1)*glaubFaktor(),r=L.G.ansprache(L.s,art,abn);L.ansprache=art;L.anspPasst=['loben','motivieren','fordern','beruhigen'].includes(art)?(r.passt&&abn>=glaubFaktor()?true:r.passt?null:false):null;liveMerken('ansprache',[art,abn]);
   L.meldung=`Ansprache „${ANSPRACHE_TEXT[art]}“${r.passt?'':' – passt nicht zur Lage, die Spieler sind irritiert'}${abn<glaubFaktor()?' (kennen sie schon, wirkt nur halb)':''}.`;liveRender();}
+// ---------- Tribüne und Protest (K09 §5.4, K09g) ----------
+// Auf der Tribüne sitzt du, wenn du für dieses Spiel gesperrt bist (disziplin.js trainerTribuene) oder in diesem Spiel Gelb-Rot gesehen hast (S.live.trib).
+const TRIBUENE_TEXT='Du sitzt auf der Tribüne. Zurufe kommen dort nicht an, die Halbzeitansprache hält der Co-Trainer.';
+const liveTribuene=()=>trainerTribuene()||!!(S.live&&S.live.trib);
+// Halbzeitansprache des Co-Trainers: Mit Wahrscheinlichkeit Qualität ÷ 20 (K16) trifft er die passende (die erste passende aus loben, motivieren, fordern, beruhigen),
+// sonst „Taktik betonen“. Ohne Zufall (Hash aus Saison, Tag, Verein), ohne Wirkung auf deine Glaubwürdigkeit. Gemerkt wie deine Ansprache, also auch nach Neuladen gleich.
+function liveCoAnsprache(){const L=LIVE;if(!L||L.ansprache||L.G.m!==45)return;const G=L.G,q=stabQ(S.my,'co')/20,h=(hash32(['coAnsprache',S.season,S.tag,S.my].join('|'))%1000)/1000;
+  const pass=['loben','motivieren','fordern','beruhigen'].find(a=>G.passt(L.s,a)),art=pass&&h<q?pass:'taktik';G.ansprache(L.s,art,1);L.ansprache=art;L.anspPasst=null;liveMerken('ansprache',[art,1]);
+  L.meldung=`Halbzeit. Du sitzt auf der Tribüne, in der Kabine spricht der Co-Trainer: „${ANSPRACHE_TEXT[art]}“.`;}
+// Protest an der Seitenlinie: bis RD.trainer.protestMinuten nach einem Elfmeter gegen dich oder einem Platzverweis bei dir, einmal je Anlass, nur mit dem Bereich zurufe.
+// Die Mannschaft wird wach (wie „Druck machen!“, mit dessen Abnutzung). Der Schiedsrichter zeigt dir mit protestGelb × Strenge Gelb (ohne Zufall, Hash). Die zweite Gelbe
+// im selben Spiel ist Gelb-Rot: Tribüne für den Rest des Spiels und gelbRotSpiele Spiele Sperre (zählt nicht zu den Gelben der Saison).
+const protestAnlass=(e,s)=>(e.art==='elfmeter'&&(e.t==='G'||e.t==='C')&&e.s!==s)||(e.t==='R'&&e.s===s);
+const protestOffen=L=>!!L&&!L.ende&&L.anlass!=null&&L.G.m-L.anlass<=RD.trainer.protestMinuten&&!L.protestiert&&!liveTribuene();
+function liveProtest(){if(!darf('zurufe','zuruf'))return;const L=LIVE;if(!protestOffen(L)||!S.live)return;const T=RD.trainer,G=L.G,SL=S.live;L.protestiert=true;
+  const n=SL.prot=(SL.prot||0)+1,h=(hash32(['protest',S.season,S.tag,S.my,G.m,n].join('|'))%1000)/1000,gelb=h<T.protestGelb*((G.schiri&&G.schiri.st)||1);
+  const r=G.zuruf(L.s,'druck');if(r.ok)liveMerken('zuruf',['druck']);
+  if(!gelb)L.meldung='Du stürmst an die Seitenlinie und schimpfst. Der Schiedsrichter lässt es durchgehen, die Mannschaft ist hellwach.';
+  else if((SL.tg||0)>=1){SL.tg=2;SL.trib=1;trainerSperre(T.gelbRotSpiele,'Gelb-Rot für den Trainer');L.meldung='Gelb-Rot für dich! Du musst auf die Tribüne, den Rest des Spiels coacht der Co-Trainer mit.';}
+  else{SL.tg=1;const g=trainerGelb();L.meldung=`Gelb für dich wegen Protests (${g}. Gelbe als Trainer in dieser Saison${g%T.sperreJe===0?', das heißt ein Spiel Sperre':`, gesperrt nach der ${Math.ceil(g/T.sperreJe)*T.sperreJe}.`}). Die Mannschaft ist hellwach.`;}
+  liveSichern();liveRender();}
 
 // ---------- Anzeige ----------
 function liveRender(){const L=LIVE;if(!L)return;if(!document.getElementById('lv-inhalt'))liveFrame();const G=L.G,r={h:G.hid,a:G.aid};
@@ -138,7 +160,7 @@ function liveTaktikAnsicht(){const L=LIVE,G=L.G,s=L.s,sd=G.Ss[s],plan=G.plan[s];
     <label>Spielstil ${sel('stil',STILE.map(k=>[k,STIL_NAME[k]]),sd.stil)}</label></div>${lzHinweis('stil')}${lzHinweis('einstellung')}
     <p class="dim">Gegner: ${op.am?(op.aus?'Auslandsverein':'Amateurklub'):`${STIL_NAME[op.stil]||'–'}, ${op.form||''}`}. ${kr} Umsetzung deines Stils ${Math.round((sd.u||1)*100)} %.</p>
     <p class="dim">Grundordnung und Spielstil wirken nach ${RL.umstellung.ordnung} Minuten, Ausrichtung und Einsatz nach ${RL.umstellung.ausrichtung}. In der Halbzeit gelten Ausrichtung und Einsatz sofort.</p>${geplant}</div>
-  <div class="card"><h3>Zurufe</h3>${lzHinweis('zurufe')}<div class="row">${ZURUFE.map(a=>`<button onclick="liveZuruf('${a}')" ${L.ende?'disabled':''}${lzAus('zurufe')}>${ZURUF_TEXT[a]}</button>`).join('')}</div>
+  <div class="card"><h3>Zurufe</h3>${lzHinweis('zurufe')}${liveTribuene()?`<p class="bad">${TRIBUENE_TEXT}</p>`:''}<div class="row">${ZURUFE.map(a=>`<button onclick="liveZuruf('${a}')" ${L.ende||liveTribuene()?'disabled':''}${lzAus('zurufe')}>${ZURUF_TEXT[a]}</button>`).join('')}</div>
     <p class="dim">Wirken ${RL.zurufe.dauer} Minuten. Derselbe Zuruf innerhalb von ${RL.zurufe.abnutzungMinuten} Minuten wirkt nur halb, ein drittes Mal gar nicht. „Zeit schinden“ nur bei Führung, kostet Gelbe Karten.</p>
     ${aktiv.length?`<p>Aktiv: ${aktiv.map(esc).join(', ')}</p>`:''}</div>`;}
 function liveStat(){const G=LIVE.G,st=G.st,b=st.besitz[0]+st.besitz[1],z=(l,a,c)=>`<div class="lv-st"><span>${a}</span><span>${l}</span><span>${c}</span></div>`;
@@ -154,7 +176,7 @@ function liveElfmeter(){const L=LIVE,G=L.G,s=L.s,reihe=G.elfmeterReihe[s].filter
 function liveReihe(id){if(!darf('schuetzen'))return;const L=LIVE;if(!L||!L.G.elf||L.G.elf.k)return;const r=L.G.elfmeterReihe[L.s],i=r.indexOf(id);if(i>0){[r[i-1],r[i]]=[r[i],r[i-1]];liveMerken('reihe',[r.slice()]);}liveRender();}
 // Halbzeit (K05 §4.4): Statistik, Einschätzung des Co-Trainers, Ansprache
 function liveHalbzeit(){const L=LIVE,G=L.G;return`<div class="card lv-hz"><h3>Halbzeit</h3><p>${esc(coEinschaetzung(G,L.s))}</p>
-  ${L.ansprache?`<p class="dim">Ansprache gehalten: ${ANSPRACHE_TEXT[L.ansprache]}.</p>`:`${lzHinweis('zurufe')}<p class="dim">Ansprache in der Kabine:</p><div class="row lv-ansp">${ANSPRACHEN.map(a=>`<button onclick="liveAnsprache('${a}')"${lzAus('zurufe')} title="${ANSPRACHE_HILFE[a]}">${ANSPRACHE_TEXT[a]}${G.passt(L.s,a)&&a!=='schweigen'&&a!=='taktik'&&a!=='augenzwinkernd'?' ✓':''}</button>`).join('')}</div><p class="dim">✓ passt zur Lage. Unpassende Ansprachen schaden.</p>`}</div>`;}
+  ${L.ansprache?`<p class="dim">Ansprache gehalten${liveTribuene()?' vom Co-Trainer (du sitzt auf der Tribüne)':''}: ${ANSPRACHE_TEXT[L.ansprache]}.</p>`:liveTribuene()?`<p class="dim">${TRIBUENE_TEXT}</p>`:`${lzHinweis('zurufe')}<p class="dim">Ansprache in der Kabine:</p><div class="row lv-ansp">${ANSPRACHEN.map(a=>`<button onclick="liveAnsprache('${a}')"${lzAus('zurufe')} title="${ANSPRACHE_HILFE[a]}">${ANSPRACHE_TEXT[a]}${G.passt(L.s,a)&&a!=='schweigen'&&a!=='taktik'&&a!=='augenzwinkernd'?' ✓':''}</button>`).join('')}</div><p class="dim">✓ passt zur Lage. Unpassende Ansprachen schaden.</p>`}</div>`;}
 // Einschätzung des Co-Trainers: schwächster und stärkster Bereich im Vergleich zum Gegner (Genauigkeit ab K16)
 function coEinschaetzung(G,s){const W=G.werte(),me=W[s],op=W[1-s];if(!me||!op)return'';
   const v=[['linke Abwehrseite',me.DL/op.AR],['rechte Abwehrseite',me.DR/op.AL],['Innenverteidigung',me.DM/op.AM],['Mittelfeld',me.K/op.K],['linke Angriffsseite',me.AL/op.DR],['rechte Angriffsseite',me.AR/op.DL],['Mitte im Angriff',me.AM/op.DM]].sort((a,b)=>a[1]-b[1]);

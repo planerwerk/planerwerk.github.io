@@ -8,6 +8,7 @@ function tagesSpieleVorbereiten(d,live){kartenAuto(d); // unbeantwortete Ereigni
   return mitStrom(strom('spieltag',S.season,d),()=>{const out={tag:d,gruppen:[],list:[],mine:null},vorher=S.gespielt;let G=null,platz=null;S.gespielt=d;
   if(S.sponsOffers&&meinSpiel(d))sponsorWaehlen(0);if(werbungAusstehend()&&meinSpiel(d))werbungVorSpiel(); // freie Werbeflächen: erstes Angebot (K24a)
   const spiel=(h,a,o,meta,g)=>{const i=g.list.length;if(o.wichtig){kiSpritzen(h);kiSpritzen(a);} // fit spritzen nur in wichtigen Spielen (K10 §7)
+    if(!o.test&&(h===S.my||a===S.my))trainerVorSpiel(d); /* gesperrt: heute auf der Tribüne (K09g) */
     if(live&&!o.test&&(h===S.my||a===S.my)){G=spielAnlegen(h,a,Object.assign({},o,{auto:[h!==S.my,a!==S.my]}));platz={meta,g,i};g.list.push(null);return;}g.list.push(Object.assign(sim(h,a,o),meta));};
   testspielHeute(d).forEach(x=>{const g={titel:'Testspiel',art:'test',e:{art:'test'},x,list:[]},hg=x.heim?[S.my,x.gegner]:[x.gegner,S.my];spiel(hg[0],hg[1],{test:1,wb:'test'},{test:1},g);out.gruppen.push(g);}); // Testspiele ohne Halt (K11)
   for(const e of termineAm(d)){
@@ -59,6 +60,7 @@ function tagesSpieleAbschliessenLauf(out){const d=out.tag;S.gespielt=d;
       news(`Supercup: ${tn(r.h)} – ${tn(r.a)} ${r.hg}:${r.ag}${r.pen?` (i.E. ${r.pen[0]}:${r.pen[1]})`:''}. ${tn(w)} holt den Supercup.`,mg?(w===S.my?'good':'bad'):'');}
     else if(g.art==='eu')euNachSpielen(g,mg);} // Europapokal (K37, U19a)
   letztesSpielMerken(out.mine,d); // Joker und frühe Auswechslungen für Karten (K05c)
+  trainerNachSpiel(out.mine,d); // Sperre des Trainers: ein Spiel abgesessen (K09g)
   presseNachSpiel(out.mine);spielfeldrandNachSpiel(out.mine); // Interview am Spielfeldrand (K29f). Kampfansagen prüfen, Pressekonferenz nach Krise, Serie, Kantersieg (K29 §5.4, U17a)
   S.trust=clamp(S.trust,0,100);vorstandPruefen();
   return out;}
