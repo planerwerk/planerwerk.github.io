@@ -187,14 +187,18 @@ const kaufe=(w,p,fee,yrs=3)=>{const els=w.W.ev('document');els.getElementById('f
   t.cash=5e8;S.tag=100;let p=null,b=0;
   for(const q of S.pl.filter(x=>x.team>=0&&x.team<1000&&x.team!==S.my&&x.age<29).sort((a,c)=>c.str-a.str).slice(0,30)){const a=ev('askPrice')(q);b=Math.round(a*0.2/RMr)*RMr;setz(b/1e6,'spiele');
     kaufe(w,q,a-bw({b}));if(q.wech&&q.wech.nach===S.my){p=q;break;}}
-  setz(0,'spiele');const x=p&&(S.boni||[]).find(y=>y.pid===p.id),vereinbart=!!x&&x.b===b&&x.art==='spiele'&&x.st==null&&x.my===S.my;
-  F.boniWoche();const wartet=!!p&&S.boni.includes(x)&&x.st==null;const von=p&&S.teams[p.wech.von];if(p)ev('wechselTag')(184);
-  F.boniWoche();const da=!!p&&p.team===S.my&&x.st!=null&&S.boni.includes(x);let faellig=false;
-  if(da){x.st-=B.arten.spiele.n;const c0=t.cash,v0=von.cash;F.boniWoche();faellig=!S.boni.includes(x)&&t.cash===c0-x.b&&von.cash===v0+x.b&&S.news[0].t.includes('Bonus fällig');}
-  const alt={pid:p?p.id:0,tid:von?von.id:0,art:'aufstieg',b:1e6,s0:S.season-B.saisons,lg0:t.lg,my:S.my,st:0},weg={pid:S.pl.find(y=>y.team>=0&&y.team!==S.my).id,tid:0,art:'spiele',b:1e6,s0:S.season,lg0:t.lg,my:S.my,st:0};
-  S.boni=[alt,weg];F.boniWoche();const aufgeraeumt=S.boni.length===0;
-  pruef(form&&!!p&&vereinbart&&wartet&&da&&faellig&&aufgeraeumt,'Boni: zählen beim Verkäufer zur Hälfte, Grenzen im Formular, fällig nach 25 Pflichtspielen, verfallen und entfallen',
-    `Formular ${form}, Kauf ${p?p.n:'keiner'}, vereinbart ${vereinbart} (${b}), wartet ${wartet}, angekommen ${da}, fällig ${faellig}, verfallen/entfallen ${aufgeraeumt}`);}
+  setz(0,'spiele');const x=p&&(S.boni||[]).find(y=>y.pid===p.id),vereinbart=!!x&&x.b===b&&x.art==='spiele'&&typeof x.st==='number'&&x.my===S.my; /* FH2: st beim Kauf */
+  F.boniWoche();const wartet=!!p&&S.boni.includes(x);const von=p&&S.teams[p.wech.von];if(p)ev('wechselTag')(184);
+  F.boniWoche();const da=!!p&&p.team===S.my&&S.boni.includes(x);let faellig=false,zweite=false;
+  if(da){const z0=p.team;p.team=ev('ZWEITE_TEAM');F.boniWoche();zweite=S.boni.includes(x);p.team=z0; /* FH2: die Zweite ist kein Abgang */
+    x.st-=B.arten.spiele.n;const c0=t.cash,v0=von.cash;F.boniWoche();faellig=!S.boni.includes(x)&&t.cash===c0-x.b&&von.cash===v0+x.b&&S.news[0].t.includes('Bonus fällig');}
+  /* FH3: Ein Aufstieg am Ende der letzten Saison zählt noch (Bedingung vor Verfall); der Aufstiegsbonus zählt beim Verkäufer nur oben in der Tabelle voll */
+  const alt={pid:p?p.id:0,tid:von?von.id:0,art:'aufstieg',b:1e6,s0:S.season-B.saisons,lg0:t.lg,my:S.my,st:0},weg={pid:S.pl.find(y=>y.team>=0&&y.team!==S.my&&!y.wech).id,tid:0,art:'spiele',b:1e6,s0:S.season,lg0:t.lg,my:S.my,st:0},
+    knapp={pid:p?p.id:0,tid:von?von.id:0,art:'aufstieg',b:1e6,s0:S.season-B.saisons,lg0:t.lg+1,my:S.my,st:0};
+  const c1=t.cash;S.boni=[alt,weg,knapp];F.boniWoche();const aufgeraeumt=S.boni.length===0&&t.cash===c1-1e6;
+  const A=B.arten.aufstieg,oben=ev('rank')(t.lg,S.my)<=A.platz,aufWert=bw({b:2e6,art:'aufstieg'})===Math.round(2e6*B.wert*(oben?1:A.sonst));
+  pruef(form&&!!p&&vereinbart&&wartet&&da&&zweite&&faellig&&aufgeraeumt&&aufWert,'Boni: zählen beim Verkäufer zur Hälfte, Grenzen im Formular, fällig nach 25 Pflichtspielen, verfallen und entfallen',
+    `Formular ${form}, Kauf ${p?p.n:'keiner'}, vereinbart ${vereinbart} (${b}), wartet ${wartet}, angekommen ${da}, Zweite ${zweite}, fällig ${faellig}, verfallen/entfallen/knapp ${aufgeraeumt}, Aufstiegswert ${aufWert}`);}
 
 // K19j. Spielertausch (K19 §4.3): Dein Spieler zählt beim Verkäufer mit wert × vwKauf. Er geht nicht zu einem deutlich kleineren Verein, außer mit Wechselwunsch; nicht, wenn
 //       der Verkäufer keinen Platz hat; nicht bei Auslandsvereinen. Ein Kauf mit Tausch außerhalb des Fensters: beide wechseln zum nächsten Fensterbeginn.
@@ -211,6 +215,19 @@ const kaufe=(w,p,fee,yrs=3)=>{const els=w.W.ev('document');els.getElementById('f
   const getauscht=!!p&&!!q.wech&&q.wech.nach===von&&q.wech.von===S.my&&S.wechsel.includes(q.id);ev('wechselTag')(184);const danach=!!p&&p.team===S.my&&q.team===von;
   pruef(pruefung&&!!p&&getauscht&&danach,'Spielertausch: Wert beim Verkäufer, Einverständnis, Kaderplatz, beide wechseln zum Fenster',
     `Prüfung ${pruefung} (Wert ${wert}, kleiner Verein ${nein}, mit Wechselwunsch ${mitWunsch}, Ausland ${ausl}, voll ${voll}), Kauf ${p?p.n:'keiner'}, vereinbart ${getauscht}, nach dem Fenster ${danach}`);}
+
+// Prüfung FH1, FH5, FH6: Gewinnst du den Bieterwettstreit doch noch (der andere Verein kann nicht mehr kaufen), übernimmt die Einigung Bonus und Tausch; ohne sie wie bisher
+// der angerechnete Betrag. Ein Verein mit Transfersperre bekommt keinen Tauschspieler. Das Ablösefeld rundet auf.
+{const {S,F,ev,t}=welt(),M=ev('RM'),Sp=ev('squad');S.tag=10;
+  const p=S.pl.find(x=>x.team>=0&&x.team<1000&&x.team!==S.my&&!x.wech&&!x.leihe&&Sp(x.team).length>M.verkaeufer.kaderMin),b=S.teams.find(x=>x.id!==S.my&&x.id!==p.team&&ev('aktiv')(x));
+  const teile={fee:1e6,bonus:{art:'spiele',b:5e5},tausch:{pid:-1,w:2e5}},v=ev('verhandlung')(p),cash=b.cash;b.cash=0;
+  v.konk={tid:b.id,amt:3e6,bis:S.tag-1,dein:1.45e6,my:S.my,teile};ev('konkurrenzTag')(S.tag);const mit=!!v.einig&&v.einig.fee===1e6&&v.einig.bonus===teile.bonus&&v.einig.tausch===teile.tausch;
+  v.einig=null;v.konk={tid:b.id,amt:3e6,bis:S.tag-1,dein:1.45e6,my:S.my,teile:null};ev('konkurrenzTag')(S.tag);const ohne=!!v.einig&&v.einig.fee===1.45e6&&!v.einig.bonus;b.cash=cash;
+  const q=Sp(S.my).find(x=>ev('tauschMoeglich')(x)),z=S.teams.find(x=>x.id!==S.my&&ev('aktiv')(x)&&Sp(x.id).length<M.kaeufer.kaderMax),q0=q.ww;q.ww=3;
+  z.lzSperre=S.season;const gesperrt=!!(F.tauschPruefen(q.id,z,false)||{}).fehler;delete z.lzSperre;const frei=!(F.tauschPruefen(q.id,z,false)||{}).fehler;q.ww=q0;
+  const mio=ev('mioAuf'),rund=mio(1525000)==='1.53'&&mio(1520000)==='1.52'&&mio(2512500)==='2.52';
+  pruef(mit&&ohne&&gesperrt&&frei&&rund,'Bieterwettstreit mit Bonus und Tausch, kein Tausch mit gesperrtem Verein, Ablösefeld aufgerundet',
+    `mit Teilen ${mit}, ohne ${ohne}, Sperre ${gesperrt}/${frei}, Rundung ${rund} (${mio(1525000)}, ${mio(2512500)})`);}
 
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

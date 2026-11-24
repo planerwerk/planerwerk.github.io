@@ -82,13 +82,14 @@ const konkurrenzOffen=v=>!!(v&&v.konk&&v.konk.bis>=S.tag);
 // Computer-Vereine, die für p (bei Verein von) mit einem Gebot über fee mitbieten könnten. Auch für die Karte „Der lachende Dritte“ (K30c).
 function mitbieter(p,von,fee){const B=RAW.bieter,C=RCV.kauf;return S.teams.filter(t=>t.id!==S.my&&t.id!==p.team&&aktiv(t)&&!kiTransferSperre(t)&&t.rep>=von.rep-C.ansehenMinus&&p.age<=C.alterMax&&hatBedarf(t,p)&&t.cash*RM.angebote.kontoAnteil>fee*(1+B.plus[0])
     &&rahmenErlaubt(t,salaryFor(p.str))&&bez(t.id,p.team)>=RBZ.wirkung.gespraechUnter&&squad(t.id).length<RM.kaeufer.kaderMax);}
-function konkurrenzKauf(p,fee){const v=verhandlung(p),B=RAW.bieter,K=RAW.konkurrenz,von=p.team>=0&&p.team<1000?S.teams[p.team]:null;
+// teile: {fee, bonus, tausch} deines Angebots (K19i, K19j). fee ist der angerechnete Wert; die Teile übernimmt die Einigung, wenn du den Wettstreit doch gewinnst (Prüfung FH1).
+function konkurrenzKauf(p,fee,teile){const v=verhandlung(p),B=RAW.bieter,K=RAW.konkurrenz,von=p.team>=0&&p.team<1000?S.teams[p.team]:null;
   if(v.kg===S.season||!von||!fensterOffen()||!fensterOffen(S.tag+B.frist+1)||p.team===S.my||istLeihe(p))return null;v.kg=S.season;
   const kand=mitbieter(p,von,fee);
   if(!kand.length)return null;
   return mitStrom(strom('konkurrenzKauf',S.season,p.id),()=>{if(R()>=K.chance)return null;const b=pick(kand),be=beraterVon(p),gier=be&&be.prof==='gierig'?B.gierig:0;
     const amt=rundeAb(Math.min(fee*(1+B.plus[0]+R()*(B.plus[1]-B.plus[0])+gier),Math.max(fee,value(p)*RTR.maxFaktor),b.cash*RM.angebote.kontoAnteil));if(amt<=fee)return null;
-    v.konk={tid:b.id,amt,bis:S.tag+B.frist,dein:fee,my:S.my};return amt;});} /* dein: deine angenommene Ablöse, my: dein Verein beim Gebot (K20d, DP6) */
+    v.konk={tid:b.id,amt,bis:S.tag+B.frist,dein:fee,my:S.my,teile:teile&&(teile.bonus||teile.tausch)?teile:null};return amt;});} /* dein: deine angenommene Ablöse, my: dein Verein beim Gebot (K20d, DP6), teile: mit Bonus oder Tausch */
 // Recht des Spielers (K20 §4.2, K20d): Will er unbedingt zu dir, lehnt er den Höchstbietenden ab. Chance nach seinem Interesse an dir, kleiner, wenn der andere Verein
 // mehr Ansehen hat als deiner. Eigener Strom je Spieler und Saison.
 function spielerLehntAb(p,b){const N=RAW.konkurrenz.nein,i=wechselInteresse(p);if(i<N.ab)return false;const c=Math.min(N.max,N.basis+(i-N.ab)*N.jePunkt)*(b.rep>myT().rep?N.besser:1);
@@ -98,9 +99,10 @@ function spielerLehntAb(p,b){const N=RAW.konkurrenz.nein,i=wechselInteresse(p);i
 // K20d: Lehnt der Spieler ab oder kann der andere Verein nicht mehr kaufen, bleibt der Verkäufer bei deinem Gebot (Einigung wie nach einem Ja, 14 Tage, Prüfung DP1 und DP2).
 function konkurrenzTag(d){if(!S.verh)return;Object.keys(S.verh).forEach(id=>{const v=S.verh[id],k=v&&v.konk;if(!k||d<=k.bis)return;v.konk=null;const p=PIX.get(+id),b=S.teams[k.tid];
   if(!p||p.team!==v.team||p.team===S.my||k.tid===S.my||p.wech||p.leihe||!fensterOffen(d)||squad(p.team).length<=RM.verkaeufer.kaderMin)return;
-  const deins=k.dein!=null&&(k.my==null||k.my===S.my),zusage=txt=>{v.f=k.dein;v.fMy=S.my;v.fNl=0;delete v.fAlt;v.einig={fee:k.dein,bis:d+RAW.konkurrenz.zusageTage};news(txt,'good');};
-  if(!b||!aktiv(b)||b.cash<k.amt||squad(b.id).length>=RM.kaeufer.kaderMax){if(deins)zusage(`Der andere Verein zieht sein Angebot für ${p.n} zurück. ${vereinName(p)} bleibt bei deinen ${fmt(k.dein)}.`);return;}
-  if(deins&&spielerLehntAb(p,b)){zusage(`${p.n} lehnt das Angebot von ${b.name} ab, er will zu ${myT().name}. ${vereinName(p)} nimmt jetzt deine ${fmt(k.dein)}.`);return;}
+  const deins=k.dein!=null&&(k.my==null||k.my===S.my),T=k.teile,zusage=txt=>{v.f=k.dein;v.fMy=S.my;v.fNl=0;delete v.fAlt;
+    v.einig=T?{fee:T.fee,bonus:T.bonus||null,tausch:T.tausch||null,bis:d+RAW.konkurrenz.zusageTage}:{fee:k.dein,bis:d+RAW.konkurrenz.zusageTage};news(txt,'good');}; /* mit Bonus und Tausch (Prüfung FH1) */
+  if(!b||!aktiv(b)||b.cash<k.amt||squad(b.id).length>=RM.kaeufer.kaderMax){if(deins)zusage(`Der andere Verein zieht sein Angebot für ${p.n} zurück. ${vereinName(p)} bleibt bei ${T?'deinem Angebot':`deinen ${fmt(k.dein)}`}.`);return;}
+  if(deins&&spielerLehntAb(p,b)){zusage(`${p.n} lehnt das Angebot von ${b.name} ab, er will zu ${myT().name}. ${vereinName(p)} nimmt jetzt ${T?'dein Angebot':`deine ${fmt(k.dein)}`}.`);return;}
   delete S.verh[id];kiWechsel(p,b,k.amt);news(`Bieterwettstreit verloren: ${p.n} wechselt für ${fmt(k.amt)} zu ${b.name}.`,'bad');});}
 const schmerzgrenze=p=>unverkaeuflichKI(p)?rundeAb(forderungDu(p)):rundeAb(forderungDu(p)/RTR.forderung*RTR.schmerzgrenze); /* unverkäuflich: nicht unter den Höchstpreis (Prüfung DU2) */
 // Eine Runde: dein Angebot an den Verein. Rückgabe {ok,preis} oder {text,gegen}
@@ -181,26 +183,32 @@ function wechselTag(d){if(d>0&&fensterOffen(d)&&!fensterOffen(d-1)&&(S.wechsel||
 // ---------- Boni als Teil der Ablöse (K19 §5.2, K19i) ----------
 // Beim Kauf von einem deutschen Verein kannst du einen Teil als Bonus anbieten (Formular: bonus in Mio €, bonusArt). Der Verkäufer rechnet ihn mit RTR.boni.wert an
 // (kaufRunde und Bieterwettstreit sehen fee + bonusWert). Höchstens maxAnteil der festen Ablöse. Die Einigung merkt sich den Bonus (v.einig.bonus).
-// Nach dem Abschluss steht er in S.boni = [{pid, tid Verkäufer, art, b Betrag, s0 Saison, lg0 deine Liga beim Kauf, my dein Verein, st Pflichtspiele für dich bei Ankunft}].
-// Montags (boniWoche, ohne Zufall): fällig, wenn die Bedingung eintritt; verfällt nach saisons Saisons; entfällt, wenn der Spieler dich verlassen hat. Er gehört dem Verein
-// (Jobwechsel: finanzenJobwechsel leert S.boni wie die Raten). Nur deine Käufe, also nicht im Gleichschritt.
-const bonusWert=x=>x&&x.b>0?Math.round(x.b*RTR.boni.wert):0;
+// Nach dem Abschluss steht er in S.boni = [{pid, tid Verkäufer, art, b Betrag, s0 Saison, lg0 deine Liga beim Kauf, my dein Verein, st Pflichtspiele für dich beim Kauf}].
+// Montags (boniWoche, ohne Zufall): erst die Bedingung, dann der Verfall nach saisons Saisons (ein Aufstieg am Ende der zweiten Saison zählt noch, Prüfung FH3), dann der
+// Abgang. Leihe nach außen und die Zweite sind kein Abgang (FH2), ein vereinbarter Wechsel zu dir heißt „noch nicht da“. Er gehört dem Verein (Jobwechsel:
+// finanzenJobwechsel leert S.boni wie die Raten). Nur deine Käufe, also nicht im Gleichschritt.
+// Wert beim Verkäufer: wert × Betrag, beim Aufstiegsbonus nur, wenn du auf einem der ersten arten.aufstieg.platz Plätze stehst, sonst × arten.aufstieg.sonst (FH3).
+const bonusWert=x=>{if(!x||!(x.b>0))return 0;const A=RTR.boni.arten.aufstieg,f=x.art==='aufstieg'&&S.teams&&S.teams[S.my]?(rank(myT().lg,S.my)<=A.platz?1:A.sonst):1;return Math.round(x.b*RTR.boni.wert*f);};
 function bonusAusFormular(fee,aus){const d=typeof document!=='undefined'?document:null,e=d&&d.getElementById('bonus'),a=d&&d.getElementById('bonusArt'),B=RTR.boni;
   const b=Math.round((e?+e.value||0:0)*1e6/RM.runden)*RM.runden;if(!(b>0))return null;const art=a&&B.arten[a.value]?a.value:'spiele';
   if(aus)return{fehler:'Boni gibt es nur bei Käufen von deutschen Vereinen.'};
   if(b>fee*B.maxAnteil)return{fehler:`Der Bonus darf höchstens ${Math.round(B.maxAnteil*100)} % der festen Ablöse betragen (${fmt(Math.floor(fee*B.maxAnteil/RM.runden)*RM.runden)}).`};
-  if(art==='aufstieg'&&myT().lg===1)return{fehler:'In der 1. Liga gibt es keinen Aufstieg.'};return{art,b};}
-function bonusVereinbaren(p,tid,x){if(!x||!(x.b>0))return;(S.boni=S.boni||[]).push({pid:p.id,tid,art:x.art,b:x.b,s0:S.season,lg0:myT().lg,my:S.my,st:null});
+  if(art==='aufstieg'&&myT().lg===1)return{fehler:'In der 1. Liga gibt es keinen Aufstieg.'};
+  if(art==='aufstieg'&&ligaFertig(myT().lg))return{fehler:'Nach dem letzten Spieltag gibt es bis zum Saisonwechsel keinen Aufstiegsbonus.'};return{art,b};} /* FH3: sonst wäre ein schon feststehender Aufstieg sicher */
+const bonusBeiDir=p=>!!p&&(p.team===S.my||istZweite(p)||(!!p.leihe&&p.leihe.von===S.my));
+function bonusVereinbaren(p,tid,x){if(!x||!(x.b>0))return;(S.boni=S.boni||[]).push({pid:p.id,tid,art:x.art,b:x.b,s0:S.season,lg0:myT().lg,my:S.my,st:vereinsSpiele(p,S.my)});
   news(`Bonus vereinbart: ${fmt(x.b)} an ${tn(tid)}, fällig ${RTR.boni.arten[x.art].name} (binnen ${RTR.boni.saisons} Saisons).`,'');}
 const bonusText=x=>`${fmt(x.b)} ${RTR.boni.arten[x.art].name}`;
 function boniWoche(){const l=S.boni;if(!l||!l.length)return;const B=RTR.boni,t=myT();
-  S.boni=l.filter(x=>{if(!x||x.my!==S.my)return false;const p=PIX.get(x.pid),n=p?p.n:'einen früheren Spieler';
+  S.boni=l.filter(x=>{if(!x||x.my!==S.my)return false;const p=PIX.get(x.pid),n=p?p.n:'einen früheren Spieler',da=bonusBeiDir(p),unterwegs=!!p&&!!p.wech&&p.wech.nach===S.my;
+    if(da){if(x.st==null)x.st=vereinsSpiele(p,S.my); /* Einträge vor FH2 */
+      const ok=x.art==='spiele'?vereinsSpiele(p,S.my)-x.st>=B.arten.spiele.n:x.art==='aufstieg'?t.lg<x.lg0:false;
+      if(ok){money('Transfers: Boni',-x.b);const v=S.teams[x.tid];if(v)v.cash+=x.b;news(`Bonus fällig: ${p.n} ${B.arten[x.art].erfuellt}. ${fmt(x.b)} gehen an ${tn(x.tid)}.`,'');return false;}}
     if(S.season-x.s0>=B.saisons){news(`Der Bonus für ${n} an ${tn(x.tid)} ist verfallen, die Bedingung trat nicht ein.`,'');return false;}
-    if(!p)return false;
-    if(p.team!==S.my){if(x.st!=null){news(`${p.n} hat deinen Verein verlassen, der Bonus an ${tn(x.tid)} entfällt.`,'');return false;}return true;} /* noch nicht da: Wechsel zum Fenster */
-    if(x.st==null)x.st=vereinsSpiele(p,S.my);
-    const ok=x.art==='spiele'?vereinsSpiele(p,S.my)-x.st>=B.arten.spiele.n:x.art==='aufstieg'?t.lg<x.lg0:false;if(!ok)return true;
-    money('Transfers: Boni',-x.b);const v=S.teams[x.tid];if(v)v.cash+=x.b;news(`Bonus fällig: ${p.n} ${B.arten[x.art].erfuellt}. ${fmt(x.b)} gehen an ${tn(x.tid)}.`,'');return false;});}
+    if(!da&&!unterwegs){if(p)news(`${p.n} hat deinen Verein verlassen, der Bonus an ${tn(x.tid)} entfällt.`,'');return false;}
+    return true;});}
+// Betrag für das Ablösefeld in Mio €, auf 0,01 aufgerundet (Prüfung FH6: abgerundet lag der Vorschlag knapp unter der Forderung)
+const mioAuf=x=>(Math.ceil(Math.round(x)/1e4)/100).toFixed(2);
 
 // ---------- Spielertausch (K19 §4.3, K19j) ----------
 // Im Transferangebot an einen deutschen Verein kannst du einen eigenen Spieler dazugeben (Formular: tausch). Der Verkäufer rechnet ihn mit RTR.tausch.wert × vwKauf an
@@ -213,6 +221,7 @@ const tauschMoeglich=q=>!!q&&q.team===S.my&&!q.wech&&!q.leihe&&!istLeihe(q);
 function tauschPruefen(id,from,aus){if(id==null||id==='')return null;const q=PIX.get(+id),T=RTR.tausch;if(!tauschMoeglich(q))return{fehler:'Diesen Spieler kannst du nicht tauschen.'};
   if(aus||!from||from.id>=AV0)return{fehler:'Einen Tausch gibt es nur mit deutschen Vereinen.'};
   if(squad(from.id).length>=RM.kaeufer.kaderMax)return{fehler:`${from.name} hat keinen Platz mehr im Kader.`};
+  if(kiTransferSperre(from))return{fehler:`${from.name} hat eine Transfersperre und darf keinen Spieler holen.`}; /* Prüfung FH5 */
   if((q.ww||0)<1&&from.rep<myT().rep-T.ansehenMinus)return{fehler:`${q.n} will nicht zu ${from.name}.`};return{pid:q.id,w:tauschWert(q,from.id)};}
 const tauschAusFormular=(from,aus)=>{const e=typeof document!=='undefined'&&document.getElementById('tausch');return tauschPruefen(e?e.value:null,from,aus);};
 // Abschluss (aktionen.js offer): dein Spieler q geht zum Verkäufer b

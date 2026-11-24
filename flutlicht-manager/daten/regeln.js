@@ -276,7 +276,7 @@ const REGELN={
     // festen Ablöse, nur bei Käufen von deutschen Vereinen. Fällig, wenn die Bedingung binnen saisons Saisons eintritt (spiele: so viele Pflichtspiele für dich; aufstieg:
     // dein Verein spielt in einer höheren Liga als beim Kauf), sonst verfällt er; verlässt der Spieler dich vorher, entfällt er.
     boni:{wert:0.5,maxAnteil:0.5,saisons:2,arten:{spiele:{n:25,name:'nach 25 Pflichtspielen für dich',erfuellt:'hat 25 Pflichtspiele für dich bestritten'},
-      aufstieg:{name:'bei einem Aufstieg deines Vereins',erfuellt:'ist mit dir aufgestiegen'}}},
+      aufstieg:{name:'bei einem Aufstieg deines Vereins',erfuellt:'ist mit dir aufgestiegen',platz:6,sonst:0.2}}}, /* Aufstieg: voller wert nur bis Platz platz, sonst × sonst (Prüfung FH3) */
     // Spielertausch beim Kauf (K19 §4.3, K19j, 24.11., popolupo, vorläufig): Ein eigener Spieler als Teil des Angebots zählt beim Verkäufer mit wert × seinem Vereinswert
     // als Käufer (vwKauf). Er geht nur mit, wenn der Verein höchstens ansehenMinus weniger Ansehen hat als deiner oder er wechseln will (Wechselwunsch), und nur, wenn
     // der Verkäufer unter kaeufer.kaderMax Spieler hat. Nur bei Käufen von deutschen Vereinen.

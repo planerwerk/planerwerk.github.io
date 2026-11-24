@@ -2630,3 +2630,18 @@ Korrekturen auf `mitarbeit/popolupo-fg-korrekturen` (auf K19j).
 | FG4 | Vorschlag und „Beste Elf automatisch aufstellen“ übergingen die Tribüne (`p.trib`), `myXI` füllte Lücken mit genau diesen Spielern (älter). Jetzt `besteElfDu` und zweistufiges Auffüllen. | ✅ behoben |
 | FG5 | „Übernehmen“ im Trainingsplan fror die heutige Wahl des Co-Trainers als feste Vorlage ein. Jetzt „Ihn planen lassen“ (Vorlage „Co-Trainer entscheidet“). | 📌 vorläufig |
 | FG6 | Verweis in K16 §3.3 und das Innenraumverbot in K29 berichtigt. | ✅ behoben |
+
+## FH. Prüfung der Korrekturen FF, K19i und K19j ohne Laufzeit (24. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 98d4c78..b5e1927 gelesen, nichts ausgeführt. Zwei mittlere und vier niedrige Funde, kein Laufzeitfehler. Ohne Befund: FF1 bis FF5, alle übrigen Pfade von `offer` (Einigung, Gegenangebot, Mitgehen, Medizincheck mit zweitem Klick, gescheiterter Vertrag, Vorvertrag, Ausland, Vereinslose, reiner Tausch mit fee 0), der Tauschspieler gegen Zwischenfälle, Jobwechsel und Altstände beim Bonus, Gleichschritt 5a, die Tests.
+
+Korrekturen auf `mitarbeit/popolupo-fh-korrekturen` (auf den Korrekturen FG).
+
+| # | Befund | Status |
+|---|---|---|
+| FH1 | **Mittel:** Gewann der Spieler den Bieterwettstreit doch noch, stand der ganze angerechnete Wert als feste Ablöse in der Einigung, Bonus und Tausch fielen weg. `konkurrenzKauf` merkt sich die Teile (`konk.teile`), die Zusage übernimmt sie. | ✅ behoben |
+| FH2 | **Mittel:** Leihe und Zweite galten als Abgang, der Bonus ließ sich so aushebeln; Spiele vor dem ersten Montag zählten nicht. Jetzt `bonusBeiDir`, `st` beim Kauf, „noch nicht da“ nur bei vereinbartem Wechsel zu dir. | ✅ behoben |
+| FH3 | Der Aufstiegsbonus verfiel am Montag, an dem der Aufstieg der zweiten Saison sichtbar wurde; im Juni war ein feststehender Aufstieg sicher, nach einem Abstieg einer praktisch nie. Jetzt Bedingung vor Verfall, kein Aufstiegsbonus nach dem letzten Spieltag, Wert beim Verkäufer nur bis Platz 6 voll, sonst ein Fünftel. | ✅ behoben |
+| FH4 | Medizincheck und Nachlass-Karte senkten nur die feste Ablöse. Jetzt auf den ganzen angerechneten Wert, abgezogen von der festen Ablöse. | ✅ behoben |
+| FH5 | Ein Verein mit Transfersperre bekam per Tausch einen Spieler. `tauschPruefen` prüft `kiTransferSperre`. | ✅ behoben |
+| FH6 | Älter: Das Ablösefeld rundete mit `toFixed(2)` ab, der Vorschlag lag knapp unter der Forderung. Jetzt `mioAuf` (aufrunden). | ✅ behoben |
