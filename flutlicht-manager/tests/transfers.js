@@ -227,8 +227,9 @@ const kaufe=(w,p,fee,yrs=3)=>{const els=w.W.ev('document');els.getElementById('f
   z.lzSperre=S.season;const gesperrt=!!(F.tauschPruefen(q.id,z,false)||{}).fehler;delete z.lzSperre;const frei=!(F.tauschPruefen(q.id,z,false)||{}).fehler;q.ww=q0;
   const mio=ev('mioAuf'),rund=mio(1525000)==='1.53'&&mio(1520000)==='1.52'&&mio(2512500)==='2.52';
   /* Prüfung FI1: Ein Spieler in der simulierten Zweiten (Hoffenheim, Stuttgart: eigener Verein in der 3. Liga, p.zwP) ist für den Bonus noch bei dir */
-  const bd=ev('bonusBeiDir'),zw=S.teams.find(x=>x.id!==S.my&&ev('aktiv')(x)&&x.lg===3&&x.zweite==null),sp=Sp(S.my)[0],t0=sp.team;zw.zweite=S.my;sp.team=zw.id;sp.zwP=1;
-  const simZw=bd(sp);delete sp.zwP;const ohneZwP=!bd(sp);sp.team=t0;delete zw.zweite;
+  /* Prüfung FJ1: buildWorld setzt zweite bei jedem Verein als Zahl (−1 ohne Mutterverein), also < 0 suchen und −1 zurückschreiben */
+  const bd=ev('bonusBeiDir'),zw=S.teams.find(x=>x.id!==S.my&&ev('aktiv')(x)&&x.lg===3&&!(x.zweite>=0)),sp=Sp(S.my)[0],t0=sp.team,z0=zw.zweite;zw.zweite=S.my;sp.team=zw.id;sp.zwP=1;
+  const simZw=bd(sp);delete sp.zwP;const ohneZwP=!bd(sp);sp.team=t0;zw.zweite=z0==null?-1:z0;
   pruef(mit&&ohne&&gesperrt&&frei&&rund&&simZw&&ohneZwP,'Bieterwettstreit mit Bonus und Tausch, kein Tausch mit gesperrtem Verein, Ablösefeld aufgerundet, simulierte Zweite',
     `mit Teilen ${mit}, ohne ${ohne}, Sperre ${gesperrt}/${frei}, Rundung ${rund} (${mio(1525000)}, ${mio(2512500)}), simulierte Zweite ${simZw}/${ohneZwP}`);}
 

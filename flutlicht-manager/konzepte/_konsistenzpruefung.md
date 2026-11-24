@@ -2660,3 +2660,13 @@ Korrekturen auf `mitarbeit/popolupo-fi-korrekturen` (auf den Korrekturen FH).
 | FI4 | „Grundordnung ändern“, Saisonwechsel und Formations-Automatik stellten Tribünen-Spieler auf. Jetzt alle über `besteElfDu`. | ✅ behoben |
 | FI5 | `besteElfDu` nahm bei einer Lücke wieder alle Spieler. Jetzt füllen Tribünen-Spieler nur die Lücken. | ✅ behoben |
 | FI6 | Das Formular nennt den geringeren Wert des Aufstiegsbonus, K33 nennt `S.live.anspCo`. | ✅ behoben |
+
+## FJ. Prüfung der Korrekturen FI ohne Laufzeit (24. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 862337e..62a41f3 gelesen, nichts ausgeführt. Der Spielcode ist ohne Befund (Ladereihenfolge von `zweiteSim`, `besteElfDu` in Saisonwechsel und Training, keine falschen Verwerfungen in `tauschPruefen`, Gleichschritt 5a). Ein Fund im Test.
+
+Korrekturen auf `mitarbeit/popolupo-fj-korrekturen` (auf K03d).
+
+| # | Befund | Status |
+|---|---|---|
+| FJ1 | **Mittel, Test:** Der Fall FI1 in `tests/transfers.js` suchte einen Verein mit `zweite==null`, `buildWorld` setzt dort aber −1. Das `find` fand nichts, der Test stürzte ab und nahm FH1, FH5 und FH6 mit. Jetzt `!(zweite>=0)` und −1 zurückschreiben. Nebenbei die Meldung beim verworfenen Tausch ohne doppelten Punkt. | ✅ behoben |

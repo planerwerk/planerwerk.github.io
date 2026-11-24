@@ -69,7 +69,7 @@ function offer(id){if(transferSperre()||transferSperreNaechste()){toast(transfer
   if(!rahmenErlaubt(t,o.sal)){msg.textContent=`Der Vorstand gibt das Gehalt nicht frei: Mit ${p.n} lägen die Gehälter mehr als ${Math.round((RFP.budget.sperreAb-1)*100)} % über dem Rahmen von ${fmt(gehaltsRahmen(t))}. Erst verkaufen.`;return;} // Gehaltsrahmen (K23d)
   // Schritt 1: Ablöse mit dem Verein (K19 §5.2). Im letzten halben Jahr seines Vertrags geht es ohne Ablöse zum Sommer (Vorvertrag, K21 §4.3).
   if(from&&!vorv){const v=verhandlung(p);if(v.einig&&v.einig.bis>=S.tag){fee=v.einig.fee;bonus=v.einig.bonus||null;tausch=v.einig.tausch||null;
-      if(tausch){const z=tauschPruefen(tausch.pid,from,aus);if(z&&z.fehler){v.einig=null;msg.textContent=`Der Tausch geht nicht mehr (${z.fehler}). Die Einigung gilt nicht mehr, mach ein neues Angebot.`;save();return;}}} /* vollständig neu geprüft, auch Transfersperre (Prüfung FI3) */
+      if(tausch){const z=tauschPruefen(tausch.pid,from,aus);if(z&&z.fehler){v.einig=null;msg.textContent=`Der Tausch geht nicht mehr: ${z.fehler} Die Einigung gilt nicht mehr, mach ein neues Angebot.`;save();return;}}} /* vollständig neu geprüft, auch Transfersperre (Prüfung FI3) */
     else{fee=Math.round((+document.getElementById('fee').value||0)*1e6);
       bonus=bonusAusFormular(fee,aus);if(bonus&&bonus.fehler){msg.textContent=bonus.fehler;return;}tausch=tauschAusFormular(from,aus);if(tausch&&tausch.fehler){msg.textContent=tausch.fehler;return;}
       const bw=bonusWert(bonus)+(tausch?tausch.w:0),wert=fee+bw; /* der Verkäufer rechnet den Bonus zur Hälfte an (K19i), den Tauschspieler mit seinem Wert (K19j) */
