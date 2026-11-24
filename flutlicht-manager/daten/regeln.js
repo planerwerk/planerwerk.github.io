@@ -272,6 +272,11 @@ const REGELN={
     bedarfAnzeige:{max:5}, // K31b (22.11., popolupo): höchstens so viele Vereine mit Bedarf auf der Spielerkarte, der Rest als Zahl
     // Weiterverkaufsbeteiligung (K19 §5.2, K19d, 22.11., popolupo): anteil am nächsten Verkauf durch den Käufer; er bewertet sie mit bewertung × anteil × Ablöse und zahlt so viel weniger
     weiterverkauf:{anteil:0.15,bewertung:0.2},
+    // Boni als Teil der Ablöse beim Kauf (K19 §5.2, K19i, 24.11., popolupo, vorläufig): Der Verkäufer rechnet einen Bonus mit wert seines Betrags an. Höchstens maxAnteil der
+    // festen Ablöse, nur bei Käufen von deutschen Vereinen. Fällig, wenn die Bedingung binnen saisons Saisons eintritt (spiele: so viele Pflichtspiele für dich; aufstieg:
+    // dein Verein spielt in einer höheren Liga als beim Kauf), sonst verfällt er; verlässt der Spieler dich vorher, entfällt er.
+    boni:{wert:0.5,maxAnteil:0.5,saisons:2,arten:{spiele:{n:25,name:'nach 25 Pflichtspielen für dich',erfuellt:'hat 25 Pflichtspiele für dich bestritten'},
+      aufstieg:{name:'bei einem Aufstieg deines Vereins',erfuellt:'ist mit dir aufgestiegen'}}},
     restlaufzeit:[0.6,0.6,0.85,1],
     finanzlage:{knappUnter:2e6,knapp:0.9,reichAb:60e6,reich:1.1}, // K23c: reich erst ab 60 Mio. € (vorher 20 Mio.), weil die Kontostände gewachsen sind
     forderung:1.15,schmerzgrenze:0.95,maxFaktor:1.8,

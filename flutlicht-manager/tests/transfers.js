@@ -177,5 +177,24 @@ const kaufe=(w,p,fee,yrs=3)=>{const els=w.W.ev('document');els.getElementById('f
   ev('verhUmstellen')();const ok=a.kater===undefined&&a.stdTag===undefined&&a.gb===null&&frisch.bis===h+AT&&alt.bis===h+AT&&b.kater===h+K&&b.stdTag===h-3;
   pruef(zw&&ok,'Fristen: Bieterrunde auch in der Zweiten und im Ausland, alte Spielstände werden beim Laden umgestellt',`Zweite/Ausland ${zw}, Umstellung ${ok} (Kater ${a.kater}, Angebot alt bis ${alt.bis})`);}
 
+// K19i. Boni als Teil der Ablöse (K19 §5.2): Der Verkäufer rechnet einen Bonus mit wert an. Mehr als maxAnteil der festen Ablöse geht nicht, nicht bei Auslandsvereinen,
+//       kein Aufstiegsbonus in der 1. Liga. Ein Kauf mit Bonus legt ihn in S.boni; er wartet, bis der Spieler da ist, wird nach 25 Pflichtspielen für dich fällig (dein Konto
+//       zahlt, der Verkäufer bekommt es), verfällt nach saisons Saisons und entfällt, wenn der Spieler dich verlassen hat.
+{const w=welt(),{S,F,ev,t}=w,B=ev('RTR').boni,RMr=ev('RM').runden,doc=ev('document'),bw=ev('bonusWert'),setz=(b,art)=>{doc.getElementById('bonus').value=String(b);doc.getElementById('bonusArt').value=art;};
+  setz(3,'spiele');const zuViel=!!(F.bonusAusFormular(4e6,false)||{}).fehler;setz(1,'spiele');const gut=F.bonusAusFormular(4e6,false),ausl=!!(F.bonusAusFormular(4e6,true)||{}).fehler;
+  const lg0=t.lg;t.lg=1;setz(1,'aufstieg');const auf1=!!(F.bonusAusFormular(4e6,false)||{}).fehler;t.lg=lg0;setz(0,'spiele');const ohne=F.bonusAusFormular(4e6,false)===null;
+  const form=bw({b:2e6})===Math.round(2e6*B.wert)&&bw(null)===0&&zuViel&&!!gut&&gut.art==='spiele'&&gut.b===1e6&&ausl&&auf1&&ohne;
+  t.cash=5e8;S.tag=100;let p=null,b=0;
+  for(const q of S.pl.filter(x=>x.team>=0&&x.team<1000&&x.team!==S.my&&x.age<29).sort((a,c)=>c.str-a.str).slice(0,30)){const a=ev('askPrice')(q);b=Math.round(a*0.2/RMr)*RMr;setz(b/1e6,'spiele');
+    kaufe(w,q,a-bw({b}));if(q.wech&&q.wech.nach===S.my){p=q;break;}}
+  setz(0,'spiele');const x=p&&(S.boni||[]).find(y=>y.pid===p.id),vereinbart=!!x&&x.b===b&&x.art==='spiele'&&x.st==null&&x.my===S.my;
+  F.boniWoche();const wartet=!!p&&S.boni.includes(x)&&x.st==null;const von=p&&S.teams[p.wech.von];if(p)ev('wechselTag')(184);
+  F.boniWoche();const da=!!p&&p.team===S.my&&x.st!=null&&S.boni.includes(x);let faellig=false;
+  if(da){x.st-=B.arten.spiele.n;const c0=t.cash,v0=von.cash;F.boniWoche();faellig=!S.boni.includes(x)&&t.cash===c0-x.b&&von.cash===v0+x.b&&S.news[0].t.includes('Bonus fällig');}
+  const alt={pid:p?p.id:0,tid:von?von.id:0,art:'aufstieg',b:1e6,s0:S.season-B.saisons,lg0:t.lg,my:S.my,st:0},weg={pid:S.pl.find(y=>y.team>=0&&y.team!==S.my).id,tid:0,art:'spiele',b:1e6,s0:S.season,lg0:t.lg,my:S.my,st:0};
+  S.boni=[alt,weg];F.boniWoche();const aufgeraeumt=S.boni.length===0;
+  pruef(form&&!!p&&vereinbart&&wartet&&da&&faellig&&aufgeraeumt,'Boni: zählen beim Verkäufer zur Hälfte, Grenzen im Formular, fällig nach 25 Pflichtspielen, verfallen und entfallen',
+    `Formular ${form}, Kauf ${p?p.n:'keiner'}, vereinbart ${vereinbart} (${b}), wartet ${wartet}, angekommen ${da}, fällig ${faellig}, verfallen/entfallen ${aufgeraeumt}`);}
+
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

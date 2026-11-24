@@ -178,6 +178,30 @@ function wechselVollziehen(sommer){const l=(S.wechsel||[]).map(id=>PIX.get(id)).
 // Täglich: am ersten Tag des Winterfensters (der Sommer beginnt mit dem Saisonwechsel)
 function wechselTag(d){if(d>0&&fensterOffen(d)&&!fensterOffen(d-1)&&(S.wechsel||[]).length)wechselVollziehen(false);}
 
+// ---------- Boni als Teil der Ablöse (K19 §5.2, K19i) ----------
+// Beim Kauf von einem deutschen Verein kannst du einen Teil als Bonus anbieten (Formular: bonus in Mio €, bonusArt). Der Verkäufer rechnet ihn mit RTR.boni.wert an
+// (kaufRunde und Bieterwettstreit sehen fee + bonusWert). Höchstens maxAnteil der festen Ablöse. Die Einigung merkt sich den Bonus (v.einig.bonus).
+// Nach dem Abschluss steht er in S.boni = [{pid, tid Verkäufer, art, b Betrag, s0 Saison, lg0 deine Liga beim Kauf, my dein Verein, st Pflichtspiele für dich bei Ankunft}].
+// Montags (boniWoche, ohne Zufall): fällig, wenn die Bedingung eintritt; verfällt nach saisons Saisons; entfällt, wenn der Spieler dich verlassen hat. Er gehört dem Verein
+// (Jobwechsel: finanzenJobwechsel leert S.boni wie die Raten). Nur deine Käufe, also nicht im Gleichschritt.
+const bonusWert=x=>x&&x.b>0?Math.round(x.b*RTR.boni.wert):0;
+function bonusAusFormular(fee,aus){const d=typeof document!=='undefined'?document:null,e=d&&d.getElementById('bonus'),a=d&&d.getElementById('bonusArt'),B=RTR.boni;
+  const b=Math.round((e?+e.value||0:0)*1e6/RM.runden)*RM.runden;if(!(b>0))return null;const art=a&&B.arten[a.value]?a.value:'spiele';
+  if(aus)return{fehler:'Boni gibt es nur bei Käufen von deutschen Vereinen.'};
+  if(b>fee*B.maxAnteil)return{fehler:`Der Bonus darf höchstens ${Math.round(B.maxAnteil*100)} % der festen Ablöse betragen (${fmt(Math.floor(fee*B.maxAnteil/RM.runden)*RM.runden)}).`};
+  if(art==='aufstieg'&&myT().lg===1)return{fehler:'In der 1. Liga gibt es keinen Aufstieg.'};return{art,b};}
+function bonusVereinbaren(p,tid,x){if(!x||!(x.b>0))return;(S.boni=S.boni||[]).push({pid:p.id,tid,art:x.art,b:x.b,s0:S.season,lg0:myT().lg,my:S.my,st:null});
+  news(`Bonus vereinbart: ${fmt(x.b)} an ${tn(tid)}, fällig ${RTR.boni.arten[x.art].name} (binnen ${RTR.boni.saisons} Saisons).`,'');}
+const bonusText=x=>`${fmt(x.b)} ${RTR.boni.arten[x.art].name}`;
+function boniWoche(){const l=S.boni;if(!l||!l.length)return;const B=RTR.boni,t=myT();
+  S.boni=l.filter(x=>{if(!x||x.my!==S.my)return false;const p=PIX.get(x.pid),n=p?p.n:'einen früheren Spieler';
+    if(S.season-x.s0>=B.saisons){news(`Der Bonus für ${n} an ${tn(x.tid)} ist verfallen, die Bedingung trat nicht ein.`,'');return false;}
+    if(!p)return false;
+    if(p.team!==S.my){if(x.st!=null){news(`${p.n} hat deinen Verein verlassen, der Bonus an ${tn(x.tid)} entfällt.`,'');return false;}return true;} /* noch nicht da: Wechsel zum Fenster */
+    if(x.st==null)x.st=vereinsSpiele(p,S.my);
+    const ok=x.art==='spiele'?vereinsSpiele(p,S.my)-x.st>=B.arten.spiele.n:x.art==='aufstieg'?t.lg<x.lg0:false;if(!ok)return true;
+    money('Transfers: Boni',-x.b);const v=S.teams[x.tid];if(v)v.cash+=x.b;news(`Bonus fällig: ${p.n} ${B.arten[x.art].erfuellt}. ${fmt(x.b)} gehen an ${tn(x.tid)}.`,'');return false;});}
+
 // ---------- Anzeige ----------
 function wechselKarte(){const l=(S.wechsel||[]).map(id=>PIX.get(id)).filter(p=>p&&p.wech&&(p.wech.nach===S.my||p.wech.von===S.my));if(!l.length)return'';
   return`<div class="card" style="margin-top:14px"><h3>Vereinbarte Wechsel</h3>${l.map(p=>`<p><a href="#" onclick="openP(${p.id});return false" style="color:var(--chalk)">${esc(p.n)}</a>: ${p.wech.nach===S.my?`kommt von ${esc(vereinName(p))}`:`geht zu ${esc(wechselZiel(p.wech))}`} am ${esc(datumKurz(p.wech.ab))}${p.wech.preis?` (Ablöse ${fmt(p.wech.preis)}, bezahlt)`:''}</p>`).join('')}</div>`;}
