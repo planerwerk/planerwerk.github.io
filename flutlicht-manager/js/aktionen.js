@@ -37,7 +37,7 @@ function setRolle(i,pos){if(!darf('rollen','rolleOderSchuetze'))return;const t=m
 function setSchuetze(art,i,id){if(!darf('schuetzen','rolleOderSchuetze'))return;const t=myT();t.schuetzen=t.schuetzen||{};id=id?+id:null;
   if(art==='elfmeter'){const l=(t.schuetzen.elfmeter||[]).slice();l[i]=id;t.schuetzen.elfmeter=l.filter((x,j,a)=>x&&a.indexOf(x)===j);}else t.schuetzen[art]=id;save();render();}
 function setEin(v){if(!darf('einstellung'))return;myT().ein=v;save();render();}
-function autoXI(){if(!darf('aufstellung'))return;S.lineup=bestXI(S.my,myT().form);save();render();toast('Beste verfügbare Elf aufgestellt.');}
+function autoXI(){if(!darf('aufstellung'))return;S.lineup=besteElfDu();save();render();toast('Beste verfügbare Elf aufgestellt.');} // ohne Spieler auf der Tribüne (Prüfung FG4)
 function setPrice(v){if(!darf('preise','sponsorOderPreis'))return;const P=RF.ticketPreis;myT().price=clamp(Math.round(+v||P.standard),P.min,P.max);save();render();}
 function loan(k){if(!darf('kredit'))return;const t=myT(),max=kreditRahmen(t);if(k>0){const a=Math.min(k*1e6,max-S.loan);if(a<=0){toast('Kreditrahmen ausgeschöpft.');return;}kreditAufnehmen(a,+((document.getElementById('kreditJahre')||{}).value)||RFP.kredit.standard);}else{const a=Math.min(k===-99?S.loan:1e6,S.loan,Math.max(0,t.cash));if(a<=0){toast('Nichts zu tilgen oder kein Geld.');return;}kreditTilgen(a);}save();render();}
 const bauLabel=(k,t)=>k==='cap'?`Tribünenausbau (+${RB.tribuene.plaetze.toLocaleString('de-DE')} Plätze)`:k==='logen'?`${RB.logen.anzahl} VIP-Logen`:'Fanshop Stufe '+(t.shop+1);

@@ -2615,3 +2615,18 @@ Korrekturen auf `mitarbeit/popolupo-ff-korrekturen` (auf K16h).
 | FF3 | „Wurfgeschosse“ nach dem Pokalfinale (neutraler Platz) als „Heimniederlage“, Zuschauer-Vergehen nach Europapokalspielen beim DFB. Das Pokalfinale trägt jetzt `neutral`, der Merker `eu`, beide Karten kommen dort nicht. | ✅ behoben |
 | FF4 | `bieterF` rückte nur in `S.pl` mit, nicht in der Zweiten und im Ausland. Jetzt alle, jeder Spieler einmal. | ✅ behoben |
 | FF5 | Spielstände mit einem Saisonwechsel vor FD behielten falsche Fristen. `fristenAltstand` (in `verhUmstellen`, also beim Laden und Import) räumt zu weit voraus liegende Werte ab. | ✅ behoben |
+
+## FG. Prüfung der Korrekturen FE, K09g und K16h ohne Laufzeit (24. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 854f95b..98d4c78 gelesen, nichts ausgeführt. Ein mittlerer und fünf niedrige Funde, kein Laufzeitfehler. Ohne Befund: die Korrekturen FE samt Tests, `G.m` ist in der Halbzeit 45, `art:'elfmeter'` bei Toren und Fehlschüssen, die Sperre ohne Neuladen in allen Wettbewerben, bei „Sofort berechnen“, Testspieltagen, Jobwechsel, Entlassung, Saisonwechsel und alten Ständen, kein neuer Würfel, eindeutige Namen, Tests K09g und K16h.
+
+Korrekturen auf `mitarbeit/popolupo-fg-korrekturen` (auf K19j).
+
+| # | Befund | Status |
+|---|---|---|
+| FG1 | **Mittel:** Neuladen mitten im Live-Spiel setzte `heute` neu, eine Sperre aus diesem Spiel (vierte Gelbe, Gelb-Rot) galt dann schon im selben Spiel und war danach abgesessen. `trainerVorSpiel` tut beim Fortsetzen nichts mehr. | ✅ behoben |
+| FG2 | Gelb-Rot in der Halbzeitpause ließ die Ansprache ausfallen, eine eigene Ansprache wurde danach dem Co-Trainer zugeschrieben. Jetzt spricht er in diesem Fall, und `S.live.anspCo` merkt, wer gesprochen hat. | ✅ behoben |
+| FG3 | Der Vorschlag nannte bei neuen Spielern die übrigen Umstellungen nicht. Jetzt mit Zahl der weiteren Plätze. | ✅ behoben |
+| FG4 | Vorschlag und „Beste Elf automatisch aufstellen“ übergingen die Tribüne (`p.trib`), `myXI` füllte Lücken mit genau diesen Spielern (älter). Jetzt `besteElfDu` und zweistufiges Auffüllen. | ✅ behoben |
+| FG5 | „Übernehmen“ im Trainingsplan fror die heutige Wahl des Co-Trainers als feste Vorlage ein. Jetzt „Ihn planen lassen“ (Vorlage „Co-Trainer entscheidet“). | 📌 vorläufig |
+| FG6 | Verweis in K16 §3.3 und das Innenraumverbot in K29 berichtigt. | ✅ behoben |

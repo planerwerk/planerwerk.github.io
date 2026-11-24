@@ -89,16 +89,17 @@ const stabGehaelter=tid=>(S.stab||[]).filter(x=>x.team===tid).reduce((a,x)=>a+x.
 const vorschlagAn=b=>!(S.einst&&S.einst.vorschlagAus&&S.einst.vorschlagAus[b]);
 function vorschlagSchalten(b,an){S.einst=S.einst||{aus:{}};const A=S.einst.vorschlagAus=S.einst.vorschlagAus||{};if(an)delete A[b];else A[b]=1;save();render();}
 // Unterschied deiner Startelf zur besten Elf: wer neu hinein (rein), wer hinaus (raus), und wie viele Plätze sonst anders besetzt sind (getauscht)
-function aufstellungVorschlag(){const t=myT(),xi=myXI(),b=bestXI(S.my,t.form),inXi=new Set(xi.filter(id=>id!=null)),inB=new Set(b.filter(id=>id!=null));
+function aufstellungVorschlag(){const xi=myXI(),b=besteElfDu(),inXi= /* ohne Spieler auf der Tribüne (Prüfung FG4) */new Set(xi.filter(id=>id!=null)),inB=new Set(b.filter(id=>id!=null));
   const rein=b.filter(id=>id!=null&&!inXi.has(id)).map(id=>PIX.get(id)).filter(Boolean),raus=xi.filter(id=>id!=null&&!inB.has(id)).map(id=>PIX.get(id)).filter(Boolean);
   const getauscht=b.filter((id,i)=>id!=null&&inXi.has(id)&&xi[i]!==id).length;return{rein,raus,getauscht};}
 function vorschlagAufstellungKarte(){if(autoB('aufstellung'))return'';
   if(!vorschlagAn('aufstellung'))return`<p class="dim"><button onclick="vorschlagSchalten('aufstellung',true)">Vorschläge des Co-Trainers zeigen</button></p>`;
   const v=aufstellungVorschlag(),n=x=>x.map(p=>esc(p.n)).join(', ');
-  const text=v.rein.length?`Der Co-Trainer würde ${n(v.rein)} bringen, dafür ${v.raus.length?n(v.raus):'niemanden'} auf die Bank setzen.`:v.getauscht?`Der Co-Trainer würde dieselben Spieler aufstellen, aber ${v.getauscht} anders auf die Positionen verteilen.`:'';
+  const text=v.rein.length?`Der Co-Trainer würde ${n(v.rein)} bringen, dafür ${v.raus.length?n(v.raus):'niemanden'} auf die Bank setzen${v.getauscht?` und ${v.getauscht} weitere ${v.getauscht===1?'Platz':'Plätze'} anders besetzen`:''}.`:v.getauscht?`Der Co-Trainer würde dieselben Spieler aufstellen, aber ${v.getauscht} anders auf die Positionen verteilen.`:'';
   return`<div class="card"><h3>Vorschlag des Co-Trainers</h3>${text?`<p>${text}</p><div class="row"><button onclick="autoXI()"${lzAus('aufstellung')}>Vorschlag übernehmen</button>`:'<p class="dim">Er hätte dieselbe Elf aufgestellt.</p><div class="row">'}<button onclick="vorschlagSchalten('aufstellung',false)">Keine Vorschläge mehr</button></div></div>`;}
-// Trainingsplan: die Vorlage, die der Co-Trainer heute nähme, wenn du eine feste gewählt hast und sie davon abweicht
+// Trainingsplan: die Vorlage, die der Co-Trainer heute nähme, wenn du eine feste gewählt hast und sie davon abweicht. Seine Wahl hängt vom Abstand zum Spiel ab, darum
+// übergibt „Ihn planen lassen“ die Planung an ihn (Vorlage auto), statt seine heutige Wahl als feste Vorlage einzufrieren (Prüfung FG5, vorläufig).
 function vorschlagVorlageText(t,akt){if(akt==='auto'||autoB('vorlage'))return'';
   if(!vorschlagAn('vorlage'))return`<p class="dim"><button onclick="vorschlagSchalten('vorlage',true)">Vorschläge des Co-Trainers zeigen</button></p>`;
   const k=vorlageAuto(spielAbstand(S.tag).get(S.my)||{},S.tag,t);if(k===akt)return'';const D=vorlageDef(k,t);if(!D)return'';
-  return`<p>Der Co-Trainer würde jetzt „${esc(D.name)}“ nehmen. <button onclick="setVorlage('${k}')"${lzAus('vorlage')}>Übernehmen</button> <button onclick="vorschlagSchalten('vorlage',false)">Keine Vorschläge mehr</button></p>`;}
+  return`<p>Der Co-Trainer würde jetzt „${esc(D.name)}“ nehmen und den Plan danach Woche für Woche anpassen. <button onclick="setVorlage('auto')"${lzAus('vorlage')}>Ihn planen lassen</button> <button onclick="vorschlagSchalten('vorlage',false)">Keine Vorschläge mehr</button></p>`;}

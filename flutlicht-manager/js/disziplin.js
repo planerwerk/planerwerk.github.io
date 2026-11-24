@@ -134,8 +134,9 @@ function trainerSperre(n,grund){if(!(n>0))return;const K=trainerKS();K.sp+=n;K.w
   news(`${grund}: Du bist für ${K.sp===1?'das nächste Pflichtspiel':`die nächsten ${K.sp} Pflichtspiele`} gesperrt und sitzt auf der Tribüne. Zurufe gibt es dann nicht, die Halbzeitansprache hält der Co-Trainer.`,'bad');}
 // Gelbe Karte für dich: jede RD.trainer.sperreJe-te in der Saison sperrt für sperreSpiele Spiele (Bundesliga seit 2019/20: nach der vierten). Gibt die Zahl der Gelben zurück.
 function trainerGelb(){const T=RD.trainer,K=trainerKS();K.g++;if(K.g%T.sperreJe===0)trainerSperre(T.sperreSpiele,`${K.g}. Gelbe Karte als Trainer`);return K.g;}
-// Vor dem Anpfiff deines Pflichtspiels (ablauf.js tagesSpieleVorbereiten): Gilt eine Sperre, sitzt du heute auf der Tribüne
-function trainerVorSpiel(d){if(trainerGesperrt())S.trainerK.heute=absTag(d);}
+// Vor dem Anpfiff deines Pflichtspiels (ablauf.js tagesSpieleVorbereiten): Gilt eine Sperre, sitzt du heute auf der Tribüne. Nicht beim Fortsetzen eines Live-Spiels
+// nach Neuladen (live.js liveFortsetzen, S.live dieses Tages): Was vor dem Anpfiff galt, steht schon in heute; eine Sperre aus diesem Spiel gilt erst ab dem nächsten (Prüfung FG1).
+function trainerVorSpiel(d){if(S.live&&S.live.tag===d)return;if(trainerGesperrt())S.trainerK.heute=absTag(d);}
 // Nach deinem Pflichtspiel (ablauf.js nach letztesSpielMerken): Saßt du auf der Tribüne, ist ein Spiel abgesessen. Eine Sperre aus diesem Spiel (Gelb-Rot, vierte Gelbe)
 // gilt erst ab dem nächsten, weil heute dafür nicht gesetzt war.
 function trainerNachSpiel(r,d){const K=S.trainerK;if(!r||r.test||!K||K.heute==null||K.heute!==absTag(d))return;K.heute=null;K.sp=Math.max(0,K.sp-1);

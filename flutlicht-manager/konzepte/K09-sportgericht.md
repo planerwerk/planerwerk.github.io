@@ -259,6 +259,7 @@ disziplin:{
 - **Auf der Tribüne:** keine Zurufe an Mannschaft oder Spieler, keine Ansprache von dir. In der Halbzeit spricht der Co-Trainer: Mit Wahrscheinlichkeit Qualität ÷ 20 (K16) wählt er die passende Ansprache, sonst „Taktik betonen“. Seine Ansprache ändert deine Glaubwürdigkeit nicht. Wechsel und Taktik gibst du weiter durch. In simulierten Spielen gibt es ohnehin keine Ansprache, dort ändert die Sperre nichts.
 - **Büro:** Karte „Du als Trainer“ bei laufender Sperre und eine Gelbe vor der nächsten Sperre.
 - **Gleichschritt:** Gelbe gibt es nur nach deinem Protest, Innenraumverbote nur nach deiner Kritik. In 5a passiert beides nicht.
+- **Seit Prüfung FG:** Neuladen mitten im Live-Spiel setzt die Tribüne nicht neu, eine Sperre aus diesem Spiel gilt also weiter erst ab dem nächsten (FG1). Gelb-Rot in der Halbzeitpause: Der Co-Trainer hält die Ansprache, die Anzeige nennt ihn nur, wenn er sie wirklich gehalten hat (FG2, `S.live.anspCo`).
 
 15. **Lernstufen (K36, nachgetragen 9.11.):** Karten, Sperren und Verfahren sind ab der ersten Lizenz (Teamleiter) als Information sichtbar. Strafe annehmen oder Einspruch einlegen ab der A-Lizenz (Stufe 4). Davor entscheidet der Verein nach der Regel der Computer-Vereine (`kiEinspruch`), im Posteingang steht nur eine Zeile.
 

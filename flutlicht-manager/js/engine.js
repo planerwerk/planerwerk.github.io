@@ -28,7 +28,9 @@ function bestXI(tid,form,kader){const sl=slotsVerein(S.teams[tid],form),pool=(ka
 function myXI(){if(autoB('aufstellung'))return bestXI(S.my,myT().form); // Automatik (K36): der Co-Trainer stellt auf
   const t=myT(),sl=slotsVerein(t),pool=squad(S.my).filter(avail),used=new Set();
   const xi=sl.map((pos,i)=>{const id=(S.lineup||[])[i];const p=PIX.get(id);if(p&&p.team===S.my&&avail(p)&&!used.has(id)){used.add(id);return id;}return null;});
-  return fillXI(sl,pool,xi,used);}
+  return fillXI(sl,pool,fillXI(sl,pool.filter(p=>!p.trib),xi,used),used);} /* Lücken erst ohne die, die du auf die Tribüne gesetzt hast (p.trib, Prüfung FG4), dann mit allen */
+// Beste Elf für dich (K16h „Vorschlag“, aktionen.js autoXI): ohne Spieler auf der Tribüne, außer es fehlen sonst Spieler (Prüfung FG4)
+function besteElfDu(){const f=myT().form,b=bestXI(S.my,f,squad(S.my).filter(p=>!p.trib));return b.some(x=>x==null)?bestXI(S.my,f):b;}
 
 // Teamwerte (K04 §3.2): Kontrolle, Angriff Mitte, Angriff links und rechts, Abwehr Mitte, Abwehr links und rechts, Torwart
 function teamWerte(sd,fr,off,lage){const T=RE.team,k=RE.staerke,acc={K:[],AM:[],AL:[],AR:[],DM:[],DL:[],DR:[]};let tw=k.leererPlatz;

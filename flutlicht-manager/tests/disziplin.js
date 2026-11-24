@@ -79,9 +79,10 @@ console.log(`\n${N} Saison(s), ${sum.spiele} Ligaspiele, in ${((Date.now()-t0)/1
   S.live={tag:S.tag,eing:[],m:0,k:0};const g0=S.trainerK.g;F.liveProtest();const ohneAnlass=!S.live.prot;
   let n=0;while(!S.live.trib&&n<60){L.anlass=G.m;L.protestiert=false;F.liveProtest();n++;}
   const gelbRot=S.live.trib===1&&S.live.tg===2&&S.trainerK.g===g0+1&&S.trainerK.sp===T.gelbRotSpiele&&ev('liveTribuene')()&&!ev('protestOffen')(Object.assign(L,{anlass:G.m,protestiert:false}))&&S.live.eing.some(e=>e.a==='zuruf');
-  while(G.m<45)G.minute();F.liveAnsprache('loben');const co=!!L.ansprache&&L.anspPasst===null&&S.live.eing.some(e=>e.a==='ansprache')&&String(L.meldung).includes('Co-Trainer');
-  pruef(vorher&&nachVier&&nichtGleich&&trib&&test&&ab&&saison&&iv1&&iv2&&anlass&&ohneAnlass&&gelbRot&&co,'Trainer-Karten: Sperre nach der vierten Gelben ab dem nächsten Pflichtspiel, Innenraumverbot, Protest mit Gelb-Rot und Tribüne, Ansprache des Co-Trainers',
+  F.trainerVorSpiel(d);const neuladen=S.trainerK.heute==null; /* Prüfung FG1: Neuladen mitten im Spiel macht die Sperre aus diesem Spiel nicht zu einer für heute */
+  while(G.m<45)G.minute();F.liveAnsprache('loben');const co=!!L.ansprache&&L.anspPasst===null&&S.live.anspCo===1&&S.live.eing.some(e=>e.a==='ansprache')&&String(L.meldung).includes('Co-Trainer');
+  pruef(vorher&&nachVier&&nichtGleich&&trib&&test&&ab&&saison&&iv1&&iv2&&anlass&&ohneAnlass&&gelbRot&&neuladen&&co,'Trainer-Karten: Sperre nach der vierten Gelben ab dem nächsten Pflichtspiel, Innenraumverbot, Protest mit Gelb-Rot und Tribüne, Ansprache des Co-Trainers',
     `vier Gelbe ${vorher}/${nachVier}, nicht im selben Spiel ${nichtGleich}, Tribüne ${trib}, Testspiel ${test}, abgesessen ${ab}, Saisonwechsel ${saison}, Innenraum ${iv1}/${iv2}, Anlässe ${anlass}, `+
-    `ohne Anlass ${ohneAnlass}, Gelb-Rot nach ${n} Protesten ${gelbRot}, Co-Trainer ${co} (${L.ansprache})`);}
+    `ohne Anlass ${ohneAnlass}, Gelb-Rot nach ${n} Protesten ${gelbRot}, Neuladen ${neuladen}, Co-Trainer ${co} (${L.ansprache})`);}
 
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

@@ -66,7 +66,7 @@ Gespeichert in `S.stab` (alle Mitarbeiter der Welt mit Verein oder vereinslos), 
 | Presse | Pressesprecher | ab Welle 4 |
 | Jugend | Jugendleiter | ab Welle 3 |
 
-- **Vorschlag:** Der Mitarbeiter stellt eine Lösung vor, du bestätigst oder änderst. Kein Halt, er erscheint dort, wo du ohnehin hinschaust (Aufstellung, Wochenplan). Gebaut seit K16h (Nr. 11).
+- **Vorschlag:** Der Mitarbeiter stellt eine Lösung vor, du bestätigst oder änderst. Kein Halt, er erscheint dort, wo du ohnehin hinschaust (Aufstellung, Wochenplan). Gebaut seit K16h (Nr. 19).
 - **Automatik:** Er entscheidet. Du siehst im Wochenbericht, was er getan hat.
 
 ## 4. Abläufe
@@ -271,7 +271,7 @@ stab:{
 16. **Deckel gegen Ausnutzung:** Alle Boni für Verhandlungen zusammen (Sportdirektor, Berater-Beziehung, Klauseln) senken eine Forderung höchstens um 15 %. Gute Leute verlangen viel Gehalt, und sie altern.
 17. **Die Besten wollen zu den Besten:** Mitarbeiter wählen ihren Verein wie Spieler (K19): nach Ansehen, Gehalt, Erfolg und Infrastruktur. Größere Vereine werben gute Leute ab (die Abwerbung aus Nr. 11 kommt damit). Reiche Vereine haben so den besten Stab, ohne dass das Spiel nachhilft (K02 §5.3a).
 18. **Computer-Vereine** stellen nach Budget und Profil ein, mit denselben Regeln.
-19. **K16h Vorschlag des Co-Trainers (24.11.2026, popolupo, ohne Testlauf, vorläufig, §3.3):** Machst du Aufstellung oder Trainingsplan selbst, zeigt der Co-Trainer im Modus Vorschlag (Voreinstellung), was er anders machen würde. In der Aufstellung eine Karte „Vorschlag des Co-Trainers“: wen er bringen und wen er auf die Bank setzen würde (beste Elf wie seine Automatik), oder wie viele Plätze er anders verteilen würde, mit „Vorschlag übernehmen“. Im Trainingsplan bei einer festen Vorlage ein Satz, welche Vorlage er jetzt nähme, mit „Übernehmen“. „Keine Vorschläge mehr“ stellt den Bereich auf „selbst“ (`S.einst.vorschlagAus`), ein Knopf zeigt sie wieder. Unter der Automatik gibt es keinen Vorschlag, dort entscheidet er ohnehin. Der Vorschlag ist genau (ohne Rauschen nach Qualität, das fehlt noch, Nr. 11), kein Halt, ohne Klick keine Wirkung.
+19. **K16h Vorschlag des Co-Trainers (24.11.2026, popolupo, ohne Testlauf, vorläufig, §3.3):** Machst du Aufstellung oder Trainingsplan selbst, zeigt der Co-Trainer im Modus Vorschlag (Voreinstellung), was er anders machen würde. In der Aufstellung eine Karte „Vorschlag des Co-Trainers“: wen er bringen und wen er auf die Bank setzen würde (beste Elf wie seine Automatik), oder wie viele Plätze er anders verteilen würde, mit „Vorschlag übernehmen“. Im Trainingsplan bei einer festen Vorlage ein Satz, welche Vorlage er jetzt nähme. Seit Prüfung FG5 (vorläufig) übergibt der Knopf „Ihn planen lassen“ die Planung an ihn („Co-Trainer entscheidet“), weil seine Wahl vom Abstand zum Spiel abhängt und als feste Vorlage etwa die Vorbereitung in die Saison hineinziehen würde. Seit Prüfung FG4 lassen Vorschlag, „Beste Elf automatisch aufstellen“ und das Auffüllen von Lücken die Spieler aus, die du auf die Tribüne gesetzt hast (außer es fehlen sonst Spieler). „Keine Vorschläge mehr“ stellt den Bereich auf „selbst“ (`S.einst.vorschlagAus`), ein Knopf zeigt sie wieder. Unter der Automatik gibt es keinen Vorschlag, dort entscheidet er ohnehin. Der Vorschlag ist genau (ohne Rauschen nach Qualität, das fehlt noch, Nr. 11), kein Halt, ohne Klick keine Wirkung.
 
 ## Quellen
 
