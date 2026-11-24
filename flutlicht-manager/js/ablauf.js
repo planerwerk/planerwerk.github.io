@@ -67,7 +67,7 @@ function tagesSpieleAbschliessenLauf(out){const d=out.tag;S.gespielt=d;
 
 // Werte pro Tag: Ausfalltage zählen herunter, Frische erholt sich, Fristen laufen ab, Bau wird fertig.
 function taeglich(d){return mitStrom(strom('tag',S.season,d),()=>taeglichLauf(d));}
-function taeglichLauf(d){const T=RT;praegungTag(d);wechselTag(d);konkurrenzTag(d); // vereinbarte Wechsel zum Winterfenster (K19, U10a), Frist im Bieterwettstreit (K20c); TV-Raten (K23h, nur mit Schalter) seit Prüfung FK3 nach finanzenTag
+function taeglichLauf(d){const T=RT;praegungTag(d);wechselTag(d);konkurrenzTag(d);laenderspielTag(d); // vereinbarte Wechsel zum Winterfenster (K19, U10a), Frist im Bieterwettstreit (K20c); TV-Raten (K23h, nur mit Schalter) seit Prüfung FK3 nach finanzenTag
   if(S.phase==='play')testspieleTag(d);
   const ab=S.phase==='play'?spielAbstand(d):new Map(),status=new Map();
   S.teams.forEach(t=>{if(!aktiv(t))return;sommerTag(t,ab.get(t.id),d);const st=sommerStatus(t);status.set(t.id,st);
@@ -75,7 +75,7 @@ function taeglichLauf(d){const T=RT;praegungTag(d);wechselTag(d);konkurrenzTag(d
     if(S.phase==='play'&&d===auftaktTag(t)+RSO.leistungstest.tag&&t.id===S.my)leistungstest();
     if(!status.get(t.id))trainingVerein(t,ab.get(t.id),d);});
   S.pl.forEach(p=>{if(p.inj>0)p.inj--;if(p.team<-1)return;const st=p.team>=0?status.get(p.team)||'':'',urlaub=st==='urlaub'?true:st==='laufplan'?'laufplan':false;
-    const tr=!urlaub&&p.team>=0&&p.inj<=0&&S.phase==='play'?trainingTag(p,S.teams[p.team],ab.get(p.team),d):0;tagesWerte(p,urlaub,tr);});
+    const tr=!urlaub&&p.team>=0&&p.inj<=0&&S.phase==='play'&&!beiNationalteam(p)?trainingTag(p,S.teams[p.team],ab.get(p.team),d):0;tagesWerte(p,urlaub,tr);});
   S.offers.filter(o=>o.bis<d).forEach(o=>versprechenAngebot(o.pid,o.amt)); // abgelaufenes Angebot zählt wie abgelehnt (Versprechen „Wechsel“, K15)
   S.offers=S.offers.filter(o=>o.bis>=d&&PIX.get(o.pid)&&PIX.get(o.pid).team===S.my&&!PIX.get(o.pid).wech&&(o.tid>=AV0?!!avVon(o.tid):S.teams[o.tid]&&aktiv(S.teams[o.tid])));
   kartenAuto(d-1); // offene Ereigniskarten von gestern entscheidet der Co-Trainer (K30, U12d)

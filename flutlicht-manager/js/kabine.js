@@ -82,7 +82,7 @@ function saisonEntschieden(t,tab){const E=RKA.bank.bedeutungslos,fx=S.fx&&S.fx[t
   for(const g of new Set([...(E.grenzen[t.lg]||[]),(t.id===S.my?S.target:t.expPos)||0])){if(!g||g>=tab.length)continue;if(i<g?tab[i].p-tab[g].p<=rest*3:tab[g-1].p-tab[i].p<=rest*3)return false;}return true;}
 // Vor dem Nachlauf der Spiele: wer verletzt oder gesperrt fehlte (danach sitzen die Sperren ab, und neue Verletzungen kommen dazu). 1 = nur gesperrt
 function einsatzVorher(list){list.forEach(r=>{const wb=wbVon(r);r.na=[0,1].map(s=>{const tid=s?r.a:r.h;if(tid>=1000||!S.teams[tid])return[];
-  return mitWettbewerb(wb,()=>squad(tid).filter(p=>!avail(p)).map(p=>[p.id,p.inj>0?0:1]));});});}
+  return mitWettbewerb(wb,()=>squad(tid).filter(p=>!avail(p)).map(p=>[p.id,p.inj>0?0:beiNationalteam(p)?2:1]));});});}
 // Nach den Noten (applyMatch): Einsatzzeit und Folgen je Spieler, dazu Startelf, Siege und neue Stammspieler für den Zusammenhalt
 function einsatzBuchen(list,d=S.tag){const tabs={},heute=absTag(d);
   list.forEach(r=>{const pokal=wbVon(r)==='pokal',ws=r.ws||[],tore=new Map();(r.ev||[]).forEach(e=>{if(e.t==='G')tore.set(e.p,(tore.get(e.p)||0)+1);});
@@ -100,7 +100,7 @@ function einsatzBuchen(list,d=S.tag){const tabs={},heute=absTag(d);
 // Ein Spieler in einem Pflichtspiel seines Vereins. c: Spiel, Startelf, Spieltagskader, Minuten, Wechsel, Ausfälle, englische Woche, angekündigte Rotation
 function bankFall(p,c){const B=RKA.bank,t=c.t,gespielt=c.min.has(p.id),m=c.min.get(p.id)||0;kabineInit(p);if(p.ea==null)p.ea=erwartungEinsatz(p);
   if(p.rue&&c.heute>p.rue)delete p.rue;
-  if(!gespielt&&c.fehlt.has(p.id)){if(c.fehlt.get(p.id))p.nsp=1;delete p.bg;return;} // verletzt oder gesperrt: zählt nicht
+  if(!gespielt&&c.fehlt.has(p.id)){if(c.fehlt.get(p.id)===1)p.nsp=1;delete p.bg;return;} // verletzt oder gesperrt: zählt nicht
   const e=erwartungEinsatz(p),unerf=unerfahren(p),etabliert=!unerf&&krStufe(p)>=2,diva=hatEig(p,'diva')?B.diva:1,rolle=kaderRolle(p),note=c.r.nt&&c.r.nt[p.id]!=null?c.r.nt[p.id]:null;
   let anteil=Math.min(1,m/90),tempo=rolle==='pokal'&&c.pokal?B.pokalTempo:RKA.einsatzTempo,zaehlt=true,grund='';
   if(gespielt){p.ppk=(p.ppk||0)+1;if(note!=null)p.n5=[...(p.n5||[]),note].slice(-5);delete p.nsp;

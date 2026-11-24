@@ -39,7 +39,8 @@ function ligaVerlegen(d,ids,grund){const M=RWB.spielplan.mindestTage;let n=0;
 // Lage für dein nächstes Ligaspiel in höchstens RWB.verlegung.vorTage Tagen (ab morgen, auch wenn vorher ein Pokal- oder Europapokalspiel kommt, Prüfung EI4): n einsatzfähige Spieler (nicht verletzt oder krank, nicht in der Liga gesperrt), tw: ein Torwart dabei,
 // grund: weniger als minSpieler oder kein Torwart. Ohne solches Spiel null.
 function verlegungLage(){const V=RWB.verlegung;let e=null;for(let d=S.tag+1;d<=S.tag+V.vorTage&&!e;d++){const x=meinSpiel(d);if(x&&x.art==='liga'&&x.i!=null)e=x;}if(!e)return null;
-  const ok=squad(S.my).filter(p=>!(p.inj>0)&&!(sperreIn(p,'liga')>0)),tw=ok.some(p=>p.pos==='TW');return{e,n:ok.length,tw,grund:ok.length<V.minSpieler||!tw};}
+  const a=absTag(e.tag),ok=squad(S.my).filter(p=>!(p.inj>0)&&!(sperreIn(p,'liga')>0)&&!beiNationalteam(p,a)),ab=squad(S.my).filter(p=>beiNationalteam(p,a)).length,tw=ok.some(p=>p.pos==='TW');
+  return{e,n:ok.length,tw,ab,grund:ok.length<V.minSpieler||!tw||ab>=V.abgestellt};} /* seit K13f auch bei abgestellt Nationalspielern (nur mit Länderspielen) */
 // Neuer Termin: der erste Tag ab dem alten + mindestTage, an dem beide Vereine mindestTage Abstand zu allen ihren Spielen haben, kein Montag,
 // bis sucheTage später, vor dem nächsten Ligaspiel beider Vereine (sonst stimmt die Reihenfolge der Spieltage nicht mehr, Prüfung EI3) und vor dem letzten Spieltag,
 // nicht an einem Tag mit deinem Testspiel in der Nähe (EI4). Sonst null.
@@ -55,7 +56,7 @@ function spielVerlegenLauf(){const V=RWB.verlegung,l=verlegungLage();if(!l)retur
   news(`Spielverlegung: Die Liga verlegt dein Spiel gegen ${tn(h===S.my?a:h)} vom ${datumKurz(alt)} auf den ${datumKurz(x)}.`,'good');return null;}
 // Karte im Büro, nur wenn ein Antrag Aussicht hat
 function verlegungKarte(){if(S.fired||S.phase!=='play')return'';const l=verlegungLage();if(!l||!l.grund||((S.verlegt||{})[S.season]||0)>=RWB.verlegung.proSaison)return'';
-  return`<div class="card"><h3>Spielverlegung</h3><p>Für das Spiel am ${datumKurz(l.e.tag)} sind nur ${l.n} Spieler einsatzfähig${l.tw?'':', kein Torwart'}. Die Liga verlegt, wenn weniger als ${RWB.verlegung.minSpieler} Spieler mit einem Torwart bereitstehen, höchstens ${RWB.verlegung.proSaison}-mal je Saison.</p>
+  return`<div class="card"><h3>Spielverlegung</h3><p>Für das Spiel am ${datumKurz(l.e.tag)} sind nur ${l.n} Spieler einsatzfähig${l.tw?'':', kein Torwart'}${l.ab?`, ${l.ab} bei Nationalmannschaften`:''}. Die Liga verlegt, wenn weniger als ${RWB.verlegung.minSpieler} Spieler mit einem Torwart bereitstehen${lsAn()?` oder mindestens ${RWB.verlegung.abgestellt} bei Nationalmannschaften sind`:''}, höchstens ${RWB.verlegung.proSaison}-mal je Saison.</p>
     <button onclick="spielVerlegen()"${lzAus('verlegung')}>Verlegung beantragen</button>${lzHinweis('verlegung')}</div>`;}
 // Tage, an denen ein Verein schon spielt (Liga ohne das Spiel ohne, Pokal solange er dabei ist, Supercup, Europapokal)
 function spieltageVon(tid,ohne){const s=new Set(),t=tid<1000?S.teams[tid]:null;if(!t)return s;const lg=t.lg,Z=S.plan.zeit[lg]||[];
@@ -115,3 +116,28 @@ function pokalSensationen(list){(list||[]).forEach(r=>{const w=winner(r),l=w===r
 // Prüfung EE4: nicht in der 1. Runde (dort ziehen alle Profis Amateure), höchstens einmal je Saison (S.cup ist je Saison neu)
 function pokalLosDesJahres(paare,r){if(r===0||(S.cup&&S.cup.losJahr))return null;const p=(paare||[]).find(x=>x.some(id=>id!=null&&id<1000&&S.teams[id]&&S.teams[id].lg===1&&S.teams[id].rep>=RWB.pokal.losTopAb)&&x.some(id=>id>=1000));
   if(p){if(S.cup)S.cup.losJahr=1;news(`Pokal-Los des Jahres: ${tn(p[0])} gegen ${tn(p[1])}.`,'');}return p||null;}
+
+// ---------- Länderspiele: Abstellung und Rückkehr (K13 §3.4, §5.1, K13f) ----------
+// Nur mit RWB.laenderspiele.an (vorerst aus). Am ersten Tag jeder Länderspielpause (S.plan.pausen, Name „Länderspielpause“) nominiert jede Nation ihre bis zu max
+// Stärksten mit Stärke ab der Schwelle (lsSchwelle); wer höchstens rand darüber liegt, braucht Form ab formMin und Spielpraxis ab praxisMin. Gezählt werden die Spieler
+// deutscher Vereine und des Auslandspools, markiert nur die deutscher Vereine: p.lsp = {von, bis (absolute Tage, bis = Tag nach der Pause), n Länderspiele, st Stammkraft}.
+// Solange fehlt er (avail) und trainiert nicht im Verein. Danach kehrt er zurück (eigener Strom „laender“ je Spieler): Stammkräfte spielen 90 Minuten, die anderen
+// minuten; wer gespielt hat, verliert Frische, trägt Saisonbelastung, kann sich verletzen, Selbstvertrauen ± sv; alle: Stimmung + stimmung.
+// Unabhängig davon, ob es dein Verein oder ein Computer-Verein ist (Gleichschritt), nur die Meldungen gibt es bei dir.
+const lsAn=()=>!!(RWB.laenderspiele&&RWB.laenderspiele.an);
+const beiNationalteam=(p,a)=>{if(!p||!p.lsp)return false;const x=a!=null?a:absTag(S.tag);return x>=p.lsp.von&&x<=p.lsp.bis;};
+const lsSchwelle=nat=>{const L=RWB.laenderspiele.schwelle,n=nation(nat);return n&&n.rang?Math.max(L.min,L.basis-L.jeRang*(n.rang-1)):Infinity;};
+function laenderspielTag(d){if(!lsAn()||!S.plan)return;const a=absTag(d);
+  S.pl.forEach(p=>{if(p.lsp&&a>p.lsp.bis)mitStrom(strom('laender',S.season,d,p.id),()=>lsRueckkehr(p));});
+  S.plan.pausen.filter(x=>x.name==='Länderspielpause'&&x.von===d).forEach(x=>lsNominieren(x));}
+function lsNominieren(x){const L=RWB.laenderspiele,von=absTag(x.von),bis=absTag(x.bis)+1,n=Math.max(2,Math.round((x.bis-x.von+1)/L.tageJeSpiel/2)*2),nach=new Map();
+  S.pl.forEach(p=>{if(p.team<0||!p.nat||p.inj>0||p.lsp)return;if(p.team<AV0){if(!S.teams[p.team]||!aktiv(S.teams[p.team]))return;}else if(!avVon(p.team))return;
+    const s=lsSchwelle(p.nat);if(p.str<s||(p.str<s+L.rand&&((p.form||0)<L.formMin||(p.sp||0)<L.praxisMin)))return;
+    if(!nach.has(p.nat))nach.set(p.nat,[]);nach.get(p.nat).push(p);});
+  const mein=[];nach.forEach(l=>l.sort((a,b)=>b.str-a.str||a.id-b.id).slice(0,L.max).forEach((p,i)=>{if(p.team>=AV0)return;p.lsp={von,bis,n,st:i<L.stamm?1:0};if(p.team===S.my)mein.push(p);}));
+  if(mein.length)news(`Länderspielpause: ${mein.map(p=>`${p.n} (${natName(p)})`).join(', ')} ${mein.length===1?'ist':'sind'} bis ${datumKurz(x.bis)} bei der Nationalmannschaft, ${n} Länderspiele.`,'');}
+function lsRueckkehr(p){const L=RWB.laenderspiele,x=p.lsp;delete p.lsp;if(p.team<0||p.team>=AV0)return;let sp=0;
+  for(let i=0;i<x.n;i++)if((x.st?90:ri(L.minuten[0],L.minuten[1]))>0)sp++;
+  stimmungAendern(p,L.stimmung);
+  if(sp){p.fit=Math.max(0,p.fit-ri(L.frische[0],L.frische[1]));p.sb=(p.sb||0)+L.belastung*sp;svAendern(p,R()<0.5?L.sv:-L.sv);if(R()<L.verletzung)verletzen(p,'kollision');}
+  if(p.team===S.my)news(`${p.n} ist von der Nationalmannschaft zurück, ${sp?`${sp} Länderspiel${sp===1?'':'e'}`:'ohne Einsatz'}${p.inj>0?', verletzt':''}.`,p.inj>0?'bad':'');}

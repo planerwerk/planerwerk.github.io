@@ -437,7 +437,8 @@ lizenz:{
 194. **K19k Boni in Angeboten der Computer-Vereine (24.11., popolupo, ohne Testlauf):** gehört zum Bereich `transfers` wie die Angebote selbst. Unter der Automatik gibt es keine Angebote an dich, also auch keine Boni.
 195. **K18g Scoutbericht (24.11., popolupo, ohne Testlauf):** keine neue Funktion, mehr Anzeige nach der Gegnerbeobachtung (Bereich `beobachten`). Die mögliche Reaktion auf deinen Lieblingsstil nennt er nur, wenn du den Stil selbst wählst, wie im Spiel.
 196. **K30h Sammlung der Ereigniskarten (24.11., popolupo, ohne Testlauf):** keine Funktion, eine Seite der Statistik, auf jeder Lizenzstufe sichtbar. Sie zählt auch die Karten, die die Automatik entscheidet.
-197. **K14f Neuer Trainer (24.11., popolupo, ohne Testlauf):** keine neue Funktion, ein weiterer Bank-Grund nach deinem Vereinswechsel. Wirkt in beiden Welten des Gleichschritts gleich, weil der Jobwechsel in beiden gleich verläuft.
+197. **K14f Neuer Trainer (24.11., popolupo, ohne Testlauf):** keine neue Funktion, ein weiterer Bank-Grund nach deinem Vereinswechsel. Den Gleichschritt 5a berührt er nicht, dort gibt es keinen Jobwechsel.
+198. **K13f Länderspiele (24.11., popolupo, ohne Testlauf, Schalter aus):** keine neue Funktion, die Abstellung trifft deinen Verein wie jeden Computer-Verein (in beiden Welten von 5a gleich). Neu ist nur der Grund „Nationalspieler“ für die Spielverlegung (Bereich `verlegung`).
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 

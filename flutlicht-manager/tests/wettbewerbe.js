@@ -89,5 +89,17 @@ pruef(supercups.length===N-1&&supercups.every(x=>!x.verl&&(x.hg!==x.ag)===!x.pen
     'Pokal-Rotation: Meldung nach dem Aus als Favorit mit vielen Wechseln, nicht bei wenigen, nicht gegen Gleichstarke, nicht nach Sieg; vor dem ersten Ligaspiel gegenüber der besten Elf (vor dem Anpfiff, FD3)',
     `gegen Amateure ${amateur}, zu wenig ${zuWenig}, gegen Gleichstarke ${gegenGleich}, nach Sieg ${sieg}, beste Elf ${mitBester}, ohne die beste Elf ${ohneBeste} (Meldung ${text}), FD3: Elf vor dem Anpfiff ${vorher}, fremdes Spiel ${fremd}, eigenes ${eigen&&eigen.length}, mit Ligaspiel ${mitLiga}`);}
 
+// K13f. Länderspiele (K13 §3.4, §5.1), nur mit Schalter: aus wird niemand abgestellt; an am ersten Tag der Pause die Stärksten je Nation ab der Schwelle
+//       (höchstens max, nur Spieler deutscher Vereine markiert); sie fehlen (avail) bis zum Tag nach der Pause, danach kehren sie zurück, Stammkräfte mit weniger Frische.
+{const {W:W5,F:F5}=neueWelt();F5.buildWorld(SEED);const S5=W5.S,ev=W5.ev;S5.my=6;S5.mgr='Test';F5.setTarget();
+  const L=ev('RWB').laenderspiele,x=S5.plan.pausen.find(y=>y.name==='Länderspielpause'),abs=ev('absTag'),av=ev('avail'),bn=ev('beiNationalteam');
+  S5.tag=x.von;F5.laenderspielTag(x.von);const aus=!S5.pl.some(p=>p.lsp);
+  L.an=true;F5.laenderspielTag(x.von);const nom=S5.pl.filter(p=>p.lsp),je={};nom.forEach(p=>{je[p.nat]=(je[p.nat]||0)+1;});
+  const schwelle=nom.every(p=>p.str>=ev('lsSchwelle')(p.nat)&&p.team>=0&&p.team<ev('AV0')),max=Object.values(je).every(n=>n<=L.max),fehlt=nom.length>0&&nom.every(p=>!av(p)&&bn(p));
+  const bis=nom.length?nom[0].lsp.bis:0,st=nom.find(p=>p.lsp.st);if(st)st.fit=100;
+  S5.tag=x.bis+2;F5.laenderspielTag(x.bis+2);const zurueck=nom.every(p=>!p.lsp)&&(!st||st.fit<100||st.inj>0);L.an=false;
+  pruef(aus&&nom.length>0&&schwelle&&max&&fehlt&&zurueck&&bis===abs(x.bis)+1,'Länderspiele: nur mit Schalter, Stärkste je Nation ab der Schwelle, fehlen bis nach der Pause, kommen müde zurück',
+    `aus ${aus}, nominiert ${nom.length} (${Object.keys(je).length} Nationen), Schwelle ${schwelle}, höchstens ${L.max} ${max}, fehlen ${fehlt}, Ende ${bis}/${abs(x.bis)+1}, zurück ${zurueck}`);}
+
 console.log(`\n${N} Saison(s) in ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

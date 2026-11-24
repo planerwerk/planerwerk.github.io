@@ -863,7 +863,14 @@ const REGELN={
   wettbewerbe:{pokal:{auslosungTage:14,profitopfZweite:14,heimrechtBisRunde:4,losTopAb:80,rotation:{favorit:5,wechsel:4}},supercup:{vorSpieltag:6,anstoss:'20:30',praemie:{sieger:3e6,verlierer:2e6}},spielplan:{mindestTage:3},
     // Spielverlegung auf Antrag (K13 §13, K13d, 23.11., popolupo, vorläufig): wie die Regel der DFL aus der Corona-Zeit, mindestens minSpieler einsatzfähige Spieler, darunter ein Torwart, sonst Verlegung möglich.
     // Für dein Ligaspiel in höchstens vorTage Tagen, höchstens proSaison je Saison, neuer Termin bis sucheTage später und vor dem letzten Spieltag deiner Liga.
-    verlegung:{minSpieler:16,vorTage:7,proSaison:1,sucheTage:60}},
+    // Seit K13f auch mit mindestens abgestellt Spielern bei Nationalmannschaften (K13 §4, nur mit laenderspiele.an).
+    verlegung:{minSpieler:16,vorTage:7,proSaison:1,sucheTage:60,abgestellt:3},
+    // Länderspiele (K13 §3.4, §5.1, K13f, 24.11., popolupo, vorläufig, Schalter an vorerst aus: Abwesenheit, Müdigkeit und Verletzungen treffen alle Vereine, erst messen).
+    // Schwelle je Nation basis − jeRang × (Rang − 1), mindestens min; höchstens max je Nation; bis rand über der Schwelle nur mit Form ab formMin und Spielpraxis ab praxisMin.
+    // Spiele je Pause: Tage der Pause / tageJeSpiel, gerundet auf gerade Zahlen, mindestens 2. Die stamm Stärksten spielen 90 Minuten, die anderen minuten (gewürfelt).
+    // Rückkehr: Frische − frische, Saisonbelastung + belastung je Spiel, Verletzung mit verletzung, Selbstvertrauen ± sv, Stimmung + stimmung (Stolz).
+    laenderspiele:{an:false,schwelle:{basis:88,jeRang:0.5,min:62},max:26,rand:3,formMin:7,praxisMin:40,tageJeSpiel:4.5,stamm:11,minuten:[0,30],
+      frische:[10,20],belastung:2,verletzung:0.03,sv:0.3,stimmung:2}},
   // Testspiele und Trainingslager (K11 §11, Welle 2). Geldbeträge und Zusagen sind Spielwerte (K11 §12 Nr. 4).
   testspiele:{abWoche:3,wechsel:11,frische:0.7,risiko:0.6,praxis:0.6,vertrautheit:2,form:0.3,
     zusage:{grund:0.6,staerker:0.4,schwaecher:1.3,staerkerAb:4,schwaecherAb:4,kalender:0.2,region:1.2,vorbereitung:1.2,saison:0.7,min:0.05,max:0.95},

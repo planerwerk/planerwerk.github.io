@@ -2,7 +2,7 @@
 // Chancentypen, Standards, Fouls mit Ort, Merkmale (K03), Ermüdung im Spiel, Erwartung vor dem Spiel, Noten gegen die Erwartung.
 const slots=f=>RE.formationen[f]||RE.formationen['4-4-2'];
 const posGruppe=pos=>RE.gruppe[pos]||pos;
-const avail=p=>(p.inj<=0||gespritzt(p))&&!gesperrt(p); // Sperren gelten je Wettbewerb (K09, js/disziplin.js)
+const avail=p=>(p.inj<=0||gespritzt(p))&&!gesperrt(p)&&!beiNationalteam(p); // Sperren gelten je Wettbewerb (K09, js/disziplin.js)
 const TAUSCH={LV:'RV',RV:'LV',LM:'RM',RM:'LM',LA:'RA',RA:'LA',LS:'RS',RS:'LS'};
 const seite=pos=>/^(LV|LM|LA|LS)$/.test(pos)?'L':/^(RV|RM|RA|RS)$/.test(pos)?'R':null;
 const linksForm=pos=>seite(pos)==='R'?TAUSCH[pos]:pos;
