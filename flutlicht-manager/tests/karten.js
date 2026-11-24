@@ -678,4 +678,15 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
     'Integration: Heimweh nur bei schlechter Integration nach Wochen, Wirkungen integration und deutsch, Traumtor nur für Neuzugänge kurz nach dem Testspiel',
     `Heimweh ${!!ja}, zu früh ${frueh}, gut integriert ${gut}, deutschsprachig ${deutsch}, Wirkungen ${wk}, voll ${voll}, Traumtor ${!!tt}, zu lange her ${alt}, integriert ${integriert}`);}
 
+// K07h. Trainingsweltmeister übertreibt (K03 §8, K07 §8): nur Trainingsweltmeister oder Vorbildprofis, gesund, in der Vorbereitung oder mit Belastungssprung. Wirkung
+//       uebertrieben: Lob (Selbstvertrauen +1) oder Zerrung. Dazu die Meldung der Neuzugänge beim Trainingsauftakt (K12a §8).
+{const {S,F,ev}=welt(),A=ev('AUSLOESER'),RTr=ev('RT'),wirk=ev('kartenWirkung'),c={titel:'Test'},sq=ev('squad')(S.my),t=ev('myT()'),auf=ev('auftaktTag')(t);S.phase='play';
+  sq.forEach(x=>{x.eig=ev('eigenschaften')(x).filter(e=>e!=='trainingsweltmeister'&&e!=='vorbildprofi');x.la=0;});const p=sq.find(x=>x.pos!=='TW'&&x.inj<=0);p.eig=[...p.eig,'trainingsweltmeister'];
+  S.tag=auf+RTr.vorbereitungTage+5;const ohne=A.uebertreibt();p.la=RTr.last.grund*10;p.lc=RTr.last.grund;const sprung=A.uebertreibt();p.la=0;S.tag=auf+1;const vorb=A.uebertreibt();
+  p.inj=5;const verletzt=A.uebertreibt();p.inj=0;
+  const sv0=p.sv||0;wirk({art:'uebertrieben',wert:1},{spieler:p.id},c);const lob=(p.sv||0)===Math.min(ev('RP').selbstvertrauen.max,sv0+1);wirk({art:'uebertrieben',wert:0},{spieler:p.id},c);const zerrung=p.inj>0;
+  sq.forEach(x=>{delete x.int;});p.int=60;S.news=[];F.neuzugaengeAuftakt();const meldung=S.news.length===1&&String(S.news[0].t).includes(p.n);delete p.int;
+  pruef(ohne===null&&!!sprung&&sprung.spieler===p.id&&!!vorb&&verletzt===null&&lob&&zerrung&&meldung,'Trainingsweltmeister übertreibt: nur in der Vorbereitung oder mit Belastungssprung, Lob oder Zerrung; Neuzugänge beim Trainingsauftakt',
+    `ohne Anlass ${ohne}, Belastungssprung ${!!sprung}, Vorbereitung ${!!vorb}, verletzt ${verletzt}, Lob ${lob}, Zerrung ${zerrung}, Meldung ${meldung}`);}
+
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

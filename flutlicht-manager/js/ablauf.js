@@ -71,7 +71,7 @@ function taeglichLauf(d){const T=RT;praegungTag(d);wechselTag(d);konkurrenzTag(d
   if(S.phase==='play')testspieleTag(d);
   const ab=S.phase==='play'?spielAbstand(d):new Map(),status=new Map();
   S.teams.forEach(t=>{if(!aktiv(t))return;sommerTag(t,ab.get(t.id),d);const st=sommerStatus(t);status.set(t.id,st);
-    if(S.phase==='play'&&d===auftaktTag(t)&&st!=='urlaub'){sommerAuftakt(t);status.set(t.id,'');if(t.id===S.my)news('Trainingsauftakt: Die Mannschaft ist zurück. Morgen ist Leistungstest.');}
+    if(S.phase==='play'&&d===auftaktTag(t)&&st!=='urlaub'){sommerAuftakt(t);status.set(t.id,'');if(t.id===S.my){news('Trainingsauftakt: Die Mannschaft ist zurück. Morgen ist Leistungstest.');neuzugaengeAuftakt();}} /* Neuzugänge mit Integration (K12a §8, K07h) */
     if(S.phase==='play'&&d===auftaktTag(t)+RSO.leistungstest.tag&&t.id===S.my)leistungstest();
     if(!status.get(t.id))trainingVerein(t,ab.get(t.id),d);});
   S.pl.forEach(p=>{if(p.inj>0)p.inj--;if(p.team<-1)return;const st=p.team>=0?status.get(p.team)||'':'',urlaub=st==='urlaub'?true:st==='laufplan'?'laufplan':false;

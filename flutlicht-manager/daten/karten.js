@@ -348,6 +348,10 @@ const KARTEN=[
   {id:'traumtor',titel:'Traumtor des Neuzugangs',bereich:'K11',art:'info',stufe:'haeufig',chance:0.5,ausloeser:'traumtor',sperrTage:120,
     texte:['Was für ein Einstand: {spieler} trifft im Testspiel per Fallrückzieher. Die Mitspieler feiern ihn, die Fans singen schon seinen Namen.','{spieler} zirkelt den Ball im Testspiel in den Winkel. Ein Tor, das ihm die Ankunft leichter macht.'],
     wirkung:[{art:'integration',wert:5},{art:'fans',wert:1}]},
+  // Trainingsweltmeister übertreibt (K03 §8, K07 §8, K07h, 24.11., popolupo): Info mit Wirkung, mit 70 % Lob vom Co-Trainer (Selbstvertrauen +1, Stimmung +2), sonst eine Zerrung. Werte vorläufig.
+  {id:'uebertreibt',titel:'Der Trainingsweltmeister übertreibt',bereich:'K07',art:'info',stufe:'haeufig',chance:0.1,ausloeser:'uebertreibt',sperrTage:90,immer:true,
+    texte:['{spieler} hängt nach dem Training noch eine Stunde Sprints dran. Der Co-Trainer schaut zu.','{spieler} ist wie immer der Letzte auf dem Platz und gibt bei jeder Übung alles.'],
+    wirkung:[{art:'uebertrieben',wert:1,chance:0.7,schlecht:0,gut:'Der Co-Trainer lobt ihn vor der Mannschaft.',schlechtText:'Beim letzten Sprint zwickt es im Oberschenkel: eine Zerrung.'}]},
   {id:'rudelbildung',titel:'Rudelbildung',bereich:'K09',art:'info',stufe:'haeufig',chance:0.5,ausloeser:'rudelbildung',sperrTage:60,
     texte:['Nach der Roten Karte im Derby gegen {verein} gingen beide Mannschaften aufeinander los. Das Sportgericht verhängt {geld:6000} gegen deinen Verein.','Die Rudelbildung im Derby gegen {verein} kostet deinen Verein {geld:6000}.'],
     wirkung:[{art:'geld',wert:-6000}]},

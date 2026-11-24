@@ -156,6 +156,9 @@ function wocheVerein(p){if(p.team!==p.vt){p.vt=p.team;p.wiv=0;p.ekw=riA(RP.entde
 const deutschVon=p=>p.de!=null?p.de:(nation(p.nat)&&nation(p.nat).sprache==='de'?100:RP.integration.deutsch.start);
 const integrationVon=p=>p.int!=null?p.int:100;
 const integrationFaktor=p=>{const W=RP.integration.wirkung;return W.an&&p.int!=null?W.min+(1-W.min)*p.int/100:1;};
+// Neuzugang beim Trainingsauftakt (K12a §8, mit K07h): eine Meldung mit den Neuzugängen deines Kaders und ihrer Integration (ablauf.js am Auftakttag), ohne Zufall
+function neuzugaengeAuftakt(){const l=squad(S.my).filter(p=>p.int!=null);if(!l.length)return;
+  news(`Neu beim Trainingsauftakt: ${l.map(p=>`${p.n} (Integration ${Math.round(p.int)} %)`).join(', ')}. Die Mitspieler nehmen ${l.length===1?'ihn':'sie'} in ihre Mitte.`,'');}
 function integrationStart(p){const I=RP.integration,a=((p.ch&&p.ch.anp)||10)-10,de=deutschVon(p);if(p.de==null&&de<100)p.de=de;
   p.int=clamp(Math.round((de>=100?I.start.deutsch:I.start.fremd)+I.start.anpassung*a/10),5,99);p.intA=p.apps||0;}
 function integrationWoche(p){if(p.team<0)return;const offen=p.int!=null,lernt=p.de!=null&&p.de<100;if(!offen&&!lernt)return;

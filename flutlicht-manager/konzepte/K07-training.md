@@ -187,7 +187,7 @@ Frischefaktor  = 1 über 80 %, darunter +5 % je Punkt
 **Gebaut als K07c (22.11.2026, popolupo, ohne Testlauf), Karten nach K30:**
 - **Spieler bittet um Pause** (Entscheidung, Voreinstellung Pause): gesunder Spieler deines Kaders mit Frische unter 65 und Professionalität ab 13. Vorläufig ohne „über eine Woche“, die Frische wird nicht über die Zeit gespeichert. Pause: neue Kartenwirkung `pause`, Frische +15, Spielpraxis −5, Stimmung +2. Durchziehen: Stimmung −2, das Risiko liegt in der niedrigen Frische selbst.
 - **Verletzungsserie** (Meldung): mindestens drei Trainingsverletzungen deines Kaders in 14 Tagen (laufende und ausgeheilte, aus `p.vl` und `p.vh`).
-- **Rangelei im Training** gibt es schon in der Kabine (K14, Hitzköpfe, wöchentlich mit Beziehung), darum keine eigene Karte. Offen bleiben „Trainingsweltmeister übertreibt“, „Lernziel erreicht“ und „Umschulung abgeschlossen“.
+- **Rangelei im Training** gibt es schon in der Kabine (K14, Hitzköpfe, wöchentlich mit Beziehung), darum keine eigene Karte. Offen bleiben „Trainingsweltmeister übertreibt“, „Lernziel erreicht“ und „Umschulung abgeschlossen“. Stand 24.11.: „Lernziel erreicht“ und „Umschulung abgeschlossen“ gibt es als Meldungen (`merkmalNeu`, `umschulungWoche`). „Trainingsweltmeister übertreibt“ seit K07h (popolupo, ohne Testlauf): Info-Karte mit Chance 0,1 je Woche für einen gesunden Trainingsweltmeister oder Vorbildprofi deines Kaders in der Vorbereitung (42 Tage ab Trainingsauftakt) oder mit Belastungssprung; mit 70 % lobt ihn der Co-Trainer (Selbstvertrauen +1, Stimmung +2), sonst eine Zerrung (neue Kartenwirkung `uebertrieben`).
 - Zahlen in `REGELN.karten.training`. Gleichschritt: Karten sind in `tests/lizenz.js` 5a abgeschaltet.
 
 ## 9. Wechselwirkungen
