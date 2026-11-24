@@ -82,4 +82,11 @@ if(staerkenJeSpieler.length>=2){const sp=Math.max(...staerkenJeSpieler)-Math.min
   pruef(leer&&start&&woche&&voll&&leihe&&wirkung,'Integration und Deutsch: Start nach Sprache und Anpassungsfähigkeit, Anstieg je Woche, Wirkung nur mit Schalter',
     `Startkader leer ${leer}, Start ${dt.int}/${I.start.deutsch} und ${I.start.fremd+I.start.anpassung}, Woche +${plus} (Deutsch ${de0} → ${fr.de}), voll ${voll}, Leihe ${leihe}, Wirkung ${wirkung} (${zAus.toFixed(3)} / ${zAn.toFixed(3)})`);}
 
+// K05f. Joker lernen (K03 §5.6, K05c): Ein Eingewechselter, der trifft, bekommt Fortschritt zum Merkmal Joker (Szene joker), wer von Beginn an spielt, nicht. Nur Mittelfeld und Sturm.
+{const {W,F}=neueWelt();F.buildWorld(1);const S=W.S,ev=W.ev;S.my=0;S.phase='play';const J=ev('RP').lernenSpiel.szenen.joker,mk=ev('hatMk');
+  const [a,b]=S.pl.filter(p=>p.team>=0&&p.team<1000&&(p.pos==='ST'||p.pos==='MF')&&!mk(p,'joker')&&!(p.lf&&p.lf.joker)&&!(p.ls&&p.ls.k==='joker')&&ev('lernbar')(p,'joker'));
+  F.lernenImSpiel({sz:[],ev:[{t:'G',s:0,p:a.id},{t:'G',s:0,p:b.id},{t:'G',s:0,p:a.id}],ein:[[a.id],[]]});
+  const ok=!!a&&(a.lf&&a.lf.joker)===J.ja&&!(b.lf&&b.lf.joker);
+  pruef(ok,'Joker lernen: Tor nach Einwechslung zählt einmal je Spiel, von Beginn an nicht',`eingewechselt ${a&&a.lf&&a.lf.joker}, Startelf ${b&&b.lf&&b.lf.joker}`);}
+
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

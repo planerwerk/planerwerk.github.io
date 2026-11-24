@@ -162,7 +162,8 @@ const REGELN={
       szenen:{ecke_tor:{k:'flankengeber',ja:8},kopf:{k:'kopfballstark',w:'kopfballschwach',ja:6,nein:1},ecke:{k:'kopfballstark',w:'kopfballschwach',ja:6,nein:1},freistossFlanke:{k:'kopfballstark',w:'kopfballschwach',ja:6,nein:1},
         kopfballduell:{k:'kopfballstark',w:'kopfballschwach',minus:4,kosten:10},freistoss:{k:'freistoss',ja:15},elfmeter:{k:'elfmeter',ja:6,nein:-10,kosten:25},elfmeter_gehalten:{k:'elfmetertoeter',ja:20},
         fern:{k:'weitschuetze',ja:10},gross:{k:'torjaeger',w:'abschlussschwach',ja:3,minus:2,kosten:5},dribbling:{k:'dribbler',ja:3},
-        flanke_tw:{k:'strafraum',w:'fliegenfaenger',ja:3,minus:10,kosten:25,zufall:0.3},parade_nah:{k:'reflexe',ja:2},patzer:{w:'unkonzentriert',minus:8},gelb:{w:'ungestuem',minus:3},rot:{w:'ungestuem',minus:10}}},
+        flanke_tw:{k:'strafraum',w:'fliegenfaenger',ja:3,minus:10,kosten:25,zufall:0.3},parade_nah:{k:'reflexe',ja:2},patzer:{w:'unkonzentriert',minus:8},gelb:{w:'ungestuem',minus:3},rot:{w:'ungestuem',minus:10},
+        joker:{k:'joker',ja:15}}}, // joker (K05f): ein Eingewechselter trifft (aus r.ev und r.ein, lernenImSpiel), nicht aus der Engine
     startMerkmale:{staerken:[[0,0.85],[55,1],[65,1.9],[75,2.85],[85,3.6]],schwaechen:[[60,0.6],[85,0.3]],beidfuessig:0.1,
       gewichte:{TW:{reflexe:3,strafraum:2,elfmetertoeter:1,mitspielend:2},AB:{kopfballstark:3,zweikampfstark:3,stellungssicher:3,ballsicher:2,flankengeber:1,ausdauernd:1,schnell:1},
         MF:{ballsicher:2,flankengeber:2,dribbler:1,weitschuetze:2,freistoss:1,ausdauernd:2,zweikampfstark:1,schnell:1,elfmeter:1,vielseitig:1},ST:{torjaeger:3,kopfballstark:2,schnell:2,dribbler:2,elfmeter:2,joker:1,weitschuetze:1}}},

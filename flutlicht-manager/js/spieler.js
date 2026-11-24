@@ -111,8 +111,10 @@ function merkmalNeu(p,k){const m=RP.merkmale[k];p.mk[k]=1;if(p.lf)delete p.lf[k]
 function merkmalWeg(p,k,grund){delete p.mk[k];if(p.fk)delete p.fk[k];if(p.team===S.my)news(`${p.n} hat das Merkmal „${RP.merkmale[k].name}“ verloren${grund?' ('+grund+')':''}.`,'bad');}
 // Lernen im Spiel (K03 §5.6): Szenen aus der Engine zahlen auf Merkmale ein, ohne Altersfaktor, höchstens 25 % je Merkmal und Spiel.
 // Erfolg: Fortschritt zur Stärke und weg von der passenden Schwäche, bei vorhandener Stärke Fehlerkonto auffüllen. Misserfolg: Fortschritt zur Schwäche oder Fehlerkonto belasten.
+// Seit K05f zusätzlich die Szene joker: jeder Eingewechselte, der trifft (r.ev mit t 'G', Schütze in r.ein der Seite), einmal je Spiel, ohne Zufall.
+const jokerSzenen=r=>{const ein=r.ein||[[],[]];return[...new Set((r.ev||[]).filter(e=>e.t==='G'&&e.p!=null&&(ein[e.s]||[]).includes(e.p)).map(e=>e.p))].map(id=>[id,'joker',1]);};
 function lernenImSpiel(r){const L=RP.lernenSpiel,sum=new Map();
-  (r.sz||[]).forEach(([id,typ,ok])=>{const z=L.szenen[typ],p=z&&PIX.get(id);if(!p||p.team<0)return;
+  [...(r.sz||[]),...jokerSzenen(r)].forEach(([id,typ,ok])=>{const z=L.szenen[typ],p=z&&PIX.get(id);if(!p||p.team<0)return;
     if(!sum.has(id))sum.set(id,{p,st:{},sw:{},fk:{}});const e=sum.get(id),add=(o,k,v)=>{o[k]=(o[k]||0)+v*L.faktor;};
     if(ok){if(z.k){if(hatMk(p,z.k))e.fk[z.k]=(e.fk[z.k]||0)+L.konto.erfolg;else add(e.st,z.k,z.ja);}if(z.w&&z.ja)add(e.sw,z.w,-z.ja);return;}
     if(z.zufall&&R()>=z.zufall)return;
