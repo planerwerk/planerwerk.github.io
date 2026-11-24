@@ -277,6 +277,10 @@ const REGELN={
     // dein Verein spielt in einer höheren Liga als beim Kauf), sonst verfällt er; verlässt der Spieler dich vorher, entfällt er.
     boni:{wert:0.5,maxAnteil:0.5,saisons:2,arten:{spiele:{n:25,name:'nach 25 Pflichtspielen für dich',erfuellt:'hat 25 Pflichtspiele für dich bestritten'},
       aufstieg:{name:'bei einem Aufstieg deines Vereins',erfuellt:'ist mit dir aufgestiegen'}}},
+    // Spielertausch beim Kauf (K19 §4.3, K19j, 24.11., popolupo, vorläufig): Ein eigener Spieler als Teil des Angebots zählt beim Verkäufer mit wert × seinem Vereinswert
+    // als Käufer (vwKauf). Er geht nur mit, wenn der Verein höchstens ansehenMinus weniger Ansehen hat als deiner oder er wechseln will (Wechselwunsch), und nur, wenn
+    // der Verkäufer unter kaeufer.kaderMax Spieler hat. Nur bei Käufen von deutschen Vereinen.
+    tausch:{wert:0.9,ansehenMinus:10},
     restlaufzeit:[0.6,0.6,0.85,1],
     finanzlage:{knappUnter:2e6,knapp:0.9,reichAb:60e6,reich:1.1}, // K23c: reich erst ab 60 Mio. € (vorher 20 Mio.), weil die Kontostände gewachsen sind
     forderung:1.15,schmerzgrenze:0.95,maxFaktor:1.8,

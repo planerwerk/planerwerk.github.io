@@ -196,5 +196,21 @@ const kaufe=(w,p,fee,yrs=3)=>{const els=w.W.ev('document');els.getElementById('f
   pruef(form&&!!p&&vereinbart&&wartet&&da&&faellig&&aufgeraeumt,'Boni: zählen beim Verkäufer zur Hälfte, Grenzen im Formular, fällig nach 25 Pflichtspielen, verfallen und entfallen',
     `Formular ${form}, Kauf ${p?p.n:'keiner'}, vereinbart ${vereinbart} (${b}), wartet ${wartet}, angekommen ${da}, fällig ${faellig}, verfallen/entfallen ${aufgeraeumt}`);}
 
+// K19j. Spielertausch (K19 §4.3): Dein Spieler zählt beim Verkäufer mit wert × vwKauf. Er geht nicht zu einem deutlich kleineren Verein, außer mit Wechselwunsch; nicht, wenn
+//       der Verkäufer keinen Platz hat; nicht bei Auslandsvereinen. Ein Kauf mit Tausch außerhalb des Fensters: beide wechseln zum nächsten Fensterbeginn.
+{const w=welt(),{S,F,ev,t}=w,T=ev('RTR').tausch,doc=ev('document'),M=ev('RM'),tw=ev('tauschWert'),akt=ev('aktiv');
+  const q=ev('squad')(S.my).filter(x=>ev('tauschMoeglich')(x)).sort((a,b)=>a.str-b.str)[0],andere=S.teams.filter(x=>x.id!==S.my&&akt(x)).sort((a,b)=>a.rep-b.rep),klein=andere[0];
+  const wert=tw(q,klein.id)===Math.round(ev('vwKauf')(q,klein.id)*T.wert/M.runden)*M.runden;
+  const ww0=q.ww;q.ww=0;const nein=klein.rep<t.rep-T.ansehenMinus?!!(F.tauschPruefen(q.id,klein,false)||{}).fehler:true;q.ww=1;const mitWunsch=!(F.tauschPruefen(q.id,klein,false)||{}).fehler;q.ww=ww0;
+  const ausl=!!(F.tauschPruefen(q.id,klein,true)||{}).fehler,km=M.kaeufer.kaderMax;M.kaeufer.kaderMax=0;const voll=!!(F.tauschPruefen(q.id,klein,false)||{}).fehler;M.kaeufer.kaderMax=km;
+  const ohne=F.tauschPruefen('',klein,false)===null,pruefung=wert&&nein&&mitWunsch&&ausl&&voll&&ohne;
+  t.cash=5e8;S.tag=100;let p=null,von=null;
+  for(const c of S.pl.filter(x=>x.team>=0&&x.team<1000&&x.team!==S.my&&x.age<29&&S.teams[x.team].rep>=t.rep-T.ansehenMinus&&ev('squad')(x.team).length<M.kaeufer.kaderMax).sort((a,b)=>b.str-a.str).slice(0,30)){
+    doc.getElementById('tausch').value=String(q.id);kaufe(w,c,Math.max(0,ev('askPrice')(c)-tw(q,c.team)));if(c.wech&&c.wech.nach===S.my){p=c;von=c.wech.von;break;}}
+  doc.getElementById('tausch').value='';
+  const getauscht=!!p&&!!q.wech&&q.wech.nach===von&&q.wech.von===S.my&&S.wechsel.includes(q.id);ev('wechselTag')(184);const danach=!!p&&p.team===S.my&&q.team===von;
+  pruef(pruefung&&!!p&&getauscht&&danach,'Spielertausch: Wert beim Verkäufer, Einverständnis, Kaderplatz, beide wechseln zum Fenster',
+    `Prüfung ${pruefung} (Wert ${wert}, kleiner Verein ${nein}, mit Wechselwunsch ${mitWunsch}, Ausland ${ausl}, voll ${voll}), Kauf ${p?p.n:'keiner'}, vereinbart ${getauscht}, nach dem Fenster ${danach}`);}
+
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

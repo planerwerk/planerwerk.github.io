@@ -65,17 +65,20 @@ function offer(id){if(transferSperre()||transferSperreNaechste()){toast(transfer
   const aus=istAusland(p),from=aus?avVon(p.team):p.team>=0?S.teams[p.team]:null;if(p.wech){msg.textContent=`${p.n} wechselt schon zu ${wechselZiel(p.wech)}.`;return;}
   // Interesse (K19 §5.3): Fehlt wenig, verlangt er mehr Geld, fehlt viel, will er nicht (U10b)
   const F=gehaltMitInteresse(p,wechselInteresse(p));if(F==null){msg.textContent=`${p.n} hat kein Interesse an einem Wechsel zu ${t.name}.`;return;}
-  const vorv=!!from&&p.ct===1&&vorvertragZeit(),o=vtPaket(p,F,yrs,!from);let fee=0,bonus=null; /* bonus: Teil der Ablöse als Bonus (K19i) */
+  const vorv=!!from&&p.ct===1&&vorvertragZeit(),o=vtPaket(p,F,yrs,!from);let fee=0,bonus=null,tausch=null; /* bonus: Teil der Ablöse als Bonus (K19i), tausch: eigener Spieler im Gegenzug (K19j) */
   if(!rahmenErlaubt(t,o.sal)){msg.textContent=`Der Vorstand gibt das Gehalt nicht frei: Mit ${p.n} lägen die Gehälter mehr als ${Math.round((RFP.budget.sperreAb-1)*100)} % über dem Rahmen von ${fmt(gehaltsRahmen(t))}. Erst verkaufen.`;return;} // Gehaltsrahmen (K23d)
   // Schritt 1: Ablöse mit dem Verein (K19 §5.2). Im letzten halben Jahr seines Vertrags geht es ohne Ablöse zum Sommer (Vorvertrag, K21 §4.3).
-  if(from&&!vorv){const v=verhandlung(p);if(v.einig&&v.einig.bis>=S.tag){fee=v.einig.fee;bonus=v.einig.bonus||null;}else{fee=Math.round((+document.getElementById('fee').value||0)*1e6);
-      bonus=bonusAusFormular(fee,aus);if(bonus&&bonus.fehler){msg.textContent=bonus.fehler;return;}const bw=bonusWert(bonus),wert=fee+bw; /* der Verkäufer rechnet den Bonus zur Hälfte an (K19i) */
+  if(from&&!vorv){const v=verhandlung(p);if(v.einig&&v.einig.bis>=S.tag){fee=v.einig.fee;bonus=v.einig.bonus||null;tausch=v.einig.tausch||null;
+      if(tausch&&!tauschMoeglich(PIX.get(tausch.pid))){v.einig=null;msg.textContent='Der Tauschspieler ist nicht mehr verfügbar, die Einigung gilt nicht mehr. Mach ein neues Angebot.';save();return;}}
+    else{fee=Math.round((+document.getElementById('fee').value||0)*1e6);
+      bonus=bonusAusFormular(fee,aus);if(bonus&&bonus.fehler){msg.textContent=bonus.fehler;return;}tausch=tauschAusFormular(from,aus);if(tausch&&tausch.fehler){msg.textContent=tausch.fehler;return;}
+      const bw=bonusWert(bonus)+(tausch?tausch.w:0),wert=fee+bw; /* der Verkäufer rechnet den Bonus zur Hälfte an (K19i), den Tauschspieler mit seinem Wert (K19j) */
       if(t.cash<feeJetzt(fee)+o.hg){msg.textContent='Dafür reicht dein Kontostand nicht.';return;}
-      const r=kaufRunde(p,wert);if(!r.ok){msg.textContent=r.text+(bw&&r.gegen?` Mit deinem Bonus fehlen an fester Ablöse noch ${fmt(Math.max(0,r.gegen-wert))}.`:'');const fe=document.getElementById('fee');if(r.gegen&&fe)fe.value=(Math.max(0,r.gegen-bw)/1e6).toFixed(2);save();return;}
+      const r=kaufRunde(p,wert);if(!r.ok){msg.textContent=r.text+(bw&&r.gegen?` Mit ${tausch?'Tausch':'Bonus'} fehlen an fester Ablöse noch ${fmt(Math.max(0,r.gegen-wert))}.`:'');const fe=document.getElementById('fee');if(r.gegen&&fe)fe.value=(Math.max(0,r.gegen-bw)/1e6).toFixed(2);save();return;}
       {const k=aus?null:konkurrenzKauf(p,wert);if(k){const bis=datumKurz(verhandlung(p).konk.bis),fe=document.getElementById('fee');if(fe)fe.value=(Math.max(0,k-bw)/1e6).toFixed(2); // Bieterwettstreit beim Kauf (K20c)
-        msg.textContent=`${from.name} sagt Ja, aber ein anderer Verein bietet ${fmt(k)} für ${p.n}. Bietest du bis ${bis} mindestens so viel, bekommst du den Zuschlag. Sonst wechselt er dorthin, es sei denn, er will unbedingt zu dir (K20d).${bw?` Dein Bonus zählt mit ${fmt(bw)}.`:''}`;
+        msg.textContent=`${from.name} sagt Ja, aber ein anderer Verein bietet ${fmt(k)} für ${p.n}. Bietest du bis ${bis} mindestens so viel, bekommst du den Zuschlag. Sonst wechselt er dorthin, es sei denn, er will unbedingt zu dir (K20d).${bw?` ${tausch?'Bonus und Tausch zählen':'Dein Bonus zählt'} mit ${fmt(bw)}.`:''}`;
         news(`Bieterwettstreit: Für ${p.n} bietet ein anderer Verein ${fmt(k)}. Frist bis ${bis}.`,'offer');save();return;}}
-      verhandlung(p).einig={fee,bonus,bis:S.tag+14};}}
+      verhandlung(p).einig={fee,bonus,tausch,bis:S.tag+14};}}
   if(t.cash<feeJetzt(fee)+o.hg+beraterProvision(p,o.sal,fee)){msg.textContent='Dafür reicht dein Kontostand nicht (mit Provision für den Berater).';return;}
   // Schritt 2: Vertrag mit dem Spieler (K21 §4.1)
   if(istLeihe(p)){msg.textContent=`${p.n} ist gerade ausgeliehen.`;return;}
@@ -86,6 +89,7 @@ function offer(id){if(transferSperre()||transferSperreNaechste()){toast(transfer
   if(from&&!aus&&!vorv)dritterKauf(p,from.id); // der lachende Dritte (K30c, K17 §5.4): Beziehung zwischen den beiden anderen Vereinen; nicht beim Vorvertrag, der Wechsel ist erst in der nächsten Saison (Prüfung EF4)
   if(fee){zgUeberBudget(fee);abloeseZahlen(fee,p.n);if(!aus)from.cash+=fee;} // über dem Transferbudget ist der Vorstand verstimmt (U12e); seit K23e auf Wunsch in Raten (K23 §5.5d)
   if(fee&&bonus&&from&&!aus)bonusVereinbaren(p,from.id,bonus); // Bonus, fällig nach Bedingung (K19i)
+  if(tausch&&from&&!aus)tauschAbgeben(PIX.get(tausch.pid),from); // dein Spieler geht im Gegenzug (K19j)
  if(S.verh)delete S.verh[p.id];if(o.hg)money('Handgelder',-o.hg);beraterAbschluss(p,o.sal,fee,r2.runden); // Provision und Beziehung (K22)
   kaufSichtMerken(p);if(from&&(vorv||!fensterOffen())){wechselVormerken(p,S.my,Object.assign({ct:o.ct,sal:o.sal,preis:fee,vp:o.vp,ak:o.ak,lk:o.lk},vorv?{ab:tageDerSaison()}:{}));S.offers=S.offers.filter(x=>x.pid!==id); // Wechsel zum nächsten Fenster (K19 §5.6) oder zum Sommer (Vorvertrag)
     news(vorv?`Vorvertrag: ${p.n} kommt im Sommer ablösefrei von ${from.name} (Gehalt ${fmt(o.sal)}/Jahr).`:`Einigung: ${p.n} kommt für ${fmt(fee)} von ${from.name} (Gehalt ${fmt(o.sal)}/Jahr). Er wechselt mit dem Transferfenster am ${datumKurz(p.wech.ab)}.`,'good');save();closeOv();render();toast(`Einigung mit ${p.n}`);return;}

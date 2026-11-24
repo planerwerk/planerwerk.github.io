@@ -202,6 +202,24 @@ function boniWoche(){const l=S.boni;if(!l||!l.length)return;const B=RTR.boni,t=m
     const ok=x.art==='spiele'?vereinsSpiele(p,S.my)-x.st>=B.arten.spiele.n:x.art==='aufstieg'?t.lg<x.lg0:false;if(!ok)return true;
     money('Transfers: Boni',-x.b);const v=S.teams[x.tid];if(v)v.cash+=x.b;news(`Bonus fällig: ${p.n} ${B.arten[x.art].erfuellt}. ${fmt(x.b)} gehen an ${tn(x.tid)}.`,'');return false;});}
 
+// ---------- Spielertausch (K19 §4.3, K19j) ----------
+// Im Transferangebot an einen deutschen Verein kannst du einen eigenen Spieler dazugeben (Formular: tausch). Der Verkäufer rechnet ihn mit RTR.tausch.wert × vwKauf an
+// (wie Bonus und Ablöse in kaufRunde und im Bieterwettstreit). Dein Spieler geht nur mit, wenn er will (Wechselwunsch oder ein Verein mit höchstens ansehenMinus weniger
+// Ansehen), und nur, wenn der Verkäufer Platz im Kader hat. Die Einigung merkt sich den Tausch (v.einig.tausch). Beim Abschluss wechselt er wie bei einem Verkauf, sofort
+// im offenen Fenster, sonst zum nächsten Fensterbeginn, mit neuem Vertrag beim Verkäufer, ohne Ablöse (keine Rekorde, die Fans reagieren wie bei einem Verkauf).
+const tauschWert=(q,tid)=>q?Math.round(vwKauf(q,tid)*RTR.tausch.wert/RM.runden)*RM.runden:0;
+const tauschMoeglich=q=>!!q&&q.team===S.my&&!q.wech&&!q.leihe&&!istLeihe(q);
+// Prüft den gewählten Tauschspieler: null ohne Tausch, {fehler} oder {pid, w Wert beim Verkäufer}
+function tauschPruefen(id,from,aus){if(id==null||id==='')return null;const q=PIX.get(+id),T=RTR.tausch;if(!tauschMoeglich(q))return{fehler:'Diesen Spieler kannst du nicht tauschen.'};
+  if(aus||!from||from.id>=AV0)return{fehler:'Einen Tausch gibt es nur mit deutschen Vereinen.'};
+  if(squad(from.id).length>=RM.kaeufer.kaderMax)return{fehler:`${from.name} hat keinen Platz mehr im Kader.`};
+  if((q.ww||0)<1&&from.rep<myT().rep-T.ansehenMinus)return{fehler:`${q.n} will nicht zu ${from.name}.`};return{pid:q.id,w:tauschWert(q,from.id)};}
+const tauschAusFormular=(from,aus)=>{const e=typeof document!=='undefined'&&document.getElementById('tausch');return tauschPruefen(e?e.value:null,from,aus);};
+// Abschluss (aktionen.js offer): dein Spieler q geht zum Verkäufer b
+function tauschAbgeben(q,b){if(!tauschMoeglich(q)||!b)return;S.offers=S.offers.filter(x=>x.pid!==q.id);fansAbgang(q,S.my); /* die Fans reagieren bei der Einigung */
+  if(!fensterOffen()){wechselVormerken(q,b.id,{ct:riA(RM.neuerVertrag),preis:0});news(`Tausch: ${q.n} geht im Gegenzug zu ${b.name}, mit dem Transferfenster am ${datumKurz(q.wech.ab)}.`,'tr');return;}
+  kabineAbgang(q,S.my);vertragEnde(q);q.seit=absTag(S.tag);q.abl=0;q.team=b.id;q.list=0;q.ct=riA(RM.neuerVertrag);news(`Tausch: ${q.n} geht im Gegenzug zu ${b.name}.`,'tr');}
+
 // ---------- Anzeige ----------
 function wechselKarte(){const l=(S.wechsel||[]).map(id=>PIX.get(id)).filter(p=>p&&p.wech&&(p.wech.nach===S.my||p.wech.von===S.my));if(!l.length)return'';
   return`<div class="card" style="margin-top:14px"><h3>Vereinbarte Wechsel</h3>${l.map(p=>`<p><a href="#" onclick="openP(${p.id});return false" style="color:var(--chalk)">${esc(p.n)}</a>: ${p.wech.nach===S.my?`kommt von ${esc(vereinName(p))}`:`geht zu ${esc(wechselZiel(p.wech))}`} am ${esc(datumKurz(p.wech.ab))}${p.wech.preis?` (Ablöse ${fmt(p.wech.preis)}, bezahlt)`:''}</p>`).join('')}</div>`;}
