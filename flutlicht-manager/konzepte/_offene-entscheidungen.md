@@ -303,7 +303,7 @@ Bei der Umsetzung (U6c):
 8. **Einstellen geht sofort** (Vertrag zwei Jahre), nicht nach 1–3 Tagen Bedenkzeit. Verlängern: zwei Jahre, 10 % mehr Gehalt. Entlassen: halbes Restgehalt als Abfindung. Ein Co-Trainer ist Pflicht.
 9. **Gehälter** werden wie die Spielergehälter je Ligaspiel gebucht. Ein Erstligist wie Freiburg zahlt so etwa 3 Mio. € pro Jahr, ein kleiner Drittligist mit nur einem Co-Trainer etwa 35.000 €. Spielwerte, Abgleich mit K23 und dem Stab-Budget aus K28.
 10. **Computer-Vereine** besetzen einen fehlenden Co-Trainer wöchentlich aus dem Pool nach und verlängern auslaufende Verträge zu 70 %.
-11. **Noch nicht gebaut:** Automatik mit Rauschen, Haltung und Spezialgebiet (5.1), Modus „Vorschlag“, Bänder für Vorhersagen außer der Qualität selbst, Abwerbung, Mitnehmen beim Vereinswechsel, Ereignisse aus §8. Ex-Spieler als Mitarbeiter seit K32c.
+11. **Noch nicht gebaut:** Automatik mit Rauschen, Haltung und Spezialgebiet (5.1), Bänder für Vorhersagen außer der Qualität selbst. Ex-Spieler als Mitarbeiter seit K32c. Inzwischen gebaut (Stand 24.11., Einzelheiten in K16 Nr. 11 und 19): Abwerbung (K16c), Mitnehmen beim Vereinswechsel (K16b), Ereignisse aus §8 (K16d bis K16g), Modus „Vorschlag“ für Aufstellung und Trainingsplan (K16h, vorläufig: Voreinstellung an, abschaltbar, Vorschlag ohne Rauschen).
 
 **Mit dir entschieden (10.11.): Für jeden Bereich lohnt sich gutes Personal**, auch für Verhandlungen.
 12. **Der Verhandler ist der Sportdirektor:** Verhandlungsgeschick (Forderungen bis −8 %, Ablösen ±5 %) und Netzwerk (Kontakte zu zwei bis sechs Beratern).

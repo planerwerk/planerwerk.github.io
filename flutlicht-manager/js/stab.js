@@ -80,3 +80,25 @@ function stabMitnehmen(altId){const w=(S.mitnehmen||[]).slice(0,RST.mitnehmen.ma
 function mitnehmenCoTrainer(){S.mitnehmen=mitnehmbar().filter(x=>x.r==='co').sort((a,b)=>b.q-a.q).slice(0,RST.mitnehmen.max).map(x=>x.id);}
 // Gehälter des eigenen Stabs je Ligaspiel (wie die Spielergehälter)
 const stabGehaelter=tid=>(S.stab||[]).filter(x=>x.team===tid).reduce((a,x)=>a+x.sal,0);
+
+// ---------- Vorschlag des Co-Trainers (K16 §3.3, K16h) ----------
+// Stufen je Bereich: selbst · Vorschlag · Automatik. Automatik ist die Lizenz-Automatik (K36, autoB). Machst du es selbst, zeigt der Co-Trainer im Modus Vorschlag
+// (Voreinstellung) dort, wo du ohnehin hinschaust, was er anders machen würde: in der Aufstellung die beste Elf (bestXI, wie seine Automatik), im Trainingsplan die
+// Vorlage, die er jetzt nähme (vorlageAuto). Ein Klick übernimmt (autoXI, setVorlage, mit den üblichen Lizenzprüfungen). Kein Halt, ohne Klick keine Wirkung.
+// „Selbst“ blendet die Vorschläge aus: S.einst.vorschlagAus = {aufstellung:1, vorlage:1}. Ohne Zufall, ohne Rauschen nach Qualität (K16 §5.1 fehlt noch).
+const vorschlagAn=b=>!(S.einst&&S.einst.vorschlagAus&&S.einst.vorschlagAus[b]);
+function vorschlagSchalten(b,an){S.einst=S.einst||{aus:{}};const A=S.einst.vorschlagAus=S.einst.vorschlagAus||{};if(an)delete A[b];else A[b]=1;save();render();}
+// Unterschied deiner Startelf zur besten Elf: wer neu hinein (rein), wer hinaus (raus), und wie viele Plätze sonst anders besetzt sind (getauscht)
+function aufstellungVorschlag(){const t=myT(),xi=myXI(),b=bestXI(S.my,t.form),inXi=new Set(xi.filter(id=>id!=null)),inB=new Set(b.filter(id=>id!=null));
+  const rein=b.filter(id=>id!=null&&!inXi.has(id)).map(id=>PIX.get(id)).filter(Boolean),raus=xi.filter(id=>id!=null&&!inB.has(id)).map(id=>PIX.get(id)).filter(Boolean);
+  const getauscht=b.filter((id,i)=>id!=null&&inXi.has(id)&&xi[i]!==id).length;return{rein,raus,getauscht};}
+function vorschlagAufstellungKarte(){if(autoB('aufstellung'))return'';
+  if(!vorschlagAn('aufstellung'))return`<p class="dim"><button onclick="vorschlagSchalten('aufstellung',true)">Vorschläge des Co-Trainers zeigen</button></p>`;
+  const v=aufstellungVorschlag(),n=x=>x.map(p=>esc(p.n)).join(', ');
+  const text=v.rein.length?`Der Co-Trainer würde ${n(v.rein)} bringen, dafür ${v.raus.length?n(v.raus):'niemanden'} auf die Bank setzen.`:v.getauscht?`Der Co-Trainer würde dieselben Spieler aufstellen, aber ${v.getauscht} anders auf die Positionen verteilen.`:'';
+  return`<div class="card"><h3>Vorschlag des Co-Trainers</h3>${text?`<p>${text}</p><div class="row"><button onclick="autoXI()"${lzAus('aufstellung')}>Vorschlag übernehmen</button>`:'<p class="dim">Er hätte dieselbe Elf aufgestellt.</p><div class="row">'}<button onclick="vorschlagSchalten('aufstellung',false)">Keine Vorschläge mehr</button></div></div>`;}
+// Trainingsplan: die Vorlage, die der Co-Trainer heute nähme, wenn du eine feste gewählt hast und sie davon abweicht
+function vorschlagVorlageText(t,akt){if(akt==='auto'||autoB('vorlage'))return'';
+  if(!vorschlagAn('vorlage'))return`<p class="dim"><button onclick="vorschlagSchalten('vorlage',true)">Vorschläge des Co-Trainers zeigen</button></p>`;
+  const k=vorlageAuto(spielAbstand(S.tag).get(S.my)||{},S.tag,t);if(k===akt)return'';const D=vorlageDef(k,t);if(!D)return'';
+  return`<p>Der Co-Trainer würde jetzt „${esc(D.name)}“ nehmen. <button onclick="setVorlage('${k}')"${lzAus('vorlage')}>Übernehmen</button> <button onclick="vorschlagSchalten('vorlage',false)">Keine Vorschläge mehr</button></p>`;}

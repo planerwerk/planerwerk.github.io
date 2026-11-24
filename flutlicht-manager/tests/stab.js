@@ -45,5 +45,20 @@ const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S,ev=W.ev;
   V.mitnehmen=[co.id].concat(ander?[ander.id]:[]);V.my=neu.id;const n=w.F.stabMitnehmen(alt.id);ev('stabGeaendert')();
   const ok=n===1&&co.team===neu.id&&co.sal===ev('stabGehalt')('co',co.q,1)&&(!ander||ander.team===alt.id)&&schwach.team===-1&&ev('stabVon')(neu.id,'co').length<=ev('RST').rollen.co.plaetze&&V.mitnehmen===null;
   pruef(nurCo&&ok,'Trainerteam mitnehmen: nur nach 30 Wochen, Gehalt der neuen Liga, volle Rolle gibt den Schwächsten ab',`wählbar ${liste.length}, mitgenommen ${n}, Co-Trainer jetzt bei ${co.team===neu.id?'neuem Verein':co.team}, Schwächster frei ${schwach.team===-1}`);}
+
+// K16h. Vorschlag des Co-Trainers (K16 §3.3): Mit der besten Elf kein Unterschied. Tauschst du einen Stammspieler gegen einen Ersatz, nennt der Vorschlag beide, und
+//       „Übernehmen“ stellt die beste Elf auf. Ausgeblendet bleibt nur ein Knopf zum Zeigen, unter der Automatik nichts. Im Trainingsplan steht die Vorlage des
+//       Co-Trainers, wenn deine feste davon abweicht, sonst nichts.
+{const {W:W2,F:F2}=neueWelt();F2.buildWorld(SEED);const S2=W2.S,e2=W2.ev;S2.my=6;S2.mgr='Test';F2.setTarget();S2.phase='play';const t=e2('myT()'),PX=e2('PIX');
+  S2.lineup=F2.bestXI(6,t.form);const v0=F2.aufstellungVorschlag(),gleich=!v0.rein.length&&!v0.raus.length&&v0.getauscht===0&&F2.vorschlagAufstellungKarte().includes('dieselbe Elf');
+  const ersatz=e2('squad')(6).find(p=>!S2.lineup.includes(p.id)&&p.pos!=='TW'&&e2('avail')(p)),i=S2.lineup.findIndex(id=>id!=null&&PX.get(id).pos!=='TW'),alt=S2.lineup[i];S2.lineup[i]=ersatz.id;
+  const v1=F2.aufstellungVorschlag(),diff=v1.rein.some(p=>p.id===alt)&&v1.raus.some(p=>p.id===ersatz.id)&&F2.vorschlagAufstellungKarte().includes('Vorschlag übernehmen');
+  F2.autoXI();const v2=F2.aufstellungVorschlag(),uebernommen=!v2.rein.length&&!v2.raus.length;
+  F2.vorschlagSchalten('aufstellung',false);const k1=F2.vorschlagAufstellungKarte(),aus=!k1.includes('<h3>')&&k1.includes('zeigen');F2.vorschlagSchalten('aufstellung',true);const wieder=e2('vorschlagAn')('aufstellung');
+  F2.lizenzStart(true);S2.lizenz.auto.aufstellung=1;const auto=F2.vorschlagAufstellungKarte()==='';S2.lizenz=null;
+  const sv=F2.spielAbstand(S2.tag).get(6)||{},k=F2.vorlageAuto(sv,S2.tag,t),andere=Object.keys(e2('RT').vorlagen).find(x=>x!==k),tv=F2.vorschlagVorlageText(t,andere);
+  const train=tv.includes(e2('vorlageDef')(k,t).name)&&tv.includes(`setVorlage('${k}')`)&&F2.vorschlagVorlageText(t,'auto')===''&&F2.vorschlagVorlageText(t,k)==='';
+  pruef(gleich&&diff&&uebernommen&&aus&&wieder&&auto&&train,'Vorschlag des Co-Trainers: Unterschied zur besten Elf, übernehmen, ausblenden, nicht unter der Automatik, Vorlage im Trainingsplan',
+    `gleich ${gleich}, Unterschied ${diff}, übernommen ${uebernommen}, ausgeblendet ${aus}, wieder an ${wieder}, Automatik ${auto}, Training ${train} (${k} statt ${andere})`);}
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);
