@@ -304,7 +304,7 @@ const wb=o.wb||'liga',H=mitWettbewerb(wb,()=>side(hid,true,o.neutral)),A=mitWett
   // Ergebnis für applyMatch und die Anzeige. xpo: [id, Position, Anteil an den erwarteten Toren, Minuten]
   G.ergebnis=()=>{const ende=G.m;
     const teil=(sd,s)=>{const ids=Object.entries(G.minuten).filter(([id])=>sd.xi.includes(+id)||G.ein[s].includes(+id)),pos={};
-      sd.xp.forEach(x=>pos[x.p.id]=x.pos);G.wechsel.filter(w=>w.s===s).forEach(w=>{if(pos[w.aus]==null)pos[w.aus]=pos[w.ein]||'ZM';});
+      sd.xp.forEach(x=>pos[x.p.id]=x.pos);G.wechsel.filter(w=>w.s===s).reverse().forEach(w=>{if(pos[w.aus]==null)pos[w.aus]=pos[w.ein]||'ZM';}); /* rückwärts: bei A für B, dann B für C kennt B seine Position schon, wenn A sie übernimmt (Prüfung EK7) */
       const l=ids.map(([id,[a,b]])=>{const p=PIX.get(+id),ps=pos[id]||(p?STD_POS[p.pos]:'ZM'),min=Math.max(1,(b==null?ende:b)-a);
         const g=ps==='TW'?0.01:(RE.schuetzen.halb[linksForm(ps)]||0.3)*Math.pow((p?p.str:60)/RE.schuetzen.mitte,RE.schuetzen.exponent)*Math.min(90,min)/90;return[+id,ps,g,min];});
       const tot=l.reduce((a,x)=>a+x[2],0);return l.map(x=>[x[0],x[1],tot?x[2]/tot:0,x[3]]);};

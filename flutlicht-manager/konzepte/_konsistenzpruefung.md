@@ -2203,7 +2203,7 @@ Korrekturen auf `mitarbeit/popolupo-ek-korrekturen` (auf K06d).
 | EK4 | Jedes Tor der Verlängerung galt als „spät“. Jetzt ab Minute 88 bis 90 oder ab Minute 118. | ✅ behoben |
 | EK5 | Bei Hin- und Rückspiel sagt das einzelne Spiel nichts über das Weiterkommen. Last-Minute-Drama jetzt vorläufig nicht in Relegation und Europapokal. | ✅ behoben, vorläufig |
 | EK6 | Der Taktik-Coup zählte auch einen Stil, den der Co-Trainer gewählt hatte. Jetzt nur ohne Automatik des Stils. | ✅ behoben |
-| EK7 | Der Zähler `p.pfal` veraltete und zählte auch Kurzeinsätze. Jetzt erst ab der Mindestzeit für eine Note. Ein Zähler älter als 28 Tage beginnt neu (`p.pfalT`), die Karte verlangt einen frischen Zähler. Nicht behoben: Bei einer Kette von Wechseln (A für B, dann B für C) bekommt A in `xpo` die Position „ZM“ (vorhandener Fehler in der Engine). Die Korrektur verschiebt die Anteile in `xpo` für alle Vereine und gehört zu einem Schritt mit Testlauf. | teils, 📌 Engine nach Testlauf |
+| EK7 | Der Zähler `p.pfal` veraltete und zählte auch Kurzeinsätze. Jetzt erst ab der Mindestzeit für eine Note. Ein Zähler älter als 28 Tage beginnt neu (`p.pfalT`), die Karte verlangt einen frischen Zähler. Nicht behoben: Bei einer Kette von Wechseln (A für B, dann B für C) bekommt A in `xpo` die Position „ZM“ (vorhandener Fehler in der Engine). Die Korrektur verschiebt die Anteile in `xpo` für alle Vereine und gehört zu einem Schritt mit Testlauf. Seit 24.11. behoben (Zweig `mitarbeit/popolupo-engine-kettenwechsel`): Die Wechsel werden rückwärts abgearbeitet, Test am Ende von `tests/live.js`. | ✅ behoben (ungetestet) |
 
 ## EL. Prüfung der Korrekturen EK und EJ ohne Laufzeit (23. November 2026, popolupo, Prüf-Agent nur lesend)
 
