@@ -82,10 +82,11 @@ Der Plan ist eine Tabelle **„Tage bis zum nächsten Spiel / Tage seit dem letz
   - **Höchstwert:** Nachbarposition 90 % (mit „vielseitig“ 95 %), entfernte Position 85 %. Nach Alter weniger: bis 23 Jahre voll, bis 27 Jahre −2, bis 30 Jahre −5, darüber −8. Liegt der Höchstwert nicht über dem, was er dort schon kann, gibt es keine Umschulung.
   - **Selten:** Ein Spieler lernt in seiner Laufbahn eine Position dazu, mit „vielseitig“ zwei. Die Umschulung belegt einen Einzeltrainingsplatz. Computer-Vereine schulen nicht um.
   - Einsätze auf der neuen Position zählen wie eine Trainingswoche zusätzlich. **Gebaut als K07g** (23.11.2026, popolupo, ohne Testlauf, Werte vorläufig):
-    - Ab 45 Minuten auf genau der Position, auf die er umschult, gleich in welchem Spiel (auch Testspiele).
-    - Höchstens einmal in 7 Tagen (`p.umE`), sonst brächte eine englische Woche drei Wochen Fortschritt.
-    - Gerechnet wird wie in der Trainingswoche, also mit Alter, Co-Trainer und genug Training. Ohne Zufall.
+    - Ab 45 Minuten auf genau der Position, auf die er umschult, gleich in welchem Spiel (auch Testspiele: `testspielNach` ruft `umschulungEinsatz` auf, seit Prüfung FB4).
+    - Höchstens einmal in 7 Tagen (`p.umE`), sonst brächte eine englische Woche drei Wochen Fortschritt. Die 7 Tage beginnen nur, wenn der Einsatz wirklich etwas bringt: nicht verletzt, Umschulung noch möglich (Prüfung FB5).
+    - Gerechnet wird wie in der Trainingswoche mit Alter und Co-Trainer, aber immer voll: Das Training der laufenden Woche zählt beim Einsatz nicht, sonst wäre ein Einsatz am Dienstag halb so viel wert wie einer am Samstag (Prüfung FB5). Ohne Zufall.
     - Nur wer eine Umschulung hat. Die setzt nur der Spieler von Hand, Computer-Vereine schulen nicht um. Der Gleichschritt bleibt darum gleich.
+    - Wer geht, schult nicht weiter um: Vertragsende (Verkauf, Auflösung, `vertragEnde`) und Verleihen (`verleihen`) löschen `p.um` und `p.umE`, wie schon das Abstellen in die Zweite (Prüfung FB6).
     - Regelwerte: `RT.umschulung.einsatzMinuten` und `einsatzTage`.
 - **Plätze:** Wie viele Spieler gleichzeitig Einzeltraining haben, hängt vom Stab ab (K16). Bis dahin 5 Plätze im Kader.
 - Gespeichert am Spieler: Lernziele `ls` (K03), trainierte Eignungen `ue = {Position: Wert}` (bis UL irrtümlich im Feld `eig`), abgeschlossene Umschulungen `uf`.

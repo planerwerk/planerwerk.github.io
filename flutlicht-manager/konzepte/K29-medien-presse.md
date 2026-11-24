@@ -298,7 +298,7 @@ Das ist der Maßstab für die Verbindung zu K09.
   - Die Beziehung der beiden Vereine sinkt um 2 (K17, mit dem Grund „Stichelei vor dem Spiel“). Sie verblasst wie jede andere.
   - Keine Wirkung auf Spieler oder Ergebnis. Die Stimmung der Computer-Vereine bleibt unberührt, so verschiebt sich keine Kalibrierung.
 - **Nur deine Liga:** Aus den anderen Ligen hört man in der Zeitung zu wenig, und die Meldungen sollen dich betreffen.
-- **Gleichschritt:** Die Sticheleien hängen weder an der Lizenz noch an der Automatik und laufen in einem eigenen Strom. In beiden Welten aus 5a passiert dasselbe.
+- **Gleichschritt:** Die Sticheleien hängen weder an der Lizenz noch an der Automatik und laufen in einem eigenen Strom. Sie hängen aber an deinem Verein (deine Liga, ohne deine Spiele): In 5a ist die eine Welt Verein 6 in der 1. Liga, die andere Verein 30 in der 2. Liga, die Sticheleien laufen dort also in verschiedenen Ligen. Das verglichene Bild (`bild`) bleibt trotzdem gleich: Es enthält nur Verein 6, die Sticheleien ändern nur Beziehungen anderer Vereine untereinander, und deren Schwellen liegen bei −50 (Prüfung FB7).
 - **Regelwerte:** `RPK.medienprofil.ki` (`tage`, `max`, `bez`).
 
 **Umsetzung K29f (22.11.2026, popolupo, ohne Testlauf): Interview am Spielfeldrand (§4.1, Muster 6)**

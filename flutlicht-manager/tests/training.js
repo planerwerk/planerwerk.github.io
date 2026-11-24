@@ -79,8 +79,21 @@ console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 {const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S,ev=W.ev,U=ev('RT').umschulung,ein=ev('umschulungEinsatz');
   const p=S.pl.find(x=>x.team>=0&&x.fp==='IV'&&!x.mk.vielseitig&&!(x.inj>0));p.age=22;p.ue={};p.uf=[];p.um='LV';p.wt=5;delete p.umE;
   const w=()=>(p.ue&&p.ue.LV)||0,kurz=ein(p,'LV',U.einsatzMinuten-1),anders=ein(p,'IV',90),v0=w(),erst=ein(p,'LV',90),v1=w(),gleich=ein(p,'LV',90),v2=w();
-  S.tag+=U.einsatzTage;p.wt=5;const spaeter=ein(p,'LV',U.einsatzMinuten),v3=w();p.um=null;const ohne=ein(p,'LV',90);
-  pruef(!kurz&&!anders&&erst&&v1>v0&&!gleich&&v2===v1&&spaeter&&v3>v2&&!ohne,'Umschulung: Einsatz auf der neuen Position zählt wie eine Trainingswoche, einmal in 7 Tagen, nicht zu kurz, nicht auf anderer Position',
-    `zu kurz ${kurz}, andere Position ${anders}, erster Einsatz ${erst} (${v0} → ${v1}), gleiche Woche ${gleich}, eine Woche später ${spaeter} (${v3}), ohne Umschulung ${ohne}`);}
+  S.tag+=U.einsatzTage;p.wt=5;const spaeter=ein(p,'LV',U.einsatzMinuten),v3=w();
+  /* Prüfung FB5: Der Einsatz zählt voll, auch ohne genug Training in der Woche (von vorn: derselbe Wert wie beim ersten Einsatz mit Training);
+     verletzt zählt er nicht und verbraucht die 7 Tage nicht, gesund geht es am selben Tag */
+  S.tag+=U.einsatzTage;p.ue={};p.wt=0;const wenig=ein(p,'LV',90),v4=w();
+  S.tag+=U.einsatzTage;p.inj=3;const e0=p.umE,verletzt=ein(p,'LV',90),sperreFrei=p.umE===e0;p.inj=0;const gesund=ein(p,'LV',90);
+  p.um=null;const ohne=ein(p,'LV',90);
+  pruef(!kurz&&!anders&&erst&&v1>v0&&!gleich&&v2===v1&&spaeter&&v3>v2&&wenig&&v4===v1&&!verletzt&&sperreFrei&&gesund&&!ohne,
+    'Umschulung: Einsatz auf der neuen Position zählt wie eine Trainingswoche, voll, einmal in 7 Tagen, nicht zu kurz, nicht auf anderer Position, verletzt nicht und ohne die Sperre zu verbrauchen',
+    `zu kurz ${kurz}, andere Position ${anders}, erster Einsatz ${erst} (${v0} → ${v1}), gleiche Woche ${gleich}, eine Woche später ${spaeter} (${v3}), ohne Training ${wenig} (${v4}, wie ${v1}), verletzt ${verletzt}, Sperre frei ${sperreFrei}, gesund ${gesund}, ohne Umschulung ${ohne}`);}
+
+// Prüfung FB6: Wer verkauft wird, ausläuft oder verliehen wird, schult nicht weiter um (vertragEnde und verleihen löschen p.um und p.umE).
+// verleihen prüft vorher Fenster, Bedarf und Gehaltsanteil; hier zählt nur, dass die Umschulung vor dem Wechsel endet (die Zeile steht vor kabineAbgang).
+{const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S,ev=W.ev;
+  const p=S.pl.find(x=>x.team>=0&&x.fp==='IV');p.um='LV';p.umE=5;ev('vertragEnde')(p);const ende=p.um==null&&!('umE' in p);
+  const leihe=/p\.um=null;delete p\.umE;[^]*kabineAbgang/.test(String(ev('verleihen')));
+  pruef(ende&&leihe,'Umschulung: Vertragsende und Verleihen beenden sie',`Vertragsende ${ende}, Verleihen ${leihe}`);}
 
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

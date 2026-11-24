@@ -152,13 +152,15 @@ const gegner=w=>w.S.teams.find(x=>x.lg===w.t.lg&&x.id!==VEREIN).id;
 
 // K29m. Sticheleien unter Computer-Trainern (K29 §7): vor einem Derby deiner Liga ohne deinen Verein in den nächsten 7 Tagen stichelt ein Lautsprecher (Chance im Test 1);
 //        eine Meldung, Beziehung der beiden Vereine −2; diplomatische Trainer schweigen; zu früh nichts. medienProfil wird im Test ersetzt (Funktionsdeklaration).
-{const {S,W,ev}=welt(false),M=ev('RPK').medienprofil,dz=ev('istDerby'),lg=ev('myT()').lg,wo=ev('kiSticheleienWoche'),bz=ev('bez');let f=null;
+//        Prüfung FB9: Gezählt wird nur die Meldung zu genau diesem Derby (Heimtrainer gegen den Gast), andere Spiele im Zeitfenster stören nicht; ki.max im Test hoch.
+{const {S,W,ev}=welt(false),M=ev('RPK').medienprofil,dz=ev('istDerby'),lg=ev('myT()').lg,wo=ev('kiSticheleienWoche'),bz=ev('bez'),tn=ev('tn');let f=null;
   S.fx[lg].forEach((md,k)=>md.forEach(([h,a],i)=>{if(!f&&h!==S.my&&a!==S.my&&dz(h,a))f={h,a,k,tag:S.plan.zeit[lg][k][i][0]};}));
   let ok=false,info='kein Derby ohne deinen Verein in deiner Liga';
-  if(f){const b0=bz(f.h,f.a),neu=()=>S.news[0]&&S.news[0].t.includes('stichelt'),c0=M.chance.laut;S.news.unshift({t:'Start',c:'',w:''});
-    W.ev('medienProfil=function(){return "diplomatisch";}');S.tag=f.tag-1;wo(S.tag);const still=!neu();
-    W.ev('medienProfil=function(){return "laut";}');M.chance.laut=1;S.tag=f.tag-M.ki.tage-1;wo(S.tag);const zuFrueh=!neu();
-    S.tag=f.tag-1;wo(S.tag);const gemeldet=neu(),b1=bz(f.h,f.a);M.chance.laut=c0;
+  if(f){const b0=bz(f.h,f.a),c0=M.chance.laut,max0=M.ki.max;M.ki.max=99;
+    const lauf=d=>{S.news.unshift({t:'Start',c:'',w:''});wo(d);const i=S.news.findIndex(x=>x.t==='Start');return S.news.slice(0,i).some(x=>x.t.includes(`(${tn(f.h)}) stichelt`)&&x.t.includes(`gegen ${tn(f.a)}`));};
+    W.ev('medienProfil=function(){return "diplomatisch";}');S.tag=f.tag-1;const still=!lauf(S.tag);
+    W.ev('medienProfil=function(){return "laut";}');M.chance.laut=1;S.tag=f.tag-M.ki.tage-1;const zuFrueh=!lauf(S.tag);
+    S.tag=f.tag-1;const gemeldet=lauf(S.tag),b1=bz(f.h,f.a);M.chance.laut=c0;M.ki.max=max0;
     ok=still&&zuFrueh&&gemeldet&&b1===b0+M.ki.bez;info=`Derby am Spieltag ${f.k+1}: diplomatisch still ${still}, zu früh ${zuFrueh}, gemeldet ${gemeldet}, Beziehung ${b0} → ${b1}`;}
   pruef(ok,'Sticheleien unter Computer-Trainern: vor dem Derby eine Meldung, Beziehung −2, nicht von diplomatischen Trainern, nicht zu früh',info);}
 

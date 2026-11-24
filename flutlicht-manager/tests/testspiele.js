@@ -26,6 +26,12 @@ const tage=(F,S,n)=>{for(let i=0;i<n;i++){F.tagEnde(S.tag);S.tag++;S.gespielt=-1
   pruef(JSON.stringify(ev('gelbe')(p))===vorher.kt&&(S.verfahren||[]).length===vorher.v,'Karten im Testspiel zählen nicht und führen zu keinem Verfahren','');
   pruef(min>0&&Math.abs((p.sp-40)-N)<0.01,'Testspiel: 60 % der Spielpraxis eines Pflichtspiels',`${f2(p.sp-40)} statt ${f2(N/ev('RTS').praxis)} (${min} Minuten)`);
   pruef(x.stand==='gespielt'&&x.erg&&x.erg.geld>0,'Testspiel beim Amateurverein bringt eine Gage',x.erg?ev('fmt')(x.erg.geld):'-');}
+// 2b. Prüfung FB4: Ein Einsatz auf der Umschulungsposition zählt auch im Testspiel (K07 §3.3, K07g). Ein Innenverteidiger der Startelf schult auf
+//     Linksverteidiger um; sein Eintrag in r.xpo bekommt die Position LV, wie es die Engine bei einer Aufstellung dort täte.
+{const {S,F,ev}=welt();S.tag=ev('auftaktTag(myT())')+21;const d=ev('testspielTage')()[0],x=ev('testspielAnfragen')(1000,d);x.stand='zugesagt';
+  const r=F.sim(1000,S.my,{test:1,wb:'test'}),U=ev('RT').umschulung,z=r.xpo[1].find(e=>{const q=ev('PIX').get(e[0]);return q&&q.fp==='IV'&&!q.mk.vielseitig&&(e[3]==null||e[3]>=U.einsatzMinuten);});
+  const p=z&&ev('PIX').get(z[0]);if(p){p.age=22;p.ue={};p.uf=[];p.um='LV';p.inj=0;delete p.umE;z[1]='LV';}F.testspielNach(r,x);
+  pruef(!!p&&p.umE!=null&&((p.ue&&p.ue.LV)||0)>0,'Testspiel: Einsatz auf der Umschulungsposition zählt',p?`umE ${p.umE}, LV ${p.ue&&p.ue.LV}`:'kein Innenverteidiger mit genug Minuten');}
 // 3. Lager lohnt (K11 §10): sieben Tage Lager im Sommer, Vertrautheit wächst um etwa ein Viertel schneller (×1,25), Konditionsreiz ×1,15
 {const run=lager=>{const {S,F,ev}=welt();const a=ev('auftaktTag(myT())');tage(F,S,a+7-S.tag); // zweite Vorbereitungswoche: erst dann gibt es Taktik-Einheiten
 if(lager){const f=ev('lagerMoeglich')('schwarzwald',S.tag+1,7);if(f)return{fehler:f};ev('lagerBuchenLauf')('schwarzwald',S.tag+1,7);}

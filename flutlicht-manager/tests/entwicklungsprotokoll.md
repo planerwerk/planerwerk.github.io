@@ -168,12 +168,13 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 | **K07g** Einsätze auf der Umschulungsposition | `mitarbeit/popolupo-k07g-umschulung-einsatz` (auf K29m, mit der Doku K30 §8.4) | fertig, ungetestet |
 | Korrekturen FA | `mitarbeit/popolupo-fa-korrekturen` (auf K07g) | fertig, ungetestet |
 | **K13e** Pokal-Rotation rächt sich | `mitarbeit/popolupo-k13e-pokal-rotation` (auf den Korrekturen FA) | fertig, ungetestet |
+| Korrekturen FB | `mitarbeit/popolupo-fb-korrekturen` (auf K13e) | fertig, ungetestet |
 | U19d2 volle Kader der Auslandsvereine in der Engine | zurückgestellt | Entwurf in K37 §5.7. Die Engine behandelt Auslandsvereine als Block wie Amateure, viele Stellen schlagen Spieler in `PIX` nach. Erst nach einem Testlauf und der Messung des Faktors 0,93 |
 
 **Die neueste Spitze ist immer der zuletzt genannte Zweig, er enthält alles davor.** K24 ist fertig (Claude).
 
-**Vorschlag für den nächsten Testlauf** (Spitze `mitarbeit/popolupo-k13e-pokal-rotation`, alles ungetestet, bis auf K29m, K07g, die Korrekturen FA und K13e von lesenden Prüf-Agenten durchgesehen, Konsistenzprüfung CS bis FA). **Wichtig:** Die Zweige `u12g` und `k29e` laden für sich allein nicht (DN1), bitte die Spitze nehmen:
-1. `node tests/code.js`, dann die schnellen Einzeltests der neuen Teile: `finanzen.js` (Nr. 11 bis 20), `geruechte.js` (seit K17d mit Klatsch), `schwierigkeit.js`, `werbung.js`, `europapokal.js`, `vorstand.js` (Nr. 10 bis 19, dazu U12m am Ende), `karriereende.js`, `stadion.js` (Nr. 8 bis 11), `karten.js`, `spielwelt-karten.js`, `fans.js` (K27b, K27e), `abwerben.js` (K20b, K20e), `transfers.js` (K20c, K20d, K19c, K31b, K31c, K19d, K19e), `presse.js` (K29b bis K29j, K29m), `marketing.js` (K25c, K25d, K25e, K25f), dazu seit dem Nachmittag des 22.11.: `testspiele.js` (K11b, K11c), `erinnerungen.js` (K09b, K07b, K11d, K07d), `scouting.js` (K18c bis K18e), `medizin.js` (K10b bis K10d, K16d), `disziplin.js` (K09c, EA1 bis EA3), `vertraege.js` (K21b, K21d, K21e), `statistik.js` (K34d), `taktik.js` (K06b, eigene Welt am Ende), `training.js` (K07g am Ende), `stab.js` (K16b), `wettbewerbe.js` (K13b, K13c, K13d, K13e, eigene Welten am Ende), `lizenz.js` (K36c am Ende), `leihe.js` (am Ende der Fall EP2, Rückkehr aus der Leihe ohne Heimkehr), und in `karten.js` die neuen Karten (K30b, K07c, K08b, K08c, K16c, K27c, K21c, K26e, K12c, K29k, K17b, K22c, K03b, K30c, K30d, K10e, K07e, K14d, K14e, K29l, K30e, K11f, K03c, K30f, K27d, K05c, K05d, K06c, K09e, K06d, K06e, K15e, K26f, K16e, K18f, K30g, K11g, K27f, K27g, K16f, K16g, K27h, K19f, U12n, U19e, dazu die Fälle EK und EL). Der Katalog in `karten.js` Fall 1 ist mit `kartenpruefung.pl` schon ohne Node geprüft.
+**Vorschlag für den nächsten Testlauf** (Spitze `mitarbeit/popolupo-fb-korrekturen`, alles ungetestet, bis auf K13e und die Korrekturen FB von lesenden Prüf-Agenten durchgesehen, Konsistenzprüfung CS bis FB). **Wichtig:** Die Zweige `u12g` und `k29e` laden für sich allein nicht (DN1), bitte die Spitze nehmen:
+1. `node tests/code.js`, dann die schnellen Einzeltests der neuen Teile: `finanzen.js` (Nr. 11 bis 20), `geruechte.js` (seit K17d mit Klatsch), `schwierigkeit.js`, `werbung.js`, `europapokal.js`, `vorstand.js` (Nr. 10 bis 19, dazu U12m am Ende), `karriereende.js`, `stadion.js` (Nr. 8 bis 11), `karten.js`, `spielwelt-karten.js`, `fans.js` (K27b, K27e), `abwerben.js` (K20b, K20e), `transfers.js` (K20c, K20d, K19c, K31b, K31c, K19d, K19e), `presse.js` (K29b bis K29j, K29m), `marketing.js` (K25c, K25d, K25e, K25f), dazu seit dem Nachmittag des 22.11.: `testspiele.js` (K11b, K11c, Fall 2b), `erinnerungen.js` (K09b, K07b, K11d, K07d), `scouting.js` (K18c bis K18e), `medizin.js` (K10b bis K10d, K16d), `disziplin.js` (K09c, EA1 bis EA3), `vertraege.js` (K21b, K21d, K21e), `statistik.js` (K34d), `taktik.js` (K06b, eigene Welt am Ende), `training.js` (K07g und FB6 am Ende), `stab.js` (K16b), `wettbewerbe.js` (K13b, K13c, K13d, K13e, eigene Welten am Ende), `lizenz.js` (K36c am Ende), `leihe.js` (am Ende der Fall EP2, Rückkehr aus der Leihe ohne Heimkehr), und in `karten.js` die neuen Karten (K30b, K07c, K08b, K08c, K16c, K27c, K21c, K26e, K12c, K29k, K17b, K22c, K03b, K30c, K30d, K10e, K07e, K14d, K14e, K29l, K30e, K11f, K03c, K30f, K27d, K05c, K05d, K06c, K09e, K06d, K06e, K15e, K26f, K16e, K18f, K30g, K11g, K27f, K27g, K16f, K16g, K27h, K19f, U12n, U19e, dazu die Fälle EK und EL). Der Katalog in `karten.js` Fall 1 ist mit `kartenpruefung.pl` schon ohne Node geprüft.
 2. `node tests/lizenz.js` (Gleichschritt, neue Bereiche `zielgespraech`; seit K36c am Ende die gesammelten Meldungen des Stabs). Viele neue Teile wirken nur ohne Automatik oder über Karten, darum sollte 5a gleich bleiben.
 3. `node tests/finanzmodell.js 2`: Salden je Liga nach K23c. Erwartet nach der Modellrechnung 1. Liga etwa +11 Mio., 2. Liga etwa 0, 3. Liga etwa −1 Mio. je Verein und Saison ohne Transfers (K23 §5.6b). Weichen sie stark ab, bitte die Zeilen ins Testprotokoll, ich stelle dann `REGELN.finanzen.verwaltung` und `sponsor` nach.
 4. Die langen Läufe: `welt.js` über zehn Saisons (Karriereende CR3, Pool CR4, Bauten CT3, Transfers CP3/CP4), `ui-zwei-saisons.js`, `fuzz-karrieren.js`.
@@ -208,6 +209,21 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 24.11.2026: Korrekturen nach Prüfung FB zu K29m, K07g und den Korrekturen FA (Zweig `mitarbeit/popolupo-fb-korrekturen`, auf K13e)
+
+- **Weckruf:** kein neuer Testlauf (Testprotokoll weiter bei Lauf 8).
+- Ein lesender Prüf-Agent hat K29m, K07g, die Doku K30 §8.4 und die Korrekturen FA durchgesehen (Konsistenzprüfung FB). Zwei mittlere und sieben niedrige Funde.
+- **Behoben:**
+  - FB1: Erwartung im Test zum Schlüssel der Sperre (`'x:7:3'`).
+  - FB2, FB3: Ein Gegenangebot unter einem Nachlass verfällt mit ihm und gilt nur für deinen Verein (`fMy`, `fNl`, `gegenGilt`). Alte Spielstände: `verhUmstellen`.
+  - FB4: Testspiele zählen für die Umschulung (`testspielNach`).
+  - FB5: Ein Einsatz zählt voll, die 7 Tage beginnen nur bei echtem Fortschritt.
+  - FB6: Verkauf, Vertragsende und Verleihen beenden die Umschulung.
+  - FB7: Wortlaut zum Gleichschritt bei K29m.
+  - FB8: Eigene Sätze für Sticheleien unter Computer-Trainern.
+  - FB9: Test K29m zählt nur die Meldung zum geprüften Derby.
+- **Tests zuerst:** `tests/karten.js` (K16f, K19f), `tests/training.js` (K07g, neu der Fall FB6 am Ende), `tests/testspiele.js` (neu Fall 2b), `tests/presse.js` (K29m).
+
 ### 23.11.2026: K13e Pokal-Rotation rächt sich (Zweig `mitarbeit/popolupo-k13e-pokal-rotation`, auf den Korrekturen FA)
 
 - **Weckruf:** kein neuer Testlauf (Testprotokoll weiter bei Lauf 8).
@@ -240,7 +256,7 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 - **Neu (K29 §7):** Vor Derbys und Spitzenspielen deiner Liga ohne deinen Verein sticheln Lautsprecher und Psychospieler unter den Computer-Trainern gegeneinander.
   - Höchstens eine Meldung je Woche, die Beziehung der beiden Vereine sinkt um 2. Keine Wirkung auf Spieler oder Ergebnisse.
   - Montags im eigenen Strom `presse`/`ki` (`kiSticheleienWoche` in `woechentlichLauf`).
-- **Gleichschritt:** In beiden Welten gleich, hängt weder an Lizenz noch an Automatik.
+- **Gleichschritt:** Hängt weder an Lizenz noch an Automatik, aber an deiner Liga: In 5a laufen die Sticheleien in den beiden Welten in verschiedenen Ligen (Verein 6 in der 1., Verein 30 in der 2. Liga). `bild` bleibt gleich, weil es nur Verein 6 enthält und die Sticheleien nur Beziehungen anderer Vereine ändern (Prüfung FB7).
 - **Tests zuerst:** `tests/presse.js` (neu Fall K29m am Ende).
 
 ### 23.11.2026: Korrekturen nach Prüfung EZ zu K16g, K27h und den Korrekturen EY (Zweig `mitarbeit/popolupo-ez-korrekturen`, auf U12n)

@@ -2540,3 +2540,21 @@ Korrekturen auf `mitarbeit/popolupo-fa-korrekturen` (auf K07g).
 | FA4 | Mit Transfersperre kam „Spieler will nur zu dir“ trotzdem. Jetzt nicht. | ✅ behoben |
 | FA5 | Tests: `x4` fehlte in der Bedingung, der Schlüssel der Sperre war ungeprüft, der Nachlass nach einem Abbruch auch. Der Schlüssel ist jetzt eine eigene Funktion (`kartenSchluessel`) und geprüft. Der Test zum lachenden Dritten vergleicht das Gegenangebot mit der Forderung im Moment des Angebots. | ✅ behoben |
 | FA6 | K28 führte die Rettung noch unter „Noch nicht“, zwei Kommentare nannten §5.13 statt §5.13a. Berichtigt. Dazu K16 §11 und K12b auf den Stand gebracht. | ✅ behoben |
+
+## FB. Prüfung von K29m, K07g, der Doku K30 §8.4 und der Korrekturen FA ohne Laufzeit (23. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 7b89219..b1a0cec gelesen, nichts ausgeführt. Zwei mittlere und sieben niedrige Funde. Ohne Befund: bei K29m der Strom, das Zeitfenster montags ohne Lücke und ohne Doppel, verlegte Spiele, nur Liga; bei K07g die Positionen aus `slotsVerein`, Minuten mit Verlängerung, keine Umschulung in der Automatik; bei FA `nachlassFaktor`, die Gerüchte, `askPrice`, `mitbieter`, die Transfersperre; die Doku K30 §8.4 (79 Karten), K33, K36 Nr. 177 und 178.
+
+Korrekturen auf `mitarbeit/popolupo-fb-korrekturen` (auf K13e). Die Sitzung brach am 23.11. mitten in den Korrekturen ab (Fehlalarm des Virenscanners), die Teständerungen zu FB1 und FB2 sind am 24.11. neu geschrieben.
+
+| # | Befund | Status |
+|---|---|---|
+| FB1 | Der Test erwartete für den Schlüssel der Sperre mit Spieler `'x:7:'`, der Code liefert richtig `'x:7:3'` (Karte:Spieler:Verein). Erwartung und Kommentar berichtigt. | ✅ behoben |
+| FB2 | FA1 war unvollständig: Ein Gegenangebot, das unter dem Nachlass entstand, galt nach der Frist und nach einem Jobwechsel weiter. Jetzt tragen Gegenangebote `fMy` und `fNl`, geprüft in `gegenGilt` (Forderung, Anzeige, Übersicht der Verhandlungen, Gerüchte). | ✅ behoben |
+| FB3 | Alte Spielstände behielten den festen Nachlass in `f`. Jetzt `verhUmstellen` beim Laden. | ✅ behoben |
+| FB4 | K07 sagte „auch Testspiele“, `testspielNach` rief `umschulungEinsatz` aber nicht auf. Aufruf ergänzt, die Doku stimmt damit. | ✅ behoben |
+| FB5 | Ein Einsatz zählte je nach Wochentag halb oder voll, und ein Einsatz ohne Fortschritt (verletzt, Umschulung nicht mehr möglich) verbrauchte die 7 Tage. Jetzt immer voll, die Sperre nur bei echtem Fortschritt. | ✅ behoben |
+| FB6 | Verkaufte und verliehene Spieler schulten beim neuen Verein weiter um. `vertragEnde` und `verleihen` löschen `um` und `umE`. | ✅ behoben |
+| FB7 | K29 und das Entwicklungsprotokoll sagten, in beiden Welten aus 5a passiere dasselbe. Die Sticheleien laufen dort aber in verschiedenen Ligen. Umformuliert: `bild` bleibt trotzdem gleich. | ✅ behoben |
+| FB8 | Die Sätze passten unter Computer-Trainern nicht („morgen“ bei bis zu 7 Tagen, „Wir fahren da hin“ vom Heimtrainer). Eigene Sätze in `PRESSE.kiSticheleien`. | ✅ behoben |
+| FB9 | Der Test K29m konnte an anderen Spielen im Zeitfenster scheitern. Jetzt zählt nur die Meldung zu genau diesem Derby, `ki.max` ist im Test hoch. | ✅ behoben |

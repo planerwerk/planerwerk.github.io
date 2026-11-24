@@ -34,10 +34,11 @@ function testspieleTag(d){if(wochentag(d)===RK.wochenTag)kiTestspielAnfrage(d); 
   lagerTag(d);}
 const testspielHeute=d=>(S.testspiele||[]).filter(x=>x.stand==='zugesagt'&&x.tag===d);
 
-// Nach dem Testspiel (K11 §3.2): weniger Frische und Belastung, Spielpraxis 60 %, Form zu 30 %, Vertrautheit +2, Lernen zur Hälfte, keine Karten, kein Einsatz in der Statistik
+// Nach dem Testspiel (K11 §3.2): weniger Frische und Belastung, Spielpraxis 60 %, Form zu 30 %, Vertrautheit +2, Lernen zur Hälfte, keine Karten, kein Einsatz in der Statistik.
+// Ein Einsatz auf der Umschulungsposition zählt wie im Pflichtspiel (K07 §3.3, K07g, Prüfung FB4).
 function testspielNach(r,x){const T=RTS,N=RE.note,F=RP.frische;
   [0,1].forEach(s=>{const tid=s?r.a:r.h;if(tid>=1000)return;const gf=s?r.ag:r.hg,ga=s?r.hg:r.ag,res=gf>ga?1:gf<ga?-1:0;
-    r.xpo[s].forEach(([id,,,min=90])=>{const p=PIX.get(id);if(!p)return;
+    r.xpo[s].forEach(([id,pos,,min=90])=>{const p=PIX.get(id);if(!p)return;if(p.um)umschulungEinsatz(p,pos,min);
       p.fit=clamp(p.fit-F.spiel*min/90*(F.ko[0]+F.ko[1]*p.ko)*T.frische,RE.fitnessMin,100);p.sp=Math.min(100,p.sp+RP.spielpraxis.jeSpiel*min/90*T.praxis);
       lastBuchen(p,RT.spielLast*min/90*T.frische);p.wk=(p.wk||0)+RT.spielKondition*min/90;p.ltag=S.tag;p.lmin=min;p.sb=Math.min(100,(p.sb||0)+min/RSO.belastung.jeMinuten*T.frische);
       if(min>=N.mindestMinuten){const fest=N.basis-(p.str-N.staerkeMitte)/N.staerkeTeiler,gr=clamp(Math.round((fest-res*N.ergebnis+(R()-0.5)*N.zufall)*2)/2,N.min,N.max),alt=p.form;
