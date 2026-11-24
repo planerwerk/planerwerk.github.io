@@ -110,14 +110,17 @@ function liveCoAnsprache(){const L=LIVE;if(!L||L.ansprache||L.G.m!==45)return;co
 // Protest an der Seitenlinie: bis RD.trainer.protestMinuten nach einem Elfmeter gegen dich oder einem Platzverweis bei dir, einmal je Anlass, nur mit dem Bereich zurufe.
 // Die Mannschaft wird wach (wie „Druck machen!“, mit dessen Abnutzung). Der Schiedsrichter zeigt dir mit protestGelb × Strenge Gelb (ohne Zufall, Hash). Die zweite Gelbe
 // im selben Spiel ist Gelb-Rot: Tribüne für den Rest des Spiels und gelbRotSpiele Spiele Sperre (zählt nicht zu den Gelben der Saison).
+// Seit K09i: mit protestRot × Strenge gleich Rot (vor der Gelben geprüft, derselbe Hash): Tribüne und rotSpiele Spiele Sperre.
 const protestAnlass=(e,s)=>(e.art==='elfmeter'&&(e.t==='G'||e.t==='C')&&e.s!==s)||(e.t==='R'&&e.s===s);
 const protestOffen=L=>!!L&&!L.ende&&L.anlass!=null&&L.G.m-L.anlass<=RD.trainer.protestMinuten&&!L.protestiert&&!liveTribuene();
+// Ab sofort auf der Tribüne (Gelb-Rot, Rot): in der Halbzeitpause spricht gleich der Co-Trainer (Prüfung FG2)
+function liveAufTribuene(L,text){S.live.trib=1;L.meldung=text;if(L.G.m===45&&!L.ansprache){liveCoAnsprache();L.meldung=text+' '+L.meldung;}}
 function liveProtest(){if(!darf('zurufe','zuruf'))return;const L=LIVE;if(!protestOffen(L)||!S.live)return;const T=RD.trainer,G=L.G,SL=S.live;L.protestiert=true;
-  const n=SL.prot=(SL.prot||0)+1,h=(hash32(['protest',S.season,S.tag,S.my,G.m,n].join('|'))%1000)/1000,gelb=h<T.protestGelb*((G.schiri&&G.schiri.st)||1);
+  const n=SL.prot=(SL.prot||0)+1,h=(hash32(['protest',S.season,S.tag,S.my,G.m,n].join('|'))%1000)/1000,st=(G.schiri&&G.schiri.st)||1,rot=h<T.protestRot*st,gelb=h<T.protestGelb*st;
   const r=G.zuruf(L.s,'druck');if(r.ok)liveMerken('zuruf',['druck']);
-  if(!gelb)L.meldung='Du stürmst an die Seitenlinie und schimpfst. Der Schiedsrichter lässt es durchgehen, die Mannschaft ist hellwach.';
-  else if((SL.tg||0)>=1){SL.tg=2;SL.trib=1;trainerSperre(T.gelbRotSpiele,'Gelb-Rot für den Trainer');L.meldung='Gelb-Rot für dich! Du musst auf die Tribüne, den Rest des Spiels coacht der Co-Trainer mit.';
-    if(G.m===45&&!L.ansprache){const m0=L.meldung;liveCoAnsprache();L.meldung=m0+' '+L.meldung;}} /* Gelb-Rot in der Halbzeitpause: der Co-Trainer spricht (Prüfung FG2) */
+  if(rot){SL.rot=1;trainerSperre(T.rotSpiele,'Rote Karte für den Trainer');liveAufTribuene(L,'Rot für dich! Der Schiedsrichter schickt dich sofort auf die Tribüne.');}
+  else if(!gelb)L.meldung='Du stürmst an die Seitenlinie und schimpfst. Der Schiedsrichter lässt es durchgehen, die Mannschaft ist hellwach.';
+  else if((SL.tg||0)>=1){SL.tg=2;trainerSperre(T.gelbRotSpiele,'Gelb-Rot für den Trainer');liveAufTribuene(L,'Gelb-Rot für dich! Du musst auf die Tribüne, den Rest des Spiels coacht der Co-Trainer mit.');}
   else{SL.tg=1;const g=trainerGelb();L.meldung=`Gelb für dich wegen Protests (${g}. Gelbe als Trainer in dieser Saison${g%T.sperreJe===0?', das heißt ein Spiel Sperre':`, gesperrt nach der ${Math.ceil(g/T.sperreJe)*T.sperreJe}.`}). Die Mannschaft ist hellwach.`;}
   liveSichern();liveRender();}
 

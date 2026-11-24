@@ -816,7 +816,8 @@ const REGELN={
     // Trainer-Karten und Tribüne (K09 §5.4, K09g, 24.11., popolupo): Protest im Live-Spiel bis protestMinuten nach dem Anlass, Gelb mit protestGelb × Strenge des Schiedsrichters.
     // Jede sperreJe-te Gelbe der Saison sperrt sperreSpiele Pflichtspiele, Gelb-Rot gelbRotSpiele. Innenraumverbot nach Schiedsrichterkritik (K09f): ab ab früheren Fällen
     // so viele Spiele wie Fälle über ab − 1, höchstens max. Werte vorläufig (die vier Gelben wie in der Bundesliga seit 2019/20).
-    trainer:{protestGelb:0.35,protestMinuten:2,sperreJe:4,sperreSpiele:1,gelbRotSpiele:1,innenraum:{ab:1,max:2}},
+    // Seit K09i: Mit protestRot × Strenge zeigt der Schiedsrichter gleich Rot (vor der Gelben geprüft): Tribüne für den Rest und rotSpiele Spiele Sperre.
+    trainer:{protestGelb:0.35,protestRot:0.04,rotSpiele:2,protestMinuten:2,sperreJe:4,sperreSpiele:1,gelbRotSpiele:1,innenraum:{ab:1,max:2}},
     schiri:{proLiga:24,strenge:[0.85,1.15],elfmeter:[0.9,1.1]}},
   // Medizin (K10 §11, Welle 2). Häufigkeit nach echten Ankern (UEFA-Studie: etwa 50 Verletzungen je 25er-Kader und Saison, 12–14 % des Kaders fehlen im Schnitt).
   // k: Anteil Kontakt (Foul, Zweikampf). Überlastung im Spiel zieht Arten mit Gewicht anteil × (1 − k), Kontakt anteil × k, Training anteil.

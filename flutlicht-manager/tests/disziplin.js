@@ -77,12 +77,18 @@ console.log(`\n${N} Saison(s), ${sum.spiele} Ligaspiele, in ${((Date.now()-t0)/1
   const pa=ev('protestAnlass'),anlass=pa({t:'G',art:'elfmeter',s:1},0)&&pa({t:'C',art:'elfmeter',s:1},0)&&pa({t:'R',s:0},0)&&!pa({t:'G',art:'elfmeter',s:0},0)&&!pa({t:'R',s:1},0)&&!pa({t:'G',art:'spiel',s:1},0);
   W.ev('liveRender=function(){};liveSichern=function(){};');const G=F.spielAnlegen(6,geg,{}),L={G,s:0,ende:false,anlass:null,protestiert:false,meldung:''};ev('(function(x){LIVE=x;})')(L);
   S.live={tag:S.tag,eing:[],m:0,k:0};const g0=S.trainerK.g;F.liveProtest();const ohneAnlass=!S.live.prot;
-  let n=0;while(!S.live.trib&&n<60){L.anlass=G.m;L.protestiert=false;F.liveProtest();n++;}
+  const rot0=T.protestRot;T.protestRot=0; /* K09i: hier nur der Weg über Gelb-Rot, Rot eigens unten */
+  let n=0;while(!S.live.trib&&n<60){L.anlass=G.m;L.protestiert=false;F.liveProtest();n++;}T.protestRot=rot0;
   const gelbRot=S.live.trib===1&&S.live.tg===2&&S.trainerK.g===g0+1&&S.trainerK.sp===T.gelbRotSpiele&&ev('liveTribuene')()&&!ev('protestOffen')(Object.assign(L,{anlass:G.m,protestiert:false}))&&S.live.eing.some(e=>e.a==='zuruf');
   F.trainerVorSpiel(d);const neuladen=S.trainerK.heute==null; /* Prüfung FG1: Neuladen mitten im Spiel macht die Sperre aus diesem Spiel nicht zu einer für heute */
   while(G.m<45)G.minute();F.liveAnsprache('loben');const co=!!L.ansprache&&L.anspPasst===null&&S.live.anspCo===1&&S.live.eing.some(e=>e.a==='ansprache')&&String(L.meldung).includes('Co-Trainer');
   pruef(vorher&&nachVier&&nichtGleich&&trib&&test&&ab&&saison&&iv1&&iv2&&anlass&&ohneAnlass&&gelbRot&&neuladen&&co,'Trainer-Karten: Sperre nach der vierten Gelben ab dem nächsten Pflichtspiel, Innenraumverbot, Protest mit Gelb-Rot und Tribüne, Ansprache des Co-Trainers',
     `vier Gelbe ${vorher}/${nachVier}, nicht im selben Spiel ${nichtGleich}, Tribüne ${trib}, Testspiel ${test}, abgesessen ${ab}, Saisonwechsel ${saison}, Innenraum ${iv1}/${iv2}, Anlässe ${anlass}, `+
-    `ohne Anlass ${ohneAnlass}, Gelb-Rot nach ${n} Protesten ${gelbRot}, Neuladen ${neuladen}, Co-Trainer ${co} (${L.ansprache})`);}
+    `ohne Anlass ${ohneAnlass}, Gelb-Rot nach ${n} Protesten ${gelbRot}, Neuladen ${neuladen}, Co-Trainer ${co} (${L.ansprache})`);
+  /* K09i. Direkte Rote Karte: mit sehr hohem protestRot bringt schon der erste Protest Rot, Tribüne und rotSpiele Spiele Sperre, ohne Gelbe in der Saisonzählung */
+  const G2=F.spielAnlegen(6,geg,{}),L2={G:G2,s:0,ende:false,anlass:0,protestiert:false,meldung:''};ev('(function(x){LIVE=x;})')(L2);S.live={tag:S.tag,eing:[],m:0,k:0};S.trainerK.sp=0;
+  const g1=S.trainerK.g;T.protestRot=2;F.liveProtest();T.protestRot=rot0; /* 2: sicher Rot, auch bei einem großzügigen Schiedsrichter */
+  pruef(S.live.rot===1&&S.live.trib===1&&S.trainerK.sp===T.rotSpiele&&S.trainerK.g===g1&&String(L2.meldung).includes('Rot'),'Rote Karte für den Trainer: Tribüne und zwei Spiele Sperre, zählt nicht zu den Gelben',
+    `Rot ${S.live.rot}, Tribüne ${S.live.trib}, Sperre ${S.trainerK.sp}, Gelbe ${g1} → ${S.trainerK.g}`);}
 
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);
