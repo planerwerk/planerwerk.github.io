@@ -157,5 +157,15 @@ const kaufe=(w,p,fee,yrs=3)=>{const els=w.W.ev('document');els.getElementById('f
   pruef(ruecken&&aufruf&&job&&alt&&imp,'Verhandlungen: Fristen rücken beim Saisonwechsel mit, Einigungen verfallen beim Jobwechsel, alte Gegenangebote werden beim Laden gebunden',
     `Fristen ${ruecken} (Pause ${v.pause}), Aufruf im Saisonwechsel ${aufruf}, Jobwechsel ${job}, altes Gegenangebot ${alt}, Import ${imp}`);}
 
+// Prüfung FD1, FD2, FD4, FD5: Auch Kater nach „Spiel der Saison“, Standardtraining, Gegnerbeobachtung (am Verein), Angebote für deine Spieler und das Fenster der letzten
+// Bieterrunde rücken beim Saisonwechsel mit. Ein Kater vom Saisonende wirkt nur noch die restlichen Tage, ein Angebot vom 28.6. verfällt in der neuen Saison.
+{const {S,ev}=welt(),dt=365,a=S.teams.find(t=>t.id!==S.my&&t.lg===1),b=S.teams.find(t=>t.id!==S.my&&t.id!==a.id&&t.lg===1),p=ev('squad')(S.my)[0];
+  a.kater=344;b.kater=370;a.stdTag=300;a.gb={g:b.id,bis:330};delete b.stdTag;delete b.gb;S.offers=[{pid:p.id,tid:a.id,fee:1e6,bis:376}];p.bieterF=365;
+  ev('fristenSaisonwechsel')(dt);
+  const ok=a.kater===344-dt&&b.kater===370-dt&&a.stdTag===300-dt&&a.gb.bis===330-dt&&b.stdTag===undefined&&b.gb===undefined&&S.offers[0].bis===376-dt&&p.bieterF===0;
+  S.tag=0;const katerA=!!a.kater&&S.tag<a.kater,katerB=!!b.kater&&S.tag<b.kater,beobachtet=ev('gegnerBeobachtet')(a,b.id);
+  pruef(ok&&!katerA&&katerB&&!beobachtet,'Saisonwechsel: Kater, Standardtraining, Gegnerbeobachtung, Angebote und Bieterrunde rücken mit',
+    `verschoben ${ok} (Kater ${a.kater}/${b.kater}, Standards ${a.stdTag}, Beobachtung bis ${a.gb.bis}, Angebot bis ${S.offers[0].bis}, Bieterfenster ${p.bieterF}), am 1.7.: Kater alt ${katerA}, Kater jung ${katerB}, Beobachtung ${beobachtet}`);}
+
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

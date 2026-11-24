@@ -2574,3 +2574,17 @@ Korrekturen auf `mitarbeit/popolupo-fc-korrekturen` (auf den Korrekturen FB).
 | FC5 | Ein Gegenangebot unter dem Nachlass überschrieb ein älteres ohne Nachlass, nach der Frist galt die volle Forderung. Jetzt gilt danach wieder das ältere (`fAlt`). | ✅ behoben |
 | FC6 | In der 1. Liga liegt die 1. Pokalrunde vor dem Ligastart, die Rotation griff dort nie. Ohne Ligaspiel dieser Saison zählt jetzt die beste Elf. | ✅ behoben |
 | FC7 | Drei Sätze in K29 und K13 passten nicht mehr zum Code. Berichtigt. | ✅ behoben |
+
+## FD. Prüfung des Doku-Abgleichs K15/K17 und der Korrekturen FC ohne Laufzeit (24. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat ca8c6bc..32c234b gelesen, nichts ausgeführt. Ein hoher und ein mittlerer Fund, beide älter als der Diff und von derselben Art wie FC1, dazu drei niedrige. Ohne Befund: Vorzeichen und Größe von `dt` in `fristenSaisonwechsel`, die übrigen Felder mit Saisontagen (`S.kiAbw`, `S.kapFrei`, `S.verfahren` u. a.), `gegenFrist`, FC2 bis FC6 samt Tests, Gleichschritt 5a, Doku K07, K13, K15, K17, K29, K33.
+
+Korrekturen auf `mitarbeit/popolupo-fd-korrekturen` (auf K09h).
+
+| # | Befund | Status |
+|---|---|---|
+| FD1 | **Hoch, älter als der Diff:** Der Kater nach „Spiel der Saison“ (`t.kater`, Saisontag) rückte beim Saisonwechsel nicht mit. Wer im Mai ein wichtiges Spiel hatte (Relegation, Pokalfinale, Halbfinale), spielte die ganze nächste Saison mit −4,5 %, Computer-Vereine eingeschlossen. `fristenSaisonwechsel` rückt `kater` jetzt bei allen Vereinen mit, auch bei den Auslandsvereinen. Die Kalibrierung über mehrere Saisons kann sich dadurch etwas verschieben. | ✅ behoben |
+| FD2 | Angebote für deine Spieler aus der Sommerpause (`S.offers[].bis`) verfielen nie, der Spieler bekam kein neues Angebot mehr. Rückt jetzt mit. | ✅ behoben |
+| FD3 | Die Pokal-Rotation verglich mit der besten Elf nach dem Spiel (müde, verletzt, gesperrt) und meldete Rotation, wo keine war. Die Vergleichself wird jetzt vor dem Anpfiff festgehalten (`pokalBezugsElf`, `bxi` im Ergebnis). | ✅ behoben |
+| FD4 | Das Fenster der letzten Bieterrunde (`p.bieterF`, Saisontag) sperrte dasselbe Fenster in allen späteren Saisons. Rückt jetzt mit. | ✅ behoben |
+| FD5 | Standardtraining (`t.stdTag`) und Gegnerbeobachtung (`t.gb.bis`) wirkten in die nächste Saison hinein. Rücken jetzt mit. | ✅ behoben |

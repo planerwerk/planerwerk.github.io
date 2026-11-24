@@ -81,9 +81,13 @@ pruef(supercups.length===N-1&&supercups.every(x=>!x.verl&&(x.hg!==x.ag)===!x.pen
   /* Prüfung FC6: Ohne Ligaspiel dieser Saison (Elf der Vorsaison) zählt die beste Elf: mit ihr keine Meldung, mit rotation.wechsel anderen Spielern die Meldung */
   S4.ligaXI.s=S4.season-1;const b=ev4('bestXI')(6,ev4('myT()').form),rest=sq.filter(id=>!b.includes(id)),mitBester=F4.pokalRotation(spiel(1000,b.slice(),0,1));
   const ohneBeste=F4.pokalRotation(spiel(1000,[...b.slice(0,b.length-P.wechsel),...rest.slice(0,P.wechsel)],0,1)),text=S4.news[0]&&String(S4.news[0].t).includes('besten Elf');
-  pruef(amateur===P.wechsel&&zuWenig===0&&gegenGleich===0&&sieg===0&&mitBester===0&&ohneBeste===P.wechsel&&text&&sq.length>=11+P.wechsel,
-    'Pokal-Rotation: Meldung nach dem Aus als Favorit mit vielen Wechseln, nicht bei wenigen, nicht gegen Gleichstarke, nicht nach Sieg; vor dem ersten Ligaspiel gegenüber der besten Elf',
-    `gegen Amateure ${amateur}, zu wenig ${zuWenig}, gegen Gleichstarke ${gegenGleich}, nach Sieg ${sieg}, beste Elf ${mitBester}, ohne die beste Elf ${ohneBeste} (Meldung ${text})`);}
+  /* Prüfung FD3: Die beste Elf von vor dem Anpfiff (bxi im Ergebnis) gilt, nicht die nach dem Spiel; pokalBezugsElf nur für dein Spiel und ohne Ligaspiel dieser Saison */
+  const andere=[...b.slice(0,b.length-P.wechsel),...rest.slice(0,P.wechsel)],vorher=F4.pokalRotation(Object.assign(spiel(1000,andere.slice(),0,1),{bxi:andere.slice()})),be=ev4('pokalBezugsElf');
+  const fremd=be([[S4.teams.find(t=>t.id!==6).id,1000]]),eigen=be([[6,1000]]);S4.ligaXI.s=S4.season;const mitLiga=be([[6,1000]]);S4.ligaXI.s=S4.season-1;
+  const fd3=vorher===0&&fremd===null&&Array.isArray(eigen)&&eigen.length===b.length&&mitLiga===null;
+  pruef(amateur===P.wechsel&&zuWenig===0&&gegenGleich===0&&sieg===0&&mitBester===0&&ohneBeste===P.wechsel&&text&&sq.length>=11+P.wechsel&&fd3,
+    'Pokal-Rotation: Meldung nach dem Aus als Favorit mit vielen Wechseln, nicht bei wenigen, nicht gegen Gleichstarke, nicht nach Sieg; vor dem ersten Ligaspiel gegenüber der besten Elf (vor dem Anpfiff, FD3)',
+    `gegen Amateure ${amateur}, zu wenig ${zuWenig}, gegen Gleichstarke ${gegenGleich}, nach Sieg ${sieg}, beste Elf ${mitBester}, ohne die beste Elf ${ohneBeste} (Meldung ${text}), FD3: Elf vor dem Anpfiff ${vorher}, fremdes Spiel ${fremd}, eigenes ${eigen&&eigen.length}, mit Ligaspiel ${mitLiga}`);}
 
 console.log(`\n${N} Saison(s) in ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

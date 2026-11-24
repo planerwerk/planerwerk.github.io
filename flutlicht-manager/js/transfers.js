@@ -35,10 +35,15 @@ function verhUmstellen(){Object.values(S.verh||{}).forEach(v=>{if(!v)return;if(v
 // Fristen in Saisontagen (Prüfung FC1): S.tag beginnt jede Saison neu. Beim Saisonwechsel rücken Pause, Preisdruck, Einigung und Bieterfrist der Verhandlungen,
 // die Vertagung der Vertragsgespräche (S.vt) und der Tag des letzten Vertragsgesprächs (S.vtGespr) um dt Tage (Länge der alten Saison) zurück.
 // Sonst sperrte ein Abbruch im Mai die ganze nächste Saison, und eine alte Einigung lebte wieder auf.
+// Seit Prüfung FD ebenso: am Verein (auch Auslandsvereine) der Kater nach „Spiel der Saison“ `kater` (FD1), der Tag des Standardtrainings `stdTag` und das Ende der
+// Gegnerbeobachtung `gb.bis` (FD5), die Fristen der Angebote für deine Spieler `S.offers[].bis` (FD2) und das Fenster der letzten Bieterrunde am Spieler `bieterF` (FD4).
 function fristenSaisonwechsel(dt){const z=x=>x==null?x:x-dt;
   Object.values(S.verh||{}).forEach(v=>{if(!v)return;v.pause=z(v.pause);v.druck=z(v.druck);if(v.einig)v.einig.bis=z(v.einig.bis);if(v.konk)v.konk.bis=z(v.konk.bis);});
   Object.values(S.vt||{}).forEach(v=>{if(v&&v.pause!=null)v.pause=z(v.pause);});
-  if(S.vtGespr)Object.keys(S.vtGespr).forEach(id=>{S.vtGespr[id]=z(S.vtGespr[id]);});}
+  if(S.vtGespr)Object.keys(S.vtGespr).forEach(id=>{S.vtGespr[id]=z(S.vtGespr[id]);});
+  [...(S.teams||[]),...((S.ausland&&S.ausland.v)||[])].forEach(t=>{if(!t)return;if(t.kater!=null)t.kater=z(t.kater);if(t.stdTag!=null)t.stdTag=z(t.stdTag);if(t.gb&&t.gb.bis!=null)t.gb.bis=z(t.gb.bis);});
+  (S.offers||[]).forEach(o=>{if(o&&o.bis!=null)o.bis=z(o.bis);});
+  (S.pl||[]).forEach(p=>{if(p.bieterF!=null)p.bieterF=z(p.bieterF);});}
 // Jobwechsel (Prüfung FC3): Einigungen über eine Ablöse galten für den alten Verein (womöglich samt dessen Nachlass), sie verfallen.
 function verhJobwechsel(){Object.values(S.verh||{}).forEach(v=>{if(v)v.einig=null;});}
 // Grundforderung an dich: mit deiner Beziehung zum Verein (K17 §5.2, U12c, nur inländische Vereine). Preise unter Computer-Vereinen nutzen forderungBasis ohne Beziehung.

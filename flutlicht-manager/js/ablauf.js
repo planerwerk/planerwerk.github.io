@@ -12,7 +12,9 @@ function tagesSpieleVorbereiten(d,live){kartenAuto(d); // unbeantwortete Ereigni
   testspielHeute(d).forEach(x=>{const g={titel:'Testspiel',art:'test',e:{art:'test'},x,list:[]},hg=x.heim?[S.my,x.gegner]:[x.gegner,S.my];spiel(hg[0],hg[1],{test:1,wb:'test'},{test:1},g);out.gruppen.push(g);}); // Testspiele ohne Halt (K11)
   for(const e of termineAm(d)){
     if(e.art==='liga'){const g={titel:`${ligaName(e.lg)} · ${e.md+1}. Spieltag`,art:'liga',e,list:[]};e.idx.forEach(i=>{const[h,a]=S.fx[e.lg][e.md][i];spiel(h,a,{},{lg:e.lg,min:S.plan.zeit[e.lg][e.md][i][1]},g);});out.gruppen.push(g);}
-    else if(e.art==='pokal'){if(S.cup.hist.length!==e.r)continue;const fin=e.r===5,g={titel:`DFB-Pokal · ${POKAL_RUNDEN[e.r]}`,art:'pokal',e,list:[]},pl=pokalPaareAm(e);if(!pl.length)continue;pl.forEach(([h,a])=>spiel(h,a,{wb:'pokal',ko:1,neutral:fin,wichtig:e.r>=RTA.ki.wichtigAbRunde},{cup:1,min:e.min},g));out.gruppen.push(g);}
+    else if(e.art==='pokal'){if(S.cup.hist.length!==e.r)continue;const fin=e.r===5,g={titel:`DFB-Pokal · ${POKAL_RUNDEN[e.r]}`,art:'pokal',e,list:[]},pl=pokalPaareAm(e);if(!pl.length)continue;
+      const bxi=pokalBezugsElf(pl); /* Vergleichself der Pokal-Rotation vor dem Anpfiff (K13e, Prüfung FD3), nur für dein Spiel, ohne Zufall */
+      pl.forEach(([h,a])=>spiel(h,a,{wb:'pokal',ko:1,neutral:fin,wichtig:e.r>=RTA.ki.wichtigAbRunde},Object.assign({cup:1,min:e.min},bxi&&(h===S.my||a===S.my)?{bxi}:{}),g));out.gruppen.push(g);}
     else if(e.art==='supercup'){const x=S.supercup,g={titel:'Supercup',art:'supercup',e,list:[]};spiel(x.h,x.a,{wb:'pokal',ko:1,elfDirekt:1,wichtig:true},{supercup:1,min:e.min},g);out.gruppen.push(g);}
     else if(e.art==='eu'){const L=euSpieleAm(e);if(!L.length)continue;const g={titel:euSpielName(e),art:'eu',e,list:[],kurz:[]}; // Europapokal (K37, U19a): Ausland gegen Ausland als Kurzrechnung im eigenen Strom
       mitStrom(strom('eukurz',S.season,d,e.wb,e.runde,e.leg,e.md==null?-1:e.md),()=>L.forEach(m=>{if(!euDe(m.h)&&!euDe(m.a))g.kurz.push(Object.assign(euKurz(m.h,m.a,m.o),{i:m.i}));}));
