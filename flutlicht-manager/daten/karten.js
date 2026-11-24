@@ -339,6 +339,15 @@ const KARTEN=[
   {id:'wurf',titel:'Wurfgeschosse',bereich:'K09',art:'info',stufe:'haeufig',chance:0.05,ausloeser:'wurf',sperrTage:60,immer:true,fanarbeit:true, /* immer: die Strafe soll nicht still abgehen (wie Platzsturm, EX4) */
     texte:['Nach der Heimniederlage gegen {verein} flogen Becher und Feuerzeuge auf den Rasen. Das Sportgericht verhängt {geld:5000} Strafe.','Ein Feuerzeug trifft den Linienrichter, das Spiel gegen {verein} stand kurz vor dem Abbruch. Der DFB will {geld:5000}.'],
     wirkung:[{art:'geld',wert:-5000},{art:'zuschauer',wert:5000}]},
+  // Integration (K03 §8, K11 §8, K03e, 24.11., popolupo): Heimweh (Entscheidung) und Traumtor des Neuzugangs im Testspiel (Info mit Wirkung). Beträge für die 3. Liga. Werte vorläufig.
+  {id:'heimweh',titel:'Heimweh',bereich:'K03',art:'entscheidung',gross:false,stufe:'haeufig',chance:0.25,ausloeser:'heimweh',sperrTage:120,
+    texte:['{spieler} wirkt abwesend. Der Co-Trainer erzählt, dass er seine Familie vermisst und abends allein in der Wohnung sitzt.','{spieler} hat Heimweh. Er spricht kaum Deutsch und findet in der Mannschaft keinen Anschluss.'],
+    optionen:[{text:'Die Familie nachholen und den Umzug zahlen',wirkung:[{art:'geld',wert:-30000},{art:'integration',wert:20},{art:'stimmung',wert:5}],folge:'Die Familie zieht nach. {spieler} lacht wieder.'},
+      {text:'Sprachkurs und ein Pate aus der Mannschaft',wirkung:[{art:'geld',wert:-8000},{art:'deutsch',wert:10},{art:'integration',wert:8}],folge:'Ein Mitspieler kümmert sich um {spieler}, der Sprachkurs beginnt nächste Woche.'},
+      {text:'Geduld, das gibt sich',wirkung:[{art:'stimmung',wert:-4}],folge:'{spieler} bleibt still. Ob sich das wirklich gibt?'}],auto:1},
+  {id:'traumtor',titel:'Traumtor des Neuzugangs',bereich:'K11',art:'info',stufe:'haeufig',chance:0.5,ausloeser:'traumtor',sperrTage:120,
+    texte:['Was für ein Einstand: {spieler} trifft im Testspiel per Fallrückzieher. Die Mitspieler feiern ihn, die Fans singen schon seinen Namen.','{spieler} zirkelt den Ball im Testspiel in den Winkel. Ein Tor, das ihm die Ankunft leichter macht.'],
+    wirkung:[{art:'integration',wert:5},{art:'fans',wert:1}]},
   {id:'rudelbildung',titel:'Rudelbildung',bereich:'K09',art:'info',stufe:'haeufig',chance:0.5,ausloeser:'rudelbildung',sperrTage:60,
     texte:['Nach der Roten Karte im Derby gegen {verein} gingen beide Mannschaften aufeinander los. Das Sportgericht verhängt {geld:6000} gegen deinen Verein.','Die Rudelbildung im Derby gegen {verein} kostet deinen Verein {geld:6000}.'],
     wirkung:[{art:'geld',wert:-6000}]},

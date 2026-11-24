@@ -429,6 +429,7 @@ lizenz:{
 186. **K19j Spielertausch (24.11., popolupo, ohne Testlauf):** keine neue Funktion. Der Tausch ist ein Feld im Transferangebot (Bereich `transfers`). Die Automatik der Transfers tauscht nicht.
 187. **K23h TV-Gelder in vier Raten und K31d Notverkauf (24.11., popolupo, ohne Testlauf, beide mit Schalter aus):** keine neue Funktion, nur Abläufe der Welt. Eingeschaltet wirken sie in beiden Welten des Gleichschritts gleich.
 188. **K03d Integration und Deutsch (24.11., popolupo, ohne Testlauf, Wirkung mit Schalter aus):** keine neue Funktion, nur Werte am Spieler und eine Anzeige. Ohne Zufall, für alle Vereine gleich.
+189. **K03e Heimweh und Traumtor des Neuzugangs (24.11., popolupo, ohne Testlauf):** keine neue Funktion, zwei Karten im Bereich `ereignisse`. Unter der Automatik wählt der Co-Trainer Sprachkurs und Pate.
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 

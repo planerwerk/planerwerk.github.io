@@ -139,6 +139,10 @@ const AUSLOESER={
   rudelbildung(){const L=kartenLetztSpiel(L=>L.derby&&L.rot);return L?{verein:L.gegner}:null;},
   // Wurfgeschosse (K09 §4.4, K09h): nach einer Heimniederlage in einem Pflichtspiel der letzten RKT.spiel.nachTage Tage (heim, nl in S.letzte)
   wurf(){const L=kartenLetztSpiel(L=>L.heim&&L.nl&&L.gegner<1000&&!L.eu);return L?{verein:L.gegner}:null;}, /* nicht im Europapokal (Prüfung FF3) */
+  // Integration (K03 §8, K11 §8, K03e): Heimweh eines fremdsprachigen Heimweh-Typs, der nach RKT.integration.heimwehWochen Wochen bei dir unter heimwehUnter liegt;
+  // Traumtor: ein Neuzugang (Integration unter 100) hat in deinem Testspiel der letzten RKT.spiel.nachTage Tage getroffen (S.letztTest aus testspielNach)
+  heimweh(){const H=RKT.integration,l=squad(S.my).filter(p=>p.int!=null&&p.int<H.heimwehUnter&&(p.wiv||0)>=H.heimwehWochen&&deutschVon(p)<100&&hatEig(p,'heimweh'));return l.length?{spieler:pick(l).id}:null;},
+  traumtor(){const L=S.letztTest;if(!L||L.s!==S.season||S.tag-L.tag<0||S.tag-L.tag>RKT.spiel.nachTage)return null;const l=(L.tore||[]).map(id=>PIX.get(id)).filter(p=>p&&p.team===S.my&&p.int!=null);return l.length?{spieler:pick(l).id}:null;},
   // Spieler hadert mit seiner Position (K06 §8, K06d): mindestens RKT.spiel.positionSpiele Einsätze in Folge auf einer Position mit geringer Eignung (p.pfal)
   positionHadern(){const SP=RKT.spiel,h=absTag(S.tag),l=squad(S.my).filter(p=>(p.pfal||0)>=SP.positionSpiele&&p.pfalT!=null&&h-p.pfalT<=SP.positionTage); /* EK7 */return l.length?{spieler:pick(l).id}:null;},
   // Streit nach Kritik (K15 §8, K15e): ein Spieler deines Kaders hat sich in den letzten RKT.gespraech.streitTage Tagen im Einzelgespräch nach deiner Kritik mit dir gestritten
@@ -311,6 +315,8 @@ function kartenWirkung(w,b,c){let wert=w.wert,txt='',erfolg=true;if(w.chance!=nu
   if(w.art==='stimmung'){if(p&&p.team===S.my)stimmungAendern(p,wert);}
   else if(w.art==='stimmungAlle')squad(S.my).forEach(x=>stimmungAendern(x,wert));
   else if(w.art==='zusammenhalt')zusammenhaltAendern(myT(),wert);
+  else if(w.art==='integration'){if(p&&p.team===S.my&&p.int!=null){p.int=Math.min(100,p.int+wert);if(p.int>=100){delete p.int;delete p.intA;}}} /* K03e */
+  else if(w.art==='deutsch'){if(p&&p.team===S.my&&deutschVon(p)<100)p.de=Math.min(100,deutschVon(p)+wert);} /* K03e: Sprachkurs */
   else if(w.art==='glaub')glaubAendern(wert);
   else if(w.art==='vertrauen')S.trust=clamp(S.trust+wert,0,100);
   else if(w.art==='ruf')rufAendern(wert);
@@ -366,7 +372,7 @@ function kartenWirkung(w,b,c){let wert=w.wert,txt='',erfolg=true;if(w.chance!=nu
   if(w.dann&&erfolg&&KARTEN_MIT_ERFOLG.includes(w.art)){const t=w.dann.map(x=>kartenWirkung(x,b,c)).filter(Boolean);txt=[w.gut||'',...t].filter(Boolean).join(' ');}
   return txt;}
 const KARTEN_MIT_ERFOLG=['leihe','gehaltAnpassen','provisionZahlen','spezialist','transferliste','zurueckrudern','stabHolen']; // Wirkungen, die melden, ob sie geklappt haben (für dann)
-const KARTEN_WIRKUNGEN=['stimmung','stimmungAlle','zusammenhalt','glaub','vertrauen','ruf','bezDu','geld','fans','verpflichten','interesse','angebot','maezen','merch','jobwechsel','pause','talent','jugendHoch','jugendWeg','stabWeg','stabHalten','preisRichtwert','gehaltAnpassen','beraterBez','zuschuss','sonderschicht','leihe','selbstvertrauen','provisionZahlen','dritter','nachlass','hygiene','spezialist','gruppeStimmung','transferliste','zurueckrudern','vertrauenHalt','svAlle','wettsperre','standardGegner','bauVerzug','stabHolen','bauAuflage','punktabzug','lagerEnde','stabStreit','chefWeg','chefHalten','fanGespraech','zuschauer'];
+const KARTEN_WIRKUNGEN=['stimmung','stimmungAlle','zusammenhalt','glaub','vertrauen','ruf','bezDu','geld','fans','verpflichten','interesse','angebot','maezen','merch','jobwechsel','pause','talent','jugendHoch','jugendWeg','stabWeg','stabHalten','preisRichtwert','gehaltAnpassen','beraterBez','zuschuss','sonderschicht','leihe','selbstvertrauen','provisionZahlen','dritter','nachlass','hygiene','spezialist','gruppeStimmung','transferliste','zurueckrudern','vertrauenHalt','svAlle','wettsperre','standardGegner','bauVerzug','stabHolen','bauAuflage','punktabzug','lagerEnde','stabStreit','chefWeg','chefHalten','fanGespraech','zuschauer','integration','deutsch'];
 // Standard-Spezialisten (K06e, taktik.js taktikWirkung): Faktor auf Tore nach Ecken und Freistoßflanken deines Vereins, solange sich die Gegner darauf eingestellt haben
 const standardGegnerFaktor=t=>t&&t.id===S.my&&S.stdGegen&&S.stdGegen.tid===S.my&&S.stdGegen.bis>=absTag(S.tag)?RKT.standard.faktor:1;
 // Ausgang des lachenden Dritten (K30 §8.3, K17 §5.4, K30c): Unterschreibt der Spieler bei dir (aktionen.js offer, vor dem Abschluss), sinkt die Beziehung zwischen den beiden

@@ -155,7 +155,7 @@ Zusage = Grundwert × Niveau × Kalender × Region × Phase   (begrenzt auf 0,05
   - Früher abreisen: Das Lager endet heute, bezahlt ist es schon. Neue Kartenwirkung `lagerEnde`, Stimmung +1.
 - **Ausflug ins Nachtleben:** nach der ersten Sichtung eines Partylöwen im Lager mit Ablenkung.
   - Geldstrafe (wie bei der Partynacht), Gespräch (Voreinstellung) oder ignorieren.
-- Zimmerkollegen und das Traumtor des Neuzugangs fehlen weiter. Dafür bräuchte es Zimmerbelegung und Integration.
+- Zimmerkollegen und das Traumtor des Neuzugangs fehlen weiter. Dafür bräuchte es Zimmerbelegung und Integration. Das Traumtor gibt es seit K03e (24.11.2026, popolupo, ohne Testlauf): Info-Karte mit Chance 0,5 je Woche, wenn ein Neuzugang (Integration unter 100, K03d) in deinem Testspiel der letzten 7 Tage getroffen hat (`S.letztTest` aus `testspielNach`), Integration +5, Fanstimmung +1. Die Zimmerkollegen fehlen weiter (keine Zimmerbelegung).
 - **Vereinswechsel (Prüfung EV7, EW1):** Alle Trainingslager der Saison gehören dem alten Verein und fallen beim Wechsel weg: gebuchte, laufende und beendete. Bezahlt hat sie der alte Verein. Beim neuen Verein kannst du in jeder Pause neu buchen.
 
 ## 9. Wechselwirkungen

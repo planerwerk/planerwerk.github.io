@@ -666,4 +666,16 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
     `Katalog ${katalog}, Würfe heim ${!!wHeim} / auswärts ${wAus} / remis ${wRemis} / Sieg ${wSieg} / Finale ${wFinale} / Europapokal ${wEu}, Fanarbeit ${fa} (${ohne} → ${mitFa}), Vorfälle ${eins}/${zwei}/${drei}, `+
     `Zuschauer Europapokal ${eu} (bleibt ${euBleibt}), Teilausschluss ${teil}, danach ${danach}, nach Jobwechsel ${nachJob} (weg ${jobWeg}), Plätze ${t.cap}`);}
 
+// K03e. Integration (K03 §8, K11 §8): Heimweh nur bei einem fremdsprachigen Heimweh-Typ mit Integration unter heimwehUnter nach heimwehWochen Wochen; die Wirkungen
+//       integration und deutsch; Traumtor nur für einen Neuzugang, der in deinem Testspiel der letzten Tage getroffen hat.
+{const {S,ev}=welt(),A=ev('AUSLOESER'),H=ev('RKT').integration,N=ev('RKT').spiel,wirk=ev('kartenWirkung'),c={titel:'Test'},sq=ev('squad')(S.my);S.phase='play';
+  sq.forEach(x=>{delete x.int;});const p=sq.find(x=>x.pos!=='TW');p.nat='BRA';p.de=20;p.eig=[...ev('eigenschaften')(p).filter(e=>e!=='heimweh'),'heimweh'];p.wiv=H.heimwehWochen;
+  p.int=H.heimwehUnter-5;const ja=A.heimweh();p.wiv=H.heimwehWochen-1;const frueh=A.heimweh();p.wiv=H.heimwehWochen;p.int=H.heimwehUnter+5;const gut=A.heimweh();
+  p.int=H.heimwehUnter-5;p.de=100;const deutsch=A.heimweh();p.de=20;
+  const i0=p.int;wirk({art:'integration',wert:8},{spieler:p.id},c);wirk({art:'deutsch',wert:10},{spieler:p.id},c);const wk=p.int===i0+8&&p.de===30;p.int=97;wirk({art:'integration',wert:8},{spieler:p.id},c);const voll=p.int==null;
+  p.int=50;S.letztTest={s:S.season,tag:S.tag,tore:[p.id]};const tt=A.traumtor();S.letztTest.tag=S.tag-N.nachTage-1;const alt=A.traumtor();S.letztTest.tag=S.tag;delete p.int;const integriert=A.traumtor();
+  pruef(!!ja&&ja.spieler===p.id&&frueh===null&&gut===null&&deutsch===null&&wk&&voll&&!!tt&&tt.spieler===p.id&&alt===null&&integriert===null,
+    'Integration: Heimweh nur bei schlechter Integration nach Wochen, Wirkungen integration und deutsch, Traumtor nur für Neuzugänge kurz nach dem Testspiel',
+    `Heimweh ${!!ja}, zu früh ${frueh}, gut integriert ${gut}, deutschsprachig ${deutsch}, Wirkungen ${wk}, voll ${voll}, Traumtor ${!!tt}, zu lange her ${alt}, integriert ${integriert}`);}
+
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

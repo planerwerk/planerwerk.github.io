@@ -46,6 +46,7 @@ function testspielNach(r,x){const T=RTS,N=RE.note,F=RP.frische;
     const tk=r.taktik&&r.taktik[s],t=S.teams[tid];if(tk){vertrautSetzen(t,'stil',tk.stil,vertraut(t,'stil',tk.stil)+T.vertrautheit);vertrautSetzen(t,'ordnung',tk.form,vertraut(t,'ordnung',tk.form)+T.vertrautheit);}});
   lernenImSpiel(Object.assign({},r,{sz:r.sz.filter((_,i)=>i%2===0)}));
   r.inj.forEach(i=>verletzen(PIX.get(i.id),i.q||'kollision'));
+  {const s=r.h===S.my?0:r.a===S.my?1:-1;if(s>=0)S.letztTest={s:S.season,tag:S.tag,tore:[...new Set(r.ev.filter(e=>e.t==='G'&&e.s===s&&e.p!=null).map(e=>e.p))]};} /* Torschützen deines Testspiels für die Karte „Traumtor des Neuzugangs“ (K03e), ohne Zufall */
   if(x&&x.gegner<AV0)bezDuAendern(x.gegner,RBZ.anlass.testspiel,'Testspiel gespielt'); // K17 §5.5, U12c (Amateure haben keine Beziehung)
   // Geld (K11 §5.2): als Gastgeber Zuschauer mit nachlassendem Interesse, beim Amateurverein eine feste Gage
   const t=myT();let geld=0,zus=0;

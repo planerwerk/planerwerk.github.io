@@ -369,8 +369,8 @@ Sehr selten, als Weltereignis: **etwa einmal in zehn Saisons** kommt ein Szenari
 | Rasen nach Frost kaputt | K26 | Die Rasenqualität mit Greenkeeper ist zurückgestellt (K26 §3.2a). |
 | Spieler will Urlaub verlängern | K12a | Braucht Urlaub je Spieler und Nationalspieler, beides gibt es nicht. |
 | Anruf des Bundestrainers, Länderspiel-Verletzung | K13 | Keine Nationalmannschaften im Spiel. |
-| Traumtor des Neuzugangs, Zimmerkollegen werden Freunde | K11 | Braucht die Integration (K03 §5.5, wartet auf einen Testlauf) und eine Zimmerbelegung. |
-| Notverkauf | K31 | Greift in die Finanzen der Computer-Vereine ein, erst nach einem Testlauf. |
+| Zimmerkollegen werden Freunde | K11 | Braucht eine Zimmerbelegung. Das Traumtor des Neuzugangs gibt es seit K03e (24.11.), ebenso die Heimweh-Karte (K03 §8). |
+| Notverkauf | K31 | Seit K31d (24.11.) gebaut, mit Schalter aus, erst nach einem Testlauf einschalten. Eine Meldung, keine Karte. |
 | Sponsor-Karten | K24 | Bereich des anderen Claude. |
 
 ## 9. Wechselwirkungen

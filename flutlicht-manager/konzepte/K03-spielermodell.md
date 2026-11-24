@@ -399,6 +399,8 @@ Ereigniskarten nach K30. Die meisten landen nur im Posteingang. Entscheidungen s
 
 Dosierung nach dem Gesamtbudget (Konsistenzprüfung B1): höchstens eine Karte aus K03 mit Entscheidung pro Woche.
 
+**Heimweh gebaut als K03e** (24.11.2026, popolupo, ohne Testlauf, vorläufig): Entscheidung mit Chance 0,25 je Woche für einen fremdsprachigen Heimweh-Typ deines Kaders, der nach mindestens 8 Wochen bei dir unter 40 % Integration liegt (`RKT.integration`). Familie nachholen (Geld, Integration +20, Stimmung +5), Sprachkurs und Pate (wenig Geld, Deutsch +10, Integration +8, Voreinstellung) oder Geduld (Stimmung −4). „Landsmann verpflichten“ ist kein Knopf, weil ein Kauf über die Karte am Transferfenster, Budget und Interesse hängt; ein Landsmann hilft ohnehin über die Wochenrechnung (§5.5). Neue Kartenwirkungen `integration` und `deutsch`.
+
 ## 9. Wechselwirkungen
 
 | Konzept | Was es von K03 braucht oder liefert |
