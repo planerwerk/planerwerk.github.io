@@ -104,4 +104,15 @@ console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
   pruef(normal===0&&auf===-n*T.aufstieg[2]&&kl===-n*T.klassenerhalt[1]&&ab===0&&anders===0,'Aufstiegs- und Klassenerhaltsprämie: nur mit hoch, Klassenerhalt nur mit diesem Ziel',
     `normal ${normal}, Aufstieg ${auf}, Klassenerhalt ${kl}, abgestiegen ${ab}, anderes Ziel ${anders}`);}
 
+// K21f. Zielvorgabe (K21 §3.1, §8): Der Spieler rechnet sie mit wert × Forderung an. Nach der Unterschrift steht p.zv mit den Spielen bei der Unterschrift; vor n weiteren
+//       Pflichtspielen passiert nichts, danach steigt das Gehalt um plus und die Vorgabe ist erfüllt (Meldung). Beim Vertragsende fällt sie weg.
+{const {S,F,ev,V}=welt(),p=ev('squad')(S.my)[0],Z=V.zielvorgabe,pw=ev('paketWert'),Fd=1e6,o={ct:3,sal:1e6},zv={n:Z.spiele,plus:Z.plus};
+  const w0=pw(p,S.my,o,Fd),w1=pw(p,S.my,Object.assign({},o,{zv}),Fd),wert=Math.abs(w1-w0-Fd*Z.wert)<1e-6;
+  F.vtUnterschrift(p,Object.assign({},o,{zv}),false);const st=ev('vereinsSpiele')(p,S.my),gesetzt=!!p.zv&&p.zv.st===st&&p.sal===1e6;
+  F.zielvorgabenWoche();const nochNicht=!!p.zv&&p.sal===1e6;p.zv.st-=Z.spiele;F.zielvorgabenWoche();
+  const erreicht=!p.zv&&p.sal===Math.round(1e6*(1+Z.plus)/1000)*1000&&String(S.news[0].t).includes('Zielvorgabe');
+  F.vtUnterschrift(p,Object.assign({},o,{zv}),false);F.vertragEnde(p);const weg=!p.zv;
+  pruef(wert&&gesetzt&&nochNicht&&erreicht&&weg,'Zielvorgabe: zählt in der Verhandlung, greift nach den Pflichtspielen seit der Unterschrift, fällt beim Vertragsende weg',
+    `Wert ${wert} (+${Math.round(w1-w0)}), gesetzt ${gesetzt}, vorher nichts ${nochNicht}, erreicht ${erreicht} (${p.sal}), Vertragsende ${weg}`);}
+
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

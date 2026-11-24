@@ -431,6 +431,7 @@ lizenz:{
 188. **K03d Integration und Deutsch (24.11., popolupo, ohne Testlauf, Wirkung mit Schalter aus):** keine neue Funktion, nur Werte am Spieler und eine Anzeige. Ohne Zufall, für alle Vereine gleich.
 189. **K03e Heimweh und Traumtor des Neuzugangs (24.11., popolupo, ohne Testlauf):** keine neue Funktion, zwei Karten im Bereich `ereignisse`. Unter der Automatik wählt der Co-Trainer Sprachkurs und Pate.
 190. **K05e Eigene Bankwahl (24.11., popolupo, ohne Testlauf):** gehört zum Bereich `aufstellung` wie die Tribüne (Grundlizenz). Unter der Automatik der Aufstellung wählt der Co-Trainer die Bank wie bisher.
+191. **K21f Zielvorgabe im Vertrag (24.11., popolupo, ohne Testlauf):** gehört zum Bereich `praemien` (A-Lizenz) wie die übrigen Klauseln im Vertragsformular.
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 

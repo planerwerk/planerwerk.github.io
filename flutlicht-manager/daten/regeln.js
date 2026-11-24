@@ -312,6 +312,9 @@ const REGELN={
     sicher:[0.6,0.02],praemie:{halbAbMinute:46,punktAbMinuten:45,zuNullAbMinuten:60},
     ausstieg:{billigAb:1.5,mittelAb:3,bonus:0.1,chance:0.25},
     ligaklausel:{malus:0.05,ref:0.3,stufen:[0,0.2,0.3,0.5]},
+    // Zielvorgabe (K21 §3.1, §5, K21f, 24.11., popolupo, vorläufig): ab spiele Pflichtspielen für dich seit der Unterschrift Gehalt + plus; der Spieler rechnet sie mit wert × Forderung an
+    // (§5: „Gehalt −5 % akzeptiert“). Nur deine Verträge.
+    zielvorgabe:{spiele:25,plus:0.1,wert:0.05},
     interesse:{lage:0.3,lageMitte:55,wechselwunsch:15,bindung:-3,treu:-10,landsleute:3,landsleuteMax:6,geldAb:-10,geldJePunkt:0.03,
       // heimkehrVerein (K19 §8, K19e, 23.11., popolupo, GESCHÄTZT): Rückkehr des verlorenen Sohns, mehr Interesse ab den Pflichtspielen eines Publikumslieblings für deinen Verein
       // (fanstimmung.ident.lieblingSpiele, seit Prüfung EP6 keine eigene Zahl mehr), beim Wechsel zu dir Fanstimmung (Umfeld) + heimkehrFans

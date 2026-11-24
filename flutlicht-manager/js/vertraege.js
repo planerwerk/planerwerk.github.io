@@ -49,6 +49,7 @@ function paketWert(p,tid,o,F){const V=RVT,sicher=V.sicher[0]+V.sicher[1]*(p.ch?p
   let w=o.sal+(o.hg||0)/Math.max(1,o.ct)+pr.erw*sicher;
   if(o.ak){const r=o.ak/Math.max(1,value(p)),A=V.ausstieg;w+=F*(r<=A.billigAb?A.bonus:r<=A.mittelAb?A.bonus/2:0);}
   if(o.lk)w-=F*V.ligaklausel.malus*(o.lk/V.ligaklausel.ref);
+  if(o.zv)w+=F*V.zielvorgabe.wert; /* Zielvorgabe (K21f): so viel weniger Gehalt akzeptiert er */
   const L=V.laufzeit;w-=F*(p.age<=L.jungBis?Math.max(0,o.ct-L.mitte)*L.jung:p.age>=L.altAb?Math.max(0,L.mitte-o.ct)*L.alt:0);
   return w;}
 
@@ -68,12 +69,18 @@ function vertragRunde(p,tid,o,F){const V=RVT,v=vtVerhandlung(p),eigen=p.team===t
 function vtPaket(p,F,ct,vereinslos){const el=id=>(document.getElementById(id)||{}).value,zahl=(id,m)=>{const v=el(id);return v===''||v==null||isNaN(+v)?null:Math.max(0,+v*m);};
   const sal=zahl('vt_sal',1e6),o={ct,sal:sal!=null&&sal>0?Math.round(sal/1000)*1000:vtVorschlag(F)};const hg=zahl('vt_hg',1e6);o.hg=hg!=null?Math.round(hg/1000)*1000:vereinslos?Math.round(o.sal*RF.handgeld/1000)*1000:0;
   if(frei('praemien')){const vp={a:zahl('vt_a',1000),p:zahl('vt_p',1000),t:zahl('vt_t',1000),z:zahl('vt_z',1000)};Object.keys(vp).forEach(k=>{if(!vp[k])delete vp[k];else vp[k]=Math.round(vp[k]);});if(Object.keys(vp).length)o.vp=vp;
-    const ak=zahl('vt_ak',1e6);if(ak)o.ak=Math.round(ak/RM.runden)*RM.runden;const lk=zahl('vt_lk',0.01);if(lk&&RVT.ligaklausel.stufen.includes(Math.round(lk*100)/100))o.lk=Math.round(lk*100)/100;}
+    const ak=zahl('vt_ak',1e6);if(ak)o.ak=Math.round(ak/RM.runden)*RM.runden;const lk=zahl('vt_lk',0.01);if(lk&&RVT.ligaklausel.stufen.includes(Math.round(lk*100)/100))o.lk=Math.round(lk*100)/100;
+    if(el('vt_zv')==='1')o.zv={n:RVT.zielvorgabe.spiele,plus:RVT.zielvorgabe.plus};} /* Zielvorgabe (K21f) */
   return o;}
 // Vertrag eintragen: Laufzeit, Gehalt, Prämien, Klauseln, Handgeld buchen
-function vtUnterschrift(p,o,neu){p.ct=o.ct;p.sal=o.sal;if(o.vp)p.vp=o.vp;else delete p.vp;if(o.ak)p.ak=o.ak;else delete p.ak;if(o.lk)p.lk=o.lk;else delete p.lk;if(o.hg)money('Handgelder',-o.hg);if(neu)p.seit=absTag(S.tag);}
+function vtUnterschrift(p,o,neu){p.ct=o.ct;p.sal=o.sal;if(o.vp)p.vp=o.vp;else delete p.vp;if(o.ak)p.ak=o.ak;else delete p.ak;if(o.lk)p.lk=o.lk;else delete p.lk;zielvorgabeSetzen(p,o.zv);if(o.hg)money('Handgelder',-o.hg);if(neu)p.seit=absTag(S.tag);}
+// Zielvorgabe (K21 §3.1, §8, K21f): p.zv = {n Pflichtspiele, plus Gehaltsaufschlag, st Pflichtspiele für deinen Verein bei der Unterschrift}. Gezählt ab der Unterschrift
+// (bei einem Wechsel zum Fenster ab der Ankunft, transfers.js wechselVollziehen). Montags (zielvorgabenWoche, ohne Zufall): erreicht, steigt das Gehalt, die Vorgabe ist erfüllt.
+function zielvorgabeSetzen(p,zv){if(zv)p.zv={n:zv.n,plus:zv.plus,st:vereinsSpiele(p,S.my)};else delete p.zv;}
+function zielvorgabenWoche(){squad(S.my).forEach(p=>{const z=p.zv;if(!z||vereinsSpiele(p,S.my)-(z.st||0)<z.n)return;p.sal=Math.round(p.sal*(1+z.plus)/1000)*1000;delete p.zv;
+  news(`Zielvorgabe erreicht: ${p.n} hat ${z.n} Pflichtspiele für dich bestritten, sein Gehalt steigt um ${Math.round(z.plus*100)} % auf ${fmt(p.sal)} im Jahr.`,'');});}
 // Vertrag endet (Verkauf, Auflösung): Prämien und Klauseln gelten nicht beim neuen Verein
-function vertragEnde(p){delete p.vp;delete p.ak;delete p.lk;p.um=null;delete p.umE; /* Prüfung FB6: wer geht, schult nicht weiter um */if(S.vt)delete S.vt[p.id];}
+function vertragEnde(p){delete p.vp;delete p.ak;delete p.lk;delete p.zv;p.um=null;delete p.umE; /* Prüfung FB6: wer geht, schult nicht weiter um */if(S.vt)delete S.vt[p.id];}
 
 // ---------- Prämien je Pflichtspiel (K21 §3.1) ----------
 function praemienNachSpiel(list){const P=RVT.praemie;let summe=0;
@@ -119,9 +126,12 @@ function vertragFormular(p,F,tid,vereinslos,laufzeitId){const z=vtZone(F),det=VT
     ${feld('vt_sal','Gehalt (Mio € pro Jahr)',(vtVorschlag(F)/1e6).toFixed(2))}${feld('vt_hg','Handgeld (Mio €, einmalig)',(hg/1e6).toFixed(2))}
     ${det?`${feld('vt_a','Auflaufprämie (Tsd € je Spiel)',0,'1')}${feld('vt_p','Punktprämie (Tsd € je Punkt)',0,'1')}${feld('vt_t','Torprämie (Tsd € je Tor)',0,'1')}${p.pos==='TW'||p.pos==='AB'?feld('vt_z','Zu-Null-Prämie (Tsd € je Spiel)',0,'1'):''}
       ${feld('vt_ak','Ausstiegsklausel (Mio €, leer = keine)','')}<label>Ligaklausel <select id="vt_lk">${RVT.ligaklausel.stufen.map(x=>`<option value="${x*100}">${x?`−${x*100} % Gehalt bei Abstieg`:'keine'}</option>`).join('')}</select></label>
+      <label>Zielvorgabe <select id="vt_zv"><option value="">keine</option><option value="1">ab ${RVT.zielvorgabe.spiele} Pflichtspielen Gehalt +${Math.round(RVT.zielvorgabe.plus*100)} %</option></select></label>
       <p class="dim">Prämien sieht er mit seinem Erwartungswert, Vorsichtige mit Abschlag. Eine Ausstiegsklausel nimmt ihm Gehalt ab, eine Ligaklausel kostet extra.</p>`
       :`<button onclick="vertragDetails(${p.id})"${lzAus('praemien')}>Prämien und Klauseln</button>${lzHinweis('praemien')}`}
     ${pr?`<p class="dim">Laufende Prämien: bei einer üblichen Saison etwa ${fmt(Math.round(pr.erw/1000)*1000)}, höchstens ${fmt(Math.round(pr.max/1000)*1000)}.</p>`:''}`;}
 // Zeile in der Spielerkarte: was im Vertrag steht
 function vertragText(p){const l=[];if(p.vp){const v=p.vp;if(v.a)l.push(`Auflauf ${fmt(v.a)}`);if(v.p)l.push(`Punkt ${fmt(v.p)}`);if(v.t)l.push(`Tor ${fmt(v.t)}`);if(v.z)l.push(`Zu-Null ${fmt(v.z)}`);}
-  if(p.ak)l.push(`Ausstiegsklausel ${fmt(p.ak)}`);if(p.lk)l.push(`Ligaklausel −${Math.round(p.lk*100)} %`);return l.length?`<p class="dim">${l.join(' · ')}</p>`:'';}
+  if(p.ak)l.push(`Ausstiegsklausel ${fmt(p.ak)}`);if(p.lk)l.push(`Ligaklausel −${Math.round(p.lk*100)} %`);
+  if(p.zv)l.push(`Zielvorgabe: Gehalt +${Math.round(p.zv.plus*100)} % nach ${p.zv.n} Pflichtspielen (noch ${Math.max(0,p.zv.n-(vereinsSpiele(p,S.my)-(p.zv.st||0)))})`);
+  return l.length?`<p class="dim">${l.join(' · ')}</p>`:'';}
