@@ -56,12 +56,16 @@ const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S,ev=W.ev;
   F2.autoXI();const v2=F2.aufstellungVorschlag(),uebernommen=!v2.rein.length&&!v2.raus.length;
   /* Prüfung FG4: Wen du auf die Tribüne gesetzt hast, schlägt der Co-Trainer nicht vor, autoXI stellt ihn nicht auf, und myXI füllt eine Lücke nicht mit ihm */
   const tr=PX.get(S2.lineup.find(id=>id!=null&&PX.get(id).pos!=='TW'));tr.trib=1;S2.lineup=S2.lineup.map(id=>id===tr.id?null:id);
-  const v3=F2.aufstellungVorschlag(),tribOk=!v3.rein.some(p=>p.id===tr.id)&&!F2.myXI().includes(tr.id);F2.autoXI();const tribAuto=!S2.lineup.includes(tr.id);delete tr.trib;F2.autoXI();
+  const v3=F2.aufstellungVorschlag(),tribOk=!v3.rein.some(p=>p.id===tr.id)&&!F2.myXI().includes(tr.id);F2.autoXI();const tribAuto=!S2.lineup.includes(tr.id);
+  F2.setForm(t.form);const tribForm=!S2.lineup.includes(tr.id);delete tr.trib;F2.autoXI(); /* FI4: auch „Grundordnung ändern“ */
+  /* FI5: Sind nur zehn ohne Tribüne verfügbar, füllt genau ein Tribünen-Spieler die Lücke */
+  const av=e2('squad')(6).filter(p=>e2('avail')(p)),frei=new Set(av.slice(0,10).map(p=>p.id));av.forEach(p=>{if(!frei.has(p.id))p.trib=1;});
+  const be=F2.besteElfDu(),eineLuecke=be.every(id=>id!=null)&&be.filter(id=>PX.get(id).trib).length===1;av.forEach(p=>{delete p.trib;});
   F2.vorschlagSchalten('aufstellung',false);const k1=F2.vorschlagAufstellungKarte(),aus=!k1.includes('<h3>')&&k1.includes('zeigen');F2.vorschlagSchalten('aufstellung',true);const wieder=e2('vorschlagAn')('aufstellung');
   F2.lizenzStart(true);S2.lizenz.auto.aufstellung=1;const auto=F2.vorschlagAufstellungKarte()==='';S2.lizenz=null;
   const sv=F2.spielAbstand(S2.tag).get(6)||{},k=F2.vorlageAuto(sv,S2.tag,t),andere=Object.keys(e2('RT').vorlagen).find(x=>x!==k),tv=F2.vorschlagVorlageText(t,andere);
   const train=tv.includes(e2('vorlageDef')(k,t).name)&&tv.includes(`setVorlage('auto')`)&&F2.vorschlagVorlageText(t,'auto')===''&&F2.vorschlagVorlageText(t,k)===''; /* FG5: ihn planen lassen */
-  pruef(gleich&&diff&&uebernommen&&tribOk&&tribAuto&&aus&&wieder&&auto&&train,'Vorschlag des Co-Trainers: Unterschied zur besten Elf, übernehmen, Tribüne beachtet, ausblenden, nicht unter der Automatik, Vorlage im Trainingsplan',
-    `gleich ${gleich}, Unterschied ${diff}, übernommen ${uebernommen}, Tribüne ${tribOk}/${tribAuto}, ausgeblendet ${aus}, wieder an ${wieder}, Automatik ${auto}, Training ${train} (${k} statt ${andere})`);}
+  pruef(gleich&&diff&&uebernommen&&tribOk&&tribAuto&&tribForm&&eineLuecke&&aus&&wieder&&auto&&train,'Vorschlag des Co-Trainers: Unterschied zur besten Elf, übernehmen, Tribüne beachtet, ausblenden, nicht unter der Automatik, Vorlage im Trainingsplan',
+    `gleich ${gleich}, Unterschied ${diff}, übernommen ${uebernommen}, Tribüne ${tribOk}/${tribAuto}/${tribForm}/${eineLuecke}, ausgeblendet ${aus}, wieder an ${wieder}, Automatik ${auto}, Training ${train} (${k} statt ${andere})`);}
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

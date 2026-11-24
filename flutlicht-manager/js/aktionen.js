@@ -2,7 +2,7 @@
 // Beim Öffnen der Aufstellung wird die Startelf mit den Ausfällen abgeglichen und gespeichert (Erinnerung „Aufstellung“ erledigt)
 function tab(k){TAB=k;if(k==='aufst'&&S){S.lineup=myXI();save();}render();window.scrollTo(0,0);}
 function setSlot(i,id){if(!darf('aufstellung','startelf'))return;id=+id;const xi=myXI(),j=xi.indexOf(id);if(j>=0)xi[j]=xi[i];xi[i]=id;S.lineup=xi;save();render();}
-function setForm(f){if(!darf('formation','ordnung'))return;myT().form=f;S.lineup=bestXI(S.my,f);save();render();}
+function setForm(f){if(!darf('formation','ordnung'))return;myT().form=f;S.lineup=besteElfDu();save();render();} // ohne Tribüne (Prüfung FI4)
 function setTac(v){if(!darf(v==='SD'||v==='SO'?'ausrichtung5':'ausrichtung3','ordnung'))return;myT().tac=v;save();render();}
 // Trainerstab (K16): einstellen (sofort, Vertrag zwei Jahre), verlängern (zwei Jahre, 10 % mehr Gehalt), entlassen (Abfindung: halbes Restgehalt). Ein Co-Trainer ist Pflicht.
 function stabEinstellen(id){if(!darf('stab','vertragOderStab'))return;const x=S.stab.find(y=>y.id===id);if(!x||x.team>=0)return;const R0=RST.rollen[x.r];if(stabVon(S.my,x.r).length>=R0.plaetze){toast(`Für die Rolle ${R0.name} sind alle Plätze besetzt.`);return;}
@@ -69,7 +69,7 @@ function offer(id){if(transferSperre()||transferSperreNaechste()){toast(transfer
   if(!rahmenErlaubt(t,o.sal)){msg.textContent=`Der Vorstand gibt das Gehalt nicht frei: Mit ${p.n} lägen die Gehälter mehr als ${Math.round((RFP.budget.sperreAb-1)*100)} % über dem Rahmen von ${fmt(gehaltsRahmen(t))}. Erst verkaufen.`;return;} // Gehaltsrahmen (K23d)
   // Schritt 1: Ablöse mit dem Verein (K19 §5.2). Im letzten halben Jahr seines Vertrags geht es ohne Ablöse zum Sommer (Vorvertrag, K21 §4.3).
   if(from&&!vorv){const v=verhandlung(p);if(v.einig&&v.einig.bis>=S.tag){fee=v.einig.fee;bonus=v.einig.bonus||null;tausch=v.einig.tausch||null;
-      if(tausch&&!tauschMoeglich(PIX.get(tausch.pid))){v.einig=null;msg.textContent='Der Tauschspieler ist nicht mehr verfügbar, die Einigung gilt nicht mehr. Mach ein neues Angebot.';save();return;}}
+      if(tausch){const z=tauschPruefen(tausch.pid,from,aus);if(z&&z.fehler){v.einig=null;msg.textContent=`Der Tausch geht nicht mehr (${z.fehler}). Die Einigung gilt nicht mehr, mach ein neues Angebot.`;save();return;}}} /* vollständig neu geprüft, auch Transfersperre (Prüfung FI3) */
     else{fee=Math.round((+document.getElementById('fee').value||0)*1e6);
       bonus=bonusAusFormular(fee,aus);if(bonus&&bonus.fehler){msg.textContent=bonus.fehler;return;}tausch=tauschAusFormular(from,aus);if(tausch&&tausch.fehler){msg.textContent=tausch.fehler;return;}
       const bw=bonusWert(bonus)+(tausch?tausch.w:0),wert=fee+bw; /* der Verkäufer rechnet den Bonus zur Hälfte an (K19i), den Tauschspieler mit seinem Wert (K19j) */
@@ -88,7 +88,7 @@ function offer(id){if(transferSperre()||transferSperreNaechste()){toast(transfer
   if(fee&&from&&!aus)bezKaufFair(p,from.id,fee); // fairer Kauf verbessert die Beziehung (K17 §5.5, U12c), vor dem Löschen der Verhandlung
   if(from&&!aus&&!vorv)dritterKauf(p,from.id); // der lachende Dritte (K30c, K17 §5.4): Beziehung zwischen den beiden anderen Vereinen; nicht beim Vorvertrag, der Wechsel ist erst in der nächsten Saison (Prüfung EF4)
   if(fee){zgUeberBudget(fee);abloeseZahlen(fee,p.n);if(!aus)from.cash+=fee;} // über dem Transferbudget ist der Vorstand verstimmt (U12e); seit K23e auf Wunsch in Raten (K23 §5.5d)
-  if(fee&&bonus&&from&&!aus)bonusVereinbaren(p,from.id,bonus); // Bonus, fällig nach Bedingung (K19i)
+  if(bonus&&from&&!aus)bonusVereinbaren(p,from.id,bonus); // Bonus, fällig nach Bedingung (K19i), auch wenn Medizincheck oder Nachlass die feste Ablöse auf 0 senkten (Prüfung FI2)
   if(tausch&&from&&!aus)tauschAbgeben(PIX.get(tausch.pid),from); // dein Spieler geht im Gegenzug (K19j)
  if(S.verh)delete S.verh[p.id];if(o.hg)money('Handgelder',-o.hg);beraterAbschluss(p,o.sal,fee,r2.runden); // Provision und Beziehung (K22)
   kaufSichtMerken(p);if(from&&(vorv||!fensterOffen())){wechselVormerken(p,S.my,Object.assign({ct:o.ct,sal:o.sal,preis:fee,vp:o.vp,ak:o.ak,lk:o.lk},vorv?{ab:tageDerSaison()}:{}));S.offers=S.offers.filter(x=>x.pid!==id); // Wechsel zum nächsten Fenster (K19 §5.6) oder zum Sommer (Vorvertrag)

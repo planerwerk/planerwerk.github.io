@@ -2645,3 +2645,18 @@ Korrekturen auf `mitarbeit/popolupo-fh-korrekturen` (auf den Korrekturen FG).
 | FH4 | Medizincheck und Nachlass-Karte senkten nur die feste Ablöse. Jetzt auf den ganzen angerechneten Wert, abgezogen von der festen Ablöse. | ✅ behoben |
 | FH5 | Ein Verein mit Transfersperre bekam per Tausch einen Spieler. `tauschPruefen` prüft `kiTransferSperre`. | ✅ behoben |
 | FH6 | Älter: Das Ablösefeld rundete mit `toFixed(2)` ab, der Vorschlag lag knapp unter der Forderung. Jetzt `mioAuf` (aufrunden). | ✅ behoben |
+
+## FI. Prüfung der Korrekturen FG und FH ohne Laufzeit (24. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat b5e1927..862337e gelesen, nichts ausgeführt. Ein mittlerer und fünf niedrige Funde, kein Laufzeitfehler. Ohne Befund: `trainerVorSpiel` mit einem `S.live` vom Vortag, `rank` in `bonusWert` jederzeit aufrufbar, Bonus genau einmal bezahlt oder sauber verfallen, feste Ablöse steigt nie, Gleichschritt 5a, die Tests für FG1, FG4, FG5, FH1, FH5, FH6 und `knapp`.
+
+Korrekturen auf `mitarbeit/popolupo-fi-korrekturen` (auf den Korrekturen FH).
+
+| # | Befund | Status |
+|---|---|---|
+| FI1 | **Mittel:** FH2 war unvollständig: Die simulierte Zweite (Hoffenheim, Stuttgart, eigener Verein in der 3. Liga) galt als Abgang, der Bonus ließ sich dort weiter aushebeln. `bonusBeiDir` erkennt sie über `zweiteSim` und `p.zwP`. | ✅ behoben |
+| FI2 | Senkten Medizincheck oder Nachlass die feste Ablöse auf 0, fiel der Bonus still weg. Er wird jetzt auch dann vereinbart. | ✅ behoben |
+| FI3 | Ein Tausch aus einer bestehenden Einigung wurde nur auf Verfügbarkeit geprüft (nicht Transfersperre, Wechselwunsch, Ansehen, Kaderplatz). Jetzt `tauschPruefen` beim Abschluss. | ✅ behoben |
+| FI4 | „Grundordnung ändern“, Saisonwechsel und Formations-Automatik stellten Tribünen-Spieler auf. Jetzt alle über `besteElfDu`. | ✅ behoben |
+| FI5 | `besteElfDu` nahm bei einer Lücke wieder alle Spieler. Jetzt füllen Tribünen-Spieler nur die Lücken. | ✅ behoben |
+| FI6 | Das Formular nennt den geringeren Wert des Aufstiegsbonus, K33 nennt `S.live.anspCo`. | ✅ behoben |

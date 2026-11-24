@@ -195,7 +195,8 @@ function bonusAusFormular(fee,aus){const d=typeof document!=='undefined'?documen
   if(b>fee*B.maxAnteil)return{fehler:`Der Bonus darf höchstens ${Math.round(B.maxAnteil*100)} % der festen Ablöse betragen (${fmt(Math.floor(fee*B.maxAnteil/RM.runden)*RM.runden)}).`};
   if(art==='aufstieg'&&myT().lg===1)return{fehler:'In der 1. Liga gibt es keinen Aufstieg.'};
   if(art==='aufstieg'&&ligaFertig(myT().lg))return{fehler:'Nach dem letzten Spieltag gibt es bis zum Saisonwechsel keinen Aufstiegsbonus.'};return{art,b};} /* FH3: sonst wäre ein schon feststehender Aufstieg sicher */
-const bonusBeiDir=p=>!!p&&(p.team===S.my||istZweite(p)||(!!p.leihe&&p.leihe.von===S.my));
+// Bei dir: im Kader, in der Zweiten (Amateurkader oder, bei Hoffenheim und Stuttgart, die simulierte Zweite in der 3. Liga mit p.zwP, Prüfung FI1) oder von dir verliehen
+const bonusBeiDir=p=>{if(!p)return false;const z=zweiteSim();return p.team===S.my||istZweite(p)||(!!p.zwP&&!!z&&p.team===z.id)||(!!p.leihe&&p.leihe.von===S.my);};
 function bonusVereinbaren(p,tid,x){if(!x||!(x.b>0))return;(S.boni=S.boni||[]).push({pid:p.id,tid,art:x.art,b:x.b,s0:S.season,lg0:myT().lg,my:S.my,st:vereinsSpiele(p,S.my)});
   news(`Bonus vereinbart: ${fmt(x.b)} an ${tn(tid)}, fällig ${RTR.boni.arten[x.art].name} (binnen ${RTR.boni.saisons} Saisons).`,'');}
 const bonusText=x=>`${fmt(x.b)} ${RTR.boni.arten[x.art].name}`;
