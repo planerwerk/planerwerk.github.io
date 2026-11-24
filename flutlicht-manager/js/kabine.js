@@ -55,7 +55,11 @@ function erwartungEinsatz(p){const k=kaderRolle(p);if(k==='pokal')return RKA.rol
 // der Einsatzzeit eingeht (p.ea) und was es sofort an Stimmung bringt oder kostet. p.bg merkt den Grund des letzten Spiels für die Anzeige.
 const BANK_GRUND={weg:'wechselt bald, erwartet nichts mehr',rotation:'Rotation, geschont (zählt nicht)',joker:'Joker mit Wirkung (zählt als erfüllt)',rivale:'sein Konkurrent spielt',unerfahren:'unerfahren, erwartet noch nichts',
   tw2:'Nummer 2 im Tor, erwartet keine Einsätze',pokal:'spielt im Pokal, Liga zählt nicht',aufbau:'Aufbau nach Verletzung (zählt nicht)',form:'Formkrise, er sieht die Bank ein',
-  tribuene:'nicht im Spieltagskader',frueh:'früh ausgewechselt',spaet:'erst in der Nachspielzeit eingewechselt',ww:'will weg, versteht die Bank',sperre:'erstes Spiel nach der Sperre (zählt nicht)',mentor:'betreut als Pate ein Talent, nimmt die Bank hin',bank:'Bank ohne besonderen Grund'};
+  tribuene:'nicht im Spieltagskader',frueh:'früh ausgewechselt',spaet:'erst in der Nachspielzeit eingewechselt',ww:'will weg, versteht die Bank',sperre:'erstes Spiel nach der Sperre (zählt nicht)',mentor:'betreut als Pate ein Talent, nimmt die Bank hin',bank:'Bank ohne besonderen Grund',
+  neu:'neuer Trainer, jeder bekommt seine Chance (zählt nicht)'};
+// Neuer Trainer (K14 §12, K14f): Nach deinem Vereinswechsel zählt RKA.bank.neuerTrainer.tage lang kein Bankplatz deiner Spieler. S.neubeginn = {t Verein, bis absoluter Tag}.
+const neubeginn=tid=>!!S.neubeginn&&S.neubeginn.t===tid&&tid===S.my&&absTag(S.tag)<=S.neubeginn.bis;
+function neubeginnStart(tid){const N=RKA.bank.neuerTrainer;S.neubeginn={t:tid,bis:absTag(S.tag)+N.tage};squad(tid).forEach(p=>{kabineInit(p);if(!stammA(p))stimmungAendern(p,N.hoffen);});}
 const feinPos=p=>p.fp||STD_POS[p.pos];
 const stammA=p=>KR_STUFE[p.krA]>=3; // stünde in der besten Elf ohne Ausfälle
 // Profi-Pflichtspiele über die Karriere. Startwert ohne Zufall aus Alter und Spielernummer (bis 18 Jahre: null)
@@ -112,7 +116,8 @@ function bankFall(p,c){const B=RKA.bank,t=c.t,gespielt=c.min.has(p.id),m=c.min.g
       if(!stark&&m<B.rivale.haltenAb&&p.rz&&platzRivale(p,c.xi))p.rz++;}
     if(rolle==='pokal'&&!c.pokal&&anteil<p.ea)zaehlt=false;}
   else{p.bnk=(p.bnk||0)+1;const imKader=!c.kader||c.kader.has(p.id),riv=platzRivale(p,c.xi),entschuldigt=g=>{grund=g;zaehlt=false;};
-    if(p.ww>=3)entschuldigt('ww');
+    if(neubeginn(t.id))entschuldigt('neu'); /* neuer Trainer: keine Abwertung für niemanden (K14f) */
+    else if(p.ww>=3)entschuldigt('ww');
     else if(p.wech&&p.wech.nach!==p.team)entschuldigt('weg'); // hat woanders unterschrieben oder ist verkauft: erwartet nichts mehr (K14 §12, U10b)
     else if(p.nsp){entschuldigt('sperre');if(hatEig(p,'hitzkopf'))stimmungAendern(p,B.sperre.hitzkopf);}
     else if(p.rue&&!(diva>1&&riv))entschuldigt('aufbau');

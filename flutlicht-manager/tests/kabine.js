@@ -201,5 +201,15 @@ const bankWelt=()=>{const w=welt(),{S,F,ev}=w;F.englischeWoche=()=>false;const s
   pruef(!fehler.length,'Saison: Jedes Ergebnis trägt Bank, Wechsel und Fehlende, alle Felder bleiben im Rahmen',fehler[0]||'');
   pruef(['rotation','joker','rivale','unerfahren','tw2','aufbau','bank'].every(k=>zahl[k]>0),'Saison: Rotation, Joker, Konkurrent, Unerfahrene, Nummer 2 im Tor, Aufbau und Bank kommen im Spiel vor',['rotation','joker','rivale','unerfahren','tw2','aufbau','form','tribuene','spaet','sperre','ww'].map(k=>`${k} ${zahl[k]||0}`).join(', '));}
 
+// 19. K14f Neuer Trainer (K14 §12): takeJob ruft neubeginnStart. Reservisten hoffen (+ hoffen), Stammspieler nicht. Solange zählt kein Bankplatz deiner Spieler
+//     (Grund „neu“, Einsatzzeit bleibt), danach wieder; ein anderer Verein hat keinen Neubeginn.
+{const {S,F,ev,sq,xi,rest,buch,ohne,t,B}=bankWelt(),N=B.neuerTrainer,st=ev('stammA'),abs=ev('absTag');
+  const ruft=/neubeginnStart\(id\)/.test(String(ev('takeJob'))),r=rest.find(q=>!st(q)),s=sq.find(q=>st(q));r.st=50;s.st=50;F.neubeginnStart(S.my);
+  const hoffen=r.st===50+N.hoffen&&s.st===50&&!!S.neubeginn&&S.neubeginn.t===S.my&&S.neubeginn.bis===abs(S.tag)+N.tage;
+  const p=sq.find(q=>xi.includes(q.id)&&q.pos==='MF'),ers=rest.find(q=>q.pos==='MF');p.fit=100;const ea0=p.ea;buch(ohne(p.id,ers.id),{bank:[p.id]});const neu=p.bg==='neu'&&p.ea===ea0;
+  const fremd=!ev('neubeginn')(S.teams.find(x=>x.id!==S.my).id);S.neubeginn.bis=abs(S.tag)-1;buch(ohne(p.id,ers.id),{bank:[p.id]});const danach=p.bg!=='neu'&&p.ea<ea0;
+  pruef(ruft&&hoffen&&neu&&fremd&&danach,'Neuer Trainer: Reservisten hoffen, vier Wochen zählt kein Bankplatz, danach wieder, nur dein Verein',
+    `takeJob ${ruft}, Hoffnung ${hoffen} (${r.st}/${s.st}), Grund ${neu} („${p.bg}“), fremder Verein ${fremd}, danach ${danach} (${pc(ea0)} → ${pc(p.ea)})`);}
+
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

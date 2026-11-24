@@ -898,6 +898,9 @@ const REGELN={
       erfolg:{ab:3,je:0.15,min:0.5,max:1.5},                 // Serie der letzten fünf Spiele gegen die Erwartung: Siegesserie halbiert die Abwertung, Krise ×1,5
       chance:{spiele:3,note:3.0},                            // Vertreter eines fehlenden Stammspielers mit Notenschnitt bis 3,0 nach drei Spielen
       sperre:{hitzkopf:-1},fuehrer:{freunde:-1},altstar:{ab:31,spiele:200},
+      // Neuer Trainer (K14 §12, K14f, 24.11., popolupo, vorläufig): Übernimmst du einen Verein, hoffen seine Reservisten (Stimmung + hoffen) und tage Tage lang zählt kein
+      // Bankplatz deiner Spieler. Nur dein Verein (Trainerwechsel der Computer-Vereine ändern nichts, sonst verschöbe sich die Kalibrierung).
+      neuerTrainer:{tage:28,hoffen:2},
       bedeutungslos:{spieltage:5,plus:2,minus:-2,minuten:20,grenzen:{1:[1,4,6,15,16],2:[2,3,15,16],3:[2,3,16]}},
       pokalTempo:0.5,diva:2},
     erfolg:{abSpiele:3,platz:25,platzMax:7,serie:1,serieMax:3,zerfall:0.9},
