@@ -270,5 +270,22 @@ const kaufe=(w,p,fee,yrs=3)=>{const els=w.W.ev('document');els.getElementById('f
   pruef(mit&&ausl&&ohne&&text&&verkauft&&wartet&&faellig&&aufgeraeumt&&job,'Boni in Angeboten der Computer-Vereine: Gebot geteilt, Verkauf merkt den Bonus, fällig, verfallen, entfallen, Jobwechsel',
     `Gebot ${mit}, Ausland ${ausl}, ohne ${ohne}, Text ${text}, Verkauf ${verkauft}, wartet ${wartet}, fällig ${faellig}, verfallen/entfallen/Aufstieg ${aufgeraeumt}, Jobwechsel ${job}`);}
 
+// K19l. Tausch in Angeboten der Computer-Vereine (K19 §4.3): tauschKI legt den teuersten passenden Spieler der Transferliste des Käufers dazu und senkt das Gebot um
+//       seinen Preis; nicht mit Bonus, nicht mit Chance 0. Beim Verkauf im offenen Fenster kommt er mit seinem Vertrag zu dir; ist er weg, zahlt der Käufer den Betrag.
+{const {S,F,ev,t}=welt(),K=ev('RTR').tausch.ki,rab=ev('rundeAb'),akt=ev('aktiv'),sq=ev('squad');
+  const b=S.teams.find(x=>x.id!==S.my&&akt(x)&&sq(x.id).length>18),ps=sq(S.my).filter(x=>!x.wech&&!x.leihe),p=ps[0],p2=ps[1];
+  const r=sq(b.id).find(q=>!q.wech&&!q.leihe&&!q.zwP);sq(b.id).forEach(q=>{q.list=0;q.ask=0;});r.list=1;r.ask=rab(2e6);r.ww=1;const ct0=r.ct,sal0=r.sal;
+  const c0=K.chance;K.chance=1;const g={amt:10e6,max:12e6};F.tauschKI(b,p,g);const mit=!!g.ta&&g.ta.pid===r.id&&g.ta.w===rab(2e6)&&g.amt===10e6-rab(2e6)&&g.max===12e6-rab(2e6);
+  const gb={amt:10e6,max:12e6,bo:{art:'spiele',b:1e6}};F.tauschKI(b,p,gb);const mitBonus=!gb.ta;
+  K.chance=0;const g0={amt:10e6,max:12e6};F.tauschKI(b,p,g0);const ohne=!g0.ta;K.chance=c0;
+  const text=ev('angebotBetrag')({amt:g.amt,tid:b.id,ta:g.ta}).includes(r.n);
+  let d=0;while(d<400&&!ev('fensterOffen')(d))d++;S.tag=d;
+  const o={pid:p.id,tid:b.id,amt:g.amt,max:g.max,r:0,bis:S.tag+5,ta:g.ta};S.offers.push(o);F.verkaufAbschluss(o);
+  const getauscht=p.team===b.id&&r.team===S.my&&r.ct===ct0&&r.sal===sal0&&!r.list;
+  const q=sq(b.id).find(x=>x!==p&&!x.wech&&!x.leihe),o2={pid:p2.id,tid:b.id,amt:5e6,max:6e6,r:0,bis:S.tag+5,ta:{pid:q.id,w:1e6}};q.team=S.my; /* nicht mehr beim Käufer */
+  const c1=t.cash;S.offers.push(o2);F.verkaufAbschluss(o2);const ersatz=p2.team===b.id&&q.team===S.my&&t.cash===c1+5e6+1e6&&S.news.slice(0,3).some(n=>String(n.t).includes('zahlt stattdessen')); /* danach kommt noch „Verkauft“ */
+  pruef(mit&&mitBonus&&ohne&&text&&getauscht&&ersatz,'Tausch in Angeboten der Computer-Vereine: Spieler der Transferliste, Gebot gesenkt, nicht mit Bonus, Wechsel mit Vertrag, sonst Geld',
+    `Gebot ${mit}, mit Bonus ${mitBonus}, Chance 0 ${ohne}, Text ${text}, getauscht ${getauscht}, Ersatz ${ersatz}`);}
+
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

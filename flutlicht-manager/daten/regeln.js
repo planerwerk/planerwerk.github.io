@@ -297,7 +297,9 @@ const REGELN={
     // Spielertausch beim Kauf (K19 §4.3, K19j, 24.11., popolupo, vorläufig): Ein eigener Spieler als Teil des Angebots zählt beim Verkäufer mit wert × seinem Vereinswert
     // als Käufer (vwKauf). Er geht nur mit, wenn der Verein höchstens ansehenMinus weniger Ansehen hat als deiner oder er wechseln will (Wechselwunsch), und nur, wenn
     // der Verkäufer unter kaeufer.kaderMax Spieler hat. Nur bei Käufen von deutschen Vereinen.
-    tausch:{wert:0.9,ansehenMinus:10},
+    // Seit K19l (25.11., popolupo, vorläufig) auch in Angeboten deutscher Computer-Vereine für deine Spieler: mit ki.chance (fest aus dem Seed, nur ohne Bonus) legt der
+    // Käufer den wertvollsten Spieler seiner Transferliste dazu, dessen Preis höchstens ki.maxAnteil des Gebots ist und der zu dir will; das Gebot sinkt um diesen Preis.
+    tausch:{wert:0.9,ansehenMinus:10,ki:{chance:0.15,maxAnteil:0.5}},
     restlaufzeit:[0.6,0.6,0.85,1],
     finanzlage:{knappUnter:2e6,knapp:0.9,reichAb:60e6,reich:1.1}, // K23c: reich erst ab 60 Mio. € (vorher 20 Mio.), weil die Kontostände gewachsen sind
     forderung:1.15,schmerzgrenze:0.95,maxFaktor:1.8,

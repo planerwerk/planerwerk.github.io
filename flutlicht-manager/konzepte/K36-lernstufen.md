@@ -441,6 +441,7 @@ lizenz:{
 198. **K13f Länderspiele (24.11., popolupo, ohne Testlauf, Schalter aus):** keine neue Funktion, die Abstellung trifft deinen Verein wie jeden Computer-Verein (in beiden Welten von 5a gleich). Neu ist nur der Grund „Nationalspieler“ für die Spielverlegung (Bereich `verlegung`).
 199. **K02a Neue Regeln ausprobieren (24.11., popolupo, ohne Testlauf):** eine Einstellung im Menü wie die Meldungsdichte, auf jeder Lizenzstufe. Sie ändert die Regeln der ganzen Welt, nicht, wer entscheidet.
 200. **K13g Länderspiel-Karten (24.11., popolupo, ohne Testlauf):** keine neue Funktion, zwei Info-Karten (Bereich `ereignisse` wie alle Karten), nur mit Länderspielen.
+201. **K19l Tausch in Angeboten der Computer-Vereine (25.11., popolupo, ohne Testlauf):** gehört zum Bereich `transfers` wie die Angebote selbst. Unter der Automatik gibt es keine Angebote an dich, also auch keinen Tausch.
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 
