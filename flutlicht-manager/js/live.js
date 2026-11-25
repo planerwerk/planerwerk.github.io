@@ -144,7 +144,8 @@ function liveRender(){const L=LIVE;if(!L)return;if(!document.getElementById('lv-
   document.getElementById('lv-uhr').textContent=L.ende?'Ende':G.elf?'i.E.':G.m===0?'0′':G.m+'′';
   const karten=s=>{const n=G.ev.filter(e=>e.s===s&&e.t==='R').length;return n?` <span class="lv-rot" title="Platzverweise">${'▮'.repeat(n)}</span>`:'';};
   document.getElementById('lv-tafel').innerHTML=`<div class="board"><div class="t">${esc(tn(G.hid))}${karten(0)}</div><div class="score">${G.sc[0]}:${G.sc[1]}</div><div class="t">${karten(1)}${esc(tn(G.aid))}</div></div>${G.pen?`<p class="dim" style="text-align:center;margin-top:6px">Elfmeterschießen ${G.pen[0]}:${G.pen[1]}</p>`:''}`;
-  if(L.scAlt){if(G.sc[L.s]>L.scAlt[L.s])torSequenz(true,myT().col);else if(G.sc[1-L.s]>L.scAlt[1-L.s])torSequenz(false);}L.scAlt=G.sc.slice(); // Torjubel (K39 §3.4, W5e3), nicht beim Fortsetzen
+  if(L.scAlt){if(G.sc[L.s]>L.scAlt[L.s]){torSequenz(true,myT().col);klang('jubel');}else if(G.sc[1-L.s]>L.scAlt[1-L.s]){torSequenz(false);klang('raunen');}}L.scAlt=G.sc.slice(); // Torjubel (K39 §3.4, W5e3)
+  if(L.pfAlt){if(!L.pfAlt.ende&&L.ende)klang('pfiff3');else if(!L.pfAlt.hz&&L.hz)klang('pfiff');else if(L.pfAlt.m===0&&G.m>0)klang('pfiff');}L.pfAlt={m:G.m,hz:L.hz,ende:L.ende}; // Pfiffe (K41, W5f): Anpfiff, Halbzeit, Abpfiff; beides nicht beim Fortsetzen
   document.getElementById('lv-druck').innerHTML=liveDruck();
   document.getElementById('lv-meldung').textContent=L.meldung||'';
   document.getElementById('lv-pause').innerHTML=G.pause()==='elfmeter'&&!L.lauf?liveElfmeter():G.m===45&&!L.ende&&!L.lauf?liveHalbzeit():'';

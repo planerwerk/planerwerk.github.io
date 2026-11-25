@@ -290,6 +290,11 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 25.11.2026: W5f Klang (Zweig `mitarbeit/popolupo-w5e-artwork`)
+
+- **Neu:** `js/klang.js` (K41): Pfiffe, Torjubel, Raunen, Klick und Brief-Ton, erzeugt mit der Web Audio API, ohne Dateien. Im Live-Spiel Anpfiff, Halbzeit- und Abpfiff, Jubel bei eigenem Tor, Raunen bei Gegentor. Stumm-Knopf in der Kopfzeile, Taste M, Menü-Karte „Klang“ mit Lautstärke (je Gerät, `REGELN.klang`, Voreinstellung an und leise). Kein Spielzufall, keine Wirkung aufs Spiel; Ton erst nach der ersten Bedienung.
+- **Test:** `tests/ui-zugang.js` (Stumm-Knopf, Taste M, Wahl nur im Browser, alle Klänge ohne Fehler).
+
 ### 25.11.2026: W5e3 Torjubel im Live-Spiel (Zweig `mitarbeit/popolupo-w5e-artwork`)
 
 - **Neu:** Bei einem Tor blitzt die Anzeigetafel (eigenes Tor gelb, Gegentor kurz dunkler), bei eigenem Tor fällt Konfetti in der Vereinsfarbe (K39 §3.4). Menü „Darstellung“: Sequenzen an, kurz oder aus (je Gerät, `REGELN.darstellung.sequenzen`), aus bei „weniger Bewegung“. Kein Zufall (Konfetti aus `hash32`), keine Wirkung aufs Spiel, blockiert nichts.

@@ -79,6 +79,8 @@ K39 (Sequenzen), K05 (Live-Spiel, Zuschauer), K35b (Einstellungen), K40 (Test oh
 
 **Vorläufig entschieden:** Ton an und leise, Musik aus; Oberflächentöne erzeugt; Atmosphäre aus CC0; keine Stimme, keine echten Fangesänge; Audio kommt nach Kacheln, Schrift und Artwork (W5f).
 
+✅ **Gebaut in W5f (25.11., ohne Testlauf):** `js/klang.js` erzeugt Klick, Brief, Pfiff, dreifachen Abpfiff, Torjubel und Raunen mit der Web Audio API (keine Dateien; Rauschen aus einem festen eigenen Generator, kein Spielzufall). Im Live-Spiel: Anpfiff, Halbzeit- und Abpfiff, Jubel bei eigenem Tor, Raunen bei Gegentor, nicht beim Fortsetzen. Stumm-Knopf in der Kopfzeile, Taste M, Menü-Karte „Klang“ mit Lautstärke; je Gerät im Browser (`REGELN.klang`). Offen: Stadionatmosphäre als Schleife nach Zuschauern und Stand (CC0-Aufnahmen, braucht Netz), Brief-Ton bei neuer Nachricht.
+
 **Für dich:** Willst du überhaupt Musik, oder reicht Stadionatmosphäre?
 
 ## Quellen

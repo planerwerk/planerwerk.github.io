@@ -46,6 +46,13 @@ if(mb){await mb.click();const fi=await pg.$('input[type=file][onchange*="eigeneW
 const seq=await pg.evaluate(async()=>{const warte=ms=>new Promise(r=>setTimeout(r,ms));sequenzSetzen('an');torSequenz(true,'#c8102e');const an=document.querySelectorAll('.konfetti i').length;
   await warte(2600);const weg=!document.querySelector('.konfetti');sequenzSetzen('aus');torSequenz(true,'#c8102e');const aus=!document.querySelector('.konfetti');sequenzSetzen('an');return{an,weg,aus};});
 pruef(seq.an>=20&&seq.weg&&seq.aus,'Sequenzen: Konfetti bei „an“, verschwindet von selbst, nichts bei „aus“',JSON.stringify(seq));
+// Klang (K41, W5f): Stumm-Knopf in der Kopfzeile und Taste M schalten um, die Wahl steht im Browser, nicht im Spielstand; alle Klänge laufen ohne Fehler
+const tonLabel=()=>pg.evaluate(()=>{const b=document.querySelector('header button.ton');return b?b.getAttribute('aria-label'):null;});
+const ton0=await tonLabel();await pg.click('header button.ton');const ton1=await tonLabel();
+const tonAus=await pg.evaluate(()=>{try{return JSON.parse(localStorage.getItem(REGELN.klang.schluessel)).an===false&&!JSON.stringify(S).includes('flutlicht-klang');}catch(e){return false;}});
+await pg.evaluate(()=>document.body.focus());await pg.keyboard.press('m');const ton2=await tonLabel();
+await pg.evaluate(()=>['klick','brief','pfiff','pfiff3','jubel','raunen'].forEach(a=>klang(a)));
+pruef(ton0==='Ton ausschalten'&&ton1==='Ton einschalten'&&tonAus&&ton2==='Ton ausschalten','Klang: Stumm-Knopf und Taste M schalten um, Wahl nur im Browser',`${ton0} → ${ton1} → ${ton2}`);
 await pg.click('.tabs button:text-is("Kader")');const zeile=await pg.$('tr.click');
 if(zeile){await zeile.click();await axeLauf('Spielerkarte');
   const fokus=await pg.evaluate(()=>{const a=document.activeElement;return !!a&&!!a.closest('.ovb');});pruef(fokus,'Fenster: Beim Öffnen liegt der Fokus im Fenster');

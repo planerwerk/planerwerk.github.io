@@ -237,3 +237,6 @@ button.wahl.on{border-color:var(--amber);color:var(--amber);font-weight:700}
 .konfetti i{position:absolute;top:-14px;width:8px;height:12px;border-radius:2px;animation:konfetti 1.9s cubic-bezier(.2,.6,.4,1) forwards}
 @keyframes konfetti{0%{transform:translate(0,0) rotate(0deg)}100%{transform:translate(var(--dx),105vh) rotate(540deg)}}
 @media (prefers-reduced-motion:reduce){#lv-tafel.tor-blitz .board,#lv-tafel.tor-gegner .board{animation:none}.konfetti{display:none}}
+/* Klang (K41, W5f): Stumm-Knopf in der Kopfzeile */
+.ton{width:40px;height:40px;padding:0;display:grid;place-items:center;border-radius:8px;flex:none}
+.ton svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}

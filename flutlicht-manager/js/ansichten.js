@@ -33,7 +33,7 @@ function knopf(){if(S.phase==='end')return['Saisonbilanz ▶','die Saison ist zu
 function hdr(){const t=myT(),tr=S.trust,[k1,k2]=knopf(),dt=datumVon(S.tag);return`<header class="top"><div class="club">${wappen(S.my,34)}<div><div class="cn">${esc(t.name)}</div><div class="sub">${esc(S.mgr)} · Saison ${S.season}/${(S.season+1)%100} · ${ligaName(t.lg)} · Platz ${rank(t.lg,S.my)}</div>${lizenzChip()}</div></div>
   <div class="kal" title="${datumLang(S.tag)}"><span>${WTL[dt.getUTCDay()]}</span><b>${dt.getUTCDate()}. ${MON[dt.getUTCMonth()]}</b><span>${dt.getUTCFullYear()}</span></div>
   <div class="stats"><div><span class="lbl">Kontostand</span><b class="${t.cash<0?'neg':''}">${fmt(t.cash)}</b></div><div title="Vertrauen des Vorstands ${Math.round(tr)} von 100"><span class="lbl">Vorstand</span>${rgMini(Math.round(tr),0,100,tr<30?'bad':tr<55?'warn':'good')}</div></div>
-  <button class="go" onclick="tagBeenden()">${k1}<small>${k2}</small></button></header>`;}
+  ${klangKnopf()}  <button class="go" onclick="tagBeenden()">${k1}<small>${k2}</small></button></header>`;}
 let RENDERING=0,RERENDER=0;
 function render(){if(RENDERING){RERENDER=1;return;}RENDERING=1;try{if(!S){renderStart();return;}
   app.innerHTML=`<div class="wrap">${hdr()}<nav class="tabs" aria-label="Bereiche">${TABS.map(([k,l])=>`<button class="${TAB===k?'on':''}" onclick="tab('${k}')">${l}</button>`).join('')}<button onclick="menu()">Menü</button></nav><main>${V[TAB]()}</main></div>`;}

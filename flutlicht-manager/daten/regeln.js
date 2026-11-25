@@ -20,6 +20,11 @@ const REGELN={
     wappenPx:[96,112],               // so groß werden eigene Wappen gespeichert (Breite, Höhe in Pixeln)
     sequenzen:{schluessel:'flutlicht-sequenzen',standard:'an',stufen:{an:'An',kurz:'Kurz (nur Aufblitzen)',aus:'Aus'}} // Animationen bei großen Momenten (K39 §3.4, W5e3), je Gerät
   },
+  klang:{                            // Klang (K41, W5f), je Gerät im Browser, nicht im Spielstand; erzeugt in js/klang.js
+    schluessel:'flutlicht-klang',
+    an:true,laut:0.4,                // Voreinstellung: Ton an, leise (K41 §6)
+    pegel:{klick:0.15,brief:0.25,pfiff:0.5,pfiff3:0.5,jubel:0.6,raunen:0.4} // Anteil an der Lautstärke je Klang
+  },
   // Neue Regeln ausprobieren (K02 §4.4, K02a, 24.11., popolupo, vorläufig): Schalter, die noch aus sind, weil sie die Kalibrierung aller Vereine verschieben.
   // Im Menü je Spielstand einschaltbar (S.einst.exp). pfad: Objekt in REGELN mit dem Feld an.
   experimente:[
