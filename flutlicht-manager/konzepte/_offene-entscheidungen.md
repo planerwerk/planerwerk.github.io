@@ -286,7 +286,7 @@ Bei der Umsetzung (U8):
 17. **Erinnerung** „Versprechen droht zu kippen“ am Spieltag, abschaltbar.
 18. **Vereinswechsel:** offene Zusagen hinfällig.
 19. **Lernstufen (K36):** Gespräche und Mannschaftsansprache ab C, Versprechen ab B.
-20. **Noch nicht gebaut:** Gespräche mit dem Vorstand, öffentliche Kritik und Presse, Karten aus §8. **Stand 25.11.2026:** Das Budgetgespräch mit dem Vorstand gibt es seit U12l, öffentliche Kritik in der Pressekonferenz seit U17a, „Streit nach Kritik“ seit K15e und „Spieler fordert Versprechen ein“ seit K15f als Karten. „Kabine glaubt dir nicht mehr“ seit K15g auch als Karte. Offen bleibt „Versprechen kippt“ als Karte, es kommt als Erinnerung. Einzelheiten in K15 Nr. 20 (berichtigt nach Prüfung FR4).
+20. **Noch nicht gebaut:** Gespräche mit dem Vorstand, öffentliche Kritik und Presse, Karten aus §8. **Stand 25.11.2026:** Das Budgetgespräch mit dem Vorstand gibt es seit U12l, öffentliche Kritik in der Pressekonferenz seit U17a, „Streit nach Kritik“ seit K15e und „Spieler fordert Versprechen ein“ seit K15f als Karten. „Kabine glaubt dir nicht mehr“ seit K15g auch als Karte. „Versprechen kippt“ seit K15h ebenfalls, damit alle Karten aus §8. Einzelheiten in K15 Nr. 20 (berichtigt nach Prüfung FR4).
 
 ## K16 – Trainerstab und Mitarbeiter
 Datei: `konzepte/K16-stab.md`

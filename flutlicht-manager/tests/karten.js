@@ -783,4 +783,12 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   t.glaub=G.krise-5;const g0=gl();c.optionen[0].wirkung.forEach(w=>ev('kartenWirkung')(w,{verein:S.my},c));const hoch=gl()===g0+6;delete t.glaubKrise;
   pruef(ohne&&ja&&erholt&&hoch,'Kabine glaubt dir nicht mehr: Karte nur während der Krise, Fehler eingestehen hebt die Glaubwürdigkeit',`ohne Krise ${ohne}, in der Krise ${ja}, erholt ${erholt}, eingestanden ${hoch}`);}
 
+// K15h. Versprechen kippt (K15 §8): nur bei einem Einsatz-Versprechen, das kaum noch zu halten ist (versprechenKippen); „zurücknehmen“ beendet es als hinfällig,
+//       ohne die Folgen eines gebrochenen Versprechens, mit Stimmung −5 und Glaubwürdigkeit −3.
+{const {S,ev}=welt(),A=ev('AUSLOESER'),p=ev('squad')(S.my)[0],c=ev('karteVon')('versprechenKippt'),gl=ev('glaub');S.vs=[];const ohne=A.versprechenKippt()===null;
+  const v=ev('versprechenAnlegen')(p,'einsatz');const frisch=A.versprechenKippt()===null;v.spiele=v.n-1;v.min=0;const b=A.versprechenKippt(),ja=!!b&&b.spieler===p.id&&b.vid===v.id;
+  p.st=50;const g0=gl(),ww0=p.ww||0;if(b)c.optionen[0].wirkung.forEach(w=>ev('kartenWirkung')(w,b,c));
+  const zurueck=v.stand==='hinfaellig'&&p.st===45&&gl()===g0-3&&(p.ww||0)===ww0&&A.versprechenKippt()===null;S.vs=[];
+  pruef(ohne&&frisch&&ja&&zurueck,'Versprechen kippt: Karte nur, wenn das Versprechen kaum noch zu halten ist; zurücknehmen kostet weniger als brechen',`ohne ${ohne}, frisch ${frisch}, kippt ${ja}, zurückgenommen ${zurueck} (${v.stand}, Stimmung ${p.st})`);}
+
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

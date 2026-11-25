@@ -418,6 +418,12 @@ const KARTEN=[
     optionen:[{text:'Fehler offen eingestehen',wirkung:[{art:'glaub',wert:6},{art:'vertrauen',wert:-1}],folge:'Du stellst dich vor die Mannschaft und gibst Fehler zu. Das wirkt, nur der Vorstand hört es nicht gern.'},
       {text:'Den Mannschaftsrat einbinden',wirkung:[{art:'glaub',wert:3},{art:'zusammenhalt',wert:2}],folge:'Kapitän und Führungsspieler reden ab jetzt mit. Die Kabine spürt, dass sich etwas ändert.'},
       {text:'Mit Ergebnissen antworten',wirkung:[],folge:'Du sagst nichts dazu. Jetzt müssen Siege her.'}],auto:1},
+  // Versprechen kippt (K15 §8, K15h, 25.11., popolupo, vorläufig): Anlasskarte, wenn ein Einsatz-Versprechen kaum noch zu halten ist. Zurücknehmen kostet weniger als
+  // ein gebrochenes Versprechen (dort Stimmung −15, Glaubwürdigkeit −10, Wechselwunsch höher); neue Wirkung versprechenZurueck.
+  {id:'versprechenKippt',titel:'Versprechen kippt',bereich:'K15',art:'entscheidung',gross:false,stufe:'haeufig',chance:0.5,ausloeser:'versprechenKippt',sperrTage:60,
+    texte:['Du hattest {spieler} Einsatzzeit versprochen, aber die restlichen Spiele reichen kaum noch. Er zählt mit.','Der Co-Trainer rechnet nach: Das Versprechen an {spieler} lässt sich nur noch halten, wenn er jetzt jedes Spiel durchspielt.'],
+    optionen:[{text:'Offen reden und das Versprechen zurücknehmen',wirkung:[{art:'versprechenZurueck',wert:1},{art:'stimmung',wert:-5},{art:'glaub',wert:-3}],folge:'Du erklärst {spieler}, warum es nicht mehr klappt. Er ist enttäuscht, aber er weiß, woran er ist.'},
+      {text:'Weiter versuchen',wirkung:[],folge:'Du willst das Versprechen halten. Dafür muss {spieler} jetzt spielen, sonst ist es gebrochen.'}],auto:0},
   // Anwohner klagen (K26 §8, K26f, 23.11., popolupo): Anlasskarte, solange Tribüne oder Dach auf die Genehmigung warten (REGELN.karten.stadion.anwohner). Werte vorläufig.
   {id:'anwohnerKlagen',titel:'Anwohner klagen',bereich:'K26',art:'entscheidung',gross:false,stufe:'haeufig',chance:0.1,ausloeser:'anwohnerKlagen',sperrTage:365,
     texte:['Eine Bürgerinitiative klagt gegen deinen Stadionausbau: mehr Lärm, mehr Verkehr, mehr Licht. Die Genehmigung könnte sich verzögern.','Anwohner haben beim Verwaltungsgericht Klage gegen den Ausbau eingereicht. Der Anwalt des Vereins rät zu einem Gespräch.'],
