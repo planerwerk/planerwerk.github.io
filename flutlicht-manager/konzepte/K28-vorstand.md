@@ -162,7 +162,7 @@ Das **Zielgespräch** mit Tiefstapeln und Hochpokern (§5.2) wartet: Seine Folge
 - **Baustein „Ziele“ im Vertrauen** (§5.1, −10 bis +10, montags): erfüllt +5, verfehlt −5. Finanzen mit Verlust bis jetzt: −3 („gefährdet“).
 - **Saisonende:** je erfülltem Nebenziel Vertrauen +5, je verfehltem −5, mit Meldung. Das geschieht vor der Prüfung auf Entlassung zum Saisonende.
 - **Anzeige:** im Büro unter dem Saisonziel, mit Stand.
-- Kader (Gehaltssumme) und Zuschauer (§3.1) fehlen noch. Zuschauer brauchen K27, die Gehaltssumme einen Gehaltsrahmen aus K23.
+- Kader (Gehaltssumme) und Zuschauer (§3.1) gibt es seit U12o (25.11.2026, popolupo, ohne Testlauf, vorläufig): **Kader** heißt, die Gehälter liegen am Saisonende im Gehaltsrahmen des Vorstands (K23), darüber „gefährdet“. **Zuschauer** heißt, der Heimschnitt erreicht 95 % des Schnitts der Vorsaison; das Nebenziel gibt es nur nach einer ganzen Saison bei diesem Verein in derselben Liga, „gefährdet“ erst ab drei Heimspielen darunter. Beide nimmt der Vorstand in die Auslosung auf, das Profil kommt weiter zuerst.
 
 **Rücktritt** (§5.3, **neue Funktion**, Bereich `ruecktritt`, Grundlizenz, ohne Automatik, K36):
 
@@ -185,7 +185,7 @@ Jetzt gibt es Budgets (K23d, K23 §5.5f) und echte Größenordnungen (K23c), dam
 - **Transferbudget** (K23d): Kontostand über der Reserve, mal dem Faktor aus dem Gespräch. Der Faktor gilt auch für das Budget der Automatik, solange der Verein deine Transfers führt (`kiBudget`, Prüfung CX5). Kaufst du über dem Budget, ist der Vorstand verstimmt: Vertrauen −1 je angefangene 10 % der Ablöse über dem Budget, höchstens −10, mit Meldung.
 - **Lizenz (K36):** neuer Bereich `zielgespraech` in der Grundlizenz, ohne Automatik (ohne Entscheidung gilt der Vorschlag).
 - **Gleichschritt:** Das Gespräch würfelt nur, wenn du tiefstapelst. Ohne Eingriff ändert sich nichts.
-- **Noch nicht:** Zwischenbilanz im Winter (§4 Nr. 3), Sparsamkeit des Präsidenten beim Budget, Nebenziele verhandeln.
+- **Noch nicht:** Zwischenbilanz im Winter (§4 Nr. 3), Sparsamkeit des Präsidenten beim Budget, Nebenziele verhandeln. (Stand 25.11.2026: Die Zwischenbilanz gibt es seit U12f, die Sparsamkeit wirkt im Budgetgespräch seit U12l; offen bleibt nur, Nebenziele zu verhandeln.)
 
 ### 5.9 Umsetzung U12f (22. November 2026, popolupo, ohne Testlauf): Zwischenbilanz im Winter
 

@@ -71,6 +71,18 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   S.trust=50;S.ziele={s:S.season,tid:me,l:[pk,fi]};S.cup={alive:[9999],hist:[[spiel]]};F.nebenzieleSaison();
   pruef(S.trust===50+N.saisonVerfehlt+N.saisonErfuellt,'Saisonende: je erfülltem Nebenziel +5, je verfehltem −5',`Vertrauen ${S.trust}`);}
 
+// U12o. Nebenziele Kader und Zuschauer (K28 §3.1): Kader gefährdet über dem Gehaltsrahmen, zum Saisonende erfüllt nur darin. Zuschauer nur nach einer Saison beim Verein
+//       in derselben Liga, Ziel zuschauerHalten des Vorjahresschnitts; gefährdet erst ab zuschauerAb Heimspielen unter dem Ziel.
+{const {S,F,ev,B}=welt(),N=B.nebenziele,t=ev('myT()'),st=(z,e)=>F.nebenzielStand(z,e),ka={k:'kader',min:0},gr=ev('gehaltsRahmen')(t),sq=ev('squad')(S.my),sal0=sq.map(p=>p.sal);
+  const setzeGehalt=f=>{sq.forEach((p,i)=>{p.sal=Math.round(sal0[i]*f);});},summe=()=>ev('gehaltsSumme')(t);
+  setzeGehalt(0.01);const k0=summe()<=gr?st(ka,false)==='offen'&&st(ka,true)==='erfuellt':false;setzeGehalt(1);let f=1;while(summe()<=gr*1.2&&f<50){f*=1.5;setzeGehalt(f);}const k1=st(ka,false)==='gefaehrdet'&&st(ka,true)==='verfehlt';setzeGehalt(1);
+  const vor=ev('zuschauerVorsaison');S.hist=[];const ohne=vor(t)===0;S.hist=[{s:S.season-1,tid:S.my,lg:t.lg,zus:10000}];const mit=vor(t)===10000;S.hist[0].lg=t.lg===1?2:1;const andereLiga=vor(t)===0;S.hist[0].lg=t.lg;
+  F.nebenzieleSetzen();const moeglich=ev('meineZiele()').every(z=>z.k!=='zuschauer'||z.min===Math.round(10000*N.zuschauerHalten/100)*100);
+  const zu={k:'zuschauer',min:9500};S.att=[9000*(N.zuschauerAb-1),N.zuschauerAb-1];const z0=st(zu,false);S.att=[9000*N.zuschauerAb,N.zuschauerAb];const z1=st(zu,false),z2=st(zu,true);S.att=[9600*4,4];const z3=st(zu,true);
+  const nz=F.nebenzielName(zu),name=(nz.includes('9.500')||nz.includes('9,500'))&&F.nebenzielName(ka).startsWith('Kader');
+  pruef(k0&&k1&&ohne&&mit&&andereLiga&&moeglich&&z0==='offen'&&z1==='gefaehrdet'&&z2==='verfehlt'&&z3==='erfuellt'&&name,'Nebenziele Kader und Zuschauer: Gehaltsrahmen zum Saisonende, Zuschauer nach der Vorsaison',
+    `Kader im Rahmen ${k0}, darüber ${k1}, Vorsaison ohne/mit/andere Liga ${ohne}/${mit}/${andereLiga}, gesetzt ${moeglich}, Zuschauer ${[z0,z1,z2,z3].join(', ')}, Namen ${name}`);}
+
 // 9. Rücktritt (K28 §5.3, U12b): sofort weg, Ruf −5 statt −8, Jobangebote; mit dem neuen Job ist der Rücktritt vergessen
 {const {S,F,ev,B}=welt();S.phase='play';S.ruf=30;F.ruecktritt();const weg=S.fired===1&&S.ruecktritt===1,r=ev('ruf()'),jobs=(S.jobs||[]).slice();
   if(jobs.length)F.takeJob(jobs[0]);

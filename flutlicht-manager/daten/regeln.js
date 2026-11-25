@@ -1071,9 +1071,9 @@ const REGELN={
     // geduldig: Grenzen für die Anzeige der Geduld des Präsidenten (bis ungeduldig: „ungeduldig“, ab geduldig: „geduldig“).
     ruf:{start:30,vergessen:0.05,jePlatzUeber:3,meister:15,pokal:10,aufstieg:8,abstieg:-6,verfehlt:-4,entlassung:-8,ruecktritt:-5,jobsJePunkt:1,ungeduldig:7,geduldig:14},
     // Nebenziele (K28 §3.1, §5.7, U12b): anzahl [normal, Präsident mit Ehrgeiz ab ehrgeizigAb]. pokalRunde je Liga: Index in POKAL_RUNDEN, die erreicht werden muss.
-    // jugend: Spieler bis jugendBis zusammen jugendEinsaetze Einsätze. finanzen: Summe der Buchungen der Saison mindestens 0. profil: dieses Nebenziel kommt beim Profil zuerst (K31 §3.2).
+    // jugend: Spieler bis jugendBis zusammen jugendEinsaetze Einsätze. finanzen: Summe der Buchungen der Saison mindestens 0. Seit U12o (25.11., popolupo, vorläufig) kader: Gehälter am Saisonende im Gehaltsrahmen; zuschauer: Heimschnitt mindestens zuschauerHalten des Schnitts der Vorsaison, gefährdet erst ab zuschauerAb Heimspielen. profil: dieses Nebenziel kommt beim Profil zuerst (K31 §3.2).
     // Baustein „Ziele“ im Vertrauen (montags): erfuellt, verfehlt, gefaehrdet je Nebenziel, begrenzt auf baustein. Saisonende: saisonErfuellt oder saisonVerfehlt je Nebenziel.
-    nebenziele:{anzahl:[1,2],ehrgeizigAb:14,pokalRunde:{1:2,2:1,3:1},jugendBis:21,jugendEinsaetze:25,profil:{ausbildung:'jugend',sparsam:'finanzen',ehrgeizig:'pokal'},
+    nebenziele:{anzahl:[1,2],ehrgeizigAb:14,pokalRunde:{1:2,2:1,3:1},jugendBis:21,jugendEinsaetze:25,zuschauerHalten:0.95,zuschauerAb:3,profil:{ausbildung:'jugend',sparsam:'finanzen',ehrgeizig:'pokal'},
       erfuellt:5,verfehlt:-5,gefaehrdet:-3,baustein:[-10,10],saisonErfuellt:5,saisonVerfehlt:-5},
     // Zielgespräch (K28 §5.2, U12e, 22.11., ALLE WERTE GESCHÄTZT): offen ab dem Setzen des Saisonziels bis zu deinem nächsten Ligaspiel, eine Entscheidung je Saison.
     // Hochpokern um 1 bis maxPlaetze Plätze: immer angenommen, Transferbudget +budgetHoch je Platz, zum Saisonende Ruf +rufHoch je Platz, wenn das Ziel erreicht ist.

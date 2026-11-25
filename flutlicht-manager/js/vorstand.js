@@ -50,13 +50,18 @@ function ultimatumText(){const u=S.ult;if(!u||u.tid!==S.my||u.s!==S.season||S.ph
 // S.ziele = {s Saison, tid Verein, l: [{k pokal|jugend|finanzen, min}]}. Gesetzt mit dem Saisonziel (setTarget), eigener Strom je Saison und Verein: mehrfaches Setzen gibt dasselbe.
 // Möglich: Pokal (nur wenn du noch drin bist und die Zielrunde nicht schon erreicht hast), Jugend (nur mit Spielern bis jugendBis), Finanzen (immer).
 // Anzahl nach dem Ehrgeiz des Präsidenten, das Nebenziel zum Profil deines Vereins zuerst, den Rest lost der Vorstand.
-function nebenzieleSetzen(){const N=RV.nebenziele,t=myT(),moegl=[],runde=N.pokalRunde[t.lg]||1;
+// Seit U12o (K28 §3.1, 25.11., popolupo, vorläufig): Kader (Gehälter am Saisonende im Gehaltsrahmen, K23) und Zuschauer (Heimschnitt mindestens zuschauerHalten
+// des Schnitts der Vorsaison, nur nach einer ganzen Saison bei diesem Verein in derselben Liga, S.hist).
+const zuschauerVorsaison=t=>{const h=(S.hist||[]).find(x=>x.s===S.season-1&&x.tid===S.my&&x.lg===t.lg);return h&&h.zus>0?h.zus:0;};
+function nebenzieleSetzen(){const N=RV.nebenziele,t=myT(),moegl=[],runde=N.pokalRunde[t.lg]||1,zv=zuschauerVorsaison(t);
   if(S.cup&&S.cup.alive.includes(S.my)&&S.cup.hist.length<runde)moegl.push('pokal');
   if(squad(S.my).some(p=>p.age<=N.jugendBis))moegl.push('jugend');
   moegl.push('finanzen');const eu=euZielMoeglich();if(eu)moegl.push('europa'); // Europapokal (K37, U19c)
+  moegl.push('kader');if(zv)moegl.push('zuschauer'); // U12o
   const n=praesident(t).ehrgeiz>=N.ehrgeizigAb?N.anzahl[1]:N.anzahl[0],zuerst=vereinsProfile(t).map(k=>N.profil[k]).filter(k=>k&&moegl.includes(k));
   const l=mitStrom(strom('nebenziele',S.season,S.my),()=>[...new Set([...zuerst,...shuffle(moegl.filter(k=>!zuerst.includes(k)))])].slice(0,n));
-  S.ziele={s:S.season,tid:S.my,l:l.map(k=>k==='europa'?{k,min:eu.min,wb:eu.wb}:{k,min:k==='pokal'?runde:k==='jugend'?N.jugendEinsaetze:0})};}
+  S.ziele={s:S.season,tid:S.my,l:l.map(k=>k==='europa'?{k,min:eu.min,wb:eu.wb}:{k,min:k==='pokal'?runde:k==='jugend'?N.jugendEinsaetze:k==='zuschauer'?Math.round(zv*N.zuschauerHalten/100)*100:0})};}
+const zuschauerSchnitt=()=>S.att&&S.att[1]?S.att[0]/S.att[1]:0;
 // Nebenziele der laufenden Saison bei deinem Verein (nach einem Jobwechsel ohne neues setTarget: keine)
 const meineZiele=()=>S.ziele&&S.ziele.s===S.season&&S.ziele.tid===S.my?S.ziele.l:[];
 const jugendEinsaetze=()=>squad(S.my).filter(p=>p.age<=RV.nebenziele.jugendBis).reduce((a,p)=>a+(p.apps||0),0);
@@ -68,6 +73,8 @@ function nebenzielStand(z,ende){
   if(z.k==='jugend')return jugendEinsaetze()>=z.min?'erfuellt':ende?'verfehlt':'offen';
   if(z.k==='europa')return euZielStand(z,ende);
   if(z.k==='finanzen'){const s=Object.entries(S.fin||{}).filter(([k])=>k!=='Schuldenschnitt').reduce((a,[,v])=>a+v,0);return ende?(s>=0?'erfuellt':'verfehlt'):(s<0?'gefaehrdet':'offen');}
+  if(z.k==='kader'){const im=gehaltsSumme(myT())<=gehaltsRahmen(myT());return ende?(im?'erfuellt':'verfehlt'):(im?'offen':'gefaehrdet');} /* U12o */
+  if(z.k==='zuschauer'){const ok=zuschauerSchnitt()>=z.min;return ende?(ok?'erfuellt':'verfehlt'):(!ok&&S.att&&S.att[1]>=RV.nebenziele.zuschauerAb?'gefaehrdet':'offen');} /* U12o */
   return'offen';}
 // Baustein „Ziele“ im Vertrauen (montags)
 function zieleBaustein(){const N=RV.nebenziele;let s=0;meineZiele().forEach(z=>{const st=nebenzielStand(z,false);s+=st==='erfuellt'?N.erfuellt:st==='verfehlt'?N.verfehlt:st==='gefaehrdet'?N.gefaehrdet:0;});
@@ -76,10 +83,11 @@ function zieleBaustein(){const N=RV.nebenziele;let s=0;meineZiele().forEach(z=>{
 function nebenzieleSaison(){const N=RV.nebenziele,l=meineZiele();if(!l.length)return;let alle=true;
   const txt=l.map(z=>{const ok=nebenzielStand(z,true)==='erfuellt';if(!ok)alle=false;S.trust=clamp(S.trust+(ok?N.saisonErfuellt:N.saisonVerfehlt),0,100);return`${nebenzielName(z)}: ${ok?'erfüllt':'verfehlt'}`;});
   news(`Nebenziele des Vorstands: ${txt.join(' · ')}.`,alle?'good':'bad');}
-function nebenzielName(z){return z.k==='europa'?`Europapokal: mindestens ${EU_RUNDE[z.min]} in der ${euName(z.wb)}`:z.k==='pokal'?`Pokal: mindestens ${POKAL_RUNDEN[z.min]}`:z.k==='jugend'?`Jugend: Spieler bis ${RV.nebenziele.jugendBis} zusammen ${z.min} Einsätze`:'Finanzen: kein Verlust in dieser Saison';}
+function nebenzielName(z){return z.k==='europa'?`Europapokal: mindestens ${EU_RUNDE[z.min]} in der ${euName(z.wb)}`:z.k==='pokal'?`Pokal: mindestens ${POKAL_RUNDEN[z.min]}`:z.k==='jugend'?`Jugend: Spieler bis ${RV.nebenziele.jugendBis} zusammen ${z.min} Einsätze`:
+  z.k==='kader'?'Kader: Gehälter am Saisonende im Rahmen des Vorstands':z.k==='zuschauer'?`Zuschauer: Heimschnitt mindestens ${z.min.toLocaleString('de-DE')}`:'Finanzen: kein Verlust in dieser Saison';}
 // Anzeige im Büro
 function nebenzieleText(){const l=meineZiele();if(!l.length)return'';const W={erfuellt:'erfüllt',verfehlt:'verfehlt',gefaehrdet:'gefährdet',offen:'offen'};
-  return`<p class="dim">Nebenziele: ${l.map(z=>`${esc(nebenzielName(z))}${z.k==='jugend'?` (bisher ${jugendEinsaetze()})`:''}: ${W[nebenzielStand(z,false)]}`).join(' · ')}</p>`;}
+  return`<p class="dim">Nebenziele: ${l.map(z=>`${esc(nebenzielName(z))}${z.k==='jugend'?` (bisher ${jugendEinsaetze()})`:z.k==='zuschauer'&&S.att&&S.att[1]?` (bisher ${Math.round(zuschauerSchnitt()).toLocaleString('de-DE')})`:z.k==='kader'?` (zurzeit ${Math.round(rahmenAnteil(myT())*100)} %)`:''}: ${W[nebenzielStand(z,false)]}`).join(' · ')}</p>`;}
 
 // ---------- Zielgespräch (K28 §5.2, U12e, Bereich zielgespraech) ----------
 // S.zg = {s Saison, tid Verein, vorschlag (Platz des Vorstands), sp (eigene Ligaspiele beim Setzen), stufe (Plätze: negativ hochgepokert, positiv tiefgestapelt), fertig, ab (1 = abgelehnt)}.
