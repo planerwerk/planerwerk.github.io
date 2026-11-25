@@ -189,6 +189,8 @@ const AUSLOESER={
   stabStreit(){if(!S.stab)return null;const h=absTag(S.tag),l=S.stab.filter(x=>x.team===S.my&&x.r!=='scout'&&stabHitzig(x)&&!(x.streitBis>=h));if(l.length<2)return null;const a=pick(l),b=pick(l.filter(x=>x!==a)),[u,v]=[a.id,b.id].sort((x,y)=>x-y);return{stab:u,stab2:v};},
   // Talent aus dem Nichts (K18 §8, K18f): du hast einen Scout mit dem Spezialgebiet Jugend ab Qualität RKT.jugend.scoutAb, er hat einen 16-Jährigen entdeckt
   talentEntdeckt(){if(!S.stab)return null; /* alte Spielstände ohne Stab (Prüfung EQ5) */const l=meineScouts().filter(x=>scoutGebiet(x)==='jugend'&&x.q>=RKT.jugend.scoutAb);return l.length?{stab:pick(l).id}:null;},
+  // Skandal um das Wunderkind (K08 §8, K08d): ein junges Talent deines Kaders mit Einsätzen (der Hype), das ein Partylöwe ist
+  wunderkind(){const W=RKT.wunderkind,l=squad(S.my).filter(p=>p.age<=W.alter&&sternZahl(p)>=W.sterne&&(p.apps||0)>=W.spiele&&hatEig(p,'partyloewe')&&!(p.inj>0));return l.length?{spieler:pick(l).id}:null;},
   // Ehemaliger Kapitän kehrt zurück (K16 §8, K16e): ein Ex-Spieler (K32c) mit den meisten Spielen für deinen Verein, mindestens so viele wie ein Publikumsliebling (Prüfung EP6),
   // ist vereinslos, seit höchstens RST.exSpieler.kapitaenSaisons Saisons, noch nicht gefragt, und in seiner Rolle hast du einen freien Platz
   exKapitaen(){const E=RST.exSpieler,l=(S.stab||[]).filter(x=>x.team<0&&x.ex&&x.exV===S.my&&(x.exVsp||0)>=RFS.ident.lieblingSpiele&&!x.gefragt&&x.exS!=null&&S.season-x.exS<=E.kapitaenSaisons&&stabVon(S.my,x.r).length<RST.rollen[x.r].plaetze);

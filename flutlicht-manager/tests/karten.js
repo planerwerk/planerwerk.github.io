@@ -751,4 +751,11 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   merk([{m:60,s:0,t:'R',p:n.id}]);const anderer=A.hitzkopfSchiri()===null;merk([{m:60,s:1,t:'R',p:h.id}]);const gegner=A.hitzkopfSchiri()===null;S.letzte=[];
   pruef(ohne&&ja&&anderer&&gegner,'Hitzkopf und Schiedsrichter: nur nach dem Platzverweis eines eigenen Hitzkopfs',`ohne ${ohne}, Hitzkopf ${ja}, anderer Spieler ${anderer}, Seite des Gegners ${gegner}`);}
 
+// K08d. Skandal um das Wunderkind (K08 §8): nur ein junges Talent deines Kaders (ab wunderkind.sterne Sternen, bis alter Jahre, ab spiele Einsätzen), das ein Partylöwe ist;
+//       ohne Partylöwe, zu alt, mit zu wenig Einsätzen oder verletzt nicht.
+{const {S,ev}=welt(),A=ev('AUSLOESER'),W=ev('RKT').wunderkind,sq=ev('squad')(S.my),p=sq[0],m0={pot:p.pot,age:p.age,apps:p.apps,inj:p.inj};sq.forEach(x=>{x.eig=[];});
+  p.age=W.alter;p.pot=p.str+20;p.apps=W.spiele;p.inj=0;const ohne=A.wunderkind()===null;p.eig=['partyloewe'];const b=A.wunderkind(),ja=!!b&&b.spieler===p.id;
+  p.age=W.alter+1;const alt=A.wunderkind()===null;p.age=W.alter;p.apps=W.spiele-1;const wenig=A.wunderkind()===null;p.apps=W.spiele;p.inj=5;const verl=A.wunderkind()===null;Object.assign(p,m0);p.eig=[];
+  pruef(ohne&&ja&&alt&&wenig&&verl,'Skandal um das Wunderkind: nur ein junges Talent mit Einsätzen, das ein Partylöwe ist',`ohne Partylöwe ${ohne}, Treffer ${ja}, zu alt ${alt}, zu wenig Einsätze ${wenig}, verletzt ${verl}`);}
+
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);
