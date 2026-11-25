@@ -98,8 +98,13 @@ pruef(supercups.length===N-1&&supercups.every(x=>!x.verl&&(x.hg!==x.ag)===!x.pen
   const schwelle=nom.every(p=>p.str>=ev('lsSchwelle')(p.nat)&&p.team>=0&&p.team<ev('AV0')),max=Object.values(je).every(n=>n<=L.max),fehlt=nom.length>0&&nom.every(p=>!av(p)&&bn(p));
   const bis=nom.length?nom[0].lsp.bis:0,st=nom.find(p=>p.lsp.st);if(st)st.fit=100;
   S5.tag=x.bis+2;F5.laenderspielTag(x.bis+2);const zurueck=nom.every(p=>!p.lsp)&&(!st||st.fit<100||st.inj>0);L.an=false;
-  pruef(aus&&nom.length>0&&schwelle&&max&&fehlt&&zurueck&&bis===abs(x.bis),'Länderspiele: nur mit Schalter, Stärkste je Nation ab der Schwelle, fehlen bis nach der Pause, kommen müde zurück',
-    `aus ${aus}, nominiert ${nom.length} (${Object.keys(je).length} Nationen), Schwelle ${schwelle}, höchstens ${L.max} ${max}, fehlen ${fehlt}, Ende /-e, zurück ${zurueck}`);}
+  /* Prüfung FM2, FM11: Ein starker Spieler des Auslandspools zählt mit und verdrängt den, der in der Rangfolge seiner Nation zuletzt kommt (bei max = Zahl der Nominierten) */
+  let pool=true;const pl=(S5.ausland&&S5.ausland.pl)||[],q=pl.find(y=>y.team>=ev('AV0')&&!!ev('avVon')(y.team)),N=Object.keys(je)[0];
+  if(q&&N){const ord=nom.filter(p=>p.nat===N).sort((a,b)=>b.str-a.str||a.id-b.id),w=ord[ord.length-1],m0=L.max,q0={nat:q.nat,str:q.str,inj:q.inj,form:q.form,sp:q.sp};
+    S5.pl.forEach(p=>{delete p.lsp;delete p.lspN;});Object.assign(q,{nat:N,str:200,inj:0,form:10,sp:100});L.max=ord.length;L.an=true;S5.tag=x.von;F5.laenderspielTag(x.von);
+    pool=!w.lsp&&ord.slice(0,-1).every(p=>!!p.lsp)&&!q.lsp;L.an=false;L.max=m0;Object.assign(q,q0);delete q.lsp;S5.pl.forEach(p=>{delete p.lsp;});}
+  pruef(aus&&nom.length>0&&schwelle&&max&&fehlt&&zurueck&&bis===abs(x.bis)&&!!q&&pool,'Länderspiele: nur mit Schalter, Stärkste je Nation ab der Schwelle (mit Auslandspool), fehlen bis nach der Pause, kommen müde zurück',
+    `aus ${aus}, nominiert ${nom.length} (${Object.keys(je).length} Nationen), Schwelle ${schwelle}, höchstens ${L.max} ${max}, fehlen ${fehlt}, Ende ${bis}/${abs(x.bis)}, zurück ${zurueck}, Auslandspool ${q?pool:'kein Spieler'}`);}
 
 console.log(`\n${N} Saison(s) in ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);
