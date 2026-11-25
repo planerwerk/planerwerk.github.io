@@ -6,6 +6,11 @@ function stabIndex(){if(STAB_IX&&STAB_IX.n===S.stab.length&&STAB_IX.key===S.stab
   STAB_IX={n:(S.stab||[]).length,key:S.stabVersion,m};return m;}
 const stabGeaendert=()=>{S.stabVersion=(S.stabVersion||0)+1;};
 const stabVon=(tid,r)=>stabIndex().get(tid+'/'+r)||[];
+// Haltung des Arztes (K16 §3.2, K16i, 25.11., popolupo, vorläufig): fest aus seiner Nummer, vorsichtig, ausgewogen (doppelt so oft) oder risikofreudig.
+// Sie verschiebt nur, ab wie vielen Tagen er vom Fitspritzen abrät (RMD.spritzen.haltung), keine Spielwerte. Ohne Arzt wie ausgewogen.
+const ARZT_HALTUNG=['vorsichtig','ausgewogen','ausgewogen','risikofreudig'];
+const arztHaltung=x=>ARZT_HALTUNG[hash32('ha|'+x.id)%ARZT_HALTUNG.length];
+const arztAbTage=()=>{const x=S.stab?stabVon(S.my,'arzt')[0]:null;return RMD.spritzen.arztAb+(x?RMD.spritzen.haltung[arztHaltung(x)]||0:0);};
 // beste Qualität einer Rolle im Verein (ohne Mitarbeiter: RST.ohne)
 const stabQ=(tid,r)=>{const l=stabVon(tid,r);return l.length?Math.max(...l.map(x=>x.q*stabStreitFaktor(x))):RST.ohne;}; /* Streit im Stab (K16f): Qualität × (1 − malus) bis x.streitBis */
 // Streit im Stab (K16 §8, K16f): hitziges Temperament fest aus der Nummer (ohne Zufall), Anteil RST.streit.hitzigProzent; während eines Streits wirkt der Mitarbeiter schwächer

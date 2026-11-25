@@ -76,9 +76,16 @@ pruef(spannen>0&&ehrlich/spannen>=0.85,'Diagnose-Spanne enthält die wahre Dauer
 {const {neueWelt}=require('./sim'),{W:W2,F:F2}=neueWelt();F2.buildWorld(SEED);const S2=W2.S,ev2=W2.ev;S2.my=6;S2.mgr='Test';S2.phase='play';
   let d=0;while(d<S2.plan.ende&&!F2.meinSpiel(d))d++;S2.tag=d;const A=ev2('RMD').spritzen,heute=ev2('absTag')(d),sq=S2.pl.filter(x=>x.team===S2.my&&x.inj<=0&&x.pos!=='TW');
   const setz=(p,sp)=>{p.inj=0;p.vl=null;F2.verletzen(p,'kollision',{art:'prellung',still:true});p.inj=sp[1]+1;Object.assign(p.vl,{ab:heute,dg:heute,sd:sp,sv:sp});};
-  const lang=sq[0],kurz=sq[1];setz(lang,[A.arztAb+2,A.arztAb+4]);setz(kurz,[1,2]);
+  const ab=ev2('arztAbTage')(),lang=sq[0],kurz=sq[1];setz(lang,[ab+2,ab+4]);setz(kurz,[1,2]); /* seit K16i mit der Grenze nach der Haltung des Arztes */
   F2.medSpritzen(lang.id);const erst=lang.spritze!==d&&lang.spritzeWarn===heute;F2.medSpritzen(lang.id);const zweit=lang.spritze===d;F2.medSpritzen(kurz.id);const sofort=kurz.spritze===d;
-  pruef(d<S2.plan.ende&&erst&&zweit&&sofort,'Arzt widerspricht: bei langer Verletzung erst beim zweiten Klick gespritzt, bei kurzer sofort',`Spieltag ${d}, erster Klick ${erst}, zweiter ${zweit}, kurz ${sofort}`);}
+  pruef(d<S2.plan.ende&&erst&&zweit&&sofort,'Arzt widerspricht: bei langer Verletzung erst beim zweiten Klick gespritzt, bei kurzer sofort',`Spieltag ${d}, erster Klick ${erst}, zweiter ${zweit}, kurz ${sofort}`);
+
+  // K16i. Haltung des Arztes (K16 §3.2): fest aus der Nummer, nur Werte aus RMD.spritzen.haltung; sie verschiebt die Grenze, ohne Arzt gilt arztAb.
+  const ha=ev2('arztHaltung'),ag=ev2('arztAbTage'),ge=ev2('stabGeaendert'),aerzte=S2.stab.filter(x=>x.r==='arzt'),werte=new Set(aerzte.map(ha)),fest=[...werte].every(h=>h in A.haltung);
+  const mein=aerzte.filter(x=>x.team===S2.my);mein.forEach(x=>{x.team=-1;});ge();const ohne=ag()===A.arztAb;
+  const jeHaltung=['vorsichtig','risikofreudig'].every(h=>{const x=aerzte.find(y=>ha(y)===h);if(!x)return true;const t1=x.team;x.team=S2.my;ge();const r=ag()===A.arztAb+A.haltung[h];x.team=t1;ge();return r;});
+  mein.forEach(x=>{x.team=S2.my;});ge();
+  pruef(fest&&ohne&&jeHaltung&&werte.size>=2,'Haltung des Arztes: fest, verschiebt die Grenze für den Rat gegen das Spritzen, ohne Arzt arztAb',`Haltungen ${[...werte].join(', ')}, ohne Arzt ${ohne}, je Haltung ${jeHaltung}`);}
 
 console.log(`\n${N} Saison(s), ${verl.length} Verletzungen, ${alle.filter(x=>x.q==='krankheit').length} Krankheiten, in ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

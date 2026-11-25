@@ -868,7 +868,7 @@ const REGELN={
     krankheit:{proTag:0.0006,winter:2,winterMonate:[11,0,1],ansteckung:2,ansteckungTage:5,hygiene:0.5}, // Spielwerte, nicht recherchiert. hygiene: Faktor während eines Hygieneplans (Karte „Grippewelle“, K10e, GESCHÄTZT)
     diagnose:{tage:[3,1],verdacht:0.6,genau:0.25,arzt:{ohne:2,jeQualitaet:-0.1,min:0.5},fehl:{ohne:0.15,jeQualitaet:-0.006,min:0.03,faktor:0.6,abTage:10}}, // Breite ±60 % und ±25 % bei Arzt-Qualität 10; fehl: Fehldiagnose (K10b, 22.11., GESCHÄTZT), Chance ohne + jeQualitaet × Arzt-Qualität (mindestens min), angezeigt faktor × wahre Dauer, ab abTage Tagen
     reha:{behandlung:0.7,rueckkehrFrische:[70,80],abTagen:7,fenster:56,rueckfallMal:7,gleicheArt:0.35},
-    spritzen:{wirkung:0.95,verschlimmerung:0.15,arztAb:5},frueher:{frische:65,rueckfall:2}, // arztAb (K16 §8, K16d, 22.11., GESCHÄTZT): bei mehr Tagen in der angezeigten Spanne rät der Arzt vom Spritzen ab
+    spritzen:{wirkung:0.95,verschlimmerung:0.15,arztAb:5,haltung:{vorsichtig:-3,ausgewogen:0,risikofreudig:4}},frueher:{frische:65,rueckfall:2}, // arztAb (K16 §8, K16d, 22.11., GESCHÄTZT): bei mehr Tagen in der angezeigten Spanne rät der Arzt vom Spritzen ab; haltung: Tage mehr oder weniger je Haltung des Arztes (K16i, 25.11., popolupo, vorläufig)
     // Zweite Meinung (K10 §5, K10c, 22.11., popolupo, GESCHÄTZT): einmal je Verletzung nach der Diagnose, kosten nach Liga; mit besser eine bessere Behandlung (Rest × (1 − aenderung)),
     // mit schlechter mehr Schaden als gedacht (Rest × (1 + aenderung)), sonst eine engere Spanne (Breite × enger). Eine Fehldiagnose (K10b) deckt sie immer auf.
     zweite:{kosten:{1:15000,2:8000,3:4000},besser:0.2,schlechter:0.05,aenderung:0.15,enger:0.5},
