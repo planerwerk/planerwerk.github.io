@@ -731,4 +731,9 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   pruef(ohne&&treffer&&wenig===null&&normal===null&&zurueck===null&&wirkt&&einmal,'Urlaub verlängern: nur beim Turnier nach genug Spielen, schiebt die Rückkehr und baut Belastung ab, einmal',
     `ohne ${ohne}, Treffer ${treffer}, zu wenig Spiele ${wenig}, normales Länderspiel ${normal}, schon zurück ${zurueck}, Wirkung ${wirkt}, einmal ${einmal}`);}
 
+// Prüfung FQ5: Die drei Länderspiel-Karten (nurMit) kommen nur mit dem Schalter ins wöchentliche Mischen, alle anderen immer.
+{const {ev}=welt(),K=ev('KARTEN'),an=ev('kartenSchalterAn'),L=ev('RWB').laenderspiele,ls=K.filter(c=>c.nurMit==='laenderspiele'),rest=K.filter(c=>!c.nurMit),a0=L.an;
+  L.an=false;const aus=ls.every(c=>!an(c))&&rest.every(c=>an(c));L.an=true;const ein=ls.every(c=>an(c));L.an=a0;
+  pruef(ls.length===3&&aus&&ein&&String(ev('kartenWoche')).includes('kartenSchalterAn(c)'),'Länderspiel-Karten würfeln nur mit dem Schalter mit',`${ls.map(c=>c.id).join(', ')}, aus ${aus}, an ${ein}`);}
+
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

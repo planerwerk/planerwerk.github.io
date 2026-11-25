@@ -26,7 +26,7 @@ function sommerNeueSaison(){S.teams.forEach(t=>{if(t.urlaub>0)return;if(!t.urlau
 // Nach dem Auftakt: Merker zurücksetzen, damit der nächste Sommer neu beginnt
 function sommerAuftakt(t){t.urlaubFertig=false;t.urlaubAb=null;}
 // Leistungstest (K12a §5.2) am zweiten Tag nach dem Auftakt: genaue Kondition, Auffällige
-function leistungstest(){const sq=squad(S.my).filter(p=>p.inj<=0);if(!sq.length)return;const m=sq.reduce((a,p)=>a+p.ko,0)/sq.length,T=RSO.leistungstest;
+function leistungstest(){const sq=squad(S.my).filter(p=>p.inj<=0&&!beiNationalteam(p)); /* FQ3: wer noch beim Turnier ist, fehlt beim Test */if(!sq.length)return;const m=sq.reduce((a,p)=>a+p.ko,0)/sq.length,T=RSO.leistungstest;
   const dick=sq.filter(p=>p.ko<=m-T.uebergewichtAb).sort((a,b)=>a.ko-b.ko).slice(0,T.meldungenMax),top=sq.filter(p=>p.koVor!=null&&p.ko>p.koVor+0.5).sort((a,b)=>(b.ko-b.koVor)-(a.ko-a.koVor)).slice(0,T.meldungenMax);
   S.lt={s:S.season,tid:S.my,tag:S.tag,ids:dick.map(p=>p.id)}; /* für die Karte „Übergewicht“ (K12c, Prüfung ED5) */
   news(`Leistungstest: Kondition im Schnitt ${Math.round(m)}.${dick.length?` Mit Übergewicht aus dem Urlaub: ${dick.map(p=>`${p.n} (${Math.round(p.ko)})`).join(', ')}.`:''}${top.length?` Im Urlaub durchgezogen: ${top.map(p=>`${p.n} (${Math.round(p.ko)})`).join(', ')}.`:''}`,dick.length?'bad':'');}

@@ -167,8 +167,8 @@ const AUSLOESER={
   fehde(){const t=myT(),l=S.teams.filter(x=>x.id!==S.my&&aktiv(x)&&x.lg===t.lg&&bezWirk(x.id)<RBZ.wirkung.gespraechUnter);return l.length?{verein:pick(l).id}:null;},
   // Sommer (K12a §8, K12c): bis RKT.sommer.nachTestTage nach dem Leistungstest ein Spieler mit Übergewicht (Kondition wie im Test zu niedrig); im Urlaub ein Partylöwe
   uebergewicht(){const L=S.lt;if(!L||L.s!==S.season||L.tid!==S.my||S.tag<L.tag||S.tag>L.tag+RKT.sommer.nachTestTage)return null; /* nur wer im Leistungstest auffiel (S.lt, Prüfung ED5) */
-    const l=(L.ids||[]).map(id=>PIX.get(id)).filter(p=>p&&p.team===S.my&&!(p.inj>0));return l.length?{spieler:pick(l).id}:null;},
-  urlaubsfoto(){if(!imUrlaub())return null;const l=squad(S.my).filter(p=>hatEig(p,'partyloewe'));return l.length?{spieler:pick(l).id}:null;},
+    const l=(L.ids||[]).map(id=>PIX.get(id)).filter(p=>p&&p.team===S.my&&!(p.inj>0)&&!beiNationalteam(p)); /* FQ3 */return l.length?{spieler:pick(l).id}:null;},
+  urlaubsfoto(){if(!imUrlaub())return null;const l=squad(S.my).filter(p=>hatEig(p,'partyloewe')&&!beiNationalteam(p)); /* FQ3: nicht beim Turnier */return l.length?{spieler:pick(l).id}:null;},
   // Stadion (K26 §8, K26e): ein laufendes Bauprojekt ab RKT.stadion.zuschussAb Kosten, noch ohne Zuschuss
   zuschuss(){const c=S.constr;return c&&c.phase!=null&&!c.zuschuss&&c.kosten>=RKT.stadion.zuschussAb?{bau:c.ab}:null;},
   // Anwohner klagen (K26 §8, K26f): Tribüne oder Dach wartet noch mindestens eine Woche auf die Genehmigung, noch keine Klage bei diesem Projekt
@@ -241,8 +241,10 @@ function entscheidungImBudget(c,W,d){const E=RKT.entscheidung,D=kartenDichte();i
 
 // ---------- Woche (montags, eigener Strom, am Ende von woechentlichLauf) ----------
 // Gemischte Reihenfolge, erst der Würfel (gleich viele Würfe jede Woche), dann Auslöser, Sperre und Budget.
+// Karten mit nurMit kommen nur mit diesem Schalter ins Mischen (Prüfung FQ5: sonst würfelten sie auch ohne Länderspiele mit und verschoben den Kartenstrom).
+const kartenSchalterAn=c=>!c.nurMit||(c.nurMit==='laenderspiele'&&lsAn());
 function kartenWoche(d){if(S.phase!=='play'||S.fired)return;const K=karten(),W=kartenBudget(d),heute=absTag(d);
-  for(const c of shuffle(KARTEN.filter(c=>!c.nurKette))){const hit=R()<kartenChance(c);if(!hit)continue; /* Folgekarten kommen nur über kartenKette (K30c) */
+  for(const c of shuffle(KARTEN.filter(c=>!c.nurKette&&kartenSchalterAn(c)))){const hit=R()<kartenChance(c);if(!hit)continue; /* Folgekarten kommen nur über kartenKette (K30c) */
     if(c.stufe==='sehrSelten'&&K.einmal[c.id])continue;const f=AUSLOESER[c.ausloeser];if(!f)continue;const b=f();if(!b)continue;
     const key=kartenSchluessel(c,b); /* Mitarbeiter als Beteiligter (Prüfung ED3), je Mitarbeiter ohne den Verein (EE3) */if(K.sp[key]!=null&&heute-K.sp[key]<(c.sperrTage||RKT.sperrTage))continue;
     let halt=false;if(c.art==='entscheidung')halt=entscheidungImBudget(c,W,d);

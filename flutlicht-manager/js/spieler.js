@@ -163,7 +163,7 @@ function leiheIntegrationZurueck(p,l){if(!l||l.i0===undefined)return;if(l.i0==nu
 const integrationVon=p=>p.int!=null?p.int:100;
 const integrationFaktor=p=>{const W=RP.integration.wirkung;return W.an&&p.int!=null?W.min+(1-W.min)*p.int/100:1;};
 // Neuzugang beim Trainingsauftakt (K12a §8, mit K07h): eine Meldung mit den Neuzugängen deines Kaders und ihrer Integration (ablauf.js am Auftakttag), ohne Zufall
-function neuzugaengeAuftakt(){const l=squad(S.my).filter(p=>p.int!=null);if(!l.length)return;
+function neuzugaengeAuftakt(){const l=squad(S.my).filter(p=>p.int!=null&&!beiNationalteam(p)); /* FQ3: ohne die, die noch beim Turnier sind */if(!l.length)return;
   news(`Neu beim Trainingsauftakt: ${l.map(p=>`${p.n} (Integration ${Math.round(p.int)} %)`).join(', ')}. Die Mitspieler nehmen ${l.length===1?'ihn':'sie'} in ihre Mitte.`,'');}
 function integrationStart(p){const I=RP.integration,a=((p.ch&&p.ch.anp)||10)-10,de=p.de!=null?p.de:deutschMutter(p)?100:I.deutsch.start;if(p.de==null&&de<100)p.de=de;
   p.int=clamp(Math.round((de>=100?I.start.deutsch:I.start.fremd)+I.start.anpassung*a/10),5,99);p.intA=p.apps||0;}

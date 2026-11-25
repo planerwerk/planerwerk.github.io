@@ -158,16 +158,18 @@ function pokalRotationKader(tid,gid,o){const R=RWB.pokal.rotationKI;if(!R||!R.an
 
 // ---------- Turniere im Sommer (K13 §3.4, K13k) ----------
 // Nur mit Länderspielen. Beim Saisonwechsel eines Turniersommers (Jahr der neuen Saison: Rest 0 bei Division durch 4 EM, Rest 2 WM): Teilnehmer der EM sind die
-// turnier.em Bestplatzierten aus UEFA_NATIONEN, der WM die turnier.wm Bestplatzierten. Abschneiden fest aus dem Seed: die Vorrunde und jede K.-o.-Runde übersteht eine
-// Nation mit weiter.basis − weiter.jeRang × (Rang − 1), mindestens weiter.min. Gespielt werden 3 Vorrundenspiele und die K.-o.-Spiele. Kader wie in den Pausen (lsKader). Abgestellte deutscher
-// Vereine fehlen bis turnier.spaet Tage nach dem Trainingsauftakt ihres Vereins (p.lsp, Rückkehr wie nach einer Pause) und tragen turnier.belastung Saisonbelastung,
-// weil der Sommerurlaub fehlt. Meldungen: deine Spieler und der Sieger. Ohne R().
+// turnier.em Bestplatzierten aus UEFA_NATIONEN, der WM die turnier.wm Bestplatzierten, ohne turnier.gesperrt (Prüfung FQ4). Abschneiden fest aus dem Seed (seit Prüfung FQ2
+// eine Rangfolge wie ein Turnierbaum, turnierRunden): Platz 1 Titel, 2 Finale, 3–4 Halbfinale usw. Gespielt werden 3 Vorrundenspiele und die K.-o.-Spiele. Kader wie in den
+// Pausen (lsKader). Abgestellte deutscher Vereine fehlen bis turnier.spaet Tage nach dem Trainingsauftakt ihres Vereins (p.lsp, Rückkehr wie nach einer Pause) und tragen
+// Saisonbelastung, weil der Sommerurlaub fehlt: seit Prüfung FQ1 mindestens die Schwelle RSO.belastung.ab, dazu turnier.belastung. Meldungen: deine Spieler und der Sieger. Ohne R().
+// Runden je Nation: Wertung = Rang − streuung × Zufall aus dem Seed, sortiert; Platz i (ab 0) erreicht Stufe ko+1 − (Bits von i), mindestens 0 (Vorrunde).
+function turnierRunden(teil,ko,T){const w=n=>n.rang-T.streuung*(hash32(['turnier',S.seed,S.season,n.k].join('|'))%1000)/1000,erg=new Map();
+  const folge=teil.slice().sort((a,b)=>w(a)-w(b)||a.rang-b.rang);folge.forEach((n,i)=>erg.set(n.k,Math.max(0,ko+1-(i?32-Math.clz32(i):0))));return{erg,sieger:folge[0]};}
 function turnierSommer(){if(!lsAn())return;const T=RWB.laenderspiele.turnier,em=S.season%4===0,wm=S.season%4===2;if(!em&&!wm)return;
-  const name=em?'EM':'WM',stufen=em?T.stufenEm:T.stufenWm,ko=stufen.length-2,W=T.weiter,a0=absTag(S.tag);
-  const teil=NATIONEN.map(n=>nation(n[0])).filter(n=>n&&n.rang&&(!em||UEFA_NATIONEN.includes(n.k))).sort((a,b)=>a.rang-b.rang).slice(0,em?T.em:T.wm),erg=new Map();
-  teil.forEach(n=>{const p=Math.max(W.min,W.basis-W.jeRang*(n.rang-1));let r=0;while(r<=ko&&hash32(['turnier',S.seed,S.season,n.k,r].join('|'))%1000<p*1000)r++;erg.set(n.k,r);});
-  const sieger=teil.slice().sort((a,b)=>erg.get(b.k)-erg.get(a.k)||a.rang-b.rang)[0],kader=lsKader(),mein=[];
+  const name=em?'EM':'WM',stufen=em?T.stufenEm:T.stufenWm,ko=stufen.length-2,a0=absTag(S.tag);
+  const teil=NATIONEN.map(n=>nation(n[0])).filter(n=>n&&n.rang&&!(T.gesperrt||[]).includes(n.k)&&(!em||UEFA_NATIONEN.includes(n.k))).sort((a,b)=>a.rang-b.rang).slice(0,em?T.em:T.wm);
+  const {erg,sieger}=turnierRunden(teil,ko,T),kader=lsKader(),mein=[];
   teil.forEach(n=>{const r=erg.get(n.k),spiele=3+Math.min(r,ko);(kader.get(n.k)||[]).forEach((p,i)=>{p.lspN=(p.lspN||0)+1;p.lspZ=a0;if(p.team>=AV0)return;
-    const t=S.teams[p.team];p.lsp={von:a0,bis:absTag(t?auftaktTag(t):S.tag)+T.spaet,n:spiele,st:i<RWB.laenderspiele.stamm?1:0,turnier:1};p.sb=Math.min(100,(p.sb||0)+T.belastung);
+    const t=S.teams[p.team];p.lsp={von:a0,bis:absTag(t?auftaktTag(t):S.tag)+T.spaet,n:spiele,st:i<RWB.laenderspiele.stamm?1:0,turnier:1};p.sb=Math.min(100,Math.max(p.sb||0,RSO.belastung.ab)+T.belastung);
     if(p.team===S.my)mein.push(`${p.n} (${natName(p)}, ${stufen[Math.min(r,stufen.length-1)]})`);});});
   news(`${name} ${S.season}: ${sieger?`Sieger ist ${sieger.name}.`:''}${mein.length?` Aus deinem Kader dabei: ${mein.join(', ')}. Sie kommen später zum Trainingsauftakt.`:''}`,'');}

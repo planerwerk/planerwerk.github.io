@@ -150,11 +150,18 @@ pruef(supercups.length===N-1&&supercups.every(x=>!x.verl&&(x.hg!==x.ag)===!x.pen
 {const {W:WA,F:FA}=neueWelt();FA.buildWorld(SEED);const SA=WA.S,ev=WA.ev,L=ev('RWB').laenderspiele,T=L.turnier,U=ev('UEFA_NATIONEN'),abs=ev('absTag'),s0=SA.season;SA.my=6;
   SA.season=2028;FA.turnierSommer();const aus=!SA.pl.some(p=>p.lsp);L.an=true;SA.season=2027;FA.turnierSommer();const keins=!SA.pl.some(p=>p.lsp);
   SA.season=2028;const sb={};SA.pl.forEach(p=>{sb[p.id]=p.sb||0;});FA.turnierSommer();const nom=SA.pl.filter(p=>p.lsp);
-  const em=nom.length>0&&nom.every(p=>U.includes(p.nat)&&p.lsp.n>=3&&p.lsp.n<=3+T.stufenEm.length-2&&p.sb===Math.min(100,sb[p.id]+T.belastung)&&p.lsp.bis>abs(SA.tag));
-  SA.pl.forEach(p=>{delete p.lsp;});SA.season=2030;FA.turnierSommer();const wm=String(SA.news[0].t).includes('WM 2030');SA.pl.forEach(p=>{delete p.lsp;});L.an=false;SA.season=s0;
+  const ab=ev('RSO').belastung.ab; /* seit Prüfung FQ1 mindestens die Schwelle, dazu turnier.belastung */
+  const em=nom.length>0&&nom.every(p=>U.includes(p.nat)&&p.lsp.n>=3&&p.lsp.n<=3+T.stufenEm.length-2&&p.sb===Math.min(100,Math.max(sb[p.id],ab)+T.belastung)&&p.lsp.bis>abs(SA.tag));
+  /* Prüfung FQ2: wie ein Turnierbaum genau ein Titel, ein Finale, zwei Halbfinale; der Sieger ist der mit dem Titel und steht in der Meldung */
+  const teil=ev('NATIONEN').map(n=>ev('nation')(n[0])).filter(n=>n&&n.rang&&U.includes(n.k)).sort((a,b)=>a.rang-b.rang).slice(0,T.em),koE=T.stufenEm.length-2,rr=ev('turnierRunden')(teil,koE,T);
+  const zahl=r=>[...rr.erg.values()].filter(x=>x===r).length,baum=zahl(koE+1)===1&&zahl(koE)===1&&zahl(koE-1)===2&&zahl(0)===T.em-2**koE&&rr.erg.get(rr.sieger.k)===koE+1&&String(SA.news[0].t).includes(`Sieger ist ${rr.sieger.name}`);
+  SA.pl.forEach(p=>{delete p.lsp;});SA.season=2030;FA.turnierSommer();const wm=String(SA.news[0].t).includes('WM 2030'),ohneRus=!SA.pl.some(p=>p.lsp&&T.gesperrt.includes(p.nat)); /* FQ4 */
+  /* FQ3: wer noch beim Turnier ist, fehlt beim Leistungstest */
+  const mein=SA.pl.find(p=>p.team===6&&p.lsp&&!(p.inj>0));let ltOk=true;if(mein){mein.ko=1;FA.leistungstest();ltOk=!SA.lt.ids.includes(mein.id);}
+  SA.pl.forEach(p=>{delete p.lsp;});L.an=false;SA.season=s0;
   const aufruf=String(ev('newSeasonLauf')).includes('turnierSommer();S.lineup=besteElfDu()');
-  pruef(aus&&keins&&em&&wm&&aufruf,'Turniere im Sommer: nur mit Schalter und im Turnierjahr, EM nur mit Europäern, Spiele und Belastung, WM-Meldung',
-    `aus ${aus}, kein Turnier ${keins}, EM ${em} (${nom.length} Spieler), WM ${wm}, Aufruf ${aufruf}`);}
+  pruef(aus&&keins&&em&&baum&&wm&&ohneRus&&ltOk&&aufruf,'Turniere im Sommer: nur mit Schalter und im Turnierjahr, EM nur mit Europäern, Turnierbaum, Spiele und Belastung, WM ohne Gesperrte, Leistungstest ohne Abgestellte',
+    `aus ${aus}, kein Turnier ${keins}, EM ${em} (${nom.length} Spieler), Baum ${baum} (Sieger ${rr.sieger.name}), WM ${wm}, ohne Gesperrte ${ohneRus}, Leistungstest ${ltOk}${mein?'':' (kein eigener Abgestellter)'}, Aufruf ${aufruf}`);}
 
 console.log(`\n${N} Saison(s) in ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

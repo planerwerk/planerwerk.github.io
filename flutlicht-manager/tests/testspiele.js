@@ -105,12 +105,14 @@ if(lager){const f=ev('lagerMoeglich')('schwarzwald',S.tag+1,7);if(f)return{fehle
   S.bz=[];sq.forEach(p=>{p.nat='GER';delete p.de;delete p.int;delete p.intA;p.eig=[];p.st=50;});const [a,b]=sq,jung=sq.slice(2).sort((x,y)=>x.age-y.age||x.id-y.id),r1=jung[0],r2=jung[1];a.nat='BRA';b.nat='POR';a.int=50;a.de=30;b.de=40;S.bz.push([r1.id,r2.id,'R',1]);
   const co=ein(sq,'co'),za=mit(co,a),partner=za&&za.length>1?ev('PIX').get(za[0]===a.id?za[1]:za[0]):null,coOk=!!partner&&partner.nat==='GER'&&partner.int==null&&mit(co,r1)!==mit(co,r2);
   const la=ein(sq,'landsleute'),laOk=mit(la,a)===mit(la,b),alle=co.reduce((n,z)=>n+z.slice(0,2).length,0)===sq.length;
+  /* Prüfung FQ6: ohne die beiden Fremdsprachigen sind die Rivalen die beiden Jüngsten; der Co-Trainer trennt sie, „Landsleute“ achtet nicht darauf */
+  const ohneAB=sq.filter(p=>p!==a&&p!==b),coR=ein(ohneAB,'co'),laR=ein(ohneAB,'landsleute'),getrennt=mit(coR,r1)!==mit(coR,r2)&&mit(laR,r1)===mit(laR,r2);
   const g=sq.find(p=>p!==r1&&p!==r2&&p.nat==='GER'&&p!==a&&p!==b),f0=Z.freund,s0=Z.streit;Z.freund=1;Z.streit=1;const l={zimmer:[[a.id,g.id],[r1.id,r2.id]]};zt(l,d);
   const integ=a.int===50+Z.integration&&a.de===Math.round((30+Z.deutsch)*10)/10,freund=!!ev('beziehung')(a,g),zoff=r1.st<50&&r2.st<50&&l.zimmer[1][2]===1&&S.news.some(x=>String(x.t).includes('Zoff im Doppelzimmer'));
   const st1=r1.st;zt(l,d);const einmal=r1.st===st1&&S.bz.filter(x=>x[2]==='F').length===1;Z.freund=f0;Z.streit=s0;
   S.lager=[{ort:'schwarzwald',von:d,bis:d+4,saison:S.season,kosten:0,tag:0,koller:0}];F.lagerTag(d);const lt=!!S.lager[0].zimmer&&S.lager[0].zimmer.length===Math.ceil(sq.length/2);S.lager=[];
-  pruef(coOk&&laOk&&alle&&integ&&freund&&zoff&&einmal&&lt,'Zimmerbelegung: Neue zu Deutschsprachigen, Landsleute zusammen, Integration, Deutsch, Freundschaft, Zoff einmal',
-    `Co-Trainer ${coOk}, Landsleute ${laOk}, alle verteilt ${alle}, Integration und Deutsch ${integ} (${a.int}, ${a.de}), Freunde ${freund}, Zoff ${zoff}, einmal ${einmal}, Lagertag ${lt}`);}
+  pruef(coOk&&laOk&&alle&&getrennt&&integ&&freund&&zoff&&einmal&&lt,'Zimmerbelegung: Neue zu Deutschsprachigen, Landsleute zusammen, Integration, Deutsch, Freundschaft, Zoff einmal',
+    `Co-Trainer ${coOk}, Landsleute ${laOk}, alle verteilt ${alle}, Rivalen getrennt ${getrennt}, Integration und Deutsch ${integ} (${a.int}, ${a.de}), Freunde ${freund}, Zoff ${zoff}, einmal ${einmal}, Lagertag ${lt}`);}
 
 // Prüfung FP2, FP8: Reist ein Lager früher ab (Wirkung lagerEnde der Karte „Lagerkoller“), kommen Meldung und Marketing der Golfregion trotzdem, einmal.
 //       Ein Testspiel beim Auslandsverein bringt keine Amateur-Gage (Bedingung in testspielNach, über den Quelltext).

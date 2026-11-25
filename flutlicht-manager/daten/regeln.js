@@ -890,8 +890,8 @@ const REGELN={
     // Seit Prüfung FM: zurück am Tag nach dem letzten Pausentag (FM1), ein Länderspiel zählt ab minMin Minuten, die Frische sinkt nach den Minuten, Saisonbelastung höchstens 100 (FM10).
     laenderspiele:{an:false,schwelle:{basis:88,jeRang:0.5,min:62},max:26,rand:3,formMin:7,praxisMin:40,tageJeSpiel:4.5,stamm:11,minuten:[0,30],
       frische:[10,20],belastung:2,verletzung:0.03,sv:0.3,stimmung:2,ersteBis:23,minMin:10,marktwert:{plus:0.05,tage:365},
-      // turnier (K13k, 25.11., popolupo, vorläufig): EM mit em, WM mit wm Teilnehmern; weiter: Chance je Runde nach Rang; spaet: Tage nach dem Trainingsauftakt; belastung: Saisonbelastung
-      turnier:{em:24,wm:48,spaet:14,belastung:6,weiter:{basis:0.8,jeRang:0.01,min:0.15},stufenEm:['Vorrunde','Achtelfinale','Viertelfinale','Halbfinale','Finale','Titel'],
+      // turnier (K13k, 25.11., popolupo, vorläufig): EM mit em, WM mit wm Teilnehmern; streuung: Ränge, um die der Zufall die Rangfolge verschiebt (seit Prüfung FQ2 statt weiter); gesperrt: nicht zugelassene Nationen (FQ4); spaet: Tage nach dem Trainingsauftakt; belastung: Saisonbelastung über der Schwelle sommer.belastung.ab (FQ1)
+      turnier:{em:24,wm:48,spaet:14,belastung:6,streuung:15,gesperrt:['RUS'],stufenEm:['Vorrunde','Achtelfinale','Viertelfinale','Halbfinale','Finale','Titel'],
         stufenWm:['Vorrunde','Sechzehntelfinale','Achtelfinale','Viertelfinale','Halbfinale','Finale','Titel']}}}, /* marktwert: Nationalspieler sind bis tage nach der letzten Nominierung plus mehr wert (K13h) */ /* ersteBis: Karte „Anruf des Nationaltrainers“ nur bis zu diesem Alter (K13g), bei Älteren war es kaum die erste */
   // Testspiele und Trainingslager (K11 §11, Welle 2). Geldbeträge und Zusagen sind Spielwerte (K11 §12 Nr. 4).
   // lagerAusland (K11h, 25.11., popolupo, vorläufig): so viele Vereine aus dem Land des Lagers (lager.orte[…].land) schlägt das Spiel an Lagertagen als Gegner vor.

@@ -356,14 +356,14 @@ const KARTEN=[
     wirkung:[{art:'integration',wert:5},{art:'fans',wert:1}]},
   // Länderspiele (K13 §8, K13g, 24.11., popolupo): nur mit Länderspielen (Schalter REGELN.wettbewerbe.laenderspiele.an oder im Menü). Erste Nominierung: Stolz, Stimmung +3.
   // Verletzt von der Nationalmannschaft zurück: Info, Fans −1 (Ärger über den Verband, K17 später). Werte vorläufig.
-  {id:'bundestrainer',titel:'Anruf des Nationaltrainers',bereich:'K13',art:'info',stufe:'haeufig',chance:1,ausloeser:'bundestrainer',sperrTage:365,
+  {id:'bundestrainer',titel:'Anruf des Nationaltrainers',bereich:'K13',art:'info',stufe:'haeufig',chance:1,ausloeser:'bundestrainer',nurMit:'laenderspiele',sperrTage:365,
     texte:['{spieler} ist zum ersten Mal für seine Nationalmannschaft nominiert. Der Nationaltrainer hat persönlich angerufen, in der Kabine gibt es Applaus.','Erste Nominierung für {spieler}. Er hat es erst geglaubt, als der Brief vom Verband auf dem Tisch lag.'],
     wirkung:[{art:'stimmung',wert:3}]},
-  {id:'lsVerletzung',titel:'Verletzt von der Nationalmannschaft zurück',bereich:'K13',art:'info',stufe:'haeufig',chance:1,ausloeser:'lsVerletzung',sperrTage:60,
+  {id:'lsVerletzung',titel:'Verletzt von der Nationalmannschaft zurück',bereich:'K13',art:'info',stufe:'haeufig',chance:1,ausloeser:'lsVerletzung',nurMit:'laenderspiele',sperrTage:60,
     texte:['{spieler} kommt verletzt von der Länderspielreise zurück. Im Verein ist man verärgert, der Verband verweist auf das normale Risiko.','Schlechte Nachricht aus dem Länderspiel: {spieler} fällt aus. Die Fans schimpfen über die Belastung.'],
     wirkung:[{art:'fans',wert:-1}]},
   // Spieler will Urlaub verlängern (K12a §8, K12d, 25.11., popolupo, vorläufig): nach einem langen Turnier im Sommer (K13k, nur mit Länderspielen), solange er noch weg ist.
-  {id:'urlaubVerlaengern',titel:'Spieler will Urlaub verlängern',bereich:'K12a',art:'entscheidung',gross:false,stufe:'haeufig',chance:0.5,ausloeser:'urlaubVerlaengern',sperrTage:300,
+  {id:'urlaubVerlaengern',titel:'Spieler will Urlaub verlängern',bereich:'K12a',art:'entscheidung',gross:false,stufe:'haeufig',chance:0.5,ausloeser:'urlaubVerlaengern',nurMit:'laenderspiele',sperrTage:300,
     texte:['{spieler} hat ein langes Turnier hinter sich und bittet um eine Woche mehr Urlaub, bevor er zum Training kommt.','Der Berater von {spieler} ruft an: Nach dem Turnier sei sein Mandant leer und brauche noch eine Woche Ruhe.'],
     optionen:[{text:'Eine Woche mehr geben',wirkung:[{art:'urlaubVerlaengern',wert:7},{art:'stimmung',wert:3}],folge:'{spieler} bedankt sich und kommt eine Woche später, aber ausgeruht.'},
       {text:'Pünktlich erscheinen lassen',wirkung:[{art:'stimmung',wert:-3}],folge:'{spieler} kommt wie geplant, aber man sieht ihm die Müdigkeit an.'}],auto:1},

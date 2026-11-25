@@ -2781,3 +2781,19 @@ Korrekturen auf `mitarbeit/popolupo-fp-korrekturen` (auf K11k).
 | FP10 | **Niedrig (nur mit Schalter):** Vergleich und Scoutbericht zeigten im Pokal die nicht rotierte Elf. Jetzt mit `pokalRotationKader` wie im Spiel (Frische von heute) und einem Hinweis, wenn der Co-Trainer schont. | ✅ behoben |
 | FP11 | **Niedrig, Tests:** K13j prüfte deinen Verein nur ohne Automatik, K19l lief im offenen Fenster mit dem echten Gehaltsrahmen. Jetzt beide Zweige (mit `lizenzStart`) und `sperreAb` am Anfang des Falls. Ein Fall über `spielAufbau` im Pokal fehlt weiter (der Anschluss ist über den Quelltext geprüft). | ✅ behoben bis auf den Fall über `spielAufbau` |
 | FP12 | **Niedrig, Doku:** Die Anleitung „Pokalsensationen mit tests/welt.js messen“ ging nicht, der Kommentar im K13j-Test war verstümmelt. Beides berichtigt. | ✅ behoben |
+
+## FQ. Prüfung von K13k, K12d, K18h, K11k, den Tests FO8, dem Doku-Abgleich 2 und den Korrekturen FP ohne Laufzeit (25. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat da83362..7098595 gelesen, nichts ausgeführt. Kein Laufzeit- oder Syntaxfehler, keine verstümmelten Template-Strings, Gleichschritt 5a unberührt, mit ausgeschalteten Schaltern im Hauptstrom keine Änderung. Ohne Befund: K18h, die übrigen Teile von K11k und K12d, die Korrekturen FP1 bis FP12, alte Spielstände, K33, K36 Nr. 208 bis 211, die Namen.
+
+Korrekturen auf `mitarbeit/popolupo-fq-korrekturen` (auf U12p).
+
+| # | Befund | Status |
+|---|---|---|
+| FQ1 | **Mittel (nur mit Länderspielen):** Die Turnierbelastung wirkte praktisch nie: Der Urlaub ist am 1. Juli schon vorbei, Turnierspieler starteten fast bei 0 und blieben mit +6 unter der Schwelle 50. Jetzt mindestens die Schwelle `sommer.belastung.ab`, dazu `turnier.belastung`; damit wirkt auch das −4 der Karte K12d. | ✅ behoben |
+| FQ2 | **Mittel (nur mit Länderspielen):** Jede Nation würfelte ihre Runden für sich, oft gab es mehrere „Titel“, der Sieger passte nicht zur Meldung. Jetzt eine Rangfolge wie ein Turnierbaum (`turnierRunden`: Rang minus Zufall aus dem Seed, Platz 1 Titel, 2 Finale, 3–4 Halbfinale …), ohne R(). Test mit genau einem Titel. | ✅ behoben |
+| FQ3 | **Niedrig:** Turnierspieler zählten beim Trainingsauftakt als anwesend (Leistungstest, Neuzugänge, Karten „Übergewicht“ und „Urlaubsfoto“). Jetzt jeweils ohne `beiNationalteam`. | ✅ behoben |
+| FQ4 | **Niedrig:** Russland war bei der WM dabei. Jetzt `turnier.gesperrt` für EM und WM. | ✅ behoben |
+| FQ5 | **Niedrig:** Die Länderspiel-Karten würfelten auch ohne Schalter mit und verschoben den Kartenstrom deines Vereins. Jetzt das Feld `nurMit:'laenderspiele'` im Katalog, `kartenSchalterAn` filtert vor dem Mischen (betrifft auch `bundestrainer` und `lsVerletzung`). | ✅ behoben |
+| FQ6 | **Niedrig, Test:** Im Test K11k war die Trennung der Rivalen trivial grün. Jetzt ein Kader ohne die Fremdsprachigen: Der Co-Trainer trennt die Rivalen, „Landsleute“ nicht. | ✅ behoben |
+| FQ7 | **Niedrig, Doku:** K13 und K12a nannten K12d und K13k noch als offen, K18 und das Protokoll „ab einem Drittel“ bei der Grenze 0,34. Berichtigt („mehr als ein Drittel“). | ✅ behoben |
