@@ -4,6 +4,8 @@
 // Am Spieler p.gerF = {f: Faktor, bis: absoluter Tag} (bekanntes Interesse hebt die Ablöse). Zufall nur im Strom 'geruechte'.
 function gerS(){return S.ger||(S.ger={l:[],ruf:Object.assign({},RGR.medien.start),id:0});}
 const gerFaktor=p=>p&&p.gerF&&p.gerF.bis>=absTag(S.tag)?p.gerF.f:1;
+// Gehaltsforderung bei bekanntem Interesse (K29 §5.5, K29n, 25.11., popolupo, vorläufig): Wer weiß, dass er gefragt ist, fordert beim Wechsel mehr (vertraege.js, gehaltForderung)
+const gerGehalt=p=>gerFaktor(p)>1?1+(RGR.wirkung.gehalt||0):1;
 function gerText(art,c,k){const T=PRESSE.geruechte[art].t;return T[k%T.length].replace(/\{(\w+)\}/g,(m,x)=>c[x]!=null?c[x]:m);}
 function gerMedium(art){const M=PRESSE.geruechte[art].m;return R()<0.6||M.length<2?M[0]:M[1+Math.floor(R()*(M.length-1))];}
 // Anlässe dieser Woche: über deinen Verein (mein) und über andere (fremd)

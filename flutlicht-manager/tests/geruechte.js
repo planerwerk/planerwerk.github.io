@@ -57,4 +57,10 @@ const fremd=w=>w.S.pl.find(p=>p.team>=0&&p.team!==VEREIN&&w.S.teams[p.team].lg==
   pruef(k0===1&&ohne===0&&k1===G.klatsch.mein&&!!p&&ev('hatBedarf')(k,p)&&d!==0&&d!=null&&S.ger.l.some(g=>g.art==='thema'&&g.pid===p.id&&g.mein===1),
     'Klatsch: Thema-Gerücht bei schlechter Beziehung, Gerüchte über dich doppelt so oft, Stimmung ändert sich',`Faktor ${k0} → ${k1}, ohne Ärger ${ohne}, Spieler ${p&&p.n}, Stimmung ${d}`);}
 
+// K29n. Gehaltsforderung bei bekanntem Interesse (K29 §5.5): Solange p.gerF gilt, fordert ein Spieler beim Wechsel wirkung.gehalt mehr; die Verlängerung bleibt, abgelaufen nichts.
+{const {S,ev}=welt(),G=ev('RGR').wirkung,gf=ev('gehaltForderung'),a=ev('absTag')(S.tag),p=S.pl.find(x=>x.team>=0&&x.team<1000&&x.team!==S.my&&x.str>=60);delete p.gerF;
+  const w0=gf(p,true),v0=gf(p,false);p.gerF={f:G.preis.wahr,bis:a+5};const w1=gf(p,true),v1=gf(p,false);p.gerF.bis=a-1;const w2=gf(p,true);delete p.gerF;
+  const hoeher=Math.abs(w1-w0*(1+G.gehalt))<=1100&&w1>w0; /* beide auf 1.000 gerundet */
+  pruef(hoeher&&v1===v0&&w2===w0,'Gehaltsforderung bei bekanntem Interesse: beim Wechsel höher, Verlängerung gleich, abgelaufen wie vorher',`Wechsel ${w0} → ${w1}, Verlängerung ${v0}/${v1}, abgelaufen ${w2}`);}
+
 console.log(probleme.length?`\n${probleme.length} Problem(e).`:'\nAlles in Ordnung.');process.exitCode=probleme.length?1:0;

@@ -664,8 +664,8 @@ const REGELN={
 
   // Gerüchteküche (K29 §4.3, §5.5, U17b). proWoche: [min, max] je Woche, meinVerein: Chance auf eins über deinen Verein, dauer: Tage bis zur Prüfung und Wirkung auf die Ablöse.
   // wirkung: Stimmung des Spielers, Fans, Vertrauen, Ablöse × preis (wahr, halb). medien: Start der Treffsicherheit, treffer/fehler danach. aergerUnter: Beziehung für „Ärger“, aergerWahr: Anteil wahr.
-  // erfindung: Chance, dass ein Gerücht erfunden ist. anzeige: so viele im Büro, log: so viele gespeichert. ALLE WERTE GESCHÄTZT (K29 §12 Nr. 15 bis 19).
-  geruechte:{proWoche:[1,3],meinVerein:0.5,dauer:30,wirkung:{stimmung:-3,fans:-2,vertrauen:-2,preis:{wahr:1.1,halb:1.15}},
+  // erfindung: Chance, dass ein Gerücht erfunden ist. anzeige: so viele im Büro, log: so viele gespeichert. ALLE WERTE GESCHÄTZT (K29 §12 Nr. 15 bis 19). Seit K29n (25.11., popolupo, vorläufig) wirkung.gehalt: Gehaltsforderung beim Wechsel + Anteil, solange das Interesse bekannt ist (p.gerF).
+  geruechte:{proWoche:[1,3],meinVerein:0.5,dauer:30,wirkung:{stimmung:-3,fans:-2,vertrauen:-2,preis:{wahr:1.1,halb:1.15},gehalt:0.05},
     medien:{start:{boulevard:40,fach:75,tv:60,portal:50,lokal:65},treffer:3,fehler:-3},aergerUnter:-30,aergerWahr:0.3,erfindung:0.25,anzeige:6,log:60,
     // Klatsch und Tratsch (K17 §5.2, §5.3, K17d, 22.11., popolupo): Liegt deine Beziehung zu einem Verein unter aergerUnter, kommen Gerüchte über deinen Verein mein-mal so oft,
     // und es gibt „{spieler} soll dort ein Thema sein“. Wirkung auf den Spieler: mit positiv +stimmung (fühlt sich begehrt), sonst −stimmung (Unruhe). Werte aus K17 §5.3.
