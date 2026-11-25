@@ -77,8 +77,8 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   const setzeGehalt=f=>{sq.forEach((p,i)=>{p.sal=Math.round(sal0[i]*f);});},summe=()=>ev('gehaltsSumme')(t);
   setzeGehalt(0.01);const k0=summe()<=gr?st(ka,false)==='offen'&&st(ka,true)==='erfuellt':false;setzeGehalt(1);let f=1;while(summe()<=gr*1.2&&f<50){f*=1.5;setzeGehalt(f);}const k1=st(ka,false)==='gefaehrdet'&&st(ka,true)==='verfehlt';setzeGehalt(1);
   const vor=ev('zuschauerVorsaison'),mg=()=>ev('nebenzieleMoeglich')();S.hist=[];const ohne=vor(t)===0&&!mg().moegl.includes('zuschauer');
-  S.hist=[{s:S.season-1,tid:S.my,lg:t.lg,zus:10000,zusN:N.zuschauerHeimAb}];const mit=vor(t)===10000;S.hist[0].lg=t.lg===1?2:1;const andereLiga=vor(t)===0;S.hist[0].lg=t.lg;
-  S.hist[0].zusN=N.zuschauerHeimAb-1;const teil=vor(t)===0;S.hist[0].zusN=N.zuschauerHeimAb; /* Prüfung FR1: Teilsaison mit zu wenig Heimspielen zählt nicht */
+  S.hist=[{s:S.season-1,tid:S.my,lg:t.lg,zus:10000,zusN:ev('zuschauerHeimSoll')(t)}];const mit=vor(t)===10000;S.hist[0].lg=t.lg===1?2:1;const andereLiga=vor(t)===0;S.hist[0].lg=t.lg;
+  S.hist[0].zusN=ev('zuschauerHeimSoll')(t)-1;const teil=ev('zuschauerHeimSoll')(t)>10&&vor(t)===0;S.hist[0].zusN=ev('zuschauerHeimSoll')(t); /* Prüfung FR1, FS3: Teilsaison mit zu wenig Heimspielen zählt nicht */
   /* Prüfung FR2: direkt über nebenzieleMoeglich und nebenzielObjekt, nicht über die Auslosung */
   const m=mg(),moeglich=m.moegl.includes('zuschauer')&&m.moegl.includes('kader')&&ev('nebenzielObjekt')('zuschauer',m).min===Math.round(10000*N.zuschauerHalten/100)*100;
   const zu={k:'zuschauer',min:9500};S.att=[9000*(N.zuschauerAb-1),N.zuschauerAb-1];const z0=st(zu,false);S.att=[9000*N.zuschauerAb,N.zuschauerAb];const z1=st(zu,false),z2=st(zu,true);S.att=[9600*4,4];const z3=st(zu,true);

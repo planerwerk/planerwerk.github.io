@@ -84,7 +84,8 @@ const punkte=(G,s)=>{const d=G.sc[s]-G.sc[1-s];return d>0?3:d===0?1:0;};
   const tore=[{t:'G',m:30,s:1},{t:'G',m:60,s:0},{t:'G',m:80,s:0}],L=(art,ev2)=>({ansprache:art,s:0,G:{ev:ev2}}),g0=gl();
   const wende=aw(L('fordern',tore))&&gl()===g0+A.glaub&&String(S2.news[0].t).startsWith('Die Ansprache hat gewirkt');const g1=gl();
   const andere=!aw(L('motivieren',tore))&&gl()===g1,ohne=!aw(L('fordern',[{t:'G',m:30,s:0},{t:'G',m:60,s:0}]))&&gl()===g1;
-  pruef(wende&&andere&&ohne,'Ansprache wirkt: nach „Fordern“ und einer Wende Glaubwürdigkeit und Meldung, sonst nichts',`Wende ${wende}, andere Ansprache ${andere}, ohne Wende ${ohne}`);}
+  const co=String(F2.liveWeiter).includes('if(!co)anspracheWirkt(L)')&&String(F2.liveWeiter).includes('S.live.anspCo'); /* FS4: nicht nach der Ansprache des Co-Trainers */
+  pruef(wende&&andere&&ohne&&co,'Ansprache wirkt: nach „Fordern“ und einer Wende Glaubwürdigkeit und Meldung, sonst nichts, nicht beim Co-Trainer',`Wende ${wende}, andere Ansprache ${andere}, ohne Wende ${ohne}, Co-Trainer ausgeschlossen ${co}`);}
 
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

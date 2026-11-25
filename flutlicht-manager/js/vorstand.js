@@ -52,7 +52,9 @@ function ultimatumText(){const u=S.ult;if(!u||u.tid!==S.my||u.s!==S.season||S.ph
 // Anzahl nach dem Ehrgeiz des Präsidenten, das Nebenziel zum Profil deines Vereins zuerst, den Rest lost der Vorstand.
 // Seit U12o (K28 §3.1, 25.11., popolupo, vorläufig): Kader (Gehälter am Saisonende im Gehaltsrahmen, K23) und Zuschauer (Heimschnitt mindestens zuschauerHalten
 // des Schnitts der Vorsaison, nur nach einer ganzen Saison bei diesem Verein in derselben Liga, S.hist).
-const zuschauerVorsaison=t=>{const h=(S.hist||[]).find(x=>x.s===S.season-1&&x.tid===S.my&&x.lg===t.lg);return h&&h.zus>0&&(h.zusN||0)>=RV.nebenziele.zuschauerHeimAb?h.zus:0;}; /* Prüfung FR1: nur nach genug Heimspielen (zusN), nicht nach einer Teilsaison */
+const zuschauerVorsaison=t=>{const h=(S.hist||[]).find(x=>x.s===S.season-1&&x.tid===S.my&&x.lg===t.lg);return h&&h.zus>0&&(h.zusN||0)>=zuschauerHeimSoll(t)?h.zus:0;}; /* Prüfung FR1, FS3: nur nach genug Heimspielen (zusN), nicht nach einer Teilsaison */
+// Heimspiele, die eine Vorsaison mindestens haben muss: Anteil zuschauerHeimAnteil der Liga-Heimspiele einer ganzen Saison (Prüfung FS3; zusN zählt auch Pokal und Europapokal)
+const zuschauerHeimSoll=t=>Math.ceil(Math.floor(((S.fx&&S.fx[t.lg])||[]).length/2)*RV.nebenziele.zuschauerHeimAnteil);
 // Seit U12p getrennt: welche Nebenziele möglich sind (in fester Reihenfolge, die Auslosung bleibt gleich) und wie eines aussieht.
 function nebenzieleMoeglich(){const N=RV.nebenziele,t=myT(),moegl=[],runde=N.pokalRunde[t.lg]||1,zv=zuschauerVorsaison(t);
   if(S.cup&&S.cup.alive.includes(S.my)&&S.cup.hist.length<runde)moegl.push('pokal');

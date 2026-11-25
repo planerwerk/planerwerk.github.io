@@ -64,7 +64,9 @@ function welt(lernstufen){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;
 // K25g. Online-Shop (K25 §2): einmalig kosten × Ligafaktor, danach je Woche Fans × jeFan × Fanartikel-Faktor als „Fanartikel online“; ohne Shop nichts, ein zweites Mal kostet nichts.
 {const {S,F,ev,t}=welt(),fin=()=>S.fin['Fanartikel online']||0;S.fin={};F.onlineShopWoche();const ohne=fin()===0&&!t.online;
   const k=ev('onlineKosten')(),c0=t.cash;F.onlineShopEroeffnen();const auf=t.online===1&&t.cash===c0-k&&S.fin['Marketing: Online-Shop']===-k;F.onlineShopEroeffnen();const einmal=t.cash===c0-k;
-  const g=ev('onlineErloes')(t);F.onlineShopWoche();const woche=g>0&&fin()===g&&g===Math.round((t.fans||0)*ev('RMK').online.jeFan*F.merchFaktor(t));delete t.online;
-  pruef(ohne&&auf&&einmal&&woche,'Online-Shop: einmal kaufen, danach jede Woche Fanartikel online nach Fans',`ohne Shop ${ohne}, eröffnet ${auf} (${k}), nur einmal ${einmal}, Woche ${woche} (${g})`);}
+  const g=ev('onlineErloes')(t);F.onlineShopWoche();const woche=g>0&&fin()===g&&g===Math.round((t.fans||0)*ev('RMK').online.jeFan*F.merchFaktor(t));
+  /* Prüfung FS4: marketingTag rechnet montags ab, an anderen Tagen nicht, seit FS2 auch in der Sommerpause */
+  const wt=ev('wochentag'),WT=ev('RK').wochenTag;let mo=S.tag;while(wt(mo)!==WT)mo++;const f1=fin();F.marketingTag(mo+1);const sonst=fin()===f1;S.phase='sommer';F.marketingTag(mo);const montag=fin()===f1+g;S.phase='play';delete t.online;
+  pruef(ohne&&auf&&einmal&&woche&&sonst&&montag,'Online-Shop: einmal kaufen, danach montags Fanartikel online nach Fans, auch im Sommer',`ohne Shop ${ohne}, eröffnet ${auf} (${k}), nur einmal ${einmal}, Woche ${woche} (${g}), anderer Tag ${sonst}, Montag im Sommer ${montag}`);}
 
 console.log(probleme.length?`\n${probleme.length} Problem(e).`:'\nAlles in Ordnung.');process.exitCode=probleme.length?1:0;

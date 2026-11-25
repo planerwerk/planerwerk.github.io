@@ -617,8 +617,8 @@ const REGELN={
       // K25d (22.11., GESCHÄTZT): Mitgliederaktion, Mitglieder + mitglieder, einmal je Saison (einmal, Prüfung DL3: sonst ließ sie sich alle vier Wochen wiederholen und wirkte dauerhaft)
       mitglieder:{name:'Mitgliederaktion',kosten:50000,tage:28,mitglieder:0.02,einmal:1}},
     ligaFaktor:{1:1,2:0.4,3:0.2},abnutzung:[1,0.5,0.25],merch:{liebling:0.05,lieblingMax:0.15},werbewert:{startJeAnsehen:0.5,zurueck:0.02,titel:5},karte:{merchTage:28}, // karte: Dauer der Wirkung merch aus der Karte „Trikot ausverkauft“ (K25b)
-    // online (K25 §2, K25g, 25.11., popolupo, vorläufig): Online-Shop, einmalig kosten × ligaFaktor, danach montags Fans × jeFan × Fanartikel-Faktor, unabhängig von den Zuschauern
-    online:{kosten:500000,jeFan:0.05}},
+    // online (K25 §2, K25g, 25.11., popolupo, vorläufig): Online-Shop, einmalig kosten × ligaFaktor, danach montags Fans × jeFan × Fanartikel-Faktor, unabhängig von den Zuschauern (seit Prüfung FS2 0,12 statt 0,05 und auch in der Sommerpause)
+    online:{kosten:500000,jeFan:0.12}},
 
   // Europapokal (K37, U19a). plaetze: Bundesliga-Platz je Wettbewerb, nachruecken: wer einspringt, wenn der Pokalsieger schon über die Liga dabei ist.
   // wb: Teilnehmer, Spiele der Ligaphase, Töpfe; titel: wohin der Titelverteidiger kommt. laender: Auslandsvereine je Land (angelehnt an die Zulassungsliste, an den Pool angepasst).
@@ -651,7 +651,7 @@ const REGELN={
   // minSpiele: so viele eigene Ligaspiele braucht der Schnitt dieser Saison, sonst gilt der der letzten Saison. lizenzTag, nachweisTag: Datum (MM-TT) der Prüfung und der Frist.
   // auflage: Vertrauen bei Auflagen. insolvenz: so viele Monatserste nacheinander unter dem negativen Kreditrahmen, Punktabzug, Vertrauen. warnMonate: Vorlauf der Warnung.
   // monatTage: Tage je Monat für die Warnung. PUNKTABZUG GESCHÄTZT (K23 §12 Nr. 9).
-  finanzplan:{laufend:['TV-Gelder','Sponsor','Weitere Sponsoren','Zuschauer','Dauerkarten','VIP-Logen','Fanartikel','Gehälter','Trainerstab','Prämien','Stadion & Betrieb','Verwaltung','Jugendarbeit','Zweite Mannschaft','Kreditzinsen','Scouting','Instandhaltung','Sonstige Einnahmen'],
+  finanzplan:{laufend:['TV-Gelder','Sponsor','Weitere Sponsoren','Zuschauer','Dauerkarten','VIP-Logen','Fanartikel','Fanartikel online','Gehälter','Trainerstab','Prämien','Stadion & Betrieb','Verwaltung','Jugendarbeit','Zweite Mannschaft','Kreditzinsen','Scouting','Instandhaltung','Sonstige Einnahmen'],
     minSpiele:3,lizenzTag:'03-01',nachweisTag:'05-31',auflage:-5,insolvenz:{monate:2,punkte:9,vertrauen:-30},warnMonate:3,monatTage:30,
     // K23b (§5.5e): sonstiges: Sonstige Einnahmen (Mitglieder, Vermarktung, Stadionvermietung) je Ligaspiel nach Liga, für alle Vereine. Seit K23c (vorläufig) etwa 7 % der Einnahmen
     // ohne Transfers wie in echt (7–11 %): 1. Liga 10,2 Mio. €, 2. Liga 2,7 Mio. €, 3. Liga 1,1 Mio. € je Saison. Vorher 0, 25.000 und 60.000 € als Ausgleich der zu kleinen Werbung.
@@ -1076,9 +1076,9 @@ const REGELN={
     // geduldig: Grenzen für die Anzeige der Geduld des Präsidenten (bis ungeduldig: „ungeduldig“, ab geduldig: „geduldig“).
     ruf:{start:30,vergessen:0.05,jePlatzUeber:3,meister:15,pokal:10,aufstieg:8,abstieg:-6,verfehlt:-4,entlassung:-8,ruecktritt:-5,jobsJePunkt:1,ungeduldig:7,geduldig:14},
     // Nebenziele (K28 §3.1, §5.7, U12b): anzahl [normal, Präsident mit Ehrgeiz ab ehrgeizigAb]. pokalRunde je Liga: Index in POKAL_RUNDEN, die erreicht werden muss.
-    // jugend: Spieler bis jugendBis zusammen jugendEinsaetze Einsätze. finanzen: Summe der Buchungen der Saison mindestens 0. Seit U12o (25.11., popolupo, vorläufig) kader: Gehälter am Saisonende im Gehaltsrahmen; zuschauer: Heimschnitt mindestens zuschauerHalten des Schnitts der Vorsaison, gefährdet erst ab zuschauerAb Heimspielen. Seit Prüfung FR1 nur, wenn die Vorsaison beim Verein mindestens zuschauerHeimAb Heimspiele hatte. profil: dieses Nebenziel kommt beim Profil zuerst (K31 §3.2).
+    // jugend: Spieler bis jugendBis zusammen jugendEinsaetze Einsätze. finanzen: Summe der Buchungen der Saison mindestens 0. Seit U12o (25.11., popolupo, vorläufig) kader: Gehälter am Saisonende im Gehaltsrahmen; zuschauer: Heimschnitt mindestens zuschauerHalten des Schnitts der Vorsaison, gefährdet erst ab zuschauerAb Heimspielen. Seit Prüfung FR1/FS3 nur, wenn die Vorsaison beim Verein mindestens zuschauerHeimAnteil der Liga-Heimspiele einer ganzen Saison an Heimspielen hatte. profil: dieses Nebenziel kommt beim Profil zuerst (K31 §3.2).
     // Baustein „Ziele“ im Vertrauen (montags): erfuellt, verfehlt, gefaehrdet je Nebenziel, begrenzt auf baustein. Saisonende: saisonErfuellt oder saisonVerfehlt je Nebenziel.
-    nebenziele:{anzahl:[1,2],ehrgeizigAb:14,pokalRunde:{1:2,2:1,3:1},jugendBis:21,jugendEinsaetze:25,zuschauerHalten:0.95,zuschauerAb:3,zuschauerHeimAb:10,profil:{ausbildung:'jugend',sparsam:'finanzen',ehrgeizig:'pokal'},
+    nebenziele:{anzahl:[1,2],ehrgeizigAb:14,pokalRunde:{1:2,2:1,3:1},jugendBis:21,jugendEinsaetze:25,zuschauerHalten:0.95,zuschauerAb:3,zuschauerHeimAnteil:0.85,profil:{ausbildung:'jugend',sparsam:'finanzen',ehrgeizig:'pokal'},
       erfuellt:5,verfehlt:-5,gefaehrdet:-3,baustein:[-10,10],saisonErfuellt:5,saisonVerfehlt:-5},
     // Zielgespräch (K28 §5.2, U12e, 22.11., ALLE WERTE GESCHÄTZT): offen ab dem Setzen des Saisonziels bis zu deinem nächsten Ligaspiel, eine Entscheidung je Saison.
     // Hochpokern um 1 bis maxPlaetze Plätze: immer angenommen, Transferbudget +budgetHoch je Platz, zum Saisonende Ruf +rufHoch je Platz, wenn das Ziel erreicht ist.

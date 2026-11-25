@@ -37,9 +37,9 @@ function trikotVorstellen(d,auto){const M=mkS(),T=RMK.trikot[d],t=myT(),K=RMK.fa
     news(`Trikotvorstellung${auto?' (der Verein wählt)':''}: ${TRIKOT_NAME[d]}. ${txt}`,d==='mutig'?(fs>0?'good':'bad'):'');});}
 // Täglich (ablauf.js taeglichLauf): ohne Wahl am Tag vor dem ersten Pflichtspiel das klassische Trikot (mit und ohne Automatik am selben Tag, Gleichschritt);
 // am Monatsersten geht der Werbewert 2 % zurück Richtung Start
-function marketingTag(d){if(S.phase!=='play')return;const M=mkS(),e=ersterPflichttag(S.my);if(!M.trikot&&e!=null&&d>=e-1)trikotVorstellen('klassisch',true);
-  if(mmtt(d).slice(3)==='01'){const W=RMK.werbewert,start=myT().rep*W.startJeAnsehen;M.ww=Math.round((M.ww+(start-M.ww)*W.zurueck)*10)/10;}
-  if(wochentag(d)===RK.wochenTag)onlineShopWoche();} /* Online-Shop (K25g) */
+function marketingTag(d){if(!S.fired&&wochentag(d)===RK.wochenTag)onlineShopWoche(); /* Online-Shop (K25g), seit Prüfung FS2 auch in der Sommerpause */
+  if(S.phase!=='play')return;const M=mkS(),e=ersterPflichttag(S.my);if(!M.trikot&&e!=null&&d>=e-1)trikotVorstellen('klassisch',true);
+  if(mmtt(d).slice(3)==='01'){const W=RMK.werbewert,start=myT().rep*W.startJeAnsehen;M.ww=Math.round((M.ww+(start-M.ww)*W.zurueck)*10)/10;}}
 // Online-Shop (K25 §2, K25g, 25.11., popolupo, vorläufig): einmalige Investition online.kosten × Ligafaktor (am Verein t.online), danach montags Fans × online.jeFan ×
 // merchFaktor als Einnahme „Fanartikel online“, unabhängig von den Zuschauern. Nur dein Verein (Computer-Vereine investieren noch nicht), kein Zufall, ohne Automatik.
 const onlineKosten=()=>Math.round(RMK.online.kosten*(RMK.ligaFaktor[myT().lg]||RMK.ligaFaktor[3])/1000)*1000;

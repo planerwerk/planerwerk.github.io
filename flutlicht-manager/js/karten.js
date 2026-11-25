@@ -122,7 +122,7 @@ const AUSLOESER={
   lagerkoller(b){const l=lagerAktiv(S.tag);return b&&l&&l.von===b.lager&&S.tag<l.bis?b:null;},
   nachtleben(b){const l=lagerAktiv(S.tag),p=b&&b.spieler!=null?PIX.get(b.spieler):null;return b&&l&&l.von===b.lager&&p&&p.team===S.my?b:null;}, /* b&& seit Prüfung EV5 */
   lagerFreizeit(b){const l=lagerAktiv(S.tag);return b&&l&&l.von===b.lager&&S.tag<l.bis?b:null;}, /* K11j: am selben Tag aus lagerTag */
-  deadlineKrimi(b){const p=b&&PIX.get(b.spieler),t=b&&S.teams[b.verein];return p&&p.team===S.my&&!p.wech&&t&&aktiv(t)&&deadlineLetzter()?b:null;}, /* K20f: am letzten Fenstertag, der Spieler noch bei dir */
+  deadlineKrimi(b){const p=b&&PIX.get(b.spieler),t=b&&S.teams[b.verein];return p&&p.team===S.my&&!p.wech&&t&&aktiv(t)&&deadlineLetzter()&&!S.offers.some(o=>o.pid===p.id)?b:null;}, /* K20f: am letzten Fenstertag, der Spieler noch bei dir, ohne anderes Angebot für ihn (Prüfung FS1) */
   // Manipulation in der 3. Liga fliegt auf (K30 §8.4, K30g): ein Spieler eines Computer-Vereins der 3. Liga (keine zweite Mannschaft, nicht verliehen, kein vereinbarter Wechsel)
   // Prüfung ER1: nicht mehr nach dem letzten Spieltag (sonst zwischen den Relegationsspielen), ER2: höchstens einmal in RKT.skandal.abstand Saisons (S.skandal3)
   manipulation3(){if(ligaFertig(3)||(S.skandal3!=null&&S.season-S.skandal3<RKT.skandal.abstand))return null;const l=S.pl.filter(p=>{const t=p.team>=0&&p.team<1000?S.teams[p.team]:null;return t&&t.id!==S.my&&t.lg===3&&!(t.zweite>=0)&&aktiv(t)&&!p.leihe&&!p.wech&&!p.zwP;});const p=l.length?pick(l):null;return p?{spieler:p.id,verein:p.team}:null;},
@@ -306,7 +306,7 @@ function kartenKette(d){const K=S.karten;if(!K||!K.kette||!K.kette.length)return
 // Urteile der Karten-Verfahren (K09 §4 „Verfahren nach 5–14 Tagen“, K09k, 25.11., popolupo, vorläufig): Die Wirkung verfahren legt S.verfK = [{tag absoluter Tag, s, t dein Verein,
 // b Beteiligte, folge Wirkungen, text Urteil, titel}]. Täglich (ablauf.js) wirken fällige Urteile wie die Karte und kommen als Meldung; nach einem Jobwechsel oder in einer neuen Saison verfallen sie.
 function verfahrenTag(d){const l=S.verfK;if(!l||!l.length)return;const h=absTag(d),f=l.filter(v=>v.tag<=h||v.s!==S.season||v.t!==S.my);if(!f.length)return;S.verfK=l.filter(v=>!f.includes(v));
-  f.forEach(v=>{if(v.s!==S.season||v.t!==S.my||S.fired||v.tag>h)return;const c={titel:v.titel};v.folge.forEach(w=>kartenWirkung(w,v.b,c));news(kartenText(v.text,v.b),'bad');});}
+  mitStrom(strom('verfahren',S.season,d),()=>f.forEach(v=>{if(v.s!==S.season||v.t!==S.my||S.fired||v.tag>h)return;const c={titel:v.titel};v.folge.forEach(w=>kartenWirkung(w,v.b,c));news(kartenText(v.text,v.b),'bad');}));} /* eigener Strom, falls eine Folgewirkung würfelt (Hinweis aus Prüfung FS) */
 // Text mit Platzhaltern, Varianten reihum
 function kartenText(t,b){const p=b.spieler!=null?PIX.get(b.spieler):null,v=b.verein!=null?(b.verein>=AV0?avVon(b.verein):b.verein>=1000?(S.am||[])[b.verein-1000]:S.teams[b.verein]):null; // Auslandsverein und Name eines Ehemaligen seit U18b, Amateurverein seit K30e
   return t.replace(/\{spieler\}/g,p?p.n:(b.name||'ein Spieler')).replace(/\{verein\}/g,v?v.name:'ein Verein').replace(/\{praesident\}/g,'der Präsident')

@@ -2811,3 +2811,16 @@ Korrekturen auf `mitarbeit/popolupo-fr-korrekturen` (auf K09k).
 | FR3 | **Niedrig, Test:** Im Test K13k war „ohne Russland“ trivial grün (kein Russe in den Kadern), der Leistungstest hing am Kader von Verein 6. Jetzt ein starker Russe eines deutschen Vereins (steht im Kader seiner Nation, fährt nicht zur WM) und der Verein eines Abgestellten. | ✅ behoben |
 | FR4 | **Niedrig, Doku:** Im Doku-Abgleich 3 fehlten bei K10 Fehldiagnose und zweite Meinung samt Offenem, bei K15 das Offene; das Protokoll sagte „zehn“ statt neun. Berichtigt (K15 mit K15f). | ✅ behoben |
 | FR5 | **Niedrig, Doku:** K28 §12 Nr. 14 und `_offene-entscheidungen.md` nannten nur drei Nebenziele. Ergänzt um Europapokal, Kader und Zuschauer. | ✅ behoben |
+
+## FS. Prüfung von K15f, K03f, K03g, K08d, K20f, K05g, K25g, K09k und den Korrekturen FR ohne Laufzeit (25. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat c2f814d..5accaef gelesen, nichts ausgeführt. Kein Laufzeit- oder Syntaxfehler, kein zusätzlicher Verbrauch des Hauptstroms, Gleichschritt 5a unberührt, keine älteren Tests rot. Ohne Befund: K15f, K03f, K03g, K08d, K05g, K09k, die Reihenfolge und Sichtbarkeit des Krimi-Angebots (Halt „Frist“, „gilt nur noch heute“), der Katalog (91 Karten), alte Spielstände, die Namen. Hinweis: `verfahrenTag` lief im Tagesstrom; jetzt im eigenen Strom, falls eine Folgewirkung würfelt.
+
+Korrekturen auf `mitarbeit/popolupo-fs-korrekturen` (auf U12q).
+
+| # | Befund | Status |
+|---|---|---|
+| FS1 | **Niedrig:** Das Krimi-Angebot konnte einen unverkäuflichen Spieler treffen, von deiner eigenen Zweiten kommen, und nach einem Wochenmarkt-Angebot desselben Vereins kam die Meldung ohne eigenes Angebot. Jetzt ohne Unverkäufliche, ohne Zweite Mannschaften, und der Auslöser verlangt, dass für den Spieler noch kein Angebot liegt. | ✅ behoben |
+| FS2 | **Niedrig, Spielwerte:** Der Online-Shop brachte bei durchschnittlichen Fans nur 700 bis 2.100 € je Woche (Changelog zu hoch), fehlte im Finanzplan und ruhte im Sommer. Jetzt 0,12 € je Fan, „Fanartikel online“ in `finanzplan.laufend`, Abrechnung auch in der Sommerpause. | ✅ behoben |
+| FS3 | **Niedrig:** Die Schwelle von 10 Heimspielen (FR1) zählte Pokal und Europapokal mit, eine Rückrunde reichte oft. Jetzt 85 % der Liga-Heimspiele einer ganzen Saison (`zuschauerHeimAnteil`, `zuschauerHeimSoll`). | ✅ behoben |
+| FS4 | **Niedrig, Tests:** K20f prüfte mit einem eigenen Wirkungsobjekt, K05g den Ausschluss des Co-Trainers nicht, K25g nicht die Abrechnung über `marketingTag`. Jetzt mit der Katalogkarte und der Reihenfolge im Tageslauf, mit dem Ausschluss über den Quelltext und mit `marketingTag` montags und an einem anderen Tag. | ✅ behoben |
