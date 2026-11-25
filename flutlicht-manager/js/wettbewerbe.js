@@ -155,6 +155,15 @@ function lsRueckkehr(p){const L=RWB.laenderspiele,x=p.lsp;delete p.lsp;if(p.team
 function pokalRotationKader(tid,gid,o){const R=RWB.pokal.rotationKI;if(!R||!R.an||!o||o.wb!=='pokal'||o.runde==null||o.runde>R.bisRunde||tid>=1000||!S.teams[tid]||!stabMacht(tid,'aufstellung'))return undefined;
   if(!(gid>=1000||teamLevel(tid)-teamLevel(gid)>=RWB.pokal.rotation.favorit))return undefined;
   const k=squad(tid).filter(p=>p.fit>=R.frische&&avail(p));return k.length>=R.minKader&&k.some(p=>p.pos==='TW')?k:undefined;}
+// Rotation nach Saisonbelastung (K10 §5, K14 §12, K10f, 25.11., popolupo, vorläufig, nur mit RCV.belastungRotation.an): Im Ligaspiel schont ein Verein, dessen Aufstellung
+// der Stab macht, Feldspieler mit Saisonbelastung ab ab mit chance je Spiel (fest aus dem Seed je Spieltag und Spieler, ohne R()), die am stärksten belasteten zuerst,
+// höchstens max, solange mindestens minKader Einsatzfähige mit Torwart bleiben. tag: Spieltag (Saisontag). Ohne Schalter undefined wie vorher.
+function belastungRotationKader(tid,o,tag){const R=RCV.belastungRotation;if(!R||!R.an||!o||o.test||(o.wb&&o.wb!=='liga')||tid<0||tid>=1000||!S.teams[tid]||!stabMacht(tid,'aufstellung'))return undefined;
+  const k=squad(tid).filter(p=>avail(p)),mued=k.filter(p=>p.pos!=='TW'&&(p.sb||0)>=R.ab&&hash32(['belRot',S.seed,S.season,tag,p.id].join('|'))%1000<R.chance*1000)
+    .sort((a,b)=>(b.sb||0)-(a.sb||0)||a.id-b.id).slice(0,R.max);if(!mued.length)return undefined;
+  const rest=k.filter(p=>!mued.includes(p));return rest.length>=R.minKader&&rest.some(p=>p.pos==='TW')?rest:undefined;}
+// Kader für side(): erst die Pokal-Rotation der Favoriten (K13j), sonst die Rotation nach Saisonbelastung (K10f); beide nur mit ihrem Schalter
+const rotationKader=(tid,gid,o,tag)=>pokalRotationKader(tid,gid,o)||belastungRotationKader(tid,o,tag);
 
 // ---------- Turniere im Sommer (K13 §3.4, K13k) ----------
 // Nur mit Länderspielen. Beim Saisonwechsel eines Turniersommers (Jahr der neuen Saison: Rest 0 bei Division durch 4 EM, Rest 2 WM): Teilnehmer der EM sind die

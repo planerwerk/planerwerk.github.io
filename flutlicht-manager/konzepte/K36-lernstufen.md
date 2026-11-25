@@ -470,6 +470,7 @@ lizenz:{
 227. **K15g Kabine glaubt dir nicht mehr (25.11., popolupo, ohne Testlauf):** keine neue Funktion, eine Ereigniskarte (Bereich `ereignisse`); unter dessen Automatik bindet der Co-Trainer den Mannschaftsrat ein.
 228. **K15h Versprechen kippt (25.11., popolupo, ohne Testlauf):** keine neue Funktion, eine Ereigniskarte (Bereich `ereignisse`); unter dessen Automatik nimmt der Co-Trainer das Versprechen zurück.
 229. **K18i Unsicherheit der Computer-Vereine (25.11., popolupo, ohne Testlauf, Schalter aus):** keine neue Funktion; trifft deinen Verein unter der Transfer-Automatik wie jeden Computer-Verein.
+230. **K10f Rotation nach Saisonbelastung (25.11., popolupo, ohne Testlauf, Schalter aus):** keine neue Funktion; trifft deinen Verein nur, wenn der Co-Trainer aufstellt (Bereich `aufstellung`), dann wie jeden Computer-Verein.
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 

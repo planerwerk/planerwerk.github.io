@@ -20,7 +20,8 @@ const REGELN={
     {k:'integration',pfad:'spieler.integration.wirkung',name:'Integration wirkt im Spiel',text:'Neuzugänge aller Vereine spielen schwächer, bis sie integriert sind (bis 8 %, K03d). Landsleute, die noch wenig Deutsch sprechen, bilden in der Kabine Grüppchen (K14g).'},
     {k:'laenderspiele',pfad:'wettbewerbe.laenderspiele',name:'Länderspiele',text:'Nationalspieler aller Vereine fehlen in den Länderspielpausen und kommen müde zurück (K13f).'},
     {k:'pokalRotation',pfad:'wettbewerbe.pokal.rotationKI',name:'Pokal-Rotation der Favoriten',text:'In den ersten zwei Pokalrunden schonen Favoriten gegen Amateure und deutlich schwächere Gegner Spieler unter 85 % Frische (K13j).'},
-    {k:'kiUnsicherheit',pfad:'computer.unsicherheit',name:'Unsicherheit der Computer-Vereine',text:'Computer-Vereine schätzen fremde Spieler nach der Qualität ihrer Scouts unscharf ein: Fehlkäufe und Schnäppchen (K18i).'}],
+    {k:'kiUnsicherheit',pfad:'computer.unsicherheit',name:'Unsicherheit der Computer-Vereine',text:'Computer-Vereine schätzen fremde Spieler nach der Qualität ihrer Scouts unscharf ein: Fehlkäufe und Schnäppchen (K18i).'},
+    {k:'belastungRotation',pfad:'computer.belastungRotation',name:'Rotation nach Saisonbelastung',text:'Vereine, deren Aufstellung der Stab macht, schonen im Ligaspiel ab und zu Spieler mit hoher Saisonbelastung (K10f).'}],
 
   kalender:{
     maxSprung:7,                     // „Tag beenden“ springt höchstens so viele Tage weit
@@ -417,6 +418,9 @@ const REGELN={
     // unsicherheit (K18 §7, K18i, 25.11., popolupo, vorläufig, Schalter aus): Computer-Vereine sehen fremde Spieler unscharf, Streuung basis − jeScout × Qualität des besten Scouts,
     // mindestens min; fest aus dem Seed je Verein, Spieler und Saison. Wirkt auf Auswahl und Grenzen beim Kauf (kiKandidat, kiStern), nicht auf den Preis.
     unsicherheit:{an:false,basis:4,jeScout:0.15,min:1},
+    // belastungRotation (K10 §5, K14 §12, K10f, 25.11., popolupo, vorläufig, Schalter aus): im Ligaspiel schont ein Verein unter dem Stab Feldspieler ab Saisonbelastung ab mit chance
+    // je Spiel (fest aus dem Seed), höchstens max, solange minKader Einsatzfähige mit Torwart bleiben
+    belastungRotation:{an:false,ab:70,chance:0.35,max:2,minKader:14},
     fuellen:{fenster:0,vereinslosBis:4,vereinslosChance:0.6}}, // fenster: Nummer des Fensters in transfers.fenster, an dessen Ende aufgefüllt wird (0 = Sommer)
 
   // Beziehungsnetz (K17 §5.5, §11, U12c): Werte −100 bis +100. grund: Grundwert für Derby und Rivalität (Paare in daten/vereine.js, DERBYS).

@@ -113,7 +113,7 @@ function spielAufbau(hid,aid,o,saison,tag){const Z=RL.zurufe,hs=hash32(['spiel',
       else if(a.art==='fordern')f*=1+(hatEig(p,'kaempfer')?A.fordern.kaempfer:(hatEig(p,'nervenschwach')||hatEig(p,'diva'))?A.fordern.empfindlich:0)*a.f;}
     const r=G.spielerRuf[p.id];if(r&&m>r.m&&m<=r.m+Z.dauer)f*=1+r.f;return f;};
   G.foulSpieler=id=>{const r=G.spielerRuf[id];return r&&r.fouls&&G.mNow>r.m&&G.mNow<=r.m+Z.dauer?r.fouls:1;};
-const wb=o.wb||'liga',H=mitWettbewerb(wb,()=>side(hid,true,o.neutral,pokalRotationKader(hid,aid,o))),A=mitWettbewerb(wb,()=>side(aid,false,o.neutral,pokalRotationKader(aid,hid,o))),Ss=[H,A]; /* Pokal-Rotation der Favoriten (K13j, nur mit Schalter) */G.schiri=schiriFuer(hid,aid,hs);G.brisant=!o.test&&spielBrisant(hid,aid);taktikAnlegen(Ss,o); /* Derby oder Brisanz (K09d): mehr Karten, kein Würfel */
+const wb=o.wb||'liga',H=mitWettbewerb(wb,()=>side(hid,true,o.neutral,rotationKader(hid,aid,o,tag))),A=mitWettbewerb(wb,()=>side(aid,false,o.neutral,rotationKader(aid,hid,o,tag))),Ss=[H,A]; /* Pokal-Rotation der Favoriten (K13j) oder Rotation nach Saisonbelastung (K10f), nur mit Schalter */G.schiri=schiriFuer(hid,aid,hs);G.brisant=!o.test&&spielBrisant(hid,aid);taktikAnlegen(Ss,o); /* Derby oder Brisanz (K09d): mehr Karten, kein Würfel */
   const xg0=(H.am||A.am)?amateurErwartung(H,A):erwarteteTore(H,A);
   const ev=[],sc=[0,0],yel={},off=new Set(),inj=[],st={besitz:[0,0],schuesse:[0,0],aufsTor:[0,0],ecken:[0,0],fouls:[0,0],gross:[0,0],wege:[[0,0,0],[0,0,0]]},sz=[];
   const fr={};Ss.forEach(sd=>sd.xp.forEach(x=>fr[x.p.id]=x.p.fit));
