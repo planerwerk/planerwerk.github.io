@@ -67,6 +67,7 @@ function welt(lernstufen){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;
   const g=ev('onlineErloes')(t);F.onlineShopWoche();const woche=g>0&&fin()===g&&g===Math.round((t.fans||0)*ev('RMK').online.jeFan*F.merchFaktor(t));
   /* Prüfung FS4: marketingTag rechnet montags ab, an anderen Tagen nicht, seit FS2 auch in der Sommerpause */
   const wt=ev('wochentag'),WT=ev('RK').wochenTag;let mo=S.tag;while(wt(mo)!==WT)mo++;const f1=fin();F.marketingTag(mo+1);const sonst=fin()===f1;S.phase='sommer';F.marketingTag(mo);const montag=fin()===f1+g;S.phase='play';delete t.online;
-  pruef(ohne&&auf&&einmal&&woche&&sonst&&montag,'Online-Shop: einmal kaufen, danach montags Fanartikel online nach Fans, auch im Sommer',`ohne Shop ${ohne}, eröffnet ${auf} (${k}), nur einmal ${einmal}, Woche ${woche} (${g}), anderer Tag ${sonst}, Montag im Sommer ${montag}`);}
+  const plan=ev('REGELN').finanzplan.laufend.includes('Fanartikel online'); /* Prüfung FT3 zu FS2: geht in die Prognose ein */
+  pruef(ohne&&auf&&einmal&&woche&&sonst&&montag&&plan,'Online-Shop: einmal kaufen, danach montags Fanartikel online nach Fans, auch im Sommer, im Finanzplan',`ohne Shop ${ohne}, eröffnet ${auf} (${k}), nur einmal ${einmal}, Woche ${woche} (${g}), anderer Tag ${sonst}, Montag im Sommer ${montag}, Finanzplan ${plan}`);}
 
 console.log(probleme.length?`\n${probleme.length} Problem(e).`:'\nAlles in Ordnung.');process.exitCode=probleme.length?1:0;

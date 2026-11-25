@@ -1,11 +1,12 @@
 // Aktionen des Spielers.
 // Beim Öffnen der Aufstellung wird die Startelf mit den Ausfällen abgeglichen und gespeichert (Erinnerung „Aufstellung“ erledigt)
 function tab(k){TAB=k;if(k==='aufst'&&S){S.lineup=myXI();save();}render();window.scrollTo(0,0);}
-function setSlot(i,id){if(!darf('aufstellung','startelf'))return;id=+id;const xi=myXI(),j=xi.indexOf(id);if(j>=0)xi[j]=xi[i];xi[i]=id;S.lineup=xi;save();render();}
+function setSlot(i,id){const xi=myXI().slice();if(!darf('aufstellung','startelf'))return;id=+id;const j=xi.indexOf(id);if(j>=0)xi[j]=xi[i];xi[i]=id;S.lineup=xi;save();render();} /* Prüfung FT1: die angezeigte Elf (auch die des Co-Trainers) vor darf sichern, darf schaltet dessen Automatik ab */
 // Aufstellung per Ziehen und Ablegen (K35 §5, K06 §2, K35c, 25.11., popolupo, vorläufig): Ein Platz im Spielfeld oder ein Reservist wird auf einen Platz gezogen,
 // das wirkt wie die Auswahl im Platz (setSlot, tauscht bei Bedarf). Daten im Ziehen: „s:Platz“ oder „p:Spieler“. Ohne Touch-Unterstützung, die Auswahllisten bleiben.
-function aufDrag(e,art,v){if(!darf('aufstellung'))return;try{e.dataTransfer.setData('text/plain',art+':'+v);e.dataTransfer.effectAllowed='move';}catch(x){}}
-function aufDrop(e,i){if(e&&e.preventDefault)e.preventDefault();if(!darf('aufstellung'))return;let d='';try{d=e.dataTransfer.getData('text/plain')||'';}catch(x){}const [art,v]=d.split(':');
+// Seit Prüfung FT1 Helfer ohne eigenes darf: Das Ziehen prüft nur frei(), damit ein abgebrochenes Ziehen die Automatik nicht abschaltet; den Bereich prüft setSlot beim Ablegen.
+function aufDrag(e,art,v){if(!frei('aufstellung'))return;try{e.dataTransfer.setData('text/plain',art+':'+v);e.dataTransfer.effectAllowed='move';}catch(x){}}
+function aufDrop(e,i){if(e&&e.preventDefault)e.preventDefault();let d='';try{d=e.dataTransfer.getData('text/plain')||'';}catch(x){}const [art,v]=d.split(':');
   if(art==='s'){const k=+v,id=myXI()[k];if(id!=null&&k!==i)setSlot(i,id);}else if(art==='p'&&v!==''&&v!=null)setSlot(i,+v);}
 function setForm(f){if(!darf('formation','ordnung'))return;myT().form=f;S.lineup=besteElfDu();save();render();} // ohne Tribüne (Prüfung FI4)
 function setTac(v){if(!darf(v==='SD'||v==='SO'?'ausrichtung5':'ausrichtung3','ordnung'))return;myT().tac=v;save();render();}

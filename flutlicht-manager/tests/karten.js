@@ -765,8 +765,12 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   const k=n(),gelegt=k.length===1&&k[0].tag===abs(d),b=gelegt?k[0].b:null,vorher=!!b&&A.deadlineKrimi(b)===null;S.tag=d;const amTag=!!b&&A.deadlineKrimi(b)===b;let angebot=false;
   if(b){const kc=ev('karteVon')('deadlineKrimi');kc.wirkung.forEach(w=>ev('kartenWirkung')(w,b,kc));const o=S.offers[0]/* FS4: mit der Katalogkarte */,p=ev('PIX').get(b.spieler);angebot=!!o&&o.bis===S.tag&&o.tid===b.verein&&o.amt===ev('rundeAb')(ev('value')(p)*1.25);}
   ev('karten')().kette=[];S.offers=[];F.lizenzStart(true);S.lizenz.auto.transfers=true;S.tag=d-1;F.deadlineKrimi(d-1);const auto=ev('autoB')('transfers')&&n().length===0;delete S.lizenz;K.chance=c0;const tl=String(ev('taeglichLauf')),reihe=tl.indexOf('kartenKette(d)')>0&&tl.indexOf('kartenKette(d)')<tl.indexOf('deadlineTag(d)'); /* FS4: Folgekarten vor dem Markt */
-  pruef(d<S.plan.ende&&gelegt&&vorher&&amTag&&angebot&&auto&&reihe,'Deadline-Day-Krimi: Folgekarte für den letzten Fenstertag, Angebot nur für heute, nicht unter der Automatik',
-    `letzter Tag ${d}, gelegt ${gelegt}, vorher ${vorher}, am Tag ${amTag}, Angebot ${angebot}, Automatik ${auto}, Reihenfolge ${reihe}`);}
+  /* Prüfung FT3 zu FS1: keine Karte für Unverkäufliche, nie von einer Zweiten, kein Auslöser, wenn für den Spieler schon ein Angebot liegt */
+  K.chance=1;S.tag=d-1;ev('karten')().kette=[];S.unv={};ev('squad')(S.my).forEach(p=>{S.unv[p.id]=1;});F.deadlineKrimi(d-1);const unv=n().length===0;S.unv={};
+  const c2=new Map(S.teams.map(t=>[t.id,t.cash]));S.teams.forEach(t=>{t.cash=t.zweite>=0?1e9:0;});ev('karten')().kette=[];F.deadlineKrimi(d-1);const ohneZweite=n().length===0;S.teams.forEach(t=>{t.cash=c2.get(t.id);});K.chance=c0;
+  let mitAngebot=false;if(b){S.tag=d;S.offers=[{pid:b.spieler,tid:b.verein,amt:1,max:1,r:0,bis:d}];mitAngebot=A.deadlineKrimi(b)===null;S.offers=[];}
+  pruef(d<S.plan.ende&&gelegt&&vorher&&amTag&&angebot&&auto&&reihe&&unv&&ohneZweite&&mitAngebot,'Deadline-Day-Krimi: Folgekarte für den letzten Fenstertag, Angebot nur für heute, nicht unter der Automatik, nicht für Unverkäufliche, nie von einer Zweiten',
+    `letzter Tag ${d}, gelegt ${gelegt}, vorher ${vorher}, am Tag ${amTag}, Angebot ${angebot}, Automatik ${auto}, Reihenfolge ${reihe}, unverkäuflich ${unv}, Zweite ${ohneZweite}, schon ein Angebot ${mitAngebot}`);}
 
 // K09k. Verfahren (K09 §4): Die Rudelbildung urteilt nicht mehr sofort. Die Wirkung verfahren legt das Urteil verfahren.tage später (fest aus dem Seed), verfahrenTag
 //       zahlt dann die Strafe und meldet das Urteil; vorher nichts, nach einem Jobwechsel verfällt es.
@@ -788,7 +792,9 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
 {const {S,ev}=welt(),A=ev('AUSLOESER'),p=ev('squad')(S.my)[0],c=ev('karteVon')('versprechenKippt'),gl=ev('glaub');S.vs=[];const ohne=A.versprechenKippt()===null;
   const v=ev('versprechenAnlegen')(p,'einsatz');const frisch=A.versprechenKippt()===null;v.spiele=v.n-1;v.min=0;const b=A.versprechenKippt(),ja=!!b&&b.spieler===p.id&&b.vid===v.id;
   p.st=50;const g0=gl(),ww0=p.ww||0;if(b)c.optionen[0].wirkung.forEach(w=>ev('kartenWirkung')(w,b,c));
-  const zurueck=v.stand==='hinfaellig'&&p.st===45&&gl()===g0-3&&(p.ww||0)===ww0&&A.versprechenKippt()===null;S.vs=[];
-  pruef(ohne&&frisch&&ja&&zurueck,'Versprechen kippt: Karte nur, wenn das Versprechen kaum noch zu halten ist; zurücknehmen kostet weniger als brechen',`ohne ${ohne}, frisch ${frisch}, kippt ${ja}, zurückgenommen ${zurueck} (${v.stand}, Stimmung ${p.st})`);}
+  const zurueck=v.stand==='hinfaellig'&&p.st===45&&gl()===g0-3&&(p.ww||0)===ww0&&A.versprechenKippt()===null;
+  /* Prüfung FT2: Hat sich das Versprechen bis zur Entscheidung schon erledigt (etwa durch einen Verkauf), kostet das Zurücknehmen nichts */
+  const st1=p.st,g1=gl();if(b)c.optionen[0].wirkung.forEach(w=>ev('kartenWirkung')(w,b,c));const umsonst=p.st===st1&&gl()===g1;S.vs=[];
+  pruef(ohne&&frisch&&ja&&zurueck&&umsonst,'Versprechen kippt: Karte nur, wenn das Versprechen kaum noch zu halten ist; zurücknehmen kostet weniger als brechen, erledigt nichts',`ohne ${ohne}, frisch ${frisch}, kippt ${ja}, zurückgenommen ${zurueck} (${v.stand}, Stimmung ${p.st}), schon erledigt ${umsonst}`);}
 
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

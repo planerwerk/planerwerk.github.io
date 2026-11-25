@@ -21,7 +21,7 @@ const punkte=(S,F,id)=>{const lg=S.teams[id].lg,r=F.table(lg).find(x=>x.id===id)
   const ohne=Object.keys(B).filter(b=>B[b].ab>1&&!mitSperre.has(b));
   pruef(!ohne.length,'Jeder Bereich ab der C-Lizenz hat eine Sperre an seiner Aktion',ohne.length?'ohne Sperre: '+ohne.join(', '):`${mitSperre.size} Bereiche mit Sperre`);
   // Aktionen des Spielers: jede Funktion in js/aktionen.js prüft ihren Bereich (Ausnahmen: Helfer ohne Entscheidung)
-  const helfer=['tab','bauLabel','bauKosten','bauWochen','bauVoll','abfindung','sgVerfahren'],fehlt=[];
+  const helfer=['tab','bauLabel','bauKosten','bauWochen','bauVoll','abfindung','sgVerfahren','aufDrag','aufDrop'],fehlt=[]; /* aufDrag, aufDrop (K35c, Prüfung FT1): setSlot prüft den Bereich */
   for(const m of code['aktionen.js'].matchAll(/^function (\w+)\([^)]*\)\{(.*)$/gm)){if(!helfer.includes(m[1])&&!/darf\(/.test(m[2]))fehlt.push(m[1]);}
   pruef(!fehlt.length,'Jede Aktion in js/aktionen.js prüft ihren Bereich',fehlt.join(', ')||null);
   const live=['liveZuruf','liveSpielerZuruf','liveTaktik','liveRein','liveAnsprache','liveReihe'].filter(f=>{const m=code['live.js'].match(new RegExp('^function '+f+'\\([^)]*\\)\\{(.*)$','m'));return !m||!(/darf\(/.test(m[1])||f==='liveRein');});

@@ -2824,3 +2824,16 @@ Korrekturen auf `mitarbeit/popolupo-fs-korrekturen` (auf U12q).
 | FS2 | **Niedrig, Spielwerte:** Der Online-Shop brachte bei durchschnittlichen Fans nur 700 bis 2.100 € je Woche (Changelog zu hoch), fehlte im Finanzplan und ruhte im Sommer. Jetzt 0,12 € je Fan, „Fanartikel online“ in `finanzplan.laufend`, Abrechnung auch in der Sommerpause. | ✅ behoben |
 | FS3 | **Niedrig:** Die Schwelle von 10 Heimspielen (FR1) zählte Pokal und Europapokal mit, eine Rückrunde reichte oft. Jetzt 85 % der Liga-Heimspiele einer ganzen Saison (`zuschauerHeimAnteil`, `zuschauerHeimSoll`). | ✅ behoben |
 | FS4 | **Niedrig, Tests:** K20f prüfte mit einem eigenen Wirkungsobjekt, K05g den Ausschluss des Co-Trainers nicht, K25g nicht die Abrechnung über `marketingTag`. Jetzt mit der Katalogkarte und der Reihenfolge im Tageslauf, mit dem Ausschluss über den Quelltext und mit `marketingTag` montags und an einem anderen Tag. | ✅ behoben |
+
+## FT. Prüfung von K35c, U12q, K15g, K15h und den Korrekturen FS ohne Laufzeit (25. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 5accaef..de29719 gelesen, nichts ausgeführt. Kein Laufzeit- oder Syntaxfehler, kein zusätzlicher Verbrauch des Hauptstroms, Gleichschritt 5a unberührt, keine älteren Tests rot. Ohne Befund: Ziehen im Browser plausibel (Ereignisse, `text/plain`, `preventDefault`), Lizenz-Test 1, U12q, `marketingTag` in den Phasen `play` und `sommer`, `zuschauerHeimSoll`, `verfahrenTag`, K15g, Doku, Namen.
+
+Korrekturen auf `mitarbeit/popolupo-ft-korrekturen` (auf K15h).
+
+| # | Befund | Status |
+|---|---|---|
+| FT1 | **Niedrig:** `aufDrag` rief `darf` schon beim Anfassen; ein abgebrochenes Ziehen schaltete die Automatik der Aufstellung still ab, danach rechnete `setSlot` mit `S.lineup` statt der angezeigten Elf. Jetzt prüft das Ziehen nur `frei`, `aufDrag` und `aufDrop` sind Helfer (Lizenz-Test 1), und `setSlot` sichert die angezeigte Elf vor `darf`. | ✅ behoben |
+| FT2 | **Niedrig:** „Versprechen zurücknehmen“ kostete auch dann, wenn sich das Versprechen bis zur Entscheidung schon erledigt hatte (etwa durch einen Verkauf). Jetzt meldet `versprechenZurueck` Erfolg (`KARTEN_MIT_ERFOLG`), Stimmung und Glaubwürdigkeit kommen als `dann`. | ✅ behoben |
+| FT3 | **Niedrig, Tests:** FS1 (Unverkäufliche, Zweite, schon vorhandenes Angebot) und „Fanartikel online“ im Finanzplan waren ungetestet. Ergänzt in den Fällen K20f und K25g. | ✅ behoben |
+| FT4 | **Niedrig, Doku:** Das Protokoll nannte K15g und K15h nicht unter den noch nicht durchgesehenen Schritten. Berichtigt. | ✅ behoben |
