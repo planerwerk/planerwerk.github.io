@@ -91,7 +91,7 @@ Keine in `regeln.js`. Farben und Abstände als CSS-Variablen in `css/spiel.css`.
 - **Vertraut und intuitiv statt Retro.** Wer ein aktuelles Sportspiel oder eine Handy-App kennt, soll sich ohne Erklärung zurechtfinden. Retro-Anklänge (Anzeigetafel, Flutlicht) bleiben als Würze, nicht als Stil.
 - **Kacheln als Grundform.** Jede Ansicht besteht aus Kacheln: eine Kachel, ein Thema, eine Kennzahl, ein klarer nächster Schritt. Das wirkt freundlich und ordnet von selbst.
 - **Nicht wie Tableau oder Excel.** Tabellen bleiben, wo man vergleichen muss (Ligatabelle, Kaderliste, Finanzen), aber nie als Startseite und nie als einziger Inhalt einer Ansicht. Auf dem Handy werden lange Tabellen zu Listen aus kleinen Karten.
-- **Dein Verein im Mittelpunkt.** Die Vereinsfarbe aus `daten/vereine.js` färbt Akzente (Streifen der Kacheln, Kopfzeile), so fühlt sich jede Karriere anders an.
+- **Dein Verein im Mittelpunkt.** Die Vereinsfarbe aus `daten/vereine.js` färbt Kopfband, Wappen und die eigene Tabellenzeile (nicht Knöpfe oder Status, §13.3), so fühlt sich jede Karriere anders an.
 
 ### 13.2 Kachel-System
 
@@ -102,7 +102,7 @@ Keine in `regeln.js`. Farben und Abstände als CSS-Variablen in `css/spiel.css`.
 | klein | 1 × 1 | eine Kennzahl mit Trend | Konto, Vertrauen, Stimmung, Verletzte, Fitness |
 
 - **Aufbau einer Kachel:** Titel klein oben, Kennzahl groß, darunter eine Zeile Erklärung oder Trend (Pfeil mit Wert), unten rechts höchstens eine Aktion („Aufstellen“, „Antworten“). Die ganze Kachel ist anklickbar und führt in die Ansicht.
-- **Zustand:** Ein farbiger Rand links (gut, Achtung, schlecht) immer zusammen mit einem Symbol (✓, !, ✕), nie Farbe allein.
+- **Zustand:** eine kleine Marke oben rechts in der Kachel mit Symbol und Wort (✓ gut, ! Achtung, ✕ kritisch, i Info), nie Farbe allein. Geändert beim Bau der Look-Studie (25.11.): kein farbiger Rand links, der wirkt schnell beliebig und trägt ohne Symbol nichts.
 - **Raster:** 4 Spalten ab 1.100 px, 2 Spalten ab 600 px, 1 Spalte darunter. Kacheln ordnen sich selbst an, große Kacheln werden auf dem Handy volle Breite.
 - **Startseite (Büro) als Kachelfläche:** Nächstes Spiel (groß), Posteingang (breit), Tabelle (breit), Konto, Vertrauen, Stimmung, Verletzte und Sperren, Training dieser Woche, Transfers, Termine (klein). Die heutige Reiterleiste bleibt als Navigation oben (Handy: unten), die Kacheln ersetzen die Textblöcke.
 - **Bewegung:** Kacheln heben sich beim Zeigen leicht an (Schatten), beim Antippen kurz gedrückt. Aus bei „weniger Bewegung“.
@@ -121,10 +121,11 @@ Keine in `regeln.js`. Farben und Abstände als CSS-Variablen in `css/spiel.css`.
 |---|---|---|---|---|
 | **A Flutlichtnacht** (Vorschlag) | Nachtblau `#0e1726` | Schiefer `#17233a` | Flutlichtgelb `#ffc83d` | dunkel, ruhig, Stadion am Abend; die heutige grüne Fläche wird blau, Grün bleibt für „gut“ frei |
 | **B Rasen** | Tiefgrün `#0f1f18` | `#183027` | Kreideweiß mit Gelb | nah am heutigen Look, aber Grün hat dann zwei Bedeutungen |
-| **C Tageslicht** (hell) | Hellgrau `#f3f5f8` | Weiß | Vereinsfarbe, sonst Blau `#2563eb` | freundlich, für Tagsüber und helle Umgebungen |
+| **C Tageslicht** (hell) | Hellgrau `#f3f5f8` | Weiß | Blau `#2563eb` | freundlich, für Tagsüber und helle Umgebungen |
 
 - **Vorläufig:** A als Standard, C als helles Thema (umschaltbar, Systemvorgabe), B entfällt. Gut `#3ecf8e`, Achtung `#ffb020`, Schlecht `#f2555a`, Information `#5aa9ff` in A; in C dunkler, damit 4,5 : 1 auf Weiß hält.
-- **Vereinsfarbe:** als Streifen und Akzent nur, wenn sie auf der Grundfläche mindestens 3 : 1 erreicht; sonst eine aufgehellte oder abgedunkelte Stufe derselben Farbe (automatisch berechnet).
+- **Vereinsfarbe nur für die Identität:** Kopfband, Wappen, eigene Tabellenzeile. Nie für Knöpfe oder Status, sonst verwechselt man ein rotes Vereinsband mit „kritisch“ (gefunden beim Bau der Look-Studie). Die Aktionsfarbe bleibt fest: Flutlichtgelb im dunklen, Blau im hellen Thema. Erreicht die Vereinsfarbe auf der Grundfläche keine 3 : 1, hellt oder dunkelt das Spiel sie in Stufen von 10 % ab, bis es reicht.
+- **Look-Studie (W5a, 25.11.):** als Entwurf zum Anschauen gebaut (Büro als Kachelfläche für Desktop und Handy, Farbstudie mit live berechneten Kontrasten und einer Simulation der Rot-Grün-Schwäche, Schrift mit ersten Zeichen der eigenen Anzeigeschrift, Titelbildschirm mit den BMH-Leitsprüchen, Ladebildschirm). Kein Spielcode.
 
 ### 13.4 Schrift
 
@@ -146,7 +147,7 @@ Keine in `regeln.js`. Farben und Abstände als CSS-Variablen in `css/spiel.css`.
 
 ### 13.6 Umsetzung (Welle 5, Reihenfolge vorläufig)
 
-1. **W5a Look-Studie** (Entwurf zum Anschauen, kein Spielcode): Paletten, Kacheln, Schriftproben, Startseite als Kachelfläche.
+1. ✅ **W5a Look-Studie** (25.11., Entwurf zum Anschauen, kein Spielcode): Paletten, Kacheln, Schriftproben, Startseite als Kachelfläche, Titel- und Ladebildschirm.
 2. **W5b Farbsystem:** Farbtokens neu (Palette A und C), Kontrasttest, Umschalter hell und dunkel.
 3. **W5c Kacheln:** Baustein `kachel()` in `js/regler.js`, Startseite (Büro) als Kachelfläche, dann Ansicht für Ansicht.
 4. **W5d Eigene Schrift:** Zeichen entwerfen, TrueType erzeugen, einbinden.
