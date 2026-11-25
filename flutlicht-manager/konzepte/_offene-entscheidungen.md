@@ -159,7 +159,7 @@ Bei der Umsetzung (U7b):
 12. **Fit spritzen** geht nur am Spieltag. Computer-Vereine spritzen nur in wichtigen Spielen (Pokal ab Runde 3, Relegation) und nur Stammspieler mit höchstens 10 Tagen Ausfall. Verschlimmerung: Prellung → Faserriss, Bänderdehnung → Bänderriss, Rücken/Leiste → Zerrung, Bruch (Nase) bekommt 7 Tage mehr.
 13. **Robustheit und „verletzungsanfällig“** wirken beide (1,6 − 0,06 × Robustheit und ×1,6), wie in 5.1. Ein Anfälliger (Robustheit 1–4) verletzt sich damit gut doppelt so oft wie der Durchschnitt, nicht nur 60 % öfter, wie der Merkmalstext sagt. Prüfen.
 14. **Lernstufen (K36):** Verletztenliste und Diagnose ab Stufe 1 (nur Information), fit spritzen und früher zurückholen ab Stufe 4. Davor entscheidet der Arzt nach den Regeln der Computer-Vereine.
-15. **Noch nicht gebaut:** zweite Meinung, Fehldiagnose, Pflichtwechsel und Zusatzwechsel bei Gehirnerschütterung, Ereignisse aus §8, Saisonbilanz der Ausfalltage in der Saisonzusammenfassung (die Bilanz steht in der Verletztenliste im Kader), Reha-Zentrum (K26), Rotation der Computer-Vereine nach Saisonbelastung. **Stand 25.11.2026:** Gebaut sind die Ausfalltage in der Saisonbilanz (K10d), Grippewelle und lange Reha (K10e), „Arzt widerspricht“ (K16d) mit der Haltung des Arztes (K16i). Einzelheiten in K10 Nr. 15.
+15. **Noch nicht gebaut:** zweite Meinung, Fehldiagnose, Pflichtwechsel und Zusatzwechsel bei Gehirnerschütterung, Ereignisse aus §8, Saisonbilanz der Ausfalltage in der Saisonzusammenfassung (die Bilanz steht in der Verletztenliste im Kader), Reha-Zentrum (K26), Rotation der Computer-Vereine nach Saisonbelastung. **Stand 25.11.2026:** Gebaut sind die Fehldiagnose (K10b), die zweite Meinung (K10c), die Ausfalltage in der Saisonbilanz (K10d), Grippewelle und lange Reha (K10e), „Arzt widerspricht“ (K16d) mit der Haltung des Arztes (K16i). Offen bleiben Pflicht- und Zusatzwechsel bei Gehirnerschütterung, „Spieler verheimlicht Verletzung“, das Reha-Zentrum (K26) und die Rotation der Computer-Vereine nach Saisonbelastung. Einzelheiten in K10 Nr. 15 (berichtigt nach Prüfung FR4).
 
 ## K11 – Freundschaftsspiele und Trainingslager
 Datei: `konzepte/K11-testspiele.md`
@@ -286,7 +286,7 @@ Bei der Umsetzung (U8):
 17. **Erinnerung** „Versprechen droht zu kippen“ am Spieltag, abschaltbar.
 18. **Vereinswechsel:** offene Zusagen hinfällig.
 19. **Lernstufen (K36):** Gespräche und Mannschaftsansprache ab C, Versprechen ab B.
-20. **Noch nicht gebaut:** Gespräche mit dem Vorstand, öffentliche Kritik und Presse, Karten aus §8. **Stand 25.11.2026:** Das Budgetgespräch mit dem Vorstand gibt es seit U12l, öffentliche Kritik in der Pressekonferenz seit U17a, „Streit nach Kritik“ seit K15e als Karte. Einzelheiten in K15 Nr. 20.
+20. **Noch nicht gebaut:** Gespräche mit dem Vorstand, öffentliche Kritik und Presse, Karten aus §8. **Stand 25.11.2026:** Das Budgetgespräch mit dem Vorstand gibt es seit U12l, öffentliche Kritik in der Pressekonferenz seit U17a, „Streit nach Kritik“ seit K15e und „Spieler fordert Versprechen ein“ seit K15f als Karten. Offen bleiben „Versprechen kippt“ und „Kabine glaubt dir nicht mehr“ als Karten, sie kommen als Erinnerung und Meldung. Einzelheiten in K15 Nr. 20 (berichtigt nach Prüfung FR4).
 
 ## K16 – Trainerstab und Mitarbeiter
 Datei: `konzepte/K16-stab.md`
@@ -819,7 +819,7 @@ Im Einzelnen in K28 §5.6 und §12 Nr. 5 bis 12.
 
 Im Einzelnen in K28 §5.7 und §12 Nr. 13 bis 17.
 
-- **Nebenziele:** Der Vorstand setzt eins, ein ehrgeiziger Präsident zwei. Zur Wahl stehen Pokalrunde, Einsätze für Spieler bis 21 und eine Saison ohne Verlust. Das Profil deines Vereins bestimmt, welches zuerst kommt. Sie wirken auf das Vertrauen, während der Saison und zum Saisonende.
+- **Nebenziele:** Der Vorstand setzt eins, ein ehrgeiziger Präsident zwei. Zur Wahl stehen Pokalrunde, Einsätze für Spieler bis 21 und eine Saison ohne Verlust (seit U19c auch der Europapokal, seit U12o Gehälter im Rahmen und der Heimschnitt der Vorsaison; berichtigt nach Prüfung FR5). Das Profil deines Vereins bestimmt, welches zuerst kommt. Sie wirken auf das Vertrauen, während der Saison und zum Saisonende.
 - **Rücktritt:** jederzeit während der Saison, Ruf −5 statt −8 bei einer Entlassung, danach Jobangebote. Grundlizenz.
 - **Zielgespräch** mit Tiefstapeln und Hochpokern wartet auf Budgets und Prämien (K23). Gebaut am 22.11. in U12e (nächster Abschnitt).
 

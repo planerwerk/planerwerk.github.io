@@ -162,7 +162,7 @@ Das **Zielgespräch** mit Tiefstapeln und Hochpokern (§5.2) wartet: Seine Folge
 - **Baustein „Ziele“ im Vertrauen** (§5.1, −10 bis +10, montags): erfüllt +5, verfehlt −5. Finanzen mit Verlust bis jetzt: −3 („gefährdet“).
 - **Saisonende:** je erfülltem Nebenziel Vertrauen +5, je verfehltem −5, mit Meldung. Das geschieht vor der Prüfung auf Entlassung zum Saisonende.
 - **Anzeige:** im Büro unter dem Saisonziel, mit Stand.
-- Kader (Gehaltssumme) und Zuschauer (§3.1) gibt es seit U12o (25.11.2026, popolupo, ohne Testlauf, vorläufig): **Kader** heißt, die Gehälter liegen am Saisonende im Gehaltsrahmen des Vorstands (K23), darüber „gefährdet“. **Zuschauer** heißt, der Heimschnitt erreicht 95 % des Schnitts der Vorsaison; das Nebenziel gibt es nur nach einer ganzen Saison bei diesem Verein in derselben Liga, „gefährdet“ erst ab drei Heimspielen darunter. Beide nimmt der Vorstand in die Auslosung auf, das Profil kommt weiter zuerst.
+- Kader (Gehaltssumme) und Zuschauer (§3.1) gibt es seit U12o (25.11.2026, popolupo, ohne Testlauf, vorläufig): **Kader** heißt, die Gehälter liegen am Saisonende im Gehaltsrahmen des Vorstands (K23), darüber „gefährdet“. **Zuschauer** heißt, der Heimschnitt erreicht 95 % des Schnitts der Vorsaison; das Nebenziel gibt es nur nach einer ganzen Saison bei diesem Verein in derselben Liga (seit Prüfung FR1: mindestens 10 Heimspiele in der Vorsaison, `zusN` in `S.hist`), „gefährdet“ erst ab drei Heimspielen darunter. Beide nimmt der Vorstand in die Auslosung auf, das Profil kommt weiter zuerst.
 
 **Rücktritt** (§5.3, **neue Funktion**, Bereich `ruecktritt`, Grundlizenz, ohne Automatik, K36):
 
@@ -381,7 +381,7 @@ vorstand:{
 **Vorläufig entschieden mit U12b** (20.11., von mir, ohne Rücksprache und ohne Testlauf):
 
 13. **Zielgespräch verschoben, bis K23 Budgets hat** (§5.7). Damit ist §5.2 ganz offen. U12b besteht aus Nebenzielen und Rücktritt.
-14. **Drei Nebenziele statt fünf:** Pokal, Jugend, Finanzen. Für Kader und Zuschauer fehlen Gehaltsrahmen und K27.
+14. **Drei Nebenziele statt fünf:** Pokal, Jugend, Finanzen. Für Kader und Zuschauer fehlen Gehaltsrahmen und K27. Seit U12o (25.11.2026) gibt es auch Kader (Gehälter im Rahmen) und Zuschauer (Heimschnitt der Vorsaison), dazu seit U19c den Europapokal; berichtigt nach Prüfung FR5.
 15. **Jugend in Einsätzen statt Minuten:** Das Spiel zählt Einsätze je Spieler (`apps`), keine Minuten. 25 Einsätze entsprechen grob einem Talent, das zwei Drittel der Ligaspiele bestreitet.
 16. **Ehrgeiz des Präsidenten wirkt:** ab 14 zwei Nebenziele. Damit ist neben der Geduld der zweite Charakterwert in Gebrauch.
 17. **Rücktritt in der Grundlizenz:** Er ist eine Karriere-Entscheidung, keine Fähigkeit, die man lernen muss.

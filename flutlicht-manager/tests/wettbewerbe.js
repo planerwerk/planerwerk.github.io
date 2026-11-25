@@ -155,13 +155,16 @@ pruef(supercups.length===N-1&&supercups.every(x=>!x.verl&&(x.hg!==x.ag)===!x.pen
   /* Prüfung FQ2: wie ein Turnierbaum genau ein Titel, ein Finale, zwei Halbfinale; der Sieger ist der mit dem Titel und steht in der Meldung */
   const teil=ev('NATIONEN').map(n=>ev('nation')(n[0])).filter(n=>n&&n.rang&&U.includes(n.k)).sort((a,b)=>a.rang-b.rang).slice(0,T.em),koE=T.stufenEm.length-2,rr=ev('turnierRunden')(teil,koE,T);
   const zahl=r=>[...rr.erg.values()].filter(x=>x===r).length,baum=zahl(koE+1)===1&&zahl(koE)===1&&zahl(koE-1)===2&&zahl(0)===T.em-2**koE&&rr.erg.get(rr.sieger.k)===koE+1&&String(SA.news[0].t).includes(`Sieger ist ${rr.sieger.name}`);
-  SA.pl.forEach(p=>{delete p.lsp;});SA.season=2030;FA.turnierSommer();const wm=String(SA.news[0].t).includes('WM 2030'),ohneRus=!SA.pl.some(p=>p.lsp&&T.gesperrt.includes(p.nat)); /* FQ4 */
-  /* FQ3: wer noch beim Turnier ist, fehlt beim Leistungstest */
-  const mein=SA.pl.find(p=>p.team===6&&p.lsp&&!(p.inj>0));let ltOk=true;if(mein){mein.ko=1;FA.leistungstest();ltOk=!SA.lt.ids.includes(mein.id);}
+  /* FQ4 mit Prüfung FR3: ein starker Russe eines deutschen Vereins stünde im Kader seiner Nation, fährt aber nicht zur WM */
+  const AV=ev('AV0'),ru=SA.pl.find(p=>p.team>=0&&p.team<AV&&!(p.inj>0)&&!U.includes(p.nat)),ru0={nat:ru.nat,str:ru.str,form:ru.form,sp:ru.sp};Object.assign(ru,{nat:'RUS',str:200,form:10,sp:100});
+  const imKader=(ev('lsKader')().get('RUS')||[]).includes(ru);
+  SA.pl.forEach(p=>{delete p.lsp;});SA.season=2030;FA.turnierSommer();const wm=String(SA.news[0].t).includes('WM 2030'),ohneRus=imKader&&!ru.lsp&&!SA.pl.some(p=>p.lsp&&T.gesperrt.includes(p.nat));Object.assign(ru,ru0);
+  /* FQ3 mit FR3: wer noch beim Turnier ist, fehlt beim Leistungstest; dafür der Verein eines Abgestellten */
+  const mein=SA.pl.find(p=>p.team>=0&&p.team<AV&&p.lsp&&!(p.inj>0));let ltOk=false;if(mein){const my0=SA.my;SA.my=mein.team;mein.ko=1;FA.leistungstest();ltOk=!!SA.lt&&!SA.lt.ids.includes(mein.id);SA.my=my0;}
   SA.pl.forEach(p=>{delete p.lsp;});L.an=false;SA.season=s0;
   const aufruf=String(ev('newSeasonLauf')).includes('turnierSommer();S.lineup=besteElfDu()');
   pruef(aus&&keins&&em&&baum&&wm&&ohneRus&&ltOk&&aufruf,'Turniere im Sommer: nur mit Schalter und im Turnierjahr, EM nur mit Europäern, Turnierbaum, Spiele und Belastung, WM ohne Gesperrte, Leistungstest ohne Abgestellte',
-    `aus ${aus}, kein Turnier ${keins}, EM ${em} (${nom.length} Spieler), Baum ${baum} (Sieger ${rr.sieger.name}), WM ${wm}, ohne Gesperrte ${ohneRus}, Leistungstest ${ltOk}${mein?'':' (kein eigener Abgestellter)'}, Aufruf ${aufruf}`);}
+    `aus ${aus}, kein Turnier ${keins}, EM ${em} (${nom.length} Spieler), Baum ${baum} (Sieger ${rr.sieger.name}), WM ${wm}, ohne Gesperrte ${ohneRus}, Leistungstest ${ltOk}${mein?'':' (kein Abgestellter)'}, Aufruf ${aufruf}`);}
 
 console.log(`\n${N} Saison(s) in ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

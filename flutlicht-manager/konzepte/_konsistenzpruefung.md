@@ -2797,3 +2797,17 @@ Korrekturen auf `mitarbeit/popolupo-fq-korrekturen` (auf U12p).
 | FQ5 | **Niedrig:** Die Länderspiel-Karten würfelten auch ohne Schalter mit und verschoben den Kartenstrom deines Vereins. Jetzt das Feld `nurMit:'laenderspiele'` im Katalog, `kartenSchalterAn` filtert vor dem Mischen (betrifft auch `bundestrainer` und `lsVerletzung`). | ✅ behoben |
 | FQ6 | **Niedrig, Test:** Im Test K11k war die Trennung der Rivalen trivial grün. Jetzt ein Kader ohne die Fremdsprachigen: Der Co-Trainer trennt die Rivalen, „Landsleute“ nicht. | ✅ behoben |
 | FQ7 | **Niedrig, Doku:** K13 und K12a nannten K12d und K13k noch als offen, K18 und das Protokoll „ab einem Drittel“ bei der Grenze 0,34. Berichtigt („mehr als ein Drittel“). | ✅ behoben |
+
+## FR. Prüfung von K14g, K16i, dem Doku-Abgleich 3, U12o, K29n, U12p und den Korrekturen FQ ohne Laufzeit (25. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 7098595..c2f814d gelesen, nichts ausgeführt. Kein Laufzeit- oder Syntaxfehler, nichts Hohes oder Mittleres, Gleichschritt 5a unberührt, im Hauptstrom kein zusätzliches R(). Ohne Schalter ändern sich nur die beschriebenen Dinge (Auslosung der Nebenziele, Kartenstrom wie vor K13g). Ohne Befund: K14g, K16i, K29n, U12p (Auslosung gleich), die Korrekturen FQ, die Namen. Hinweis: vorstand.js Nr. 2 rechnet das Soll ohne den Baustein der Nebenziele; das stimmt, solange „Kader“ dort „offen“ ist.
+
+Korrekturen auf `mitarbeit/popolupo-fr-korrekturen` (auf K09k).
+
+| # | Befund | Status |
+|---|---|---|
+| FR1 | **Niedrig:** Das Nebenziel „Zuschauer“ gab es auch nach einer Teilsaison (Jobwechsel mitten in der Saison, Schnitt aus wenigen Heimspielen). Jetzt `zusN` in `S.hist` und mindestens `nebenziele.zuschauerHeimAb` (10) Heimspiele. | ✅ behoben |
+| FR2 | **Niedrig, Test:** Der Teil „gesetzt“ im Test U12o war meist trivial grün. Jetzt direkt über `nebenzieleMoeglich` und `nebenzielObjekt`, mit Gegenprobe ohne Vorsaison und mit Teilsaison. | ✅ behoben |
+| FR3 | **Niedrig, Test:** Im Test K13k war „ohne Russland“ trivial grün (kein Russe in den Kadern), der Leistungstest hing am Kader von Verein 6. Jetzt ein starker Russe eines deutschen Vereins (steht im Kader seiner Nation, fährt nicht zur WM) und der Verein eines Abgestellten. | ✅ behoben |
+| FR4 | **Niedrig, Doku:** Im Doku-Abgleich 3 fehlten bei K10 Fehldiagnose und zweite Meinung samt Offenem, bei K15 das Offene; das Protokoll sagte „zehn“ statt neun. Berichtigt (K15 mit K15f). | ✅ behoben |
+| FR5 | **Niedrig, Doku:** K28 §12 Nr. 14 und `_offene-entscheidungen.md` nannten nur drei Nebenziele. Ergänzt um Europapokal, Kader und Zuschauer. | ✅ behoben |

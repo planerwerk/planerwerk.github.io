@@ -144,7 +144,7 @@ function statistikSaison(sm){const st=statS(),s=S.season,E=RSTAT.ehrung,L=saison
   LIGEN.forEach(lg=>{if(auf[lg].includes(S.my))v('aufstieg',lg);});
   // Karriere des Trainers: die Zeile dieser Saison in S.hist ergänzen
   const h=S.hist[S.hist.length-1];if(h&&h.s===s){const row=table(me.lg).find(r=>r.id===S.my)||{p:0,tf:0,ta:0};
-    Object.assign(h,{tid:S.my,pk:row.p,tf:row.tf,ta:row.ta,zus:S.att&&S.att[1]?Math.round(S.att[0]/S.att[1]):0,um:Object.values(S.fin||{}).filter(x=>x>0).reduce((x,y)=>x+y,0),erg:sm.fin,ruf:ruf(),st:S.stufe||REGELN.schwierigkeit.standard});}
+    Object.assign(h,{tid:S.my,pk:row.p,tf:row.tf,ta:row.ta,zus:S.att&&S.att[1]?Math.round(S.att[0]/S.att[1]):0,zusN:S.att?S.att[1]:0,um:Object.values(S.fin||{}).filter(x=>x>0).reduce((x,y)=>x+y,0),erg:sm.fin,ruf:ruf(),st:S.stufe||REGELN.schwierigkeit.standard});}
   // Zeilen schließen, lange Inaktive verdichten (K34 §5.2)
   for(const p of PIX.values()){statZeileSchliessen(p);if(p.kar&&p.kar.length&&p.kar[p.kar.length-1][KZ.s]<=s-RSTAT.verdichtenNach)statVerdichten(p);}
   st.tz={};st.eg={};}

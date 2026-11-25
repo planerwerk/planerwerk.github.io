@@ -76,12 +76,15 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
 {const {S,F,ev,B}=welt(),N=B.nebenziele,t=ev('myT()'),st=(z,e)=>F.nebenzielStand(z,e),ka={k:'kader',min:0},gr=ev('gehaltsRahmen')(t),sq=ev('squad')(S.my),sal0=sq.map(p=>p.sal);
   const setzeGehalt=f=>{sq.forEach((p,i)=>{p.sal=Math.round(sal0[i]*f);});},summe=()=>ev('gehaltsSumme')(t);
   setzeGehalt(0.01);const k0=summe()<=gr?st(ka,false)==='offen'&&st(ka,true)==='erfuellt':false;setzeGehalt(1);let f=1;while(summe()<=gr*1.2&&f<50){f*=1.5;setzeGehalt(f);}const k1=st(ka,false)==='gefaehrdet'&&st(ka,true)==='verfehlt';setzeGehalt(1);
-  const vor=ev('zuschauerVorsaison');S.hist=[];const ohne=vor(t)===0;S.hist=[{s:S.season-1,tid:S.my,lg:t.lg,zus:10000}];const mit=vor(t)===10000;S.hist[0].lg=t.lg===1?2:1;const andereLiga=vor(t)===0;S.hist[0].lg=t.lg;
-  F.nebenzieleSetzen();const moeglich=ev('meineZiele()').every(z=>z.k!=='zuschauer'||z.min===Math.round(10000*N.zuschauerHalten/100)*100);
+  const vor=ev('zuschauerVorsaison'),mg=()=>ev('nebenzieleMoeglich')();S.hist=[];const ohne=vor(t)===0&&!mg().moegl.includes('zuschauer');
+  S.hist=[{s:S.season-1,tid:S.my,lg:t.lg,zus:10000,zusN:N.zuschauerHeimAb}];const mit=vor(t)===10000;S.hist[0].lg=t.lg===1?2:1;const andereLiga=vor(t)===0;S.hist[0].lg=t.lg;
+  S.hist[0].zusN=N.zuschauerHeimAb-1;const teil=vor(t)===0;S.hist[0].zusN=N.zuschauerHeimAb; /* Prüfung FR1: Teilsaison mit zu wenig Heimspielen zählt nicht */
+  /* Prüfung FR2: direkt über nebenzieleMoeglich und nebenzielObjekt, nicht über die Auslosung */
+  const m=mg(),moeglich=m.moegl.includes('zuschauer')&&m.moegl.includes('kader')&&ev('nebenzielObjekt')('zuschauer',m).min===Math.round(10000*N.zuschauerHalten/100)*100;
   const zu={k:'zuschauer',min:9500};S.att=[9000*(N.zuschauerAb-1),N.zuschauerAb-1];const z0=st(zu,false);S.att=[9000*N.zuschauerAb,N.zuschauerAb];const z1=st(zu,false),z2=st(zu,true);S.att=[9600*4,4];const z3=st(zu,true);
   const nz=F.nebenzielName(zu),name=(nz.includes('9.500')||nz.includes('9,500'))&&F.nebenzielName(ka).startsWith('Kader');
-  pruef(k0&&k1&&ohne&&mit&&andereLiga&&moeglich&&z0==='offen'&&z1==='gefaehrdet'&&z2==='verfehlt'&&z3==='erfuellt'&&name,'Nebenziele Kader und Zuschauer: Gehaltsrahmen zum Saisonende, Zuschauer nach der Vorsaison',
-    `Kader im Rahmen ${k0}, darüber ${k1}, Vorsaison ohne/mit/andere Liga ${ohne}/${mit}/${andereLiga}, gesetzt ${moeglich}, Zuschauer ${[z0,z1,z2,z3].join(', ')}, Namen ${name}`);}
+  pruef(k0&&k1&&ohne&&mit&&andereLiga&&teil&&moeglich&&z0==='offen'&&z1==='gefaehrdet'&&z2==='verfehlt'&&z3==='erfuellt'&&name,'Nebenziele Kader und Zuschauer: Gehaltsrahmen zum Saisonende, Zuschauer nach der Vorsaison',
+    `Kader im Rahmen ${k0}, darüber ${k1}, Vorsaison ohne/mit/andere Liga/Teilsaison ${ohne}/${mit}/${andereLiga}/${teil}, gesetzt ${moeglich}, Zuschauer ${[z0,z1,z2,z3].join(', ')}, Namen ${name}`);}
 
 // U12p. Nebenziel tauschen (K28 §5.2 „Nebenziele verhandeln“): nur im offenen Zielgespräch und einmal je Saison; die Zusage tauscht gegen ein anderes mögliches,
 //       die Ablehnung kostet Vertrauen tausch.abgelehnt. Die Chance ist für den Test fest (wie zgTiefChance in Nr. 11 und 12).
