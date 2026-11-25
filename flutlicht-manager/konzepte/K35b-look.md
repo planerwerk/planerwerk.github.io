@@ -1,6 +1,6 @@
 # K35b – Look und Stil
 
-Status: **Entwurf** (8. November 2026), nach „weiter, entscheide du“. Vorläufige Entscheidungen stehen in Abschnitt 12.
+Status: **Entwurf** (8. November 2026), nach „weiter, entscheide du“. Vorläufige Entscheidungen stehen in Abschnitt 12. **Neu ausgerichtet am 25.11.2026** nach deiner Vorgabe (Abschnitt 13): kein Retro-Zwang, vertraut und intuitiv, Kacheln, eigene Schrift. Abschnitt 13 geht den Abschnitten 1 bis 12 vor, wo sie sich widersprechen.
 Hängt ab von: K35a (Bedienkonzept, Regler) · Wird gebraucht von: –
 
 ## 1. Ziel und Spielgefühl
@@ -84,7 +84,78 @@ Keine in `regeln.js`. Farben und Abstände als CSS-Variablen in `css/spiel.css`.
 
 **Vorläufig entschieden:** dunkles Flutlicht-Thema als Standard, Systemschriften, keine Vereinslogos, Bewegung sparsam und abschaltbar.
 
+## 13. Neuausrichtung (25.11.2026, deine Vorgabe, Ausarbeitung popolupo, vorläufig)
+
+### 13.1 Leitbild
+
+- **Vertraut und intuitiv statt Retro.** Wer ein aktuelles Sportspiel oder eine Handy-App kennt, soll sich ohne Erklärung zurechtfinden. Retro-Anklänge (Anzeigetafel, Flutlicht) bleiben als Würze, nicht als Stil.
+- **Kacheln als Grundform.** Jede Ansicht besteht aus Kacheln: eine Kachel, ein Thema, eine Kennzahl, ein klarer nächster Schritt. Das wirkt freundlich und ordnet von selbst.
+- **Nicht wie Tableau oder Excel.** Tabellen bleiben, wo man vergleichen muss (Ligatabelle, Kaderliste, Finanzen), aber nie als Startseite und nie als einziger Inhalt einer Ansicht. Auf dem Handy werden lange Tabellen zu Listen aus kleinen Karten.
+- **Dein Verein im Mittelpunkt.** Die Vereinsfarbe aus `daten/vereine.js` färbt Akzente (Streifen der Kacheln, Kopfzeile), so fühlt sich jede Karriere anders an.
+
+### 13.2 Kachel-System
+
+| Größe | Raster | Zweck | Beispiele |
+|---|---|---|---|
+| groß | 2 × 2 | das Wichtigste der Ansicht | Nächstes Spiel mit Gegner, Anstoß und Vergleich |
+| breit | 2 × 1 | Liste mit wenigen Zeilen | Posteingang (3 neueste), Tabellenausschnitt (Platz ±2) |
+| klein | 1 × 1 | eine Kennzahl mit Trend | Konto, Vertrauen, Stimmung, Verletzte, Fitness |
+
+- **Aufbau einer Kachel:** Titel klein oben, Kennzahl groß, darunter eine Zeile Erklärung oder Trend (Pfeil mit Wert), unten rechts höchstens eine Aktion („Aufstellen“, „Antworten“). Die ganze Kachel ist anklickbar und führt in die Ansicht.
+- **Zustand:** Ein farbiger Rand links (gut, Achtung, schlecht) immer zusammen mit einem Symbol (✓, !, ✕), nie Farbe allein.
+- **Raster:** 4 Spalten ab 1.100 px, 2 Spalten ab 600 px, 1 Spalte darunter. Kacheln ordnen sich selbst an, große Kacheln werden auf dem Handy volle Breite.
+- **Startseite (Büro) als Kachelfläche:** Nächstes Spiel (groß), Posteingang (breit), Tabelle (breit), Konto, Vertrauen, Stimmung, Verletzte und Sperren, Training dieser Woche, Transfers, Termine (klein). Die heutige Reiterleiste bleibt als Navigation oben (Handy: unten), die Kacheln ersetzen die Textblöcke.
+- **Bewegung:** Kacheln heben sich beim Zeigen leicht an (Schatten), beim Antippen kurz gedrückt. Aus bei „weniger Bewegung“.
+
+### 13.3 Farbstudie
+
+**Grundsätze** (Stand der Technik, keine eigene Messung):
+- **Kontrast nach WCAG 2.2 AA:** Text mindestens 4,5 : 1, große Schrift und Bedienelemente mindestens 3 : 1, in beiden Themen. Wird mit einem automatischen Test geprüft (K40).
+- **Farbsehschwäche:** Eine Rot-Grün-Schwäche betrifft grob jeden zwölften Mann (Größenordnung aus der Fachliteratur, nicht eigens nachgeprüft). Gerade im Fußball (grüner Rasen, Rot als Warnfarbe) darf keine Aussage nur an Rot gegen Grün hängen. Gut und schlecht deshalb zusätzlich mit Symbol, Form oder Helligkeit; als zweites Paar Blau gegen Orange für Diagramme.
+- **Wenige Farben mit fester Bedeutung:** Grundfläche, Kachel, Text, gedämpfter Text, ein Akzent (Aktion), Gut, Achtung, Schlecht, Information. Alles andere sind Vereinsfarben.
+- **Vertraute Bedeutungen:** Grün gut, Gelb Achtung, Rot schlecht, Blau Information, die Hauptaktion im Akzent. So machen es fast alle Apps und Sportspiele.
+
+**Drei Paletten zur Wahl** (Entwürfe, in der Look-Studie nebeneinander):
+
+| Palette | Grundfläche | Kachel | Akzent | Wirkung |
+|---|---|---|---|---|
+| **A Flutlichtnacht** (Vorschlag) | Nachtblau `#0e1726` | Schiefer `#17233a` | Flutlichtgelb `#ffc83d` | dunkel, ruhig, Stadion am Abend; die heutige grüne Fläche wird blau, Grün bleibt für „gut“ frei |
+| **B Rasen** | Tiefgrün `#0f1f18` | `#183027` | Kreideweiß mit Gelb | nah am heutigen Look, aber Grün hat dann zwei Bedeutungen |
+| **C Tageslicht** (hell) | Hellgrau `#f3f5f8` | Weiß | Vereinsfarbe, sonst Blau `#2563eb` | freundlich, für Tagsüber und helle Umgebungen |
+
+- **Vorläufig:** A als Standard, C als helles Thema (umschaltbar, Systemvorgabe), B entfällt. Gut `#3ecf8e`, Achtung `#ffb020`, Schlecht `#f2555a`, Information `#5aa9ff` in A; in C dunkler, damit 4,5 : 1 auf Weiß hält.
+- **Vereinsfarbe:** als Streifen und Akzent nur, wenn sie auf der Grundfläche mindestens 3 : 1 erreicht; sonst eine aufgehellte oder abgedunkelte Stufe derselben Farbe (automatisch berechnet).
+
+### 13.4 Schrift
+
+- **Eigene Schrift für das Spiel** (deine Vorgabe): eine Anzeigeschrift für Überschriften, Kennzahlen und die Anzeigetafel, Arbeitsname „Flutlicht Display“. Geometrisch, schmal, mit klaren Ziffern (Tabellenziffern gleich breit), Großbuchstaben, Kleinbuchstaben, Ziffern, deutsche Umlaute und ß, Satzzeichen.
+- **Wie sie entsteht, ohne etwas zu installieren:** Ich entwerfe die Zeichen als Formen auf einem Raster und erzeuge daraus mit einem kleinen eigenen Skript eine TrueType-Datei (das Format ist offen beschrieben). Alternative ohne Skript: Glyphr Studio oder FontStruct im Browser, dort lassen sich gezeichnete Formen als Schrift ausgeben. Die Schrift gehört dann dem Projekt, Lizenz frei wählbar (Vorschlag: SIL Open Font License).
+- **Fließtext:** keine eigene Schrift (Lesbarkeit braucht Hinting und viel Feinarbeit), sondern eine freie, gut lesbare Schrift unter der SIL Open Font License, als Datei im Spiel (offline, keine fremden Server). Vorschlag zum Prüfen: Atkinson Hyperlegible (für gute Lesbarkeit entworfen) oder die heutige Barlow; Entscheidung in der Look-Studie.
+- **Zeitung (Presse):** eine freie Serifenschrift, ebenfalls als Datei.
+
+### 13.5 Vertraute Bedienung (Abgleich mit heutigen Spielen und Apps)
+
+- Eine Hauptaktion je Ansicht, immer an derselben Stelle („Weiter“ oben rechts, auf dem Handy unten rechts als großer Knopf).
+- Zurück-Weg immer sichtbar, Breadcrumb in Unteransichten.
+- Kurze Rückmeldungen als Einblendung unten (Toast), Rückfragen nur bei Unumkehrbarem.
+- Hinweise beim Zeigen (Tooltip) und ein Fragezeichen an jeder Kennzahl, das erklärt, woher sie kommt.
+- Suche und Filter in langen Listen (Transfermarkt, Kader), Sortieren per Klick auf die Spalte.
+- Ziehen und Ablegen, wo es natürlich ist (Aufstellung seit K35c, später Training und Kaderrollen).
+- Tastatur: Leertaste „Weiter“, Zahlen für Reiter, Escape schließt Fenster. Auf dem Handy Wischen zwischen Reitern.
+- Speichern geschieht automatisch, ein kleines Zeichen zeigt es.
+
+### 13.6 Umsetzung (Welle 5, Reihenfolge vorläufig)
+
+1. **W5a Look-Studie** (Entwurf zum Anschauen, kein Spielcode): Paletten, Kacheln, Schriftproben, Startseite als Kachelfläche.
+2. **W5b Farbsystem:** Farbtokens neu (Palette A und C), Kontrasttest, Umschalter hell und dunkel.
+3. **W5c Kacheln:** Baustein `kachel()` in `js/regler.js`, Startseite (Büro) als Kachelfläche, dann Ansicht für Ansicht.
+4. **W5d Eigene Schrift:** Zeichen entwerfen, TrueType erzeugen, einbinden.
+5. **W5e Artwork, Ladebildschirme, Sequenzen** (K39) und **W5f Audio** (K41).
+6. Erst nach dem ersten Testlauf des Testers zusammenführen, damit Fehler der Mechanik und der Oberfläche getrennt bleiben.
+
 ## Quellen
 
 - Was Anstoss-Fans schätzen: `konzepte/_recherche-genre.md`, Abschnitt 4c
 - Bedienkonzept und Regler: `konzepte/K35-oberflaeche.md`
+- Kontrastregeln: WCAG 2.2, Erfolgskriterien 1.4.3 (Text) und 1.4.11 (Bedienelemente), W3C
+- Freie Schrift-Editoren im Browser: FontStruct (https://fontstruct.com), Glyphr Studio (Websuche vom 25.11.2026)

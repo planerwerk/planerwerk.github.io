@@ -890,3 +890,15 @@ Im Einzelnen in `konzepte/K40-usability.md` (neu, aus dem Vorschlag in PLAN §4)
 - **Eigenes Testskript** `tests/ui-zugang.js`: axe-core auf allen Ansichten, Spielerkarte und Menü, nur schwere Verstöße zählen. Dazu Tastatur: „Tag beenden“ mit Tab und Enter, Fokus sichtbar.
 - **Kleine Änderung im Spiel:** Escape schließt Fenster mit Schließen-Knopf, beim Öffnen springt der Fokus ins Fenster (nicht auf die erste Option).
 - **axe-core kommt aus der Installation des Testers,** wie Playwright.
+
+## Welle 5: Look, Artwork, Audio, Name (25.11.), vorläufig von popolupo, nur Konzepte
+
+Neu ausgerichtet nach deiner Vorgabe vom 25.11. Im Einzelnen in K35b §13, K39, K41 und K42, Überblick in PLAN §4 „Welle 5“.
+
+- **Look:** Kacheln als Grundform (groß, breit, klein), Büro als Kachelfläche. Palette A „Flutlichtnacht“ als dunkles Standardthema, C „Tageslicht“ als helles Thema, B „Rasen“ entfällt. Kontrast nach WCAG AA, Gut und Schlecht immer mit Symbol.
+- **Schrift:** eigene Anzeigeschrift „Flutlicht Display“ (aus Rasterformen per eigenem Skript erzeugt), Fließtext in einer freien OFL-Schrift als Datei.
+- **Artwork:** keine Videodateien, Sequenzen als Animation. Wappen, Gesichter und Symbole als SVG von mir. Echte Wappen nicht mitliefern, nur „Eigene Wappen laden“ im eigenen Browser.
+- **Audio:** Ton an und leise, Musik aus. Oberflächentöne mit Web Audio erzeugt, Atmosphäre aus CC0, keine Stimme, keine echten Fangesänge.
+- **Name:** bleibt „Flutlicht Manager“, Leitspruch „Bratwurst. Meisterschale. Herzblut.“ (BMH).
+
+**Für dich:** KI-Bilder über Hugging Face nutzen (Konto und MCP-Server nötig)? Musik ja oder nein? Welcher BMH-Leitspruch?
