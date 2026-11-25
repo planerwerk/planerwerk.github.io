@@ -57,6 +57,7 @@ const KACHEL_ICON={
   transfer:'M4 8h14l-3-3M20 16H6l3 3',
   spiel:'M12 3a9 9 0 1 0 .01 0zM12 7.5l4 3-1.5 4.5h-5L8 10.5z',
   kredit:'M3 10l9-6 9 6M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18',
+  fitness:'M3 12h4l2-5 4 10 2-5h6',
   stadion:'M3 18c0-4 4-7 9-7s9 3 9 7M3 18h18M6 11V6M18 11V6M5 6h2M17 6h2',
   shop:'M5 8h14l-1 12H6zM9 8a3 3 0 0 1 6 0',
   lohn:'M4 7h16v10H4zM12 9.5a2.5 2.5 0 1 0 .01 0zM7 12h.01M17 12h.01',

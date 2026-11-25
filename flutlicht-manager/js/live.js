@@ -139,9 +139,11 @@ function konfetti(farbe,n=28){if(typeof document==='undefined')return;const box=
   document.body.appendChild(box);setTimeout(()=>box.remove(),2400);}
 // Titel und Aufstieg (K39 §3.4, W5e6): einmal je Saison und Sitzung Konfetti und Jubel in der Saisonbilanz. Nicht im Spielstand gemerkt.
 let TITEL_GEFEIERT=null;
-function titelFeier(sm){if(!sm||TITEL_GEFEIERT===sm.season||typeof S==='undefined'||!S)return;const m=S.my,dabei=l=>(l||[]).includes(m);
-  if(!(sm.champ===m||sm.champ2===m||sm.champ3===m||sm.cup===m||dabei(sm.up)||dabei(sm.up3)||dabei(sm.up4)))return;TITEL_GEFEIERT=sm.season;
-  if(sequenzAn()){konfetti(myT().col,48);klang('jubel');}}
+// Verein aus der Bilanz (sm.my, nach einer Entlassung ist S.my schon der neue), Aufstieg auch über die Relegation, gemerkt je Karriere (Prüfung FZ2, FZ3)
+function titelFeier(sm){if(!sm||typeof S==='undefined'||!S)return;const m=sm.my!=null?sm.my:S.my,k=`${S.seed}|${sm.season}`,dabei=l=>(l||[]).includes(m);if(TITEL_GEFEIERT===k)return;
+  const rel=(sm.rel&&sm.rw===m&&sm.rel[1]===m)||(sm.rel2&&sm.rw2===m&&sm.rel2[1]===m);
+  if(!(sm.champ===m||sm.champ2===m||sm.champ3===m||sm.cup===m||dabei(sm.up)||dabei(sm.up3)||dabei(sm.up4)||rel))return;TITEL_GEFEIERT=k;
+  if(sequenzAn()){konfetti((S.teams[m]&&S.teams[m].col)||myT().col,48);klang('jubel');}}
 function torSequenz(meins,farbe){if(typeof document==='undefined'||!sequenzAn())return;const kurz=sequenzStufe()==='kurz',el=document.getElementById('lv-tafel');
   if(el){el.classList.remove('tor-blitz','tor-gegner');void el.offsetWidth;el.classList.add(meins?'tor-blitz':'tor-gegner');setTimeout(()=>el.classList.remove('tor-blitz','tor-gegner'),kurz?700:1400);}
   if(meins&&!kurz)konfetti(farbe||'#ffc83d');}

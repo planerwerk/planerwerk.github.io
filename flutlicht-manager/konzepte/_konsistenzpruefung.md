@@ -2890,7 +2890,7 @@ Korrekturen auf `mitarbeit/popolupo-fx-korrekturen` (auf W5c3).
 | FX2 | **Niedrig:** Der Ton wurde nur beim ersten `pointerdown` freigeschaltet, das ist auf Touch-Geräten keine Nutzeraktivierung. Jetzt bei `click`, `keydown` und `touchend`, bis der Ton läuft. | ✅ behoben |
 | FX3 | **Niedrig:** Taste M bei offenem Menü ließ das Häkchen „Ton an“ stehen. Jetzt `klangSetzen` mit festem Wert, das Häkchen zieht mit. | ✅ behoben |
 | FX4 | **Niedrig, Doku:** K41 verlangte Ton aus bei „weniger Bewegung“. Die Einstellung betrifft nur Animationen, K41 §4 entsprechend berichtigt (vorläufig). | ✅ behoben |
-| FX5 | **Niedrig:** Beim Vorspulen liefen An- und Schlusspfiff gleichzeitig, Jubel und Konfetti auch bei einer Niederlage. Jetzt holt das Spiel nach einem Sprung keine Einzelmomente nach, nur der Schlusspfiff kommt; Jubel nur bei genau einem neuen Tor. | ✅ behoben |
+| FX5 | **Niedrig:** Beim Vorspulen liefen An- und Schlusspfiff gleichzeitig, Jubel und Konfetti auch bei einer Niederlage. Jetzt holt das Spiel nach einem Sprung keine Einzelmomente nach, nur der Schlusspfiff kommt; Jubel bei eigenem Tor (seit FY1 auch bei zwei Toren in einer Minute). | ✅ behoben |
 | FX6 | **Niedrig:** Ein eigenes Wappen als SVG ohne Größenangabe ergab ein leeres Bild. Jetzt füllt es die ganze Fläche. | ✅ behoben |
 | FX7 | **Niedrig, Test:** `__check` baute bei jedem Aufruf alle Gesichter neu (Minuten im Fuzz-Test). Jetzt einmal je Seite. Dazu der Hinweis ohne Fund: `tests/ui-zwei-saisons.js` zählte alle Schalter im Menü statt nur der Erinnerungen; jetzt nur `erinnerungAus`. | ✅ behoben |
 
@@ -2905,3 +2905,19 @@ Korrekturen auf `mitarbeit/popolupo-fy-korrekturen` (auf den Korrekturen FX).
 | FY1 | **Niedrig:** Bei zwei Toren in einer Minute gab es weder Jubel noch Raunen (Bedingung „genau ein Tor“). Für das Vorspulen ist sie unnötig, das deckt der Sprung ab. Jetzt wieder Jubel, sobald du getroffen hast, sonst Raunen. | ✅ behoben |
 | FY2 | **Niedrig:** Die Kabine zeigte einen abgegebenen Kapitän bis zum nächsten Wochenlauf weiter als Kapitän. Jetzt zählt er nur, solange er bei dir spielt (wie in `js/vorbereitung.js`). | ✅ behoben |
 | – | Hinweise: K41 §4 versprach beim Vorspulen noch Tore, jetzt richtig „nur der Abpfiff“. Die Stadion-Kachel nannte „gut“ ab 90 % Auslastung, der Regler ab `RU.ausverkauftAb`; jetzt beide gleich. | ✅ behoben |
+
+## FZ. Prüfung der Korrekturen FY, W5c4, W5e6 und W5e7 ohne Laufzeit (25. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat c0e89e4..6a8e4fe gelesen. Kein Laufzeitfehler, kein undefined, NaN oder null im Text, kein Zufall, keine Änderung am Spielstand. FY1 und FY2 behoben, die kleinen Gesichter in der Kabine sind auch bei der Leistung unbedenklich. Bericht: `flutlicht-tools/pruefung-fz.md`.
+
+Korrekturen auf `mitarbeit/popolupo-fz-korrekturen` (auf W5e7).
+
+| # | Befund | Status |
+|---|---|---|
+| FZ1 | **Mittel:** Die Stadion-Kachel zeigte „Auslastung %“ ohne Zahl (beim Ersetzen in FY ging der Wert verloren). Berichtigt. | ✅ behoben |
+| FZ2 | **Niedrig:** Ein Aufstieg über die Relegation wurde nicht gefeiert. Jetzt zählt er mit (`sm.rw` gleich `sm.rel[1]`, ebenso für die 3. Liga). | ✅ behoben |
+| FZ3 | **Niedrig:** Nach einer Entlassung am Saisonende zeigte die Bilanz nach dem Jobwechsel den Erfolg des neuen Vereins. Die Bilanz merkt sich jetzt deinen Verein (`sm.my`), gefeiert wird einmal je Karriere und Saison. | ✅ behoben |
+| FZ4 | **Niedrig:** Die Kachel „Heute“ nannte im Urlaub eine Trainingseinheit. Jetzt „Urlaub, kein Training“. | ✅ behoben |
+| FZ5 | **Niedrig:** Der Kachel „Frische“ fehlte das Symbol. Ergänzt; dazu nutzt sie jetzt die Zonen des Frische-Reglers (`RU.zonenFitness`). | ✅ behoben |
+| FZ6 | **Niedrig:** Training- und Büro-Kachel zeigten die eigene Vorlage auch, wenn der Stab unter der Automatik plant. Jetzt „Der Stab plant (Automatik)“. | ✅ behoben |
+| – | Hinweis, schon vorher: In der Kapitänswahl ließ sich ohne gültigen Kapitän der erste Spieler nicht wählen. Jetzt steht dann „Kapitän wählen“ als erste, nicht wählbare Zeile da. | ✅ behoben |

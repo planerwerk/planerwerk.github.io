@@ -95,7 +95,7 @@ function bueroKacheln(heute,d){const t=myT(),sq=squad(S.my),out=sq.filter(p=>!av
   ${kachel({titel:'Saisonziel',icon:'ziel',wert:`Platz ${rg}`,sub:targetText(t.lg,S.target)})}
   ${kachel({titel:'Stimmung',icon:'stimmung',wert:`${ms} von 100`,sub:unz?`${unz} Spieler unzufrieden`:'Niemand ist unzufrieden',status:ms<W.gespraech[0]?'kritisch':ms<W.grummeln[0]?'achtung':'gut',link:{text:'Kabine',onclick:"tab('kabine')"}})}
   ${kachel({titel:'Ausfälle',icon:'medizin',wert:out.length,sub:out.length?out.slice(0,3).map(p=>`${p.n} (${ausfallKurz(p)})`).join(', ')+(out.length>3?' …':''):'Alle einsatzbereit',status:out.length?'achtung':'gut',link:{text:'Kader',onclick:"tab('kader')"}})}
-  ${kachel({titel:'Training',icon:'training',wert:vl?vl.name:'Co-Trainer',sub:vl?'Trainingsvorlage dieser Woche':'Der Co-Trainer entscheidet',link:{text:'Training',onclick:"tab('training')"}})}
+  ${kachel({titel:'Training',icon:'training',wert:vl&&!autoB('vorlage')?vl.name:'Co-Trainer',sub:vl&&!autoB('vorlage')?'Trainingsvorlage dieser Woche':autoB('vorlage')?'Der Stab plant (Automatik)':'Der Co-Trainer entscheidet',link:{text:'Training',onclick:"tab('training')"}})}
   ${kachel({titel:'Transfers',icon:'transfer',wert:fensterOffen(d)?'Fenster offen':'Fenster zu',sub:ang?`${ang} ${ang===1?'Angebot':'Angebote'} für deine Spieler`:'Keine Angebote für deine Spieler',status:ang?'info':undefined,link:{text:'Transfers',onclick:"tab('transfer')"}})}
   ${lm?kachel({titel:'Letztes Spiel',icon:'spiel',wert:`${lm.hg}:${lm.ag}`,sub:`${tn(lm.h)} – ${tn(lm.a)}`}):''}</div>`;}
 V.buero=()=>{const t=myT(),d=S.tag;let heute='';
@@ -262,10 +262,11 @@ function transferKacheln(t){const sq=squad(S.my),n=sq.length,ang=S.offers.length
   ${kachel({titel:'Angebote',icon:'post',wert:ang,sub:ang?(ang===1?'Angebot für einen deiner Spieler':'Angebote für deine Spieler'):'kein Angebot für deine Spieler',status:ang?'info':undefined,link:ang?{text:'Im Büro ansehen',onclick:"tab('buero')"}:undefined})}
   ${kachel({titel:'Transferliste',icon:'tabelle',wert:liste,sub:liste===1?'Spieler von dir steht zum Verkauf':'Spieler von dir stehen zum Verkauf'})}</div>`;}
 function trainingKacheln(t,tal,akt){const sq=squad(S.my),fit=sq.length?Math.round(sq.reduce((s,p)=>s+p.fit,0)/sq.length):0,a=spielAbstand(S.tag).get(S.my)||{},
-    e=imUrlaub()&&S.tag<auftaktTag(t)?null:einheitVerein(t,a,S.tag),heute=a.heute?'Spieltag':S.tag<auftaktTag(t)?'Urlaub':e?`${EINHEIT_NAME[e[0]]}${e[0]!=='frei'?' · '+INTENSITAET_NAME[e[1]]:''}`:'frei',vl=vorlageDef(akt,t);
-  return`<div class="kacheln">${kachel({titel:'Trainingsplan',icon:'training',wert:akt==='auto'||!vl?'Co-Trainer':vl.name,sub:akt==='auto'||!vl?'Der Co-Trainer entscheidet.':'deine Vorlage'})}
-  ${kachel({titel:'Heute',icon:'termin',wert:heute,sub:'Einheit nach Abstand zum Spiel'})}
-  ${kachel({titel:'Frische',icon:'fitness',wert:`Ø ${fit} %`,sub:`${sq.filter(p=>p.fit<75).length} Spieler unter 75 %`,status:fit<75?'achtung':fit>=88?'gut':undefined})}
+    urlaub=imUrlaub(),e=urlaub?null:einheitVerein(t,a,S.tag),heute=a.heute?'Spieltag':urlaub?'Urlaub':e?`${EINHEIT_NAME[e[0]]}${e[0]!=='frei'?' · '+INTENSITAET_NAME[e[1]]:''}`:'frei',vl=vorlageDef(akt,t),
+    stab=akt==='auto'||!vl||autoB('vorlage'),Z=RU.zonenFitness,schwach=sq.filter(p=>{const s=zonenStatus(p.fit,Z);return s==='kritisch'||s==='achtung';}).length; // Urlaub als Ganzes, Stab plant unter der Automatik, Zonen wie der Regler (Prüfung FZ4, FZ6)
+  return`<div class="kacheln">${kachel({titel:'Trainingsplan',icon:'training',wert:stab?'Co-Trainer':vl.name,sub:stab?(autoB('vorlage')?'Der Stab plant (Automatik).':'Der Co-Trainer entscheidet.'):'deine Vorlage'})}
+  ${kachel({titel:'Heute',icon:'termin',wert:heute,sub:urlaub?'kein Training':'Einheit nach Abstand zum Spiel'})}
+  ${kachel({titel:'Frische',icon:'fitness',wert:`Ø ${fit} %`,sub:schwach?`${schwach} Spieler geschwächt`:'niemand geschwächt',status:zonenStatus(fit,Z)})}
   ${kachel({titel:'Talente',icon:'kapitaen',wert:tal.length,sub:'Spieler bis 21 Jahre im Kader'})}</div>`;}
 V.transfer=()=>{const t=myT(),XI=new Set();S.teams.forEach(x=>bestXI(x.id,x.form).forEach(id=>XI.add(id)));
   const aus=TF.lg==='a'; // Ausland ist ein eigener Filter (K32): Der Pool ist groß und kaum bekannt, er würde die Liste sonst überschwemmen
@@ -302,7 +303,7 @@ function kabineKacheln(t,kap,vs,zh){const ms=Math.round(mannschaftsStimmung(S.my
   ${offen?kachel({titel:'Versprechen',icon:'versprechen',wert:offen,sub:offen===1?'offenes Versprechen':'offene Versprechen',status:'info'}):''}</div>`;}
 function stadionKacheln(t,schnitt){const ausl=t.cap?Math.round(100*schnitt/t.cap):0;
   return`<div class="kacheln">${kachel({titel:'Plätze',icon:'stadion',wert:t.cap.toLocaleString('de-DE'),sub:'Fassungsvermögen des Stadions'})}
-  ${kachel({titel:'Zuschauerschnitt',icon:'team',wert:avgAtt(),sub:schnitt?(schnitt>=t.cap*RU.ausverkauftAb?'im Schnitt fast ausverkauft':`Auslastung  %`):'noch kein Heimspiel',status:schnitt?(schnitt>=t.cap*RU.ausverkauftAb?'gut':ausl<60?'achtung':undefined):undefined})}
+  ${kachel({titel:'Zuschauerschnitt',icon:'team',wert:avgAtt(),sub:schnitt?(schnitt>=t.cap*RU.ausverkauftAb?'im Schnitt fast ausverkauft':`Auslastung ${ausl} %`):'noch kein Heimspiel',status:schnitt?(schnitt>=t.cap*RU.ausverkauftAb?'gut':ausl<60?'achtung':undefined):undefined})}
   ${kachel({titel:'VIP-Logen',icon:'kredit',wert:t.logen,sub:'Logen im Stadion'})}
   ${kachel({titel:'Fanshop',icon:'shop',wert:`Stufe ${t.shop}`,sub:'Ausbau weiter unten'})}</div>`;}
 V.finanzen=()=>{const t=myT(),ent=Object.entries(S.fin),inc=ent.filter(e=>e[1]>0).sort((a,b)=>b[1]-a[1]),ex=ent.filter(e=>e[1]<0).sort((a,b)=>a[1]-b[1]),sum=ent.reduce((s,e)=>s+e[1],0),pay=squad(S.my).reduce((s,p)=>s+p.sal,0),maxL=kreditRahmen(t),P=RF.ticketPreis;
@@ -386,7 +387,7 @@ V.kabine=()=>{const t=myT(),sq=squad(S.my).sort((a,b)=>stimmung(a)-stimmung(b)),
   return`${kabineKacheln(t,kap,vs,zh)}<div class="grid" style="margin-top:14px"><div class="card"><h2>Kabine</h2><div class="rgs">${rgAnzeige({label:'Mannschaftsstimmung',sub:'Schnitt, Führungsspieler doppelt, Kapitän zweieinhalbfach',min:0,max:100,wert:Math.round(mannschaftsStimmung(S.my)),zonen:RU.zonenStimmung})}
     ${rgAnzeige({label:'Zusammenhalt',sub:`Teamstärke im Spiel ${de((W[0]+W[1]*zh-1)*100,1)} %`,min:0,max:100,wert:Math.round(zh),zonen:RU.zonenZusammenhalt,marker:[{v:50,t:'Mitte'}]})}
     ${rgAnzeige({label:'Glaubwürdigkeit',sub:'wie sehr die Mannschaft deinen Worten glaubt',min:0,max:100,wert:Math.round(glaub()),zonen:RU.zonenGlaub})}</div>
-    <label>Kapitän <select id="kapsel" onchange="setKapitaen(this.value)"${lzAus('kapitaen')}>${squad(S.my).sort((a,b)=>(b.ch?b.ch.fue:10)-(a.ch?a.ch.fue:10)).map(p=>`<option value="${p.id}" ${p.id===t.kap?'selected':''}>${esc(p.n)}${hatEig(p,'fuehrungsspieler')&&bekannteEigenschaften(p).includes('fuehrungsspieler')?' (Führungsspieler)':''}</option>`).join('')}</select></label>
+    <label>Kapitän <select id="kapsel" onchange="setKapitaen(this.value)"${lzAus('kapitaen')}>${kap?'':'<option value="" selected disabled>– Kapitän wählen –</option>'}${squad(S.my).sort((a,b)=>(b.ch?b.ch.fue:10)-(a.ch?a.ch.fue:10)).map(p=>`<option value="${p.id}" ${p.id===t.kap?'selected':''}>${esc(p.n)}${hatEig(p,'fuehrungsspieler')&&bekannteEigenschaften(p).includes('fuehrungsspieler')?' (Führungsspieler)':''}</option>`).join('')}</select></label>
     ${lzHinweis('kapitaen')}<p class="dim">${kap?`${t.kapAuto?'Vom Co-Trainer bestimmt. ':''}Absetzen kostet Stimmung beim Kapitän und seinen Freunden.`:''} Gespräche diese Woche: ${gespraecheDieseWoche()} von ${RGS.proWoche}.</p></div>
     <div class="card"><h3>Mannschaftsansprache</h3><div class="opts">${Object.entries(M_ANSPRACHEN).map(([k,l])=>`<button class="opt" onclick="mansAnsprache('${k}')" ${ans?'disabled':''}${lzAus('ansprache')}><b>${l}${anspracheGeeignet(k)?' ✓':''}</b><span>${esc(M_ANSPRACHE_HILFE[k])}</span></button>`).join('')}</div>
       ${lzHinweis('ansprache')}<p class="dim">${ans?'Diese Woche hast du schon zur Mannschaft gesprochen.':'Höchstens einmal pro Woche. ✓ = passt zur Lage, sonst wirkt sie halb umgekehrt.'}</p>

@@ -290,6 +290,12 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 25.11.2026: Korrekturen nach Prüfung FZ (Zweig `mitarbeit/popolupo-fz-korrekturen`, auf W5e7)
+
+- **Prüfung FZ** (lesender Agent über FY-Korrekturen, W5c4, W5e6, W5e7): ein mittlerer und fünf niedrige Funde, dazu ein älterer Hinweis, alles behoben, Einzelheiten in der Konsistenzprüfung FZ.
+- **Sichtbar:** Die Stadion-Kachel zeigt die Auslastung wieder mit Zahl. Aufstieg über die Relegation wird gefeiert, nach einem Jobwechsel nicht der Erfolg des neuen Vereins. Training zeigt im Urlaub kein Training, die Frische-Kachel hat ihr Symbol und dieselben Grenzen wie der Regler, unter der Automatik steht „Der Stab plant“. In der Kapitänswahl steht ohne Kapitän „Kapitän wählen“.
+- **Spielstand:** Die Saisonbilanz trägt jetzt den eigenen Verein (`S.summary.my`); ältere Spielstände ohne das Feld nehmen den aktuellen Verein.
+
 ### 25.11.2026: W5e7 Gesichter in der Kabine (Zweig `mitarbeit/popolupo-w5c4-kacheln`)
 
 - **Neu:** kleine Spielergesichter (24 px) vor den Namen in der Spielerliste der Kabine. Nur Anzeige.
