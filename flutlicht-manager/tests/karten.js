@@ -736,4 +736,12 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   L.an=false;const aus=ls.every(c=>!an(c))&&rest.every(c=>an(c));L.an=true;const ein=ls.every(c=>an(c));L.an=a0;
   pruef(ls.length===3&&aus&&ein&&String(ev('kartenWoche')).includes('kartenSchalterAn(c)'),'Länderspiel-Karten würfeln nur mit dem Schalter mit',`${ls.map(c=>c.id).join(', ')}, aus ${aus}, an ${ein}`);}
 
+// K15f. Spieler fordert Versprechen ein (K15 §8): nur kurz nach einem gebrochenen Versprechen (S.vs) an einen Spieler deines Kaders; nicht nach einem gehaltenen,
+//       nicht nach mehr als versprechen.tage Tagen, nicht für einen Spieler eines anderen Vereins.
+{const {S,ev}=welt(),A=ev('AUSLOESER'),T=ev('RKT').versprechen.tage,h=ev('absTag')(S.tag),p=ev('squad')(S.my)[0],f=S.pl.find(x=>x.team>=0&&x.team<1000&&x.team!==S.my);
+  S.vs=[];const ohne=A.versprechenEinfordern()===null;S.vs=[{pid:p.id,art:'einsatz',stand:'gebrochen',ende:h-1}];const b=A.versprechenEinfordern(),ja=!!b&&b.spieler===p.id;
+  S.vs[0].stand='gehalten';const gehalten=A.versprechenEinfordern()===null;S.vs[0].stand='gebrochen';S.vs[0].ende=h-T-1;const alt=A.versprechenEinfordern()===null;
+  S.vs=[{pid:f.id,art:'wechsel',stand:'gebrochen',ende:h}];const fremd=A.versprechenEinfordern()===null;S.vs=[];
+  pruef(ohne&&ja&&gehalten&&alt&&fremd,'Spieler fordert Versprechen ein: nur kurz nach einem gebrochenen Versprechen eines eigenen Spielers',`ohne ${ohne}, gebrochen ${ja}, gehalten ${gehalten}, zu alt ${alt}, anderer Verein ${fremd}`);}
+
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

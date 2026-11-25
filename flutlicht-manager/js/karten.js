@@ -158,6 +158,9 @@ const AUSLOESER={
   positionHadern(){const SP=RKT.spiel,h=absTag(S.tag),l=squad(S.my).filter(p=>(p.pfal||0)>=SP.positionSpiele&&p.pfalT!=null&&h-p.pfalT<=SP.positionTage); /* EK7 */return l.length?{spieler:pick(l).id}:null;},
   // Streit nach Kritik (K15 §8, K15e): ein Spieler deines Kaders hat sich in den letzten RKT.gespraech.streitTage Tagen im Einzelgespräch nach deiner Kritik mit dir gestritten
   streitNachKritik(){const h=absTag(S.tag),T=RKT.gespraech.streitTage,l=squad(S.my).filter(p=>p.streit!=null&&h-p.streit>=0&&h-p.streit<=T&&p.streitT==='kritik'); /* Thema des Streits seit Prüfung EO3 (gespraeche.js), vorher nur das Datum */return l.length?{spieler:pick(l).id}:null;},
+  // Spieler fordert Versprechen ein (K15 §8, K15f): ein Versprechen an einen Spieler deines Kaders ist in den letzten RKT.versprechen.tage Tagen gebrochen worden (S.vs)
+  versprechenEinfordern(){const h=absTag(S.tag),T=RKT.versprechen.tage,l=(S.vs||[]).filter(v=>v.stand==='gebrochen'&&v.ende!=null&&h-v.ende>=0&&h-v.ende<=T).map(v=>PIX.get(v.pid)).filter(p=>p&&p.team===S.my);
+    return l.length?{spieler:pick(l).id}:null;},
   // Standard-Spezialisten (K06 §8, K06e): in der laufenden Halbserie auffällig viele Ligatore nach Standards (S.std aus letztesSpielMerken), einmal je Halbserie
   standardSpezialisten(){const A=S.std,St=RKT.standard;return A&&A.s===S.season&&A.t===S.my&&!A.k&&A.sp>=St.abSpiele&&A.n>=St.ab&&A.g>0&&A.n/A.g>=St.anteil?{}:null;},
   // Folgekarte der Kette (nur über kartenKette, mit den Beteiligten der ersten Karte): Der Spieler ist noch beim selben Verein und noch nicht vergeben

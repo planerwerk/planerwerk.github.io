@@ -389,6 +389,12 @@ const KARTEN=[
     optionen:[{text:'Die Hand reichen und sich aussprechen',wirkung:[{art:'stimmung',wert:4,chance:0.6,schlecht:-1,gut:'Ihr redet in Ruhe. {spieler} gibt zu, dass er überreagiert hat.',schlechtText:'{spieler} nimmt die Hand, aber das Eis bleibt dünn.'}]},
       {text:'Hart bleiben, die Kritik gilt',wirkung:[{art:'stimmung',wert:-3},{art:'glaub',wert:1},{art:'zusammenhalt',wert:-1}],folge:'Du bleibst bei deiner Kritik. {spieler} schweigt, die Kabine hat es registriert.'},
       {text:'Es aussitzen',wirkung:[{art:'glaub',wert:-1},{art:'vertrauen',wert:-1}],folge:'{spieler} erzählt einem Reporter von eurem Streit. Die Zeitung macht eine Geschichte daraus, der Vorstand liest mit.'}],auto:0},
+  // Spieler fordert Versprechen ein (K15 §8, K15f, 25.11., popolupo, vorläufig): Anlasskarte (K30d) nach einem gebrochenen Versprechen an einen Spieler deines Kaders.
+  {id:'versprechenEinfordern',titel:'Spieler fordert Versprechen ein',bereich:'K15',art:'entscheidung',gross:false,stufe:'haeufig',chance:0.6,ausloeser:'versprechenEinfordern',sperrTage:60,
+    texte:['{spieler} steht in deinem Büro: Du hattest ihm etwas versprochen und es nicht gehalten. Er will wissen, woran er bei dir ist.','{spieler} stellt dich nach dem Training zur Rede. Das gebrochene Versprechen nimmt er persönlich.'],
+    optionen:[{text:'Sich entschuldigen',wirkung:[{art:'stimmung',wert:5}],folge:'Du entschuldigst dich. {spieler} nimmt es an, ganz vergessen ist es nicht.'},
+      {text:'Hart bleiben, die Lage hat sich geändert',wirkung:[{art:'stimmung',wert:-3},{art:'glaub',wert:1}],folge:'Du erklärst, warum es anders kam. {spieler} ist bedient, die Kabine sieht einen klaren Trainer.'},
+      {text:'Ihm einen Wechsel erlauben',wirkung:[{art:'transferliste',wert:1,dann:[{art:'stimmung',wert:3}],gut:'{spieler} darf sich einen neuen Verein suchen und steht auf der Transferliste.'}],folge:''}],auto:0},
   // Anwohner klagen (K26 §8, K26f, 23.11., popolupo): Anlasskarte, solange Tribüne oder Dach auf die Genehmigung warten (REGELN.karten.stadion.anwohner). Werte vorläufig.
   {id:'anwohnerKlagen',titel:'Anwohner klagen',bereich:'K26',art:'entscheidung',gross:false,stufe:'haeufig',chance:0.1,ausloeser:'anwohnerKlagen',sperrTage:365,
     texte:['Eine Bürgerinitiative klagt gegen deinen Stadionausbau: mehr Lärm, mehr Verkehr, mehr Licht. Die Genehmigung könnte sich verzögern.','Anwohner haben beim Verwaltungsgericht Klage gegen den Ausbau eingereicht. Der Anwalt des Vereins rät zu einem Gespräch.'],
