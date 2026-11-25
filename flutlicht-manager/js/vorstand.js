@@ -153,7 +153,7 @@ function nebenzielTauschText(aus){const z=meinZg(),l=meineZiele();if(!z||z.nt||!
 function zwischenbilanzWoche(){const t=myT(),n=(S.fx&&S.fx[t.lg]||[]).length,sp=meineSpieltage();
   if(S.fired||S.phase!=='play'||!n||sp<Math.floor(n/2)||(S.zb&&S.zb.s===S.season&&S.zb.tid===S.my))return;zwischenbilanz(rank(t.lg,S.my),sp);}
 // Bilanz mit Platz pos: anheben (der Ruf rechnet dann vom neuen Ziel, beim Zielgespräch wird der Vorschlag mit verschoben) oder Antrag ermöglichen
-function zwischenbilanz(pos,sp){const t=myT(),Z=RV.zwischenbilanz,z=meinZg();S.zb={s:S.season,tid:S.my,sp,pos,art:'fest'};
+function zwischenbilanz(pos,sp){const t=myT(),Z=RV.zwischenbilanz,z=meinZg();S.zb={s:S.season,tid:S.my,sp,pos,art:'fest'};nebenzieleWinter();
   if(pos<=S.target-Z.abstand){const neu=zgZielGrenze(t.lg,S.target-Z.hoch);if(neu<S.target){const d=neu-S.target;S.target=neu;if(z)z.vorschlag+=d;S.zb.art='hoch';
       news(`Zwischenbilanz: Der Vorstand ist begeistert (Platz ${pos}) und hebt das Ziel an: ${targetText(t.lg,neu)}.`,'good');return;}}
   // U12k: Weit hinter dem Ziel senkt ein geduldiger Präsident von sich aus, ohne Antrag und ohne Abzug beim Budget. Alles rechnet danach vom neuen Ziel (wie beim Anheben).
@@ -162,6 +162,12 @@ function zwischenbilanz(pos,sp){const t=myT(),Z=RV.zwischenbilanz,z=meinZg();S.z
   if(pos>=S.target+Z.abstand&&zgZielGrenze(t.lg,S.target+Z.senken)>S.target){S.zb.art='antrag';
     news(`Zwischenbilanz: Platz ${pos} liegt weit hinter dem Ziel (${targetText(t.lg,S.target)}). Bis zum nächsten Ligaspiel kannst du im Büro beantragen, das Ziel zu senken.`,'bad');return;}
   news(`Zwischenbilanz: Der Vorstand hält am Ziel fest (${targetText(t.lg,S.target)}, aktuell Platz ${pos}).`,'');}
+// Nebenziele im Winter (K28 §5.9 „Nebenziele werden nicht angepasst“, U12q, 25.11., popolupo, vorläufig): Ist ein Nebenziel bei der Zwischenbilanz schon verfehlt
+// (etwa das Pokal-Aus), rechnet der Vorstand es ab (Vertrauen zwischenbilanz.nebenzielNeu) und setzt dafür ein anderes mögliches (eigener Strom). Gibt es keins, bleibt es verfehlt.
+function nebenzieleWinter(){const l=meineZiele();if(!l.length)return;const m=nebenzieleMoeglich();
+  l.forEach((z,i)=>{if(nebenzielStand(z,false)!=='verfehlt')return;const frei=m.moegl.filter(k=>!l.some(x=>x.k===k));if(!frei.length)return;
+    const k=mitStrom(strom('nebenzielWinter',S.season,S.my,i),()=>pick(frei));l[i]=nebenzielObjekt(k,m);S.trust=clamp(S.trust+RV.zwischenbilanz.nebenzielNeu,0,100);
+    news(`Zwischenbilanz: Das Nebenziel „${nebenzielName(z)}“ ist verfehlt. Der Vorstand rechnet es ab und setzt dafür „${nebenzielName(l[i])}“.`,'');});}
 const zbAntragOffen=()=>!!(S.zb&&S.zb.s===S.season&&S.zb.tid===S.my&&S.zb.art==='antrag'&&!S.zb.fertig&&!S.fired&&S.phase==='play'&&meineSpieltage()===S.zb.sp);
 function zbChance(){const A=RV.zwischenbilanz.antrag;return clamp(A.basis+A.jeVertrauen*(S.trust-50)+A.jeRuf*(ruf()-RV.ruf.start),A.grenzen[0],A.grenzen[1]);}
 // Antrag: zugesagt wirkt wie Tiefstapeln (Zielgespräch: stufe steigt, Budget sinkt, Ruf rechnet vom Vorschlag), abgelehnt kostet Vertrauen

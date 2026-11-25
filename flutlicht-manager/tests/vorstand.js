@@ -96,6 +96,13 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   pruef(offen&&karte&&neu&&einmal&&ab&&zu,'Nebenziel tauschen: im offenen Zielgespräch einmal, Zusage tauscht, Ablehnung kostet Vertrauen',
     `offen ${offen}, Karte ${karte}, getauscht ${neu} (${k1}), einmal ${einmal}, abgelehnt ${ab}, nach dem Gespräch ${zu}`);}
 
+// U12q. Nebenziele im Winter (K28 §5.9): Ein bei der Zwischenbilanz schon verfehltes Nebenziel (Pokal-Aus) rechnet der Vorstand ab (Vertrauen zwischenbilanz.nebenzielNeu)
+//       und ersetzt es durch ein anderes mögliches; ein offenes bleibt.
+{const {S,F,ev,B}=welt(),l=()=>ev('meineZiele()'),me=S.my;S.cup={alive:[9999],hist:[[[me,9999,0,1]]]};S.ziele={s:S.season,tid:me,l:[{k:'pokal',min:2},{k:'finanzen',min:0}]};S.fin={a:5};S.trust=50;
+  F.zwischenbilanz(S.target,10);const z=l(),ersetzt=z[0].k!=='pokal'&&z[0].k!=='finanzen'&&ev('nebenzieleMoeglich')().moegl.includes(z[0].k),bleibt=z[1].k==='finanzen';
+  const trust=S.trust===50+B.zwischenbilanz.nebenzielNeu,text=S.news.some(x=>String(x.t).includes('ist verfehlt'));
+  pruef(ersetzt&&bleibt&&trust&&text,'Nebenziele im Winter: verfehltes Nebenziel wird abgerechnet und ersetzt, offenes bleibt',`ersetzt ${ersetzt} (${z[0].k}), offenes bleibt ${bleibt}, Vertrauen ${S.trust}, Meldung ${text}`);}
+
 // 9. Rücktritt (K28 §5.3, U12b): sofort weg, Ruf −5 statt −8, Jobangebote; mit dem neuen Job ist der Rücktritt vergessen
 {const {S,F,ev,B}=welt();S.phase='play';S.ruf=30;F.ruecktritt();const weg=S.fired===1&&S.ruecktritt===1,r=ev('ruf()'),jobs=(S.jobs||[]).slice();
   if(jobs.length)F.takeJob(jobs[0]);
