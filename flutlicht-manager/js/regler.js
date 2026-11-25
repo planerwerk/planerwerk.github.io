@@ -55,7 +55,12 @@ const KACHEL_ICON={
   medizin:'M7 4h10a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3zM12 8v8M8 12h8',
   training:'M8 4h8v3H8zM6 5.5H5v15h14v-15h-1M9 12h6M9 16h4',
   transfer:'M4 8h14l-3-3M20 16H6l3 3',
-  spiel:'M12 3a9 9 0 1 0 .01 0zM12 7.5l4 3-1.5 4.5h-5L8 10.5z'
+  spiel:'M12 3a9 9 0 1 0 .01 0zM12 7.5l4 3-1.5 4.5h-5L8 10.5z',
+  kredit:'M3 10l9-6 9 6M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18',
+  lohn:'M4 7h16v10H4zM12 9.5a2.5 2.5 0 1 0 .01 0zM7 12h.01M17 12h.01',
+  team:'M8 11a3 3 0 1 0 .01 0zM16 11a3 3 0 1 0 .01 0zM3 20c.7-3 2.7-4.5 5-4.5s4.3 1.5 5 4.5M11 20c.7-3 2.7-4.5 5-4.5s4.3 1.5 5 4.5',
+  kapitaen:'M12 3l2.5 5 5.5.8-4 3.9.9 5.5L12 15.6 7.1 18.2l.9-5.5-4-3.9 5.5-.8z',
+  versprechen:'M8 12l3 3 5-6M12 3a9 9 0 1 0 .01 0z'
 };
 const KACHEL_STATUS={gut:['✓','gut','good'],achtung:['!','Achtung','warn'],kritisch:['✕','kritisch','bad'],info:['i','Info','blue']};
 function kachel(o){const{titel,icon,groesse='',wert,sub,status,trend,inhalt='',link}=o,m=KACHEL_STATUS[status];
@@ -64,3 +69,8 @@ function kachel(o){const{titel,icon,groesse='',wert,sub,status,trend,inhalt='',l
     +(wert!=null?`<div class="k-wert">${esc(String(wert))}</div>`:'')+(sub?`<div class="k-sub">${esc(sub)}</div>`:'')
     +(trend?`<div class="k-trend ${trend.art}"><span aria-hidden="true">${trend.hoch?'▲':'▼'}</span> ${esc(trend.text)}</div>`:'')
     +inhalt+(link?`<button class="k-link" onclick="${link.onclick}">${esc(link.text)} ›</button>`:'')+`</section>`;}
+// Statusmarke aus Zonen eines Reglers (good, warn, bad), damit Kacheln und Regler dieselben Grenzen nutzen
+const ZONEN_STATUS={good:'gut',warn:'achtung',bad:'kritisch'};
+const zonenTreffer=(w,z)=>(z||[]).find(q=>w>=q.von&&w<=q.bis);
+const zonenStatus=(w,z)=>{const q=zonenTreffer(w,z);return q?ZONEN_STATUS[q.art]:undefined;};
+const zonenText=(w,z)=>{const q=zonenTreffer(w,z);return q&&q.text?q.text:'';};

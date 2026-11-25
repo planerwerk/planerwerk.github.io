@@ -290,6 +290,11 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 25.11.2026: W5c2 Kacheln in Finanzen und Kabine (Zweig `mitarbeit/popolupo-w5c2-kacheln`, auf W5e5)
+
+- **Neu:** Kachelzeile oben in Finanzen (Kontostand, Saldo der Saison, Kredit, Gehälter) und Kabine (Stimmung, Zusammenhalt, Kapitän, Gespräche, offene Versprechen). Die Karten darunter bleiben. Statusmarken nutzen dieselben Zonen wie die Regler (`zonenStatus` in `js/regler.js`). Nur Anzeige.
+- **Test:** `tests/fuzz-karrieren.js` rendert beide Ansichten in jeder Karriere.
+
 ### 25.11.2026: W5e5 Spielergesichter (Zweig `mitarbeit/popolupo-w5e5-gesichter`, auf den Korrekturen FW)
 
 - **Weckruf:** kein neuer Testlauf (Testprotokoll weiter bei Lauf 8). Nur Oberfläche, kein Spielzufall (alle Würfe aus `hash32` auf Name und Nation).
