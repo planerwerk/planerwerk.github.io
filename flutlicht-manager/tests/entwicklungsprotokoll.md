@@ -290,6 +290,12 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 25.11.2026: Welle 5, Konzepte und Look-Studie (Zweig `mitarbeit/popolupo-w5-konzepte`, auf den Korrekturen FU)
+
+- **Nur Konzepte, kein Spielcode, keine Tests nötig.** Nach deiner Vorgabe vom 25.11.: K35b §13 (vertraut statt Retro, Kacheln, Farbstudie, eigene Schrift, vertraute Bedienung), K39 Artwork (Ladebildschirme, Sequenzen als Animation, echte Wappen nur selbst laden), K41 Audio, K42 Name (BMH als Leitspruch), PLAN §3 bis §5, offene Entscheidungen.
+- **Look-Studie W5a:** als Entwurf in Claude gebaut (Büro als Kachelfläche, Handy, Farbstudie mit berechneten Kontrasten, Schrift, Titel- und Ladebildschirm). Daraus zwei Änderungen in K35b: Status als Marke mit Symbol statt farbigem Rand, Vereinsfarbe nur für die Identität.
+- **Zusammenführen** erst nach dem ersten Lauf des Testers.
+
 ### 25.11.2026: Korrekturen nach Prüfung FU (Zweig `mitarbeit/popolupo-fu-korrekturen`, auf K10f)
 
 - **Weckruf:** kein neuer Testlauf (Testprotokoll weiter bei Lauf 8).
