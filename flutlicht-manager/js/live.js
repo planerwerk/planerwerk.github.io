@@ -145,7 +145,7 @@ function liveRender(){const L=LIVE;if(!L)return;if(!document.getElementById('lv-
   const karten=s=>{const n=G.ev.filter(e=>e.s===s&&e.t==='R').length;return n?` <span class="lv-rot" title="Platzverweise">${'▮'.repeat(n)}</span>`:'';};
   document.getElementById('lv-tafel').innerHTML=`<div class="board"><div class="t">${esc(tn(G.hid))}${karten(0)}</div><div class="score">${G.sc[0]}:${G.sc[1]}</div><div class="t">${karten(1)}${esc(tn(G.aid))}</div></div>${G.pen?`<p class="dim" style="text-align:center;margin-top:6px">Elfmeterschießen ${G.pen[0]}:${G.pen[1]}</p>`:''}`;
   const sprung=!!L.pfAlt&&G.m-L.pfAlt.m>1; // vorgespult: keine einzelnen Momente nachholen (Prüfung FX5)
-  if(L.scAlt&&!sprung){const d0=G.sc[L.s]-L.scAlt[L.s],d1=G.sc[1-L.s]-L.scAlt[1-L.s];if(d0===1&&d1===0){torSequenz(true,myT().col);klang('jubel');}else if(d1===1&&d0===0){torSequenz(false);klang('raunen');}}L.scAlt=G.sc.slice(); // Torjubel (K39 §3.4, W5e3)
+  if(L.scAlt&&!sprung){const d0=G.sc[L.s]-L.scAlt[L.s],d1=G.sc[1-L.s]-L.scAlt[1-L.s];if(d0>0){torSequenz(true,myT().col);klang('jubel');}else if(d1>0){torSequenz(false);klang('raunen');}}L.scAlt=G.sc.slice(); // Torjubel (K39 §3.4, W5e3)
   if(L.pfAlt){if(!L.pfAlt.ende&&L.ende)klang('pfiff3');else if(!sprung&&!L.pfAlt.hz&&L.hz)klang('pfiff');else if(!sprung&&L.pfAlt.m===0&&G.m>0)klang('pfiff');}L.pfAlt={m:G.m,hz:L.hz,ende:L.ende}; // Pfiffe (K41, W5f): Anpfiff, Halbzeit, Abpfiff; beides nicht beim Fortsetzen
   document.getElementById('lv-druck').innerHTML=liveDruck();
   document.getElementById('lv-meldung').textContent=L.meldung||'';

@@ -28,7 +28,7 @@ Hängt ab von: K39 (Sequenzen), K05 (Live-Spiel) · Wird gebraucht von: –
 ## 4. Abläufe
 
 - Klang startet erst nach der ersten Bedienung (Browser blockieren automatisches Abspielen vorher).
-- Im Live-Spiel läuft die Atmosphäre als Schleife, Ereignisse legen sich darüber. Beim schnellen Vorspulen nur Tore und Abpfiff.
+- Im Live-Spiel läuft die Atmosphäre als Schleife, Ereignisse legen sich darüber. Nach dem Vorspulen nur der Abpfiff, keine nachgeholten Tore oder Pfiffe (seit Prüfung FX5).
 - Bei ausgeblendetem Tab Ton aus. „Weniger Bewegung“ im Gerät betrifft nur Animationen, nicht den Ton (geändert nach Prüfung FX4, vorläufig); stumm geht über den Knopf oben, die Taste M oder das Menü.
 
 ## 5. Regeln und Formeln

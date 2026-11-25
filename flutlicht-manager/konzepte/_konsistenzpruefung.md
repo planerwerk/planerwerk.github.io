@@ -2893,3 +2893,15 @@ Korrekturen auf `mitarbeit/popolupo-fx-korrekturen` (auf W5c3).
 | FX5 | **Niedrig:** Beim Vorspulen liefen An- und Schlusspfiff gleichzeitig, Jubel und Konfetti auch bei einer Niederlage. Jetzt holt das Spiel nach einem Sprung keine Einzelmomente nach, nur der Schlusspfiff kommt; Jubel nur bei genau einem neuen Tor. | ✅ behoben |
 | FX6 | **Niedrig:** Ein eigenes Wappen als SVG ohne Größenangabe ergab ein leeres Bild. Jetzt füllt es die ganze Fläche. | ✅ behoben |
 | FX7 | **Niedrig, Test:** `__check` baute bei jedem Aufruf alle Gesichter neu (Minuten im Fuzz-Test). Jetzt einmal je Seite. Dazu der Hinweis ohne Fund: `tests/ui-zwei-saisons.js` zählte alle Schalter im Menü statt nur der Erinnerungen; jetzt nur `erinnerungAus`. | ✅ behoben |
+
+## FY. Prüfung von W5c2, W5c3 und den Korrekturen FX ohne Laufzeit (25. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 3dcf15e..c0e89e4 gelesen. Kein Laufzeitfehler, kein undefined, NaN oder null in den neuen Kacheln, alles lädt im Simulator. FX1 bis FX7 sind behoben (FX1 mit Perl an 3.600 Namen nachgerechnet: Merkmale jetzt unabhängig). Die Sprung-Logik im Live-Spiel erkennt alle Wege, die Event-Listener werden richtig entfernt. Kein Zugriff auf Spielzufall oder Spielstand. Bericht: `flutlicht-tools/pruefung-fy.md`.
+
+Korrekturen auf `mitarbeit/popolupo-fy-korrekturen` (auf den Korrekturen FX).
+
+| # | Befund | Status |
+|---|---|---|
+| FY1 | **Niedrig:** Bei zwei Toren in einer Minute gab es weder Jubel noch Raunen (Bedingung „genau ein Tor“). Für das Vorspulen ist sie unnötig, das deckt der Sprung ab. Jetzt wieder Jubel, sobald du getroffen hast, sonst Raunen. | ✅ behoben |
+| FY2 | **Niedrig:** Die Kabine zeigte einen abgegebenen Kapitän bis zum nächsten Wochenlauf weiter als Kapitän. Jetzt zählt er nur, solange er bei dir spielt (wie in `js/vorbereitung.js`). | ✅ behoben |
+| – | Hinweise: K41 §4 versprach beim Vorspulen noch Tore, jetzt richtig „nur der Abpfiff“. Die Stadion-Kachel nannte „gut“ ab 90 % Auslastung, der Regler ab `RU.ausverkauftAb`; jetzt beide gleich. | ✅ behoben |

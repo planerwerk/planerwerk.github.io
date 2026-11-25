@@ -290,6 +290,11 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 25.11.2026: Korrekturen nach Prüfung FY (Zweig `mitarbeit/popolupo-fy-korrekturen`, auf den Korrekturen FX)
+
+- **Prüfung FY** (lesender Agent über W5c2, W5c3 und die Korrekturen FX): zwei niedrige Funde und zwei Hinweise, alles behoben, Einzelheiten in der Konsistenzprüfung FY.
+- **Sichtbar:** Jubel auch bei zwei Toren in einer Minute, die Kabine zeigt keinen abgegebenen Kapitän mehr, die Stadion-Kachel nennt „fast ausverkauft“ ab derselben Grenze wie der Regler.
+
 ### 25.11.2026: Korrekturen nach Prüfung FX (Zweig `mitarbeit/popolupo-fx-korrekturen`, auf W5c3)
 
 - **Prüfung FX** (lesender Agent über W5d2 bis W5f, W5e5 und die Korrekturen FW): ein mittlerer und sechs niedrige Funde, alle behoben, Einzelheiten in der Konsistenzprüfung FX.

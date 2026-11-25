@@ -290,7 +290,7 @@ function kabineKacheln(t,kap,vs,zh){const ms=Math.round(mannschaftsStimmung(S.my
   ${offen?kachel({titel:'Versprechen',icon:'versprechen',wert:offen,sub:offen===1?'offenes Versprechen':'offene Versprechen',status:'info'}):''}</div>`;}
 function stadionKacheln(t,schnitt){const ausl=t.cap?Math.round(100*schnitt/t.cap):0;
   return`<div class="kacheln">${kachel({titel:'Plätze',icon:'stadion',wert:t.cap.toLocaleString('de-DE'),sub:'Fassungsvermögen des Stadions'})}
-  ${kachel({titel:'Zuschauerschnitt',icon:'team',wert:avgAtt(),sub:schnitt?`Auslastung ${ausl} %`:'noch kein Heimspiel',status:schnitt?(ausl>=90?'gut':ausl<60?'achtung':undefined):undefined})}
+  ${kachel({titel:'Zuschauerschnitt',icon:'team',wert:avgAtt(),sub:schnitt?(schnitt>=t.cap*RU.ausverkauftAb?'im Schnitt fast ausverkauft':`Auslastung  %`):'noch kein Heimspiel',status:schnitt?(schnitt>=t.cap*RU.ausverkauftAb?'gut':ausl<60?'achtung':undefined):undefined})}
   ${kachel({titel:'VIP-Logen',icon:'kredit',wert:t.logen,sub:'Logen im Stadion'})}
   ${kachel({titel:'Fanshop',icon:'shop',wert:`Stufe ${t.shop}`,sub:'Ausbau weiter unten'})}</div>`;}
 V.finanzen=()=>{const t=myT(),ent=Object.entries(S.fin),inc=ent.filter(e=>e[1]>0).sort((a,b)=>b[1]-a[1]),ex=ent.filter(e=>e[1]<0).sort((a,b)=>a[1]-b[1]),sum=ent.reduce((s,e)=>s+e[1],0),pay=squad(S.my).reduce((s,p)=>s+p.sal,0),maxL=kreditRahmen(t),P=RF.ticketPreis;
@@ -369,7 +369,7 @@ V.stab=()=>{if(!S.stab)return'<div class="card"><p>Dieser Spielstand hat noch ke
   <div class="card"><h2>Vereinslose Mitarbeiter</h2><div class="tw"><table><thead><tr><th>Rolle</th><th>Name</th><th class="num">Qualität</th><th class="num">Gehalt/Jahr</th><th></th></tr></thead><tbody>${frei.map(zeileFrei).join('')}</tbody></table></div></div></div>
   <div class="card"><h2>Was die Rollen bewirken</h2>${rollen.map(r=>`<p><b>${esc(RST.rollen[r].name)}</b> <span class="dim">(${RST.rollen[r].plaetze} ${RST.rollen[r].plaetze>1?'Plätze':'Platz'}${RST.rollen[r].pflicht?', Pflicht':''})</span>: ${esc(RST.rollen[r].text)}</p>`).join('')}</div></div>`;};
 // Kabine (K14, K15): Mannschaftsstimmung, Zusammenhalt, Glaubwürdigkeit, Kapitän, Ansprache, Teamevent, Spieler mit Rolle und Stimmung, Zusagen, Beziehungen
-V.kabine=()=>{const t=myT(),sq=squad(S.my).sort((a,b)=>stimmung(a)-stimmung(b)),kap=PIX.get(t.kap),tev=teameventMoeglich(),vs=(S.vs||[]).filter(v=>{const p=PIX.get(v.pid);return p&&(v.stand==='offen'||v.ende>absTag(S.tag)-28);}),
+V.kabine=()=>{const t=myT(),sq=squad(S.my).sort((a,b)=>stimmung(a)-stimmung(b)),kap=(k=>k&&k.team===S.my?k:null)(PIX.get(t.kap)), /* abgegebener Kapitän zählt nicht mehr (Prüfung FY2) */tev=teameventMoeglich(),vs=(S.vs||[]).filter(v=>{const p=PIX.get(v.pid);return p&&(v.stand==='offen'||v.ende>absTag(S.tag)-28);}),
     gr=grueppchen(S.my),bz=(S.bz||[]).filter(b=>{const p=PIX.get(b[0]);return p&&p.team===S.my;}),ans=anspracheDieseWoche(),zh=zusammenhalt(t),W=RKA.zusammenhalt.wirkung;
   return`${kabineKacheln(t,kap,vs,zh)}<div class="grid" style="margin-top:14px"><div class="card"><h2>Kabine</h2><div class="rgs">${rgAnzeige({label:'Mannschaftsstimmung',sub:'Schnitt, Führungsspieler doppelt, Kapitän zweieinhalbfach',min:0,max:100,wert:Math.round(mannschaftsStimmung(S.my)),zonen:RU.zonenStimmung})}
     ${rgAnzeige({label:'Zusammenhalt',sub:`Teamstärke im Spiel ${de((W[0]+W[1]*zh-1)*100,1)} %`,min:0,max:100,wert:Math.round(zh),zonen:RU.zonenZusammenhalt,marker:[{v:50,t:'Mitte'}]})}
