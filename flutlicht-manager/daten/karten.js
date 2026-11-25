@@ -299,6 +299,12 @@ const KARTEN=[
     optionen:[{text:'Geldstrafe verhängen',wirkung:[{art:'geld',wert:5000},{art:'stimmung',wert:-3},{art:'glaub',wert:1}],folge:'{spieler} zahlt und entschuldigt sich vor der Mannschaft.'},
       {text:'Unter vier Augen reden',wirkung:[{art:'stimmung',wert:-1}],folge:'{spieler} verspricht, sich für den Rest des Lagers zurückzuhalten.'},
       {text:'Ignorieren',wirkung:[{art:'glaub',wert:-1},{art:'zusammenhalt',wert:-1}],folge:'Die anderen haben genau hingesehen.'}],auto:1},
+  // Freier Nachmittag im Lager (K11 §12 Nr. 11, K11j, 25.11., popolupo, vorläufig): am 3. Lagertag eines Lagers ab 5 Tagen, einmal je Lager, Folgekarte aus dem Tageslauf.
+  {id:'lagerFreizeit',titel:'Freier Nachmittag im Lager',bereich:'K11',art:'entscheidung',gross:false,stufe:'haeufig',nurKette:true,ausSpiel:true,ausloeser:'lagerFreizeit',sperrTage:30,
+    texte:['Im Plan des Trainingslagers ist heute Nachmittag eine Lücke. Der Co-Trainer fragt, was ihr daraus macht.','Halbzeit im Trainingslager. Die Spieler hoffen auf einen freien Nachmittag, der Athletiktrainer hätte gern noch eine Einheit.'],
+    optionen:[{text:'Teamausflug',wirkung:[{art:'zusammenhalt',wert:3},{art:'stimmungAlle',wert:1}],folge:'Die Mannschaft fährt gemeinsam los. Am Abend wird viel gelacht.'},
+      {text:'Zusatzeinheit',wirkung:[{art:'konditionAlle',wert:2}],folge:'Noch eine Einheit auf dem Platz. Die Beine sind schwer, die Kondition wächst.'},
+      {text:'Ruhe',wirkung:[],folge:'Die Spieler legen die Beine hoch. Nichts Besonderes passiert.'}],auto:2},
   // Manipulation in der 3. Liga (K30 §8.4, K30g, 23.11., popolupo): Weltereignis, Sperre wie beim Wettskandal und Punktabzug für den Verein. Werte vorläufig.
   {id:'manipulation3',titel:'Manipulation in der 3. Liga',bereich:'K30',art:'info',stufe:'selten',ausloeser:'manipulation3',sperrTage:3650,immer:true, /* immer gemeldet, auch über der Info-Grenze (Prüfung ER3) */
     texte:['Ermittler decken auf: {spieler} von {verein} hat Spiele gegen Geld beeinflusst. Er ist für viele Monate gesperrt, {verein} bekommt 3 Punkte abgezogen.','Wettskandal in der 3. Liga: {spieler} hat für eine Wettmafia Spiele von {verein} verschoben. Das Sportgericht sperrt ihn und zieht {verein} 3 Punkte ab.'],

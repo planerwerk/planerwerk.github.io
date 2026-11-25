@@ -714,4 +714,12 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
     'Länderspiel-Karten: Anruf nur bei der ersten Nominierung eines jungen Spielers, Verletzung nur kurz nach der Rückkehr und solange verletzt',
     `ohne Merker ${ohne}, erste ${!!erste}, zweite ${zweite}, zu alt ${alt}, nicht mehr abgestellt ${weg}, verletzt ${!!verl}, geheilt ${heil}, zu lange her ${lange}`);}
 
+// K11j. Freier Nachmittag im Lager (K11 §12 Nr. 11): am Lagertag tag eines Lagers ab min Tagen eine Folgekarte (einmal je Lager), bei kürzeren Lagern nicht;
+//       die Zusatzeinheit (konditionAlle) hebt die Kondition aller Gesunden und kostet Frische.
+{const {S,ev}=welt(),Z=ev('RKT').lagerFreizeit,A=ev('AUSLOESER'),wirk=ev('kartenWirkung'),lt=ev('lagerTag'),d=S.tag,n=()=>((ev('karten')().kette)||[]).filter(x=>x.id==='lagerFreizeit').length;
+  const lager=t=>{S.lager=[{ort:'schwarzwald',von:d-Z.tag+1,bis:d-Z.tag+t,saison:S.season,kosten:0,tag:0,koller:0}];};
+  const n0=n();lager(Z.min+1);lt(d);lt(d);const einmal=n()===n0+1,b=A.lagerFreizeit({lager:S.lager[0].von});lager(Z.min-1);lt(d);const kurz=n()===n0+1;S.lager=[];
+  const p=ev('squad')(S.my).find(x=>!(x.inj>0)),ko0=p.ko,fit0=p.fit;p.ko=50;p.fit=90;wirk({art:'konditionAlle',wert:2},{},{titel:'Test'});const extra=p.ko===52&&p.fit===Math.max(ev('RE').fitnessMin,90-Z.frische);p.ko=ko0;p.fit=fit0;
+  pruef(einmal&&!!b&&kurz&&extra,'Freier Nachmittag im Lager: Folgekarte am dritten Tag, einmal, nicht bei kurzen Lagern; Zusatzeinheit für alle',`einmal ${einmal}, Auslöser ${!!b}, kurzes Lager ${kurz}, Zusatzeinheit ${extra}`);}
+
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);
