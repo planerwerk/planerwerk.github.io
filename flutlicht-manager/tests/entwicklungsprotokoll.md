@@ -290,6 +290,10 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 25.11.2026: W5c3 Kacheln im Stadion (Zweig `mitarbeit/popolupo-w5c2-kacheln`)
+
+- **Neu:** Kachelzeile oben im Stadion: Plätze, Zuschauerschnitt mit Auslastung (ab 90 % gut, unter 60 % Achtung), VIP-Logen, Fanshop. Nur Anzeige.
+
 ### 25.11.2026: W5c2 Kacheln in Finanzen und Kabine (Zweig `mitarbeit/popolupo-w5c2-kacheln`, auf W5e5)
 
 - **Neu:** Kachelzeile oben in Finanzen (Kontostand, Saldo der Saison, Kredit, Gehälter) und Kabine (Stimmung, Zusammenhalt, Kapitän, Gespräche, offene Versprechen). Die Karten darunter bleiben. Statusmarken nutzen dieselben Zonen wie die Regler (`zonenStatus` in `js/regler.js`). Nur Anzeige.
