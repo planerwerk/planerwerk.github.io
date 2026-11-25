@@ -9,8 +9,7 @@
 # Bögen zu Ringstücken (quadratische Kurven, höchstens 45 Grad je Stück). An Ecken kommt eine Gehrung dazu, bis zum Zweifachen der halben
 # Strichstärke, sonst eine abgeschrägte Ecke (wie stroke-miterlimit 2). Freie Enden sind stumpf. Die Flächen dürfen sich überlappen:
 # TrueType füllt nach der Nonzero-Regel, das erste Flag jedes Zeichens trägt OVERLAP_SIMPLE.
-# Umfang: Ziffern und Zeichen für Zahlen (W5d1), Großbuchstaben mit Ä Ö Ü (W5d2). Kleinbuchstaben folgen (W5d3); bis dahin gelten die
-# Buchstaben nur für Text in Versalien (Familie "Flutlicht Versal" im CSS), sonst kommen sie aus Saira Condensed.
+# Umfang: Ziffern und Zahlzeichen (W5d1), Großbuchstaben mit Ä Ö Ü (W5d2), Kleinbuchstaben mit ä ö ü ß, €, Klammern und häufige Satzzeichen (W5d3).
 # Lizenz der Schrift: SIL Open Font License 1.1 (vorläufig, K35b §13.4).
 use strict; use warnings;
 use MIME::Base64 qw(encode_base64);
@@ -85,6 +84,52 @@ my %UML=(Ae=>['A',0xC4,10,24,32,46],Oe=>['O',0xD6,12,26,34,48],Ue=>['U',0xDC,10,
 for my $b(keys %V){$Z{$b}=$V{$b};$U{$b}=[ord $b];}
 for my $u(keys %UML){my($b,$cp,$a1,$a2,$b1,$b2)=@{$UML{$u}};$Z{$u}={w=>$V{$b}{w},p=>[@{$V{$b}{p}},[0,[L=>$a1,-15,$a2,-15]],[0,[L=>$b1,-15,$b2,-15]]]};$U{$u}=[$cp];}
 
+# Kleinbuchstaben (W5d3): x-Höhe mit der Mittellinie bei y = 35 (Oberkante 28, also 504 Einheiten), Unterlängen bis y = 121,
+# Rundungen mit Radius 16 (die Bögen der Versalien mit 20 passen nicht in die kleinere Höhe). Dazu ß, €, Klammern und häufige Satzzeichen.
+my @o_l=([A=>23,51,16,180,270],[L=>23,35,29,35],[A=>29,51,16,270,360],[L=>45,51,45,77],[A=>29,77,16,0,90],[L=>29,93,23,93],[A=>23,77,16,90,180],[L=>7,77,7,51]);
+my @bauch_links=([L=>7,35,29,35],[A=>29,51,16,270,360],[L=>45,51,45,77],[A=>29,77,16,0,90],[L=>29,93,7,93],[L=>7,93,7,35]);       # Bauch mit eckiger linker Seite (b, p)
+my @bauch_rechts=([L=>45,35,23,35],[A=>23,51,16,270,180],[L=>7,51,7,77],[A=>23,77,16,180,90],[L=>23,93,45,93],[L=>45,93,45,35]);  # Bauch mit eckiger rechter Seite (a, d, g, q)
+my @C_gross=@{$V{C}{p}};
+my %KL=(
+  'a'=>{w=>52,p=>[[1,@bauch_rechts]]},
+  'b'=>{w=>52,p=>[[0,[L=>7,7,7,93]],[1,@bauch_links]]},
+  'c'=>{w=>52,p=>[[0,[A=>29,51,16,360,270],[L=>29,35,23,35],[A=>23,51,16,270,180],[L=>7,51,7,77],[A=>23,77,16,180,90],[L=>23,93,29,93],[A=>29,77,16,90,0]]]},
+  'd'=>{w=>52,p=>[[0,[L=>45,7,45,93]],[1,@bauch_rechts]]},
+  'e'=>{w=>52,p=>[[0,[L=>7,64,45,64],[L=>45,64,45,51],[A=>29,51,16,360,270],[L=>29,35,23,35],[A=>23,51,16,270,180],[L=>7,51,7,77],[A=>23,77,16,180,90],[L=>23,93,45,93]]]},
+  'f'=>{w=>40,p=>[[0,[L=>14,93,14,23],[A=>30,23,16,180,270],[L=>30,7,33,7]],[0,[L=>5,35,33,35]]]},
+  'g'=>{w=>52,p=>[[1,@bauch_rechts],[0,[L=>45,35,45,105],[A=>29,105,16,0,90],[L=>29,121,7,121]]]},
+  'h'=>{w=>52,p=>[[0,[L=>7,7,7,93]],[0,[L=>7,35,29,35],[A=>29,51,16,270,360],[L=>45,51,45,93]]]},
+  'i'=>{w=>28,p=>[[0,[L=>14,35,14,93]],[0,[L=>7,14,21,14]]]},
+  'j'=>{w=>28,p=>[[0,[L=>14,35,14,105],[A=>-2,105,16,0,90]],[0,[L=>7,14,21,14]]]},
+  'k'=>{w=>48,p=>[[0,[L=>7,7,7,93]],[0,[L=>41,35,7,69]],[0,[L=>19,57,43,93]]]},
+  'l'=>{w=>28,p=>[[0,[L=>14,7,14,93]]]},
+  'm'=>{w=>74,p=>[[0,[L=>7,93,7,35],[L=>7,35,21,35],[A=>21,51,16,270,360],[L=>37,51,37,93]],[0,[L=>37,51,37,35],[L=>37,35,51,35],[A=>51,51,16,270,360],[L=>67,51,67,93]]]},
+  'n'=>{w=>52,p=>[[0,[L=>7,93,7,35],[L=>7,35,29,35],[A=>29,51,16,270,360],[L=>45,51,45,93]]]},
+  'o'=>{w=>52,p=>[[1,@o_l]]},
+  'p'=>{w=>52,p=>[[0,[L=>7,35,7,121]],[1,@bauch_links]]},
+  'q'=>{w=>52,p=>[[0,[L=>45,35,45,121]],[1,@bauch_rechts]]},
+  'r'=>{w=>44,p=>[[0,[L=>7,93,7,35],[L=>7,35,25,35],[A=>25,51,16,270,315]]]},
+  's'=>{w=>52,p=>[[0,[L=>45,35,22,35],[A=>22,49.5,14.5,270,90],[L=>22,64,30,64],[A=>30,78.5,14.5,270,450],[L=>30,93,7,93]]]},
+  't'=>{w=>40,p=>[[0,[L=>14,7,14,77],[A=>30,77,16,180,90],[L=>30,93,33,93]],[0,[L=>5,35,33,35]]]},
+  'u'=>{w=>52,p=>[[0,[L=>7,35,7,77],[A=>23,77,16,180,90],[L=>23,93,45,93],[L=>45,93,45,35]]]},
+  'v'=>{w=>52,p=>[[0,[L=>7,35,26,93],[L=>26,93,45,35]]]},
+  'w'=>{w=>74,p=>[[0,[L=>7,35,19,93],[L=>19,93,37,50],[L=>37,50,55,93],[L=>55,93,67,35]]]},
+  'x'=>{w=>52,p=>[[0,[L=>7,35,45,93]],[0,[L=>45,35,7,93]]]},
+  'y'=>{w=>52,p=>[[0,[L=>45,35,15,121]],[0,[L=>7,35,25,93]]]},
+  'z'=>{w=>52,p=>[[0,[L=>7,35,45,35],[L=>45,35,7,93],[L=>7,93,45,93]]]},
+  'sz'=>{w=>52,p=>[[0,[L=>7,93,7,23],[A=>23,23,16,180,270],[L=>23,7,25,7],[A=>25,21,14,270,450],[L=>25,35,19,35]],[0,[L=>19,35,29,35],[A=>29,51,16,270,360],[L=>45,51,45,77],[A=>29,77,16,0,90],[L=>29,93,19,93]]]},
+  'euro'=>{w=>56,p=>[@C_gross,[0,[L=>-3,45,33,45]],[0,[L=>-3,59,33,59]]]},
+  '('=>{w=>32,p=>[[0,[L=>22,3,14,11],[L=>14,11,14,89],[L=>14,89,22,97]]]},
+  ')'=>{w=>32,p=>[[0,[L=>10,3,18,11],[L=>18,11,18,89],[L=>18,89,10,97]]]},
+  '!'=>{w=>28,p=>[[0,[L=>14,7,14,70]],[0,[L=>7,93,21,93]]]},
+  '?'=>{w=>46,p=>[[0,[A=>23,23,16,180,360],[L=>39,23,39,33],[L=>39,33,23,52],[L=>23,52,23,70]],[0,[L=>16,93,30,93]]]},
+  'mdot'=>{w=>28,p=>[[0,[L=>7,57,21,57]]]},
+  'ndash'=>{w=>56,p=>[[0,[L=>4,52,52,52]]]},
+);
+my %KU=(sz=>0xDF,euro=>0x20AC,mdot=>0xB7,ndash=>0x2013);
+for my $k(keys %KL){$Z{$k}=$KL{$k};$U{$k}=[$KU{$k}//ord $k];}
+for my $u([ae=>'a',0xE4],[oe=>'o',0xF6],[ue=>'u',0xFC]){my($n,$b,$cp)=@$u;$Z{$n}={w=>52,p=>[@{$KL{$b}{p}},[0,[L=>9,14,23,14]],[0,[L=>29,14,43,14]]]};$U{$n}=[$cp];}
+
 # ---------- Geometrie (Rasterkoordinaten, y nach unten) ----------
 sub info { my $s=shift;
   if($s->[0] eq 'L'){my(undef,$x1,$y1,$x2,$y2)=@$s;my($dx,$dy)=($x2-$x1,$y2-$y1);my $l=sqrt($dx*$dx+$dy*$dy)||1;my @d=($dx/$l,$dy/$l);
@@ -155,9 +200,9 @@ $T{maxp}=pack('Nn14',0x00010000,$ng,$maxP,$maxC,0,0,2,0,0,0,0,0,0,0,0);
 my @cps=sort{$a<=>$b}keys %cmap;
 $T{'OS/2'}=pack('nnnnnnnnnnnnnnnn',4,int($sumAdv/$ng+0.5),700,3,0,650,600,0,75,650,600,0,350,50,300,0)
   .pack('C10',2,11,8,6,3,0,0,0,0,0)
-  .pack('NNNN',0x3,1<<6,0,0).'NONE'
+  .pack('NNNN',0x3|(1<<31),(1<<1)|(1<<6),0,0).'NONE'
   .pack('nnnnnnnn',0x20|0x80,$cps[0],($cps[-1]>0xFFFF?0xFFFF:$cps[-1]),800,n16(-200),0,900,250)
-  .pack('NN',1,0).pack('nnnnn',0,700,0,0x20,0);
+  .pack('NN',1,0).pack('nnnnn',504,700,0,0x20,0);
 { my @seg=map{[$_,$_,$cmap{$_}]}@cps;push @seg,[0xFFFF,0xFFFF,0];my $sc=@seg;my $es=floor(log($sc)/log(2));my $sr=2*(2**$es);
   my $st=pack('n*',map{$_->[1]}@seg).pack('n',0).pack('n*',map{$_->[0]}@seg).pack('n*',map{$_->[0]==0xFFFF?1:(($_->[2]-$_->[0])&0xFFFF)}@seg).pack('n*',(0)x$sc);
   my $sub=pack('nnnnnnn',4,14+length($st),0,2*$sc,$sr,$es,2*$sc-$sr).$st;
@@ -189,11 +234,8 @@ my $b64=encode_base64($font,'');
 open(my $c,'>:raw',"$wurzel/css/schrift.css") or die "Kann CSS nicht schreiben: $!\n";
 print $c "/* Flutlicht Display (K35b \xc2\xa713.4, W5d): eigene Anzeigeschrift, erzeugt von schrift/schrift.pl, nicht von Hand \xc3\xa4ndern.\n"
  ."   Eingebettet als data-URL, damit sie auch per Doppelklick (file://) l\xc3\xa4dt. Lizenz der Schrift: SIL Open Font License 1.1 (vorl\xc3\xa4ufig).\n"
- ."   \"Flutlicht Display\" gilt per unicode-range nur f\xc3\xbcr Ziffern und Zahlzeichen (\xc3\xbcberall in --f-disp), Buchstaben kommen dort aus Saira Condensed,\n"
- ."   bis es Kleinbuchstaben gibt. \"Flutlicht Versal\" ist dieselbe Datei mit Gro\xc3\x9fbuchstaben, nur f\xc3\xbcr Text in Versalien (.go, .logo in css/spiel.css). */\n"
+ ."   Sie ist die erste Schrift in --f-disp (css/spiel.css). Zeichen, die ihr fehlen (seltene Satzzeichen), nimmt der Browser einzeln aus Saira Condensed. */\n"
  ."\@font-face{font-family:\"Flutlicht Display\";src:url(data:font/ttf;base64,$b64) format(\"truetype\");font-weight:100 900;font-style:normal;font-display:swap;"
- ."unicode-range:U+0020,U+0025,U+002B-003A,U+00A0,U+2212}\n"
- ."\@font-face{font-family:\"Flutlicht Versal\";src:url(data:font/ttf;base64,$b64) format(\"truetype\");font-weight:100 900;font-style:normal;font-display:swap;"
- ."unicode-range:U+0020-005A,U+00A0,U+00C4,U+00D6,U+00DC,U+2212}\n";
+ ."unicode-range:U+0020-007E,U+00A0,U+00B7,U+00C4,U+00D6,U+00DC,U+00DF,U+00E4,U+00F6,U+00FC,U+2013,U+2212,U+20AC}\n";
 close $c;
 printf "Flutlicht Display: %d Zeichen, %d Tabellen, %d Byte TTF, %d Byte CSS, h\xc3\xb6chstens %d Punkte und %d Konturen je Zeichen\n",$ng,$nt,length $font,length($b64)+600,$maxP,$maxC;

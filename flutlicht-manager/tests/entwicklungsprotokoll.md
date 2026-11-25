@@ -290,6 +290,11 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 25.11.2026: W5d3 Kleinbuchstaben, die eigene Schrift gilt für alle Anzeigetexte (Zweig `mitarbeit/popolupo-w5d-schrift`)
+
+- **Neu:** a bis z mit ä, ö, ü, ß, dazu €, Klammern, !, ?, Mittelpunkt und Halbgeviertstrich (85 Zeichen, 18 KB). „Flutlicht Display“ ist jetzt die Anzeigeschrift für alle Überschriften, Kennzahlen, Knöpfe, die Anzeigetafel und den Titel (`--f-disp`). Fehlende Zeichen kommen einzeln aus Saira Condensed. Die Familie „Flutlicht Versal“ aus W5d2 entfällt.
+- **Bitte beim Testlauf ansehen:** Wirken Überschriften oder Knöpfe zu breit, zu eng oder unruhig? Kerning fehlt noch.
+
 ### 25.11.2026: W5d2 Großbuchstaben der eigenen Schrift (Zweig `mitarbeit/popolupo-w5d-schrift`)
 
 - **Neu:** A bis Z mit Ä, Ö, Ü in `schrift/schrift.pl` (48 Zeichen, 10 KB). Zweite Schriftfamilie „Flutlicht Versal“ in `css/schrift.css` (dieselbe Datei, unicode-range mit Großbuchstaben), genutzt für die Hauptknöpfe (`.go`) und den Titel (`.logo`), die ohnehin in Versalien stehen. Sonst bleiben Buchstaben aus Saira Condensed, bis es Kleinbuchstaben gibt.

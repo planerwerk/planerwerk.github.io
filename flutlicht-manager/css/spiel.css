@@ -9,7 +9,7 @@
   --amber:#ffc83d; --ink:#1a1300; --good:#3ecf8e; --warn:#ffb020; --bad:#ff6b6b; --blue:#5aa9ff;
   --led:#ffc83d; --you:#7cc4ff; --spur:#0a1220; --spur2:#111b2c; --glow:rgba(255,255,255,.18); --glow-led:rgba(255,200,61,.4);
   --tafel:#070d17; --tafel-text:#eef2f8; --tafel-led:#ffc83d;
-  --f-disp:"Flutlicht Display","Saira Condensed","Arial Narrow",system-ui,sans-serif; /* eigene Schrift für Ziffern (css/schrift.css, W5d1), Buchstaben aus Saira */
+  --f-disp:"Flutlicht Display","Saira Condensed","Arial Narrow",system-ui,sans-serif; /* eigene Schrift (css/schrift.css, W5d), was ihr fehlt, aus Saira */
   --f-body:"Barlow",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   color-scheme:dark;
 }
@@ -35,7 +35,7 @@ button:disabled{opacity:.45;cursor:not-allowed}
 button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
 select,input,textarea{background:var(--night);border:1px solid var(--rule);border-radius:6px;padding:6px 8px;max-width:100%}
 textarea{width:100%;min-height:90px;font-size:12px}
-.go{background:var(--amber);color:var(--ink);border:0;font-family:"Flutlicht Versal",var(--f-disp);font-weight:700;font-size:18px;letter-spacing:.04em;padding:9px 18px;text-transform:uppercase}
+.go{background:var(--amber);color:var(--ink);border:0;font-family:var(--f-disp);font-weight:700;font-size:18px;letter-spacing:.04em;padding:9px 18px;text-transform:uppercase}
 .go:hover{filter:brightness(1.08)}
 .wrap{max-width:1180px;margin:0 auto;display:grid;gap:14px}
 .wrap>*,.ovb>*{min-width:0}
@@ -134,7 +134,7 @@ label input,label select{color:var(--chalk)}
 details summary{cursor:pointer;font-weight:600}
 #toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom,0px));background:var(--amber);color:var(--ink);padding:9px 16px;border-radius:8px;font-weight:600;z-index:40;max-width:calc(100% - 32px)}
 .start{max-width:620px;margin:5vh auto 0;display:grid;gap:18px}
-.logo{font-family:"Flutlicht Versal",var(--f-disp);font-weight:800;font-size:clamp(48px,11vw,92px);line-height:.88;margin:0;text-transform:uppercase;letter-spacing:.01em;text-shadow:0 0 40px var(--glow)}
+.logo{font-family:var(--f-disp);font-weight:800;font-size:clamp(48px,11vw,92px);line-height:.88;margin:0;text-transform:uppercase;letter-spacing:.01em;text-shadow:0 0 40px var(--glow)}
 .logo span{display:block;color:var(--amber);text-shadow:0 0 34px var(--glow-led)}
 .beams{height:6px;border-radius:3px;background:linear-gradient(90deg,transparent,var(--amber),transparent);opacity:.7}
 .tagline{color:var(--mist);font-size:16px;margin:0}
