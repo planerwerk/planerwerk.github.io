@@ -166,4 +166,11 @@ const tagMit=(ev,mmtt)=>{for(let d=0;d<400;d++)if(ev('mmtt')(d)===mmtt)return d;
   pruef(aus&&ausTag&&anSpiel&&rate&&sonst&&summe&&lauf&&offen&&bezahlt&&ausOffen,'TV-Gelder in vier Raten: nur mit Schalter, ein Viertel am Ratentag, sonst nichts, übers Jahr gleich viel, offene Raten in der Prognose',
     `aus ${aus}/${ausTag}, an ${anSpiel}/${rate}/${sonst}, Summe ${summe}, nicht laufend ${lauf}, offen ${offen}, nach der Zahlung ${bezahlt}, aus ${ausOffen}`);}
 
+// Prüfung FL2, FL7: Die TV-Rate wird nach dem Monatsbericht gebucht (taeglichLauf), die Insolvenzprüfungen zählen die heute fällige Rate mit (tvHeute), gezahlt oder
+//       mit Schalter aus nicht mehr.
+{const {F,S,ev,t}=welt(),R0=ev('RF').tv.raten,d=tagMit(ev,R0.tage[0]),th=ev('tvHeute'),bt=ev('tvSaisonBetrag');
+  const reihe=String(ev('taeglichLauf')).includes('finanzenTag(d);tvRatenTag(d)')&&String(ev('insolvenzPruefen')).includes('tvHeute(t)')&&String(ev('kiInsolvenzPruefen')).includes('tvHeute(t)');
+  S.tag=d;delete S.tvRT;const aus=th(t)===0;R0.an=true;const heute=th(t)===Math.round(bt(t)/R0.tage.length);F.tvRatenTag(d);const gezahlt=th(t)===0;S.tag=d+1;delete S.tvRT;const morgen=th(t)===0;R0.an=false;
+  pruef(reihe&&aus&&heute&&gezahlt&&morgen,'TV-Raten: Buchung nach dem Monatsbericht, die Insolvenzprüfung zählt die heute fällige Rate mit',`Reihenfolge ${reihe}, aus ${aus}, heute ${heute}, gezahlt ${gezahlt}, anderer Tag ${morgen}`);}
+
 console.log(probleme.length?`\n${probleme.length} Problem(e).`:'\nAlles in Ordnung.');process.exitCode=probleme.length?1:0;

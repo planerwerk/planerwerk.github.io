@@ -115,4 +115,16 @@ console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
   pruef(wert&&gesetzt&&nochNicht&&erreicht&&weg,'Zielvorgabe: zählt in der Verhandlung, greift nach den Pflichtspielen seit der Unterschrift, fällt beim Vertragsende weg',
     `Wert ${wert} (+${Math.round(w1-w0)}), gesetzt ${gesetzt}, vorher nichts ${nochNicht}, erreicht ${erreicht} (${p.sal}), Vertragsende ${weg}`);}
 
+// Prüfung FL6, FL7: Formularweg (vtPaket liest vt_zv, nur mit dem Bereich praemien) und Verlängerung: Eine laufende Zielvorgabe zählt weiter und bringt keinen
+//       neuen Nachlass; wer sie in der Verlängerung streicht, muss dem Spieler dafür so viel mehr bieten.
+{const {S,F,ev,V}=welt(),p=ev('squad')(S.my)[1],Z=V.zielvorgabe,pw=ev('paketWert'),Fd=1e6,doc=ev('document'),zv={n:Z.spiele,plus:Z.plus},o={ct:3,sal:1e6};
+  doc.getElementById('vt_zv').value='1';const o1=F.vtPaket(p,Fd,3,false);doc.getElementById('vt_zv').value='';const o0=F.vtPaket(p,Fd,3,false);
+  const formular=!ev('frei')('praemien')||(!!o1.zv&&o1.zv.n===Z.spiele&&o1.zv.plus===Z.plus&&!o0.zv);
+  F.vtUnterschrift(p,Object.assign({},o,{zv}),false);p.zv.st-=5;const st0=p.zv.st;
+  const wMit=pw(p,S.my,Object.assign({},o,{zv}),Fd),wOhne=pw(p,S.my,o,Fd);delete p.zv;const wFrei=pw(p,S.my,o,Fd);p.zv={n:Z.spiele,plus:Z.plus,st:st0};
+  const bewertung=Math.abs(wMit-wFrei)<1e-6&&Math.abs(wFrei-wOhne-Fd*Z.wert)<1e-6;
+  F.vtUnterschrift(p,Object.assign({},o,{zv}),false);const weiter=!!p.zv&&p.zv.st===st0;F.vtUnterschrift(p,o,false);const gestrichen=!p.zv;
+  pruef(formular&&bewertung&&weiter&&gestrichen,'Zielvorgabe: Formular, Verlängerung ohne neuen Nachlass, Zählung läuft weiter, Streichen kostet',
+    `Formular ${formular}, Bewertung ${bewertung} (${Math.round(wMit-wFrei)}/${Math.round(wFrei-wOhne)}), läuft weiter ${weiter}, gestrichen ${gestrichen}`);}
+
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

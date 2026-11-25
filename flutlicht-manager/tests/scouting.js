@@ -87,6 +87,16 @@ const scout=(S,F,q,gebiet,ev=F.__ev)=>{let x;for(let i=0;i<50;i++){x=F.stabNeu('
   pruef(gleich&&lieb&&re&&bericht&&ohne&&mit,'Scoutbericht: wahrscheinlicher Stil wie die Wahl im Spiel, Reaktion auf deinen Lieblingsstil, Ausfälle, erst nach der Beobachtung, nur einmal',
     `ohne Reaktion gleich ${gleich}, Lieblingsstil ${lieb}, Reaktion ${re}, Bericht ${bericht} („${b}“), Vorschau ohne/mit ${ohne}/${mit}`);}
 
+// Prüfung FM4, FM9, FM11: Ein im Wettbewerb des nächsten Spiels gesperrter Spieler steht nicht unter „Gefährlich“, sondern unter „Es fehlen (gesperrt)“
+//       (scoutBericht rechnet mit mitWettbewerb); ein Abgestellter steht dort mit „Nationalmannschaft“.
+{const {F,S,ev}=welt(),t=ev('myT()'),l=ev('meineLigaspiele')(),ns=ev('naechstesSpiel');let i=3;while(i<l.length-1&&(ns(l[i].tag-1)||{}).tag!==l[i].tag)i++;S.tag=l[i].tag-2;S.gespielt=-1;
+  const f=ev('paarung')(l[i]),home=f[0]===S.my,o=home?f[1]:f[0],wb=ev('naechsterWb')(),sq=ev('squad')(o).filter(x=>!(x.inj>0)).sort((a,b)=>b.str-a.str),g=sq[0],n=sq[1];
+  const sp0=g.sperre;g.sperre=Object.assign({},g.sperre||{},{[wb]:{rot:1,gelb:0}}); /* gesperrt nur im Wettbewerb des nächsten Spiels (p.sperre je Wettbewerb, disziplin.js) */
+  const gesperrt=ev('gesperrt')(g,wb);let ok=true,txt='';
+  if(gesperrt){txt=F.scoutBericht(o,home);ok=!txt.split('Es fehlen')[0].includes(g.n)&&txt.includes(g.n+' (gesperrt)');}if(sp0===undefined)delete g.sperre;else g.sperre=sp0;
+  const a=ev('absTag')(S.tag);n.lsp={von:a,bis:a+3,n:2,st:1};const txt2=F.scoutBericht(o,home);delete n.lsp;const nat=txt2.includes(n.n+' (Nationalmannschaft)');
+  pruef(ok&&nat,'Scoutbericht: gesperrt im Wettbewerb des Spiels fehlt, nicht gefährlich; Nationalspieler fehlen',`gesperrt ${gesperrt?ok:'nicht prüfbar'}, Nationalmannschaft ${nat}`);}
+
 // K18e. Scout liegt daneben (K18 §8): Einschätzung beim Kauf 6 über der wahren Stärke gibt eine Meldung, 2 darüber keine; der Merker ist danach weg;
 //       kaufSichtMerken merkt sich bei einem fremden Spieler Mitte und Stärke, bei einem eigenen (genau bekannt) nichts
 {const {S,F,ev}=welt(),sq=ev('squad')(S.my),[p,q]=sq,n=()=>S.news.filter(x=>x.t.startsWith('Scout lag daneben')).length,f=S.pl.find(x=>x.team>=0&&x.team!==S.my);

@@ -287,5 +287,11 @@ const kaufe=(w,p,fee,yrs=3)=>{const els=w.W.ev('document');els.getElementById('f
   pruef(mit&&mitBonus&&ohne&&text&&getauscht&&ersatz,'Tausch in Angeboten der Computer-Vereine: Spieler der Transferliste, Gebot gesenkt, nicht mit Bonus, Wechsel mit Vertrag, sonst Geld',
     `Gebot ${mit}, mit Bonus ${mitBonus}, Chance 0 ${ohne}, Text ${text}, getauscht ${getauscht}, Ersatz ${ersatz}`);}
 
+// Prüfung FL7: Bonus (K19k) und Tausch (K19l) werden in market() an beiden Stellen angehängt (Transferliste und Überraschung), beim Überraschungsangebot nicht für
+//       unverkäufliche Spieler, und beide landen im Angebot.
+{const {ev}=welt(),m=String(ev('market')),n=re=>(m.match(re)||[]).length;
+  const ok=n(/bonusKI\(b,p,g\)/g)===2&&n(/tauschKI\(b,p,g\)/g)===2&&n(/if\(g\.bo\)o\.bo=g\.bo/g)===2&&n(/if\(g\.ta\)o\.ta=g\.ta/g)===2&&m.includes('if(!unverkaeuflichDu(p)){bonusKI(b,p,g);tauschKI(b,p,g);}');
+  pruef(ok,'Angebote an dich: Bonus und Tausch an beiden Stellen in market(), nicht beim unverkäuflichen Spieler',ok?null:'Aufrufe in market() fehlen');}
+
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);
