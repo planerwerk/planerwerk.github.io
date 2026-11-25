@@ -2852,3 +2852,14 @@ Korrekturen auf `mitarbeit/popolupo-fu-korrekturen` (auf K10f).
 | FU4 | **Niedrig, Doku:** K18i wirkt nur auf die Stärke, das Talent bei Talentlücken sehen die Vereine genau. So festgehalten (K18, Regeln). | ✅ behoben |
 | FU5 | **Niedrig, Test:** Der Teil „dein Verein ohne Automatik“ im Test K10f war immer grün. Jetzt mit Belastung und mit dem Fall unter der Automatik. | ✅ behoben |
 | FU6 | **Niedrig, Doku:** K10f verwies auf K10 §5 statt §7. Berichtigt. | ✅ behoben |
+
+## FV. Prüfung der Korrekturen FU ohne Laufzeit (25. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 41604cc..bad3ab0 gelesen, nichts ausgeführt. FU1 bis FU6 sind vollständig behoben. Kein Laufzeit- oder Syntaxfehler. Mit Schalter aus ändert sich nichts (`gs` bleibt leer, kein neuer R()-Aufruf), der Gleichschritt 5a bleibt symmetrisch. Die anderen Leser des Spielergebnisses (Statistik, Versprechen, Prämien, Live-Spiel, Speichern, Tests mit JSON-Vergleich) brauchen `gs` nicht. Bericht: `flutlicht-tools/pruefung-fv.md`.
+
+Korrekturen auf `mitarbeit/popolupo-fv-korrekturen` (auf den Korrekturen FU, ohne die Welle-5-Zweige).
+
+| # | Befund | Status |
+|---|---|---|
+| FV1 | **Niedrig (nur mit Schalter):** Die am Saisonende nachgeholte Relegation (Sicherheitsnetz für ältere Spielstände, `seasonEndLauf`) lief ohne `wichtig` und wurde wie ein Ligaspiel nach Belastung rotiert. Jetzt mit `wichtig` wie am Relegationstag (`js/ablauf.js`). Test K10f prüft den Anschluss. | ✅ behoben |
+| – | Anmerkung ohne Befund: Ein geschontes Spiel deines Vereins unter der Automatik zählt gegen ein Einsatz-Versprechen, wie bei der Pokal-Rotation K13j und der Aufstellung durch den Stab. | so gewollt |

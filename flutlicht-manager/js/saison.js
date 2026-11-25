@@ -26,7 +26,7 @@ function seasonEndLauf(){
   S.teams.forEach(t=>{if(aktiv(t))t.lastPos=rank(t.lg,t.id);t.lastLg=t.lg;});tvWertungEintragen(); // Fünfjahreswertung der TV-Gelder (K23c), vor Auf- und Abstieg
   T[3].forEach(r=>{S.teams[r.id].ewig3=(S.teams[r.id].ewig3||0)+r.p;});
   // Relegation (K13 §3.3): fehlt ein Spiel, wird es nachgerechnet, das Rückspiel mit Verlängerung und Elfmeterschießen. Ein Los gibt es nur noch für alte Spielstände.
-  const ergebnis=(sp,paar)=>{const a=sp[0]||sim(paar[1],paar[0]),b=sp[1]||sim(paar[0],paar[1],{ko:1,agg:[a.ag,a.hg]}),g0=a.ag+b.hg,g1=a.hg+b.ag,s=relegationSieger([a,b],paar);
+  const ergebnis=(sp,paar)=>{const a=sp[0]||sim(paar[1],paar[0],{wichtig:true}),b=sp[1]||sim(paar[0],paar[1],{wichtig:true,ko:1,agg:[a.ag,a.hg]}),g0=a.ag+b.hg,g1=a.hg+b.ag,s=relegationSieger([a,b],paar);
     return{sieger:s!=null?s:(R()<RS.relegationLos?paar[0]:paar[1]),text:`Hinspiel ${tn(a.h)} – ${tn(a.a)} ${a.hg}:${a.ag}, Rückspiel ${tn(b.h)} – ${tn(b.a)} ${b.hg}:${b.ag}${b.pen?`, Elfmeterschießen ${b.pen[0]}:${b.pen[1]}`:''}`};};
   // Relegation 1./2. Liga und 2./3. Liga (Zweitmannschaften der 3. Liga dürfen nicht aufsteigen)
   const reihe=aufstiegsReihe3(),rel=[T[1][15].id,T[2][2].id],rel2=[T[2][15].id,reihe[2]],e1=ergebnis(S.relSp,rel),e2=ergebnis(S.relSp2,rel2);

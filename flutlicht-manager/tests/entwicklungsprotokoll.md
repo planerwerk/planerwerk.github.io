@@ -290,6 +290,13 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 25.11.2026: Korrektur nach Prüfung FV (Zweig `mitarbeit/popolupo-fv-korrekturen`, auf den Korrekturen FU)
+
+- **Weckruf:** kein neuer Testlauf (Testprotokoll weiter bei Lauf 8). Dieser Zweig enthält nur Mechanik, keine Oberfläche aus Welle 5, und ist der Stand für den Tester.
+- **Prüfung FV** (lesender Agent über die Korrekturen FU): ein niedriger Fund, behoben, Einzelheiten in der Konsistenzprüfung FV.
+- **Nur mit Schalter K10f:** Auch die am Saisonende nachgeholte Relegation gilt als wichtiges Spiel und wird nicht nach Belastung rotiert.
+- **Test:** `tests/wettbewerbe.js` (K10f prüft zusätzlich den Anschluss in `seasonEndLauf`).
+
 ### 25.11.2026: Korrekturen nach Prüfung FU (Zweig `mitarbeit/popolupo-fu-korrekturen`, auf K10f)
 
 - **Weckruf:** kein neuer Testlauf (Testprotokoll weiter bei Lauf 8).
