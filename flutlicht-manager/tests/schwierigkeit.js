@@ -39,4 +39,10 @@ for(const k of ['leicht','schwer']){const {W,S}=R[k],ls=W.ev('meineLigaspiele()'
   S.einst.exp={[X[2].k]:true};F.experimenteAnwenden();const laden=o(X[2]).an===true;delete S.einst.exp[X[2].k];F.experimenteAnwenden();const wieder=o(X[2]).an===false;
   pruef(alleAus&&an&&aus&&fremd&&laden&&wieder,'Neue Regeln ausprobieren: alle Schalter aus, ein und aus je Spielstand, von außen gesetzte Schalter bleiben',
     `aus ${alleAus}, an ${an}, wieder aus ${aus}, von außen ${fremd}, Laden ${laden}/${wieder}`);}
+
+// Prüfung FN2, FN5, FO8: TV-Raten im Menü umgeschaltet gelten erst ab der nächsten Saison (S.tvModus); Länderspiele im Menü ausgeschaltet holen Abgestellte sofort zurück.
+{const {W,F,S}=welt('normal'),ev=W.ev,an=ev('tvRatenAn');delete S.tvModus;
+  F.experimentSetzen('tvRaten',true);const dieseSaison=an()===false&&!!S.tvModus&&S.tvModus.s===S.season;S.season++;const naechste=an()===true;S.season--;F.experimentSetzen('tvRaten',false);
+  F.experimentSetzen('laenderspiele',true);const p=S.pl.find(x=>x.team>=0);p.lsp={von:0,bis:1e9,n:2,st:1};F.experimentSetzen('laenderspiele',false);const zurueck=!p.lsp;
+  pruef(dieseSaison&&naechste&&zurueck,'Neue Regeln im Menü: TV-Raten erst ab der nächsten Saison, Länderspiele aus holt Abgestellte zurück',`diese Saison ${dieseSaison}, nächste ${naechste}, zurück ${zurueck}`);}
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

@@ -125,7 +125,10 @@ function pokalLosDesJahres(paare,r){if(r===0||(S.cup&&S.cup.losJahr))return null
 // minuten; wer gespielt hat, verliert Frische, trägt Saisonbelastung, kann sich verletzen, Selbstvertrauen ± sv; alle: Stimmung + stimmung.
 // Unabhängig davon, ob es dein Verein oder ein Computer-Verein ist (Gleichschritt), nur die Meldungen gibt es bei dir.
 const lsAn=()=>!!(RWB.laenderspiele&&RWB.laenderspiele.an);
-const beiNationalteam=(p,a)=>{if(!p||!p.lsp)return false;const x=a!=null?a:absTag(S.tag);return x>=p.lsp.von&&x<=p.lsp.bis;};
+// Seit Prüfung FO6: mitLsTag setzt den Tag für Vorschauen (Scoutbericht, Vergleich), sonst gilt heute
+let LS_TAG=null;
+function mitLsTag(a,fn){const alt=LS_TAG;LS_TAG=a;try{return fn();}finally{LS_TAG=alt;}}
+const beiNationalteam=(p,a)=>{if(!p||!p.lsp)return false;const x=a!=null?a:LS_TAG!=null?LS_TAG:absTag(S.tag);return x>=p.lsp.von&&x<=p.lsp.bis;};
 const lsSchwelle=nat=>{const L=RWB.laenderspiele.schwelle,n=nation(nat);return n&&n.rang?Math.max(L.min,L.basis-L.jeRang*(n.rang-1)):Infinity;};
 function laenderspielTag(d){if(!lsAn()||!S.plan)return;const a=absTag(d);
   S.pl.forEach(p=>{if(!p.lsp||a<=p.lsp.bis)return;if(a-p.lsp.bis>2){delete p.lsp;return;} /* FN5: veraltet (Schalter zwischendurch aus), ohne Folgen */mitStrom(strom('laender',S.season,d,p.id),()=>lsRueckkehr(p));});
@@ -134,7 +137,7 @@ function lsNominieren(x){const L=RWB.laenderspiele,von=absTag(x.von),bis=absTag(
   [...S.pl,...((S.ausland&&S.ausland.pl)||[])].forEach(p=>{if(p.team<0||!p.nat||p.inj>0||p.lsp)return;if(p.team<AV0){if(!S.teams[p.team]||!aktiv(S.teams[p.team]))return;}else if(!avVon(p.team))return;
     const s=lsSchwelle(p.nat);if(p.str<s||(p.str<s+L.rand&&((p.form||0)<L.formMin||(p.sp||0)<L.praxisMin)))return;
     if(!nach.has(p.nat))nach.set(p.nat,[]);nach.get(p.nat).push(p);});
-  const mein=[];nach.forEach(l=>l.sort((a,b)=>b.str-a.str||a.id-b.id).slice(0,L.max).forEach((p,i)=>{p.lspN=(p.lspN||0)+1;if(p.team>=AV0)return; /* FN7: auch im Auslandspool gezählt */p.lsp={von,bis,n,st:i<L.stamm?1:0};p.lspZ=von;if(p.team===S.my)mein.push(p);}));
+  const mein=[];nach.forEach(l=>l.sort((a,b)=>b.str-a.str||a.id-b.id).slice(0,L.max).forEach((p,i)=>{p.lspN=(p.lspN||0)+1;p.lspZ=von;if(p.team>=AV0)return; /* FN7, FO7: Zählung und Marktwert auch im Auslandspool */p.lsp={von,bis,n,st:i<L.stamm?1:0};if(p.team===S.my)mein.push(p);}));
   if(mein.length)news(`Länderspielpause: ${mein.map(p=>`${p.n} (${natName(p)})`).join(', ')} ${mein.length===1?'ist':'sind'} bis ${datumKurz(x.bis)} bei der Nationalmannschaft, ${n} Länderspiele.`,'');}
 function lsRueckkehr(p){const L=RWB.laenderspiele,x=p.lsp;delete p.lsp;if(p.team<0||p.team>=AV0)return;let sp=0;
   let M=0;for(let i=0;i<x.n;i++){const m=x.st?90:ri(L.minuten[0],L.minuten[1]);M+=m;if(m>=L.minMin)sp++;} /* FM10: kurze Einsätze zählen nicht voll */

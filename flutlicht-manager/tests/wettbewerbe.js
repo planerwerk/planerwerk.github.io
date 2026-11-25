@@ -98,13 +98,20 @@ pruef(supercups.length===N-1&&supercups.every(x=>!x.verl&&(x.hg!==x.ag)===!x.pen
   const schwelle=nom.every(p=>p.str>=ev('lsSchwelle')(p.nat)&&p.team>=0&&p.team<ev('AV0')&&p.lspN===1&&p.lspZ===abs(x.von)),max=Object.values(je).every(n=>n<=L.max),fehlt=nom.length>0&&nom.every(p=>!av(p)&&bn(p))&&nom.some(p=>F5.status(p).includes('Nationalmannschaft')); /* K13i: Kaderliste zeigt es */
   const bis=nom.length?nom[0].lsp.bis:0,st=nom.find(p=>p.lsp.st);if(st)st.fit=100;
   S5.tag=x.bis+2;F5.laenderspielTag(x.bis+2);const zurueck=nom.every(p=>!p.lsp)&&(!st||st.fit<100||st.inj>0);L.an=false;
-  /* Prüfung FM2, FM11: Ein starker Spieler des Auslandspools zählt mit und verdrängt den, der in der Rangfolge seiner Nation zuletzt kommt (bei max = Zahl der Nominierten) */
-  let pool=true;const pl=(S5.ausland&&S5.ausland.pl)||[],q=pl.find(y=>y.team>=ev('AV0')&&!!ev('avVon')(y.team)),N=Object.keys(je)[0];
-  if(q&&N){const ord=nom.filter(p=>p.nat===N).sort((a,b)=>b.str-a.str||a.id-b.id),w=ord[ord.length-1],m0=L.max,q0={nat:q.nat,str:q.str,inj:q.inj,form:q.form,sp:q.sp};
-    S5.pl.forEach(p=>{delete p.lsp;delete p.lspN;});Object.assign(q,{nat:N,str:200,inj:0,form:10,sp:100});L.max=ord.length;L.an=true;S5.tag=x.von;F5.laenderspielTag(x.von);
-    pool=!w.lsp&&ord.slice(0,-1).every(p=>!!p.lsp)&&!q.lsp;L.an=false;L.max=m0;Object.assign(q,q0);delete q.lsp;S5.pl.forEach(p=>{delete p.lsp;});}
-  pruef(aus&&nom.length>0&&schwelle&&max&&fehlt&&zurueck&&bis===abs(x.bis)&&!!q&&pool,'Länderspiele: nur mit Schalter, Stärkste je Nation ab der Schwelle (mit Auslandspool), fehlen bis nach der Pause, kommen müde zurück',
-    `aus ${aus}, nominiert ${nom.length} (${Object.keys(je).length} Nationen), Schwelle ${schwelle}, höchstens ${L.max} ${max}, fehlen ${fehlt}, Ende ${bis}/${abs(x.bis)}, zurück ${zurueck}, Auslandspool ${q?pool:'kein Spieler'}`);}
+  pruef(aus&&nom.length>0&&schwelle&&max&&fehlt&&zurueck&&bis===abs(x.bis),'Länderspiele: nur mit Schalter, Stärkste je Nation ab der Schwelle, fehlen bis nach der Pause, kommen müde zurück',
+    `aus ${aus}, nominiert ${nom.length} (${Object.keys(je).length} Nationen), Schwelle ${schwelle}, höchstens ${L.max} ${max}, fehlen ${fehlt}, Ende ${bis}/${abs(x.bis)}, zurück ${zurueck}`);}
+
+// Prüfung FM2, FO2: Der Auslandspool zählt bei der Rangfolge mit. Eigene Welt, die vollständige Rangfolge einer Nation (deutsche Vereine und Pool) wie in lsNominieren,
+//       max = ihre Länge, eine Nation, deren Letzter bei einem deutschen Verein spielt; ein starker Poolspieler dazu verdrängt genau diesen.
+{const {W:W9,F:F9}=neueWelt();F9.buildWorld(SEED);const S9=W9.S,ev=W9.ev,L=ev('RWB').laenderspiele,x=S9.plan.pausen.find(y=>y.name==='Länderspielpause'),s=ev('lsSchwelle'),AV0=ev('AV0'),av=ev('avVon'),akt=ev('aktiv');
+  const pool=(S9.ausland&&S9.ausland.pl)||[],dabei=p=>p.team>=0&&!!p.nat&&!(p.inj>0)&&(p.team<AV0?!!S9.teams[p.team]&&akt(S9.teams[p.team]):!!av(p.team));
+  const gut=p=>{const t=s(p.nat);return p.str>=t&&!(p.str<t+L.rand&&((p.form||0)<L.formMin||(p.sp||0)<L.praxisMin));},nach={};
+  [...S9.pl,...pool].filter(p=>dabei(p)&&gut(p)).forEach(p=>{(nach[p.nat]=nach[p.nat]||[]).push(p);});Object.values(nach).forEach(l=>l.sort((a,b)=>b.str-a.str||a.id-b.id));
+  const N=Object.keys(nach).find(n=>nach[n].length>=2&&nach[n].length<=L.max&&nach[n][nach[n].length-1].team<AV0),q=pool.find(y=>!!av(y.team)&&y.nat!==N);let ok=false,info='keine passende Nation';
+  if(N&&q){const E=nach[N],w=E[E.length-1],m0=L.max,q0={nat:q.nat,str:q.str,inj:q.inj,form:q.form,sp:q.sp};Object.assign(q,{nat:N,str:200,inj:0,form:10,sp:100});L.max=E.length;L.an=true;S9.tag=x.von;F9.laenderspielTag(x.von);
+    ok=!w.lsp&&E.slice(0,-1).every(p=>p.team>=AV0||!!p.lsp)&&!q.lsp&&q.lspN===1;info=`${N}: ${E.length} Spieler, Letzter ${w.n} ${w.lsp?'nominiert':'verdrängt'}, Poolspieler gezählt ${q.lspN===1}`;
+    L.an=false;L.max=m0;Object.assign(q,q0);delete q.lspN;delete q.lspZ;S9.pl.forEach(p=>{delete p.lsp;delete p.lspN;delete p.lspZ;});}
+  pruef(ok,'Länderspiele: der Auslandspool zählt bei der Rangfolge mit (FM2, FO7)',info);}
 
 // K13h. Marktwert der Nationalspieler (K13 §3.4): bis marktwert.tage nach der letzten Nominierung (p.lspZ) marktwert.plus mehr, nur mit Schalter.
 {const {W:W6,F:F6}=neueWelt();F6.buildWorld(SEED);const S6=W6.S,ev=W6.ev,L=ev('RWB').laenderspiele,val=ev('value'),abs=ev('absTag');S6.my=6;

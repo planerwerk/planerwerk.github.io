@@ -230,10 +230,13 @@ const tauschKIMoeglich=(q,b)=>!!q&&!!b&&q.team===b.id&&!q.wech&&!q.leihe&&!istLe
 function tauschKI(b,p,g){const K=RTR.tausch.ki;if(!b||b.id>=AV0||g.bo||!(g.amt>0)||hash32(['tauschKI',S.seed,p.id,b.id,S.tag].join('|'))%1000>=K.chance*1000)return;
   const r=squad(b.id).filter(q=>q.list&&q.ask>0&&q.ask<=g.amt*K.maxAnteil&&tauschKIMoeglich(q,b)).sort((x,y)=>y.ask-x.ask||x.id-y.id)[0];if(!r)return;
   const w=rundeAb(r.ask);if(!(w>0)||w>=g.amt)return;g.amt-=w;g.max=Math.max(g.amt,(g.max||g.amt+w)-w);g.ta={pid:r.id,w};}
-function tauschKIAnnehmen(o,b){const r=PIX.get(o.ta.pid),w=o.ta.w;
-  if(!tauschKIMoeglich(r,b)){b.cash-=w;money('Transfers',w);news(`${r?r.n:'Der Tauschspieler'} ist nicht mehr zu haben, ${b.name} zahlt stattdessen ${fmt(w)}.`,'');return;}
-  if(!fensterOffen()){wechselVormerken(r,S.my,{ct:r.ct,sal:r.sal,preis:0});news(`Tausch: ${r.n} kommt im Gegenzug von ${b.name}, mit dem Transferfenster am ${datumKurz(r.wech.ab)}.`,'tr');return;}
-  kabineAbgang(r,b.id);r.team=S.my;r.list=0;r.ask=0;r.seit=absTag(S.tag);r.abl=0;neuzugang(r,S.my);kabineInit(r);statTransfer(r,0,b.id,S.my);news(`Tausch: ${r.n} kommt im Gegenzug von ${b.name}.`,'good');}
+// Seit Prüfung FO: Zum Sommerfenster zählt die laufende Saison im Vertrag nicht mehr mit (ct − 1, FO1); läuft er dann aus, gibt es Geld statt Tausch. Auch mit Transfersperre
+// der Lizenz oder über dem Gehaltsrahmen gibt es Geld statt Tausch (FO3). Bei Geld steht der Betrag in der Ablöse (o.amt), die Meldung nennt den Spieler nicht mehr (FO4).
+function tauschKIAnnehmen(o,b){const r=PIX.get(o.ta.pid),w=o.ta.w,offen=fensterOffen(),sommer=!offen&&(naechstesFenster()==null||naechstesFenster()>=S.plan.ende);
+  const grund=!tauschKIMoeglich(r,b)?'ist nicht mehr zu haben':(sommer&&r.ct<=1)?'hat dann keinen Vertrag mehr':(offen?transferSperre():(sommer?transferSperreNaechste():transferSperre()))?'darf wegen der Transfersperre nicht kommen':!rahmenErlaubt(myT(),r.sal)?'passt nicht mehr in den Gehaltsrahmen':'';
+  if(grund){b.cash-=w;money('Transfers',w);o.amt+=w;delete o.ta;news(`${r?r.n:'Der Tauschspieler'} ${grund}, ${b.name} zahlt stattdessen ${fmt(w)}.`,'');return;}
+  if(!offen){wechselVormerken(r,S.my,{ct:sommer?r.ct-1:r.ct,sal:r.sal,preis:0});news(`Tausch: ${r.n} kommt im Gegenzug von ${b.name}, mit dem Transferfenster am ${datumKurz(r.wech.ab)}.`,'tr');return;}
+  kabineAbgang(r,b.id);r.team=S.my;r.list=0;r.ask=0;r.seit=absTag(S.tag);r.abl=0;neuzugang(r,S.my);kabineInit(r);versprechenKauf(r);statTransfer(r,0,b.id,S.my);news(`Tausch: ${r.n} kommt im Gegenzug von ${b.name}.`,'good');}
 function bonusEinVereinbaren(p,tid,x){if(!x||!(x.b>0)||!S.teams[tid])return;(S.boniEin=S.boniEin||[]).push({pid:p.id,tid,art:x.art,b:x.b,s0:S.season,lg0:S.teams[tid].lg,my:S.my,st:vereinsSpiele(p,tid)});}
 function boniEinWoche(){const l=S.boniEin;if(!l||!l.length)return;const B=RTR.boni;
   S.boniEin=l.filter(x=>{if(!x||x.my!==S.my)return false;const p=PIX.get(x.pid),t=S.teams[x.tid],wer=tn(x.tid),n=p?p.n:'einen früheren Spieler';

@@ -2742,3 +2742,21 @@ Korrekturen auf `mitarbeit/popolupo-fn-korrekturen` (auf K09j).
 | FN8 | **Niedrig:** Im Neubeginn kostete eine späte Einwechslung weiter −1. Jetzt nicht. | ✅ behoben |
 | FN9 | **Niedrig, Doku:** Kommentare in `kabine.js` und `wettbewerbe.js`, im Test K13f und die Tabelle in K14 waren veraltet. Berichtigt; die Meldung „Ende /-e“ war schon auf `tests-fm11` berichtigt. | ✅ behoben |
 | FN10 | **Niedrig, Tests:** Ohne Test waren FL2, FL3, FL6, FM6, FM7, FM9, FM10, das Setzen von `lspN`/`lspV`, und der Test zu FL5 deckte nur Vereinslose ab. FL2, FL6 und FM9 haben seit `tests-fl7` Tests, jetzt dazu FL3 (Joker), FL5 (erzeugter Spieler), FM7 (stumme Karte) und `lspN`/`lspZ`. FM10, `lspV` und FN5 seit `mitarbeit/popolupo-tests-fn10`; nur FM6 (kurzer Einsatz im Neubeginn) bleibt ohne eigenen Test. | ✅ behoben bis auf FM6 |
+
+## FO. Prüfung von K19l, K13h, K13i, K09j, den Test-Zweigen, dem Doku-Abgleich und den Korrekturen FN ohne Laufzeit (25. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat b26e659..83482bf gelesen, nichts ausgeführt. Kein Laufzeit- oder Syntaxfehler, kein unbeabsichtigter Zufall, keine verstümmelten Template-Strings, Gleichschritt 5a und ausgeschaltete Schalter unberührt. Ohne Befund: Zufall und Gleichschritt bei K19l, Wegfall des Tauschspielers bis zum Fenster, K13h, K13i, K09j, FN1 bis FN5 und FN8, die übrigen neuen Tests, der Doku-Abgleich. Zwei mittlere, sieben niedrige Funde.
+
+Korrekturen auf `mitarbeit/popolupo-fo-korrekturen` (auf K11j).
+
+| # | Befund | Status |
+|---|---|---|
+| FO1 | **Mittel:** Ein Tausch zum Sommerfenster gab ein Vertragsjahr zu viel (`ct` mit der laufenden Saison vorgemerkt, `wechselVollziehen(true)` addiert eins). Jetzt `ct − 1`; läuft der Vertrag dann aus, gibt es Geld statt Tausch. Test im geschlossenen Fenster. | ✅ behoben |
+| FO2 | **Mittel, Test:** Der Pool-Teil des Tests K13f übersah Poolspieler derselben Nation und Verletzte aus der Rückkehr. Jetzt eigene Welt mit der vollständigen Rangfolge wie in `lsNominieren`. | ✅ behoben |
+| FO3 | **Niedrig:** Der Tausch umging Transfersperre und Gehaltsrahmen. Jetzt Geld statt Tausch. | ✅ behoben |
+| FO4 | **Niedrig:** Bei Geld statt Tausch nannte „Verkauft“ den Spieler, Ablöse und Statistik rechneten ohne den Betrag; im offenen Fenster fehlte `versprechenKauf`. Berichtigt. Dass der Spieler bei der Annahme noch auf der Liste steht, prüft das Spiel bewusst nicht (das Angebot gilt). | ✅ behoben |
+| FO5 | **Niedrig:** K09j zählte je Tag statt je Spieltag, der Text sprach nur von Rot. Jetzt `S.kiSchiri` je Spieltag, Text „Platzverweis“. | ✅ behoben |
+| FO6 | **Niedrig:** „Gefährlich“ und die Balken rechneten die Nationalmannschaft mit dem heutigen Tag. Jetzt `mitLsTag` mit dem Spieltag. | ✅ behoben |
+| FO7 | **Niedrig:** `lspN`/`lspZ` fehlten in `POOL_FELDER`, Poolspieler bekamen kein `lspZ`. Beides ergänzt. | ✅ behoben |
+| FO8 | **Niedrig, Tests:** Neu getestet: FN2 und FN5 über das Menü, FN3 (Feld fehlt), FN4 (Kauf), Tausch im geschlossenen Fenster, Pool mit `lspN`. Weiter ohne eigenen Test: FM4 im Pokal (der Test nimmt ein Ligaspiel), FN6/FO6 mit Spieltag, FN8. | ✅ behoben bis auf FM4, FO6, FN8 |
+| FO9 | **Niedrig, Doku:** K33 (`tvModus`, `tvRT`), K36 (K13h, K13i jetzt Nr. 207), Kommentar in `takeJob`, Testliste im Protokoll. Berichtigt. | ✅ behoben |

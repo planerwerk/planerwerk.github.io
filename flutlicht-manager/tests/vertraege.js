@@ -124,7 +124,10 @@ console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
   const wMit=pw(p,S.my,Object.assign({},o,{zv}),Fd),wOhne=pw(p,S.my,o,Fd);delete p.zv;const wFrei=pw(p,S.my,o,Fd);p.zv={n:Z.spiele,plus:Z.plus,st:st0};
   const bewertung=Math.abs(wMit-wFrei)<1e-6&&Math.abs(wFrei-wOhne-Fd*Z.wert)<1e-6;
   F.vtUnterschrift(p,Object.assign({},o,{zv}),false);const weiter=!!p.zv&&p.zv.st===st0;F.vtUnterschrift(p,o,false);const gestrichen=!p.zv;
-  pruef(formular&&bewertung&&weiter&&gestrichen,'Zielvorgabe: Formular, Verlängerung ohne neuen Nachlass, Zählung läuft weiter, Streichen kostet',
-    `Formular ${formular}, Bewertung ${bewertung} (${Math.round(wMit-wFrei)}/${Math.round(wFrei-wOhne)}), läuft weiter ${weiter}, gestrichen ${gestrichen}`);}
+  /* FN3, FO8: Felder zu (vt_zv fehlt im Formular) – eine laufende Vorgabe bleibt im Paket; FN4: beim Kauf (neu) beginnt eine alte Vorgabe neu zu zählen */
+  p.zv={n:Z.spiele,plus:Z.plus,st:st0};const gid=doc.getElementById;doc.getElementById=id=>id==='vt_zv'?null:gid(id);const o2=F.vtPaket(p,Fd,3,false);doc.getElementById=gid;const behalten=!!o2.zv&&o2.zv.n===Z.spiele;
+  p.zv={n:Z.spiele,plus:Z.plus,st:-99};F.vtUnterschrift(p,Object.assign({},o,{zv}),true);const neu=!!p.zv&&p.zv.st===ev('vereinsSpiele')(p,S.my);delete p.zv;
+  pruef(formular&&bewertung&&weiter&&gestrichen&&behalten&&neu,'Zielvorgabe: Formular, Verlängerung ohne neuen Nachlass, Zählung läuft weiter, Streichen kostet, Felder zu behalten sie, Kauf zählt neu',
+    `Formular ${formular}, Bewertung ${bewertung} (${Math.round(wMit-wFrei)}/${Math.round(wFrei-wOhne)}), läuft weiter ${weiter}, gestrichen ${gestrichen}, Felder zu ${behalten}, Kauf ${neu}`);}
 
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);
