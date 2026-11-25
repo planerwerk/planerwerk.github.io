@@ -290,6 +290,11 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 25.11.2026: Korrekturen nach Prüfung FW (Zweig `mitarbeit/popolupo-fw-korrekturen`, auf W5e4)
+
+- **Prüfung FW** (lesender Agent über W5b, W5c1, W5d1 und FV): ein mittlerer und vier niedrige Funde, alle behoben, Einzelheiten in der Konsistenzprüfung FW.
+- **Sichtbar:** Im hellen Thema ist die Unterzeile im Knopf „Tag beenden“ voll deckend (Kontrast), Informationen sind petrolfarben statt blau (unterscheidbar von der Aktionsfarbe), die Büro-Tabelle scrollt auf schmalen Handys in sich, „Ausfälle“ zeigt „bei der Nationalmannschaft“ statt leerer Klammern. Die Schriftdatei hat richtige Kopfdaten.
+
 ### 25.11.2026: W5e4 Startbildschirm mit Stadion und Leitspruch (Zweig `mitarbeit/popolupo-w5e-artwork`)
 
 - **Neu:** eigene SVG-Illustration „Stadion bei Nacht“ über dem Namen (K39 §3.3, `stadionBild` in `js/start.js`), darunter der BMH-Leitspruch „Bratwurst. Meisterschale. Herzblut.“ (K42, vorläufig, `REGELN.darstellung.leitspruch`). Der Leuchtbalken unter dem Namen entfällt.

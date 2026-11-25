@@ -18,6 +18,7 @@ const avgAtt=()=>S.att[1]?Math.round(S.att[0]/S.att[1]).toLocaleString('de-DE'):
 const sperrText=p=>{const l=sperreIn(p,'liga'),k=sperreIn(p,'pokal'),e=sperreIn(p,'eu'),nm=p.team===S.my&&naechsterWb()==='eu'&&!euSpielberechtigt(p);if(!l&&!k&&!e&&!nm)return'';const v=verfahrenVon(p);
   return`${l||k||e?`gesperrt (${[l?`Liga ${l}`:'',k?`Pokal ${k}`:'',e?`Europapokal ${e}`:''].filter(Boolean).join(', ')}${v?', Verfahren läuft':''})`:''}${nm?`${l||k||e?', ':''}nicht gemeldet (Europapokal)`:''}`;};
 const ausfallText=p=>{if(p.inj>0){const i=verletzungInfo(p);return i?`${i.art==='krankheit'?'krank':'verletzt'} (${i.name}, noch ${spanneText(i.rest)}${gespritzt(p)?', gespritzt':''})`:`verletzt (${p.inj} ${p.inj===1?'Tag':'Tage'})`;}return sperrText(p);};
+const ausfallKurz=p=>ausfallText(p)||(p.lsp?'bei der Nationalmannschaft':'nicht einsatzbereit'); // nie leer, auch bei Abstellung (Prüfung FW4)
 // Verletzte und Kranke (K10 §4): Art oder Verdacht, Ursache, Phase, Rückkehr als Spanne, fit spritzen am Spieltag, früher zurückholen aus dem Aufbautraining
 function verletztenKarte(){const l=squad(S.my).filter(p=>p.inj>0).sort((a,b)=>a.inj-b.inj),b=verletzungsBilanz(S.my),spieltag=heuteMeinSpiel();
   const zeile=p=>{const i=verletzungInfo(p);if(!i)return`<tr><td>${esc(p.n)}</td><td colspan="4">${p.inj} Tage</td></tr>`;const d0=S.tag+i.rest[0],d1=S.tag+i.rest[1];
@@ -82,7 +83,7 @@ function pokalLosKarte(){const L=S.cup&&S.cup.los;if(!L||L.am!==S.tag||S.phase!=
 // Büro als Kachelfläche (K35b §13.2, W5c): oben die Übersicht in Kacheln, darunter wie bisher die Karten mit Entscheidungen und Einzelheiten.
 // Nur Anzeige, ohne Zufall und ohne Wirkung aufs Spiel. Die Links führen in die Ansichten, die es ohnehin gibt.
 function bueroKacheln(heute,d){const t=myT(),sq=squad(S.my),out=sq.filter(p=>!avail(p)),tb=table(t.lg),rg=tb.findIndex(r=>r.id===S.my)+1;
-  const von=Math.max(0,Math.min(rg-3,tb.length-5)),tabelle=`<table class="k-tab"><thead><tr><th class="num" scope="col">Pl.</th><th scope="col">Verein</th><th class="num" scope="col">Sp.</th><th class="num" scope="col">Diff.</th><th class="num" scope="col">Pkt.</th></tr></thead><tbody>${tb.slice(von,von+5).map((r,i)=>{const df=r.tf-r.ta;return`<tr${r.id===S.my?' class="me"':''}><td class="num">${von+i+1}</td><td>${chip(r.id)}${esc(tn(r.id))}</td><td class="num">${r.sp}</td><td class="num">${df>0?'+':''}${df}</td><td class="num"><b>${r.p}</b></td></tr>`;}).join('')}</tbody></table>`;
+  const von=Math.max(0,Math.min(rg-3,tb.length-5)),tabelle=`<div class="tw"><table class="k-tab"><thead><tr><th class="num" scope="col">Pl.</th><th scope="col">Verein</th><th class="num" scope="col">Sp.</th><th class="num" scope="col">Diff.</th><th class="num" scope="col">Pkt.</th></tr></thead><tbody>${tb.slice(von,von+5).map((r,i)=>{const df=r.tf-r.ta;return`<tr${r.id===S.my?' class="me"':''}><td class="num">${von+i+1}</td><td>${chip(r.id)}${esc(tn(r.id))}</td><td class="num">${r.sp}</td><td class="num">${df>0?'+':''}${df}</td><td class="num"><b>${r.p}</b></td></tr>`;}).join('')}</tbody></table></div>`;
   const post=`<div class="news">${S.news.slice(0,3).map(n=>`<div class="${n.c}"><small>${n.w}</small>${esc(n.t)}</div>`).join('')||'<p class="dim">Noch keine Nachrichten.</p>'}</div>`;
   const vz=(RU.zonenVertrauen||[]).find(z=>S.trust>=z.von&&S.trust<=z.bis),ART={good:'gut',warn:'achtung',bad:'kritisch'};
   const ms=Math.round(mannschaftsStimmung(S.my)),W=RKA.wechsel,unz=sq.filter(p=>stimmungArt(p)).length,vl=vorlageDef(t.vorlage,t),lm=LAST&&LAST.mine,ang=S.offers.length;
@@ -93,7 +94,7 @@ function bueroKacheln(heute,d){const t=myT(),sq=squad(S.my),out=sq.filter(p=>!av
   ${kachel({titel:'Vorstand',icon:'vorstand',wert:`${Math.round(S.trust)} von 100`,sub:vz&&vz.text?vz.text:'Vertrauen des Vorstands',status:vz?ART[vz.art]:undefined})}
   ${kachel({titel:'Saisonziel',icon:'ziel',wert:`Platz ${rg}`,sub:targetText(t.lg,S.target)})}
   ${kachel({titel:'Stimmung',icon:'stimmung',wert:`${ms} von 100`,sub:unz?`${unz} Spieler unzufrieden`:'Niemand ist unzufrieden',status:ms<W.gespraech[0]?'kritisch':ms<W.grummeln[0]?'achtung':'gut',link:{text:'Kabine',onclick:"tab('kabine')"}})}
-  ${kachel({titel:'Ausfälle',icon:'medizin',wert:out.length,sub:out.length?out.slice(0,3).map(p=>`${p.n} (${ausfallText(p)})`).join(', ')+(out.length>3?' …':''):'Alle einsatzbereit',status:out.length?'achtung':'gut',link:{text:'Kader',onclick:"tab('kader')"}})}
+  ${kachel({titel:'Ausfälle',icon:'medizin',wert:out.length,sub:out.length?out.slice(0,3).map(p=>`${p.n} (${ausfallKurz(p)})`).join(', ')+(out.length>3?' …':''):'Alle einsatzbereit',status:out.length?'achtung':'gut',link:{text:'Kader',onclick:"tab('kader')"}})}
   ${kachel({titel:'Training',icon:'training',wert:vl?vl.name:'Co-Trainer',sub:vl?'Trainingsvorlage dieser Woche':'Der Co-Trainer entscheidet',link:{text:'Training',onclick:"tab('training')"}})}
   ${kachel({titel:'Transfers',icon:'transfer',wert:fensterOffen(d)?'Fenster offen':'Fenster zu',sub:ang?`${ang} ${ang===1?'Angebot':'Angebote'} für deine Spieler`:'Keine Angebote für deine Spieler',status:ang?'info':undefined,link:{text:'Transfers',onclick:"tab('transfer')"}})}
   ${lm?kachel({titel:'Letztes Spiel',icon:'spiel',wert:`${lm.hg}:${lm.ag}`,sub:`${tn(lm.h)} – ${tn(lm.a)}`}):''}</div>`;}
@@ -105,7 +106,7 @@ V.buero=()=>{const t=myT(),d=S.tag;let heute='';
   else{const n=naechstesSpiel(d+1);heute=`<p><b>${esc(tagesText(d))}</b></p>${n?spielKarte(n,false):'<p class="dim">Keine Spiele mehr in dieser Saison.</p>'}`;}
   const warn=[];const sq=squad(S.my);
   if(sq.length<18)warn.push(`Nur ${sq.length} Spieler im Kader – verpflichte Verstärkung.`);
-  const out=sq.filter(p=>!avail(p));if(out.length)warn.push(`Nicht einsatzbereit: ${out.map(p=>`${esc(p.n)} (${ausfallText(p)})`).join(', ')}.`);
+  const out=sq.filter(p=>!avail(p));if(out.length)warn.push(`Nicht einsatzbereit: ${out.map(p=>`${esc(p.n)} (${ausfallKurz(p)})`).join(', ')}.`);
   const exp=sq.filter(p=>p.ct<=1);if(exp.length&&meineSpieltage()>=RK.hinweisVertraegeAbSpieltag)warn.push(`Verträge enden zum Saisonende: ${exp.map(p=>esc(p.n)).join(', ')}.`);
   if(t.cash<0)warn.push('Das Konto ist im Minus. Der Vorstand verliert Vertrauen – Kredit aufnehmen oder Spieler verkaufen.');
   const sp=S.sponsOffers?`<div class="card"><h3>Trikotsponsor wählen</h3><div class="opts">${S.sponsOffers.map((o,i)=>`<button class="opt" onclick="pickSponsor(${i})"${lzAus('sponsor')}><b>${esc(o.name)}</b><span>${fmt(o.base)} pro Spieltag${o.win?` + ${fmt(o.win)} pro Sieg`:''} · ${o.info}</span></button>`).join('')}</div></div>`:'';

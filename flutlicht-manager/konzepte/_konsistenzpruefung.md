@@ -2863,3 +2863,17 @@ Korrekturen auf `mitarbeit/popolupo-fv-korrekturen` (auf den Korrekturen FU, ohn
 |---|---|---|
 | FV1 | **Niedrig (nur mit Schalter):** Die am Saisonende nachgeholte Relegation (Sicherheitsnetz für ältere Spielstände, `seasonEndLauf`) lief ohne `wichtig` und wurde wie ein Ligaspiel nach Belastung rotiert. Jetzt mit `wichtig` wie am Relegationstag (`js/ablauf.js`). Test K10f prüft den Anschluss. | ✅ behoben |
 | – | Anmerkung ohne Befund: Ein geschontes Spiel deines Vereins unter der Automatik zählt gegen ein Einsatz-Versprechen, wie bei der Pokal-Rotation K13j und der Aufstellung durch den Stab. | so gewollt |
+
+## FW. Prüfung von W5b, W5c1, W5d1 und der Korrektur FV ohne Laufzeit (25. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat bad3ab0..954b5cf gelesen (Code, Stile, Tests, Schrift-Skript), nichts ausgeführt außer Perl zum Lesen der Schriftdatei. Kein Laufzeit- oder Syntaxfehler. FV1 richtig umgesetzt. Alle Farbvariablen definiert, alle Textfarben halten in beiden Themen 4,5 : 1 auf Grundfläche, Kachel und Knopf. Die Schriftdatei würde der Schrift-Prüfer OTS in Chrome und Firefox annehmen (Tabellengrößen, Verzeichnis, Prüfsummen, cmap, glyf geprüft). `V.buero()` liefert in keinem Zustand undefined, NaN oder null. Bericht: `flutlicht-tools/pruefung-fw.md`.
+
+Korrekturen auf `mitarbeit/popolupo-fw-korrekturen` (auf W5e4, Welle-5-Strang).
+
+| # | Befund | Status |
+|---|---|---|
+| FW1 | **Mittel:** Im hellen Thema hatte die Unterzeile im Knopf „Tag beenden“ durch `opacity:.8` nur 3,89 : 1. Jetzt Deckkraft als Farbvariable `--go-unter` (dunkel 0,8, hell 1), damit 5,17 : 1. | ✅ behoben |
+| FW2 | **Niedrig:** Im hellen Thema waren Aktion (`--amber`) und Information (`--blue`) fast dasselbe Blau (Druckleiste ohne Teilung, Nachrichtenränder gleich). Information jetzt Petrol `#0e7490` (4,9 : 1 auf der Grundfläche), dein Wert in Reglern ebenso. Rote Karten auf der Anzeigetafel fest `#ff6b6b`, weil die Tafel in beiden Themen dunkel ist. | ✅ behoben |
+| FW3 | **Niedrig:** Die Tabelle in der Büro-Kachel stand ohne Scroll-Hülle, bei 360 px und langen Vereinsnamen hätte die Seite seitlich gescrollt. Jetzt in `.tw`. | ✅ behoben |
+| FW4 | **Niedrig:** Spieler bei der Nationalmannschaft erschienen in „Ausfälle“ und „Hinweise“ als „Name ()“. Jetzt `ausfallKurz` mit „bei der Nationalmannschaft“. | ✅ behoben |
+| FW5 | **Niedrig, ohne Wirkung im Browser:** In der Schrift stand `head.xMin` 0 statt der echten Box, `fontRevision` 1.0 statt 0.1. Berichtigt, Datei neu erzeugt. | ✅ behoben |

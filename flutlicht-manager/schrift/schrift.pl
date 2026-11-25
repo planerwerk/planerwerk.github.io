@@ -185,7 +185,7 @@ my %cmap=(0x20=>1,0xA0=>1);
 for my $z(@namen){my @k=zeichen($z,$Z{$z});my($bin,$x0,$y0,$x1,$y1,$np)=glyf_bin(@k);
   push @gl,{name=>$z,adv=>$Z{$z}{w}*$S+2*$SB,bin=>$bin,bb=>[$x0,$y0,$x1,$y1],np=>$np,nc=>scalar @k};$cmap{$_}=$#gl for @{$U{$z}};}
 my $ng=@gl;
-my($gx0,$gy0,$gx1,$gy1,$maxP,$maxC,$advMax,$minL,$minR,$xMaxE,$sumAdv)=(0,0,0,0,0,0,0,32767,32767,0,0);
+my($gx0,$gy0,$gx1,$gy1,$maxP,$maxC,$advMax,$minL,$minR,$xMaxE,$sumAdv)=(32767,32767,-32768,-32768,0,0,0,32767,32767,-32768,0);   # Prüfung FW5: Startwerte, damit head die echte Box trägt
 for my $g(@gl){$advMax=$g->{adv} if $g->{adv}>$advMax;$sumAdv+=$g->{adv};next unless $g->{bb};my($x0,$y0,$x1,$y1)=@{$g->{bb}};
   $gx0=$x0 if $x0<$gx0;$gy0=$y0 if $y0<$gy0;$gx1=$x1 if $x1>$gx1;$gy1=$y1 if $y1>$gy1;$maxP=$g->{np} if $g->{np}>$maxP;$maxC=$g->{nc} if $g->{nc}>$maxC;
   $minL=$x0 if $x0<$minL;$minR=$g->{adv}-$x1 if $g->{adv}-$x1<$minR;$xMaxE=$x1 if $x1>$xMaxE;}
@@ -194,7 +194,7 @@ my($glyf,@loca)=('');for my $g(@gl){push @loca,length $glyf;my $b=$g->{bin};$b.=
 $T{glyf}=$glyf;$T{loca}=pack('N*',@loca);
 $T{hmtx}=join('',map{pack('nn',$_->{adv},n16($_->{bb}?$_->{bb}[0]:0))}@gl);
 my $zeit=1795600000+2082844800;   # Sekunden seit 1904 (25.11.2026)
-$T{head}=pack('NNNNnnNNNNnnnnnnnnn',0x00010000,0x00010000,0,0x5F0F3CF5,0x000B,1000,0,$zeit,0,$zeit,n16($gx0,$gy0,$gx1,$gy1),1,8,2,1,0);
+$T{head}=pack('NNNNnnNNNNnnnnnnnnn',0x00010000,0x0000199A,0,0x5F0F3CF5,0x000B,1000,0,$zeit,0,$zeit,n16($gx0,$gy0,$gx1,$gy1),1,8,2,1,0);
 $T{hhea}=pack('Nnnnnnnnnnnnnnnnn',0x00010000,n16(900,-250,0),$advMax,n16($minL,$minR,$xMaxE),1,0,0,0,0,0,0,0,$ng);
 $T{maxp}=pack('Nn14',0x00010000,$ng,$maxP,$maxC,0,0,2,0,0,0,0,0,0,0,0);
 my @cps=sort{$a<=>$b}keys %cmap;
