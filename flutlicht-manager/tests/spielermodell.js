@@ -119,4 +119,12 @@ if(staerkenJeSpieler.length>=2){const sp=Math.max(...staerkenJeSpieler)-Math.min
   const ok=!!a&&(a.lf&&a.lf.joker)===J.ja&&!(b.lf&&b.lf.joker);
   pruef(ok,'Joker lernen: Tor nach Einwechslung zählt einmal je Spiel, von Beginn an nicht',`eingewechselt ${a&&a.lf&&a.lf.joker}, Startelf ${b&&b.lf&&b.lf.joker}`);}
 
+// K03g. Eigenschaft entdeckt (K03 §8): In der Woche, in der der Co-Trainer einen Spieler kennt (wiv = ekw), eine gebündelte Meldung mit seinen Eigenschaften;
+//       vorher und danach nicht, ohne bekannte Eigenschaft nicht.
+{const {W,F}=neueWelt();F.buildWorld(1);const S=W.S,ev=W.ev;S.my=0;S.phase='play';const sq=ev('squad')(0),[p,q]=sq,RPe=ev('RP').eigenschaften,n=()=>S.news.filter(x=>String(x.t).startsWith('Der Co-Trainer kennt jetzt')).length;
+  sq.forEach(x=>{x.ekw=5;x.wiv=0;});p.eig=['hitzkopf'];q.eig=[];p.wiv=4;F.eigenschaftenEntdecktWoche();const vorher=n()===0;p.wiv=5;q.wiv=5;F.eigenschaftenEntdecktWoche();
+  const t=String((S.news.find(x=>String(x.t).startsWith('Der Co-Trainer kennt jetzt'))||{}).t||''),jetzt=n()===1&&t.includes(p.n)&&t.includes(RPe.hitzkopf.name)&&!t.includes(q.n);
+  p.wiv=6;q.wiv=6;F.eigenschaftenEntdecktWoche();const danach=n()===1;
+  pruef(vorher&&jetzt&&danach,'Eigenschaft entdeckt: eine Meldung in der Woche, in der der Co-Trainer den Spieler kennt',`vorher ${vorher}, jetzt ${jetzt} („${t}“), danach ${danach}`);}
+
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

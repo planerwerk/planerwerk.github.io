@@ -91,6 +91,10 @@ function eigenschaftenBerechnen(p){if(!p.ch)return[];const EL=EIGENSCHAFT_LISTE|
 const hatEig=(p,k)=>eigenschaften(p).includes(k);
 // Was du über einen Spieler weißt: Eigenschaften eigener Spieler nach einigen Wochen, nur solche, die im Spiel wirken
 function bekannteEigenschaften(p){if(p.team!==S.my||p.wiv<p.ekw)return[];return eigenschaften(p).filter(k=>RP.eigenschaftenWirksam.includes(k));}
+// Eigenschaft entdeckt (K03 §8, K03g, 25.11., popolupo): In der Woche, in der der Co-Trainer einen Spieler deines Kaders kennt (wiv erreicht ekw), nennt er seine Eigenschaften,
+// gebündelt in einer Meldung. Nur Anzeige, ohne Zufall (training, nach wocheVerein).
+function eigenschaftenEntdecktWoche(){const RPe=RP.eigenschaften,l=squad(S.my).filter(p=>p.ekw!=null&&p.wiv===p.ekw).map(p=>[p,bekannteEigenschaften(p)]).filter(x=>x[1].length);if(!l.length)return;
+  news(`Der Co-Trainer kennt jetzt: ${l.map(([p,e])=>`${p.n} (${e.map(k=>(RPe[k]&&RPe[k].name)||k).join(', ')})`).join(', ')}.`,'');}
 const sichtbareMerkmale=p=>Object.keys(p.mk||{}).filter(k=>RP.merkmaleWirksam.includes(k)||!!(RP.merkmale[k]&&RP.merkmale[k].zeigen)); /* zeigen: auch ohne Wirkung sichtbar (Joker, Prüfung FL3) */
 const hatMk=(p,k)=>!!(p.mk&&p.mk[k]);
 // Lernen (K03 §5.6): ein Lernziel, Fortschritt pro Woche
