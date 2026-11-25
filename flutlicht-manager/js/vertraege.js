@@ -71,12 +71,13 @@ function vtPaket(p,F,ct,vereinslos){const el=id=>(document.getElementById(id)||{
   if(frei('praemien')){const vp={a:zahl('vt_a',1000),p:zahl('vt_p',1000),t:zahl('vt_t',1000),z:zahl('vt_z',1000)};Object.keys(vp).forEach(k=>{if(!vp[k])delete vp[k];else vp[k]=Math.round(vp[k]);});if(Object.keys(vp).length)o.vp=vp;
     const ak=zahl('vt_ak',1e6);if(ak)o.ak=Math.round(ak/RM.runden)*RM.runden;const lk=zahl('vt_lk',0.01);if(lk&&RVT.ligaklausel.stufen.includes(Math.round(lk*100)/100))o.lk=Math.round(lk*100)/100;
     if(el('vt_zv')==='1')o.zv={n:RVT.zielvorgabe.spiele,plus:RVT.zielvorgabe.plus};} /* Zielvorgabe (K21f) */
+  if(!o.zv&&p.zv&&p.team===S.my&&el('vt_zv')==null)o.zv={n:p.zv.n,plus:p.zv.plus}; /* FN3: Felder zu (VT_DETAIL) oder ohne Bereich: eine laufende Vorgabe bleibt */
   return o;}
 // Vertrag eintragen: Laufzeit, Gehalt, Prämien, Klauseln, Handgeld buchen
-function vtUnterschrift(p,o,neu){p.ct=o.ct;p.sal=o.sal;if(o.vp)p.vp=o.vp;else delete p.vp;if(o.ak)p.ak=o.ak;else delete p.ak;if(o.lk)p.lk=o.lk;else delete p.lk;zielvorgabeSetzen(p,o.zv);if(o.hg)money('Handgelder',-o.hg);if(neu)p.seit=absTag(S.tag);}
+function vtUnterschrift(p,o,neu){p.ct=o.ct;p.sal=o.sal;if(o.vp)p.vp=o.vp;else delete p.vp;if(o.ak)p.ak=o.ak;else delete p.ak;if(o.lk)p.lk=o.lk;else delete p.lk;zielvorgabeSetzen(p,o.zv,!neu);if(o.hg)money('Handgelder',-o.hg);if(neu)p.seit=absTag(S.tag);}
 // Zielvorgabe (K21 §3.1, §8, K21f): p.zv = {n Pflichtspiele, plus Gehaltsaufschlag, st Pflichtspiele für deinen Verein bei der Unterschrift}. Gezählt ab der Unterschrift
 // (bei einem Wechsel zum Fenster ab der Ankunft, transfers.js wechselVollziehen). Montags (zielvorgabenWoche, ohne Zufall): erreicht, steigt das Gehalt, die Vorgabe ist erfüllt.
-function zielvorgabeSetzen(p,zv){if(zv&&p.zv&&p.team===S.my)return; /* FL6: laufende Vorgabe zählt weiter */if(zv)p.zv={n:zv.n,plus:zv.plus,st:vereinsSpiele(p,S.my)};else delete p.zv;}
+function zielvorgabeSetzen(p,zv,verl){if(zv&&verl&&p.zv&&p.team===S.my)return; /* FL6, FN4: nur bei einer Verlängerung zählt eine laufende Vorgabe weiter */if(zv)p.zv={n:zv.n,plus:zv.plus,st:vereinsSpiele(p,S.my)};else delete p.zv;}
 function zielvorgabenWoche(){squad(S.my).forEach(p=>{const z=p.zv;if(!z||vereinsSpiele(p,S.my)-(z.st||0)<z.n)return;p.sal=Math.round(p.sal*(1+z.plus)/1000)*1000;delete p.zv;
   news(`Zielvorgabe erreicht: ${p.n} hat ${z.n} Pflichtspiele für dich bestritten, sein Gehalt steigt um ${Math.round(z.plus*100)} % auf ${fmt(p.sal)} im Jahr.`,'');});}
 // Vertrag endet (Verkauf, Auflösung): Prämien und Klauseln gelten nicht beim neuen Verein
@@ -126,7 +127,7 @@ function vertragFormular(p,F,tid,vereinslos,laufzeitId){const z=vtZone(F),det=VT
     ${feld('vt_sal','Gehalt (Mio € pro Jahr)',(vtVorschlag(F)/1e6).toFixed(2))}${feld('vt_hg','Handgeld (Mio €, einmalig)',(hg/1e6).toFixed(2))}
     ${det?`${feld('vt_a','Auflaufprämie (Tsd € je Spiel)',0,'1')}${feld('vt_p','Punktprämie (Tsd € je Punkt)',0,'1')}${feld('vt_t','Torprämie (Tsd € je Tor)',0,'1')}${p.pos==='TW'||p.pos==='AB'?feld('vt_z','Zu-Null-Prämie (Tsd € je Spiel)',0,'1'):''}
       ${feld('vt_ak','Ausstiegsklausel (Mio €, leer = keine)','')}<label>Ligaklausel <select id="vt_lk">${RVT.ligaklausel.stufen.map(x=>`<option value="${x*100}">${x?`−${x*100} % Gehalt bei Abstieg`:'keine'}</option>`).join('')}</select></label>
-      <label>Zielvorgabe <select id="vt_zv"><option value="">keine</option><option value="1">ab ${RVT.zielvorgabe.spiele} Pflichtspielen Gehalt +${Math.round(RVT.zielvorgabe.plus*100)} %</option></select></label>
+      <label>Zielvorgabe <select id="vt_zv"><option value="">keine</option><option value="1"${p.zv&&p.team===S.my?' selected':''}>ab ${RVT.zielvorgabe.spiele} Pflichtspielen Gehalt +${Math.round(RVT.zielvorgabe.plus*100)} %</option></select></label>
       <p class="dim">Prämien sieht er mit seinem Erwartungswert, Vorsichtige mit Abschlag. Eine Ausstiegsklausel nimmt ihm Gehalt ab, eine Ligaklausel kostet extra.</p>`
       :`<button onclick="vertragDetails(${p.id})"${lzAus('praemien')}>Prämien und Klauseln</button>${lzHinweis('praemien')}`}
     ${pr?`<p class="dim">Laufende Prämien: bei einer üblichen Saison etwa ${fmt(Math.round(pr.erw/1000)*1000)}, höchstens ${fmt(Math.round(pr.max/1000)*1000)}.</p>`:''}`;}

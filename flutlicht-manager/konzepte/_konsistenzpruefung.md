@@ -2723,3 +2723,22 @@ Korrekturen auf `mitarbeit/popolupo-fm-korrekturen` (auf den Korrekturen FL).
 | FM9 | **Niedrig, nur mit Schalter:** Der Scoutbericht nannte Abgestellte nicht als fehlend. Jetzt mit „Nationalmannschaft“. | ✅ behoben |
 | FM10 | **Niedrig, nur mit Schalter:** Saisonbelastung ohne Obergrenze, eine Minute im Länderspiel zählte voll. Jetzt höchstens 100, ein Spiel zählt ab 10 Minuten, die Frische sinkt nach den Minuten. | ✅ behoben |
 | FM11 | **Niedrig, Tests:** Einige Teilprüfungen sind schon durch den Aufbau wahr (`fremd`, `gleich`, `max`). FM1 und FM3 prüfen die Tests jetzt, FM2 seit dem Zweig `mitarbeit/popolupo-tests-fm11` auch (ein starker Spieler des Auslandspools verdrängt den Letzten seiner Nation), FM4 und FM9 seit `mitarbeit/popolupo-tests-fl7` (gesperrt im Wettbewerb des Spiels, Nationalmannschaft). Dabei die verstümmelte Meldung des Tests K13f („Ende /-e“) berichtigt. | ✅ behoben |
+
+## FN. Prüfung von K02a, K13g und den Korrekturen FL und FM ohne Laufzeit (25. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat e404bd5..b26e659 gelesen, nichts ausgeführt. Kein Laufzeit- oder Syntaxfehler im Spielcode, kein unbeabsichtigter Zufall, Gleichschritt 5a unberührt, ausgeschaltete Schalter ändern nichts. Ohne Befund: Reihenfolge von `EXP_AN` gegenüber `start()`, die vier Pfade der Experimente, die Karten K13g (Pausen beginnen montags vor der Kartenprüfung), FL1, FL4, FL5, FL8, FM1, FM2, FM3, FM5, FM7, FM8. Ein hoher, zwei mittlere, sieben niedrige Funde.
+
+Korrekturen auf `mitarbeit/popolupo-fn-korrekturen` (auf K09j).
+
+| # | Befund | Status |
+|---|---|---|
+| FN1 | **Hoch, Test:** `tests/sim.js` lädt `js/start.js` nicht, der Test K02a wäre an `expObjekt` abgestürzt. Der Block der Experimente steht jetzt in `js/fenster.js`. | ✅ behoben |
+| FN2 | **Mittel, nur über das Menü:** TV-Raten mitten in der Saison umgeschaltet gaben Geld doppelt oder zu wenig; `S.tvRT` war ein Tag relativ zur Saison. Jetzt gilt die neue Art ab der nächsten Saison (`S.tvModus`), `S.tvRT` ist absolut, der Menütext sagt es. | ✅ behoben |
+| FN3 | **Mittel:** Bei der üblichen Verlängerung (Felder zu) ging eine laufende Zielvorgabe verloren und kostete 5 %. Jetzt bleibt sie, die Auswahl ist vorbelegt. | ✅ behoben |
+| FN4 | **Niedrig:** Die Sperre aus FL6 griff auch beim Kauf; eine alte Vorgabe blieb mit falschem Zählstand. Jetzt nur bei Verlängerungen. | ✅ behoben |
+| FN5 | **Niedrig:** Länderspiele mitten in der Pause ausgeschaltet ließen `p.lsp` stehen. Jetzt sofort zurück, veraltete Abstellungen verfallen ohne Folgen. | ✅ behoben |
+| FN6 | **Niedrig:** Die Balken des Vergleichs rechneten ohne den Wettbewerb, „Nationalmannschaft“ mit dem heutigen Tag. Beides berichtigt. | ✅ behoben |
+| FN7 | **Niedrig:** `p.lspN` zählte nicht im Auslandspool. Jetzt schon. | ✅ behoben |
+| FN8 | **Niedrig:** Im Neubeginn kostete eine späte Einwechslung weiter −1. Jetzt nicht. | ✅ behoben |
+| FN9 | **Niedrig, Doku:** Kommentare in `kabine.js` und `wettbewerbe.js`, im Test K13f und die Tabelle in K14 waren veraltet. Berichtigt; die Meldung „Ende /-e“ war schon auf `tests-fm11` berichtigt. | ✅ behoben |
+| FN10 | **Niedrig, Tests:** Ohne Test waren FL2, FL3, FL6, FM6, FM7, FM9, FM10, das Setzen von `lspN`/`lspV`, und der Test zu FL5 deckte nur Vereinslose ab. FL2, FL6 und FM9 haben seit `tests-fl7` Tests, jetzt dazu FL3 (Joker), FL5 (erzeugter Spieler), FM7 (stumme Karte) und `lspN`/`lspZ`. FM6, FM10 und `lspV` bleiben ohne eigenen Test. | ✅ behoben bis auf FM6, FM10, `lspV` |

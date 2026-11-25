@@ -696,7 +696,7 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
 // K30h. Sammlung über alle Karrieren (K30 §5.4): kartenLog zählt jede Karte im Browser-Speicher unter RKT.sammlung.schluessel, nicht im Spielstand; die Seite in der
 //       Statistik nennt erlebt von allen und die erlebten Titel; ein kaputter Eintrag im Speicher bricht nichts.
 {const {S,F,ev}=welt(),R=ev('RKT'),LS=ev('localStorage'),K=ev('KARTEN'),c=K[0],d=K[1];
-  F.kartenLog(c,S.tag,null,false);F.kartenLog(c,S.tag,null,true);F.kartenLog(d,S.tag,0,false);
+  F.kartenLog(c,S.tag,null,false);F.kartenLog(c,S.tag,null,true);F.kartenLog(d,S.tag,0,false);F.kartenLog(c,S.tag,null,false,true); /* FM7, FN10: stumm zählt nicht */
   const m=JSON.parse(LS.getItem(R.sammlung.schluessel)||'{}'),gezaehlt=m[c.id]===2&&m[d.id]===1&&!('sammlung' in S)&&!JSON.stringify(S).includes(R.sammlung.schluessel);
   const html=F.sammlungAnsicht(),ansicht=html.includes(`2 von ${K.length}`)&&html.includes(c.titel)&&html.includes('2×');
   ev('SAMMLUNG=null');LS.setItem(R.sammlung.schluessel,'{kaputt');const kaputt=Object.keys(F.sammlungLaden()).length===0;F.kartenLog(c,S.tag,null,false);const weiter=F.sammlungLaden()[c.id]===1;

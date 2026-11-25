@@ -57,7 +57,7 @@ const BANK_GRUND={weg:'wechselt bald, erwartet nichts mehr',rotation:'Rotation, 
   tw2:'Nummer 2 im Tor, erwartet keine Einsätze',pokal:'spielt im Pokal, Liga zählt nicht',aufbau:'Aufbau nach Verletzung (zählt nicht)',form:'Formkrise, er sieht die Bank ein',
   tribuene:'nicht im Spieltagskader',frueh:'früh ausgewechselt',spaet:'erst in der Nachspielzeit eingewechselt',ww:'will weg, versteht die Bank',sperre:'erstes Spiel nach der Sperre (zählt nicht)',mentor:'betreut als Pate ein Talent, nimmt die Bank hin',bank:'Bank ohne besonderen Grund',
   neu:'neuer Trainer, jeder bekommt seine Chance (zählt nicht)'};
-// Neuer Trainer (K14 §12, K14f): Nach deinem Vereinswechsel zählt RKA.bank.neuerTrainer.tage lang kein Bankplatz deiner Spieler. S.neubeginn = {t Verein, bis absoluter Tag}.
+// Neuer Trainer (K14 §12, K14f): Nach deinem Vereinswechsel zählt in den ersten RKA.bank.neuerTrainer.spiele Pflichtspielen kein Bankplatz deiner Spieler (seit FM5). S.neubeginn = {t Verein, rest Pflichtspiele; alt: bis absoluter Tag}.
 const neubeginn=tid=>{const N=S.neubeginn;if(!N||N.t!==tid||tid!==S.my)return false;return N.rest!=null?N.rest>0:absTag(S.tag)<=N.bis;}; /* seit FM5 rest Pflichtspiele, bis (Tage) nur in Spielständen von davor */
 function neubeginnStart(tid){const N=RKA.bank.neuerTrainer;S.neubeginn={t:tid,rest:N.spiele};squad(tid).forEach(p=>{kabineInit(p);if(!stammA(p))stimmungAendern(p,N.hoffen);});}
 const feinPos=p=>p.fp||STD_POS[p.pos];
@@ -112,7 +112,7 @@ function bankFall(p,c){const B=RKA.bank,t=c.t,gespielt=c.min.has(p.id),m=c.min.g
     else{const ab=c.rein.get(p.id),stark=(c.tore.get(p.id)||0)>0||(note!=null&&note<=B.joker.note);p.bnk=(p.bnk||0)+1;
       if(m<B.joker.kurz)p.jk=[...(p.jk||[]),stark?1:0].slice(-B.joker.von);
       if(stark){grund='joker';stimmungAendern(p,B.joker.stimmung);anteil=Math.max(anteil,e);jokerAnspruch(p,c);}
-      else if(ab!=null&&ab>B.spaet.nach&&m<=B.spaet.minuten){grund='spaet';const v=unerf?B.spaet.unerfahren:etabliert?B.spaet.etabliert:0;if(v)stimmungAendern(p,v);}
+      else if(ab!=null&&ab>B.spaet.nach&&m<=B.spaet.minuten){grund='spaet';const v=unerf?B.spaet.unerfahren:etabliert?B.spaet.etabliert:0;if(v&&!(v<0&&neubeginn(t.id)))stimmungAendern(p,v);} /* FN8: im Neubeginn kein Abzug */
       if(!stark&&m<B.rivale.haltenAb&&p.rz&&platzRivale(p,c.xi))p.rz++;}
     if(rolle==='pokal'&&!c.pokal&&anteil<p.ea)zaehlt=false;if(neubeginn(t.id)&&anteil<p.ea)zaehlt=false;} /* FM6: im Neubeginn auch kein Abzug für kurze Einsätze */
   else{p.bnk=(p.bnk||0)+1;const imKader=!c.kader||c.kader.has(p.id),riv=platzRivale(p,c.xi),entschuldigt=g=>{grund=g;zaehlt=false;};

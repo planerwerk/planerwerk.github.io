@@ -34,21 +34,21 @@ const tvSaisonBetrag=t=>tvSaison()[t.id]||0;
 const tvRang=t=>S.teams.filter(x=>x.lg===t.lg).sort((a,b)=>tvWertung(b)-tvWertung(a)||b.rep-a.rep||a.id-b.id).findIndex(x=>x.id===t.id)+1; // Platz in der Leistungssäule (Anzeige)
 const tvGeld=t=>Math.round(tvSaisonBetrag(t)/((S.fx&&S.fx[t.lg]||[]).length||(t.lg===3?38:34)));
 // Auszahlung (K23 §4, K23h): je Ligaspiel tvGeld, mit RF.tv.raten.an stattdessen vier Raten (tvRatenTag). tvGeld bleibt der Maßstab für Verwaltung und Prognosen.
-const tvRatenAn=()=>!!(RF.tv.raten&&RF.tv.raten.an);
+const tvRatenAn=()=>S&&S.tvModus&&S.tvModus.s===S.season?!!S.tvModus.raten:!!(RF.tv.raten&&RF.tv.raten.an); /* FN2: im Menü umgeschaltet gilt die neue Art erst ab der nächsten Saison */
 const tvJeSpiel=t=>tvRatenAn()?0:tvGeld(t);
 // Täglich (ablauf.js taeglichLauf, nach finanzenTag): an den Ratentagen ein Viertel des Saisonbetrags an jeden aktiven Verein, ohne Zufall.
 // Seit Prüfung FK3 bucht dein Verein sie unter „TV-Raten“. Das steht nicht in RFP.laufend, der Saldo je Ligaspiel bleibt also ohne TV (sonst zählte die Rate vom 1. August,
 // die vor dem ersten Spiel kommt, in jedem Spiel mit). Prognosen setzen stattdessen die noch offenen Raten der Saison an (tvOffen). S.tvRT: Tag der letzten Rate.
-function tvRatenTag(d){const R0=RF.tv.raten;if(!tvRatenAn()||!R0.tage.includes(mmtt(d)))return;let mein=0;S.tvRT=d;
+function tvRatenTag(d){const R0=RF.tv.raten;if(!tvRatenAn()||!R0.tage.includes(mmtt(d)))return;let mein=0;S.tvRT=absTag(d); /* FN2: absoluter Tag */
   S.teams.forEach(t=>{if(!aktiv(t))return;const b=Math.round(tvSaisonBetrag(t)/R0.tage.length);if(!b)return;if(t.id===S.my){money('TV-Raten',b);mein=b;}else t.cash+=b;});
   if(mein)news(`TV-Gelder: Die ${R0.tage.indexOf(mmtt(d))+1}. Rate ist da, ${fmt(mein)} für deinen Verein.`,'');}
 // Zahl der Ratentage ab heute (die heutige nur, wenn sie noch nicht gezahlt ist) bis zum Saisonende oder bis zum Tag bis; mit Schalter aus 0
 function tvRatenOffen(bis){const R0=RF.tv.raten;if(!tvRatenAn())return 0;const ende=Math.min(bis!=null?bis:Infinity,S.plan?S.plan.ende:S.tag);let n=0;
-  for(let d=S.tvRT===S.tag?S.tag+1:S.tag;d<=ende;d++)if(R0.tage.includes(mmtt(d)))n++;return n;}
+  for(let d=S.tvRT===absTag(S.tag)?S.tag+1:S.tag;d<=ende;d++)if(R0.tage.includes(mmtt(d)))n++;return n;}
 const tvOffen=(t,bis)=>t?tvRatenOffen(bis)*Math.round(tvSaisonBetrag(t)/RF.tv.raten.tage.length):0;
 // Die heute fällige, noch nicht gebuchte Rate (Prüfung FL2): Die Ratentage sind Monatserste, gebucht wird nach dem Monatsbericht; die Insolvenzprüfung davor zählt sie mit,
 // sonst träfe sie jeden Verein am Tiefpunkt des Quartals. Mit Schalter aus 0.
-const tvHeute=t=>tvRatenAn()&&!!t&&RF.tv.raten.tage.includes(mmtt(S.tag))&&S.tvRT!==S.tag?Math.round(tvSaisonBetrag(t)/RF.tv.raten.tage.length):0;
+const tvHeute=t=>tvRatenAn()&&!!t&&RF.tv.raten.tage.includes(mmtt(S.tag))&&S.tvRT!==absTag(S.tag)?Math.round(tvSaisonBetrag(t)/RF.tv.raten.tage.length):0;
 // Spielstände von vor K23c (ohne S.k23c): Gehälter einmal auf die neue Kurve umrechnen (gleiches Verhältnis zum Gehalt nach Stärke wie vorher), damit sich niemand
 // plötzlich unterbezahlt fühlt (kabine.js). Kontostände, Verträge mit Sponsoren und Kredite bleiben, sie gleichen sich über die Saisons an. Aufruf nach dem Laden.
 // Dazu vorgemerkte Wechsel (p.wech.sal) und deine Werbeverträge (Brust, Ausrüster, Ärmel: Betrag mal neuer durch alten Grundbetrag der Fläche, Prüfung CS4).

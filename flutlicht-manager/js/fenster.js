@@ -116,4 +116,18 @@ function importSave(){let d=null;try{d=JSON.parse(document.getElementById('imp')
   if(!d||!d.teams||!d.pl){toast('Der Code ist ungültig.');return;}
   if(d.v!==REGELN.spielstand.version){toast('Dieser Code stammt aus einer älteren Version (Wochenkalender) und passt nicht mehr.');return;}
   if(LIVE){clearInterval(LIVE.timer);LIVE=null;}S=d;delete S.stabT;reindex();verhUmstellen();k23cUmstellen();mitgliederUmstellen();vertragUmstellen();experimenteAnwenden();save();closeOv();TAB='buero';render();toast('Spielstand geladen.');if(S.live)liveFortsetzen();}
+// ---------- Neue Regeln ausprobieren (K02 §4.4, K02a; seit Prüfung FN1 hier statt in start.js, das der Test-Simulator nicht lädt) ----------
+// Regeln hinter einem Schalter (REGELN.experimente: k, pfad zum Objekt mit dem Feld an, name, text) kannst du im Menü für deinen Spielstand einschalten
+// (S.einst.exp = {k: true}). experimenteAnwenden setzt sie nach dem Laden, beim neuen Spiel und beim Umschalten: an, was der Spielstand will; aus nur, was es
+// selbst eingeschaltet hat (EXP_AN). So bleiben Tests unberührt, die einen Schalter vor dem Aufbau der Welt setzen. Ohne Zufall.
+// FN2: Wer die TV-Raten mitten in der Saison umschaltet, behält für diese Saison die bisherige Art (S.tvModus, welt.js tvRatenAn), sonst gäbe es Geld doppelt oder zu wenig.
+// FN5: Werden die Länderspiele ausgeschaltet, sind alle Abgestellten sofort zurück, ohne Folgen.
+let EXP_AN=new Set();
+const expObjekt=pfad=>String(pfad).split('.').reduce((o,k)=>o&&o[k],REGELN);
+function experimenteAnwenden(){const w=(S&&S.einst&&S.einst.exp)||{};(REGELN.experimente||[]).forEach(x=>{const o=expObjekt(x.pfad);if(!o)return;
+  if(w[x.k]){o.an=true;EXP_AN.add(x.k);}else if(EXP_AN.has(x.k)){o.an=false;EXP_AN.delete(x.k);}});}
+function experimentSetzen(k,an){if(!S||!(REGELN.experimente||[]).some(x=>x.k===k))return;S.einst=S.einst||{aus:{}};const e=Object.assign({},S.einst.exp);
+  if(k==='tvRaten'&&!(S.tvModus&&S.tvModus.s===S.season))S.tvModus={s:S.season,raten:tvRatenAn()};
+  if(an)e[k]=true;else delete e[k];S.einst.exp=e;experimenteAnwenden();if(k==='laenderspiele'&&!an)S.pl.forEach(p=>{delete p.lsp;});save();}
+const experimentAn=k=>!!(S&&S.einst&&S.einst.exp&&S.einst.exp[k]);
 function confirmNew(){ov(`<h2>Neues Spiel?</h2><p>Der aktuelle Spielstand wird überschrieben, wenn du im neuen Spiel den ersten Schritt machst. Sichere ihn vorher über „Menü“, falls du ihn behalten willst.</p><div class="row"><button class="go" onclick="closeOv();S=null;render()">Ja, neues Spiel</button><button onclick="closeOv()">Abbrechen</button></div>`);}

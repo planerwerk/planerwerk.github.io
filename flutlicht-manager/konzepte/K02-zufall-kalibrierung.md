@@ -77,6 +77,7 @@ Heute zieht alles aus einem einzigen Strom (`S.zufall`). Das hat zwei Nachteile:
 - Im Menü kannst du sie unter „Neue Regeln ausprobieren“ für deinen Spielstand einschalten. Sie gelten dann für alle Vereine, nur in diesem Spielstand, und lassen sich wieder ausschalten. Gespeichert in `S.einst.exp`, die Liste steht in `REGELN.experimente` (Schlüssel, Pfad zum Schalter, Name, Erklärung).
 - `experimenteAnwenden` setzt die Schalter nach dem Laden, beim neuen Spiel und beim Umschalten. Aus schaltet es nur, was es selbst eingeschaltet hat, damit Tests, die einen Schalter vor dem Aufbau der Welt setzen, unberührt bleiben.
 - Wird ein Schalter nach der Messung standardmäßig eingeschaltet, verschwindet er aus der Liste.
+- Seit Prüfung FN: Die Funktionen stehen in `js/fenster.js` (der Test-Simulator lädt `start.js` nicht, FN1). TV-Raten gelten nach dem Umschalten erst ab der nächsten Saison (`S.tvModus`, FN2), ausgeschaltete Länderspiele holen alle Abgestellten sofort zurück (FN5).
 
 ## 5. Regeln und Formeln
 

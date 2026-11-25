@@ -96,8 +96,21 @@ if(staerkenJeSpieler.length>=2){const sp=Math.max(...staerkenJeSpieler)-Math.min
   if(fa){const t=S.teams.find(x=>x.id!==S.my&&akt(x)),ks=RS.kaderSoll,ch=RS.vereinslosChance,vor=new Set(ev('squad')(t.id).map(p=>p.id));
     RS.kaderSoll={[fa.pos]:ev('squad')(t.id).filter(p=>p.pos===fa.pos).length+1};RS.vereinslosChance=1;F.kaderAuffuellen(t,99);RS.kaderSoll=ks;RS.vereinslosChance=ch;
     const neu=ev('squad')(t.id).filter(p=>!vor.has(p.id));auff=neu.length===1&&neu[0].int!=null;}
-  pruef(!!fr&&gesetzt&&kader&&lernt&&ausl&&!!au&&geliehen&&zurueck&&auff,'Integration: Deutsch im Startkader, Rückkehr aus der Leihe, Vereinslose beim Auffüllen',
-    `Startkader ${fr?dv(fr):'-'} (beim Aufbau gesetzt ${gesetzt}, lernt ${lernt}), Ausland ${au?ausl:'kein Spieler gefunden'}, Leihe ${geliehen}/${zurueck}, Auffüllen ${auff}`);}
+  /* FN10: auch ein erzeugter Spieler (kein Vereinsloser, Chance 0) bekommt eine Integration (FL5) */
+  let erzeugt=true;{const t=S.teams.find(x=>x.id!==S.my&&akt(x)),ks=RS.kaderSoll,ch=RS.vereinslosChance,vor=new Set(ev('squad')(t.id).map(p=>p.id));
+    RS.kaderSoll={ST:ev('squad')(t.id).filter(p=>p.pos==='ST').length+1};RS.vereinslosChance=0;F.kaderAuffuellen(t,70);RS.kaderSoll=ks;RS.vereinslosChance=ch;
+    const neu=ev('squad')(t.id).filter(p=>!vor.has(p.id));erzeugt=neu.length===1&&neu[0].int!=null&&neu[0].team===t.id;}
+  pruef(!!fr&&gesetzt&&kader&&lernt&&ausl&&!!au&&geliehen&&zurueck&&auff&&erzeugt,'Integration: Deutsch im Startkader, Rückkehr aus der Leihe, Vereinslose und erzeugte Spieler beim Auffüllen',
+    `Startkader ${fr?dv(fr):'-'} (beim Aufbau gesetzt ${gesetzt}, lernt ${lernt}), Ausland ${au?ausl:'kein Spieler gefunden'}, Leihe ${geliehen}/${zurueck}, Auffüllen ${auff}, erzeugt ${erzeugt}`);}
+
+// Prüfung FL3, FN10: Joker belegt keinen Platz für Stärken (lernbar zählt ihn nicht, er ist auch bei vollen Plätzen lernbar) und ist auf der Spielerkarte sichtbar.
+{const {W,F}=neueWelt();F.buildWorld(1);const S=W.S,ev=W.ev,RP=ev('RP'),lb=ev('lernbar'),sm=ev('sichtbareMerkmale'),pl=ev('platzStaerken');
+  const p=S.pl.find(x=>x.team>=0&&x.pos==='ST'&&x.age<=30),mk0=p.mk,an=m=>RP.merkmale[m]&&!RP.merkmale[m].schwaeche&&RP.merkmale[m].g.includes(p.pos)&&!(RP.merkmale[m].bis&&p.age>RP.merkmale[m].bis);
+  const andere=RP.merkmaleWirksam.filter(m=>m!=='joker'&&an(m)),n=pl(p);let ok=andere.length>n,frei=false,voll=false,sicht=false;
+  if(ok){p.mk={joker:1};andere.slice(0,n-1).forEach(m=>{p.mk[m]=1;});frei=lb(p,andere[n]);sicht=sm(p).includes('joker');
+    p.mk={};andere.slice(0,n).forEach(m=>{p.mk[m]=1;});voll=lb(p,'joker')&&!lb(p,andere[n]);}
+  p.mk=mk0;
+  pruef(ok&&frei&&voll&&sicht,'Joker: belegt keinen Platz für Stärken, bei vollen Plätzen lernbar, sichtbar',`Plätze ${n}, mit Joker noch frei ${frei}, voll und Joker lernbar ${voll}, sichtbar ${sicht}`);}
 
 // K05f. Joker lernen (K03 §5.6, K05c): Ein Eingewechselter, der trifft, bekommt Fortschritt zum Merkmal Joker (Szene joker), wer von Beginn an spielt, nicht. Nur Mittelfeld und Sturm.
 {const {W,F}=neueWelt();F.buildWorld(1);const S=W.S,ev=W.ev;S.my=0;S.phase='play';const J=ev('RP').lernenSpiel.szenen.joker,mk=ev('hatMk');

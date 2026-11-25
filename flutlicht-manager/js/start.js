@@ -25,17 +25,7 @@ function newGame(){const id=+document.getElementById('club').value,name=(documen
   if(S.lizenz.an)news(`Du beginnst als ${lizenzName(1)}: Aufstellung, Grundordnung, Ausrichtung und dein Spiel gehören dir. Alles andere erledigt der Stab, bis du die nächste Lizenz hast. Oben steht deine Lizenz, ein Klick zeigt den Weg.`);
   experimenteAnwenden();save();TAB='buero';render();} /* neue Regeln nach dem Spielstand (K02a): ein neues Spiel beginnt ohne */
 
-// ---------- Neue Regeln ausprobieren (K02 §4.4, K02a) ----------
-// Regeln hinter einem Schalter (REGELN.experimente: k, pfad zum Objekt mit dem Feld an, name, text) kannst du im Menü für deinen Spielstand einschalten
-// (S.einst.exp = {k: true}). experimenteAnwenden setzt sie nach dem Laden, beim neuen Spiel und beim Umschalten: an, was der Spielstand will; aus nur, was es
-// selbst eingeschaltet hat (EXP_AN). So bleiben Tests unberührt, die einen Schalter vor dem Aufbau der Welt setzen. Ohne Zufall.
-let EXP_AN=new Set();
-const expObjekt=pfad=>String(pfad).split('.').reduce((o,k)=>o&&o[k],REGELN);
-function experimenteAnwenden(){const w=(S&&S.einst&&S.einst.exp)||{};(REGELN.experimente||[]).forEach(x=>{const o=expObjekt(x.pfad);if(!o)return;
-  if(w[x.k]){o.an=true;EXP_AN.add(x.k);}else if(EXP_AN.has(x.k)){o.an=false;EXP_AN.delete(x.k);}});}
-function experimentSetzen(k,an){if(!S||!(REGELN.experimente||[]).some(x=>x.k===k))return;S.einst=S.einst||{aus:{}};const e=Object.assign({},S.einst.exp);
-  if(an)e[k]=true;else delete e[k];S.einst.exp=e;experimenteAnwenden();save();}
-const experimentAn=k=>!!(S&&S.einst&&S.einst.exp&&S.einst.exp[k]);
+// Neue Regeln ausprobieren (K02a): experimenteAnwenden und Co. stehen seit Prüfung FN1 in js/fenster.js, weil der Test-Simulator start.js nicht lädt.
 
 // Test- und Fehlersuch-Zugang
 window.FM={get S(){return S;},buildWorld,weiter,sommerpause,tagesSpiele,meinSpiel,heuteMeinSpiel,seasonEnd,newSeason,takeJob,render,V,tab,table};
