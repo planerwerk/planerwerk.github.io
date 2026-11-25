@@ -83,6 +83,16 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   pruef(k0&&k1&&ohne&&mit&&andereLiga&&moeglich&&z0==='offen'&&z1==='gefaehrdet'&&z2==='verfehlt'&&z3==='erfuellt'&&name,'Nebenziele Kader und Zuschauer: Gehaltsrahmen zum Saisonende, Zuschauer nach der Vorsaison',
     `Kader im Rahmen ${k0}, darüber ${k1}, Vorsaison ohne/mit/andere Liga ${ohne}/${mit}/${andereLiga}, gesetzt ${moeglich}, Zuschauer ${[z0,z1,z2,z3].join(', ')}, Namen ${name}`);}
 
+// U12p. Nebenziel tauschen (K28 §5.2 „Nebenziele verhandeln“): nur im offenen Zielgespräch und einmal je Saison; die Zusage tauscht gegen ein anderes mögliches,
+//       die Ablehnung kostet Vertrauen tausch.abgelehnt. Die Chance ist für den Test fest (wie zgTiefChance in Nr. 11 und 12).
+{const {S,F,ev,B,W}=welt(),Z=B.zielgespraech.tausch,l=()=>ev('meineZiele()');S.phase='play';F.zielgespraechStart();S.ziele={s:S.season,tid:S.my,l:[{k:'finanzen',min:0}]};
+  const offen=ev('zgOffen')(),karte=F.zielgespraechKarte().includes('nebenzielTauschen(0)');W.ev('nebenzielTauschChance=function(){return 1;}');F.nebenzielTauschen(0);
+  const k1=l()[0].k,neu=k1!=='finanzen'&&S.zg.nt===1&&ev('nebenzieleMoeglich')().moegl.includes(k1);F.nebenzielTauschen(0);const einmal=l()[0].k===k1;
+  S.zg.nt=0;S.trust=50;W.ev('nebenzielTauschChance=function(){return 0;}');F.nebenzielTauschen(0);const ab=l()[0].k===k1&&S.trust===50+Z.abgelehnt&&S.zg.nt===1;
+  S.zg.nt=0;S.zg.fertig=1;F.nebenzielTauschen(0);const zu=S.zg.nt===0;
+  pruef(offen&&karte&&neu&&einmal&&ab&&zu,'Nebenziel tauschen: im offenen Zielgespräch einmal, Zusage tauscht, Ablehnung kostet Vertrauen',
+    `offen ${offen}, Karte ${karte}, getauscht ${neu} (${k1}), einmal ${einmal}, abgelehnt ${ab}, nach dem Gespräch ${zu}`);}
+
 // 9. Rücktritt (K28 §5.3, U12b): sofort weg, Ruf −5 statt −8, Jobangebote; mit dem neuen Job ist der Rücktritt vergessen
 {const {S,F,ev,B}=welt();S.phase='play';S.ruf=30;F.ruecktritt();const weg=S.fired===1&&S.ruecktritt===1,r=ev('ruf()'),jobs=(S.jobs||[]).slice();
   if(jobs.length)F.takeJob(jobs[0]);

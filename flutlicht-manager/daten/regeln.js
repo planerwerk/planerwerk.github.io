@@ -1086,7 +1086,8 @@ const REGELN={
     // Zusage mit antrag.basis + jeVertrauen × (Vertrauen − 50) + jeRuf × (Ruf − Startruf), begrenzt (eigener Strom). Zugesagt wirkt es wie Tiefstapeln (Budget, Ruf), abgelehnt: Vertrauen abgelehnt.
     zwischenbilanz:{abstand:4,hoch:1,senken:1,antrag:{basis:0.5,jeVertrauen:0.005,jeRuf:0.005,grenzen:[0.05,0.95]},abgelehnt:-3,
       vonSichAus:6}, // U12k (22.11., GESCHÄTZT): ab so vielen Plätzen hinter dem Ziel senkt ein geduldiger Präsident (Geduld ab ruf.geduldig) von sich aus um senken
-    zielgespraech:{maxPlaetze:2,budgetHoch:0.1,budgetTief:0.15,rufHoch:2,tief:{basis:0.6,weiterer:0.2,jeVertrauen:0.005,jeRuf:0.005,ehrgeiz:0.15,ruhigBis:7,grenzen:[0.05,0.95]},abgelehnt:-3,ueberBudget:-1,ueberMax:-10},
+    // tausch (K28 §5.2 „Nebenziele verhandeln“, U12p, 25.11., popolupo, vorläufig): Zusage für einen Tausch je Saison wie beim Tiefstapeln, abgelehnt Vertrauen abgelehnt
+    zielgespraech:{maxPlaetze:2,budgetHoch:0.1,budgetTief:0.15,rufHoch:2,tief:{basis:0.6,weiterer:0.2,jeVertrauen:0.005,jeRuf:0.005,ehrgeiz:0.15,ruhigBis:7,grenzen:[0.05,0.95]},tausch:{basis:0.5,jeVertrauen:0.005,jeRuf:0.005,grenzen:[0.05,0.95],abgelehnt:-2},abgelehnt:-3,ueberBudget:-1,ueberMax:-10},
     entlassenUnter:12,schonfristSpieltage:6, // entlassen erst nach mehr als so vielen eigenen Ligaspieltagen. Die Schwierigkeit ersetzt beide Werte.
     pokalAus:-6,pokalWeiter:1.5,pokalSieg:10,
     saisonErreicht:20,saisonWeitAb:3,saisonWeit:-25,saisonVerfehlt:-8,entlassenSaisonUnter:15,

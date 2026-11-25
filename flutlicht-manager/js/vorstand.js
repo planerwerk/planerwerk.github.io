@@ -53,14 +53,18 @@ function ultimatumText(){const u=S.ult;if(!u||u.tid!==S.my||u.s!==S.season||S.ph
 // Seit U12o (K28 §3.1, 25.11., popolupo, vorläufig): Kader (Gehälter am Saisonende im Gehaltsrahmen, K23) und Zuschauer (Heimschnitt mindestens zuschauerHalten
 // des Schnitts der Vorsaison, nur nach einer ganzen Saison bei diesem Verein in derselben Liga, S.hist).
 const zuschauerVorsaison=t=>{const h=(S.hist||[]).find(x=>x.s===S.season-1&&x.tid===S.my&&x.lg===t.lg);return h&&h.zus>0?h.zus:0;};
-function nebenzieleSetzen(){const N=RV.nebenziele,t=myT(),moegl=[],runde=N.pokalRunde[t.lg]||1,zv=zuschauerVorsaison(t);
+// Seit U12p getrennt: welche Nebenziele möglich sind (in fester Reihenfolge, die Auslosung bleibt gleich) und wie eines aussieht.
+function nebenzieleMoeglich(){const N=RV.nebenziele,t=myT(),moegl=[],runde=N.pokalRunde[t.lg]||1,zv=zuschauerVorsaison(t);
   if(S.cup&&S.cup.alive.includes(S.my)&&S.cup.hist.length<runde)moegl.push('pokal');
   if(squad(S.my).some(p=>p.age<=N.jugendBis))moegl.push('jugend');
   moegl.push('finanzen');const eu=euZielMoeglich();if(eu)moegl.push('europa'); // Europapokal (K37, U19c)
   moegl.push('kader');if(zv)moegl.push('zuschauer'); // U12o
+  return{moegl,runde,zv,eu};}
+const nebenzielObjekt=(k,m)=>{const N=RV.nebenziele;return k==='europa'?{k,min:m.eu.min,wb:m.eu.wb}:{k,min:k==='pokal'?m.runde:k==='jugend'?N.jugendEinsaetze:k==='zuschauer'?Math.round(m.zv*N.zuschauerHalten/100)*100:0};};
+function nebenzieleSetzen(){const N=RV.nebenziele,t=myT(),m=nebenzieleMoeglich(),moegl=m.moegl;
   const n=praesident(t).ehrgeiz>=N.ehrgeizigAb?N.anzahl[1]:N.anzahl[0],zuerst=vereinsProfile(t).map(k=>N.profil[k]).filter(k=>k&&moegl.includes(k));
   const l=mitStrom(strom('nebenziele',S.season,S.my),()=>[...new Set([...zuerst,...shuffle(moegl.filter(k=>!zuerst.includes(k)))])].slice(0,n));
-  S.ziele={s:S.season,tid:S.my,l:l.map(k=>k==='europa'?{k,min:eu.min,wb:eu.wb}:{k,min:k==='pokal'?runde:k==='jugend'?N.jugendEinsaetze:k==='zuschauer'?Math.round(zv*N.zuschauerHalten/100)*100:0})};}
+  S.ziele={s:S.season,tid:S.my,l:l.map(k=>nebenzielObjekt(k,m))};}
 const zuschauerSchnitt=()=>S.att&&S.att[1]?S.att[0]/S.att[1]:0;
 // Nebenziele der laufenden Saison bei deinem Verein (nach einem Jobwechsel ohne neues setTarget: keine)
 const meineZiele=()=>S.ziele&&S.ziele.s===S.season&&S.ziele.tid===S.my?S.ziele.l:[];
@@ -118,6 +122,16 @@ function zgUeberBudget(fee){const Z=RV.zielgespraech,b=transferBudget(myT());if(
 // Ziel bringt dazu einen Zuschlag (Prüfung CX2: vorher zählte „übertroffen“ vom höheren Ziel, Hochpokern brachte so weniger Ruf als Annehmen)
 const zgRufSoll=soll=>{const z=meinZg();return z&&z.stufe?z.vorschlag:soll;};
 const zgRufZuschlag=pos=>{const z=meinZg();return z&&z.stufe<0&&pos<=S.target?RV.zielgespraech.rufHoch*-z.stufe:0;};
+// Nebenziel tauschen (K28 §5.2 „Nebenziele verhandeln“, U12p, 25.11., popolupo, vorläufig): solange das Zielgespräch offen ist, einmal je Saison (S.zg.nt).
+// Du stellst ein Nebenziel zur Wahl, der Vorstand sagt mit tausch.basis + Vertrauen und Ruf zu und wählt ein anderes mögliches; abgelehnt: Vertrauen tausch.abgelehnt.
+// Eigene Ströme, nur auf deinen Klick.
+function nebenzielTauschChance(){const Z=RV.zielgespraech.tausch;return clamp(Z.basis+Z.jeVertrauen*(S.trust-50)+Z.jeRuf*(ruf()-RV.ruf.start),Z.grenzen[0],Z.grenzen[1]);}
+function nebenzielTauschen(i){if(!darf('zielgespraech')||!zgOffen())return;const z=S.zg,l=meineZiele(),alt=l[i];if(!alt||z.nt)return;
+  const m=nebenzieleMoeglich(),frei=m.moegl.filter(k=>!l.some(x=>x.k===k));if(!frei.length){toast('Der Vorstand hat kein anderes Nebenziel.');return;}
+  z.nt=1;if(mitStrom(strom('nebenzielTausch',S.season,S.my),()=>R())<nebenzielTauschChance()){const k=mitStrom(strom('nebenzielNeu',S.season,S.my),()=>pick(frei));l[i]=nebenzielObjekt(k,m);
+    news(`Zielgespräch: Der Vorstand tauscht das Nebenziel. Statt „${nebenzielName(alt)}“ gilt jetzt „${nebenzielName(l[i])}“.`,'');}
+  else{S.trust=clamp(S.trust+RV.zielgespraech.tausch.abgelehnt,0,100);news(`Zielgespräch: Der Vorstand hält am Nebenziel „${nebenzielName(alt)}“ fest.`,'bad');}
+  save();render();}
 // Karte im Büro, solange das Gespräch offen ist
 // Je Richtung nur Knöpfe mit verschiedenem Ziel, Budget und Chance nach den tatsächlich verschobenen Plätzen (CX4)
 function zielgespraechKarte(){if(!zgOffen())return'';const t=myT(),Z=RV.zielgespraech,aus=lzAus('zielgespraech');
@@ -127,7 +141,11 @@ function zielgespraechKarte(){if(!zgOffen())return'';const t=myT(),Z=RV.zielgesp
   const tief=knoepfe(1,(neu,n)=>`Tiefstapeln: ${targetText(t.lg,neu)} (Zusage etwa ${Math.round(zgTiefChance(n)*100)} %, Budget −${Math.round(Z.budgetTief*n*100)} %)`);
   return`<div class="card"><h3>Zielgespräch mit dem Vorstand</h3><p>Der Vorstand schlägt vor: <b>${targetText(t.lg,S.target)}</b>. Bis zu deinem nächsten Ligaspiel kannst du verhandeln, danach gilt der Vorschlag.</p>
     <p class="dim">Hochpokern sagt der Vorstand immer zu: mehr Transferbudget und mehr Ruf, wenn du lieferst, aber das Ziel gilt. Tiefstapeln nimmt Druck, kostet Budget und bringt weniger Ruf. Lehnt der Vorstand ab, kühlt das Vertrauen um ${-Z.abgelehnt} ab. Eine Entscheidung je Saison.</p>
-    <div class="row"><button class="go" onclick="zielVerhandeln(0)"${aus}>Ziel annehmen</button>${hoch}${tief}</div>${lzHinweis('zielgespraech')}</div>`;}
+    <div class="row"><button class="go" onclick="zielVerhandeln(0)"${aus}>Ziel annehmen</button>${hoch}${tief}</div>${nebenzielTauschText(aus)}${lzHinweis('zielgespraech')}</div>`;}
+// Nebenziel tauschen (U12p): je Nebenziel ein Knopf, solange noch nicht getauscht und ein anderes möglich ist
+function nebenzielTauschText(aus){const z=meinZg(),l=meineZiele();if(!z||z.nt||!l.length)return'';const m=nebenzieleMoeglich();if(!m.moegl.some(k=>!l.some(x=>x.k===k)))return'';
+  return`<p class="dim" style="margin-top:8px">Ein Nebenziel kannst du einmal je Saison zum Tausch stellen, vor der Entscheidung über das Ziel. Zusage etwa ${Math.round(nebenzielTauschChance()*100)} %, sonst Vertrauen ${RV.zielgespraech.tausch.abgelehnt}.</p>
+    <div class="row">${l.map((x,i)=>`<button onclick="nebenzielTauschen(${i})"${aus}>Tauschen: ${esc(nebenzielName(x))}</button>`).join('')}</div>`;}
 
 // ---------- Zwischenbilanz im Winter (K28 §4 Nr. 3, U12f, Bereich zielgespraech) ----------
 // S.zb = {s Saison, tid Verein, sp eigene Ligaspiele bei der Bilanz, pos Platz, art 'hoch' | 'antrag' | 'fest', fertig}. Einmal je Saison und Verein, ohne Zufall (außer beim Antrag).

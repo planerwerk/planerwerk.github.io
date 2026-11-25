@@ -456,6 +456,7 @@ lizenz:{
 213. **K16i Haltung des Arztes (25.11., popolupo, ohne Testlauf):** keine neue Funktion, nur die Grenze für den Rat gegen das Fitspritzen (Bereich `medizin`) und die Anzeige im Trainerstab.
 214. **U12o Nebenziele Kader und Zuschauer (25.11., popolupo, ohne Testlauf):** keine neue Funktion; der Vorstand setzt sie wie die anderen Nebenziele, Anzeige im Büro.
 215. **K29n Gehaltsforderung bei bekanntem Interesse (25.11., popolupo, ohne Testlauf):** keine neue Funktion; wirkt auf die Forderung im Transfermarkt.
+216. **U12p Nebenziel tauschen (25.11., popolupo, ohne Testlauf):** keine neue Funktion, ein Knopf im Zielgespräch (Bereich `zielgespraech`, Grundlizenz, ohne Automatik).
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 

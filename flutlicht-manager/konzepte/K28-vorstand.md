@@ -185,7 +185,7 @@ Jetzt gibt es Budgets (K23d, K23 §5.5f) und echte Größenordnungen (K23c), dam
 - **Transferbudget** (K23d): Kontostand über der Reserve, mal dem Faktor aus dem Gespräch. Der Faktor gilt auch für das Budget der Automatik, solange der Verein deine Transfers führt (`kiBudget`, Prüfung CX5). Kaufst du über dem Budget, ist der Vorstand verstimmt: Vertrauen −1 je angefangene 10 % der Ablöse über dem Budget, höchstens −10, mit Meldung.
 - **Lizenz (K36):** neuer Bereich `zielgespraech` in der Grundlizenz, ohne Automatik (ohne Entscheidung gilt der Vorschlag).
 - **Gleichschritt:** Das Gespräch würfelt nur, wenn du tiefstapelst. Ohne Eingriff ändert sich nichts.
-- **Noch nicht:** Zwischenbilanz im Winter (§4 Nr. 3), Sparsamkeit des Präsidenten beim Budget, Nebenziele verhandeln. (Stand 25.11.2026: Die Zwischenbilanz gibt es seit U12f, die Sparsamkeit wirkt im Budgetgespräch seit U12l; offen bleibt nur, Nebenziele zu verhandeln.)
+- **Noch nicht:** Zwischenbilanz im Winter (§4 Nr. 3), Sparsamkeit des Präsidenten beim Budget, Nebenziele verhandeln. (Stand 25.11.2026: Die Zwischenbilanz gibt es seit U12f, die Sparsamkeit wirkt im Budgetgespräch seit U12l; Nebenziele verhandeln seit U12p: Im offenen Zielgespräch stellst du einmal je Saison ein Nebenziel zum Tausch, der Vorstand sagt mit 50 % + 0,5 % je Punkt Vertrauen über 50 + 0,5 % je Punkt Ruf über dem Start zu (5 bis 95 %, eigener Strom) und wählt ein anderes mögliches Nebenziel, abgelehnt Vertrauen −2.)
 
 ### 5.9 Umsetzung U12f (22. November 2026, popolupo, ohne Testlauf): Zwischenbilanz im Winter
 
