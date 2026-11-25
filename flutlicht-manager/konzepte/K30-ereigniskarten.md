@@ -355,7 +355,7 @@ Sehr selten, als Weltereignis: **etwa einmal in zehn Saisons** kommt ein Szenari
 
 ### 8.4 Stand am 25.11.2026 (popolupo, ohne Testlauf)
 
-- **Im Katalog** (`daten/karten.js`): 91 Karten. Die meisten Zeilen aus den Tabellen in §8 der Konzepte sind gebaut, entweder als Karte oder als Meldung in der Wochen- und Spiellogik. Beispiele für Meldungen statt Karten:
+- **Im Katalog** (`daten/karten.js`): 92 Karten. Die meisten Zeilen aus den Tabellen in §8 der Konzepte sind gebaut, entweder als Karte oder als Meldung in der Wochen- und Spiellogik. Beispiele für Meldungen statt Karten:
   - Goldener Jahrgang (K08) beim neuen Jahrgang.
   - Berater bietet an (K22) in `beraterWoche`.
   - Vorvertrag woanders und Ausstiegsklausel (K21) in der Vertragswoche.

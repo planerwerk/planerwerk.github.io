@@ -144,6 +144,7 @@ K05 regelt Ablauf und Zeitpunkt, K15 die Wirkung (Konsistenzprüfung D2). Ab Wel
   - Aussitzen: Er erzählt es der Presse, Glaubwürdigkeit −1 und Vertrauen des Vorstands −1. Eine eigene Pressewirkung (K29) fehlt, die Meldung nennt es.
 - Die Karten „Versprechen kippt“, „Spieler fordert Versprechen ein“ und „Kabine glaubt dir nicht mehr“ bleiben Erinnerung und Meldungen wie bisher (Nr. 17, gebrochene Versprechen, Glaubwürdigkeitskrise).
 - **Seit K15f** (25.11.2026, popolupo, ohne Testlauf, Werte vorläufig): „Spieler fordert Versprechen ein“ als Entscheidungskarte (Anlasskarte, Chance 0,6 je Woche) bis 7 Tage nach einem gebrochenen Versprechen an einen Spieler deines Kaders. Sich entschuldigen: Stimmung +5. Hart bleiben: Stimmung −3, Glaubwürdigkeit +1. Einen Wechsel erlauben: Transferliste (wie K14e), dann Stimmung +3. Die Automatik entschuldigt sich. Die Folgen des gebrochenen Versprechens selbst (Stimmung −15, Wechselwunsch eine Stufe höher, Glaubwürdigkeit) bleiben.
+- **Seit K15g** (25.11.2026, popolupo, ohne Testlauf, vorläufig): „Kabine glaubt dir nicht mehr“ zusätzlich zur Meldung als Entscheidungskarte während der Krise (Anlasskarte 0,5, Sperre 120 Tage). Fehler offen eingestehen: Glaubwürdigkeit +6, Vertrauen −1. Den Mannschaftsrat einbinden (Automatik): Glaubwürdigkeit +3, Zusammenhalt +2. Mit Ergebnissen antworten: nichts. „Versprechen kippt“ bleibt eine Erinnerung.
 
 ## 9. Wechselwirkungen
 

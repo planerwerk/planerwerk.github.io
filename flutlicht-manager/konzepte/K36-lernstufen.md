@@ -467,6 +467,7 @@ lizenz:{
 224. **K09k Verfahren nach einigen Tagen (25.11., popolupo, ohne Testlauf):** keine neue Funktion, das Urteil einer Ereigniskarte kommt später als Meldung.
 225. **K35c Ziehen und Ablegen in der Aufstellung (25.11., popolupo, ohne Testlauf):** keine neue Funktion, ein zweiter Weg zur Startelf (Bereich `aufstellung`); ist er gesperrt, lässt sich nichts ziehen.
 226. **U12q Nebenziele im Winter (25.11., popolupo, ohne Testlauf):** keine neue Funktion; der Vorstand ersetzt bei der Zwischenbilanz ein schon verfehltes Nebenziel.
+227. **K15g Kabine glaubt dir nicht mehr (25.11., popolupo, ohne Testlauf):** keine neue Funktion, eine Ereigniskarte (Bereich `ereignisse`); unter dessen Automatik bindet der Co-Trainer den Mannschaftsrat ein.
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 

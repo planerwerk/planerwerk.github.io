@@ -412,6 +412,12 @@ const KARTEN=[
     optionen:[{text:'Sich entschuldigen',wirkung:[{art:'stimmung',wert:5}],folge:'Du entschuldigst dich. {spieler} nimmt es an, ganz vergessen ist es nicht.'},
       {text:'Hart bleiben, die Lage hat sich geändert',wirkung:[{art:'stimmung',wert:-3},{art:'glaub',wert:1}],folge:'Du erklärst, warum es anders kam. {spieler} ist bedient, die Kabine sieht einen klaren Trainer.'},
       {text:'Ihm einen Wechsel erlauben',wirkung:[{art:'transferliste',wert:1,dann:[{art:'stimmung',wert:3}],gut:'{spieler} darf sich einen neuen Verein suchen und steht auf der Transferliste.'}],folge:''}],auto:0},
+  // Kabine glaubt dir nicht mehr (K15 §8, K15g, 25.11., popolupo, vorläufig): Anlasskarte während der Glaubwürdigkeitskrise (unter 25), zusätzlich zur Meldung. Nur bekannte Wirkungen.
+  {id:'glaubKrise',titel:'Die Kabine glaubt dir nicht mehr',bereich:'K15',art:'entscheidung',gross:false,stufe:'haeufig',chance:0.5,ausloeser:'glaubKrise',sperrTage:120,
+    texte:['In der Kabine wird nur noch gelächelt, wenn du redest. Deine Ansprachen verpuffen, und einige Spieler sagen es dir inzwischen ins Gesicht.','Der Kapitän nimmt dich zur Seite: Die Mannschaft glaubt deinen Worten nicht mehr. So kann es nicht weitergehen.'],
+    optionen:[{text:'Fehler offen eingestehen',wirkung:[{art:'glaub',wert:6},{art:'vertrauen',wert:-1}],folge:'Du stellst dich vor die Mannschaft und gibst Fehler zu. Das wirkt, nur der Vorstand hört es nicht gern.'},
+      {text:'Den Mannschaftsrat einbinden',wirkung:[{art:'glaub',wert:3},{art:'zusammenhalt',wert:2}],folge:'Kapitän und Führungsspieler reden ab jetzt mit. Die Kabine spürt, dass sich etwas ändert.'},
+      {text:'Mit Ergebnissen antworten',wirkung:[],folge:'Du sagst nichts dazu. Jetzt müssen Siege her.'}],auto:1},
   // Anwohner klagen (K26 §8, K26f, 23.11., popolupo): Anlasskarte, solange Tribüne oder Dach auf die Genehmigung warten (REGELN.karten.stadion.anwohner). Werte vorläufig.
   {id:'anwohnerKlagen',titel:'Anwohner klagen',bereich:'K26',art:'entscheidung',gross:false,stufe:'haeufig',chance:0.1,ausloeser:'anwohnerKlagen',sperrTage:365,
     texte:['Eine Bürgerinitiative klagt gegen deinen Stadionausbau: mehr Lärm, mehr Verkehr, mehr Licht. Die Genehmigung könnte sich verzögern.','Anwohner haben beim Verwaltungsgericht Klage gegen den Ausbau eingereicht. Der Anwalt des Vereins rät zu einem Gespräch.'],

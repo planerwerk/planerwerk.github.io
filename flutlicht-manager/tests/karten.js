@@ -777,4 +777,10 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   c.wirkung.forEach(w=>ev('kartenWirkung')(w,b,c));const my0=S.my;S.my=S.teams.find(x=>x.id!==my0&&x.id!==b.verein).id;const c1=ev('myT()').cash;vt(d+T[1]);const verfallen=S.verfK.length===0&&ev('myT()').cash===c1;S.my=my0;
   pruef(gelegt&&vorher&&urteil&&verfallen,'Verfahren: Urteil der Rudelbildung nach einigen Tagen, dann Strafe und Meldung, nach einem Jobwechsel verfallen',`gelegt ${gelegt}, vorher ${vorher}, Urteil ${urteil}, Jobwechsel ${verfallen}`);}
 
+// K15g. Kabine glaubt dir nicht mehr (K15 §8): nur während der Glaubwürdigkeitskrise (t.glaubKrise, Glaubwürdigkeit unter krise + 10); „Fehler eingestehen“ hebt sie um 6.
+{const {S,ev}=welt(),A=ev('AUSLOESER'),t=ev('myT()'),G=ev('RGS').glaubwuerdigkeit,gl=ev('glaub'),c=ev('karteVon')('glaubKrise');
+  delete t.glaubKrise;t.glaub=G.krise-5;const ohne=A.glaubKrise()===null;t.glaubKrise=1;const ja=!!A.glaubKrise();t.glaub=G.krise+10;const erholt=A.glaubKrise()===null;
+  t.glaub=G.krise-5;const g0=gl();c.optionen[0].wirkung.forEach(w=>ev('kartenWirkung')(w,{verein:S.my},c));const hoch=gl()===g0+6;delete t.glaubKrise;
+  pruef(ohne&&ja&&erholt&&hoch,'Kabine glaubt dir nicht mehr: Karte nur während der Krise, Fehler eingestehen hebt die Glaubwürdigkeit',`ohne Krise ${ohne}, in der Krise ${ja}, erholt ${erholt}, eingestanden ${hoch}`);}
+
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);
