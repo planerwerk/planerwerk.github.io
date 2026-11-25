@@ -26,7 +26,11 @@ function zusageChance(tid,d){const Z=RTS.zusage;if(tid>=1000)return Z.max;const 
   if(inVorbereitung(d)&&vorbereitungsWoche(d)<RTS.abWoche)return 0; // Profis erst ab der 3. Vorbereitungswoche, davor nur Amateure (Anstoss-Idee)
   p*=1+RBZ.wirkung.testspiel*bezWirk(tid); // Beziehung (K17 §5.2, U12c)
   return clamp(p,Z.min,Z.max);}
-function testspielAnfragen(tid,d){if(!testspielTage().includes(d))return null;(S.testspiele=S.testspiele||[]);S.testId=(S.testId||0)+1;
+// Auslandsvereine als Gegner im Trainingslager (K11 §12 Nr. 11, K11h): an Lagertagen die RTS.lagerAusland Vereine aus dem Land des Lagerorts (RLA.orte[…].land), deren
+// Stärke deiner am nächsten liegt; erst ab der Woche, ab der auch Profis zusagen. Gespielt wird dort (auswärts, ohne Zuschauereinnahmen). Ohne Zufall.
+function testspielGegnerAusland(d){const l=lagerAktiv(d),O=l&&RLA.orte[l.ort];if(!O||!O.land||!S.ausland||(inVorbereitung(d)&&vorbereitungsWoche(d)<RTS.abWoche))return[];const me=teamLevel(S.my);
+  return S.ausland.v.filter(v=>v&&v.land===O.land).map(v=>({id:v.id,d:euStaerke(v.id)-me,aus:true})).sort((a,b)=>Math.abs(a.d)-Math.abs(b.d)||a.id-b.id).slice(0,RTS.lagerAusland);}
+function testspielAnfragen(tid,d){if(!testspielTage().includes(d))return null;if(tid>=AV0&&!testspielGegnerAusland(d).some(g=>g.id===tid))return null; /* Auslandsverein nur im Lager (K11h) */(S.testspiele=S.testspiele||[]);S.testId=(S.testId||0)+1;
   const x={id:S.testId,tag:d,gegner:tid,heim:tid<1000,stand:'angefragt',antwortAm:S.tag+riA(RTS.antwortTage)};S.testspiele.push(x);return x;}
 // Jeden Tag: Antworten auf Anfragen, Trainingslager
 function testspieleTag(d){if(wochentag(d)===RK.wochenTag)kiTestspielAnfrage(d); /* Anfragen der Computer-Vereine (K11c) */ (S.testspiele||[]).forEach(x=>{if(x.stand!=='angefragt'||d<x.antwortAm)return;const ok=R()<zusageChance(x.gegner,x.tag);x.stand=ok?'zugesagt':'abgesagt';

@@ -81,5 +81,15 @@ if(lager){const f=ev('lagerMoeglich')('schwarzwald',S.tag+1,7);if(f)return{fehle
   pruef(!!j.a&&!!j.x&&j.x.heim===false&&j.x.stand==='zugesagt'&&j.frist==='Frist'&&j.abstand>=R.kiAnfrage.tage+R.vorlaufTage&&!j.alt&&!!n.a&&!n.x&&!au.a,
     'Anfragen der Computer-Vereine: Einladung am Montag, Zusage am letzten Tag als Auswärtsspiel, Halt zur Frist, Absage, keine in der Automatik, nicht in der nächsten Saison oder bei einem anderen Verein',
     `Zusage ${!!j.x}, Absage ${!n.x}, Automatik ${au.a?'Anfrage':'keine'}, Halt ${j.frist}, Abstand ${j.abstand} Tage, alte Einladung gilt ${j.alt}`);}
+
+// K11h. Auslandsvereine im Trainingslager (K11 §12 Nr. 11): an Lagertagen RTS.lagerAusland Vereine aus dem Land des Lagerorts (Andalusien: Spanien), im Schwarzwald
+//       und ohne Lager keine; anfragen geht nur im Lager, gespielt wird auswärts.
+{const {S,F,ev}=welt(),RTS=ev('RTS'),tage=F.testspielTage(),iv=ev('inVorbereitung'),vw=ev('vorbereitungsWoche'),av=ev('avVon'),d=tage.find(x=>!iv(x)||vw(x)>=RTS.abWoche);
+  const lager=ort=>{S.lager=[{ort,von:d-1,bis:d+3,saison:S.season,kosten:0,tag:0,koller:0}];};let ok=false,info='kein freier Tag';
+  if(d!=null){lager('andalusien');const g=F.testspielGegnerAusland(d),spanien=g.length===RTS.lagerAusland&&g.every(x=>x.aus&&av(x.id).land==='ESP');
+    lager('schwarzwald');const keinLand=F.testspielGegnerAusland(d).length===0;S.lager=[];const ohne=F.testspielGegnerAusland(d).length===0,abgelehnt=F.testspielAnfragen(g[0].id,d)===null;
+    lager('andalusien');const x=F.testspielAnfragen(g[0].id,d),angefragt=!!x&&x.gegner===g[0].id&&x.heim===false;S.lager=[];
+    ok=spanien&&keinLand&&ohne&&abgelehnt&&angefragt;info=`Spanien ${spanien} (${g.map(y=>av(y.id).name).join(', ')}), Schwarzwald ${keinLand}, ohne Lager ${ohne}, außerhalb abgelehnt ${abgelehnt}, angefragt ${angefragt}`;}
+  pruef(ok,'Auslandsvereine im Trainingslager: Gegner aus dem Land des Lagers, nur dort, auswärts',info);}
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);
