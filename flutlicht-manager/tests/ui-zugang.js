@@ -46,6 +46,10 @@ if(mb){await mb.click();const fi=await pg.$('input[type=file][onchange*="eigeneW
 const seq=await pg.evaluate(async()=>{const warte=ms=>new Promise(r=>setTimeout(r,ms));sequenzSetzen('an');torSequenz(true,'#c8102e');const an=document.querySelectorAll('.konfetti i').length;
   await warte(2600);const weg=!document.querySelector('.konfetti');sequenzSetzen('aus');torSequenz(true,'#c8102e');const aus=!document.querySelector('.konfetti');sequenzSetzen('an');return{an,weg,aus};});
 pruef(seq.an>=20&&seq.weg&&seq.aus,'Sequenzen: Konfetti bei „an“, verschwindet von selbst, nichts bei „aus“',JSON.stringify(seq));
+// Saisonwechsel (K39 §3.3, W5e8): Bildschirm mit Tafel und Tipp bei neuer Saison, blockiert keine Klicks, verschwindet von selbst
+const sw=await pg.evaluate(async()=>{const warte=ms=>new Promise(r=>setTimeout(r,ms));SAISON_GESEHEN=`${S.seed}|${S.season-1}`;saisonSequenz();const el=document.querySelector('.saisonwechsel');
+  const da=!!el&&el.textContent.includes(String(S.season))&&getComputedStyle(el).pointerEvents==='none';await warte(3300);return{da,weg:!document.querySelector('.saisonwechsel')};});
+pruef(sw.da&&sw.weg,'Saisonwechsel: Tafel mit neuer Saison, klickdurchlässig, verschwindet von selbst',JSON.stringify(sw));
 // Klang (K41, W5f): Stumm-Knopf in der Kopfzeile und Taste M schalten um, die Wahl steht im Browser, nicht im Spielstand; alle Klänge laufen ohne Fehler
 const tonLabel=()=>pg.evaluate(()=>{const b=document.querySelector('header button.ton');return b?b.getAttribute('aria-label'):null;});
 const ton0=await tonLabel();await pg.click('header button.ton');const ton1=await tonLabel();

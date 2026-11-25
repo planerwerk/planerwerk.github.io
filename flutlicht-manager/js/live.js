@@ -137,6 +137,14 @@ const sequenzAn=()=>sequenzStufe()!=='aus'&&!(typeof matchMedia==='function'&&ma
 function konfetti(farbe,n=28){if(typeof document==='undefined')return;const box=document.createElement('div');box.className='konfetti';box.setAttribute('aria-hidden','true');
   box.innerHTML=Array.from({length:n},(_,i)=>{const h=hash32('konfetti|'+i);return`<i style="left:${h%100}%;background:${i%3?farbe:'#ffffff'};animation-delay:${(h>>>8)%400}ms;--dx:${((h>>>16)%120)-60}px"></i>`;}).join('');
   document.body.appendChild(box);setTimeout(()=>box.remove(),2400);}
+// Saisonwechsel (K39 §3.3 und §3.4, W5e8): kurzer Bildschirm „Neue Saison“ mit Anzeigetafel und einem Tipp. Er blockiert nichts (pointer-events: none)
+// und verschwindet von selbst; nicht beim ersten Zeichnen nach dem Laden. Tipp fest aus Seed und Saison (hash32), kein Spielzufall, nichts im Spielstand.
+let SAISON_GESEHEN=null;
+function saisonSequenz(){if(typeof document==='undefined'||typeof document.createElement!=='function'||typeof S==='undefined'||!S)return;const k=`${S.seed}|${S.season}`;
+  if(SAISON_GESEHEN===null||SAISON_GESEHEN.split('|')[0]!==String(S.seed)){SAISON_GESEHEN=k;return;}if(SAISON_GESEHEN===k)return;SAISON_GESEHEN=k;if(!sequenzAn()||!document.body)return;
+  const kurz=sequenzStufe()==='kurz',tipp=TIPPS.length?TIPPS[hash32('tipp|'+k)%TIPPS.length]:'',el=document.createElement('div');el.className='saisonwechsel';el.setAttribute('role','status');
+  el.innerHTML=`<div class="sw-tafel"><span>Neue Saison</span><b>${S.season}/${String((S.season+1)%100).padStart(2,'0')}</b></div>${tipp?`<p class="sw-tipp"><b>Tipp:</b> ${esc(tipp)}</p>`:''}`;
+  document.body.appendChild(el);setTimeout(()=>el.classList.add('weg'),kurz?1200:2600);setTimeout(()=>el.remove(),kurz?1700:3100);}
 // Titel und Aufstieg (K39 §3.4, W5e6): einmal je Saison und Sitzung Konfetti und Jubel in der Saisonbilanz. Nicht im Spielstand gemerkt.
 let TITEL_GEFEIERT=null;
 // Verein aus der Bilanz (sm.my, nach einer Entlassung ist S.my schon der neue), Aufstieg auch über die Relegation, gemerkt je Karriere (Prüfung FZ2, FZ3)

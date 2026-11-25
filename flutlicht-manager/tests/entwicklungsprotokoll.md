@@ -290,6 +290,12 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 26.11.2026: W5e8 Saisonwechsel-Bildschirm mit Tipp (Zweig `mitarbeit/popolupo-w5e8-saisonwechsel`, auf den Korrekturen FZ)
+
+- **Weckruf:** kein neuer Testlauf (Testprotokoll weiter bei Lauf 8). Nur Oberfläche, kein Spielzufall, nichts im Spielstand.
+- **Neu:** Beim Wechsel in eine neue Saison erscheint kurz die Anzeigetafel „Neue Saison 2027/28“ mit einem Tipp (`saisonSequenz` in `js/live.js`, aufgerufen nach jedem Zeichnen, aber nicht nach dem Laden). Klickdurchlässig, verschwindet nach 2,5 Sekunden (Stufe „kurz“: 1,2), aus bei Sequenzen „aus“ oder „weniger Bewegung“. Neun Tipps in `TIPPS` (`daten/texte.js`), nur Aussagen, die zu den Regeln passen.
+- **Test:** `tests/ui-zugang.js` (Tafel mit neuer Saison, klickdurchlässig, verschwindet).
+
 ### 25.11.2026: Korrekturen nach Prüfung FZ (Zweig `mitarbeit/popolupo-fz-korrekturen`, auf W5e7)
 
 - **Prüfung FZ** (lesender Agent über FY-Korrekturen, W5c4, W5e6, W5e7): ein mittlerer und fünf niedrige Funde, dazu ein älterer Hinweis, alles behoben, Einzelheiten in der Konsistenzprüfung FZ.

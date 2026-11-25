@@ -37,7 +37,7 @@ function hdr(){const t=myT(),tr=S.trust,[k1,k2]=knopf(),dt=datumVon(S.tag);retur
   ${klangKnopf()}  <button class="go" onclick="tagBeenden()">${k1}<small>${k2}</small></button></header>`;}
 let RENDERING=0,RERENDER=0;
 function render(){if(RENDERING){RERENDER=1;return;}RENDERING=1;try{if(!S){renderStart();return;}
-  app.innerHTML=`<div class="wrap">${hdr()}<nav class="tabs" aria-label="Bereiche">${TABS.map(([k,l])=>`<button class="${TAB===k?'on':''}" onclick="tab('${k}')">${l}</button>`).join('')}<button onclick="menu()">Menü</button></nav><main>${V[TAB]()}</main></div>`;}
+  app.innerHTML=`<div class="wrap">${hdr()}<nav class="tabs" aria-label="Bereiche">${TABS.map(([k,l])=>`<button class="${TAB===k?'on':''}" onclick="tab('${k}')">${l}</button>`).join('')}<button onclick="menu()">Menü</button></nav><main>${V[TAB]()}</main></div>`;saisonSequenz();}
   finally{RENDERING=0;if(RERENDER){RERENDER=0;setTimeout(render,0);}}}
 const V={};
 // Karte für ein Spiel deines Vereins (heute oder demnächst)

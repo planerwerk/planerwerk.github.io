@@ -245,3 +245,12 @@ button.wahl.on{border-color:var(--amber);color:var(--amber);font-weight:700}
 .gs{flex:none;border-radius:10px;background:var(--turf2);border:1px solid var(--rule)}
 .phead .gs{margin-right:4px}
 td .gs{vertical-align:middle;margin-right:6px;border-radius:6px}
+/* Saisonwechsel (K39 §3.3, W5e8): blockiert nichts, verschwindet von selbst */
+.saisonwechsel{position:fixed;inset:0;z-index:45;display:grid;place-items:center;align-content:center;gap:18px;background:color-mix(in srgb,var(--night) 92%,transparent);pointer-events:none;animation:swEin .35s ease-out}
+.saisonwechsel.weg{opacity:0;transition:opacity .45s ease}
+.sw-tafel{background:var(--tafel);color:var(--tafel-text);border:1px solid var(--rule);border-radius:16px;padding:18px 40px;display:grid;justify-items:center;gap:4px}
+.sw-tafel span{font-family:var(--f-disp);letter-spacing:.3em;text-transform:uppercase;color:#9fb0c8;font-size:16px}
+.sw-tafel b{font-family:var(--f-disp);font-size:clamp(56px,12vw,110px);line-height:1;color:var(--tafel-led);font-variant-numeric:tabular-nums}
+.sw-tipp{max-width:560px;margin:0 16px;text-align:center;font-size:17px;color:var(--chalk)}
+@keyframes swEin{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.saisonwechsel{display:none}}

@@ -21,3 +21,16 @@ const VORLAGE_TEXT={auto:'Der Co-Trainer wählt je nach Spielplan: Standardwoche
   aufbau:'Für Pausen ohne Spiel: viel Kondition, Technik und Trainingsspiele. Fordert die Spieler, höheres Verletzungsrisiko.',
   schonen:'Wenig Belastung: frischer, aber die Kondition sinkt und die Entwicklung ist langsamer.',
   vorbereitung:'Nach dem Urlaub langsam steigern: erst normal, dann hart, zuletzt Taktik. Schützt vor Verletzungen durch Belastungssprünge.'};
+
+// Tipps für den Saisonwechsel-Bildschirm (K39 §3.3, W5e8). Nur Aussagen, die zu den Regeln im Spiel passen; neue Tipps einfach anhängen.
+const TIPPS=[
+  'Kündige Rotation vor dem Spiel an. Wer aus diesem Grund draußen bleibt, nimmt dir die Bank weniger übel.',
+  'In einer englischen Woche nimmt dir niemand einen Rotationsplatz übel.',
+  'Spieler mit sehr wenig Frische sind im Spiel deutlich geschwächt. Die Kachel „Frische“ im Training zeigt, wie viele es sind.',
+  'Wer um ein Gespräch bittet und vier Wochen weder ein Gespräch noch Besserung erlebt, will offiziell weg.',
+  'Einigst du dich außerhalb des Transferfensters, wechselt der Spieler zum Beginn des nächsten Fensters.',
+  'Unter „Lizenz und Lernstufen“ im Menü siehst du, welche Bereiche der Stab für dich übernimmt.',
+  'Im Menü unter „Darstellung“ wechselst du zwischen dunklem und hellem Thema.',
+  'Die Taste M schaltet den Ton stumm.',
+  'Eigene Wappen lädst du im Menü: Dateiname gleich Kürzel des Vereins, etwa FCK.png.'
+];
