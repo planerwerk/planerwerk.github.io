@@ -116,7 +116,7 @@ const protestOffen=L=>!!L&&!L.ende&&L.anlass!=null&&L.G.m-L.anlass<=RD.trainer.p
 // Ab sofort auf der Tribüne (Gelb-Rot, Rot): in der Halbzeitpause spricht gleich der Co-Trainer (Prüfung FG2)
 function liveAufTribuene(L,text){S.live.trib=1;L.meldung=text;if(L.G.m===45&&!L.ansprache){liveCoAnsprache();L.meldung=text+' '+L.meldung;}}
 function liveProtest(){if(!darf('zurufe','zuruf'))return;const L=LIVE;if(!protestOffen(L)||!S.live)return;const T=RD.trainer,G=L.G,SL=S.live;L.protestiert=true;
-  const n=SL.prot=(SL.prot||0)+1,h=(hash32(['protest',S.season,S.tag,S.my,G.m,n].join('|'))%1000)/1000,st=(G.schiri&&G.schiri.st)||1,rot=h<T.protestRot*st,gelb=h<T.protestGelb*st;
+  const n=SL.prot=(SL.prot||0)+1,h=(hash32(['protest',S.season,S.tag,S.my,G.m,n].join('|'))%1000)/1000,st=(G.schiri&&G.schiri.st)||1,rot=h<T.protestRot*st,gelb=h<(T.protestRot+T.protestGelb)*st /* FL8: Gelb wirklich mit protestGelb, nach Rot */;
   const r=G.zuruf(L.s,'druck');if(r.ok)liveMerken('zuruf',['druck']);
   if(rot){SL.rot=1;trainerSperre(T.rotSpiele,'Rote Karte für den Trainer');liveAufTribuene(L,'Rot für dich! Der Schiedsrichter schickt dich sofort auf die Tribüne.');}
   else if(!gelb)L.meldung='Du stürmst an die Seitenlinie und schimpfst. Der Schiedsrichter lässt es durchgehen, die Mannschaft ist hellwach.';

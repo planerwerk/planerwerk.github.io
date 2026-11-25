@@ -433,7 +433,7 @@ lizenz:{
 190. **K05e Eigene Bankwahl (24.11., popolupo, ohne Testlauf):** gehört zum Bereich `aufstellung` wie die Tribüne (Grundlizenz). Unter der Automatik der Aufstellung wählt der Co-Trainer die Bank wie bisher.
 191. **K21f Zielvorgabe im Vertrag (24.11., popolupo, ohne Testlauf):** gehört zum Bereich `praemien` (A-Lizenz) wie die übrigen Klauseln im Vertragsformular.
 192. **K07h Trainingsweltmeister übertreibt und Neuzugänge beim Trainingsauftakt (24.11., popolupo, ohne Testlauf):** keine neue Funktion, eine Info-Karte und eine Meldung.
-193. **K09i Rote Karte für den Trainer (24.11., popolupo, ohne Testlauf):** keine neue Funktion, ein weiterer Ausgang des Protests im Live-Spiel (Bereich `live` wie der Protest selbst).
+193. **K09i Rote Karte für den Trainer (24.11., popolupo, ohne Testlauf):** keine neue Funktion, ein weiterer Ausgang des Protests im Live-Spiel (Bereich `zurufe` wie der Protest selbst). Berichtigt nach Prüfung FL8, vorher stand hier `live`.
 194. **K19k Boni in Angeboten der Computer-Vereine (24.11., popolupo, ohne Testlauf):** gehört zum Bereich `transfers` wie die Angebote selbst. Unter der Automatik gibt es keine Angebote an dich, also auch keine Boni.
 195. **K18g Scoutbericht (24.11., popolupo, ohne Testlauf):** keine neue Funktion, mehr Anzeige nach der Gegnerbeobachtung (Bereich `beobachten`). Die mögliche Reaktion auf deinen Lieblingsstil nennt er nur, wenn du den Stil selbst wählst, wie im Spiel.
 196. **K30h Sammlung der Ereigniskarten (24.11., popolupo, ohne Testlauf):** keine Funktion, eine Seite der Statistik, auf jeder Lizenzstufe sichtbar. Sie zählt auch die Karten, die die Automatik entscheidet.

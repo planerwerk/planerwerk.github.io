@@ -2686,3 +2686,20 @@ Korrekturen auf `mitarbeit/popolupo-fk-korrekturen` (auf K19k).
 | FK5 | **Niedrig:** Nach einer Leihe behielt der Spieler die Integration des Leihvereins. Jetzt merkt `neuzugang` beim Verleihen den alten Stand in `p.leihe.i0`, `leiheEnde` und `zurueckholen` schreiben ihn zurück (angekommen bleibt angekommen). | ✅ behoben |
 | FK6 | **Niedrig:** Vereinslose aus `kaderAuffuellen` bekamen keine Integration. Jetzt `integrationStart` wie bei `planAuffuellen`, ohne Zufall. | ✅ behoben |
 | FK7 | **Niedrig, Doku:** K03 §5.5 führte die Heimweh-Karte noch unter „Noch nicht“, K11 widersprach sich zum Traumtor, Schritt 1 des Testlaufs im Entwicklungsprotokoll nannte die neuen Fälle nicht. Alles angepasst. | ✅ behoben |
+
+## FL. Prüfung von K05e, K05f, K21f, K07h, K09i, K19k und den Korrekturen FK ohne Laufzeit (24. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat c395a88..07ccf03 gelesen, nichts ausgeführt. Kein Laufzeitfehler, kein doppelter Name, kein unbeabsichtigter Zufallsverbrauch, Gleichschritt 5a und ausgeschaltete Schalter unberührt. Nachgerechnet ohne Befund: Heimweh 37 bis 41 nach 4 Wochen, Rot 3,4 bis 4,6 %, Bonus 30 % mit 9 + 2 Mio., Zielvorgabe nach 25 Spielen; der Ablauf in der Oberfläche bei Abschluss, Verlängerung, nach dem Spiel und beim Neuladen. Ein roter Test, zwei mittlere, fünf niedrige Funde.
+
+Korrekturen auf `mitarbeit/popolupo-fl-korrekturen` (auf K13g).
+
+| # | Befund | Status |
+|---|---|---|
+| FL1 | **Mittel, Test rot:** `bankAnzeige` (K05e) stand in `js/aktionen.js` ohne `darf(`, `tests/lizenz.js` Prüfung 1 wäre rot. Die Funktion ist eine Anzeige und steht jetzt in `js/ansichten.js`. | ✅ behoben |
+| FL2 | **Mittel, nur mit Schalter:** Seit FK3 wird die TV-Rate nach `finanzenTag` gebucht; die Insolvenzprüfung am Monatsersten sah sie nicht und traf Vereine am Tiefpunkt des Quartals. Jetzt zählen `insolvenzPruefen` und `kiInsolvenzPruefen` die heute fällige, noch nicht gebuchte Rate mit (`tvHeute`). | ✅ behoben |
+| FL3 | **Mittel:** Joker (K05f) zählte im Testspiel voll und belegte unsichtbar einen Platz für Stärken (ein laufendes Lernziel konnte still verfallen). Jetzt zur Hälfte im Testspiel, kein Platz (`platz:false`), sichtbar (`zeigen`). | ✅ behoben |
+| FL4 | **Niedrig:** Startkader-Ausländer zeigten „Deutsch 60“, bei einem Wechsel in der ersten Woche gab `integrationStart` aber 20. Jetzt setzt der Aufbau der Welt `p.de`. | ✅ behoben |
+| FL5 | **Niedrig:** In `kaderAuffuellen` bekamen erzeugte Spieler keine Integration. Jetzt wie in `planAuffuellen`. | ✅ behoben |
+| FL6 | **Niedrig:** Jede Verlängerung setzte die Zielvorgabe zurück, der Nachlass von 5 % ließ sich immer neu holen. Jetzt läuft eine bestehende weiter ohne neuen Nachlass, wer sie streicht, zahlt die 5 %. | ✅ behoben |
+| FL7 | **Niedrig, Tests:** Der Fall „im Ausland“ suchte in `S.pl` statt `S.ausland.pl`; der Test K31d prüfte den Kauf zum Notpreis nicht. Beides ergänzt. Die Reihenfolge bei FK3, der Formularweg von K21f und `bonusKI` in `market()` bleiben ohne eigenen Test. | ✅ behoben (teilweise ohne Test) |
+| FL8 | **Niedrig, Doku:** K36 Nr. 193 nannte den Bereich `live` statt `zurufe`; K21 Nr. 12 führte die Zielvorgabe unter „Nicht gebaut“; Gelb nach einem Protest kam seit K09i nur mit etwa 31 % statt 35 % (jetzt im Code berichtigt: Gelb bis (Rot + Gelb) × Strenge); `zv` stand in K33 für zwei Dinge (jetzt erklärt). | ✅ behoben |
