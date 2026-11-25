@@ -445,6 +445,7 @@ lizenz:{
 202. **K09j Schiedsrichterkritik der Computer-Trainer (25.11., popolupo, ohne Testlauf):** keine Funktion, nur Meldungen.
 203. **K13j Pokal-Rotation der Favoriten (25.11., popolupo, ohne Testlauf, Schalter aus):** keine neue Funktion. Dein Verein rotiert nur, wenn der Co-Trainer aufstellt (Bereich `aufstellung` in der Automatik), sonst stellst du selbst auf.
 204. **K11h Auslandsvereine im Trainingslager (25.11., popolupo, ohne Testlauf):** gehört zum Bereich `testspiele` wie jede Anfrage. Die Automatik des Bereichs fragt weiter nur Amateure an.
+205. **K11i Marketing der Golfregion (25.11., popolupo, ohne Testlauf):** keine neue Funktion, eine Folge der Ortswahl im Bereich `lager`.
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 

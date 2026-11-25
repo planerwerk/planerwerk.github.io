@@ -91,5 +91,12 @@ if(lager){const f=ev('lagerMoeglich')('schwarzwald',S.tag+1,7);if(f)return{fehle
     lager('andalusien');const x=F.testspielAnfragen(g[0].id,d),angefragt=!!x&&x.gegner===g[0].id&&x.heim===false;S.lager=[];
     ok=spanien&&keinLand&&ohne&&abgelehnt&&angefragt;info=`Spanien ${spanien} (${g.map(y=>av(y.id).name).join(', ')}), Schwarzwald ${keinLand}, ohne Lager ${ohne}, außerhalb abgelehnt ${abgelehnt}, angefragt ${angefragt}`;}
   pruef(ok,'Auslandsvereine im Trainingslager: Gegner aus dem Land des Lagers, nur dort, auswärts',info);}
+
+// K11i. Marketing der Golfregion (K11 §4.2, K25): am letzten Lagertag marketing.anteil der Lagerkosten als Einnahme, einmal; andere Orte nichts.
+{const {S,F,ev}=welt(),t=ev('myT()'),O=ev('RLA').orte,d=S.tag,mk=k=>S.fin[k]||0;
+  S.lager=[{ort:'golf',von:d-3,bis:d,saison:S.season,kosten:100000,tag:0,koller:0}];const c0=t.cash,f0=mk('Marketing: Lager');F.lagerTag(d);
+  const g=Math.round(100000*O.golf.marketing.anteil/1000)*1000,bezahlt=t.cash===c0+g&&mk('Marketing: Lager')===f0+g&&S.lager[0].mk===1;F.lagerTag(d);const einmal=t.cash===c0+g;
+  S.lager=[{ort:'alpen',von:d-3,bis:d,saison:S.season,kosten:100000,tag:0,koller:0}];const c1=t.cash;F.lagerTag(d);const andere=t.cash===c1;S.lager=[];
+  pruef(bezahlt&&einmal&&andere,'Marketing der Golfregion: Einnahme am letzten Lagertag, einmal, nur dort',`bezahlt ${bezahlt} (${g}), einmal ${einmal}, andere Orte ${andere}`);}
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

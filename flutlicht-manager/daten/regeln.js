@@ -895,9 +895,10 @@ const REGELN={
     // Sommerturnier (K11 §3, K11b, 22.11., GESCHÄTZT): Antrittsgeld und Siegprämie je Liga, Stimmung aller beim Turniersieg
     turnier:{name:'Sommerturnier',antritt:{1:150000,2:60000,3:25000},sieg:{1:100000,2:40000,3:15000},stimmung:1},
     kiAnfrage:{chance:0.35,tage:3},spielfrei:{tage:7,abstandTage:7}}, // Anfragen der Computer-Vereine in der Vorbereitung (K11c, GESCHÄTZT): montags mit chance, Antwort binnen tage; spielfrei: Erinnerung „spielfreie Woche ohne Testspiel“ (K01 H9, K11d), Blick auf tage Tage, höchstens einmal je abstandTage
+  // Seit K11h je Ort land (Gegner aus dem Ausland im Lager), seit K11i bei der Golfregion marketing: am letzten Lagertag anteil der Lagerkosten als Einnahme, Fanstimmung + fans (25.11., popolupo, vorläufig)
   lager:{orte:{alpen:{name:'Alpen',land:'AUT',saison:'sommer',kosten:40000,kondition:1.15,text:'Höhenlage: Kondition wirkt stärker'},schwarzwald:{name:'Schwarzwald',saison:'sommer',kosten:25000,text:'günstig und ruhig'},
       algarve:{name:'Algarve',land:'POR',saison:'winter',kosten:50000,text:'mildes Wetter'},andalusien:{name:'Andalusien',land:'ESP',saison:'winter',kosten:55000,text:'warm, gute Plätze'},
-      riviera:{name:'Türkische Riviera',land:'TUR',saison:'winter',kosten:30000,ablenkung:true,text:'günstig, aber mehr Ablenkung'},golf:{name:'Golfregion',saison:'winter',kosten:90000,text:'sehr warm, lange Reise'},
+      riviera:{name:'Türkische Riviera',land:'TUR',saison:'winter',kosten:30000,ablenkung:true,text:'günstig, aber mehr Ablenkung'},golf:{name:'Golfregion',saison:'winter',kosten:90000,marketing:{anteil:1.2,fans:-1},text:'sehr warm, lange Reise, Termine bei Partnern bringen Geld, manche Fans murren'},
       heimat:{name:'Heimat',saison:'beide',kosten:0,wetter:0.2,text:'kein Ortswechsel, im Winter fällt öfter Training aus'}},
     ligaFaktor:{1:1,2:0.6,3:0.35},tage:[5,10],training:1.15,vertrautheit:1.25,zusammenhalt:1,zusammenhaltBis:7,kollerAb:8,koller:0.13,kollerSv:-0.5,ablenkung:0.15,ablenkungSv:-1},
   // Stimmung, Kaderrollen, Wechselwunsch, Kabine, Zusammenhalt, Beziehungen, Kapitän (K14 §11, U8). Spielwerte, kalibriert mit tests/kabine.js

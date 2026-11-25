@@ -81,7 +81,11 @@ function lagerTag(d){const l=lagerAktiv(d);if(!l)return;const O=RLA.orte[l.ort],
     if(!l.kollerK&&d<l.bis){l.kollerK=1;kartenKetteHeute('lagerkoller',{lager:l.von},d);}} /* Karte „Lagerkoller“ noch heute, einmal je Lager (K11g, Prüfung EU1) */
   if(O.ablenkung)sq.filter(p=>hatEig(p,'partyloewe')).forEach(p=>{if(R()<RLA.ablenkung/(l.bis-l.von+1)){svAendern(p,RLA.ablenkungSv);news(`Trainingslager: ${p.n} wurde nachts in der Stadt gesehen.`,'bad');
     if(!l.nachtK){l.nachtK=1;kartenKetteHeute('nachtleben',{spieler:p.id,lager:l.von},d);}}}); /* Karte „Ausflug ins Nachtleben“ noch heute, einmal je Lager (K11g, EU1) */
-  if(d===l.bis)news(`Trainingslager in ${O.name} beendet. Der Co-Trainer ist zufrieden mit Kondition und Abläufen.`,'good');}
+  if(d===l.bis){news(`Trainingslager in ${O.name} beendet. Der Co-Trainer ist zufrieden mit Kondition und Abläufen.`,'good');if(O.marketing&&!l.mk)lagerMarketing(l,O);}}
+// Marketing der Golfregion (K11 §4.2, K25, K11i): Am letzten Lagertag bringen Auftritte bei Partnern vor Ort marketing.anteil der Lagerkosten (Buchung „Marketing: Lager“),
+// die Fans murren über die Reise (Fanstimmung marketing.fans, Umfeld). Einmal je Lager (l.mk). Ohne Zufall.
+function lagerMarketing(l,O){const M=O.marketing,g=Math.round(l.kosten*M.anteil/1000)*1000;l.mk=1;if(g>0)money('Marketing: Lager',g);if(M.fans)fanAnlass(myT(),'fanU',M.fans);
+  news(`Trainingslager in ${O.name}: Termine bei Partnern vor Ort bringen ${fmt(g)}.${M.fans?' Ein Teil der Fans kritisiert die Reise.':''}`,'');}
 
 // ---------- Sommerturnier (K11 §3, K11b) ----------
 // Vier Vereine, zwei Tage in der Vorbereitung: Halbfinale gegen einen Verein deines Niveaus (Tag 1, als Testspiel), das andere Halbfinale wird kurz nach Ansehen gerechnet
