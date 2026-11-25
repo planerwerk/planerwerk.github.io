@@ -51,10 +51,10 @@ function teamWerte(sd,fr,off,lage){const T=RE.team,k=RE.staerke,acc={K:[],AM:[],
   if(sd.stilF){w.K*=sd.stilF.kontrolle;['DM','DL','DR'].forEach(q=>w[q]*=sd.stilF.abwehr);}if(sd.mult&&sd.mult!==1)for(const k in w)w[k]*=sd.mult;
   return w;}
 // Eine Mannschaft vor dem Anpfiff. A und D sind Gesamtwerte für Vorschau und Tauziehen.
-function side(tid,home,neutral){
+function side(tid,home,neutral,kader){
   if(tid>=AV0){const v=euStaerke(tid)*(home&&!neutral?RE.heim.alle:1),w={K:v,AM:v,AL:v,AR:v,DM:v,DL:v,DR:v,TW:v};return{id:tid,am:true,aus:true,w,A:v,D:v,red:0,xp:[],xi:[],ein:'N',tac:'N',namen:euTorschuetzen(tid)};} // Auslandsverein im Europapokal (K37, U19a): Block mit Teamstärke wie die Amateure
   if(tid>=1000){const a=S.am[tid-1000],v=a.str*(home&&!neutral?RE.heim.amateure:1),w={K:v,AM:v,AL:v,AR:v,DM:v,DL:v,DR:v,TW:v};return{id:tid,am:true,w,A:v,D:v,red:0,xp:[],xi:[],ein:'N',tac:'N'};}
-  const t=S.teams[tid],sl=slotsVerein(t),xi=tid===S.my?myXI():bestXI(tid,t.form),xp=[];
+  const t=S.teams[tid],sl=slotsVerein(t),xi=tid===S.my&&!kader?myXI():bestXI(tid,t.form,kader),xp=[];
   xi.forEach((id,i)=>{const p=id!=null?PIX.get(id):null;if(p)xp.push({p,pos:sl[i]});});
   const sd={id:tid,xp,xi:xi.filter(x=>x!=null),ein:t.ein,tac:RE.ausrichtung[t.tac]?t.tac:'N',form:t.form,heim:home&&!neutral,dach:home&&!neutral?dachFaktor(tid):1,red:0};sd.w=teamWerte(sd); /* Dach (K26d) */
   sd.A=0.5*sd.w.AM+0.25*(sd.w.AL+sd.w.AR);sd.D=0.4*sd.w.DM+0.2*(sd.w.DL+sd.w.DR)+0.2*sd.w.TW;return sd;}
@@ -113,7 +113,7 @@ function spielAufbau(hid,aid,o,saison,tag){const Z=RL.zurufe,hs=hash32(['spiel',
       else if(a.art==='fordern')f*=1+(hatEig(p,'kaempfer')?A.fordern.kaempfer:(hatEig(p,'nervenschwach')||hatEig(p,'diva'))?A.fordern.empfindlich:0)*a.f;}
     const r=G.spielerRuf[p.id];if(r&&m>r.m&&m<=r.m+Z.dauer)f*=1+r.f;return f;};
   G.foulSpieler=id=>{const r=G.spielerRuf[id];return r&&r.fouls&&G.mNow>r.m&&G.mNow<=r.m+Z.dauer?r.fouls:1;};
-const wb=o.wb||'liga',H=mitWettbewerb(wb,()=>side(hid,true,o.neutral)),A=mitWettbewerb(wb,()=>side(aid,false,o.neutral)),Ss=[H,A];G.schiri=schiriFuer(hid,aid,hs);G.brisant=!o.test&&spielBrisant(hid,aid);taktikAnlegen(Ss,o); /* Derby oder Brisanz (K09d): mehr Karten, kein Würfel */
+const wb=o.wb||'liga',H=mitWettbewerb(wb,()=>side(hid,true,o.neutral,pokalRotationKader(hid,aid,o))),A=mitWettbewerb(wb,()=>side(aid,false,o.neutral,pokalRotationKader(aid,hid,o))),Ss=[H,A]; /* Pokal-Rotation der Favoriten (K13j, nur mit Schalter) */G.schiri=schiriFuer(hid,aid,hs);G.brisant=!o.test&&spielBrisant(hid,aid);taktikAnlegen(Ss,o); /* Derby oder Brisanz (K09d): mehr Karten, kein Würfel */
   const xg0=(H.am||A.am)?amateurErwartung(H,A):erwarteteTore(H,A);
   const ev=[],sc=[0,0],yel={},off=new Set(),inj=[],st={besitz:[0,0],schuesse:[0,0],aufsTor:[0,0],ecken:[0,0],fouls:[0,0],gross:[0,0],wege:[[0,0,0],[0,0,0]]},sz=[];
   const fr={};Ss.forEach(sd=>sd.xp.forEach(x=>fr[x.p.id]=x.p.fit));

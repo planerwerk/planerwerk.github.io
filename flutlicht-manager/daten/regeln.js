@@ -18,7 +18,8 @@ const REGELN={
     {k:'tvRaten',pfad:'finanzen.tv.raten',name:'TV-Gelder in vier Raten',text:'Statt je Ligaspiel kommt das TV-Geld am 1. August, 1. November, 1. Februar und 1. Mai für alle Vereine (K23h). Umgeschaltet gilt es ab der nächsten Saison.'},
     {k:'notverkauf',pfad:'computer.notverkauf',name:'Notverkauf bei Computer-Vereinen',text:'Wer über seinem Gehaltsrahmen liegt, setzt seinen teuersten Spieler unter Wert auf die Transferliste (K31d).'},
     {k:'integration',pfad:'spieler.integration.wirkung',name:'Integration wirkt im Spiel',text:'Neuzugänge aller Vereine spielen schwächer, bis sie integriert sind (bis 8 %, K03d).'},
-    {k:'laenderspiele',pfad:'wettbewerbe.laenderspiele',name:'Länderspiele',text:'Nationalspieler aller Vereine fehlen in den Länderspielpausen und kommen müde zurück (K13f).'}],
+    {k:'laenderspiele',pfad:'wettbewerbe.laenderspiele',name:'Länderspiele',text:'Nationalspieler aller Vereine fehlen in den Länderspielpausen und kommen müde zurück (K13f).'},
+    {k:'pokalRotation',pfad:'wettbewerbe.pokal.rotationKI',name:'Pokal-Rotation der Favoriten',text:'In den ersten zwei Pokalrunden schonen Favoriten gegen Amateure und deutlich schwächere Gegner Spieler unter 85 % Frische (K13j).'}],
 
   kalender:{
     maxSprung:7,                     // „Tag beenden“ springt höchstens so viele Tage weit
@@ -871,7 +872,9 @@ const REGELN={
   // Wettbewerbe und Spielplan (K13 §11, Welle 2): Pokal-Auslosung, Heimrecht der Amateure (3. Liga und darunter) bis zum Halbfinale (Runde 4), Supercup, 72 Stunden
   // supercup.praemie (K13b, 22.11.2026): Franz-Beckenbauer-Supercup 2025, 3 Mio. € für den Sieger, 2 Mio. € für den Verlierer (Websuche 22.11., Medienberichte, keine offizielle DFL-Quelle)
   // pokal.rotation (K13e, 23.11., GESCHÄTZT): Pokal-Rotation rächt sich, wenn du als Favorit (Amateur oder Niveau mindestens favorit unter deinem) ausscheidest und mindestens wechsel Spieler der Startelf des letzten Ligaspiels getauscht hast
-  wettbewerbe:{pokal:{auslosungTage:14,profitopfZweite:14,heimrechtBisRunde:4,losTopAb:80,rotation:{favorit:5,wechsel:4}},supercup:{vorSpieltag:6,anstoss:'20:30',praemie:{sieger:3e6,verlierer:2e6}},spielplan:{mindestTage:3},
+  // pokal.rotationKI (K13 §4, K13j, 25.11., popolupo, vorläufig, Schalter an vorerst aus): Favoriten (wie rotation.favorit) schonen in den Runden bis bisRunde (0 = 1. Runde)
+  // Spieler unter frische % Frische, wenn danach noch minKader Spieler mit Torwart bleiben. Computer-Vereine und dein Verein, wenn der Co-Trainer aufstellt.
+  wettbewerbe:{pokal:{auslosungTage:14,profitopfZweite:14,heimrechtBisRunde:4,losTopAb:80,rotation:{favorit:5,wechsel:4},rotationKI:{an:false,frische:85,bisRunde:1,minKader:14}},supercup:{vorSpieltag:6,anstoss:'20:30',praemie:{sieger:3e6,verlierer:2e6}},spielplan:{mindestTage:3},
     // Spielverlegung auf Antrag (K13 §13, K13d, 23.11., popolupo, vorläufig): wie die Regel der DFL aus der Corona-Zeit, mindestens minSpieler einsatzfähige Spieler, darunter ein Torwart, sonst Verlegung möglich.
     // Für dein Ligaspiel in höchstens vorTage Tagen, höchstens proSaison je Saison, neuer Termin bis sucheTage später und vor dem letzten Spieltag deiner Liga.
     // Seit K13f auch mit mindestens abgestellt Spielern bei Nationalmannschaften (K13 §4, nur mit laenderspiele.an).

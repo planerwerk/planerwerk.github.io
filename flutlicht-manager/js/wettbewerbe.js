@@ -141,3 +141,11 @@ function lsRueckkehr(p){const L=RWB.laenderspiele,x=p.lsp;delete p.lsp;if(p.team
   stimmungAendern(p,L.stimmung);
   if(sp){const a=Math.min(1,M/(90*sp));p.fit=Math.max(0,p.fit-Math.round(ri(L.frische[0],L.frische[1])*a));p.sb=Math.min(100,(p.sb||0)+L.belastung*sp);svAendern(p,R()<0.5?L.sv:-L.sv);if(R()<L.verletzung&&verletzen(p,'kollision'))p.lspV=absTag(S.tag);}
   if(p.team===S.my)news(`${p.n} ist von der Nationalmannschaft zurück, ${sp?`${sp} Länderspiel${sp===1?'':'e'}`:'ohne Einsatz'}${p.inj>0?', verletzt':''}.`,p.inj>0?'bad':'');}
+
+// ---------- Pokal-Rotation der Favoriten (K13 §4, K13j) ----------
+// Nur mit RWB.pokal.rotationKI.an (vorerst aus). In den Pokalrunden bis bisRunde schont ein Favorit (Gegner Amateur oder Niveau mindestens rotation.favorit unter seinem)
+// Spieler unter frische % Frische: Er stellt aus dem Kader ohne sie auf, wenn danach mindestens minKader Spieler mit Torwart bleiben. Gilt für Computer-Vereine und für
+// deinen Verein, wenn der Co-Trainer aufstellt (stabMacht), also in beiden Welten des Gleichschritts gleich. Ohne Zufall. Gibt den Kader oder undefined zurück.
+function pokalRotationKader(tid,gid,o){const R=RWB.pokal.rotationKI;if(!R||!R.an||!o||o.wb!=='pokal'||o.runde==null||o.runde>R.bisRunde||tid>=1000||!S.teams[tid]||!stabMacht(tid,'aufstellung'))return undefined;
+  if(!(gid>=1000||teamLevel(tid)-teamLevel(gid)>=RWB.pokal.rotation.favorit))return undefined;
+  const k=squad(tid).filter(p=>p.fit>=R.frische);return k.length>=R.minKader&&k.some(p=>p.pos==='TW')?k:undefined;}
