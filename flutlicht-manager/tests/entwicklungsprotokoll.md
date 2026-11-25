@@ -290,6 +290,12 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 25.11.2026: W5e1 erzeugte Wappen (Zweig `mitarbeit/popolupo-w5e-artwork`, auf W5d)
+
+- **Weckruf:** kein neuer Testlauf (Testprotokoll weiter bei Lauf 8). Nur Oberfläche, kein Zufall (Form über `hash32` aus dem Kürzel).
+- **Neu:** `wappen(id, px)` in `js/ansichten.js` (K39 §3.1): Grundform aus vier, Vereinsfarbe, innere Linie, Kürzel ab 28 px. In der Kopfzeile statt des Farbstreifens, auf den Spielkarten beide Wappen, klein (`chip`) in Tabellen, Spielplan und Jobangeboten statt des Farbpunkts. Keine echten Wappen.
+- **Test:** `tests/pruefungen.js` (`__check`, läuft in allen Browser-Tests) prüft für jeden Verein ein vollständiges Wappen.
+
 ### 25.11.2026: W5d3 Kleinbuchstaben, die eigene Schrift gilt für alle Anzeigetexte (Zweig `mitarbeit/popolupo-w5d-schrift`)
 
 - **Neu:** a bis z mit ä, ö, ü, ß, dazu €, Klammern, !, ?, Mittelpunkt und Halbgeviertstrich (85 Zeichen, 18 KB). „Flutlicht Display“ ist jetzt die Anzeigeschrift für alle Überschriften, Kennzahlen, Knöpfe, die Anzeigetafel und den Titel (`--f-disp`). Fehlende Zeichen kommen einzeln aus Saira Condensed. Die Familie „Flutlicht Versal“ aus W5d2 entfällt.

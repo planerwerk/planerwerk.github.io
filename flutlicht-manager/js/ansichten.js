@@ -4,7 +4,15 @@ const SORTS={pos:(a,b)=>POSO[a.pos]-POSO[b.pos]||b.str-a.str,str:(a,b)=>b.str-a.
 const SORTL={pos:'Position',str:'Stärke',age:'Alter',val:'Marktwert'};
 const TABS=[['buero','Büro'],['kalender','Kalender'],['kader','Kader'],['kabine','Kabine'],['aufst','Aufstellung'],['tabelle','Tabelle'],['spielplan','Spielplan'],['pokal','Pokal'],['statistik','Statistik'],['transfer','Transfers'],['finanzen','Finanzen'],['stadion','Stadion'],['training','Training & Jugend'],['stab','Stab']];
 const fact=(k,v)=>`<div><span class="lbl">${k}</span><b>${v}</b></div>`;
-const chip=id=>`<span class="dot" style="background:${S.teams[id].col}"></span>`;
+// Wappen (K39 §3.1, W5e1): erzeugt aus Vereinsfarbe, Kürzel und einer Grundform, fest aus dem Kürzel (in jeder Karriere gleich). Keine echten Wappen.
+// Unter 28 px ohne Kürzel. Rein dekorativ (aria-hidden), der Vereinsname steht immer daneben. Ohne Zufall: hash32 auf das Kürzel.
+const WAPPEN_FORM=['M4 4H44V27C44 40 35 48 24 52C13 48 4 40 4 27Z','M24 6A22 22 0 1 1 23.99 6Z','M24 3L45 28L24 53L3 28Z','M6 4H42V44L24 53L6 44Z'];
+const farbHell=h=>{const m=/^#?([0-9a-f]{6})$/i.exec(String(h||''));if(!m)return 0.2;return[0,2,4].map(i=>parseInt(m[1].substr(i,2),16)/255).map(c=>c<=0.04045?c/12.92:Math.pow((c+0.055)/1.055,2.4)).reduce((s,c,i)=>s+c*[0.2126,0.7152,0.0722][i],0);};
+function wappen(id,px=16){const t=S.teams[id],col=(t&&t.col)||'#7a8699',sh=(t&&t.sh)||'',d=WAPPEN_FORM[hash32('wappen|'+(sh||id))%WAPPEN_FORM.length],ink=farbHell(col)>0.2?'#141b26':'#ffffff';
+  return`<svg class="wp" viewBox="0 0 48 56" width="${px}" height="${Math.round(px*56/48)}" aria-hidden="true" focusable="false"><path d="${d}" fill="${col}" style="stroke:var(--rule)" stroke-width="1.5"></path><path d="${d}" fill="none" stroke="${ink}" stroke-width="2.6" transform="translate(3.84 4.48) scale(.84)"></path>${px>=28&&sh?`<text x="24" y="33" text-anchor="middle" font-size="${sh.length>3?11:14}" font-weight="700" fill="${ink}" style="font-family:var(--f-disp)">${esc(sh)}</text>`:''}</svg>`;}
+const chip=id=>wappen(id,14);
+const wappenPaar=f=>`<div class="vs-wp">${wappen(f[0],44)}<i>:</i>${wappen(f[1],44)}</div>`;
+
 const avgAtt=()=>S.att[1]?Math.round(S.att[0]/S.att[1]).toLocaleString('de-DE'):'–';
 // Sperren je Wettbewerb (K09): „gesperrt (Liga 2, Pokal 1)“, mit Hinweis auf ein laufendes Verfahren
 const sperrText=p=>{const l=sperreIn(p,'liga'),k=sperreIn(p,'pokal'),e=sperreIn(p,'eu'),nm=p.team===S.my&&naechsterWb()==='eu'&&!euSpielberechtigt(p);if(!l&&!k&&!e&&!nm)return'';const v=verfahrenVon(p);
@@ -22,7 +30,7 @@ function status(p){if(p.inj>0||gesperrt(p))return`<span class="tag bad">${ausfal
 // Hauptknopf: Text und Zeile darunter
 function knopf(){if(S.phase==='end')return['Saisonbilanz ▶','die Saison ist zu Ende'];if(S.fired)return['Jobangebote ▶','du wurdest entlassen'];
   if(heuteMeinSpiel())return['Tag beenden ▶','heute: '+spielName(meinSpiel(S.tag))];return['Tag beenden ▶','weiter bis '+datumKurz(naechsterHalt())];}
-function hdr(){const t=myT(),tr=S.trust,[k1,k2]=knopf(),dt=datumVon(S.tag);return`<header class="top"><div class="club"><span class="chip" style="--c:${t.col}"></span><div><div class="cn">${esc(t.name)}</div><div class="sub">${esc(S.mgr)} · Saison ${S.season}/${(S.season+1)%100} · ${ligaName(t.lg)} · Platz ${rank(t.lg,S.my)}</div>${lizenzChip()}</div></div>
+function hdr(){const t=myT(),tr=S.trust,[k1,k2]=knopf(),dt=datumVon(S.tag);return`<header class="top"><div class="club">${wappen(S.my,34)}<div><div class="cn">${esc(t.name)}</div><div class="sub">${esc(S.mgr)} · Saison ${S.season}/${(S.season+1)%100} · ${ligaName(t.lg)} · Platz ${rank(t.lg,S.my)}</div>${lizenzChip()}</div></div>
   <div class="kal" title="${datumLang(S.tag)}"><span>${WTL[dt.getUTCDay()]}</span><b>${dt.getUTCDate()}. ${MON[dt.getUTCMonth()]}</b><span>${dt.getUTCFullYear()}</span></div>
   <div class="stats"><div><span class="lbl">Kontostand</span><b class="${t.cash<0?'neg':''}">${fmt(t.cash)}</b></div><div title="Vertrauen des Vorstands ${Math.round(tr)} von 100"><span class="lbl">Vorstand</span>${rgMini(Math.round(tr),0,100,tr<30?'bad':tr<55?'warn':'good')}</div></div>
   <button class="go" onclick="tagBeenden()">${k1}<small>${k2}</small></button></header>`;}
@@ -37,8 +45,8 @@ function spielKarte(e,heute){const f=paarung(e),wann=(heute?'Heute':datumKurz(e.
   if(e.art==='eu')return euSpielKarte(e,f,wann); // Europapokal (K37, U19a)
   const home=f[0]===S.my,oid=home?f[1]:f[0],o=S.teams[oid],ort=e.art==='pokal'&&e.r===5?'Finale in Berlin':home?'Heimspiel':'Auswärtsspiel';
   if(!o)return`<div class="vs"><span>${wann} · ${spielName(e)} · ${ort}</span><b>${esc(tn(oid))}</b><span>Amateurverein · K.-o.-Spiel mit Verlängerung und Elfmeterschießen</span></div>`;
-  if(e.art==='pokal'||e.art==='supercup')return`<div class="vs"><span>${wann} · ${spielName(e)} · ${ort}</span><b>${chip(o.id)}${esc(o.name)}</b><span>${o.lg}. Liga · Kaderstärke ${teamLevel(o.id).toFixed(1)} (deine: ${teamLevel(S.my).toFixed(1)}) · ${e.art==='supercup'?'bei Gleichstand direkt Elfmeterschießen':'K.-o.-Spiel'}</span></div>`;
-  return`<div class="vs"><span>${wann} · ${spielName(e)} · ${home?'Heimspiel':'Auswärtsspiel'}</span><b>${chip(o.id)}${esc(o.name)}</b><span>Tabellenplatz ${rank(o.lg,o.id)} (${o.lg}. Liga) · Kaderstärke ${teamLevel(o.id).toFixed(1)} (deine: ${teamLevel(S.my).toFixed(1)})</span></div>`;}
+  if(e.art==='pokal'||e.art==='supercup')return`<div class="vs">${wappenPaar(f)}<span>${wann} · ${spielName(e)} · ${ort}</span><b>${esc(o.name)}</b><span>${o.lg}. Liga · Kaderstärke ${teamLevel(o.id).toFixed(1)} (deine: ${teamLevel(S.my).toFixed(1)}) · ${e.art==='supercup'?'bei Gleichstand direkt Elfmeterschießen':'K.-o.-Spiel'}</span></div>`;
+  return`<div class="vs">${wappenPaar(f)}<span>${wann} · ${spielName(e)} · ${home?'Heimspiel':'Auswärtsspiel'}</span><b>${esc(o.name)}</b><span>Tabellenplatz ${rank(o.lg,o.id)} (${o.lg}. Liga) · Kaderstärke ${teamLevel(o.id).toFixed(1)} (deine: ${teamLevel(S.my).toFixed(1)})</span></div>`;}
 // Termin eines Kalendertags aus Sicht deines Vereins, auch für vergangene Tage
 function kalTermin(d){const r={kurz:'',cls:'',titel:''},l=meineLigaspiele().find(e=>e.tag===d);
   if(l){const f=S.fx[l.lg][l.md][l.i],home=f[0]===S.my,o=home?f[1]:f[0],x=S.res[l.lg].find(y=>y[4]===l.md&&y[0]===f[0]&&y[1]===f[1]);
