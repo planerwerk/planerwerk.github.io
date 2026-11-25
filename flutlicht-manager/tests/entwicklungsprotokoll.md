@@ -290,6 +290,12 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 25.11.2026: W5d1 eigene Anzeigeschrift, Ziffern (Zweig `mitarbeit/popolupo-w5d-schrift`, auf W5c1 und der Korrektur FV)
+
+- **Weckruf:** kein neuer Testlauf (Testprotokoll weiter bei Lauf 8). Nur Oberfläche, keine Spielregel.
+- **Neu:** `schrift/schrift.pl` erzeugt die eigene Schrift „Flutlicht Display“ (`schrift/FlutlichtDisplay.ttf`, 4,5 KB) und `css/schrift.css` mit der Schrift als data-URL. Bisher Ziffern und Zahlzeichen; im Spiel gilt sie per unicode-range nur für diese, Buchstaben bleiben aus Saira Condensed.
+- **Prüfen:** `perl schrift/schrift.pl` erzeugt dieselben zwei Dateien noch einmal (danach kein Unterschied in git). `tests/ui-zugang.js` prüft, dass die Schrift im Browser lädt (sonst fiele das Spiel still auf Saira zurück).
+
 ### 25.11.2026: Korrektur nach Prüfung FV (Zweig `mitarbeit/popolupo-fv-korrekturen`, auf den Korrekturen FU)
 
 - **Weckruf:** kein neuer Testlauf (Testprotokoll weiter bei Lauf 8). Dieser Zweig enthält nur Mechanik, keine Oberfläche aus Welle 5, und ist der Stand für den Tester.

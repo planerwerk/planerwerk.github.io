@@ -9,7 +9,7 @@
   --amber:#ffc83d; --ink:#1a1300; --good:#3ecf8e; --warn:#ffb020; --bad:#ff6b6b; --blue:#5aa9ff;
   --led:#ffc83d; --you:#7cc4ff; --spur:#0a1220; --spur2:#111b2c; --glow:rgba(255,255,255,.18); --glow-led:rgba(255,200,61,.4);
   --tafel:#070d17; --tafel-text:#eef2f8; --tafel-led:#ffc83d;
-  --f-disp:"Saira Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-disp:"Flutlicht Display","Saira Condensed","Arial Narrow",system-ui,sans-serif; /* eigene Schrift für Ziffern (css/schrift.css, W5d1), Buchstaben aus Saira */
   --f-body:"Barlow",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   color-scheme:dark;
 }

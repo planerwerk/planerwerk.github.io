@@ -19,6 +19,9 @@ const axeLauf=async wo=>{if(!AXE)return;if(typeof AXE.source!=='string'){hinweis
   pruef(!schwer.length,`axe ${wo}: keine schweren Verstöße`,schwer.map(x=>`${x.id} (${x.impact}, ${x.n}×): ${x.help}`).join(' | ')||null);
   if(rest.length)hinweise.push(`axe ${wo}: ${rest.map(x=>`${x.id} (${x.impact}, ${x.n}×)`).join(', ')}`);};
 await axeLauf('Startbildschirm');
+// Eigene Anzeigeschrift (K35b §13.4, W5d1): Die eingebettete Schrift lädt ohne Fehler (sonst fiele das Spiel still auf Saira zurück) und gilt für Ziffern
+const schrift=await pg.evaluate(async()=>{try{const f=await document.fonts.load('700 30px "Flutlicht Display"','0123456789:');return f.length?f.map(x=>x.status).join(','):'keine Schrift gefunden';}catch(e){return 'Fehler: '+e.message;}});
+pruef(schrift==='loaded','Schrift: Flutlicht Display lädt',schrift);
 // Karriere wie in tests/ui-zwei-saisons.js: Freiburg, ohne Lernstufen, fester Seed
 await pg.selectOption('#club',{label:'SC Freiburg'});await pg.selectOption('#lernstufen','0');await pg.fill('#mgr','Testtrainer');await pg.click('summary:text-is("Erweitert")');await pg.fill('#seed','4711');await pg.click('text=Anpfiff zur Karriere');
 for(const t of TABS){await pg.click(`.tabs button:text-is("${t}")`);await axeLauf('Ansicht '+t);}
