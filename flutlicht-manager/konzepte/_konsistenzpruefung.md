@@ -2760,3 +2760,24 @@ Korrekturen auf `mitarbeit/popolupo-fo-korrekturen` (auf K11j).
 | FO7 | **Niedrig:** `lspN`/`lspZ` fehlten in `POOL_FELDER`, Poolspieler bekamen kein `lspZ`. Beides ergänzt. | ✅ behoben |
 | FO8 | **Niedrig, Tests:** Neu getestet: FN2 und FN5 über das Menü, FN3 (Feld fehlt), FN4 (Kauf), Tausch im geschlossenen Fenster, Pool mit `lspN`. Die letzten drei (FM4 im Pokal, FN6/FO6 mit Spieltag, FN8) haben seit dem Zweig `tests-fo8` (25.11.) eigene Tests in `scouting.js` und `kabine.js`. | ✅ behoben |
 | FO9 | **Niedrig, Doku:** K33 (`tvModus`, `tvRT`), K36 (K13h, K13i jetzt Nr. 207), Kommentar in `takeJob`, Testliste im Protokoll. Berichtigt. | ✅ behoben |
+
+## FP. Prüfung von K13j, K11h, K11i, K11j, dem Test-Zweig FN10 und den Korrekturen FO ohne Laufzeit (25. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 83482bf..da83362 gelesen, nichts ausgeführt. Kein Laufzeit- oder Syntaxfehler, keine verstümmelten Template-Strings, ausgeschaltete Schalter und Gleichschritt 5a unberührt. Ohne Befund: K13j mit Schalter aus (gleiches Verhalten, gleicher Zufall), dein Verein mit eigener Aufstellung, die Bank im Pokal, der Ablauf eines Testspiels beim Auslandsverein, K11i, K11j (bis auf FP7), FO1 und FO3 bis FO7, die neuen Tests, alte Spielstände.
+
+Korrekturen auf `mitarbeit/popolupo-fp-korrekturen` (auf K11k).
+
+| # | Befund | Status |
+|---|---|---|
+| FP1 | **Mittel (nur mit Schalter):** `pokalRotationKader` zählte Verletzte, Gesperrte und Abgestellte zum Restkader und zur Torwartprüfung, der Favorit konnte zu zehnt oder ohne Torwart spielen. Jetzt nur Einsatzfähige (`avail`), Test mit Verletztem und ohne Torwart. | ✅ behoben |
+| FP2 | **Mittel:** Ein Testspiel beim Auslandsverein brachte die Amateur-Gage. Jetzt nur bei Amateurvereinen (`r.h<AV0`). | ✅ behoben |
+| FP3 | **Niedrig:** Meldung „Blamage gegen einen Amateurverein“ und Kalender „Test Amat.“ auch beim Auslandsverein. Jetzt nur bei Amateuren, im Kalender „Test Ausl.“. | ✅ behoben |
+| FP4 | **Niedrig:** Die Auswahl der Auslandsgegner verglich `euStaerke` (mit dem Faktor der Engine) mit `teamLevel` (ohne). Jetzt mit `euSt(S.my)`. | ✅ behoben |
+| FP5 | **Niedrig:** Das Formular nahm für Auslandsgegner den ersten Lagertag, auch wenn der vor der 3. Vorbereitungswoche lag, und meldete nur „Dieser Tag geht nicht.“. Jetzt der erste Lagertag mit Gegnern und eine eigene Meldung. | ✅ behoben |
+| FP6 | **Mittel, Test:** Der Test K09j lief seit FO5 mit dem Zähler des ersten Falls, die Fälle ohne Meldung waren immer grün; „je Spieltag“ war nicht getestet; ein Nachholspiel konnte den Zähler zurücksetzen. Jetzt je Fall ein Spieltag, ein Fall für „je Spieltag“ und Nachholspiel, Zähler `S.kiSchiri` je Liga und Spieltag der Saison, Kommentar berichtigt. | ✅ behoben |
+| FP7 | **Niedrig:** „Freier Nachmittag ab 5 Tagen“ traf jedes Lager (Lager dauern 5 bis 10 Tage). Jetzt ab 7 Tagen (`lagerFreizeit.min`). | ✅ behoben |
+| FP8 | **Niedrig:** Nach vorzeitiger Abreise (Karte „Lagerkoller“) fielen die Meldung zum Lagerende und das Golf-Marketing weg. Jetzt `lagerAbschluss` auch aus der Wirkung `lagerEnde`, einmal je Lager (`l.ende`), mit Test. | ✅ behoben |
+| FP9 | **Niedrig, Spielwert:** Das Golf-Marketing brachte das 1,2-Fache der Lagerkosten, Golf machte Gewinn. Jetzt 0,6 (vorläufig). | ✅ behoben |
+| FP10 | **Niedrig (nur mit Schalter):** Vergleich und Scoutbericht zeigten im Pokal die nicht rotierte Elf. Jetzt mit `pokalRotationKader` wie im Spiel (Frische von heute) und einem Hinweis, wenn der Co-Trainer schont. | ✅ behoben |
+| FP11 | **Niedrig, Tests:** K13j prüfte deinen Verein nur ohne Automatik, K19l lief im offenen Fenster mit dem echten Gehaltsrahmen. Jetzt beide Zweige (mit `lizenzStart`) und `sperreAb` am Anfang des Falls. Ein Fall über `spielAufbau` im Pokal fehlt weiter (der Anschluss ist über den Quelltext geprüft). | ✅ behoben bis auf den Fall über `spielAufbau` |
+| FP12 | **Niedrig, Doku:** Die Anleitung „Pokalsensationen mit tests/welt.js messen“ ging nicht, der Kommentar im K13j-Test war verstümmelt. Beides berichtigt. | ✅ behoben |

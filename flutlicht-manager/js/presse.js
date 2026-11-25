@@ -31,12 +31,13 @@ function kiSticheleienWoche(d){if(S.phase!=='play')return;const M=RPK.medienprof
     for(const [von,ziel] of [[h,a],[a,h]]){const x=trainerVon(von),pr=medienProfil(x),c=pr&&M.chance[pr]||0;if(!c||R()>=c)continue;const l=PRESSE.kiSticheleien[pr];
       news(`${x.n} (${tn(von)}) stichelt vor ${derby?'dem Derby':'dem Spitzenspiel'} gegen ${tn(ziel)}: „${pkText(l[Math.floor(R()*l.length)],{verein:tn(ziel)})}“`);bezAendern(von,ziel,K.bez,'Stichelei vor dem Spiel');n++;break;}}));}
 // Schiedsrichterkritik der Computer-Trainer (K09 §12 Nr. 14 „Äußerungen von Computer-Trainern“, K09j): nach den Ligaspielen deiner Liga (ohne deinen Verein) schimpft der
-// Trainer des Verlierers, wenn einer seiner Spieler vom Platz flog, mit ki.schiri[Medienprofil], höchstens ki.schiriMax Meldungen je Tag. Fest aus dem Seed (hash32),
+// Trainer des Verlierers, wenn einer seiner Spieler vom Platz flog, mit ki.schiri[Medienprofil], höchstens ki.schiriMax Meldungen je Spieltag. Fest aus dem Seed (hash32),
 // ohne R() und ohne Folgen (keine Beziehung, kein Verfahren), damit Gleichschritt und Kalibrierung gleich bleiben.
-function kiSchiriKritik(list,lg,md){if(lg!==myT().lg)return;const K=RPK.medienprofil.ki,l=PRESSE.kiSchiriKritik,k=S.season+'/'+lg+'/'+md,Z=S.kiSchiri&&S.kiSchiri.k===k?S.kiSchiri:(S.kiSchiri={k,n:0});let n=Z.n; /* FO5: je Spieltag, nicht je Tag */
+// Zähler S.kiSchiri = {s Saison, m {Liga/Spieltag: Meldungen}} (FO5: je Spieltag, nicht je Tag; FP6: je Spieltag gemerkt, auch wenn ein Nachholspiel dazwischen kommt)
+function kiSchiriKritik(list,lg,md){if(lg!==myT().lg)return;const K=RPK.medienprofil.ki,l=PRESSE.kiSchiriKritik,k=lg+'/'+md;if(!S.kiSchiri||S.kiSchiri.s!==S.season)S.kiSchiri={s:S.season,m:{}};const Z=S.kiSchiri.m;let n=Z[k]||0;
   list.forEach(r=>{if(n>=K.schiriMax||r.h===S.my||r.a===S.my||r.hg===r.ag)return;const v=r.hg<r.ag?r.h:r.a,gew=v===r.h?r.a:r.h,rot=(r.off||[]).map(id=>PIX.get(id)).find(p=>p&&p.team===v);if(!rot)return;
     const x=trainerVon(v),pr=medienProfil(x),c=pr&&(K.schiri||{})[pr]||0,h=k=>hash32([k,S.seed,S.season,S.tag,r.h,r.a].join('|'));if(!c||h('schiri')%1000>=c*1000)return;
-    news(`${x.n} (${tn(v)}) nach dem ${v===r.h?r.hg:r.ag}:${v===r.h?r.ag:r.hg} gegen ${tn(gew)}: „${pkText(l[h('text')%l.length],{schiri:r.sr||'der Schiedsrichter',spieler:rot.n})}“`);n++;Z.n=n;});}
+    news(`${x.n} (${tn(v)}) nach dem ${v===r.h?r.hg:r.ag}:${v===r.h?r.ag:r.hg} gegen ${tn(gew)}: „${pkText(l[h('text')%l.length],{schiri:r.sr||'der Schiedsrichter',spieler:rot.n})}“`);n++;Z[k]=n;});}
 // Stichelei ohne Antwort (Co-Trainer geschickt oder nicht hingegangen, aber ohne Automatik): die eigene Mannschaft grübelt. Nicht, wenn die erste Frage
 // (die Stichelei) schon beantwortet ist, nach einer Entlassung oder in einer neuen Saison (Prüfung DO1)
 function stichelOffen(pk){if(!pk.profil||pk.i>0||S.fired||pk.s!==S.season||autoB('presse'))return;const v=RPK.medienprofil.offen[pk.profil]||0;if(!v)return;squad(S.my).forEach(p=>stimmungAendern(p,v));

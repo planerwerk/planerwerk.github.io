@@ -457,8 +457,8 @@ const REGELN={
     presse:{leckUnter:45,viralTage:7,vorTage:7}, // Presse-Karten (K29 §8, K17 §8, K29k, 22.11., GESCHÄTZT): Leck bei Medienklima unter leckUnter; Fehde bei Beziehung unter RBZ.wirkung.gespraechUnter.
     // Seit K29l: „Spruch geht viral“ bis viralTage nach einem Eintrag in der Sprüche-Chronik; „Rivale greift deine Kampfansage auf“ bis vorTage vor dem Spiel gegen ihn
     sommer:{nachTestTage:14,sonderFrische:15}, // Sommerkarten (K12a §8, K12c, 22.11., GESCHÄTZT): Übergewicht bis nachTestTage nach dem Leistungstest; Sonderschichten kosten sonderFrische Frische
-    // Freier Nachmittag im Lager (K11 §12 Nr. 11, K11j, 25.11., popolupo, vorläufig): Karte am Lagertag tag, wenn das Lager mindestens min Tage dauert; die Zusatzeinheit kostet alle frische Frische
-    lagerFreizeit:{tag:3,min:5,frische:8},
+    // Freier Nachmittag im Lager (K11 §12 Nr. 11, K11j, 25.11., popolupo, vorläufig): Karte am Lagertag tag, wenn das Lager mindestens min Tage dauert (seit Prüfung FP7 eine Woche, Lager dauern 5 bis 10 Tage); die Zusatzeinheit kostet alle frische Frische
+    lagerFreizeit:{tag:3,min:7,frische:8},
     // Spieler will Urlaub verlängern (K12a §8, K12d, 25.11., popolupo, vorläufig): ab abSpiele Turnierspielen; verlängert er, fehlt er wert Tage länger und baut erholung Saisonbelastung ab
     urlaubVerlaengern:{abSpiele:5,erholung:4},
     stadion:{zuschussAb:5e6,anwohner:['cap','dach'],anwohnerRest:7}, // anwohner: Bauten, gegen die Anwohner klagen können, anwohnerRest: Tage Genehmigung mindestens noch (K26f, 23.11., Prüfung EO2). Stadt bietet Zuschuss (K26 §8, K26e, 22.11., GESCHÄTZT): bei einem Bauprojekt ab zuschussAb Kosten; Anteil in der Karte (Wirkung zuschuss)
@@ -902,10 +902,10 @@ const REGELN={
     // Sommerturnier (K11 §3, K11b, 22.11., GESCHÄTZT): Antrittsgeld und Siegprämie je Liga, Stimmung aller beim Turniersieg
     turnier:{name:'Sommerturnier',antritt:{1:150000,2:60000,3:25000},sieg:{1:100000,2:40000,3:15000},stimmung:1},
     kiAnfrage:{chance:0.35,tage:3},spielfrei:{tage:7,abstandTage:7}}, // Anfragen der Computer-Vereine in der Vorbereitung (K11c, GESCHÄTZT): montags mit chance, Antwort binnen tage; spielfrei: Erinnerung „spielfreie Woche ohne Testspiel“ (K01 H9, K11d), Blick auf tage Tage, höchstens einmal je abstandTage
-  // Seit K11h je Ort land (Gegner aus dem Ausland im Lager), seit K11i bei der Golfregion marketing: am letzten Lagertag anteil der Lagerkosten als Einnahme, Fanstimmung + fans (25.11., popolupo, vorläufig)
+  // Seit K11h je Ort land (Gegner aus dem Ausland im Lager), seit K11i bei der Golfregion marketing: am letzten Lagertag anteil der Lagerkosten als Einnahme, Fanstimmung + fans (25.11., popolupo, vorläufig); seit Prüfung FP9 0,6 statt 1,2, damit Golf teuer bleibt, und auch bei vorzeitiger Abreise (FP8)
   lager:{orte:{alpen:{name:'Alpen',land:'AUT',saison:'sommer',kosten:40000,kondition:1.15,text:'Höhenlage: Kondition wirkt stärker'},schwarzwald:{name:'Schwarzwald',saison:'sommer',kosten:25000,text:'günstig und ruhig'},
       algarve:{name:'Algarve',land:'POR',saison:'winter',kosten:50000,text:'mildes Wetter'},andalusien:{name:'Andalusien',land:'ESP',saison:'winter',kosten:55000,text:'warm, gute Plätze'},
-      riviera:{name:'Türkische Riviera',land:'TUR',saison:'winter',kosten:30000,ablenkung:true,text:'günstig, aber mehr Ablenkung'},golf:{name:'Golfregion',saison:'winter',kosten:90000,marketing:{anteil:1.2,fans:-1},text:'sehr warm, lange Reise, Termine bei Partnern bringen Geld, manche Fans murren'},
+      riviera:{name:'Türkische Riviera',land:'TUR',saison:'winter',kosten:30000,ablenkung:true,text:'günstig, aber mehr Ablenkung'},golf:{name:'Golfregion',saison:'winter',kosten:90000,marketing:{anteil:0.6,fans:-1},text:'sehr warm, lange Reise, Termine bei Partnern bringen Geld, manche Fans murren'},
       heimat:{name:'Heimat',saison:'beide',kosten:0,wetter:0.2,text:'kein Ortswechsel, im Winter fällt öfter Training aus'}},
     ligaFaktor:{1:1,2:0.6,3:0.35},tage:[5,10],training:1.15,vertrautheit:1.25,zusammenhalt:1,zusammenhaltBis:7,kollerAb:8,koller:0.13,kollerSv:-0.5,ablenkung:0.15,ablenkungSv:-1,
     // Zimmerbelegung (K11 §5.4, K11k, 25.11., popolupo, vorläufig): je Lagertag und Doppelzimmer Freundschaft mit freund (Landsleute ×landsleute), Integration +integration

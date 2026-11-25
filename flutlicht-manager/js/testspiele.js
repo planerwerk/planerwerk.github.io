@@ -28,7 +28,7 @@ function zusageChance(tid,d){const Z=RTS.zusage;if(tid>=1000)return Z.max;const 
   return clamp(p,Z.min,Z.max);}
 // Auslandsvereine als Gegner im Trainingslager (K11 §12 Nr. 11, K11h): an Lagertagen die RTS.lagerAusland Vereine aus dem Land des Lagerorts (RLA.orte[…].land), deren
 // Stärke deiner am nächsten liegt; erst ab der Woche, ab der auch Profis zusagen. Gespielt wird dort (auswärts, ohne Zuschauereinnahmen). Ohne Zufall.
-function testspielGegnerAusland(d){const l=lagerAktiv(d),O=l&&RLA.orte[l.ort];if(!O||!O.land||!S.ausland||(inVorbereitung(d)&&vorbereitungsWoche(d)<RTS.abWoche))return[];const me=teamLevel(S.my);
+function testspielGegnerAusland(d){const l=lagerAktiv(d),O=l&&RLA.orte[l.ort];if(!O||!O.land||!S.ausland||(inVorbereitung(d)&&vorbereitungsWoche(d)<RTS.abWoche))return[];const me=euSt(S.my); /* gleiche Skala wie euStaerke, mit dem Faktor der Engine (Prüfung FP4) */
   return S.ausland.v.filter(v=>v&&v.land===O.land).map(v=>({id:v.id,d:euStaerke(v.id)-me,aus:true})).sort((a,b)=>Math.abs(a.d)-Math.abs(b.d)||a.id-b.id).slice(0,RTS.lagerAusland);}
 function testspielAnfragen(tid,d){if(!testspielTage().includes(d))return null;if(tid>=AV0&&!testspielGegnerAusland(d).some(g=>g.id===tid))return null; /* Auslandsverein nur im Lager (K11h) */(S.testspiele=S.testspiele||[]);S.testId=(S.testId||0)+1;
   const x={id:S.testId,tag:d,gegner:tid,heim:tid<1000,stand:'angefragt',antwortAm:S.tag+riA(RTS.antwortTage)};S.testspiele.push(x);return x;}
@@ -56,10 +56,10 @@ function testspielNach(r,x){const T=RTS,N=RE.note,F=RP.frische;
   const t=myT();let geld=0,zus=0;
   if(x.heim&&r.h===S.my&&!x.turnier){const N2=T.nachfrage, /* im Turnier nur Antrittsgeld und Siegprämie, die Zuschauer gehören dem Ausrichter (Prüfung DW7) */w=inVorbereitung(x.tag)?vorbereitungsWoche(x.tag):99,f=Math.max(N2.min,N2.start+N2.jeWoche*Math.max(0,w-T.abWoche))*(r.a<1000&&S.teams[r.a].rep>=N2.grossAb?N2.grosserName:1);
     zus=Math.round(Math.min(t.cap,attendance(t,r.a<1000?S.teams[r.a]:null,false)*f));geld=zus*t.price;}
-  else if(r.h>=1000){const G=T.gageAmateur;geld=Math.round((G[0]+(G[1]-G[0])*clamp(t.rep/100,0,1))/1000)*1000;}
+  else if(r.h>=1000&&r.h<AV0){const G=T.gageAmateur; /* nur Amateurvereine, nicht beim Auslandsverein (Prüfung FP2) */geld=Math.round((G[0]+(G[1]-G[0])*clamp(t.rep/100,0,1))/1000)*1000;}
   if(geld)money('Testspiele',geld);x.erg={hg:r.hg,ag:r.ag,zus,geld};x.stand='gespielt';
   const sieg=(r.h===S.my?r.hg-r.ag:r.ag-r.hg);
-  news(`Testspiel: ${tn(r.h)} – ${tn(r.a)} ${r.hg}:${r.ag}${zus?` vor ${zus.toLocaleString('de-DE')} Zuschauern`:''}${geld?`, Einnahmen ${fmt(geld)}`:''}.${sieg<0&&(r.h>=1000||r.a>=1000)?' Eine Blamage gegen einen Amateurverein.':''}`,sieg>0?'good':sieg<0?'bad':'');}
+  news(`Testspiel: ${tn(r.h)} – ${tn(r.a)} ${r.hg}:${r.ag}${zus?` vor ${zus.toLocaleString('de-DE')} Zuschauern`:''}${geld?`, Einnahmen ${fmt(geld)}`:''}.${sieg<0&&((r.h>=1000&&r.h<AV0)||(r.a>=1000&&r.a<AV0))?' Eine Blamage gegen einen Amateurverein.':''}`,sieg>0?'good':sieg<0?'bad':'');}
 
 // Trainingslager (K11 §3.3, §5.3): Ort, Zeitraum, Kosten; im Lager wirkt das Training stärker
 function lagerSaison(d){const t=myT(),w=S.plan.pausen.find(p=>p.name==='Winterpause'&&p.ligen.includes(t.lg)&&d>=p.von-7&&d<=p.bis);if(w)return'winter';return inVorbereitung(d)?'sommer':null;}
@@ -83,7 +83,9 @@ function lagerTag(d){const l=lagerAktiv(d);if(!l)return;const O=RLA.orte[l.ort],
   if(O.ablenkung)sq.filter(p=>hatEig(p,'partyloewe')).forEach(p=>{if(R()<RLA.ablenkung/(l.bis-l.von+1)){svAendern(p,RLA.ablenkungSv);news(`Trainingslager: ${p.n} wurde nachts in der Stadt gesehen.`,'bad');
     if(!l.nachtK){l.nachtK=1;kartenKetteHeute('nachtleben',{spieler:p.id,lager:l.von},d);}}}); /* Karte „Ausflug ins Nachtleben“ noch heute, einmal je Lager (K11g, EU1) */
   {const Z=RKT.lagerFreizeit;if(l.tag===Z.tag&&l.bis-l.von+1>=Z.min&&!l.freiK){l.freiK=1;kartenKetteHeute('lagerFreizeit',{lager:l.von},d);}} /* Karte „Freier Nachmittag im Lager“ (K11j), einmal je Lager */
-  if(d===l.bis){news(`Trainingslager in ${O.name} beendet. Der Co-Trainer ist zufrieden mit Kondition und Abläufen.`,'good');if(O.marketing&&!l.mk)lagerMarketing(l,O);}}
+  if(d===l.bis)lagerAbschluss(l,false);}
+// Lagerende (seit Prüfung FP8 eigene Funktion, einmal je Lager, l.ende): Meldung und Marketing der Golfregion, auch nach vorzeitiger Abreise (Karte „Lagerkoller“, Wirkung lagerEnde)
+function lagerAbschluss(l,frueh){if(l.ende)return;l.ende=1;const O=RLA.orte[l.ort];news(frueh?`Trainingslager in ${O.name} vorzeitig beendet.`:`Trainingslager in ${O.name} beendet. Der Co-Trainer ist zufrieden mit Kondition und Abläufen.`,frueh?'':'good');if(O.marketing&&!l.mk)lagerMarketing(l,O);}
 // Marketing der Golfregion (K11 §4.2, K25, K11i): Am letzten Lagertag bringen Auftritte bei Partnern vor Ort marketing.anteil der Lagerkosten (Buchung „Marketing: Lager“),
 // die Fans murren über die Reise (Fanstimmung marketing.fans, Umfeld). Einmal je Lager (l.mk). Ohne Zufall.
 function lagerMarketing(l,O){const M=O.marketing,g=Math.round(l.kosten*M.anteil/1000)*1000;l.mk=1;if(g>0)money('Marketing: Lager',g);if(M.fans)fanAnlass(myT(),'fanU',M.fans);

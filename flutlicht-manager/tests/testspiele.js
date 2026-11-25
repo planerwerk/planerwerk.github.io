@@ -112,5 +112,13 @@ if(lager){const f=ev('lagerMoeglich')('schwarzwald',S.tag+1,7);if(f)return{fehle
   pruef(coOk&&laOk&&alle&&integ&&freund&&zoff&&einmal&&lt,'Zimmerbelegung: Neue zu Deutschsprachigen, Landsleute zusammen, Integration, Deutsch, Freundschaft, Zoff einmal',
     `Co-Trainer ${coOk}, Landsleute ${laOk}, alle verteilt ${alle}, Integration und Deutsch ${integ} (${a.int}, ${a.de}), Freunde ${freund}, Zoff ${zoff}, einmal ${einmal}, Lagertag ${lt}`);}
 
+// Prüfung FP2, FP8: Reist ein Lager früher ab (Wirkung lagerEnde der Karte „Lagerkoller“), kommen Meldung und Marketing der Golfregion trotzdem, einmal.
+//       Ein Testspiel beim Auslandsverein bringt keine Amateur-Gage (Bedingung in testspielNach, über den Quelltext).
+{const {S,F,ev}=welt(),t=ev('myT()'),d=S.tag,wirk=ev('kartenWirkung');S.lager=[{ort:'golf',von:d-2,bis:d+5,saison:S.season,kosten:100000,tag:0,koller:0}];F.lagerTag(d);const c0=t.cash;
+  wirk({art:'lagerEnde',wert:0},{lager:d-2},{titel:'Test'});const l=S.lager[0],g=Math.round(100000*ev('RLA').orte.golf.marketing.anteil/1000)*1000;
+  const frueh=l.bis===d&&l.ende===1&&l.mk===1&&t.cash===c0+g&&S.news.some(x=>String(x.t).includes('vorzeitig beendet'));F.lagerTag(d);const einmal=t.cash===c0+g;S.lager=[];
+  const gage=String(ev('testspielNach')).includes('r.h>=1000&&r.h<AV0');
+  pruef(frueh&&einmal&&gage,'Lager vorzeitig beendet: Meldung und Marketing trotzdem, einmal; keine Gage beim Auslandsverein',`früh ${frueh}, einmal ${einmal}, Gage ${gage}`);}
+
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

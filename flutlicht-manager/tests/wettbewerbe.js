@@ -131,15 +131,19 @@ pruef(supercups.length===N-1&&supercups.every(x=>!x.verl&&(x.hg!==x.ag)===!x.pen
   pruef(kurz&&lang&&alt,'Länderspiele: Rückkehr nach Minuten, Belastung höchstens 100, Verletzung gemerkt, veraltete Abstellung ohne Folgen',`kurz ${kurz}, Stammkraft ${lang} (Frische ${q.fit}, Belastung ${q.sb}), veraltet ${alt}`);}
 
 // K13j. Pokal-Rotation der Favoriten (K13 §4), nur mit Schalter: gegen einen Amateur in Runde 1 ohne die Müden; nicht nach bisRunde, nicht in der Liga, nicht ohne
-//       Favoritenrolle; dein Verein nur, wenn der Co-Trainer aufstellt. Die Pokalspiele geben die Runde mit (market-unabhängig, ablauf.js).
+//       Favoritenrolle; dein Verein nur, wenn der Co-Trainer aufstellt. Die Pokalspiele geben die Runde mit (Spielobjekt aus tagesSpieleVorbereiten, ablauf.js).
+//       Seit Prüfung FP1 zählen nur Einsatzfähige (ein Verletzter fehlt, ohne einsatzfähigen Torwart keine Rotation), seit FP11 dein Verein mit und ohne Automatik.
 {const {W:W8,F:F8}=neueWelt();F8.buildWorld(SEED);const S8=W8.S,ev=W8.ev,R=ev('RWB').pokal.rotationKI,rk=ev('pokalRotationKader');S8.my=6;
-  const t=S8.teams.find(x=>x.id!==6&&x.lg===1),sq=ev('squad')(t.id),m=sq.find(p=>p.pos!=='TW'),o={wb:'pokal',runde:0};sq.forEach(p=>{p.fit=100;});m.fit=R.frische-10;
+  const frisch=id=>ev('squad')(id).forEach(p=>{p.fit=100;p.inj=0;p.sus=0;delete p.sperre;delete p.lsp;});frisch(6);
+  const t=S8.teams.find(x=>x.id!==6&&x.lg===1);frisch(t.id);const sq=ev('squad')(t.id),m=sq.find(p=>p.pos!=='TW'),o={wb:'pokal',runde:0};m.fit=R.frische-10;
   const aus=rk(t.id,1000,o)===undefined;R.an=true;const k=rk(t.id,1000,o),ohneMuede=!!k&&!k.includes(m)&&k.length===sq.length-1;
+  const v=sq.find(p=>p!==m&&p.pos!=='TW');v.inj=10;const kv=rk(t.id,1000,o),ohneVerletzte=!!kv&&!kv.includes(v)&&kv.length===sq.length-2;v.inj=0;
+  const tw=sq.filter(p=>p.pos==='TW');tw.forEach(p=>{p.inj=10;});const ohneTw=rk(t.id,1000,o)===undefined;tw.forEach(p=>{p.inj=0;});
   const spaet=rk(t.id,1000,{wb:'pokal',runde:R.bisRunde+1})===undefined,liga=rk(t.id,1000,{wb:'liga'})===undefined,gleich=rk(t.id,t.id,o)===undefined;
-  const mein=ev('autoB')('aufstellung')?!!rk(6,1000,o):rk(6,1000,o)===undefined;R.an=false;
+  const ohneAuto=rk(6,1000,o)===undefined;F8.lizenzStart(true);S8.lizenz.auto.aufstellung=true;const mitAuto=ev('autoB')('aufstellung')&&!!rk(6,1000,o);delete S8.lizenz;R.an=false;
   const runde=String(ev('tagesSpieleVorbereiten')).includes('runde:e.r')&&String(ev('side')).includes('bestXI(tid,t.form,kader)');
-  pruef(aus&&ohneMuede&&spaet&&liga&&gleich&&mein&&runde,'Pokal-Rotation der Favoriten: nur mit Schalter, früh im Pokal gegen Schwächere ohne die Müden, dein Verein nur mit Automatik',
-    `aus ${aus}, ohne Müde ${ohneMuede}, spätere Runde ${spaet}, Liga ${liga}, gleich stark ${gleich}, dein Verein ${mein}, Anschluss ${runde}`);}
+  pruef(aus&&ohneMuede&&ohneVerletzte&&ohneTw&&spaet&&liga&&gleich&&ohneAuto&&mitAuto&&runde,'Pokal-Rotation der Favoriten: nur mit Schalter, früh im Pokal gegen Schwächere ohne die Müden, nur Einsatzfähige, dein Verein nur mit Automatik',
+    `aus ${aus}, ohne Müde ${ohneMuede}, ohne Verletzte ${ohneVerletzte}, ohne Torwart ${ohneTw}, spätere Runde ${spaet}, Liga ${liga}, gleich stark ${gleich}, dein Verein ohne/mit Automatik ${ohneAuto}/${mitAuto}, Anschluss ${runde}`);}
 
 // K13k. Turniere im Sommer (K13 §3.4), nur mit Länderspielen: im EM-Jahr fehlen Spieler europäischer Nationen bis nach dem Trainingsauftakt, mit 3 bis 7 Spielen und
 //       Saisonbelastung; im Jahr ohne Turnier und ohne Schalter nichts; im WM-Jahr eine Meldung zur WM. Aufruf beim Saisonwechsel vor der Aufstellung.

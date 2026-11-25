@@ -136,7 +136,7 @@ function medZweite(id){if(!darf('medizin','medizin'))return;const p=PIX.get(id);
   const i=verletzungInfo(p);news(`Zweite Meinung zu ${p.n} (${fmt(k)}): ${txt.join(' ')}${i?` Zurück in etwa ${spanneText(i.rest)}.`:''}`,'');save();render();}
 function medFrueher(id){if(!darf('medizin','medizin'))return;const p=PIX.get(id),i=p&&p.team===S.my?verletzungInfo(p):null;if(!i||i.phase!=='aufbau'||i.pflicht)return;p.inj=0;medizinRueckkehr(p,RMD.frueher.frische);news(`${p.n} ist früher zurück, aber noch nicht bei voller Frische.`);save();render();}
 // Testspiele und Trainingslager (K11)
-function tsAnfragen(){if(!darf('testspiele','sommerplan'))return;const d=+document.getElementById('ts_tag').value,g=+document.getElementById('ts_geg').value;const x=testspielAnfragen(g,d);if(!x){toast('Dieser Tag geht nicht.');return;}
+function tsAnfragen(){if(!darf('testspiele','sommerplan'))return;const d=+document.getElementById('ts_tag').value,g=+document.getElementById('ts_geg').value;const x=testspielAnfragen(g,d);if(!x){toast(g>=AV0?`Gegen ${tn(g)} geht es nur an einem Tag deines Trainingslagers, in der Vorbereitung erst ab der ${RTS.abWoche}. Woche.`:'Dieser Tag geht nicht.');return;} /* FP5 */
   news(`Testspiel am ${datumKurz(d)} bei ${tn(g)} angefragt. Antwort bis ${datumKurz(x.antwortAm)}.`);save();render();}
 function lagerBuchen(){if(!darf('lager','sommerplan'))return;const o=document.getElementById('la_ort').value,v=+document.getElementById('la_von').value,n=+document.getElementById('la_tage').value,f=lagerMoeglich(o,v,n);if(f){toast(f);return;}
   const k=lagerBuchenLauf(o,v,n);news(`Trainingslager gebucht: ${RLA.orte[o].name}, ${datumKurz(v)} bis ${datumKurz(v+n-1)}, Kosten ${fmt(k)}.`);save();render();}

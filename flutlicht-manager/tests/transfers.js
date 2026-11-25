@@ -272,7 +272,7 @@ const kaufe=(w,p,fee,yrs=3)=>{const els=w.W.ev('document');els.getElementById('f
 
 // K19l. Tausch in Angeboten der Computer-Vereine (K19 §4.3): tauschKI legt den teuersten passenden Spieler der Transferliste des Käufers dazu und senkt das Gebot um
 //       seinen Preis; nicht mit Bonus, nicht mit Chance 0. Beim Verkauf im offenen Fenster kommt er mit seinem Vertrag zu dir; ist er weg, zahlt der Käufer den Betrag.
-{const {S,F,ev,t}=welt(),K=ev('RTR').tausch.ki,rab=ev('rundeAb'),akt=ev('aktiv'),sq=ev('squad');
+{const {S,F,ev,t}=welt(),K=ev('RTR').tausch.ki,rab=ev('rundeAb'),akt=ev('aktiv'),sq=ev('squad'),RB=ev('RFP').budget,sp0=RB.sperreAb;RB.sperreAb=99; /* FP11: Gehaltsrahmen im ganzen Fall aus */
   const b=S.teams.find(x=>x.id!==S.my&&akt(x)&&sq(x.id).length>18),ps=sq(S.my).filter(x=>!x.wech&&!x.leihe),p=ps[0],p2=ps[1];
   const r=sq(b.id).find(q=>!q.wech&&!q.leihe&&!q.zwP);sq(b.id).forEach(q=>{q.list=0;q.ask=0;});r.list=1;r.ask=rab(2e6);r.ww=1;const ct0=r.ct,sal0=r.sal;
   const c0=K.chance;K.chance=1;const g={amt:10e6,max:12e6};F.tauschKI(b,p,g);const mit=!!g.ta&&g.ta.pid===r.id&&g.ta.w===rab(2e6)&&g.amt===10e6-rab(2e6)&&g.max===12e6-rab(2e6);
@@ -286,7 +286,7 @@ const kaufe=(w,p,fee,yrs=3)=>{const els=w.W.ev('document');els.getElementById('f
   const c1=t.cash;S.offers.push(o2);F.verkaufAbschluss(o2);const ersatz=p2.team===b.id&&q.team===S.my&&t.cash===c1+5e6+1e6&&S.news.slice(0,3).some(n=>String(n.t).includes('zahlt stattdessen')); /* danach kommt noch „Verkauft“ */
   /* Prüfung FO1, FO4, FO8: im geschlossenen Fenster nach dem Winter kommt der Tauschspieler zum Sommer mit einem Vertragsjahr weniger; läuft sein Vertrag dann aus, zahlt der
      Käufer, und die Ablöse enthält den Betrag (o.amt), das Angebot keinen Tausch mehr */
-  const RB=ev('RFP').budget,sp0=RB.sperreAb;RB.sperreAb=99;let d2=S.plan.ende-1;while(d2>0&&(ev('fensterOffen')(d2)||(ev('naechstesFenster')(d2)||Infinity)<S.plan.ende))d2--;S.tag=d2;
+  let d2=S.plan.ende-1;while(d2>0&&(ev('fensterOffen')(d2)||(ev('naechstesFenster')(d2)||Infinity)<S.plan.ende))d2--;S.tag=d2;
   const [p3,p4]=ps.slice(2,4),[r3,r4]=sq(b.id).filter(x=>!x.wech&&!x.leihe&&!x.zwP&&x!==p&&x!==q).slice(0,2);r3.ww=1;r4.ww=1;r3.ct=3;r4.ct=1;
   const o3={pid:p3.id,tid:b.id,amt:4e6,max:5e6,r:0,bis:S.tag+5,ta:{pid:r3.id,w:1e6}};S.offers.push(o3);F.verkaufAbschluss(o3);const sommer=!!r3.wech&&r3.wech.nach===S.my&&r3.wech.ct===2;
   const c2=t.cash,o4={pid:p4.id,tid:b.id,amt:4e6,max:5e6,r:0,bis:S.tag+5,ta:{pid:r4.id,w:1e6}};S.offers.push(o4);F.verkaufAbschluss(o4);const auslauf=!r4.wech&&t.cash===c2+5e6&&o4.amt===5e6&&!o4.ta;RB.sperreAb=sp0;

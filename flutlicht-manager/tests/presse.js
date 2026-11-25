@@ -182,8 +182,12 @@ const gegner=w=>w.S.teams.find(x=>x.lg===w.t.lg&&x.id!==VEREIN).id;
 {const {S,ev}=welt(false),K=ev('RPK').medienprofil.ki,lg=ev('myT()').lg,kk=ev('kiSchiriKritik'),tv=ev('trainerVon'),mp=ev('medienProfil'),sq=ev('squad');
   const ts=S.teams.filter(x=>x.lg===lg&&x.id!==S.my&&!!tv(x.id)&&!!mp(tv(x.id))),v=ts[0],g=ts[1],rot=sq(v.id)[0],c0=K.schiri;K.schiri={laut:1,psycho:1,floskel:1,diplomatisch:1};
   const mark=()=>S.news.unshift({t:'MARKE'}),neu=()=>S.news[0].t!=='MARKE',r={h:v.id,a:g.id,hg:0,ag:2,off:[rot.id],sr:'Testschiri'};
-  mark();kk([r],lg);const ja=neu()&&String(S.news[0].t).includes(tv(v.id).n)&&String(S.news[0].t).includes('0:2');
-  mark();kk([Object.assign({},r,{off:[]})],lg);const ohneRot=!neu();mark();kk([Object.assign({},r,{hg:3})],lg);const sieg=!neu();mark();kk([r],lg===1?2:1);const andereLiga=!neu();K.schiri=c0;
-  pruef(ja&&ohneRot&&sieg&&andereLiga,'Schiedsrichterkritik der Computer-Trainer: nach Niederlage mit Platzverweis, sonst nicht',`Meldung ${ja}, ohne Rot ${ohneRot}, Sieg ${sieg}, andere Liga ${andereLiga}`);}
+  /* Prüfung FP6: jeder Fall mit eigenem Spieltag, sonst bricht der Zähler je Spieltag vorher ab und die Fälle ohne Meldung wären immer grün */
+  mark();kk([r],lg,1);const ja=neu()&&String(S.news[0].t).includes(tv(v.id).n)&&String(S.news[0].t).includes('0:2');
+  mark();kk([Object.assign({},r,{off:[]})],lg,2);const ohneRot=!neu();mark();kk([Object.assign({},r,{hg:3})],lg,3);const sieg=!neu();mark();kk([r],lg===1?2:1,4);const andereLiga=!neu();
+  /* FO5/FP6: höchstens schiriMax je Spieltag, auch über zwei Tage; ein neuer Spieltag wieder; ein Nachholspiel dazwischen setzt den alten Spieltag nicht zurück */
+  const n=()=>S.news.filter(x=>String(x.t).includes(tv(v.id).n)).length,n0=n(),E=Math.min(2,K.schiriMax);kk([r],lg,5);kk([r],lg,5);const einmal=n()===n0+E;kk([r],lg,6);const neuerTag=n()===n0+E+1;kk([r],lg,5);const nachhol=n()===n0+E+1+(K.schiriMax>2?1:0);K.schiri=c0;
+  pruef(ja&&ohneRot&&sieg&&andereLiga&&einmal&&neuerTag&&nachhol,'Schiedsrichterkritik der Computer-Trainer: nach Niederlage mit Platzverweis, sonst nicht, höchstens schiriMax je Spieltag',
+    `Meldung ${ja}, ohne Rot ${ohneRot}, Sieg ${sieg}, andere Liga ${andereLiga}, je Spieltag ${einmal}, neuer Spieltag ${neuerTag}, nach Nachholspiel ${nachhol}`);}
 
 console.log(probleme.length?`\n${probleme.length} Problem(e).`:'\nAlles in Ordnung.');process.exitCode=probleme.length?1:0;
