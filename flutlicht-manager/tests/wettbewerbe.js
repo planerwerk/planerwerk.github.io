@@ -106,5 +106,12 @@ pruef(supercups.length===N-1&&supercups.every(x=>!x.verl&&(x.hg!==x.ag)===!x.pen
   pruef(aus&&nom.length>0&&schwelle&&max&&fehlt&&zurueck&&bis===abs(x.bis)&&!!q&&pool,'Länderspiele: nur mit Schalter, Stärkste je Nation ab der Schwelle (mit Auslandspool), fehlen bis nach der Pause, kommen müde zurück',
     `aus ${aus}, nominiert ${nom.length} (${Object.keys(je).length} Nationen), Schwelle ${schwelle}, höchstens ${L.max} ${max}, fehlen ${fehlt}, Ende ${bis}/${abs(x.bis)}, zurück ${zurueck}, Auslandspool ${q?pool:'kein Spieler'}`);}
 
+// K13h. Marktwert der Nationalspieler (K13 §3.4): bis marktwert.tage nach der letzten Nominierung (p.lspZ) marktwert.plus mehr, nur mit Schalter.
+{const {W:W6,F:F6}=neueWelt();F6.buildWorld(SEED);const S6=W6.S,ev=W6.ev,L=ev('RWB').laenderspiele,val=ev('value'),abs=ev('absTag');S6.my=6;
+  const p=S6.pl.filter(x=>x.team>=0&&x.team<1000&&x.age>=24).sort((a,b)=>b.str-a.str)[0],v0=val(p);p.lspZ=abs(S6.tag);const aus=val(p)===v0;L.an=true;const an=val(p);
+  p.lspZ=abs(S6.tag)-L.marktwert.tage-1;const alt=val(p);L.an=false;delete p.lspZ;
+  pruef(aus&&an>v0&&Math.abs(an/v0-(1+L.marktwert.plus))<0.02&&alt===v0,'Marktwert der Nationalspieler: mehr nach einer Nominierung, nur mit Schalter, nach einem Jahr wieder normal',
+    `ohne Schalter ${aus}, ${v0} → ${an}, zu lange her ${alt===v0}`);}
+
 console.log(`\n${N} Saison(s) in ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

@@ -880,7 +880,7 @@ const REGELN={
     // Rückkehr: Frische − frische, Saisonbelastung + belastung je Spiel, Verletzung mit verletzung, Selbstvertrauen ± sv, Stimmung + stimmung (Stolz).
     // Seit Prüfung FM: zurück am Tag nach dem letzten Pausentag (FM1), ein Länderspiel zählt ab minMin Minuten, die Frische sinkt nach den Minuten, Saisonbelastung höchstens 100 (FM10).
     laenderspiele:{an:false,schwelle:{basis:88,jeRang:0.5,min:62},max:26,rand:3,formMin:7,praxisMin:40,tageJeSpiel:4.5,stamm:11,minuten:[0,30],
-      frische:[10,20],belastung:2,verletzung:0.03,sv:0.3,stimmung:2,ersteBis:23,minMin:10}}, /* ersteBis: Karte „Anruf des Nationaltrainers“ nur bis zu diesem Alter (K13g), bei Älteren war es kaum die erste */
+      frische:[10,20],belastung:2,verletzung:0.03,sv:0.3,stimmung:2,ersteBis:23,minMin:10,marktwert:{plus:0.05,tage:365}}}, /* marktwert: Nationalspieler sind bis tage nach der letzten Nominierung plus mehr wert (K13h) */ /* ersteBis: Karte „Anruf des Nationaltrainers“ nur bis zu diesem Alter (K13g), bei Älteren war es kaum die erste */
   // Testspiele und Trainingslager (K11 §11, Welle 2). Geldbeträge und Zusagen sind Spielwerte (K11 §12 Nr. 4).
   testspiele:{abWoche:3,wechsel:11,frische:0.7,risiko:0.6,praxis:0.6,vertrautheit:2,form:0.3,
     zusage:{grund:0.6,staerker:0.4,schwaecher:1.3,staerkerAb:4,schwaecherAb:4,kalender:0.2,region:1.2,vorbereitung:1.2,saison:0.7,min:0.05,max:0.95},

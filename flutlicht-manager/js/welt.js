@@ -1,7 +1,7 @@
 // Welt: Spieler erzeugen, Welt bauen, Spielplan, Ziele, Sponsoren, Preise.
 const rname=()=>pick(VORNAMEN)+' '+pick(NACHNAMEN);
 const salaryFor=s=>{const g=RP.gehalt;return Math.round(g.basis*Math.exp(g.steigung*(s-g.mitte))/g.runden)*g.runden;};
-function value(p){const m=RP.marktwert,s=p.age<m.jungUnter?p.str*m.staerkeAnteil+Math.max(p.str,p.pot)*m.talentAnteil:p.str;let v=m.basis*Math.exp(m.steigung*(s-m.mitte));const a=p.age,f=m.alter.find(x=>a<=x[0]);v*=f?f[1]:m.alterSonst;if(p.ww>=3)v*=RKA.wechsel.abloese;if(p.ehj!=null&&S.season-p.ehj<=1)v*=1+RSTAT.ehrung.marktwert;return Math.max(m.minimum,Math.round(v/m.runden)*m.runden);} // offizieller Wechselwunsch: Ablöse −10 % (K14 §5.4)
+function value(p){const m=RP.marktwert,s=p.age<m.jungUnter?p.str*m.staerkeAnteil+Math.max(p.str,p.pot)*m.talentAnteil:p.str;let v=m.basis*Math.exp(m.steigung*(s-m.mitte));const a=p.age,f=m.alter.find(x=>a<=x[0]);v*=f?f[1]:m.alterSonst;if(p.ww>=3)v*=RKA.wechsel.abloese;if(p.ehj!=null&&S.season-p.ehj<=1)v*=1+RSTAT.ehrung.marktwert;if(p.lspZ!=null&&lsAn()&&absTag(S.tag)-p.lspZ<=RWB.laenderspiele.marktwert.tage)v*=1+RWB.laenderspiele.marktwert.plus; /* Nationalspieler (K13h, nur mit Länderspielen) */return Math.max(m.minimum,Math.round(v/m.runden)*m.runden);} // offizieller Wechselwunsch: Ablöse −10 % (K14 §5.4)
 function sternZahl(p){const d=p.pot-p.str,st=RP.sterne;return d>=st[0]?4:d>=st[1]?3:d>=st[2]?2:1;}
 // Angezeigte Sterne mit Schätzfehler (K03): Das wahre Talent kennt niemand genau
 function stars(p){const n=clamp(sternZahl(p)+sternFehler(p),1,4);return '★★★★'.slice(0,n)+'☆☆☆☆'.slice(n);}
