@@ -580,7 +580,9 @@ const REGELN={
     // mit chance (Strom presse). Antwort auf die Stichelei, zusätzlich zur normalen Wirkung: gelassen (Humor) eigene Mannschaft +gelassen, kontern (Provokation) eigene +konterEigen und die Spieler des Gegners
     // +konterGegner (Trotz), ignorieren (Floskel) eigene +ignorieren[Profil]; nicht hingegangen (ohne Automatik) eigene +offen[Profil]
     // ki (K29m, 23.11., GESCHÄTZT): Sticheleien unter Computer-Trainern vor Derbys und Spitzenspielen deiner Liga in den nächsten tage Tagen, höchstens max je Woche, Beziehung der Vereine + bez
-    medienprofil:{anteile:{diplomatisch:40,floskel:25,laut:20,psycho:15},anlaesse:['derby','spitze','pokal','relegation'],chance:{laut:0.6,psycho:0.5},ki:{tage:7,max:1,bez:-2},
+    // ki.schiri (K09j, 25.11., popolupo, vorläufig): Nach einer Niederlage mit Platzverweis in deiner Liga (ohne deinen Verein) schimpft der Computer-Trainer mit dieser Chance
+    // je Medienprofil über den Schiedsrichter, höchstens schiriMax Meldungen je Spieltag. Nur Meldung, fest aus dem Seed, keine Folgen.
+    medienprofil:{anteile:{diplomatisch:40,floskel:25,laut:20,psycho:15},anlaesse:['derby','spitze','pokal','relegation'],chance:{laut:0.6,psycho:0.5},ki:{tage:7,max:1,bez:-2,schiri:{laut:0.5,psycho:0.3,floskel:0.1},schiriMax:1},
       gelassen:1,konterEigen:1,konterGegner:1,ignorieren:{laut:0,psycho:-1},offen:{laut:-1,psycho:-2}},
     // K29f (22.11., GESCHÄTZT): Interview am Spielfeldrand nach deinem Spiel, Wirkung der Antwortart × faktor, ohne Streuung, Abnutzung und Deckel
     spielfeldrand:{faktor:0.5},

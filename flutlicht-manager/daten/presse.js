@@ -131,6 +131,9 @@ const PRESSE={
   kiSticheleien:{
     laut:['Gegen {verein} wollen wir gewinnen, alles andere interessiert uns nicht.','Bei allem Respekt: {verein} ist für uns kein Maßstab.','{verein} soll erst einmal zeigen, dass sie mit uns mithalten können.'],
     psycho:['Ich höre, bei {verein} ist die Stimmung nicht die beste. Das wird man im Spiel sehen.','Wenn {verein} früh hinten liegt, kippt das Spiel. Das wissen die auch.','Die Abwehr von {verein} wackelt, wenn man sie unter Druck setzt.']},
+  // Computer-Trainer schimpfen über den Schiedsrichter (K09j): Platzhalter {schiri}, {spieler} (der Vom-Platz-Gestellte)
+  kiSchiriKritik:['Die Rote Karte gegen {spieler} war ein Witz. {schiri} hat das Spiel entschieden.','Ich sage nichts zum Schiedsrichter, sonst werde ich gesperrt. Aber jeder hat gesehen, was da passiert ist.',
+    '{schiri} war heute der beste Spieler des Gegners.','Mit zehn Mann gegen elf und den Schiedsrichter, das gewinnt man nicht.'],
   stichelFrage:['{gtrainer} hat über Ihre Mannschaft gesagt: „{zitat}“ Was entgegnen Sie?','Ihr Kollege {gtrainer} meint: „{zitat}“ Ihre Antwort?'],
   // Pressekonferenz nach dem Urteil (K29g, K29h): die Antwortart Schiedsrichterkritik heißt dort „Kritik am Urteil“, mit eigenen Texten und eigener Schlagzeile (Prüfung DR5)
   urteil:{name:'Kritik am Urteil',antworten:['Dieses Urteil ist ein Witz. {spieler} hat den Ball gespielt, das sieht jeder.','Wir akzeptieren das, aber verstehen tun wir es nicht. Das ist viel zu hart.','Andere bekommen für dasselbe ein Spiel. Bei uns sind es gleich mehrere. Das muss man sich fragen.'],

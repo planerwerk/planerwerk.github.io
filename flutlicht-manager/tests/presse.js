@@ -177,4 +177,13 @@ const gegner=w=>w.S.teams.find(x=>x.lg===w.t.lg&&x.id!==VEREIN).id;
     ok=still&&zuFrueh&&gemeldet&&b1===b0+M.ki.bez;info=`Derby am Spieltag ${f.k+1}: diplomatisch still ${still}, zu früh ${zuFrueh}, gemeldet ${gemeldet}, Beziehung ${b0} → ${b1}`;}
   pruef(ok,'Sticheleien unter Computer-Trainern: vor dem Derby eine Meldung, Beziehung −2, nicht von diplomatischen Trainern, nicht zu früh',info);}
 
+// K09j. Schiedsrichterkritik der Computer-Trainer (K09 §12 Nr. 14): nach einer Niederlage mit Platzverweis in deiner Liga (ohne deinen Verein) mit der Chance seines
+//       Medienprofils eine Meldung mit Trainer und Ergebnis aus seiner Sicht; ohne Platzverweis, nach einem Sieg oder in einer anderen Liga keine.
+{const {S,ev}=welt(false),K=ev('RPK').medienprofil.ki,lg=ev('myT()').lg,kk=ev('kiSchiriKritik'),tv=ev('trainerVon'),mp=ev('medienProfil'),sq=ev('squad');
+  const ts=S.teams.filter(x=>x.lg===lg&&x.id!==S.my&&!!tv(x.id)&&!!mp(tv(x.id))),v=ts[0],g=ts[1],rot=sq(v.id)[0],c0=K.schiri;K.schiri={laut:1,psycho:1,floskel:1,diplomatisch:1};
+  const mark=()=>S.news.unshift({t:'MARKE'}),neu=()=>S.news[0].t!=='MARKE',r={h:v.id,a:g.id,hg:0,ag:2,off:[rot.id],sr:'Testschiri'};
+  mark();kk([r],lg);const ja=neu()&&String(S.news[0].t).includes(tv(v.id).n)&&String(S.news[0].t).includes('0:2');
+  mark();kk([Object.assign({},r,{off:[]})],lg);const ohneRot=!neu();mark();kk([Object.assign({},r,{hg:3})],lg);const sieg=!neu();mark();kk([r],lg===1?2:1);const andereLiga=!neu();K.schiri=c0;
+  pruef(ja&&ohneRot&&sieg&&andereLiga,'Schiedsrichterkritik der Computer-Trainer: nach Niederlage mit Platzverweis, sonst nicht',`Meldung ${ja}, ohne Rot ${ohneRot}, Sieg ${sieg}, andere Liga ${andereLiga}`);}
+
 console.log(probleme.length?`\n${probleme.length} Problem(e).`:'\nAlles in Ordnung.');process.exitCode=probleme.length?1:0;
