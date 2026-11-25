@@ -907,7 +907,10 @@ const REGELN={
       algarve:{name:'Algarve',land:'POR',saison:'winter',kosten:50000,text:'mildes Wetter'},andalusien:{name:'Andalusien',land:'ESP',saison:'winter',kosten:55000,text:'warm, gute Plätze'},
       riviera:{name:'Türkische Riviera',land:'TUR',saison:'winter',kosten:30000,ablenkung:true,text:'günstig, aber mehr Ablenkung'},golf:{name:'Golfregion',saison:'winter',kosten:90000,marketing:{anteil:1.2,fans:-1},text:'sehr warm, lange Reise, Termine bei Partnern bringen Geld, manche Fans murren'},
       heimat:{name:'Heimat',saison:'beide',kosten:0,wetter:0.2,text:'kein Ortswechsel, im Winter fällt öfter Training aus'}},
-    ligaFaktor:{1:1,2:0.6,3:0.35},tage:[5,10],training:1.15,vertrautheit:1.25,zusammenhalt:1,zusammenhaltBis:7,kollerAb:8,koller:0.13,kollerSv:-0.5,ablenkung:0.15,ablenkungSv:-1},
+    ligaFaktor:{1:1,2:0.6,3:0.35},tage:[5,10],training:1.15,vertrautheit:1.25,zusammenhalt:1,zusammenhaltBis:7,kollerAb:8,koller:0.13,kollerSv:-0.5,ablenkung:0.15,ablenkungSv:-1,
+    // Zimmerbelegung (K11 §5.4, K11k, 25.11., popolupo, vorläufig): je Lagertag und Doppelzimmer Freundschaft mit freund (Landsleute ×landsleute), Integration +integration
+    // neben einem Eingewöhnten, Deutsch +deutsch neben einem Muttersprachler, Zoff bei Rivalen oder zwei Hitzköpfen mit streit (Stimmung stimmung, einmal je Zimmer)
+    zimmer:{freund:0.03,landsleute:2,integration:0.5,deutsch:0.3,streit:0.15,stimmung:-2}},
   // Stimmung, Kaderrollen, Wechselwunsch, Kabine, Zusammenhalt, Beziehungen, Kapitän (K14 §11, U8). Spielwerte, kalibriert mit tests/kabine.js
   kabine:{start:[60,75],                // Stimmung zu Beginn (0–100)
     rollen:{schluessel:0.85,stamm:0.65,rotation:0.40,ergaenzung:0.15,talent:0.15,pokal:0.9}, // erwartete Einsatzzeit je Kaderrolle (Anteil der Minuten), „spielt im Pokal“: Anteil der Pokalspiele

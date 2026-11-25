@@ -75,6 +75,7 @@ function lagerFaktor(tid,d){if(tid!==S.my)return{training:1,kondition:1,vertraut
   if(l.ausfall===d)return{training:0,kondition:0,vertrautheit:0};const O=RLA.orte[l.ort];return{training:RLA.training,kondition:RLA.training*(O.kondition||1),vertrautheit:RLA.vertrautheit};}
 function lagerTag(d){const l=lagerAktiv(d);if(!l)return;const O=RLA.orte[l.ort],sq=squad(S.my).filter(p=>p.inj<=0);l.tag=d-l.von+1;
   if(l.tag===1)news(`Trainingslager in ${O.name} beginnt (${l.bis-l.von+1} Tage).`);
+  if(!l.zimmer)l.zimmer=zimmerEinteilen(squad(S.my).filter(p=>!beiNationalteam(p)),l.zi);lagerZimmerTag(l,d); /* Zimmerbelegung (K11k) */
   if(O.wetter&&R()<O.wetter){l.ausfall=d;news(`Trainingslager: Wegen des Wetters fällt das Training heute aus.`);}
   if(l.tag<=RLA.zusammenhaltBis)zusammenhaltAendern(myT(),RLA.zusammenhalt); // Zusammenhalt +1 pro Tag bis zum 7. Tag (K14 §5.6)
   if(l.tag>=RLA.kollerAb&&R()<RLA.koller){l.koller++;const n=Math.min(sq.length,ri(3,5));shuffle(sq.slice()).slice(0,n).forEach(p=>svAendern(p,RLA.kollerSv));news('Lagerkoller: Die Stimmung im Lager kippt, einige Spieler wollen nach Hause.','bad');
@@ -87,6 +88,28 @@ function lagerTag(d){const l=lagerAktiv(d);if(!l)return;const O=RLA.orte[l.ort],
 // die Fans murren über die Reise (Fanstimmung marketing.fans, Umfeld). Einmal je Lager (l.mk). Ohne Zufall.
 function lagerMarketing(l,O){const M=O.marketing,g=Math.round(l.kosten*M.anteil/1000)*1000;l.mk=1;if(g>0)money('Marketing: Lager',g);if(M.fans)fanAnlass(myT(),'fanU',M.fans);
   news(`Trainingslager in ${O.name}: Termine bei Partnern vor Ort bringen ${fmt(g)}.${M.fans?' Ein Teil der Fans kritisiert die Reise.':''}`,'');}
+
+// Zimmerbelegung (K11 §5.4, K11k, 25.11., popolupo, vorläufig): Am ersten Lagertag teilt der Co-Trainer Doppelzimmer ein (l.zimmer [[id, id, Zoff schon da], …], bei ungerader Zahl
+// ein Einzelzimmer). Art l.zi: 'co' (Voreinstellung) setzt Neuzugänge und Spieler, die Deutsch lernen, zu deutschsprachigen Eingewöhnten und trennt Rivalen und zwei Hitzköpfe;
+// 'landsleute' legt Fremdsprachige gleicher Sprache zusammen (schneller Freunde, aber kein Deutsch im Zimmer) und achtet nicht auf Streithähne. Der Rest nach Alter.
+// Zufall fest aus dem Seed (hash32), nicht aus R(): Das Lager gibt es nur bei dir.
+const zimmerZoff=(p,q)=>{const b=beziehung(p,q);return(!!b&&b[2]==='R')||(hatEig(p,'hitzkopf')&&hatEig(q,'hitzkopf'));};
+const zimmerFremdGleich=(p,q)=>!deutschMutter(p)&&gleicheSprache(p,q);
+function zimmerEinteilen(sq,art){const land=art==='landsleute',rest=sq.slice().sort((a,b)=>a.age-b.age||a.id-b.id),z=[],weg=p=>rest.splice(rest.indexOf(p),1),passt=(p,q)=>land||!zimmerZoff(p,q);
+  const zuerst=land?rest.filter(p=>!deutschMutter(p)):rest.filter(p=>p.int!=null||deutschVon(p)<100);
+  zuerst.forEach(p=>{if(!rest.includes(p))return;const q=rest.find(x=>x!==p&&(land?zimmerFremdGleich(p,x):deutschMutter(x)&&x.int==null)&&passt(p,x));if(q){weg(p);weg(q);z.push([p.id,q.id]);}});
+  while(rest.length>1){const p=rest.shift(),i=rest.findIndex(x=>passt(p,x)),q=rest.splice(i>=0?i:0,1)[0];z.push([p.id,q.id]);}
+  if(rest.length)z.push([rest[0].id]);return z;}
+// Jeden Lagertag je Doppelzimmer: Freundschaft mit Z.freund (Landsleute ×Z.landsleute), Integration +Z.integration für einen Neuzugang neben einem Eingewöhnten
+// (deutschsprachig oder gleiche Sprache), Deutsch +Z.deutsch neben einem Muttersprachler, Zoff bei Rivalen oder zwei Hitzköpfen einmal je Zimmer mit Z.streit.
+function lagerZimmerTag(l,d){const Z=RLA.zimmer,B=RKA.beziehungen,t=myT(),zufall=(k,p,q)=>hash32([k,S.seed,S.season,d,p.id,q.id].join('|'))%1000/1000;
+  (l.zimmer||[]).forEach(z=>{if(z.length<2)return;const p=PIX.get(z[0]),q=PIX.get(z[1]);if(!p||!q||p.team!==S.my||q.team!==S.my)return;const gleich=zimmerFremdGleich(p,q);
+    if(!beziehung(p,q)&&freundeVon(p).length<B.maxFreunde&&freundeVon(q).length<B.maxFreunde&&zufall('zf',p,q)<Z.freund*(gleich?Z.landsleute:1)){
+      S.bz=S.bz||[];S.bz.push([p.id,q.id,'F',1]);news(`Trainingslager: Die Zimmerkollegen ${p.n} und ${q.n} sind Freunde geworden.`,'good');}
+    [[p,q],[q,p]].forEach(([a,b])=>{if(a.int!=null&&b.int==null&&(deutschMutter(b)||gleich)){a.int=Math.min(100,a.int+Z.integration);if(a.int>=100){delete a.int;delete a.intA;}}
+      if(a.team<AV0&&!deutschMutter(a)&&deutschVon(a)<100&&deutschMutter(b))a.de=Math.min(100,Math.round((deutschVon(a)+Z.deutsch)*10)/10);});
+    if(!z[2]&&zimmerZoff(p,q)&&zufall('zz',p,q)<Z.streit){z[2]=1;stimmungAendern(p,Z.stimmung);stimmungAendern(q,Z.stimmung);zusammenhaltAendern(t,RKA.zusammenhalt.streit);
+      if(!beziehung(p,q)){S.bz=S.bz||[];S.bz.push([p.id,q.id,'R',1]);}news(`Trainingslager: Zoff im Doppelzimmer von ${p.n} und ${q.n}. Der Zusammenhalt leidet.`,'bad');}});}
 
 // ---------- Sommerturnier (K11 §3, K11b) ----------
 // Vier Vereine, zwei Tage in der Vorbereitung: Halbfinale gegen einen Verein deines Niveaus (Tag 1, als Testspiel), das andere Halbfinale wird kurz nach Ansehen gerechnet

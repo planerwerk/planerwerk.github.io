@@ -140,6 +140,9 @@ function tsAnfragen(){if(!darf('testspiele','sommerplan'))return;const d=+docume
   news(`Testspiel am ${datumKurz(d)} bei ${tn(g)} angefragt. Antwort bis ${datumKurz(x.antwortAm)}.`);save();render();}
 function lagerBuchen(){if(!darf('lager','sommerplan'))return;const o=document.getElementById('la_ort').value,v=+document.getElementById('la_von').value,n=+document.getElementById('la_tage').value,f=lagerMoeglich(o,v,n);if(f){toast(f);return;}
   const k=lagerBuchenLauf(o,v,n);news(`Trainingslager gebucht: ${RLA.orte[o].name}, ${datumKurz(v)} bis ${datumKurz(v+n-1)}, Kosten ${fmt(k)}.`);save();render();}
+// Zimmerbelegung (K11k): Art der Einteilung für ein gebuchtes Lager, nur bis zum ersten Lagertag
+function lagerZimmerArt(von,art){if(!darf('lager','sommerplan'))return;const l=(S.lager||[]).find(x=>x.saison===S.season&&x.von===+von);if(!l||l.zimmer||S.tag>=l.von)return;
+  l.zi=art==='landsleute'?'landsleute':'co';save();render();}
 // Kabine und Gespräche (K14, K15): Kaderrolle, Kapitän, Einzelgespräch, Mannschaftsansprache, Teamevent
 function setKaderrolle(id,k){if(!darf('kaderrollen','kaderrolleOderVersprechen'))return;const p=PIX.get(id);if(!p||p.team!==S.my)return;
   if(k==='pokal'&&!imPokal(S.my)){toast('Ihr seid nicht mehr im Pokal.');return;}
