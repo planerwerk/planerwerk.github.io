@@ -80,7 +80,7 @@ function taeglichLauf(d){const T=RT;praegungTag(d);wechselTag(d);konkurrenzTag(d
   S.offers=S.offers.filter(o=>o.bis>=d&&PIX.get(o.pid)&&PIX.get(o.pid).team===S.my&&!PIX.get(o.pid).wech&&(o.tid>=AV0?!!avVon(o.tid):S.teams[o.tid]&&aktiv(S.teams[o.tid])));
   kartenAuto(d-1); // offene Ereigniskarten von gestern entscheidet der Co-Trainer (K30, U12d)
   if(S.karten&&S.karten.kette&&S.karten.kette.length)mitStrom(strom('ereignisse',S.season,d,'kette'),()=>kartenKette(d)); // fällige Folgekarten (K30c), eigener Strom
-  medizinTag(d);sportgerichtTag(d);kontrolleTag(d);pokalAuslosungTag(d);versprechenTag();testspieleAuto(d);lizenzTag(d);vorbereitungTag(d);deadlineTag(d);presseTag(d);finanzenTag(d);tvRatenTag(d);marketingTag(d);werbungTag(d); // Saisoneröffnung aller Vereine (K12b §5.2, U14) und zusätzlicher Markttag am Deadline Day (K20 §5.4, U15), je mit eigenem Strom
+  medizinTag(d);sportgerichtTag(d);kontrolleTag(d);verfahrenTag(d);pokalAuslosungTag(d);versprechenTag();testspieleAuto(d);lizenzTag(d);vorbereitungTag(d);deadlineTag(d);presseTag(d);finanzenTag(d);tvRatenTag(d);marketingTag(d);werbungTag(d); // Saisoneröffnung aller Vereine (K12b §5.2, U14) und zusätzlicher Markttag am Deadline Day (K20 §5.4, U15), je mit eigenem Strom
   bauTag(d);euTag(d);} // Bau mit Genehmigung, Verzögerung und Ende (K26 §4, K26a, js/stadion.js), Auslosungen im Europapokal (K37, U19a, js/europa.js)
 // Werte pro Woche (montags): Training und Entwicklung, Transfermarkt, Vorstand bei Minus auf dem Konto.
 function woechentlich(d){return mitStrom(strom('woche',S.season,d),()=>woechentlichLauf(d));}

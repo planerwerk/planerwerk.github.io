@@ -768,4 +768,13 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   pruef(d<S.plan.ende&&gelegt&&vorher&&amTag&&angebot&&auto,'Deadline-Day-Krimi: Folgekarte für den letzten Fenstertag, Angebot nur für heute, nicht unter der Automatik',
     `letzter Tag ${d}, gelegt ${gelegt}, vorher ${vorher}, am Tag ${amTag}, Angebot ${angebot}, Automatik ${auto}`);}
 
+// K09k. Verfahren (K09 §4): Die Rudelbildung urteilt nicht mehr sofort. Die Wirkung verfahren legt das Urteil verfahren.tage später (fest aus dem Seed), verfahrenTag
+//       zahlt dann die Strafe und meldet das Urteil; vorher nichts, nach einem Jobwechsel verfällt es.
+{const {S,ev}=welt(),c=ev('karteVon')('rudelbildung'),T=ev('RKT').verfahren.tage,t=ev('myT()'),abs=ev('absTag'),h=abs(S.tag),vt=ev('verfahrenTag'),b={verein:S.teams.find(x=>x.id!==S.my).id};
+  S.verfK=[];const c0=t.cash;c.wirkung.forEach(w=>ev('kartenWirkung')(w,b,c));const v=S.verfK[0],gelegt=!!v&&v.tag>=h+T[0]&&v.tag<=h+T[1]&&t.cash===c0;
+  vt(S.tag);const vorher=S.verfK.length===1&&t.cash===c0;const d=v?v.tag-abs(0):S.tag;vt(d);
+  const urteil=S.verfK.length===0&&t.cash===c0+ev('kartenGeld')(-6000)&&String(S.news[0].t).startsWith('Urteil des Sportgerichts');
+  c.wirkung.forEach(w=>ev('kartenWirkung')(w,b,c));const my0=S.my;S.my=S.teams.find(x=>x.id!==my0&&x.id!==b.verein).id;const c1=ev('myT()').cash;vt(d+T[1]);const verfallen=S.verfK.length===0&&ev('myT()').cash===c1;S.my=my0;
+  pruef(gelegt&&vorher&&urteil&&verfallen,'Verfahren: Urteil der Rudelbildung nach einigen Tagen, dann Strafe und Meldung, nach einem Jobwechsel verfallen',`gelegt ${gelegt}, vorher ${vorher}, Urteil ${urteil}, Jobwechsel ${verfallen}`);}
+
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

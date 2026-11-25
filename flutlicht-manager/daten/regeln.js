@@ -458,6 +458,7 @@ const REGELN={
     presse:{leckUnter:45,viralTage:7,vorTage:7}, // Presse-Karten (K29 §8, K17 §8, K29k, 22.11., GESCHÄTZT): Leck bei Medienklima unter leckUnter; Fehde bei Beziehung unter RBZ.wirkung.gespraechUnter.
     // Seit K29l: „Spruch geht viral“ bis viralTage nach einem Eintrag in der Sprüche-Chronik; „Rivale greift deine Kampfansage auf“ bis vorTage vor dem Spiel gegen ihn
     sommer:{nachTestTage:14,sonderFrische:15}, // Sommerkarten (K12a §8, K12c, 22.11., GESCHÄTZT): Übergewicht bis nachTestTage nach dem Leistungstest; Sonderschichten kosten sonderFrische Frische
+    verfahren:{tage:[5,14]}, // Karten-Verfahren (K09 §4, K09k, 25.11., popolupo, vorläufig): Urteil so viele Tage nach der Karte (Wirkung verfahren, fest aus dem Seed)
     // Freier Nachmittag im Lager (K11 §12 Nr. 11, K11j, 25.11., popolupo, vorläufig): Karte am Lagertag tag, wenn das Lager mindestens min Tage dauert (seit Prüfung FP7 eine Woche, Lager dauern 5 bis 10 Tage); die Zusatzeinheit kostet alle frische Frische
     lagerFreizeit:{tag:3,min:7,frische:8},
     // Spieler will Urlaub verlängern (K12a §8, K12d, 25.11., popolupo, vorläufig): ab abSpiele Turnierspielen; verlängert er, fehlt er wert Tage länger und baut erholung Saisonbelastung ab

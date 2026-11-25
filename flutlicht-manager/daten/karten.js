@@ -382,8 +382,9 @@ const KARTEN=[
     texte:['{spieler} hängt nach dem Training noch eine Stunde Sprints dran. Der Co-Trainer schaut zu.','{spieler} ist wie immer der Letzte auf dem Platz und gibt bei jeder Übung alles.'],
     wirkung:[{art:'uebertrieben',wert:1,chance:0.7,schlecht:0,gut:'Der Co-Trainer lobt ihn vor der Mannschaft.',schlechtText:'Beim letzten Sprint zwickt es im Oberschenkel: eine Zerrung.'}]},
   {id:'rudelbildung',titel:'Rudelbildung',bereich:'K09',art:'info',stufe:'haeufig',chance:0.5,ausloeser:'rudelbildung',sperrTage:60,
-    texte:['Nach der Roten Karte im Derby gegen {verein} gingen beide Mannschaften aufeinander los. Das Sportgericht verhängt {geld:6000} gegen deinen Verein.','Die Rudelbildung im Derby gegen {verein} kostet deinen Verein {geld:6000}.'],
-    wirkung:[{art:'geld',wert:-6000}]},
+    texte:['Nach der Roten Karte im Derby gegen {verein} gingen beide Mannschaften aufeinander los. Das Sportgericht hat ein Verfahren eröffnet, das Urteil kommt in den nächsten Tagen.','Die Rudelbildung im Derby gegen {verein} hat ein Nachspiel: Der Kontrollausschuss ermittelt gegen deinen Verein.'],
+    /* seit K09k (25.11.) urteilt das Sportgericht nach 5 bis 14 Tagen (Wirkung verfahren), vorher sofort */
+    wirkung:[{art:'verfahren',folge:[{art:'geld',wert:-6000}],text:'Urteil des Sportgerichts nach der Rudelbildung gegen {verein}: {geld:6000} Geldstrafe für deinen Verein.'}]},
   // Der Hitzkopf und der Schiedsrichter (K03 §8, K03f, 25.11., popolupo, vorläufig): Anlasskarte nach dem Platzverweis eines Hitzkopfs deines Kaders. Nur bekannte Wirkungen.
   {id:'hitzkopfSchiri',titel:'Der Hitzkopf und der Schiedsrichter',bereich:'K03',art:'entscheidung',gross:false,stufe:'haeufig',chance:0.6,ausloeser:'hitzkopfSchiri',sperrTage:120,
     texte:['{spieler} hat nach seiner Roten Karte den Schiedsrichter beschimpft. Die Szene läuft in jeder Zusammenfassung, die Reporter wollen wissen, wie du reagierst.','Auf dem Weg in die Kabine hat {spieler} den Schiedsrichter angeschrien. Der Bericht des Unparteiischen ist deutlich.'],
