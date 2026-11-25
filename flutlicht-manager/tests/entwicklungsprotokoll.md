@@ -290,6 +290,13 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 25.11.2026: W5e5 Spielergesichter (Zweig `mitarbeit/popolupo-w5e5-gesichter`, auf den Korrekturen FW)
+
+- **Weckruf:** kein neuer Testlauf (Testprotokoll weiter bei Lauf 8). Nur Oberfläche, kein Spielzufall (alle Würfe aus `hash32` auf Name und Nation).
+- **Neu:** Comic-Gesicht auf der Spielerkarte (K39 §3.2, deine Vorgabe vom 18.11.): `js/gesichter.js` baut es aus Kopfform, Augen, Brauen, Nase, Mund, Frisur, Bart und Trikot in der Vereinsfarbe. Haut- und Haarfarbe nach Herkunftsregion gewichtet, jede Farbe überall möglich (`daten/aussehen.js`, Region je Nation nach Geografie, Gewichte vorläufig geschätzt), graue Haare und Geheimratsecken mit dem Alter.
+- **Test:** `tests/pruefungen.js` (`__check`) baut für jeden Spieler ein Gesicht und meldet unvollständige.
+- **Bitte beim Testlauf ansehen:** Wirken die Gesichter stimmig? Ich konnte sie ohne Browser nicht ansehen.
+
 ### 25.11.2026: Korrekturen nach Prüfung FW (Zweig `mitarbeit/popolupo-fw-korrekturen`, auf W5e4)
 
 - **Prüfung FW** (lesender Agent über W5b, W5c1, W5d1 und FV): ein mittlerer und vier niedrige Funde, alle behoben, Einzelheiten in der Konsistenzprüfung FW.
