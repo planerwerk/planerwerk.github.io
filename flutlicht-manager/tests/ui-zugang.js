@@ -22,6 +22,12 @@ await axeLauf('Startbildschirm');
 // Karriere wie in tests/ui-zwei-saisons.js: Freiburg, ohne Lernstufen, fester Seed
 await pg.selectOption('#club',{label:'SC Freiburg'});await pg.selectOption('#lernstufen','0');await pg.fill('#mgr','Testtrainer');await pg.click('summary:text-is("Erweitert")');await pg.fill('#seed','4711');await pg.click('text=Anpfiff zur Karriere');
 for(const t of TABS){await pg.click(`.tabs button:text-is("${t}")`);await axeLauf('Ansicht '+t);}
+// Büro als Kachelfläche (K35b §13.2, W5c): große Kachel „Heute“, mindestens neun Kacheln, keine mit undefined oder NaN, Link „Ganze Tabelle“ führt zur Tabelle
+await pg.click('.tabs button:text-is("Büro")');
+const kb=await pg.evaluate(()=>{const k=[...document.querySelectorAll('.kacheln .kachel')];return{n:k.length,gross:!!document.querySelector('.kacheln .k-gross'),kaputt:k.filter(x=>/undefined|NaN/.test(x.textContent)).map(x=>x.getAttribute('aria-label'))};});
+pruef(kb.n>=9&&kb.gross,'Büro: Kachelfläche mit großer Kachel und mindestens neun Kacheln',kb.n);
+pruef(!kb.kaputt.length,'Büro: keine Kachel mit undefined oder NaN',kb.kaputt.join(', ')||null);
+await pg.click('.kachel button.k-link:has-text("Ganze Tabelle")');pruef(await pg.evaluate(()=>TAB==='tabelle'),'Büro: Der Link „Ganze Tabelle“ öffnet die Tabelle');
 await pg.click('.tabs button:text-is("Kader")');const zeile=await pg.$('tr.click');
 if(zeile){await zeile.click();await axeLauf('Spielerkarte');
   const fokus=await pg.evaluate(()=>{const a=document.activeElement;return !!a&&!!a.closest('.ovb');});pruef(fokus,'Fenster: Beim Öffnen liegt der Fokus im Fenster');

@@ -197,3 +197,30 @@ button.wahl.on{border-color:var(--amber);color:var(--amber);font-weight:700}
 .lzchip{margin-top:4px;padding:1px 8px;font-size:12px;border-radius:10px;border:1px solid var(--amber);color:var(--amber);background:transparent}
 .lzkarte{border:2px solid var(--amber);grid-column:1/-1}
 .tag.good{color:var(--good,#7bd88f)}
+/* Kacheln (K35b §13.2, W5c): Büro als Kachelfläche. 4 Spalten ab 1.100 px, 2 ab 600 px, darunter 1. Marken mit 10 % Farbton halten 4,5 : 1 in beiden Themen. */
+.kacheln{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;grid-auto-flow:row dense}
+.kachel{background:var(--turf);border:1px solid var(--rule);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:6px;min-width:0;min-height:148px}
+.k-gross{grid-column:span 2;grid-row:span 2}
+.k-breit{grid-column:span 2}
+.k-kopf{display:flex;align-items:center;gap:8px;color:var(--mist);min-width:0}
+.k-kopf h2{margin:0;font-family:var(--f-body);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mist);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.k-ic{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.k-marke{margin-left:auto;display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;padding:2px 9px;border-radius:999px;white-space:nowrap}
+.k-marke.good{color:var(--good);background:color-mix(in srgb,var(--good) 10%,transparent)}
+.k-marke.warn{color:var(--warn);background:color-mix(in srgb,var(--warn) 10%,transparent)}
+.k-marke.bad{color:var(--bad);background:color-mix(in srgb,var(--bad) 10%,transparent)}
+.k-marke.blue{color:var(--blue);background:color-mix(in srgb,var(--blue) 10%,transparent)}
+.k-wert{font-family:var(--f-disp);font-size:30px;font-weight:700;line-height:1.05;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.k-sub{color:var(--mist);font-size:13px}
+.k-trend{font-size:13px;font-weight:700}
+.k-trend.good{color:var(--good)} .k-trend.warn{color:var(--warn)} .k-trend.bad{color:var(--bad)}
+.k-link{margin-top:auto;align-self:flex-start;background:transparent;border:0;padding:6px 0;color:var(--amber);font-weight:700;font-size:13px}
+.k-link:hover{text-decoration:underline}
+.k-tab{width:100%;font-size:13px;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.k-tab th{color:var(--mist);font-weight:600;font-size:12px;text-align:left;padding:2px 6px}
+.k-tab td{padding:4px 6px}
+.k-tab .num{text-align:right}
+.kachel .news{max-height:none}
+@media (max-width:1100px){.kacheln{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:600px){.kacheln{grid-template-columns:minmax(0,1fr)}.k-gross,.k-breit{grid-column:auto;grid-row:auto}}
+.buero{display:grid;gap:14px}

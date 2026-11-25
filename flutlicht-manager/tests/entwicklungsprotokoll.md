@@ -290,6 +290,12 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 25.11.2026: W5c1 Büro als Kachelfläche (Zweig `mitarbeit/popolupo-w5c-kacheln`, auf W5b)
+
+- **Weckruf:** kein neuer Testlauf (Testprotokoll weiter bei Lauf 8). Nur Oberfläche, keine Spielregel, kein Zufall.
+- **Neu:** Baustein `kachel()` in `js/regler.js` (groß, breit, klein; Marke mit Symbol und Wort; Link unten). Das Büro zeigt oben eine Kachelfläche: Heute (Spiel, Wochenleiste), Posteingang, Tabellenausschnitt, Kontostand, Vorstand, Saisonziel, Stimmung, Ausfälle, Training, Transfers, letztes Spiel. Die bisherigen Karten mit Entscheidungen stehen unverändert darunter, die Karte „Heute“ ist in der großen Kachel aufgegangen.
+- **Tests:** `tests/ui-zugang.js` prüft die Kachelfläche (mindestens neun Kacheln, kein undefined oder NaN, Link zur Tabelle); `tests/fuzz-karrieren.js` rendert das Büro ohnehin in jeder Karriere.
+
 ### 25.11.2026: W5b Farben mit hellem Thema (Zweig `mitarbeit/popolupo-w5b-farben`, auf den Welle-5-Konzepten)
 
 - **Weckruf:** kein neuer Testlauf (Testprotokoll weiter bei Lauf 8). Nur Oberfläche, keine Spielregel, kein Zufall, Spielstand unverändert.
