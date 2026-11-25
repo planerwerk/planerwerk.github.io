@@ -744,4 +744,11 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   S.vs=[{pid:f.id,art:'wechsel',stand:'gebrochen',ende:h}];const fremd=A.versprechenEinfordern()===null;S.vs=[];
   pruef(ohne&&ja&&gehalten&&alt&&fremd,'Spieler fordert Versprechen ein: nur kurz nach einem gebrochenen Versprechen eines eigenen Spielers',`ohne ${ohne}, gebrochen ${ja}, gehalten ${gehalten}, zu alt ${alt}, anderer Verein ${fremd}`);}
 
+// K03f. Der Hitzkopf und der Schiedsrichter (K03 §8): nur nach dem Platzverweis eines Hitzkopfs deines Kaders (rotM im Merker des letzten Spiels),
+//       nicht bei einem anderen eigenen Spieler und nicht bei einem Platzverweis auf der Seite des Gegners.
+{const {S,F,ev}=welt(),A=ev('AUSLOESER'),sq=ev('squad')(S.my),h=sq[0],n=sq[1],g=S.teams.find(t=>t.id!==S.my).id,merk=evs=>{S.letzte=[];F.letztesSpielMerken({h:S.my,a:g,hg:0,ag:1,ev:evs},S.tag);};
+  h.eig=['hitzkopf'];n.eig=[];merk([]);const ohne=A.hitzkopfSchiri()===null;merk([{m:60,s:0,t:'R',p:h.id}]);const b=A.hitzkopfSchiri(),ja=!!b&&b.spieler===h.id&&S.letzt.rotM.includes(h.id);
+  merk([{m:60,s:0,t:'R',p:n.id}]);const anderer=A.hitzkopfSchiri()===null;merk([{m:60,s:1,t:'R',p:h.id}]);const gegner=A.hitzkopfSchiri()===null;S.letzte=[];
+  pruef(ohne&&ja&&anderer&&gegner,'Hitzkopf und Schiedsrichter: nur nach dem Platzverweis eines eigenen Hitzkopfs',`ohne ${ohne}, Hitzkopf ${ja}, anderer Spieler ${anderer}, Seite des Gegners ${gegner}`);}
+
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

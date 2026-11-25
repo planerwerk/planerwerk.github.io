@@ -374,6 +374,12 @@ const KARTEN=[
   {id:'rudelbildung',titel:'Rudelbildung',bereich:'K09',art:'info',stufe:'haeufig',chance:0.5,ausloeser:'rudelbildung',sperrTage:60,
     texte:['Nach der Roten Karte im Derby gegen {verein} gingen beide Mannschaften aufeinander los. Das Sportgericht verhängt {geld:6000} gegen deinen Verein.','Die Rudelbildung im Derby gegen {verein} kostet deinen Verein {geld:6000}.'],
     wirkung:[{art:'geld',wert:-6000}]},
+  // Der Hitzkopf und der Schiedsrichter (K03 §8, K03f, 25.11., popolupo, vorläufig): Anlasskarte nach dem Platzverweis eines Hitzkopfs deines Kaders. Nur bekannte Wirkungen.
+  {id:'hitzkopfSchiri',titel:'Der Hitzkopf und der Schiedsrichter',bereich:'K03',art:'entscheidung',gross:false,stufe:'haeufig',chance:0.6,ausloeser:'hitzkopfSchiri',sperrTage:120,
+    texte:['{spieler} hat nach seiner Roten Karte den Schiedsrichter beschimpft. Die Szene läuft in jeder Zusammenfassung, die Reporter wollen wissen, wie du reagierst.','Auf dem Weg in die Kabine hat {spieler} den Schiedsrichter angeschrien. Der Bericht des Unparteiischen ist deutlich.'],
+    optionen:[{text:'Sich vor ihn stellen',wirkung:[{art:'stimmung',wert:3},{art:'fans',wert:1},{art:'vertrauen',wert:-1}],folge:'Du nimmst {spieler} öffentlich in Schutz. Die Kurve feiert dich, der Vorstand weniger.'},
+      {text:'Intern eine Geldstrafe verhängen',wirkung:[{art:'geld',wert:5000},{art:'stimmung',wert:-4},{art:'glaub',wert:1}],folge:'{spieler} zahlt. Er ist sauer, aber die Kabine weiß, wo die Grenze liegt.'},
+      {text:'Sich beim Schiedsrichter entschuldigen',wirkung:[{art:'vertrauen',wert:1},{art:'stimmung',wert:-1}],folge:'Du rufst den Schiedsrichter an und entschuldigst dich. Der Verband nimmt es wohlwollend zur Kenntnis.'}],auto:1},
   // Spieler hadert mit seiner Position (K06 §8, K06d, 23.11., popolupo): Entscheidung, Werte vorläufig. Die Aufstellung änderst du selbst.
   {id:'positionHadern',titel:'Spieler hadert mit seiner Position',bereich:'K06',art:'entscheidung',gross:false,stufe:'haeufig',chance:0.5,ausloeser:'positionHadern',sperrTage:120,
     texte:['{spieler} spielt seit Wochen auf einer Position, die ihm nicht liegt. Er will mit dir reden.','„Das ist nicht meine Position“, sagt {spieler} in der Kabine. Er fühlt sich falsch eingesetzt.'],

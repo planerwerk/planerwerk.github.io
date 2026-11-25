@@ -458,6 +458,7 @@ lizenz:{
 215. **K29n Gehaltsforderung bei bekanntem Interesse (25.11., popolupo, ohne Testlauf):** keine neue Funktion; wirkt auf die Forderung im Transfermarkt.
 216. **U12p Nebenziel tauschen (25.11., popolupo, ohne Testlauf):** keine neue Funktion, ein Knopf im Zielgespräch (Bereich `zielgespraech`, Grundlizenz, ohne Automatik).
 217. **K15f Spieler fordert Versprechen ein (25.11., popolupo, ohne Testlauf):** keine neue Funktion, eine Ereigniskarte (Bereich `ereignisse`); unter dessen Automatik entschuldigt sich der Co-Trainer in deinem Namen.
+218. **K03f Der Hitzkopf und der Schiedsrichter (25.11., popolupo, ohne Testlauf):** keine neue Funktion, eine Ereigniskarte (Bereich `ereignisse`); unter dessen Automatik verhängt der Co-Trainer eine interne Geldstrafe.
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 
