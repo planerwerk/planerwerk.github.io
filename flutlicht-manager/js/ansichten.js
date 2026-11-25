@@ -5,10 +5,10 @@ const SORTL={pos:'Position',str:'Stärke',age:'Alter',val:'Marktwert'};
 const TABS=[['buero','Büro'],['kalender','Kalender'],['kader','Kader'],['kabine','Kabine'],['aufst','Aufstellung'],['tabelle','Tabelle'],['spielplan','Spielplan'],['pokal','Pokal'],['statistik','Statistik'],['transfer','Transfers'],['finanzen','Finanzen'],['stadion','Stadion'],['training','Training & Jugend'],['stab','Stab']];
 const fact=(k,v)=>`<div><span class="lbl">${k}</span><b>${v}</b></div>`;
 // Wappen (K39 §3.1, W5e1): erzeugt aus Vereinsfarbe, Kürzel und einer Grundform, fest aus dem Kürzel (in jeder Karriere gleich). Keine echten Wappen.
-// Unter 28 px ohne Kürzel. Rein dekorativ (aria-hidden), der Vereinsname steht immer daneben. Ohne Zufall: hash32 auf das Kürzel.
+// Unter 28 px ohne Kürzel. Rein dekorativ (aria-hidden), der Vereinsname steht immer daneben. Ohne Zufall: hash32 auf das Kürzel. Eigene Bilder (W5e2, js/fenster.js) gehen vor.
 const WAPPEN_FORM=['M4 4H44V27C44 40 35 48 24 52C13 48 4 40 4 27Z','M24 6A22 22 0 1 1 23.99 6Z','M24 3L45 28L24 53L3 28Z','M6 4H42V44L24 53L6 44Z'];
 const farbHell=h=>{const m=/^#?([0-9a-f]{6})$/i.exec(String(h||''));if(!m)return 0.2;return[0,2,4].map(i=>parseInt(m[1].substr(i,2),16)/255).map(c=>c<=0.04045?c/12.92:Math.pow((c+0.055)/1.055,2.4)).reduce((s,c,i)=>s+c*[0.2126,0.7152,0.0722][i],0);};
-function wappen(id,px=16){const t=S.teams[id],col=(t&&t.col)||'#7a8699',sh=(t&&t.sh)||'',d=WAPPEN_FORM[hash32('wappen|'+(sh||id))%WAPPEN_FORM.length],ink=farbHell(col)>0.2?'#141b26':'#ffffff';
+function wappen(id,px=16){const t=S.teams[id],eig=t&&eigenesWappen(t.sh);if(eig)return`<img class="wp" src="${eig}" width="${px}" height="${Math.round(px*56/48)}" alt="" style="object-fit:contain">`;const col=(t&&t.col)||'#7a8699',sh=(t&&t.sh)||'',d=WAPPEN_FORM[hash32('wappen|'+(sh||id))%WAPPEN_FORM.length],ink=farbHell(col)>0.2?'#141b26':'#ffffff';
   return`<svg class="wp" viewBox="0 0 48 56" width="${px}" height="${Math.round(px*56/48)}" aria-hidden="true" focusable="false"><path d="${d}" fill="${col}" style="stroke:var(--rule)" stroke-width="1.5"></path><path d="${d}" fill="none" stroke="${ink}" stroke-width="2.6" transform="translate(3.84 4.48) scale(.84)"></path>${px>=28&&sh?`<text x="24" y="33" text-anchor="middle" font-size="${sh.length>3?11:14}" font-weight="700" fill="${ink}" style="font-family:var(--f-disp)">${esc(sh)}</text>`:''}</svg>`;}
 const chip=id=>wappen(id,14);
 const wappenPaar=f=>`<div class="vs-wp">${wappen(f[0],44)}<i>:</i>${wappen(f[1],44)}</div>`;

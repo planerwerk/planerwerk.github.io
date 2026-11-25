@@ -290,6 +290,11 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 25.11.2026: W5e2 eigene Wappen laden (Zweig `mitarbeit/popolupo-w5e-artwork`)
+
+- **Neu:** Menü-Karte „Eigene Wappen“ (K39 §3.1, deine Frage vom 25.11.): Bilder mit Dateiname = Kürzel (etwa FCK.png) laden, mehrere auf einmal. Sie werden auf 96 × 112 Pixel verkleinert und nur im Browser gespeichert, nie im Spielstand und nie im Repository. `wappen()` zeigt sie statt des erzeugten Wappens. Liste der Kürzel in der Karte, „Alle eigenen Wappen entfernen“.
+- **Test:** `tests/ui-zugang.js` lädt ein Bild über das Dateifeld, prüft Kopfzeile und Spielstand und entfernt es wieder.
+
 ### 25.11.2026: W5e1 erzeugte Wappen (Zweig `mitarbeit/popolupo-w5e-artwork`, auf W5d)
 
 - **Weckruf:** kein neuer Testlauf (Testprotokoll weiter bei Lauf 8). Nur Oberfläche, kein Zufall (Form über `hash32` aus dem Kürzel).

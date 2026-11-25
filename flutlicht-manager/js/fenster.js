@@ -106,6 +106,7 @@ function menu(){let size='';try{size=Math.round(JSON.stringify(S).length/1024)+'
   <div class="card"><h3>Spielstand sichern (${size})</h3><textarea id="exp" readonly aria-label="Spielstand als Text zum Kopieren">${esc(JSON.stringify(S))}</textarea><div class="row" style="margin-top:8px"><button onclick="copyExp()">Code kopieren</button></div></div>
   <div class="card"><h3>Spielstand-Code laden</h3><textarea id="imp" placeholder="Code hier einfügen"></textarea><div class="row" style="margin-top:8px"><button onclick="importSave()">Laden</button></div></div>
   <div class="card"><h3>Darstellung</h3><p class="dim">Gilt für dieses Gerät, nicht für den Spielstand.</p><div class="form">${Object.entries(REGELN.darstellung.themen).map(([k,l])=>`<label class="pick"><input type="radio" name="thema" ${themaLesen()===k?'checked':''} onchange="themaSetzen('${k}')"> ${esc(l)}</label>`).join('')}</div></div>
+  ${eigeneWappenKarte()}
   <div class="card"><h3>Erinnerungen vor „Tag beenden“</h3><p class="dim">Sie erscheinen nur, wenn wirklich etwas offen ist.</p><div class="form">${Object.entries(RK.erinnerungen).map(([k,l])=>`<label class="pick"><input type="checkbox" ${erinnerungAn(k)?'checked':''} onchange="erinnerungAus('${k}',!this.checked)"> ${l}</label>`).join('')}</div></div>
   <div class="card"><h3>Meldungsdichte</h3><p class="dim">Wie oft dich Ereigniskarten mit einer Entscheidung anhalten. Was darüber hinausgeht, entscheidet der Co-Trainer, die Karten selbst kommen gleich oft (K30).</p><div class="form">${Object.entries(RKT.dichte.stufen).map(([k,o])=>`<label class="pick"><input type="radio" name="dichte" ${kartenDichteStufe()===k?'checked':''} onchange="kartenDichteSetzen('${k}')"> ${esc(o.name)}</label>`).join('')}</div></div>
   <div class="card"><h3>Neue Regeln ausprobieren</h3><p class="dim">Diese Regeln sind fertig, aber noch nicht vermessen. Sie gelten für alle Vereine und nur in diesem Spielstand. Du kannst sie jederzeit wieder ausschalten.</p><div class="form">${(REGELN.experimente||[]).map(x=>`<label class="pick"><input type="checkbox" ${experimentAn(x.k)?'checked':''} onchange="experimentSetzen('${x.k}',this.checked)"> <b>${esc(x.name)}</b> <span class="dim">${esc(x.text)}</span></label>`).join('')}</div></div>
@@ -122,6 +123,27 @@ function importSave(){let d=null;try{d=JSON.parse(document.getElementById('imp')
 function themaLesen(){const D=REGELN.darstellung;try{const t=localStorage.getItem(D.schluessel);return D.themen[t]?t:D.standard;}catch(e){return D.standard;}}
 function themaAnwenden(t){if(typeof document==='undefined')return;const r=document.documentElement;if(!REGELN.darstellung.themen[t]||t==='dunkel')r.removeAttribute('data-thema');else r.setAttribute('data-thema',t);}
 function themaSetzen(t){if(!REGELN.darstellung.themen[t])return;try{localStorage.setItem(REGELN.darstellung.schluessel,t);}catch(e){}themaAnwenden(t);}
+
+// ---------- Eigene Wappen (K39 §3.1, W5e2): Echte Wappen liefert das Spiel nicht mit (Urheber- und Markenrecht). Wer sie will, lädt Bilder selbst. ----------
+// Dateiname ohne Endung = Kürzel des Vereins (etwa FCK.png, Groß- und Kleinschreibung egal). Die Bilder werden auf REGELN.darstellung.wappenPx verkleinert
+// und nur in diesem Browser gespeichert (REGELN.darstellung.wappenSchluessel), nie im Spielstand und nie weitergegeben. Ohne Zufall, ohne Wirkung aufs Spiel.
+let EIGENE_WAPPEN=null;
+function eigeneWappen(){if(EIGENE_WAPPEN)return EIGENE_WAPPEN;try{const m=JSON.parse(localStorage.getItem(REGELN.darstellung.wappenSchluessel)||'{}');EIGENE_WAPPEN=m&&typeof m==='object'?m:{};}catch(e){EIGENE_WAPPEN={};}return EIGENE_WAPPEN;}
+const eigenesWappen=sh=>{const u=sh&&eigeneWappen()[sh];return typeof u==='string'&&/^data:image\/(png|jpeg|gif|webp|svg\+xml);base64,[A-Za-z0-9+\/=]+$/.test(u)?u:null;};
+function eigeneWappenSpeichern(m){EIGENE_WAPPEN=m;try{localStorage.setItem(REGELN.darstellung.wappenSchluessel,JSON.stringify(m));return true;}catch(e){return false;}}
+function eigeneWappenLaden(dateien){const l=[...(dateien||[])];if(!l.length||!S)return;const D=REGELN.darstellung,[bw,bh]=D.wappenPx,m=Object.assign({},eigeneWappen());let n=0,offen=l.length;const fremd=[];
+  const fertig=()=>{if(--offen>0)return;const ok=eigeneWappenSpeichern(m);toast(ok?`${n} Wappen geladen${fremd.length?`, ohne passenden Verein: ${fremd.slice(0,5).join(', ')}${fremd.length>5?' …':''}`:''}.`:'Der Speicher im Browser ist voll, die Wappen sind nicht gespeichert.');render();menu();};
+  l.forEach(f=>{const k=f.name.replace(/\.[^.]+$/,'').trim().toUpperCase(),t=S.teams.find(x=>x.sh&&x.sh.toUpperCase()===k);if(!t||!String(f.type||'').startsWith('image/')){fremd.push(f.name);fertig();return;}
+    const r=new FileReader();r.onerror=()=>{fremd.push(f.name);fertig();};
+    r.onload=()=>{const img=new Image();img.onerror=()=>{fremd.push(f.name);fertig();};
+      img.onload=()=>{try{const c=document.createElement('canvas');c.width=bw;c.height=bh;const s=Math.min(bw/img.width,bh/img.height),w=img.width*s,h=img.height*s;c.getContext('2d').drawImage(img,(bw-w)/2,(bh-h)/2,w,h);m[t.sh]=c.toDataURL('image/png');n++;}catch(e){fremd.push(f.name);}fertig();};
+      img.src=r.result;};
+    r.readAsDataURL(f);});}
+function eigeneWappenLoeschen(){eigeneWappenSpeichern({});try{localStorage.removeItem(REGELN.darstellung.wappenSchluessel);}catch(e){}render();menu();}
+function eigeneWappenKarte(){const n=Object.keys(eigeneWappen()).length,l=S?S.teams.filter(t=>t.sh&&t.lg<=3).sort((a,b)=>a.lg-b.lg||a.name.localeCompare(b.name)):[];
+  return`<div class="card"><h3>Eigene Wappen</h3><p class="dim">Echte Wappen liefert das Spiel nicht mit (Urheber- und Markenrecht). Du kannst eigene Bilder laden: Dateiname = Kürzel des Vereins, etwa FCK.png. Sie bleiben nur in diesem Browser und kommen nicht in den Spielstand.</p>
+  <div class="form"><label>Bilder wählen <input type="file" accept="image/*" multiple onchange="eigeneWappenLaden(this.files)"></label></div><p class="dim">${n?`${n} eigene Wappen geladen.`:'Noch keine eigenen Wappen.'}</p>${n?'<div class="row"><button onclick="eigeneWappenLoeschen()">Alle eigenen Wappen entfernen</button></div>':''}
+  <details><summary>Kürzel der Vereine</summary><p class="dim">${l.map(t=>`${esc(t.sh)} ${esc(t.name)}`).join(' · ')}</p></details></div>`;}
 
 // ---------- Neue Regeln ausprobieren (K02 §4.4, K02a; seit Prüfung FN1 hier statt in start.js, das der Test-Simulator nicht lädt) ----------
 // Regeln hinter einem Schalter (REGELN.experimente: k, pfad zum Objekt mit dem Feld an, name, text) kannst du im Menü für deinen Spielstand einschalten

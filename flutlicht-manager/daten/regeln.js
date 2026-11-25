@@ -15,7 +15,9 @@ const REGELN={
   darstellung:{                      // Thema je Gerät (K35b §13.3, W5b): im Browser gespeichert, nicht im Spielstand; Farben in css/spiel.css
     schluessel:'flutlicht-thema',    // Speicherplatz im Browser
     standard:'dunkel',               // ohne gespeicherte Wahl
-    themen:{dunkel:'Dunkel (Flutlichtnacht)',hell:'Hell (Tageslicht)',system:'Wie das Gerät'}
+    themen:{dunkel:'Dunkel (Flutlichtnacht)',hell:'Hell (Tageslicht)',system:'Wie das Gerät'},
+    wappenSchluessel:'flutlicht-wappen', // eigene Wappen (K39 §3.1, W5e2): nur im Browser, nie im Spielstand
+    wappenPx:[96,112]                // so groß werden eigene Wappen gespeichert (Breite, Höhe in Pixeln)
   },
   // Neue Regeln ausprobieren (K02 §4.4, K02a, 24.11., popolupo, vorläufig): Schalter, die noch aus sind, weil sie die Kalibrierung aller Vereine verschieben.
   // Im Menü je Spielstand einschaltbar (S.einst.exp). pfad: Objekt in REGELN mit dem Feld an.

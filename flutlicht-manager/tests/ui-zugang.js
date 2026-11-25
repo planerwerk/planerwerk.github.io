@@ -31,6 +31,17 @@ const kb=await pg.evaluate(()=>{const k=[...document.querySelectorAll('.kacheln 
 pruef(kb.n>=9&&kb.gross,'Büro: Kachelfläche mit großer Kachel und mindestens neun Kacheln',kb.n);
 pruef(!kb.kaputt.length,'Büro: keine Kachel mit undefined oder NaN',kb.kaputt.join(', ')||null);
 await pg.click('.kachel button.k-link:has-text("Ganze Tabelle")');pruef(await pg.evaluate(()=>TAB==='tabelle'),'Büro: Der Link „Ganze Tabelle“ öffnet die Tabelle');
+// Eigene Wappen (K39 §3.1, W5e2): Bild mit Dateiname = Kürzel über das Menü laden, Kopfzeile zeigt es, nicht im Spielstand; Entfernen stellt das erzeugte Wappen her
+const mb=await pg.$('button:text-is("Menü")');
+if(mb){await mb.click();const fi=await pg.$('input[type=file][onchange*="eigeneWappenLaden"]');
+  if(fi){const kurz=await pg.evaluate(()=>myT().sh);
+    await fi.setInputFiles({name:kurz+'.png',mimeType:'image/png',buffer:Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=','base64')});
+    await pg.waitForFunction(()=>!!document.querySelector('header .club img.wp'),null,{timeout:3000}).catch(()=>{});
+    pruef(await pg.evaluate(()=>!!document.querySelector('header .club img.wp')&&!JSON.stringify(S).includes('data:image')),'Eigene Wappen: Bild geladen, in der Kopfzeile, nicht im Spielstand');
+    await pg.evaluate(()=>eigeneWappenLoeschen());
+    pruef(await pg.evaluate(()=>!document.querySelector('header .club img.wp')&&!!document.querySelector('header .club svg.wp')),'Eigene Wappen: Entfernen stellt das erzeugte Wappen wieder her');}
+  else pruef(false,'Eigene Wappen: Das Menü hat die Auswahl');
+  await pg.evaluate(()=>closeOv());}
 await pg.click('.tabs button:text-is("Kader")');const zeile=await pg.$('tr.click');
 if(zeile){await zeile.click();await axeLauf('Spielerkarte');
   const fokus=await pg.evaluate(()=>{const a=document.activeElement;return !!a&&!!a.closest('.ovb');});pruef(fokus,'Fenster: Beim Öffnen liegt der Fokus im Fenster');
