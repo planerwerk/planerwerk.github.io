@@ -2837,3 +2837,18 @@ Korrekturen auf `mitarbeit/popolupo-ft-korrekturen` (auf K15h).
 | FT2 | **Niedrig:** „Versprechen zurücknehmen“ kostete auch dann, wenn sich das Versprechen bis zur Entscheidung schon erledigt hatte (etwa durch einen Verkauf). Jetzt meldet `versprechenZurueck` Erfolg (`KARTEN_MIT_ERFOLG`), Stimmung und Glaubwürdigkeit kommen als `dann`. | ✅ behoben |
 | FT3 | **Niedrig, Tests:** FS1 (Unverkäufliche, Zweite, schon vorhandenes Angebot) und „Fanartikel online“ im Finanzplan waren ungetestet. Ergänzt in den Fällen K20f und K25g. | ✅ behoben |
 | FT4 | **Niedrig, Doku:** Das Protokoll nannte K15g und K15h nicht unter den noch nicht durchgesehenen Schritten. Berichtigt. | ✅ behoben |
+
+## FU. Prüfung der Korrekturen FT, K18i und K10f ohne Laufzeit (25. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat de29719..41604cc gelesen, nichts ausgeführt. Kein Laufzeit- oder Syntaxfehler. Mit beiden neuen Schaltern aus ändert sich nichts (gleiche Auswahl, gleiche Zahl und Reihenfolge der R()-Aufrufe, gleiche Kader und Vorschau), der Gleichschritt 5a bleibt auch mit Schaltern an symmetrisch, K02a bleibt generisch. Ohne Befund: die Korrekturen FT, die neuen Tests bis auf FU5, ältere Tests, Doku, Namen.
+
+Korrekturen auf `mitarbeit/popolupo-fu-korrekturen` (auf K10f).
+
+| # | Befund | Status |
+|---|---|---|
+| FU1 | **Mittel (nur mit Schalter):** Wer nach Saisonbelastung geschont wurde, saß mit voller Frische einen gezählten Bankplatz ab (Stimmung, Rivale). Jetzt trägt der Kader die Geschonten (`geschont`), das Spielergebnis `gs`, und `bankFall` entschuldigt sie als Rotation. | ✅ behoben |
+| FU2 | **Niedrig (nur mit Schalter):** Auch die Relegation (ohne `wb`) wurde rotiert, die Vorschau zeigte die volle Elf. Jetzt nicht bei `o.wichtig`. | ✅ behoben |
+| FU3 | **Niedrig:** FT2 griff im Spiel kaum, weil das Versprechen bis zur Entscheidung offen bleibt. Jetzt kostet das Zurücknehmen auch nichts, wenn der Spieler nicht mehr bei dir ist. | ✅ behoben |
+| FU4 | **Niedrig, Doku:** K18i wirkt nur auf die Stärke, das Talent bei Talentlücken sehen die Vereine genau. So festgehalten (K18, Regeln). | ✅ behoben |
+| FU5 | **Niedrig, Test:** Der Teil „dein Verein ohne Automatik“ im Test K10f war immer grün. Jetzt mit Belastung und mit dem Fall unter der Automatik. | ✅ behoben |
+| FU6 | **Niedrig, Doku:** K10f verwies auf K10 §5 statt §7. Berichtigt. | ✅ behoben |

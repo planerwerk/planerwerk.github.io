@@ -89,7 +89,7 @@ function einsatzBuchen(list,d=S.tag){const tabs={},heute=absTag(d);
     [0,1].forEach(s=>{const tid=s?r.a:r.h,t=S.teams[tid];if(tid>=1000||!t)return;const sq=squad(tid),xi=new Set(r.xi[s]||[]);
       const c={r,t,sq,xi,pokal,heute,tore,mein:tid===S.my,min:new Map(r.xpo[s].map(x=>[x[0],x[3]==null?90:x[3]])),kader:r.bk&&r.bk[s]?new Set([...xi,...r.bk[s]]):null,
         fehlt:new Map((r.na&&r.na[s])||[]),rein:new Map(ws.filter(w=>w[0]===s).map(w=>[w[3],w[1]])),raus:new Map(ws.filter(w=>w[0]===s).map(w=>[w[2],w[1]])),verl:new Set((r.inj||[]).map(x=>x.id)),
-        englisch:S.plan?englischeWoche(tid,d):false,rotAn:t.rotAn&&heute<=t.rotAn.bis?t.rotAn.f:0,egal:false};
+        englisch:S.plan?englischeWoche(tid,d):false,rotAn:t.rotAn&&heute<=t.rotAn.bis?t.rotAn.f:0,egal:false,geschont:new Set(((r.gs||[])[s])||[])}; /* geschont nach Saisonbelastung (K10f, Prüfung FU1) */
       if(r.lg&&S.res&&S.res[r.lg])c.egal=saisonEntschieden(t,tabs[r.lg]||(tabs[r.lg]=table(r.lg)));
       sq.forEach(p=>bankFall(p,c));if(neubeginn(tid)&&S.neubeginn.rest!=null)S.neubeginn.rest--; /* Neubeginn zählt Pflichtspiele (Prüfung FM5) */
       // Wer wie oft in Folge im Tor stand (Torwart-Duell)
@@ -123,6 +123,7 @@ function bankFall(p,c){const B=RKA.bank,t=c.t,gespielt=c.min.has(p.id),m=c.min.g
     else if(p.rue&&!(diva>1&&riv))entschuldigt('aufbau');
     else if(rolle==='pokal'&&!c.pokal)entschuldigt('pokal');
     else if(istPate(p))entschuldigt('mentor');
+    else if(c.geschont&&c.geschont.has(p.id))entschuldigt('rotation'); /* vom Stab nach Saisonbelastung geschont (K10f, Prüfung FU1) */
     else if(ersatzTorwart(p))grund='tw2';
     else if(unerf){grund='unerfahren';if(imKader)stimmungAendern(p,B.unerfahren.kader);}
     else if(stammA(p)&&(c.rotAn>0||p.fit<B.frischeUnter||c.englisch)&&p.bnk<=(c.rotAn>0?B.rotationAngekuendigt:B.rotationReihe)){entschuldigt('rotation');if(c.rotAn>0)stimmungAendern(p,B.angekuendigt*c.rotAn);}

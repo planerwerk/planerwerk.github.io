@@ -225,5 +225,12 @@ const bankWelt=()=>{const w=welt(),{S,F,ev}=w;F.englischeWoche=()=>false;const s
   const hat=()=>gr(S.my).some(g=>l.every(p=>g.includes(p)));const ohne=!hat();I.an=true;const mit=hat()&&!gr(S.my).some(g=>g.includes(d));l[2].de=G.spracheBis;const gutDeutsch=!hat();I.an=false;
   pruef(ohne&&mit&&gutDeutsch,'Sprachgrüppchen: Landsleute mit wenig Deutsch und schlechter Stimmung, nur mit Schalter',`ohne Schalter ${ohne}, mit ${mit}, mit gutem Deutsch ${gutDeutsch}`);}
 
+// Prüfung FU1 (K10f): Wer vom Stab nach Saisonbelastung geschont wurde (gs im Ergebnis), dessen Bankplatz zählt nicht, auch mit voller Frische (Grund „rotation“);
+//       ohne den Vermerk zählt derselbe Bankplatz wie bisher.
+{const {S,F,sq,xi,rest}=bankWelt(),p=sq.find(q=>xi.includes(q.id)&&q.pos==='MF'),ers=rest.find(q=>q.pos==='MF'),ohneP=xi.map(x=>x===p.id?ers.id:x);p.fit=100;const ea0=p.ea;
+  const r=spiel(S.my,ohneP,{bank:[p.id]});r.gs=[[p.id],[]];F.einsatzBuchen([r],S.tag);const geschont=p.bg==='rotation'&&p.ea===ea0;
+  F.einsatzBuchen([spiel(S.my,ohneP,{bank:[p.id]})],S.tag);const sonst=p.ea<ea0;
+  pruef(geschont&&sonst,'Rotation nach Saisonbelastung: der Geschonte verliert keine Einsatzzeit, ohne Vermerk zählt die Bank',`geschont ${geschont} (${p.bg}), ohne Vermerk ${sonst}`);}
+
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

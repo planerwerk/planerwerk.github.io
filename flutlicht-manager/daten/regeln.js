@@ -416,9 +416,9 @@ const REGELN={
       grenze:20,schonfrist:6,ultimatumSpiele:2,entlassung:{basis:0.9,jeGeduld:-0.03},saisonWeitAb:3,saisonUnter:30,saisonZurueck:0.5,schub:5,protokoll:200},
     aktivJeWoche:0.5,schaetzFehler:2,
     // unsicherheit (K18 §7, K18i, 25.11., popolupo, vorläufig, Schalter aus): Computer-Vereine sehen fremde Spieler unscharf, Streuung basis − jeScout × Qualität des besten Scouts,
-    // mindestens min; fest aus dem Seed je Verein, Spieler und Saison. Wirkt auf Auswahl und Grenzen beim Kauf (kiKandidat, kiStern), nicht auf den Preis.
+    // mindestens min; fest aus dem Seed je Verein, Spieler und Saison. Wirkt auf Auswahl und Grenzen beim Kauf (kiKandidat, kiStern), nicht auf den Preis. Nur die Stärke, das Talent bei Talentlücken bleibt genau (Prüfung FU4).
     unsicherheit:{an:false,basis:4,jeScout:0.15,min:1},
-    // belastungRotation (K10 §5, K14 §12, K10f, 25.11., popolupo, vorläufig, Schalter aus): im Ligaspiel schont ein Verein unter dem Stab Feldspieler ab Saisonbelastung ab mit chance
+    // belastungRotation (K10 §7, K14 §12, K10f, 25.11., popolupo, vorläufig, Schalter aus): im Ligaspiel schont ein Verein unter dem Stab Feldspieler ab Saisonbelastung ab mit chance
     // je Spiel (fest aus dem Seed), höchstens max, solange minKader Einsatzfähige mit Torwart bleiben
     belastungRotation:{an:false,ab:70,chance:0.35,max:2,minKader:14},
     fuellen:{fenster:0,vereinslosBis:4,vereinslosChance:0.6}}, // fenster: Nummer des Fensters in transfers.fenster, an dessen Ende aufgefüllt wird (0 = Sommer)

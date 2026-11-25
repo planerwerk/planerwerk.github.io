@@ -145,17 +145,20 @@ pruef(supercups.length===N-1&&supercups.every(x=>!x.verl&&(x.hg!==x.ag)===!x.pen
   pruef(aus&&ohneMuede&&ohneVerletzte&&ohneTw&&spaet&&liga&&gleich&&ohneAuto&&mitAuto&&runde,'Pokal-Rotation der Favoriten: nur mit Schalter, früh im Pokal gegen Schwächere ohne die Müden, nur Einsatzfähige, dein Verein nur mit Automatik',
     `aus ${aus}, ohne Müde ${ohneMuede}, ohne Verletzte ${ohneVerletzte}, ohne Torwart ${ohneTw}, spätere Runde ${spaet}, Liga ${liga}, gleich stark ${gleich}, dein Verein ohne/mit Automatik ${ohneAuto}/${mitAuto}, Anschluss ${runde}`);}
 
-// K10f. Rotation nach Saisonbelastung (K10 §5, K14 §12), nur mit Schalter: Im Ligaspiel fehlen die höchstens max am stärksten belasteten Feldspieler ab ab (hier mit chance 1),
-//       der Torwart nie; nicht im Pokal, nicht im Testspiel, dein Verein nur unter der Automatik. Die Engine nimmt rotationKader (Pokal zuerst, dann Belastung).
+// K10f. Rotation nach Saisonbelastung (K10 §7, K14 §12), nur mit Schalter: Im Ligaspiel fehlen die höchstens max am stärksten belasteten Feldspieler ab ab (hier mit chance 1),
+//       der Torwart nie; nicht im Pokal, nicht im Testspiel, nicht in der Relegation (o.wichtig, FU2), dein Verein nur unter der Automatik (FU5). Die Geschonten stehen am Kader
+//       (geschont) und im Ergebnis (gs, FU1). Die Engine nimmt rotationKader (Pokal zuerst, dann Belastung).
 {const {W:WB,F:FB}=neueWelt();FB.buildWorld(SEED);const SB=WB.S,ev=WB.ev,R=ev('RCV').belastungRotation,br=ev('belastungRotationKader'),c0=R.chance;SB.my=6;
-  const t=SB.teams.find(x=>x.id!==6&&x.lg===1),sq=ev('squad')(t.id);sq.forEach(p=>{p.inj=0;p.sb=0;delete p.sperre;p.sus=0;delete p.lsp;});
-  const feld=sq.filter(p=>p.pos!=='TW'),tw=sq.find(p=>p.pos==='TW');feld.slice(0,3).forEach((p,i)=>{p.sb=R.ab+10-i;});tw.sb=R.ab+20;const o={wb:'liga'},tag=SB.tag+3;
-  const aus=br(t.id,o,tag)===undefined;R.an=true;R.chance=1;const k=br(t.id,o,tag),ohne=!!k&&!k.includes(feld[0])&&!k.includes(feld[1])&&(R.max>2||k.includes(feld[2]))&&k.includes(tw)&&k.length===sq.length-Math.min(R.max,3);
-  const pokal=br(t.id,{wb:'pokal',runde:0},tag)===undefined,test=br(t.id,{wb:'liga',test:1},tag)===undefined,meinOhne=br(6,o,tag)===undefined;
+  const frisch=id=>{const l=ev('squad')(id);l.forEach(p=>{p.inj=0;p.sb=0;delete p.sperre;p.sus=0;delete p.lsp;});return l;},belaste=l=>{const f=l.filter(p=>p.pos!=='TW');f.slice(0,3).forEach((p,i)=>{p.sb=R.ab+10-i;});return f;};
+  const t=SB.teams.find(x=>x.id!==6&&x.lg===1),sq=frisch(t.id),feld=belaste(sq),tw=sq.find(p=>p.pos==='TW');tw.sb=R.ab+20;const o={wb:'liga'},tag=SB.tag+3;
+  const aus=br(t.id,o,tag)===undefined;R.an=true;R.chance=1;const k=br(t.id,o,tag),ohne=!!k&&!k.includes(feld[0])&&!k.includes(feld[1])&&(R.max>2||k.includes(feld[2]))&&k.includes(tw)&&k.length===sq.length-Math.min(R.max,3)
+    &&k.geschont.includes(feld[0].id)&&k.geschont.includes(feld[1].id);
+  const pokal=br(t.id,{wb:'pokal',runde:0},tag)===undefined,test=br(t.id,{wb:'liga',test:1},tag)===undefined,rel=br(t.id,{wichtig:true},tag)===undefined;
+  belaste(frisch(6));const meinOhne=br(6,o,tag)===undefined;FB.lizenzStart(true);SB.lizenz.auto.aufstellung=true;const meinMit=ev('autoB')('aufstellung')&&!!br(6,o,tag);delete SB.lizenz;
   sq.forEach(p=>{p.sb=0;});const niemand=br(t.id,o,tag)===undefined;R.chance=c0;R.an=false;
-  const anschluss=String(ev('spielAufbau')).includes('rotationKader(hid,aid,o,tag)');
-  pruef(aus&&ohne&&pokal&&test&&meinOhne&&niemand&&anschluss,'Rotation nach Saisonbelastung: nur mit Schalter, im Ligaspiel die am stärksten belasteten Feldspieler, nicht im Pokal oder Testspiel, dein Verein nur mit Automatik',
-    `aus ${aus}, ohne die Belasteten ${ohne}, Pokal ${pokal}, Testspiel ${test}, dein Verein ohne Automatik ${meinOhne}, ohne Belastete ${niemand}, Anschluss ${anschluss}`);}
+  const sa=String(ev('spielAufbau')),anschluss=sa.includes('rotationKader(hid,aid,o,tag)')&&sa.includes('gs:G.geschont');
+  pruef(aus&&ohne&&pokal&&test&&rel&&meinOhne&&meinMit&&niemand&&anschluss,'Rotation nach Saisonbelastung: nur mit Schalter, im Ligaspiel die am stärksten belasteten Feldspieler, nicht im Pokal, Testspiel oder in der Relegation, dein Verein nur mit Automatik',
+    `aus ${aus}, ohne die Belasteten ${ohne}, Pokal ${pokal}, Testspiel ${test}, Relegation ${rel}, dein Verein ohne/mit Automatik ${meinOhne}/${meinMit}, ohne Belastete ${niemand}, Anschluss ${anschluss}`);}
 
 // K13k. Turniere im Sommer (K13 §3.4), nur mit Länderspielen: im EM-Jahr fehlen Spieler europäischer Nationen bis nach dem Trainingsauftakt, mit 3 bis 7 Spielen und
 //       Saisonbelastung; im Jahr ohne Turnier und ohne Schalter nichts; im WM-Jahr eine Meldung zur WM. Aufruf beim Saisonwechsel vor der Aufstellung.

@@ -794,7 +794,9 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   p.st=50;const g0=gl(),ww0=p.ww||0;if(b)c.optionen[0].wirkung.forEach(w=>ev('kartenWirkung')(w,b,c));
   const zurueck=v.stand==='hinfaellig'&&p.st===45&&gl()===g0-3&&(p.ww||0)===ww0&&A.versprechenKippt()===null;
   /* Prüfung FT2: Hat sich das Versprechen bis zur Entscheidung schon erledigt (etwa durch einen Verkauf), kostet das Zurücknehmen nichts */
-  const st1=p.st,g1=gl();if(b)c.optionen[0].wirkung.forEach(w=>ev('kartenWirkung')(w,b,c));const umsonst=p.st===st1&&gl()===g1;S.vs=[];
-  pruef(ohne&&frisch&&ja&&zurueck&&umsonst,'Versprechen kippt: Karte nur, wenn das Versprechen kaum noch zu halten ist; zurücknehmen kostet weniger als brechen, erledigt nichts',`ohne ${ohne}, frisch ${frisch}, kippt ${ja}, zurückgenommen ${zurueck} (${v.stand}, Stimmung ${p.st}), schon erledigt ${umsonst}`);}
+  const st1=p.st,g1=gl();if(b)c.optionen[0].wirkung.forEach(w=>ev('kartenWirkung')(w,b,c));const umsonst=p.st===st1&&gl()===g1;
+  /* Prüfung FU3: ist der Spieler nicht mehr bei dir (verkauft), kostet das Zurücknehmen nichts */
+  const v2=ev('versprechenAnlegen')(p,'einsatz');v2.spiele=v2.n-1;v2.min=0;const t0=p.team;p.team=S.teams.find(x=>x.id!==S.my).id;const g2=gl();c.optionen[0].wirkung.forEach(w=>ev('kartenWirkung')(w,{spieler:p.id,vid:v2.id},c));const verkauft=gl()===g2&&v2.stand==='offen';p.team=t0;S.vs=[];
+  pruef(ohne&&frisch&&ja&&zurueck&&umsonst&&verkauft,'Versprechen kippt: Karte nur, wenn das Versprechen kaum noch zu halten ist; zurücknehmen kostet weniger als brechen, erledigt nichts',`ohne ${ohne}, frisch ${frisch}, kippt ${ja}, zurückgenommen ${zurueck} (${v.stand}, Stimmung ${p.st}), schon erledigt ${umsonst}, verkauft ${verkauft}`);}
 
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);
