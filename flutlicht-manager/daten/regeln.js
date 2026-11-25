@@ -1047,7 +1047,7 @@ const REGELN={
     verletztFrische:30,              // ein verletzter Spieler humpelt bis zum Wechsel (Frische höchstens 30)
     zurufe:{dauer:10,abnutzungMinuten:15,druck:{angriff:1.08,abwehr:0.97,frische:1.2},ruhe:{abwehr:1.03,angriff:0.95,fouls:0.85},konzentration:{patzer:0.7},
       zeit:{angriffe:0.8,gelb:3,gelbJeMinute:0.002},spieler:{sv:0.3,wirkung:0.02,hitzkopfFouls:1.5}},
-    ansprache:{loben:{sv:0.3},motivieren:{wirkung:0.02},fordern:{kaempfer:0.03,empfindlich:-0.02},beruhigen:{fouls:0.8,patzer:0.8},augenzwinkernd:{wirkung:0.01},unpassend:-0.5,abnutzungSpiele:3},
+    ansprache:{loben:{sv:0.3},motivieren:{wirkung:0.02},fordern:{kaempfer:0.03,empfindlich:-0.02},beruhigen:{fouls:0.8,patzer:0.8},augenzwinkernd:{wirkung:0.01},unpassend:-0.5,abnutzungSpiele:3,wirkt:{ab:2,glaub:1}}, // wirkt (K05 §8, K05g, 25.11., popolupo, vorläufig): nach „Fordern“ die zweite Halbzeit um ab Tore besser als die erste: Glaubwürdigkeit + glaub
     ki:{muedeUnter:65,wechselVon:55,wechselBis:86,chanceJeMinute:0.13,frischAb:58,frischUnter:93,toleranz:6,gelbAb:60,jeGelegenheit:2,rueckstandAb:60,alleNachVorn:80,fuehrungAb:75},
     druckleiste:{minuten:5,gross:3,halb:1,ecke:0.5}},
   // Schwierigkeit (K02 §5.4): ändert nur Bedingungen, Information und Hilfen. Werte und Würfel im Spiel sind auf allen Stufen gleich.

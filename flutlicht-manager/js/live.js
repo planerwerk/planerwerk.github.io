@@ -78,10 +78,14 @@ function liveSteuer(){const L=LIVE,el=document.getElementById('lv-steuer');if(!e
     ${protestOffen(L)?`<button onclick="liveProtest()"${lzAus('zurufe')} title="Weckt die Mannschaft auf, kann dir Gelb bringen">Protestieren</button>`:''}
     ${L.G.m<45?`<button onclick="liveSpulen('hz')">Bis zur Halbzeit</button>`:''}<button onclick="liveBisEnde()">${L.G.elf?'Alle Elfmeter':'Zum Abpfiff'}</button>`;}
 function liveAbpfiff(){const L=LIVE;if(!L||L.ende)return;liveStop();L.ende=true;const G=L.G;L.meldung=G.pen?`Elfmeterschießen ${G.pen[0]}:${G.pen[1]}.`:'Abpfiff.';liveRender();liveSteuer();}
+// Ansprache wirkt (K05 §8, K05g, 25.11., popolupo, vorläufig): Nach deinem „Fordern“ in der Pause ist die Tordifferenz deiner Mannschaft in der zweiten Halbzeit
+// (Minute 46 bis 90) um mindestens RL.ansprache.wirkt.ab besser als in der ersten: Meldung, Glaubwürdigkeit + wirkt.glaub. Nur im Live-Spiel und nur deine eigene Ansprache.
+function anspracheWirkt(L){const W=RL.ansprache.wirkt;if(!W||!L||L.ansprache!=='fordern'||!L.G)return false;const dif=(von,bis)=>(L.G.ev||[]).filter(e=>e.t==='G'&&e.m>=von&&e.m<=bis).reduce((a,e)=>a+(e.s===L.s?1:-1),0);
+  const d1=dif(0,45),d2=dif(46,90);if(d2-d1<W.ab)return false;glaubAendern(W.glaub);news('Die Ansprache hat gewirkt: Nach deiner deutlichen Pausenrede war die Mannschaft in der zweiten Halbzeit nicht wiederzuerkennen.','good');return true;}
 // Ergebnis eintragen und den Tag abschließen
-function liveWeiter(){const L=LIVE;if(!L||!L.ende)return;BUSY=true;let out=null;
+function liveWeiter(){const L=LIVE;if(!L||!L.ende)return;BUSY=true;let out=null;const co=!!(S.live&&S.live.anspCo);
   try{liveEintragen(L.v);S.live=null;if(!L.vorgespult)aufgabe('liveBisEnde');out=tagesSpieleAbschliessen(L.v.out);LAST=out;
-    if(L.ansprache){const T=myT();T.ansp=[...(T.ansp||[]),L.ansprache].slice(-RL.ansprache.abnutzungSpiele);if(L.anspPasst!=null)halbzeitGlaub(L.anspPasst);}save();}
+    if(L.ansprache){const T=myT();T.ansp=[...(T.ansp||[]),L.ansprache].slice(-RL.ansprache.abnutzungSpiele);if(L.anspPasst!=null)halbzeitGlaub(L.anspPasst);if(!co)anspracheWirkt(L);}save();}
   catch(e){console.error(e);toast('Fehler: '+e.message);}finally{BUSY=false;}
   LIVE=null;closeOv();weiterUI();}
 
