@@ -305,6 +305,10 @@ const KARTEN=[
     optionen:[{text:'Geldstrafe verhängen',wirkung:[{art:'geld',wert:5000},{art:'stimmung',wert:-3},{art:'glaub',wert:1}],folge:'{spieler} zahlt und entschuldigt sich vor der Mannschaft.'},
       {text:'Unter vier Augen reden',wirkung:[{art:'stimmung',wert:-1}],folge:'{spieler} verspricht, sich für den Rest des Lagers zurückzuhalten.'},
       {text:'Ignorieren',wirkung:[{art:'glaub',wert:-1},{art:'zusammenhalt',wert:-1}],folge:'Die anderen haben genau hingesehen.'}],auto:1},
+  // Deadline-Day-Krimi (K20 §8, K20f, 25.11., popolupo, vorläufig): Folgekarte aus deadlineKrimi am letzten Fenstertag, ein Angebot über dem Marktwert, das nur heute gilt.
+  {id:'deadlineKrimi',titel:'Deadline-Day-Krimi',bereich:'K20',art:'info',stufe:'haeufig',nurKette:true,ausSpiel:true,ausloeser:'deadlineKrimi',sperrTage:60,immer:true,
+    texte:['Am letzten Tag des Fensters klingelt das Telefon: {verein} will {spieler} und bietet deutlich über dem Marktwert. Das Angebot gilt nur bis heute Abend.','Deadline Day: {verein} meldet sich in letzter Minute und will {spieler} unbedingt. Bis Mitternacht musst du dich entscheiden.'],
+    wirkung:[{art:'angebot',wert:1.25,heute:1}]},
   // Freier Nachmittag im Lager (K11 §12 Nr. 11, K11j, 25.11., popolupo, vorläufig): am 3. Lagertag eines Lagers ab 7 Tagen (seit Prüfung FP7), einmal je Lager, Folgekarte aus dem Tageslauf.
   {id:'lagerFreizeit',titel:'Freier Nachmittag im Lager',bereich:'K11',art:'entscheidung',gross:false,stufe:'haeufig',nurKette:true,ausSpiel:true,ausloeser:'lagerFreizeit',sperrTage:30,
     texte:['Im Plan des Trainingslagers ist heute Nachmittag eine Lücke. Der Co-Trainer fragt, was ihr daraus macht.','Halbzeit im Trainingslager. Die Spieler hoffen auf einen freien Nachmittag, der Athletiktrainer hätte gern noch eine Einheit.'],

@@ -758,4 +758,14 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   p.age=W.alter+1;const alt=A.wunderkind()===null;p.age=W.alter;p.apps=W.spiele-1;const wenig=A.wunderkind()===null;p.apps=W.spiele;p.inj=5;const verl=A.wunderkind()===null;Object.assign(p,m0);p.eig=[];
   pruef(ohne&&ja&&alt&&wenig&&verl,'Skandal um das Wunderkind: nur ein junges Talent mit Einsätzen, das ein Partylöwe ist',`ohne Partylöwe ${ohne}, Treffer ${ja}, zu alt ${alt}, zu wenig Einsätze ${wenig}, verletzt ${verl}`);}
 
+// K20f. Deadline-Day-Krimi (K20 §8): Am Tag vor dem letzten Fenstertag legt deadlineKrimi (Chance für den Test 1) eine Folgekarte für den letzten Tag; ihr Auslöser gilt
+//       nur an diesem Tag; die Wirkung legt ein Angebot über dem Marktwert, das nur heute gilt; unter der Transfer-Automatik nichts.
+{const {S,F,ev}=welt(),K=ev('RAW').deadline.krimi,c0=K.chance,A=ev('AUSLOESER'),letzter=ev('deadlineLetzter'),abs=ev('absTag'),n=()=>((ev('karten')().kette)||[]).filter(x=>x.id==='deadlineKrimi');
+  let d=1;while(d<S.plan.ende&&!letzter(d))d++;S.phase='play';S.offers=[];S.teams.forEach(t=>{if(t.id!==S.my)t.cash=Math.max(t.cash,1e9);});K.chance=1;S.tag=d-1;F.deadlineKrimi(d-1);
+  const k=n(),gelegt=k.length===1&&k[0].tag===abs(d),b=gelegt?k[0].b:null,vorher=!!b&&A.deadlineKrimi(b)===null;S.tag=d;const amTag=!!b&&A.deadlineKrimi(b)===b;let angebot=false;
+  if(b){ev('kartenWirkung')({art:'angebot',wert:1.25,heute:1},b,{titel:'Test'});const o=S.offers[0],p=ev('PIX').get(b.spieler);angebot=!!o&&o.bis===S.tag&&o.tid===b.verein&&o.amt===ev('rundeAb')(ev('value')(p)*1.25);}
+  ev('karten')().kette=[];S.offers=[];F.lizenzStart(true);S.lizenz.auto.transfers=true;S.tag=d-1;F.deadlineKrimi(d-1);const auto=ev('autoB')('transfers')&&n().length===0;delete S.lizenz;K.chance=c0;
+  pruef(d<S.plan.ende&&gelegt&&vorher&&amTag&&angebot&&auto,'Deadline-Day-Krimi: Folgekarte für den letzten Fenstertag, Angebot nur für heute, nicht unter der Automatik',
+    `letzter Tag ${d}, gelegt ${gelegt}, vorher ${vorher}, am Tag ${amTag}, Angebot ${angebot}, Automatik ${auto}`);}
+
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

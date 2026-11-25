@@ -461,6 +461,7 @@ lizenz:{
 218. **K03f Der Hitzkopf und der Schiedsrichter (25.11., popolupo, ohne Testlauf):** keine neue Funktion, eine Ereigniskarte (Bereich `ereignisse`); unter dessen Automatik verhängt der Co-Trainer eine interne Geldstrafe.
 219. **K03g Eigenschaft entdeckt (25.11., popolupo, ohne Testlauf):** keine neue Funktion, nur eine Meldung.
 220. **K08d Skandal um das Wunderkind (25.11., popolupo, ohne Testlauf):** keine neue Funktion, eine Ereigniskarte (Bereich `ereignisse`); unter dessen Automatik schirmt der Co-Trainer den Spieler ab.
+221. **K20f Deadline-Day-Krimi (25.11., popolupo, ohne Testlauf):** keine neue Funktion, ein Angebot im Büro (Bereich `transfers`); unter der Transfer-Automatik kommt es nicht.
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 

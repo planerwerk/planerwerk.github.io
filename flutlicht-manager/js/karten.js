@@ -122,6 +122,7 @@ const AUSLOESER={
   lagerkoller(b){const l=lagerAktiv(S.tag);return b&&l&&l.von===b.lager&&S.tag<l.bis?b:null;},
   nachtleben(b){const l=lagerAktiv(S.tag),p=b&&b.spieler!=null?PIX.get(b.spieler):null;return b&&l&&l.von===b.lager&&p&&p.team===S.my?b:null;}, /* b&& seit Prüfung EV5 */
   lagerFreizeit(b){const l=lagerAktiv(S.tag);return b&&l&&l.von===b.lager&&S.tag<l.bis?b:null;}, /* K11j: am selben Tag aus lagerTag */
+  deadlineKrimi(b){const p=b&&PIX.get(b.spieler),t=b&&S.teams[b.verein];return p&&p.team===S.my&&!p.wech&&t&&aktiv(t)&&deadlineLetzter()?b:null;}, /* K20f: am letzten Fenstertag, der Spieler noch bei dir */
   // Manipulation in der 3. Liga fliegt auf (K30 §8.4, K30g): ein Spieler eines Computer-Vereins der 3. Liga (keine zweite Mannschaft, nicht verliehen, kein vereinbarter Wechsel)
   // Prüfung ER1: nicht mehr nach dem letzten Spieltag (sonst zwischen den Relegationsspielen), ER2: höchstens einmal in RKT.skandal.abstand Saisons (S.skandal3)
   manipulation3(){if(ligaFertig(3)||(S.skandal3!=null&&S.season-S.skandal3<RKT.skandal.abstand))return null;const l=S.pl.filter(p=>{const t=p.team>=0&&p.team<1000?S.teams[p.team]:null;return t&&t.id!==S.my&&t.lg===3&&!(t.zweite>=0)&&aktiv(t)&&!p.leihe&&!p.wech&&!p.zwP;});const p=l.length?pick(l):null;return p?{spieler:p.id,verein:p.team}:null;},
@@ -349,7 +350,7 @@ function kartenWirkung(w,b,c){let wert=w.wert,txt='',erfolg=true;if(w.chance!=nu
   else if(w.art==='interesse'){if(p)p.rkI={s:S.season,v:wert};}
   else if(w.art==='maezen')S.maezen=S.season; // K23e: Präsident mischt sich bis Saisonende ein
   else if(w.art==='merch')mkS().extra={bis:absTag(S.tag)+RMK.karte.merchTage,f:wert}; // K25b: Fanartikel-Erlös für einige Wochen höher
-  else if(w.art==='angebot'){if(p&&p.team===S.my&&b.verein!=null&&!S.offers.some(o=>o.pid===p.id&&o.tid===b.verein)){const v=value(p);S.offers.push({pid:p.id,tid:b.verein,amt:rundeAb(v*wert),max:rundeAb(v*(wert+0.2)),r:0,bis:S.tag+RK.angebotTage});}}
+  else if(w.art==='angebot'){if(p&&p.team===S.my&&b.verein!=null&&!S.offers.some(o=>o.pid===p.id&&o.tid===b.verein)){const v=value(p);S.offers.push({pid:p.id,tid:b.verein,amt:rundeAb(v*wert),max:rundeAb(v*(wert+0.2)),r:0,bis:w.heute?S.tag:S.tag+RK.angebotTage});}} /* heute: gilt nur heute (K20f) */
   else if(w.art==='jobwechsel'){if(b.verein!=null)karteJobwechsel(b.verein);} /* U12j: nur über deine Wahl, die Voreinstellung bleibt */
   else if(w.art==='talent'){if(wert>0){jugendKader();const q=jugendNeu(wert);q.age=RKT.jugend.alter;eigenschaftenNeu(q);S.jg.push(q);PIX.set(q.id,q);news(`${q.n} (${q.pos}, ${q.age}) kommt nach dem Probetraining in deine Jugend.`,'good');}} /* K08b: neues Talent mit Plus wert */
   else if(w.art==='jugendHoch'){if(p&&istJugend(p)&&(S.jg||[]).includes(p)){if(squad(S.my).length>=RM.kaderMax)news(`Im Kader ist kein Platz, ${p.n} bleibt vorerst in der Jugend.`,'');else{jugendHoch(p);news(`${p.n} unterschreibt seinen ersten Profivertrag.`,'good');}}} /* K08c */

@@ -38,7 +38,13 @@ function abwKarte(p){if(!abwerbbar(p))return'';const a=abwVon(p),g=abwGrund(p),b
 const deadlineTage=(d=S.tag)=>fensterOffen(d)&&!fensterOffen(d+RAW.deadline.tage);
 const deadlineLetzter=(d=S.tag)=>fensterOffen(d)&&!fensterOffen(d+1);
 // Täglich (ablauf.js taeglichLauf): am letzten Tag ein zusätzlicher Markttag der Computer-Vereine
-function deadlineTag(d){if(S.phase!=='play'||!deadlineLetzter(d))return;mitStrom(strom('deadline',S.season,d),market);news('Deadline Day: Heute schließt das Transferfenster. Die Vereine machen noch schnell Geschäfte.','tr');}
+function deadlineTag(d){deadlineKrimi(d);if(S.phase!=='play'||!deadlineLetzter(d))return;mitStrom(strom('deadline',S.season,d),market);news('Deadline Day: Heute schließt das Transferfenster. Die Vereine machen noch schnell Geschäfte.','tr');}
+// Deadline-Day-Krimi (K20 §8, K20f, 25.11., popolupo, vorläufig): Am Tag vor dem letzten Fenstertag legt das Spiel mit krimi.chance eine Folgekarte für den letzten Tag
+// (Folgekarten kommen am Morgen, vor dem Markt): Ein deutscher Computer-Verein mit Bedarf und Geld bietet in letzter Minute krimi.faktor des Marktwerts für einen wichtigen
+// Spieler deines Kaders (Stärke ab deinem Niveau − staerkeUnter), das Angebot gilt nur an diesem Tag. Nicht unter der Transfer-Automatik (Gleichschritt 5a). Eigener Strom.
+function deadlineKrimi(d){const K=RAW.deadline.krimi;if(!K||S.phase!=='play'||S.fired||!deadlineLetzter(d+1)||!fensterOffen(d)||autoB('transfers'))return;
+  mitStrom(strom('deadlineKrimi',S.season,d),()=>{if(R()>=K.chance)return;const lvl=teamLevel(S.my),l=squad(S.my).filter(p=>!p.wech&&!istLeihe(p)&&!(p.inj>0)&&p.str>=lvl-K.staerkeUnter&&!S.offers.some(o=>o.pid===p.id));if(!l.length)return;
+    const p=pick(l),v=value(p),B=S.teams.filter(t=>t.id!==S.my&&aktiv(t)&&!kiTransferSperre(t)&&t.cash>v*K.faktor&&hatBedarf(t,p));if(!B.length)return;kartenKetteHeute('deadlineKrimi',{spieler:p.id,verein:pick(B).id},d+1);});}
 function deadlineKarte(){if(S.phase!=='play'||!deadlineTage())return'';const e=fensterEnde(),soll=RS.kaderSoll,sq=squad(S.my),fehlt=Object.keys(soll).map(pos=>[pos,soll[pos]-sq.filter(p=>p.pos===pos).length]).filter(x=>x[1]>0);
   const v=Object.entries(S.verh||{}).map(([id,x])=>[PIX.get(+id),x]).filter(([p,x])=>p&&p.team===x.team&&p.team!==S.my&&(gegenGilt(x)||(x.einig&&x.einig.bis>=S.tag)));
   return`<div class="card"><h3>Deadline Day</h3><p>Das Transferfenster schließt am ${esc(datumKurz(e))}. Danach gelten Einigungen erst ab dem nächsten Fenster.</p><p class="dim">Bis dahin schwanken die Forderungen der Vereine täglich um bis zu ±${Math.round(RAW.deadline.preis*100)} %, wer auf ihrer Transferliste steht, ist billiger. Für deine Spieler auf der Transferliste kommen öfter Angebote.</p><ul>

@@ -150,6 +150,8 @@ Keine Geldstrafe, kein Verbandsverfahren.
 | Deadline-Day-Krimi | Angebot in den letzten Stunden | Entscheidung mit kurzer Frist |
 | Der lachende Dritte | Kette aus K30 §8.3 | Variante „Treffen“ jetzt möglich |
 
+**„Deadline-Day-Krimi“ gebaut als K20f** (25.11.2026, popolupo, ohne Testlauf, vorläufig): Am Tag vor dem letzten Fenstertag legt das Spiel mit 40 % (eigener Strom) eine Folgekarte für den letzten Tag. Ein deutscher Computer-Verein mit Bedarf und genug Geld bietet in letzter Minute das 1,25-Fache des Marktwerts für einen wichtigen Spieler deines Kaders (Stärke ab deinem Niveau − 3). Das Angebot liegt wie jedes andere im Büro, gilt aber nur an diesem Tag (neue Option `heute` der Kartenwirkung `angebot`). Nicht unter der Transfer-Automatik, damit der Gleichschritt bleibt. Werte in `REGELN.abwerben.deadline.krimi`.
+
 ## 9. Wechselwirkungen
 
 K14 (Wechselwunsch, Stimmung), K15 (zur Rede stellen), K17 (Beziehung, Klatsch), K19 (Transfer nach erfolgreichem Abwerben), K22 (Berater), K27 (Fans), K28 (Vorstand), K29 (Gerüchte), K30 (lachender Dritter), K31 (Bedarf am Deadline Day).
