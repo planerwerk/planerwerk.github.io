@@ -290,6 +290,10 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 25.11.2026: W5d2 Großbuchstaben der eigenen Schrift (Zweig `mitarbeit/popolupo-w5d-schrift`)
+
+- **Neu:** A bis Z mit Ä, Ö, Ü in `schrift/schrift.pl` (48 Zeichen, 10 KB). Zweite Schriftfamilie „Flutlicht Versal“ in `css/schrift.css` (dieselbe Datei, unicode-range mit Großbuchstaben), genutzt für die Hauptknöpfe (`.go`) und den Titel (`.logo`), die ohnehin in Versalien stehen. Sonst bleiben Buchstaben aus Saira Condensed, bis es Kleinbuchstaben gibt.
+
 ### 25.11.2026: W5d1 eigene Anzeigeschrift, Ziffern (Zweig `mitarbeit/popolupo-w5d-schrift`, auf W5c1 und der Korrektur FV)
 
 - **Weckruf:** kein neuer Testlauf (Testprotokoll weiter bei Lauf 8). Nur Oberfläche, keine Spielregel.

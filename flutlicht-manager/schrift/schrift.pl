@@ -9,7 +9,8 @@
 # Bögen zu Ringstücken (quadratische Kurven, höchstens 45 Grad je Stück). An Ecken kommt eine Gehrung dazu, bis zum Zweifachen der halben
 # Strichstärke, sonst eine abgeschrägte Ecke (wie stroke-miterlimit 2). Freie Enden sind stumpf. Die Flächen dürfen sich überlappen:
 # TrueType füllt nach der Nonzero-Regel, das erste Flag jedes Zeichens trägt OVERLAP_SIMPLE.
-# Umfang W5d1: Ziffern und Zeichen für Zahlen. Buchstaben folgen (W5d2), bis dahin kommen sie aus Saira Condensed (unicode-range im CSS).
+# Umfang: Ziffern und Zeichen für Zahlen (W5d1), Großbuchstaben mit Ä Ö Ü (W5d2). Kleinbuchstaben folgen (W5d3); bis dahin gelten die
+# Buchstaben nur für Text in Versalien (Familie "Flutlicht Versal" im CSS), sonst kommen sie aus Saira Condensed.
 # Lizenz der Schrift: SIL Open Font License 1.1 (vorläufig, K35b §13.4).
 use strict; use warnings;
 use MIME::Base64 qw(encode_base64);
@@ -49,6 +50,40 @@ my %Z=(
 my %U=('0'=>[0x30],'1'=>[0x31],'2'=>[0x32],'3'=>[0x33],'4'=>[0x34],'5'=>[0x35],'6'=>[0x36],'7'=>[0x37],'8'=>[0x38],'9'=>[0x39],
        ':'=>[0x3A],'.'=>[0x2E],','=>[0x2C],'-'=>[0x2D,0x2212],'+'=>[0x2B],'/'=>[0x2F],'%'=>[0x25]);
 my $LEER=240; # Breite des Leerzeichens in Fonteinheiten
+
+# Großbuchstaben (W5d2), im selben Raster. Regel: Ecken gehören in denselben Unterpfad (dann bekommen sie eine Gehrung), Abzweige enden frei
+# auf der Mittellinie des anderen Strichs (dann deckt dessen Breite die Kante). Umlautpunkte stehen über der Versalhöhe (y = -15).
+my %V=(
+  'A'=>{w=>56,p=>[[0,[L=>7,93,7,27],[A=>27,27,20,180,270],[L=>27,7,29,7],[A=>29,27,20,270,360],[L=>49,27,49,93]],[0,[L=>7,57,49,57]]]},
+  'B'=>{w=>56,p=>[[0,[L=>29,93,7,93],[L=>7,93,7,7],[L=>7,7,27,7],[A=>27,24,17,270,450],[L=>27,41,7,41]],[0,[L=>7,41,29,41],[A=>29,61,20,270,360],[L=>49,61,49,73],[A=>29,73,20,0,90],[L=>29,93,27,93]]]},
+  'C'=>{w=>56,p=>[[0,[A=>29,27,20,360,270],[L=>29,7,27,7],[A=>27,27,20,270,180],[L=>7,27,7,73],[A=>27,73,20,180,90],[L=>27,93,29,93],[A=>29,73,20,90,0]]]},
+  'D'=>{w=>56,p=>[[1,[L=>7,7,29,7],[A=>29,27,20,270,360],[L=>49,27,49,73],[A=>29,73,20,0,90],[L=>29,93,7,93],[L=>7,93,7,7]]]},
+  'E'=>{w=>56,p=>[[0,[L=>49,7,7,7],[L=>7,7,7,93],[L=>7,93,49,93]],[0,[L=>7,50,41,50]]]},
+  'F'=>{w=>56,p=>[[0,[L=>49,7,7,7],[L=>7,7,7,93]],[0,[L=>7,50,41,50]]]},
+  'G'=>{w=>56,p=>[[0,[A=>29,27,20,360,270],[L=>29,7,27,7],[A=>27,27,20,270,180],[L=>7,27,7,73],[A=>27,73,20,180,90],[L=>27,93,29,93],[A=>29,73,20,90,0],[L=>49,73,49,53],[L=>49,53,31,53]]]},
+  'H'=>{w=>56,p=>[[0,[L=>7,7,7,93]],[0,[L=>49,7,49,93]],[0,[L=>7,50,49,50]]]},
+  'I'=>{w=>28,p=>[[0,[L=>14,7,14,93]]]},
+  'J'=>{w=>56,p=>[[0,[L=>49,7,49,73],[A=>29,73,20,0,90],[L=>29,93,27,93],[A=>27,73,20,90,180]]]},
+  'K'=>{w=>56,p=>[[0,[L=>7,7,7,93]],[0,[L=>47,7,7,57]],[0,[L=>21,40,49,93]]]},
+  'L'=>{w=>56,p=>[[0,[L=>7,7,7,93],[L=>7,93,49,93]]]},
+  'M'=>{w=>70,p=>[[0,[L=>7,93,7,7],[L=>7,7,35,60],[L=>35,60,63,7],[L=>63,7,63,93]]]},
+  'N'=>{w=>56,p=>[[0,[L=>7,93,7,7],[L=>7,7,49,93],[L=>49,93,49,7]]]},
+  'O'=>{w=>60,p=>[[1,[A=>27,27,20,180,270],[L=>27,7,33,7],[A=>33,27,20,270,360],[L=>53,27,53,73],[A=>33,73,20,0,90],[L=>33,93,27,93],[A=>27,73,20,90,180],[L=>7,73,7,27]]]},
+  'P'=>{w=>56,p=>[[0,[L=>7,93,7,7],[L=>7,7,29,7],[A=>29,27,20,270,360],[L=>49,27,49,35],[A=>29,35,20,0,90],[L=>29,55,7,55]]]},
+  'Q'=>{w=>60,p=>[[1,[A=>27,27,20,180,270],[L=>27,7,33,7],[A=>33,27,20,270,360],[L=>53,27,53,73],[A=>33,73,20,0,90],[L=>33,93,27,93],[A=>27,73,20,90,180],[L=>7,73,7,27]],[0,[L=>36,72,55,99]]]},
+  'R'=>{w=>56,p=>[[0,[L=>7,93,7,7],[L=>7,7,29,7],[A=>29,27,20,270,360],[L=>49,27,49,35],[A=>29,35,20,0,90],[L=>29,55,7,55]],[0,[L=>29,55,49,93]]]},
+  'S'=>{w=>56,p=>[[0,[L=>49,7,27,7],[A=>27,27,20,270,90],[L=>27,47,29,47],[A=>29,67,20,270,360],[L=>49,67,49,73],[A=>29,73,20,0,90],[L=>29,93,7,93]]]},
+  'T'=>{w=>56,p=>[[0,[L=>5,7,51,7]],[0,[L=>28,7,28,93]]]},
+  'U'=>{w=>56,p=>[[0,[L=>7,7,7,73],[A=>27,73,20,180,90],[L=>27,93,29,93],[A=>29,73,20,90,0],[L=>49,73,49,7]]]},
+  'V'=>{w=>56,p=>[[0,[L=>7,7,28,93],[L=>28,93,49,7]]]},
+  'W'=>{w=>70,p=>[[0,[L=>7,7,18,93],[L=>18,93,35,40],[L=>35,40,52,93],[L=>52,93,63,7]]]},
+  'X'=>{w=>56,p=>[[0,[L=>7,7,49,93]],[0,[L=>49,7,7,93]]]},
+  'Y'=>{w=>56,p=>[[0,[L=>7,7,28,50],[L=>28,50,49,7]],[0,[L=>28,50,28,93]]]},
+  'Z'=>{w=>56,p=>[[0,[L=>7,7,49,7],[L=>49,7,7,93],[L=>7,93,49,93]]]},
+);
+my %UML=(Ae=>['A',0xC4,10,24,32,46],Oe=>['O',0xD6,12,26,34,48],Ue=>['U',0xDC,10,24,32,46]);
+for my $b(keys %V){$Z{$b}=$V{$b};$U{$b}=[ord $b];}
+for my $u(keys %UML){my($b,$cp,$a1,$a2,$b1,$b2)=@{$UML{$u}};$Z{$u}={w=>$V{$b}{w},p=>[@{$V{$b}{p}},[0,[L=>$a1,-15,$a2,-15]],[0,[L=>$b1,-15,$b2,-15]]]};$U{$u}=[$cp];}
 
 # ---------- Geometrie (Rasterkoordinaten, y nach unten) ----------
 sub info { my $s=shift;
@@ -152,10 +187,13 @@ my $hier=dirname(__FILE__);my $wurzel="$hier/..";
 open(my $f,'>:raw',"$hier/FlutlichtDisplay.ttf") or die "Kann TTF nicht schreiben: $!\n";print $f $font;close $f;
 my $b64=encode_base64($font,'');
 open(my $c,'>:raw',"$wurzel/css/schrift.css") or die "Kann CSS nicht schreiben: $!\n";
-print $c "/* Flutlicht Display (K35b \xc2\xa713.4, W5d1): eigene Anzeigeschrift, erzeugt von schrift/schrift.pl, nicht von Hand \xc3\xa4ndern.\n"
- ."   Eingebettet als data-URL, damit sie auch per Doppelklick (file://) l\xc3\xa4dt. Vorerst nur Ziffern und Zeichen f\xc3\xbcr Zahlen (unicode-range),\n"
- ."   Buchstaben kommen weiter aus Saira Condensed. Lizenz der Schrift: SIL Open Font License 1.1 (vorl\xc3\xa4ufig). */\n"
+print $c "/* Flutlicht Display (K35b \xc2\xa713.4, W5d): eigene Anzeigeschrift, erzeugt von schrift/schrift.pl, nicht von Hand \xc3\xa4ndern.\n"
+ ."   Eingebettet als data-URL, damit sie auch per Doppelklick (file://) l\xc3\xa4dt. Lizenz der Schrift: SIL Open Font License 1.1 (vorl\xc3\xa4ufig).\n"
+ ."   \"Flutlicht Display\" gilt per unicode-range nur f\xc3\xbcr Ziffern und Zahlzeichen (\xc3\xbcberall in --f-disp), Buchstaben kommen dort aus Saira Condensed,\n"
+ ."   bis es Kleinbuchstaben gibt. \"Flutlicht Versal\" ist dieselbe Datei mit Gro\xc3\x9fbuchstaben, nur f\xc3\xbcr Text in Versalien (.go, .logo in css/spiel.css). */\n"
  ."\@font-face{font-family:\"Flutlicht Display\";src:url(data:font/ttf;base64,$b64) format(\"truetype\");font-weight:100 900;font-style:normal;font-display:swap;"
- ."unicode-range:U+0020,U+0025,U+002B-003A,U+00A0,U+2212}\n";
+ ."unicode-range:U+0020,U+0025,U+002B-003A,U+00A0,U+2212}\n"
+ ."\@font-face{font-family:\"Flutlicht Versal\";src:url(data:font/ttf;base64,$b64) format(\"truetype\");font-weight:100 900;font-style:normal;font-display:swap;"
+ ."unicode-range:U+0020-005A,U+00A0,U+00C4,U+00D6,U+00DC,U+2212}\n";
 close $c;
 printf "Flutlicht Display: %d Zeichen, %d Tabellen, %d Byte TTF, %d Byte CSS, h\xc3\xb6chstens %d Punkte und %d Konturen je Zeichen\n",$ng,$nt,length $font,length($b64)+600,$maxP,$maxC;
