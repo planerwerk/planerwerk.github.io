@@ -93,7 +93,7 @@ Ziel = 60 + Erfolg + Preise + Identifikation + Entscheidungen + Umfeld     (0–
   - **Preise** (−15 bis +5): 30 × (1 − Ticketpreis / Richtpreis). 10 % über dem Richtpreis kosten 3 Punkte.
   - **Identifikation** (vorerst 0 bis +10): 2 je Publikumsliebling im Kader. Den negativen Teil (−5 für eine Söldnertruppe aus lauter Neuzugängen) gibt es noch nicht, damit die Stimmung am Start bei 60 bleibt: Weil die Statistik erst mit dem Spielstand beginnt, hätte am Start noch kein Verein einen Liebling. Publikumsliebling: mindestens 60 Pflichtspiele für den Verein (gezählt ab Spielbeginn, K34) oder ein Eigengewächs (aus der eigenen Jugend) mit mindestens 20.
   - **Entscheidungen** (−15 bis +5): Verkauf eines Publikumslieblings −8, verblasst um 10 % je Woche.
-  - **Umfeld** (−5 bis +5): Saisoneröffnung +3 (K12b), Fan-Gespräch, verblasst um 10 % je Woche. Presse (K29) kommt später.
+  - **Umfeld** (−5 bis +5): Saisoneröffnung +3 (K12b), Fan-Gespräch, verblasst um 10 % je Woche. Die Presse wirkt seit U17a mit (Antworten in der Pressekonferenz, Kult, eingelöste Kampfansage, Häme; berichtigt am 25.11.2026).
 - **Wirkung auf die Zuschauer** (§5.3): Faktor 0,85 bei 0, 1,0 bei 60, 1,10 bei 100, linear dazwischen. Am Start also wie bisher. Gilt in deinen Heimspielen, Testspielen und in der Vorhersage am Ticketpreis.
 - **Wirkung auf deinen Vorstand** (K28): Baustein Fans im Ziel des Vertrauens, nur außerhalb von 45 bis 75: darunter (Stimmung − 45) / 3 bis höchstens −10, darüber (Stimmung − 75) / 5 bis höchstens +5.
 - **Protest** (§5.4): Unter 30 pfeifen die Fans in deinen Ligaheimspielen. Selbstvertrauen deiner eingesetzten Spieler −0,2, mit Meldung.

@@ -190,7 +190,7 @@ abwerben:{
 4. Aufgeflogen: Ablöse +15 % bis zum Saisonende, Abwerben dieses Spielers für die Saison vorbei (§5.4).
 5. Deadline Day mit Übersicht, Halt am letzten Tag und einem zusätzlichen Markttag der Computer-Vereine. Ohne Preisschwankung (§5.4).
 6. Bieterrunde nur beim Verkauf, einmal je Fenster und Spieler (§5.4).
-7. Computer-Vereine werben noch nicht ab (§7 kommt später).
+7. Computer-Vereine werben deine Spieler seit K20e ab (nur wenn du die Transfers selbst führst, §7); untereinander werben sie nicht ab. Berichtigt am 25.11.2026.
 
 ## Quellen
 
