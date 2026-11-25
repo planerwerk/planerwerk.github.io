@@ -290,6 +290,10 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 25.11.2026: W5c4 Kacheln in Transfers und Training (Zweig `mitarbeit/popolupo-w5c4-kacheln`, auf den Korrekturen FY)
+
+- **Neu:** Kachelzeile oben in Transfers (Fenster, Kontostand, Kader, Angebote für deine Spieler, eigene Transferliste) und Training (Trainingsplan, heutige Einheit, Frische im Schnitt, Talente bis 21). Nur Anzeige, die Ansichten darunter bleiben.
+
 ### 25.11.2026: Korrekturen nach Prüfung FY (Zweig `mitarbeit/popolupo-fy-korrekturen`, auf den Korrekturen FX)
 
 - **Prüfung FY** (lesender Agent über W5c2, W5c3 und die Korrekturen FX): zwei niedrige Funde und zwei Hinweise, alles behoben, Einzelheiten in der Konsistenzprüfung FY.
