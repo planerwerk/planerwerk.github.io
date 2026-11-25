@@ -109,7 +109,7 @@ Bei der Umsetzung (U6a):
 11. **„Training wirkt“ wird über die Wirkung geprüft** (Startelf stärker, Kondition höher, nicht mehr Ausfälle), nicht über Punkte: Punkte schwanken über wenige Saisons um ±7 je Saison. Gemessen: Startelf +0,4 bis +0,5 stärker als mit „Schonen“, also etwa +1 Punkt im ersten Jahr und mehr danach.
 12. **Vorbereitung** als Vorlage mit vier Wochen (normal, hart, hart, Taktik). Der Co-Trainer nutzt sie bis zum ersten Pflichtspiel. Doppeleinheiten, Leistungstests und Testspiele kommen mit K11 und K12a.
 13. **Umschulung nach deiner Entscheidung vom 12.11.:** nur Nachbarpositionen, entfernte nur sehr jung oder vielseitig, nie Torwart, nach Alter gestaffelt, selten. Vorläufig von mir: Nachbarn sind die verwandten Paare der Eignungstabelle, „sehr jung“ bis 19 Jahre, Torwart auch für Junge ausgeschlossen, Tempo ×1,25 bis ×0,4 und Höchstwert 90 bis 82 % nach Alter, eine Umschulung je Laufbahn (zwei mit „vielseitig“). Vorher: **Umschulung** belegt einen der fünf Einzeltrainingsplätze. Verwandt heißt: Eignung ohne Fußabzug mindestens 75 %. Der Fuß bleibt nach der Umschulung ein Nachteil (außer bei beidfüßigen).
-14. **Noch nicht gebaut:** eigene Vorlagen speichern, Erinnerung „Plan passt nicht“, Ereignisse aus §8, eigenes Torwarttraining (K16), Bonus +2 % mit Gegneranalyse (K18).
+14. **Noch nicht gebaut:** eigene Vorlagen speichern, Erinnerung „Plan passt nicht“, Ereignisse aus §8, eigenes Torwarttraining (K16), Bonus +2 % mit Gegneranalyse (K18). **Stand 25.11.2026:** Gebaut sind eigene Vorlagen (K07f), die Erinnerung „Plan passt nicht“ (K07b), der Bonus mit Gegnerbeobachtung (K18c) und die Ereignisse aus §8 (K07c, K07e, K07h, Meldungen für Lernziel und Umschulung). Offen bleibt das eigene Torwarttraining. Einzelheiten in K07 Nr. 14.
 
 ## K08 – Jugend und Talententwicklung
 Datei: `konzepte/K08-jugend.md`
@@ -159,7 +159,7 @@ Bei der Umsetzung (U7b):
 12. **Fit spritzen** geht nur am Spieltag. Computer-Vereine spritzen nur in wichtigen Spielen (Pokal ab Runde 3, Relegation) und nur Stammspieler mit höchstens 10 Tagen Ausfall. Verschlimmerung: Prellung → Faserriss, Bänderdehnung → Bänderriss, Rücken/Leiste → Zerrung, Bruch (Nase) bekommt 7 Tage mehr.
 13. **Robustheit und „verletzungsanfällig“** wirken beide (1,6 − 0,06 × Robustheit und ×1,6), wie in 5.1. Ein Anfälliger (Robustheit 1–4) verletzt sich damit gut doppelt so oft wie der Durchschnitt, nicht nur 60 % öfter, wie der Merkmalstext sagt. Prüfen.
 14. **Lernstufen (K36):** Verletztenliste und Diagnose ab Stufe 1 (nur Information), fit spritzen und früher zurückholen ab Stufe 4. Davor entscheidet der Arzt nach den Regeln der Computer-Vereine.
-15. **Noch nicht gebaut:** zweite Meinung, Fehldiagnose, Pflichtwechsel und Zusatzwechsel bei Gehirnerschütterung, Ereignisse aus §8, Saisonbilanz der Ausfalltage in der Saisonzusammenfassung (die Bilanz steht in der Verletztenliste im Kader), Reha-Zentrum (K26), Rotation der Computer-Vereine nach Saisonbelastung.
+15. **Noch nicht gebaut:** zweite Meinung, Fehldiagnose, Pflichtwechsel und Zusatzwechsel bei Gehirnerschütterung, Ereignisse aus §8, Saisonbilanz der Ausfalltage in der Saisonzusammenfassung (die Bilanz steht in der Verletztenliste im Kader), Reha-Zentrum (K26), Rotation der Computer-Vereine nach Saisonbelastung. **Stand 25.11.2026:** Gebaut sind die Ausfalltage in der Saisonbilanz (K10d), Grippewelle und lange Reha (K10e), „Arzt widerspricht“ (K16d) mit der Haltung des Arztes (K16i). Einzelheiten in K10 Nr. 15.
 
 ## K11 – Freundschaftsspiele und Trainingslager
 Datei: `konzepte/K11-testspiele.md`
@@ -176,7 +176,7 @@ Bei der Umsetzung (U7d):
 8. **Geld:** Als Gastgeber kommen in der 3. Vorbereitungswoche 12 % der Ligaspiel-Nachfrage (Entwurf: 25 %), danach je Woche 1,5 Prozentpunkte weniger, mindestens 4 %, gegen einen großen Namen (Ansehen ab 80) doppelt so viele. Beim Amateurverein gibt es eine Gage von 10.000 bis 80.000 € nach Ansehen. Auswärts bei Profis gibt es nichts. Die Lagerkosten sind um 60 % höher als im Entwurf (Alpen 40.000 €, Schwarzwald 25.000 € pro Tag in der 1. Liga). Mit den Entwurfswerten brachten drei Heim-Testspiele einem Zweitligisten das Siebenfache der Lagerkosten, jetzt etwa das Doppelte. Alles Spielwerte.
 9. **Trainingslager** in der Trainingsansicht: Ort, Beginn (in der Vorbereitung oder bis eine Woche vor und während der Winterpause der eigenen Liga), 5–10 Tage, Kosten sofort. Im Lager wirkt das Training ×1,15 (Alpen: Kondition ×1,15 mehr), die Vertrautheit ×1,25. Bis zum 7. Tag bekommen alle +0,1 Selbstvertrauen pro Tag (bis K14 statt Zusammenhalt). Ab dem 8. Tag gibt es mit 13 % pro Tag Lagerkoller (−0,5 Selbstvertrauen für 3–5 Spieler), damit es bei zehn Tagen in etwa einem Drittel der Fälle passiert (mit 10 % wären es nur 27 %). Riviera: Partylöwen fallen nachts auf. Heimat im Winter: 20 % pro Tag fällt das Training aus. Ein Lager pro Pause.
 10. **Widerspruch in §10:** „Sieben Tage Lager bringen etwa eine Woche Vorsprung in der Vertrautheit“ passt nicht zu ×1,25 aus 5.3. Gebaut ist ×1,25, der Test prüft 15–35 % mehr Vertrautheitsgewinn. Soll das Lager stärker wirken, muss der Wert hoch.
-11. **Noch nicht gebaut:** Testspiele der Computer-Vereine und deren Anfragen an dich, Turniere, Auslandsvereine als Gegner im Lager (kommen mit K32 und den echten Vereinsnamen), Zimmerbelegung (K14), Lager-Ereignisse mit Entscheidung, Marketing der Golfregion (K25), Erinnerung „spielfreie Woche ohne Testspiel“ (K01 H9), Testspiel live ansehen.
+11. **Noch nicht gebaut:** Testspiele der Computer-Vereine und deren Anfragen an dich, Turniere, Auslandsvereine als Gegner im Lager (kommen mit K32 und den echten Vereinsnamen), Zimmerbelegung (K14), Lager-Ereignisse mit Entscheidung, Marketing der Golfregion (K25), Erinnerung „spielfreie Woche ohne Testspiel“ (K01 H9), Testspiel live ansehen. **Stand 25.11.2026:** Gebaut sind die Anfragen der Computer-Vereine an dich (K11c), das Sommerturnier (K11b), die Erinnerung (K11d), Lagerkoller und Nachtleben (K11g), Auslandsvereine im Lager (K11h), das Marketing der Golfregion (K11i), der freie Nachmittag (K11j) und die Zimmerbelegung (K11k). Offen bleiben Testspiele der Computer-Vereine untereinander und das Testspiel live. Einzelheiten in K11 Nr. 11.
 12. **Lernstufen (K36):** Testspiele ab Stufe 3 (davor plant der Co-Trainer zwei Testspiele gegen Amateure), Trainingslager ab Stufe 3 (davor fährt der Verein nicht ins Lager). Die Automatik dafür kommt mit UL.
 
 ## K12a – Sommerpause und Vorbereitung
@@ -193,7 +193,7 @@ Bei der Umsetzung (U6b):
 7. **Saisonbelastung wird mitgenommen:** Sie sinkt nur im Urlaub (4 pro Tag) und steigt mit jeder Spielminute. Nach zwei Wochen Urlaub startet ein Stammspieler mit Belastung 90 in die neue Saison mit etwa 26 statt 0 und liegt damit schon im Herbst über 50 (langsamere Erholung, mehr Verletzungen). Die Rechnung in 5.1 („Wirkung im Herbst nur bei Belastung über 74“) ging von einer Wirkung direkt nach dem Urlaub aus, die es mit der Schwelle 50 nie gäbe.
 8. **Urlaubslänge auch im laufenden Urlaub änderbar** (Training und Saisonbilanz). Bereits vergangene Urlaubstage zählen.
 9. **Formänderung je Notenpunkt 2,3 statt 2,5** und 11 % statt 10 % pro Woche zurück zur Mitte. Mit dem neuen Saisonablauf lagen sonst 6,5 % der Spieler bei Form ≤ 4 oder ≥ 16 (Ziel höchstens 5 %).
-10. **Noch nicht gebaut:** Nationalspieler mit Turnier (K13), Ereignisse aus §8, Stimmung aus der Urlaubslänge (K14), Testspiele und Trainingslager (K11).
+10. **Noch nicht gebaut:** Nationalspieler mit Turnier (K13), Ereignisse aus §8, Stimmung aus der Urlaubslänge (K14), Testspiele und Trainingslager (K11). **Stand 25.11.2026:** Gebaut sind die Stimmung aus der Urlaubslänge (U8), Testspiele und Trainingslager (K11), die Ereignisse aus §8 (K12c, K07h, K12d) und Turniere im Sommer (K13k, nur mit Länderspielen). Einzelheiten in K12a Nr. 10.
 
 ## K12b – Saisonvorbereitung (Rahmen)
 Datei: `konzepte/K12b-saisonvorbereitung.md`
@@ -228,7 +228,7 @@ Bei der Umsetzung (U7c):
 9. **Relegation:** Das Rückspiel hat bei Gleichstand in der Summe Verlängerung und Elfmeterschießen aus der Engine, auch live. Das Los bleibt nur für alte Spielstände. Echt setzt sich der Bundesligist seit 2009 in etwa 80 % durch (13 von 16 bis 2024, Sky), im Spiel sind es etwa 50 %, weil der 16. der 1. Liga und der 3. der 2. Liga in unserer Welt fast gleich stark sind (Konsistenzprüfung AI5).
 10. **Supercup** ab der zweiten Saison (für die erste fehlt die Vorsaison im Spiel): Meister gegen Pokalsieger am Samstag vor dem 1. Spieltag beim Meister, sonst gegen den Vizemeister, wie 2024 Leverkusen gegen Stuttgart. Bei Gleichstand direkt Elfmeterschießen, seit 2010 gibt es keine Verlängerung. Karten und Sperren zählen wie im Pokal, Tore nicht zur Torjägerliste. Noch ohne Prämie (K23).
 11. **Zweitmannschaften:** Spielt die erste Mannschaft in derselben Liga, muss die Zweite eine Liga tiefer, und der beste Absteiger dieser Liga bleibt drin. Die echte Regel ist weiter nicht geprüft (Nr. 4).
-12. **Länderspiele noch nicht gebaut:** Seit U9b haben alle Spieler eine Nationalität, die Nationen-Tabelle liegt vor. Vorher: Spieler haben noch keine Nationalität (kommt mit K32 und dem Auslandspool, K03). Ohne sie gibt es keine Nominierung. Ebenfalls offen: Spielverlegung auf Antrag, Rotation der Favoriten in Runde 1 und 2, Pokal an Dienstag und Mittwoch, Prämien für den Supercup.
+12. **Länderspiele noch nicht gebaut:** Seit U9b haben alle Spieler eine Nationalität, die Nationen-Tabelle liegt vor. Vorher: Spieler haben noch keine Nationalität (kommt mit K32 und dem Auslandspool, K03). Ohne sie gibt es keine Nominierung. Ebenfalls offen: Spielverlegung auf Antrag, Rotation der Favoriten in Runde 1 und 2, Pokal an Dienstag und Mittwoch, Prämien für den Supercup. **Stand 25.11.2026:** Länderspiele gibt es seit K13f (Schalter aus, im Menü einschaltbar) mit Karten (K13g), Marktwert (K13h), Anzeige (K13i) und Turnieren (K13k); Spielverlegung seit K13d, Pokal-Rotation seit K13e (Meldung, wenn deine Rotation schiefgeht) und K13j (Favoriten unter den Computer-Vereinen, Schalter aus), Prämie für den Supercup seit K13b. Offen bleibt der Pokal an Dienstag und Mittwoch. Einzelheiten in K13 Nr. 12.
 13. **Lernstufen (K36):** Pokal, Relegation und Supercup laufen ab Stufe 1 (nur Termine und Ergebnisse). Die Auslosung ist ab Stufe 1 ein Moment. Spielverlegung beantragen kommt später auf Stufe 4, wenn es sie gibt.
 
 ## K14 – Stimmung, Selbstvertrauen, Kabine
@@ -256,7 +256,7 @@ Bei der Umsetzung (U8):
 18. **Neuanfang beim Vereinswechsel:** Wechselwunsch null, Stimmung mindestens Startwert.
 19. **Diva und Söldner** sichtbar und wirksam.
 20. **Lernstufen (K36):** Stimmung sehen ab Teamleiter, Kapitän ab C, Kaderrollen und Teamevent ab B.
-21. **Noch nicht gebaut:** Ereignisse aus §8 außer dem Gesprächswunsch, Geldstrafen erlassen, Prämien, Integration und Heimweh, Integrationsfigur und Mentor.
+21. **Noch nicht gebaut:** Ereignisse aus §8 außer dem Gesprächswunsch, Geldstrafen erlassen, Prämien, Integration und Heimweh, Integrationsfigur und Mentor. **Stand 25.11.2026:** Gebaut sind die Ereignisse aus §8 (K14b bis K14e), Geldstrafen (K09c), Prämien (K21b, K21d, K21e), Integration und Heimweh (K03d, K03e), Integrationsfigur und Mentor, dazu Sprachgrüppchen (K14g, nur mit dem Schalter der Integration). Einzelheiten in K14 Nr. 21.
 
 **Umgesetzt in U8d (13.11.), vorläufig von mir (K14 §12 Nr. 22–38):** Rotation höchstens zwei Spiele in Folge (angekündigt drei). Rivalen-Zähler kommt zur Spanne des Bausteins dazu (bis −38), der feste Faktor 1,5 entfällt. „Entschlossene“ sind Vorbildprofis. Karriere-Spiele der vorhandenen Spieler sind geschätzt. Torwart-Duell endet durch eine Kaderrolle von dir oder fünf Spiele in Folge. Rolle „spielt im Pokal“ erwartet 90 % der Pokalspiele. Aufbau 21 Tage nach Verletzungen ab 14 Tagen. Tribüne setzt du an der Spielerkarte, die Bank wählt sonst der Co-Trainer. Über die Baustufe hinaus gebaut: nach einer Sperre, Wechselwunsch, Führungsspieler auf der Bank, bedeutungslose Spiele. „Rotation ankündigen“ als fünfte Ansprache.
 
@@ -286,7 +286,7 @@ Bei der Umsetzung (U8):
 17. **Erinnerung** „Versprechen droht zu kippen“ am Spieltag, abschaltbar.
 18. **Vereinswechsel:** offene Zusagen hinfällig.
 19. **Lernstufen (K36):** Gespräche und Mannschaftsansprache ab C, Versprechen ab B.
-20. **Noch nicht gebaut:** Gespräche mit dem Vorstand, öffentliche Kritik und Presse, Karten aus §8.
+20. **Noch nicht gebaut:** Gespräche mit dem Vorstand, öffentliche Kritik und Presse, Karten aus §8. **Stand 25.11.2026:** Das Budgetgespräch mit dem Vorstand gibt es seit U12l, öffentliche Kritik in der Pressekonferenz seit U17a, „Streit nach Kritik“ seit K15e als Karte. Einzelheiten in K15 Nr. 20.
 
 ## K16 – Trainerstab und Mitarbeiter
 Datei: `konzepte/K16-stab.md`
@@ -340,7 +340,7 @@ Bei der Umsetzung (U9a):
 12. **Scouts im Stab:** vier Plätze, Start nach Ansehen (1, ab 60 zwei, ab 80 drei).
 13. **Kenntnis gehört dem Verein,** beim Jobwechsel beginnst du neu.
 14. **Lernstufen:** Beobachten ab C, Scouts ab B, Suchauftrag ab A.
-15. **Noch nicht gebaut:** Unsicherheit der Computer-Vereine, Gegnerbeobachtung, Ereignisse, Jugend. Ausland seit U9b gebaut.
+15. **Noch nicht gebaut:** Unsicherheit der Computer-Vereine, Gegnerbeobachtung, Ereignisse, Jugend. Ausland seit U9b gebaut. **Stand 25.11.2026:** Gebaut sind die Gegnerbeobachtung (K18c) mit Scoutbericht (K18g), Jugend (U9c), die Ereignisse aus §8 (K18d, K18e, K18f, Geheimtipp) und der Ruf des Scouts (K18h). Offen bleibt die Unsicherheit der Computer-Vereine. Einzelheiten in K18 Nr. 15.
 
 Bei der Umsetzung (U9b), ausführlich in K18 §12 Nr. 17–24:
 17. **Grundkenntnis Ausland 5,** Spanne ohne Scout etwa ±10, Merkmale unbekannt.
@@ -638,7 +638,7 @@ Bei der Umsetzung (U9b, 11.11.), ausführlich in K32 §12 Nr. 4–20:
 17. **Nationen-Tabelle** mit 148 Nationen und dem Rang vom 7. Oktober 2026, nicht alle Länder der Welt.
 18. **Poolspieler schlank gespeichert** (ohne Sperren, Karten, berechnete Eigenschaften), Spielstand unter 3 MB.
 19. **Lernstufen:** Auslandsmarkt ansehen frei, im Ausland beobachten und kaufen ab B, Suchauftrag Ausland ab A.
-20. **Noch nicht gebaut:** Handel der Computer-Vereine mit dem Ausland (U11), Integration, Deutschkenntnisse, Heimweh, Landsleute, Länderspiele, Ereignisse, Europapokal.
+20. **Noch nicht gebaut:** Handel der Computer-Vereine mit dem Ausland (U11), Integration, Deutschkenntnisse, Heimweh, Landsleute, Länderspiele, Ereignisse, Europapokal. **Stand 25.11.2026:** Gebaut sind Integration, Deutschkenntnisse und Landsleute (K03d), Heimweh (K03e), Länderspiele (K13f, Schalter aus), die Ereignisse (U18b) und der Europapokal (U19a bis U19e). Offen bleibt der Handel der Computer-Vereine mit dem Ausland. Einzelheiten in K32 Nr. 20.
 
 Bei der Umsetzung (U18a, 20.11.), ausführlich in K32 §12 Nr. 21–25:
 21. **Erfundene Cheftrainer** für alle Computer-Vereine, keine echten.
