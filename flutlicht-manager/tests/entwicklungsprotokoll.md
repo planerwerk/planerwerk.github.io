@@ -221,6 +221,7 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 | Doku-Abgleich 2 (K20 Nr. 7, K27 Umfeld), nur Doku | `mitarbeit/popolupo-doku-abgleich-2` (auf den Korrekturen FO) | fertig |
 | **K13k** Turniere im Sommer (EM, WM; nur mit Länderspielen) | `mitarbeit/popolupo-k13k-turniere` (auf dem Doku-Abgleich 2) | fertig, ungetestet |
 | **K12d** Spieler will Urlaub verlängern (Karte nach dem Turnier; nur mit Länderspielen) | `mitarbeit/popolupo-k12d-urlaub-verlaengern` (auf K13k) | fertig, ungetestet |
+| Tests zu FO8 (Scoutbericht im Pokal und am Spieltag, späte Einwechslung im Neubeginn), nur Tests | `mitarbeit/popolupo-tests-fo8` (auf K12d) | fertig, ungetestet |
 | U19d2 volle Kader der Auslandsvereine in der Engine | zurückgestellt | Entwurf in K37 §5.7. Die Engine behandelt Auslandsvereine als Block wie Amateure, viele Stellen schlagen Spieler in `PIX` nach. Erst nach einem Testlauf und der Messung des Faktors 0,93 |
 
 **Die neueste Spitze ist immer der zuletzt genannte Zweig, er enthält alles davor.** K24 ist fertig (Claude).
@@ -260,6 +261,12 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 ---
 
 ## Changelog
+
+### 25.11.2026: Tests zu Prüfung FO8 (Zweig `mitarbeit/popolupo-tests-fo8`, auf K12d)
+
+- **Weckruf:** kein neuer Testlauf (Testprotokoll weiter bei Lauf 8).
+- **Nur Tests, kein Spielcode:** `tests/scouting.js` neuer Fall am Ende (Sperre nur im Pokal zählt nur vor dem Pokalspiel, `naechsterWb` dafür vorgegeben; Nationalspieler am Spieltag statt heute, FM4/FO6), `tests/kabine.js` neuer Fall am Ende (späte Einwechslung im Neubeginn ohne −1, FN8).
+- **Zu erwarten:** beide neuen Fälle grün. Schlägt einer fehl, liegt es eher am Aufbau des Tests (Stärke-Reihenfolge, Kaderrollen) als am Spielcode, bitte melden.
 
 ### 25.11.2026: K12d Spieler will Urlaub verlängern (Zweig `mitarbeit/popolupo-k12d-urlaub-verlaengern`, auf K13k)
 
