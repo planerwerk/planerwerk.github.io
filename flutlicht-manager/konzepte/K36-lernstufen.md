@@ -452,6 +452,7 @@ lizenz:{
 209. **K12d Spieler will Urlaub verlängern (25.11., popolupo, ohne Testlauf, nur mit Länderspielen):** keine neue Funktion, eine Ereigniskarte (Bereich `ereignisse`); unter dessen Automatik lässt der Co-Trainer den Spieler pünktlich erscheinen.
 210. **K18h Ruf des Scouts (25.11., popolupo, ohne Testlauf):** keine neue Funktion, nur Anzeige (Bilanz und Ruf je Scout im Trainerstab und bei der Wahl des Scouts für Beobachtung und Suchauftrag).
 211. **K11k Zimmerbelegung im Trainingslager (25.11., popolupo, ohne Testlauf):** keine neue Funktion, eine Wahl im Bereich `lager` (gesperrt wie das Buchen). Ohne Wahl teilt der Co-Trainer ein.
+212. **K14g Sprachgrüppchen (25.11., popolupo, ohne Testlauf, nur mit dem Schalter der Integration):** keine neue Funktion; trifft deinen Verein wie jeden Computer-Verein.
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 

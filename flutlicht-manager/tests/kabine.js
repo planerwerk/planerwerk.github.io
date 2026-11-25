@@ -218,5 +218,12 @@ const bankWelt=()=>{const w=welt(),{S,F,ev}=w;F.englischeWoche=()=>false;const s
   S.neubeginn=null;rot.st=50;buch(xi,{ein:[[rot.id,89,a.id]]});const danach=rot.st===50+B.spaet.etabliert;
   pruef(neu&&danach,'Neuer Trainer: späte Einwechslung kostet im Neubeginn nichts, danach wieder',`im Neubeginn ${neu} (${rot.bg}), danach ${danach} (${rot.st})`);}
 
+// K14g. Sprachgrüppchen (K14 §5.5), nur mit dem Schalter der Integration: drei Spieler mit gleicher Fremdsprache und wenig Deutsch bilden ohne Freundschaft ein Grüppchen,
+//       wenn ihre Stimmung im Schnitt unter G.unter liegt. Ohne Schalter nicht, mit gutem Deutsch nicht, Deutschsprachige nie.
+{const {S,ev}=welt(),sq=ev('squad')(S.my),G=ev('RKA').gruppe,I=ev('RP').integration.wirkung,gr=ev('grueppchen');S.bz=[];
+  sq.forEach(p=>{p.nat='GER';delete p.de;p.st=60;});const l=sq.slice(0,3);l.forEach((p,i)=>{p.nat=['BRA','POR','BRA'][i];p.de=20;p.st=G.unter-10;});const d=sq[3];d.st=G.unter-10;
+  const hat=()=>gr(S.my).some(g=>l.every(p=>g.includes(p)));const ohne=!hat();I.an=true;const mit=hat()&&!gr(S.my).some(g=>g.includes(d));l[2].de=G.spracheBis;const gutDeutsch=!hat();I.an=false;
+  pruef(ohne&&mit&&gutDeutsch,'Sprachgrüppchen: Landsleute mit wenig Deutsch und schlechter Stimmung, nur mit Schalter',`ohne Schalter ${ohne}, mit ${mit}, mit gutem Deutsch ${gutDeutsch}`);}
+
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

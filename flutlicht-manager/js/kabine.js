@@ -225,8 +225,11 @@ function beziehungenWoche(aktive,kader){const B=RKA.beziehungen;
 function kabineAbgang(p,tid){if(!p)return;freundeVon(p).filter(q=>q.team===tid).forEach(q=>{stimmungAendern(q,RKA.beziehungen.verkauf);if(tid===S.my)news(`${q.n} ist traurig über den Abschied seines Freundes ${p.n}.`,'bad');});
   S.bz=(S.bz||[]).filter(b=>b[0]!==p.id&&b[1]!==p.id);S.gw=(S.gw||[]).filter(g=>g.pid!==p.id);delete p.kr;delete p.zhNeu;}
 // Grüppchen: Freunde, die zusammenhängen (mindestens drei), mit schlechter Stimmung im Schnitt
-function grueppchen(tid,kader){const G=RKA.gruppe,ids=new Set((kader||squad(tid)).map(p=>p.id)),adj=new Map();
-  (S.bz||[]).forEach(([a,b,art])=>{if(art!=='F'||!ids.has(a)||!ids.has(b))return;[[a,b],[b,a]].forEach(([x,y])=>{if(!adj.has(x))adj.set(x,[]);adj.get(x).push(y);});});
+// Seit K14g (K14 §5.5, 25.11., popolupo, vorläufig, nur mit dem Schalter RP.integration.wirkung.an): auch Fremdsprachige mit gleicher Sprache, deren Deutsch
+// noch unter G.spracheBis liegt, hängen zusammen (Landsleute mit gemeinsamer Sprache). Ohne Schalter wie vorher, für alle Vereine gleich.
+function grueppchen(tid,kader){const G=RKA.gruppe,sq=kader||squad(tid),ids=new Set(sq.map(p=>p.id)),adj=new Map(),kante=(a,b)=>[[a,b],[b,a]].forEach(([x,y])=>{if(!adj.has(x))adj.set(x,[]);adj.get(x).push(y);});
+  (S.bz||[]).forEach(([a,b,art])=>{if(art!=='F'||!ids.has(a)||!ids.has(b))return;kante(a,b);});
+  if(RP.integration.wirkung.an){const spr=new Map();sq.forEach(p=>{const n=nation(p.nat);if(!n||n.sprache==='de'||deutschVon(p)>=G.spracheBis)return;if(spr.has(n.sprache))kante(spr.get(n.sprache),p.id);spr.set(n.sprache,p.id);});}
   const seen=new Set(),out=[];adj.forEach((_,id)=>{if(seen.has(id))return;const comp=[],stack=[id];seen.add(id);
     while(stack.length){const x=stack.pop();comp.push(x);(adj.get(x)||[]).forEach(y=>{if(!seen.has(y)){seen.add(y);stack.push(y);}});}
     if(comp.length>=G.min){const l=comp.map(i=>PIX.get(i)),m=l.reduce((s,p)=>s+stimmung(p),0)/l.length;if(m<G.unter)out.push(l);}});return out;}

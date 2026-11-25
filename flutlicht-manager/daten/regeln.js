@@ -17,7 +17,7 @@ const REGELN={
   experimente:[
     {k:'tvRaten',pfad:'finanzen.tv.raten',name:'TV-Gelder in vier Raten',text:'Statt je Ligaspiel kommt das TV-Geld am 1. August, 1. November, 1. Februar und 1. Mai für alle Vereine (K23h). Umgeschaltet gilt es ab der nächsten Saison.'},
     {k:'notverkauf',pfad:'computer.notverkauf',name:'Notverkauf bei Computer-Vereinen',text:'Wer über seinem Gehaltsrahmen liegt, setzt seinen teuersten Spieler unter Wert auf die Transferliste (K31d).'},
-    {k:'integration',pfad:'spieler.integration.wirkung',name:'Integration wirkt im Spiel',text:'Neuzugänge aller Vereine spielen schwächer, bis sie integriert sind (bis 8 %, K03d).'},
+    {k:'integration',pfad:'spieler.integration.wirkung',name:'Integration wirkt im Spiel',text:'Neuzugänge aller Vereine spielen schwächer, bis sie integriert sind (bis 8 %, K03d). Landsleute, die noch wenig Deutsch sprechen, bilden in der Kabine Grüppchen (K14g).'},
     {k:'laenderspiele',pfad:'wettbewerbe.laenderspiele',name:'Länderspiele',text:'Nationalspieler aller Vereine fehlen in den Länderspielpausen und kommen müde zurück (K13f).'},
     {k:'pokalRotation',pfad:'wettbewerbe.pokal.rotationKI',name:'Pokal-Rotation der Favoriten',text:'In den ersten zwei Pokalrunden schonen Favoriten gegen Amateure und deutlich schwächere Gegner Spieler unter 85 % Frische (K13j).'}],
 
@@ -950,7 +950,7 @@ const REGELN={
     folgen:{leistung:{unter:20,minus:0.03,ueber:85,plus:0.02},lernenUnter:30,lernen:0.7,vertragUnter:[40,25],vertragAufschlag:0.25},
     wechsel:{grummeln:[45,2],gespraech:[40,2],offiziell:4,oeffentlich:4,oeffentlichChance:0.1,oeffentlichDiva:0.3,abloese:0.9,teamMinus:3,zurueckAb:50},
     ansteckung:{fuehrerUnter:35,freunde:-2,fuehrerUeber:70,alleUnter:50,alle:1},
-    gruppe:{min:3,unter:35,zh:-2},
+    gruppe:{min:3,unter:35,zh:-2,spracheBis:60}, // spracheBis: Sprachgrüppchen nur, solange das Deutsch darunter liegt (K14g, 25.11., popolupo, vorläufig, nur mit spieler.integration.wirkung.an)
     zusammenhalt:{start:50,stammelf:1,stammelfGleich:9,sieg:1,lager:1,neuer:-5,neuerWochen:8,streit:-3,ausgleich:0.04,wirkung:[0.97,0.0006]},
     beziehungen:{freundChance:0.25,freundAlter:4,maxFreunde:3,rivaleChance:0.3,rivaleStaerke:3,rivaleEhrgeiz:13,rivaleEnde:8,rangelei:0.02,
       verkauf:-8,lernen:1.05},
