@@ -95,7 +95,7 @@ pruef(supercups.length===N-1&&supercups.every(x=>!x.verl&&(x.hg!==x.ag)===!x.pen
   const L=ev('RWB').laenderspiele,x=S5.plan.pausen.find(y=>y.name==='Länderspielpause'),abs=ev('absTag'),av=ev('avail'),bn=ev('beiNationalteam');
   S5.tag=x.von;F5.laenderspielTag(x.von);const aus=!S5.pl.some(p=>p.lsp);
   L.an=true;F5.laenderspielTag(x.von);const nom=S5.pl.filter(p=>p.lsp),je={};nom.forEach(p=>{je[p.nat]=(je[p.nat]||0)+1;});
-  const schwelle=nom.every(p=>p.str>=ev('lsSchwelle')(p.nat)&&p.team>=0&&p.team<ev('AV0')),max=Object.values(je).every(n=>n<=L.max),fehlt=nom.length>0&&nom.every(p=>!av(p)&&bn(p));
+  const schwelle=nom.every(p=>p.str>=ev('lsSchwelle')(p.nat)&&p.team>=0&&p.team<ev('AV0')),max=Object.values(je).every(n=>n<=L.max),fehlt=nom.length>0&&nom.every(p=>!av(p)&&bn(p))&&nom.some(p=>F5.status(p).includes('Nationalmannschaft')); /* K13i: Kaderliste zeigt es */
   const bis=nom.length?nom[0].lsp.bis:0,st=nom.find(p=>p.lsp.st);if(st)st.fit=100;
   S5.tag=x.bis+2;F5.laenderspielTag(x.bis+2);const zurueck=nom.every(p=>!p.lsp)&&(!st||st.fit<100||st.inj>0);L.an=false;
   /* Prüfung FM2, FM11: Ein starker Spieler des Auslandspools zählt mit und verdrängt den, der in der Rangfolge seiner Nation zuletzt kommt (bei max = Zahl der Nominierten) */
