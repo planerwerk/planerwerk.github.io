@@ -459,6 +459,8 @@ const REGELN={
     sommer:{nachTestTage:14,sonderFrische:15}, // Sommerkarten (K12a §8, K12c, 22.11., GESCHÄTZT): Übergewicht bis nachTestTage nach dem Leistungstest; Sonderschichten kosten sonderFrische Frische
     // Freier Nachmittag im Lager (K11 §12 Nr. 11, K11j, 25.11., popolupo, vorläufig): Karte am Lagertag tag, wenn das Lager mindestens min Tage dauert; die Zusatzeinheit kostet alle frische Frische
     lagerFreizeit:{tag:3,min:5,frische:8},
+    // Spieler will Urlaub verlängern (K12a §8, K12d, 25.11., popolupo, vorläufig): ab abSpiele Turnierspielen; verlängert er, fehlt er wert Tage länger und baut erholung Saisonbelastung ab
+    urlaubVerlaengern:{abSpiele:5,erholung:4},
     stadion:{zuschussAb:5e6,anwohner:['cap','dach'],anwohnerRest:7}, // anwohner: Bauten, gegen die Anwohner klagen können, anwohnerRest: Tage Genehmigung mindestens noch (K26f, 23.11., Prüfung EO2). Stadt bietet Zuschuss (K26 §8, K26e, 22.11., GESCHÄTZT): bei einem Bauprojekt ab zuschussAb Kosten; Anteil in der Karte (Wirkung zuschuss)
     // nurZuDir (K19f, 23.11., GESCHÄTZT): Spieler will nur zu dir ab Stärke teamLevel − staerkeUnter; „hohes Interesse“ ist die Grenze aus K20d (abwerben.konkurrenz.nein.ab)
     nurZuDir:{staerkeUnter:3},

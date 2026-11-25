@@ -722,4 +722,13 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   const p=ev('squad')(S.my).find(x=>!(x.inj>0)),ko0=p.ko,fit0=p.fit;p.ko=50;p.fit=90;wirk({art:'konditionAlle',wert:2},{},{titel:'Test'});const extra=p.ko===52&&p.fit===Math.max(ev('RE').fitnessMin,90-Z.frische);p.ko=ko0;p.fit=fit0;
   pruef(einmal&&!!b&&kurz&&extra,'Freier Nachmittag im Lager: Folgekarte am dritten Tag, einmal, nicht bei kurzen Lagern; Zusatzeinheit für alle',`einmal ${einmal}, Auslöser ${!!b}, kurzes Lager ${kurz}, Zusatzeinheit ${extra}`);}
 
+// K12d. Spieler will Urlaub verlängern (K12a §8): nur für einen eigenen Spieler, der noch beim Turnier im Sommer ist (lsp.turnier) und mindestens abSpiele Spiele gemacht hat,
+//       nicht nach einem normalen Länderspiel und nicht zweimal; die Wirkung schiebt die Rückkehr um wert Tage und baut erholung Saisonbelastung ab.
+{const {S,ev}=welt(),U=ev('RKT').urlaubVerlaengern,A=ev('AUSLOESER'),wirk=ev('kartenWirkung'),a=ev('absTag')(S.tag),sq=ev('squad')(S.my);sq.forEach(x=>{delete x.lsp;});
+  const p=sq[0],ohne=A.urlaubVerlaengern()===null;p.lsp={von:a-10,bis:a+5,n:U.abSpiele,st:1,turnier:1};const b=A.urlaubVerlaengern(),treffer=!!b&&b.spieler===p.id;
+  p.lsp.n=U.abSpiele-1;const wenig=A.urlaubVerlaengern();p.lsp.n=U.abSpiele;delete p.lsp.turnier;const normal=A.urlaubVerlaengern();p.lsp.turnier=1;p.lsp.bis=a-1;const zurueck=A.urlaubVerlaengern();p.lsp.bis=a+5;
+  p.sb=10;wirk({art:'urlaubVerlaengern',wert:7},{spieler:p.id},{titel:'Test'});const wirkt=p.lsp.bis===a+12&&p.lsp.uv===1&&p.sb===10-U.erholung,einmal=A.urlaubVerlaengern()===null;delete p.lsp;p.sb=0;
+  pruef(ohne&&treffer&&wenig===null&&normal===null&&zurueck===null&&wirkt&&einmal,'Urlaub verlängern: nur beim Turnier nach genug Spielen, schiebt die Rückkehr und baut Belastung ab, einmal',
+    `ohne ${ohne}, Treffer ${treffer}, zu wenig Spiele ${wenig}, normales Länderspiel ${normal}, schon zurück ${zurueck}, Wirkung ${wirkt}, einmal ${einmal}`);}
+
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

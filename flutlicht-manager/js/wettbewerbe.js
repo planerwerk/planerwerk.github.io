@@ -168,6 +168,6 @@ function turnierSommer(){if(!lsAn())return;const T=RWB.laenderspiele.turnier,em=
   teil.forEach(n=>{const p=Math.max(W.min,W.basis-W.jeRang*(n.rang-1));let r=0;while(r<=ko&&hash32(['turnier',S.seed,S.season,n.k,r].join('|'))%1000<p*1000)r++;erg.set(n.k,r);});
   const sieger=teil.slice().sort((a,b)=>erg.get(b.k)-erg.get(a.k)||a.rang-b.rang)[0],kader=lsKader(),mein=[];
   teil.forEach(n=>{const r=erg.get(n.k),spiele=3+Math.min(r,ko);(kader.get(n.k)||[]).forEach((p,i)=>{p.lspN=(p.lspN||0)+1;p.lspZ=a0;if(p.team>=AV0)return;
-    const t=S.teams[p.team];p.lsp={von:a0,bis:absTag(t?auftaktTag(t):S.tag)+T.spaet,n:spiele,st:i<RWB.laenderspiele.stamm?1:0};p.sb=Math.min(100,(p.sb||0)+T.belastung);
+    const t=S.teams[p.team];p.lsp={von:a0,bis:absTag(t?auftaktTag(t):S.tag)+T.spaet,n:spiele,st:i<RWB.laenderspiele.stamm?1:0,turnier:1};p.sb=Math.min(100,(p.sb||0)+T.belastung);
     if(p.team===S.my)mein.push(`${p.n} (${natName(p)}, ${stufen[Math.min(r,stufen.length-1)]})`);});});
   news(`${name} ${S.season}: ${sieger?`Sieger ist ${sieger.name}.`:''}${mein.length?` Aus deinem Kader dabei: ${mein.join(', ')}. Sie kommen später zum Trainingsauftakt.`:''}`,'');}

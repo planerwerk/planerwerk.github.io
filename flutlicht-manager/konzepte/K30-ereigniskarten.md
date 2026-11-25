@@ -353,9 +353,9 @@ Sehr selten, als Weltereignis: **etwa einmal in zehn Saisons** kommt ein Szenari
 3. **Karte 2 (nach 3–7 Tagen, wenn Treffen):** Der Spieler ist interessiert. Optionen: schnell bieten (Preis normal), die beiden Vereine gegeneinander ausspielen (Preis niedriger, Risiko, dass es auffliegt).
 4. **Ausgang:** Unterschreibt er bei dir, sinkt die Beziehung zwischen den beiden anderen Vereinen um 10, deine zu ihnen nur um 2, bei geschicktem Vorgehen gar nicht (K17 §5.4).
 
-### 8.4 Stand am 23.11.2026 (popolupo, ohne Testlauf)
+### 8.4 Stand am 25.11.2026 (popolupo, ohne Testlauf)
 
-- **Im Katalog** (`daten/karten.js`): 79 Karten. Die meisten Zeilen aus den Tabellen in §8 der Konzepte sind gebaut, entweder als Karte oder als Meldung in der Wochen- und Spiellogik. Beispiele für Meldungen statt Karten:
+- **Im Katalog** (`daten/karten.js`): 87 Karten. Die meisten Zeilen aus den Tabellen in §8 der Konzepte sind gebaut, entweder als Karte oder als Meldung in der Wochen- und Spiellogik. Beispiele für Meldungen statt Karten:
   - Goldener Jahrgang (K08) beim neuen Jahrgang.
   - Berater bietet an (K22) in `beraterWoche`.
   - Vorvertrag woanders und Ausstiegsklausel (K21) in der Vertragswoche.
@@ -368,7 +368,7 @@ Sehr selten, als Weltereignis: **etwa einmal in zehn Saisons** kommt ein Szenari
 | Ereignis | Konzept | Grund |
 |---|---|---|
 | Rasen nach Frost kaputt | K26 | Die Rasenqualität mit Greenkeeper ist zurückgestellt (K26 §3.2a). |
-| Spieler will Urlaub verlängern | K12a | Braucht Urlaub je Spieler und Turniere im Sommer; Nationalspieler gibt es seit K13f (nur mit Länderspielen). |
+| Spieler will Urlaub verlängern | K12a | Seit K12d (25.11.2026) gebaut, kommt aber nur nach einem Turnier im Sommer (K13k), also nur mit Länderspielen. Urlaub je Spieler gibt es weiter nicht: die Karte schiebt die Rückkehr vom Turnier. |
 | Anruf des Bundestrainers, Länderspiel-Verletzung | K13 | Seit K13g (24.11.2026) gebaut, kommen aber nur mit Länderspielen (K13f, Schalter oder Menü „Neue Regeln ausprobieren“). |
 | Zimmerkollegen werden Freunde | K11 | Braucht eine Zimmerbelegung. Das Traumtor des Neuzugangs gibt es seit K03e (24.11.), ebenso die Heimweh-Karte (K03 §8). |
 | Notverkauf | K31 | Seit K31d (24.11.) gebaut, mit Schalter aus, erst nach einem Testlauf einschalten. Eine Meldung, keine Karte. |

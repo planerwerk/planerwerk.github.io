@@ -362,6 +362,11 @@ const KARTEN=[
   {id:'lsVerletzung',titel:'Verletzt von der Nationalmannschaft zurück',bereich:'K13',art:'info',stufe:'haeufig',chance:1,ausloeser:'lsVerletzung',sperrTage:60,
     texte:['{spieler} kommt verletzt von der Länderspielreise zurück. Im Verein ist man verärgert, der Verband verweist auf das normale Risiko.','Schlechte Nachricht aus dem Länderspiel: {spieler} fällt aus. Die Fans schimpfen über die Belastung.'],
     wirkung:[{art:'fans',wert:-1}]},
+  // Spieler will Urlaub verlängern (K12a §8, K12d, 25.11., popolupo, vorläufig): nach einem langen Turnier im Sommer (K13k, nur mit Länderspielen), solange er noch weg ist.
+  {id:'urlaubVerlaengern',titel:'Spieler will Urlaub verlängern',bereich:'K12a',art:'entscheidung',gross:false,stufe:'haeufig',chance:0.5,ausloeser:'urlaubVerlaengern',sperrTage:300,
+    texte:['{spieler} hat ein langes Turnier hinter sich und bittet um eine Woche mehr Urlaub, bevor er zum Training kommt.','Der Berater von {spieler} ruft an: Nach dem Turnier sei sein Mandant leer und brauche noch eine Woche Ruhe.'],
+    optionen:[{text:'Eine Woche mehr geben',wirkung:[{art:'urlaubVerlaengern',wert:7},{art:'stimmung',wert:3}],folge:'{spieler} bedankt sich und kommt eine Woche später, aber ausgeruht.'},
+      {text:'Pünktlich erscheinen lassen',wirkung:[{art:'stimmung',wert:-3}],folge:'{spieler} kommt wie geplant, aber man sieht ihm die Müdigkeit an.'}],auto:1},
   // Trainingsweltmeister übertreibt (K03 §8, K07 §8, K07h, 24.11., popolupo): Info mit Wirkung, mit 70 % Lob vom Co-Trainer (Selbstvertrauen +1, Stimmung +2), sonst eine Zerrung. Werte vorläufig.
   {id:'uebertreibt',titel:'Der Trainingsweltmeister übertreibt',bereich:'K07',art:'info',stufe:'haeufig',chance:0.1,ausloeser:'uebertreibt',sperrTage:90,immer:true,
     texte:['{spieler} hängt nach dem Training noch eine Stunde Sprints dran. Der Co-Trainer schaut zu.','{spieler} ist wie immer der Letzte auf dem Platz und gibt bei jeder Übung alles.'],
