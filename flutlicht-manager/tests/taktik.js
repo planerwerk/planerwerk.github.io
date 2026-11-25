@@ -73,4 +73,13 @@ console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
   spiel(0,2,lieb,gegen);const eins=n();spiel(2,0,lieb,gegen);spiel(0,2,anders,gegen);spiel(0,2,lieb,anders);spiel(0,2,lieb,gegen,0);const danach=n();W2.ev('RTA').ki.reaktion=1;S2.stilVerlauf=[lieb,lieb,lieb];const sd={id:o,A:50,D:50},st=W2.ev('mitStrom')(W2.ev('strom')('test','k06b'),()=>F2.kiStil(sd,{id:6,A:50,D:50})),markiert=st===gegen&&sd.konter===1; /* kiStil markiert seinen Konter (ED2) */ /* ohne Markierung des Konters keine Meldung (EC1) */
   pruef(!!gegen&&eins===1&&danach===1&&markiert,'Durchschaut: Meldung nur bei Niederlage mit dem Lieblingsstil gegen seinen Konter',`Konter ${gegen}, Meldungen ${eins} / ${danach}`);}
 
+// K35c. Ziehen und Ablegen (K35 §5): Platz auf Platz tauscht die beiden, ein Reservist auf einen Platz ersetzt den Spieler dort, ohne Daten passiert nichts.
+//       Gleiche Wirkung wie die Auswahl im Platz (setSlot). Eigene Welt, die Ereignisse sind nachgebaut.
+{const {W:W9,F:F9}=neueWelt();F9.buildWorld(SEED);const S9=W9.S,ev=W9.ev;S9.my=6;S9.mgr='Test';S9.lineup=F9.bestXI(6,ev('myT()').form);
+  const xi=()=>F9.myXI().slice(),zug=d=>({preventDefault(){},dataTransfer:{getData:()=>d}}),xi0=xi();
+  F9.aufDrop(zug('s:0'),1);const xi1=xi(),tausch=xi1[0]===xi0[1]&&xi1[1]===xi0[0];
+  const res=ev('squad')(6).find(p=>!xi1.includes(p.id)&&ev('avail')(p));F9.aufDrop(zug('p:'+res.id),3);const xi2=xi(),rein=xi2[3]===res.id&&!xi2.includes(xi1[3]);
+  F9.aufDrop(zug(''),2);F9.aufDrop(zug('s:2'),2);const nichts=xi().join()===xi2.join();
+  pruef(tausch&&rein&&nichts,'Ziehen und Ablegen: Plätze tauschen, Reservist kommt auf den Platz, ohne Daten nichts',`Tausch ${tausch}, Reservist ${rein}, ohne Daten ${nichts}`);}
+
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

@@ -465,6 +465,7 @@ lizenz:{
 222. **K05g Ansprache wirkt (25.11., popolupo, ohne Testlauf):** keine neue Funktion, eine Folge der Halbzeitansprache (Bereich `zurufe`); hält der Co-Trainer sie, gibt es sie nicht.
 223. **K25g Online-Shop (25.11., popolupo, ohne Testlauf):** **neue Funktion** „Online-Shop eröffnen“ im Bereich `marketing` (gesperrt wie die Kampagnen), ohne Automatik: Der Stab eröffnet keinen Shop, unter der Automatik bleibt alles wie bisher.
 224. **K09k Verfahren nach einigen Tagen (25.11., popolupo, ohne Testlauf):** keine neue Funktion, das Urteil einer Ereigniskarte kommt später als Meldung.
+225. **K35c Ziehen und Ablegen in der Aufstellung (25.11., popolupo, ohne Testlauf):** keine neue Funktion, ein zweiter Weg zur Startelf (Bereich `aufstellung`); ist er gesperrt, lässt sich nichts ziehen.
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 
