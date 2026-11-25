@@ -101,13 +101,15 @@ function gegnerBeobachten(){if(!darf('beobachten'))return;const t=myT(),n=gbNaec
 // Scoutbericht (K18 §5 Nr. 3, K18g): wahrscheinlicher Stil des Gegners (kiStilWahl gegen deinen eingestellten Stil, ohne Zufall), ob er auf deinen Lieblingsstil reagieren
 // könnte (nur wenn du den Stil selbst wählst, wie in kiStil), die drei Stärksten seiner wahrscheinlichen Elf und wer von seinen bericht.top Stärksten fehlt (verletzt oder
 // für den Wettbewerb deines nächsten Spiels gesperrt). Nur Anzeige, ändert nichts am Spiel. Text ohne HTML, der Aufrufer escapt.
-function scoutBericht(o,home){const t=o!=null&&o>=0&&o<1000?S.teams[o]:null;if(!t)return'';const mt=myT(),me=side(S.my,home,false),op=side(o,!home,false);
-  me.stil=STILE.includes(mt.stil)?mt.stil:'ausgewogen';const stil=kiStilWahl(op,me),L=!autoB('stil')?stilLiebling():null,wb=naechsterWb(),sn=k=>STIL_NAME[k]||k;
-  const gef=op.xp.slice().sort((a,b)=>b.p.str-a.p.str).slice(0,3).map(x=>`${x.p.n} (${x.pos})`);
-  const fehlt=squad(o).slice().sort((a,b)=>b.str-a.str).slice(0,RSC.gegner.bericht.top).filter(p=>p.inj>0||gesperrt(p,wb)).map(p=>`${p.n} (${p.inj>0?'verletzt':'gesperrt'})`);
-  return`Scoutbericht: ${t.name} spielt wohl ${sn(stil)} (${t.form}).${L&&L.gegen!==stil?` Der Trainer kennt deinen Lieblingsstil ${sn(L.lieb)} und könnte mit ${sn(L.gegen)} dagegenhalten.`:''}${gef.length?` Gefährlich: ${gef.join(', ')}.`:''} ${fehlt.length?`Es fehlen: ${fehlt.join(', ')}.`:'Von seinen Stammkräften fehlt keiner.'}`;}
-function gegnerBeobachtenText(){const t=myT(),n=gbNaechstes();if(!n)return'';if(gegnerBeobachtet(t,n.g)){const e=heuteMeinSpiel()?meinSpiel(S.tag):naechstesSpiel(S.tag+1),f=e&&paarung(e),b=f?scoutBericht(n.g,f[0]===S.my):'';
-    return` <span class="dim">Ein Scout hat den Gegner beobachtet, die Spielvorbereitung wirkt doppelt.</span>${b?`<br>${esc(b)}`:''}`;}
+// Seit Prüfung FM4 mit den Sperren des Wettbewerbs deines nächsten Spiels (mitWettbewerb, wie im Spiel), FM9: auch Abgestellte bei Nationalmannschaften fehlen.
+function scoutBericht(o,home){const t=o!=null&&o>=0&&o<1000?S.teams[o]:null;if(!t)return'';const wb=naechsterWb();return mitWettbewerb(wb,()=>{const mt=myT(),me=side(S.my,home,false),op=side(o,!home,false);
+  me.stil=STILE.includes(mt.stil)?mt.stil:'ausgewogen';const stil=kiStilWahl(op,me),L=!autoB('stil')?stilLiebling():null,sn=k=>STIL_NAME[k]||k;
+  const gef=op.xp.slice().sort((a,b)=>b.p.str-a.p.str).slice(0,3).map(x=>`${x.p.n} (${x.pos})`),grund=p=>p.inj>0?'verletzt':beiNationalteam(p)?'Nationalmannschaft':'gesperrt';
+  const fehlt=squad(o).slice().sort((a,b)=>b.str-a.str).slice(0,RSC.gegner.bericht.top).filter(p=>p.inj>0||gesperrt(p,wb)||beiNationalteam(p)).map(p=>`${p.n} (${grund(p)})`);
+  return scoutBerichtText(t,stil,L,gef,fehlt,sn);});}
+const scoutBerichtText=(t,stil,L,gef,fehlt,sn)=>`Scoutbericht: ${t.name} spielt wohl ${sn(stil)} (${t.form}).${L&&L.gegen!==stil?` Der Trainer kennt deinen Lieblingsstil ${sn(L.lieb)} und könnte mit ${sn(L.gegen)} dagegenhalten.`:''}${gef.length?` Gefährlich: ${gef.join(', ')}.`:''} ${fehlt.length?`Es fehlen: ${fehlt.join(', ')}.`:'Von seinen Stammkräften fehlt keiner.'}`;
+// Seit Prüfung FM3 ohne den Bericht: Den zeigt der Vergleich (tauziehenNaechstes), der im Fenster vor dem Spiel schon steht, sonst stand er doppelt da
+function gegnerBeobachtenText(){const t=myT(),n=gbNaechstes();if(!n)return'';if(gegnerBeobachtet(t,n.g))return' <span class="dim">Ein Scout hat den Gegner beobachtet, die Spielvorbereitung wirkt doppelt.</span>';
   const ohne=gbOhneWirkung(t,n);if(ohne)return` <span class="dim">${esc(ohne)}</span>`;
   return` <button onclick="gegnerBeobachten()"${lzAus('beobachten')}>Gegner beobachten lassen (${fmt(RSC.gegner.kosten)})</button>`;}
 

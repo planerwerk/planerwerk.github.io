@@ -205,11 +205,12 @@ const bankWelt=()=>{const w=welt(),{S,F,ev}=w;F.englischeWoche=()=>false;const s
 //     (Grund „neu“, Einsatzzeit bleibt), danach wieder; ein anderer Verein hat keinen Neubeginn.
 {const {S,F,ev,sq,xi,rest,buch,ohne,t,B}=bankWelt(),N=B.neuerTrainer,st=ev('stammA'),abs=ev('absTag');
   const ruft=/neubeginnStart\(id\)/.test(String(ev('takeJob'))),r=rest.find(q=>!st(q)),s=sq.find(q=>st(q));r.st=50;s.st=50;F.neubeginnStart(S.my);
-  const hoffen=r.st===50+N.hoffen&&s.st===50&&!!S.neubeginn&&S.neubeginn.t===S.my&&S.neubeginn.bis===abs(S.tag)+N.tage;
-  const p=sq.find(q=>xi.includes(q.id)&&q.pos==='MF'),ers=rest.find(q=>q.pos==='MF');p.fit=100;const ea0=p.ea;buch(ohne(p.id,ers.id),{bank:[p.id]});const neu=p.bg==='neu'&&p.ea===ea0;
-  const fremd=!ev('neubeginn')(S.teams.find(x=>x.id!==S.my).id);S.neubeginn.bis=abs(S.tag)-1;buch(ohne(p.id,ers.id),{bank:[p.id]});const danach=p.bg!=='neu'&&p.ea<ea0;
-  pruef(ruft&&hoffen&&neu&&fremd&&danach,'Neuer Trainer: Reservisten hoffen, vier Wochen zählt kein Bankplatz, danach wieder, nur dein Verein',
-    `takeJob ${ruft}, Hoffnung ${hoffen} (${r.st}/${s.st}), Grund ${neu} („${p.bg}“), fremder Verein ${fremd}, danach ${danach} (${pc(ea0)} → ${pc(p.ea)})`);}
+  const hoffen=r.st===50+N.hoffen&&s.st===50&&!!S.neubeginn&&S.neubeginn.t===S.my&&S.neubeginn.rest===N.spiele; /* seit FM5 Pflichtspiele statt Tage */
+  const p=sq.find(q=>xi.includes(q.id)&&q.pos==='MF'),ers=rest.find(q=>q.pos==='MF');p.fit=100;const ea0=p.ea;buch(ohne(p.id,ers.id),{bank:[p.id]});const neu=p.bg==='neu'&&p.ea===ea0&&S.neubeginn.rest===N.spiele-1;
+  const fremd=!ev('neubeginn')(S.teams.find(x=>x.id!==S.my).id);S.neubeginn.rest=0;buch(ohne(p.id,ers.id),{bank:[p.id]});const danach=p.bg!=='neu'&&p.ea<ea0;
+  const altStand=(S.neubeginn={t:S.my,bis:abs(S.tag)},ev('neubeginn')(S.my))&&(S.neubeginn.bis=abs(S.tag)-1,!ev('neubeginn')(S.my)); /* Spielstand von vor FM5 mit bis */
+  pruef(ruft&&hoffen&&neu&&fremd&&danach&&altStand,'Neuer Trainer: Reservisten hoffen, die ersten Pflichtspiele zählt kein Bankplatz, danach wieder, nur dein Verein',
+    `takeJob ${ruft}, Hoffnung ${hoffen} (${r.st}/${s.st}), Grund ${neu} („${p.bg}“, noch ${S.neubeginn&&S.neubeginn.rest}), fremder Verein ${fremd}, danach ${danach} (${pc(ea0)} → ${pc(p.ea)}), alter Stand ${altStand}`);}
 
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

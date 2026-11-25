@@ -98,8 +98,8 @@ pruef(supercups.length===N-1&&supercups.every(x=>!x.verl&&(x.hg!==x.ag)===!x.pen
   const schwelle=nom.every(p=>p.str>=ev('lsSchwelle')(p.nat)&&p.team>=0&&p.team<ev('AV0')),max=Object.values(je).every(n=>n<=L.max),fehlt=nom.length>0&&nom.every(p=>!av(p)&&bn(p));
   const bis=nom.length?nom[0].lsp.bis:0,st=nom.find(p=>p.lsp.st);if(st)st.fit=100;
   S5.tag=x.bis+2;F5.laenderspielTag(x.bis+2);const zurueck=nom.every(p=>!p.lsp)&&(!st||st.fit<100||st.inj>0);L.an=false;
-  pruef(aus&&nom.length>0&&schwelle&&max&&fehlt&&zurueck&&bis===abs(x.bis)+1,'Länderspiele: nur mit Schalter, Stärkste je Nation ab der Schwelle, fehlen bis nach der Pause, kommen müde zurück',
-    `aus ${aus}, nominiert ${nom.length} (${Object.keys(je).length} Nationen), Schwelle ${schwelle}, höchstens ${L.max} ${max}, fehlen ${fehlt}, Ende ${bis}/${abs(x.bis)+1}, zurück ${zurueck}`);}
+  pruef(aus&&nom.length>0&&schwelle&&max&&fehlt&&zurueck&&bis===abs(x.bis),'Länderspiele: nur mit Schalter, Stärkste je Nation ab der Schwelle, fehlen bis nach der Pause, kommen müde zurück',
+    `aus ${aus}, nominiert ${nom.length} (${Object.keys(je).length} Nationen), Schwelle ${schwelle}, höchstens ${L.max} ${max}, fehlen ${fehlt}, Ende /-e, zurück ${zurueck}`);}
 
 console.log(`\n${N} Saison(s) in ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

@@ -876,8 +876,9 @@ const REGELN={
     // Schwelle je Nation basis − jeRang × (Rang − 1), mindestens min; höchstens max je Nation; bis rand über der Schwelle nur mit Form ab formMin und Spielpraxis ab praxisMin.
     // Spiele je Pause: Tage der Pause / tageJeSpiel, gerundet auf gerade Zahlen, mindestens 2. Die stamm Stärksten spielen 90 Minuten, die anderen minuten (gewürfelt).
     // Rückkehr: Frische − frische, Saisonbelastung + belastung je Spiel, Verletzung mit verletzung, Selbstvertrauen ± sv, Stimmung + stimmung (Stolz).
+    // Seit Prüfung FM: zurück am Tag nach dem letzten Pausentag (FM1), ein Länderspiel zählt ab minMin Minuten, die Frische sinkt nach den Minuten, Saisonbelastung höchstens 100 (FM10).
     laenderspiele:{an:false,schwelle:{basis:88,jeRang:0.5,min:62},max:26,rand:3,formMin:7,praxisMin:40,tageJeSpiel:4.5,stamm:11,minuten:[0,30],
-      frische:[10,20],belastung:2,verletzung:0.03,sv:0.3,stimmung:2,ersteBis:23}}, /* ersteBis: Karte „Anruf des Nationaltrainers“ nur bis zu diesem Alter (K13g), bei Älteren war es kaum die erste */
+      frische:[10,20],belastung:2,verletzung:0.03,sv:0.3,stimmung:2,ersteBis:23,minMin:10}}, /* ersteBis: Karte „Anruf des Nationaltrainers“ nur bis zu diesem Alter (K13g), bei Älteren war es kaum die erste */
   // Testspiele und Trainingslager (K11 §11, Welle 2). Geldbeträge und Zusagen sind Spielwerte (K11 §12 Nr. 4).
   testspiele:{abWoche:3,wechsel:11,frische:0.7,risiko:0.6,praxis:0.6,vertrautheit:2,form:0.3,
     zusage:{grund:0.6,staerker:0.4,schwaecher:1.3,staerkerAb:4,schwaecherAb:4,kalender:0.2,region:1.2,vorbereitung:1.2,saison:0.7,min:0.05,max:0.95},
@@ -913,8 +914,8 @@ const REGELN={
       chance:{spiele:3,note:3.0},                            // Vertreter eines fehlenden Stammspielers mit Notenschnitt bis 3,0 nach drei Spielen
       sperre:{hitzkopf:-1},fuehrer:{freunde:-1},altstar:{ab:31,spiele:200},
       // Neuer Trainer (K14 §12, K14f, 24.11., popolupo, vorläufig): Übernimmst du einen Verein, hoffen seine Reservisten (Stimmung + hoffen) und tage Tage lang zählt kein
-      // Bankplatz deiner Spieler. Nur dein Verein (Trainerwechsel der Computer-Vereine ändern nichts, sonst verschöbe sich die Kalibrierung).
-      neuerTrainer:{tage:28,hoffen:2},
+      // Bankplatz deiner Spieler (seit FM5: spiele Pflichtspiele lang). Nur dein Verein (Trainerwechsel der Computer-Vereine ändern nichts, sonst verschöbe sich die Kalibrierung).
+      neuerTrainer:{spiele:5,hoffen:2}, /* seit Prüfung FM5 die ersten spiele Pflichtspiele statt 28 Tage, sonst lief der Neubeginn bei einer Übernahme im Sommer vor dem ersten Spiel ab */
       bedeutungslos:{spieltage:5,plus:2,minus:-2,minuten:20,grenzen:{1:[1,4,6,15,16],2:[2,3,15,16],3:[2,3,16]}},
       pokalTempo:0.5,diva:2},
     erfolg:{abSpiele:3,platz:25,platzMax:7,serie:1,serieMax:3,zerfall:0.9},

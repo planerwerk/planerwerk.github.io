@@ -58,8 +58,8 @@ const BANK_GRUND={weg:'wechselt bald, erwartet nichts mehr',rotation:'Rotation, 
   tribuene:'nicht im Spieltagskader',frueh:'früh ausgewechselt',spaet:'erst in der Nachspielzeit eingewechselt',ww:'will weg, versteht die Bank',sperre:'erstes Spiel nach der Sperre (zählt nicht)',mentor:'betreut als Pate ein Talent, nimmt die Bank hin',bank:'Bank ohne besonderen Grund',
   neu:'neuer Trainer, jeder bekommt seine Chance (zählt nicht)'};
 // Neuer Trainer (K14 §12, K14f): Nach deinem Vereinswechsel zählt RKA.bank.neuerTrainer.tage lang kein Bankplatz deiner Spieler. S.neubeginn = {t Verein, bis absoluter Tag}.
-const neubeginn=tid=>!!S.neubeginn&&S.neubeginn.t===tid&&tid===S.my&&absTag(S.tag)<=S.neubeginn.bis;
-function neubeginnStart(tid){const N=RKA.bank.neuerTrainer;S.neubeginn={t:tid,bis:absTag(S.tag)+N.tage};squad(tid).forEach(p=>{kabineInit(p);if(!stammA(p))stimmungAendern(p,N.hoffen);});}
+const neubeginn=tid=>{const N=S.neubeginn;if(!N||N.t!==tid||tid!==S.my)return false;return N.rest!=null?N.rest>0:absTag(S.tag)<=N.bis;}; /* seit FM5 rest Pflichtspiele, bis (Tage) nur in Spielständen von davor */
+function neubeginnStart(tid){const N=RKA.bank.neuerTrainer;S.neubeginn={t:tid,rest:N.spiele};squad(tid).forEach(p=>{kabineInit(p);if(!stammA(p))stimmungAendern(p,N.hoffen);});}
 const feinPos=p=>p.fp||STD_POS[p.pos];
 const stammA=p=>KR_STUFE[p.krA]>=3; // stünde in der besten Elf ohne Ausfälle
 // Profi-Pflichtspiele über die Karriere. Startwert ohne Zufall aus Alter und Spielernummer (bis 18 Jahre: null)
@@ -91,7 +91,7 @@ function einsatzBuchen(list,d=S.tag){const tabs={},heute=absTag(d);
         fehlt:new Map((r.na&&r.na[s])||[]),rein:new Map(ws.filter(w=>w[0]===s).map(w=>[w[3],w[1]])),raus:new Map(ws.filter(w=>w[0]===s).map(w=>[w[2],w[1]])),verl:new Set((r.inj||[]).map(x=>x.id)),
         englisch:S.plan?englischeWoche(tid,d):false,rotAn:t.rotAn&&heute<=t.rotAn.bis?t.rotAn.f:0,egal:false};
       if(r.lg&&S.res&&S.res[r.lg])c.egal=saisonEntschieden(t,tabs[r.lg]||(tabs[r.lg]=table(r.lg)));
-      sq.forEach(p=>bankFall(p,c));
+      sq.forEach(p=>bankFall(p,c));if(neubeginn(tid)&&S.neubeginn.rest!=null)S.neubeginn.rest--; /* Neubeginn zählt Pflichtspiele (Prüfung FM5) */
       // Wer wie oft in Folge im Tor stand (Torwart-Duell)
       const tw=(r.xi[s]||[]).map(id=>PIX.get(id)).find(p=>p&&p.pos==='TW');if(tw)t.twS=t.twS&&t.twS[0]===tw.id?[tw.id,t.twS[1]+1]:[tw.id,1];
       t.xiW=(r.xi[s]||[]).slice();if(winner(r)===tid&&r.hg!==r.ag||(r.pen&&winner(r)===tid))t.siegeW=(t.siegeW||0)+1;
@@ -114,7 +114,7 @@ function bankFall(p,c){const B=RKA.bank,t=c.t,gespielt=c.min.has(p.id),m=c.min.g
       if(stark){grund='joker';stimmungAendern(p,B.joker.stimmung);anteil=Math.max(anteil,e);jokerAnspruch(p,c);}
       else if(ab!=null&&ab>B.spaet.nach&&m<=B.spaet.minuten){grund='spaet';const v=unerf?B.spaet.unerfahren:etabliert?B.spaet.etabliert:0;if(v)stimmungAendern(p,v);}
       if(!stark&&m<B.rivale.haltenAb&&p.rz&&platzRivale(p,c.xi))p.rz++;}
-    if(rolle==='pokal'&&!c.pokal&&anteil<p.ea)zaehlt=false;}
+    if(rolle==='pokal'&&!c.pokal&&anteil<p.ea)zaehlt=false;if(neubeginn(t.id)&&anteil<p.ea)zaehlt=false;} /* FM6: im Neubeginn auch kein Abzug für kurze Einsätze */
   else{p.bnk=(p.bnk||0)+1;const imKader=!c.kader||c.kader.has(p.id),riv=platzRivale(p,c.xi),entschuldigt=g=>{grund=g;zaehlt=false;};
     if(neubeginn(t.id))entschuldigt('neu'); /* neuer Trainer: keine Abwertung für niemanden (K14f) */
     else if(p.ww>=3)entschuldigt('ww');
@@ -136,7 +136,7 @@ function bankFall(p,c){const B=RKA.bank,t=c.t,gespielt=c.min.has(p.id),m=c.min.g
       if(t.kap===p.id||hatEig(p,'fuehrungsspieler')||(p.age>=B.altstar.ab&&(p.ppk||0)>=B.altstar.spiele))freundeVon(p).forEach(q=>{if(q.team===p.team)stimmungAendern(q,B.fuehrer.freunde);});}
     delete p.nsp;}
   // Bedeutungslose Spiele: Reservisten und Talente erwarten Chancen
-  if(c.egal&&!stammA(p)&&krStufe(p)<=2&&!['ww','aufbau','sperre'].includes(grund))stimmungAendern(p,m>=B.bedeutungslos.minuten?B.bedeutungslos.plus:B.bedeutungslos.minus);
+  if(c.egal&&!neubeginn(t.id)&&!stammA(p)&&krStufe(p)<=2&&!['ww','aufbau','sperre'].includes(grund))stimmungAendern(p,m>=B.bedeutungslos.minuten?B.bedeutungslos.plus:B.bedeutungslos.minus);
   if(zaehlt&&anteil<p.ea)tempo*=vertragsDruck(p); // Vertragsjahr und teurer Neuzugang: Der Bankplatz wiegt schwerer (K14 §12, U10b)
   if(zaehlt)p.ea=p.ea*(1-tempo)+tempo*anteil;
   // Wer bisher nichts erwartet hat und es jetzt tut (zehntes Profispiel), beginnt bei seiner Erwartung und nicht im Minus

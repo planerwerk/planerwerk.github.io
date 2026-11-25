@@ -82,8 +82,9 @@ const scout=(S,F,q,gebiet,ev=F.__ev)=>{let x;for(let i=0;i<50;i++){x=F.stabNeu('
   const v=ev('squad')(o).slice().sort((a,b)=>b.str-a.str)[0],inj0=v.inj;v.inj=10;const b=F.scoutBericht(o,home),stil=F.kiStilWahl(side(o,!home,false),mich());v.inj=inj0;
   const bericht=b.includes('Scoutbericht')&&b.includes(S.teams[o].name)&&b.includes(SN[stil]||stil)&&b.includes(v.n+' (verletzt)');
   S.stab=S.stab.filter(x=>!(x.team===S.my&&(x.r==='scout'||x.r==='video')));S.stab.push(ev('stabNeu')('scout',10,S.my,t.lg));ev('stabGeaendert')();delete t.gb;
-  const ohne=!F.gegnerBeobachtenText().includes('Scoutbericht');F.gegnerBeobachten();const mit=!!t.gb&&F.gegnerBeobachtenText().includes('Scoutbericht');
-  pruef(gleich&&lieb&&re&&bericht&&ohne&&mit,'Scoutbericht: wahrscheinlicher Stil wie die Wahl im Spiel, Reaktion auf deinen Lieblingsstil, Ausfälle, erst nach der Beobachtung',
+  /* Prüfung FM3: der Bericht steht nur im Vergleich (tauziehenNaechstes), nicht noch einmal im Text zur Beobachtung */
+  const ohne=!F.tauziehenNaechstes().includes('Scoutbericht');F.gegnerBeobachten();const mit=!!t.gb&&F.tauziehenNaechstes().includes('Scoutbericht')&&!F.gegnerBeobachtenText().includes('Scoutbericht');
+  pruef(gleich&&lieb&&re&&bericht&&ohne&&mit,'Scoutbericht: wahrscheinlicher Stil wie die Wahl im Spiel, Reaktion auf deinen Lieblingsstil, Ausfälle, erst nach der Beobachtung, nur einmal',
     `ohne Reaktion gleich ${gleich}, Lieblingsstil ${lieb}, Reaktion ${re}, Bericht ${bericht} („${b}“), Vorschau ohne/mit ${ohne}/${mit}`);}
 
 // K18e. Scout liegt daneben (K18 §8): Einschätzung beim Kauf 6 über der wahren Stärke gibt eine Meldung, 2 darüber keine; der Merker ist danach weg;

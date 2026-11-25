@@ -169,7 +169,7 @@ const stLigaWahl=lg=>`<div class="row">${LIGEN.map(l=>`<button class="${l===lg?'
 const stLink=e=>e?`<a href="#" onclick="openP(${e[0]});return false">${esc(e[1])}</a> <span class="dim">(${esc(stVerein(e[2]))})</span>`:'–';
 function statistikAnsicht(){const st=statS(),f={saison:stAnsichtSaison,ehrungen:stAnsichtEhrungen,rekorde:stAnsichtRekorde,archiv:stAnsichtArchiv,karriere:stAnsichtKarriere,sammlung:sammlungAnsicht}[STV]||stAnsichtSaison;
   return`<div class="card"><div class="row between"><h2>Statistik</h2><div class="row">${ST_SEITEN.map(([k,l])=>`<button class="${STV===k?'go':''}" aria-pressed="${STV===k}" onclick="STV='${k}';render()">${l}</button>`).join('')}</div></div>
-    <p class="dim">Alle Zahlen seit Beginn deines Spielstands (Saison ${stSaison(st.ab)}). Frühere Spiele zählen nicht.</p></div>${stVergleich()}${f(st)}`;}
+    ${STV==='sammlung'?'':`<p class="dim">Alle Zahlen seit Beginn deines Spielstands (Saison ${stSaison(st.ab)}). Frühere Spiele zählen nicht.</p>`}</div>${stVergleich()}${f(st)}`;} /* die Sammlung gilt über alle Karrieren (Prüfung FM8) */
 // Europapokal in der Saisonstatistik (K37 „Noch nicht“, K34c): Torjäger der deutschen Vereine im Europapokal dieser Saison (p.eg, am Saisonwechsel auf 0)
 function stEuropaTorjaeger(){const l=S.pl.filter(p=>p.team>=0&&p.team<AV0&&(p.eg||0)>0).sort((a,b)=>b.eg-a.eg).slice(0,RSTAT.euListe);if(!l.length)return'';
   return`<div class="card"><h3>Europapokal: Torjäger deutscher Vereine ${stSaison(S.season)}</h3><table><tbody>${l.map((p,i)=>`<tr class="click ${p.team===S.my?'me':''}" onclick="openP(${p.id})"><td class="num">${i+1}.</td><td>${esc(p.n)}<br><span class="dim">${esc(tn(p.team))}</span></td><td class="num"><b>${p.eg}</b></td></tr>`).join('')}</tbody></table></div>`;}

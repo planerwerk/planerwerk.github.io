@@ -130,14 +130,14 @@ const lsSchwelle=nat=>{const L=RWB.laenderspiele.schwelle,n=nation(nat);return n
 function laenderspielTag(d){if(!lsAn()||!S.plan)return;const a=absTag(d);
   S.pl.forEach(p=>{if(p.lsp&&a>p.lsp.bis)mitStrom(strom('laender',S.season,d,p.id),()=>lsRueckkehr(p));});
   S.plan.pausen.filter(x=>x.name==='Länderspielpause'&&x.von===d).forEach(x=>lsNominieren(x));}
-function lsNominieren(x){const L=RWB.laenderspiele,von=absTag(x.von),bis=absTag(x.bis)+1,n=Math.max(2,Math.round((x.bis-x.von+1)/L.tageJeSpiel/2)*2),nach=new Map();
-  S.pl.forEach(p=>{if(p.team<0||!p.nat||p.inj>0||p.lsp)return;if(p.team<AV0){if(!S.teams[p.team]||!aktiv(S.teams[p.team]))return;}else if(!avVon(p.team))return;
+function lsNominieren(x){const L=RWB.laenderspiele,von=absTag(x.von),bis=absTag(x.bis),n=Math.max(2,Math.round((x.bis-x.von+1)/L.tageJeSpiel/2)*2),nach=new Map();
+  [...S.pl,...((S.ausland&&S.ausland.pl)||[])].forEach(p=>{if(p.team<0||!p.nat||p.inj>0||p.lsp)return;if(p.team<AV0){if(!S.teams[p.team]||!aktiv(S.teams[p.team]))return;}else if(!avVon(p.team))return;
     const s=lsSchwelle(p.nat);if(p.str<s||(p.str<s+L.rand&&((p.form||0)<L.formMin||(p.sp||0)<L.praxisMin)))return;
     if(!nach.has(p.nat))nach.set(p.nat,[]);nach.get(p.nat).push(p);});
   const mein=[];nach.forEach(l=>l.sort((a,b)=>b.str-a.str||a.id-b.id).slice(0,L.max).forEach((p,i)=>{if(p.team>=AV0)return;p.lsp={von,bis,n,st:i<L.stamm?1:0};p.lspN=(p.lspN||0)+1;if(p.team===S.my)mein.push(p);}));
   if(mein.length)news(`Länderspielpause: ${mein.map(p=>`${p.n} (${natName(p)})`).join(', ')} ${mein.length===1?'ist':'sind'} bis ${datumKurz(x.bis)} bei der Nationalmannschaft, ${n} Länderspiele.`,'');}
 function lsRueckkehr(p){const L=RWB.laenderspiele,x=p.lsp;delete p.lsp;if(p.team<0||p.team>=AV0)return;let sp=0;
-  for(let i=0;i<x.n;i++)if((x.st?90:ri(L.minuten[0],L.minuten[1]))>0)sp++;
+  let M=0;for(let i=0;i<x.n;i++){const m=x.st?90:ri(L.minuten[0],L.minuten[1]);M+=m;if(m>=L.minMin)sp++;} /* FM10: kurze Einsätze zählen nicht voll */
   stimmungAendern(p,L.stimmung);
-  if(sp){p.fit=Math.max(0,p.fit-ri(L.frische[0],L.frische[1]));p.sb=(p.sb||0)+L.belastung*sp;svAendern(p,R()<0.5?L.sv:-L.sv);if(R()<L.verletzung&&verletzen(p,'kollision'))p.lspV=absTag(S.tag);}
+  if(sp){const a=Math.min(1,M/(90*sp));p.fit=Math.max(0,p.fit-Math.round(ri(L.frische[0],L.frische[1])*a));p.sb=Math.min(100,(p.sb||0)+L.belastung*sp);svAendern(p,R()<0.5?L.sv:-L.sv);if(R()<L.verletzung&&verletzen(p,'kollision'))p.lspV=absTag(S.tag);}
   if(p.team===S.my)news(`${p.n} ist von der Nationalmannschaft zurück, ${sp?`${sp} Länderspiel${sp===1?'':'e'}`:'ohne Einsatz'}${p.inj>0?', verletzt':''}.`,p.inj>0?'bad':'');}

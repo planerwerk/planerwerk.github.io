@@ -299,7 +299,7 @@ function kartenText(t,b){const p=b.spieler!=null?PIX.get(b.spieler):null,v=b.ver
 const kartenGeld=w=>{const t=S.teams&&S.teams[S.my],f=(RKT.geldLiga||{})[t?t.lg:3]||1;return Math.round(w*f/1000)*1000;};
 function kartenZeigen(c,b,d,halt,stumm){const K=karten(),i=K.v[c.id]||0,text=kartenText(c.texte[i%c.texte.length],b);K.v[c.id]=i+1;
   if(c.art==='info'){const z=c.wirkung?mitStrom(strom('ereignisse',S.season,d,c.id),()=>c.wirkung.map(w=>kartenWirkung(w,b,c)).filter(Boolean)):[]; /* Info-Karten mit Wirkung (K30e) */
-    if(!stumm)news(`${c.titel}: ${text}${z.length?' '+z.map(t=>kartenText(t,b)).join(' '):''}`,'');kartenLog(c,d,null,false);return;} /* stumm: über der Info-Grenze nur die Wirkung (EH3) */
+    if(!stumm)news(`${c.titel}: ${text}${z.length?' '+z.map(t=>kartenText(t,b)).join(' '):''}`,'');kartenLog(c,d,null,false,stumm);return;} /* stumm: über der Info-Grenze nur die Wirkung (EH3) */
   const k={id:c.id,tag:d,s:S.season,b,text};
   if(halt){K.offen.push(k);news(`${c.titel}: ${text} Deine Entscheidung steht im Büro.`,'offer');return;}
   kartenEntscheiden(k,c.auto,true);}
@@ -427,7 +427,7 @@ function karteChef(x,v,weg,wert){const K=RKT.stab,C=K.chef,rolle=RST.rollen[x.r]
   trainerS();const alt=trainerGeht(v,0),c=mitStrom(strom('trainerpool',S.season,S.tag,'co',x.id),()=>trainerNeu(v.rep-C.rufAbschlag,v.id));c.n=x.n;c.co=1;if(x.age!=null)c.alter=x.age;v.chef=c.id;v.stil=c.stil; /* EZ5: sein Alter */
   const a=Math.min(Math.round(x.sal*K.abloese/1000)*1000,Math.max(0,v.cash));if(a){money('Stab: Ablöse',a);v.cash-=a;}S.stab=S.stab.filter(y=>y!==x);stabGeaendert();
   news(`${x.n} wird Cheftrainer bei ${v.name}${a?`, Ablöse ${fmt(a)}`:''}.${alt?` ${alt.n} war dort nur wenige Tage im Amt.`:''}`,'tr');}
-function kartenLog(c,tag,wahl,auto){const K=karten();K.log.push({id:c.id,s:S.season,tag,wahl,auto});if(K.log.length>RKT.log)K.log.splice(0,K.log.length-RKT.log);sammlungMerken(c);}
+function kartenLog(c,tag,wahl,auto,stumm){const K=karten();K.log.push({id:c.id,s:S.season,tag,wahl,auto});if(K.log.length>RKT.log)K.log.splice(0,K.log.length-RKT.log);if(!stumm)sammlungMerken(c);} /* FM7: stumme Karten sieht niemand, sie zählen nicht zur Sammlung */
 // ---------- Sammlung über alle Karrieren (K30 §5.4, K30h) ----------
 // Welche Karten du schon erlebt hast, im Browser unter RKT.sammlung.schluessel, getrennt vom Spielstand und über alle Karrieren: {id: Zahl}. Gezählt wird jede Karte,
 // die in dein Kartenprotokoll kommt (auch die der Automatik). Ohne Browser-Speicher (privates Fenster) gilt sie nur bis zum Neuladen. Kein Zufall, keine Meldung, kein Spielstand.

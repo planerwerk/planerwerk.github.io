@@ -2703,3 +2703,23 @@ Korrekturen auf `mitarbeit/popolupo-fl-korrekturen` (auf K13g).
 | FL6 | **Niedrig:** Jede Verlängerung setzte die Zielvorgabe zurück, der Nachlass von 5 % ließ sich immer neu holen. Jetzt läuft eine bestehende weiter ohne neuen Nachlass, wer sie streicht, zahlt die 5 %. | ✅ behoben |
 | FL7 | **Niedrig, Tests:** Der Fall „im Ausland“ suchte in `S.pl` statt `S.ausland.pl`; der Test K31d prüfte den Kauf zum Notpreis nicht. Beides ergänzt. Die Reihenfolge bei FK3, der Formularweg von K21f und `bonusKI` in `market()` bleiben ohne eigenen Test. | ✅ behoben (teilweise ohne Test) |
 | FL8 | **Niedrig, Doku:** K36 Nr. 193 nannte den Bereich `live` statt `zurufe`; K21 Nr. 12 führte die Zielvorgabe unter „Nicht gebaut“; Gelb nach einem Protest kam seit K09i nur mit etwa 31 % statt 35 % (jetzt im Code berichtigt: Gelb bis (Rot + Gelb) × Strenge); `zv` stand in K33 für zwei Dinge (jetzt erklärt). | ✅ behoben |
+
+## FM. Prüfung von K18g, K30h, K14f und K13f ohne Laufzeit (24. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 07ccf03..e404bd5 gelesen, nichts ausgeführt. Kein Laufzeitfehler, kein hoher Fund. Der Umbau von `kiStil` ändert weder Verhalten noch die Reihenfolge der Zufallszahlen; K13f ändert mit Schalter aus nichts; der Gleichschritt 5a bleibt unberührt, auch mit Schalter (K14f greift dort nicht, 5a ruft kein `takeJob`). Die Vorbedingungen der vier neuen Tests stimmen.
+
+Korrekturen auf `mitarbeit/popolupo-fm-korrekturen` (auf den Korrekturen FL).
+
+| # | Befund | Status |
+|---|---|---|
+| FM1 | **Mittel, nur mit Schalter:** Alle Länderspielpausen enden donnerstags; mit `bis = Ende + 1` fehlten die Nationalspieler am Freitag, an dem die 1. und 2. Liga wieder spielen, und Erst- und Zweitligisten bekamen eine Verlegung. Jetzt zurück am Tag nach dem letzten Pausentag. Test angepasst. | ✅ behoben |
+| FM2 | **Mittel, nur mit Schalter:** `lsNominieren` ging nur über `S.pl`, der Auslandspool (`S.ausland.pl`) zählte nie mit, es wurden zu viele Spieler deutscher Vereine nominiert. Jetzt beide. | ✅ behoben |
+| FM3 | **Niedrig:** Im Fenster vor dem Spiel stand der Scoutbericht doppelt. Jetzt nur im Vergleich. Test prüft beides. | ✅ behoben |
+| FM4 | **Niedrig:** `scoutBericht` rechnete ohne den Wettbewerb des nächsten Spiels, im Pokal konnte ein Gesperrter zugleich unter „Gefährlich“ stehen. Jetzt mit `mitWettbewerb`. Der neutrale Platz (Pokalfinale) fehlt weiter. | ✅ behoben |
+| FM5 | **Niedrig, Entwurf (vorläufig entschieden):** 28 Kalendertage Neubeginn liefen bei einer Übernahme im Sommer vor dem ersten Spiel ab. Jetzt die ersten 5 Pflichtspiele (`rest`), alte Stände mit `bis` laufen weiter. | ✅ behoben |
+| FM6 | **Niedrig:** „Keine Abwertung“ hatte Lücken (kurze Einsätze, bedeutungslose Spiele). Beides jetzt ohne Abzug. Kleine Pluswirkungen der Bank entfallen im Neubeginn weiter. | ✅ behoben |
+| FM7 | **Niedrig:** Die Sammlung zählte stumme Info-Karten, die du nie gesehen hast. Jetzt nicht mehr. | ✅ behoben |
+| FM8 | **Niedrig, Anzeige:** Über der Seite „Sammlung“ stand „seit Beginn deines Spielstands“, jetzt nicht mehr. Zwei Kartenpaare mit gleichem Titel unterscheidet die Liste am Bereich. | ✅ behoben |
+| FM9 | **Niedrig, nur mit Schalter:** Der Scoutbericht nannte Abgestellte nicht als fehlend. Jetzt mit „Nationalmannschaft“. | ✅ behoben |
+| FM10 | **Niedrig, nur mit Schalter:** Saisonbelastung ohne Obergrenze, eine Minute im Länderspiel zählte voll. Jetzt höchstens 100, ein Spiel zählt ab 10 Minuten, die Frische sinkt nach den Minuten. | ✅ behoben |
+| FM11 | **Niedrig, Tests:** Einige Teilprüfungen sind schon durch den Aufbau wahr (`fremd`, `gleich`, `max`). FM1 und FM3 prüfen die Tests jetzt, FM2 und FM4 weiter nicht. | offen (Tests) |
