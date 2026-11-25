@@ -42,6 +42,10 @@ if(mb){await mb.click();const fi=await pg.$('input[type=file][onchange*="eigeneW
     pruef(await pg.evaluate(()=>!document.querySelector('header .club img.wp')&&!!document.querySelector('header .club svg.wp')),'Eigene Wappen: Entfernen stellt das erzeugte Wappen wieder her');}
   else pruef(false,'Eigene Wappen: Das Menü hat die Auswahl');
   await pg.evaluate(()=>closeOv());}
+// Sequenzen (K39 §3.4, W5e3): Torjubel mit Konfetti bei „an“, nichts bei „aus“, Konfetti verschwindet von selbst
+const seq=await pg.evaluate(async()=>{const warte=ms=>new Promise(r=>setTimeout(r,ms));sequenzSetzen('an');torSequenz(true,'#c8102e');const an=document.querySelectorAll('.konfetti i').length;
+  await warte(2600);const weg=!document.querySelector('.konfetti');sequenzSetzen('aus');torSequenz(true,'#c8102e');const aus=!document.querySelector('.konfetti');sequenzSetzen('an');return{an,weg,aus};});
+pruef(seq.an>=20&&seq.weg&&seq.aus,'Sequenzen: Konfetti bei „an“, verschwindet von selbst, nichts bei „aus“',JSON.stringify(seq));
 await pg.click('.tabs button:text-is("Kader")');const zeile=await pg.$('tr.click');
 if(zeile){await zeile.click();await axeLauf('Spielerkarte');
   const fokus=await pg.evaluate(()=>{const a=document.activeElement;return !!a&&!!a.closest('.ovb');});pruef(fokus,'Fenster: Beim Öffnen liegt der Fokus im Fenster');

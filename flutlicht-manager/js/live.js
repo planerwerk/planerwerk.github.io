@@ -129,10 +129,22 @@ function liveProtest(){if(!darf('zurufe','zuruf'))return;const L=LIVE;if(!protes
   liveSichern();liveRender();}
 
 // ---------- Anzeige ----------
+// Sequenzen (K39 §3.4, W5e3): kurze Animationen bei großen Momenten. Sie blockieren nichts und verschwinden von selbst. Stufe je Gerät
+// (REGELN.darstellung.sequenzen: an, kurz, aus), aus bei „weniger Bewegung“ im Gerät. Ohne Zufall: Konfetti aus hash32, keine Wirkung aufs Spiel.
+function sequenzStufe(){const D=REGELN.darstellung.sequenzen;try{const v=localStorage.getItem(D.schluessel);if(D.stufen[v])return v;}catch(e){}return D.standard;}
+function sequenzSetzen(v){const D=REGELN.darstellung.sequenzen;if(!D.stufen[v])return;try{localStorage.setItem(D.schluessel,v);}catch(e){}}
+const sequenzAn=()=>sequenzStufe()!=='aus'&&!(typeof matchMedia==='function'&&matchMedia('(prefers-reduced-motion: reduce)').matches);
+function konfetti(farbe,n=28){if(typeof document==='undefined')return;const box=document.createElement('div');box.className='konfetti';box.setAttribute('aria-hidden','true');
+  box.innerHTML=Array.from({length:n},(_,i)=>{const h=hash32('konfetti|'+i);return`<i style="left:${h%100}%;background:${i%3?farbe:'#ffffff'};animation-delay:${(h>>>8)%400}ms;--dx:${((h>>>16)%120)-60}px"></i>`;}).join('');
+  document.body.appendChild(box);setTimeout(()=>box.remove(),2400);}
+function torSequenz(meins,farbe){if(typeof document==='undefined'||!sequenzAn())return;const kurz=sequenzStufe()==='kurz',el=document.getElementById('lv-tafel');
+  if(el){el.classList.remove('tor-blitz','tor-gegner');void el.offsetWidth;el.classList.add(meins?'tor-blitz':'tor-gegner');setTimeout(()=>el.classList.remove('tor-blitz','tor-gegner'),kurz?700:1400);}
+  if(meins&&!kurz)konfetti(farbe||'#ffc83d');}
 function liveRender(){const L=LIVE;if(!L)return;if(!document.getElementById('lv-inhalt'))liveFrame();const G=L.G,r={h:G.hid,a:G.aid};
   document.getElementById('lv-uhr').textContent=L.ende?'Ende':G.elf?'i.E.':G.m===0?'0′':G.m+'′';
   const karten=s=>{const n=G.ev.filter(e=>e.s===s&&e.t==='R').length;return n?` <span class="lv-rot" title="Platzverweise">${'▮'.repeat(n)}</span>`:'';};
   document.getElementById('lv-tafel').innerHTML=`<div class="board"><div class="t">${esc(tn(G.hid))}${karten(0)}</div><div class="score">${G.sc[0]}:${G.sc[1]}</div><div class="t">${karten(1)}${esc(tn(G.aid))}</div></div>${G.pen?`<p class="dim" style="text-align:center;margin-top:6px">Elfmeterschießen ${G.pen[0]}:${G.pen[1]}</p>`:''}`;
+  if(L.scAlt){if(G.sc[L.s]>L.scAlt[L.s])torSequenz(true,myT().col);else if(G.sc[1-L.s]>L.scAlt[1-L.s])torSequenz(false);}L.scAlt=G.sc.slice(); // Torjubel (K39 §3.4, W5e3), nicht beim Fortsetzen
   document.getElementById('lv-druck').innerHTML=liveDruck();
   document.getElementById('lv-meldung').textContent=L.meldung||'';
   document.getElementById('lv-pause').innerHTML=G.pause()==='elfmeter'&&!L.lauf?liveElfmeter():G.m===45&&!L.ende&&!L.lauf?liveHalbzeit():'';

@@ -17,7 +17,8 @@ const REGELN={
     standard:'dunkel',               // ohne gespeicherte Wahl
     themen:{dunkel:'Dunkel (Flutlichtnacht)',hell:'Hell (Tageslicht)',system:'Wie das Gerät'},
     wappenSchluessel:'flutlicht-wappen', // eigene Wappen (K39 §3.1, W5e2): nur im Browser, nie im Spielstand
-    wappenPx:[96,112]                // so groß werden eigene Wappen gespeichert (Breite, Höhe in Pixeln)
+    wappenPx:[96,112],               // so groß werden eigene Wappen gespeichert (Breite, Höhe in Pixeln)
+    sequenzen:{schluessel:'flutlicht-sequenzen',standard:'an',stufen:{an:'An',kurz:'Kurz (nur Aufblitzen)',aus:'Aus'}} // Animationen bei großen Momenten (K39 §3.4, W5e3), je Gerät
   },
   // Neue Regeln ausprobieren (K02 §4.4, K02a, 24.11., popolupo, vorläufig): Schalter, die noch aus sind, weil sie die Kalibrierung aller Vereine verschieben.
   // Im Menü je Spielstand einschaltbar (S.einst.exp). pfad: Objekt in REGELN mit dem Feld an.

@@ -63,6 +63,7 @@ Kurze animierte Szenen von 2 bis 6 Sekunden, jederzeit überspringbar, aus bei �
 | Saisonwechsel | 1. Juli | Kalenderblatt fliegt, neue Saison |
 
 - **Technik:** CSS- und SVG-Animation, für Konfetti und Licht ein kleines Canvas. Standbilder aus 3.3 als Ebenen (Vordergrund, Tribüne, Himmel) mit leichter Bewegung. Keine Videodateien.
+- ✅ **Gebaut in W5e3 (25.11., ohne Testlauf):** Torjubel im Live-Spiel (`torSequenz` in `js/live.js`): Die Anzeigetafel blitzt bei eigenem Tor gelb auf, bei einem Gegentor wird sie kurz dunkler, bei eigenem Tor fällt Konfetti in der Vereinsfarbe. Stufen im Menü unter „Darstellung“: an, kurz (nur Aufblitzen), aus; aus bei „weniger Bewegung“. Beim Fortsetzen eines Spiels kein Jubel für alte Tore. Offen: Intro, Einlauf, Abpfiff, Titel, Entlassung, Saisonwechsel.
 - **Später möglich:** echte kurze KI-Videos (Abschnitt 11), wenn ein Werkzeug mit klarer Lizenz kostenlos verfügbar ist. Vorerst nicht nötig.
 
 ### 3.5 Symbole

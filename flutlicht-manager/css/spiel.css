@@ -228,3 +228,12 @@ button.wahl.on{border-color:var(--amber);color:var(--amber);font-weight:700}
 .vs-wp{display:flex;align-items:center;gap:10px;margin-bottom:6px}
 .vs-wp .wp{margin:0}
 .vs-wp i{font-style:normal;font-family:var(--f-disp);font-size:24px;color:var(--mist)}
+/* Sequenzen (K39 §3.4, W5e3): Torjubel im Live-Spiel, gesteuert in js/live.js (torSequenz), aus bei „weniger Bewegung“ */
+#lv-tafel.tor-blitz .board{animation:torblitz .45s ease-out 3}
+#lv-tafel.tor-gegner .board{animation:torgegner .6s ease-out 1}
+@keyframes torblitz{0%{box-shadow:0 0 0 0 rgba(255,200,61,0)}35%{box-shadow:0 0 0 6px rgba(255,200,61,.55),0 0 40px rgba(255,200,61,.45)}100%{box-shadow:0 0 0 0 rgba(255,200,61,0)}}
+@keyframes torgegner{0%{filter:none}40%{filter:brightness(.65)}100%{filter:none}}
+.konfetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:40}
+.konfetti i{position:absolute;top:-14px;width:8px;height:12px;border-radius:2px;animation:konfetti 1.9s cubic-bezier(.2,.6,.4,1) forwards}
+@keyframes konfetti{0%{transform:translate(0,0) rotate(0deg)}100%{transform:translate(var(--dx),105vh) rotate(540deg)}}
+@media (prefers-reduced-motion:reduce){#lv-tafel.tor-blitz .board,#lv-tafel.tor-gegner .board{animation:none}.konfetti{display:none}}

@@ -290,6 +290,11 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 25.11.2026: W5e3 Torjubel im Live-Spiel (Zweig `mitarbeit/popolupo-w5e-artwork`)
+
+- **Neu:** Bei einem Tor blitzt die Anzeigetafel (eigenes Tor gelb, Gegentor kurz dunkler), bei eigenem Tor fällt Konfetti in der Vereinsfarbe (K39 §3.4). Menü „Darstellung“: Sequenzen an, kurz oder aus (je Gerät, `REGELN.darstellung.sequenzen`), aus bei „weniger Bewegung“. Kein Zufall (Konfetti aus `hash32`), keine Wirkung aufs Spiel, blockiert nichts.
+- **Test:** `tests/ui-zugang.js` (Konfetti bei „an“, verschwindet von selbst, nichts bei „aus“).
+
 ### 25.11.2026: W5e2 eigene Wappen laden (Zweig `mitarbeit/popolupo-w5e-artwork`)
 
 - **Neu:** Menü-Karte „Eigene Wappen“ (K39 §3.1, deine Frage vom 25.11.): Bilder mit Dateiname = Kürzel (etwa FCK.png) laden, mehrere auf einmal. Sie werden auf 96 × 112 Pixel verkleinert und nur im Browser gespeichert, nie im Spielstand und nie im Repository. `wappen()` zeigt sie statt des erzeugten Wappens. Liste der Kürzel in der Karte, „Alle eigenen Wappen entfernen“.
