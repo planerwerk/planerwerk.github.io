@@ -141,5 +141,16 @@ pruef(supercups.length===N-1&&supercups.every(x=>!x.verl&&(x.hg!==x.ag)===!x.pen
   pruef(aus&&ohneMuede&&spaet&&liga&&gleich&&mein&&runde,'Pokal-Rotation der Favoriten: nur mit Schalter, früh im Pokal gegen Schwächere ohne die Müden, dein Verein nur mit Automatik',
     `aus ${aus}, ohne Müde ${ohneMuede}, spätere Runde ${spaet}, Liga ${liga}, gleich stark ${gleich}, dein Verein ${mein}, Anschluss ${runde}`);}
 
+// K13k. Turniere im Sommer (K13 §3.4), nur mit Länderspielen: im EM-Jahr fehlen Spieler europäischer Nationen bis nach dem Trainingsauftakt, mit 3 bis 7 Spielen und
+//       Saisonbelastung; im Jahr ohne Turnier und ohne Schalter nichts; im WM-Jahr eine Meldung zur WM. Aufruf beim Saisonwechsel vor der Aufstellung.
+{const {W:WA,F:FA}=neueWelt();FA.buildWorld(SEED);const SA=WA.S,ev=WA.ev,L=ev('RWB').laenderspiele,T=L.turnier,U=ev('UEFA_NATIONEN'),abs=ev('absTag'),s0=SA.season;SA.my=6;
+  SA.season=2028;FA.turnierSommer();const aus=!SA.pl.some(p=>p.lsp);L.an=true;SA.season=2027;FA.turnierSommer();const keins=!SA.pl.some(p=>p.lsp);
+  SA.season=2028;const sb={};SA.pl.forEach(p=>{sb[p.id]=p.sb||0;});FA.turnierSommer();const nom=SA.pl.filter(p=>p.lsp);
+  const em=nom.length>0&&nom.every(p=>U.includes(p.nat)&&p.lsp.n>=3&&p.lsp.n<=3+T.stufenEm.length-2&&p.sb===Math.min(100,sb[p.id]+T.belastung)&&p.lsp.bis>abs(SA.tag));
+  SA.pl.forEach(p=>{delete p.lsp;});SA.season=2030;FA.turnierSommer();const wm=String(SA.news[0].t).includes('WM 2030');SA.pl.forEach(p=>{delete p.lsp;});L.an=false;SA.season=s0;
+  const aufruf=String(ev('newSeasonLauf')).includes('turnierSommer();S.lineup=besteElfDu()');
+  pruef(aus&&keins&&em&&wm&&aufruf,'Turniere im Sommer: nur mit Schalter und im Turnierjahr, EM nur mit Europäern, Spiele und Belastung, WM-Meldung',
+    `aus ${aus}, kein Turnier ${keins}, EM ${em} (${nom.length} Spieler), WM ${wm}, Aufruf ${aufruf}`);}
+
 console.log(`\n${N} Saison(s) in ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

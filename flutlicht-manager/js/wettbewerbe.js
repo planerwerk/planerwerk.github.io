@@ -133,11 +133,14 @@ const lsSchwelle=nat=>{const L=RWB.laenderspiele.schwelle,n=nation(nat);return n
 function laenderspielTag(d){if(!lsAn()||!S.plan)return;const a=absTag(d);
   S.pl.forEach(p=>{if(!p.lsp||a<=p.lsp.bis)return;if(a-p.lsp.bis>2){delete p.lsp;return;} /* FN5: veraltet (Schalter zwischendurch aus), ohne Folgen */mitStrom(strom('laender',S.season,d,p.id),()=>lsRueckkehr(p));});
   S.plan.pausen.filter(x=>x.name==='Länderspielpause'&&x.von===d).forEach(x=>lsNominieren(x));}
-function lsNominieren(x){const L=RWB.laenderspiele,von=absTag(x.von),bis=absTag(x.bis),n=Math.max(2,Math.round((x.bis-x.von+1)/L.tageJeSpiel/2)*2),nach=new Map();
+// Kader je Nation (seit K13k eigene Funktion, für Pausen und Turniere): Map Nation → die bis zu max Stärksten, sortiert (Spieler deutscher Vereine und des Auslandspools)
+function lsKader(){const L=RWB.laenderspiele,nach=new Map();
   [...S.pl,...((S.ausland&&S.ausland.pl)||[])].forEach(p=>{if(p.team<0||!p.nat||p.inj>0||p.lsp)return;if(p.team<AV0){if(!S.teams[p.team]||!aktiv(S.teams[p.team]))return;}else if(!avVon(p.team))return;
     const s=lsSchwelle(p.nat);if(p.str<s||(p.str<s+L.rand&&((p.form||0)<L.formMin||(p.sp||0)<L.praxisMin)))return;
     if(!nach.has(p.nat))nach.set(p.nat,[]);nach.get(p.nat).push(p);});
-  const mein=[];nach.forEach(l=>l.sort((a,b)=>b.str-a.str||a.id-b.id).slice(0,L.max).forEach((p,i)=>{p.lspN=(p.lspN||0)+1;p.lspZ=von;if(p.team>=AV0)return; /* FN7, FO7: Zählung und Marktwert auch im Auslandspool */p.lsp={von,bis,n,st:i<L.stamm?1:0};if(p.team===S.my)mein.push(p);}));
+  nach.forEach((l,k)=>nach.set(k,l.sort((a,b)=>b.str-a.str||a.id-b.id).slice(0,L.max)));return nach;}
+function lsNominieren(x){const L=RWB.laenderspiele,von=absTag(x.von),bis=absTag(x.bis),n=Math.max(2,Math.round((x.bis-x.von+1)/L.tageJeSpiel/2)*2);
+  const mein=[];lsKader().forEach(l=>l.forEach((p,i)=>{p.lspN=(p.lspN||0)+1;p.lspZ=von;if(p.team>=AV0)return; /* FN7, FO7: Zählung und Marktwert auch im Auslandspool */p.lsp={von,bis,n,st:i<L.stamm?1:0};if(p.team===S.my)mein.push(p);}));
   if(mein.length)news(`Länderspielpause: ${mein.map(p=>`${p.n} (${natName(p)})`).join(', ')} ${mein.length===1?'ist':'sind'} bis ${datumKurz(x.bis)} bei der Nationalmannschaft, ${n} Länderspiele.`,'');}
 function lsRueckkehr(p){const L=RWB.laenderspiele,x=p.lsp;delete p.lsp;if(p.team<0||p.team>=AV0)return;let sp=0;
   let M=0;for(let i=0;i<x.n;i++){const m=x.st?90:ri(L.minuten[0],L.minuten[1]);M+=m;if(m>=L.minMin)sp++;} /* FM10: kurze Einsätze zählen nicht voll */
@@ -152,3 +155,19 @@ function lsRueckkehr(p){const L=RWB.laenderspiele,x=p.lsp;delete p.lsp;if(p.team
 function pokalRotationKader(tid,gid,o){const R=RWB.pokal.rotationKI;if(!R||!R.an||!o||o.wb!=='pokal'||o.runde==null||o.runde>R.bisRunde||tid>=1000||!S.teams[tid]||!stabMacht(tid,'aufstellung'))return undefined;
   if(!(gid>=1000||teamLevel(tid)-teamLevel(gid)>=RWB.pokal.rotation.favorit))return undefined;
   const k=squad(tid).filter(p=>p.fit>=R.frische);return k.length>=R.minKader&&k.some(p=>p.pos==='TW')?k:undefined;}
+
+// ---------- Turniere im Sommer (K13 §3.4, K13k) ----------
+// Nur mit Länderspielen. Beim Saisonwechsel eines Turniersommers (Jahr der neuen Saison: Rest 0 bei Division durch 4 EM, Rest 2 WM): Teilnehmer der EM sind die
+// turnier.em Bestplatzierten aus UEFA_NATIONEN, der WM die turnier.wm Bestplatzierten. Abschneiden fest aus dem Seed: die Vorrunde und jede K.-o.-Runde übersteht eine
+// Nation mit weiter.basis − weiter.jeRang × (Rang − 1), mindestens weiter.min. Gespielt werden 3 Vorrundenspiele und die K.-o.-Spiele. Kader wie in den Pausen (lsKader). Abgestellte deutscher
+// Vereine fehlen bis turnier.spaet Tage nach dem Trainingsauftakt ihres Vereins (p.lsp, Rückkehr wie nach einer Pause) und tragen turnier.belastung Saisonbelastung,
+// weil der Sommerurlaub fehlt. Meldungen: deine Spieler und der Sieger. Ohne R().
+function turnierSommer(){if(!lsAn())return;const T=RWB.laenderspiele.turnier,em=S.season%4===0,wm=S.season%4===2;if(!em&&!wm)return;
+  const name=em?'EM':'WM',stufen=em?T.stufenEm:T.stufenWm,ko=stufen.length-2,W=T.weiter,a0=absTag(S.tag);
+  const teil=NATIONEN.map(n=>nation(n[0])).filter(n=>n&&n.rang&&(!em||UEFA_NATIONEN.includes(n.k))).sort((a,b)=>a.rang-b.rang).slice(0,em?T.em:T.wm),erg=new Map();
+  teil.forEach(n=>{const p=Math.max(W.min,W.basis-W.jeRang*(n.rang-1));let r=0;while(r<=ko&&hash32(['turnier',S.seed,S.season,n.k,r].join('|'))%1000<p*1000)r++;erg.set(n.k,r);});
+  const sieger=teil.slice().sort((a,b)=>erg.get(b.k)-erg.get(a.k)||a.rang-b.rang)[0],kader=lsKader(),mein=[];
+  teil.forEach(n=>{const r=erg.get(n.k),spiele=3+Math.min(r,ko);(kader.get(n.k)||[]).forEach((p,i)=>{p.lspN=(p.lspN||0)+1;p.lspZ=a0;if(p.team>=AV0)return;
+    const t=S.teams[p.team];p.lsp={von:a0,bis:absTag(t?auftaktTag(t):S.tag)+T.spaet,n:spiele,st:i<RWB.laenderspiele.stamm?1:0};p.sb=Math.min(100,(p.sb||0)+T.belastung);
+    if(p.team===S.my)mein.push(`${p.n} (${natName(p)}, ${stufen[Math.min(r,stufen.length-1)]})`);});});
+  news(`${name} ${S.season}: ${sieger?`Sieger ist ${sieger.name}.`:''}${mein.length?` Aus deinem Kader dabei: ${mein.join(', ')}. Sie kommen später zum Trainingsauftakt.`:''}`,'');}

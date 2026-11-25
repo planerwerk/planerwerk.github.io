@@ -448,6 +448,7 @@ lizenz:{
 205. **K11i Marketing der Golfregion (25.11., popolupo, ohne Testlauf):** keine neue Funktion, eine Folge der Ortswahl im Bereich `lager`.
 206. **K11j Freier Nachmittag im Lager (25.11., popolupo, ohne Testlauf):** keine neue Funktion, eine Ereigniskarte (Bereich `ereignisse`); unter dessen Automatik wählt der Co-Trainer „Ruhe“.
 207. **K13h Marktwert der Nationalspieler und K13i Nationalspieler in der Kaderliste (25.11., popolupo, ohne Testlauf, nur mit Länderspielen):** keine neue Funktion, nur Werte und Anzeige. Nachgetragen nach Prüfung FO9.
+208. **K13k Turniere im Sommer (25.11., popolupo, ohne Testlauf, nur mit Länderspielen):** keine neue Funktion; trifft deinen Verein wie jeden Computer-Verein.
 
 **Für UL zu klären (erledigt):** Vertragsverlängerungen und Kader auffüllen laufen in der Automatik nach der Regel der Computer-Vereine. Testspiele und Kredit haben eine eigene Regel der Automatik (Nr. 18, 25), weil Computer-Vereine dort noch nichts tun. Jeder Bereich mit Automatik hat in den Regeln einen Satz „was der Stab tut“ für Karte, Hinweis und Lizenz-Ansicht.
 

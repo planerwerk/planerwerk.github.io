@@ -112,7 +112,7 @@ function newSeasonLauf(){lizenzNachweis();wechselVollziehen(true);leiheEnde();ve
   const sp=spielplanFuer(S.season);S.fx=sp.fx;S.plan.zeit=sp.zeit;initCup();supercupAnlegen(sm);europaAnlegen(sm); // Europapokal (K37, U19a), eigener Strom
   S.fin={};/* TV-Gelder der neuen Saison zu Saisonbeginn festlegen (K23c), so hängen sie nicht davon ab, wann sie zuerst gebraucht werden */tvSaison();finanzenSaisonstart();/* Computer-Vereine bauen (K26b) */kiBauenSaison();/* Ligaklausel des Trainervertrags (U12g) */vertragNeueSaison();S.att=[0,0];S.offers=S.offers.filter(o=>PIX.get(o.pid)&&PIX.get(o.pid).team===S.my);S.phase='play';S.summary=null;TDAY=null;TLG=0;LAST=null;
   setTarget();werbungSaison();if(!S.spons)sponsOffers(); /* alle Werbeflächen samt Brust zählen in werbungSaison herunter (K24a, seit K24c auch die Brust) */
-  S.lineup=besteElfDu();kabineNachSaisonwechsel();jubilaeumJahre(); // 10 Jahre im Verein (K34 §8, U13); Elf ohne Tribüne (Prüfung FI4)
+  turnierSommer();S.lineup=besteElfDu();kabineNachSaisonwechsel();jubilaeumJahre(); /* EM/WM im Sommer (K13k, nur mit Länderspielen) */ // 10 Jahre im Verein (K34 §8, U13); Elf ohne Tribüne (Prüfung FI4)
   news(`Neue Saison ${S.season}/${(S.season+1)%100} in der ${ligaName(myT().lg)}: Ziel des Vorstands – ${targetText(myT().lg,S.target)}. Trainingsauftakt am ${datumMittel(auftaktTag(myT()))}.`,'good');save();}
 // Kader auf die Sollstärke je Position bringen: zuerst Vereinslose, sonst erzeugte Spieler. Im Sommer für alle Computer-Vereine, und wenn du einen Verein mit zu kleinem Kader verlässt.
 function kaderAuffuellen(t,base){const Z=RS,need=Z.kaderSoll;
