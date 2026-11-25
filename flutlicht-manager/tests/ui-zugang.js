@@ -41,6 +41,18 @@ if(gefunden){const vor=await pg.evaluate(()=>S.tag);await pg.keyboard.press('Ent
 // Menü: Fokus und Escape
 const menu=await pg.$('button:text-is("Menü")');if(menu){await pg.evaluate(()=>closeOv());await menu.click();await axeLauf('Menü');await pg.keyboard.press('Escape');
   pruef(await pg.evaluate(()=>!document.getElementById('ov').innerHTML),'Fenster: Escape schließt das Menü');}
+// Darstellung (K35b §13.3, W5b): Standard dunkel; hell über das Menü, axe im hellen Thema; Wahl bleibt nach dem Neuladen; „Wie das Gerät“ folgt dem Gerät
+const grund=()=>pg.evaluate(()=>getComputedStyle(document.body).backgroundColor),thema=()=>pg.evaluate(()=>document.documentElement.getAttribute('data-thema'));
+pruef(await thema()===null&&await grund()==='rgb(14, 23, 38)','Darstellung: Standard ist dunkel (Flutlichtnacht)',await grund());
+if(menu){await pg.evaluate(()=>closeOv());await menu.click();const hell=await pg.$('input[name=thema][onchange*="hell"]');
+  if(hell){await hell.check();pruef(await thema()==='hell'&&await grund()==='rgb(243, 245, 248)','Darstellung: Das Menü schaltet auf hell',await grund());
+    await axeLauf('Menü (hell)');await pg.keyboard.press('Escape');
+    for(const t of ['Büro','Kader','Aufstellung','Tabelle','Finanzen']){await pg.click(`.tabs button:text-is("${t}")`);await axeLauf(`Ansicht ${t} (hell)`);}
+    await pg.reload();pruef(await thema()==='hell','Darstellung: Die Wahl bleibt nach dem Neuladen');
+    await pg.evaluate(()=>themaSetzen('system'));await pg.emulateMedia({colorScheme:'light'});pruef(await grund()==='rgb(243, 245, 248)','Darstellung: „Wie das Gerät“ folgt einem hellen Gerät',await grund());
+    await pg.emulateMedia({colorScheme:'dark'});pruef(await grund()==='rgb(14, 23, 38)','Darstellung: „Wie das Gerät“ folgt einem dunklen Gerät',await grund());
+    await pg.evaluate(()=>themaSetzen('dunkel'));pruef(await thema()===null,'Darstellung: zurück auf dunkel, ohne Attribut');}
+  else pruef(false,'Darstellung: Das Menü hat die Auswahl „Darstellung“');}
 await b.close();
 if(hinweise.length)console.log('\nHINWEISE\n'+hinweise.join('\n'));
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

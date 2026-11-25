@@ -123,7 +123,7 @@ Keine in `regeln.js`. Farben und Abstände als CSS-Variablen in `css/spiel.css`.
 | **B Rasen** | Tiefgrün `#0f1f18` | `#183027` | Kreideweiß mit Gelb | nah am heutigen Look, aber Grün hat dann zwei Bedeutungen |
 | **C Tageslicht** (hell) | Hellgrau `#f3f5f8` | Weiß | Blau `#2563eb` | freundlich, für Tagsüber und helle Umgebungen |
 
-- **Vorläufig:** A als Standard, C als helles Thema (umschaltbar, Systemvorgabe), B entfällt. Gut `#3ecf8e`, Achtung `#ffb020`, Schlecht `#f2555a`, Information `#5aa9ff` in A; in C dunkler, damit 4,5 : 1 auf Weiß hält.
+- **Vorläufig:** A als Standard, C als helles Thema (umschaltbar im Menü: dunkel, hell oder wie das Gerät; Standard dunkel), B entfällt. Gut `#3ecf8e`, Achtung `#ffb020`, Schlecht `#ff6b6b`, Information `#5aa9ff` in A; in C dunkler, damit 4,5 : 1 auf Weiß hält.
 - **Vereinsfarbe nur für die Identität:** Kopfband, Wappen, eigene Tabellenzeile. Nie für Knöpfe oder Status, sonst verwechselt man ein rotes Vereinsband mit „kritisch“ (gefunden beim Bau der Look-Studie). Die Aktionsfarbe bleibt fest: Flutlichtgelb im dunklen, Blau im hellen Thema. Erreicht die Vereinsfarbe auf der Grundfläche keine 3 : 1, hellt oder dunkelt das Spiel sie in Stufen von 10 % ab, bis es reicht.
 - **Look-Studie (W5a, 25.11.):** als Entwurf zum Anschauen gebaut (Büro als Kachelfläche für Desktop und Handy, Farbstudie mit live berechneten Kontrasten und einer Simulation der Rot-Grün-Schwäche, Schrift mit ersten Zeichen der eigenen Anzeigeschrift, Titelbildschirm mit den BMH-Leitsprüchen, Ladebildschirm). Kein Spielcode.
 
@@ -148,7 +148,7 @@ Keine in `regeln.js`. Farben und Abstände als CSS-Variablen in `css/spiel.css`.
 ### 13.6 Umsetzung (Welle 5, Reihenfolge vorläufig)
 
 1. ✅ **W5a Look-Studie** (25.11., Entwurf zum Anschauen, kein Spielcode): Paletten, Kacheln, Schriftproben, Startseite als Kachelfläche, Titel- und Ladebildschirm.
-2. **W5b Farbsystem:** Farbtokens neu (Palette A und C), Kontrasttest, Umschalter hell und dunkel.
+2. ✅ **W5b Farbsystem** (25.11., ohne Testlauf): Farben der Palette A als Standard, Palette C als helles Thema, Auswahl im Menü (dunkel, hell, wie das Gerät; je Gerät im Browser gespeichert, nicht im Spielstand). Feste Farbwerte im Stylesheet durch die Farbvariablen ersetzt. Beim Nachrechnen angepasst: Schlecht im dunklen Thema `#ff6b6b` (mit `#f2555a` nur 4,1 : 1 auf Knöpfen und Hover-Zeilen), im hellen Thema Gut `#0f7a54` und Achtung `#9a5800` (4,5 : 1 auch auf der hellgrauen Grundfläche, nicht nur auf Weiß). Anzeigetafel im Live-Spiel und Rasen der Aufstellung bleiben in beiden Themen dunkel beziehungsweise grün. Test: `tests/ui-zugang.js` prüft das helle Thema mit axe und das Umschalten.
 3. **W5c Kacheln:** Baustein `kachel()` in `js/regler.js`, Startseite (Büro) als Kachelfläche, dann Ansicht für Ansicht.
 4. **W5d Eigene Schrift:** Zeichen entwerfen, TrueType erzeugen, einbinden.
 5. **W5e Artwork, Ladebildschirme, Sequenzen** (K39) und **W5f Audio** (K41).

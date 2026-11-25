@@ -290,6 +290,13 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 25.11.2026: W5b Farben mit hellem Thema (Zweig `mitarbeit/popolupo-w5b-farben`, auf den Welle-5-Konzepten)
+
+- **Weckruf:** kein neuer Testlauf (Testprotokoll weiter bei Lauf 8). Nur Oberfläche, keine Spielregel, kein Zufall, Spielstand unverändert.
+- **Neu:** dunkles Thema „Flutlichtnacht“ (Nachtblau mit Flutlichtgelb) statt des grünen Looks, dazu ein helles Thema „Tageslicht“. Auswahl im Menü unter „Darstellung“: dunkel, hell oder wie das Gerät. Die Wahl gilt je Gerät (Browser), nicht je Spielstand (`REGELN.darstellung`, `themaLesen`, `themaSetzen` in `js/fenster.js`).
+- **Stylesheet:** feste Farbwerte durch Farbvariablen ersetzt (Overlay, Regler-Spuren, Leuchten, Positionsmarken). Anzeigetafel und Rasen bleiben in beiden Themen dunkel beziehungsweise grün. Kontraste nachgerechnet, Einzelheiten in K35b §13.6.
+- **Test:** `tests/ui-zugang.js` prüft am Ende den Standard (dunkel), das Umschalten über das Menü, axe im hellen Thema auf Menü, Büro, Kader, Aufstellung, Tabelle und Finanzen, das Neuladen und „Wie das Gerät“ mit hellem und dunklem Gerät.
+
 ### 25.11.2026: Welle 5, Konzepte und Look-Studie (Zweig `mitarbeit/popolupo-w5-konzepte`, auf den Korrekturen FU)
 
 - **Nur Konzepte, kein Spielcode, keine Tests nötig.** Nach deiner Vorgabe vom 25.11.: K35b §13 (vertraut statt Retro, Kacheln, Farbstudie, eigene Schrift, vertraute Bedienung), K39 Artwork (Ladebildschirme, Sequenzen als Animation, echte Wappen nur selbst laden), K41 Audio, K42 Name (BMH als Leitspruch), PLAN §3 bis §5, offene Entscheidungen.

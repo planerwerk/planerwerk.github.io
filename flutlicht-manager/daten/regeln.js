@@ -12,6 +12,11 @@ const REGELN={
     alteSchluessel:['flutlicht-manager-v1','flutlicht-manager-v2','flutlicht-manager-v3'], // Spielstände älterer Testversionen, werden beim Start gelöscht
     nachrichtenMax:80                // so viele Nachrichten bleiben im Posteingang
   },
+  darstellung:{                      // Thema je Gerät (K35b §13.3, W5b): im Browser gespeichert, nicht im Spielstand; Farben in css/spiel.css
+    schluessel:'flutlicht-thema',    // Speicherplatz im Browser
+    standard:'dunkel',               // ohne gespeicherte Wahl
+    themen:{dunkel:'Dunkel (Flutlichtnacht)',hell:'Hell (Tageslicht)',system:'Wie das Gerät'}
+  },
   // Neue Regeln ausprobieren (K02 §4.4, K02a, 24.11., popolupo, vorläufig): Schalter, die noch aus sind, weil sie die Kalibrierung aller Vereine verschieben.
   // Im Menü je Spielstand einschaltbar (S.einst.exp). pfad: Objekt in REGELN mit dem Feld an.
   experimente:[

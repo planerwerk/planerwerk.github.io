@@ -14,6 +14,7 @@ function renderStart(){
   <p class="dim">Kader aller 36 Vereine: deutsche Wikipedia, Stand Ende August bis Ende Oktober 2026. Die Stärkewerte sind geschätzt. Korrekturen gehören in die Datei daten/spieler.js, nicht ins Spiel. Nachwuchsspieler, Vereinslose, die Kader der 3. Liga und die Amateurklubs im Pokal sind erfunden. Die 208 Auslandsvereine tragen echte Namen (höchste Ligen 2026/27), ihre Spieler sind erfunden. Die 3. Liga erreichst du per Abstieg oder Jobwechsel.</p></div>`;}
 // Spielstände älterer Testversionen passen nicht mehr und werden gelöscht
 try{REGELN.spielstand.alteSchluessel.forEach(k=>localStorage.removeItem(k));}catch(e){}
+themaAnwenden(themaLesen()); // Darstellung je Gerät (K35b §13.3, W5b), vor dem ersten Zeichnen
 function loadLocal(){try{const s=localStorage.getItem(REGELN.spielstand.schluessel);if(s){const d=JSON.parse(s);if(d.v!==REGELN.spielstand.version){toast('Der gespeicherte Spielstand passt nicht zu dieser Version.');return;}S=d;delete S.stabT;reindex();verhUmstellen();k23cUmstellen();mitgliederUmstellen();vertragUmstellen();experimenteAnwenden();TAB='buero';render();if(S.live)liveFortsetzen();}}catch(e){toast('Spielstand konnte nicht geladen werden.');}}
 function newGame(){const id=+document.getElementById('club').value,name=(document.getElementById('mgr').value||'Trainer').trim().slice(0,30)||'Trainer';
   const se=(document.getElementById('seed')||{}).value,seed=se&&/^\d+$/.test(se.trim())?(+se.trim())>>>0:neuerSeed();
