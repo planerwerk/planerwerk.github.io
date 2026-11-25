@@ -113,5 +113,15 @@ pruef(supercups.length===N-1&&supercups.every(x=>!x.verl&&(x.hg!==x.ag)===!x.pen
   pruef(aus&&an>v0&&Math.abs(an/v0-(1+L.marktwert.plus))<0.02&&alt===v0,'Marktwert der Nationalspieler: mehr nach einer Nominierung, nur mit Schalter, nach einem Jahr wieder normal',
     `ohne Schalter ${aus}, ${v0} → ${an}, zu lange her ${alt===v0}`);}
 
+// Prüfung FM10, FN5, FN10: Rückkehr von der Nationalmannschaft. Unter minMin Minuten zählt kein Länderspiel (keine Müdigkeit); eine Stammkraft kommt müde zurück,
+//       die Saisonbelastung höchstens bis 100, eine Verletzung setzt lspV; eine über zwei Tage alte Abstellung verfällt ohne Folgen.
+{const {W:W7,F:F7}=neueWelt();F7.buildWorld(SEED);const S7=W7.S,ev=W7.ev,L=ev('RWB').laenderspiele,abs=ev('absTag');S7.my=6;
+  const [p,q,r]=S7.pl.filter(x=>x.team>=0&&x.team<1000&&!(x.inj>0)),a=abs(S7.tag),m0=L.minuten,v0=L.verletzung;L.an=true;
+  L.minuten=[5,5];p.fit=100;p.lsp={von:a-5,bis:a-1,n:2,st:0};F7.laenderspielTag(S7.tag);const kurz=!p.lsp&&p.fit===100;
+  q.fit=100;q.sb=99;L.verletzung=1;q.lsp={von:a-5,bis:a-1,n:2,st:1};F7.laenderspielTag(S7.tag);const lang=!q.lsp&&q.fit<100&&q.sb===100&&q.inj>0&&q.lspV===a;
+  r.fit=100;const st0=r.st;r.lsp={von:a-20,bis:a-10,n:2,st:1};F7.laenderspielTag(S7.tag);const alt=!r.lsp&&r.fit===100&&r.st===st0&&!(r.inj>0);
+  L.minuten=m0;L.verletzung=v0;L.an=false;
+  pruef(kurz&&lang&&alt,'Länderspiele: Rückkehr nach Minuten, Belastung höchstens 100, Verletzung gemerkt, veraltete Abstellung ohne Folgen',`kurz ${kurz}, Stammkraft ${lang} (Frische ${q.fit}, Belastung ${q.sb}), veraltet ${alt}`);}
+
 console.log(`\n${N} Saison(s) in ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);
