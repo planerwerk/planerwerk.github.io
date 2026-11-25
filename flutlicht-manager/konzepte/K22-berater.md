@@ -79,7 +79,7 @@ Gleiche Regeln. Berater bieten auch Computer-Vereinen Spieler an, gierige spiele
 | Berater-Wechsel | Spieler wechselt den Berater | Beziehung neu |
 | Provisionsstreit | Berater fordert nachträglich mehr | zahlen (Geld) oder nicht (Beziehung −, Stimmung des Spielers −) |
 
-**Gebaut als K21c (22.11.2026, popolupo, ohne Testlauf), Karte nach K30:** „Provisionsstreit“ für einen Neuzugang mit Berater in den ersten 60 Tagen: zahlen (20.000 € in der 3. Liga, nach Liga mehr, Beziehung zum Berater +5) oder nicht (Beziehung −15, Stimmung −2, neue Kartenwirkung `beraterBez`). „Berater droht mit Wechsel“ seit K22c: Spieler im letzten Vertragsjahr mit gierigem Berater; nachgeben (Gehalt auf das Marktgehalt im Gehaltsrahmen, Beziehung +5, Stimmung +2) oder standhaft (Beziehung −10, Stimmung −2, Glaubwürdigkeit +1).
+**Gebaut als K21c (22.11.2026, popolupo, ohne Testlauf), Karte nach K30:** „Provisionsstreit“ für einen Neuzugang mit Berater in den ersten 60 Tagen: zahlen (20.000 € in der 3. Liga, nach Liga mehr, Beziehung zum Berater +5) oder nicht (Beziehung −15, Stimmung −2, neue Kartenwirkung `beraterBez`). „Berater droht mit Wechsel“ seit K22c: Spieler im letzten Vertragsjahr mit gierigem Berater; nachgeben (Gehalt auf das Marktgehalt im Gehaltsrahmen, Beziehung +5, Stimmung +2) oder standhaft (Beziehung −10, Stimmung −2, Glaubwürdigkeit +1). „Der entfernte Verwandte“ steckt seit K30c im lachenden Dritten (K17 §8, K30 §8.3): Ohne gute Beziehung zum Berater kommt die Karte mit 5 % über einen Verwandten (berichtigt am 25.11.2026).
 
 ## 9. Wechselwirkungen
 

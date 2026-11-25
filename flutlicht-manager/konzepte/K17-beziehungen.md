@@ -164,7 +164,7 @@ Brisanz im Spiel seit K09d (22.11.2026, popolupo, ohne Testlauf): Derby oder Bez
 | Fehde in der Presse | Beziehung unter −50, Trainer kritisiert dich öffentlich | Antwort (K29) oder schweigen |
 | Versöhnung | Beziehung lange unter −50, Zufall | Treffen, +20, wenn es klappt |
 
-**Gebaut:** „Versöhnung“ seit U12d, „Fehde in der Presse“ seit K29k (22.11.2026, ohne Testlauf) für einen Verein deiner Liga mit Beziehung unter −50 (zurückschießen: Beziehung −5, Fans +1, Glaubwürdigkeit +1; schweigen: Beziehung +3). „Hilfe in der Not“ seit K17b (22.11.2026, ohne Testlauf): ab fünf Verletzten im offenen Fenster bietet ein Verein mit Beziehung über 40 einen Spieler an, den er abgeben würde; annehmen läuft über `ausleihen` (alle Prüfungen der Leihe, neue Kartenwirkung `leihe`), Beziehung +5. „Der entfernte Verwandte“ fehlt noch.
+**Gebaut:** „Versöhnung“ seit U12d, „Fehde in der Presse“ seit K29k (22.11.2026, ohne Testlauf) für einen Verein deiner Liga mit Beziehung unter −50 (zurückschießen: Beziehung −5, Fans +1, Glaubwürdigkeit +1; schweigen: Beziehung +3). „Hilfe in der Not“ seit K17b (22.11.2026, ohne Testlauf): ab fünf Verletzten im offenen Fenster bietet ein Verein mit Beziehung über 40 einen Spieler an, den er abgeben würde; annehmen läuft über `ausleihen` (alle Prüfungen der Leihe, neue Kartenwirkung `leihe`), Beziehung +5. „Der entfernte Verwandte“ steckt seit K30c im lachenden Dritten: Kennst du den Berater nicht gut genug, kommt die Karte mit 5 % je Spieler über einen entfernten Verwandten (`REGELN.karten.dritter.verwandt`), mit eigenem Text (berichtigt am 25.11.2026).
 
 ## 9. Wechselwirkungen
 

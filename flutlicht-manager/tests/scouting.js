@@ -116,5 +116,19 @@ const scout=(S,F,q,gebiet,ev=F.__ev)=>{let x;for(let i=0;i<50;i++){x=F.stabNeu('
   F.kaufSichtMerken(f);F.kaufSichtMerken(p);
   pruef(n()===1&&ohneScout&&!p.kaufSicht&&!q.kaufSicht&&!!f.kaufSicht&&f.kaufSicht.str===Math.round(f.str),'Scout liegt daneben: Meldung ab 5 unter der Einschätzung, Merker beim Kauf',`Meldungen ${n()}, fremder Spieler ${JSON.stringify(f.kaufSicht)}`);}
 
+// K18h. Ruf des Scouts (K18 §8): Der Merker beim Kauf nennt die Scouts deines Stabs, die den Spieler beobachtet haben. Jede Einschätzung zählt in ihre Bilanz, zu hohe extra;
+//       ab ruf.ab Einschätzungen ein Ruf (treffsicher, durchwachsen, unzuverlässig), beim schlechten Ruf steht es in der Meldung. Ein entlassener Scout zählt nicht, ein alter Merker ohne ids bricht nichts.
+{const {S,F,ev}=welt(),RS=ev('RSC'),ruf=ev('scoutRuf'),x=S.stab.find(y=>y.r==='scout'),f=S.pl.find(p=>p.team>=0&&p.team<1000&&p.team!==S.my),sq=ev('squad')(S.my);
+  const tm0=x.team;x.team=S.my;delete x.bil;sq.forEach(p=>{delete p.kaufSicht;});S.kenntnis=S.kenntnis||{};S.kenntnis[f.id]={k:50,s:[x.id,-5]};F.kaufSichtMerken(f);
+  const ids=!!f.kaufSicht&&JSON.stringify(f.kaufSicht.ids)===JSON.stringify([x.id]);delete f.kaufSicht;
+  const [p,q,r]=sq,setze=(pl,m)=>{pl.kaufSicht={mitte:Math.round(pl.str)+m,str:Math.round(pl.str),scout:1,ids:[x.id]};},leidet=()=>S.news.filter(z=>String(z.t).includes('sein Ruf leidet')).length;
+  setze(p,0);F.scoutDanebenWoche();const eins=!!x.bil&&x.bil.n===1&&x.bil.d===0&&ruf(x)==='';
+  setze(p,RS.daneben.ab);setze(q,0);F.scoutDanebenWoche();const drei=x.bil.n===3&&x.bil.d===1&&ruf(x)==='durchwachsen'&&ev('scoutBilanzText')(x).includes('3 Käufe')&&leidet()===0;
+  setze(p,RS.daneben.ab+1);F.scoutDanebenWoche();const schlecht=x.bil.n===4&&x.bil.d===2&&ruf(x)==='unzuverlässig'&&leidet()===1;
+  r.kaufSicht={mitte:Math.round(r.str),str:Math.round(r.str),scout:1};F.scoutDanebenWoche();const alt=x.bil.n===4&&!r.kaufSicht;
+  x.team=-1;setze(p,0);F.scoutDanebenWoche();const weg=x.bil.n===4;x.bil={n:RS.ruf.ab,d:0};const gut=ruf(x)==='treffsicher';x.team=tm0;delete x.bil;
+  pruef(ids&&eins&&drei&&schlecht&&alt&&weg&&gut,'Ruf des Scouts: Bilanz der Einschätzungen beim Kauf, Ruf ab drei, schlechter Ruf in der Meldung',
+    `Scouts im Merker ${ids}, eine ${eins}, drei ${drei}, unzuverlässig ${schlecht}, alter Merker ${alt}, entlassen ${weg}, treffsicher ${gut}`);}
+
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

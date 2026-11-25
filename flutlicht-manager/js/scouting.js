@@ -124,6 +124,13 @@ const konkurrenzTischFaktor=p=>p&&p.kTisch&&p.kTisch.von===p.team&&absTag(S.tag)
 // ---------- Scout liegt daneben (K18 §8, K18e) ----------
 // Beim Kauf (aktionen.js) merkt sich das Spiel die Mitte deiner Einschätzung und die wahre Stärke (p.kaufSicht). Ist der Spieler bei dir (montags, scoutingWoche) und lag
 // die Mitte mindestens RSC.daneben.ab über der wahren Stärke beim Kauf, kommt eine Meldung. Danach ist der Merker weg. Nur Anzeige.
-function kaufSichtMerken(p){const s=staerkeSicht(p);if(!s||s.genau)return;const e=kenntnisEintrag(p);p.kaufSicht={mitte:Math.round(s.mitte),str:Math.round(p.str),scout:e&&e.s&&e.s.length?1:0};}
-function scoutDanebenWoche(){squad(S.my).forEach(p=>{const k=p.kaufSicht;if(!k)return;delete p.kaufSicht;
-  if(k.mitte-k.str>=RSC.daneben.ab)news(`${k.scout?'Scout lag daneben':'Einschätzung lag daneben'}: ${p.n} ist schwächer als gedacht${k.scout?'':' (ohne Scout nur ein grober Eindruck)'}. Beim Kauf sah es nach etwa ${k.mitte} aus, tatsächlich waren es ${k.str}.`,'bad');});}
+// Seit K18h merkt kaufSicht auch die Scouts deines Stabs, die ihn beobachtet haben (ids), für ihre Bilanz.
+function kaufSichtMerken(p){const s=staerkeSicht(p);if(!s||s.genau)return;const e=kenntnisEintrag(p),ids=(e&&e.s||[]).filter(id=>{const x=scoutVon(id);return x&&x.team===S.my&&x.r==='scout';});
+  p.kaufSicht={mitte:Math.round(s.mitte),str:Math.round(p.str),scout:e&&e.s&&e.s.length?1:0,ids};}
+function scoutDanebenWoche(){squad(S.my).forEach(p=>{const k=p.kaufSicht;if(!k)return;delete p.kaufSicht;const zuHoch=k.mitte-k.str>=RSC.daneben.ab,bil=scoutBilanz(k,zuHoch);
+  if(zuHoch)news(`${k.scout?'Scout lag daneben':'Einschätzung lag daneben'}: ${p.n} ist schwächer als gedacht${k.scout?'':' (ohne Scout nur ein grober Eindruck)'}. Beim Kauf sah es nach etwa ${k.mitte} aus, tatsächlich waren es ${k.str}.${bil.map(x=>` Bilanz von ${x.n}: ${x.bil.d} von ${x.bil.n} Einschätzungen zu hoch${scoutRuf(x)==='unzuverlässig'?', sein Ruf leidet':''}.`).join('')}`,'bad');});}
+// Ruf des Scouts (K18 §8, K18h, 25.11., popolupo, vorläufig): Jede Einschätzung beim Kauf zählt in die Bilanz der Scouts, die den Spieler beobachtet haben
+// und noch bei dir sind (x.bil {n Einschätzungen, d zu hoch}). Ab RSC.ruf.ab Einschätzungen ein Ruf: unzuverlässig ab dem Anteil RSC.ruf.schlecht zu hoch, treffsicher ohne. Nur Anzeige.
+function scoutBilanz(k,zuHoch){return(k.ids||[]).map(scoutVon).filter(x=>x&&x.team===S.my&&x.r==='scout').map(x=>{const b=x.bil=x.bil||{n:0,d:0};b.n++;if(zuHoch)b.d++;return x;});}
+const scoutRuf=x=>{const b=x&&x.bil;if(!b||b.n<RSC.ruf.ab)return'';return b.d/b.n>=RSC.ruf.schlecht?'unzuverlässig':b.d?'durchwachsen':'treffsicher';};
+const scoutBilanzText=x=>{const b=x&&x.bil;if(!b||!b.n)return'';const r=scoutRuf(x);return`${b.n} ${b.n===1?'Kauf':'Käufe'} eingeschätzt, ${b.d} zu hoch${r?`, ${r}`:''}`;};
