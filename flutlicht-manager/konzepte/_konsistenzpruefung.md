@@ -2877,3 +2877,19 @@ Korrekturen auf `mitarbeit/popolupo-fw-korrekturen` (auf W5e4, Welle-5-Strang).
 | FW3 | **Niedrig:** Die Tabelle in der Büro-Kachel stand ohne Scroll-Hülle, bei 360 px und langen Vereinsnamen hätte die Seite seitlich gescrollt. Jetzt in `.tw`. | ✅ behoben |
 | FW4 | **Niedrig:** Spieler bei der Nationalmannschaft erschienen in „Ausfälle“ und „Hinweise“ als „Name ()“. Jetzt `ausfallKurz` mit „bei der Nationalmannschaft“. | ✅ behoben |
 | FW5 | **Niedrig, ohne Wirkung im Browser:** In der Schrift stand `head.xMin` 0 statt der echten Box, `fontRevision` 1.0 statt 0.1. Berichtigt, Datei neu erzeugt. | ✅ behoben |
+
+## FX. Prüfung von W5d2, W5d3, W5e1 bis W5e5, W5f und den Korrekturen FW ohne Laufzeit (25. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 954b5cf..7ec7f00 gelesen, nichts ausgeführt außer Perl (Schriftdatei, Streuung der Gesichtsmerkmale an 520 Namen). Kein Laufzeit- oder Syntaxfehler, alle Skripte laden im Simulator, `wappen()` und `gesicht()` liefern in keinem Fall undefined oder NaN. Nichts berührt `R()`, `Math.random` oder den Spielstand, Bilder und Einstellungen bleiben im Browser. Der Filter für eigene Wappen lässt keine Einschleusung zu. Schrift ohne Lücken, Tabellen nach Spezifikation. Bericht: `flutlicht-tools/pruefung-fx.md`.
+
+Korrekturen auf `mitarbeit/popolupo-fx-korrekturen` (auf W5c3).
+
+| # | Befund | Status |
+|---|---|---|
+| FX1 | **Mittel:** Die Gesichtsmerkmale kamen aus `hash32` ohne Nachmischen und hingen stark zusammen (Augen, Brauen, Nase, Mund lagen je Spieler fast gleich, Kopfbreite und -höhe ebenso). Jetzt mit `mix32` nachgemischt wie in `hashNormal`. Die Gesichter ändern sich dadurch einmal. | ✅ behoben |
+| FX2 | **Niedrig:** Der Ton wurde nur beim ersten `pointerdown` freigeschaltet, das ist auf Touch-Geräten keine Nutzeraktivierung. Jetzt bei `click`, `keydown` und `touchend`, bis der Ton läuft. | ✅ behoben |
+| FX3 | **Niedrig:** Taste M bei offenem Menü ließ das Häkchen „Ton an“ stehen. Jetzt `klangSetzen` mit festem Wert, das Häkchen zieht mit. | ✅ behoben |
+| FX4 | **Niedrig, Doku:** K41 verlangte Ton aus bei „weniger Bewegung“. Die Einstellung betrifft nur Animationen, K41 §4 entsprechend berichtigt (vorläufig). | ✅ behoben |
+| FX5 | **Niedrig:** Beim Vorspulen liefen An- und Schlusspfiff gleichzeitig, Jubel und Konfetti auch bei einer Niederlage. Jetzt holt das Spiel nach einem Sprung keine Einzelmomente nach, nur der Schlusspfiff kommt; Jubel nur bei genau einem neuen Tor. | ✅ behoben |
+| FX6 | **Niedrig:** Ein eigenes Wappen als SVG ohne Größenangabe ergab ein leeres Bild. Jetzt füllt es die ganze Fläche. | ✅ behoben |
+| FX7 | **Niedrig, Test:** `__check` baute bei jedem Aufruf alle Gesichter neu (Minuten im Fuzz-Test). Jetzt einmal je Seite. Dazu der Hinweis ohne Fund: `tests/ui-zwei-saisons.js` zählte alle Schalter im Menü statt nur der Erinnerungen; jetzt nur `erinnerungAus`. | ✅ behoben |

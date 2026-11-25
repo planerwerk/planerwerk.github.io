@@ -136,7 +136,7 @@ function eigeneWappenLaden(dateien){const l=[...(dateien||[])];if(!l.length||!S)
   l.forEach(f=>{const k=f.name.replace(/\.[^.]+$/,'').trim().toUpperCase(),t=S.teams.find(x=>x.sh&&x.sh.toUpperCase()===k);if(!t||!String(f.type||'').startsWith('image/')){fremd.push(f.name);fertig();return;}
     const r=new FileReader();r.onerror=()=>{fremd.push(f.name);fertig();};
     r.onload=()=>{const img=new Image();img.onerror=()=>{fremd.push(f.name);fertig();};
-      img.onload=()=>{try{const c=document.createElement('canvas');c.width=bw;c.height=bh;const s=Math.min(bw/img.width,bh/img.height),w=img.width*s,h=img.height*s;c.getContext('2d').drawImage(img,(bw-w)/2,(bh-h)/2,w,h);m[t.sh]=c.toDataURL('image/png');n++;}catch(e){fremd.push(f.name);}fertig();};
+      img.onload=()=>{try{const c=document.createElement('canvas');c.width=bw;c.height=bh;const iw=img.naturalWidth||img.width||bw,ih=img.naturalHeight||img.height||bh,s=Math.min(bw/iw,bh/ih),w=iw*s,h=ih*s; /* SVG ohne Größe: ganze Fläche (Prüfung FX6) */c.getContext('2d').drawImage(img,(bw-w)/2,(bh-h)/2,w,h);m[t.sh]=c.toDataURL('image/png');n++;}catch(e){fremd.push(f.name);}fertig();};
       img.src=r.result;};
     r.readAsDataURL(f);});}
 function eigeneWappenLoeschen(){eigeneWappenSpeichern({});try{localStorage.removeItem(REGELN.darstellung.wappenSchluessel);}catch(e){}render();menu();}

@@ -4,7 +4,7 @@ module.exports=()=>{
  window.__check=function(){const e=[];
   const gr=[1,2,3,4].map(l=>S.teams.filter(t=>t.lg===l).length);if(gr[0]!==18||gr[1]!==18||gr[2]!==20)e.push(`Ligagrößen ${gr.join('/')}`);
   if(typeof wappen==='function')S.teams.forEach(t=>{if(typeof eigenesWappen==='function'&&eigenesWappen(t.sh))return;const w=wappen(t.id,40);if(/undefined|NaN/.test(w)||!w.includes(t.col)||(t.sh&&!w.includes('>'+t.sh+'<')))e.push('Wappen '+t.sh+' unvollständig');}); // erzeugte Wappen (K39 §3.1, W5e1)
-  if(typeof gesicht==='function')S.pl.forEach(p=>{const g=gesicht(p,56);if(!g||/undefined|NaN/.test(g))e.push('Gesicht '+p.n+' unvollständig');}); // Spielergesichter (K39 §3.2, W5e5)
+  if(typeof gesicht==='function'&&!window.__gesichterGeprueft){window.__gesichterGeprueft=true;S.pl.forEach(p=>{const g=gesicht(p,56);if(!g||/undefined|NaN/.test(g))e.push('Gesicht '+p.n+' unvollständig');});} // einmal je Seite reicht, die Gesichter hängen nur an Name und Nation (Prüfung FX7) // Spielergesichter (K39 §3.2, W5e5)
   const ids=new Set();
   S.pl.forEach(p=>{if(ids.has(p.id))e.push('doppelte ID '+p.id);ids.add(p.id);
    for(const k of ['str','pot','form','fit','ko','sp','sv','sal','age','ct','inj','g','apps'])if(typeof p[k]!=='number'||!isFinite(p[k]))e.push(`Spieler ${p.n} ${k}=${p[k]}`);

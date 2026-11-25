@@ -290,6 +290,12 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 25.11.2026: Korrekturen nach Prüfung FX (Zweig `mitarbeit/popolupo-fx-korrekturen`, auf W5c3)
+
+- **Prüfung FX** (lesender Agent über W5d2 bis W5f, W5e5 und die Korrekturen FW): ein mittlerer und sechs niedrige Funde, alle behoben, Einzelheiten in der Konsistenzprüfung FX.
+- **Sichtbar:** Die Spielergesichter sind abwechslungsreicher (Merkmale unabhängig voneinander) und ändern sich dadurch einmal. Ton auch auf Touch-Geräten, Häkchen „Ton an“ zieht bei Taste M mit, beim Vorspulen kein Doppelpfiff und kein Jubel für alte Tore, eigene Wappen als SVG ohne Größe werden nicht mehr leer.
+- **Tests:** `tests/pruefungen.js` baut die Gesichter nur einmal je Seite, `tests/ui-zwei-saisons.js` zählt nur noch die Erinnerungs-Schalter.
+
 ### 25.11.2026: W5c3 Kacheln im Stadion (Zweig `mitarbeit/popolupo-w5c2-kacheln`)
 
 - **Neu:** Kachelzeile oben im Stadion: Plätze, Zuschauerschnitt mit Auslastung (ab 90 % gut, unter 60 % Achtung), VIP-Logen, Fanshop. Nur Anzeige.

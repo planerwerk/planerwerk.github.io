@@ -3,7 +3,7 @@
 // (daten/aussehen.js, deine Vorgabe vom 18.11.), graue Haare und Geheimratsecken mit dem Alter. Frisuren und Bärte hängen nicht von der Herkunft ab.
 // Kein Porträt echter Personen: nur grobe, gewürfelte Merkmale (PLAN §4, § 22 KUG). Ohne Spielzufall: alle Würfe aus hash32, keine Wirkung aufs Spiel.
 // Rein dekorativ (aria-hidden), der Name steht immer daneben.
-const gesichtWurf=(p,m)=>hash32(`gesicht|${p.n}|${p.nat||''}|${m}`)/4294967296;
+const gesichtWurf=(p,m)=>mix32(hash32(`gesicht|${p.n}|${p.nat||''}|${m}`),7)/4294967296; // nachgemischt, sonst hängen die Merkmale zusammen (Prüfung FX1)
 const gesichtWahl=(u,w)=>{const s=w.reduce((a,b)=>a+b,0);let x=u*s;for(let i=0;i<w.length;i++){x-=w[i];if(x<0)return i;}return w.length-1;};
 const gesichtRegion=nat=>{const R=AUSSEHEN.region;for(const k in R)if((' '+R[k]+' ').includes(' '+nat+' '))return k;return'welt';};
 const gesichtMisch=(hex,f)=>{const m=/^#([0-9a-f]{6})$/i.exec(hex||'');if(!m)return hex;return'#'+[0,2,4].map(i=>Math.round(parseInt(m[1].substr(i,2),16)*(1-f)).toString(16).padStart(2,'0')).join('');};

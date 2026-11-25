@@ -6,7 +6,8 @@ let KLANG_CTX=null,KLANG_EINST=null;
 function klangEinst(){if(KLANG_EINST)return KLANG_EINST;const K=REGELN.klang;let e={};try{e=JSON.parse(localStorage.getItem(K.schluessel)||'{}')||{};}catch(x){e={};}
   KLANG_EINST={an:e.an!==undefined?!!e.an:K.an,laut:typeof e.laut==='number'?Math.max(0,Math.min(1,e.laut)):K.laut};return KLANG_EINST;}
 function klangSpeichern(){try{localStorage.setItem(REGELN.klang.schluessel,JSON.stringify(klangEinst()));}catch(x){}}
-function klangUmschalten(){const e=klangEinst();e.an=!e.an;klangSpeichern();if(e.an){klangCtx();klang('klick');}if(typeof render==='function')render();}
+function klangSetzen(an){const e=klangEinst();e.an=!!an;klangSpeichern();if(e.an){klangCtx();klang('klick');}if(typeof document!=='undefined'&&document.querySelectorAll)document.querySelectorAll('input.klang-an').forEach(x=>{x.checked=e.an;});if(typeof render==='function')render();} // Häkchen im offenen Menü mitziehen (Prüfung FX3)
+function klangUmschalten(){klangSetzen(!klangEinst().an);}
 function klangLautSetzen(v){const e=klangEinst();e.laut=Math.max(0,Math.min(1,(+v||0)/100));klangSpeichern();klang('klick');}
 function klangCtx(){if(typeof window==='undefined')return null;const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return null;
   if(!KLANG_CTX){try{KLANG_CTX=new AC();}catch(x){return null;}}if(KLANG_CTX.state==='suspended')KLANG_CTX.resume().catch(()=>{});return KLANG_CTX;}
@@ -29,8 +30,9 @@ function klang(art){const e=klangEinst(),P=REGELN.klang.pegel;if(!e.an||e.laut<=
 // Knopf in der Kopfzeile (Stumm, Taste M) und Karte im Menü
 function klangKnopf(){const an=klangEinst().an;return`<button class="ton" onclick="klangUmschalten()" aria-label="${an?'Ton ausschalten':'Ton einschalten'}" title="${an?'Ton aus':'Ton an'} (Taste M)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="${an?'M4 10v4h3l5 4V6L7 10zM16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11':'M4 10v4h3l5 4V6L7 10zM16 9l5 6M21 9l-5 6'}"></path></svg></button>`;}
 function klangKarte(){const e=klangEinst();return`<div class="card"><h3>Klang</h3><p class="dim">Pfiffe und Torjubel im Live-Spiel, erzeugt im Browser. Gilt für dieses Gerät. Stumm auch über den Knopf oben oder die Taste M.</p>
-  <div class="form"><label class="pick"><input type="checkbox" ${e.an?'checked':''} onchange="klangUmschalten()"> Ton an</label><label>Lautstärke <input type="range" min="0" max="100" step="5" value="${Math.round(e.laut*100)}" onchange="klangLautSetzen(this.value)" aria-label="Lautstärke"></label></div></div>`;}
+  <div class="form"><label class="pick"><input type="checkbox" class="klang-an" ${e.an?'checked':''} onchange="klangSetzen(this.checked)"> Ton an</label><label>Lautstärke <input type="range" min="0" max="100" step="5" value="${Math.round(e.laut*100)}" onchange="klangLautSetzen(this.value)" aria-label="Lautstärke"></label></div></div>`;}
 // Ton erst nach der ersten Bedienung freischalten; Taste M schaltet stumm (nicht beim Tippen in Feldern)
 if(typeof document!=='undefined'&&typeof document.addEventListener==='function'){
-  const frei=()=>{if(klangEinst().an)klangCtx();};document.addEventListener('pointerdown',frei,{once:true});
+  const ARTEN=['click','keydown','touchend'],frei=()=>{if(!klangEinst().an)return;const c=klangCtx();if(c&&c.state==='running')ARTEN.forEach(a=>document.removeEventListener(a,frei,true));}; // echte Nutzeraktivierung, auch auf Touch-Geräten (Prüfung FX2)
+  ARTEN.forEach(a=>document.addEventListener(a,frei,true));
   document.addEventListener('keydown',e=>{const z=e.target||{};if((e.key==='m'||e.key==='M')&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&!['INPUT','TEXTAREA','SELECT'].includes(z.tagName)&&!z.isContentEditable&&typeof S!=='undefined'&&S){e.preventDefault();klangUmschalten();}});}
