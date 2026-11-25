@@ -2758,5 +2758,5 @@ Korrekturen auf `mitarbeit/popolupo-fo-korrekturen` (auf K11j).
 | FO5 | **Niedrig:** K09j zählte je Tag statt je Spieltag, der Text sprach nur von Rot. Jetzt `S.kiSchiri` je Spieltag, Text „Platzverweis“. | ✅ behoben |
 | FO6 | **Niedrig:** „Gefährlich“ und die Balken rechneten die Nationalmannschaft mit dem heutigen Tag. Jetzt `mitLsTag` mit dem Spieltag. | ✅ behoben |
 | FO7 | **Niedrig:** `lspN`/`lspZ` fehlten in `POOL_FELDER`, Poolspieler bekamen kein `lspZ`. Beides ergänzt. | ✅ behoben |
-| FO8 | **Niedrig, Tests:** Neu getestet: FN2 und FN5 über das Menü, FN3 (Feld fehlt), FN4 (Kauf), Tausch im geschlossenen Fenster, Pool mit `lspN`. Weiter ohne eigenen Test: FM4 im Pokal (der Test nimmt ein Ligaspiel), FN6/FO6 mit Spieltag, FN8. | ✅ behoben bis auf FM4, FO6, FN8 |
+| FO8 | **Niedrig, Tests:** Neu getestet: FN2 und FN5 über das Menü, FN3 (Feld fehlt), FN4 (Kauf), Tausch im geschlossenen Fenster, Pool mit `lspN`. Die letzten drei (FM4 im Pokal, FN6/FO6 mit Spieltag, FN8) haben seit dem Zweig `tests-fo8` (25.11.) eigene Tests in `scouting.js` und `kabine.js`. | ✅ behoben |
 | FO9 | **Niedrig, Doku:** K33 (`tvModus`, `tvRT`), K36 (K13h, K13i jetzt Nr. 207), Kommentar in `takeJob`, Testliste im Protokoll. Berichtigt. | ✅ behoben |

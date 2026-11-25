@@ -212,5 +212,11 @@ const bankWelt=()=>{const w=welt(),{S,F,ev}=w;F.englischeWoche=()=>false;const s
   pruef(ruft&&hoffen&&neu&&fremd&&danach&&altStand,'Neuer Trainer: Reservisten hoffen, die ersten Pflichtspiele zählt kein Bankplatz, danach wieder, nur dein Verein',
     `takeJob ${ruft}, Hoffnung ${hoffen} (${r.st}/${s.st}), Grund ${neu} („${p.bg}“, noch ${S.neubeginn&&S.neubeginn.rest}), fremder Verein ${fremd}, danach ${danach} (${pc(ea0)} → ${pc(p.ea)}), alter Stand ${altStand}`);}
 
+// Prüfung FO8 zu FN8: Im Neubeginn kostet eine Einwechslung in der Nachspielzeit einen Etablierten nichts, ein Unerfahrener freut sich weiter; danach wieder −1.
+{const {S,sq,xi,rest,buch,B}=bankWelt(),rot=rest.find(q=>q.krA==='rotation'&&q.pos!=='TW'),jung=rest.find(q=>q.krA==='talent'||q.krA==='ergaenzung'),a=sq.find(q=>q.id===xi[3]),b=sq.find(q=>q.id===xi[4]);
+  rot.ppk=100;jung.ppk=2;rot.st=50;jung.st=50;S.neubeginn={t:S.my,rest:3};buch(xi,{ein:[[rot.id,89,a.id],[jung.id,89,b.id]]});const neu=rot.st===50&&jung.st===50+B.spaet.unerfahren&&rot.bg==='spaet';
+  S.neubeginn=null;rot.st=50;buch(xi,{ein:[[rot.id,89,a.id]]});const danach=rot.st===50+B.spaet.etabliert;
+  pruef(neu&&danach,'Neuer Trainer: späte Einwechslung kostet im Neubeginn nichts, danach wieder',`im Neubeginn ${neu} (${rot.bg}), danach ${danach} (${rot.st})`);}
+
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

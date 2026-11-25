@@ -97,6 +97,17 @@ const scout=(S,F,q,gebiet,ev=F.__ev)=>{let x;for(let i=0;i<50;i++){x=F.stabNeu('
   const a=ev('absTag')(S.tag);n.lsp={von:a,bis:a+3,n:2,st:1};const txt2=F.scoutBericht(o,home);delete n.lsp;const nat=txt2.includes(n.n+' (Nationalmannschaft)');
   pruef(ok&&nat,'Scoutbericht: gesperrt im Wettbewerb des Spiels fehlt, nicht gefährlich; Nationalspieler fehlen',`gesperrt ${gesperrt?ok:'nicht prüfbar'}, Nationalmannschaft ${nat}`);}
 
+// Prüfung FO8 zu FM4 und FO6: Ist das nächste Spiel ein Pokalspiel (hier vorgegeben), fehlt ein nur im Pokal Gesperrter, vor einem Ligaspiel nicht.
+//       Mit dem Spieltag fehlt ein Nationalspieler, der erst bis zum Spiel abgestellt ist, und steht nicht unter „Gefährlich“; mit dem heutigen Tag fehlt er nicht.
+{const {F,S,ev}=welt(),l=ev('meineLigaspiele')(),f=ev('paarung')(l[3]),home=f[0]===S.my,o=home?f[1]:f[0],sq=ev('squad')(o),nw=F.naechsterWb;
+  sq.forEach(x=>{x.inj=0;delete x.sperre;x.sus=0;delete x.lsp;});sq.sort((a,b)=>b.str-a.str);const g=sq[0],n=sq[1];g.sperre={pokal:{rot:1,gelb:0}};
+  F.naechsterWb=()=>'pokal';const tp=F.scoutBericht(o,home);F.naechsterWb=()=>'liga';const tl=F.scoutBericht(o,home);F.naechsterWb=nw;delete g.sperre;
+  const pokal=tp.includes(g.n+' (gesperrt)')&&!tp.split('Es fehlen')[0].includes(g.n),liga=!tl.includes(g.n+' (gesperrt)');
+  const a=ev('absTag')(S.tag);n.lsp={von:a+2,bis:a+4,n:2,st:1};const mt=F.scoutBericht(o,home,S.tag+3),ot=F.scoutBericht(o,home);delete n.lsp;
+  const spieltag=mt.includes(n.n+' (Nationalmannschaft)')&&!mt.split('Es fehlen')[0].includes(n.n),heute=!ot.includes(n.n+' (Nationalmannschaft)');
+  pruef(pokal&&liga&&spieltag&&heute,'Scoutbericht: eine Sperre im Pokal zählt nur vor dem Pokalspiel, die Nationalmannschaft am Spieltag statt heute',
+    `Pokal ${pokal}, Liga ${liga}, mit Spieltag ${spieltag}, heute ${heute}`);}
+
 // K18e. Scout liegt daneben (K18 §8): Einschätzung beim Kauf 6 über der wahren Stärke gibt eine Meldung, 2 darüber keine; der Merker ist danach weg;
 //       kaufSichtMerken merkt sich bei einem fremden Spieler Mitte und Stärke, bei einem eigenen (genau bekannt) nichts
 {const {S,F,ev}=welt(),sq=ev('squad')(S.my),[p,q]=sq,n=()=>S.news.filter(x=>x.t.startsWith('Scout lag daneben')).length,f=S.pl.find(x=>x.team>=0&&x.team!==S.my);
