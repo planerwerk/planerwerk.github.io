@@ -38,7 +38,15 @@ function trikotVorstellen(d,auto){const M=mkS(),T=RMK.trikot[d],t=myT(),K=RMK.fa
 // Täglich (ablauf.js taeglichLauf): ohne Wahl am Tag vor dem ersten Pflichtspiel das klassische Trikot (mit und ohne Automatik am selben Tag, Gleichschritt);
 // am Monatsersten geht der Werbewert 2 % zurück Richtung Start
 function marketingTag(d){if(S.phase!=='play')return;const M=mkS(),e=ersterPflichttag(S.my);if(!M.trikot&&e!=null&&d>=e-1)trikotVorstellen('klassisch',true);
-  if(mmtt(d).slice(3)==='01'){const W=RMK.werbewert,start=myT().rep*W.startJeAnsehen;M.ww=Math.round((M.ww+(start-M.ww)*W.zurueck)*10)/10;}}
+  if(mmtt(d).slice(3)==='01'){const W=RMK.werbewert,start=myT().rep*W.startJeAnsehen;M.ww=Math.round((M.ww+(start-M.ww)*W.zurueck)*10)/10;}
+  if(wochentag(d)===RK.wochenTag)onlineShopWoche();} /* Online-Shop (K25g) */
+// Online-Shop (K25 §2, K25g, 25.11., popolupo, vorläufig): einmalige Investition online.kosten × Ligafaktor (am Verein t.online), danach montags Fans × online.jeFan ×
+// merchFaktor als Einnahme „Fanartikel online“, unabhängig von den Zuschauern. Nur dein Verein (Computer-Vereine investieren noch nicht), kein Zufall, ohne Automatik.
+const onlineKosten=()=>Math.round(RMK.online.kosten*(RMK.ligaFaktor[myT().lg]||RMK.ligaFaktor[3])/1000)*1000;
+const onlineErloes=t=>Math.round((t.fans||0)*RMK.online.jeFan*merchFaktor(t));
+function onlineShopEroeffnen(){if(!darf('marketing'))return;const t=myT();if(t.online){toast('Der Online-Shop läuft schon.');return;}const k=onlineKosten();if(t.cash<k){toast('Dafür reicht das Geld nicht.');return;}
+  t.online=1;money('Marketing: Online-Shop',-k);news(`Online-Shop eröffnet (${fmt(k)}). Ab jetzt verkauft der Verein Fanartikel auch im Netz.`,'good');save();render();}
+function onlineShopWoche(){const t=myT();if(!t||!t.online)return;const g=onlineErloes(t);if(g>0)money('Fanartikel online',g);}
 // Faktor auf den Fanartikel-Erlös im Heimspiel (ablauf.js heimspielEinnahmen)
 function merchFaktor(t){if(!t||t.id!==S.my)return 1;const M=mkS(),E=RMK.merch;let f=M.trikot?M.trikot.f:1;
   const lieb=squad(S.my).filter(p=>istLiebling(p,S.my)).length;f*=1+Math.min(E.lieblingMax,lieb*E.liebling);
@@ -58,6 +66,7 @@ function marketingKarte(){const t=myT(),M=mkS(),C=RMK.kampagnen,tr=M.trikot,offe
     <p>Mitglieder ${mitgliederVon(t).toLocaleString('de-DE')} <span class="dim">(Beiträge etwa ${fmt(mitgliederVon(t)*RFP.mitglieder.beitrag)} je Saison, wachsen und schrumpfen mit den Fans, K25d)</span></p>
     ${fk?`<p>Fankultur ${fk.wert} von 100 <span class="dim">(${fk.aus>=RMK.fankultur.ausverkauft[1]?'ausverkauft':`Fans für ${Math.floor(fk.aus*100)} % der Plätze`}, ${de(fk.mp,1)} Mitglieder je Platz, Zugkraft ${de(fk.zug,2)} gemessen am Ansehen im Ligaschnitt; ab ${RMK.fankultur.wirkung[0]} mögen die Fans das klassische Trikot mehr, K25f)</span></p>`:''}
     <h3>Trikot ${stSaison(S.season)}</h3>${tr?`<p>${esc(TRIKOT_NAME[tr.d])}, Fanartikel × ${de(tr.f,2)}</p>`:offen&&vorbereitungAktiv()?`<div class="row">${Object.keys(RMK.trikot).map(d=>`<button onclick="trikotWaehlen('${d}')"${lzAus('marketing')}>${esc(TRIKOT_NAME[d])}</button>`).join('')}</div><p class="dim">Klassisch ist sicher, mutig wird Kult oder Spott. Ohne Wahl nimmt der Verein vor dem ersten Pflichtspiel das klassische.</p>`:'<p class="dim">Das Trikot wird in der Vorbereitung vorgestellt.</p>'}
+    <h3>Online-Shop</h3>${t.online?`<p>Läuft: etwa ${fmt(onlineErloes(t))} je Woche <span class="dim">(Fans × Fanartikel-Faktor, unabhängig von den Zuschauern)</span></p>`:`<p><button onclick="onlineShopEroeffnen()"${lzAus('marketing')}>Online-Shop eröffnen (${fmt(onlineKosten())})</button> <span class="dim">bringt dann etwa ${fmt(onlineErloes(t))} je Woche</span></p>`}
     <h3>Kampagnen</h3><table><tbody>${Object.entries(C).map(([k,c])=>{const e=M.k[k],aktiv=mkAktiv(k);return`<tr><td><b>${esc(c.name)}</b><br><span class="dim">${fmt(kampagnenKosten(k))}${c.sommer?', nur in der Vorbereitung':`, ${Math.round(c.tage/7)} Wochen`}${e&&e.n?`, in dieser Saison ${e.n}×`:''}</span></td>
       <td>${aktiv?'läuft':`<button onclick="kampagneStarten('${k}')"${lzAus('marketing')}>Starten</button>`}</td></tr>`;}).join('')}</tbody></table>
     <p class="dim">Dieselbe Kampagne wirkt in einer Saison beim zweiten Mal halb, beim dritten Mal ein Viertel. Fanartikel im Heimspiel × ${de(merchFaktor(t),2)} (Trikot, Lieblinge, Kampagne).</p></div>`;}

@@ -61,4 +61,10 @@ function welt(lernstufen){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;
 {const w=welt(false),fk=w.ev('fankultur'),t=w.t,P=w.ev('RB').tribuene.plaetze,f0=fk(t);w.S.constr={k:'cap',phase:'bau'};t.cap-=P;const f1=fk(t);t.cap+=P;w.S.constr=null;
   pruef(f1===f0,'Fankultur während eines Tribünenbaus unverändert (ET3)',`${f0} → ${f1}`);}
 
+// K25g. Online-Shop (K25 §2): einmalig kosten × Ligafaktor, danach je Woche Fans × jeFan × Fanartikel-Faktor als „Fanartikel online“; ohne Shop nichts, ein zweites Mal kostet nichts.
+{const {S,F,ev,t}=welt(),fin=()=>S.fin['Fanartikel online']||0;S.fin={};F.onlineShopWoche();const ohne=fin()===0&&!t.online;
+  const k=ev('onlineKosten')(),c0=t.cash;F.onlineShopEroeffnen();const auf=t.online===1&&t.cash===c0-k&&S.fin['Marketing: Online-Shop']===-k;F.onlineShopEroeffnen();const einmal=t.cash===c0-k;
+  const g=ev('onlineErloes')(t);F.onlineShopWoche();const woche=g>0&&fin()===g&&g===Math.round((t.fans||0)*ev('RMK').online.jeFan*F.merchFaktor(t));delete t.online;
+  pruef(ohne&&auf&&einmal&&woche,'Online-Shop: einmal kaufen, danach jede Woche Fanartikel online nach Fans',`ohne Shop ${ohne}, eröffnet ${auf} (${k}), nur einmal ${einmal}, Woche ${woche} (${g})`);}
+
 console.log(probleme.length?`\n${probleme.length} Problem(e).`:'\nAlles in Ordnung.');process.exitCode=probleme.length?1:0;
