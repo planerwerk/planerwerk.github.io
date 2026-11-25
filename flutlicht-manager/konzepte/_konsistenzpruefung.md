@@ -2921,3 +2921,15 @@ Korrekturen auf `mitarbeit/popolupo-fz-korrekturen` (auf W5e7).
 | FZ5 | **Niedrig:** Der Kachel „Frische“ fehlte das Symbol. Ergänzt; dazu nutzt sie jetzt die Zonen des Frische-Reglers (`RU.zonenFitness`). | ✅ behoben |
 | FZ6 | **Niedrig:** Training- und Büro-Kachel zeigten die eigene Vorlage auch, wenn der Stab unter der Automatik plant. Jetzt „Der Stab plant (Automatik)“. | ✅ behoben |
 | – | Hinweis, schon vorher: In der Kapitänswahl ließ sich ohne gültigen Kapitän der erste Spieler nicht wählen. Jetzt steht dann „Kapitän wählen“ als erste, nicht wählbare Zeile da. | ✅ behoben |
+
+## GA. Prüfung der Korrekturen FZ und von W5e8 ohne Laufzeit (26. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 6a8e4fe..127cb98 gelesen. FZ1, FZ2, FZ5, FZ6 und der Platzhalter der Kapitänswahl sind behoben, `autoB` ohne Nebenwirkung, Lizenz-Test 1 unberührt. Der Saisonwechsel-Bildschirm erscheint nur nach `newSeason` und lässt Klicks durch. Bericht: `flutlicht-tools/pruefung-ga.md`.
+
+Korrekturen auf `mitarbeit/popolupo-ga-korrekturen` (auf W5e8). Der Tester-Strang war nicht betroffen.
+
+| # | Befund | Status |
+|---|---|---|
+| GA1 | **Hoch:** Die FZ3-Korrektur las in der Saisonbilanz `my:m`, aber `m` gilt nur im Block davor. Jedes Saisonende brach mit einem ReferenceError ab, die Karriere stand. Jetzt `my:S.my`. Ursache: Ersetzung per Skript ohne Blick auf den Gültigkeitsbereich. | ✅ behoben |
+| GA2 | **Niedrig:** Der Saisonwechsel-Bildschirm erschien auch beim Laden eines älteren Spielstand-Codes derselben Karriere oder bei einem neuen Spiel mit demselben Seed. Jetzt merkt er sich das Spielstand-Objekt und beginnt bei jedem neuen von vorn. | ✅ behoben |
+| GA3 | **Niedrig:** Zwei Tipps passten nicht zum Code: Rotation ankündigen hilft nur vor einer englischen Woche, sonst ärgert es die Stammspieler; die Frische-Kachel zählt alle nicht frischen Spieler, nicht nur die deutlich geschwächten. Tipps und Kachel-Text berichtigt. | ✅ behoben |

@@ -290,6 +290,12 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 26.11.2026: Korrekturen nach Prüfung GA (Zweig `mitarbeit/popolupo-ga-korrekturen`, auf W5e8)
+
+- **Prüfung GA** (lesender Agent über die Korrekturen FZ und W5e8): ein hoher und zwei niedrige Funde, alle behoben, Einzelheiten in der Konsistenzprüfung GA.
+- **Wichtig:** Auf dem Oberflächen-Strang brach seit a284e85 jedes Saisonende ab (falsche Variable in der Saisonbilanz). Behoben. Der Tester-Strang `mitarbeit/popolupo-fv-korrekturen` war nie betroffen.
+- **Sichtbar:** Der Saisonwechsel-Bildschirm erscheint nicht mehr beim Laden eines Spielstands; zwei Tipps und der Text der Frische-Kachel stimmen jetzt mit den Regeln überein.
+
 ### 26.11.2026: W5e8 Saisonwechsel-Bildschirm mit Tipp (Zweig `mitarbeit/popolupo-w5e8-saisonwechsel`, auf den Korrekturen FZ)
 
 - **Weckruf:** kein neuer Testlauf (Testprotokoll weiter bei Lauf 8). Nur Oberfläche, kein Spielzufall, nichts im Spielstand.

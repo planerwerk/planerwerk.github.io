@@ -33,7 +33,7 @@ function seasonEndLauf(){
   const rl=regionalligaAufsteiger(),ts=topScorers(1)[0];
   {const m=S.my,auf=[T[2][0].id,T[2][1].id,reihe[0],reihe[1]].includes(m)||(e1.sieger===m&&me.lg===2)||(e2.sieger===m&&me.lg===3), // Aufstiegs- und Klassenerhaltsprämie (K21e), vor der Summe der Finanzen
     ab=[T[1][16].id,T[1][17].id,T[2][16].id,T[2][17].id,...T[3].slice(-RS.abstieg3).map(r=>r.id)].includes(m)||(rel[0]===m&&e1.sieger!==m)||(rel2[0]===m&&e2.sieger!==m);teampraemieSaison(auf,ab);}
-  const sm={season:S.season,my:m,lg:me.lg,pos,target:S.target,champ:T[1][0].id,vize:T[1][1].id,champ2:T[2][0].id,champ3:T[3][0].id,
+  const sm={season:S.season,my:S.my,lg:me.lg,pos,target:S.target,champ:T[1][0].id,vize:T[1][1].id,champ2:T[2][0].id,champ3:T[3][0].id,
     down:[T[1][16].id,T[1][17].id],up:[T[2][0].id,T[2][1].id],rel,relRes:e1.text,rw:e1.sieger,
     down2:[T[2][16].id,T[2][17].id],up3:[reihe[0],reihe[1]],rel2,rel2Res:e2.text,rw2:e2.sieger,
     down3:T[3].slice(-RS.abstieg3).map(r=>r.id),up4:rl.ids,rlText:rl.text,

@@ -266,7 +266,7 @@ function trainingKacheln(t,tal,akt){const sq=squad(S.my),fit=sq.length?Math.roun
     stab=akt==='auto'||!vl||autoB('vorlage'),Z=RU.zonenFitness,schwach=sq.filter(p=>{const s=zonenStatus(p.fit,Z);return s==='kritisch'||s==='achtung';}).length; // Urlaub als Ganzes, Stab plant unter der Automatik, Zonen wie der Regler (Prüfung FZ4, FZ6)
   return`<div class="kacheln">${kachel({titel:'Trainingsplan',icon:'training',wert:stab?'Co-Trainer':vl.name,sub:stab?(autoB('vorlage')?'Der Stab plant (Automatik).':'Der Co-Trainer entscheidet.'):'deine Vorlage'})}
   ${kachel({titel:'Heute',icon:'termin',wert:heute,sub:urlaub?'kein Training':'Einheit nach Abstand zum Spiel'})}
-  ${kachel({titel:'Frische',icon:'fitness',wert:`Ø ${fit} %`,sub:schwach?`${schwach} Spieler geschwächt`:'niemand geschwächt',status:zonenStatus(fit,Z)})}
+  ${kachel({titel:'Frische',icon:'fitness',wert:`Ø ${fit} %`,sub:schwach?`${schwach} Spieler nicht frisch`:'alle frisch',status:zonenStatus(fit,Z)})}
   ${kachel({titel:'Talente',icon:'kapitaen',wert:tal.length,sub:'Spieler bis 21 Jahre im Kader'})}</div>`;}
 V.transfer=()=>{const t=myT(),XI=new Set();S.teams.forEach(x=>bestXI(x.id,x.form).forEach(id=>XI.add(id)));
   const aus=TF.lg==='a'; // Ausland ist ein eigener Filter (K32): Der Pool ist groß und kaum bekannt, er würde die Liste sonst überschwemmen

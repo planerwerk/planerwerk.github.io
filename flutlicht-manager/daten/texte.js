@@ -24,9 +24,9 @@ const VORLAGE_TEXT={auto:'Der Co-Trainer wählt je nach Spielplan: Standardwoche
 
 // Tipps für den Saisonwechsel-Bildschirm (K39 §3.3, W5e8). Nur Aussagen, die zu den Regeln im Spiel passen; neue Tipps einfach anhängen.
 const TIPPS=[
-  'Kündige Rotation vor dem Spiel an. Wer aus diesem Grund draußen bleibt, nimmt dir die Bank weniger übel.',
+  'Kündige Rotation vor einer englischen Woche an. Wer dann draußen bleibt, nimmt dir die Bank weniger übel. Ohne englische Woche ärgert die Ankündigung die Stammspieler.',
   'In einer englischen Woche nimmt dir niemand einen Rotationsplatz übel.',
-  'Spieler mit sehr wenig Frische sind im Spiel deutlich geschwächt. Die Kachel „Frische“ im Training zeigt, wie viele es sind.',
+  'Spieler mit sehr wenig Frische sind im Spiel deutlich geschwächt. Die Kachel „Frische“ im Training zeigt, wie viele gerade nicht frisch sind.',
   'Wer um ein Gespräch bittet und vier Wochen weder ein Gespräch noch Besserung erlebt, will offiziell weg.',
   'Einigst du dich außerhalb des Transferfensters, wechselt der Spieler zum Beginn des nächsten Fensters.',
   'Unter „Lizenz und Lernstufen“ im Menü siehst du, welche Bereiche der Stab für dich übernimmt.',
