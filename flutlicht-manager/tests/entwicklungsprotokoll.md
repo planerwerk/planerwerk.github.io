@@ -290,6 +290,10 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 25.11.2026: W5e7 Gesichter in der Kabine (Zweig `mitarbeit/popolupo-w5c4-kacheln`)
+
+- **Neu:** kleine Spielergesichter (24 px) vor den Namen in der Spielerliste der Kabine. Nur Anzeige.
+
 ### 25.11.2026: W5e6 Titel und Aufstieg feiern (Zweig `mitarbeit/popolupo-w5c4-kacheln`)
 
 - **Neu:** Gewinnst du Meisterschaft (jede Liga), Pokal oder steigst auf, feiert die Saisonbilanz das einmal mit Konfetti in der Vereinsfarbe und Jubel (`titelFeier` in `js/live.js`, Stufe „Sequenzen“ im Menü gilt). Nur in dieser Sitzung gemerkt, nicht im Spielstand.

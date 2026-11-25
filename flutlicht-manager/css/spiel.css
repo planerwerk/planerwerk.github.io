@@ -244,3 +244,4 @@ button.wahl.on{border-color:var(--amber);color:var(--amber);font-weight:700}
 /* Spielergesichter (K39 §3.2, W5e5): erzeugt in js/gesichter.js */
 .gs{flex:none;border-radius:10px;background:var(--turf2);border:1px solid var(--rule)}
 .phead .gs{margin-right:4px}
+td .gs{vertical-align:middle;margin-right:6px;border-radius:6px}
