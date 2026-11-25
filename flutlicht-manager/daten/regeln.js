@@ -19,7 +19,8 @@ const REGELN={
     {k:'notverkauf',pfad:'computer.notverkauf',name:'Notverkauf bei Computer-Vereinen',text:'Wer über seinem Gehaltsrahmen liegt, setzt seinen teuersten Spieler unter Wert auf die Transferliste (K31d).'},
     {k:'integration',pfad:'spieler.integration.wirkung',name:'Integration wirkt im Spiel',text:'Neuzugänge aller Vereine spielen schwächer, bis sie integriert sind (bis 8 %, K03d). Landsleute, die noch wenig Deutsch sprechen, bilden in der Kabine Grüppchen (K14g).'},
     {k:'laenderspiele',pfad:'wettbewerbe.laenderspiele',name:'Länderspiele',text:'Nationalspieler aller Vereine fehlen in den Länderspielpausen und kommen müde zurück (K13f).'},
-    {k:'pokalRotation',pfad:'wettbewerbe.pokal.rotationKI',name:'Pokal-Rotation der Favoriten',text:'In den ersten zwei Pokalrunden schonen Favoriten gegen Amateure und deutlich schwächere Gegner Spieler unter 85 % Frische (K13j).'}],
+    {k:'pokalRotation',pfad:'wettbewerbe.pokal.rotationKI',name:'Pokal-Rotation der Favoriten',text:'In den ersten zwei Pokalrunden schonen Favoriten gegen Amateure und deutlich schwächere Gegner Spieler unter 85 % Frische (K13j).'},
+    {k:'kiUnsicherheit',pfad:'computer.unsicherheit',name:'Unsicherheit der Computer-Vereine',text:'Computer-Vereine schätzen fremde Spieler nach der Qualität ihrer Scouts unscharf ein: Fehlkäufe und Schnäppchen (K18i).'}],
 
   kalender:{
     maxSprung:7,                     // „Tag beenden“ springt höchstens so viele Tage weit
@@ -413,6 +414,9 @@ const REGELN={
     vorstand:{start:55,traegheit:0.2,basis:50,jePlatz:5,sport:[-35,25],serieSpiele:5,serieMitte:1.3,serieFaktor:10,serie:[-15,10],finanzMinus:-15,abSpiel:5,
       grenze:20,schonfrist:6,ultimatumSpiele:2,entlassung:{basis:0.9,jeGeduld:-0.03},saisonWeitAb:3,saisonUnter:30,saisonZurueck:0.5,schub:5,protokoll:200},
     aktivJeWoche:0.5,schaetzFehler:2,
+    // unsicherheit (K18 §7, K18i, 25.11., popolupo, vorläufig, Schalter aus): Computer-Vereine sehen fremde Spieler unscharf, Streuung basis − jeScout × Qualität des besten Scouts,
+    // mindestens min; fest aus dem Seed je Verein, Spieler und Saison. Wirkt auf Auswahl und Grenzen beim Kauf (kiKandidat, kiStern), nicht auf den Preis.
+    unsicherheit:{an:false,basis:4,jeScout:0.15,min:1},
     fuellen:{fenster:0,vereinslosBis:4,vereinslosChance:0.6}}, // fenster: Nummer des Fensters in transfers.fenster, an dessen Ende aufgefüllt wird (0 = Sommer)
 
   // Beziehungsnetz (K17 §5.5, §11, U12c): Werte −100 bis +100. grund: Grundwert für Derby und Rivalität (Paare in daten/vereine.js, DERBYS).

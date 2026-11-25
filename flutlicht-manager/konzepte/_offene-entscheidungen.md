@@ -340,7 +340,7 @@ Bei der Umsetzung (U9a):
 12. **Scouts im Stab:** vier Plätze, Start nach Ansehen (1, ab 60 zwei, ab 80 drei).
 13. **Kenntnis gehört dem Verein,** beim Jobwechsel beginnst du neu.
 14. **Lernstufen:** Beobachten ab C, Scouts ab B, Suchauftrag ab A.
-15. **Noch nicht gebaut:** Unsicherheit der Computer-Vereine, Gegnerbeobachtung, Ereignisse, Jugend. Ausland seit U9b gebaut. **Stand 25.11.2026:** Gebaut sind die Gegnerbeobachtung (K18c) mit Scoutbericht (K18g), Jugend (U9c), die Ereignisse aus §8 (K18d, K18e, K18f, Geheimtipp) und der Ruf des Scouts (K18h). Offen bleibt die Unsicherheit der Computer-Vereine. Einzelheiten in K18 Nr. 15.
+15. **Noch nicht gebaut:** Unsicherheit der Computer-Vereine, Gegnerbeobachtung, Ereignisse, Jugend. Ausland seit U9b gebaut. **Stand 25.11.2026:** Gebaut sind die Gegnerbeobachtung (K18c) mit Scoutbericht (K18g), Jugend (U9c), die Ereignisse aus §8 (K18d, K18e, K18f, Geheimtipp) und der Ruf des Scouts (K18h). Die Unsicherheit der Computer-Vereine gibt es seit K18i hinter einem Schalter (aus). Einzelheiten in K18 Nr. 15.
 
 Bei der Umsetzung (U9b), ausführlich in K18 §12 Nr. 17–24:
 17. **Grundkenntnis Ausland 5,** Spanne ohne Scout etwa ±10, Merkmale unbekannt.

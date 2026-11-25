@@ -130,5 +130,15 @@ const scout=(S,F,q,gebiet,ev=F.__ev)=>{let x;for(let i=0;i<50;i++){x=F.stabNeu('
   pruef(ids&&eins&&drei&&schlecht&&alt&&weg&&gut,'Ruf des Scouts: Bilanz der Einschätzungen beim Kauf, Ruf ab drei, schlechter Ruf in der Meldung',
     `Scouts im Merker ${ids}, eine ${eins}, drei ${drei}, unzuverlässig ${schlecht}, alter Merker ${alt}, entlassen ${weg}, treffsicher ${gut}`);}
 
+// K18i. Unsicherheit der Computer-Vereine (K18 §7), nur mit Schalter: ohne Schalter sieht ein Verein die wahre Stärke. Mit Schalter fest aus dem Seed, eigene Spieler genau,
+//       mit einem guten Scout im Schnitt näher an der Wahrheit als mit einem schwachen.
+{const {S,ev}=welt(),U=ev('RCV').unsicherheit,ks=ev('kiSichtStr'),ge=ev('stabGeaendert'),t=S.teams.find(x=>x.id!==S.my&&x.lg===1);
+  const fremd=S.pl.filter(p=>p.team>=0&&p.team<1000&&p.team!==t.id).slice(0,300),eigen=S.pl.find(p=>p.team===t.id);
+  const aus=fremd.every(p=>ks(t,p)===p.str);U.an=true;const fest=fremd.every(p=>ks(t,p)===ks(t,p)),genau=ks(t,eigen)===eigen.str,anders=fremd.some(p=>Math.abs(ks(t,p)-p.str)>0.5);
+  let sc=S.stab.filter(x=>x.r==='scout'&&x.team===t.id);if(!sc.length){const x=S.stab.find(y=>y.r==='scout'&&y.team<0);if(x){x.team=t.id;sc=[x];ge();}}const q0=sc.map(x=>x.q);
+  const fehler=q=>{sc.forEach(x=>{x.q=q;});return fremd.reduce((s,p)=>s+Math.abs(ks(t,p)-p.str),0)/fremd.length;},gut=fehler(20),schwach=fehler(1);sc.forEach((x,i)=>{x.q=q0[i];});U.an=false;
+  pruef(aus&&fest&&genau&&anders&&sc.length>0&&gut<schwach,'Unsicherheit der Computer-Vereine: nur mit Schalter, fest, eigene genau, guter Scout genauer',
+    `ohne Schalter ${aus}, fest ${fest}, eigene genau ${genau}, unscharf ${anders}, Fehler mit gutem/schwachem Scout ${gut.toFixed(2)}/${schwach.toFixed(2)}`);}
+
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

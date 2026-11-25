@@ -91,6 +91,9 @@ function kiNotverkauf(t,P){const N=RCV.notverkauf;if(!N||!N.an||!t||P.alle.lengt
 // Bester Kandidat für eine Lücke: Vereinslose und Spieler der Transferliste anderer Vereine. Er passt in die Gruppe, hat die gesuchte Stärke, will zu diesem Verein,
 // der Preis passt ins Budget und zum Vereinswert des Käufers, und beim Verkäufer gilt Regel B noch in diesem Moment.
 // Auswahl nach Stärke (bei Jungen zählt ein Teil des Talents, ab 30 ein Abzug) mit einem Schätzfehler aus dem Markt-Strom.
+// Unsicherheit der Computer-Vereine (K18 §7, K18i, nur mit RCV.unsicherheit.an): die Stärke eines fremden Spielers p, wie Verein t sie sieht. Ohne Schalter die wahre Stärke.
+// Streuung nach dem besten Scout des Vereins, fest aus dem Seed je Saison, Verein und Spieler (kein R(), gleiche Reihenfolge der Würfel wie ohne Schalter).
+const kiSichtStr=(t,p)=>{const U=RCV.unsicherheit;if(!U||!U.an||p.team===t.id)return p.str;const q=S.stab?stabQ(t.id,'scout'):RST.ohne,sd=Math.max(U.min,U.basis-U.jeScout*q);return p.str+hashNormal('kiSicht',S.season,t.id,p.id)*sd;};
 function kiKandidat(t,n,rest,senk,kader,plan){const K=RCV.kauf,min=n.min-senk,alterMax=profilWert(t,'alterMax',K.alterMax),talentGewicht=profilWert(t,'talentGewicht',K.talentGewicht),altMalus=profilWert(t,'altMalus',K.altMalus);let best=null,bv=-Infinity;
   for(const p of S.pl){if(p.team===t.id||p.team<-1||p.wech||p.leihe||p.zwP||p.age>alterMax)continue;
     const von=p.team>=0?S.teams[p.team]:null;
@@ -99,24 +102,25 @@ function kiKandidat(t,n,rest,senk,kader,plan){const K=RCV.kauf,min=n.min-senk,al
     // starke Vereinslose bei Drittligisten (bis 16 über deren Grundstärke), und die unteren Ligen wurden über die Saisons stärker.
     if(!von&&p.str>grundStaerke(t.rep)+(K.vereinslosBis!=null?K.vereinslosBis:RCV.fuellen.vereinslosBis))continue;
     if(n.grund==='talent'){if(p.age>RCV.talentBis||p.pot<min)continue;}
-    else if(planGruppe(p)!==n.g||p.str<min||(n.statt&&p.str<=n.statt.str))continue;
+    const sicht=kiSichtStr(t,p); /* K18i */
+    if(n.grund!=='talent'&&(planGruppe(p)!==n.g||sicht<min||(n.statt&&sicht<=n.statt.str)))continue;
     let preis=0;
     if(von){if(von.rep-t.rep>K.ansehenMinus&&(p.ww||0)<3)continue; // er geht nicht weit nach unten, außer er will weg
       if(bez(t.id,von.id)<RBZ.wirkung.gespraechUnter)continue; // mit diesem Verein redet der Käufer nicht (K17 §7, U12c)
       if(kader.get(von.id).length<=RM.verkaeufer.kaderMin||!(plan(von).abgabe.has(p.id)||p.nv===S.season))continue; /* Notverkauf ohne Abgabegrund (Prüfung FK1) */
       preis=p.nv===S.season?p.ask:kiPreis(p);if(preis>rest||preis>kiZahlt(p,t,n))continue;}
-    const v=(n.grund==='talent'?p.pot:p.str+(p.age<=K.jungBis?(p.pot-p.str)*talentGewicht:0)-Math.max(0,p.age-K.altAb)*altMalus)+(R()-0.5)*2*RCV.schaetzFehler;
+    const v=(n.grund==='talent'?p.pot:sicht+(p.age<=K.jungBis?(p.pot-p.str)*talentGewicht:0)-Math.max(0,p.age-K.altAb)*altMalus)+(R()-0.5)*2*RCV.schaetzFehler;
     if(v>bv){bv=v;best={p,preis,von:von?von.id:null};}}
   return best;}
 // Sternejagd (§5.3, U11b): der stärkste bezahlbare Spieler eines kleineren Vereins, der nicht auf der Liste stehen muss. Er ist deutlich stärker als der Anspruch des Käufers
 // und bekäme dort einen Stammplatz. Sein Verein nimmt das außergewöhnliche Angebot an, auch wenn ihm danach eine Planstelle fehlt (die Ersatzsuche folgt aus dem Bedarf).
 function kiStern(t,P,rest,kader){const J=RCV.sterneJagd;let best=null,bv=-Infinity;
-  for(const p of S.pl){if(p.team<0||p.team===t.id||p.wech||p.leihe||p.zwP||p.age>J.alterMax||p.str<P.niveau+J.ueberNiveau)continue;
+  for(const p of S.pl){if(p.team<0||p.team===t.id||p.wech||p.leihe||p.zwP||p.age>J.alterMax)continue;const sicht=kiSichtStr(t,p);if(sicht<P.niveau+J.ueberNiveau)continue; /* K18i */
     const von=S.teams[p.team];if(!von||!aktiv(von)||!stabMacht(von.id,'transfers')||t.rep-von.rep<J.ansehenPlus||kader.get(von.id).length<=RM.verkaeufer.kaderMin)continue;
     if(bez(t.id,von.id)<RBZ.wirkung.gespraechUnter)continue; // kein Gespräch unter −50 (K17 §7, U12c)
-    const G=P.gr[planGruppe(p)],letzter=G.stamm?G.l[G.stamm-1]:null;if(!G.stamm||(letzter&&p.str<=letzter.str))continue;
+    const G=P.gr[planGruppe(p)],letzter=G.stamm?G.l[G.stamm-1]:null;if(!G.stamm||(letzter&&sicht<=letzter.str))continue;
     const preis=kiSternPreis(p);if(preis>rest)continue;
-    const v=p.str+(R()-0.5)*2*RCV.schaetzFehler;if(v>bv){bv=v;best={p,preis,von:von.id};}}
+    const v=sicht+(R()-0.5)*2*RCV.schaetzFehler;if(v>bv){bv=v;best={p,preis,von:von.id};}}
   return best;}
 // Der Wechsel selbst: Geld, Kabine, Vertrag. Vereinslose kommen ohne Ablöse und ohne Meldung (außer bei dir). art: 'stern' bei der Sternejagd (Auswertungen in tests/welt.js, Meldung „Konkurrent rüstet auf“ seit K31c).
 function kiWechsel(p,b,preis,art){const von=p.team>=0?S.teams[p.team]:null;
