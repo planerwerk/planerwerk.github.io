@@ -290,6 +290,10 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 25.11.2026: W5e4 Startbildschirm mit Stadion und Leitspruch (Zweig `mitarbeit/popolupo-w5e-artwork`)
+
+- **Neu:** eigene SVG-Illustration „Stadion bei Nacht“ über dem Namen (K39 §3.3, `stadionBild` in `js/start.js`), darunter der BMH-Leitspruch „Bratwurst. Meisterschale. Herzblut.“ (K42, vorläufig, `REGELN.darstellung.leitspruch`). Der Leuchtbalken unter dem Namen entfällt.
+
 ### 25.11.2026: W5f Klang (Zweig `mitarbeit/popolupo-w5e-artwork`)
 
 - **Neu:** `js/klang.js` (K41): Pfiffe, Torjubel, Raunen, Klick und Brief-Ton, erzeugt mit der Web Audio API, ohne Dateien. Im Live-Spiel Anpfiff, Halbzeit- und Abpfiff, Jubel bei eigenem Tor, Raunen bei Gegentor. Stumm-Knopf in der Kopfzeile, Taste M, Menü-Karte „Klang“ mit Lautstärke (je Gerät, `REGELN.klang`, Voreinstellung an und leise). Kein Spielzufall, keine Wirkung aufs Spiel; Ton erst nach der ersten Bedienung.

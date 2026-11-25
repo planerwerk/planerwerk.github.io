@@ -46,6 +46,7 @@ Hängt ab von: K35b (Look, Abschnitt 13) · Wird gebraucht von: K41 (Audio zu de
 | Pokal und Konfetti | Titel | Jubel |
 
 - **Ladebildschirm:** eines dieser Bilder passend zum Anlass (Spiel laden, Saisonwechsel, langer Sprung), darüber ein Tipp aus den Lernstufen (K36) oder ein Satz aus der Vereinsgeschichte (K34). Ein Ladebildschirm erscheint nur, wenn etwas wirklich dauert (Saisonwechsel, Laden), höchstens ein bis zwei Sekunden, mit Klick zu überspringen.
+- ✅ **Gebaut in W5e4 (25.11., ohne Testlauf):** Der Startbildschirm zeigt das Stadion bei Nacht als eigene SVG-Illustration (`stadionBild` in `js/start.js`, ohne Datei) und darunter den BMH-Leitspruch (K42). Die Ladebildschirme selbst folgen, wenn der Saisonwechsel spürbar dauert.
 - **Herstellung:** mit einem freien KI-Bildmodell (Abschnitt 11), danach von mir auf Format, Farben der Palette und Größe gebracht. Ohne echte Vereine, Logos, Werbung oder Gesichter. Stil einheitlich: gezeichnet, flächig, leicht körnig, nicht fotorealistisch (passt zu den Comic-Gesichtern und wirkt nicht wie ein Fake-Foto).
 
 ### 3.4 Sequenzen („Videosequenzen“)

@@ -28,7 +28,7 @@ Status: **Entwurf** (25. November 2026, popolupo), nach deiner Vorgabe vom 25.11
 
 ## 4. Vorläufige Entscheidung
 
-- Name bleibt **Flutlicht Manager**, Leitspruch **„Bratwurst. Meisterschale. Herzblut.“** (BMH), in der Look-Studie mit den anderen Vorschlägen zum Vergleich.
+- Name bleibt **Flutlicht Manager**, Leitspruch **„Bratwurst. Meisterschale. Herzblut.“** (BMH), in der Look-Studie mit den anderen Vorschlägen zum Vergleich. ✅ Im Spiel seit W5e4 (25.11.): Leitspruch unter dem Namen auf dem Startbildschirm, änderbar in `REGELN.darstellung.leitspruch`.
 - Vor einer Veröffentlichung prüfe ich im Markenregister des DPMA, ob „Flutlicht Manager“ oder „BMH“ für Spiele eingetragen ist.
 
 **Für dich:** Welcher Leitspruch gefällt dir, oder doch BMH als Hauptname?

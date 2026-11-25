@@ -1,7 +1,20 @@
 // Startbildschirm, Laden, neues Spiel und Programmstart.
+// Stadion bei Nacht (K39 §3.3, W5e4): eigene Illustration für den Startbildschirm, als SVG im Code (keine Datei, kein fremdes Bild)
+function stadionBild(){const masten=[[70,50],[200,70],[420,70],[550,50]],kegel=['M50 50L90 50L430 240L150 240Z','M180 70L220 70L470 240L170 240Z','M400 70L440 70L450 240L150 240Z','M530 50L570 50L470 240L190 240Z'];
+  const lampen=([x,y])=>{let h=`<rect x="${x-22}" y="${y-10}" width="44" height="20" rx="3" fill="#2a3b5a"/>`;for(let r=0;r<2;r++)for(let c=0;c<4;c++)h+=`<circle cx="${x-15+c*10}" cy="${y-4+r*8}" r="3" fill="#fff3cf"/>`;return h;};
+  return`<svg class="stadion" viewBox="0 0 620 240" role="img" aria-label="Stadion bei Nacht unter Flutlicht (eigene Illustration)"><defs>
+  <linearGradient id="st-himmel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#050a12"/><stop offset="1" stop-color="#1b2a45"/></linearGradient>
+  <radialGradient id="st-schein"><stop offset="0" stop-color="#ffe7a3" stop-opacity=".55"/><stop offset="1" stop-color="#ffc83d" stop-opacity="0"/></radialGradient>
+  <linearGradient id="st-kegel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe7a3" stop-opacity=".16"/><stop offset="1" stop-color="#ffe7a3" stop-opacity="0"/></linearGradient>
+  <linearGradient id="st-rasen" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2f8a52"/><stop offset="1" stop-color="#16492c"/></linearGradient></defs>
+  <rect width="620" height="240" fill="url(#st-himmel)"/><path d="M0 150H620V162H0Z" fill="#16233a"/><path d="M0 162H620V196H0Z" fill="#0c1524"/><path d="M0 172H620M0 184H620" stroke="#15223a" stroke-width="1.5"/>
+  ${kegel.map(d=>`<path d="${d}" fill="url(#st-kegel)"/>`).join('')}
+  <path d="M-60 240L95 196H525L680 240Z" fill="url(#st-rasen)"/><path d="M28 217L95 196H150L114 217ZM200 217L204 196H259L288 217ZM374 217L368 196H423L460 217ZM546 217L476 196H525L600 217Z" fill="#ffffff" opacity=".05"/>
+  <path d="M310 196V240M95 196H525M-60 240L95 196M525 196L680 240" fill="none" stroke="#e9f5ec" stroke-width="1.5" opacity=".55"/><ellipse cx="310" cy="222" rx="60" ry="12" fill="none" stroke="#e9f5ec" stroke-width="1.5" opacity=".55"/>
+  ${masten.map(([x,y])=>`<path d="M${x} ${y+10}L${x<310?x+12:x-12} 150" stroke="#24324d" stroke-width="3"/><circle cx="${x}" cy="${y}" r="60" fill="url(#st-schein)"/>${lampen([x,y])}`).join('')}</svg>`;}
 function renderStart(){
   const opt=lg=>VEREINE.map((c,i)=>[c,i]).filter(([c])=>c.liga===lg).map(([c,i])=>`<option value="${i}" ${c.kurz==='SCF'?'selected':''}>${c.name}</option>`).join('');
-  app.innerHTML=`<div class="start"><div><h1 class="logo">Flutlicht<span>Manager</span></h1><div class="beams" style="margin-top:14px"></div></div>
+  app.innerHTML=`<div class="start">${stadionBild()}<div><h1 class="logo">Flutlicht<span>Manager</span></h1><p class="leitspruch">${esc(REGELN.darstellung.leitspruch)}</p></div>
   <p class="tagline">Fußballmanager für die Saison 2026/27 · 1. bis 3. Liga · DFB-Pokal · Transfers, Stadion, Finanzen, Vorstand.</p>
   ${hasSave()?`<button class="go" onclick="loadLocal()">Weiterspielen</button>`:''}
   <div class="card"><h2>Neues Spiel</h2><div class="form"><label>Dein Name <input id="mgr" value="Trainer" maxlength="30"></label>

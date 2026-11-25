@@ -18,7 +18,8 @@ const REGELN={
     themen:{dunkel:'Dunkel (Flutlichtnacht)',hell:'Hell (Tageslicht)',system:'Wie das Gerät'},
     wappenSchluessel:'flutlicht-wappen', // eigene Wappen (K39 §3.1, W5e2): nur im Browser, nie im Spielstand
     wappenPx:[96,112],               // so groß werden eigene Wappen gespeichert (Breite, Höhe in Pixeln)
-    sequenzen:{schluessel:'flutlicht-sequenzen',standard:'an',stufen:{an:'An',kurz:'Kurz (nur Aufblitzen)',aus:'Aus'}} // Animationen bei großen Momenten (K39 §3.4, W5e3), je Gerät
+    sequenzen:{schluessel:'flutlicht-sequenzen',standard:'an',stufen:{an:'An',kurz:'Kurz (nur Aufblitzen)',aus:'Aus'}}, // Animationen bei großen Momenten (K39 §3.4, W5e3), je Gerät
+    leitspruch:'Bratwurst. Meisterschale. Herzblut.' // BMH als Leitspruch unter dem Namen (K42, vorläufig; Alternativen in K42 §2)
   },
   klang:{                            // Klang (K41, W5f), je Gerät im Browser, nicht im Spielstand; erzeugt in js/klang.js
     schluessel:'flutlicht-klang',
