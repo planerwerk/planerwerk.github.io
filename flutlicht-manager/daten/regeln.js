@@ -265,9 +265,15 @@ const REGELN={
     // Seit K23c (vorläufig): Anteile am Grundbetrag der Werbung nach den Zielanteilen in K24 §3.1 (Brust 35–45 %, Ausrüster 15–25 %, Ärmel 5–10 %), den Rest (partner)
     // zahlen weitere Partner (Premium-, Logen- und Regionalpartner) je Ligaspiel ohne Verhandlung. Bayern bekommt so etwa 75 Mio. € für die Brust (echt etwa 60 Mio., K24 §5.1).
     // Bis K23c teilten sich die drei Flächen den ganzen Grundbetrag (0,6, 0,29, 0,11). Namen erfunden.
-    werbung:{anteil:{brust:0.38,ausruester:0.18,aermel:0.07},partner:0.37,titel:{brust:'Trikotbrust',ausruester:'Ausrüster',aermel:'Ärmel'},
+    // K24d (26.11., Antworten popolupo in K24 §12): Stadionname als vierte Fläche, geldneutral 12 % aus dem bisherigen Partneranteil (vorher 0,37).
+    // Jeder Verein darf ihn verkaufen (Eigentum am Stadion kommt mit der Recherche). Computer-Vereine verkaufen ihn automatisch, ihr Geld bleibt gleich.
+    werbung:{anteil:{brust:0.38,ausruester:0.18,aermel:0.07,stadion:0.12},partner:0.25,titel:{brust:'Trikotbrust',ausruester:'Ausrüster',aermel:'Ärmel',stadion:'Stadionname'},
+      // Fanstimmung beim Verkauf des Namens (K24 §6): −3 − 3 × Fankultur (K27d, fankulturWirkung 0 bis 1), also −3 bis −6; nicht bei einer Verlängerung.
+      // Der Name ist erfunden: erstes Wort der Firma und ein Wort aus worte (ohne Zufall aus dem Firmennamen).
+      stadion:{fans:-3,fansKultur:-3,worte:['Arena','Park','Stadion']},
       namen:{ausruester:['Falkner Sport','Sprintwerk','Kranich Teamwear','Nordlicht Athletics','Bergfalke Sport','Tiedemann Sportswear'],
-        aermel:['Moorland Versicherung','Weserblick Immobilien','Albtrauf Software','Uferwerk Logistik','Sonnhalde Energie','Grünfeld Mobilfunk']},
+        aermel:['Moorland Versicherung','Weserblick Immobilien','Albtrauf Software','Uferwerk Logistik','Sonnhalde Energie','Grünfeld Mobilfunk'],
+        stadion:['Kesselberg Energie','Lindenhof Versicherung','Brückner Bau','Talgrund Bank','Möwenwerk Logistik','Sternquell Telekom']},
       // K24b (21.11., alle Werte aus K24 §5.4, §4.3, vorläufig): je Fläche ein viertes Angebot von einem umstrittenen Geldgeber (30 % über dem besten festen Angebot,
       // zwei Jahre). Fans: −5 bei Vertragsschluss, −1 an jedem Monatsersten. Skandal mit 5 % je Saison: Fans −10, danach darfst du kostenlos kündigen. Die Automatik meidet sie (K24 §7).
       umstritten:{faktor:1.3,jahre:2,fans:-5,fansMonat:-1,skandal:0.05,skandalFans:-10,info:'Umstrittener Geldgeber: 30 % mehr, zwei Jahre, die Fans murren',
@@ -687,7 +693,7 @@ const REGELN={
   // minSpiele: so viele eigene Ligaspiele braucht der Schnitt dieser Saison, sonst gilt der der letzten Saison. lizenzTag, nachweisTag: Datum (MM-TT) der Prüfung und der Frist.
   // auflage: Vertrauen bei Auflagen. insolvenz: so viele Monatserste nacheinander unter dem negativen Kreditrahmen, Punktabzug, Vertrauen. warnMonate: Vorlauf der Warnung.
   // monatTage: Tage je Monat für die Warnung. PUNKTABZUG GESCHÄTZT (K23 §12 Nr. 9).
-  finanzplan:{laufend:['TV-Gelder','Sponsor','Weitere Sponsoren','Zuschauer','Dauerkarten','VIP-Logen','Fanartikel','Fanartikel online','Gehälter','Trainerstab','Prämien','Stadion & Betrieb','Verwaltung','Jugendarbeit','Zweite Mannschaft','Kreditzinsen','Scouting','Instandhaltung','Sonstige Einnahmen'],
+  finanzplan:{laufend:['TV-Gelder','Sponsor','Stadionname','Weitere Sponsoren','Zuschauer','Dauerkarten','VIP-Logen','Fanartikel','Fanartikel online','Gehälter','Trainerstab','Prämien','Stadion & Betrieb','Verwaltung','Jugendarbeit','Zweite Mannschaft','Kreditzinsen','Scouting','Instandhaltung','Sonstige Einnahmen'],
     minSpiele:3,lizenzTag:'03-01',nachweisTag:'05-31',auflage:-5,insolvenz:{monate:2,punkte:9,vertrauen:-30},warnMonate:3,monatTage:30,
     // K23b (§5.5e): sonstiges: Sonstige Einnahmen (Mitglieder, Vermarktung, Stadionvermietung) je Ligaspiel nach Liga, für alle Vereine. Seit K23c (vorläufig) etwa 7 % der Einnahmen
     // ohne Transfers wie in echt (7–11 %): 1. Liga 10,2 Mio. €, 2. Liga 2,7 Mio. €, 3. Liga 1,1 Mio. € je Saison. Vorher 0, 25.000 und 60.000 € als Ausgleich der zu kleinen Werbung.
@@ -1260,7 +1266,7 @@ const REGELN={
       marketing:{ab:3,name:'Marketing (Trikot und Kampagnen)',tab:'stadion',auto:1,wer:'der Verein',tut:'nimmt das klassische Trikot und startet keine Kampagnen'}, // K25 §5.4, K25a
       sportgericht:{ab:4,name:'Sportgericht',tab:'buero',auto:1,wer:'der Verein',tut:'nimmt Strafen an oder legt bei harten Anträgen Einspruch ein'},
       medizin:{ab:4,name:'Fit spritzen und früher zurückholen',tab:'kader',auto:1,wer:'der Mannschaftsarzt',tut:'spritzt nur in wichtigen Spielen Stammspieler mit kurzer Verletzung fit'},
-      sponsor:{ab:4,name:'Werbeverträge (Trikotbrust, Ausrüster, Ärmel)',tab:'buero',auto:1,wer:'der Verein',tut:'nimmt je Fläche das Angebot mit dem höchsten festen Betrag'}, // seit K24a alle Werbeflächen
+      sponsor:{ab:4,name:'Werbeverträge (Trikotbrust, Ausrüster, Ärmel, Stadionname)',tab:'buero',auto:1,wer:'der Verein',tut:'nimmt je Fläche das Angebot mit dem höchsten festen Betrag'}, // seit K24a alle Werbeflächen
       preise:{ab:4,name:'Eintrittspreis',tab:'finanzen',auto:1,wer:'der Verein',tut:'setzt den Richtpreis nach Liga und Ansehen'},
       stadion:{ab:5,name:'Stadionausbau',tab:'stadion'},
       kredit:{ab:5,name:'Kredit',tab:'finanzen',auto:1,wer:'der Verein',tut:'nimmt keinen Kredit auf und tilgt am Saisonende aus dem Guthaben'}

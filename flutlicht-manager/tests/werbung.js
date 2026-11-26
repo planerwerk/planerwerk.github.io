@@ -10,9 +10,9 @@ function welt(lernstufen){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;
 // 1. Angebote je Fläche: Die festen Beträge der drei Flächen ergeben zusammen ihren Anteil am Grundbetrag der Werbung (seit K23c 63 %, den Rest zahlen weitere Partner), bis auf Rundung
 {const {S,ev}=welt(false),t=ev('myT()'),SP=ev('RF').sponsor,alt=ev('sponsorBasis')(t)*(1-ev('RF').werbung.partner),A=SP.angebote;
   const fl=Object.keys(S.werbOffers||{}),summe=k=>S.sponsOffers[k].base+fl.reduce((a,f)=>a+S.werbOffers[f][k].base,0);
-  const ok=fl.length===2&&fl.includes('ausruester')&&fl.includes('aermel')&&fl.every(f=>S.werbOffers[f].length===A.length+1)&&S.sponsOffers.length===A.length+1&&A.every((a,k)=>Math.abs(summe(k)-alt*a.fix)<=3000);
+  const ok=fl.length===3&&fl.includes('ausruester')&&fl.includes('aermel')&&fl.includes('stadion')&&fl.every(f=>S.werbOffers[f].length===A.length+1)&&S.sponsOffers.length===A.length+1&&A.every((a,k)=>Math.abs(summe(k)-alt*a.fix)<=3000);
   const U=ev('RF').werbung.umstritten,namen=fl.every(f=>S.werbOffers[f].every(o=>o.im==='umstritten'?U.namen.includes(o.name):ev('RF').werbung.namen[f].includes(o.name)));
-  pruef(ok&&namen,'Angebote: Ausrüster und Ärmel je drei (dazu seit K24b je ein umstrittenes, auch bei der Brust), Namen aus den Listen, die festen Beträge aller drei Flächen ergeben zusammen ihren Anteil am Grundbetrag der Werbung',`früher ${Math.round(alt)}, jetzt ${A.map((a,k)=>summe(k)).join(' / ')} (Soll ${A.map(a=>Math.round(alt*a.fix)).join(' / ')})`);}
+  pruef(ok&&namen,'Angebote: Ausrüster, Ärmel und seit K24d Stadionname je drei (dazu seit K24b je ein umstrittenes, auch bei der Brust), Namen aus den Listen, die festen Beträge aller vier Flächen ergeben zusammen ihren Anteil am Grundbetrag der Werbung (75 %, den Rest zahlen weitere Partner)',`früher ${Math.round(alt)}, jetzt ${A.map((a,k)=>summe(k)).join(' / ')} (Soll ${A.map(a=>Math.round(alt*a.fix)).join(' / ')})`);}
 
 // 2. Wahl: je Fläche höchstens ein Vertrag, die Angebote der Fläche sind danach weg, Meldung
 {const {S,F}=welt(false);F.sponsorWaehlen(1);F.werbungWaehlen('ausruester',2);const w=S.werbung.ausruester;
@@ -29,10 +29,10 @@ function welt(lernstufen){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;
   const A=W.ev('RF').sponsor.angebote;
   pruef(!F.werbungAusstehend()&&S.spons&&['ausruester','aermel'].every(f=>S.werbung[f]&&S.werbung[f].yrs===A[0].jahre),'Ohne Wahl: Vor dem ersten Pflichtspiel hat jede Fläche das erste Angebot',['ausruester','aermel'].map(f=>S.werbung[f]&&S.werbung[f].name).join(', '));
   // 5. Geld je Spieltag: Brust und die anderen Flächen werden bei jedem eigenen Ligaspiel gebucht
-  const vor=S.fin['Sponsor']||0,erw=S.spons.base+Object.values(S.werbung).reduce((a,w)=>a+w.base,0),sieg=S.spons.win+Object.values(S.werbung).reduce((a,w)=>a+(w.win||0),0);
+  const geld=()=>(S.fin['Sponsor']||0)+(S.fin['Stadionname']||0),vor=geld(),erw=S.spons.base+Object.values(S.werbung).reduce((a,w)=>a+w.base,0),sieg=S.spons.win+Object.values(S.werbung).reduce((a,w)=>a+(w.win||0),0);
   let m=0;const spiele=()=>S.res[W.ev('myT()').lg].filter(r=>r[0]===VEREIN||r[1]===VEREIN).length,s0=spiele();
   while(m<100&&spiele()===s0){m++;if(W.ev('heuteMeinSpiel()'))F.tagesSpiele(S.tag);F.weiter();}
-  const d=(S.fin['Sponsor']||0)-vor;pruef(d===erw||d===erw+sieg,'Geld: je eigenem Ligaspiel die festen Beträge aller Flächen (dazu Siegprämien)',`${d} (fest ${erw}${sieg?', mit Sieg '+(erw+sieg):''})`);}
+  const d=geld()-vor;pruef(d===erw||d===erw+sieg,'Geld: je eigenem Ligaspiel die festen Beträge aller Flächen (dazu Siegprämien), der Stadionname als eigener Posten',`${d} (fest ${erw}${sieg?', mit Sieg '+(erw+sieg):''})`);}
 
 // 6. Saisonwechsel: Laufzeiten zählen herunter, ausgelaufene Flächen bekommen neue Angebote
 {const {S,F}=welt(false);F.sponsorWaehlen(0);F.werbungWaehlen('ausruester',2);F.werbungWaehlen('aermel',0);S.season++;F.werbungSaison();
@@ -126,5 +126,35 @@ const sm0=(S,pos,target,ab)=>({pos,target,down:ab?[S.my]:[],down2:[],down3:[],re
 // 21. Die Automatik nimmt eine Verlängerung, wenn sie das höchste feste Angebot ist
 {const {S,F,ev}=welt(true);S.spons.z=90;S.spons.yrs=1;S.spons.base=Math.max(...[S.spons.base])*2;const name=S.spons.name;S.season++;F.werbungSaison();if(!S.spons)F.sponsOffers();
   pruef(S.spons&&S.spons.name===name&&S.spons.ver===1,'Automatik: nimmt die Verlängerung, wenn sie das höchste feste Angebot ist',S.spons&&S.spons.name);}
+
+// ---------- K24d (26.11.): Stadionname, Antworten popolupo in K24 §12 ----------
+// 22. Angebote für den Stadionnamen: Firmen aus der Liste, Name aus erstem Wort und Arena, Park oder Stadion; 12 % des Grundbetrags, der Partneranteil sinkt auf 25 %
+{const {S,ev}=welt(false),t=ev('myT()'),RW=ev('RF').werbung,l=S.werbOffers.stadion||[],b=ev('sponsorBasis')(t);
+  const namen=l.every(o=>o.im==='umstritten'||RW.namen.stadion.includes(o.name)),form=l.every(o=>/^[A-ZÄÖÜ][a-zäöüß]+-(Arena|Park|Stadion)$/.test(ev('stadionName')(o)));
+  pruef(l.length===ev('RF').sponsor.angebote.length+1&&namen&&form&&Math.abs(l[0].base-b*RW.anteil.stadion)<=500&&RW.partner===0.25&&Math.abs(RW.anteil.brust+RW.anteil.ausruester+RW.anteil.aermel+RW.anteil.stadion+RW.partner-1)<1e-9,
+    'Stadionname: drei Angebote und ein umstrittenes, erfundene Namen (Kesselberg-Arena), 12 % des Grundbetrags, zusammen mit den Partnern weiter 100 %',l.map(o=>ev('stadionName')(o)).join(', '));}
+
+// 23. Verkauf kostet Fanstimmung −3 − 3 × Fankultur (−3 bis −6), eine Verlängerung nicht
+{const {S,F,ev}=welt(false),t=ev('myT()');const erw=-3-3*ev('fankulturWirkung')(t),d0=t.fanD||0;F.werbungWaehlen('stadion',0);const d1=t.fanD||0;
+  const c=S.werbung.stadion;delete S.werbung.stadion;S.werbOffers.stadion=[{...c,ver:1}];F.werbungWaehlen('stadion',0);const d2=t.fanD||0;
+  pruef(Math.abs((d1-d0)-Math.round(erw*10)/10)<0.051&&erw<=-3&&erw>=-6&&d2===d1&&S.news.some(n=>/Das Stadion heißt jetzt/.test(n.t)),
+    'Stadionname verkauft: Fanstimmung −3 − 3 × Fankultur, bei Verlängerung nichts',`${(d1-d0).toFixed(1)} (erwartet ${erw.toFixed(2)}), Verlängerung ${(d2-d1).toFixed(1)}`);}
+
+// 24. Traditionsnamen behalten: Angebote weg bis zur nächsten Saison, kein Nachreichen am Monatsersten, nächste Saison wieder Angebote; ohne A-Lizenz gesperrt
+{const {S,F,ev}=welt(false),t=ev('myT()'),d0=t.fanD||0;F.stadionBehalten();const weg=!S.werbOffers.stadion&&S.stadionBehalten===S.season&&(t.fanD||0)===d0;
+  ev('werbungTag')(S.tag+1);ev('werbungOffen()');const bleibt=!S.werbOffers.stadion&&!S.werbung.stadion;
+  S.season++;F.werbungSaison();const wieder=(S.werbOffers.stadion||[]).length>0;
+  const L=welt(true);L.F.stadionBehalten();const gesperrt=!!(L.S.werbOffers.stadion||[]).length||!!L.S.werbung.stadion;
+  pruef(weg&&bleibt&&wieder&&gesperrt,'Traditionsnamen behalten: keine Fanstrafe, keine Angebote mehr in dieser Saison, in der nächsten wieder; mit Lernstufen gesperrt (Automatik verkauft)',`weg ${weg}, bleibt ${bleibt}, wieder ${wieder}, gesperrt ${gesperrt}`);}
+
+// 25. Geld: Der Stadionname zahlt je eigenem Ligaspiel unter „Stadionname“, die weiteren Sponsoren 25 % des Grundbetrags; ohne Verkauf fehlen die 12 %
+{const {S,F,ev}=welt(false),t=ev('myT()');F.werbungWaehlen('stadion',0);let m=null;S.fx[t.lg].some(md=>md.some(([h,a])=>{if(a===S.my){m={h,a,hg:0,ag:1,lg:t.lg};return true;}return false;}));
+  const s0=S.fin['Stadionname']||0,w0=S.fin['Weitere Sponsoren']||0;F.finanzenLiga(m);const s=(S.fin['Stadionname']||0)-s0,w=(S.fin['Weitere Sponsoren']||0)-w0,b=ev('sponsorBasis')(t);
+  pruef(s===S.werbung.stadion.base&&w===Math.round(b*0.25)&&ev('RFP').laufend.includes('Stadionname'),'Geld: Stadionname als eigener Posten je Ligaspiel, weitere Sponsoren 25 %, in der Prognose enthalten',`Stadionname ${s}, weitere Sponsoren ${w}`);}
+
+// 26. Ältere Stände ohne Stadionname: Am nächsten Tag kommen Angebote, am nächsten eigenen Spieltag nimmt der Vorstand das erste
+{const {S,F,W,ev}=welt(false);F.sponsorWaehlen(0);['ausruester','aermel'].forEach(f=>F.werbungWaehlen(f,0));delete S.werbOffers.stadion;delete S.werbung.stadion;delete S.stadionBehalten;
+  ev('werbungTag')(S.tag+1);const da=(S.werbOffers.stadion||[]).length>0;let k=0;while(k<120&&!S.werbung.stadion){k++;if(W.ev('heuteMeinSpiel()'))F.tagesSpiele(S.tag);F.weiter();}
+  pruef(da&&!!S.werbung.stadion,'Ältere Stände: Stadionname wird nachgereicht und vor dem nächsten eigenen Spiel vergeben',`Angebote ${da}, Vertrag ${S.werbung.stadion?S.werbung.stadion.name:'keiner'} nach ${k} Tagen`);}
 
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

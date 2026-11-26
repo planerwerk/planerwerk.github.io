@@ -11,6 +11,10 @@ const werbTitel=f=>RF.werbung.titel[f]||f;
 const werbFlaechenAlle=()=>['brust',...werbFlaechen()];
 const werbVertrag=f=>f==='brust'?S.spons:(S.werbung||{})[f];
 const istUmstritten=o=>!!o&&o.im==='umstritten';
+// Stadionname (K24d): erstes Wort der Firma und ein Wort aus RF.werbung.stadion.worte, ohne Zufall aus dem Namen (Kesselberg-Arena)
+const stadionName=c=>{if(!c)return'';const W=RF.werbung.stadion.worte,n=String(c.name),h=[...n].reduce((a,ch)=>a+ch.charCodeAt(0),0);return`${n.split(' ')[0]}-${W[h%W.length]}`;};
+// Fanstimmung beim Verkauf des Namens: −3 − 3 × Fankultur (−3 bis −6). Ohne Fankultur (ältere Stände) nur der Grundwert.
+const stadionFans=(t=myT())=>{const P=RF.werbung.stadion;return P.fans+P.fansKultur*(typeof fankulturWirkung==='function'?fankulturWirkung(t):0);};
 // Faktor aus dem Werbewert (K25, S.mk.ww): über dem Startwert (Ansehen × startJeAnsehen) mehr, darunter weniger, höchstens ±max. Ohne Marketing-Stand neutral.
 function werbFaktor(t=myT()){const W=RF.werbung.werbewert,M=S.mk;if(!W||!M||M.ww==null||typeof RMK==='undefined')return 1;return 1+clamp((M.ww-t.rep*RMK.werbewert.startJeAnsehen)*W.jePunkt,-W.max,W.max);}
 // Das vierte Angebot einer Fläche: umstrittener Geldgeber über dem besten festen Angebot. Der Name kommt ohne Zufall aus Saison und Fläche (kein Strom wird berührt).
@@ -22,7 +26,7 @@ const werbBasis=(f,t=myT())=>sponsorBasis(t)*RF.werbung.anteil[f]; // Grundbetra
 function werbAngebote(f){const b=werbBasis(f)*werbFaktor()*(stufe().sponsor||1),r=v=>Math.round(v/1000)*1000; // Schwierigkeit (K43) wie bei der Brust
   return mitStrom(strom('werbung',S.season,f),()=>{const ns=shuffle(RF.werbung.namen[f].slice());return [...RF.sponsor.angebote.map((a,i)=>({name:ns[i%ns.length],base:r(b*a.fix),win:a.sieg?r(b*a.sieg):0,yrs:a.jahre,info:a.info})),werbUmstritten(f,b)];});}
 // Für jede freie Fläche Angebote bereitstellen (aufgerufen aus sponsOffers, also beim Start, nach einem Jobwechsel und wenn ein Vertrag ausläuft)
-function werbungOffen(){S.werbung=S.werbung||{};S.werbOffers=S.werbOffers||{};werbFlaechen().forEach(f=>{if(!S.werbung[f]&&!S.werbOffers[f]){S.werbOffers[f]=werbAngebote(f);werbVerlaengerung(f,S.werbOffers[f]);}});werbungAuto();}
+function werbungOffen(){S.werbung=S.werbung||{};S.werbOffers=S.werbOffers||{};werbFlaechen().forEach(f=>{if(f==='stadion'&&S.stadionBehalten===S.season)return; /* Traditionsname in dieser Saison (K24d) */if(!S.werbung[f]&&!S.werbOffers[f]){S.werbOffers[f]=werbAngebote(f);werbVerlaengerung(f,S.werbOffers[f]);}});werbungAuto();}
 // Verlängerungsangebot (K24c): Ein zufriedener Partner (ab verlaengernAb), dessen Vertrag gerade ausgelaufen ist, steht mit 10 % mehr in der Liste (aus S.werbAlt, siehe werbungSaison)
 function werbVerlaengerung(f,l){const a=(S.werbAlt||{})[f];if(!a||!l)return;const Z=RF.werbung.zufriedenheit,r=v=>Math.round(v*(1+Z.plus)/1000)*1000;
   l.push({name:a.name,base:r(a.base),win:a.win?r(a.win):0,yrs:Z.jahre,info:`Verlängerung: ${a.name} ist zufrieden und bietet 10 % mehr, ${Z.jahre} Jahre`,ver:1,im:a.im});delete S.werbAlt[f];}
@@ -30,7 +34,12 @@ function werbungAusstehend(){return !!S.werbOffers&&Object.keys(S.werbOffers).le
 function werbungWaehlen(f,i){const l=(S.werbOffers||{})[f];if(!l||!l[i])return;S.werbung=S.werbung||{};S.werbung[f]={...l[i]};delete S.werbOffers[f];
   news(`Werbevertrag (${werbTitel(f)}) unterschrieben: ${S.werbung[f].name}.`,'good');werbUnterschrieben(f);}
 // Nach jeder Unterschrift (auch der Brust, welt.js): Ein umstrittener Geldgeber kostet Fanstimmung (K27 Baustein Entscheidungen)
-function werbUnterschrieben(f){const c=werbVertrag(f);if(!istUmstritten(c))return;fanAnlass(myT(),'fanD',RF.werbung.umstritten.fans);news(`Die Fans murren über den neuen Geldgeber ${c.name} (${werbTitel(f)}).`,'bad');}
+function werbUnterschrieben(f){const c=werbVertrag(f);
+  if(f==='stadion'&&c&&!c.ver){const v=Math.round(stadionFans()*10)/10;fanAnlass(myT(),'fanD',v);news(`Das Stadion heißt jetzt ${stadionName(c)}. Viele Fans hängen am alten Namen.`,'bad');} // K24d, nicht bei Verlängerung
+  if(!istUmstritten(c))return;fanAnlass(myT(),'fanD',RF.werbung.umstritten.fans);news(`Die Fans murren über den neuen Geldgeber ${c.name} (${werbTitel(f)}).`,'bad');}
+// Traditionsnamen behalten (K24d, Aktion): Die Angebote für den Stadionnamen verfallen bis zur nächsten Saison. Keine Fanstrafe, aber 12 % der Werbung fehlen.
+function stadionBehalten(){if(!darf('sponsor','sponsorOderPreis'))return;if(!(S.werbOffers||{}).stadion)return;delete S.werbOffers.stadion;S.stadionBehalten=S.season;
+  news('Das Stadion behält in dieser Saison seinen Namen. Die Fans freuen sich, das Geld eines Namenssponsors fehlt.','good');save();render();}
 // Aktion des Spielers
 function pickWerbung(f,i){if(!darf('sponsor','sponsorOderPreis'))return;werbungWaehlen(f,i);save();render();}
 // Automatik (K36): je Fläche das Angebot mit dem höchsten festen Betrag, wie bei der Brust (sponsorAuto)
@@ -57,7 +66,8 @@ function werbSkandale(){const U=RF.werbung.umstritten;werbFlaechenAlle().forEach
 function werbungKuendigen(f){if(!darf('sponsor','sponsorOderPreis'))return;const c=werbVertrag(f);if(!c||!c.skandal)return;news(`Vertrag mit ${c.name} (${werbTitel(f)}) nach dem Skandal gekündigt.`);
   if(f==='brust'){S.spons=null;sponsOffers();}else{delete S.werbung[f];werbungOffen();}save();render();}
 // Monatserster (ablauf.js): Laufende umstrittene Verträge kosten jeden Monat etwas Fanstimmung
-function werbungTag(d){if(S.phase!=='play'||mmtt(d).slice(3)!=='01')return;const n=werbFlaechenAlle().filter(f=>istUmstritten(werbVertrag(f))).length;if(n)fanAnlass(myT(),'fanD',RF.werbung.umstritten.fansMonat*n);}
+function werbungTag(d){if(S.werbung&&!S.werbung.stadion&&!(S.werbOffers||{}).stadion&&S.stadionBehalten!==S.season)werbungOffen(); /* ältere Stände ohne Stadionname (K24d): Angebote nachreichen, am nächsten eigenen Spieltag nimmt der Vorstand das erste */
+  if(S.phase!=='play'||mmtt(d).slice(3)!=='01')return;const n=werbFlaechenAlle().filter(f=>istUmstritten(werbVertrag(f))).length;if(n)fanAnlass(myT(),'fanD',RF.werbung.umstritten.fansMonat*n);}
 // Sponsorentag (K24 §4.3, Aktion): einmal je Saison, solange Angebote offen sind, kostet Geld, danach sind alle offenen Angebote besser
 // Seit 22.11. in drei Größen (klein, mittel, groß): Kosten nach Liga, Zuschlag gewürfelt im eigenen Strom, als Rückmeldung nur ein Text nach der Lage des Wurfs in der Spanne.
 const sponsorTagKosten=k=>{const T=RF.werbung.sponsorentag;return Math.round(T.stufen[k].kosten*(T.liga[myT().lg]||T.liga[3])/1000)*1000;};
@@ -69,13 +79,13 @@ function sponsorenTag(k='gross'){if(!darf('sponsor','sponsorOderPreis'))return;c
 // Jobwechsel: Die Verträge gehören dem alten Verein
 function werbungNeuerVerein(){S.werbung={};S.werbOffers={};S.werbAlt={};}
 // Geld je eigenem Spiel (finanzenLiga): Fixum und Siegprämie wie bei der Brust
-function werbungSpieltag(m){Object.values(S.werbung||{}).forEach(w=>{money('Sponsor',w.base);if(w.win&&winner(m)===S.my&&m.hg!==m.ag)money('Sponsor',w.win);});}
+function werbungSpieltag(m){Object.entries(S.werbung||{}).forEach(([f,w])=>{const k=f==='stadion'?'Stadionname':'Sponsor'; /* eigener Posten im Finanzbericht (K24d) */money(k,w.base);if(w.win&&winner(m)===S.my&&m.hg!==m.ag)money(k,w.win);});}
 // Summe der festen Beträge aller Flächen je Spieltag (Anzeige)
 const werbungSumme=()=>(S.spons?S.spons.base:0)+Object.values(S.werbung||{}).reduce((a,w)=>a+w.base,0);
 
 // Büro: Angebote für freie Flächen (die Brust zeigt ansichten.js wie bisher)
 function werbungAngebotsKarte(){if(!werbungAusstehend()&&!S.sponsOffers)return'';const T=RF.werbung.sponsorentag,tag=S.sponsorTag===S.season;
-  return`<div class="card"><h3>Werbeflächen vergeben</h3><p class="dim">Neben der Trikotbrust: Ausrüster und Ärmel. Ohne Wahl nimmt der Vorstand vor dem ersten Pflichtspiel das erste Angebot. Umstrittene Geldgeber zahlen mehr, kosten aber Fanstimmung und können in einen Skandal geraten.</p><div class="row" style="margin:6px 0;flex-wrap:wrap;gap:6px">${Object.keys(T.stufen).map(k=>`<button onclick="sponsorenTag('${k}')"${tag?' disabled':''}${lzAus('sponsor')}>Sponsorentag ${esc(T.stufen[k].name)} (${fmt(sponsorTagKosten(k))})</button>`).join('')}<span class="dim">${tag?'In dieser Saison schon veranstaltet.':'Einmal je Saison: Du lädst Partner ins Stadion, danach werden die offenen Angebote besser. Je größer der Tag, desto mehr ist drin.'}</span></div>${Object.keys(S.werbOffers||{}).map(f=>`<h4 style="margin:10px 0 4px">${esc(werbTitel(f))}</h4><div class="opts">${S.werbOffers[f].map((o,i)=>`<button class="opt" onclick="pickWerbung('${f}',${i})"${lzAus('sponsor')}><b>${esc(o.name)}</b>${istUmstritten(o)?' <span class="tag warn">umstritten</span>':''}${o.ver?' <span class="tag good">Verlängerung</span>':''}<span>${fmt(o.base)} pro Spieltag${o.win?` + ${fmt(o.win)} pro Sieg`:''} · ${esc(o.info)}</span></button>`).join('')}</div>`).join('')}</div>`;}
+  return`<div class="card"><h3>Werbeflächen vergeben</h3><p class="dim">Neben der Trikotbrust: Ausrüster, Ärmel und Stadionname. Ohne Wahl nimmt der Vorstand vor dem ersten Pflichtspiel das erste Angebot. Umstrittene Geldgeber zahlen mehr, kosten aber Fanstimmung und können in einen Skandal geraten.</p><div class="row" style="margin:6px 0;flex-wrap:wrap;gap:6px">${Object.keys(T.stufen).map(k=>`<button onclick="sponsorenTag('${k}')"${tag?' disabled':''}${lzAus('sponsor')}>Sponsorentag ${esc(T.stufen[k].name)} (${fmt(sponsorTagKosten(k))})</button>`).join('')}<span class="dim">${tag?'In dieser Saison schon veranstaltet.':'Einmal je Saison: Du lädst Partner ins Stadion, danach werden die offenen Angebote besser. Je größer der Tag, desto mehr ist drin.'}</span></div>${Object.keys(S.werbOffers||{}).map(f=>`<h4 style="margin:10px 0 4px">${esc(werbTitel(f))}</h4><div class="opts">${f==='stadion'?`<p class="dim">Ein verkaufter Name kostet Fanstimmung (bei deinem Verein ${String(Math.round(stadionFans()*10)/10).replace('.',',')}, je stärker die Fankultur, desto mehr). Behältst du den Traditionsnamen, fehlt das Geld des Namenssponsors bis zur nächsten Saison. <button onclick="stadionBehalten()"${lzAus('sponsor')}>Traditionsnamen behalten</button></p>`:''}${S.werbOffers[f].map((o,i)=>`<button class="opt" onclick="pickWerbung('${f}',${i})"${lzAus('sponsor')}><b>${esc(o.name)}</b>${f==='stadion'?` (${esc(stadionName(o))})`:''}${istUmstritten(o)?' <span class="tag warn">umstritten</span>':''}${o.ver?' <span class="tag good">Verlängerung</span>':''}<span>${fmt(o.base)} pro Spieltag${o.win?` + ${fmt(o.win)} pro Sieg`:''} · ${esc(o.info)}</span></button>`).join('')}</div>`).join('')}</div>`;}
 // Finanzen: alle laufenden Werbeverträge
-function werbungVertraege(){const z=(f,w)=>`<p><b>${esc(werbTitel(f))}:</b> ${w?`${esc(w.name)}${istUmstritten(w)?` <span class="tag warn">${w.skandal?'Skandal':'umstritten'}</span>`:''}, ${fmt(w.base)} pro Spieltag${w.win?` + ${fmt(w.win)} pro Sieg`:''}, Laufzeit noch ${w.yrs} Saison(s), Zufriedenheit ${w.z!=null?w.z:RF.werbung.zufriedenheit.start}${w.skandal?` <button onclick="werbungKuendigen('${f}')"${lzAus('sponsor')}>Kostenlos kündigen</button>`:''}`:'frei (Angebote im Büro)'}</p>`;
+function werbungVertraege(){const z=(f,w)=>`<p><b>${esc(werbTitel(f))}:</b> ${!w&&f==='stadion'&&S.stadionBehalten===S.season?'Traditionsname, in dieser Saison nicht verkauft':w?`${f==='stadion'?`${esc(stadionName(w))}, `:''}${esc(w.name)}${istUmstritten(w)?` <span class="tag warn">${w.skandal?'Skandal':'umstritten'}</span>`:''}, ${fmt(w.base)} pro Spieltag${w.win?` + ${fmt(w.win)} pro Sieg`:''}, Laufzeit noch ${w.yrs} Saison(s), Zufriedenheit ${w.z!=null?w.z:RF.werbung.zufriedenheit.start}${w.skandal?` <button onclick="werbungKuendigen('${f}')"${lzAus('sponsor')}>Kostenlos kündigen</button>`:''}`:'frei (Angebote im Büro)'}</p>`;
   return werbFlaechenAlle().map(f=>z(f,werbVertrag(f))).join('')+`<p class="dim">Zusammen fest: ${fmt(werbungSumme())} pro Spieltag.</p>`;}
