@@ -220,6 +220,9 @@ medizin:{
 13. **Robustheit und „verletzungsanfällig“** wirken beide (1,6 − 0,06 × Robustheit und ×1,6), wie in 5.1. Ein Anfälliger (Robustheit 1–4) verletzt sich damit gut doppelt so oft wie der Durchschnitt, nicht nur 60 % öfter, wie der Merkmalstext sagt. Prüfen.
 14. **Lernstufen (K36):** Verletztenliste und Diagnose ab Stufe 1 (nur Information), fit spritzen und früher zurückholen ab Stufe 4. Davor entscheidet der Arzt nach den Regeln der Computer-Vereine.
 15. **Noch nicht gebaut:** Pflichtwechsel und Zusatzwechsel bei Gehirnerschütterung, Ereignisse aus §8 außer Verletzungsserie (K07c), Grippewelle und lange Reha (K10e), Reha-Zentrum (K26), Rotation der Computer-Vereine nach Saisonbelastung. (Die Rotation gibt es seit K10f, 25.11.2026, popolupo, ohne Testlauf, hinter dem Schalter `REGELN.computer.belastungRotation.an`, im Menü „Rotation nach Saisonbelastung“: Im Ligaspiel schont ein Verein, dessen Aufstellung der Stab macht, Feldspieler ab Saisonbelastung 70 mit 35 % je Spiel, fest aus dem Seed, höchstens zwei, solange 14 Einsatzfähige mit Torwart bleiben; nicht in der Relegation; seit Prüfung FU1 zählt der Bankplatz der Geschonten nicht, sie stehen im Spielergebnis.) Die Ausfalltage stehen seit K10d (22.11.2026, ohne Testlauf) auch in der Saisonbilanz, mit dem Ligaschnitt.
+16. **Nachkalibrierung 26.11.2026** (popolupo, vorläufig):
+    - Rückfall nach Zerrung 0,095 statt 0,12 und Kreuzbandriss-Anteil 0,006 statt 0,01. Gemessen lagen sie bei 15–16 % Rückfall und 9,5–10 Kreuzbandrissen je Saison (Ziele 10–15 % und 3–8).
+    - Zerrung-Anteil 0,22 statt 0,25 (Lauf 19). Mit den Rückfällen lag der gemessene Anteil genau auf der Obergrenze von 25 %. Die Tabelle in §3.1 nennt weiter den Zielwert, nicht den Grundanteil.
 
 **Noch zu recherchieren:** aktuelle Gesamtrate für Männer-Profis (je 1000 Stunden und pro Team und Saison), Anteil der Trainingsverletzungen, Regel zu zusätzlichen Wechseln bei Gehirnerschütterung in Bundesliga und Pokal.
 
