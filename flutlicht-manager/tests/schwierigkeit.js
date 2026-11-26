@@ -96,11 +96,15 @@ for(const k of ['leicht','normal']){const {W,S}=welt(k),ev=W.ev,t=ev('myT()'),I=
   const hebel=gr(1)===St('normal').entlassenUnter+Wk.vorstand&&gr(-1)===St('normal').entlassenUnter-Wk.vorstand&&Math.abs(gPlus/g0-(1+Wk.gehalt))<0.01&&Math.abs(gMinus/g0-(1-Wk.gehalt))<0.01
     &&zPlus<=z0&&zMinus>=z0&&(zPlus<z0||zMinus>z0);S.mitw.s=0;
   pruef(hebel,'K43: Mitwachsend wirkt nur leicht: Vorstand ±3 Punkte, Gehaltsforderung ±6 %, Saisonziel einen Platz',`Grenze ${gr(1)}/${gr(-1)}, Forderung ${g0} → ${gPlus}/${gMinus}, Ziel ${z0} → ${zPlus}/${zMinus}`);S.mitw.s=0;
+  // Glück bei Karten nur in der Durststrecke (Hinweis aus Prüfung GH): bei s = −1 mehr gute Ausgänge als bei 0, bei +1 genauso viele wie bei 0 (gleicher Würfel)
+  const gutBei=s=>{S.mitw.s=s;let k=0;ev('mitStrom')(ev('strom')('k43mw',1),()=>{for(let i=0;i<400;i++)if(ev('kartenWirkung')({art:'vertrauen',wert:0,chance:0.5,gut:'g',schlecht:0,schlechtText:'s'},{},{id:'k43',titel:'Test'})==='g')k++;});return k;};
+  const gu=gutBei(-1),g00=gutBei(0),gp=gutBei(1);S.mitw.s=0;pruef(gu>g00&&gp===g00,'K43: Mitwachsend, Glück bei Karten nur in der Durststrecke',`gute Ausgänge von 400: ${gu}/${g00}/${gp}`);
   // E: ohne „Mitwachsend“ ändert die Bewertung nichts, und alle Hebel sind neutral
   const n=R.normal;n.W.ev('stufeMitwachsen')({my:n.S.my,lg:1,pos:1,target:5,champ:n.S.my,gap:20});const fest=!n.S.mitw&&n.W.ev('mitwachsWert')()===0&&n.W.ev('entlassGrenze')()===St('normal').entlassenUnter;
-  // Reihenfolge im Saisonwechsel: erst die Bewertung, dann der Europapokal
-  const quelle=require('fs').readFileSync(require('path').join(require('./sim').ROOT,'js','saison.js'),'utf8'),reihe=quelle.indexOf('stufeMitwachsen(sm)')>=0&&quelle.indexOf('stufeMitwachsen(sm)')<quelle.indexOf('europaAnlegen(sm)');
-  pruef(fest&&reihe,'K43: ohne Mitwachsend keine Änderung; Bewertung im Saisonwechsel vor dem Europapokal',`neutral ${fest}, Reihenfolge ${reihe}`);}
+  // Reihenfolge im Saisonwechsel (Prüfung GH1): Titel der alten Saison vor europaAnlegen merken, Bewertung nach finanzenSaisonstart (Zuschuss in den Finanzen) und vor setTarget
+  const quelle=require('fs').readFileSync(require('path').join(require('./sim').ROOT,'js','saison.js'),'utf8'),q=x=>quelle.indexOf(x);
+  const reihe=q('euTitelAlt=S.eu')>=0&&q('euTitelAlt=S.eu')<q('europaAnlegen(sm)')&&q('finanzenSaisonstart()')<q('stufeMitwachsen(sm,euTitelAlt)')&&q('stufeMitwachsen(sm,euTitelAlt)')<q('setTarget();werbungSaison()');
+  pruef(fest&&reihe,'K43: ohne Mitwachsend keine Änderung; Bewertung im Saisonwechsel nach dem Start der Finanzen, mit den Titeln der alten Saison',`neutral ${fest}, Reihenfolge ${reihe}`);}
 
 // K02a. Neue Regeln ausprobieren (K02 §4.4): Jeder Eintrag in REGELN.experimente zeigt auf einen Schalter, der aus ist. experimentSetzen schaltet ihn für diesen
 //       Spielstand ein (S.einst.exp) und wieder aus; experimenteAnwenden schaltet nur aus, was es selbst eingeschaltet hat (ein von außen gesetzter Schalter bleibt).

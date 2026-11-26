@@ -126,7 +126,7 @@ Wann gebaut wird: wenn ein Langlauf auf Leicht zeigt, dass ein Verein zu oft all
 ### 5.3 Wie es gebaut ist
 
 - **Wahl beim Spielstart:** „Mitwachsend: das Spiel reagiert leicht auf deinen Erfolg“. Grundlage ist Normal.
-- **Bewertung jeder Saison** (zu Beginn der nächsten, vor der Einteilung des Europapokals, `stufeMitwachsen` in `js/welt.js`), immer am eigenen Anspruch in der eigenen Liga:
+- **Bewertung jeder Saison** (zu Beginn der nächsten, nach dem Start der Finanzen und vor dem neuen Saisonziel, `stufeMitwachsen` in `js/welt.js`), immer am eigenen Anspruch in der eigenen Liga. Bei einem Jobwechsel am Saisonende zählt die Saison des alten Vereins, ein Partner kommt dann nicht für den neuen. Gewertet wird:
   - Platz gegen Saisonziel: je Platz besser oder schlechter ±0,5, höchstens ±3;
   - Meister der eigenen Liga (auch 2. oder 3. Liga) +2, dazu je Punkt Vorsprung über 5 Punkte +0,2, höchstens +2;
   - Aufstieg +2, Pokalsieg +1, Europapokalsieg +2, Abstieg −2.

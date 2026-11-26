@@ -290,6 +290,17 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 26.11.2026: Korrekturen nach Prüfung GH (Zweig `mitarbeit/popolupo-gh-korrekturen`, auf K43d)
+
+- **„Mitwachsend“:**
+  - Der Zuschuss des Partners steht jetzt in den Finanzen der neuen Saison.
+  - Bei einem Jobwechsel am Saisonende gibt es keinen Partner für den neuen Verein.
+  - Spielstände der ersten Fassung kommen auf die Grundlage Normal.
+- **Tests:**
+  - Glück bei Karten mit „Mitwachsend“ und die neue Reihenfolge im Saisonwechsel.
+  - fuzz-karrieren prüft wieder Angebote ohne Ablösefeld.
+  - tests/README.md führt regeln-fest und den Langlauf.
+
 ### 26.11.2026: K43d „Mitwachsend“ neu gefasst (Zweig `mitarbeit/popolupo-k43d-mitwachsend-erfolg`, auf t11-korrekturen)
 
 - **Nach deiner Rückmeldung:**

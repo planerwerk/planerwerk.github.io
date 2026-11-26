@@ -3038,3 +3038,23 @@ Korrekturen auf `mitarbeit/popolupo-gg-korrekturen` (auf K43c).
 | GG1 | **Mittel, nur „Mitwachsend“:** Der Kreditrahmen sank beim Wechsel sofort, das konnte ohne Warnung zur Insolvenz mit Punktabzug führen. Jetzt gilt in der Saison des Wechsels noch der alte Rahmen (`kreditFaktor`), der Zähler der Insolvenz beginnt neu, und die Meldung nennt beide Rahmen und den Fehlbetrag, falls das Konto schon darunter liegt. | ✅ behoben |
 | GG2 | **Niedrig, Text:** Zwei Texte nannten noch vier Wochen bis zum offiziellen Wechselwunsch. Die Kabine nimmt die Zahl jetzt aus der Regel, der Tipp sagt „einige Wochen“. | ✅ behoben |
 | – | Hinweise: Menü zeigt „(mitwachsend)“. Saisonziel und Talentsterne wechseln mit der Stufe, gewollt und in K43 §5 genannt. Test für die Reihenfolge im Saisonwechsel (Quelltext) und den Kreditrahmen nächste Saison. tests/welt.js zählt nur Konten, die länger unter dem Kreditrahmen liegen, als die Regeln bis zur Insolvenz erlauben. Der Langlauf misst „Mitwachsend“ mit. | ✅ umgesetzt |
+
+## GH. Prüfung der Korrekturen zu Lauf 11 und des neuen „Mitwachsend“ ohne Laufzeit (26. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat d38f98d..0368e92 gelesen.
+
+- Kein Laufzeitfehler, auch mit Spielständen der ersten Fassung.
+- Die Bewertung wertet Ziel, Meister mit Vorsprung, Aufstieg, Abstieg samt Relegation, Pokal und Europapokal richtig. Tote Zone und Grenze stimmen mit K43 §5.3.
+- Ohne „Mitwachsend“ sind alle Hebel exakt neutral, mit gleich vielen Würfen. Die Hebel wirken nur auf deinen Verein und bleiben in ihren Grenzen.
+- K43f nachgerechnet, geht auf.
+
+Bericht: `flutlicht-tools/pruefung-gh.md`.
+
+Korrekturen auf `mitarbeit/popolupo-gh-korrekturen` (auf K43d).
+
+| # | Befund | Status |
+|---|---|---|
+| GH1 | **Niedrig:** Der Zuschuss des Partners stand in keiner Finanzübersicht, weil er vor dem Zurücksetzen der Saisonfinanzen gebucht wurde. Die Bewertung läuft jetzt nach `finanzenSaisonstart`. Die Europapokal-Titel der alten Saison merkt sich `newSeasonLauf` vor `europaAnlegen`. Der Test zur Reihenfolge ist angepasst. | ✅ behoben |
+| GH2 | **Niedrig, Test:** fuzz-karrieren gab Angebote nur mit Ablösefeld ab und prüfte Vereinslose, Vorverträge und vereinbarte Ablösen nicht mehr. Jetzt genügt das Feld für die Jahre. | ✅ behoben |
+| – | Hinweise: Partner nur für den Verein der Durststrecke, nicht nach einem Jobwechsel am Saisonende. Spielstände der ersten Fassung kommen auf die Grundlage Normal. Test für das Glück bei Karten mit „Mitwachsend“. Kommentare und tests/README.md nachgezogen, regeln-fest und der Langlauf eingetragen. | ✅ umgesetzt |
+| – | Hinweis: Die Vertrauensanzeige im Büro zeigt die Grenze fest. Das war auf Leicht und Schwer schon vorher so, kein Fund aus dieser Änderung. | später |

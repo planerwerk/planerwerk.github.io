@@ -24,10 +24,13 @@ function stufeAnwenden(k){const M=REGELN.schwierigkeit.mitwachsend;if(k==='mitwa
 // Wirkt nur über kleine Hebel (Gehaltsforderungen, Vorstand, Saisonziel, Glück bei Karten, Abwerbeversuche, Zuschuss eines Partners), nie über Spielstärke, Würfel oder Spielerwerte.
 const mitwachsWert=()=>typeof S!=='undefined'&&S&&S.mitw?(S.mitw.s||0):0;
 const entlassGrenze=()=>stufe().entlassenUnter+Math.round(((REGELN.schwierigkeit.mitwachsend||{}).wirkung||{vorstand:0}).vorstand*mitwachsWert()); // Vorstand (vorstand.js)
-// Bewertung der abgelaufenen Saison zu Beginn der neuen (newSeasonLauf, vor dem Europapokal), am eigenen Anspruch in der eigenen Liga gemessen. Ohne Zufall.
+// Bewertung der abgelaufenen Saison zu Beginn der neuen (newSeasonLauf, nach finanzenSaisonstart und vor setTarget), am eigenen Anspruch in der eigenen Liga gemessen. Ohne Zufall.
 // Beispiele (Werte aus REGELN): fünfmal Vierter in der 3. Liga mit Ziel Platz 6 ergibt s ≈ 0,2 (kaum spürbar); Meister der 3. Liga mit 20 Punkten Vorsprung
 // und Aufstieg ergibt s = 1; zwei Abstiege nacheinander ergeben s ≈ −0,8 und dann −1, beim ersten davon kommt ein Partner mit Geld.
-function stufeMitwachsen(sm){const M=REGELN.schwierigkeit.mitwachsend;if(!S.mitw||!M||!sm)return;const E=M.erfolg,W=M.wirkung,m=sm.my!=null?sm.my:S.my,ti=S.eu&&S.eu.titel,hat=l=>(l||[]).includes(m);
+// titelAlt: Europapokal-Sieger der abgelaufenen Saison (saison.js merkt sie vor europaAnlegen), ohne Angabe S.eu.titel.
+function stufeMitwachsen(sm,titelAlt){const M=REGELN.schwierigkeit.mitwachsend;if(!S.mitw||!M||!sm)return;
+  if(S.mitw.e==null){S.mitw={e:0,s:0,verlauf:[]};S.stufe=M.basis;} // Spielstand aus der ersten Fassung (Stufen nach Titeln): neu auf der Grundlage (Hinweis aus Prüfung GH)
+  const E=M.erfolg,W=M.wirkung,m=sm.my!=null?sm.my:S.my,ti=titelAlt!==undefined?titelAlt:S.eu&&S.eu.titel,hat=l=>(l||[]).includes(m);
   let w=0;if(sm.target!=null&&sm.pos!=null)w+=clamp((sm.target-sm.pos)*E.zielJePlatz,-E.zielMax,E.zielMax);
   if([sm.champ,sm.champ2,sm.champ3][(sm.lg||1)-1]===m){w+=E.meister;if((sm.gap||0)>E.abstandAb)w+=Math.min(E.abstandMax,(sm.gap-E.abstandAb)*E.abstandJe);}
   if(hat(sm.up)||hat(sm.up3)||hat(sm.up4)||(sm.rel&&sm.rel[1]===m&&sm.rw===m)||(sm.rel2&&sm.rel2[1]===m&&sm.rw2===m))w+=E.aufstieg;
@@ -35,7 +38,8 @@ function stufeMitwachsen(sm){const M=REGELN.schwierigkeit.mitwachsend;if(!S.mitw
   if(hat(sm.down)||hat(sm.down2)||hat(sm.down3)||(sm.rel&&sm.rel[0]===m&&sm.rw!==m)||(sm.rel2&&sm.rel2[0]===m&&sm.rw2!==m))w+=E.abstieg;
   const e=clamp(E.gedaechtnis*(S.mitw.e||0)+w,-E.grenze,E.grenze),b=Math.abs(e),s=Math.sign(e)*Math.min(1,Math.max(0,b-W.totzone)/(W.voll-W.totzone));
   S.mitw.e=Math.round(e*100)/100;S.mitw.s=Math.round(s*100)/100;S.mitw.verlauf=[...(S.mitw.verlauf||[]),{s:sm.season,w:Math.round(w*10)/10,e:S.mitw.e,a:S.mitw.s}].slice(-12);
-  const P=W.partner;if(S.mitw.s<=P.ab&&(S.mitw.partner==null||S.season-S.mitw.partner>=P.abstand)){const t=myT(),x=Math.round(sponsorBasis(t)*P.spiele/1000)*1000;S.mitw.partner=S.season;money('Ereignisse',x);
+  // Partner nur für den Verein, mit dem die Durststrecke war (nach einem Jobwechsel am Saisonende nicht für den neuen, Hinweis aus Prüfung GH)
+  const P=W.partner;if(S.mitw.s<=P.ab&&m===S.my&&(S.mitw.partner==null||S.season-S.mitw.partner>=P.abstand)){const t=myT(),x=Math.round(sponsorBasis(t)*P.spiele/1000)*1000;S.mitw.partner=S.season;money('Ereignisse',x);
     news(`Ein Unternehmer aus der Region glaubt an ${t.name} und steigt als Partner ein: ${fmt(x)} für den Neuanfang.`,'good');}}
 // TV-Gelder (K23 §5.1, K23c): Säulenmodell, Saisonbetrag je Verein einmal je Saison und Ligazusammensetzung berechnet (S.tvS), ohne Zufall, ausgezahlt je Ligaspiel.
 // Fünfjahreswertung: t.tvw = Punkte der letzten Saisons (jüngste zuerst, saison.js), t.tv0 = Startpunkte nach Liga und Ansehen für fehlende Saisons.

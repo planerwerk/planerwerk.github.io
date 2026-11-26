@@ -14,7 +14,7 @@ const allesAuto=(S,ev)=>{const B=ev('RLZ').bereiche;for(const b in B)if(B[b].aut
 const vereine=(()=>{const {W,F}=neueWelt();F.buildWorld(SEED);const T=W.S.teams,nach=lg=>T.filter(t=>t.lg===lg).sort((a,b)=>b.rep-a.rep||a.id-b.id);
   const l1=nach(1),l2=nach(2);return[['Spitze 1. Liga',l1[0]],['Mitte 1. Liga',l1[Math.floor(l1.length/2)]],['Mitte 2. Liga',l2[Math.floor(l2.length/2)]]].map(([k,t])=>({k,id:t.id,name:t.name}));})();
 const erg={};
-// „mitwachsend“ (K43 §5): zeigt zusätzlich die Stufe am Ende jeder Saison (Hinweis aus Prüfung GG)
+// „mitwachsend“ (K43 §5): zeigt zusätzlich den Ausschlag (−1 bis +1) jeder Saison (Hinweise aus Prüfung GG und GH)
 for(const stufe of ['leicht','normal','schwer','mitwachsend'])for(const v of vereine){
   const z={meister:0,pokal:0,europa:0,pleite:0,entlassen:0,minus:0,konto:[],stufen:[]};let ev=null;
   saisons({n:N,seed:SEED,verein:v.id,stufe,
