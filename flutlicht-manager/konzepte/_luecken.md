@@ -32,6 +32,7 @@ Viele naheliegende Kandidaten sind schon im Plan oder im Code:
 **Vorschlag:**
 - Spielstand als Datei sichern und laden. **Gebaut am 26.11. abends** (Claude): Im Menü gibt es „Als Datei sichern“ und „Datei laden“, auf dem Startbildschirm „Datei laden“. Das Menü zeigt, wie viel Prozent des Browser-Speichers der Spielstand braucht. Der Text-Code bleibt als Ausweg. Test: `tests/ui-sicherung.js`.
 - Dazu ein Test, der nach 10 Saisons eine Obergrenze prüft, zum Beispiel 4,5 Mio. Zeichen.
+- **Windows-App gebaut am 26.11. abends** (Claude, auf Wunsch „eigener Container, Installer nur für Windows“): `desktop/` mit Electron, Spielstand als Datei ohne Größengrenze, Installer über GitHub Actions. Siehe `desktop/LIESMICH.md`.
 - Später bei Bedarf Kompression (`CompressionStream` im Browser) oder IndexedDB. Beides ist nicht nötig, solange die Größe unter der Grenze bleibt. Vor dem 7-Tage-Löschen schützt nur die Datei.
 
 ### L2 Echte Spielernamen (vor einer Veröffentlichung klären)
@@ -65,9 +66,17 @@ Steht nur als „später denkbar“ in K02. Ausgliederung, Investor mit Geld geg
 
 Es gibt Presse und Gerüchte (K29), aber keine Fan-Stimmen im Netz. Möglich wäre eine kurze Liste von Fan-Beiträgen als Ansicht der Fanstimmung (K27), ohne neue Spielwirkung.
 
+### L6 Schriften von Google-Servern (vor einer Veröffentlichung, klein)
+
+`index.html` lädt Barlow, Saira Condensed und VT323 von `fonts.googleapis.com`. Dabei geht die IP-Adresse jedes Spielers an Google, im Browser wie in der Windows-App. Das LG München I hat am 20.01.2022 (3 O 17493/20) eine solche dynamische Einbindung ohne Einwilligung als Verstoß gegen die DSGVO gewertet und 100 € Schadensersatz zugesprochen. Das ist ein Urteil der ersten Instanz, andere Gerichte bindet es nicht.
+- **Vorschlag:** die drei Schriften als Dateien ins Spiel legen (`schrift/`, `@font-face` in `css/schrift.css`), so wie die eigene Anzeigeschrift. Dann läuft das Spiel auch offline mit allen Schriften.
+- Die Lizenz der drei Schriften prüfe ich vorher an jeder Schrift. Nach meinem Kenntnisstand ist es die SIL Open Font License, geprüft habe ich das noch nicht.
+- Der Eingriff betrifft `index.html` und `css/` (K35b, popolupo). Deshalb nur nach Absprache.
+
 ## Quellen
 
 - [WebKit: 7-Day Cap on All Script-Writable Storage (Bug 211775)](https://bugs.webkit.org/show_bug.cgi?id=211775), [Didomi: Apple implements 7-day cap](https://docs.didomi.io/releases-and-announcements/announcements/apple-implements-7-day-cap-on-script-writable-storage), [Simo Ahava: First-party cookies and WebKit, revisited](https://www.simoahava.com/privacy/first-party-cookies-webkit-revisited/)
 - [MDN: Storage quotas and eviction criteria](https://developer.mozilla.org/docs/Web/API/Storage_API/Storage_quotas_and_eviction_criteria)
 - [Pinsent Masons: Football game banned over player's image rights](https://pinsentmasons.com/out-law/news/football-game-banned-over-players-image-rights), [fifplay: Oliver Kahn sued EA Sports](https://www.fifplay.com/oliver-kahn-sued-ea-sports-over-fifa/), [LTO: OLG Frankfurt zu Sammelkarten](https://www.lto.de/recht/nachrichten/n/olg-ffm-11u15616-ehemaliger-torwart-nationalmannschaft-sammelkarten-verlag-presse-persoenlichkeitsrecht)
 - [Commons: Reusing content outside Wikimedia](https://commons.wikimedia.org/wiki/Commons:Reusing_content_outside_Wikimedia)
+- [LG München I, 3 O 17493/20 (gesetze-bayern.de)](https://www.gesetze-bayern.de/Content/Document/Y-300-Z-GRURRS-B-2022-N-612), [Dr. Datenschutz zum Urteil](https://www.dr-datenschutz.de/schadensersatz-urteil-google-fonts-und-die-dsgvo/)

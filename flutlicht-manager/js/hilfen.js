@@ -20,5 +20,10 @@ function money(k,v){myT().cash+=v;S.fin[k]=(S.fin[k]||0)+v;}
 function toast(m){const t=document.getElementById('toast');t.textContent=m;t.hidden=false;clearTimeout(toast.h);toast.h=setTimeout(()=>t.hidden=true,3200);}
 // Speichern im Browser. Scheitert es (meist: Speicher voll), sagt das Spiel es einmal im Posteingang, statt still nicht mehr zu speichern (T2.5).
 let SPEICHER_FEHLER=false;
-function save(){try{localStorage.setItem(REGELN.spielstand.schluessel,JSON.stringify(S));SPEICHER_FEHLER=false;}catch(e){if(!SPEICHER_FEHLER&&S){SPEICHER_FEHLER=true;news('Der Browser hat den Spielstand nicht gespeichert, vermutlich ist sein Speicher voll. Was seit dem letzten Speichern passiert ist, geht beim Schließen verloren. Gib in den Browser-Einstellungen Speicher frei.','bad');}}}
-function hasSave(){try{return !!localStorage.getItem(REGELN.spielstand.schluessel);}catch(e){return false;}}
+// Speicherort (Desktop-App, 26.11.): In der Windows-App (Ordner desktop/) liegt der Spielstand als Datei im Benutzerordner, ohne die Größengrenze des Browsers
+// und ohne das Löschen nach sieben Tagen (konzepte/_luecken.md L1). Die App stellt dafür window.flutlichtApp bereit (desktop/preload.js). Im Browser wie bisher localStorage.
+const APP_SPEICHER=()=>(typeof window!=='undefined'&&window.flutlichtApp)||null;
+function speicherLesen(k){const a=APP_SPEICHER();return a?a.lesen(k):localStorage.getItem(k);}
+function speicherSchreiben(k,v){const a=APP_SPEICHER();if(a){if(!a.schreiben(k,v))throw new Error('Datei nicht geschrieben');return;}localStorage.setItem(k,v);}
+function save(){try{speicherSchreiben(REGELN.spielstand.schluessel,JSON.stringify(S));SPEICHER_FEHLER=false;}catch(e){if(!SPEICHER_FEHLER&&S){SPEICHER_FEHLER=true;news(APP_SPEICHER()?'Der Spielstand ließ sich nicht als Datei speichern, vermutlich ist die Festplatte voll oder der Ordner gesperrt. Was seit dem letzten Speichern passiert ist, geht beim Schließen verloren. Sichere ihn über „Menü“ als Datei an einem anderen Ort.':'Der Browser hat den Spielstand nicht gespeichert, vermutlich ist sein Speicher voll. Was seit dem letzten Speichern passiert ist, geht beim Schließen verloren. Gib in den Browser-Einstellungen Speicher frei.','bad');}}}
+function hasSave(){try{return !!speicherLesen(REGELN.spielstand.schluessel);}catch(e){return false;}}

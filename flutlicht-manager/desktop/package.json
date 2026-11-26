@@ -1,0 +1,35 @@
+{
+  "name": "flutlicht-manager",
+  "productName": "Flutlicht Manager",
+  "version": "0.1.0",
+  "description": "Fußballmanager für die Saison 2026/27 als Windows-App",
+  "author": "Flutlicht Manager",
+  "private": true,
+  "main": "main.js",
+  "scripts": {
+    "spiel": "node kopieren.js",
+    "start": "node kopieren.js && electron .",
+    "installer": "node kopieren.js && electron-builder --win nsis --x64 --publish never"
+  },
+  "devDependencies": {
+    "electron": "45.3.0",
+    "electron-builder": "26.18.1"
+  },
+  "build": {
+    "appId": "de.flutlicht.manager",
+    "productName": "Flutlicht Manager",
+    "directories": { "output": "dist", "buildResources": "bau" },
+    "files": ["main.js", "preload.js", "spiel/**/*"],
+    "win": { "target": [{ "target": "nsis", "arch": ["x64"] }], "icon": "bau/icon.png" },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Flutlicht Manager",
+      "artifactName": "Flutlicht-Manager-Setup-${version}.${ext}",
+      "deleteAppDataOnUninstall": false
+    }
+  }
+}
