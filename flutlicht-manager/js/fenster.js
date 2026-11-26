@@ -157,7 +157,7 @@ function saveDatei(){if(!S)return;let j;try{j=JSON.stringify(S);}catch(e){toast(
 // Erinnerung zum Saisonende (L1): Wer in dieser Saison in dieser Karriere keine Datei gesichert hat, bekommt eine Nachricht. Gemerkt wird je Gerät im Browser
 // (REGELN.spielstand.sicherungSchluessel), nicht im Spielstand, mit Seed und Trainername, damit eine alte Karriere eine neue nicht stumm schaltet (Prüfung GK4).
 // Wirft der Browser-Speicher einen Fehler, kommt die Erinnerung erst recht (GK7). In der Simulation (Ersatz-Speicher, leer) kommt sie jede Saison, ohne Zufall.
-function sicherungErinnern(){if(APP_SPEICHER())return; /* in der Desktop-App liegt der Spielstand ohnehin als Datei */let z=null;try{z=JSON.parse(localStorage.getItem(REGELN.spielstand.sicherungSchluessel)||'null');}catch(e){z=null;}
+function sicherungErinnern(){if(APP_SPEICHER())return; /* in der Windows-App liegt der Spielstand ohnehin als Datei */let z=null;try{z=JSON.parse(localStorage.getItem(REGELN.spielstand.sicherungSchluessel)||'null');}catch(e){z=null;}
   if(z&&z.s>=S.season&&z.seed===S.seed&&z.mgr===S.mgr)return;news('Saisonende: Sichere deinen Spielstand als Datei (Menü, „Als Datei sichern“). Der Browser kann ihn verlieren, Safari löscht Seitendaten nach sieben Tagen ohne Besuch.');}
 function sicherungMerken(){try{localStorage.setItem(REGELN.spielstand.sicherungSchluessel,JSON.stringify({s:S.season,tag:S.tag,seed:S.seed,mgr:S.mgr}));}catch(e){}}
 function ladeDatei(f){if(!f)return;const r=new FileReader();r.onerror=()=>toast('Die Datei ließ sich nicht lesen.');r.onload=()=>importSave(String(r.result||''));r.readAsText(f);}

@@ -273,6 +273,11 @@ const REGELN={
       // jahre (Prüfung GL1): Namensrechte laufen länger als Trikotverträge. Drei, drei und fünf Saisons statt eins, eins und drei, sonst wechselte der Name ohne eigene Wahl jede Saison.
       // Der Name ist erfunden: erstes Wort der Firma und ein Wort aus worte (ohne Zufall aus dem Firmennamen).
       stadion:{fans:-3,fansKultur:-1,jahre:[3,3,5],worte:['Arena','Park','Stadion']},
+      // K24e Nachverhandeln (26.11., K24 §4 Nr. 2 und §6, vorläufig): Du forderst +5 bis +20 % auf ein offenes Angebot. Jedes Angebot hat einen verdeckten Spielraum
+      // (gewürfelt je Saison, Fläche und Firma, 3–15 %). Liegt die Forderung darin, unterschreibt der Sponsor sofort zum höheren Betrag (Fixum und Siegprämie).
+      // Sonst lehnt er ab und zieht mit absprung.nah (bis grenze über dem Spielraum) oder absprung.weit zurück, nach runden Absagen sicher.
+      // Das letzte normale Angebot einer Fläche bleibt immer stehen (dann ohne weitere Verhandlung), damit nie nur der umstrittene Geldgeber übrig ist.
+      verhandeln:{stufen:[0.05,0.10,0.15,0.20],spielraum:[0.03,0.15],runden:3,absprung:{nah:0.15,weit:0.5,grenze:0.05}},
       namen:{ausruester:['Falkner Sport','Sprintwerk','Kranich Teamwear','Nordlicht Athletics','Bergfalke Sport','Tiedemann Sportswear'],
         aermel:['Moorland Versicherung','Weserblick Immobilien','Albtrauf Software','Uferwerk Logistik','Sonnhalde Energie','Grünfeld Mobilfunk'],
         stadion:['Kesselberg Energie','Lindenhof Versicherung','Brückner Bau','Talgrund Bank','Möwenwerk Logistik','Sternquell Telekom']},
@@ -287,7 +292,7 @@ const REGELN={
       // K24c (21.11., K24 §5.3 und §3.2, vorläufig): Zufriedenheit je Vertrag 0–100, Start 50, zum Saisonende +5 je Platz über dem Ziel (höchstens ±25), Fanstimmung über ihrem
       // Start × 0,5 (±10), Werbewert über seinem Start × 0,5 (±10), Abstieg −20. Ab 70 bietet der Partner zum Vertragsende eine Verlängerung mit 10 % mehr (zwei Jahre).
       // Abstiegsklausel: Laufende Verträge, die in die nächste Saison reichen, zahlen nach einem Abstieg 40 % weniger.
-      zufriedenheit:{start:50,jePlatz:5,erfolgMax:25,fans:0.5,fansMax:10,werbewert:0.5,werbewertMax:10,abstieg:-20,verlaengernAb:70,plus:0.1,jahre:2,klausel:0.4},
+      zufriedenheit:{start:50,jePlatz:5,erfolgMax:25,fans:0.5,fansMax:10,werbewert:0.5,werbewertMax:10,abstieg:-20,verlaengernAb:70,plus:0.1,jahre:2,klausel:0.4,ausstiegUnter:30} /* ausstiegUnter (K24f, 26.11., K24 §5.3): darunter steigt der Partner zum Saisonwechsel aus, auch wenn der Vertrag länger läuft; nicht im Abstiegsjahr, da gilt die Abstiegsklausel */,
       werbewert:{jePunkt:0.004,max:0.15}}, // Werbewert aus K25 (S.mk.ww) über seinem Startwert hebt neue Angebote, darunter senkt er sie, höchstens ±15 %
     abfindung:0.5,                   // Abfindung = Gehalt × Restlaufzeit × Wert
     handgeld:0.5,                    // Handgeld für Vereinslose = Gehalt × Wert

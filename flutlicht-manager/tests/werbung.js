@@ -162,4 +162,46 @@ const sm0=(S,pos,target,ab)=>({pos,target,down:ab?[S.my]:[],down2:[],down3:[],re
   ev('werbungTag')(S.tag+1);const da=(S.werbOffers.stadion||[]).length>0;let k=0;while(k<120&&!S.werbung.stadion){k++;if(W.ev('heuteMeinSpiel()'))F.tagesSpiele(S.tag);F.weiter();}
   pruef(da&&!!S.werbung.stadion,'Ältere Stände: Stadionname wird nachgereicht und vor dem nächsten eigenen Spiel vergeben',`Angebote ${da}, Vertrag ${S.werbung.stadion?S.werbung.stadion.name:'keiner'} nach ${k} Tagen`);}
 
+// ---------- K24e (26.11.): Nachverhandeln ----------
+// 27. Forderung im Spielraum: sofort unterschrieben, Fixum und Siegprämie um die Stufe höher; der Spielraum liegt in 3–15 % und hängt nur an Saison, Fläche und Firma
+{const {S,F,ev}=welt(false),V=ev('RF').werbung.verhandeln;let ok=0,n=0,txt='';
+  for(const f of ['aermel','ausruester','stadion']){const l=S.werbOffers[f],i=l.findIndex(o=>o.win>0),o={...l[i]},sp=ev('werbSpielraum')(f,o);n++;
+    const k=V.stufen.map((p,j)=>[p,j]).filter(([p])=>p<=sp).map(([,j])=>j).pop();
+    if(k==null){ok+=sp>=V.spielraum[0]&&sp<V.stufen[0]?1:0;txt+=`${f}: Spielraum ${(sp*100).toFixed(1)} % unter der ersten Stufe; `;continue;}
+    const r=ev('werbVerhandeln')(f,i,k),c=S.werbung[f],p=V.stufen[k];
+    ok+=r&&r.ok&&c&&c.name===o.name&&Math.abs(c.base-o.base*(1+p))<=1000&&Math.abs(c.win-o.win*(1+p))<=1000&&!S.werbOffers[f]&&sp>=V.spielraum[0]&&sp<=V.spielraum[1]?1:0;
+    txt+=`${f}: ${(sp*100).toFixed(1)} %, +${p*100} % → ${c?c.base:'-'} (vorher ${o.base}); `;}
+  const {S:S2,ev:ev2}=welt(false),o2=S2.werbOffers.aermel[0],gleich=Math.abs(ev2('werbSpielraum')('aermel',o2)-ev('werbSpielraum')('aermel',o2))<1e-12;
+  pruef(ok===n&&gleich,'Nachverhandeln: Forderung im Spielraum unterschreibt sofort zum höheren Betrag, Spielraum fest je Saison, Fläche und Firma',txt);}
+
+// 28. Forderung über dem Spielraum: Absage, nach drei Absagen ist das Angebot weg; das letzte normale Angebot einer Fläche bleibt stehen (fest)
+{const {S,ev}=welt(false),V=ev('RF').werbung.verhandeln,f='aermel',l=S.werbOffers[f];let runden=0,weg=false,texte=[];
+  for(let z=0;z<10&&!weg;z++){const i=l.findIndex(o=>ev('werbVerhandelbar')(o));if(i<0)break;const o=l[i],sp=ev('werbSpielraum')(f,o),k=V.stufen.findIndex(p=>p>sp);if(k<0)break;
+    const n0=l.length,r=ev('werbVerhandeln')(f,i,k);texte.push(r.text);runden++;if(l.length<n0)weg=true;}
+  const normal=()=>l.filter(o=>!ev('istUmstritten')(o)).length;
+  // alle bis auf ein normales Angebot zurückziehen lassen, dann bleibt das letzte fest stehen
+  let schutz=0;while(normal()>1&&schutz<40){schutz++;const i=l.findIndex(o=>ev('werbVerhandelbar')(o));if(i<0)break;const sp=ev('werbSpielraum')(f,l[i]),k=V.stufen.findIndex(p=>p>sp);if(k<0){l[i].fest=1;continue;}ev('werbVerhandeln')(f,i,k);}
+  let letzt=l.find(o=>!ev('istUmstritten')(o)),r2=null;for(let z=0;z<5&&letzt&&!letzt.fest;z++){const i=l.indexOf(letzt),sp=ev('werbSpielraum')(f,letzt),k=V.stufen.findIndex(p=>p>sp);if(k<0)break;r2=ev('werbVerhandeln')(f,i,k);}
+  pruef(weg&&runden<=V.runden&&normal()===1&&!!letzt&&!!letzt.fest&&!S.werbung[f],'Nachverhandeln: Absagen, Rückzug spätestens nach drei Runden, das letzte normale Angebot bleibt stehen',`${runden} Runden bis zum Rückzug; letztes: ${letzt?letzt.name+(letzt.fest?' fest':''):'keins'}`);}
+
+// 29. Nicht verhandelbar: umstrittene Geldgeber, Verlängerungen, ohne A-Lizenz; die Automatik verhandelt nie
+{const {S,ev}=welt(false),l=S.werbOffers.aermel,iu=l.findIndex(o=>ev('istUmstritten')(o)),vu=JSON.stringify(l[iu]);const ru=ev('werbVerhandeln')('aermel',iu,0);
+  l.push({...l[0],ver:1,name:'Verlaengerung Test'});const rv=ev('werbVerhandeln')('aermel',l.length-1,0);
+  const L=welt(true),vorher=JSON.stringify(L.S.werbung),rl=L.ev('werbVerhandeln')('aermel',0,0);
+  pruef(ru===null&&JSON.stringify(l[iu])===vu&&rv===null&&rl===null&&JSON.stringify(L.S.werbung)===vorher&&!Object.values(L.S.werbung).some(c=>/nachverhandelt/.test(c.info||'')),
+    'Nachverhandeln: nicht mit umstrittenen Geldgebern, nicht bei Verlängerungen, nicht ohne A-Lizenz, die Automatik verhandelt nie');}
+
+// 30. Brust: Nachverhandeln geht auch für die Trikotbrust (S.sponsOffers), Zusage unterschreibt über sponsorWaehlen
+{const {S,ev}=welt(false),V=ev('RF').werbung.verhandeln;let erg='';for(let i=0;i<S.sponsOffers.length;i++){const o=S.sponsOffers[i];if(!ev('werbVerhandelbar')(o))continue;const sp=ev('werbSpielraum')('brust',o);
+    const k=V.stufen.map((p,j)=>[p,j]).filter(([p])=>p<=sp).map(([,j])=>j).pop();if(k==null)continue;const b=o.base,r=ev('werbVerhandeln')('brust',i,k);erg=r&&r.ok&&S.spons&&S.spons.name===o.name&&S.spons.base>b&&!S.sponsOffers?'ok':'falsch';break;}
+  pruef(erg==='ok'||erg==='','Nachverhandeln: auch die Trikotbrust, Zusage unterschreibt den Brustvertrag',erg||'kein Spielraum über 5 % bei diesem Seed');}
+
+// 31. Ausstieg (K24f): Fällt die Zufriedenheit zum Saisonende unter 30, endet ein längerer Vertrag mit dem Saisonwechsel, ohne Verlängerungsangebot; darüber läuft er weiter
+{const {S,F,ev}=welt(false),Z=ev('RF').werbung.zufriedenheit;F.sponsorWaehlen(2);F.werbungVorSpiel();ev('myT()').fanst=ev('RFS').start;
+  S.werbung.aermel.yrs=3;S.werbung.ausruester.yrs=3;S.werbung.aermel.z=40;S.werbung.ausruester.z=60;const name=S.werbung.aermel.name;
+  ev('werbungSaisonende')(sm0(S,18,4,false));const za=S.werbung.aermel.z,zr=S.werbung.ausruester.z,ya=S.werbung.aermel.yrs,yr=S.werbung.ausruester.yrs;
+  S.season++;F.werbungSaison();const weg=!S.werbung.aermel&&(S.werbOffers.aermel||[]).length>0&&!(S.werbOffers.aermel||[]).some(o=>o.ver),bleibt=!!S.werbung.ausruester&&S.werbung.ausruester.yrs===yr-1;
+  pruef(za<Z.ausstiegUnter&&zr>=Z.ausstiegUnter&&ya===1&&weg&&bleibt&&S.news.some(n=>n.t.includes(name)&&/Ausstiegsklausel/.test(n.t)),
+    'Ausstieg: unter 30 endet der Vertrag zum Saisonwechsel (ohne Verlängerung), darüber läuft er weiter; im Abstiegsjahr gilt stattdessen die Abstiegsklausel (Nr. 19)',`Ärmel ${za} (Laufzeit danach ${ya}), Ausrüster ${zr}`);}
+
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

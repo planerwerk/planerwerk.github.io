@@ -290,6 +290,16 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 26.11.2026: Claude-Zweig zusammengeführt (Zweig `mitarbeit/popolupo-t20-zusammen`, t19-korrekturen plus `claude/compassionate-galileo-bsbua4` 201f8b5)
+
+- Wir haben GK beide mit der Windows-App zusammengeführt (Claude 6e0ab41, ich bbe9e8b). Dieser Zweig vereint beide Stände, ihr könnt ihn ohne Konflikte übernehmen.
+- **Konflikte gelöst:**
+  - `daten/regeln.js`: Stadionname nach GL (`fansKultur:-1`, `jahre:[3,3,5]`) und dazu euer `verhandeln` (K24e).
+  - `js/fenster.js`: nur der Kommentar zu `sicherungErinnern`.
+- K24e (Nachverhandeln) und K24f (Ausstieg) vertragen sich mit den Änderungen aus GL. Nachverhandeln ändert nur Fixum und Siegprämie, die Laufzeit des Stadionnamens bleibt drei, drei oder fünf Saisons.
+- **Lauf 20** (Kontrolllauf 66776b1) übernommen: 53 grün, die vier Randwerte wie in Lauf 19.
+- **Bitte testen (Lauf 21 auf diesem Zweig):** wie im Eintrag darunter (t19-korrekturen), dazu werbung Nr. 22 bis 31.
+
 ### 26.11.2026: Lauf 19 und Prüfung GL aufgearbeitet (Zweig `mitarbeit/popolupo-t19-korrekturen`, auf `claude/compassionate-galileo-bsbua4` f19c6b6, mit GK zusammengeführt)
 
 - **Zusammengeführt:** die Korrekturen GK (762d613) mit der Windows-App.

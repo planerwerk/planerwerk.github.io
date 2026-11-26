@@ -19,7 +19,17 @@ Node.js 22, Playwright mit Chromium, für `tests/ui-zugang.js` axe-core 4.10.2 (
 - **L1 ergänzt:** Erinnerung zum Saisonende als Nachricht, wenn in dieser Saison keine Datei gesichert wurde (`sicherungErinnern` in `werbungSaisonende` folgend, `js/saison.js`; Merker je Gerät `REGELN.spielstand.sicherungSchluessel`, nicht im Spielstand). Die Simulation bekommt die Nachricht auch (ihr `localStorage`-Ersatz ist leer), sonst ändert sich am Spielstand nichts. Neuer Node-Test `tests/spielstand.js` (Größe, Wachstum, keine NaN oder Infinity im Spielstand, Erinnerung).
 - **Windows-App** (auf Wunsch des Nutzers): `desktop/` mit Electron, Spielstand als Datei über `speicherLesen`/`speicherSchreiben` (`js/hilfen.js`, im Browser weiter `localStorage`), Test `tests/desktop.js` (11 ✓, braucht `npm install` in `desktop/` und `xvfb-run`), Installer über `.github/workflows/windows-installer.yml` (erster Lauf erfolgreich). Siehe `desktop/LIESMICH.md`.
 - **K24d Stadionname** nach euren Antworten in K24 §12 umgesetzt (`js/werbung.js`, `RF.werbung.anteil.stadion` 0,12, `partner` 0,25, `RF.werbung.stadion`, Posten „Stadionname“ in `RFP.laufend`). `tests/werbung.js` Nr. 22 bis 26 grün, `finanzen`, `lizenz`, `marketing`, `fans` grün. Für die KURZ-Zeilen im `finanzmodell`: Der Posten heißt `Stadionname` (nur dein Verein, Computer-Vereine unverändert).
-- **Begonnen bei Claude:** nichts weiter. L1 fasse ich nicht an, solange eure Prüfung GK läuft. K24 Rest (Bande und Partnerpool, Trainingskleidung, Verhandeln mit Reglern) bleibt vorgemerkt.
+- **K24e Nachverhandeln** (`werbVerhandeln`, Fenster `werbungVerhandlungsFenster`, `RF.werbung.verhandeln`), `tests/werbung.js` Nr. 27 bis 30 grün. Eure Korrekturen GK (762d613) sind zusammengeführt, die Konflikte mit der Windows-App in `hilfen.js`, `fenster.js` und `start.js` sind gelöst (beide Änderungen drin, `spielstand`, `ui-sicherung`, `desktop` grün).
+- **K24f** Ausstieg eines Partners unter 30 Zufriedenheit (nicht im Abstiegsjahr), `tests/werbung.js` Nr. 31.
+- **Begonnen bei Claude:** nichts weiter. K24 Rest (Bande und Partnerpool, Trainingskleidung, Verhandeln mit Reglern) bleibt vorgemerkt.
+---
+
+## Lauf 20, 26.11.2026 nachts: Claude-Zweig 66776b1 (78e6b78 von popolupo, dazu L1, Erinnerung, Windows-App)
+
+Kontrolllauf für die Änderungen von Claude an diesem Abend, alle Tests. **53 grün, 4 rot.** Die vier roten sind dieselben wie in Lauf 19, mit denselben Werten: kalibrierung (Auswärtssiege 29 %), medizin (Zerrungen 25 %), sommer (Kondition 79,6), akzeptanz (Abwehr +0,9). Das `finanzmodell 2` ist Zeile für Zeile gleich wie in Lauf 19, ebenso `welt 10`. Die neuen Tests `spielstand` und `ui-sicherung` sind grün. L1 und die Windows-App verschieben also nichts im Spiel.
+
+K24d (f19c6b6) war in diesem Lauf noch nicht dabei, er folgt in Lauf 21.
+
 ---
 
 ## Lauf 19, 26.11.2026 abends: `popolupo-gj-korrekturen` (78e6b78, enthält t18-ligaklausel)
