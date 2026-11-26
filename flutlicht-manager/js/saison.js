@@ -49,7 +49,7 @@ function seasonEndLauf(){
   sm.verl=verletzungsBilanzText(S.my);S.summary=sm;S.phase='end'; /* Ausfalltage beim Saisonende festhalten (Prüfung DZ5) */
   nebenzieleSaison(); // Nebenziele des Vorstands (K28 §5.7, U12b), vor der Prüfung auf Entlassung
   rufSaison(sm); // Ruf als Trainer (K28 §5.4, U12a), vor einer Entlassung, damit die Jobangebote schon den neuen Ruf sehen
-  statistikSaison(sm);trainerSaison(sm);finanzenSaisonende();marketingSaisonende(sm);werbungSaisonende(sm); // Ruf der Computer-Trainer (K32 §3.3b, U18a); Ehrungen, Saisonarchiv, Vitrine, Karrierezeilen (K34, U13), nach dem Ruf (Trainer der Saison +5) und vor einer Entlassung
+  statistikSaison(sm);trainerSaison(sm);finanzenSaisonende();marketingSaisonende(sm);werbungSaisonende(sm);sicherungErinnern(); // Ruf der Computer-Trainer (K32 §3.3b, U18a); Ehrungen, Saisonarchiv, Vitrine, Karrierezeilen (K34, U13), nach dem Ruf (Trainer der Saison +5) und vor einer Entlassung
   if(sm.down3.includes(S.my))entlassen(`${me.name} steigt in die Regionalliga ab. Der Verein trennt sich von dir.`);
   if(S.trust<B.entlassenSaisonUnter)entlassen();vertragSaisonende();lizenzRueckblick();kreditAuto();save();} /* Trainervertrag (K28 §5.5, U12g): Gehalt der Saison, Verlängerung */
 // Regionalliga (K32a): je Staffel wird ein Meister gelost, gewichtet nach Ansehen. West und Südwest steigen direkt auf,

@@ -130,7 +130,12 @@ function saveDatei(){if(!S)return;let j;try{j=JSON.stringify(S);}catch(e){toast(
   let tag='';try{tag=datumVon(S.tag).toISOString().slice(0,10);}catch(e){tag=S.season+'-'+S.tag;}
   const name=`${REGELN.spielstand.dateiName}-${String((myT()||{}).sh||'spiel').toLowerCase()}-${tag}.json`;
   try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([j],{type:'application/json'}));a.download=name;document.body.appendChild(a);a.click();
-    setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},1000);toast('Spielstand gesichert: '+name);}catch(e){toast('Der Browser hat das Sichern als Datei abgelehnt. Nimm den Text-Code.');}}
+    setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},1000);sicherungMerken();toast('Spielstand gesichert: '+name);}catch(e){toast('Der Browser hat das Sichern als Datei abgelehnt. Nimm den Text-Code.');}}
+// Erinnerung zum Saisonende (L1): Wer in dieser oder der letzten Saison keine Datei gesichert hat, bekommt eine Nachricht. Gemerkt wird je Gerät im Browser
+// (REGELN.spielstand.sicherungSchluessel), nicht im Spielstand. Ohne Browser-Speicher (Simulation, Tests in Node) passiert nichts, der Spielstand bleibt gleich.
+function sicherungErinnern(){let z=null;try{if(typeof localStorage==='undefined')return;z=JSON.parse(localStorage.getItem(REGELN.spielstand.sicherungSchluessel)||'null');}catch(e){return;}
+  if(z&&z.s>=S.season)return;news('Saisonende: Sichere deinen Spielstand als Datei (Menü, „Als Datei sichern“). Der Browser kann ihn verlieren, Safari löscht Seitendaten nach sieben Tagen ohne Besuch.');}
+function sicherungMerken(){try{localStorage.setItem(REGELN.spielstand.sicherungSchluessel,JSON.stringify({s:S.season,tag:S.tag}));}catch(e){}}
 function ladeDatei(f){if(!f)return;const r=new FileReader();r.onerror=()=>toast('Die Datei ließ sich nicht lesen.');r.onload=()=>importSave(String(r.result||''));r.readAsText(f);}
 // ---------- Darstellung (K35b §13.3, W5b): Thema je Gerät im Browser, nicht im Spielstand ----------
 // dunkel = ohne Attribut (Standard), hell und system als data-thema am html-Element; die Farben dazu stehen in css/spiel.css. Ohne Zufall, ohne Wirkung aufs Spiel.
