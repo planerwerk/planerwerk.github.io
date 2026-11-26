@@ -13,6 +13,46 @@ Node.js 22, Playwright mit Chromium, für `tests/ui-zugang.js` axe-core 4.10.2 (
 
 ---
 
+## Lauf 18, 26.11.2026 abends: `popolupo-t16-messung` (70f3128, enthält t15-korrekturen)
+
+Nur getestet und geloggt. Der Spielcode ist gegenüber Lauf 17 unverändert, geändert sind nur `finanzmodell.js` und `kalibrierung-sweep.js`. Deshalb liefen nur diese beiden, beide mit exit 0. Die übrigen Ergebnisse aus Lauf 17 gelten weiter.
+
+**finanzmodell 2, KURZ-Zeilen (Durchschnitt je Verein und Saison):**
+
+```
+KURZ 2026 L1: ein 137.7 Mio = TV 49.8 Mio + Werbung/Sonstiges 63.5 Mio + Spieltag 24.4 Mio | aus 127.7 Mio = Gehalt+Stab 75.5 Mio + Betrieb 1.5 Mio + Verwaltung 49.3 Mio + Jugend 1.4 Mio | Saldo 10.1 Mio
+KURZ 2026 L2: ein 33.0 Mio = TV 12.4 Mio + Werbung/Sonstiges 10.9 Mio + Spieltag 9.7 Mio | aus 32.4 Mio = Gehalt+Stab 19.0 Mio + Betrieb 1.0 Mio + Verwaltung 11.0 Mio + Jugend 1.4 Mio | Saldo 0.6 Mio
+KURZ 2026 L3: ein 10.6 Mio = TV 1.3 Mio + Werbung/Sonstiges 4.8 Mio + Spieltag 4.4 Mio | aus 12.4 Mio = Gehalt+Stab 8.3 Mio + Betrieb 0.7 Mio + Verwaltung 1.8 Mio + Jugend 1.5 Mio | Saldo -1.8 Mio
+KURZ 2027 L1: ein 141.1 Mio = TV 49.8 Mio + Werbung/Sonstiges 64.5 Mio + Spieltag 26.7 Mio | aus 129.2 Mio = Gehalt+Stab 76.4 Mio + Betrieb 1.6 Mio + Verwaltung 49.7 Mio + Jugend 1.4 Mio | Saldo 11.9 Mio
+KURZ 2027 L2: ein 31.4 Mio = TV 12.4 Mio + Werbung/Sonstiges 10.4 Mio + Spieltag 8.6 Mio | aus 33.4 Mio = Gehalt+Stab 20.5 Mio + Betrieb 0.9 Mio + Verwaltung 10.7 Mio + Jugend 1.4 Mio | Saldo -2.0 Mio
+KURZ 2027 L3: ein 10.9 Mio = TV 1.3 Mio + Werbung/Sonstiges 4.8 Mio + Spieltag 4.8 Mio | aus 14.2 Mio = Gehalt+Stab 10.1 Mio + Betrieb 0.7 Mio + Verwaltung 1.8 Mio + Jugend 1.5 Mio | Saldo -3.3 Mio
+```
+
+**finanzmodell 2, Saldo gegen das Ziel (K23 Nr. 25):** 4 ✓, 2 ✗ (2. und 3. Liga 2027, beide vor allem wegen höherer Gehälter).
+
+```
+✓ Saldo 1. Liga Saison 2026: 10.1 Mio je Verein (Ziel 11.0 Mio ± 1.5) · TV 49.8 Mio, Werbung/Sonstiges 63.5 Mio, Spieltag 24.4 Mio, Gehalt+Stab 75.5 Mio (Kader 28.3 Spieler, Ø Gehalt 2.56 Mio, Ø Stärke 73.5), Betrieb 1.5 Mio, Verwaltung 49.3 Mio
+✓ Saldo 2. Liga Saison 2026: 0.6 Mio je Verein (Ziel 0.0 Mio ± 1.5) · TV 12.4 Mio, Werbung/Sonstiges 10.9 Mio, Spieltag 9.7 Mio, Gehalt+Stab 19.0 Mio (Kader 29.2 Spieler, Ø Gehalt 0.64 Mio, Ø Stärke 65.8), Betrieb 1.0 Mio, Verwaltung 11.0 Mio
+✓ Saldo 3. Liga Saison 2026: -1.8 Mio je Verein (Ziel -1.0 Mio ± 1.5) · TV 1.3 Mio, Werbung/Sonstiges 4.8 Mio, Spieltag 4.4 Mio, Gehalt+Stab 8.3 Mio (Kader 28.6 Spieler, Ø Gehalt 0.29 Mio, Ø Stärke 61.0), Betrieb 0.7 Mio, Verwaltung 1.8 Mio
+✓ Saldo 1. Liga Saison 2027: 11.9 Mio je Verein (Ziel 11.0 Mio ± 1.5) · gegenüber Vorsaison: TV +0.0, Werbung/Sonstiges +1.0, Spieltag +2.4, Gehalt+Stab +0.9 (Kader 28.3 → 28.0 Spieler, Ø Gehalt 2.56 → 2.68 Mio, Ø Stärke 73.5 → 74.1), Betrieb +0.1, Verwaltung +0.4, Jugend +0.0
+✗ Saldo 2. Liga Saison 2027: -2.0 Mio je Verein (Ziel 0.0 Mio ± 1.5) · gegenüber Vorsaison: TV −0.0, Werbung/Sonstiges −0.5, Spieltag −1.1, Gehalt+Stab +1.5 (Kader 29.2 → 28.7 Spieler, Ø Gehalt 0.64 → 0.70 Mio, Ø Stärke 65.8 → 66.4), Betrieb −0.2, Verwaltung −0.2, Jugend +0.0
+✗ Saldo 3. Liga Saison 2027: -3.3 Mio je Verein (Ziel -1.0 Mio ± 1.5) · gegenüber Vorsaison: TV +0.0, Werbung/Sonstiges +0.0, Spieltag +0.4, Gehalt+Stab +1.8 (Kader 28.6 → 28.8 Spieler, Ø Gehalt 0.29 → 0.36 Mio, Ø Stärke 61.0 → 62.2), Betrieb +0.1, Verwaltung +0.0, Jugend +0.0
+```
+
+**kalibrierung-sweep (461 s, Vergleich, kein Fehler im Spiel):**
+
+```
+✓ heute                              Meister-Median  76 (66/80/76/74) · Favorit 67 % · Heim 42 % · Remis 25 % · Tore 2.97 · Elfmeter 0.24
+✗ Exponent 1,65                      Meister-Median  68 (67/65/69/68) · Favorit 65 % · Heim 45 % · Remis 26 % · Tore 3.01 · Elfmeter 0.26
+✓ Exponent 1,75                      Meister-Median  73 (73/76/68/69) · Favorit 67 % · Heim 44 % · Remis 25 % · Tore 3.05 · Elfmeter 0.24
+✗ überragend 0,15                    Meister-Median  67 (67/71/66/66) · Favorit 75 % · Heim 43 % · Remis 26 % · Tore 2.98 · Elfmeter 0.23
+✓ überragend 0,30                    Meister-Median  75 (72/69/75/78) · Favorit 71 % · Heim 42 % · Remis 26 % · Tore 3.03 · Elfmeter 0.24
+✓ Exponent 1,65 + überragend 0,15    Meister-Median  73 (67/71/73/85) · Favorit 71 % · Heim 45 % · Remis 24 % · Tore 3.08 · Elfmeter 0.26
+Ziele: Meister-Median 70–85 · Favorit (Top 3 gegen Letzte 3) 65–75 % · Heim 40–46 % · Remis 23–27 % · Tore 2,9–3,3 · Elfmeter 0,2–0,3
+```
+
+---
+
 ## Lauf 17, 26.11.2026 abends: `popolupo-t15-korrekturen` (e97431f, enthält t14-finanzen)
 
 Nur getestet und geloggt. **52 grün, 3 rot.** welt (2 Saisons) und spielermodell wieder grün. Rot:
