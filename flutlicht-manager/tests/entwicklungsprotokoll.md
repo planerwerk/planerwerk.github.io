@@ -290,6 +290,25 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 26.11.2026: Läufe 17 und 18 aufgearbeitet, Ligaklausel der Computer-Vereine (Zweig `mitarbeit/popolupo-t18-ligaklausel`, auf t16-messung)
+
+- **Lauf 17** (e97431f): 52 grün, 3 rot. In der Welt über zehn Saisons gab es keinen kleinen Kader mehr. Nur 2032 lag mit 13 Wechseln mit Ablöse unter dem Ziel, bei 19 Vereinen im Minus.
+- **Lauf 18** (70f3128): Die neuen Prüfzeilen zeigen die Ursache der Finanzdrift.
+  - In der zweiten Saison stiegen die Gehälter: 2. Liga +1,5 Mio. (Ø 0,64 → 0,70 Mio. je Spieler), 3. Liga +1,8 Mio. (Ø 0,29 → 0,36). Dazu fiel in der 2. Liga der Spieltag um 1,1 Mio.
+  - Die 1. Liga liegt in beiden Saisons im Ziel.
+- **Neu: Ligaklausel der Computer-Vereine** (K21 §12 Nr. 20, vorläufig). Nach einem Abstieg sinken alle laufenden Gehälter um 30 %.
+  - Vermutete Hauptursache der Drift: Absteiger behalten die Gehälter der höheren Liga.
+  - Dein Verein kürzt weiter nur mit ausgehandelter Klausel.
+  - Test: `tests/vertraege.js` 4b.
+- **`tests/finanzmodell.js`:** Die Saldo-Zeilen trennen ab der zweiten Saison Vereine, die neu in der Liga sind, von denen, die geblieben sind (Saldo und Ø Gehalt je Gruppe).
+- **Engine bleibt unverändert** (K04, vorläufig). Im Vergleich trifft die heutige Einstellung alle sechs Ziele (Meister-Median 76). Die 64–66 kamen vom Seed in `tests/kalibrierung.js`.
+- **`tests/kalibrierung.js`:** Die Anteile Favorit, gleich stark und Pokal beruhen auf kleinen Stichproben (Lauf 17: n=248, Standardfehler gut 3 Punkte, das Ziel ist 6 Punkte breit).
+  - Sie zählen jetzt erst als Problem, wenn sie auch mit zwei Standardfehlern Spielraum außerhalb des Ziels liegen. Dazwischen gelb mit Hinweis.
+- **Bitte testen (Lauf 19 auf diesem Zweig):** alle Tests, besonders vertraege und kalibrierung. Bitte wörtlich ins Protokoll:
+  - die ✓/✗-Zeilen „Saldo …“ aus **`node tests/finanzmodell.js 3`** (drei Saisons, damit die Klausel zweimal greift);
+  - aus `node tests/welt.js 10` die Zeilen „Wechsel mit Ablöse“ und „Saisonende …“.
+- **Offen:** akzeptanz Abwehr +0,9 (seit Lauf 1), T1.3.
+
 ### 26.11.2026: Lauf 16 übernommen, Messskripte melden Prüfzeilen (Zweig `mitarbeit/popolupo-t16-messung`, auf t15-korrekturen)
 
 - **Lauf 16** (aabbce8): 50 grün. medizin und jugend wieder grün.

@@ -397,6 +397,13 @@ engine:{
 
 **Kalibrierung** (3 Seeds × 8 Saisons, 1. Liga): 3,1–3,2 Tore, Heim/Remis/Auswärts 44–46 / 22–24 / 31–33 %, 25 Schüsse, Torquote 13 %, 9,6 Ecken, 24 % Standardtore, 7 % Elfmetertore, 0,27 Elfmeter, 2,0 Gelbe je Team, 0,2 Platzverweise. Meister im Median 72–74 Punkte. Bundesligist gegen Amateure: 90–91 % weiter. 2. und 3. Liga 2,85–3,1 Tore.
 
+**Nachkalibrierung geprüft (26.11.2026, Testlauf 18, `tests/kalibrierung-sweep.js`):** Die Testläufe 12 bis 14 maßen die Punkte des Meisters im Median bei 64–66, Ziel 70–85. Der Vergleich spielt sechs Einstellungen mit denselben vier Saisons.
+- Die heutige Einstellung trifft dort alle sechs Ziele: Meister-Median 76, Favorit 67 %, Heim 42 %, Remis 25 %, 2,97 Tore, 0,24 Elfmeter.
+- Ebenfalls im Ziel: Exponent 1,75 (Median 73), überragend 0,30 (75) und Exponent 1,65 mit überragend 0,15 (73). Exponent 1,65 allein (68) und überragend 0,15 allein (67) liegen darunter.
+- **Entscheidung (vorläufig):** Die Engine bleibt unverändert. Die niedrigen Werte kamen vom Seed in `tests/kalibrierung.js` (vier Saisons schwanken dort zwischen 66 und 80).
+- Anteile aus kleinen Stichproben (Favorit, gleich stark, Pokal) zählen dort seit Lauf 17 erst dann als Problem, wenn sie auch mit zwei Standardfehlern Spielraum außerhalb des Ziels liegen.
+- Offen bleibt aus `tests/akzeptanz.js` die Sensitivität der Abwehr (ein Innenverteidiger +5 bringt +0,9 statt 1–3 Punkte), seit dem ersten Testlauf unverändert.
+
 **Abweichungen vom Entwurf:**
 1. **Remis spät:** Ohne Zusatz kamen nur 21 % Remis heraus, obwohl die Tore stimmten. Neu: Steht es nach der 75. Minute unentschieden, greifen beide Teams seltener an (×0,85, `verlauf.gleich`). Damit 23–24 %.
 2. **Verwarnte Spieler** foulen seltener (×0,35) und sehen seltener eine Karte (×0,5), Hitzköpfe ausgenommen. Sonst gab es zu viele Gelb-Rote Karten (0,55 Platzverweise pro Spiel).

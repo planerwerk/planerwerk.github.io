@@ -95,7 +95,12 @@ function praemienNachSpiel(list){const P=RVT.praemie;let summe=0;
   if(summe>0)money('Prämien',-Math.round(summe));return summe;}
 
 // ---------- Saisonwechsel: Ligaklausel (K21 §3.1) ----------
-function vertraegeSaison(){const t=myT();if(!(t.lastLg&&t.lg>t.lastLg))return;const l=squad(S.my).filter(p=>p.lk);
+// Computer-Vereine (K21 §12 Nr. 20, vorläufig): Ihre Verträge enthalten die übliche Ligaklausel, nach einem Abstieg sinken alle laufenden Gehälter um ligaklausel.computer.
+// Sonst trugen Absteiger die Gehälter der höheren Liga mit und drückten den Saldo der 2. und 3. Liga in der zweiten Saison um 1,5 bis 1,8 Mio. je Verein (Lauf 18).
+// Dein Verein kürzt nur mit ausgehandelter Klausel (p.lk), auch in der Automatik. Leihspieler und vereinbarte Wechsel bleiben unberührt. Ohne Zufall.
+function kiLigaklausel(){const c=RVT.ligaklausel.computer;if(!c)return;
+  S.teams.forEach(t=>{if(t.id===S.my||!aktiv(t)||!(t.lastLg&&t.lg>t.lastLg))return;squad(t.id).forEach(p=>{if(!p.leihe&&!p.wech)p.sal=Math.round(p.sal*(1-c)/1000)*1000;});});}
+function vertraegeSaison(){kiLigaklausel();const t=myT();if(!(t.lastLg&&t.lg>t.lastLg))return;const l=squad(S.my).filter(p=>p.lk);
   l.forEach(p=>{p.sal=Math.round(p.sal*(1-p.lk)/1000)*1000;});if(l.length)news(`Ligaklausel: Nach dem Abstieg verdienen ${l.map(p=>`${p.n} (−${Math.round(p.lk*100)} %)`).join(', ')} weniger.`);}
 
 // ---------- Woche: Ausstiegsklausel und Vorvertrag (K21 §4.3, §4.5) ----------
