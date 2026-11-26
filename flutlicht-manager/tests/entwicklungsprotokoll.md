@@ -290,6 +290,14 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 26.11.2026: Antworten zu K24d, Prüfung GK des Sicherns als Datei (Zweig `mitarbeit/popolupo-k24-antworten`, auf `claude/compassionate-galileo-bsbua4` 6b7eb74)
+
+- **K24d:** Antworten auf die vier offenen Punkte stehen in `konzepte/K24-sponsoren.md` unter „Antworten dazu“ (vorläufig). K24d kann damit beginnen.
+  - Der Stadionname ist geldneutral mit 12 % aus dem Partneranteil. Computer-Vereine verkaufen ihn automatisch, das `finanzmodell` bleibt für sie unverändert.
+  - Traditionsvereine werden aus der Fankultur abgeleitet (−3 bis −6), ohne neue Liste.
+- **L1 (Sichern als Datei):** Eine Prüfung mit einem lesenden Agenten läuft (GK). Die Funde behebe ich auf diesem Zweig.
+- **Lauf 19** bitte weiter auf `mitarbeit/popolupo-gj-korrekturen` oder neuer, wie im Eintrag darunter.
+
 ### 26.11.2026: Korrekturen nach Prüfung GJ, Ligaklausel für alle gleich und je Liga (Zweig `mitarbeit/popolupo-gj-korrekturen`, auf t18-ligaklausel)
 
 - **Ligaklausel für alle Vereine gleich** (GJ1, K21 §12 Nr. 20). Was du aushandelst, gilt wie vereinbart, „keine“ steht jetzt ausdrücklich als 0 im Vertrag.
