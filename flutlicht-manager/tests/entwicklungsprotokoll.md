@@ -290,6 +290,24 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 26.11.2026: Lauf 19 und Prüfung GL aufgearbeitet (Zweig `mitarbeit/popolupo-t19-korrekturen`, auf `claude/compassionate-galileo-bsbua4` f19c6b6, mit GK zusammengeführt)
+
+- **Zusammengeführt:** die Korrekturen GK (762d613) mit der Windows-App.
+  - `importSave`, `hasSave` und `loadLocal` gehen über `speicherLesen` und `save()`.
+  - Menü und Erinnerung kennen die App (`APP_SPEICHER`).
+- **Lauf 19** (78e6b78): 51 grün. welt 10 ist grün, die Ligaklausel wirkt: 2. Liga −1,2 (vorher −2,0), 3. Liga −2,7 (vorher −3,3).
+  - In der 3. Liga stiegen die Gehälter auch bei den Gebliebenen (Ø 0,36 Mio. nach 0,29 im Ligaschnitt der Vorsaison). Die Ursache ist also nicht nur der Abstieg.
+  - Vor einer weiteren Änderung brauche ich den Trend über drei Saisons. `tests/finanzmodell.js` läuft deshalb jetzt mindestens drei Saisons.
+- **medizin:** Zerrung-Anteil 0,22 statt 0,25. Mit den Rückfällen lag der gemessene Anteil genau auf der Obergrenze (K10 Nr. 16).
+- **Nicht geändert:** sommer, Kondition 79,6 bei einem einzigen Seed (Grenze 80). Kalibrierung Auswärtssiege 29 % (Grenze 30) ist am Rand, die Engine bleibt (K04).
+- **Prüfung GL** (Windows-App und Stadionname, beide von Claude; Einzelheiten in der Konsistenzprüfung GL):
+  - **Stadionname:** Laufzeiten drei, drei und fünf Saisons. Fanärger nur bei neuem Namen. Automatik und Vorstand nehmen eine Verlängerung. Die Fankultur zählt nur einmal (gebucht −3 − 1 × Fankultur, insgesamt −3 bis −6). Nach einem Jobwechsel wird zurückgesetzt. Je Fläche ein anderer umstrittener Name.
+  - **App:** Speichern mit fsync und Umbenennen statt Kopieren, bis zu fünf Versuche bei gesperrter Datei, keine Navigation zu gezogenen Dateien.
+  - **Workflow:** nur Leserechte, Token nicht behalten, Schriften in den Pfaden.
+- **Bitte testen (Lauf 20 auf diesem Zweig):** alle Tests, besonders werbung (Nr. 23 neu), medizin, `ui-sicherung`, `spielstand`, `desktop`. Dazu wörtlich ins Protokoll:
+  - die ✓/✗-Zeilen „Saldo …“ aus `node tests/finanzmodell.js` (jetzt drei Saisons);
+  - aus `node tests/welt.js 10` die Zeilen „Wechsel mit Ablöse“ und „Saisonende …“.
+
 ### 26.11.2026: Antworten zu K24d, Prüfung GK des Sicherns als Datei (Zweig `mitarbeit/popolupo-k24-antworten`, auf `claude/compassionate-galileo-bsbua4` 6b7eb74)
 
 - **K24d:** Antworten auf die vier offenen Punkte stehen in `konzepte/K24-sponsoren.md` unter „Antworten dazu“ (vorläufig). K24d kann damit beginnen.

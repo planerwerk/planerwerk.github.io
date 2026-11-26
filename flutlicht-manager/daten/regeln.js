@@ -268,9 +268,11 @@ const REGELN={
     // K24d (26.11., Antworten popolupo in K24 §12): Stadionname als vierte Fläche, geldneutral 12 % aus dem bisherigen Partneranteil (vorher 0,37).
     // Jeder Verein darf ihn verkaufen (Eigentum am Stadion kommt mit der Recherche). Computer-Vereine verkaufen ihn automatisch, ihr Geld bleibt gleich.
     werbung:{anteil:{brust:0.38,ausruester:0.18,aermel:0.07,stadion:0.12},partner:0.25,titel:{brust:'Trikotbrust',ausruester:'Ausrüster',aermel:'Ärmel',stadion:'Stadionname'},
-      // Fanstimmung beim Verkauf des Namens (K24 §6): −3 − 3 × Fankultur (K27d, fankulturWirkung 0 bis 1), also −3 bis −6; nicht bei einer Verlängerung.
+      // Fanstimmung beim Verkauf des Namens (K24 §6): insgesamt −3 bis −6 je nach Fankultur (K27d, fankulturWirkung k von 0 bis 1); nur wenn sich der Name ändert.
+      // Seit Prüfung GL5: Die Fanstimmung wiegt Entscheidungen schon mit 1 + 0,5 × k (fans.entscheid.fankultur). Gebucht wird deshalb −3 − 1 × k, das ergibt −3 bei k = 0 und −6 bei k = 1.
+      // jahre (Prüfung GL1): Namensrechte laufen länger als Trikotverträge. Drei, drei und fünf Saisons statt eins, eins und drei, sonst wechselte der Name ohne eigene Wahl jede Saison.
       // Der Name ist erfunden: erstes Wort der Firma und ein Wort aus worte (ohne Zufall aus dem Firmennamen).
-      stadion:{fans:-3,fansKultur:-3,worte:['Arena','Park','Stadion']},
+      stadion:{fans:-3,fansKultur:-1,jahre:[3,3,5],worte:['Arena','Park','Stadion']},
       namen:{ausruester:['Falkner Sport','Sprintwerk','Kranich Teamwear','Nordlicht Athletics','Bergfalke Sport','Tiedemann Sportswear'],
         aermel:['Moorland Versicherung','Weserblick Immobilien','Albtrauf Software','Uferwerk Logistik','Sonnhalde Energie','Grünfeld Mobilfunk'],
         stadion:['Kesselberg Energie','Lindenhof Versicherung','Brückner Bau','Talgrund Bank','Möwenwerk Logistik','Sternquell Telekom']},

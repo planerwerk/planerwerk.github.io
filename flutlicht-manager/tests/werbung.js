@@ -134,11 +134,16 @@ const sm0=(S,pos,target,ab)=>({pos,target,down:ab?[S.my]:[],down2:[],down3:[],re
   pruef(l.length===ev('RF').sponsor.angebote.length+1&&namen&&form&&Math.abs(l[0].base-b*RW.anteil.stadion)<=500&&RW.partner===0.25&&Math.abs(RW.anteil.brust+RW.anteil.ausruester+RW.anteil.aermel+RW.anteil.stadion+RW.partner-1)<1e-9,
     'Stadionname: drei Angebote und ein umstrittenes, erfundene Namen (Kesselberg-Arena), 12 % des Grundbetrags, zusammen mit den Partnern weiter 100 %',l.map(o=>ev('stadionName')(o)).join(', '));}
 
-// 23. Verkauf kostet Fanstimmung −3 − 3 × Fankultur (−3 bis −6), eine Verlängerung nicht
-{const {S,F,ev}=welt(false),t=ev('myT()');const erw=-3-3*ev('fankulturWirkung')(t),d0=t.fanD||0;F.werbungWaehlen('stadion',0);const d1=t.fanD||0;
+// 23. Verkauf kostet Fanstimmung, mit der Gewichtung der Fankultur in fans.js insgesamt −3 bis −6 (Prüfung GL5: gebucht −3 − 1 × Fankultur, gewogen × (1 + 0,5 × Fankultur)).
+// Keine Strafe bei einer Verlängerung und keine, wenn derselbe Name wiederkommt (GL1). Die Angebote laufen drei, drei und fünf Saisons (GL1).
+{const {S,F,ev}=welt(false),t=ev('myT()'),RS=ev('RF').werbung.stadion,k=ev('fankulturWirkung')(t),roh=RS.fans+RS.fansKultur*k,wirk=roh*(1+k*ev('RFS').entscheid.fankultur);
+  const jahre=(S.werbOffers.stadion||[]).slice(0,RS.jahre.length).map(o=>o.yrs).join('/');
+  const d0=t.fanD||0;F.werbungWaehlen('stadion',0);const d1=t.fanD||0;
   const c=S.werbung.stadion;delete S.werbung.stadion;S.werbOffers.stadion=[{...c,ver:1}];F.werbungWaehlen('stadion',0);const d2=t.fanD||0;
-  pruef(Math.abs((d1-d0)-Math.round(erw*10)/10)<0.051&&erw<=-3&&erw>=-6&&d2===d1&&S.news.some(n=>/Das Stadion heißt jetzt/.test(n.t)),
-    'Stadionname verkauft: Fanstimmung −3 − 3 × Fankultur, bei Verlängerung nichts',`${(d1-d0).toFixed(1)} (erwartet ${erw.toFixed(2)}), Verlängerung ${(d2-d1).toFixed(1)}`);}
+  delete S.werbung.stadion;S.werbOffers.stadion=[{...c}];F.werbungWaehlen('stadion',0);const d3=t.fanD||0;
+  pruef(Math.abs((d1-d0)-Math.round(roh*10)/10)<0.051&&wirk<=-2.99&&wirk>=-6.01&&d2===d1&&d3===d2&&jahre===RS.jahre.join('/')&&S.news.some(n=>/Das Stadion heißt jetzt/.test(n.t)),
+    'Stadionname verkauft: Fanstimmung insgesamt −3 bis −6 nach Fankultur, bei Verlängerung und gleichem Namen nichts, Verträge über mehrere Saisons',
+    `gebucht ${(d1-d0).toFixed(1)} (erwartet ${roh.toFixed(2)}, gewogen ${wirk.toFixed(2)}), Verlängerung ${(d2-d1).toFixed(1)}, gleicher Name ${(d3-d2).toFixed(1)}, Laufzeiten ${jahre}`);}
 
 // 24. Traditionsnamen behalten: Angebote weg bis zur nächsten Saison, kein Nachreichen am Monatsersten, nächste Saison wieder Angebote; ohne A-Lizenz gesperrt
 {const {S,F,ev}=welt(false),t=ev('myT()'),d0=t.fanD||0;F.stadionBehalten();const weg=!S.werbOffers.stadion&&S.stadionBehalten===S.season&&(t.fanD||0)===d0;

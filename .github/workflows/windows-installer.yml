@@ -13,7 +13,11 @@ on:
       - 'flutlicht-manager/js/**'
       - 'flutlicht-manager/css/**'
       - 'flutlicht-manager/daten/**'
+      - 'flutlicht-manager/schrift/**'
       - '.github/workflows/windows-installer.yml'
+# Nur lesen (Prüfung GL11): Der Bau braucht keine Schreibrechte am Repository, ein kompromittiertes Paket beim npm ci soll nichts pushen können.
+permissions:
+  contents: read
 concurrency:
   group: windows-installer-${{ github.ref }}
   cancel-in-progress: true
@@ -26,6 +30,8 @@ jobs:
         working-directory: flutlicht-manager/desktop
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: 22
