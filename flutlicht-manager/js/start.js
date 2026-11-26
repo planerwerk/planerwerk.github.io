@@ -30,7 +30,7 @@ function renderStart(){
 // Spielstände älterer Testversionen passen nicht mehr und werden gelöscht
 try{REGELN.spielstand.alteSchluessel.forEach(k=>localStorage.removeItem(k));}catch(e){}
 themaAnwenden(themaLesen()); // Darstellung je Gerät (K35b §13.3, W5b), vor dem ersten Zeichnen
-function loadLocal(){try{const s=speicherLesen(REGELN.spielstand.schluessel);if(s){const d=JSON.parse(s);if(d.v!==REGELN.spielstand.version){toast('Der gespeicherte Spielstand passt nicht zu dieser Version.');return;}S=d;delete S.stabT;reindex();verhUmstellen();k23cUmstellen();mitgliederUmstellen();vertragUmstellen();experimenteAnwenden();TAB='buero';render();if(S.live)liveFortsetzen();}}catch(e){toast('Spielstand konnte nicht geladen werden.');}}
+function loadLocal(){try{const s=speicherLesen(REGELN.spielstand.schluessel);if(s){const d=JSON.parse(s);if(d.v!==REGELN.spielstand.version){toast('Der gespeicherte Spielstand passt nicht zu dieser Version.');return;}S=d;delete S.stabT;STAB_IX=null;reindex();verhUmstellen();k23cUmstellen();mitgliederUmstellen();vertragUmstellen();experimenteAnwenden();TAB='buero';render();if(S.live)liveFortsetzen();}}catch(e){toast('Spielstand konnte nicht geladen werden.');}}
 function newGame(){const id=+document.getElementById('club').value,name=(document.getElementById('mgr').value||'Trainer').trim().slice(0,30)||'Trainer';
   const se=(document.getElementById('seed')||{}).value,seed=se&&/^\d+$/.test(se.trim())?(+se.trim())>>>0:neuerSeed();
   buildWorld(seed);S.my=id;S.mgr=name;stufeAnwenden((document.getElementById('stufe')||{}).value);statS();presseS().antritt=1; // Statistik ab Spielbeginn, erste Station des Trainers (K34, U13), Antrittspressekonferenz (K29, U17a)

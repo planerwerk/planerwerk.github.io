@@ -34,6 +34,16 @@ Viele naheliegende Kandidaten sind schon im Plan oder im Code:
 - Dazu ein Test, der nach 10 Saisons eine Obergrenze prüft, zum Beispiel 4,5 Mio. Zeichen.
 - **Windows-App gebaut am 26.11. abends** (Claude, auf Wunsch „eigener Container, Installer nur für Windows“): `desktop/` mit Electron, Spielstand als Datei ohne Größengrenze, Installer über GitHub Actions. Siehe `desktop/LIESMICH.md`.
 - Später bei Bedarf Kompression (`CompressionStream` im Browser) oder IndexedDB. Beides ist nicht nötig, solange die Größe unter der Grenze bleibt. Vor dem 7-Tage-Löschen schützt nur die Datei.
+- **Nachgezogen nach Prüfung GK** (26.11. nachts, popolupo):
+  - Laden fragt nach, bevor eine laufende oder gespeicherte Karriere ersetzt wird. Dabei lässt sich vorher der aktuelle Stand sichern.
+  - Die Datei wird gründlich geprüft (Listen, Verein, Saison, Tag). Der Browser-Speicher wird erst überschrieben, wenn sich der neue Stand zeichnen ließ, sonst bleibt der alte.
+  - Neuere Dateien bekommen eine eigene Meldung. Der Merker für die Erinnerung gilt je Karriere (Seed und Trainername).
+  - Die Anzeige im Menü zählt Wappen und Einstellungen mit. Die Meldung bei vollem Speicher nennt die Datei.
+- **Offen, wichtig (Prüfung GK6, ungemessen):** Safari rechnet seine Grenze vermutlich in UTF-16-Bytes. Dann passen dort nur etwa 2,6 Mio. Zeichen, der Spielstand hat aber schon nach der ersten Saison 2,85 Mio.
+  - Das automatische Speichern könnte auf iPhone, iPad und Mac mit Safari also schon in der ersten Saison scheitern.
+  - Zu messen auf einem echten Gerät.
+  - Abhilfe wäre Kompression des Spielstands im Browser-Speicher (etwa zehnmal kleiner, ohne Installation möglich, mit Rückfalltest in `tests/spielstand.js`) oder IndexedDB.
+- **Offen (GK5):** Nach dem nächsten Versionssprung des Spielstands passen alte Dateien nicht mehr. Dann braucht es eine Umstellung für Dateien, nicht nur für den Browser-Speicher.
 
 ### L2 Echte Spielernamen (vor einer Veröffentlichung klären)
 
