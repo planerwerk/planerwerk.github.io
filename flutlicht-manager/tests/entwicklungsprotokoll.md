@@ -290,6 +290,13 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 26.11.2026: W5e12 Abpfiff als Sequenz (Zweig `mitarbeit/popolupo-w5e12-abpfiff`, auf W5e11)
+
+- **Neu:** Kommt der Schlusspfiff live, wird das Licht der Anzeigetafel nach einem Sieg warm und nach einer Niederlage kalt (Elfmeterschießen zählt mit).
+  - Nicht beim Fortsetzen eines beendeten Spiels.
+  - Beim nächsten Einlauf ist das Licht wieder normal.
+  - Nur Anzeige.
+
 ### 26.11.2026: W5e11 Entlassung als Sequenz (Zweig `mitarbeit/popolupo-w5e11-entlassung`, auf K43)
 
 - **Neu:** Bei einer Entlassung flackert im Büro die Schreibtischlampe und geht mit einem Klick aus. Der Raum wird dunkel, danach bleiben die Jobangebote.

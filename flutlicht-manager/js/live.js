@@ -169,6 +169,10 @@ function entlassungSequenz(){if(typeof document==='undefined'||typeof document.c
     <polygon points="72,62 128,62 114,40 86,40" fill="#3d4a5c"/><circle class="el-schein" cx="100" cy="64" r="6" fill="#fff3c4"/><rect x="16" y="148" width="168" height="9" rx="2" fill="#5b4636"/></svg>
     <p>Entlassen</p>`;
   document.body.appendChild(el);setTimeout(()=>klang('klick'),kurz?300:1000);setTimeout(()=>el.classList.add('weg'),kurz?1100:2800);setTimeout(()=>el.remove(),kurz?1600:3400);}
+// Abpfiff (K39 §3.4, W5e12): Licht der Anzeigetafel nach dem Ergebnis aus deiner Sicht, warm nach einem Sieg, kalt nach einer Niederlage (auch im Elfmeterschießen).
+// Nur wenn der Abpfiff live kommt, nicht beim Fortsetzen eines beendeten Spiels. Nur Anzeige.
+function abpfiffSequenz(L,G){if(typeof document==='undefined'||typeof document.getElementById!=='function'||!sequenzAn()||L.s==null)return;const el=document.getElementById('lv-tafel');if(!el||!el.classList)return;
+  const d=(G.sc[L.s]-G.sc[1-L.s])||(G.pen?G.pen[L.s]-G.pen[1-L.s]:0);el.classList.add(d>0?'abpfiff-sieg':d<0?'abpfiff-niederlage':'abpfiff-remis');}
 function liveRender(){const L=LIVE;if(!L)return;if(!document.getElementById('lv-inhalt'))liveFrame();const G=L.G,r={h:G.hid,a:G.aid};
   document.getElementById('lv-uhr').textContent=L.ende?'Ende':G.elf?'i.E.':G.m===0?'0′':G.m+'′';
   const karten=s=>{const n=G.ev.filter(e=>e.s===s&&e.t==='R').length;return n?` <span class="lv-rot" title="Platzverweise">${'▮'.repeat(n)}</span>`:'';};
@@ -176,8 +180,8 @@ function liveRender(){const L=LIVE;if(!L)return;if(!document.getElementById('lv-
   if(tafel.__html!==tafelHtml){tafel.innerHTML=tafelHtml;tafel.__html=tafelHtml;} // nur bei Änderung neu schreiben, sonst startet der Einlauf ständig neu (Prüfung GC1)
   const sprung=!!L.pfAlt&&G.m-L.pfAlt.m>1; // vorgespult: keine einzelnen Momente nachholen (Prüfung FX5)
   if(L.scAlt&&!sprung){const d0=G.sc[L.s]-L.scAlt[L.s],d1=G.sc[1-L.s]-L.scAlt[1-L.s];if(d0>0){torSequenz(true,myT().col);klang('jubel');}else if(d1>0){torSequenz(false);klang('raunen');}}L.scAlt=G.sc.slice(); // Torjubel (K39 §3.4, W5e3)
-  if(L.pfAlt){if(!L.pfAlt.ende&&L.ende)klang('pfiff3');else if(!sprung&&!L.pfAlt.hz&&L.hz)klang('pfiff');else if(!sprung&&L.pfAlt.m===0&&G.m>0)klang('pfiff');}L.pfAlt={m:G.m,hz:L.hz,ende:L.ende}; // Pfiffe (K41, W5f): Anpfiff, Halbzeit, Abpfiff; beides nicht beim Fortsetzen
-  if(!L.einlauf&&G.m===0&&!L.ende){L.einlauf=1;einlaufSequenz();} // Einlauf (K39 §3.4, W5e9): nur vor dem Anpfiff
+  if(L.pfAlt){if(!L.pfAlt.ende&&L.ende){klang('pfiff3');abpfiffSequenz(L,G);}else if(!sprung&&!L.pfAlt.hz&&L.hz)klang('pfiff');else if(!sprung&&L.pfAlt.m===0&&G.m>0)klang('pfiff');}L.pfAlt={m:G.m,hz:L.hz,ende:L.ende}; // Pfiffe (K41, W5f): Anpfiff, Halbzeit, Abpfiff; beides nicht beim Fortsetzen
+  if(!L.einlauf&&G.m===0&&!L.ende){L.einlauf=1;if(tafel&&tafel.classList)tafel.classList.remove('abpfiff-sieg','abpfiff-niederlage','abpfiff-remis');einlaufSequenz();} // Einlauf (K39 §3.4, W5e9): nur vor dem Anpfiff, Licht vom letzten Abpfiff aus (W5e12)
   document.getElementById('lv-druck').innerHTML=liveDruck();
   document.getElementById('lv-meldung').textContent=L.meldung||'';
   document.getElementById('lv-pause').innerHTML=G.pause()==='elfmeter'&&!L.lauf?liveElfmeter():G.m===45&&!L.ende&&!L.lauf?liveHalbzeit():'';
