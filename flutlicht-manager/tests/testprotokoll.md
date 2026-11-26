@@ -13,6 +13,19 @@ Node.js 22, Playwright mit Chromium, für `tests/ui-zugang.js` axe-core 4.10.2 (
 
 ---
 
+## Lauf 14, 26.11.2026 abends: `popolupo-t12-korrekturen` (a36f093, enthält k43e)
+
+Nur getestet und geloggt. **49 grün, 5 rot.** jugend wieder grün; welt 10 ohne Trainerwechsel-Fund und ohne Konten zu lange unter dem Kreditrahmen. Rot:
+
+- **wettbewerbe:** 72 Stunden 2×, jetzt Leverkusen 105 (Europapokal Do) / 107 (Liga Sa) und 252 / 254 (Do → Sa).
+- **welt 10:** 2032 nur 12 und 2035 nur 14 Wechsel mit Ablöse (mindestens 15); Saisonende 2030 ein Kader mit 14 Spielern und einer leeren Gruppe.
+- **kalibrierung:** Punkte des Meisters (Median) 66, 64, 76, 65 (Ziel 70–85).
+- **spielermodell:** 2. Liga Spanne 2,3 (69,7 → 72,0), T1.3 Rest.
+- **akzeptanz:** Abwehr +0,9.
+- **finanzmodell 2:** 1. Liga +14,0 / +16,4 Mio., 2. Liga −1,2 / −3,8 Mio., 3. Liga −2,5 / −3,7 Mio. je Verein und Saison (erwartet etwa +11, 0, −1).
+
+---
+
 ## Lauf 13, 26.11.2026: `popolupo-k43e-vertrauenszonen` (2672476, enthält gh-korrekturen)
 
 Nur getestet und geloggt. **48 grün, 6 rot, alle Zahlen genau wie in Lauf 12** (wettbewerbe 72 Stunden 2× So Liga → Di Europapokal, welt 10 wie oben, jugend 1,98, kalibrierung Meisterpunkte 66/66/75/66, spielermodell 2. Liga 2,6, akzeptanz Abwehr +0,9, finanzmodell gleich). K43e und gh-korrekturen ändern an den Testergebnissen nichts.
