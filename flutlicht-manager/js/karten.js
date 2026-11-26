@@ -17,12 +17,12 @@ const AUSLOESER={
   // Ein Verein derselben oder einer höheren Liga mit mindestens abstand mehr Ansehen als deiner, aber höchstens jobangebotGrenze (Prüfung DQ1)
   jobangebot(){const J=RV.jobangebot,t=myT(),K=karten(),heute=absTag(S.tag),sp=(karteVon('jobangebot')||{}).sperrTage||RKT.sperrTage;
     if(ruf()<J.rufAb||meineSpieltage()<RV.platzAbSpieltag||S.ult||Object.keys(K.sp).some(k=>k.startsWith('jobangebot:')&&heute-K.sp[k]<sp))return null;
-    const l=S.teams.filter(x=>x.id!==S.my&&aktiv(x)&&x.lg<=t.lg&&x.rep>=t.rep+J.abstand&&x.rep<=jobangebotGrenze());return l.length?{verein:pick(l).id}:null;},
+    const l=S.teams.filter(x=>x.id!==S.my&&aktiv(x)&&x.lg<=t.lg&&x.rep>=t.rep+J.abstand&&x.rep<=jobangebotGrenze()&&!euClFest(x.id));return l.length?{verein:pick(l).id}:null;}, // euClFest: Leicht (Prüfung GD2)
   // Rettungsangebot (K28 §5.13, U12n): du stehst im Ultimatum, Ruf ab RV.rettung.rufAb, höchstens eins je sperrTage über alle Vereine (wie beim Jobangebot).
   // Ein Verein derselben oder einer tieferen Profiliga mit höchstens deinem Ansehen und höchstens rettung.abstand darunter: ein Schritt zurück statt der Entlassung
   rettung(){const R0=RV.rettung,t=myT(),K=karten(),heute=absTag(S.tag),sp=(karteVon('rettung')||{}).sperrTage||RKT.sperrTage;
     if(!S.ult||S.ult.tid!==S.my||S.fired||ruf()<R0.rufAb||Object.keys(K.sp).some(k=>k.startsWith('rettung:')&&heute-K.sp[k]<sp))return null;
-    const l=S.teams.filter(x=>x.id!==S.my&&aktiv(x)&&x.lg>=t.lg&&x.lg<=3&&x.rep<=t.rep&&x.rep>=t.rep-R0.abstand);return l.length?{verein:pick(l).id}:null;},
+    const l=S.teams.filter(x=>x.id!==S.my&&aktiv(x)&&x.lg>=t.lg&&x.lg<=3&&x.rep<=t.rep&&x.rep>=t.rep-R0.abstand&&!euClFest(x.id));return l.length?{verein:pick(l).id}:null;}, // euClFest: Leicht (Prüfung GD2)
   // Vertrauen ab 80, obwohl du unter dem Saisonziel stehst (ab dem 5. Ligaspiel)
   rueckendeckung(){if(S.trust<80||meineSpieltage()<RV.platzAbSpieltag)return null;return rank(myT().lg,S.my)>S.target?{}:null;},
   // Ein Verein, zu dem deine Beziehung unter −50 liegt (K17)
@@ -258,14 +258,14 @@ const kartenSchalterAn=c=>!c.nurMit||(c.nurMit==='laenderspiele'&&lsAn());
 function kartenWoche(d){if(S.phase!=='play'||S.fired)return;const K=karten(),W=kartenBudget(d),heute=absTag(d);
   for(const c of shuffle(KARTEN.filter(c=>!c.nurKette&&kartenSchalterAn(c)))){const hit=R()<kartenChance(c);if(!hit)continue; /* Folgekarten kommen nur über kartenKette (K30c) */
     if(c.stufe==='sehrSelten'&&K.einmal[c.id])continue;const f=AUSLOESER[c.ausloeser];if(!f)continue;const b=f();if(!b)continue;
-    if(!(stufe().kartenNegativ>0)&&karteNurSchlecht(c))continue; /* Schwierigkeit (K43): auf Leicht fallen Infokarten, die nur schlecht ausgehen, nach dem Wurf weg */
+    if(!((stufe().kartenNegativ??1)>0)&&karteNurSchlecht(c))continue; /* Schwierigkeit (K43): auf Leicht fallen Infokarten, die nur schlecht ausgehen, nach dem Wurf weg */
     const key=kartenSchluessel(c,b); /* Mitarbeiter als Beteiligter (Prüfung ED3), je Mitarbeiter ohne den Verein (EE3) */if(K.sp[key]!=null&&heute-K.sp[key]<(c.sperrTage||RKT.sperrTage))continue;
     let halt=false;if(c.art==='entscheidung')halt=entscheidungImBudget(c,W,d);
     let stumm=false;if(halt)kartenHaltZaehlen(c,W);else if(c.art==='info'){if(W.info>=kartenDichte().info&&!c.immer){if(!c.wirkung)continue;stumm=true;}else W.info++;} /* immer: Meldung auch über der Grenze (Prüfung ER3, Punktabzug) */ /* Entscheidungen ohne Halt entscheidet der Co-Trainer, sie fallen nicht weg (Prüfung DY8) */
     K.sp[key]=heute;if(c.stufe==='sehrSelten')K.einmal[c.id]=1;kartenZeigen(c,b,d,halt,stumm);}} /* Info mit Wirkung über der Grenze: Wirkung ja, Meldung nein (Prüfung EH3) */
 // Chance je Woche (K30 §5.4, K30d): Anlasskarten mit eigener chance (im Katalog, 0 < chance ≤ 1), sonst nach der Seltenheitsstufe. Ein Würfel je Karte und Woche wie bisher.
 // Karten mit fanarbeit:true (Zuschauer-Vergehen, K09h, K25 §5) werden bei laufender Fanarbeit seltener (fanarbeitVergehen, marketing.js). Der Würfel bleibt derselbe.
-const kartenChance=c=>Math.min(1,(c.chance!=null?c.chance:1/(RKT.seltenheit[c.stufe]*RKT.wochenJeSaison))*(c.fanarbeit?fanarbeitVergehen():1)*(stufe().kartenNegativ>0&&karteNurSchlecht(c)?stufe().kartenNegativ:1));
+const kartenChance=c=>Math.min(1,(c.chance!=null?c.chance:1/(RKT.seltenheit[c.stufe]*RKT.wochenJeSaison))*(c.fanarbeit?fanarbeitVergehen():1)*((stufe().kartenNegativ??1)>0&&karteNurSchlecht(c)?(stufe().kartenNegativ??1):1)); // ohne Angabe wie Normal (Hinweis aus Prüfung GD)
 // Schwierigkeit (K43, 26.11., vorläufig): Infokarte, die für dich nur schlecht ausgeht (jede Wirkung senkt einen dieser Werte oder ist ein Verfahren). Leicht: fällt weg, Schwer: häufiger.
 // verfahren und zuschauer (Zuschauer-Vergehen, wert ist die Grundlage des Zuschlags) sind immer schlecht, die übrigen Werte, wenn sie sinken.
 const KARTEN_WERTE=['stimmung','stimmungAlle','zusammenhalt','glaub','vertrauen','ruf','bezDu','geld','fans'],KARTEN_IMMER_SCHLECHT=['verfahren','zuschauer'];
@@ -344,7 +344,7 @@ function karteWaehlen(n,i){const k=karten().offen[n];if(!k)return;if(!darf('erei
 function kartenAuto(d){const K=S.karten;if(!K||!K.offen.length)return;K.offen.filter(k=>k.tag<=d||k.s!==S.season).forEach(k=>{const c=karteVon(k.id);if(c)kartenEntscheiden(k,c.auto,'spaet');else K.offen=K.offen.filter(x=>x!==k);});}
 // Erlaubte Wirkungen (K30 §3.2). Rückgabe: Text zum Ausgang (bei Wirkungen mit Chance) oder ''
 // dann (Prüfung EE2, EE5, EE6): Folgewirkungen nur, wenn die Wirkung geklappt hat (nur bei KARTEN_MIT_ERFOLG), dazu der Text gut. Sonst der Grund des Scheiterns.
-function kartenWirkung(w,b,c){let wert=w.wert,txt='',erfolg=true;if(w.chance!=null){const ok=R()<Math.min(1,Math.max(0,w.chance+(stufe().kartenGlueck||0))); /* Schwierigkeit (K43): Glück im guten Ausgang, gleicher Würfel */wert=ok?w.wert:(w.schlecht||0);txt=ok?(w.gut||''):(w.schlechtText||'');}
+function kartenWirkung(w,b,c){let wert=w.wert,txt='',erfolg=true;if(w.chance!=null){const ok=R()<Math.min(1,Math.max(0,w.chance+(stufe().kartenGlueck||0)*(w.pech?-1:1))); /* Schwierigkeit (K43): Glück im guten Ausgang, gleicher Würfel; pech: chance ist die des schlechten Ausgangs (Prüfung GD3) */wert=ok?w.wert:(w.schlecht||0);txt=ok?(w.gut||''):(w.schlechtText||'');}
   const p=b.spieler!=null?PIX.get(b.spieler):null;
   if(w.art==='stimmung'){if(p&&p.team===S.my)stimmungAendern(p,wert);}
   else if(w.art==='stimmungAlle')squad(S.my).forEach(x=>stimmungAendern(x,wert));

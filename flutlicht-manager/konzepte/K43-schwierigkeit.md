@@ -62,7 +62,11 @@ Auf Leicht wird trotzdem gewürfelt, die Karte fällt erst danach weg. So bleibe
 
 - Qualifiziert sich dein Verein auf Leicht für die Champions League, spielt er Europa League. Sein Platz geht an den ersten deutschen Verein aus der Europa League.
 - Die Zahl der Plätze bleibt gleich, es wird nur getauscht, ohne Zufall.
-- Das gilt auch in der ersten Saison mit den echten Startern 2026/27. Getauscht wird beim Spielbeginn, vor der Auslosung.
+- Das gilt auch in der ersten Saison mit den echten Startern 2026/27. Getauscht wird beim Spielbeginn, vor der Auslosung und vor den Saisonzielen.
+- Jobwechsel (Prüfung GD2, vorläufig):
+  - Wer vor der Auslosung einen Verein aus der Champions League übernimmt, wird ebenso getauscht.
+  - Nach der Auslosung bietet auf Leicht kein Verein aus der Champions League einen Job an, bis die Saison zu Ende ist.
+- Saisonziel, Tabellenlegende und eine Meldung sagen, warum dein Verein Europa League spielt.
 - Die Europa League und die Conference League kannst du auf Leicht gewinnen.
 
 ### 3.3 Gönner statt Insolvenz
@@ -73,7 +77,9 @@ Auf Leicht wird trotzdem gewürfelt, die Karte fällt erst danach weg. So bleibe
 
 ### 3.4 Was nicht geändert wird
 
-- Keine Stärke-Zuschläge im Spiel, kein Gummiband, kein Glück bei Verletzungen oder Schiedsrichtern.
+- Keine Stärke-Zuschläge im Spiel, kein Gummiband, kein Glück bei Verletzungen im Spiel und im Training oder bei Schiedsrichtern.
+- Das Glück bei Karten gilt für jeden Kartenausgang mit Chance, auch wenn eine Karte eine Verletzung als schlechten Ausgang hat (etwa der übertreibende Trainingsweltmeister).
+- Ist die Chance die des schlechten Ausgangs, trägt die Wirkung `pech:true`, und das Glück wirkt umgekehrt (Wunderkind, „Laufen lassen“).
 - Auch auf Leicht kann man absteigen und entlassen werden, nur später.
 - Die Computer-Vereine spielen auf allen Stufen gleich.
 

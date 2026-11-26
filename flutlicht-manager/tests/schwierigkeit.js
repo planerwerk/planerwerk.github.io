@@ -61,7 +61,13 @@ for(const k of ['leicht','normal']){const {W,S}=welt(k),ev=W.ev,t=ev('myT()'),I=
   pruef(ok,`K43: Pleite auf ${St(k).name}: ${k==='leicht'?'ein Gönner zahlt, kein Punktabzug':'Insolvenz mit Punktabzug'}`,`Abzug ${abzug}, Konto ${t.cash}, Vertrauen ${S.trust}`);}
 // K43e. Glück bei Karten: Ausgang mit Chance 0,5 auf Leicht in mehr Fällen gut als auf Schwer, bei gleichem Würfel (eigener Strom, gleiche Folge)
 {const gut=k=>{const {W}=R[k],ev=W.ev;let n=0;ev('mitStrom')(ev('strom')('k43test',1),()=>{for(let i=0;i<400;i++)if(ev('kartenWirkung')({art:'vertrauen',wert:0,chance:0.5,gut:'g',schlecht:0,schlechtText:'s'},{},{id:'k43',titel:'Test'})==='g')n++;});return n;};
-  const l=gut('leicht'),m=gut('normal'),s=gut('schwer');pruef(l>m&&m>s,'K43: Glück bei Karten, Leicht > Normal > Schwer',`gute Ausgänge von 400: ${l}/${m}/${s}`);}
+  const l=gut('leicht'),m=gut('normal'),s=gut('schwer');pruef(l>m&&m>s,'K43: Glück bei Karten, Leicht > Normal > Schwer',`gute Ausgänge von 400: ${l}/${m}/${s}`);
+  // pech:true (Prüfung GD3): chance ist die des schlechten Ausgangs, das Glück wirkt umgekehrt
+  const pech=k=>{const {W}=R[k],ev=W.ev;let n=0;ev('mitStrom')(ev('strom')('k43pech',1),()=>{for(let i=0;i<400;i++)if(ev('kartenWirkung')({art:'vertrauen',wert:0,chance:0.5,pech:true,gut:'p',schlecht:0,schlechtText:'s'},{},{id:'k43',titel:'Test'})==='p')n++;});return n;};
+  const pl=pech('leicht'),pm=pech('normal'),ps=pech('schwer');pruef(pl<pm&&pm<ps,'K43: Glück bei Karten mit pech, Leicht < Normal < Schwer schlechte Ausgänge',`schlechte Ausgänge von 400: ${pl}/${pm}/${ps}`);}
+// Prüfung GD4: Saisonziel auf Leicht nennt die Europa League statt der Champions League
+{const l=R.leicht.W.ev('targetText')(1,3),n=R.normal.W.ev('targetText')(1,3);
+  pruef(l.includes('Europa League')&&!n.includes('Europa League')&&n.includes('Champions League'),'K43: Saisonziel Platz 3 auf Leicht ohne Champions League',`${l} / ${n}`);}
 
 // K02a. Neue Regeln ausprobieren (K02 §4.4): Jeder Eintrag in REGELN.experimente zeigt auf einen Schalter, der aus ist. experimentSetzen schaltet ihn für diesen
 //       Spielstand ein (S.einst.exp) und wieder aus; experimenteAnwenden schaltet nur aus, was es selbst eingeschaltet hat (ein von außen gesetzter Schalter bleibt).

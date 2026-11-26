@@ -2956,3 +2956,26 @@ Korrekturen auf `mitarbeit/popolupo-gc-korrekturen` (auf W5e9).
 |---|---|---|
 | GC1 | **Niedrig, nur Anzeige:** `liveRender` schrieb die Anzeigetafel bei jedem Takt neu, dadurch startete der Einlauf in den ersten 1,3 Sekunden neu und flackerte. Jetzt schreibt es die Tafel nur, wenn sich ihr Inhalt ändert. | ✅ behoben |
 | – | Hinweis: Die Titelfeier hielt das alte Spielstand-Objekt im Speicher fest. Jetzt `WeakMap`. | ✅ umgesetzt |
+
+## GD. Prüfung der Korrekturen zu Testlauf 10 und von K43 ohne Laufzeit (26. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 566ae45..7a3c747 gelesen.
+
+- Kein Laufzeitfehler, kein Name außerhalb seines Gültigkeitsbereichs, kein fehlender Wert in Template-Strings.
+- „Normal“ verhält sich genau wie vorher, die Gleichschritt-Tests brechen nicht.
+- Im Europapokal bleiben es 36 Teilnehmer je Wettbewerb, auch für Titelverteidiger, in der Qualifikation und ohne deutschen Verein in der Europa League.
+- `karteNurSchlecht` trifft fünf Karten, alle gehen wirklich nur schlecht aus, keine Kette hängt an ihnen.
+
+Bericht: `flutlicht-tools/pruefung-gd.md`.
+
+Korrekturen auf `mitarbeit/popolupo-gd-korrekturen` (auf dem Messskript K43b).
+
+| # | Befund | Status |
+|---|---|---|
+| GD1 | **Mittel, nur Leicht:** In der ersten Saison setzte `setTarget` die Nebenziele vor dem Tausch in die Europa League. Ein Champions-League-Starter konnte ein unerfüllbares Nebenziel „Champions League“ bekommen. Jetzt wird erst getauscht. | ✅ behoben |
+| GD2 | **Mittel, nur Leicht:** Nach einem Jobwechsel zu einem Verein in der Champions League spielte man sie doch. Jetzt (vorläufig): Vor der Auslosung tauscht `takeJob` wie beim Spielstart. Nach der Auslosung bieten solche Vereine auf Leicht keinen Job an (`euClFest` in mkJobs, Jobangebot und Rettung). | ✅ behoben |
+| GD3 | **Niedrig, Leicht und Schwer:** Beim Wunderkind („Laufen lassen“) ist die Chance die des schlechten Ausgangs, das Glück wirkte dort verkehrt herum. Neues Merkmal `pech:true` an der Wirkung dreht das Glück um. Der Trainingsweltmeister bleibt ein Kartenausgang mit Glück (K43 §3.4 präzisiert). | ✅ behoben |
+| GD4 | **Niedrig, nur Leicht:** Texte nannten Punktabzug und Champions League. Jetzt nennen Lizenzhinweis, Saisonziel und Tabellenlegende den Gönner und die Europa League, und der Tausch kommt mit einer Meldung samt Grund. | ✅ behoben |
+| – | Hinweis: Fehlt `kartenNegativ` in einer Stufe, fielen böse Karten still weg. Jetzt gilt ohne Angabe 1. | ✅ umgesetzt |
+| – | Hinweis: Tests frieren REGELN nicht mehr ein. Bewusst so, damit Tests Regelwerte verstellen können; im Browser bleibt REGELN eingefroren. | entschieden |
+| – | Hinweis: Alte Spielstände auf Leicht bekommen die Regeln aus K43 sofort. Gewollt, die Stufe gilt für den ganzen Spielstand. | entschieden |

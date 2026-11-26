@@ -290,6 +290,19 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 26.11.2026: Korrekturen nach Prüfung GD (Zweig `mitarbeit/popolupo-gd-korrekturen`, auf dem Messskript K43b)
+
+Alles nur auf Leicht oder Schwer, Normal bleibt unverändert.
+
+- **Champions League auf Leicht:**
+  - Erst tauschen, dann die Saisonziele setzen, also kein unerfüllbares Nebenziel mehr.
+  - Beim Jobwechsel vor der Auslosung wird ebenso getauscht.
+  - Nach der Auslosung bietet kein Verein aus der Champions League einen Job an.
+  - Eine Meldung nennt den Grund.
+- **Glück bei Karten:** Beim Wunderkind („Laufen lassen“) wirkt es jetzt in die richtige Richtung (`pech:true`).
+- **Texte auf Leicht:** Lizenzhinweis, Saisonziel und Tabellenlegende nennen den Gönner und die Europa League statt Punktabzug und Champions League.
+- **Tests:** neu in `tests/schwierigkeit.js` (Glück mit `pech`, Saisonziel auf Leicht).
+
 ### 26.11.2026: Messskript für die Schwierigkeit (Zweig `mitarbeit/popolupo-k43b-langlauf`, auf W5d5)
 
 - **Neu:** `tests/schwierigkeit-langlauf.js [Saisons=5] [Seed=7]` misst je Stufe und für drei Startvereine (Spitze 1. Liga, Mitte 1. Liga, Mitte 2. Liga):

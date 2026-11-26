@@ -95,11 +95,16 @@ function euTitelDeutsch(de,vor){if(!vor)return;const rang=w=>EU_WB.indexOf(w);
 // Schwierigkeit (K43, 26.11., vorläufig): Auf „Leicht“ spielt dein Verein nicht in der Champions League. Sein Platz geht an den ersten deutschen Verein aus der Europa League,
 // dein Verein spielt dafür Europa League. Die Zahl der Plätze bleibt gleich, nur die Zuordnung tauscht. Ohne Zufall.
 function euOhneClAufLeicht(dt){if(typeof S==='undefined'||!S||!stufe().ohneCL||!dt.cl.includes(S.my))return;const e=dt.el.find(x=>x!==S.my);dt.cl=dt.cl.filter(x=>x!==S.my);
-  if(e!=null){dt.el=dt.el.filter(x=>x!==e);dt.cl.push(e);}dt.el=[S.my,...dt.el.filter(x=>x!==S.my)];}
+  if(e!=null){dt.el=dt.el.filter(x=>x!==e);dt.cl.push(e);}dt.el=[S.my,...dt.el.filter(x=>x!==S.my)];euOhneClMeldung(e);}
+// Meldung mit Grund (Prüfung GD4)
+function euOhneClMeldung(e){if(S.news)news(`Schwierigkeit „Leicht“: Die Champions League gibt es erst ab „Normal“. Dein Verein spielt diese Saison Europa League${e!=null?`, sein Platz in der Champions League geht an ${tn(e)}`:''}.`,'');}
 // Erste Saison (echte Starter 2026/27): Die Welt steht schon, bevor du einen Verein wählst. stufeAnwenden tauscht deshalb hier, solange noch nicht ausgelost ist.
+// Ebenso beim Jobwechsel zu einem Verein in der Champions League vor der Auslosung (takeJob, Prüfung GD2).
 function euOhneClStart(){if(!euAktiv()||!stufe().ohneCL||S.eu.cl.lp||S.eu.el.lp)return;const cl=S.eu.cl.t,el=S.eu.el.t;if(!cl.includes(S.my))return;
   const e=el.find(x=>x!==S.my&&euDe(x))??el.find(x=>x!==S.my);S.eu.cl.t=cl.filter(x=>x!==S.my);S.eu.el.t=[S.my,...el.filter(x=>x!==S.my&&x!==e)];
-  if(e!=null)S.eu.cl.t=[...S.eu.cl.t.filter(euDe),e,...S.eu.cl.t.filter(x=>!euDe(x))];}
+  if(e!=null)S.eu.cl.t=[...S.eu.cl.t.filter(euDe),e,...S.eu.cl.t.filter(x=>!euDe(x))];euOhneClMeldung(e);}
+// Nach der Auslosung lässt sich nicht mehr tauschen: Auf Leicht bietet dann kein Verein aus der Champions League dir einen Job an (mkJobs, Jobangebot, Rettung; Prüfung GD2)
+const euClFest=id=>!!stufe().ohneCL&&S.phase!=='end'&&euAktiv()&&S.eu.cl.t.includes(id)&&!!(S.eu.cl.lp||S.eu.el.lp); // nach dem Saisonende entscheidet europaAnlegen neu
 // Auslandsvereine: je Land nach Ansehen plus Zufall, zuerst die Champions League. Fehlen Plätze, die Nächsten aus allen Ländern. Titelverteidiger sind fest dabei.
 function euAuslandWaehlen(bedarf,vor,plus=[]){const Z=REU.zufall,sc=(S.ausland?S.ausland.v:[]).map((v,i)=>({id:AV0+i,land:v.land,w:v.rep+(R()*2-1)*Z,fest:false}));
   const used=new Set(),out={cl:[],el:[],ecl:[]},nimm=(wb,x)=>{used.add(x.id);out[wb].push(x);};
