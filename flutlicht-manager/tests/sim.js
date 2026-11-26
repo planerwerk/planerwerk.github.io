@@ -13,7 +13,8 @@ function neueWelt(){
   const els={},store={};
   const document={getElementById:id=>els[id]||(els[id]=el()),querySelector:()=>null,querySelectorAll:()=>[],addEventListener(){},createElement:()=>el(),body:el(),documentElement:el()};
   const localStorage={getItem:k=>k in store?store[k]:null,setItem:(k,v)=>{store[k]=String(v);},removeItem:k=>{delete store[k];},clear:()=>{for(const k in store)delete store[k];}};
-  const ctx={console,document,localStorage,crypto:require('crypto').webcrypto,setTimeout,clearTimeout,requestAnimationFrame:f=>setTimeout(f,0),navigator:{}};ctx.window=ctx;
+  // __REGELN_OFFEN: REGELN bleibt im Test beschreibbar (daten/regeln.js), damit Tests einen Regelwert für einen Fall verstellen können (Testlauf 10)
+  const ctx={console,document,localStorage,crypto:require('crypto').webcrypto,setTimeout,clearTimeout,requestAnimationFrame:f=>setTimeout(f,0),navigator:{},__REGELN_OFFEN:true};ctx.window=ctx;
   vm.createContext(ctx);
   const code=skripte().map(f=>fs.readFileSync(path.join(ROOT,f),'utf8')).join('\n;\n')
     +'\n;render=function(){};closeOv=function(){};showSummary=function(){};toast=function(){};'

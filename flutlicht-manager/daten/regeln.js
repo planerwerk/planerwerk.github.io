@@ -1292,7 +1292,12 @@ const REGELN={
   }
 };
 
-// Schreibschutz: Zur Laufzeit darf kein Code eine Regel ändern.
-(function frieren(o){Object.freeze(o);Object.values(o).forEach(v=>{if(v&&typeof v==='object'&&!Object.isFrozen(v))frieren(v);});})(REGELN);
+// Schreibschutz: Zur Laufzeit darf kein Code eine Regel ändern. Ausnahmen (Testlauf 10, 26.11.2026):
+// - die Schalter-Objekte aus REGELN.experimente bleiben beschreibbar, sonst kann das Menü „Neue Regeln ausprobieren“ ihr Feld an nicht setzen
+//   (vorher schlug das still fehl, kein Schalter ließ sich einschalten);
+// - der Test-Simulator (tests/sim.js) setzt __REGELN_OFFEN, damit Tests einen Regelwert für einen Fall verstellen und wieder zurücksetzen können.
+(function(){const offen=new Set((REGELN.experimente||[]).map(x=>String(x.pfad).split('.').reduce((o,k)=>o&&o[k],REGELN)).filter(o=>o&&typeof o==='object'));
+  const frieren=o=>{if(!offen.has(o))Object.freeze(o);Object.values(o).forEach(v=>{if(v&&typeof v==='object'&&!Object.isFrozen(v)&&!offen.has(v))frieren(v);else if(offen.has(v))Object.values(v).forEach(w=>{if(w&&typeof w==='object')frieren(w);});});};
+  if(!(typeof globalThis!=='undefined'&&globalThis.__REGELN_OFFEN))frieren(REGELN);})();
 // Kurzformen für den Code
 const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui,RL=REGELN.live,RTA=REGELN.taktik,RSO=REGELN.sommer,RST=REGELN.stab,RD=REGELN.disziplin,RMD=REGELN.medizin,RWB=REGELN.wettbewerbe,RTS=REGELN.testspiele,RLA=REGELN.lager,RKA=REGELN.kabine,RGS=REGELN.gespraeche,RSC=REGELN.scouting,RLZ=REGELN.lizenz,RJ=REGELN.jugend,RZ=REGELN.zweite,RTR=REGELN.transfers,RVT=REGELN.vertraege,RBE=REGELN.berater,RLE=REGELN.leihe,RCV=REGELN.computer,RBZ=REGELN.beziehungen,RKT=REGELN.karten,RSTAT=REGELN.statistik,RVB=REGELN.vorbereitung,RAW=REGELN.abwerben,RFS=REGELN.fanstimmung,RPK=REGELN.presse,RTP=REGELN.trainerpool,RGR=REGELN.geruechte,RFP=REGELN.finanzplan,RMK=REGELN.marketing,REU=REGELN.europa;

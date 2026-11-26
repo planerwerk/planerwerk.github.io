@@ -13,6 +13,72 @@ Node.js 22, Playwright mit Chromium, für `tests/ui-zugang.js` axe-core 4.10.2 (
 
 ---
 
+## Lauf 10, 26.11.2026: `popolupo-w5e10-intro` (566ae45, enthält alles bis gc-korrekturen)
+
+Nur getestet und geloggt, keine Ursachen gesucht (Auftrag: wenig Aufwand). Grün: 29 Tests (u. a. code, lizenz, statistik, werbung, stadion, marketing, fans, geruechte, live, training, ausland, zweite, leihe, vertraege, ui-lernstufen, live-neuladen, ui-zugang). Rot:
+
+- **seed:** „Speichern, Neuladen und Weiterspielen nach Halt 33 ergibt anderen Verlauf“ (Wiederholbarkeit verletzt, wahrscheinlich Zustand außerhalb von `S`).
+- **TypeError „Cannot assign to read only property“** (Tests setzen eingefrorene `REGELN`, vermutlich die neuen Schalter): medizin (`ohne`), transfers (`ab`), vorstand (`grenzen`, Test bricht ab).
+- **Schalter-Tests rot:** finanzen (TV-Raten 2×), schwierigkeit (Schalter aus/an/von außen, Menü TV-Raten), kabine (Sprachgrüppchen), scouting (Unsicherheit), spielermodell (Integration und Deutsch 2×), wettbewerbe (Länderspiele 3×, Marktwert Nationalspieler), testspiele (Zimmerbelegung).
+- **Weitere neue Fälle rot:** abwerben (Computer-Vereine werben ab: kein Versuch), disziplin (Rote Karte für den Trainer: Rot undefined), karten (lachender Dritter, Lager-Ereignisse, Nachtleben, Choreo), presse (Medienprofile, Trotz Maulkorb, Sticheleien, Schiedsrichterkritik), scouting (Konkurrenz am Tisch: „Chance 0 [object Object]“, Scoutbericht), taktik (Durchschaut: Meldungen 1/1), transfers (Mondpreise höchstens 1,88, Gegenangebot, K20c Bieterwettstreit: Gegenangebot null).
+- **Punkte inkonsistent** (Prüfung in `pruefungen.js`: Punkte ≠ 3 × Spiele − Remis): ui-zwei-saisons 36×, fuzz-karrieren 95×. Vermutlich Punktabzug nach Insolvenz, die Prüfung zieht ihn nicht ab. Dazu wieder T9.4 (Pokal am zweiten Tag) 1× bzw. 4×.
+- **welt:** Konten im Minus zum Saisonende 14 (2026) und 16 (2027); Sternejagd wie T9.2. **welt 10:** Trainerwechsel 200 in 10 Saisons (Grenze: höchstens 18 je Saison in der 1. Liga, kein Verein öfter als dreimal), 2031 und 2032 nur 13 Wechsel mit Ablöse (mindestens 15).
+- **wettbewerbe:** 72 Stunden noch 12× (T8.2), europapokal: 4 Fälle unter drei Tagen bei 6 Vereinen.
+- **Randwerte:** medizin Rückfall 16 %, Kreuzbandrisse 9,5; kabine Wechselwunsch 1,05 je Kader (höchstens 1); kalibrierung 1 gelb; spielermodell und akzeptanz wie immer.
+- **finanzmodell 2 (K23c, Salden je Verein und Saison):** 1. Liga +13,9 / +12,3 Mio. (erwartet etwa +11), 2. Liga −1,0 / −1,7 Mio. (erwartet etwa 0), 3. Liga −2,7 / −3,8 Mio. (erwartet etwa −1). Einnahmen 1. Liga 137,8 Mio. (TV 49,8, Sponsor 63,5, Spieltag 24,4), Gehälter 75,7 Mio. Rohausgabe: Scratchpad von Claude, auf Wunsch vollständig.
+
+---
+
+## Lauf 9, 22.11.2026: `popolupo-u19d-kaderliste` (2c16d91: K23b, K23d, U19d1, Korrekturen zu Lauf 8)
+
+Nur getestet. Erledigt: T8.1 (finanzen grün), T8.3 (training grün). Grün außerdem lizenz, europapokal, werbung, transfers, vorstand, jugend, ui-lernstufen, live-neuladen, seed, ui-zugang.
+- **T8.2 teilweise:** Pokal nach dem Europapokal verlegt. Rest in `wettbewerbe.js` (Seed 4, drei Saisons): 12-mal Do Europapokal → Sa Liga, einmal So Liga → Di Liga.
+- **T9.2 `welt.js` Sternejagd:** Käufer im gebauten Fall (Wolfsburg) liegt bei 121 % des Gehaltsrahmens (K23d), darf darum nicht kaufen, trotz 500 Mio. auf dem Konto. Testfall passt nicht mehr.
+- **T9.3 `welt.js` „kein Konto im Minus“:** Saisonende 2027 fünf Drittligisten im Minus (−0,1 bis −3,4 Mio., Rahmen 114–164 %). Schnitt der Konten 1. Liga 50,6 → 103,5 Mio. in einer Saison.
+- **T9.4 Pokalprüfung in `pruefungen.js`** (ui-zwei-saisons 1×, fuzz-karrieren 5×): „Pokal: 0 Runden, laut Kalender 1“ am zweiten Pokaltag. Die Prüfung kennt den zweiten Tag nicht.
+- **medizin:** Kreuzbandrisse 1. Liga 12,5 je Saison (vorher 9–10, Ziel 3–8). sommer 79,7 (Grenze 80), spielermodell 2. Liga Spanne 2,1, kalibrierung drei gelbe Randwerte, akzeptanz wie immer.
+- **T5.3 Europapokal:** CL über drei Saisons 1× Sieger (Bayern 2026), 3× Achtelfinale, 4× K.-o.-Play-offs, 4× Ligaphase; Länderwertung GER 6., 3., 11.
+
+---
+
+## Lauf 8, 22.11.2026: `popolupo-t5-korrekturen` (5253729, auf 0fae7b8)
+
+Nur getestet, am Code von popolupo nichts geändert.
+
+**Erledigt laut Lauf 8:** T5.1 und T5.5 (`lizenz.js` grün, Gleichschritt wieder 150 Tage), T5.4 (`ui-zwei-saisons.js` grün). T5.3 deutlich besser (siehe unten). CH4 nicht einzeln geprüft.
+
+| Test | Ergebnis |
+|---|---|
+| lizenz, europapokal, werbung, statistik, welt, jugend und alle übrigen Node-Tests außer den unten genannten | grün |
+| alle Browser-Tests (ui-zwei-saisons, fuzz-karrieren, ui-lernstufen, live-neuladen, seed, ui-zugang) | grün |
+| wettbewerbe | rot (1): **T5.2 noch offen**, siehe T8.2 |
+| finanzen | rot (1): T8.1 (Fehler im Test) |
+| training | rot (2): T8.3, neu |
+| spielermodell | rot (2): T1.3 Rest, 2. Liga 69,8 → 72,2, 3. Liga 65,4 → 68,0 |
+| kalibrierung | rot (3, alle gelb am Rand): Elfmetertore 8 %, Elfmeter 0,32, Favoritensieg 64 % (Ziel ab 65 %) |
+| medizin | rot (3, am Rand): Zerrungen 25 %, Rückfall 16 %, Kreuzbandrisse 9,0 |
+| akzeptanz | rot (3) wie immer: Abwehr +0,8, Verhältnis, Tempo 5,8 ms (Rechner war nebenbei belastet) |
+
+**T8.2 (zu T5.2) `wettbewerbe.js` „72 Stunden“: noch 23 Fälle.** Nachgebaut mit Seed 5 über eine Saison: alle Fälle sind **Donnerstag Europapokal → Samstag Liga** (6) oder **Donnerstag Europapokal → Samstag Pokal** (1), zum Beispiel Leverkusen Do 22.10. Europa League / Sa 24.10. Bundesliga, Freiburg Do 20.8. Conference League (Qualifikation) / Sa 22.8. DFB-Pokal. Mittwoch → Freitag kommt nicht mehr vor. `ligaVerlegen` müsste nach einem Donnerstag auf den Sonntag schieben (so plant es auch die DFL für Vereine in der Europa League).
+
+**T8.1 `finanzen.js` „mindestens 9 Monatsberichte“: 4.** Kein Fehler im Spiel: In dieser Welt wird der Trainer der Testsimulation (Freiburg, Seed 4711) an Tag 221 entlassen und wechselt zu Union Berlin. Beim Vereinswechsel beginnt `S.finV` neu (`finanzenJobwechsel`), zum Saisonende stehen darum nur 4 Berichte. In Lauf 7 kam die Entlassung erst am Saisonende (11 Berichte). Vorschlag: Der Test zählt die Berichte bis zum Vereinswechsel mit, oder er wählt einen Verein, der nicht entlassen wird, oder er schaltet die Entlassung ab.
+
+**T8.3 `training.js` neu rot:** „Training wirkt: Kondition der Startelf mindestens 10 höher als mit Schonen“ 77,9 gegen 68,6 (Lauf 7: 79,5 gegen 68,5) und „Training kostet nicht zu viel: höchstens ein Verletzter mehr“ 3,0 gegen 2,0 (Lauf 7: 2,4 gegen 2,5). Zwischen Lauf 7 und Lauf 8 hat sich nur dieser Korrekturzweig geändert (Verlegung und Stärke im Europapokal). Vermutung: Die verlegten Spiele machen den Spielplan dichter, weniger Trainingstage, mehr Belastung. Nicht untersucht.
+
+**T5.3 nach der Korrektur (Faktor 0,93), gemessen wie in Lauf 5 (Seed 5, drei Saisons):**
+
+| Saison | Champions League | Europa League | Conference League | Länderwertung GER |
+|---|---|---|---|---|
+| 2026 | FCB K.-o.-Play-offs, BVB, RBL, VFB Ligaphase | B04 Achtelfinale, TSG Ligaphase | SCF Ligaphase | 16. von 19 |
+| 2027 | FCB Viertelfinale, SCF K.-o.-Play-offs, BMG, B04 Ligaphase | FCA K.-o.-Play-offs, VFB Ligaphase | SGE Achtelfinale | 8. von 19 |
+| 2028 | VFB Halbfinale, SGE Viertelfinale, FCB Achtelfinale, BVB Ligaphase | B04 Finale, RBL Ligaphase | SCF Halbfinale | 2. von 19 |
+
+Champions League: 6-mal Ligaphase (vorher 9), 2-mal K.-o.-Play-offs, je einmal Achtelfinale und Halbfinale, 2-mal Viertelfinale, kein deutscher Sieger. Sieger: Chelsea, Liverpool, Liverpool (CL), Sturm Graz, Brentford, Anderlecht (EL), Gent, Bilbao, Groningen (ECL). Damit näher an K37 §10, die Hälfte scheidet aber noch in der Ligaphase aus.
+
+**Neu von Claude auf dem Claude-Zweig** (seit Lauf 7, nicht in diesem Korrekturzweig): Sponsorentag in drei Größen auf Wunsch des Nutzers (c50db88): klein, mittel, groß mit Kosten nach Liga, Zuschlag gewürfelt in 5–7 %, 7–10 % oder 8–11 %, als Rückmeldung nur ein Text (Erfolg, voller Erfolg, grandioser Erfolg). Betrifft nur `js/werbung.js`, `daten/regeln.js` (`RF.werbung.sponsorentag`) und `tests/werbung.js`.
+
+---
+
 ## Lauf 7, 21./22.11.2026 nachts: Claude-Zweig mit K24b und K24c (452dc0f, auf eb3efbe)
 
 **Neu von Claude** (Rest von K24, wie im Entwicklungsprotokoll abgesprochen). popolupos Spitze eb3efbe ist dafür in den Claude-Zweig geholt (5d8444b, ohne Konflikt).
