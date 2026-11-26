@@ -290,6 +290,10 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 26.11.2026: W5f4 Regler für Stadion und Oberfläche (Zweig `mitarbeit/popolupo-w5f4-regler`, auf W5f3)
+
+- **Neu:** Im Menü unter „Klang“ zwei weitere Regler. „Stadion“ gilt für Pfiffe, Jubel, Raunen und Atmosphäre, „Oberfläche“ für Klicks und den Brief-Ton. Beide sind Anteile der Gesamtlautstärke und werden je Gerät gespeichert.
+
 ### 26.11.2026: W5f3 Brief-Ton (Zweig `mitarbeit/popolupo-w5f3-brief`, auf W5f2)
 
 - **Neu:** Nach „Weiter“ kommt ein kurzer Brief-Ton, wenn eine neue Ereigniskarte oder ein neues Angebot für einen deiner Spieler wartet. Nur Klang.

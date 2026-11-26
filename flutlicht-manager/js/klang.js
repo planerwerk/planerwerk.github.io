@@ -4,7 +4,11 @@
 // Ohne Zufall im Spiel: Das Rauschen für Jubel und Raunen kommt aus einem eigenen festen Generator (kein R(), kein Math.random), keine Wirkung aufs Spiel.
 let KLANG_CTX=null,KLANG_EINST=null;
 function klangEinst(){if(KLANG_EINST)return KLANG_EINST;const K=REGELN.klang;let e={};try{e=JSON.parse(localStorage.getItem(K.schluessel)||'{}')||{};}catch(x){e={};}
-  KLANG_EINST={an:e.an!==undefined?!!e.an:K.an,laut:typeof e.laut==='number'?Math.max(0,Math.min(1,e.laut)):K.laut};return KLANG_EINST;}
+  const anteil=(v,s)=>typeof v==='number'?Math.max(0,Math.min(1,v)):s; // Stadion und Oberfläche als Anteil der Gesamtlautstärke (K41 §6, W5f4)
+  KLANG_EINST={an:e.an!==undefined?!!e.an:K.an,laut:anteil(e.laut,K.laut),stadion:anteil(e.stadion,1),ober:anteil(e.ober,1)};return KLANG_EINST;}
+const KLANG_OBERFLAECHE=['klick','brief']; // die übrigen Klänge gehören zum Stadion
+const klangAnteil=art=>{const e=klangEinst();return KLANG_OBERFLAECHE.includes(art)?e.ober:e.stadion;};
+function klangTeilSetzen(k,v){if(k!=='stadion'&&k!=='ober')return;const e=klangEinst();e[k]=Math.max(0,Math.min(1,(+v||0)/100));klangSpeichern();klang(k==='ober'?'klick':'pfiff');}
 function klangSpeichern(){try{localStorage.setItem(REGELN.klang.schluessel,JSON.stringify(klangEinst()));}catch(x){}}
 function klangSetzen(an){const e=klangEinst();e.an=!!an;klangSpeichern();if(e.an){klangCtx();klang('klick');}else atmoStop();if(typeof document!=='undefined'&&document.querySelectorAll)document.querySelectorAll('input.klang-an').forEach(x=>{x.checked=e.an;});if(typeof render==='function')render();} // Häkchen im offenen Menü mitziehen (Prüfung FX3)
 function klangUmschalten(){klangSetzen(!klangEinst().an);}
@@ -12,8 +16,8 @@ function klangLautSetzen(v){const e=klangEinst();e.laut=Math.max(0,Math.min(1,(+
 function klangCtx(){if(typeof window==='undefined')return null;const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return null;
   if(!KLANG_CTX){try{KLANG_CTX=new AC();}catch(x){return null;}}if(KLANG_CTX.state==='suspended')KLANG_CTX.resume().catch(()=>{});return KLANG_CTX;}
 // Ein Klang: klick, brief, pfiff (einmal), pfiff3 (Abpfiff), jubel, raunen. Pegel je Art in REGELN.klang.pegel.
-function klang(art){const e=klangEinst(),P=REGELN.klang.pegel;if(!e.an||e.laut<=0||!P[art]||typeof document==='undefined'||document.hidden)return;const c=klangCtx();if(!c||c.state!=='running')return;
-  const t=c.currentTime,aus=c.createGain();aus.gain.value=e.laut*P[art];aus.connect(c.destination);
+function klang(art){const e=klangEinst(),P=REGELN.klang.pegel;if(!e.an||e.laut<=0||!P[art]||klangAnteil(art)<=0||typeof document==='undefined'||document.hidden)return;const c=klangCtx();if(!c||c.state!=='running')return;
+  const t=c.currentTime,aus=c.createGain();aus.gain.value=e.laut*klangAnteil(art)*P[art];aus.connect(c.destination);
   const ton=(f,von,dauer,typ)=>{const o=c.createOscillator(),g=c.createGain();o.type=typ||'sine';o.frequency.setValueAtTime(f,t+von);g.gain.setValueAtTime(0.0001,t+von);
     g.gain.exponentialRampToValueAtTime(1,t+von+0.01);g.gain.exponentialRampToValueAtTime(0.0001,t+von+dauer);o.connect(g);g.connect(aus);o.start(t+von);o.stop(t+von+dauer+0.02);};
   if(art==='klick')ton(1800,0,0.04,'triangle');
@@ -39,14 +43,16 @@ function atmoStart(){const e=klangEinst();if(KLANG_ATMO||!e.an||e.laut<=0||typeo
   w.gain.value=1;lfo.frequency.value=0.13;lg.gain.value=0.18;lfo.connect(lg);lg.connect(w.gain); // An- und Abschwellen
   g.gain.setValueAtTime(0.0001,c.currentTime);q.connect(lp);lp.connect(bp);bp.connect(w);w.connect(g);g.connect(c.destination);q.start();lfo.start();KLANG_ATMO={c,q,g,lfo};}
 // x: Stärke 0 bis etwa 1,5 aus atmoStaerke; der Pegel folgt weich (Zeitkonstante in REGELN.klang.atmo.weich)
-function atmoPegel(x){if(!KLANG_ATMO)return;const {c,g}=KLANG_ATMO,e=klangEinst(),A=REGELN.klang.atmo,v=Math.max(0.0001,e.an?e.laut*A.pegel*Math.max(0,x):0);
+function atmoPegel(x){if(!KLANG_ATMO)return;const {c,g}=KLANG_ATMO,e=klangEinst(),A=REGELN.klang.atmo,v=Math.max(0.0001,e.an?e.laut*e.stadion*A.pegel*Math.max(0,x):0);
   g.gain.cancelScheduledValues(c.currentTime);g.gain.setTargetAtTime(v,c.currentTime,A.weich);}
 function atmoStop(){if(!KLANG_ATMO)return;const {c,q,g,lfo}=KLANG_ATMO;KLANG_ATMO=null;const t=c.currentTime;g.gain.cancelScheduledValues(t);g.gain.setTargetAtTime(0.0001,t,0.6);
   try{q.stop(t+3);lfo.stop(t+3);}catch(x){}}
 // Knopf in der Kopfzeile (Stumm, Taste M) und Karte im Menü
 function klangKnopf(){const an=klangEinst().an;return`<button class="ton" onclick="klangUmschalten()" aria-label="${an?'Ton ausschalten':'Ton einschalten'}" title="${an?'Ton aus':'Ton an'} (Taste M)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="${an?'M4 10v4h3l5 4V6L7 10zM16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11':'M4 10v4h3l5 4V6L7 10zM16 9l5 6M21 9l-5 6'}"></path></svg></button>`;}
 function klangKarte(){const e=klangEinst();return`<div class="card"><h3>Klang</h3><p class="dim">Pfiffe, Torjubel und Stadionatmosphäre im Live-Spiel, erzeugt im Browser. Gilt für dieses Gerät. Stumm auch über den Knopf oben oder die Taste M.</p>
-  <div class="form"><label class="pick"><input type="checkbox" class="klang-an" ${e.an?'checked':''} onchange="klangSetzen(this.checked)"> Ton an</label><label>Lautstärke <input type="range" min="0" max="100" step="5" value="${Math.round(e.laut*100)}" onchange="klangLautSetzen(this.value)" aria-label="Lautstärke"></label></div></div>`;}
+  <div class="form"><label class="pick"><input type="checkbox" class="klang-an" ${e.an?'checked':''} onchange="klangSetzen(this.checked)"> Ton an</label><label>Lautstärke <input type="range" min="0" max="100" step="5" value="${Math.round(e.laut*100)}" onchange="klangLautSetzen(this.value)" aria-label="Lautstärke"></label>
+  <label>Stadion <input type="range" min="0" max="100" step="5" value="${Math.round(e.stadion*100)}" onchange="klangTeilSetzen('stadion',this.value)" aria-label="Lautstärke Stadion: Pfiffe, Jubel, Atmosphäre"></label>
+  <label>Oberfläche <input type="range" min="0" max="100" step="5" value="${Math.round(e.ober*100)}" onchange="klangTeilSetzen('ober',this.value)" aria-label="Lautstärke Oberfläche: Klicks und Brief-Ton"></label></div></div>`;}
 // Ton erst nach der ersten Bedienung freischalten; Taste M schaltet stumm (nicht beim Tippen in Feldern)
 if(typeof document!=='undefined'&&typeof document.addEventListener==='function'){
   const ARTEN=['click','keydown','touchend'],frei=()=>{if(!klangEinst().an)return;const c=klangCtx();if(c&&c.state==='running')ARTEN.forEach(a=>document.removeEventListener(a,frei,true));}; // echte Nutzeraktivierung, auch auf Touch-Geräten (Prüfung FX2)

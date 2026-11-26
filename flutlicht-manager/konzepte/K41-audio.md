@@ -88,7 +88,9 @@ K39 (Sequenzen), K05 (Live-Spiel, Zuschauer), K35b (Einstellungen), K40 (Test oh
 
 ✅ **W5f3 (26.11.):** Brief-Ton nach „Weiter“, wenn eine neue Ereigniskarte oder ein neues Angebot für einen deiner Spieler wartet (`briefStand` in `js/fenster.js`). Nicht bei jeder Nachricht, sonst klänge er jeden Tag.
 
-Offen: getrennte Regler für Stadion und Oberfläche (§6).
+✅ **W5f4 (26.11.):** Getrennte Regler im Menü unter „Klang“: Stadion (Pfiffe, Jubel, Raunen, Atmosphäre) und Oberfläche (Klicks, Brief-Ton), je als Anteil der Gesamtlautstärke, je Gerät gespeichert.
+
+Offen: Musik (§2, erst mit klarer Lizenz).
 
 **Für dich:** Willst du überhaupt Musik, oder reicht Stadionatmosphäre?
 
