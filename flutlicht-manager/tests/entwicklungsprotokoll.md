@@ -290,6 +290,13 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 26.11.2026: W5e11 Entlassung als Sequenz (Zweig `mitarbeit/popolupo-w5e11-entlassung`, auf K43)
+
+- **Neu:** Bei einer Entlassung flackert im Büro die Schreibtischlampe und geht mit einem Klick aus. Der Raum wird dunkel, danach bleiben die Jobangebote.
+  - Nicht beim Rücktritt.
+  - Einmal je Entlassung, klickdurchlässig, still bei Sequenzen „aus“ oder „weniger Bewegung“.
+  - Nur Anzeige, nichts im Spielstand.
+
 ### 26.11.2026: K43 Schwierigkeit (Zweig `mitarbeit/popolupo-t10-korrekturen`)
 
 - **Neu, vorläufig, nach deiner Vorgabe vom 26.11.:**

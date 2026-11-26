@@ -158,6 +158,17 @@ function torSequenz(meins,farbe){if(typeof document==='undefined'||!sequenzAn())
 // Einlauf (K39 §3.4, W5e9): vor dem Anpfiff fahren Wappen und Namen auf der Anzeigetafel kurz ein. Blockiert nichts, keine Wirkung aufs Spiel.
 function einlaufSequenz(){if(typeof document==='undefined'||typeof document.getElementById!=='function'||!sequenzAn())return;const el=document.getElementById('lv-tafel');if(!el||!el.classList)return;
   el.classList.add('einlauf');setTimeout(()=>el.classList.remove('einlauf'),sequenzStufe()==='kurz'?500:1300);}
+// Entlassung (K39 §3.4, W5e11): Im Büro flackert die Schreibtischlampe und geht aus, der Bildschirm wird dunkel, dann bleiben die Jobangebote.
+// Nur bei einer Entlassung, nicht beim Rücktritt. Einmal je Spielstand-Objekt und Entlassungstag, klickdurchlässig, nichts im Spielstand.
+const ENTLASSUNG_GEZEIGT=new WeakMap();
+function entlassungSequenz(){if(typeof document==='undefined'||typeof document.createElement!=='function'||typeof S==='undefined'||!S||!S.fired||S.ruecktritt)return;
+  const k=`${S.season}|${S.tag}`;if(ENTLASSUNG_GEZEIGT.get(S)===k)return;ENTLASSUNG_GEZEIGT.set(S,k);if(!sequenzAn()||!document.body)return;
+  const kurz=sequenzStufe()==='kurz',el=document.createElement('div');el.className='entlassung'+(kurz?' kurz':'');el.setAttribute('role','status');
+  el.innerHTML=`<svg viewBox="0 0 200 160" aria-hidden="true"><polygon class="el-schein" points="80,60 120,60 172,148 28,148" fill="#ffd27a" fill-opacity=".32"/>
+    <path d="M100 146 L124 100 L100 44" stroke="#9aa4b2" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><rect x="84" y="142" width="32" height="6" rx="2" fill="#9aa4b2"/>
+    <polygon points="72,62 128,62 114,40 86,40" fill="#3d4a5c"/><circle class="el-schein" cx="100" cy="64" r="6" fill="#fff3c4"/><rect x="16" y="148" width="168" height="9" rx="2" fill="#5b4636"/></svg>
+    <p>Entlassen</p>`;
+  document.body.appendChild(el);setTimeout(()=>klang('klick'),kurz?300:1000);setTimeout(()=>el.classList.add('weg'),kurz?1100:2800);setTimeout(()=>el.remove(),kurz?1600:3400);}
 function liveRender(){const L=LIVE;if(!L)return;if(!document.getElementById('lv-inhalt'))liveFrame();const G=L.G,r={h:G.hid,a:G.aid};
   document.getElementById('lv-uhr').textContent=L.ende?'Ende':G.elf?'i.E.':G.m===0?'0′':G.m+'′';
   const karten=s=>{const n=G.ev.filter(e=>e.s===s&&e.t==='R').length;return n?` <span class="lv-rot" title="Platzverweise">${'▮'.repeat(n)}</span>`:'';};
