@@ -19,8 +19,13 @@ function pokalVerlegen(r,paare){const d=S.plan.pokal[r][0],ids=spaet=>new Set(pa
   return ligaVerlegen(d,ids(false),'des Pokals')+ligaVerlegen(d+1,ids(true),'des Pokals');}
 // Pokal am zweiten Tag (T8.2, wie beim DFB): Wer in den fünf Tagen vor der Runde im Europapokal spielt, spielt den Pokal einen Tag später (Dienstag → Mittwoch,
 // in der 1. Runde Samstag → Sonntag), mit seinem Gegner. Sonst passt zwischen Donnerstag und Dienstag kein Ligaspiel mit drei Tagen Abstand.
+// Seit Testlauf 10 auch, wer weniger als drei Tage vor der Runde in der Liga gegen einen Verein spielt, der davor im Europapokal war: Das Ligaspiel kann nicht
+// nach vorn (dem Gegner fehlten die 72 Stunden nach dem Donnerstag), also muss der Pokal nach hinten (vorher legte der Notfall in ligaVerlegen es auf Samstag).
 // S.cup.spaet[Runde] = Vereine dieser Paarungen, bleibt die ganze Saison stehen (Kalender, Ergebnisse).
-function pokalSpaet(r,paare){if(r>=5||!S.plan.pokal[r])return[];const d=S.plan.pokal[r][0];return paare.filter(p=>p.some(id=>id<1000&&euTageVon(id).some(x=>x<d&&x>=d-5))).flat();}
+function pokalSpaet(r,paare){if(r>=5||!S.plan.pokal[r])return[];const d=S.plan.pokal[r][0],M=RWB.spielplan.mindestTage;
+  const ligaNachEu=id=>{const lg=S.teams[id].lg,Z=S.plan.zeit[lg]||[];return(S.fx[lg]||[]).some((md,k)=>md.some(([h,a],i)=>{const x=Z[k]&&Z[k][i]?Z[k][i][0]:-99;
+    return(h===id||a===id)&&x>d-M&&x<d&&euTageVon(h===id?a:h).some(e=>e<x&&e>d-2*M);}));};
+  return paare.filter(p=>p.some(id=>id<1000&&(euTageVon(id).some(x=>x<d&&x>=d-5)||ligaNachEu(id)))).flat();}
 const pokalSpaetIst=(r,id)=>!!(S.cup&&S.cup.spaet&&(S.cup.spaet[r]||[]).includes(id));
 const pokalGeteilt=r=>!!(S.cup&&S.cup.spaet&&(S.cup.spaet[r]||[]).length);
 const pokalPaareAm=e=>pokalPaare(e.r).filter(p=>pokalSpaetIst(e.r,p[0])===!!e.spaet);
@@ -32,9 +37,15 @@ function ligaVerlegen(d,ids,grund){const M=RWB.spielplan.mindestTage;let n=0;
   LIGEN.forEach(lg=>(S.fx[lg]||[]).forEach((md,k)=>md.forEach(([h,a],i)=>{if(!ids.has(h)&&!ids.has(a))return;const z=S.plan.zeit[lg][k][i],alt=z[0];
     if(!(z[0]>d-M&&z[0]<d+M))return;const vor=z[0]<d,belegt=[spieltageVon(h,z),spieltageVon(a,z)];[h,a].forEach((id,j)=>{if(ids.has(id))belegt[j].add(d);});
     const frei=x=>belegt.every(s=>{for(let j=1-M;j<M;j++)if(s.has(x+j))return false;return true;}),kand=(vor?[d-M,d-M-1,d-M-2,d+M,d+M+1]:[d+M,d+M+1,d+M+2,d-M,d-M-1]).filter(x=>wochentag(x)!==1);
-    const neu=kand.find(frei);if(neu!=null)z[0]=neu;else if(vor){z[0]=d-M;while(wochentag(z[0])===0||wochentag(z[0])===1)z[0]--;}else z[0]=d+M;n++;
+    const neu=kand.find(frei);if(neu!=null)z[0]=neu;else if(vor){z[0]=d-M;while(wochentag(z[0])===0||wochentag(z[0])===1)z[0]--;}else{z[0]=d+M;ligaNachziehen(lg,k,h,a,z[0]);}n++; /* Testlauf 10: nach dem Notfall danach das nächste Ligaspiel nachziehen */
     if(h===S.my||a===S.my)news(`Wegen ${grund} wird dein Ligaspiel gegen ${tn(h===S.my?a:h)} von ${datumKurz(alt)} auf ${datumKurz(z[0])} verlegt.`);})));
   if(n)TAGINDEX.plan=null;return n;}
+// Seit Testlauf 10: Bleibt nach dem Termin nur der Notfall (drei Tage danach), rückt das nächste Ligaspiel beider Vereine nach hinten (Dienstag → Mittwoch wie
+// planReparieren), wenn der neue Tag für beide Vereine dieses Spiels drei Tage Abstand zu allen ihren Spielen hat. Nicht am letzten Spieltag (zeitgleich), nie auf einen Montag.
+function ligaNachziehen(lg,k,h,a,x){const M=RWB.spielplan.mindestTage,F=S.fx[lg],Z=S.plan.zeit[lg],ziel=x+M;if(!F||!Z||k+1>=F.length-1||wochentag(ziel)===1)return;
+  F[k+1].forEach(([p,q],i)=>{if(p!==h&&p!==a&&q!==h&&q!==a)return;const y=Z[k+1][i],alt=y[0];if(alt>=ziel||ziel-alt>2)return;
+    if(![spieltageVon(p,y),spieltageVon(q,y)].every(s=>{for(let j=1-M;j<M;j++)if(s.has(ziel+j))return false;return true;}))return;y[0]=ziel;
+    if(p===S.my||q===S.my)news(`Deshalb wird auch dein Ligaspiel gegen ${tn(p===S.my?q:p)} von ${datumKurz(alt)} auf ${datumKurz(ziel)} verlegt.`);});}
 // ---------- Spielverlegung auf Antrag (K13 §13, K13d) ----------
 // Lage für dein nächstes Ligaspiel in höchstens RWB.verlegung.vorTage Tagen (ab morgen, auch wenn vorher ein Pokal- oder Europapokalspiel kommt, Prüfung EI4): n einsatzfähige Spieler (nicht verletzt oder krank, nicht in der Liga gesperrt), tw: ein Torwart dabei,
 // grund: weniger als minSpieler oder kein Torwart. Ohne solches Spiel null.
