@@ -42,10 +42,11 @@ module.exports=()=>{
   if(S.phase==='play'){[1,2,3].forEach(lg=>{const tb=table(lg),soll={};S.fx[lg].forEach((md,k)=>md.forEach(([h,a],i)=>{if(vorbei(S.plan.zeit[lg][k][i][0])){soll[h]=(soll[h]||0)+1;soll[a]=(soll[a]||0)+1;}}));
     tb.forEach(r=>{if(r.sp!==(soll[r.id]||0))e.push(`Liga ${lg}: ${tn(r.id)} hat ${r.sp} Spiele, laut Kalender ${soll[r.id]||0}`);});
     if(S.fx[lg].some((md,k)=>md.length!==S.plan.zeit[lg][k].length))e.push(`Liga ${lg}: Spielplan und Termine passen nicht zusammen`);
-    const pts=tb.reduce((a,r)=>a+r.p,0),g=S.res[lg].length,d=S.res[lg].filter(r=>r[2]===r[3]).length;if(pts!==g*3-d)e.push('Punkte inkonsistent');});
+    const A=(S.abzug||{})[S.season]||{},ab=tb.reduce((a,r)=>a+(A[r.id]||0),0); /* Punktabzug nach Insolvenz oder Manipulation zieht table() ab (Testlauf 10) */
+    const pts=tb.reduce((a,r)=>a+r.p,0),g=S.res[lg].length,d=S.res[lg].filter(r=>r[2]===r[3]).length;if(pts!==g*3-d-ab)e.push('Punkte inkonsistent');});
    const ex=64>>S.cup.hist.length;if(S.cup.alive.length!==ex)e.push(`Pokal ${S.cup.alive.length} statt ${ex}`);if(new Set(S.cup.alive).size!==S.cup.alive.length)e.push('Pokal doppelt');
    if(S.cup.alive.some(id=>id<1000&&(S.teams[id].zweite>=0||S.teams[id].lg>3)))e.push('Zweitmannschaft oder Regionalligist im Pokal');
-   const cupSoll=S.plan.pokal.filter(([d])=>vorbei(d)).length;if(S.cup.hist.length!==cupSoll)e.push(`Pokal: ${S.cup.hist.length} Runden, laut Kalender ${cupSoll}`);}
+   const cupSoll=S.plan.pokal.filter(([d],r)=>vorbei(d+(typeof pokalGeteilt==='function'&&pokalGeteilt(r)?1:0))).length; /* geteilte Runde zählt erst nach dem zweiten Tag (T9.4) */if(S.cup.hist.length!==cupSoll)e.push(`Pokal: ${S.cup.hist.length} Runden, laut Kalender ${cupSoll}`);}
   // Vereinbarte Wechsel (K19, U10a): Eintrag und Spieler passen zusammen, im offenen Fenster ist nichts mehr offen
   const wl=S.wechsel||[];wl.forEach(id=>{const p=PIX.get(id);if(!p||!p.wech)e.push('vorgemerkter Wechsel ohne Spieler '+id);});
   S.pl.forEach(p=>{if(p.wech&&!wl.includes(p.id))e.push('Wechsel ohne Eintrag '+p.n);});if(fensterOffen(S.tag)&&S.phase==='play'&&wl.some(id=>{const p=PIX.get(id);return p&&p.wech&&p.wech.ab<=S.tag;}))e.push('fälliger Wechsel im offenen Fenster nicht vollzogen');

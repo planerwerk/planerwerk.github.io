@@ -69,7 +69,7 @@ const scout=(S,F,q,gebiet,ev=F.__ev)=>{let x;for(let i=0;i<50;i++){x=F.stabNeu('
   const t0=p.team,anders=S.teams.find(x=>x.id!==t0&&x.id!==S.my).id;p.team=anders;const woanders=ev('konkurrenzTischFaktor')(p)===1;p.team=t0; /* nur beim Verein von damals (EC2) */
   p.kTisch.bis=ev('absTag')(S.tag)-1;const f2=ev('forderungDu')(p);
   pruef(nein===null&&!!b&&b.id!==p.team&&b.id!==S.my&&Math.abs(f1/f0-(1+K.preis))<0.001&&Math.abs(f2-f0)<1&&woanders,'Konkurrenz am Tisch: anderer Verein mit Bedarf, Forderung + 5 % bis zur Frist, nur beim selben Verein',
-    `Chance 0 ${nein}, Verein ${b&&b.name}, Forderung ${Math.round(f0)} → ${Math.round(f1)} → ${Math.round(f2)}`);}
+    `Chance 0 ${nein?nein.name:'nichts'}, Verein ${b&&b.name}, Forderung ${Math.round(f0)} → ${Math.round(f1)} → ${Math.round(f2)}`);}
 
 // K18g. Scoutbericht (K18 §5 Nr. 3): kiStil ohne Reaktion ist kiStilWahl, mit Reaktion der Stil gegen deinen Lieblingsstil (stilLiebling, nur wenn du den Stil wählst).
 //       Der Bericht nennt Verein, wahrscheinlichen Stil und einen verletzten Stammspieler; die Vorschau zeigt ihn erst nach der Beobachtung.

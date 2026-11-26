@@ -23,11 +23,13 @@ const kaufe=(w,p,fee,yrs=3)=>{const els=w.W.ev('document');els.getElementById('f
   t.cash=5e6;const werte={};for(const r of ['schluessel','stamm','rotation','ergaenzung']){p.krA=r;werte[r]=vw();}p.krA='stamm';p.ct=3;const lang=vw();p.ct=1;const kurz=vw();p.ct=3;t.cash=1e5;const arm=vw();t.cash=T.finanzlage.reichAb;const reich=vw();p.krA=kr;p.ct=ct;t.cash=cash;
   pruef(werte.schluessel>werte.stamm&&werte.stamm>werte.rotation&&werte.rotation>werte.ergaenzung&&Math.abs(kurz/lang-T.restlaufzeit[1])<1e-9&&Math.abs(arm/lang-T.finanzlage.knapp)<1e-9&&Math.abs(reich/lang-T.finanzlage.reich)<1e-9,
     'Vereinswert: Schlüsselspieler > Stammspieler > Rotation > Ergänzung, ein Jahr Restlaufzeit ×0,6, knappe Kasse ×0,9, reich ×1,1');
-  const l=S.pl.filter(q=>q.team>=0&&q.team!==S.my),r=l.map(q=>ev('askPrice')(q)/ev('value')(q)),zuHoch=l.filter(q=>!q.list&&ev('askPrice')(q)>ev('value')(q)*T.maxFaktor+ev('RM').runden);
+  /* Beziehung zum Verein herausrechnen (K17, bezAbloese): Ein Derby hebt die Forderung über das 1,8-Fache, das ist gewollt (Testlauf 10) */
+  const bz=q=>ev('bezAbloese')(q.team),ohneBez=q=>ev('askPrice')(q)/bz(q);
+  const l=S.pl.filter(q=>q.team>=0&&q.team!==S.my),r=l.map(q=>ohneBez(q)/ev('value')(q)),zuHoch=l.filter(q=>!q.list&&ohneBez(q)>ev('value')(q)*T.maxFaktor+ev('RM').runden);
   pruef(!zuHoch.length&&m(r)>=0.9&&m(r)<=1.4,'Keine Mondpreise: keine Forderung über dem 1,8-Fachen des Marktwerts, im Schnitt 0,9 bis 1,4',`Ø ${f2(m(r))}, höchstens ${f2(Math.max(...r))}, vorher Ø 1,39`);}
 
 // 3. Verhandlungsrunden beim Kauf (K19 §5.2): Gegenangebot in der Mitte, nie unter der Schmerzgrenze, Preisdruck, Spott, Abbruch mit Pause
-{const w=welt(),{S,F,ev,T,t}=w;t.cash=5e8;const kandidat=S.pl.filter(q=>q.team>=0&&q.team!==S.my&&!q.list&&q.age<30&&ev('askPrice')(q)>2e6).sort((a,b)=>b.str-a.str);
+{const w=welt(),{S,F,ev,T,t}=w;t.cash=5e8;const kandidat=S.pl.filter(q=>q.team>=0&&q.team!==S.my&&!q.list&&q.age<30&&ev('askPrice')(q)>2e6&&!F.unverkaeuflichKI(q)).sort((a,b)=>b.str-a.str); /* Unverkäufliche haben Schmerzgrenze = Forderung (K19c), kein Gegenangebot in der Mitte (Testlauf 10) */
   const p=kandidat.find(q=>{const I=ev('RM').interesse;return true;}),F0=ev('forderung')(p),sch=ev('schmerzgrenze')(p);
   const r1=ev('kaufRunde')(p,Math.round(F0*0.85/25000)*25000),f1=ev('forderung')(p);
   const r2=ev('kaufRunde')(p,sch-25000),f2v=ev('forderung')(p);
