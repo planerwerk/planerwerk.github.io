@@ -254,3 +254,13 @@ td .gs{vertical-align:middle;margin-right:6px;border-radius:6px}
 .sw-tipp{max-width:560px;margin:0 16px;text-align:center;font-size:17px;color:var(--chalk)}
 @keyframes swEin{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.saisonwechsel{display:none}}
+/* Wappen auf der Anzeigetafel und Einlauf vor dem Anpfiff (K39 §3.4, W5e9) */
+.board .wp{vertical-align:middle;margin:0 8px 0 0}
+.board .t:last-child .wp{margin:0 0 0 8px}
+#lv-tafel.einlauf .board .t:first-child{animation:einL .8s cubic-bezier(.2,.7,.3,1)}
+#lv-tafel.einlauf .board .t:last-child{animation:einR .8s cubic-bezier(.2,.7,.3,1)}
+#lv-tafel.einlauf .score{animation:einS .8s ease-out}
+@keyframes einL{from{transform:translateX(-40px);opacity:0}to{transform:none;opacity:1}}
+@keyframes einR{from{transform:translateX(40px);opacity:0}to{transform:none;opacity:1}}
+@keyframes einS{from{transform:scale(.6);opacity:0}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){#lv-tafel.einlauf .board .t,#lv-tafel.einlauf .score{animation:none}}

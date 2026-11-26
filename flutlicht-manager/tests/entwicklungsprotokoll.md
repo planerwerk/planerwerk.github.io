@@ -290,6 +290,10 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 26.11.2026: W5e9 Wappen auf der Anzeigetafel und Einlauf (Zweig `mitarbeit/popolupo-w5e9-einlauf`, auf den Hinweisen GB)
+
+- **Neu:** Die Anzeigetafel im Live-Spiel zeigt die erzeugten (oder eigenen) Wappen beider Vereine. Vor dem Anpfiff fahren Wappen, Namen und Spielstand kurz ein (`einlaufSequenz` in `js/live.js`, nur bei Minute 0, Stufe „Sequenzen“ gilt, aus bei „weniger Bewegung“). Nur Anzeige.
+
 ### 26.11.2026: Gesichter im Kader (Zweig `mitarbeit/popolupo-gb-hinweise`)
 
 - **Neu:** kleine Spielergesichter (24 px) vor den Namen in der Kaderliste, wie in der Kabine. Nur Anzeige.
