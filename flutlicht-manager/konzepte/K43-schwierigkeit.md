@@ -66,6 +66,7 @@ Auf Leicht wird trotzdem gewürfelt, die Karte fällt erst danach weg. So bleibe
 - Jobwechsel (Prüfung GD2, vorläufig):
   - Wer vor der Auslosung einen Verein aus der Champions League übernimmt, wird ebenso getauscht.
   - Nach der Auslosung bietet auf Leicht kein Verein aus der Champions League einen Job an, bis die Saison zu Ende ist.
+  - Verlässt du deinen Verein auf Leicht vor der Auslosung, bleibt er in der Europa League. Der Tausch wird nicht zurückgenommen (vorläufig, selten).
 - Saisonziel, Tabellenlegende und eine Meldung sagen, warum dein Verein Europa League spielt.
 - Die Europa League und die Conference League kannst du auf Leicht gewinnen.
 
@@ -110,9 +111,13 @@ Wann gebaut wird: wenn ein Langlauf auf Leicht zeigt, dass ein Verein zu oft all
 - die Regeln aus K43:
   - die Sponsorangebote für Brust und Ausrüster;
   - welche Karte als „nur schlecht“ gilt, und die Chance der Blamage je Stufe;
-  - Glück bei Karten: Leicht vor Normal vor Schwer, bei gleichem Würfel;
-  - den Tausch in die Europa League beim Saisonwechsel und in der ersten Saison;
+  - Glück bei Karten: Leicht vor Normal vor Schwer, bei gleichem Würfel, und umgekehrt bei Wirkungen mit `pech`;
+  - den Tausch in die Europa League beim Saisonwechsel und in der ersten Saison, mit passendem Nebenziel;
+  - den Jobwechsel auf Leicht zu einem Verein aus der Champions League, vor und nach der Auslosung;
+  - das Saisonziel auf Leicht ohne Champions League;
   - den Gönner auf Leicht und die Insolvenz auf Normal.
+
+`tests/schwierigkeit-langlauf.js` misst den Langlauf je Stufe (siehe §7).
 
 Ausgeführt wird der Test beim Tester (hier gibt es kein Node.js). Er steht für Lauf 11 an.
 

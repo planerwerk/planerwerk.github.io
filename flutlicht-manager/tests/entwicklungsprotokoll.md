@@ -290,6 +290,14 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 26.11.2026: Hinweise aus Prüfung GF (Zweig `mitarbeit/popolupo-gf-hinweise`, auf den Korrekturen GE)
+
+- Prüfung GF über die Korrekturen GD und GE, das Messskript und die Schrift: keine Funde.
+- **Umgesetzt:**
+  - Tests für den Tausch in die Europa League mit passendem Nebenziel und für den Jobwechsel auf Leicht.
+  - Die Atmosphäre startet auch beim ersten „Ton an“ einer Sitzung.
+  - Die Jobsperre für Vereine aus der Champions League gilt nur in der Spielzeit.
+
 ### 26.11.2026: Korrekturen nach Prüfung GE (Zweig `mitarbeit/popolupo-ge-korrekturen`, auf den Korrekturen GD)
 
 - **Stadionatmosphäre:**

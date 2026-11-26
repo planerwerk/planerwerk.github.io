@@ -3001,3 +3001,23 @@ Korrekturen auf `mitarbeit/popolupo-ge-korrekturen` (auf den Korrekturen GD).
 | GE4 | **Niedrig, nur Klang:** Der Brief-Ton verglich nur Anzahlen. Jetzt vergleicht er die Karten und Angebote selbst. | ✅ behoben |
 | – | Hinweise: Stumm und versteckter Tab jetzt sofort still. Klangaufrufe in `liveRender` mit try/catch. Entlassung als reines Bild (`aria-hidden`), der Dialog sagt „Entlassen!“. Attrappe in tests/sim.js mit `setAttribute` und `remove`. | ✅ umgesetzt |
 | – | Hinweis: Ein Teilausschluss (leerer Block) wirkt nicht auf die Atmosphäre. | später |
+
+## GF. Prüfung der Korrekturen GD und GE, des Messskripts K43b und der Schrift W5d4/W5d5 ohne Laufzeit (26. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 98c4191..b06cbf4 gelesen. **Keine Funde.**
+
+- GD1 bis GD4 und GE1 bis GE4 sind behoben, ohne neue Fehler. „Normal“ ist unverändert, auch die Zahl der R()-Aufrufe.
+- Das Messskript würde nach dem Lesen laufen und richtig zählen.
+- Die kern-Tabelle entspricht der Spezifikation (Format 0), auch in der eingecheckten Schriftdatei.
+
+Bericht: `flutlicht-tools/pruefung-gf.md`.
+
+Hinweise umgesetzt auf `mitarbeit/popolupo-gf-hinweise` (auf den Korrekturen GE):
+
+| # | Hinweis | Status |
+|---|---|---|
+| 1 | Tests für GD1 (Nebenziel passt zum Wettbewerb) und GD2 (Jobwechsel vor und nach der Auslosung) in tests/schwierigkeit.js | ✅ umgesetzt |
+| 2 | Erstes „Ton an“ der Sitzung: Atmosphäre nach `resume` nachführen. Bei einem Tor erst die Schleife, dann der Jubel. | ✅ umgesetzt |
+| 3 | `euClFest` nur in der Spielzeit (`play`), nicht in der Sommerpause | ✅ umgesetzt |
+| 4 | Rücktritt auf Leicht vor der Auslosung: Der alte Verein bleibt in der Europa League. Selten, so gelassen (K43 §3.2). | entschieden, vorläufig |
+| 5 | K43 §6 nennt die neuen Tests | ✅ umgesetzt |

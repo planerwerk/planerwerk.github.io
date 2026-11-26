@@ -52,8 +52,17 @@ for(const k of ['leicht','normal']){const {W,F}=neueWelt();F.buildWorld(SEED);co
   if(id==null){pruef(false,`K43: erste Saison ${k}, kein deutscher Verein in der Champions League gefunden`);continue;}
   const cl=S.eu.cl.t.length,el=S.eu.el.t.length,de=S.eu.cl.t.filter(x=>x<AV0).length;S.my=id;S.mgr='Test';F.setTarget();F.stufeAnwenden(k);
   const drin=S.eu.cl.t.includes(id),ok=k==='leicht'?!drin&&S.eu.el.t.includes(id)&&S.eu.cl.t.filter(x=>x<AV0).length===de:drin;
-  pruef(ok&&S.eu.cl.t.length===cl&&S.eu.el.t.length===el,`K43: erste Saison auf ${St(k).name}, ${k==='leicht'?'dein Verein spielt Europa League':'dein Verein bleibt in der Champions League'}, gleich viele Plätze`,
-    `${ev('tn')(id)}: CL ${drin}, ${S.eu.cl.t.length}/${S.eu.el.t.length}`);}
+  const ziele=(S.ziele&&S.ziele.l)||[],zielOk=ziele.every(z=>z.k!=='europa'||S.eu[z.wb].t.includes(S.my)); // Prüfung GD1: kein Nebenziel in einem Wettbewerb, in dem du nicht spielst
+  pruef(ok&&zielOk&&S.eu.cl.t.length===cl&&S.eu.el.t.length===el,`K43: erste Saison auf ${St(k).name}, ${k==='leicht'?'dein Verein spielt Europa League':'dein Verein bleibt in der Champions League'}, gleich viele Plätze, Nebenziel passt`,
+    `${ev('tn')(id)}: CL ${drin}, ${S.eu.cl.t.length}/${S.eu.el.t.length}, Nebenziele ${ziele.map(z=>z.k+(z.wb?'/'+z.wb:'')).join(' ')}`);}
+// Prüfung GD2: Jobwechsel auf Leicht zu einem Verein aus der Champions League. Vor der Auslosung wird getauscht, nach der Auslosung bietet so ein Verein keinen Job an.
+{const {W,F,S}=welt('leicht'),ev=W.ev,AV0=ev('AV0'),id=S.eu&&S.eu.cl.t.find(x=>x<AV0&&x!==S.my);
+  if(id==null)pruef(false,'K43: Jobwechsel auf Leicht, kein anderer deutscher Verein in der Champions League gefunden');
+  else{const cl=S.eu.cl.t.length,el=S.eu.el.t.length;F.takeJob(id);const getauscht=S.my===id&&!S.eu.cl.t.includes(id)&&S.eu.el.t.includes(id)&&S.eu.cl.t.length===cl&&S.eu.el.t.length===el;
+    S.eu.cl.lp=[];S.phase='play';const fest=S.eu.cl.t.every(x=>ev('euClFest')(x));S.fired=1;F.mkJobs();const jobs=(S.jobs||[]).filter(x=>S.eu.cl.t.includes(x)).length;S.fired=0;
+    const n=R.normal.W.ev,nFest=n('euClFest')(R.normal.S.eu.cl.t[0]);
+    pruef(getauscht&&fest&&jobs===0&&!nFest,'K43: Jobwechsel auf Leicht, vor der Auslosung getauscht, danach keine Jobs bei Vereinen aus der Champions League (Normal: doch)',
+      `getauscht ${getauscht}, gesperrt ${fest}, Jobs in der CL ${jobs}, Normal gesperrt ${nFest}`);}}
 // K43d. Gönner auf Leicht: keine Insolvenz mit Punktabzug, die Schulden sind weg, das Vertrauen sinkt um 10. Auf Normal Punktabzug wie bisher.
 for(const k of ['leicht','normal']){const {W,S}=welt(k),ev=W.ev,t=ev('myT()'),I=ev('RFP').insolvenz;S.phase='play';S.trust=60;t.cash=-1e9;t.fu=I.monate;ev('insolvenzPruefen()');
   const abzug=((S.abzug||{})[S.season]||{})[S.my]||((S.abzug||{})[S.season+1]||{})[S.my]||0;
