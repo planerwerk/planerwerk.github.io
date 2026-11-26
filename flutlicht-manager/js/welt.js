@@ -24,6 +24,8 @@ function stufeAnwenden(k){const M=REGELN.schwierigkeit.mitwachsend;if(k==='mitwa
 // Wirkt nur über kleine Hebel (Gehaltsforderungen, Vorstand, Saisonziel, Glück bei Karten, Abwerbeversuche, Zuschuss eines Partners), nie über Spielstärke, Würfel oder Spielerwerte.
 const mitwachsWert=()=>typeof S!=='undefined'&&S&&S.mitw?(S.mitw.s||0):0;
 const entlassGrenze=()=>stufe().entlassenUnter+Math.round(((REGELN.schwierigkeit.mitwachsend||{}).wirkung||{vorstand:0}).vorstand*mitwachsWert()); // Vorstand (vorstand.js)
+// Zonen der Vertrauensanzeige (RU.zonenVertrauen) mit der echten Grenze statt der von „Normal“: Leicht, Schwer und „Mitwachsend“ (Hinweis aus Prüfung GH)
+const zonenVertrauen=()=>{const g=entlassGrenze(),n=REGELN.schwierigkeit.stufen.normal.entlassenUnter;return(RU.zonenVertrauen||[]).map(z=>({...z,von:z.von===n?g:z.von,bis:z.bis===n?g:z.bis}));};
 // Bewertung der abgelaufenen Saison zu Beginn der neuen (newSeasonLauf, nach finanzenSaisonstart und vor setTarget), am eigenen Anspruch in der eigenen Liga gemessen. Ohne Zufall.
 // Beispiele (Werte aus REGELN): fünfmal Vierter in der 3. Liga mit Ziel Platz 6 ergibt s ≈ 0,2 (kaum spürbar); Meister der 3. Liga mit 20 Punkten Vorsprung
 // und Aufstieg ergibt s = 1; zwei Abstiege nacheinander ergeben s ≈ −0,8 und dann −1, beim ersten davon kommt ein Partner mit Geld.

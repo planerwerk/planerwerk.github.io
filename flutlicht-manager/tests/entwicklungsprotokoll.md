@@ -290,6 +290,11 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 26.11.2026: K43e Vertrauensanzeige mit der echten Grenze (Zweig `mitarbeit/popolupo-k43e-vertrauenszonen`, auf GH)
+
+- **Neu:** Die Vertrauensanzeige im Büro zeigt die Zone „kritisch“ bis zur Entlassungsgrenze deiner Stufe: 5 auf Leicht, 12 auf Normal, 18 auf Schwer, mit „Mitwachsend“ leicht verschoben. Vorher stand dort immer 12.
+- **Test** in `tests/schwierigkeit.js`.
+
 ### 26.11.2026: Korrekturen nach Prüfung GH (Zweig `mitarbeit/popolupo-gh-korrekturen`, auf K43d)
 
 - **„Mitwachsend“:**

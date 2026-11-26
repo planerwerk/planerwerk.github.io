@@ -106,6 +106,11 @@ for(const k of ['leicht','normal']){const {W,S}=welt(k),ev=W.ev,t=ev('myT()'),I=
   const reihe=q('euTitelAlt=S.eu')>=0&&q('euTitelAlt=S.eu')<q('europaAnlegen(sm)')&&q('finanzenSaisonstart()')<q('stufeMitwachsen(sm,euTitelAlt)')&&q('stufeMitwachsen(sm,euTitelAlt)')<q('setTarget();werbungSaison()');
   pruef(fest&&reihe,'K43: ohne Mitwachsend keine Änderung; Bewertung im Saisonwechsel nach dem Start der Finanzen, mit den Titeln der alten Saison',`neutral ${fest}, Reihenfolge ${reihe}`);}
 
+// Vertrauensanzeige im Büro (Hinweis aus Prüfung GH): Die Zone „kritisch“ endet bei der echten Entlassungsgrenze der Stufe
+{const z=k=>R[k].W.ev('zonenVertrauen')(),grenze=k=>z(k).find(x=>x.art==='bad').bis,warn=k=>z(k).find(x=>x.art==='warn').von;
+  const ok=['leicht','normal','schwer'].every(k=>grenze(k)===St(k).entlassenUnter&&warn(k)===St(k).entlassenUnter);
+  pruef(ok,'K43: Vertrauensanzeige zeigt die Entlassungsgrenze der Stufe',['leicht','normal','schwer'].map(k=>`${St(k).name} ${grenze(k)}`).join(', '));}
+
 // K02a. Neue Regeln ausprobieren (K02 §4.4): Jeder Eintrag in REGELN.experimente zeigt auf einen Schalter, der aus ist. experimentSetzen schaltet ihn für diesen
 //       Spielstand ein (S.einst.exp) und wieder aus; experimenteAnwenden schaltet nur aus, was es selbst eingeschaltet hat (ein von außen gesetzter Schalter bleibt).
 {const {W,F,S}=welt('normal'),ev=W.ev,X=ev('REGELN').experimente,o=x=>ev('expObjekt')(x.pfad);
