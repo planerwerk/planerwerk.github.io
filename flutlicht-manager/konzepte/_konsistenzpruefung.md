@@ -2933,3 +2933,15 @@ Korrekturen auf `mitarbeit/popolupo-ga-korrekturen` (auf W5e8). Der Tester-Stran
 | GA1 | **Hoch:** Die FZ3-Korrektur las in der Saisonbilanz `my:m`, aber `m` gilt nur im Block davor. Jedes Saisonende brach mit einem ReferenceError ab, die Karriere stand. Jetzt `my:S.my`. Ursache: Ersetzung per Skript ohne Blick auf den Gültigkeitsbereich. | ✅ behoben |
 | GA2 | **Niedrig:** Der Saisonwechsel-Bildschirm erschien auch beim Laden eines älteren Spielstand-Codes derselben Karriere oder bei einem neuen Spiel mit demselben Seed. Jetzt merkt er sich das Spielstand-Objekt und beginnt bei jedem neuen von vorn. | ✅ behoben |
 | GA3 | **Niedrig:** Zwei Tipps passten nicht zum Code: Rotation ankündigen hilft nur vor einer englischen Woche, sonst ärgert es die Stammspieler; die Frische-Kachel zählt alle nicht frischen Spieler, nicht nur die deutlich geschwächten. Tipps und Kachel-Text berichtigt. | ✅ behoben |
+
+## GB. Prüfung des ganzen Oberflächen-Strangs auf Fehler im Spielablauf (26. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Anlass: GA1 (Saisonende brach ab) wurde erst in einer Prüfung gefunden. Ein Agent hat 62ef689..c2a1b69 gelesen (alle Code-Änderungen von Welle 5 gegenüber dem Tester-Strang) und mit eigenen Perl-Prüfungen nach Gültigkeitsbereich, doppelten Namen, Syntax und dem Kommentar-Wächter abgesucht, jede mit Gegenprobe (sie findet GA1 im alten Stand). **Keine Funde.** Kein Weg durch das Spiel wirft (Start, Laden, neues Spiel, alle Zustände von `render`, Saisonende, neue Saison, Live-Spiel mit Fortsetzen, Menü, Spielerkarten), der Simulator lädt, kein Spielzufall und kein Spielstandfeld außer `S.summary.my`; Test 5a und alle Node-Tests gehen auf beiden Strängen gleich aus. Bericht: `flutlicht-tools/pruefung-gb.md`.
+
+Umgesetzte Hinweise auf `mitarbeit/popolupo-gb-hinweise`:
+
+| # | Hinweis | Status |
+|---|---|---|
+| GB-H1 | Eigene Wappen teilen sich den Browser-Speicher mit dem Spielstand. Jetzt höchstens `REGELN.darstellung.wappenMaxKB` (900 KB), sonst wird nichts gespeichert und eine Meldung erklärt warum. | ✅ umgesetzt |
+| GB-H2 | Die Titelfeier merkte sich nur Seed und Saison. Jetzt je Spielstand-Objekt wie der Saisonwechsel. | ✅ umgesetzt |
+| – | Weitere Hinweise ohne Wirkung im Spiel (Attrappe im Simulator ohne `setAttribute`, `stimmung()` setzt beim Zeichnen Startwerte wie schon auf dem Tester-Strang, Urlaub-Anzeige bei Relegationsteilnehmern am Saisonende) | vorgemerkt |

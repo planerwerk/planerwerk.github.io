@@ -130,16 +130,17 @@ function themaSetzen(t){if(!REGELN.darstellung.themen[t])return;try{localStorage
 let EIGENE_WAPPEN=null;
 function eigeneWappen(){if(EIGENE_WAPPEN)return EIGENE_WAPPEN;try{const m=JSON.parse(localStorage.getItem(REGELN.darstellung.wappenSchluessel)||'{}');EIGENE_WAPPEN=m&&typeof m==='object'?m:{};}catch(e){EIGENE_WAPPEN={};}return EIGENE_WAPPEN;}
 const eigenesWappen=sh=>{const u=sh&&eigeneWappen()[sh];return typeof u==='string'&&/^data:image\/(png|jpeg|gif|webp|svg\+xml);base64,[A-Za-z0-9+\/=]+$/.test(u)?u:null;};
-function eigeneWappenSpeichern(m){EIGENE_WAPPEN=m;try{localStorage.setItem(REGELN.darstellung.wappenSchluessel,JSON.stringify(m));return true;}catch(e){return false;}}
+// Höchstens REGELN.darstellung.wappenMaxKB, damit der Spielstand im selben Browser-Speicher immer Platz behält (Hinweis aus Prüfung GB)
+function eigeneWappenSpeichern(m){const j=JSON.stringify(m);if(j.length>REGELN.darstellung.wappenMaxKB*1024)return'grenze';try{localStorage.setItem(REGELN.darstellung.wappenSchluessel,j);EIGENE_WAPPEN=m;return'ok';}catch(e){return'fehler';}}
 function eigeneWappenLaden(dateien){const l=[...(dateien||[])];if(!l.length||!S)return;const D=REGELN.darstellung,[bw,bh]=D.wappenPx,m=Object.assign({},eigeneWappen());let n=0,offen=l.length;const fremd=[];
-  const fertig=()=>{if(--offen>0)return;const ok=eigeneWappenSpeichern(m);toast(ok?`${n} Wappen geladen${fremd.length?`, ohne passenden Verein: ${fremd.slice(0,5).join(', ')}${fremd.length>5?' …':''}`:''}.`:'Der Speicher im Browser ist voll, die Wappen sind nicht gespeichert.');render();menu();};
+  const fertig=()=>{if(--offen>0)return;const r=eigeneWappenSpeichern(m);toast(r==='ok'?`${n} Wappen geladen${fremd.length?`, ohne passenden Verein: ${fremd.slice(0,5).join(', ')}${fremd.length>5?' …':''}`:''}.`:r==='grenze'?`Zu viele oder zu große Bilder: Eigene Wappen dürfen zusammen ${REGELN.darstellung.wappenMaxKB} KB belegen, damit der Spielstand Platz behält. Nichts gespeichert.`:'Der Speicher im Browser ist voll, die Wappen sind nicht gespeichert.');render();menu();};
   l.forEach(f=>{const k=f.name.replace(/\.[^.]+$/,'').trim().toUpperCase(),t=S.teams.find(x=>x.sh&&x.sh.toUpperCase()===k);if(!t||!String(f.type||'').startsWith('image/')){fremd.push(f.name);fertig();return;}
     const r=new FileReader();r.onerror=()=>{fremd.push(f.name);fertig();};
     r.onload=()=>{const img=new Image();img.onerror=()=>{fremd.push(f.name);fertig();};
       img.onload=()=>{try{const c=document.createElement('canvas');c.width=bw;c.height=bh;const iw=img.naturalWidth||img.width||bw,ih=img.naturalHeight||img.height||bh,s=Math.min(bw/iw,bh/ih),w=iw*s,h=ih*s; /* SVG ohne Größe: ganze Fläche (Prüfung FX6) */c.getContext('2d').drawImage(img,(bw-w)/2,(bh-h)/2,w,h);m[t.sh]=c.toDataURL('image/png');n++;}catch(e){fremd.push(f.name);}fertig();};
       img.src=r.result;};
     r.readAsDataURL(f);});}
-function eigeneWappenLoeschen(){eigeneWappenSpeichern({});try{localStorage.removeItem(REGELN.darstellung.wappenSchluessel);}catch(e){}render();menu();}
+function eigeneWappenLoeschen(){EIGENE_WAPPEN={};try{localStorage.removeItem(REGELN.darstellung.wappenSchluessel);}catch(e){}render();menu();}
 function eigeneWappenKarte(){const n=Object.keys(eigeneWappen()).length,l=S?S.teams.filter(t=>t.sh&&t.lg<=3).sort((a,b)=>a.lg-b.lg||a.name.localeCompare(b.name)):[];
   return`<div class="card"><h3>Eigene Wappen</h3><p class="dim">Echte Wappen liefert das Spiel nicht mit (Urheber- und Markenrecht). Du kannst eigene Bilder laden: Dateiname = Kürzel des Vereins, etwa FCK.png. Sie bleiben nur in diesem Browser und kommen nicht in den Spielstand.</p>
   <div class="form"><label>Bilder wählen <input type="file" accept="image/*" multiple onchange="eigeneWappenLaden(this.files)"></label></div><p class="dim">${n?`${n} eigene Wappen geladen.`:'Noch keine eigenen Wappen.'}</p>${n?'<div class="row"><button onclick="eigeneWappenLoeschen()">Alle eigenen Wappen entfernen</button></div>':''}

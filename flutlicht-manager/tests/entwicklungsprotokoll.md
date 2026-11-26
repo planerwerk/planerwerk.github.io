@@ -290,6 +290,11 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 26.11.2026: Prüfung GB über den ganzen Oberflächen-Strang, zwei Hinweise umgesetzt (Zweig `mitarbeit/popolupo-gb-hinweise`, auf den Korrekturen GA)
+
+- **Prüfung GB** (lesender Agent, alle Code-Änderungen von Welle 5 gegen den Tester-Strang, mit eigenen Perl-Prüfungen auf Gültigkeitsbereich und Syntax): keine Funde. Einzelheiten in der Konsistenzprüfung GB.
+- **Umgesetzt:** Eigene Wappen belegen höchstens 900 KB im Browser-Speicher (`REGELN.darstellung.wappenMaxKB`), damit das automatische Speichern des Spielstands nie daran scheitert. Die Titelfeier merkt sich den Spielstand wie der Saisonwechsel.
+
 ### 26.11.2026: Korrekturen nach Prüfung GA (Zweig `mitarbeit/popolupo-ga-korrekturen`, auf W5e8)
 
 - **Prüfung GA** (lesender Agent über die Korrekturen FZ und W5e8): ein hoher und zwei niedrige Funde, alle behoben, Einzelheiten in der Konsistenzprüfung GA.

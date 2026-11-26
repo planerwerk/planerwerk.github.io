@@ -18,6 +18,7 @@ const REGELN={
     themen:{dunkel:'Dunkel (Flutlichtnacht)',hell:'Hell (Tageslicht)',system:'Wie das Gerät'},
     wappenSchluessel:'flutlicht-wappen', // eigene Wappen (K39 §3.1, W5e2): nur im Browser, nie im Spielstand
     wappenPx:[96,112],               // so groß werden eigene Wappen gespeichert (Breite, Höhe in Pixeln)
+    wappenMaxKB:900,                 // eigene Wappen zusammen höchstens so viel Browser-Speicher (der Spielstand braucht bis etwa 4 MB, Browser erlauben meist 5 MB)
     sequenzen:{schluessel:'flutlicht-sequenzen',standard:'an',stufen:{an:'An',kurz:'Kurz (nur Aufblitzen)',aus:'Aus'}}, // Animationen bei großen Momenten (K39 §3.4, W5e3), je Gerät
     leitspruch:'Bratwurst. Meisterschale. Herzblut.' // BMH als Leitspruch unter dem Namen (K42, vorläufig; Alternativen in K42 §2)
   },
