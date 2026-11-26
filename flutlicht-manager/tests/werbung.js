@@ -179,9 +179,11 @@ const sm0=(S,pos,target,ab)=>({pos,target,down:ab?[S.my]:[],down2:[],down3:[],re
   for(let z=0;z<10&&!weg;z++){const i=l.findIndex(o=>ev('werbVerhandelbar')(o));if(i<0)break;const o=l[i],sp=ev('werbSpielraum')(f,o),k=V.stufen.findIndex(p=>p>sp);if(k<0)break;
     const n0=l.length,r=ev('werbVerhandeln')(f,i,k);texte.push(r.text);runden++;if(l.length<n0)weg=true;}
   const normal=()=>l.filter(o=>!ev('istUmstritten')(o)).length;
-  // alle bis auf ein normales Angebot zurückziehen lassen, dann bleibt das letzte fest stehen
-  let schutz=0;while(normal()>1&&schutz<40){schutz++;const i=l.findIndex(o=>ev('werbVerhandelbar')(o));if(i<0)break;const sp=ev('werbSpielraum')(f,l[i]),k=V.stufen.findIndex(p=>p>sp);if(k<0){l[i].fest=1;continue;}ev('werbVerhandeln')(f,i,k);}
-  let letzt=l.find(o=>!ev('istUmstritten')(o)),r2=null;for(let z=0;z<5&&letzt&&!letzt.fest;z++){const i=l.indexOf(letzt),sp=ev('werbSpielraum')(f,letzt),k=V.stufen.findIndex(p=>p>sp);if(k<0)break;r2=ev('werbVerhandeln')(f,i,k);}
+  // Nur ein normales Angebot übrig lassen, und zwar das mit dem kleinsten Spielraum (seit GM2 reicht er bis 22 %, darüber ließe sich keine Absage erzwingen).
+  // Wird es dann abgelehnt, zieht es nicht zurück, sondern bleibt fest stehen.
+  const ws=o=>ev('werbSpielraum')(f,o),reg=l.filter(o=>!ev('istUmstritten')(o)).sort((a,b)=>ws(a)-ws(b));reg.slice(1).forEach(o=>l.splice(l.indexOf(o),1));
+  let letzt=reg[0];if(letzt){delete letzt.vh;delete letzt.fest;}
+  for(let z=0;z<5&&letzt&&!letzt.fest;z++){const i=l.indexOf(letzt),k=V.stufen.findIndex(p=>p>ws(letzt));if(k<0)break;ev('werbVerhandeln')(f,i,k);}
   pruef(weg&&runden<=V.runden&&normal()===1&&!!letzt&&!!letzt.fest&&!S.werbung[f],'Nachverhandeln: Absagen, Rückzug spätestens nach drei Runden, das letzte normale Angebot bleibt stehen',`${runden} Runden bis zum Rückzug; letztes: ${letzt?letzt.name+(letzt.fest?' fest':''):'keins'}`);}
 
 // 29. Nicht verhandelbar: umstrittene Geldgeber, Verlängerungen, ohne A-Lizenz; die Automatik verhandelt nie
