@@ -344,7 +344,7 @@ function karteWaehlen(n,i){const k=karten().offen[n];if(!k)return;if(!darf('erei
 function kartenAuto(d){const K=S.karten;if(!K||!K.offen.length)return;K.offen.filter(k=>k.tag<=d||k.s!==S.season).forEach(k=>{const c=karteVon(k.id);if(c)kartenEntscheiden(k,c.auto,'spaet');else K.offen=K.offen.filter(x=>x!==k);});}
 // Erlaubte Wirkungen (K30 §3.2). Rückgabe: Text zum Ausgang (bei Wirkungen mit Chance) oder ''
 // dann (Prüfung EE2, EE5, EE6): Folgewirkungen nur, wenn die Wirkung geklappt hat (nur bei KARTEN_MIT_ERFOLG), dazu der Text gut. Sonst der Grund des Scheiterns.
-function kartenWirkung(w,b,c){let wert=w.wert,txt='',erfolg=true;if(w.chance!=null){const ok=R()<Math.min(1,Math.max(0,w.chance+(stufe().kartenGlueck||0)*(w.pech?-1:1))); /* Schwierigkeit (K43): Glück im guten Ausgang, gleicher Würfel; pech: chance ist die des schlechten Ausgangs (Prüfung GD3) */wert=ok?w.wert:(w.schlecht||0);txt=ok?(w.gut||''):(w.schlechtText||'');}
+function kartenWirkung(w,b,c){let wert=w.wert,txt='',erfolg=true;if(w.chance!=null){const ok=R()<Math.min(1,Math.max(0,w.chance+((stufe().kartenGlueck||0)+REGELN.schwierigkeit.mitwachsend.wirkung.glueck*Math.max(0,-mitwachsWert()))*(w.pech?-1:1))); /* Mitwachsend: in einer Durststrecke etwas mehr Glück (K43 §5) */ /* Schwierigkeit (K43): Glück im guten Ausgang, gleicher Würfel; pech: chance ist die des schlechten Ausgangs (Prüfung GD3) */wert=ok?w.wert:(w.schlecht||0);txt=ok?(w.gut||''):(w.schlechtText||'');}
   const p=b.spieler!=null?PIX.get(b.spieler):null;
   if(w.art==='stimmung'){if(p&&p.team===S.my)stimmungAendern(p,wert);}
   else if(w.art==='stimmungAlle')squad(S.my).forEach(x=>stimmungAendern(x,wert));

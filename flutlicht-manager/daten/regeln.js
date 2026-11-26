@@ -1088,9 +1088,16 @@ const REGELN={
   // nur einige Grenzen verschieben sich (Glück bei Karten, böse Karten).
   // ziel: Saisonziel um so viele Plätze leichter (+) oder strenger (−). sterneGenau: Talentsterne eigener Spieler sofort genau. sterneWochen: Faktor auf die Zeit, bis sie genau sind.
   schwierigkeit:{standard:'normal',
-    // Mitwachsend (K43 §5, 26.11., vorläufig): beginnt auf reihe[0]. Zu Beginn jeder Saison zählt die abgelaufene: Meister der 1. Liga oder ein Europapokal mit deinem Verein
-    // ist ein Titel. Nach einem Titel mindestens reihe[1], nach Titeln in zwei Saisons nacheinander reihe[2]. Die Stufe sinkt nie, Aufstiege zählen nicht.
-    mitwachsend:{name:'Mitwachsend',text:'beginnt auf Leicht und wird mit Titeln in der Bundesliga oder im Europapokal schwerer, nie leichter',reihe:['leicht','normal','schwer']},
+    // Mitwachsend (K43 §5 in der Fassung vom 26.11. abends, vorläufig): Grundlage ist die Stufe basis. Zu Beginn jeder Saison wird die abgelaufene bewertet (erfolg),
+    // gemessen am eigenen Anspruch in der eigenen Liga: Platz gegen Saisonziel (zielJePlatz je Platz, höchstens zielMax), Meister der eigenen Liga (auch 3. Liga),
+    // dazu je Punkt Vorsprung über abstandAb abstandJe (höchstens abstandMax), Aufstieg, Pokal, Europapokal, Abstieg (negativ).
+    // Der Erfolgswert e merkt sich die Vorjahre mit dem Faktor gedaechtnis und bleibt zwischen −grenze und +grenze. Daraus der Ausschlag s von −1 (Durststrecke) bis +1 (Erfolg):
+    // unter totzone 0, bei voll ±1. wirkung: kleine Hebel je Einheit von s (gehalt: Gehaltsforderungen, vorstand: Entlassungsgrenze in Punkten, ziel: ab diesem Ausschlag ein Platz
+    // strenger oder leichter, glueck: Glück bei Karten (nur bei Durststrecke, als Zuschlag), abwerben: Abwerbeversuche anderer Vereine (nur bei Erfolg)). partner: einmal je
+    // abstand Saisons bei Ausschlag bis ab ein Zuschuss in Höhe von spiele Ligaspielen Werbung. Nie an Spielstärke, Würfeln oder Spielerwerten.
+    mitwachsend:{name:'Mitwachsend',text:'das Spiel reagiert leicht auf deinen Erfolg: nach guten Jahren etwas anspruchsvoller, in einer Durststrecke etwas Rückenwind',basis:'normal',
+      erfolg:{zielJePlatz:0.5,zielMax:3,meister:2,abstandAb:5,abstandJe:0.2,abstandMax:2,aufstieg:2,pokal:1,europa:2,abstieg:-2,gedaechtnis:0.6,grenze:8},
+      wirkung:{totzone:1.5,voll:6,gehalt:0.06,vorstand:3,ziel:0.6,glueck:0.08,abwerben:0.3,partner:{ab:-0.5,abstand:4,spiele:6}}},
     // Seit K43 (26.11.2026, popolupo, vorläufig), je Stufe: sponsor als Faktor auf deine Sponsorangebote, kartenGlueck als Zuschlag auf die Chance des guten Ausgangs
     // in Ereigniskarten, kartenNegativ als Faktor auf die Chance von Infokarten, die für dich nur schlecht ausgehen (0 heißt, sie fallen nach dem Wurf weg), ohneCL heißt, dein
     // Verein spielt statt Champions League Europa League, goenner heißt, bei einer Insolvenz zahlt ein Gönner die Schulden ohne Punktabzug (Vertrauen goennerVertrauen).

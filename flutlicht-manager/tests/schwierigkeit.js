@@ -77,27 +77,30 @@ for(const k of ['leicht','normal']){const {W,S}=welt(k),ev=W.ev,t=ev('myT()'),I=
 // Prüfung GD4: Saisonziel auf Leicht nennt die Europa League statt der Champions League
 {const l=R.leicht.W.ev('targetText')(1,3),n=R.normal.W.ev('targetText')(1,3);
   pruef(l.includes('Europa League')&&!n.includes('Europa League')&&n.includes('Champions League'),'K43: Saisonziel Platz 3 auf Leicht ohne Champions League',`${l} / ${n}`);}
-// K43f. Mitwachsend (K43 §5): Start auf Leicht mit Leicht-Konto. Titel (Meister 1. Liga oder Europapokal) heben die Stufe, Titel in zwei Saisons nacheinander auf Schwer,
-//       eine Saison ohne Titel beginnt die Folge neu, die Stufe sinkt nie. Ein Aufstieg oder ein Titel eines anderen Vereins zählt nicht. Ohne „Mitwachsend“ passiert nichts.
-{const {W,S,vorher}=welt('mitwachsend'),ev=W.ev,t=ev('myT()'),mit=ev('stufeMitwachsen'),m=S.my,verlauf=[S.stufe];
-  const start=S.stufe==='leicht'&&!!S.mitw&&Math.abs(t.cash-Math.round(vorher.cash*St('leicht').konto))<=1;
-  const saison=(sm,eu)=>{const alt=S.eu&&S.eu.titel;if(S.eu)S.eu.titel=Object.assign({cl:null,el:null,ecl:null},eu||{});mit(sm);if(S.eu)S.eu.titel=alt;verlauf.push(S.stufe);};
-  saison({my:m,lg:2,champ:m,up:[m]});                 // Aufstieg und Meister der 2. Liga: kein Titel im Sinne von K43 §5 (sm.champ ist der Meister der 1. Liga, hier nur so gesetzt)
-  saison({my:m,lg:1,champ:m+1});                      // anderer Verein Meister
-  t.fu=1;saison({my:m,lg:1,champ:m});                 // erster Titel: Normal
-  // Prüfung GG1: Kreditrahmen der alten Stufe noch diese Saison, Zähler der Insolvenz neu; Champions League offen
-  const kf=ev('kreditFaktor'),gg1=kf()===St('leicht').kredit&&t.fu===0&&ev('stufe()').ohneCL===false;
-  saison({my:m,lg:1,champ:m+1});                      // ohne Titel: bleibt Normal, Folge neu
-  saison({my:m,lg:1,champ:m+1},{el:m});               // Europa League gewonnen: Titel, Folge 1, bleibt Normal
-  saison({my:m,lg:1,champ:m});                        // zweiter Titel in Folge: Schwer
-  saison({my:m,lg:1,champ:m+1});                      // ohne Titel: bleibt Schwer
-  const soll=['leicht','leicht','leicht','normal','normal','normal','schwer','schwer'];
-  const n=R.normal,nv=n.S.stufe;n.W.ev('stufeMitwachsen')({my:n.S.my,lg:1,champ:n.S.my});const fest=n.S.stufe===nv&&!n.S.mitw;
-  S.season++;const kfNaechste=kf();S.season--; // in der nächsten Saison der Faktor der neuen Stufe
-  // Reihenfolge im Saisonwechsel: erst die Stufe, dann der Europapokal (sonst gälte die Champions League erst ein Jahr später)
+// K43f. Mitwachsend (K43 §5, Fassung vom 26.11. abends): Grundlage Normal. Erfolg wird am eigenen Anspruch in der eigenen Liga gemessen, wirkt in beide Richtungen und nur leicht.
+{const {W,F,S,vorher}=welt('mitwachsend'),ev=W.ev,t=ev('myT()'),mit=ev('stufeMitwachsen'),m=S.my,M=ev('REGELN').schwierigkeit.mitwachsend,Wk=M.wirkung;
+  const start=S.stufe==='normal'&&!!S.mitw&&S.mitw.s===0&&Math.abs(t.cash-Math.round(vorher.cash*St('normal').konto))<=1;
+  const neu=()=>{S.mitw={e:0,s:0,verlauf:[]};};
+  // A: fünfmal Vierter in der 3. Liga bei Ziel Platz 6, ohne Aufstieg: kaum spürbar (deine Vorgabe: so etwas darf die Schwierigkeit nicht hochtreiben)
+  neu();for(let i=0;i<5;i++)mit({my:m,lg:3,pos:4,target:6,champ:-1,champ2:-1,champ3:-2,gap:3});const a=S.mitw.s;
+  // B: Meister der 3. Liga mit 20 Punkten Vorsprung und Aufstieg, Ziel Platz 5: voller Ausschlag nach oben
+  neu();mit({my:m,lg:3,pos:1,target:5,champ:-1,champ2:-1,champ3:m,gap:20,up3:[m]});const b=S.mitw.s;
+  // C: zwei Abstiege nacheinander: Ausschlag nach unten, beim ersten ein Partner mit Geld, beim zweiten nicht noch einmal
+  neu();const c0=t.cash,n0=S.news.length;mit({my:m,lg:2,pos:17,target:9,champ:-1,champ2:-1,champ3:-1,down2:[m]});const c1=S.mitw.s,geld=t.cash-c0,meldung=S.news.length>n0;
+  const c2cash=t.cash;mit({my:m,lg:3,pos:19,target:10,champ:-1,champ2:-1,champ3:-1,down3:[m]});const c2=S.mitw.s,keinZweites=t.cash===c2cash;
+  const verlauf=`A ${a}, B ${b}, C ${c1} und ${c2}, Partner ${geld} €`;
+  pruef(start&&a>0&&a<0.3&&b===1&&c1<=-0.5&&c1>-1&&c2===-1&&geld>0&&meldung&&keinZweites,'K43: Mitwachsend bewertet die Saison am eigenen Anspruch, in beide Richtungen, mit Partner in der Durststrecke',verlauf);
+  // D: Hebel bei s = +1, 0, −1: Vorstand ±3, Gehaltsforderung ±6 %, Saisonziel einen Platz strenger oder leichter
+  const p=S.pl.filter(x=>x.team>=0&&x.team!==m&&x.str>=70)[0],fo=s=>{S.mitw.s=s;return ev('gehaltForderung')(p,true);},gr=s=>{S.mitw.s=s;return ev('entlassGrenze')();};
+  const zi=s=>{S.mitw.s=s;F.setTarget();return S.target;};const g0=fo(0),gPlus=fo(1),gMinus=fo(-1),z0=zi(0),zPlus=zi(1),zMinus=zi(-1);S.mitw.s=0;F.setTarget();
+  const hebel=gr(1)===St('normal').entlassenUnter+Wk.vorstand&&gr(-1)===St('normal').entlassenUnter-Wk.vorstand&&Math.abs(gPlus/g0-(1+Wk.gehalt))<0.01&&Math.abs(gMinus/g0-(1-Wk.gehalt))<0.01
+    &&zPlus<=z0&&zMinus>=z0&&(zPlus<z0||zMinus>z0);S.mitw.s=0;
+  pruef(hebel,'K43: Mitwachsend wirkt nur leicht: Vorstand ±3 Punkte, Gehaltsforderung ±6 %, Saisonziel einen Platz',`Grenze ${gr(1)}/${gr(-1)}, Forderung ${g0} → ${gPlus}/${gMinus}, Ziel ${z0} → ${zPlus}/${zMinus}`);S.mitw.s=0;
+  // E: ohne „Mitwachsend“ ändert die Bewertung nichts, und alle Hebel sind neutral
+  const n=R.normal;n.W.ev('stufeMitwachsen')({my:n.S.my,lg:1,pos:1,target:5,champ:n.S.my,gap:20});const fest=!n.S.mitw&&n.W.ev('mitwachsWert')()===0&&n.W.ev('entlassGrenze')()===St('normal').entlassenUnter;
+  // Reihenfolge im Saisonwechsel: erst die Bewertung, dann der Europapokal
   const quelle=require('fs').readFileSync(require('path').join(require('./sim').ROOT,'js','saison.js'),'utf8'),reihe=quelle.indexOf('stufeMitwachsen(sm)')>=0&&quelle.indexOf('stufeMitwachsen(sm)')<quelle.indexOf('europaAnlegen(sm)');
-  pruef(start&&JSON.stringify(verlauf)===JSON.stringify(soll)&&fest&&gg1&&kfNaechste===St('schwer').kredit&&reihe,'K43: Mitwachsend beginnt auf Leicht, steigt mit Titeln, sinkt nie; Kreditrahmen erst zur nächsten Saison; ohne Mitwachsend keine Änderung',
-    `Start ${start}, Verlauf ${verlauf.join(' → ')}, Normal fest ${fest}, Kredit beim Wechsel ${gg1}, nächste Saison ${kfNaechste}, Reihenfolge ${reihe}`);}
+  pruef(fest&&reihe,'K43: ohne Mitwachsend keine Änderung; Bewertung im Saisonwechsel vor dem Europapokal',`neutral ${fest}, Reihenfolge ${reihe}`);}
 
 // K02a. Neue Regeln ausprobieren (K02 §4.4): Jeder Eintrag in REGELN.experimente zeigt auf einen Schalter, der aus ist. experimentSetzen schaltet ihn für diesen
 //       Spielstand ein (S.einst.exp) und wieder aus; experimenteAnwenden schaltet nur aus, was es selbst eingeschaltet hat (ein von außen gesetzter Schalter bleibt).

@@ -921,3 +921,9 @@ Nach deiner Vorgabe vom 26.11. Im Einzelnen in `konzepte/K43-schwierigkeit.md`, 
   - ~~Stufe „Mitwachsend“, die nur mit Titeln steigt, nicht mit Aufstiegen.~~ Seit 26.11. gebaut (siehe unten).
 
 **Entschieden am 26.11. (vorläufig, von mir, weil die Frage offen blieb):** „Mitwachsend“ ist gebaut, als vierte Wahl beim Spielstart (K43 §5).
+
+**Neu gefasst nach deiner Rückmeldung vom 26.11. abends** (K43 §5):
+- Erfolg zählt in jeder Liga und wird am eigenen Anspruch gemessen: Platz gegen Ziel, Meister, Vorsprung, Aufstieg, Pokal, Europapokal, Abstieg.
+- Die Anpassung wirkt in beide Richtungen und nur leicht: Gehaltsforderungen ±6 %, Vorstand ±3 Punkte, Saisonziel ±1 Platz, mehr Abwerbeversuche nach Erfolg, mehr Glück bei Karten und ein Partner mit Geld in einer Durststrecke.
+- Grundlage ist Normal. Spielstärke, Würfel und Spielerwerte bleiben unberührt.
+- Die Stärke der Hebel wird erst nach Messung im Langlauf und einer Runde mit Menschen eingestellt.

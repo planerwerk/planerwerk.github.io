@@ -29,14 +29,14 @@ function vorstandWoche(){const t=myT(),V=RV.vertrauen;
 // ---------- Ultimatum und Entlassung (K28 §4 Nr. 4, §5.3) ----------
 // Nach jedem Spieltag und jeden Montag. Grenze und Schonfrist aus der Schwierigkeit (K02). Unter der Grenze nach der Schonfrist: Ultimatum über RV.ultimatum.spiele Ligaspiele.
 // Danach wieder an der Grenze: aufgehoben. Sonst Entlassung nach der Geduld des Präsidenten (eigener Strom), sonst ein letztes Ultimatum. Nach dem letzten: Entlassung.
-function vorstandPruefen(){const St=stufe(),U=RV.ultimatum;if(S.fired||S.phase!=='play')return;
+function vorstandPruefen(){const St=stufe(),U=RV.ultimatum,grenze=entlassGrenze();if(S.fired||S.phase!=='play')return; // grenze: Stufe, mit „Mitwachsend“ leicht verschoben (K43 §5)
   {const H=S.trustHalt;if(H&&H.tid===S.my&&H.s===S.season&&H.bis>=absTag(S.tag))S.trust=Math.max(S.trust,H.min);} // Rückendeckung (Karte, K28 §8, K30e): einen Monat nicht unter dem Wert des Tages
   if(S.ult&&(S.ult.tid!==S.my||S.ult.s!==S.season))S.ult=null; // Verein oder Saison gewechselt
   const sp=meineSpieltage();
-  if(!S.ult){if(S.trust<St.entlassenUnter&&sp>St.schonfrist){S.ult={tid:S.my,s:S.season,ab:sp,n:1};
-      news(`Ultimatum: Der Vorstand gibt dir noch ${U.spiele} Ligaspiele. Liegt sein Vertrauen danach nicht wieder bei mindestens ${St.entlassenUnter}, droht die Entlassung.`,'bad');}return;}
+  if(!S.ult){if(S.trust<grenze&&sp>St.schonfrist){S.ult={tid:S.my,s:S.season,ab:sp,n:1};
+      news(`Ultimatum: Der Vorstand gibt dir noch ${U.spiele} Ligaspiele. Liegt sein Vertrauen danach nicht wieder bei mindestens ${grenze}, droht die Entlassung.`,'bad');}return;}
   if(sp-S.ult.ab<U.spiele)return;
-  if(S.trust>=St.entlassenUnter){S.ult=null;news('Der Vorstand ist vorerst zufrieden: Das Ultimatum ist aufgehoben.','good');return;}
+  if(S.trust>=grenze){S.ult=null;news('Der Vorstand ist vorerst zufrieden: Das Ultimatum ist aufgehoben.','good');return;}
   if(S.ult.n<2&&mitStrom(strom('ultimatum',S.season,S.tag),()=>R())>=entlassChance(myT(),U.entlassung)){S.ult={tid:S.my,s:S.season,ab:sp,n:2};
     news(`Letztes Ultimatum: Der Präsident hält noch einmal zu dir. Nach ${U.spiele} weiteren Ligaspielen entscheidet der Vorstand endgültig.`,'bad');return;}
   entlassen(`Der Vorstand hat genug: ${myT().name} trennt sich von dir.`);}
@@ -44,7 +44,7 @@ function vorstandPruefen(){const St=stufe(),U=RV.ultimatum;if(S.fired||S.phase!=
 function entlassen(text){if(S.fired)return;trainerVertragEnde(true);S.fired=1;S.ult=null;rufAendern(RV.ruf.entlassung);if(text)news(text,'bad');mkJobs();} /* trainerVertragEnde: Gehalt bis heute und Abfindung in die Karriere (U12g) */
 // Anzeige im Büro: laufendes Ultimatum (oder leer)
 function ultimatumText(){const u=S.ult;if(!u||u.tid!==S.my||u.s!==S.season||S.phase!=='play')return'';const rest=Math.max(0,RV.ultimatum.spiele-(meineSpieltage()-u.ab));
-  return`<p class="neg"><b>${u.n>1?'Letztes Ultimatum':'Ultimatum'}:</b> noch ${rest} Ligaspiel${rest===1?'':'e'}, dann muss das Vertrauen wieder bei mindestens ${stufe().entlassenUnter} liegen.</p>`;}
+  return`<p class="neg"><b>${u.n>1?'Letztes Ultimatum':'Ultimatum'}:</b> noch ${rest} Ligaspiel${rest===1?'':'e'}, dann muss das Vertrauen wieder bei mindestens ${entlassGrenze()} liegen.</p>`;}
 
 // ---------- Nebenziele (K28 §3.1, §5.7, U12b) ----------
 // S.ziele = {s Saison, tid Verein, l: [{k pokal|jugend|finanzen, min}]}. Gesetzt mit dem Saisonziel (setTarget), eigener Strom je Saison und Verein: mehrfaches Setzen gibt dasselbe.

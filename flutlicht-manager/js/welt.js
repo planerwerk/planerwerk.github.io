@@ -9,30 +9,34 @@ const teamLevel=tid=>{const s=squad(tid).map(p=>p.str).sort((a,b)=>b-a).slice(0,
 function askPrice(p){return forderung(p);} // Forderung des Vereins nach dem Vereinswert (K19 §5.1, U10a), mit dem Stand der Verhandlung
 const extDemand=p=>{const g=RM.gehalt;return Math.round(salaryFor(p.str)*(g.basis+p.seed*g.zufall)*(p.age>=g.altAb?g.altFaktor:1)/1000)*1000;};
 // Kreditrahmen, Startkonto und Werbung wachsen seit K23c mit e^(steigung × (Ansehen − mitte)), wie die Einnahmen der echten Vereine
-const kreditRahmen=t=>{const K=RF.kreditRahmen;return Math.round(K.basis*Math.exp(K.steigung*(t.rep-K.mitte))/K.runden)*K.runden*(t.id===S.my?kreditFaktor():1);};
-// Faktor der Stufe; nach einem Wechsel der mitwachsenden Stufe gilt der alte (höhere) Faktor noch bis zum Ende dieser Saison (Prüfung GG1)
-const kreditFaktor=()=>{const f=stufe().kredit,a=S.mitw&&S.mitw.kredit;return a&&a.s===S.season?Math.max(f,a.f):f;};
+const kreditRahmen=t=>{const K=RF.kreditRahmen;return Math.round(K.basis*Math.exp(K.steigung*(t.rep-K.mitte))/K.runden)*K.runden*(t.id===S.my?stufe().kredit:1);};
 const startKonto=rep=>{const K=RW.konto;return Math.round(K.basis*Math.exp(K.steigung*(rep-K.mitte))/K.runden)*K.runden;};
 // Grundbetrag der Werbung je Ligaspiel (K23c): Grundlage der Angebote für Brust, Ausrüster und Ärmel, der weiteren Partner und der Werbung der Computer-Vereine
 const sponsorBasis=t=>{const P=RF.sponsor;return Math.round(P.basis*Math.exp(P.steigung*(t.rep-P.mitte))*(P.liga[t.lg]||P.liga[3]));}; // gerundet, damit Kontostände ganze Euro bleiben
 // Schwierigkeit (K02 §5.4): Spielstände ohne Angabe gelten als „Normal“
 const stufe=()=>REGELN.schwierigkeit.stufen[S.stufe]||REGELN.schwierigkeit.stufen[REGELN.schwierigkeit.standard];
-function stufeAnwenden(k){const M=REGELN.schwierigkeit.mitwachsend;if(k==='mitwachsend'&&M){S.mitw={folge:0,titel:0};k=M.reihe[0];}else delete S.mitw; // K43 §5
+function stufeAnwenden(k){const M=REGELN.schwierigkeit.mitwachsend;if(k==='mitwachsend'&&M){S.mitw={e:0,s:0,verlauf:[]};k=M.basis;}else delete S.mitw; // K43 §5
   S.stufe=REGELN.schwierigkeit.stufen[k]?k:REGELN.schwierigkeit.standard;const St=stufe(),t=myT();t.cash=Math.round(t.cash*St.konto);
   if(!St.erinnerungen){S.einst=S.einst||{aus:{}};S.einst.aus=S.einst.aus||{};Object.keys(RK.erinnerungen).forEach(e=>S.einst.aus[e]=1);}
   if(typeof euOhneClStart==='function')euOhneClStart(); // Leicht: keine Champions League, auch nicht in der ersten Saison (K43); vor setTarget, sonst Nebenziel „Champions League“ (Prüfung GD1)
   setTarget();}
-// Mitwachsende Schwierigkeit (K43 §5, 26.11., vorläufig): zu Beginn jeder Saison (newSeasonLauf, vor dem Europapokal) mit der Bilanz der abgelaufenen.
-// Ein Titel ist die Meisterschaft der 1. Liga oder ein Europapokal deines Vereins am Saisonende (sm.my). Ohne Titel beginnt die Folge neu, die Stufe bleibt.
-// Startkonto und Erinnerungen ändern sich nicht nachträglich. Ab sofort gelten Sponsoren, Karten, Champions League, Gönner, Vorstand, Saisonziel und Talentsterne neuer Spieler.
-// Der Kreditrahmen sinkt erst zur nächsten Saison, der Zähler für die Insolvenz beginnt neu (Prüfung GG1).
-function stufeMitwachsen(sm){const M=REGELN.schwierigkeit.mitwachsend;if(!S.mitw||!M||!sm)return;const m=sm.my!=null?sm.my:S.my,ti=S.eu&&S.eu.titel;
-  const titel=(sm.champ===m&&sm.lg===1)||(!!ti&&['cl','el','ecl'].some(w=>ti[w]===m));if(!titel){S.mitw.folge=0;return;}
-  S.mitw.folge++;S.mitw.titel++;const i=Math.max(M.reihe.indexOf(S.stufe),S.mitw.folge>=2?2:1);if(i<0||M.reihe[i]===S.stufe)return;
-  const t=myT(),f0=kreditFaktor(),kr0=kreditRahmen(t);S.stufe=M.reihe[i];S.mitw.kredit={s:S.season,f:f0};t.fu=0;
-  const krNeu=Math.round(kr0*stufe().kredit/f0),unter=t.cash<-krNeu;
-  news(`Mitwachsende Schwierigkeit: Nach ${S.mitw.folge>=2?'Titeln in zwei Saisons nacheinander':'deinem ersten Titel'} spielst du ab jetzt auf „${stufe().name}“ (${stufe().text}).`
-    +(krNeu<kr0?` Dein Kreditrahmen bleibt diese Saison bei ${fmt(kr0)} und sinkt ab der nächsten auf ${fmt(krNeu)}.${unter?` Dein Konto liegt schon darunter: Bis dahin musst du ${fmt(-t.cash-krNeu)} gutmachen, sonst droht die Insolvenz.`:''}`:''),unter?'bad':'');}
+// Mitwachsend (K43 §5, Fassung vom 26.11. abends, vorläufig): Ausschlag s von −1 (Durststrecke, etwas leichter) bis +1 (Erfolg, etwas anspruchsvoller), sonst 0.
+// Wirkt nur über kleine Hebel (Gehaltsforderungen, Vorstand, Saisonziel, Glück bei Karten, Abwerbeversuche, Zuschuss eines Partners), nie über Spielstärke, Würfel oder Spielerwerte.
+const mitwachsWert=()=>typeof S!=='undefined'&&S&&S.mitw?(S.mitw.s||0):0;
+const entlassGrenze=()=>stufe().entlassenUnter+Math.round(((REGELN.schwierigkeit.mitwachsend||{}).wirkung||{vorstand:0}).vorstand*mitwachsWert()); // Vorstand (vorstand.js)
+// Bewertung der abgelaufenen Saison zu Beginn der neuen (newSeasonLauf, vor dem Europapokal), am eigenen Anspruch in der eigenen Liga gemessen. Ohne Zufall.
+// Beispiele (Werte aus REGELN): fünfmal Vierter in der 3. Liga mit Ziel Platz 6 ergibt s ≈ 0,2 (kaum spürbar); Meister der 3. Liga mit 20 Punkten Vorsprung
+// und Aufstieg ergibt s = 1; zwei Abstiege nacheinander ergeben s ≈ −0,8 und dann −1, beim ersten davon kommt ein Partner mit Geld.
+function stufeMitwachsen(sm){const M=REGELN.schwierigkeit.mitwachsend;if(!S.mitw||!M||!sm)return;const E=M.erfolg,W=M.wirkung,m=sm.my!=null?sm.my:S.my,ti=S.eu&&S.eu.titel,hat=l=>(l||[]).includes(m);
+  let w=0;if(sm.target!=null&&sm.pos!=null)w+=clamp((sm.target-sm.pos)*E.zielJePlatz,-E.zielMax,E.zielMax);
+  if([sm.champ,sm.champ2,sm.champ3][(sm.lg||1)-1]===m){w+=E.meister;if((sm.gap||0)>E.abstandAb)w+=Math.min(E.abstandMax,(sm.gap-E.abstandAb)*E.abstandJe);}
+  if(hat(sm.up)||hat(sm.up3)||hat(sm.up4)||(sm.rel&&sm.rel[1]===m&&sm.rw===m)||(sm.rel2&&sm.rel2[1]===m&&sm.rw2===m))w+=E.aufstieg;
+  if(sm.cup===m)w+=E.pokal;if(ti&&['cl','el','ecl'].some(x=>ti[x]===m))w+=E.europa;
+  if(hat(sm.down)||hat(sm.down2)||hat(sm.down3)||(sm.rel&&sm.rel[0]===m&&sm.rw!==m)||(sm.rel2&&sm.rel2[0]===m&&sm.rw2!==m))w+=E.abstieg;
+  const e=clamp(E.gedaechtnis*(S.mitw.e||0)+w,-E.grenze,E.grenze),b=Math.abs(e),s=Math.sign(e)*Math.min(1,Math.max(0,b-W.totzone)/(W.voll-W.totzone));
+  S.mitw.e=Math.round(e*100)/100;S.mitw.s=Math.round(s*100)/100;S.mitw.verlauf=[...(S.mitw.verlauf||[]),{s:sm.season,w:Math.round(w*10)/10,e:S.mitw.e,a:S.mitw.s}].slice(-12);
+  const P=W.partner;if(S.mitw.s<=P.ab&&(S.mitw.partner==null||S.season-S.mitw.partner>=P.abstand)){const t=myT(),x=Math.round(sponsorBasis(t)*P.spiele/1000)*1000;S.mitw.partner=S.season;money('Ereignisse',x);
+    news(`Ein Unternehmer aus der Region glaubt an ${t.name} und steigt als Partner ein: ${fmt(x)} für den Neuanfang.`,'good');}}
 // TV-Gelder (K23 §5.1, K23c): Säulenmodell, Saisonbetrag je Verein einmal je Saison und Ligazusammensetzung berechnet (S.tvS), ohne Zufall, ausgezahlt je Ligaspiel.
 // Fünfjahreswertung: t.tvw = Punkte der letzten Saisons (jüngste zuerst, saison.js), t.tv0 = Startpunkte nach Liga und Ansehen für fehlende Saisons.
 function tvPunkteStart(){const off={};let n=0;LIGEN.forEach(lg=>{off[lg]=n;n+=lgIds(lg).length;});
@@ -127,7 +131,9 @@ function targetFor(r,lg){const z=RV.ziel;return r===1?1:r<=z.spitzeBis?r+z.spitz
 function targetText(lg,t){if(lg===1)return t===1?'Deutsche Meisterschaft':t<=4?'Platz '+t+' oder besser ('+(stufe().ohneCL?'Europa League, Champions League erst ab „Normal“':'Champions League')+')':t<=7?'Platz '+t+' oder besser (Europapokal)':t<=12?'Platz '+t+' oder besser (Mittelfeld)':'Klassenerhalt (Platz '+t+' oder besser)';return t<=2?'Aufstieg (Platz '+t+' oder besser)':t===3?'Relegationsplatz (Platz 3)':t>=RV.ziel.schlechtester[lg]?'Klassenerhalt (Platz '+t+' oder besser)':'Platz '+t+' oder besser';}
 function setTarget(){LIGEN.forEach(lg=>S.teams.filter(t=>t.lg===lg).sort((a,b)=>b.rep-a.rep).forEach((t,i)=>t.expPos=i+1));const lg=myT().lg,r=targetFor(myT().expPos,lg);let z=lg>=2?Math.max(RV.ziel.unterhalbMindestens,r):r;
   // Schwierigkeit: Ziel einen Platz leichter oder strenger, nie schlechter als das schlechteste Ziel der Liga und nie besser als das beste (1. Liga Platz 1, sonst Platz 2)
-  if(stufe().ziel)z=clamp(z+stufe().ziel,lg>=2?Math.min(z,RV.ziel.unterhalbMindestens):1,Math.max(z,RV.ziel.schlechtester[lg]));S.target=z;nebenzieleSetzen();zielgespraechStart();} // Nebenziele mit dem Saisonziel (K28 §5.7, U12b, js/vorstand.js)
+  // Mitwachsend (K43 §5): nach Erfolg ein Platz strenger, in einer Durststrecke ein Platz leichter
+  const mw=mitwachsWert(),W=(REGELN.schwierigkeit.mitwachsend||{}).wirkung,o=(stufe().ziel||0)+(W&&mw>=W.ziel?-1:W&&mw<=-W.ziel?1:0);
+  if(o)z=clamp(z+o,lg>=2?Math.min(z,RV.ziel.unterhalbMindestens):1,Math.max(z,RV.ziel.schlechtester[lg]));S.target=z;nebenzieleSetzen();zielgespraechStart();} // Nebenziele mit dem Saisonziel (K28 §5.7, U12b, js/vorstand.js)
 function sponsOffers(){const t=myT(),SP=RF.sponsor;const b=sponsorBasis(t)*(RF.werbung?RF.werbung.anteil.brust:1)*werbFaktor()*(stufe().sponsor||1); /* Schwierigkeit (K43): Leicht höhere, Schwer niedrigere Angebote */ /* Brust: Anteil am Grundbetrag der Werbung, daneben Ausrüster, Ärmel (K24a) und weitere Partner (K23c); Werbewert (K24b) */const ns=shuffle(SPONSOREN.slice());const r=v=>Math.round(v/1000)*1000;
   S.sponsOffers=[...SP.angebote.map((a,i)=>({name:ns[i],base:r(b*a.fix),win:a.sieg?r(b*a.sieg):0,yrs:a.jahre,info:a.info})),werbUmstritten('brust',b)];werbVerlaengerung('brust',S.sponsOffers);sponsorAuto();werbungOffen();} /* viertes Angebot: umstrittener Geldgeber (K24b) */ // in der Automatik wählt der Verein sofort (K36); freie Werbeflächen bekommen Angebote (K24a)
 function sponsorWaehlen(i){S.spons={...S.sponsOffers[i]};S.sponsOffers=null;news(`Sponsorvertrag unterschrieben: ${S.spons.name}.`,'good');werbUnterschrieben('brust');}

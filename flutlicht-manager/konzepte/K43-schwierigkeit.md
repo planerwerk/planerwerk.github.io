@@ -95,25 +95,74 @@ Dein Einwand: Jedes Jahr das Triple macht keinen Spaß mehr. Ein heimliches Gumm
 
 Wann gebaut wird: wenn ein Langlauf auf Leicht zeigt, dass ein Verein zu oft alles gewinnt. Messgröße (vorläufig): Auf Leicht holt ein Spitzenverein in 10 Saisons höchstens 6 Meisterschaften.
 
-## 5. Mitwachsende Stufe (gebaut am 26.11., vorläufig)
+## 5. Mitwachsend (Fassung vom 26.11. abends, vorläufig)
 
-Deine Frage blieb offen, deshalb habe ich nach unserer Regel selbst entschieden: gebaut als vierte Wahl beim Spielstart, die drei festen Stufen bleiben unverändert.
+### 5.1 Deine Vorgabe vom 26.11. abends
 
-- **Wann es zählt:** Zu Beginn jeder Saison zählt die abgelaufene (`stufeMitwachsen` in `js/welt.js`, vor der Einteilung des Europapokals). Ein Titel ist die Meisterschaft der 1. Liga oder ein Europapokal deines Vereins.
-- **Was sich ändert:**
-  - Startkonto und Erinnerungen bleiben, wie sie sind.
-  - Ab der neuen Saison gelten Sponsoren, Karten, Champions League, Gönner, Vorstand, Saisonziel und Talentsterne neuer Spieler der neuen Stufe.
-  - **Kreditrahmen mit einer Saison Übergang** (Prüfung GG1): In der Saison des Wechsels gilt noch der alte Rahmen, erst danach der neue. Der Zähler für die Insolvenz beginnt neu.
-  - Eine Meldung nennt die neue Stufe und die beiden Kreditrahmen. Liegt das Konto schon unter dem künftigen Rahmen, sagt sie (als schlechte Nachricht), wie viel bis dahin gutzumachen ist.
-- **Im Menü** steht „Schwierigkeit: Normal (mitwachsend, steigt mit Titeln)“.
-- **In der Statistik** steht bei den Saisons „(mitwachsend)“.
+- Entweder wählt man vorher eine Stufe, oder das Spiel wächst mit. Du bist eher für „wachsen“, aber erst nach Erfolgen.
+- **Erfolg gibt es in jeder Liga:**
+  - ein Aufstieg ist ein Erfolg;
+  - Erster in der 3. Liga ist ein Erfolg;
+  - Erster mit 20 Punkten Vorsprung ist ein riesiger Erfolg.
+- **Wer besonders schlecht ist, bekommt es etwas leichter.** Beispiel: zwei Abstiege.
+  - Glaubwürdig wäre etwa, dass die Leute sich besser entwickeln oder dass per Ereignis ein großer Sponsor kommt.
+  - Dass alle Sponsoren besser werden, wäre unglaubwürdig, weil man ja abgestiegen ist.
+- Die Anpassungen müssen sehr fein sein und sehr gut getestet, sonst wird das Spiel frustrierend.
+- Die erste Fassung (Leicht → Normal → Schwer nur mit Titeln der Bundesliga, nie leichter) passte nicht: Fünf Saisons als Vierter der 3. Liga dürfen nichts hochtreiben.
 
-Der ursprüngliche Entwurf:
+### 5.2 Was Studien und Entwickler sagen
 
-- Zusätzliche Wahl **„Mitwachsend“**: Du beginnst auf Leicht. Nach dem ersten Titel in der Bundesliga oder dem ersten Europapokalsieg wird es Normal, nach dem zweiten Titel in Folge Schwer.
-- Die Stufe sinkt nie, und jeder Wechsel wird angekündigt.
-- Der Nachteil, den du genannt hast, gilt nicht: Ein Aufstieg zählt nicht als Titel. Wer in der dritten Liga beginnt, bleibt beim Aufstieg auf Leicht.
-- ~~Vorläufig nicht gebaut.~~ Gebaut am 26.11. (siehe oben).
+- **Leichte Eingriffe:** Hunicke und Chapman wollten mit „Hamlet“ den Spieler stützen, ohne schlechte Rückmeldung ganz wegzunehmen und ohne das Spiel zu leicht und vorhersehbar zu machen. Das passt zu deinem „sehr fein“.
+- **Anpassung kann helfen:** Bei Denisova und Cairns (2015) steigerte die Anpassung das Eintauchen ins Spiel. Spieler fühlten sich schon stärker im Spiel, wenn man ihnen sagte, dass es sich anpasst.
+- **Selbst wählen bleibt wichtig:** Bei Smeddinck u. a. (2016) wollten die meisten selbst wählen. Die automatische Anpassung schadete dem Erleben aber nicht.
+  - Folge: Beides bleibt, feste Stufen und „Mitwachsend“, als Wahl beim Spielstart.
+- **Offen sagen, was passiert:** Eine Masterarbeit (Aalto) rät, Erwartungen offen zu setzen, also vorher zu sagen, dass sich das Spiel anpasst. Ein Preprint von 2025 findet, dass verborgene oder plötzliche Anpassungen Vertrauen und das Gefühl von Kontrolle kosten (nur ein Preprint, daher schwach gewichtet).
+  - Folge: Die Wahl sagt beim Start, was sie tut. Einzelne Anpassungen kommen als glaubwürdige Ereignisse im Spiel, nie als Sprung „Stufe jetzt Schwer“.
+- **Selbstüberschätzung:** Constant und Levieux (CHI 2019) fanden, dass automatische Anpassung Spieler zu Selbstüberschätzung führt. Wer Hilfe bekommt, merkt es nicht und schreibt den Erfolg sich zu.
+  - Folge: Die Hilfe muss klein bleiben, sonst ist der Erfolg nicht mehr der eigene.
+- **Aufholmechanik:** Aufholen muss verdient sein. Das Fenster für die richtige Stärke ist schmal: Zu stark, und frühe Erfolge zählen nicht mehr; zu schwach, und Aufholen gelingt nie (Riot zu League of Legends). Wer führt, darf sich nicht bestraft fühlen (Game Developer zum „Schneeball-Effekt“).
+  - Folge: Nach Erfolg nur etwas mehr Anspruch, keine Bremse. Nie an Spielstärke, Würfeln oder Spielerwerten drehen.
+
+### 5.3 Wie es gebaut ist
+
+- **Wahl beim Spielstart:** „Mitwachsend: das Spiel reagiert leicht auf deinen Erfolg“. Grundlage ist Normal.
+- **Bewertung jeder Saison** (zu Beginn der nächsten, vor der Einteilung des Europapokals, `stufeMitwachsen` in `js/welt.js`), immer am eigenen Anspruch in der eigenen Liga:
+  - Platz gegen Saisonziel: je Platz besser oder schlechter ±0,5, höchstens ±3;
+  - Meister der eigenen Liga (auch 2. oder 3. Liga) +2, dazu je Punkt Vorsprung über 5 Punkte +0,2, höchstens +2;
+  - Aufstieg +2, Pokalsieg +1, Europapokalsieg +2, Abstieg −2.
+- **Erfolgswert:** Er merkt sich die Vorjahre mit 60 % und bleibt zwischen −8 und +8. Daraus ein Ausschlag von −1 bis +1. Bis ±1,5 passiert gar nichts (tote Zone), ab ±6 ist der Ausschlag voll.
+- **Hebel** (bei vollem Ausschlag, dazwischen anteilig):
+
+| Hebel | nach Erfolg (+1) | in einer Durststrecke (−1) |
+|---|---|---|
+| Gehaltsforderungen bei Verhandlungen | +6 % („nach dem Erfolg wollen alle mehr“) | −6 % („wer jetzt kommt, will spielen“) |
+| Vorstand: Entlassungsgrenze | 3 Punkte strenger | 3 Punkte geduldiger |
+| Saisonziel | ab +0,6 ein Platz strenger | ab −0,6 ein Platz leichter |
+| Abwerbeversuche anderer Vereine | +30 % | unverändert |
+| Glück bei Ereigniskarten | unverändert | +8 Punkte |
+| Partner aus der Region | – | einmal in vier Saisons ab −0,5: Zuschuss in Höhe von sechs Ligaspielen Werbung, mit Meldung |
+
+- **Beispiele** (aus den Werten gerechnet, geprüft in `tests/schwierigkeit.js`):
+  - Fünfmal Vierter der 3. Liga bei Ziel Platz 6: Ausschlag 0,18, kaum spürbar.
+  - Meister der 3. Liga mit 20 Punkten Vorsprung und Aufstieg: Ausschlag +1.
+  - Zwei Abstiege nacheinander: −0,78, dann −1. Beim ersten kommt ein Partner.
+- **Nicht angefasst:**
+  - Spielstärke, Würfel und Spielerwerte bleiben unverändert;
+  - Sponsoren gesamt und Startkonto auch;
+  - Champions League, Gönner und Kreditrahmen gelten wie auf Normal.
+- **Im Menü:** „Normal (mitwachsend: reagiert leicht auf deinen Erfolg)“. **In der Statistik:** „(mitwachsend)“.
+
+### 5.4 Prüfen, bevor es ernst wird
+
+- **`tests/schwierigkeit.js` (K43f):** Bewertung in beide Richtungen, Beispiele oben, Hebel bei +1, 0 und −1, Partner nur einmal, ohne „Mitwachsend“ alles neutral, Reihenfolge im Saisonwechsel.
+- **`tests/schwierigkeit-langlauf.js`:** zehn Saisons mit drei Startvereinen, Ausschlag je Saison.
+- **Zielwerte (vorläufig):**
+  - Der Ausschlag pendelt nicht von Saison zu Saison zwischen + und −.
+  - Ein Mittelfeldverein bleibt meist in der toten Zone.
+  - Wer die Liga dominiert, landet bei +0,5 bis +1.
+  - Gegenüber „Normal“ ändern sich Titel, Pleiten und Entlassungen nur um wenige Prozent.
+  - Werden die Hebel spürbar, kommen danach Menschen mit dem Leitfaden aus K40 §11 dran.
+- Der Ausschlag hat noch keine Anzeige. Ob man ihn sehen soll (etwa als „Rückenwind“ in der Statistik), entscheidet sich nach den Tests mit Menschen.
 
 ## 6. Tests
 
@@ -128,7 +177,7 @@ Der ursprüngliche Entwurf:
   - den Tausch in die Europa League beim Saisonwechsel und in der ersten Saison, mit passendem Nebenziel;
   - den Jobwechsel auf Leicht zu einem Verein aus der Champions League, vor und nach der Auslosung;
   - das Saisonziel auf Leicht ohne Champions League;
-  - „Mitwachsend“: Start auf Leicht, Verlauf über sieben Saisons mit und ohne Titel, nie leichter;
+  - „Mitwachsend“ (§5.4): Bewertung in beide Richtungen, Beispiele, Hebel, Partner, neutral ohne „Mitwachsend“;
   - den Gönner auf Leicht und die Insolvenz auf Normal.
 
 `tests/schwierigkeit-langlauf.js` misst den Langlauf je Stufe (siehe §7).
@@ -154,3 +203,8 @@ Ausgeführt wird der Test beim Tester (hier gibt es kein Node.js). Er steht für
 - Game Developer: [Rubber banding as a design requirement](https://gamedeveloper.com/design/rubber-banding-as-a-design-requirement), [The value of rubber banding](https://gamedeveloper.com/design/the-value-of-rubber-banding-an-engagement-driver-), [Do we really want difficult games?](https://gamedeveloper.com/design/do-we-really-want-difficult-games-).
 - Destructoid: [How do you feel about rubber banding in games?](https://www.destructoid.com/how-do-you-feel-about-rubber-banding-in-games/)
 - Football Manager Projects: [Football Manager difficulty settings](https://fmprojects.substack.com/p/football-manager-difficulty-settings).
+- Hunicke, Chapman: [AI for Dynamic Difficulty Adjustment in Games (Hamlet)](https://users.cs.northwestern.edu/~hunicke/pubs/Hamlet.pdf), dazu [Robin Hunicke, Arbeiten](https://users.cs.northwestern.edu/~hunicke/thesis.html).
+- Constant, Levieux: [Dynamic Difficulty Adjustment Impact on Players' Confidence](https://hal.archives-ouvertes.fr/hal-02141897v1), CHI 2019.
+- [Dynamic difficulty adjustment in single-player games: Player perception on hidden vs. upfront DDA](https://aaltodoc.aalto.fi/items/940fd4e0-96c6-491a-8613-e0983008f1cf) (Masterarbeit, Aalto).
+- [Preprint zu adaptiver Schwierigkeit, Transparenz und Vertrauen](https://www.preprints.org/manuscript/202511.2251) (2025, nicht begutachtet).
+- Riot Games: [Quick Gameplay Thoughts: Comeback Mechanics](https://www.leagueoflegends.com/en-us/news/dev/quick-gameplay-thoughts-2-25-comeback-mechanics/); Game Developer: [Second looks at snowballing](https://gamedeveloper.com/design/second-looks-at-snowballing), [Examining negative feedback in game design](https://gamedeveloper.com/design/examining-negative-feedback-in-game-design).

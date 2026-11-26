@@ -37,6 +37,7 @@ function seasonEndLauf(){
     down:[T[1][16].id,T[1][17].id],up:[T[2][0].id,T[2][1].id],rel,relRes:e1.text,rw:e1.sieger,
     down2:[T[2][16].id,T[2][17].id],up3:[reihe[0],reihe[1]],rel2,rel2Res:e2.text,rw2:e2.sieger,
     down3:T[3].slice(-RS.abstieg3).map(r=>r.id),up4:rl.ids,rlText:rl.text,
+    gap:T[me.lg]&&T[me.lg][1]?T[me.lg][0].p-T[me.lg][1].p:0, // Vorsprung des Meisters deiner Liga (Mitwachsend, K43 §5)
     cup:S.cup.alive.length===1?S.cup.alive[0]:null,ts:ts?`${ts.n} (${tn(ts.team)}), ${ts.g} Tore`:'–',ok:pos<=S.target,fin:Object.values(S.fin).reduce((x,y)=>x+y,0)};
   S.trust=clamp(S.trust+(sm.ok?B.saisonErreicht:pos>S.target+B.saisonWeitAb?B.saisonWeit:B.saisonVerfehlt),0,100);
   news(`${tn(sm.champ)} ist Deutscher Meister ${S.season}/${(S.season+1)%100}!`,'good');

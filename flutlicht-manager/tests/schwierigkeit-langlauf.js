@@ -24,9 +24,9 @@ for(const stufe of ['leicht','normal','schwer','mitwachsend'])for(const v of ver
       F.entlassen=function(){const vor=W.S.fired;const x=ent.apply(this,arguments);if(!vor&&W.S.fired)z.entlassen++;return x;};},
     beiSaisonstart:(S,F)=>{if(!S.lizenz){F.lizenzStart(false);allesAuto(S,ev);}},
     beiSaisonende:(S)=>{const sm=S.summary||{},m=sm.my!=null?sm.my:S.my;if(sm.champ===m&&sm.lg===1)z.meister++;if(sm.cup===m)z.pokal++;
-      const ti=S.eu&&S.eu.titel;if(ti&&['cl','el','ecl'].some(w=>ti[w]===m))z.europa++;const t=S.teams[m];if(t){if(t.cash<0)z.minus++;z.konto.push(t.cash);}z.stufen.push(S.stufe);}});
+      const ti=S.eu&&S.eu.titel;if(ti&&['cl','el','ecl'].some(w=>ti[w]===m))z.europa++;const t=S.teams[m];if(t){if(t.cash<0)z.minus++;z.konto.push(t.cash);}z.stufen.push(S.mitw?(S.mitw.s>=0?'+':'')+S.mitw.s:S.stufe);}}); // bei „mitwachsend“ der Ausschlag (−1 bis +1) der laufenden Saison
   erg[stufe+'|'+v.k]=z;
-  console.log(`${stufe.padEnd(11)} ${v.k.padEnd(15)}`+(stufe==='mitwachsend'?` [Stufe je Saisonende: ${z.stufen.join(' ')}]`:'')+` (${v.name}): Meister ${z.meister}, Pokal ${z.pokal}, Europa ${z.europa}, Pleite ${z.pleite}, entlassen ${z.entlassen}, `
+  console.log(`${stufe.padEnd(11)} ${v.k.padEnd(15)}`+(stufe==='mitwachsend'?` [Ausschlag je Saison: ${z.stufen.join(' ')}]`:'')+` (${v.name}): Meister ${z.meister}, Pokal ${z.pokal}, Europa ${z.europa}, Pleite ${z.pleite}, entlassen ${z.entlassen}, `
     +`Konto im Minus ${z.minus} von ${z.konto.length}, Konto im Schnitt ${Math.round(z.konto.reduce((a,b)=>a+b,0)/Math.max(1,z.konto.length)/1e5)/10} Mio.`);}
 const sp=erg['leicht|Spitze 1. Liga'];
 if(N>=10)pruef(sp.meister<=Math.round(6*N/10),`K43 §4: Spitzenverein auf Leicht höchstens 6 Meisterschaften je 10 Saisons`,`${sp.meister} in ${N}`);

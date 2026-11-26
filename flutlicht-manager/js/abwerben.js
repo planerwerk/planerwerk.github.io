@@ -70,7 +70,7 @@ function bieterKnoepfe(){const ids=[...new Set(S.offers.map(o=>o.pid))].filter(b
 function kiAbwerbenKandidaten(){const K=RAW.ki,t=myT(),lvl=teamLevel(S.my);
   const sp=squad(S.my).filter(p=>!p.wech&&!p.leihe&&p.age<=K.alterMax&&p.str>=lvl+K.staerkePlus&&(p.ww||0)<2); /* höchstens bis Stufe 2, nie direkt zum offiziellen Wechselwunsch (Prüfung EB2) */
   const vs=S.teams.filter(b=>b.id!==S.my&&aktiv(b)&&!kiTransferSperre(b)&&b.rep>=t.rep-K.ansehenMinus);return{sp,vs};}
-function kiAbwerbenWoche(d){const K=RAW.ki;if(S.phase!=='play'||S.fired||autoB('transfers')||R()>=K.chance)return;const {sp,vs}=kiAbwerbenKandidaten();
+function kiAbwerbenWoche(d){const K=RAW.ki;if(S.phase!=='play'||S.fired||autoB('transfers')||R()>=K.chance*(1+REGELN.schwierigkeit.mitwachsend.wirkung.abwerben*Math.max(0,mitwachsWert())))return; /* Mitwachsend: nach Erfolg öfter (K43 §5) */const {sp,vs}=kiAbwerbenKandidaten();
   const paare=[];sp.forEach(p=>vs.forEach(b=>{if(b.cash>value(p)&&hatBedarf(b,p))paare.push([p,b]);}));if(!paare.length)return;
   const [p,b]=paare[Math.floor(R()*paare.length)];kiAbwUnruhig(p);
   if(R()<K.aufflieg&&!kiAbwOffen()){S.kiAbw={pid:p.id,tid:b.id,bis:d+K.frist,s:S.season};news(`Aufgeflogen: ${b.name} hat heimlich mit ${p.n} gesprochen. Deine Entscheidung steht im Büro.`,'bad');}}

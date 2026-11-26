@@ -8,7 +8,7 @@
 const vtFrac=x=>x-Math.floor(x);
 function gehaltForderung(p,neu){const F=RVT.forderung,a=(F.alter.find(x=>p.age<=x[0])||[0,1])[1];
   let f=salaryFor(p.str)*a*(p.age<=F.talentBis&&sternZahl(p)>=F.talentSterne?F.talent:1)*(hatEig(p,'soeldner')?F.soeldner:hatEig(p,'vereinstreu')?F.treu:1)*(F.zufall[0]+(p.seed||0.5)*F.zufall[1]);
-  f*=(neu?F.wechsel*gerGehalt(p):vertragsAufschlag(p))*beraterFaktor(p);return Math.round(f/1000)*1000;} // Berater: Profil und Beziehung (K22, U10c)
+  f*=(neu?F.wechsel*gerGehalt(p):vertragsAufschlag(p))*beraterFaktor(p)*(1+REGELN.schwierigkeit.mitwachsend.wirkung.gehalt*mitwachsWert());return Math.round(f/1000)*1000;} // Berater: Profil und Beziehung (K22, U10c). Mitwachsend (K43 §5) macht Forderungen nach Erfolg etwas teurer, in einer Durststrecke etwas billiger
 // Schwelle des Spielers: seine Forderung, je Spieler fest um bis zu ±3 % verschoben. Du siehst nur die Zone.
 const vtSchwelle=(p,F)=>F*(1+(vtFrac((p.seed||0.5)*7)-0.5)*2*RVT.zone);
 const vtZone=F=>[Math.round(F*(1-RVT.zone)/10000)*10000,Math.round(F*(1+RVT.zone)/10000)*10000];

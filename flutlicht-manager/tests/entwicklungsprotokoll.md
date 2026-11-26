@@ -290,6 +290,19 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 26.11.2026: K43d „Mitwachsend“ neu gefasst (Zweig `mitarbeit/popolupo-k43d-mitwachsend-erfolg`, auf t11-korrekturen)
+
+- **Nach deiner Rückmeldung:**
+  - Erfolg zählt in jeder Liga, gemessen am eigenen Anspruch: Platz gegen Saisonziel, Meister der eigenen Liga mit Vorsprung, Aufstieg, Pokal, Europapokal, Abstieg.
+  - Ein Erfolgswert merkt sich die Vorjahre und ergibt einen Ausschlag von −1 bis +1, mit toter Zone. Fünfmal Vierter der 3. Liga bewegt fast nichts.
+- **Hebel, alle klein:**
+  - Gehaltsforderungen ±6 %, Entlassungsgrenze ±3, Saisonziel ±1 Platz;
+  - nach Erfolg mehr Abwerbeversuche;
+  - in einer Durststrecke mehr Glück bei Karten und einmal in vier Saisons ein Partner aus der Region mit Geld.
+- **Grundlage ist Normal.** Die alte Fassung (Leicht → Normal → Schwer nur mit Titeln) ist ersetzt, ebenso der Übergang beim Kreditrahmen, der dafür nötig war.
+- **Konzept:** K43 §5 mit Studien (Hunicke, Denisova und Cairns, Smeddinck, Constant und Levieux, Aufholmechanik nach Riot und Game Developer).
+- **Tests:** K43f neu, Langlauf zeigt den Ausschlag je Saison.
+
 ### 26.11.2026: Testlauf 11 aufgearbeitet (Zweig `mitarbeit/popolupo-t11-korrekturen`, auf den Korrekturen GG)
 
 Lauf 11 (ce62ffe): 45 grün, 8 rot (Lauf 10: 29 grün).
