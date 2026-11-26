@@ -25,7 +25,11 @@ const REGELN={
   klang:{                            // Klang (K41, W5f), je Gerät im Browser, nicht im Spielstand; erzeugt in js/klang.js
     schluessel:'flutlicht-klang',
     an:true,laut:0.4,                // Voreinstellung: Ton an, leise (K41 §6)
-    pegel:{klick:0.15,brief:0.25,pfiff:0.5,pfiff3:0.5,jubel:0.6,raunen:0.4} // Anteil an der Lautstärke je Klang
+    pegel:{klick:0.15,brief:0.25,pfiff:0.5,pfiff3:0.5,jubel:0.6,raunen:0.4}, // Anteil an der Lautstärke je Klang
+    // Stadionatmosphäre (W5f2, vorläufig): pegel Anteil an der Lautstärke bei Stärke 1, weich Zeitkonstante in Sekunden. Stärke: grund plus groesse mal Wurzel aus
+    // Plätzen durch voll (höchstens 1), mal rueckstand, wenn die Heimelf mit 2 oder mehr zurückliegt; dazu schluss ab Minute schlussAb bei knappem Stand
+    // und tor für torSek Sekunden nach einem Tor. In der Pause mal pause.
+    atmo:{pegel:0.35,weich:0.8,grund:0.35,groesse:0.5,voll:60000,rueckstand:0.65,schluss:0.2,schlussAb:75,tor:0.5,torSek:6,pause:0.6}
   },
   // Neue Regeln ausprobieren (K02 §4.4, K02a, 24.11., popolupo, vorläufig): Schalter, die noch aus sind, weil sie die Kalibrierung aller Vereine verschieben.
   // Im Menü je Spielstand einschaltbar (S.einst.exp). pfad: Objekt in REGELN mit dem Feld an.

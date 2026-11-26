@@ -290,6 +290,14 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 26.11.2026: W5f2 Stadionatmosphäre (Zweig `mitarbeit/popolupo-w5f2-atmosphaere`, auf W5e12)
+
+- **Neu, vorläufig:** Im Live-Spiel läuft eine Stadionatmosphäre. Sie wird im Browser aus Rauschen erzeugt, ohne Dateien und ohne Lizenzfrage.
+  - Lauter in großen Stadien, in knappen Schlussphasen und kurz nach Toren.
+  - Leiser bei klarem Rückstand der Heimelf und in der Pause.
+  - Klingt nach dem Abpfiff aus.
+- **Regeln:** `REGELN.klang.atmo`. Nur Klang, keine Wirkung aufs Spiel, kein Spielzufall.
+
 ### 26.11.2026: W5e12 Abpfiff als Sequenz (Zweig `mitarbeit/popolupo-w5e12-abpfiff`, auf W5e11)
 
 - **Neu:** Kommt der Schlusspfiff live, wird das Licht der Anzeigetafel nach einem Sieg warm und nach einer Niederlage kalt (Elfmeterschießen zählt mit).

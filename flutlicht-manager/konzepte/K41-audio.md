@@ -79,7 +79,14 @@ K39 (Sequenzen), K05 (Live-Spiel, Zuschauer), K35b (Einstellungen), K40 (Test oh
 
 **Vorläufig entschieden:** Ton an und leise, Musik aus; Oberflächentöne erzeugt; Atmosphäre aus CC0; keine Stimme, keine echten Fangesänge; Audio kommt nach Kacheln, Schrift und Artwork (W5f).
 
-✅ **Gebaut in W5f (25.11., ohne Testlauf):** `js/klang.js` erzeugt Klick, Brief, Pfiff, dreifachen Abpfiff, Torjubel und Raunen mit der Web Audio API (keine Dateien; Rauschen aus einem festen eigenen Generator, kein Spielzufall). Im Live-Spiel: Anpfiff, Halbzeit- und Abpfiff, Jubel bei eigenem Tor, Raunen bei Gegentor, nicht beim Fortsetzen. Stumm-Knopf in der Kopfzeile, Taste M, Menü-Karte „Klang“ mit Lautstärke; je Gerät im Browser (`REGELN.klang`). Offen: Stadionatmosphäre als Schleife nach Zuschauern und Stand (CC0-Aufnahmen, braucht Netz), Brief-Ton bei neuer Nachricht.
+✅ **Gebaut in W5f (25.11., ohne Testlauf):** `js/klang.js` erzeugt Klick, Brief, Pfiff, dreifachen Abpfiff, Torjubel und Raunen mit der Web Audio API (keine Dateien; Rauschen aus einem festen eigenen Generator, kein Spielzufall). Im Live-Spiel: Anpfiff, Halbzeit- und Abpfiff, Jubel bei eigenem Tor, Raunen bei Gegentor, nicht beim Fortsetzen. Stumm-Knopf in der Kopfzeile, Taste M, Menü-Karte „Klang“ mit Lautstärke; je Gerät im Browser (`REGELN.klang`). ✅ **W5f2 (26.11., vorläufig):** Stadionatmosphäre im Live-Spiel, **erzeugt statt aufgenommen**: tiefes Rauschen aus dem festen Generator als Schleife von 4 Sekunden, ohne Knacken an der Schleifenstelle, zu einem Gemurmel gefiltert, das langsam an- und abschwillt (`atmoStart`, `atmoPegel`, `atmoStop` in `js/klang.js`).
+  - Lautstärke (`atmoStaerke` in `js/live.js`, Werte in `REGELN.klang.atmo`): nach den Plätzen im Stadion der Heimelf.
+  - Leiser, wenn die Heimelf mit zwei Toren zurückliegt, und in der Pause.
+  - Lauter in einer knappen Schlussphase ab Minute 75 und einige Sekunden nach einem Tor.
+  - Klingt nach dem Abpfiff aus. Aus bei Stumm und verstecktem Tab.
+  - Keine Dateien, keine Lizenzfrage. CC0-Aufnahmen (Gesang, echte Menge) bleiben eine spätere Möglichkeit.
+
+Offen: Brief-Ton bei neuer Nachricht, getrennte Regler für Stadion und Oberfläche (§6).
 
 **Für dich:** Willst du überhaupt Musik, oder reicht Stadionatmosphäre?
 

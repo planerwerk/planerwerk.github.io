@@ -117,7 +117,7 @@ function copyExp(){const ta=document.getElementById('exp');const done=()=>toast(
 function importSave(){let d=null;try{d=JSON.parse(document.getElementById('imp').value);}catch(e){}
   if(!d||!d.teams||!d.pl){toast('Der Code ist ungültig.');return;}
   if(d.v!==REGELN.spielstand.version){toast('Dieser Code stammt aus einer älteren Version (Wochenkalender) und passt nicht mehr.');return;}
-  if(LIVE){clearInterval(LIVE.timer);LIVE=null;}S=d;delete S.stabT;reindex();verhUmstellen();k23cUmstellen();mitgliederUmstellen();vertragUmstellen();experimenteAnwenden();save();closeOv();TAB='buero';render();toast('Spielstand geladen.');if(S.live)liveFortsetzen();}
+  if(LIVE){clearInterval(LIVE.timer);LIVE=null;atmoStop();}S=d;delete S.stabT;reindex();verhUmstellen();k23cUmstellen();mitgliederUmstellen();vertragUmstellen();experimenteAnwenden();save();closeOv();TAB='buero';render();toast('Spielstand geladen.');if(S.live)liveFortsetzen();}
 // ---------- Darstellung (K35b §13.3, W5b): Thema je Gerät im Browser, nicht im Spielstand ----------
 // dunkel = ohne Attribut (Standard), hell und system als data-thema am html-Element; die Farben dazu stehen in css/spiel.css. Ohne Zufall, ohne Wirkung aufs Spiel.
 function themaLesen(){const D=REGELN.darstellung;try{const t=localStorage.getItem(D.schluessel);return D.themen[t]?t:D.standard;}catch(e){return D.standard;}}
