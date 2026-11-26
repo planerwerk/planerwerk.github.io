@@ -10,7 +10,9 @@ const REGELN={
     version:4,                       // Version des Spielstands (4 = Spielermodell K03: Frische, Kondition, Form 0–20, Entwicklung je Spieltag)
     schluessel:'flutlicht-manager-v4', // Speicherplatz im Browser
     alteSchluessel:['flutlicht-manager-v1','flutlicht-manager-v2','flutlicht-manager-v3'], // Spielstände älterer Testversionen, werden beim Start gelöscht
-    nachrichtenMax:80                // so viele Nachrichten bleiben im Posteingang
+    nachrichtenMax:80,               // so viele Nachrichten bleiben im Posteingang
+    browserGrenze:5200000,           // etwa so viele Zeichen nimmt der Browser je Seite (Chromium im Test vom 26.11.: 5,24 Mio., MDN: 5 MiB); nur für die Anzeige im Menü
+    dateiName:'flutlicht'            // Anfang des Dateinamens beim Sichern als Datei (Lücke L1, konzepte/_luecken.md)
   },
   darstellung:{                      // Thema je Gerät (K35b §13.3, W5b): im Browser gespeichert, nicht im Spielstand; Farben in css/spiel.css
     schluessel:'flutlicht-thema',    // Speicherplatz im Browser

@@ -11,6 +11,12 @@ Asynchroner Kanal zwischen der Entwicklung auf den Zweigen `mitarbeit/popolupo-*
 **Wie Claude testet**
 Node.js 22, Playwright mit Chromium, für `tests/ui-zugang.js` axe-core 4.10.2 (per npm in der Testkopie). Die Node-Tests laufen parallel (vier gleichzeitig), die Browser-Tests einzeln nacheinander, `tests/akzeptanz.js` allein am Schluss (wegen der Tempomessung). Dazu `tests/code.js` (Kommentar am Zeilenende verschluckt keinen Code).
 
+
+**Neu von Claude (26.11. abends, auf Wunsch des Nutzers: wenn nichts zu testen ist, entwickeln oder planen)**
+- Die Claude-Zweige enthalten jetzt `popolupo-gj-korrekturen` (78e6b78, zusammengeführt ohne Konflikt). Neue Zweige können wie gewohnt auf `claude/compassionate-galileo-bsbua4` beginnen.
+- **Lücken-Check** in `konzepte/_luecken.md`: L1 Spielstand-Sicherheit (Safari löscht nach 7 Tagen, Größe 3,7 Mio. Zeichen nach 10 Saisons bei etwa 5,2 Mio. Grenze), L2 echte Spielernamen (vor einer Veröffentlichung klären), L3 Mehrspieler an einem Gerät, L4 Investoren und 50+1, L5 soziale Medien.
+- **L1 gebaut:** „Als Datei sichern“ und „Datei laden“ im Menü (`js/fenster.js`: `saveDatei`, `ladeDatei`, `dateiWaehlen`, `dateiFeld`), „Datei laden“ auf dem Startbildschirm (`js/start.js`), Anteil am Browser-Speicher im Menü (`REGELN.spielstand.browserGrenze`, `dateiName`). `importSave(txt)` nimmt jetzt optional den Text, ohne Text wie bisher das Feld `#imp`. Neuer Browser-Test `tests/ui-sicherung.js` (8 ✓), `tests/ui-zugang.js`, `tests/code.js` und `tests/regeln-fest.js` grün.
+- **Begonnen bei Claude:** nur L1, sonst nichts. K24 Rest (Stadionname, Bande) bleibt vorgemerkt, ist aber nicht begonnen.
 ---
 
 ## Lauf 18, 26.11.2026 abends: `popolupo-t16-messung` (70f3128, enthält t15-korrekturen)

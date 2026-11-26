@@ -104,10 +104,10 @@ function showSummary(){const sm=S.summary;if(!sm)return;const L=ids=>ids.map(id=
 function showFired(){if(!S.jobs)mkJobs();entlassungSequenz();ov(`${S.ruecktritt?`<h2>Zurückgetreten</h2><p>Du hast ${esc(myT().name)} verlassen.`:`<h2>Entlassen!</h2><p>Der Vorstand von ${esc(myT().name)} hat dir das Vertrauen entzogen.`} Diese Vereine bieten dir einen Job an:</p>${mitnehmenText()}
   <div class="opts">${S.jobs.map(id=>{const t=S.teams[id];return`<button class="opt" onclick="takeJob(${id})"><b>${chip(id)}${esc(t.name)}</b><span>${t.lg}. Liga · Platz ${rank(t.lg,id)} · Kontostand ${fmt(t.cash)} · dein Gehalt etwa ${fmt(trainerGehalt(id))} je Saison</span></button>`;}).join('')}</div>
   <div class="row"><button onclick="confirmNew()">Stattdessen neues Spiel</button></div>`);} /* Trainerteam mitnehmen (K16 §5, K16b) über den Jobangeboten (Prüfung DU6) */
-function menu(){let size='';try{size=Math.round(JSON.stringify(S).length/1024)+' KB';}catch(e){}
+function menu(){let j='',size='';try{j=JSON.stringify(S);size=Math.round(j.length/1024)+' KB, etwa '+Math.round(100*j.length/REGELN.spielstand.browserGrenze)+' % des Browser-Speichers';}catch(e){}
   ov(`<div class="phead"><h2>Menü</h2><button class="x" onclick="closeOv()" aria-label="Schließen">✕</button></div>
-  <p>Der Spielstand wird nach jedem Spieltag automatisch in diesem Browser gespeichert. Für andere Geräte oder als Sicherung: Code kopieren und später unter „Spielstand-Code laden“ einfügen.</p>
-  <div class="card"><h3>Spielstand sichern (${size})</h3><textarea id="exp" readonly aria-label="Spielstand als Text zum Kopieren">${esc(JSON.stringify(S))}</textarea><div class="row" style="margin-top:8px"><button onclick="copyExp()">Code kopieren</button></div></div>
+  <p>Der Spielstand wird nach jedem Spieltag automatisch in diesem Browser gespeichert. Der Browser kann ihn aber verlieren, wenn sein Speicher voll ist oder Seitendaten gelöscht werden (Safari löscht sie nach sieben Tagen ohne Besuch). Sichere ihn deshalb ab und zu als Datei. Mit der Datei kannst du auch auf einem anderen Gerät weiterspielen.</p>
+  <div class="card"><h3>Spielstand sichern (${size})</h3><div class="row" style="margin-bottom:8px"><button onclick="saveDatei()">Als Datei sichern</button><button onclick="dateiWaehlen()">Datei laden</button>${dateiFeld()}</div><p class="dim">Oder als Text-Code zum Kopieren:</p><textarea id="exp" readonly aria-label="Spielstand als Text zum Kopieren">${esc(j)}</textarea><div class="row" style="margin-top:8px"><button onclick="copyExp()">Code kopieren</button></div></div>
   <div class="card"><h3>Spielstand-Code laden</h3><textarea id="imp" placeholder="Code hier einfügen"></textarea><div class="row" style="margin-top:8px"><button onclick="importSave()">Laden</button></div></div>
   <div class="card"><h3>Darstellung</h3><p class="dim">Gilt für dieses Gerät, nicht für den Spielstand.</p><div class="form">${Object.entries(REGELN.darstellung.themen).map(([k,l])=>`<label class="pick"><input type="radio" name="thema" ${themaLesen()===k?'checked':''} onchange="themaSetzen('${k}')"> ${esc(l)}</label>`).join('')}</div><p class="dim" style="margin-top:10px">Kurze Animationen bei Toren und großen Momenten (aus, wenn dein Gerät „weniger Bewegung“ will):</p><div class="form">${Object.entries(REGELN.darstellung.sequenzen.stufen).map(([k,l])=>`<label class="pick"><input type="radio" name="sequenzen" ${sequenzStufe()===k?'checked':''} onchange="sequenzSetzen('${k}')"> ${esc(l)}</label>`).join('')}</div></div>
   ${eigeneWappenKarte()}${klangKarte()}
@@ -118,10 +118,20 @@ function menu(){let size='';try{size=Math.round(JSON.stringify(S).length/1024)+'
   <p class="dim">Schwierigkeit: ${stufe().name}${S.mitw?' (mitwachsend: reagiert leicht auf deinen Erfolg)':''} · Startwert für den Zufall (Seed): ${S.seed} · Spielstand-Version ${S.v}</p>
   <div class="row"><button onclick="showLizenz()">Lizenz und Lernstufen</button><button onclick="confirmNew()">Neues Spiel beginnen</button></div>`);}
 function copyExp(){const ta=document.getElementById('exp');const done=()=>toast('Code kopiert.');try{navigator.clipboard.writeText(ta.value).then(done,()=>{ta.select();toast('Text ist markiert – bitte manuell kopieren.');});}catch(e){ta.select();toast('Text ist markiert – bitte manuell kopieren.');}}
-function importSave(){let d=null;try{d=JSON.parse(document.getElementById('imp').value);}catch(e){}
+function importSave(txt){let d=null;try{d=JSON.parse(txt!=null?txt:document.getElementById('imp').value);}catch(e){}
   if(!d||!d.teams||!d.pl){toast('Der Code ist ungültig.');return;}
   if(d.v!==REGELN.spielstand.version){toast('Dieser Code stammt aus einer älteren Version (Wochenkalender) und passt nicht mehr.');return;}
   if(LIVE){clearInterval(LIVE.timer);LIVE=null;atmoStop(true);}S=d;delete S.stabT;reindex();verhUmstellen();k23cUmstellen();mitgliederUmstellen();vertragUmstellen();experimenteAnwenden();save();closeOv();TAB='buero';render();toast('Spielstand geladen.');if(S.live)liveFortsetzen();}
+// Spielstand als Datei (Lücke L1 in konzepte/_luecken.md, 26.11.): Sicherung gegen vollen oder gelöschten Browserspeicher und zum Umziehen auf ein
+// anderes Gerät. Inhalt wie der Text-Code (JSON des Spielstands), geladen wird über importSave mit denselben Prüfungen. Der Text-Code bleibt als Ausweg.
+const dateiFeld=()=>`<input type="file" id="datei-laden" accept=".json,application/json" hidden aria-label="Spielstand-Datei wählen" onchange="ladeDatei(this.files[0]);this.value=''">`;
+function dateiWaehlen(){const f=document.getElementById('datei-laden');if(f)f.click();}
+function saveDatei(){if(!S)return;let j;try{j=JSON.stringify(S);}catch(e){toast('Der Spielstand ließ sich nicht schreiben.');return;}
+  let tag='';try{tag=datumVon(S.tag).toISOString().slice(0,10);}catch(e){tag=S.season+'-'+S.tag;}
+  const name=`${REGELN.spielstand.dateiName}-${String((myT()||{}).sh||'spiel').toLowerCase()}-${tag}.json`;
+  try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([j],{type:'application/json'}));a.download=name;document.body.appendChild(a);a.click();
+    setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},1000);toast('Spielstand gesichert: '+name);}catch(e){toast('Der Browser hat das Sichern als Datei abgelehnt. Nimm den Text-Code.');}}
+function ladeDatei(f){if(!f)return;const r=new FileReader();r.onerror=()=>toast('Die Datei ließ sich nicht lesen.');r.onload=()=>importSave(String(r.result||''));r.readAsText(f);}
 // ---------- Darstellung (K35b §13.3, W5b): Thema je Gerät im Browser, nicht im Spielstand ----------
 // dunkel = ohne Attribut (Standard), hell und system als data-thema am html-Element; die Farben dazu stehen in css/spiel.css. Ohne Zufall, ohne Wirkung aufs Spiel.
 function themaLesen(){const D=REGELN.darstellung;try{const t=localStorage.getItem(D.schluessel);return D.themen[t]?t:D.standard;}catch(e){return D.standard;}}
