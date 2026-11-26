@@ -290,6 +290,11 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 26.11.2026: W5d4 Kerning der Schrift (Zweig `mitarbeit/popolupo-w5d4-kerning`, auf W5f4)
+
+- **Neu:** Die eigene Schrift „Flutlicht Display“ hat eine Kerning-Tabelle mit 53 Paaren, etwa „Ta“, „Vo“, „Ye“, „T.“ und „LT“. Umlaute werden wie ihr Grundbuchstabe behandelt.
+- **Erzeugt** mit `perl schrift/schrift.pl`, das Skript prüft die Tabelle selbst. Die Schrift wächst von 17,8 auf 18,2 KB.
+
 ### 26.11.2026: W5f4 Regler für Stadion und Oberfläche (Zweig `mitarbeit/popolupo-w5f4-regler`, auf W5f3)
 
 - **Neu:** Im Menü unter „Klang“ zwei weitere Regler. „Stadion“ gilt für Pfiffe, Jubel, Raunen und Atmosphäre, „Oberfläche“ für Klicks und den Brief-Ton. Beide sind Anteile der Gesamtlautstärke und werden je Gerät gespeichert.

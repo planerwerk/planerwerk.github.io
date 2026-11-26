@@ -212,6 +212,18 @@ $T{'OS/2'}=pack('nnnnnnnnnnnnnnnn',4,int($sumAdv/$ng+0.5),700,3,0,650,600,0,75,6
   my($rec,$str)=('','');for my $e(@nm){my $u=encode('UTF-16BE',$e->[1]);$rec.=pack('nnnnnn',3,1,0x0409,$e->[0],length $u,length $str);$str.=$u;}
   $T{name}=pack('nnn',0,scalar @nm,6+12*@nm).$rec.$str; }
 $T{post}=pack('NNnnNNNNN',0x00030000,0,n16(-100),50,0,0,0,0,0);
+# Kerning (W5d4, 26.11., vorläufig): klassische kern-Tabelle, Format 0, waagerecht. Browser wenden sie an, solange die Schrift kein GPOS hat.
+# Nur Paare, bei denen die Formen Luft lassen: T, V, W, Y, F mit runden Kleinbuchstaben, Punkt und Komma nach offenen Formen, L vor T, V, W, Y.
+# Die Großbuchstaben A, H, O sind eckig mit senkrechten Seiten, dort braucht es keins. Werte in Fonteinheiten (7 je Rastereinheit).
+# Umlaute ä, ö, ü bekommen die Werte von a, o, u.
+{ my @KERN=(['T','aceosu',-63],['T','.,',-70],['V','aeo',-42],['V','.,',-70],['W','aeo',-35],['W','.,',-56],['Y','aeo',-56],['Y','.,',-70],
+            ['F','aeo',-28],['F','.,',-56],['P','.,',-56],['L','TVWY',-56],['r','.,',-42],['v','.,',-35],['w','.,',-35],['y','.,',-35]);
+  my %umlaut=(a=>0xE4,o=>0xF6,u=>0xFC);my %paar;
+  for my $k(@KERN){my($l,$rs,$v)=@$k;my $gl=$cmap{ord $l};die "Kerning: Zeichen $l fehlt\n" unless defined $gl;
+    for my $r(split //,$rs){for my $cp(ord($r),($umlaut{$r}?$umlaut{$r}:())){my $gr=$cmap{$cp};die "Kerning: Zeichen $cp fehlt\n" unless defined $gr;$paar{$gl*65536+$gr}=$v;}}}
+  my @p=sort{$a<=>$b}keys %paar;my $np=@p;my $kes=floor(log($np)/log(2));my $ksr=(2**$kes)*6;
+  $T{kern}=pack('nn',0,1).pack('nnnnnnn',0,14+6*$np,0x0001,$np,$ksr,$kes,$np*6-$ksr).join('',map{pack('nnn',int($_/65536),$_%65536,$paar{$_}&0xFFFF)}@p);
+  die "kern passt nicht\n" unless length($T{kern})==4+14+6*$np; }
 
 my @tags=sort keys %T;my $nt=@tags;my $es=floor(log($nt)/log(2));my $sr=(2**$es)*16;
 my $kopf=pack('Nnnnn',0x00010000,$nt,$sr,$es,$nt*16-$sr);my $off=12+16*$nt;my($vz,$rumpf,$headOff)=('','',0);
