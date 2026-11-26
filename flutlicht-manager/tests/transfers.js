@@ -155,7 +155,7 @@ const kaufe=(w,p,fee,yrs=3)=>{const els=w.W.ev('document');els.getElementById('f
   const aufruf=/fristenSaisonwechsel\(absTag\(0\)-tag0\)/.test(String(ev('newSeasonLauf')));
   v.einig={fee:1e6,bis:S.tag+10};ev('verhJobwechsel')();const job=v.einig===null&&/verhJobwechsel\(\)/.test(String(ev('takeJob')));
   v.f=2e6;delete v.fMy;delete v.fNl;v.nlF=0.1;v.nlMy=S.my;v.nlBis=ev('absTag')(S.tag)+30;ev('verhUmstellen')();const alt=v.fMy===S.my&&v.fNl===1;
-  const imp=/verhUmstellen\(\)/.test(String(ev('importSave')));
+  const imp=/verhUmstellen\(\)/.test(String(ev('importSave'))+String(ev('typeof spielstandUebernehmen=="function"?spielstandUebernehmen:""'))); // seit GK (762d613) übernimmt spielstandUebernehmen den geladenen Stand (T21.1)
   pruef(ruecken&&aufruf&&job&&alt&&imp,'Verhandlungen: Fristen rücken beim Saisonwechsel mit, Einigungen verfallen beim Jobwechsel, alte Gegenangebote werden beim Laden gebunden',
     `Fristen ${ruecken} (Pause ${v.pause}), Aufruf im Saisonwechsel ${aufruf}, Jobwechsel ${job}, altes Gegenangebot ${alt}, Import ${imp}`);}
 

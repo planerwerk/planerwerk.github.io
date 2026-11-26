@@ -24,6 +24,16 @@ Node.js 22, Playwright mit Chromium, für `tests/ui-zugang.js` axe-core 4.10.2 (
 - **Begonnen bei Claude:** nichts weiter. K24 Rest (Bande und Partnerpool, Trainingskleidung, Verhandeln mit Reglern) bleibt vorgemerkt.
 ---
 
+## Lauf 21, 26.11.2026 nachts: Claude-Zweig 6e0ab41 (enthält popolupo-k24-antworten 762d613 mit den Korrekturen GK, K24d, Windows-App)
+
+Alle Tests. **50 grün, 7 rot.** Davon sind vier unverändert wie in Lauf 19 und 20: kalibrierung (Auswärtssiege 29 %), medizin (Zerrungen 25 %), sommer (Kondition 79,6), akzeptanz (Abwehr +0,9). Das `finanzmodell 2` ist Zeile für Zeile gleich wie in Lauf 20. Neu rot:
+
+- **T21.1 transfers** (erledigt von Claude): „alte Gegenangebote werden beim Laden gebunden“ meldete „Import false“. Der Test suchte `verhUmstellen()` in `importSave`, seit GK steht der Aufruf in `spielstandUebernehmen`. Der Test sucht jetzt in beiden, er ist grün. Am Spiel ist nichts falsch.
+- **T21.2 ui-zwei-saisons** (erledigt von Claude): Zeitüberschreitung beim Laden des Text-Codes in Woche 8. Seit GK fragt das Spiel vor dem Ersetzen („Spielstand ersetzen?“), der Test klickte die Rückfrage nicht weg. Er klickt jetzt `#laden-ja`, falls die Rückfrage kommt, und ist grün (geprüft am Arbeitsstand).
+- **T21.3 welt 10** (offen, für popolupo): 2032 nur 14 Wechsel mit Ablöse (mindestens 15), zum Saisonende 2034 ein Kader mit 9 Spielern und einer leeren Gruppe. Das alte Randproblem aus Lauf 15 und 16 ist wieder da, nachdem es in Lauf 19 und 20 grün war. Vermutlich ein Schmetterlingseffekt: K24d ändert die Fanstimmung des eigenen Vereins (Stadionname verkauft) und damit den weiteren Verlauf der Welt. Dass ein Computer-Verein bis auf 9 Spieler schrumpft, bleibt ein Fehler der Kaderplanung, unabhängig vom Auslöser. Nicht weiter untersucht.
+
+---
+
 ## Lauf 20, 26.11.2026 nachts: Claude-Zweig 66776b1 (78e6b78 von popolupo, dazu L1, Erinnerung, Windows-App)
 
 Kontrolllauf für die Änderungen von Claude an diesem Abend, alle Tests. **53 grün, 4 rot.** Die vier roten sind dieselben wie in Lauf 19, mit denselben Werten: kalibrierung (Auswärtssiege 29 %), medizin (Zerrungen 25 %), sommer (Kondition 79,6), akzeptanz (Abwehr +0,9). Das `finanzmodell 2` ist Zeile für Zeile gleich wie in Lauf 19, ebenso `welt 10`. Die neuen Tests `spielstand` und `ui-sicherung` sind grün. L1 und die Windows-App verschieben also nichts im Spiel.
