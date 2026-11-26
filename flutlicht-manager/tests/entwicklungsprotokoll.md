@@ -299,8 +299,12 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
   - Gemessen über fünf Läufe je Verein und Saison: 1. Liga +13 bis +16 Mio., 2. Liga −1 bis −4 Mio., 3. Liga −2,5 bis −3,8 Mio.
   - Ziel: etwa +11, 0 und −1 Mio.
   - Das wirkt auf alle Vereine, auch auf deinen.
+- **Neu: `tests/kalibrierung-sweep.js`** für die Engine.
+  - Es spielt sechs Einstellungen mit denselben Saisons nebeneinander durch: Stärke-Exponent beim Angriff und Dämpfung überragender Spieler.
+  - Je Einstellung zeigt es Meisterpunkte, Favoritensiege, Heimsiege, Remis, Tore und Elfmeter.
+  - Mit den Zahlen wähle ich die Einstellung, statt blind zu drehen.
 - **Offen:**
-  - Engine: Meisterpunkte im Median 64–66 (Ziel 70–85), eigener Kalibrierschritt.
+  - Engine: Meisterpunkte im Median 64–66 (Ziel 70–85), nach dem Vergleichslauf.
   - welt 10: Wechsel mit Ablöse 12–14 (mindestens 15), ein Kader mit leerer Gruppe.
   - T1.3, akzeptanz Abwehr.
 
