@@ -290,6 +290,11 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 26.11.2026: Korrekturen nach Prüfung GC (Zweig `mitarbeit/popolupo-gc-korrekturen`, auf W5e9)
+
+- **Prüfung GC** (lesender Agent über Speichergrenze, Gesichter im Kader, Wappen und Einlauf auf der Tafel): ein niedriger Fund und ein Hinweis, beides umgesetzt, Einzelheiten in der Konsistenzprüfung GC.
+- **Sichtbar:** Der Einlauf vor dem Anpfiff läuft einmal sauber durch statt zu flackern; die Anzeigetafel wird nur neu geschrieben, wenn sich etwas ändert.
+
 ### 26.11.2026: W5e9 Wappen auf der Anzeigetafel und Einlauf (Zweig `mitarbeit/popolupo-w5e9-einlauf`, auf den Hinweisen GB)
 
 - **Neu:** Die Anzeigetafel im Live-Spiel zeigt die erzeugten (oder eigenen) Wappen beider Vereine. Vor dem Anpfiff fahren Wappen, Namen und Spielstand kurz ein (`einlaufSequenz` in `js/live.js`, nur bei Minute 0, Stufe „Sequenzen“ gilt, aus bei „weniger Bewegung“). Nur Anzeige.

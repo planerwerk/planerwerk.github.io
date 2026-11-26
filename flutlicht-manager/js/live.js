@@ -146,11 +146,11 @@ function saisonSequenz(){if(typeof document==='undefined'||typeof document.creat
   el.innerHTML=`<div class="sw-tafel"><span>Neue Saison</span><b>${S.season}/${String((S.season+1)%100).padStart(2,'0')}</b></div>${tipp?`<p class="sw-tipp"><b>Tipp:</b> ${esc(tipp)}</p>`:''}`;
   document.body.appendChild(el);setTimeout(()=>el.classList.add('weg'),kurz?1200:2600);setTimeout(()=>el.remove(),kurz?1700:3100);}
 // Titel und Aufstieg (K39 §3.4, W5e6): einmal je Saison und Sitzung Konfetti und Jubel in der Saisonbilanz. Nicht im Spielstand gemerkt.
-let TITEL_GEFEIERT=null;
+const TITEL_GEFEIERT=new WeakMap(); // Spielstand-Objekt → gefeierte Saison; hält alte Spielstände nicht im Speicher fest (Hinweis aus Prüfung GC)
 // Verein aus der Bilanz (sm.my, nach einer Entlassung ist S.my schon der neue), Aufstieg auch über die Relegation, gemerkt je Karriere (Prüfung FZ2, FZ3)
-function titelFeier(sm){if(!sm||typeof S==='undefined'||!S)return;const m=sm.my!=null?sm.my:S.my,k=`${S.seed}|${sm.season}`,dabei=l=>(l||[]).includes(m);if(TITEL_GEFEIERT&&TITEL_GEFEIERT.s===S&&TITEL_GEFEIERT.k===k)return; // je Spielstand-Objekt (Hinweis aus Prüfung GB)
+function titelFeier(sm){if(!sm||typeof S==='undefined'||!S)return;const m=sm.my!=null?sm.my:S.my,k=`${S.seed}|${sm.season}`,dabei=l=>(l||[]).includes(m);if(TITEL_GEFEIERT.get(S)===k)return; // je Spielstand-Objekt (Hinweise aus Prüfung GB und GC)
   const rel=(sm.rel&&sm.rw===m&&sm.rel[1]===m)||(sm.rel2&&sm.rw2===m&&sm.rel2[1]===m);
-  if(!(sm.champ===m||sm.champ2===m||sm.champ3===m||sm.cup===m||dabei(sm.up)||dabei(sm.up3)||dabei(sm.up4)||rel))return;TITEL_GEFEIERT={s:S,k};
+  if(!(sm.champ===m||sm.champ2===m||sm.champ3===m||sm.cup===m||dabei(sm.up)||dabei(sm.up3)||dabei(sm.up4)||rel))return;TITEL_GEFEIERT.set(S,k);
   if(sequenzAn()){konfetti((S.teams[m]&&S.teams[m].col)||myT().col,48);klang('jubel');}}
 function torSequenz(meins,farbe){if(typeof document==='undefined'||!sequenzAn())return;const kurz=sequenzStufe()==='kurz',el=document.getElementById('lv-tafel');
   if(el){el.classList.remove('tor-blitz','tor-gegner');void el.offsetWidth;el.classList.add(meins?'tor-blitz':'tor-gegner');setTimeout(()=>el.classList.remove('tor-blitz','tor-gegner'),kurz?700:1400);}
@@ -161,7 +161,8 @@ function einlaufSequenz(){if(typeof document==='undefined'||typeof document.getE
 function liveRender(){const L=LIVE;if(!L)return;if(!document.getElementById('lv-inhalt'))liveFrame();const G=L.G,r={h:G.hid,a:G.aid};
   document.getElementById('lv-uhr').textContent=L.ende?'Ende':G.elf?'i.E.':G.m===0?'0′':G.m+'′';
   const karten=s=>{const n=G.ev.filter(e=>e.s===s&&e.t==='R').length;return n?` <span class="lv-rot" title="Platzverweise">${'▮'.repeat(n)}</span>`:'';};
-  document.getElementById('lv-tafel').innerHTML=`<div class="board"><div class="t">${wappen(G.hid,30)}${esc(tn(G.hid))}${karten(0)}</div><div class="score">${G.sc[0]}:${G.sc[1]}</div><div class="t">${karten(1)}${esc(tn(G.aid))}${wappen(G.aid,30)}</div></div>${G.pen?`<p class="dim" style="text-align:center;margin-top:6px">Elfmeterschießen ${G.pen[0]}:${G.pen[1]}</p>`:''}`;
+  const tafel=document.getElementById('lv-tafel'),tafelHtml=`<div class="board"><div class="t">${wappen(G.hid,30)}${esc(tn(G.hid))}${karten(0)}</div><div class="score">${G.sc[0]}:${G.sc[1]}</div><div class="t">${karten(1)}${esc(tn(G.aid))}${wappen(G.aid,30)}</div></div>${G.pen?`<p class="dim" style="text-align:center;margin-top:6px">Elfmeterschießen ${G.pen[0]}:${G.pen[1]}</p>`:''}`;
+  if(tafel.__html!==tafelHtml){tafel.innerHTML=tafelHtml;tafel.__html=tafelHtml;} // nur bei Änderung neu schreiben, sonst startet der Einlauf ständig neu (Prüfung GC1)
   const sprung=!!L.pfAlt&&G.m-L.pfAlt.m>1; // vorgespult: keine einzelnen Momente nachholen (Prüfung FX5)
   if(L.scAlt&&!sprung){const d0=G.sc[L.s]-L.scAlt[L.s],d1=G.sc[1-L.s]-L.scAlt[1-L.s];if(d0>0){torSequenz(true,myT().col);klang('jubel');}else if(d1>0){torSequenz(false);klang('raunen');}}L.scAlt=G.sc.slice(); // Torjubel (K39 §3.4, W5e3)
   if(L.pfAlt){if(!L.pfAlt.ende&&L.ende)klang('pfiff3');else if(!sprung&&!L.pfAlt.hz&&L.hz)klang('pfiff');else if(!sprung&&L.pfAlt.m===0&&G.m>0)klang('pfiff');}L.pfAlt={m:G.m,hz:L.hz,ende:L.ende}; // Pfiffe (K41, W5f): Anpfiff, Halbzeit, Abpfiff; beides nicht beim Fortsetzen

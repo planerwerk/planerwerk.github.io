@@ -2945,3 +2945,14 @@ Umgesetzte Hinweise auf `mitarbeit/popolupo-gb-hinweise`:
 | GB-H1 | Eigene Wappen teilen sich den Browser-Speicher mit dem Spielstand. Jetzt höchstens `REGELN.darstellung.wappenMaxKB` (900 KB), sonst wird nichts gespeichert und eine Meldung erklärt warum. | ✅ umgesetzt |
 | GB-H2 | Die Titelfeier merkte sich nur Seed und Saison. Jetzt je Spielstand-Objekt wie der Saisonwechsel. | ✅ umgesetzt |
 | – | Weitere Hinweise ohne Wirkung im Spiel (Attrappe im Simulator ohne `setAttribute`, `stimmung()` setzt beim Zeichnen Startwerte wie schon auf dem Tester-Strang, Urlaub-Anzeige bei Relegationsteilnehmern am Saisonende) | vorgemerkt |
+
+## GC. Prüfung von 36666e5, 8585589 und W5e9 ohne Laufzeit (26. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 2ef156c..9e2391b gelesen. Kein Laufzeitfehler, kein Name außerhalb seines Gültigkeitsbereichs, kein fehlender Wert in Template-Strings. Wappen auf der Tafel für Amateur- und Auslandsvereine grau ohne Kürzel, ohne Fehler. Kein Test liest den Text der Tafel. Die Speichergrenze für eigene Wappen berührt den Browser-Test nicht. Kaderliste ohne Überlauf. Bericht: `flutlicht-tools/pruefung-gc.md`.
+
+Korrekturen auf `mitarbeit/popolupo-gc-korrekturen` (auf W5e9).
+
+| # | Befund | Status |
+|---|---|---|
+| GC1 | **Niedrig, nur Anzeige:** `liveRender` schrieb die Anzeigetafel bei jedem Takt neu, dadurch startete der Einlauf in den ersten 1,3 Sekunden neu und flackerte. Jetzt schreibt es die Tafel nur, wenn sich ihr Inhalt ändert. | ✅ behoben |
+| – | Hinweis: Die Titelfeier hielt das alte Spielstand-Objekt im Speicher fest. Jetzt `WeakMap`. | ✅ umgesetzt |
