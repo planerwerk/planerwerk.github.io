@@ -13,6 +13,17 @@ Node.js 22, Playwright mit Chromium, für `tests/ui-zugang.js` axe-core 4.10.2 (
 
 ---
 
+## Lauf 17, 26.11.2026 abends: `popolupo-t15-korrekturen` (e97431f, enthält t14-finanzen)
+
+Nur getestet und geloggt. **52 grün, 3 rot.** welt (2 Saisons) und spielermodell wieder grün. Rot:
+
+- **welt 10:** nur noch 2032 mit 13 Wechseln mit Ablöse (mindestens 15; 16 Vereinslose, 19 Vereine im Minus). Alle Saisonenden mit Kader 20 bis 30 und ohne leere Gruppe.
+- **kalibrierung:** „Gleich stark: Heimsieg“ 47 % (n=248, Ziel 40–46 %) steht jetzt unter PROBLEME, deshalb exit 1. Die übrigen Werte sind grün oder gelb.
+- **akzeptanz:** Abwehr +0,9 (unverändert).
+- **finanzmodell 2 (Saldo je Verein und Saison):** 1. Liga +10,1 / +11,9 Mio., 2. Liga +0,6 / −2,0 Mio., 3. Liga −1,8 / −3,3 Mio. (erwartet etwa +11, 0, −1). Die 1. Liga trifft jetzt beide Saisons. 2. und 3. Liga fallen in der zweiten Saison weiter ab.
+
+---
+
 ## Lauf 16, 26.11.2026 abends: `popolupo-t14-finanzen` (aabbce8, enthält gi-korrekturen)
 
 Nur getestet und geloggt. **50 grün, 5 rot.** medizin und jugend wieder grün. Rot:
