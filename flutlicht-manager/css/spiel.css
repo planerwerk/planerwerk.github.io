@@ -264,3 +264,8 @@ td .gs{vertical-align:middle;margin-right:6px;border-radius:6px}
 @keyframes einR{from{transform:translateX(40px);opacity:0}to{transform:none;opacity:1}}
 @keyframes einS{from{transform:scale(.6);opacity:0}to{transform:none;opacity:1}}
 @media (prefers-reduced-motion:reduce){#lv-tafel.einlauf .board .t,#lv-tafel.einlauf .score{animation:none}}
+/* Intro (K39 §3.4, W5e10): Flutlichtmasten gehen auf dem Startbildschirm nacheinander an */
+.stadion .st-an{animation:flutAn .9s ease-out both}
+@keyframes flutAn{0%{opacity:0}55%{opacity:1}70%{opacity:.55}100%{opacity:1}}
+.stadion.still .st-an{animation:none}
+@media (prefers-reduced-motion:reduce){.stadion .st-an{animation:none}}

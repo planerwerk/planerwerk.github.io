@@ -290,6 +290,11 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 26.11.2026: W5e10 Intro auf dem Startbildschirm (Zweig `mitarbeit/popolupo-w5e10-intro`, auf den Korrekturen GC)
+
+- **Neu:** Auf dem Startbildschirm gehen die vier Flutlichtmasten nacheinander an (Lampen, Schein, Lichtkegel, kurzes Flackern), reines CSS. Still bei Sequenzen „aus“ oder „weniger Bewegung“. Nur Anzeige.
+- **Umgebung:** `.ci-tools/push.sh` nutzt seit heute `awk` statt `sed`, weil der Virenscanner `sed.exe` in Quarantäne geschoben hat (Fehlalarm, nicht aus der Flutlicht-Arbeit).
+
 ### 26.11.2026: Korrekturen nach Prüfung GC (Zweig `mitarbeit/popolupo-gc-korrekturen`, auf W5e9)
 
 - **Prüfung GC** (lesender Agent über Speichergrenze, Gesichter im Kader, Wappen und Einlauf auf der Tafel): ein niedriger Fund und ein Hinweis, beides umgesetzt, Einzelheiten in der Konsistenzprüfung GC.
