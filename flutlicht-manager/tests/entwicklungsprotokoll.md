@@ -290,6 +290,12 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 26.11.2026: tests/welt.js an K23c und K23d angepasst (Zweig `mitarbeit/popolupo-t10b-welt-pruefung`, auf den Hinweisen GF)
+
+- **T9.2 Sternejagd:** Seit K23d gilt der Gehaltsrahmen auch für Computer-Vereine. Ein Zweitligist kann das Gehalt eines Sterns der Stärke 96 nie zahlen. Der Testfall schaltet den Gehaltsrahmen deshalb für sich ab, weil er die Regeln der Sternejagd prüft.
+- **T9.3, Lauf 10 „Konten im Minus“:** Seit K23c haben auch Computer-Vereine einen Kreditrahmen. Geprüft wird jetzt „kein Konto unter dem Kreditrahmen“. Wie viele Konten im Minus sind, wird nur noch ausgegeben.
+- **Trainerwechsel (Lauf 10: 200 in 10 Saisons):** Die Meldung nennt jetzt, welche Grenze verletzt ist: die meisten Wechsel einer Saison in der 1. Liga und den Verein mit den meisten Wechseln in einer Saison. Ursache und Kalibrierung folgen nach dem nächsten Lauf.
+
 ### 26.11.2026: Hinweise aus Prüfung GF (Zweig `mitarbeit/popolupo-gf-hinweise`, auf den Korrekturen GE)
 
 - Prüfung GF über die Korrekturen GD und GE, das Messskript und die Schrift: keine Funde.

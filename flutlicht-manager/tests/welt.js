@@ -109,7 +109,10 @@ const mitLeihProtokoll=(F,getS,C)=>{const log=[],orig=F.kiLeihe;
   // kleinerer Vereine bezahlen, also muss der Stern klar der Beste sein (auch mit Schätzfehler ±2), sonst nimmt die Jagd einen anderen.
   const niveau=F.kaderplan(t).niveau,plaetze=F.planSoll(t).stamm,q=ev('squad')(v.id).filter(p=>p.pos!=='TW'&&plaetze[F.planGruppe(p)]>0).sort((a,b)=>b.str-a.str)[0];q.str=96;q.pot=Math.max(q.pot,q.str);q.age=24;q.ct=3;q.list=0;delete q.wech;delete q.leihe;
   t.cash=5e8;const soll=ev('value')(q)*C.verkauf.angebotAb*ev('rlFaktor')(q),log=mitProtokoll(F,()=>w.W.S,C.talentBis);
-  for(let i=0;i<14;i++)im('stern'+i,()=>F.kiMarkt());
+  // T9.2: Seit K23d gilt der Gehaltsrahmen auch für Computer-Vereine. Ein Zweitligist kann das Gehalt eines Sterns der Stärke 96 nie tragen.
+  // Hier geht es um die Regeln der Sternejagd, darum ist der Gehaltsrahmen für diesen Fall abgeschaltet (Tests dürfen Regelwerte verstellen, tests/sim.js).
+  const B=ev('RFP').budget,sperreAb=B.sperreAb;B.sperreAb=1e9;
+  try{for(let i=0;i<14;i++)im('stern'+i,()=>F.kiMarkt());}finally{B.sperreAb=sperreAb;}
   const st=log.filter(e=>e.art==='stern'&&e.nach===t.id),e=st[0];
   pruef(niveau+C.sterneJagd.ueberNiveau<=q.str&&F.vereinsProfile(t).includes('ehrgeizig')&&st.length===1&&e.pid===q.id&&q.team===t.id&&e.preis>=soll-25000&&e.repDiff>=C.sterneJagd.ansehenPlus&&t.tb.s===1,
     'Sternejagd: genau ein Stern je Sommer, der Stärkste eines kleineren Vereins, mindestens 150 % des Marktwerts × Restlaufzeit',e?`${q.n} (${q.str}) von ${v.name} zu ${t.name} für ${e.preis}, Soll mindestens ${Math.round(soll)}`:`kein Stern in 14 Wochen, ${st.length} Käufe`);
@@ -185,11 +188,12 @@ const mitLeihProtokoll=(F,getS,C)=>{const log=[],orig=F.kiLeihe;
   pruef(S.trainerWechsel.length===n0+1&&S.trainerWechsel[n0].t===z.id&&Math.abs(y.vor.v-(y0+(V.start-y0)*V.saisonZurueck))<0.11&&y.vor.ab===0,'Saisonwechsel: Ziel weit verfehlt und wenig Vertrauen, Wechsel im Sommer. Die anderen gehen halb zurück zum Start',`${S.trainerWechsel.length-n0} Wechsel im Sommer`);}
 
 // 7. Saisons im Ablauf: jeder Wechsel geprüft, Zahl der Wechsel, Obergrenze je Fenster, Kader und Konten am Saisonende
-{const R0=neueWelt().W,C=R0.ev('RCV'),RM=R0.ev('RM');let log=null,leihLog=null,S0=null;const ende=[],fuell=[],nochVerliehen=[];
-  const lauf=saisons({n:N,seed:SEED,verein:6,
+{const R0=neueWelt().W,C=R0.ev('RCV'),RM=R0.ev('RM');let log=null,leihLog=null,S0=null,evL=null;const ende=[],fuell=[],nochVerliehen=[];
+  const lauf=saisons({n:N,seed:SEED,verein:6,vorher:(F,W)=>{evL=W.ev;},
     beiSaisonstart:(S,F)=>{if(log){nochVerliehen.push(S.pl.filter(p=>p.leihe).length);return;}S0=S;log=mitProtokoll(F,()=>S0,C.talentBis);leihLog=mitLeihProtokoll(F,()=>S0,C);const orig=F.planAuffuellen;F.planAuffuellen=function(t,P,l){const n=orig(t,P,l);fuell.push({s:S0.season,t:t.id,n});return n;};},
-    beiSaisonende:(S,F)=>{const z={s:S.season,offen:0,leer:0,ueber2:0,vereine:0,kader:[],minus:0,gebraucht:0,laufenAus:0};
-      S.teams.forEach(t=>{if(t.lg>3||t.id===S.my)return;z.vereine++;const P=F.kaderplan(t);z.kader.push(P.alle.length);if(t.cash<0)z.minus++;let u2=false;
+    beiSaisonende:(S,F)=>{const z={s:S.season,offen:0,leer:0,ueber2:0,vereine:0,kader:[],minus:0,ueberKredit:0,gebraucht:0,laufenAus:0};
+      // Seit K23c haben auch Computer-Vereine einen Kreditrahmen: ein Konto im Minus ist erlaubt, nur nicht unter dem Kreditrahmen (T9.3, Lauf 10)
+      S.teams.forEach(t=>{if(t.lg>3||t.id===S.my)return;z.vereine++;const P=F.kaderplan(t);z.kader.push(P.alle.length);if(t.cash<0)z.minus++;if(t.cash<-evL('kreditRahmen')(t))z.ueberKredit++;let u2=false;
         P.alle.forEach(p=>{if(C.vertrag.wichtig.includes(P.rang.get(p.id))){z.gebraucht++;if(p.ct===1)z.laufenAus++;}});
         C.gruppen.forEach(g=>{const G=P.gr[g];if(G.l.length<G.soll)z.offen+=G.soll-G.l.length;if(!G.l.length&&G.soll>0)z.leer++;if(G.l.filter(p=>P.rang.get(p.id)==='ueber').length>2)u2=true;});if(u2)z.ueber2++;});
       ende.push(z);}});
@@ -209,7 +213,9 @@ const mitLeihProtokoll=(F,getS,C)=>{const log=[],orig=F.kiLeihe;
   // Trainerwechsel (U11d2): je Saison und Liga, während der Saison und im Sommer danach. Ziel 4 bis 10 in der 1. Liga (K31 §10), bis zur Kalibrierung nur grob gewertet.
   {const tw=S.trainerWechsel||[],je={},proVerein={};tw.forEach(e=>{je[e.s+':'+e.lg]=(je[e.s+':'+e.lg]||0)+1;proVerein[e.s+':'+e.t]=(proVerein[e.s+':'+e.t]||0)+1;});
     jahre.forEach(s=>info(`Saison ${s}: Trainerwechsel`,`1. Liga ${je[s+':1']||0}, 2. Liga ${je[s+':2']||0}, 3. Liga ${je[s+':3']||0} (Ziel 1. Liga: 4 bis 10)`));
-    pruef(jahre.every(s=>(je[s+':1']||0)<=18)&&Object.values(proVerein).every(n=>n<=3),'Trainerwechsel nicht absurd: höchstens 18 je Saison in der 1. Liga, kein Verein öfter als dreimal in einer Saison',`${tw.length} Wechsel in ${N} Saison(s)`);}
+    const max1=Math.max(0,...jahre.map(s=>je[s+':1']||0)),maxV=Object.entries(proVerein).sort((a,b)=>b[1]-a[1])[0]; // welche Grenze verletzt ist (Lauf 10 nannte nur die Summe)
+    pruef(jahre.every(s=>(je[s+':1']||0)<=18)&&Object.values(proVerein).every(n=>n<=3),'Trainerwechsel nicht absurd: höchstens 18 je Saison in der 1. Liga, kein Verein öfter als dreimal in einer Saison',
+      `${tw.length} Wechsel in ${N} Saison(s), 1. Liga höchstens ${max1} je Saison, ein Verein höchstens ${maxV?maxV[1]:0}${maxV?` (Saison ${maxV[0].split(':')[0]}, ${S.teams[+maxV[0].split(':')[1]]?S.teams[+maxV[0].split(':')[1]].name:'?'})`:''}`);}
   const jeFenster={};[...log,...leihLog].forEach(e=>{const k=e.s+':'+e.nr+':'+e.nach;jeFenster[k]=(jeFenster[k]||0)+1;});
   const zuViel=Object.entries(jeFenster).filter(([k,n])=>n>C.kauf.jeFenster[+k.split(':')[1]]).length;pruef(zuViel===0,'Obergrenze: höchstens 4 Zugänge über den Markt im Sommer und 2 im Winter je Verein, Leihen eingerechnet',`${zuViel} darüber`);
   jahre.forEach(s=>{const l=log.filter(e=>e.s===s),bez=l.filter(e=>e.von>=0),so=l.filter(e=>e.nr===0),wi=l.filter(e=>e.nr===1),f=fuell.filter(x=>x.s===s),z=ende.find(x=>x.s===s)||{vereine:55};
@@ -217,7 +223,7 @@ const mitLeihProtokoll=(F,getS,C)=>{const log=[],orig=F.kiLeihe;
     info(`Saison ${s}: Zugänge über den Markt je Verein`,`Sommer ${f1(so.length/z.vereine)}, Winter ${f1(wi.length/z.vereine)} (K31 §10 nennt 3–8 und 0–3 für alle Zugänge zusammen)`);
     info(`Saison ${s}: am Ende des Sommerfensters aufgefüllt`,`${f.reduce((a,x)=>a+x.n,0)} Spieler bei ${f.filter(x=>x.n>0).length} Vereinen`);});
   ende.forEach(z=>{const mn=Math.min(...z.kader),mx=Math.max(...z.kader);
-    pruef(mn>=15&&mx<=36&&z.minus===0&&z.leer===0,`Saisonende ${z.s}: Kader zwischen 15 und 36, keine Gruppe ganz leer, kein Konto im Minus`,`Kader ${mn} bis ${mx}, ${z.leer} leere Gruppen, ${z.minus} im Minus`);
+    pruef(mn>=15&&mx<=36&&z.ueberKredit===0&&z.leer===0,`Saisonende ${z.s}: Kader zwischen 15 und 36, keine Gruppe ganz leer, kein Konto unter dem Kreditrahmen`,`Kader ${mn} bis ${mx}, ${z.leer} leere Gruppen, ${z.ueberKredit} unter dem Kreditrahmen (${z.minus} im Minus, erlaubt)`);
     info(`Saisonende ${z.s}: offene Planstellen je Verein`,`${f1(z.offen/z.vereine)}, Vereine mit mehr als 2 Spielern Überhang in einer Gruppe: ${pc(z.ueber2/z.vereine)}`);
     info(`Saisonende ${z.s}: Gebrauchte mit auslaufendem Vertrag (U11c, früh verlängert sollten es unter 20 % sein)`,`${z.laufenAus} von ${z.gebraucht} (${pc(z.laufenAus/Math.max(1,z.gebraucht))})`);});
   // Budget genutzt (K31 §10: 60 bis 100 %): Anteil des Winterbudgets der letzten Saison, der ausgegeben wurde (das Sommerbudget ist dann schon überschrieben)
