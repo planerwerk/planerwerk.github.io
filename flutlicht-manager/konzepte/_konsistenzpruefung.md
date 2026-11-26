@@ -3075,3 +3075,22 @@ Korrekturen auf `mitarbeit/popolupo-gi-korrekturen` (auf t12).
 |---|---|---|
 | GI1 | **Mittel:** Die zwei Fälle aus Lauf 12 haben keinen erlaubten Tag: dein Verein dienstags Champions League, der Ligagegner donnerstags davor und danach Europapokal. Das Sicherheitsnetz griff dann zur Notregel und schob das Spiel täglich zwischen Samstag und Sonntag hin und her. Jetzt verlegt das Netz nur auf einen freien Tag (`ligaVerlegen` mit `nurFrei`). Unvermeidbare Fälle zählt `tests/wettbewerbe.js` getrennt und nicht als Fehler. Das Champions-League-Spiel auf Mittwoch zu legen, griffe an sechs Stellen in den Europapokal ein und bleibt vorerst aus (vorläufig). | ✅ behoben (vorläufig) |
 | GI2 | **Niedrig:** Das Netz konnte auf morgen oder heute verlegen. Jetzt frühestens übermorgen (`ab`). | ✅ behoben |
+
+## GJ. Prüfung der Ligaklausel der Computer-Vereine und der Messskripte ohne Laufzeit (26. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat ba186df gelesen.
+
+- `lastLg` ist zum Zeitpunkt der Kürzung für alle Vereine die Liga der Vorsaison. Die Kürzung läuft je Saisonwechsel genau einmal und würfelt nicht.
+- Gleichschritt 5a und `tests/schwierigkeit.js` erreichen keinen Saisonwechsel.
+- Test 4b, `finanzmodell` und `kalibrierung` sind ohne Syntax- oder Bereichsfehler.
+
+Bericht: `flutlicht-tools/pruefung-gj.md`.
+
+Korrekturen auf `mitarbeit/popolupo-gj-korrekturen` (auf t18-ligaklausel).
+
+| # | Befund | Status |
+|---|---|---|
+| GJ1 | **Mittel:** Ob gekürzt wurde, hing davon ab, wer den Verein am 1. Juli führt, nicht davon, wer den Vertrag geschlossen hat. Dein Startkader blieb nach einem Abstieg ungekürzt. Jetzt gilt für alle Vereine dieselbe Regel: Was du aushandelst, steht in `p.lk`, „keine“ ausdrücklich als 0. Alles andere hat die übliche Klausel. Verlängerung durch den Verein und Vertragsende setzen auf die übliche zurück. | ✅ behoben |
+| GJ2 | **Mittel:** Die Kürzung blieb bis zum Vertragsende, auch nach dem Wiederaufstieg, und die Stimmung sah einen unterbezahlten Spieler. Jetzt gilt das Gehalt je Liga: `p.lkAlt` merkt das alte Gehalt, nach dem Wiederaufstieg gilt es wieder, ein zweiter Abstieg kürzt nicht noch einmal. Stimmung und Neid-Karte messen das Vertragsgehalt (`gehaltVertrag`). | ✅ behoben |
+| GJ3 | **Niedrig:** „neu in der Liga“ mischte Absteiger und Aufsteiger. Jetzt drei Gruppen. | ✅ behoben |
+| GJ4 | **Niedrig:** Die Ausnahme für Leihen und vereinbarte Wechsel griff nie, weil beide vorher schon abgewickelt sind. Jetzt wird nicht gekürzt, wer am Tag des Saisonwechsels kam (`p.seit`). Leihen waren schon richtig. | ✅ behoben |

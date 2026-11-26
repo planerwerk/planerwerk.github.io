@@ -40,11 +40,16 @@ const welt=(id=9)=>{const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S,ev=W.e
   pruef(summe===soll&&S.fin['Prämien']===-soll,'Prämien je Spiel: Auflauf voll in der Startelf, halb bei später Einwechslung, Punkte ab 45 Minuten, Tore, Zu-Null für Abwehr und Torwart',`${summe} €, erwartet ${soll} €`);
   const pokal=Object.assign({},r,{lg:null});S.fin={};const sp=ev('praemienNachSpiel')([pokal]);pruef(sp===soll-3*2000*3,'Im Pokal gibt es keine Punktprämie',`${sp} €`);}
 
-// 4b. Ligaklausel der Computer-Vereine (K21 §12 Nr. 20, Lauf 18): nach einem Abstieg sinken alle laufenden Gehälter um ligaklausel.computer, dein Verein ohne ausgehandelte Klausel nicht
-{const {S,ev}=welt();const c=ev('RVT').ligaklausel.computer,k=S.teams.find(x=>x.id!==S.my&&x.lg===2),sq=ev('squad')(k.id).filter(p=>!p.leihe&&!p.wech),vor=sq.map(p=>p.sal),me=S.teams[S.my],mein=ev('squad')(S.my),m0=mein.map(p=>p.sal);
-  mein.forEach(p=>{delete p.lk;});me.lastLg=me.lg;me.lg=me.lg+1;k.lastLg=2;k.lg=3;ev('vertraegeSaison')();k.lg=2;me.lg=me.lastLg;
-  pruef(c>0&&sq.length>0&&sq.every((p,i)=>p.sal===Math.round(vor[i]*(1-c)/1000)*1000)&&mein.every((p,i)=>p.sal===m0[i]),'Ligaklausel der Computer-Vereine: Nach einem Abstieg sinken alle Gehälter um 30 %, dein Verein ohne Klausel bleibt unverändert',
-    `${k.name}: ${vor[0]} → ${sq[0].sal}, dein Verein ${mein.filter((p,i)=>p.sal!==m0[i]).length} geändert`);}
+// 4b. Ligaklausel für alle Vereine (K21 §12 Nr. 20, Lauf 18, Prüfung GJ): ohne ausgehandelte Klausel gilt die übliche (ligaklausel.computer), ausgehandelt wie vereinbart
+// (auch „keine“), wer heute kam, wird nicht gekürzt, ein zweiter Abstieg kürzt nicht noch einmal, nach dem Wiederaufstieg gilt das alte Gehalt, die Stimmung misst das Vertragsgehalt
+{const {S,ev}=welt();const c=ev('RVT').ligaklausel.computer,r=x=>Math.round(x/1000)*1000,k=S.teams.find(x=>x.id!==S.my&&x.lg===2),sq=ev('squad')(k.id),vor=sq.map(p=>p.sal),me=S.teams[S.my],mein=ev('squad')(S.my).slice(0,4),m0=mein.map(p=>p.sal),lg0=me.lg;
+  delete mein[0].lk;mein[1].lk=0;mein[2].lk=0.5;delete mein[3].lk;mein[3].seit=ev('absTag')(S.tag);
+  me.lastLg=lg0;me.lg=lg0+1;k.lastLg=2;k.lg=3;ev('vertraegeSaison')();
+  const ab=sq.every((p,i)=>p.sal===r(vor[i]*(1-c)))&&mein[0].sal===r(m0[0]*(1-c))&&mein[1].sal===m0[1]&&mein[2].sal===r(m0[2]*0.5)&&mein[3].sal===m0[3]&&ev('gehaltVertrag')(mein[0])===m0[0];
+  ev('vertraegeSaison')();const nichtDoppelt=sq.every((p,i)=>p.sal===r(vor[i]*(1-c)));
+  k.lastLg=3;k.lg=2;me.lastLg=lg0+1;me.lg=lg0;ev('vertraegeSaison')();const auf=sq.every((p,i)=>p.sal===vor[i])&&mein.every((p,i)=>p.sal===m0[i])&&!mein[0].lkAlt;
+  pruef(c>0&&sq.length>0&&ab&&nichtDoppelt&&auf,'Ligaklausel: Nach einem Abstieg ohne ausgehandelte Klausel −30 %, ausgehandelt wie vereinbart, Neuzugang von heute nicht; kein zweites Mal; nach dem Wiederaufstieg wieder das alte Gehalt',
+    `${k.name}: ${vor[0]} → ${r(vor[0]*(1-c))} → ${sq[0].sal}; dein Verein ${m0.join('/')} → ${mein.map(p=>p.sal).join('/')}, Abstieg ${ab}, nicht doppelt ${nichtDoppelt}, Aufstieg ${auf}`);}
 
 // 5. Ligaklausel nach einem Abstieg, Ausstiegsklausel nur im Fenster
 {const {S,ev,t,F}=welt();const p=ev('squad')(S.my)[2],sal=p.sal;p.lk=0.3;t.lastLg=t.lg;t.lg=t.lg+1;ev('vertraegeSaison')();t.lg=t.lastLg;

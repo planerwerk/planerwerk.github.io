@@ -205,7 +205,7 @@ function vertragChance(p,P){const V=RCV.vertrag,r=P?P.rang.get(p.id):null;if(!r)
 function kiVertraegeFrueh(kader){const V=RCV.vertrag,F=V.frueh,k=mmtt(S.tag);if(S.phase!=='play'||k<F.von||k>F.bis)return;
   S.teams.forEach(t=>{if(!aktiv(t)||!stabMacht(t.id,'vertraege'))return;const sq=kader.get(t.id)||[],P=kaderplan(t,sq);
     sq.forEach(p=>{if(p.ct!==1||p.wech||p.leihe||p.zwP||!V.wichtig.includes(P.rang.get(p.id))||(V.altAb&&p.age>=V.altAb)||R()>=F.chance)return; // ab altAb nicht früh (T1.3)
-      p.ct=1+riA(RS.vertrag.jahre);p.sal=salaryFor(p.str);if(t.id===S.my)stabMeldung(`Der Verein hat den Vertrag von ${p.n} vorzeitig verlängert (bis Juni ${S.season+p.ct}).`);});});}
+      p.ct=1+riA(RS.vertrag.jahre);p.sal=salaryFor(p.str);delete p.lk; /* vom Verein geschlossen: übliche Ligaklausel (K21 §12 Nr. 20) */if(t.id===S.my)stabMeldung(`Der Verein hat den Vertrag von ${p.n} vorzeitig verlängert (bis Juni ${S.season+p.ct}).`);});});}
 
 // ---------- Woche (montags im Markt-Strom, aufgerufen aus market in js/ablauf.js) ----------
 // 1. Transferliste aller Vereine nach den Verkaufsregeln (auch außerhalb der Fenster, damit du sie siehst).

@@ -90,8 +90,8 @@ function newSeasonLauf(){lizenzNachweis();wechselVollziehen(true);leiheEnde();ve
   S.pl.forEach(p=>{delete p.ld3;if(p.team<-1)return;p.age++;p.g=0;p.pg=0;if(p.eg)p.eg=0;p.apps=0;disziplinSaison(p);p.form=Z.neuForm;p.sv=0;p.ent=0;eigenschaftenNeu(p);
     if(p.team>=0&&!aktiv(S.teams[p.team])){p.team=-1;p.list=0;}
     if(karriereEnde(p,kSchnitt)){if(p.team===S.my)news(`${p.n} beendet seine Karriere.`);p.team=-2;return;} // K32 §5.1, eigener Strom je Spieler
-    if(p.team>=0){p.ct--;if(p.ct<=0){const mein=p.team===S.my;if(mein&&!autoB('vertraege')){news(`Vertrag ausgelaufen: ${p.n} verlässt den Verein.`,'bad');p.team=-1;p.list=0;}
-      else if(R()<vertragChance(p,vPlan.get(p.team))){p.ct=riA(Z.vertrag.jahre);p.sal=salaryFor(p.str);if(mein)stabMeldung(`Der Verein hat den Vertrag von ${p.n} verlängert (${p.ct} Jahr${p.ct>1?'e':''}).`);}else{if(mein)news(`Vertrag ausgelaufen: ${p.n} verlässt den Verein. Der Verein hat nicht verlängert.`,'bad');p.team=-1;p.list=0;}}}
+    if(p.team>=0){p.ct--;if(p.ct<=0){const mein=p.team===S.my;if(mein&&!autoB('vertraege')){news(`Vertrag ausgelaufen: ${p.n} verlässt den Verein.`,'bad');p.team=-1;p.list=0;delete p.lk;}
+      else if(R()<vertragChance(p,vPlan.get(p.team))){p.ct=riA(Z.vertrag.jahre);p.sal=salaryFor(p.str);delete p.lk; /* vom Verein verlängert: übliche Ligaklausel (K21 §12 Nr. 20) */if(mein)stabMeldung(`Der Verein hat den Vertrag von ${p.n} verlängert (${p.ct} Jahr${p.ct>1?'e':''}).`);}else{if(mein)news(`Vertrag ausgelaufen: ${p.n} verlässt den Verein. Der Verein hat nicht verlängert.`,'bad');p.team=-1;p.list=0;delete p.lk;}}}
     if(p.team!==S.my)p.list=0;});
   {const weg=S.pl.filter(p=>p.team===-2);statistikAbschied(weg);trainerNeueSaison(weg);stabExSpieler(weg);} /* Ex-Spieler im Stab (K32c), nach dem Trainerpool */ // Ehemalige (K34 §5.3, U13), Trainerpool mit Ex-Spielern (K32 §3.3b, U18a)
   S.pl=S.pl.filter(p=>p.team!==-2);reindex();mitStrom(strom('auslandSaison',S.season),auslandSaison); // Auslandspool: Alter, Karriereende, neue Talente (K32 §4.1)

@@ -44,9 +44,10 @@ saisons({n:N,seed:SEED,verein:VEREIN,
         const d=f=>{const x=(jetzt[f]-v[f])/1e6;return(x>=0?'+':'−')+Math.abs(x).toFixed(1);},mio2=x=>(x/1e6).toFixed(2);
         pruefZeilen.push(`${ok?'✓':'✗'} Saldo ${lg}. Liga Saison ${S.season}: ${fmt(jetzt.saldo)} je Verein (Ziel ${fmt(ZIEL[lg])} ± 1.5)`+(v?
           ` · gegenüber Vorsaison: TV ${d('tv')}, Werbung/Sonstiges ${d('spons')}, Spieltag ${d('tor')}, Gehalt+Stab ${d('gehalt')} (Kader ${v.kader.toFixed(1)} → ${jetzt.kader.toFixed(1)} Spieler, Ø Gehalt ${mio2(v.sal)} → ${mio2(jetzt.sal)} Mio, Ø Stärke ${v.str.toFixed(1)} → ${jetzt.str.toFixed(1)}), Betrieb ${d('betrieb')}, Verwaltung ${d('verw')}, Jugend ${d('jugend')}`+
-          (()=>{const gr=neu=>l.filter(x=>ligaVorher.has(x.t.id)&&(ligaVorher.get(x.t.id)!==lg)===neu),txt=(g,name)=>{if(!g.length)return`${name} 0`;const s=g.flatMap(x=>ev('squad')(x.t.id));
+          (()=>{const gr=f=>l.filter(x=>ligaVorher.has(x.t.id)&&f(ligaVorher.get(x.t.id))),txt=(g,name)=>{if(!g.length)return`${name} 0`;const s=g.flatMap(x=>ev('squad')(x.t.id));
             return`${name} ${g.length} (Saldo ${fmt(g.reduce((a,x)=>a+saldo(x),0)/g.length)}, Ø Gehalt ${mio2(s.reduce((a,p)=>a+p.sal,0)/Math.max(1,s.length))} Mio)`;};
-            return ` · ${txt(gr(true),'neu in der Liga')}, ${txt(gr(false),'geblieben')}`;})():
+            // drei Gruppen (Prüfung GJ3): Absteiger von oben, Aufsteiger von unten, geblieben
+            return ` · ${txt(gr(v0=>v0<lg),'abgestiegen')}, ${txt(gr(v0=>v0>lg),'aufgestiegen')}, ${txt(gr(v0=>v0===lg),'geblieben')}`;})():
           ` · TV ${fmt(jetzt.tv)}, Werbung/Sonstiges ${fmt(jetzt.spons)}, Spieltag ${fmt(jetzt.tor)}, Gehalt+Stab ${fmt(jetzt.gehalt)} (Kader ${jetzt.kader.toFixed(1)} Spieler, Ø Gehalt ${mio2(jetzt.sal)} Mio, Ø Stärke ${jetzt.str.toFixed(1)}), Betrieb ${fmt(jetzt.betrieb)}, Verwaltung ${fmt(jetzt.verw)}`));
         vor[lg]=jetzt;}}
     const t=ev('myT()'),lauf=Object.entries(S.fin).filter(([k])=>ev('RFP').laufend.includes(k)).reduce((a,[,v])=>a+v,0);

@@ -201,7 +201,7 @@ const AUSLOESER={
   exKapitaen(){const E=RST.exSpieler,l=(S.stab||[]).filter(x=>x.team<0&&x.ex&&x.exV===S.my&&(x.exVsp||0)>=RFS.ident.lieblingSpiele&&!x.gefragt&&x.exS!=null&&S.season-x.exS<=E.kapitaenSaisons&&stabVon(S.my,x.r).length<RST.rollen[x.r].plaetze);
     return l.length?{stab:pick(l).id}:null;},
   // Verträge (K21 §8, K22 §8, K21c): Gehalt deutlich unter dem Marktgehalt und Stimmung gesunken; Neuzugang mit Berater, höchstens provisionTage bei dir
-  gehaltsneid(){const V=RKT.vertrag,l=squad(S.my).filter(p=>!p.leihe&&!p.wech&&p.sal<salaryFor(p.str)*V.neidUnter&&stimmung(p)<V.neidStimmung);return l.length?{spieler:pick(l).id}:null;},
+  gehaltsneid(){const V=RKT.vertrag,l=squad(S.my).filter(p=>!p.leihe&&!p.wech&&gehaltVertrag(p)<salaryFor(p.str)*V.neidUnter&&stimmung(p)<V.neidStimmung);return l.length?{spieler:pick(l).id}:null;},
   provision(){const V=RKT.vertrag,heute=absTag(S.tag),l=squad(S.my).filter(p=>p.seit!=null&&heute-p.seit<=V.provisionTage&&!!beraterVon(p));return l.length?{spieler:pick(l).id}:null;},
   // Fans (K27 §8, K27c): Ticketpreis über Richtpreis × RKT.fans.preisFaktor bei Fanstimmung unter protestUnter; ein Spieler deines Kaders mit Wechselwunsch ab wwAb
   ticketProtest(){const F=RKT.fans,t=myT();return S.phase==='play'&&t.price>richtPreis(t)*F.preisFaktor&&fanst(t)<F.protestUnter?{}:null;},

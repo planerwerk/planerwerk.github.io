@@ -175,7 +175,7 @@ function wechselVollziehen(sommer){const l=(S.wechsel||[]).map(id=>PIX.get(id)).
     else{const t=S.teams[w.nach];if(!t||!aktiv(t)){if(!istAusland(p)){kabineAbgang(p,p.team);p.team=-1;p.list=0;}return;}
       if(istAusland(p))ausDemAusland(p,w.nach);else kabineAbgang(p,p.team);
       if(w.von===S.my)vertragEnde(p);p.team=w.nach;p.list=0;p.ct=(w.ct||riA(RM.neuerVertrag))+(sommer?1:0);if(w.sal)p.sal=w.sal;p.seit=absTag(S.tag);if(w.preis)p.abl=w.preis;
-      if(w.nach===S.my){if(w.vp)p.vp=w.vp;else delete p.vp;if(w.ak)p.ak=w.ak;else delete p.ak;if(w.lk)p.lk=w.lk;else delete p.lk;zielvorgabeSetzen(p,w.zv);}else delete p.zv;neuzugang(p,w.nach); /* Zielvorgabe ab der Ankunft (K21f) */if(w.nach===S.my){kabineInit(p);versprechenKauf(p);}statTransfer(p,w.preis,w.von,w.nach);}
+      if(w.nach===S.my){if(w.vp)p.vp=w.vp;else delete p.vp;if(w.ak)p.ak=w.ak;else delete p.ak;if('lk' in w)p.lk=w.lk||0;else delete p.lk; /* ausgehandelt (auch 0) oder ein übernommener Vertrag mit der üblichen Klausel (Tausch), K21 §12 Nr. 20 */zielvorgabeSetzen(p,w.zv);}else delete p.zv;neuzugang(p,w.nach); /* Zielvorgabe ab der Ankunft (K21f) */if(w.nach===S.my){kabineInit(p);versprechenKauf(p);}statTransfer(p,w.preis,w.von,w.nach);}
     if(mein)news(`Transferfenster: ${p.n} wechselt wie vereinbart ${w.nach===S.my?'zu dir':'zu '+wechselZiel(w)}.`,w.nach===S.my?'good':'tr');});}
 // Täglich: am ersten Tag des Winterfensters (der Sommer beginnt mit dem Saisonwechsel)
 function wechselTag(d){if(d>0&&fensterOffen(d)&&!fensterOffen(d-1)&&(S.wechsel||[]).length)wechselVollziehen(false);}

@@ -348,8 +348,8 @@ const REGELN={
     einsatz:{stamm:0.85,rotation:0.45,rest:0.15},spiele:{1:36,2:36,3:39},punkteJeSpiel:1.4,torquote:{ST:0.35,MF:0.12,AB:0.04,TW:0},zuNullQuote:0.25,
     sicher:[0.6,0.02],praemie:{halbAbMinute:46,punktAbMinuten:45,zuNullAbMinuten:60},
     ausstieg:{billigAb:1.5,mittelAb:3,bonus:0.1,chance:0.25},
-    // computer: Ligaklausel in den Verträgen der Computer-Vereine (K21 §12 Nr. 20, 26.11., vorläufig): nach einem Abstieg sinken alle laufenden Gehälter um 30 %
-    // (K21: üblich −20 bis −50 %). Ohne sie trugen Absteiger die Gehälter der höheren Liga mit (finanzmodell, Lauf 18).
+    // computer: übliche Ligaklausel in allen Verträgen, die ein Verein selbst schließt (K21 §12 Nr. 20, 26.11., vorläufig, Prüfung GJ): nach einem Abstieg −30 %,
+    // nach dem Wiederaufstieg wieder das alte Gehalt (K21: üblich −20 bis −50 %). Ohne sie trugen Absteiger die Gehälter der höheren Liga mit (finanzmodell, Lauf 18).
     ligaklausel:{malus:0.05,ref:0.3,stufen:[0,0.2,0.3,0.5],computer:0.3},
     // Zielvorgabe (K21 §3.1, §5, K21f, 24.11., popolupo, vorläufig): ab spiele Pflichtspielen für dich seit der Unterschrift Gehalt + plus; der Spieler rechnet sie mit wert × Forderung an
     // (§5: „Gehalt −5 % akzeptiert“). Nur deine Verträge.

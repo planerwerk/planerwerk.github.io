@@ -178,7 +178,7 @@ function bausteine(p){const Z=RKA.ziel,t=S.teams[p.team]||{},B={},E=RKA.einsatz;
   B.einsatz=clamp(x,Z.einsatz[0],Z.einsatz[1])-rivalenAbzug(p);
   B.erfolg=clamp((t.erf||0)+teampraemieStimmung(t),Z.erfolg[0],Z.erfolg[1]);
   B.leistung=clamp((p.form-RP.form.mitte)*RKA.leistung,Z.leistung[0],Z.leistung[1]);
-  const V=RKA.vertrag,q=p.sal/salaryFor(p.str);let v=q<V.unter?-V.minus*Math.min(1,(V.unter-q)/0.4):q>V.ueber?V.plus*Math.min(1,(q-V.ueber)/0.35):0;
+  const V=RKA.vertrag,q=gehaltVertrag(p)/salaryFor(p.str); /* Vertragsgehalt: die Kürzung der Ligaklausel hat er unterschrieben (Prüfung GJ2, js/vertraege.js) */let v=q<V.unter?-V.minus*Math.min(1,(V.unter-q)/0.4):q>V.ueber?V.plus*Math.min(1,(q-V.ueber)/0.35):0;
   if(p.ct<=1&&einschaetzung(p)>=3)v+=V.auslaufend;if(v<0&&hatEig(p,'soeldner'))v*=V.soeldner;B.vertrag=clamp(v,Math.max(Z.vertrag[0],V.max),Z.vertrag[1]);
   const Ro=RKA.rolle,R=krStufe(p),Sx=einschaetzung(p);let tr=p.tb||0;
   if(p.team===S.my&&p.kr&&!autoB('kaderrollen')){if(R<Sx)tr+=Ro.zuNiedrig*(Sx-R)*(hatEig(p,'diva')?Ro.diva:1);else if(R>Sx)tr+=Math.min(Ro.hoeherMax,Ro.hoeher*(R-Sx));} // nur eine Rolle, die du selbst vergeben hast

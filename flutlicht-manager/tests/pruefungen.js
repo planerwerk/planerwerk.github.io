@@ -50,7 +50,7 @@ module.exports=()=>{
   // Vereinbarte Wechsel (K19, U10a): Eintrag und Spieler passen zusammen, im offenen Fenster ist nichts mehr offen
   const wl=S.wechsel||[];wl.forEach(id=>{const p=PIX.get(id);if(!p||!p.wech)e.push('vorgemerkter Wechsel ohne Spieler '+id);});
   S.pl.forEach(p=>{if(p.wech&&!wl.includes(p.id))e.push('Wechsel ohne Eintrag '+p.n);});if(fensterOffen(S.tag)&&S.phase==='play'&&wl.some(id=>{const p=PIX.get(id);return p&&p.wech&&p.wech.ab<=S.tag;}))e.push('fälliger Wechsel im offenen Fenster nicht vollzogen');
-  S.pl.forEach(p=>{if(p.vp&&Object.values(p.vp).some(x=>!(x>=0&&isFinite(x))))e.push('Prämie kaputt '+p.n);if(p.ak!=null&&!(p.ak>0))e.push('Ausstiegsklausel kaputt '+p.n);if(p.lk!=null&&!(p.lk>0&&p.lk<1))e.push('Ligaklausel kaputt '+p.n);});
+  S.pl.forEach(p=>{if(p.vp&&Object.values(p.vp).some(x=>!(x>=0&&isFinite(x))))e.push('Prämie kaputt '+p.n);if(p.ak!=null&&!(p.ak>0))e.push('Ausstiegsklausel kaputt '+p.n);if(p.lk!=null&&!(p.lk>=0&&p.lk<1))e.push('Ligaklausel kaputt '+p.n);});
   S.offers.forEach(o=>{if(PIX.get(o.pid)&&PIX.get(o.pid).wech)e.push('Angebot für einen schon verkauften Spieler');});
   S.pl.forEach(p=>{if(!p.leihe)return;if(p.leihe.von===p.team||!S.teams[p.leihe.von]||!(p.leihe.anteil>=0&&p.leihe.anteil<=1))e.push('Leihe kaputt '+p.n);if(p.wech)e.push('verliehen und verkauft '+p.n);}); // U10d
   (S.ber||[]).forEach(b=>{if(!(b.bz>=-100&&b.bz<=100)||!REGELN.berater.profile[b.prof])e.push('Berater außerhalb des Rahmens '+b.n);}); // K22, U10c

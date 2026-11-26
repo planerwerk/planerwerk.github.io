@@ -290,6 +290,21 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 26.11.2026: Korrekturen nach Prüfung GJ, Ligaklausel für alle gleich und je Liga (Zweig `mitarbeit/popolupo-gj-korrekturen`, auf t18-ligaklausel)
+
+- **Ligaklausel für alle Vereine gleich** (GJ1, K21 §12 Nr. 20). Was du aushandelst, gilt wie vereinbart, „keine“ steht jetzt ausdrücklich als 0 im Vertrag.
+  - Alle anderen Verträge haben die übliche Klausel (−30 %): Computer-Vereine, Verlängerungen der Automatik und dein Kader beim Spielstart.
+  - Vorher hing es davon ab, wer den Verein am 1. Juli führt.
+- **Gehalt je Liga** (GJ2): Nach dem Wiederaufstieg gilt wieder das alte Gehalt (`p.lkAlt`), ein zweiter Abstieg kürzt nicht noch einmal.
+  - Stimmung und Neid-Karte messen das Vertragsgehalt vor der Kürzung.
+  - Die Spielerkarte zeigt die Klausel und während der Kürzung das alte Gehalt.
+- **Neuzugänge vom Tag des Saisonwechsels** werden nicht gekürzt (GJ4).
+- **`tests/finanzmodell.js`:** drei Gruppen, abgestiegen, aufgestiegen und geblieben (GJ3).
+- **`tests/pruefungen.js`:** Eine Ligaklausel von 0 ist gültig („keine“, ausgehandelt).
+- **Bitte testen (Lauf 19 auf diesem Zweig statt auf t18-ligaklausel):** alle Tests, besonders vertraege (4b und 5), pruefungen und fuzz-karrieren. Dazu wörtlich ins Protokoll:
+  - die ✓/✗-Zeilen „Saldo …“ aus `node tests/finanzmodell.js 3`;
+  - aus `node tests/welt.js 10` die Zeilen „Wechsel mit Ablöse“ und „Saisonende …“.
+
 ### 26.11.2026: Läufe 17 und 18 aufgearbeitet, Ligaklausel der Computer-Vereine (Zweig `mitarbeit/popolupo-t18-ligaklausel`, auf t16-messung)
 
 - **Lauf 17** (e97431f): 52 grün, 3 rot. In der Welt über zehn Saisons gab es keinen kleinen Kader mehr. Nur 2032 lag mit 13 Wechseln mit Ablöse unter dem Ziel, bei 19 Vereinen im Minus.

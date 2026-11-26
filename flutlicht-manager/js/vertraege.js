@@ -74,7 +74,7 @@ function vtPaket(p,F,ct,vereinslos){const el=id=>(document.getElementById(id)||{
   if(!o.zv&&p.zv&&p.team===S.my&&el('vt_zv')==null)o.zv={n:p.zv.n,plus:p.zv.plus}; /* FN3: Felder zu (VT_DETAIL) oder ohne Bereich: eine laufende Vorgabe bleibt */
   return o;}
 // Vertrag eintragen: Laufzeit, Gehalt, Prämien, Klauseln, Handgeld buchen
-function vtUnterschrift(p,o,neu){p.ct=o.ct;p.sal=o.sal;if(o.vp)p.vp=o.vp;else delete p.vp;if(o.ak)p.ak=o.ak;else delete p.ak;if(o.lk)p.lk=o.lk;else delete p.lk;zielvorgabeSetzen(p,o.zv,!neu);if(o.hg)money('Handgelder',-o.hg);if(neu)p.seit=absTag(S.tag);}
+function vtUnterschrift(p,o,neu){p.ct=o.ct;p.sal=o.sal;if(o.vp)p.vp=o.vp;else delete p.vp;if(o.ak)p.ak=o.ak;else delete p.ak;p.lk=o.lk||0; /* ausgehandelt, auch „keine“ (0): sonst gälte die übliche Klausel (K21 §12 Nr. 20) */zielvorgabeSetzen(p,o.zv,!neu);if(o.hg)money('Handgelder',-o.hg);if(neu)p.seit=absTag(S.tag);}
 // Zielvorgabe (K21 §3.1, §8, K21f): p.zv = {n Pflichtspiele, plus Gehaltsaufschlag, st Pflichtspiele für deinen Verein bei der Unterschrift}. Gezählt ab der Unterschrift
 // (bei einem Wechsel zum Fenster ab der Ankunft, transfers.js wechselVollziehen). Montags (zielvorgabenWoche, ohne Zufall): erreicht, steigt das Gehalt, die Vorgabe ist erfüllt.
 function zielvorgabeSetzen(p,zv,verl){if(zv&&verl&&p.zv&&p.team===S.my)return; /* FL6, FN4: nur bei einer Verlängerung zählt eine laufende Vorgabe weiter */if(zv)p.zv={n:zv.n,plus:zv.plus,st:vereinsSpiele(p,S.my)};else delete p.zv;}
@@ -95,13 +95,21 @@ function praemienNachSpiel(list){const P=RVT.praemie;let summe=0;
   if(summe>0)money('Prämien',-Math.round(summe));return summe;}
 
 // ---------- Saisonwechsel: Ligaklausel (K21 §3.1) ----------
-// Computer-Vereine (K21 §12 Nr. 20, vorläufig): Ihre Verträge enthalten die übliche Ligaklausel, nach einem Abstieg sinken alle laufenden Gehälter um ligaklausel.computer.
-// Sonst trugen Absteiger die Gehälter der höheren Liga mit und drückten den Saldo der 2. und 3. Liga in der zweiten Saison um 1,5 bis 1,8 Mio. je Verein (Lauf 18).
-// Dein Verein kürzt nur mit ausgehandelter Klausel (p.lk), auch in der Automatik. Leihspieler und vereinbarte Wechsel bleiben unberührt. Ohne Zufall.
-function kiLigaklausel(){const c=RVT.ligaklausel.computer;if(!c)return;
-  S.teams.forEach(t=>{if(t.id===S.my||!aktiv(t)||!(t.lastLg&&t.lg>t.lastLg))return;squad(t.id).forEach(p=>{if(!p.leihe&&!p.wech)p.sal=Math.round(p.sal*(1-c)/1000)*1000;});});}
-function vertraegeSaison(){kiLigaklausel();const t=myT();if(!(t.lastLg&&t.lg>t.lastLg))return;const l=squad(S.my).filter(p=>p.lk);
-  l.forEach(p=>{p.sal=Math.round(p.sal*(1-p.lk)/1000)*1000;});if(l.length)news(`Ligaklausel: Nach dem Abstieg verdienen ${l.map(p=>`${p.n} (−${Math.round(p.lk*100)} %)`).join(', ')} weniger.`);}
+// Gilt für alle Vereine gleich (K21 §12 Nr. 20, vorläufig, Prüfung GJ1). Was du ausgehandelt hast, gilt wie vereinbart (p.lk, auch 0 = keine Klausel).
+// Verträge, die ein Verein selbst schließt (Computer-Vereine, die Automatik, der Kader beim Spielstart), haben kein p.lk und enthalten die übliche Klausel (ligaklausel.computer).
+// Ohne sie trugen Absteiger die Gehälter der höheren Liga mit und drückten den Saldo der 2. und 3. Liga in der zweiten Saison um 1,5 bis 1,8 Mio. je Verein (Lauf 18).
+// Wer erst heute kam (vereinbarter Wechsel zum Sommer), unterschrieb schon für die neue Liga und wird nicht gekürzt (Prüfung GJ4).
+// Gehalt je Liga (Prüfung GJ2): p.lkAlt merkt Verein, Liga vor dem Abstieg, Gehalt vorher und gekürzt. Steigt der Verein in diese Liga zurück auf, gilt wieder das alte Gehalt.
+// Ein zweiter Abstieg kürzt nicht noch einmal. Ein neuer Vertrag (anderer Verein oder anderes Gehalt) macht den Merker ungültig. Die Stimmung misst das Vertragsgehalt (gehaltVertrag). Ohne Zufall.
+const ligaklauselVon=p=>p.lk!=null?p.lk:(RVT.ligaklausel.computer||0);
+const lkGueltig=p=>!!p.lkAlt&&p.team===p.lkAlt.t&&p.sal===p.lkAlt.neu;
+const gehaltVertrag=p=>lkGueltig(p)?p.lkAlt.sal:p.sal;
+function vertraegeSaison(){const heute=absTag(S.tag),gekuerzt=[],zurueck=[];
+  S.pl.forEach(p=>{if(!p.lkAlt)return;if(!lkGueltig(p)){delete p.lkAlt;return;}const t=S.teams[p.team];if(t&&t.lg<=p.lkAlt.lg){p.sal=p.lkAlt.sal;delete p.lkAlt;if(p.team===S.my)zurueck.push(p);}});
+  S.teams.forEach(t=>{if(!(t.lastLg&&t.lastLg<=3&&t.lg>t.lastLg))return; /* auch beim Abstieg in die Regionalliga, wie vorher bei deinem Verein */
+    squad(t.id).forEach(p=>{const k=ligaklauselVon(p);if(p.lkAlt||p.seit===heute||!(k>0))return;const neu=Math.round(p.sal*(1-k)/1000)*1000;p.lkAlt={t:t.id,lg:t.lastLg,sal:p.sal,neu};p.sal=neu;if(t.id===S.my)gekuerzt.push(p);});});
+  if(gekuerzt.length)news(`Ligaklausel: Nach dem Abstieg verdienen ${gekuerzt.length} Spieler weniger, bis der Verein wieder aufsteigt: ${gekuerzt.map(p=>`${p.n} (−${Math.round(ligaklauselVon(p)*100)} %)`).join(', ')}.`);
+  if(zurueck.length)news(`Ligaklausel: Nach dem Aufstieg verdienen ${zurueck.map(p=>p.n).join(', ')} wieder ihr volles Gehalt.`);}
 
 // ---------- Woche: Ausstiegsklausel und Vorvertrag (K21 §4.3, §4.5) ----------
 const vorvertragZeit=(tag=S.tag)=>{const k=mmtt(tag),V=RVT.vorvertrag;return S.phase==='play'&&k>=V.von&&k<=V.bis;};
@@ -138,6 +146,7 @@ function vertragFormular(p,F,tid,vereinslos,laufzeitId){const z=vtZone(F),det=VT
     ${pr?`<p class="dim">Laufende Prämien: bei einer üblichen Saison etwa ${fmt(Math.round(pr.erw/1000)*1000)}, höchstens ${fmt(Math.round(pr.max/1000)*1000)}.</p>`:''}`;}
 // Zeile in der Spielerkarte: was im Vertrag steht
 function vertragText(p){const l=[];if(p.vp){const v=p.vp;if(v.a)l.push(`Auflauf ${fmt(v.a)}`);if(v.p)l.push(`Punkt ${fmt(v.p)}`);if(v.t)l.push(`Tor ${fmt(v.t)}`);if(v.z)l.push(`Zu-Null ${fmt(v.z)}`);}
-  if(p.ak)l.push(`Ausstiegsklausel ${fmt(p.ak)}`);if(p.lk)l.push(`Ligaklausel −${Math.round(p.lk*100)} %`);
+  if(p.ak)l.push(`Ausstiegsklausel ${fmt(p.ak)}`);{const k=ligaklauselVon(p);if(k>0)l.push(`Ligaklausel −${Math.round(k*100)} %${p.lk==null?' (üblich)':''}`);} // ohne ausgehandelte Klausel die übliche (K21 §12 Nr. 20)
+  if(lkGueltig(p))l.push(`nach dem Abstieg gekürzt, bis zum Wiederaufstieg (vorher ${fmt(p.lkAlt.sal)})`);
   if(p.zv)l.push(`Zielvorgabe: Gehalt +${Math.round(p.zv.plus*100)} % nach ${p.zv.n} Pflichtspielen (noch ${Math.max(0,p.zv.n-(vereinsSpiele(p,S.my)-(p.zv.st||0)))})`);
   return l.length?`<p class="dim">${l.join(' · ')}</p>`:'';}
