@@ -13,6 +13,21 @@ Node.js 22, Playwright mit Chromium, für `tests/ui-zugang.js` axe-core 4.10.2 (
 
 ---
 
+## Lauf 11, 26.11.2026 nachmittags: `popolupo-w5g-usability-leitfaden` (ce62ffe, enthält t10b und t10c)
+
+Nur getestet und geloggt. **45 grün, 8 rot** (Lauf 10: 29 grün). Wieder grün u. a. seed, ui-zwei-saisons, medizin, transfers, vorstand, finanzen, schwierigkeit, kabine, scouting, karten, presse, abwerben, disziplin, testspiele, taktik, europapokal, ui-lernstufen, live-neuladen, ui-zugang. Rot:
+
+- **fuzz-karrieren:** ein Fehler „Aktion: Cannot set properties of null (setting 'value')“ (eine Aktion setzt den Wert eines Elements, das es nicht gibt). Sonst keine Funde, die Punkt- und Pokalprüfungen sind ruhig.
+- **wettbewerbe:** 72 Stunden noch 3× (Bayern 255/257, Frankfurt 108/110, Hoffenheim …), vorher 12×.
+- **welt:** Sternejagd wie T9.2; Saisonende 2026 und 2027 je ein Konto unter dem Kreditrahmen. **welt 10:** Trainerwechsel 200 in 10 Saisons (Grenze höchstens 18 je Saison in der 1. Liga, kein Verein öfter als dreimal), Sternejagd, Saisonende 2034 und 2035 je 4 Konten unter dem Kreditrahmen.
+- **kalibrierung:** 3 rot: Favoritensieg Top 3 gegen Letzte 3 60 % (Ziel 65–75), gleich stark Heimsieg 49 % (Ziel 40–46), Elfmeter je Spiel 0,33 (Ziel 0,2–0,3).
+- **sommer:** Kondition zum ersten Ligaspiel 77,6 (Ziel 80–88).
+- **spielermodell:** 2. Liga Spanne 2,3 (69,6 → 71,9), T1.3 Rest.
+- **akzeptanz:** Abwehr +0,8 und Verhältnis wie immer, Tempo diesmal im Ziel.
+- **finanzmodell 2 (Saldo je Verein und Saison):** 1. Liga +13,4 / +12,7 Mio., 2. Liga −1,1 / −3,0 Mio., 3. Liga −2,4 / −3,8 Mio. (erwartet etwa +11, 0, −1).
+
+---
+
 ## Lauf 10, 26.11.2026: `popolupo-w5e10-intro` (566ae45, enthält alles bis gc-korrekturen)
 
 Nur getestet und geloggt, keine Ursachen gesucht (Auftrag: wenig Aufwand). Grün: 29 Tests (u. a. code, lizenz, statistik, werbung, stadion, marketing, fans, geruechte, live, training, ausland, zweite, leihe, vertraege, ui-lernstufen, live-neuladen, ui-zugang). Rot:
