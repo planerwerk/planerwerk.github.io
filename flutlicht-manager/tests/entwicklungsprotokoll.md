@@ -290,6 +290,16 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 26.11.2026: Messskript für die Schwierigkeit (Zweig `mitarbeit/popolupo-k43b-langlauf`, auf W5d5)
+
+- **Neu:** `tests/schwierigkeit-langlauf.js [Saisons=5] [Seed=7]` misst je Stufe und für drei Startvereine (Spitze 1. Liga, Mitte 1. Liga, Mitte 2. Liga):
+  - Meisterschaften, Pokalsiege und Europapokal-Titel;
+  - Pleiten (auf Leicht die Rettungen durch den Gönner) und Entlassungen;
+  - das Konto am Saisonende.
+- **Was geprüft wird:** Dein Verein läuft dabei ganz in der Automatik. Geprüft wird nur der Zielwert aus K43 §4 (auf Leicht höchstens 6 Meisterschaften in 10 Saisons für den Spitzenverein), alles andere ist Ausgabe für die Kalibrierung.
+- **`tests/sim.js`:** `saisons()` nimmt jetzt eine Stufe (`stufe`). Ohne Angabe bleibt alles wie bisher.
+- **Testlauf:** steht aus (kein Node.js hier). Vorschlag für den Tester: `node tests/schwierigkeit-langlauf.js 10`.
+
 ### 26.11.2026: W5d5 Anführungszeichen und Satzzeichen in der Schrift (Zweig `mitarbeit/popolupo-w5d5-satzzeichen`, auf W5d4)
 
 - **Neu:** „Flutlicht Display“ hat jetzt deutsche Anführungszeichen („…“ und ‚…‘), Apostroph, gerade Anführungszeichen, Semikolon und Gleichheitszeichen. Insgesamt 95 Zeichen, 19 KB.

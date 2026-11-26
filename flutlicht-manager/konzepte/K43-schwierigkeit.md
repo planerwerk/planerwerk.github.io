@@ -113,6 +113,11 @@ Ausgeführt wird der Test beim Tester (hier gibt es kein Node.js). Er steht für
 ## 7. Offen
 
 - **Kalibrierung**: Sind ×1,5 Konto und ×1,2 Sponsoren auf Leicht zu viel? Das soll ein Langlauf je Stufe zeigen, mit Insolvenzen, Titeln und Entlassungen über 10 Saisons.
+  - Messskript: `node tests/schwierigkeit-langlauf.js [Saisons] [Seed]`.
+  - Je Stufe drei Startvereine (Spitze und Mitte der 1. Liga, Mitte der 2. Liga), dein Verein ganz in der Automatik.
+  - Ausgabe: Meisterschaften, Pokal, Europapokal, Pleiten, Entlassungen, Konto am Saisonende.
+  - Geprüft wird nur der Zielwert aus §4, ab 10 Saisons.
+  - Noch nie gelaufen. Der Lauf beim Tester steht aus.
 - **Text auf dem Startbildschirm**: Die Auswahl zeigt den Kurztext der Stufe. Eine ausführliche Tabelle wie oben könnte als Hilfe daneben stehen (K40).
 
 ## Quellen
