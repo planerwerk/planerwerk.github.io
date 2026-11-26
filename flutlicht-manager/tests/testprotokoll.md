@@ -13,6 +13,22 @@ Node.js 22, Playwright mit Chromium, für `tests/ui-zugang.js` axe-core 4.10.2 (
 
 ---
 
+## Lauf 10, 26.11.2026: `popolupo-w5e10-intro` (566ae45, enthält alles bis gc-korrekturen)
+
+Nur getestet und geloggt, keine Ursachen gesucht (Auftrag: wenig Aufwand). Grün: 29 Tests (u. a. code, lizenz, statistik, werbung, stadion, marketing, fans, geruechte, live, training, ausland, zweite, leihe, vertraege, ui-lernstufen, live-neuladen, ui-zugang). Rot:
+
+- **seed:** „Speichern, Neuladen und Weiterspielen nach Halt 33 ergibt anderen Verlauf“ (Wiederholbarkeit verletzt, wahrscheinlich Zustand außerhalb von `S`).
+- **TypeError „Cannot assign to read only property“** (Tests setzen eingefrorene `REGELN`, vermutlich die neuen Schalter): medizin (`ohne`), transfers (`ab`), vorstand (`grenzen`, Test bricht ab).
+- **Schalter-Tests rot:** finanzen (TV-Raten 2×), schwierigkeit (Schalter aus/an/von außen, Menü TV-Raten), kabine (Sprachgrüppchen), scouting (Unsicherheit), spielermodell (Integration und Deutsch 2×), wettbewerbe (Länderspiele 3×, Marktwert Nationalspieler), testspiele (Zimmerbelegung).
+- **Weitere neue Fälle rot:** abwerben (Computer-Vereine werben ab: kein Versuch), disziplin (Rote Karte für den Trainer: Rot undefined), karten (lachender Dritter, Lager-Ereignisse, Nachtleben, Choreo), presse (Medienprofile, Trotz Maulkorb, Sticheleien, Schiedsrichterkritik), scouting (Konkurrenz am Tisch: „Chance 0 [object Object]“, Scoutbericht), taktik (Durchschaut: Meldungen 1/1), transfers (Mondpreise höchstens 1,88, Gegenangebot, K20c Bieterwettstreit: Gegenangebot null).
+- **Punkte inkonsistent** (Prüfung in `pruefungen.js`: Punkte ≠ 3 × Spiele − Remis): ui-zwei-saisons 36×, fuzz-karrieren 95×. Vermutlich Punktabzug nach Insolvenz, die Prüfung zieht ihn nicht ab. Dazu wieder T9.4 (Pokal am zweiten Tag) 1× bzw. 4×.
+- **welt:** Konten im Minus zum Saisonende 14 (2026) und 16 (2027); Sternejagd wie T9.2. **welt 10:** Trainerwechsel 200 in 10 Saisons (Grenze: höchstens 18 je Saison in der 1. Liga, kein Verein öfter als dreimal), 2031 und 2032 nur 13 Wechsel mit Ablöse (mindestens 15).
+- **wettbewerbe:** 72 Stunden noch 12× (T8.2), europapokal: 4 Fälle unter drei Tagen bei 6 Vereinen.
+- **Randwerte:** medizin Rückfall 16 %, Kreuzbandrisse 9,5; kabine Wechselwunsch 1,05 je Kader (höchstens 1); kalibrierung 1 gelb; spielermodell und akzeptanz wie immer.
+- **finanzmodell 2 (K23c, Salden je Verein und Saison):** 1. Liga +13,9 / +12,3 Mio. (erwartet etwa +11), 2. Liga −1,0 / −1,7 Mio. (erwartet etwa 0), 3. Liga −2,7 / −3,8 Mio. (erwartet etwa −1). Einnahmen 1. Liga 137,8 Mio. (TV 49,8, Sponsor 63,5, Spieltag 24,4), Gehälter 75,7 Mio. Rohausgabe: Scratchpad von Claude, auf Wunsch vollständig.
+
+---
+
 ## Lauf 9, 22.11.2026: `popolupo-u19d-kaderliste` (2c16d91: K23b, K23d, U19d1, Korrekturen zu Lauf 8)
 
 Nur getestet. Erledigt: T8.1 (finanzen grün), T8.3 (training grün). Grün außerdem lizenz, europapokal, werbung, transfers, vorstand, jugend, ui-lernstufen, live-neuladen, seed, ui-zugang.
