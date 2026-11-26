@@ -4,10 +4,10 @@
 //   Ausgaben: Gehälter des Kaders und des Stabs je Ligaspiel, Stadion und Betrieb mit Verwaltung (seit K23c), Jugendarbeit (Stufe der Computer-Vereine).
 //   Zum Vergleich die heutige Pauschale der Computer-Vereine (Ansehen² × fremdeEinnahmen.liga je Ligaspiel).
 // Ausgabe je Liga: Einnahmen, Ausgaben und Saldo je Saison (Schnitt, Spanne), Anteil mit Minus, die drei schwächsten und stärksten Vereine, dazu dein Verein mit den echten Buchungen.
-// Aufruf: node tests/finanzmodell.js [Saisons, Standard 1]. Nur Node.js. Keine Prüfung mit Exit-Code, nur Zahlen für das Testprotokoll.
+// Aufruf: node tests/finanzmodell.js [Saisons, Standard und Minimum 3, seit Lauf 19]. Nur Node.js. Keine Prüfung mit Exit-Code, nur Zahlen für das Testprotokoll.
 // Lief in Lauf 5 (Testprotokoll, BZ7). Die Zeilen „Spieler“ und „nach Stärke“ für K23c (22.11.) sind neu und noch nie gelaufen.
 const {saisons}=require('./sim');
-const N=Math.max(1,+(process.argv[2]||1)),SEED=4711,VEREIN=6;
+const N=Math.max(3,+(process.argv[2]||3)) /* mindestens drei Saisons: erst die zweite und dritte zeigen den Trend nach Auf- und Abstiegen (Lauf 19) */,SEED=4711,VEREIN=6;
 const konto=new Map(); // Verein → {ein, aus, alt, sp}
 const z=(id)=>{if(!konto.has(id))konto.set(id,{ein:0,aus:0,alt:0,sp:0,tv:0,spons:0,tor:0,gehalt:0,betrieb:0,verw:0,jugend:0});return konto.get(id);};
 const kurz=[]; // seit Lauf 12: eine kurze Zeile je Liga und Saison mit allen Posten, zum Übernehmen ins Testprotokoll

@@ -3120,3 +3120,29 @@ Korrekturen auf `mitarbeit/popolupo-k24-antworten` (auf `claude/compassionate-ga
 | GK8 | **Test:** `instanceof Map/Set/Date` griff über die vm-Grenze nie. Jetzt `Object.prototype.toString`. | ✅ behoben |
 | GK9 | **Test:** `tests/ui-sicherung.js` prüft jetzt Rückfrage und Abbrechen, einen Stand mit leeren Listen, die Meldung bei einer Datei mit Syntaxfehler und den Startbildschirm mit gespeicherter Karriere. | ✅ behoben |
 | GK10 | **Niedrig, älter:** Der Stab-Index (`STAB_IX`) wurde beim Laden nicht geleert. Jetzt in `spielstandUebernehmen` und `loadLocal`. | ✅ behoben |
+
+## GL. Prüfung der Windows-App und des Stadionnamens (K24d) ohne Laufzeit (26. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 4954d44 (Windows-App mit Electron, von Claude) und f19c6b6 (K24d, von Claude) gelesen.
+- Die App ist abgesichert: `contextIsolation`, `sandbox` und kein `nodeIntegration`. Das Muster für den Namen verhindert Schreiben außerhalb des Ordners.
+- Die Paketversionen sind fest, die Lockdatei hat Prüfsummen.
+- Computer-Vereine buchen weiter die volle Werbung, der Posten „Stadionname“ steht in `RFP.laufend`.
+- Nach dem Zusammenführen geht nichts mehr am Spielstand direkt über `localStorage`.
+
+Bericht: `flutlicht-tools/pruefung-gl.md`.
+
+Korrekturen auf `mitarbeit/popolupo-t19-korrekturen` (auf `claude/compassionate-galileo-bsbua4`, mit GK).
+
+| # | Befund | Status |
+|---|---|---|
+| GL1 | **Mittel:** Ohne eigene Wahl wechselte der Stadionname jede Saison (Einjahresangebot), jedes Mal mit Fanärger, auch bei derselben Firma. Jetzt laufen die Angebote drei, drei und fünf Saisons. Strafe nur bei neuem Namen, Automatik und Vorstand nehmen eine Verlängerung. | ✅ behoben |
+| GL2 | **Mittel:** Der Traditionsname galt nach einem Jobwechsel für den neuen Verein weiter. Jetzt setzt `werbungNeuerVerein` ihn zurück. | ✅ behoben |
+| GL3 | **Niedrig:** Offene Angebote aus einem alten Stand behalten nach dem Aufstieg den Preis der alten Liga. | offen (selten) |
+| GL4 | **Niedrig:** Brust und Stadion bekamen denselben umstrittenen Geldgeber. Jetzt ein Name je Fläche. | ✅ behoben |
+| GL5 | **Niedrig:** Die Fankultur zählte doppelt (−3 bis −9). Jetzt gebucht −3 − 1 × Fankultur, insgesamt −3 bis −6. | ✅ behoben |
+| GL6 | **Niedrig:** Schwierigkeit und Werbewert wirken auf die 12 %. Entschieden: gewollt wie bei den anderen Flächen (K24 „Nach Prüfung GL“). | ✅ entschieden |
+| GL7 | **Mittel:** Speichern in der App war nicht sicher gegen Stromausfall (kein fsync, Kopie statt Umbenennen). Jetzt: fsync, dann umbenennen. Eine leere Hauptdatei wird nicht zur Sicherung. | ✅ behoben |
+| GL8 | **Mittel:** Unter Windows scheiterte das Umbenennen gelegentlich (EPERM, EBUSY). Jetzt bis zu fünf Versuche, der Fehlercode steht in der Konsole. | ✅ behoben |
+| GL9 | **Niedrig, ungemessen:** Synchrones Schreiben von 3–4 MB bei fast jeder Aktion. | offen (erst messen) |
+| GL10 | **Niedrig:** Eine auf das Fenster gezogene Datei ersetzte das Spiel. Jetzt darf nur das Spiel selbst geladen werden. | ✅ behoben |
+| GL11 | **Niedrig:** Der Workflow hatte keine `permissions`, und der Checkout behielt den Token. Jetzt `contents: read` und `persist-credentials: false`, dazu `schrift/**` in den Pfaden. | ✅ behoben |

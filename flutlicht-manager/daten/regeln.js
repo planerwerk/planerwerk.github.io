@@ -268,9 +268,11 @@ const REGELN={
     // K24d (26.11., Antworten popolupo in K24 §12): Stadionname als vierte Fläche, geldneutral 12 % aus dem bisherigen Partneranteil (vorher 0,37).
     // Jeder Verein darf ihn verkaufen (Eigentum am Stadion kommt mit der Recherche). Computer-Vereine verkaufen ihn automatisch, ihr Geld bleibt gleich.
     werbung:{anteil:{brust:0.38,ausruester:0.18,aermel:0.07,stadion:0.12},partner:0.25,titel:{brust:'Trikotbrust',ausruester:'Ausrüster',aermel:'Ärmel',stadion:'Stadionname'},
-      // Fanstimmung beim Verkauf des Namens (K24 §6): −3 − 3 × Fankultur (K27d, fankulturWirkung 0 bis 1), also −3 bis −6; nicht bei einer Verlängerung.
+      // Fanstimmung beim Verkauf des Namens (K24 §6): insgesamt −3 bis −6 je nach Fankultur (K27d, fankulturWirkung k von 0 bis 1); nur wenn sich der Name ändert.
+      // Seit Prüfung GL5: Die Fanstimmung wiegt Entscheidungen schon mit 1 + 0,5 × k (fans.entscheid.fankultur). Gebucht wird deshalb −3 − 1 × k, das ergibt −3 bei k = 0 und −6 bei k = 1.
+      // jahre (Prüfung GL1): Namensrechte laufen länger als Trikotverträge. Drei, drei und fünf Saisons statt eins, eins und drei, sonst wechselte der Name ohne eigene Wahl jede Saison.
       // Der Name ist erfunden: erstes Wort der Firma und ein Wort aus worte (ohne Zufall aus dem Firmennamen).
-      stadion:{fans:-3,fansKultur:-3,worte:['Arena','Park','Stadion']},
+      stadion:{fans:-3,fansKultur:-1,jahre:[3,3,5],worte:['Arena','Park','Stadion']},
       // K24e Nachverhandeln (26.11., K24 §4 Nr. 2 und §6, vorläufig): Du forderst +5 bis +20 % auf ein offenes Angebot. Jedes Angebot hat einen verdeckten Spielraum
       // (gewürfelt je Saison, Fläche und Firma, 3–15 %). Liegt die Forderung darin, unterschreibt der Sponsor sofort zum höheren Betrag (Fixum und Siegprämie).
       // Sonst lehnt er ab und zieht mit absprung.nah (bis grenze über dem Spielraum) oder absprung.weit zurück, nach runden Absagen sicher.
@@ -902,7 +904,8 @@ const REGELN={
     arten:{prellung:{name:'Prellung',g:'prellung',anteil:0.20,tage:[1,7],k:1,spritzen:true},
       // Zerrung: rueckfall 0,095 statt 0,12 und Kreuzband: anteil 0,006 statt 0,01 (26.11., vorläufig). Gemessen seit U7b immer über dem Ziel:
       // Rückfall nach Zerrung 15 bis 16 % (Ziel 10–15 %), Kreuzbandrisse in der 1. Liga 9,5 bis 10 je Saison (Ziel 3–8). Gesenkt im Verhältnis zur Mitte des Ziels.
-      zerrung:{name:'Zerrung im Oberschenkel',g:'muskel',anteil:0.25,tage:[8,30],k:0,rueckfall:0.095},
+      // Zerrung: anteil 0,22 statt 0,25 (Lauf 19, vorläufig): Der gemessene Anteil lag mit den Rückfällen genau auf der Obergrenze 25 % (Ziel 20–25 %).
+      zerrung:{name:'Zerrung im Oberschenkel',g:'muskel',anteil:0.22,tage:[8,30],k:0,rueckfall:0.095},
       faserriss:{name:'Muskelfaserriss',g:'muskel',anteil:0.12,tage:[21,49],k:0,rueckfall:0.15},
       baenderdehnung:{name:'Bänderdehnung im Sprunggelenk',g:'band',anteil:0.12,tage:[4,21],k:0.6,rueckfall:0.10,spritzen:true},
       baenderriss:{name:'Bänderriss im Sprunggelenk',g:'band',anteil:0.05,tage:[28,63],k:0.8,rueckfall:0.08},

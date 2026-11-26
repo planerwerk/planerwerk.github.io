@@ -153,6 +153,16 @@ sponsoren:{
 3. **Traditionsvereine:** keine neue Liste. Ableitung aus der vorhandenen Fankultur (K27d, `fankulturWirkung` 0 bis 1): Fanstimmung −3 − 3 × Fankultur, also −3 bei schwacher und −6 bei stärkster Fankultur. Die Fankultur enthält schon Mitglieder und Auslastung. Das Gründungsjahr (`gegr`) bleibt Anzeige.
 4. **Name:** einverstanden.
 
+**Nach Prüfung GL** (26.11. nachts, popolupo, vorläufig):
+- **Laufzeit:** Namensrechte laufen drei, drei oder fünf Saisons (`RF.werbung.stadion.jahre`), nicht eine.
+  - Fanstimmung kostet nur ein neuer Name. Eine Verlängerung oder derselbe Name von derselben Firma kosten nichts.
+  - Automatik und Vorstand nehmen beim Stadionnamen eine angebotene Verlängerung.
+  - Sonst hätte jedes Spiel ohne eigene Wahl jede Saison einen neuen Namen und Fanärger gehabt.
+- **Fankultur nur einmal:** Die Fanstimmung wiegt Entscheidungen schon mit 1 + 0,5 × Fankultur. Gebucht wird deshalb −3 − 1 × Fankultur, insgesamt −3 bis −6 wie entschieden.
+- **Schwierigkeit und Werbewert** wirken auf den Stadionnamen wie auf die anderen Flächen. Auf „Leicht“ ist er etwas mehr wert, auf „Schwer“ weniger. Das ist gewollt und nur für deinen Verein nicht ganz geldneutral.
+- Nach einem Jobwechsel gelten Traditionsname und alter Name nicht mehr.
+- Offen (niedrig): Offene Angebote aus einem alten Spielstand, der in der Sommerpause geladen wird, behalten den Preis der alten Liga (GL3).
+
 ## Quellen
 
 - Hauptsponsoren-Erlöse (Schätzungen): [90min.de: So viel kassieren die Bundesligisten vom Hauptsponsor](https://www.90min.de/bayern-an-der-spitze-so-viel-kassieren-die-bundesligisten-von-ihrem-hauptsponsor), [leinetal24.de: Bundesliga-Vergleich Hauptsponsor](https://www.leinetal24.de/sport/fussball/bundesliga-vergleich-so-viel-kassiert-eintracht-frankfurt-vom-hauptsponsor-zr-94404426.html)
