@@ -84,15 +84,20 @@ for(const k of ['leicht','normal']){const {W,S}=welt(k),ev=W.ev,t=ev('myT()'),I=
   const saison=(sm,eu)=>{const alt=S.eu&&S.eu.titel;if(S.eu)S.eu.titel=Object.assign({cl:null,el:null,ecl:null},eu||{});mit(sm);if(S.eu)S.eu.titel=alt;verlauf.push(S.stufe);};
   saison({my:m,lg:2,champ:m,up:[m]});                 // Aufstieg und Meister der 2. Liga: kein Titel im Sinne von K43 §5 (sm.champ ist der Meister der 1. Liga, hier nur so gesetzt)
   saison({my:m,lg:1,champ:m+1});                      // anderer Verein Meister
-  saison({my:m,lg:1,champ:m});                        // erster Titel: Normal
+  t.fu=1;saison({my:m,lg:1,champ:m});                 // erster Titel: Normal
+  // Prüfung GG1: Kreditrahmen der alten Stufe noch diese Saison, Zähler der Insolvenz neu; Champions League offen
+  const kf=ev('kreditFaktor'),gg1=kf()===St('leicht').kredit&&t.fu===0&&ev('stufe()').ohneCL===false;
   saison({my:m,lg:1,champ:m+1});                      // ohne Titel: bleibt Normal, Folge neu
   saison({my:m,lg:1,champ:m+1},{el:m});               // Europa League gewonnen: Titel, Folge 1, bleibt Normal
   saison({my:m,lg:1,champ:m});                        // zweiter Titel in Folge: Schwer
   saison({my:m,lg:1,champ:m+1});                      // ohne Titel: bleibt Schwer
   const soll=['leicht','leicht','leicht','normal','normal','normal','schwer','schwer'];
   const n=R.normal,nv=n.S.stufe;n.W.ev('stufeMitwachsen')({my:n.S.my,lg:1,champ:n.S.my});const fest=n.S.stufe===nv&&!n.S.mitw;
-  pruef(start&&JSON.stringify(verlauf)===JSON.stringify(soll)&&fest,'K43: Mitwachsend beginnt auf Leicht, steigt mit Titeln, sinkt nie; ohne Mitwachsend keine Änderung',
-    `Start ${start}, Verlauf ${verlauf.join(' → ')}, Normal fest ${fest}`);}
+  S.season++;const kfNaechste=kf();S.season--; // in der nächsten Saison der Faktor der neuen Stufe
+  // Reihenfolge im Saisonwechsel: erst die Stufe, dann der Europapokal (sonst gälte die Champions League erst ein Jahr später)
+  const quelle=require('fs').readFileSync(require('path').join(require('./sim').ROOT,'js','saison.js'),'utf8'),reihe=quelle.indexOf('stufeMitwachsen(sm)')>=0&&quelle.indexOf('stufeMitwachsen(sm)')<quelle.indexOf('europaAnlegen(sm)');
+  pruef(start&&JSON.stringify(verlauf)===JSON.stringify(soll)&&fest&&gg1&&kfNaechste===St('schwer').kredit&&reihe,'K43: Mitwachsend beginnt auf Leicht, steigt mit Titeln, sinkt nie; Kreditrahmen erst zur nächsten Saison; ohne Mitwachsend keine Änderung',
+    `Start ${start}, Verlauf ${verlauf.join(' → ')}, Normal fest ${fest}, Kredit beim Wechsel ${gg1}, nächste Saison ${kfNaechste}, Reihenfolge ${reihe}`);}
 
 // K02a. Neue Regeln ausprobieren (K02 §4.4): Jeder Eintrag in REGELN.experimente zeigt auf einen Schalter, der aus ist. experimentSetzen schaltet ihn für diesen
 //       Spielstand ein (S.einst.exp) und wieder aus; experimenteAnwenden schaltet nur aus, was es selbst eingeschaltet hat (ein von außen gesetzter Schalter bleibt).

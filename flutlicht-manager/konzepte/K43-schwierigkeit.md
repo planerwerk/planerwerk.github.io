@@ -102,8 +102,10 @@ Deine Frage blieb offen, deshalb habe ich nach unserer Regel selbst entschieden:
 - **Wann es zählt:** Zu Beginn jeder Saison zählt die abgelaufene (`stufeMitwachsen` in `js/welt.js`, vor der Einteilung des Europapokals). Ein Titel ist die Meisterschaft der 1. Liga oder ein Europapokal deines Vereins.
 - **Was sich ändert:**
   - Startkonto und Erinnerungen bleiben, wie sie sind.
-  - Alles andere gilt ab der neuen Saison: Sponsoren, Karten, Champions League, Gönner, Kreditrahmen, Vorstand.
-  - Eine Meldung nennt die neue Stufe und, falls er sinkt, den neuen Kreditrahmen.
+  - Ab der neuen Saison gelten Sponsoren, Karten, Champions League, Gönner, Vorstand, Saisonziel und Talentsterne neuer Spieler der neuen Stufe.
+  - **Kreditrahmen mit einer Saison Übergang** (Prüfung GG1): In der Saison des Wechsels gilt noch der alte Rahmen, erst danach der neue. Der Zähler für die Insolvenz beginnt neu.
+  - Eine Meldung nennt die neue Stufe und die beiden Kreditrahmen. Liegt das Konto schon unter dem künftigen Rahmen, sagt sie (als schlechte Nachricht), wie viel bis dahin gutzumachen ist.
+- **Im Menü** steht „Schwierigkeit: Normal (mitwachsend, steigt mit Titeln)“.
 - **In der Statistik** steht bei den Saisons „(mitwachsend)“.
 
 Der ursprüngliche Entwurf:

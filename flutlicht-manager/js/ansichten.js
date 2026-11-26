@@ -127,7 +127,7 @@ function wwTag(p){const w=p.ww||0;if(p.team===S.my){if(w>=3)return`<span class="
 const stimmungArt=p=>{const s=stimmung(p);return s<RKA.wechsel.gespraech[0]?'bad':s<RKA.wechsel.grummeln[0]?'warn':'';};
 // Gesprächswünsche im Büro (K14 §4.3)
 function gespraechswunschKarte(){const l=(S.gw||[]).map(g=>PIX.get(g.pid)).filter(p=>p&&p.team===S.my);if(!l.length)return'';
-  return`<div class="card"><h3>Gesprächswunsch</h3>${l.map(p=>`<div class="row between" style="padding:6px 0;border-bottom:1px solid var(--rule)"><span><b>${esc(p.n)}</b> möchte mit dir sprechen (Stimmung ${Math.round(p.st)}, ${esc(BAUSTEIN_GRUND[hauptgrund(p)]||'unzufrieden')}).</span><button onclick="openP(${p.id})">Zum Gespräch</button></div>`).join('')}<p class="dim">Ohne Gespräch und ohne Besserung will er nach vier Wochen offiziell weg. Gespräche diese Woche: ${gespraecheDieseWoche()} von ${RGS.proWoche}.</p></div>`;}
+  return`<div class="card"><h3>Gesprächswunsch</h3>${l.map(p=>`<div class="row between" style="padding:6px 0;border-bottom:1px solid var(--rule)"><span><b>${esc(p.n)}</b> möchte mit dir sprechen (Stimmung ${Math.round(p.st)}, ${esc(BAUSTEIN_GRUND[hauptgrund(p)]||'unzufrieden')}).</span><button onclick="openP(${p.id})">Zum Gespräch</button></div>`).join('')}<p class="dim">Ohne Gespräch und ohne Besserung will er nach ${RKA.wechsel.offiziell} Wochen offiziell weg. Gespräche diese Woche: ${gespraecheDieseWoche()} von ${RGS.proWoche}.</p></div>`;}
 // Stimmung und Gespräch auf der Spielerkarte (K14, K15)
 // Bankzeit nach Grund (K14 §12): was gerade für oder gegen ihn läuft, in einem Satz
 function bankHinweis(p){const B=RKA.bank,l=[];

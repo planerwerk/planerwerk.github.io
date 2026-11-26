@@ -89,7 +89,7 @@ Ziel = 60 + Einsatz + Erfolg + Leistung + Vertrag + Trainer + Umfeld   (begrenzt
 |---|---|---|
 | 1 Grummeln | Stimmung unter 40 seit 3 Wochen | Hinweis im Wochenbericht |
 | 2 Gesprächswunsch | Stimmung unter 35 seit 4 Wochen | **Halt:** Gespräch (K15) |
-| 3 offizieller Wechselwunsch | Stufe 2 ohne Besserung nach 4 Wochen oder gescheitertes Gespräch | will auf die Transferliste, Ablöse sinkt um 10 %, andere Vereine wissen es (K19) |
+| 3 offizieller Wechselwunsch | Stufe 2 ohne Besserung nach 4 Wochen (seit 26.11. 5 Wochen) oder gescheitertes Gespräch | will auf die Transferliste, Ablöse sinkt um 10 %, andere Vereine wissen es (K19) |
 | 4 öffentlich | Stufe 3 seit 4 Wochen, Charakter Diva oder Söldner wahrscheinlicher | Medien (K29), Mannschaftsstimmung −3 |
 
 Die Stufe sinkt wieder, wenn die Stimmung über 50 steigt.

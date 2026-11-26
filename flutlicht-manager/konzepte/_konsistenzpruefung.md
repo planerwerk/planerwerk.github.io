@@ -3021,3 +3021,20 @@ Hinweise umgesetzt auf `mitarbeit/popolupo-gf-hinweise` (auf den Korrekturen GE)
 | 3 | `euClFest` nur in der Spielzeit (`play`), nicht in der Sommerpause | ✅ umgesetzt |
 | 4 | Rücktritt auf Leicht vor der Auslosung: Der alte Verein bleibt in der Europa League. Selten, so gelassen (K43 §3.2). | entschieden, vorläufig |
 | 5 | K43 §6 nennt die neuen Tests | ✅ umgesetzt |
+
+## GG. Prüfung von 266247b, der Prüfregeln in tests/welt.js, der Kalibrierung und von „Mitwachsend“ ohne Laufzeit (26. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat b06cbf4..6259798 gelesen.
+
+- „Mitwachsend“ wertet die abgelaufene Saison richtig. Die Folge beginnt ohne Titel neu, die Stufe sinkt nie, und der Wechsel kommt vor der Einteilung des Europapokals.
+- Kein Laufzeitfehler. Auf den festen Stufen unveränderte Würfe. Kein Test wird sicher rot.
+
+Bericht: `flutlicht-tools/pruefung-gg.md`.
+
+Korrekturen auf `mitarbeit/popolupo-gg-korrekturen` (auf K43c).
+
+| # | Befund | Status |
+|---|---|---|
+| GG1 | **Mittel, nur „Mitwachsend“:** Der Kreditrahmen sank beim Wechsel sofort, das konnte ohne Warnung zur Insolvenz mit Punktabzug führen. Jetzt gilt in der Saison des Wechsels noch der alte Rahmen (`kreditFaktor`), der Zähler der Insolvenz beginnt neu, und die Meldung nennt beide Rahmen und den Fehlbetrag, falls das Konto schon darunter liegt. | ✅ behoben |
+| GG2 | **Niedrig, Text:** Zwei Texte nannten noch vier Wochen bis zum offiziellen Wechselwunsch. Die Kabine nimmt die Zahl jetzt aus der Regel, der Tipp sagt „einige Wochen“. | ✅ behoben |
+| – | Hinweise: Menü zeigt „(mitwachsend)“. Saisonziel und Talentsterne wechseln mit der Stufe, gewollt und in K43 §5 genannt. Test für die Reihenfolge im Saisonwechsel (Quelltext) und den Kreditrahmen nächste Saison. tests/welt.js zählt nur Konten, die länger unter dem Kreditrahmen liegen, als die Regeln bis zur Insolvenz erlauben. Der Langlauf misst „Mitwachsend“ mit. | ✅ umgesetzt |

@@ -9,7 +9,9 @@ const teamLevel=tid=>{const s=squad(tid).map(p=>p.str).sort((a,b)=>b-a).slice(0,
 function askPrice(p){return forderung(p);} // Forderung des Vereins nach dem Vereinswert (K19 §5.1, U10a), mit dem Stand der Verhandlung
 const extDemand=p=>{const g=RM.gehalt;return Math.round(salaryFor(p.str)*(g.basis+p.seed*g.zufall)*(p.age>=g.altAb?g.altFaktor:1)/1000)*1000;};
 // Kreditrahmen, Startkonto und Werbung wachsen seit K23c mit e^(steigung × (Ansehen − mitte)), wie die Einnahmen der echten Vereine
-const kreditRahmen=t=>{const K=RF.kreditRahmen;return Math.round(K.basis*Math.exp(K.steigung*(t.rep-K.mitte))/K.runden)*K.runden*(t.id===S.my?stufe().kredit:1);};
+const kreditRahmen=t=>{const K=RF.kreditRahmen;return Math.round(K.basis*Math.exp(K.steigung*(t.rep-K.mitte))/K.runden)*K.runden*(t.id===S.my?kreditFaktor():1);};
+// Faktor der Stufe; nach einem Wechsel der mitwachsenden Stufe gilt der alte (höhere) Faktor noch bis zum Ende dieser Saison (Prüfung GG1)
+const kreditFaktor=()=>{const f=stufe().kredit,a=S.mitw&&S.mitw.kredit;return a&&a.s===S.season?Math.max(f,a.f):f;};
 const startKonto=rep=>{const K=RW.konto;return Math.round(K.basis*Math.exp(K.steigung*(rep-K.mitte))/K.runden)*K.runden;};
 // Grundbetrag der Werbung je Ligaspiel (K23c): Grundlage der Angebote für Brust, Ausrüster und Ärmel, der weiteren Partner und der Werbung der Computer-Vereine
 const sponsorBasis=t=>{const P=RF.sponsor;return Math.round(P.basis*Math.exp(P.steigung*(t.rep-P.mitte))*(P.liga[t.lg]||P.liga[3]));}; // gerundet, damit Kontostände ganze Euro bleiben
@@ -22,12 +24,15 @@ function stufeAnwenden(k){const M=REGELN.schwierigkeit.mitwachsend;if(k==='mitwa
   setTarget();}
 // Mitwachsende Schwierigkeit (K43 §5, 26.11., vorläufig): zu Beginn jeder Saison (newSeasonLauf, vor dem Europapokal) mit der Bilanz der abgelaufenen.
 // Ein Titel ist die Meisterschaft der 1. Liga oder ein Europapokal deines Vereins am Saisonende (sm.my). Ohne Titel beginnt die Folge neu, die Stufe bleibt.
-// Startkonto und Erinnerungen ändern sich nicht nachträglich, alles andere gilt ab sofort (Sponsoren, Karten, Champions League, Gönner, Kreditrahmen, Vorstand).
+// Startkonto und Erinnerungen ändern sich nicht nachträglich. Ab sofort gelten Sponsoren, Karten, Champions League, Gönner, Vorstand, Saisonziel und Talentsterne neuer Spieler.
+// Der Kreditrahmen sinkt erst zur nächsten Saison, der Zähler für die Insolvenz beginnt neu (Prüfung GG1).
 function stufeMitwachsen(sm){const M=REGELN.schwierigkeit.mitwachsend;if(!S.mitw||!M||!sm)return;const m=sm.my!=null?sm.my:S.my,ti=S.eu&&S.eu.titel;
   const titel=(sm.champ===m&&sm.lg===1)||(!!ti&&['cl','el','ecl'].some(w=>ti[w]===m));if(!titel){S.mitw.folge=0;return;}
   S.mitw.folge++;S.mitw.titel++;const i=Math.max(M.reihe.indexOf(S.stufe),S.mitw.folge>=2?2:1);if(i<0||M.reihe[i]===S.stufe)return;
-  const kr0=kreditRahmen(myT());S.stufe=M.reihe[i];const kr=kreditRahmen(myT());
-  news(`Mitwachsende Schwierigkeit: Nach ${S.mitw.folge>=2?'Titeln in zwei Saisons nacheinander':'deinem ersten Titel'} spielst du ab jetzt auf „${stufe().name}“ (${stufe().text}).${kr<kr0?` Dein Kreditrahmen sinkt auf ${fmt(kr)}.`:''}`,'');}
+  const t=myT(),f0=kreditFaktor(),kr0=kreditRahmen(t);S.stufe=M.reihe[i];S.mitw.kredit={s:S.season,f:f0};t.fu=0;
+  const krNeu=Math.round(kr0*stufe().kredit/f0),unter=t.cash<-krNeu;
+  news(`Mitwachsende Schwierigkeit: Nach ${S.mitw.folge>=2?'Titeln in zwei Saisons nacheinander':'deinem ersten Titel'} spielst du ab jetzt auf „${stufe().name}“ (${stufe().text}).`
+    +(krNeu<kr0?` Dein Kreditrahmen bleibt diese Saison bei ${fmt(kr0)} und sinkt ab der nächsten auf ${fmt(krNeu)}.${unter?` Dein Konto liegt schon darunter: Bis dahin musst du ${fmt(-t.cash-krNeu)} gutmachen, sonst droht die Insolvenz.`:''}`:''),unter?'bad':'');}
 // TV-Gelder (K23 §5.1, K23c): Säulenmodell, Saisonbetrag je Verein einmal je Saison und Ligazusammensetzung berechnet (S.tvS), ohne Zufall, ausgezahlt je Ligaspiel.
 // Fünfjahreswertung: t.tvw = Punkte der letzten Saisons (jüngste zuerst, saison.js), t.tv0 = Startpunkte nach Liga und Ansehen für fehlende Saisons.
 function tvPunkteStart(){const off={};let n=0;LIGEN.forEach(lg=>{off[lg]=n;n+=lgIds(lg).length;});

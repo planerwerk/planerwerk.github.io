@@ -290,6 +290,18 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 26.11.2026: Korrekturen nach Prüfung GG (Zweig `mitarbeit/popolupo-gg-korrekturen`, auf K43c)
+
+- **„Mitwachsend“:**
+  - Der Kreditrahmen sinkt erst eine Saison nach dem Wechsel, der Zähler der Insolvenz beginnt neu.
+  - Die Meldung nennt den Fehlbetrag, falls das Konto schon unter dem künftigen Rahmen liegt.
+  - Das Menü zeigt „(mitwachsend)“.
+- **Texte:** Die Zahl der Wochen bis zum offiziellen Wechselwunsch kommt aus der Regel.
+- **Tests:**
+  - K43f prüft den Kreditrahmen beim Wechsel und in der nächsten Saison sowie die Reihenfolge im Saisonwechsel.
+  - `tests/welt.js` zählt nur Konten, die zu lange unter dem Kreditrahmen liegen.
+  - Der Langlauf misst „Mitwachsend“ mit.
+
 ### 26.11.2026: K43c Schwierigkeit „Mitwachsend“ (Zweig `mitarbeit/popolupo-k43c-mitwachsend`, auf W5g)
 
 - **Neu, vorläufig:** vierte Wahl beim Spielstart.

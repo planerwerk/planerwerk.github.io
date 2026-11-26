@@ -192,8 +192,10 @@ const mitLeihProtokoll=(F,getS,C)=>{const log=[],orig=F.kiLeihe;
   const lauf=saisons({n:N,seed:SEED,verein:6,vorher:(F,W)=>{evL=W.ev;},
     beiSaisonstart:(S,F)=>{if(log){nochVerliehen.push(S.pl.filter(p=>p.leihe).length);return;}S0=S;log=mitProtokoll(F,()=>S0,C.talentBis);leihLog=mitLeihProtokoll(F,()=>S0,C);const orig=F.planAuffuellen;F.planAuffuellen=function(t,P,l){const n=orig(t,P,l);fuell.push({s:S0.season,t:t.id,n});return n;};},
     beiSaisonende:(S,F)=>{const z={s:S.season,offen:0,leer:0,ueber2:0,vereine:0,kader:[],minus:0,ueberKredit:0,gebraucht:0,laufenAus:0};
-      // Seit K23c haben auch Computer-Vereine einen Kreditrahmen: ein Konto im Minus ist erlaubt, nur nicht unter dem Kreditrahmen (T9.3, Lauf 10)
-      S.teams.forEach(t=>{if(t.lg>3||t.id===S.my)return;z.vereine++;const P=F.kaderplan(t);z.kader.push(P.alle.length);if(t.cash<0)z.minus++;if(t.cash<-evL('kreditRahmen')(t))z.ueberKredit++;let u2=false;
+      // Seit K23c haben auch Computer-Vereine einen Kreditrahmen: ein Konto im Minus ist erlaubt. Unter dem Kreditrahmen ebenfalls, bis der Zähler t.fu die Monate
+      // bis zur Insolvenz erreicht (finanzen.js, Hinweis aus Prüfung GG). Gezählt wird nur, wer länger darunter liegt (T9.3, Lauf 10).
+      S.teams.forEach(t=>{if(t.lg>3||t.id===S.my)return;z.vereine++;const P=F.kaderplan(t);z.kader.push(P.alle.length);if(t.cash<0)z.minus++;
+        if(t.cash<-evL('kreditRahmen')(t)&&(t.fu||0)>=evL('RFP').insolvenz.monate)z.ueberKredit++;let u2=false;
         P.alle.forEach(p=>{if(C.vertrag.wichtig.includes(P.rang.get(p.id))){z.gebraucht++;if(p.ct===1)z.laufenAus++;}});
         C.gruppen.forEach(g=>{const G=P.gr[g];if(G.l.length<G.soll)z.offen+=G.soll-G.l.length;if(!G.l.length&&G.soll>0)z.leer++;if(G.l.filter(p=>P.rang.get(p.id)==='ueber').length>2)u2=true;});if(u2)z.ueber2++;});
       ende.push(z);}});
@@ -223,7 +225,7 @@ const mitLeihProtokoll=(F,getS,C)=>{const log=[],orig=F.kiLeihe;
     info(`Saison ${s}: Zugänge über den Markt je Verein`,`Sommer ${f1(so.length/z.vereine)}, Winter ${f1(wi.length/z.vereine)} (K31 §10 nennt 3–8 und 0–3 für alle Zugänge zusammen)`);
     info(`Saison ${s}: am Ende des Sommerfensters aufgefüllt`,`${f.reduce((a,x)=>a+x.n,0)} Spieler bei ${f.filter(x=>x.n>0).length} Vereinen`);});
   ende.forEach(z=>{const mn=Math.min(...z.kader),mx=Math.max(...z.kader);
-    pruef(mn>=15&&mx<=36&&z.ueberKredit===0&&z.leer===0,`Saisonende ${z.s}: Kader zwischen 15 und 36, keine Gruppe ganz leer, kein Konto unter dem Kreditrahmen`,`Kader ${mn} bis ${mx}, ${z.leer} leere Gruppen, ${z.ueberKredit} unter dem Kreditrahmen (${z.minus} im Minus, erlaubt)`);
+    pruef(mn>=15&&mx<=36&&z.ueberKredit===0&&z.leer===0,`Saisonende ${z.s}: Kader zwischen 15 und 36, keine Gruppe ganz leer, kein Konto länger unter dem Kreditrahmen, als die Regeln bis zur Insolvenz erlauben`,`Kader ${mn} bis ${mx}, ${z.leer} leere Gruppen, ${z.ueberKredit} zu lange unter dem Kreditrahmen (${z.minus} im Minus, erlaubt)`);
     info(`Saisonende ${z.s}: offene Planstellen je Verein`,`${f1(z.offen/z.vereine)}, Vereine mit mehr als 2 Spielern Überhang in einer Gruppe: ${pc(z.ueber2/z.vereine)}`);
     info(`Saisonende ${z.s}: Gebrauchte mit auslaufendem Vertrag (U11c, früh verlängert sollten es unter 20 % sein)`,`${z.laufenAus} von ${z.gebraucht} (${pc(z.laufenAus/Math.max(1,z.gebraucht))})`);});
   // Budget genutzt (K31 §10: 60 bis 100 %): Anteil des Winterbudgets der letzten Saison, der ausgegeben wurde (das Sommerbudget ist dann schon überschrieben)
