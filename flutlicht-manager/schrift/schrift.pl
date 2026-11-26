@@ -125,8 +125,20 @@ my %KL=(
   '?'=>{w=>46,p=>[[0,[A=>23,23,16,180,360],[L=>39,23,39,33],[L=>39,33,23,52],[L=>23,52,23,70]],[0,[L=>16,93,30,93]]]},
   'mdot'=>{w=>28,p=>[[0,[L=>7,57,21,57]]]},
   'ndash'=>{w=>56,p=>[[0,[L=>4,52,52,52]]]},
+  # Anführungszeichen und weitere Satzzeichen (W5d5, 26.11.): deutsche „…“ und ‚…‘, dazu ’ (Apostroph), gerade ' und ", ; und =.
+  # Unten wie das Komma (Grundlinie), oben gespiegelt (6-Form „“ links offen) oder hochgestellt (9-Form ’ ”).
+  'dq_unten'=>{w=>40,p=>[[0,[L=>12,86,12,100],[L=>12,100,7,111]],[0,[L=>28,86,28,100],[L=>28,100,23,111]]]},
+  'dq_6'=>{w=>40,p=>[[0,[L=>17,4,12,15],[L=>12,15,12,29]],[0,[L=>33,4,28,15],[L=>28,15,28,29]]]},
+  'dq_9'=>{w=>40,p=>[[0,[L=>12,7,12,21],[L=>12,21,7,32]],[0,[L=>28,7,28,21],[L=>28,21,23,32]]]},
+  'sq_unten'=>{w=>28,p=>[[0,[L=>14,86,14,100],[L=>14,100,9,111]]]},
+  'sq_6'=>{w=>28,p=>[[0,[L=>19,4,14,15],[L=>14,15,14,29]]]},
+  'sq_9'=>{w=>28,p=>[[0,[L=>14,7,14,21],[L=>14,21,9,32]]]},
+  "'"=>{w=>28,p=>[[0,[L=>14,7,14,30]]]},
+  '"'=>{w=>40,p=>[[0,[L=>12,7,12,30]],[0,[L=>28,7,28,30]]]},
+  ';'=>{w=>28,p=>[[0,[L=>7,35,21,35]],[0,[L=>14,58,14,72],[L=>14,72,9,83]]]},
+  '='=>{w=>56,p=>[[0,[L=>9,42,47,42]],[0,[L=>9,62,47,62]]]},
 );
-my %KU=(sz=>0xDF,euro=>0x20AC,mdot=>0xB7,ndash=>0x2013);
+my %KU=(sz=>0xDF,euro=>0x20AC,mdot=>0xB7,ndash=>0x2013,dq_unten=>0x201E,dq_6=>0x201C,dq_9=>0x201D,sq_unten=>0x201A,sq_6=>0x2018,sq_9=>0x2019);
 for my $k(keys %KL){$Z{$k}=$KL{$k};$U{$k}=[$KU{$k}//ord $k];}
 for my $u([ae=>'a',0xE4],[oe=>'o',0xF6],[ue=>'u',0xFC]){my($n,$b,$cp)=@$u;$Z{$n}={w=>52,p=>[@{$KL{$b}{p}},[0,[L=>9,14,23,14]],[0,[L=>29,14,43,14]]]};$U{$n}=[$cp];}
 
@@ -248,6 +260,6 @@ print $c "/* Flutlicht Display (K35b \xc2\xa713.4, W5d): eigene Anzeigeschrift, 
  ."   Eingebettet als data-URL, damit sie auch per Doppelklick (file://) l\xc3\xa4dt. Lizenz der Schrift: SIL Open Font License 1.1 (vorl\xc3\xa4ufig).\n"
  ."   Sie ist die erste Schrift in --f-disp (css/spiel.css). Zeichen, die ihr fehlen (seltene Satzzeichen), nimmt der Browser einzeln aus Saira Condensed. */\n"
  ."\@font-face{font-family:\"Flutlicht Display\";src:url(data:font/ttf;base64,$b64) format(\"truetype\");font-weight:100 900;font-style:normal;font-display:swap;"
- ."unicode-range:U+0020-007E,U+00A0,U+00B7,U+00C4,U+00D6,U+00DC,U+00DF,U+00E4,U+00F6,U+00FC,U+2013,U+2212,U+20AC}\n";
+ ."unicode-range:U+0020-007E,U+00A0,U+00B7,U+00C4,U+00D6,U+00DC,U+00DF,U+00E4,U+00F6,U+00FC,U+2013,U+2018-2019,U+201A,U+201C-201E,U+2212,U+20AC}\n";
 close $c;
 printf "Flutlicht Display: %d Zeichen, %d Tabellen, %d Byte TTF, %d Byte CSS, h\xc3\xb6chstens %d Punkte und %d Konturen je Zeichen\n",$ng,$nt,length $font,length($b64)+600,$maxP,$maxC;

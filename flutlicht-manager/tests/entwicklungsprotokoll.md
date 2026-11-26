@@ -290,6 +290,11 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 26.11.2026: W5d5 Anführungszeichen und Satzzeichen in der Schrift (Zweig `mitarbeit/popolupo-w5d5-satzzeichen`, auf W5d4)
+
+- **Neu:** „Flutlicht Display“ hat jetzt deutsche Anführungszeichen („…“ und ‚…‘), Apostroph, gerade Anführungszeichen, Semikolon und Gleichheitszeichen. Insgesamt 95 Zeichen, 19 KB.
+- Vorher kamen diese Zeichen einzeln aus Saira Condensed und sahen dadurch anders aus.
+
 ### 26.11.2026: W5d4 Kerning der Schrift (Zweig `mitarbeit/popolupo-w5d4-kerning`, auf W5f4)
 
 - **Neu:** Die eigene Schrift „Flutlicht Display“ hat eine Kerning-Tabelle mit 53 Paaren, etwa „Ta“, „Vo“, „Ye“, „T.“ und „LT“. Umlaute werden wie ihr Grundbuchstabe behandelt.
