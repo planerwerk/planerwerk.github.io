@@ -388,7 +388,7 @@ finanzen:{
 22. Gehalt 2,5 Mio. × e^(0,16 × (Stärke − 75)), Marktwert 7 Mio. × e^(0,2 × (Stärke − 75)) (§5.6b).
 23. TV nach dem Säulenmodell: 54 % gleich, 43 % Leistung nach Rang in der Fünfjahreswertung (Gewicht Zahl + 3 − Rang), 3 % Interesse nach Ansehen², 3. Liga gleich. Nachwuchs-Säule in der Gleichverteilung, bis es sie gibt (§5.6b).
 24. Werbung exponentiell im Ansehen mit Ligafaktor, davon 37 % weitere Sponsoren ohne Verhandlung (§5.6b).
-25. Neuer Posten Verwaltung und Sonstiges: 40, 55 oder 40 % von TV, Werbung und Sonstigem (§5.6b).
+25. Neuer Posten Verwaltung und Sonstiges: 40, 55 oder 40 % von TV, Werbung und Sonstigem (§5.6b). **Seit 26.11. (vorläufig) 43,5, 47 und 30 %:** Die Läufe 10 bis 14 maßen je Verein und Saison 1. Liga +13 bis +16 Mio., 2. Liga −1 bis −4 Mio., 3. Liga −2,5 bis −3,8 Mio. statt etwa +11, 0 und −1.
 26. Sonstige Einnahmen 300.000, 80.000, 30.000 € je Ligaspiel (§5.6b).
 27. Startkonto und Kreditrahmen exponentiell im Ansehen, Gehaltsrahmen 75 % (§5.6b).
 28. Europapokal mit echten Beträgen (Faktor 1, K37 §5.3).

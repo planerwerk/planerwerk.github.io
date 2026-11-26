@@ -234,7 +234,9 @@ const REGELN={
     // Verwaltung und Sonstiges (K23c, neu, vorläufig): Geschäftsstelle, Reisen, Sicherheit, Vermarktung. Je Ligaspiel dieser Anteil an TV, Werbung (Grundbetrag) und
     // sonstigen Einnahmen, für alle Vereine. Echt liegen die übrigen Aufwendungen bei 40 bis 70 % des Umsatzes. So gewählt, dass die Ligen im Schnitt wie vorher stehen:
     // 1. Liga etwa +11 Mio. € je Saison, 2. Liga etwa 0, 3. Liga knapp im Minus (Modellrechnung K23 §5.6b, ohne Transfers und Pokal).
-    verwaltung:{1:0.4,2:0.55,3:0.4},
+    // 26.11. (vorläufig, nach den Läufen 10 bis 14 mit tests/finanzmodell.js 2): gemessen 1. Liga +13 bis +16 Mio., 2. Liga −1 bis −4 Mio., 3. Liga −2,5 bis −3,8 Mio.
+    // je Verein und Saison. Anteile im Verhältnis zur Abweichung und zum Grundbetrag (etwa 113, 25 und 17 Mio.) nachgestellt, vorher 0,4 / 0,55 / 0,4.
+    verwaltung:{1:0.435,2:0.47,3:0.3},
     pokalPraemien:[2e5,4e5,8e5,1.6e6,3.2e6,4.5e6], // je gespielter Runde
     pokalSieg:3e6,
     pokal:{drittligisten:4,amateure:24}, // DFB-Pokal: 36 aus 1. und 2. Liga, dazu die besten Drittligisten (ohne Zweitmannschaften) und Amateure

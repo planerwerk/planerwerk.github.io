@@ -290,6 +290,20 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 26.11.2026: Finanzen der Ligen nachgestellt, Läufe 13 und 14 übernommen (Zweig `mitarbeit/popolupo-t14-finanzen`, auf GI)
+
+- **Läufe 13 und 14** (2672476 und a36f093): 48 und 49 grün.
+  - Seit a36f093 sind Trainerwechsel, Konten unter dem Kreditrahmen und Jugend grün.
+  - Die 72 Stunden betrifft die Korrektur GI, die erst danach kam.
+- **Verwaltung und Sonstiges** (K23 Nr. 25): Anteil 0,4 / 0,55 / 0,4 → 0,435 / 0,47 / 0,3 (vorläufig), im Verhältnis zur gemessenen Abweichung.
+  - Gemessen über fünf Läufe je Verein und Saison: 1. Liga +13 bis +16 Mio., 2. Liga −1 bis −4 Mio., 3. Liga −2,5 bis −3,8 Mio.
+  - Ziel: etwa +11, 0 und −1 Mio.
+  - Das wirkt auf alle Vereine, auch auf deinen.
+- **Offen:**
+  - Engine: Meisterpunkte im Median 64–66 (Ziel 70–85), eigener Kalibrierschritt.
+  - welt 10: Wechsel mit Ablöse 12–14 (mindestens 15), ein Kader mit leerer Gruppe.
+  - T1.3, akzeptanz Abwehr.
+
 ### 26.11.2026: Korrekturen nach Prüfung GI (Zweig `mitarbeit/popolupo-gi-korrekturen`, auf t12)
 
 - **72 Stunden:**
