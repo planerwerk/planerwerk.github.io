@@ -32,9 +32,9 @@ function saisons({n=1,seed=1,verein=6,stufe=null,beiSaisonende=null,beiSaisonsta
   const {W,F}=neueWelt();if(vorher)vorher(F,W);
   if(beiSpielen){const orig=F.tagesSpiele;F.tagesSpiele=function(d){const o=orig(d);if(o&&o.list.length)beiSpielen(o.list,W.S,o);return o;};}
   F.buildWorld(seed);let S=W.S;S.my=verein;S.mgr='Simulator';F.setTarget();if(stufe)F.stufeAnwenden(stufe);F.sponsOffers();S.lineup=F.bestXI(verein,W.ev('myT()').form);
-  const job=()=>{const S=W.S;if(!S.fired)return;if(!S.jobs||!S.jobs.length)F.mkJobs();const id=S.jobs[0];
+  const job=()=>{const S=W.S;if(!S.fired)return;if(!S.jobs||!S.jobs.length)F.mkJobs();const id=S.jobs[0],alt=S.teams[S.my];
     if(F.bauAbgeben)F.bauAbgeben();if(F.finanzenJobwechsel)F.finanzenJobwechsel();if(F.marketingJobwechsel)F.marketingJobwechsel(); // wie takeJob (K23e, K25a, K26a)
-    if(F.statStation)F.statStation(id);S.my=id;if(F.finanzenStart)F.finanzenStart();if(F.vertragNeu)F.vertragNeu(id);if(F.glaubNeu)W.ev('myT()').glaub=F.glaubNeu();if(F.neubeginnStart)F.neubeginnStart(id);S.fired=0; /* Station, Trainervertrag, Glaubwürdigkeit und Neubeginn (K14f) wie takeJob (U12g, U12h, Prüfung DN5) */S.trust=W.ev('RV').neuerJob;S.offers=[];S.constr=null;S.loan=0;S.fin={};S.att=[0,0];F.setTarget();S.spons=null;F.sponsOffers();S.lineup=F.bestXI(id,W.ev('myT()').form);};
+    if(F.statStation)F.statStation(id);S.my=id;if(F.finanzenStart)F.finanzenStart();if(F.vertragNeu)F.vertragNeu(id);if(F.glaubNeu)W.ev('myT()').glaub=F.glaubNeu();if(F.neubeginnStart)F.neubeginnStart(id);if(F.altenVereinAuffuellen)F.altenVereinAuffuellen(alt); /* wie takeJob: der alte Verein füllt seinen Kader auf (T22.1, vorher fehlte das hier) */S.fired=0; /* Station, Trainervertrag, Glaubwürdigkeit und Neubeginn (K14f) wie takeJob (U12g, U12h, Prüfung DN5) */S.trust=W.ev('RV').neuerJob;S.offers=[];S.constr=null;S.loan=0;S.fin={};S.att=[0,0];F.setTarget();S.spons=null;F.sponsOffers();S.lineup=F.bestXI(id,W.ev('myT()').form);};
   let fertig=0,schritte=0,saison=null;
   while(fertig<n&&schritte<5000){schritte++;S=W.S;
     // Der Simulator spielt den Trainer: Ohne Lernstufen rückt niemand von allein auf. Darum holt er jeden Sommer die zwei Besten ab 17 aus der Jugend, wie die Automatik und die Computer-Vereine (K08).

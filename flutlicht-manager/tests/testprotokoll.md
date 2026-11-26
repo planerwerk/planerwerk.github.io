@@ -24,6 +24,59 @@ Node.js 22, Playwright mit Chromium, für `tests/ui-zugang.js` axe-core 4.10.2 (
 - **Begonnen bei Claude:** nichts weiter. K24 Rest (Bande und Partnerpool, Trainingskleidung, Verhandeln mit Reglern) bleibt vorgemerkt.
 ---
 
+## Lauf 22, 27.11.2026 kurz nach Mitternacht: Claude-Zweig ad7d927 (enthält popolupo-t20-zusammen 2ef1b7f mit den Korrekturen GL, dazu K24e, K24f und die Testanpassungen T21.1, T21.2)
+
+Alle Tests. **55 grün, 2 rot**, das beste Ergebnis bisher. T21.1 und T21.2 sind grün. kalibrierung, medizin und sommer sind diesmal ebenfalls grün, ihre Randwerte schwanken von Lauf zu Lauf. Der App-Test `tests/desktop.js` war vor dem Lauf einzeln grün (11 ✓, mit den Änderungen aus GL). Rot:
+
+- **akzeptanz:** Abwehr +0,9 (unverändert).
+- **T22.1 welt 10** (offen, für popolupo, Nachfolger von T21.3): leere Gruppen in Computer-Kadern.
+
+```
+✗ Saisonende 2030: Kader zwischen 15 und 36, keine Gruppe ganz leer, kein Konto länger unter dem Kreditrahmen, als die Regeln bis zur Insolvenz erlauben: Kader 11 bis 30, 2 leere Gruppen, 0 zu lange unter dem Kreditrahmen (21 im Minus, erlaubt). Kleine Kader: Hamburger SV (Liga 1, am 1. Juli dein Verein): Kader 11, leer: TW/OM, am 1. Juli 10, nach dem Auffüllen nicht aufgefüllt, 1 Zugänge, Abgänge: keine
+✗ Saisonende 2035: Kader zwischen 15 und 36, keine Gruppe ganz leer, kein Konto länger unter dem Kreditrahmen, als die Regeln bis zur Insolvenz erlauben: Kader 14 bis 30, 1 leere Gruppen, 0 zu lange unter dem Kreditrahmen (17 im Minus, erlaubt). Kleine Kader: Borussia Dortmund (Liga 1, am 1. Juli dein Verein): Kader 14, leer: IV, am 1. Juli 14, nach dem Auffüllen nicht aufgefüllt, 0 Zugänge, Abgänge: keine
+✗ Ausgewogene Kader: keine Gruppe unbesetzt, höchstens 5 % der Vereine mit mehr als 2 Spielern Überhang je Gruppe (K31 §10): 2 %
+```
+
+**finanzmodell 2, KURZ-Zeilen** (seit eurer neuen Fassung drei Saisons):
+
+```
+KURZ 2026 L1: ein 137.7 Mio = TV 49.8 Mio + Werbung/Sonstiges 63.5 Mio + Spieltag 24.4 Mio | aus 127.2 Mio = Gehalt+Stab 75.0 Mio + Betrieb 1.5 Mio + Verwaltung 49.3 Mio + Jugend 1.4 Mio | Saldo 10.5 Mio
+KURZ 2026 L2: ein 33.0 Mio = TV 12.4 Mio + Werbung/Sonstiges 10.9 Mio + Spieltag 9.7 Mio | aus 32.1 Mio = Gehalt+Stab 18.7 Mio + Betrieb 1.0 Mio + Verwaltung 11.0 Mio + Jugend 1.4 Mio | Saldo 0.9 Mio
+KURZ 2026 L3: ein 10.6 Mio = TV 1.3 Mio + Werbung/Sonstiges 4.8 Mio + Spieltag 4.5 Mio | aus 12.4 Mio = Gehalt+Stab 8.4 Mio + Betrieb 0.7 Mio + Verwaltung 1.8 Mio + Jugend 1.5 Mio | Saldo -1.8 Mio
+KURZ 2027 L1: ein 140.8 Mio = TV 49.8 Mio + Werbung/Sonstiges 64.3 Mio + Spieltag 26.7 Mio | aus 131.5 Mio = Gehalt+Stab 78.8 Mio + Betrieb 1.6 Mio + Verwaltung 49.6 Mio + Jugend 1.4 Mio | Saldo 9.3 Mio
+KURZ 2027 L2: ein 31.5 Mio = TV 12.4 Mio + Werbung/Sonstiges 10.0 Mio + Spieltag 9.0 Mio | aus 30.7 Mio = Gehalt+Stab 17.8 Mio + Betrieb 0.9 Mio + Verwaltung 10.6 Mio + Jugend 1.4 Mio | Saldo 0.8 Mio
+KURZ 2027 L3: ein 10.6 Mio = TV 1.3 Mio + Werbung/Sonstiges 4.7 Mio + Spieltag 4.6 Mio | aus 13.4 Mio = Gehalt+Stab 9.4 Mio + Betrieb 0.7 Mio + Verwaltung 1.8 Mio + Jugend 1.5 Mio | Saldo -2.8 Mio
+KURZ 2028 L1: ein 140.6 Mio = TV 49.8 Mio + Werbung/Sonstiges 65.1 Mio + Spieltag 25.7 Mio | aus 133.0 Mio = Gehalt+Stab 80.1 Mio + Betrieb 1.6 Mio + Verwaltung 50.0 Mio + Jugend 1.4 Mio | Saldo 7.6 Mio
+KURZ 2028 L2: ein 34.8 Mio = TV 12.4 Mio + Werbung/Sonstiges 11.1 Mio + Spieltag 11.2 Mio | aus 34.3 Mio = Gehalt+Stab 20.8 Mio + Betrieb 1.0 Mio + Verwaltung 11.1 Mio + Jugend 1.4 Mio | Saldo 0.5 Mio
+KURZ 2028 L3: ein 10.6 Mio = TV 1.3 Mio + Werbung/Sonstiges 4.8 Mio + Spieltag 4.5 Mio | aus 14.8 Mio = Gehalt+Stab 10.8 Mio + Betrieb 0.7 Mio + Verwaltung 1.8 Mio + Jugend 1.5 Mio | Saldo -4.2 Mio
+```
+
+**finanzmodell 2, Saldo gegen das Ziel:** 5 ✓, 4 ✗.
+
+```
+✓ Saldo 1. Liga Saison 2026: 10.5 Mio je Verein (Ziel 11.0 Mio ± 1.5) · TV 49.8 Mio, Werbung/Sonstiges 63.5 Mio, Spieltag 24.4 Mio, Gehalt+Stab 75.0 Mio (Kader 28.4 Spieler, Ø Gehalt 2.53 Mio, Ø Stärke 73.4), Betrieb 1.5 Mio, Verwaltung 49.3 Mio
+✓ Saldo 2. Liga Saison 2026: 0.9 Mio je Verein (Ziel 0.0 Mio ± 1.5) · TV 12.4 Mio, Werbung/Sonstiges 10.9 Mio, Spieltag 9.7 Mio, Gehalt+Stab 18.7 Mio (Kader 29.0 Spieler, Ø Gehalt 0.63 Mio, Ø Stärke 65.7), Betrieb 1.0 Mio, Verwaltung 11.0 Mio
+✓ Saldo 3. Liga Saison 2026: -1.8 Mio je Verein (Ziel -1.0 Mio ± 1.5) · TV 1.3 Mio, Werbung/Sonstiges 4.8 Mio, Spieltag 4.5 Mio, Gehalt+Stab 8.4 Mio (Kader 28.6 Spieler, Ø Gehalt 0.29 Mio, Ø Stärke 61.0), Betrieb 0.7 Mio, Verwaltung 1.8 Mio
+✗ Saldo 1. Liga Saison 2027: 9.3 Mio je Verein (Ziel 11.0 Mio ± 1.5) · gegenüber Vorsaison: TV +0.0, Werbung/Sonstiges +0.7, Spieltag +2.3, Gehalt+Stab +3.8 (Kader 28.4 → 27.9 Spieler, Ø Gehalt 2.53 → 2.75 Mio, Ø Stärke 73.4 → 74.3), Betrieb +0.2, Verwaltung +0.3, Jugend +0.0 · abgestiegen 0, aufgestiegen 2 (Saldo 22.6 Mio, Ø Gehalt 1.06 Mio), geblieben 16 (Saldo 7.6 Mio, Ø Gehalt 2.97 Mio)
+✓ Saldo 2. Liga Saison 2027: 0.8 Mio je Verein (Ziel 0.0 Mio ± 1.5) · gegenüber Vorsaison: TV −0.0, Werbung/Sonstiges −0.9, Spieltag −0.7, Gehalt+Stab −0.9 (Kader 29.0 → 28.8 Spieler, Ø Gehalt 0.63 → 0.62 Mio, Ø Stärke 65.7 → 66.1), Betrieb −0.1, Verwaltung −0.4, Jugend +0.0 · abgestiegen 2 (Saldo -2.3 Mio, Ø Gehalt 0.64 Mio), aufgestiegen 3 (Saldo 3.2 Mio, Ø Gehalt 0.40 Mio), geblieben 13 (Saldo 0.7 Mio, Ø Gehalt 0.67 Mio)
+✗ Saldo 3. Liga Saison 2027: -2.8 Mio je Verein (Ziel -1.0 Mio ± 1.5) · gegenüber Vorsaison: TV +0.0, Werbung/Sonstiges −0.1, Spieltag +0.1, Gehalt+Stab +1.0 (Kader 28.6 → 28.6 Spieler, Ø Gehalt 0.29 → 0.34 Mio, Ø Stärke 61.0 → 62.0), Betrieb −0.0, Verwaltung −0.0, Jugend +0.0 · abgestiegen 3 (Saldo -3.9 Mio, Ø Gehalt 0.45 Mio), aufgestiegen 4 (Saldo -3.3 Mio, Ø Gehalt 0.25 Mio), geblieben 13 (Saldo -2.4 Mio, Ø Gehalt 0.34 Mio)
+✗ Saldo 1. Liga Saison 2028: 7.6 Mio je Verein (Ziel 11.0 Mio ± 1.5) · gegenüber Vorsaison: TV +0.0, Werbung/Sonstiges +0.8, Spieltag −1.0, Gehalt+Stab +1.3 (Kader 27.9 → 27.0 Spieler, Ø Gehalt 2.75 → 2.93 Mio, Ø Stärke 74.3 → 74.5), Betrieb −0.1, Verwaltung +0.3, Jugend +0.0 · abgestiegen 0, aufgestiegen 2 (Saldo 12.5 Mio, Ø Gehalt 1.20 Mio), geblieben 16 (Saldo 6.9 Mio, Ø Gehalt 3.14 Mio)
+✓ Saldo 2. Liga Saison 2028: 0.5 Mio je Verein (Ziel 0.0 Mio ± 1.5) · gegenüber Vorsaison: TV +0.0, Werbung/Sonstiges +1.1, Spieltag +2.2, Gehalt+Stab +3.0 (Kader 28.8 → 28.8 Spieler, Ø Gehalt 0.62 → 0.74 Mio, Ø Stärke 66.1 → 66.8), Betrieb +0.1, Verwaltung +0.5, Jugend +0.0 · abgestiegen 2 (Saldo 2.9 Mio, Ø Gehalt 1.16 Mio), aufgestiegen 3 (Saldo 0.2 Mio, Ø Gehalt 0.62 Mio), geblieben 13 (Saldo 0.2 Mio, Ø Gehalt 0.70 Mio)
+✗ Saldo 3. Liga Saison 2028: -4.2 Mio je Verein (Ziel -1.0 Mio ± 1.5) · gegenüber Vorsaison: TV +0.0, Werbung/Sonstiges +0.0, Spieltag −0.1, Gehalt+Stab +1.4 (Kader 28.6 → 28.5 Spieler, Ø Gehalt 0.34 → 0.39 Mio, Ø Stärke 62.0 → 62.5), Betrieb +0.0, Verwaltung +0.0, Jugend +0.0 · abgestiegen 3 (Saldo -5.9 Mio, Ø Gehalt 0.53 Mio), aufgestiegen 4 (Saldo -3.5 Mio, Ø Gehalt 0.27 Mio), geblieben 13 (Saldo -4.0 Mio, Ø Gehalt 0.40 Mio)
+```
+
+---
+
+## Lauf 21, 26.11.2026 nachts: Claude-Zweig 6e0ab41 (enthält popolupo-k24-antworten 762d613 mit den Korrekturen GK, K24d, Windows-App)
+
+Alle Tests. **50 grün, 7 rot.** Davon sind vier unverändert wie in Lauf 19 und 20: kalibrierung (Auswärtssiege 29 %), medizin (Zerrungen 25 %), sommer (Kondition 79,6), akzeptanz (Abwehr +0,9). Das `finanzmodell 2` ist Zeile für Zeile gleich wie in Lauf 20. Neu rot:
+
+- **T21.1 transfers** (erledigt von Claude): „alte Gegenangebote werden beim Laden gebunden“ meldete „Import false“. Der Test suchte `verhUmstellen()` in `importSave`, seit GK steht der Aufruf in `spielstandUebernehmen`. Der Test sucht jetzt in beiden, er ist grün. Am Spiel ist nichts falsch.
+- **T21.2 ui-zwei-saisons** (erledigt von Claude): Zeitüberschreitung beim Laden des Text-Codes in Woche 8. Seit GK fragt das Spiel vor dem Ersetzen („Spielstand ersetzen?“), der Test klickte die Rückfrage nicht weg. Er klickt jetzt `#laden-ja`, falls die Rückfrage kommt, und ist grün (geprüft am Arbeitsstand).
+- **T21.3 welt 10** (offen, für popolupo): 2032 nur 14 Wechsel mit Ablöse (mindestens 15), zum Saisonende 2034 ein Kader mit 9 Spielern und einer leeren Gruppe. Das alte Randproblem aus Lauf 15 und 16 ist wieder da, nachdem es in Lauf 19 und 20 grün war. Vermutlich ein Schmetterlingseffekt: K24d ändert die Fanstimmung des eigenen Vereins (Stadionname verkauft) und damit den weiteren Verlauf der Welt. Dass ein Computer-Verein bis auf 9 Spieler schrumpft, bleibt ein Fehler der Kaderplanung, unabhängig vom Auslöser. Nicht weiter untersucht.
+
+---
+
 ## Lauf 20, 26.11.2026 nachts: Claude-Zweig 66776b1 (78e6b78 von popolupo, dazu L1, Erinnerung, Windows-App)
 
 Kontrolllauf für die Änderungen von Claude an diesem Abend, alle Tests. **53 grün, 4 rot.** Die vier roten sind dieselben wie in Lauf 19, mit denselben Werten: kalibrierung (Auswärtssiege 29 %), medizin (Zerrungen 25 %), sommer (Kondition 79,6), akzeptanz (Abwehr +0,9). Das `finanzmodell 2` ist Zeile für Zeile gleich wie in Lauf 19, ebenso `welt 10`. Die neuen Tests `spielstand` und `ui-sicherung` sind grün. L1 und die Windows-App verschieben also nichts im Spiel.

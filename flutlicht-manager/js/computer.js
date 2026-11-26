@@ -200,11 +200,15 @@ function planAuffuellen(t,P,liste){const Z=RS,F=RCV.fuellen,base=grundStaerke(t.
 // Chance, dass ein auslaufender Vertrag beim Saisonwechsel verlängert wird (die Zusage des Spielers eingeschlossen). P: Kaderplan seines Vereins, ohne Plan die alte Regel.
 function vertragChance(p,P){const V=RCV.vertrag,r=P?P.rang.get(p.id):null;if(!r)return RS.vertrag.verlaengern;
   if(V.wichtig.includes(r))return V.altAb&&p.age>=V.altAb?V.chanceAlt:V.chanceWichtig;return r==='ergaenzung'&&p.age<V.ergaenzungBis?V.ergaenzung:V.sonst;} // ab altAb seltener (T1.3)
+// Gehalt bei einer Verlängerung im Gehaltsrahmen (K23d, Lauf 22, vorläufig): Passt die Erhöhung auf das Gehalt nach Stärke in den Rahmen des Vereins (oder sinkt
+// das Gehalt), gilt das neue. Sonst bietet der Verein nur das alte, und der Spieler bleibt mit vertrag.ohneErhoehung (ein Wurf), sonst null: Er geht ablösefrei.
+function verlaengerGehalt(p){const t=S.teams[p.team],neu=salaryFor(p.str);if(!t||neu<=p.sal||rahmenErlaubt(t,neu-p.sal))return neu;return R()<RCV.vertrag.ohneErhoehung?p.sal:null;}
 // Früh verlängern: Von Oktober bis Dezember bindet ein Verein jede Woche mit 15 % die Spieler mit auslaufendem Vertrag, die er braucht,
 // bevor ab dem 1. Januar andere Vereine (und du) ihnen einen Vorvertrag geben dürfen (K21 §4.3). Laufzeit und Gehalt wie beim Saisonwechsel.
 function kiVertraegeFrueh(kader){const V=RCV.vertrag,F=V.frueh,k=mmtt(S.tag);if(S.phase!=='play'||k<F.von||k>F.bis)return;
   S.teams.forEach(t=>{if(!aktiv(t)||!stabMacht(t.id,'vertraege'))return;const sq=kader.get(t.id)||[],P=kaderplan(t,sq);
     sq.forEach(p=>{if(p.ct!==1||p.wech||p.leihe||p.zwP||!V.wichtig.includes(P.rang.get(p.id))||(V.altAb&&p.age>=V.altAb)||R()>=F.chance)return; // ab altAb nicht früh (T1.3)
+      {const neu=salaryFor(p.str);if(neu>p.sal&&!rahmenErlaubt(t,neu-p.sal))return;} // über dem Gehaltsrahmen keine frühe Verlängerung, erst beim Saisonwechsel (verlaengerGehalt)
       p.ct=1+riA(RS.vertrag.jahre);p.sal=salaryFor(p.str);delete p.lk; /* vom Verein geschlossen: übliche Ligaklausel (K21 §12 Nr. 20) */if(t.id===S.my)stabMeldung(`Der Verein hat den Vertrag von ${p.n} vorzeitig verlängert (bis Juni ${S.season+p.ct}).`);});});}
 
 // ---------- Woche (montags im Markt-Strom, aufgerufen aus market in js/ablauf.js) ----------

@@ -58,7 +58,7 @@ async function actions(s,tag){const wk=s.wk,yr=s.season,K=yr+':'+wk+':';
  if(wk===6&&once(K+'liste')){const id=await pg.evaluate(()=>squad(S.my).sort((a,b)=>a.str-b.str)[0].id);await pg.evaluate(i=>openP(i),id);
    await pg.fill('#ask',String(await pg.evaluate(i=>(value(PIX.get(i))*0.8/1e6).toFixed(1),id)));await pg.click('button:text-is("Auf die Transferliste setzen")');await closeModal();actlog.push(tag+' Spieler auf Transferliste');}
  if(yr===2026&&wk===8&&once(K+'export')){await tabClick('Menü');const exp=await pg.$eval('#exp',e=>e.value);const before=await pg.evaluate(()=>JSON.stringify(S));
-   if(exp!==before)note(tag,'Export-Code weicht vom Spielstand ab');await pg.fill('#imp',exp);await pg.click('button:text-is("Laden")');
+   if(exp!==before)note(tag,'Export-Code weicht vom Spielstand ab');await pg.fill('#imp',exp);await pg.click('button:text-is("Laden")');if(await pg.$('#laden-ja'))await pg.click('#laden-ja'); /* seit GK (762d613) fragt das Spiel vor dem Ersetzen (T21.2) */
    const after=await pg.evaluate(()=>JSON.stringify(S));if(after!==before)note(tag,'Import ergibt anderen Spielstand');
    await tabClick('Menü');await pg.fill('#imp','{"v":1,"teams":[],"pl":[]}');await pg.click('button:text-is("Laden")');if((await pg.evaluate(()=>JSON.stringify(S)))!==before)note(tag,'Code der Version 1 wurde geladen');
    await closeModal();actlog.push(tag+' Export/Import geprüft');}
