@@ -232,6 +232,11 @@ function euTageVon(tid){const out=[];if(!euAktiv())return out;const P=euPlan();
     if(W.q)duell(W.q,0,p.quali);(W.lp||[]).forEach(m=>{if(m[0]===tid||m[1]===tid)out.push(m[3]);});
     ['po','af','vf','hf'].forEach(r=>(W.ko[r]||[]).forEach((k,i)=>duell(k,i,p[r])));(W.ko.fin||[]).forEach(k=>{if(k[0]===tid||k[1]===tid)out.push(p.fin);});});
   return out;}
+// Sicherheitsnetz für die 72 Stunden (Lauf 12): Jeden Tag die Europapokal-Termine der deutschen Vereine in 5 bis 12 Tagen prüfen und ein zu nahes Ligaspiel noch
+// rechtzeitig verlegen (ligaVerlegen ist idempotent). Nötig, weil Pokal, Nachziehen und Auslosungen in wechselnder Reihenfolge verlegen: Lauf 12 fand Liga am Sonntag
+// vor Europapokal am Dienstag. Ohne Zufall. Frühester neuer Termin zwei Tage nach heute.
+function euPlanPruefen(d){if(!euAktiv()||!S.teams)return;const M=RWB.spielplan.mindestTage,von=d+M+2,bis=d+12;
+  S.teams.forEach(t=>{if(!t||t.lg>3||!aktiv(t))return;euTageVon(t.id).filter(x=>x>=von&&x<=bis).forEach(x=>ligaVerlegen(x,new Set([t.id]),'des Europapokals'));});}
 // 72 Stunden (K13 §3.5): Ligaspiele deutscher Teilnehmer neben einem Europapokalspiel verlegen
 function euVerlegen(wb,runde){const W=S.eu[wb],P=euPlan()[wb],plan=[];
   if(runde==='lp')(W.lp||[]).forEach(m=>plan.push([m[3],[m[0],m[1]]]));

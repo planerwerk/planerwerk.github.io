@@ -290,6 +290,25 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 26.11.2026: Testlauf 12 aufgearbeitet (Zweig `mitarbeit/popolupo-t12-korrekturen`, auf K43e)
+
+Lauf 12 (0368e92): 48 grün, 6 rot (Lauf 11: 45 grün).
+
+- **72 Stunden (noch 2 Fälle, Liga am Sonntag vor Europapokal am Dienstag):** neues Sicherheitsnetz `euPlanPruefen`.
+  - Es prüft jeden Tag die Europapokal-Termine der nächsten 5 bis 12 Tage und verlegt ein zu nahes Ligaspiel rechtzeitig.
+  - Die Verlegungen aus Pokal, Nachziehen und Auslosungen greifen in wechselnder Reihenfolge, das Netz fängt alle ab.
+  - Ohne Zufall.
+- **Trainerwechsel:**
+  - Das Protokoll hielt nur 200 Wechsel, darum zählte `welt 10` immer genau 200. Jetzt 400.
+  - Ein Computer-Verein entlässt höchstens zweimal je Saison, danach kein Ultimatum bis zum Sommer (Lauf 12: Cottbus viermal). Vorläufig.
+- **welt:** Ein Verein, der in dieser Saison schon insolvent war, zählt nicht als „zu lange unter dem Kreditrahmen“. Die Sperre gilt bis zur nächsten Saison.
+- **finanzmodell:** schlüsselt die Ausgaben auf (Gehalt und Stab, Betrieb, Verwaltung, Jugend) und gibt am Ende KURZ-Zeilen je Liga aus, zum Übernehmen ins Protokoll. Damit lassen sich die Salden der 2. und 3. Liga gezielt einstellen.
+- **Offen:**
+  - Engine: Meisterpunkte im Median 66 (Ziel 70–85) und Favoritensieg 60 % (Ziel 65–75) zeigen seit mehreren Läufen eine zu ausgeglichene 1. Liga. Eigener Kalibrierschritt mit mehreren Testrunden, nicht blind.
+  - welt 10: einmal 13 Wechsel mit Ablöse (mindestens 15), zweimal Kader mit leerer Gruppe.
+  - jugend: Prägungen 1,98 (mindestens 2).
+  - T1.3.
+
 ### 26.11.2026: K43e Vertrauensanzeige mit der echten Grenze (Zweig `mitarbeit/popolupo-k43e-vertrauenszonen`, auf GH)
 
 - **Neu:** Die Vertrauensanzeige im Büro zeigt die Zone „kritisch“ bis zur Entlassungsgrenze deiner Stufe: 5 auf Leicht, 12 auf Normal, 18 auf Schwer, mit „Mitwachsend“ leicht verschoben. Vorher stand dort immer 12.

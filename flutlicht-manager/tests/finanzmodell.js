@@ -9,7 +9,8 @@
 const {saisons}=require('./sim');
 const N=Math.max(1,+(process.argv[2]||1)),SEED=4711,VEREIN=6;
 const konto=new Map(); // Verein → {ein, aus, alt, sp}
-const z=(id)=>{if(!konto.has(id))konto.set(id,{ein:0,aus:0,alt:0,sp:0,tv:0,spons:0,tor:0,gehalt:0});return konto.get(id);};
+const z=(id)=>{if(!konto.has(id))konto.set(id,{ein:0,aus:0,alt:0,sp:0,tv:0,spons:0,tor:0,gehalt:0,betrieb:0,verw:0,jugend:0});return konto.get(id);};
+const kurz=[]; // seit Lauf 12: eine kurze Zeile je Liga und Saison mit allen Posten, zum Übernehmen ins Testprotokoll
 let F0=null,ergebnis=[];
 saisons({n:N,seed:SEED,verein:VEREIN,
   beiSpielen:(list,S,o)=>{const W=F0.__W,ev=W.ev,RF=ev('RF'),RS=ev('RS'),Z=RF.zuschauer;
@@ -18,8 +19,8 @@ saisons({n:N,seed:SEED,verein:VEREIN,
       // seit K23c: Werbung = Grundbetrag (sponsorBasis), Ausgaben mit Verwaltung (verwaltungKosten)
       const tv=ev('tvGeld')(t),sp=ev('sponsorBasis')(t)+ev('sonstigeEinnahmen')(t);let tor=0;
       if(s===0)tor=ev('kiHeimEinnahmen')(t,S.teams[r.a]||null,false);
-      const geh=(ev('squad')(id).reduce((a,p)=>a+p.sal,0)+ev('stabGehaelter')(id))/n,betr=t.cap*RF.betrieb.jePlatz+(t.logen||0)*RF.betrieb.jeLoge+ev('verwaltungKosten')(t),jug=RF.jugendKosten[RS.nachwuchs.computerStufe];
-      k.ein+=tv+sp+tor;k.aus+=geh+betr+jug;k.alt+=t.rep*t.rep*RF.fremdeEinnahmen.liga;k.sp++;k.tv+=tv;k.spons+=sp;k.tor+=tor;k.gehalt+=geh;});});},
+      const verw=ev('verwaltungKosten')(t),geh=(ev('squad')(id).reduce((a,p)=>a+p.sal,0)+ev('stabGehaelter')(id))/n,betr=t.cap*RF.betrieb.jePlatz+(t.logen||0)*RF.betrieb.jeLoge+verw,jug=RF.jugendKosten[RS.nachwuchs.computerStufe];
+      k.ein+=tv+sp+tor;k.aus+=geh+betr+jug;k.alt+=t.rep*t.rep*RF.fremdeEinnahmen.liga;k.sp++;k.tv+=tv;k.spons+=sp;k.tor+=tor;k.gehalt+=geh;k.betrieb+=betr-verw;k.verw+=verw;k.jugend+=jug;});});},
   vorher:(F)=>{F0=F;},
   beiSaisonende:(S,F)=>{const ev=F.__W.ev,fmt=x=>(x/1e6).toFixed(1)+' Mio';
     for(const lg of [1,2,3]){const l=S.teams.filter(t=>t.lg===lg).map(t=>({t,k:z(t.id)})).filter(x=>x.k.sp>0);if(!l.length)continue;
@@ -29,6 +30,7 @@ saisons({n:N,seed:SEED,verein:VEREIN,
         `Ausgaben ${fmt(sum(x=>x.k.aus))} (Gehälter ${fmt(sum(x=>x.k.gehalt))}), Saldo ${fmt(sum(saldo))} je Verein, Spanne ${fmt(saldo(sort[0]))} bis ${fmt(saldo(sort[sort.length-1]))}, `+
         `mit Minus ${l.filter(x=>saldo(x)<0).length}, heutige Pauschale ${fmt(sum(x=>x.k.alt))}`);
       ergebnis.push('  schwächste: '+sort.slice(0,3).map(zeile).join(' | '));ergebnis.push('  stärkste: '+sort.slice(-3).map(zeile).join(' | '));
+      kurz.push(`KURZ ${S.season} L${lg}: ein ${fmt(sum(x=>x.k.ein))} = TV ${fmt(sum(x=>x.k.tv))} + Werbung/Sonstiges ${fmt(sum(x=>x.k.spons))} + Spieltag ${fmt(sum(x=>x.k.tor))} | aus ${fmt(sum(x=>x.k.aus))} = Gehalt+Stab ${fmt(sum(x=>x.k.gehalt))} + Betrieb ${fmt(sum(x=>x.k.betrieb))} + Verwaltung ${fmt(sum(x=>x.k.verw))} + Jugend ${fmt(sum(x=>x.k.jugend))} | Saldo ${fmt(sum(saldo))}`);
       // Für K23c (K23 §5.6a): Gehälter und Marktwerte der Spieler je Liga (Schnitt, Median, Spitze) und je Stärkeband
       const sp=l.flatMap(x=>ev('squad')(x.t.id)),med=a=>{const s=a.slice().sort((p,q)=>p-q);return s.length?s[Math.floor(s.length/2)]:0;},sal=sp.map(p=>p.sal),wert=sp.map(p=>ev('value')(p));
       const band=[[0,60],[60,65],[65,70],[70,75],[75,80],[80,85],[85,99]].map(([a,b])=>{const q=sp.filter(p=>p.str>=a&&p.str<b);return q.length?`${a}–${b}: ${q.length} Spieler, Gehalt ${fmt(q.reduce((s,p)=>s+p.sal,0)/q.length)}, Wert ${fmt(q.reduce((s,p)=>s+ev('value')(p),0)/q.length)}`:null;}).filter(Boolean);
@@ -38,3 +40,4 @@ saisons({n:N,seed:SEED,verein:VEREIN,
     ergebnis.push(`Dein Verein ${t.name}: laufender Saldo nach den echten Buchungen ${fmt(lauf)}, nach dem Modell ${fmt(z(t.id).ein-z(t.id).aus)}`);
     konto.clear();}});
 console.log(ergebnis.join('\n'));
+console.log('\nBitte diese KURZ-Zeilen vollständig ins Testprotokoll übernehmen (Durchschnitt je Verein und Saison):\n'+kurz.join('\n'));

@@ -197,7 +197,7 @@ const mitLeihProtokoll=(F,getS,C)=>{const log=[],orig=F.kiLeihe;
       // Seit K23c haben auch Computer-Vereine einen Kreditrahmen: ein Konto im Minus ist erlaubt. Unter dem Kreditrahmen ebenfalls, bis der Zähler t.fu die Monate
       // bis zur Insolvenz erreicht (finanzen.js, Hinweis aus Prüfung GG). Gezählt wird nur, wer länger darunter liegt (T9.3, Lauf 10).
       S.teams.forEach(t=>{if(t.lg>3||t.id===S.my)return;z.vereine++;const P=F.kaderplan(t);z.kader.push(P.alle.length);if(t.cash<0)z.minus++;
-        if(t.cash<-evL('kreditRahmen')(t)&&(t.fu||0)>=evL('RFP').insolvenz.monate)z.ueberKredit++;let u2=false;
+        if(t.cash<-evL('kreditRahmen')(t)&&(t.fu||0)>=evL('RFP').insolvenz.monate&&!(t.fins>=S.season))z.ueberKredit++;let u2=false; // nach einer Insolvenz in dieser Saison gilt die Sperre bis zur nächsten (finanzen.js, Lauf 12)
         P.alle.forEach(p=>{if(C.vertrag.wichtig.includes(P.rang.get(p.id))){z.gebraucht++;if(p.ct===1)z.laufenAus++;}});
         C.gruppen.forEach(g=>{const G=P.gr[g];if(G.l.length<G.soll)z.offen+=G.soll-G.l.length;if(!G.l.length&&G.soll>0)z.leer++;if(G.l.filter(p=>P.rang.get(p.id)==='ueber').length>2)u2=true;});if(u2)z.ueber2++;});
       ende.push(z);}});

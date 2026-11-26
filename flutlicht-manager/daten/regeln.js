@@ -431,8 +431,10 @@ const REGELN={
     // Danach Entlassung mit entlassung.basis + jeGeduld × Geduld des Präsidenten, sonst ein zweites, letztes Ultimatum. Saisonende: erwarteten Platz um mehr als saisonWeitAb verfehlt
     // und Vertrauen unter saisonUnter: Wechsel im Sommer; danach geht das Vertrauen aller um saisonZurueck zurück zum Start. Neuer Trainer: neuer Lieblingsstil, Stimmung + schub für alle
     // (die Grundordnung wählt der Computer-Trainer ohnehin jeden Monat). protokoll: so viele Wechsel bleiben in S.trainerWechsel. ALLE ZAHLEN GESCHÄTZT, Ziel 4 bis 10 je Saison in der 1. Liga.
+    // Seit Lauf 12 (26.11., vorläufig): höchstens maxJeSaison Entlassungen während einer Saison je Verein, danach kein Ultimatum mehr bis zum Sommer (Lauf 12: Cottbus 4-mal).
+    // protokoll 400 statt 200: Mit 200 zählte tests/welt.js über zehn Saisons immer genau 200.
     vorstand:{start:55,traegheit:0.2,basis:50,jePlatz:5,sport:[-35,25],serieSpiele:5,serieMitte:1.3,serieFaktor:10,serie:[-15,10],finanzMinus:-15,abSpiel:5,
-      grenze:20,schonfrist:6,ultimatumSpiele:2,entlassung:{basis:0.9,jeGeduld:-0.03},saisonWeitAb:3,saisonUnter:30,saisonZurueck:0.5,schub:5,protokoll:200},
+      grenze:20,schonfrist:6,ultimatumSpiele:2,entlassung:{basis:0.9,jeGeduld:-0.03},saisonWeitAb:3,saisonUnter:30,saisonZurueck:0.5,schub:5,protokoll:400,maxJeSaison:2},
     aktivJeWoche:0.5,schaetzFehler:2,
     // unsicherheit (K18 §7, K18i, 25.11., popolupo, vorläufig, Schalter aus): Computer-Vereine sehen fremde Spieler unscharf, Streuung basis − jeScout × Qualität des besten Scouts,
     // mindestens min; fest aus dem Seed je Verein, Spieler und Saison. Wirkt auf Auswahl und Grenzen beim Kauf (kiKandidat, kiStern), nicht auf den Preis. Nur die Stärke, das Talent bei Talentlücken bleibt genau (Prüfung FU4).

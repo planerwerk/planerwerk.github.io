@@ -13,6 +13,20 @@ Node.js 22, Playwright mit Chromium, für `tests/ui-zugang.js` axe-core 4.10.2 (
 
 ---
 
+## Lauf 12, 26.11.2026: `popolupo-k43d-mitwachsend-erfolg` (0368e92, enthält t11-korrekturen)
+
+Nur getestet und geloggt. **48 grün, 6 rot.** Wieder grün: fuzz-karrieren, welt (2 Saisons), sommer, und alle übrigen bis auf:
+
+- **wettbewerbe:** 72 Stunden noch 2×: Bayern 255 (Liga So) / 257 (Europapokal Di), Frankfurt 108 (Liga So) / 110 (Europapokal Di). Also Sonntag Liga → Dienstag Europapokal.
+- **welt 10:** Trainerwechsel 200 in 10 Saisons, 1. Liga höchstens 8 je Saison, aber ein Verein 4-mal in einer Saison (2030, Energie Cottbus; erlaubt 3). Eine Saison nur 13 Wechsel mit Ablöse (mindestens 15). In 8 Saisons 1 bis 4 Vereine zu lange unter dem Kreditrahmen (13 bis 21 im Minus, das ist erlaubt). Zweimal Kader 13 bzw. 14 mit einer leeren Gruppe.
+- **jugend:** Prägungen 1,98 je Verein (mindestens 2), am Rand.
+- **kalibrierung:** Punkte des Meisters (Median) 66, 66, 75, 66 (Ziel 70–85); sonst nichts rot.
+- **spielermodell:** 2. Liga Spanne 2,6 (69,7 → 72,3), T1.3 Rest.
+- **akzeptanz:** nur noch Abwehr +0,9 (Verhältnis und Tempo im Ziel).
+- **finanzmodell 2 (Saldo je Verein und Saison):** 1. Liga +14,0 / +14,4 Mio., 2. Liga −1,2 / −2,8 Mio., 3. Liga −2,5 / −3,5 Mio. (erwartet etwa +11, 0, −1).
+
+---
+
 ## Lauf 11, 26.11.2026 nachmittags: `popolupo-w5g-usability-leitfaden` (ce62ffe, enthält t10b und t10c)
 
 Nur getestet und geloggt. **45 grün, 8 rot** (Lauf 10: 29 grün). Wieder grün u. a. seed, ui-zwei-saisons, medizin, transfers, vorstand, finanzen, schwierigkeit, kabine, scouting, karten, presse, abwerben, disziplin, testspiele, taktik, europapokal, ui-lernstufen, live-neuladen, ui-zugang. Rot:

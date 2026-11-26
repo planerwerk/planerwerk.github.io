@@ -163,11 +163,13 @@ function kiVor(t){if(!t.vor)t.vor={v:RCV.vorstand.start,u:null,n:0,ab:0};return 
 function kiVertrauenZiel(t,r,pos){const V=RCV.vorstand;return vertrauenZiel(V,r,pos,t.expPos,t.cash<0?V.finanzMinus:0);}
 // Entlassung nach einem gescheiterten ersten Ultimatum (K28 §5.3): 0,9 − 0,03 × Geduld
 function kiEntlassChance(t){return entlassChance(t,RCV.vorstand.entlassung);}
+// Trainerwechsel eines Vereins in der laufenden Saison (aus dem Protokoll S.trainerWechsel)
+const kiWechselDieseSaison=t=>(S.trainerWechsel||[]).filter(e=>e.t===t.id&&e.s===S.season).length;
 // Woche (montags, eigener Strom): Vertrauen, Ultimatum, Entlassung. Nur Computer-Vereine der 1. bis 3. Liga, nur in der Spielzeit, ab dem fünften Ligaspiel.
 function kiVorstandWoche(){if(S.phase!=='play')return;const V=RCV.vorstand,tab={};
   S.teams.forEach(t=>{if(t.id===S.my||!aktiv(t)||t.lg>3)return;const T=tab[t.lg]||(tab[t.lg]=table(t.lg)),i=T.findIndex(r=>r.id===t.id),r=T[i];if(!r||r.sp<V.abSpiel)return;
     const o=kiVor(t);o.v=Math.round((o.v+(kiVertrauenZiel(t,r,i+1)-o.v)*V.traegheit)*10)/10;
-    if(o.u==null){if(o.v<V.grenze&&r.sp-o.ab>V.schonfrist){o.u=r.sp;o.n=1;}return;} // Ultimatum über die nächsten Ligaspiele
+    if(o.u==null){if(o.v<V.grenze&&r.sp-o.ab>V.schonfrist&&kiWechselDieseSaison(t)<(V.maxJeSaison||99)){o.u=r.sp;o.n=1;}return;} // Ultimatum über die nächsten Ligaspiele, höchstens maxJeSaison Entlassungen je Saison (Lauf 12)
     if(r.sp-o.u<V.ultimatumSpiele)return;
     if(o.v>=V.grenze){o.u=null;o.n=0;return;} // überstanden
     if(o.n>=2||R()<kiEntlassChance(t))kiTrainerWechsel(t,r.sp);else{o.u=r.sp;o.n=2;}});} // sonst das zweite, letzte Ultimatum
