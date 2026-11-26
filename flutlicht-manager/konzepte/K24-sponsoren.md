@@ -138,6 +138,12 @@ sponsoren:{
 
 **Noch zu recherchieren:** Ärmel- und Namensrechte-Erlöse in der Bundesliga, Sponsoring in 2. und 3. Liga.
 
+**Vor K24d zu entscheiden** (26.11. abends, Claude; deshalb noch nicht begonnen):
+1. **Wem gehört das Stadion?** §3.1 erlaubt den Stadionnamen nur mit eigenem oder gepachtetem Stadion. Im Spiel gibt es dafür kein Feld, die Daten nennen auch keine Stadionnamen. Vorschlag: Feld `stadionEigen` (eigen, gepachtet, Stadt) je Verein nach Recherche, bei „Stadt“ geht ein Teil des Erlöses an die Stadt.
+2. **Woher kommt das Geld?** Seit K23c zahlen „weitere Sponsoren“ automatisch 37 % des Grundbetrags (`RF.werbung.partner`). Vorschlag geldneutral wie bei K24a: Stadionname 12 % daraus, Bande und Partnerpool bleiben automatisch. Wer den Namen nicht verkauft, bekommt dann weniger als heute, das verschiebt das `finanzmodell`. Deshalb nur abgestimmt mit der Kalibrierung von K23 (popolupo).
+3. **Traditionsvereine:** §6 nennt −6 statt −3 Fanstimmung. Ein Merkmal „Traditionsverein“ gibt es nicht. Vorschlag: aus Ansehen, Gründungsjahr und Mitgliedern ableiten oder als Liste in den Daten pflegen.
+4. **Name:** erfundener Sponsorname plus Wort (zum Beispiel „Falkner-Arena“), echte Stadionnamen nicht (Marken, siehe `konzepte/_luecken.md` L2).
+
 ## Quellen
 
 - Hauptsponsoren-Erlöse (Schätzungen): [90min.de: So viel kassieren die Bundesligisten vom Hauptsponsor](https://www.90min.de/bayern-an-der-spitze-so-viel-kassieren-die-bundesligisten-von-ihrem-hauptsponsor), [leinetal24.de: Bundesliga-Vergleich Hauptsponsor](https://www.leinetal24.de/sport/fussball/bundesliga-vergleich-so-viel-kassiert-eintracht-frankfurt-vom-hauptsponsor-zr-94404426.html)
