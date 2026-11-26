@@ -298,7 +298,13 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
   - `js/fenster.js`: nur der Kommentar zu `sicherungErinnern`.
 - K24e (Nachverhandeln) und K24f (Ausstieg) vertragen sich mit den Änderungen aus GL. Nachverhandeln ändert nur Fixum und Siegprämie, die Laufzeit des Stadionnamens bleibt drei, drei oder fünf Saisons.
 - **Lauf 20** (Kontrolllauf 66776b1) übernommen: 53 grün, die vier Randwerte wie in Lauf 19.
+- **Neu: Spielstand gepackt im Browser-Speicher, als Rückfall für Safari** (Lücke L1 und GK6, vorläufig). Safari nimmt nach bekannten Messungen etwa 2,5 Mio. Zeichen, der Spielstand hat nach einer Saison 2,85 Mio.
+  - Lehnt der Browser das Speichern ab, packt `speicherSchreiben` den Spielstand mit LZW über die UTF-8-Bytes und prüft vor dem Ablegen durch Entpacken.
+  - `speicherLesen` liest beides. Chrome und Firefox merken nichts, solange es ungepackt passt.
+  - Test `tests/spielstand.js` Nr. 5.
 - **Bitte testen (Lauf 21 auf diesem Zweig):** wie im Eintrag darunter (t19-korrekturen), dazu werbung Nr. 22 bis 31.
+  - Bei `spielstand` bitte die Zeile „Packen und Entpacken ergeben genau den Spielstand“ wörtlich ins Protokoll (Größe und Zeit).
+  - Dazu `ui-sicherung` und `desktop`, weil das Lesen jetzt über das Entpacken geht.
 
 ### 26.11.2026: Lauf 19 und Prüfung GL aufgearbeitet (Zweig `mitarbeit/popolupo-t19-korrekturen`, auf `claude/compassionate-galileo-bsbua4` f19c6b6, mit GK zusammengeführt)
 

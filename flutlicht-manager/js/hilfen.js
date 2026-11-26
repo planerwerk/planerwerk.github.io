@@ -23,7 +23,39 @@ let SPEICHER_FEHLER=false;
 // Speicherort (Desktop-App, 26.11.): In der Windows-App (Ordner desktop/) liegt der Spielstand als Datei im Benutzerordner, ohne die Größengrenze des Browsers
 // und ohne das Löschen nach sieben Tagen (konzepte/_luecken.md L1). Die App stellt dafür window.flutlichtApp bereit (desktop/preload.js). Im Browser wie bisher localStorage.
 const APP_SPEICHER=()=>(typeof window!=='undefined'&&window.flutlichtApp)||null;
-function speicherLesen(k){const a=APP_SPEICHER();return a?a.lesen(k):localStorage.getItem(k);}
-function speicherSchreiben(k,v){const a=APP_SPEICHER();if(a){if(!a.schreiben(k,v))throw new Error('Datei nicht geschrieben');return;}localStorage.setItem(k,v);}
+// Gepackt im Browser-Speicher (Lücke L1, Prüfung GK6, 26.11., vorläufig): Safari nimmt je Seite nach bekannten Messungen nur etwa 2,5 Mio. Zeichen, der Spielstand hat
+// nach einer Saison rund 2,85 Mio. Lehnt der Browser das Speichern ab, legt das Spiel den Spielstand gepackt ab, ab dann bis zum Neuladen immer. Verfahren: LZW über die
+// UTF-8-Bytes, Wörterbuch bis 65.536 Einträge (danach fest), jeder Code 16 Bit, verteilt auf Zeichen mit 15 Bit ab 32 (keine Steuer- und keine Ersatzzeichen).
+// Vor dem Ablegen wird zur Probe entpackt; stimmt das nicht genau, bleibt es beim Fehler und der alte Stand im Speicher. Chrome und Firefox (etwa 5,2 Mio. Zeichen)
+// speichern weiter ungepackt, solange es passt. Gelesen wird beides (Kopf PACK_KOPF). Ohne Zufall; nur Zeichenketten, Map und Typed Arrays, auch in Node.
+const PACK_KOPF='FLZ1:';let SPEICHER_GEPACKT=false;
+function spielstandPacken(s){const b=unescape(encodeURIComponent(s)),n=b.length,teile=[],puf=[];let acc=0,bits=0,anzahl=0;
+  const raus=()=>{teile.push(String.fromCharCode.apply(null,puf));puf.length=0;};
+  const code=c=>{acc=(acc<<16)|c;bits+=16;anzahl++;while(bits>=15){bits-=15;puf.push(((acc>>>bits)&0x7FFF)+32);if(puf.length>=8192)raus();}acc&=(1<<bits)-1;};
+  if(n){const d=new Map();let next=256,w=b.charCodeAt(0);
+    for(let i=1;i<n;i++){const c=b.charCodeAt(i),k=w*256+c,x=d.get(k);if(x!==undefined){w=x;continue;}code(w);if(next<65536)d.set(k,next++);w=c;}
+    code(w);}
+  if(bits>0)puf.push(((acc<<(15-bits))&0x7FFF)+32);raus();
+  return PACK_KOPF+anzahl+':'+teile.join('');}
+function spielstandEntpacken(t){if(typeof t!=='string'||!t.startsWith(PACK_KOPF))return t;
+  const z=t.indexOf(':',PACK_KOPF.length),anzahl=+t.slice(PACK_KOPF.length,z);if(!(z>0)||!Number.isInteger(anzahl)||anzahl<0)throw new Error('Spielstand gepackt, Kopf beschädigt');
+  const codes=new Uint16Array(anzahl);let acc=0,bits=0,j=0;
+  for(let i=z+1;i<t.length&&j<anzahl;i++){acc=(acc<<15)|(t.charCodeAt(i)-32);bits+=15;while(bits>=16&&j<anzahl){bits-=16;codes[j++]=(acc>>>bits)&0xFFFF;}acc&=(1<<bits)-1;}
+  if(j!==anzahl)throw new Error('Spielstand gepackt, aber unvollständig');
+  const pre=new Int32Array(65536),suf=new Uint8Array(65536),erst=new Uint8Array(65536),len=new Int32Array(65536);for(let i=0;i<256;i++){pre[i]=-1;suf[i]=i;erst[i]=i;len[i]=1;}
+  let out=new Uint8Array(Math.max(1024,anzahl*4)),pos=0,next=256;
+  const platz=m=>{if(pos+m>out.length){const neu=new Uint8Array(Math.max(out.length*2,pos+m));neu.set(out);out=neu;}};
+  const schreib=c=>{const l=len[c];platz(l);let p=pos+l-1;for(let x=c;x>=0;x=pre[x])out[p--]=suf[x];pos+=l;};
+  if(anzahl){let prev=codes[0];if(prev>255)throw new Error('Spielstand gepackt, aber beschädigt');schreib(prev);
+    for(let i=1;i<anzahl;i++){const c=codes[i];let f;
+      if(c<next){f=erst[c];schreib(c);}else if(c===next&&next<65536){f=erst[prev];schreib(prev);platz(1);out[pos++]=f;}else throw new Error('Spielstand gepackt, aber beschädigt');
+      if(next<65536){pre[next]=prev;suf[next]=f;erst[next]=erst[prev];len[next]=len[prev]+1;next++;}prev=c;}}
+  const teile=[];for(let i=0;i<pos;i+=8192)teile.push(String.fromCharCode.apply(null,out.subarray(i,Math.min(pos,i+8192))));
+  return decodeURIComponent(escape(teile.join('')));}
+function gepacktGeprueft(v){const p=spielstandPacken(v);if(spielstandEntpacken(p)!==v)throw new Error('Packen fehlgeschlagen');return p;}
+function speicherLesen(k){const a=APP_SPEICHER();return a?a.lesen(k):spielstandEntpacken(localStorage.getItem(k));}
+function speicherSchreiben(k,v){const a=APP_SPEICHER();if(a){if(!a.schreiben(k,v))throw new Error('Datei nicht geschrieben');return;}
+  const spiel=k===REGELN.spielstand.schluessel;if(spiel&&SPEICHER_GEPACKT){localStorage.setItem(k,gepacktGeprueft(v));return;}
+  try{localStorage.setItem(k,v);}catch(e){if(!spiel)throw e;localStorage.setItem(k,gepacktGeprueft(v));SPEICHER_GEPACKT=true;}} /* wirft auch das zweite Mal, bleibt der alte Stand */
 function save(){try{speicherSchreiben(REGELN.spielstand.schluessel,JSON.stringify(S));SPEICHER_FEHLER=false;}catch(e){if(!SPEICHER_FEHLER&&S){SPEICHER_FEHLER=true;news(APP_SPEICHER()?'Der Spielstand ließ sich nicht als Datei speichern, vermutlich ist die Festplatte voll oder der Ordner gesperrt. Was seit dem letzten Speichern passiert ist, geht beim Schließen verloren. Sichere ihn über „Menü“ als Datei an einem anderen Ort.':'Der Browser hat den Spielstand nicht gespeichert, vermutlich ist sein Speicher voll. Was seit dem letzten Speichern passiert ist, geht beim Schließen verloren. Sichere ihn jetzt als Datei (Menü, „Als Datei sichern“) und gib in den Browser-Einstellungen Speicher frei.','bad');}}} /* Hinweis auf die Datei: Prüfung GK7 */
-function hasSave(){try{return !!speicherLesen(REGELN.spielstand.schluessel);}catch(e){return false;}}
+function hasSave(){try{const a=APP_SPEICHER(),k=REGELN.spielstand.schluessel;return !!(a?a.lesen(k):localStorage.getItem(k));}catch(e){return false;}} // ohne Entpacken, nur ob etwas da ist

@@ -41,8 +41,13 @@ Viele naheliegende Kandidaten sind schon im Plan oder im Code:
   - Die Anzeige im Menü zählt Wappen und Einstellungen mit. Die Meldung bei vollem Speicher nennt die Datei.
 - **Offen, wichtig (Prüfung GK6, ungemessen):** Safari rechnet seine Grenze vermutlich in UTF-16-Bytes. Dann passen dort nur etwa 2,6 Mio. Zeichen, der Spielstand hat aber schon nach der ersten Saison 2,85 Mio.
   - Das automatische Speichern könnte auf iPhone, iPad und Mac mit Safari also schon in der ersten Saison scheitern.
-  - Zu messen auf einem echten Gerät.
-  - Abhilfe wäre Kompression des Spielstands im Browser-Speicher (etwa zehnmal kleiner, ohne Installation möglich, mit Rückfalltest in `tests/spielstand.js`) oder IndexedDB.
+  - Zu messen auf einem echten Gerät. Bekannte Messungen anderer nennen für Safari etwa 2,5 Mio. Zeichen.
+  - **Gebaut am 26.11. nachts (popolupo, vorläufig): gepackt als Rückfall** (`js/hilfen.js`: `spielstandPacken`, `spielstandEntpacken`, `speicherSchreiben`).
+    - Lehnt der Browser das Speichern ab, legt das Spiel den Spielstand gepackt ab. Das Verfahren ist LZW über die UTF-8-Bytes, ohne Installation.
+    - Vor dem Ablegen wird zur Probe entpackt. Stimmt das nicht genau, bleibt der alte Stand.
+    - Chrome und Firefox speichern weiter ungepackt, solange es passt. Das Menü zeigt „im Browser gepackt“.
+    - Test: `tests/spielstand.js` Nr. 5 (genaues Hin und Zurück, Grenzfälle, ein Speicher mit Safari-Grenze).
+    - Die gepackte Größe ist noch ungemessen, erwartet etwa ein Fünftel.
 - **Offen (GK5):** Nach dem nächsten Versionssprung des Spielstands passen alte Dateien nicht mehr. Dann braucht es eine Umstellung für Dateien, nicht nur für den Browser-Speicher.
 
 ### L2 Echte Spielernamen (vor einer Veröffentlichung klären)
