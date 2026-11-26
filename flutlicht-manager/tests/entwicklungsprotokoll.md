@@ -290,6 +290,20 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 26.11.2026: Lauf 15 aufgearbeitet (Zweig `mitarbeit/popolupo-t15-korrekturen`, auf t14-finanzen)
+
+- **Lauf 15** (6760284): 49 grün. wettbewerbe (72 Stunden) und spielermodell sind jetzt grün.
+- **medizin, „Fit gespritzt“:** Fehler im Test, nicht im Spiel. Die Wirkung ×0,95 stimmte.
+  - Der Test nahm den ersten unverletzten Spieler deines Vereins, und der war am Ende des Laufs nicht einsatzbereit: gesperrt, beim Nationalteam oder im Europapokal nicht gemeldet.
+  - Jetzt nimmt der Test einen, der ohne Verletzung einsatzbereit ist.
+- **jugend, Prägungen:** Die Läufe 12 bis 15 lagen bei 1,98 bis 2,1 je Verein und Saison, das Ziel ist 2 bis 5.
+  - Der Faktor für die Häufigkeit geht von 1 auf 1,2 (erwartet etwa 2,4, vorläufig, K08 Nr. 12).
+- **welt 10, Diagnose statt Vermutung:** Die Ursache der kleinen Kader lässt sich ohne Node.js nicht nachstellen.
+  - Hat ein Verein am Saisonende weniger als 15 Spieler oder eine leere Gruppe, nennt der Test jetzt Verein, Liga, Transfersperre oder Insolvenz und den Kader am 1. Juli und nach dem Auffüllen. Dazu kommen die Zugänge und wohin die Abgänge gingen (vereinslos, verliehen, Ligen, Ausland, dein Verein).
+  - Die Wechsel mit Ablöse stehen jetzt getrennt nach Sommer und Winter, dazu die Zahl der Vereine im Minus. Vermutung: In späten Saisons stehen viele Vereine im Minus und haben kein Budget. Dagegen wirkt die Verwaltung aus t14-finanzen.
+- **Bitte testen (Lauf 16 auf diesem Zweig):** alle Tests, besonders jugend, medizin und `node tests/welt.js 10` (Zeilen „Saisonende“ und „Wechsel mit Ablöse“ vollständig), dazu `node tests/finanzmodell.js 2` mit den KURZ-Zeilen und `node tests/kalibrierung-sweep.js 4` mit allen Zeilen.
+- **Offen:** Engine (Meisterpunkte, akzeptanz Abwehr +0,9) nach dem Vergleichslauf, T1.3.
+
 ### 26.11.2026: Finanzen der Ligen nachgestellt, Läufe 13 und 14 übernommen (Zweig `mitarbeit/popolupo-t14-finanzen`, auf GI)
 
 - **Läufe 13 und 14** (2672476 und a36f093): 48 und 49 grün.

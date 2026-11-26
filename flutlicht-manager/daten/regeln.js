@@ -1015,7 +1015,8 @@ const REGELN={
     stab:{vereinslos:8},
     pate:{wachstum:1.1,profi:0.3,jeMentor:2,bisAlter:21},
     // Prägungen (K08 §5.3): [Chance Schub, Chance Knacks] je Anlass. faktor: Häufigkeit insgesamt, kalibriert auf 2–5 Prägungen je Verein und Saison.
-    praegung:{faktor:1,debuet:[0.15,0.05],topspiel:[0.20,0.12],tor:[0.30,0],fehler:[0,0.30],topAbRunde:3,topPlaetze:4,topAbSpieltag:5,spaetAb:80,
+    // Mit 1 lagen die Läufe 12 bis 15 bei 1,98 bis 2,1 (am unteren Rand), mit 1,2 erwartet etwa 2,4 (vorläufig, 26.11.).
+    praegung:{faktor:1.2,debuet:[0.15,0.05],topspiel:[0.20,0.12],tor:[0.30,0],fehler:[0,0.30],topAbRunde:3,topPlaetze:4,topAbSpieltag:5,spaetAb:80,
       druck:{schub:[0.5,0.05],knacks:[1.5,-0.05]},note:1.3,sieg:1.2,niederlage:1.2,
       umgang:{loben:1.3,schuetzen:0.5,kritik:1.5,tage:3},belastung:1.5,psychologe:-0.02,
       schub:{talent:[0.25,2,6],tempo:1.3,tage:90,sv:1,stimmung:5},knacks:{talent:[0.15,1,3],tempo:0.5,tage:[30,90],sv:-1,stimmung:-5},bisAlter:21,verlauf:6},

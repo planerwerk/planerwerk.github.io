@@ -38,7 +38,8 @@ pruef(verletztTage/kaderTage>=0.05&&verletztTage/kaderTage<=0.14,'Im Schnitt feh
 // 8. Ehrliche Spanne: Die Diagnose enthält die wahre Dauer in mindestens 85 % der Fälle
 pruef(spannen>0&&ehrlich/spannen>=0.85,'Diagnose-Spanne enthält die wahre Dauer in mindestens 85 % der Fälle',pc(ehrlich/spannen));
 // 9. Fit spritzen: spielt mit Wirkung ×0,95, wird in etwa 15 % der Fälle schlimmer; früher zurückholen gibt Frische 65 % und doppeltes Rückfallrisiko
-{const p=S.pl.find(x=>x.team===S.my&&x.inj<=0&&x.pos!=='TW');let schlimmer=0;const n=2000;
+// Der Spieler muss ohne Verletzung einsatzbereit sein (nicht gesperrt, nicht beim Nationalteam, im Europapokal gemeldet), sonst misst der Test etwas anderes (Lauf 15).
+{const p=S.pl.find(x=>x.team===S.my&&x.inj<=0&&x.pos!=='TW'&&ev('avail')(x))||S.pl.find(x=>x.team===S.my&&x.inj<=0&&x.pos!=='TW');let schlimmer=0;const n=2000;
   for(let i=0;i<n;i++){p.inj=0;p.vl=null;ev('verletzen')(p,'kollision',{art:'prellung',still:true});p.inj=4;p.spritze=S.tag;if(i===0){const a=ev('avail')(p),e=ev('eff')(p,'ZM'),q=e/((p.spritze=null),ev('eff')(p,'ZM'));p.spritze=S.tag;
       pruef(a&&Math.abs(q-RMD.spritzen.wirkung)<0.001,'Fit gespritzt: spielt mit Wirkung ×0,95',`einsatzbereit ${a}, Wirkung ×${q.toFixed(3)}`);}
     ev('nachSpritze')(p);if(p.vl&&p.vl.art!=='prellung')schlimmer++;}

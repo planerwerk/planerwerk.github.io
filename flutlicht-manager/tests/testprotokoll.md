@@ -13,6 +13,19 @@ Node.js 22, Playwright mit Chromium, für `tests/ui-zugang.js` axe-core 4.10.2 (
 
 ---
 
+## Lauf 15, 26.11.2026 abends: `popolupo-gi-korrekturen` (6760284, enthält t12)
+
+Nur getestet und geloggt. **49 grün, 5 rot.** wettbewerbe und spielermodell jetzt grün (72 Stunden erledigt, 2. Liga im Rahmen). Rot:
+
+- **medizin (neu):** „Fit gespritzt: spielt mit Wirkung ×0,95“: einsatzbereit false, Wirkung ×0,950. Der gespritzte Spieler gilt nicht als einsatzbereit.
+- **welt 10:** zwei Saisons mit 12 bzw. 14 Wechseln mit Ablöse (mindestens 15); ein Saisonende mit Kader 12 und einer leeren Gruppe.
+- **jugend:** Prägungen 1,99 je Verein (mindestens 2), am Rand.
+- **kalibrierung:** nur gelbe Randwerte (Favoritensieg 64 %, Pokal gegen Amateure 88 %, Ballbesitz-Spanne), Meisterpunkte nicht mehr rot.
+- **akzeptanz:** Abwehr +0,9.
+- **finanzmodell 2:** unverändert zu Lauf 14 (1. Liga +14,0 / +16,4, 2. Liga −1,2 / −3,8, 3. Liga −2,5 / −3,7 Mio. je Verein und Saison).
+
+---
+
 ## Lauf 14, 26.11.2026 abends: `popolupo-t12-korrekturen` (a36f093, enthält k43e)
 
 Nur getestet und geloggt. **49 grün, 5 rot.** jugend wieder grün; welt 10 ohne Trainerwechsel-Fund und ohne Konten zu lange unter dem Kreditrahmen. Rot:
