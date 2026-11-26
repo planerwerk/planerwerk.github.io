@@ -918,6 +918,6 @@ Nach deiner Vorgabe vom 26.11. Im Einzelnen in `konzepte/K43-schwierigkeit.md`, 
 - **Grundsatz neu** (K02 §5.4): Spielerwerte und Spielstärke gleich, gleich viele Würfe, nur einige Grenzen und das Geld verschieben sich. Kein Gummiband.
 - **Nur Konzept:**
   - Folgen von Titeln in Folge (Gehälter, Abwerben, Erwartungen), immer mit Meldung;
-  - Stufe „Mitwachsend“, die nur mit Titeln steigt, nicht mit Aufstiegen.
+  - ~~Stufe „Mitwachsend“, die nur mit Titeln steigt, nicht mit Aufstiegen.~~ Seit 26.11. gebaut (siehe unten).
 
-**Für dich:** Reicht das, oder soll „Mitwachsend“ gleich gebaut werden?
+**Entschieden am 26.11. (vorläufig, von mir, weil die Frage offen blieb):** „Mitwachsend“ ist gebaut, als vierte Wahl beim Spielstart (K43 §5).

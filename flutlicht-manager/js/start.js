@@ -21,7 +21,7 @@ function renderStart(){
   ${hasSave()?`<button class="go" onclick="loadLocal()">Weiterspielen</button>`:''}
   <div class="card"><h2>Neues Spiel</h2><div class="form"><label>Dein Name <input id="mgr" value="Trainer" maxlength="30"></label>
   <label>Verein <select id="club"><optgroup label="1. Bundesliga 2026/27">${opt(1)}</optgroup><optgroup label="2. Bundesliga 2026/27">${opt(2)}</optgroup></select></label>
-  <label>Schwierigkeit <select id="stufe">${Object.entries(REGELN.schwierigkeit.stufen).map(([k,s])=>`<option value="${k}" ${k===REGELN.schwierigkeit.standard?'selected':''}>${s.name}: ${s.text}</option>`).join('')}</select></label>
+  <label>Schwierigkeit <select id="stufe">${Object.entries(REGELN.schwierigkeit.stufen).map(([k,s])=>`<option value="${k}" ${k===REGELN.schwierigkeit.standard?'selected':''}>${s.name}: ${s.text}</option>`).join('')}${REGELN.schwierigkeit.mitwachsend?`<option value="mitwachsend">${REGELN.schwierigkeit.mitwachsend.name}: ${REGELN.schwierigkeit.mitwachsend.text}</option>`:''}</select></label>
   <label>Einstieg <select id="lernstufen"><option value="1" ${RLZ.start?'selected':''}>Mit Lernstufen (empfohlen für den Einstieg): Du beginnst mit Aufstellung und Spiel, der Stab macht den Rest, Schritt für Schritt kommt mehr dazu</option><option value="0" ${RLZ.start?'':'selected'}>Alles frei: jede Entscheidung von Anfang an bei dir</option></select></label>
   <details><summary>Erweitert</summary><label style="margin-top:8px">Startwert für den Zufall (Seed, leer = zufällig) <input id="seed" inputmode="numeric" placeholder="zum Beispiel 12345"></label></details>
   <button class="go" onclick="newGame()">Anpfiff zur Karriere</button></div></div>

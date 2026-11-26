@@ -15,10 +15,19 @@ const startKonto=rep=>{const K=RW.konto;return Math.round(K.basis*Math.exp(K.ste
 const sponsorBasis=t=>{const P=RF.sponsor;return Math.round(P.basis*Math.exp(P.steigung*(t.rep-P.mitte))*(P.liga[t.lg]||P.liga[3]));}; // gerundet, damit Kontostände ganze Euro bleiben
 // Schwierigkeit (K02 §5.4): Spielstände ohne Angabe gelten als „Normal“
 const stufe=()=>REGELN.schwierigkeit.stufen[S.stufe]||REGELN.schwierigkeit.stufen[REGELN.schwierigkeit.standard];
-function stufeAnwenden(k){S.stufe=REGELN.schwierigkeit.stufen[k]?k:REGELN.schwierigkeit.standard;const St=stufe(),t=myT();t.cash=Math.round(t.cash*St.konto);
+function stufeAnwenden(k){const M=REGELN.schwierigkeit.mitwachsend;if(k==='mitwachsend'&&M){S.mitw={folge:0,titel:0};k=M.reihe[0];}else delete S.mitw; // K43 §5
+  S.stufe=REGELN.schwierigkeit.stufen[k]?k:REGELN.schwierigkeit.standard;const St=stufe(),t=myT();t.cash=Math.round(t.cash*St.konto);
   if(!St.erinnerungen){S.einst=S.einst||{aus:{}};S.einst.aus=S.einst.aus||{};Object.keys(RK.erinnerungen).forEach(e=>S.einst.aus[e]=1);}
   if(typeof euOhneClStart==='function')euOhneClStart(); // Leicht: keine Champions League, auch nicht in der ersten Saison (K43); vor setTarget, sonst Nebenziel „Champions League“ (Prüfung GD1)
   setTarget();}
+// Mitwachsende Schwierigkeit (K43 §5, 26.11., vorläufig): zu Beginn jeder Saison (newSeasonLauf, vor dem Europapokal) mit der Bilanz der abgelaufenen.
+// Ein Titel ist die Meisterschaft der 1. Liga oder ein Europapokal deines Vereins am Saisonende (sm.my). Ohne Titel beginnt die Folge neu, die Stufe bleibt.
+// Startkonto und Erinnerungen ändern sich nicht nachträglich, alles andere gilt ab sofort (Sponsoren, Karten, Champions League, Gönner, Kreditrahmen, Vorstand).
+function stufeMitwachsen(sm){const M=REGELN.schwierigkeit.mitwachsend;if(!S.mitw||!M||!sm)return;const m=sm.my!=null?sm.my:S.my,ti=S.eu&&S.eu.titel;
+  const titel=(sm.champ===m&&sm.lg===1)||(!!ti&&['cl','el','ecl'].some(w=>ti[w]===m));if(!titel){S.mitw.folge=0;return;}
+  S.mitw.folge++;S.mitw.titel++;const i=Math.max(M.reihe.indexOf(S.stufe),S.mitw.folge>=2?2:1);if(i<0||M.reihe[i]===S.stufe)return;
+  const kr0=kreditRahmen(myT());S.stufe=M.reihe[i];const kr=kreditRahmen(myT());
+  news(`Mitwachsende Schwierigkeit: Nach ${S.mitw.folge>=2?'Titeln in zwei Saisons nacheinander':'deinem ersten Titel'} spielst du ab jetzt auf „${stufe().name}“ (${stufe().text}).${kr<kr0?` Dein Kreditrahmen sinkt auf ${fmt(kr)}.`:''}`,'');}
 // TV-Gelder (K23 §5.1, K23c): Säulenmodell, Saisonbetrag je Verein einmal je Saison und Ligazusammensetzung berechnet (S.tvS), ohne Zufall, ausgezahlt je Ligaspiel.
 // Fünfjahreswertung: t.tvw = Punkte der letzten Saisons (jüngste zuerst, saison.js), t.tv0 = Startpunkte nach Liga und Ansehen für fehlende Saisons.
 function tvPunkteStart(){const off={};let n=0;LIGEN.forEach(lg=>{off[lg]=n;n+=lgIds(lg).length;});

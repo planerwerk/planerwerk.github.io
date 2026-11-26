@@ -109,7 +109,7 @@ function newSeasonLauf(){lizenzNachweis();wechselVollziehen(true);leiheEnde();ve
   S.am.forEach(a=>a.str=riA(RW.amateurStaerke));
   finanzenMonat(tageDerSaison(),true); // Monatsbericht Juni zum 1. Juli, der Tag läuft sonst nie durch taeglich (K23a)
   const tag0=absTag(0);S.season++;S.plan=planFuer(S.season);S.tag=S.plan.start;fristenSaisonwechsel(absTag(0)-tag0); /* Fristen in Saisontagen rücken mit (Prüfung FC1) */S.gespielt=-1;S.relSp=[];S.relSp2=[];S.res={1:[],2:[],3:[]};
-  const sp=spielplanFuer(S.season);S.fx=sp.fx;S.plan.zeit=sp.zeit;initCup();supercupAnlegen(sm);europaAnlegen(sm); // Europapokal (K37, U19a), eigener Strom
+  const sp=spielplanFuer(S.season);S.fx=sp.fx;S.plan.zeit=sp.zeit;initCup();supercupAnlegen(sm);stufeMitwachsen(sm);europaAnlegen(sm); // Europapokal (K37, U19a), eigener Strom; mitwachsende Stufe vorher, sie entscheidet über die Champions League (K43 §5)
   S.fin={};/* TV-Gelder der neuen Saison zu Saisonbeginn festlegen (K23c), so hängen sie nicht davon ab, wann sie zuerst gebraucht werden */tvSaison();finanzenSaisonstart();/* Computer-Vereine bauen (K26b) */kiBauenSaison();/* Ligaklausel des Trainervertrags (U12g) */vertragNeueSaison();S.att=[0,0];S.offers=S.offers.filter(o=>PIX.get(o.pid)&&PIX.get(o.pid).team===S.my);S.phase='play';S.summary=null;TDAY=null;TLG=0;LAST=null;
   setTarget();werbungSaison();if(!S.spons)sponsOffers(); /* alle Werbeflächen samt Brust zählen in werbungSaison herunter (K24a, seit K24c auch die Brust) */
   turnierSommer();S.lineup=besteElfDu();kabineNachSaisonwechsel();jubilaeumJahre(); /* EM/WM im Sommer (K13k, nur mit Länderspielen) */ // 10 Jahre im Verein (K34 §8, U13); Elf ohne Tribüne (Prüfung FI4)

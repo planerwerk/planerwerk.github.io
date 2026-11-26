@@ -290,6 +290,15 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 26.11.2026: K43c Schwierigkeit „Mitwachsend“ (Zweig `mitarbeit/popolupo-k43c-mitwachsend`, auf W5g)
+
+- **Neu, vorläufig:** vierte Wahl beim Spielstart.
+  - Du beginnst auf Leicht. Nach einem Titel (Meister der 1. Liga oder ein Europapokal) geht es auf Normal, nach Titeln in zwei Saisons nacheinander auf Schwer.
+  - Die Stufe sinkt nie. Aufstiege zählen nicht, wer unten anfängt, bleibt also auf Leicht.
+  - Gewechselt wird zu Beginn der Saison, mit einer Meldung (dazu der neue Kreditrahmen, falls er sinkt).
+  - Die Statistik zeigt „(mitwachsend)“.
+- **Tests:** `tests/schwierigkeit.js` (K43f).
+
 ### 26.11.2026: W5g Leitfaden für die Usability-Runde mit Menschen (Zweig `mitarbeit/popolupo-w5g-usability-leitfaden`, auf t10c)
 
 - **Neu:** K40 §11 enthält alles für die Runde mit Testpersonen:

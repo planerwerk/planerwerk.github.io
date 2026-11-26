@@ -95,12 +95,23 @@ Dein Einwand: Jedes Jahr das Triple macht keinen Spaß mehr. Ein heimliches Gumm
 
 Wann gebaut wird: wenn ein Langlauf auf Leicht zeigt, dass ein Verein zu oft alles gewinnt. Messgröße (vorläufig): Auf Leicht holt ein Spitzenverein in 10 Saisons höchstens 6 Meisterschaften.
 
-## 5. Mitwachsende Stufe (Option, Konzept, noch nicht gebaut)
+## 5. Mitwachsende Stufe (gebaut am 26.11., vorläufig)
+
+Deine Frage blieb offen, deshalb habe ich nach unserer Regel selbst entschieden: gebaut als vierte Wahl beim Spielstart, die drei festen Stufen bleiben unverändert.
+
+- **Wann es zählt:** Zu Beginn jeder Saison zählt die abgelaufene (`stufeMitwachsen` in `js/welt.js`, vor der Einteilung des Europapokals). Ein Titel ist die Meisterschaft der 1. Liga oder ein Europapokal deines Vereins.
+- **Was sich ändert:**
+  - Startkonto und Erinnerungen bleiben, wie sie sind.
+  - Alles andere gilt ab der neuen Saison: Sponsoren, Karten, Champions League, Gönner, Kreditrahmen, Vorstand.
+  - Eine Meldung nennt die neue Stufe und, falls er sinkt, den neuen Kreditrahmen.
+- **In der Statistik** steht bei den Saisons „(mitwachsend)“.
+
+Der ursprüngliche Entwurf:
 
 - Zusätzliche Wahl **„Mitwachsend“**: Du beginnst auf Leicht. Nach dem ersten Titel in der Bundesliga oder dem ersten Europapokalsieg wird es Normal, nach dem zweiten Titel in Folge Schwer.
 - Die Stufe sinkt nie, und jeder Wechsel wird angekündigt.
 - Der Nachteil, den du genannt hast, gilt nicht: Ein Aufstieg zählt nicht als Titel. Wer in der dritten Liga beginnt, bleibt beim Aufstieg auf Leicht.
-- Vorläufig nicht gebaut. Zuerst sehen, ob die drei festen Stufen reichen.
+- ~~Vorläufig nicht gebaut.~~ Gebaut am 26.11. (siehe oben).
 
 ## 6. Tests
 
@@ -115,6 +126,7 @@ Wann gebaut wird: wenn ein Langlauf auf Leicht zeigt, dass ein Verein zu oft all
   - den Tausch in die Europa League beim Saisonwechsel und in der ersten Saison, mit passendem Nebenziel;
   - den Jobwechsel auf Leicht zu einem Verein aus der Champions League, vor und nach der Auslosung;
   - das Saisonziel auf Leicht ohne Champions League;
+  - „Mitwachsend“: Start auf Leicht, Verlauf über sieben Saisons mit und ohne Titel, nie leichter;
   - den Gönner auf Leicht und die Insolvenz auf Normal.
 
 `tests/schwierigkeit-langlauf.js` misst den Langlauf je Stufe (siehe §7).

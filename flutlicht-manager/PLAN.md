@@ -132,7 +132,7 @@ Spalte „Welle“: wann das Konzept spätestens fertig sein muss. Umfang des Ko
 | K40 | Usability-Tests (**Idee**, 18.11., erste Gedanken in §4) | automatische Prüfungen in den Browser-Tests (Barrierefreiheit, Tastatur, Kontrast, Handy-Breite), Tests mit Menschen (Aufgaben laut denkend, Erfolgsquote, Zeit, Fehler, Fragebogen SUS), Zeitpunkte, Umgang mit den Befunden | M | 3 (automatisch), 5 |
 | K41 | Audio (**Entwurf** 25.11., `konzepte/K41-audio.md`) | Oberflächentöne, Pfiffe, Stadionatmosphäre nach Spielstand, Momente zu den Sequenzen, Musik nur im Titel, Regler und Stumm, erzeugt mit Web Audio oder CC0, Größenbudget | S | 5 |
 | K42 | Name (**Entwurf** 25.11., `konzepte/K42-name.md`) | Akronym auf BMH als Leitspruch, Name bleibt vorläufig „Flutlicht Manager“ | S | 5 |
-| K43 | Schwierigkeit (**Entwurf, Teile gebaut** 26.11., `konzepte/K43-schwierigkeit.md`) | Leicht mit mehr Sponsorgeld, ohne böse Karten, mit Gönner, aber ohne Champions League; Schwer mit weniger Geld und öfter Pech; Konzept gegen Langeweile bei Titeln und eine mitwachsende Stufe | S | 1 |
+| K43 | Schwierigkeit (**Entwurf, Teile gebaut** 26.11., `konzepte/K43-schwierigkeit.md`) | Leicht mit mehr Sponsorgeld, ohne böse Karten, mit Gönner, aber ohne Champions League; Schwer mit weniger Geld und öfter Pech; mitwachsende Stufe (gebaut 26.11.); Konzept gegen Langeweile bei Titeln | S | 1 |
 
 ## 4. Erste Gedanken zu den neuen Punkten
 

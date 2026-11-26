@@ -1087,6 +1087,9 @@ const REGELN={
   // nur einige Grenzen verschieben sich (Glück bei Karten, böse Karten).
   // ziel: Saisonziel um so viele Plätze leichter (+) oder strenger (−). sterneGenau: Talentsterne eigener Spieler sofort genau. sterneWochen: Faktor auf die Zeit, bis sie genau sind.
   schwierigkeit:{standard:'normal',
+    // Mitwachsend (K43 §5, 26.11., vorläufig): beginnt auf reihe[0]. Zu Beginn jeder Saison zählt die abgelaufene: Meister der 1. Liga oder ein Europapokal mit deinem Verein
+    // ist ein Titel. Nach einem Titel mindestens reihe[1], nach Titeln in zwei Saisons nacheinander reihe[2]. Die Stufe sinkt nie, Aufstiege zählen nicht.
+    mitwachsend:{name:'Mitwachsend',text:'beginnt auf Leicht und wird mit Titeln in der Bundesliga oder im Europapokal schwerer, nie leichter',reihe:['leicht','normal','schwer']},
     // Seit K43 (26.11.2026, popolupo, vorläufig), je Stufe: sponsor als Faktor auf deine Sponsorangebote, kartenGlueck als Zuschlag auf die Chance des guten Ausgangs
     // in Ereigniskarten, kartenNegativ als Faktor auf die Chance von Infokarten, die für dich nur schlecht ausgehen (0 heißt, sie fallen nach dem Wurf weg), ohneCL heißt, dein
     // Verein spielt statt Champions League Europa League, goenner heißt, bei einer Insolvenz zahlt ein Gönner die Schulden ohne Punktabzug (Vertrauen goennerVertrauen).

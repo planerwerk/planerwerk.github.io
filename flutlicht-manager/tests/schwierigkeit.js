@@ -77,6 +77,22 @@ for(const k of ['leicht','normal']){const {W,S}=welt(k),ev=W.ev,t=ev('myT()'),I=
 // Prüfung GD4: Saisonziel auf Leicht nennt die Europa League statt der Champions League
 {const l=R.leicht.W.ev('targetText')(1,3),n=R.normal.W.ev('targetText')(1,3);
   pruef(l.includes('Europa League')&&!n.includes('Europa League')&&n.includes('Champions League'),'K43: Saisonziel Platz 3 auf Leicht ohne Champions League',`${l} / ${n}`);}
+// K43f. Mitwachsend (K43 §5): Start auf Leicht mit Leicht-Konto. Titel (Meister 1. Liga oder Europapokal) heben die Stufe, Titel in zwei Saisons nacheinander auf Schwer,
+//       eine Saison ohne Titel beginnt die Folge neu, die Stufe sinkt nie. Ein Aufstieg oder ein Titel eines anderen Vereins zählt nicht. Ohne „Mitwachsend“ passiert nichts.
+{const {W,S,vorher}=welt('mitwachsend'),ev=W.ev,t=ev('myT()'),mit=ev('stufeMitwachsen'),m=S.my,verlauf=[S.stufe];
+  const start=S.stufe==='leicht'&&!!S.mitw&&Math.abs(t.cash-Math.round(vorher.cash*St('leicht').konto))<=1;
+  const saison=(sm,eu)=>{const alt=S.eu&&S.eu.titel;if(S.eu)S.eu.titel=Object.assign({cl:null,el:null,ecl:null},eu||{});mit(sm);if(S.eu)S.eu.titel=alt;verlauf.push(S.stufe);};
+  saison({my:m,lg:2,champ:m,up:[m]});                 // Aufstieg und Meister der 2. Liga: kein Titel im Sinne von K43 §5 (sm.champ ist der Meister der 1. Liga, hier nur so gesetzt)
+  saison({my:m,lg:1,champ:m+1});                      // anderer Verein Meister
+  saison({my:m,lg:1,champ:m});                        // erster Titel: Normal
+  saison({my:m,lg:1,champ:m+1});                      // ohne Titel: bleibt Normal, Folge neu
+  saison({my:m,lg:1,champ:m+1},{el:m});               // Europa League gewonnen: Titel, Folge 1, bleibt Normal
+  saison({my:m,lg:1,champ:m});                        // zweiter Titel in Folge: Schwer
+  saison({my:m,lg:1,champ:m+1});                      // ohne Titel: bleibt Schwer
+  const soll=['leicht','leicht','leicht','normal','normal','normal','schwer','schwer'];
+  const n=R.normal,nv=n.S.stufe;n.W.ev('stufeMitwachsen')({my:n.S.my,lg:1,champ:n.S.my});const fest=n.S.stufe===nv&&!n.S.mitw;
+  pruef(start&&JSON.stringify(verlauf)===JSON.stringify(soll)&&fest,'K43: Mitwachsend beginnt auf Leicht, steigt mit Titeln, sinkt nie; ohne Mitwachsend keine Änderung',
+    `Start ${start}, Verlauf ${verlauf.join(' → ')}, Normal fest ${fest}`);}
 
 // K02a. Neue Regeln ausprobieren (K02 §4.4): Jeder Eintrag in REGELN.experimente zeigt auf einen Schalter, der aus ist. experimentSetzen schaltet ihn für diesen
 //       Spielstand ein (S.einst.exp) und wieder aus; experimenteAnwenden schaltet nur aus, was es selbst eingeschaltet hat (ein von außen gesetzter Schalter bleibt).
