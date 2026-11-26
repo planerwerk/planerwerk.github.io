@@ -9,7 +9,7 @@ function skripte(){const html=fs.readFileSync(path.join(ROOT,'index.html'),'utf8
 // Eine frische Spielwelt im eigenen Kontext. Funktionen über F, Spielstand über W.S, Konstanten und Pfeilfunktionen über W.ev('name').
 function neueWelt(){
   const el=()=>({innerHTML:'',textContent:'',hidden:true,value:'',style:{},dataset:{},classList:{add(){},remove(){},toggle(){},contains(){return false;}},
-    addEventListener(){},removeEventListener(){},querySelector(){return null;},querySelectorAll(){return [];},appendChild(){},focus(){},blur(){},scrollIntoView(){},getBoundingClientRect(){return{left:0,top:0,width:0,height:0};}});
+    addEventListener(){},removeEventListener(){},setAttribute(){},removeAttribute(){},remove(){},querySelector(){return null;}, /* setAttribute, remove: Sequenzen (Hinweis aus Prüfung GE) */querySelectorAll(){return [];},appendChild(){},focus(){},blur(){},scrollIntoView(){},getBoundingClientRect(){return{left:0,top:0,width:0,height:0};}});
   const els={},store={};
   const document={getElementById:id=>els[id]||(els[id]=el()),querySelector:()=>null,querySelectorAll:()=>[],addEventListener(){},createElement:()=>el(),body:el(),documentElement:el()};
   const localStorage={getItem:k=>k in store?store[k]:null,setItem:(k,v)=>{store[k]=String(v);},removeItem:k=>{delete store[k];},clear:()=>{for(const k in store)delete store[k];}};

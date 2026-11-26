@@ -2979,3 +2979,25 @@ Korrekturen auf `mitarbeit/popolupo-gd-korrekturen` (auf dem Messskript K43b).
 | – | Hinweis: Fehlt `kartenNegativ` in einer Stufe, fielen böse Karten still weg. Jetzt gilt ohne Angabe 1. | ✅ umgesetzt |
 | – | Hinweis: Tests frieren REGELN nicht mehr ein. Bewusst so, damit Tests Regelwerte verstellen können; im Browser bleibt REGELN eingefroren. | entschieden |
 | – | Hinweis: Alte Spielstände auf Leicht bekommen die Regeln aus K43 sofort. Gewollt, die Stufe gilt für den ganzen Spielstand. | entschieden |
+
+## GE. Prüfung von W5e11, W5e12, W5f2, W5f3 und W5f4 ohne Laufzeit (26. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 7a3c747..98c4191 gelesen.
+
+- Kein Laufzeitfehler, auch nicht in Node.
+- Die Atmosphäre läuft nie doppelt und stoppt auf allen Wegen aus dem Live-Fenster.
+- Die Abpfiff-Klasse bleibt nicht am nächsten Spiel hängen. Die Entlassung erscheint einmal, lässt Klicks durch und fehlt bei „weniger Bewegung“.
+- Alte Klang-Einstellungen funktionieren weiter. Weder Spielzufall noch Spielstand ändern sich.
+
+Bericht: `flutlicht-tools/pruefung-ge.md`.
+
+Korrekturen auf `mitarbeit/popolupo-ge-korrekturen` (auf den Korrekturen GD).
+
+| # | Befund | Status |
+|---|---|---|
+| GE1 | **Mittel, nur Klang:** Die Atmosphäre setzte bei jedem Start etwa 2 Sekunden lang viel zu laut ein (der erste Pegel begann beim Grundwert 1 des Knotens), auch bei Stadion 0. Jetzt Startwert direkt am Knoten, Pegel vom aktuellen Wert aus (`atmoHalten`), kein Start bei Stadion 0. | ✅ behoben |
+| GE2 | **Niedrig, nur Anzeige:** Das Abpfiff-Licht folgte dem Spielstand, auch wenn das Elfmeterschießen oder das Gesamtergebnis im Rückspiel anders entschied. Jetzt erst Elfmeterschießen, dann Gesamtergebnis, dann Spielstand. | ✅ behoben |
+| GE3 | **Niedrig, nur Klang:** Mit „bei Tor anhalten“ wurde die Menge nach einem Tor nicht lauter, und nach Ton an oder Rückkehr in den Tab blieb es in Spielpausen still. Jetzt ein eigener Jubel-Zweig (`atmoTor`), leiser nur vor dem Anpfiff und in der Halbzeit, und `atmoNachfuehren` bei Ton an, Lautstärke und Rückkehr in den Tab. | ✅ behoben |
+| GE4 | **Niedrig, nur Klang:** Der Brief-Ton verglich nur Anzahlen. Jetzt vergleicht er die Karten und Angebote selbst. | ✅ behoben |
+| – | Hinweise: Stumm und versteckter Tab jetzt sofort still. Klangaufrufe in `liveRender` mit try/catch. Entlassung als reines Bild (`aria-hidden`), der Dialog sagt „Entlassen!“. Attrappe in tests/sim.js mit `setAttribute` und `remove`. | ✅ umgesetzt |
+| – | Hinweis: Ein Teilausschluss (leerer Block) wirkt nicht auf die Atmosphäre. | später |

@@ -290,6 +290,17 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 26.11.2026: Korrekturen nach Prüfung GE (Zweig `mitarbeit/popolupo-ge-korrekturen`, auf den Korrekturen GD)
+
+- **Stadionatmosphäre:**
+  - Kein zu lauter Einsatz mehr beim Start.
+  - Eigener Jubel nach Toren, auch wenn das Spiel beim Tor anhält.
+  - Nach Ton an, neuer Lautstärke oder Rückkehr in den Tab gleich wieder auf dem richtigen Pegel.
+  - Stumm ist sofort still.
+- **Abpfiff-Licht:** richtet sich nach dem Elfmeterschießen und im Rückspiel nach dem Gesamtergebnis.
+- **Brief-Ton:** vergleicht die Karten und Angebote selbst, nicht nur ihre Anzahl.
+- **Entlassung:** Die Sequenz ist für Screenreader ausgeblendet. Der Dialog darunter sagt „Entlassen!“.
+
 ### 26.11.2026: Korrekturen nach Prüfung GD (Zweig `mitarbeit/popolupo-gd-korrekturen`, auf dem Messskript K43b)
 
 Alles nur auf Leicht oder Schwer, Normal bleibt unverändert.

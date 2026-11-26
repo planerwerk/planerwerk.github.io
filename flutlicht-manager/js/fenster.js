@@ -44,10 +44,11 @@ function tagBeenden(ohneErinnerung){if(LIVE){liveFrame();liveRender();return;}if
   if(heuteMeinSpiel()){showPre(meinSpiel(S.tag));return;}
   weiterUI();}
 // Brief-Ton (K41, W5f3): nach „Weiter“ ein kurzer Ton, wenn eine neue Ereigniskarte oder ein neues Angebot für einen deiner Spieler wartet. Nur Klang.
-const briefStand=()=>({k:((S.karten&&S.karten.offen)||[]).length,o:(S.offers||[]).length});
-function weiterUI(){const vor=briefStand();BUSY=true;let n=0;try{n=weiter();}catch(e){console.error(e);toast('Fehler: '+e.message);}finally{BUSY=false;}
+// Verglichen werden die Objekte, nicht die Anzahl: fällt eine alte Karte weg und kommt eine neue dazu, klingt er trotzdem (Prüfung GE4).
+const briefStand=()=>[...((S.karten&&S.karten.offen)||[]),...(S.offers||[])];
+function weiterUI(){const vor=new Set(briefStand());BUSY=true;let n=0;try{n=weiter();}catch(e){console.error(e);toast('Fehler: '+e.message);}finally{BUSY=false;}
   closeOv();TAB='buero';render();window.scrollTo(0,0);if(S.phase==='end')showSummary();else if(S.fired)showFired();else if(n>1)toast(`${n} Tage weiter: ${datumMittel(S.tag)}`);
-  const nach=briefStand();if(!S.fired&&S.phase!=='end'&&(nach.k>vor.k||nach.o>vor.o))klang('brief');}
+  if(!S.fired&&S.phase!=='end'&&briefStand().some(x=>!vor.has(x)))klang('brief');}
 function zeigeErinnerungen(E){ov(`<h2>Sicher? Du kannst noch …</h2><div class="opts">${E.map(e=>`<div class="card"><p>${e.text}</p><div class="row between"><button onclick="closeOv();tab('${e.tab}')">${e.knopf}</button><label class="pick"><input type="checkbox" onchange="erinnerungAus('${e.art}',this.checked)"> nicht mehr erinnern</label></div></div>`).join('')}</div>
   <div class="row" style="margin-top:12px"><button class="go" id="trotzdem" onclick="closeOv();tagBeenden(1)">Trotzdem Tag beenden</button><button onclick="closeOv()">Abbrechen</button></div>`);}
 function erinnerungAus(art,aus){S.einst=S.einst||{aus:{}};S.einst.aus=S.einst.aus||{};if(aus)S.einst.aus[art]=1;else delete S.einst.aus[art];save();}
@@ -120,7 +121,7 @@ function copyExp(){const ta=document.getElementById('exp');const done=()=>toast(
 function importSave(){let d=null;try{d=JSON.parse(document.getElementById('imp').value);}catch(e){}
   if(!d||!d.teams||!d.pl){toast('Der Code ist ungültig.');return;}
   if(d.v!==REGELN.spielstand.version){toast('Dieser Code stammt aus einer älteren Version (Wochenkalender) und passt nicht mehr.');return;}
-  if(LIVE){clearInterval(LIVE.timer);LIVE=null;atmoStop();}S=d;delete S.stabT;reindex();verhUmstellen();k23cUmstellen();mitgliederUmstellen();vertragUmstellen();experimenteAnwenden();save();closeOv();TAB='buero';render();toast('Spielstand geladen.');if(S.live)liveFortsetzen();}
+  if(LIVE){clearInterval(LIVE.timer);LIVE=null;atmoStop(true);}S=d;delete S.stabT;reindex();verhUmstellen();k23cUmstellen();mitgliederUmstellen();vertragUmstellen();experimenteAnwenden();save();closeOv();TAB='buero';render();toast('Spielstand geladen.');if(S.live)liveFortsetzen();}
 // ---------- Darstellung (K35b §13.3, W5b): Thema je Gerät im Browser, nicht im Spielstand ----------
 // dunkel = ohne Attribut (Standard), hell und system als data-thema am html-Element; die Farben dazu stehen in css/spiel.css. Ohne Zufall, ohne Wirkung aufs Spiel.
 function themaLesen(){const D=REGELN.darstellung;try{const t=localStorage.getItem(D.schluessel);return D.themen[t]?t:D.standard;}catch(e){return D.standard;}}
