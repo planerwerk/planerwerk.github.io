@@ -3094,3 +3094,29 @@ Korrekturen auf `mitarbeit/popolupo-gj-korrekturen` (auf t18-ligaklausel).
 | GJ2 | **Mittel:** Die Kürzung blieb bis zum Vertragsende, auch nach dem Wiederaufstieg, und die Stimmung sah einen unterbezahlten Spieler. Jetzt gilt das Gehalt je Liga: `p.lkAlt` merkt das alte Gehalt, nach dem Wiederaufstieg gilt es wieder, ein zweiter Abstieg kürzt nicht noch einmal. Stimmung und Neid-Karte messen das Vertragsgehalt (`gehaltVertrag`). | ✅ behoben |
 | GJ3 | **Niedrig:** „neu in der Liga“ mischte Absteiger und Aufsteiger. Jetzt drei Gruppen. | ✅ behoben |
 | GJ4 | **Niedrig:** Die Ausnahme für Leihen und vereinbarte Wechsel griff nie, weil beide vorher schon abgewickelt sind. Jetzt wird nicht gekürzt, wer am Tag des Saisonwechsels kam (`p.seit`). Leihen waren schon richtig. | ✅ behoben |
+
+## GK. Prüfung des Sicherns als Datei (L1) ohne Laufzeit (26. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat cb7ea4b und 070ff70 gelesen (gebaut von Claude, Lücke L1).
+
+- Die Datei enthält genau dasselbe wie `save()`. Beim Laden laufen dieselben Umstellungen wie bei `loadLocal`.
+- Leere Datei, kein JSON und eine andere Version ändern nichts.
+- Der Dateiname ist sicher, alle neuen Zugriffe auf den Browser-Speicher stehen in try/catch, der Merker liegt nicht im Spielstand.
+- Die Erinnerung verbraucht keinen Zufall und kommt höchstens einmal je Saison.
+
+Bericht: `flutlicht-tools/pruefung-gk.md`.
+
+Korrekturen auf `mitarbeit/popolupo-k24-antworten` (auf `claude/compassionate-galileo-bsbua4`).
+
+| # | Befund | Status |
+|---|---|---|
+| GK1 | **Hoch:** „Datei laden“ ersetzte die laufende Karriere sofort, auch im Browser-Speicher, ohne Rückfrage. Auf dem Startbildschirm auch die gespeicherte hinter „Weiterspielen“. Jetzt fragt das Spiel nach und nennt beide Stände. Vorher lässt sich der aktuelle Stand als Datei sichern. | ✅ behoben |
+| GK2 | **Mittel:** Die Prüfung war zu dünn. `{"v":4,"teams":[],"pl":[]}` überschrieb den Browser-Speicher, erst danach stürzte das Zeichnen ab. Jetzt prüft `spielstandFehler` gründlich, und `spielstandUebernehmen` speichert erst nach erfolgreichem Zeichnen. Bei einem Fehler kommt der alte Stand zurück. | ✅ behoben |
+| GK3 | **Mittel:** „gesichert“ kam, bevor feststand, dass eine Datei entstand. Die Adresse wurde nach 1 s freigegeben. Jetzt nach 60 s, und die Meldung sagt ehrlich, dass man im Download-Ordner nachsehen soll. | ✅ behoben (Gerätetest offen) |
+| GK4 | **Mittel:** Der Merker galt je Gerät statt je Karriere. Jetzt mit Seed und Trainername. | ✅ behoben |
+| GK5 | **Mittel, später:** Nach einem Versionssprung passen alte Dateien nicht mehr. Die Meldung für neuere Dateien ist jetzt richtig, die Umstellung für Dateien steht als offen in `_luecken.md`. | teilweise |
+| GK6 | **Mittel:** Die Prozentanzeige zählte nur den Spielstand. Jetzt mit Wappen und Einstellungen. Offen und ungemessen: Safari rechnet vermutlich in UTF-16-Bytes (etwa 2,6 Mio. Zeichen bei 2,85 Mio. nach einer Saison), siehe `_luecken.md`. | teilweise |
+| GK7 | **Niedrig:** Die Meldung bei vollem Speicher nennt jetzt die Datei. Wirft der Browser-Speicher einen Fehler, kommt die Erinnerung trotzdem. | ✅ behoben |
+| GK8 | **Test:** `instanceof Map/Set/Date` griff über die vm-Grenze nie. Jetzt `Object.prototype.toString`. | ✅ behoben |
+| GK9 | **Test:** `tests/ui-sicherung.js` prüft jetzt Rückfrage und Abbrechen, einen Stand mit leeren Listen, die Meldung bei einer Datei mit Syntaxfehler und den Startbildschirm mit gespeicherter Karriere. | ✅ behoben |
+| GK10 | **Niedrig, älter:** Der Stab-Index (`STAB_IX`) wurde beim Laden nicht geleert. Jetzt in `spielstandUebernehmen` und `loadLocal`. | ✅ behoben |
