@@ -24,7 +24,7 @@ function werbUmstritten(f,b){const U=RF.werbung.umstritten,best=Math.max(...RF.s
 const werbBasis=(f,t=myT())=>sponsorBasis(t)*RF.werbung.anteil[f]; // Grundbetrag der Werbung (K23c) mal Anteil der Fläche
 // Angebote für eine freie Fläche, eigener Zufallsstrom (die Namen sind das einzige Zufällige)
 function werbAngebote(f){const b=werbBasis(f)*werbFaktor()*(stufe().sponsor||1),r=v=>Math.round(v/1000)*1000,J=f==='stadion'?RF.werbung.stadion.jahre:null; // Schwierigkeit (K43) wie bei der Brust; Namensrechte länger (Prüfung GL1)
-  return mitStrom(strom('werbung',S.season,f),()=>{const ns=shuffle(RF.werbung.namen[f].slice());return [...RF.sponsor.angebote.map((a,i)=>{const y=J&&J[i]?J[i]:a.jahre;
+  return mitStrom(strom('werbung',S.season,f),()=>{const weg=(S.werbWeg||{})[f],ns=shuffle(RF.werbung.namen[f].slice()).filter(n=>n!==weg); /* GM4: wer ausstieg, bietet nicht gleich wieder an; mischt wie vorher, kein Zufall mehr */return [...RF.sponsor.angebote.map((a,i)=>{const y=J&&J[i]?J[i]:a.jahre;
     return{name:ns[i%ns.length],base:r(b*a.fix),win:a.sieg?r(b*a.sieg):0,yrs:y,info:y===a.jahre?a.info:a.info.replace(/\d+ Saisons?/,`${y} Saisons`)};}),werbUmstritten(f,b)];});}
 // Für jede freie Fläche Angebote bereitstellen (aufgerufen aus sponsOffers, also beim Start, nach einem Jobwechsel und wenn ein Vertrag ausläuft)
 function werbungOffen(){S.werbung=S.werbung||{};S.werbOffers=S.werbOffers||{};werbFlaechen().forEach(f=>{if(f==='stadion'&&S.stadionBehalten===S.season)return; /* Traditionsname in dieser Saison (K24d) */if(!S.werbung[f]&&!S.werbOffers[f]){S.werbOffers[f]=werbAngebote(f);werbVerlaengerung(f,S.werbOffers[f]);}});werbungAuto();}
@@ -40,20 +40,25 @@ function werbUnterschrieben(f){const c=werbVertrag(f);
   if(f==='stadion'&&c)S.stadionZuletzt=stadionName(c);
   if(!istUmstritten(c))return;fanAnlass(myT(),'fanD',RF.werbung.umstritten.fans);news(`Die Fans murren über den neuen Geldgeber ${c.name} (${werbTitel(f)}).`,'bad');}
 // Traditionsnamen behalten (K24d, Aktion): Die Angebote für den Stadionnamen verfallen bis zur nächsten Saison. Keine Fanstrafe, aber 12 % der Werbung fehlen.
-function stadionBehalten(){if(!darf('sponsor','sponsorOderPreis'))return;if(!(S.werbOffers||{}).stadion)return;delete S.werbOffers.stadion;S.stadionBehalten=S.season;
+function stadionBehalten(){if(!darf('sponsor','sponsorOderPreis'))return;if(!(S.werbOffers||{}).stadion)return;delete S.werbOffers.stadion;S.stadionBehalten=S.season;S.stadionZuletzt=null; /* wieder der Traditionsname: ein späterer Verkauf kostet Fanstimmung (GM3) */
   news('Das Stadion behält in dieser Saison seinen Namen. Die Fans freuen sich, das Geld eines Namenssponsors fehlt.','good');save();render();}
 // Aktion des Spielers
 function pickWerbung(f,i){if(!darf('sponsor','sponsorOderPreis'))return;werbungWaehlen(f,i);save();render();}
 // Automatik (K36): je Fläche das Angebot mit dem höchsten festen Betrag, wie bei der Brust (sponsorAuto)
 // Beim Stadionnamen nimmt der Verein eine Verlängerung, wenn es eine gibt: Der Name bleibt, die Fans bleiben ruhig (Prüfung GL1). Ebenso der Vorstand (werbungVorSpiel).
 const stadionVerl=(f,l)=>f==='stadion'?l.findIndex(o=>o.ver&&!istUmstritten(o)):-1;
+// Der Vorstand nimmt nie den umstrittenen Geldgeber (K24 §7, Prüfung GM1): das erste Angebot, das nicht umstritten ist. Nach dem Nachverhandeln kann
+// der umstrittene vorne stehen, wenn nur er und eine Verlängerung übrig sind. Auch für die Brust (ablauf.js).
+const ersteNormale=l=>{const k=(l||[]).findIndex(o=>!istUmstritten(o));return k>=0?k:0;};
 function werbungAuto(){if(!autoB('sponsor'))return;Object.keys(S.werbOffers||{}).forEach(f=>{const l=S.werbOffers[f],v=stadionVerl(f,l);if(v>=0){werbungWaehlen(f,v);return;}let k=l.findIndex(o=>!istUmstritten(o));l.forEach((o,j)=>{if(!istUmstritten(o)&&o.base>l[k].base)k=j;});werbungWaehlen(f,k);});} // umstrittene meidet der Verein (K24 §7)
 // Vor dem ersten Pflichtspiel: Was noch frei ist, bekommt das erste Angebot (wie die Brust, ablauf.js)
-function werbungVorSpiel(){Object.keys(S.werbOffers||{}).forEach(f=>{const v=stadionVerl(f,S.werbOffers[f]);werbungWaehlen(f,v>=0?v:0);});}
+function werbungVorSpiel(){Object.keys(S.werbOffers||{}).forEach(f=>{const v=stadionVerl(f,S.werbOffers[f]);werbungWaehlen(f,v>=0?v:ersteNormale(S.werbOffers[f]));});}
 // Saisonwechsel: Laufzeiten zählen herunter, ausgelaufene Flächen bekommen neue Angebote
 // Seit K24c zählt hier auch die Brust herunter (vorher saison.js). Ausgelaufene Verträge zufriedener Partner merkt sich S.werbAlt für das Verlängerungsangebot.
-function werbungSaison(){werbSkandale();const Z=RF.werbung.zufriedenheit;S.werbAlt={};
-  werbFlaechenAlle().forEach(f=>{const c=werbVertrag(f);if(!c)return;c.yrs--;if(c.yrs>0)return;if(f==='stadion')S.stadionZuletzt=stadionName(c); /* alter Name, auch für ältere Stände (Prüfung GL1) */if(!c.skandal&&(c.z!=null?c.z:Z.start)>=Z.verlaengernAb)S.werbAlt[f]=c;if(f==='brust')S.spons=null;else delete S.werbung[f];});
+// Offene Angebote der alten Saison verfallen (Prüfung GM5): Spielraum und Absprung hängen an der Saison, Preise an der Liga (GL3). Wer über die Ausstiegsklausel
+// ging (K24f), merkt sich S.werbWeg und bietet in dieser Saison nicht neu an (GM4, K24 §5.3 „unter 30: kein Angebot“).
+function werbungSaison(){werbSkandale();const Z=RF.werbung.zufriedenheit;S.werbAlt={};S.werbOffers={};S.werbWeg={};
+  werbFlaechenAlle().forEach(f=>{const c=werbVertrag(f);if(!c)return;c.yrs--;if(c.yrs>0)return;if(c.ausstieg)S.werbWeg[f]=c.name;if(f==='stadion')S.stadionZuletzt=stadionName(c); /* alter Name, auch für ältere Stände (Prüfung GL1) */if(!c.skandal&&(c.z!=null?c.z:Z.start)>=Z.verlaengernAb)S.werbAlt[f]=c;if(f==='brust')S.spons=null;else delete S.werbung[f];});
   werbungOffen();}
 // Saisonende (K24c, saison.js): Zufriedenheit aller laufenden Verträge, Abstiegsklausel
 function werbungSaisonende(sm){const Z=RF.werbung.zufriedenheit,t=myT(),me=S.my;

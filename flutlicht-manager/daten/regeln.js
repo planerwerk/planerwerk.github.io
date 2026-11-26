@@ -277,7 +277,9 @@ const REGELN={
       // (gewürfelt je Saison, Fläche und Firma, 3–15 %). Liegt die Forderung darin, unterschreibt der Sponsor sofort zum höheren Betrag (Fixum und Siegprämie).
       // Sonst lehnt er ab und zieht mit absprung.nah (bis grenze über dem Spielraum) oder absprung.weit zurück, nach runden Absagen sicher.
       // Das letzte normale Angebot einer Fläche bleibt immer stehen (dann ohne weitere Verhandlung), damit nie nur der umstrittene Geldgeber übrig ist.
-      verhandeln:{stufen:[0.05,0.10,0.15,0.20],spielraum:[0.03,0.15],runden:3,absprung:{nah:0.15,weit:0.5,grenze:0.05}},
+      // spielraum seit Prüfung GM2 3–22 % statt 3–15 %: Mit 15 % Obergrenze konnten +15 % und +20 % nie gelingen. Jetzt gelingen etwa +5 % zu 89 %, +10 % zu 63 %,
+      // +15 % zu 37 %, +20 % zu 11 %. Den höchsten Erwartungswert hat +10 %, mehr ist ein Wagnis (vorläufig).
+      verhandeln:{stufen:[0.05,0.10,0.15,0.20],spielraum:[0.03,0.22],runden:3,absprung:{nah:0.15,weit:0.5,grenze:0.05}},
       namen:{ausruester:['Falkner Sport','Sprintwerk','Kranich Teamwear','Nordlicht Athletics','Bergfalke Sport','Tiedemann Sportswear'],
         aermel:['Moorland Versicherung','Weserblick Immobilien','Albtrauf Software','Uferwerk Logistik','Sonnhalde Energie','Grünfeld Mobilfunk'],
         stadion:['Kesselberg Energie','Lindenhof Versicherung','Brückner Bau','Talgrund Bank','Möwenwerk Logistik','Sternquell Telekom']},

@@ -3146,3 +3146,39 @@ Korrekturen auf `mitarbeit/popolupo-t19-korrekturen` (auf `claude/compassionate-
 | GL9 | **Niedrig, ungemessen:** Synchrones Schreiben von 3–4 MB bei fast jeder Aktion. | offen (erst messen) |
 | GL10 | **Niedrig:** Eine auf das Fenster gezogene Datei ersetzte das Spiel. Jetzt darf nur das Spiel selbst geladen werden. | ✅ behoben |
 | GL11 | **Niedrig:** Der Workflow hatte keine `permissions`, und der Checkout behielt den Token. Jetzt `contents: read` und `persist-credentials: false`, dazu `schrift/**` in den Pfaden. | ✅ behoben |
+
+## GM. Prüfung von Nachverhandeln (K24e) und Ausstieg (K24f) ohne Laufzeit (27. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 0d012ff und 201f8b5 (beide von Claude) im zusammengeführten Stand 5cf61eb gelesen.
+- Zufall nur aus eigenen Strömen, Neuladen bringt keinen neuen Wurf, Sperren für umstrittene Angebote, Verlängerungen und Automatik greifen.
+- Das Geld ist auf allen Flächen gleich erhöht, die Schwierigkeit wirkt einmal.
+- Zeitpunkt des Ausstiegs, Abstiegsjahr und Meldung stimmen, alte Spielstände sind abgedeckt.
+
+Bericht: `flutlicht-tools/pruefung-gm.md`. Korrekturen auf `mitarbeit/popolupo-t20-zusammen`.
+
+| # | Befund | Status |
+|---|---|---|
+| GM1 | **Mittel:** Nach dem Nachverhandeln konnte vorne der umstrittene Geldgeber stehen, und der Vorstand nahm das erste Angebot. Jetzt nimmt er das erste nicht umstrittene (`ersteNormale`), auch bei der Brust (`ablauf.js`). | ✅ behoben |
+| GM2 | **Mittel:** Bei einem Spielraum von 3–15 % gelangen +15 % und +20 % nie. Jetzt 3–22 %: +5 % etwa 89 %, +10 % 63 %, +15 % 37 %, +20 % 11 %. | ✅ behoben (vorläufig) |
+| GM3 | **Niedrig:** Nach einer Saison mit Traditionsnamen kostete die Rückkehr des alten Namens keine Fanstimmung. Jetzt setzt `stadionBehalten` den Merker zurück. | ✅ behoben |
+| GM4 | **Niedrig:** Wer über die Ausstiegsklausel ging, konnte gleich wieder anbieten. Jetzt merkt `S.werbWeg` ihn für die Saison, auch bei der Brust. | ✅ behoben |
+| GM5 | **Niedrig:** Offene Angebote überlebten den Saisonwechsel, und der Spielraum wurde neu gewürfelt. Jetzt verfallen sie in `werbungSaison` (behebt auch GL3). | ✅ behoben |
+| GM6 | **Test:** Neu ist `tests/werbung.js` Nr. 32: Der Vorstand nimmt nie den umstrittenen Geldgeber, Nachverhandeln lässt `S.zufall` unberührt, offene Angebote verfallen. Nr. 31 prüft zusätzlich, dass dieselbe Firma nicht gleich wieder anbietet. | ✅ behoben |
+| GM7 | **Niedrig:** K24 §12 widersprach sich zum Ausstieg. | ✅ behoben |
+
+## GN. Prüfung des gepackten Spielstands ohne Laufzeit (27. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 2ef1b7f gelesen. Er hat den Packer von Hand durchgerechnet und in Perl nachgebaut.
+- LZW läuft auf beiden Seiten gleich, auch an der Grenze und im Fall KwKwK.
+- Die Bits laufen nie über, und die Zeichen liegen in 32 bis 32799.
+- UTF-8 geht hin und zurück, auch mit `%`, Emoji und Umlauten.
+- Ein abgelehntes Speichern lässt den alten Stand stehen.
+- Text-Code, Datei und Windows-App bleiben ungepackt.
+
+Bericht: `flutlicht-tools/pruefung-gn.md`. Korrekturen auf `mitarbeit/popolupo-t20-zusammen`.
+
+| # | Befund | Status |
+|---|---|---|
+| GN1 | **Mittel, ungemessen:** Im gepackten Modus packt und prüft jedes `save()` den ganzen Stand, auf dem Handy grob eine Sekunde je Klick. Jetzt wird nach 1,5 s Ruhe gespeichert, sofort beim Verlassen der Seite. Unveränderte Stände werden nicht neu gepackt, nach einem Fehlschlag erst am nächsten Spieltag wieder. | ✅ behoben |
+| GN2 | **Test:** Zweites Speichern im gepackten Modus und „auch gepackt zu groß“ (alter Stand bleibt, Meldung kommt) fehlten. Jetzt in `tests/spielstand.js` Nr. 5, dazu das alte Format FLZ1. | ✅ behoben |
+| GN3 | **Niedrig, Risiko:** Das feste Wörterbuch lernte nur aus den ersten 200 bis 300 KB. Jetzt beginnt es neu, wenn es voll ist (FLZ2). | ✅ behoben |
