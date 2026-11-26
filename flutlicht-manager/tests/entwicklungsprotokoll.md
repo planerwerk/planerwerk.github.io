@@ -290,6 +290,16 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 26.11.2026: W5g Leitfaden für die Usability-Runde mit Menschen (Zweig `mitarbeit/popolupo-w5g-usability-leitfaden`, auf t10c)
+
+- **Neu:** K40 §11 enthält alles für die Runde mit Testpersonen:
+  - Rahmen (fünf Personen, 30–45 Minuten) und eine Einführung zum Vorlesen;
+  - sieben Aufgaben mit klarer Erfolgsbedingung und einen Beobachtungsbogen;
+  - den Fragebogen SUS auf Deutsch mit Auswertung (Ziel vorläufig im Schnitt mindestens 70);
+  - Fragen für das Gespräch danach und die Auswertung mit Schweregraden.
+- **`konzepte/_usability.md`:** trägt den grünen Lauf von `tests/ui-zugang.js` aus Lauf 10 nach und hat eine Tabelle für die Runden.
+- Nur Doku, kein Code.
+
 ### 26.11.2026: Kalibrierung der Randwerte aus Lauf 10 (Zweig `mitarbeit/popolupo-t10c-kalibrierung`, auf t10b)
 
 Alles vorläufig und im Verhältnis zur Messung gesetzt. Der nächste Lauf zeigt, ob es reicht.
