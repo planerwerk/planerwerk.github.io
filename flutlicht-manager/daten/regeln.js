@@ -879,13 +879,15 @@ const REGELN={
   // k: Anteil Kontakt (Foul, Zweikampf). Überlastung im Spiel zieht Arten mit Gewicht anteil × (1 − k), Kontakt anteil × k, Training anteil.
   medizin:{
     arten:{prellung:{name:'Prellung',g:'prellung',anteil:0.20,tage:[1,7],k:1,spritzen:true},
-      zerrung:{name:'Zerrung im Oberschenkel',g:'muskel',anteil:0.25,tage:[8,30],k:0,rueckfall:0.12},
+      // Zerrung: rueckfall 0,095 statt 0,12 und Kreuzband: anteil 0,006 statt 0,01 (26.11., vorläufig). Gemessen seit U7b immer über dem Ziel:
+      // Rückfall nach Zerrung 15 bis 16 % (Ziel 10–15 %), Kreuzbandrisse in der 1. Liga 9,5 bis 10 je Saison (Ziel 3–8). Gesenkt im Verhältnis zur Mitte des Ziels.
+      zerrung:{name:'Zerrung im Oberschenkel',g:'muskel',anteil:0.25,tage:[8,30],k:0,rueckfall:0.095},
       faserriss:{name:'Muskelfaserriss',g:'muskel',anteil:0.12,tage:[21,49],k:0,rueckfall:0.15},
       baenderdehnung:{name:'Bänderdehnung im Sprunggelenk',g:'band',anteil:0.12,tage:[4,21],k:0.6,rueckfall:0.10,spritzen:true},
       baenderriss:{name:'Bänderriss im Sprunggelenk',g:'band',anteil:0.05,tage:[28,63],k:0.8,rueckfall:0.08},
       innenband:{name:'Innenbandverletzung im Knie',g:'knie',anteil:0.04,tage:[21,56],k:0.8,rueckfall:0.05},
       meniskus:{name:'Meniskusverletzung',g:'knie',anteil:0.02,tage:[42,100],k:0.4,rueckfall:0.10},
-      kreuzband:{name:'Kreuzbandriss',g:'knie',anteil:0.01,tage:[180,300],k:0.3,rueckfall:0.10},
+      kreuzband:{name:'Kreuzbandriss',g:'knie',anteil:0.006,tage:[180,300],k:0.3,rueckfall:0.10},
       bruch:{name:'Knochenbruch',g:'bruch',anteil:0.03,tage:[28,84],k:1},
       kopf:{name:'Gehirnerschütterung',g:'kopf',anteil:0.02,tage:[7,14],k:1,pflicht:true},
       sonstiges:{name:'Rücken- oder Leistenprobleme',g:'sonstiges',anteil:0.04,tage:[3,21],k:0.2,rueckfall:0.10,spritzen:true},
@@ -980,7 +982,8 @@ const REGELN={
     traegheit:0.2,wocheMax:8,sofortMax:10,
     rufGefaelle:{ab:15,lob:0.5,kritik:2,einsatz:1.5,trainer:[50,0.3,0.5,95]}, // Ruf des Trainers in der Kabine seit U12h (K28 §5.4): 50 + 0,3 × Ansehen + 0,5 je Punkt Ruf über dem Start, höchstens 95 (vorher 3 je Trainerjahr)
     folgen:{leistung:{unter:20,minus:0.03,ueber:85,plus:0.02},lernenUnter:30,lernen:0.7,vertragUnter:[40,25],vertragAufschlag:0.25},
-    wechsel:{grummeln:[45,2],gespraech:[40,2],offiziell:4,oeffentlich:4,oeffentlichChance:0.1,oeffentlichDiva:0.3,abloese:0.9,teamMinus:3,zurueckAb:50},
+    // offiziell 5 statt 4 Wochen (26.11., vorläufig): Lauf 10 maß 1,05 offizielle Wechselwünsche je Kader und Saison, Ziel höchstens 1 (tests/kabine.js)
+    wechsel:{grummeln:[45,2],gespraech:[40,2],offiziell:5,oeffentlich:4,oeffentlichChance:0.1,oeffentlichDiva:0.3,abloese:0.9,teamMinus:3,zurueckAb:50},
     ansteckung:{fuehrerUnter:35,freunde:-2,fuehrerUeber:70,alleUnter:50,alle:1},
     gruppe:{min:3,unter:35,zh:-2,spracheBis:60}, // spracheBis: Sprachgrüppchen nur, solange das Deutsch darunter liegt (K14g, 25.11., popolupo, vorläufig, nur mit spieler.integration.wirkung.an)
     zusammenhalt:{start:50,stammelf:1,stammelfGleich:9,sieg:1,lager:1,neuer:-5,neuerWochen:8,streit:-3,ausgleich:0.04,wirkung:[0.97,0.0006]},

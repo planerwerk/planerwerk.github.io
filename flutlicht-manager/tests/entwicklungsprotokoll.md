@@ -290,6 +290,16 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 26.11.2026: Kalibrierung der Randwerte aus Lauf 10 (Zweig `mitarbeit/popolupo-t10c-kalibrierung`, auf t10b)
+
+Alles vorläufig und im Verhältnis zur Messung gesetzt. Der nächste Lauf zeigt, ob es reicht.
+
+| Wert | Ziel | Messung bisher | Änderung |
+|---|---|---|---|
+| Rückfall nach Zerrung | 10–15 % | 15–16 % | Rückfallwert 0,12 → 0,095 |
+| Kreuzbandrisse in der 1. Liga je Saison | 3–8 | 9,5–10 | Anteil 0,01 → 0,006 |
+| Offizielle Wechselwünsche je Kader und Saison | höchstens 1 | 1,05 | offiziell nach 5 statt 4 Wochen |
+
 ### 26.11.2026: tests/welt.js an K23c und K23d angepasst (Zweig `mitarbeit/popolupo-t10b-welt-pruefung`, auf den Hinweisen GF)
 
 - **T9.2 Sternejagd:** Seit K23d gilt der Gehaltsrahmen auch für Computer-Vereine. Ein Zweitligist kann das Gehalt eines Sterns der Stärke 96 nie zahlen. Der Testfall schaltet den Gehaltsrahmen deshalb für sich ab, weil er die Regeln der Sternejagd prüft.
