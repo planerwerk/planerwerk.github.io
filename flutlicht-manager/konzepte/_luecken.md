@@ -48,6 +48,10 @@ Viele naheliegende Kandidaten sind schon im Plan oder im Code:
     - Chrome und Firefox speichern weiter ungepackt, solange es passt. Das Menü zeigt „im Browser gepackt“.
     - Test: `tests/spielstand.js` Nr. 5 (genaues Hin und Zurück, Grenzfälle, ein Speicher mit Safari-Grenze).
     - Die gepackte Größe ist noch ungemessen, erwartet etwa ein Fünftel.
+    - **Nach Prüfung GN** (der Packer ist richtig, ein Nachbau in Perl bestätigt alle Proben):
+      - Das Wörterbuch beginnt neu, wenn es voll ist (Kopf `FLZ2`), statt nur aus dem Anfang zu lernen. `FLZ1` bleibt lesbar.
+      - Im gepackten Modus wird nach 1,5 s Ruhe gespeichert und sofort beim Verlassen der Seite. Unveränderte Stände werden nicht neu gepackt.
+      - Nach einem gescheiterten gepackten Versuch kommt der nächste erst am nächsten Spieltag. Sonst würde jeder Klick auf dem Handy etwa eine Sekunde hängen.
 - **Offen (GK5):** Nach dem nächsten Versionssprung des Spielstands passen alte Dateien nicht mehr. Dann braucht es eine Umstellung für Dateien, nicht nur für den Browser-Speicher.
 
 ### L2 Echte Spielernamen (vor einer Veröffentlichung klären)

@@ -163,7 +163,7 @@ const sm0=(S,pos,target,ab)=>({pos,target,down:ab?[S.my]:[],down2:[],down3:[],re
   pruef(da&&!!S.werbung.stadion,'Ältere Stände: Stadionname wird nachgereicht und vor dem nächsten eigenen Spiel vergeben',`Angebote ${da}, Vertrag ${S.werbung.stadion?S.werbung.stadion.name:'keiner'} nach ${k} Tagen`);}
 
 // ---------- K24e (26.11.): Nachverhandeln ----------
-// 27. Forderung im Spielraum: sofort unterschrieben, Fixum und Siegprämie um die Stufe höher; der Spielraum liegt in 3–15 % und hängt nur an Saison, Fläche und Firma
+// 27. Forderung im Spielraum: sofort unterschrieben, Fixum und Siegprämie um die Stufe höher; der Spielraum liegt in REGELN (3–22 % seit GM2) und hängt nur an Saison, Fläche und Firma
 {const {S,F,ev}=welt(false),V=ev('RF').werbung.verhandeln;let ok=0,n=0,txt='';
   for(const f of ['aermel','ausruester','stadion']){const l=S.werbOffers[f],i=l.findIndex(o=>o.win>0),o={...l[i]},sp=ev('werbSpielraum')(f,o);n++;
     const k=V.stufen.map((p,j)=>[p,j]).filter(([p])=>p<=sp).map(([,j])=>j).pop();
@@ -201,7 +201,19 @@ const sm0=(S,pos,target,ab)=>({pos,target,down:ab?[S.my]:[],down2:[],down3:[],re
   S.werbung.aermel.yrs=3;S.werbung.ausruester.yrs=3;S.werbung.aermel.z=40;S.werbung.ausruester.z=60;const name=S.werbung.aermel.name;
   ev('werbungSaisonende')(sm0(S,18,4,false));const za=S.werbung.aermel.z,zr=S.werbung.ausruester.z,ya=S.werbung.aermel.yrs,yr=S.werbung.ausruester.yrs;
   S.season++;F.werbungSaison();const weg=!S.werbung.aermel&&(S.werbOffers.aermel||[]).length>0&&!(S.werbOffers.aermel||[]).some(o=>o.ver),bleibt=!!S.werbung.ausruester&&S.werbung.ausruester.yrs===yr-1;
-  pruef(za<Z.ausstiegUnter&&zr>=Z.ausstiegUnter&&ya===1&&weg&&bleibt&&S.news.some(n=>n.t.includes(name)&&/Ausstiegsklausel/.test(n.t)),
-    'Ausstieg: unter 30 endet der Vertrag zum Saisonwechsel (ohne Verlängerung), darüber läuft er weiter; im Abstiegsjahr gilt stattdessen die Abstiegsklausel (Nr. 19)',`Ärmel ${za} (Laufzeit danach ${ya}), Ausrüster ${zr}`);}
+  const nichtWieder=!(S.werbOffers.aermel||[]).some(o=>o.name===name); // Prüfung GM4: wer ausstieg, bietet in der neuen Saison nicht gleich wieder an
+  pruef(za<Z.ausstiegUnter&&zr>=Z.ausstiegUnter&&ya===1&&weg&&bleibt&&nichtWieder&&S.news.some(n=>n.t.includes(name)&&/Ausstiegsklausel/.test(n.t)),
+    'Ausstieg: unter 30 endet der Vertrag zum Saisonwechsel (ohne Verlängerung, ohne neues Angebot derselben Firma), darüber läuft er weiter; im Abstiegsjahr gilt stattdessen die Abstiegsklausel (Nr. 19)',
+    `Ärmel ${za} (Laufzeit danach ${ya}), Ausrüster ${zr}, derselbe wieder im Angebot: ${!nichtWieder}`);}
+
+// 32. Prüfung GM: Der Vorstand nimmt nie den umstrittenen Geldgeber, auch wenn er nach dem Nachverhandeln vorne steht (GM1). Nachverhandeln lässt den
+// Grundstrom S.zufall unberührt (GM6). Offene Angebote der alten Saison verfallen zum Saisonwechsel und kommen neu (GM5).
+{const {S,F,ev}=welt(false),um=o=>ev('istUmstritten')(o),l=S.werbOffers.aermel,u=l.find(um),n=l.find(o=>!um(o));
+  S.werbOffers.aermel=[u,{...n,ver:1}];F.werbungVorSpiel();const gm1=!!S.werbung.aermel&&!um(S.werbung.aermel);
+  const W2=welt(false),z0=JSON.stringify(W2.S.zufall),i=W2.S.werbOffers.ausruester.findIndex(o=>W2.ev('werbVerhandelbar')(o));
+  for(let k=0;k<3;k++)W2.ev('werbVerhandeln')('ausruester',i,3);const gm6=JSON.stringify(W2.S.zufall)===z0;
+  const W3=welt(false);W3.S.werbOffers.stadion[0].vh=2;W3.S.season++;W3.F.werbungSaison();const gm5=(W3.S.werbOffers.stadion||[]).length>0&&!(W3.S.werbOffers.stadion||[]).some(o=>o.vh);
+  pruef(gm1&&gm6&&gm5,'Vorstand nimmt nie den umstrittenen Geldgeber; Nachverhandeln ändert den Grundstrom nicht; offene Angebote verfallen zum Saisonwechsel',
+    `Vorstand: ${S.werbung.aermel?S.werbung.aermel.name:'nichts'}${gm1?'':' (umstritten!)'}, Grundstrom gleich ${gm6}, Angebote neu ${gm5}`);}
 
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

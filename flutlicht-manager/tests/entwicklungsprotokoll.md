@@ -302,7 +302,18 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
   - Lehnt der Browser das Speichern ab, packt `speicherSchreiben` den Spielstand mit LZW über die UTF-8-Bytes und prüft vor dem Ablegen durch Entpacken.
   - `speicherLesen` liest beides. Chrome und Firefox merken nichts, solange es ungepackt passt.
   - Test `tests/spielstand.js` Nr. 5.
-- **Bitte testen (Lauf 21 auf diesem Zweig):** wie im Eintrag darunter (t19-korrekturen), dazu werbung Nr. 22 bis 31.
+- **Korrekturen nach Prüfung GM** (Nachverhandeln und Ausstieg, Einzelheiten in der Konsistenzprüfung):
+  - Der Vorstand nimmt nie den umstrittenen Geldgeber.
+  - Der Spielraum liegt jetzt bei 3–22 %, damit +15 % und +20 % eine Chance haben.
+  - Wer ausstieg, bietet in dieser Saison nicht wieder an.
+  - Offene Angebote verfallen zum Saisonwechsel.
+  - Traditionsname und Fanstimmung, neuer Test werbung Nr. 32.
+- **Korrekturen nach Prüfung GN** (gepackter Spielstand, kein Fehler im Packer):
+  - Das Wörterbuch beginnt neu, wenn es voll ist (FLZ2, FLZ1 bleibt lesbar).
+  - Gepackt wird nach 1,5 s Ruhe gespeichert, sofort beim Verlassen der Seite.
+  - Unveränderte Stände werden nicht neu gepackt, nach einem Fehlschlag erst am nächsten Spieltag wieder.
+  - Tests in `spielstand` Nr. 5 ergänzt.
+- **Bitte testen (Lauf 21 auf diesem Zweig):** wie im Eintrag darunter (t19-korrekturen), dazu werbung Nr. 22 bis 32.
   - Bei `spielstand` bitte die Zeile „Packen und Entpacken ergeben genau den Spielstand“ wörtlich ins Protokoll (Größe und Zeit).
   - Dazu `ui-sicherung` und `desktop`, weil das Lesen jetzt über das Entpacken geht.
 

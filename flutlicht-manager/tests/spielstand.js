@@ -38,6 +38,13 @@ pruef(erinnert===groessen.length,'Der Merker der letzten Sicherung steht nicht i
   const proben=['','a','a'.repeat(100000),'äöüßÄÖÜ €—„“ 😀 %25 \\u0000 \n\t','{"x":[1,2,3],"y":"ab'.repeat(5000)+'"}',Array.from({length:70000},(_,i)=>String.fromCharCode(32+(i*7919)%9000)).join('')]; // die letzte füllt das Wörterbuch
   const falsch=proben.filter(s=>entpack(pack(s))!==s).length;pruef(!falsch,'Packen und Entpacken in Grenzfällen (leer, ein Zeichen, lange Wiederholung, Umlaute und Emoji, volles Wörterbuch)',`${falsch} von ${proben.length} falsch`);
   const L=ev('localStorage'),k=ev('REGELN').spielstand.schluessel,orig=L.setItem;L.setItem=(a,b)=>{if(String(b).length>2.5e6)throw new Error('QuotaExceededError');return orig(a,b);};
-  ev('SPEICHER_FEHLER=false');ev('save()');const roh=L.getItem(k),fehler=ev('SPEICHER_FEHLER');L.setItem=orig;
-  pruef(!fehler&&typeof roh==='string'&&roh.startsWith('FLZ1:')&&ev('speicherLesen')(k)===JSON.stringify(S),'Speicher zu klein (wie Safari): save() legt gepackt ab, ohne Fehlermeldung, Lesen ergibt genau den Spielstand',roh?mio(roh.length)+' Mio. Zeichen':'nichts gespeichert');}
+  ev('SPEICHER_FEHLER=false');ev('save()');const roh=L.getItem(k),fehler=ev('SPEICHER_FEHLER');
+  pruef(!fehler&&typeof roh==='string'&&roh.startsWith('FLZ2:')&&ev('speicherLesen')(k)===JSON.stringify(S),'Speicher zu klein (wie Safari): save() legt gepackt ab, ohne Fehlermeldung, Lesen ergibt genau den Spielstand',roh?mio(roh.length)+' Mio. Zeichen':'nichts gespeichert');
+  // Prüfung GN2: zweites Speichern im gepackten Modus; dann ist auch gepackt zu groß: der alte Stand bleibt, die Meldung kommt (Simulation ohne Fenster: sofort, ohne Warten)
+  S.mgr='Gepackt 2';ev('save()');const zweit=JSON.parse(ev('speicherLesen')(k)).mgr;
+  L.setItem=(a,b)=>{if(String(b).length>1e5)throw new Error('QuotaExceededError');return orig(a,b);};S.mgr='Zu groß';ev('save()');const bleibt=JSON.parse(ev('speicherLesen')(k)).mgr,meldung=ev('SPEICHER_FEHLER');L.setItem=orig;
+  pruef(zweit==='Gepackt 2'&&bleibt==='Gepackt 2'&&meldung,'Gepackt weiter speichern; ist auch gepackt kein Platz, bleibt der letzte Stand und die Meldung kommt',`zweites Speichern ${zweit}, danach ${bleibt}, Meldung ${meldung}`);
+  // FLZ1 (älterer gepackter Stand, Wörterbuch fest) bleibt lesbar: von Hand gepackt „aaa“ = Codes 97, 256 → Zeichen aus den 32 Bit 0x0061 0x0100
+  const flz1=(()=>{const v=(97<<16|256)>>>0,c1=((v>>>17)&0x7FFF)+32,c2=((v>>>2)&0x7FFF)+32,c3=(((v&3)<<13)&0x7FFF)+32;return'FLZ1:2:'+String.fromCharCode(c1,c2,c3);})();
+  pruef(entpack(flz1)==='aaa','Älterer gepackter Stand (FLZ1) bleibt lesbar',JSON.stringify(entpack(flz1)));}
 console.log('PROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

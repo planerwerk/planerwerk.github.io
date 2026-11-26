@@ -6,7 +6,7 @@
 function tagesSpiele(d){const v=tagesSpieleVorbereiten(d,false);return tagesSpieleAbschliessen(v.out);}
 function tagesSpieleVorbereiten(d,live){kartenAuto(d); // unbeantwortete Ereigniskarten vor dem Anpfiff (K30, U12d)
   return mitStrom(strom('spieltag',S.season,d),()=>{const out={tag:d,gruppen:[],list:[],mine:null},vorher=S.gespielt;let G=null,platz=null;S.gespielt=d;
-  if(S.sponsOffers&&meinSpiel(d))sponsorWaehlen(0);if(werbungAusstehend()&&meinSpiel(d))werbungVorSpiel(); // freie Werbeflächen: erstes Angebot (K24a)
+  if(S.sponsOffers&&meinSpiel(d))sponsorWaehlen(ersteNormale(S.sponsOffers)); /* nie der umstrittene Geldgeber (Prüfung GM1) */if(werbungAusstehend()&&meinSpiel(d))werbungVorSpiel(); // freie Werbeflächen: erstes Angebot (K24a)
   const spiel=(h,a,o,meta,g)=>{const i=g.list.length;if(o.wichtig){kiSpritzen(h);kiSpritzen(a);} // fit spritzen nur in wichtigen Spielen (K10 §7)
     if(!o.test&&(h===S.my||a===S.my))trainerVorSpiel(d); /* gesperrt: heute auf der Tribüne (K09g) */
     if(meta.cup&&(h===S.my||a===S.my)){const bxi=pokalBezugsElf([[h,a]]);if(bxi)meta=Object.assign({},meta,{bxi});} /* Vergleichself der Pokal-Rotation vor dem Anpfiff, nach dem Fitspritzen (K13e, FD3, FF1) */
