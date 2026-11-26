@@ -13,6 +13,18 @@ Node.js 22, Playwright mit Chromium, für `tests/ui-zugang.js` axe-core 4.10.2 (
 
 ---
 
+## Lauf 9, 22.11.2026: `popolupo-u19d-kaderliste` (2c16d91: K23b, K23d, U19d1, Korrekturen zu Lauf 8)
+
+Nur getestet. Erledigt: T8.1 (finanzen grün), T8.3 (training grün). Grün außerdem lizenz, europapokal, werbung, transfers, vorstand, jugend, ui-lernstufen, live-neuladen, seed, ui-zugang.
+- **T8.2 teilweise:** Pokal nach dem Europapokal verlegt. Rest in `wettbewerbe.js` (Seed 4, drei Saisons): 12-mal Do Europapokal → Sa Liga, einmal So Liga → Di Liga.
+- **T9.2 `welt.js` Sternejagd:** Käufer im gebauten Fall (Wolfsburg) liegt bei 121 % des Gehaltsrahmens (K23d), darf darum nicht kaufen, trotz 500 Mio. auf dem Konto. Testfall passt nicht mehr.
+- **T9.3 `welt.js` „kein Konto im Minus“:** Saisonende 2027 fünf Drittligisten im Minus (−0,1 bis −3,4 Mio., Rahmen 114–164 %). Schnitt der Konten 1. Liga 50,6 → 103,5 Mio. in einer Saison.
+- **T9.4 Pokalprüfung in `pruefungen.js`** (ui-zwei-saisons 1×, fuzz-karrieren 5×): „Pokal: 0 Runden, laut Kalender 1“ am zweiten Pokaltag. Die Prüfung kennt den zweiten Tag nicht.
+- **medizin:** Kreuzbandrisse 1. Liga 12,5 je Saison (vorher 9–10, Ziel 3–8). sommer 79,7 (Grenze 80), spielermodell 2. Liga Spanne 2,1, kalibrierung drei gelbe Randwerte, akzeptanz wie immer.
+- **T5.3 Europapokal:** CL über drei Saisons 1× Sieger (Bayern 2026), 3× Achtelfinale, 4× K.-o.-Play-offs, 4× Ligaphase; Länderwertung GER 6., 3., 11.
+
+---
+
 ## Lauf 8, 22.11.2026: `popolupo-t5-korrekturen` (5253729, auf 0fae7b8)
 
 Nur getestet, am Code von popolupo nichts geändert.
