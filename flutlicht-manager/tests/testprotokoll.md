@@ -20,6 +20,39 @@ Node.js 22, Playwright mit Chromium, für `tests/ui-zugang.js` axe-core 4.10.2 (
 - **Begonnen bei Claude:** nur L1, sonst nichts. K24 Rest (Stadionname, Bande) bleibt vorgemerkt, ist aber nicht begonnen.
 ---
 
+## Lauf 19, 26.11.2026 abends: `popolupo-gj-korrekturen` (78e6b78, enthält t18-ligaklausel)
+
+Nur getestet und geloggt. **51 grün, 4 rot.** Neu grün: welt 10 (alle zehn Saisons mit genug Wechseln, keine leeren Gruppen). Der Lauf ist an der Zeitgrenze der Hintergrundaufgabe in welt 10 abgebrochen; welt 10, die Browser-Tests und akzeptanz liefen danach neu. Alle vier roten Werte liegen knapp am Rand:
+
+- **kalibrierung:** Auswärtssiege 29 % (Ziel 30–36 %).
+- **medizin:** Anteil Zerrungen (Oberschenkel hinten) 25 % (Ziel 20–25 %), gerundet genau auf der Grenze.
+- **sommer (neu rot):** Kondition zum ersten Ligaspiel nach der Vorbereitung 79,6 (Ziel 80–88).
+- **akzeptanz:** Abwehr +0,9 (unverändert).
+
+**finanzmodell 2, KURZ-Zeilen:**
+
+```
+KURZ 2026 L1: ein 137.7 Mio = TV 49.8 Mio + Werbung/Sonstiges 63.5 Mio + Spieltag 24.4 Mio | aus 127.7 Mio = Gehalt+Stab 75.5 Mio + Betrieb 1.5 Mio + Verwaltung 49.3 Mio + Jugend 1.4 Mio | Saldo 10.1 Mio
+KURZ 2026 L2: ein 33.0 Mio = TV 12.4 Mio + Werbung/Sonstiges 10.9 Mio + Spieltag 9.7 Mio | aus 32.4 Mio = Gehalt+Stab 19.0 Mio + Betrieb 1.0 Mio + Verwaltung 11.0 Mio + Jugend 1.4 Mio | Saldo 0.6 Mio
+KURZ 2026 L3: ein 10.6 Mio = TV 1.3 Mio + Werbung/Sonstiges 4.8 Mio + Spieltag 4.4 Mio | aus 12.4 Mio = Gehalt+Stab 8.3 Mio + Betrieb 0.7 Mio + Verwaltung 1.8 Mio + Jugend 1.5 Mio | Saldo -1.8 Mio
+KURZ 2027 L1: ein 141.1 Mio = TV 49.8 Mio + Werbung/Sonstiges 64.5 Mio + Spieltag 26.7 Mio | aus 129.2 Mio = Gehalt+Stab 76.5 Mio + Betrieb 1.6 Mio + Verwaltung 49.7 Mio + Jugend 1.4 Mio | Saldo 11.8 Mio
+KURZ 2027 L2: ein 31.4 Mio = TV 12.4 Mio + Werbung/Sonstiges 10.4 Mio + Spieltag 8.6 Mio | aus 32.5 Mio = Gehalt+Stab 19.6 Mio + Betrieb 0.9 Mio + Verwaltung 10.7 Mio + Jugend 1.4 Mio | Saldo -1.2 Mio
+KURZ 2027 L3: ein 11.0 Mio = TV 1.3 Mio + Werbung/Sonstiges 4.8 Mio + Spieltag 4.8 Mio | aus 13.7 Mio = Gehalt+Stab 9.6 Mio + Betrieb 0.7 Mio + Verwaltung 1.8 Mio + Jugend 1.5 Mio | Saldo -2.7 Mio
+```
+
+**finanzmodell 2, Saldo gegen das Ziel:** 5 ✓, 1 ✗ (3. Liga 2027).
+
+```
+✓ Saldo 1. Liga Saison 2026: 10.1 Mio je Verein (Ziel 11.0 Mio ± 1.5) · TV 49.8 Mio, Werbung/Sonstiges 63.5 Mio, Spieltag 24.4 Mio, Gehalt+Stab 75.5 Mio (Kader 28.3 Spieler, Ø Gehalt 2.56 Mio, Ø Stärke 73.5), Betrieb 1.5 Mio, Verwaltung 49.3 Mio
+✓ Saldo 2. Liga Saison 2026: 0.6 Mio je Verein (Ziel 0.0 Mio ± 1.5) · TV 12.4 Mio, Werbung/Sonstiges 10.9 Mio, Spieltag 9.7 Mio, Gehalt+Stab 19.0 Mio (Kader 29.2 Spieler, Ø Gehalt 0.64 Mio, Ø Stärke 65.8), Betrieb 1.0 Mio, Verwaltung 11.0 Mio
+✓ Saldo 3. Liga Saison 2026: -1.8 Mio je Verein (Ziel -1.0 Mio ± 1.5) · TV 1.3 Mio, Werbung/Sonstiges 4.8 Mio, Spieltag 4.4 Mio, Gehalt+Stab 8.3 Mio (Kader 28.6 Spieler, Ø Gehalt 0.29 Mio, Ø Stärke 61.0), Betrieb 0.7 Mio, Verwaltung 1.8 Mio
+✓ Saldo 1. Liga Saison 2027: 11.8 Mio je Verein (Ziel 11.0 Mio ± 1.5) · gegenüber Vorsaison: TV +0.0, Werbung/Sonstiges +1.0, Spieltag +2.4, Gehalt+Stab +1.0 (Kader 28.3 → 27.9 Spieler, Ø Gehalt 2.56 → 2.68 Mio, Ø Stärke 73.5 → 74.1), Betrieb +0.1, Verwaltung +0.4, Jugend +0.0 · abgestiegen 0, aufgestiegen 3 (Saldo 25.5 Mio, Ø Gehalt 0.93 Mio), geblieben 15 (Saldo 9.1 Mio, Ø Gehalt 3.04 Mio)
+✓ Saldo 2. Liga Saison 2027: -1.2 Mio je Verein (Ziel 0.0 Mio ± 1.5) · gegenüber Vorsaison: TV −0.0, Werbung/Sonstiges −0.5, Spieltag −1.1, Gehalt+Stab +0.6 (Kader 29.2 → 28.9 Spieler, Ø Gehalt 0.64 → 0.67 Mio, Ø Stärke 65.8 → 66.4), Betrieb −0.2, Verwaltung −0.2, Jugend +0.0 · abgestiegen 3 (Saldo -5.5 Mio, Ø Gehalt 0.85 Mio), aufgestiegen 3 (Saldo 4.2 Mio, Ø Gehalt 0.37 Mio), geblieben 12 (Saldo -1.4 Mio, Ø Gehalt 0.70 Mio)
+✗ Saldo 3. Liga Saison 2027: -2.7 Mio je Verein (Ziel -1.0 Mio ± 1.5) · gegenüber Vorsaison: TV +0.0, Werbung/Sonstiges +0.0, Spieltag +0.4, Gehalt+Stab +1.3 (Kader 28.6 → 28.9 Spieler, Ø Gehalt 0.29 → 0.34 Mio, Ø Stärke 61.0 → 62.2), Betrieb +0.1, Verwaltung +0.0, Jugend +0.0 · abgestiegen 3 (Saldo -2.1 Mio, Ø Gehalt 0.42 Mio), aufgestiegen 4 (Saldo -3.2 Mio, Ø Gehalt 0.24 Mio), geblieben 13 (Saldo -2.7 Mio, Ø Gehalt 0.36 Mio)
+```
+
+---
+
 ## Lauf 18, 26.11.2026 abends: `popolupo-t16-messung` (70f3128, enthält t15-korrekturen)
 
 Nur getestet und geloggt. Der Spielcode ist gegenüber Lauf 17 unverändert, geändert sind nur `finanzmodell.js` und `kalibrierung-sweep.js`. Deshalb liefen nur diese beiden, beide mit exit 0. Die übrigen Ergebnisse aus Lauf 17 gelten weiter.
