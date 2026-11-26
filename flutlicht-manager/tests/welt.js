@@ -108,14 +108,16 @@ const mitLeihProtokoll=(F,getS,C)=>{const log=[],orig=F.kiLeihe;
   // Der Stern spielt in einer Gruppe, in der die Grundordnung des Käufers einen Stammplatz hat. Stärke 96: Mit 500 Mio € auf dem Konto könnte der Käufer jeden Spieler
   // kleinerer Vereine bezahlen, also muss der Stern klar der Beste sein (auch mit Schätzfehler ±2), sonst nimmt die Jagd einen anderen.
   const niveau=F.kaderplan(t).niveau,plaetze=F.planSoll(t).stamm,q=ev('squad')(v.id).filter(p=>p.pos!=='TW'&&plaetze[F.planGruppe(p)]>0).sort((a,b)=>b.str-a.str)[0];q.str=96;q.pot=Math.max(q.pot,q.str);q.age=24;q.ct=3;q.list=0;delete q.wech;delete q.leihe;
-  t.cash=5e8;const soll=ev('value')(q)*C.verkauf.angebotAb*ev('rlFaktor')(q),log=mitProtokoll(F,()=>w.W.S,C.talentBis);
+  // 5 Mrd. statt 500 Mio. (Lauf 11): Das Budget ist ein Anteil vom Konto (budgetAnteil 0,5 im Sommer), und seit K23c kostet ein Stern der Stärke 96 mehr als 250 Mio.
+  t.cash=5e9;const soll=ev('value')(q)*C.verkauf.angebotAb*ev('rlFaktor')(q),log=mitProtokoll(F,()=>w.W.S,C.talentBis);
   // T9.2: Seit K23d gilt der Gehaltsrahmen auch für Computer-Vereine. Ein Zweitligist kann das Gehalt eines Sterns der Stärke 96 nie tragen.
   // Hier geht es um die Regeln der Sternejagd, darum ist der Gehaltsrahmen für diesen Fall abgeschaltet (Tests dürfen Regelwerte verstellen, tests/sim.js).
   const B=ev('RFP').budget,sperreAb=B.sperreAb;B.sperreAb=1e9;
   try{for(let i=0;i<14;i++)im('stern'+i,()=>F.kiMarkt());}finally{B.sperreAb=sperreAb;}
   const st=log.filter(e=>e.art==='stern'&&e.nach===t.id),e=st[0];
   pruef(niveau+C.sterneJagd.ueberNiveau<=q.str&&F.vereinsProfile(t).includes('ehrgeizig')&&st.length===1&&e.pid===q.id&&q.team===t.id&&e.preis>=soll-25000&&e.repDiff>=C.sterneJagd.ansehenPlus&&t.tb.s===1,
-    'Sternejagd: genau ein Stern je Sommer, der Stärkste eines kleineren Vereins, mindestens 150 % des Marktwerts × Restlaufzeit',e?`${q.n} (${q.str}) von ${v.name} zu ${t.name} für ${e.preis}, Soll mindestens ${Math.round(soll)}`:`kein Stern in 14 Wochen, ${st.length} Käufe`);
+    'Sternejagd: genau ein Stern je Sommer, der Stärkste eines kleineren Vereins, mindestens 150 % des Marktwerts × Restlaufzeit',e?`${q.n} (${q.str}) von ${v.name} zu ${t.name} für ${e.preis}, Soll mindestens ${Math.round(soll)}`
+    :`kein Stern in 14 Wochen, ${st.length} Käufe; Budget ${t.tb?t.tb.b-t.tb.a:'–'}, Preis des Sterns ${ev('kiSternPreis')(q)}, ehrgeizig ${F.vereinsProfile(t).includes('ehrgeizig')}, Niveau ${niveau}, Stern bei ${q.team===v.id?v.name:q.team}`);
   const alle=log.filter(x=>x.art==='stern');pruef(alle.every(x=>x.repDiff>=C.sterneJagd.ansehenPlus&&x.preis<=x.rest&&x.nr===C.sterneJagd.fenster)&&new Set(alle.map(x=>x.nach)).size===alle.length,'Sternejagd: nur nach oben, im Budget, im Sommerfenster, je Verein höchstens einer',`${alle.length} Sterne`);}
 
 // 6c. Verträge nach Rang (K31 §5.8, U11c): Chance je Rang beim Saisonwechsel, früh verlängern im Herbst nur für Gebrauchte, deine Spieler bleiben unberührt

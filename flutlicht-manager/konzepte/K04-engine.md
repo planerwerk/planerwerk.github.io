@@ -150,7 +150,7 @@ Torwart = 1 − 0,008 × (Wirkung Torwart − 70), begrenzt auf 0,85–1,15
 ### 5.4 Fouls, Standards, Elfmeter
 
 - **Fouls:** pro Minute und Team etwa 0,12, mehr bei hartem Einsatz, Pressing, „ungestüm“ und hohem Temperament. Ziel 10–13 pro Team und Spiel (prüfen).
-- **Ort des Fouls:** 75,2 % in der eigenen Hälfte oder im Mittelfeld (kein gefährlicher Standard), 20 % in gefährlicher Zone (Freistoßflanke), 3,5 % zentral vor dem Strafraum (direkter Freistoß), 1,3 % im Strafraum (Elfmeter). Ziel 0,2–0,3 Elfmeter pro Spiel (prüfen).
+- **Ort des Fouls:** 75,2 % in der eigenen Hälfte oder im Mittelfeld (kein gefährlicher Standard), 20 % in gefährlicher Zone (Freistoßflanke), 3,5 % zentral vor dem Strafraum (direkter Freistoß), 1,3 % im Strafraum (Elfmeter). Ziel 0,2–0,3 Elfmeter pro Spiel (prüfen). **26.11. (vorläufig):** Im Spiel stand der Anteil zuletzt bei 1,1 %. Lauf 11 maß damit 0,33 Elfmeter je Spiel, deshalb jetzt 0,9 %.
 - **Karten:** Schwere des Fouls und Strafmaß kommen aus K09. Bis dahin gilt die heutige Kartenwahrscheinlichkeit, verteilt auf die Fouls.
 - **Schützen:** Für Elfmeter, direkte Freistöße und Ecken (links und rechts) teilt der Trainer Schützen ein (K06). Ohne Einteilung nimmt die Engine den Besten nach Merkmal und Stärke.
 

@@ -781,7 +781,8 @@ const REGELN={
     schuetze:{mitte:70,jePunkt:0.008,min:0.8,max:1.2},
     abwehr:{versatz:3,jePunkt:0.022,min:0.78,max:1.22}, // Druck der Abwehr auf den Abschluss: 1 − jePunkt × (Abwehr − Angriff − versatz). Abwehrwerte liegen im Schnitt etwa 3 über den Angriffswerten.
     torwart:{mitte:70,jePunkt:0.011,min:0.80,max:1.20,patzer:0.02,unkonzentriert:4},
-    fouls:{proMinute:0.12,ort:{flanke:0.20,direkt:0.035,elfmeter:0.011},hart:1.3,fair:0.7, // Häufigkeit der Fouls; Foulart, Karten und Sperren stehen unter disziplin (K09)
+    // ort.elfmeter 0,009 statt 0,011 (26.11., vorläufig): Lauf 11 maß 0,33 Elfmeter je Spiel in der 1. Liga, Ziel 0,2–0,3 (tests/kalibrierung.js)
+    fouls:{proMinute:0.12,ort:{flanke:0.20,direkt:0.035,elfmeter:0.009},hart:1.3,fair:0.7, // Häufigkeit der Fouls; Foulart, Karten und Sperren stehen unter disziplin (K09)
       gewicht:{IV:2,LV:1.5,DM:2,ZM:1.3,LS:1.5,LM:1,SM:0.8,OM:0.8,HS:0.8,MS:1,LA:0.8},ungestuem:1.4},
     verlauf:{fuehrung:{A:0.92,D:1.05},rueckstand:{A:1.08,D:0.96},gleich:{A:0.78},abMinute:75, // gleich: bei Unentschieden gehen spät beide weniger Risiko ein
       rot:{A:0.90,D:0.95}},

@@ -290,6 +290,17 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 26.11.2026: Testlauf 11 aufgearbeitet (Zweig `mitarbeit/popolupo-t11-korrekturen`, auf den Korrekturen GG)
+
+Lauf 11 (ce62ffe): 45 grün, 8 rot (Lauf 10: 29 grün).
+
+- **fuzz-karrieren:** Der Fehler lag im Testskript. Es setzte die Vertragsjahre, ohne zu prüfen, ob die Spielerkarte ein Angebotsformular hat. Jetzt mit Prüfung.
+- **welt, Sternejagd (T9.2):** Seit K23c kostet ein Stern der Stärke 96 mehr, als ein Budget aus 500 Mio. € hergibt. Der Testfall hat jetzt 5 Mrd. €, die Meldung nennt Budget und Preis.
+- **wettbewerbe, 72 Stunden:** noch 3 Fälle (vorher 12). Die Meldung nennt jetzt je Tag Wettbewerb und Wochentag, damit der nächste Lauf die Ursache zeigt.
+- **kalibrierung:** Der Elfmeteranteil der Fouls im Strafraum sinkt von 0,011 auf 0,009 (gemessen 0,33 je Spiel, Ziel 0,2–0,3, vorläufig). Den Favoritensieg (60 %, seit Langem knapp rot) und den Heimsieg bei gleich starken Teams (49 %, kleine Stichprobe) lasse ich bis zu einem längeren Lauf.
+- **Neu: `tests/regeln-fest.js`.** Er spielt eine Saison und meldet, wenn das Spiel selbst einen Regelwert verändert hat. Seit die Tests die Regeln nicht mehr einfrieren, würde so ein Fehler sonst nur in den Tests wirken, nicht im Browser. Eine Suche im Code fand keine solche Stelle.
+- **Noch offen:** Finanzsalden der 2. und 3. Liga (−1 bis −4 Mio. statt 0 und −1). Dafür braucht es die volle Ausgabe von `tests/finanzmodell.js 2` mit allen Ligen.
+
 ### 26.11.2026: Korrekturen nach Prüfung GG (Zweig `mitarbeit/popolupo-gg-korrekturen`, auf K43c)
 
 - **„Mitwachsend“:**

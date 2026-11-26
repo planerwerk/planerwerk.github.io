@@ -18,7 +18,7 @@ const res=await pg.evaluate(()=>{const out=[];
    const t0=performance.now();let steps=0;
    lgVor=myT().lg;while(S.season<2028&&steps<500){steps++;
     try{const r=T();
-     if(r<0.12){const c=S.ausland&&T()<0.3?S.ausland.pl:S.pl.filter(p=>p.team!==S.my&&p.team>=-1);const p=rnd(c);openP(p.id);const f=document.getElementById('fee');if(f)f.value=(askPrice(p)/1e6*(0.6+T()*0.8)).toFixed(1);document.getElementById('yrs').value=String(1+Math.floor(T()*5));offer(p.id);closeOv();}
+     if(r<0.12){const c=S.ausland&&T()<0.3?S.ausland.pl:S.pl.filter(p=>p.team!==S.my&&p.team>=-1);const p=rnd(c);openP(p.id);const f=document.getElementById('fee');if(f)f.value=(askPrice(p)/1e6*(0.6+T()*0.8)).toFixed(1);const y=document.getElementById('yrs'),jahre=String(1+Math.floor(T()*5));if(y)y.value=jahre;if(f&&y)offer(p.id);closeOv();} /* Lauf 11: nicht jede Spielerkarte hat ein Angebotsformular */
      else if(r<0.17){const p=rnd(squad(S.my));if(p){openP(p.id);const a=document.getElementById('ask');if(a){a.value=(value(p)/1e6*(0.7+T())).toFixed(1);setListed(p.id,1);}closeOv();}}
      else if(r<0.22){if(S.offers.length)acceptOffer(0);}
      else if(r<0.25){loan(rnd([1,5,-1,-99]));}
