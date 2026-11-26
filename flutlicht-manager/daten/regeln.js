@@ -271,6 +271,11 @@ const REGELN={
       // Fanstimmung beim Verkauf des Namens (K24 §6): −3 − 3 × Fankultur (K27d, fankulturWirkung 0 bis 1), also −3 bis −6; nicht bei einer Verlängerung.
       // Der Name ist erfunden: erstes Wort der Firma und ein Wort aus worte (ohne Zufall aus dem Firmennamen).
       stadion:{fans:-3,fansKultur:-3,worte:['Arena','Park','Stadion']},
+      // K24e Nachverhandeln (26.11., K24 §4 Nr. 2 und §6, vorläufig): Du forderst +5 bis +20 % auf ein offenes Angebot. Jedes Angebot hat einen verdeckten Spielraum
+      // (gewürfelt je Saison, Fläche und Firma, 3–15 %). Liegt die Forderung darin, unterschreibt der Sponsor sofort zum höheren Betrag (Fixum und Siegprämie).
+      // Sonst lehnt er ab und zieht mit absprung.nah (bis grenze über dem Spielraum) oder absprung.weit zurück, nach runden Absagen sicher.
+      // Das letzte normale Angebot einer Fläche bleibt immer stehen (dann ohne weitere Verhandlung), damit nie nur der umstrittene Geldgeber übrig ist.
+      verhandeln:{stufen:[0.05,0.10,0.15,0.20],spielraum:[0.03,0.15],runden:3,absprung:{nah:0.15,weit:0.5,grenze:0.05}},
       namen:{ausruester:['Falkner Sport','Sprintwerk','Kranich Teamwear','Nordlicht Athletics','Bergfalke Sport','Tiedemann Sportswear'],
         aermel:['Moorland Versicherung','Weserblick Immobilien','Albtrauf Software','Uferwerk Logistik','Sonnhalde Energie','Grünfeld Mobilfunk'],
         stadion:['Kesselberg Energie','Lindenhof Versicherung','Brückner Bau','Talgrund Bank','Möwenwerk Logistik','Sternquell Telekom']},
