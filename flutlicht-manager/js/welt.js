@@ -16,7 +16,8 @@ const sponsorBasis=t=>{const P=RF.sponsor;return Math.round(P.basis*Math.exp(P.s
 // Schwierigkeit (K02 §5.4): Spielstände ohne Angabe gelten als „Normal“
 const stufe=()=>REGELN.schwierigkeit.stufen[S.stufe]||REGELN.schwierigkeit.stufen[REGELN.schwierigkeit.standard];
 function stufeAnwenden(k){S.stufe=REGELN.schwierigkeit.stufen[k]?k:REGELN.schwierigkeit.standard;const St=stufe(),t=myT();t.cash=Math.round(t.cash*St.konto);
-  if(!St.erinnerungen){S.einst=S.einst||{aus:{}};S.einst.aus=S.einst.aus||{};Object.keys(RK.erinnerungen).forEach(e=>S.einst.aus[e]=1);}setTarget();}
+  if(!St.erinnerungen){S.einst=S.einst||{aus:{}};S.einst.aus=S.einst.aus||{};Object.keys(RK.erinnerungen).forEach(e=>S.einst.aus[e]=1);}setTarget();
+  if(typeof euOhneClStart==='function')euOhneClStart();} // Leicht: keine Champions League, auch nicht in der ersten Saison (K43)
 // TV-Gelder (K23 §5.1, K23c): Säulenmodell, Saisonbetrag je Verein einmal je Saison und Ligazusammensetzung berechnet (S.tvS), ohne Zufall, ausgezahlt je Ligaspiel.
 // Fünfjahreswertung: t.tvw = Punkte der letzten Saisons (jüngste zuerst, saison.js), t.tv0 = Startpunkte nach Liga und Ansehen für fehlende Saisons.
 function tvPunkteStart(){const off={};let n=0;LIGEN.forEach(lg=>{off[lg]=n;n+=lgIds(lg).length;});
@@ -112,7 +113,7 @@ function targetText(lg,t){if(lg===1)return t===1?'Deutsche Meisterschaft':t<=4?'
 function setTarget(){LIGEN.forEach(lg=>S.teams.filter(t=>t.lg===lg).sort((a,b)=>b.rep-a.rep).forEach((t,i)=>t.expPos=i+1));const lg=myT().lg,r=targetFor(myT().expPos,lg);let z=lg>=2?Math.max(RV.ziel.unterhalbMindestens,r):r;
   // Schwierigkeit: Ziel einen Platz leichter oder strenger, nie schlechter als das schlechteste Ziel der Liga und nie besser als das beste (1. Liga Platz 1, sonst Platz 2)
   if(stufe().ziel)z=clamp(z+stufe().ziel,lg>=2?Math.min(z,RV.ziel.unterhalbMindestens):1,Math.max(z,RV.ziel.schlechtester[lg]));S.target=z;nebenzieleSetzen();zielgespraechStart();} // Nebenziele mit dem Saisonziel (K28 §5.7, U12b, js/vorstand.js)
-function sponsOffers(){const t=myT(),SP=RF.sponsor;const b=sponsorBasis(t)*(RF.werbung?RF.werbung.anteil.brust:1)*werbFaktor(); /* Brust: Anteil am Grundbetrag der Werbung, daneben Ausrüster, Ärmel (K24a) und weitere Partner (K23c); Werbewert (K24b) */const ns=shuffle(SPONSOREN.slice());const r=v=>Math.round(v/1000)*1000;
+function sponsOffers(){const t=myT(),SP=RF.sponsor;const b=sponsorBasis(t)*(RF.werbung?RF.werbung.anteil.brust:1)*werbFaktor()*(stufe().sponsor||1); /* Schwierigkeit (K43): Leicht höhere, Schwer niedrigere Angebote */ /* Brust: Anteil am Grundbetrag der Werbung, daneben Ausrüster, Ärmel (K24a) und weitere Partner (K23c); Werbewert (K24b) */const ns=shuffle(SPONSOREN.slice());const r=v=>Math.round(v/1000)*1000;
   S.sponsOffers=[...SP.angebote.map((a,i)=>({name:ns[i],base:r(b*a.fix),win:a.sieg?r(b*a.sieg):0,yrs:a.jahre,info:a.info})),werbUmstritten('brust',b)];werbVerlaengerung('brust',S.sponsOffers);sponsorAuto();werbungOffen();} /* viertes Angebot: umstrittener Geldgeber (K24b) */ // in der Automatik wählt der Verein sofort (K36); freie Werbeflächen bekommen Angebote (K24a)
 function sponsorWaehlen(i){S.spons={...S.sponsOffers[i]};S.sponsOffers=null;news(`Sponsorvertrag unterschrieben: ${S.spons.name}.`,'good');werbUnterschrieben('brust');}
 function pickSponsor(i){if(!darf('sponsor','sponsorOderPreis'))return;sponsorWaehlen(i);save();render();}

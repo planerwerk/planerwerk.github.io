@@ -290,6 +290,37 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 26.11.2026: K43 Schwierigkeit (Zweig `mitarbeit/popolupo-t10-korrekturen`)
+
+- **Neu, vorläufig, nach deiner Vorgabe vom 26.11.:**
+  - Leicht:
+    - Sponsorangebote ×1,2 (Brust, Ausrüster, Ärmel);
+    - Infokarten, die nur schlecht ausgehen, kommen nicht;
+    - +15 Punkte Glück beim Ausgang von Karten;
+    - keine Champions League (Europa League statt dessen, auch in der ersten Saison vor der Auslosung);
+    - ein Gönner statt Insolvenz, ohne Punktabzug, mit Vertrauen −10.
+  - Schwer: Sponsorangebote ×0,85, böse Infokarten ×1,5 so oft, −10 Punkte Glück.
+  - Normal bleibt wie bisher.
+- **Konzept:** `konzepte/K43-schwierigkeit.md` mit Studien und Quellen. Gegen Langeweile bei Titeln (Gehälter, Abwerben, Erwartungen) und eine Stufe „Mitwachsend“, beides nur als Konzept.
+- **Grundsatz** in K02 §5.4 angepasst: gleich viele Würfe, aber andere Grenzen und anderes Geld.
+- **Tests:** `tests/schwierigkeit.js`. Der Gleichschritt Leicht gegen Schwer läuft jetzt ohne die Regeln aus K43. Neu sind Prüfungen für Sponsoren, böse Karten, Glück, Champions League und Gönner. Ausführen beim Tester (Lauf 11).
+
+### 26.11.2026: Testlauf 10 aufgearbeitet (Zweig `mitarbeit/popolupo-t10-korrekturen`, auf W5e10)
+
+- **Ursache der meisten roten Tests:** `REGELN` war ganz eingefroren, auch die Schalter in `REGELN.experimente`. Die Schalter wirkten deshalb im Spiel nie, und Tests, die Regelwerte verstellen, scheiterten still oder mit TypeError.
+  - Jetzt bleiben die Schalter beschreibbar.
+  - Tests heben das Einfrieren mit `__REGELN_OFFEN` auf (`tests/sim.js`).
+- **Prüfregeln:** Der Punktestand zählt Punktabzüge mit. Ein geteilter Pokaltag zählt erst am zweiten Tag als vorbei.
+- **Zwei Transfer-Tests berichtigt:** Mondpreise ohne Beziehung, unverkäufliche Spieler nicht als Kandidat.
+- **seed:** legt den Trainervertrag an wie `newGame`, damit ein Neuladen dieselben Ergebnisse bringt.
+- **Spielplan:** 72 Stunden nach einem Europapokalspiel auch für späte Pokaltermine (T8.2). Kann ein Ligaspiel nicht verlegt werden, wird es nachgezogen (`ligaNachziehen`).
+- **Noch offen (Kalibrierung aus Lauf 10):**
+  - welt: negative Konten, Sternejagd T9.2, Trainerwechsel, Ablöse-Änderungen;
+  - medizin: Rückfall, Kreuzband;
+  - kabine: Wechselwunsch;
+  - kalibrierung: eine gelbe Zahl;
+  - K23c: Salden.
+
 ### 26.11.2026: W5e10 Intro auf dem Startbildschirm (Zweig `mitarbeit/popolupo-w5e10-intro`, auf den Korrekturen GC)
 
 - **Neu:** Auf dem Startbildschirm gehen die vier Flutlichtmasten nacheinander an (Lampen, Schein, Lichtkegel, kurzes Flackern), reines CSS. Still bei Sequenzen „aus“ oder „weniger Bewegung“. Nur Anzeige.

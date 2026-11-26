@@ -1076,12 +1076,19 @@ const REGELN={
     ansprache:{loben:{sv:0.3},motivieren:{wirkung:0.02},fordern:{kaempfer:0.03,empfindlich:-0.02},beruhigen:{fouls:0.8,patzer:0.8},augenzwinkernd:{wirkung:0.01},unpassend:-0.5,abnutzungSpiele:3,wirkt:{ab:2,glaub:1}}, // wirkt (K05 §8, K05g, 25.11., popolupo, vorläufig): nach „Fordern“ die zweite Halbzeit um ab Tore besser als die erste: Glaubwürdigkeit + glaub
     ki:{muedeUnter:65,wechselVon:55,wechselBis:86,chanceJeMinute:0.13,frischAb:58,frischUnter:93,toleranz:6,gelbAb:60,jeGelegenheit:2,rueckstandAb:60,alleNachVorn:80,fuehrungAb:75},
     druckleiste:{minuten:5,gross:3,halb:1,ecke:0.5}},
-  // Schwierigkeit (K02 §5.4): ändert nur Bedingungen, Information und Hilfen. Werte und Würfel im Spiel sind auf allen Stufen gleich.
+  // Schwierigkeit (K02 §5.4, K43): ändert Bedingungen, Information, Hilfen und Geld. Spielerwerte sind auf allen Stufen gleich, gewürfelt wird gleich oft,
+  // nur einige Grenzen verschieben sich (Glück bei Karten, böse Karten).
   // ziel: Saisonziel um so viele Plätze leichter (+) oder strenger (−). sterneGenau: Talentsterne eigener Spieler sofort genau. sterneWochen: Faktor auf die Zeit, bis sie genau sind.
   schwierigkeit:{standard:'normal',
-    stufen:{leicht:{name:'Leicht',text:'mehr Geld, geduldiger Vorstand, genaue Talentsterne',konto:1.5,kredit:1.5,entlassenUnter:5,schonfrist:10,ziel:1,sterneGenau:true,sterneWochen:1,erinnerungen:true},
-      normal:{name:'Normal',text:'so, wie das Spiel gedacht ist',konto:1,kredit:1,entlassenUnter:12,schonfrist:6,ziel:0,sterneGenau:false,sterneWochen:1,erinnerungen:true},
-      schwer:{name:'Schwer',text:'weniger Geld, ungeduldiger Vorstand, strengeres Ziel, keine Erinnerungen',konto:0.7,kredit:0.6,entlassenUnter:18,schonfrist:4,ziel:-1,sterneGenau:false,sterneWochen:1.5,erinnerungen:false}}},
+    // Seit K43 (26.11.2026, popolupo, vorläufig), je Stufe: sponsor als Faktor auf deine Sponsorangebote, kartenGlueck als Zuschlag auf die Chance des guten Ausgangs
+    // in Ereigniskarten, kartenNegativ als Faktor auf die Chance von Infokarten, die für dich nur schlecht ausgehen (0 heißt, sie fallen nach dem Wurf weg), ohneCL heißt, dein
+    // Verein spielt statt Champions League Europa League, goenner heißt, bei einer Insolvenz zahlt ein Gönner die Schulden ohne Punktabzug (Vertrauen goennerVertrauen).
+    stufen:{leicht:{name:'Leicht',text:'mehr Geld und bessere Sponsoren, geduldiger Vorstand, keine bösen Überraschungen, ein Gönner rettet vor der Pleite; Champions League erst ab Normal',konto:1.5,kredit:1.5,entlassenUnter:5,schonfrist:10,ziel:1,sterneGenau:true,sterneWochen:1,erinnerungen:true,
+        sponsor:1.2,kartenGlueck:0.15,kartenNegativ:0,ohneCL:true,goenner:true,goennerVertrauen:-10},
+      normal:{name:'Normal',text:'so, wie das Spiel gedacht ist',konto:1,kredit:1,entlassenUnter:12,schonfrist:6,ziel:0,sterneGenau:false,sterneWochen:1,erinnerungen:true,
+        sponsor:1,kartenGlueck:0,kartenNegativ:1,ohneCL:false,goenner:false},
+      schwer:{name:'Schwer',text:'weniger Geld und Sponsoren, ungeduldiger Vorstand, strengeres Ziel, öfter Pech, keine Erinnerungen',konto:0.7,kredit:0.6,entlassenUnter:18,schonfrist:4,ziel:-1,sterneGenau:false,sterneWochen:1.5,erinnerungen:false,
+        sponsor:0.85,kartenGlueck:-0.1,kartenNegativ:1.5,ohneCL:false,goenner:false}}},
   vorstand:{
     staerkerAb:5,                    // Gegner gilt als stärker/schwächer ab diesem Unterschied im Ansehen
     sieg:{staerker:4,sonst:2.5},

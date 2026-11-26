@@ -902,3 +902,22 @@ Neu ausgerichtet nach deiner Vorgabe vom 25.11. Im Einzelnen in K35b §13, K39, 
 - **Name:** bleibt „Flutlicht Manager“, Leitspruch „Bratwurst. Meisterschale. Herzblut.“ (BMH).
 
 **Für dich:** KI-Bilder über Hugging Face nutzen (Konto und MCP-Server nötig)? Musik ja oder nein? Welcher BMH-Leitspruch?
+
+## K43 Schwierigkeit (26.11.), vorläufig von popolupo, gebaut ohne Testlauf
+
+Nach deiner Vorgabe vom 26.11. Im Einzelnen in `konzepte/K43-schwierigkeit.md`, mit Quellen.
+
+- **Drei Stufen bleiben** (Leicht, Normal, Schwer), Wahl am Spielstart. „Normal“ verhält sich wie bisher, alte Spielstände gelten als „Normal“.
+- **Leicht:**
+  - Sponsorangebote ×1,2;
+  - böse Infokarten kommen nicht;
+  - +15 Punkte Glück bei Karten;
+  - keine Champions League (Europa League statt dessen, auch in der ersten Saison);
+  - ein Gönner statt Insolvenz (kein Punktabzug, Vertrauen −10).
+- **Schwer:** Sponsorangebote ×0,85, böse Infokarten ×1,5 so oft, −10 Punkte Glück bei Karten.
+- **Grundsatz neu** (K02 §5.4): Spielerwerte und Spielstärke gleich, gleich viele Würfe, nur einige Grenzen und das Geld verschieben sich. Kein Gummiband.
+- **Nur Konzept:**
+  - Folgen von Titeln in Folge (Gehälter, Abwerben, Erwartungen), immer mit Meldung;
+  - Stufe „Mitwachsend“, die nur mit Titeln steigt, nicht mit Aufstiegen.
+
+**Für dich:** Reicht das, oder soll „Mitwachsend“ gleich gebaut werden?

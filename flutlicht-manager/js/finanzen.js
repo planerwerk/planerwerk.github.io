@@ -43,6 +43,9 @@ function insolvenzPruefen(){const t=myT(),L=lzpS(),I=RFP.insolvenz;if(L.unter!=n
   if((t.fu||0)<I.monate||L.ins===S.season||t.fins===S.season||S.phase!=='play')return; /* t.fins: Sperre am Verein, überlebt einen Jobwechsel (Prüfung ET1) */
   /* Nach dem letzten Spieltag der eigenen Liga gilt der Abzug für die neue Saison (Prüfung ER1: sonst zwischen den Relegationsspielen; ES1: sofort gebucht statt aufgeschoben) */
   const s=insolvenzSaison(t);L.ins=s;t.fins=s;t.fu=0;
+  /* Schwierigkeit (K43, 26.11., vorläufig): Auf Leicht zahlt ein Gönner die Schulden, kein Punktabzug, kleinerer Vertrauensverlust */
+  if(stufe().goenner){S.trust=clamp(S.trust+(stufe().goennerVertrauen||0),0,100);money('Schuldenschnitt',-t.cash);
+    news(`Ein Gönner rettet ${t.name}: Er übernimmt die Schulden, bevor es zur Insolvenz kommt. Kein Punktabzug, aber der Vorstand erwartet, dass das nicht wieder vorkommt.`,'bad');return;}
   const A=S.abzug||(S.abzug={}),a=A[s]||(A[s]={});a[S.my]=(a[S.my]||0)+I.punkte;S.trust=clamp(S.trust+I.vertrauen,0,100);money('Schuldenschnitt',-t.cash);
   news(`Insolvenz: ${t.name} ist zahlungsunfähig. ${I.punkte} Punkte Abzug${s>S.season?' in der neuen Saison':''}, die Gläubiger verzichten auf die Schulden, der Kredit bleibt. Der Vorstand ist entsetzt.`,'bad');}
 // Saison des Punktabzugs: die laufende, nach dem letzten Spieltag der eigenen Liga die nächste (ER1, ES1)

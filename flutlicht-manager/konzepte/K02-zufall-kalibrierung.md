@@ -167,7 +167,13 @@ Schwierigkeit ändert nur **Bedingungen, Information und Hilfen**:
 | Klugheit der Computer-Vereine (K31) | gemütlich | normal | clever |
 
 - **Klugheit der Computer-Vereine** heißt: wie gut sie Kader planen, Taktik wählen und verhandeln. Sie bekommen nie bessere Spieler oder Würfel.
-- Werte und Würfel im Spiel selbst sind auf allen Stufen gleich. Ein Spielstand auf „Schwer“ simuliert dieselben Ergebnisse wie auf „Leicht“, wenn man dieselben Entscheidungen trifft.
+- Spielerwerte und Spielstärke sind auf allen Stufen gleich, und es wird gleich oft gewürfelt. Seit **K43** (26.11.2026, vorläufig) verschieben sich einige Grenzen, gegen die gewürfelt wird, dazu das Geld:
+  - Sponsorangebote ×1,2 auf Leicht, ×0,85 auf Schwer;
+  - Glück bei Ereigniskarten +15 oder −10 Punkte;
+  - böse Infokarten fallen auf Leicht weg und kommen auf Schwer ×1,5 so oft;
+  - auf Leicht keine Champions League (Europa League statt dessen);
+  - auf Leicht ein Gönner statt Insolvenz.
+- Ohne diese Regeln aus K43 simuliert ein Spielstand auf „Schwer“ dieselben Ergebnisse wie auf „Leicht“, wenn man dieselben Entscheidungen trifft (geprüft in tests/schwierigkeit.js).
 
 ## 6. Hebel des Spielers
 

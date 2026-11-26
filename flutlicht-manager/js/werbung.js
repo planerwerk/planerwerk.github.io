@@ -19,7 +19,7 @@ function werbUmstritten(f,b){const U=RF.werbung.umstritten,best=Math.max(...RF.s
 // Grundbetrag je Spieltag für eine Fläche: wie bei der Brust Ansehen² × Ligawert, davon der Anteil der Fläche
 const werbBasis=(f,t=myT())=>sponsorBasis(t)*RF.werbung.anteil[f]; // Grundbetrag der Werbung (K23c) mal Anteil der Fläche
 // Angebote für eine freie Fläche, eigener Zufallsstrom (die Namen sind das einzige Zufällige)
-function werbAngebote(f){const b=werbBasis(f)*werbFaktor(),r=v=>Math.round(v/1000)*1000;
+function werbAngebote(f){const b=werbBasis(f)*werbFaktor()*(stufe().sponsor||1),r=v=>Math.round(v/1000)*1000; // Schwierigkeit (K43) wie bei der Brust
   return mitStrom(strom('werbung',S.season,f),()=>{const ns=shuffle(RF.werbung.namen[f].slice());return [...RF.sponsor.angebote.map((a,i)=>({name:ns[i%ns.length],base:r(b*a.fix),win:a.sieg?r(b*a.sieg):0,yrs:a.jahre,info:a.info})),werbUmstritten(f,b)];});}
 // Für jede freie Fläche Angebote bereitstellen (aufgerufen aus sponsOffers, also beim Start, nach einem Jobwechsel und wenn ein Vertrag ausläuft)
 function werbungOffen(){S.werbung=S.werbung||{};S.werbOffers=S.werbOffers||{};werbFlaechen().forEach(f=>{if(!S.werbung[f]&&!S.werbOffers[f]){S.werbOffers[f]=werbAngebote(f);werbVerlaengerung(f,S.werbOffers[f]);}});werbungAuto();}

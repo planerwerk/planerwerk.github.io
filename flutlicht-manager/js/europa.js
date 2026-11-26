@@ -92,6 +92,14 @@ function euDeutsche(sm,fuenf){const out={cl:[],el:[],ecl:[]};
 function euTitelDeutsch(de,vor){if(!vor)return;const rang=w=>EU_WB.indexOf(w);
   EU_WB.forEach(wb=>{const id=vor[wb];if(id==null||!euDe(id))return;const ziel=REU.wb[wb].titel,jetzt=EU_WB.find(w=>de[w].includes(id));
     if(jetzt&&rang(jetzt)<=rang(ziel))return;if(jetzt)de[jetzt]=de[jetzt].filter(x=>x!==id);de[ziel].push(id);});}
+// Schwierigkeit (K43, 26.11., vorläufig): Auf „Leicht“ spielt dein Verein nicht in der Champions League. Sein Platz geht an den ersten deutschen Verein aus der Europa League,
+// dein Verein spielt dafür Europa League. Die Zahl der Plätze bleibt gleich, nur die Zuordnung tauscht. Ohne Zufall.
+function euOhneClAufLeicht(dt){if(typeof S==='undefined'||!S||!stufe().ohneCL||!dt.cl.includes(S.my))return;const e=dt.el.find(x=>x!==S.my);dt.cl=dt.cl.filter(x=>x!==S.my);
+  if(e!=null){dt.el=dt.el.filter(x=>x!==e);dt.cl.push(e);}dt.el=[S.my,...dt.el.filter(x=>x!==S.my)];}
+// Erste Saison (echte Starter 2026/27): Die Welt steht schon, bevor du einen Verein wählst. stufeAnwenden tauscht deshalb hier, solange noch nicht ausgelost ist.
+function euOhneClStart(){if(!euAktiv()||!stufe().ohneCL||S.eu.cl.lp||S.eu.el.lp)return;const cl=S.eu.cl.t,el=S.eu.el.t;if(!cl.includes(S.my))return;
+  const e=el.find(x=>x!==S.my&&euDe(x))??el.find(x=>x!==S.my);S.eu.cl.t=cl.filter(x=>x!==S.my);S.eu.el.t=[S.my,...el.filter(x=>x!==S.my&&x!==e)];
+  if(e!=null)S.eu.cl.t=[...S.eu.cl.t.filter(euDe),e,...S.eu.cl.t.filter(x=>!euDe(x))];}
 // Auslandsvereine: je Land nach Ansehen plus Zufall, zuerst die Champions League. Fehlen Plätze, die Nächsten aus allen Ländern. Titelverteidiger sind fest dabei.
 function euAuslandWaehlen(bedarf,vor,plus=[]){const Z=REU.zufall,sc=(S.ausland?S.ausland.v:[]).map((v,i)=>({id:AV0+i,land:v.land,w:v.rep+(R()*2-1)*Z,fest:false}));
   const used=new Set(),out={cl:[],el:[],ecl:[]},nimm=(wb,x)=>{used.add(x.id);out[wb].push(x);};
@@ -104,7 +112,7 @@ function euAuslandWaehlen(bedarf,vor,plus=[]){const Z=REU.zufall,sc=(S.ausland?S
 // Saisonwechsel (saison.js newSeasonLauf) und neue Welt (welt.js buildWorld, ohne sm): Teilnehmer aller drei Wettbewerbe, eigener Strom 'europa'
 function europaAnlegen(sm){const vor=S.eu&&S.eu.titel?S.eu.titel:null,wv=sm&&S.eu?euLaenderwertung(S.eu).map(x=>({land:x.land,w:x.w})):[],plus=wv.slice(0,REU.wertung.plaetze).map(x=>x.land);
   S.eu=null;if(!S.ausland||!S.ausland.v.length)return;
-  mitStrom(strom('europa',S.season),()=>{const dt=euDeutsche(sm,plus.includes('GER'));euTitelDeutsch(dt,vor);
+  mitStrom(strom('europa',S.season),()=>{const dt=euDeutsche(sm,plus.includes('GER'));euTitelDeutsch(dt,vor);euOhneClAufLeicht(dt);
     const a=euAuslandWaehlen({cl:36-dt.cl.length,el:36-dt.el.length,ecl:36-dt.ecl.length},vor,plus);
     S.eu={s:S.season,v:1,vor,wv,plus,titel:{cl:null,el:null,ecl:null},cl:{t:[...dt.cl,...a.cl],lp:null,ko:{}},el:{t:[...dt.el,...a.el],lp:null,ko:{}},ecl:{t:a.ecl.slice(),lp:null,ko:{},q:null}};
     // Der deutsche Starter der Conference League spielt die Play-off-Runde der Qualifikation gegen einen der besten übrigen Auslandsvereine (K37 §4.2)

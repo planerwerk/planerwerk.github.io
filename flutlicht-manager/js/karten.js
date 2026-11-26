@@ -258,13 +258,17 @@ const kartenSchalterAn=c=>!c.nurMit||(c.nurMit==='laenderspiele'&&lsAn());
 function kartenWoche(d){if(S.phase!=='play'||S.fired)return;const K=karten(),W=kartenBudget(d),heute=absTag(d);
   for(const c of shuffle(KARTEN.filter(c=>!c.nurKette&&kartenSchalterAn(c)))){const hit=R()<kartenChance(c);if(!hit)continue; /* Folgekarten kommen nur über kartenKette (K30c) */
     if(c.stufe==='sehrSelten'&&K.einmal[c.id])continue;const f=AUSLOESER[c.ausloeser];if(!f)continue;const b=f();if(!b)continue;
+    if(!(stufe().kartenNegativ>0)&&karteNurSchlecht(c))continue; /* Schwierigkeit (K43): auf Leicht fallen Infokarten, die nur schlecht ausgehen, nach dem Wurf weg */
     const key=kartenSchluessel(c,b); /* Mitarbeiter als Beteiligter (Prüfung ED3), je Mitarbeiter ohne den Verein (EE3) */if(K.sp[key]!=null&&heute-K.sp[key]<(c.sperrTage||RKT.sperrTage))continue;
     let halt=false;if(c.art==='entscheidung')halt=entscheidungImBudget(c,W,d);
     let stumm=false;if(halt)kartenHaltZaehlen(c,W);else if(c.art==='info'){if(W.info>=kartenDichte().info&&!c.immer){if(!c.wirkung)continue;stumm=true;}else W.info++;} /* immer: Meldung auch über der Grenze (Prüfung ER3, Punktabzug) */ /* Entscheidungen ohne Halt entscheidet der Co-Trainer, sie fallen nicht weg (Prüfung DY8) */
     K.sp[key]=heute;if(c.stufe==='sehrSelten')K.einmal[c.id]=1;kartenZeigen(c,b,d,halt,stumm);}} /* Info mit Wirkung über der Grenze: Wirkung ja, Meldung nein (Prüfung EH3) */
 // Chance je Woche (K30 §5.4, K30d): Anlasskarten mit eigener chance (im Katalog, 0 < chance ≤ 1), sonst nach der Seltenheitsstufe. Ein Würfel je Karte und Woche wie bisher.
 // Karten mit fanarbeit:true (Zuschauer-Vergehen, K09h, K25 §5) werden bei laufender Fanarbeit seltener (fanarbeitVergehen, marketing.js). Der Würfel bleibt derselbe.
-const kartenChance=c=>(c.chance!=null?c.chance:1/(RKT.seltenheit[c.stufe]*RKT.wochenJeSaison))*(c.fanarbeit?fanarbeitVergehen():1);
+const kartenChance=c=>Math.min(1,(c.chance!=null?c.chance:1/(RKT.seltenheit[c.stufe]*RKT.wochenJeSaison))*(c.fanarbeit?fanarbeitVergehen():1)*(stufe().kartenNegativ>0&&karteNurSchlecht(c)?stufe().kartenNegativ:1));
+// Schwierigkeit (K43, 26.11., vorläufig): Infokarte, die für dich nur schlecht ausgeht (jede Wirkung senkt einen dieser Werte oder ist ein Verfahren). Leicht: fällt weg, Schwer: häufiger.
+const KARTEN_WERTE=['stimmung','stimmungAlle','zusammenhalt','glaub','vertrauen','ruf','bezDu','geld','fans','zuschauer'];
+const karteNurSchlecht=c=>c.art==='info'&&Array.isArray(c.wirkung)&&c.wirkung.length>0&&c.wirkung.every(w=>w&&(w.art==='verfahren'||(KARTEN_WERTE.includes(w.art)&&(+w.wert||0)<0)));
 // Veränderung der Stärke seit dem jüngsten Monatseintrag dieser Saison, der mindestens RKT.entwicklung.tage alt ist (K03c); ohne Eintrag 0
 const kartenStaerkePlus=p=>{const T=RKT.entwicklung.tage,a=(p.mvl||[]).filter(e=>e[0]===S.season&&S.tag-e[1]>=T).pop();return a?Math.round(p.str)-a[2]:0;};
 // Merker deiner letzten Pflichtspiele für Karten (K05 §8, K05c, ablauf.js nach den Spielen). S.letzt = das letzte, S.letzte = die Spiele der letzten RKT.spiel.nachTage Tage
@@ -339,7 +343,7 @@ function karteWaehlen(n,i){const k=karten().offen[n];if(!k)return;if(!darf('erei
 function kartenAuto(d){const K=S.karten;if(!K||!K.offen.length)return;K.offen.filter(k=>k.tag<=d||k.s!==S.season).forEach(k=>{const c=karteVon(k.id);if(c)kartenEntscheiden(k,c.auto,'spaet');else K.offen=K.offen.filter(x=>x!==k);});}
 // Erlaubte Wirkungen (K30 §3.2). Rückgabe: Text zum Ausgang (bei Wirkungen mit Chance) oder ''
 // dann (Prüfung EE2, EE5, EE6): Folgewirkungen nur, wenn die Wirkung geklappt hat (nur bei KARTEN_MIT_ERFOLG), dazu der Text gut. Sonst der Grund des Scheiterns.
-function kartenWirkung(w,b,c){let wert=w.wert,txt='',erfolg=true;if(w.chance!=null){const ok=R()<w.chance;wert=ok?w.wert:(w.schlecht||0);txt=ok?(w.gut||''):(w.schlechtText||'');}
+function kartenWirkung(w,b,c){let wert=w.wert,txt='',erfolg=true;if(w.chance!=null){const ok=R()<Math.min(1,Math.max(0,w.chance+(stufe().kartenGlueck||0))); /* Schwierigkeit (K43): Glück im guten Ausgang, gleicher Würfel */wert=ok?w.wert:(w.schlecht||0);txt=ok?(w.gut||''):(w.schlechtText||'');}
   const p=b.spieler!=null?PIX.get(b.spieler):null;
   if(w.art==='stimmung'){if(p&&p.team===S.my)stimmungAendern(p,wert);}
   else if(w.art==='stimmungAlle')squad(S.my).forEach(x=>stimmungAendern(x,wert));
