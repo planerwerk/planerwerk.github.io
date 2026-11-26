@@ -897,7 +897,8 @@ const REGELN={
     arten:{prellung:{name:'Prellung',g:'prellung',anteil:0.20,tage:[1,7],k:1,spritzen:true},
       // Zerrung: rueckfall 0,095 statt 0,12 und Kreuzband: anteil 0,006 statt 0,01 (26.11., vorläufig). Gemessen seit U7b immer über dem Ziel:
       // Rückfall nach Zerrung 15 bis 16 % (Ziel 10–15 %), Kreuzbandrisse in der 1. Liga 9,5 bis 10 je Saison (Ziel 3–8). Gesenkt im Verhältnis zur Mitte des Ziels.
-      zerrung:{name:'Zerrung im Oberschenkel',g:'muskel',anteil:0.25,tage:[8,30],k:0,rueckfall:0.095},
+      // Zerrung: anteil 0,22 statt 0,25 (Lauf 19, vorläufig): Der gemessene Anteil lag mit den Rückfällen genau auf der Obergrenze 25 % (Ziel 20–25 %).
+      zerrung:{name:'Zerrung im Oberschenkel',g:'muskel',anteil:0.22,tage:[8,30],k:0,rueckfall:0.095},
       faserriss:{name:'Muskelfaserriss',g:'muskel',anteil:0.12,tage:[21,49],k:0,rueckfall:0.15},
       baenderdehnung:{name:'Bänderdehnung im Sprunggelenk',g:'band',anteil:0.12,tage:[4,21],k:0.6,rueckfall:0.10,spritzen:true},
       baenderriss:{name:'Bänderriss im Sprunggelenk',g:'band',anteil:0.05,tage:[28,63],k:0.8,rueckfall:0.08},
