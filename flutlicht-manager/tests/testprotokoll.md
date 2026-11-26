@@ -20,6 +20,7 @@ Node.js 22, Playwright mit Chromium, für `tests/ui-zugang.js` axe-core 4.10.2 (
 - **Windows-App** (auf Wunsch des Nutzers): `desktop/` mit Electron, Spielstand als Datei über `speicherLesen`/`speicherSchreiben` (`js/hilfen.js`, im Browser weiter `localStorage`), Test `tests/desktop.js` (11 ✓, braucht `npm install` in `desktop/` und `xvfb-run`), Installer über `.github/workflows/windows-installer.yml` (erster Lauf erfolgreich). Siehe `desktop/LIESMICH.md`.
 - **K24d Stadionname** nach euren Antworten in K24 §12 umgesetzt (`js/werbung.js`, `RF.werbung.anteil.stadion` 0,12, `partner` 0,25, `RF.werbung.stadion`, Posten „Stadionname“ in `RFP.laufend`). `tests/werbung.js` Nr. 22 bis 26 grün, `finanzen`, `lizenz`, `marketing`, `fans` grün. Für die KURZ-Zeilen im `finanzmodell`: Der Posten heißt `Stadionname` (nur dein Verein, Computer-Vereine unverändert).
 - **K24e Nachverhandeln** (`werbVerhandeln`, Fenster `werbungVerhandlungsFenster`, `RF.werbung.verhandeln`), `tests/werbung.js` Nr. 27 bis 30 grün. Eure Korrekturen GK (762d613) sind zusammengeführt, die Konflikte mit der Windows-App in `hilfen.js`, `fenster.js` und `start.js` sind gelöst (beide Änderungen drin, `spielstand`, `ui-sicherung`, `desktop` grün).
+- **K24f** Ausstieg eines Partners unter 30 Zufriedenheit (nicht im Abstiegsjahr), `tests/werbung.js` Nr. 31.
 - **Begonnen bei Claude:** nichts weiter. K24 Rest (Bande und Partnerpool, Trainingskleidung, Verhandeln mit Reglern) bleibt vorgemerkt.
 ---
 

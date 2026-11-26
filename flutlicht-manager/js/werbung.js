@@ -57,6 +57,7 @@ function werbungSaisonende(sm){const Z=RF.werbung.zufriedenheit,t=myT(),me=S.my;
   const ww=S.mk&&S.mk.ww!=null&&typeof RMK!=='undefined'?S.mk.ww-t.rep*RMK.werbewert.startJeAnsehen:0;
   const d=clamp(Z.jePlatz*(sm.target-sm.pos),-Z.erfolgMax,Z.erfolgMax)+clamp((fanst(t)-RFS.start)*Z.fans,-Z.fansMax,Z.fansMax)+clamp(ww*Z.werbewert,-Z.werbewertMax,Z.werbewertMax)+(ab?Z.abstieg:0);
   werbFlaechenAlle().forEach(f=>{const c=werbVertrag(f);if(!c)return;c.z=clamp(Math.round((c.z!=null?c.z:Z.start)+d),0,100);
+    if(!ab&&c.z<Z.ausstiegUnter&&c.yrs>1){ /* im Abstiegsjahr gilt die Abstiegsklausel statt des Ausstiegs */c.yrs=1;c.ausstieg=1;news(`${c.name} (${werbTitel(f)}) ist unzufrieden (Zufriedenheit ${c.z}) und steigt zum Saisonwechsel über die Ausstiegsklausel aus.`,'bad');return;} // K24f
     if(ab&&c.yrs>1){const r=v=>Math.round(v*(1-Z.klausel)/1000)*1000;c.base=r(c.base);if(c.win)c.win=r(c.win);news(`Abstiegsklausel: ${c.name} (${werbTitel(f)}) zahlt ab der neuen Saison ${Math.round(Z.klausel*100)} % weniger.`,'bad');}});}
 // Skandal (K24 §5.4, K24b): zum Saisonwechsel je umstrittenem Vertrag mit 5 %, eigener Strom. Fans −10, danach darfst du kostenlos kündigen.
 function werbSkandale(){const U=RF.werbung.umstritten;werbFlaechenAlle().forEach(f=>{const c=werbVertrag(f);if(!istUmstritten(c)||c.skandal)return;

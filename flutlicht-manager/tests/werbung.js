@@ -191,4 +191,12 @@ const sm0=(S,pos,target,ab)=>({pos,target,down:ab?[S.my]:[],down2:[],down3:[],re
     const k=V.stufen.map((p,j)=>[p,j]).filter(([p])=>p<=sp).map(([,j])=>j).pop();if(k==null)continue;const b=o.base,r=ev('werbVerhandeln')('brust',i,k);erg=r&&r.ok&&S.spons&&S.spons.name===o.name&&S.spons.base>b&&!S.sponsOffers?'ok':'falsch';break;}
   pruef(erg==='ok'||erg==='','Nachverhandeln: auch die Trikotbrust, Zusage unterschreibt den Brustvertrag',erg||'kein Spielraum über 5 % bei diesem Seed');}
 
+// 31. Ausstieg (K24f): Fällt die Zufriedenheit zum Saisonende unter 30, endet ein längerer Vertrag mit dem Saisonwechsel, ohne Verlängerungsangebot; darüber läuft er weiter
+{const {S,F,ev}=welt(false),Z=ev('RF').werbung.zufriedenheit;F.sponsorWaehlen(2);F.werbungVorSpiel();ev('myT()').fanst=ev('RFS').start;
+  S.werbung.aermel.yrs=3;S.werbung.ausruester.yrs=3;S.werbung.aermel.z=40;S.werbung.ausruester.z=60;const name=S.werbung.aermel.name;
+  ev('werbungSaisonende')(sm0(S,18,4,false));const za=S.werbung.aermel.z,zr=S.werbung.ausruester.z,ya=S.werbung.aermel.yrs,yr=S.werbung.ausruester.yrs;
+  S.season++;F.werbungSaison();const weg=!S.werbung.aermel&&(S.werbOffers.aermel||[]).length>0&&!(S.werbOffers.aermel||[]).some(o=>o.ver),bleibt=!!S.werbung.ausruester&&S.werbung.ausruester.yrs===yr-1;
+  pruef(za<Z.ausstiegUnter&&zr>=Z.ausstiegUnter&&ya===1&&weg&&bleibt&&S.news.some(n=>n.t.includes(name)&&/Ausstiegsklausel/.test(n.t)),
+    'Ausstieg: unter 30 endet der Vertrag zum Saisonwechsel (ohne Verlängerung), darüber läuft er weiter; im Abstiegsjahr gilt stattdessen die Abstiegsklausel (Nr. 19)',`Ärmel ${za} (Laufzeit danach ${ya}), Ausrüster ${zr}`);}
+
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);
