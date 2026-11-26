@@ -234,9 +234,10 @@ function euTageVon(tid){const out=[];if(!euAktiv())return out;const P=euPlan();
   return out;}
 // Sicherheitsnetz für die 72 Stunden (Lauf 12): Jeden Tag die Europapokal-Termine der deutschen Vereine in 5 bis 12 Tagen prüfen und ein zu nahes Ligaspiel noch
 // rechtzeitig verlegen (ligaVerlegen ist idempotent). Nötig, weil Pokal, Nachziehen und Auslosungen in wechselnder Reihenfolge verlegen: Lauf 12 fand Liga am Sonntag
-// vor Europapokal am Dienstag. Ohne Zufall. Frühester neuer Termin zwei Tage nach heute.
+// vor Europapokal am Dienstag. Ohne Zufall. Nur auf einen freien Tag, frühestens übermorgen, ohne Notregel (Prüfung GI1, GI2): Spielt ein Verein dienstags Champions League
+// und sein Ligagegner donnerstags davor und danach Europapokal, gibt es keinen Tag mit 72 Stunden für beide. Dann bleibt der Termin, wie ihn die erste Verlegung gesetzt hat.
 function euPlanPruefen(d){if(!euAktiv()||!S.teams)return;const M=RWB.spielplan.mindestTage,von=d+M+2,bis=d+12;
-  S.teams.forEach(t=>{if(!t||t.lg>3||!aktiv(t))return;euTageVon(t.id).filter(x=>x>=von&&x<=bis).forEach(x=>ligaVerlegen(x,new Set([t.id]),'des Europapokals'));});}
+  S.teams.forEach(t=>{if(!t||t.lg>3||!aktiv(t))return;euTageVon(t.id).filter(x=>x>=von&&x<=bis).forEach(x=>ligaVerlegen(x,new Set([t.id]),'des Europapokals',{nurFrei:true,ab:d+2}));});}
 // 72 Stunden (K13 §3.5): Ligaspiele deutscher Teilnehmer neben einem Europapokalspiel verlegen
 function euVerlegen(wb,runde){const W=S.eu[wb],P=euPlan()[wb],plan=[];
   if(runde==='lp')(W.lp||[]).forEach(m=>plan.push([m[3],[m[0],m[1]]]));

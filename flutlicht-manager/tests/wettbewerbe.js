@@ -4,14 +4,14 @@ const {saisons,neueWelt}=require('./sim');
 const N=+(process.argv[2]||3),SEED=+(process.argv[3]||4),probleme=[],t0=Date.now();
 const pruef=(ok,text,wert)=>{console.log(`${ok?'✓':'✗'} ${text}${wert!=null?': '+wert:''}`);if(!ok)probleme.push(text+(wert!=null?' ('+wert+')':''));};
 const f1=x=>x.toFixed(1),pc=x=>(x*100).toFixed(0)+' %';
-const tage={},arten={},runde1=[],heimFehler=[],losZuSpaet=[],zweiteFehler=[],supercups=[];let losGeprueft=0,Wl=null;const W0=()=>Wl; // arten: Wettbewerb und Wochentag je Verein und Tag (Lauf 11)
+const tage={},arten={},gegner={},runde1=[],heimFehler=[],losZuSpaet=[],zweiteFehler=[],supercups=[];let losGeprueft=0,Wl=null;const W0=()=>Wl; // arten: Wettbewerb und Wochentag je Verein und Tag (Lauf 11)
 const {W,F}=saisons({n:N,seed:SEED,verein:6,vorher:(F,W)=>{Wl=W;},
   beiSaisonstart:S=>{S.teams.forEach(t=>{if(t.zweite>=0&&S.teams[t.zweite]&&S.teams[t.zweite].lg===t.lg&&t.lg<=3)zweiteFehler.push(`${S.season}: ${t.name}`);});},
   beiSpielen:(liste,S,o)=>{const am=id=>id>=1000||S.teams[id].lg>=3;
     // Relegation und Pokalfinale liegen im echten Kalender (Donnerstag, Samstag, Montag) so dicht, dass ein Verein in beiden dreimal in fünf Tagen spielt: ausgenommen
     const relFinale=new Set();o.gruppen.forEach(g=>{if(g.art==='rel'||g.art==='rel2'||(g.art==='pokal'&&g.e.r===5))g.list.forEach(r=>{relFinale.add(r.h);relFinale.add(r.a);});});
     const artVon=new Map();o.gruppen.forEach(g=>g.list.forEach(r=>artVon.set(r,g.art+(g.e&&g.e.r!=null?(g.e.r+1):''))));
-    liste.forEach(r=>{[r.h,r.a].forEach(id=>{if(id<1000&&!relFinale.has(id)){(tage[id]=tage[id]||[]).push(S.season*400+o.tag);arten[id+':'+(S.season*400+o.tag)]=(artVon.get(r)||'?')+' '+['So','Mo','Di','Mi','Do','Fr','Sa'][W0().ev('wochentag')(o.tag)];}});
+    liste.forEach(r=>{[r.h,r.a].forEach(id=>{if(id<1000&&!relFinale.has(id)){(tage[id]=tage[id]||[]).push(S.season*400+o.tag);arten[id+':'+(S.season*400+o.tag)]=(artVon.get(r)||'?')+' '+['So','Mo','Di','Mi','Do','Fr','Sa'][W0().ev('wochentag')(o.tag)];gegner[id+':'+(S.season*400+o.tag)]=id===r.h?r.a:r.h;}});
       if(r.supercup)supercups.push({s:S.season,h:r.h,a:r.a,hg:r.hg,ag:r.ag,pen:r.pen,verl:r.ev.some(e=>e.m>90&&e.t!=='E'&&e.t!=='P'),tag:o.tag});});
     o.gruppen.filter(g=>g.art==='pokal').forEach(g=>{const rr=g.e.r,L=S.cup.los;losGeprueft++;if(!L||L.am>=S.plan.pokal[rr][0]-1)losZuSpaet.push(`${S.season} Runde ${rr+1}`);
       g.list.forEach(r=>{if(rr===0)runde1.push({h:r.h,a:r.a,hProfi:!am(r.h),aProfi:!am(r.a),aLg:r.a<1000?S.teams[r.a].lg:9,hLg:r.h<1000?S.teams[r.h].lg:9,sieger:r.hg>r.ag?r.h:r.hg<r.ag?r.a:(r.pen[0]>r.pen[1]?r.h:r.a)});
@@ -25,8 +25,15 @@ pruef(losGeprueft>0&&losZuSpaet.length===0,'Auslosung mindestens zwei Tage vor d
 // 2. Bundesligisten raus in Runde 1: im Schnitt 2–5 pro Saison (prüfen)
 {const raus=runde1.filter(x=>(x.hLg===1&&x.sieger!==x.h)||(x.aLg===1&&x.sieger!==x.a)).length/N;pruef(raus>=1&&raus<=5,'Bundesligisten scheiden in Runde 1 aus: im Schnitt 1–5 pro Saison (Ziel 2–5 prüfen)',f1(raus));}
 // 3. 72 Stunden: kein Verein spielt zweimal innerhalb von drei Tagen
-{let n=0,b=[];for(const id in tage){const t=[...new Set(tage[id])].sort((a,b)=>a-b);for(let i=1;i<t.length;i++)if(t[i]-t[i-1]<3){n++;if(b.length<6)b.push(`${S.teams[id].name} ${t[i-1]%400} (${arten[id+':'+t[i-1]]}) / ${t[i]%400} (${arten[id+':'+t[i]]})`);}} // seit Lauf 11 mit Wettbewerb und Wochentag
-  pruef(n===0,'72 Stunden: kein Verein spielt zweimal innerhalb von drei Tagen',n?`${n}× (${b.join('; ')})`:'nie');}
+// Unvermeidbar (Prüfung GI1): Für das beteiligte Ligaspiel gibt es zwischen Tag L−4 und L+4 keinen Tag, der für beide Vereine drei Tage Abstand zu allen ihren übrigen
+// Spielen hat (etwa: du dienstags Champions League, dein Ligagegner donnerstags davor und danach Europapokal). Solche Fälle zählen getrennt und nicht als Fehler.
+const unvermeidbar=(id,L)=>{const g=gegner[id+':'+L];if(g==null||!String(arten[id+':'+L]||'').startsWith('liga'))return false;
+  const andere=[...(tage[id]||[]),...(tage[g]||[])].filter(x=>x!==L);for(let x=L-4;x<=L+4;x++)if(andere.every(y=>Math.abs(x-y)>=3))return false;return true;};
+{let n=0,u=0,b=[],bu=[];for(const id in tage){const t=[...new Set(tage[id])].sort((a,b)=>a-b);for(let i=1;i<t.length;i++)if(t[i]-t[i-1]<3){
+    const text=`${S.teams[id].name} ${t[i-1]%400} (${arten[id+':'+t[i-1]]}) / ${t[i]%400} (${arten[id+':'+t[i]]})`; // seit Lauf 11 mit Wettbewerb und Wochentag
+    if(unvermeidbar(id,t[i-1])||unvermeidbar(id,t[i])){u++;if(bu.length<6)bu.push(text);}else{n++;if(b.length<6)b.push(text);}}}
+  pruef(n===0,'72 Stunden: kein Verein spielt zweimal innerhalb von drei Tagen (außer unvermeidbar)',n?`${n}× (${b.join('; ')})`:'nie');
+  console.log(`  Unvermeidbar (kein Tag mit 72 Stunden für beide Vereine): ${u}×${u?' ('+bu.join('; ')+')':''}`);}
 // 4. Zweitmannschaften nie in der Liga der ersten Mannschaft
 pruef(zweiteFehler.length===0,'Zweitmannschaften nie in derselben Liga wie die erste',zweiteFehler.join('; ')||'nie');
 // 5. Supercup ab der zweiten Saison: Meister gegen Pokalsieger (oder Vizemeister), ohne Verlängerung, bei Gleichstand Elfmeterschießen

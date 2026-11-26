@@ -33,11 +33,12 @@ const pokalMeinTag=e=>pokalSpaetIst(e.r,S.my)===!!e.spaet;
 // Ligaspiele der Vereine ids, die weniger als drei Tage vor oder nach Tag d liegen, verlegen (Pokal, seit K37 auch Europapokal).
 // Seit T5.2: Der neue Tag muss für beide Vereine drei Tage Abstand zu allen ihren übrigen Spielen haben (Liga, Pokal, Supercup, Europapokal). Kandidaten der Reihe nach,
 // zuerst in Richtung des alten Termins, nie auf einen Montag (Montag abends vor Donnerstag wären keine 72 Stunden). Passt keiner, gilt die alte Regel (Sonntag und Montag vor dem Termin → Samstag, danach → drei Tage später).
-function ligaVerlegen(d,ids,grund){const M=RWB.spielplan.mindestTage;let n=0;
+// opt (seit Prüfung GI): mit nurFrei ohne Notregel, also nur verlegen, wenn ein Kandidat frei ist. Mit ab der früheste erlaubte neue Tag (Sicherheitsnetz euPlanPruefen).
+function ligaVerlegen(d,ids,grund,opt){const M=RWB.spielplan.mindestTage,O=opt||{};let n=0;
   LIGEN.forEach(lg=>(S.fx[lg]||[]).forEach((md,k)=>md.forEach(([h,a],i)=>{if(!ids.has(h)&&!ids.has(a))return;const z=S.plan.zeit[lg][k][i],alt=z[0];
     if(!(z[0]>d-M&&z[0]<d+M))return;const vor=z[0]<d,belegt=[spieltageVon(h,z),spieltageVon(a,z)];[h,a].forEach((id,j)=>{if(ids.has(id))belegt[j].add(d);});
-    const frei=x=>belegt.every(s=>{for(let j=1-M;j<M;j++)if(s.has(x+j))return false;return true;}),kand=(vor?[d-M,d-M-1,d-M-2,d+M,d+M+1]:[d+M,d+M+1,d+M+2,d-M,d-M-1]).filter(x=>wochentag(x)!==1);
-    const neu=kand.find(frei);if(neu!=null)z[0]=neu;else if(vor){z[0]=d-M;while(wochentag(z[0])===0||wochentag(z[0])===1)z[0]--;}else{z[0]=d+M;ligaNachziehen(lg,k,h,a,z[0]);}n++; /* Testlauf 10: nach dem Notfall danach das nächste Ligaspiel nachziehen */
+    const frei=x=>belegt.every(s=>{for(let j=1-M;j<M;j++)if(s.has(x+j))return false;return true;}),kand=(vor?[d-M,d-M-1,d-M-2,d+M,d+M+1]:[d+M,d+M+1,d+M+2,d-M,d-M-1]).filter(x=>wochentag(x)!==1&&(O.ab==null||x>=O.ab));
+    const neu=kand.find(frei);if(neu==null&&O.nurFrei)return;if(neu!=null)z[0]=neu;else if(vor){z[0]=d-M;while(wochentag(z[0])===0||wochentag(z[0])===1)z[0]--;}else{z[0]=d+M;ligaNachziehen(lg,k,h,a,z[0]);}n++; /* Testlauf 10: nach dem Notfall danach das nächste Ligaspiel nachziehen */
     if(h===S.my||a===S.my)news(`Wegen ${grund} wird dein Ligaspiel gegen ${tn(h===S.my?a:h)} von ${datumKurz(alt)} auf ${datumKurz(z[0])} verlegt.`);})));
   if(n)TAGINDEX.plan=null;return n;}
 // Seit Testlauf 10: Bleibt nach dem Termin nur der Notfall (drei Tage danach), rückt das nächste Ligaspiel beider Vereine nach hinten (Dienstag → Mittwoch wie

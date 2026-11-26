@@ -3058,3 +3058,20 @@ Korrekturen auf `mitarbeit/popolupo-gh-korrekturen` (auf K43d).
 | GH2 | **Niedrig, Test:** fuzz-karrieren gab Angebote nur mit Ablösefeld ab und prüfte Vereinslose, Vorverträge und vereinbarte Ablösen nicht mehr. Jetzt genügt das Feld für die Jahre. | ✅ behoben |
 | – | Hinweise: Partner nur für den Verein der Durststrecke, nicht nach einem Jobwechsel am Saisonende. Spielstände der ersten Fassung kommen auf die Grundlage Normal. Test für das Glück bei Karten mit „Mitwachsend“. Kommentare und tests/README.md nachgezogen, regeln-fest und der Langlauf eingetragen. | ✅ umgesetzt |
 | – | Hinweis: Die Vertrauensanzeige im Büro zeigte die Grenze fest. Seit K43e nimmt sie die echte Grenze (`zonenVertrauen`). | ✅ umgesetzt (K43e) |
+
+## GI. Prüfung von K43e und der Korrekturen zu Lauf 12 ohne Laufzeit (26. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 824337d..a36f093 gelesen.
+
+- `euPlanPruefen` rechnet in den richtigen Tageseinheiten, legt nie auf einen vergangenen Tag und lässt fremde Spiele der 2. und 3. Liga in Ruhe. Es würfelt nicht und kostet wenig.
+- `maxJeSaison` zählt richtig: Ein Wechsel im Sommer zählt zur alten Saison, je Verein und Saison sind es höchstens 3.
+- `zonenVertrauen` stimmt für alle Stufen und für „Mitwachsend“.
+
+Bericht: `flutlicht-tools/pruefung-gi.md`.
+
+Korrekturen auf `mitarbeit/popolupo-gi-korrekturen` (auf t12).
+
+| # | Befund | Status |
+|---|---|---|
+| GI1 | **Mittel:** Die zwei Fälle aus Lauf 12 haben keinen erlaubten Tag: dein Verein dienstags Champions League, der Ligagegner donnerstags davor und danach Europapokal. Das Sicherheitsnetz griff dann zur Notregel und schob das Spiel täglich zwischen Samstag und Sonntag hin und her. Jetzt verlegt das Netz nur auf einen freien Tag (`ligaVerlegen` mit `nurFrei`). Unvermeidbare Fälle zählt `tests/wettbewerbe.js` getrennt und nicht als Fehler. Das Champions-League-Spiel auf Mittwoch zu legen, griffe an sechs Stellen in den Europapokal ein und bleibt vorerst aus (vorläufig). | ✅ behoben (vorläufig) |
+| GI2 | **Niedrig:** Das Netz konnte auf morgen oder heute verlegen. Jetzt frühestens übermorgen (`ab`). | ✅ behoben |

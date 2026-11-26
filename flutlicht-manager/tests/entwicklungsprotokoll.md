@@ -290,6 +290,14 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 26.11.2026: Korrekturen nach Prüfung GI (Zweig `mitarbeit/popolupo-gi-korrekturen`, auf t12)
+
+- **72 Stunden:**
+  - Die zwei Fälle aus Lauf 12 haben gar keinen erlaubten Termin: ein Verein dienstags Champions League, sein Ligagegner donnerstags davor und danach Europapokal.
+  - Das Sicherheitsnetz verlegt jetzt nur auf einen freien Tag, frühestens übermorgen. Vorher schob es solche Spiele täglich hin und her, mit einer Meldung je Verschiebung.
+  - `tests/wettbewerbe.js` zählt unvermeidbare Fälle getrennt und gibt sie aus.
+- **Vorläufig nicht gebaut:** das Champions-League-Spiel in so einem Fall auf Mittwoch legen (greift an sechs Stellen in den Europapokal ein).
+
 ### 26.11.2026: Testlauf 12 aufgearbeitet (Zweig `mitarbeit/popolupo-t12-korrekturen`, auf K43e)
 
 Lauf 12 (0368e92): 48 grün, 6 rot (Lauf 11: 45 grün).
