@@ -11,7 +11,7 @@ function liveEinstSetzen(k,v){S.einst=S.einst||{aus:{}};S.einst.live=S.einst.liv
 function kickoffLive(){if(BUSY||CONF||LIVE)return;BUSY=true;let v=null;
   try{v=tagesSpieleVorbereiten(S.tag,true);}catch(e){console.error(e);toast('Fehler: '+e.message);}finally{BUSY=false;}
   if(!v)return;if(!v.G){LAST=tagesSpieleAbschliessen(v.out);save();if(LAST.list.length)showConf(LAST);else weiterUI();return;}
-  S.live={tag:S.tag,eing:[],m:0,k:0};liveAufbauen(v,'');liveStart();}
+  S.live={tag:S.tag,eing:[],m:0,k:0};liveAufbauen(v,trainerTribuene()?'Du bist gesperrt und sitzt heute auf der Tribüne. Wechsel und Taktik gibst du per Telefon durch, Zurufe gibt es nicht, die Halbzeitansprache hält der Co-Trainer.':'');liveStart();}
 function liveAufbauen(v,meldung){const G=v.G,s=G.hid===S.my?0:1;
   LIVE={v,G,s,lauf:false,timer:null,evN:G.ev.length,gewarnt:new Set(),hz:G.m>=45,verl:G.m>=90,ende:G.ende,raus:null,meldung,ansprache:(S.live&&S.live.ansprache)||null,anspPasst:S.live?S.live.anspPasst:null,tab:'spiel'};
   liveFrame();liveRender();}
@@ -51,11 +51,11 @@ function liveTick(){const L=LIVE;if(!L)return;const G=L.G;if(G.ende){liveAbpfiff
   if(G.ende){liveAbpfiff();return;}
   if(G.m%10===0&&!G.elf)liveSichern();
   const p=G.pause();
-  if(p==='elfmeter'){liveStop();L.meldung='Auch nach 120 Minuten unentschieden: Elfmeterschießen! Lege die Reihenfolge deiner Schützen fest.';liveRender();return;}if(p==='halbzeit'&&!L.hz){L.hz=true;liveStop();L.meldung='Halbzeit. Ansprache, Wechsel und Umstellungen sind jetzt möglich.';liveRender();return;}
+  if(p==='elfmeter'){liveStop();L.meldung='Auch nach 120 Minuten unentschieden: Elfmeterschießen! Lege die Reihenfolge deiner Schützen fest.';liveRender();return;}if(p==='halbzeit'&&!L.hz){L.hz=true;liveStop();L.meldung='Halbzeit. Ansprache, Wechsel und Umstellungen sind jetzt möglich.';if(liveTribuene())liveCoAnsprache();liveRender();return;}
   if(p==='verlaengerung'&&!L.verl){L.verl=true;liveStop();L.meldung='Unentschieden nach 90 Minuten: Es gibt Verlängerung. In der Verlängerung ist ein weiterer Wechsel erlaubt.';liveRender();return;}
   if(halt){liveStop();L.meldung=halt;liveRender();}}
 function liveHalte(){const L=LIVE,G=L.G,A=liveEinst().anhalten,neu=G.ev.slice(L.evN);L.evN=G.ev.length;let t=null;
-  for(const e of neu){const mein=e.s===L.s;
+  for(const e of neu){const mein=e.s===L.s;if(protestAnlass(e,L.s)){L.anlass=e.m;L.protestiert=false;} /* Protest an der Seitenlinie möglich (K09g) */
     if(e.t==='G'&&A.tor)t=`Tor! ${e.n} trifft zum ${e.sc.join(':')}.`;
     else if(e.t==='R'&&A.rot)t=`${e.x||`${e.gy?'Gelb-Rot':'Rot'} für ${e.n}`}${mein?' – du bist in Unterzahl.':'.'}`;
     else if(e.t==='I'&&mein&&A.verletzung)t=`${e.n} ist verletzt (${URSACHE[e.q]||'Verletzung'}) und humpelt nur noch. Wechseln?`;
@@ -69,40 +69,128 @@ function gelbRotGefahr(G,s,id){const x=G.Ss[s].xp.find(y=>y.p.id===id);if(!x)ret
 // Vorspulen: der Co-Trainer übernimmt bis zur Halbzeit oder bis zum Ende
 function liveSpulen(bis){const L=LIVE;if(!L||L.ende)return;if(bis==='ende')L.vorgespult=1;liveStop();const G=L.G,alt=G.auto[L.s],m0=G.m,k0=G.elf?G.elf.k:null;G.auto[L.s]=true;
   while(!G.ende&&!(bis==='hz'&&G.m>=45)){G.minute();}
-  G.auto[L.s]=alt;if(S.live){S.live.eing.push({m:m0,k:k0,a:'spulen',x:[G.m]});}L.evN=G.ev.length;if(bis==='hz'&&G.m===45){L.hz=true;L.meldung='Halbzeit. Der Co-Trainer hat bis hierher entschieden.';}
+  G.auto[L.s]=alt;if(S.live){S.live.eing.push({m:m0,k:k0,a:'spulen',x:[G.m]});}L.evN=G.ev.length;L.anlass=null;if(bis==='hz'&&G.m===45){L.hz=true;L.meldung='Halbzeit. Der Co-Trainer hat bis hierher entschieden.';if(liveTribuene())liveCoAnsprache();}
   liveSichern();liveRender();if(G.ende)liveAbpfiff();}
 function liveBisEnde(){liveSpulen('ende');}
 function liveSteuer(){const L=LIVE,el=document.getElementById('lv-steuer');if(!el||!L)return;
   if(L.ende){el.innerHTML=`<button class="go" id="lv-weiter" onclick="liveWeiter()">Weiter</button>`;const b=document.getElementById('lv-weiter');if(b)b.focus();return;}
   el.innerHTML=`${L.lauf?`<button id="lv-pause-btn" onclick="liveStop()">Pause</button>`:`<button class="go" id="lv-los" onclick="LIVE.meldung='';liveStart()">${L.G.m===0?'Anpfiff':L.G.m===45?'2. Halbzeit':'Weiter'}</button>`}
+    ${protestOffen(L)?`<button onclick="liveProtest()"${lzAus('zurufe')} title="Weckt die Mannschaft auf, kann dir Gelb bringen">Protestieren</button>`:''}
     ${L.G.m<45?`<button onclick="liveSpulen('hz')">Bis zur Halbzeit</button>`:''}<button onclick="liveBisEnde()">${L.G.elf?'Alle Elfmeter':'Zum Abpfiff'}</button>`;}
 function liveAbpfiff(){const L=LIVE;if(!L||L.ende)return;liveStop();L.ende=true;const G=L.G;L.meldung=G.pen?`Elfmeterschießen ${G.pen[0]}:${G.pen[1]}.`:'Abpfiff.';liveRender();liveSteuer();}
+// Ansprache wirkt (K05 §8, K05g, 25.11., popolupo, vorläufig): Nach deinem „Fordern“ in der Pause ist die Tordifferenz deiner Mannschaft in der zweiten Halbzeit
+// (Minute 46 bis 90) um mindestens RL.ansprache.wirkt.ab besser als in der ersten: Meldung, Glaubwürdigkeit + wirkt.glaub. Nur im Live-Spiel und nur deine eigene Ansprache.
+function anspracheWirkt(L){const W=RL.ansprache.wirkt;if(!W||!L||L.ansprache!=='fordern'||!L.G)return false;const dif=(von,bis)=>(L.G.ev||[]).filter(e=>e.t==='G'&&e.m>=von&&e.m<=bis).reduce((a,e)=>a+(e.s===L.s?1:-1),0);
+  const d1=dif(0,45),d2=dif(46,90);if(d2-d1<W.ab)return false;glaubAendern(W.glaub);news('Die Ansprache hat gewirkt: Nach deiner deutlichen Pausenrede war die Mannschaft in der zweiten Halbzeit nicht wiederzuerkennen.','good');return true;}
 // Ergebnis eintragen und den Tag abschließen
-function liveWeiter(){const L=LIVE;if(!L||!L.ende)return;BUSY=true;let out=null;
+function liveWeiter(){const L=LIVE;if(!L||!L.ende)return;BUSY=true;let out=null;const co=!!(S.live&&S.live.anspCo);
   try{liveEintragen(L.v);S.live=null;if(!L.vorgespult)aufgabe('liveBisEnde');out=tagesSpieleAbschliessen(L.v.out);LAST=out;
-    if(L.ansprache){const T=myT();T.ansp=[...(T.ansp||[]),L.ansprache].slice(-RL.ansprache.abnutzungSpiele);if(L.anspPasst!=null)halbzeitGlaub(L.anspPasst);}save();}
+    if(L.ansprache){const T=myT();T.ansp=[...(T.ansp||[]),L.ansprache].slice(-RL.ansprache.abnutzungSpiele);if(L.anspPasst!=null)halbzeitGlaub(L.anspPasst);if(!co)anspracheWirkt(L);}save();}
   catch(e){console.error(e);toast('Fehler: '+e.message);}finally{BUSY=false;}
-  LIVE=null;closeOv();weiterUI();}
+  LIVE=null;atmoStop();closeOv();weiterUI();}
 
 // ---------- Eingriffe ----------
-function liveZuruf(art){if(!darf('zurufe','zuruf'))return;const L=LIVE;if(!L||L.ende)return;const r=L.G.zuruf(L.s,art);if(r.ok)liveMerken('zuruf',[art]);
+function liveZuruf(art){if(!darf('zurufe','zuruf'))return;const L=LIVE;if(!L||L.ende)return;if(liveTribuene()){L.meldung=TRIBUENE_TEXT;liveRender();return;}const r=L.G.zuruf(L.s,art);if(r.ok)liveMerken('zuruf',[art]);
   L.meldung=r.ok?(r.w===1?`„${ZURUF_TEXT[art]}“ – die Mannschaft reagiert.`:r.w>0?`„${ZURUF_TEXT[art]}“ – schon wieder? Wirkt nur noch halb.`:`„${ZURUF_TEXT[art]}“ – keiner hört mehr hin.`):r.grund;liveRender();}
-function liveSpielerZuruf(id,art){if(!darf('schuetzen'))return;const L=LIVE;if(!L||L.ende)return;const p=PIX.get(id),r=L.G.spielerZuruf(L.s,id,art);if(r.ok)liveMerken('spieler',[id,art]);if(r.ok)L.meldung=`${art==='loben'?'Lob':'Kritik'} für ${p.n}: ${r.text}.`;liveRender();}
+function liveSpielerZuruf(id,art){if(!darf('schuetzen'))return;const L=LIVE;if(!L||L.ende)return;if(liveTribuene()){L.meldung=TRIBUENE_TEXT;liveRender();return;}const p=PIX.get(id),r=L.G.spielerZuruf(L.s,id,art);if(r.ok)liveMerken('spieler',[id,art]);if(r.ok)L.meldung=`${art==='loben'?'Lob':'Kritik'} für ${p.n}: ${r.text}.`;liveRender();}
 function liveTaktik(k,v){if(!darf(k==='form'?'formation':k==='stil'?'stil':k==='ein'?'einstellung':v==='SD'||v==='SO'?'ausrichtung5':'ausrichtung3',k==='stil'?'stil':k==='ein'?null:'ordnung'))return;const L=LIVE;if(!L||L.ende)return;const o={};o[k]=v;L.G.taktik(L.s,o);liveMerken('taktik',[o]);const pl=L.G.plan[L.s].filter(x=>x.art===k).pop();
   L.meldung=pl?(pl.ab<=L.G.m+1?'Die Umstellung gilt ab sofort.':`Die Umstellung greift ab der ${pl.ab}. Minute.`):'Unverändert.';liveRender();}
 function liveRaus(id){const L=LIVE;if(!L)return;L.raus=L.raus===id?null:id;liveRender();}
 function liveRein(id){const L=LIVE;if(!L||!L.raus)return;const aus=PIX.get(L.raus),ein=PIX.get(id),ausId=L.raus,r=L.G.wechseln(L.s,L.raus,id);if(r.ok){liveMerken('wechsel',[ausId,id]);aufgabe('wechsel');}
   L.meldung=r.ok?`Wechsel: ${ein.n} kommt für ${aus.n}.`:r.grund;L.raus=null;L.evN=L.G.ev.length;liveRender();}
-function liveAnsprache(art){if(!darf('zurufe','zuruf'))return;const L=LIVE;if(!L||L.G.m!==45||L.ansprache)return;const T=myT(),alt=(T.ansp||[]).slice(-(RL.ansprache.abnutzungSpiele-1));
+function liveAnsprache(art){if(!darf('zurufe','zuruf'))return;const L=LIVE;if(!L||L.G.m!==45||L.ansprache)return;if(liveTribuene()){liveCoAnsprache();liveRender();return;}const T=myT(),alt=(T.ansp||[]).slice(-(RL.ansprache.abnutzungSpiele-1));
   // Glaubwürdigkeit (K15 §5.5): Die Wirkung hängt davon ab, wie sehr die Mannschaft dir glaubt. Nur Ansprachen mit Anlass verändern danach die Glaubwürdigkeit.
   const abn=(alt.length===RL.ansprache.abnutzungSpiele-1&&alt.every(a=>a===art)&&art!=='schweigen'?0.5:1)*glaubFaktor(),r=L.G.ansprache(L.s,art,abn);L.ansprache=art;L.anspPasst=['loben','motivieren','fordern','beruhigen'].includes(art)?(r.passt&&abn>=glaubFaktor()?true:r.passt?null:false):null;liveMerken('ansprache',[art,abn]);
   L.meldung=`Ansprache „${ANSPRACHE_TEXT[art]}“${r.passt?'':' – passt nicht zur Lage, die Spieler sind irritiert'}${abn<glaubFaktor()?' (kennen sie schon, wirkt nur halb)':''}.`;liveRender();}
+// ---------- Tribüne und Protest (K09 §5.4, K09g) ----------
+// Auf der Tribüne sitzt du, wenn du für dieses Spiel gesperrt bist (disziplin.js trainerTribuene) oder in diesem Spiel Gelb-Rot gesehen hast (S.live.trib).
+const TRIBUENE_TEXT='Du sitzt auf der Tribüne. Zurufe kommen dort nicht an, die Halbzeitansprache hält der Co-Trainer.';
+const liveTribuene=()=>trainerTribuene()||!!(S.live&&S.live.trib);
+// Halbzeitansprache des Co-Trainers: Mit Wahrscheinlichkeit Qualität ÷ 20 (K16) trifft er die passende (die erste passende aus loben, motivieren, fordern, beruhigen),
+// sonst „Taktik betonen“. Ohne Zufall (Hash aus Saison, Tag, Verein), ohne Wirkung auf deine Glaubwürdigkeit. Gemerkt wie deine Ansprache, also auch nach Neuladen gleich.
+function liveCoAnsprache(){const L=LIVE;if(!L||L.ansprache||L.G.m!==45)return;const G=L.G,q=stabQ(S.my,'co')/20,h=(hash32(['coAnsprache',S.season,S.tag,S.my].join('|'))%1000)/1000;
+  const pass=['loben','motivieren','fordern','beruhigen'].find(a=>G.passt(L.s,a)),art=pass&&h<q?pass:'taktik';G.ansprache(L.s,art,1);L.ansprache=art;L.anspPasst=null;if(S.live)S.live.anspCo=1;liveMerken('ansprache',[art,1]);
+  L.meldung=`Halbzeit. Du sitzt auf der Tribüne, in der Kabine spricht der Co-Trainer: „${ANSPRACHE_TEXT[art]}“.`;} /* anspCo: die Ansprache hielt der Co-Trainer, nicht du (Prüfung FG2) */
+// Protest an der Seitenlinie: bis RD.trainer.protestMinuten nach einem Elfmeter gegen dich oder einem Platzverweis bei dir, einmal je Anlass, nur mit dem Bereich zurufe.
+// Die Mannschaft wird wach (wie „Druck machen!“, mit dessen Abnutzung). Der Schiedsrichter zeigt dir mit protestGelb × Strenge Gelb (ohne Zufall, Hash). Die zweite Gelbe
+// im selben Spiel ist Gelb-Rot: Tribüne für den Rest des Spiels und gelbRotSpiele Spiele Sperre (zählt nicht zu den Gelben der Saison).
+// Seit K09i: mit protestRot × Strenge gleich Rot (vor der Gelben geprüft, derselbe Hash): Tribüne und rotSpiele Spiele Sperre.
+const protestAnlass=(e,s)=>(e.art==='elfmeter'&&(e.t==='G'||e.t==='C')&&e.s!==s)||(e.t==='R'&&e.s===s);
+const protestOffen=L=>!!L&&!L.ende&&L.anlass!=null&&L.G.m-L.anlass<=RD.trainer.protestMinuten&&!L.protestiert&&!liveTribuene();
+// Ab sofort auf der Tribüne (Gelb-Rot, Rot): in der Halbzeitpause spricht gleich der Co-Trainer (Prüfung FG2)
+function liveAufTribuene(L,text){S.live.trib=1;L.meldung=text;if(L.G.m===45&&!L.ansprache){liveCoAnsprache();L.meldung=text+' '+L.meldung;}}
+function liveProtest(){if(!darf('zurufe','zuruf'))return;const L=LIVE;if(!protestOffen(L)||!S.live)return;const T=RD.trainer,G=L.G,SL=S.live;L.protestiert=true;
+  const n=SL.prot=(SL.prot||0)+1,h=(hash32(['protest',S.season,S.tag,S.my,G.m,n].join('|'))%1000)/1000,st=(G.schiri&&G.schiri.st)||1,rot=h<T.protestRot*st,gelb=h<(T.protestRot+T.protestGelb)*st /* FL8: Gelb wirklich mit protestGelb, nach Rot */;
+  const r=G.zuruf(L.s,'druck');if(r.ok)liveMerken('zuruf',['druck']);
+  if(rot){SL.rot=1;trainerSperre(T.rotSpiele,'Rote Karte für den Trainer');liveAufTribuene(L,'Rot für dich! Der Schiedsrichter schickt dich sofort auf die Tribüne.');}
+  else if(!gelb)L.meldung='Du stürmst an die Seitenlinie und schimpfst. Der Schiedsrichter lässt es durchgehen, die Mannschaft ist hellwach.';
+  else if((SL.tg||0)>=1){SL.tg=2;trainerSperre(T.gelbRotSpiele,'Gelb-Rot für den Trainer');liveAufTribuene(L,'Gelb-Rot für dich! Du musst auf die Tribüne, den Rest des Spiels coacht der Co-Trainer mit.');}
+  else{SL.tg=1;const g=trainerGelb();L.meldung=`Gelb für dich wegen Protests (${g}. Gelbe als Trainer in dieser Saison${g%T.sperreJe===0?', das heißt ein Spiel Sperre':`, gesperrt nach der ${Math.ceil(g/T.sperreJe)*T.sperreJe}.`}). Die Mannschaft ist hellwach.`;}
+  liveSichern();liveRender();}
 
 // ---------- Anzeige ----------
+// Sequenzen (K39 §3.4, W5e3): kurze Animationen bei großen Momenten. Sie blockieren nichts und verschwinden von selbst. Stufe je Gerät
+// (REGELN.darstellung.sequenzen: an, kurz, aus), aus bei „weniger Bewegung“ im Gerät. Ohne Zufall: Konfetti aus hash32, keine Wirkung aufs Spiel.
+function sequenzStufe(){const D=REGELN.darstellung.sequenzen;try{const v=localStorage.getItem(D.schluessel);if(D.stufen[v])return v;}catch(e){}return D.standard;}
+function sequenzSetzen(v){const D=REGELN.darstellung.sequenzen;if(!D.stufen[v])return;try{localStorage.setItem(D.schluessel,v);}catch(e){}}
+const sequenzAn=()=>sequenzStufe()!=='aus'&&!(typeof matchMedia==='function'&&matchMedia('(prefers-reduced-motion: reduce)').matches);
+function konfetti(farbe,n=28){if(typeof document==='undefined')return;const box=document.createElement('div');box.className='konfetti';box.setAttribute('aria-hidden','true');
+  box.innerHTML=Array.from({length:n},(_,i)=>{const h=hash32('konfetti|'+i);return`<i style="left:${h%100}%;background:${i%3?farbe:'#ffffff'};animation-delay:${(h>>>8)%400}ms;--dx:${((h>>>16)%120)-60}px"></i>`;}).join('');
+  document.body.appendChild(box);setTimeout(()=>box.remove(),2400);}
+// Saisonwechsel (K39 §3.3 und §3.4, W5e8): kurzer Bildschirm „Neue Saison“ mit Anzeigetafel und einem Tipp. Er blockiert nichts (pointer-events: none)
+// und verschwindet von selbst; nicht beim ersten Zeichnen nach dem Laden. Tipp fest aus Seed und Saison (hash32), kein Spielzufall, nichts im Spielstand.
+let SAISON_GESEHEN=null,SAISON_STAND=null; // SAISON_STAND: das Spielstand-Objekt, zu dem die gemerkte Saison gehört (Prüfung GA2: Laden und neues Spiel setzen zurück)
+function saisonSequenz(){if(typeof document==='undefined'||typeof document.createElement!=='function'||typeof S==='undefined'||!S)return;const k=`${S.seed}|${S.season}`;
+  if(SAISON_STAND!==S||SAISON_GESEHEN===null){SAISON_STAND=S;SAISON_GESEHEN=k;return;}if(SAISON_GESEHEN===k)return;SAISON_GESEHEN=k;if(!sequenzAn()||!document.body)return;
+  const kurz=sequenzStufe()==='kurz',tipp=TIPPS.length?TIPPS[hash32('tipp|'+k)%TIPPS.length]:'',el=document.createElement('div');el.className='saisonwechsel';el.setAttribute('role','status');
+  el.innerHTML=`<div class="sw-tafel"><span>Neue Saison</span><b>${S.season}/${String((S.season+1)%100).padStart(2,'0')}</b></div>${tipp?`<p class="sw-tipp"><b>Tipp:</b> ${esc(tipp)}</p>`:''}`;
+  document.body.appendChild(el);setTimeout(()=>el.classList.add('weg'),kurz?1200:2600);setTimeout(()=>el.remove(),kurz?1700:3100);}
+// Titel und Aufstieg (K39 §3.4, W5e6): einmal je Saison und Sitzung Konfetti und Jubel in der Saisonbilanz. Nicht im Spielstand gemerkt.
+const TITEL_GEFEIERT=new WeakMap(); // Spielstand-Objekt → gefeierte Saison; hält alte Spielstände nicht im Speicher fest (Hinweis aus Prüfung GC)
+// Verein aus der Bilanz (sm.my, nach einer Entlassung ist S.my schon der neue), Aufstieg auch über die Relegation, gemerkt je Karriere (Prüfung FZ2, FZ3)
+function titelFeier(sm){if(!sm||typeof S==='undefined'||!S)return;const m=sm.my!=null?sm.my:S.my,k=`${S.seed}|${sm.season}`,dabei=l=>(l||[]).includes(m);if(TITEL_GEFEIERT.get(S)===k)return; // je Spielstand-Objekt (Hinweise aus Prüfung GB und GC)
+  const rel=(sm.rel&&sm.rw===m&&sm.rel[1]===m)||(sm.rel2&&sm.rw2===m&&sm.rel2[1]===m);
+  if(!(sm.champ===m||sm.champ2===m||sm.champ3===m||sm.cup===m||dabei(sm.up)||dabei(sm.up3)||dabei(sm.up4)||rel))return;TITEL_GEFEIERT.set(S,k);
+  if(sequenzAn()){konfetti((S.teams[m]&&S.teams[m].col)||myT().col,48);klang('jubel');}}
+function torSequenz(meins,farbe){if(typeof document==='undefined'||!sequenzAn())return;const kurz=sequenzStufe()==='kurz',el=document.getElementById('lv-tafel');
+  if(el){el.classList.remove('tor-blitz','tor-gegner');void el.offsetWidth;el.classList.add(meins?'tor-blitz':'tor-gegner');setTimeout(()=>el.classList.remove('tor-blitz','tor-gegner'),kurz?700:1400);}
+  if(meins&&!kurz)konfetti(farbe||'#ffc83d');}
+// Einlauf (K39 §3.4, W5e9): vor dem Anpfiff fahren Wappen und Namen auf der Anzeigetafel kurz ein. Blockiert nichts, keine Wirkung aufs Spiel.
+function einlaufSequenz(){if(typeof document==='undefined'||typeof document.getElementById!=='function'||!sequenzAn())return;const el=document.getElementById('lv-tafel');if(!el||!el.classList)return;
+  el.classList.add('einlauf');setTimeout(()=>el.classList.remove('einlauf'),sequenzStufe()==='kurz'?500:1300);}
+// Entlassung (K39 §3.4, W5e11): Im Büro flackert die Schreibtischlampe und geht aus, der Bildschirm wird dunkel, dann bleiben die Jobangebote.
+// Nur bei einer Entlassung, nicht beim Rücktritt. Einmal je Spielstand-Objekt und Entlassungstag, klickdurchlässig, nichts im Spielstand.
+const ENTLASSUNG_GEZEIGT=new WeakMap();
+function entlassungSequenz(){if(typeof document==='undefined'||typeof document.createElement!=='function'||typeof S==='undefined'||!S||!S.fired||S.ruecktritt)return;
+  const k=`${S.season}|${S.tag}`;if(ENTLASSUNG_GEZEIGT.get(S)===k)return;ENTLASSUNG_GEZEIGT.set(S,k);if(!sequenzAn()||!document.body)return;
+  const kurz=sequenzStufe()==='kurz',el=document.createElement('div');el.className='entlassung'+(kurz?' kurz':'');el.setAttribute('aria-hidden','true'); // nur Bild, „Entlassen!“ sagt der Dialog darunter (Hinweis aus Prüfung GE)
+  el.innerHTML=`<svg viewBox="0 0 200 160" aria-hidden="true"><polygon class="el-schein" points="80,60 120,60 172,148 28,148" fill="#ffd27a" fill-opacity=".32"/>
+    <path d="M100 146 L124 100 L100 44" stroke="#9aa4b2" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><rect x="84" y="142" width="32" height="6" rx="2" fill="#9aa4b2"/>
+    <polygon points="72,62 128,62 114,40 86,40" fill="#3d4a5c"/><circle class="el-schein" cx="100" cy="64" r="6" fill="#fff3c4"/><rect x="16" y="148" width="168" height="9" rx="2" fill="#5b4636"/></svg>
+    <p>Entlassen</p>`;
+  document.body.appendChild(el);setTimeout(()=>klang('klick'),kurz?300:1000);setTimeout(()=>el.classList.add('weg'),kurz?1100:2800);setTimeout(()=>el.remove(),kurz?1600:3400);}
+// Abpfiff (K39 §3.4, W5e12): Licht der Anzeigetafel nach dem Ergebnis aus deiner Sicht, warm nach einem Sieg, kalt nach einer Niederlage (auch im Elfmeterschießen).
+// Nur wenn der Abpfiff live kommt, nicht beim Fortsetzen eines beendeten Spiels. Nur Anzeige.
+function abpfiffSequenz(L,G){if(typeof document==='undefined'||typeof document.getElementById!=='function'||!sequenzAn()||L.s==null)return;const el=document.getElementById('lv-tafel');if(!el||!el.classList)return;
+  // Elfmeterschießen zuerst, im Rückspiel zählt das Gesamtergebnis (G.o.agg), sonst das Spiel (Prüfung GE2)
+  const A=G.o&&G.o.agg,d=G.pen?G.pen[L.s]-G.pen[1-L.s]:A?(G.sc[L.s]+A[L.s])-(G.sc[1-L.s]+A[1-L.s]):G.sc[L.s]-G.sc[1-L.s];el.classList.add(d>0?'abpfiff-sieg':d<0?'abpfiff-niederlage':'abpfiff-remis');}
+// Stärke der Stadionatmosphäre (W5f2, Werte in REGELN.klang.atmo): Plätze der Heimelf (Amateure 3.000, Auslandsvereine 40.000), Rückstand der Heimelf, knappe Schlussphase,
+// vor dem Anpfiff und in der Halbzeit leiser (nicht bei anderen Halten, etwa nach einem Tor, Prüfung GE3). Der Jubel nach einem Tor läuft getrennt (atmoTor in js/klang.js).
+// Nur Klang, keine Wirkung aufs Spiel.
+function atmoStaerke(L,G){const A=REGELN.klang.atmo,h=G.hid<1000?S.teams[G.hid]:null,cap=h&&h.cap?h.cap:G.hid>=AV0?40000:3000;let x=A.grund+A.groesse*Math.min(1,Math.sqrt(cap/A.voll));
+  if(G.sc[1]-G.sc[0]>=2)x*=A.rueckstand;if(G.m>=A.schlussAb&&Math.abs(G.sc[0]-G.sc[1])<=1)x+=A.schluss;if(!L.lauf&&(G.m===0||G.m===45))x*=A.pause;return x;}
+// Atmosphäre des laufenden Live-Spiels starten und auf den Stand bringen (aus liveRender und aus js/klang.js bei Ton an, Lautstärke, Rückkehr in den Tab)
+function atmoNachfuehren(){const L=LIVE;if(!L||L.ende||!L.G)return;atmoStart();atmoPegel(atmoStaerke(L,L.G));}
 function liveRender(){const L=LIVE;if(!L)return;if(!document.getElementById('lv-inhalt'))liveFrame();const G=L.G,r={h:G.hid,a:G.aid};
   document.getElementById('lv-uhr').textContent=L.ende?'Ende':G.elf?'i.E.':G.m===0?'0′':G.m+'′';
   const karten=s=>{const n=G.ev.filter(e=>e.s===s&&e.t==='R').length;return n?` <span class="lv-rot" title="Platzverweise">${'▮'.repeat(n)}</span>`:'';};
-  document.getElementById('lv-tafel').innerHTML=`<div class="board"><div class="t">${esc(tn(G.hid))}${karten(0)}</div><div class="score">${G.sc[0]}:${G.sc[1]}</div><div class="t">${karten(1)}${esc(tn(G.aid))}</div></div>${G.pen?`<p class="dim" style="text-align:center;margin-top:6px">Elfmeterschießen ${G.pen[0]}:${G.pen[1]}</p>`:''}`;
+  const tafel=document.getElementById('lv-tafel'),tafelHtml=`<div class="board"><div class="t">${wappen(G.hid,30)}${esc(tn(G.hid))}${karten(0)}</div><div class="score">${G.sc[0]}:${G.sc[1]}</div><div class="t">${karten(1)}${esc(tn(G.aid))}${wappen(G.aid,30)}</div></div>${G.pen?`<p class="dim" style="text-align:center;margin-top:6px">Elfmeterschießen ${G.pen[0]}:${G.pen[1]}</p>`:''}`;
+  if(tafel.__html!==tafelHtml){tafel.innerHTML=tafelHtml;tafel.__html=tafelHtml;} // nur bei Änderung neu schreiben, sonst startet der Einlauf ständig neu (Prüfung GC1)
+  const sprung=!!L.pfAlt&&G.m-L.pfAlt.m>1; // vorgespult: keine einzelnen Momente nachholen (Prüfung FX5)
+  if(L.scAlt&&!sprung){const d0=G.sc[L.s]-L.scAlt[L.s],d1=G.sc[1-L.s]-L.scAlt[1-L.s];if(d0>0){torSequenz(true,myT().col);klang('jubel');}else if(d1>0){torSequenz(false);klang('raunen');}if(d0>0||d1>0)try{atmoNachfuehren();atmoTor();}catch(x){}} /* erst die Schleife, dann der Jubel (Hinweis aus Prüfung GF) */L.scAlt=G.sc.slice(); // Torjubel (K39 §3.4, W5e3)
+  if(L.pfAlt){if(!L.pfAlt.ende&&L.ende){klang('pfiff3');abpfiffSequenz(L,G);}else if(!sprung&&!L.pfAlt.hz&&L.hz)klang('pfiff');else if(!sprung&&L.pfAlt.m===0&&G.m>0)klang('pfiff');}L.pfAlt={m:G.m,hz:L.hz,ende:L.ende}; // Pfiffe (K41, W5f): Anpfiff, Halbzeit, Abpfiff; beides nicht beim Fortsetzen
+  try{if(L.ende)atmoStop();else atmoNachfuehren();}catch(x){} // Stadionatmosphäre (W5f2): klingt nach dem Abpfiff aus; ein Fehler im Klang hält das Spiel nicht an
+  if(!L.einlauf&&G.m===0&&!L.ende){L.einlauf=1;if(tafel&&tafel.classList)tafel.classList.remove('abpfiff-sieg','abpfiff-niederlage','abpfiff-remis');einlaufSequenz();} // Einlauf (K39 §3.4, W5e9): nur vor dem Anpfiff, Licht vom letzten Abpfiff aus (W5e12)
   document.getElementById('lv-druck').innerHTML=liveDruck();
   document.getElementById('lv-meldung').textContent=L.meldung||'';
   document.getElementById('lv-pause').innerHTML=G.pause()==='elfmeter'&&!L.lauf?liveElfmeter():G.m===45&&!L.ende&&!L.lauf?liveHalbzeit():'';
@@ -138,7 +226,7 @@ function liveTaktikAnsicht(){const L=LIVE,G=L.G,s=L.s,sd=G.Ss[s],plan=G.plan[s];
     <label>Spielstil ${sel('stil',STILE.map(k=>[k,STIL_NAME[k]]),sd.stil)}</label></div>${lzHinweis('stil')}${lzHinweis('einstellung')}
     <p class="dim">Gegner: ${op.am?(op.aus?'Auslandsverein':'Amateurklub'):`${STIL_NAME[op.stil]||'–'}, ${op.form||''}`}. ${kr} Umsetzung deines Stils ${Math.round((sd.u||1)*100)} %.</p>
     <p class="dim">Grundordnung und Spielstil wirken nach ${RL.umstellung.ordnung} Minuten, Ausrichtung und Einsatz nach ${RL.umstellung.ausrichtung}. In der Halbzeit gelten Ausrichtung und Einsatz sofort.</p>${geplant}</div>
-  <div class="card"><h3>Zurufe</h3>${lzHinweis('zurufe')}<div class="row">${ZURUFE.map(a=>`<button onclick="liveZuruf('${a}')" ${L.ende?'disabled':''}${lzAus('zurufe')}>${ZURUF_TEXT[a]}</button>`).join('')}</div>
+  <div class="card"><h3>Zurufe</h3>${lzHinweis('zurufe')}${liveTribuene()?`<p class="bad">${TRIBUENE_TEXT}</p>`:''}<div class="row">${ZURUFE.map(a=>`<button onclick="liveZuruf('${a}')" ${L.ende||liveTribuene()?'disabled':''}${lzAus('zurufe')}>${ZURUF_TEXT[a]}</button>`).join('')}</div>
     <p class="dim">Wirken ${RL.zurufe.dauer} Minuten. Derselbe Zuruf innerhalb von ${RL.zurufe.abnutzungMinuten} Minuten wirkt nur halb, ein drittes Mal gar nicht. „Zeit schinden“ nur bei Führung, kostet Gelbe Karten.</p>
     ${aktiv.length?`<p>Aktiv: ${aktiv.map(esc).join(', ')}</p>`:''}</div>`;}
 function liveStat(){const G=LIVE.G,st=G.st,b=st.besitz[0]+st.besitz[1],z=(l,a,c)=>`<div class="lv-st"><span>${a}</span><span>${l}</span><span>${c}</span></div>`;
@@ -154,7 +242,7 @@ function liveElfmeter(){const L=LIVE,G=L.G,s=L.s,reihe=G.elfmeterReihe[s].filter
 function liveReihe(id){if(!darf('schuetzen'))return;const L=LIVE;if(!L||!L.G.elf||L.G.elf.k)return;const r=L.G.elfmeterReihe[L.s],i=r.indexOf(id);if(i>0){[r[i-1],r[i]]=[r[i],r[i-1]];liveMerken('reihe',[r.slice()]);}liveRender();}
 // Halbzeit (K05 §4.4): Statistik, Einschätzung des Co-Trainers, Ansprache
 function liveHalbzeit(){const L=LIVE,G=L.G;return`<div class="card lv-hz"><h3>Halbzeit</h3><p>${esc(coEinschaetzung(G,L.s))}</p>
-  ${L.ansprache?`<p class="dim">Ansprache gehalten: ${ANSPRACHE_TEXT[L.ansprache]}.</p>`:`${lzHinweis('zurufe')}<p class="dim">Ansprache in der Kabine:</p><div class="row lv-ansp">${ANSPRACHEN.map(a=>`<button onclick="liveAnsprache('${a}')"${lzAus('zurufe')} title="${ANSPRACHE_HILFE[a]}">${ANSPRACHE_TEXT[a]}${G.passt(L.s,a)&&a!=='schweigen'&&a!=='taktik'&&a!=='augenzwinkernd'?' ✓':''}</button>`).join('')}</div><p class="dim">✓ passt zur Lage. Unpassende Ansprachen schaden.</p>`}</div>`;}
+  ${L.ansprache?`<p class="dim">Ansprache gehalten${S.live&&S.live.anspCo?' vom Co-Trainer (du sitzt auf der Tribüne)':''}: ${ANSPRACHE_TEXT[L.ansprache]}.</p>`:liveTribuene()?`<p class="dim">${TRIBUENE_TEXT}</p>`:`${lzHinweis('zurufe')}<p class="dim">Ansprache in der Kabine:</p><div class="row lv-ansp">${ANSPRACHEN.map(a=>`<button onclick="liveAnsprache('${a}')"${lzAus('zurufe')} title="${ANSPRACHE_HILFE[a]}">${ANSPRACHE_TEXT[a]}${G.passt(L.s,a)&&a!=='schweigen'&&a!=='taktik'&&a!=='augenzwinkernd'?' ✓':''}</button>`).join('')}</div><p class="dim">✓ passt zur Lage. Unpassende Ansprachen schaden.</p>`}</div>`;}
 // Einschätzung des Co-Trainers: schwächster und stärkster Bereich im Vergleich zum Gegner (Genauigkeit ab K16)
 function coEinschaetzung(G,s){const W=G.werte(),me=W[s],op=W[1-s];if(!me||!op)return'';
   const v=[['linke Abwehrseite',me.DL/op.AR],['rechte Abwehrseite',me.DR/op.AL],['Innenverteidigung',me.DM/op.AM],['Mittelfeld',me.K/op.K],['linke Angriffsseite',me.AL/op.DR],['rechte Angriffsseite',me.AR/op.DL],['Mitte im Angriff',me.AM/op.DM]].sort((a,b)=>a[1]-b[1]);

@@ -18,23 +18,27 @@ const istLeihe=p=>!!(p&&p.leihe);
 // Wie viel Gehalt ein Verein übernehmen würde: Er zahlt alles für einen, der ihn besser macht, die Hälfte für einen gleich guten, sonst nichts
 function zahlBereit(p,tid){const Z=RLE.zahlBereit,lvl=teamLevel(tid);return p.str>lvl+Z.spanne?Z.besser:p.str>=lvl-Z.spanne?Z.gleich:Z.schlechter;}
 // Vereine, die ihn nehmen würden: Bedarf auf seiner Position, aktiv, nicht du, Platz im Leihkontingent (U11d1)
-function leihVereine(p){const z=leihZaehler();return S.teams.filter(t=>t.id!==S.my&&aktiv(t)&&hatBedarf(t,p)&&leihErlaubt(p,S.my,t.id,z)).sort((a,b)=>b.rep-a.rep);}
+function leihVereine(p){const z=leihZaehler();return S.teams.filter(t=>t.id!==S.my&&aktiv(t)&&!kiTransferSperre(t)&&hatBedarf(t,p)&&leihErlaubt(p,S.my,t.id,z)).sort((a,b)=>b.rep-a.rep);}
 // Verleihen (nur im Fenster). o = {tid, anteil, rolle, rueckruf, option}. Rückgabe Text (Fehler) oder null
 function verleihen(p,o){if(!p||p.team!==S.my||p.wech||istLeihe(p))return'Er kann nicht verliehen werden.';if(!fensterOffen())return'Leihen geht nur im Transferfenster.';
   const t=S.teams[o.tid];if(t&&!leihErlaubt(p,S.my,t.id))return leihKontingentText();
   if(!t||!leihVereine(p).includes(t))return`${t?t.name:'Der Verein'} hat keinen Bedarf.`;if(o.anteil>zahlBereit(p,t.id))return`${t.name} übernimmt höchstens ${Math.round(zahlBereit(p,t.id)*100)} % seines Gehalts.`;
+  p.um=null;delete p.umE; /* Prüfung FB6: verliehen ohne Umschulung */
   kabineAbgang(p,S.my);S.offers=S.offers.filter(x=>x.pid!==p.id);p.leihe={von:S.my,anteil:o.anteil,rolle:o.rolle==='stamm'?'stamm':'rotation',rueckruf:!!o.rueckruf,option:o.option>0?o.option:0,start:absTag(S.tag)};
   p.team=t.id;p.list=0;neuzugang(p,t.id);news(`Leihe: ${p.n} spielt bis zum Saisonende bei ${t.name} (${t.name} zahlt ${Math.round(o.anteil*100)} % seines Gehalts${o.option?`, Kaufoption ${fmt(o.option)}`:''}).`,'tr');return null;}
 // Zurückholen: im Winterfenster, wenn ein Rückruf vereinbart ist
 function zurueckholen(p){if(!istLeihe(p)||p.leihe.von!==S.my)return'Er ist nicht von dir verliehen.';if(!p.leihe.rueckruf)return'Ein Rückruf ist nicht vereinbart.';if(!fensterOffen())return'Zurückholen geht nur im Transferfenster.';
-  const von=p.team;kabineAbgang(p,von);delete p.leihe;p.team=S.my;kabineInit(p);rollenBerechnen(S.my);news(`${p.n} kommt vorzeitig von ${tn(von)} zurück.`);return null;}
+  const von=p.team,l=p.leihe;kabineAbgang(p,von);delete p.leihe;leiheIntegrationZurueck(p,l);p.team=S.my;kabineInit(p);rollenBerechnen(S.my);news(`${p.n} kommt vorzeitig von ${tn(von)} zurück.`);return null;}
 
 // ---------- Leihe holen ----------
 // Ein Verein gibt nur Spieler ab, die bei ihm nicht Stamm- oder Schlüsselspieler sind. Der Spieler will Einsatzzeit: bei dir mindestens Rotation.
-function ausleihen(p){if(transferSperre())return'Transfersperre wegen der Lizenzauflagen: In dieser Saison darfst du nicht ausleihen.';if(!p||p.team<0||p.team===S.my||istAusland(p)||p.wech||istLeihe(p))return'Diesen Spieler kannst du nicht ausleihen.';if(!fensterOffen())return'Leihen geht nur im Transferfenster.';
+// ausleihenGrund: alle Prüfungen ohne Wirkung (Grund oder null), auch für die Karte „Hilfe in der Not“ (K17b, Prüfung EE2)
+function ausleihenGrund(p){if(transferSperre())return'Transfersperre wegen der Lizenzauflagen: In dieser Saison darfst du nicht ausleihen.';if(!p||p.team<0||p.team===S.my||istAusland(p)||p.wech||istLeihe(p))return'Diesen Spieler kannst du nicht ausleihen.';if(!fensterOffen())return'Leihen geht nur im Transferfenster.';
   if(!RLE.holenRollen.includes(kaderRolle(p)))return`${tn(p.team)} gibt ${p.n} nicht ab, er ist dort gesetzt.`;
   if(einsatzSchaetzung(p,S.my)<RVT.einsatz.rotation)return`${p.n} will Spielzeit. Bei dir sähe er die Bank.`;if(squad(S.my).length>=RM.kaderMax)return`Dein Kader ist voll (höchstens ${RM.kaderMax} Spieler).`;
   if(!leihErlaubt(p,p.team,S.my))return leihKontingentText(); // U11d1
+  return null;}
+function ausleihen(p){const g=ausleihenGrund(p);if(g)return g;
   const von=p.team;kabineAbgang(p,von);p.leihe={von,anteil:1,rolle:'rotation',rueckruf:false,option:0,start:absTag(S.tag)};p.team=S.my;p.list=0;neuzugang(p,S.my);kabineInit(p);rollenBerechnen(S.my);
   news(`Leihe: ${p.n} kommt bis zum Saisonende von ${tn(von)}. Du zahlst sein Gehalt.`,'good');return null;}
 
@@ -50,7 +54,7 @@ function leiheEnde(){S.pl.forEach(p=>{if(!p.leihe)return;const l=p.leihe,bei=S.t
     if(l.von===S.my&&bei&&bei.id!==S.my)bezDuAendern(bei.id,l.gemeldet?RBZ.anlass.leiheSchlecht:RBZ.anlass.leiheGut,`Leihe von ${p.n}: Absprache ${l.gemeldet?'nicht ':''}gehalten`); // K17, U12c
     if(l.option&&bei&&aktiv(bei)&&bei.id!==l.von&&bei.cash>=l.option&&l.option<=vwKauf(p,bei.id)){if(l.von===S.my){money('Transfers',l.option);vertragEnde(p);}else if(heim)heim.cash+=l.option;bei.cash-=l.option;
       delete p.leihe;p.ct=riA(RM.neuerVertrag)+1;p.seit=absTag(S.tag);p.abl=l.option;statTransfer(p,l.option,l.von,bei.id);if(l.von===S.my)news(`Kaufoption gezogen: ${p.n} bleibt für ${fmt(l.option)} bei ${bei.name}.`,'good');return;}
-    const von=p.team;kabineAbgang(p,von);delete p.leihe;p.team=l.von;if(heim)neuzugang(p,l.von);if(l.von===S.my){kabineInit(p);news(`Leihe beendet: ${p.n} ist von ${tn(von)} zurück.`);}});}
+    const von=p.team;kabineAbgang(p,von);delete p.leihe;leiheIntegrationZurueck(p,l);p.team=l.von;if(heim)neuzugang(p,l.von,true); /* true: Rückkehr aus der Leihe, keine Heimkehr-Freude der Fans (K19e, Prüfung EP2) */if(l.von===S.my){kabineInit(p);news(`Leihe beendet: ${p.n} ist von ${tn(von)} zurück.`);}});}
 
 // ---------- Profis in die Zweite (K08 §12 Nr. 29) ----------
 // Bis 23 Jahre: Er behält Vertrag und Gehalt, spielt in der Zweiten und sammelt Spielpraxis. Zurück mit „Aufrücken“ (Vertrag bleibt) oder automatisch mit 24.

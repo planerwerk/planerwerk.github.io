@@ -38,7 +38,8 @@ pruef(verletztTage/kaderTage>=0.05&&verletztTage/kaderTage<=0.14,'Im Schnitt feh
 // 8. Ehrliche Spanne: Die Diagnose enthält die wahre Dauer in mindestens 85 % der Fälle
 pruef(spannen>0&&ehrlich/spannen>=0.85,'Diagnose-Spanne enthält die wahre Dauer in mindestens 85 % der Fälle',pc(ehrlich/spannen));
 // 9. Fit spritzen: spielt mit Wirkung ×0,95, wird in etwa 15 % der Fälle schlimmer; früher zurückholen gibt Frische 65 % und doppeltes Rückfallrisiko
-{const p=S.pl.find(x=>x.team===S.my&&x.inj<=0&&x.pos!=='TW');let schlimmer=0;const n=2000;
+// Der Spieler muss ohne Verletzung einsatzbereit sein (nicht gesperrt, nicht beim Nationalteam, im Europapokal gemeldet), sonst misst der Test etwas anderes (Lauf 15).
+{const p=S.pl.find(x=>x.team===S.my&&x.inj<=0&&x.pos!=='TW'&&ev('avail')(x))||S.pl.find(x=>x.team===S.my&&x.inj<=0&&x.pos!=='TW');let schlimmer=0;const n=2000;
   for(let i=0;i<n;i++){p.inj=0;p.vl=null;ev('verletzen')(p,'kollision',{art:'prellung',still:true});p.inj=4;p.spritze=S.tag;if(i===0){const a=ev('avail')(p),e=ev('eff')(p,'ZM'),q=e/((p.spritze=null),ev('eff')(p,'ZM'));p.spritze=S.tag;
       pruef(a&&Math.abs(q-RMD.spritzen.wirkung)<0.001,'Fit gespritzt: spielt mit Wirkung ×0,95',`einsatzbereit ${a}, Wirkung ×${q.toFixed(3)}`);}
     ev('nachSpritze')(p);if(p.vl&&p.vl.art!=='prellung')schlimmer++;}
@@ -48,5 +49,44 @@ pruef(spannen>0&&ehrlich/spannen>=0.85,'Diagnose-Spanne enthält die wahre Dauer
 // 10. Verletzungsfolge (K09 §5.2): Fällt der Gegner vier Wochen oder länger aus, beantragt der Kontrollausschuss im Schnitt ein Spiel mehr
 {const a=ev('antragFuer'),m=folge=>{let s=0;for(let i=0;i<2000;i++)s+=a({art:'grob',vor:0,folge});return s/2000;};const d=m(true)-m(false);
   pruef(d>=0.7&&d<=1.1,'Verletzungsfolge: im Schnitt etwa ein Spiel mehr',d.toFixed(2));}
+// K10b. Fehldiagnose (K10 §12 Nr. 9): mit Chance 1 ist die Diagnose bei deinem Verein zu optimistisch (wahre Dauer nach dem Ende der Spanne, die richtige steht in sk),
+//       am Ende der angezeigten Spanne kommt die Aufklärung mit Meldung; bei Computer-Vereinen nie; mit Chance 0 nie
+{const D=RMD.diagnose.fehl,alt=Object.assign({},D),p=S.pl.find(x=>x.team===S.my&&x.inj<=0),k=S.pl.find(x=>x.team>=0&&x.team!==S.my&&x.inj<=0);
+  const neu=x=>{x.inj=0;x.vl=null;return ev('verletzen')(x,'kollision',{art:'faserriss',still:true});};
+  D.ohne=1;D.min=1;const v=neu(p),falsch=!!v&&!!v.fehl&&v.sd[1]<v.t&&!!v.sk&&v.sd[1]>=Math.min(v.t-1,v.sv[0]),vk=neu(k),kiNie=!!vk&&!vk.fehl;
+  ev('fehlAufklaeren')(v.ab+v.sd[1]);const auf=!p.vl.fehl&&p.vl.sd[0]<=p.vl.sd[1]&&S.news.some(n=>n.t.startsWith('Rückschlag bei '+p.n));
+  D.ohne=0;D.min=0;const v0=neu(p),nie=!!v0&&!v0.fehl;Object.assign(D,alt);[p,k].forEach(x=>{x.inj=0;x.vl=null;});
+  pruef(falsch&&kiNie&&auf&&nie,'Fehldiagnose: zu optimistisch nur bei deinem Verein, Aufklärung am Ende der Spanne, mit Chance 0 nie',`falsch ${falsch}, Computer-Verein ${kiNie}, Aufklärung ${auf}, Chance 0 ${nie}`);}
+
+// K10c. Zweite Meinung (K10 §5): nicht vor der Diagnose, kostet nach Liga, deckt eine Fehldiagnose auf, danach enthält die Spanne die wahre Dauer
+//       (auch wenn die Behandlung die Pause ändert), nur einmal je Verletzung
+{const p=S.pl.find(x=>x.team===S.my&&x.inj<=0),Z=RMD.zweite,D=RMD.diagnose.fehl,alt=Object.assign({},D),L=S.lizenz;delete S.lizenz;
+  p.inj=0;p.vl=null;D.ohne=1;D.min=1;ev('verletzen')(p,'kollision',{art:'faserriss',still:true});Object.assign(D,alt);const v=p.vl,dg=v.dg;
+  v.dg=v.ab+99;const vorher=ev('medZweiteMoeglich')(p);v.dg=v.ab;const k=Z.kosten[ev('myT()').lg]||Z.kosten[3],m0=S.fin['Medizin']||0;
+  F.medZweite(p.id);const kosten=(S.fin['Medizin']||0)-m0,auf=!v.fehl&&v.zm===1&&v.sd[0]<=v.t&&v.t<=v.sd[1]&&p.inj>0;F.medZweite(p.id);const einmal=(S.fin['Medizin']||0)-m0===kosten;
+  if(L)S.lizenz=L;p.inj=0;p.vl=null;
+  pruef(!vorher&&kosten===-k&&auf&&einmal,'Zweite Meinung: nach der Diagnose, Kosten nach Liga, Fehldiagnose aufgedeckt, Spanne enthält die wahre Dauer, nur einmal',
+    `vor der Diagnose ${vorher}, Kosten ${kosten}, aufgedeckt ${auf}, einmal ${einmal}, Diagnosetag war ${dg}`);}
+
+// K10d. Saisonbilanz (K10 §12 Nr. 15): Text mit Verletzungen und Ausfalltagen deines Vereins und dem Ligaschnitt, ohne Verein leer
+{const b=ev('verletzungsBilanz')(S.my),t=F.verletzungsBilanzText(S.my);
+  pruef(t.startsWith(`${b.n} Verletzungen, ${b.tage} Ausfalltage`)&&t.includes('Ligaschnitt')&&F.verletzungsBilanzText(-1)==='','Saisonbilanz: Verletzungen und Ausfalltage mit Ligaschnitt',t);}
+
+// K16d. Arzt widerspricht (K16 §8): Bei mehr als arztAb Tagen in der angezeigten Spanne rät der Arzt beim ersten Klick ab, erst der zweite am selben Tag spritzt;
+//       bei einer kurzen Verletzung spritzt schon der erste Klick. Eigene Welt an einem eigenen Spieltag.
+{const {neueWelt}=require('./sim'),{W:W2,F:F2}=neueWelt();F2.buildWorld(SEED);const S2=W2.S,ev2=W2.ev;S2.my=6;S2.mgr='Test';S2.phase='play';
+  let d=0;while(d<S2.plan.ende&&!F2.meinSpiel(d))d++;S2.tag=d;const A=ev2('RMD').spritzen,heute=ev2('absTag')(d),sq=S2.pl.filter(x=>x.team===S2.my&&x.inj<=0&&x.pos!=='TW');
+  const setz=(p,sp)=>{p.inj=0;p.vl=null;F2.verletzen(p,'kollision',{art:'prellung',still:true});p.inj=sp[1]+1;Object.assign(p.vl,{ab:heute,dg:heute,sd:sp,sv:sp});};
+  const ab=ev2('arztAbTage')(),lang=sq[0],kurz=sq[1];setz(lang,[ab+2,ab+4]);setz(kurz,[1,2]); /* seit K16i mit der Grenze nach der Haltung des Arztes */
+  F2.medSpritzen(lang.id);const erst=lang.spritze!==d&&lang.spritzeWarn===heute;F2.medSpritzen(lang.id);const zweit=lang.spritze===d;F2.medSpritzen(kurz.id);const sofort=kurz.spritze===d;
+  pruef(d<S2.plan.ende&&erst&&zweit&&sofort,'Arzt widerspricht: bei langer Verletzung erst beim zweiten Klick gespritzt, bei kurzer sofort',`Spieltag ${d}, erster Klick ${erst}, zweiter ${zweit}, kurz ${sofort}`);
+
+  // K16i. Haltung des Arztes (K16 §3.2): fest aus der Nummer, nur Werte aus RMD.spritzen.haltung; sie verschiebt die Grenze, ohne Arzt gilt arztAb.
+  const ha=ev2('arztHaltung'),ag=ev2('arztAbTage'),ge=ev2('stabGeaendert'),aerzte=S2.stab.filter(x=>x.r==='arzt'),werte=new Set(aerzte.map(ha)),fest=[...werte].every(h=>h in A.haltung);
+  const mein=aerzte.filter(x=>x.team===S2.my);mein.forEach(x=>{x.team=-1;});ge();const ohne=ag()===A.arztAb;
+  const jeHaltung=['vorsichtig','risikofreudig'].every(h=>{const x=aerzte.find(y=>ha(y)===h);if(!x)return true;const t1=x.team;x.team=S2.my;ge();const r=ag()===A.arztAb+A.haltung[h];x.team=t1;ge();return r;});
+  mein.forEach(x=>{x.team=S2.my;});ge();
+  pruef(fest&&ohne&&jeHaltung&&werte.size>=2,'Haltung des Arztes: fest, verschiebt die Grenze für den Rat gegen das Spritzen, ohne Arzt arztAb',`Haltungen ${[...werte].join(', ')}, ohne Arzt ${ohne}, je Haltung ${jeHaltung}`);}
+
 console.log(`\n${N} Saison(s), ${verl.length} Verletzungen, ${alle.filter(x=>x.q==='krankheit').length} Krankheiten, in ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

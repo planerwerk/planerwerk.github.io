@@ -21,7 +21,7 @@ const punkte=(S,F,id)=>{const lg=S.teams[id].lg,r=F.table(lg).find(x=>x.id===id)
   const ohne=Object.keys(B).filter(b=>B[b].ab>1&&!mitSperre.has(b));
   pruef(!ohne.length,'Jeder Bereich ab der C-Lizenz hat eine Sperre an seiner Aktion',ohne.length?'ohne Sperre: '+ohne.join(', '):`${mitSperre.size} Bereiche mit Sperre`);
   // Aktionen des Spielers: jede Funktion in js/aktionen.js prüft ihren Bereich (Ausnahmen: Helfer ohne Entscheidung)
-  const helfer=['tab','bauLabel','bauKosten','bauWochen','bauVoll','abfindung','sgVerfahren'],fehlt=[];
+  const helfer=['tab','bauLabel','bauKosten','bauWochen','bauVoll','abfindung','sgVerfahren','aufDrag','aufDrop'],fehlt=[]; /* aufDrag, aufDrop (K35c, Prüfung FT1): setSlot prüft den Bereich */
   for(const m of code['aktionen.js'].matchAll(/^function (\w+)\([^)]*\)\{(.*)$/gm)){if(!helfer.includes(m[1])&&!/darf\(/.test(m[2]))fehlt.push(m[1]);}
   pruef(!fehlt.length,'Jede Aktion in js/aktionen.js prüft ihren Bereich',fehlt.join(', ')||null);
   const live=['liveZuruf','liveSpielerZuruf','liveTaktik','liveRein','liveAnsprache','liveReihe'].filter(f=>{const m=code['live.js'].match(new RegExp('^function '+f+'\\([^)]*\\)\\{(.*)$','m'));return !m||!(/darf\(/.test(m[1])||f==='liveRein');});
@@ -100,9 +100,10 @@ const punkte=(S,F,id)=>{const lg=S.teams[id].lg,r=F.table(lg).find(x=>x.id===id)
 // genau wie beim selben Verein als Computer-Verein. Das zeigt, dass die Automatik dieselben Regeln nutzt. Später trennen sich die Welten über das Geld
 // (dein Verein hat echte Buchhaltung, Computer-Vereine bekommen Einnahmen nach Formel) und damit über den Transfermarkt.
 // Ebenfalls ausgenommen: die Gerüchteküche (U17b). Sie wählt jede Woche gezielt ein Gerücht über deinen Verein, das die Stimmung drückt, Computer-Vereine bekommen keins (T1.1).
-{const TAGE=150,mach=mein=>{const {W,F}=neueWelt();F.buildWorld(SEED+10);const S=W.S;S.my=mein;S.mgr='Sim';F.setTarget();F.lizenzStart(false);allesAuto(S,W.ev,true);delete S.lizenz.auto.testspiele;W.ev('geruechteWoche=()=>{}');F.sponsOffers();S.lineup=F.bestXI(mein,W.ev('myT()').form);return{W,F};};
+// Und die Ereigniskarten (U12d): Viele treffen gezielt deinen Verein (etwa „Ein Spieler heiratet“), im anderen Lauf also einen anderen Verein (T5.1).
+{const TAGE=150,mach=mein=>{const {W,F}=neueWelt();F.buildWorld(SEED+10);const S=W.S;S.my=mein;S.mgr='Sim';F.setTarget();F.lizenzStart(false);allesAuto(S,W.ev,true);delete S.lizenz.auto.testspiele;W.ev('geruechteWoche=()=>{}');W.ev('kartenWoche=()=>{}');F.sponsOffers();S.lineup=F.bestXI(mein,W.ev('myT()').form);return{W,F};};
   const a=mach(6),b=mach(30),bild=x=>JSON.stringify(x.W.S.pl.filter(p=>p.team===6).map(p=>[p.id,p.str,p.fit,p.ko,p.form,p.sp,p.st,p.inj,p.sv,p.ww,p.ea]))+JSON.stringify([x.W.S.teams[6].form,x.W.S.teams[6].zh,x.W.S.res[1].filter(r=>r[0]===6||r[1]===6)]);
-  const schritt=x=>{const S=x.W.S;if(S.sponsOffers)x.F.sponsorWaehlen(0);if(S.fired){S.fired=0;S.trust=60;}x.W.ev('tagEnde')(S.tag);S.tag++;S.gespielt=-1;x.W.ev('tagBeginn')(S.tag);};
+  const schritt=x=>{const S=x.W.S;if(S.sponsOffers)x.F.sponsorWaehlen(0);if(S.fired){S.fired=0;S.trust=60;S.ruf=null;}x.W.ev('tagEnde')(S.tag);S.tag++;S.gespielt=-1;x.W.ev('tagBeginn')(S.tag);};
   let gleich=0;for(let i=0;i<TAGE;i++){schritt(a);schritt(b);if(bild(a)!==bild(b))break;gleich++;}
   pruef(gleich>=TAGE,`Gleichschritt: Kader und Ergebnisse ${TAGE} Tage lang Tag für Tag gleich, ob der Stab deinen Verein führt oder er ein Computer-Verein ist`,`${gleich} Tage gleich`);}
 
@@ -114,6 +115,37 @@ const punkte=(S,F,id)=>{const lg=S.teams[id].lg,r=F.table(lg).find(x=>x.id===id)
   // Geprüft wird deshalb, ob ein Nachteil von mehr als 2 Punkten nachweisbar ist (einseitig, 95 %). Genau messen: 18 Seeds, siehe K36 §12 Nr. 30.
   const dl=d.map(([a,c])=>a-c),diff=mw(dl),se=Math.sqrt(dl.reduce((x,y)=>x+(y-diff)*(y-diff),0)/Math.max(1,dl.length-1)/dl.length);
   pruef(diff+1.64*se>=-2,`Kein Nachteil: Automatik gegen Computer-Verein über ${SEEDS} Seeds, ein Nachteil von mehr als 2 Punkten ist nicht nachweisbar`,`${diff>=0?'+':''}${diff.toFixed(1)} ± ${se.toFixed(1)} Punkte (${d.map(([a,c])=>a+':'+c).join(', ')})`);}
+
+// K36c. Meldungen des Stabs (K36 §8): außerhalb der Tagesläufe sofort; in einem Tageslauf gesammelt, eine als eigene Zeile, mehrere als eine Zeile; danach ist der Sammler weg.
+//       Dazu ein echter Tag mit allem beim Stab: keine Stab-Meldung bleibt liegen.
+{const {S,F,ev,W}=welt(true),hat=t=>S.news.some(n=>n.t===t),enth=(...l)=>S.news.some(n=>l.every(x=>n.t.includes(x)));
+  F.stabMeldung('Test A');const sofort=hat('Test A');S.stabT=[];F.stabMeldung('Test B');const wartet=!hat('Test B');F.stabBericht();const eine=hat('Test B');
+  S.stabT=[];F.stabMeldung('Test C');F.stabMeldung('Test D','good');F.stabBericht();const zwei=enth('2 Entscheidungen','Test C','Test D')&&!hat('Test C');
+  ev('tagEnde')(S.tag);S.tag++;S.gespielt=-1;ev('tagBeginn')(S.tag);const leer=!('stabT' in S);
+  // Seit Prüfung DY: zwei Meldungen aus einem echten tagBeginn kommen genau einmal als eine Zeile; nach einem Fehler im Tageslauf ist die Meldung trotzdem da und der Sammler weg
+  while(ev('wochentag')(S.tag)===ev('RK').wochenTag)S.tag++;W.ev('taeglich=function(d){stabMeldung("Probe X1");stabMeldung("Probe X2","bad");}');ev('tagBeginn')(S.tag);
+  const tag2=S.news.filter(n=>n.t.includes('Probe X1')).length===1&&S.news.some(n=>n.t.includes('2 Entscheidungen')&&n.t.includes('Probe X2')&&n.c==='bad');
+  W.ev('taeglich=function(d){stabMeldung("Probe Y");throw new Error("Test");}');let fehler=false;try{ev('tagBeginn')(S.tag);}catch(e){fehler=true;}const nachFehler=fehler&&hat('Probe Y')&&!('stabT' in S);
+  pruef(sofort&&wartet&&eine&&zwei&&leer&&tag2&&nachFehler,'Meldungen des Stabs: sofort außerhalb des Tageslaufs, im Tageslauf gesammelt, mehrere in einer Zeile, nichts bleibt liegen',
+    `sofort ${sofort}, gesammelt ${wartet}, eine ${eine}, mehrere ${zwei}, Sammler weg ${leer}, echter Tag ${tag2}, nach Fehler ${nachFehler}`);}
+
+// K36d. Kleine Aufgabe auf der Aufstiegskarte (K36 §8): Jede Aufgabe aller Lizenzen hat einen Ort mit bekanntem Bereich. Vorschlag ist die erste offene Aufgabe der nächsten Lizenz;
+//       gemerkt steht sie im Büro, bis sie erledigt ist; die nächste Lizenz löscht sie; ohne Lernstufen kein Vorschlag.
+{const {S,F,ev}=welt(true),R=ev('RLZ'),fehlt=[];R.aufstieg.forEach(A=>{if(A)A.aufgaben.forEach(k=>{const O=R.aufgabenOrt[k];if(!O||!R.bereiche[O[0]]||!O[1])fehlt.push(k);});});
+  const L=S.lizenz,v1=ev('lizenzVorschlag')();L.aufgaben.startelf=1;const v2=ev('lizenzVorschlag')();F.lizenzMerken(v2&&v2.k);const karte=F.lizenzMerkKarte(),zeigt=karte.includes(R.aufgabenNamen.liveBisEnde)&&karte.includes("tab('buero')");
+  L.aufgaben.liveBisEnde=1;const weg=F.lizenzMerkKarte()==='';F.lizenzMerken('wechsel');F.lizenzAufstieg('geholt');const neu=L.merk===null;L.an=false;const aus=F.lizenzMerkKarte()===''&&ev('lizenzVorschlag')()===null;
+  pruef(!fehlt.length&&!!v1&&v1.k==='startelf'&&!!v2&&v2.k==='liveBisEnde'&&zeigt&&weg&&neu&&aus,'Kleine Aufgabe: Ort für jede Aufgabe, Vorschlag ist die erste offene, gemerkt im Büro bis erledigt, die nächste Lizenz löscht sie',
+    `ohne Ort ${fehlt.join(',')||'keine'}, Vorschlag ${v1&&v1.k} dann ${v2&&v2.k}, Karte ${zeigt}, erledigt weg ${weg}, nach Aufstieg ${neu}, ohne Lernstufen ${aus}`);}
+
+// Prüfung FE2, FE3: Aufgaben, die einen Anlass brauchen (ohneGelegenheit), schlägt die Karte erst vor, wenn keine andere offen ist. Ohne Lernstufen (aus oder S.lizenz null)
+//       gibt es weder Vorschlag noch Merkkarte, mit ihnen zeigt die Merkkarte eine gemerkte offene Aufgabe (Gegenprobe).
+{const {S,F,ev}=welt(true),R=ev('RLZ'),og=R.ohneGelegenheit,L=S.lizenz,i=R.aufstieg.findIndex(A=>!!A&&A.aufgaben.some(k=>og.includes(k))&&A.aufgaben.some(k=>!og.includes(k)));
+  L.stufe=i;L.aufgaben={};L.gel=Object.fromEntries(og.map(k=>[k,1]));L.karte=null; /* gel: es gab Gelegenheit, die Anlass-Aufgaben bleiben offen */
+  const v=ev('lizenzVorschlag')();R.aufstieg[i].aufgaben.forEach(k=>{if(!og.includes(k))L.aufgaben[k]=1;});const w=ev('lizenzVorschlag')();
+  const k0=R.aufstieg[i].aufgaben.find(k=>!og.includes(k));L.aufgaben={};F.lizenzMerken(k0);const mitAn=F.lizenzMerkKarte()!=='';
+  L.an=false;const ohneAn=F.lizenzMerkKarte()===''&&ev('lizenzVorschlag')()===null;S.lizenz=null;const ohneL=F.lizenzMerkKarte()===''&&ev('lizenzVorschlag')()===null&&F.lizenzKarte()==='';
+  pruef(i>=0&&!!v&&!og.includes(v.k)&&!!w&&og.includes(w.k)&&mitAn&&ohneAn&&ohneL,'Kleine Aufgabe: Anlass-Aufgaben zuletzt, ohne Lernstufen weder Vorschlag noch Merkkarte',
+    `Stufe ${i}, Vorschlag ${v&&v.k}, wenn nur noch Anlass-Aufgaben offen ${w&&w.k}, Merkkarte mit Lernstufen ${mitAn}, Lernstufen aus ${ohneAn}, ohne S.lizenz ${ohneL}`);}
 
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

@@ -11,9 +11,21 @@ function spielAbstand(d){const key=S.season+'/'+d;if(ABSTAND.key===key)return AB
 // Vorlage, die der Co-Trainer (und jeder Computer-Verein) wählt (K07 §7): englische Woche bei höchstens 4 Tagen zwischen zwei Spielen, Aufbau in Pausen, Vorbereitung vor dem ersten Pflichtspiel
 function vorlageAuto(a,d,t){if(!a||a.next==null)return'aufbau';if(a.last==null&&d<auftaktTag(t)+RT.vorbereitungTage)return'vorbereitung';
   const gap=a.last!=null?a.next-a.last:99;return gap<=RT.englischBis?'englisch':a.next-d>RT.pauseAb?'aufbau':'standard';}
-const vorlageVon=(t,a,d)=>t&&t.vorlage&&t.vorlage!=='auto'&&RT.vorlagen[t.vorlage]&&!(t.id===S.my&&autoB('vorlage'))?t.vorlage:vorlageAuto(a,d,t);
+// Eigene Vorlagen (K07 §6, K07f): S.eigV = {e1: {name, p1, p1rest, p2, mitte: [3 × [Einheit, Intensität]], m2, m1}}, höchstens RT.eigeneMax, nur für deinen Verein.
+// Ein anderer Verein (auch dein früherer) findet sie nicht und plant nach vorlageAuto.
+const vorlageDef=(k,t)=>!k?null:RT.vorlagen[k]||(t&&t.id===S.my&&S.eigV&&S.eigV[k])||null;
+const vorlageVon=(t,a,d)=>t&&t.vorlage&&t.vorlage!=='auto'&&vorlageDef(t.vorlage,t)&&!(t.id===S.my&&autoB('vorlage'))?t.vorlage:vorlageAuto(a,d,t);
+const EIGENE_SLOTS=[['p1','Tag nach dem Spiel, Startelf'],['p1rest','Tag nach dem Spiel, übrige'],['p2','zwei Tage danach'],['mitte0','mittlere Tage, 1.'],['mitte1','mittlere Tage, 2.'],['mitte2','mittlere Tage, 3.'],['m2','zwei Tage vor dem Spiel'],['m1','Tag vor dem Spiel']];
+// Eigene Vorlage aus Werten {slot: [Einheit, Intensität]} bauen. Rückgabe: Vorlage oder ein Text mit dem Fehler. Ohne Wirkung auf den Spielstand.
+function eigeneVorlageAus(w,name){const v={name:String(name||'').trim().slice(0,30)||'Eigene Vorlage',mitte:[]};
+  for(const[k,txt]of EIGENE_SLOTS){const x=w&&w[k];if(!x||!RT.einheiten[x[0]]||!RT.intensitaet[x[1]])return`${txt}: Einheit oder Intensität fehlt.`;if(k.startsWith('mitte'))v.mitte.push([x[0],x[1]]);else v[k]=[x[0],x[1]];}
+  return v;}
+// Speichern (erste freie Kennung e1 … eN) oder Text mit dem Grund
+function eigeneVorlageSpeichernLauf(v){if(typeof v==='string')return v;const E=S.eigV||(S.eigV={});let k=null;for(let i=1;i<=RT.eigeneMax;i++)if(!E['e'+i]){k='e'+i;break;}
+  if(!k)return`Höchstens ${RT.eigeneMax} eigene Vorlagen. Lösch erst eine.`;E[k]=v;return k;}
+function eigeneVorlageLoeschenLauf(k){if(!S.eigV||!S.eigV[k])return;delete S.eigV[k];const t=myT();if(t&&t.vorlage===k)t.vorlage='auto';}
 // Einheit eines Spielers an Tag d: [Einheit, Intensität] oder null (Spieltag). MD+1 regenerieren nur Spieler mit mindestens 60 Minuten.
-function einheitFuer(p,t,a,d){a=a||{};if(a.heute)return null;const key=vorlageVon(t,a,d),V=RT.vorlagen[key];
+function einheitFuer(p,t,a,d){a=a||{};if(a.heute)return null;const key=vorlageVon(t,a,d),V=vorlageDef(key,t);
   const L=a.last!=null?d-a.last:null,N=a.next!=null?a.next-d:null;
   if(key==='vorbereitung'){if(N===1)return V.m1;const a0=auftaktTag(t),w=Math.max(0,Math.floor((d-a0)/7)),l=V.wochen[Math.min(w,V.wochen.length-1)];return l[((d-a0)%l.length+l.length)%l.length];}
   if(L===1)return p&&p.ltag===a.last&&p.lmin>=RT.startspielerAb?V.p1:V.p1rest;if(N===1)return V.m1;if(L===2)return V.p2;if(N===2)return V.m2;
@@ -25,6 +37,19 @@ function einheitVerein(t,a,d){return einheitFuer(Object.assign({},STARTER,{ltag:
 function lastBuchen(p,l){const L=RT.last;p.la=(p.la||0)+(l-(p.la||0))*2/(L.akut+1);p.lc=(p.lc||0)+(l-(p.lc||0))*2/(L.chronisch+1);}
 // Untergrenze der gewohnten Last: auch im Urlaub halten sich Profis etwas fit, sonst wäre jeder erste Trainingstag ein riesiger Sprung
 const lastQuote=p=>(p.la||0)/Math.max(p.lc||0,RT.last.grund);
+// Erinnerung „Plan passt nicht“ (K07 §5 Nr. 4, K07b): von dir gewählte Standardwoche, obwohl deine nächsten zwei Pflichtspiele höchstens RT.englischBis auseinander liegen,
+// oder mindestens spielerAb Spieler der Startelf mit Belastungssprung (lastQuote) über sprungAb. Nicht unter der Automatik der Vorlage, höchstens alle abstandTage (Prüfung DV1).
+// Rückgabe: Eintrag für erinnerungen (kalender.js) oder null
+function planPasstNicht(d){const t=myT(),E=RT.planErinnerung,grund=[];if(autoB('vorlage'))return null;const heute=absTag(d);if(S.planEr!=null&&heute-S.planEr<E.abstandTage)return null;
+  const sp=[];for(let x=d;x<=d+E.vorschau&&sp.length<2;x++)if(meinSpiel(x))sp.push(x);
+  if(t.vorlage==='standard'&&sp.length===2&&sp[1]-sp[0]<=RT.englischBis)grund.push(`Englische Woche mit der ${RT.vorlagen.standard.name}: Die Vorlage „${RT.vorlagen.englisch.name}“ schont die Spieler.`);
+  const xi=new Set(myXI()),hoch=squad(S.my).filter(p=>xi.has(p.id)&&lastQuote(p)>E.sprungAb);if(hoch.length>=E.spielerAb)grund.push(`${hoch.map(p=>esc(p.n)).join(', ')} haben einen Belastungssprung über ${de(E.sprungAb,1)}: Verletzungsgefahr.`);
+  if(!grund.length)return null;S.planEr=heute;return{art:'plan',text:grund.join(' '),tab:'training',knopf:'Zum Training'};}
+// Erinnerung „Lernplatz frei“ (K07 §8, K07d): ein Platz im Einzeltraining ist frei, und du vergibst Lernziele selbst (Bereich lernziel frei, ohne Automatik).
+// Höchstens einmal je RT.lernplatzErinnerung.abstandTage (S.lpEr).
+function lernplatzFrei(d){if(S.phase!=='play'||autoB('lernziel')||!frei('lernziel'))return null;const heute=absTag(d);if(S.lpEr!=null&&heute-S.lpEr<RT.lernplatzErinnerung.abstandTage)return null;
+  const n=lernPlaetze(S.my),belegt=squad(S.my).filter(p=>p.ls||p.um).length;if(belegt>=n)return null;if(!squad(S.my).some(p=>!p.ls&&!p.um&&!(p.inj>0)&&(lernOptionen(p).length||(frei('umschulung')&&umschulungZiele(p).length))))return null; /* nur, wenn jemand etwas lernen kann (Prüfung EC4) */S.lpEr=heute;
+  return{art:'lernplatz',text:`${n-belegt} von ${n} Plätzen im Einzeltraining ${n-belegt===1?'ist':'sind'} frei. Ein Lernziel oder eine Umschulung bringt einen Spieler weiter.`,tab:'training',knopf:'Zum Training'};}
 function sprungFaktor(q){const V=RT.verletzung;return q<=V.sprungAb?1:1+V.sprungJe01*(q-V.sprungAb)/0.1;}
 
 // Ein Trainingstag eines Spielers: gibt den Frischeverlust (negativ) oder -gewinn zurück und bucht Reize, Last, Spielpraxis und Verletzungsrisiko
@@ -78,8 +103,13 @@ function umschulungHinweis(p){const U=RT.umschulung,gel=umgeschult(p);if(p.pos==
   else teile.push(hatMk(p,'vielseitig')?'Vielseitig: auch entfernte Positionen und eine zweite Umschulung sind möglich.':p.age<=U.jungBis?`Bis ${U.jungBis} Jahre sind auch entfernte Positionen möglich, danach nur noch Nachbarpositionen.`:'Möglich sind nur Nachbarpositionen. Torwart nie.');
   const t=umschulungTempo(p);teile.push(t>1?'Er lernt schnell.':t<0.7?'In seinem Alter lernt er langsam und erreicht weniger.':'');return teile.filter(Boolean).join(' ');}
 const umschulungZiele=p=>Object.keys(RP.positionsNamen).filter(x=>!umschulungGrund(p,x));
-function umschulungWoche(p){if(!p.um||p.team<0||p.inj>0)return;const U=RT.umschulung,pos=p.um;if(umschulungGrund(p,pos)){p.um=null;return;}
+// Einsatz auf der neuen Position (K07 §3.3, K07g): zählt wie eine Trainingswoche zusätzlich, ab RT.umschulung.einsatzMinuten Minuten,
+// höchstens einmal in einsatzTage Tagen (p.umE: absoluter Tag des letzten gezählten Einsatzes), damit eine englische Woche nicht doppelt zählt. Ohne Zufall.
+// Prüfung FB5: Die Sperre zählt nur, wenn der Einsatz wirklich etwas bringt (nicht verletzt, Umschulung noch möglich), und der Einsatz zählt voll, unabhängig vom Training der Woche.
+function umschulungEinsatz(p,pos,min){const U=RT.umschulung;if(!p||!p.um||pos!==p.um||!(min>=U.einsatzMinuten)||p.team<0||p.inj>0||umschulungGrund(p,pos))return false;const h=absTag(S.tag);
+  if(p.umE!=null&&h-p.umE<U.einsatzTage)return false;p.umE=h;umschulungWoche(p,true);return true;}
+function umschulungWoche(p,voll){if(!p.um||p.team<0||p.inj>0)return;const U=RT.umschulung,pos=p.um;if(umschulungGrund(p,pos)){p.um=null;return;}
   const max=umschulungMax(p,pos),basis=eignungOhneTraining(p,pos);p.ue=p.ue||{};
   // ohne Fußabzug: verwandt ist, was nah beieinander liegt
-  const akt=Math.max(p.ue[pos]||0,basis),plus=(basis>=U.verwandtAb?U.verwandt:U.fremd)*umschulungTempo(p)*stabFaktor(p.team,'co')*(genugTraining(p)?1:0.5);
+  const akt=Math.max(p.ue[pos]||0,basis),plus=(basis>=U.verwandtAb?U.verwandt:U.fremd)*umschulungTempo(p)*stabFaktor(p.team,'co')*(voll||genugTraining(p)?1:0.5);
   p.ue[pos]=Math.min(max,akt+plus);if(p.ue[pos]>=max){p.uf=[...umgeschult(p),pos];if(p.team===S.my)news(`Umschulung abgeschlossen: ${p.n} kann jetzt ${RP.positionsNamen[pos]||pos} (${max} %).`,'good');p.um=null;}}

@@ -81,7 +81,13 @@ Der Plan ist eine Tabelle **„Tage bis zum nächsten Spiel / Tage seit dem letz
   - **Tempo:** 4 Punkte pro Woche bei Positionen mit Startwert ab 75 %, sonst 2 Punkte, mal Alter: bis 19 Jahre ×1,25, bis 23 ×1, bis 27 ×0,8, bis 30 ×0,6, darüber ×0,4.
   - **Höchstwert:** Nachbarposition 90 % (mit „vielseitig“ 95 %), entfernte Position 85 %. Nach Alter weniger: bis 23 Jahre voll, bis 27 Jahre −2, bis 30 Jahre −5, darüber −8. Liegt der Höchstwert nicht über dem, was er dort schon kann, gibt es keine Umschulung.
   - **Selten:** Ein Spieler lernt in seiner Laufbahn eine Position dazu, mit „vielseitig“ zwei. Die Umschulung belegt einen Einzeltrainingsplatz. Computer-Vereine schulen nicht um.
-  - Einsätze auf der neuen Position zählen wie eine Trainingswoche zusätzlich (noch nicht gebaut).
+  - Einsätze auf der neuen Position zählen wie eine Trainingswoche zusätzlich. **Gebaut als K07g** (23.11.2026, popolupo, ohne Testlauf, Werte vorläufig):
+    - Ab 45 Minuten auf genau der Position, auf die er umschult, gleich in welchem Spiel (auch Testspiele: `testspielNach` ruft `umschulungEinsatz` auf, seit Prüfung FB4).
+    - Höchstens einmal in 7 Tagen (`p.umE`), sonst brächte eine englische Woche drei Wochen Fortschritt. Die 7 Tage beginnen nur, wenn der Einsatz wirklich etwas bringt: nicht verletzt, Umschulung noch möglich (Prüfung FB5).
+    - Gerechnet wird wie in der Trainingswoche mit Alter und Co-Trainer, aber immer voll: Das Training der laufenden Woche zählt beim Einsatz nicht, sonst wäre ein Einsatz am Dienstag halb so viel wert wie einer am Samstag (Prüfung FB5). Ohne Zufall.
+    - Nur wer eine Umschulung hat. Die setzt nur der Spieler von Hand, Computer-Vereine schulen nicht um. Der Gleichschritt bleibt darum gleich.
+    - Wer geht, schult nicht weiter um: Vertragsende (Verkauf, Auflösung, `vertragEnde`) und Verleihen (`verleihen`) löschen `p.um` und `p.umE`, wie schon das Abstellen in die Zweite (Prüfung FB6). Für alle anderen Wege (Vertrag ausgelaufen, Leihe zurück, dein Jobwechsel) löscht die Woche (`wocheVerein`) beides bei jedem, der nicht bei dir ist, und Einsätze zählen nur bei dir (Prüfung FC2).
+    - Regelwerte: `RT.umschulung.einsatzMinuten` und `einsatzTage`.
 - **Plätze:** Wie viele Spieler gleichzeitig Einzeltraining haben, hängt vom Stab ab (K16). Bis dahin 5 Plätze im Kader.
 - Gespeichert am Spieler: Lernziele `ls` (K03), trainierte Eignungen `ue = {Position: Wert}` (bis UL irrtümlich im Feld `eig`), abgeschlossene Umschulungen `uf`.
 
@@ -178,6 +184,12 @@ Frischefaktor  = 1 über 80 %, darunter +5 % je Punkt
 | Lernziel erreicht | aus K03 | Info, Erinnerung „Lernplatz frei“ |
 | Umschulung abgeschlossen | Eignung 90 % | Info |
 
+**Gebaut als K07c (22.11.2026, popolupo, ohne Testlauf), Karten nach K30:**
+- **Spieler bittet um Pause** (Entscheidung, Voreinstellung Pause): gesunder Spieler deines Kaders mit Frische unter 65 und Professionalität ab 13. Vorläufig ohne „über eine Woche“, die Frische wird nicht über die Zeit gespeichert. Pause: neue Kartenwirkung `pause`, Frische +15, Spielpraxis −5, Stimmung +2. Durchziehen: Stimmung −2, das Risiko liegt in der niedrigen Frische selbst.
+- **Verletzungsserie** (Meldung): mindestens drei Trainingsverletzungen deines Kaders in 14 Tagen (laufende und ausgeheilte, aus `p.vl` und `p.vh`).
+- **Rangelei im Training** gibt es schon in der Kabine (K14, Hitzköpfe, wöchentlich mit Beziehung), darum keine eigene Karte. Offen bleiben „Trainingsweltmeister übertreibt“, „Lernziel erreicht“ und „Umschulung abgeschlossen“. Stand 24.11.: „Lernziel erreicht“ und „Umschulung abgeschlossen“ gibt es als Meldungen (`merkmalNeu`, `umschulungWoche`). „Trainingsweltmeister übertreibt“ seit K07h (popolupo, ohne Testlauf): Info-Karte mit Chance 0,1 je Woche für einen gesunden Trainingsweltmeister oder Vorbildprofi deines Kaders in der Vorbereitung (42 Tage ab Trainingsauftakt) oder mit Belastungssprung; mit 70 % lobt ihn der Co-Trainer (Selbstvertrauen +1, Stimmung +2), sonst eine Zerrung (neue Kartenwirkung `uebertrieben`).
+- Zahlen in `REGELN.karten.training`. Gleichschritt: Karten sind in `tests/lizenz.js` 5a abgeschaltet.
+
 ## 9. Wechselwirkungen
 
 | Konzept | Zusammenspiel |
@@ -251,7 +263,7 @@ training:{
 11. **„Training wirkt“ wird über die Wirkung geprüft** (Startelf stärker, Kondition höher, nicht mehr Ausfälle), nicht über Punkte: Punkte schwanken über wenige Saisons um ±7 je Saison. Gemessen: Startelf +0,4 bis +0,5 stärker als mit „Schonen“, also etwa +1 Punkt im ersten Jahr und mehr danach.
 12. **Vorbereitung** als Vorlage mit vier Wochen (normal, hart, hart, Taktik). Der Co-Trainer nutzt sie bis zum ersten Pflichtspiel. Doppeleinheiten, Leistungstests und Testspiele kommen mit K11 und K12a.
 13. **Umschulung** belegt einen der fünf Einzeltrainingsplätze. Verwandt heißt: Eignung ohne Fußabzug mindestens 75 %. Der Fuß bleibt nach der Umschulung ein Nachteil (außer bei beidfüßigen). **Geändert am 12.11. nach deiner Entscheidung** (§3.3): nur Nachbarpositionen, entfernte nur sehr jung oder vielseitig, nie Torwart, nach Alter gestaffelt, eine Umschulung je Laufbahn. Vorläufig von mir: was als Nachbar gilt (die verwandten Paare der Eignungstabelle), „sehr jung“ bis 19 Jahre, Torwart auch für sehr junge und vielseitige Spieler ausgeschlossen, die Staffeln für Tempo und Höchstwert, die Grenze von einer Position (zwei mit „vielseitig“), „bestimmtes Talent“ gleich Merkmal „vielseitig“.
-14. **Noch nicht gebaut:** eigene Vorlagen speichern, Erinnerung „Plan passt nicht“, Ereignisse aus §8, eigenes Torwarttraining (K16), Bonus +2 % mit Gegneranalyse (K18).
+14. **Noch nicht gebaut:** (eigene Vorlagen seit K07f, 23.11.2026, popolupo, ohne Testlauf: bis zu drei, je Tag im Abstand zum Spiel wie die festen, nur für deinen Verein und nur ohne Automatik des Bereichs `vorlage`, Formular im Training vorbelegt mit der eingestellten Vorlage) Ereignisse aus §8 außer „Spieler bittet um Pause“ und „Verletzungsserie“ (K07c, §8), „Rangelei im Training“ (K07e, 22.11.2026, ohne Testlauf: Hitzkopf mit Rivale im Kader, Geldstrafe, Aussprache oder laufen lassen; die Intensität des Trainings zählt noch nicht, eine Verletzung gibt es nicht) und der Erinnerung „Lernplatz frei“ (K07d; „Lernziel erreicht“ und „Umschulung abgeschlossen“ gab es schon als Meldung), eigenes Torwarttraining (K16). Bonus +2 % mit Gegneranalyse seit K18c (Gegnerbeobachtung durch einen Scout). Die Erinnerung „Plan passt nicht“ gibt es seit K07b (22.11., popolupo, ohne Testlauf): selbst gewählte Standardwoche in einer englischen Woche (zwei Pflichtspiele höchstens 4 Tage auseinander) oder mindestens drei Spieler der Startelf mit Belastungssprung über 1,5. Eine harte Einheit am Tag vor einem Spiel kann keine Vorlage erzeugen (MD-1 ist immer Spielvorbereitung), darum fehlt dieser Fall.
 
 **Recherchiert:** Anteil der Trainingsverletzungen siehe Nr. 10.
 

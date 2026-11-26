@@ -9,9 +9,12 @@ const inVorbereitung=d=>d>=auftaktTag(myT())&&d<ersterPflichttermin();
 function pflichtspielNah(tid,d,k){for(let x=d-k;x<=d+k;x++){if(spielendeAm(x).has(tid))return true;if(S.supercup&&S.supercup.tag===x&&[S.supercup.h,S.supercup.a].includes(tid))return true;
     const P=S.plan.pokal.findIndex(z=>z[0]===x);if(P>=0&&S.cup.alive.includes(tid)&&S.cup.hist.length<=P)return true;}return false;}
 // Mögliche Tage für ein Testspiel: ab übermorgen plus Antwortzeit, kein Urlaub, Abstand zu eigenen Pflichtspielen, höchstens eins pro Tag
-function testspielTage(){const T=RTS,l=[],von=S.tag+T.vorlaufTage,bis=Math.min(S.plan.ende-1,S.tag+T.planTage),belegt=new Set((S.testspiele||[]).filter(x=>x.stand!=='abgesagt').map(x=>x.tag));
+function testspielTage(){const T=RTS,l=[],von=S.tag+T.vorlaufTage,bis=Math.min(S.plan.ende-1,S.tag+T.planTage),alle=testspielBelegt(),belegt=new Set(alle);
   for(let d=von;d<=bis;d++){if(belegt.has(d)||d<auftaktTag(myT())||pflichtspielNah(S.my,d,T.abstandPflichtspiel))continue;
-    const w=Math.floor(d/7),n=(S.testspiele||[]).filter(x=>x.stand!=='abgesagt'&&Math.floor(x.tag/7)===w).length;if(n>=T.maxProWoche)continue;l.push(d);}return l;}
+    const w=Math.floor(d/7),n=alle.filter(x=>Math.floor(x/7)===w).length;if(n>=T.maxProWoche)continue;l.push(d);}return l;}
+// Belegte Testspieltage (nicht abgesagt), dazu Tag 2 eines angemeldeten Sommerturniers, solange er noch nicht eingetragen ist (Prüfung DW1)
+function testspielBelegt(){const U=S.turnier,l=(S.testspiele||[]).filter(x=>x.stand!=='abgesagt').map(x=>x.tag);
+  if(U&&U.s===S.season&&U.platz==null&&!(S.testspiele||[]).some(x=>x.turnier&&x.runde===2&&x.tag===U.tag+1))l.push(U.tag+1);return l;}
 // Vorgeschlagene Gegner: zwei Amateurvereine aus der Region, Profis aus der 1. bis 3. Liga nach Niveau (näher zuerst)
 function testspielGegner(d){const me=teamLevel(S.my),t=myT(),pro=S.teams.filter(x=>aktiv(x)&&x.id!==S.my).map(x=>({id:x.id,d:teamLevel(x.id)-me,reg:x.region===t.region}))
     .sort((a,b)=>Math.abs(a.d)-Math.abs(b.d)-(a.reg-b.reg)*2).slice(0,inVorbereitung(d)&&vorbereitungsWoche(d)<RTS.abWoche?0:RTS.vorschlaege);
@@ -23,34 +26,40 @@ function zusageChance(tid,d){const Z=RTS.zusage;if(tid>=1000)return Z.max;const 
   if(inVorbereitung(d)&&vorbereitungsWoche(d)<RTS.abWoche)return 0; // Profis erst ab der 3. Vorbereitungswoche, davor nur Amateure (Anstoss-Idee)
   p*=1+RBZ.wirkung.testspiel*bezWirk(tid); // Beziehung (K17 §5.2, U12c)
   return clamp(p,Z.min,Z.max);}
-function testspielAnfragen(tid,d){if(!testspielTage().includes(d))return null;(S.testspiele=S.testspiele||[]);S.testId=(S.testId||0)+1;
+// Auslandsvereine als Gegner im Trainingslager (K11 §12 Nr. 11, K11h): an Lagertagen die RTS.lagerAusland Vereine aus dem Land des Lagerorts (RLA.orte[…].land), deren
+// Stärke deiner am nächsten liegt; erst ab der Woche, ab der auch Profis zusagen. Gespielt wird dort (auswärts, ohne Zuschauereinnahmen). Ohne Zufall.
+function testspielGegnerAusland(d){const l=lagerAktiv(d),O=l&&RLA.orte[l.ort];if(!O||!O.land||!S.ausland||(inVorbereitung(d)&&vorbereitungsWoche(d)<RTS.abWoche))return[];const me=euSt(S.my); /* gleiche Skala wie euStaerke, mit dem Faktor der Engine (Prüfung FP4) */
+  return S.ausland.v.filter(v=>v&&v.land===O.land).map(v=>({id:v.id,d:euStaerke(v.id)-me,aus:true})).sort((a,b)=>Math.abs(a.d)-Math.abs(b.d)||a.id-b.id).slice(0,RTS.lagerAusland);}
+function testspielAnfragen(tid,d){if(!testspielTage().includes(d))return null;if(tid>=AV0&&!testspielGegnerAusland(d).some(g=>g.id===tid))return null; /* Auslandsverein nur im Lager (K11h) */(S.testspiele=S.testspiele||[]);S.testId=(S.testId||0)+1;
   const x={id:S.testId,tag:d,gegner:tid,heim:tid<1000,stand:'angefragt',antwortAm:S.tag+riA(RTS.antwortTage)};S.testspiele.push(x);return x;}
 // Jeden Tag: Antworten auf Anfragen, Trainingslager
-function testspieleTag(d){(S.testspiele||[]).forEach(x=>{if(x.stand!=='angefragt'||d<x.antwortAm)return;const ok=R()<zusageChance(x.gegner,x.tag);x.stand=ok?'zugesagt':'abgesagt';
+function testspieleTag(d){if(wochentag(d)===RK.wochenTag)kiTestspielAnfrage(d); /* Anfragen der Computer-Vereine (K11c) */ (S.testspiele||[]).forEach(x=>{if(x.stand!=='angefragt'||d<x.antwortAm)return;const ok=R()<zusageChance(x.gegner,x.tag);x.stand=ok?'zugesagt':'abgesagt';
   news(ok?`Testspiel am ${datumKurz(x.tag)}: ${tn(x.gegner)} sagt zu${x.heim?' und kommt zu dir':', du spielst dort'}.`:`${tn(x.gegner)} sagt das Testspiel am ${datumKurz(x.tag)} ab.`,ok?'good':'');});
   lagerTag(d);}
 const testspielHeute=d=>(S.testspiele||[]).filter(x=>x.stand==='zugesagt'&&x.tag===d);
 
-// Nach dem Testspiel (K11 §3.2): weniger Frische und Belastung, Spielpraxis 60 %, Form zu 30 %, Vertrautheit +2, Lernen zur Hälfte, keine Karten, kein Einsatz in der Statistik
+// Nach dem Testspiel (K11 §3.2): weniger Frische und Belastung, Spielpraxis 60 %, Form zu 30 %, Vertrautheit +2, Lernen zur Hälfte, keine Karten, kein Einsatz in der Statistik.
+// Ein Einsatz auf der Umschulungsposition zählt wie im Pflichtspiel (K07 §3.3, K07g, Prüfung FB4).
 function testspielNach(r,x){const T=RTS,N=RE.note,F=RP.frische;
   [0,1].forEach(s=>{const tid=s?r.a:r.h;if(tid>=1000)return;const gf=s?r.ag:r.hg,ga=s?r.hg:r.ag,res=gf>ga?1:gf<ga?-1:0;
-    r.xpo[s].forEach(([id,,,min=90])=>{const p=PIX.get(id);if(!p)return;
+    r.xpo[s].forEach(([id,pos,,min=90])=>{const p=PIX.get(id);if(!p)return;if(p.um&&p.team===S.my)umschulungEinsatz(p,pos,min);
       p.fit=clamp(p.fit-F.spiel*min/90*(F.ko[0]+F.ko[1]*p.ko)*T.frische,RE.fitnessMin,100);p.sp=Math.min(100,p.sp+RP.spielpraxis.jeSpiel*min/90*T.praxis);
       lastBuchen(p,RT.spielLast*min/90*T.frische);p.wk=(p.wk||0)+RT.spielKondition*min/90;p.ltag=S.tag;p.lmin=min;p.sb=Math.min(100,(p.sb||0)+min/RSO.belastung.jeMinuten*T.frische);
       if(min>=N.mindestMinuten){const fest=N.basis-(p.str-N.staerkeMitte)/N.staerkeTeiler,gr=clamp(Math.round((fest-res*N.ergebnis+(R()-0.5)*N.zufall)*2)/2,N.min,N.max),alt=p.form;
         formNachNote(p,gr,fest);p.form=alt+(p.form-alt)*T.form;}});
     const tk=r.taktik&&r.taktik[s],t=S.teams[tid];if(tk){vertrautSetzen(t,'stil',tk.stil,vertraut(t,'stil',tk.stil)+T.vertrautheit);vertrautSetzen(t,'ordnung',tk.form,vertraut(t,'ordnung',tk.form)+T.vertrautheit);}});
-  lernenImSpiel(Object.assign({},r,{sz:r.sz.filter((_,i)=>i%2===0)}));
+  lernenImSpiel(Object.assign({},r,{sz:[...r.sz,...jokerSzenen(r)].filter((_,i)=>i%2===0),ein:[[],[]]})); /* zur Hälfte, seit Prüfung FL3 auch die Joker-Szenen (ein leer, sonst zählten sie voll) */
   r.inj.forEach(i=>verletzen(PIX.get(i.id),i.q||'kollision'));
+  {const s=r.h===S.my?0:r.a===S.my?1:-1;if(s>=0)S.letztTest={s:S.season,tag:S.tag,tore:[...new Set(r.ev.filter(e=>e.t==='G'&&e.s===s&&e.p!=null).map(e=>e.p))]};} /* Torschützen deines Testspiels für die Karte „Traumtor des Neuzugangs“ (K03e), ohne Zufall */
   if(x&&x.gegner<AV0)bezDuAendern(x.gegner,RBZ.anlass.testspiel,'Testspiel gespielt'); // K17 §5.5, U12c (Amateure haben keine Beziehung)
   // Geld (K11 §5.2): als Gastgeber Zuschauer mit nachlassendem Interesse, beim Amateurverein eine feste Gage
   const t=myT();let geld=0,zus=0;
-  if(x.heim&&r.h===S.my){const N2=T.nachfrage,w=inVorbereitung(x.tag)?vorbereitungsWoche(x.tag):99,f=Math.max(N2.min,N2.start+N2.jeWoche*Math.max(0,w-T.abWoche))*(r.a<1000&&S.teams[r.a].rep>=N2.grossAb?N2.grosserName:1);
+  if(x.heim&&r.h===S.my&&!x.turnier){const N2=T.nachfrage, /* im Turnier nur Antrittsgeld und Siegprämie, die Zuschauer gehören dem Ausrichter (Prüfung DW7) */w=inVorbereitung(x.tag)?vorbereitungsWoche(x.tag):99,f=Math.max(N2.min,N2.start+N2.jeWoche*Math.max(0,w-T.abWoche))*(r.a<1000&&S.teams[r.a].rep>=N2.grossAb?N2.grosserName:1);
     zus=Math.round(Math.min(t.cap,attendance(t,r.a<1000?S.teams[r.a]:null,false)*f));geld=zus*t.price;}
-  else if(r.h>=1000){const G=T.gageAmateur;geld=Math.round((G[0]+(G[1]-G[0])*clamp(t.rep/100,0,1))/1000)*1000;}
+  else if(r.h>=1000&&r.h<AV0){const G=T.gageAmateur; /* nur Amateurvereine, nicht beim Auslandsverein (Prüfung FP2) */geld=Math.round((G[0]+(G[1]-G[0])*clamp(t.rep/100,0,1))/1000)*1000;}
   if(geld)money('Testspiele',geld);x.erg={hg:r.hg,ag:r.ag,zus,geld};x.stand='gespielt';
   const sieg=(r.h===S.my?r.hg-r.ag:r.ag-r.hg);
-  news(`Testspiel: ${tn(r.h)} – ${tn(r.a)} ${r.hg}:${r.ag}${zus?` vor ${zus.toLocaleString('de-DE')} Zuschauern`:''}${geld?`, Einnahmen ${fmt(geld)}`:''}.${sieg<0&&(r.h>=1000||r.a>=1000)?' Eine Blamage gegen einen Amateurverein.':''}`,sieg>0?'good':sieg<0?'bad':'');}
+  news(`Testspiel: ${tn(r.h)} – ${tn(r.a)} ${r.hg}:${r.ag}${zus?` vor ${zus.toLocaleString('de-DE')} Zuschauern`:''}${geld?`, Einnahmen ${fmt(geld)}`:''}.${sieg<0&&((r.h>=1000&&r.h<AV0)||(r.a>=1000&&r.a<AV0))?' Eine Blamage gegen einen Amateurverein.':''}`,sieg>0?'good':sieg<0?'bad':'');}
 
 // Trainingslager (K11 §3.3, §5.3): Ort, Zeitraum, Kosten; im Lager wirkt das Training stärker
 function lagerSaison(d){const t=myT(),w=S.plan.pausen.find(p=>p.name==='Winterpause'&&p.ligen.includes(t.lg)&&d>=p.von-7&&d<=p.bis);if(w)return'winter';return inVorbereitung(d)?'sommer':null;}
@@ -66,8 +75,89 @@ function lagerFaktor(tid,d){if(tid!==S.my)return{training:1,kondition:1,vertraut
   if(l.ausfall===d)return{training:0,kondition:0,vertrautheit:0};const O=RLA.orte[l.ort];return{training:RLA.training,kondition:RLA.training*(O.kondition||1),vertrautheit:RLA.vertrautheit};}
 function lagerTag(d){const l=lagerAktiv(d);if(!l)return;const O=RLA.orte[l.ort],sq=squad(S.my).filter(p=>p.inj<=0);l.tag=d-l.von+1;
   if(l.tag===1)news(`Trainingslager in ${O.name} beginnt (${l.bis-l.von+1} Tage).`);
+  if(!l.zimmer)l.zimmer=zimmerEinteilen(squad(S.my).filter(p=>!beiNationalteam(p)),l.zi);lagerZimmerTag(l,d); /* Zimmerbelegung (K11k) */
   if(O.wetter&&R()<O.wetter){l.ausfall=d;news(`Trainingslager: Wegen des Wetters fällt das Training heute aus.`);}
   if(l.tag<=RLA.zusammenhaltBis)zusammenhaltAendern(myT(),RLA.zusammenhalt); // Zusammenhalt +1 pro Tag bis zum 7. Tag (K14 §5.6)
-  if(l.tag>=RLA.kollerAb&&R()<RLA.koller){l.koller++;const n=Math.min(sq.length,ri(3,5));shuffle(sq.slice()).slice(0,n).forEach(p=>svAendern(p,RLA.kollerSv));news('Lagerkoller: Die Stimmung im Lager kippt, einige Spieler wollen nach Hause.','bad');}
-  if(O.ablenkung)sq.filter(p=>hatEig(p,'partyloewe')).forEach(p=>{if(R()<RLA.ablenkung/(l.bis-l.von+1)){svAendern(p,RLA.ablenkungSv);news(`Trainingslager: ${p.n} wurde nachts in der Stadt gesehen.`,'bad');}});
-  if(d===l.bis)news(`Trainingslager in ${O.name} beendet. Der Co-Trainer ist zufrieden mit Kondition und Abläufen.`,'good');}
+  if(l.tag>=RLA.kollerAb&&R()<RLA.koller){l.koller++;const n=Math.min(sq.length,ri(3,5));shuffle(sq.slice()).slice(0,n).forEach(p=>svAendern(p,RLA.kollerSv));news('Lagerkoller: Die Stimmung im Lager kippt, einige Spieler wollen nach Hause.','bad');
+    if(!l.kollerK&&d<l.bis){l.kollerK=1;kartenKetteHeute('lagerkoller',{lager:l.von},d);}} /* Karte „Lagerkoller“ noch heute, einmal je Lager (K11g, Prüfung EU1) */
+  if(O.ablenkung)sq.filter(p=>hatEig(p,'partyloewe')).forEach(p=>{if(R()<RLA.ablenkung/(l.bis-l.von+1)){svAendern(p,RLA.ablenkungSv);news(`Trainingslager: ${p.n} wurde nachts in der Stadt gesehen.`,'bad');
+    if(!l.nachtK){l.nachtK=1;kartenKetteHeute('nachtleben',{spieler:p.id,lager:l.von},d);}}}); /* Karte „Ausflug ins Nachtleben“ noch heute, einmal je Lager (K11g, EU1) */
+  {const Z=RKT.lagerFreizeit;if(l.tag===Z.tag&&l.bis-l.von+1>=Z.min&&!l.freiK){l.freiK=1;kartenKetteHeute('lagerFreizeit',{lager:l.von},d);}} /* Karte „Freier Nachmittag im Lager“ (K11j), einmal je Lager */
+  if(d===l.bis)lagerAbschluss(l,false);}
+// Lagerende (seit Prüfung FP8 eigene Funktion, einmal je Lager, l.ende): Meldung und Marketing der Golfregion, auch nach vorzeitiger Abreise (Karte „Lagerkoller“, Wirkung lagerEnde)
+function lagerAbschluss(l,frueh){if(l.ende)return;l.ende=1;const O=RLA.orte[l.ort];news(frueh?`Trainingslager in ${O.name} vorzeitig beendet.`:`Trainingslager in ${O.name} beendet. Der Co-Trainer ist zufrieden mit Kondition und Abläufen.`,frueh?'':'good');if(O.marketing&&!l.mk)lagerMarketing(l,O);}
+// Marketing der Golfregion (K11 §4.2, K25, K11i): Am letzten Lagertag bringen Auftritte bei Partnern vor Ort marketing.anteil der Lagerkosten (Buchung „Marketing: Lager“),
+// die Fans murren über die Reise (Fanstimmung marketing.fans, Umfeld). Einmal je Lager (l.mk). Ohne Zufall.
+function lagerMarketing(l,O){const M=O.marketing,g=Math.round(l.kosten*M.anteil/1000)*1000;l.mk=1;if(g>0)money('Marketing: Lager',g);if(M.fans)fanAnlass(myT(),'fanU',M.fans);
+  news(`Trainingslager in ${O.name}: Termine bei Partnern vor Ort bringen ${fmt(g)}.${M.fans?' Ein Teil der Fans kritisiert die Reise.':''}`,'');}
+
+// Zimmerbelegung (K11 §5.4, K11k, 25.11., popolupo, vorläufig): Am ersten Lagertag teilt der Co-Trainer Doppelzimmer ein (l.zimmer [[id, id, Zoff schon da], …], bei ungerader Zahl
+// ein Einzelzimmer). Art l.zi: 'co' (Voreinstellung) setzt Neuzugänge und Spieler, die Deutsch lernen, zu deutschsprachigen Eingewöhnten und trennt Rivalen und zwei Hitzköpfe;
+// 'landsleute' legt Fremdsprachige gleicher Sprache zusammen (schneller Freunde, aber kein Deutsch im Zimmer) und achtet nicht auf Streithähne. Der Rest nach Alter.
+// Zufall fest aus dem Seed (hash32), nicht aus R(): Das Lager gibt es nur bei dir.
+const zimmerZoff=(p,q)=>{const b=beziehung(p,q);return(!!b&&b[2]==='R')||(hatEig(p,'hitzkopf')&&hatEig(q,'hitzkopf'));};
+const zimmerFremdGleich=(p,q)=>!deutschMutter(p)&&gleicheSprache(p,q);
+function zimmerEinteilen(sq,art){const land=art==='landsleute',rest=sq.slice().sort((a,b)=>a.age-b.age||a.id-b.id),z=[],weg=p=>rest.splice(rest.indexOf(p),1),passt=(p,q)=>land||!zimmerZoff(p,q);
+  const zuerst=land?rest.filter(p=>!deutschMutter(p)):rest.filter(p=>p.int!=null||deutschVon(p)<100);
+  zuerst.forEach(p=>{if(!rest.includes(p))return;const q=rest.find(x=>x!==p&&(land?zimmerFremdGleich(p,x):deutschMutter(x)&&x.int==null)&&passt(p,x));if(q){weg(p);weg(q);z.push([p.id,q.id]);}});
+  while(rest.length>1){const p=rest.shift(),i=rest.findIndex(x=>passt(p,x)),q=rest.splice(i>=0?i:0,1)[0];z.push([p.id,q.id]);}
+  if(rest.length)z.push([rest[0].id]);return z;}
+// Jeden Lagertag je Doppelzimmer: Freundschaft mit Z.freund (Landsleute ×Z.landsleute), Integration +Z.integration für einen Neuzugang neben einem Eingewöhnten
+// (deutschsprachig oder gleiche Sprache), Deutsch +Z.deutsch neben einem Muttersprachler, Zoff bei Rivalen oder zwei Hitzköpfen einmal je Zimmer mit Z.streit.
+function lagerZimmerTag(l,d){const Z=RLA.zimmer,B=RKA.beziehungen,t=myT(),zufall=(k,p,q)=>hash32([k,S.seed,S.season,d,p.id,q.id].join('|'))%1000/1000;
+  (l.zimmer||[]).forEach(z=>{if(z.length<2)return;const p=PIX.get(z[0]),q=PIX.get(z[1]);if(!p||!q||p.team!==S.my||q.team!==S.my)return;const gleich=zimmerFremdGleich(p,q);
+    if(!beziehung(p,q)&&freundeVon(p).length<B.maxFreunde&&freundeVon(q).length<B.maxFreunde&&zufall('zf',p,q)<Z.freund*(gleich?Z.landsleute:1)){
+      S.bz=S.bz||[];S.bz.push([p.id,q.id,'F',1]);news(`Trainingslager: Die Zimmerkollegen ${p.n} und ${q.n} sind Freunde geworden.`,'good');}
+    [[p,q],[q,p]].forEach(([a,b])=>{if(a.int!=null&&b.int==null&&(deutschMutter(b)||gleich)){a.int=Math.min(100,a.int+Z.integration);if(a.int>=100){delete a.int;delete a.intA;}}
+      if(a.team<AV0&&!deutschMutter(a)&&deutschVon(a)<100&&deutschMutter(b))a.de=Math.min(100,Math.round((deutschVon(a)+Z.deutsch)*10)/10);});
+    if(!z[2]&&zimmerZoff(p,q)&&zufall('zz',p,q)<Z.streit){z[2]=1;stimmungAendern(p,Z.stimmung);stimmungAendern(q,Z.stimmung);zusammenhaltAendern(t,RKA.zusammenhalt.streit);
+      if(!beziehung(p,q)){S.bz=S.bz||[];S.bz.push([p.id,q.id,'R',1]);}news(`Trainingslager: Zoff im Doppelzimmer von ${p.n} und ${q.n}. Der Zusammenhalt leidet.`,'bad');}});}
+
+// ---------- Sommerturnier (K11 §3, K11b) ----------
+// Vier Vereine, zwei Tage in der Vorbereitung: Halbfinale gegen einen Verein deines Niveaus (Tag 1, als Testspiel), das andere Halbfinale wird kurz nach Ansehen gerechnet
+// (eigener Strom), Tag 2 Finale oder Spiel um Platz 3. Remis: Elfmeterschießen (eigener Strom). Antrittsgeld und Siegprämie nach Liga, Pokal in der Vitrine (K34), Stimmung beim Sieg.
+// S.turnier = {s, tag, g: [drei Gegner], platz}. Einmal je Saison.
+// Ab der Woche RTS.abWoche, weil vorher keine Profis zusagen (Prüfung DW6). Liegen beide Tage in einer Woche, zählen sie zusammen zu maxProWoche.
+function turnierMoeglich(d){const tage=testspielTage(),w=x=>Math.floor(x/7),eine=w(d)===w(d+1)?testspielBelegt().filter(x=>w(x)===w(d)).length+2<=RTS.maxProWoche:true;
+  return inVorbereitung(d)&&inVorbereitung(d+1)&&vorbereitungsWoche(d)>=RTS.abWoche&&tage.includes(d)&&tage.includes(d+1)&&eine&&!(S.turnier&&S.turnier.s===S.season);}
+function turnierAnmelden(d){if(!darf('testspiele','sommerplan'))return;if(!turnierMoeglich(d)){toast('An diesen Tagen geht kein Turnier.');return;}
+  const g=testspielGegner(d).filter(x=>!x.am).slice(0,3).map(x=>x.id);if(g.length<3){toast('Es finden sich keine drei Gegner.');return;}
+  const T=RTS.turnier,lg=myT().lg,geld=T.antritt[lg]||T.antritt[3];S.turnier={s:S.season,tag:d,g,platz:null};S.testspiele=S.testspiele||[];S.testId=(S.testId||0)+1;
+  S.testspiele.push({id:S.testId,tag:d,gegner:g[0],heim:true,stand:'zugesagt',turnier:1,runde:1});money('Testspiele',geld);
+  news(`${T.name}: Halbfinale am ${datumKurz(d)} gegen ${tn(g[0])}, am Tag danach Finale oder Spiel um Platz 3. Antrittsgeld ${fmt(geld)}.`,'good');save();render();}
+// Nach einem Turnierspiel (ablauf.js, nach testspielNach)
+function turnierNach(r,x){const U=S.turnier;if(!x||!x.turnier||!U||U.s!==S.season)return;let gew=winner(r)===S.my;
+  if(r.hg===r.ag&&!r.pen){const e=mitStrom(strom('turnier',S.season,x.runde,'elf'),shootout);gew=r.h===S.my?e[0]>e[1]:e[1]>e[0];}
+  if(x.runde===1){const b=U.g[1],c=U.g[2],rb=S.teams[b].rep,rc=S.teams[c].rep,sb=mitStrom(strom('turnier',S.season,'hf2'),()=>R()*(rb+rc)<rb),fin=sb?b:c,kl=sb?c:b,geg=gew?fin:kl;
+    S.testId=(S.testId||0)+1;S.testspiele.push({id:S.testId,tag:x.tag+1,gegner:geg,heim:true,stand:'zugesagt',turnier:1,runde:2,finale:gew?1:0});
+    news(`${RTS.turnier.name}: ${gew?'Sieg':'Niederlage'} im Halbfinale. Morgen ${gew?'Finale':'Spiel um Platz 3'} gegen ${tn(geg)}.`,gew?'good':'');return;}
+  const T=RTS.turnier,lg=myT().lg;U.platz=x.finale?(gew?1:2):(gew?3:4);
+  if(U.platz===1){money('Testspiele',T.sieg[lg]||T.sieg[3]);statS().vit.push({s:S.season,k:'turnier',lg,tid:S.my});squad(S.my).forEach(p=>stimmungAendern(p,T.stimmung));}
+  news(`${T.name}: Platz ${U.platz}${U.platz===1?`. Der Pokal steht in der Vitrine, Siegprämie ${fmt(T.sieg[lg]||T.sieg[3])}.`:'.'}`,U.platz===1?'good':'');}
+// Anzeige bei den Testspielen (ansichten.js)
+function turnierText(){const T=RTS.turnier;if(S.turnier&&S.turnier.s===S.season){const U=S.turnier;return`<p class="dim">${T.name} am ${datumKurz(U.tag)} mit ${U.g.map(id=>esc(tn(id))).join(', ')}${U.platz?`: Platz ${U.platz}`:''}.</p>`;}
+  const tage=testspielTage().filter(turnierMoeglich);if(!tage.length)return'';
+  return`<div class="row" style="margin-top:8px;flex-wrap:wrap;gap:6px"><select id="tu_tag" aria-label="Erster Turniertag">${tage.map(d=>`<option value="${d}">${datumKurz(d)}</option>`).join('')}</select><button onclick="turnierAnmelden(+document.getElementById('tu_tag').value)"${lzAus('testspiele')}>${T.name} (zwei Tage, Antrittsgeld ${fmt(T.antritt[myT().lg]||T.antritt[3])})</button></div>`;}
+
+// ---------- Erinnerung „spielfreie Woche ohne Testspiel“ (K01 H9, K11 §3, K11d) ----------
+// In der Saison (nicht in der Vorbereitung, nicht im Urlaub): In den RTS.spielfrei.tage Tagen ab dem frühesten Testspieltag (heute + vorlaufTage) liegt kein Pflichtspiel
+// und kein Testspiel, aber ein Testspiel wäre möglich. Nicht unter der Automatik der Testspiele, nicht ohne Lizenz dafür, höchstens einmal je abstandTage (S.tsEr).
+function spielfreiOhneTestspiel(d){const E=RTS.spielfrei;if(S.phase!=='play'||autoB('testspiele')||!frei('testspiele')||imUrlaub()||inVorbereitung(d))return null;
+  const heute=absTag(d);if(S.tsEr!=null&&heute-S.tsEr<E.abstandTage)return null;const von=d+RTS.vorlaufTage,bis=von+E.tage-1;
+  for(let x=von;x<=bis;x++)if(meinSpiel(x))return null;if(!naechstesSpiel(bis+1))return null; /* danach kein Pflichtspiel mehr: Saisonende, nicht erinnern (Prüfung DZ1) */if(testspielBelegt().some(x=>x>=von&&x<=bis))return null;if(!testspielTage().some(x=>x>=von&&x<=bis))return null;
+  S.tsEr=heute;return{art:'spielfrei',text:`Vom ${datumKurz(von)} bis ${datumKurz(bis)} hast du kein Pflichtspiel und kein Testspiel. Ein Testspiel hält die Spieler im Rhythmus.`,tab:'training',knopf:'Zu den Testspielen'};}
+
+// ---------- Anfragen der Computer-Vereine (K11 §5, K11c) ----------
+// In der Vorbereitung ab Woche RTS.abWoche fragt montags mit kiAnfrage.chance ein Verein deines Niveaus nach einem Testspiel bei sich (eigener Strom je Saison und Tag).
+// S.tsKI = {tid, tag, bis, s, my}: Antwort bis bis, sonst verfällt sie. Gilt nur in ihrer Saison und für den Verein, den du da trainiert hast (Prüfung DW2).
+// Nicht in der Automatik der Testspiele (dort plant der Co-Trainer selbst). Der Tag liegt so weit hinten, dass er bei einer Antwort am letzten Tag noch frei sein kann (DW3).
+const tsKIOffen=d=>{const a=S.tsKI;return a&&a.s===S.season&&a.my===S.my&&a.bis>=d?a:null;};
+function kiTestspielAnfrage(d){if(S.phase!=='play'||tsKIOffen(d)||autoB('testspiele')||!inVorbereitung(d)||vorbereitungsWoche(d)<RTS.abWoche)return;
+  mitStrom(strom('tsKI',S.season,d),()=>{if(R()>=RTS.kiAnfrage.chance)return;const tage=testspielTage().filter(x=>inVorbereitung(x)&&x>=d+RTS.kiAnfrage.tage+RTS.vorlaufTage);if(!tage.length)return;
+    const pro=testspielGegner(tage[0]).filter(x=>!x.am);if(!pro.length)return;const g=pro[Math.floor(R()*pro.length)].id,tag=tage[Math.floor(R()*tage.length)];
+    S.tsKI={tid:g,tag,bis:d+RTS.kiAnfrage.tage,s:S.season,my:S.my};news(`Testspiel-Anfrage: ${tn(g)} lädt dich am ${datumKurz(tag)} zu sich ein. Antwort im Training bis ${datumKurz(S.tsKI.bis)}.`,'offer');});}
+function kiTestspielAntwort(ja){const a=tsKIOffen(S.tag);if(!a||!darf('testspiele','sommerplan'))return;S.tsKI=null;
+  if(ja&&testspielTage().includes(a.tag)){S.testspiele=S.testspiele||[];S.testId=(S.testId||0)+1;S.testspiele.push({id:S.testId,tag:a.tag,gegner:a.tid,heim:false,stand:'zugesagt'});news(`Testspiel am ${datumKurz(a.tag)} bei ${tn(a.tid)} vereinbart.`,'good');}
+  else if(ja)toast('An diesem Tag geht es nicht mehr.');save();render();}
+function kiTestspielText(){const a=tsKIOffen(S.tag);if(!a)return'';
+  return`<div class="card"><p>${esc(tn(a.tid))} lädt dich am ${datumKurz(a.tag)} zu einem Testspiel ein (Antwort bis ${datumKurz(a.bis)}).</p><div class="row"><button onclick="kiTestspielAntwort(1)"${lzAus('testspiele')}>Zusagen</button><button onclick="kiTestspielAntwort(0)"${lzAus('testspiele')}>Absagen</button></div></div>`;}

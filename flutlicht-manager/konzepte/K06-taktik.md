@@ -5,7 +5,7 @@ Hängt ab von: K03 (Positionen, Merkmale, Fuß), K04 (Engine) · Wird gebraucht 
 
 **Umsetzungshinweise (U5a, 8. November 2026):** Spielstile mit Umsetzung und Kreislauf, Vertrautheit, Einstellung zum Spiel mit Kater, Rollen, Standardschützen und die Computer-Trainer aus §7 sind in der Engine (`js/taktik.js`, Werte in `REGELN.taktik`). Alle Prüfungen aus §10 laufen in `tests/taktik.js` und sind grün. Abweichungen in §12 unter U5a.
 
-**Umsetzungshinweise (U5b):** Aufstellung mit Spielstil, Einstellung zum nächsten Spiel, Rollen am Platz, Standardschützen (Elfmeter 1–5, Freistöße, Ecken), Umsetzung und Vertrautheit als Anzeige, dazu wen der Stil schlägt und gegen wen er verliert. Im Vorbericht stehen die zuletzt gespielten Stile des Gegners, im Live-Spiel lässt sich der Stil ändern, mit Hinweis auf den Kreislauf. **U5 ist damit fertig.** Noch nicht gebaut: Ziehen und Ablegen auf dem Spielfeld (K35a), Kapitän (ohne Wirkung), Ereignisse aus §8.
+**Umsetzungshinweise (U5b):** Aufstellung mit Spielstil, Einstellung zum nächsten Spiel, Rollen am Platz, Standardschützen (Elfmeter 1–5, Freistöße, Ecken), Umsetzung und Vertrautheit als Anzeige, dazu wen der Stil schlägt und gegen wen er verliert. Im Vorbericht stehen die zuletzt gespielten Stile des Gegners, im Live-Spiel lässt sich der Stil ändern, mit Hinweis auf den Kreislauf. **U5 ist damit fertig.** Noch nicht gebaut: (Ziehen und Ablegen auf dem Spielfeld seit K35c, 25.11.2026: Plätze tauschen und Reservisten aus einer Leiste unter dem Spielfeld auf einen Platz ziehen, wirkt wie die Auswahl im Platz; ohne Touch, die Auswahllisten bleiben) Kapitän (ohne Wirkung), Ereignisse aus §8. Davon gebaut: „Der Gegner hat dich durchschaut“ als Meldung seit K06b (22.11.2026, ohne Testlauf): nach einer verlorenen Ligapartie, in der du deinen Lieblingsstil (häufigster der letzten Spiele, wie in `kiStil`) gespielt hast und der Gegner den Stil, der ihn schlägt; nur wenn du den Stil selbst wählst. Seit Prüfung EC1 nur, wenn der Computer-Trainer wirklich auf deinen Lieblingsstil reagiert hat (Markierung `konter` im Spielergebnis).
 
 ## 1. Ziel und Spielgefühl
 
@@ -207,6 +207,14 @@ Es gibt keine Höchstzahl. Wer „Spiel der Saison“ ständig nutzt, spielt in 
 | Spieler hadert mit seiner Position (Entscheidung) | Spieler dreimal in Folge auf einer Position mit Eignung unter 80 % | Gespräch (K15): erklären, Umschulung anbieten (K07) oder zurück auf seine Position. Ein Wunsch aus der Community (Recherche 4b). |
 | Der Gegner hat dich durchschaut | ein Computer-Trainer kontert deinen Lieblingsstil und gewinnt | Info, Hinweis im Spielbericht |
 | Standard-Spezialisten | auffällig viele Standardtore in einer Halbserie | Presse, Gegner stellen sich darauf ein (Ecken gegen dich ×0,95 für einen Monat) |
+
+**Gebaut als K06c** (23.11.2026, popolupo, ohne Testlauf, Meldung mit Wirkung nach deinem Pflichtspiel): „Taktik-Coup“, wenn du als Außenseiter (Niveau des Gegners mindestens 2 höher) mit dem Stil gewinnst, der den des Gegners im Kreislauf schlägt. Ruf +1, Fans +1. Nur wenn du den Stil selbst wählst: Wählt ihn die Automatik (Bereich `stil`, Lizenz), gibt es keinen Coup (Prüfung EK6). Seit K06d „Spieler hadert mit seiner Position“ (Entscheidung, Chance 0,5) nach drei Einsätzen in Folge auf einer Position mit Eignung unter 80 % (Zähler `p.pfal`). Ein Einsatz zählt erst ab der Mindestzeit für eine Note (20 Minuten). Liegt der letzte gezählte Einsatz mehr als 28 Tage zurück, beginnt der Zähler neu, und die Karte kommt nicht mehr (Prüfung EK7). Die Wahl: erklären (mit 60 % Stimmung +2, sonst −1) oder hart bleiben (Stimmung −3, Glaubwürdigkeit +1). Die Umschulung bietet die Karte nicht an, sie geht wie bisher im Training. „Standard-Spezialisten“ fehlte noch.
+
+**Gebaut als K06e** (23.11.2026, popolupo, ohne Testlauf, Info-Karte mit Wirkung, Werte geschätzt und nach einem Testlauf zu eichen): „Standard-Spezialisten“.
+- **Halbserie:** deine Ligaspiele bis zur Hälfte der Spieltage, danach zählt alles neu (`S.std`).
+- **Auslöser:** mindestens 8 Ligaspiele der Halbserie, mindestens 7 Tore nach Ecken, Freistößen und Freistoßflanken (Elfmeter zählen nicht) und mindestens 40 % aller Ligatore. Einmal je Halbserie.
+- **Wirkung:** Die Presse lobt (Ruf +1). Die Gegner stellen sich 28 Tage darauf ein: Tore deines Vereins nach Ecken und Freistoßflanken × 0,95 (`S.stdGegen`, in `taktikWirkung` auf `stdF`, wie der Bonus der Standard-Einheit aus K07 §5.3). Direkte Freistöße bleiben unberührt, wie beim Bonus.
+- **Gleichschritt:** unberührt, Karten sind in `tests/lizenz.js` 5a aus.
 
 ## 9. Wechselwirkungen
 

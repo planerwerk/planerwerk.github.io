@@ -1,6 +1,6 @@
 # K27 – Fans und Zuschauer
 
-Status: **Entwurf** (8. November 2026), nach „weiter, entscheide du“. Vorläufige Entscheidungen stehen in Abschnitt 12. **Teilweise umgesetzt mit U16 (20. November 2026, §5.4b), noch ohne Testlauf.**
+Status: **Entwurf** (8. November 2026), nach „weiter, entscheide du“. Vorläufige Entscheidungen stehen in Abschnitt 12. **Teilweise umgesetzt mit U16 (20. November 2026, §5.4b) und K27b Dauerkarten (22. November 2026, §5.2), noch ohne Testlauf.**
 Hängt ab von: K23 (Finanzen), K26 (Stadion) · Wird gebraucht von: K04 (Heimvorteil), K09 (Zuschauer-Vergehen), K14, K24, K25, K28.
 
 ## 1. Ziel und Spielgefühl
@@ -59,6 +59,16 @@ Ziel = 60 + Erfolg + Preise + Identifikation + Entscheidungen + Umfeld     (0–
 - Dauerkarten-Inhaber zählen in jedem Heimspiel als Zuschauer (Nichterscheinen spielt keine Rolle für die Einnahmen).
 - **Folge:** Einnahmen sicherer, weniger Schwankung durch Formkrisen.
 
+**Umsetzung K27b (22.11.2026, popolupo, ohne Testlauf, `js/fans.js`):**
+- **Nur dein Verein.** Die Einnahmen der Computer-Vereine bleiben beim Erwartungswert (K23b), dort gleichen sich Schwankungen ohnehin aus.
+- **Verkauf** beim ersten Ligaheimspiel der Saison (auch nach einem Jobwechsel beim neuen Verein). Anteil der Plätze = 0,35 + 0,25 × Fanstimmung/100 + 0,5 × (Rabatt − 20 %), höchstens 90 % (10 % Gästeblock).
+- **Rabatt** 10, 20 oder 30 % im Finanzen-Tab unter dem Eintrittspreis, nur vor dem Verkauf, Bereich `preise` (in der Automatik 20 %).
+- **Je Ligaheimspiel:** Alle Inhaber zählen als Zuschauer und zahlen den Ticketpreis vom Tag des Verkaufs × (1 − Rabatt), höchstens den heutigen Preis, wenn du ihn später senkst (Buchung „Dauerkarten“, laufend in der Prognose). Ein späteres Hochsetzen des Preises ändert an den Dauerkarten nichts (Prüfung CZ2). Die übrige Nachfrage kauft Einzelkarten zum vollen Preis. Pokal und Europapokal laufen wie bisher nur mit Einzelkarten.
+- **Fanstimmung:** Baustein Preise +2 je 10 Prozentpunkte Rabatt über dem Standard, −2 darunter.
+- **Rechnung:** Bei 20 % Rabatt und einem vollen Stadion bringen Dauerkarten weniger als Einzelkarten. In einer Krise (Nachfrage unter der Zahl der Dauerkarten) bringen sie mehr. Das ist der Hebel aus §6.
+- **Noch nicht:** Gästeblock als eigene Plätze, Dauerkarten der Computer-Vereine, Warteliste.
+  - **Warteliste geprüft (23.11.2026, popolupo):** Mit den heutigen Werten erreicht die Nachfrage höchstens 80 % der Plätze (0,35 + 0,25 Fanstimmung + 0,05 Rabatt + 0,1 Mitglieder + 0,05 Aktion), die Grenze liegt bei 90 %. Eine Warteliste käme also nie vor. Sinnvoll wird sie erst mit einem Kontingent, wie es echte Vereine festlegen (etwa zwei Drittel der Plätze). Das würde aber die Einnahmen aus K27b verschieben. Darum zurückgestellt, bis ein Testlauf die Einnahmen zeigt.
+
 ### 5.3 Nachfrage
 
 - Formel wie heute (Preis, Form, Gegner, Liga, Pokal, Zufall), dazu Faktor Fanstimmung: 0,85 bei 0 bis 1,10 bei 100.
@@ -83,14 +93,52 @@ Ziel = 60 + Erfolg + Preise + Identifikation + Entscheidungen + Umfeld     (0–
   - **Preise** (−15 bis +5): 30 × (1 − Ticketpreis / Richtpreis). 10 % über dem Richtpreis kosten 3 Punkte.
   - **Identifikation** (vorerst 0 bis +10): 2 je Publikumsliebling im Kader. Den negativen Teil (−5 für eine Söldnertruppe aus lauter Neuzugängen) gibt es noch nicht, damit die Stimmung am Start bei 60 bleibt: Weil die Statistik erst mit dem Spielstand beginnt, hätte am Start noch kein Verein einen Liebling. Publikumsliebling: mindestens 60 Pflichtspiele für den Verein (gezählt ab Spielbeginn, K34) oder ein Eigengewächs (aus der eigenen Jugend) mit mindestens 20.
   - **Entscheidungen** (−15 bis +5): Verkauf eines Publikumslieblings −8, verblasst um 10 % je Woche.
-  - **Umfeld** (−5 bis +5): Saisoneröffnung +3 (K12b), Fan-Gespräch, verblasst um 10 % je Woche. Presse (K29) kommt später.
+  - **Umfeld** (−5 bis +5): Saisoneröffnung +3 (K12b), Fan-Gespräch, verblasst um 10 % je Woche. Die Presse wirkt seit U17a mit (Antworten in der Pressekonferenz, Kult, eingelöste Kampfansage, Häme; berichtigt am 25.11.2026).
 - **Wirkung auf die Zuschauer** (§5.3): Faktor 0,85 bei 0, 1,0 bei 60, 1,10 bei 100, linear dazwischen. Am Start also wie bisher. Gilt in deinen Heimspielen, Testspielen und in der Vorhersage am Ticketpreis.
 - **Wirkung auf deinen Vorstand** (K28): Baustein Fans im Ziel des Vertrauens, nur außerhalb von 45 bis 75: darunter (Stimmung − 45) / 3 bis höchstens −10, darüber (Stimmung − 75) / 5 bis höchstens +5.
 - **Protest** (§5.4): Unter 30 pfeifen die Fans in deinen Ligaheimspielen. Selbstvertrauen deiner eingesetzten Spieler −0,2, mit Meldung.
 - **Fan-Gespräch** (§5.4): höchstens einmal im Monat, Stimmung im Baustein Umfeld +3 bis +8 nach deiner Glaubwürdigkeit (K15). Unter 25 Glaubwürdigkeit nennen die Fans es leere Versprechen: −5. Lizenz-Bereich `fangespraech` ab der C-Lizenz, ohne Automatik.
 - **Anzeige:** im Stadion die Fanstimmung als Regler mit den Bausteinen und das Fan-Gespräch.
-- **Computer-Vereine:** gleiche Stimmung, wirkt aber noch nirgends (ihre Einnahmen kommen aus einer Formel ohne Zuschauer, ihr Vorstand aus U11d2 bleibt unverändert).
-- **Noch nicht:** Dauerkarten und Gästeblock (warten auf K23), Ultras und Tradition als Stammdaten (dafür fehlen Quellen je Verein), Choreo, Pyrotechnik und Platzsturm (K09, K30), Heimvorteil durch Fans (würde die Kalibrierung der Engine ändern).
+- **Computer-Vereine:** gleiche Stimmung, wirkt aber noch nirgends (ihre Einnahmen kommen aus einer Formel ohne Zuschauer, ihr Vorstand aus U11d2 bleibt unverändert). Seit Prüfung EN5 (23.11.) berichtigt: Seit K23b/K23c rechnen ihre Heimeinnahmen mit `zuschauerErwartung` und damit mit dem Zuschauerfaktor der Fanstimmung. Seit U12i hängt die Präsidentenwahl (`wahlChance`) bei allen Vereinen von der Fanstimmung ab. K27e verstärkt beides leicht bei hoher Fankultur nach dem Verkauf eines Lieblings, ohne Zufall.
+- **Noch nicht:** Dauerkarten und Gästeblock (warten auf K23), Ultras und Tradition als Stammdaten (dafür fehlen Quellen je Verein), Choreo, Pyrotechnik und Platzsturm (K09, K30), Heimvorteil durch Fans (würde die Kalibrierung der Engine ändern). Seit 23.11.: Dauerkarten (K27b), Fankultur statt Tradition (K25f, K27e), Pyrotechnik im Derby (K09e), Choreo (K27f, §5.4d), Platzsturm (K27g, §5.4e).
+
+### 5.4e K27g Platzsturm (23.11.2026, popolupo, vorläufig)
+
+Aus §5.4 („Platzsturm: Aufstieg, Klassenerhalt am letzten Spieltag, Feier, kleine Geldstrafe (K09)“):
+- **Auslöser:** Info-Karte mit Wirkung, sicher (Chance 1), einmal je Saison. Bedingungen:
+  - Die Liga ist fertig, dein letztes Ligaspiel ist höchstens 7 Tage her (`RKT.spiel.nachTage`).
+  - Es war ein Heimspiel, das du nicht verloren hast.
+  - Du bist Meister, direkter Aufsteiger oder gerade noch gerettet:
+    - Aufsteiger in der 2. Liga: Platz 1 oder 2.
+    - Aufsteiger in der 3. Liga: die ersten zwei der Aufstiegsreihe ohne zweite Mannschaften (`aufstiegsReihe3`, wie beim Saisonende). Eine zweite Mannschaft steigt nie auf. Seit Prüfung EX2.
+    - Gerettet: vor dem letzten Spieltag unter dem Strich, danach darüber. Der Strich liegt in der 1. und 2. Liga nach Platz 15, in der 3. Liga vor den Absteigern. Seit Prüfung EX3, vorher nur genau Platz 15.
+  - Die Relegation zählt nicht mit, sie kommt erst danach.
+- **Wirkung:** Fanstimmung +2, Geldstrafe 20.000 € in der 3. Liga, nach Liga skaliert (in der 1. Liga 80.000 €). Seit K09h zählt der Platzsturm als Zuschauer-Vergehen (Zuschlag und Teilausschluss bei Wiederholung, K09 Nr. 14).
+- **Meldung:** Die Karte erscheint immer (`immer:true`), auch über der Grenze für Info-Karten der Woche. Die Strafe soll nicht still abgehen. Seit Prüfung EX4.
+- **Regelwerte:** `REGELN.karten.fans.platzsturm` mit `aufstieg` (2 direkte Aufstiegsplätze) und `unterStrich` (3 Plätze unter dem Strich in der 1. und 2. Liga: zwei Absteiger und die Relegation). Seit Prüfung EX3.
+
+### 5.4d K27f Choreo in der Kurve (23.11.2026, popolupo, vorläufig)
+
+Aus §5.4 („Choreografie bei Derby, Jubiläum, Spitzenspiel, Ultras ≥ 1“):
+- **Auslöser:** Info-Karte mit Wirkung, Anlasskarte mit Chance 0,6 je Woche. Unter deinen Ligaspielen der nächsten 7 Tage ist ein Heimspiel, das ein Derby oder Spitzenspiel ist (wie bei der Pressekonferenz, `RPK.anlass`). Seit Prüfung EW2 zählen alle Heimspiele im Fenster, nicht nur das nächste Spiel, sonst verdeckte ein Spiel am Dienstag das Derby am Samstag. Die Wirkung deiner Fankultur (K25f) beträgt mindestens 0,5, also etwa ab Fankultur 65. Ultras gibt es nicht als Stammdatum, die Fankultur steht dafür. Zum Jubiläum bietet die Karte aus K27d schon eine Choreo an.
+- **Wirkung:** Stimmung des Kaders +3, wie in §5.4, dazu Zusammenhalt +1.
+- **Noch nicht:** Heimvorteil +0,5 %. Er würde die Kalibrierung der Engine verschieben, wie schon in §5.4b. Die Presse aus der Tabelle in §5.4 fehlt auch. Die Karte ist ihre eigene Meldung, eine Wirkung auf das Medienklima (K29) gibt es nicht.
+
+### 5.4c K27e Fankultur statt Tradition (23.11.2026, popolupo, vorläufig)
+
+Tradition als Stammdatum (0–3) fehlt weiter. Seit K25f gibt es dafür die Fankultur (0–100, K25 §5.6). Sie kommt aus Stadion, Mitgliedern und Zugkraft und wurde nach der Rückmeldung des Nutzers vom 23.11. gebaut. Ihre Wirkung ist stufenlos: bis 50 keine, ab 80 die volle (`fankulturWirkung`, 0 bis 1). Hier ersetzt sie die Tradition aus §5.1:
+
+- **Baustein Entscheidungen:** „Tradition verstärkt den Baustein Entscheidungen“ wird zu: Entscheidungen × (1 + Wirkung × 0,5).
+  - Bei voller Fankultur wiegt der Verkauf eines Publikumslieblings −12 statt −8. Dasselbe gilt für einen umstrittenen Sponsor (K24).
+  - Gerechnet wird beim Ziel, nicht beim Anlass. Darum folgt der Baustein der heutigen Fankultur, und das Gedächtnis `t.fanD` bleibt unverändert.
+  - Die Grenzen −15 bis +5 gelten weiter. Das gilt für alle Vereine, ohne Zufall.
+  - Seit Prüfung EN4 verblassen alle Anlässe (Erfolg, Entscheidungen, Umfeld) bis ±0,5 ganz auf 0 (`anlassMin`). Vorher blieb das Runden auf eine Stelle bei −0,4 oder 0,5 hängen, und der Faktor stand für immer in der Anzeige.
+  - Die Anzeige im Stadion nennt den Faktor.
+- **Vorstand beim Abwerben** (K20 §5.3: „bei Traditionsvereinen −6“): Fliegt ein Abwerbeversuch auf, sinkt das Vertrauen um 3 × (1 + Wirkung). Das sind −3 bis −6, bei Freiburg etwa −5,5.
+- **Noch nicht:**
+  - Ultras als Stammdatum.
+  - Fankultur bei den Dauerkarten: Mitglieder je Platz stecken schon in beiden, das zählte doppelt.
+  - Stadionname (K24, Claude).
 
 ### 5.5 Größenordnungen
 
@@ -120,6 +168,17 @@ Gleiches Modell für Nachfrage, Dauerkarten und Fanstimmung. Ihre Fanstimmung wi
 | Pfiffe gegen den eigenen Spieler | Spieler mit Wechselwunsch Stufe 4 oder Verkauf eines Lieblings | Stimmung des Spielers (K14) |
 | Platzsturm | Aufstieg | Feier |
 | Fans wollen reden (Entscheidung) | Fanstimmung unter 25 | Gespräch (5.4) oder ablehnen |
+
+**Gebaut als K27c (22.11.2026, popolupo, ohne Testlauf), Karten nach K30:** „Protest gegen Ticketpreise“ (Preis über 1,3 × Richtpreis bei Fanstimmung unter 50; senken setzt den Richtpreis, neue Kartenwirkung `preisRichtwert`, Fans +2; halten Fans −3) und „Pfiffe gegen den eigenen Spieler“ (ab Wechselwunsch Stufe 3; in Schutz nehmen Stimmung +3, Fans −1; schweigen Stimmung −3). „Fans wollen reden“ gibt es schon als Fan-Gespräch im Büro (U16), seit K27h auch als Karte. Platzsturm fehlt noch (Aufstiegsfeier), seit K27g gebaut. Das Jubiläum gibt es seit K27d (23.11.2026, popolupo, ohne Testlauf): Gründungsjahre der 54 Profivereine in `daten/vereine.js` (`gegr`, Quelle RSSSF, zwölf nach Vereinsangabe ungeprüft). Im Kalenderjahr eines Vielfachen von 25 Jahren kommt die Anlasskarte „Rundes Jubiläum“: Choreo bezahlen (Fans +3), Retro-Trikot (Fanartikel +25 % für vier Wochen, K25 §8) oder im kleinen Rahmen feiern.
+
+**Gebaut als K27h** (23.11.2026, popolupo, ohne Testlauf, Werte vorläufig): „Fans wollen reden“ als Entscheidungskarte (Anlasskarte, Chance 0,4 je Woche). Bis dahin gab es nur den Knopf im Stadion, jetzt melden sich die Fans auch von selbst, wenn es brennt.
+- **Auslöser:** Fanstimmung unter 25 (`RKT.fans.redenUnter`), und das Fan-Gespräch des Monats ist noch frei.
+- **Wahl:**
+  - Zum Gespräch einladen: genau das Fan-Gespräch aus §5.4 (Umfeld +3 bis +8 nach Glaubwürdigkeit, unter 25 Glaubwürdigkeit −5). Es zählt als Gespräch des Monats, der Knopf ist danach 30 Tage gesperrt.
+  - Absagen: Fans −2.
+  - Die Automatik lädt ein. Das kostet nichts, und die Fans sind ohnehin schon unzufrieden.
+- **Lernstufe:** wie der Knopf. Ist der Bereich `fangespraech` noch gesperrt (ab der C-Lizenz), führt das Gespräch der Verein, und es passiert nichts. Das prüft die Wirkung, nicht der Auslöser.
+- Nur dein Verein, Karten sind im Gleichschritt aus.
 
 ## 9. Wechselwirkungen
 
@@ -162,7 +221,8 @@ fans:{
 5. Zuschauerfaktor neutral bei 60, damit sich am Start nichts ändert.
 6. Vorstand mit toter Zone von 45 bis 75, damit kleine Schwankungen das Vertrauen nicht bewegen.
 7. Fan-Gespräch ab der C-Lizenz, einmal im Monat.
-8. Dauerkarten, Gästeblock, Ultras, Tradition, Choreo, Pyro, Platzsturm und Heimvorteil verschoben (§5.4b).
+8. Dauerkarten, Gästeblock, Ultras, Tradition, Choreo, Pyro, Platzsturm und Heimvorteil verschoben (§5.4b). Inzwischen gebaut: Dauerkarten, Fankultur statt Tradition, Pyro, Choreo und Platzsturm (siehe §5.4 bis §5.4e).
+9. **Dauerkarten gebaut mit K27b** (22.11., popolupo, ohne Testlauf, §5.2): nur dein Verein, Verkauf beim ersten Ligaheimspiel, Rabatt 10, 20 oder 30 % im Bereich `preise`, Zahlung je Ligaheimspiel statt auf einmal (so stimmt die Prognose aus K23a), Fanstimmung ±2 je 10 Prozentpunkte Rabatt.
 
 ## Quellen
 

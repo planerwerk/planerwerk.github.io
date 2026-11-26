@@ -10,7 +10,7 @@ function vertrautheitWoche(t){const V=RTA.vertrautheit,stil=t.stil||'ausgewogen'
   STILE.forEach(k=>{if(k!==stil)vertrautSetzen(t,'stil',k,vertraut(t,'stil',k)-V.vergessen);});
   Object.keys(RE.formationen).forEach(f=>{if(f!==t.form)vertrautSetzen(t,'ordnung',f,vertraut(t,'ordnung',f)-V.vergessen);});}
 // Neuzugang (K06 §5.4): Ein neuer Stammspieler senkt alle Vertrautheitswerte um 4
-function neuzugang(p,tid){neuAnfang(p,tid);if(tid===S.my)fotoNachzuegler(p); // fehlt auf dem Mannschaftsfoto (K12b §5.2, U14)
+function neuzugang(p,tid,ausLeihe){neuAnfang(p,tid);if(!ausLeihe&&!p.zwP){leiheIntegrationMerken(p);integrationStart(p);} /* FK5: Stand vor der Leihe merken */ /* Integration (K03d), nicht nach der eigenen Leihe und nicht beim Wechsel in die Zweite */if(tid===S.my){fotoNachzuegler(p);if(!ausLeihe)heimkehrFans(p);} // fehlt auf dem Mannschaftsfoto (K12b §5.2, U14), Rückkehr des verlorenen Sohns (K19e), nicht nach der eigenen Leihe (EP2)
 const t=S.teams[tid];if(!t||p.str<teamLevel(tid)-2)return;const V=RTA.vertrautheit;
   STILE.forEach(k=>vertrautSetzen(t,'stil',k,vertraut(t,'stil',k)-V.neuzugang));Object.keys(RE.formationen).forEach(f=>vertrautSetzen(t,'ordnung',f,vertraut(t,'ordnung',f)-V.neuzugang));}
 const ordnungFaktor=(t,f)=>{const V=RTA.vertrautheit,v=vertraut(t,'ordnung',f);return v<V.ordnungUnter?(1-V.ordnungMalus)+V.ordnungMalus*v/V.ordnungUnter:1;};
@@ -47,6 +47,8 @@ function stilWirkung(stil,u){const d=RTA.stile[stil]||{},vorteil={kontrolle:v=>v
   return f;}
 
 // Vor dem Anpfiff: Stil, Einstellung, Umsetzung, Kreislauf und Faktoren beider Mannschaften (Computer-Trainer wählen ihren Stil gegen diesen Gegner)
+// Spielvorbereitung wirkt am Spieltag, wenn sie an einem der RTA.vorbereitungTage Tage davor war (K07 §5.3; Helfer seit Prüfung DX2, auch für die Gegnerbeobachtung in scouting.js)
+const vorbereitungWirkt=t=>t.vbTag!=null&&S.tag-t.vbTag<=RTA.vorbereitungTage&&S.tag>t.vbTag;
 function taktikAnlegen(Ss,o){Ss.forEach(sd=>{if(sd.am)return;const t=S.teams[sd.id];sd.stil=STILE.includes(t.stil)?t.stil:'ausgewogen';
     sd.einst=!stabMacht(sd.id,'einstellung')?(t.einstellung||'normal'):(o.wichtig?'saison':'normal');sd.wRoh=sd.w;});
   Ss.forEach((sd,s)=>{if(!sd.am&&stabMacht(sd.id,'stil'))sd.stil=kiStil(sd,Ss[1-s]);}); // auch dein Verein, solange der Co-Trainer den Stil wählt (K36)
@@ -56,15 +58,20 @@ function taktikWirkung(Ss){const E=RTA.einstellung;
   // Kreislauf (K06 §5.3): der Sieger erzeugt mehr Chancen, der Verlierer verliert einen Teil seiner Stil-Vorteile
   Ss.forEach((sd,s)=>{if(sd.am)return;const op=Ss[1-s],K=RTA.kreislauf,sieg=!op.am&&K[sd.stil]===op.stil,nieder=!op.am&&K[op.stil]===sd.stil;
     sd.kreis=sieg?1+K.vorteil*sd.u:1;sd.uWirk=nieder?sd.u*(1-K.daempfung*op.u):sd.u;});
-  Ss.forEach(sd=>{if(sd.am)return;const t=S.teams[sd.id];sd.stilF=stilWirkung(sd.stil,sd.uWirk);
+  Ss.forEach((sd,s)=>{if(sd.am)return;const t=S.teams[sd.id];sd.stilF=stilWirkung(sd.stil,sd.uWirk);
     let mult=ordnungFaktor(t,sd.form);if(sd.einst==='locker')mult*=E.locker.wirkung;else if(sd.einst==='saison')mult*=E.saison.wirkung;
-    if(t.kater&&S.tag<t.kater)mult*=E.saison.kater;if(t.vbTag!=null&&S.tag-t.vbTag<=2&&S.tag>t.vbTag)mult*=1+RTA.vorbereitungBonus*(stabFaktor(sd.id,'video')>1?2:1);sd.mult=mult;sd.stdF=t.stdTag!=null&&S.tag-t.stdTag<=7?1+(RTA.standardsBonus-1)*stabFaktor(sd.id,'standard'):1;sd.frischeF=sd.einst==='locker'?E.locker.frische:1;});
+    if(t.kater&&S.tag<t.kater)mult*=E.saison.kater;if(vorbereitungWirkt(t))mult*=1+RTA.vorbereitungBonus*(stabFaktor(sd.id,'video')>1||gegnerBeobachtet(t,Ss[1-s].id)?2:1); /* Gegnerbeobachtung (K18c) */sd.mult=mult;sd.stdF=(t.stdTag!=null&&S.tag-t.stdTag<=7?1+(RTA.standardsBonus-1)*stabFaktor(sd.id,'standard'):1)*standardGegnerFaktor(t); /* Gegner haben sich auf deine Standards eingestellt (K06e) */sd.frischeF=sd.einst==='locker'?E.locker.frische:1;});
   Ss.forEach(sd=>{if(sd.am)return;sd.w=teamWerte(sd);sd.A=0.5*sd.w.AM+0.25*(sd.w.AL+sd.w.AR);sd.D=0.4*sd.w.DM+0.2*(sd.w.DL+sd.w.DR)+0.2*sd.w.TW;});}
 // Computer-Trainer (K06 §7): Außenseiter mauern oder kontern, Favoriten pressen oder haben den Ball, sonst ihr Profil. Gegen dich kontern sie mit Wahrscheinlichkeit 25 % deinen Lieblingsstil.
-function kiStil(sd,op){const K=RTA.ki,t=S.teams[sd.id],q=op.am?2:(sd.A+sd.D)/Math.max(1,op.A+op.D);
+function kiStil(sd,op){const K=RTA.ki;
   // Die Reaktion gilt nur deinem eigenen Lieblingsstil: Wählt dein Co-Trainer den Stil, gibt es keinen (K36)
-  if(op.id===S.my&&!autoB('stil')&&R()<K.reaktion){const v=(S.stilVerlauf||[]).slice(-K.rueckblick);if(v.length){const z={};v.forEach(x=>z[x]=(z[x]||0)+1);const lieb=Object.entries(z).sort((a,b)=>b[1]-a[1])[0][0],gegen=Object.keys(RTA.kreislauf).find(k=>RTA.kreislauf[k]===lieb);if(gegen)return gegen;}}
-  // Wahl nach Umsetzung und Kreislauf gegen den (bisher bekannten) Stil des Gegners
+  if(op.id===S.my&&!autoB('stil')&&R()<K.reaktion){const L=stilLiebling();if(L){sd.konter=1;return L.gegen;}}
+  return kiStilWahl(sd,op);}
+// Dein Lieblingsstil der letzten RTA.ki.rueckblick Spiele und der Stil, der ihn schlägt ({lieb, gegen} oder null), ohne Zufall (seit K18g eigene Funktion, auch für den Scoutbericht)
+function stilLiebling(){const K=RTA.ki,v=(S.stilVerlauf||[]).slice(-K.rueckblick);if(!v.length)return null;const z={};v.forEach(x=>z[x]=(z[x]||0)+1);
+  const lieb=Object.entries(z).sort((a,b)=>b[1]-a[1])[0][0],gegen=Object.keys(RTA.kreislauf).find(k=>RTA.kreislauf[k]===lieb);return gegen?{lieb,gegen}:null;}
+// Wahl nach Umsetzung und Kreislauf gegen den (bisher bekannten) Stil des Gegners, ohne Zufall (seit K18g eigene Funktion, auch für den Scoutbericht)
+function kiStilWahl(sd,op){const K=RTA.ki,t=S.teams[sd.id],q=op.am?2:(sd.A+sd.D)/Math.max(1,op.A+op.D);
   const kreis=k=>op.am?0:RTA.kreislauf[k]===op.stil?1:RTA.kreislauf[op.stil]===k?-1:0,wahl=l=>l.map(k=>[k,umsetzung(sd,k)+K.kreislaufGewicht*kreis(k)]).sort((a,b)=>b[1]-a[1])[0][0];
   if(q<K.aussenseiter)return wahl(['mauern','konter']);if(q>K.favorit)return wahl(['ballbesitz','pressing']);return STILE.includes(t.stil)?t.stil:'ausgewogen';}
 // Grundordnung der Computer-Vereine (K06 §7): die mit den höchsten Teamwerten, mit Vorliebe für die vertraute
@@ -74,3 +81,10 @@ function kiOrdnung(t){let best=t.form,bv=-1;const kader=squad(t.id);if(!kader.le
   t.form=best;}
 // Profil-Stil eines Computer-Vereins (bis K31)
 function profilStil(){return waehleGewichtet(Object.assign({},RTA.ki.profil));}
+
+// ---------- „Der Gegner hat dich durchschaut“ (K06 §8, K06b) ----------
+// Nach einem verlorenen Ligaspiel, in dem der Computer-Trainer bewusst auf deinen Lieblingsstil reagiert hat (kiStil markiert das mit konter, Prüfung EC1) und sein Stil
+// deinen gespielten schlägt: eine Meldung. Nur wenn du den Stil selbst wählst (sonst kontert niemand). Ohne Würfel.
+function durchschautMeldung(m){if(!m||!m.taktik||autoB('stil'))return;const s=m.h===S.my?0:1,mein=m.taktik[s],geg=m.taktik[1-s],gf=s?m.ag:m.hg,ga=s?m.hg:m.ag,oid=s?m.h:m.a;
+  if(!mein||!geg||!geg.konter||gf>=ga||oid>=1000||RTA.kreislauf[geg.stil]!==mein.stil)return;
+  news(`Der Gegner hat dich durchschaut: ${tn(oid)} stellte sich mit ${STIL_NAME[geg.stil]||geg.stil} auf dein ${STIL_NAME[mein.stil]||mein.stil} ein. Wer immer gleich spielt, wird gekontert.`,'');}

@@ -7,12 +7,12 @@ const VEREIN=6,SEED=4711;
 function welt(lernstufen){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREIN;S.mgr='Test';if(lernstufen)F.lizenzStart(true);F.setTarget();F.sponsOffers();
   S.lineup=F.bestXI(VEREIN,W.ev('myT()').form);return{W,F,S,ev:W.ev};}
 
-// 1. Angebote je Fläche, geldneutral: Die festen Beträge der drei Flächen ergeben zusammen den früheren Brustbetrag (Ansehen² × Ligawert), bis auf Rundung
-{const {S,ev}=welt(false),t=ev('myT()'),SP=ev('RF').sponsor,alt=t.rep*t.rep*(SP['liga'+t.lg]||SP.liga3),A=SP.angebote;
+// 1. Angebote je Fläche: Die festen Beträge der drei Flächen ergeben zusammen ihren Anteil am Grundbetrag der Werbung (seit K23c 63 %, den Rest zahlen weitere Partner), bis auf Rundung
+{const {S,ev}=welt(false),t=ev('myT()'),SP=ev('RF').sponsor,alt=ev('sponsorBasis')(t)*(1-ev('RF').werbung.partner),A=SP.angebote;
   const fl=Object.keys(S.werbOffers||{}),summe=k=>S.sponsOffers[k].base+fl.reduce((a,f)=>a+S.werbOffers[f][k].base,0);
   const ok=fl.length===2&&fl.includes('ausruester')&&fl.includes('aermel')&&fl.every(f=>S.werbOffers[f].length===A.length+1)&&S.sponsOffers.length===A.length+1&&A.every((a,k)=>Math.abs(summe(k)-alt*a.fix)<=3000);
   const U=ev('RF').werbung.umstritten,namen=fl.every(f=>S.werbOffers[f].every(o=>o.im==='umstritten'?U.namen.includes(o.name):ev('RF').werbung.namen[f].includes(o.name)));
-  pruef(ok&&namen,'Angebote: Ausrüster und Ärmel je drei (dazu seit K24b je ein umstrittenes, auch bei der Brust), Namen aus den Listen, die festen Beträge aller drei Flächen ergeben zusammen den früheren Brustbetrag',`früher ${Math.round(alt)}, jetzt ${A.map((a,k)=>summe(k)).join(' / ')} (Soll ${A.map(a=>Math.round(alt*a.fix)).join(' / ')})`);}
+  pruef(ok&&namen,'Angebote: Ausrüster und Ärmel je drei (dazu seit K24b je ein umstrittenes, auch bei der Brust), Namen aus den Listen, die festen Beträge aller drei Flächen ergeben zusammen ihren Anteil am Grundbetrag der Werbung',`früher ${Math.round(alt)}, jetzt ${A.map((a,k)=>summe(k)).join(' / ')} (Soll ${A.map(a=>Math.round(alt*a.fix)).join(' / ')})`);}
 
 // 2. Wahl: je Fläche höchstens ein Vertrag, die Angebote der Fläche sind danach weg, Meldung
 {const {S,F}=welt(false);F.sponsorWaehlen(1);F.werbungWaehlen('ausruester',2);const w=S.werbung.ausruester;

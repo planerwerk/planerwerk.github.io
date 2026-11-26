@@ -40,3 +40,6 @@ const NATIONEN=[
   ["IDN","Indonesien",121,"id"], // geschätzt
   ["PHI","Philippinen",136,"en"]  // geschätzt
 ];
+// Mitglieder der UEFA aus der Tabelle oben (für die EM, K13k, 25.11.2026). Russland ist seit 2022 von UEFA-Wettbewerben ausgeschlossen und fehlt darum.
+const UEFA_NATIONEN=['ESP','FRA','ENG','POR','BEL','NED','SUI','GER','CRO','ITA','NOR','DEN','AUT','TUR','SWE','UKR','POL','HUN','WAL','GRE','SCO','SRB','SVK','CZE','SVN','IRL',
+  'BIH','ROU','NIR','ALB','MKD','ISL','GEO','FIN','KVX','ISR','MNE','BLR','BUL','LUX','ARM','KAZ','EST','CYP','FRO','AZE','LVA','LTU','MDA','MLT','AND','GIB','LIE','SMR'];

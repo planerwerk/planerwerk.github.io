@@ -4,7 +4,7 @@
 // Zustandsfaktor (K03 §5.8): Frische, Form und Spielpraxis zusammen, gedeckelt. Die Stärke bleibt der Hauptwert.
 function zustand(p){const Z=RP.zustand,F=RP.form,P=RP.spielpraxis,k=RE.staerke;
   const fr=k.fitBasis+k.fitAnteil*p.fit/100,fo=1+(p.form-F.mitte)*F.wirkung,pr=p.sp<P.wirkungUnter?1-P.wirkungMax*(P.wirkungUnter-p.sp)/P.wirkungUnter:1;
-  return clamp(fr*fo*pr*stimmungFaktor(p),Z.min,Z.max);} // Stimmung (K14 §5.3): unter 20 bis −3 %, über 85 bis +2 %
+  return clamp(fr*fo*pr*stimmungFaktor(p)*integrationFaktor(p),Z.min,Z.max);} // Stimmung (K14 §5.3): unter 20 bis −3 %, über 85 bis +2 %; Integration nur mit Schalter (K03d)
 
 // Frische-Erholung pro Tag (K03 §5.3): Wer müde ist, erholt sich anfangs schneller
 function erholung(p){const F=RP.frische,a=F.alter.find(x=>p.age<=x[0]);return(F.erholung[0]+F.erholung[1]*(100-p.fit))*(a?a[1]:F.alterSonst)*(F.koErholung[0]+F.koErholung[1]*p.ko)*belastungErholung(p);}
@@ -60,7 +60,7 @@ const svWort=sv=>SV_WORTE[clamp(Math.round((sv||0)+3),0,6)];
 // Welche Vereine spielen an Tag d ein Pflichtspiel? (für Training und Ruhetage)
 function spielendeAm(d){const s=new Set();for(const e of termineAm(d)){
     if(e.art==='liga')e.idx.forEach(i=>{const f=S.fx[e.lg][e.md][i];s.add(f[0]);s.add(f[1]);});
-    else if(e.art==='pokal'&&S.cup.hist.length===e.r)S.cup.alive.forEach(id=>{if(id<1000)s.add(id);});
+    else if(e.art==='pokal'&&S.cup.hist.length===e.r)S.cup.alive.forEach(id=>{if(id<1000&&pokalSpaetIst(e.r,id)===!!e.spaet)s.add(id);});
     else if((e.art==='rel'||e.art==='rel2')&&relBereit(e.art))relTeams(e.art).forEach(id=>s.add(id));
     else if(e.art==='supercup'){s.add(S.supercup.h);s.add(S.supercup.a);}
     else if(e.art==='eu')euSpieleAm(e).forEach(m=>{if(euDe(m.h))s.add(m.h);if(euDe(m.a))s.add(m.a);});} // Europapokal (K37, U19a)
@@ -91,11 +91,15 @@ function eigenschaftenBerechnen(p){if(!p.ch)return[];const EL=EIGENSCHAFT_LISTE|
 const hatEig=(p,k)=>eigenschaften(p).includes(k);
 // Was du über einen Spieler weißt: Eigenschaften eigener Spieler nach einigen Wochen, nur solche, die im Spiel wirken
 function bekannteEigenschaften(p){if(p.team!==S.my||p.wiv<p.ekw)return[];return eigenschaften(p).filter(k=>RP.eigenschaftenWirksam.includes(k));}
-const sichtbareMerkmale=p=>Object.keys(p.mk||{}).filter(k=>RP.merkmaleWirksam.includes(k));
+// Eigenschaft entdeckt (K03 §8, K03g, 25.11., popolupo): In der Woche, in der der Co-Trainer einen Spieler deines Kaders kennt (wiv erreicht ekw), nennt er seine Eigenschaften,
+// gebündelt in einer Meldung. Nur Anzeige, ohne Zufall (training, nach wocheVerein).
+function eigenschaftenEntdecktWoche(){const RPe=RP.eigenschaften,l=squad(S.my).filter(p=>p.ekw!=null&&p.wiv===p.ekw).map(p=>[p,bekannteEigenschaften(p)]).filter(x=>x[1].length);if(!l.length)return;
+  news(`Der Co-Trainer kennt jetzt: ${l.map(([p,e])=>`${p.n} (${e.map(k=>(RPe[k]&&RPe[k].name)||k).join(', ')})`).join(', ')}.`,'');}
+const sichtbareMerkmale=p=>Object.keys(p.mk||{}).filter(k=>RP.merkmaleWirksam.includes(k)||!!(RP.merkmale[k]&&RP.merkmale[k].zeigen)); /* zeigen: auch ohne Wirkung sichtbar (Joker, Prüfung FL3) */
 const hatMk=(p,k)=>!!(p.mk&&p.mk[k]);
 // Lernen (K03 §5.6): ein Lernziel, Fortschritt pro Woche
 function lernbar(p,k){const m=RP.merkmale[k];if(!m||m.schwaeche||hatMk(p,k)||!m.g.includes(p.pos))return false;if(m.bis&&p.age>m.bis)return false;
-  if(Object.keys(p.mk||{}).filter(x=>!RP.merkmale[x].schwaeche).length>=platzStaerken(p))return false;return true;}
+  if(m.platz!==false&&Object.keys(p.mk||{}).filter(x=>!RP.merkmale[x].schwaeche&&RP.merkmale[x].platz!==false).length>=platzStaerken(p))return false;return true;} /* Joker ohne Platz (Prüfung FL3) */
 // Platz für Stärken: mit der Klasse wächst das Repertoire (bis 64: 1, bis 74: 2, bis 84: 3, sonst 4)
 const platzStaerken=p=>{const t=RP.lernen.platz.find(x=>p.str<=x[0]);return Math.min(RP.lernen.maxStaerken,t?t[1]:RP.lernen.maxStaerken);};
 const lernOptionen=p=>RP.merkmaleWirksam.filter(k=>lernbar(p,k));
@@ -111,8 +115,10 @@ function merkmalNeu(p,k){const m=RP.merkmale[k];p.mk[k]=1;if(p.lf)delete p.lf[k]
 function merkmalWeg(p,k,grund){delete p.mk[k];if(p.fk)delete p.fk[k];if(p.team===S.my)news(`${p.n} hat das Merkmal „${RP.merkmale[k].name}“ verloren${grund?' ('+grund+')':''}.`,'bad');}
 // Lernen im Spiel (K03 §5.6): Szenen aus der Engine zahlen auf Merkmale ein, ohne Altersfaktor, höchstens 25 % je Merkmal und Spiel.
 // Erfolg: Fortschritt zur Stärke und weg von der passenden Schwäche, bei vorhandener Stärke Fehlerkonto auffüllen. Misserfolg: Fortschritt zur Schwäche oder Fehlerkonto belasten.
+// Seit K05f zusätzlich die Szene joker: jeder Eingewechselte, der trifft (r.ev mit t 'G', Schütze in r.ein der Seite), einmal je Spiel, ohne Zufall.
+const jokerSzenen=r=>{const ein=r.ein||[[],[]];return[...new Set((r.ev||[]).filter(e=>e.t==='G'&&e.p!=null&&(ein[e.s]||[]).includes(e.p)).map(e=>e.p))].map(id=>[id,'joker',1]);};
 function lernenImSpiel(r){const L=RP.lernenSpiel,sum=new Map();
-  (r.sz||[]).forEach(([id,typ,ok])=>{const z=L.szenen[typ],p=z&&PIX.get(id);if(!p||p.team<0)return;
+  [...(r.sz||[]),...jokerSzenen(r)].forEach(([id,typ,ok])=>{const z=L.szenen[typ],p=z&&PIX.get(id);if(!p||p.team<0)return;
     if(!sum.has(id))sum.set(id,{p,st:{},sw:{},fk:{}});const e=sum.get(id),add=(o,k,v)=>{o[k]=(o[k]||0)+v*L.faktor;};
     if(ok){if(z.k){if(hatMk(p,z.k))e.fk[z.k]=(e.fk[z.k]||0)+L.konto.erfolg;else add(e.st,z.k,z.ja);}if(z.w&&z.ja)add(e.sw,z.w,-z.ja);return;}
     if(z.zufall&&R()>=z.zufall)return;
@@ -144,7 +150,32 @@ function lernplaetzeVergeben(){const nach=new Map();S.pl.forEach(p=>{if(p.team>=
     for(const p of sq.filter(p=>!p.ls&&p.inj<=0).sort((a,b)=>a.age-b.age||b.str-a.str)){if(frei<=0)break;if(lernAutomatik(p))frei--;}});}
 // Woche: Zeit im Verein, neue Spieler (Talentschätzung neu), Lernen
 function wocheVerein(p){if(p.team!==p.vt){p.vt=p.team;p.wiv=0;p.ekw=riA(RP.entdeckenWochen);p.tf=ri(-RP.talentSchaetzung.fehler,RP.talentSchaetzung.fehler);}else p.wiv=(p.wiv||0)+1;
-  lernWoche(p);umschulungWoche(p);merkmaleWoche(p);p.wt=0;p.wl=0;}
+  if(p.um&&p.team!==S.my){p.um=null;delete p.umE;} /* Prüfung FC2: umgeschult wird nur bei dir (ausgelaufen, Leihe zurück, Jobwechsel) */
+  lernWoche(p);umschulungWoche(p);merkmaleWoche(p);integrationWoche(p);p.wt=0;p.wl=0;}
+// ---------- Integration und Deutsch (K03 §5.5, K03d) ----------
+// p.int (0–100) nur bei Neuzugängen, fehlt = 100 (Startkader, Eigengewächse). p.de Deutschkenntnisse, fehlt = nach der Sprache der Nation (deutschsprachig 100, sonst deutsch.start).
+// Start beim Zugang (neuzugang in taktik.js, nicht bei Rückkehr aus der Leihe und nicht beim Wechsel in die Zweite): deutschsprachig start.deutsch, sonst start.fremd,
+// ± start.anpassung je 10 Punkte Anpassungsfähigkeit (ch.anp 1–20) über oder unter 10. Woche (wocheVerein): siehe RP.integration.woche. Alles ohne Zufall.
+// Wirkung im Spiel (zustand): nur mit RP.integration.wirkung.an, vorerst aus, weil sie die Stärke aller Neuzugänge senkt (erst messen).
+// Seit Prüfung FK4: Fehlt p.de bei einem fremdsprachigen Spieler eines deutschen Vereins ohne laufende Integration (Startkader, längst angekommen), gilt deutsch.kader
+// statt deutsch.start, und er lernt von dort weiter (integrationWoche setzt dann p.de). Beim Zugang (integrationStart) gilt ohne p.de weiter deutsch.start.
+const deutschMutter=p=>!!nation(p.nat)&&nation(p.nat).sprache==='de';
+const deutschVon=p=>p.de!=null?p.de:deutschMutter(p)?100:(p.team>=0&&p.team<AV0&&p.int==null?RP.integration.deutsch.kader:RP.integration.deutsch.start);
+// Seit Prüfung FK5: Beim Verleihen merkt p.leihe den alten Stand (i0 Integration, null = angekommen), bei der Rückkehr (Ende oder Rückruf) gilt er wieder
+const leiheIntegrationMerken=p=>{if(p.leihe&&p.leihe.i0===undefined)p.leihe.i0=p.int!=null?p.int:null;};
+function leiheIntegrationZurueck(p,l){if(!l||l.i0===undefined)return;if(l.i0==null){delete p.int;delete p.intA;}else{p.int=l.i0;p.intA=p.apps||0;}}
+const integrationVon=p=>p.int!=null?p.int:100;
+const integrationFaktor=p=>{const W=RP.integration.wirkung;return W.an&&p.int!=null?W.min+(1-W.min)*p.int/100:1;};
+// Neuzugang beim Trainingsauftakt (K12a §8, mit K07h): eine Meldung mit den Neuzugängen deines Kaders und ihrer Integration (ablauf.js am Auftakttag), ohne Zufall
+function neuzugaengeAuftakt(){const l=squad(S.my).filter(p=>p.int!=null&&!beiNationalteam(p)); /* FQ3: ohne die, die noch beim Turnier sind */if(!l.length)return;
+  news(`Neu beim Trainingsauftakt: ${l.map(p=>`${p.n} (Integration ${Math.round(p.int)} %)`).join(', ')}. Die Mitspieler nehmen ${l.length===1?'ihn':'sie'} in ihre Mitte.`,'');}
+function integrationStart(p){const I=RP.integration,a=((p.ch&&p.ch.anp)||10)-10,de=p.de!=null?p.de:deutschMutter(p)?100:I.deutsch.start;if(p.de==null&&de<100)p.de=de;
+  p.int=clamp(Math.round((de>=100?I.start.deutsch:I.start.fremd)+I.start.anpassung*a/10),5,99);p.intA=p.apps||0;}
+function integrationWoche(p){if(p.team<0)return;const offen=p.int!=null,lernt=p.de!=null?p.de<100:p.team<AV0&&deutschVon(p)<100;if(!offen&&!lernt)return; /* FK4: auch ohne p.de bei deutschen Vereinen */
+  const sq=squad(p.team).filter(q=>q!==p),lands=sq.filter(q=>landsleute(p,q)).length;
+  if(offen){const W=RP.integration.woche;let w=W.basis;if((p.apps||0)>(p.intA||0))w+=W.einsatz;if(deutschVon(p)>=W.deutschAb)w+=W.deutsch;if(sq.some(q=>hatEig(q,'integrationsfigur')))w+=W.figur;if(lands)w+=W.landsleute;
+    p.int=Math.min(100,p.int+Math.min(W.max,w));p.intA=p.apps||0;if(p.int>=100){delete p.int;delete p.intA;}}
+  if(lernt){const D=RP.integration.deutsch,a=(p.ch&&p.ch.anp)||10;p.de=Math.min(100,Math.round((deutschVon(p)+(D.min+(D.max-D.min)*(a-1)/19)*(lands>=2?0.5:1))*10)/10);}}
 // Talentsterne mit Schätzfehler (K03, K02): bis zu einem Stern daneben, nach zwei Jahren im Verein genau
 // Talentsterne: genau nach zwei Jahren, mit gutem Co-Trainer früher (K16 §5.2: Faktor 1,5 − 0,05 × Qualität)
 const sternFehler=p=>p.team===S.my&&(stufe().sterneGenau||p.wiv>=RP.talentSchaetzung.genauNachWochen*stufe().sterneWochen*(S.stab?1.5-0.05*stabQ(S.my,'co'):1))?0:(p.tf||0);

@@ -41,4 +41,31 @@ function bisFertig(w){const {F,S,ev}=w;let d=S.tag,n=0;while(S.constr&&n<400){d+
 {const w=welt(),{F,S,ev,t}=w,cap0=t.cap;F.bauStarten('cap');let d=S.tag,n=0;while(S.constr&&S.constr.phase!=='bau'&&n<100){d++;n++;F.bauTag(d);}const waehrend=t.cap;F.bauAbgeben();
   pruef(waehrend===cap0-3000&&t.cap===cap0+3000&&!S.constr,'Vereinswechsel: Tribüne beim alten Verein fertig, keine Plätze verloren',`${cap0} → ${waehrend} → ${t.cap}`);}
 
+// 8. K26b (K26 §7): Ein Computer-Verein baut die Tribüne aus, wenn die Nachfrage zwei Saisons nacheinander über 95 % der Plätze liegt, die neuen Plätze nicht über
+//    105 % der Nachfrage hinausgehen und genug Geld bleibt. Zu wenig Geld: kein Bau. Zu wenig Nachfrage für 3.000 Plätze mehr: kein Leerbau.
+{const {F,S,ev}=welt(),B=ev('RB'),T=B.tribuene,o=S.teams.find(x=>x.lg===1&&x.id!==S.my),n0=ev('kiNachfrage')(o);
+  o.cap=Math.round(n0*0.9);o.voll=1;o.cash=200e6;const c0=o.cash,cap0=o.cap,r1=F.kiBauen(o),gebaut=r1==='cap'&&o.cap===cap0+T.plaetze&&o.cash===c0-T.kosten&&o.voll===0;
+  o.cap=Math.round(n0*0.9);o.voll=1;o.cash=T.kosten;const r2=F.kiBauen(o),arm=r2!=='cap'&&o.cap===Math.round(n0*0.9);
+  o.cap=Math.round(n0*1.02);o.voll=1;o.cash=200e6;const r3=F.kiBauen(o),leer=r3!=='cap'; // voll genug (über 95 %), aber 3.000 Plätze mehr lägen über 105 % der Nachfrage
+  pruef(gebaut&&arm&&leer,'K26b: Tribüne nach Nachfrage und Geld, kein Leerbau',`Nachfrage ${n0}, gebaut ${r1}, arm ${r2}, knapp ${r3}`);}
+
+// 9. K26b: Ohne Tribüne baut ein reicher Computer-Verein höchstens eine Anlage je Saison aus der Liste seines Profils, ein armer keine. Dein Verein baut nicht von selbst.
+{const {F,S,ev,t}=welt(),B=ev('RB'),o=S.teams.find(x=>x.lg===2&&x.id!==S.my);o.cap=1e5;o.voll=0;o.cash=500e6;
+  const liste=B.computer.anlagen[ev('vereinsProfile')(o).includes('ausbildung')?'ausbildung':'standard'],k=F.kiBauen(o),reich=k===liste[0]&&(k==='shop'?o.shop===1:ev('anlage')(o,k)===B.anlagen[k].start+1); // seit K26c steht der Fanshop vorn
+  const p=S.teams.find(x=>x.lg===3&&x.id!==S.my);p.cap=1e5;p.cash=0;const arm=F.kiBauen(p)===null;
+  const cap0=t.cap,anl0=JSON.stringify(t.anl||{});t.voll=5;F.kiBauenSaison();const mein=t.cap===cap0&&JSON.stringify(t.anl||{})===anl0;
+  pruef(reich&&arm&&mein,'K26b: Anlage nach Profil, nur mit Geld, dein Verein nicht',`reich ${k} (erwartet ${liste[0]}), arm ${arm}, dein Verein unverändert ${mein}`);}
+
+// 10. K26c: Computer-Vereine zahlen Instandhaltung je Ligaspiel (1 % der Bausumme je Saison, verteilt auf die Ligaspiele)
+{const {F,S,ev}=welt(),o=S.teams.find(x=>x.lg===2&&x.id!==S.my),g=S.teams.find(x=>x.lg===2&&x.id!==S.my&&x.id!==o.id),n=S.fx[2].length;
+  o.bausumme=0;let c=o.cash;F.kiFinanzenSpiel(o,{h:g.id,a:o.id});const ohne=o.cash-c;o.bausumme=12e6;c=o.cash;F.kiFinanzenSpiel(o,{h:g.id,a:o.id});const mit=o.cash-c;
+  pruef(ohne-mit===Math.round(12e6*ev('RB').instandhaltung/n),'K26c: Instandhaltung der Computer-Vereine je Ligaspiel',`${ohne} → ${mit}`);}
+
+// 11. K26d: Dach: Heimvorteil × 1,005, wenn das Heimspiel voraussichtlich voll ist, sonst nichts; ohne Dach nichts; auswärts nichts
+{const {F,S,ev,t}=welt(),A=ev('RB').anlagen.dach;t.anl=t.anl||{};t.anl.dach=0;const k0=F.side(S.my,true,false).w.K;
+  t.anl.dach=1;t.cap=100;const voll=F.dachFaktor(S.my),k1=F.side(S.my,true,false).w.K,aus=F.side(S.my,false,false).dach;t.cap=1e6;const leer=F.dachFaktor(S.my);
+  // DI1: mit deinem Ticketpreis. Zum Richtpreis knapp voll, zum doppelten Preis nicht mehr
+  const d=ev('zuschauerErwartung')(t,null,false,false,true),rp=Math.round(ev('richtPreis')(t));t.cap=Math.floor(d*ev('preisFaktor')(t,rp)*0.97);t.price=rp;const rich=F.dachFaktor(S.my);t.price=rp*2;const teuer=F.dachFaktor(S.my);t.price=rp;
+  pruef(Math.abs(voll-(1+A.heim))<1e-12&&Math.abs(k1/k0-(1+A.heim))<1e-9&&aus===1&&leer===1&&Math.abs(rich-(1+A.heim))<1e-12&&teuer===1,'K26d: Dach wirkt nur bei vollem Stadion auf den Heimvorteil',`voll ${voll}, Teamwert ${k0.toFixed(3)} → ${k1.toFixed(3)}, auswärts ${aus}, leer ${leer}`);}
+
 console.log(probleme.length?`\n${probleme.length} Problem(e).`:'\nAlles in Ordnung.');process.exitCode=probleme.length?1:0;

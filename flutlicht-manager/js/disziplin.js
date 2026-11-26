@@ -11,6 +11,12 @@ const absTag=d=>Math.round(saisonNull(S.season)/TAG_MS)+d;
 // Alte Spielstände hatten p.sus (alle Wettbewerbe zusammen) und p.yc: beim ersten Zugriff übernommen.
 function sperren(p){if(!p.sperre){p.sperre={liga:{rot:p.sus||0,gelb:0},pokal:{rot:0,gelb:0}};delete p.sus;}if(!p.sperre.eu)p.sperre.eu={rot:0,gelb:0};return p.sperre;} // eu beim ersten Zugriff (K37)
 function gelbe(p){if(!p.kt){p.kt={liga:p.yc||0,pokal:0};delete p.yc;}if(p.kt.eu==null)p.kt.eu=0;return p.kt;}
+// Erinnerung „Gelbsperre droht“ (K09 §12 Nr. 14, K09b): am Ligaspieltag Spieler deiner Startelf, die mit der nächsten Gelben Karte gesperrt wären, wenn das nächste Ligaspiel
+// ein Derby oder ein Spitzenspiel ist (wie die Pressekonferenzen, RPK.anlass). Rückgabe: Eintrag für erinnerungen (kalender.js) oder null
+function gelbsperreDroht(d){const n=meineLigaspiele().find(e=>e.tag>d);if(!n)return null;const g=pkGegner(n),t=myT(),A=RPK.anlass;if(g==null)return null;
+  const derby=istDerby(S.my,g),spitze=n.md+1>=A.spitzeAb&&rank(t.lg,S.my)<=A.spitzeBis&&rank(t.lg,g)<=A.spitzeBis;if(!derby&&!spitze)return null;
+  const G=RD.gelbsperre.liga,xi=new Set(myXI()),l=squad(S.my).filter(p=>xi.has(p.id)&&!(sperreIn(p,'liga')>0)&&G.includes((gelbe(p).liga||0)+1));if(!l.length)return null;
+  return{art:'gelbsperre',text:`${l.map(p=>esc(p.n)).join(', ')} ${l.length===1?'fehlt':'fehlen'} mit der nächsten Gelben Karte im ${derby?'Derby':'Spitzenspiel'} gegen ${esc(tn(g))} (${datumKurz(n.tag)}).`,tab:'aufst',knopf:'Zur Aufstellung'};}
 const sperreIn=(p,wb)=>{const s=p.sperre&&p.sperre[wb];return s?s.rot+s.gelb:p.sperre||wb!=='liga'?0:p.sus||0;}; // im Testspiel (wb 'test') gibt es keine Sperren
 const verfahrenVon=(p,wb)=>(S.verfahren||[]).find(v=>v.pid===p.id&&(!wb||v.wb===wb));
 
@@ -18,7 +24,7 @@ const verfahrenVon=(p,wb)=>(S.verfahren||[]).find(v=>v.pid===p.id&&(!wb||v.wb===
 let WB=null,WB_NAECHST={k:null,wb:'liga'};
 function naechsterWb(){if(!S.plan)return'liga';const k=S.season+'/'+S.tag+'/'+S.gespielt+'/'+S.cup.hist.length;
   if(WB_NAECHST.k!==k){const e=S.phase==='play'?naechstesSpiel(S.gespielt===S.tag?S.tag+1:S.tag):null;WB_NAECHST={k,wb:e&&e.art==='pokal'?'pokal':e&&e.art==='eu'?'eu':'liga'};}return WB_NAECHST.wb;}
-const gesperrt=(p,wb)=>sperreIn(p,wb||WB||(p.team===S.my?naechsterWb():'liga'))>0;
+const gesperrt=(p,wb)=>{const w=wb||WB||(p.team===S.my?naechsterWb():'liga');return sperreIn(p,w)>0||(w==='eu'&&!euSpielberechtigt(p));}; // im Europapokal nur mit Meldung (K37 §5.6, U19d1)
 function mitWettbewerb(wb,fn){const alt=WB;WB=wb;try{return fn();}finally{WB=alt;}}
 
 // Schiedsrichter (K09 §3.3): erfundener Pool je Liga mit Strenge (Karten) und Elfmeterneigung. Angesetzt aus dem Spiel-Hash.
@@ -58,7 +64,21 @@ function sgUrteil(v,n,ausgang,d){const p=PIX.get(v.pid);if(p){const s=sperren(p)
   v.urteil=n;v.ausgang=ausgang;v.am=d;v.stand='erledigt';
   (S.sgArchiv=S.sgArchiv||[]).unshift({pid:v.pid,n:p?p.n:'?',team:v.team,wb:v.wb,art:v.art,tag:v.tag,antrag:v.antrag,urteil:n,ausgang,am:d,einspruch:!!v.einspruch});
   S.sgArchiv.length=Math.min(S.sgArchiv.length,RD.verfahren.archiv);
-  if(p&&p.team===S.my){const rest=sperreIn(p,v.wb);news(`Sportgericht: ${p.n} ist für ${n} ${WB_SPIEL[v.wb]}${n===1?'':'e'} gesperrt (${VERGEHEN[v.art]}, ${AUSGANG[ausgang]}).${rest?` Noch ${rest} offen.`:' Die Sperre ist schon abgesessen.'}`,ausgang==='gemindert'?'good':'bad');}}
+  if(p&&p.team===S.my){const rest=sperreIn(p,v.wb);news(`Sportgericht: ${p.n} ist für ${n} ${WB_SPIEL[v.wb]}${n===1?'':'e'} gesperrt (${VERGEHEN[v.art]}, ${AUSGANG[ausgang]}).${rest?` Noch ${rest} offen.`:' Die Sperre ist schon abgesessen.'}`,ausgang==='gemindert'?'good':'bad');
+    if(n>=RPK.anlass.urteilAb&&rest>0)presseS().urteil={pid:p.id,tag:absTag(S.tag),s:S.season,wb:v.wb};if(n>0&&v.team===S.my&&!autoB('sportgericht'))vereinsstrafeAnbieten(p,n);}} /* Pressekonferenz nach dem Urteil (K29 §4.1, K29g): vorgemerkt, presseTag öffnet sie (Prüfung DR2, DR4: nur, solange die Sperre noch läuft) */
+// Vereinsstrafe (K09 §5.2, K14 §6, K09c): Nach einem Urteil gegen deinen Spieler (für eine Rote Karte bei deinem Verein) entscheidest du binnen RD.vereinsstrafe.tage Tagen,
+// ob er eine interne Geldstrafe zahlt. Nicht unter der Automatik des Sportgerichts (Gleichschritt in tests/lizenz.js). Ohne Antwort keine Strafe. Am letzten Tag hält
+// das Spiel an („Frist“, kalender.js haltGrund, Prüfung EA1). S.vstrafe = [{pid, betrag, bis, s}], mehrere zugleich möglich (EA2; alte Spielstände: ein Objekt).
+const vstrafeListe=()=>{let l=S.vstrafe;if(l&&!Array.isArray(l))l=S.vstrafe=[l];return l||[];};
+function vereinsstrafeAnbieten(p,n){const V=RD.vereinsstrafe,neu={pid:p.id,betrag:n*(V.jeSpiel[myT().lg]||V.jeSpiel[3]),bis:S.tag+V.tage,s:S.season};
+  S.vstrafe=vstrafeListe().filter(v=>v.pid!==p.id&&v.s===S.season&&v.bis>=S.tag).concat([neu]);news(`Im Büro: Verhängst du gegen ${p.n} eine Vereinsstrafe? Antwort bis ${datumKurz(neu.bis)}.`,'');}
+const vereinsstrafeOffen=()=>vstrafeListe().filter(v=>{const p=PIX.get(v.pid);return v.s===S.season&&v.bis>=S.tag&&p&&p.team===S.my;});
+const vereinsstrafeFrist=d=>!autoB('sportgericht')&&vereinsstrafeOffen().some(v=>v.bis===d);
+function vereinsstrafe(pid,ja){if(!darf('sportgericht'))return;const v=vereinsstrafeOffen().find(x=>x.pid===pid);if(!v)return;const p=PIX.get(v.pid),V=RD.vereinsstrafe;S.vstrafe=vstrafeListe().filter(x=>x!==v);
+  if(ja){money('Vereinsstrafen',v.betrag);stimmungAendern(p,V.stimmung);glaubAendern(V.glaub);news(`${p.n} zahlt ${fmt(v.betrag)} Strafe in die Vereinskasse. Die Mannschaft sieht: Die Regeln gelten für alle.`,'');}
+  else{stimmungAendern(p,V.erlassStimmung);glaubAendern(V.erlassGlaub);news(`Du verzichtest auf eine Strafe für ${p.n}. Er dankt es dir, in der Kabine wird darüber geredet.`,'');}save();render();}
+function vereinsstrafeKarte(){return vereinsstrafeOffen().map(v=>{const p=PIX.get(v.pid);
+  return`<div class="card"><h3>Vereinsstrafe</h3><p>${esc(p.n)} wurde gesperrt. Verhängst du eine interne Geldstrafe von ${fmt(v.betrag)}? Antwort bis ${datumKurz(v.bis)}, sonst bleibt es ohne Strafe.</p><div class="row"><button onclick="vereinsstrafe(${p.id},1)"${lzAus('sportgericht')}>Strafe verhängen</button><button onclick="vereinsstrafe(${p.id},0)"${lzAus('sportgericht')}>Darauf verzichten</button></div></div>`;}).join('');}
 function sgAnnehmenLauf(v,d){sgUrteil(v,v.antrag,'angenommen',d);}
 function sgEinspruchLauf(v,d){const E=RD.einspruch;v.einspruch=true;v.stand='einspruch';v.kosten=riA(E.kosten);
   v.urteilAm=Math.min(v.tag+RD.verfahren.urteilSpaetestens,d+riA(RD.verfahren.urteilTage));
@@ -81,6 +101,50 @@ function sportgerichtTag(d){if(!S.verfahren||!S.verfahren.length)return;
     else if(v.stand==='einspruch'&&d>=v.urteilAm)sgEntscheiden(v,d);});
   S.verfahren=S.verfahren.filter(v=>v.stand!=='erledigt');}
 const meineVerfahren=()=>(S.verfahren||[]).filter(v=>{const p=PIX.get(v.pid);return p&&p.team===S.my;});
+
+// ---------- Äußerungen (K09 §4.3, §5.4, K09f) ----------
+// Schiedsrichterkritik in der Pressekonferenz (K29, auch Kritik am Urteil, K29h): Der Kontrollausschuss ermittelt (Chance RPK.schiri.verfahren beim Abschluss der
+// Pressekonferenz), das Urteil kommt nach RPK.schiri.tage Tagen. Ohne frühere Fälle in gedaechtnis Tagen gibt es mit verwarnung nur eine Verwarnung, sonst eine
+// Geldstrafe nach Liga, Faktor 1 + wiederholung × Zahl der früheren Fälle, höchstens wiederholungMax. Zahlen muss der Verein, bei dem du die Kritik geäußert hast
+// (nach einem Jobwechsel der alte, direkt von seinem Konto, Prüfung FE1). Die Chronik bekommt den Eintrag bei diesem Verein.
+// Ohne Halt, eigene Ströme. Seit K09g bei Wiederholung zusätzlich ein Innenraumverbot (RD.trainer.innenraum: ab ab früheren Fällen, so viele Spiele wie Fälle über ab − 1,
+// höchstens max). Es gilt dir, nicht dem Verein, also auch nach einem Jobwechsel.
+// S.kontrolle = {f: offene Fälle [{tid, urteil (absoluter Tag), uk (Kritik am Urteil), txt, kopf}], alt: absolute Tage früherer Urteile}
+const kontrolleS=()=>S.kontrolle||(S.kontrolle={f:[],alt:[]});
+function kontrolleEroeffnen(urteilKritik,txt,kopf){const K=RPK.schiri,heute=absTag(S.tag),n=mitStrom(strom('kontrolle',S.season,heute,kontrolleS().f.length),()=>riA(K.tage));
+  kontrolleS().f.push({tid:S.my,urteil:heute+n,uk:urteilKritik?1:0,txt:txt||'',kopf:kopf||''});
+  news(`Der Kontrollausschuss des DFB ermittelt wegen deiner Kritik ${urteilKritik?'am Urteil des Sportgerichts':'am Schiedsrichter'}. Das Ergebnis kommt in den nächsten Tagen.`,'bad');}
+function kontrolleTag(d){const k=S.kontrolle;if(!k||!k.f.length)return;const K=RPK.schiri,heute=absTag(d);k.alt=(k.alt||[]).filter(a=>heute-a<K.gedaechtnis);
+  k.f.filter(c=>heute>=c.urteil).forEach(c=>{k.f=k.f.filter(x=>x!==c);const vor=k.alt.length;k.alt.push(heute);const was=c.uk?'deine Kritik am Urteil':'deine Kritik am Schiedsrichter';
+    mitStrom(strom('kontrolleUrteil',S.season,c.urteil,vor),()=>{
+      if(!vor&&R()<K.verwarnung){news(`Kontrollausschuss: Für ${was} gibt es eine Verwarnung. Beim nächsten Mal wird es teuer.`,'');return;}
+      const t=S.teams[c.tid],L=K.strafe[t?t.lg:3]||K.strafe[3],f=Math.min(K.wiederholungMax,1+K.wiederholung*vor),b=Math.round((L[0]+R()*(L[1]-L[0]))*f/1000)*1000,mein=c.tid===S.my;
+      if(mein)money('Strafen',-b);else if(t)t.cash-=b;news(`Kontrollausschuss: Das Sportgericht bestraft ${was} mit ${fmt(b)}${vor?` (${vor+1}. Fall in zwölf Monaten)`:''}.${mein?'':` Zahlen muss ${tn(c.tid)}.`}`,'bad');
+      chronikEintrag(c.txt,c.kopf,c.tid);const IV=RD.trainer.innenraum;if(vor>=IV.ab)trainerSperre(Math.min(IV.max,vor-IV.ab+1),'Innenraumverbot des Kontrollausschusses');});});}
+
+// ---------- Trainer-Karten und Tribüne (K09 §5.4, K09g) ----------
+// S.trainerK = {s Saison der Gelben, g deine Gelben Karten als Trainer in dieser Saison, sp Sperre in Pflichtspielen deines Vereins, w Grund, heute absoluter Tag des
+// Spiels, für das die Sperre gerade gilt (null sonst)}. Die Sperre gehört dir: Sie läuft nach einem Jobwechsel und über den Saisonwechsel weiter, die Gelben verfallen
+// zum Saisonende. Gelb gibt es nur für Protest im Live-Spiel (live.js liveProtest). Computer-Trainer bekommen keine Karten (keine Proteste, keine Ansprache).
+// Auf der Tribüne: keine Zurufe, keine Ansprache von dir, in der Halbzeit spricht der Co-Trainer (live.js). Wechsel und Taktik gehen weiter. Ohne Zufall.
+const trainerKS=()=>{const K=S.trainerK||(S.trainerK={s:S.season,g:0,sp:0,w:'',heute:null});if(K.s!==S.season){K.s=S.season;K.g=0;}return K;};
+const trainerGesperrt=()=>!!S.trainerK&&S.trainerK.sp>0;
+const trainerTribuene=()=>!!S.trainerK&&S.trainerK.heute!=null&&S.trainerK.heute===absTag(S.tag);
+function trainerSperre(n,grund){if(!(n>0))return;const K=trainerKS();K.sp+=n;K.w=grund;
+  news(`${grund}: Du bist für ${K.sp===1?'das nächste Pflichtspiel':`die nächsten ${K.sp} Pflichtspiele`} gesperrt und sitzt auf der Tribüne. Zurufe gibt es dann nicht, die Halbzeitansprache hält der Co-Trainer.`,'bad');}
+// Gelbe Karte für dich: jede RD.trainer.sperreJe-te in der Saison sperrt für sperreSpiele Spiele (Bundesliga seit 2019/20: nach der vierten). Gibt die Zahl der Gelben zurück.
+function trainerGelb(){const T=RD.trainer,K=trainerKS();K.g++;if(K.g%T.sperreJe===0)trainerSperre(T.sperreSpiele,`${K.g}. Gelbe Karte als Trainer`);return K.g;}
+// Vor dem Anpfiff deines Pflichtspiels (ablauf.js tagesSpieleVorbereiten): Gilt eine Sperre, sitzt du heute auf der Tribüne. Nicht beim Fortsetzen eines Live-Spiels
+// nach Neuladen (live.js liveFortsetzen, S.live dieses Tages): Was vor dem Anpfiff galt, steht schon in heute; eine Sperre aus diesem Spiel gilt erst ab dem nächsten (Prüfung FG1).
+function trainerVorSpiel(d){if(S.live&&S.live.tag===d)return;if(trainerGesperrt())S.trainerK.heute=absTag(d);}
+// Nach deinem Pflichtspiel (ablauf.js nach letztesSpielMerken): Saßt du auf der Tribüne, ist ein Spiel abgesessen. Eine Sperre aus diesem Spiel (Gelb-Rot, vierte Gelbe)
+// gilt erst ab dem nächsten, weil heute dafür nicht gesetzt war.
+function trainerNachSpiel(r,d){const K=S.trainerK;if(!r||r.test||!K||K.heute==null||K.heute!==absTag(d))return;K.heute=null;K.sp=Math.max(0,K.sp-1);
+  if(!K.sp)news('Deine Sperre ist abgesessen. Beim nächsten Spiel stehst du wieder an der Seitenlinie.','good');}
+// Büro: Sperre oder eine Gelbe vor der Sperre
+function trainerKartenKarte(){const K=S.trainerK,T=RD.trainer;if(!K)return'';const g=K.s===S.season?K.g:0,vorSperre=g%T.sperreJe===T.sperreJe-1;if(!(K.sp>0)&&!vorSperre)return'';
+  return`<div class="card"><h3>Du als Trainer</h3>${K.sp>0?`<p class="bad">Gesperrt für ${K.sp===1?'das nächste Pflichtspiel':`${K.sp} Pflichtspiele`} (${esc(K.w)}). Du sitzt auf der Tribüne: keine Zurufe, die Halbzeitansprache hält der Co-Trainer.</p>`:''}
+    ${vorSperre?`<p>${g} Gelbe Karten in dieser Saison. Bei der nächsten bist du ein Spiel gesperrt.</p>`:''}</div>`;}
 
 // Saisonwechsel: Gelbe Karten und Gelbsperren verfallen, Rot- und Gelb-Rot-Sperren laufen weiter (K09 §3.2, auch im Pokal)
 function disziplinSaison(p){if(p.kt)p.kt={liga:0,pokal:0,eu:0};else delete p.yc;if(p.sperre)WETTBEWERBE.forEach(wb=>{if(p.sperre[wb])p.sperre[wb].gelb=0;});}

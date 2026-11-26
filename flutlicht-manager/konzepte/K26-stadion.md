@@ -1,6 +1,6 @@
 # K26 – Stadion und Infrastruktur
 
-Status: **Entwurf** (8. November 2026), nach „weiter, entscheide du“. Vorläufige Entscheidungen stehen in Abschnitt 12. **Teilschritt K26a umgesetzt (21. November 2026, popolupo, §5.1), noch ohne Testlauf.**
+Status: **Entwurf** (8. November 2026), nach „weiter, entscheide du“. Vorläufige Entscheidungen stehen in Abschnitt 12. **Teilschritt K26a umgesetzt (21. November 2026, popolupo, §5.1), K26b Computer-Vereine bauen (22. November 2026, §5.2), beide noch ohne Testlauf.**
 Hängt ab von: K23 (Finanzen), K27 (Fans) · Wird gebraucht von: K07, K08, K10, K24, K25.
 
 ## 1. Ziel und Spielgefühl
@@ -12,7 +12,7 @@ Hängt ab von: K23 (Finanzen), K27 (Fans) · Wird gebraucht von: K07, K08, K10, 
 ## 2. Vorbilder und Abgrenzung
 
 - **BMH, Anstoss:** Stadionausbau und Platzwart (PLAN §4, Recherche 2.1).
-- **Heute im Spiel:** Tribünen (+3.000 Plätze, 4,5 Mio. €, 6 Wochen), Logen (+10, 2,5 Mio. €, 4 Wochen), Fanshop (3 Stufen). Bleibt die Grundlage.
+- **Heute im Spiel:** Tribünen (+3.000 Plätze, 4,5 Mio. €, seit K23c 12 Mio. €, 6 Wochen), Logen (+10, 2,5 Mio. €, 4 Wochen), Fanshop (3 Stufen). Bleibt die Grundlage.
 - **Bewusst anders:** kein grafischer Editor, sondern Bauteile mit klaren Wirkungen.
 
 ## 3. Begriffe und Daten
@@ -86,6 +86,27 @@ Hängt ab von: K23 (Finanzen), K27 (Fans) · Wird gebraucht von: K07, K08, K10, 
 - **Lizenz:** Bereich `stadion` (wie die Tribünen), kein neuer Bereich.
 - **Noch nicht:** Steh- und Sitzplätze, Business-Seats, Dach, Rasenheizung, Flutlicht, Rasenqualität mit Greenkeeper (§3.2a), Eigentum und Miete (§3.3), neues Stadion als Großprojekt, Karten aus §8, Bauen der Computer-Vereine.
 
+### 5.2 Umsetzung K26b (22.11.2026, popolupo, ohne Testlauf): Computer-Vereine bauen
+
+- **Wann:** einmal je Saison zum Saisonstart (nach Auf- und Abstieg und den TV-Geldern der neuen Saison), ohne Zufall. Gebaut wird ohne Genehmigung und Bauzeit, es ist in der Sommerpause fertig (vereinfacht gegenüber deinem Bauprozess).
+- **Tribüne** (§7): Die Nachfrage ist die erwartete Zuschauerzahl eines Ligaheimspiels ohne Deckel durch die Plätze, gegen einen Gegner mit dem Ansehen des Ligaschnitts, mit neutraler Form (dieselbe Rechnung wie die Einnahmen der Computer-Vereine, K23b). Liegt sie zwei Saisons nacheinander über 95 % der Plätze, kommen 3.000 Plätze dazu, wenn
+  - die neue Zahl höchstens 105 % der Nachfrage ist (kein Leerbau, §10),
+  - danach noch die Reserve des Vorstands bleibt (10 % der erwarteten Einnahmen, K23d) und
+  - höchstens 90.000 Plätze entstehen.
+- **Anlagen** (sonst, höchstens eine je Saison): die erste noch nicht ausgebaute aus der Liste des Profils. Ausbildungsvereine: Trainingsgelände, Catering, Anzeigetafel. Alle anderen: Catering, Anzeigetafel, Trainingsgelände. Nur wenn danach noch dreimal die Reserve bleibt.
+  - Abweichung von §7: Ausbildungsvereine bauen das Trainingsgelände statt des Nachwuchszentrums, weil das Nachwuchszentrum im Spiel nur auf deine Jugend wirkt (`jugendDeckel`). Das Trainingsgelände wirkt bei allen Vereinen (Entwicklung, Verletzungen).
+- **Meldung:** nur für Tribünen in deiner Liga.
+- **Dein Verein** baut nicht von selbst: Der Bereich `stadion` hat keine Automatik (K36).
+- **Seit K26c (22.11.2026, popolupo, ohne Testlauf):** Der Fanshop (`t.shop`, Kosten nach Stufe wie bei dir) steht vorn in den Listen (bei Ausbildungsvereinen nach dem Trainingsgelände). So verkaufen auch Computer-Vereine Fanartikel. Sie zahlen Instandhaltung wie du (1 % der Bausumme je Saison, verteilt auf die Ligaspiele).
+- **Noch nicht:** Reha-Zentrum und Nachwuchszentrum für sie, Abriss bei dauerhaft leerem Stadion.
+
+### 5.3 Umsetzung K26d (22.11.2026, popolupo, ohne Testlauf): Dach
+
+- **Dach** als weitere Anlage (§3.1): eine Stufe, 15 Mio. €, 20 Wochen Bauzeit, mit dem Bauprozess aus §5.1.
+- **Wirkung:** Heimvorteil × 1,005 im Heimspiel, wenn das Stadion voraussichtlich mindestens zu 95 % voll ist. Die Schätzung nimmt die erwarteten Zuschauer ohne Würfel und ohne den konkreten Gegner (Engine `side`, `dachFaktor`). Seit Prüfung DI1 mit deinem Ticketpreis wie bei den echten Zuschauern, sonst bekam ein halb leeres Stadion bei teuren Tickets den Bonus.
+- **Nicht** für Computer-Vereine (nicht in ihren Baulisten aus K26b), kein Schutz vor Wetter, weil es im Spiel kein Wetter gibt.
+- **Lizenz:** Bereich `stadion` wie die übrigen Bauten.
+
 ## 6. Hebel des Spielers
 
 | Hebel | Nutzen | Preis |
@@ -110,6 +131,16 @@ Bauen nach Nachfrage und Budget: Tribünen, wenn die Auslastung zwei Saisons üb
 | Bauverzögerung | 4.4 | Info, Kosten |
 | Stadt bietet Zuschuss | Großprojekt, Zufall | Geld gegen Auflagen |
 | Anwohner klagen | Ausbau, Zufall | Genehmigung verzögert |
+
+**Stand 22.11.2026:** Bauverzögerung, Auflagen (Lärmschutz, Verkehr) und Mehrkosten kommen seit K26a als Meldungen im Bauablauf. „Stadt bietet Zuschuss“ seit K26e (ohne Testlauf) als große Entscheidungskarte bei einem Bauprojekt ab 5 Mio. €: annehmen bringt 15 % der Baukosten (neue Kartenwirkung `zuschuss`), dafür sinkt der Ticketpreis auf den Richtpreis. Seit Prüfung ED1 sinkt er höchstens auf den Richtpreis, ein niedrigerer Preis bleibt. „Rasen nach Frost kaputt“ fehlt (Rasenqualität ist zurückgestellt).
+
+**Gebaut als K26f** (23.11.2026, popolupo, ohne Testlauf, Werte vorläufig): „Anwohner klagen“ als Entscheidungskarte (Anlasskarte, Chance 0,1 je Woche).
+- **Auslöser:** Tribünenausbau oder Dach wartet noch mindestens eine Woche auf die Genehmigung, bei diesem Projekt gab es noch keine Klage.
+- **Wahl:**
+  - Reden und Lärmschutz bezahlen: 50.000 € in der 3. Liga, nach Liga wie alle Kartenbeträge (K23f), in der 1. Liga also 200.000 €. Bis Prüfung EQ2 stand hier „150.000 € in der 1. Liga“. Die Beträge im Katalog gelten aber für die 3. Liga, das wären in der 1. Liga 600.000 € gewesen. Seit Prüfung EO4 entfallen dafür die Auflagen beim Baubeginn (`auflage` 0, neue Kartenwirkung `bauAuflage`), sonst hätte man den Lärmschutz zweimal bezahlt.
+  - Es auf die Klage ankommen lassen: mit 50 % weist das Gericht sie ab, sonst kommt die Genehmigung 3 Wochen später. Seit EO4 wählt die Automatik diese Möglichkeit, damit sie nicht ungefragt Geld ausgibt.
+- **Verzögerung:** Baubeginn und Fertigstellung verschieben sich (`S.constr.klage` in Wochen, das Ende `bis` um dieselbe Zeit). `ab` bleibt als Kennung des Projekts, wie beim Zuschuss (Prüfung ED6). Die Baustelle zeigt „Anwohner haben geklagt“.
+- Nur dein Verein, Karten sind im Gleichschritt aus.
 
 ## 9. Wechselwirkungen
 
@@ -157,7 +188,14 @@ stadion:{
 4. Reha-Zentrum mit Physio zusammen höchstens −25 % Ausfallzeit (§5.1).
 5. Catering +5 %, Anzeigetafel +3 % auf die Zuschauereinnahmen (§5.1).
 6. Instandhaltung 1 % der Bausumme im Jahr, nur für Bauten ab K26a (§5.1).
-7. Computer-Vereine bauen noch nicht (§5.1).
+7. Computer-Vereine bauen noch nicht (§5.1). Seit K26b bauen sie (§5.2).
+
+**Vorläufig entschieden mit K26b (22.11.2026, popolupo, ohne Testlauf):**
+
+8. Computer-Vereine bauen zum Saisonstart ohne Zufall und ohne Bauzeit (§5.2).
+9. Tribüne nach zwei Saisons mit Nachfrage über 95 %, höchstens bis 105 % der Nachfrage, nur mit Reserve (§5.2).
+10. Höchstens eine Anlage je Saison nach Profil, Ausbildungsvereine zuerst das Trainingsgelände statt des Nachwuchszentrums (§5.2).
+11. Dein Verein baut nicht von selbst, `stadion` bleibt ohne Automatik (§5.2).
 
 ## Quellen
 

@@ -49,7 +49,7 @@ async function actions(s,tag){const wk=s.wk,yr=s.season,K=yr+':'+wk+':';
    if(id!=null){await pg.evaluate(i=>openP(i),id);await pg.click('button:text-is("Angebot abgeben")');actlog.push(tag+' Kauf Listenspieler: '+await msgOrClosed());}else actlog.push(tag+' kein passender Listenspieler');
    const star=await pg.evaluate(()=>{const c=S.pl.filter(p=>p.team===0&&!p.list).sort((a,b)=>b.str-a.str);return c[0].id;});
    await pg.evaluate(i=>openP(i),star);await pg.fill('#fee','0.5');await pg.click('button:text-is("Angebot abgeben")');actlog.push(tag+' Billigangebot für Bayern-Star: '+await msgOrClosed());}
- if(wk===4&&yr===2026&&once(K+'menue')){await tabClick('Menü');const cb=await pg.$$('.ovb .pick input'),soll=await pg.evaluate(()=>Object.keys(REGELN.kalender.erinnerungen).length);if(cb.length!==soll)note(tag,`Menü: ${cb.length} statt ${soll} Erinnerungs-Schalter`);
+ if(wk===4&&yr===2026&&once(K+'menue')){await tabClick('Menü');const cb=await pg.$$('.ovb .pick input[onchange^="erinnerungAus"]'),soll=await pg.evaluate(()=>Object.keys(REGELN.kalender.erinnerungen).length);if(cb.length!==soll)note(tag,`Menü: ${cb.length} statt ${soll} Erinnerungs-Schalter`);
    await cb[1].click();const aus=await pg.evaluate(()=>!erinnerungAn('aufstellung'));await cb[1].click();const an=await pg.evaluate(()=>erinnerungAn('aufstellung'));if(!aus||!an)note(tag,'Erinnerung lässt sich nicht ab- und wieder anschalten');await closeModal();
    await tabClick('Kalender');await pg.click('button[aria-label="Monat vor"]');await pg.click('button[aria-label="Monat vor"]');const sc=await pg.evaluate(()=>__scan());if(sc)note(tag,'Kalender: '+sc);await pg.click('button:text-is("Heute")');actlog.push(tag+' Menü-Schalter und Kalender geprüft');}
  if(wk===5&&once(K+'frei')){await tabClick('Transfers');await pg.selectOption('#tf_lg','f');const row=await pg.$('tbody tr.click');if(row){await row.click();await pg.click('button:text-is("Verpflichten")');actlog.push(tag+' Vereinsloser: '+await msgOrClosed());}
@@ -138,7 +138,7 @@ async function actions(s,tag){const wk=s.wk,yr=s.season,K=yr+':'+wk+':';
 async function advance(tag){await tabClick('Büro');const t0=await pg.evaluate(()=>S.tag);await pg.click('header .go');
  for(let k=0;k<10;k++){await pg.waitForTimeout(30);const ov=(await pg.evaluate(()=>document.getElementById('ov').innerText)).trim();if(!ov)break;
   if(ov.startsWith('Sicher?')){rem++;const sc=await pg.evaluate(()=>__scan());if(sc)note(tag,'Erinnerung: '+sc);await pg.click('#trotzdem');continue;}
-  if(await pg.$('#kick')){const unav=await pg.evaluate(()=>S.pl.filter(p=>p.inj>0||sperreIn(p,'liga')>0||sperreIn(p,'pokal')>0).map(p=>[p.id,p.inj>0,sperreIn(p,'liga')>0,sperreIn(p,'pokal')>0])),z=Math.random();
+  if(await pg.$('#kick')){const unav=await pg.evaluate(()=>S.pl.filter(p=>p.inj>0||sperreIn(p,'liga')>0||sperreIn(p,'pokal')>0||sperreIn(p,'eu')>0).map(p=>[p.id,p.inj>0,sperreIn(p,'liga')>0,sperreIn(p,'pokal')>0,sperreIn(p,'eu')>0])),z=Math.random();
    // Meist live mit Vorspulen, manchmal mit Eingriffen zur Halbzeit, manchmal „Sofort berechnen“ (alte Konferenz)
    if(z<0.15){await pg.click('#sofort');await pg.click('.ovb button:text-is("Zum Abpfiff")',{timeout:4000});}
    else{await pg.click('#kick');
@@ -148,7 +148,7 @@ async function advance(tag){await tabClick('Büro');const t0=await pg.evaluate((
      await pg.click('.ovb button:text-is("Zum Abpfiff")',{timeout:4000});}
    await pg.waitForSelector('#cf-next, #lv-weiter',{timeout:6000});const sc=await pg.evaluate(()=>__scan());if(sc)note(tag,'Spiel: '+sc);
    if(await pg.$('#lv-weiter'))await pg.click('#lv-weiter');
-   const bad=await pg.evaluate(u=>{const m=new Map(u.map(x=>[x[0],x]));return LAST.list.flatMap(r=>{const w=wbVon(r);return[...r.xi.flat(),...(r.ein||[]).flat()].filter(id=>{const x=m.get(id),p=PIX.get(id);return x&&((x[1]&&!(p&&p.spritzeAm===LAST.tag))||(w==='liga'?x[2]:x[3]));});}).length;},unav);if(bad)note(tag,bad+' gesperrte/verletzte Spieler eingesetzt');
+   const bad=await pg.evaluate(u=>{const m=new Map(u.map(x=>[x[0],x]));return LAST.list.flatMap(r=>{const w=wbVon(r);return[...r.xi.flat(),...(r.ein||[]).flat()].filter(id=>{const x=m.get(id),p=PIX.get(id);return x&&((x[1]&&!(p&&p.spritzeAm===LAST.tag))||(w==='liga'?x[2]:w==='eu'?x[4]:x[3]));});}).length;},unav);if(bad)note(tag,bad+' gesperrte/verletzte Spieler eingesetzt');
    if(await pg.$('#cf-next'))await pg.click('#cf-next');continue;}
   if(ov.includes('Entlassen!')){actlog.push(tag+' ENTLASSEN – nehme Job');await pg.click('.ovb .opt');continue;}
   if(ov.includes('Saisonbilanz')){const sc=await pg.evaluate(()=>__scan());if(sc)note(tag,'Bilanz: '+sc);

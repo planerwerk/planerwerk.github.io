@@ -41,7 +41,7 @@ Hängt ab von: K04 (Engine), K06 (Taktik), K02 (Zufallsströme) · Wird gebrauch
 - **5 Wechsel** in höchstens **3 Gelegenheiten** während des Spiels. Wechsel in der Halbzeitpause zählen nicht als Gelegenheit. So gilt es in der Bundesliga dauerhaft seit 2022 (Quellen).
 - **Verlängerung:** ein zusätzlicher Wechsel (Regel für den DFB-Pokal prüfen).
 - **Gehirnerschütterung:** Das IFAB erlaubt seit Juli 2024 zusätzliche dauerhafte Wechsel bei Gehirnerschütterung, die Wettbewerbe entscheiden selbst. Für die Bundesliga habe ich keine Einführung gefunden. 2021 hatte die DFL sie wegen der fünf Wechsel abgelehnt. Vorläufig **nicht** aktiv, als Stellschraube vorhanden.
-- **Bank:** 9 Auswechselspieler (Zahl prüfen). Der Co-Trainer wählt sie: ein Torwart, je Gruppe die zwei Stärksten, dann nach Stärke. Seit U8d kannst du einzelne Spieler an der Spielerkarte auf die Tribüne setzen (K14 §12 Nr. 31). Eine eigene Bankwahl fehlt noch.
+- **Bank:** 9 Auswechselspieler (Zahl prüfen). Der Co-Trainer wählt sie: ein Torwart, je Gruppe die zwei Stärksten, dann nach Stärke. Seit U8d kannst du einzelne Spieler an der Spielerkarte auf die Tribüne setzen (K14 §12 Nr. 31). Seit K05e (24.11.2026, popolupo, ohne Testlauf) auch „fest auf die Bank“ (`p.bankF`): Wer nicht in der Startelf steht, sitzt dann zuerst auf der Bank, den Rest füllt der Co-Trainer wie bisher (ein Torwart nur, wenn noch keiner dabei ist). Bank und Tribüne schließen sich aus, unter der Automatik der Aufstellung zählt die Markierung nicht, ein Vereinswechsel löscht sie. Die Aufstellung zeigt, wer auf der Bank säße.
 
 ### 3.3 Spielstand während des Spiels
 
@@ -152,6 +152,10 @@ Siehe 5.5. In der Konferenz und bei Spielen ohne dich laufen beide Computer-Trai
 | Spieler verweigert den Handschlag | früh ausgewechselter Spieler mit hohem Ehrgeiz (Diva) | Stimmung (K14), Presse (K29) |
 | Last-Minute-Drama | Tor in der Nachspielzeit, das ein Spiel entscheidet | Ticker hervorgehoben, Presse |
 
+**Gebaut als K05c** (23.11.2026, popolupo, ohne Testlauf, Anlasskarten bis 7 Tage nach deinem Pflichtspiel): „Der Joker sticht“ (Meldung, Selbstvertrauen +1, Stimmung +2; das Lernen „Joker“ gibt es seit K05f, 24.11.: jedes Tor nach Einwechslung zahlt 15 auf das Merkmal ein, bei allen Vereinen, im Testspiel seit Prüfung FL3 zur Hälfte, ohne Zufall; eine Wirkung des Merkmals in der Engine, „stärker in den ersten 20 Minuten nach der Einwechslung“ aus K03, fehlt noch; seit FL3 belegt es keinen Platz für Stärken mehr und steht sichtbar auf der Spielerkarte) und „Handschlag verweigert“ (Diva vor der 60. Minute ausgewechselt; zurechtweisen, unter vier Augen klären oder ignorieren). Dafür merkt sich das Spiel nach deinem Spiel die Joker und die früh Ausgewechselten (`S.letzt`), der Wechsel im Spielbericht trägt jetzt auch `ausId`. Seit K05d auch „Last-Minute-Drama“: Entschied ein Tor ab Minute 88 dein Pflichtspiel mit einem Tor Unterschied (ohne Elfmeterschießen), kommt eine Meldung, beim Sieg Fans +2 und Stimmung im Kader +1, bei der Niederlage Stimmung −1. Die Nachspielzeit steht nicht eigens im Spielbericht, darum ab Minute 88. Seit Prüfung EK: in der Verlängerung ab Minute 118, nicht in Relegation und Europapokal (Hin- und Rückspiel, vorläufig). Die Karten sehen alle Pflichtspiele der letzten 7 Tage, auch das Pokalspiel unter der Woche. Verletzt Ausgewechselte zählen nicht für den Handschlag.
+
+**„Ansprache wirkt“ gebaut als K05g** (25.11.2026, popolupo, ohne Testlauf, vorläufig): Nach deinem eigenen „Fordern“ in der Halbzeit des Live-Spiels ist die Tordifferenz der zweiten Halbzeit (Minute 46 bis 90) um mindestens 2 besser als die der ersten: Meldung „Die Ansprache hat gewirkt“, Glaubwürdigkeit +1 (`REGELN.live.ansprache.wirkt`). Nicht, wenn der Co-Trainer die Ansprache hält (Tribüne), ohne Zufall.
+
 ## 9. Wechselwirkungen
 
 | Konzept | Zusammenspiel |
@@ -218,7 +222,7 @@ live:{
 13. **Elfmeter halten erst nach der Ausführung an** (Treffer über „Tor“, Fehlschuss über „Elfmeter“). Den Schützen vorher zu ändern, braucht die Schützenliste aus K06 (U5).
 14. **Gelb-Rot-Gefahr** hält nur bei verwarnten Abwehrspielern, Sechsern, Ungestümen und Hitzköpfen an. Mit jeder Gelben Karte wären es im Schnitt 6 Halte pro Spiel, jetzt etwa 5,5 (Ziel 3–6).
 15. **Halbzeit-Einschätzung des Co-Trainers:** schwächster und stärkster Bereich im Vergleich zum Gegner und wer schon platt ist, immer zutreffend, bis K16 die Genauigkeit an seine Qualität bindet.
-16. **Frühere Spiele des Tages als Zuschauer** (4.1) sind noch nicht gebaut. Sie erscheinen in der Konferenz mit Endstand.
+16. **Frühere Spiele des Tages als Zuschauer** (4.1) sind noch nicht gebaut: Sie vorher im Schnelldurchlauf anzusehen, geht nicht. Gebaut ist nur die Notlösung: In der Konferenz erscheinen frühere Spiele mit Endstand, spätere ohne Ergebnis (`omKonf`). Die Live-Ansicht lässt weiter alle Spiele des Tages gleichzeitig laufen (`liveKonf`). (Berichtigt nach Prüfung EJ3, 23.11.2026.)
 17. **Elfmeterschießen** endet, sobald eine Mannschaft uneinholbar führt (wie im echten Spiel). Vorher wurden immer fünf Schüsse je Seite gerechnet.
 
 **Noch zu recherchieren:** Größe der Ersatzbank in der Bundesliga, zusätzlicher Wechsel in der Verlängerung im DFB-Pokal.

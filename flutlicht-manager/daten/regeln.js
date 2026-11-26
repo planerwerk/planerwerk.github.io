@@ -12,6 +12,35 @@ const REGELN={
     alteSchluessel:['flutlicht-manager-v1','flutlicht-manager-v2','flutlicht-manager-v3'], // Spielstände älterer Testversionen, werden beim Start gelöscht
     nachrichtenMax:80                // so viele Nachrichten bleiben im Posteingang
   },
+  darstellung:{                      // Thema je Gerät (K35b §13.3, W5b): im Browser gespeichert, nicht im Spielstand; Farben in css/spiel.css
+    schluessel:'flutlicht-thema',    // Speicherplatz im Browser
+    standard:'dunkel',               // ohne gespeicherte Wahl
+    themen:{dunkel:'Dunkel (Flutlichtnacht)',hell:'Hell (Tageslicht)',system:'Wie das Gerät'},
+    wappenSchluessel:'flutlicht-wappen', // eigene Wappen (K39 §3.1, W5e2): nur im Browser, nie im Spielstand
+    wappenPx:[96,112],               // so groß werden eigene Wappen gespeichert (Breite, Höhe in Pixeln)
+    wappenMaxKB:900,                 // eigene Wappen zusammen höchstens so viel Browser-Speicher (der Spielstand braucht bis etwa 4 MB, Browser erlauben meist 5 MB)
+    sequenzen:{schluessel:'flutlicht-sequenzen',standard:'an',stufen:{an:'An',kurz:'Kurz (nur Aufblitzen)',aus:'Aus'}}, // Animationen bei großen Momenten (K39 §3.4, W5e3), je Gerät
+    leitspruch:'Bratwurst. Meisterschale. Herzblut.' // BMH als Leitspruch unter dem Namen (K42, vorläufig; Alternativen in K42 §2)
+  },
+  klang:{                            // Klang (K41, W5f), je Gerät im Browser, nicht im Spielstand; erzeugt in js/klang.js
+    schluessel:'flutlicht-klang',
+    an:true,laut:0.4,                // Voreinstellung: Ton an, leise (K41 §6)
+    pegel:{klick:0.15,brief:0.25,pfiff:0.5,pfiff3:0.5,jubel:0.6,raunen:0.4}, // Anteil an der Lautstärke je Klang
+    // Stadionatmosphäre (W5f2, vorläufig): pegel Anteil an der Lautstärke bei Stärke 1, weich Zeitkonstante in Sekunden. Stärke: grund plus groesse mal Wurzel aus
+    // Plätzen durch voll (höchstens 1), mal rueckstand, wenn die Heimelf mit 2 oder mehr zurückliegt; dazu schluss ab Minute schlussAb bei knappem Stand
+    // und tor als eigener Jubel für torSek Sekunden nach einem Tor. Vor dem Anpfiff und in der Halbzeit mal pause.
+    atmo:{pegel:0.35,weich:0.8,grund:0.35,groesse:0.5,voll:60000,rueckstand:0.65,schluss:0.2,schlussAb:75,tor:0.5,torSek:6,pause:0.6}
+  },
+  // Neue Regeln ausprobieren (K02 §4.4, K02a, 24.11., popolupo, vorläufig): Schalter, die noch aus sind, weil sie die Kalibrierung aller Vereine verschieben.
+  // Im Menü je Spielstand einschaltbar (S.einst.exp). pfad: Objekt in REGELN mit dem Feld an.
+  experimente:[
+    {k:'tvRaten',pfad:'finanzen.tv.raten',name:'TV-Gelder in vier Raten',text:'Statt je Ligaspiel kommt das TV-Geld am 1. August, 1. November, 1. Februar und 1. Mai für alle Vereine (K23h). Umgeschaltet gilt es ab der nächsten Saison.'},
+    {k:'notverkauf',pfad:'computer.notverkauf',name:'Notverkauf bei Computer-Vereinen',text:'Wer über seinem Gehaltsrahmen liegt, setzt seinen teuersten Spieler unter Wert auf die Transferliste (K31d).'},
+    {k:'integration',pfad:'spieler.integration.wirkung',name:'Integration wirkt im Spiel',text:'Neuzugänge aller Vereine spielen schwächer, bis sie integriert sind (bis 8 %, K03d). Landsleute, die noch wenig Deutsch sprechen, bilden in der Kabine Grüppchen (K14g).'},
+    {k:'laenderspiele',pfad:'wettbewerbe.laenderspiele',name:'Länderspiele',text:'Nationalspieler aller Vereine fehlen in den Länderspielpausen und kommen müde zurück (K13f).'},
+    {k:'pokalRotation',pfad:'wettbewerbe.pokal.rotationKI',name:'Pokal-Rotation der Favoriten',text:'In den ersten zwei Pokalrunden schonen Favoriten gegen Amateure und deutlich schwächere Gegner Spieler unter 85 % Frische (K13j).'},
+    {k:'kiUnsicherheit',pfad:'computer.unsicherheit',name:'Unsicherheit der Computer-Vereine',text:'Computer-Vereine schätzen fremde Spieler nach der Qualität ihrer Scouts unscharf ein: Fehlkäufe und Schnäppchen (K18i).'},
+    {k:'belastungRotation',pfad:'computer.belastungRotation',name:'Rotation nach Saisonbelastung',text:'Vereine, deren Aufstellung der Stab macht, schonen im Ligaspiel ab und zu Spieler mit hoher Saisonbelastung (K10f).'}],
 
   kalender:{
     maxSprung:7,                     // „Tag beenden“ springt höchstens so viele Tage weit
@@ -28,7 +57,7 @@ const REGELN={
       2:{wochenende:[['Sa','20:30',1],['Fr','18:30',2],['So','13:30',3],['Sa','13:00',3]],mitte:[['Di','18:30',4],['Mi','18:30',5]],letzter:'15:30'},
       3:{wochenende:[['Sa','16:30',1],['Fr','19:00',1],['So','16:30',1],['So','19:30',1],['So','13:30',1],['Sa','14:00',5]],mitte:[['Di','19:00',5],['Mi','19:00',5]],letzter:'13:30'}},
     attraktivZufall:15,              // Zufall bei der Verteilung auf die Anstoßzeiten (in Ansehen-Punkten)
-    erinnerungen:{frist:'Angebot läuft heute ab',aufstellung:'Startelf hat Ausfälle',sponsor:'Kein Sponsor gewählt',vertrag:'Verträge laufen aus',versprechen:'Versprechen droht zu kippen',vorbereitung:'Punkte vor dem Saisonstart offen (höchstens einmal je Woche)',deadline:'Halt am letzten Tag des Transferfensters (Deadline Day)'} // abschaltbar im Menü; vorbereitung seit U14 (K12b)
+    erinnerungen:{frist:'Angebot läuft heute ab',aufstellung:'Startelf hat Ausfälle',sponsor:'Kein Sponsor gewählt',vertrag:'Verträge laufen aus',versprechen:'Versprechen droht zu kippen',vorbereitung:'Punkte vor dem Saisonstart offen (höchstens einmal je Woche)',deadline:'Halt am letzten Tag des Transferfensters (Deadline Day)',gelbsperre:'Gelbsperre droht vor einem Derby oder Spitzenspiel',plan:'Trainingsplan passt nicht (englische Woche, Belastungssprung)',spielfrei:'Spielfreie Woche ohne Testspiel (in der Saison)',lernplatz:'Platz im Einzeltraining frei'} // abschaltbar im Menü; vorbereitung seit U14 (K12b)
   },
 
   welt:{
@@ -38,7 +67,9 @@ const REGELN={
     startZiel:9,                     // Platzhalter, wird sofort aus dem Ansehen berechnet
     startJugend:2,                   // Stufe der Jugendarbeit (1–5)
     startFormationen:['4-4-2','4-3-3','4-2-3-1','3-5-2'], // daraus wählt jeder Verein zufällig
-    konto:{basis:5e5,jeAnsehen2:2500},   // Startkonto = basis + Ansehen² × jeAnsehen2
+    // Startkonto = basis × e^(steigung × (Ansehen − mitte)), gerundet (K23c, vorläufig): etwa ein Fünftel der Jahreseinnahmen,
+    // Ansehen 95 etwa 127 Mio. €, 71 etwa 27 Mio. €, 52 etwa 8 Mio. €, 39 etwa 3 Mio. €. Vorher basis + Ansehen² × 2.500 €.
+    konto:{basis:25e6,steigung:0.065,mitte:70,runden:1e5},
     ticket:{basis:15,jeAnsehen:0.25},    // Startpreis = basis + Ansehen × jeAnsehen (€)
     grund:{basis:48,jeAnsehen:0.4},      // Grundstärke erfundener Spieler = basis + Ansehen × jeAnsehen
     kaderVollAb:20,                  // ab so vielen echten Spielern gilt das Soll „voll“
@@ -75,7 +106,7 @@ const REGELN={
       altRaus:{ab:31,jeJahr:0.12},     // im Sommer: ab 31 fällt ein Spieler mit (Alter − 30) × 12 % aus dem Kern (Bank, kleinere Liga), zusätzlich zum Karriereende
       aufstieg:{ab:6,chance:0.5,fenster:3}, // im Sommer: wer mehr als 6 darüber liegt, wechselt mit 50 % zu einem größeren Auslandsverein (dessen Grundstärke höchstens 3 unter seiner Stärke)
       forderung:[0.8,0.6],             // Ablöseforderung = Marktwert × (0,8 + 0,6 × Finanzkraft/100): arme Vereine verkaufen günstiger (K32 §6)
-      budget:12000,                    // Transferbudget eines Auslandsvereins = Finanzkraft² × 12.000 € (Spielwert, K23)
+      budget:25000,                    // Transferbudget eines Auslandsvereins = Finanzkraft² × 25.000 € (Spielwert, seit K23c doppelt so hoch wie vorher, weil gute Spieler teurer sind)
       angebote:{anteil:0.3,niveau:5},  // Anteil der Angebote für deine Spieler, die aus dem Ausland kommen; der Spieler darf höchstens 5 unter der Grundstärke des Käufers liegen
       // Abwanderung (K32 §8 „Bundesliga verliert je Sommer Spieler an reiche Auslandsgruppen“, T1.3, vorläufig): im Sommerfenster je Liga so viele Käufe aus dem Ausland,
       // ab dieser Stärke, bis zu diesem Alter, höchstens jeVerein je Verein, Ablöse = Vereinswert fürs Ausland × preis. Sommer 2025: allein die vier teuersten Zugänge der Premier League kamen aus der Bundesliga.
@@ -108,6 +139,11 @@ const REGELN={
     selbstvertrauen:{min:-3,max:3,tor:0.5,guteNote:0.3,schlechteNote:-0.3,ausgleich:0.15},
     spielpraxis:{zerfall:0.97,jeSpiel:25,wirkungUnter:50,wirkungMax:0.04}, // Trainingsspiele geben zusätzlich Spielpraxis (K07)
     zustand:{min:0.80,max:1.08},    // Deckel für Form, Frische und Spielpraxis zusammen (K03 §5.8)
+    // Integration und Deutsch (K03 §5.5, K03d, 24.11., popolupo, vorläufig): Start beim Zugang deutsch (deutschsprachig) oder fremd, ± anpassung je 10 Punkte Anpassungsfähigkeit.
+    // Woche: basis, + einsatz mit einem Spiel, + deutsch ab deutschAb, + figur mit Integrationsfigur, + landsleute mit einem Landsmann, höchstens max. Deutsch: Start start,
+    // je Woche min bis max nach Anpassungsfähigkeit, mit zwei Landsleuten halb so schnell. Wirkung im Spiel min + (1 − min) × Integration, nur mit wirkung.an (vorerst aus).
+    // Seit Prüfung FK4: kader für Fremdsprachige deutscher Vereine ohne eigenen Wert und ohne laufende Integration (Startkader), sie lernen von dort weiter.
+    integration:{start:{deutsch:70,fremd:35,anpassung:15},woche:{basis:3,einsatz:2,deutsch:1,deutschAb:60,figur:1,landsleute:1,max:8},deutsch:{start:20,kader:60,min:1,max:3},wirkung:{an:false,min:0.92}},
     // Persönlichkeit (K03 §3.3): 8 verdeckte Werte 1–20, ausgewürfelt je Karriere
     persoenlichkeit:{mitte:10,streuung:3.5,min:1,max:20,werte:['pro','ehr','loy','tem','dru','anp','fue','rob']},
     // Eigenschaften (K03 §3.5) entstehen aus der Persönlichkeit. Angezeigt nur, wenn ihre Wirkung im Spiel gebaut ist (wirksam).
@@ -136,7 +172,7 @@ const REGELN={
       flankengeber:{name:'Flankengeber',g:['AB','MF'],s:'mittel',text:'mehr Kopfballchancen über außen, gefährlichere Ecken'},dribbler:{name:'Dribbler',g:['MF','ST'],s:'schwer',text:'macht aus Halbchancen öfter Großchancen'},torjaeger:{name:'Torjäger',g:['MF','ST'],s:'schwer',gegen:'abschlussschwach',text:'kommt öfter zum Abschluss und trifft besser'},
       weitschuetze:{name:'Weitschütze',g:['MF','ST'],s:'mittel',text:'schießt öfter aus der Distanz und trifft dabei besser'},freistoss:{name:'Freistoßspezialist',g:['AB','MF','ST'],s:'mittel',text:'direkte Freistöße gehen öfter rein'},
       elfmeter:{name:'Elfmeterschütze',g:['AB','MF','ST'],s:'leicht',text:'trifft vom Punkt öfter'},beidfuessig:{name:'beidfüßig',g:['AB','MF','ST'],s:'schwer',bis:25,text:'trifft etwas besser, keine Einbuße auf der „falschen“ Seite'},
-      vielseitig:{name:'vielseitig',g:['AB','MF','ST'],s:'mittel',text:'auf fremden Positionen besser geeignet'},joker:{name:'Joker',g:['MF','ST'],s:'mittel'},
+      vielseitig:{name:'vielseitig',g:['AB','MF','ST'],s:'mittel',text:'auf fremden Positionen besser geeignet'},joker:{name:'Joker',g:['MF','ST'],s:'mittel',platz:false,zeigen:true,text:'trifft nach Einwechslungen (noch ohne Wirkung im Spiel, belegt keinen Platz für Stärken)'},
       reflexe:{name:'Reflexe',g:['TW'],s:'mittel',text:'hält Schüsse aus kurzer Distanz besser'},strafraum:{name:'Strafraumbeherrscher',g:['TW'],s:'mittel',gegen:'fliegenfaenger',text:'fängt Flanken ab, weniger Kopfballtore'},
       elfmetertoeter:{name:'Elfmetertöter',g:['TW'],s:'leicht',text:'hält Elfmeter öfter'},mitspielend:{name:'mitspielend',g:['TW'],s:'mittel'},
       kopfballschwach:{name:'kopfballschwach',g:['AB','MF','ST'],s:'mittel',schwaeche:true,text:'schwächer bei Kopfbällen'},abschlussschwach:{name:'abschlussschwach',g:['MF','ST'],s:'mittel',schwaeche:true,text:'vergibt öfter'},
@@ -156,7 +192,8 @@ const REGELN={
       szenen:{ecke_tor:{k:'flankengeber',ja:8},kopf:{k:'kopfballstark',w:'kopfballschwach',ja:6,nein:1},ecke:{k:'kopfballstark',w:'kopfballschwach',ja:6,nein:1},freistossFlanke:{k:'kopfballstark',w:'kopfballschwach',ja:6,nein:1},
         kopfballduell:{k:'kopfballstark',w:'kopfballschwach',minus:4,kosten:10},freistoss:{k:'freistoss',ja:15},elfmeter:{k:'elfmeter',ja:6,nein:-10,kosten:25},elfmeter_gehalten:{k:'elfmetertoeter',ja:20},
         fern:{k:'weitschuetze',ja:10},gross:{k:'torjaeger',w:'abschlussschwach',ja:3,minus:2,kosten:5},dribbling:{k:'dribbler',ja:3},
-        flanke_tw:{k:'strafraum',w:'fliegenfaenger',ja:3,minus:10,kosten:25,zufall:0.3},parade_nah:{k:'reflexe',ja:2},patzer:{w:'unkonzentriert',minus:8},gelb:{w:'ungestuem',minus:3},rot:{w:'ungestuem',minus:10}}},
+        flanke_tw:{k:'strafraum',w:'fliegenfaenger',ja:3,minus:10,kosten:25,zufall:0.3},parade_nah:{k:'reflexe',ja:2},patzer:{w:'unkonzentriert',minus:8},gelb:{w:'ungestuem',minus:3},rot:{w:'ungestuem',minus:10},
+        joker:{k:'joker',ja:15}}}, // joker (K05f): ein Eingewechselter trifft (aus r.ev und r.ein, lernenImSpiel), nicht aus der Engine
     startMerkmale:{staerken:[[0,0.85],[55,1],[65,1.9],[75,2.85],[85,3.6]],schwaechen:[[60,0.6],[85,0.3]],beidfuessig:0.1,
       gewichte:{TW:{reflexe:3,strafraum:2,elfmetertoeter:1,mitspielend:2},AB:{kopfballstark:3,zweikampfstark:3,stellungssicher:3,ballsicher:2,flankengeber:1,ausdauernd:1,schnell:1},
         MF:{ballsicher:2,flankengeber:2,dribbler:1,weitschuetze:2,freistoss:1,ausdauernd:2,zweikampfstark:1,schnell:1,elfmeter:1,vielseitig:1},ST:{torjaeger:3,kopfballstark:2,schnell:2,dribbler:2,elfmeter:2,joker:1,weitschuetze:1}}},
@@ -166,8 +203,14 @@ const REGELN={
     fuss:{rechts:0.77},
     talentSchaetzung:{fehler:1,genauNachWochen:104}, // Talentsterne bis 1 daneben, nach 2 Jahren im Verein genau (K03, Normal)
     vertrag:[1,4],                   // Restlaufzeit in Jahren
-    gehalt:{basis:1e6,steigung:0.1,mitte:75,runden:1000}, // Gehalt/Jahr = basis × e^(steigung × (Stärke − mitte))
-    marktwert:{basis:8e6,steigung:0.1,mitte:75,jungUnter:24,staerkeAnteil:0.6,talentAnteil:0.4,
+    // Gehalt/Jahr = basis × e^(steigung × (Stärke − mitte)). K23c (vorläufig, Modellrechnung K23 §5.6b): steiler als vorher (basis 1 Mio., steigung 0,1),
+    // damit die Personalkosten je Liga nahe an echt liegen: 1. Liga im Schnitt etwa 72 Mio. €, 2. Liga 17 Mio. €, 3. Liga 7 Mio. € je Verein.
+    // Stärke 60 bekommt 0,23 Mio., 70 1,1 Mio., 75 2,5 Mio., 80 5,6 Mio., 85 12 Mio., 90 28 Mio. €.
+    gehalt:{basis:2.5e6,steigung:0.16,mitte:75,runden:1000},
+    gehaltAlt:{basis:1e6,steigung:0.1,mitte:75},  // Kurve vor K23c, nur zum Umrechnen alter Spielstände (welt.js, k23cUmstellen)
+    // Marktwert ebenso steiler (K23c, vorher basis 8 Mio., steigung 0,1): Kaderwert 1. Liga im Schnitt etwa 220 Mio. €, 2. Liga 37 Mio. €, 3. Liga 11 Mio. €.
+    // Stärke 60 im besten Alter 0,35 Mio., 70 2,6 Mio., 75 7 Mio., 80 19 Mio., 85 52 Mio., 90 140 Mio. €.
+    marktwert:{basis:7e6,steigung:0.2,mitte:75,jungUnter:24,staerkeAnteil:0.6,talentAnteil:0.4,
       alter:[[21,1.5],[24,1.25],[28,1],[30,0.7],[32,0.45]],alterSonst:0.22,minimum:25000,runden:25000},
     sterne:[12,8,4],                 // Talent − Stärke ab diesem Wert: 4, 3 oder 2 Sterne
     niveauSpieler:14,                // Kaderstärke = Schnitt der besten 14
@@ -175,15 +218,29 @@ const REGELN={
   },
 
   finanzen:{
-    tv:{liga1:{basis:120000,jeAnsehen:2500},liga2:{basis:50000,jeAnsehen:900},liga3:{basis:20000,jeAnsehen:400}}, // je Ligaspieltag
+    // TV-Gelder (K23 §5.1, K23c, vorläufig): Säulenmodell mit echten Töpfen je Saison (DFL 1,121 Mrd. € für 1. und 2. Liga im Verhältnis 80:20, DFB 26,2 Mio. € für die 3. Liga).
+    // 1. und 2. Liga: gleich (Gleichverteilung 50 % plus Nachwuchs 4 %, den es im Spiel noch nicht gibt) zu gleichen Teilen, leistung nach dem Rang in der Fünfjahreswertung
+    // innerhalb der Liga (Gewicht n + versatz − Rang), interesse nach Ansehen². Fünfjahreswertung: Punkte je Saison = Zahl der Vereine der drei Ligen + 1 − Gesamtplatz
+    // (1. Liga Platz 1 bis 18, 2. Liga 19 bis 36, 3. Liga ab 37), gewichtet mit gewichte (jüngste Saison zuerst). Fehlende Saisons zählen wie der Startplatz nach Ansehen.
+    // 3. Liga: Topf zu gleichen Teilen. Ausgezahlt je Ligaspiel. Seit K23h (24.11., popolupo, K23 §4): mit raten.an in vier gleichen Raten an den Tagen raten.tage
+    // (August, November, Februar, Mai) an alle Vereine der Profiligen statt je Spiel. Vorerst aus: verschiebt den Zeitpunkt des Geldes aller Vereine, erst messen.
+    tv:{topf:{1:897e6,2:224e6,3:26.2e6},gleich:0.54,leistung:0.43,interesse:0.03,versatz:3,gewichte:[5,4,3,2,1],raten:{an:false,tage:['08-01','11-01','02-01','05-01']}},
     betrieb:{jePlatz:1,jeLoge:300},  // Stadion und Betrieb je Ligaspieltag
     jugendKosten:[0,20000,40000,70000,110000,160000], // je Ligaspieltag, Index = Stufe
     kreditZins:0.08,                 // pro Saison
-    kreditRahmen:{basis:2e6,jeAnsehen:250000},
+    // Kreditrahmen = basis × e^(steigung × (Ansehen − mitte)), gerundet (K23c, vorläufig, vorher 2 Mio. + 250.000 € je Ansehen): Ansehen 95 etwa 54 Mio. €,
+    // 71 etwa 21 Mio. €, 52 etwa 10 Mio. €, 39 etwa 6 Mio. €. Er ist zugleich die Grenze für die Insolvenz.
+    kreditRahmen:{basis:20e6,steigung:0.04,mitte:70,runden:1e5},
+    // Verwaltung und Sonstiges (K23c, neu, vorläufig): Geschäftsstelle, Reisen, Sicherheit, Vermarktung. Je Ligaspiel dieser Anteil an TV, Werbung (Grundbetrag) und
+    // sonstigen Einnahmen, für alle Vereine. Echt liegen die übrigen Aufwendungen bei 40 bis 70 % des Umsatzes. So gewählt, dass die Ligen im Schnitt wie vorher stehen:
+    // 1. Liga etwa +11 Mio. € je Saison, 2. Liga etwa 0, 3. Liga knapp im Minus (Modellrechnung K23 §5.6b, ohne Transfers und Pokal).
+    // 26.11. (vorläufig, nach den Läufen 10 bis 14 mit tests/finanzmodell.js 2): gemessen 1. Liga +13 bis +16 Mio., 2. Liga −1 bis −4 Mio., 3. Liga −2,5 bis −3,8 Mio.
+    // je Verein und Saison. Anteile im Verhältnis zur Abweichung und zum Grundbetrag (etwa 113, 25 und 17 Mio.) nachgestellt, vorher 0,4 / 0,55 / 0,4.
+    verwaltung:{1:0.435,2:0.47,3:0.3},
     pokalPraemien:[2e5,4e5,8e5,1.6e6,3.2e6,4.5e6], // je gespielter Runde
     pokalSieg:3e6,
     pokal:{drittligisten:4,amateure:24}, // DFB-Pokal: 36 aus 1. und 2. Liga, dazu die besten Drittligisten (ohne Zweitmannschaften) und Amateure
-    fremdeEinnahmen:{liga:30,pokal:10}, // Computer-Vereine: Ansehen² × Wert je Spieltag bzw. Pokalrunde
+    fremdeEinnahmen:{liga:30,pokal:10}, // bis K23b die Pauschale der Computer-Vereine (Ansehen² × Wert je Spieltag bzw. Pokalrunde), seit K23b nur noch zum Vergleich in tests/finanzmodell.js
     fanartikel:[0,1.5,3,5],          // € je Zuschauer, Index = Fanshop-Stufe
     loge:3000,                       // € je Loge und Heimspiel
     zuschauer:{refBasis:15,refJeAnsehen:0.25, // Richtpreis = refBasis + Ansehen × refJeAnsehen
@@ -192,15 +249,20 @@ const REGELN={
       gegnerBasis:0.88,gegnerFaktor:0.3,gegnerOhne:40, // Gegner = basis + Ansehen/100 × faktor
       liga2:0.82,liga3:0.7,pokal:1.05,zufallBasis:0.95,zufallSpanne:0.1},
     ticketPreis:{min:5,max:150,standard:20},
-    sponsor:{liga1:45,liga2:18,liga3:8,      // Grundbetrag je Spieltag = Ansehen² × Wert
+    // Werbung (K23c, vorläufig): Grundbetrag je Ligaspiel = basis × e^(steigung × (Ansehen − mitte)) × liga. Vorher Ansehen² × 45, 18 oder 8.
+    // Echt (DFL 2023/24): 1. Liga im Schnitt 57 Mio. € je Saison, 3. Liga 5,8 Mio. €. Im Spiel: 1. Liga etwa 53 Mio. € (Ansehen 95 etwa 200 Mio. €, 55 etwa 15 Mio. €),
+    // 2. Liga etwa 8 Mio. €, 3. Liga etwa 4 Mio. €. Davon teilen sich Trikotbrust, Ausrüster und Ärmel den Anteil werbung.anteil, den Rest (werbung.partner) zahlen weitere Partner.
+    sponsorAlt:{liga:{1:45,2:18,3:8},anteil:{brust:0.6,ausruester:0.29,aermel:0.11}}, // Werbung vor K23c (Ansehen² × liga × anteil), nur zum Umrechnen alter Verträge (welt.js k23cUmstellen)
+    sponsor:{basis:1.15e6,steigung:0.065,mitte:70,liga:{1:1,2:0.65,3:0.6},
       angebote:[
         {fix:1,sieg:0,jahre:1,info:'Festes Geld pro Spieltag, 1 Saison'},
         {fix:0.65,sieg:1.3,jahre:1,info:'Weniger Fixum, dafür Prämie pro Sieg, 1 Saison'},
         {fix:0.92,sieg:0,jahre:3,info:'Langfristig: 3 Saisons feste Summe'}]},
     // Werbeflächen (K24 §3.1, Teilschritt K24a, 21.11.): Trikotbrust, Ausrüster und Ärmel mit je eigenen Angeboten in der Form oben.
-    // Vorläufig geldneutral: Die drei teilen sich den bisherigen Brustbetrag. Verhältnis nach den Zielanteilen in K24 §3.1 (Brust 35–45 %, Ausrüster 15–25 %, Ärmel 5–10 %).
-    // Die Höhe nach K24 §5.1 (Bayern etwa 60 Mio. € für die Brust) kommt erst mit K23, weil sie die ganze Wirtschaft verschiebt. Namen erfunden.
-    werbung:{anteil:{brust:0.6,ausruester:0.29,aermel:0.11},titel:{brust:'Trikotbrust',ausruester:'Ausrüster',aermel:'Ärmel'},
+    // Seit K23c (vorläufig): Anteile am Grundbetrag der Werbung nach den Zielanteilen in K24 §3.1 (Brust 35–45 %, Ausrüster 15–25 %, Ärmel 5–10 %), den Rest (partner)
+    // zahlen weitere Partner (Premium-, Logen- und Regionalpartner) je Ligaspiel ohne Verhandlung. Bayern bekommt so etwa 75 Mio. € für die Brust (echt etwa 60 Mio., K24 §5.1).
+    // Bis K23c teilten sich die drei Flächen den ganzen Grundbetrag (0,6, 0,29, 0,11). Namen erfunden.
+    werbung:{anteil:{brust:0.38,ausruester:0.18,aermel:0.07},partner:0.37,titel:{brust:'Trikotbrust',ausruester:'Ausrüster',aermel:'Ärmel'},
       namen:{ausruester:['Falkner Sport','Sprintwerk','Kranich Teamwear','Nordlicht Athletics','Bergfalke Sport','Tiedemann Sportswear'],
         aermel:['Moorland Versicherung','Weserblick Immobilien','Albtrauf Software','Uferwerk Logistik','Sonnhalde Energie','Grünfeld Mobilfunk']},
       // K24b (21.11., alle Werte aus K24 §5.4, §4.3, vorläufig): je Fläche ein viertes Angebot von einem umstrittenen Geldgeber (30 % über dem besten festen Angebot,
@@ -245,11 +307,31 @@ const REGELN={
     fenster:[['07-01','09-01'],['01-01','02-01']],
     stellenwert:{schluessel:1.5,stamm:1.3,rotation:1,pokal:1,talent:1,ergaenzung:0.8},
     kauf:{besser:1.2,gleich:1,schlechter:0.7,spanne:2},
+    bedarfAnzeige:{max:5}, // K31b (22.11., popolupo): höchstens so viele Vereine mit Bedarf auf der Spielerkarte, der Rest als Zahl
+    // Weiterverkaufsbeteiligung (K19 §5.2, K19d, 22.11., popolupo): anteil am nächsten Verkauf durch den Käufer; er bewertet sie mit bewertung × anteil × Ablöse und zahlt so viel weniger
+    weiterverkauf:{anteil:0.15,bewertung:0.2},
+    // Boni als Teil der Ablöse beim Kauf (K19 §5.2, K19i, 24.11., popolupo, vorläufig): Der Verkäufer rechnet einen Bonus mit wert seines Betrags an. Höchstens maxAnteil der
+    // festen Ablöse, nur bei Käufen von deutschen Vereinen. Fällig, wenn die Bedingung binnen saisons Saisons eintritt (spiele: so viele Pflichtspiele für dich; aufstieg:
+    // dein Verein spielt in einer höheren Liga als beim Kauf), sonst verfällt er; verlässt der Spieler dich vorher, entfällt er.
+    // Seit K19k (24.11., popolupo, vorläufig) auch in Angeboten deutscher Computer-Vereine für deine Spieler: mit ki.chance (fest aus dem Seed) ist ki.anteil des Gebots ein
+    // Bonus, die feste Ablöse sinkt um wert × Bonus. Aufstiegsbonus mit ki.aufstieg, wenn der Käufer nicht in der 1. Liga spielt, sonst nach arten.spiele.n Pflichtspielen für ihn.
+    boni:{wert:0.5,maxAnteil:0.5,saisons:2,arten:{spiele:{n:25,name:'nach 25 Pflichtspielen für dich',erfuellt:'hat 25 Pflichtspiele für dich bestritten'},
+      aufstieg:{name:'bei einem Aufstieg deines Vereins',erfuellt:'ist mit dir aufgestiegen',platz:6,sonst:0.2}}, /* Aufstieg: voller wert nur bis Platz platz, sonst × sonst (Prüfung FH3) */
+      ki:{chance:0.3,anteil:0.2,aufstieg:0.5}},
+    // Spielertausch beim Kauf (K19 §4.3, K19j, 24.11., popolupo, vorläufig): Ein eigener Spieler als Teil des Angebots zählt beim Verkäufer mit wert × seinem Vereinswert
+    // als Käufer (vwKauf). Er geht nur mit, wenn der Verein höchstens ansehenMinus weniger Ansehen hat als deiner oder er wechseln will (Wechselwunsch), und nur, wenn
+    // der Verkäufer unter kaeufer.kaderMax Spieler hat. Nur bei Käufen von deutschen Vereinen.
+    // Seit K19l (25.11., popolupo, vorläufig) auch in Angeboten deutscher Computer-Vereine für deine Spieler: mit ki.chance (fest aus dem Seed, nur ohne Bonus) legt der
+    // Käufer den wertvollsten Spieler seiner Transferliste dazu, dessen Preis höchstens ki.maxAnteil des Gebots ist und der zu dir will; das Gebot sinkt um diesen Preis.
+    tausch:{wert:0.9,ansehenMinus:10,ki:{chance:0.15,maxAnteil:0.5}},
     restlaufzeit:[0.6,0.6,0.85,1],
-    finanzlage:{knappUnter:1.5e6,knapp:0.9,reichAb:20e6,reich:1.1},
+    finanzlage:{knappUnter:2e6,knapp:0.9,reichAb:60e6,reich:1.1}, // K23c: reich erst ab 60 Mio. € (vorher 20 Mio.), weil die Kontostände gewachsen sind
     forderung:1.15,schmerzgrenze:0.95,maxFaktor:1.8,
     runden:{kauf:4,verkauf:3},geduld:2,spott:0.6,anstaendig:0.8,preisdruck:{prozent:0.03,tage:28},pause:28,
-    angebotKI:[0.85,1],auslandMax:1.15},
+    angebotKI:[0.85,1],auslandMax:1.15,
+    // Transferstatus „unverkäuflich“ (K19 §5, K19c, 22.11., GESCHÄTZT): bei Computer-Vereinen die schluessel stärksten Spieler mit mindestens bindungAb Jahren Vertrag,
+    // nicht auf der Transferliste. Für dich gilt dann der Höchstpreis maxFaktor × Marktwert. Deine eigenen markierst du selbst.
+    unverkaeuflich:{schluessel:3,bindungAb:2}},
 
   // Verträge (K21 §5, §11, U10b): Gehaltsforderung, Verhandlung über ein Paket, Prämien je Spiel, Klauseln, Vorvertrag, Interesse beim Wechsel (K19 §5.3), Bankzeit (K14 §12).
   // Forderung = Gehalt nach Stärke × Alter (bis 23 ×0,8, ab 31 ×0,9) × Talent (bis 23 mit drei Sternen ×1,1) × Söldner 1,2 oder vereinstreu 0,9 × Zufall (0,95 bis 1,05),
@@ -266,8 +348,17 @@ const REGELN={
     einsatz:{stamm:0.85,rotation:0.45,rest:0.15},spiele:{1:36,2:36,3:39},punkteJeSpiel:1.4,torquote:{ST:0.35,MF:0.12,AB:0.04,TW:0},zuNullQuote:0.25,
     sicher:[0.6,0.02],praemie:{halbAbMinute:46,punktAbMinuten:45,zuNullAbMinuten:60},
     ausstieg:{billigAb:1.5,mittelAb:3,bonus:0.1,chance:0.25},
-    ligaklausel:{malus:0.05,ref:0.3,stufen:[0,0.2,0.3,0.5]},
-    interesse:{lage:0.3,lageMitte:55,wechselwunsch:15,bindung:-3,treu:-10,landsleute:3,landsleuteMax:6,geldAb:-10,geldJePunkt:0.03},
+    // computer: übliche Ligaklausel in allen Verträgen, die ein Verein selbst schließt (K21 §12 Nr. 20, 26.11., vorläufig, Prüfung GJ): nach einem Abstieg −30 %,
+    // nach dem Wiederaufstieg wieder das alte Gehalt (K21: üblich −20 bis −50 %). Ohne sie trugen Absteiger die Gehälter der höheren Liga mit (finanzmodell, Lauf 18).
+    ligaklausel:{malus:0.05,ref:0.3,stufen:[0,0.2,0.3,0.5],computer:0.3},
+    // Zielvorgabe (K21 §3.1, §5, K21f, 24.11., popolupo, vorläufig): ab spiele Pflichtspielen für dich seit der Unterschrift Gehalt + plus; der Spieler rechnet sie mit wert × Forderung an
+    // (§5: „Gehalt −5 % akzeptiert“). Nur deine Verträge.
+    zielvorgabe:{spiele:25,plus:0.1,wert:0.05},
+    interesse:{lage:0.3,lageMitte:55,wechselwunsch:15,bindung:-3,treu:-10,landsleute:3,landsleuteMax:6,geldAb:-10,geldJePunkt:0.03,
+      // heimkehrVerein (K19 §8, K19e, 23.11., popolupo, GESCHÄTZT): Rückkehr des verlorenen Sohns, mehr Interesse ab den Pflichtspielen eines Publikumslieblings für deinen Verein
+      // (fanstimmung.ident.lieblingSpiele, seit Prüfung EP6 keine eigene Zahl mehr), beim Wechsel zu dir Fanstimmung (Umfeld) + heimkehrFans
+      heimkehrVerein:10,heimkehrFans:2,
+      ruf:0.2}, // U12h (K28 §5.4, 22.11., GESCHÄTZT): je Punkt deines Rufs als Trainer über dem Start mehr Interesse, darunter weniger
     vorvertrag:{von:'01-01',bis:'06-30',chance:0.06,ansehenMinus:5},
     bank:{vertragsjahr:1.5,soeldner:2,neuzugang:1.5,neuTage:365,teuerAnteil:0.25}},
 
@@ -316,6 +407,9 @@ const REGELN={
     qualitaet:{stamm:3,herausforderer:6,ergaenzung:10},
     bedarf:{stammUnterZiel:3,verletztTage:56,budgetRestAb:0.4,endspurtWochen:3,anspruchJeWoche:1},
     verkauf:{unterPlanstelle:6,angebotAb:1.5}, // angebotAb: außergewöhnliches Angebot (× Marktwert), dafür gibt ein Verein auch ohne Grund ab (Sternejagd)
+    // Notverkauf (K31 §8, K31d, 24.11., popolupo): Liegen die Gehälter eines Computer-Vereins über ueberRahmen × Gehaltsrahmen (K23d), setzt er den Spieler mit dem höchsten
+    // Gehalt außer den Schlüsselspielern für preis × seinen üblichen Preis (kiPreis) auf die Liste. Vorerst aus (an): ändert die Verkäufe aller Vereine, erst messen.
+    notverkauf:{an:false,ueberRahmen:1.1,preis:0.75},
     // Vereinsprofile (K31 §3.2, §5.7, U11b). „ehrgeizig“ folgt aus der Lage: unter den ersten ehrgeizigBis nach Ansehen in der Liga oder gerade aufgestiegen.
     // Das zweite Profil wird beim Aufbau der Welt nach gewichte gelost (oder steht als profil in daten/vereine.js). werte: was ein Profil am Standard ändert.
     // qualitaet: Aufschlag auf alle Qualitätsziele (−1 = strenger). budget: Faktor auf den Anteil des Kontos. zahlt: Faktor auf den Vereinswert des Käufers.
@@ -341,9 +435,17 @@ const REGELN={
     // Danach Entlassung mit entlassung.basis + jeGeduld × Geduld des Präsidenten, sonst ein zweites, letztes Ultimatum. Saisonende: erwarteten Platz um mehr als saisonWeitAb verfehlt
     // und Vertrauen unter saisonUnter: Wechsel im Sommer; danach geht das Vertrauen aller um saisonZurueck zurück zum Start. Neuer Trainer: neuer Lieblingsstil, Stimmung + schub für alle
     // (die Grundordnung wählt der Computer-Trainer ohnehin jeden Monat). protokoll: so viele Wechsel bleiben in S.trainerWechsel. ALLE ZAHLEN GESCHÄTZT, Ziel 4 bis 10 je Saison in der 1. Liga.
+    // Seit Lauf 12 (26.11., vorläufig): höchstens maxJeSaison Entlassungen während einer Saison je Verein, danach kein Ultimatum mehr bis zum Sommer (Lauf 12: Cottbus 4-mal).
+    // protokoll 400 statt 200: Mit 200 zählte tests/welt.js über zehn Saisons immer genau 200.
     vorstand:{start:55,traegheit:0.2,basis:50,jePlatz:5,sport:[-35,25],serieSpiele:5,serieMitte:1.3,serieFaktor:10,serie:[-15,10],finanzMinus:-15,abSpiel:5,
-      grenze:20,schonfrist:6,ultimatumSpiele:2,entlassung:{basis:0.9,jeGeduld:-0.03},saisonWeitAb:3,saisonUnter:30,saisonZurueck:0.5,schub:5,protokoll:200},
+      grenze:20,schonfrist:6,ultimatumSpiele:2,entlassung:{basis:0.9,jeGeduld:-0.03},saisonWeitAb:3,saisonUnter:30,saisonZurueck:0.5,schub:5,protokoll:400,maxJeSaison:2},
     aktivJeWoche:0.5,schaetzFehler:2,
+    // unsicherheit (K18 §7, K18i, 25.11., popolupo, vorläufig, Schalter aus): Computer-Vereine sehen fremde Spieler unscharf, Streuung basis − jeScout × Qualität des besten Scouts,
+    // mindestens min; fest aus dem Seed je Verein, Spieler und Saison. Wirkt auf Auswahl und Grenzen beim Kauf (kiKandidat, kiStern), nicht auf den Preis. Nur die Stärke, das Talent bei Talentlücken bleibt genau (Prüfung FU4).
+    unsicherheit:{an:false,basis:4,jeScout:0.15,min:1},
+    // belastungRotation (K10 §7, K14 §12, K10f, 25.11., popolupo, vorläufig, Schalter aus): im Ligaspiel schont ein Verein unter dem Stab Feldspieler ab Saisonbelastung ab mit chance
+    // je Spiel (fest aus dem Seed), höchstens max, solange minKader Einsatzfähige mit Torwart bleiben
+    belastungRotation:{an:false,ab:70,chance:0.35,max:2,minKader:14},
     fuellen:{fenster:0,vereinslosBis:4,vereinslosChance:0.6}}, // fenster: Nummer des Fensters in transfers.fenster, an dessen Ende aufgefüllt wird (0 = Sommer)
 
   // Beziehungsnetz (K17 §5.5, §11, U12c): Werte −100 bis +100. grund: Grundwert für Derby und Rivalität (Paare in daten/vereine.js, DERBYS).
@@ -352,13 +454,66 @@ const REGELN={
   // wirkung: abloese (Forderung × (1 + abloese × Beziehung)), unter gespraechUnter lehnt ein Verein mit gespraechAblehnen ab, testspiel (Zusage × (1 + testspiel × Beziehung)).
   beziehungen:{grund:{derby:-30,rivale:-15},vergessen:0.05,loeschenUnter:2,verlauf:5,fairKauf:0.9,fairRunden:0,
     anlass:{fair:5,spott:-3,ausstieg:-8,testspiel:3,leiheGut:5,leiheSchlecht:-5,kiWechsel:5,derbySieg:-2},
-    wirkung:{abloese:-0.0015,gespraechUnter:-50,gespraechAblehnen:0.5,testspiel:0.005},anzeige:3},
+    wirkung:{abloese:-0.0015,gespraechUnter:-50,gespraechAblehnen:0.5,testspiel:0.005,brisanzUnter:-50},anzeige:3}, // brisanzUnter (K17 §5.2, K09d): zwei Vereine darunter spielen wie im Derby (mehr Karten)
 
   // Ereigniskarten (K30 §5.5, §11, U12d). Chance je Woche, in der die Bedingungen erfüllt sind: 1 / (seltenheit × wochenJeSaison).
   // Dosierung: infoProWoche, Entscheidungen klein je Woche und groß je Monat, je Bereich je Woche, Halte je Woche (eigene Spiele mitgezählt).
   // sperrTage: Standard-Sperre je Karte und Beteiligten. log: so viele Karten bleiben im Protokoll.
+  // Anlasskarten (K30d, 22.11., popolupo, vorläufig) tragen im Katalog statt der Stufe eine eigene chance je Woche, in der ihr Anlass besteht (0 < chance ≤ 1)
   karten:{seltenheit:{haeufig:3,gelegentlich:20,selten:100,sehrSelten:400},wochenJeSaison:40,
-    infoProWoche:5,entscheidung:{kleinProWoche:1,grossProMonat:1,jeBereichProWoche:1},halteProWoche:4,sperrTage:120,log:100},
+    infoProWoche:5,entscheidung:{kleinProWoche:1,grossProMonat:1,jeBereichProWoche:1},halteProWoche:4,sperrTage:120,log:100,
+    // Sammlung über alle Karrieren (K30 §5.4, K30h, 24.11., popolupo, vorläufig): erlebte Karten im Browser unter schluessel, getrennt vom Spielstand; stufen: Namen in der Anzeige
+    sammlung:{schluessel:'flutlicht-manager-sammlung',stufen:{haeufig:'häufig',gelegentlich:'gelegentlich',selten:'selten',sehrSelten:'sehr selten'}},
+    // Meldungsdichte (K30 §5.1, K35a, K30b, 22.11., popolupo): Regler in den Einstellungen. Je Stufe ersetzen klein, gross, info die Grenzen oben, wochen: 1 oder 2, bei 2 zählt die Vorwoche mit (mehr Wochen kennt der Code nicht, Prüfung DY8).
+    dichte:{standard:'normal',stufen:{wenig:{name:'wenig (eine Entscheidung alle zwei Wochen)',wochen:2,info:3},normal:{name:'normal (eine je Woche)'},viel:{name:'viel (zwei je Woche)',klein:2,gross:2,info:8}}},
+    form:{kriseBis:4,hochAb:16}, // Formkarten (K03 §8, K03b, 22.11., GESCHÄTZT): Formkrise bei Form bis kriseBis, Formhoch ab hochAb (Form 0–20)
+    // Der lachende Dritte (K30 §8.3, K17 §5.4, K30c, 22.11., popolupo, GESCHÄTZT): Du kennst den Berater ab Beziehung beraterAb, sonst mit Glück einen Verwandten (verwandt je Prüfung).
+    // Unterschreibt der Spieler bei dir, sinkt die Beziehung zwischen den beiden anderen Vereinen um zwischen, deine zu ihnen um du (bei geschicktem Vorgehen gar nicht)
+    dritter:{beraterAb:20,verwandt:0.05,zwischen:-10,du:-2},
+    // nachlass (Prüfung FA1, 23.11., GESCHÄTZT): Ein Nachlass aus einer Karte (Wirkung nachlass) gilt so viele Tage, etwa ein Transferfenster
+    nachlass:{tage:60},
+    entwicklung:{jungBis:21,altAb:30,tage:21,punkte:2}, // Durchbruch und Altersverlust (K03 §8, K03c, 22.11., GESCHÄTZT): Stärke seit dem Monatseintrag (p.mvl, K34) mindestens tage alt um punkte gestiegen (bis jungBis Jahre) oder gefallen (ab altAb)
+    // Seit Prüfung FK2: 45 nach 4 Wochen. Ein Heimweh-Typ (anp 1–4) startet fremdsprachig bei 22–26 und gewinnt je Woche mindestens 3; nach 8 Wochen lag er nie unter 40.
+    // So trifft es Heimweh-Typen, die kaum spielen und keinen Landsmann haben (nach 4 Wochen 37–41, mit Einsatz jede Woche 47 und mehr).
+    integration:{heimwehUnter:45,heimwehWochen:4}, // Heimweh-Karte (K03 §8, K03e, 24.11., popolupo): Heimweh-Typ, fremdsprachig, Integration unter heimwehUnter nach heimwehWochen Wochen bei dir
+    spiel:{nachTage:7,fruehBis:60,spaetAb:88,spaetVerlAb:118,coupAb:2,positionUnter:0.8,positionSpiele:3,positionTage:28,merken:4}, // Karten nach deinem Spiel (K05 §8, K05c, K05d, K06c: Taktik-Coup als Außenseiter mit mindestens coupAb Niveau Abstand, K06d: positionSpiele Einsätze in Folge mit Eignung unter positionUnter, seit Prüfung EK: spaetVerlAb in der Verlängerung, positionTage höchstens seit dem letzten gezählten Einsatz, merken: so viele Spiele der letzten nachTage Tage, 23.11., GESCHÄTZT): bis nachTage danach; früh ausgewechselt vor Minute fruehBis; spätes Siegtor ab Minute spaetAb (die Nachspielzeit steht nicht eigens im Spielbericht)
+    jubilaeum:{ab:25,alle:25}, // Jubiläum (K27 §8, K25 §8, K27d, 23.11.): ab ab Jahren alle alle Jahre, im Kalenderjahr des Jubiläums (Gründungsjahr gegr in daten/vereine.js)
+    // Standard-Spezialisten (K06 §8, K06e, 23.11., popolupo, GESCHÄTZT, nach einem Testlauf eichen): in der laufenden Halbserie (eigene Ligaspiele bis zur Hälfte der Spieltage, danach neu)
+    // mindestens abSpiele Ligaspiele, mindestens ab Tore nach arten (ohne Elfmeter) und Anteil an allen Ligatoren mindestens anteil. Danach stellen sich die Gegner tage Tage
+    // darauf ein: Tore nach Ecken und Freistoßflanken × faktor (wie der Bonus der Standard-Einheit, K07 §5.3). Einmal je Halbserie.
+    standard:{arten:['ecke','freistoss','freistossFlanke'],abSpiele:8,ab:7,anteil:0.4,tage:28,faktor:0.95},
+    gespraech:{streitTage:7}, // Streit nach Kritik (K15 §8, K15e, 23.11., popolupo, GESCHÄTZT): Streit im Einzelgespräch nach Kritik (p.streit, Thema p.streitT seit Prüfung EO3) höchstens streitTage her
+    versprechen:{tage:7}, // Spieler fordert Versprechen ein (K15 §8, K15f, 25.11., popolupo, vorläufig): Versprechen höchstens tage her gebrochen
+    skandal:{sperreLiga:20,sperrePokal:3,abstand:10}, // Skandale (K30 §8.4, K30f, 23.11., GESCHÄTZT): Wettbetrug eines Spielers eines Computer-Vereins, Sperre in Liga- und Pokalspielen; abstand: Manipulation in der 3. Liga (K30g) höchstens einmal in so vielen Saisons (Prüfung ER2)
+    testspiel:{nachTage:7}, // Testspiel-Karten (K11 §8, K30e, 22.11., GESCHÄTZT): bis nachTage nach dem Testspiel beim Amateurverein oder der Niederlage gegen ihn
+    medizin:{grippeAb:3,rehaAb:60,restAb:30}, // Medizin-Karten (K10 §8, K10e, 22.11., GESCHÄTZT): Grippewelle ab grippeAb Kranken im Kader; lange Reha bei einer Verletzung ab rehaAb Tagen mit noch mindestens restAb Tagen
+    hilfe:{verletzteAb:5,bezAb:40}, // Hilfe in der Not (K17 §8, K17b, 22.11., GESCHÄTZT): ab verletzteAb Verletzten im offenen Fenster bietet ein Verein mit Beziehung über bezAb eine Leihe an
+    presse:{leckUnter:45,viralTage:7,vorTage:7}, // Presse-Karten (K29 §8, K17 §8, K29k, 22.11., GESCHÄTZT): Leck bei Medienklima unter leckUnter; Fehde bei Beziehung unter RBZ.wirkung.gespraechUnter.
+    // Seit K29l: „Spruch geht viral“ bis viralTage nach einem Eintrag in der Sprüche-Chronik; „Rivale greift deine Kampfansage auf“ bis vorTage vor dem Spiel gegen ihn
+    sommer:{nachTestTage:14,sonderFrische:15}, // Sommerkarten (K12a §8, K12c, 22.11., GESCHÄTZT): Übergewicht bis nachTestTage nach dem Leistungstest; Sonderschichten kosten sonderFrische Frische
+    verfahren:{tage:[5,14]}, // Karten-Verfahren (K09 §4, K09k, 25.11., popolupo, vorläufig): Urteil so viele Tage nach der Karte (Wirkung verfahren, fest aus dem Seed)
+    // Freier Nachmittag im Lager (K11 §12 Nr. 11, K11j, 25.11., popolupo, vorläufig): Karte am Lagertag tag, wenn das Lager mindestens min Tage dauert (seit Prüfung FP7 eine Woche, Lager dauern 5 bis 10 Tage); die Zusatzeinheit kostet alle frische Frische
+    lagerFreizeit:{tag:3,min:7,frische:8},
+    // Spieler will Urlaub verlängern (K12a §8, K12d, 25.11., popolupo, vorläufig): ab abSpiele Turnierspielen; verlängert er, fehlt er wert Tage länger und baut erholung Saisonbelastung ab
+    urlaubVerlaengern:{abSpiele:5,erholung:4},
+    stadion:{zuschussAb:5e6,anwohner:['cap','dach'],anwohnerRest:7}, // anwohner: Bauten, gegen die Anwohner klagen können, anwohnerRest: Tage Genehmigung mindestens noch (K26f, 23.11., Prüfung EO2). Stadt bietet Zuschuss (K26 §8, K26e, 22.11., GESCHÄTZT): bei einem Bauprojekt ab zuschussAb Kosten; Anteil in der Karte (Wirkung zuschuss)
+    // nurZuDir (K19f, 23.11., GESCHÄTZT): Spieler will nur zu dir ab Stärke teamLevel − staerkeUnter; „hohes Interesse“ ist die Grenze aus K20d (abwerben.konkurrenz.nein.ab)
+    nurZuDir:{staerkeUnter:3},
+    vertrag:{neidUnter:0.7,neidStimmung:55,provisionTage:60}, // Vertragskarten (K21 §8, K22 §8, K21c, 22.11., GESCHÄTZT): Gehaltsneid unter neidUnter × Marktgehalt und Stimmung unter neidStimmung; Provisionsstreit bis provisionTage nach dem Wechsel
+    // choreoTage, choreoAb (K27f, 23.11., GESCHÄTZT): Karte „Choreo in der Kurve“ vor einem Heim-Derby oder Spitzenspiel in höchstens choreoTage Tagen, Wirkung der Fankultur ab choreoAb
+    // platzsturm (K27g, Prüfung EX3): direkte Aufstiegsplätze (2. und 3. Liga, in der 3. Liga ohne zweite Mannschaften) und Plätze unter dem Strich in der 1. und 2. Liga (zwei Absteiger + Relegation)
+    // redenUnter (K27h, 23.11., GESCHÄTZT): Fans wollen reden bei Fanstimmung unter diesem Wert (K27 §8)
+    fans:{preisFaktor:1.3,protestUnter:50,wwAb:3,choreoTage:7,choreoAb:0.5,platzsturm:{aufstieg:2,unterStrich:3},redenUnter:25}, // Fan-Karten (K27 §8, K27c, 22.11., GESCHÄTZT): Protest ab Preis × preisFaktor über dem Richtpreis bei Fanstimmung unter protestUnter; Pfiffe gegen Spieler ab Wechselwunsch wwAb
+    // chef (K16g, 23.11., GESCHÄTZT): Co-Trainer wird Cheftrainer, wenn ein Computer-Verein vor höchstens tage Tagen den Trainer gewechselt hat; Co-Trainer ab Qualität qAb und ehrgeizig (ehrgeizProzent, fest aus der Nummer); Ruf als Cheftrainer: Ansehen des Vereins − rufAbschlag
+    stab:{qAb:14,ansehenPlus:5,abloese:1,chef:{tage:21,qAb:12,ehrgeizProzent:40,rufAbschlag:5}}, // Mitarbeiter abgeworben (K16 §8, K16c, 22.11., GESCHÄTZT): Qualität ab qAb, Verein mit Ansehen ab deinem + ansehenPlus und freiem Platz; Ablöse abloese × Jahresgehalt, halten: Gehalt + wert aus der Karte
+    jugend:{alter:16,lockAb:17,lockPlus:3,grossPlus:10,scoutAb:8}, // scoutAb: Talent aus dem Nichts (K18 §8, K18f, 23.11., GESCHÄTZT) nur mit einem Jugendscout ab dieser Qualität. Probetraining (K08 §8, K08b, 22.11.): Alter des neuen Talents (Plus in der Karte, Wirkung talent). K08c: großer Verein lockt ein Talent ab lockAb Jahren mit Talent ab Kaderschnitt + lockPlus, Verein mit Ansehen ab deinem + grossPlus
+    wunderkind:{alter:21,sterne:3,spiele:5}, // Skandal um das Wunderkind (K08 §8, K08d, 25.11., popolupo, vorläufig): Talent bis alter Jahre, ab sterne Sternen, ab spiele Einsätzen, Partylöwe
+    training:{pauseUnter:65,profiAb:13,pauseSpielpraxis:5,serieAb:3,serieTage:14}, // Trainingskarten (K07 §8, K07c, 22.11., GESCHÄTZT): Pause ab Frische unter pauseUnter und Professionalität ab profiAb, kostet pauseSpielpraxis; Verletzungsserie ab serieAb Trainingsverletzungen in serieTage Tagen
+    europa:{vorTage:7,nachTage:7,wunderAb:2}, // Europapokal-Karten (K37 §8, U19e, 22.11., GESCHÄTZT): Auswärtsspiel in den nächsten vorTage Tagen, Spiel höchstens nachTage her, Wunder ab wunderAb Toren Rückstand nach dem Hinspiel
+    kabine:{neuMin:14,neuTage:60,kaumMinuten:90,abSpieltag:3,staerkeMinus:2,fremdTage:120,partyTage:7,meutertUnter:25}, // Kabinen-Karten (K14 §8, K14b, 22.11., GESCHÄTZT): Neuzugang von neuMin bis neuTage Tagen, höchstens kaumMinuten, ab abSpieltag; Eingewöhnung bis fremdTage; Party höchstens partyTage nach dem Spiel (DT4, DT5)
+    // K23f (22.11., popolupo, GESCHÄTZT): Geldbeträge der Karten (Wirkung geld, auch der schlechte Ausgang) mal Faktor nach der Liga deines Vereins, auf 1.000 € gerundet.
+    // Die Beträge in daten/karten.js gelten für die 3. Liga. Seit K23c sind die Einnahmen der 1. Liga etwa 13-mal so groß wie die der 3. Liga, der Faktor bleibt bewusst kleiner.
+    geldLiga:{1:4,2:2,3:1}},
 
   // Statistik und Historie (K34 §5.3 bis §5.9, §11, U13). ALLE ANTEILE UND GEWICHTE GESCHÄTZT (K34 §12).
   // vorlage.anteil: Chance auf eine Vorlage je Art des Tores (keine bei Elfmeter, direktem Freistoß, Eigentor). gewicht: je Position auf dem Platz (linke Form),
@@ -374,8 +529,17 @@ const REGELN={
     ehrung:{elf:{TW:1,AB:4,MF:3,ST:3},elfMinNoten:20,spieler:{minNoten:20,mitte:4,note:10,tor:1,vorlage:0.7,platz:0.5},
       talent:{bisAlter:21,minNoten:10,mitte:4,fortschritt:2,note:5},marktwert:0.05,trainerRuf:5},
     rekord:{allzeit:{1:{sieg:{hg:12,ag:0,h:'Borussia Mönchengladbach',a:'Borussia Dortmund',datum:'29.4.1978'},tore:{n:41,name:'Robert Lewandowski',verein:'FC Bayern München',saison:'2020/21'},
-      serie:{n:53,verein:'FC Bayern München',zeit:'November 2012 bis März 2014'}}},meldenAb:1},
+      serie:{n:53,verein:'FC Bayern München',zeit:'November 2012 bis März 2014'}},
+      // 2. und 3. Liga seit K34 (22.11.2026, popolupo, Quellen bundesliga.com und dfb.de, siehe K34 §5.6). 2. Liga: Rekorde seit 1974, also auch aus der zweigleisigen Zeit.
+      2:{sieg:{hg:11,ag:0,h:'Arminia Bielefeld',a:'Arminia Hannover',datum:'23.5.1980'},tore:{n:41,name:'Horst Hrubesch',verein:'Rot-Weiss Essen',saison:'1977/78'},
+        serie:{n:28,verein:'FC St. Pauli und Arminia Bielefeld',zeit:'1976 bis 1979 und 1979/80'}},
+      // 3. Liga: 7:0 gab es viermal, hier der erste (danach Wehen Wiesbaden 2018, Mannheim und Zwickau 2022). 21 Spiele ohne Niederlage auch Saarbrücken 2011 über zwei Saisons.
+      3:{sieg:{hg:0,ag:7,h:'FC Carl Zeiss Jena',a:'1. FC Saarbrücken',datum:'11.8.2010'},tore:{n:28,name:'Lars Gindorf',verein:'Alemannia Aachen',saison:'2025/26'},
+        serie:{n:21,verein:'Karlsruher SC',zeit:'2017/18'}}},
+      // transfer: teuerster Zugang eines deutschen Vereins als Startwert des Rekordtransfers (K34d, 22.11.2026, Websuche: Harry Kane 2023 für etwa 95 Mio. €, andere Quellen 100 Mio. plus Boni)
+      transfer:{n:95e6,name:'Harry Kane',von:'Tottenham Hotspur',nach:'FC Bayern München',saison:'2023/24'},meldenAb:1},
     ehemalige:{ligaspiele:150,vereinSpiele:30,max:400},
+    euListe:10, // Europapokal in der Saisonstatistik (K37, K34c): so viele deutsche Torjäger
     jubilaeum:{spiele:100,jahre:10},
     speicher:{max:1e6,saisons:20,frueh:2.5}}, // Ziel (K34 §10): Statistik nach 20 Saisons unter 1 MB im Spielstand (geprüft in tests/statistik.js). frueh: In den ersten Saisons wächst sie schneller (gemessen 101, 176, 244, 303 KB, ab Saison 13 etwa 650 KB), kurze Läufe dürfen bis zum 2,5-Fachen des Schnitts je Saison (T2.5)
 
@@ -390,8 +554,20 @@ const REGELN={
   abwerben:{ort:{hotel:{name:'Hotel in einer anderen Stadt',kosten:15000,risiko:0.6},restaurant:{name:'Restaurant',kosten:5000,risiko:1.2},berater:{name:'beim Berater',kosten:10000,risiko:0.8}},
     bereitschaft:{basis:10,jeInteresse:0.1,interesse:[-50,100],berater:{gierig:1.2,strippenzieher:1.2},stimmung:{unter:[40,1.3],ueber:[70,0.7]},treu:0.4,ab:70},
     risiko:{basis:0.08,bekanntAb:80,bekannt:1.5,berater:{verschwiegen:0.4,familie:0.8,serioes:1,strippenzieher:1.2,gierig:1.5},ohneBerater:1.1,jeTreffen:0.2,petzen:0.3},
-    folgen:{beziehung:[-30,-15],forderung:1.15,stimmung:-10,vertrauen:-3},
-    deadline:{tage:3},bieter:{plus:[0.02,0.10],gierig:0.05,frist:2}},
+    folgen:{beziehung:[-30,-15],forderung:1.15,stimmung:-10,vertrauen:-3,fankultur:1}, // fankultur (K27e, GESCHÄTZT): Vertrauen × (1 + Wirkung der Fankultur × fankultur), K20 §5.3 „Traditionsvereine −6“
+    // Computer-Vereine werben deine Spieler ab (K20 §7, K20e, 22.11., popolupo, GESCHÄTZT): montags mit chance ein Verein mit Bedarf, Ansehen ab deinem − ansehenMinus,
+    // Konto über dem Marktwert; der Spieler (Stärke ab deinem Kaderschnitt + staerkePlus, bis alterMax) wird unruhig (Wechselwunsch eine Stufe höher). Mit aufflieg fliegt es auf:
+    // Entscheidung binnen frist Tagen (zur Rede stellen: stimmung, glaub; öffentlich: beziehung, fans; Preis hoch: unverkäuflich). Nur, wenn du die Transfers selbst führst.
+    ki:{chance:0.04,ansehenMinus:5,staerkePlus:0,alterMax:30,aufflieg:0.5,frist:5,stimmung:-3,glaub:2,beziehung:-15,fans:1},
+    // Deadline Day (K20 §4.3, K20b 22.11., GESCHÄTZT): in den letzten tage Tagen eines Fensters schwankt die Forderung deutscher Computer-Vereine an dich um bis zu ±preis
+    // (fest je Spieler und Tag), für Spieler auf ihrer Transferliste um liste verschoben. Angebote für deine Spieler auf der Transferliste kommen angebote-mal so oft.
+    deadline:{tage:3,preis:0.15,liste:-0.1,angebote:1.5,krimi:{chance:0.4,faktor:1.25,staerkeUnter:3}},bieter:{plus:[0.02,0.10],gierig:0.05,frist:2},
+    // Bieterwettstreit beim Kauf (K20 §4.2, K20c, 22.11., GESCHÄTZT): Sagt ein deutscher Verein im offenen Fenster Ja zu deiner Ablöse, bietet mit dieser Chance ein Computer-Verein
+    // mit Bedarf mit (einmal je Spieler und Saison): deine Ablöse plus bieter.plus (gieriger Berater + bieter.gierig), höchstens sein Vereinswert. Du hast bieter.frist Tage zum Mitgehen.
+    konkurrenz:{chance:0.25,
+      // K20d (22.11., GESCHÄTZT): Gehst du nicht mit, lehnt der Spieler den anderen Verein ab, wenn sein Interesse an dir mindestens ab ist: Chance basis + jePunkt je Punkt darüber,
+      // höchstens max, mal besser, wenn der andere Verein mehr Ansehen hat als deiner. Dann nimmt der Verkäufer deine Ablöse.
+      nein:{ab:20,basis:0.25,jePunkt:0.01,max:0.6,besser:0.5},zusageTage:14}}, // zusageTage: so lange gilt die Einigung danach (wie nach einem Ja, aktionen.js offer)
 
   // Fanstimmung (K27 §5.4b, §11, U16), 0–100. Montags traegheit Richtung Ziel = start + Erfolg + Preise + Identifikation + Entscheidungen + Umfeld, je Baustein begrenzt.
   // erfolg: jePlatz × (erwarteter Platz − Platz) ab abSpiel Ligaspielen, serie × (Punkte je Spiel der letzten fünf − serieMitte), Anlässe (derby, pokal, pokalAusTiefer) mit verblassen je Woche.
@@ -401,32 +577,81 @@ const REGELN={
   fanstimmung:{start:60,traegheit:0.15,
     erfolg:{spanne:[-20,20],jePlatz:2,abSpiel:5,serie:10,serieMitte:1.3,derby:6,pokal:2,pokalAusTiefer:-4,verblassen:0.2},
     preise:{spanne:[-15,5],faktor:30},ident:{spanne:[-5,10],basis:0,jeLiebling:2,lieblingSpiele:60,lieblingEigen:20},
-    entscheid:{spanne:[-15,5],lieblingVerkauf:-8,verblassen:0.1},umfeld:{spanne:[-5,5],eroeffnung:3,gespraech:[3,8],leer:-5,leerUnter:25,verblassen:0.1},
+    // entscheid.fankultur (K27e, GESCHÄTZT): Baustein Entscheidungen × (1 + Wirkung der Fankultur × fankultur), K27 §5.4c
+    entscheid:{spanne:[-15,5],lieblingVerkauf:-8,verblassen:0.1,fankultur:0.5},umfeld:{spanne:[-5,5],eroeffnung:3,gespraech:[3,8],leer:-5,leerUnter:25,verblassen:0.1},
     nachfrage:[0.85,1,1.10],vorstand:{zone:[45,75],teilerUnten:3,minUnten:-10,teilerOben:5,maxOben:5},
-    protestUnter:30,pfiffeSv:-0.2,gespraechTage:30},
+    protestUnter:30,pfiffeSv:-0.2,gespraechTage:30,
+    anlassMin:0.5, // Prüfung EN4 (23.11.): Anlässe (fanE, fanD, fanU) verblassen bis zu diesem Betrag ganz auf 0
+    // Dauerkarten (K27 §5.2, K27b, 22.11., popolupo, GESCHÄTZT): nur dein Verein, verkauft beim ersten Ligaheimspiel der Saison. Anteil der Plätze = basis + jeStimmung × Fanstimmung/100
+    // + jeRabatt × (Rabatt − rabatt), höchstens 1 − gaesteblock. Rabatt wählbar aus stufen (Bereich preise, Automatik: rabatt). Je Ligaheimspiel zahlen alle Inhaber Preis × (1 − Rabatt),
+    // auch wenn weniger Zuschauer kommen. Fanstimmung (Baustein Preise): fans je 10 Prozentpunkte Rabatt über oder unter dem Standard.
+    dauerkarten:{basis:0.35,jeStimmung:0.25,rabatt:0.2,stufen:[0.1,0.2,0.3],jeRabatt:0.5,gaesteblock:0.1,fans:2,mitglieder:0.1}}, // mitglieder: Vorkaufsrecht, Anteil + mitglieder × Mitglieder je Platz (höchstens 1), K25e, GESCHÄTZT
 
   // Pressekonferenzen (K29 §5.4, §11, U17a). Texte in daten/presse.js. budget: höchstens je Saison, abstand: Tage zwischen zwei, sperre: Tage je Anlass, fragen: [min, max].
   // anlass: Schwellen (spitzeBis Platz, spitzeAb Spieltag, pokalAb Runde, krise Niederlagen, hoehenflug Siege, fuehrungAb Spieltag, kantersieg Tore Abstand, auftaktVorher Tage).
   // wirkung je Antwortart: team (Stimmung aller), spieler (genannter Spieler), fans (Umfeld K27), vorstand (Vertrauen), medien (Medienklima). streuung: × [min, max]. deckel je Pressekonferenz.
   // abnutzung: Faktor, wenn die Art der letzten (bzw. der letzten beiden) entspricht. ausraster: Wahrscheinlichkeiten, Wirkungen, je Saison. schiri: Verfahren, Strafe je Liga [min, max].
   // gedaechtnis: Rückendeckung und Verkauf (Tage, Glaubwürdigkeit), Kampfansage (Kult, Häme). delegieren: Medienklima. chronikHumor: Chance. ALLE WERTE GESCHÄTZT (K29 §12).
+  // Medienpolitik (K29 §6, K29b, 22.11., GESCHÄTZT): dauerhafte Einstellung deines Vereins (Bereich presse, in der Automatik standard). Je Woche zieht sie das Medienklima um klima
+  // in Richtung ziel, nur nach oben (richtung 1), nur nach unten (−1) oder in beide Richtungen (0). Seit der Prüfung DF1 zieht auch „zurückhaltend“ zur Mitte, sonst sank das Klima
+  // in der Automatik (Co-Trainer bei jeder Pressekonferenz −2) immer weiter. mein: Chance auf ein Gerücht über deinen Verein × mein, erfindung: Anteil erfundener Gerüchte über dich × erfindung.
+  // klimaWirkung: Medienklima unter 50 macht Gerüchte über dich häufiger und öfter erfunden, darüber seltener, Faktor 1 + klimaWirkung × (50 − Klima)/50.
+  medienpolitik:{standard:'zurueckhaltend',klimaWirkung:0.5,arten:{offen:{name:'offen',text:'Interviews und Einblicke: mehr Berichte über deinen Verein, die Medien mögen dich',mein:1.25,erfindung:0.8,klima:0.5,ziel:70,richtung:1},
+    zurueckhaltend:{name:'zurückhaltend',text:'das Übliche, das Klima kehrt langsam zur Mitte zurück',mein:1,erfindung:1,klima:0.5,ziel:50,richtung:0},
+    abgeschottet:{name:'abgeschottet',text:'keine Einblicke: weniger Berichte, dafür mehr Erfundenes, die Medien sind verstimmt',mein:0.6,erfindung:1.4,klima:0.5,ziel:30,richtung:-1}}},
+  // Exklusivinterview (K29 §6, K29c, 22.11., GESCHÄTZT): höchstens alle tage Tage, Bereich presse. Das gewählte Medium plus, alle anderen andere (Beziehung je Medium in grenzen),
+  // Medienklima klima. Gerüchte über deinen Verein wirken (Stimmung, Fans, Vertrauen) mal 1 − Beziehung/teiler, begrenzt auf wirkung: gewogene Medien schreiben milder, verärgerte schärfer.
+  exklusiv:{tage:28,plus:10,andere:-3,grenzen:[-30,30],klima:2,teiler:60,wirkung:[0.5,1.5],
+    // K29d (22.11., GESCHÄTZT): Beziehungen verblassen je Woche um verblassen Richtung 0, eine Antwort ändert die Beziehung zum fragenden Medium um ihre Wirkung aufs Klima × ausAntwort
+    verblassen:0.5,ausAntwort:0.5},
   presse:{budget:20,abstand:4,sperre:21,fragen:[2,3],klimaStart:50,
-    anlass:{spitzeBis:4,spitzeAb:10,pokalAb:3,krise:3,hoehenflug:5,fuehrungAb:5,kantersieg:4,auftaktVorher:2},
+    anlass:{spitzeBis:4,spitzeAb:10,pokalAb:3,krise:3,hoehenflug:5,fuehrungAb:5,kantersieg:4,auftaktVorher:2,urteilAb:3,urteilTage:7}, // urteilAb: Pressekonferenz ab so vielen Spielen Sperre (K29g), urteilTage: so lange wartet sie auf einen freien Tag (DR2)
     wirkung:{rueckendeckung:{team:2,spieler:5,medien:1},ankuendigung:{team:1,fans:2,vorstand:-0.5},kritikTeam:{vorstand:1,medien:1,kaempfer:2,empfindlich:-3,sonst:-1},
       kritikSpieler:{spieler:-8,medien:1},kritikSchiri:{team:1,fans:3,vorstand:-1},angriffMedien:{team:1,fans:1,vorstand:-1,medien:-4},provokation:{fans:2,medien:1,beziehung:-3},
       floskel:{medien:-1},humor:{team:1,fans:1,medien:1,krise:-1}},
     streuung:[0.5,1.5],deckel:{team:6,spieler:10,fans:6,vorstand:4,medien:8},abnutzung:[0.5,0.25],
     ausraster:{weckruf:0.35,bruch:0.35,kult:0.3,proSaison:2,weckrufTeam:4,bruchTeam:-5,bruchVorstand:-3,kultFans:6},
-    schiri:{verfahren:0.3,strafe:{1:[20000,50000],2:[10000,25000],3:[5000,12000]}},
-    gedaechtnis:{rueckendeckungTage:28,rueckendeckungGlaub:-5,kultFans:2,haemeGlaub:-3,haemeFans:-2,aussagen:40},delegieren:-2,chronikHumor:0.3,chronikMax:100},
+    // Kontrollausschuss nach Schiedsrichterkritik (K09 §4.3, §5.4, K09f): Urteil nach tage Tagen; ohne frühere Fälle in gedaechtnis Tagen mit verwarnung nur eine Verwarnung,
+    // sonst Geldstrafe aus strafe je Liga × (1 + wiederholung × Zahl der früheren Fälle), Faktor höchstens wiederholungMax
+    schiri:{verfahren:0.3,strafe:{1:[20000,50000],2:[10000,25000],3:[5000,12000]},tage:[3,7],verwarnung:0.5,wiederholung:0.5,wiederholungMax:2,gedaechtnis:365},
+    gedaechtnis:{rueckendeckungTage:28,rueckendeckungGlaub:-5,kultFans:2,haemeGlaub:-3,haemeFans:-2,aussagen:40},delegieren:-2,chronikHumor:0.3,chronikMax:100,
+    // K29d (22.11., GESCHÄTZT): Medienklima in der Pressekonferenz. Gewicht der scharfen Medien 1 + gewicht × (50 − Klima)/50, der übrigen 1 − …; unter bohrenUnter eine Frage mehr
+    klimaFragen:{scharf:['boulevard','portal'],gewicht:0.5,bohrenUnter:35,bohrenPlus:1},
+    // K29e (22.11., GESCHÄTZT): Medienprofile der Computer-Trainer, Anteile in Prozent, fest aus der Trainernummer. Vor den Anlässen in anlaesse stichelt ein Trainer mit dem Profil laut oder psycho
+    // mit chance (Strom presse). Antwort auf die Stichelei, zusätzlich zur normalen Wirkung: gelassen (Humor) eigene Mannschaft +gelassen, kontern (Provokation) eigene +konterEigen und die Spieler des Gegners
+    // +konterGegner (Trotz), ignorieren (Floskel) eigene +ignorieren[Profil]; nicht hingegangen (ohne Automatik) eigene +offen[Profil]
+    // ki (K29m, 23.11., GESCHÄTZT): Sticheleien unter Computer-Trainern vor Derbys und Spitzenspielen deiner Liga in den nächsten tage Tagen, höchstens max je Woche, Beziehung der Vereine + bez
+    // ki.schiri (K09j, 25.11., popolupo, vorläufig): Nach einer Niederlage mit Platzverweis in deiner Liga (ohne deinen Verein) schimpft der Computer-Trainer mit dieser Chance
+    // je Medienprofil über den Schiedsrichter, höchstens schiriMax Meldungen je Spieltag. Nur Meldung, fest aus dem Seed, keine Folgen.
+    medienprofil:{anteile:{diplomatisch:40,floskel:25,laut:20,psycho:15},anlaesse:['derby','spitze','pokal','relegation'],chance:{laut:0.6,psycho:0.5},ki:{tage:7,max:1,bez:-2,schiri:{laut:0.5,psycho:0.3,floskel:0.1},schiriMax:1},
+      gelassen:1,konterEigen:1,konterGegner:1,ignorieren:{laut:0,psycho:-1},offen:{laut:-1,psycho:-2}},
+    // K29f (22.11., GESCHÄTZT): Interview am Spielfeldrand nach deinem Spiel, Wirkung der Antwortart × faktor, ohne Streuung, Abnutzung und Deckel
+    spielfeldrand:{faktor:0.5},
+    // K29i (22.11., GESCHÄTZT): Interviews deiner Spieler, montags mit chance (eigener Strom), Mitteilsame mit gewicht öfter; Fettnäpfchen mit basis (+ mitteilsam, + unzufrieden unter Stimmung
+    // unzufriedenUnter, höchstens max). Maulkorb: keine Interviews, Mitteilsame je Woche Stimmung maulkorb. Nicht in der Automatik (Bereich presse).
+    interview:{chance:0.3,mitteilsam:['diva','partyloewe','hitzkopf'],gewicht:3,trotz:{chance:0.15,glaub:-2},fettnapf:{basis:0.3,mitteilsam:0.3,unzufrieden:0.2,unzufriedenUnter:40,max:0.9},
+      schlecht:{klima:-2,zusammenhalt:-1,fans:-1},gut:{klima:1,fans:1},maulkorb:-1}},
 
   // Marketing (K25 §5.4, §11, K25a). trikot: Faktor auf den Fanartikel-Erlös [min, max] und Fanstimmung je Design, mutig: Chance auf Kult, sonst Spott.
   // kampagnen: Kosten in der 1. Liga, Dauer in Tagen (sommer: bis zum ersten Pflichtspiel), Wirkung. ligaFaktor: Kosten je Liga. abnutzung: 1., 2., 3. Mal in der Saison.
   // merch: Publikumslieblinge je Spieler und höchstens. werbewert: Start = Ansehen × startJeAnsehen, Rückgang je Monat Richtung Start, Titel. ALLE WERTE GESCHÄTZT (K25 §12).
   marketing:{trikot:{klassisch:{faktor:[0.95,1.05],fans:1},modern:{faktor:[0.9,1.15],fans:0},mutig:{kult:0.5,faktor:[0.8,1.25],fans:[-3,3]}},
+    // Fankultur (K25 §5.6, K25f, 23.11., popolupo, GESCHÄTZT, ersetzt die Tradition nach Gründungsjahr aus K25e): 0–100 = 100 × Summe gewicht × Teil, jeder Teil linear von [0, voll] auf 0–1.
+    // auslastung: Fans ÷ Plätze (höchstens 1); mitglieder: Mitglieder je Platz; zugkraft: (Fans ÷ Ligaschnitt) ÷ (Ansehen ÷ Ligaschnitt), Liga ohne zweite Mannschaften,
+    // Untergrenze der Zugkraft bei (fast) vollem Stadion: ausverkauftMin × Anteil der Auslastung zwischen ausverkauft[0] und ausverkauft[1] (stufenlos, Prüfung EM2).
+    // Wirkung beim Trikot stufenlos von wirkung[0] (keine) bis wirkung[1] (voll): klassisch Faktor +klassischPlus, Fans +klassischFans (gerundet),
+    // mutig wird mit mutigKult statt trikot.mutig.kult Kult. Meldung „Kurve“ ab kurve (Anteil der Wirkung, EM3)
+    fankultur:{gewicht:{auslastung:0.3,mitglieder:0.3,zugkraft:0.4},auslastung:[0.6,1],mitglieder:[0,2],zugkraft:[0.5,1.5],ausverkauft:[0.93,0.97],ausverkauftMin:0.5,
+      wirkung:[50,80],klassischPlus:0.05,klassischFans:1,mutigKult:0.35,kurve:0.5},
     kampagnen:{trikot:{name:'Trikot-Kampagne',kosten:150000,tage:28,merch:0.15},fanwerbung:{name:'Fanwerbung in der Region',kosten:200000,tage:56,fans:0.02,werbewert:5},
-      camps:{name:'Jugend-Camps',kosten:60000,sommer:1,fans:0.01,stimmung:1},fanarbeit:{name:'Fanarbeit',kosten:50000,tage:120,pfiffe:0.7}},
-    ligaFaktor:{1:1,2:0.4,3:0.2},abnutzung:[1,0.5,0.25],merch:{liebling:0.05,lieblingMax:0.15},werbewert:{startJeAnsehen:0.5,zurueck:0.02,titel:5},karte:{merchTage:28}}, // karte: Dauer der Wirkung merch aus der Karte „Trikot ausverkauft“ (K25b)
+      camps:{name:'Jugend-Camps',kosten:60000,sommer:1,fans:0.01,stimmung:1},fanarbeit:{name:'Fanarbeit',kosten:50000,tage:120,pfiffe:0.7,vergehen:0.7}, /* vergehen: Chance der Karten zu Zuschauer-Vergehen (K09h, K25 −30 %) */
+      // K25c (22.11., GESCHÄTZT): Dauerkarten-Aktion in der Vorbereitung, vor dem Verkauf (K27b): Anteil der Dauerkarten + dauerkarten
+      dauerkarten:{name:'Dauerkarten-Aktion',kosten:100000,sommer:1,dauerkarten:0.05},
+      // K25d (22.11., GESCHÄTZT): Mitgliederaktion, Mitglieder + mitglieder, einmal je Saison (einmal, Prüfung DL3: sonst ließ sie sich alle vier Wochen wiederholen und wirkte dauerhaft)
+      mitglieder:{name:'Mitgliederaktion',kosten:50000,tage:28,mitglieder:0.02,einmal:1}},
+    ligaFaktor:{1:1,2:0.4,3:0.2},abnutzung:[1,0.5,0.25],merch:{liebling:0.05,lieblingMax:0.15},werbewert:{startJeAnsehen:0.5,zurueck:0.02,titel:5},karte:{merchTage:28}, // karte: Dauer der Wirkung merch aus der Karte „Trikot ausverkauft“ (K25b)
+    // online (K25 §2, K25g, 25.11., popolupo, vorläufig): Online-Shop, einmalig kosten × ligaFaktor, danach montags Fans × jeFan × Fanartikel-Faktor, unabhängig von den Zuschauern (seit Prüfung FS2 0,12 statt 0,05 und auch in der Sommerpause)
+    online:{kosten:500000,jeFan:0.12}},
 
   // Europapokal (K37, U19a). plaetze: Bundesliga-Platz je Wettbewerb, nachruecken: wer einspringt, wenn der Pokalsieger schon über die Liga dabei ist.
   // wb: Teilnehmer, Spiele der Ligaphase, Töpfe; titel: wohin der Titelverteidiger kommt. laender: Auslandsvereine je Land (angelehnt an die Zulassungsliste, an den Pool angepasst).
@@ -439,10 +664,10 @@ const REGELN={
       el:{ENG:3,ESP:2,ITA:2,FRA:2,POR:2,NED:2,BEL:2,TUR:2,AUT:2,SUI:2,CZE:2,DEN:2,NOR:2,SWE:2,POL:2,CRO:1,SRB:1,UKR:1},
       ecl:{ENG:1,ESP:2,ITA:2,FRA:1,POR:2,NED:3,BEL:3,TUR:3,AUT:3,SUI:3,CZE:1,DEN:2,NOR:2,SWE:3,POL:3,CRO:1}},
     zufall:8,quali:8,auslosung:{versuche:30,ohneHoechstzahl:15,hoechstzahl:2,tausch:3000},
-    kurz:{tore:1.4,exp:1.6,heim:1.03,verl:0.33},staerke:{faktor:1},
-    // Geld (K37 §5.3, U19b): echte Beträge 2025/26 (Websuche 21.11.2026), mal faktor bis K23c (dann 1). start: Startgeld, sieg/remis je Spiel der Ligaphase, rang: je Anteil (Platz 1 = 36 Anteile),
+    kurz:{tore:1.4,exp:1.6,heim:1.03,verl:0.33},staerke:{faktor:0.93}, // T5.3: Eine Elf der Stärke S hat in der Engine Teamwerte von etwa 0,93 × S (Zustand, Anteile, Schwächster), der Block sonst die volle Stärke
+    // Geld (K37 §5.3, U19b): echte Beträge 2025/26 (Websuche 21.11.2026), mal faktor (bis K23c 0,2, seit K23c 1). start: Startgeld, sieg/remis je Spiel der Ligaphase, rang: je Anteil (Platz 1 = 36 Anteile),
     // po bis fin: beim Erreichen der Runde, titel: Sieger zusätzlich, wert: Schnitt der Wertsäule je Teilnehmer (verteilt nach dem Rang des Ansehens). Nicht recherchierte Werte sind 0 (K37 §12).
-    geld:{faktor:0.2,cl:{start:18.62e6,sieg:2.1e6,remis:0.7e6,rang:275000,po:1e6,af:11e6,vf:12.5e6,hf:15e6,fin:18.5e6,titel:6.5e6,wert:24e6},
+    geld:{faktor:1,cl:{start:18.62e6,sieg:2.1e6,remis:0.7e6,rang:275000,po:1e6,af:11e6,vf:12.5e6,hf:15e6,fin:18.5e6,titel:6.5e6,wert:24e6},
       el:{start:4.31e6,sieg:450000,remis:150000,rang:75000,top8:600000,top16:300000,po:0,af:1.75e6,vf:2.5e6,hf:4.2e6,fin:7e6,titel:6e6,wert:5.5e6}, // top8, top16: Bonus nach der Ligaphase für Platz 1–8 und 9–16
       ecl:{start:3.17e6,sieg:400000,remis:133000,rang:28000,top8:400000,top16:200000,po:0,af:800000,vf:1.3e6,hf:2.5e6,fin:4e6,titel:3e6,wert:2.8e6}},
     // Ansehen zum Saisonwechsel (K37 §5.4): erreichte Runde, Anteil je Wettbewerb. vertrauen: Vorstand bei jedem gewonnenen Duell und beim Titel.
@@ -450,22 +675,39 @@ const REGELN={
     // U19c: wertung: Länderwertung der Saison (Punkte je Sieg und Remis, geteilt durch die Zahl der Vereine des Landes), die besten plaetze Länder bekommen nächste Saison einen Platz mehr
     // in der Champions League (European Performance Spot seit 2024/25). interesse: Wechselinteresse der Spieler an einem Verein im Wettbewerb (K19). ziel: Nebenziel des Vorstands
     // (K28 §5.7), K.-o.-Play-offs erreichen, in der Champions League ab diesem Ansehen das Achtelfinale.
-    wertung:{sieg:2,remis:1,plaetze:2},interesse:{cl:6,el:3,ecl:1},ziel:{afAbAnsehen:85}},
+    wertung:{sieg:2,remis:1,plaetze:2},interesse:{cl:6,el:3,ecl:1},ziel:{afAbAnsehen:85},
+    // U19d1: liste: Kaderliste der UEFA (Reglement Art. 31): höchstens max auf Liste A, davon tw Torhüter, lokal Plätze für lokal Ausgebildete, davon höchstens verband verbandsausgebildet.
+    // Liste B: bis bBis Jahre und aus der eigenen Jugend oder seit bTage Tagen im Verein. nach: neue Spieler bei der Nachmeldung zur K.-o.-Phase.
+    liste:{max:25,tw:2,lokal:8,verband:4,bBis:21,bTage:730,nach:3}},
 
   // Finanzplan (K23 §5.5c, K23a): Monatsbericht, Prognose, Lizenzprüfung, Insolvenz. laufend: Buchungsarten, die in die Prognose eingehen (die übrigen sind einmalig).
   // minSpiele: so viele eigene Ligaspiele braucht der Schnitt dieser Saison, sonst gilt der der letzten Saison. lizenzTag, nachweisTag: Datum (MM-TT) der Prüfung und der Frist.
   // auflage: Vertrauen bei Auflagen. insolvenz: so viele Monatserste nacheinander unter dem negativen Kreditrahmen, Punktabzug, Vertrauen. warnMonate: Vorlauf der Warnung.
   // monatTage: Tage je Monat für die Warnung. PUNKTABZUG GESCHÄTZT (K23 §12 Nr. 9).
-  finanzplan:{laufend:['TV-Gelder','Sponsor','Zuschauer','VIP-Logen','Fanartikel','Gehälter','Trainerstab','Prämien','Stadion & Betrieb','Jugendarbeit','Zweite Mannschaft','Kreditzinsen','Scouting','Instandhaltung'],
+  finanzplan:{laufend:['TV-Gelder','Sponsor','Weitere Sponsoren','Zuschauer','Dauerkarten','VIP-Logen','Fanartikel','Fanartikel online','Gehälter','Trainerstab','Prämien','Stadion & Betrieb','Verwaltung','Jugendarbeit','Zweite Mannschaft','Kreditzinsen','Scouting','Instandhaltung','Sonstige Einnahmen'],
     minSpiele:3,lizenzTag:'03-01',nachweisTag:'05-31',auflage:-5,insolvenz:{monate:2,punkte:9,vertrauen:-30},warnMonate:3,monatTage:30,
+    // K23b (§5.5e): sonstiges: Sonstige Einnahmen (Mitglieder, Vermarktung, Stadionvermietung) je Ligaspiel nach Liga, für alle Vereine. Seit K23c (vorläufig) etwa 7 % der Einnahmen
+    // ohne Transfers wie in echt (7–11 %): 1. Liga 10,2 Mio. €, 2. Liga 2,7 Mio. €, 3. Liga 1,1 Mio. € je Saison. Vorher 0, 25.000 und 60.000 € als Ausgleich der zu kleinen Werbung.
+    // Seit K25d (22.11., vorläufig) ohne die Mitgliedsbeiträge: Grundbetrag je Ligaspiel plus Mitglieder × mitglieder.beitrag ÷ Ligaspiele. Der Grundbetrag ist so gewählt, dass der
+    // Schnitt je Liga wie vorher bei 300.000, 80.000 und 30.000 € liegt (Mitglieder im Schnitt etwa 107.000, 24.000 und 7.500, K25 §5.5).
+    sonstiges:{1:110000,2:37000,3:18000},
+    // mitglieder (K25d): beitrag Jahresbeitrag je Mitglied (€), ausFans Anteil der Fans für Vereine ohne Angabe in daten/vereine.js.
+    mitglieder:{beitrag:60,ausFans:0.3},
+    // K23d (§5.3, §5.5f): budget: Gehaltsrahmen = gehaltAnteil × erwartete Einnahmen einer Saison (Liga-Modell ohne Transfers). Über sperreAb × Rahmen keine Käufe (du und Computer-Vereine),
+    // Transferbudget = Kontostand über einer Reserve von reserve × erwarteten Einnahmen. gehaltAnteil seit K23c 0,75 (vorher 0,85): Nach der Modellrechnung (K23 §5.6b) liegen Gehälter
+    // und Stab im Schnitt bei 55 bis 66 % der erwarteten Einnahmen, bei kleinen Drittligisten und Leverkusen (starker Kader) bei 80 bis 84 %. Gesperrt (über 82,5 %) ist anfangs kaum einer.
+    budget:{gehaltAnteil:0.75,sperreAb:1.1,reserve:0.1},
     // K23e (§5.5d): kredit: Laufzeiten in Jahren, Standard. raten: Anzahlung, Aufschlag auf den Rest, Zahl der Monatsraten. verzicht: Anteil der Gehälter, Dauer in Tagen, Stimmung. GESCHÄTZT.
     kredit:{jahre:[1,2,3,4,5],standard:3},raten:{anzahlung:0.5,aufschlag:0.05,monate:12},verzicht:{anteil:0.15,tage:90,stimmung:-10}},
 
   // Gerüchteküche (K29 §4.3, §5.5, U17b). proWoche: [min, max] je Woche, meinVerein: Chance auf eins über deinen Verein, dauer: Tage bis zur Prüfung und Wirkung auf die Ablöse.
   // wirkung: Stimmung des Spielers, Fans, Vertrauen, Ablöse × preis (wahr, halb). medien: Start der Treffsicherheit, treffer/fehler danach. aergerUnter: Beziehung für „Ärger“, aergerWahr: Anteil wahr.
-  // erfindung: Chance, dass ein Gerücht erfunden ist. anzeige: so viele im Büro, log: so viele gespeichert. ALLE WERTE GESCHÄTZT (K29 §12 Nr. 15 bis 19).
-  geruechte:{proWoche:[1,3],meinVerein:0.5,dauer:30,wirkung:{stimmung:-3,fans:-2,vertrauen:-2,preis:{wahr:1.1,halb:1.15}},
-    medien:{start:{boulevard:40,fach:75,tv:60,portal:50,lokal:65},treffer:3,fehler:-3},aergerUnter:-30,aergerWahr:0.3,erfindung:0.25,anzeige:6,log:60},
+  // erfindung: Chance, dass ein Gerücht erfunden ist. anzeige: so viele im Büro, log: so viele gespeichert. ALLE WERTE GESCHÄTZT (K29 §12 Nr. 15 bis 19). Seit K29n (25.11., popolupo, vorläufig) wirkung.gehalt: Gehaltsforderung beim Wechsel + Anteil, solange das Interesse bekannt ist (p.gerF).
+  geruechte:{proWoche:[1,3],meinVerein:0.5,dauer:30,wirkung:{stimmung:-3,fans:-2,vertrauen:-2,preis:{wahr:1.1,halb:1.15},gehalt:0.05},
+    medien:{start:{boulevard:40,fach:75,tv:60,portal:50,lokal:65},treffer:3,fehler:-3},aergerUnter:-30,aergerWahr:0.3,erfindung:0.25,anzeige:6,log:60,
+    // Klatsch und Tratsch (K17 §5.2, §5.3, K17d, 22.11., popolupo): Liegt deine Beziehung zu einem Verein unter aergerUnter, kommen Gerüchte über deinen Verein mein-mal so oft,
+    // und es gibt „{spieler} soll dort ein Thema sein“. Wirkung auf den Spieler: mit positiv +stimmung (fühlt sich begehrt), sonst −stimmung (Unruhe). Werte aus K17 §5.3.
+    klatsch:{mein:2,positiv:0.3,stimmung:3}},
 
   // Trainerpool (K32 §3.3b, U18a): Cheftrainer der Computer-Vereine. aufbau: Ruf = Ansehen + streuung, Alter, freie Trainer mit Ruf poolRuf. wechsel: Ruf des Entlassenen, Nachfolger höchstens ueber über dem Ansehen.
   // saison: je Platz über/unter der Erwartung (bis platzMax), Meister, Abstieg, freie Trainer vergessen Richtung mitte, Ruhestand der freien ab ruhestand.
@@ -492,6 +734,7 @@ const REGELN={
         [['kondition','hoch'],['technik','normal'],['kondition','hoch'],['spiel','normal'],['taktik','normal'],['kondition','normal'],['frei','normal']],
         [['kondition','hoch'],['technik','normal'],['taktik','normal'],['spiel','normal'],['kondition','normal'],['technik','normal'],['frei','normal']],
         [['taktik','normal'],['technik','normal'],['spiel','normal'],['standards','normal'],['taktik','normal'],['kondition','normal'],['frei','normal']]]}},
+    eigeneMax:3, // eigene Vorlagen deines Vereins (K07 §6, K07f, 22.11., popolupo, vorläufig): höchstens so viele, Slots wie die festen Vorlagen (p1, p1rest, p2, drei mittlere, m2, m1)
     startVorlage:'auto',blick:14,englischBis:4,pauseAb:9,vorbereitungTage:42,startspielerAb:60,
     kondition:{basis:58,jeReiz:4,max:95},
     // Trainingsfaktor der Entwicklung: 0,6 (kaum Training) bis 1,25, Standardwoche (Reiz 2,5) = 1. Wer platt ist (Frische unter 70), lernt schlechter.
@@ -501,12 +744,15 @@ const REGELN={
     // gehen nur bei sehr jungen Spielern (bis jungBis) oder mit dem Merkmal „vielseitig“. Torwart ist ausgeschlossen, in beide Richtungen.
     // Punkte je Woche: verwandt (Startwert ab verwandtAb) oder fremd, mal Tempo nach Alter. Höchstwert: max (vielseitig maxVielseitig, entfernte Position fernMax)
     // plus Abzug nach Alter. Ein Spieler lernt in seiner Laufbahn höchstens so viele Positionen dazu (positionen, mit „vielseitig“ positionenVielseitig).
-    umschulung:{verwandt:4,fremd:2,verwandtAb:75,max:90,maxVielseitig:95,fernMax:85,jungBis:19,
+    // einsatzMinuten, einsatzTage (K07g, 23.11., GESCHÄTZT): Ein Einsatz auf der neuen Position ab einsatzMinuten zählt wie eine Trainingswoche zusätzlich, höchstens einmal in einsatzTage Tagen
+    umschulung:{einsatzMinuten:45,einsatzTage:7,verwandt:4,fremd:2,verwandtAb:75,max:90,maxVielseitig:95,fernMax:85,jungBis:19,
       tempo:[[19,1.25],[23,1],[27,0.8],[30,0.6]],tempoSonst:0.4,
       maxAlter:[[23,0],[27,-2],[30,-5]],maxAlterSonst:-8,
       positionen:1,positionenVielseitig:2},
     verletzung:{basis:0.0016,sprungAb:1.3,sprungJe01:1.5,frischeAb:80,frischeJePunkt:0.05}, // Art und Dauer aus REGELN.medizin (K10)
     last:{akut:7,chronisch:28,grund:2}, // grund: gewohnte Last mindestens 2 pro Tag
+    planErinnerung:{vorschau:7,sprungAb:1.5,spielerAb:3,abstandTage:7}, // Erinnerung „Plan passt nicht“ (K07 §5 Nr. 4, K07b, 22.11., GESCHÄTZT)
+    lernplatzErinnerung:{abstandTage:7}, // Erinnerung „Lernplatz frei“ (K07 §8, K07d, 22.11.): höchstens einmal je abstandTage
     spielLast:15,spielKondition:1 // Last und Konditionsreiz eines ganzen Pflichtspiels
   },
 
@@ -541,7 +787,8 @@ const REGELN={
     schuetze:{mitte:70,jePunkt:0.008,min:0.8,max:1.2},
     abwehr:{versatz:3,jePunkt:0.022,min:0.78,max:1.22}, // Druck der Abwehr auf den Abschluss: 1 − jePunkt × (Abwehr − Angriff − versatz). Abwehrwerte liegen im Schnitt etwa 3 über den Angriffswerten.
     torwart:{mitte:70,jePunkt:0.011,min:0.80,max:1.20,patzer:0.02,unkonzentriert:4},
-    fouls:{proMinute:0.12,ort:{flanke:0.20,direkt:0.035,elfmeter:0.011},hart:1.3,fair:0.7, // Häufigkeit der Fouls; Foulart, Karten und Sperren stehen unter disziplin (K09)
+    // ort.elfmeter 0,009 statt 0,011 (26.11., vorläufig): Lauf 11 maß 0,33 Elfmeter je Spiel in der 1. Liga, Ziel 0,2–0,3 (tests/kalibrierung.js)
+    fouls:{proMinute:0.12,ort:{flanke:0.20,direkt:0.035,elfmeter:0.009},hart:1.3,fair:0.7, // Häufigkeit der Fouls; Foulart, Karten und Sperren stehen unter disziplin (K09)
       gewicht:{IV:2,LV:1.5,DM:2,ZM:1.3,LS:1.5,LM:1,SM:0.8,OM:0.8,HS:0.8,MS:1,LA:0.8},ungestuem:1.4},
     verlauf:{fuehrung:{A:0.92,D:1.05},rueckstand:{A:1.08,D:0.96},gleich:{A:0.78},abMinute:75, // gleich: bei Unentschieden gehen spät beide weniger Risiko ein
       rot:{A:0.90,D:0.95}},
@@ -575,7 +822,7 @@ const REGELN={
     // Umsetzung = 0,5 × Voraussetzungen + 0,5 × Vertrautheit/100. Grundwert: Bereich gegen Ligaschnitt, ±grundSpanne/2 Punkte = 0 bis 1. Frische und Kondition: von 60 (0) bis 90 (1).
     umsetzung:{voraussetzungen:0.5,vertrautheit:0.5,merkmalErtrag:[1,0.6,0.3],grundSpanne:12,frische:[60,90]},
     vertrautheit:{start:[70,30],trainingWoche:5,jeSpiel:3,vergessen:2,min:30,neuzugang:4,ordnungUnter:60,ordnungMalus:0.03},
-    vorbereitungBonus:0.01,standardsBonus:1.05, // Spielvorbereitung MD-1/MD-2: Teamwerte +1 %, Standard-Einheit in den letzten 7 Tagen: Tore nach Ecken und Freistoßflanken ×1,05 (K07 §5.3)
+    vorbereitungBonus:0.01,vorbereitungTage:2,standardsBonus:1.05, // Spielvorbereitung MD-1/MD-2: Teamwerte +1 %, Standard-Einheit in den letzten 7 Tagen: Tore nach Ecken und Freistoßflanken ×1,05 (K07 §5.3)
     einstellung:{locker:{wirkung:0.96,frische:0.7},saison:{wirkung:1.04,katerTage:10,kater:0.955,frische:5}}, // Kater 10 Tage: trifft auch das nächste Wochenendspiel (K06 §12)
     // Computer-Trainer (K06 §7): Außenseiter mauern oder kontern, Favoriten pressen oder haben den Ball, Reaktion auf deinen Lieblingsstil (Stufe „normal“)
     ki:{aussenseiter:0.95,favorit:1.05,reaktion:0.25,rueckblick:5,profil:{ausgewogen:3,pressing:1,ballbesitz:1,konter:1,mauern:1,fluegel:1},ordnungTreue:1.02,ordnungAlleWochen:4,wichtigAbRunde:3,kreislaufGewicht:0.3}},
@@ -597,7 +844,17 @@ const REGELN={
       video:{ab:10,bonus:1},standard:0.015,psycho:{erholung:0.05,nervenschwach:-0.025}},
     ohne:3,gehalt:{basis:{1:300000,2:120000,3:50000},steigung:0.15,runden:5000},
     start:{qualitaetJeAnsehen:0.2,streuung:[-3,3],zweiterCoAb:70,vereinslosQ:[3,16],rolleAbAnsehen:{arzt:30,physio:30,torwart:35,athletik:40,jugend:45,video:55,standard:60,psycho:65}},
-    vereinslos:40,vertrag:[1,3],alter:[32,58],rente:68,verlaengern:0.7,abfindung:0.5,unschaerfe:3,genauNachWochen:6},
+    vereinslos:40,vertrag:[1,3],alter:[32,58],rente:68,verlaengern:0.7,abfindung:0.5,unschaerfe:3,genauNachWochen:6,
+    einstellenJahre:2, // Vertrag beim Einstellen (von Hand und über die Karte „Ehemaliger Kapitän“, K16e, Prüfung EP1), auch die Jahre beim Verlängern (EQ7)
+    verlaengernGehalt:1.1, // Gehalt beim Verlängern von Hand (K16, seit Prüfung EQ7 aus den Regeln statt fest im Code)
+    // Streit im Stab (K16 §8, K16f, 23.11., popolupo, GESCHÄTZT): hitzigProzent der Mitarbeiter sind hitzig (fest aus der Nummer), im Streit wirkt ihre Qualität × (1 − malus)
+    streit:{hitzigProzent:30,malus:0.1},
+    // Ex-Spieler im Stab (K32 §3.3b, K16 §10, K32c, 22.11., GESCHÄTZT): ab Ligaspielen mit chance vereinsloser Mitarbeiter, Torhüter als Torwarttrainer, sonst nach Gewicht rollen;
+    // Qualität basis + Ligaspiele/jeSpiele (+ehrung bei einer Ehrung) + streuung. Ziel K16 §10: 5 bis 15 je Saison in der ganzen Welt.
+    // kapitaenSaisons (K16 §8, K16e, 23.11., popolupo, GESCHÄTZT): Die Karte „Ehemaliger Kapitän kehrt zurück“ kommt bis so viele Saisons nach dem Karriereende,
+    // ab den Pflichtspielen eines Publikumslieblings für deinen Verein (fanstimmung.ident.lieblingSpiele, seit Prüfung EP6 keine eigene Zahl mehr)
+    exSpieler:{ab:100,chance:0.25,basis:4,jeSpiele:60,ehrung:2,streuung:[-2,2],rollen:{co:5,jugend:3,standard:2},freiSaisons:5,kapitaenSaisons:1},
+    mitnehmen:{max:2,wochen:30}}, // mitnehmen (K16 §5, K16b, GESCHÄTZT): beim Jobwechsel bis zu max Mitarbeiter, die mindestens wochen bei dir waren. freiSaisons: so lange bleibt ein Ex-Spieler ohne Job in der Liste (DP5)
   // Disziplin und Sportgericht (K09 §11, Welle 2). Anteile und Kartenquoten der Foularten sind auf die echten Häufigkeiten kalibriert (K09 §10),
   // nicht die Rohwerte aus §3.1: sonst gäbe es doppelt so viele Rote Karten. art: Vergehen vor dem Sportgericht.
   disziplin:{
@@ -606,24 +863,38 @@ const REGELN={
     meckern:{jeSpiel:0.15,rot:0.02},       // Unsportlichkeit und Meckern: Gelb je Spiel und Mannschaft, ein kleiner Teil wird Rot (Beleidigung)
     taetlichkeit:{jeSpiel:0.0016,schwer:0.05}, // etwa eine Tätlichkeit je Liga und Saison (306 Spiele)
     faktoren:{hart:1.3,fair:0.7,hitzkopf:1.5,hitzkopfMeckern:2,hitzkopfTaetlichkeit:3,muedeUnter:60,muede:1.2,rueckstand:1.0,rueckstandAb:75, // Rückstand ×1,2 aus K09 §5.1 vorläufig aus (K09 §12 Nr. 9)
-      mitGelb:{foul:0.35,karte:0.5}}, // verwarnte Spieler foulen vorsichtiger, außer Hitzköpfen (Konsistenzprüfung AI4)
+      mitGelb:{foul:0.35,karte:0.5}, // verwarnte Spieler foulen vorsichtiger, außer Hitzköpfen (Konsistenzprüfung AI4)
+      derby:1.3}, // Derby oder brisantes Spiel (K09 §5.1, K17 §5.2, K09d, 22.11., popolupo): Karten nach Fouls ×derby. Nicht in Testspielen.
     gelbsperre:{liga:[5,10,15],pokal:[5],eu:[3,5,7,9],spiele:1},gelbRot:1, // nach der letzten Schwelle zählt es neu; eu: Europapokal nach der UEFA-Regel (K37, U19a)
     rot:{notbremse:[1,1,2],grob:[2,1,4],unsportlich:[2,1,5],taetlichkeit:[4,3,6],schwer:[8,6,12],wiederholung:1,wiederholungTage:365,zufall:1,verletzung:1,verletzungAbTagen:28},
     verfahren:{antragTage:[1,2],frist:2,urteilTage:[2,5],urteilSpaetestens:10,archiv:60},
     einspruch:{kosten:[10000,30000],gemindert:0.25,erhoeht:0.10,hart:{gemindert:0.35,erhoeht:0.05},eindeutig:{gemindert:0.10,erhoeht:0.15}},
     ki:{einspruchWichtig:0.6,einspruchSonst:0.1},
+    // Vereinsstrafe nach einem Urteil (K09 §5.2, K14 §6, K09c, 22.11., popolupo, GESCHÄTZT): je Spiel Sperre jeSpiel nach Liga, Antwort binnen tage Tagen.
+    // Verhängen: Stimmung des Spielers stimmung, Glaubwürdigkeit glaub, das Geld kommt in die Vereinskasse. Erlassen: erlassStimmung, erlassGlaub. Ohne Antwort keine Strafe.
+    vereinsstrafe:{jeSpiel:{1:20000,2:8000,3:3000},tage:3,stimmung:-6,glaub:2,erlassStimmung:3,erlassGlaub:-1},
+    // Zuschauer-Vergehen deines Vereins (K09 §4.4, §5.5, K09h): Vorfälle der letzten tage Tage. Ab dem zweiten kommt ein Zuschlag in Höhe der Strafe (× zuschlag, also verdoppelt),
+    // ab dem ausschlussAb-ten bleibt beim nächsten Heimspiel ein Block mit dem Anteil block der Plätze leer (Teilausschluss). Werte vorläufig.
+    zuschauer:{tage:365,zuschlag:1,ausschlussAb:3,block:0.1},
+    // Trainer-Karten und Tribüne (K09 §5.4, K09g, 24.11., popolupo): Protest im Live-Spiel bis protestMinuten nach dem Anlass, Gelb mit protestGelb × Strenge des Schiedsrichters.
+    // Jede sperreJe-te Gelbe der Saison sperrt sperreSpiele Pflichtspiele, Gelb-Rot gelbRotSpiele. Innenraumverbot nach Schiedsrichterkritik (K09f): ab ab früheren Fällen
+    // so viele Spiele wie Fälle über ab − 1, höchstens max. Werte vorläufig (die vier Gelben wie in der Bundesliga seit 2019/20).
+    // Seit K09i: Mit protestRot × Strenge zeigt der Schiedsrichter gleich Rot (vor der Gelben geprüft): Tribüne für den Rest und rotSpiele Spiele Sperre.
+    trainer:{protestGelb:0.35,protestRot:0.04,rotSpiele:2,protestMinuten:2,sperreJe:4,sperreSpiele:1,gelbRotSpiele:1,innenraum:{ab:1,max:2}},
     schiri:{proLiga:24,strenge:[0.85,1.15],elfmeter:[0.9,1.1]}},
   // Medizin (K10 §11, Welle 2). Häufigkeit nach echten Ankern (UEFA-Studie: etwa 50 Verletzungen je 25er-Kader und Saison, 12–14 % des Kaders fehlen im Schnitt).
   // k: Anteil Kontakt (Foul, Zweikampf). Überlastung im Spiel zieht Arten mit Gewicht anteil × (1 − k), Kontakt anteil × k, Training anteil.
   medizin:{
     arten:{prellung:{name:'Prellung',g:'prellung',anteil:0.20,tage:[1,7],k:1,spritzen:true},
-      zerrung:{name:'Zerrung im Oberschenkel',g:'muskel',anteil:0.25,tage:[8,30],k:0,rueckfall:0.12},
+      // Zerrung: rueckfall 0,095 statt 0,12 und Kreuzband: anteil 0,006 statt 0,01 (26.11., vorläufig). Gemessen seit U7b immer über dem Ziel:
+      // Rückfall nach Zerrung 15 bis 16 % (Ziel 10–15 %), Kreuzbandrisse in der 1. Liga 9,5 bis 10 je Saison (Ziel 3–8). Gesenkt im Verhältnis zur Mitte des Ziels.
+      zerrung:{name:'Zerrung im Oberschenkel',g:'muskel',anteil:0.25,tage:[8,30],k:0,rueckfall:0.095},
       faserriss:{name:'Muskelfaserriss',g:'muskel',anteil:0.12,tage:[21,49],k:0,rueckfall:0.15},
       baenderdehnung:{name:'Bänderdehnung im Sprunggelenk',g:'band',anteil:0.12,tage:[4,21],k:0.6,rueckfall:0.10,spritzen:true},
       baenderriss:{name:'Bänderriss im Sprunggelenk',g:'band',anteil:0.05,tage:[28,63],k:0.8,rueckfall:0.08},
       innenband:{name:'Innenbandverletzung im Knie',g:'knie',anteil:0.04,tage:[21,56],k:0.8,rueckfall:0.05},
       meniskus:{name:'Meniskusverletzung',g:'knie',anteil:0.02,tage:[42,100],k:0.4,rueckfall:0.10},
-      kreuzband:{name:'Kreuzbandriss',g:'knie',anteil:0.01,tage:[180,300],k:0.3,rueckfall:0.10},
+      kreuzband:{name:'Kreuzbandriss',g:'knie',anteil:0.006,tage:[180,300],k:0.3,rueckfall:0.10},
       bruch:{name:'Knochenbruch',g:'bruch',anteil:0.03,tage:[28,84],k:1},
       kopf:{name:'Gehirnerschütterung',g:'kopf',anteil:0.02,tage:[7,14],k:1,pflicht:true},
       sonstiges:{name:'Rücken- oder Leistenprobleme',g:'sonstiges',anteil:0.04,tage:[3,21],k:0.2,rueckfall:0.10,spritzen:true},
@@ -635,23 +906,52 @@ const REGELN={
       kollision:0.0016,ueberlastung:0.0022, // je Minute und Mannschaft
       frischeAb:80,frischeJePunkt:0.05,frischeKritisch:60,kritisch:2,stil:1.2,altAb:30,alt:1.3},
     robustheit:[1.6,-0.06],anfaellig:1.6,
-    krankheit:{proTag:0.0006,winter:2,winterMonate:[11,0,1],ansteckung:2,ansteckungTage:5}, // Spielwerte, nicht recherchiert
-    diagnose:{tage:[3,1],verdacht:0.6,genau:0.25,arzt:{ohne:2,jeQualitaet:-0.1,min:0.5}}, // Breite ±60 % und ±25 % bei Arzt-Qualität 10
+    krankheit:{proTag:0.0006,winter:2,winterMonate:[11,0,1],ansteckung:2,ansteckungTage:5,hygiene:0.5}, // Spielwerte, nicht recherchiert. hygiene: Faktor während eines Hygieneplans (Karte „Grippewelle“, K10e, GESCHÄTZT)
+    diagnose:{tage:[3,1],verdacht:0.6,genau:0.25,arzt:{ohne:2,jeQualitaet:-0.1,min:0.5},fehl:{ohne:0.15,jeQualitaet:-0.006,min:0.03,faktor:0.6,abTage:10}}, // Breite ±60 % und ±25 % bei Arzt-Qualität 10; fehl: Fehldiagnose (K10b, 22.11., GESCHÄTZT), Chance ohne + jeQualitaet × Arzt-Qualität (mindestens min), angezeigt faktor × wahre Dauer, ab abTage Tagen
     reha:{behandlung:0.7,rueckkehrFrische:[70,80],abTagen:7,fenster:56,rueckfallMal:7,gleicheArt:0.35},
-    spritzen:{wirkung:0.95,verschlimmerung:0.15},frueher:{frische:65,rueckfall:2},
+    spritzen:{wirkung:0.95,verschlimmerung:0.15,arztAb:5,haltung:{vorsichtig:-3,ausgewogen:0,risikofreudig:4}},frueher:{frische:65,rueckfall:2}, // arztAb (K16 §8, K16d, 22.11., GESCHÄTZT): bei mehr Tagen in der angezeigten Spanne rät der Arzt vom Spritzen ab; haltung: Tage mehr oder weniger je Haltung des Arztes (K16i, 25.11., popolupo, vorläufig)
+    // Zweite Meinung (K10 §5, K10c, 22.11., popolupo, GESCHÄTZT): einmal je Verletzung nach der Diagnose, kosten nach Liga; mit besser eine bessere Behandlung (Rest × (1 − aenderung)),
+    // mit schlechter mehr Schaden als gedacht (Rest × (1 + aenderung)), sonst eine engere Spanne (Breite × enger). Eine Fehldiagnose (K10b) deckt sie immer auf.
+    zweite:{kosten:{1:15000,2:8000,3:4000},besser:0.2,schlechter:0.05,aenderung:0.15,enger:0.5},
     verlaufTage:730},
   // Wettbewerbe und Spielplan (K13 §11, Welle 2): Pokal-Auslosung, Heimrecht der Amateure (3. Liga und darunter) bis zum Halbfinale (Runde 4), Supercup, 72 Stunden
-  wettbewerbe:{pokal:{auslosungTage:14,profitopfZweite:14,heimrechtBisRunde:4},supercup:{vorSpieltag:6,anstoss:'20:30'},spielplan:{mindestTage:3}},
+  // supercup.praemie (K13b, 22.11.2026): Franz-Beckenbauer-Supercup 2025, 3 Mio. € für den Sieger, 2 Mio. € für den Verlierer (Websuche 22.11., Medienberichte, keine offizielle DFL-Quelle)
+  // pokal.rotation (K13e, 23.11., GESCHÄTZT): Pokal-Rotation rächt sich, wenn du als Favorit (Amateur oder Niveau mindestens favorit unter deinem) ausscheidest und mindestens wechsel Spieler der Startelf des letzten Ligaspiels getauscht hast
+  // pokal.rotationKI (K13 §4, K13j, 25.11., popolupo, vorläufig, Schalter an vorerst aus): Favoriten (wie rotation.favorit) schonen in den Runden bis bisRunde (0 = 1. Runde)
+  // Spieler unter frische % Frische, wenn danach noch minKader Spieler mit Torwart bleiben. Computer-Vereine und dein Verein, wenn der Co-Trainer aufstellt.
+  wettbewerbe:{pokal:{auslosungTage:14,profitopfZweite:14,heimrechtBisRunde:4,losTopAb:80,rotation:{favorit:5,wechsel:4},rotationKI:{an:false,frische:85,bisRunde:1,minKader:14}},supercup:{vorSpieltag:6,anstoss:'20:30',praemie:{sieger:3e6,verlierer:2e6}},spielplan:{mindestTage:3},
+    // Spielverlegung auf Antrag (K13 §13, K13d, 23.11., popolupo, vorläufig): wie die Regel der DFL aus der Corona-Zeit, mindestens minSpieler einsatzfähige Spieler, darunter ein Torwart, sonst Verlegung möglich.
+    // Für dein Ligaspiel in höchstens vorTage Tagen, höchstens proSaison je Saison, neuer Termin bis sucheTage später und vor dem letzten Spieltag deiner Liga.
+    // Seit K13f auch mit mindestens abgestellt Spielern bei Nationalmannschaften (K13 §4, nur mit laenderspiele.an).
+    verlegung:{minSpieler:16,vorTage:7,proSaison:1,sucheTage:60,abgestellt:3},
+    // Länderspiele (K13 §3.4, §5.1, K13f, 24.11., popolupo, vorläufig, Schalter an vorerst aus: Abwesenheit, Müdigkeit und Verletzungen treffen alle Vereine, erst messen).
+    // Schwelle je Nation basis − jeRang × (Rang − 1), mindestens min; höchstens max je Nation; bis rand über der Schwelle nur mit Form ab formMin und Spielpraxis ab praxisMin.
+    // Spiele je Pause: Tage der Pause / tageJeSpiel, gerundet auf gerade Zahlen, mindestens 2. Die stamm Stärksten spielen 90 Minuten, die anderen minuten (gewürfelt).
+    // Rückkehr: Frische − frische, Saisonbelastung + belastung je Spiel, Verletzung mit verletzung, Selbstvertrauen ± sv, Stimmung + stimmung (Stolz).
+    // Seit Prüfung FM: zurück am Tag nach dem letzten Pausentag (FM1), ein Länderspiel zählt ab minMin Minuten, die Frische sinkt nach den Minuten, Saisonbelastung höchstens 100 (FM10).
+    laenderspiele:{an:false,schwelle:{basis:88,jeRang:0.5,min:62},max:26,rand:3,formMin:7,praxisMin:40,tageJeSpiel:4.5,stamm:11,minuten:[0,30],
+      frische:[10,20],belastung:2,verletzung:0.03,sv:0.3,stimmung:2,ersteBis:23,minMin:10,marktwert:{plus:0.05,tage:365},
+      // turnier (K13k, 25.11., popolupo, vorläufig): EM mit em, WM mit wm Teilnehmern; streuung: Ränge, um die der Zufall die Rangfolge verschiebt (seit Prüfung FQ2 statt weiter); gesperrt: nicht zugelassene Nationen (FQ4); spaet: Tage nach dem Trainingsauftakt; belastung: Saisonbelastung über der Schwelle sommer.belastung.ab (FQ1)
+      turnier:{em:24,wm:48,spaet:14,belastung:6,streuung:15,gesperrt:['RUS'],stufenEm:['Vorrunde','Achtelfinale','Viertelfinale','Halbfinale','Finale','Titel'],
+        stufenWm:['Vorrunde','Sechzehntelfinale','Achtelfinale','Viertelfinale','Halbfinale','Finale','Titel']}}}, /* marktwert: Nationalspieler sind bis tage nach der letzten Nominierung plus mehr wert (K13h) */ /* ersteBis: Karte „Anruf des Nationaltrainers“ nur bis zu diesem Alter (K13g), bei Älteren war es kaum die erste */
   // Testspiele und Trainingslager (K11 §11, Welle 2). Geldbeträge und Zusagen sind Spielwerte (K11 §12 Nr. 4).
-  testspiele:{abWoche:3,wechsel:11,frische:0.7,risiko:0.6,praxis:0.6,vertrautheit:2,form:0.3,
+  // lagerAusland (K11h, 25.11., popolupo, vorläufig): so viele Vereine aus dem Land des Lagers (lager.orte[…].land) schlägt das Spiel an Lagertagen als Gegner vor.
+  testspiele:{lagerAusland:2,abWoche:3,wechsel:11,frische:0.7,risiko:0.6,praxis:0.6,vertrautheit:2,form:0.3,
     zusage:{grund:0.6,staerker:0.4,schwaecher:1.3,staerkerAb:4,schwaecherAb:4,kalender:0.2,region:1.2,vorbereitung:1.2,saison:0.7,min:0.05,max:0.95},
     antwortTage:[1,3],abstandPflichtspiel:2,vorlaufTage:4,planTage:42,maxProWoche:2,vorschlaege:8,
-    nachfrage:{start:0.12,jeWoche:-0.015,min:0.04,grosserName:2,grossAb:80},gageAmateur:[10000,80000]},
-  lager:{orte:{alpen:{name:'Alpen',saison:'sommer',kosten:40000,kondition:1.15,text:'Höhenlage: Kondition wirkt stärker'},schwarzwald:{name:'Schwarzwald',saison:'sommer',kosten:25000,text:'günstig und ruhig'},
-      algarve:{name:'Algarve',saison:'winter',kosten:50000,text:'mildes Wetter'},andalusien:{name:'Andalusien',saison:'winter',kosten:55000,text:'warm, gute Plätze'},
-      riviera:{name:'Türkische Riviera',saison:'winter',kosten:30000,ablenkung:true,text:'günstig, aber mehr Ablenkung'},golf:{name:'Golfregion',saison:'winter',kosten:90000,text:'sehr warm, lange Reise'},
+    nachfrage:{start:0.12,jeWoche:-0.015,min:0.04,grosserName:2,grossAb:80},gageAmateur:[10000,80000],
+    // Sommerturnier (K11 §3, K11b, 22.11., GESCHÄTZT): Antrittsgeld und Siegprämie je Liga, Stimmung aller beim Turniersieg
+    turnier:{name:'Sommerturnier',antritt:{1:150000,2:60000,3:25000},sieg:{1:100000,2:40000,3:15000},stimmung:1},
+    kiAnfrage:{chance:0.35,tage:3},spielfrei:{tage:7,abstandTage:7}}, // Anfragen der Computer-Vereine in der Vorbereitung (K11c, GESCHÄTZT): montags mit chance, Antwort binnen tage; spielfrei: Erinnerung „spielfreie Woche ohne Testspiel“ (K01 H9, K11d), Blick auf tage Tage, höchstens einmal je abstandTage
+  // Seit K11h je Ort land (Gegner aus dem Ausland im Lager), seit K11i bei der Golfregion marketing: am letzten Lagertag anteil der Lagerkosten als Einnahme, Fanstimmung + fans (25.11., popolupo, vorläufig); seit Prüfung FP9 0,6 statt 1,2, damit Golf teuer bleibt, und auch bei vorzeitiger Abreise (FP8)
+  lager:{orte:{alpen:{name:'Alpen',land:'AUT',saison:'sommer',kosten:40000,kondition:1.15,text:'Höhenlage: Kondition wirkt stärker'},schwarzwald:{name:'Schwarzwald',saison:'sommer',kosten:25000,text:'günstig und ruhig'},
+      algarve:{name:'Algarve',land:'POR',saison:'winter',kosten:50000,text:'mildes Wetter'},andalusien:{name:'Andalusien',land:'ESP',saison:'winter',kosten:55000,text:'warm, gute Plätze'},
+      riviera:{name:'Türkische Riviera',land:'TUR',saison:'winter',kosten:30000,ablenkung:true,text:'günstig, aber mehr Ablenkung'},golf:{name:'Golfregion',saison:'winter',kosten:90000,marketing:{anteil:0.6,fans:-1},text:'sehr warm, lange Reise, Termine bei Partnern bringen Geld, manche Fans murren'},
       heimat:{name:'Heimat',saison:'beide',kosten:0,wetter:0.2,text:'kein Ortswechsel, im Winter fällt öfter Training aus'}},
-    ligaFaktor:{1:1,2:0.6,3:0.35},tage:[5,10],training:1.15,vertrautheit:1.25,zusammenhalt:1,zusammenhaltBis:7,kollerAb:8,koller:0.13,kollerSv:-0.5,ablenkung:0.15,ablenkungSv:-1},
+    ligaFaktor:{1:1,2:0.6,3:0.35},tage:[5,10],training:1.15,vertrautheit:1.25,zusammenhalt:1,zusammenhaltBis:7,kollerAb:8,koller:0.13,kollerSv:-0.5,ablenkung:0.15,ablenkungSv:-1,
+    // Zimmerbelegung (K11 §5.4, K11k, 25.11., popolupo, vorläufig): je Lagertag und Doppelzimmer Freundschaft mit freund (Landsleute ×landsleute), Integration +integration
+    // neben einem Eingewöhnten, Deutsch +deutsch neben einem Muttersprachler, Zoff bei Rivalen oder zwei Hitzköpfen mit streit (Stimmung stimmung, einmal je Zimmer)
+    zimmer:{freund:0.03,landsleute:2,integration:0.5,deutsch:0.3,streit:0.15,stimmung:-2}},
   // Stimmung, Kaderrollen, Wechselwunsch, Kabine, Zusammenhalt, Beziehungen, Kapitän (K14 §11, U8). Spielwerte, kalibriert mit tests/kabine.js
   kabine:{start:[60,75],                // Stimmung zu Beginn (0–100)
     rollen:{schluessel:0.85,stamm:0.65,rotation:0.40,ergaenzung:0.15,talent:0.15,pokal:0.9}, // erwartete Einsatzzeit je Kaderrolle (Anteil der Minuten), „spielt im Pokal“: Anteil der Pokalspiele
@@ -673,19 +973,26 @@ const REGELN={
       erfolg:{ab:3,je:0.15,min:0.5,max:1.5},                 // Serie der letzten fünf Spiele gegen die Erwartung: Siegesserie halbiert die Abwertung, Krise ×1,5
       chance:{spiele:3,note:3.0},                            // Vertreter eines fehlenden Stammspielers mit Notenschnitt bis 3,0 nach drei Spielen
       sperre:{hitzkopf:-1},fuehrer:{freunde:-1},altstar:{ab:31,spiele:200},
+      // Neuer Trainer (K14 §12, K14f, 24.11., popolupo, vorläufig): Übernimmst du einen Verein, hoffen seine Reservisten (Stimmung + hoffen) und tage Tage lang zählt kein
+      // Bankplatz deiner Spieler (seit FM5: spiele Pflichtspiele lang). Nur dein Verein (Trainerwechsel der Computer-Vereine ändern nichts, sonst verschöbe sich die Kalibrierung).
+      neuerTrainer:{spiele:5,hoffen:2}, /* seit Prüfung FM5 die ersten spiele Pflichtspiele statt 28 Tage, sonst lief der Neubeginn bei einer Übernahme im Sommer vor dem ersten Spiel ab */
       bedeutungslos:{spieltage:5,plus:2,minus:-2,minuten:20,grenzen:{1:[1,4,6,15,16],2:[2,3,15,16],3:[2,3,16]}},
       pokalTempo:0.5,diva:2},
     erfolg:{abSpiele:3,platz:25,platzMax:7,serie:1,serieMax:3,zerfall:0.9},
+    // Teamprämie (K21 §3.2, K21b, 22.11., popolupo, GESCHÄTZT): vor dem ersten Ligaspiel normal (in den Gehältern) oder hoch. Hoch: je Ligasieg jeSpieler × Kadergröße
+    // zusätzlich, Baustein Erfolg der Stimmung + stimmung. Ab der A-Lizenz (Bereich praemien).
+    teampraemie:{stimmung:2,jeSpieler:{1:15000,2:4000,3:1000},pokal:{1:20000,2:6000,3:2000},aufstieg:{2:50000,3:15000},klassenerhalt:{1:30000,2:10000,3:3000},stufen:{normal:'normal (in den Gehältern enthalten)',hoch:'hoch (Sieg- und Pokalprämie obendrauf)'}}, // pokal (K21d, 23.11., GESCHÄTZT): je gewonnene Runde im DFB-Pokal und Spieler; aufstieg und klassenerhalt (K21e, GESCHÄTZT): je Spieler zum Saisonende, Klassenerhalt nur mit diesem Saisonziel
     leistung:0.5,                        // (Form − 10) × 0,5
     vertrag:{unter:0.8,minus:12,ueber:1.15,plus:3,auslaufend:-3,soeldner:1.5,max:-8}, // vorläufig höchstens −8, bis K21 das Gehaltsgefüge baut
     rolle:{zuNiedrig:-4,diva:2,hoeher:1,hoeherMax:2},           // deine Rolle unter seiner Einschätzung: −4 je Stufe (Diva doppelt)
     trainerZerfall:0.1,                  // Wirkung von Gesprächen im Baustein „Trainer“ verblasst um 10 % pro Woche
     traegheit:0.2,wocheMax:8,sofortMax:10,
-    rufGefaelle:{ab:15,lob:0.5,kritik:2,einsatz:1.5,trainer:[50,0.3,3,95]}, // Ruf des Trainers bis K28: 50 + 0,3 × Ansehen + 3 je Trainerjahr, höchstens 95
+    rufGefaelle:{ab:15,lob:0.5,kritik:2,einsatz:1.5,trainer:[50,0.3,0.5,95]}, // Ruf des Trainers in der Kabine seit U12h (K28 §5.4): 50 + 0,3 × Ansehen + 0,5 je Punkt Ruf über dem Start, höchstens 95 (vorher 3 je Trainerjahr)
     folgen:{leistung:{unter:20,minus:0.03,ueber:85,plus:0.02},lernenUnter:30,lernen:0.7,vertragUnter:[40,25],vertragAufschlag:0.25},
-    wechsel:{grummeln:[45,2],gespraech:[40,2],offiziell:4,oeffentlich:4,oeffentlichChance:0.1,oeffentlichDiva:0.3,abloese:0.9,teamMinus:3,zurueckAb:50},
+    // offiziell 5 statt 4 Wochen (26.11., vorläufig): Lauf 10 maß 1,05 offizielle Wechselwünsche je Kader und Saison, Ziel höchstens 1 (tests/kabine.js)
+    wechsel:{grummeln:[45,2],gespraech:[40,2],offiziell:5,oeffentlich:4,oeffentlichChance:0.1,oeffentlichDiva:0.3,abloese:0.9,teamMinus:3,zurueckAb:50},
     ansteckung:{fuehrerUnter:35,freunde:-2,fuehrerUeber:70,alleUnter:50,alle:1},
-    gruppe:{min:3,unter:35,zh:-2},
+    gruppe:{min:3,unter:35,zh:-2,spracheBis:60}, // spracheBis: Sprachgrüppchen nur, solange das Deutsch darunter liegt (K14g, 25.11., popolupo, vorläufig, nur mit spieler.integration.wirkung.an)
     zusammenhalt:{start:50,stammelf:1,stammelfGleich:9,sieg:1,lager:1,neuer:-5,neuerWochen:8,streit:-3,ausgleich:0.04,wirkung:[0.97,0.0006]},
     beziehungen:{freundChance:0.25,freundAlter:4,maxFreunde:3,rivaleChance:0.3,rivaleStaerke:3,rivaleEhrgeiz:13,rivaleEnde:8,rangelei:0.02,
       verkauf:-8,lernen:1.05},
@@ -710,7 +1017,8 @@ const REGELN={
     stab:{vereinslos:8},
     pate:{wachstum:1.1,profi:0.3,jeMentor:2,bisAlter:21},
     // Prägungen (K08 §5.3): [Chance Schub, Chance Knacks] je Anlass. faktor: Häufigkeit insgesamt, kalibriert auf 2–5 Prägungen je Verein und Saison.
-    praegung:{faktor:1,debuet:[0.15,0.05],topspiel:[0.20,0.12],tor:[0.30,0],fehler:[0,0.30],topAbRunde:3,topPlaetze:4,topAbSpieltag:5,spaetAb:80,
+    // Mit 1 lagen die Läufe 12 bis 15 bei 1,98 bis 2,1 (am unteren Rand), mit 1,2 erwartet etwa 2,4 (vorläufig, 26.11.).
+    praegung:{faktor:1.2,debuet:[0.15,0.05],topspiel:[0.20,0.12],tor:[0.30,0],fehler:[0,0.30],topAbRunde:3,topPlaetze:4,topAbSpieltag:5,spaetAb:80,
       druck:{schub:[0.5,0.05],knacks:[1.5,-0.05]},note:1.3,sieg:1.2,niederlage:1.2,
       umgang:{loben:1.3,schuetzen:0.5,kritik:1.5,tage:3},belastung:1.5,psychologe:-0.02,
       schub:{talent:[0.25,2,6],tempo:1.3,tage:90,sv:1,stimmung:5},knacks:{talent:[0.15,1,3],tempo:0.5,tage:[30,90],sv:-1,stimmung:-5},bisAlter:21,verlauf:6},
@@ -745,12 +1053,19 @@ const REGELN={
     fehler:{je:0.15,lieblingstyp:[1,3],lieblingsChance:0.3},   // Grundfehler eines Scouts: Streuung 0,15 × (21 − Qualität)
     verblassen:2,                                             // je Monat ohne Beobachtung, nicht unter die Grundkenntnis
     kosten:{inland:3000,ausland:15000},                       // je Beobachtungswoche (Spielwerte, K23)
+    // Seit K18g (24.11., popolupo, vorläufig) mit Scoutbericht in der Vorschau: wahrscheinlicher Stil, Reaktion auf deinen Lieblingsstil, die drei Stärksten der Elf
+    // und wer von den bericht.top Stärksten des Kaders fehlt (verletzt oder gesperrt). Nur Anzeige.
+    gegner:{kosten:3000,bericht:{top:14}}, // Gegnerbeobachtung vor dem nächsten Pflichtspiel (K18c, 22.11., GESCHÄTZT): Reisekosten einmal
+    daneben:{ab:5}, // Scout liegt daneben (K18 §8, K18e, 22.11.): gekaufter Spieler mindestens ab unter der Mitte der Einschätzung beim Kauf
+    ruf:{ab:3,schlecht:0.34}, // Ruf des Scouts (K18 §8, K18h, 25.11., popolupo, vorläufig): ab ab Einschätzungen beim Kauf; unzuverlässig ab dem Anteil schlecht zu hoch. Nur Anzeige
+    konkurrenz:{chance:0.25,preis:0.05,tage:60}, // Konkurrenz am Tisch (K18 §8, K18d, 22.11., GESCHÄTZT): nach einem Scoutbericht mit chance ein Verein mit Bedarf, Forderung an dich + preis für tage Tage
     suche:{kandidaten:[3,8],jeWoche:4,anteil:0.5},             // Suchauftrag: je Woche vier neue Namen, Beobachtung mit halber Wirkung
     empfehlung:{verpflichten:1,beobachten:-3},                 // Mitte gegen deinen Stammspieler auf der Position
     start:{scouts:[[0,1],[60,2],[80,3]],vereinslos:8}},        // Scouts je Verein nach Ansehen, dazu vereinslose
   // Gespräche und Ansprachen (K15 §11, U8): Glaubwürdigkeit, Wirkung, Abnutzung, Versprechen, Mannschaftsansprache
   gespraeche:{proWoche:3,schuetzenSv:0.3,
-    glaubwuerdigkeit:{start:60,faktor:[0.5,0.7],erholungBis:60,erholung:1,gehalten:3,gebrochen:-10,offenAb:4,offenMinus:2,krise:25,krisenVorstand:-3},
+    glaubwuerdigkeit:{start:60,faktor:[0.5,0.7],erholungBis:60,erholung:1,gehalten:3,gebrochen:-10,offenAb:4,offenMinus:2,krise:25,krisenVorstand:-3,
+      jeRuf:0.3,neuGrenzen:[30,90]}, // U12h (K28 §5.4, 22.11., GESCHÄTZT): Start beim neuen Verein = start + jeRuf × (Ruf − Startruf), in neuGrenzen
     wirkung:{rolle:3,einsatz:10,geduld:5,wechsel:8,konkurrent:6,schuetzen:3,lob:4,kritik:-4,unpassend:-0.5,nachStreit:0.5,nachStreitTage:28,trainerAnteil:0.5},
     lage:{lobBis:3,kritikAb:4},           // Lob passt bei einer Note bis 3,0, Kritik ab 4,0 (letztes Spiel)
     abnutzung:{wochen:4,zweites:0.5,danach:0.2},
@@ -773,15 +1088,32 @@ const REGELN={
     verletztFrische:30,              // ein verletzter Spieler humpelt bis zum Wechsel (Frische höchstens 30)
     zurufe:{dauer:10,abnutzungMinuten:15,druck:{angriff:1.08,abwehr:0.97,frische:1.2},ruhe:{abwehr:1.03,angriff:0.95,fouls:0.85},konzentration:{patzer:0.7},
       zeit:{angriffe:0.8,gelb:3,gelbJeMinute:0.002},spieler:{sv:0.3,wirkung:0.02,hitzkopfFouls:1.5}},
-    ansprache:{loben:{sv:0.3},motivieren:{wirkung:0.02},fordern:{kaempfer:0.03,empfindlich:-0.02},beruhigen:{fouls:0.8,patzer:0.8},augenzwinkernd:{wirkung:0.01},unpassend:-0.5,abnutzungSpiele:3},
+    ansprache:{loben:{sv:0.3},motivieren:{wirkung:0.02},fordern:{kaempfer:0.03,empfindlich:-0.02},beruhigen:{fouls:0.8,patzer:0.8},augenzwinkernd:{wirkung:0.01},unpassend:-0.5,abnutzungSpiele:3,wirkt:{ab:2,glaub:1}}, // wirkt (K05 §8, K05g, 25.11., popolupo, vorläufig): nach „Fordern“ die zweite Halbzeit um ab Tore besser als die erste: Glaubwürdigkeit + glaub
     ki:{muedeUnter:65,wechselVon:55,wechselBis:86,chanceJeMinute:0.13,frischAb:58,frischUnter:93,toleranz:6,gelbAb:60,jeGelegenheit:2,rueckstandAb:60,alleNachVorn:80,fuehrungAb:75},
     druckleiste:{minuten:5,gross:3,halb:1,ecke:0.5}},
-  // Schwierigkeit (K02 §5.4): ändert nur Bedingungen, Information und Hilfen. Werte und Würfel im Spiel sind auf allen Stufen gleich.
+  // Schwierigkeit (K02 §5.4, K43): ändert Bedingungen, Information, Hilfen und Geld. Spielerwerte sind auf allen Stufen gleich, gewürfelt wird gleich oft,
+  // nur einige Grenzen verschieben sich (Glück bei Karten, böse Karten).
   // ziel: Saisonziel um so viele Plätze leichter (+) oder strenger (−). sterneGenau: Talentsterne eigener Spieler sofort genau. sterneWochen: Faktor auf die Zeit, bis sie genau sind.
   schwierigkeit:{standard:'normal',
-    stufen:{leicht:{name:'Leicht',text:'mehr Geld, geduldiger Vorstand, genaue Talentsterne',konto:1.5,kredit:1.5,entlassenUnter:5,schonfrist:10,ziel:1,sterneGenau:true,sterneWochen:1,erinnerungen:true},
-      normal:{name:'Normal',text:'so, wie das Spiel gedacht ist',konto:1,kredit:1,entlassenUnter:12,schonfrist:6,ziel:0,sterneGenau:false,sterneWochen:1,erinnerungen:true},
-      schwer:{name:'Schwer',text:'weniger Geld, ungeduldiger Vorstand, strengeres Ziel, keine Erinnerungen',konto:0.7,kredit:0.6,entlassenUnter:18,schonfrist:4,ziel:-1,sterneGenau:false,sterneWochen:1.5,erinnerungen:false}}},
+    // Mitwachsend (K43 §5 in der Fassung vom 26.11. abends, vorläufig): Grundlage ist die Stufe basis. Zu Beginn jeder Saison wird die abgelaufene bewertet (erfolg),
+    // gemessen am eigenen Anspruch in der eigenen Liga: Platz gegen Saisonziel (zielJePlatz je Platz, höchstens zielMax), Meister der eigenen Liga (auch 3. Liga),
+    // dazu je Punkt Vorsprung über abstandAb abstandJe (höchstens abstandMax), Aufstieg, Pokal, Europapokal, Abstieg (negativ).
+    // Der Erfolgswert e merkt sich die Vorjahre mit dem Faktor gedaechtnis und bleibt zwischen −grenze und +grenze. Daraus der Ausschlag s von −1 (Durststrecke) bis +1 (Erfolg):
+    // unter totzone 0, bei voll ±1. wirkung: kleine Hebel je Einheit von s (gehalt: Gehaltsforderungen, vorstand: Entlassungsgrenze in Punkten, ziel: ab diesem Ausschlag ein Platz
+    // strenger oder leichter, glueck: Glück bei Karten (nur bei Durststrecke, als Zuschlag), abwerben: Abwerbeversuche anderer Vereine (nur bei Erfolg)). partner: einmal je
+    // abstand Saisons bei Ausschlag bis ab ein Zuschuss in Höhe von spiele Ligaspielen Werbung. Nie an Spielstärke, Würfeln oder Spielerwerten.
+    mitwachsend:{name:'Mitwachsend',text:'das Spiel reagiert leicht auf deinen Erfolg: nach guten Jahren etwas anspruchsvoller, in einer Durststrecke etwas Rückenwind',basis:'normal',
+      erfolg:{zielJePlatz:0.5,zielMax:3,meister:2,abstandAb:5,abstandJe:0.2,abstandMax:2,aufstieg:2,pokal:1,europa:2,abstieg:-2,gedaechtnis:0.6,grenze:8},
+      wirkung:{totzone:1.5,voll:6,gehalt:0.06,vorstand:3,ziel:0.6,glueck:0.08,abwerben:0.3,partner:{ab:-0.5,abstand:4,spiele:6}}},
+    // Seit K43 (26.11.2026, popolupo, vorläufig), je Stufe: sponsor als Faktor auf deine Sponsorangebote, kartenGlueck als Zuschlag auf die Chance des guten Ausgangs
+    // in Ereigniskarten, kartenNegativ als Faktor auf die Chance von Infokarten, die für dich nur schlecht ausgehen (0 heißt, sie fallen nach dem Wurf weg), ohneCL heißt, dein
+    // Verein spielt statt Champions League Europa League, goenner heißt, bei einer Insolvenz zahlt ein Gönner die Schulden ohne Punktabzug (Vertrauen goennerVertrauen).
+    stufen:{leicht:{name:'Leicht',text:'mehr Geld und bessere Sponsoren, geduldiger Vorstand, keine bösen Überraschungen, ein Gönner rettet vor der Pleite; Champions League erst ab Normal',konto:1.5,kredit:1.5,entlassenUnter:5,schonfrist:10,ziel:1,sterneGenau:true,sterneWochen:1,erinnerungen:true,
+        sponsor:1.2,kartenGlueck:0.15,kartenNegativ:0,ohneCL:true,goenner:true,goennerVertrauen:-10},
+      normal:{name:'Normal',text:'so, wie das Spiel gedacht ist',konto:1,kredit:1,entlassenUnter:12,schonfrist:6,ziel:0,sterneGenau:false,sterneWochen:1,erinnerungen:true,
+        sponsor:1,kartenGlueck:0,kartenNegativ:1,ohneCL:false,goenner:false},
+      schwer:{name:'Schwer',text:'weniger Geld und Sponsoren, ungeduldiger Vorstand, strengeres Ziel, öfter Pech, keine Erinnerungen',konto:0.7,kredit:0.6,entlassenUnter:18,schonfrist:4,ziel:-1,sterneGenau:false,sterneWochen:1.5,erinnerungen:false,
+        sponsor:0.85,kartenGlueck:-0.1,kartenNegativ:1.5,ohneCL:false,goenner:false}}},
   vorstand:{
     staerkerAb:5,                    // Gegner gilt als stärker/schwächer ab diesem Unterschied im Ansehen
     sieg:{staerker:4,sonst:2.5},
@@ -792,30 +1124,65 @@ const REGELN={
     // Vertrauen mit Bausteinen (K28 §5.1, §5.6, U12a). schnell: Gewicht der Werte je Sieg, Remis, Niederlage. Montags um traegheit Richtung Ziel = basis + Sport + Serie + Finanzen + Umfeld.
     // Sport: jePlatz × (Saisonziel − Platz) in sport. Serie wie bei Computer-Vereinen. Finanzen: kontoMinus bei Konto im Minus, kredit mit Kredit, zusammen mindestens finanzMin.
     // Umfeld: bei Glaubwürdigkeit unter glaubUnter linear bis umfeldMin.
-    vertrauen:{schnell:0.5,traegheit:0.2,basis:50,jePlatz:5,sport:[-35,25],serieSpiele:5,serieMitte:1.3,serieFaktor:10,serie:[-15,10],kontoMinus:-15,kredit:-5,finanzMin:-15,glaubUnter:25,umfeldMin:-10},
+    vertrauen:{schnell:0.5,traegheit:0.2,basis:50,jePlatz:5,sport:[-35,25],serieSpiele:5,serieMitte:1.3,serieFaktor:10,serie:[-15,10],kontoMinus:-15,kredit:-5,finanzMin:-15,glaubUnter:25,umfeldMin:-10,gehaltUeber:-5}, // gehaltUeber: Gehälter über dem Rahmen (K23d)
     // Ultimatum statt sofortiger Entlassung (K28 §5.3, U12a): spiele Ligaspiele Zeit, danach Entlassung mit entlassung.basis + jeGeduld × Geduld, sonst ein letztes Ultimatum.
     ultimatum:{spiele:2,entlassung:{basis:0.9,jeGeduld:-0.03}},
     // Ruf als Trainer (K28 §5.4, U12a), 0–100. Zum Saisonende erst vergessen (Richtung start), dann die Anlässe. jobsJePunkt: so viel Ansehen mehr je Punkt Ruf über start bei Jobangeboten.
     // geduldig: Grenzen für die Anzeige der Geduld des Präsidenten (bis ungeduldig: „ungeduldig“, ab geduldig: „geduldig“).
     ruf:{start:30,vergessen:0.05,jePlatzUeber:3,meister:15,pokal:10,aufstieg:8,abstieg:-6,verfehlt:-4,entlassung:-8,ruecktritt:-5,jobsJePunkt:1,ungeduldig:7,geduldig:14},
     // Nebenziele (K28 §3.1, §5.7, U12b): anzahl [normal, Präsident mit Ehrgeiz ab ehrgeizigAb]. pokalRunde je Liga: Index in POKAL_RUNDEN, die erreicht werden muss.
-    // jugend: Spieler bis jugendBis zusammen jugendEinsaetze Einsätze. finanzen: Summe der Buchungen der Saison mindestens 0. profil: dieses Nebenziel kommt beim Profil zuerst (K31 §3.2).
+    // jugend: Spieler bis jugendBis zusammen jugendEinsaetze Einsätze. finanzen: Summe der Buchungen der Saison mindestens 0. Seit U12o (25.11., popolupo, vorläufig) kader: Gehälter am Saisonende im Gehaltsrahmen; zuschauer: Heimschnitt mindestens zuschauerHalten des Schnitts der Vorsaison, gefährdet erst ab zuschauerAb Heimspielen. Seit Prüfung FR1/FS3 nur, wenn die Vorsaison beim Verein mindestens zuschauerHeimAnteil der Liga-Heimspiele einer ganzen Saison an Heimspielen hatte. profil: dieses Nebenziel kommt beim Profil zuerst (K31 §3.2).
     // Baustein „Ziele“ im Vertrauen (montags): erfuellt, verfehlt, gefaehrdet je Nebenziel, begrenzt auf baustein. Saisonende: saisonErfuellt oder saisonVerfehlt je Nebenziel.
-    nebenziele:{anzahl:[1,2],ehrgeizigAb:14,pokalRunde:{1:2,2:1,3:1},jugendBis:21,jugendEinsaetze:25,profil:{ausbildung:'jugend',sparsam:'finanzen',ehrgeizig:'pokal'},
+    nebenziele:{anzahl:[1,2],ehrgeizigAb:14,pokalRunde:{1:2,2:1,3:1},jugendBis:21,jugendEinsaetze:25,zuschauerHalten:0.95,zuschauerAb:3,zuschauerHeimAnteil:0.85,profil:{ausbildung:'jugend',sparsam:'finanzen',ehrgeizig:'pokal'},
       erfuellt:5,verfehlt:-5,gefaehrdet:-3,baustein:[-10,10],saisonErfuellt:5,saisonVerfehlt:-5},
+    // Zielgespräch (K28 §5.2, U12e, 22.11., ALLE WERTE GESCHÄTZT): offen ab dem Setzen des Saisonziels bis zu deinem nächsten Ligaspiel, eine Entscheidung je Saison.
+    // Hochpokern um 1 bis maxPlaetze Plätze: immer angenommen, Transferbudget +budgetHoch je Platz, zum Saisonende Ruf +rufHoch je Platz, wenn das Ziel erreicht ist.
+    // Tiefstapeln: Zusage mit tief.basis − tief.weiterer × (Plätze − 1) + jeVertrauen × (Vertrauen − 50) + jeRuf × (Ruf − Startruf), bei einem ehrgeizigen Präsidenten
+    // (ab nebenziele.ehrgeizigAb) − ehrgeiz, bei einem ruhigen (bis ruhigBis) + ehrgeiz, begrenzt auf grenzen (eigener Strom). Zugesagt: Transferbudget −budgetTief je Platz,
+    // der Ruf rechnet „übertroffen“ weiter vom Vorschlag aus (kleinere Prämie). Abgelehnt: Vertrauen abgelehnt, das Ziel bleibt.
+    // ueberBudget: Kauf über dem Transferbudget kostet Vertrauen je angefangene 10 % der Ablöse über dem Budget, höchstens ueberMax.
+    // Zwischenbilanz im Winter (K28 §4 Nr. 3, U12f, 22.11., GESCHÄTZT): in der ersten Woche nach der Hälfte deiner Ligaspiele. Liegt der Platz mindestens abstand besser als das Ziel,
+    // hebt der Vorstand es um hoch an (der Ruf rechnet dann von dort). Liegt er mindestens abstand schlechter, kannst du bis zum nächsten Ligaspiel beantragen, es um senken zu senken:
+    // Zusage mit antrag.basis + jeVertrauen × (Vertrauen − 50) + jeRuf × (Ruf − Startruf), begrenzt (eigener Strom). Zugesagt wirkt es wie Tiefstapeln (Budget, Ruf), abgelehnt: Vertrauen abgelehnt. nebenzielNeu (U12q, 25.11., popolupo, vorläufig): Vertrauen, wenn der Vorstand ein schon verfehltes Nebenziel abrechnet und ersetzt.
+    zwischenbilanz:{abstand:4,hoch:1,senken:1,antrag:{basis:0.5,jeVertrauen:0.005,jeRuf:0.005,grenzen:[0.05,0.95]},abgelehnt:-3,nebenzielNeu:-2,
+      vonSichAus:6}, // U12k (22.11., GESCHÄTZT): ab so vielen Plätzen hinter dem Ziel senkt ein geduldiger Präsident (Geduld ab ruf.geduldig) von sich aus um senken
+    // tausch (K28 §5.2 „Nebenziele verhandeln“, U12p, 25.11., popolupo, vorläufig): Zusage für einen Tausch je Saison wie beim Tiefstapeln, abgelehnt Vertrauen abgelehnt
+    zielgespraech:{maxPlaetze:2,budgetHoch:0.1,budgetTief:0.15,rufHoch:2,tief:{basis:0.6,weiterer:0.2,jeVertrauen:0.005,jeRuf:0.005,ehrgeiz:0.15,ruhigBis:7,grenzen:[0.05,0.95]},tausch:{basis:0.5,jeVertrauen:0.005,jeRuf:0.005,grenzen:[0.05,0.95],abgelehnt:-2},abgelehnt:-3,ueberBudget:-1,ueberMax:-10},
     entlassenUnter:12,schonfristSpieltage:6, // entlassen erst nach mehr als so vielen eigenen Ligaspieltagen. Die Schwierigkeit ersetzt beide Werte.
     pokalAus:-6,pokalWeiter:1.5,pokalSieg:10,
     saisonErreicht:20,saisonWeitAb:3,saisonWeit:-25,saisonVerfehlt:-8,entlassenSaisonUnter:15,
     neuerJob:55,
-    praesident:{min:1,max:20}, // Geduld, Ehrgeiz, Sparsamkeit des Präsidenten (K28 §3), fest aus der Vereinsnummer. Wirkt seit U11d2 nur bei Computer-Vereinen (Geduld).
+    praesident:{min:1,max:20, // Geduld, Ehrgeiz, Sparsamkeit des Präsidenten (K28 §3), fest aus der Vereinsnummer und der Zahl der Wechsel (versatz je Wechsel)
+      // Präsidentenwahl (K28 §8, K25 §5.5, U12i, 22.11., GESCHÄTZT): Mitgliederversammlung im Sommer alle jahre (je nach Vereinsnummer). Der Präsident bleibt mit bleiben
+      // + jePunkt × (Punkte je Spiel − mitte) + aufstieg/abstieg + fans × (Fanstimmung − 50), in grenzen. Sonst ein neuer; bei dir rückt das Vertrauen um vertrauen Richtung 50.
+      // U12m (K28 §5.12 „Mitglieder als Stimmen“, 23.11., popolupo, GESCHÄTZT): Das Gewicht der Fanstimmung wächst mit den Mitgliedern je Platz, linear von mitglieder[0]
+      // (keine Mitglieder) bis mitglieder[1] (ab mitgliederVoll je Platz), ein Mitglied je Platz ergibt 1 wie bisher
+      versatz:101,wahl:{jahre:[3,4],bleiben:0.65,mitte:1.35,jePunkt:0.3,aufstieg:0.15,abstieg:-0.25,fans:0.005,grenzen:[0.2,0.95],vertrauen:0.5,mitglieder:[0.5,1.5],mitgliederVoll:2,anzeigeAb:0.05}}, // anzeigeAb: Abweichung des Gewichts von 1, ab der das Büro es nennt (Prüfung ES3)
     jobs:{ansehenAbschlag:4,kandidaten:8,angebote:4},
+    // Jobangebot während der Saison (K28 §8, U12j, 22.11., GESCHÄTZT): Karte ab Ruf rufAb, Verein mit mindestens abstand mehr Ansehen und höchstens Ruf + rufSpanne;
+    // beim Wechsel zahlt der neue Verein dem alten abloese × dein Gehalt je Saison
+    // rettung (U12n, K28 §5.13, 23.11., GESCHÄTZT): Rettungsangebot im Ultimatum ab Ruf rufAb, von einem Verein derselben oder einer tieferen Liga mit höchstens deinem Ansehen und höchstens abstand darunter
+    rettung:{rufAb:40,abstand:15},
+    jobangebot:{rufAb:55,abstand:8,rufSpanne:10,abloese:1}, // rufSpanne: über der Mitte der Jobangebote (mkJobs), seit Prüfung DQ1 (vorher Ruf + 40, das hat nichts begrenzt)
+    // Budgetgespräch (K28, K15 §12 Nr. 20, U12l, 22.11., GESCHÄTZT): einmal je Saison mehr Transferbudget beantragen. Zusage mit basis + jeVertrauen × (Vertrauen − 50)
+    // + jeRuf × (Ruf − Startruf) − jeSparsam × (Sparsamkeit des Präsidenten − 10), bei Glaubwürdigkeit unter glaubUnter × glaubFaktor, in grenzen (eigener Strom).
+    // Zugesagt: Transferbudget × (1 + plus) bis Saisonende. Abgelehnt: Vertrauen abgelehnt.
+    budgetgespraech:{basis:0.4,jeVertrauen:0.01,jeRuf:0.005,jeSparsam:0.02,vertrauenMitte:50,sparsamMitte:10,glaubUnter:40,glaubFaktor:0.5,grenzen:[0.05,0.9],plus:0.2,abgelehnt:-3}, // Mitten seit Prüfung DW9
+    // Trainervertrag (K28 §5.5, U12g, 22.11., GESCHÄTZT, nur Statistik, es fließt kein Geld): Gehalt je Saison = basis × liga × e^(steigung × (Ansehen − mitte)) × (1 + jeRuf × (Ruf − Startruf)), auf runden.
+    // Laufzeit nach der Geduld des Präsidenten (Grenzen wie ruf.ungeduldig und ruf.geduldig); ab Tag winterAb zählt die laufende Saison nicht mit. Läuft er aus: Vertrauen über verlaengernAb
+    // verlängert um verlaengern Saisons mit neuem Gehalt, sonst um bewaehrung zum alten. Abfindung bei Entlassung: Restgehalt × abfindung. saisonTage: Tage je Saison für den Anteil.
+    vertrag:{basis:2e6,liga:{1:1,2:0.4,3:0.25},steigung:0.05,mitte:70,jeRuf:0.01,runden:1e4,laufzeit:{ungeduldig:1,mittel:2,geduldig:3},winterAb:183,verlaengernAb:55,verlaengern:2,bewaehrung:1,abfindung:0.5,saisonTage:365},
     ziel:{spitzeBis:3,spitzePlus:1,plus:2,schlechtester:{1:15,2:15,3:16},unterhalbMindestens:2} // Saisonziel aus dem erwarteten Platz; 2. und 3. Liga: bestes Ziel Platz 2
   },
 
   saison:{
     ansehen:{faktor:0.6,maxAenderung:5,aufstieg:4,abstieg:-5,min:30,max:99},
     fans:{faktor:0.015,min:3000,maxJePlatz:1.4},
-    karriereende:{abAlter:34,nullAlter:33,jeJahr:0.25,spaetestens:38},
+    // Karriereende (K32 §5.1, 22.11., popolupo, vorläufig, ohne Testlauf): Chance je Saison = Grundwert nach Alter × Niveau × Verletzung × Professionalität, höchstens 1.
+    // grund: [Alter, Chance], dazwischen linear, darunter 0, ab dem letzten Punkt 1. Torhüter rechnen torwartPlus Jahre jünger. Niveau: Stärke mehr als schwachUnter unter dem Schnitt
+    // der Liga (besten 14 je Verein; Vereinslose: Schnitt der 3. Liga) ×schwach, sonst Stammspieler (stammRollen) ×stamm. Kreuzbandriss in den letzten kreuzbandTage Tagen ab kreuzbandAb Jahren
+    // ×kreuzband, Vorbildprofi ×profi. Eigener Strom je Spieler und Saison. Vorher: ab 34 Jahren (Alter − 33) × 25 %, spätestens mit 38. Ziel (K32 §10): Schnitt 33 bis 35, Torhüter 35 bis 37.
+    karriereende:{grund:[[32,0.10],[34,0.25],[36,0.50],[38,0.90],[39,1]],torwartPlus:2,schwachUnter:10,schwach:1.5,stamm:0.7,stammRollen:['schluessel','stamm'],kreuzbandAb:32,kreuzbandTage:365,kreuzband:1.5,profi:0.8},
     vertrag:{verlaengern:0.7,jahre:[1,3]}, // Computer-Vereine verlängern auslaufende Verträge
     neuForm:10,
     nachwuchs:{anzahl:2,positionen:['TW','AB','AB','MF','MF','ST','ST'],alter:17,abschlag:17,streuung:[-3,3],
@@ -848,6 +1215,7 @@ const REGELN={
       verletzte:{ab:1,name:'Verletztenliste',tab:'kader'},
       pokal:{ab:1,name:'Pokal, Relegation, Supercup',tab:'pokal'},
       ruecktritt:{ab:1,name:'Rücktritt',tab:'buero'}, // K28 §5.7, U12b
+      zielgespraech:{ab:1,name:'Zielgespräch mit dem Vorstand',tab:'buero'}, // K28 §5.2, U12e: ohne Automatik, ohne Entscheidung gilt der Vorschlag
       ereignisse:{ab:1,name:'Entscheidungen in Ereigniskarten',tab:'buero',auto:1,wer:'der Co-Trainer',tut:'wählt bei jeder Karte die vorsichtige Voreinstellung'}, // K30 §5.5, U12d
       statistik:{ab:1,name:'Statistik und Historie',tab:'statistik'}, // K34 §5.9, U13 (steuert nichts, darum ohne Automatik)
       stimmung:{ab:1,name:'Stimmung und Kabine ansehen',tab:'kabine'},
@@ -883,6 +1251,7 @@ const REGELN={
       versprechen:{ab:3,name:'Zusagen und Teamevent',tab:'kabine'},
       suchauftrag:{ab:4,name:'Suchauftrag für Scouts',tab:'transfer'},
       abwerben:{ab:4,name:'Spieler heimlich abwerben',tab:'transfer'}, // K20 §5.4, U15 (ohne Automatik: dein Verein wirbt nie von selbst ab)
+      verlegung:{ab:4,name:'Spielverlegung beantragen',tab:'buero'}, // K13 §13, K13d (ohne Automatik: dein Verein beantragt nie von selbst)
       fangespraech:{ab:2,name:'Fan-Gespräch',tab:'stadion'}, // K27 §5.4b, U16 (ohne Automatik)
       presse:{ab:2,name:'Pressekonferenzen',tab:'buero',auto:1,wer:'der Co-Trainer',tut:'geht zu jeder Pressekonferenz und antwortet mit Floskeln'}, // K29 §5.4, U17a
       marketing:{ab:3,name:'Marketing (Trikot und Kampagnen)',tab:'stadion',auto:1,wer:'der Verein',tut:'nimmt das klassische Trikot und startet keine Kampagnen'}, // K25 §5.4, K25a
@@ -904,12 +1273,21 @@ const REGELN={
       stil:'Spielstil gewählt',vorlage:'Trainingsvorlage selbst gesetzt',zuruf:'Zuruf oder Halbzeitansprache',gespraechOderTransfer:'Einzelgespräch geführt oder Transferangebot abgegeben',
       rolleOderSchuetze:'Rolle oder Schütze festgelegt',lernziel:'Lernziel oder Umschulung',sommerplan:'Testspiel, Trainingslager oder Urlaubslänge selbst gewählt',vertragOderStab:'Vertrag verlängert oder Mitarbeiter eingestellt',kaderrolleOderVersprechen:'Kaderrolle oder Zusage',
       sportgericht:'Sportgerichtsverfahren selbst entschieden',medizin:'fit gespritzt oder früher zurückgeholt',sponsorOderPreis:'Sponsor oder Eintrittspreis selbst gewählt'},
+    // Kleine Aufgabe auf der Aufstiegskarte (K36 §8, K36d): je Aufgabe der Bereich (für den Ort, „Hingehen“) und ein Satz, wie es geht
+    aufgabenOrt:{startelf:['aufstellung','In der Aufstellung einen Spieler tauschen.'],liveBisEnde:['live','Das nächste Pflichtspiel live ansehen, ohne ans Ende zu springen.'],
+      wechsel:['wechsel','Im Live-Spiel einen Spieler auswechseln.'],ordnung:['formation','In der Aufstellung die Grundordnung oder die Ausrichtung ändern.'],
+      stil:['stil','In der Aufstellung den Spielstil gegen den nächsten Gegner wählen.'],vorlage:['vorlage','Im Training eine Wochenvorlage selbst setzen.'],
+      zuruf:['zurufe','Im Live-Spiel einen Zuruf geben oder in der Halbzeit zur Mannschaft sprechen.'],gespraechOderTransfer:['gespraeche','Mit einem Spieler ein Einzelgespräch führen oder ein Transferangebot abgeben.'],
+      rolleOderSchuetze:['rollen','In der Aufstellung eine Rolle oder einen Standardschützen festlegen.'],lernziel:['lernziel','Einem Spieler ein Lernziel oder eine Umschulung geben.'],
+      sommerplan:['testspiele','Ein Testspiel anfragen, ein Trainingslager buchen oder die Urlaubslänge wählen.'],vertragOderStab:['vertraege','Einen Vertrag verlängern oder einen Mitarbeiter einstellen.'],
+      kaderrolleOderVersprechen:['kaderrollen','In der Kabine eine Kaderrolle vergeben oder eine Zusage machen.'],sportgericht:['sportgericht','Bei einem Verfahren selbst annehmen oder Einspruch einlegen.'],
+      medizin:['medizin','Einen Verletzten fit spritzen oder früher zurückholen.'],sponsorOderPreis:['preise','Einen Werbevertrag oder den Eintrittspreis selbst wählen.']},
     ohneGelegenheit:['sportgericht','medizin'], // zählen als erledigt, wenn es seit dem Aufstieg bis zur Mindestzeit keine Gelegenheit gab
     testspieleAuto:2,testspielAbstand:6          // Automatik: so viele Testspiele je Vorbereitung, mit mindestens so vielen Tagen Abstand
   },
 
   stadion:{
-    tribuene:{plaetze:3000,kosten:4.5e6,wochen:6,max:90000},
+    tribuene:{plaetze:3000,kosten:12e6,wochen:6,max:90000}, // K23c: 4.000 € je Platz (echt 3.000 bis 6.000 €, K26 §5.1), vorher 4,5 Mio.
     logen:{anzahl:10,kosten:2.5e6,wochen:4,max:120},
     fanshop:{kosten:[1.5e6,3e6,5e6],wochen:3,max:3},
     // Bauprozess (K26 §4, §5.1, K26a): genehmigung Wochen, auflagen Chance und Mehrkosten, verzoegerung Chance und Wochen, mehrkosten Chance und Anteil. instandhaltung: Anteil der Bausumme je Jahr.
@@ -919,7 +1297,16 @@ const REGELN={
       nlz:{name:'Nachwuchsleistungszentrum',start:0,max:5,kosten:1.5e6,wochen:16,deckelJe:6},
       reha:{name:'Reha-Zentrum',start:0,max:3,kosten:1e6,wochen:8,je:0.03,minFaktor:0.75},
       catering:{name:'Catering',start:0,max:1,kosten:1.5e6,wochen:6,zuschauer:0.05},
-      tafel:{name:'Anzeigetafel',start:0,max:1,kosten:1e6,wochen:4,zuschauer:0.03},faktor:1.6}
+      tafel:{name:'Anzeigetafel',start:0,max:1,kosten:1e6,wochen:4,zuschauer:0.03},
+      // K26d (22.11., K26 §3.1, GESCHÄTZT): Dach. Lautstärke: Heimvorteil × (1 + heim), wenn das Heimspiel voraussichtlich mindestens abAuslastung der Plätze füllt.
+      dach:{name:'Dach',start:0,max:1,kosten:15e6,wochen:20,heim:0.005,abAuslastung:0.95},faktor:1.6},
+    // Computer-Vereine bauen (K26 §7, K26b, 22.11., popolupo, ALLE WERTE GESCHÄTZT): einmal je Saison zum Saisonstart, ohne Zufall, ohne Bauzeit (fertig in der Sommerpause).
+    // Tribüne: Nachfrage (erwartete Zuschauer ohne Deckel gegen einen Gegner mit dem Ansehen des Ligaschnitts, neutrale Form) mindestens vollAb × Plätze in saisons Saisons nacheinander,
+    // die neuen Plätze höchstens nachfrageMax × Nachfrage (kein Leerbau), nach dem Bau bleibt mindestens reserveTribuene × Reserve (finanzplan.budget.reserve × erwartete Einnahmen).
+    // Sonst höchstens eine Anlage aus der Liste des Profils (ausbildung oder standard), wenn danach mindestens reserveAnlage × Reserve bleibt.
+    // Seit K26c (22.11.): shop (Fanshop-Stufe, Kosten fanshop.kosten) steht mit in den Listen, damit Computer-Vereine Fanartikel verkaufen (K23 §3.1: 4 bis 7 % des Umsatzes).
+    // Instandhaltung zahlen sie seit K26c wie du (instandhaltung × Bausumme je Saison, verteilt auf die Ligaspiele).
+    computer:{vollAb:0.95,saisons:2,nachfrageMax:1.05,reserveTribuene:1,reserveAnlage:3,anlagen:{standard:['shop','catering','tafel','training'],ausbildung:['training','shop','catering','tafel']}}
   },
 
   ui:{
@@ -937,7 +1324,12 @@ const REGELN={
   }
 };
 
-// Schreibschutz: Zur Laufzeit darf kein Code eine Regel ändern.
-(function frieren(o){Object.freeze(o);Object.values(o).forEach(v=>{if(v&&typeof v==='object'&&!Object.isFrozen(v))frieren(v);});})(REGELN);
+// Schreibschutz: Zur Laufzeit darf kein Code eine Regel ändern. Ausnahmen (Testlauf 10, 26.11.2026):
+// - die Schalter-Objekte aus REGELN.experimente bleiben beschreibbar, sonst kann das Menü „Neue Regeln ausprobieren“ ihr Feld an nicht setzen
+//   (vorher schlug das still fehl, kein Schalter ließ sich einschalten);
+// - der Test-Simulator (tests/sim.js) setzt __REGELN_OFFEN, damit Tests einen Regelwert für einen Fall verstellen und wieder zurücksetzen können.
+(function(){const offen=new Set((REGELN.experimente||[]).map(x=>String(x.pfad).split('.').reduce((o,k)=>o&&o[k],REGELN)).filter(o=>o&&typeof o==='object'));
+  const frieren=o=>{if(!offen.has(o))Object.freeze(o);Object.values(o).forEach(v=>{if(v&&typeof v==='object'&&!Object.isFrozen(v)&&!offen.has(v))frieren(v);else if(offen.has(v))Object.values(v).forEach(w=>{if(w&&typeof w==='object')frieren(w);});});};
+  if(!(typeof globalThis!=='undefined'&&globalThis.__REGELN_OFFEN))frieren(REGELN);})();
 // Kurzformen für den Code
 const RW=REGELN.welt,RP=REGELN.spieler,RF=REGELN.finanzen,RM=REGELN.markt,RT=REGELN.training,RE=REGELN.engine,RV=REGELN.vorstand,RS=REGELN.saison,RB=REGELN.stadion,RK=REGELN.kalender,RU=REGELN.ui,RL=REGELN.live,RTA=REGELN.taktik,RSO=REGELN.sommer,RST=REGELN.stab,RD=REGELN.disziplin,RMD=REGELN.medizin,RWB=REGELN.wettbewerbe,RTS=REGELN.testspiele,RLA=REGELN.lager,RKA=REGELN.kabine,RGS=REGELN.gespraeche,RSC=REGELN.scouting,RLZ=REGELN.lizenz,RJ=REGELN.jugend,RZ=REGELN.zweite,RTR=REGELN.transfers,RVT=REGELN.vertraege,RBE=REGELN.berater,RLE=REGELN.leihe,RCV=REGELN.computer,RBZ=REGELN.beziehungen,RKT=REGELN.karten,RSTAT=REGELN.statistik,RVB=REGELN.vorbereitung,RAW=REGELN.abwerben,RFS=REGELN.fanstimmung,RPK=REGELN.presse,RTP=REGELN.trainerpool,RGR=REGELN.geruechte,RFP=REGELN.finanzplan,RMK=REGELN.marketing,REU=REGELN.europa;

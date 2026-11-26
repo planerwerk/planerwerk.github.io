@@ -6,10 +6,13 @@ const {neueWelt,saisons}=require('./sim');
 const probleme=[],pruef=(ok,text,wert)=>{console.log(`${ok?'✓':'✗'} ${text}${wert!=null?': '+wert:''}`);if(!ok)probleme.push(text+(wert!=null?' ('+wert+')':''));};
 const N=Math.max(1,+(process.argv[2]||2)),SEED=4711,VEREIN=6;
 
-// 1. Echte Startwerte der Bundesliga-Rekorde (K34 §5.6), 2. und 3. Liga leer
-{const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREIN;const r1=F.rekLiga(1),r2=F.rekLiga(2);
-  pruef(r1.sieg&&r1.sieg.hg===12&&r1.sieg.ag===0&&r1.tore&&r1.tore.n===41&&r1.serie&&r1.serie.n===53&&!r2.sieg&&!r2.tore,'Rekorde: 1. Liga startet mit 12:0, 41 Toren und 53 Spielen ohne Niederlage, die 2. Liga leer',
-    `${r1.sieg&&r1.sieg.hg}:${r1.sieg&&r1.sieg.ag}, ${r1.tore&&r1.tore.n}, ${r1.serie&&r1.serie.n}`);}
+// 1. Echte Startwerte der Rekorde (K34 §5.6): 1. Liga 12:0, 41 Tore, 53 Spiele; seit K34b 2. Liga 11:0, 41, 28 und 3. Liga 0:7 (Abstand 7), 28, 21.
+//    Alter Spielstand ohne Startwerte: schwächere Rekorde aus dem Spiel werden ersetzt, bessere bleiben.
+{const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREIN;const r1=F.rekLiga(1),r2=F.rekLiga(2),r3=F.rekLiga(3);
+  const L=S.stat.rek.lg;L[2]={sieg:{n:5,hg:5,ag:0,txt:'Spiel'}};L[3]={tore:{n:30,txt:'Spiel'}};const a2=F.rekLiga(2),a3=F.rekLiga(3);
+  pruef(r1.sieg&&r1.sieg.hg===12&&r1.sieg.ag===0&&r1.tore&&r1.tore.n===41&&r1.serie&&r1.serie.n===53&&r2.sieg.n===11&&r2.tore.n===41&&r2.serie.n===28&&r3.sieg.n===7&&r3.tore.n===28&&r3.serie.n===21
+    &&a2.sieg.n===11&&a2.sieg.echt===1&&a3.tore.n===30&&a3.tore.txt==='Spiel'&&a3.sieg.n===7,'Rekorde: echte Startwerte in allen drei Ligen, auch für alte Spielstände, bessere Rekorde aus dem Spiel bleiben',
+    `${r1.sieg&&r1.sieg.hg}:${r1.sieg&&r1.sieg.ag}, ${r1.tore&&r1.tore.n}, ${r1.serie&&r1.serie.n}; 2. Liga ${r2.sieg&&r2.sieg.n}/${r2.tore&&r2.tore.n}/${r2.serie&&r2.serie.n}; 3. Liga ${r3.sieg&&r3.sieg.n}/${r3.tore&&r3.tore.n}/${r3.serie&&r3.serie.n}; alt ${a2.sieg.n}, ${a3.tore.n}`);}
 
 // 2. Marktwert nach einer Ehrung +5 % bis zum Ende der folgenden Saison (K34 §5.5)
 {const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREIN;const p=W.ev('squad')(VEREIN).sort((a,b)=>b.str-a.str)[0],a=F.value(p);
@@ -59,5 +62,19 @@ pruef(tore>0&&falsch===0&&vorl/tore>0.55&&vorl/tore<0.9,'Vorlagen: nie für den 
   let fehler='';try{for(let i=0;i<40&&!W.S.stat;i++){S=W.S;if(W.ev('heuteMeinSpiel()'))F.tagesSpiele(S.tag);F.weiter();}
     delete W.S.stat;for(const p of W.ev('PIX').values()){delete p.sst;delete p.kar;}for(let i=0;i<20;i++){S=W.S;if(W.ev('heuteMeinSpiel()'))F.tagesSpiele(S.tag);F.weiter();}}catch(e){fehler=e.message;}
   pruef(!fehler&&W.S.stat&&W.S.stat.ab===W.S.season,'Alter Spielstand: ohne S.stat und Zeilen geht es ohne Fehler weiter, die Statistik beginnt mit der laufenden Saison',fehler||(W.S.stat?`ab ${W.S.stat.ab}`:'kein S.stat'));}
+
+// K34c. Europapokal in der Saisonstatistik (K37): Torjäger deutscher Vereine nach Europapokaltoren, ohne Tore keine Karte
+{const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREIN;const leer=F.stEuropaTorjaeger()==='';
+  const a=S.pl.find(p=>p.team===VEREIN),b=S.pl.find(p=>p.team>=0&&p.team<1000&&p.team!==VEREIN);a.eg=1;b.eg=3;const h=F.stEuropaTorjaeger(),ia=h.indexOf(a.n),ib=h.indexOf(b.n);
+  pruef(leer&&ia>0&&ib>0&&ib<ia,'Europapokal in der Saisonstatistik: deutsche Torjäger nach Toren',`leer ${leer}, Reihenfolge ${ib<ia}`);}
+
+// K34d. Rekordtransfer mit echtem Startwert (Harry Kane, 95 Mio. €): steht von Anfang an da, ein billigerer Zugang ändert nichts und meldet nichts,
+//       ein teurerer wird Rekord und wird sofort gemeldet. Alter Spielstand mit einem kleineren Rekord aus dem Spiel bekommt den echten.
+{const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREIN;const A=W.ev('RSTAT').rekord.transfer,meld=[],orig=F.news;F.news=function(t,c){if(String(t).startsWith('Rekordtransfer'))meld.push(t);return orig(t,c);};
+  const start=F.rekWelt().transfer,p=S.pl.find(x=>x.team>=0&&x.team!==VEREIN),nach=S.teams.find(x=>x.id!==p.team&&x.lg===1).id;
+  F.statTransfer(p,A.n/2,p.team,nach);const billig=S.stat.rek.welt.transfer.n===A.n&&!meld.length;F.statTransfer(p,A.n+1e6,p.team,nach);const teuer=S.stat.rek.welt.transfer.n===A.n+1e6&&meld.length===1;
+  delete S.stat.rek.welt.start;S.stat.rek.welt.transfer={n:5e6,txt:'Spiel'};const alt=F.rekWelt().transfer;
+  pruef(!!start&&start.n===A.n&&start.echt===1&&billig&&teuer&&alt.n===A.n&&alt.echt===1,'Rekordtransfer: echter Startwert, nur ein teurerer Zugang ersetzt ihn und wird gemeldet, alter Spielstand bekommt ihn',
+    `Start ${start&&start.n}, billiger ${billig}, teurer ${teuer}, alter Spielstand ${alt.n}`);}
 
 console.log(probleme.length?`\n${probleme.length} Problem(e).`:'\nAlles in Ordnung.');process.exitCode=probleme.length?1:0;

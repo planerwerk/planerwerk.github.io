@@ -9,9 +9,19 @@ function welt(lernstufen){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;
   S.lineup=F.bestXI(VEREIN,W.ev('myT()').form);S.phase='play';W.ev('myT()').cash=20e6;return{W,F,S,ev:W.ev,t:W.ev('myT()')};}
 
 // 1. Trikot: klassisch mit Faktor 0,95–1,05 und Fanstimmung +1, danach fest; mutig ergibt 0,8 oder 1,25 mit ±3
-{const {F,S,t}=welt(false);t.fanU=0;F.trikotWaehlen('klassisch');const k=S.mk.trikot,fu=t.fanU;F.trikotWaehlen('mutig');const fest=S.mk.trikot.d==='klassisch';
+{const {F,S,t,ev}=welt(false),K=ev('RMK').fankultur,wk=ev('fankulturWirkung')(t),pl=wk*K.klassischPlus,fp=Math.round(wk*K.klassischFans); /* wk, nicht w: w ist unten die zweite Welt (Prüfung EM1) */t.fanU=0;F.trikotWaehlen('klassisch'); /* seit K25f mit Fankultur (vorher K25e Tradition) */const k=S.mk.trikot,fu=t.fanU;F.trikotWaehlen('mutig');const fest=S.mk.trikot.d==='klassisch';
   const w=welt(false);w.t.fanU=0;w.F.trikotWaehlen('mutig');const m=w.S.mk.trikot;
-  pruef(k&&k.d==='klassisch'&&k.f>=0.95&&k.f<=1.05&&fu===1&&fest&&m&&(m.f===0.8&&w.t.fanU===-3||m.f===1.25&&w.t.fanU===3),'Trikot: klassisch 0,95–1,05 und Fans +1, danach fest, mutig 0,8 oder 1,25 mit Fans ±3',`klassisch ${k&&k.f}, mutig ${m&&m.f}/${w.t.fanU}`);}
+  pruef(k&&k.d==='klassisch'&&k.f>=0.95+pl-0.005-1e-9&&k.f<=1.05+pl+0.005+1e-9&&fu===1+fp /* ± 0,005: der Faktor wird auf zwei Stellen gerundet, der Zuschlag ist seit K25f stufenlos */&&fest&&m&&(m.f===0.8&&w.t.fanU===-3||m.f===1.25&&w.t.fanU===3),'Trikot: klassisch 0,95–1,05 und Fans +1, danach fest, mutig 0,8 oder 1,25 mit Fans ±3',`klassisch ${k&&k.f}, mutig ${m&&m.f}/${w.t.fanU}`);}
+
+// K25f. Fankultur (K25 §5.6, ersetzt die Tradition nach Gründungsjahr aus K25e): Union, St. Pauli und Kaiserslautern über 60, Wolfsburg, Hoffenheim und RB Leipzig unter 50
+// (Leipzig vor den beiden). Bei Leipzig bleibt das klassische Trikot bei 0,95–1,05 und Fans +1. Im Spiel veränderlich: doppelt so viele Plätze senken, doppelt so viele Mitglieder heben sie.
+{const w=welt(false),V=w.ev('VEREINE'),fk=w.ev('fankultur'),T=k=>w.S.teams[V.findIndex(v=>v.kurz===k)],wert=k=>fk(T(k));
+  const hoch=['FCU','STP','FCK'].every(k=>wert(k)>60),tief=['WOB','TSG','RBL'].every(k=>wert(k)<50),rbVor=wert('RBL')>wert('WOB')&&wert('RBL')>wert('TSG');
+  const fck=T('FCK'),cap0=fck.cap,m0=fck.mitglieder,f0=fk(fck);fck.cap=cap0*2;const fGross=fk(fck);fck.cap=cap0;fck.mitglieder=m0*2;const fMitgl=fk(fck);fck.mitglieder=m0;
+  /* Prüfung EN2: fast ausverkauft (EM2), Freiburg 75 statt 69 mit harter Grenze; 170 Fans mehr ändern höchstens 4 Punkte (gerechnet 75 → 78) statt 9 */const scf=T('SCF'),fs0=scf.fans,fScf=fk(scf);scf.fans=fs0+170;const fScf2=fk(scf);scf.fans=fs0;const weich=fScf>=72&&fScf<=77&&Math.abs(fScf2-fScf)<=4;
+  const rb=V.findIndex(v=>v.kurz==='RBL');w.S.my=rb;const t2=w.ev('myT()');t2.fanU=0;w.S.mk=null;w.F.trikotWaehlen('klassisch');const k2=w.S.mk.trikot;
+  pruef(hoch&&tief&&rbVor&&fGross<f0&&fMitgl>f0&&weich&&w.ev('fankulturWirkung')(t2)===0&&!!k2&&k2.f>=0.95&&k2.f<=1.05&&t2.fanU===1,'Fankultur: Union, St. Pauli, Kaiserslautern hoch, Wolfsburg, Hoffenheim, Leipzig tief, Stadion und Mitglieder wirken, Leipzig ohne Zuschlag',
+    `${['FCU','STP','FCK','B04','SCF','RBL','WOB','TSG'].map(k=>k+' '+wert(k)).join(', ')}; Kaiserslautern ${f0}, doppeltes Stadion ${fGross}, doppelte Mitglieder ${fMitgl}; Freiburg ${fScf}, mit 170 Fans mehr ${fScf2}; Leipzig Faktor ${k2&&k2.f}, Fans ${t2.fanU}`);}
 
 // 2. Ohne Wahl: am Tag vor dem ersten Pflichtspiel nimmt der Verein das klassische
 {const {F,S}=welt(false),e=F.ersterPflichttag(VEREIN);F.marketingTag(e-2);const vorher=!S.mk.trikot;F.marketingTag(e-1);
@@ -41,5 +51,23 @@ function welt(lernstufen){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;
   const ohne=ev('AUSLOESER').teenieStar();jung.age=19;jung.g=3;const mit=ev('AUSLOESER').teenieStar();const f0=F.merchFaktor(t);F.kartenWirkung({art:'merch',wert:0.2},{},{titel:'Test'});const f1=F.merchFaktor(t);
   S.tag+=29;const f2=F.merchFaktor(t);
   pruef(!!mit&&Math.abs(f1/f0-1.2)<1e-9&&Math.abs(f2-f0)<1e-9,'Karte „Trikot ausverkauft“: Auslöser und vier Wochen mehr Fanartikel',`ohne ${!!ohne}, mit ${!!mit}, Faktor ${f0.toFixed(3)} → ${f1.toFixed(3)} → ${f2.toFixed(3)}`);}
+
+// K25c. Dauerkarten-Aktion (Sommer-Kampagne): hebt den Anteil der Dauerkarten (K27b) um 0,05, kostet nach Liga, geht nach dem Verkauf nicht mehr
+{const {S,F,ev,t}=welt(false),C=ev('RMK').kampagnen.dauerkarten,a0=F.dkAnteil(t,0.2),c0=t.cash;F.kampagneStarten('dauerkarten');const a1=F.dkAnteil(t,0.2),kost=c0-t.cash;
+  F.dkVerkauf(t);const c1=t.cash,n1=(S.mk.k.dauerkarten||{}).n;S.mk.k.dauerkarten.bis=-1;F.kampagneStarten('dauerkarten');const danach=t.cash===c1&&S.mk.k.dauerkarten.n===n1;
+  pruef(Math.abs(a1-a0-C.dauerkarten)<1e-9&&kost===ev('kampagnenKosten')('dauerkarten')&&danach,'Dauerkarten-Aktion: Anteil höher, Kosten nach Liga, nach dem Verkauf nicht mehr',`Anteil ${a0.toFixed(3)} → ${a1.toFixed(3)}, Kosten ${kost}, danach gesperrt ${danach}`);}
+
+// Prüfung ET3, EU3: Während eines Tribünenbaus (bauTag zieht Plätze ab) bleibt die Fankultur deines Vereins gleich, sie rechnet mit den Plätzen ohne Bau-Abzug (kapOhneBau)
+{const w=welt(false),fk=w.ev('fankultur'),t=w.t,P=w.ev('RB').tribuene.plaetze,f0=fk(t);w.S.constr={k:'cap',phase:'bau'};t.cap-=P;const f1=fk(t);t.cap+=P;w.S.constr=null;
+  pruef(f1===f0,'Fankultur während eines Tribünenbaus unverändert (ET3)',`${f0} → ${f1}`);}
+
+// K25g. Online-Shop (K25 §2): einmalig kosten × Ligafaktor, danach je Woche Fans × jeFan × Fanartikel-Faktor als „Fanartikel online“; ohne Shop nichts, ein zweites Mal kostet nichts.
+{const {S,F,ev,t}=welt(),fin=()=>S.fin['Fanartikel online']||0;S.fin={};F.onlineShopWoche();const ohne=fin()===0&&!t.online;
+  const k=ev('onlineKosten')(),c0=t.cash;F.onlineShopEroeffnen();const auf=t.online===1&&t.cash===c0-k&&S.fin['Marketing: Online-Shop']===-k;F.onlineShopEroeffnen();const einmal=t.cash===c0-k;
+  const g=ev('onlineErloes')(t);F.onlineShopWoche();const woche=g>0&&fin()===g&&g===Math.round((t.fans||0)*ev('RMK').online.jeFan*F.merchFaktor(t));
+  /* Prüfung FS4: marketingTag rechnet montags ab, an anderen Tagen nicht, seit FS2 auch in der Sommerpause */
+  const wt=ev('wochentag'),WT=ev('RK').wochenTag;let mo=S.tag;while(wt(mo)!==WT)mo++;const f1=fin();F.marketingTag(mo+1);const sonst=fin()===f1;S.phase='sommer';F.marketingTag(mo);const montag=fin()===f1+g;S.phase='play';delete t.online;
+  const plan=ev('REGELN').finanzplan.laufend.includes('Fanartikel online'); /* Prüfung FT3 zu FS2: geht in die Prognose ein */
+  pruef(ohne&&auf&&einmal&&woche&&sonst&&montag&&plan,'Online-Shop: einmal kaufen, danach montags Fanartikel online nach Fans, auch im Sommer, im Finanzplan',`ohne Shop ${ohne}, eröffnet ${auf} (${k}), nur einmal ${einmal}, Woche ${woche} (${g}), anderer Tag ${sonst}, Montag im Sommer ${montag}, Finanzplan ${plan}`);}
 
 console.log(probleme.length?`\n${probleme.length} Problem(e).`:'\nAlles in Ordnung.');process.exitCode=probleme.length?1:0;

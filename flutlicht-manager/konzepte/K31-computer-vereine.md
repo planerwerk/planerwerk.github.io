@@ -307,6 +307,12 @@ Das ganze Konzept.
 | Konkurrent rüstet auf | ehrgeiziger Rivale kauft einen Star | Presse, deine Fans erwarten eine Antwort (K27) |
 | Notverkauf | Verein über dem Gehaltsrahmen | Spieler unter Wert auf dem Markt |
 
+**Stand 22.11.2026:**
+- „Großer Umbruch“ seit U11d2.
+- „Rekordtransfer“ seit U13, seit K34d mit echtem Startwert.
+- **„Konkurrent rüstet auf“ seit K31c (ohne Testlauf):** Gelingt einem Verein deiner Liga die Sternejagd (§5.7), steht es als Meldung da. Nur eine Meldung, ohne Presse und Fans. Eine Wirkung auf deinen Verein gäbe es nur in deiner Welt, nicht beim selben Verein als Computer-Verein, und das bricht den Gleichschritt in `tests/lizenz.js`. Presse und Fans kommen, wenn es dafür eine Karte gibt (K30).
+- **„Notverkauf“ seit K31d (24.11.2026, popolupo, ohne Testlauf, Schalter aus):** Liegen die Gehälter eines Computer-Vereins (Kader und Stab) über 110 % seines Gehaltsrahmens (K23d), setzt er jede Woche den Spieler mit dem höchsten Gehalt, der kein Schlüsselspieler ist, für 75 % seines üblichen Preises auf die Transferliste, mit einer Meldung je Verein und Saison (`kiNotverkauf` nach `kiListe`, ohne Zufall). Er ändert die Verkäufe aller Vereine, darum ist er vorerst abgeschaltet (`REGELN.computer.notverkauf.an = false`) und wird erst nach einer Messung eingeschaltet. Seit Prüfung FK1: Den Spieler kauften die Computer-Vereine nie, weil `kiKandidat` nur Spieler mit Abgabegrund nahm. Jetzt trägt er den Merker `p.nv` (Saison, `kiListe` löscht ihn jede Woche, der Notverkauf setzt ihn neu), und `kiKandidat` kauft ihn auch ohne Abgabegrund zum Notpreis `p.ask`. Wie `kiListe` gilt der Notverkauf auch für deinen Verein, wenn dein Stab die Transfers führt, so wirkt er in beiden Welten des Gleichschritts gleich.
+
 ## 9. Wechselwirkungen
 
 | Konzept | Zusammenspiel |
@@ -408,7 +414,7 @@ Entfernt sind `markt.listeVoll`, `markt.listeZufall`, `markt.kaeufer.niveauPlus`
 14. **Budget fest am Anfang des Fensters** (50 % und 25 % des Kontos). Grund: Dein Verein in der Automatik hat echte Buchhaltung, ein Computer-Verein Einnahmen nach Formel. Mit einem festen Budget entscheiden beide im Sommerfenster gleich (`tests/lizenz.js`, Gleichschritt). Einen Gehaltsrahmen gibt es noch nicht (K23).
 15. **Feine Positionen und Kaderplan passen nicht zusammen:** `spieler.positionen` würfelt die Hälfte der Mittelfeldspieler auf die Außen und ins offensive Mittelfeld, der Plan will dort zwei bis vier von neun. Folge im ersten Sommer: viele Überzählige im offensiven Mittelfeld und im Sturm, zu wenige zentrale Mittelfeldspieler. Das gleicht sich über das Auffüllen und den Kaderschnitt aus, nicht über den Markt. Besser wird es erst mit echten Daten zu den feinen Positionen (K03, PLAN §7 Nr. 5).
 16. **Meldungen:** Jeder Wechsel mit Ablöse steht wie bisher im Posteingang. Es werden mehr als vorher. Bündeln oder nach Liga filtern kommt mit K29.
-17. **Keine neue Funktion für dich, also kein neuer Bereich der Lernstufen (K36).** Die Automatik des Bereichs `transfers` folgt den neuen Regeln. Eine Anzeige „Bedarf der anderen Vereine“ (§6) ist noch nicht gebaut.
+17. **Keine neue Funktion für dich, also kein neuer Bereich der Lernstufen (K36).** Die Automatik des Bereichs `transfers` folgt den neuen Regeln. Die Anzeige „Bedarf der anderen Vereine“ (§6) gibt es seit K31b (22.11., ohne Testlauf): Auf der Karte deines Spielers stehen die deutschen Vereine, die für ihn auf der Transferliste bieten dürften, mit denselben Bedingungen wie die Angebote im Markt (Bedarf nach `hatBedarf`, Konto über Preis × `angebote.kontoAnteil`, keine Transfersperre). Vereine mit einer Lücke (Stellenwert „besser“, sie zahlen mehr) stehen vorn, höchstens fünf mit Namen, dazu die Zahl möglicher Käufer im Ausland. Preis ist deine Forderung, sonst der Marktwert. Reine Information, frei, ohne Würfel.
 
 **Vorläufig entschieden mit U11b** (19.11., von mir, ohne Rücksprache und ohne Testlauf):
 

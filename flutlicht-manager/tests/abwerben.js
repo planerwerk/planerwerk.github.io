@@ -29,10 +29,10 @@ const ziel=(w,f)=>w.S.pl.find(p=>p.team>=0&&p.team!==VEREIN&&p.team<1000&&w.S.te
   pruef(!doppelt&&a.ok===1&&a.b>=70&&p.ww===3&&p.list===1&&kosten===a.n*O.kosten,'Treffen: einmal je Woche, je Treffen 15.000 €, ab 70 Bereitschaft Wechselwunsch Stufe 3 und Transferliste',`${a.n} Treffen, Bereitschaft ${Math.round(a.b)}, ww ${p.ww}, Liste ${p.list}, Kosten ${kosten}`);}
 function W0(w){return w.ev('myT()').cash;}
 
-// 4. Aufgeflogen: Beziehung −15 bis −30, Ablöse +15 % bis Saisonende, Vertrauen −3, danach keine Treffen mehr
-{const w=welt(false),{F,S}=w,p=ziel(w),tid=p.team;F.abwRisiko=()=>1;S.trust=50;const bez0=F.bezDu(tid);F.abwTreffen(p.id,'restaurant');
+// 4. Aufgeflogen: Beziehung −15 bis −30, Ablöse +15 % bis Saisonende, Vertrauen −3 (seit K27e × (1 + Wirkung der Fankultur), Freiburg etwa −5,5), danach keine Treffen mehr
+{const w=welt(false),{F,S}=w,p=ziel(w),tid=p.team,FO=w.ev('RAW').folgen,wk=w.ev('fankulturWirkung')(w.ev('myT()')),vSoll=50+FO.vertrauen*(1+wk*FO.fankultur);F.abwRisiko=()=>1;S.trust=50;const bez0=F.bezDu(tid);F.abwTreffen(p.id,'restaurant');
   const a=S.abw[p.id],bez=F.bezDu(tid)-bez0,soll=F.forderungBasis(p)*w.ev('bezAbloese')(tid)*1.15,ist=w.ev('forderungDu')(p);S.tag+=7;const n=a.n;F.abwTreffen(p.id,'hotel');
-  pruef(a.auf===1&&bez<=-15&&bez>=-30&&nah(ist,soll)&&S.trust===47&&a.n===n,'Aufgeflogen: Beziehung −15 bis −30, Ablöse +15 % (mit Beziehung), Vertrauen −3, kein weiteres Treffen in dieser Saison',`Beziehung ${bez}, Forderung ${Math.round(ist)} (soll ${Math.round(soll)}), Vertrauen ${S.trust}`);}
+  pruef(a.auf===1&&bez<=-15&&bez>=-30&&nah(ist,soll)&&Math.abs(S.trust-vSoll)<1e-9&&wk>0&&S.trust<47&&a.n===n,'Aufgeflogen: Beziehung −15 bis −30, Ablöse +15 % (mit Beziehung), Vertrauen −3 mal Fankultur, kein weiteres Treffen in dieser Saison',`Beziehung ${bez}, Forderung ${Math.round(ist)} (soll ${Math.round(soll)}), Vertrauen ${S.trust} (soll ${vSoll}, Wirkung der Fankultur ${wk.toFixed(2)})`);}
 
 // 5. Lizenz: mit Lernstufen in der ersten Stufe gesperrt, kein Geld weg
 {const w=welt(true),{F,S}=w,p=ziel(w),c=W0(w);F.abwTreffen(p.id,'hotel');
@@ -50,5 +50,31 @@ function W0(w){return w.ev('myT()').cash;}
   S.offers=[{pid:p.id,tid:A.id,amt:1e6,max:1.5e6,r:0,bis:S.tag+1},{pid:p.id,tid:B.id,amt:1.2e6,max:1.25e6,r:0,bis:S.tag+1}];const vorher=F.bieterMoeglich(p.id);F.bieterRunde(p.id);
   const l=S.offers.filter(o=>o.pid===p.id),top=Math.max(...l.map(o=>o.amt)),ok=l.every(o=>o.amt<=o.max&&o.bis>=S.tag+2),nachher=F.bieterMoeglich(p.id);
   pruef(vorher&&top>1.2e6&&ok&&!nachher,'Bieterrunde: höchstes Gebot steigt, niemand über seiner Grenze, Fristen mindestens 2 Tage, danach nicht noch einmal',`${l.map(o=>o.amt).join(' / ')}`);}
+
+// K20b. Deadline Day (K20 §4.3): Die Forderung eines Computer-Vereins schwankt in den letzten Tagen des Fensters um höchstens ±15 %, am selben Tag gleich,
+//       vorher nicht; ein Spieler auf seiner Transferliste ist im Schnitt billiger
+{const w=welt(false),{F,S,ev}=w,D=ev('RAW').deadline,d0=S.tag;let tage=[];for(let d=S.tag;d<S.tag+120&&tage.length<D.tage;d++)if(ev('deadlineTage')(d))tage.push(d);
+  const p=S.pl.find(q=>q.team>=0&&q.team<1000&&q.team!==S.my&&!q.list&&ev('forderungBasis')(q)>0),f=x=>ev('deadlinePreis')(p);
+  S.tag=d0;const vorher=f();const fs=tage.map(d=>{S.tag=d;return f();}),gleich=tage.every((d,i)=>{S.tag=d;return f()===fs[i];});
+  const viele=S.pl.filter(q=>q.team>=0&&q.team<1000&&q.team!==S.my).slice(0,200);S.tag=tage[0];const mit=viele.map(q=>{q.list=0;return ev('deadlinePreis')(q);}),liste=viele.map(q=>{q.list=1;const x=ev('deadlinePreis')(q);q.list=0;return x;});
+  const schnitt=a=>a.reduce((s,x)=>s+x,0)/a.length;
+  pruef(tage.length===D.tage&&vorher===1&&gleich&&fs.every(x=>x>=1-D.preis&&x<=1+D.preis)&&new Set(fs).size>1&&schnitt(liste)<schnitt(mit),'Deadline Day: Forderung schwankt fest je Tag, vorher nicht, Transferliste billiger',
+    `Faktoren ${fs.map(x=>x.toFixed(3)).join(' / ')}, ohne Liste ${schnitt(mit).toFixed(3)}, mit Liste ${schnitt(liste).toFixed(3)}`);}
+
+// K20e. Computer-Vereine werben ab (K20 §7): mit Chance 1 wird genau ein Leistungsträger unruhig (Wechselwunsch eine Stufe höher); mit Auffliegen 1 eine Karte im Büro;
+//       „öffentlich“ kostet Beziehung, „unverkäuflich“ setzt den Status; unter der Automatik der Transfers passiert nichts
+{const lauf=(auto,art)=>{const {S,F,ev}=welt(auto),K=ev('RAW').ki;K.chance=1;K.aufflieg=1;if(auto)S.lizenz.auto.transfers=1;S.phase='play';
+    const sq=ev('squad')(S.my),ww0=new Map(sq.map(p=>[p.id,p.ww||0]));ev('mitStrom')(ev('strom')('test','kiabw'),()=>F.kiAbwerbenWoche(S.tag));const a=S.kiAbw;
+    const unruhig=sq.filter(p=>(p.ww||0)>ww0.get(p.id)).length;if(!a)return{a:null,unruhig};const karte=F.kiAbwerbenKarte().includes('Abwerbeversuch'),bz0=F.bezDu(a.tid);
+    F.kiAbwerbenAntwort(art);return{a,unruhig,karte,weg:!S.kiAbw,bz:F.bezDu(a.tid)-bz0,unv:!!(S.unv&&S.unv[a.pid])};};
+  const o=lauf(false,'oeffentlich'),pr=lauf(false,'preis'),au=lauf(true,'rede');
+  pruef(!!o.a&&o.unruhig===1&&o.karte&&o.weg&&o.bz<0&&!!pr.a&&pr.unv&&!au.a&&au.unruhig===0,'Computer-Vereine werben ab: ein Spieler unruhig, Karte beim Auffliegen, Antworten wirken, nichts unter der Automatik',
+    `Abwerbeversuch ${!!o.a}, unruhig ${o.unruhig}, Karte ${o.karte}, Beziehung ${o.bz}, unverkäuflich ${pr.unv}, Automatik ${au.a?'Versuch':'nichts'}`);}
+
+// EB1. Unruhe nach einem Abwerbeversuch auf Stufe 2: ohne Automatik der Gespräche ein Gesprächswunsch, mit Automatik spricht der Co-Trainer (kein Gesprächswunsch)
+{const lauf=auto=>{const {S,F,ev}=welt(auto);if(auto){S.lizenz.auto.gespraeche=1;}const p=ev('squad')(S.my)[0];ev('stimmung')(p);p.ww=1;S.gw=[];
+    ev('mitStrom')(ev('strom')('test','eb1'),()=>F.kiAbwUnruhig(p));return{wunsch:(S.gw||[]).some(g=>g.pid===p.id),ww:p.ww};};
+  const ohne=lauf(false),mit=lauf(true);
+  pruef(ohne.wunsch&&ohne.ww===2&&!mit.wunsch&&mit.ww<=2,'Abwerbeversuch Stufe 2: Gesprächswunsch nur ohne Automatik der Gespräche',`ohne ${JSON.stringify(ohne)}, mit ${JSON.stringify(mit)}`);}
 
 console.log(probleme.length?`\n${probleme.length} Problem(e).`:'\nAlles in Ordnung.');process.exitCode=probleme.length?1:0;

@@ -39,3 +39,41 @@ function rgTauziehen(links,rechts,zeilen){return`<div class="rg-tug"><div class=
   ${zeilen.map(([n,a,b])=>`<div class="rg-tug-r"><span>${esc(n)}</span><div class="rg-tug-bar" role="img" aria-label="${esc(n)} ${de(a)} zu ${de(b)}"><div class="a" style="width:${a/(a+b)*100}%"></div><div class="b" style="width:${b/(a+b)*100}%"></div><div class="mid"></div></div><span class="rg-n">${de(a)}:${de(b)}</span></div>`).join('')}</div>`;}
 // Urteil unter einem Stell-Regler: good, warn oder bad
 const rgUrteil=(art,titel,text)=>`<p class="rg-verdict v-${art}"><b>${titel}</b> · ${text}</p>`;
+
+// Kacheln (K35b §13.2, W5c): Übersicht in Kacheln statt Tabellen. Eine Kachel, ein Thema: Titel klein oben, Kennzahl groß, eine Zeile Erklärung,
+// höchstens ein Link unten. Zustand als Marke mit Symbol und Wort, nie nur Farbe. Größe: gross (2 × 2), breit (2 × 1) oder klein (1 × 1).
+// o = {titel, icon, groesse, wert, sub, status ('gut' | 'achtung' | 'kritisch' | 'info'), trend {art: 'good' | 'warn' | 'bad', hoch, text}, inhalt (HTML), link {text, onclick}}
+// Texte in titel, wert, sub, trend.text und link.text werden hier maskiert, inhalt ist fertiges HTML.
+const KACHEL_ICON={
+  termin:'M5 5h14a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zM4 10h16M9 3v4M15 3v4',
+  post:'M4 6h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1zM3 7l9 6 9-6',
+  tabelle:'M4 6h16M4 12h16M4 18h16M9 6v12',
+  geld:'M12 3a9 9 0 1 0 .01 0zM15 9.2a3.5 3.5 0 1 0 0 5.6M8 11h6M8 13h6',
+  vorstand:'M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6zM9 12l2 2 4-4',
+  ziel:'M12 3a9 9 0 1 0 .01 0zM12 7a5 5 0 1 0 .01 0zM12 11a1 1 0 1 0 .01 0z',
+  stimmung:'M12 3a9 9 0 1 0 .01 0zM8.5 14.5c1 1.3 2.2 2 3.5 2s2.5-.7 3.5-2M9 9.5v.5M15 9.5v.5',
+  medizin:'M7 4h10a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3zM12 8v8M8 12h8',
+  training:'M8 4h8v3H8zM6 5.5H5v15h14v-15h-1M9 12h6M9 16h4',
+  transfer:'M4 8h14l-3-3M20 16H6l3 3',
+  spiel:'M12 3a9 9 0 1 0 .01 0zM12 7.5l4 3-1.5 4.5h-5L8 10.5z',
+  kredit:'M3 10l9-6 9 6M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18',
+  fitness:'M3 12h4l2-5 4 10 2-5h6',
+  stadion:'M3 18c0-4 4-7 9-7s9 3 9 7M3 18h18M6 11V6M18 11V6M5 6h2M17 6h2',
+  shop:'M5 8h14l-1 12H6zM9 8a3 3 0 0 1 6 0',
+  lohn:'M4 7h16v10H4zM12 9.5a2.5 2.5 0 1 0 .01 0zM7 12h.01M17 12h.01',
+  team:'M8 11a3 3 0 1 0 .01 0zM16 11a3 3 0 1 0 .01 0zM3 20c.7-3 2.7-4.5 5-4.5s4.3 1.5 5 4.5M11 20c.7-3 2.7-4.5 5-4.5s4.3 1.5 5 4.5',
+  kapitaen:'M12 3l2.5 5 5.5.8-4 3.9.9 5.5L12 15.6 7.1 18.2l.9-5.5-4-3.9 5.5-.8z',
+  versprechen:'M8 12l3 3 5-6M12 3a9 9 0 1 0 .01 0z'
+};
+const KACHEL_STATUS={gut:['✓','gut','good'],achtung:['!','Achtung','warn'],kritisch:['✕','kritisch','bad'],info:['i','Info','blue']};
+function kachel(o){const{titel,icon,groesse='',wert,sub,status,trend,inhalt='',link}=o,m=KACHEL_STATUS[status];
+  const ic=KACHEL_ICON[icon]?`<svg class="k-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="${KACHEL_ICON[icon]}"></path></svg>`:'';
+  return`<section class="kachel${groesse?' k-'+groesse:''}" aria-label="${esc(titel)}"><div class="k-kopf">${ic}<h2>${esc(titel)}</h2>${m?`<span class="k-marke ${m[2]}"><b aria-hidden="true">${m[0]}</b>${m[1]}</span>`:''}</div>`
+    +(wert!=null?`<div class="k-wert">${esc(String(wert))}</div>`:'')+(sub?`<div class="k-sub">${esc(sub)}</div>`:'')
+    +(trend?`<div class="k-trend ${trend.art}"><span aria-hidden="true">${trend.hoch?'▲':'▼'}</span> ${esc(trend.text)}</div>`:'')
+    +inhalt+(link?`<button class="k-link" onclick="${link.onclick}">${esc(link.text)} ›</button>`:'')+`</section>`;}
+// Statusmarke aus Zonen eines Reglers (good, warn, bad), damit Kacheln und Regler dieselben Grenzen nutzen
+const ZONEN_STATUS={good:'gut',warn:'achtung',bad:'kritisch'};
+const zonenTreffer=(w,z)=>(z||[]).find(q=>w>=q.von&&w<=q.bis);
+const zonenStatus=(w,z)=>{const q=zonenTreffer(w,z);return q?ZONEN_STATUS[q.art]:undefined;};
+const zonenText=(w,z)=>{const q=zonenTreffer(w,z);return q&&q.text?q.text:'';};

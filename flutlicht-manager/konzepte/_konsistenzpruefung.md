@@ -1266,7 +1266,7 @@ Zweig `mitarbeit/popolupo-k26-stadion` (baut auf `mitarbeit/popolupo-k25-marketi
 | CB4 | **Tribüne:** Während des Baus fehlen 3.000 Plätze, danach kommen 6.000 dazu, zusammen +3.000 wie bisher. Bei einer laufenden alten Baustelle ohne Phase kommen wie bisher 3.000 dazu. | ✅ entworfen |
 | CB5 | **Reha und Physio zusammen höchstens −25 %** Ausfallzeit. Der Physio allein schafft höchstens −25 % (`stab.physio.max`), die Untergrenze ändert für Vereine ohne Reha-Zentrum nichts. | ✅ |
 | CB6 | **Computer-Vereine bauen noch nicht.** Ihre Anlagen stehen auf der Startstufe, Instandhaltung zahlen sie nicht. | 📌 vorläufig |
-| CB7 | **`startBuildAlt`** in `js/aktionen.js` bleibt als alter Ablauf stehen, wird aber nicht mehr aufgerufen. Kann weg, sobald `tests/stadion.js` gelaufen ist. | 📌 aufräumen |
+| CB7 | **`startBuildAlt`** in `js/aktionen.js` bleibt als alter Ablauf stehen, wird aber nicht mehr aufgerufen. Kann weg, sobald `tests/stadion.js` gelaufen ist. **Entfernt am 22.11. (T5.5).** | ✅ |
 | CB8 | **Nicht gebaut:** neues Stadion als Großprojekt, Stehplätze und Sitzplätze, Rasenqualität und Rasenheizung, Flutlicht, Parkplätze, Namensrechte, Zuschuss der Stadt. | 📌 später |
 | CB9 | **`tests/stadion.js`:** sechs Prüfungen, siehe Test-README. Nie gelaufen. | ⚠️ offen |
 
@@ -1381,3 +1381,1716 @@ Wieder ein eigener Prüf-Agent, nur lesend. Keine Laufzeitfehler gefunden, aber 
 | CI6 | **Rate 0 bei sehr kleinen Krediten:** Die Tranche wäre nie kleiner geworden. Rate jetzt mindestens 1 €, aufgerundet. | ✅ behoben |
 | CI7 | **Alter Spielstand, Bau im alten Format** mit Fertigtag nach dem Saisonende wird nie fertig. War schon vorher so. Nicht geändert. | 📌 alt |
 | CI8 | **Ohne Befund geprüft:** Kredite (Summe der Tranchen gleich `S.loan` auf allen Wegen), Monatsbericht innerhalb der Saison, Termine der Lizenzprüfung, Bauprozess mit Tribüne, alle `S.teams`-Zugriffe der Anlagen, Zufall nur über Ströme, Erwartungswerte in den Tests. | ✅ |
+
+---
+
+## CJ. Korrekturen zu Lauf 5 (22. November 2026, popolupo, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-t5-korrekturen` (auf 0fae7b8). Funde aus `tests/testprotokoll.md`, Lauf 5.
+
+| # | Befund | Status |
+|---|---|---|
+| CJ1 | **T5.2, 72 Stunden:** Jede Verlegung schaute nur auf den Anlass (Pokal oder Europapokal). Eine spätere Pokalverlegung konnte ein schon verlegtes Spiel neben den Europapokal zurückschieben. `ligaVerlegen` prüft jetzt alle Termine beider Vereine (`spieltageVon`). Passt kein Kandidat (drei Tage in Richtung des alten Termins, zwei in die andere), gilt die alte Regel. | ✅ behoben |
+| CJ2 | **T5.3, Stärke der Auslandsvereine:** Teamwerte einer Elf liegen in der Engine bei etwa 0,93 × Stärke (Zustand mit Frische um 90, Anteile je Position etwa 0,97, 20 % Gewicht auf dem Schwächsten). Der Block der Auslandsvereine hatte die volle Stärke. Faktor jetzt 0,93. Ob das „meist Achtelfinale“ ergibt, zeigt erst die nächste Messung. | ⚠️ messen |
+| CJ3 | **T5.1, T5.4:** nur Tests angepasst (Karten aus dem Gleichschritt, Sperre `eu` im Browser-Test). | ✅ |
+| CJ4 | **T5.5, CB7:** `startBuild` prüft die Lizenz selbst, `startBuildAlt` ist weg. | ✅ |
+| CJ5 | **CH4:** `supercupAnlegen` nimmt bei einem Amateur-Pokalsieger den Vizemeister. | ✅ behoben |
+
+---
+
+## CK. Nachtrag zu K23b: Computer-Vereine nach denselben Regeln (22. November 2026, popolupo, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-k23b-computer-finanzen` (auf den Korrekturen zu Lauf 5). Konzept: K23 §5.5e, §12 Nr. 15 bis 18. Grundlage: Messung BZ7.
+
+| # | Befund | Status |
+|---|---|---|
+| CK1 | **Die Welt verschiebt sich:** Erstligisten haben im Schnitt etwa doppelt so viel Geld wie mit der Pauschale (+10 statt +5 Mio. je Saison), Vereine mit großem Stadion noch mehr (Dortmund, Schalke, HSV +20 bis +30 Mio.), Leverkusen mit kleinem Stadion und hohen Gehältern ein Minus. Mehr Geld heißt mehr Käufe (Budget 70 % des Kontos). Das kann T1.3 Rest und die Dominanz der Großen (K02 §5.3a) in beide Richtungen verschieben. | ⚠️ messen |
+| CK2 | **Sonstige Einnahmen auch für dich:** In der 2. Liga 0,85 Mio., in der 3. Liga 2,3 Mio. mehr je Saison. Das macht deinen Start in den unteren Ligen leichter als bisher. | 📌 vorläufig bis K23c |
+| CK3 | **Kein neuer Zufall:** Zuschauer der Computer-Vereine aus dem Erwartungswert, keine Würfe im Strom `spieltagEnde`. | ✅ |
+| CK4 | **Insolvenzen der Computer-Vereine** sind selten (Kreditrahmen in der 3. Liga rund 12 Mio.). Erst eine lange Verlustreihe führt dorthin. Bitte über viele Saisons zählen. | ⚠️ messen |
+| CK5 | **Pokal:** Die Pauschale ging an alle Vereine, auch ohne Spiel. Jetzt bekommen nur Teilnehmer Geld, dafür mehr (Rundenprämien 0,2 bis 4,5 Mio.). | ✅ |
+| CK6 | **`tests/finanzen.js` Nr. 11 und 12:** Buchung je Spiel, Insolvenz. Nie gelaufen. | ⚠️ offen |
+
+---
+
+## CL. Nachtrag zu K23d: Budgets vom Vorstand (22. November 2026, popolupo, ohne Testlauf)
+
+Gleicher Zweig wie CK. Konzept: K23 §5.5f, §12 Nr. 19 und 20.
+
+| # | Befund | Status |
+|---|---|---|
+| CL1 | **Kaufstopp über 110 % des Rahmens** trifft Vereine mit hohen Gehältern und kleinem Stadion. Nach BZ7 wäre Leverkusen ein Kandidat. Wer als dein Verein dort startet, muss vielleicht erst verkaufen. | ⚠️ beobachten |
+| CL2 | **Gleichschritt:** Die Regel gilt für deinen Verein in der Automatik genauso wie für Computer-Vereine, ohne Zwischenspeicher, aus dem aktuellen Zustand. Beide Läufe entscheiden gleich. | ✅ entworfen |
+| CL3 | **Stabilisiert K23b:** Ein Computer-Verein mit zu hohen Gehältern kauft nicht mehr nach. Verkäufe und auslaufende Verträge senken die Gehälter mit der Zeit. Schneller geht es erst mit Notverkäufen, die gibt es noch nicht. | 📌 später |
+| CL4 | **Anteil 85 % vorläufig:** Er passt zu den heutigen Größenordnungen (Gehälter bei 70 bis 85 % der Einnahmen). Mit K23c auf echte Werte senken. | 📌 K23c |
+| CL5 | **`tests/finanzen.js` Nr. 13.** Nie gelaufen. | ⚠️ offen |
+
+---
+
+## CM. Nachtrag zu U19d1: Kaderliste der UEFA (22. November 2026, popolupo, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-u19d-kaderliste` (auf K23d). Konzept: K37 §5.6, §12 Nr. 19.
+
+| # | Befund | Status |
+|---|---|---|
+| CM1 | **Lokal ausgebildet als Näherung:** Die Laufbahn vor dem Spielstart fehlt. Vereinsausgebildet ist nur, wer aus der eigenen Jugend kommt (`p.ej`), verbandsausgebildet sind die übrigen Deutschen. Echte Eigengewächse der Startkader zählen deshalb nur als verbandsausgebildet. Die Höchstzahl sinkt bei wenigen lokal Ausgebildeten, wie im Reglement. | 📌 vorläufig |
+| CM2 | **Liste B** nur für Spieler bis 21 aus der eigenen Jugend oder seit zwei Jahren im Verein (`p.seit`). Echte junge Spieler der Startkader haben kein `p.seit` und brauchen zuerst eine Meldung auf Liste A. | 📌 vorläufig |
+| CM3 | **Gleichschritt:** Zur Frist meldet der Verein ohne gültige Liste automatisch, mit Automatik immer. Beide Läufe melden am selben Tag dieselbe Liste. | ✅ entworfen |
+| CM4 | **Neuzugänge nach der Frist** dürfen erst nach der Nachmeldung im Europapokal spielen, wie in echt. | ✅ |
+| CM5 | **`tests/europapokal.js` Nr. 10.** Nie gelaufen. | ⚠️ offen |
+| CM6 | **Startkader:** Ohne Laufbahn hätte kein Verein in den ersten Jahren mehr als 21 Spieler auf Liste A gehabt (höchstens 4 lokal Ausgebildete). Jetzt gelten Deutsche der Startkader ohne Wechsel, die zum Spielstart höchstens 21 waren, als vereinsausgebildet. | 📌 vorläufig |
+
+---
+
+## CN. Prüfung der Änderungen vom 22.11. ohne Laufzeit (popolupo)
+
+Dritter Prüf-Agent, nur lesend, über T5-Korrekturen, K23b, K23d und U19d1. Keine Laufzeitfehler, diese Funde:
+
+| # | Befund | Status |
+|---|---|---|
+| CN1 | **Nachmeldung ohne Liste:** Ein Verein ohne Liste (alter Spielstand) hätte zur Nachmeldung nur drei Spieler behalten, alle übrigen wären gesperrt gewesen. Jetzt bekommt er die volle automatische Meldung. | ✅ behoben |
+| CN2 | **Gehaltsrahmen nicht gleich für alle:** Computer-Vereine wurden vor dem Kauf ohne das neue Gehalt geprüft, und ihre Leihen waren ebenfalls gesperrt. Bei dir war die Karte „verpflichten“ ungeprüft. Jetzt gilt überall `rahmenErlaubt(Verein, neues Gehalt)` beim Kauf (Angebot, Karte, `kiMarkt` mit dem Gehalt des Kandidaten). Leihen sind für alle frei. | ✅ behoben |
+| CN3 | **Gleichschritt-Risiko:** Der Rahmen hing an der Fanstimmung, die sich durch die Trikotvorstellung nur bei deinem Verein ändert. Jetzt rechnet er mit neutraler Fanstimmung und Form. | ✅ behoben |
+| CN4 | **Verlegung auf Montag:** Montag abends vor einem Donnerstag wären keine 72 Stunden. Montage sind jetzt keine Kandidaten mehr. | ✅ behoben |
+| CN5 | **Leeres rotes Etikett im Kader** für nicht gemeldete Spieler vor einem Europapokalspiel. `sperrText` nennt jetzt „nicht gemeldet (Europapokal)“ und Europapokal-Sperren. | ✅ behoben |
+| CN6 | **Text nach der Nachmeldung** sprach von einer Nachmeldung in der Vergangenheit. Neue Phase „ko“ mit eigenem Text. | ✅ behoben |
+| CN7 | **Torhüterregel:** Mit nur einem Torhüter außerhalb von Liste B konnte keine Liste gültig werden. Jetzt kommen Torhüter von Liste B auf Liste A, und die Regel verlangt nur so viele Torhüter, wie der Kader hat. | ✅ behoben |
+| CN8 | **Startkader und Liste A** (CM6). | ✅ behoben (Näherung) |
+| CN9 | **`tests/finanzmodell.js`** rechnete die Zeile „nach dem Modell“ anders als das Spiel. Jetzt mit `kiHeimEinnahmen` und `sonstigeEinnahmen`. | ✅ behoben |
+| CN10 | **Anzeige der Gegnerstärke** zeigte den Block mit 0,93 neben deiner ungeteilten Kaderstärke. Jetzt beide auf derselben Skala. | ✅ behoben |
+
+---
+
+## CO. Korrekturen zu Lauf 8 (22. November 2026, popolupo, ohne Testlauf)
+
+| # | Befund | Status |
+|---|---|---|
+| CO1 | **T8.2, Donnerstag → Samstag:** In einer Pokalwoche (Europapokal am Donnerstag, Pokal am Dienstag) passt kein Ligaspiel mit drei Tagen Abstand zu beiden. Wie beim DFB spielen solche Vereine den Pokal jetzt einen Tag später, ihre Gegner mit ihnen. In Runde 1 (Samstag) heißt das Sonntag, nach der Qualifikation zur Conference League am Donnerstag. `S.cup.spaet[Runde]` hält die Vereine fest. Die Runde wird erst nach dem zweiten Tag in `S.cup.hist` eingetragen, bis dahin liegt der erste Tag in `S.cup.teil`. | ✅ behoben |
+| CO2 | **Eingriff in den Pokal (K13):** `termineAm`, `meinSpiel`, `spielendeAm`, `kalTermin` und das Eintragen der Runde kennen jetzt zwei Tage. Das Finale und alte Spielstände ohne `S.cup.spaet` spielen wie bisher an einem Tag. | ⚠️ bitte im Browser-Test ansehen |
+| CO3 | **T8.1, T8.3:** nur Tests. `tests/finanzen.js` ohne Entlassung, `tests/training.js` Nr. 4 ohne Europapokal (die englischen Wochen eines Europapokal-Vereins verschieben Kondition und Ausfälle). | ✅ |
+
+---
+
+## CP. Nachtrag zu K23c: echte Größenordnungen (22. November 2026, popolupo, ohne Testlauf)
+
+Ausführlich in K23 §5.6b. Gebaut ohne die Messung aus K23 §5.6a, mit einer eigenen Modellrechnung der Welt (Perl, außerhalb des Repos).
+
+| # | Befund | Status |
+|---|---|---|
+| CP1 | **Alle Geldwerte auf einmal:** Gehälter, Marktwerte, TV (Säulenmodell), Werbung, Sonstiges, neuer Posten Verwaltung, Startkonto, Kreditrahmen, Gehaltsrahmen, Finanzlage beim Vereinswert, Budgets der Auslandsvereine, Europapokal (Faktor 1), Tribüne. Nach der Modellrechnung stehen die Ligen im Schnitt wie vorher (1. Liga etwa +11 Mio., 2. Liga 0, 3. Liga −1 Mio. je Verein und Saison), nur in echter Größe. | ⚠️ bitte mit `tests/finanzmodell.js` (zwei Saisons) nachmessen |
+| CP2 | **Gleichschritt (K36, `tests/lizenz.js` 5a):** Die TV-Gelder hängen vom Ansehen ab. Damit beide Läufe gleich rechnen, werden sie zu Saisonbeginn festgelegt (`tvSaison` in `newSeason` und `buildWorld`), nicht beim ersten Gebrauch. Neu berechnet wird nur, wenn sich eine Liga geändert hat. | ✅ so gebaut |
+| CP3 | **Wer kauft noch?** Der Gehaltsrahmen (75 %) sperrt nach der Modellrechnung anfangs nur Leverkusen und die kleinsten Drittligisten. Leverkusen hat den zweitteuersten Kader, liegt ohne Champions League im Minus und muss erst Gehalt abbauen. | ⚠️ im Testlauf ansehen: Zahl der Käufe je Fenster gegen Lauf 5 |
+| CP4 | **Wirkung auf Transfers:** Gute Spieler werden viel teurer (Stärke 85: 52 statt 22 Mio.), schwache viel billiger (Stärke 60: 0,35 statt 1,8 Mio.). Drittligisten haben im Verhältnis zu den Preisen mehr Geld als vorher, der Gehaltsrahmen bremst sie. Jugendverkäufe bringen weniger. | ⚠️ im Testlauf ansehen |
+| CP5 | **Alte Spielstände:** Gehälter einmal auf die neue Kurve umgerechnet (`k23cUmstellen` beim Laden, Import und Live-Update, Merker `S.k23c`). Kontostände bleiben, die TV-Wertung startet aus Liga und Ansehen. | ✅ |
+| CP6 | **Tests angepasst:** `tests/werbung.js` Nr. 1 (drei Flächen zusammen 63 % des Grundbetrags), `tests/finanzen.js` Nr. 11 (mit Verwaltung) und neu Nr. 14 bis 18, `tests/transfers.js` (reich ab `finanzlage.reichAb`), `tests/europapokal.js` Nr. 6 (Startgeld mit dem Faktor aus den Regeln), `tests/finanzmodell.js` (Werbung und Verwaltung wie im Spiel). | ✅ ungetestet |
+| CP7 | **Noch nicht umgestellt:** feste Beträge der Karten, Kampagnen (K25), Fanartikel, Logen, Stab, übrige Bauten. Fanartikel der Computer-Vereine fehlen ganz. | offen, nach dem Testlauf |
+
+---
+
+## CQ. Nachtrag zu U12e: Zielgespräch (22. November 2026, popolupo, ohne Testlauf)
+
+Ausführlich in K28 §5.8. Zweig `mitarbeit/popolupo-u12e-zielgespraech`, auf K23c.
+
+| # | Befund | Status |
+|---|---|---|
+| CQ1 | **Zeitpunkt:** `zielgespraechStart` hängt am Ende von `setTarget` (Saisonstart, Jobwechsel, neues Spiel). Offen, solange die Zahl deiner gespielten Ligaspiele gleich der beim Setzen ist. Ein Jobwechsel mitten in der Saison öffnet ein neues Gespräch beim neuen Verein. | ✅ |
+| CQ2 | **Gleichschritt (K36):** Gewürfelt wird nur beim Tiefstapeln (Strom `zielgespraech`), also nur nach deinem Klick. Ohne Eingriff bleibt alles wie vorher, auch das Transferbudget (Faktor 1). | ✅ |
+| CQ3 | **Transferbudget weich:** `zgUeberBudget` steht in `offer` direkt vor der Zahlung der Ablöse. Käufe über die Automatik (Computer-Regeln) laufen nicht durch `offer` und kosten nichts. Vorher konnte man das ganze Konto ausgeben, das geht weiter, nur mit Vertrauen. | ⚠️ im Spiel ansehen, ob die Meldung zu oft kommt (das Budget ist das Konto über 10 % der erwarteten Einnahmen) |
+| CQ4 | **Ruf:** `rufSaison` rechnet „übertroffen“ nach dem Tiefstapeln vom Vorschlag aus, „deutlich verfehlt“ weiter vom verhandelten Ziel. Ein hochgepokertes, erreichtes Ziel bringt den Zuschlag dazu. Alte Spielstände ohne `S.zg`: alles wie bisher. | ✅ |
+| CQ5 | **Vorbereitungsliste (K12b):** Der Punkt „Saisonziel“ heißt jetzt „Saisonziel und Zielgespräch“. Er bleibt ohne Entscheidung „Standard“ (nicht „offen“), damit die Erinnerung vor „Tag beenden“ nicht öfter kommt als bisher. | ✅ |
+
+---
+
+## CR. Nachtrag zum Karriereende nach K32 §5.1 (22. November 2026, popolupo, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-k32-karriereende`, auf U12e. Ausführlich in K32 §5.1 (Umsetzung) und §12 Nr. 27.
+
+| # | Befund | Status |
+|---|---|---|
+| CR1 | **Formel statt Pauschale:** Grundwert nach Alter (32: 10 %, 34: 25 %, 36: 50 %, 38: 90 %, linear dazwischen, ab 39 sicher), Torhüter zwei Jahre später, ×1,5 zu schwach für die Liga, ×0,7 Stammspieler, ×1,5 Kreuzbandriss in zwölf Monaten, ×0,8 Vorbildprofi. | ✅ |
+| CR2 | **Zufall:** vorher im Strom des Saisonwechsels, jetzt eigener Strom je Spieler und Saison. Dadurch verschiebt sich der übrige Zufall des Saisonwechsels einmal gegenüber früheren Läufen (andere Anzahl Würfe). Vergleiche mit alten Läufen gleichen Seeds stimmen ab dem ersten Saisonwechsel nicht mehr. | ⚠️ bekannt |
+| CR3 | **Gleichgewicht (K32 §5.3, K03 §10):** Mit 32 und 33 hören jetzt einige auf, mit 35 bis 37 weniger als vorher. Die Ligen könnten über zehn Saisons etwas jünger und anfangs etwas schwächer werden. | ⚠️ `tests/welt.js` über zehn Saisons ansehen |
+| CR4 | **Auslandspool:** gleiche Chance ohne Niveau, im Strom des Pools. Der Pool verliert ab 32 etwas mehr Spieler, seine eigenen Regeln bleiben. | ⚠️ Größe des Pools über zehn Saisons (K32 §10: ±15 %) |
+
+---
+
+## CS. Prüfung von K23c ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat den Commit cfe0f41 gelesen (nichts ausgeführt). Die Korrekturen liegen auf dem Zweig `mitarbeit/popolupo-k32-karriereende` (der neuesten Spitze), nicht auf dem K23c-Zweig.
+
+| # | Befund | Status |
+|---|---|---|
+| CS1 | **`tests/schwierigkeit.js` Nr. 1** rechnete den Kreditrahmen noch mit der alten Formel (`jeAnsehen` fehlt seit K23c, Soll NaN). Jetzt mit der Formel aus den Regeln. | ✅ behoben |
+| CS2 | **Werbung ungerundet:** `sponsorBasis` gab Kommazahlen zurück, dadurch wurden die Kontostände der Computer-Vereine krumm und `tests/finanzen.js` Nr. 11 wäre fast immer an der letzten Binärstelle gescheitert. `sponsorBasis` rundet jetzt auf ganze Euro. | ✅ behoben |
+| CS3 | **Fünfjahreswertung in der Regionalliga:** Vereine in der Regionalliga bekamen keine Saison eingetragen, ihre alten Saisons rückten nicht nach. Jetzt zählt eine Saison dort mit 0 Punkten. | ✅ behoben |
+| CS4 | **Alte Spielstände:** Vorgemerkte Wechsel (`p.wech.sal`) und deine Werbeverträge blieben auf der alten Größe, während Gehälter und Verwaltung neu rechnen (grob −8 Mio. € je Saison für einen Erstligisten). Jetzt rechnet `k23cUmstellen` beides mit um (Verträge: mal neuer durch alten Grundbetrag der Fläche, alte Werte in `RF.sponsorAlt`). `tests/finanzen.js` Nr. 17 prüft es mit. | ✅ behoben |
+| CS5 | **Nicht geprüft werden konnte:** `tests/transfers.js` Nr. 4, 5 und 9 erkennen „kein Interesse“ am Text. Eine Absage wegen des Gehaltsrahmens würde dort als Erfolg zählen. Nach Schätzung bleibt genug Spielraum. | ⚠️ im Lauf ansehen |
+| CS6 | Ohne Befund: Laufzeitfehler, alte Schlüssel im übrigen Code, Gleichschritt (TV hängt nur an Ansehen, Liga und Wertung, alle vor `tvSaison` gesetzt), Rangfolge der Wertung, Kommentare mitten in der Zeile, die neuen Tests 14 bis 16 und 18 (18 nur grob). | ✅ |
+
+---
+
+## CT. Nachtrag zu K26b: Computer-Vereine bauen (22. November 2026, popolupo, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-k26b-computer-bauen`, auf dem Karriereende. Ausführlich in K26 §5.2.
+
+| # | Befund | Status |
+|---|---|---|
+| CT1 | **Zeitpunkt:** `kiBauenSaison` läuft in `newSeason` nach `tvSaison` und `finanzenSaisonstart`, also mit den Ligen und TV-Geldern der neuen Saison. Ohne Zufall. | ✅ |
+| CT2 | **Nachfrage:** `zuschauerErwartung` hat einen neuen fünften Parameter `frei` (ohne Deckel durch die Plätze). Alle bisherigen Aufrufe bleiben gleich. | ✅ |
+| CT3 | **Geld:** Tribüne 12 Mio. € (K23c), Anlagen nach `anlageKosten`. Gebaut wird nur mit der Reserve aus K23d, Anlagen mit dreifacher Reserve. Das Transferbudget der Computer-Vereine (Anteil des Kontos zum Fensterbeginn, K31) sinkt dadurch im Sommer nach einem Bau. | ⚠️ im Testlauf ansehen: Bauten je Saison, Kontostände, Käufe im Sommer |
+| CT4 | **K36 „Kein Nachteil“:** Nur der Computer-Lauf baut. Ab der zweiten Saison kann er dadurch etwas besser dastehen (Trainingsgelände). Bisher war die Grenze 2 Punkte im Schnitt. | ⚠️ `tests/lizenz.js` Nr. 5 ansehen |
+| CT5 | **Instandhaltung** zahlen Computer-Vereine noch nicht, ihre Bausumme wird aber gezählt. | offen |
+
+---
+
+## CU. Nachtrag zu K23f: Kartenbeträge nach Liga (22. November 2026, popolupo, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-k23f-karten-nach-liga`, auf K26b. Erledigt CP7 zum Teil (Karten), K30 §3.2.
+
+| # | Befund | Status |
+|---|---|---|
+| CU1 | **Beträge:** Die Werte in `daten/karten.js` gelten für die 3. Liga, mal 2 in der 2. und mal 4 in der 1. Liga, auf 1.000 € gerundet. Auch der schlechte Ausgang (Einspruch bei der Steuerprüfung). Ein Ausgang mit 0 € bucht nichts mehr (vorher eine Buchung über 0 €). | ✅ |
+| CU2 | **Texte:** Platzhalter `{geld:Grundwert}`, ersetzt in `kartenText` (auch im Ausgang). Das Prüfskript in `tests/karten.js` erkennt ihn nicht als unbekannten Platzhalter, weil es nur `{wort}` sucht. | ✅ |
+| CU3 | **Tests angepasst:** `tests/karten.js` (Teamausflug), `tests/finanzen.js` (Mäzen), `tests/spielwelt-karten.js` (Abschiedsspiel) rechnen mit `kartenGeld`. Der Testverein spielt in der 1. Liga, die Beträge sind dort viermal so hoch. | ✅ ungetestet |
+| CU4 | **Noch offen aus CP7:** Kampagnen (haben schon einen Ligafaktor, K25a), Fanartikel und Logen, Fanartikel der Computer-Vereine. | offen |
+
+---
+
+## CV. Nachtrag zu K27b: Dauerkarten (22. November 2026, popolupo, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-k27b-dauerkarten`, auf K23f. Ausführlich in K27 §5.2 (Umsetzung).
+
+| # | Befund | Status |
+|---|---|---|
+| CV1 | **Einnahmen:** `heimspielEinnahmen` bucht in der Liga „Dauerkarten“ (alle Inhaber, Preis × (1 − Rabatt)) und „Zuschauer“ nur für die übrige Nachfrage. Die gezählten Zuschauer sind mindestens die Zahl der Dauerkarten. Bei vollem Stadion und 20 % Rabatt sinken die Spieltagseinnahmen gegenüber vorher um etwa 9 bis 12 %. | ⚠️ im Testlauf ansehen, ob die Prognose und das Nebenziel Finanzen damit kippen |
+| CV2 | **Gleichschritt:** In der Automatik gilt der Standardrabatt, der Baustein der Fanstimmung bekommt +0. Der Würfel der Zuschauer bleibt (ein Wurf je Heimspiel wie vorher). Nur das Geld deines Vereins ändert sich, und das trennt die Läufe ohnehin. | ✅ |
+| CV3 | **Computer-Vereine** haben keine Dauerkarten. Ihre Einnahmen sind ohnehin der Erwartungswert ohne Würfel (K23b). | bewusst |
+| CV4 | **Alte Spielstände:** ohne `S.dk` verkauft der Verein beim nächsten Ligaheimspiel, auch mitten in der Saison. | ✅ |
+
+---
+
+## CW. Nachtrag zu K20b: Preise am Deadline Day (22. November 2026, popolupo, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-k20b-deadline-preise`, auf K27b. Erledigt den offenen Punkt aus K20 §4.3.
+
+| # | Befund | Status |
+|---|---|---|
+| CW1 | **Forderung:** `deadlinePreis` steckt in `forderungDu`, also nur in Forderungen deutscher Computer-Vereine an dich. Fest je Spieler und Tag (Strom `deadlinePreis`), darum zeigt jede Ansicht am selben Tag denselben Preis. Laufende Verhandlungen behalten ihre niedrigere Forderung (`Math.min` mit `v.f`). | ✅ |
+| CW2 | **Angebote an dich:** Die Chance je Markttag für Spieler auf deiner Transferliste ist in den letzten drei Tagen 1,5-mal so hoch. Gleich viele Würfe wie vorher, nur die Schwelle ändert sich. | ✅ |
+| CW3 | **Gleichschritt:** Die Regeln der Computer-Vereine (`kiPreis`, `kiZahlt`, `kiSternPreis`) und die Automatik rechnen ohne Schwankung. | ✅ |
+| CW4 | **Noch nicht:** Computer-Vereine untereinander mit Schwankung, Bieterwettstreit beim Kauf (K20 §4.2). | offen |
+
+---
+
+## CX. Prüfung von U12e, Karriereende und K26b ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat a764c13, d7b48e2 und e3322cf gelesen (nichts ausgeführt). Korrekturen auf der neuesten Spitze `mitarbeit/popolupo-k20b-deadline-preise`.
+
+| # | Befund | Status |
+|---|---|---|
+| CX1 | **`tests/karriereende.js` Nr. 5:** `sommerpause` setzt nur die Phase, die neue Saison beginnt erst mit `weiter`. Der Test maß deshalb vor dem Altern. Jetzt zwei Saisons im Simulator, gemessen zum Start der zweiten. | ✅ behoben |
+| CX2 | **Ruf nach dem Hochpokern** war kleiner als nach dem Annehmen („übertroffen“ zählte vom höheren Ziel, −3 je Platz, der Zuschlag gab nur +2 zurück). Jetzt zählt „übertroffen“ nach jeder Verhandlung vom Vorschlag aus, der Zuschlag kommt dazu. `tests/vorstand.js` Nr. 13 prüft den neuen Wert. | ✅ behoben |
+| CX3 | **Grenzen des Ziels:** In der 2. und 3. Liga ließ sich auf Platz 1 hochpokern, `setTarget` erlaubt dort höchstens Platz 2. Jetzt dieselbe Grenze. | ✅ behoben |
+| CX4 | **Schritte an der Grenze:** Ein Schritt um zwei, der nur einen Platz verschiebt, zeigte doppeltes Budget und würfelte mit der Chance für zwei Plätze. Jetzt zählen die tatsächlich verschobenen Plätze, doppelte Knöpfe fallen weg. | ✅ behoben |
+| CX5 | **Budget in der Automatik:** Mit Lizenz 1 führt der Verein die Transfers, sein Budget (`kiBudget`) kannte den Faktor aus dem Gespräch nicht. Jetzt schon. Ohne Verhandlung ist der Faktor 1, der Gleichschritt bleibt. | ✅ behoben |
+| CX6 | **Kreuzband bei Vereinslosen:** Ein entlassener Spieler mit Kreuzbandriss behielt `p.vl` für immer und bekam jede Saison ×1,5. Jetzt zählt ein laufender Riss nur mit `p.inj > 0`. | ✅ behoben |
+| CX7 | Ohne Befund: Laufzeitfehler, Regelpfade, alte Spielstände, Fenster des Gesprächs, Formel des Karriereendes, Bauen der Computer-Vereine (K26b), Zufall und Gleichschritt, Kommentare mitten in der Zeile. | ✅ |
+
+---
+
+## CY. Nachtrag zu K26c: Fanshop und Instandhaltung der Computer-Vereine (22. November 2026, popolupo, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-k26c-fanshop-instandhaltung`, auf K20b mit den Korrekturen CX. Erledigt CT5 und einen Teil von CU4.
+
+| # | Befund | Status |
+|---|---|---|
+| CY1 | **Fanshop:** `kiBauen` kennt neben den Anlagen den Eintrag `shop` (Stufe `t.shop`, Kosten `RB.fanshop.kosten`). Die Einnahmen daraus rechnet `kiHeimEinnahmen` schon seit K23b (Zuschauer × Fanartikel je Stufe). Ein Fanshop der Stufe 1 bringt einem Erstligisten etwa 1 Mio. € je Saison und kostet 1,5 Mio. €. | ✅ |
+| CY2 | **Instandhaltung:** `kiFinanzenSpiel` zieht je Ligaspiel 1 % der Bausumme je Saison anteilig ab, wie bei dir monatlich. Gezählt werden nur Bauten ab K26b. | ✅ |
+| CY3 | **Wirkung auf die Salden (K23 §5.6b):** Die Computer-Vereine gewinnen mit dem Fanshop etwas dazu, die Modellrechnung ohne Fanartikel unterschätzt das. Im Testlauf mit `tests/finanzmodell.js` ansehen. | ⚠️ |
+| CY4 | **`tests/stadion.js` Nr. 9** prüft jetzt den Fanshop als erste Anlage, neu Nr. 10 die Instandhaltung. | ✅ ungetestet |
+
+---
+
+## CZ. Prüfung von K23f, K27b, K20b und K26c ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 5559cf4, 183ed6e, ba38849 und 32b75fc gelesen (nichts ausgeführt). Korrekturen auf der neuesten Spitze `mitarbeit/popolupo-k26c-fanshop-instandhaltung`.
+
+| # | Befund | Status |
+|---|---|---|
+| CZ1 | **`tests/fans.js` (K27b):** Der Deckel von 90 % war mit Fanstimmung 100 und 30 % Rabatt nicht erreichbar (0,65). Jetzt prüft der Test ihn mit 100 % Rabatt (Rechnung 1,0, gedeckelt 0,9). | ✅ behoben |
+| CZ2 | **Ausnutzbar:** Die Inhaber zahlten den Ticketpreis des Tages. Nach dem Verkauf den Preis auf 150 € setzen brachte für die Dauerkarten fast das Doppelte eines ausverkauften Stadions, ohne dass sie wegbleiben. Jetzt gilt der Preis vom Verkauf (`S.dk.p`), höchstens der heutige. Der Test setzt den Preis danach hoch und erwartet dieselbe Buchung. | ✅ behoben |
+| CZ3 | **Rabatt nach dem Verkauf:** Wurde danach die Automatik eingeschaltet, rechnete die Fanstimmung mit dem Standardrabatt statt dem verkauften. Jetzt gilt nach dem Verkauf immer der verkaufte Rabatt. | ✅ behoben |
+| CZ4 | **Anzeige:** Der Betrag je Heimspiel zählte während eines Tribünenbaus zu viele Plätze. Jetzt wie die Buchung höchstens die Plätze. | ✅ behoben |
+| CZ5 | Ohne Befund: K23f (Rundung, alle Textwege mit Platzhalter, Tests), K20b (Grenzen, verschachtelter Strom, Gleichschritt, kein anderer Test an einem Deadline-Tag), K26c (Fanshop-Stufen und Kostenliste, Instandhaltung, Tests 9 und 10), Laufzeit, Kommentare mitten in der Zeile. | ✅ |
+
+---
+
+## DB. Nachtrag zu U12f: Zwischenbilanz im Winter (22. November 2026, popolupo, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-u12f-zwischenbilanz`, auf K20c. Ausführlich in K28 §5.9.
+
+| # | Befund | Status |
+|---|---|---|
+| DB1 | **Zeitpunkt:** `zwischenbilanzWoche` läuft montags nach `vorstandWoche`, ab der Hälfte der eigenen Ligaspiele, einmal je Saison und Verein (`S.zb`). Ein Jobwechsel nach der Hälfte bringt beim neuen Verein sofort eine Bilanz. | ✅ |
+| DB2 | **Zusammenspiel mit dem Zielgespräch (U12e):** Anheben verschiebt den Vorschlag mit (der Ruf rechnet vom neuen Ziel), ein zugesagter Antrag erhöht `stufe` wie Tiefstapeln (Budget −15 %, „übertroffen“ vom alten Vorschlag). Ohne Zielgespräch in der Saison (alter Spielstand) ändert sich nur das Ziel. | ✅ |
+| DB3 | **Gleichschritt:** Die Bilanz liegt nach den 150 Tagen des Tests, würfelt nur beim Antrag und ändert nur Ziel und Vertrauen deines Vereins. | ✅ |
+| DB4 | **Kommentar-Wächter:** Ein Kommentar mit `);` am Zeilenende wurde als verschluckter Code gemeldet (Fehlalarm), umformuliert. | ✅ |
+
+---
+
+## DC. Nachtrag zu K29b: Medienpolitik und Wirkung des Medienklimas (22. November 2026, popolupo, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-k29b-medienpolitik`, auf U12f. Ausführlich in K29 (Umsetzung K29b).
+
+| # | Befund | Status |
+|---|---|---|
+| DC1 | **Medienklima wirkt:** Bisher wurde es nur angezeigt (K29 §12 Nr. 13). Jetzt verändert es die Schwellen für Gerüchte über deinen Verein in `geruechteWoche`, gleich viele Würfe. Pressekonferenzen, die das Klima bewegen, haben damit erstmals eine Folge über die Anzeige hinaus. | ✅ |
+| DC2 | **Ältere Tests:** Mit Klima 50 und „zurückhaltend“ sind alle Faktoren 1. Bewegen Pressekonferenzen im Test das Klima, ändert sich die Zahl der Gerüchte über dich leicht. | ⚠️ `tests/geruechte.js` ansehen |
+| DC3 | **Gleichschritt:** Automatik heißt „zurückhaltend“, die Gerüchteküche ist im Test 5a ohnehin aus. | ✅ |
+
+---
+
+## DD. Prüfung von K20c und U12f ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat bf2de5e und 2c36bd0 gelesen (nichts ausgeführt). Korrekturen auf der neuesten Spitze `mitarbeit/popolupo-k29b-medienpolitik`.
+
+| # | Befund | Status |
+|---|---|---|
+| DD1 | **Mitbieter kam fast nie:** Sein Gebot war durch seinen Vereinswert gedeckelt (höchstens etwa 1,32 × Marktwert), deine Ablöse für Stamm- und Schlüsselspieler liegt aber bei 1,5 bis 1,8 × Marktwert. Der Test K20c wäre gescheitert. Jetzt gedeckelt durch 1,8 × Marktwert und 80 % seines Kontos. Der Test nimmt einen Spieler von der Transferliste. | ✅ behoben |
+| DD2 | **Mitgehen blockiert:** Vor dem Gegenangebot liefen Pause und die Prüfung der Beziehung, bei schlechter Beziehung konntest du nicht mitgehen. Jetzt zählt das Gegenangebot zuerst. | ✅ behoben |
+| DD3 | **Jobwechsel in der Frist:** Führst du danach den Mitbieter oder den Verkäufer, lief der Wechsel trotzdem. Jetzt nicht mehr. | ✅ behoben |
+| DD4 | **Grenzen der Computer-Vereine:** Mitbieter jetzt nur bis 30 Ansehen unter dem Verkäufer und für Spieler bis 32, der Verkäufer behält seine Mindestgröße. Budget und Zahl der Käufe je Fenster des Mitbieters zählen noch nicht mit. | ✅ behoben, Budget offen |
+| DD5 | **Gebot kurz vor Fensterschluss:** wirkte nicht (der Wechsel braucht ein offenes Fenster). Jetzt gibt es dann keinen Mitbieter. | ✅ behoben |
+| DD6 | **`tests/vorstand.js` Nr. 14:** Die Prüfung „einmal je Saison“ lief vor der Hälfte der Spiele und prüfte nichts. Jetzt nach der Hälfte. | ✅ behoben |
+| DD7 | **Alter Spielstand ohne Zielgespräch:** Ein zugesagter Antrag in der Zwischenbilanz senkte nur das Ziel. Jetzt legt er das Zielgespräch wie nach dem Tiefstapeln an (Budget, Ruf). | ✅ behoben |
+| DD8 | Ohne Befund: Laufzeit, Ablauf nach dem Mitgehen, Tagesreihenfolge, Gleichschritt, Logik der Zwischenbilanz, Kommentare. | ✅ |
+
+---
+
+## DE. Nachtrag zu K23g: Lizenzprüfung der Computer-Vereine (22. November 2026, popolupo, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-k23g-lizenz-computer`, auf K29b. Ausführlich in K23 §5.5g.
+
+| # | Befund | Status |
+|---|---|---|
+| DE1 | **Ablauf:** `kiLizenzPruefen` hängt in `finanzenTag` an denselben Tagen wie deine Prüfung (1. März Auflagen, 31. Mai Sperre). Die Sperre (`kiTransferSperre`) greift in `kiMarkt` (Kauf, Leihe, Sternejagd), in `market` (Angebote für deine Spieler) und bei Mitbietern (K20c). | ✅ |
+| DE2 | **Modell der Liquidität:** derselbe erwartete Saldo wie in `kiFinanzenSpiel`. Pokal, Europapokal und Transfers fehlen darin, große Vereine im Europapokal stehen dadurch schlechter da als in Wirklichkeit. Nach der Modellrechnung (K23 §5.6b) reicht ihr Konto trotzdem. | ⚠️ im Testlauf über mehrere Saisons ansehen, wie viele Sperren es gibt |
+| DE3 | **K36 „Kein Nachteil“:** Dein Verein in der Automatik läuft durch deine Prüfung, derselbe Verein als Computer-Verein durch diese. Über mehrere Saisons kann das auseinanderlaufen. | ⚠️ `tests/lizenz.js` Nr. 5 |
+
+---
+
+## DF. Prüfung von K29b und K23g ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 8fe3f70 und ab898d3 gelesen (nichts ausgeführt). Korrekturen auf der neuesten Spitze `mitarbeit/popolupo-k23g-lizenz-computer`.
+
+| # | Befund | Status |
+|---|---|---|
+| DF1 | **Medienklima in der Automatik:** Der Co-Trainer senkt es bei jeder Pressekonferenz um 2, nichts hob es wieder. Seit K29b kostet ein schlechtes Klima Gerüchte. Jetzt zieht auch „zurückhaltend“ (Standard und Automatik) das Klima je Woche um 0,5 zur Mitte, in beide Richtungen. | ✅ behoben |
+| DF2 | **Lücke der Sperre:** Vom 31. Mai bis zum 1. Juli kamen noch Angebote gesperrter Vereine, ein angenommenes führte am 1. Juli zum Wechsel. Jetzt gilt die Sperre ab dem 31. Mai, und `verkaufAbschluss` lehnt Angebote gesperrter Vereine ab. | ✅ behoben |
+| DF3 | **Andere Wege:** Ausstiegsklausel (`vertraege.js`) und Leihe an einen gesperrten Verein (`leihVereine`) gingen noch. Jetzt nicht mehr. Vereinslose zum Auffüllen bleiben bewusst erlaubt. Kaufoption aus einer Leihe und Vorverträge gelten wie bei dir weiter. | ✅ behoben, Rest bewusst |
+| DF4 | Ohne Befund: Laufzeit, Grenzen und Rundung des Klimas, gleich viele Würfe, Modell der Liquidität, Zeitpunkte, Gleichschritt, beide Tests, Kommentare. | ✅ |
+
+---
+
+## DG. Nachtrag zu K25c: Dauerkarten-Aktion (22. November 2026, popolupo, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-k25c-dauerkarten-aktion`, auf K23g mit den Korrekturen DF.
+
+| # | Befund | Status |
+|---|---|---|
+| DG1 | **Kampagne:** neuer Eintrag in `REGELN.marketing.kampagnen` (Sommer, 100.000 € mal Ligafaktor). Die Karte im Marketing listet sie wie die übrigen. Nach dem Verkauf der Dauerkarten lehnt `kampagneStarten` sie ab. | ✅ |
+| DG2 | **Wirkung:** `dkAnteil` addiert für deinen Verein 0,05 mal Abnutzung, wenn die Aktion in dieser Saison lief. Der Deckel von 90 % bleibt. | ✅ |
+| DG3 | **Prüfskript für Tests (neu, außerhalb des Repos):** `testnamen.pl` prüft alle Tests: `F.name(...)` nur für function-Deklarationen, `ev('name')` nur für vorhandene Namen, `ev('name=…')` nicht für const. Über alle Tests 0 Funde. | ✅ |
+
+---
+
+## DH. Nachtrag zu K26d: Dach (22. November 2026, popolupo, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-k26d-dach`, auf K25c. Ausführlich in K26 §5.3.
+
+| # | Befund | Status |
+|---|---|---|
+| DH1 | **Engine:** `side` setzt `sd.dach` einmal je Spiel (nur für den Gastgeber), `teamWerte` multipliziert den Heimvorteil damit. Seiten, die anderswo gebaut werden, haben kein `dach` und rechnen mit 1. | ✅ |
+| DH2 | **Schätzung der Auslastung:** ohne den konkreten Gegner (die Seite kennt ihn nicht), also etwas vorsichtig. Ohne Würfel. | ✅ |
+| DH3 | **Gleichschritt:** Nur dein Verein kann bauen, die Automatik baut nicht. | ✅ |
+
+---
+
+## DI. Prüfung von K25c und K26d ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 8a94e04 und 0f01091 gelesen (nichts ausgeführt). Korrekturen auf der neuesten Spitze `mitarbeit/popolupo-k26d-dach`. K25c ohne Befund.
+
+| # | Befund | Status |
+|---|---|---|
+| DI1 | **Dach ohne Ticketpreis:** Die Schätzung der Auslastung kam aus dem Modell der Computer-Vereine (Richtpreis). Bei doppeltem Preis bekam ein halb leeres Stadion den Bonus, bei Kampfpreisen ein ausverkauftes keinen. Jetzt mit deinem Preis (`preisFaktor`, dieselbe Formel wie `attendance`). `tests/stadion.js` Nr. 11 prüft beide Fälle. | ✅ behoben |
+| DI2 | **Kommentar:** `dachFaktor` hatte einen ungenutzten Parameter für den Gegner. Entfernt, Kommentar richtig gestellt. | ✅ behoben |
+| DI3 | **Älterer Fehler:** Die Preisvorschau (`zuschauerSpanne`) rechnete die 3. Liga mit dem Faktor der 2. Liga (0,82 statt 0,7) und zeigte etwa 17 % zu viele Zuschauer. Jetzt wie `attendance`. | ✅ behoben |
+| DI4 | Ohne Befund: Bau des Dachs über die allgemeinen Abläufe, Computer-Vereine bauen es nicht, `zuschauerErwartung` aus `side` ohne Zufall und nur mit Dach, Gleichschritt, Tests, K25c. | ✅ |
+
+---
+
+## DJ. Nachtrag zu K29c: Exklusivinterview (22. November 2026, popolupo, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-k29c-exklusivinterview`, auf K26d mit den Korrekturen DI. Ausführlich in K29 (Umsetzung K29c).
+
+| # | Befund | Status |
+|---|---|---|
+| DJ1 | **Beziehungen je Medium** (`S.mb`) und Exklusivinterview mit Sperrfrist (`S.exkl`), ohne Zufall. Die Wirkung von Gerüchten über dich wird mit der Beziehung des berichtenden Mediums gewichtet (`medienWirkung`), gleich viele Würfe. | ✅ |
+| DJ2 | **Stimmung mit Kommastellen:** −3 × 1,5 gibt −4,5. Das gab es schon durch die Streuung der Pressekonferenzen. | ✅ |
+| DJ3 | **Gleichschritt:** nur nach deinem Klick, die Gerüchteküche ist im Test 5a aus. | ✅ |
+
+---
+
+## DK. Prüfung von K29c und Nachtrag zu K25d: Mitglieder (22. November 2026, popolupo, ohne Testlauf)
+
+Zweig `mitarbeit/popolupo-k25d-mitglieder`, auf K29c. K25d ausführlich in K25 §5.5.
+
+| # | Befund | Status |
+|---|---|---|
+| DK1 | **Prüfung K29c (Agent, nur lesend):** ohne Fehler. Drei Kleinigkeiten behoben: Die Wirkung der Beziehung auf ein Gerücht hat jetzt einen eigenen Test (`tests/geruechte.js` K29c), der Block `exklusiv` steht in `daten/regeln.js` unter seinem Kommentar und nicht mehr zwischen Kommentar und `medienpolitik`, die Anzeige nennt die verbleibenden Tage bis zum nächsten Interview. | ✅ |
+| DK2 | **Mitglieder (K25d):** Stammdatum aus `daten/vereine.js` (56 Vereine, Quellen dort), Beiträge (60 € je Jahr) in den sonstigen Einnahmen aller Vereine, Grundbetrag je Liga gesenkt, so dass der Schnitt je Liga gleich bleibt. Mitglieder folgen beim Saisonwechsel den Fans, Mitgliederaktion +2 %. | ✅ |
+| DK3 | **Verschiebung innerhalb der Ligen:** Mitgliederstarke Vereine bekommen mehr (Bayern etwa +19,5 Mio. € je Saison gegenüber K23c, nach 40 % Verwaltung etwa +11,7 Mio. €), mitgliederschwache weniger (Leipzig, Elversberg, Paderborn etwa −6 Mio. €). Das ändert die Salden aus K23 §5.6b je Verein, nicht im Schnitt. | ⚠️ `tests/finanzmodell.js` ansehen |
+| DK4 | **`tests/finanzen.js` Nr. 11** rechnet die sonstigen Einnahmen jetzt mit `sonstigeEinnahmen` statt dem festen Wert, neu Nr. 20 für Mitglieder und Beiträge. | ✅ |
+
+---
+
+## DL. Prüfung von K25d ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 902200f gelesen (nichts ausgeführt). Korrekturen auf `mitarbeit/popolupo-k25d-mitglieder`.
+
+| # | Befund | Status |
+|---|---|---|
+| DL1 | **Alte Spielstände:** Ohne `t.mitglieder` rechnete das Spiel mit 30 % der Fans, in der 1. Liga liegen die echten Zahlen aber beim 2,5-Fachen der Fans (sonstige Einnahmen etwa 132.000 statt 300.000 € je Ligaspiel). Jetzt rechnet `mitgliederUmstellen` beim Laden einmal aus den Stammdaten um, im Verhältnis der heutigen zu den Start-Fans. | ✅ behoben |
+| DL2 | **Sprung bei kleinen Vereinen:** Großaspach, Havelse und die Zweiten haben weniger Fans als die Mindestzahl, die Mitglieder wären beim ersten Saisonwechsel um 50 % gesprungen. Jetzt folgen die Mitglieder dem Wachstumsfaktor der Fans ohne deren Grenzen. | ✅ behoben |
+| DL3 | **Mitgliederaktion wiederholbar:** alle vier Wochen, mit dauerhafter Wirkung. Jetzt einmal je Saison (`einmal` in den Kampagnen). | ✅ behoben |
+| DL4 | **Doku:** Bayern bekommt gegenüber K23c etwa +19,5 Mio. € (nicht +15), das Minimum der 2. Liga ist Greuther Fürth (nicht Elversberg). | ✅ behoben |
+| DL5 | Ohne Befund: Werte der Tests von Hand nachgerechnet, `S.fx` bei jedem Aufruf vorhanden, Zweite mit 0 Mitgliedern, Zeile in `saison.js`, `vereine.js` (56 Vereine, Zeilenenden), alle Nutzer von `sonstigeEinnahmen`, Gleichschritt, Kommentare. | ✅ |
+
+---
+
+## DM. Prüfung von K29d ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat dc13074 gelesen (nichts ausgeführt). Kein blockierender Fehler. Die Korrekturen liegen auf `mitarbeit/popolupo-u12g-trainervertrag`, mit U12g zusammen.
+
+| # | Befund | Status |
+|---|---|---|
+| DM1 | **Ausraster ohne Medium:** Bruch (Vorstand −3) und Kult (Fans +6) gingen am Faktor der Beziehung vorbei, obwohl die Doku „jede Antwort“ sagt. Jetzt auch über das fragende Medium. Kein zusätzlicher Wurf. | ✅ behoben |
+| DM2 | **Reihenfolge:** Der Faktor wurde je Antwort neu gelesen, nachdem frühere Antworten derselben Pressekonferenz die Beziehung schon geändert hatten. Jetzt steht der Faktor je Frage vor den Antworten fest. | ✅ behoben |
+| DM3 | **Exklusivinterview ohne Rundung:** Ganze Zahlen auf jetzt gebrochene Beziehungen, ohne `fanZahl`. Jetzt über `medienBezAendern`, mit Rundung und Grenzen. | ✅ behoben |
+| DM4 | Die zusätzliche Frage stand als 1 im Code, jetzt `klimaFragen.bohrenPlus`. | ✅ behoben |
+| DM5 | **Doku:** „Noch nicht“ von K29c ist veraltet. Die Beziehung steigt auch bei Kritik und Provokation (Klima +1), mit Abnutzung weniger. Im Changelog sind es die Fälle 4, 5 und 6. | ✅ behoben |
+| DM6 | Ohne Befund: gleiche Wahl bei Klima 50 auch an den Grenzen (R() liefert k/2^32, ×9 exakt), Anteile 0,6 und 1/7, Würfe nur im Strom `presse`, Gleichschritt (Co-Trainer sofort, `S.mb` bleibt leer), Zuordnung Antwort zu Frage, Deckel nach dem Faktor, Rundung und −0 beim Verblassen, alle Testwerte von Hand. | ✅ |
+
+---
+
+## DN. Prüfung von U12g ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 3286ff9 gelesen (nichts ausgeführt). **Ein blockierender Fehler.** Die Korrekturen liegen auf `mitarbeit/popolupo-u12h-ruf-wirkt`. Die Zweige `u12g` und `k29e` laden für sich allein nicht, getestet werden soll die Spitze.
+
+| # | Befund | Status |
+|---|---|---|
+| DN1 | **`abfindung` doppelt:** In `aktionen.js` gibt es `const abfindung` für Spieler, U12g legte `function abfindung` dazu. Der Browser meldet einen SyntaxError und lädt `aktionen.js` nicht, die Node-Tests scheitern beim Laden. Jetzt `trainerAbfindung`. | ✅ behoben |
+| DN2 | **`vertragEnde` doppelt:** Die Trainerfassung überschrieb still die Spielerfassung aus `vertraege.js`. Jeder Verkauf hätte eine Trainerabfindung gebucht, und Prämien wie Klauseln wären am Spieler geblieben. Jetzt `trainerVertragEnde`. | ✅ behoben |
+| DN3 | **`vertragText` doppelt:** Das Spielerfenster hätte deinen Trainervertrag gezeigt. Jetzt `trainerVertragText`. | ✅ behoben |
+| DN4 | Die Anzeige legte den Vertrag beim Zeichnen an. Jetzt liest sie nur, alte Spielstände bekommen den Vertrag beim Laden (`vertragUmstellen`). | ✅ behoben |
+| DN5 | Der Jobwechsel in `tests/sim.js` nahm weder Station noch Vertrag mit. Jetzt wie `takeJob` (Station, Vertrag, Glaubwürdigkeit). | ✅ behoben |
+| DN6 | „verdient“ zeigte die laufende Saison erst am Saisonende. Jetzt anteilig bis heute, nur in der Anzeige. | ✅ behoben |
+| DN7 | Ein Kommentar stand an der falschen Stelle. | ✅ behoben |
+| DN8 | Ohne Befund: Ablauf bei Spielbeginn, Jobwechsel in der Saison und nach dem Saisonende, Entlassung in der Saison und am Saisonende, Rücktritt, Verlängerung, Ligaklausel, keine doppelte oder verlorene Buchung, keine anderen Wege aus dem Job, Test Nr. 15 von Hand nachgerechnet, Spaltenzahlen, Zahlen in der Doku. | ✅ |
+
+**Neue Prüfung vor jedem Commit:** `perl C:\Users\siegemund.gerry\projekte\flutlicht-tools\dubletten.pl flutlicht-manager` meldet Namen, die auf oberster Ebene in zwei Dateien deklariert sind. Alle Skripte teilen sich einen Namensraum. Für den Kommentar-Wächter (`tests/code.js`) wäre dieselbe Prüfung nützlich.
+
+---
+
+## DO. Prüfung von K29e und U12h ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 69be27f und 569fb0d gelesen (nichts ausgeführt, nur `dubletten.pl` und `codewaechter.pl`, beide ohne Befund). Kein blockierender Fehler. Korrekturen auf `mitarbeit/popolupo-k20d-spieler-nein`.
+
+| # | Befund | Status |
+|---|---|---|
+| DO1 | **Strafe für eine offene Stichelei zu oft:** Sie traf auch, wenn du die Stichelei (immer Frage 1) schon beantwortet und dann den Co-Trainer geschickt hattest, nach einer Entlassung (dann die Mannschaft des alten Vereins) und bei einer Pressekonferenz aus der alten Saison. Jetzt nur ohne Antwort, nicht nach einer Entlassung, nur in derselben Saison. | ✅ behoben |
+| DO2 | **Gleichschritt nach einer Entlassung:** `tests/lizenz.js` 5a setzt nach einer Entlassung `fired` und `trust` zurück, aber nicht den Ruf. Seit U12h wirkt der Ruf in der Kabine, Lauf A wäre dann abgewichen. Der Test setzt jetzt auch `S.ruf` zurück. | ✅ behoben |
+| DO3 | **Test Nr. 16 zu schwach:** Mit Ruf +50 lag die Kabine bei der Obergrenze 95, jeder Faktor ab 0,47 hätte bestanden. Jetzt Ruf +20 (erwartet 81,6). | ✅ behoben |
+| DO4 | Hinweis: In allen `saisons()`-Läufen ohne Lernstufen geht der Co-Trainer am Tag danach. Der Sim-Verein verliert vor Topspielen mit stichelnden Trainern also 1 oder 2 Stimmung. Kein Test mit festen Erwartungen bricht. | zur Kenntnis |
+| DO5 | Ohne Befund: Würfe nur im Strom `presse`, nichts für Diplomaten und Floskelkönige, keine Abstürze (Amateure, Ausland, ohne Trainer, alte offene Pressekonferenzen), Gleichschritt unter Automatik, Deckel, Platzhalter, Testwerte von Hand (Anteile, Sticheleien, 51/51, 48), alle Umbenennungen aus DN, `vertragUmstellen` auf allen drei Ladewegen, `gehaltLaufend`, Doku. | ✅ |
+
+---
+
+## DP. Prüfung von K34b, K32c und K20d ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat e4dcccf, 39d3e7c, 8454a66 und d66cdc7 gelesen (nichts ausgeführt, `dubletten.pl` und `codewaechter.pl` ohne Befund). Kein Fehler, ein mittlerer Befund. Korrekturen auf `mitarbeit/popolupo-u12j-jobangebot`.
+
+| # | Befund | Status |
+|---|---|---|
+| DP1 | **K20d, Nein ohne feste Einigung:** Nach dem Nein des Spielers sank nur die Forderung. Dein nächstes Angebot lief noch einmal durch die Runde mit dem Verkäufer, dort konnte die schlechte Beziehung (unter der Gesprächsgrenze) ablehnen und eine Pause setzen, obwohl der Verkäufer schon Ja gesagt hatte. Jetzt steht die Einigung 14 Tage fest (`einig`, wie nach einem Ja). | ✅ behoben |
+| DP2 | **K20d, Mitbieter fällt aus:** Kann der andere Verein nicht mehr kaufen (Geld, Kader, nicht aktiv), ging das Ja zu deinem Gebot verloren. Jetzt bleibt der Verkäufer dabei. | ✅ behoben |
+| DP3 | **K34b, Hinweis unter den Rekorden:** Bei der 2. und 3. Liga stand noch „Rekorde seit Spielbeginn“. Jetzt „Startwerte sind die echten Rekorde der …“. | ✅ behoben |
+| DP4 | **Serie ohne Niederlage (alt, seit U13):** Erreichte ein Verein mit einer neuen Serie seinen alten Rekord plus eins, galt sie als dieselbe Serie, und es kam keine Meldung. Jetzt merkt sich die Serie ihren Beginn. | ✅ behoben |
+| DP5 | **K32c, Ex-Spieler häufen sich:** Computer-Vereine holen nur Co-Trainer, also blieben Ex-Spieler bis 68 in der Liste und zählten beim Auffüllen mit. Jetzt gehen sie nach fünf Saisons ohne Job und zählen beim Auffüllen nicht mit. | ✅ behoben |
+| DP6 | **K20d, Kleinigkeiten:** Das Nein gilt nur für den Verein, den du beim Gebot geführt hast. Die Meldung beim Gebot nennt das mögliche Nein. Der Hinweis erscheint nicht bei alten Gegenangeboten ohne deine Ablöse. | ✅ behoben |
+| DP7 | Ohne Befund: Startwerte für neue und alte Spielstände (gleich gut: der echte bleibt), echte Rekorde werden nie still verlängert, 0:7 als Startwert, kein Meldungsschwall, Ströme in K32c, Reihenfolge im Saisonwechsel, Meldung nur für eigene Ehemalige, Ausschluss neuer Trainer, alle Testwerte von Hand, Gleichschritt. | ✅ |
+
+---
+
+## DQ. Prüfung von U12i und U12j ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 86ef44d und a3b1902 gelesen (nichts ausgeführt, `dubletten.pl` und `codewaechter.pl` ohne Befund). Kein blockierender Fehler. Korrekturen auf `mitarbeit/popolupo-k29g-urteil`.
+
+| # | Befund | Status |
+|---|---|---|
+| DQ1 | **Jobangebot ohne wirksame Grenze:** Ruf + 40 lag ab Ruf 55 immer bei mindestens 95, ein Drittligatrainer konnte also Bayern angeboten bekommen. Jetzt höchstens die Mitte der Jobangebote nach einer Entlassung (`mkJobs`) plus 10. | ✅ behoben |
+| DQ2 | **„Einmal je Jahr“ nur je Verein:** Die Sperre hing am Schlüssel mit dem Verein, ein anderer Verein konnte in der nächsten Woche anrufen. Jetzt prüft der Auslöser alle Jobangebote der letzten 365 Tage. | ✅ behoben |
+| DQ3 | **Offene Karten wanderten mit:** Nach einem Jobwechsel entschied der Co-Trainer offene Karten des alten Vereins für den neuen (Geld, Fans, Vertrauen, Verpflichtung). Jetzt entscheidet er sie am Anfang von `takeJob` noch für den alten Verein (`kartenJobwechsel`), für jeden Jobwechsel. | ✅ behoben |
+| DQ4 | Kredite und Raten verschwinden beim Jobwechsel wie bisher (auch bei Rücktritt und Entlassung), Computer-Vereine führen keine Kredite. Jetzt in K28 §5.13 genannt. | dokumentiert |
+| DQ5 | Die Ablöse für den Trainervertrag steht nicht in den Finanzen, nur in der Meldung (`takeJob` leert `S.fin`). | dokumentiert |
+| DQ6 | **Präsidentenwahl ohne Relegation:** Auf- und Abstieg über die Relegation zählten nicht. Jetzt wie in `rufSaison`. | ✅ behoben |
+| DQ7 | Wahl bei deinem Verein, während du entlassen bist: keine Meldung, kein Vertrauen (im Spiel kaum möglich, Schutz). | ✅ behoben |
+| DQ8 | Hinweis: Jeder neue Präsident bekommt eine andere Geduld (101 × Multiplikator ergibt modulo 20 immer 9). So gewollt, fest. | zur Kenntnis |
+| DQ9 | Ohne Befund: gleiche Werte ohne Wechsel, Wahl vor Auf- und Abstieg mit der fertigen Tabelle, eigener Strom, Zielgespräch und Nebenziele mit dem neuen Präsidenten, „Sommer s+1“, Automatik bleibt immer, Reihenfolge beim Wechsel (Gehalt, Ablöse, Station „gewechselt“), Pressekonferenz, Ultimatum und Vertrag werden zurückgesetzt, Testwerte von Hand, Gleichschritt. | ✅ |
+
+---
+
+## DR. Prüfung von K29f und K29g ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 30a8575 und 3ef6aa5 gelesen (nichts ausgeführt, `dubletten.pl` und `codewaechter.pl` ohne Befund). **Ein schwerer Befund**, dazu ein alter Fehler aus U17a mit derselben Ursache. Korrekturen auf `mitarbeit/popolupo-k29g-urteil`.
+
+| # | Befund | Status |
+|---|---|---|
+| DR1 | **Interview am Spielfeldrand nie sichtbar:** Nach dem Abpfiff ruft das Spiel sofort `weiter()` auf, der Tag springt weiter, die Karte galt nur am Spieltag. Jetzt gilt sie bis zum nächsten Halt (`spielfeldrandWeiter` am Anfang von `weiter`). **Derselbe Fehler seit U17a:** Pressekonferenzen nach dem Spiel (Kantersieg, Krise, Höhenflug, Führung) übernahm im selben Schritt der Co-Trainer, du hast sie nie gesehen (je −2 Medienklima). Jetzt finden sie am Tag danach statt, mit Halt. | ✅ behoben |
+| DR2 | **Urteil verdrängt Spiel-Pressekonferenzen:** Das Sportgericht läuft im Tageslauf vor `presseTag`, die Pressekonferenz zum Urteil blockierte Derby, Spitzenspiel, Pokal oder Saisonauftakt. Jetzt vorgemerkt und in `presseTag` nach diesen Anlässen geöffnet, verfällt nach 7 Tagen. | ✅ behoben |
+| DR3 | **Remis-Frage nach Pokalspielen:** Ein Elfmeterschießen galt als Remis („Zufrieden mit dem Punkt?“). Jetzt zählt der Sieger, ein Remis außerhalb der Liga bekommt eine eigene Frage. | ✅ behoben |
+| DR4 | **Pressekonferenz nach abgesessener Sperre:** Jetzt nur, solange die Sperre noch läuft. | ✅ behoben |
+| DR5 | Die Antworten zur Kritik am Urteil waren die Texte der Schiedsrichterkritik. Seit K29h eigene Texte, Name und Schlagzeile. | ✅ behoben (K29h) |
+| DR6 | Test K29f hing am Tag (Frage reihum). Jetzt mit festem Tag. Doku: bei schlechtem Klima bis zu vier Fragen. | ✅ behoben |
+| DR7 | Ohne Befund: Interview für Liga, Pokal (auch geteilte Runden), Supercup, Europapokal und Relegation, nicht für Testspiele; Speichern und Laden, alte Spielstände ohne `einst`, keine Wirkung in der Automatik, keine Würfe, Platzhalter; alle Wege zum Urteil, Ströme, Gleichschritt, Katalog. | ✅ |
+
+---
+
+## DS. Prüfung der Korrektur DR (Ablauf nach dem Abpfiff) ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat ef6619c gelesen und die drei Wege nach dem Abpfiff Schritt für Schritt verfolgt (Konferenz, Live-Spiel, Spiel in `weiter`). Die Korrektur trägt: Die Pressekonferenz nach dem Spiel kommt am Tag danach mit Halt, das Interview steht beim nächsten Halt. Korrekturen auf `mitarbeit/popolupo-k14b-kabinen-karten`.
+
+| # | Befund | Status |
+|---|---|---|
+| DS1 | **Vorgemerktes Urteil ohne Prüfung des Spielers:** Nach einem Verkauf oder Jobwechsel binnen 7 Tagen kam die Pressekonferenz zu einem fremden Spieler (mit Glaubwürdigkeitsverlust nach Rückendeckung). Jetzt nur, solange er dein Spieler ist und die Sperre läuft; `takeJob` löscht die Vormerkung. | ✅ behoben |
+| DS2 | **Saisonende:** Eine Pressekonferenz nach dem letzten Spiel lag bis in die neue Saison und kostete dann 2 Punkte Medienklima. Jetzt nie über das Saisonende hinaus, eine alte aus der Vorsaison fällt still weg. | ✅ behoben |
+| DS3 | **Interview nach einer Entlassung** (alt): Beim neuen Verein stand noch das Interview zum letzten Spiel. `takeJob` löscht es. | ✅ behoben |
+| DS4 | Abstand und Sperre der Pressekonferenzen zählen jetzt ab ihrem Tag, nicht ab dem Spieltag. Die Vormerkung zum Urteil gilt jetzt genau 7 Tage. | ✅ behoben |
+| DS5 | Test Nr. 7 prüft jetzt Tag danach, Halt, Bleiben und Übernahme durch den Co-Trainer. | ✅ behoben |
+| DS6 | Hinweis: `fuzz-karrieren.js` und `ui-zwei-saisons.js` bekommen ein paar Halte mehr je Saison, ihre Grenzen bitte im Blick behalten. | zur Kenntnis |
+| DS7 | Ohne Befund: alle drei Wege, Spiel am Tag danach (ein Halt), Erinnerungen, `naechsterHalt` nach dem Laden, Interview in allen Wegen bis zum nächsten `weiter`, Urteil am selben Tag, Gleichschritt 5a, Test 4 in `lizenz.js`, `schwierigkeit.js`. | ✅ |
+
+---
+
+## DT. Prüfung von U12k, K25e und K14b ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 6fd507f, 9a8696d und 9d4e16d gelesen (nichts ausgeführt, `dubletten.pl` und `codewaechter.pl` ohne Befund). Kein blockierender Fehler. Korrekturen auf `mitarbeit/popolupo-k16b-team-mitnehmen`.
+
+| # | Befund | Status |
+|---|---|---|
+| DT1 | **Eingewöhnung für jeden Ausländer:** Auch wer von einem deutschen Verein kam, „tat sich schwer im neuen Land“. Jetzt nur nach einer Ankunft aus dem Ausland (`p.ausAb`, gesetzt in `ausDemAusland`). | ✅ behoben |
+| DT2 | **Eine Antwort immer besser:** Kabinenparty „feiern“ und Neuzugang „Chance“ kosteten nichts. Jetzt: Bei der Party werden mit 30 % Fotos publik (Vertrauen −3). Die Chance für den Neuzugang kostet Zusammenhalt −1. Der Text verspricht keine Folge mehr, die es nicht gibt. | ✅ behoben |
+| DT3 | **U12k nach Hochpokern:** Die freiwillige Senkung behielt das höhere Budget und den Ruf-Zuschlag. Jetzt senkt der Präsident nach Hochpokern nicht von sich aus, dann bleibt der Antrag. | ✅ behoben |
+| DT4 | Neuzugang: nur einsatzfähig und frühestens nach 14 Tagen im Verein. Die Zahl 2 (Stärke) steht jetzt in den Regeln. | ✅ behoben |
+| DT5 | Kabinenparty nur bis 7 Tage nach dem Kantersieg (nicht nach der Winterpause). | ✅ behoben |
+| DT6 | Kleinigkeiten: Kommentare, `gesenkt` in K33, „Prozentpunkte“ in der Anzeige der Dauerkarten. | ✅ behoben |
+| DT7 | Ohne Befund: U12k bei alten Spielständen und am Rand der Liga, Vertrauen danach, Test 18 und 14; K25e bei 0 Mitgliedern und Kapazität 0, Freiburg genau +10 Punkte, Tests K27b und K25e; `S.res` nur Liga, `p.seit` auf allen Wegen, Katalog, Test K14b, Gleichschritt. Hinweis: Fast jeder Erstligist bekommt die vollen 10 Punkte Vorkaufsrecht. | ✅ |
+
+---
+
+## DU. Prüfung von K19c, K09b und K16b ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 4659aa2, e418ef8 und f7f7716 gelesen (nichts ausgeführt, `dubletten.pl` und `codewaechter.pl` ohne Befund). Kein blockierender Fehler, fünf echte Befunde. Korrekturen auf `mitarbeit/popolupo-k29i-maulkorb`.
+
+| # | Befund | Status |
+|---|---|---|
+| DU1 | **Unverkäuflich ohne Angebote:** Ein Überraschungsangebot erreicht höchstens etwa 1,5 × Marktwert, die Grenze 1,8 × also nie. Jetzt hebt der Bieter auf den Höchstpreis, wenn er ihn zahlen kann (ohne zusätzlichen Wurf). | ✅ behoben |
+| DU2 | **Verhandlung unter den Höchstpreis:** Die Schmerzgrenze lag bei etwa 1,49 × Marktwert. Jetzt bei unverkäuflichen Schlüsselspielern gleich dem Höchstpreis. | ✅ behoben |
+| DU3 | **Mitgebrachte verdrängten sich:** Der zweite Mitgebrachte konnte den ersten verdrängen. Jetzt geht nur ein Mitarbeiter, der schon dort war, mit Meldung. | ✅ behoben |
+| DU4 | **„30 Wochen bei dir“ zählte ab Eintritt beim Verein:** `wiv` lief weiter, wenn du kamst. Jetzt beginnen die übrigen Mitarbeiter des neuen Vereins bei 0 Wochen mit dir. | ✅ behoben |
+| DU5 | **Jobangebot per Karte ohne Wahl:** Jetzt kommen dort die mitnehmbaren Co-Trainer mit. | ✅ behoben |
+| DU6 | Kleinigkeiten: Wahl des Trainerteams über den Jobangeboten, Gelbsperre-Erinnerung nicht unter der Automatik der Aufstellung und nicht für schon Gesperrte, `S.unv` wird beim Jobwechsel geleert. Die Aufschläge in `forderungDu` (Beziehung, Abwerben, Gerüchte, Deadline Day) können den Höchstpreis noch übersteigen, das ist gewollt. | ✅ behoben |
+| DU7 | Ohne Befund: kein Durchsickern in Wechsel unter Computer-Vereinen, Würfe im Markt unverändert, Gleichschritt, Hinweis im Spielerfenster, `askPrice`; nächstes Ligaspiel auch mit Pokal dazwischen, Spitzenspiel wie in der Presse, Menü der Erinnerungen, Derby BVB–S04 im Test; Eigentum, Gehalt, `stabGeaendert`, Aufräumen von `S.mitnehmen`, Tests K19c und K16b. | ✅ |
+
+---
+
+## DV. Prüfung von K29h, K14c, K07b, K34c, K29i und der Korrekturen DU ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat a7ed216, 8eb2597, 7c90478, f6a2692, 8a92d9e und bfb2f69 gelesen (nichts ausgeführt, `dubletten.pl` und `codewaechter.pl` ohne Befund). Kein blockierender Fehler. Korrekturen auf `mitarbeit/popolupo-k18c-gegnerbeobachtung`.
+
+| # | Befund | Status |
+|---|---|---|
+| DV1 | **„Plan passt nicht“ unter Automatik und täglich:** Der Belastungssprung lag in der Vorbereitung bei vielen über 1,5. Die Erinnerung hätte jeden Tag „Tag beenden“ aufgehalten, auch wenn die Vorlage beim Stab liegt. Jetzt nicht unter der Automatik der Vorlage und höchstens einmal je Woche. | ✅ behoben |
+| DV2 | Der Maulkorb blieb beim Jobwechsel bestehen. Jetzt hebt `takeJob` ihn auf. | ✅ behoben |
+| DV3 | Der Medien-Kasten versprach unter der Automatik Interviews. Jetzt steht dort, dass der Co-Trainer die Linie vorgibt. | ✅ behoben |
+| DV4 | Die englische Woche hatte eine eigene Zahl neben `RT.englischBis`. Jetzt gilt dieselbe. | ✅ behoben |
+| DV5 | Ein Kommentar stand an der falschen Zeile. | ✅ behoben |
+| DV6 | `kontoAnteil` wird im Markt bei Spielern auf der Transferliste anders gelesen (Konto über 0,8 × Preis) als im Mitbieter und bei Unverkäuflichen (0,8 × Konto über dem Preis). Die Stelle ist alt, sie bleibt vorerst so und ist hier vermerkt. | offen |
+| DV7 | Überschrift „Torjäger deutscher Vereine“ statt „deutsche Torjäger“. | ✅ behoben |
+| DV8 | Ohne Befund: Ströme in K29i (eigener Strom, keine zusätzlichen Würfe im Wochenstrom), Gleichschritt 5a (Presse in beiden Läufen in der Automatik), K29h, K14c, Korrekturen DU, alle neuen Tests von Hand nachgerechnet. | ✅ |
+
+## DW. Prüfung von U12l, K18c, K11b, K11c und der Korrekturen DV ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat a97ce26, dc5ccd6, 8b6873a, 3d6b3ea und 574aca0 gelesen (nichts ausgeführt). Kein blockierender Fehler, keine Namenskonflikte, `${}` nur in Backticks, jeder neue Würfel im eigenen Strom, alte Spielstände ohne die neuen Felder laufen. Korrekturen auf `mitarbeit/popolupo-u19e-europa-karten`.
+
+| # | Befund | Status |
+|---|---|---|
+| DW1 | **Tag 2 des Sommerturniers war nicht reserviert:** Das zweite Spiel steht erst nach dem Halbfinale in `S.testspiele`. Bis dahin bot `testspielTage` den Tag noch an, für eine Anfrage bei einem Amateurverein oder eine Einladung (K11c), und die Woche bekam drei Testspiele. Jetzt zählt `testspielBelegt` den Tag mit, solange das Turnier läuft. Liegen beide Turniertage in einer Woche, zählen sie zusammen zu `maxProWoche`. | ✅ behoben |
+| DW2 | **Einladung ohne Saison und Verein:** `S.tsKI` verfiel nur mit der Antwort. Weil die Tage jede Saison neu zählen, kam eine unbeantwortete Einladung in der nächsten Saison wieder, und nach einem Jobwechsel galt sie für den neuen Verein (im schlimmsten Fall gegen sich selbst). Jetzt mit `s` und `my`, geprüft über `tsKIOffen`, gelöscht in `newSeasonLauf` und `takeJob`. `takeJob` löscht auch `S.turnier` und die noch nicht gespielten Testspiele des alten Vereins (das Letzte war schon vor K11b so). | ✅ behoben |
+| DW3 | **Frist versprach mehr als möglich:** Der Termin konnte vier Tage nach der Einladung liegen, die Zusage prüft aber noch einmal mit dem Vorlauf. Eine Zusage am Dienstag scheiterte mit „An diesem Tag geht es nicht mehr“. Jetzt liegt der Termin mindestens Antwortfrist + Vorlauf hinter der Einladung. | ✅ behoben |
+| DW4 | **Einladung verfiel ungesehen:** In der Vorbereitung gibt es kaum Halte, „Tag beenden“ springt bis zu sieben Tage. Jetzt hält das Spiel am letzten Tag der Frist an („Frist“, wie bei Angeboten), nicht unter der Automatik der Testspiele. | ✅ behoben |
+| DW5 | **Falsche Prozente im Zielgespräch:** `zgBudgetFaktor` enthält seit U12l das Budgetgespräch. Nach einer Zusage im Budgetgespräch stand im Zielgespräch „32 % mehr“ statt 10 %. Die Meldungen rechnen jetzt ohne den Faktor des Budgetgesprächs. | ✅ behoben |
+| DW6 | **Turnier vor der 3. Woche:** `turnierMoeglich` bot Tage in Woche 1 und 2 an, dort sagen aber keine Profis zu („keine drei Gegner“). Jetzt erst ab `RTS.abWoche`, wie K11 §12 sagt. | ✅ behoben |
+| DW7 | **Zuschauer im Turnier doppelt:** Beide Turnierspiele sind Heimspiele, `testspielNach` buchte dazu Zuschauereinnahmen. Entschieden (vorläufig): im Turnier nur Antrittsgeld und Siegprämie, die Zuschauer gehören dem Ausrichter. | ✅ behoben, vorläufig |
+| DW8 | **Gegnerbeobachtung ohne Wirkung kostete Geld:** Mit Videoanalyst oder am Spieltag ohne Spielvorbereitung der letzten zwei Tage verdoppelt die Beobachtung nichts. Jetzt steht dort ein Hinweis statt des Knopfs, und `gegnerBeobachten` bucht nichts. Nach dem Klick zeichnet das Spiel das Fenster vor dem Spiel neu (`render` tat das nicht). | ✅ behoben |
+| DW9 | Ein Kommentar zu `jobangebot.rufSpanne` war an die Zeile `budgetgespraech` gerutscht, `bgChance` nutzte die Zahlen 50 und 10 im Code (jetzt `vertrauenMitte`, `sparsamMitte`). Unter der Automatik der Transfers merkt sich `kiBudget` das Budget je Fenster, das Plus aus dem Budgetgespräch wirkt dann erst ab dem nächsten Fenster. Das bleibt so und ist hier vermerkt. | ✅ behoben, Rest dokumentiert |
+| DW10 | **Tests:** K11b prüfte „einmal je Saison“ an einem Tag, der auch aus anderen Gründen nicht ging. Jetzt an allen Tagen, an denen ohne das erste Turnier eines ginge, dazu Siegprämie, reservierter Tag 2 und keine Turniere vor der 3. Woche. K11c läuft jetzt über den Montag in `testspieleTag`, antwortet am letzten Tag der Frist und prüft Halt, Saison und Verein. Neu `tests/scouting.js` DW8. Offen: das Elfmeterschießen im Turnier und die Wochengrenze von „Plan passt nicht“ in `tests/erinnerungen.js`. | teils offen |
+| DW11 | Ohne Befund: Korrekturen DV, Gleichschritt 5a (die Einladung entsteht dort, weil `auto.testspiele` fehlt, wirkt aber nicht und würfelt im eigenen Strom), Budgetgespräch und Turnier nur per Knopf. | ✅ |
+
+## DX. Prüfung von U19e, K31b und der Korrekturen DW ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat a10719d, 832e7f5 und 9d726b3 gelesen (nichts ausgeführt). Kein blockierender und kein mittlerer Fehler. Geprüft und ohne Befund: Datenform von `euMeineSpiele` (Hin- und Rückspiel, Elfmeterschießen, Finale), Zeitfenster der Europapokal-Karten mit dem Montag, die Liste in K31b gleich den Bietern im Markt, der Halt „Frist“, Gleichschritt 5a, `showPre` nach der Gegnerbeobachtung, DW5. Korrekturen auf `mitarbeit/popolupo-k36c-stabbericht`.
+
+| # | Befund | Status |
+|---|---|---|
+| DX1 | Nach einem Jobwechsel blieben die gespielten Testspiele des alten Vereins, auch Tag 2 eines gespielten Turniers. `testspielBelegt` erkannte daran den Tag 2 eines neuen Turniers als schon eingetragen (DW1 kam auf diesem Weg zurück), und die alten Spiele zählten beim neuen Verein zur Woche, zur Automatik und zur Vorbereitungsliste. Jetzt löscht `takeJob` alle Testspiele, und Tag 2 muss genau der Tag nach dem Turnierbeginn sein. | ✅ behoben |
+| DX2 | Das Fenster der Spielvorbereitung (2 Tage) stand doppelt im Code (taktik.js, scouting.js). Jetzt `RTA.vorbereitungTage` und ein Helfer `vorbereitungWirkt` für beide. | ✅ behoben |
+| DX3 | Der Test K11b „einmal je Saison“ war bestanden, wenn es keinen prüfbaren Tag gab. Jetzt muss es einen geben. | ✅ behoben |
+| DX4 | Das Changelog zu DW nannte `tests/vorstand.js`, dort fehlte aber ein Fall zu DW5. Jetzt Fall DW5 (Prozente im Zielgespräch nach einem zugesagten Budgetgespräch). | ✅ behoben |
+| DX5 | Die Häufigkeit der Europapokal-Karten stand in K37 §8 für alle gleich. Jetzt je Karte (Pyrotechnik etwa alle 12 bis 15 Saisons, Fanmarsch und Reisechaos 25 bis 30, Wunder fast nie). | ✅ behoben |
+| DX6 | Der Hinweis unter „Bedarf anderer Vereine“ war ungenau (Auslandsvereine bieten ohne Bedarf, unter der Automatik kommen keine Angebote). Jetzt steht beides da. Der Test K31b vergleicht mit einer Kopie des Filters aus `market()`, nicht mit `market()` selbst. Das bleibt so und ist hier vermerkt. | ✅ behoben, Rest dokumentiert |
+
+## DY. Prüfung von K34d, K31c, K30b, K36c und der Korrekturen DX ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 78704ea, ffad7fa, 5e3b8a1, f9fea58 und 1a8a508 gelesen (nichts ausgeführt). Kein blockierender und kein mittlerer Fehler. Ohne Befund: neue Namen nur einmal, `${}` nur in Backticks, `RTA` und Ladereihenfolge, Gleichschritt 5a (keine neuen Würfel, `news` und `S.stabT` ändern nichts, was 5a vergleicht), alte Spielstände, die Korrekturen DX. Korrekturen auf `mitarbeit/popolupo-k10d-ausfall-bilanz`.
+
+| # | Befund | Status |
+|---|---|---|
+| DY1 | `tagBeginn` und `tagEnde` gaben die gesammelten Stab-Meldungen nur am Ende aus. Nach einem Fehler im Tageslauf blieb `S.stabT` liegen, spätere Meldungen (etwa beim Jobwechsel) kamen erst einen Tag später. Jetzt `try`/`finally`, und beim Laden eines Spielstands wird `S.stabT` gelöscht. | ✅ behoben |
+| DY2 | Der Saisonwechsel läuft außerhalb von `tagBeginn`. Die vielen Verlängerungen kamen dort weiter einzeln. Jetzt sammelt `weiter` auch um `newSeason`. | ✅ behoben |
+| DY3 | Eine schlechte Meldung (etwa vom Sportgericht) verlor in der Sammelzeile ihre rote Farbe. Jetzt färbt eine schlechte Meldung die ganze Zeile. | ✅ behoben |
+| DY4 | Der Test K36c prüfte nur, dass der Sammler weg ist. Jetzt zwei Meldungen aus einem echten `tagBeginn` (genau eine Zeile, rot) und eine Meldung vor einem Fehler im Tageslauf. | ✅ behoben |
+| DY5 | Mit dem echten Startwert meldete das Spiel in der ersten Saison nur den ersten neuen Rekordtransfer, einen zweiten nicht mehr (Sperre `meldenAb`). Mit Startwert braucht es die Sperre nicht mehr, jetzt wird jeder neue Rekord gemeldet. | ✅ behoben |
+| DY6 | „Konkurrent rüstet auf“ kam auch, wenn der Rivale unter deiner Automatik der Transfers einen Spieler von dir holte („holt mit deinem Spieler einen Star …“). Jetzt nicht, wenn der Spieler von dir kommt. | ✅ behoben |
+| DY7 | Der Test K30b setzte die Entscheidungen vor dem Sprung über eine Woche auf 0 und konnte darum nicht scheitern. Jetzt bleibt es 1, erwartet wird trotzdem 0. | ✅ behoben |
+| DY8 | Entscheidungskarten ohne Halt zählten zur Info-Grenze. Unter „wenig“ (3 Infos) konnten sie wegfallen, obwohl der Menütext sagt, die Karten kämen gleich oft. Jetzt zählen nur Info-Karten zur Info-Grenze, Entscheidungen ohne Halt entscheidet der Co-Trainer immer. Das gilt auch für „normal“, die Grenze greift bei etwa 0,13 Karten je Woche aber fast nie. Dazu in den Regeln: `wochen` ist 1 oder 2. | ✅ behoben |
+| DY9 | Der Text der Gegnerbeobachtung nannte „zwei Tage“ fest, jetzt `RTA.vorbereitungTage`. | ✅ behoben |
+
+## DZ. Prüfung von K11d, K10b, K10c, K10d und der Korrekturen DY ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 8702394, fc41bed, 0314438, 684a255 und 5c55511 gelesen (nichts ausgeführt). Kein blockierender Fehler, ein mittlerer. Ohne Befund: Namen, `${}`, Zahlen in den Regeln, keine neuen Würfel in geteilten Strömen, alte Spielstände, Gleichschritt 5a (die Fehldiagnose ändert nur `p.vl.sd/sk/fehl` und Meldungen, keine Entscheidung liest `sd`), die Korrekturen DY. Korrekturen auf `mitarbeit/popolupo-dz-korrekturen`.
+
+| # | Befund | Status |
+|---|---|---|
+| DZ1 | **Mittel: „spielfreie Woche“ am letzten Spieltag.** Nach dem letzten Ligaspiel liegen bis zum Urlaub keine Pflichtspiele, Testspieltage gibt es aber noch. Die Erinnerung kam darum vor dem letzten Spiel fast jeder Saison (auch beim 16. vor einer noch offenen Relegation). Jetzt nur, wenn nach dem Zeitraum noch ein Pflichtspiel kommt. Test K11d prüft den letzten Spieltag ohne Pokalfinale. | ✅ behoben |
+| DZ2 | Zweite Meinung am letzten Tag einer Verletzung: Bei „bessere Behandlung“ und `p.inj` 1 änderte sich nichts, der Text sagte aber „die Pause wird länger“. Jetzt entscheidet die tatsächliche Änderung über den Text, ohne Änderung heißt es „bestätigt“. | ✅ behoben |
+| DZ3 | Nach einer Spritze, die die Verletzung verschlimmert, bleibt `p.inj` beim alten Rest, `v.t` passt nicht mehr. Die zweite Meinung nimmt die wahre Dauer jetzt aus dem Zähler (`seit + p.inj − 1`), die Spanne enthält sie danach immer. Die Ursache in `nachSpritze` bleibt (älter als K10). | ✅ behoben, Ursache dokumentiert |
+| DZ4 | Die Fehldiagnose lag oft ganz unter der ersten Einschätzung und fiel so sofort auf. Jetzt reicht ihre Obergrenze bis zur Untergrenze der ersten Einschätzung (höchstens wahre Dauer − 1). | ✅ behoben |
+| DZ5 | Nach einem Jobwechsel in der Phase „Saisonende“ zeigte die Saisonbilanz die Verletzungen des neuen Vereins. Jetzt hält `seasonEnd` den Text in der Bilanz fest. | ✅ behoben |
+| DZ6 | Die zweite Meinung erfüllt die Lizenzaufgabe `medizin`, die Gelegenheit dafür zählte sie aber nicht. Jetzt zählt eine mögliche zweite Meinung als Gelegenheit. | ✅ behoben |
+
+## EA. Prüfung von K09c, K19d, K21b und der Korrekturen DZ ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 54e3a1e, 0a9841b, 838821e, 0dd110f und 464e56d gelesen (nichts ausgeführt). Kein blockierender Fehler, drei mittlere. Ohne Befund: Doku-Berichtigung, Korrekturen DZ (`naechstesSpiel` sucht bis zum Saisonende, `v.t` passt zum Zähler), Geldfluss der Weiterverkaufsbeteiligung auf allen Wegen, Gleichschritt, Namen, `${}`. Korrekturen auf `mitarbeit/popolupo-ea-korrekturen`.
+
+| # | Befund | Status |
+|---|---|---|
+| EA1 | **Mittel: Vereinsstrafe verfällt ungesehen.** Das Urteil kommt im Tageslauf ohne Halt, „Tag beenden“ springt bis zu sieben Tage, die Frist ist drei. Jetzt Meldung „Im Büro: …“ beim Urteil und Halt „Frist“ am letzten Tag. | ✅ behoben |
+| EA2 | Ein zweites Urteil innerhalb der Frist löschte die erste Karte. Jetzt eine Liste (alte Spielstände mit einem Objekt werden umgewandelt), je Spieler eine Karte. | ✅ behoben |
+| EA3 | Die Karte kam auch für eine Rote Karte bei einem anderen Verein (gekaufter Spieler mit laufendem Verfahren, Rückkehr von einer Leihe). Jetzt nur, wenn das Verfahren deinem Verein gehört. Text „wurde gesperrt“ statt „ist gesperrt“. | ✅ behoben |
+| EA4 | **Mittel: Weiterverkaufsbeteiligung hing am Spieler, nicht am Käufer.** Nach einem ablösefreien Wechsel zahlte der nächste Verein, der nichts zugesagt hatte; ein eigener Rückkauf und Weiterverkauf ohne Klausel zahlte trotzdem; eine alte Klausel konnte überschrieben werden. Jetzt `p.wvb.von` = der Verein, der sie schuldet. Nur er zahlt, jeder andere Wechsel mit Ablöse beendet sie ohne Zahlung. Hat der Spieler schon eine Klausel, gibt es keine neue (der Knopf fehlt dann). | ✅ behoben |
+| EA5 | Kaufte dein Verein den Spieler zurück, zahlte der Verkäufer dir 15 % deiner eigenen Ablöse. Jetzt endet sie beim Rückkauf ohne Zahlung. | ✅ behoben |
+| EA6 | **Mittel: Teamprämie nicht in der Finanzprognose.** Gebucht unter „Prämien: Mannschaft“, das nicht in `RFP.finanzplan.laufend` steht. Jetzt unter „Prämien“ (in der Prognose). | ✅ behoben |
+| EA7 | Nach einem Jobwechsel oder im Sommer hieß es „Für diese Saison festgelegt“, auch ohne Wahl bei diesem Verein, und „hoch“ wirkte bis zum 1. Juli auf die Stimmung. Jetzt eigener Text und Wirkung nur in der Saison. | ✅ behoben |
+
+## EB. Prüfung von K07c, K20e, K08b, K08c und der Korrekturen EA ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 34b1633, 53d8da8, 956fc85, 72a06c1 und 5497208 gelesen (nichts ausgeführt). Kein blockierender Fehler, zwei mittlere. Ohne Befund: K07c (Wirkung `pause` prüft den Verein beim Entscheiden), K08b, die Korrekturen EA (Liste der Vereinsstrafen, Halt, Weiterverkauf: zahlt im Normalfall genau einmal), Gleichschritt (Abwerben nur ohne Automatik der Transfers, eigener Strom). Korrekturen auf `mitarbeit/popolupo-eb-korrekturen`.
+
+| # | Befund | Status |
+|---|---|---|
+| EB1 | **Mittel: Abwerbeversuch erzeugte einen Gesprächswunsch auch unter der Automatik der Gespräche.** `wwHoeher` fragt die Automatik nicht. Wer die Transfers schon selbst führt, die Gespräche aber noch nicht, bekam Halt und Karte aus einem Bereich des Co-Trainers, und niemand sprach mit dem Spieler. Jetzt `kiAbwUnruhig`: auf Stufe 2 wie im Wochenlauf, unter der Automatik spricht der Co-Trainer. | ✅ behoben |
+| EB2 | Ein Spieler auf Stufe 2 sprang durch einen Abwerbeversuch direkt zum offiziellen Wechselwunsch (Stufe 3). Jetzt nur Spieler bis Stufe 1. | ✅ behoben |
+| EB3 | „Unverkäuflich machen“ rief `setUnverkaeuflich` auf: Spielerfenster über dem Büro, zweite Meldung und `versprechenAngebot`, das ein offenes Wechselversprechen brechen konnte. Jetzt setzt die Antwort den Status still selbst. | ✅ behoben |
+| EB4 | Die Frist des Abwerbeversuchs hatte keinen Halt, ein zweiter aufgeflogener Versuch überschrieb den ersten. Jetzt Halt „Frist“ am letzten Tag, und solange eine Karte offen ist, macht ein neuer Versuch den Spieler nur unruhig, ohne neue Karte. | ✅ behoben |
+| EB5 | **Mittel: Profivertrag aus der Karte am falschen Kaderdeckel.** `RS.kaderMax` (28, Deckel der Computer-Vereine) statt `RM.kaderMax` (36, dein Kader). Jetzt `RM.kaderMax` wie beim Aufrücken. | ✅ behoben |
+| EB6 | Das gelockte Talent bekam beim neuen Verein kein `p.seit`/`p.abl` (galt dort als vereinsausgebildet), und der Verein wurde beim Entscheiden nicht auf `aktiv` geprüft. Jetzt beides. Den Kaderdeckel des Käufers prüft die Karte nicht (ein Talent mehr ist vertretbar). | ✅ behoben, Rest dokumentiert |
+| EB7 | Profivertrag und Abgang aus der Karte wirken auch, wenn der Bereich `jugendkader` noch gesperrt ist. Entschieden (vorläufig): gewollt, das entspricht dem Aufrücken durch den Co-Trainer unter der Automatik. | dokumentiert |
+| EB8 | Eine fremde, veraltete Klausel (Spieler ablösefrei geholt) verhinderte deine neue Weiterverkaufsbeteiligung. Jetzt blockiert nur eine Klausel, die deinen Verein bindet (oder eine alte ohne `von`). | ✅ behoben |
+
+## EC. Prüfung von K06b, K18d, K18e, K07d, K29j und der Korrekturen EB ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 7a5808c, c35cbc9, 6b31038, 3f2e209, a9de4dc und a032948 gelesen (nichts ausgeführt). Kein blockierender und kein mittlerer Fehler. Ohne Befund: K29j, Namen, `${}`, Zahlen, alte Spielstände, keine neuen Würfel in geteilten Strömen, Gleichschritt, `kiAbwUnruhig` gleich dem Wochenlauf, `kiAbwFrist` für alte Spielstände. Korrekturen auf `mitarbeit/popolupo-ec-korrekturen`.
+
+| # | Befund | Status |
+|---|---|---|
+| EC1 | „Durchschaut“ nahm den Lieblingsstil aus einem Verlauf, der das gerade gespielte Spiel schon enthielt, und kam auch, wenn der Gegner gar nicht reagiert hatte (schon nach dem ersten Spiel). Jetzt markiert `kiStil` seine Reaktion (`konter` im Ergebnis, ohne Würfel), und die Meldung kommt nur damit und nur, wenn sein Stil deinen schlägt. | ✅ behoben |
+| EC2 | Der Aufschlag „Konkurrenz am Tisch“ galt auch nach einem Wechsel des Spielers zu einem anderen Verein. Jetzt nur beim Verein von damals (`kTisch.von`). Die Prüfung `!p` steht jetzt vor dem Zugriff. | ✅ behoben |
+| EC3 | „Scout lag daneben“ kam auch ohne Scout (die Einschätzung war nur Grundwissen). Jetzt merkt sich der Kauf, ob ein Scout den Spieler gesehen hat; ohne Scout heißt es „Einschätzung lag daneben“. | ✅ behoben |
+| EC4 | „Lernplatz frei“ konnte jede Woche kommen, obwohl niemand etwas lernen konnte (die Automatik der Lernplätze füllt sonst alle). Jetzt nur, wenn ein Spieler ohne Ziel ein Merkmal lernen oder umgeschult werden kann. | ✅ behoben |
+| EC5 | „Unverkäuflich“ aus der Abwerbe-Karte umging ein offenes Wechselversprechen (EB3 hatte `versprechenAngebot` entfernt). Jetzt wieder mit `versprechenAngebot`, nur ohne Spielerfenster und zweite Meldung. | ✅ behoben |
+
+## ED. Prüfung von K16c, K27c, K21c, K13b, K26e, K12c und der Korrekturen EC ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 4a991fb, e5a65f5, fc1bf59, 9d07188, 7f00d5f, ffa480a und 65c8e73 gelesen (nichts ausgeführt). Kein blockierender Fehler, zwei mittlere. Ohne Befund: K13b (Supercup, nicht in den 150 Tagen von 5a), `kiStil`/`sd.konter` (neues `sd` je Spiel, kein zusätzlicher Würfel), Dauerkarten bei gesenktem Preis, Namen, `${}`, alte Spielstände. Korrekturen auf `mitarbeit/popolupo-ed-korrekturen`.
+
+| # | Befund | Status |
+|---|---|---|
+| ED1 | **Mittel: `preisRichtwert` konnte den Preis erhöhen.** Wer unter dem Richtpreis lag, bekam mit dem Zuschuss (Text „Die Ticketpreise sinken“) einen höheren Preis. Jetzt höchstens auf den Richtpreis, nie hinauf. | ✅ behoben |
+| ED2 | **Mittel (Test): Die Markierung des Konters wurde nicht geprüft.** Der Test gab `konter` direkt vor. Jetzt ruft er `kiStil` mit sicherer Reaktion auf und prüft `sd.konter`. Das Kopieren in `r.taktik` in der Engine ist eine Zeile und bleibt ohne eigenen Test. | ✅ behoben, Rest dokumentiert |
+| ED3 | Die Sperre von „Mitarbeiter abgeworben“ galt je Verein, nicht je Mitarbeiter (der Schlüssel kannte `stab` nicht). Jetzt ist der Mitarbeiter Teil des Schlüssels. | ✅ behoben |
+| ED4 | `karteStab`: Pflichtrolle erst beim Entscheiden prüfen (sonst konnte der letzte Co-Trainer gehen), Ablöse höchstens das Konto des Vereins, „halten“ im Gehaltsrahmen (sonst geht er). | ✅ behoben |
+| ED5 | „Übergewicht“ nahm die Kondition von heute statt des Tests (Altstar mit −20, nach dem Test Geheilte). Jetzt merkt sich `leistungstest` die Auffälligen (`S.lt`), nur sie kommen infrage. | ✅ behoben |
+| ED6 | Späte Entscheidungen: „Provision zahlen“ zahlte auch für einen Spieler, der weg ist (jetzt Wirkung `provisionZahlen` mit Prüfung), „Zuschuss“ konnte ein neueres Projekt treffen (jetzt an `S.constr.ab` gebunden). | ✅ behoben |
+| ED7 | Tests: K21c jetzt sicher im Gehaltsrahmen und mit `beraterBez`, K12c mit `S.lt`, K18d mit `kTisch.von` (EC2), K18e mit dem Weg ohne Scout (EC3). Weiter ohne eigenen Test: EC4, EC5, Urlaubsfoto positiv, `b0.stab` in K16c. | teils offen |
+
+## EE. Prüfung von K13c, K29k, K17b, K22c, K03b und der Korrekturen ED ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat dcf771d, 4188cdc, 276ad82, 829e909, 5faa5fd, 3178f67 und 02f4cbf gelesen (nichts ausgeführt). Kein blockierender Fehler, zwei mittlere, beide in K17b.
+
+**Ohne Befund:**
+
+- K29k: `presseS()` legt `klima` auch in alten Spielständen an.
+- K03b: `pause` und `selbstvertrauen` sind unabhängig.
+- K13c: `winner()` mit Elfmeterschießen, Amateure über `tn`, eine Auslosung je Runde, auch bei geteilter Runde keine doppelte Meldung.
+- ED: `karteStab` ohne Schleife, `S.lt` nach Saison, Verein und Tag geschützt, `S.constr.ab` ändert sich nie.
+- Gleichschritt 5a: Die neuen Teile außerhalb der Karten schreiben nur Meldungen oder `S.lt`.
+
+Korrekturen auf `mitarbeit/popolupo-ee-korrekturen` (auf K30c).
+
+| # | Befund | Status |
+|---|---|---|
+| EE1 | **Mittel: „Hilfe in der Not“ umging die Lizenz der Leihen.** Die Wirkung `leihe` rief `ausleihen` direkt auf, Karten brauchen nur den Bereich `ereignisse` (Stufe 1), Leihen sind erst ab Stufe 3 frei. Jetzt prüft die Wirkung `frei('leihe')` wie `verpflichten` die Transfers („Die Leihen führt noch der Verein.“). Der Auslöser bleibt ohne Lizenzprüfung. | ✅ behoben |
+| EE2 | **Mittel: Der Auslöser bot Spieler an, die die Leihe ablehnt, und die Beziehung +5 kam auch ohne Leihe.** Die Prüfungen von `ausleihen` stehen jetzt in `ausleihenGrund` (ohne Wirkung). Der Auslöser nimmt nur Spieler ohne Grund, nicht aus der Zweiten (`zwP`), und nur, wenn der Verleiher mehr als `kaderMin` Spieler behält (wie `kiLeihbar`). Neu im Katalog: `dann`, Folgewirkungen nur bei Erfolg (`KARTEN_MIT_ERFOLG`: `leihe`, `gehaltAnpassen`, `provisionZahlen`) mit dem Text `gut`. Die Beziehung +5 steht jetzt in `dann`. Der Test K17b prüft die Leihe, die +5 und den Fall mit Lizenz streng. | ✅ behoben |
+| EE3 | Die Sperre von „Mitarbeiter abgeworben“ galt je Mitarbeiter **und** Verein. Ein anderer Verein konnte denselben Mitarbeiter gleich wieder abwerben. Jetzt ohne den Verein, wenn ein Mitarbeiter beteiligt ist. Sperren aus alten Spielständen (Schlüssel mit Verein) gelten einmal nicht mehr. | ✅ behoben |
+| EE4 | „Pokal-Los des Jahres“ kam fast jede Saison schon in Runde 1 (dort ziehen alle Profis Amateure) und konnte sich wiederholen. Jetzt nicht in Runde 1 und höchstens einmal je Saison (`S.cup.losJahr`). Test K13c erweitert. | ✅ behoben |
+| EE5 | „Berater droht“: „Nachgeben“ kostete nichts, wenn der Spieler schon das Marktgehalt bekam, und Beziehung und Stimmung kamen auch, wenn der Vorstand ablehnte. Jetzt nur unter dem Marktgehalt, und Beziehung und Stimmung kommen nur mit Erhöhung (`dann`), sonst nennt die Karte den Grund. Ebenso „Gehaltsneid“. Test K22c erweitert. | ✅ behoben |
+| EE6 | „Provisionsstreit“: Die Beziehung +5 kam auch, wenn der Spieler weg war und nichts gezahlt wurde. Jetzt in `dann`. Test K21c erweitert. | ✅ behoben |
+
+## EF. Prüfung von K30c, der Korrekturen EE, K30d und K10e ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 740c1b9, fd53169, 23a16ef und 365d5e6 gelesen (nichts ausgeführt). Kein blockierender Fehler, zwei mittlere.
+
+**Ohne Befund:**
+
+- `mitbieter`: gleiche Bedingung und Reihenfolge wie vorher in `konkurrenzKauf`.
+- Gleichschritt: `kartenKette` nur mit Einträgen und im eigenen Strom, die Faktoren in `medizin.js` ohne Karten genau 1, gleich viele Würfel. `ausleihenGrund` wirkt wie vorher.
+- Halt „Ereignis“ für Folgekarten.
+- Wochenbudget: Die Wochen laufen von Donnerstag bis Mittwoch (`absTag` ab 1.1.1970). Eine Folgekarte 3 bis 7 Tage nach einem Montag liegt immer in der nächsten Woche.
+- Keine Ketten über Saison, Entlassung oder Vereinswechsel hinweg.
+- `else if`-Kette in `kartenWirkung` intakt, `erfolg` in allen Zweigen richtig.
+- K30d ohne Befund.
+
+Korrekturen auf `mitarbeit/popolupo-ef-korrekturen` (auf K14e).
+
+| # | Befund | Status |
+|---|---|---|
+| EF1 | **Mittel: Nach dem Nachlass konnte das Gegenangebot über der eigenen Forderung liegen.** Die Schmerzgrenze rechnet mit der aktuellen Forderung, der Nachlass senkte nur `v.f`. Stieg die Forderung danach (zum Beispiel bekanntes Interesse aus einem Verhandlungsgerücht, das der Nachlass selbst auslöste), lag das Gegenangebot über dem Nachlass, und der Nachlass war weg. Jetzt ist das Gegenangebot in `kaufRunde` höchstens die aktuelle Forderung. Ein Nachlass allein zählt nicht mehr als Verhandlung für die Gerüchteküche (`v.nl`). Test K30c mit Gegenangebot unter bekanntem Interesse. | ✅ behoben |
+| EF2 | **Mittel: Der Hygieneplan endete mit dem ersten neuen Kranken.** Jede neue Krankheit setzte die Ansteckung wieder, dann galt ×2 × 0,5 = 1. Jetzt gilt während des Plans sein Faktor statt der Ansteckung (`krankFaktor`). Test K10e mit einem neuen Kranken. | ✅ behoben |
+| EF3 | Der Nachlass senkte keine schon vereinbarte Ablöse (`v.einig.fee`). Jetzt auch die. Test K30c. | ✅ behoben |
+| EF4 | `dritterKauf` wirkte auch beim Vorvertrag, obwohl der Spieler erst in der nächsten Saison wechselt. Jetzt nicht beim Vorvertrag. Der Merker `p.ld3` fällt beim Saisonwechsel weg. | ✅ behoben |
+| EF5 | Test K22c: Der Gehaltsrahmen konnte die Erhöhung ablehnen. Jetzt verdient der ganze Kader die Hälfte des Marktgehalts, wie in K21c. | ✅ behoben |
+| EF6 | Test: Das Gegenangebot nach dem Nachlass war ungeprüft. Jetzt in K30c (EF1). | ✅ behoben |
+
+## EG. Prüfung von K17d, K09d, K07e/K14d, K14e und der Korrekturen EF ohne Laufzeit (22. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat e2e0339, ad4674f, 27a273b, bced550 und 090e8ca gelesen (nichts ausgeführt). Kein blockierender Fehler, vier kleine.
+
+**Ohne Befund:**
+
+- **K09d:** `G.brisant` in `spielAufbau` für alle Wege des Spiels. Testspiele und Turniere tragen `test`. Auslands- und Amateurvereine sind nie brisant. Es gibt keinen neuen Würfel. Im Gleichschritt kann die Beziehung Verein–Verein in 150 Tagen nicht unter −50 sinken.
+- **K07e/K14d:** Die Partynacht funktioniert auch mit leeren Beteiligten.
+- **Korrekturen EF:** Die Deckelung in `kaufRunde` schadet außerhalb des Nachlasses nicht (schließen zum Preis `F` war schon vorher möglich). `krankFaktor`, `v.nl`, `p.ld3` und der Vorvertrag sind ohne Befund.
+- **Insgesamt:** keine doppelten Namen, alte Spielstände sicher.
+
+Korrekturen auf `mitarbeit/popolupo-eg-korrekturen` (auf K03c).
+
+| # | Befund | Status |
+|---|---|---|
+| EG1 | Die Karte „Grüppchenbildung“ hatte zwei Lücken:<br>– Die Transferliste beachtete nicht, dass der Stab die Transfers führen kann. Er hätte die Liste wieder geräumt, die Strafen wären geblieben.<br>– Anführer konnte ein ausgeliehener Spieler oder einer mit vereinbartem Wechsel sein.<br>Jetzt lehnt die Karte mit Stab ab („Die Transfers führt der Stab“). Der Anführer ist nie ausgeliehen und hat keinen vereinbarten Wechsel. Für solche Spieler gibt es einen eigenen Text. | ✅ behoben |
+| EG2 | Das Gerücht „Thema“ galt als eingetreten, wenn der Spieler zu irgendeinem Verein wechselte. Jetzt zählt nur ein Wechsel zum genannten Verein (auch vereinbart). | ✅ behoben |
+| EG3 | Die Schwelle für Klatsch (−30) war gleich dem Grundwert eines Derbys. Ein einziges entschiedenes Derby hat den Klatsch eingeschaltet. Jetzt zählt die Beziehung ohne ihren Grundwert (vorläufig). | ✅ behoben |
+| EG4 | Test K30c: Die Prüfung des Gegenangebots lief ohne Gegenangebot durch. Jetzt muss es eins geben. Außerdem steht in der README die Dauer von `beziehungen.js` mit 600 Spielen (unter 60 s). | ✅ behoben |
+
+## EH. Prüfung von K29l, K30e, K11f, K16d, K03c und der Korrekturen EG ohne Laufzeit (23. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat b610d0d, d02df69, 9128d11, 1c1c14c, c91b512 und 1f513c3 gelesen (nichts ausgeführt). Kein blockierender und kein mittlerer Fund, drei kleine und eine Kleinigkeit.
+
+**Ohne Befund:**
+
+- K11f, K03c und die Korrekturen EG.
+- Vergleiche mit dem Saisontag sind sicher:
+  - Die Chronik prüft die Saison.
+  - Testspiele und Turnier werden zum Saisonwechsel und beim Vereinswechsel geleert.
+  - `p.mvl` prüft die Saison.
+- `kampfansageRivale` funktioniert für alle Arten von Spielen.
+- `zurueckrudern` verhindert Kult und Häme.
+- Test K16d: Lizenz und Spieltag stimmen.
+- Gleichschritt unverändert.
+
+Korrekturen auf `mitarbeit/popolupo-eh-korrekturen` (auf K13d).
+
+| # | Befund | Status |
+|---|---|---|
+| EH1 | Der Halt aus „Rückendeckung“ galt bis zu einem absoluten Tag, ohne Saison. In einem Jahr, in dem die Karte am letzten Montag kommt, hätte er am ersten Tag der neuen Saison das Vertrauen über die Strafe für das verfehlte Ziel gehoben. Jetzt gilt er nur in derselben Saison (`s`). Test K30e. | ✅ behoben |
+| EH2 | Test K29l: Freiburg (Verein 6) spielt vor dem ersten Ligaspiel die Qualifikation zur Conference League. Die Prüfung „zu früh“ lief über dieses Spiel und nicht über den Abstand. Jetzt nimmt der Test ein Ligaspiel ohne eigenes Spiel in den 8 Tagen davor. | ✅ behoben |
+| EH3 | Info-Karten mit Wirkung fielen über der Info-Grenze der Meldungsdichte ganz weg, mit ihrer Wirkung. So hätte eine Anzeige-Einstellung den Spielstand geändert (gegen K30 §5.1 und DY8). Jetzt wirkt die Karte trotzdem, nur die Meldung entfällt. Test K30e. | ✅ behoben |
+| EH4 | `p.spritzeWarn` merkte den Saisontag, in einer späteren Saison am selben Tag wäre die Warnung ausgefallen. Jetzt der absolute Tag. | ✅ behoben |
+
+## EI. Prüfung von K07f, K21d, K21e, K13d und der Korrekturen EH ohne Laufzeit (23. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 1a73ead, 76c57cc, 8c35b79, dae3c5c und 3a436fc gelesen (nichts ausgeführt). Kein blockierender Fehler, ein mittlerer.
+
+**Ohne Befund:**
+
+- **K07f:** Vorlagen nur über `vorlageDef`, Name überall maskiert, Vorbereitung wie bei den festen Vorlagen.
+- **Korrekturen EH:** Eine stumme Karte setzt Sperre und Variante, verbraucht aber keine Info.
+- **Gleichschritt:** unberührt.
+- **Lizenztest:** findet den neuen Bereich `verlegung`.
+
+Korrekturen auf `mitarbeit/popolupo-ei-korrekturen-b` (auf K25e). Davor steht auf `mitarbeit/popolupo-ei-korrekturen` nur der Doku-Abgleich.
+
+| # | Befund | Status |
+|---|---|---|
+| EI1 | **Mittel: Pokal-, Aufstiegs- und Klassenerhaltsprämie liefen als „Prämien“ in die Prognose.** Die Prognose rechnet „Prämien“ als laufende Kosten (`RFP.laufend`). Drei gewonnene Pokalrunden hätten den Saldo je Spiel um etwa 73.000 € gedrückt und die Lizenzprüfung um Millionen zu schlecht gerechnet. Jetzt sind sie einmalig gebucht („Sonderprämien“). Die Siegprämie der Liga bleibt laufend. | ✅ behoben |
+| EI2 | K21e prüft Auf- und Abstieg vor den Regeln für zweite Mannschaften. Eine zweite Mannschaft, die du als Trainer führst, bekam die Prämie. Jetzt nie für zweite Mannschaften. Ein Verein, der wegen einer zweiten Mannschaft doch drinbleibt, bekommt vorläufig keine Klassenerhaltsprämie. | ✅ behoben, Rest vorläufig |
+| EI3 | K13d: Der neue Termin konnte nach dem nächsten Ligaspiel liegen, etwa bei Vereinen im Europapokal. Danach hätten Gelbsperren-Hinweis und Saisonstart das falsche Spiel genommen. Jetzt liegt er vor dem nächsten Ligaspiel beider Vereine, mit drei Tagen Abstand. | ✅ behoben |
+| EI4 | K13d: Kam vorher ein Pokal- oder Europapokalspiel, war das Ligaspiel nie verlegbar. Jetzt sucht die Lage das nächste Ligaspiel in den 7 Tagen. Der neue Termin hält drei Tage Abstand zu deinen Testspielen. | ✅ behoben |
+| EI5 | Test K13d: Der zweite Antrag galt bei jeder Ablehnung als richtig. Jetzt muss der Grund „schon eine Verlegung“ sein. | ✅ behoben |
+
+## EJ. Prüfung von K30f, dem Doku-Abgleich, K27d, K25e und der Korrekturen EI ohne Laufzeit (23. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 4c5af2a, 5cedb2c, 6b57f75, ef4195a und 63acbe0 gelesen (nichts ausgeführt, zweiter Anlauf nach einem Netzwerkfehler). Kein blockierender Fehler, ein mittlerer.
+
+**Ohne Befund:**
+
+- **K27d:** Kennungen der Vereine sind die Indizes von `VEREINE`, `t.sh` ist das Kürzel. Zweite Mannschaften und Regionalliga ohne Jubiläum.
+- **Korrekturen EI:** „Sonderprämien“ stehen in Finanzansicht, Vorstand und Saisonbilanz, nicht in der Prognose. Die Grenze `weiter` stimmt. K13d findet für Freiburg den Mittwoch 2. September.
+- **K25e:** gleich viele Würfel, Fall 1 hält für Freiburg.
+- **Gleichschritt:** unberührt.
+
+Korrekturen auf `mitarbeit/popolupo-ej-korrekturen` (auf den Korrekturen EK).
+
+| # | Befund | Status |
+|---|---|---|
+| EJ1 | **Mittel: Die Transferliste aus dem Wettskandal hielt nur eine Woche.** `kiListe` räumt montags alle, die nicht im Abgabeplan stehen. Computer-Käufer nahmen ihn ohnehin nicht. Jetzt gibt es nur die Sperre, die Texte sprechen nicht mehr von der Transferliste. | ✅ behoben |
+| EJ2 | Der Skandal konnte einen Spieler deines Kaders treffen, der in der zweiten Mannschaft spielt (`zwP`, eigener Verein in der 3. Liga). Jetzt nie. Test K30f. | ✅ behoben |
+| EJ3 | Der Doku-Abgleich zu K05 Nr. 16 war falsch: Gemeint ist das Zuschauen vorher, gebaut ist nur der Endstand. Berichtigt, dazu der Hinweis auf die Live-Ansicht. | ✅ behoben |
+| EJ4 | Nach dem Gründungsjahr wären Hoffenheim (1899) und Leverkusen (1904) Traditionsvereine. In der Fankultur gelten sie als Gegenbeispiele. Jetzt `tradition:false` in `VEREINE` (vorläufig). Test K25e. Seit K25f überholt: Fankultur aus Stadion, Mitgliedern und Zugkraft statt Gründungsjahr, `tradition:false` entfernt. | ✅ behoben, vorläufig |
+| EJ5 | Test K13d konnte EI3 und EI4 nicht vom alten Code unterscheiden. Jetzt prüft er den Termin vor dem nächsten eigenen Ligaspiel und den Abstand zu einem Testspiel. Hinweis zum Entwurf: In einer normalen Woche bleiben nur Dienstag und Mittwoch, mit Spielen unter der Woche gibt es oft keinen Ersatztermin. Das bleibt so, bis die Reihenfolge der Spieltage nach Datum gilt. | ✅ behoben, 📌 Entwurf |
+
+## EK. Prüfung von K05c, K05d, K06c/K09e und K06d ohne Laufzeit (23. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 066a25b, f74e03d, 50542cb und c1ef342 gelesen (nichts ausgeführt). Kein blockierender Fehler, zwei mittlere. Prüfung EJ (K30f bis zu den Korrekturen EI) war am 23.11. an einem Netzwerkfehler abgebrochen und läuft neu.
+
+**Ohne Befund:**
+
+- Testspiele kommen nie bei `out.mine` an.
+- Die eigene Seite stimmt auswärts und im Finale.
+- `r.taktik` gibt es auch im Live-Spiel.
+- Die Richtung des Kreislaufs beim Coup stimmt.
+- `xpo` hat die Positionscodes, die `eignung` erwartet.
+- Gleichschritt unberührt. `ausId` steht in beiden verglichenen Läufen.
+- Alte Spielstände sind sicher.
+
+Korrekturen auf `mitarbeit/popolupo-ek-korrekturen` (auf K06d).
+
+| # | Befund | Status |
+|---|---|---|
+| EK1 | **Mittel: Verletzte zählten als früh ausgewechselt.** Der Co-Trainer nimmt Verletzte sofort vom Platz, „Handschlag verweigert“ hätte dann von einer Diva erzählt, die verletzt ging. Jetzt zählen Verletzte (`r.inj`) nicht. | ✅ behoben |
+| EK2 | **Mittel: Spiele unter der Woche gingen verloren.** Der Merker hielt nur das letzte Spiel, die Karten prüfen montags. Das Ligaspiel am Wochenende überschrieb Pokal- und Europapokalspiele. Jetzt hält `S.letzte` die Spiele der letzten 7 Tage (höchstens 4), die Auslöser schauen in alle. | ✅ behoben |
+| EK3 | Der Merker überlebte einen Vereinswechsel. Jetzt trägt er deinen Verein (`t`) und gilt nur für ihn. | ✅ behoben |
+| EK4 | Jedes Tor der Verlängerung galt als „spät“. Jetzt ab Minute 88 bis 90 oder ab Minute 118. | ✅ behoben |
+| EK5 | Bei Hin- und Rückspiel sagt das einzelne Spiel nichts über das Weiterkommen. Last-Minute-Drama jetzt vorläufig nicht in Relegation und Europapokal. | ✅ behoben, vorläufig |
+| EK6 | Der Taktik-Coup zählte auch einen Stil, den der Co-Trainer gewählt hatte. Jetzt nur ohne Automatik des Stils. | ✅ behoben |
+| EK7 | Der Zähler `p.pfal` veraltete und zählte auch Kurzeinsätze. Jetzt erst ab der Mindestzeit für eine Note. Ein Zähler älter als 28 Tage beginnt neu (`p.pfalT`), die Karte verlangt einen frischen Zähler. Nicht behoben: Bei einer Kette von Wechseln (A für B, dann B für C) bekommt A in `xpo` die Position „ZM“ (vorhandener Fehler in der Engine). Die Korrektur verschiebt die Anteile in `xpo` für alle Vereine und gehört zu einem Schritt mit Testlauf. Seit 24.11. behoben (Zweig `mitarbeit/popolupo-engine-kettenwechsel`): Die Wechsel werden rückwärts abgearbeitet, Test am Ende von `tests/live.js`. | ✅ behoben (ungetestet) |
+
+## EL. Prüfung der Korrekturen EK und EJ ohne Laufzeit (23. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat ba1811d und 994a64c gelesen (nichts ausgeführt). Kein Fehler in der Spiellogik. Ein mittlerer Fund in einem Test, drei niedrige.
+
+**Ohne Befund (im Code nachgeprüft):**
+
+- **EK1 bis EK5:** Jeder Test würde mit dem alten Code scheitern.
+- **EK2:** Die Karten prüfen vor den Spielen des Tages, jedes Spiel zählt genau einmal.
+- **EK6, EK7:** Der Bereich `stil` existiert. `xpo[3]` sind die Minuten.
+- **EJ1 bis EJ4:** stimmen, auch der Index von `S.teams` gleich `VEREINE`.
+- **Gleichschritt und Projektregeln:** unberührt.
+
+Korrekturen auf `mitarbeit/popolupo-el-korrekturen` (auf K25f).
+
+| # | Befund | Status |
+|---|---|---|
+| EL1 | **Mittel: Der Test K13d unterschied EI3 immer noch nicht vom alten Code.** Findet der neue Code einen Tag, findet der alte denselben. Jetzt rückt der Test das nächste eigene Ligaspiel auf drei Tage plus einen nach dem alten Termin und erwartet „kein Ersatztermin“. Neu geprüft wird auch die Lage aus EI4: Ein Supercup am Vortag versperrt das Ligaspiel nicht mehr. | ✅ behoben |
+| EL2 | K06 §8 nannte die Bedingungen aus EK6 (nur ohne Stil-Automatik) und EK7 (ab 20 Minuten, Verfall nach 28 Tagen) nicht. Ergänzt. | ✅ behoben |
+| EL3 | Kommentare nannten noch `S.letzt` statt `S.letzte` und beim Wettskandal noch die Transferliste. Der Rückfall auf `S.letzt` aus alten Spielständen griff wegen des Filters auf den Verein nie und ist gestrichen. In der laufenden Woche fehlen dann die Spielkarten, harmlos. | ✅ behoben |
+| EL4 | Testlücken: EK6 (Stil-Automatik) und die 28-Tage-Grenze aus EK7 waren ungetestet, `tests/README.md` nannte den Fall EK nicht. Neuer Fall EL in `tests/karten.js`, README ergänzt. | ✅ behoben |
+
+## EM. Prüfung von K25f und der Korrekturen EL ohne Laufzeit (23. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 524411c und bda526c gelesen (nichts ausgeführt). Ein hoher Fund, ein Syntaxfehler im Test, dazu zwei niedrige.
+
+**Ohne Befund:**
+
+- **Formel gegen K25 §5.6:** Bereiche, Gewichte, Ligaschnitt ohne zweite Mannschaften und Rundung stimmen.
+- **Tabelle in §5.6:** Alle Werte und Aussagen sind von Hand nachgerechnet.
+- **Würfel und Gleichschritt:** Die Zahl der Würfe bleibt gleich, der Gleichschritt ist unberührt.
+- **Randfälle:** Plätze 0, Ligaschnitt 0 und alte Spielstände sind abgesichert.
+- **Reste:** Keine Reste von `traditionsverein` oder `tradition:false` im Code.
+- **Korrekturen EL:** Die Tests unterscheiden jetzt wirklich vom alten Code, die Kommentare stimmen.
+
+Korrekturen auf `mitarbeit/popolupo-em-korrekturen` (auf den Korrekturen EL).
+
+| # | Befund | Status |
+|---|---|---|
+| EM1 | **Hoch: Syntaxfehler in `tests/marketing.js`.** Fall 1 deklarierte `w` zweimal im selben Block (Wirkung und zweite Welt), Node hätte die ganze Datei abgelehnt. Die Wirkung heißt jetzt `wk`. | ✅ behoben |
+| EM2 | An der Grenze „ausverkauft“ (97 %) sprang die Fankultur hart: Freiburg (96,5 %) mit 170 Fans mehr von 69 auf 78. Die Karte zeigte gerundet „97 %“, obwohl die Grenze nicht erreicht war. Jetzt steigt die Untergrenze der Zugkraft stufenlos von 93 % bis 97 % (`ausverkauft:[0.93,0.97]`). Die Karte rundet ab und schreibt ab 97 % „ausverkauft“. Neue Werte: Freiburg 75, Heidenheim 59, Kiel 56, Osnabrück 46 (vorher 69, 42, 43, 42), die übrigen unverändert. | ✅ behoben, vorläufig |
+| EM3 | Die Schwelle 0,5 für die Meldung „Kurve“ stand als Zahl im Code. Jetzt `RMK.fankultur.kurve`. | ✅ behoben |
+
+## EN. Prüfung der Korrekturen EM und von K27e ohne Laufzeit (23. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat db519e4 und b07996e gelesen, nichts ausgeführt. Die Fankultur hat er mit einem eigenen Perl-Skript nachgerechnet. Kein Fehler in der Spiellogik, fünf niedrige Funde.
+
+**Ohne Befund:**
+
+- **Werte nach EM2 stimmen:** Freiburg 75 (Abwerben −5,5), Heidenheim 59, Kiel 56, Osnabrück 46, alle anderen unverändert.
+- **`daten/regeln.js`:** Kein Kommentar schluckt Code.
+- **K27e:** gerechnet beim Ziel, das Gedächtnis bleibt unverändert, Grenzen nach der Multiplikation.
+- **Tests:** Die neuen Tests scheitern mit dem alten Code.
+- **Gleichschritt:** unberührt.
+
+Korrekturen auf `mitarbeit/popolupo-en-korrekturen` (auf K26f).
+
+| # | Befund | Status |
+|---|---|---|
+| EN1 | Im Marketing-Kasten fehlte seit EM2 das Leerzeichen nach dem Komma („der Plätze,2,3 Mitglieder“). | ✅ behoben |
+| EN2 | Die stufenlose Grenze aus EM2 war ungetestet. Fall K25f prüft jetzt Freiburg zwischen 72 und 77 und dass 170 Fans mehr höchstens 4 Punkte ändern, mit harter Grenze waren es 9. | ✅ behoben |
+| EN3 | Der Fall K27e nahm Union, das genau auf 80 liegt (roh 79,96). Jetzt Dortmund (100). | ✅ behoben |
+| EN4 | **Schon seit U16:** Anlässe der Fanstimmung verblassten nie ganz (Rundung auf eine Stelle blieb bei −0,4 oder 0,5 hängen). Mit K27e stand dann der Faktor der Fankultur für immer in der Anzeige. Jetzt geht ein Anlass bis ±0,5 auf 0 (`RFS.anlassMin`). Getestet in Fall K27e. | ✅ behoben |
+| EN5 | K27 §5.4b sagte, die Fanstimmung der Computer-Vereine wirke nirgends. Seit K23b/K23c wirkt sie auf ihre Heimeinnahmen, seit U12i auf die Präsidentenwahl. K20 §5.3 nannte K27e nicht. Beides berichtigt. | ✅ behoben |
+
+## EO. Prüfung von K06e, K15e, K26f und der Korrekturen EN ohne Laufzeit (23. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 9e16a38, 6294b81, 4bd2343 und 7ae50b5 gelesen (nichts ausgeführt). Kein hoher oder mittlerer Fund, sieben niedrige.
+
+**Ohne Befund (im Code nachgeprüft):**
+
+- **Tore in der Engine:** `art` ist `ecke`, `freistossFlanke`, `freistoss`, `elfmeter` oder der Schusstyp. Eigentore gibt es nicht, das Elfmeterschießen zählt nicht.
+- **Zählung K06e:** Nur Ligaspiele haben `r.lg`, auch live. Die Halbserie wechselt nach Spiel 17 (bei 34 Spieltagen). Jobwechsel, neue Saison und alte Spielstände sind abgedeckt.
+- **Klage K26f:**
+  - `ab` bleibt die Kennung des Projekts.
+  - Alle Leser von `ab` und `bis` rechnen die Klage mit.
+  - Der Vereinswechsel räumt die Baustelle.
+- **`fanVerblasst`:** gleich für alle Vereine. Die Fälle 3, 5 und 10 halten.
+- **Gleichschritt:** unberührt.
+- **Tests:** Alle neuen Tests scheitern mit dem alten Code.
+
+Korrekturen auf `mitarbeit/popolupo-eo-korrekturen` (auf K19e).
+
+| # | Befund | Status |
+|---|---|---|
+| EO1 | In K33 stand „VerzÃ¶gerung“, ein Kodierungsfehler aus einem Perl-Einzeiler. | ✅ behoben |
+| EO2 | Die Schwelle „mindestens eine Woche Genehmigung übrig“ stand als 7 im Code. Jetzt `REGELN.karten.stadion.anwohnerRest`. | ✅ behoben |
+| EO3 | „Streit nach Kritik“ erkannte die Kritik nur am Datum. Kritik ohne Streit und danach Streit nach Lob am selben Tag hätte die Karte ausgelöst. Jetzt merkt das Gespräch das Thema des Streits (`p.streitT`). Test K15e. | ✅ behoben |
+| EO4 | „Lärmschutz bezahlen“ änderte am Bau nichts. Beim Baubeginn konnten trotzdem Auflagen für Lärmschutz kommen, man hätte doppelt bezahlt. Zudem zahlte die Automatik ungefragt. Jetzt entfallen die Auflagen (`bauAuflage`), und die Automatik lässt es auf die Klage ankommen. Test K26f. | ✅ behoben |
+| EO5 | Test K06e prüfte nur den Faktor, nicht die Wirkung im Spiel. Jetzt prüft er `stdF` in `spielAnlegen`: dein Verein 0,95, der Gegner 1. | ✅ behoben |
+| EO6 | In `letztesSpielMerken` stand der K06e-Block zwischen dem Kommentar zu K06d und dessen Code. Umgestellt. | ✅ behoben |
+| EO7 | Die Feldliste von `S.constr` in `stadion.js` nannte `zuschuss` und `klage` nicht. Die README nannte die Freiburg-Prüfung aus EN2 nicht. Beides ergänzt. | ✅ behoben |
+
+## EP. Prüfung von K16e, K19e und der Korrekturen EO ohne Laufzeit (23. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat b957f3b, 2ddcb86 und ba0974c gelesen, nichts ausgeführt. Kein hoher Fund, zwei mittlere, vier niedrige.
+
+**Ohne Befund:**
+
+- **Saisonzählung K16e:** `stabExSpieler` läuft vor `S.season++`. Damit passt „seit höchstens einer Saison“.
+- **`statSumme().ver`:** ohne Zufall.
+- **K19e:** Alle Aufrufer von `wechselInteresse` gehören nur zu deinem Verein. Computer- und Automatik-Käufe nutzen es nicht.
+- **Gleichschritt:** In 5a ist niemand 60 Spiele beim Verein.
+- **`spielAnlegen`:** gibt `G.Ss` zurück, `stdF` wird beim Anlegen gesetzt.
+- **EO-Korrekturen:** stimmen.
+
+Korrekturen auf `mitarbeit/popolupo-ep-korrekturen` (auf K18f).
+
+| # | Befund | Status |
+|---|---|---|
+| EP1 | **Mittel: „Ihn in den Stab holen“ prüfte die Lernstufe nicht.** Der Bereich `stab` ist erst ab Stufe 3 frei, Karten kommen ab Stufe 1. Jetzt stellt die Wirkung nur ein, wenn der Bereich frei und nicht in der Automatik ist. Eingestellt wird über `stabAnstellen`, das auch das Einstellen von Hand nutzt. Der Vertrag steht als `einstellenJahre` in den Regeln. Ist der Ex-Spieler inzwischen woanders angestellt, sagt die Meldung das jetzt richtig. Test K16e. | ✅ behoben |
+| EP2 | **Mittel: Rückkehr aus der eigenen Leihe galt als Heimkehr.** `leiheEnde` ruft `neuzugang` auch für deinen verliehenen Spieler auf. Ein Stammspieler mit 60 Spielen brachte nach der Leihe „… kehrt zurück!“ und Fans +2. Jetzt übergibt `leiheEnde` `ausLeihe`, dann keine Heimkehr. Neuer Fall in `tests/leihe.js`. | ✅ behoben |
+| EP3 | Im Test K16e war die Rolle nach dem Einstellen voll. Die Sperre über `gefragt` wurde deshalb nie wirklich geprüft. Jetzt wird der Platz vorher wieder frei. | ✅ behoben |
+| EP4 | Im Test K26f stand `erlassen` nicht in der Meldung. Ergänzt. | ✅ behoben |
+| EP5 | K19 und `vertraege.js` sprachen von einer „Karriere vor dem Spielstand“, die gibt es nicht. Gezählt wird ab Spielbeginn. Dazu nennt K19 jetzt `spielerLehntAb`, und der Kommentar zu `gespraech` in den Regeln nennt `p.streitT`. | ✅ behoben |
+| EP6 | `heimkehrAb` und `exSpieler.vereinAb` waren Kopien der 60 Spiele des Publikumslieblings. Jetzt gilt `fanstimmung.ident.lieblingSpiele` direkt. Die 1 Saison der Karte steht als `kapitaenSaisons` in den Regeln. | ✅ behoben |
+
+## EQ. Prüfung von K18f und der Korrekturen EP ohne Laufzeit (23. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 44e47a8 und f84c6af gelesen, nichts ausgeführt. Ein mittlerer Fund (aus der Korrektur EP1), sieben niedrige.
+
+**Ohne Befund:**
+
+- **Auslöser und Karte K18f:** stimmen. Die Schleife im Test endet, die längste Folge ohne Jugendscout ist 6 lang.
+- **`stabAnstellen`:** verhält sich wie vorher.
+- **`neuzugang`:** Nur `leiheEnde` braucht `ausLeihe`.
+- **Reste von `heimkehrAb` und `vereinAb`:** keine im Code.
+- **Gleichschritt:** unberührt.
+
+Korrekturen auf `mitarbeit/popolupo-eq-korrekturen` (auf den Korrekturen EP).
+
+| # | Befund | Status |
+|---|---|---|
+| EQ1 | **Mittel: Die Korrektur EP1 lehnte auch bei freiem Stab in der Automatik ab.** Nach dem Aufstieg steht jeder neu freie Bereich zunächst in der Automatik. Die Karte lehnte dann ab, setzte aber `gefragt`, und der Ex-Spieler war für immer weg. Jetzt wie `darf`: Nur ein gesperrter Bereich verhindert das Einstellen, die Automatik wird ausgeschaltet. `gefragt` gibt es nur nach einer endgültigen Antwort. Test K16e. | ✅ behoben |
+| EQ2 | K18 und K26 nannten die Kartenbeträge als Beträge der 1. Liga. Der Katalog gilt aber für die 3. Liga (× 4 in der 1. Liga). Der Lärmschutz kostet jetzt 50.000 € in der 3. Liga (200.000 € in der 1.) statt 150.000 € (600.000 €). | ✅ behoben |
+| EQ3 | Der Test K18f prüfte einen guten Scout eines anderen Gebiets und einen schwachen Jugendscout nicht wirklich. Jetzt nacheinander: kein guter Scout, guter Inlandsscout, schwacher Jugendscout (alle ohne Karte), dann der gute. | ✅ behoben |
+| EQ4 | Der Fall EP2 in `tests/leihe.js` prüfte nicht, ob das Verleihen geklappt hat. Ergänzt. | ✅ behoben |
+| EQ5 | `talentEntdeckt` stürzte bei sehr alten Spielständen ohne `S.stab` ab. Jetzt `null`. | ✅ behoben |
+| EQ6 | Der Testplan nannte `leihe.js` nicht, die README nannte EP2 und die Sperre bei K16e nicht. Ergänzt. | ✅ behoben |
+| EQ7 | `stabEinstellen` hatte eine ungenutzte Variable. Schon vorher: `stabVerlaengern` rechnete mit festen Zahlen. Jetzt `einstellenJahre` und `verlaengernGehalt` aus den Regeln. | ✅ behoben |
+| EQ8 | Der Kartentext „Dein Jugendscout {mitarbeiter}“ wurde zu „Dein Jugendscout Name (Scout)“. Jetzt „Dein Scout {mitarbeiter}“. | ✅ behoben |
+
+## ER. Prüfung der Korrekturen EQ und von K30g ohne Laufzeit (23. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 935189f und 3e0dcea gelesen, nichts ausgeführt. Kein hoher oder mittlerer Fund, sechs niedrige.
+
+**Ohne Befund:**
+
+- **Klammern in `stabHolen`:** mit einem Perl-Zähler nachgezählt.
+- **`gefragt`:** Die Karte kommt bei gesperrtem Stab nur bis `kapitaenSaisons` wieder.
+- **Tests K16e, K18f und EP2:** Sie scheitern mit dem alten Code, die Schleife endet.
+- **Punktabzug:** Er wird nur in `table()` gelesen und gilt für das Archiv, die ewige Tabelle sowie Auf- und Abstieg vor dem Saisonwechsel. Er hängt an der Saison.
+- **Gleichschritt:** unberührt.
+
+Korrekturen auf `mitarbeit/popolupo-er-korrekturen` (auf U12m).
+
+| # | Befund | Status |
+|---|---|---|
+| ER1 | Der Punktabzug konnte zwischen den Relegationsspielen 2./3. Liga kommen. Dann hätte das Rückspiel ein anderer Verein bestritten als das Hinspiel. Jetzt nicht mehr nach dem letzten Spieltag der 3. Liga (`ligaFertig(3)`). Bei der Insolvenz am 1.6. gab es dasselbe schon länger. Seit dem Nachtrag gilt ihr Abzug nach dem letzten Spieltag für die neue Saison, bei dir und bei den Computer-Vereinen (Test in `tests/finanzen.js`, seit ES1 sofort gebucht statt aufgeschoben). | ✅ behoben |
+| ER2 | „Höchstens einmal in zehn Jahren“ stimmte nicht. `sperrTage` sperrt nur denselben Spieler beim selben Verein. Jetzt sperrt `S.skandal3` mit `RKT.skandal.abstand` (10 Saisons) für alle. Die Stufe selten ergibt etwa einmal in 100 Saisons. | ✅ behoben |
+| ER3 | Über der Info-Grenze der Woche wurde der Abzug ohne Meldung gebucht. Neues Katalogfeld `immer`, die Karte wird immer gemeldet. | ✅ behoben |
+| ER4 | Der Test K30g stürzte ab, wenn der Auslöser nichts fand, und prüfte den Katalogeintrag nicht. Jetzt über `kartenZeigen`, abgesichert, dazu ER1 und ER2. | ✅ behoben |
+| ER5 | Die Karte „Ehemaliger Kapitän“ zählte die Lizenz-Aufgabe „Mitarbeiter eingestellt“ nicht. Jetzt wie beim Einstellen von Hand. | ✅ behoben |
+| ER6 | Wer den Ex-Spieler vorher von Hand eingestellt hatte, bekam „hat anderswo zugesagt“. Jetzt „ist schon in deinem Stab“. | ✅ behoben |
+
+## ES. Prüfung von U12m, der Korrekturen ER und des Aufschubs der Insolvenz ohne Laufzeit (23. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat c6bf417, 0e4656a und 7823165 gelesen, nichts ausgeführt. Ein mittlerer Fund, vier niedrige.
+
+**Ohne Befund:**
+
+- **U12m:** Formel und Beispiele stimmen: Union 3,24, Schalke 3,28 und Köln 3,10 Mitglieder je Platz ergeben 1,5, Leipzig 0,51.
+- **Testwerte:** bleiben in den Grenzen.
+- **`manipulation3`:** Die Wächter stehen vor dem Würfel.
+- **Feld `immer`:** stimmt.
+- **`stabHolen` mit `aufgabe`:** wie `darf`.
+- **Test K30g:** stimmt.
+- **`ligaFertig`:** bekommt nie Liga 4.
+- **Gleichschritt:** unberührt.
+
+Korrekturen auf `mitarbeit/popolupo-es-korrekturen` (auf den Korrekturen ER).
+
+| # | Befund | Status |
+|---|---|---|
+| ES1 | **Mittel: Der Aufschub der Insolvenz aus ER1 konnte einfrieren.** Ein Drittligist mit Aufschub, der in die Regionalliga absteigt, wird dort nicht mehr geprüft. Zähler und Schulden blieben stehen, Jahre später nach dem Wiederaufstieg kam sofort der Abzug. Jetzt kein Aufschub mehr: Nach dem letzten Spieltag kommt die Insolvenz wie sonst, mit sofortigem Schuldenschnitt, nur der Abzug geht in `S.abzug` der nächsten Saison (`insolvenzSaison`). Test angepasst. | ✅ behoben |
+| ES2 | Die Doku sprach vom „nächsten Monatsersten“, tatsächlich wäre es erst der 1. August gewesen. Mit ES1 entfällt der Aufschub, die Texte nennen jetzt den Abzug in der neuen Saison. | ✅ behoben |
+| ES3 | Die Anzeigegrenze 0,05 für das Wahlgewicht stand im Code. Jetzt `wahl.anzeigeAb`. | ✅ behoben |
+| ES4 | Der Testtext sagte „Fans 90“, gerechnet wird mit 80. | ✅ behoben |
+| ES5 | Während eines Tribünenbaus fehlen 3.000 Plätze in `t.cap`, das hob kurz die Mitglieder je Platz (Wahlgewicht, auch Dauerkarten-Vorkaufsrecht). Neu `kapOhneBau` für beide. | ✅ behoben |
+
+## ET. Prüfung der Korrekturen ES ohne Laufzeit (23. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 6d359b5 gelesen, nichts ausgeführt. Fünf niedrige Funde.
+
+**Ohne Befund:**
+
+- **„Einmal je Saison“ ohne Jobwechsel:** Nach dem letzten Spieltag liegt nur der 1.6., eine zweite Insolvenz ist unmöglich.
+- **Auf- und Abstieg:** Der Abzug wirkt in der neuen Liga.
+- **Phase:** Geprüft wird nur in der Phase `play`.
+- **Ladereihenfolge:** keine Probleme.
+- **`kapOhneBau`:** Nur dein Verein baut mit Bauzeit, ein Abriss existiert nicht.
+- **Gleichschritt:** unberührt.
+
+Korrekturen auf `mitarbeit/popolupo-et-korrekturen` (auf den Korrekturen ES).
+
+| # | Befund | Status |
+|---|---|---|
+| ET1 | Bei deinem Verein stand die Sperre „einmal je Saison“ nur in `S.lzp.ins`, und das löscht der Jobwechsel. Seit ES1 bucht der 1.6. schon in die nächste Saison. Übernimmst du dann einen Verein, der am 1.6. insolvent wurde, war eine zweite Insolvenz in derselben Saison möglich, auch umgekehrt. Jetzt setzt und prüft auch `insolvenzPruefen` `t.fins`. | ✅ behoben |
+| ET2 | Bei einem Abstieg in die Regionalliga verfällt ein Abzug für die neue Saison, denn dort gibt es keine Tabelle. In K23 festgehalten, vorläufig hingenommen. | ✅ dokumentiert, vorläufig |
+| ET3 | ES5 war unvollständig. Auch die Fankultur (`fankulturTeile`) und die Obergrenze der Fans beim Saisonwechsel (`saison.js`) rechneten mit den Plätzen ohne Bau. Jetzt beide mit `kapOhneBau`. | ✅ behoben |
+| ET4 | `ins` und `fins` hießen „Saison der letzten Insolvenz“, gemeint ist jetzt die Saison des Abzugs. Kommentar und K33 angepasst. | ✅ behoben |
+| ET5 | ES5 und der Weg über deinen Verein in ES1 waren ungetestet. Neue Fälle in `tests/vorstand.js` (U12m) und `tests/finanzen.js`. | ✅ behoben |
+
+## EU. Prüfung der Korrekturen ET und von K11g ohne Laufzeit (23. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 74a07e5 und a41a498 gelesen, nichts ausgeführt. Ein mittlerer Fund, drei niedrige.
+
+**Ohne Befund:**
+
+- **`kapOhneBau`:** wird beim Laden nicht aufgerufen. Im Saisonwechsel ist `S.constr` noch dein Bau.
+- **Vertrauen bei der Insolvenz:** 60 → 30 stimmt.
+- **Leser von `l.bis`:** alle ohne Fehler. Rückzahlung gibt es keine.
+- **`l.gesehen`:** kein zusätzlicher Zufall.
+- **Karten:** Voreinstellungen, Geldstrafe und Sperrschlüssel stimmen.
+- **Gleichschritt:** unberührt, ein Lager bucht nur die Oberfläche.
+
+Korrekturen auf `mitarbeit/popolupo-eu-korrekturen` (auf K11g).
+
+| # | Befund | Status |
+|---|---|---|
+| EU1 | **Mittel: Die Karte „Lagerkoller“ kam fast nie.** Ein Lager dauert 5 bis 10 Tage, der Koller beginnt erst an Tag 8, Karten kommen montags. Bei 7 Tagen (Voreinstellung) nie, bei 10 Tagen in etwa 3 % der Lager. Jetzt legt `lagerTag` die Karte am Tag des Kollers oder der Sichtung in die tägliche Kette (`kartenKetteHeute`), je Lager einmal (`kollerK`, `nachtK`). Die Karten sind Folgekarten aus dem Spielablauf (`nurKette`, `ausSpiel`). Katalogtest und `kartenpruefung.pl` erlauben dafür Folgekarten ohne Vorgänger. | ✅ behoben |
+| EU2 | **Schon seit K23b:** Der Zähler der Monatserste unter dem Rahmen stand bei deinem Verein in `S.lzp.unter`, bei Computer-Vereinen in `t.fu`. Nach einem Jobwechsel stimmten beide nicht mehr, eine Insolvenz konnte nach einem Monat kommen. Jetzt zählt `t.fu` für alle Vereine. | ✅ behoben |
+| EU3 | Die Tests prüften nicht, ob die Sperre aus ET1 eine zweite Insolvenz nach einem Jobwechsel verhindert, und ET3 (Fankultur beim Bau) gar nicht. Beides ergänzt (`tests/finanzen.js`, `tests/marketing.js`). | ✅ behoben |
+| EU4 | K11 Nr. 11 nannte die Lager-Ereignisse noch als fehlend. K33 erklärte `fins` durch sich selbst. Die README nannte die ET5-Fälle nicht. Berichtigt. | ✅ behoben |
+
+## EV. Prüfung der Korrekturen EU ohne Laufzeit (23. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 3637fe6 gelesen, nichts ausgeführt. Kein hoher oder mittlerer Fund, acht niedrige.
+
+**Ohne Befund:**
+
+- **Reihenfolge:** `lagerTag` läuft vor `kartenKette` am selben Tag, `kartenKetteHeute` würfelt nicht.
+- **Budget und Halt:** wie bei allen Ketten.
+- **„Früher abreisen“:** lässt keine Einträge übrig.
+- **Wochenpool:** filtert `nurKette` weiter heraus.
+- **`t.fu`:** keine Doppelzählung, sonst las niemand `lzp.unter`.
+- **Gleichschritt:** In 5a gibt es kein Lager. `kartenKette` läuft zwar, bekommt aber keine Einträge.
+
+Korrekturen auf `mitarbeit/popolupo-ev-korrekturen` (auf den Korrekturen EU).
+
+| # | Befund | Status |
+|---|---|---|
+| EV1 | Alte Spielstände: `S.lzp.unter` wurde mit EU2 ignoriert, `t.fu` deines Vereins konnte noch aus seiner Zeit als Computer-Verein stammen. Jetzt wird `L.unter` einmal nach `t.fu` übernommen. | ✅ behoben |
+| EV2 | K30 §5.6 nannte die Ausnahme `ausSpiel` und den Weg über `kartenKetteHeute` nicht. Ergänzt. | ✅ behoben |
+| EV3 | `kartenpruefung.pl` führte `ausSpiel`-Karten nicht als `nurKette`. Wäre so eine Karte Ziel einer Kette geworden, hätte das Werkzeug fälschlich gemeldet. Jetzt wird nur die Vorgänger-Prüfung übersprungen, wie im Katalogtest. | ✅ behoben |
+| EV4 | Der Test K11g prüfte nur, dass die Karte gelegt wird, nicht, dass sie am selben Tag kommt. Die Nachtleben-Karte war ungetestet. Ein unvollständiges `S.karten` hätte `kartenKette` abbrechen lassen. Jetzt mit `karten()`, `kartenKette` und einem eigenen Nachtleben-Fall. | ✅ behoben |
+| EV5 | `nachtleben(b)` las `b.lager` ohne Schutz. Jetzt `b&&`. | ✅ behoben |
+| EV6 | `sperrTage` wirkt bei Kettenkarten nicht. Kommentar im Katalog. | ✅ behoben |
+| EV7 | **Schon seit K11:** Beim Vereinswechsel blieb ein gebuchtes oder laufendes Trainingslager stehen und lief für den neuen Verein weiter. Jetzt räumt `takeJob` laufende und künftige Lager der Saison. | ✅ behoben |
+| EV8 | Die README nannte den neuen Marketing-Fall nicht. Ergänzt. | ✅ behoben |
+
+## EW. Prüfung der Korrekturen EV und von K27f ohne Laufzeit (23. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat e05bb44 und eaba5a3 gelesen, nichts ausgeführt. Sieben niedrige Funde. Ohne Befund: EV1 (einmalige Übernahme), die übrigen Folgen von EV7 (Kette beim Jobwechsel leer, Kosten bezahlt), die Tests K11g und Nachtleben (`inj:0` aus `mkPlayer`), der Test K27f (Derbys innerhalb einer Liga gibt es), die Regeln.
+
+Korrekturen auf `mitarbeit/popolupo-ew-korrekturen` (auf K27g).
+
+| # | Befund | Status |
+|---|---|---|
+| EW1 | EV7 ließ beendete Lager der Saison stehen. Sie sperrten beim neuen Verein dieselbe Pause. Jetzt fallen alle Lager der Saison weg. | ✅ behoben |
+| EW2 | Die Choreo prüfte nur das nächste Ligaspiel. Nach einer englischen Woche verdeckte das Spiel am Dienstag das Derby am Samstag. Jetzt zählen alle Heimspiele im Fenster. | ✅ behoben |
+| EW3 | Der Test K27f prüfte nur die Extreme. Ergänzt: Fenster `choreoTage`, Schwelle `choreoAb`, ein Spitzenspiel ohne Derby. | ✅ behoben |
+| EW4 | Der Test K11g ruft `kartenKette` von Hand auf und hängt so nicht an der Reihenfolge in `taeglichLauf`. Bewusst so gelassen: Ein ganzer Tageslauf im Kartentest wäre schwer und anfällig. Die Reihenfolge steht in K30 §5.6. | 📌 bewusst offen |
+| EW5 | EV1 und EV7 waren ungetestet. Zwei neue Fälle in `tests/finanzen.js`. | ✅ behoben |
+| EW6 | In K33 stand der K27f-Satz mitten im K11g-Satz. Umgestellt, dazu EV1 genannt. | ✅ behoben |
+| EW7 | K27 nannte die Choreo noch als „noch nicht“. §5.4d sagte nichts zur fehlenden Presse, K11 nichts zum Lager beim Vereinswechsel. Ergänzt. | ✅ behoben |
+
+## EX. Prüfung von K27g und der Korrekturen EW ohne Laufzeit (23. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat d6fdf25 und 302bbf2 gelesen, nichts ausgeführt. Ein mittlerer und fünf niedrige Funde. Ohne Befund: der letzte Spieltag (verlegte Spiele behalten ihren Spieltag, er ist zeitgleich), die Sperre einmal je Saison, die Wirkung und ihr Betrag nach Liga.
+
+Korrekturen auf `mitarbeit/popolupo-ex-korrekturen` (auf K16f).
+
+| # | Befund | Status |
+|---|---|---|
+| EX1 | Der Spitzenspiel-Fall aus EW3 prüfte in der Testwelt nie etwas. FCB empfängt BVB schon am 8. Spieltag, vor `spitzeAb`, und der Fall galt dann als „übersprungen“. Jetzt sucht er alle Paare der oberen Plätze ohne Derby und scheitert, wenn er keines findet. | ✅ behoben |
+| EX2 | In der 3. Liga zählte der rohe Tabellenplatz. Ein Dritter hinter einer zweiten Mannschaft bekam keine Karte, eine zweite Mannschaft auf Platz 2 schon. Jetzt gilt die Aufstiegsreihe ohne zweite Mannschaften (`aufstiegsReihe3`), eine zweite Mannschaft steigt nie auf. | ✅ behoben |
+| EX3 | „Gerade noch gerettet“ hieß nur genau Platz 15 (3. Liga: 16). Wer am letzten Spieltag von Platz 17 auf 14 sprang, bekam nichts, wer seit Wochen auf 15 stand, schon. Jetzt: vor dem letzten Spieltag unter dem Strich, danach darüber. Neue Regelwerte `REGELN.karten.fans.platzsturm` (`aufstieg`, `unterStrich`). | ✅ behoben |
+| EX4 | Über der Grenze für Info-Karten der Woche lief der Platzsturm stumm, in der 1. Liga gingen 80.000 € ohne Meldung ab. Jetzt `immer:true` wie bei `manipulation3`. | ✅ behoben |
+| EX5 | Der Test K27g prüfte als „Mitte“ nur Platz 18 und hatte keinen positiven Fall für „gerettet“. Neu in der 1. Liga: gerettet, unten geblieben, echte Mitte, Liga nicht fertig, zu spät. Neu in der 3. Liga: Dritter mit und ohne zweite Mannschaft davor, zweite Mannschaft auf Platz 2. | ✅ behoben |
+| EX6 | Der Lager-Test aus EW5 bestand auch mit dem alten Filter, weil das Lager noch nicht beendet war. Jetzt mit einem beendeten Lager dieser Saison und einem aus der Vorsaison, das bleiben muss. Dazu ein Fall für EW2: ein Heimspiel ohne Anlass zwei Tage vor dem Heim-Derby verdeckt die Choreo nicht. | ✅ behoben |
+
+## EY. Prüfung von K16f und der Korrekturen EX ohne Laufzeit (23. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 8e67149 und edd3c22 gelesen, nichts ausgeführt. Ein mittlerer und drei niedrige Funde. Ohne Befund: der Platzsturm in allen drei Ligen (Strich wie beim Saisonende, Punktabzug in beiden Tabellen gleich, verlegte Spiele, 3. Liga nach `aufstiegsReihe3`, `immer`), die neuen Tests (Tabellen nachgerechnet, die Fälle englische Woche und Lager fielen mit dem alten Code durch), ein Streit mit einem Mitarbeiter, der nicht mehr da ist, der Gleichschritt.
+
+Korrekturen auf `mitarbeit/popolupo-ey-korrekturen` (auf K27h).
+
+| # | Befund | Status |
+|---|---|---|
+| EY1 | Der Streit traf auch Scouts, die nicht über `stabQ` wirken, und die Einzeltrainingsplätze rechneten ohne den Streit. Jetzt streiten Scouts in der Karte nicht mit, `stabPlaetze` rechnet den Streit ein. Der Test prüft jetzt auch `stabQ`. | ✅ behoben |
+| EY2 | Die Sperre hing am zuerst gezogenen Mitarbeiter. Dasselbe Paar konnte nach einem gelungenen Gespräch gleich wieder streiten, wenn der Würfel den anderen zuerst zog. Jetzt kommt das Paar sortiert. | ✅ behoben |
+| EY3 | Der Faktor galt für jeden Verein. Nach einem Jobwechsel (offene Karte automatisch entschieden) oder einem Wechsel über K16c war der Stab eines Computer-Vereins schwächer. Jetzt nur bei `x.team===S.my`. | ✅ behoben |
+| EY4 | Der Kommentar zum Platzsturm nannte noch den alten Strich, die Tabelle in K16 §8 „−10 %“. Beides angepasst, K16f erklärt die kleinere Wirkung (Sockel und Schwellen). | ✅ behoben |
+
+## EZ. Prüfung von K16g, K27h und der Korrekturen EY ohne Laufzeit (23. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 2ba03b1, b695aa0 und 64ea61e gelesen, nichts ausgeführt. Sechs niedrige Funde. Ohne Befund: der absolute Tag im Protokoll der Trainerwechsel (auch im Sommer), der eigene Strom für den neuen Cheftrainer, Trainerpool, Lieblingsstil und Ablöse, der Gehaltsrahmen mit dem Stab, offene Karten mit einem Mitarbeiter, der weg ist, das Fan-Gespräch mit Lernstufe und ohne doppeltes Gespräch, Computer-Vereine und K16c nach EY3, alle Namen in den Tests.
+
+Korrekturen auf `mitarbeit/popolupo-ez-korrekturen` (auf U12n).
+
+| # | Befund | Status |
+|---|---|---|
+| EZ1 | Seit EY2 hing die Sperre an der kleineren Nummer des Paars, nicht am Paar. Jetzt stehen beide Nummern im Schlüssel. | ✅ behoben |
+| EZ2 | Nach „Ziehen lassen“ konnte für denselben Trainerwechsel noch ein Angebot kommen, das deinen früheren Co-Trainer nach wenigen Tagen wieder in den Pool schickte. Jetzt nicht, wenn dort schon dein früherer Co-Trainer sitzt. | ✅ behoben |
+| EZ3 | Wechselst du selbst zu dem Verein, entschied der Jobwechsel die offene Karte noch für den alten Verein. Ohne Freigabe ging der Co-Trainer zum Verein, der dich gerade holt, und landete gleich im Pool. Jetzt kennt der Jobwechsel sein Ziel, das Angebot gilt dann nicht mehr. | ✅ behoben |
+| EZ4 | Ein mitgenommener Mitarbeiter trug den Streit zum neuen Verein. Jetzt endet er beim Mitnehmen. Dass der Partner allein weiterstreitet, wenn einer über K16c oder K16g geht, steht in K16. | ✅ behoben |
+| EZ5 | Der neue Cheftrainer bekam ein zufälliges Alter statt seines Alters aus dem Stab. | ✅ behoben |
+| EZ6 | Tests: Die Einzeltrainingsplätze im Streit waren ungeprüft. Der Gehaltsrahmen war im Test nicht erzwungen, „ohne Freigabe geht er“ und „Auf den Vertrag pochen“ fehlten. Alles ergänzt. | ✅ behoben |
+
+Nebenbei geprüft: Eine Warteliste für Dauerkarten (K27 „Noch nicht“) käme mit den heutigen Werten nie vor, die Nachfrage erreicht höchstens 80 % der Plätze. Zurückgestellt, Begründung in K27 §5.2.
+
+## FA. Prüfung von K19f, U12n und der Korrekturen EZ ohne Laufzeit (23. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat c90038f, 5256099 und 7b89219 gelesen, nichts ausgeführt. Ein mittlerer und fünf niedrige Funde. Ohne Befund: die Kaufbarkeit bei K19f (Ausland, Leihe, vereinbarte Wechsel, Jugend), die Laufzeit des Auslösers, alle Folgen des Wechsels bei U12n (Station, keine Abfindung, kein Rufverlust, das Ultimatum endet), kein offenes Angebot nach Entlassung oder Saisonende, `KARTEN_ZIEL` mit try/finally, der Gleichschritt, die Namen in den Tests.
+
+Korrekturen auf `mitarbeit/popolupo-fa-korrekturen` (auf K07g).
+
+| # | Befund | Status |
+|---|---|---|
+| FA1 | Der Nachlass aus einer Karte stand als fester Betrag in der Verhandlung und verfiel nie, auch nicht nach Jahren oder einem Jobwechsel. Jetzt ein Anteil mit Frist (60 Tage) und Verein (`nlF`, `nlBis`, `nlMy`), angewandt in `forderung`. Gilt auch für den lachenden Dritten (K30c). | ✅ behoben |
+| FA2 | „Spieler will nur zu dir“ konnte einen Spieler deiner eigenen Zweiten nennen. Jetzt nicht die eigene Zweite und keine dorthin abgestellten Profis. | ✅ behoben |
+| FA3 | Der Schutz aus EZ3 fehlte bei „Mitarbeiter abgeworben“ (K16c). Jetzt auch dort. | ✅ behoben |
+| FA4 | Mit Transfersperre kam „Spieler will nur zu dir“ trotzdem. Jetzt nicht. | ✅ behoben |
+| FA5 | Tests: `x4` fehlte in der Bedingung, der Schlüssel der Sperre war ungeprüft, der Nachlass nach einem Abbruch auch. Der Schlüssel ist jetzt eine eigene Funktion (`kartenSchluessel`) und geprüft. Der Test zum lachenden Dritten vergleicht das Gegenangebot mit der Forderung im Moment des Angebots. | ✅ behoben |
+| FA6 | K28 führte die Rettung noch unter „Noch nicht“, zwei Kommentare nannten §5.13 statt §5.13a. Berichtigt. Dazu K16 §11 und K12b auf den Stand gebracht. | ✅ behoben |
+
+## FB. Prüfung von K29m, K07g, der Doku K30 §8.4 und der Korrekturen FA ohne Laufzeit (23. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 7b89219..b1a0cec gelesen, nichts ausgeführt. Zwei mittlere und sieben niedrige Funde. Ohne Befund: bei K29m der Strom, das Zeitfenster montags ohne Lücke und ohne Doppel, verlegte Spiele, nur Liga; bei K07g die Positionen aus `slotsVerein`, Minuten mit Verlängerung, keine Umschulung in der Automatik; bei FA `nachlassFaktor`, die Gerüchte, `askPrice`, `mitbieter`, die Transfersperre; die Doku K30 §8.4 (79 Karten), K33, K36 Nr. 177 und 178.
+
+Korrekturen auf `mitarbeit/popolupo-fb-korrekturen` (auf K13e). Die Sitzung brach am 23.11. mitten in den Korrekturen ab (Fehlalarm des Virenscanners), die Teständerungen zu FB1 und FB2 sind am 24.11. neu geschrieben.
+
+| # | Befund | Status |
+|---|---|---|
+| FB1 | Der Test erwartete für den Schlüssel der Sperre mit Spieler `'x:7:'`, der Code liefert richtig `'x:7:3'` (Karte:Spieler:Verein). Erwartung und Kommentar berichtigt. | ✅ behoben |
+| FB2 | FA1 war unvollständig: Ein Gegenangebot, das unter dem Nachlass entstand, galt nach der Frist und nach einem Jobwechsel weiter. Jetzt tragen Gegenangebote `fMy` und `fNl`, geprüft in `gegenGilt` (Forderung, Anzeige, Übersicht der Verhandlungen, Gerüchte). | ✅ behoben |
+| FB3 | Alte Spielstände behielten den festen Nachlass in `f`. Jetzt `verhUmstellen` beim Laden. | ✅ behoben |
+| FB4 | K07 sagte „auch Testspiele“, `testspielNach` rief `umschulungEinsatz` aber nicht auf. Aufruf ergänzt, die Doku stimmt damit. | ✅ behoben |
+| FB5 | Ein Einsatz zählte je nach Wochentag halb oder voll, und ein Einsatz ohne Fortschritt (verletzt, Umschulung nicht mehr möglich) verbrauchte die 7 Tage. Jetzt immer voll, die Sperre nur bei echtem Fortschritt. | ✅ behoben |
+| FB6 | Verkaufte und verliehene Spieler schulten beim neuen Verein weiter um. `vertragEnde` und `verleihen` löschen `um` und `umE`. | ✅ behoben |
+| FB7 | K29 und das Entwicklungsprotokoll sagten, in beiden Welten aus 5a passiere dasselbe. Die Sticheleien laufen dort aber in verschiedenen Ligen. Umformuliert: `bild` bleibt trotzdem gleich. | ✅ behoben |
+| FB8 | Die Sätze passten unter Computer-Trainern nicht („morgen“ bei bis zu 7 Tagen, „Wir fahren da hin“ vom Heimtrainer). Eigene Sätze in `PRESSE.kiSticheleien`. | ✅ behoben |
+| FB9 | Der Test K29m konnte an anderen Spielen im Zeitfenster scheitern. Jetzt zählt nur die Meldung zu genau diesem Derby, `ki.max` ist im Test hoch. | ✅ behoben |
+
+## FC. Prüfung von K13e und der Korrekturen FB ohne Laufzeit (24. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat b1a0cec..ca8c6bc gelesen, nichts ausgeführt. Ein mittlerer Fund (älter als der Diff) und sechs niedrige, kein Laufzeitfehler. Ohne Befund: der Ablauf von K13e (`pokalRotation` vor `letztesSpielMerken`, nur Ligaspiele setzen `S.ligaXI`, `xi` auch im Live-Spiel), alle Stellen, die `v.f` lesen oder setzen, die Tests der Korrekturen FB (Zahlen nachgerechnet), der Gleichschritt 5a, Namen, Zufall und Zahlen.
+
+Korrekturen auf `mitarbeit/popolupo-fc-korrekturen` (auf den Korrekturen FB).
+
+| # | Befund | Status |
+|---|---|---|
+| FC1 | Älter als der Diff: Die Fristen der Verhandlungen (`pause`, `druck`, `einig.bis`, `konk.bis`), die Vertagung der Vertragsgespräche und der Tag des letzten Vertragsgesprächs stehen in Saisontagen, `S.tag` beginnt jede Saison neu. Ein Abbruch im Mai sperrte so die ganze nächste Saison, eine alte Einigung lebte wieder auf. Jetzt rücken sie beim Saisonwechsel um die Länge der alten Saison zurück (`fristenSaisonwechsel`). | ✅ behoben |
+| FC2 | FB6 war lückenhaft: Nach einem ausgelaufenen Vertrag, einer beendeten Leihe und deinem Jobwechsel schulte der Spieler weiter um. Jetzt löscht die Woche die Umschulung bei jedem, der nicht bei dir ist, und Einsätze zählen nur bei dir. | ✅ behoben |
+| FC3 | Eine Einigung über die Ablöse galt nach deinem Jobwechsel weiter, samt Nachlass des alten Vereins. Sie verfällt jetzt beim Jobwechsel (`verhJobwechsel`). | ✅ behoben |
+| FC4 | Der Import eines Spielstands rief `verhUmstellen` nicht auf, und Gegenangebote aus Spielständen vor FB galten ohne Bindung. Beides ergänzt. | ✅ behoben |
+| FC5 | Ein Gegenangebot unter dem Nachlass überschrieb ein älteres ohne Nachlass, nach der Frist galt die volle Forderung. Jetzt gilt danach wieder das ältere (`fAlt`). | ✅ behoben |
+| FC6 | In der 1. Liga liegt die 1. Pokalrunde vor dem Ligastart, die Rotation griff dort nie. Ohne Ligaspiel dieser Saison zählt jetzt die beste Elf. | ✅ behoben |
+| FC7 | Drei Sätze in K29 und K13 passten nicht mehr zum Code. Berichtigt. | ✅ behoben |
+
+## FD. Prüfung des Doku-Abgleichs K15/K17 und der Korrekturen FC ohne Laufzeit (24. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat ca8c6bc..32c234b gelesen, nichts ausgeführt. Ein hoher und ein mittlerer Fund, beide älter als der Diff und von derselben Art wie FC1, dazu drei niedrige. Ohne Befund: Vorzeichen und Größe von `dt` in `fristenSaisonwechsel`, die übrigen Felder mit Saisontagen (`S.kiAbw`, `S.kapFrei`, `S.verfahren` u. a.), `gegenFrist`, FC2 bis FC6 samt Tests, Gleichschritt 5a, Doku K07, K13, K15, K17, K29, K33.
+
+Korrekturen auf `mitarbeit/popolupo-fd-korrekturen` (auf K09h).
+
+| # | Befund | Status |
+|---|---|---|
+| FD1 | **Hoch, älter als der Diff:** Der Kater nach „Spiel der Saison“ (`t.kater`, Saisontag) rückte beim Saisonwechsel nicht mit. Wer im Mai ein wichtiges Spiel hatte (Relegation, Pokalfinale, Halbfinale), spielte die ganze nächste Saison mit −4,5 %, Computer-Vereine eingeschlossen. `fristenSaisonwechsel` rückt `kater` jetzt bei allen Vereinen mit, auch bei den Auslandsvereinen. Die Kalibrierung über mehrere Saisons kann sich dadurch etwas verschieben. | ✅ behoben |
+| FD2 | Angebote für deine Spieler aus der Sommerpause (`S.offers[].bis`) verfielen nie, der Spieler bekam kein neues Angebot mehr. Rückt jetzt mit. | ✅ behoben |
+| FD3 | Die Pokal-Rotation verglich mit der besten Elf nach dem Spiel (müde, verletzt, gesperrt) und meldete Rotation, wo keine war. Die Vergleichself wird jetzt vor dem Anpfiff festgehalten (`pokalBezugsElf`, `bxi` im Ergebnis). | ✅ behoben |
+| FD4 | Das Fenster der letzten Bieterrunde (`p.bieterF`, Saisontag) sperrte dasselbe Fenster in allen späteren Saisons. Rückt jetzt mit. | ✅ behoben |
+| FD5 | Standardtraining (`t.stdTag`) und Gegnerbeobachtung (`t.gb.bis`) wirkten in die nächste Saison hinein. Rücken jetzt mit. | ✅ behoben |
+
+## FE. Prüfung von K09f und K36d ohne Laufzeit (24. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 32c234b..fc1ebbe gelesen, nichts ausgeführt. Vier niedrige Funde, kein Laufzeitfehler. Ohne Befund: absolute Tage in `S.kontrolle` (halten über den Saisonwechsel), alte Spielstände, Import, mehrere Tage am Stück, Entlassung, die Zählung über zwölf Monate, Zufall nur in eigenen Strömen (Gleichschritt 5a unberührt), Test presse Fall 5, für K36d alle 16 Aufgaben mit Ort und existierendem Bereich, ohne `S.lizenz`, letzte Lizenz, Import.
+
+Korrekturen auf `mitarbeit/popolupo-fe-korrekturen` (auf den Korrekturen FD).
+
+| # | Befund | Status |
+|---|---|---|
+| FE1 | Nach einem Jobwechsel vor dem Urteil zahlte niemand, obwohl Meldung und K09 „der alte Verein“ sagen, und die Chronik (samt Karte „Dein Spruch geht viral“) landete beim neuen Verein. Jetzt zahlt der alte Verein von seinem Konto, `chronikEintrag` nimmt den Verein mit. | ✅ behoben |
+| FE2 | Auf dem Weg zur A-Lizenz schlug die Karte immer „Sportgerichtsverfahren selbst entschieden“ vor, das du nicht selbst angehen kannst. Aufgaben aus `ohneGelegenheit` kommen jetzt zuletzt. | ✅ behoben |
+| FE3 | Der Testteil „ohne Lernstufen“ war immer grün (nach dem Aufstieg war die Merkkarte ohnehin leer). Neuer Fall mit Gegenprobe, `S.lizenz=null` und Vorschlag. | ✅ behoben |
+| FE4 | Entwicklungsprotokoll nannte presse.js Fall 3 statt Fall 5, K29 den alten Strafrahmen, Kommentare den Faktor der Wiederholung ungenau. Berichtigt. | ✅ behoben |
+
+## FF. Prüfung von K09h und der Korrekturen FD ohne Laufzeit (24. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat fc1ebbe..854f95b gelesen, nichts ausgeführt. Fünf niedrige Funde, kein Laufzeitfehler. Ohne Befund: `zuschauerVorfall` läuft je Karte genau einmal (auch mit Automatik, Co-Trainer, Einspruch), `wurf` und `platzsturm` sind nie stumm, `m.eu` ist live und simuliert gesetzt, Zuschlag immer vom Grundwert, alte Spielstände, Import, Saisonwechsel und Entlassung bei `S.zv`/`S.ausschluss`, die Tests K09h, FD und FD3, Gleichschritt 5a, `bxi` wird nicht gespeichert.
+
+Korrekturen auf `mitarbeit/popolupo-ff-korrekturen` (auf K16h).
+
+| # | Befund | Status |
+|---|---|---|
+| FF1 | Die Vergleichself der Pokal-Rotation sah die Sperren des nächsten Wettbewerbs (Liga) statt des Pokals und entstand vor dem Fitspritzen. Jetzt `mitWettbewerb('pokal')`, berechnet im Helfer `spiel` nach `kiSpritzen`. | ✅ behoben |
+| FF2 | Doku und Kommentar sagten, der Teilausschluss treffe auch Dauerkarten. Die gibt es höchstens für 90 % der Plätze, der Block kommt aus dem Rest. Berichtigt. | ✅ behoben |
+| FF3 | „Wurfgeschosse“ nach dem Pokalfinale (neutraler Platz) als „Heimniederlage“, Zuschauer-Vergehen nach Europapokalspielen beim DFB. Das Pokalfinale trägt jetzt `neutral`, der Merker `eu`, beide Karten kommen dort nicht. | ✅ behoben |
+| FF4 | `bieterF` rückte nur in `S.pl` mit, nicht in der Zweiten und im Ausland. Jetzt alle, jeder Spieler einmal. | ✅ behoben |
+| FF5 | Spielstände mit einem Saisonwechsel vor FD behielten falsche Fristen. `fristenAltstand` (in `verhUmstellen`, also beim Laden und Import) räumt zu weit voraus liegende Werte ab. | ✅ behoben |
+
+## FG. Prüfung der Korrekturen FE, K09g und K16h ohne Laufzeit (24. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 854f95b..98d4c78 gelesen, nichts ausgeführt. Ein mittlerer und fünf niedrige Funde, kein Laufzeitfehler. Ohne Befund: die Korrekturen FE samt Tests, `G.m` ist in der Halbzeit 45, `art:'elfmeter'` bei Toren und Fehlschüssen, die Sperre ohne Neuladen in allen Wettbewerben, bei „Sofort berechnen“, Testspieltagen, Jobwechsel, Entlassung, Saisonwechsel und alten Ständen, kein neuer Würfel, eindeutige Namen, Tests K09g und K16h.
+
+Korrekturen auf `mitarbeit/popolupo-fg-korrekturen` (auf K19j).
+
+| # | Befund | Status |
+|---|---|---|
+| FG1 | **Mittel:** Neuladen mitten im Live-Spiel setzte `heute` neu, eine Sperre aus diesem Spiel (vierte Gelbe, Gelb-Rot) galt dann schon im selben Spiel und war danach abgesessen. `trainerVorSpiel` tut beim Fortsetzen nichts mehr. | ✅ behoben |
+| FG2 | Gelb-Rot in der Halbzeitpause ließ die Ansprache ausfallen, eine eigene Ansprache wurde danach dem Co-Trainer zugeschrieben. Jetzt spricht er in diesem Fall, und `S.live.anspCo` merkt, wer gesprochen hat. | ✅ behoben |
+| FG3 | Der Vorschlag nannte bei neuen Spielern die übrigen Umstellungen nicht. Jetzt mit Zahl der weiteren Plätze. | ✅ behoben |
+| FG4 | Vorschlag und „Beste Elf automatisch aufstellen“ übergingen die Tribüne (`p.trib`), `myXI` füllte Lücken mit genau diesen Spielern (älter). Jetzt `besteElfDu` und zweistufiges Auffüllen. | ✅ behoben |
+| FG5 | „Übernehmen“ im Trainingsplan fror die heutige Wahl des Co-Trainers als feste Vorlage ein. Jetzt „Ihn planen lassen“ (Vorlage „Co-Trainer entscheidet“). | 📌 vorläufig |
+| FG6 | Verweis in K16 §3.3 und das Innenraumverbot in K29 berichtigt. | ✅ behoben |
+
+## FH. Prüfung der Korrekturen FF, K19i und K19j ohne Laufzeit (24. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 98d4c78..b5e1927 gelesen, nichts ausgeführt. Zwei mittlere und vier niedrige Funde, kein Laufzeitfehler. Ohne Befund: FF1 bis FF5, alle übrigen Pfade von `offer` (Einigung, Gegenangebot, Mitgehen, Medizincheck mit zweitem Klick, gescheiterter Vertrag, Vorvertrag, Ausland, Vereinslose, reiner Tausch mit fee 0), der Tauschspieler gegen Zwischenfälle, Jobwechsel und Altstände beim Bonus, Gleichschritt 5a, die Tests.
+
+Korrekturen auf `mitarbeit/popolupo-fh-korrekturen` (auf den Korrekturen FG).
+
+| # | Befund | Status |
+|---|---|---|
+| FH1 | **Mittel:** Gewann der Spieler den Bieterwettstreit doch noch, stand der ganze angerechnete Wert als feste Ablöse in der Einigung, Bonus und Tausch fielen weg. `konkurrenzKauf` merkt sich die Teile (`konk.teile`), die Zusage übernimmt sie. | ✅ behoben |
+| FH2 | **Mittel:** Leihe und Zweite galten als Abgang, der Bonus ließ sich so aushebeln; Spiele vor dem ersten Montag zählten nicht. Jetzt `bonusBeiDir`, `st` beim Kauf, „noch nicht da“ nur bei vereinbartem Wechsel zu dir. | ✅ behoben |
+| FH3 | Der Aufstiegsbonus verfiel am Montag, an dem der Aufstieg der zweiten Saison sichtbar wurde; im Juni war ein feststehender Aufstieg sicher, nach einem Abstieg einer praktisch nie. Jetzt Bedingung vor Verfall, kein Aufstiegsbonus nach dem letzten Spieltag, Wert beim Verkäufer nur bis Platz 6 voll, sonst ein Fünftel. | ✅ behoben |
+| FH4 | Medizincheck und Nachlass-Karte senkten nur die feste Ablöse. Jetzt auf den ganzen angerechneten Wert, abgezogen von der festen Ablöse. | ✅ behoben |
+| FH5 | Ein Verein mit Transfersperre bekam per Tausch einen Spieler. `tauschPruefen` prüft `kiTransferSperre`. | ✅ behoben |
+| FH6 | Älter: Das Ablösefeld rundete mit `toFixed(2)` ab, der Vorschlag lag knapp unter der Forderung. Jetzt `mioAuf` (aufrunden). | ✅ behoben |
+
+## FI. Prüfung der Korrekturen FG und FH ohne Laufzeit (24. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat b5e1927..862337e gelesen, nichts ausgeführt. Ein mittlerer und fünf niedrige Funde, kein Laufzeitfehler. Ohne Befund: `trainerVorSpiel` mit einem `S.live` vom Vortag, `rank` in `bonusWert` jederzeit aufrufbar, Bonus genau einmal bezahlt oder sauber verfallen, feste Ablöse steigt nie, Gleichschritt 5a, die Tests für FG1, FG4, FG5, FH1, FH5, FH6 und `knapp`.
+
+Korrekturen auf `mitarbeit/popolupo-fi-korrekturen` (auf den Korrekturen FH).
+
+| # | Befund | Status |
+|---|---|---|
+| FI1 | **Mittel:** FH2 war unvollständig: Die simulierte Zweite (Hoffenheim, Stuttgart, eigener Verein in der 3. Liga) galt als Abgang, der Bonus ließ sich dort weiter aushebeln. `bonusBeiDir` erkennt sie über `zweiteSim` und `p.zwP`. | ✅ behoben |
+| FI2 | Senkten Medizincheck oder Nachlass die feste Ablöse auf 0, fiel der Bonus still weg. Er wird jetzt auch dann vereinbart. | ✅ behoben |
+| FI3 | Ein Tausch aus einer bestehenden Einigung wurde nur auf Verfügbarkeit geprüft (nicht Transfersperre, Wechselwunsch, Ansehen, Kaderplatz). Jetzt `tauschPruefen` beim Abschluss. | ✅ behoben |
+| FI4 | „Grundordnung ändern“, Saisonwechsel und Formations-Automatik stellten Tribünen-Spieler auf. Jetzt alle über `besteElfDu`. | ✅ behoben |
+| FI5 | `besteElfDu` nahm bei einer Lücke wieder alle Spieler. Jetzt füllen Tribünen-Spieler nur die Lücken. | ✅ behoben |
+| FI6 | Das Formular nennt den geringeren Wert des Aufstiegsbonus, K33 nennt `S.live.anspCo`. | ✅ behoben |
+
+## FJ. Prüfung der Korrekturen FI ohne Laufzeit (24. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 862337e..62a41f3 gelesen, nichts ausgeführt. Der Spielcode ist ohne Befund (Ladereihenfolge von `zweiteSim`, `besteElfDu` in Saisonwechsel und Training, keine falschen Verwerfungen in `tauschPruefen`, Gleichschritt 5a). Ein Fund im Test.
+
+Korrekturen auf `mitarbeit/popolupo-fj-korrekturen` (auf K03d).
+
+| # | Befund | Status |
+|---|---|---|
+| FJ1 | **Mittel, Test:** Der Fall FI1 in `tests/transfers.js` suchte einen Verein mit `zweite==null`, `buildWorld` setzt dort aber −1. Das `find` fand nichts, der Test stürzte ab und nahm FH1, FH5 und FH6 mit. Jetzt `!(zweite>=0)` und −1 zurückschreiben. Nebenbei die Meldung beim verworfenen Tausch ohne doppelten Punkt. | ✅ behoben |
+
+## FK. Prüfung von Kettenwechsel, K23h, K31d, K03d, den Korrekturen FJ und K03e ohne Laufzeit (24. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 62a41f3..c395a88 gelesen, nichts ausgeführt. Kein Laufzeitfehler, kein doppelter Name, Ladereihenfolge in Ordnung, ausgeschaltete Schalter ändern weder Verhalten noch Zufall. Ohne Befund: der Kettenwechsel (rückwärts ist für jede Kette gültig, Test EK7 wäre mit dem alten Code rot), die Startkader ohne Integration, die Kosten von `integrationWoche`, Zeitpunkt und Summe der TV-Raten, die Auslöser von K03e. Drei mittlere, vier niedrige Funde.
+
+Korrekturen auf `mitarbeit/popolupo-fk-korrekturen` (auf K19k).
+
+| # | Befund | Status |
+|---|---|---|
+| FK1 | **Mittel, nur mit Schalter:** Den Spieler aus dem Notverkauf kaufte kein Computer-Verein, `kiKandidat` nahm nur Spieler mit Abgabegrund und zahlte `kiPreis`. Jetzt Merker `p.nv` (Saison, von `kiListe` jede Woche gelöscht, vom Notverkauf neu gesetzt), `kiKandidat` kauft ihn auch ohne Abgabegrund zum Notpreis `p.ask`. Der Notverkauf gilt wie `kiListe` auch für deinen Verein, wenn dein Stab die Transfers führt; so stimmt K36 Nr. 187 (in beiden Welten von 5a gleich). Test K31d prüft den Merker und deinen Verein. | ✅ behoben |
+| FK2 | **Mittel:** Die Heimweh-Karte konnte nie kommen: Ein Heimweh-Typ startet bei 22 bis 26 und gewinnt je Woche mindestens 3, nach 8 Wochen lag er nie unter 40. Jetzt unter 45 nach 4 Wochen (trifft Heimweh-Typen ohne Einsatz und ohne Landsmann). Der Test K03e stellt den Zustand zusätzlich über `integrationStart` und echte Wochenschritte her. | ✅ behoben |
+| FK3 | **Mittel, nur mit Schalter:** Die TV-Raten zählten im Saldo je Ligaspiel mit (die Rate vom 1. August kommt vor dem ersten Spiel), die Prognose lag in der 1. Liga nach dem dritten Spieltag rund 84 Mio. zu hoch, zur Lizenzprüfung etwa 11 Mio. Jetzt Buchung „TV-Raten“ außerhalb von `laufend`; `finPrognose`, Warnung vor dem Kreditrahmen und `kiLiquiditaet` setzen die offenen Raten an (`tvOffen`, `tvRatenOffen`, `S.tvRT`). Die Rate wird nach dem Monatsbericht gebucht, die Finanzansicht zeigt „in 4 Raten je …“. Die Begründung in K23 und im Entwicklungsprotokoll („im Juli fehlt das TV-Geld“) ist berichtigt. | ✅ behoben |
+| FK4 | **Niedrig:** Ausländer der Startkader ohne `p.de` lernten nie Deutsch und standen bei 20. Jetzt gelten Fremdsprachige deutscher Vereine ohne eigenen Wert und ohne laufende Integration mit `deutsch.kader` 60 und lernen weiter (im Ausland nicht). Beim Zugang gilt ohne Wert weiter 20. | ✅ behoben |
+| FK5 | **Niedrig:** Nach einer Leihe behielt der Spieler die Integration des Leihvereins. Jetzt merkt `neuzugang` beim Verleihen den alten Stand in `p.leihe.i0`, `leiheEnde` und `zurueckholen` schreiben ihn zurück (angekommen bleibt angekommen). | ✅ behoben |
+| FK6 | **Niedrig:** Vereinslose aus `kaderAuffuellen` bekamen keine Integration. Jetzt `integrationStart` wie bei `planAuffuellen`, ohne Zufall. | ✅ behoben |
+| FK7 | **Niedrig, Doku:** K03 §5.5 führte die Heimweh-Karte noch unter „Noch nicht“, K11 widersprach sich zum Traumtor, Schritt 1 des Testlaufs im Entwicklungsprotokoll nannte die neuen Fälle nicht. Alles angepasst. | ✅ behoben |
+
+## FL. Prüfung von K05e, K05f, K21f, K07h, K09i, K19k und den Korrekturen FK ohne Laufzeit (24. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat c395a88..07ccf03 gelesen, nichts ausgeführt. Kein Laufzeitfehler, kein doppelter Name, kein unbeabsichtigter Zufallsverbrauch, Gleichschritt 5a und ausgeschaltete Schalter unberührt. Nachgerechnet ohne Befund: Heimweh 37 bis 41 nach 4 Wochen, Rot 3,4 bis 4,6 %, Bonus 30 % mit 9 + 2 Mio., Zielvorgabe nach 25 Spielen; der Ablauf in der Oberfläche bei Abschluss, Verlängerung, nach dem Spiel und beim Neuladen. Ein roter Test, zwei mittlere, fünf niedrige Funde.
+
+Korrekturen auf `mitarbeit/popolupo-fl-korrekturen` (auf K13g).
+
+| # | Befund | Status |
+|---|---|---|
+| FL1 | **Mittel, Test rot:** `bankAnzeige` (K05e) stand in `js/aktionen.js` ohne `darf(`, `tests/lizenz.js` Prüfung 1 wäre rot. Die Funktion ist eine Anzeige und steht jetzt in `js/ansichten.js`. | ✅ behoben |
+| FL2 | **Mittel, nur mit Schalter:** Seit FK3 wird die TV-Rate nach `finanzenTag` gebucht; die Insolvenzprüfung am Monatsersten sah sie nicht und traf Vereine am Tiefpunkt des Quartals. Jetzt zählen `insolvenzPruefen` und `kiInsolvenzPruefen` die heute fällige, noch nicht gebuchte Rate mit (`tvHeute`). | ✅ behoben |
+| FL3 | **Mittel:** Joker (K05f) zählte im Testspiel voll und belegte unsichtbar einen Platz für Stärken (ein laufendes Lernziel konnte still verfallen). Jetzt zur Hälfte im Testspiel, kein Platz (`platz:false`), sichtbar (`zeigen`). | ✅ behoben |
+| FL4 | **Niedrig:** Startkader-Ausländer zeigten „Deutsch 60“, bei einem Wechsel in der ersten Woche gab `integrationStart` aber 20. Jetzt setzt der Aufbau der Welt `p.de`. | ✅ behoben |
+| FL5 | **Niedrig:** In `kaderAuffuellen` bekamen erzeugte Spieler keine Integration. Jetzt wie in `planAuffuellen`. | ✅ behoben |
+| FL6 | **Niedrig:** Jede Verlängerung setzte die Zielvorgabe zurück, der Nachlass von 5 % ließ sich immer neu holen. Jetzt läuft eine bestehende weiter ohne neuen Nachlass, wer sie streicht, zahlt die 5 %. | ✅ behoben |
+| FL7 | **Niedrig, Tests:** Der Fall „im Ausland“ suchte in `S.pl` statt `S.ausland.pl`; der Test K31d prüfte den Kauf zum Notpreis nicht. Beides ergänzt. Seit dem Zweig `mitarbeit/popolupo-tests-fl7` haben auch die Reihenfolge bei FK3 (mit `tvHeute`), der Formularweg von K21f (mit FL6) und `bonusKI`/`tauschKI` in `market()` eigene Prüfungen. | ✅ behoben |
+| FL8 | **Niedrig, Doku:** K36 Nr. 193 nannte den Bereich `live` statt `zurufe`; K21 Nr. 12 führte die Zielvorgabe unter „Nicht gebaut“; Gelb nach einem Protest kam seit K09i nur mit etwa 31 % statt 35 % (jetzt im Code berichtigt: Gelb bis (Rot + Gelb) × Strenge); `zv` stand in K33 für zwei Dinge (jetzt erklärt). | ✅ behoben |
+
+## FM. Prüfung von K18g, K30h, K14f und K13f ohne Laufzeit (24. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 07ccf03..e404bd5 gelesen, nichts ausgeführt. Kein Laufzeitfehler, kein hoher Fund. Der Umbau von `kiStil` ändert weder Verhalten noch die Reihenfolge der Zufallszahlen; K13f ändert mit Schalter aus nichts; der Gleichschritt 5a bleibt unberührt, auch mit Schalter (K14f greift dort nicht, 5a ruft kein `takeJob`). Die Vorbedingungen der vier neuen Tests stimmen.
+
+Korrekturen auf `mitarbeit/popolupo-fm-korrekturen` (auf den Korrekturen FL).
+
+| # | Befund | Status |
+|---|---|---|
+| FM1 | **Mittel, nur mit Schalter:** Alle Länderspielpausen enden donnerstags; mit `bis = Ende + 1` fehlten die Nationalspieler am Freitag, an dem die 1. und 2. Liga wieder spielen, und Erst- und Zweitligisten bekamen eine Verlegung. Jetzt zurück am Tag nach dem letzten Pausentag. Test angepasst. | ✅ behoben |
+| FM2 | **Mittel, nur mit Schalter:** `lsNominieren` ging nur über `S.pl`, der Auslandspool (`S.ausland.pl`) zählte nie mit, es wurden zu viele Spieler deutscher Vereine nominiert. Jetzt beide. | ✅ behoben |
+| FM3 | **Niedrig:** Im Fenster vor dem Spiel stand der Scoutbericht doppelt. Jetzt nur im Vergleich. Test prüft beides. | ✅ behoben |
+| FM4 | **Niedrig:** `scoutBericht` rechnete ohne den Wettbewerb des nächsten Spiels, im Pokal konnte ein Gesperrter zugleich unter „Gefährlich“ stehen. Jetzt mit `mitWettbewerb`. Der neutrale Platz (Pokalfinale) fehlt weiter. | ✅ behoben |
+| FM5 | **Niedrig, Entwurf (vorläufig entschieden):** 28 Kalendertage Neubeginn liefen bei einer Übernahme im Sommer vor dem ersten Spiel ab. Jetzt die ersten 5 Pflichtspiele (`rest`), alte Stände mit `bis` laufen weiter. | ✅ behoben |
+| FM6 | **Niedrig:** „Keine Abwertung“ hatte Lücken (kurze Einsätze, bedeutungslose Spiele). Beides jetzt ohne Abzug. Kleine Pluswirkungen der Bank entfallen im Neubeginn weiter. | ✅ behoben |
+| FM7 | **Niedrig:** Die Sammlung zählte stumme Info-Karten, die du nie gesehen hast. Jetzt nicht mehr. | ✅ behoben |
+| FM8 | **Niedrig, Anzeige:** Über der Seite „Sammlung“ stand „seit Beginn deines Spielstands“, jetzt nicht mehr. Zwei Kartenpaare mit gleichem Titel unterscheidet die Liste am Bereich. | ✅ behoben |
+| FM9 | **Niedrig, nur mit Schalter:** Der Scoutbericht nannte Abgestellte nicht als fehlend. Jetzt mit „Nationalmannschaft“. | ✅ behoben |
+| FM10 | **Niedrig, nur mit Schalter:** Saisonbelastung ohne Obergrenze, eine Minute im Länderspiel zählte voll. Jetzt höchstens 100, ein Spiel zählt ab 10 Minuten, die Frische sinkt nach den Minuten. | ✅ behoben |
+| FM11 | **Niedrig, Tests:** Einige Teilprüfungen sind schon durch den Aufbau wahr (`fremd`, `gleich`, `max`). FM1 und FM3 prüfen die Tests jetzt, FM2 seit dem Zweig `mitarbeit/popolupo-tests-fm11` auch (ein starker Spieler des Auslandspools verdrängt den Letzten seiner Nation), FM4 und FM9 seit `mitarbeit/popolupo-tests-fl7` (gesperrt im Wettbewerb des Spiels, Nationalmannschaft). Dabei die verstümmelte Meldung des Tests K13f („Ende /-e“) berichtigt. | ✅ behoben |
+
+## FN. Prüfung von K02a, K13g und den Korrekturen FL und FM ohne Laufzeit (25. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat e404bd5..b26e659 gelesen, nichts ausgeführt. Kein Laufzeit- oder Syntaxfehler im Spielcode, kein unbeabsichtigter Zufall, Gleichschritt 5a unberührt, ausgeschaltete Schalter ändern nichts. Ohne Befund: Reihenfolge von `EXP_AN` gegenüber `start()`, die vier Pfade der Experimente, die Karten K13g (Pausen beginnen montags vor der Kartenprüfung), FL1, FL4, FL5, FL8, FM1, FM2, FM3, FM5, FM7, FM8. Ein hoher, zwei mittlere, sieben niedrige Funde.
+
+Korrekturen auf `mitarbeit/popolupo-fn-korrekturen` (auf K09j).
+
+| # | Befund | Status |
+|---|---|---|
+| FN1 | **Hoch, Test:** `tests/sim.js` lädt `js/start.js` nicht, der Test K02a wäre an `expObjekt` abgestürzt. Der Block der Experimente steht jetzt in `js/fenster.js`. | ✅ behoben |
+| FN2 | **Mittel, nur über das Menü:** TV-Raten mitten in der Saison umgeschaltet gaben Geld doppelt oder zu wenig; `S.tvRT` war ein Tag relativ zur Saison. Jetzt gilt die neue Art ab der nächsten Saison (`S.tvModus`), `S.tvRT` ist absolut, der Menütext sagt es. | ✅ behoben |
+| FN3 | **Mittel:** Bei der üblichen Verlängerung (Felder zu) ging eine laufende Zielvorgabe verloren und kostete 5 %. Jetzt bleibt sie, die Auswahl ist vorbelegt. | ✅ behoben |
+| FN4 | **Niedrig:** Die Sperre aus FL6 griff auch beim Kauf; eine alte Vorgabe blieb mit falschem Zählstand. Jetzt nur bei Verlängerungen. | ✅ behoben |
+| FN5 | **Niedrig:** Länderspiele mitten in der Pause ausgeschaltet ließen `p.lsp` stehen. Jetzt sofort zurück, veraltete Abstellungen verfallen ohne Folgen. | ✅ behoben |
+| FN6 | **Niedrig:** Die Balken des Vergleichs rechneten ohne den Wettbewerb, „Nationalmannschaft“ mit dem heutigen Tag. Beides berichtigt. | ✅ behoben |
+| FN7 | **Niedrig:** `p.lspN` zählte nicht im Auslandspool. Jetzt schon. | ✅ behoben |
+| FN8 | **Niedrig:** Im Neubeginn kostete eine späte Einwechslung weiter −1. Jetzt nicht. | ✅ behoben |
+| FN9 | **Niedrig, Doku:** Kommentare in `kabine.js` und `wettbewerbe.js`, im Test K13f und die Tabelle in K14 waren veraltet. Berichtigt; die Meldung „Ende /-e“ war schon auf `tests-fm11` berichtigt. | ✅ behoben |
+| FN10 | **Niedrig, Tests:** Ohne Test waren FL2, FL3, FL6, FM6, FM7, FM9, FM10, das Setzen von `lspN`/`lspV`, und der Test zu FL5 deckte nur Vereinslose ab. FL2, FL6 und FM9 haben seit `tests-fl7` Tests, jetzt dazu FL3 (Joker), FL5 (erzeugter Spieler), FM7 (stumme Karte) und `lspN`/`lspZ`. FM10, `lspV` und FN5 seit `mitarbeit/popolupo-tests-fn10`; nur FM6 (kurzer Einsatz im Neubeginn) bleibt ohne eigenen Test. | ✅ behoben bis auf FM6 |
+
+## FO. Prüfung von K19l, K13h, K13i, K09j, den Test-Zweigen, dem Doku-Abgleich und den Korrekturen FN ohne Laufzeit (25. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat b26e659..83482bf gelesen, nichts ausgeführt. Kein Laufzeit- oder Syntaxfehler, kein unbeabsichtigter Zufall, keine verstümmelten Template-Strings, Gleichschritt 5a und ausgeschaltete Schalter unberührt. Ohne Befund: Zufall und Gleichschritt bei K19l, Wegfall des Tauschspielers bis zum Fenster, K13h, K13i, K09j, FN1 bis FN5 und FN8, die übrigen neuen Tests, der Doku-Abgleich. Zwei mittlere, sieben niedrige Funde.
+
+Korrekturen auf `mitarbeit/popolupo-fo-korrekturen` (auf K11j).
+
+| # | Befund | Status |
+|---|---|---|
+| FO1 | **Mittel:** Ein Tausch zum Sommerfenster gab ein Vertragsjahr zu viel (`ct` mit der laufenden Saison vorgemerkt, `wechselVollziehen(true)` addiert eins). Jetzt `ct − 1`; läuft der Vertrag dann aus, gibt es Geld statt Tausch. Test im geschlossenen Fenster. | ✅ behoben |
+| FO2 | **Mittel, Test:** Der Pool-Teil des Tests K13f übersah Poolspieler derselben Nation und Verletzte aus der Rückkehr. Jetzt eigene Welt mit der vollständigen Rangfolge wie in `lsNominieren`. | ✅ behoben |
+| FO3 | **Niedrig:** Der Tausch umging Transfersperre und Gehaltsrahmen. Jetzt Geld statt Tausch. | ✅ behoben |
+| FO4 | **Niedrig:** Bei Geld statt Tausch nannte „Verkauft“ den Spieler, Ablöse und Statistik rechneten ohne den Betrag; im offenen Fenster fehlte `versprechenKauf`. Berichtigt. Dass der Spieler bei der Annahme noch auf der Liste steht, prüft das Spiel bewusst nicht (das Angebot gilt). | ✅ behoben |
+| FO5 | **Niedrig:** K09j zählte je Tag statt je Spieltag, der Text sprach nur von Rot. Jetzt `S.kiSchiri` je Spieltag, Text „Platzverweis“. | ✅ behoben |
+| FO6 | **Niedrig:** „Gefährlich“ und die Balken rechneten die Nationalmannschaft mit dem heutigen Tag. Jetzt `mitLsTag` mit dem Spieltag. | ✅ behoben |
+| FO7 | **Niedrig:** `lspN`/`lspZ` fehlten in `POOL_FELDER`, Poolspieler bekamen kein `lspZ`. Beides ergänzt. | ✅ behoben |
+| FO8 | **Niedrig, Tests:** Neu getestet: FN2 und FN5 über das Menü, FN3 (Feld fehlt), FN4 (Kauf), Tausch im geschlossenen Fenster, Pool mit `lspN`. Die letzten drei (FM4 im Pokal, FN6/FO6 mit Spieltag, FN8) haben seit dem Zweig `tests-fo8` (25.11.) eigene Tests in `scouting.js` und `kabine.js`. | ✅ behoben |
+| FO9 | **Niedrig, Doku:** K33 (`tvModus`, `tvRT`), K36 (K13h, K13i jetzt Nr. 207), Kommentar in `takeJob`, Testliste im Protokoll. Berichtigt. | ✅ behoben |
+
+## FP. Prüfung von K13j, K11h, K11i, K11j, dem Test-Zweig FN10 und den Korrekturen FO ohne Laufzeit (25. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 83482bf..da83362 gelesen, nichts ausgeführt. Kein Laufzeit- oder Syntaxfehler, keine verstümmelten Template-Strings, ausgeschaltete Schalter und Gleichschritt 5a unberührt. Ohne Befund: K13j mit Schalter aus (gleiches Verhalten, gleicher Zufall), dein Verein mit eigener Aufstellung, die Bank im Pokal, der Ablauf eines Testspiels beim Auslandsverein, K11i, K11j (bis auf FP7), FO1 und FO3 bis FO7, die neuen Tests, alte Spielstände.
+
+Korrekturen auf `mitarbeit/popolupo-fp-korrekturen` (auf K11k).
+
+| # | Befund | Status |
+|---|---|---|
+| FP1 | **Mittel (nur mit Schalter):** `pokalRotationKader` zählte Verletzte, Gesperrte und Abgestellte zum Restkader und zur Torwartprüfung, der Favorit konnte zu zehnt oder ohne Torwart spielen. Jetzt nur Einsatzfähige (`avail`), Test mit Verletztem und ohne Torwart. | ✅ behoben |
+| FP2 | **Mittel:** Ein Testspiel beim Auslandsverein brachte die Amateur-Gage. Jetzt nur bei Amateurvereinen (`r.h<AV0`). | ✅ behoben |
+| FP3 | **Niedrig:** Meldung „Blamage gegen einen Amateurverein“ und Kalender „Test Amat.“ auch beim Auslandsverein. Jetzt nur bei Amateuren, im Kalender „Test Ausl.“. | ✅ behoben |
+| FP4 | **Niedrig:** Die Auswahl der Auslandsgegner verglich `euStaerke` (mit dem Faktor der Engine) mit `teamLevel` (ohne). Jetzt mit `euSt(S.my)`. | ✅ behoben |
+| FP5 | **Niedrig:** Das Formular nahm für Auslandsgegner den ersten Lagertag, auch wenn der vor der 3. Vorbereitungswoche lag, und meldete nur „Dieser Tag geht nicht.“. Jetzt der erste Lagertag mit Gegnern und eine eigene Meldung. | ✅ behoben |
+| FP6 | **Mittel, Test:** Der Test K09j lief seit FO5 mit dem Zähler des ersten Falls, die Fälle ohne Meldung waren immer grün; „je Spieltag“ war nicht getestet; ein Nachholspiel konnte den Zähler zurücksetzen. Jetzt je Fall ein Spieltag, ein Fall für „je Spieltag“ und Nachholspiel, Zähler `S.kiSchiri` je Liga und Spieltag der Saison, Kommentar berichtigt. | ✅ behoben |
+| FP7 | **Niedrig:** „Freier Nachmittag ab 5 Tagen“ traf jedes Lager (Lager dauern 5 bis 10 Tage). Jetzt ab 7 Tagen (`lagerFreizeit.min`). | ✅ behoben |
+| FP8 | **Niedrig:** Nach vorzeitiger Abreise (Karte „Lagerkoller“) fielen die Meldung zum Lagerende und das Golf-Marketing weg. Jetzt `lagerAbschluss` auch aus der Wirkung `lagerEnde`, einmal je Lager (`l.ende`), mit Test. | ✅ behoben |
+| FP9 | **Niedrig, Spielwert:** Das Golf-Marketing brachte das 1,2-Fache der Lagerkosten, Golf machte Gewinn. Jetzt 0,6 (vorläufig). | ✅ behoben |
+| FP10 | **Niedrig (nur mit Schalter):** Vergleich und Scoutbericht zeigten im Pokal die nicht rotierte Elf. Jetzt mit `pokalRotationKader` wie im Spiel (Frische von heute) und einem Hinweis, wenn der Co-Trainer schont. | ✅ behoben |
+| FP11 | **Niedrig, Tests:** K13j prüfte deinen Verein nur ohne Automatik, K19l lief im offenen Fenster mit dem echten Gehaltsrahmen. Jetzt beide Zweige (mit `lizenzStart`) und `sperreAb` am Anfang des Falls. Ein Fall über `spielAufbau` im Pokal fehlt weiter (der Anschluss ist über den Quelltext geprüft). | ✅ behoben bis auf den Fall über `spielAufbau` |
+| FP12 | **Niedrig, Doku:** Die Anleitung „Pokalsensationen mit tests/welt.js messen“ ging nicht, der Kommentar im K13j-Test war verstümmelt. Beides berichtigt. | ✅ behoben |
+
+## FQ. Prüfung von K13k, K12d, K18h, K11k, den Tests FO8, dem Doku-Abgleich 2 und den Korrekturen FP ohne Laufzeit (25. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat da83362..7098595 gelesen, nichts ausgeführt. Kein Laufzeit- oder Syntaxfehler, keine verstümmelten Template-Strings, Gleichschritt 5a unberührt, mit ausgeschalteten Schaltern im Hauptstrom keine Änderung. Ohne Befund: K18h, die übrigen Teile von K11k und K12d, die Korrekturen FP1 bis FP12, alte Spielstände, K33, K36 Nr. 208 bis 211, die Namen.
+
+Korrekturen auf `mitarbeit/popolupo-fq-korrekturen` (auf U12p).
+
+| # | Befund | Status |
+|---|---|---|
+| FQ1 | **Mittel (nur mit Länderspielen):** Die Turnierbelastung wirkte praktisch nie: Der Urlaub ist am 1. Juli schon vorbei, Turnierspieler starteten fast bei 0 und blieben mit +6 unter der Schwelle 50. Jetzt mindestens die Schwelle `sommer.belastung.ab`, dazu `turnier.belastung`; damit wirkt auch das −4 der Karte K12d. | ✅ behoben |
+| FQ2 | **Mittel (nur mit Länderspielen):** Jede Nation würfelte ihre Runden für sich, oft gab es mehrere „Titel“, der Sieger passte nicht zur Meldung. Jetzt eine Rangfolge wie ein Turnierbaum (`turnierRunden`: Rang minus Zufall aus dem Seed, Platz 1 Titel, 2 Finale, 3–4 Halbfinale …), ohne R(). Test mit genau einem Titel. | ✅ behoben |
+| FQ3 | **Niedrig:** Turnierspieler zählten beim Trainingsauftakt als anwesend (Leistungstest, Neuzugänge, Karten „Übergewicht“ und „Urlaubsfoto“). Jetzt jeweils ohne `beiNationalteam`. | ✅ behoben |
+| FQ4 | **Niedrig:** Russland war bei der WM dabei. Jetzt `turnier.gesperrt` für EM und WM. | ✅ behoben |
+| FQ5 | **Niedrig:** Die Länderspiel-Karten würfelten auch ohne Schalter mit und verschoben den Kartenstrom deines Vereins. Jetzt das Feld `nurMit:'laenderspiele'` im Katalog, `kartenSchalterAn` filtert vor dem Mischen (betrifft auch `bundestrainer` und `lsVerletzung`). | ✅ behoben |
+| FQ6 | **Niedrig, Test:** Im Test K11k war die Trennung der Rivalen trivial grün. Jetzt ein Kader ohne die Fremdsprachigen: Der Co-Trainer trennt die Rivalen, „Landsleute“ nicht. | ✅ behoben |
+| FQ7 | **Niedrig, Doku:** K13 und K12a nannten K12d und K13k noch als offen, K18 und das Protokoll „ab einem Drittel“ bei der Grenze 0,34. Berichtigt („mehr als ein Drittel“). | ✅ behoben |
+
+## FR. Prüfung von K14g, K16i, dem Doku-Abgleich 3, U12o, K29n, U12p und den Korrekturen FQ ohne Laufzeit (25. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 7098595..c2f814d gelesen, nichts ausgeführt. Kein Laufzeit- oder Syntaxfehler, nichts Hohes oder Mittleres, Gleichschritt 5a unberührt, im Hauptstrom kein zusätzliches R(). Ohne Schalter ändern sich nur die beschriebenen Dinge (Auslosung der Nebenziele, Kartenstrom wie vor K13g). Ohne Befund: K14g, K16i, K29n, U12p (Auslosung gleich), die Korrekturen FQ, die Namen. Hinweis: vorstand.js Nr. 2 rechnet das Soll ohne den Baustein der Nebenziele; das stimmt, solange „Kader“ dort „offen“ ist.
+
+Korrekturen auf `mitarbeit/popolupo-fr-korrekturen` (auf K09k).
+
+| # | Befund | Status |
+|---|---|---|
+| FR1 | **Niedrig:** Das Nebenziel „Zuschauer“ gab es auch nach einer Teilsaison (Jobwechsel mitten in der Saison, Schnitt aus wenigen Heimspielen). Jetzt `zusN` in `S.hist` und mindestens `nebenziele.zuschauerHeimAb` (10) Heimspiele. | ✅ behoben |
+| FR2 | **Niedrig, Test:** Der Teil „gesetzt“ im Test U12o war meist trivial grün. Jetzt direkt über `nebenzieleMoeglich` und `nebenzielObjekt`, mit Gegenprobe ohne Vorsaison und mit Teilsaison. | ✅ behoben |
+| FR3 | **Niedrig, Test:** Im Test K13k war „ohne Russland“ trivial grün (kein Russe in den Kadern), der Leistungstest hing am Kader von Verein 6. Jetzt ein starker Russe eines deutschen Vereins (steht im Kader seiner Nation, fährt nicht zur WM) und der Verein eines Abgestellten. | ✅ behoben |
+| FR4 | **Niedrig, Doku:** Im Doku-Abgleich 3 fehlten bei K10 Fehldiagnose und zweite Meinung samt Offenem, bei K15 das Offene; das Protokoll sagte „zehn“ statt neun. Berichtigt (K15 mit K15f). | ✅ behoben |
+| FR5 | **Niedrig, Doku:** K28 §12 Nr. 14 und `_offene-entscheidungen.md` nannten nur drei Nebenziele. Ergänzt um Europapokal, Kader und Zuschauer. | ✅ behoben |
+
+## FS. Prüfung von K15f, K03f, K03g, K08d, K20f, K05g, K25g, K09k und den Korrekturen FR ohne Laufzeit (25. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat c2f814d..5accaef gelesen, nichts ausgeführt. Kein Laufzeit- oder Syntaxfehler, kein zusätzlicher Verbrauch des Hauptstroms, Gleichschritt 5a unberührt, keine älteren Tests rot. Ohne Befund: K15f, K03f, K03g, K08d, K05g, K09k, die Reihenfolge und Sichtbarkeit des Krimi-Angebots (Halt „Frist“, „gilt nur noch heute“), der Katalog (91 Karten), alte Spielstände, die Namen. Hinweis: `verfahrenTag` lief im Tagesstrom; jetzt im eigenen Strom, falls eine Folgewirkung würfelt.
+
+Korrekturen auf `mitarbeit/popolupo-fs-korrekturen` (auf U12q).
+
+| # | Befund | Status |
+|---|---|---|
+| FS1 | **Niedrig:** Das Krimi-Angebot konnte einen unverkäuflichen Spieler treffen, von deiner eigenen Zweiten kommen, und nach einem Wochenmarkt-Angebot desselben Vereins kam die Meldung ohne eigenes Angebot. Jetzt ohne Unverkäufliche, ohne Zweite Mannschaften, und der Auslöser verlangt, dass für den Spieler noch kein Angebot liegt. | ✅ behoben |
+| FS2 | **Niedrig, Spielwerte:** Der Online-Shop brachte bei durchschnittlichen Fans nur 700 bis 2.100 € je Woche (Changelog zu hoch), fehlte im Finanzplan und ruhte im Sommer. Jetzt 0,12 € je Fan, „Fanartikel online“ in `finanzplan.laufend`, Abrechnung auch in der Sommerpause. | ✅ behoben |
+| FS3 | **Niedrig:** Die Schwelle von 10 Heimspielen (FR1) zählte Pokal und Europapokal mit, eine Rückrunde reichte oft. Jetzt 85 % der Liga-Heimspiele einer ganzen Saison (`zuschauerHeimAnteil`, `zuschauerHeimSoll`). | ✅ behoben |
+| FS4 | **Niedrig, Tests:** K20f prüfte mit einem eigenen Wirkungsobjekt, K05g den Ausschluss des Co-Trainers nicht, K25g nicht die Abrechnung über `marketingTag`. Jetzt mit der Katalogkarte und der Reihenfolge im Tageslauf, mit dem Ausschluss über den Quelltext und mit `marketingTag` montags und an einem anderen Tag. | ✅ behoben |
+
+## FT. Prüfung von K35c, U12q, K15g, K15h und den Korrekturen FS ohne Laufzeit (25. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 5accaef..de29719 gelesen, nichts ausgeführt. Kein Laufzeit- oder Syntaxfehler, kein zusätzlicher Verbrauch des Hauptstroms, Gleichschritt 5a unberührt, keine älteren Tests rot. Ohne Befund: Ziehen im Browser plausibel (Ereignisse, `text/plain`, `preventDefault`), Lizenz-Test 1, U12q, `marketingTag` in den Phasen `play` und `sommer`, `zuschauerHeimSoll`, `verfahrenTag`, K15g, Doku, Namen.
+
+Korrekturen auf `mitarbeit/popolupo-ft-korrekturen` (auf K15h).
+
+| # | Befund | Status |
+|---|---|---|
+| FT1 | **Niedrig:** `aufDrag` rief `darf` schon beim Anfassen; ein abgebrochenes Ziehen schaltete die Automatik der Aufstellung still ab, danach rechnete `setSlot` mit `S.lineup` statt der angezeigten Elf. Jetzt prüft das Ziehen nur `frei`, `aufDrag` und `aufDrop` sind Helfer (Lizenz-Test 1), und `setSlot` sichert die angezeigte Elf vor `darf`. | ✅ behoben |
+| FT2 | **Niedrig:** „Versprechen zurücknehmen“ kostete auch dann, wenn sich das Versprechen bis zur Entscheidung schon erledigt hatte (etwa durch einen Verkauf). Jetzt meldet `versprechenZurueck` Erfolg (`KARTEN_MIT_ERFOLG`), Stimmung und Glaubwürdigkeit kommen als `dann`. | ✅ behoben |
+| FT3 | **Niedrig, Tests:** FS1 (Unverkäufliche, Zweite, schon vorhandenes Angebot) und „Fanartikel online“ im Finanzplan waren ungetestet. Ergänzt in den Fällen K20f und K25g. | ✅ behoben |
+| FT4 | **Niedrig, Doku:** Das Protokoll nannte K15g und K15h nicht unter den noch nicht durchgesehenen Schritten. Berichtigt. | ✅ behoben |
+
+## FU. Prüfung der Korrekturen FT, K18i und K10f ohne Laufzeit (25. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat de29719..41604cc gelesen, nichts ausgeführt. Kein Laufzeit- oder Syntaxfehler. Mit beiden neuen Schaltern aus ändert sich nichts (gleiche Auswahl, gleiche Zahl und Reihenfolge der R()-Aufrufe, gleiche Kader und Vorschau), der Gleichschritt 5a bleibt auch mit Schaltern an symmetrisch, K02a bleibt generisch. Ohne Befund: die Korrekturen FT, die neuen Tests bis auf FU5, ältere Tests, Doku, Namen.
+
+Korrekturen auf `mitarbeit/popolupo-fu-korrekturen` (auf K10f).
+
+| # | Befund | Status |
+|---|---|---|
+| FU1 | **Mittel (nur mit Schalter):** Wer nach Saisonbelastung geschont wurde, saß mit voller Frische einen gezählten Bankplatz ab (Stimmung, Rivale). Jetzt trägt der Kader die Geschonten (`geschont`), das Spielergebnis `gs`, und `bankFall` entschuldigt sie als Rotation. | ✅ behoben |
+| FU2 | **Niedrig (nur mit Schalter):** Auch die Relegation (ohne `wb`) wurde rotiert, die Vorschau zeigte die volle Elf. Jetzt nicht bei `o.wichtig`. | ✅ behoben |
+| FU3 | **Niedrig:** FT2 griff im Spiel kaum, weil das Versprechen bis zur Entscheidung offen bleibt. Jetzt kostet das Zurücknehmen auch nichts, wenn der Spieler nicht mehr bei dir ist. | ✅ behoben |
+| FU4 | **Niedrig, Doku:** K18i wirkt nur auf die Stärke, das Talent bei Talentlücken sehen die Vereine genau. So festgehalten (K18, Regeln). | ✅ behoben |
+| FU5 | **Niedrig, Test:** Der Teil „dein Verein ohne Automatik“ im Test K10f war immer grün. Jetzt mit Belastung und mit dem Fall unter der Automatik. | ✅ behoben |
+| FU6 | **Niedrig, Doku:** K10f verwies auf K10 §5 statt §7. Berichtigt. | ✅ behoben |
+
+## FV. Prüfung der Korrekturen FU ohne Laufzeit (25. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 41604cc..bad3ab0 gelesen, nichts ausgeführt. FU1 bis FU6 sind vollständig behoben. Kein Laufzeit- oder Syntaxfehler. Mit Schalter aus ändert sich nichts (`gs` bleibt leer, kein neuer R()-Aufruf), der Gleichschritt 5a bleibt symmetrisch. Die anderen Leser des Spielergebnisses (Statistik, Versprechen, Prämien, Live-Spiel, Speichern, Tests mit JSON-Vergleich) brauchen `gs` nicht. Bericht: `flutlicht-tools/pruefung-fv.md`.
+
+Korrekturen auf `mitarbeit/popolupo-fv-korrekturen` (auf den Korrekturen FU, ohne die Welle-5-Zweige).
+
+| # | Befund | Status |
+|---|---|---|
+| FV1 | **Niedrig (nur mit Schalter):** Die am Saisonende nachgeholte Relegation (Sicherheitsnetz für ältere Spielstände, `seasonEndLauf`) lief ohne `wichtig` und wurde wie ein Ligaspiel nach Belastung rotiert. Jetzt mit `wichtig` wie am Relegationstag (`js/ablauf.js`). Test K10f prüft den Anschluss. | ✅ behoben |
+| – | Anmerkung ohne Befund: Ein geschontes Spiel deines Vereins unter der Automatik zählt gegen ein Einsatz-Versprechen, wie bei der Pokal-Rotation K13j und der Aufstellung durch den Stab. | so gewollt |
+
+## FW. Prüfung von W5b, W5c1, W5d1 und der Korrektur FV ohne Laufzeit (25. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat bad3ab0..954b5cf gelesen (Code, Stile, Tests, Schrift-Skript), nichts ausgeführt außer Perl zum Lesen der Schriftdatei. Kein Laufzeit- oder Syntaxfehler. FV1 richtig umgesetzt. Alle Farbvariablen definiert, alle Textfarben halten in beiden Themen 4,5 : 1 auf Grundfläche, Kachel und Knopf. Die Schriftdatei würde der Schrift-Prüfer OTS in Chrome und Firefox annehmen (Tabellengrößen, Verzeichnis, Prüfsummen, cmap, glyf geprüft). `V.buero()` liefert in keinem Zustand undefined, NaN oder null. Bericht: `flutlicht-tools/pruefung-fw.md`.
+
+Korrekturen auf `mitarbeit/popolupo-fw-korrekturen` (auf W5e4, Welle-5-Strang).
+
+| # | Befund | Status |
+|---|---|---|
+| FW1 | **Mittel:** Im hellen Thema hatte die Unterzeile im Knopf „Tag beenden“ durch `opacity:.8` nur 3,89 : 1. Jetzt Deckkraft als Farbvariable `--go-unter` (dunkel 0,8, hell 1), damit 5,17 : 1. | ✅ behoben |
+| FW2 | **Niedrig:** Im hellen Thema waren Aktion (`--amber`) und Information (`--blue`) fast dasselbe Blau (Druckleiste ohne Teilung, Nachrichtenränder gleich). Information jetzt Petrol `#0e7490` (4,9 : 1 auf der Grundfläche), dein Wert in Reglern ebenso. Rote Karten auf der Anzeigetafel fest `#ff6b6b`, weil die Tafel in beiden Themen dunkel ist. | ✅ behoben |
+| FW3 | **Niedrig:** Die Tabelle in der Büro-Kachel stand ohne Scroll-Hülle, bei 360 px und langen Vereinsnamen hätte die Seite seitlich gescrollt. Jetzt in `.tw`. | ✅ behoben |
+| FW4 | **Niedrig:** Spieler bei der Nationalmannschaft erschienen in „Ausfälle“ und „Hinweise“ als „Name ()“. Jetzt `ausfallKurz` mit „bei der Nationalmannschaft“. | ✅ behoben |
+| FW5 | **Niedrig, ohne Wirkung im Browser:** In der Schrift stand `head.xMin` 0 statt der echten Box, `fontRevision` 1.0 statt 0.1. Berichtigt, Datei neu erzeugt. | ✅ behoben |
+
+## FX. Prüfung von W5d2, W5d3, W5e1 bis W5e5, W5f und den Korrekturen FW ohne Laufzeit (25. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 954b5cf..7ec7f00 gelesen, nichts ausgeführt außer Perl (Schriftdatei, Streuung der Gesichtsmerkmale an 520 Namen). Kein Laufzeit- oder Syntaxfehler, alle Skripte laden im Simulator, `wappen()` und `gesicht()` liefern in keinem Fall undefined oder NaN. Nichts berührt `R()`, `Math.random` oder den Spielstand, Bilder und Einstellungen bleiben im Browser. Der Filter für eigene Wappen lässt keine Einschleusung zu. Schrift ohne Lücken, Tabellen nach Spezifikation. Bericht: `flutlicht-tools/pruefung-fx.md`.
+
+Korrekturen auf `mitarbeit/popolupo-fx-korrekturen` (auf W5c3).
+
+| # | Befund | Status |
+|---|---|---|
+| FX1 | **Mittel:** Die Gesichtsmerkmale kamen aus `hash32` ohne Nachmischen und hingen stark zusammen (Augen, Brauen, Nase, Mund lagen je Spieler fast gleich, Kopfbreite und -höhe ebenso). Jetzt mit `mix32` nachgemischt wie in `hashNormal`. Die Gesichter ändern sich dadurch einmal. | ✅ behoben |
+| FX2 | **Niedrig:** Der Ton wurde nur beim ersten `pointerdown` freigeschaltet, das ist auf Touch-Geräten keine Nutzeraktivierung. Jetzt bei `click`, `keydown` und `touchend`, bis der Ton läuft. | ✅ behoben |
+| FX3 | **Niedrig:** Taste M bei offenem Menü ließ das Häkchen „Ton an“ stehen. Jetzt `klangSetzen` mit festem Wert, das Häkchen zieht mit. | ✅ behoben |
+| FX4 | **Niedrig, Doku:** K41 verlangte Ton aus bei „weniger Bewegung“. Die Einstellung betrifft nur Animationen, K41 §4 entsprechend berichtigt (vorläufig). | ✅ behoben |
+| FX5 | **Niedrig:** Beim Vorspulen liefen An- und Schlusspfiff gleichzeitig, Jubel und Konfetti auch bei einer Niederlage. Jetzt holt das Spiel nach einem Sprung keine Einzelmomente nach, nur der Schlusspfiff kommt; Jubel bei eigenem Tor (seit FY1 auch bei zwei Toren in einer Minute). | ✅ behoben |
+| FX6 | **Niedrig:** Ein eigenes Wappen als SVG ohne Größenangabe ergab ein leeres Bild. Jetzt füllt es die ganze Fläche. | ✅ behoben |
+| FX7 | **Niedrig, Test:** `__check` baute bei jedem Aufruf alle Gesichter neu (Minuten im Fuzz-Test). Jetzt einmal je Seite. Dazu der Hinweis ohne Fund: `tests/ui-zwei-saisons.js` zählte alle Schalter im Menü statt nur der Erinnerungen; jetzt nur `erinnerungAus`. | ✅ behoben |
+
+## FY. Prüfung von W5c2, W5c3 und den Korrekturen FX ohne Laufzeit (25. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 3dcf15e..c0e89e4 gelesen. Kein Laufzeitfehler, kein undefined, NaN oder null in den neuen Kacheln, alles lädt im Simulator. FX1 bis FX7 sind behoben (FX1 mit Perl an 3.600 Namen nachgerechnet: Merkmale jetzt unabhängig). Die Sprung-Logik im Live-Spiel erkennt alle Wege, die Event-Listener werden richtig entfernt. Kein Zugriff auf Spielzufall oder Spielstand. Bericht: `flutlicht-tools/pruefung-fy.md`.
+
+Korrekturen auf `mitarbeit/popolupo-fy-korrekturen` (auf den Korrekturen FX).
+
+| # | Befund | Status |
+|---|---|---|
+| FY1 | **Niedrig:** Bei zwei Toren in einer Minute gab es weder Jubel noch Raunen (Bedingung „genau ein Tor“). Für das Vorspulen ist sie unnötig, das deckt der Sprung ab. Jetzt wieder Jubel, sobald du getroffen hast, sonst Raunen. | ✅ behoben |
+| FY2 | **Niedrig:** Die Kabine zeigte einen abgegebenen Kapitän bis zum nächsten Wochenlauf weiter als Kapitän. Jetzt zählt er nur, solange er bei dir spielt (wie in `js/vorbereitung.js`). | ✅ behoben |
+| – | Hinweise: K41 §4 versprach beim Vorspulen noch Tore, jetzt richtig „nur der Abpfiff“. Die Stadion-Kachel nannte „gut“ ab 90 % Auslastung, der Regler ab `RU.ausverkauftAb`; jetzt beide gleich. | ✅ behoben |
+
+## FZ. Prüfung der Korrekturen FY, W5c4, W5e6 und W5e7 ohne Laufzeit (25. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat c0e89e4..6a8e4fe gelesen. Kein Laufzeitfehler, kein undefined, NaN oder null im Text, kein Zufall, keine Änderung am Spielstand. FY1 und FY2 behoben, die kleinen Gesichter in der Kabine sind auch bei der Leistung unbedenklich. Bericht: `flutlicht-tools/pruefung-fz.md`.
+
+Korrekturen auf `mitarbeit/popolupo-fz-korrekturen` (auf W5e7).
+
+| # | Befund | Status |
+|---|---|---|
+| FZ1 | **Mittel:** Die Stadion-Kachel zeigte „Auslastung %“ ohne Zahl (beim Ersetzen in FY ging der Wert verloren). Berichtigt. | ✅ behoben |
+| FZ2 | **Niedrig:** Ein Aufstieg über die Relegation wurde nicht gefeiert. Jetzt zählt er mit (`sm.rw` gleich `sm.rel[1]`, ebenso für die 3. Liga). | ✅ behoben |
+| FZ3 | **Niedrig:** Nach einer Entlassung am Saisonende zeigte die Bilanz nach dem Jobwechsel den Erfolg des neuen Vereins. Die Bilanz merkt sich jetzt deinen Verein (`sm.my`), gefeiert wird einmal je Karriere und Saison. | ✅ behoben |
+| FZ4 | **Niedrig:** Die Kachel „Heute“ nannte im Urlaub eine Trainingseinheit. Jetzt „Urlaub, kein Training“. | ✅ behoben |
+| FZ5 | **Niedrig:** Der Kachel „Frische“ fehlte das Symbol. Ergänzt; dazu nutzt sie jetzt die Zonen des Frische-Reglers (`RU.zonenFitness`). | ✅ behoben |
+| FZ6 | **Niedrig:** Training- und Büro-Kachel zeigten die eigene Vorlage auch, wenn der Stab unter der Automatik plant. Jetzt „Der Stab plant (Automatik)“. | ✅ behoben |
+| – | Hinweis, schon vorher: In der Kapitänswahl ließ sich ohne gültigen Kapitän der erste Spieler nicht wählen. Jetzt steht dann „Kapitän wählen“ als erste, nicht wählbare Zeile da. | ✅ behoben |
+
+## GA. Prüfung der Korrekturen FZ und von W5e8 ohne Laufzeit (26. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 6a8e4fe..127cb98 gelesen. FZ1, FZ2, FZ5, FZ6 und der Platzhalter der Kapitänswahl sind behoben, `autoB` ohne Nebenwirkung, Lizenz-Test 1 unberührt. Der Saisonwechsel-Bildschirm erscheint nur nach `newSeason` und lässt Klicks durch. Bericht: `flutlicht-tools/pruefung-ga.md`.
+
+Korrekturen auf `mitarbeit/popolupo-ga-korrekturen` (auf W5e8). Der Tester-Strang war nicht betroffen.
+
+| # | Befund | Status |
+|---|---|---|
+| GA1 | **Hoch:** Die FZ3-Korrektur las in der Saisonbilanz `my:m`, aber `m` gilt nur im Block davor. Jedes Saisonende brach mit einem ReferenceError ab, die Karriere stand. Jetzt `my:S.my`. Ursache: Ersetzung per Skript ohne Blick auf den Gültigkeitsbereich. | ✅ behoben |
+| GA2 | **Niedrig:** Der Saisonwechsel-Bildschirm erschien auch beim Laden eines älteren Spielstand-Codes derselben Karriere oder bei einem neuen Spiel mit demselben Seed. Jetzt merkt er sich das Spielstand-Objekt und beginnt bei jedem neuen von vorn. | ✅ behoben |
+| GA3 | **Niedrig:** Zwei Tipps passten nicht zum Code: Rotation ankündigen hilft nur vor einer englischen Woche, sonst ärgert es die Stammspieler; die Frische-Kachel zählt alle nicht frischen Spieler, nicht nur die deutlich geschwächten. Tipps und Kachel-Text berichtigt. | ✅ behoben |
+
+## GB. Prüfung des ganzen Oberflächen-Strangs auf Fehler im Spielablauf (26. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Anlass: GA1 (Saisonende brach ab) wurde erst in einer Prüfung gefunden. Ein Agent hat 62ef689..c2a1b69 gelesen (alle Code-Änderungen von Welle 5 gegenüber dem Tester-Strang) und mit eigenen Perl-Prüfungen nach Gültigkeitsbereich, doppelten Namen, Syntax und dem Kommentar-Wächter abgesucht, jede mit Gegenprobe (sie findet GA1 im alten Stand). **Keine Funde.** Kein Weg durch das Spiel wirft (Start, Laden, neues Spiel, alle Zustände von `render`, Saisonende, neue Saison, Live-Spiel mit Fortsetzen, Menü, Spielerkarten), der Simulator lädt, kein Spielzufall und kein Spielstandfeld außer `S.summary.my`; Test 5a und alle Node-Tests gehen auf beiden Strängen gleich aus. Bericht: `flutlicht-tools/pruefung-gb.md`.
+
+Umgesetzte Hinweise auf `mitarbeit/popolupo-gb-hinweise`:
+
+| # | Hinweis | Status |
+|---|---|---|
+| GB-H1 | Eigene Wappen teilen sich den Browser-Speicher mit dem Spielstand. Jetzt höchstens `REGELN.darstellung.wappenMaxKB` (900 KB), sonst wird nichts gespeichert und eine Meldung erklärt warum. | ✅ umgesetzt |
+| GB-H2 | Die Titelfeier merkte sich nur Seed und Saison. Jetzt je Spielstand-Objekt wie der Saisonwechsel. | ✅ umgesetzt |
+| – | Weitere Hinweise ohne Wirkung im Spiel (Attrappe im Simulator ohne `setAttribute`, `stimmung()` setzt beim Zeichnen Startwerte wie schon auf dem Tester-Strang, Urlaub-Anzeige bei Relegationsteilnehmern am Saisonende) | vorgemerkt |
+
+## GC. Prüfung von 36666e5, 8585589 und W5e9 ohne Laufzeit (26. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 2ef156c..9e2391b gelesen. Kein Laufzeitfehler, kein Name außerhalb seines Gültigkeitsbereichs, kein fehlender Wert in Template-Strings. Wappen auf der Tafel für Amateur- und Auslandsvereine grau ohne Kürzel, ohne Fehler. Kein Test liest den Text der Tafel. Die Speichergrenze für eigene Wappen berührt den Browser-Test nicht. Kaderliste ohne Überlauf. Bericht: `flutlicht-tools/pruefung-gc.md`.
+
+Korrekturen auf `mitarbeit/popolupo-gc-korrekturen` (auf W5e9).
+
+| # | Befund | Status |
+|---|---|---|
+| GC1 | **Niedrig, nur Anzeige:** `liveRender` schrieb die Anzeigetafel bei jedem Takt neu, dadurch startete der Einlauf in den ersten 1,3 Sekunden neu und flackerte. Jetzt schreibt es die Tafel nur, wenn sich ihr Inhalt ändert. | ✅ behoben |
+| – | Hinweis: Die Titelfeier hielt das alte Spielstand-Objekt im Speicher fest. Jetzt `WeakMap`. | ✅ umgesetzt |
+
+## GD. Prüfung der Korrekturen zu Testlauf 10 und von K43 ohne Laufzeit (26. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 566ae45..7a3c747 gelesen.
+
+- Kein Laufzeitfehler, kein Name außerhalb seines Gültigkeitsbereichs, kein fehlender Wert in Template-Strings.
+- „Normal“ verhält sich genau wie vorher, die Gleichschritt-Tests brechen nicht.
+- Im Europapokal bleiben es 36 Teilnehmer je Wettbewerb, auch für Titelverteidiger, in der Qualifikation und ohne deutschen Verein in der Europa League.
+- `karteNurSchlecht` trifft fünf Karten, alle gehen wirklich nur schlecht aus, keine Kette hängt an ihnen.
+
+Bericht: `flutlicht-tools/pruefung-gd.md`.
+
+Korrekturen auf `mitarbeit/popolupo-gd-korrekturen` (auf dem Messskript K43b).
+
+| # | Befund | Status |
+|---|---|---|
+| GD1 | **Mittel, nur Leicht:** In der ersten Saison setzte `setTarget` die Nebenziele vor dem Tausch in die Europa League. Ein Champions-League-Starter konnte ein unerfüllbares Nebenziel „Champions League“ bekommen. Jetzt wird erst getauscht. | ✅ behoben |
+| GD2 | **Mittel, nur Leicht:** Nach einem Jobwechsel zu einem Verein in der Champions League spielte man sie doch. Jetzt (vorläufig): Vor der Auslosung tauscht `takeJob` wie beim Spielstart. Nach der Auslosung bieten solche Vereine auf Leicht keinen Job an (`euClFest` in mkJobs, Jobangebot und Rettung). | ✅ behoben |
+| GD3 | **Niedrig, Leicht und Schwer:** Beim Wunderkind („Laufen lassen“) ist die Chance die des schlechten Ausgangs, das Glück wirkte dort verkehrt herum. Neues Merkmal `pech:true` an der Wirkung dreht das Glück um. Der Trainingsweltmeister bleibt ein Kartenausgang mit Glück (K43 §3.4 präzisiert). | ✅ behoben |
+| GD4 | **Niedrig, nur Leicht:** Texte nannten Punktabzug und Champions League. Jetzt nennen Lizenzhinweis, Saisonziel und Tabellenlegende den Gönner und die Europa League, und der Tausch kommt mit einer Meldung samt Grund. | ✅ behoben |
+| – | Hinweis: Fehlt `kartenNegativ` in einer Stufe, fielen böse Karten still weg. Jetzt gilt ohne Angabe 1. | ✅ umgesetzt |
+| – | Hinweis: Tests frieren REGELN nicht mehr ein. Bewusst so, damit Tests Regelwerte verstellen können; im Browser bleibt REGELN eingefroren. | entschieden |
+| – | Hinweis: Alte Spielstände auf Leicht bekommen die Regeln aus K43 sofort. Gewollt, die Stufe gilt für den ganzen Spielstand. | entschieden |
+
+## GE. Prüfung von W5e11, W5e12, W5f2, W5f3 und W5f4 ohne Laufzeit (26. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 7a3c747..98c4191 gelesen.
+
+- Kein Laufzeitfehler, auch nicht in Node.
+- Die Atmosphäre läuft nie doppelt und stoppt auf allen Wegen aus dem Live-Fenster.
+- Die Abpfiff-Klasse bleibt nicht am nächsten Spiel hängen. Die Entlassung erscheint einmal, lässt Klicks durch und fehlt bei „weniger Bewegung“.
+- Alte Klang-Einstellungen funktionieren weiter. Weder Spielzufall noch Spielstand ändern sich.
+
+Bericht: `flutlicht-tools/pruefung-ge.md`.
+
+Korrekturen auf `mitarbeit/popolupo-ge-korrekturen` (auf den Korrekturen GD).
+
+| # | Befund | Status |
+|---|---|---|
+| GE1 | **Mittel, nur Klang:** Die Atmosphäre setzte bei jedem Start etwa 2 Sekunden lang viel zu laut ein (der erste Pegel begann beim Grundwert 1 des Knotens), auch bei Stadion 0. Jetzt Startwert direkt am Knoten, Pegel vom aktuellen Wert aus (`atmoHalten`), kein Start bei Stadion 0. | ✅ behoben |
+| GE2 | **Niedrig, nur Anzeige:** Das Abpfiff-Licht folgte dem Spielstand, auch wenn das Elfmeterschießen oder das Gesamtergebnis im Rückspiel anders entschied. Jetzt erst Elfmeterschießen, dann Gesamtergebnis, dann Spielstand. | ✅ behoben |
+| GE3 | **Niedrig, nur Klang:** Mit „bei Tor anhalten“ wurde die Menge nach einem Tor nicht lauter, und nach Ton an oder Rückkehr in den Tab blieb es in Spielpausen still. Jetzt ein eigener Jubel-Zweig (`atmoTor`), leiser nur vor dem Anpfiff und in der Halbzeit, und `atmoNachfuehren` bei Ton an, Lautstärke und Rückkehr in den Tab. | ✅ behoben |
+| GE4 | **Niedrig, nur Klang:** Der Brief-Ton verglich nur Anzahlen. Jetzt vergleicht er die Karten und Angebote selbst. | ✅ behoben |
+| – | Hinweise: Stumm und versteckter Tab jetzt sofort still. Klangaufrufe in `liveRender` mit try/catch. Entlassung als reines Bild (`aria-hidden`), der Dialog sagt „Entlassen!“. Attrappe in tests/sim.js mit `setAttribute` und `remove`. | ✅ umgesetzt |
+| – | Hinweis: Ein Teilausschluss (leerer Block) wirkt nicht auf die Atmosphäre. | später |
+
+## GF. Prüfung der Korrekturen GD und GE, des Messskripts K43b und der Schrift W5d4/W5d5 ohne Laufzeit (26. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 98c4191..b06cbf4 gelesen. **Keine Funde.**
+
+- GD1 bis GD4 und GE1 bis GE4 sind behoben, ohne neue Fehler. „Normal“ ist unverändert, auch die Zahl der R()-Aufrufe.
+- Das Messskript würde nach dem Lesen laufen und richtig zählen.
+- Die kern-Tabelle entspricht der Spezifikation (Format 0), auch in der eingecheckten Schriftdatei.
+
+Bericht: `flutlicht-tools/pruefung-gf.md`.
+
+Hinweise umgesetzt auf `mitarbeit/popolupo-gf-hinweise` (auf den Korrekturen GE):
+
+| # | Hinweis | Status |
+|---|---|---|
+| 1 | Tests für GD1 (Nebenziel passt zum Wettbewerb) und GD2 (Jobwechsel vor und nach der Auslosung) in tests/schwierigkeit.js | ✅ umgesetzt |
+| 2 | Erstes „Ton an“ der Sitzung: Atmosphäre nach `resume` nachführen. Bei einem Tor erst die Schleife, dann der Jubel. | ✅ umgesetzt |
+| 3 | `euClFest` nur in der Spielzeit (`play`), nicht in der Sommerpause | ✅ umgesetzt |
+| 4 | Rücktritt auf Leicht vor der Auslosung: Der alte Verein bleibt in der Europa League. Selten, so gelassen (K43 §3.2). | entschieden, vorläufig |
+| 5 | K43 §6 nennt die neuen Tests | ✅ umgesetzt |
+
+## GG. Prüfung von 266247b, der Prüfregeln in tests/welt.js, der Kalibrierung und von „Mitwachsend“ ohne Laufzeit (26. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat b06cbf4..6259798 gelesen.
+
+- „Mitwachsend“ wertet die abgelaufene Saison richtig. Die Folge beginnt ohne Titel neu, die Stufe sinkt nie, und der Wechsel kommt vor der Einteilung des Europapokals.
+- Kein Laufzeitfehler. Auf den festen Stufen unveränderte Würfe. Kein Test wird sicher rot.
+
+Bericht: `flutlicht-tools/pruefung-gg.md`.
+
+Korrekturen auf `mitarbeit/popolupo-gg-korrekturen` (auf K43c).
+
+| # | Befund | Status |
+|---|---|---|
+| GG1 | **Mittel, nur „Mitwachsend“:** Der Kreditrahmen sank beim Wechsel sofort, das konnte ohne Warnung zur Insolvenz mit Punktabzug führen. Jetzt gilt in der Saison des Wechsels noch der alte Rahmen (`kreditFaktor`), der Zähler der Insolvenz beginnt neu, und die Meldung nennt beide Rahmen und den Fehlbetrag, falls das Konto schon darunter liegt. | ✅ behoben |
+| GG2 | **Niedrig, Text:** Zwei Texte nannten noch vier Wochen bis zum offiziellen Wechselwunsch. Die Kabine nimmt die Zahl jetzt aus der Regel, der Tipp sagt „einige Wochen“. | ✅ behoben |
+| – | Hinweise: Menü zeigt „(mitwachsend)“. Saisonziel und Talentsterne wechseln mit der Stufe, gewollt und in K43 §5 genannt. Test für die Reihenfolge im Saisonwechsel (Quelltext) und den Kreditrahmen nächste Saison. tests/welt.js zählt nur Konten, die länger unter dem Kreditrahmen liegen, als die Regeln bis zur Insolvenz erlauben. Der Langlauf misst „Mitwachsend“ mit. | ✅ umgesetzt |
+
+## GH. Prüfung der Korrekturen zu Lauf 11 und des neuen „Mitwachsend“ ohne Laufzeit (26. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat d38f98d..0368e92 gelesen.
+
+- Kein Laufzeitfehler, auch mit Spielständen der ersten Fassung.
+- Die Bewertung wertet Ziel, Meister mit Vorsprung, Aufstieg, Abstieg samt Relegation, Pokal und Europapokal richtig. Tote Zone und Grenze stimmen mit K43 §5.3.
+- Ohne „Mitwachsend“ sind alle Hebel exakt neutral, mit gleich vielen Würfen. Die Hebel wirken nur auf deinen Verein und bleiben in ihren Grenzen.
+- K43f nachgerechnet, geht auf.
+
+Bericht: `flutlicht-tools/pruefung-gh.md`.
+
+Korrekturen auf `mitarbeit/popolupo-gh-korrekturen` (auf K43d).
+
+| # | Befund | Status |
+|---|---|---|
+| GH1 | **Niedrig:** Der Zuschuss des Partners stand in keiner Finanzübersicht, weil er vor dem Zurücksetzen der Saisonfinanzen gebucht wurde. Die Bewertung läuft jetzt nach `finanzenSaisonstart`. Die Europapokal-Titel der alten Saison merkt sich `newSeasonLauf` vor `europaAnlegen`. Der Test zur Reihenfolge ist angepasst. | ✅ behoben |
+| GH2 | **Niedrig, Test:** fuzz-karrieren gab Angebote nur mit Ablösefeld ab und prüfte Vereinslose, Vorverträge und vereinbarte Ablösen nicht mehr. Jetzt genügt das Feld für die Jahre. | ✅ behoben |
+| – | Hinweise: Partner nur für den Verein der Durststrecke, nicht nach einem Jobwechsel am Saisonende. Spielstände der ersten Fassung kommen auf die Grundlage Normal. Test für das Glück bei Karten mit „Mitwachsend“. Kommentare und tests/README.md nachgezogen, regeln-fest und der Langlauf eingetragen. | ✅ umgesetzt |
+| – | Hinweis: Die Vertrauensanzeige im Büro zeigte die Grenze fest. Seit K43e nimmt sie die echte Grenze (`zonenVertrauen`). | ✅ umgesetzt (K43e) |
+
+## GI. Prüfung von K43e und der Korrekturen zu Lauf 12 ohne Laufzeit (26. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 824337d..a36f093 gelesen.
+
+- `euPlanPruefen` rechnet in den richtigen Tageseinheiten, legt nie auf einen vergangenen Tag und lässt fremde Spiele der 2. und 3. Liga in Ruhe. Es würfelt nicht und kostet wenig.
+- `maxJeSaison` zählt richtig: Ein Wechsel im Sommer zählt zur alten Saison, je Verein und Saison sind es höchstens 3.
+- `zonenVertrauen` stimmt für alle Stufen und für „Mitwachsend“.
+
+Bericht: `flutlicht-tools/pruefung-gi.md`.
+
+Korrekturen auf `mitarbeit/popolupo-gi-korrekturen` (auf t12).
+
+| # | Befund | Status |
+|---|---|---|
+| GI1 | **Mittel:** Die zwei Fälle aus Lauf 12 haben keinen erlaubten Tag: dein Verein dienstags Champions League, der Ligagegner donnerstags davor und danach Europapokal. Das Sicherheitsnetz griff dann zur Notregel und schob das Spiel täglich zwischen Samstag und Sonntag hin und her. Jetzt verlegt das Netz nur auf einen freien Tag (`ligaVerlegen` mit `nurFrei`). Unvermeidbare Fälle zählt `tests/wettbewerbe.js` getrennt und nicht als Fehler. Das Champions-League-Spiel auf Mittwoch zu legen, griffe an sechs Stellen in den Europapokal ein und bleibt vorerst aus (vorläufig). | ✅ behoben (vorläufig) |
+| GI2 | **Niedrig:** Das Netz konnte auf morgen oder heute verlegen. Jetzt frühestens übermorgen (`ab`). | ✅ behoben |
+
+## GJ. Prüfung der Ligaklausel der Computer-Vereine und der Messskripte ohne Laufzeit (26. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat ba186df gelesen.
+
+- `lastLg` ist zum Zeitpunkt der Kürzung für alle Vereine die Liga der Vorsaison. Die Kürzung läuft je Saisonwechsel genau einmal und würfelt nicht.
+- Gleichschritt 5a und `tests/schwierigkeit.js` erreichen keinen Saisonwechsel.
+- Test 4b, `finanzmodell` und `kalibrierung` sind ohne Syntax- oder Bereichsfehler.
+
+Bericht: `flutlicht-tools/pruefung-gj.md`.
+
+Korrekturen auf `mitarbeit/popolupo-gj-korrekturen` (auf t18-ligaklausel).
+
+| # | Befund | Status |
+|---|---|---|
+| GJ1 | **Mittel:** Ob gekürzt wurde, hing davon ab, wer den Verein am 1. Juli führt, nicht davon, wer den Vertrag geschlossen hat. Dein Startkader blieb nach einem Abstieg ungekürzt. Jetzt gilt für alle Vereine dieselbe Regel: Was du aushandelst, steht in `p.lk`, „keine“ ausdrücklich als 0. Alles andere hat die übliche Klausel. Verlängerung durch den Verein und Vertragsende setzen auf die übliche zurück. | ✅ behoben |
+| GJ2 | **Mittel:** Die Kürzung blieb bis zum Vertragsende, auch nach dem Wiederaufstieg, und die Stimmung sah einen unterbezahlten Spieler. Jetzt gilt das Gehalt je Liga: `p.lkAlt` merkt das alte Gehalt, nach dem Wiederaufstieg gilt es wieder, ein zweiter Abstieg kürzt nicht noch einmal. Stimmung und Neid-Karte messen das Vertragsgehalt (`gehaltVertrag`). | ✅ behoben |
+| GJ3 | **Niedrig:** „neu in der Liga“ mischte Absteiger und Aufsteiger. Jetzt drei Gruppen. | ✅ behoben |
+| GJ4 | **Niedrig:** Die Ausnahme für Leihen und vereinbarte Wechsel griff nie, weil beide vorher schon abgewickelt sind. Jetzt wird nicht gekürzt, wer am Tag des Saisonwechsels kam (`p.seit`). Leihen waren schon richtig. | ✅ behoben |

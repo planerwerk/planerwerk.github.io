@@ -61,6 +61,7 @@ function spieleAm(d){if(TAGINDEX.plan!==S.plan){const m=new Map();LIGEN.forEach(
 function termineAm(d){const P=S.plan,L=[],g={};
   spieleAm(d).forEach(x=>{const k=x.lg+':'+x.md;if(!g[k]){g[k]={art:'liga',lg:x.lg,md:x.md,idx:[],tag:d};L.push(g[k]);}g[k].idx.push(x.i);});
   const r=P.pokal.findIndex(x=>x[0]===d);if(r>=0)L.push({art:'pokal',r,tag:d,min:P.pokal[r][1]});
+  const r2=P.pokal.findIndex(x=>x[0]+1===d);if(r2>=0&&pokalGeteilt(r2))L.push({art:'pokal',r:r2,tag:d,min:P.pokal[r2][1],spaet:1}); // zweiter Pokaltag für Vereine aus dem Europapokal (T8.2)
   [['rel',P.rel],['rel2',P.rel2]].forEach(([art,a])=>{const k=a.findIndex(x=>x[0]===d);if(k>=0)L.push({art,leg:k,tag:d,min:a[k][1]});});
   const sc=supercupAm(d);if(sc)L.push({art:'supercup',tag:d,min:sc.min});
   euTermineAm(d).forEach(x=>L.push(x)); // Europapokal (K37, U19a)
@@ -74,7 +75,7 @@ const relBereit=art=>art==='rel'?ligaFertig(1)&&ligaFertig(2):ligaFertig(2)&&lig
 function meinSpiel(d){const t=myT();
   for(const e of termineAm(d)){
     if(e.art==='liga'&&e.lg===t.lg){const i=e.idx.find(j=>{const f=S.fx[e.lg][e.md][j];return f[0]===S.my||f[1]===S.my;});if(i!=null)return{...e,i,min:S.plan.zeit[e.lg][e.md][i][1]};}
-    if(e.art==='pokal'&&S.cup.hist.length===e.r&&S.cup.alive.includes(S.my))return e;
+    if(e.art==='pokal'&&S.cup.hist.length===e.r&&S.cup.alive.includes(S.my)&&pokalMeinTag(e))return e;
     if((e.art==='rel'||e.art==='rel2')&&relBereit(e.art)&&relTeams(e.art).includes(S.my))return e;
     if(e.art==='supercup'&&[S.supercup.h,S.supercup.a].includes(S.my))return e;
     if(e.art==='eu'){const m=euMeinSpiel(e);if(m)return Object.assign({},e,{h:m.h,a:m.a});}}
@@ -97,17 +98,17 @@ const meineSpieltage=()=>meineLigaspiele().filter(e=>e.tag<S.tag||(e.tag===S.tag
 const heuteMeinSpiel=()=>S.phase==='play'&&S.gespielt!==S.tag&&!!meinSpiel(S.tag);
 
 // Halt-Regeln: Hier hält „Tag beenden“ an.
-function haltGrund(d){if(S.phase==='end')return'Saisonende';if(S.fired)return'Entlassen';if(S.phase==='play'&&meinSpiel(d))return'Spiel';if(S.lizenz&&S.lizenz.karte&&S.lizenz.karte.tag===d&&S.lizenz.karte.s===S.season)return'Lizenz';if(pokalLosHeute(d)||euLosHeute(d))return'Auslosung';if(S.offers.some(o=>o.bis===d)||(!autoB('sportgericht')&&meineVerfahren().some(v=>v.stand==='antrag'&&v.frist===d)))return'Frist';if((S.gw||[]).some(g=>g.tag===d&&g.s===S.season))return'Gesprächswunsch';if(((S.karten&&S.karten.offen)||[]).some(k=>k.tag===d&&k.s===S.season))return'Ereignis';if(S.phase==='play'&&erinnerungAn('deadline')&&deadlineLetzter(d))return'Deadline Day';if(S.pk&&S.pk.tag===d&&S.pk.s===S.season&&!autoB('presse'))return'Pressekonferenz';if(S.phase==='play'&&d===auftaktTag(myT()))return'Trainingsauftakt';return'';}
+function haltGrund(d){if(S.phase==='end')return'Saisonende';if(S.fired)return'Entlassen';if(S.phase==='play'&&meinSpiel(d))return'Spiel';if(S.lizenz&&S.lizenz.karte&&S.lizenz.karte.tag===d&&S.lizenz.karte.s===S.season)return'Lizenz';if(pokalLosHeute(d)||euLosHeute(d))return'Auslosung';if(S.offers.some(o=>o.bis===d)||(!autoB('sportgericht')&&meineVerfahren().some(v=>v.stand==='antrag'&&v.frist===d))||(!autoB('testspiele')&&tsKIOffen(d)&&S.tsKI.bis===d)||vereinsstrafeFrist(d)||kiAbwFrist(d))return'Frist';if((S.gw||[]).some(g=>g.tag===d&&g.s===S.season))return'Gesprächswunsch';if(((S.karten&&S.karten.offen)||[]).some(k=>k.tag===d&&k.s===S.season))return'Ereignis';if(S.phase==='play'&&erinnerungAn('deadline')&&deadlineLetzter(d))return'Deadline Day';if(S.pk&&S.pk.tag===d&&S.pk.s===S.season&&!autoB('presse'))return'Pressekonferenz';if(S.phase==='play'&&d===auftaktTag(myT()))return'Trainingsauftakt';return'';}
 function naechsterHalt(){const ende=S.phase==='sommer'?tageDerSaison():S.plan.ende;
   for(let d=S.tag+1;d<=S.tag+RK.maxSprung;d++){if(d>=ende||haltGrund(d)||(S.phase==='play'&&d===auftaktTag(myT())))return Math.min(d,ende);}return S.tag+RK.maxSprung;}
 
 // Tageswechsel
-function tagBeginn(d){taeglich(d);if(wochentag(d)===RK.wochenTag)woechentlich(d);if(S.phase==='play'&&d>=S.plan.ende)seasonEnd();}
-function tagEnde(d){if(S.phase==='play'&&S.gespielt!==d)tagesSpiele(d);}
+function tagBeginn(d){S.stabT=S.stabT||[];try{taeglich(d);if(wochentag(d)===RK.wochenTag)woechentlich(d);if(S.phase==='play'&&d>=S.plan.ende)seasonEnd();}finally{stabBericht();}} // Meldungen des Stabs gesammelt (K36c)
+function tagEnde(d){S.stabT=S.stabT||[];try{if(S.phase==='play'&&S.gespielt!==d)tagesSpiele(d);}finally{stabBericht();}} // try/finally: kein Sammler bleibt nach einem Fehler liegen (Prüfung DY1)
 // Beendet den heutigen Tag und springt zum nächsten Halt, höchstens RK.maxSprung Tage weit. Am 1. Juli beginnt die neue Saison.
-function weiter(){let n=0;tagEnde(S.tag);
+function weiter(){let n=0;spielfeldrandWeiter();tagEnde(S.tag);
   while(S.phase!=='end'&&!S.fired){S.tag++;n++;S.gespielt=-1;
-    if(S.tag>=tageDerSaison()){newSeason();break;}
+    if(S.tag>=tageDerSaison()){S.stabT=S.stabT||[];try{newSeason();}finally{stabBericht();}break;} /* Verlängerungen des Saisonwechsels gesammelt (DY2) */
     tagBeginn(S.tag);if(haltGrund(S.tag)||(n>=RK.maxSprung&&!sommerSprung()))break;tagEnde(S.tag);}
   save();return n;}
 // Nach der Saisonbilanz: weiter in die Sommerpause (Urlaub bis zum Trainingsauftakt der neuen Saison)
@@ -116,10 +117,14 @@ function sommerpause(){if(S.phase==='end'&&!S.fired){S.phase='sommer';save();}}
 // Erinnerungen vor „Tag beenden“: nur, wenn wirklich etwas offen ist. Jede Art ist im Menü abschaltbar.
 const erinnerungAn=k=>!(S.einst&&S.einst.aus&&S.einst.aus[k]);
 function erinnerungen(){const E=[],d=S.tag,m=heuteMeinSpiel()?meinSpiel(d):null;
-  if(erinnerungAn('frist'))S.offers.filter(o=>o.bis===d).forEach(o=>{const p=PIX.get(o.pid);if(p)E.push({art:'frist',text:`Das Angebot von ${esc(tn(o.tid))} für ${esc(p.n)} (${fmt(o.amt)}) gilt nur noch heute.`,tab:'buero',knopf:'Zum Angebot'});});
+  if(erinnerungAn('frist'))S.offers.filter(o=>o.bis===d).forEach(o=>{const p=PIX.get(o.pid);if(p)E.push({art:'frist',text:`Das Angebot von ${esc(tn(o.tid))} für ${esc(p.n)} (${esc(angebotBetrag(o))}) gilt nur noch heute.`,tab:'buero',knopf:'Zum Angebot'});});
   if(erinnerungAn('frist')&&!autoB('sportgericht'))meineVerfahren().filter(v=>v.stand==='antrag'&&v.frist===d).forEach(v=>{const p=PIX.get(v.pid);E.push({art:'frist',text:`Sportgericht: Die Frist für ${esc(p.n)} (Antrag ${v.antrag} Spiel${v.antrag===1?'':'e'}) endet heute. Ohne Antwort gilt der Antrag als angenommen.`,tab:'buero',knopf:'Zum Sportgericht'});});
   if(m&&erinnerungAn('aufstellung')){const aus=(S.lineup||[]).map(id=>PIX.get(id)).filter(p=>p&&p.team===S.my&&!avail(p));
     if(aus.length)E.push({art:'aufstellung',text:`In deiner Startelf fehlen ${aus.map(p=>esc(p.n)).join(', ')}. Ohne Änderung stellt das Spiel automatisch Ersatz auf.`,tab:'aufst',knopf:'Zur Aufstellung'});}
+  if(m&&m.art==='liga'&&erinnerungAn('gelbsperre')&&!autoB('aufstellung')){const g=gelbsperreDroht(S.tag);if(g)E.push(g);} /* Gelbsperre vor Derby oder Spitzenspiel (K09, K09b) */
+  if(erinnerungAn('plan')&&S.phase==='play'){const pl=planPasstNicht(S.tag);if(pl)E.push(pl);} /* Plan passt nicht (K07, K07b), höchstens einmal je Woche */
+  if(erinnerungAn('spielfrei')){const sf=spielfreiOhneTestspiel(S.tag);if(sf)E.push(sf);} /* spielfreie Woche ohne Testspiel (K01 H9, K11d), höchstens einmal je Woche */
+  if(erinnerungAn('lernplatz')){const lp=lernplatzFrei(S.tag);if(lp)E.push(lp);} /* Lernplatz frei (K07 §8, K07d), höchstens einmal je Woche */
   if(m&&erinnerungAn('versprechen'))versprechenKippen().forEach(v=>{const p=PIX.get(v.pid);if(p&&!myXI().includes(p.id))E.push({art:'versprechen',text:`Du hast ${esc(p.n)} Einsatzzeit versprochen (${versprechenText(v)}), aber er steht nicht in der Startelf. Das Versprechen droht zu kippen.`,tab:'aufst',knopf:'Zur Aufstellung'});});
   if(m&&erinnerungAn('sponsor')&&(S.sponsOffers||werbungAusstehend()))E.push({art:'sponsor',text:S.sponsOffers?'Du hast noch keinen Trikotsponsor gewählt. Sonst nimmt der Vorstand das erste Angebot.':'Für Ausrüster oder Ärmel ist noch kein Werbevertrag gewählt. Sonst nimmt der Vorstand das erste Angebot.',tab:'buero',knopf:'Zu den Angeboten'});
   if(erinnerungAn('vertrag')&&!autoB('vertraege')&&tageDerSaison()-d<=RK.erinnerungVertragTage){const xi=new Set(myXI()),e=squad(S.my).filter(p=>p.ct<=1&&xi.has(p.id));

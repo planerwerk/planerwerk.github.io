@@ -63,7 +63,7 @@ function planBedarf(P){const Q=P.Q,B=RCV.bedarf,niveau=P.niveau,out=[];
 function fensterNr(tag=S.tag){const k=mmtt(tag);return RTR.fenster.findIndex(([a,b])=>k>=a&&k<=b);}
 // Transferbudget: einmal am Anfang des Fensters aus dem Konto festgelegt. Danach zählt nur noch, was ausgegeben und durch Verkäufe eingenommen wurde.
 // So entscheidet dein Verein in der Automatik genau wie als Computer-Verein, auch wenn die laufende Buchhaltung anders ist (tests/lizenz.js, Gleichschritt).
-function kiBudget(t,nr){const k=S.season*10+nr;if(!t.tb||t.tb.k!==k)t.tb={k,b:Math.max(0,Math.round(t.cash*RCV.finanzen.budgetAnteil[nr]*profilWert(t,'budget',1))),a:0,n:0};return t.tb;}
+function kiBudget(t,nr){const k=S.season*10+nr;if(!t.tb||t.tb.k!==k)t.tb={k,b:Math.max(0,Math.round(t.cash*RCV.finanzen.budgetAnteil[nr]*profilWert(t,'budget',1)*(t.id===S.my?zgBudgetFaktor():1))),a:0,n:0};return t.tb;} // Zielgespräch wirkt auch in der Automatik (U12e, Prüfung CX5), ohne Verhandlung Faktor 1
 // Budget nutzen (§5.1): In den letzten Wochen des Fensters sinkt die gesuchte Stärke, solange mehr als 40 % des Budgets übrig sind
 function kiSenkung(tb){const B=RCV.bedarf,ende=fensterEnde();if(ende==null||tb.a>=tb.b*(1-B.budgetRestAb))return 0;return Math.max(0,B.endspurtWochen-Math.floor((ende-S.tag)/7))*B.anspruchJeWoche;}
 // Preis eines Spielers der Transferliste: Vereinswert des Verkäufers (K19 §5.1), aber ohne Aufschlag für den Stellenwert. Wer gehen darf, kostet höchstens den Marktwert.
@@ -77,12 +77,23 @@ const kiSternPreis=p=>Math.max(RP.marktwert.minimum,rundeAb(Math.max(forderungBa
 // Auf der Liste steht, wer Grund A hat und wessen Gruppe danach noch voll ist (Regel B). Alle anderen kommen von der Liste.
 // Nicht angefasst werden vereinbarte Wechsel, geliehene Spieler und Profis, die ein anderer Verein in seine Zweite abgestellt hat.
 function kiListe(P){const klein=P.alle.length<=RM.verkaeufer.kaderMin;
-  P.alle.forEach(p=>{if(p.wech||p.leihe||p.zwP)return;if(!klein&&P.abgabe.has(p.id)){p.list=1;p.ask=kiPreis(p);}else if(p.list){p.list=0;p.ask=0;}});}
+  P.alle.forEach(p=>{if(p.wech||p.leihe||p.zwP)return;if(p.nv)delete p.nv;if(!klein&&P.abgabe.has(p.id)){p.list=1;p.ask=kiPreis(p);}else if(p.list){p.list=0;p.ask=0;}});}
+// Notverkauf (K31 §8, K31d, nur mit RCV.notverkauf.an): nach kiListe jede Woche, ohne Zufall. Über dem Gehaltsrahmen kommt der Spieler mit dem höchsten Gehalt (keine
+// Schlüsselspieler, keine vereinbarten Wechsel, Leihen oder Zweite) unter Wert auf die Liste. Meldung einmal je Verein und Saison (t.nvS). Gibt den Spieler zurück.
+// Seit Prüfung FK1: Merker p.nv (Saison, kiListe löscht ihn jede Woche, der Notverkauf setzt ihn neu), damit kiKandidat ihn auch ohne Abgabegrund zum Notpreis p.ask
+// kauft. Wie kiListe auch für deinen Verein, wenn dein Stab die Transfers führt (kiMarkt nimmt nur solche Vereine), so wirkt der Schalter in beiden Welten von 5a gleich.
+function kiNotverkauf(t,P){const N=RCV.notverkauf;if(!N||!N.an||!t||P.alle.length<=RM.verkaeufer.kaderMin||gehaltsSumme(t)<=gehaltsRahmen(t)*N.ueberRahmen)return null;
+  const p=P.alle.filter(x=>!x.wech&&!x.leihe&&!x.zwP&&kaderRolle(x)!=='schluessel').sort((a,b)=>b.sal-a.sal||a.id-b.id)[0];if(!p)return null;
+  p.list=1;p.ask=Math.max(RP.marktwert.minimum,rundeAb(kiPreis(p)*N.preis));p.nv=S.season;
+  if(t.nvS!==S.season){t.nvS=S.season;news(`Notverkauf: ${t.name} muss Gehalt sparen. ${p.n} steht für ${fmt(p.ask)} auf der Transferliste.`,'tr');}return p;}
 
 // ---------- Kauf (K31 §5.3) ----------
 // Bester Kandidat für eine Lücke: Vereinslose und Spieler der Transferliste anderer Vereine. Er passt in die Gruppe, hat die gesuchte Stärke, will zu diesem Verein,
 // der Preis passt ins Budget und zum Vereinswert des Käufers, und beim Verkäufer gilt Regel B noch in diesem Moment.
 // Auswahl nach Stärke (bei Jungen zählt ein Teil des Talents, ab 30 ein Abzug) mit einem Schätzfehler aus dem Markt-Strom.
+// Unsicherheit der Computer-Vereine (K18 §7, K18i, nur mit RCV.unsicherheit.an): die Stärke eines fremden Spielers p, wie Verein t sie sieht. Ohne Schalter die wahre Stärke.
+// Streuung nach dem besten Scout des Vereins, fest aus dem Seed je Saison, Verein und Spieler (kein R(), gleiche Reihenfolge der Würfel wie ohne Schalter).
+const kiSichtStr=(t,p)=>{const U=RCV.unsicherheit;if(!U||!U.an||p.team===t.id)return p.str;const q=S.stab?stabQ(t.id,'scout'):RST.ohne,sd=Math.max(U.min,U.basis-U.jeScout*q);return p.str+hashNormal('kiSicht',S.season,t.id,p.id)*sd;};
 function kiKandidat(t,n,rest,senk,kader,plan){const K=RCV.kauf,min=n.min-senk,alterMax=profilWert(t,'alterMax',K.alterMax),talentGewicht=profilWert(t,'talentGewicht',K.talentGewicht),altMalus=profilWert(t,'altMalus',K.altMalus);let best=null,bv=-Infinity;
   for(const p of S.pl){if(p.team===t.id||p.team<-1||p.wech||p.leihe||p.zwP||p.age>alterMax)continue;
     const von=p.team>=0?S.teams[p.team]:null;
@@ -91,30 +102,32 @@ function kiKandidat(t,n,rest,senk,kader,plan){const K=RCV.kauf,min=n.min-senk,al
     // starke Vereinslose bei Drittligisten (bis 16 über deren Grundstärke), und die unteren Ligen wurden über die Saisons stärker.
     if(!von&&p.str>grundStaerke(t.rep)+(K.vereinslosBis!=null?K.vereinslosBis:RCV.fuellen.vereinslosBis))continue;
     if(n.grund==='talent'){if(p.age>RCV.talentBis||p.pot<min)continue;}
-    else if(planGruppe(p)!==n.g||p.str<min||(n.statt&&p.str<=n.statt.str))continue;
+    const sicht=kiSichtStr(t,p); /* K18i */
+    if(n.grund!=='talent'&&(planGruppe(p)!==n.g||sicht<min||(n.statt&&sicht<=n.statt.str)))continue;
     let preis=0;
     if(von){if(von.rep-t.rep>K.ansehenMinus&&(p.ww||0)<3)continue; // er geht nicht weit nach unten, außer er will weg
       if(bez(t.id,von.id)<RBZ.wirkung.gespraechUnter)continue; // mit diesem Verein redet der Käufer nicht (K17 §7, U12c)
-      if(kader.get(von.id).length<=RM.verkaeufer.kaderMin||!plan(von).abgabe.has(p.id))continue;
-      preis=kiPreis(p);if(preis>rest||preis>kiZahlt(p,t,n))continue;}
-    const v=(n.grund==='talent'?p.pot:p.str+(p.age<=K.jungBis?(p.pot-p.str)*talentGewicht:0)-Math.max(0,p.age-K.altAb)*altMalus)+(R()-0.5)*2*RCV.schaetzFehler;
+      if(kader.get(von.id).length<=RM.verkaeufer.kaderMin||!(plan(von).abgabe.has(p.id)||p.nv===S.season))continue; /* Notverkauf ohne Abgabegrund (Prüfung FK1) */
+      preis=p.nv===S.season?p.ask:kiPreis(p);if(preis>rest||preis>kiZahlt(p,t,n))continue;}
+    const v=(n.grund==='talent'?p.pot:sicht+(p.age<=K.jungBis?(p.pot-p.str)*talentGewicht:0)-Math.max(0,p.age-K.altAb)*altMalus)+(R()-0.5)*2*RCV.schaetzFehler;
     if(v>bv){bv=v;best={p,preis,von:von?von.id:null};}}
   return best;}
 // Sternejagd (§5.3, U11b): der stärkste bezahlbare Spieler eines kleineren Vereins, der nicht auf der Liste stehen muss. Er ist deutlich stärker als der Anspruch des Käufers
 // und bekäme dort einen Stammplatz. Sein Verein nimmt das außergewöhnliche Angebot an, auch wenn ihm danach eine Planstelle fehlt (die Ersatzsuche folgt aus dem Bedarf).
 function kiStern(t,P,rest,kader){const J=RCV.sterneJagd;let best=null,bv=-Infinity;
-  for(const p of S.pl){if(p.team<0||p.team===t.id||p.wech||p.leihe||p.zwP||p.age>J.alterMax||p.str<P.niveau+J.ueberNiveau)continue;
+  for(const p of S.pl){if(p.team<0||p.team===t.id||p.wech||p.leihe||p.zwP||p.age>J.alterMax)continue;const sicht=kiSichtStr(t,p);if(sicht<P.niveau+J.ueberNiveau)continue; /* K18i */
     const von=S.teams[p.team];if(!von||!aktiv(von)||!stabMacht(von.id,'transfers')||t.rep-von.rep<J.ansehenPlus||kader.get(von.id).length<=RM.verkaeufer.kaderMin)continue;
     if(bez(t.id,von.id)<RBZ.wirkung.gespraechUnter)continue; // kein Gespräch unter −50 (K17 §7, U12c)
-    const G=P.gr[planGruppe(p)],letzter=G.stamm?G.l[G.stamm-1]:null;if(!G.stamm||(letzter&&p.str<=letzter.str))continue;
+    const G=P.gr[planGruppe(p)],letzter=G.stamm?G.l[G.stamm-1]:null;if(!G.stamm||(letzter&&sicht<=letzter.str))continue;
     const preis=kiSternPreis(p);if(preis>rest)continue;
-    const v=p.str+(R()-0.5)*2*RCV.schaetzFehler;if(v>bv){bv=v;best={p,preis,von:von.id};}}
+    const v=sicht+(R()-0.5)*2*RCV.schaetzFehler;if(v>bv){bv=v;best={p,preis,von:von.id};}}
   return best;}
-// Der Wechsel selbst: Geld, Kabine, Vertrag. Vereinslose kommen ohne Ablöse und ohne Meldung (außer bei dir). art: 'stern' bei der Sternejagd (nur für Auswertungen, tests/welt.js).
+// Der Wechsel selbst: Geld, Kabine, Vertrag. Vereinslose kommen ohne Ablöse und ohne Meldung (außer bei dir). art: 'stern' bei der Sternejagd (Auswertungen in tests/welt.js, Meldung „Konkurrent rüstet auf“ seit K31c).
 function kiWechsel(p,b,preis,art){const von=p.team>=0?S.teams[p.team]:null;
   if(von){if(b.id===S.my)money('Transfers',-preis);else b.cash-=preis;
     if(von.id===S.my){money('Transfers',preis);vertragEnde(p);}else von.cash+=preis;
     kabineAbgang(p,von.id);S.offers=S.offers.filter(o=>o.pid!==p.id);news(`Wechsel perfekt: ${p.n} geht für ${fmt(preis)} von ${von.name} zu ${b.name}.`,'tr');
+    if(art==='stern'&&b.id!==S.my&&von.id!==S.my&&S.teams[S.my]&&b.lg===myT().lg)news(`Konkurrent rüstet auf: ${b.name} holt mit ${p.n} einen Star für ${fmt(preis)}. Die Zeitungen fragen, was du dagegenhältst.`,'tr'); /* K31 §8, K31c: nur Meldung, deine Liga */
     bezAendern(von.id,b.id,RBZ.anlass.kiWechsel,`Transfer ${p.n}`);} // zum Listenpreis, also fair (K17 §12 Nr. 8, U12c)
   else if(b.id===S.my)stabMeldung(`Der Verein hat den vereinslosen ${p.n} verpflichtet.`);
   p.team=b.id;p.list=0;p.ask=0;p.ct=riA(RM.neuerVertrag);p.sal=salaryFor(p.str);p.seit=absTag(S.tag);p.abl=preis;neuzugang(p,b.id);
@@ -150,11 +163,13 @@ function kiVor(t){if(!t.vor)t.vor={v:RCV.vorstand.start,u:null,n:0,ab:0};return 
 function kiVertrauenZiel(t,r,pos){const V=RCV.vorstand;return vertrauenZiel(V,r,pos,t.expPos,t.cash<0?V.finanzMinus:0);}
 // Entlassung nach einem gescheiterten ersten Ultimatum (K28 §5.3): 0,9 − 0,03 × Geduld
 function kiEntlassChance(t){return entlassChance(t,RCV.vorstand.entlassung);}
+// Trainerwechsel eines Vereins in der laufenden Saison (aus dem Protokoll S.trainerWechsel)
+const kiWechselDieseSaison=t=>(S.trainerWechsel||[]).filter(e=>e.t===t.id&&e.s===S.season).length;
 // Woche (montags, eigener Strom): Vertrauen, Ultimatum, Entlassung. Nur Computer-Vereine der 1. bis 3. Liga, nur in der Spielzeit, ab dem fünften Ligaspiel.
 function kiVorstandWoche(){if(S.phase!=='play')return;const V=RCV.vorstand,tab={};
   S.teams.forEach(t=>{if(t.id===S.my||!aktiv(t)||t.lg>3)return;const T=tab[t.lg]||(tab[t.lg]=table(t.lg)),i=T.findIndex(r=>r.id===t.id),r=T[i];if(!r||r.sp<V.abSpiel)return;
     const o=kiVor(t);o.v=Math.round((o.v+(kiVertrauenZiel(t,r,i+1)-o.v)*V.traegheit)*10)/10;
-    if(o.u==null){if(o.v<V.grenze&&r.sp-o.ab>V.schonfrist){o.u=r.sp;o.n=1;}return;} // Ultimatum über die nächsten Ligaspiele
+    if(o.u==null){if(o.v<V.grenze&&r.sp-o.ab>V.schonfrist&&kiWechselDieseSaison(t)<(V.maxJeSaison||99)){o.u=r.sp;o.n=1;}return;} // Ultimatum über die nächsten Ligaspiele, höchstens maxJeSaison Entlassungen je Saison (Lauf 12)
     if(r.sp-o.u<V.ultimatumSpiele)return;
     if(o.v>=V.grenze){o.u=null;o.n=0;return;} // überstanden
     if(o.n>=2||R()<kiEntlassChance(t))kiTrainerWechsel(t,r.sp);else{o.u=r.sp;o.n=2;}});} // sonst das zweite, letzte Ultimatum
@@ -162,7 +177,7 @@ function kiVorstandWoche(){if(S.phase!=='play')return;const V=RCV.vorstand,tab={
 // Schonfrist ab sp Ligaspielen. Die Grundordnung wählt der Computer-Trainer wie bisher jeden Monat (kiOrdnung in training). Meldung nur aus deiner Liga („Großer Umbruch“, §8).
 function kiTrainerWechsel(t,sp){const V=RCV.vorstand,w=trainerWechseln(t);t.stil=w.neu.stil; // Nachfolger aus dem Trainerpool mit seinem Lieblingsstil (K32 §3.3b, U18a)
   squad(t.id).forEach(p=>stimmungAendern(p,V.schub));t.vor={v:V.start,u:null,n:0,ab:sp};
-  const l=S.trainerWechsel||(S.trainerWechsel=[]);l.push({s:S.season,tag:S.tag,t:t.id,lg:t.lg});if(l.length>V.protokoll)l.splice(0,l.length-V.protokoll);
+  const l=S.trainerWechsel||(S.trainerWechsel=[]);l.push({s:S.season,tag:S.tag,a:absTag(S.tag),t:t.id,lg:t.lg}); /* a: absoluter Tag, auch über den Saisonwechsel vergleichbar (K16g) */if(l.length>V.protokoll)l.splice(0,l.length-V.protokoll);
   if(t.lg===myT().lg)news(`Großer Umbruch: ${t.name} trennt sich von ${w.alt?w.alt.n:'seinem Trainer'}. Nachfolger ${w.neu.n} setzt auf ${STIL_NAME[t.stil]||t.stil}.`,'tr');}
 // Saisonwechsel (eigener Strom, vor Auf- und Abstieg): erwarteten Platz deutlich verfehlt und wenig Vertrauen, dann Wechsel im Sommer.
 // Danach für alle: Vertrauen halb zurück zum Start, kein Ultimatum, Schonfrist neu (die Tabelle beginnt bei null).
@@ -190,7 +205,7 @@ function vertragChance(p,P){const V=RCV.vertrag,r=P?P.rang.get(p.id):null;if(!r)
 function kiVertraegeFrueh(kader){const V=RCV.vertrag,F=V.frueh,k=mmtt(S.tag);if(S.phase!=='play'||k<F.von||k>F.bis)return;
   S.teams.forEach(t=>{if(!aktiv(t)||!stabMacht(t.id,'vertraege'))return;const sq=kader.get(t.id)||[],P=kaderplan(t,sq);
     sq.forEach(p=>{if(p.ct!==1||p.wech||p.leihe||p.zwP||!V.wichtig.includes(P.rang.get(p.id))||(V.altAb&&p.age>=V.altAb)||R()>=F.chance)return; // ab altAb nicht früh (T1.3)
-      p.ct=1+riA(RS.vertrag.jahre);p.sal=salaryFor(p.str);if(t.id===S.my)stabMeldung(`Der Verein hat den Vertrag von ${p.n} vorzeitig verlängert (bis Juni ${S.season+p.ct}).`);});});}
+      p.ct=1+riA(RS.vertrag.jahre);p.sal=salaryFor(p.str);delete p.lk; /* vom Verein geschlossen: übliche Ligaklausel (K21 §12 Nr. 20) */if(t.id===S.my)stabMeldung(`Der Verein hat den Vertrag von ${p.n} vorzeitig verlängert (bis Juni ${S.season+p.ct}).`);});});}
 
 // ---------- Woche (montags im Markt-Strom, aufgerufen aus market in js/ablauf.js) ----------
 // 1. Transferliste aller Vereine nach den Verkaufsregeln (auch außerhalb der Fenster, damit du sie siehst).
@@ -199,7 +214,7 @@ function kiVertraegeFrueh(kader){const V=RCV.vertrag,F=V.frueh,k=mmtt(S.tag);if(
 function kiMarkt(){const nr=fensterNr(),vereine=S.teams.filter(t=>aktiv(t)&&stabMacht(t.id,'transfers')),kader=new Map(S.teams.map(t=>[t.id,[]])),plaene=new Map();
   S.pl.forEach(p=>{const l=kader.get(p.team);if(l)l.push(p);});
   const plan=t=>{let x=plaene.get(t.id);if(!x){x=kaderplan(t,kader.get(t.id));plaene.set(t.id,x);}return x;};
-  vereine.forEach(t=>kiListe(plan(t)));
+  vereine.forEach(t=>{kiListe(plan(t));kiNotverkauf(t,plan(t));}); /* Notverkauf nur mit Schalter (K31d) */
   kiVertraegeFrueh(kader); // Herbst: Verträge der Gebrauchten früh verlängern (U11c), ändert keinen Kader
   if(nr<0)return;
   vereine.forEach(t=>kiBudget(t,nr)); // Budget aller Vereine vor dem ersten Wechsel des Fensters festlegen (nicht erst, wenn ein Verein an der Reihe ist oder verkauft)
@@ -210,14 +225,14 @@ function kiMarkt(){const nr=fensterNr(),vereine=S.teams.filter(t=>aktiv(t)&&stab
   const zugang=(t,tb,c,art)=>{kiWechsel(c.p,t,c.preis,art);tb.a+=c.preis;tb.n++;umzug(c.p,c.von,t.id);if(c.von!=null)kiBudget(S.teams[c.von],nr).b+=Math.round(c.preis*RCV.finanzen.reinvest);};
   // Eine Leihe (U11d1): zählt als Zugang der Woche und zur Obergrenze des Fensters, kostet kein Budget
   const leihe=(t,tb,c)=>{kiLeihe(c.p,t);leihZaehlen(z,c.p,c.von,t.id);tb.n++;umzug(c.p,c.von,t.id);};
-  dran.forEach(t=>{if(t.id===S.my&&transferSperre())return;const tb=kiBudget(t,nr),sq=kader.get(t.id);if(tb.n>=K.jeFenster[nr]||sq.length>=RM.kaeufer.kaderMax)return;
+  dran.forEach(t=>{if((t.id===S.my&&transferSperre())||kiTransferSperre(t))return; /* Lizenzsperre der Computer-Vereine (K23g) */const tb=kiBudget(t,nr),sq=kader.get(t.id);if(tb.n>=K.jeFenster[nr]||sq.length>=RM.kaeufer.kaderMax)return;
     // Sternejagd zuerst: ehrgeizige Vereine, einmal je Saison im Sommerfenster. Gelingt sie, war das der Zugang dieser Woche.
-    if(nr===RCV.sterneJagd.fenster&&!tb.s&&vereinsProfile(t).includes('ehrgeizig')){const c=kiStern(t,plan(t),tb.b-tb.a,kader);if(c){tb.s=1;zugang(t,tb,c,'stern');return;}}
+    if(nr===RCV.sterneJagd.fenster&&!tb.s&&vereinsProfile(t).includes('ehrgeizig')){const c=kiStern(t,plan(t),tb.b-tb.a,kader);if(c&&rahmenErlaubt(t,salaryFor(c.p.str))){tb.s=1;zugang(t,tb,c,'stern');return;}}
     // Je Lücke: bei „verletzt“ zuerst Leihe, dann Kauf; bei „offen“ zuerst Kauf, sonst Leihe (§5.9). Dein Verein leiht nur in der Automatik (Bereich leihe, seit T1.1).
     const senk=kiSenkung(tb),leiht=S.phase==='play'&&stabMacht(t.id,'leihe'); // nicht vor dem Saisonwechsel, sonst endete die Leihe sofort wieder
     for(const n of planBedarf(plan(t))){const zuerst=L.zuerst.includes(n.grund);
       const a=leiht&&zuerst?kiLeihKandidat(t,n,senk,plan,z):null;if(a){leihe(t,tb,a);break;}
-      const c=kiKandidat(t,n,tb.b-tb.a,senk,kader,plan);if(c){zugang(t,tb,c);break;}
+      const c=kiKandidat(t,n,tb.b-tb.a,senk,kader,plan);if(c&&rahmenErlaubt(t,salaryFor(c.p.str))){zugang(t,tb,c);break;} // Gehaltsrahmen wie bei dir (K23d)
       const b=leiht&&!zuerst?kiLeihKandidat(t,n,senk,plan,z):null;if(b){leihe(t,tb,b);break;}}});
   const ende=fensterEnde();
   // Abwanderung ins Ausland einmal je Sommer in der letzten Woche des Fensters (K32 §8, T1.3, js/ausland.js): Die Sternejagd hat davor das ganze Fenster,

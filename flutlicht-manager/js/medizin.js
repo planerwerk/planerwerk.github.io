@@ -32,6 +32,7 @@ function verletzen(p,q,o={}){if(!p||p.team<0)return null;const art=o.art||artFue
   if(p.inj>0&&p.vl&&p.inj>=t)return null;const heute=absTag(S.tag),b=arztBreite(p.team),D=RMD.diagnose;
   p.inj=t+1; // Zähler läuft ab morgen herunter (wie bisher: w Wochen = die nächsten 7·w Tage)
   p.vl={art,q,ab:heute,t,dg:heute+(q==='krankheit'?0:diagnoseTage(p.team)),sv:spanne(t,D.verdacht*b),sd:spanne(t,D.genau*b)};
+  if(p.team===S.my&&q!=='krankheit'&&t>=D.fehl.abTage&&fehlDiagnose(p,heute))Object.assign(p.vl,{sk:p.vl.sd,sd:fehlSpanne(t,p.vl.sv),fehl:1}); /* K10b */
   p.spritze=null;if(q==='krankheit'){const tm=S.teams[p.team];if(tm)tm.krankBis=heute+RMD.krankheit.ansteckungTage;}
   verletzungZaehlen(p.team,q,t);
   if(p.team===S.my&&!o.still)news(q==='krankheit'?`${p.n} ist krank (${A.name}) und fällt einige Tage aus.`:`Verletzung (${URSACHE[q]}): ${p.n}, ${RMD.gruppen[A.g]}. Erste Einschätzung: ${spanneText(p.vl.sv)}.`,'bad');
@@ -47,17 +48,27 @@ const verletzungText=p=>{const i=verletzungInfo(p);return i?`${i.name}, ${PHASE[
 // Rückkehr (K10 §5.3): nach längeren Ausfällen Frische 70–80 %, danach acht Wochen erhöhtes Rückfallrisiko bei Muskel- und Bandverletzungen
 function medizinRueckkehr(p,frisch){const v=p.vl;if(!v)return;const A=RMD.arten[v.art],R0=RMD.reha,heute=absTag(S.tag);
   if(v.t>=R0.abTagen)p.fit=Math.min(p.fit,frisch!=null?frisch:riA(R0.rueckkehrFrische));
-  if(A.rueckfall)p.rf={art:v.art,bis:heute+R0.fenster,w:A.rueckfall*(frisch!=null?RMD.frueher.rueckfall:1)};
+  if(A.rueckfall)p.rf={art:v.art,bis:heute+R0.fenster,w:A.rueckfall*(frisch!=null?RMD.frueher.rueckfall:1)*(v.rfF||1)}; // rfF: Reha beim Spezialisten (Karte „Lange Reha“, K10e)
   if(v.t>=RKA.bank.aufbau.abTagen)p.rue=heute+RKA.bank.aufbau.tage; // Aufbau: drei Wochen ohne Erwartung an Einsatzzeit (K14 §12)
   p.vh=[...(p.vh||[]).filter(x=>heute-x.ab<=RMD.verlaufTage),{art:v.art,q:v.q,ab:v.ab,t:v.t}];p.vl=null;p.spritze=null;
   if(p.team===S.my&&v.t>=R0.abTagen)news(`${p.n} ist nach ${A.name} zurück im Mannschaftstraining.`,'good');}
 
 // Jeden Tag: Rückkehr, Krankheiten (im Winter doppelt, Ansteckung im Kader)
+// Fehldiagnose (K10 §12 Nr. 9, K10b): nur bei deinem Verein und nur in der Anzeige. Die genaue Diagnose ist zu optimistisch (faktor × wahre Dauer), die richtige Spanne
+// steht in sk. Fest aus Seed, Spieler und Tag (hash32), ohne Würfel aus den Strömen, damit kein Ablauf sich verschiebt. Chance nach der Qualität des Mannschaftsarztes.
+function fehlDiagnose(p,heute){const F=RMD.diagnose.fehl,q=S.stab?stabQ(p.team,'arzt'):10,c=clamp(F.ohne+F.jeQualitaet*q,F.min,F.ohne);return hash32(S.seed+'/fehl/'+p.id+'/'+heute)%10000<c*10000;}
+// Spanne der Fehldiagnose: faktor × wahre Dauer, zu optimistisch, aber mit Überlappung zur ersten Einschätzung sv, damit sie nicht sofort auffällt (Prüfung DZ4)
+function fehlSpanne(t,sv){const D=RMD.diagnose,hi0=Math.max(1,Math.round(t*D.fehl.faktor)),hi=Math.max(1,Math.min(t-1,Math.max(hi0,sv[0]))),lo=Math.max(1,Math.min(hi,Math.round(t*D.fehl.faktor*(1-D.genau))));return[lo,hi];}
+// Aufklärung: Ist der Spieler am Ende der angezeigten Spanne noch verletzt, gilt die richtige Spanne, mit Meldung
+function fehlAufklaeren(heute){squad(S.my).forEach(p=>{const v=p.vl;if(!(p.inj>0&&v&&v.fehl&&v.sk&&heute>=v.ab+v.sd[1]))return;v.sd=v.sk;delete v.sk;delete v.fehl;
+  const i=verletzungInfo(p);news(`Rückschlag bei ${p.n}: Die Diagnose war zu optimistisch.${i?` Neue Einschätzung: noch ${spanneText(i.rest)}.`:''}`,'bad');});}
 function medizinTag(d){const K=RMD.krankheit,heute=absTag(d),winter=K.winterMonate.includes(datumVon(d).getUTCMonth());
-  S.pl.forEach(p=>{if(p.team<0)return;if(p.inj===0&&p.vl)medizinRueckkehr(p);});
+  S.pl.forEach(p=>{if(p.team<0)return;if(p.inj===0&&p.vl)medizinRueckkehr(p);});fehlAufklaeren(heute);
   if(S.phase!=='play')return;
   S.pl.forEach(p=>{if(p.team<0||p.inj>0)return;const t=S.teams[p.team];if(!t||!aktiv(t)||sommerStatus(t)==='urlaub')return;
-    if(R()<K.proTag*(winter?K.winter:1)*((t.krankBis||0)>=heute?K.ansteckung:1))verletzen(p,'krankheit');});}
+    if(R()<K.proTag*(winter?K.winter:1)*krankFaktor(t,heute))verletzen(p,'krankheit');});}
+// Ansteckung und Hygieneplan (t.hygBis, nur über die Karte „Grippewelle“, K10e): Solange der Plan läuft, gilt sein Faktor statt der Ansteckung, auch nach neuen Kranken (Prüfung EF2)
+const krankFaktor=(t,heute)=>{const K=RMD.krankheit;return(t.hygBis||0)>=heute?K.hygiene:(t.krankBis||0)>=heute?K.ansteckung:1;};
 
 // Fit spritzen (K10 §5.4): nur am Spieltag und nur bei Arten mit „ja“. Wirkung ×0,95, danach mit 15 % Verschlimmerung.
 const gespritzt=p=>p.spritze===S.tag&&p.inj>0&&p.vl&&RMD.arten[p.vl.art].spritzen;
@@ -71,5 +82,8 @@ function kiSpritzen(tid){if(tid>=1000||!stabMacht(tid,'medizin'))return;const sq
 // Saisonbilanz je Verein und Ligaschnitt (K10 §4)
 function verletzungsBilanz(tid){const s=(S.vstat||{})[tid]||{n:0,tage:0},t=S.teams[tid],l=S.teams.filter(x=>x.lg===t.lg).map(x=>(S.vstat||{})[x.id]||{n:0,tage:0});
   return{n:s.n,tage:s.tage,krank:s.krankheit||0,schnittN:l.reduce((a,x)=>a+x.n,0)/Math.max(1,l.length),schnittTage:l.reduce((a,x)=>a+x.tage,0)/Math.max(1,l.length)};}
+// Kurztext für die Saisonbilanz (K10 §12 Nr. 15, K10d): Verletzungen und Ausfalltage deines Vereins gegen den Ligaschnitt. S.vstat gilt bis zum Saisonwechsel.
+function verletzungsBilanzText(tid){if(tid==null||tid<0||!S.teams[tid])return'';const b=verletzungsBilanz(tid);
+  return`${b.n} Verletzungen, ${b.tage} Ausfalltage (Ligaschnitt ${Math.round(b.schnittN)} und ${Math.round(b.schnittTage)})`;}
 // Saisonwechsel: alte Einträge der Verletzungsakte bei allen kürzen (T2.5). Bisher geschah das nur bei einer neuen Verletzung, Spieler ohne neue Verletzung behielten alles.
 function verlaufKuerzen(){const heute=absTag(S.tag);[...S.pl,...(S.jg||[]),...(S.zw||[])].forEach(p=>{if(!p.vh)return;p.vh=p.vh.filter(x=>heute-x.ab<=RMD.verlaufTage);if(!p.vh.length)delete p.vh;});}

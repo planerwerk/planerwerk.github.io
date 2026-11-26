@@ -2,7 +2,7 @@
 // Chancentypen, Standards, Fouls mit Ort, Merkmale (K03), Ermüdung im Spiel, Erwartung vor dem Spiel, Noten gegen die Erwartung.
 const slots=f=>RE.formationen[f]||RE.formationen['4-4-2'];
 const posGruppe=pos=>RE.gruppe[pos]||pos;
-const avail=p=>(p.inj<=0||gespritzt(p))&&!gesperrt(p); // Sperren gelten je Wettbewerb (K09, js/disziplin.js)
+const avail=p=>(p.inj<=0||gespritzt(p))&&!gesperrt(p)&&!beiNationalteam(p); // Sperren gelten je Wettbewerb (K09, js/disziplin.js)
 const TAUSCH={LV:'RV',RV:'LV',LM:'RM',RM:'LM',LA:'RA',RA:'LA',LS:'RS',RS:'LS'};
 const seite=pos=>/^(LV|LM|LA|LS)$/.test(pos)?'L':/^(RV|RM|RA|RS)$/.test(pos)?'R':null;
 const linksForm=pos=>seite(pos)==='R'?TAUSCH[pos]:pos;
@@ -28,7 +28,11 @@ function bestXI(tid,form,kader){const sl=slotsVerein(S.teams[tid],form),pool=(ka
 function myXI(){if(autoB('aufstellung'))return bestXI(S.my,myT().form); // Automatik (K36): der Co-Trainer stellt auf
   const t=myT(),sl=slotsVerein(t),pool=squad(S.my).filter(avail),used=new Set();
   const xi=sl.map((pos,i)=>{const id=(S.lineup||[])[i];const p=PIX.get(id);if(p&&p.team===S.my&&avail(p)&&!used.has(id)){used.add(id);return id;}return null;});
-  return fillXI(sl,pool,xi,used);}
+  return fillXI(sl,pool,fillXI(sl,pool.filter(p=>!p.trib),xi,used),used);} /* Lücken erst ohne die, die du auf die Tribüne gesetzt hast (p.trib, Prüfung FG4), dann mit allen */
+// Beste Elf für dich (K16h „Vorschlag“, aktionen.js autoXI, setForm, Saisonwechsel, Formations-Automatik): ohne Spieler auf der Tribüne; fehlen dann Spieler, füllen
+// Tribünen-Spieler nur die Lücken (Prüfung FG4, FI4, FI5)
+function besteElfDu(){const t=myT(),f=t.form,b=bestXI(S.my,f,squad(S.my).filter(p=>!p.trib));if(!b.some(x=>x==null))return b;
+  return fillXI(slotsVerein(t,f),squad(S.my).filter(avail),b,new Set(b.filter(x=>x!=null)));}
 
 // Teamwerte (K04 §3.2): Kontrolle, Angriff Mitte, Angriff links und rechts, Abwehr Mitte, Abwehr links und rechts, Torwart
 function teamWerte(sd,fr,off,lage){const T=RE.team,k=RE.staerke,acc={K:[],AM:[],AL:[],AR:[],DM:[],DL:[],DR:[]};let tw=k.leererPlatz;
@@ -42,17 +46,17 @@ function teamWerte(sd,fr,off,lage){const T=RE.team,k=RE.staerke,acc={K:[],AM:[],
   const wert=l0=>{const l=daempfen(l0),sa=l.reduce((s,x)=>s+x[0],0);if(sa<=0)return k.leererPlatz;const m=l.reduce((s,x)=>s+x[0]*x[1],0)/sa,st=l.filter(x=>x[0]>=T.mindestAnteil).map(x=>x[1]);
     const v=st.length?(1-T.schwaechstes)*m+T.schwaechstes*Math.min(...st):m;return v*Math.min(T.anzahlMax,T.anzahl[0]+T.anzahl[1]*sa);};
   const w={TW:tw};for(const key in acc)w[key]=wert(acc[key]);
-  const ta=RE.ausrichtung[sd.tac],ei=RE.einsatz[sd.ein],hm=sd.heim?RE.heim.alle:1;
+  const ta=RE.ausrichtung[sd.tac],ei=RE.einsatz[sd.ein],hm=sd.heim?RE.heim.alle*(sd.dach||1):1;
   ['AM','AL','AR'].forEach(q=>w[q]*=(ta?ta.A:1)*(ei?ei.A:1)*hm);['DM','DL','DR'].forEach(q=>w[q]*=(ta?ta.D:1)*(ei?ei.D:1)*hm);w.K*=hm;w.TW*=hm;
   if(sd.stilF){w.K*=sd.stilF.kontrolle;['DM','DL','DR'].forEach(q=>w[q]*=sd.stilF.abwehr);}if(sd.mult&&sd.mult!==1)for(const k in w)w[k]*=sd.mult;
   return w;}
 // Eine Mannschaft vor dem Anpfiff. A und D sind Gesamtwerte für Vorschau und Tauziehen.
-function side(tid,home,neutral){
+function side(tid,home,neutral,kader){
   if(tid>=AV0){const v=euStaerke(tid)*(home&&!neutral?RE.heim.alle:1),w={K:v,AM:v,AL:v,AR:v,DM:v,DL:v,DR:v,TW:v};return{id:tid,am:true,aus:true,w,A:v,D:v,red:0,xp:[],xi:[],ein:'N',tac:'N',namen:euTorschuetzen(tid)};} // Auslandsverein im Europapokal (K37, U19a): Block mit Teamstärke wie die Amateure
   if(tid>=1000){const a=S.am[tid-1000],v=a.str*(home&&!neutral?RE.heim.amateure:1),w={K:v,AM:v,AL:v,AR:v,DM:v,DL:v,DR:v,TW:v};return{id:tid,am:true,w,A:v,D:v,red:0,xp:[],xi:[],ein:'N',tac:'N'};}
-  const t=S.teams[tid],sl=slotsVerein(t),xi=tid===S.my?myXI():bestXI(tid,t.form),xp=[];
+  const t=S.teams[tid],sl=slotsVerein(t),xi=tid===S.my&&!kader?myXI():bestXI(tid,t.form,kader),xp=[];
   xi.forEach((id,i)=>{const p=id!=null?PIX.get(id):null;if(p)xp.push({p,pos:sl[i]});});
-  const sd={id:tid,xp,xi:xi.filter(x=>x!=null),ein:t.ein,tac:RE.ausrichtung[t.tac]?t.tac:'N',form:t.form,heim:home&&!neutral,red:0};sd.w=teamWerte(sd);
+  const sd={id:tid,xp,xi:xi.filter(x=>x!=null),ein:t.ein,tac:RE.ausrichtung[t.tac]?t.tac:'N',form:t.form,heim:home&&!neutral,dach:home&&!neutral?dachFaktor(tid):1,red:0};sd.w=teamWerte(sd); /* Dach (K26d) */
   sd.A=0.5*sd.w.AM+0.25*(sd.w.AL+sd.w.AR);sd.D=0.4*sd.w.DM+0.2*(sd.w.DL+sd.w.DR)+0.2*sd.w.TW;return sd;}
 
 // ---------- Hilfen für Szenen ----------
@@ -109,7 +113,7 @@ function spielAufbau(hid,aid,o,saison,tag){const Z=RL.zurufe,hs=hash32(['spiel',
       else if(a.art==='fordern')f*=1+(hatEig(p,'kaempfer')?A.fordern.kaempfer:(hatEig(p,'nervenschwach')||hatEig(p,'diva'))?A.fordern.empfindlich:0)*a.f;}
     const r=G.spielerRuf[p.id];if(r&&m>r.m&&m<=r.m+Z.dauer)f*=1+r.f;return f;};
   G.foulSpieler=id=>{const r=G.spielerRuf[id];return r&&r.fouls&&G.mNow>r.m&&G.mNow<=r.m+Z.dauer?r.fouls:1;};
-const wb=o.wb||'liga',H=mitWettbewerb(wb,()=>side(hid,true,o.neutral)),A=mitWettbewerb(wb,()=>side(aid,false,o.neutral)),Ss=[H,A];G.schiri=schiriFuer(hid,aid,hs);taktikAnlegen(Ss,o);
+const wb=o.wb||'liga',kH=mitWettbewerb(wb,()=>rotationKader(hid,aid,o,tag)),kA=mitWettbewerb(wb,()=>rotationKader(aid,hid,o,tag)),H=mitWettbewerb(wb,()=>side(hid,true,o.neutral,kH)),A=mitWettbewerb(wb,()=>side(aid,false,o.neutral,kA)),Ss=[H,A];G.geschont=[(kH&&kH.geschont)||[],(kA&&kA.geschont)||[]]; /* Geschonte nach Saisonbelastung ins Ergebnis (gs), die Bank zählt für sie nicht (Prüfung FU1) */ /* Pokal-Rotation der Favoriten (K13j) oder Rotation nach Saisonbelastung (K10f), nur mit Schalter */G.schiri=schiriFuer(hid,aid,hs);G.brisant=!o.test&&spielBrisant(hid,aid);taktikAnlegen(Ss,o); /* Derby oder Brisanz (K09d): mehr Karten, kein Würfel */
   const xg0=(H.am||A.am)?amateurErwartung(H,A):erwarteteTore(H,A);
   const ev=[],sc=[0,0],yel={},off=new Set(),inj=[],st={besitz:[0,0],schuesse:[0,0],aufsTor:[0,0],ecken:[0,0],fouls:[0,0],gross:[0,0],wege:[[0,0,0],[0,0,0]]},sz=[];
   const fr={};Ss.forEach(sd=>sd.xp.forEach(x=>fr[x.p.id]=x.p.fit));
@@ -174,7 +178,7 @@ const wb=o.wb||'liga',H=mitWettbewerb(wb,()=>side(hid,true,o.neutral)),A=mitWett
       if(R()<k*faktor){const typ=waehle(Object.keys(RE.mix.konter),q=>RE.mix.konter[q]*((Ss[1-s].stilF&&Ss[1-s].stilF.konterMix[q])||1));const r2=abschluss(m,1-s,typ,schuetzeWahl(1-s,typ),'konter');if(r2==='parade'&&R()<RE.ecken.parade)ecke(m,1-s);}}};
   // Fouls und Karten (K09 §5.1): Foulart würfeln, Kartenwahrscheinlichkeit mit Strenge, Einsatz, Hitzkopf, Müdigkeit, Rückstand in der Schlussphase
   const kartenFaktor=(s,p,m)=>{const K=RD.faktoren,sd=Ss[s],d=sc[s]-sc[1-s];return G.schiri.st*(sd.ein==='H'?K.hart:sd.ein==='F'?K.fair:1)*(hatEig(p,'hitzkopf')?K.hitzkopf:1)
-    *((fr[p.id]!=null?fr[p.id]:p.fit)<K.muedeUnter?K.muede:1)*(d<0&&m>=K.rueckstandAb?K.rueckstand:1)*(yel[p.id]?K.mitGelb.karte:1);};
+    *((fr[p.id]!=null?fr[p.id]:p.fit)<K.muedeUnter?K.muede:1)*(d<0&&m>=K.rueckstandAb?K.rueckstand:1)*(yel[p.id]?K.mitGelb.karte:1)*(G.brisant?K.derby:1);}; // Derby und Brisanz (K09 §5.1, K17 §5.2, K09d)
   const platzverweis=(m,s,p,art,x,opfer)=>{off.add(p.id);Ss[s].red++;ev.push({m,s,t:'R',p:p.id,n:p.n,art,x,opfer});sz.push([p.id,'rot',0]);W=werte(m);};
   const gelbeKarte=(m,s,p,x)=>{sz.push([p.id,'gelb',0]);if(yel[p.id]){off.add(p.id);Ss[s].red++;ev.push({m,s,t:'R',p:p.id,n:p.n,gy:1});W=werte(m);}else{yel[p.id]=1;ev.push({m,s,t:'Y',p:p.id,n:p.n,x});}};
   const FOULARTEN=Object.keys(RD.foulArten);
@@ -255,7 +259,7 @@ const wb=o.wb||'liga',H=mitWettbewerb(wb,()=>side(hid,true,o.neutral)),A=mitWett
     if(!p||!G.bank[s].includes(einId))return{ok:false,grund:'Dieser Spieler sitzt nicht auf der Bank.'};
     const aus=x.p;x.p=p;fr[p.id]=p.fit;G.minuten[aus.id][1]=G.m;G.minuten[p.id]=[G.m,null];G.bank[s]=G.bank[s].filter(i=>i!==einId);G.raus.add(aus.id);G.ein[s].push(p.id);
     G.wz[s]++;if(!G.pause()&&!G.gel[s].includes(G.m))G.gel[s].push(G.m);G.wechsel.push({s,m:G.m,aus:aus.id,ein:p.id});
-    ev.push({m:G.m,s,t:'S',p:p.id,n:p.n,aus:aus.n});W=werte(G.m);return{ok:true};};
+    ev.push({m:G.m,s,t:'S',p:p.id,n:p.n,aus:aus.n,ausId:aus.id});W=werte(G.m);return{ok:true};};
   // Taktik im Spiel (K05 §5.1): Grundordnung nach 5 Minuten, Ausrichtung und Einsatz nach 2. In der Halbzeit wirken Ausrichtung und Einsatz sofort, mit „Taktik betonen“ auch die Grundordnung.
   G.taktik=(s,{form,tac,ein,stil})=>{const U=RL.umstellung,hz=!!G.pause(),sofortOrdnung=hz&&G.ansp[s]&&G.ansp[s].art==='taktik';
     if(stil&&stil!==Ss[s].stil&&!Ss[s].am)G.plan[s].push({art:'stil',wert:stil,ab:G.m+1+(sofortOrdnung?0:U.ordnung)});
@@ -300,16 +304,17 @@ const wb=o.wb||'liga',H=mitWettbewerb(wb,()=>side(hid,true,o.neutral)),A=mitWett
   // Ergebnis für applyMatch und die Anzeige. xpo: [id, Position, Anteil an den erwarteten Toren, Minuten]
   G.ergebnis=()=>{const ende=G.m;
     const teil=(sd,s)=>{const ids=Object.entries(G.minuten).filter(([id])=>sd.xi.includes(+id)||G.ein[s].includes(+id)),pos={};
-      sd.xp.forEach(x=>pos[x.p.id]=x.pos);G.wechsel.filter(w=>w.s===s).forEach(w=>{if(pos[w.aus]==null)pos[w.aus]=pos[w.ein]||'ZM';});
+      sd.xp.forEach(x=>pos[x.p.id]=x.pos);G.wechsel.filter(w=>w.s===s).reverse().forEach(w=>{if(pos[w.aus]==null)pos[w.aus]=pos[w.ein]||'ZM';}); /* rückwärts: bei A für B, dann B für C kennt B seine Position schon, wenn A sie übernimmt (Prüfung EK7) */
       const l=ids.map(([id,[a,b]])=>{const p=PIX.get(+id),ps=pos[id]||(p?STD_POS[p.pos]:'ZM'),min=Math.max(1,(b==null?ende:b)-a);
         const g=ps==='TW'?0.01:(RE.schuetzen.halb[linksForm(ps)]||0.3)*Math.pow((p?p.str:60)/RE.schuetzen.mitte,RE.schuetzen.exponent)*Math.min(90,min)/90;return[+id,ps,g,min];});
       const tot=l.reduce((a,x)=>a+x[2],0);return l.map(x=>[x[0],x[1],tot?x[2]/tot:0,x[3]]);};
-    return{h:hid,a:aid,hg:sc[0],ag:sc[1],ev,pen:G.pen,sr:G.schiri.n,yel:Object.keys(yel).map(Number),off:[...off],inj,xi:[H.xi,A.xi],ein:G.ein,bk:[0,1].map(s=>[...G.ein[s],...(G.bank[s]||[])]),ws:G.wechsel.map(w=>[w.s,w.m,w.aus,w.ein]),xg0,xpo:[H.am?[]:teil(H,0),A.am?[]:teil(A,1)],st,sz,sv:G.sv,taktik:[H,A].map(sd=>sd.am?null:{stil:sd.stil,form:sd.form,einst:sd.einst,u:Math.round(sd.u*100)/100})};};
+    return{h:hid,a:aid,hg:sc[0],ag:sc[1],ev,pen:G.pen,sr:G.schiri.n,yel:Object.keys(yel).map(Number),off:[...off],inj,xi:[H.xi,A.xi],ein:G.ein,bk:[0,1].map(s=>[...G.ein[s],...(G.bank[s]||[])]),ws:G.wechsel.map(w=>[w.s,w.m,w.aus,w.ein]),xg0,xpo:[H.am?[]:teil(H,0),A.am?[]:teil(A,1)],st,sz,sv:G.sv,taktik:[H,A].map(sd=>sd.am?null:{stil:sd.stil,form:sd.form,einst:sd.einst,u:Math.round(sd.u*100)/100,konter:sd.konter?1:0}),gs:G.geschont&&(G.geschont[0].length||G.geschont[1].length)?G.geschont:undefined};};
   return G;}
 // Bank (K05 §3.2): 9 Spieler, darunter ein Torwart, sonst die stärksten verfügbaren aus jeder Gruppe. Wen du auf die Tribüne gesetzt hast (p.trib, K14 §12), bleibt draußen.
 const ZURUFE=['druck','ruhe','konzentration','zeit'],ANSPRACHEN=['loben','motivieren','fordern','beruhigen','taktik','schweigen','augenzwinkernd'];
-function bankWaehlen(sd){if(sd.am)return[];const imXI=new Set(sd.xi),ohne=sd.id===S.my&&!autoB('aufstellung'),pool=squad(sd.id).filter(p=>avail(p)&&!imXI.has(p.id)&&!(ohne&&p.trib)).sort((a,b)=>b.str-a.str),n=RL.wechsel.bank,b=[];
-  const tw=pool.find(p=>p.pos==='TW');if(tw)b.push(tw);['AB','MF','ST'].forEach(g=>pool.filter(p=>p.pos===g).slice(0,2).forEach(p=>{if(b.length<n&&!b.includes(p))b.push(p);}));
+// Seit K05e: Wen du fest auf die Bank gesetzt hast (p.bankF), sitzt zuerst dort (höchstens n), dann füllt der Co-Trainer wie bisher; ein Torwart nur, wenn noch keiner dabei ist.
+function bankWaehlen(sd){if(sd.am)return[];const imXI=new Set(sd.xi),ohne=sd.id===S.my&&!autoB('aufstellung'),pool=squad(sd.id).filter(p=>avail(p)&&!imXI.has(p.id)&&!(ohne&&p.trib)).sort((a,b)=>b.str-a.str),n=RL.wechsel.bank,b=ohne?pool.filter(p=>p.bankF).slice(0,n):[];
+  const tw=pool.find(p=>p.pos==='TW');if(tw&&b.length<n&&!b.some(p=>p.pos==='TW'))b.push(tw);['AB','MF','ST'].forEach(g=>pool.filter(p=>p.pos===g).slice(0,2).forEach(p=>{if(b.length<n&&!b.includes(p))b.push(p);}));
   pool.forEach(p=>{if(b.length<n&&!b.includes(p)&&p.pos!=='TW')b.push(p);});return b.map(p=>p.id);}
 // Erwartung gegen Amateurklubs: Verhältnis der Teamwerte
 function amateurErwartung(H,A){const q=(H.am?H.w.AM:H.A)/(A.am?A.w.DM:A.D);return[clamp(1.4*Math.pow(q,1.6),0.2,5),clamp(1.4*Math.pow(1/q,1.6),0.1,5)];}
@@ -330,7 +335,7 @@ function applyMatch(r,cup){return mitStrom(strom('nachspiel',S.season,S.tag,r.h,
 function applyMatchLauf(r,cup){const N=RE.note,V=RP.selbstvertrauen;
   [0,1].forEach(s=>{const tid=s?r.a:r.h;if(tid>=1000)return;const gf=s?r.ag:r.hg,ga=s?r.hg:r.ag,res=gf>ga?1:gf<ga?-1:0;
     const xgF=r.xg0[s],E=erwartung(xgF,r.xg0[1-s]),eres=E.sieg-E.niederlage;
-    r.xpo[s].forEach(([id,,anteil,min=90])=>{const p=PIX.get(id);if(!p)return;p.apps++;nachSpiel(p,min);
+    r.xpo[s].forEach(([id,pos,anteil,min=90])=>{const p=PIX.get(id);if(!p)return;p.apps++;nachSpiel(p,min);if(p.um&&p.team===S.my)umschulungEinsatz(p,pos,min); /* K07g, nur bei dir (Prüfung FC2) */
       const goals=r.ev.filter(e=>e.t==='G'&&e.p===id).length;if(cup)p.pg=(p.pg||0)+goals;else if(r.eu)p.eg=(p.eg||0)+goals;else if(!r.rel&&!r.supercup)p.g+=goals;if(min<N.mindestMinuten){p.played=1;return;} // Kurzeinsatz: keine Note
       const fest=N.basis-(p.str-N.staerkeMitte)/N.staerkeTeiler;
       let gr=fest-res*N.ergebnis-goals*N.tor+(R()-0.5)*N.zufall;if(r.off.includes(id))gr+=N.platzverweis;gr=clamp(Math.round(gr*2)/2,N.min,N.max);

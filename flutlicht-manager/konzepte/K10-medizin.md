@@ -96,7 +96,7 @@ Hängt ab von: K03 (Frische, Robustheit, Saisonbelastung), K04 (Fouls, Ermüdung
 
 - **Fit spritzen** (nur Arten mit „ja“): Der Spieler kann sofort spielen, mit Wirkung ×0,95. Danach mit 15 % eine Verschlimmerung um eine Stufe (Bänderdehnung → Bänderriss, Prellung → Faserriss im Muskel). Kämpfer wollen, Diven nicht (K14).
 - **Früher zurückholen** aus dem Aufbautraining: einsatzfähig sofort, Frische 65 %, Rückfallwert doppelt.
-- **Zweite Meinung** (Entscheidung nach der Diagnose): kostet Geld (K23), gibt eine engere Spanne. Mit 20 % kommt eine bessere Behandlung heraus (−15 % Dauer), mit 5 % eine schlechtere Nachricht.
+- **Zweite Meinung** (Entscheidung nach der Diagnose): kostet Geld (K23), gibt eine engere Spanne. Mit 20 % kommt eine bessere Behandlung heraus (−15 % Dauer), mit 5 % eine schlechtere Nachricht. **Gebaut seit K10c** (22.11.2026, popolupo, ohne Testlauf): Knopf in der Verletztenliste nach der Diagnose, einmal je Verletzung, 15.000, 8.000 oder 4.000 € je Liga (Buchung „Medizin“), −15 % oder +15 % auf den Rest der Pause, sonst die halbe Breite der Diagnose. Sie deckt eine Fehldiagnose (K10b) immer auf. Kein Halt, keine Automatik (der Arzt holt keine zweite Meinung), eigener Strom.
 
 ### 5.5 Gehirnerschütterung
 
@@ -129,6 +129,20 @@ Hängt ab von: K03 (Frische, Robustheit, Saisonbelastung), K04 (Fouls, Ermüdung
 | Spieler verheimlicht Verletzung | hoher Ehrgeiz, kleine Verletzung, Zufall | spielt weiter, Risiko der Verschlimmerung, Glaubwürdigkeit (K15) |
 | Grippewelle | drei oder mehr Kranke gleichzeitig | Info, eventuell Antrag auf Spielverlegung (K13, Community-Wunsch) |
 | Verletzungsserie | drei Muskelverletzungen in zwei Wochen | Arzt nennt die Ursache (Belastungssprung, Frische) |
+
+**Gebaut als K10e (22.11.2026, popolupo, ohne Testlauf), beide als Anlasskarten (K30d):**
+
+- **Grippewelle** (Entscheidung, Chance 0,5 je Woche mit Anlass, Sperre 60 Tage):
+  - Anlass: mindestens drei Kranke im Kader.
+  - „Hygieneplan umsetzen“ (Voreinstellung): 3.000 € (3. Liga, nach Liga mehr). Die Ansteckung endet sofort, und zwei Wochen lang erkranken nur halb so viele (`RMD.krankheit.hygiene`). Seit Prüfung EF2 gilt das auch nach neuen Kranken, die Ansteckung zählt während des Plans nicht (`krankFaktor`).
+  - „Normal weitermachen“: nichts.
+  - Spielverlegung beantragen gibt es seit K13d (Stufe 4, bei weniger als 16 einsatzfähigen Spielern).
+- **Lange Reha** (Entscheidung, Chance 0,03 je Woche mit Anlass, Sperre 365 Tage). Sie steht statt „Kreuzbandriss“:
+  - Anlass: ein Spieler mit einer Verletzung ab 60 Tagen, die noch mindestens 30 Tage dauert, Diagnose gestellt.
+  - „Zum Spezialisten schicken“: 15.000 €, Stimmung +3, das Rückfallrisiko nach der Rückkehr halbiert (`p.vl.rfF`). Geld und Stimmung gibt es nur, solange er noch verletzt ist (`dann`).
+  - „Reha im Verein“ (Voreinstellung): nichts.
+  - Grund für den Umbau: Ein Kreuzbandriss ist selten (1 % der Verletzungen), und die Karte hätte nur in der Woche danach kommen können. Die Reha dauert Monate, dort passt die Entscheidung.
+- „Spieler spielt trotz Schmerzen“ gibt es schon als „fit spritzen“ (§5.4). „Spieler verheimlicht Verletzung“ fehlt noch, die Karte bräuchte eine versteckte Verletzung in der Engine.
 
 ## 9. Wechselwirkungen
 
@@ -198,14 +212,14 @@ medizin:{
 5. **Quellen im Spiel:** Foul (je erlittenem Foul 1,2 % nach Schwere der Foulart: taktisch ×0,5, rücksichtslos ×4, brutal ×10, harter Einsatz ×1,5), Zweikampf ohne Foul (je Minute und Team 0,16 %) und Überlastung (je Minute und Team 0,22 %, nach Frische, Alter ab 30, Pressing und Konter, Rückfallfenster). Dazu kommt das Training (Grundrate 0,0016 statt 0,00032). Die Werte aus 5.1 (je Spieler und Minute 0,0003) hätten etwa zehnmal zu viele Verletzungen ergeben.
 6. **Art nach Quelle:** Jede Art hat einen Kontaktanteil k. Kontakt zieht anteil × k, Überlastung anteil × (1 − k), das Training alle Arten nach anteil (Trainingsspiel, Zweikämpfe). Ergebnis: 35 % Muskel, 25 % Zerrung, 44 % im Training.
 7. **Spiel gegen Training je Stunde:** etwa 20-mal statt 3- bis 6-mal (UEFA-Studie etwa 7-mal). Beides zugleich geht mit unserer Trainingszeit (jeder Spieler fast täglich 1,5 Stunden) nicht: Bei einem Training-Anteil von 40–55 % wird das Verhältnis groß. Der Test prüft nur „mindestens dreimal“. Prüfen, wenn K11 und die Trainingsdauer genauer sind.
-8. **Zerrung 8–30 Tage** statt 7–28, weil der Physiotherapeut (K16) die Dauer zusätzlich verkürzt. Rückfall: Im Fenster von acht Wochen ist das Risiko ×(1 + 7 × Rückfallwert), und 35 % der Verletzungen in dieser Zeit sind dieselbe Art. Das ergibt etwa 14 % Rückfälle nach einer Zerrung.
-9. **Diagnose:** Verdacht nur als Gruppe (Muskel-, Band-, Knieverletzung …) mit Spanne ±60 %, nach der Untersuchung die genaue Art mit ±25 %. Mit Mannschaftsarzt (K16) geht es schneller und genauer: Qualität 10 entspricht dem Durchschnitt, ohne Arzt ist die Spanne doppelt so breit und die Untersuchung dauert 3 Tage. Die Spanne enthält immer die wahre Dauer. Eine Fehldiagnose ist noch nicht gebaut.
+8. **Zerrung 8–30 Tage** statt 7–28, weil der Physiotherapeut (K16) die Dauer zusätzlich verkürzt. Rückfall: Im Fenster von acht Wochen ist das Risiko ×(1 + 7 × Rückfallwert), und 35 % der Verletzungen in dieser Zeit sind dieselbe Art. Das ergibt etwa 14 % Rückfälle nach einer Zerrung. **26.11. (vorläufig):** Gemessen waren es über viele Läufe 15 bis 16 % und 9,5 bis 10 Kreuzbandrisse je Saison in der 1. Liga (Ziel 3–8). Rückfallwert der Zerrung daher 0,095 statt 0,12, Anteil des Kreuzbandrisses 0,006 statt 0,01.
+9. **Diagnose:** Verdacht nur als Gruppe (Muskel-, Band-, Knieverletzung …) mit Spanne ±60 %, nach der Untersuchung die genaue Art mit ±25 %. Mit Mannschaftsarzt (K16) geht es schneller und genauer: Qualität 10 entspricht dem Durchschnitt, ohne Arzt ist die Spanne doppelt so breit und die Untersuchung dauert 3 Tage. Die Spanne enthält immer die wahre Dauer, außer bei einer Fehldiagnose. **Fehldiagnose seit K10b** (22.11.2026, popolupo, ohne Testlauf, Werte GESCHÄTZT): nur bei deinem Verein, ab 10 Tagen Ausfall, Chance 15 % − 0,6 % je Punkt Arzt-Qualität, mindestens 3 % (Qualität 10: 9 %). Die genaue Diagnose zeigt dann 0,6 × die wahre Dauer (zu optimistisch). Ist der Spieler am Ende dieser Spanne noch verletzt, kommt die Meldung „Rückschlag“ mit der richtigen Spanne. Nur Anzeige, fest aus Seed, Spieler und Tag, ohne Würfel aus den Strömen, darum ohne Folgen für Ergebnisse und Gleichschritt.
 10. **Krankheiten:** 0,06 % je Spieler und Tag statt 0,15 %, Ansteckung ×2 für 5 Tage statt ×3 für 7 Tage. Mit den Werten aus dem Entwurf schaukelte sich die Ansteckung auf 35 Krankheiten pro Team und Saison hoch, jetzt sind es etwa 7. Das ist ein Spielwert, nicht recherchiert.
 11. **Verletzungen laufen über den Saisonwechsel weiter** (vorher wurden sie am 1. Juli gelöscht). Ein Kreuzbandriss im April kostet also auch die Vorbereitung.
 12. **Fit spritzen** geht nur am Spieltag. Computer-Vereine spritzen nur in wichtigen Spielen (Pokal ab Runde 3, Relegation) und nur Stammspieler mit höchstens 10 Tagen Ausfall. Verschlimmerung: Prellung → Faserriss, Bänderdehnung → Bänderriss, Rücken/Leiste → Zerrung, Bruch (Nase) bekommt 7 Tage mehr.
 13. **Robustheit und „verletzungsanfällig“** wirken beide (1,6 − 0,06 × Robustheit und ×1,6), wie in 5.1. Ein Anfälliger (Robustheit 1–4) verletzt sich damit gut doppelt so oft wie der Durchschnitt, nicht nur 60 % öfter, wie der Merkmalstext sagt. Prüfen.
 14. **Lernstufen (K36):** Verletztenliste und Diagnose ab Stufe 1 (nur Information), fit spritzen und früher zurückholen ab Stufe 4. Davor entscheidet der Arzt nach den Regeln der Computer-Vereine.
-15. **Noch nicht gebaut:** zweite Meinung, Fehldiagnose, Pflichtwechsel und Zusatzwechsel bei Gehirnerschütterung, Ereignisse aus §8, Saisonbilanz der Ausfalltage in der Saisonzusammenfassung (die Bilanz steht in der Verletztenliste im Kader), Reha-Zentrum (K26), Rotation der Computer-Vereine nach Saisonbelastung.
+15. **Noch nicht gebaut:** Pflichtwechsel und Zusatzwechsel bei Gehirnerschütterung, Ereignisse aus §8 außer Verletzungsserie (K07c), Grippewelle und lange Reha (K10e), Reha-Zentrum (K26), Rotation der Computer-Vereine nach Saisonbelastung. (Die Rotation gibt es seit K10f, 25.11.2026, popolupo, ohne Testlauf, hinter dem Schalter `REGELN.computer.belastungRotation.an`, im Menü „Rotation nach Saisonbelastung“: Im Ligaspiel schont ein Verein, dessen Aufstellung der Stab macht, Feldspieler ab Saisonbelastung 70 mit 35 % je Spiel, fest aus dem Seed, höchstens zwei, solange 14 Einsatzfähige mit Torwart bleiben; nicht in der Relegation; seit Prüfung FU1 zählt der Bankplatz der Geschonten nicht, sie stehen im Spielergebnis.) Die Ausfalltage stehen seit K10d (22.11.2026, ohne Testlauf) auch in der Saisonbilanz, mit dem Ligaschnitt.
 
 **Noch zu recherchieren:** aktuelle Gesamtrate für Männer-Profis (je 1000 Stunden und pro Team und Saison), Anteil der Trainingsverletzungen, Regel zu zusätzlichen Wechseln bei Gehirnerschütterung in Bundesliga und Pokal.
 

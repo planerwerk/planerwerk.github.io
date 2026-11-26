@@ -43,4 +43,24 @@ const fremd=w=>w.S.pl.find(p=>p.team>=0&&p.team!==VEREIN&&w.S.teams[p.team].lg==
   const l=F.gerS().l,wochen=Math.max(1,Math.floor((W.S.tag)/7));
   pruef(!fehler&&l.length>=wochen&&l.length<=3*wochen+3,'Ablauf: 20 Wochen ohne Fehler, ein bis drei Gerüchte je Woche',fehler||`${l.length} Gerüchte in etwa ${wochen} Wochen, über dich ${l.filter(g=>g.mein).length}`);}
 
+// K29c. Beziehung zu den Medien: Mit allen fünf Medien verärgert (−30) trifft ein Gerücht über dich als Trainer das Vertrauen 1,5-mal so stark, gewogen (+30) halb so stark
+{const w=welt(),{S,F,ev}=w,W=ev('RGR').wirkung,E=ev('REGELN').exklusiv,alle=v=>{S.mb={};['boulevard','fach','tv','portal','lokal'].forEach(k=>S.mb[k]=v);};
+  alle(E.grenzen[0]);S.trust=50;F.gerVeroeffentlichen({art:'trainerAus',tid:S.my,w:0});const boese=S.trust-50;alle(E.grenzen[1]);S.trust=50;F.gerVeroeffentlichen({art:'trainerAus',tid:S.my,w:0});const gut=S.trust-50;
+  pruef(nah(boese,W.vertrauen*E.wirkung[1])&&nah(gut,W.vertrauen*E.wirkung[0]),'Gerücht über dich wirkt nach der Beziehung zum Medium',`verärgert ${boese}, gewogen ${gut} (Grundwert ${W.vertrauen})`);}
+
+// K17d. Klatsch und Tratsch (K17 §5.2, §5.3): Bei einer Beziehung unter −30 gibt es „soll dort ein Thema sein“ mit einem Spieler, den der Verein brauchen könnte.
+//       Gerüchte über dich kommen doppelt so oft, der Spieler fühlt sich begehrt oder wird unruhig. Ohne schlechte Beziehung nichts davon.
+{const {S,F,ev}=welt(),G=ev('RGR'),k0=ev('gerKlatschFaktor')(),ohne=F.gerKandidaten().mein.filter(c=>c.art==='thema').length;
+  const k=S.teams.find(x=>x.id!==S.my&&ev('aktiv')(x)&&ev('squad')(S.my).some(p=>ev('hatBedarf')(x,p)));F.bezDuAendern(k.id,-90,'Test');const k1=ev('gerKlatschFaktor')();
+  const c=F.gerKandidaten().mein.find(x=>x.art==='thema'&&x.klub===k.id),p=c&&ev('PIX').get(c.pid);let d=null;
+  if(p){ev('stimmung')(p);p.st=50;F.gerVeroeffentlichen(Object.assign({},c,{w:1}));d=p.st-50;}
+  pruef(k0===1&&ohne===0&&k1===G.klatsch.mein&&!!p&&ev('hatBedarf')(k,p)&&d!==0&&d!=null&&S.ger.l.some(g=>g.art==='thema'&&g.pid===p.id&&g.mein===1),
+    'Klatsch: Thema-Gerücht bei schlechter Beziehung, Gerüchte über dich doppelt so oft, Stimmung ändert sich',`Faktor ${k0} → ${k1}, ohne Ärger ${ohne}, Spieler ${p&&p.n}, Stimmung ${d}`);}
+
+// K29n. Gehaltsforderung bei bekanntem Interesse (K29 §5.5): Solange p.gerF gilt, fordert ein Spieler beim Wechsel wirkung.gehalt mehr; die Verlängerung bleibt, abgelaufen nichts.
+{const {S,ev}=welt(),G=ev('RGR').wirkung,gf=ev('gehaltForderung'),a=ev('absTag')(S.tag),p=S.pl.find(x=>x.team>=0&&x.team<1000&&x.team!==S.my&&x.str>=60);delete p.gerF;
+  const w0=gf(p,true),v0=gf(p,false);p.gerF={f:G.preis.wahr,bis:a+5};const w1=gf(p,true),v1=gf(p,false);p.gerF.bis=a-1;const w2=gf(p,true);delete p.gerF;
+  const hoeher=Math.abs(w1-w0*(1+G.gehalt))<=1100&&w1>w0; /* beide auf 1.000 gerundet */
+  pruef(hoeher&&v1===v0&&w2===w0,'Gehaltsforderung bei bekanntem Interesse: beim Wechsel höher, Verlängerung gleich, abgelaufen wie vorher',`Wechsel ${w0} → ${w1}, Verlängerung ${v0}/${v1}, abgelaufen ${w2}`);}
+
 console.log(probleme.length?`\n${probleme.length} Problem(e).`:'\nAlles in Ordnung.');process.exitCode=probleme.length?1:0;

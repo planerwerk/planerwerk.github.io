@@ -1,5 +1,5 @@
 // Finanzplan (K23 §5.5c, §10, K23a): Monatsbericht, Prognose, Lizenzprüfung mit Auflagen und Transfersperre, Insolvenz mit Punktabzug, eine Saison im Ablauf
-// mit der Prüfung „Kontostand nachvollziehbar aus den Buchungen“ (K23 §10).
+// mit der Prüfung „Kontostand nachvollziehbar aus den Buchungen“ (K23 §10). Dazu K23b (11, 12), K23d (13) und K23c (14 bis 18, echte Größenordnungen).
 // Aufruf: node tests/finanzen.js. Nur Node.js.
 // ACHTUNG: Dieses Skript ist noch nie gelaufen. K23a entstand auf einem Rechner ohne Node.js. Fehler können im Spiel oder im Skript selbst liegen.
 const {neueWelt,saisons}=require('./sim');
@@ -30,7 +30,7 @@ const tagMit=(ev,mmtt)=>{for(let d=0;d<400;d++)if(ev('mmtt')(d)===mmtt)return d;
   pruef(nachEins&&vor===3&&nach===-6&&S.trust===30&&t.cash===0,'Insolvenz: erst beim zweiten Monatsersten, 9 Punkte Abzug (3 → −6), Vertrauen −30, Kontostand 0',`${vor} → ${nach}, Vertrauen ${S.trust}, Konto ${t.cash}`);}
 
 // 5. Eine Saison im Ablauf: Monatsberichte, und der Kontostand ist aus den Buchungen nachvollziehbar (Summe der Monatssalden = Änderung des Kontostands)
-{let erg=null;saisons({n:1,seed:SEED,verein:VEREIN,beiSaisonende:S=>{const v=S.finV||[];if(!v.length){erg={n:0};return;}
+{let erg=null;saisons({n:1,seed:SEED,verein:VEREIN,vorher:(F,W)=>{W.ev('entlassen=function(){}');},beiSaisonende:S=>{const v=S.finV||[];if(!v.length){erg={n:0};return;}
     const start=v[0].cash-v[0].saldo-(v[0].k||0),summe=v.reduce((a,r)=>a+r.saldo+(r.k||0),0),diff=Math.abs(v[v.length-1].cash-start-summe),umsatz=v.reduce((a,r)=>a+r.ein-r.aus,0); // k: Kreditflüsse (K23e)
     erg={n:v.length,diff,umsatz,loan:S.loan||0};}});
   pruef(erg&&erg.n>=9&&erg.diff<=Math.max(1000,erg.umsatz*0.001),'Saison: mindestens 9 Monatsberichte, Kontostand gleich Startstand plus Summe der Monatssalden (K23 §10)',
@@ -56,11 +56,121 @@ const tagMit=(ev,mmtt)=>{for(let d=0;d<400;d++)if(ev('mmtt')(d)===mmtt)return d;
 
 // 9. Mäzen: nur in der Not; angenommen bringt Geld, danach mischt sich auch ein Präsident ohne Ehrgeiz ein
 {const {F,S,ev,t}=welt(),A=ev('AUSLOESER');t.cash=1e6;const ohne=A.maezen();t.cash=-1e5;const mit=A.maezen();const g0=S.fin['Ereignisse']||0;F.kartenEntscheiden({id:'maezen',tag:S.tag,s:S.season,b:{},text:''},0,false);
-  pruef(ohne===null&&!!mit&&(S.fin['Ereignisse']||0)-g0===1500000&&S.maezen===S.season,'Mäzen: nur in der Not, 1,5 Mio. €, danach mischt sich der Präsident ein',`Geld ${(S.fin['Ereignisse']||0)-g0}, Merker ${S.maezen}`);}
+  pruef(ohne===null&&!!mit&&(S.fin['Ereignisse']||0)-g0===ev('kartenGeld')(1500000)&&S.maezen===S.season,'Mäzen: nur in der Not, 1,5 Mio. €, danach mischt sich der Präsident ein',`Geld ${(S.fin['Ereignisse']||0)-g0}, Merker ${S.maezen}`);}
 
 // 10. Vereinswechsel (takeJob): Kredite, Raten, Lizenzprüfung und Marketing des alten Vereins gehen nicht mit, der neue Verein zahlt nichts davon
 {const {F,S,ev,t}=welt(),alt=t;F.kreditAufnehmen(2e6,3);(S.raten=S.raten||[]).push({n:'Test',rest:600000,rate:50000});S.lzp={s:S.season,fehlt:1,sperre:S.season};ev('mkS')().ww=99;
   const neu=S.teams.find(x=>x.lg===1&&x.id!==S.my).id;F.takeJob(neu);const c0=ev('myT()').cash;F.monatsRaten();const c1=ev('myT()').cash;
   pruef(S.my===neu&&(S.kredite||[]).length===0&&(S.raten||[]).length===0&&!ev('transferSperre')()&&ev('mkS')().ww!==99&&c1===c0,'Vereinswechsel: keine Kredite, Raten, Sperre oder Marketingwerte vom alten Verein',`Kredite ${(S.kredite||[]).length}, Raten ${(S.raten||[]).length}, Werbewert ${ev('mkS')().ww}, Kasse ${c0} → ${c1}`);}
+
+// 11. K23b: Computer-Verein je Ligaspiel nach dem Modell (auswärts TV + Werbung + Sonstiges − Gehälter − Betrieb − Verwaltung (K23c) − Jugend, zu Hause dazu die Zuschauer), keine Pauschale mehr
+{const {F,S,ev}=welt(),RF=ev('RF'),t=S.teams.find(x=>x.lg===3&&x.id!==S.my),o=S.teams.find(x=>x.lg===3&&x.id!==S.my&&x.id!==t.id),n=S.fx[3].length;
+  const soll=ev('tvGeld')(t)+ev('sponsorBasis')(t)+ev('sonstigeEinnahmen')(t)-Math.round((ev('squad')(t.id).reduce((a,p)=>a+p.sal,0)+ev('stabGehaelter')(t.id))/n)-Math.round(t.cap*RF.betrieb.jePlatz+(t.logen||0)*RF.betrieb.jeLoge)-ev('verwaltungKosten')(t)-RF.jugendKosten[ev('RS').nachwuchs.computerStufe];
+  let c=t.cash;F.kiFinanzenSpiel(t,{h:o.id,a:t.id});const aus=t.cash-c;c=t.cash;F.kiFinanzenSpiel(t,{h:t.id,a:o.id});const heim=t.cash-c;
+  pruef(aus===soll&&heim-aus===ev('kiHeimEinnahmen')(t,o,false)&&heim>aus,'K23b: Computer-Verein bucht Einnahmen und Ausgaben je Spiel, zu Hause mit Zuschauern',`auswärts ${aus} (Soll ${soll}), zu Hause ${heim}`);}
+
+// 12. K23b: Insolvenz eines Computer-Vereins nach zwei Monatsersten unter dem Kreditrahmen: 9 Punkte Abzug, Konto auf 0
+{const {F,S,ev}=welt(),t=S.teams.find(x=>x.lg===2&&x.id!==S.my);t.cash=-ev('kreditRahmen')(t)-1;F.kiInsolvenzPruefen();const nachEinem=(S.abzug&&S.abzug[S.season]||{})[t.id]||0;t.cash=-ev('kreditRahmen')(t)-1;F.kiInsolvenzPruefen();
+  pruef(nachEinem===0&&S.abzug[S.season][t.id]===9&&t.cash===0,'K23b: Insolvenz eines Computer-Vereins mit Punktabzug und Schuldenschnitt',`Abzug ${S.abzug&&S.abzug[S.season]&&S.abzug[S.season][t.id]}, Konto ${t.cash}`);}
+
+// Prüfung ER1, ES1: Nach dem letzten Spieltag der Liga (Relegation läuft noch) kommt die Insolvenz eines Computer-Vereins wie sonst, aber der Abzug gilt für die neue Saison:
+//       nichts in der laufenden Tabelle, 9 Punkte in S.abzug der nächsten Saison, Schuldenschnitt und Zähler sofort (kein eingefrorener Zähler bei einem Abstieg in die Regionalliga)
+{const {F,S,ev}=welt(),t=S.teams.find(x=>x.lg===3&&!(x.zweite>=0)&&x.id!==S.my),lg=t.lg,r0=S.res[lg].slice(),n=S.fx[lg].reduce((s,md)=>s+md.length,0),[h,a]=S.fx[lg][0][0];
+  while(S.res[lg].length<n)S.res[lg].push([h,a,0,0,0]);t.cash=-ev('kreditRahmen')(t)-1;F.kiInsolvenzPruefen();t.cash=-ev('kreditRahmen')(t)-1;F.kiInsolvenzPruefen();S.res[lg]=r0;
+  const jetzt=((S.abzug||{})[S.season]||{})[t.id]||0,neu=((S.abzug||{})[S.season+1]||{})[t.id]||0,sofort=t.fu===0&&t.cash===0&&t.fins===S.season+1;
+  pruef(jetzt===0&&neu===9&&sofort,'Insolvenz nach dem letzten Spieltag: Abzug in der neuen Saison, Schuldenschnitt sofort (ER1, ES1)',`laufende Saison ${jetzt}, neue Saison ${neu}, Zähler ${t.fu}, Konto ${t.cash}`);}
+
+// Prüfung ET1, ET5: derselbe Fall für deinen Verein. Der Abzug geht in die nächste Saison, die Sperre steht auch am Verein (t.fins), damit nach einem Jobwechsel
+//       keine zweite Insolvenz in derselben Saison kommt.
+{const {F,S,ev,t}=welt(),lg=t.lg,r0=S.res[lg].slice(),n=S.fx[lg].reduce((s,md)=>s+md.length,0),[h,a]=S.fx[lg][0][0];while(S.res[lg].length<n)S.res[lg].push([h,a,0,0,0]);
+  t.cash=-ev('kreditRahmen')(t)-1e6;S.trust=60;F.insolvenzPruefen();F.insolvenzPruefen();S.res[lg]=r0;
+  const jetzt=((S.abzug||{})[S.season]||{})[S.my]||0,neu=((S.abzug||{})[S.season+1]||{})[S.my]||0,sperre=S.lzp.ins===S.season+1&&t.fins===S.season+1;
+  pruef(jetzt===0&&neu===9&&sperre&&S.trust===30,'Insolvenz deines Vereins nach dem letzten Spieltag: Abzug in der neuen Saison, Sperre auch am Verein (ET1)',`laufende Saison ${jetzt}, neue Saison ${neu}, ins ${S.lzp.ins}, fins ${t.fins}, Vertrauen ${S.trust}`);
+  /* Prüfung EU3: Die Sperre wirkt nach einem Jobwechsel (S.lzp gelöscht) in der neuen Saison weiter: keine zweite Insolvenz, 9 statt 18 Punkte. EU2: Zähler am Verein (t.fu) */
+  F.finanzenJobwechsel();S.season++;t.cash=-ev('kreditRahmen')(t)-1e6;F.insolvenzPruefen();const fu1=t.fu;F.insolvenzPruefen();const zweite=((S.abzug||{})[S.season]||{})[S.my]||0;S.season--;
+  pruef(zweite===9&&fu1===1,'Insolvenz: nach Jobwechsel keine zweite in derselben Saison, Zähler am Verein (EU2, EU3)',`Abzug in der Saison ${zweite}, Zähler nach dem ersten Monatsersten ${fu1}`);}
+
+// Prüfung EW5: alter Spielstand mit S.lzp.unter=1 und t.fu=0. Der Zähler wird übernommen, der nächste Monatserste unter dem Rahmen bringt die Insolvenz (EV1).
+{const {F,S,ev,t}=welt();S.lzp={unter:1};t.fu=0;t.cash=-ev('kreditRahmen')(t)-1e6;F.insolvenzPruefen();const ab=((S.abzug||{})[S.season]||{})[S.my]||0;
+  pruef(ab===9&&S.lzp.unter===undefined,'Alter Spielstand: Insolvenz-Zähler aus S.lzp.unter übernommen (EV1)',`Abzug ${ab}, unter ${S.lzp.unter}`);}
+
+// Prüfung EW5: Ein Vereinswechsel räumt die Trainingslager der Saison, auch ein gebuchtes künftiges (EV7, EW1).
+//   Prüfung EX6: auch ein schon beendetes Lager dieser Saison; ein Lager einer früheren Saison bleibt stehen.
+{const {F,S,ev}=welt();S.lager=[{ort:'heimat',von:1,bis:3,saison:S.season-1,kosten:0,tag:0,koller:0}];F.lagerBuchenLauf('heimat',S.tag-10,5);F.lagerBuchenLauf('heimat',S.tag+5,5);
+  const neu=S.teams.find(x=>x.lg===1&&x.id!==S.my).id;F.takeJob(neu);const L=S.lager||[];
+  pruef(L.length===1&&L[0].saison===S.season-1&&ev('lagerAktiv')(S.tag+6)===null,'Vereinswechsel räumt die Trainingslager der Saison, beendete und künftige; frühere Saisons bleiben (EV7, EW1, EX6)',
+    `Lager danach ${L.length}: ${L.map(l=>l.saison+'/'+l.bis).join(', ')}`);}
+
+// 13. K23d: Gehaltsrahmen = gehaltAnteil (seit K23c 75 %) der erwarteten Einnahmen, Anteil steigt mit den Gehältern, Transferbudget = Konto über 10 % Reserve, über 110 % kauft niemand
+{const {F,S,ev,t}=welt(),B=ev('RFP').budget,E=ev('erwarteteEinnahmen')(t),r0=ev('rahmenAnteil')(t);ev('squad')(S.my).forEach(p=>{p.sal*=5;});const r1=ev('rahmenAnteil')(t);t.cash=E;
+  pruef(ev('gehaltsRahmen')(t)===Math.round(E*B.gehaltAnteil)&&r1>r0*4&&r1>B.sperreAb&&ev('transferBudget')(t)===E-Math.round(E*B.reserve),'K23d: Gehaltsrahmen, Anteil und Transferbudget',`Rahmen ${ev('gehaltsRahmen')(t)}, Anteil ${r0.toFixed(2)} → ${r1.toFixed(2)}, Budget ${ev('transferBudget')(t)}`);}
+
+// 14. K23c: TV-Gelder nach dem Säulenmodell: Töpfe je Liga voll verteilt, oben mehr als unten, 3. Liga gleich, je Ligaspiel ein Teil des Saisonbetrags
+{const {S,ev}=welt(),T=ev('RF').tv,b=ev('tvSaisonBetrag'),rang=ev('tvRang'),summe=lg=>S.teams.filter(x=>x.lg===lg).reduce((a,x)=>a+b(x),0);
+  const l1=S.teams.filter(x=>x.lg===1).sort((x,y)=>rang(x)-rang(y)),l3=S.teams.filter(x=>x.lg===3),n1=S.fx[1].length;
+  const ok=[1,2,3].every(lg=>Math.abs(summe(lg)-T.topf[lg])<=20)&&b(l1[0])>b(l1[l1.length-1])*1.5&&l3.every(x=>b(x)===b(l3[0]))&&Math.abs(ev('tvGeld')(l1[0])*n1-b(l1[0]))<=n1;
+  pruef(ok,'K23c: TV-Gelder nach dem Säulenmodell',`1. Liga ${Math.round(summe(1)/1e6)} Mio. (${Math.round(b(l1[0])/1e6)} bis ${Math.round(b(l1[l1.length-1])/1e6)}), 2. Liga ${Math.round(summe(2)/1e6)} Mio., 3. Liga je ${Math.round(b(l3[0])/1e5)/10} Mio.`);}
+
+// 15. K23c: Fünfjahreswertung: Punkte der Saison aus dem Gesamtplatz, ein Absteiger mit guter Wertung bekommt in der 2. Liga das meiste TV-Geld
+{const {F,S,ev}=welt(),a=S.teams.filter(x=>x.lg===1).sort((x,y)=>y.rep-x.rep)[0],z=S.teams.find(x=>x.lg===2);
+  S.teams.forEach(x=>{if(x.lg<=3)x.lastPos=1;});z.lastPos=3;F.tvWertungEintragen();
+  const n=S.teams.filter(x=>x.lg<=3).length,pa=a.tvw[0],pz=z.tvw[0];a.lg=2;
+  const v=ev('tvSaisonBetrag')(a),rest=S.teams.filter(x=>x.lg===2&&x.id!==a.id).map(x=>ev('tvSaisonBetrag')(x));
+  pruef(pa===n&&pz===n-20&&ev('tvRang')(a)===1&&rest.every(x=>v>x),'K23c: Fünfjahreswertung, ein Absteiger bekommt in der 2. Liga das meiste TV-Geld',`Punkte ${pa} und ${pz}, Rang ${ev('tvRang')(a)}, ${Math.round(v/1e6)} gegen höchstens ${Math.round(Math.max(...rest)/1e6)} Mio.`);}
+
+// 16. K23c: Je Ligaspiel bucht dein Verein Verwaltung und weitere Sponsoren, beide zählen in der Prognose (laufend)
+{const {F,S,ev,t}=welt();let m=null;S.fx[t.lg].some(md=>md.some(([h,a])=>{if(a===S.my){m={h,a,hg:1,ag:1,lg:t.lg};return true;}return false;}));
+  const v0=S.fin['Verwaltung']||0,w0=S.fin['Weitere Sponsoren']||0;F.finanzenLiga(m);const v=(S.fin['Verwaltung']||0)-v0,w=(S.fin['Weitere Sponsoren']||0)-w0,L=ev('RFP').laufend;
+  pruef(v===-ev('verwaltungKosten')(t)&&v<0&&w===Math.round(ev('sponsorBasis')(t)*ev('RF').werbung.partner)&&w>0&&L.includes('Verwaltung')&&L.includes('Weitere Sponsoren'),'K23c: Verwaltung und weitere Sponsoren je Ligaspiel',`Verwaltung ${v}, weitere Sponsoren ${w}`);}
+
+// 17. K23c: Alte Spielstände: Gehälter einmal auf die neue Kurve umgerechnet, im gleichen Verhältnis zur Kurve wie vorher, ein zweiter Aufruf ändert nichts
+{const {F,S,ev}=welt(),A=ev('RP').gehaltAlt,alt=s=>A.basis*Math.exp(A.steigung*(s-A.mitte)),kurve=ev('salaryFor'),p=S.pl.find(x=>x.team>=0&&x.str>=80),q=S.pl.find(x=>x.team>=0&&x.str<=62);
+  p.sal=Math.round(alt(p.str)*1.2/1000)*1000;q.sal=Math.round(alt(q.str)/1000)*1000;p.wech={nach:S.my,sal:Math.round(alt(p.str)/1000)*1000};
+  const t=ev('myT()'),SA=ev('RF').sponsorAlt,brustAlt=Math.round(t.rep*t.rep*SA.liga[t.lg]*SA.anteil.brust),brustNeu=ev('sponsorBasis')(t)*ev('RF').werbung.anteil.brust;if(S.spons)S.spons.base=brustAlt;
+  delete S.k23c;F.k23cUmstellen();const sp=p.sal;F.k23cUmstellen();const vertrag=!S.spons||Math.abs(S.spons.base-brustNeu)<=2000;
+  pruef(S.k23c===1&&Math.abs(p.sal/kurve(p.str)-1.2)<0.01&&Math.abs(q.sal-kurve(q.str))<=2000&&p.sal===sp&&Math.abs(p.wech.sal-kurve(p.str))<=2000&&vertrag,'K23c: Gehälter, vorgemerkte Wechsel und Werbeverträge alter Spielstände einmal umgerechnet',
+    `${p.n}: ${p.sal} (Kurve ${kurve(p.str)}), Wechsel ${p.wech.sal}, ${q.n}: ${q.sal} (Kurve ${kurve(q.str)}), Brust ${S.spons&&S.spons.base} (Soll ${Math.round(brustNeu)})`);}
+
+// 18. K23c: Größenordnungen in der neuen Welt: Gehälter je Liga, Kaderwerte, Startkonto und Kreditrahmen wachsen mit dem Ansehen (Grenzen grob, Modellrechnung K23 §5.6b)
+{const {S,ev}=welt(),sq=ev('squad'),val=ev('value'),kr=ev('kreditRahmen'),lg=l=>S.teams.filter(x=>x.lg===l),schnitt=(l,f)=>lg(l).reduce((a,x)=>a+sq(x.id).reduce((b,p)=>b+f(p),0),0)/lg(l).length;
+  const g=[1,2,3].map(l=>schnitt(l,p=>p.sal)),w1=schnitt(1,val),w3=schnitt(3,val),reich=lg(1).sort((a,b)=>b.rep-a.rep)[0],arm=lg(3).sort((a,b)=>a.rep-b.rep)[0];
+  pruef(g[0]>40e6&&g[0]<120e6&&g[1]>8e6&&g[1]<30e6&&g[2]>3e6&&g[2]<12e6&&w1>w3*8&&reich.cash>arm.cash*10&&kr(reich)>kr(arm)*3,'K23c: Größenordnungen (Gehälter, Kaderwerte, Startkonto, Kreditrahmen)',
+    `Gehälter je Verein ${g.map(x=>Math.round(x/1e5)/10).join(' / ')} Mio., Kaderwert 1. Liga ${Math.round(w1/1e6)}, 3. Liga ${Math.round(w3/1e6)} Mio., Konto ${Math.round(reich.cash/1e6)} gegen ${Math.round(arm.cash/1e5)/10} Mio., Kreditrahmen ${Math.round(kr(reich)/1e6)} gegen ${Math.round(kr(arm)/1e6)} Mio.`);}
+
+// 19. K23g: Lizenzprüfung der Computer-Vereine: am 1. März Auflagen bei negativer Liquidität, am 31. Mai noch negativ → Transfersperre für die nächste Saison;
+//     ein Verein mit Geld bleibt frei, dein Verein wird hier nicht geprüft
+{const {F,S,ev,t}=welt(),arm=S.teams.find(x=>x.lg===2&&x.id!==S.my),reich=S.teams.find(x=>x.lg===2&&x.id!==S.my&&x.id!==arm.id);
+  arm.cash=-1e9;reich.cash=1e9;t.cash=-1e9;F.kiLizenzPruefen(false);const aufl=arm.lzA===S.season&&reich.lzA==null&&t.lzA==null;F.kiLizenzPruefen(true);
+  const gesperrt=arm.lzSperre===S.season+1&&reich.lzSperre==null;S.season++;const jetzt=ev('kiTransferSperre')(arm)&&!ev('kiTransferSperre')(reich)&&!ev('kiTransferSperre')(t);S.season--;
+  pruef(aufl&&gesperrt&&jetzt,'K23g: Lizenzprüfung der Computer-Vereine mit Auflagen und Transfersperre',`Auflagen ${aufl}, Sperre ${gesperrt}, nächste Saison gesperrt ${jetzt}`);}
+
+// 20. K25d: Mitglieder aus daten/vereine.js, Beiträge in den sonstigen Einnahmen (Bayern etwa 26 Mio. € je Saison), Schnitt der 1. Liga wie vorher etwa 300.000 € je Ligaspiel,
+//     Mitgliederaktion +2 %
+{const {F,S,ev,t}=welt(),M=ev('RFP').mitglieder,so=ev('sonstigeEinnahmen'),fcb=S.teams.find(x=>x.sh==='FCB'||x.name==='FC Bayern München'),n1=S.fx[1].length;
+  const l1=S.teams.filter(x=>x.lg===1),schnitt=l1.reduce((a,x)=>a+so(x),0)/l1.length,b=fcb?so(fcb)-ev('RFP').sonstiges[1]:0;
+  const m0=t.mitglieder;t.cash=1e8;F.kampagneStarten('mitglieder');const m1=t.mitglieder;S.mk.k.mitglieder.bis=-1;F.kampagneStarten('mitglieder');const einmal=t.mitglieder===m1; // DL3
+  delete fcb.mitglieder;fcb.fans=Math.round(fcb.fans*1.1);F.mitgliederUmstellen();const alt=fcb.mitglieder===Math.round(432000*1.1); // DL1: alter Spielstand
+  pruef(!!fcb&&Math.abs(b-Math.round(432000*M.beitrag/n1))<=1&&schnitt>270000&&schnitt<330000&&m0>0&&m1===Math.round(m0*1.02)&&einmal&&alt,'K25d: Mitglieder, Beiträge, Schnitt der Liga, Mitgliederaktion einmal je Saison, alte Spielstände',
+    `Bayern ${fcb&&fcb.mitglieder} Mitglieder nach der Umrechnung, Beiträge je Spiel ${b}, Schnitt 1. Liga ${Math.round(schnitt)}, dein Verein ${m0} → ${m1}, einmal ${einmal}`);}
+
+// K23h. TV-Gelder in vier Raten (K23 §4), nur mit Schalter RF.tv.raten.an: aus wie bisher je Spiel und kein Geld an Ratentagen; an je Spiel nichts, am Ratentag ein Viertel
+//       des Saisonbetrags an jeden aktiven Verein (deiner seit Prüfung FK3 mit Buchung „TV-Raten“), an anderen Tagen nichts. Übers Jahr gleich viel wie je Spiel.
+//       FK3: „TV-Raten“ zählt nicht im Saldo je Ligaspiel; die Prognosen setzen die offenen Raten an, die heutige nur, solange sie nicht gezahlt ist; ausgeschaltet 0.
+{const {F,S,ev,t}=welt(),R0=ev('RF').tv.raten,d=tagMit(ev,R0.tage[0]),k=S.teams.find(x=>x.id!==S.my&&ev('aktiv')(x)),je=ev('tvJeSpiel'),bt=ev('tvSaisonBetrag');
+  const aus=!R0.an&&je(t)===ev('tvGeld')(t);let c0=k.cash;F.tvRatenTag(d);const ausTag=k.cash===c0;
+  R0.an=true;const anSpiel=je(t)===0&&je(k)===0;c0=k.cash;const f0=S.fin['TV-Raten']||0;F.tvRatenTag(d);const rate=k.cash===c0+Math.round(bt(k)/R0.tage.length)&&(S.fin['TV-Raten']||0)===f0+Math.round(bt(t)/R0.tage.length);
+  c0=k.cash;F.tvRatenTag(d+1);const sonst=k.cash===c0;R0.an=false;
+  const summe=Math.abs(R0.tage.length*Math.round(bt(t)/R0.tage.length)-ev('tvGeld')(t)*((S.fx[t.lg]||[]).length))<=R0.tage.length+(S.fx[t.lg]||[]).length;
+  const lauf=!ev('RFP').laufend.includes('TV-Raten');R0.an=true;S.tag=d;delete S.tvRT;const q=Math.round(bt(t)/R0.tage.length),offen=F.tvRatenOffen()===R0.tage.length&&ev('tvOffen')(t)===R0.tage.length*q;
+  F.tvRatenTag(d);const bezahlt=F.tvRatenOffen()===R0.tage.length-1;R0.an=false;const ausOffen=ev('tvOffen')(t)===0;
+  pruef(aus&&ausTag&&anSpiel&&rate&&sonst&&summe&&lauf&&offen&&bezahlt&&ausOffen,'TV-Gelder in vier Raten: nur mit Schalter, ein Viertel am Ratentag, sonst nichts, übers Jahr gleich viel, offene Raten in der Prognose',
+    `aus ${aus}/${ausTag}, an ${anSpiel}/${rate}/${sonst}, Summe ${summe}, nicht laufend ${lauf}, offen ${offen}, nach der Zahlung ${bezahlt}, aus ${ausOffen}`);}
+
+// Prüfung FL2, FL7: Die TV-Rate wird nach dem Monatsbericht gebucht (taeglichLauf), die Insolvenzprüfungen zählen die heute fällige Rate mit (tvHeute), gezahlt oder
+//       mit Schalter aus nicht mehr.
+{const {F,S,ev,t}=welt(),R0=ev('RF').tv.raten,d=tagMit(ev,R0.tage[0]),th=ev('tvHeute'),bt=ev('tvSaisonBetrag');
+  const reihe=String(ev('taeglichLauf')).includes('finanzenTag(d);tvRatenTag(d)')&&String(ev('insolvenzPruefen')).includes('tvHeute(t)')&&String(ev('kiInsolvenzPruefen')).includes('tvHeute(t)');
+  S.tag=d;delete S.tvRT;const aus=th(t)===0;R0.an=true;const heute=th(t)===Math.round(bt(t)/R0.tage.length);F.tvRatenTag(d);const gezahlt=th(t)===0;S.tag=d+1;delete S.tvRT;const morgen=th(t)===0;R0.an=false;
+  pruef(reihe&&aus&&heute&&gezahlt&&morgen,'TV-Raten: Buchung nach dem Monatsbericht, die Insolvenzprüfung zählt die heute fällige Rate mit',`Reihenfolge ${reihe}, aus ${aus}, heute ${heute}, gezahlt ${gezahlt}, anderer Tag ${morgen}`);}
 
 console.log(probleme.length?`\n${probleme.length} Problem(e).`:'\nAlles in Ordnung.');process.exitCode=probleme.length?1:0;

@@ -78,14 +78,14 @@ Hängt ab von: K04 (Spieldaten), K29 (Sprüche) · Wird gebraucht von: K28, K35a
 ### 5.6 Rekorde
 
 - **Je Liga:** höchster Sieg, meiste Ligatore eines Spielers in einer Saison, längste Serie ohne Niederlage (nur Spiele dieser Liga, nach einem Ligawechsel beginnt die Serie neu).
-- **Die 1. Liga startet mit den echten Bundesliga-Rekorden** (geprüft am 20.11.2026): 12:0 Mönchengladbach gegen Dortmund (29.4.1978), 41 Tore von Lewandowski (2020/21), 53 Spiele ohne Niederlage von Bayern (November 2012 bis März 2014). Wer sie bricht, bekommt die Meldung „Bundesliga-Rekord“. Die 2. und 3. Liga beginnen leer (vorläufig, die Werte habe ich nicht gesucht) und melden erst ab der zweiten Saison.
+- **Die 1. Liga startet mit den echten Bundesliga-Rekorden** (geprüft am 20.11.2026): 12:0 Mönchengladbach gegen Dortmund (29.4.1978), 41 Tore von Lewandowski (2020/21), 53 Spiele ohne Niederlage von Bayern (November 2012 bis März 2014). Wer sie bricht, bekommt die Meldung „Bundesliga-Rekord“. Seit K34b (22.11.2026, popolupo, Quellen bundesliga.com und dfb.de) starten auch die 2. und 3. Liga mit echten Rekorden. 2. Liga, seit 1974 und damit auch aus der zweigleisigen Zeit: 11:0 Arminia Bielefeld gegen Arminia Hannover (23.5.1980), 41 Tore von Horst Hrubesch für Rot-Weiss Essen (1977/78, eine Quelle nennt 1978/79), 28 Spiele ohne Niederlage (FC St. Pauli 1976 bis 1979, Arminia Bielefeld 1979/80). In der eingleisigen 2. Liga gab es bis 2021 nie einen zweistelligen Sieg, höchster war das 9:0 von Hansa Rostock gegen Koblenz (19.10.2008). 3. Liga seit 2008: 7:0 viermal, zuerst 1. FC Saarbrücken in Jena (11.8.2010), dann Wehen Wiesbaden in Köln (2018), Mannheim gegen Havelse und Zwickau gegen Würzburg (beide 14.5.2022). Dazu 28 Tore von Lars Gindorf für Alemannia Aachen (2025/26, vorher 27 von Dominik Stroh-Engel 2013/14) und 21 Spiele ohne Niederlage vom Karlsruher SC (2017/18, ebenso Saarbrücken 2011 über zwei Saisons). Beide Ligen melden Rekorde der eigenen Liga jetzt sofort. Alte Spielstände bekommen die Startwerte nachträglich, ein besserer Rekord aus dem Spiel bleibt.
 - **Vereinsrekorde** für Vereine, die du trainierst: Zuschauer, höchster Sieg, teuerster Zugang, teuerster Abgang. Gemeldet wird nur, wenn ein alter Wert übertroffen wird.
-- **Rekordtransfer der Spielwelt:** teuerster Zugang eines deutschen Vereins. Kein echter Startwert, weil die Geldbeträge im Spiel erst mit K23 an die echten angepasst werden.
+- **Rekordtransfer der Spielwelt:** teuerster Zugang eines deutschen Vereins. Seit K34d (22.11.2026, ohne Testlauf) mit echtem Startwert: Harry Kane, Tottenham Hotspur zum FC Bayern München, 2023/24, etwa 95 Mio. € (andere Quellen 100 Mio. plus Boni; Websuche 22.11., [Statista](https://de.statista.com/infografik/amp/30582/abloesesummen-der-teuersten-bundesliga-zugaenge), [Flashscore](https://www.flashscore.de/news/fu-ball-bundesliga-mit-luis-diaz-auf-platz-drei-die-zehn-teuersten-bundesliga-zugange-aller-zeiten/C0ZZl4qn/)). Seit K23c sind die Geldbeträge echt, darum passt der Wert. Jeder teurere Zugang im Spiel wird sofort gemeldet (seit Prüfung DY5 auch der zweite in derselben Saison). Alte Spielstände bekommen den Startwert einmal nachträglich, ein teurerer Rekord aus dem Spiel bleibt.
 
 ### 5.7 Vitrine und Karriere
 
 - **Vitrine:** Meisterschaft, Pokal, Supercup und Aufstieg deines Vereins und deine Ehrungen, mit Saison und Verein. Turnierpokale aus Testspielen (K11) gibt es im Spiel noch nicht.
-- **Karriere:** Stationen mit Beginn, Ende und Grund (entlassen, zurückgetreten, gewechselt), je Saison Verein, Liga, Platz, Punkte, Tore, Zuschauerschnitt, Umsatz, Ergebnis, Ruf und Schwierigkeit. Das Gehalt des Trainers fehlt, bis K28 es einführt.
+- **Karriere:** Stationen mit Beginn, Ende und Grund (entlassen, zurückgetreten, gewechselt), je Saison Verein, Liga, Platz, Punkte, Tore, Zuschauerschnitt, Umsatz, Ergebnis, Ruf und Schwierigkeit. Das Gehalt des Trainers steht seit U12g (K28 §5.10, 22.11., ohne Testlauf) je Station und je Saison, dazu der Verdienst mit Abfindungen.
 - **Saisonarchiv:** Abschlusstabellen aller drei Ligen (Verein, Punkte, Tore), Meister, Pokalsieger, Supercup, Aufsteiger und die Ehrungen.
 
 ### 5.8 Meldungen
@@ -150,8 +150,8 @@ Seit U13 stehen die Werte in `daten/regeln.js` unter `statistik` (Vorlagen, Ehru
 6. Spieler der Saison und Talent der Saison mit festen Gewichten (§5.5).
 7. Trainer der Saison nach Punkten über der Erwartung. Bei Computer-Vereinen ohne Namen (§5.5).
 8. Marktwert +5 % bis zum Ende der folgenden Saison (§5.5).
-9. 1. Liga mit echten Rekorden als Startwert, 2. und 3. Liga leer (§5.6).
-10. Kein echter Startwert für den Rekordtransfer, bis K23 die Geldbeträge anpasst (§5.6).
+9. 1. Liga mit echten Rekorden als Startwert, 2. und 3. Liga leer (§5.6). Seit K34b (22.11.) alle drei Ligen mit echten Startwerten.
+10. Echter Startwert für den Rekordtransfer seit K34d (Harry Kane, 95 Mio. €), weil K23c die Geldbeträge an die echten angepasst hat (§5.6). Vorher: kein Startwert.
 11. Ehemalige mit Grenzen 150 Ligaspiele, Ehrung oder 30 Spiele für deinen Verein, höchstens 400 (§5.3).
 12. Jubiläen ab Spielbeginn gezählt, nur für eigene Spieler (§5.8).
 13. Torschützenkönig je Liga aus den Zeilen dieser Liga. Wer in der Winterpause die Liga wechselt, hat zwei Zeilen und zählt in jeder Liga nur mit seinen Toren dort.
@@ -159,7 +159,9 @@ Seit U13 stehen die Werte in `daten/regeln.js` unter `statistik` (Vorlagen, Ehru
 15. Vergleich zweier Spieler über „Vergleichen“ auf der Spielerkarte statt einer eigenen Suche (§5.9).
 16. Lizenz `statistik` ab der ersten Stufe, ohne Automatik (§5.9).
 
-**Noch offen:** Sprüche-Chronik (wartet auf K29), Turnierpokale (K11), Gehalt in der Karriere (K28), Startwerte der Rekorde für die 2. und 3. Liga.
+**Seit K34c (22.11., popolupo, ohne Testlauf):** In der Saisonstatistik steht unter den Ligalisten eine Karte mit den deutschen Torjägern im Europapokal (bis zu 10, nach Europapokaltoren dieser Saison).
+
+**Noch offen:** nichts aus diesem Konzept. Turnierpokale gibt es seit K11b (Sommerturnier, 22.11.).
 
 ## Quellen
 
@@ -171,3 +173,5 @@ Seit U13 stehen die Werte in `daten/regeln.js` unter `statistik` (Vorlagen, Ehru
 - Kane 2025/26 mit 36 Toren Torschützenkönig, der Rekord steht weiter: https://www.bundesliga.com/en/bundesliga/news/harry-kane-top-scorer-2025-26-third-time-bayern-munich-37407
 - 53 Bundesligaspiele ohne Niederlage, Bayern, 3.11.2012 bis 29.3.2014: https://guinnessworldrecords.com/world-records/114310-longest-unbeaten-streak-in-bundesliga und https://www.bundesliga.com/en/news/Bundesliga/0000290529.jsp
 - Kriterien der kicker-Elf der Saison habe ich nicht gefunden. Die Grenze von 20 Noten ist meine Wahl.
+- Rekorde der 2. Liga (K34b, gelesen am 22.11.2026): https://www.bundesliga.com/de/2bundesliga/news/rekorde-tore-aufstieg-abstieg-historie-bestmarken-spieler-5557 (11:0, Hrubesch 1977/78, 28 Spiele) und https://www.bundesliga.com/de/2bundesliga/news/rekorde-bestmarken-tore-siege-serien-saison-terodde-16477 (Stand 2021: Hrubesch 1978/79, 9:0 Rostock als Rekord der eingleisigen Liga). Hrubesch spielte ab 1978 in Hamburg, darum 1977/78.
+- Rekorde der 3. Liga (K34b): https://www.dfb.de/news/rekordsiege-svww-erzielt-zum-zweiten-mal-sieben-tore (Liste der höchsten Siege, Stand 26.10.2026), https://dfb.de/news/28-treffer-torschuetzenkoenig-gindorf-knackt-bestmarke (28 Tore Gindorf), https://www.dfb.de/news/detail/zehn-siege-am-stueck-ksc-und-regensburg-unuebertroffen-263286 (21 Spiele ohne Niederlage Karlsruhe 2017/18, zehn Siege in Folge).

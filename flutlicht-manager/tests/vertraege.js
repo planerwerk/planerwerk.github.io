@@ -40,6 +40,17 @@ const welt=(id=9)=>{const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S,ev=W.e
   pruef(summe===soll&&S.fin['Prämien']===-soll,'Prämien je Spiel: Auflauf voll in der Startelf, halb bei später Einwechslung, Punkte ab 45 Minuten, Tore, Zu-Null für Abwehr und Torwart',`${summe} €, erwartet ${soll} €`);
   const pokal=Object.assign({},r,{lg:null});S.fin={};const sp=ev('praemienNachSpiel')([pokal]);pruef(sp===soll-3*2000*3,'Im Pokal gibt es keine Punktprämie',`${sp} €`);}
 
+// 4b. Ligaklausel für alle Vereine (K21 §12 Nr. 20, Lauf 18, Prüfung GJ): ohne ausgehandelte Klausel gilt die übliche (ligaklausel.computer), ausgehandelt wie vereinbart
+// (auch „keine“), wer heute kam, wird nicht gekürzt, ein zweiter Abstieg kürzt nicht noch einmal, nach dem Wiederaufstieg gilt das alte Gehalt, die Stimmung misst das Vertragsgehalt
+{const {S,ev}=welt();const c=ev('RVT').ligaklausel.computer,r=x=>Math.round(x/1000)*1000,k=S.teams.find(x=>x.id!==S.my&&x.lg===2),sq=ev('squad')(k.id),vor=sq.map(p=>p.sal),me=S.teams[S.my],mein=ev('squad')(S.my).slice(0,4),m0=mein.map(p=>p.sal),lg0=me.lg;
+  delete mein[0].lk;mein[1].lk=0;mein[2].lk=0.5;delete mein[3].lk;mein[3].seit=ev('absTag')(S.tag);
+  me.lastLg=lg0;me.lg=lg0+1;k.lastLg=2;k.lg=3;ev('vertraegeSaison')();
+  const ab=sq.every((p,i)=>p.sal===r(vor[i]*(1-c)))&&mein[0].sal===r(m0[0]*(1-c))&&mein[1].sal===m0[1]&&mein[2].sal===r(m0[2]*0.5)&&mein[3].sal===m0[3]&&ev('gehaltVertrag')(mein[0])===m0[0];
+  ev('vertraegeSaison')();const nichtDoppelt=sq.every((p,i)=>p.sal===r(vor[i]*(1-c)));
+  k.lastLg=3;k.lg=2;me.lastLg=lg0+1;me.lg=lg0;ev('vertraegeSaison')();const auf=sq.every((p,i)=>p.sal===vor[i])&&mein.every((p,i)=>p.sal===m0[i])&&!mein[0].lkAlt;
+  pruef(c>0&&sq.length>0&&ab&&nichtDoppelt&&auf,'Ligaklausel: Nach einem Abstieg ohne ausgehandelte Klausel −30 %, ausgehandelt wie vereinbart, Neuzugang von heute nicht; kein zweites Mal; nach dem Wiederaufstieg wieder das alte Gehalt',
+    `${k.name}: ${vor[0]} → ${r(vor[0]*(1-c))} → ${sq[0].sal}; dein Verein ${m0.join('/')} → ${mein.map(p=>p.sal).join('/')}, Abstieg ${ab}, nicht doppelt ${nichtDoppelt}, Aufstieg ${auf}`);}
+
 // 5. Ligaklausel nach einem Abstieg, Ausstiegsklausel nur im Fenster
 {const {S,ev,t,F}=welt();const p=ev('squad')(S.my)[2],sal=p.sal;p.lk=0.3;t.lastLg=t.lg;t.lg=t.lg+1;ev('vertraegeSaison')();t.lg=t.lastLg;
   pruef(p.sal===Math.round(sal*0.7/1000)*1000,'Ligaklausel: Nach einem Abstieg sinkt das Gehalt um die vereinbarte Kürzung',`${sal} → ${p.sal}`);
@@ -80,4 +91,54 @@ const welt=(id=9)=>{const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S,ev=W.e
   pruef(!fehler.length,'Zwei Saisons: keine kaputten Verträge oder Wechsel',fehler[0]||`${vorv} Meldungen zu Vorverträgen`);}
 
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
+// K21b. Teamprämie (K21 §3.2): ohne Lizenz für Prämien nicht setzbar; „hoch“ vor dem ersten Ligaspiel; ein Ligasieg kostet Kadergröße × Prämie, ein Remis nichts;
+//       Baustein Erfolg + 2 nur bei deinem Verein; nach dem ersten Ligaspiel nicht mehr änderbar
+{const {S,F,ev}=welt(),T=ev('RKA').teampraemie,t=ev('myT()'),o=S.teams.find(x=>x.lg===t.lg&&x.id!==S.my);S.phase='play';
+  F.lizenzStart(true);S.lizenz.stufe=1;F.teampraemieSetzen('hoch');const gesperrt=ev('tpStufe')()==='normal';delete S.lizenz;
+  F.teampraemieSetzen('hoch');const hoch=ev('tpStufe')()==='hoch',st=ev('teampraemieStimmung'),mein=st(t)===T.stimmung&&st(o)===0;
+  const f0=S.fin['Prämien']||0;F.teampraemieSpiel({h:S.my,a:o.id,hg:2,ag:0});const sieg=(S.fin['Prämien']||0)-f0;F.teampraemieSpiel({h:S.my,a:o.id,hg:1,ag:1});const remis=(S.fin['Prämien']||0)-f0-sieg;
+  S.tag=ev('meineLigaspiele')()[0].tag+1;F.teampraemieSetzen('normal');const fest=ev('tpStufe')()==='hoch';
+  pruef(gesperrt&&hoch&&mein&&sieg===-ev('squad')(S.my).length*(T.jeSpieler[t.lg]||T.jeSpieler[3])&&remis===0&&fest,'Teamprämie: Lizenz, hoch vor dem ersten Ligaspiel, Kosten je Sieg, Stimmung nur bei dir, danach fest',
+    `ohne Lizenz ${gesperrt}, hoch ${hoch}, Stimmung ${mein}, Sieg ${sieg}, Remis ${remis}, nach dem ersten Spiel fest ${fest}`);}
+
+// K21d. Pokalprämie (K21 §4): mit „hoch“ kostet jede gewonnene Pokalrunde Kadergröße × Pokalprämie (auch im Elfmeterschießen), eine Niederlage nichts, mit „normal“ nichts
+{const {S,F,ev}=welt(),T=ev('RKA').teampraemie,t=ev('myT()'),o=S.teams.find(x=>x.lg===t.lg&&x.id!==S.my),n=ev('squad')(S.my).length,je=T.pokal[t.lg]||T.pokal[3];S.phase='play';
+  const k=()=>S.fin['Sonderprämien']||0 /* einmalig gebucht seit Prüfung EI1 */,lauf=l=>{const f0=k();F.teampraemiePokal(l);return k()-f0;};const normal=lauf([{h:S.my,a:o.id,hg:2,ag:0}]);F.teampraemieSetzen('hoch');
+  const sieg=lauf([{h:o.id,a:S.my,hg:0,ag:1},{h:o.id+1,a:o.id+2,hg:1,ag:0}]),elfer=lauf([{h:S.my,a:o.id,hg:1,ag:1,pen:[5,4]}]),aus=lauf([{h:S.my,a:o.id,hg:0,ag:1}]),fremd=lauf([{h:o.id,a:o.id+1,hg:3,ag:0}]);
+  pruef(normal===0&&sieg===-n*je&&elfer===-n*je&&aus===0&&fremd===0,'Pokalprämie: nur mit hoch, je gewonnene Runde, auch im Elfmeterschießen',`normal ${normal}, Sieg ${sieg}, Elfmeter ${elfer}, raus ${aus}, ohne dich ${fremd}`);}
+
+// K21e. Aufstiegs- und Klassenerhaltsprämie (K21 §4): nur mit „hoch“; Aufstieg aus der 2. Liga kostet Kadergröße × Prämie; Klassenerhalt nur mit dem Saisonziel Klassenerhalt
+//       und nicht beim Abstieg; ein anderes Saisonziel bringt nichts
+{const {S,F,ev}=welt(),T=ev('RKA').teampraemie,t=ev('myT()'),n=ev('squad')(S.my).length;S.phase='play';
+  const k=()=>S.fin['Sonderprämien']||0 /* einmalig gebucht seit Prüfung EI1 */,lauf=(auf,ab)=>{const f0=k();F.teampraemieSaison(auf,ab);return k()-f0;};const normal=lauf(true,false);F.teampraemieSetzen('hoch');
+  const lg0=t.lg,ziel0=S.target;t.lg=2;const auf=lauf(true,false);t.lg=1;S.target=15;const kl=lauf(false,false),ab=lauf(false,true);S.target=4;const anders=lauf(false,false);t.lg=lg0;S.target=ziel0;
+  pruef(normal===0&&auf===-n*T.aufstieg[2]&&kl===-n*T.klassenerhalt[1]&&ab===0&&anders===0,'Aufstiegs- und Klassenerhaltsprämie: nur mit hoch, Klassenerhalt nur mit diesem Ziel',
+    `normal ${normal}, Aufstieg ${auf}, Klassenerhalt ${kl}, abgestiegen ${ab}, anderes Ziel ${anders}`);}
+
+// K21f. Zielvorgabe (K21 §3.1, §8): Der Spieler rechnet sie mit wert × Forderung an. Nach der Unterschrift steht p.zv mit den Spielen bei der Unterschrift; vor n weiteren
+//       Pflichtspielen passiert nichts, danach steigt das Gehalt um plus und die Vorgabe ist erfüllt (Meldung). Beim Vertragsende fällt sie weg.
+{const {S,F,ev,V}=welt(),p=ev('squad')(S.my)[0],Z=V.zielvorgabe,pw=ev('paketWert'),Fd=1e6,o={ct:3,sal:1e6},zv={n:Z.spiele,plus:Z.plus};
+  const w0=pw(p,S.my,o,Fd),w1=pw(p,S.my,Object.assign({},o,{zv}),Fd),wert=Math.abs(w1-w0-Fd*Z.wert)<1e-6;
+  F.vtUnterschrift(p,Object.assign({},o,{zv}),false);const st=ev('vereinsSpiele')(p,S.my),gesetzt=!!p.zv&&p.zv.st===st&&p.sal===1e6;
+  F.zielvorgabenWoche();const nochNicht=!!p.zv&&p.sal===1e6;p.zv.st-=Z.spiele;F.zielvorgabenWoche();
+  const erreicht=!p.zv&&p.sal===Math.round(1e6*(1+Z.plus)/1000)*1000&&String(S.news[0].t).includes('Zielvorgabe');
+  F.vtUnterschrift(p,Object.assign({},o,{zv}),false);F.vertragEnde(p);const weg=!p.zv;
+  pruef(wert&&gesetzt&&nochNicht&&erreicht&&weg,'Zielvorgabe: zählt in der Verhandlung, greift nach den Pflichtspielen seit der Unterschrift, fällt beim Vertragsende weg',
+    `Wert ${wert} (+${Math.round(w1-w0)}), gesetzt ${gesetzt}, vorher nichts ${nochNicht}, erreicht ${erreicht} (${p.sal}), Vertragsende ${weg}`);}
+
+// Prüfung FL6, FL7: Formularweg (vtPaket liest vt_zv, nur mit dem Bereich praemien) und Verlängerung: Eine laufende Zielvorgabe zählt weiter und bringt keinen
+//       neuen Nachlass; wer sie in der Verlängerung streicht, muss dem Spieler dafür so viel mehr bieten.
+{const {S,F,ev,V}=welt(),p=ev('squad')(S.my)[1],Z=V.zielvorgabe,pw=ev('paketWert'),Fd=1e6,doc=ev('document'),zv={n:Z.spiele,plus:Z.plus},o={ct:3,sal:1e6};
+  doc.getElementById('vt_zv').value='1';const o1=F.vtPaket(p,Fd,3,false);doc.getElementById('vt_zv').value='';const o0=F.vtPaket(p,Fd,3,false);
+  const formular=!ev('frei')('praemien')||(!!o1.zv&&o1.zv.n===Z.spiele&&o1.zv.plus===Z.plus&&!o0.zv);
+  F.vtUnterschrift(p,Object.assign({},o,{zv}),false);p.zv.st-=5;const st0=p.zv.st;
+  const wMit=pw(p,S.my,Object.assign({},o,{zv}),Fd),wOhne=pw(p,S.my,o,Fd);delete p.zv;const wFrei=pw(p,S.my,o,Fd);p.zv={n:Z.spiele,plus:Z.plus,st:st0};
+  const bewertung=Math.abs(wMit-wFrei)<1e-6&&Math.abs(wFrei-wOhne-Fd*Z.wert)<1e-6;
+  F.vtUnterschrift(p,Object.assign({},o,{zv}),false);const weiter=!!p.zv&&p.zv.st===st0;F.vtUnterschrift(p,o,false);const gestrichen=!p.zv;
+  /* FN3, FO8: Felder zu (vt_zv fehlt im Formular) – eine laufende Vorgabe bleibt im Paket; FN4: beim Kauf (neu) beginnt eine alte Vorgabe neu zu zählen */
+  p.zv={n:Z.spiele,plus:Z.plus,st:st0};const gid=doc.getElementById;doc.getElementById=id=>id==='vt_zv'?null:gid(id);const o2=F.vtPaket(p,Fd,3,false);doc.getElementById=gid;const behalten=!!o2.zv&&o2.zv.n===Z.spiele;
+  p.zv={n:Z.spiele,plus:Z.plus,st:-99};F.vtUnterschrift(p,Object.assign({},o,{zv}),true);const neu=!!p.zv&&p.zv.st===ev('vereinsSpiele')(p,S.my);delete p.zv;
+  pruef(formular&&bewertung&&weiter&&gestrichen&&behalten&&neu,'Zielvorgabe: Formular, Verlängerung ohne neuen Nachlass, Zählung läuft weiter, Streichen kostet, Felder zu behalten sie, Kauf zählt neu',
+    `Formular ${formular}, Bewertung ${bewertung} (${Math.round(wMit-wFrei)}/${Math.round(wFrei-wOhne)}), läuft weiter ${weiter}, gestrichen ${gestrichen}, Felder zu ${behalten}, Kauf ${neu}`);}
+
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

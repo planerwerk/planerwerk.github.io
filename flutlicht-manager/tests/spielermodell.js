@@ -68,4 +68,63 @@ pruef(Math.abs(mS-mW)<=1.5,'Keine Formspirale: die vier stärksten Kader der 1. 
 // Seit U9c kann ein Schub das Talent während der Saison heben (K08 §5.3). Verglichen wird deshalb mit dem höheren Wert aus Saisonbeginn und Saisonende.
 pruef(talentVerletzt===0,'Niemand überschreitet sein Talent (ein Schub darf es heben)',talentVerletzt);
 if(staerkenJeSpieler.length>=2){const sp=Math.max(...staerkenJeSpieler)-Math.min(...staerkenJeSpieler);pruef(sp<=0.4,'Merkmale stabil: Stärken je Spieler schwanken über die Saisons höchstens um 0,4',staerkenJeSpieler.map(f2).join(' → '));}
+// K03d. Integration und Deutsch (K03 §5.5): Der Startkader hat keinen Wert (gilt 100). Neuzugang: deutschsprachig 70, sonst 35, ± 15 je 10 Punkte Anpassungsfähigkeit,
+//       nicht nach der eigenen Leihe. Je Woche 3 bis 8 mehr, mit Einsatz mindestens basis + einsatz; bei 100 fällt der Wert weg. Deutsch steigt bei Fremdsprachigen.
+//       Wirkung im Spiel nur mit Schalter: aus ist der Zustand gleich, an × (0,92 + 0,08 × Integration).
+{const {W,F}=neueWelt();F.buildWorld(1);const S=W.S,ev=W.ev;S.my=0;S.phase='play';const I=ev('RP').integration,dv=ev('deutschVon');
+  const leer=S.pl.filter(p=>p.team>=0).every(p=>p.int==null),dt=S.pl.find(p=>p.team>=0&&p.team<1000&&dv(p)>=100),fr=S.pl.find(p=>p.team>=0&&p.team<1000&&dv(p)<100);
+  dt.ch.anp=10;fr.ch.anp=20;delete fr.de; /* wie ein Neuzugang aus dem Ausland, seit FL4 haben Startkader schon p.de */F.integrationStart(dt);F.integrationStart(fr);const start=dt.int===I.start.deutsch&&fr.int===I.start.fremd+I.start.anpassung&&fr.de===I.deutsch.start&&dt.de==null;
+  const i0=fr.int,de0=fr.de;fr.apps=(fr.intA||0)+1;F.integrationWoche(fr);const plus=fr.int-i0,woche=plus>=I.woche.basis+I.woche.einsatz&&plus<=I.woche.max&&fr.de>de0;
+  fr.int=98;F.integrationWoche(fr);const voll=fr.int==null;
+  delete dt.int;F.neuzugang(dt,dt.team,true);const leihe=dt.int==null;
+  fr.int=35;const z=ev('zustand'),Z=ev('RP').zustand,zAus=z(fr),zOhne=(()=>{const x=fr.int;delete fr.int;const r=z(fr);fr.int=x;return r;})();I.wirkung.an=true;const zAn=z(fr);I.wirkung.an=false;
+  const wirkung=Math.abs(zAus-zOhne)<1e-12&&Math.abs(zAn-Math.min(Z.max,Math.max(Z.min,zOhne/1*(I.wirkung.min+(1-I.wirkung.min)*0.35))))<0.02;
+  pruef(leer&&start&&woche&&voll&&leihe&&wirkung,'Integration und Deutsch: Start nach Sprache und Anpassungsfähigkeit, Anstieg je Woche, Wirkung nur mit Schalter',
+    `Startkader leer ${leer}, Start ${dt.int}/${I.start.deutsch} und ${I.start.fremd+I.start.anpassung}, Woche +${plus} (Deutsch ${de0} → ${fr.de}), voll ${voll}, Leihe ${leihe}, Wirkung ${wirkung} (${zAus.toFixed(3)} / ${zAn.toFixed(3)})`);}
+
+// Prüfung FK4, FK5, FK6: Fremdsprachige im Startkader gelten mit deutsch.kader (seit FL4 schon beim Aufbau gesetzt; ohne p.de, alter Spielstand, ebenso) und lernen
+//       weiter, im Ausland (S.ausland.pl, FL7) nicht; nach einer Leihe gilt der alte Stand wieder (angekommen bleibt angekommen); Vereinslose, die kaderAuffuellen holt,
+//       bekommen Integration, seit FL5 auch die dort erzeugten Spieler.
+{const {W,F}=neueWelt();F.buildWorld(1);const S=W.S,ev=W.ev;S.my=0;S.phase='play';const I=ev('RP').integration,dv=ev('deutschVon'),akt=ev('aktiv');
+  const fr=S.pl.find(p=>p.team>=0&&p.team<1000&&p.int==null&&dv(p)<100),gesetzt=!!fr&&fr.de===I.deutsch.kader;if(fr)delete fr.de;const kader=!!fr&&dv(fr)===I.deutsch.kader;
+  if(fr)F.integrationWoche(fr);const lernt=!!fr&&fr.de>I.deutsch.kader&&fr.int==null;
+  const au=((S.ausland&&S.ausland.pl)||[]).find(p=>p.de==null&&dv(p)<100);let ausl=true;if(au){F.integrationWoche(au);ausl=au.de==null&&dv(au)===I.deutsch.start;}
+  const q=S.pl.find(p=>p.team>=0&&p.team<1000&&p.team!==S.my&&p.int==null&&!p.leihe),von=q.team,b=S.teams.find(t=>t.id!==von&&t.id!==S.my&&akt(t));
+  q.leihe={von,anteil:1,rolle:'rotation',rueckruf:false,option:0,start:0};q.team=b.id;F.neuzugang(q,b.id);const geliehen=q.int!=null&&q.leihe.i0===null;
+  F.leiheEnde();const zurueck=q.team===von&&!q.leihe&&q.int==null;
+  const RS=ev('RS'),fa=S.pl.find(p=>p.team===-1&&p.pos in RS.kaderSoll);let auff=true;
+  if(fa){const t=S.teams.find(x=>x.id!==S.my&&akt(x)),ks=RS.kaderSoll,ch=RS.vereinslosChance,vor=new Set(ev('squad')(t.id).map(p=>p.id));
+    RS.kaderSoll={[fa.pos]:ev('squad')(t.id).filter(p=>p.pos===fa.pos).length+1};RS.vereinslosChance=1;F.kaderAuffuellen(t,99);RS.kaderSoll=ks;RS.vereinslosChance=ch;
+    const neu=ev('squad')(t.id).filter(p=>!vor.has(p.id));auff=neu.length===1&&neu[0].int!=null;}
+  /* FN10: auch ein erzeugter Spieler (kein Vereinsloser, Chance 0) bekommt eine Integration (FL5) */
+  let erzeugt=true;{const t=S.teams.find(x=>x.id!==S.my&&akt(x)),ks=RS.kaderSoll,ch=RS.vereinslosChance,vor=new Set(ev('squad')(t.id).map(p=>p.id));
+    RS.kaderSoll={ST:ev('squad')(t.id).filter(p=>p.pos==='ST').length+1};RS.vereinslosChance=0;F.kaderAuffuellen(t,70);RS.kaderSoll=ks;RS.vereinslosChance=ch;
+    const neu=ev('squad')(t.id).filter(p=>!vor.has(p.id));erzeugt=neu.length===1&&neu[0].int!=null&&neu[0].team===t.id;}
+  pruef(!!fr&&gesetzt&&kader&&lernt&&ausl&&!!au&&geliehen&&zurueck&&auff&&erzeugt,'Integration: Deutsch im Startkader, Rückkehr aus der Leihe, Vereinslose und erzeugte Spieler beim Auffüllen',
+    `Startkader ${fr?dv(fr):'-'} (beim Aufbau gesetzt ${gesetzt}, lernt ${lernt}), Ausland ${au?ausl:'kein Spieler gefunden'}, Leihe ${geliehen}/${zurueck}, Auffüllen ${auff}, erzeugt ${erzeugt}`);}
+
+// Prüfung FL3, FN10: Joker belegt keinen Platz für Stärken (lernbar zählt ihn nicht, er ist auch bei vollen Plätzen lernbar) und ist auf der Spielerkarte sichtbar.
+{const {W,F}=neueWelt();F.buildWorld(1);const S=W.S,ev=W.ev,RP=ev('RP'),lb=ev('lernbar'),sm=ev('sichtbareMerkmale'),pl=ev('platzStaerken');
+  const p=S.pl.find(x=>x.team>=0&&x.pos==='ST'&&x.age<=30),mk0=p.mk,an=m=>RP.merkmale[m]&&!RP.merkmale[m].schwaeche&&RP.merkmale[m].g.includes(p.pos)&&!(RP.merkmale[m].bis&&p.age>RP.merkmale[m].bis);
+  const andere=RP.merkmaleWirksam.filter(m=>m!=='joker'&&an(m)),n=pl(p);let ok=andere.length>n,frei=false,voll=false,sicht=false;
+  if(ok){p.mk={joker:1};andere.slice(0,n-1).forEach(m=>{p.mk[m]=1;});frei=lb(p,andere[n]);sicht=sm(p).includes('joker');
+    p.mk={};andere.slice(0,n).forEach(m=>{p.mk[m]=1;});voll=lb(p,'joker')&&!lb(p,andere[n]);}
+  p.mk=mk0;
+  pruef(ok&&frei&&voll&&sicht,'Joker: belegt keinen Platz für Stärken, bei vollen Plätzen lernbar, sichtbar',`Plätze ${n}, mit Joker noch frei ${frei}, voll und Joker lernbar ${voll}, sichtbar ${sicht}`);}
+
+// K05f. Joker lernen (K03 §5.6, K05c): Ein Eingewechselter, der trifft, bekommt Fortschritt zum Merkmal Joker (Szene joker), wer von Beginn an spielt, nicht. Nur Mittelfeld und Sturm.
+{const {W,F}=neueWelt();F.buildWorld(1);const S=W.S,ev=W.ev;S.my=0;S.phase='play';const J=ev('RP').lernenSpiel.szenen.joker,mk=ev('hatMk');
+  const [a,b]=S.pl.filter(p=>p.team>=0&&p.team<1000&&(p.pos==='ST'||p.pos==='MF')&&!mk(p,'joker')&&!(p.lf&&p.lf.joker)&&!(p.ls&&p.ls.k==='joker')&&ev('lernbar')(p,'joker'));
+  F.lernenImSpiel({sz:[],ev:[{t:'G',s:0,p:a.id},{t:'G',s:0,p:b.id},{t:'G',s:0,p:a.id}],ein:[[a.id],[]]});
+  const ok=!!a&&(a.lf&&a.lf.joker)===J.ja&&!(b.lf&&b.lf.joker);
+  pruef(ok,'Joker lernen: Tor nach Einwechslung zählt einmal je Spiel, von Beginn an nicht',`eingewechselt ${a&&a.lf&&a.lf.joker}, Startelf ${b&&b.lf&&b.lf.joker}`);}
+
+// K03g. Eigenschaft entdeckt (K03 §8): In der Woche, in der der Co-Trainer einen Spieler kennt (wiv = ekw), eine gebündelte Meldung mit seinen Eigenschaften;
+//       vorher und danach nicht, ohne bekannte Eigenschaft nicht.
+{const {W,F}=neueWelt();F.buildWorld(1);const S=W.S,ev=W.ev;S.my=0;S.phase='play';const sq=ev('squad')(0),[p,q]=sq,RPe=ev('RP').eigenschaften,n=()=>S.news.filter(x=>String(x.t).startsWith('Der Co-Trainer kennt jetzt')).length;
+  sq.forEach(x=>{x.ekw=5;x.wiv=0;});p.eig=['hitzkopf'];q.eig=[];p.wiv=4;F.eigenschaftenEntdecktWoche();const vorher=n()===0;p.wiv=5;q.wiv=5;F.eigenschaftenEntdecktWoche();
+  const t=String((S.news.find(x=>String(x.t).startsWith('Der Co-Trainer kennt jetzt'))||{}).t||''),jetzt=n()===1&&t.includes(p.n)&&t.includes(RPe.hitzkopf.name)&&!t.includes(q.n);
+  p.wiv=6;q.wiv=6;F.eigenschaftenEntdecktWoche();const danach=n()===1;
+  pruef(vorher&&jetzt&&danach,'Eigenschaft entdeckt: eine Meldung in der Woche, in der der Co-Trainer den Spieler kennt',`vorher ${vorher}, jetzt ${jetzt} („${t}“), danach ${danach}`);}
+
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

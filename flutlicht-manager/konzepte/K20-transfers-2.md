@@ -75,7 +75,7 @@ Risiko je Treffen = 8 % × Bekanntheit × Berater × Ort × (1 + 0,2 × bisherig
 | abgebender Verein | Beziehung −15 bis −30 (K17). Unter −50 verhandelt er für den Rest der Saison oft gar nicht (50 %). Ablöseforderung +15 %. |
 | Spieler | Ungnade beim Verein: Stimmung −10 (K14). Kann dir nützen: Er drängt auf den Wechsel, der Preis sinkt eventuell. |
 | Presse | Gerücht (K29), Klatsch über deinen Verein (K17 §5.3) |
-| dein Vorstand | Vertrauen −3, bei Traditionsvereinen −6 (K28) |
+| dein Vorstand | Vertrauen −3, bei Traditionsvereinen −6 (K28). Seit K27e −3 × (1 + Wirkung der Fankultur), also −3 bis −6 (§5.4) |
 | deine Fans | je nach Rivalität: gegen den Derby-Rivalen sogar +3 (K27) |
 
 Keine Geldstrafe, kein Verbandsverfahren.
@@ -89,7 +89,7 @@ Keine Geldstrafe, kein Verbandsverfahren.
 - **Wechselbereitschaft je Treffen:** (10 + Interesse/10) × Berater × Stimmung × treu. Interesse aus K19 §5.3 (`wechselInteresse`), begrenzt auf −50 bis 100. Berater: gierig und Strippenzieher ×1,2, sonst ×1. Stimmung beim alten Verein unter 40 ×1,3, über 70 ×0,7. Vereinstreue Spieler ×0,4.
 - **Auffliegen je Treffen:** 8 % × Bekanntheit (Stärke über 80 ×1,5) × Berater (verschwiegen 0,4, Familie 0,8, seriös 1, Strippenzieher 1,2, gierig 1,5, ohne Berater 1,1) × Ort (Hotel 0,6, Restaurant 1,2, Berater 0,8) × (1 + 0,2 × bisherige Treffen). Vereinstreue petzen zusätzlich mit 30 %. Nationalspieler (×1,3) fehlen, das Spiel kennt keine Nationalmannschaft.
 - **Ab 70 Bereitschaft:** Er bittet offiziell um den Wechsel (Wechselwunsch Stufe 3, K14, Ablöse −10 %) und sein Verein setzt ihn auf die Transferliste. Danach der normale Kauf nach K19.
-- **Aufgeflogen:** Beziehung zu seinem Verein −15 bis −30 (K17), Ablöseforderung dieses Vereins für ihn +15 % bis zum Saisonende, seine Stimmung −10, Vertrauen deines Vorstands −3. Für diesen Spieler ist das Abwerben in dieser Saison vorbei. Fans (K27) und Presse (K29) fehlen noch, es gibt eine Meldung.
+- **Aufgeflogen:** Beziehung zu seinem Verein −15 bis −30 (K17), Ablöseforderung dieses Vereins für ihn +15 % bis zum Saisonende, seine Stimmung −10, Vertrauen deines Vorstands −3, seit K27e (23.11., ohne Testlauf) × (1 + Wirkung der Fankultur), also bis −6 statt „bei Traditionsvereinen −6“ (K27 §5.4c). Für diesen Spieler ist das Abwerben in dieser Saison vorbei. Fans (K27) und Presse (K29) fehlen noch, es gibt eine Meldung.
 - **Zufall:** im Grundstrom, weil es deine Handlung ist (wie bei K17).
 
 **Deadline Day (§4.3):**
@@ -97,15 +97,34 @@ Keine Geldstrafe, kein Verbandsverfahren.
 - Die letzten drei Tage eines Fensters. Im Büro eine Übersicht: offene Verhandlungen, Angebote für deine Spieler, Lücken im Kader.
 - **Halt am letzten Tag** („Deadline Day“), abschaltbar im Menü bei den Erinnerungen.
 - **Computer-Vereine:** am letzten Tag ein zusätzlicher Markttag (eigener Strom `deadline`). Die Obergrenzen je Fenster gelten weiter.
-- **Noch nicht:** Preise ±15 % und Antworten am selben Tag. Antworten kommen schon heute sofort (U10a), die Preisschwankung wartet auf K23.
+- **Seit K20b (22.11.2026, popolupo, ohne Testlauf):** In den letzten drei Tagen schwankt die Forderung deutscher Computer-Vereine an dich um bis zu ±15 %, fest je Spieler und Tag (eigener Strom `deadlinePreis`). Spieler auf ihrer Transferliste kosten 10 % weniger (höchstens −25 %). Angebote für deine Spieler auf der Transferliste kommen 1,5-mal so oft. Antworten kommen schon seit U10a sofort.
 
 **Bieterrunde (§4.2), nur wenn du verkaufst:**
 
 - Bieten zwei oder mehr Vereine für denselben deiner Spieler, kannst du einmal je Fenster und Spieler eine Bieterrunde ausrufen.
 - Jeder Bieter erfährt das höchste Gebot und darf einmal erhöhen, der niedrigste zuerst: auf 2 bis 10 % über das Höchstgebot, höchstens bis zu seiner Grenze. Ist ein gieriger Berater dabei, 5 % mehr. Alle Angebote gelten danach noch mindestens 2 Tage.
-- **Noch nicht:** Bieterwettstreit, wenn du kaufst (Computer-Vereine bieten gegen dich), und das Recht des Spielers, das höchste Angebot abzulehnen.
+- **Noch nicht:** Bieterwettstreit, wenn du kaufst (Computer-Vereine bieten gegen dich), und das Recht des Spielers, das höchste Angebot abzulehnen. Beides gibt es inzwischen (K20c, K20d).
 
-**Später:** Computer-Vereine werben deine Spieler ab (§7), Klugheit beim Abwerben (K02).
+**K20c: Bieterwettstreit beim Kauf (22.11.2026, popolupo, vorläufig, gebaut ohne Testlauf, `konkurrenzKauf` und `konkurrenzTag` in `js/transfers.js`):**
+- **Wann:** Sagt ein deutscher Verein im offenen Fenster Ja zu deiner Ablöse, prüft er einmal je Spieler und Saison, ob ein anderer Verein mitbietet (eigener Strom). Nicht beim Vorvertrag, nicht bei Auslandsvereinen, nicht außerhalb des Fensters.
+- **Wer bietet mit:** ein Computer-Verein mit Bedarf auf der Position (wie beim Kauf unter Computer-Vereinen, K31), genug Geld, Platz im Gehaltsrahmen (K23d) und einer Beziehung zum Verkäufer, die Gespräche erlaubt (K17). Chance 25 %, wenn es einen gibt.
+- **Sein Gebot:** deine Ablöse plus 2 bis 10 % (gieriger Berater des Spielers: 5 % mehr), höchstens sein Vereinswert für den Spieler (`kiZahlt`).
+- **Dann:** Der Verkäufer nennt dir das Gebot (ohne Namen) und gibt dir 2 Tage. Bietest du mindestens so viel, steht die Einigung mit dir, der Rest läuft wie bisher (Vertrag mit dem Spieler, K21). Sonst wechselt der Spieler nach Ablauf der Frist zum anderen Verein (`kiWechsel`), sofern das Fenster noch offen ist.
+- **Der Spieler** entscheidet danach wie bisher über deinen Vertrag (K21). Ein eigenes Nein zum Höchstbietenden gibt es seit K20d (unten).
+- **Gleichschritt:** nur nach deinem Angebot, die Automatik kauft nach den Regeln der Computer-Vereine und trifft nie auf diesen Ablauf.
+- **Korrigiert nach Prüfung DD (22.11.):** Das Gebot ist nicht mehr durch den Vereinswert des Mitbieters gedeckelt (der lag fast immer unter deiner Ablöse, es kam praktisch nie ein Mitbieter), sondern durch 1,8 × Marktwert (keine Mondpreise, K19) und 80 % seines Kontos. Mitbieter wie beim Kauf unter Computer-Vereinen nur bis 30 Ansehen unter dem Verkäufer und für Spieler bis 32. Kein Mitbieter, wenn das Fenster vor dem Ende der Frist schließt. Der Wechsel zum Mitbieter unterbleibt, wenn du inzwischen einen der beiden Vereine führst oder der Verkäufer unter seine Mindestgröße fiele. Das Mitgehen zählt vor Pause und Beziehung.
+- **Beim Bau ergänzt:** kein Mitbieter für ausgeliehene Spieler. Solange das Gegenangebot gilt, ist die Forderung mindestens das Gebot, ein kleineres Angebot bringt nur den Hinweis darauf (keine Verhandlungsrunde). Gehst du mit, zieht der andere zurück.
+
+**K20d: Recht des Spielers beim Bieterwettstreit (22.11.2026, popolupo, vorläufig, gebaut ohne Testlauf, `spielerLehntAb` in `js/transfers.js`):**
+- **Wann:** Die Frist aus K20c läuft ab, ohne dass du mitgegangen bist, und der Wechsel zum anderen Verein wäre möglich.
+- **Der Spieler entscheidet:** Ist sein Interesse an dir (K19 §5.3) mindestens 20, lehnt er den anderen Verein mit 25 % ab, dazu 1 % je Punkt Interesse über 20, höchstens 60 %. Hat der andere Verein mehr Ansehen als deiner, ist die Chance halb so groß. Eigener Strom je Spieler und Saison.
+- **Lehnt er ab:** Der Verkäufer nimmt jetzt deine Ablöse. Die Forderung sinkt auf dein Gebot, dein nächstes Angebot in dieser Höhe kommt durch. Danach verhandelst du wie bisher mit dem Spieler (K21).
+- **Sonst:** wie in K20c, er wechselt zum anderen Verein.
+- **Hinweis:** Die Meldung zum Gegenangebot sagt, dass ein Spieler, der unbedingt zu dir will, das andere Angebot ablehnen kann.
+- **Gleichschritt:** nur nach deinem Angebot, wie K20c.
+- **Nach der Prüfung DP:** Lehnt der Spieler ab, steht die Einigung zu deiner Ablöse 14 Tage fest, ohne neue Runde mit dem Verkäufer. Kann der andere Verein nicht mehr kaufen (Geld, Kader, nicht mehr aktiv), bleibt der Verkäufer ebenfalls bei deinem Gebot. Hast du inzwischen den Verein gewechselt, gilt das Nein nicht mehr.
+
+**Später:** Klugheit beim Abwerben (K02), das Nein des Spielers, wenn du verkaufst (Bieterrunde). Computer-Vereine werben deine Spieler seit K20e ab (§7).
 
 ## 6. Hebel des Spielers
 
@@ -118,7 +137,7 @@ Keine Geldstrafe, kein Verbandsverfahren.
 
 ## 7. Verhalten der Computer-Vereine
 
-- Auch sie werben ab, auch deine Spieler. Fliegt es auf, bekommst du eine Meldung und eine Entscheidung: Spieler zur Rede stellen (K15), Preis erhöhen, öffentlich machen (Presse, Beziehung zu ihnen −).
+- Auch sie werben ab, auch deine Spieler. Fliegt es auf, bekommst du eine Meldung und eine Entscheidung: Spieler zur Rede stellen (K15), Preis erhöhen, öffentlich machen (Presse, Beziehung zu ihnen −). **Gebaut als K20e** (22.11.2026, popolupo, ohne Testlauf, Werte GESCHÄTZT): montags mit 4 % ein deutscher Verein mit Bedarf, Ansehen höchstens 5 unter deinem und genug Geld; einer deiner Leistungsträger (mindestens Kaderschnitt, bis 30, ohne Wechselwunsch Stufe 3) wird unruhig (Wechselwunsch eine Stufe höher). Mit 50 % fliegt es auf, dann Karte im Büro für 5 Tage: zur Rede stellen (Stimmung −3, Glaubwürdigkeit +2), öffentlich machen (Beziehung −15, Fans +1) oder unverkäuflich machen (K19c). Nur, wenn du die Transfers selbst führst (Gleichschritt, Computer-Vereine werben sich nicht gegenseitig ab). Klugheit (K02) fehlt noch. Seit Prüfung EB: nur Spieler bis Stufe 1, auf Stufe 2 Gesprächswunsch nur ohne Automatik der Gespräche, Halt „Frist“ am letzten Tag, solange eine Karte offen ist keine zweite.
 - Klugheit (K02): clevere Vereine wählen sichere Orte und verschwiegene Berater.
 
 ## 8. Ereignisse
@@ -130,6 +149,8 @@ Keine Geldstrafe, kein Verbandsverfahren.
 | Der Spieler petzt | loyaler Spieler | wie aufgeflogen |
 | Deadline-Day-Krimi | Angebot in den letzten Stunden | Entscheidung mit kurzer Frist |
 | Der lachende Dritte | Kette aus K30 §8.3 | Variante „Treffen“ jetzt möglich |
+
+**„Deadline-Day-Krimi“ gebaut als K20f** (25.11.2026, popolupo, ohne Testlauf, vorläufig): Am Tag vor dem letzten Fenstertag legt das Spiel mit 40 % (eigener Strom) eine Folgekarte für den letzten Tag. Ein deutscher Computer-Verein mit Bedarf und genug Geld bietet in letzter Minute das 1,25-Fache des Marktwerts für einen wichtigen Spieler deines Kaders (Stärke ab deinem Niveau − 3). Das Angebot liegt wie jedes andere im Büro, gilt aber nur an diesem Tag (neue Option `heute` der Kartenwirkung `angebot`). Nicht unter der Transfer-Automatik, damit der Gleichschritt bleibt. Werte in `REGELN.abwerben.deadline.krimi`. Seit Prüfung FS1 nicht für unverkäufliche Spieler, nie von einer Zweiten Mannschaft, und keine Karte, wenn für den Spieler schon ein Angebot liegt.
 
 ## 9. Wechselwirkungen
 
@@ -171,7 +192,7 @@ abwerben:{
 4. Aufgeflogen: Ablöse +15 % bis zum Saisonende, Abwerben dieses Spielers für die Saison vorbei (§5.4).
 5. Deadline Day mit Übersicht, Halt am letzten Tag und einem zusätzlichen Markttag der Computer-Vereine. Ohne Preisschwankung (§5.4).
 6. Bieterrunde nur beim Verkauf, einmal je Fenster und Spieler (§5.4).
-7. Computer-Vereine werben noch nicht ab (§7 kommt später).
+7. Computer-Vereine werben deine Spieler seit K20e ab (nur wenn du die Transfers selbst führst, §7); untereinander werben sie nicht ab. Berichtigt am 25.11.2026.
 
 ## Quellen
 

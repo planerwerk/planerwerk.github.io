@@ -7,21 +7,37 @@ function table(lg){const T={};S.teams.filter(t=>t.lg===lg).forEach(t=>T[t.id]={i
 const rank=(lg,id)=>table(lg).findIndex(r=>r.id===id)+1;
 function formPts(id){const r=table(S.teams[id].lg).find(x=>x.id===id);if(!r||!r.last.length)return 1.4;const l=r.last.slice(-5);return l.reduce((a,b)=>a+b,0)/l.length;}
 const topScorers=lg=>S.pl.filter(p=>p.team>=0&&S.teams[p.team].lg===lg&&p.g>0).sort((a,b)=>b.g-a.g).slice(0,15);
+// ---------- Karriereende (K32 §5.1) ----------
+// Schnitt je Liga: Mittel der Kaderstärke (beste 14) aller Vereine der Liga. Vereinslose vergleichen sich mit der 3. Liga.
+function karriereSchnitte(){const s={};LIGEN.forEach(lg=>{const l=S.teams.filter(t=>t.lg===lg);s[lg]=l.length?l.reduce((a,t)=>a+teamLevel(t.id),0)/l.length:null;});return s;}
+// Chance je Saison: Grundwert nach Alter (Torhüter jünger gerechnet, dazwischen linear) × Niveau × Verletzung × Professionalität. sch: Schnitte je Liga oder null (Auslandspool)
+function karriereChance(p,sch){const K=RS.karriereende,G=K.grund,a=p.age-(p.pos==='TW'?K.torwartPlus:0);if(a<G[0][0])return 0;
+  let f=1;for(let i=0;i<G.length;i++)if(a<=G[i][0]){f=i?G[i-1][1]+(G[i][1]-G[i-1][1])*(a-G[i-1][0])/(G[i][0]-G[i-1][0]):G[0][1];break;}
+  const t=p.team>=0?S.teams[p.team]:null,ls=sch?(t&&t.lg<=3?sch[t.lg]:sch[3]):null;
+  if(ls!=null&&p.str<ls-K.schwachUnter)f*=K.schwach;else if(t&&K.stammRollen.includes(kaderRolle(p)))f*=K.stamm;
+  const heute=absTag(S.tag);if(p.age>=K.kreuzbandAb&&((p.inj>0&&p.vl&&p.vl.art==='kreuzband')||(p.vh||[]).some(x=>x.art==='kreuzband'&&heute-x.ab<=K.kreuzbandTage)))f*=K.kreuzband;
+  if(hatEig(p,'vorbildprofi'))f*=K.profi;return Math.min(1,f);}
+// Hört der Spieler auf? Gewürfelt im eigenen Strom je Spieler und Saison, nur wenn die Chance zwischen 0 und 1 liegt
+function karriereEnde(p,sch){const c=karriereChance(p,sch);return c>=1||(c>0&&mitStrom(strom('karriereende',S.season,p.id),()=>R())<c);}
+
 function seasonEnd(){return mitStrom(strom('saisonende',S.season),seasonEndLauf);}
 function seasonEndLauf(){
   const T={1:table(1),2:table(2),3:table(3)},me=myT(),pos=rank(me.lg,S.my),B=RV;
-  S.teams.forEach(t=>{if(aktiv(t))t.lastPos=rank(t.lg,t.id);t.lastLg=t.lg;});
+  S.teams.forEach(t=>{if(aktiv(t))t.lastPos=rank(t.lg,t.id);t.lastLg=t.lg;});tvWertungEintragen(); // Fünfjahreswertung der TV-Gelder (K23c), vor Auf- und Abstieg
   T[3].forEach(r=>{S.teams[r.id].ewig3=(S.teams[r.id].ewig3||0)+r.p;});
   // Relegation (K13 §3.3): fehlt ein Spiel, wird es nachgerechnet, das Rückspiel mit Verlängerung und Elfmeterschießen. Ein Los gibt es nur noch für alte Spielstände.
-  const ergebnis=(sp,paar)=>{const a=sp[0]||sim(paar[1],paar[0]),b=sp[1]||sim(paar[0],paar[1],{ko:1,agg:[a.ag,a.hg]}),g0=a.ag+b.hg,g1=a.hg+b.ag,s=relegationSieger([a,b],paar);
+  const ergebnis=(sp,paar)=>{const a=sp[0]||sim(paar[1],paar[0],{wichtig:true}),b=sp[1]||sim(paar[0],paar[1],{wichtig:true,ko:1,agg:[a.ag,a.hg]}),g0=a.ag+b.hg,g1=a.hg+b.ag,s=relegationSieger([a,b],paar);
     return{sieger:s!=null?s:(R()<RS.relegationLos?paar[0]:paar[1]),text:`Hinspiel ${tn(a.h)} – ${tn(a.a)} ${a.hg}:${a.ag}, Rückspiel ${tn(b.h)} – ${tn(b.a)} ${b.hg}:${b.ag}${b.pen?`, Elfmeterschießen ${b.pen[0]}:${b.pen[1]}`:''}`};};
   // Relegation 1./2. Liga und 2./3. Liga (Zweitmannschaften der 3. Liga dürfen nicht aufsteigen)
   const reihe=aufstiegsReihe3(),rel=[T[1][15].id,T[2][2].id],rel2=[T[2][15].id,reihe[2]],e1=ergebnis(S.relSp,rel),e2=ergebnis(S.relSp2,rel2);
   const rl=regionalligaAufsteiger(),ts=topScorers(1)[0];
-  const sm={season:S.season,lg:me.lg,pos,target:S.target,champ:T[1][0].id,vize:T[1][1].id,champ2:T[2][0].id,champ3:T[3][0].id,
+  {const m=S.my,auf=[T[2][0].id,T[2][1].id,reihe[0],reihe[1]].includes(m)||(e1.sieger===m&&me.lg===2)||(e2.sieger===m&&me.lg===3), // Aufstiegs- und Klassenerhaltsprämie (K21e), vor der Summe der Finanzen
+    ab=[T[1][16].id,T[1][17].id,T[2][16].id,T[2][17].id,...T[3].slice(-RS.abstieg3).map(r=>r.id)].includes(m)||(rel[0]===m&&e1.sieger!==m)||(rel2[0]===m&&e2.sieger!==m);teampraemieSaison(auf,ab);}
+  const sm={season:S.season,my:S.my,lg:me.lg,pos,target:S.target,champ:T[1][0].id,vize:T[1][1].id,champ2:T[2][0].id,champ3:T[3][0].id,
     down:[T[1][16].id,T[1][17].id],up:[T[2][0].id,T[2][1].id],rel,relRes:e1.text,rw:e1.sieger,
     down2:[T[2][16].id,T[2][17].id],up3:[reihe[0],reihe[1]],rel2,rel2Res:e2.text,rw2:e2.sieger,
     down3:T[3].slice(-RS.abstieg3).map(r=>r.id),up4:rl.ids,rlText:rl.text,
+    gap:T[me.lg]&&T[me.lg][1]?T[me.lg][0].p-T[me.lg][1].p:0, // Vorsprung des Meisters deiner Liga (Mitwachsend, K43 §5)
     cup:S.cup.alive.length===1?S.cup.alive[0]:null,ts:ts?`${ts.n} (${tn(ts.team)}), ${ts.g} Tore`:'–',ok:pos<=S.target,fin:Object.values(S.fin).reduce((x,y)=>x+y,0)};
   S.trust=clamp(S.trust+(sm.ok?B.saisonErreicht:pos>S.target+B.saisonWeitAb?B.saisonWeit:B.saisonVerfehlt),0,100);
   news(`${tn(sm.champ)} ist Deutscher Meister ${S.season}/${(S.season+1)%100}!`,'good');
@@ -30,12 +46,12 @@ function seasonEndLauf(){
   news(`Aus der Regionalliga steigen auf: ${sm.up4.map(tn).join(', ')}.`);
   S.hist.push({s:S.season,team:me.name,lg:me.lg,pos,ok:sm.ok});
   sm.zw=mitStrom(strom('zweiteErgebnis',S.season),()=>zweiteSaisonEnde(sm)); // zweite Mannschaft (K08 §5.6)
-  S.summary=sm;S.phase='end';
+  sm.verl=verletzungsBilanzText(S.my);S.summary=sm;S.phase='end'; /* Ausfalltage beim Saisonende festhalten (Prüfung DZ5) */
   nebenzieleSaison(); // Nebenziele des Vorstands (K28 §5.7, U12b), vor der Prüfung auf Entlassung
   rufSaison(sm); // Ruf als Trainer (K28 §5.4, U12a), vor einer Entlassung, damit die Jobangebote schon den neuen Ruf sehen
   statistikSaison(sm);trainerSaison(sm);finanzenSaisonende();marketingSaisonende(sm);werbungSaisonende(sm); // Ruf der Computer-Trainer (K32 §3.3b, U18a); Ehrungen, Saisonarchiv, Vitrine, Karrierezeilen (K34, U13), nach dem Ruf (Trainer der Saison +5) und vor einer Entlassung
   if(sm.down3.includes(S.my))entlassen(`${me.name} steigt in die Regionalliga ab. Der Verein trennt sich von dir.`);
-  if(S.trust<B.entlassenSaisonUnter)entlassen();lizenzRueckblick();kreditAuto();save();}
+  if(S.trust<B.entlassenSaisonUnter)entlassen();vertragSaisonende();lizenzRueckblick();kreditAuto();save();} /* Trainervertrag (K28 §5.5, U12g): Gehalt der Saison, Verlängerung */
 // Regionalliga (K32a): je Staffel wird ein Meister gelost, gewichtet nach Ansehen. West und Südwest steigen direkt auf,
 // von Nord, Nordost und Bayern eine Staffel im Wechsel, die beiden anderen Meister spielen Aufstiegsspiele.
 function poisson(l){const L=Math.exp(-l);let k=0,p=1;do{k++;p*=R();}while(p>L&&k<12);return k-1;}
@@ -56,8 +72,9 @@ function regionalligaAufsteiger(){const G=RS.regionalliga,meister={},ids=[],txt=
 function newSeason(){return mitStrom(strom('saison',S.season),newSeasonLauf);}
 function newSeasonLauf(){lizenzNachweis();wechselVollziehen(true);leiheEnde();verlaufKuerzen(); // Leihen enden mit der Saison (U10d), alte Verletzungen fallen aus der Akte (T2.5)
   mitStrom(strom('vorstandKI',S.season),kiVorstandSaison); // Trainerwechsel im Sommer bei Computer-Vereinen, vor Auf- und Abstieg (K31 §5.10, U11d2)
+  praesidentenWahlen(S.summary); // Präsidentenwahl auf der Mitgliederversammlung (K28 §8, U12i), nach den Trainerwechseln, eigener Strom je Verein
    // vereinbarte Wechsel zum Sommerfenster, vor dem Saisonwechsel der Verträge (K19, U10a)
-  S.vstat={};S.testspiele=[];kabineSaison();const sm=S.summary,Z=RS,setze=(ids,lg)=>ids.forEach(id=>S.teams[id].lg=lg);sommerNeueSaison();if(S.stab)stabSaison();
+  S.vstat={};S.testspiele=[];S.tsKI=null;kabineSaison();const sm=S.summary,Z=RS,setze=(ids,lg)=>ids.forEach(id=>S.teams[id].lg=lg);sommerNeueSaison();if(S.stab)stabSaison();
   setze(sm.down,2);setze(sm.up,1);if(sm.rw===sm.rel[1]){S.teams[sm.rel[1]].lg=1;S.teams[sm.rel[0]].lg=2;}
   setze(sm.down2,3);setze(sm.up3,2);if(sm.rw2===sm.rel2[1]){S.teams[sm.rel2[1]].lg=2;S.teams[sm.rel2[0]].lg=3;}
   setze(sm.down3,4);setze(sm.up4,3);sm.down3.forEach(id=>S.teams[id].abstieg3=sm.season);
@@ -65,18 +82,18 @@ function newSeasonLauf(){lizenzNachweis();wechselVollziehen(true);leiheEnde();ve
   vertraegeSaison(); // Ligaklausel nach einem Abstieg (K21, U10b)
   beraterSaison(); // Beziehungen zu Beratern verblassen (K22, U10c)
   S.teams.forEach(t=>{if(t.lastLg>3&&t.lg>3)return;const A=Z.ansehen;let d=t.lastLg<=3?clamp((t.expPos-t.lastPos)*A.faktor,-A.maxAenderung,A.maxAenderung):0;
-    if(t.lg<t.lastLg)d+=A.aufstieg;if(t.lg>t.lastLg)d+=A.abstieg;d+=euAnsehen(t.id);t.rep=clamp(Math.round(t.rep+d),A.min,A.max);t.fans=Math.round(clamp(t.fans*(1+d*Z.fans.faktor),Z.fans.min,t.cap*Z.fans.maxJePlatz));});
+    if(t.lg<t.lastLg)d+=A.aufstieg;if(t.lg>t.lastLg)d+=A.abstieg;d+=euAnsehen(t.id);t.rep=clamp(Math.round(t.rep+d),A.min,A.max);const m0=mitgliederVon(t);t.fans=Math.round(clamp(t.fans*(1+d*Z.fans.faktor),Z.fans.min,kapOhneBau(t)*Z.fans.maxJePlatz)); /* Plätze ohne Bau-Abzug (Prüfung ET3) */t.mitglieder=Math.round(m0*Math.max(0,1+d*Z.fans.faktor));}); /* Mitglieder wie die Fans, ohne deren Grenzen (K25d, Prüfung DL2) */
   zweiteAbstiegSim();marketingNeueSaison(); // Fans-Bonus der Kampagnen (K25 §5.4, K25a)
   // deine Zweite aus der 3. Liga abgestiegen: Spieler bis 23 bleiben als Amateurkader (K08 §5.6)
-  const K=Z.karriereende;
+  const kSchnitt=karriereSchnitte(); // Schnitt je Liga für das Karriereende (K32 §5.1), vor dem Altern
   const vPlan=new Map();S.teams.forEach(t=>{if(aktiv(t)&&stabMacht(t.id,'vertraege'))vPlan.set(t.id,kaderplan(t));}); // Verträge nach Rang (K31 §5.8, U11c): Plan vor dem Altern, ohne Zufall
-  S.pl.forEach(p=>{if(p.team<-1)return;p.age++;p.g=0;p.pg=0;if(p.eg)p.eg=0;p.apps=0;disziplinSaison(p);p.form=Z.neuForm;p.sv=0;p.ent=0;eigenschaftenNeu(p);
+  S.pl.forEach(p=>{delete p.ld3;if(p.team<-1)return;p.age++;p.g=0;p.pg=0;if(p.eg)p.eg=0;p.apps=0;disziplinSaison(p);p.form=Z.neuForm;p.sv=0;p.ent=0;eigenschaftenNeu(p);
     if(p.team>=0&&!aktiv(S.teams[p.team])){p.team=-1;p.list=0;}
-    if((p.age>=K.abAlter&&R()<(p.age-K.nullAlter)*K.jeJahr)||p.age>=K.spaetestens){if(p.team===S.my)news(`${p.n} beendet seine Karriere.`);p.team=-2;return;}
-    if(p.team>=0){p.ct--;if(p.ct<=0){const mein=p.team===S.my;if(mein&&!autoB('vertraege')){news(`Vertrag ausgelaufen: ${p.n} verlässt den Verein.`,'bad');p.team=-1;p.list=0;}
-      else if(R()<vertragChance(p,vPlan.get(p.team))){p.ct=riA(Z.vertrag.jahre);p.sal=salaryFor(p.str);if(mein)stabMeldung(`Der Verein hat den Vertrag von ${p.n} verlängert (${p.ct} Jahr${p.ct>1?'e':''}).`);}else{if(mein)news(`Vertrag ausgelaufen: ${p.n} verlässt den Verein. Der Verein hat nicht verlängert.`,'bad');p.team=-1;p.list=0;}}}
+    if(karriereEnde(p,kSchnitt)){if(p.team===S.my)news(`${p.n} beendet seine Karriere.`);p.team=-2;return;} // K32 §5.1, eigener Strom je Spieler
+    if(p.team>=0){p.ct--;if(p.ct<=0){const mein=p.team===S.my;if(mein&&!autoB('vertraege')){news(`Vertrag ausgelaufen: ${p.n} verlässt den Verein.`,'bad');p.team=-1;p.list=0;delete p.lk;}
+      else if(R()<vertragChance(p,vPlan.get(p.team))){p.ct=riA(Z.vertrag.jahre);p.sal=salaryFor(p.str);delete p.lk; /* vom Verein verlängert: übliche Ligaklausel (K21 §12 Nr. 20) */if(mein)stabMeldung(`Der Verein hat den Vertrag von ${p.n} verlängert (${p.ct} Jahr${p.ct>1?'e':''}).`);}else{if(mein)news(`Vertrag ausgelaufen: ${p.n} verlässt den Verein. Der Verein hat nicht verlängert.`,'bad');p.team=-1;p.list=0;delete p.lk;}}}
     if(p.team!==S.my)p.list=0;});
-  {const weg=S.pl.filter(p=>p.team===-2);statistikAbschied(weg);trainerNeueSaison(weg);} // Ehemalige (K34 §5.3, U13), Trainerpool mit Ex-Spielern (K32 §3.3b, U18a)
+  {const weg=S.pl.filter(p=>p.team===-2);statistikAbschied(weg);trainerNeueSaison(weg);stabExSpieler(weg);} /* Ex-Spieler im Stab (K32c), nach dem Trainerpool */ // Ehemalige (K34 §5.3, U13), Trainerpool mit Ex-Spielern (K32 §3.3b, U18a)
   S.pl=S.pl.filter(p=>p.team!==-2);reindex();mitStrom(strom('auslandSaison',S.season),auslandSaison); // Auslandspool: Alter, Karriereende, neue Talente (K32 §4.1)
   sm.up4.forEach(id=>{if(!squad(id).length&&!zweiteWirdVerein(id))kaderErzeugen(S.teams[id]);}); // deine Zweite nimmt ihren Amateurkader mit (K08 §5.6)
   const N=Z.nachwuchs;
@@ -92,20 +109,21 @@ function newSeasonLauf(){lizenzNachweis();wechselVollziehen(true);leiheEnde();ve
   const fa=S.pl.filter(p=>p.team===-1);if(fa.length>Z.vereinsloseMax){fa.sort((a,b)=>a.str-b.str).slice(0,fa.length-Z.vereinsloseMax).forEach(p=>p.team=-2);statistikAbschied(fa.filter(p=>p.team===-2));S.pl=S.pl.filter(p=>p.team!==-2);reindex();}
   S.am.forEach(a=>a.str=riA(RW.amateurStaerke));
   finanzenMonat(tageDerSaison(),true); // Monatsbericht Juni zum 1. Juli, der Tag läuft sonst nie durch taeglich (K23a)
-  S.season++;S.plan=planFuer(S.season);S.tag=S.plan.start;S.gespielt=-1;S.relSp=[];S.relSp2=[];S.res={1:[],2:[],3:[]};
-  const sp=spielplanFuer(S.season);S.fx=sp.fx;S.plan.zeit=sp.zeit;initCup();supercupAnlegen(sm);europaAnlegen(sm); // Europapokal (K37, U19a), eigener Strom
-  S.fin={};finanzenSaisonstart();S.att=[0,0];S.offers=S.offers.filter(o=>PIX.get(o.pid)&&PIX.get(o.pid).team===S.my);S.phase='play';S.summary=null;TDAY=null;TLG=0;LAST=null;
+  const tag0=absTag(0);S.season++;S.plan=planFuer(S.season);S.tag=S.plan.start;fristenSaisonwechsel(absTag(0)-tag0); /* Fristen in Saisontagen rücken mit (Prüfung FC1) */S.gespielt=-1;S.relSp=[];S.relSp2=[];S.res={1:[],2:[],3:[]};
+  const sp=spielplanFuer(S.season);S.fx=sp.fx;S.plan.zeit=sp.zeit;initCup();supercupAnlegen(sm);const euTitelAlt=S.eu&&S.eu.titel;europaAnlegen(sm); // Europapokal (K37, U19a), eigener Strom. Die Titel der alten Saison für „Mitwachsend“ vorher merken (K43 §5)
+  S.fin={};/* TV-Gelder der neuen Saison zu Saisonbeginn festlegen (K23c), so hängen sie nicht davon ab, wann sie zuerst gebraucht werden */tvSaison();finanzenSaisonstart();/* Computer-Vereine bauen (K26b) */kiBauenSaison();/* Ligaklausel des Trainervertrags (U12g) */vertragNeueSaison();S.att=[0,0];S.offers=S.offers.filter(o=>PIX.get(o.pid)&&PIX.get(o.pid).team===S.my);S.phase='play';S.summary=null;TDAY=null;TLG=0;LAST=null;
+  stufeMitwachsen(sm,euTitelAlt); /* Mitwachsend (K43 §5): nach finanzenSaisonstart, damit ein Zuschuss in den Finanzen der neuen Saison steht (Prüfung GH1), vor setTarget wegen des Saisonziels */
   setTarget();werbungSaison();if(!S.spons)sponsOffers(); /* alle Werbeflächen samt Brust zählen in werbungSaison herunter (K24a, seit K24c auch die Brust) */
-  S.lineup=bestXI(S.my,myT().form);kabineNachSaisonwechsel();jubilaeumJahre(); // 10 Jahre im Verein (K34 §8, U13)
+  turnierSommer();S.lineup=besteElfDu();kabineNachSaisonwechsel();jubilaeumJahre(); /* EM/WM im Sommer (K13k, nur mit Länderspielen) */ // 10 Jahre im Verein (K34 §8, U13); Elf ohne Tribüne (Prüfung FI4)
   news(`Neue Saison ${S.season}/${(S.season+1)%100} in der ${ligaName(myT().lg)}: Ziel des Vorstands – ${targetText(myT().lg,S.target)}. Trainingsauftakt am ${datumMittel(auftaktTag(myT()))}.`,'good');save();}
 // Kader auf die Sollstärke je Position bringen: zuerst Vereinslose, sonst erzeugte Spieler. Im Sommer für alle Computer-Vereine, und wenn du einen Verein mit zu kleinem Kader verlässt.
 function kaderAuffuellen(t,base){const Z=RS,need=Z.kaderSoll;
   for(const pos in need){let have=squad(t.id).filter(p=>p.pos===pos).length;while(have<need[pos]){const fa=S.pl.filter(p=>p.team===-1&&p.pos===pos&&p.str<=base+Z.vereinslosBis).sort((a,b)=>b.str-a.str)[0];
-      if(fa&&R()<Z.vereinslosChance){fa.team=t.id;fa.ct=riA(Z.vertrag.jahre);fa.sal=salaryFor(fa.str);}else addP(mkPlayer({pos,age:riA(Z.auffuellAlter),str:Math.round(base-Z.auffuellAbschlag+riA(Z.auffuellStreuung)),team:t.id}));have++;}}}
+      if(fa&&R()<Z.vereinslosChance){fa.team=t.id;fa.ct=riA(Z.vertrag.jahre);fa.sal=salaryFor(fa.str);integrationStart(fa);}else{const np=mkPlayer({pos,age:riA(Z.auffuellAlter),str:Math.round(base-Z.auffuellAbschlag+riA(Z.auffuellStreuung)),team:t.id});addP(np);integrationStart(np);}have++; /* FL5: wie planAuffuellen */}}}
 function mkJobs(){const J=RV.jobs,r=myT().rep-J.ansehenAbschlag+(ruf()-RV.ruf.start)*RV.ruf.jobsJePunkt, // Ruf als Trainer (K28 §5.4, U12a)
-  weg=S.summary?S.summary.down3:[];const c=S.teams.filter(t=>t.id!==S.my&&aktiv(t)&&!weg.includes(t.id)).sort((a,b)=>Math.abs(a.rep-r)-Math.abs(b.rep-r)).slice(0,J.kandidaten);S.jobs=shuffle(c).slice(0,J.angebote).map(t=>t.id);}
-function takeJob(id){const old=myT().name,alt=myT();LAST=null;statStation(id);presseS().antritt=1;S.pk=null;trainerJobwechsel(alt,id); // Stationen des Trainers mit Grund (K34 §5.7, U13), solange S.fired und S.ruecktritt noch gelten
-versprechenJobwechsel();bauAbgeben();finanzenJobwechsel();marketingJobwechsel();S.kenntnis={};S.auftraege=[];S.my=id;finanzenStart();
+  weg=S.summary?S.summary.down3:[];const c=S.teams.filter(t=>t.id!==S.my&&aktiv(t)&&!weg.includes(t.id)&&!euClFest(t.id)).sort((a,b)=>Math.abs(a.rep-r)-Math.abs(b.rep-r)).slice(0,J.kandidaten);S.jobs=shuffle(c).slice(0,J.angebote).map(t=>t.id);}
+function takeJob(id){const old=myT().name,alt=myT();LAST=null;kartenJobwechsel(id);statStation(id);presseS().antritt=1;presseS().urteil=null;S.pk=null;S.ifr=null;S.unv=null;S.maulkorb=0;S.tsKI=null;S.turnier=null;S.testspiele=[];S.lager=(S.lager||[]).filter(l=>l.saison!==S.season); /* alle Lager der Saison gehören dem alten Verein (Prüfung EV7, EW1: auch beendete, sonst sperrten sie die Pause) */trainerJobwechsel(alt,id); // Stationen des Trainers mit Grund (K34 §5.7, U13), solange S.fired und S.ruecktritt noch gelten
+versprechenJobwechsel();bauAbgeben();finanzenJobwechsel();marketingJobwechsel();verhJobwechsel(); /* Einigungen über Ablösen verfallen (Prüfung FC3) */S.kenntnis={};S.auftraege=[];S.my=id;euOhneClStart(); /* Leicht: Champions League tauschen, solange nicht ausgelost (K43, Prüfung GD2) */finanzenStart();vertragNeu(id);myT().glaub=glaubNeu();stabMitnehmen(alt.id);neubeginnStart(id); /* neuer Trainer: Reservisten hoffen, in den ersten 5 Pflichtspielen zählt keine Bank (K14f, FM5) */
   if(aktiv(alt))mitStrom(strom('auffuellen',S.season,S.tag,alt.id),()=>kaderAuffuellen(alt,grundStaerke(alt.rep))); // dein alter Verein ist jetzt ein Computer-Verein und füllt seinen Kader sofort auf
   S.kapFrei={s:S.season,bis:S.tag+14};S.fired=0;S.ult=null;S.ruecktritt=0;S.trust=RV.neuerJob;S.offers=[];S.constr=null;S.loan=0;S.fin={};S.att=[0,0];setTarget();werbungNeuerVerein();if(!S.spons||S.sponsOffers===null){S.spons=null;sponsOffers();}werbungOffen();S.lineup=bestXI(id,myT().form);
   news(`Neuer Job: ${S.mgr} übernimmt ${myT().name} (vorher ${old}). Ziel: ${targetText(myT().lg,S.target)}.`,'good');save();closeOv();TAB='buero';render();if(S.phase==='end')showSummary();}

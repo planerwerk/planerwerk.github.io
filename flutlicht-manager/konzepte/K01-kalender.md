@@ -53,7 +53,7 @@ Hängt ab von: K33 (Daten), K35a (Bedienung) · Wird gebraucht von: K05, K07, K0
 3. Sponsor: Am Spieltag ist noch kein Trikotsponsor gewählt.
 4. Verträge: In der letzten Woche vor Saisonende laufen Verträge von Stammspielern aus.
 
-Die Erinnerungen „kein Trainingsplan“ und „spielfreie Woche ohne Testspiel“ kommen mit K07 und K11.
+Die Erinnerungen „kein Trainingsplan“ und „spielfreie Woche ohne Testspiel“ kommen mit K07 und K11. Gebaut: „Plan passt nicht“ statt „kein Trainingsplan“ (K07b) und „spielfreie Woche ohne Testspiel“ (K11d, 22.11.2026).
 
 **Tagesverarbeitung**, in dieser Reihenfolge:
 1. Tagesbeginn: Ausfalltage zählen herunter, die Frische erholt sich um ein Siebtel der Wochenrate, abgelaufene Angebote fallen weg, ein fertiger Bau wird gemeldet.

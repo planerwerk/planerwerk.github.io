@@ -11,6 +11,8 @@ function derbyMap(){if(DERBY_MAP)return DERBY_MAP;const m=new Map(),nr=k=>VEREIN
   return DERBY_MAP=m;}
 const bezGrund=(a,b)=>{const d=derbyMap().get(bezPaar(a,b));return d?d.g:0;};
 const istDerby=(a,b)=>{const d=derbyMap().get(bezPaar(a,b));return!!d&&d.art==='derby';};
+// Brisantes Spiel (K17 §5.2, K09 §5.1, K09d): Derby oder Beziehung der beiden Vereine (nur Verein–Verein, gleich für alle) unter RBZ.wirkung.brisanzUnter. Mehr Karten in der Engine.
+const spielBrisant=(a,b)=>istDerby(a,b)||bez(a,b)<RBZ.wirkung.brisanzUnter;
 const derbyName=(a,b)=>{const d=derbyMap().get(bezPaar(a,b));return d?d.name:'';};
 const bezVerein=id=>id>=0&&!!S.teams[id];
 

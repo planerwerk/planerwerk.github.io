@@ -109,7 +109,7 @@ Bei der Umsetzung (U6a):
 11. **„Training wirkt“ wird über die Wirkung geprüft** (Startelf stärker, Kondition höher, nicht mehr Ausfälle), nicht über Punkte: Punkte schwanken über wenige Saisons um ±7 je Saison. Gemessen: Startelf +0,4 bis +0,5 stärker als mit „Schonen“, also etwa +1 Punkt im ersten Jahr und mehr danach.
 12. **Vorbereitung** als Vorlage mit vier Wochen (normal, hart, hart, Taktik). Der Co-Trainer nutzt sie bis zum ersten Pflichtspiel. Doppeleinheiten, Leistungstests und Testspiele kommen mit K11 und K12a.
 13. **Umschulung nach deiner Entscheidung vom 12.11.:** nur Nachbarpositionen, entfernte nur sehr jung oder vielseitig, nie Torwart, nach Alter gestaffelt, selten. Vorläufig von mir: Nachbarn sind die verwandten Paare der Eignungstabelle, „sehr jung“ bis 19 Jahre, Torwart auch für Junge ausgeschlossen, Tempo ×1,25 bis ×0,4 und Höchstwert 90 bis 82 % nach Alter, eine Umschulung je Laufbahn (zwei mit „vielseitig“). Vorher: **Umschulung** belegt einen der fünf Einzeltrainingsplätze. Verwandt heißt: Eignung ohne Fußabzug mindestens 75 %. Der Fuß bleibt nach der Umschulung ein Nachteil (außer bei beidfüßigen).
-14. **Noch nicht gebaut:** eigene Vorlagen speichern, Erinnerung „Plan passt nicht“, Ereignisse aus §8, eigenes Torwarttraining (K16), Bonus +2 % mit Gegneranalyse (K18).
+14. **Noch nicht gebaut:** eigene Vorlagen speichern, Erinnerung „Plan passt nicht“, Ereignisse aus §8, eigenes Torwarttraining (K16), Bonus +2 % mit Gegneranalyse (K18). **Stand 25.11.2026:** Gebaut sind eigene Vorlagen (K07f), die Erinnerung „Plan passt nicht“ (K07b), der Bonus mit Gegnerbeobachtung (K18c) und die Ereignisse aus §8 (K07c, K07e, K07h, Meldungen für Lernziel und Umschulung). Offen bleibt das eigene Torwarttraining. Einzelheiten in K07 Nr. 14.
 
 ## K08 – Jugend und Talententwicklung
 Datei: `konzepte/K08-jugend.md`
@@ -137,7 +137,7 @@ Bei der Umsetzung (U7a):
 11. **Strafmaß ohne Verletzungsfolge:** Verletzungen aus der Engine sind noch nicht mit dem Foul verknüpft. Kommt mit K10.
 12. **Einspruch:** Ausgang nach Lage. Eine harte Entscheidung (erste Rote Karte, kein Tätlichkeitsfall) wird zu 35 % gemindert und zu 5 % erhöht, eine eindeutige (Tätlichkeit) zu 10 % gemindert und zu 15 % erhöht, sonst 25 % und 10 %. Im Mittel sind es so etwa 30 % gemindert. Bei einem Antrag von nur einem Spiel ist kein Einspruch möglich. Computer-Vereine legen Einspruch ein, wenn ein Stammspieler hart bestraft wurde (60 %), sonst nur selten (10 %).
 13. **Zweite Rote Karte vor dem Urteil:** Es bleibt ein Verfahren, gewertet wird das schwerere Vergehen.
-14. **Noch nicht gebaut:** Äußerungen und Kontrollausschuss (K29), Zuschauer-Vergehen (K27), Trainer-Karten und Tribüne, Videobeweis, Derby-Faktor, Rudelbildung, Geldstrafen für Spieler (K14), Erinnerung „Gelbsperre droht“ vor wichtigen Spielen. Die Kader-Ansicht zeigt nur einen Hinweis bei 4, 9 oder 14 Gelben.
+14. **Noch nicht gebaut:** Videobeweis, Karten für Computer-Trainer. Seit K09g (24.11., vorläufig): Protest im Live-Spiel kann dir Gelb bringen (35 % × Strenge), jede vierte Gelbe der Saison und Gelb-Rot sperren ein Spiel, wiederholte Schiedsrichterkritik bringt ein Innenraumverbot (1, dann 2 Spiele), auf der Tribüne keine Zurufe und die Halbzeitansprache vom Co-Trainer. Die Kader-Ansicht zeigt nur einen Hinweis bei 4, 9 oder 14 Gelben. Inzwischen gebaut (Stand 24.11., Einzelheiten in K09 Nr. 14): Geldstrafen für Spieler (K09c), Derby-Faktor (K09d), Erinnerung „Gelbsperre droht“ (K09b), Rudelbildung als Karte (K09e), Kontrollausschuss (K09f), Zuschauer-Vergehen mit Zuschlag und Teilausschluss (K09h, Werte vorläufig: Zuschlag in Höhe der Strafe ab dem zweiten Vorfall in 365 Tagen, ab dem dritten ein Block mit 10 % der Plätze leer, Fanarbeit −30 %, die UEFA-Karte zählt nicht).
 15. **Lernstufen (K36):** Information ab Teamleiter, Strafe annehmen oder Einspruch ab der A-Lizenz. Davor entscheidet der Verein nach `kiEinspruch`.
 
 ## K10 – Medizin und Verletzungen
@@ -159,7 +159,7 @@ Bei der Umsetzung (U7b):
 12. **Fit spritzen** geht nur am Spieltag. Computer-Vereine spritzen nur in wichtigen Spielen (Pokal ab Runde 3, Relegation) und nur Stammspieler mit höchstens 10 Tagen Ausfall. Verschlimmerung: Prellung → Faserriss, Bänderdehnung → Bänderriss, Rücken/Leiste → Zerrung, Bruch (Nase) bekommt 7 Tage mehr.
 13. **Robustheit und „verletzungsanfällig“** wirken beide (1,6 − 0,06 × Robustheit und ×1,6), wie in 5.1. Ein Anfälliger (Robustheit 1–4) verletzt sich damit gut doppelt so oft wie der Durchschnitt, nicht nur 60 % öfter, wie der Merkmalstext sagt. Prüfen.
 14. **Lernstufen (K36):** Verletztenliste und Diagnose ab Stufe 1 (nur Information), fit spritzen und früher zurückholen ab Stufe 4. Davor entscheidet der Arzt nach den Regeln der Computer-Vereine.
-15. **Noch nicht gebaut:** zweite Meinung, Fehldiagnose, Pflichtwechsel und Zusatzwechsel bei Gehirnerschütterung, Ereignisse aus §8, Saisonbilanz der Ausfalltage in der Saisonzusammenfassung (die Bilanz steht in der Verletztenliste im Kader), Reha-Zentrum (K26), Rotation der Computer-Vereine nach Saisonbelastung.
+15. **Noch nicht gebaut:** zweite Meinung, Fehldiagnose, Pflichtwechsel und Zusatzwechsel bei Gehirnerschütterung, Ereignisse aus §8, Saisonbilanz der Ausfalltage in der Saisonzusammenfassung (die Bilanz steht in der Verletztenliste im Kader), Reha-Zentrum (K26), Rotation der Computer-Vereine nach Saisonbelastung. **Stand 25.11.2026:** Gebaut sind die Fehldiagnose (K10b), die zweite Meinung (K10c), die Ausfalltage in der Saisonbilanz (K10d), Grippewelle und lange Reha (K10e), „Arzt widerspricht“ (K16d) mit der Haltung des Arztes (K16i). Offen bleiben Pflicht- und Zusatzwechsel bei Gehirnerschütterung, „Spieler verheimlicht Verletzung“, das Reha-Zentrum (K26). Die Rotation der Computer-Vereine nach Saisonbelastung gibt es seit K10f hinter einem Schalter (aus). Einzelheiten in K10 Nr. 15 (berichtigt nach Prüfung FR4).
 
 ## K11 – Freundschaftsspiele und Trainingslager
 Datei: `konzepte/K11-testspiele.md`
@@ -176,7 +176,7 @@ Bei der Umsetzung (U7d):
 8. **Geld:** Als Gastgeber kommen in der 3. Vorbereitungswoche 12 % der Ligaspiel-Nachfrage (Entwurf: 25 %), danach je Woche 1,5 Prozentpunkte weniger, mindestens 4 %, gegen einen großen Namen (Ansehen ab 80) doppelt so viele. Beim Amateurverein gibt es eine Gage von 10.000 bis 80.000 € nach Ansehen. Auswärts bei Profis gibt es nichts. Die Lagerkosten sind um 60 % höher als im Entwurf (Alpen 40.000 €, Schwarzwald 25.000 € pro Tag in der 1. Liga). Mit den Entwurfswerten brachten drei Heim-Testspiele einem Zweitligisten das Siebenfache der Lagerkosten, jetzt etwa das Doppelte. Alles Spielwerte.
 9. **Trainingslager** in der Trainingsansicht: Ort, Beginn (in der Vorbereitung oder bis eine Woche vor und während der Winterpause der eigenen Liga), 5–10 Tage, Kosten sofort. Im Lager wirkt das Training ×1,15 (Alpen: Kondition ×1,15 mehr), die Vertrautheit ×1,25. Bis zum 7. Tag bekommen alle +0,1 Selbstvertrauen pro Tag (bis K14 statt Zusammenhalt). Ab dem 8. Tag gibt es mit 13 % pro Tag Lagerkoller (−0,5 Selbstvertrauen für 3–5 Spieler), damit es bei zehn Tagen in etwa einem Drittel der Fälle passiert (mit 10 % wären es nur 27 %). Riviera: Partylöwen fallen nachts auf. Heimat im Winter: 20 % pro Tag fällt das Training aus. Ein Lager pro Pause.
 10. **Widerspruch in §10:** „Sieben Tage Lager bringen etwa eine Woche Vorsprung in der Vertrautheit“ passt nicht zu ×1,25 aus 5.3. Gebaut ist ×1,25, der Test prüft 15–35 % mehr Vertrautheitsgewinn. Soll das Lager stärker wirken, muss der Wert hoch.
-11. **Noch nicht gebaut:** Testspiele der Computer-Vereine und deren Anfragen an dich, Turniere, Auslandsvereine als Gegner im Lager (kommen mit K32 und den echten Vereinsnamen), Zimmerbelegung (K14), Lager-Ereignisse mit Entscheidung, Marketing der Golfregion (K25), Erinnerung „spielfreie Woche ohne Testspiel“ (K01 H9), Testspiel live ansehen.
+11. **Noch nicht gebaut:** Testspiele der Computer-Vereine und deren Anfragen an dich, Turniere, Auslandsvereine als Gegner im Lager (kommen mit K32 und den echten Vereinsnamen), Zimmerbelegung (K14), Lager-Ereignisse mit Entscheidung, Marketing der Golfregion (K25), Erinnerung „spielfreie Woche ohne Testspiel“ (K01 H9), Testspiel live ansehen. **Stand 25.11.2026:** Gebaut sind die Anfragen der Computer-Vereine an dich (K11c), das Sommerturnier (K11b), die Erinnerung (K11d), Lagerkoller und Nachtleben (K11g), Auslandsvereine im Lager (K11h), das Marketing der Golfregion (K11i), der freie Nachmittag (K11j) und die Zimmerbelegung (K11k). Offen bleiben Testspiele der Computer-Vereine untereinander und das Testspiel live. Einzelheiten in K11 Nr. 11.
 12. **Lernstufen (K36):** Testspiele ab Stufe 3 (davor plant der Co-Trainer zwei Testspiele gegen Amateure), Trainingslager ab Stufe 3 (davor fährt der Verein nicht ins Lager). Die Automatik dafür kommt mit UL.
 
 ## K12a – Sommerpause und Vorbereitung
@@ -193,7 +193,7 @@ Bei der Umsetzung (U6b):
 7. **Saisonbelastung wird mitgenommen:** Sie sinkt nur im Urlaub (4 pro Tag) und steigt mit jeder Spielminute. Nach zwei Wochen Urlaub startet ein Stammspieler mit Belastung 90 in die neue Saison mit etwa 26 statt 0 und liegt damit schon im Herbst über 50 (langsamere Erholung, mehr Verletzungen). Die Rechnung in 5.1 („Wirkung im Herbst nur bei Belastung über 74“) ging von einer Wirkung direkt nach dem Urlaub aus, die es mit der Schwelle 50 nie gäbe.
 8. **Urlaubslänge auch im laufenden Urlaub änderbar** (Training und Saisonbilanz). Bereits vergangene Urlaubstage zählen.
 9. **Formänderung je Notenpunkt 2,3 statt 2,5** und 11 % statt 10 % pro Woche zurück zur Mitte. Mit dem neuen Saisonablauf lagen sonst 6,5 % der Spieler bei Form ≤ 4 oder ≥ 16 (Ziel höchstens 5 %).
-10. **Noch nicht gebaut:** Nationalspieler mit Turnier (K13), Ereignisse aus §8, Stimmung aus der Urlaubslänge (K14), Testspiele und Trainingslager (K11).
+10. **Noch nicht gebaut:** Nationalspieler mit Turnier (K13), Ereignisse aus §8, Stimmung aus der Urlaubslänge (K14), Testspiele und Trainingslager (K11). **Stand 25.11.2026:** Gebaut sind die Stimmung aus der Urlaubslänge (U8), Testspiele und Trainingslager (K11), die Ereignisse aus §8 (K12c, K07h, K12d) und Turniere im Sommer (K13k, nur mit Länderspielen). Einzelheiten in K12a Nr. 10.
 
 ## K12b – Saisonvorbereitung (Rahmen)
 Datei: `konzepte/K12b-saisonvorbereitung.md`
@@ -228,7 +228,7 @@ Bei der Umsetzung (U7c):
 9. **Relegation:** Das Rückspiel hat bei Gleichstand in der Summe Verlängerung und Elfmeterschießen aus der Engine, auch live. Das Los bleibt nur für alte Spielstände. Echt setzt sich der Bundesligist seit 2009 in etwa 80 % durch (13 von 16 bis 2024, Sky), im Spiel sind es etwa 50 %, weil der 16. der 1. Liga und der 3. der 2. Liga in unserer Welt fast gleich stark sind (Konsistenzprüfung AI5).
 10. **Supercup** ab der zweiten Saison (für die erste fehlt die Vorsaison im Spiel): Meister gegen Pokalsieger am Samstag vor dem 1. Spieltag beim Meister, sonst gegen den Vizemeister, wie 2024 Leverkusen gegen Stuttgart. Bei Gleichstand direkt Elfmeterschießen, seit 2010 gibt es keine Verlängerung. Karten und Sperren zählen wie im Pokal, Tore nicht zur Torjägerliste. Noch ohne Prämie (K23).
 11. **Zweitmannschaften:** Spielt die erste Mannschaft in derselben Liga, muss die Zweite eine Liga tiefer, und der beste Absteiger dieser Liga bleibt drin. Die echte Regel ist weiter nicht geprüft (Nr. 4).
-12. **Länderspiele noch nicht gebaut:** Seit U9b haben alle Spieler eine Nationalität, die Nationen-Tabelle liegt vor. Vorher: Spieler haben noch keine Nationalität (kommt mit K32 und dem Auslandspool, K03). Ohne sie gibt es keine Nominierung. Ebenfalls offen: Spielverlegung auf Antrag, Rotation der Favoriten in Runde 1 und 2, Pokal an Dienstag und Mittwoch, Prämien für den Supercup.
+12. **Länderspiele noch nicht gebaut:** Seit U9b haben alle Spieler eine Nationalität, die Nationen-Tabelle liegt vor. Vorher: Spieler haben noch keine Nationalität (kommt mit K32 und dem Auslandspool, K03). Ohne sie gibt es keine Nominierung. Ebenfalls offen: Spielverlegung auf Antrag, Rotation der Favoriten in Runde 1 und 2, Pokal an Dienstag und Mittwoch, Prämien für den Supercup. **Stand 25.11.2026:** Länderspiele gibt es seit K13f (Schalter aus, im Menü einschaltbar) mit Karten (K13g), Marktwert (K13h), Anzeige (K13i) und Turnieren (K13k); Spielverlegung seit K13d, Pokal-Rotation seit K13e (Meldung, wenn deine Rotation schiefgeht) und K13j (Favoriten unter den Computer-Vereinen, Schalter aus), Prämie für den Supercup seit K13b. Offen bleibt der Pokal an Dienstag und Mittwoch. Einzelheiten in K13 Nr. 12.
 13. **Lernstufen (K36):** Pokal, Relegation und Supercup laufen ab Stufe 1 (nur Termine und Ergebnisse). Die Auslosung ist ab Stufe 1 ein Moment. Spielverlegung beantragen kommt später auf Stufe 4, wenn es sie gibt.
 
 ## K14 – Stimmung, Selbstvertrauen, Kabine
@@ -256,7 +256,7 @@ Bei der Umsetzung (U8):
 18. **Neuanfang beim Vereinswechsel:** Wechselwunsch null, Stimmung mindestens Startwert.
 19. **Diva und Söldner** sichtbar und wirksam.
 20. **Lernstufen (K36):** Stimmung sehen ab Teamleiter, Kapitän ab C, Kaderrollen und Teamevent ab B.
-21. **Noch nicht gebaut:** Ereignisse aus §8 außer dem Gesprächswunsch, Geldstrafen erlassen, Prämien, Integration und Heimweh, Integrationsfigur und Mentor.
+21. **Noch nicht gebaut:** Ereignisse aus §8 außer dem Gesprächswunsch, Geldstrafen erlassen, Prämien, Integration und Heimweh, Integrationsfigur und Mentor. **Stand 25.11.2026:** Gebaut sind die Ereignisse aus §8 (K14b bis K14e), Geldstrafen (K09c), Prämien (K21b, K21d, K21e), Integration und Heimweh (K03d, K03e), Integrationsfigur und Mentor, dazu Sprachgrüppchen (K14g, nur mit dem Schalter der Integration). Einzelheiten in K14 Nr. 21.
 
 **Umgesetzt in U8d (13.11.), vorläufig von mir (K14 §12 Nr. 22–38):** Rotation höchstens zwei Spiele in Folge (angekündigt drei). Rivalen-Zähler kommt zur Spanne des Bausteins dazu (bis −38), der feste Faktor 1,5 entfällt. „Entschlossene“ sind Vorbildprofis. Karriere-Spiele der vorhandenen Spieler sind geschätzt. Torwart-Duell endet durch eine Kaderrolle von dir oder fünf Spiele in Folge. Rolle „spielt im Pokal“ erwartet 90 % der Pokalspiele. Aufbau 21 Tage nach Verletzungen ab 14 Tagen. Tribüne setzt du an der Spielerkarte, die Bank wählt sonst der Co-Trainer. Über die Baustufe hinaus gebaut: nach einer Sperre, Wechselwunsch, Führungsspieler auf der Bank, bedeutungslose Spiele. „Rotation ankündigen“ als fünfte Ansprache.
 
@@ -286,7 +286,7 @@ Bei der Umsetzung (U8):
 17. **Erinnerung** „Versprechen droht zu kippen“ am Spieltag, abschaltbar.
 18. **Vereinswechsel:** offene Zusagen hinfällig.
 19. **Lernstufen (K36):** Gespräche und Mannschaftsansprache ab C, Versprechen ab B.
-20. **Noch nicht gebaut:** Gespräche mit dem Vorstand, öffentliche Kritik und Presse, Karten aus §8.
+20. **Noch nicht gebaut:** Gespräche mit dem Vorstand, öffentliche Kritik und Presse, Karten aus §8. **Stand 25.11.2026:** Das Budgetgespräch mit dem Vorstand gibt es seit U12l, öffentliche Kritik in der Pressekonferenz seit U17a, „Streit nach Kritik“ seit K15e und „Spieler fordert Versprechen ein“ seit K15f als Karten. „Kabine glaubt dir nicht mehr“ seit K15g auch als Karte. „Versprechen kippt“ seit K15h ebenfalls, damit alle Karten aus §8. Einzelheiten in K15 Nr. 20 (berichtigt nach Prüfung FR4).
 
 ## K16 – Trainerstab und Mitarbeiter
 Datei: `konzepte/K16-stab.md`
@@ -303,7 +303,7 @@ Bei der Umsetzung (U6c):
 8. **Einstellen geht sofort** (Vertrag zwei Jahre), nicht nach 1–3 Tagen Bedenkzeit. Verlängern: zwei Jahre, 10 % mehr Gehalt. Entlassen: halbes Restgehalt als Abfindung. Ein Co-Trainer ist Pflicht.
 9. **Gehälter** werden wie die Spielergehälter je Ligaspiel gebucht. Ein Erstligist wie Freiburg zahlt so etwa 3 Mio. € pro Jahr, ein kleiner Drittligist mit nur einem Co-Trainer etwa 35.000 €. Spielwerte, Abgleich mit K23 und dem Stab-Budget aus K28.
 10. **Computer-Vereine** besetzen einen fehlenden Co-Trainer wöchentlich aus dem Pool nach und verlängern auslaufende Verträge zu 70 %.
-11. **Noch nicht gebaut:** Automatik mit Rauschen, Haltung und Spezialgebiet (5.1), Modus „Vorschlag“, Bänder für Vorhersagen außer der Qualität selbst, Abwerbung, Mitnehmen beim Vereinswechsel, Ex-Spieler als Mitarbeiter (K32), Ereignisse aus §8.
+11. **Noch nicht gebaut:** Automatik mit Rauschen, Haltung und Spezialgebiet (5.1), Bänder für Vorhersagen außer der Qualität selbst. Ex-Spieler als Mitarbeiter seit K32c. Inzwischen gebaut (Stand 24.11., Einzelheiten in K16 Nr. 11 und 19): Abwerbung (K16c), Mitnehmen beim Vereinswechsel (K16b), Ereignisse aus §8 (K16d bis K16g), Modus „Vorschlag“ für Aufstellung und Trainingsplan (K16h, vorläufig: Voreinstellung an, abschaltbar, Vorschlag ohne Rauschen).
 
 **Mit dir entschieden (10.11.): Für jeden Bereich lohnt sich gutes Personal**, auch für Verhandlungen.
 12. **Der Verhandler ist der Sportdirektor:** Verhandlungsgeschick (Forderungen bis −8 %, Ablösen ±5 %) und Netzwerk (Kontakte zu zwei bis sechs Beratern).
@@ -340,7 +340,7 @@ Bei der Umsetzung (U9a):
 12. **Scouts im Stab:** vier Plätze, Start nach Ansehen (1, ab 60 zwei, ab 80 drei).
 13. **Kenntnis gehört dem Verein,** beim Jobwechsel beginnst du neu.
 14. **Lernstufen:** Beobachten ab C, Scouts ab B, Suchauftrag ab A.
-15. **Noch nicht gebaut:** Unsicherheit der Computer-Vereine, Gegnerbeobachtung, Ereignisse, Jugend. Ausland seit U9b gebaut.
+15. **Noch nicht gebaut:** Unsicherheit der Computer-Vereine, Gegnerbeobachtung, Ereignisse, Jugend. Ausland seit U9b gebaut. **Stand 25.11.2026:** Gebaut sind die Gegnerbeobachtung (K18c) mit Scoutbericht (K18g), Jugend (U9c), die Ereignisse aus §8 (K18d, K18e, K18f, Geheimtipp) und der Ruf des Scouts (K18h). Die Unsicherheit der Computer-Vereine gibt es seit K18i hinter einem Schalter (aus). Einzelheiten in K18 Nr. 15.
 
 Bei der Umsetzung (U9b), ausführlich in K18 §12 Nr. 17–24:
 17. **Grundkenntnis Ausland 5,** Spanne ohne Scout etwa ±10, Merkmale unbekannt.
@@ -356,7 +356,7 @@ Bei der Umsetzung (U9b), ausführlich in K18 §12 Nr. 17–24:
 Datei: `konzepte/K19-transfers.md`
 
 1. **Eine Formel für alle Vereine** beim Kaufen und Verkaufen, Ausreißer nur aus Schätzfehlern.
-2. **Unverkäuflich ist nie absolut:** ab dem 1,8-Fachen wird verhandelt.
+2. **Unverkäuflich ist nie absolut:** ab dem 1,8-Fachen wird verhandelt. Seit K19c (22.11., popolupo, vorläufig): bei Computer-Vereinen die drei Stärksten mit mindestens zwei Jahren Vertrag, für dich zum Höchstpreis 1,8 × Marktwert (der Vereinswert lag ohnehin unter dieser Grenze). Eigene Spieler markierst du selbst.
 3. **Fenster** nach den echten Terminen 2026/27, danach verschoben wie die übrigen Termine.
 4. **Abwerben, Bieterwettstreit im Detail und Deadline Day** bleiben in K20 (Welle 4).
 
@@ -371,8 +371,8 @@ Datei: `konzepte/K20-transfers-2.md`
 - Feste Kosten je Ort.
 - Berater-Profile aus K22 zugeordnet. Ohne Berater ist es etwas riskanter.
 - Fliegt es auf, steigt die Ablöse bis zum Saisonende um 15 %, und das Abwerben dieses Spielers ist für die Saison vorbei.
-- Deadline Day mit Übersicht, Halt am letzten Tag und einem zusätzlichen Markttag. Die Preise schwanken noch nicht.
-- Bieterrunde nur beim Verkauf.
+- Deadline Day mit Übersicht, Halt am letzten Tag und einem zusätzlichen Markttag. Die Preise schwanken noch nicht. Seit K20b (22.11., popolupo, vorläufig) schwanken die Forderungen an dich um bis zu ±15 % je Tag, die Transferliste ist 10 % billiger, Angebote für deine Spieler kommen 1,5-mal so oft.
+- Bieterrunde nur beim Verkauf. Seit K20c (22.11., popolupo, vorläufig) bietet beim Kauf mit 25 % ein Computer-Verein mit Bedarf mit (2 bis 10 % mehr, höchstens 1,8 × Marktwert, Frist 2 Tage), danach wechselt der Spieler zu ihm, wenn du nicht mitgehst. Seit K20d (22.11., popolupo, vorläufig) lehnt ein Spieler mit Interesse an dir ab 20 den anderen Verein mit 25 % ab (+1 % je Punkt, höchstens 60 %, halb so oft, wenn der andere mehr Ansehen hat), dann nimmt der Verkäufer deine Ablöse.
 - Computer-Vereine werben noch nicht ab.
 
 ## K21 – Verträge und Gehälter
@@ -429,6 +429,34 @@ Datei: `konzepte/K23-finanzen.md`
 - Gehaltsverzicht: 15 % für drei Monate, Stimmung −10, nur in der Not.
 - Die Karten Mäzen und Steuerprüfung haben feste Beträge.
 
+**Mit K23b von popolupo vorläufig entschieden (22.11.2026, K23 §12 Nr. 15 bis 18):**
+
+- Computer-Vereine buchen je Ligaspiel nach deinem Modell, mit Zuschauern aus dem Erwartungswert ohne Würfel.
+- Sonstige Einnahmen je Ligaspiel für alle Vereine: 1. Liga 0, 2. Liga 25.000 €, 3. Liga 60.000 €, bis K23c.
+- Insolvenz auch für Computer-Vereine. Die Lizenzprüfung bekommen sie erst mit K23d.
+- Das Säulenmodell der TV-Gelder kommt mit K23c.
+
+**Mit K23d von popolupo vorläufig entschieden (22.11.2026, K23 §12 Nr. 19 und 20):**
+
+- K23d kommt vor K23c.
+- Der Gehaltsrahmen ist 85 % der erwarteten Einnahmen, bis K23c. Über 100 % sinkt das Vertrauen, über 110 % gibt es keine neuen Gehälter, für dich und die Computer-Vereine.
+
+**Mit K23g von popolupo vorläufig entschieden (22.11.2026, K23 §5.5g, ohne Testlauf):**
+
+- Computer-Vereine bekommen dieselbe Lizenzprüfung wie du (Auflagen am 1. März, Transfersperre nach dem 31. Mai), ohne Gespräch und ohne Zufall, mit der Liquidität aus ihrem Einnahmenmodell.
+- Die Sperre verbietet Kauf, Leihe und Angebote, Verkaufen geht.
+
+**Mit K23c von popolupo vorläufig entschieden (22.11.2026, K23 §5.6b, §12 Nr. 21 bis 30, ohne Testlauf):**
+
+- K23c ohne die Messung, mit Werten aus einer Modellrechnung der Welt. Ein voller Testlauf soll sie bestätigen.
+- Gehälter und Marktwerte steiler (2,5 Mio. und 0,16, 7 Mio. und 0,2), damit die Ligen so weit auseinanderliegen wie in echt.
+- TV-Gelder nach dem Säulenmodell mit echten Töpfen und Fünfjahreswertung. Die Nachwuchs-Säule steckt in der Gleichverteilung.
+- Werbung wächst exponentiell mit dem Ansehen, 37 % davon zahlen weitere Sponsoren ohne Verhandlung.
+- Neuer Posten Verwaltung (40, 55 oder 40 % von TV, Werbung und Sonstigem), sonst lägen alle Ligen weit im Plus.
+- Startkonto und Kreditrahmen wachsen exponentiell mit dem Ansehen, Gehaltsrahmen 75 %, Europapokal mit echten Beträgen.
+- Alte Spielstände: nur die Gehälter werden einmal umgerechnet.
+- Karten, Kampagnen, Fanartikel, Logen, Stab und die übrigen Bauten erst nach dem Testlauf.
+
 ## K24 – Sponsoren
 Datei: `konzepte/K24-sponsoren.md`
 
@@ -450,6 +478,13 @@ sechs Kampagnen, drei Trikotdesigns je Saison, Sortiment in drei Stufen, Online-
 - Der Werbewert hat noch keine Wirkung.
 - Bereich `marketing` ab der B-Lizenz mit Automatik.
 
+**Mit K25c und K25d von popolupo vorläufig entschieden (22.11.2026, K25 §5.4, §5.5, ohne Testlauf):**
+
+- Dauerkarten-Aktion als Sommer-Kampagne vor dem Verkauf, +5 Prozentpunkte Dauerkarten.
+- Echte Mitgliederzahlen je Verein (Stand Winterpause 2025/26, drei Drittligisten geschätzt), Beiträge 60 € je Jahr in den sonstigen Einnahmen aller Vereine, Grundbetrag je Liga so, dass der Schnitt gleich bleibt.
+- Mitglieder folgen den Fans, Mitgliederaktion +2 %.
+- Seit K25e (22.11., popolupo, vorläufig): Vorkaufsrecht der Mitglieder bei Dauerkarten, Anteil + 10 % × Mitglieder je Platz (höchstens 10 Punkte). Kein eigener Rabatt für Mitglieder.
+
 ## K26 – Stadion und Infrastruktur
 Datei: `konzepte/K26-stadion.md`
 
@@ -464,6 +499,13 @@ Datei: `konzepte/K26-stadion.md`
 - Catering +5 %, Anzeigetafel +3 % auf die Zuschauereinnahmen.
 - Instandhaltung 1 % der Bausumme im Jahr.
 - Computer-Vereine bauen noch nicht.
+
+**Mit K26b von popolupo vorläufig entschieden (22.11.2026, K26 §5.2, §12 Nr. 8 bis 11, ohne Testlauf):**
+
+- Computer-Vereine bauen zum Saisonstart, ohne Zufall und ohne Bauzeit.
+- Tribüne nach zwei Saisons mit Nachfrage über 95 %, höchstens bis 105 % der Nachfrage, nur mit Reserve.
+- Höchstens eine Anlage je Saison nach Profil, Ausbildungsvereine zuerst das Trainingsgelände.
+- Dein Verein baut nicht von selbst.
 
 **Ergänzt 10.11.:** Greenkeeper (Platzwart) im Stab (K16), Rasenqualität 0–100 je Platz mit kleiner Wirkung auf Ballbesitzstile, Verletzungsrisiko und Heimvorteil (K26 3.2a, Spielwerte).
 
@@ -480,6 +522,12 @@ Datei: `konzepte/K27-fans.md`
 - Ein neues Kennzeichen markiert Eigengewächse.
 - Der Zuschauerfaktor ist bei 60 neutral.
 - Der Vorstand hat eine tote Zone von 45 bis 75.
+
+**Mit K27b von popolupo vorläufig entschieden (22.11.2026, K27 §5.2, §12 Nr. 9, ohne Testlauf):**
+
+- Dauerkarten nur für deinen Verein, verkauft beim ersten Ligaheimspiel, Rabatt 10, 20 oder 30 % (Bereich `preise`).
+- Die Inhaber zahlen je Ligaheimspiel statt auf einmal, damit die Prognose stimmt.
+- Fanstimmung ±2 je 10 Prozentpunkte Rabatt gegenüber dem Standard.
 - Fan-Gespräch ab der C-Lizenz.
 - Dauerkarten, Gästeblock, Ultras, Tradition, Choreo, Pyro, Platzsturm und Heimvorteil kommen später.
 
@@ -509,7 +557,13 @@ Datei: `konzepte/K29-medien-presse.md`
 - Neuer Halt „Pressekonferenz“. Ohne Antwort geht der Co-Trainer.
 - Lizenz `presse` ab der C-Lizenz mit Automatik.
 - Wirkungen als Spielwerte nach der Tendenz aus K29 §5.1.
-- Das Medienklima ist ein eigener Wert und wird vorerst nur angezeigt.
+- Das Medienklima ist ein eigener Wert und wird vorerst nur angezeigt. Seit K29b (22.11., popolupo, vorläufig) wirkt es auf die Gerüchte über deinen Verein (×1,5 bei 0 bis ×0,5 bei 100), und die Medienpolitik (offen, zurückhaltend, abgeschottet) zieht es je Woche Richtung 70, 50 oder 30.
+- Seit K29c (22.11., popolupo, vorläufig): Beziehung zu den fünf Medien (−30 bis +30), Exklusivinterview alle 28 Tage (+10 für das Medium, −3 für die anderen), Gerüchte über dich wirken nach der Beziehung milder oder schärfer.
+- Seit K29d (22.11., popolupo, vorläufig): Bei schlechtem Medienklima fragen öfter Boulevard und Portal (bei 0 etwa 60 % statt einem Drittel), unter 35 eine Frage mehr. Antworten wirken auf Fans und Vorstand nach der Beziehung zum fragenden Medium und ändern sie um die halbe Wirkung aufs Klima. Beziehungen verblassen je Woche um 0,5.
+- Seit K29e (22.11., popolupo, vorläufig): Computer-Trainer haben ein festes Medienprofil (diplomatisch 40 %, Floskelkönig 25 %, Lautsprecher 20 %, Psychospieler 15 %). Lautsprecher (60 %) und Psychospieler (50 %) sticheln vor Topspielen. Kontern hebt beide Mannschaften um 1, gelassen die eigene um 1, eine unbeantwortete Stichelei kostet −1 oder −2. In der Automatik ohne Wirkung.
+- Seit K29f (22.11., popolupo, vorläufig): Interview am Spielfeldrand nach jedem deiner Spiele, freiwillig und abschaltbar, halbe Wirkung einer Pressekonferenz, ohne Zufall, nicht in der Automatik.
+- Seit K29g (22.11., popolupo, vorläufig): Pressekonferenz nach dem Urteil, wenn einer deiner Spieler mindestens 3 Spiele gesperrt wird. Kritik am Urteil wirkt wie Schiedsrichterkritik.
+- Seit K29i (22.11., popolupo, vorläufig): Montags mit 30 % ein Interview eines deiner Spieler, Diven, Partylöwen und Hitzköpfe dreimal so oft und mit mehr Fettnäpfchen. Maulkorb: keine Interviews, Mitteilsame −1 Stimmung je Woche. Nicht in der Automatik.
 - Zum Start 54 Fragen, 30 Antworten und 22 Schlagzeilen.
 
 **Mit U17b von mir vorläufig entschieden (20.11.2026, K29 §12 Nr. 15 bis 19):**
@@ -584,15 +638,16 @@ Bei der Umsetzung (U9b, 11.11.), ausführlich in K32 §12 Nr. 4–20:
 17. **Nationen-Tabelle** mit 148 Nationen und dem Rang vom 7. Oktober 2026, nicht alle Länder der Welt.
 18. **Poolspieler schlank gespeichert** (ohne Sperren, Karten, berechnete Eigenschaften), Spielstand unter 3 MB.
 19. **Lernstufen:** Auslandsmarkt ansehen frei, im Ausland beobachten und kaufen ab B, Suchauftrag Ausland ab A.
-20. **Noch nicht gebaut:** Handel der Computer-Vereine mit dem Ausland (U11), Integration, Deutschkenntnisse, Heimweh, Landsleute, Länderspiele, Ereignisse, Europapokal.
+20. **Noch nicht gebaut:** Handel der Computer-Vereine mit dem Ausland (U11), Integration, Deutschkenntnisse, Heimweh, Landsleute, Länderspiele, Ereignisse, Europapokal. **Stand 25.11.2026:** Gebaut sind Integration, Deutschkenntnisse und Landsleute (K03d), Heimweh (K03e), Länderspiele (K13f, Schalter aus), die Ereignisse (U18b) und der Europapokal (U19a bis U19e). Offen bleibt der Handel der Computer-Vereine mit dem Ausland. Einzelheiten in K32 Nr. 20.
 
 Bei der Umsetzung (U18a, 20.11.), ausführlich in K32 §12 Nr. 21–25:
 21. **Erfundene Cheftrainer** für alle Computer-Vereine, keine echten.
 22. **Nachfolger ohne Zufall** nach dem Ruf, der zum Ansehen passt.
 23. **Ruf der Computer-Trainer** zum Saisonende nach Platz gegen Erwartung, Meister und Abstieg.
-24. **Ex-Spieler als Trainer** mit 15 % ab 150 Ligaspielen, nur erfundene Spieler.
+24. **Ex-Spieler als Trainer** mit 15 % ab 150 Ligaspielen, nur erfundene Spieler. Seit K32c (22.11., popolupo, vorläufig) auch im Stab: ab 100 Ligaspielen mit 25 % als vereinsloser Mitarbeiter, hier auch echte Spieler, weil Mitarbeiter nicht in Pressekonferenzen reden.
 25. **Pool mit mindestens 12 freien Trainern.**
 26. **Ereignisse aus §8 als Ereigniskarten** (U18b): Altstar, Abschiedsspiel, Heimweh, England ruft. Das Karriereende nach §5.1 wartet auf einen Testlauf.
+27. **Karriereende nach §5.1 gebaut ohne Testlauf** (22.11., popolupo): Stützstellen linear, Ligaschnitt aus den Kaderstärken, Vereinslose gegen die 3. Liga, „zu schwach“ vor „Stammspieler“, eigener Strom je Spieler, Auslandspool ohne Niveau.
 
 ## K34 – Statistik und Historie
 Datei: `konzepte/K34-statistik.md`
@@ -764,9 +819,25 @@ Im Einzelnen in K28 §5.6 und §12 Nr. 5 bis 12.
 
 Im Einzelnen in K28 §5.7 und §12 Nr. 13 bis 17.
 
-- **Nebenziele:** Der Vorstand setzt eins, ein ehrgeiziger Präsident zwei. Zur Wahl stehen Pokalrunde, Einsätze für Spieler bis 21 und eine Saison ohne Verlust. Das Profil deines Vereins bestimmt, welches zuerst kommt. Sie wirken auf das Vertrauen, während der Saison und zum Saisonende.
+- **Nebenziele:** Der Vorstand setzt eins, ein ehrgeiziger Präsident zwei. Zur Wahl stehen Pokalrunde, Einsätze für Spieler bis 21 und eine Saison ohne Verlust (seit U19c auch der Europapokal, seit U12o Gehälter im Rahmen und der Heimschnitt der Vorsaison; berichtigt nach Prüfung FR5). Das Profil deines Vereins bestimmt, welches zuerst kommt. Sie wirken auf das Vertrauen, während der Saison und zum Saisonende.
 - **Rücktritt:** jederzeit während der Saison, Ruf −5 statt −8 bei einer Entlassung, danach Jobangebote. Grundlizenz.
-- **Zielgespräch** mit Tiefstapeln und Hochpokern wartet auf Budgets und Prämien (K23).
+- **Zielgespräch** mit Tiefstapeln und Hochpokern wartet auf Budgets und Prämien (K23). Gebaut am 22.11. in U12e (nächster Abschnitt).
+
+## K28 Vorstand, U12e Zielgespräch (22.11.), vorläufig von popolupo, gebaut ohne Testlauf
+
+Im Einzelnen in K28 §5.8 und §12 Nr. 18 bis 22.
+
+- **Ablauf:** Vorschlag mit dem Saisonziel, verhandeln bis zum nächsten eigenen Ligaspiel, eine Entscheidung je Saison, ohne Entscheidung gilt der Vorschlag.
+- **Hochpokern** (1 bis 2 Plätze): immer angenommen, Transferbudget +10 % je Platz, Ruf +2 je Platz, wenn das Ziel erreicht ist.
+- **Tiefstapeln:** Zusage nach Vertrauen, Ruf, Plätzen und Ehrgeiz des Präsidenten, dann Budget −15 % je Platz und weniger Ruf. Abgelehnt: Vertrauen −3.
+- **Transferbudget als weiche Grenze:** darüber kaufen kostet Vertrauen, sperrt aber nicht.
+- **Prämie als Ruf,** weil es kein Trainergehalt gibt. Grundlizenz, ohne Automatik.
+- **Seit U12f (K28 §5.9, §12 Nr. 23, 24):** Zwischenbilanz zur Hälfte der eigenen Ligaspiele. Der Vorstand hebt bei 4 Plätzen Vorsprung um einen Platz an, bei 4 Plätzen Rückstand kannst du eine Senkung beantragen (wirkt wie Tiefstapeln). Seit U12k senkt ein geduldiger Präsident ab 6 Plätzen Rückstand von sich aus, ohne Abzug beim Budget.
+- **Seit U12g (K28 §5.10, §12 Nr. 25, 26):** Trainervertrag nur als Statistik: Gehalt nach Liga, Ansehen und Ruf (Bayern etwa 7 Mio., 3. Liga etwa 0,14 Mio. je Saison, geschätzt), Laufzeit nach der Geduld des Präsidenten, Verlängerung über Vertrauen 55, sonst ein Jahr Bewährung, Abfindung Restgehalt × 0,5. Kein Abschied bei Vertragsende.
+- **Seit U12h (K28 §5.11):** Dein Ruf als Trainer wirkt auf das Interesse von Spielern (+0,2 je Punkt über 30), auf das Ruf-Gefälle in der Kabine (statt der Trainerjahre) und auf die Glaubwürdigkeit beim neuen Verein (60 + 0,3 je Punkt).
+- **Seit U12i (K28 §5.12, §12 Nr. 27):** Präsidentenwahl auf der Mitgliederversammlung alle 3 oder 4 Jahre. Der Präsident bleibt mit 65 % (± Punkte, Auf- und Abstieg, Fanstimmung). Ein neuer bringt neue Werte, dein Vertrauen rückt zur Hälfte Richtung 50.
+- **Seit U12j (K28 §5.13, §12 Nr. 28):** Jobangebot während der Saison als Karte ab Ruf 55 von einem Verein mit mindestens 8 mehr Ansehen (höchstens Ruf + 40). Wechseln nur auf deine Wahl, der alte Verein bekommt ein Jahresgehalt als Ablöse.
+- **Seit U12l (K28 §5.14):** Budgetgespräch einmal je Saison: Zusage nach Vertrauen, Ruf und Sparsamkeit des Präsidenten (bei wenig Glaubwürdigkeit halb so oft), dann Transferbudget +20 % bis Saisonende; abgelehnt Vertrauen −3.
 
 ## K17 Beziehungen, U12c (20.11.), vorläufig von mir, gebaut ohne Testlauf
 
@@ -786,6 +857,9 @@ Im Einzelnen in K30 §5.5 und §12 Nr. 4 bis 9.
 - **Entscheidungen** halten an und stehen im Büro. Ohne Antwort wählt der Co-Trainer vor dem Anpfiff die Voreinstellung. Wer will, schaltet die Automatik ein (neuer Bereich `ereignisse`, Grundlizenz).
 - **Erste fünf Karten:** Der Präsident mischt sich ein, Rückendeckung vom Vorstand, Versöhnung, ein Spieler heiratet, Geheimtipp.
 - **Noch nicht:** Ketten, verzögerte Folgen, Meldungsdichte, Chronik, Skandale.
+- **Seit K23f (22.11., popolupo, vorläufig):** Geldbeträge der Karten gelten für die 3. Liga, mal 2 in der 2. Liga, mal 4 in der 1. Liga. Texte mit Platzhalter `{geld:Grundwert}`.
+- **Seit K30c (22.11., popolupo, vorläufig):** Ketten (Folgekarten nach einigen Tagen), erste Kette „Der lachende Dritte“ (K30 §5.6).
+- **Seit K30d (22.11., popolupo, vorläufig, bitte bestätigen):** Anlasskarten mit eigener Chance je Woche statt der Seltenheitsstufe (K30 §5.5 Nr. 3, K37 §12 Nr. 21). Ohne diese Regel kämen Karten zu seltenen Anlässen (Europapokal, Grippewelle, lange Reha) praktisch nie. In K37 stand die Frage als „braucht deine Entscheidung“. Ich habe sie nach deiner Vorgabe für den Tag selbst beantwortet.
 
 ## K37 – Europapokal (Entwurf 21.11.2026, popolupo)
 Datei: `konzepte/K37-europapokal.md`
@@ -804,6 +878,7 @@ Datei: `konzepte/K37-europapokal.md`
 - Kein neuer Lizenz-Bereich in U19a und U19b.
 - Mit U19a (21.11.): Auslandsvereine spielen in der Engine vorerst als Block mit Teamstärke (volle Kader in U19c). Die Auslosung folgt einem festen Bauplan mit gezogenen Plätzen im Topf. Gelbsperre im Europapokal nach der 3., 5., 7. und 9. Gelben.
 - Mit U19b (21.11.): Vorstand +1,5 je gewonnenem Duell und +10 beim Titel, kein Abzug beim Ausscheiden. Startgeld und Wertsäule mit der Auslosung, Rangprämie nach der Ligaphase, Rundenprämien beim Erreichen.
+- Mit U19d1 (22.11.): Kaderliste der UEFA nach dem Reglement, lokal ausgebildet als Näherung (eigene Jugend, sonst Deutsche), Bereich `aufstellung`, ohne Meldung meldet der Verein zur Frist. Stärke der Auslandsvereine 0,93 (T5.3).
 - Mit U19c (21.11.): Länderwertung nur aus der laufenden Saison, die besten zwei Länder bekommen einen Platz mehr in der Champions League. Wechselinteresse +6/+3/+1. Nebenziel „Europapokal“ (K.-o.-Play-offs, ab Ansehen 85 Achtelfinale).
 
 **Noch zu recherchieren:** amtliche Rangprämie der Conference League (vorläufig geschätzt), Zulassungsliste 2026/27 für die Länderkontingente, Termine der Conference-League-Ligaphase 2026/27. Erledigt am 21.11.: Rangprämie der Europa League, deutsche Starter 2026/27 (Bayern holte das Double, Sechster und Siebter rücken nach).
@@ -815,3 +890,40 @@ Im Einzelnen in `konzepte/K40-usability.md` (neu, aus dem Vorschlag in PLAN §4)
 - **Eigenes Testskript** `tests/ui-zugang.js`: axe-core auf allen Ansichten, Spielerkarte und Menü, nur schwere Verstöße zählen. Dazu Tastatur: „Tag beenden“ mit Tab und Enter, Fokus sichtbar.
 - **Kleine Änderung im Spiel:** Escape schließt Fenster mit Schließen-Knopf, beim Öffnen springt der Fokus ins Fenster (nicht auf die erste Option).
 - **axe-core kommt aus der Installation des Testers,** wie Playwright.
+
+## Welle 5: Look, Artwork, Audio, Name (25.11.), vorläufig von popolupo, nur Konzepte
+
+Neu ausgerichtet nach deiner Vorgabe vom 25.11. Im Einzelnen in K35b §13, K39, K41 und K42, Überblick in PLAN §4 „Welle 5“.
+
+- **Look:** Kacheln als Grundform (groß, breit, klein), Büro als Kachelfläche. Palette A „Flutlichtnacht“ als dunkles Standardthema, C „Tageslicht“ als helles Thema, B „Rasen“ entfällt. Kontrast nach WCAG AA, Gut und Schlecht immer mit Symbol.
+- **Schrift:** eigene Anzeigeschrift „Flutlicht Display“ (aus Rasterformen per eigenem Skript erzeugt), Fließtext in einer freien OFL-Schrift als Datei.
+- **Artwork:** keine Videodateien, Sequenzen als Animation. Wappen, Gesichter und Symbole als SVG von mir. Echte Wappen nicht mitliefern, nur „Eigene Wappen laden“ im eigenen Browser.
+- **Audio:** Ton an und leise, Musik aus. Oberflächentöne mit Web Audio erzeugt, Atmosphäre aus CC0, keine Stimme, keine echten Fangesänge.
+- **Name:** bleibt „Flutlicht Manager“, Leitspruch „Bratwurst. Meisterschale. Herzblut.“ (BMH).
+
+**Für dich:** KI-Bilder über Hugging Face nutzen (Konto und MCP-Server nötig)? Musik ja oder nein? Welcher BMH-Leitspruch?
+
+## K43 Schwierigkeit (26.11.), vorläufig von popolupo, gebaut ohne Testlauf
+
+Nach deiner Vorgabe vom 26.11. Im Einzelnen in `konzepte/K43-schwierigkeit.md`, mit Quellen.
+
+- **Drei Stufen bleiben** (Leicht, Normal, Schwer), Wahl am Spielstart. „Normal“ verhält sich wie bisher, alte Spielstände gelten als „Normal“.
+- **Leicht:**
+  - Sponsorangebote ×1,2;
+  - böse Infokarten kommen nicht;
+  - +15 Punkte Glück bei Karten;
+  - keine Champions League (Europa League statt dessen, auch in der ersten Saison);
+  - ein Gönner statt Insolvenz (kein Punktabzug, Vertrauen −10).
+- **Schwer:** Sponsorangebote ×0,85, böse Infokarten ×1,5 so oft, −10 Punkte Glück bei Karten.
+- **Grundsatz neu** (K02 §5.4): Spielerwerte und Spielstärke gleich, gleich viele Würfe, nur einige Grenzen und das Geld verschieben sich. Kein Gummiband.
+- **Nur Konzept:**
+  - Folgen von Titeln in Folge (Gehälter, Abwerben, Erwartungen), immer mit Meldung;
+  - ~~Stufe „Mitwachsend“, die nur mit Titeln steigt, nicht mit Aufstiegen.~~ Seit 26.11. gebaut (siehe unten).
+
+**Entschieden am 26.11. (vorläufig, von mir, weil die Frage offen blieb):** „Mitwachsend“ ist gebaut, als vierte Wahl beim Spielstart (K43 §5).
+
+**Neu gefasst nach deiner Rückmeldung vom 26.11. abends** (K43 §5):
+- Erfolg zählt in jeder Liga und wird am eigenen Anspruch gemessen: Platz gegen Ziel, Meister, Vorsprung, Aufstieg, Pokal, Europapokal, Abstieg.
+- Die Anpassung wirkt in beide Richtungen und nur leicht: Gehaltsforderungen ±6 %, Vorstand ±3 Punkte, Saisonziel ±1 Platz, mehr Abwerbeversuche nach Erfolg, mehr Glück bei Karten und ein Partner mit Geld in einer Durststrecke.
+- Grundlage ist Normal. Spielstärke, Würfel und Spielerwerte bleiben unberührt.
+- Die Stärke der Hebel wird erst nach Messung im Langlauf und einer Runde mit Menschen eingestellt.

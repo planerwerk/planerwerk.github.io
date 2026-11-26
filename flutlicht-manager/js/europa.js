@@ -30,7 +30,7 @@ function euStaerke(id){const k=S.seed+'/'+S.season+'/'+S.tag+'/'+(S.ausland?S.au
 const euTorschuetzen=id=>avKader(id).filter(p=>p.pos!=='TW').flatMap(p=>p.pos==='ST'?[p.n,p.n]:[p.n]);
 // Ausland gegen Ausland ohne Engine (K37 §5.2): erwartete Tore aus dem Verhältnis der Stärken, im K.-o.-Spiel Verlängerung und Elfmeterschießen
 // Stärke für die Kurzrechnung: Auslandsverein wie oben, deutscher Verein (nur beim Nachholen) mit seiner Kaderstärke
-const euSt=id=>euDe(id)?teamLevel(id):euStaerke(id);
+const euSt=id=>euDe(id)?teamLevel(id)*REU.staerke.faktor:euStaerke(id);
 function euKurz(h,a,o){const K=REU.kurz,q=euSt(h)*(o.neutral?1:K.heim)/euSt(a),xh=clamp(K.tore*Math.pow(q,K.exp),0.2,5),xa=clamp(K.tore*Math.pow(1/q,K.exp),0.1,5);
   let hg=poisson(xh),ag=poisson(xa),pen=null;const agg=o.agg||[0,0],gleich=()=>hg+agg[0]===ag+agg[1];
   if(o.ko&&gleich()){hg+=poisson(xh*K.verl);ag+=poisson(xa*K.verl);if(gleich())pen=shootout();}
@@ -92,6 +92,19 @@ function euDeutsche(sm,fuenf){const out={cl:[],el:[],ecl:[]};
 function euTitelDeutsch(de,vor){if(!vor)return;const rang=w=>EU_WB.indexOf(w);
   EU_WB.forEach(wb=>{const id=vor[wb];if(id==null||!euDe(id))return;const ziel=REU.wb[wb].titel,jetzt=EU_WB.find(w=>de[w].includes(id));
     if(jetzt&&rang(jetzt)<=rang(ziel))return;if(jetzt)de[jetzt]=de[jetzt].filter(x=>x!==id);de[ziel].push(id);});}
+// Schwierigkeit (K43, 26.11., vorläufig): Auf „Leicht“ spielt dein Verein nicht in der Champions League. Sein Platz geht an den ersten deutschen Verein aus der Europa League,
+// dein Verein spielt dafür Europa League. Die Zahl der Plätze bleibt gleich, nur die Zuordnung tauscht. Ohne Zufall.
+function euOhneClAufLeicht(dt){if(typeof S==='undefined'||!S||!stufe().ohneCL||!dt.cl.includes(S.my))return;const e=dt.el.find(x=>x!==S.my);dt.cl=dt.cl.filter(x=>x!==S.my);
+  if(e!=null){dt.el=dt.el.filter(x=>x!==e);dt.cl.push(e);}dt.el=[S.my,...dt.el.filter(x=>x!==S.my)];euOhneClMeldung(e);}
+// Meldung mit Grund (Prüfung GD4)
+function euOhneClMeldung(e){if(S.news)news(`Schwierigkeit „Leicht“: Die Champions League gibt es erst ab „Normal“. Dein Verein spielt diese Saison Europa League${e!=null?`, sein Platz in der Champions League geht an ${tn(e)}`:''}.`,'');}
+// Erste Saison (echte Starter 2026/27): Die Welt steht schon, bevor du einen Verein wählst. stufeAnwenden tauscht deshalb hier, solange noch nicht ausgelost ist.
+// Ebenso beim Jobwechsel zu einem Verein in der Champions League vor der Auslosung (takeJob, Prüfung GD2).
+function euOhneClStart(){if(!euAktiv()||!stufe().ohneCL||S.eu.cl.lp||S.eu.el.lp)return;const cl=S.eu.cl.t,el=S.eu.el.t;if(!cl.includes(S.my))return;
+  const e=el.find(x=>x!==S.my&&euDe(x))??el.find(x=>x!==S.my);S.eu.cl.t=cl.filter(x=>x!==S.my);S.eu.el.t=[S.my,...el.filter(x=>x!==S.my&&x!==e)];
+  if(e!=null)S.eu.cl.t=[...S.eu.cl.t.filter(euDe),e,...S.eu.cl.t.filter(x=>!euDe(x))];euOhneClMeldung(e);}
+// Nach der Auslosung lässt sich nicht mehr tauschen: Auf Leicht bietet dann kein Verein aus der Champions League dir einen Job an (mkJobs, Jobangebot, Rettung; Prüfung GD2)
+const euClFest=id=>!!stufe().ohneCL&&S.phase==='play'&&euAktiv()&&S.eu.cl.t.includes(id)&&!!(S.eu.cl.lp||S.eu.el.lp); // nach dem Saisonende und in der Sommerpause entscheidet europaAnlegen neu (Hinweis aus Prüfung GF)
 // Auslandsvereine: je Land nach Ansehen plus Zufall, zuerst die Champions League. Fehlen Plätze, die Nächsten aus allen Ländern. Titelverteidiger sind fest dabei.
 function euAuslandWaehlen(bedarf,vor,plus=[]){const Z=REU.zufall,sc=(S.ausland?S.ausland.v:[]).map((v,i)=>({id:AV0+i,land:v.land,w:v.rep+(R()*2-1)*Z,fest:false}));
   const used=new Set(),out={cl:[],el:[],ecl:[]},nimm=(wb,x)=>{used.add(x.id);out[wb].push(x);};
@@ -104,7 +117,7 @@ function euAuslandWaehlen(bedarf,vor,plus=[]){const Z=REU.zufall,sc=(S.ausland?S
 // Saisonwechsel (saison.js newSeasonLauf) und neue Welt (welt.js buildWorld, ohne sm): Teilnehmer aller drei Wettbewerbe, eigener Strom 'europa'
 function europaAnlegen(sm){const vor=S.eu&&S.eu.titel?S.eu.titel:null,wv=sm&&S.eu?euLaenderwertung(S.eu).map(x=>({land:x.land,w:x.w})):[],plus=wv.slice(0,REU.wertung.plaetze).map(x=>x.land);
   S.eu=null;if(!S.ausland||!S.ausland.v.length)return;
-  mitStrom(strom('europa',S.season),()=>{const dt=euDeutsche(sm,plus.includes('GER'));euTitelDeutsch(dt,vor);
+  mitStrom(strom('europa',S.season),()=>{const dt=euDeutsche(sm,plus.includes('GER'));euTitelDeutsch(dt,vor);euOhneClAufLeicht(dt);
     const a=euAuslandWaehlen({cl:36-dt.cl.length,el:36-dt.el.length,ecl:36-dt.ecl.length},vor,plus);
     S.eu={s:S.season,v:1,vor,wv,plus,titel:{cl:null,el:null,ecl:null},cl:{t:[...dt.cl,...a.cl],lp:null,ko:{}},el:{t:[...dt.el,...a.el],lp:null,ko:{}},ecl:{t:a.ecl.slice(),lp:null,ko:{},q:null}};
     // Der deutsche Starter der Conference League spielt die Play-off-Runde der Qualifikation gegen einen der besten übrigen Auslandsvereine (K37 §4.2)
@@ -213,6 +226,18 @@ function euMeineSpiele(){const out=[];if(!euAktiv())return out;const P=euPlan(),
 function euLosHeute(d){if(!euAktiv()||S.phase!=='play')return false;const P=euPlan();
   return EU_WB.some(wb=>{const W=S.eu[wb],p=P[wb];if(d===p.los)return W.t.includes(S.my)||(!!W.q&&W.q[0]===S.my&&euSieger(W.q)===S.my);
     if(d!==p.losPo&&d!==p.losAf)return false;const rang=W.lp?euTabelle(wb).findIndex(r=>r.id===S.my):-1;if(d===p.losPo)return rang>=8&&rang<24;if(d===p.losAf)return(rang>=0&&rang<8)||(W.ko.po||[]).some(k=>euSieger(k)===S.my);return false;});}
+// Alle Europapokal-Tage eines Vereins in dieser Saison (wettbewerbe.js spieltageVon, damit eine Verlegung nicht neben einem anderen Spiel landet, T5.2)
+function euTageVon(tid){const out=[];if(!euAktiv())return out;const P=euPlan();
+  EU_WB.forEach(wb=>{const W=S.eu[wb],p=P[wb],duell=(k,i,tage)=>{if(k[0]===tid||k[1]===tid)out.push(tage[0][i%2],tage[1][i%2]);};
+    if(W.q)duell(W.q,0,p.quali);(W.lp||[]).forEach(m=>{if(m[0]===tid||m[1]===tid)out.push(m[3]);});
+    ['po','af','vf','hf'].forEach(r=>(W.ko[r]||[]).forEach((k,i)=>duell(k,i,p[r])));(W.ko.fin||[]).forEach(k=>{if(k[0]===tid||k[1]===tid)out.push(p.fin);});});
+  return out;}
+// Sicherheitsnetz für die 72 Stunden (Lauf 12): Jeden Tag die Europapokal-Termine der deutschen Vereine in 5 bis 12 Tagen prüfen und ein zu nahes Ligaspiel noch
+// rechtzeitig verlegen (ligaVerlegen ist idempotent). Nötig, weil Pokal, Nachziehen und Auslosungen in wechselnder Reihenfolge verlegen: Lauf 12 fand Liga am Sonntag
+// vor Europapokal am Dienstag. Ohne Zufall. Nur auf einen freien Tag, frühestens übermorgen, ohne Notregel (Prüfung GI1, GI2): Spielt ein Verein dienstags Champions League
+// und sein Ligagegner donnerstags davor und danach Europapokal, gibt es keinen Tag mit 72 Stunden für beide. Dann bleibt der Termin, wie ihn die erste Verlegung gesetzt hat.
+function euPlanPruefen(d){if(!euAktiv()||!S.teams)return;const M=RWB.spielplan.mindestTage,von=d+M+2,bis=d+12;
+  S.teams.forEach(t=>{if(!t||t.lg>3||!aktiv(t))return;euTageVon(t.id).filter(x=>x>=von&&x<=bis).forEach(x=>ligaVerlegen(x,new Set([t.id]),'des Europapokals',{nurFrei:true,ab:d+2}));});}
 // 72 Stunden (K13 §3.5): Ligaspiele deutscher Teilnehmer neben einem Europapokalspiel verlegen
 function euVerlegen(wb,runde){const W=S.eu[wb],P=euPlan()[wb],plan=[];
   if(runde==='lp')(W.lp||[]).forEach(m=>plan.push([m[3],[m[0],m[1]]]));
@@ -225,6 +250,7 @@ function euVerlegen(wb,runde){const W=S.eu[wb],P=euPlan()[wb],plan=[];
 function euTag(d){if(!euAktiv()||S.phase!=='play')return;const P=euPlan();
   EU_WB.forEach(wb=>{const W=S.eu[wb],p=P[wb];
     mitStrom(strom('eunach',S.season,d,wb),()=>euNachholen(wb,d)); // Sicherheitsnetz: nichts bleibt ungespielt liegen
+    if(wb==='cl')euListeTag(d); // Kaderliste der UEFA (U19d1), einmal für alle drei Wettbewerbe
     if(d>=p.los&&!W.lp)mitStrom(strom('eulos',S.season,wb,'lp'),()=>{if(W.q){euDuellErgaenzen(W.q);const s=euSieger(W.q);if(s!=null&&!W.t.includes(s))W.t.push(s);}euLigaphaseLosen(wb);});
     if(d>=p.losPo&&W.lp&&W.lp.length&&!W.ko.po&&euLigaFertig(wb))mitStrom(strom('eulos',S.season,wb,'po'),()=>euPlayoffsLosen(wb));
     if(d>=p.losAf&&W.ko.po&&!W.ko.af&&W.ko.po.every(k=>euSieger(k)!=null))mitStrom(strom('eulos',S.season,wb,'af'),()=>euAchtelfinaleLosen(wb));});}
@@ -258,10 +284,55 @@ function euRundeFertig(e){const W=S.eu[e.wb];
   if(e.runde==='fin'){const s=euSieger(L[0]);S.eu.titel[e.wb]=s;news(`${tn(s)} gewinnt die ${euName(e.wb)}!`,s===S.my||euDe(s)?'good':'');euZahlen(s,euGeldWert(e.wb,'titel'),`Siegprämie der ${euName(e.wb)}`);if(s===S.my)S.trust+=REU.vertrauen.titel;return;}
   const n=EU_KO[EU_KO.indexOf(e.runde)+1];if(!W.ko[n])euNaechsteRunde(e.wb,n);}
 
+// ---------- Kaderliste der UEFA (K37 §5.6, U19d1) ----------
+// S.eu.liste[Verein] = Spieler-Nummern auf Liste A, S.eu.listeLp[Verein] = Stand zur Frist der Ligaphase (Grundlage der Nachmeldung).
+// Lokal ausgebildet als Näherung: vereinsausgebildet = aus der eigenen Jugend (p.ej), verbandsausgebildet = übrige Spieler mit deutscher Nationalität.
+// Spieler der Startkader ohne Wechsel (kein p.seit), mit deutscher Nationalität und zum Spielstart höchstens 21 Jahre alt, gelten als vereinsausgebildet (Näherung, sonst hätte
+// kein Verein in den ersten Jahren mehr als 21 Spieler auf Liste A, Konsistenzprüfung CM6)
+const euVereinsAus=(p,tid)=>p.ej===tid||(p.team===tid&&p.seit==null&&p.nat===RW.nation.heimat&&p.age-(S.season-RW.startSaison)<=21);
+const euVerbandsAus=(p,tid)=>!euVereinsAus(p,tid)&&p.nat===RW.nation.heimat;
+const euListeB=p=>p.age<=REU.liste.bBis&&(p.ej===p.team||(p.seit!=null&&absTag(S.tag)-p.seit>=REU.liste.bTage));
+function euListeStand(ids,tid){const L=REU.liste,ps=ids.map(id=>PIX.get(id)).filter(p=>p&&p.team===tid),c=ps.filter(p=>euVereinsAus(p,tid)).length,a=ps.filter(p=>euVerbandsAus(p,tid)).length,
+    lokal=Math.min(L.lokal,c+Math.min(a,L.verband)),tw=ps.filter(p=>p.pos==='TW').length,twMoeglich=Math.min(L.tw,squad(tid).filter(p=>p.pos==='TW').length);
+  return{n:ps.length,lokal,tw,c,a,max:L.max-L.lokal+lokal,ok:ps.length<=L.max&&ps.length-lokal<=L.max-L.lokal&&tw>=twMoeglich};}
+// Automatische Meldung: zuerst zwei Torhüter, dann die Stärksten, solange die Regeln halten (Liste B zählt nicht mit)
+function euListeAuto(tid){const L=REU.liste,sq=squad(tid).filter(p=>!euListeB(p)).sort((x,y)=>y.str-x.str),A=[];
+  const passt=id=>{const r=euListeStand([...A,id],tid);return r.n<=L.max&&r.n-r.lokal<=L.max-L.lokal;};
+  sq.filter(p=>p.pos==='TW').slice(0,L.tw).forEach(p=>A.push(p.id));
+  if(A.length<L.tw)squad(tid).filter(p=>p.pos==='TW'&&euListeB(p)).sort((x,y)=>y.str-x.str).slice(0,L.tw-A.length).forEach(p=>A.push(p.id)); // Torhüter von Liste B, wenn sonst keine zwei da sind
+  sq.forEach(p=>{if(!A.includes(p.id)&&passt(p.id))A.push(p.id);});return A;}
+// Fristen: Meldung bis zum Tag vor dem 1. Spieltag, Nachmeldung nach dem letzten Spieltag der Ligaphase bis zum Tag vor den K.-o.-Play-offs
+const euFristen=wb=>{const p=euPlan()[wb];return{lp:p.liga[0][0]-1,ab:p.liga[p.liga.length-1][1]+1,ko:p.po[0][0]-1};};
+function euListePhase(wb){const F=euFristen(wb),d=S.tag;return d<=F.lp?'frei':d>=F.ab&&d<=F.ko?'nach':d>F.ko?'ko':'zu';} // zu: Ligaphase, ko: nach der Nachmeldung
+// Spielberechtigt im Europapokal (disziplin.js gesperrt): ohne Liste alle (Qualifikation, vor der Frist), sonst Liste A oder Liste B
+function euSpielberechtigt(p){if(!euAktiv()||!S.eu.liste)return true;const l=S.eu.liste[p.team];return!l||l.includes(p.id)||euListeB(p);}
+// Täglich (euTag): Zur Frist melden alle deutschen Teilnehmer ohne gültige Liste automatisch, dein Verein mit Automatik immer (gleicher Tag, Gleichschritt).
+// Zur Nachmeldung behalten Computer-Vereine ihre Liste und nehmen bis zu drei neue Spieler aus der automatischen Meldung dazu.
+function euListeTag(d){EU_WB.forEach(wb=>{const W=S.eu[wb],F=euFristen(wb),de=W.t.filter(euDe);if(!de.length||(d!==F.lp&&d!==F.ko))return;const Li=S.eu.liste||(S.eu.liste={});
+  if(d===F.lp)de.forEach(id=>{const mein=id===S.my,auto=mein&&autoB('aufstellung');if(!Li[id]||auto||!euListeStand(Li[id],id).ok){Li[id]=euListeAuto(id);
+      if(mein)news(`Kaderliste ${euName(wb)}: ${auto?'Der Co-Trainer':'Der Verein'} meldet ${Li[id].length} Spieler für Liste A.`,'');}
+    (S.eu.listeLp||(S.eu.listeLp={}))[id]=Li[id].slice();});
+  if(d===F.ko)de.forEach(id=>{if(id===S.my&&!autoB('aufstellung'))return;if(!Li[id]){Li[id]=euListeAuto(id);return;}const alt=Li[id];let neu=0;Li[id]=euListeAuto(id).filter(x=>alt.includes(x)||(neu<REU.liste.nach&&++neu));});});}
+// Melden und Streichen (Karte im Kader). Beim ersten Mal beginnt die Liste mit dem Vorschlag der automatischen Meldung.
+function euListeUmschalten(id){if(!darf('aufstellung'))return;const wb=euMeinWb();if(!wb||!S.eu[wb].t.includes(S.my))return;const ph=euListePhase(wb),L=REU.liste;
+  if(ph==='zu'||ph==='ko'){toast(ph==='zu'?'Die Kaderliste ist fest, bis zur Nachmeldung vor den K.-o.-Play-offs.':'Die Kaderliste ist fest bis zum Ende des Wettbewerbs.');return;}
+  const Li=S.eu.liste||(S.eu.liste={}),l=Li[S.my]||(Li[S.my]=euListeAuto(S.my)),i=l.indexOf(id);
+  if(i>=0)l.splice(i,1);else{const p=PIX.get(id);if(!p||p.team!==S.my)return;if(euListeB(p)){toast(`${p.n} steht auf Liste B und braucht keine Meldung.`);return;}
+    if(ph==='nach'){const lp=(S.eu.listeLp||{})[S.my]||[];if(l.filter(x=>!lp.includes(x)).length>=L.nach){toast(`Zur K.-o.-Phase gehen höchstens ${L.nach} neue Spieler.`);return;}}
+    const r=euListeStand([...l,id],S.my);if(r.n>L.max||r.n-r.lokal>L.max-L.lokal){toast(`Kein Platz: höchstens ${L.max} Spieler, davon ${L.lokal} Plätze für lokal Ausgebildete.`);return;}l.push(id);}
+  save();render();}
+// Karte im Kader
+function euListeKarte(){const wb=euMeinWb();if(!wb||!S.eu[wb].t.includes(S.my))return'';const ph=euListePhase(wb),F=euFristen(wb),l=S.eu.liste&&S.eu.liste[S.my],ids=l||euListeAuto(S.my),r=euListeStand(ids,S.my),sq=squad(S.my).sort((a,b)=>b.str-a.str);
+  const knopf=p=>euListeB(p)?'<span class="tag">Liste B</span>':`<button onclick="euListeUmschalten(${p.id})"${lzAus('aufstellung')}${ph==='zu'||ph==='ko'?' disabled':''}>${ids.includes(p.id)?'gemeldet, streichen':'melden'}</button>`;
+  const frist=ph==='frei'?`Meldung bis ${datumKurz(F.lp)}.`:ph==='nach'?`Nachmeldung bis ${datumKurz(F.ko)}, höchstens ${REU.liste.nach} neue Spieler.`:ph==='ko'?'Fest bis zum Ende des Wettbewerbs.':`Fest, Nachmeldung ab ${datumKurz(F.ab)}.`;
+  return`<div class="card"><h3>Kaderliste ${esc(euName(wb))}</h3>${lzHinweis('aufstellung')}<p>${l?'Gemeldet':'Vorschlag'}: <b>${r.n}</b> von höchstens ${r.max} auf Liste A, davon ${r.tw} Torhüter, ${r.lokal} lokal Ausgebildete angerechnet (${r.c} aus der eigenen Jugend, ${r.a} aus Deutschland, davon höchstens ${REU.liste.verband}). ${frist}</p>
+    <div class="tw"><table><tbody>${sq.map(p=>`<tr><td><span class="pos ${p.pos}">${p.pos}</span></td><td>${esc(p.n)}${euVereinsAus(p,S.my)?' <span class="dim">(eigene Jugend)</span>':euVerbandsAus(p,S.my)?' <span class="dim">(Deutschland)</span>':''}</td><td class="num">${Math.round(p.str)}</td><td>${knopf(p)}</td></tr>`).join('')}</tbody></table></div>
+    <p class="dim">Wer nicht gemeldet ist, darf im Europapokal nicht spielen. Liste B (bis ${REU.liste.bBis} Jahre, aus der eigenen Jugend oder seit zwei Jahren im Verein) braucht keine Meldung. Ohne deine Meldung meldet der Verein zur Frist.</p></div>`;}
+
 // ---------- Ansicht ----------
 // Karte für dein nächstes Europapokalspiel (ansichten.js spielKarte)
 function euSpielKarte(e,f,wann){const home=f[0]===S.my,oid=home?f[1]:f[0],v=avVon(oid),land=v?(nation(v.land)||{name:v.land}).name:null;
-  return`<div class="vs"><span>${wann} · ${esc(euSpielName(e))} · ${e.runde==='fin'?'Finale auf neutralem Platz':home?'Heimspiel':'Auswärtsspiel'}</span><b>${esc(tn(oid))}</b><span>${v?`${esc(land)} · Teamstärke ${de(euStaerke(oid),1)}`:`${S.teams[oid].lg}. Liga · Kaderstärke ${teamLevel(oid).toFixed(1)}`} (deine: ${teamLevel(S.my).toFixed(1)})${e.runde!=='lp'&&(e.leg===1||e.runde==='fin')?' · mit Verlängerung und Elfmeterschießen':''}</span></div>`;}
+  return`<div class="vs"><span>${wann} · ${esc(euSpielName(e))} · ${e.runde==='fin'?'Finale auf neutralem Platz':home?'Heimspiel':'Auswärtsspiel'}</span><b>${esc(tn(oid))}</b><span>${v?`${esc(land)} · Teamstärke ${de(euStaerke(oid)/REU.staerke.faktor,1)}`:`${S.teams[oid].lg}. Liga · Kaderstärke ${teamLevel(oid).toFixed(1)}`} (deine: ${teamLevel(S.my).toFixed(1)})${e.runde!=='lp'&&(e.leg===1||e.runde==='fin')?' · mit Verlängerung und Elfmeterschießen':''}</span></div>`;}
 // Kalendertag (ansichten.js kalTermin)
 function euKalTermin(d){const x=euMeineSpiele().find(y=>y.tag===d);if(!x)return null;const home=x.h===S.my,o=home?x.a:x.h,r={kurz:`${REU.wb[x.wb].kurz} ${o>=AV0?(avVon(o).name.split(' ').pop()).slice(0,6):S.teams[o].sh}`,cls:'sp pk',titel:euSpielName(x)+`: ${home?'gegen':'bei'} ${tn(o)}`};
   if(x.hg!=null){const gf=home?x.hg:x.ag,ga=home?x.ag:x.hg;r.erg=`${x.hg}:${x.ag}${x.pen?' i.E.':''}`;r.cls+=gf>ga?' win':gf<ga?' loss':' draw';}return r;}
@@ -280,4 +351,4 @@ function europaKarte(){if(!euAktiv())return'';const mein=euMeinWb(),wb=mein||'cl
     ${mein&&sp?`<h3>Deine Spiele</h3><ul>${sp}</ul>`:''}${mein?'':`<p class="dim">Hier: ${euName(wb)}.</p>`}${ko}${q}${lp}
     ${euWertungText()}
     ${mein?`<p>Prämien dieser Saison: <b>${fmt((S.eu.geld&&S.eu.geld[S.my])||0)}</b> <span class="dim">(Startgeld, Wertsäule, Siege, Runden, gebucht als „Europapokal“)</span></p>`:''}
-    <p class="dim">Modus seit 2024/25: 36 Vereine in einer Ligaphase (Conference League 6, sonst 8 Spiele), danach Hin- und Rückspiel bis zum Halbfinale und ein Finale. Prämien nach den echten Beträgen 2025/26, im Spielgeld mal ${de(REU.geld.faktor,1)} (K37 §5.3).</p></div>`;}
+    <p class="dim">Modus seit 2024/25: 36 Vereine in einer Ligaphase (Conference League 6, sonst 8 Spiele), danach Hin- und Rückspiel bis zum Halbfinale und ein Finale. Prämien nach den echten Beträgen 2025/26${REU.geld.faktor!==1?`, im Spielgeld mal ${de(REU.geld.faktor,1)}`:''} (K37 §5.3).</p></div>`;}

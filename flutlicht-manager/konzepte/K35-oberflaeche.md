@@ -161,7 +161,7 @@ Der Gegner ist ebenfalls unscharf, solange er nicht analysiert wurde (K06).
 | **Kalender** | Monat und Saison: Spiele, Training, Transferfenster, Trainingslager, Länderspielpausen. Testspiele per Klick auf einen freien Tag ansetzen. | K01, K11, K13 |
 | **Kader** | Tabelle mit **Mini-Reglern** statt Zahlen, frei wählbare Spalten, Filter. Ein Klick auf eine Zeile öffnet die Schnellansicht. | K03 |
 | **Spielerkarte** | alle Werte als Regler (Stärke mit Talent, Kondition, Frische, Form, Selbstvertrauen, Stimmung, Integration, Spielpraxis), Merkmale mit Lernfortschritt, Charakter, Beziehungen im Kader, Vertrag, Statistik, Verläufe | K03, K14, K21 |
-| **Aufstellung und Taktik** | Spielfeld mit Ziehen und Ablegen, Eignung pro Position als Farbe am Spieler, Spielstil-Kreislauf mit Vertrautheit pro Stil, Einsatz-Regler, Tauziehen gegen den nächsten Gegner | K05, K06 |
+| **Aufstellung und Taktik** | Spielfeld mit Ziehen und Ablegen (seit K35c, 25.11.2026, ohne Touch), Eignung pro Position als Farbe am Spieler, Spielstil-Kreislauf mit Vertrautheit pro Stil, Einsatz-Regler, Tauziehen gegen den nächsten Gegner | K05, K06 |
 | **Spieltag** | Vorbericht, Live-Ticker mit Frische der eigenen Spieler als Mini-Regler, Wechsel (zählt Wechsel und Unterbrechungen), Halbzeit, Konferenz, Spielbericht mit Gründen (Chancen, xG, Schlüsselszenen) und Noten | K04, K05 |
 | **Training** | Wochenplan mit 5 Einheiten, Intensität mit Vorhersage, Einzeltraining mit Lernfortschritt | K07 |
 | **Jugend** | Jahrgang, Talente mit unscharfen Reglern, Paten und Mentoren, Leihen | K08 |

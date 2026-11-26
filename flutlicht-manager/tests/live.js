@@ -72,5 +72,20 @@ const punkte=(G,s)=>{const d=G.sc[s]-G.sc[1-s];return d>0?3:d===0?1:0;};
     W.__setLive({G,s:0,evN:0,gewarnt:new Set()});while(!G.ende){G.minute();if(halte())h++;}n++;}
   pruef(h/n>=3&&h/n<=6,'Automatische Halte: im Schnitt 3–6 pro Spiel',f2(h/n));W.__setLive(null);}
 
+// Prüfung EK7: Bei einer Kette von Wechseln (A raus für B, später B raus für C) haben alle drei in xpo die Position des Platzes. Vorher bekam A „ZM“.
+{S.season=7100;S.tag=3;const G=spielAnlegen(X,gegner[0],{auto:[false,true]}),x=G.Ss[0].xp[5],pos=x.pos,a=x.p.id;
+  while(G.m<30)G.minute();const b=G.bank[0][1],r1=G.wechseln(0,a,b).ok;while(G.m<60)G.minute();const c=G.bank[0][1],r2=r1&&G.wechseln(0,b,c).ok;while(!G.ende)G.minute();
+  const xp=G.ergebnis().xpo[0],ps=id=>(xp.find(z=>z[0]===id)||[])[1];
+  pruef(r1&&r2&&ps(a)===pos&&ps(b)===pos&&ps(c)===pos,'Kettenwechsel: alle drei mit der Position des Platzes',`${pos}: A ${ps(a)}, B ${ps(b)}, C ${ps(c)}`);}
+
+// K05g. Ansprache wirkt (K05 §8): Nach „Fordern“ und einer zweiten Halbzeit, die um wirkt.ab Tore besser ist als die erste, Glaubwürdigkeit + wirkt.glaub und eine Meldung;
+//       nach einer anderen Ansprache oder ohne Wende nichts.
+{const {W:W2,F:F2}=neueWelt();F2.buildWorld(SEED);const S2=W2.S,ev=W2.ev,A=ev('RL').ansprache.wirkt,gl=ev('glaub'),aw=ev('anspracheWirkt');S2.my=6;
+  const tore=[{t:'G',m:30,s:1},{t:'G',m:60,s:0},{t:'G',m:80,s:0}],L=(art,ev2)=>({ansprache:art,s:0,G:{ev:ev2}}),g0=gl();
+  const wende=aw(L('fordern',tore))&&gl()===g0+A.glaub&&String(S2.news[0].t).startsWith('Die Ansprache hat gewirkt');const g1=gl();
+  const andere=!aw(L('motivieren',tore))&&gl()===g1,ohne=!aw(L('fordern',[{t:'G',m:30,s:0},{t:'G',m:60,s:0}]))&&gl()===g1;
+  const co=String(F2.liveWeiter).includes('if(!co)anspracheWirkt(L)')&&String(F2.liveWeiter).includes('S.live.anspCo'); /* FS4: nicht nach der Ansprache des Co-Trainers */
+  pruef(wende&&andere&&ohne&&co,'Ansprache wirkt: nach „Fordern“ und einer Wende Glaubwürdigkeit und Meldung, sonst nichts, nicht beim Co-Trainer',`Wende ${wende}, andere Ansprache ${andere}, ohne Wende ${ohne}, Co-Trainer ausgeschlossen ${co}`);}
+
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

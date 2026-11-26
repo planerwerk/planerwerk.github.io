@@ -3,6 +3,8 @@
 module.exports=()=>{
  window.__check=function(){const e=[];
   const gr=[1,2,3,4].map(l=>S.teams.filter(t=>t.lg===l).length);if(gr[0]!==18||gr[1]!==18||gr[2]!==20)e.push(`Ligagrößen ${gr.join('/')}`);
+  if(typeof wappen==='function')S.teams.forEach(t=>{if(typeof eigenesWappen==='function'&&eigenesWappen(t.sh))return;const w=wappen(t.id,40);if(/undefined|NaN/.test(w)||!w.includes(t.col)||(t.sh&&!w.includes('>'+t.sh+'<')))e.push('Wappen '+t.sh+' unvollständig');}); // erzeugte Wappen (K39 §3.1, W5e1)
+  if(typeof gesicht==='function'&&!window.__gesichterGeprueft){window.__gesichterGeprueft=true;S.pl.forEach(p=>{const g=gesicht(p,56);if(!g||/undefined|NaN/.test(g))e.push('Gesicht '+p.n+' unvollständig');});} // einmal je Seite reicht, die Gesichter hängen nur an Name und Nation (Prüfung FX7) // Spielergesichter (K39 §3.2, W5e5)
   const ids=new Set();
   S.pl.forEach(p=>{if(ids.has(p.id))e.push('doppelte ID '+p.id);ids.add(p.id);
    for(const k of ['str','pot','form','fit','ko','sp','sv','sal','age','ct','inj','g','apps'])if(typeof p[k]!=='number'||!isFinite(p[k]))e.push(`Spieler ${p.n} ${k}=${p[k]}`);
@@ -40,14 +42,15 @@ module.exports=()=>{
   if(S.phase==='play'){[1,2,3].forEach(lg=>{const tb=table(lg),soll={};S.fx[lg].forEach((md,k)=>md.forEach(([h,a],i)=>{if(vorbei(S.plan.zeit[lg][k][i][0])){soll[h]=(soll[h]||0)+1;soll[a]=(soll[a]||0)+1;}}));
     tb.forEach(r=>{if(r.sp!==(soll[r.id]||0))e.push(`Liga ${lg}: ${tn(r.id)} hat ${r.sp} Spiele, laut Kalender ${soll[r.id]||0}`);});
     if(S.fx[lg].some((md,k)=>md.length!==S.plan.zeit[lg][k].length))e.push(`Liga ${lg}: Spielplan und Termine passen nicht zusammen`);
-    const pts=tb.reduce((a,r)=>a+r.p,0),g=S.res[lg].length,d=S.res[lg].filter(r=>r[2]===r[3]).length;if(pts!==g*3-d)e.push('Punkte inkonsistent');});
+    const A=(S.abzug||{})[S.season]||{},ab=tb.reduce((a,r)=>a+(A[r.id]||0),0); /* Punktabzug nach Insolvenz oder Manipulation zieht table() ab (Testlauf 10) */
+    const pts=tb.reduce((a,r)=>a+r.p,0),g=S.res[lg].length,d=S.res[lg].filter(r=>r[2]===r[3]).length;if(pts!==g*3-d-ab)e.push('Punkte inkonsistent');});
    const ex=64>>S.cup.hist.length;if(S.cup.alive.length!==ex)e.push(`Pokal ${S.cup.alive.length} statt ${ex}`);if(new Set(S.cup.alive).size!==S.cup.alive.length)e.push('Pokal doppelt');
    if(S.cup.alive.some(id=>id<1000&&(S.teams[id].zweite>=0||S.teams[id].lg>3)))e.push('Zweitmannschaft oder Regionalligist im Pokal');
-   const cupSoll=S.plan.pokal.filter(([d])=>vorbei(d)).length;if(S.cup.hist.length!==cupSoll)e.push(`Pokal: ${S.cup.hist.length} Runden, laut Kalender ${cupSoll}`);}
+   const cupSoll=S.plan.pokal.filter(([d],r)=>vorbei(d+(typeof pokalGeteilt==='function'&&pokalGeteilt(r)?1:0))).length; /* geteilte Runde zählt erst nach dem zweiten Tag (T9.4) */if(S.cup.hist.length!==cupSoll)e.push(`Pokal: ${S.cup.hist.length} Runden, laut Kalender ${cupSoll}`);}
   // Vereinbarte Wechsel (K19, U10a): Eintrag und Spieler passen zusammen, im offenen Fenster ist nichts mehr offen
   const wl=S.wechsel||[];wl.forEach(id=>{const p=PIX.get(id);if(!p||!p.wech)e.push('vorgemerkter Wechsel ohne Spieler '+id);});
   S.pl.forEach(p=>{if(p.wech&&!wl.includes(p.id))e.push('Wechsel ohne Eintrag '+p.n);});if(fensterOffen(S.tag)&&S.phase==='play'&&wl.some(id=>{const p=PIX.get(id);return p&&p.wech&&p.wech.ab<=S.tag;}))e.push('fälliger Wechsel im offenen Fenster nicht vollzogen');
-  S.pl.forEach(p=>{if(p.vp&&Object.values(p.vp).some(x=>!(x>=0&&isFinite(x))))e.push('Prämie kaputt '+p.n);if(p.ak!=null&&!(p.ak>0))e.push('Ausstiegsklausel kaputt '+p.n);if(p.lk!=null&&!(p.lk>0&&p.lk<1))e.push('Ligaklausel kaputt '+p.n);});
+  S.pl.forEach(p=>{if(p.vp&&Object.values(p.vp).some(x=>!(x>=0&&isFinite(x))))e.push('Prämie kaputt '+p.n);if(p.ak!=null&&!(p.ak>0))e.push('Ausstiegsklausel kaputt '+p.n);if(p.lk!=null&&!(p.lk>=0&&p.lk<1))e.push('Ligaklausel kaputt '+p.n);});
   S.offers.forEach(o=>{if(PIX.get(o.pid)&&PIX.get(o.pid).wech)e.push('Angebot für einen schon verkauften Spieler');});
   S.pl.forEach(p=>{if(!p.leihe)return;if(p.leihe.von===p.team||!S.teams[p.leihe.von]||!(p.leihe.anteil>=0&&p.leihe.anteil<=1))e.push('Leihe kaputt '+p.n);if(p.wech)e.push('verliehen und verkauft '+p.n);}); // U10d
   (S.ber||[]).forEach(b=>{if(!(b.bz>=-100&&b.bz<=100)||!REGELN.berater.profile[b.prof])e.push('Berater außerhalb des Rahmens '+b.n);}); // K22, U10c

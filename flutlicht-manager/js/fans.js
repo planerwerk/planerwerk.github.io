@@ -8,12 +8,15 @@ function istLiebling(p,tid){const F=RFS.ident,n=vereinsSpiele(p,tid);return n>=F
 function fanBausteine(t){const F=RFS,E=F.erfolg,c=(x,s)=>clamp(x,s[0],s[1]);let erfolg=t.fanE||0;
   const tab=table(t.lg),i=tab.findIndex(r=>r.id===t.id),r=tab[i];
   if(r&&r.sp>=E.abSpiel){erfolg+=E.jePlatz*((t.expPos||i+1)-(i+1));const l=r.last.slice(-5);if(l.length)erfolg+=E.serie*(l.reduce((a,b)=>a+b,0)/l.length-E.serieMitte);}
-  const rp=richtPreis(t),preise=t.price&&rp>0?F.preise.faktor*(1-t.price/rp):0,lieb=squad(t.id).filter(p=>istLiebling(p,t.id));
-  return{erfolg:c(erfolg,E.spanne),preise:c(preise,F.preise.spanne),ident:c(F.ident.basis+F.ident.jeLiebling*lieb.length,F.ident.spanne),entscheid:c(t.fanD||0,F.entscheid.spanne),umfeld:c(t.fanU||0,F.umfeld.spanne),lieb};}
+  const rp=richtPreis(t),preise=(t.price&&rp>0?F.preise.faktor*(1-t.price/rp):0)+dkFans(t),lieb=squad(t.id).filter(p=>istLiebling(p,t.id)); // dazu der Dauerkartenrabatt (K27b)
+  /* Fankultur (K27 §5.4c, K27e): Entscheidungen wiegen bei großer Fankultur schwerer, nur mit Anlass gerechnet */const fkF=t.fanD?1+fankulturWirkung(t)*F.entscheid.fankultur:1;
+  return{erfolg:c(erfolg,E.spanne),preise:c(preise,F.preise.spanne),ident:c(F.ident.basis+F.ident.jeLiebling*lieb.length,F.ident.spanne),entscheid:c((t.fanD||0)*fkF,F.entscheid.spanne),fkF,umfeld:c(t.fanU||0,F.umfeld.spanne),lieb};}
 function fanZiel(t){const b=fanBausteine(t);return clamp(RFS.start+b.erfolg+b.preise+b.ident+b.entscheid+b.umfeld,0,100);}
 // Montags (ablauf.js woechentlichLauf, vor dem Vorstand): Richtung Ziel, Anlässe verblassen
 function fansWoche(){const F=RFS;S.teams.forEach(t=>{if(!aktiv(t))return;const v=fanst(t);t.fanst=fanZahl(v+(fanZiel(t)-v)*F.traegheit);
-  if(t.fanE)t.fanE=fanZahl(t.fanE*(1-F.erfolg.verblassen));if(t.fanD)t.fanD=fanZahl(t.fanD*(1-F.entscheid.verblassen));if(t.fanU)t.fanU=fanZahl(t.fanU*(1-F.umfeld.verblassen));});}
+  if(t.fanE)t.fanE=fanVerblasst(t.fanE,F.erfolg.verblassen);if(t.fanD)t.fanD=fanVerblasst(t.fanD,F.entscheid.verblassen);if(t.fanU)t.fanU=fanVerblasst(t.fanU,F.umfeld.verblassen);});}
+// Anlass verblasst um den Anteil v; bis RFS.anlassMin ganz auf 0, sonst blieb das Runden auf eine Stelle bei ±0,4 oder 0,5 hängen (Prüfung EN4)
+const fanVerblasst=(x,v)=>{const y=fanZahl(x*(1-v));return Math.abs(y)<=RFS.anlassMin?0:y;};
 const fanAnlass=(t,k,v)=>{if(t)t[k]=fanZahl((t[k]||0)+v);};
 // Ligaspiel (ablauf.js): Derby mit Sieger doppelt
 function fansDerby(r){if(r.hg===r.ag||!istDerby(r.h,r.a))return;const w=r.hg>r.ag?r.h:r.a,l=w===r.h?r.a:r.h,D=RFS.erfolg.derby;fanAnlass(S.teams[w],'fanE',D);fanAnlass(S.teams[l],'fanE',-D);}
@@ -32,10 +35,47 @@ function fansHeimspiel(m){if(!m||m.h!==S.my||fanst(myT())>=RFS.protestUnter)retu
 // Fan-Gespräch (K27 §5.4): einmal im Monat, Wirkung nach Glaubwürdigkeit
 const fanGespraechFrei=()=>S.fanG==null||absTag(S.tag)-S.fanG>=RFS.gespraechTage;
 function fanGespraech(){if(!darf('fangespraech'))return;if(!fanGespraechFrei()){toast(`Das nächste Fan-Gespräch geht erst wieder am ${datumKurz(S.fanG+RFS.gespraechTage-absTag(0))}.`);return;}
-  const t=myT(),U=RFS.umfeld,g=glaub(t),d=g<U.leerUnter?U.leer:U.gespraech[0]+(U.gespraech[1]-U.gespraech[0])*g/100;S.fanG=absTag(S.tag);fanAnlass(t,'fanU',d);
-  news(d<0?`Fan-Gespräch: Die Fans glauben dir nicht mehr und sprechen von leeren Versprechen.`:`Fan-Gespräch: Die Fans fühlen sich ernst genommen.`,d<0?'bad':'good');save();render();}
+  const d=fanGespraechWirkung(myT());news(fanGespraechText(d),d<0?'bad':'good');save();render();}
+// Wirkung des Gesprächs, auch für die Karte „Fans wollen reden“ (K27h): zählt als Gespräch des Monats, Umfeld nach Glaubwürdigkeit
+function fanGespraechWirkung(t){const U=RFS.umfeld,g=glaub(t),d=g<U.leerUnter?U.leer:U.gespraech[0]+(U.gespraech[1]-U.gespraech[0])*g/100;S.fanG=absTag(S.tag);fanAnlass(t,'fanU',d);return d;}
+const fanGespraechText=d=>d<0?'Fan-Gespräch: Die Fans glauben dir nicht mehr und sprechen von leeren Versprechen.':'Fan-Gespräch: Die Fans fühlen sich ernst genommen.';
 // Karte im Stadion
 function fansKarte(){const t=myT(),b=fanBausteine(t),v=fanst(t),z=fanZiel(t),f=x=>`${x>0?'+':''}${de(x,1)}`;
   return`<div class="card rgs"><h2>Fans</h2>${rgAnzeige({label:'Fanstimmung',sub:'0–100, wirkt auf Zuschauer und Vorstand',min:0,max:100,wert:Math.round(v),marker:[{v:Math.round(z),t:'Ziel '+Math.round(z)}],zonen:[{von:0,bis:RFS.protestUnter,art:'bad',text:'Protest: Pfiffe in Heimspielen'},{von:RFS.vorstand.zone[1],bis:100,art:'good',text:'Rückenwind'}]})}
-    <p class="dim">Bausteine des Ziels (montags 15 % Richtung Ziel): Erfolg ${f(b.erfolg)}, Preise ${f(b.preise)}, Identifikation ${f(b.ident)}${b.lieb.length?` (Lieblinge: ${b.lieb.slice(0,5).map(p=>esc(p.n)).join(', ')}${b.lieb.length>5?' …':''})`:''}, Entscheidungen ${f(b.entscheid)}, Umfeld ${f(b.umfeld)}. Zuschauer × ${de(fanFaktor(t),2)}.</p>
+    <p class="dim">Bausteine des Ziels (montags 15 % Richtung Ziel): Erfolg ${f(b.erfolg)}, Preise ${f(b.preise)}, Identifikation ${f(b.ident)}${b.lieb.length?` (Lieblinge: ${b.lieb.slice(0,5).map(p=>esc(p.n)).join(', ')}${b.lieb.length>5?' …':''})`:''}, Entscheidungen ${f(b.entscheid)}${b.fkF>1?` (× ${de(b.fkF,2)} nach der Fankultur)`:''}, Umfeld ${f(b.umfeld)}. Zuschauer × ${de(fanFaktor(t),2)}.</p>
     ${lzHinweis('fangespraech')}<div class="row"><button onclick="fanGespraech()"${lzAus('fangespraech')}${fanGespraechFrei()?'':' disabled'}>Fan-Gespräch</button><span class="dim">einmal im Monat, wirkt nach deiner Glaubwürdigkeit (${Math.round(glaub(t))})</span></div></div>`;}
+
+// ---------- Dauerkarten (K27 §5.2, K27b, 22.11., popolupo) ----------
+// Nur dein Verein. S.dk = {s Saison, tid Verein, r Rabatt, n verkauft und p Ticketpreis beim Verkauf (beide fehlen bis zum Verkauf)}. Verkauf beim ersten Ligaheimspiel der Saison
+// (ablauf.js heimspielEinnahmen), vorher wählst du den Rabatt (Bereich preise, in der Automatik der Standard). Je Ligaheimspiel zahlen alle Inhaber den Preis vom Verkauf
+// (höchstens den heutigen, wenn du ihn senkst) × (1 − Rabatt), auch wenn weniger kommen. Kein Zufall. Prüfung CZ: vorher zahlten sie den Preis des Tages, ein späteres Hochsetzen lohnte sich.
+const dkStand=()=>S.dk&&S.dk.s===S.season&&S.dk.tid===S.my?S.dk:null;
+const dkAktuell=()=>{const d=dkStand();return d&&d.n!=null?d:null;};
+// Nach dem Verkauf gilt der verkaufte Rabatt, auch wenn die Automatik danach wieder eingeschaltet wird (CZ3)
+const dkRabatt=()=>{const D=RFS.dauerkarten,d=dkStand();if(d&&d.n!=null)return d.r;return autoB('preise')||!d||d.r==null?D.rabatt:d.r;};
+// Preis je Dauerkarte und Ligaheimspiel: Preis beim Verkauf, höchstens der heutige, mit Catering und Anzeigetafel, abzüglich Rabatt
+const dkPreis=(t,d)=>Math.min(t.price,d.p!=null?d.p:t.price)*zuschauerFaktor(t)*(1-d.r);
+// Anteil der Plätze nach Fanstimmung und Rabatt, höchstens ohne Gästeblock
+function dkAnteil(t,r){const D=RFS.dauerkarten;return clamp(D.basis+D.jeStimmung*fanst(t)/100+D.jeRabatt*(r-D.rabatt)+(t&&t.id===S.my?dkKampagne():0)+dkMitglieder(t),0,1-D.gaesteblock);} /* + Vorkaufsrecht der Mitglieder (K25e) */
+// Vorkaufsrecht der Mitglieder (K25 §5.5, K25e): mehr Mitglieder je Platz, mehr Dauerkarten, höchstens dauerkarten.mitglieder (ab einem Mitglied je Platz)
+function dkMitglieder(t){const D=RFS.dauerkarten,k=t?kapOhneBau(t):0;return k>0?D.mitglieder*Math.min(1,mitgliederVon(t)/k):0;} /* Plätze ohne Bau-Abzug (Prüfung ES5) */
+// Dauerkarten-Aktion (K25c): in dieser Saison gestartet, mit der Abnutzung aus K25a
+const dkKampagne=()=>{const M=S.mk,e=M&&M.s===S.season&&M.k&&M.k.dauerkarten,C=RMK.kampagnen.dauerkarten;return e&&e.n&&C?C.dauerkarten*(e.w||1):0;};
+function dkVerkauf(t){const r=dkRabatt(),n=Math.round(t.cap*dkAnteil(t,r));S.dk={s:S.season,tid:S.my,r,n,p:t.price};
+  news(`Dauerkarten: ${n.toLocaleString('de-DE')} verkauft (${Math.round(r*100)} % Rabatt). Die Inhaber zahlen in jedem Ligaheimspiel, auch wenn weniger kommen.`,'');return S.dk;}
+// Fanstimmung, Baustein Preise (fans.js fanBausteine): mehr Rabatt als der Standard freut die Fans, weniger ärgert sie. Nur dein Verein.
+function dkFans(t){if(!t||t.id!==S.my)return 0;const D=RFS.dauerkarten;return D.fans*(dkRabatt()-D.rabatt)*10;}
+function dkRabattSetzen(r){const D=RFS.dauerkarten;if(!darf('preise')||!D.stufen.includes(r)||dkAktuell())return;S.dk={s:S.season,tid:S.my,r};save();render();}
+// Anzeige im Finanzen-Tab unter dem Eintrittspreis
+function dauerkartenText(t){const D=RFS.dauerkarten,d=dkAktuell(),pct=x=>Math.round(x*100)+' %';
+  if(d)return`<p>Dauerkarten: <b>${d.n.toLocaleString('de-DE')}</b> verkauft (${pct(d.r)} Rabatt${d.p!=null?`, Preis beim Verkauf ${d.p} €`:''}), je Ligaheimspiel ${fmt(Math.round(Math.min(d.n,t.cap)*dkPreis(t,d)))}.</p>`;
+  const r=dkRabatt();
+  return`<p>Dauerkarten werden beim ersten Ligaheimspiel verkauft, voraussichtlich etwa ${Math.round(t.cap*dkAnteil(t,r)).toLocaleString('de-DE')} (${pct(r)} Rabatt, Vorkaufsrecht der Mitglieder +${Math.round(dkMitglieder(t)*100)} Prozentpunkte). Mehr Rabatt: mehr Dauerkarten und zufriedenere Fans, aber weniger je Platz.</p>
+    <div class="row">${D.stufen.map(x=>`<button class="${x===r?'go':''}" onclick="dkRabattSetzen(${x})"${lzAus('preise')}>${pct(x)} Rabatt</button>`).join('')}</div>`;}
+// Zuschauer-Vergehen (K09 §4.4, §5.5, K09h): Vorfälle deines Vereins (Karten mit der Wirkung zuschauer: Pyrotechnik im Derby, Wurfgeschosse, Platzsturm; nicht die
+// UEFA-Karte, die UEFA führt ihr eigenes Register) in S.zv = [{tid, a absoluter Tag}], nur die letzten RD.zuschauer.tage und nur die des Vereins, den du gerade trainierst.
+// Ab dem zweiten Vorfall ein Zuschlag in Höhe der Strafe × zuschlag (basis: Grundwert der 3. Liga, nach Liga wie das Kartengeld), ab dem ausschlussAb-ten
+// ein Teilausschluss beim nächsten Heimspiel in Liga oder Pokal (S.ausschluss, in heimspielEinnahmen). Ohne Zufall, ohne Halt.
+function zuschauerVorfall(basis){const Z=RD.zuschauer,heute=absTag(S.tag),l=(S.zv||[]).filter(x=>x&&x.tid===S.my&&heute-x.a<Z.tage);l.push({tid:S.my,a:heute});S.zv=l;const n=l.length;if(n<2)return;
+  const b=kartenGeld((basis||0)*Z.zuschlag);if(b>0){money('Strafen',-b);news(`Wiederholungstäter: das ${n}. Zuschauer-Vergehen in zwölf Monaten. Das Sportgericht erhöht die Strafe um ${fmt(b)}.`,'bad');}
+  if(n>=Z.ausschlussAb){S.ausschluss={tid:S.my,anteil:Z.block};news(`Teilausschluss: Beim nächsten Heimspiel in Liga oder Pokal bleibt ein Block leer (${Math.round(Z.block*100)} % der Plätze).`,'bad');}}

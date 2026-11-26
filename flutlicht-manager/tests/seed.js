@@ -2,7 +2,7 @@
 const {chromium}=require('playwright');const path=require('path');
 const FILE='file://'+path.resolve(__dirname,'..','index.html');
 // Feste Abfolge von Eingaben und „Tag beenden“, bis Halt Nummer `bis`
-const LAUF=({seed,bis,von})=>{if(!von){buildWorld(seed);S.my=6;S.mgr='Seed';setTarget();sponsOffers();S.lineup=bestXI(6,myT().form);S.__halt=0;}
+const LAUF=({seed,bis,von})=>{if(!von){buildWorld(seed);S.my=6;S.mgr='Seed';setTarget();sponsOffers();S.lineup=bestXI(6,myT().form);vertragNeu(6);S.__halt=0;} /* Trainervertrag wie newGame, sonst legt ihn erst das Neuladen an (Testlauf 10) */
   while(S.__halt<bis){const h=S.__halt++;
     if(h===2&&S.sponsOffers)pickSponsor(1);
     if(h===4){setForm('4-3-3');setTac('O');setVorlage('aufbau');loan(5);startBuild('cap');}

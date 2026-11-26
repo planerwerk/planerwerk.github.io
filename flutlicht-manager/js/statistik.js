@@ -61,20 +61,28 @@ function statSpielBuchen(r,cup,lg,d){const st=statS(),V=RSTAT,nt=r.nt||{},seite=
   [0,1].forEach(s=>{const tid=s?r.a:r.h;if(tid!==S.my)return;(r.xpo[s]||[]).forEach(([id])=>{const p=PIX.get(id);if(p)jubilaeumSpiele(p,tid);});});}
 
 // ---------- Rekorde (K34 §5.6) ----------
-function rekLiga(lg){const L=statS().rek.lg;if(!L[lg]){const A=RSTAT.rekord.allzeit[lg];
-    L[lg]=A?{sieg:{n:A.sieg.hg-A.sieg.ag,hg:A.sieg.hg,ag:A.sieg.ag,txt:`${A.sieg.h} – ${A.sieg.a}`,wann:A.sieg.datum,echt:1},tore:{n:A.tore.n,txt:`${A.tore.name} (${A.tore.verein})`,wann:A.tore.saison,echt:1},serie:{n:A.serie.n,txt:A.serie.verein,wann:A.serie.zeit,echt:1}}:{};}
-  return L[lg];}
-// Melden: 1. Liga immer (echte Startwerte), 2. und 3. Liga nur die eigene Liga und erst ab der zweiten Saison des Spielstands
-const rekMelden=lg=>lg===1||(lg===myT().lg&&S.season-statS().ab>=RSTAT.rekord.meldenAb);
+// Startwerte: die echten Rekorde (A). Alte Spielstände ohne sie (2. und 3. Liga vor K34b) bekommen sie einmal nachträglich (Merker start);
+// ein Rekord aus dem Spiel bleibt, wenn er besser ist als der echte. Gleich gut: der echte bleibt, wie beim Melden.
+function rekLiga(lg){const L=statS().rek.lg,R0=L[lg]||(L[lg]={}),A=RSTAT.rekord.allzeit[lg];if(!A||R0.start)return R0;R0.start=1;
+  const s=Math.abs(A.sieg.hg-A.sieg.ag),hoch=Math.max(A.sieg.hg,A.sieg.ag);
+  if(!R0.sieg||R0.sieg.n<s||(R0.sieg.n===s&&Math.max(R0.sieg.hg,R0.sieg.ag)<=hoch))R0.sieg={n:s,hg:A.sieg.hg,ag:A.sieg.ag,txt:`${A.sieg.h} – ${A.sieg.a}`,wann:A.sieg.datum,echt:1};
+  if(!R0.tore||R0.tore.n<=A.tore.n)R0.tore={n:A.tore.n,txt:`${A.tore.name} (${A.tore.verein})`,wann:A.tore.saison,echt:1};
+  if(!R0.serie||R0.serie.n<=A.serie.n)R0.serie={n:A.serie.n,txt:A.serie.verein,wann:A.serie.zeit,echt:1};return R0;}
+// Rekordtransfer der Spielwelt mit dem echten Startwert (K34d, RSTAT.rekord.transfer), auch für alte Spielstände einmal nachträglich (Merker start). Ein Transfer aus dem Spiel bleibt, wenn er teurer ist.
+function rekWelt(){const W=statS().rek.welt,A=RSTAT.rekord.transfer;if(!A||W.start)return W;W.start=1;
+  if(!W.transfer||W.transfer.n<=A.n)W.transfer={n:A.n,txt:`${A.name}, ${A.von} → ${A.nach}`,wann:A.saison,echt:1};return W;}
+// Melden: 1. Liga immer (echte Startwerte), 2. und 3. Liga nur die eigene Liga; ohne echte Startwerte erst ab der zweiten Saison des Spielstands (seit K34 haben beide welche)
+const rekMelden=lg=>lg===1||(lg===myT().lg&&(!!RSTAT.rekord.allzeit[lg]||S.season-statS().ab>=RSTAT.rekord.meldenAb));
 function rekNeu(lg,art,text){if(!rekMelden(lg))return;news(`${lg===1?'Bundesliga-Rekord':'Rekord der '+ligaName(lg)}: ${text}`,'good');}
 function siegRekord(r,lg,d){const n=Math.abs(r.hg-r.ag);if(!n)return;const R0=rekLiga(lg),a=R0.sieg,hoch=Math.max(r.hg,r.ag);
   if(a&&(n<a.n||(n===a.n&&hoch<=Math.max(a.hg,a.ag))))return;
   R0.sieg={n,hg:r.hg,ag:r.ag,txt:`${tn(r.h)} – ${tn(r.a)}`,wann:`${datumKurz(d)} ${stSaison(S.season)}`};rekNeu(lg,'sieg',`${tn(r.h)} – ${tn(r.a)} ${r.hg}:${r.ag} ist der höchste Sieg${a?` (bisher ${a.hg}:${a.ag}, ${a.txt})`:''}.`);}
 function toreRekord(p,tid,lg,n){const R0=rekLiga(lg),a=R0.tore;if(a&&n<=a.n)return;const gleich=a&&a.pid===p.id&&a.s===S.season;
   R0.tore={n,pid:p.id,s:S.season,txt:`${p.n} (${tn(tid)})`,wann:stSaison(S.season)};if(!gleich)rekNeu(lg,'tore',`${p.n} (${tn(tid)}) hat ${n} Tore in dieser Saison${a?`, mehr als ${a.txt} mit ${a.n}`:''}.`);}
-function serieStat(tid,lg,verloren){const st=statS(),l=st.lauf[tid]&&st.lauf[tid][1]===lg?st.lauf[tid]:[0,lg];l[0]=verloren?0:l[0]+1;st.lauf[tid]=l;if(verloren)return;
-  const R0=rekLiga(lg),a=R0.serie;if(a&&l[0]<=a.n)return;const gleich=a&&a.tid===tid&&!a.echt&&a.n===l[0]-1; // dieselbe Serie läuft weiter: still verlängern
-  R0.serie={n:l[0],tid,txt:tn(tid),wann:stSaison(S.season)};if(!gleich)rekNeu(lg,'serie',`${tn(tid)} ist seit ${l[0]} Ligaspielen ungeschlagen${a?`, länger als ${a.txt} (${a.n})`:''}.`);}
+// l[2]: Beginn der laufenden Serie (Saison × 1000 + Tag). Dieselbe Serie nur bei gleichem Beginn, sonst ist es eine neue mit Meldung (Prüfung DP4; alte Spielstände ohne Beginn wie bisher)
+function serieStat(tid,lg,verloren){const st=statS(),l=st.lauf[tid]&&st.lauf[tid][1]===lg?st.lauf[tid]:[0,lg];l[0]=verloren?0:l[0]+1;if(l[0]===1)l[2]=S.season*1000+S.tag;st.lauf[tid]=l;if(verloren)return;
+  const R0=rekLiga(lg),a=R0.serie;if(a&&l[0]<=a.n)return;const gleich=a&&a.tid===tid&&!a.echt&&a.n===l[0]-1&&a.ab===l[2]; /* dieselbe Serie läuft weiter: still verlängern */
+  R0.serie={n:l[0],tid,txt:tn(tid),wann:stSaison(S.season),ab:l[2]};if(!gleich)rekNeu(lg,'serie',`${tn(tid)} ist seit ${l[0]} Ligaspielen ungeschlagen${a?`, länger als ${a.txt} (${a.n})`:''}.`);}
 // Vereinsrekorde nur für Vereine, die du trainierst. besser(neu, alt). Meldung nur, wenn ein alter Wert übertroffen wird.
 function vereinsRekord(tid,k,n,o,besser){if(tid!==S.my)return;const v=statS().rek.v,r=v[tid]||(v[tid]={}),neu=Object.assign({n},o),alt=r[k];
   if(alt&&!(besser?besser(neu,alt):neu.n>alt.n))return;r[k]=neu;if(!alt)return;
@@ -83,10 +91,10 @@ function vereinsRekord(tid,k,n,o,besser){if(tid!==S.my)return;const v=statS().re
 // Zuschauer (ablauf.js heimspielEinnahmen)
 function statZuschauer(m,att){vereinsRekord(S.my,'zus',att,{txt:`gegen ${tn(m.a)}`,wann:`${datumKurz(S.tag)} ${stSaison(S.season)}`});}
 // Transfers mit Ablöse: Rekordtransfer der Spielwelt (Zugang eines deutschen Vereins) und Vereinsrekorde
-function statTransfer(p,fee,von,nach){if(!p||!(fee>0))return;fansAbgang(p,von); // Verkauf eines Publikumslieblings (K27, U16)
+function statTransfer(p,fee,von,nach){if(!p||!(fee>0))return;weiterverkaufPruefen(p,fee,von,nach);fansAbgang(p,von); // Verkauf eines Publikumslieblings (K27, U16)
   const st=statS(),de0=id=>id!=null&&id>=0&&id<1000&&!!S.teams[id],wann=stSaison(S.season);
-  if(de0(nach)){const a=st.rek.welt.transfer;if(!a||fee>a.n){st.rek.welt.transfer={n:fee,pid:p.id,txt:`${p.n}, ${stVerein(von)} → ${stVerein(nach)}`,wann};
-    if(a&&S.season-st.ab>=RSTAT.rekord.meldenAb)news(`Rekordtransfer: ${p.n} wechselt für ${fmt(fee)} von ${stVerein(von)} zu ${stVerein(nach)}. Bisher: ${a.txt} (${fmt(a.n)}).`,'tr');}
+  if(de0(nach)){const a=rekWelt().transfer;if(!a||fee>a.n){st.rek.welt.transfer={n:fee,pid:p.id,txt:`${p.n}, ${stVerein(von)} → ${stVerein(nach)}`,wann};
+    if(a)news( /* seit K34d gibt es immer einen echten Startwert, also immer melden (Prüfung DY5) */`Rekordtransfer: ${p.n} wechselt für ${fmt(fee)} von ${stVerein(von)} zu ${stVerein(nach)}. Bisher: ${a.txt} (${fmt(a.n)}).`,'tr');}
     vereinsRekord(nach,'zu',fee,{txt:`${p.n} von ${stVerein(von)}`,wann});}
   if(de0(von))vereinsRekord(von,'ab',fee,{txt:`${p.n} zu ${stVerein(nach)}`,wann});}
 
@@ -136,7 +144,7 @@ function statistikSaison(sm){const st=statS(),s=S.season,E=RSTAT.ehrung,L=saison
   LIGEN.forEach(lg=>{if(auf[lg].includes(S.my))v('aufstieg',lg);});
   // Karriere des Trainers: die Zeile dieser Saison in S.hist ergänzen
   const h=S.hist[S.hist.length-1];if(h&&h.s===s){const row=table(me.lg).find(r=>r.id===S.my)||{p:0,tf:0,ta:0};
-    Object.assign(h,{tid:S.my,pk:row.p,tf:row.tf,ta:row.ta,zus:S.att&&S.att[1]?Math.round(S.att[0]/S.att[1]):0,um:Object.values(S.fin||{}).filter(x=>x>0).reduce((x,y)=>x+y,0),erg:sm.fin,ruf:ruf(),st:S.stufe||REGELN.schwierigkeit.standard});}
+    Object.assign(h,{tid:S.my,pk:row.p,tf:row.tf,ta:row.ta,zus:S.att&&S.att[1]?Math.round(S.att[0]/S.att[1]):0,zusN:S.att?S.att[1]:0,um:Object.values(S.fin||{}).filter(x=>x>0).reduce((x,y)=>x+y,0),erg:sm.fin,ruf:ruf(),st:S.stufe||REGELN.schwierigkeit.standard,mw:S.mitw?1:0});}
   // Zeilen schließen, lange Inaktive verdichten (K34 §5.2)
   for(const p of PIX.values()){statZeileSchliessen(p);if(p.kar&&p.kar.length&&p.kar[p.kar.length-1][KZ.s]<=s-RSTAT.verdichtenNach)statVerdichten(p);}
   st.tz={};st.eg={};}
@@ -156,12 +164,15 @@ function statSaisonSumme(p,s){const a={sp:0,t:0,v:0,ns:0,nz:0};statZeilen(p).for
 // ---------- Ansicht (K34 §5.9) ----------
 // Zustand der Ansicht (nicht im Spielstand): Unterseite, Liga, Archiv-Saison, gemerkte Spieler für den Vergleich
 let STV='saison',STLG=0,STARCH=null,VGL=[];
-const ST_SEITEN=[['saison','Saison'],['ehrungen','Ehrungen'],['rekorde','Rekorde'],['archiv','Archiv'],['karriere','Karriere']];
+const ST_SEITEN=[['saison','Saison'],['ehrungen','Ehrungen'],['rekorde','Rekorde'],['archiv','Archiv'],['karriere','Karriere'],['sammlung','Sammlung']]; /* Sammlung der Ereigniskarten (K30h) */
 const stLigaWahl=lg=>`<div class="row">${LIGEN.map(l=>`<button class="${l===lg?'go':''}" aria-pressed="${l===lg}" onclick="STLG=${l};render()">${l}. Liga</button>`).join('')}</div>`;
 const stLink=e=>e?`<a href="#" onclick="openP(${e[0]});return false">${esc(e[1])}</a> <span class="dim">(${esc(stVerein(e[2]))})</span>`:'–';
-function statistikAnsicht(){const st=statS(),f={saison:stAnsichtSaison,ehrungen:stAnsichtEhrungen,rekorde:stAnsichtRekorde,archiv:stAnsichtArchiv,karriere:stAnsichtKarriere}[STV]||stAnsichtSaison;
+function statistikAnsicht(){const st=statS(),f={saison:stAnsichtSaison,ehrungen:stAnsichtEhrungen,rekorde:stAnsichtRekorde,archiv:stAnsichtArchiv,karriere:stAnsichtKarriere,sammlung:sammlungAnsicht}[STV]||stAnsichtSaison;
   return`<div class="card"><div class="row between"><h2>Statistik</h2><div class="row">${ST_SEITEN.map(([k,l])=>`<button class="${STV===k?'go':''}" aria-pressed="${STV===k}" onclick="STV='${k}';render()">${l}</button>`).join('')}</div></div>
-    <p class="dim">Alle Zahlen seit Beginn deines Spielstands (Saison ${stSaison(st.ab)}). Frühere Spiele zählen nicht.</p></div>${stVergleich()}${f(st)}`;}
+    ${STV==='sammlung'?'':`<p class="dim">Alle Zahlen seit Beginn deines Spielstands (Saison ${stSaison(st.ab)}). Frühere Spiele zählen nicht.</p>`}</div>${stVergleich()}${f(st)}`;} /* die Sammlung gilt über alle Karrieren (Prüfung FM8) */
+// Europapokal in der Saisonstatistik (K37 „Noch nicht“, K34c): Torjäger der deutschen Vereine im Europapokal dieser Saison (p.eg, am Saisonwechsel auf 0)
+function stEuropaTorjaeger(){const l=S.pl.filter(p=>p.team>=0&&p.team<AV0&&(p.eg||0)>0).sort((a,b)=>b.eg-a.eg).slice(0,RSTAT.euListe);if(!l.length)return'';
+  return`<div class="card"><h3>Europapokal: Torjäger deutscher Vereine ${stSaison(S.season)}</h3><table><tbody>${l.map((p,i)=>`<tr class="click ${p.team===S.my?'me':''}" onclick="openP(${p.id})"><td class="num">${i+1}.</td><td>${esc(p.n)}<br><span class="dim">${esc(tn(p.team))}</span></td><td class="num"><b>${p.eg}</b></td></tr>`).join('')}</tbody></table></div>`;}
 function stAnsichtSaison(){const lg=STLG||myT().lg,l=[...saisonSammeln(S.season)[lg].values()];
   const zeile=(a,i,w)=>`<tr class="click ${a.p.team===S.my?'me':''}" onclick="openP(${a.p.id})"><td class="num">${i+1}.</td><td>${esc(a.p.n)}<br><span class="dim">${esc(stVerein(a.tid))}</span></td><td class="num"><b>${w(a)}</b></td></tr>`;
   const liste=(titel,c,w,leer)=>`<div class="card"><h3>${titel}</h3>${c.length?`<table><tbody>${c.slice(0,15).map((a,i)=>zeile(a,i,w)).join('')}</tbody></table>`:`<p class="dim">${leer}</p>`}</div>`;
@@ -170,7 +181,7 @@ function stAnsichtSaison(){const lg=STLG||myT().lg,l=[...saisonSammeln(S.season)
   const noten=l.filter(a=>a.nz>=nMin).sort((a,b)=>statSchnitt(a)-statSchnitt(b)),tw=l.filter(a=>a.p.pos==='TW'&&a.sp>0).sort((a,b)=>b.zn-a.zn||b.pa-a.pa);
   return`<div class="card"><div class="row between"><h3>${ligaName(lg)} ${stSaison(S.season)}</h3>${stLigaWahl(lg)}</div></div>
   <div class="grid">${liste('Torjäger',tore,a=>a.t,'Noch keine Tore.')}${liste('Vorlagen',vorl,a=>a.v,'Noch keine Vorlagen.')}${liste('Scorer (Tore und Vorlagen)',sc,a=>`${a.t+a.v} <span class="dim">(${a.t}+${a.v})</span>`,'Noch keine Scorer.')}
-  ${liste(`Notenschnitt (ab ${nMin} Noten)`,noten,a=>stNote(Math.round(statSchnitt(a)*100)),'Noch zu wenige Noten.')}${liste('Torhüter: Spiele zu null',tw,a=>`${a.zn} <span class="dim">· ${a.pa} Paraden</span>`,'Noch keine Spiele.')}</div>${stKaderTabelle()}`;}
+  ${liste(`Notenschnitt (ab ${nMin} Noten)`,noten,a=>stNote(Math.round(statSchnitt(a)*100)),'Noch zu wenige Noten.')}${liste('Torhüter: Spiele zu null',tw,a=>`${a.zn} <span class="dim">· ${a.pa} Paraden</span>`,'Noch keine Spiele.')}</div>${stEuropaTorjaeger()}${stKaderTabelle()}`;}
 function stKaderTabelle(){const sq=squad(S.my).map(p=>({p,x:p.sst&&p.sst.s===S.season&&p.sst.tid===S.my?p.sst:null})).sort((a,b)=>((b.x&&b.x.sp)||0)-((a.x&&a.x.sp)||0)||((b.x&&b.x.ps)||0)-((a.x&&a.x.ps)||0));
   const z=({p,x})=>{const g=k=>x?x[k]:0;return`<tr class="click" onclick="openP(${p.id})"><td><span class="pos ${p.pos}">${p.pos}</span> ${esc(p.n)}</td><td class="num">${g('sp')}</td><td class="num">${g('min')}</td><td class="num">${g('t')}</td><td class="num">${g('v')}</td><td class="num">${x&&x.nz?stNote(Math.round(x.ns/x.nz*100)):'–'}</td><td class="num">${g('ge')}/${g('ro')}</td><td class="num">${g('ps')}/${g('pt')}/${g('pv')}</td></tr>`;};
   return`<div class="card"><h3>Dein Kader in dieser Saison</h3><div class="tw"><table><thead><tr><th>Spieler</th><th class="num">Sp</th><th class="num">Min</th><th class="num">T</th><th class="num">V</th><th class="num">Ø</th><th class="num" title="Gelb/Rot">G/R</th><th class="num" title="Pokal: Spiele/Tore/Vorlagen">Pokal</th></tr></thead><tbody>${sq.map(z).join('')}</tbody></table></div>
@@ -186,12 +197,12 @@ function stAnsichtEhrungen(st){const lg=STLG||myT().lg,A=st.arch.slice().reverse
 function stAnsichtRekorde(st){const zeile=(k,r,f)=>`<tr><td>${k}</td><td>${r?f(r):'<span class="dim">noch keiner</span>'}</td></tr>`,wann=r=>` <span class="dim">${esc(r.wann||'')}${r.echt?' · echter Rekord':''}</span>`;
   const liga=lg=>{const R0=rekLiga(lg);return`<div class="card"><h3>${ligaName(lg)}</h3><table><tbody>${zeile('Höchster Sieg',R0.sieg,r=>`<b>${r.hg}:${r.ag}</b> ${esc(r.txt)}${wann(r)}`)}
     ${zeile('Meiste Tore einer Saison',R0.tore,r=>`<b>${r.n}</b> ${esc(r.txt)}${wann(r)}`)}${zeile('Längste Serie ohne Niederlage',R0.serie,r=>`<b>${r.n} Spiele</b> ${esc(r.txt)}${wann(r)}`)}</tbody></table>
-    ${lg===1?'<p class="dim">Startwerte sind die echten Bundesliga-Rekorde.</p>':'<p class="dim">Rekorde seit Spielbeginn.</p>'}</div>`;};
+    ${lg===1?'<p class="dim">Startwerte sind die echten Bundesliga-Rekorde.</p>':RSTAT.rekord.allzeit[lg]?`<p class="dim">Startwerte sind die echten Rekorde der ${ligaName(lg)}.</p>`:'<p class="dim">Rekorde seit Spielbeginn.</p>'}</div>`;};
   const v=Object.entries(st.rek.v).map(([tid,r])=>`<div class="card"><h3>Vereinsrekorde ${esc(stVerein(+tid))}</h3><table><tbody>${zeile('Zuschauer',r.zus,x=>`<b>${de(x.n)}</b> ${esc(x.txt)}${wann(x)}`)}
     ${zeile('Höchster Sieg',r.sieg,x=>`<b>${x.hg}:${x.ag}</b> ${esc(x.txt)}${wann(x)}`)}${zeile('Teuerster Zugang',r.zu,x=>`<b>${fmt(x.n)}</b> ${esc(x.txt)}${wann(x)}`)}${zeile('Teuerster Abgang',r.ab,x=>`<b>${fmt(x.n)}</b> ${esc(x.txt)}${wann(x)}`)}</tbody></table>
     <p class="dim">Seit Spielbeginn, nur in deiner Zeit als Trainer.</p></div>`).join('');
-  const w=st.rek.welt.transfer;
-  return`<div class="grid">${LIGEN.map(liga).join('')}<div class="card"><h3>Rekordtransfer</h3><p>${w?`<b>${fmt(w.n)}</b> ${esc(w.txt)}${wann(w)}`:'<span class="dim">noch keiner</span>'}</p><p class="dim">Teuerster Zugang eines deutschen Vereins seit Spielbeginn.</p></div>${v}</div>`;}
+  const w=rekWelt().transfer;
+  return`<div class="grid">${LIGEN.map(liga).join('')}<div class="card"><h3>Rekordtransfer</h3><p>${w?`<b>${fmt(w.n)}</b> ${esc(w.txt)}${wann(w)}`:'<span class="dim">noch keiner</span>'}</p><p class="dim">Teuerster Zugang eines deutschen Vereins${w&&w.echt?' (echter Rekord, noch nicht übertroffen)':' seit dem echten Rekord'}.</p></div>${v}</div>`;}
 function stAnsichtArchiv(st){if(!st.arch.length)return`<div class="card"><p>Das Archiv beginnt am Ende der Saison ${stSaison(st.ab)}.</p></div>`;
   const a=st.arch.find(x=>x.s===STARCH)||st.arch[st.arch.length-1],meine=new Set(st.st.map(x=>x.tid)),titel=new Map();
   st.arch.forEach(x=>x.m.forEach((id,i)=>{if(id==null)return;const k=id+':'+(i+1);titel.set(k,(titel.get(k)||0)+1);}));
@@ -199,19 +210,21 @@ function stAnsichtArchiv(st){if(!st.arch.length)return`<div class="card"><p>Das 
   const tab=lg=>`<div class="card"><h3>${ligaName(lg)}</h3><div class="tw"><table><thead><tr><th class="num">#</th><th>Verein</th><th class="num">Tore</th><th class="num">Pkt</th></tr></thead><tbody>${(a.tab[lg]||[]).map((r,i)=>`<tr class="${meine.has(r[0])?'me':''}"><td class="num">${i+1}</td><td>${esc(stVerein(r[0]))}${(a.auf[lg-1]||[]).includes(r[0])?' <span class="dim">(Aufstieg)</span>':''}</td><td class="num">${r[2]}:${r[3]}</td><td class="num"><b>${r[1]}</b></td></tr>`).join('')}</tbody></table></div></div>`;
   return`<div class="card"><div class="row between"><h3>Saison ${stSaison(a.s)}</h3><select aria-label="Saison im Archiv" onchange="STARCH=+this.value;render()">${st.arch.map(x=>`<option value="${x.s}" ${x.s===a.s?'selected':''}>${stSaison(x.s)}</option>`).join('')}</select></div>
     <div class="facts">${fact('Meister',esc(stVerein(a.m[0])))}${fact('Pokalsieger',esc(stVerein(a.p)))}${a.sc!=null?fact('Supercup',esc(stVerein(a.sc))):''}</div><h3>Titel seit Spielbeginn</h3>${meister}</div><div class="grid">${LIGEN.map(tab).join('')}</div>`;}
-function stAnsichtKarriere(st){const G={meister:'Meister',pokal:'DFB-Pokal',supercup:'Supercup',aufstieg:'Aufstieg',trainer:'Trainer der Saison',cl:'Champions League',el:'Europa League',ecl:'Conference League'},E=RSTAT.ehemalige,meine=new Set(st.st.map(x=>x.tid));
+function stAnsichtKarriere(st){const G={meister:'Meister',pokal:'DFB-Pokal',supercup:'Supercup',aufstieg:'Aufstieg',trainer:'Trainer der Saison',cl:'Champions League',el:'Europa League',ecl:'Conference League',turnier:'Sommerturnier'},E=RSTAT.ehemalige,meine=new Set(st.st.map(x=>x.tid));
   const wo=x=>x.k==='meister'||x.k==='trainer'?` ${ligaName(x.lg)}`:x.k==='aufstieg'?` in die ${ligaName(x.lg)}`:'';
   const vit=st.vit.length?`<ul>${st.vit.slice().reverse().map(x=>`<li><b>${G[x.k]||x.k}</b>${wo(x)} · ${esc(stVerein(x.tid))} · ${stSaison(x.s)}</li>`).join('')}</ul>`:'<p class="dim">Noch leer.</p>';
-  const stn=st.st.map(x=>`<tr><td>${esc(stVerein(x.tid))}</td><td>${stSaison(x.von[0])}</td><td>${x.bis?stSaison(x.bis[0]):'heute'}</td><td>${esc(x.g||'')}</td></tr>`).reverse().join('');
+  const lauf=gehaltLaufend(),vd=x=>(x.verd||0)+(x.abf||0)+(x.bis==null&&x.tid===S.my?lauf:0); /* Trainervertrag (K28 §5.5, U12g), nur Statistik; die laufende Saison anteilig dazu (DN6) */
+  const stn=st.st.map(x=>`<tr><td>${esc(stVerein(x.tid))}</td><td>${stSaison(x.von[0])}</td><td>${x.bis?stSaison(x.bis[0]):'heute'}</td><td>${esc(x.g||'')}</td><td class="num">${x.geh?fmt(x.geh):'–'}</td><td class="num">${vd(x)?fmt(vd(x)):'–'}${x.abf?` <span class="dim">(Abfindung ${fmt(x.abf)})</span>`:''}</td></tr>`).reverse().join('');
+  const verd=st.st.reduce((a,x)=>a+vd(x),0),abf=st.st.reduce((a,x)=>a+(x.abf||0),0);
   const stufeName=k=>k?esc((REGELN.schwierigkeit.stufen[k]||{}).name||k):'–';
-  const h=(S.hist||[]).slice().reverse().map(x=>`<tr><td>${stSaison(x.s)}</td><td>${esc(x.team)}</td><td class="num">${x.lg}.</td><td class="num">${x.pos}${x.ok?' ✓':''}</td><td class="num">${x.pk!=null?x.pk:'–'}</td><td class="num">${x.tf!=null?x.tf+':'+x.ta:'–'}</td><td class="num">${x.zus?de(x.zus):'–'}</td><td class="num">${x.um!=null?fmt(x.um):'–'}</td><td class="num">${x.erg!=null?fmt(x.erg):'–'}</td><td class="num">${x.ruf!=null?de(x.ruf):'–'}</td><td>${stufeName(x.st)}</td></tr>`).join('');
+  const h=(S.hist||[]).slice().reverse().map(x=>`<tr><td>${stSaison(x.s)}</td><td>${esc(x.team)}</td><td class="num">${x.lg}.</td><td class="num">${x.pos}${x.ok?' ✓':''}</td><td class="num">${x.pk!=null?x.pk:'–'}</td><td class="num">${x.tf!=null?x.tf+':'+x.ta:'–'}</td><td class="num">${x.zus?de(x.zus):'–'}</td><td class="num">${x.um!=null?fmt(x.um):'–'}</td><td class="num">${x.erg!=null?fmt(x.erg):'–'}</td><td class="num">${x.ruf!=null?de(x.ruf):'–'}</td><td class="num">${x.geh?fmt(x.geh):'–'}</td><td>${stufeName(x.st)}${x.mw?' (mitwachsend)':''}</td></tr>`).join('');
   const em=st.ehem.filter(e=>Object.entries(e.ver||{}).some(([t,n])=>meine.has(+t)&&n>=E.vereinSpiele)).sort((a,b)=>b.sp-a.sp).slice(0,25),el=st.ehem.slice().sort((a,b)=>b.sp-a.sp).slice(0,25);
   const ehz=e=>`<tr><td>${esc(e.n)} <span class="dim">${e.pos}</span>${e.ehr?' <span title="geehrt">★</span>':''}</td><td>${esc(stVerein(e.tid))}</td><td>${e.von!=null?stSaison(e.von):''} bis ${e.bis!=null?stSaison(e.bis):''}</td><td class="num">${e.sp}</td><td class="num">${e.t}</td><td class="num">${e.v}</td><td class="num">${stNote(e.no)}</td></tr>`;
   const ehTab=(titel,l)=>`<div class="card"><h3>${titel}</h3>${l.length?`<div class="tw"><table><thead><tr><th>Spieler</th><th>Verein</th><th>Zeit</th><th class="num">Sp</th><th class="num">T</th><th class="num">V</th><th class="num">Ø</th></tr></thead><tbody>${l.map(ehz).join('')}</tbody></table></div>`:'<p class="dim">Noch niemand.</p>'}</div>`;
   const chronik=(st.chronik||[]).slice().reverse().slice(0,10).map(c=>`<p>„${esc(c.txt)}“<br><span class="dim">${stSaison(c.s)} · ${esc(stVerein(c.tid))}${c.kopf?' · '+esc(c.kopf):''}</span></p>`).join(''); // Sprüche-Chronik (K34 D6, Inhalt aus K29, U17a)
   const fotos=(st.foto||[]).slice().reverse().slice(0,5).map(f=>`<p><b>${stSaison(f.s)} · ${esc(stVerein(f.tid))}</b><br><span class="dim">${f.n.map(esc).join(', ')}</span></p>`).join(''); // Mannschaftsfotos der Saisoneröffnung (K12b §5.2, U14)
-  return`<div class="grid"><div class="card"><h3>Vitrine</h3>${vit}<p class="dim">Turnierpokale aus Testspielen gibt es noch nicht.</p></div><div class="card"><h3>Stationen</h3><table><thead><tr><th>Verein</th><th>von</th><th>bis</th><th>Ende</th></tr></thead><tbody>${stn}</tbody></table></div>${fotos?`<div class="card"><h3>Mannschaftsfotos</h3>${fotos}</div>`:''}${chronik?`<div class="card"><h3>Sprüche-Chronik</h3>${chronik}</div>`:''}</div>
-  <div class="card"><h3>Saisons</h3><div class="tw"><table><thead><tr><th>Saison</th><th>Verein</th><th class="num">Liga</th><th class="num" title="Platz, ✓ Saisonziel erreicht">Platz</th><th class="num">Pkt</th><th class="num">Tore</th><th class="num" title="Zuschauerschnitt">Zusch.</th><th class="num">Umsatz</th><th class="num">Ergebnis</th><th class="num">Ruf</th><th>Stufe</th></tr></thead><tbody>${h||'<tr><td colspan="11" class="dim">Noch keine abgeschlossene Saison.</td></tr>'}</tbody></table></div></div>
+  return`<div class="grid"><div class="card"><h3>Vitrine</h3>${vit}</div><div class="card"><h3>Stationen</h3><div class="tw"><table><thead><tr><th>Verein</th><th>von</th><th>bis</th><th>Ende</th><th class="num" title="Gehalt je Saison laut Vertrag">Gehalt</th><th class="num" title="Gehalt anteilig nach Tagen, dazu Abfindungen">verdient</th></tr></thead><tbody>${stn}</tbody></table></div><p class="dim">Verdient insgesamt ${fmt(verd)}${abf?`, davon Abfindungen ${fmt(abf)}`:''}. Nur Statistik, das Gehalt geht nicht über das Vereinskonto.</p></div>${fotos?`<div class="card"><h3>Mannschaftsfotos</h3>${fotos}</div>`:''}${chronik?`<div class="card"><h3>Sprüche-Chronik</h3>${chronik}</div>`:''}</div>
+  <div class="card"><h3>Saisons</h3><div class="tw"><table><thead><tr><th>Saison</th><th>Verein</th><th class="num">Liga</th><th class="num" title="Platz, ✓ Saisonziel erreicht">Platz</th><th class="num">Pkt</th><th class="num">Tore</th><th class="num" title="Zuschauerschnitt">Zusch.</th><th class="num">Umsatz</th><th class="num">Ergebnis</th><th class="num">Ruf</th><th class="num" title="Gehalt je Saison laut Vertrag zum Saisonende">Gehalt</th><th>Stufe</th></tr></thead><tbody>${h||'<tr><td colspan="12" class="dim">Noch keine abgeschlossene Saison.</td></tr>'}</tbody></table></div></div>
   <div class="grid">${ehTab('Ehemalige deiner Vereine',em)}${ehTab('Ehemalige mit den meisten Ligaspielen',el)}</div>`;}
 // Vergleich zweier Spieler (K34 §4): „Vergleichen“ auf der Spielerkarte merkt sich bis zu zwei Spieler
 function vergleichen(id){VGL=[id,...VGL.filter(x=>x!==id)].slice(0,2);toast(VGL.length<2?'Gemerkt. Noch einen Spieler wählen, dann steht der Vergleich in der Statistik.':'Der Vergleich steht in der Statistik.');}

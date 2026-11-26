@@ -43,4 +43,52 @@ pruef(ein>0&&ein<urteile.length,'Computer-Vereine legen manchmal Einspruch ein',
   pruef(sp.pokal.rot===1&&sp.pokal.gelb===0&&sp.liga.gelb===0&&p.kt.liga===0,'Saisonwechsel: Gelbe und Gelbsperren verfallen, Rot im Pokal läuft weiter',JSON.stringify(sp));
   sp.pokal.rot=0;}
 console.log(`\n${N} Saison(s), ${sum.spiele} Ligaspiele, in ${((Date.now()-t0)/1000).toFixed(1)} s`);
+// K09c. Vereinsstrafe (K09 §5.2, K14 §6): nach einem Urteil gegen deinen Spieler eine Karte im Büro. Verhängen bringt Geld, drückt seine Stimmung und hebt die
+//       Glaubwürdigkeit, verzichten umgekehrt. Unter der Automatik des Sportgerichts gibt es sie nicht. Eigene Welt, weil F.sgUrteil oben ersetzt ist.
+{const {neueWelt}=require('./sim'),lauf=(ja,auto)=>{const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S,ev=W.ev;S.my=6;S.mgr='Test';F.setTarget();
+    if(auto){F.lizenzStart(true);S.lizenz.auto.sportgericht=1;}const p=ev('squad')(S.my)[0];ev('stimmung')(p);p.st=50;const t=ev('myT()');t.glaub=50;
+    F.sgUrteil({pid:p.id,team:S.my,wb:'liga',art:'grob',tag:S.tag,antrag:2,gesessen:0,vor:0},2,'angenommen',S.tag);const karte=F.vereinsstrafeKarte();
+    if(!karte)return{karte:false};const b=S.vstrafe[0].betrag,f0=S.fin['Vereinsstrafen']||0;F.vereinsstrafe(p.id,ja);
+    return{karte:true,geld:(S.fin['Vereinsstrafen']||0)-f0,b,st:p.st,glaub:ev('glaub')(t),weg:!S.vstrafe.length,soll:2*(ev('RD').vereinsstrafe.jeSpiel[t.lg]||ev('RD').vereinsstrafe.jeSpiel[3])};};
+  const ja=lauf(1,false),nein=lauf(0,false),au=lauf(1,true);
+  pruef(ja.karte&&ja.geld===ja.b&&ja.b===ja.soll&&ja.st<50&&ja.glaub>50&&ja.weg&&nein.karte&&nein.geld===0&&nein.st>50&&nein.glaub<50&&!au.karte,
+    'Vereinsstrafe: Karte nach dem Urteil, verhängen (Geld, Stimmung runter, Glaubwürdigkeit rauf), verzichten (umgekehrt), keine unter der Automatik',
+    `verhängt ${ja.geld} € (soll ${ja.soll}), Stimmung ${ja.st}, Glaubwürdigkeit ${ja.glaub}; verzichtet Stimmung ${nein.st}, Glaubwürdigkeit ${nein.glaub}; Automatik ${au.karte}`);}
+
+// EA1 bis EA3. Vereinsstrafe: zwei Urteile ergeben zwei Karten; am letzten Tag hält das Spiel an („Frist“); für eine Rote Karte bei einem anderen Verein keine Karte
+{const {neueWelt}=require('./sim'),{W,F}=neueWelt();F.buildWorld(SEED);const S=W.S,ev=W.ev;S.my=6;S.mgr='Test';F.setTarget();S.phase='play';
+  const [p,q,r]=ev('squad')(S.my),urteil=(x,team)=>F.sgUrteil({pid:x.id,team,wb:'liga',art:'grob',tag:S.tag,antrag:1,gesessen:0,vor:0},1,'angenommen',S.tag);
+  urteil(p,S.my);urteil(q,S.my);urteil(r,S.my+1);const offen=ev('vereinsstrafeOffen')(),zwei=offen.length===2&&!offen.some(v=>v.pid===r.id);
+  const bis=offen[0].bis,frist=ev('vereinsstrafeFrist')(bis)&&!ev('vereinsstrafeFrist')(bis-1),karten=(F.vereinsstrafeKarte().match(/<h3>Vereinsstrafe<\/h3>/g)||[]).length===2;
+  pruef(zwei&&karten&&frist,'Vereinsstrafe: mehrere Karten, Halt am letzten Tag, keine für eine Rote Karte bei einem anderen Verein',`offen ${offen.length}, Karten ${karten}, Halt ${frist}`);}
+
+// K09g. Trainer-Karten und Tribüne (K09 §5.4): Jede vierte Gelbe sperrt ein Spiel. Die Sperre gilt ab dem nächsten Pflichtspiel (nicht in dem, in dem sie entstand) und läuft
+//       dort ab, Testspiele zählen nicht. Die Gelben verfallen zum Saisonende, die Sperre nicht. Innenraumverbot nach wiederholter Schiedsrichterkritik (1, dann 2 Spiele).
+//       Protest nur nach einem Anlass; die zweite Gelbe im selben Spiel ist Gelb-Rot mit Tribüne und Sperre. Auf der Tribüne spricht in der Halbzeit der Co-Trainer.
+{const {neueWelt}=require('./sim'),{W,F}=neueWelt();F.buildWorld(SEED);const S=W.S,ev=W.ev;S.my=6;S.mgr='Test';F.setTarget();S.phase='play';S.lineup=F.bestXI(6,ev('myT()').form);
+  const T=ev('RD').trainer,abs=ev('absTag'),d=S.tag,geg=S.teams.find(t=>t.id!==6&&t.lg===S.teams[6].lg).id,spiel=o=>Object.assign({h:6,a:geg,ev:[]},o||{});
+  for(let i=1;i<T.sperreJe;i++)F.trainerGelb();const vorher=S.trainerK.sp===0;F.trainerGelb();const nachVier=S.trainerK.sp===T.sperreSpiele&&S.trainerK.g===T.sperreJe;
+  F.trainerNachSpiel(spiel(),d);const nichtGleich=S.trainerK.sp===T.sperreSpiele; /* im Spiel entstanden: noch nicht abgesessen */
+  F.trainerVorSpiel(d);const trib=ev('trainerTribuene')();F.trainerNachSpiel(spiel({test:1}),d);const test=S.trainerK.sp===T.sperreSpiele;
+  F.trainerNachSpiel(spiel(),d);const ab=S.trainerK.sp===0&&S.trainerK.heute===null&&!ev('trainerTribuene')();
+  F.trainerSperre(1,'Test');S.season++;const saison=ev('trainerKS')().g===0&&S.trainerK.sp===1;S.season--;S.trainerK.s=S.season;S.trainerK.sp=0;
+  S.kontrolle={f:[{tid:6,urteil:abs(d),uk:0,txt:'',kopf:''}],alt:[abs(d)-10]};F.kontrolleTag(d);const iv1=S.trainerK.sp===1;S.trainerK.sp=0;
+  S.kontrolle={f:[{tid:6,urteil:abs(d),uk:0,txt:'',kopf:''}],alt:[abs(d)-20,abs(d)-10]};F.kontrolleTag(d);const iv2=S.trainerK.sp===Math.min(T.innenraum.max,2);S.trainerK.sp=0;
+  const pa=ev('protestAnlass'),anlass=pa({t:'G',art:'elfmeter',s:1},0)&&pa({t:'C',art:'elfmeter',s:1},0)&&pa({t:'R',s:0},0)&&!pa({t:'G',art:'elfmeter',s:0},0)&&!pa({t:'R',s:1},0)&&!pa({t:'G',art:'spiel',s:1},0);
+  W.ev('liveRender=function(){};liveSichern=function(){};');const G=F.spielAnlegen(6,geg,{}),L={G,s:0,ende:false,anlass:null,protestiert:false,meldung:''};ev('(function(x){LIVE=x;})')(L);
+  S.live={tag:S.tag,eing:[],m:0,k:0};const g0=S.trainerK.g;F.liveProtest();const ohneAnlass=!S.live.prot;
+  const rot0=T.protestRot;T.protestRot=0; /* K09i: hier nur der Weg über Gelb-Rot, Rot eigens unten */
+  let n=0;while(!S.live.trib&&n<60){L.anlass=G.m;L.protestiert=false;F.liveProtest();n++;}T.protestRot=rot0;
+  const gelbRot=S.live.trib===1&&S.live.tg===2&&S.trainerK.g===g0+1&&S.trainerK.sp===T.gelbRotSpiele&&ev('liveTribuene')()&&!ev('protestOffen')(Object.assign(L,{anlass:G.m,protestiert:false}))&&S.live.eing.some(e=>e.a==='zuruf');
+  F.trainerVorSpiel(d);const neuladen=S.trainerK.heute==null; /* Prüfung FG1: Neuladen mitten im Spiel macht die Sperre aus diesem Spiel nicht zu einer für heute */
+  while(G.m<45)G.minute();F.liveAnsprache('loben');const co=!!L.ansprache&&L.anspPasst===null&&S.live.anspCo===1&&S.live.eing.some(e=>e.a==='ansprache')&&String(L.meldung).includes('Co-Trainer');
+  pruef(vorher&&nachVier&&nichtGleich&&trib&&test&&ab&&saison&&iv1&&iv2&&anlass&&ohneAnlass&&gelbRot&&neuladen&&co,'Trainer-Karten: Sperre nach der vierten Gelben ab dem nächsten Pflichtspiel, Innenraumverbot, Protest mit Gelb-Rot und Tribüne, Ansprache des Co-Trainers',
+    `vier Gelbe ${vorher}/${nachVier}, nicht im selben Spiel ${nichtGleich}, Tribüne ${trib}, Testspiel ${test}, abgesessen ${ab}, Saisonwechsel ${saison}, Innenraum ${iv1}/${iv2}, Anlässe ${anlass}, `+
+    `ohne Anlass ${ohneAnlass}, Gelb-Rot nach ${n} Protesten ${gelbRot}, Neuladen ${neuladen}, Co-Trainer ${co} (${L.ansprache})`);
+  /* K09i. Direkte Rote Karte: mit sehr hohem protestRot bringt schon der erste Protest Rot, Tribüne und rotSpiele Spiele Sperre, ohne Gelbe in der Saisonzählung */
+  const G2=F.spielAnlegen(6,geg,{}),L2={G:G2,s:0,ende:false,anlass:0,protestiert:false,meldung:''};ev('(function(x){LIVE=x;})')(L2);S.live={tag:S.tag,eing:[],m:0,k:0};S.trainerK.sp=0;
+  const g1=S.trainerK.g;T.protestRot=2;F.liveProtest();T.protestRot=rot0; /* 2: sicher Rot, auch bei einem großzügigen Schiedsrichter */
+  pruef(S.live.rot===1&&S.live.trib===1&&S.trainerK.sp===T.rotSpiele&&S.trainerK.g===g1&&String(L2.meldung).includes('Rot'),'Rote Karte für den Trainer: Tribüne und zwei Spiele Sperre, zählt nicht zu den Gelben',
+    `Rot ${S.live.rot}, Tribüne ${S.live.trib}, Sperre ${S.trainerK.sp}, Gelbe ${g1} → ${S.trainerK.g}`);}
+
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

@@ -48,6 +48,7 @@ Karten dürfen nur Werte ändern, die es im Spiel gibt (K35a: Texte beschreiben 
 - **Seit U18b (20.11.2026, K32 §8):** Fans (Baustein Umfeld der Fanstimmung, K27), einen Vereinslosen verpflichten (ein Jahr, Anteil am üblichen Gehalt), Wechselinteresse eines Spielers an dir (K19 §5.3, bis Saisonende), Angebot eines Vereins für deinen Spieler (Vielfaches des Marktwerts, danach wie jedes Angebot, K19 §5.4). Im Code `fans`, `verpflichten`, `interesse`, `angebot`.
 - **Seit K23e (21.11.2026, K23 §8):** Einfluss eines Mäzens (`maezen`): Der Präsident mischt sich bis zum Saisonende auch ohne Ehrgeiz ein (Karte „Der Präsident mischt sich ein“).
 - **Seit K25b (21.11.2026, K25 §8):** Fanartikel (`merch`): Erlös × (1 + Wert) für vier Wochen (Karte „Trikot ausverkauft“).
+- **Seit K23f (22.11.2026, popolupo, ohne Testlauf):** Geld (`geld`, auch der schlechte Ausgang) gilt als Betrag für die 3. Liga und wird mit der Liga deines Vereins mal 2 (2. Liga) oder mal 4 (1. Liga) genommen (`REGELN.karten.geldLiga`, `kartenGeld`). In Texten steht der Betrag als Platzhalter `{geld:Grundwert}` und erscheint umgerechnet. Grund: Seit K23c sind die Einnahmen der 1. Liga etwa 13-mal so groß wie die der 3. Liga.
 
 ### 3.3 Speicherorte
 
@@ -115,6 +116,7 @@ Nachgerechnet mit einem kleinen Simulationsskript: Mit diesen Stufen sind nach 1
 - Zufall aus dem eigenen Strom „ereignisse“ (K02), Neuladen bringt keine andere Karte.
 - **Inhalte wachsen nach und nach** als Daten (`daten/ereignisse.js`): Vorlagen mit Platzhaltern für Beteiligte, Varianten und Folgen. 1000 Szenarien sind ein Ziel über viele Schritte, kein Startumfang.
 - **Sammlung (Idee, vorläufig):** Das Spiel merkt sich über alle Karrieren im Browser, welche Szenarien du schon erlebt hast („Chronik: 137 von 1000“), getrennt vom Spielstand. Seltene Funde sind so eine kleine Belohnung.
+  - **Gebaut als K30h (24.11.2026, popolupo, ohne Testlauf, vorläufig):** Jede Karte, die in dein Kartenprotokoll kommt (auch die der Automatik), zählt in der Sammlung (`kartenLog` → `sammlungMerken`, Browser-Speicher `flutlicht-manager-sammlung`, `{Karte: Zahl}`). Die Statistik hat dafür die Seite „Sammlung“: erlebt von allen, je Seltenheitsstufe, und die erlebten Karten mit Titel, Stufe, Bereich und Zahl. Unbekannte Karten bleiben verborgen. Keine Meldung beim ersten Mal, kein Zufall, nichts im Spielstand. Seit Prüfung FM7 zählen stumme Info-Karten (über der Grenze der Woche nur die Wirkung, ohne Meldung) nicht mit, seit FM8 steht über der Seite nicht mehr „seit Beginn deines Spielstands“. Zwei Kartenpaare tragen denselben Titel („Heimweh“ K03 und K32, „Der lachende Dritte“ mit Folgekarte), die Liste unterscheidet sie am Bereich. Ohne Browser-Speicher (privates Fenster) gilt sie nur bis zum Neuladen.
 
 ### 5.5 Umsetzung U12d (20. November 2026, ohne Testlauf): das Gerüst und die ersten fünf Karten
 
@@ -132,7 +134,13 @@ Nachgerechnet mit einem kleinen Simulationsskript: Mit diesen Stufen sind nach 1
    - ihre Sperrzeit für diese Beteiligten vorbei ist (Standard 120 Tage),
    - eine sehr seltene Karte in dieser Karriere noch nicht kam.
 3. Sie kommt dann mit der Chance 1 / (Saisons der Seltenheitsstufe × 40 Wochen). Eine häufige Karte (alle 3 Saisons) hat also 1 zu 120 je Woche, in der ihre Bedingungen erfüllt sind.
-4. Der Regler Meldungsdichte fehlt noch (K35a), es gilt „normal“.
+   - **Anlasskarten (K30d, 22.11.2026, popolupo, vorläufig, ohne Testlauf):** Eine Karte kann statt der Stufe eine eigene `chance` je Woche tragen (0 < chance ≤ 1, im Katalog).
+   - Das gilt für Karten, deren Anlass selbst selten ist und nur wenige Wochen besteht, etwa ein Auswärtsspiel im Europapokal oder eine Aufholjagd. Mit 1 zu 120 kämen sie praktisch nie (K37 §12 Nr. 21).
+   - Es bleibt ein Würfel je Karte und Woche. Budget, Sperre und Info-Grenze gelten wie für alle Karten.
+   - Seltenheit nach §5.4 bleibt für Karten ohne festen Anlass. Die Raten in §5.4 zählen Anlasskarten nicht mit.
+   - Gesetzt sind bisher: Fanmarsch 0,15, Reisechaos 0,1, Pyrotechnik 0,1, Wunder 1 (eine Aufholjagd wird immer gemeldet). Seit K10e auch Grippewelle 0,5 und lange Reha 0,03. Seit K09h Wurfgeschosse 0,05.
+   - Seit K09h kann eine Karte `fanarbeit:true` tragen: Läuft die Fanarbeit (K25), gilt ihre Chance × 0,7 (`REGELN.marketing.kampagnen.fanarbeit.vergehen`). Der Würfel bleibt derselbe.
+4. Der Regler Meldungsdichte ist seit K30b gebaut (22.11.2026, popolupo, ohne Testlauf): im Menü wenig, normal oder viel. „Wenig“ erlaubt eine kleine Entscheidung mit Halt je zwei Wochen und 3 Karten-Infos je Woche, „viel“ zwei kleine je Woche, zwei große je Monat und 8 Infos. Die Karten kommen gleich oft (gleiche Würfel), was nicht ins Budget passt, entscheidet der Co-Trainer. Seit Prüfung DY8 zählen Entscheidungen ohne Halt nicht mehr zur Info-Grenze, sie fallen also nie weg. Die Grenze von 4 Halten je Woche (Spiele mitgezählt) gilt in jeder Stufe. Ohne Einstellung „normal“.
 
 **Dosierung (§5.1):**
 
@@ -183,12 +191,89 @@ Jede Wirkung kann eine Chance haben. Dann wird im Strom `ereignisse` gewürfelt,
 | Ein Spieler heiratet | PLAN §4, K14 | Entscheidung, klein | ein Spieler deines Kaders zwischen 24 und 34 (Sperre je Spieler 2000 Tage) | „Teamausflug zur Feier“: −20.000 €, Zusammenhalt +3, Stimmung des Spielers +5. „Glückwunschkarte“: Stimmung +2 (Voreinstellung) |
 | Geheimtipp | K18 §8 | Info | ein Talent bis 20 bei einem Verein der 2. oder 3. Liga mit großem Talent | keine, nur der Hinweis |
 
-Noch nicht gebaut: verzögerte Folgen und Ketten (§3.1, §8.3), Merker, Meldungsdichte, die Chronik über alle Karrieren (§5.4), Skandale (§8.4), Kategorien mit eigener Rate.
+Noch nicht gebaut: verzögerte Folgen ohne eigene Karte, die schweren Skandale (§8.4, die ersten zwei seit K30f, die Manipulation in der 3. Liga seit K30g), Kategorien mit eigener Rate. Ketten und Merker gibt es seit K30c (§5.6), die Sammlung über alle Karrieren (§5.4) seit K30h.
+
+### 5.6 Umsetzung K30c (22. November 2026, popolupo, ohne Testlauf): Ketten und „Der lachende Dritte“
+
+**Ketten (§3.1, §4 Nr. 5):**
+
+- Eine Option kann eine Folgekarte anstoßen: `kette:{karte, tage:[von, bis]}` in `daten/karten.js`.
+- Wird die Option gewählt (von dir oder vom Co-Trainer), legt das Spiel die Folgekarte in `S.karten.kette`.
+  - Sie kommt nach `von` bis `bis` Tagen.
+  - Gezählt wird ab dem Tag der ersten Karte, nicht ab dem Tag der Antwort.
+  - Gewürfelt wird im Strom der ersten Karte, nach ihren Wirkungen. Wann du antwortest, ändert also nichts.
+- **Folgekarten** tragen `nurKette:true`. Im Wochenlauf werden sie nicht gezogen.
+- Ihr Auslöser bekommt die Beteiligten der ersten Karte und bestätigt sie oder gibt `null` zurück. Zum Beispiel: Ist der Spieler noch beim selben Verein?
+- **Täglich** (`kartenKette`, eigener Strom) kommen die fälligen Folgekarten:
+  - Ist der Auslöser nicht mehr erfüllt, verfällt die Folgekarte still.
+  - Es gilt das Budget für Entscheidungen wie montags. Passt die Karte nicht hinein, entscheidet der Co-Trainer.
+  - Sperre und Info-Grenze gelten nicht. Eine Kette läuft zu Ende oder verfällt (§5.2: Ketten vor den übrigen Karten).
+- **Ketten enden** mit der Saison, bei der Entlassung und beim Vereinswechsel.
+- **Merker** stehen dort, wo sie gebraucht werden. Beim lachenden Dritten ist das der Spieler (`p.ld3`).
+- **Folgekarten aus dem Spielablauf** (seit K11g, Prüfung EU1 und EV2): Karten mit `nurKette:true` und `ausSpiel:true` haben keine Vorgänger-Karte. Das Spiel selbst legt sie über `kartenKetteHeute(id, b, d)` für denselben Tag in die Kette, ohne Zufall, etwa `lagerTag` beim Lagerkoller. Das ist der Weg für alles, was nur in einem kurzen Zeitfenster passt (Lager, Spieltag), denn montags käme die Karte zu spät oder gar nicht. Doppelte verhindert ein Merker am Anlass (`l.kollerK`), denn die Kette prüft keine Sperre.
+- Das Prüfskript (`tests/karten.js` Fall 1 und `kartenpruefung.pl`) prüft:
+  - Jede Folgekarte existiert und hat `nurKette`.
+  - Jede `nurKette`-Karte hat einen Vorgänger, außer sie hat `ausSpiel`.
+  - `tage` ist gültig.
+
+**Der lachende Dritte (§8.3, K17 §5.4), Karte 1 „dritterTipp“** (Entscheidung, klein, häufig, Sperre 365 Tage):
+
+- **Auslöser:** im offenen Fenster ein Spieler auf der Transferliste eines Computer-Vereins, dazu:
+  - Er passt in deinen Kader (wie der Bedarf der Computer-Vereine).
+  - Mindestens zwei andere Computer-Vereine könnten mitbieten. Dafür gelten dieselben Bedingungen wie im Bieterwettstreit K20c: Bedarf, Ansehen, Alter, Konto, Gehaltsrahmen, Beziehung zum Verkäufer und Kaderplatz (`mitbieter`, aus `konkurrenzKauf` herausgelöst).
+  - Du kennst seinen Berater (Beziehung ab 20), oder du hast mit 5 % Glück einen Verwandten, der ihn kennt.
+- **Treffen mit dem Berater:** 5.000 € (3. Liga, nach Liga mehr). Mit 20 % spricht es sich herum: Beziehung zum Verkäufer −5. Folgekarte nach 3 bis 7 Tagen.
+- **Offiziell beim Verein melden:** Beziehung zum Berater +3.
+- **Nicht einmischen** (Voreinstellung).
+
+**Karte 2 „dritterTreffen“** (nur als Folgekarte):
+
+- **Schnell bieten** (Voreinstellung): Wechselinteresse des Spielers an dir +10 bis Saisonende.
+- **Die Vereine gegeneinander ausspielen:**
+  - Mit 60 % senkt der Verkäufer seine Forderung um 10 %. Das ist ein Gegenangebot in der Verhandlung, es gilt bis zum nächsten Abbruch.
+  - Sonst fliegt es auf: Beziehung zum Verkäufer −10.
+
+**Ausgang** (`dritterKauf`, beim Abschluss deines Kaufs):
+
+- Gilt nur, wenn der Spieler in derselben Saison vom selben Verein zu deinem Verein wechselt.
+- Die Beziehung zwischen den beiden anderen Vereinen sinkt um 10.
+- Deine Beziehung zu beiden sinkt um 2. Nach erfolgreichem Ausspielen sinkt sie nicht.
+- Wer nur die erste Karte beantwortet (Treffen oder offiziell melden) und dann kauft, bekommt den Ausgang ebenfalls, mit −2.
+- Seit Prüfung EF:
+  - Ein Vorvertrag zählt nicht, der Spieler wechselt erst in der nächsten Saison.
+  - Der Merker fällt beim Saisonwechsel weg.
+  - Der Nachlass senkt auch eine schon vereinbarte Ablöse.
+  - Das Gegenangebot liegt nie über der Forderung.
+  - Ein Nachlass allein bringt kein Verhandlungsgerücht.
+- Seit Prüfung FA1 (23.11.2026): Der Nachlass ist ein Anteil mit Frist (60 Tage, `RKT.nachlass.tage`), kein fester Betrag mehr. Er übersteht einen Abbruch der Verhandlung, verfällt mit der Frist und gilt nur für den Verein, den du gerade trainierst. Ein Gerücht, das den Preis hebt, wirkt auf die Forderung vor dem Nachlass.
+
+**Vorläufig entschieden (von mir, ohne Rücksprache):**
+
+1. **Die beiden Vereine** sind zwei zufällige der möglichen Mitbieter. Echte laufende Verhandlungen unter Computer-Vereinen gibt es nicht, sie kaufen zum Listenpreis (K31).
+2. **Kosten und Risiko** des Treffens sind kleiner als beim Abwerben (K20). Es geht um ein Gespräch mit dem Berater, nicht mit dem Spieler eines anderen Vereins.
+3. **„Geschickt“ heißt: Ausspielen hat geklappt.** Nur dann bleibt deine Beziehung zu den beiden unverändert (K17 §5.4).
+4. **Keine Lizenzprüfung im Auslöser** (wie bei allen Karten). Das Angebot machst du auf dem Transfermarkt, dort gelten Lizenz und Transfersperre.
+5. **Werte geschätzt** (`REGELN.karten.dritter`, Kosten, Chancen und Nachlass im Katalog).
+
+**Info-Karten mit Wirkung (K30e, 22.11.2026, popolupo, ohne Testlauf):**
+
+- Eine Info-Karte kann `wirkung:[…]` tragen. Die Wirkungen gelten sofort beim Erscheinen, gewürfelt im Strom `ereignisse` von Saison, Tag und Karte. Ihre Texte stehen hinter der Meldung.
+- Bisher:
+  - „Rückendeckung vom Vorstand“ (K28 §8): 30 Tage lang fällt das Vertrauen nicht unter den Wert des Tages (`vertrauenHalt`, `S.trustHalt`, angewandt in `vorstandPruefen`).
+  - „Dorfverein im Ausnahmezustand“ (K11 §8): Fans +1, bis 7 Tage nach einem Testspiel beim Amateurverein.
+  - „Blamage gegen Amateure“ (K11 §8): Vertrauen −1, Fans −1, bis 7 Tage nach einer Niederlage gegen einen Amateurverein.
+- `{verein}` nennt seit K30e auch Amateurvereine beim Namen.
+
+**Folgewirkungen nur bei Erfolg (`dann`, seit Prüfung EE, 22.11.2026):**
+
+- Eine Wirkung kann `dann:[…]` tragen. Diese Wirkungen kommen nur, wenn die erste geklappt hat, dazu ihr Text `gut`. Sonst zeigt die Karte den Grund des Scheiterns.
+- Erlaubt ist `dann` nur bei Wirkungen, die Erfolg melden (`KARTEN_MIT_ERFOLG`): `leihe`, `gehaltAnpassen`, `provisionZahlen`. Das prüfen `tests/karten.js` Fall 1 und `kartenpruefung.pl`.
+- Grund: Bei „Hilfe in der Not“, „Berater droht“, „Gehaltsneid“ und „Provisionsstreit“ kamen Beziehung und Stimmung auch dann, wenn die Leihe, die Erhöhung oder die Zahlung nicht zustande kam.
 
 ## 6. Hebel des Spielers
 
 - Entscheidungen in den Karten.
-- Regler Meldungsdichte.
+- Regler Meldungsdichte (seit K30b im Menü).
 - Automatik: Der Co-Trainer oder der zuständige Mitarbeiter entscheidet Karten, die als Info kommen (K16).
 
 ## 7. Verhalten der Computer-Vereine
@@ -213,7 +298,7 @@ Jedes Konzept führt seine Karten in Abschnitt 8. Stand heute:
 | K11 Testspiele | 7 | Dorfverein im Ausnahmezustand, Lagerkoller |
 | K12a Sommer | 4 | Übergewicht nach dem Urlaub, Urlaub verlängern |
 | K13 Wettbewerbe | 5 | Pokal-Los des Jahres, Anruf des Bundestrainers |
-| K14 Kabine | 6 | Grüppchenbildung, Führungsspieler meutert |
+| K14 Kabine | 6 | Grüppchenbildung; als Karten seit K14b: Kabinenparty, Neuzugang drängt auf Einsatz, Eingewöhnung; seit K14c: Führungsspieler meutert |
 | K15 Gespräche | 4 | Versprechen kippt, Kabine glaubt dir nicht mehr |
 | K16 Stab | 4 | Co-Trainer wird Cheftrainer, Ex-Kapitän kehrt zurück |
 | K17 Beziehungen | 4 | Hilfe in der Not, Fehde in der Presse, Versöhnung |
@@ -221,7 +306,7 @@ Jedes Konzept führt seine Karten in Abschnitt 8. Stand heute:
 | K19 Transfers | 5 | Befund beim Medizincheck, Rückkehr des verlorenen Sohns |
 | K21 Verträge | 5 | Vorvertrag woanders, Gehaltsneid |
 | K22 Berater | 5 | Der entfernte Verwandte, Provisionsstreit |
-| K28 Vorstand | 5 | Ultimatum, Präsident mischt sich ein, neuer Präsident |
+| K28 Vorstand | 5 | Ultimatum, Präsident mischt sich ein, neuer Präsident (seit U12i als Wahl, keine Karte), Jobangebot (seit U12j als Karte) |
 | K31 Computer-Vereine | 4 | Konkurrent rüstet auf, Notverkauf |
 
 Zusammen etwa 100 Karten, viele davon Infos.
@@ -252,9 +337,14 @@ Sehr selten, als Weltereignis: **etwa einmal in zehn Saisons** kommt ein Szenari
 | Ein Spiel deines Vereins wird deshalb wiederholt | sehr selten | neuer Termin, Ergebnis gestrichen, Tabelle ändert sich |
 | Großer Skandal mit mehreren Vereinen wie 1971 | sehr selten | Lizenzentzug oder Zwangsabstieg, viele Sperren, Ansehen der Liga sinkt für eine Saison |
 
+- **Gebaut als K30g** (23.11.2026, popolupo, ohne Testlauf, Werte vorläufig): „Wettbetrug in der 3. Liga fliegt auf“ als Info-Karte. Sie hat die Stufe selten, kommt also etwa einmal in 100 Saisons, und höchstens einmal in zehn Saisons (`RKT.skandal.abstand`, `S.skandal3`, seit Prüfung ER2; vorher sperrte `sperrTage` nur denselben Spieler). Nicht mehr nach dem letzten Spieltag der 3. Liga, sonst könnte sich zwischen den Relegationsspielen die Paarung ändern (ER1). Sie wird immer gemeldet, auch über der Info-Grenze der Woche (`immer`, ER3).
+  - Ein Spieler eines Computer-Vereins der 3. Liga (keine zweite Mannschaft) wird gesperrt wie beim Wettskandal (K30f).
+  - Sein Verein bekommt in dieser Saison 3 Punkte abgezogen, über denselben Weg wie nach einer Insolvenz (`S.abzug`, K23a). Das gilt auch, wenn du in der 3. Liga spielst. Dein eigener Verein ist nie betroffen.
+  - Die Regionalliga hat keine Kader im Spiel, darum nur die 3. Liga. Schiedsrichter, wiederholte Spiele und der große Skandal fehlen weiter.
 - **Nur als Weltereignis, ohne eigene Entscheidung zum Mitmachen** (vorläufig). Die Idee einer Versuchung (ein Mittelsmann bietet dir an, ein Spiel „zu regeln“) bleibt draußen, solange du sie nicht willst.
 - **Doping kommt nicht ins Spiel** (deine Entscheidung vom 10.11.). „Fit spritzen“ mit Schmerzmitteln bleibt, das ist erlaubt (K10).
 - Sichtbar ab der ersten Lizenz (nur Information, K36).
+- **Gebaut seit K30f** (23.11.2026, popolupo, ohne Testlauf, Info-Karten mit Wirkung, Stufe „gelegentlich“, zusammen etwa einmal in zehn Saisons): „Ein Wettpate meldet sich“ (ein Spieler deines Kaders meldet den Anwerbeversuch, Stimmung +3, Fans +1) und „Wettskandal“ (ein Spieler eines Computer-Vereins, nie einer deines Kaders in der Zweiten, ist 20 Liga- und 3 Pokalspiele gesperrt; die Transferliste ist seit Prüfung EJ1 weg, der Markt räumte sie nach einer Woche). Die schweren Szenarien (Schiedsrichter, Wiederholung, Zwangsabstieg) fehlen noch.
 
 ### 8.3 Beispiel einer Kette: „Der lachende Dritte“
 
@@ -262,6 +352,27 @@ Sehr selten, als Weltereignis: **etwa einmal in zehn Saisons** kommt ein Szenari
 2. **Karte 1 (Entscheidung):** „Dein Cousin kennt den Berater von {spieler}.“ Optionen: Treffen (Kosten, Risiko wie Abwerben in K20), offiziell bieten, ignorieren.
 3. **Karte 2 (nach 3–7 Tagen, wenn Treffen):** Der Spieler ist interessiert. Optionen: schnell bieten (Preis normal), die beiden Vereine gegeneinander ausspielen (Preis niedriger, Risiko, dass es auffliegt).
 4. **Ausgang:** Unterschreibt er bei dir, sinkt die Beziehung zwischen den beiden anderen Vereinen um 10, deine zu ihnen nur um 2, bei geschicktem Vorgehen gar nicht (K17 §5.4).
+
+### 8.4 Stand am 25.11.2026 (popolupo, ohne Testlauf)
+
+- **Im Katalog** (`daten/karten.js`): 93 Karten. Die meisten Zeilen aus den Tabellen in §8 der Konzepte sind gebaut, entweder als Karte oder als Meldung in der Wochen- und Spiellogik. Beispiele für Meldungen statt Karten:
+  - Goldener Jahrgang (K08) beim neuen Jahrgang.
+  - Berater bietet an (K22) in `beraterWoche`.
+  - Vorvertrag woanders und Ausstiegsklausel (K21) in der Vertragswoche.
+  - Liquiditätswarnung und Auflagen bei der Lizenz (K23) im Finanzplan.
+  - Einspruch (K09) im Verfahren nach der Roten Karte.
+  - Neuer Präsident (K28) als Wahl (U12i).
+  - Fan-Proteste gegen den Verkauf eines Lieblings (K19) als Wirkung auf die Fanstimmung (K27e).
+- **Bewusst noch nicht gebaut:**
+
+| Ereignis | Konzept | Grund |
+|---|---|---|
+| Rasen nach Frost kaputt | K26 | Die Rasenqualität mit Greenkeeper ist zurückgestellt (K26 §3.2a). |
+| Spieler will Urlaub verlängern | K12a | Seit K12d (25.11.2026) gebaut, kommt aber nur nach einem Turnier im Sommer (K13k), also nur mit Länderspielen. Urlaub je Spieler gibt es weiter nicht: die Karte schiebt die Rückkehr vom Turnier. |
+| Anruf des Bundestrainers, Länderspiel-Verletzung | K13 | Seit K13g (24.11.2026) gebaut, kommen aber nur mit Länderspielen (K13f, Schalter oder Menü „Neue Regeln ausprobieren“). |
+| Zimmerkollegen werden Freunde | K11 | Seit K11k (25.11.2026) als Meldung aus der Zimmerbelegung im Trainingslager, keine Karte. Das Traumtor des Neuzugangs gibt es seit K03e (24.11.), ebenso die Heimweh-Karte (K03 §8). |
+| Notverkauf | K31 | Seit K31d (24.11.) gebaut, mit Schalter aus, erst nach einem Testlauf einschalten. Eine Meldung, keine Karte. |
+| Sponsor-Karten | K24 | Bereich des anderen Claude. |
 
 ## 9. Wechselwirkungen
 
@@ -307,7 +418,7 @@ karten:{
 5. **Chance je Woche = 1 / (Saisons der Stufe × 40).** Gilt nur in Wochen, in denen die Bedingungen erfüllt sind. Die Raten in §5.4 sind damit Obergrenzen.
 6. **Keine Antwort heißt Automatik am nächsten Tag,** wie bei den Fristen des Sportgerichts.
 7. **Bereich `ereignisse` mit Automatik in der Grundlizenz.** Er ist sofort frei, und die Automatik lässt alle Karten vom Co-Trainer entscheiden.
-8. **Erste fünf Karten** nur mit Wirkungen, die es schon gibt. Ketten und verzögerte Folgen kommen mit der nächsten Karte, die sie braucht (der lachende Dritte, §8.3).
+8. **Erste fünf Karten** nur mit Wirkungen, die es schon gibt. Ketten und verzögerte Folgen kommen mit der nächsten Karte, die sie braucht (der lachende Dritte, §8.3). Ketten gibt es seit K30c (§5.6).
 9. **Geld aus Karten bucht als „Ereignisse“** in den Finanzen.
 
 **Vorläufig dazu:** Kategorie, Szenario und Varianten als drei Ebenen, vier Seltenheitsstufen (5.4), sehr seltene Szenarien höchstens einmal je Karriere, keine eigene Entscheidung zum Mitmachen bei Manipulation, eine Sammlung erlebter Szenarien über alle Karrieren.

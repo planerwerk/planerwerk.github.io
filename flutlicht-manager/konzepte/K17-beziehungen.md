@@ -76,6 +76,7 @@ Hängt ab von: – · Wird gebraucht von: K11, K19, K20, K22, K29, K30, K31.
 
 - Bieten zwei Vereine um denselben Spieler und gewinnst du ihn, sinkt die Beziehung **zwischen den beiden** um 10, deine zu ihnen nur um 2.
 - Mit einer Ereigniskarte (K30) und geschicktem Vorgehen auch 0.
+- **Gebaut seit K30c** (22.11.2026, popolupo, ohne Testlauf) als Kette „Der lachende Dritte“ (K30 §5.6). Die Werte stehen in `REGELN.karten.dritter`. „Geschickt“ heißt: Du hast die beiden Vereine erfolgreich gegeneinander ausgespielt.
 
 ### 5.5 Umsetzung U12c (20. November 2026, ohne Testlauf)
 
@@ -107,8 +108,12 @@ Partnervereine (+30) gibt es noch keine. Dazu bräuchte es eine Quelle.
 | Leihe zurück: Absprache gehalten / nicht gehalten | du–Leihverein | +5 / −5 |
 | Wechsel unter Computer-Vereinen (immer zum Listenpreis) | Verein–Verein | +5 |
 | Derby mit Sieger (jede Liga, alle Vereine) | Verein–Verein | −2 |
+| Abwerbeversuch aufgeflogen (K20 §5.3) | du–Verein des Spielers | −15 bis −30 |
+| Abwerbeversuch eines Computer-Vereins öffentlich gemacht (K20e) | du–abwerbender Verein | −15 |
+| Provokation in der Pressekonferenz (K29) | du–Gegner | −3 je Provokation |
+| Stichelei unter Computer-Trainern vor Derby oder Spitzenspiel (K29m) | Verein–Verein | −2 |
 
-Noch nicht gebaut: Abwerben (K20), Presse und Gerüchte (K29), Vorfälle im Spiel (K09), Hilfe in der Not und lachender Dritter (Ereigniskarten, K30).
+Nachgetragen am 24.11.2026 (Abgleich mit dem Code): Die vier Zeilen darüber sind mit K20, K20e, K29 und K29m gebaut, Werte in `REGELN.abwerben.folgen.beziehung`, `REGELN.abwerben.ki.beziehung`, `REGELN.presse.wirkung.provokation.beziehung` und `REGELN.presse.medienprofil.ki.bez`. Gerüchte ändern keine Beziehung, sie hängen umgekehrt an ihr (Klatsch, unten). Noch nicht gebaut: Vorfälle im Spiel (K09). Hilfe in der Not gibt es seit K17b als Karte, den lachenden Dritten seit K30c als Kette (K30 §5.6).
 
 **Wirkungen (§5.2), gebaut:**
 
@@ -117,7 +122,17 @@ Noch nicht gebaut: Abwerben (K20), Presse und Gerüchte (K29), Vorfälle im Spie
 - **Testspiele:** Zusage × (1 + 0,005 × Beziehung).
 - **Computer-Vereine** kaufen nicht bei einem Verein, zu dem ihre Beziehung unter −50 liegt (§7).
 
-Noch nicht gebaut: Leihangebote über +40 (braucht K30), Gerüchte (K29), Brisanz im Spiel.
+Brisanz im Spiel seit K09d (22.11.2026, popolupo, ohne Testlauf): Derby oder Beziehung der beiden Vereine (Verein–Verein, nicht deine) unter −50, dort gibt es nach Fouls ×1,3 Karten (`spielBrisant`, `RD.faktoren.derby`). Noch offen: Derbys und brisante Spiele als „wichtige Spiele“ (K04 §5.5), das ändert die Spielstärke und kommt erst nach einem Testlauf. Leihangebote über +40 gibt es seit K17b als Karte „Hilfe in der Not“.
+
+**Gerüchte und Klatsch (§5.2, §5.3), gebaut seit K17d (22.11.2026, popolupo, ohne Testlauf):**
+
+- **Auslöser:** Deine Beziehung zu einem Verein (du und dein Verein, wie bei allen Geschäften) liegt mehr als 30 unter ihrem Grundwert (`REGELN.geruechte.aergerUnter`). Seit Prüfung EG3 zählt der Grundwert nicht mit, sonst hätte ein einziges entschiedenes Derby (Grundwert −30, dann −32) den Klatsch eingeschaltet (vorläufig).
+- **Häufigkeit:** Gerüchte über deinen Verein kommen dann doppelt so oft (`klatsch.mein`). Gewürfelt wird gleich oft, nur die Schwelle ändert sich, wie bei Medienpolitik und Medienklima (K29b).
+- **Neue Art „Thema“:** „{spieler} soll bei {klub} ein Thema sein“. Es geht um einen Spieler deines Kaders, den dieser Verein brauchen könnte.
+  - Wirkung: Mit 30 % fühlt er sich begehrt (Stimmung +3), sonst wird er unruhig (Stimmung −3, verstärkt durch eine verärgerte Redaktion wie bei den anderen Gerüchten, K29c).
+  - Eine sinkende Stimmung macht einen Wechselwunsch wahrscheinlicher (K14). Einen eigenen Zuschlag gibt es dafür nicht.
+  - Nach 30 Tagen zählt für die Treffsicherheit, ob er gewechselt ist.
+- Gerüchte laufen im eigenen Strom und sind im Gleichschritt (5a) abgeschaltet.
 
 **Vergessen:** am ersten Montag jedes Monats 5 % zurück zum Grundwert (−50 ist nach einem Jahr etwa −27). Liegt ein Wert weniger als 2 vom Grundwert entfernt, fällt er aus dem Spielstand.
 
@@ -148,6 +163,8 @@ Noch nicht gebaut: Leihangebote über +40 (braucht K30), Gerüchte (K29), Brisan
 | Hilfe in der Not (Entscheidung) | Verletzungskrise bei dir, Verein mit Beziehung über 40 | Leihe annehmen (+10 Beziehung bei Rückgabe in Ordnung) |
 | Fehde in der Presse | Beziehung unter −50, Trainer kritisiert dich öffentlich | Antwort (K29) oder schweigen |
 | Versöhnung | Beziehung lange unter −50, Zufall | Treffen, +20, wenn es klappt |
+
+**Gebaut:** „Versöhnung“ seit U12d, „Fehde in der Presse“ seit K29k (22.11.2026, ohne Testlauf) für einen Verein deiner Liga mit Beziehung unter −50 (zurückschießen: Beziehung −5, Fans +1, Glaubwürdigkeit +1; schweigen: Beziehung +3). „Hilfe in der Not“ seit K17b (22.11.2026, ohne Testlauf): ab fünf Verletzten im offenen Fenster bietet ein Verein mit Beziehung über 40 einen Spieler an, den er abgeben würde; annehmen läuft über `ausleihen` (alle Prüfungen der Leihe, neue Kartenwirkung `leihe`), Beziehung +5. „Der entfernte Verwandte“ steckt seit K30c im lachenden Dritten: Kennst du den Berater nicht gut genug, kommt die Karte mit 5 % je Spieler über einen entfernten Verwandten (`REGELN.karten.dritter.verwandt`), mit eigenem Text (berichtigt am 25.11.2026).
 
 ## 9. Wechselwirkungen
 

@@ -18,8 +18,12 @@ function aufgabe(k){if(S.lizenz&&S.lizenz.an&&k)S.lizenz.aufgaben[k]=1;}
 // Prüfung vor jeder Aktion: gesperrt → Hinweis und Abbruch. Frei → der Bereich gehört ab jetzt dir (Automatik aus), die Aufgabe zählt.
 function darf(b,aufg){if(!S.lizenz)return true;if(!frei(b)){toast(`${bereich(b).name}: frei ab der ${lizenzName(bereich(b).ab)}.`);return false;}
   if(S.lizenz.auto[b])delete S.lizenz.auto[b];aufgabe(aufg);return true;}
-// Meldung des Stabs über eine Entscheidung in einem Bereich, den du nicht selbst führst (nur Posteingang, kein Halt, K36 §8)
-function stabMeldung(text,art){news(text,art||'');}
+// Meldung des Stabs über eine Entscheidung in einem Bereich, den du nicht selbst führst (nur Posteingang, kein Halt, K36 §8).
+// Seit K36c während tagBeginn und tagEnde gesammelt (S.stabT gibt es nur dort) und an ihrem Ende ausgegeben (stabBericht): eine Meldung als eigene Zeile, mehrere als eine Zeile.
+// Außerhalb (deine Klicks, Spielbeginn) sofort wie bisher.
+function stabMeldung(text,art){if(S.stabT)S.stabT.push([text,art||'']);else news(text,art||'');}
+function stabBericht(){const l=S.stabT;delete S.stabT;if(!l||!l.length)return;if(l.length===1){news(l[0][0],l[0][1]);return;}
+  news(`Der Stab meldet ${l.length} Entscheidungen: ${l.map(x=>x[0]).join(' · ')}`,l.some(x=>x[1]==='bad')?'bad':l.every(x=>x[1]==='good')?'good':'');} // eine schlechte Meldung färbt die Zeile (Prüfung DY3)
 
 // ---------- Aufstieg (K36 §5.3): Mindestzeit und Aufgaben, oder die späteste Zeit ----------
 function aufstiegStand(){const L=S.lizenz;if(!L||!L.an||L.stufe>=RLZ.namen.length)return null;const A=RLZ.aufstieg[L.stufe],ks=karriereSaison();
@@ -33,14 +37,14 @@ function aufstiegStand(){const L=S.lizenz;if(!L||!L.an||L.stufe>=RLZ.namen.lengt
     spaet=ks>Sp.saison||(ks===Sp.saison&&S.tag>=tag);spaetText=juli?`am 1. Juli ${jahr}`:`am 1. Januar ${jahr+1}`;}
   return{naechste:L.stufe+1,A,spiele:L.spiele,mindest,ab,abText:A.abSaison?(A.abSaison===2?'frühestens in deiner zweiten Saison':'frühestens nach deiner zweiten Saison'):'',liste,erledigt,aufgabenOk:erledigt>=A.noetig,spaet,spaetText,
     reif:spaet||(mindest&&ab&&erledigt>=A.noetig)};}
-function lizenzAufstieg(wie){const L=S.lizenz;if(!L||L.stufe>=RLZ.namen.length)return;const alt=L.stufe;L.stufe++;L.spiele=0;L.gel={};
+function lizenzAufstieg(wie){const L=S.lizenz;if(!L||L.stufe>=RLZ.namen.length)return;const alt=L.stufe;L.stufe++;L.spiele=0;L.gel={};L.merk=null; /* gemerkte Aufgabe gehört zur alten Lizenz (K36d) */
   // Neu freie Bereiche bleiben zuerst in der Automatik, bis du eingreifst (K36 §4 Nr. 4)
   const neu=Object.keys(RLZ.bereiche).filter(b=>RLZ.bereiche[b].ab===L.stufe);neu.forEach(b=>{if(RLZ.bereiche[b].auto)L.auto[b]=1;});
   L.verlauf.push({stufe:L.stufe,s:S.season,tag:S.tag,wie});L.karte={stufe:L.stufe,wie,tag:S.tag,s:S.season};
   news(`Neue Lizenz: ${lizenzName(L.stufe)}${wie==='zeit'?' (mit der Zeit)':wie==='geholt'?' (sofort geholt)':''}. Neu frei: ${neu.map(b=>RLZ.bereiche[b].name).join(', ')}.`,'good');return alt;}
 // Täglich (nicht an einem Tag mit eigenem Spiel, damit die Karte nie vor dem Anpfiff kommt): Gelegenheiten merken, Aufstieg prüfen
 function lizenzTag(d){const L=S.lizenz;if(!L||!L.an||L.stufe>=RLZ.namen.length)return;
-  if(frei('medizin')&&!autoB('medizin')&&!L.gel.medizin&&squad(S.my).some(p=>{if(p.inj<=0)return false;const i=verletzungInfo(p);return i&&((i.phase==='aufbau'&&!i.pflicht)||(i.spritzbar&&!!meinSpiel(d)));}))L.gel.medizin=1;
+  if(frei('medizin')&&!autoB('medizin')&&!L.gel.medizin&&squad(S.my).some(p=>{if(p.inj<=0)return false;const i=verletzungInfo(p);return i&&((i.phase==='aufbau'&&!i.pflicht)||(i.spritzbar&&!!meinSpiel(d))||medZweiteMoeglich(p));}))L.gel.medizin=1;
   if(S.phase==='play'&&meinSpiel(d))return;const st=aufstiegStand();if(st&&st.reif)lizenzAufstieg(st.mindest&&st.ab&&st.aufgabenOk?'nutzung':'zeit');}
 // Nach jedem Pflichtspiel deines Vereins (Liga, Pokal, Relegation, Supercup)
 function lizenzSpiel(){if(S.lizenz&&S.lizenz.an)S.lizenz.spiele++;}
@@ -57,6 +61,16 @@ function lizenzAuto(b,an){const L=S.lizenz;if(!L||!bereich(b).auto||!frei(b))ret
   if(b==='aufstellung'&&!an)S.lineup=myXI();save();render();if(document.getElementById('lz-ansicht'))showLizenz();}
 function lizenzAllesSelbst(){const L=S.lizenz;if(!L)return;Object.keys(L.auto).forEach(b=>{if(frei(b))delete L.auto[b];});S.lineup=myXI();save();render();showLizenz();}
 function lizenzKarteZu(ansehen){if(S.lizenz)S.lizenz.karte=null;save();render();if(ansehen)showLizenz();}
+// Kleine Aufgabe (K36 §8, K36d): Die Aufstiegskarte schlägt die erste offene Aufgabe der nächsten Lizenz vor, mit Ort und einem Satz, wie es geht (RLZ.aufgabenOrt).
+// „Merken“ legt sie als kleine Karte ins Büro (S.lizenz.merk), bis sie erledigt ist, du sie wegklickst oder die nächste Lizenz kommt. Kein Halt, keine Wirkung auf den Aufstieg.
+// Aufgaben, die einen Anlass brauchen (RLZ.ohneGelegenheit: Rote Karte, Verletzung), nur, wenn sonst keine offen ist: angehen kannst du sie nicht selbst (Prüfung FE2).
+const lizenzVorschlag=()=>{const st=aufstiegStand();if(!st)return null;const offen=st.liste.filter(a=>!a.ok&&RLZ.aufgabenOrt[a.k]),og=RLZ.ohneGelegenheit||[];
+  const x=offen.find(a=>!og.includes(a.k))||offen[0];return x?{k:x.k,name:x.name,wie:RLZ.aufgabenOrt[x.k][1]}:null;};
+const aufgabeTab=k=>{const O=RLZ.aufgabenOrt[k];return O&&O[0]&&RLZ.bereiche[O[0]]?RLZ.bereiche[O[0]].tab:'buero';};
+function lizenzMerken(k){const L=S.lizenz;if(!L)return;L.merk=k&&RLZ.aufgabenOrt[k]?k:null;save();render();}
+function lizenzMerkKarte(){const L=S.lizenz;if(!L||!L.an||!L.merk||L.karte)return'';const st=aufstiegStand(),x=st&&st.liste.find(a=>a.k===L.merk);if(!x||x.ok)return'';
+  return`<div class="card lzkarte"><h3>Deine Aufgabe für die ${lizenzName(st.naechste)}</h3><p>${esc(x.name)}. <span class="dim">${esc(RLZ.aufgabenOrt[x.k][1])}</span></p>
+    <div class="row"><button onclick="tab('${aufgabeTab(x.k)}')">Hingehen</button><button onclick="lizenzMerken()">Nicht mehr zeigen</button></div></div>`;}
 
 // ---------- Automatik, die es vor UL nicht gab ----------
 // Testspiele (K36 §5.2, K11): Der Co-Trainer plant in der Vorbereitung zwei Testspiele gegen Amateure
@@ -81,10 +95,11 @@ const lzAusAlle=(...bs)=>{for(const b of bs){const x=lzAus(b);if(x)return x;}ret
 const lzHinweisAlle=(...bs)=>{for(const b of bs){const x=lzHinweis(b);if(x)return x;}return'';};
 const lizenzChip=()=>S.lizenz&&S.lizenz.an?`<button class="lzchip" onclick="showLizenz()" title="Deine Lizenz: was frei ist und was der Stab macht">${lizenzName(S.lizenz.stufe)}</button>`:'';
 // Aufstiegskarte im Büro (K36 §8): was neu ist, was der Stab bisher getan hat, Knöpfe „Ansehen“ und „Später“
-function lizenzKarte(){const L=S.lizenz;if(!L||!L.karte)return'';const n=L.karte.stufe,neu=Object.entries(RLZ.bereiche).filter(([,B])=>B.ab===n),st=aufstiegStand();
+function lizenzKarte(){const L=S.lizenz;if(!L||!L.karte)return'';const n=L.karte.stufe,neu=Object.entries(RLZ.bereiche).filter(([,B])=>B.ab===n),st=aufstiegStand(),v=lizenzVorschlag();
   return`<div class="card lzkarte"><h2>Neue Lizenz: ${lizenzName(n)}</h2><p>${L.karte.wie==='nutzung'?'Du hast benutzt, was frei war. Jetzt kommt mehr dazu.':L.karte.wie==='geholt'?'Du hast die Lizenz sofort geholt.':'Die Zeit ist reif: Du hast dem Stab lange genug zugesehen.'}</p>
     <table><tbody>${neu.map(([b,B])=>`<tr><td><b>${esc(B.name)}</b><br><span class="dim">${B.auto?`Bisher: ${esc(B.wer)} ${esc(B.tut)}. Das bleibt so, bis du eingreifst.`:'Neu für dich.'}</span></td><td><button onclick="lizenzKarteZu();tab('${B.tab}')">Hingehen</button></td></tr>`).join('')}</tbody></table>
     ${st?`<p class="dim">Nächste Lizenz: ${lizenzName(st.naechste)}. Dafür: ${st.liste.map(x=>esc(x.name)).join(' · ')} (${st.A.noetig} davon).</p>`:'<p class="dim">Das war die letzte Lizenz. Alles ist frei.</p>'}
+    ${v?`<p>Für den Anfang: <b>${esc(v.name)}</b>. <span class="dim">${esc(v.wie)}</span> ${L.merk===v.k?'<span class="tag good">gemerkt</span>':`<button onclick="lizenzMerken('${v.k}')">Merken</button>`}</p>`:''}
     <div class="row"><button class="go" onclick="lizenzKarteZu(1)">Ansehen</button><button onclick="lizenzKarteZu()">Später</button></div></div>`;}
 // Lizenz-Ansicht (Menü, Kopfzeile, Büro): Stand, Weg zur nächsten Lizenz, alle Bereiche mit Automatik-Schalter, Überspringen und Abschalten
 function showLizenz(){const L=S.lizenz;if(!L){ov(`<div class="phead"><h2>Lernstufen</h2><button class="x" onclick="closeOv()" aria-label="Schließen">✕</button></div><p>Dieser Spielstand hat keine Lernstufen. Alles ist frei.</p>`);return;}

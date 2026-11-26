@@ -1,6 +1,6 @@
 # K28 – Vorstand, Ziele, Karriere
 
-Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12. Teilweise gebaut: Computer-Vereine in U11d2 (§7), Vertrauen, Ultimatum und Ruf für dich in U12a (§5.6), Nebenziele und Rücktritt in U12b (§5.7), beide 20.11., ohne Testlauf.
+Status: **Entwurf** (7. November 2026), geschrieben ohne Rücksprache. Vorläufige Entscheidungen stehen in Abschnitt 12. Teilweise gebaut: Computer-Vereine in U11d2 (§7), Vertrauen, Ultimatum und Ruf für dich in U12a (§5.6), Nebenziele und Rücktritt in U12b (§5.7), beide 20.11., Zielgespräch in U12e (§5.8, 22.11.), Zwischenbilanz im Winter in U12f (§5.9, 22.11.), Trainervertrag als Statistik in U12g (§5.10, 22.11.), Wirkung des Rufs in U12h (§5.11, 22.11.), Präsidentenwahl in U12i (§5.12, 22.11.), Jobangebot während der Saison in U12j (§5.13, 22.11.), alle ohne Testlauf.
 Hängt ab von: K02 (Geduld je Stufe), K15 (Gespräche) · Wird gebraucht von: K12b, K14, K19, K23, K29.
 
 ## 1. Ziel und Spielgefühl
@@ -162,7 +162,7 @@ Das **Zielgespräch** mit Tiefstapeln und Hochpokern (§5.2) wartet: Seine Folge
 - **Baustein „Ziele“ im Vertrauen** (§5.1, −10 bis +10, montags): erfüllt +5, verfehlt −5. Finanzen mit Verlust bis jetzt: −3 („gefährdet“).
 - **Saisonende:** je erfülltem Nebenziel Vertrauen +5, je verfehltem −5, mit Meldung. Das geschieht vor der Prüfung auf Entlassung zum Saisonende.
 - **Anzeige:** im Büro unter dem Saisonziel, mit Stand.
-- Kader (Gehaltssumme) und Zuschauer (§3.1) fehlen noch. Zuschauer brauchen K27, die Gehaltssumme einen Gehaltsrahmen aus K23.
+- Kader (Gehaltssumme) und Zuschauer (§3.1) gibt es seit U12o (25.11.2026, popolupo, ohne Testlauf, vorläufig): **Kader** heißt, die Gehälter liegen am Saisonende im Gehaltsrahmen des Vorstands (K23), darüber „gefährdet“. **Zuschauer** heißt, der Heimschnitt erreicht 95 % des Schnitts der Vorsaison; das Nebenziel gibt es nur nach einer ganzen Saison bei diesem Verein in derselben Liga (seit Prüfung FR1 mit `zusN` in `S.hist`, seit FS3 mindestens 85 % der Liga-Heimspiele einer ganzen Saison an Heimspielen in der Vorsaison), „gefährdet“ erst ab drei Heimspielen darunter. Beide nimmt der Vorstand in die Auslosung auf, das Profil kommt weiter zuerst.
 
 **Rücktritt** (§5.3, **neue Funktion**, Bereich `ruecktritt`, Grundlizenz, ohne Automatik, K36):
 
@@ -170,6 +170,117 @@ Das **Zielgespräch** mit Tiefstapeln und Hochpokern (§5.2) wartet: Seine Folge
 - Danach wie nach einer Entlassung: Jobangebote nach deinem Ruf. Der Ruf sinkt nur um 5 statt um 8.
 - Das Fenster heißt dann „Zurückgetreten“ statt „Entlassen!“.
 - Nur während der Saison und nur, solange du nicht entlassen bist.
+
+### 5.8 Umsetzung U12e (22. November 2026, popolupo, ohne Testlauf): Zielgespräch
+
+Jetzt gibt es Budgets (K23d, K23 §5.5f) und echte Größenordnungen (K23c), damit hat §5.2 Folgen.
+
+- **Wann:** Mit dem Saisonziel (Saisonstart, Jobwechsel, neues Spiel) legt der Vorstand einen Vorschlag vor. Bis zu deinem nächsten Ligaspiel kannst du im Büro verhandeln (Karte „Zielgespräch mit dem Vorstand“, dazu ein Punkt in der Liste „Vor dem Saisonstart“, K12b). Ohne Entscheidung gilt der Vorschlag. Eine Entscheidung je Saison.
+- **Ziel annehmen:** nichts ändert sich.
+- **Grenzen** wie beim Saisonziel: in der 2. und 3. Liga nie besser als Platz 2 (Aufstieg), nie schlechter als das schlechteste Ziel der Liga. Stößt ein Schritt an die Grenze, zählt nur die tatsächliche Verschiebung (Budget und Zusage-Chance).
+- **Hochpokern** um einen oder zwei Plätze: immer angenommen. Transferbudget +10 % je Platz. „Übertroffen“ zählt beim Ruf weiter vom Vorschlag aus, erreichst du das höhere Ziel, gibt es zusätzlich +2 je Platz. Das Ziel gilt für Vertrauen, Ultimatum, Entlassung und „deutlich verfehlt“. (Korrigiert nach Prüfung CX2: Vorher zählte „übertroffen“ vom höheren Ziel, Hochpokern brachte so weniger Ruf als Annehmen.)
+- **Tiefstapeln** um einen oder zwei Plätze: Zusage mit 60 % − 20 % je weiterem Platz + 0,5 % je Punkt Vertrauen über 50 + 0,5 % je Punkt Ruf über 30, bei einem ehrgeizigen Präsidenten (ab 14) −15 %, bei einem ruhigen (bis 7) +15 %, begrenzt auf 5 bis 95 % (eigener Strom).
+  - Zugesagt: Ziel schlechter, Transferbudget −15 % je Platz, der Ruf rechnet „übertroffen“ weiter vom Vorschlag aus.
+  - Abgelehnt: Das Ziel bleibt, Vertrauen −3.
+- **Transferbudget** (K23d): Kontostand über der Reserve, mal dem Faktor aus dem Gespräch. Der Faktor gilt auch für das Budget der Automatik, solange der Verein deine Transfers führt (`kiBudget`, Prüfung CX5). Kaufst du über dem Budget, ist der Vorstand verstimmt: Vertrauen −1 je angefangene 10 % der Ablöse über dem Budget, höchstens −10, mit Meldung.
+- **Lizenz (K36):** neuer Bereich `zielgespraech` in der Grundlizenz, ohne Automatik (ohne Entscheidung gilt der Vorschlag).
+- **Gleichschritt:** Das Gespräch würfelt nur, wenn du tiefstapelst. Ohne Eingriff ändert sich nichts.
+- **Noch nicht:** Zwischenbilanz im Winter (§4 Nr. 3), Sparsamkeit des Präsidenten beim Budget, Nebenziele verhandeln. (Stand 25.11.2026: Die Zwischenbilanz gibt es seit U12f, die Sparsamkeit wirkt im Budgetgespräch seit U12l; Nebenziele verhandeln seit U12p: Im offenen Zielgespräch stellst du einmal je Saison ein Nebenziel zum Tausch, der Vorstand sagt mit 50 % + 0,5 % je Punkt Vertrauen über 50 + 0,5 % je Punkt Ruf über dem Start zu (5 bis 95 %, eigener Strom) und wählt ein anderes mögliches Nebenziel, abgelehnt Vertrauen −2.)
+
+### 5.9 Umsetzung U12f (22. November 2026, popolupo, ohne Testlauf): Zwischenbilanz im Winter
+
+- **Wann:** am ersten Montag, nachdem du die Hälfte deiner Ligaspiele gespielt hast (§4 Nr. 3), einmal je Saison und Verein.
+- **Klar besser** (Platz mindestens 4 besser als das Ziel): Der Vorstand hebt das Ziel um einen Platz an. Der Ruf rechnet „übertroffen“ dann vom neuen Ziel, nach einem Zielgespräch wird der Vorschlag mit verschoben. Ohne Zufall.
+- **Klar schlechter** (mindestens 4 schlechter): Bis zum nächsten Ligaspiel kannst du im Büro beantragen, das Ziel um einen Platz zu senken. Zusage mit 50 % + 0,5 % je Punkt Vertrauen über 50 + 0,5 % je Punkt Ruf über 30 (5 bis 95 %, eigener Strom).
+  - Zugesagt wirkt es wie Tiefstapeln: Transferbudget −15 % (wichtig fürs Winterfenster), „übertroffen“ zählt weiter vom alten Vorschlag.
+  - Abgelehnt: Vertrauen −3.
+- **Dazwischen:** Meldung, das Ziel bleibt.
+- **Lizenz (K36):** der Antrag gehört zum Bereich `zielgespraech` (Grundlizenz), ohne Automatik.
+- **Seit U12k (22.11., popolupo, ohne Testlauf):** Liegst du mindestens 6 Plätze hinter dem Ziel und ist der Präsident geduldig (Geduld ab 14), senkt der Vorstand das Ziel von sich aus um einen Platz, ohne Antrag und ohne Abzug beim Transferbudget. Wie beim Anheben rechnet danach alles vom neuen Ziel, auch der Ruf. Ungeduldige oder mittlere Präsidenten und 4 bis 5 Plätze Rückstand: Antrag wie bisher.
+- **Noch nicht:** Nebenziele werden nicht angepasst. (Seit U12q, 25.11.2026, popolupo, ohne Testlauf, vorläufig: Ist ein Nebenziel bei der Zwischenbilanz schon verfehlt, etwa nach dem Pokal-Aus, rechnet der Vorstand es ab, Vertrauen −2, und setzt dafür ein anderes mögliches Nebenziel, eigener Strom. Offene Nebenziele bleiben.)
+
+### 5.10 Umsetzung U12g (22. November 2026, popolupo, ohne Testlauf): Trainervertrag
+
+Nach §5.5, nur als Karriere-Statistik (K34). Es fließt kein Geld, das Gehalt steckt wie bisher in der Verwaltung des Vereins (K23c). Ohne Zufall.
+
+- **Gehalt je Saison:** 2 Mio. € × Liga (1. Liga 1, 2. Liga 0,4, 3. Liga 0,25) × e^(0,05 × (Ansehen − 70)) × (1 + 1 % je Punkt Ruf über 30), auf 10.000 € gerundet.
+  - Beispiele beim Startruf: Bayern (Ansehen 95) etwa 7 Mio., ein Verein der 1. Liga mit 60 etwa 1,2 Mio., 2. Liga mit 60 etwa 0,5 Mio., 3. Liga mit 45 etwa 0,14 Mio. (geschätzt).
+- **Laufzeit nach der Geduld des Präsidenten:** ungeduldig eine Saison, mittel zwei, geduldig drei.
+  - Wer bis zum Winter (Tag 183) anfängt, für den zählt die laufende Saison mit. Wer später oder nach dem Saisonende anfängt, für den zählt sie nicht.
+- **Verlängerung zum Saisonende**, wenn der Vertrag ausläuft:
+  - Vertrauen über 55: zwei Saisons mit neuem Gehalt (nach dem heutigen Ruf).
+  - Sonst eine Saison zum alten Gehalt („Bewährung“).
+  - Ein Abschied bei Vertragsende kommt später. Er wäre ein neuer Weg aus dem Job, mit Folgen für Jobangebote, Tests und Gleichschritt.
+- **Ligaklausel:** Steigt der Verein auf oder ab, ändert sich das Gehalt zum 1. Juli im Verhältnis der Ligafaktoren.
+- **Abfindung bei Entlassung:** Restgehalt × 0,5. Rest heißt die Saisons nach der laufenden bis zum Vertragsende plus der Rest der laufenden Saison nach Tagen (nach dem Saisonende 0). Beim Rücktritt gibt es keine.
+- **Karriere (K34 §5.7):**
+  - Jede Station zeigt das Gehalt je Saison und was du dort verdient hast. Das Gehalt zählt anteilig nach Tagen, dazu kommt die Abfindung.
+  - Jede Saisonzeile zeigt das Gehalt laut Vertrag zum Saisonende.
+  - Darüber steht die Summe über alle Stationen.
+  - Alte Spielstände bekommen beim ersten Lesen einen Vertrag ab heute. Was davor verdient wurde, fehlt.
+- **Anzeige:**
+  - In der Karte Saisonziel: Laufzeit und Gehalt.
+  - In den Jobangeboten: das Gehalt, das dich dort etwa erwartet.
+- **Lizenz (K36):** keine neue Funktion, nur Anzeige und Statistik.
+- **Noch nicht:** Vertragsgespräch mit eigener Forderung, Abschied bei Vertragsende, Ausstiegsklausel bei Angeboten anderer Vereine, Gehalt als eigenes Wirtschaftsspiel (Community-Wunsch, §5.5).
+- **Nach der Prüfung DN:**
+  - Die Funktionen heißen `trainerAbfindung`, `trainerVertragEnde` und `trainerVertragText`, weil es die kurzen Namen schon für Spieler gab.
+  - Die Anzeige im Büro liest nur. Alte Spielstände bekommen den Vertrag beim Laden.
+  - Die Karriere zählt die laufende Saison anteilig mit.
+
+### 5.11 Umsetzung U12h (22. November 2026, popolupo, ohne Testlauf): Ruf wirkt
+
+Nach §5.4 „Wirkt auf“. Die Jobangebote nutzten den Ruf schon seit U12a, jetzt kommen drei weitere Stellen dazu. Ohne Zufall.
+
+- **Interesse von Spielern (K19 §5.3):** +0,2 je Punkt Ruf über dem Start (30), darunter entsprechend weniger. Ruf 80 bringt +10, Ruf 0 kostet −6.
+- **Ruf-Gefälle in der Kabine (K14 §12 Nr. 11):** Dein Ruf in der Kabine ist 50 + 0,3 × Ansehen des Vereins + 0,5 je Punkt Ruf über dem Start, höchstens 95. Vorher zählten 3 Punkte je Trainerjahr, als Platzhalter bis K28. Wer lange ohne Erfolg trainiert, gewinnt damit kein Ansehen in der Kabine mehr.
+- **Glaubwürdigkeit beim neuen Verein (K15):** Start 60 + 0,3 je Punkt Ruf über dem Start, zwischen 30 und 90. Sie wird beim Jobwechsel gesetzt, auch bei der Rückkehr zu einem früheren Verein.
+- **Lizenz (K36):** keine neue Funktion.
+- **Noch nicht:** Ruf und Presse (K29), zum Beispiel mehr Pressekonferenzen oder ein anderes Medienklima für bekannte Trainer.
+
+### 5.12 Umsetzung U12i (22. November 2026, popolupo, ohne Testlauf): Präsidentenwahl
+
+Nach §8 („Neuer Präsident: Wahl alle 3–4 Jahre“) und K25 §5.5 (Mitgliederversammlung).
+
+- **Wann:** im Sommer nach der Saison, auf der Mitgliederversammlung, bei jedem Verein alle 3 oder 4 Jahre. Der Takt ist fest aus der Vereinsnummer, die Vereine wählen also nicht alle im selben Jahr. Im Büro steht, wann dein Verein wieder wählt.
+- **Bleibt der Präsident?** Die Chance ist 65 %, dazu:
+  - +0,3 je Punkt pro Spiel über 1,35 (darunter entsprechend weniger),
+  - +15 % bei einem Aufstieg, −25 % bei einem Abstieg, auch über die Relegation (DQ6),
+  - +0,5 % je Punkt Fanstimmung über 50 (darunter weniger),
+  - zusammen zwischen 20 und 95 %. Gewürfelt im eigenen Strom je Verein und Saison.
+- **Neuer Präsident:** neue Werte für Geduld, Ehrgeiz und Sparsamkeit (weiter fest aus der Vereinsnummer, jetzt mit der Zahl der Wechsel).
+  - Bei Computer-Vereinen wirkt die neue Geduld auf Trainerwechsel (K31).
+  - Bei dir wirkt sie auf Nebenziele, Tiefstapeln und die Vertragslaufzeit beim nächsten Vertrag. Dein Vertrauen rückt zur Hälfte Richtung 50, denn der Neue muss sich erst ein Bild machen. Du bekommst eine Meldung, auch bei einer Wiederwahl.
+- **Lizenz (K36):** keine neue Funktion.
+- **Noch nicht:** Namen der Präsidenten, Kandidaten mit Programm, Einfluss des Trainers auf die Wahl, Mitglieder als Stimmen (K25d), neue Ziele direkt nach der Wahl (gilt erst mit dem Saisonziel der neuen Saison).
+- **Seit U12m (23.11.2026, popolupo, ohne Testlauf, vorläufig): Mitglieder als Stimmen.** Die Mitglieder wählen, also zählt ihre Stimmung mehr, je mehr Mitglieder ein Verein je Platz hat. Das Gewicht der Fanstimmung in der Wahl geht linear von 0,5 (keine Mitglieder) über 1 (ein Mitglied je Platz, wie bisher) bis 1,5 (ab zwei je Platz).
+  - Beispiele: Union, Schalke oder Köln wählen mit 1,5. Leipzig mit 0,5, dort entscheidet der Geldgeber, nicht die Kurve.
+  - Das gilt für alle Vereine, ohne Zufall. Die Mitgliederaktion (K25d) wirkt damit auch hier.
+  - Das Büro nennt das Gewicht neben dem Termin der nächsten Wahl, wenn es von 1 abweicht.
+
+### 5.13 Umsetzung U12j (22. November 2026, popolupo, ohne Testlauf): Jobangebot während der Saison
+
+Nach §8 als Ereigniskarte (K30, `daten/karten.js`, Bereich `ereignisse`).
+
+- **Wann:** Dein Ruf ist mindestens 55, du hast mindestens 5 Ligaspiele bestritten und stehst nicht im Ultimatum. Es meldet sich ein Verein derselben oder einer höheren Liga mit mindestens 8 mehr Ansehen als deiner. Große Vereine melden sich erst bei großem Ruf: Ihr Ansehen ist höchstens die Mitte der Jobangebote nach einer Entlassung (Ansehen deines Vereins − 4 + Ruf über 30) plus 10 (seit Prüfung DQ1, vorher Ruf + 40, das begrenzte nichts). Stufe „häufig“ (etwa alle drei Saisons, solange die Bedingungen gelten), höchstens ein Angebot je Jahr über alle Vereine (DQ2).
+- **Wechseln:** Du übernimmst den Verein sofort.
+  - Dein Gehalt bis heute steht in der Karriere, die Station endet mit „gewechselt“, eine Abfindung gibt es nicht.
+  - Der neue Verein zahlt deinem alten ein Jahresgehalt als Ablöse für deinen Vertrag, höchstens sein Kontostand.
+  - Danach gilt alles wie bei jedem Jobwechsel: neuer Vertrag, Vertrauen 55, Glaubwürdigkeit nach Ruf.
+  - Offene Karten des alten Vereins entscheidet vorher der Co-Trainer, sie wandern nicht mit (gilt für jeden Jobwechsel, DQ3).
+  - Kredite und Raten bleiben wie bei jedem Jobwechsel beim alten Verein, ohne Buchung (Computer-Vereine führen keine Kredite). Die Ablöse steht nur in der Meldung, nicht in den Finanzen (DQ4, DQ5).
+- **Bleiben und es öffentlich sagen:** Vertrauen +5, Fans +2. Das ist auch die Voreinstellung, der Co-Trainer wechselt nie für dich.
+- **Sich alles anhören und dann absagen:** Ruf +1. Mit 50 % wird das Treffen publik, dann Vertrauen −8.
+- **Noch nicht:** Ausstiegsklausel im Trainervertrag, Angebote aus dem Ausland. Das Angebot während des Ultimatums gibt es seit U12n (§5.13a).
+
+### 5.13a Umsetzung U12n (23. November 2026, popolupo, ohne Testlauf, Werte vorläufig): Ein Ausweg im Ultimatum
+Eigene Entscheidungskarte „Ein Ausweg“ (Anlasskarte, Chance 0,25 je Woche, große Karte mit Halt wie das Jobangebot).
+- **Wann:** Du stehst bei deinem Verein im Ultimatum (§5.3) und bist nicht entlassen. Dein Ruf ist mindestens 40 (`RV.rettung.rufAb`). Höchstens ein Angebot je Jahr über alle Vereine, wie beim Jobangebot.
+- **Wer:** ein Verein derselben oder einer tieferen Profiliga mit höchstens deinem Ansehen und höchstens 15 darunter (`rettung.abstand`). Es ist ein Schritt zurück, kein Aufstieg.
+- **Wechseln:** genau wie beim Jobangebot (§5.13, Kartenwirkung `jobwechsel`): Station „gewechselt“ statt „entlassen“, Ablöse an den alten Verein, Co-Trainer kommen mit, offene Karten entscheidet der Co-Trainer. Das Ultimatum endet mit dem Jobwechsel.
+- **Bleiben und kämpfen:** Vertrauen +3. Das Ultimatum läuft weiter.
+- **Voreinstellung:** bleiben. Der Co-Trainer wechselt nie für dich.
+- **Warum:** Wer kurz vor der Entlassung steht, bekommt im echten Fußball manchmal einen Ausweg. Der Preis ist der kleinere Verein. Dafür steht in der Karriere „gewechselt“, und der Ruf leidet nicht wie bei einer Entlassung.
 
 ## 6. Hebel des Spielers
 
@@ -202,6 +313,8 @@ Das **Zielgespräch** mit Tiefstapeln und Hochpokern (§5.2) wartet: Seine Folge
 | Rückendeckung vom Vorstand | Vertrauen über 80 nach Krise | Info, Vertrauen ein Monat stabil |
 | Neuer Präsident | Wahl alle 3–4 Jahre, Zufall | neue Charakterwerte, Ziele werden neu verhandelt |
 | Jobangebot während der Saison (Entscheidung) | Ruf hoch, Verein mit höherem Ansehen | wechseln (Ablöse für den Trainervertrag), bleiben (Vertrauen +), Gespräch publik (Glaubwürdigkeit −) |
+
+**Seit K30e** (22.11.2026, popolupo, ohne Testlauf) wirkt „Rückendeckung vom Vorstand“: 30 Tage lang fällt das Vertrauen nicht unter den Wert des Tages (K30 §5.6).
 
 ## 9. Wechselwirkungen
 
@@ -263,15 +376,38 @@ vorstand:{
 9. **Sport gegen das Saisonziel**, nicht gegen den erwarteten Platz wie bei Computer-Vereinen. Dein Ziel ist das, was der Vorstand von dir verlangt (K02 verschiebt es je Stufe).
 10. **Präsident ohne Namen und ohne Wahl,** wie in K31 §12 Nr. 34. Neuwahl und „Präsident mischt sich ein“ kommen mit K30.
 11. **Ruf wirkt zuerst nur auf Jobangebote.** Die anderen Wirkungen brauchen K14, K19 und K29 im Detail.
-12. **Rücktritt** (§5.3) fehlt noch. Er wäre eine neue Funktion mit Lizenz (K36) und kommt mit U12b.
+12. **Rücktritt** (§5.3): gebaut in U12b (§5.7, Bereich `ruecktritt`, Grundlizenz). Der frühere Hinweis „fehlt noch“ war veraltet (berichtigt am 22.11.2026).
 
 **Vorläufig entschieden mit U12b** (20.11., von mir, ohne Rücksprache und ohne Testlauf):
 
 13. **Zielgespräch verschoben, bis K23 Budgets hat** (§5.7). Damit ist §5.2 ganz offen. U12b besteht aus Nebenzielen und Rücktritt.
-14. **Drei Nebenziele statt fünf:** Pokal, Jugend, Finanzen. Für Kader und Zuschauer fehlen Gehaltsrahmen und K27.
+14. **Drei Nebenziele statt fünf:** Pokal, Jugend, Finanzen. Für Kader und Zuschauer fehlen Gehaltsrahmen und K27. Seit U12o (25.11.2026) gibt es auch Kader (Gehälter im Rahmen) und Zuschauer (Heimschnitt der Vorsaison), dazu seit U19c den Europapokal; berichtigt nach Prüfung FR5.
 15. **Jugend in Einsätzen statt Minuten:** Das Spiel zählt Einsätze je Spieler (`apps`), keine Minuten. 25 Einsätze entsprechen grob einem Talent, das zwei Drittel der Ligaspiele bestreitet.
 16. **Ehrgeiz des Präsidenten wirkt:** ab 14 zwei Nebenziele. Damit ist neben der Geduld der zweite Charakterwert in Gebrauch.
 17. **Rücktritt in der Grundlizenz:** Er ist eine Karriere-Entscheidung, keine Fähigkeit, die man lernen muss.
+
+**Vorläufig entschieden mit U12e** (22.11., popolupo, ohne Rücksprache und ohne Testlauf, §5.8):
+
+18. **Vorschlag wie bisher** (Ziel aus dem erwarteten Platz, verschoben nach der Schwierigkeit). Der Ehrgeiz des Präsidenten verschiebt nicht den Vorschlag, sondern macht ihn schwerer oder leichter herunterzuhandeln (±15 %).
+19. **Ein bis zwei Plätze, eine Entscheidung je Saison,** offen bis zum nächsten eigenen Ligaspiel. Ohne Entscheidung gilt der Vorschlag.
+20. **Transferbudget als weiche Grenze:** Kaufen über dem Budget geht, kostet aber Vertrauen (−1 je angefangene 10 % der Ablöse über dem Budget, höchstens −10). Eine harte Sperre hätte viele bestehende Abläufe verändert.
+21. **Prämie als Ruf:** Ein Trainergehalt gibt es nicht. Nach dem Tiefstapeln zählt „übertroffen“ vom Vorschlag aus, ein erreichtes hochgepokertes Ziel bringt +2 Ruf je Platz.
+22. **Zielgespräch in der Grundlizenz** (Bereich `zielgespraech`), wie der Rücktritt.
+
+**Vorläufig entschieden mit U12f** (22.11., popolupo, ohne Testlauf, §5.9):
+
+23. **Zwischenbilanz zur Hälfte der eigenen Ligaspiele** statt an einem festen Datum. So passt sie zu allen Ligen und zu einem Jobwechsel.
+24. **Anheben vom Vorstand, Senken nur auf Antrag**, je ein Platz, Schwelle 4 Plätze Abstand. Ein zugesagter Antrag wirkt wie Tiefstapeln.
+
+**Vorläufig entschieden mit U12g** (22.11., popolupo, ohne Testlauf, §5.10):
+
+25. **Trainergehalt nur als Statistik**, nicht über das Vereinskonto. Nr. 21 gilt weiter für Prämien: Sie bleiben Ruf. Das Gehalt richtet sich nach Liga, Ansehen und Ruf, die Laufzeit nach der Geduld des Präsidenten.
+26. **Kein Abschied bei Vertragsende:** Unter Vertrauen 56 verlängert der Vorstand um eine Saison zum alten Gehalt. Der Abschied folgt mit dem Vertragsgespräch.
+
+**Vorläufig entschieden mit U12i** (22.11., popolupo, ohne Testlauf, §5.12):
+
+27. **Präsidentenwahl alle 3 oder 4 Jahre** nach festem Takt je Verein, Chance zu bleiben aus Punkten, Auf- und Abstieg und Fanstimmung. Ein neuer Präsident bekommt neue Werte, dein Vertrauen rückt zur Hälfte Richtung 50.
+28. **Jobangebot als Karte** (U12j, §5.13): ab Ruf 55, Wechsel nur auf deine Wahl, Ablöse ein Jahresgehalt für den alten Verein.
 
 **Noch zu recherchieren:** Zahl der Trainerwechsel pro Saison in 1., 2. und 3. Liga.
 
@@ -280,3 +416,13 @@ vorstand:{
 - Saisonziel verhandeln: PLAN §4 (GameStar 4/2000)
 - Unrealistische Ziele nach Aufstiegen, Trainergehalt: `konzepte/_recherche-genre.md`, Abschnitt 4b
 - Heutige Vorstandslogik: `daten/regeln.js` (Abschnitt `vorstand`), `js/ablauf.js`
+
+### 5.14 Umsetzung U12l (22. November 2026, popolupo, ohne Testlauf): Budgetgespräch
+
+Nach K15 §12 Nr. 20 („Gespräche mit dem Vorstand“), mit der Glaubwürdigkeit als Warnsignal.
+
+- **Wann:** einmal je Saison und Verein, während der Saison, im Büro unter dem Saisonziel. Bereich `zielgespraech` (Grundlizenz).
+- **Zusage:** 40 % + 1 % je Punkt Vertrauen über 50 + 0,5 % je Punkt Ruf über 30 − 2 % je Punkt Sparsamkeit des Präsidenten über 10. Bei Glaubwürdigkeit unter 40 halb so viel. Zwischen 5 und 90 %, eigener Strom.
+- **Zugesagt:** Das Transferbudget steigt bis Saisonende um 20 % (zusammen mit dem Faktor aus dem Zielgespräch).
+- **Abgelehnt:** Vertrauen −3.
+- **Noch nicht:** Gehaltsrahmen verhandeln, Gespräch über einen Stadionausbau.

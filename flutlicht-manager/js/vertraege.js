@@ -8,7 +8,7 @@
 const vtFrac=x=>x-Math.floor(x);
 function gehaltForderung(p,neu){const F=RVT.forderung,a=(F.alter.find(x=>p.age<=x[0])||[0,1])[1];
   let f=salaryFor(p.str)*a*(p.age<=F.talentBis&&sternZahl(p)>=F.talentSterne?F.talent:1)*(hatEig(p,'soeldner')?F.soeldner:hatEig(p,'vereinstreu')?F.treu:1)*(F.zufall[0]+(p.seed||0.5)*F.zufall[1]);
-  f*=(neu?F.wechsel:vertragsAufschlag(p))*beraterFaktor(p);return Math.round(f/1000)*1000;} // Berater: Profil und Beziehung (K22, U10c)
+  f*=(neu?F.wechsel*gerGehalt(p):vertragsAufschlag(p))*beraterFaktor(p)*(1+REGELN.schwierigkeit.mitwachsend.wirkung.gehalt*mitwachsWert());return Math.round(f/1000)*1000;} // Berater: Profil und Beziehung (K22, U10c). Mitwachsend (K43 §5) macht Forderungen nach Erfolg etwas teurer, in einer Durststrecke etwas billiger
 // Schwelle des Spielers: seine Forderung, je Spieler fest um bis zu ±3 % verschoben. Du siehst nur die Zone.
 const vtSchwelle=(p,F)=>F*(1+(vtFrac((p.seed||0.5)*7)-0.5)*2*RVT.zone);
 const vtZone=F=>[Math.round(F*(1-RVT.zone)/10000)*10000,Math.round(F*(1+RVT.zone)/10000)*10000];
@@ -18,6 +18,11 @@ const vtVorschlag=F=>Math.ceil(F*(1+RVT.zone)/1000)*1000;
 // ---------- Interesse beim Wechsel (K19 §5.3) ----------
 // Verein (Ansehen, Liga), Perspektive (Stärke gegen deine Kaderstärke), Alter, Zufall, Ausland (wie bisher), dazu neu: Lage beim alten Verein (Stimmung, Wechselwunsch),
 // Bindung (Restlaufzeit, vereinstreu) und Heimat (Landsleute in deinem Kader). Geld gleicht ein wenig fehlendes Interesse aus (gehaltMitInteresse).
+// Rückkehr des verlorenen Sohns (K19 §8, K19e): mindestens so viele Pflichtspiele für deinen Verein wie ein Publikumsliebling (RFS.ident.lieblingSpiele, Prüfung EP6),
+// gezählt ab Spielbeginn (Statistik K34, Prüfung EP5: eine Karriere vor dem Spielstand gibt es nicht)
+const heimkehrer=p=>vereinsSpiele(p,S.my)>=RFS.ident.lieblingSpiele;
+// Beim Wechsel zu dir (taktik.js neuzugang): die Fans freuen sich, Fanstimmung (Umfeld) + heimkehrFans, mit Meldung. Ohne Zufall.
+function heimkehrFans(p){if(!heimkehrer(p))return;fanAnlass(myT(),'fanU',RVT.interesse.heimkehrFans);news(`${p.n} kehrt zurück! Die Fans feiern die Heimkehr eines alten Bekannten.`,'good');}
 function wechselInteresse(p){const t=myT(),I=RM.interesse,IV=RVT.interesse,IA=RW.ausland.interesse,aus=istAusland(p),from=aus?avVon(p.team):p.team>=0?S.teams[p.team]:null,lvl=teamLevel(S.my);
   let x=(t.rep-(from?from.rep:t.rep-I.vereinslosAbstand))+(lvl-p.str)*I.niveauFaktor+I.basis+(t.lg===1?I.liga1:t.lg===2?I.liga2:I.liga3)+(p.age>=I.altAb?I.altPlus:0)+((p.seed||0.5)-0.5)*I.zufall
     +(aus?(p.nat===RW.nation.heimat?IA.heimkehr:IA.fremd):0);
@@ -26,6 +31,8 @@ function wechselInteresse(p){const t=myT(),I=RM.interesse,IV=RVT.interesse,IA=RW
   if(from&&hatEig(p,'vereinstreu'))x+=IV.treu;
   if(p.nat)x+=Math.min(IV.landsleuteMax,squad(S.my).filter(q=>q.nat===p.nat).length*IV.landsleute)*(p.nat===RW.nation.heimat?0:1);
   if(p.rkI&&p.rkI.s===S.season)x+=p.rkI.v; // Heimweh, Kontakt über eine Ereigniskarte (K32 §8, U18b)
+  if(p.team!==S.my&&heimkehrer(p))x+=IV.heimkehrVerein; // Rückkehr des verlorenen Sohns (K19 §8, K19e)
+  x+=(ruf()-RV.ruf.start)*IV.ruf; // dein Ruf als Trainer (K28 §5.4, U12h)
   return x+beraterInteresse(p);} // ab +60 rät sein Berater ihm zu dir (K22)
 // Fehlt etwas Interesse (bis −10), will er mehr Geld: je Punkt 3 % mehr. Darunter hilft kein Geld.
 function gehaltMitInteresse(p,interesse){const F=gehaltForderung(p,true),IV=RVT.interesse;if(interesse>=0)return F;if(interesse<IV.geldAb)return null;return Math.round(F*(1-interesse*IV.geldJePunkt)/1000)*1000;}
@@ -42,6 +49,7 @@ function paketWert(p,tid,o,F){const V=RVT,sicher=V.sicher[0]+V.sicher[1]*(p.ch?p
   let w=o.sal+(o.hg||0)/Math.max(1,o.ct)+pr.erw*sicher;
   if(o.ak){const r=o.ak/Math.max(1,value(p)),A=V.ausstieg;w+=F*(r<=A.billigAb?A.bonus:r<=A.mittelAb?A.bonus/2:0);}
   if(o.lk)w-=F*V.ligaklausel.malus*(o.lk/V.ligaklausel.ref);
+  {const lauf=!!p.zv&&p.team===S.my;if(o.zv&&!lauf)w+=F*V.zielvorgabe.wert;else if(!o.zv&&lauf)w-=F*V.zielvorgabe.wert;} /* Zielvorgabe (K21f); FL6: eine laufende bleibt ohne neuen Nachlass, wer sie streicht, zahlt dafür */
   const L=V.laufzeit;w-=F*(p.age<=L.jungBis?Math.max(0,o.ct-L.mitte)*L.jung:p.age>=L.altAb?Math.max(0,L.mitte-o.ct)*L.alt:0);
   return w;}
 
@@ -61,12 +69,19 @@ function vertragRunde(p,tid,o,F){const V=RVT,v=vtVerhandlung(p),eigen=p.team===t
 function vtPaket(p,F,ct,vereinslos){const el=id=>(document.getElementById(id)||{}).value,zahl=(id,m)=>{const v=el(id);return v===''||v==null||isNaN(+v)?null:Math.max(0,+v*m);};
   const sal=zahl('vt_sal',1e6),o={ct,sal:sal!=null&&sal>0?Math.round(sal/1000)*1000:vtVorschlag(F)};const hg=zahl('vt_hg',1e6);o.hg=hg!=null?Math.round(hg/1000)*1000:vereinslos?Math.round(o.sal*RF.handgeld/1000)*1000:0;
   if(frei('praemien')){const vp={a:zahl('vt_a',1000),p:zahl('vt_p',1000),t:zahl('vt_t',1000),z:zahl('vt_z',1000)};Object.keys(vp).forEach(k=>{if(!vp[k])delete vp[k];else vp[k]=Math.round(vp[k]);});if(Object.keys(vp).length)o.vp=vp;
-    const ak=zahl('vt_ak',1e6);if(ak)o.ak=Math.round(ak/RM.runden)*RM.runden;const lk=zahl('vt_lk',0.01);if(lk&&RVT.ligaklausel.stufen.includes(Math.round(lk*100)/100))o.lk=Math.round(lk*100)/100;}
+    const ak=zahl('vt_ak',1e6);if(ak)o.ak=Math.round(ak/RM.runden)*RM.runden;const lk=zahl('vt_lk',0.01);if(lk&&RVT.ligaklausel.stufen.includes(Math.round(lk*100)/100))o.lk=Math.round(lk*100)/100;
+    if(el('vt_zv')==='1')o.zv={n:RVT.zielvorgabe.spiele,plus:RVT.zielvorgabe.plus};} /* Zielvorgabe (K21f) */
+  if(!o.zv&&p.zv&&p.team===S.my&&el('vt_zv')==null)o.zv={n:p.zv.n,plus:p.zv.plus}; /* FN3: Felder zu (VT_DETAIL) oder ohne Bereich: eine laufende Vorgabe bleibt */
   return o;}
 // Vertrag eintragen: Laufzeit, Gehalt, Prämien, Klauseln, Handgeld buchen
-function vtUnterschrift(p,o,neu){p.ct=o.ct;p.sal=o.sal;if(o.vp)p.vp=o.vp;else delete p.vp;if(o.ak)p.ak=o.ak;else delete p.ak;if(o.lk)p.lk=o.lk;else delete p.lk;if(o.hg)money('Handgelder',-o.hg);if(neu)p.seit=absTag(S.tag);}
+function vtUnterschrift(p,o,neu){p.ct=o.ct;p.sal=o.sal;if(o.vp)p.vp=o.vp;else delete p.vp;if(o.ak)p.ak=o.ak;else delete p.ak;p.lk=o.lk||0; /* ausgehandelt, auch „keine“ (0): sonst gälte die übliche Klausel (K21 §12 Nr. 20) */zielvorgabeSetzen(p,o.zv,!neu);if(o.hg)money('Handgelder',-o.hg);if(neu)p.seit=absTag(S.tag);}
+// Zielvorgabe (K21 §3.1, §8, K21f): p.zv = {n Pflichtspiele, plus Gehaltsaufschlag, st Pflichtspiele für deinen Verein bei der Unterschrift}. Gezählt ab der Unterschrift
+// (bei einem Wechsel zum Fenster ab der Ankunft, transfers.js wechselVollziehen). Montags (zielvorgabenWoche, ohne Zufall): erreicht, steigt das Gehalt, die Vorgabe ist erfüllt.
+function zielvorgabeSetzen(p,zv,verl){if(zv&&verl&&p.zv&&p.team===S.my)return; /* FL6, FN4: nur bei einer Verlängerung zählt eine laufende Vorgabe weiter */if(zv)p.zv={n:zv.n,plus:zv.plus,st:vereinsSpiele(p,S.my)};else delete p.zv;}
+function zielvorgabenWoche(){squad(S.my).forEach(p=>{const z=p.zv;if(!z||vereinsSpiele(p,S.my)-(z.st||0)<z.n)return;p.sal=Math.round(p.sal*(1+z.plus)/1000)*1000;delete p.zv;
+  news(`Zielvorgabe erreicht: ${p.n} hat ${z.n} Pflichtspiele für dich bestritten, sein Gehalt steigt um ${Math.round(z.plus*100)} % auf ${fmt(p.sal)} im Jahr.`,'');});}
 // Vertrag endet (Verkauf, Auflösung): Prämien und Klauseln gelten nicht beim neuen Verein
-function vertragEnde(p){delete p.vp;delete p.ak;delete p.lk;if(S.vt)delete S.vt[p.id];}
+function vertragEnde(p){delete p.vp;delete p.ak;delete p.lk;delete p.zv;p.um=null;delete p.umE; /* Prüfung FB6: wer geht, schult nicht weiter um */if(S.vt)delete S.vt[p.id];}
 
 // ---------- Prämien je Pflichtspiel (K21 §3.1) ----------
 function praemienNachSpiel(list){const P=RVT.praemie;let summe=0;
@@ -80,14 +95,27 @@ function praemienNachSpiel(list){const P=RVT.praemie;let summe=0;
   if(summe>0)money('Prämien',-Math.round(summe));return summe;}
 
 // ---------- Saisonwechsel: Ligaklausel (K21 §3.1) ----------
-function vertraegeSaison(){const t=myT();if(!(t.lastLg&&t.lg>t.lastLg))return;const l=squad(S.my).filter(p=>p.lk);
-  l.forEach(p=>{p.sal=Math.round(p.sal*(1-p.lk)/1000)*1000;});if(l.length)news(`Ligaklausel: Nach dem Abstieg verdienen ${l.map(p=>`${p.n} (−${Math.round(p.lk*100)} %)`).join(', ')} weniger.`);}
+// Gilt für alle Vereine gleich (K21 §12 Nr. 20, vorläufig, Prüfung GJ1). Was du ausgehandelt hast, gilt wie vereinbart (p.lk, auch 0 = keine Klausel).
+// Verträge, die ein Verein selbst schließt (Computer-Vereine, die Automatik, der Kader beim Spielstart), haben kein p.lk und enthalten die übliche Klausel (ligaklausel.computer).
+// Ohne sie trugen Absteiger die Gehälter der höheren Liga mit und drückten den Saldo der 2. und 3. Liga in der zweiten Saison um 1,5 bis 1,8 Mio. je Verein (Lauf 18).
+// Wer erst heute kam (vereinbarter Wechsel zum Sommer), unterschrieb schon für die neue Liga und wird nicht gekürzt (Prüfung GJ4).
+// Gehalt je Liga (Prüfung GJ2): p.lkAlt merkt Verein, Liga vor dem Abstieg, Gehalt vorher und gekürzt. Steigt der Verein in diese Liga zurück auf, gilt wieder das alte Gehalt.
+// Ein zweiter Abstieg kürzt nicht noch einmal. Ein neuer Vertrag (anderer Verein oder anderes Gehalt) macht den Merker ungültig. Die Stimmung misst das Vertragsgehalt (gehaltVertrag). Ohne Zufall.
+const ligaklauselVon=p=>p.lk!=null?p.lk:(RVT.ligaklausel.computer||0);
+const lkGueltig=p=>!!p.lkAlt&&p.team===p.lkAlt.t&&p.sal===p.lkAlt.neu;
+const gehaltVertrag=p=>lkGueltig(p)?p.lkAlt.sal:p.sal;
+function vertraegeSaison(){const heute=absTag(S.tag),gekuerzt=[],zurueck=[];
+  S.pl.forEach(p=>{if(!p.lkAlt)return;if(!lkGueltig(p)){delete p.lkAlt;return;}const t=S.teams[p.team];if(t&&t.lg<=p.lkAlt.lg){p.sal=p.lkAlt.sal;delete p.lkAlt;if(p.team===S.my)zurueck.push(p);}});
+  S.teams.forEach(t=>{if(!(t.lastLg&&t.lastLg<=3&&t.lg>t.lastLg))return; /* auch beim Abstieg in die Regionalliga, wie vorher bei deinem Verein */
+    squad(t.id).forEach(p=>{const k=ligaklauselVon(p);if(p.lkAlt||p.seit===heute||!(k>0))return;const neu=Math.round(p.sal*(1-k)/1000)*1000;p.lkAlt={t:t.id,lg:t.lastLg,sal:p.sal,neu};p.sal=neu;if(t.id===S.my)gekuerzt.push(p);});});
+  if(gekuerzt.length)news(`Ligaklausel: Nach dem Abstieg verdienen ${gekuerzt.length} Spieler weniger, bis der Verein wieder aufsteigt: ${gekuerzt.map(p=>`${p.n} (−${Math.round(ligaklauselVon(p)*100)} %)`).join(', ')}.`);
+  if(zurueck.length)news(`Ligaklausel: Nach dem Aufstieg verdienen ${zurueck.map(p=>p.n).join(', ')} wieder ihr volles Gehalt.`);}
 
 // ---------- Woche: Ausstiegsklausel und Vorvertrag (K21 §4.3, §4.5) ----------
 const vorvertragZeit=(tag=S.tag)=>{const k=mmtt(tag),V=RVT.vorvertrag;return S.phase==='play'&&k>=V.von&&k<=V.bis;};
 function vertraegeWoche(d){const V=RVT,t=myT();
   // Ausstiegsklausel: Ein größerer Verein mit Bedarf und Geld zahlt den Betrag (nur im Fenster). Der Spieler geht sofort.
-  if(fensterOffen(d))squad(S.my).filter(p=>p.ak&&!p.wech).forEach(p=>{const B=S.teams.filter(b=>b.id!==S.my&&aktiv(b)&&b.rep>=t.rep&&b.cash>=p.ak&&hatBedarf(b,p)&&vwKauf(p,b.id)>=p.ak);
+  if(fensterOffen(d))squad(S.my).filter(p=>p.ak&&!p.wech).forEach(p=>{const B=S.teams.filter(b=>b.id!==S.my&&aktiv(b)&&!kiTransferSperre(b)&&b.rep>=t.rep&&b.cash>=p.ak&&hatBedarf(b,p)&&vwKauf(p,b.id)>=p.ak);
     if(!B.length||R()>=V.ausstieg.chance)return;const b=pick(B),betrag=p.ak;money('Transfers',betrag);b.cash-=betrag;bezDuAendern(b.id,RBZ.anlass.ausstieg,`Ausstiegsklausel von ${p.n} gezogen`); // K17, U12c
     kabineAbgang(p,S.my);vertragEnde(p);S.offers=S.offers.filter(o=>o.pid!==p.id);
     p.team=b.id;p.list=0;p.ct=riA(RM.neuerVertrag);p.seit=absTag(d);p.abl=betrag;neuzugang(p,b.id);statTransfer(p,betrag,S.my,b.id);news(`Ausstiegsklausel gezogen: ${b.name} zahlt ${fmt(betrag)} für ${p.n}. Er wechselt sofort.`,'bad');});
@@ -112,9 +140,13 @@ function vertragFormular(p,F,tid,vereinslos,laufzeitId){const z=vtZone(F),det=VT
     ${feld('vt_sal','Gehalt (Mio € pro Jahr)',(vtVorschlag(F)/1e6).toFixed(2))}${feld('vt_hg','Handgeld (Mio €, einmalig)',(hg/1e6).toFixed(2))}
     ${det?`${feld('vt_a','Auflaufprämie (Tsd € je Spiel)',0,'1')}${feld('vt_p','Punktprämie (Tsd € je Punkt)',0,'1')}${feld('vt_t','Torprämie (Tsd € je Tor)',0,'1')}${p.pos==='TW'||p.pos==='AB'?feld('vt_z','Zu-Null-Prämie (Tsd € je Spiel)',0,'1'):''}
       ${feld('vt_ak','Ausstiegsklausel (Mio €, leer = keine)','')}<label>Ligaklausel <select id="vt_lk">${RVT.ligaklausel.stufen.map(x=>`<option value="${x*100}">${x?`−${x*100} % Gehalt bei Abstieg`:'keine'}</option>`).join('')}</select></label>
+      <label>Zielvorgabe <select id="vt_zv"><option value="">keine</option><option value="1"${p.zv&&p.team===S.my?' selected':''}>ab ${RVT.zielvorgabe.spiele} Pflichtspielen Gehalt +${Math.round(RVT.zielvorgabe.plus*100)} %</option></select></label>
       <p class="dim">Prämien sieht er mit seinem Erwartungswert, Vorsichtige mit Abschlag. Eine Ausstiegsklausel nimmt ihm Gehalt ab, eine Ligaklausel kostet extra.</p>`
       :`<button onclick="vertragDetails(${p.id})"${lzAus('praemien')}>Prämien und Klauseln</button>${lzHinweis('praemien')}`}
     ${pr?`<p class="dim">Laufende Prämien: bei einer üblichen Saison etwa ${fmt(Math.round(pr.erw/1000)*1000)}, höchstens ${fmt(Math.round(pr.max/1000)*1000)}.</p>`:''}`;}
 // Zeile in der Spielerkarte: was im Vertrag steht
 function vertragText(p){const l=[];if(p.vp){const v=p.vp;if(v.a)l.push(`Auflauf ${fmt(v.a)}`);if(v.p)l.push(`Punkt ${fmt(v.p)}`);if(v.t)l.push(`Tor ${fmt(v.t)}`);if(v.z)l.push(`Zu-Null ${fmt(v.z)}`);}
-  if(p.ak)l.push(`Ausstiegsklausel ${fmt(p.ak)}`);if(p.lk)l.push(`Ligaklausel −${Math.round(p.lk*100)} %`);return l.length?`<p class="dim">${l.join(' · ')}</p>`:'';}
+  if(p.ak)l.push(`Ausstiegsklausel ${fmt(p.ak)}`);{const k=ligaklauselVon(p);if(k>0)l.push(`Ligaklausel −${Math.round(k*100)} %${p.lk==null?' (üblich)':''}`);} // ohne ausgehandelte Klausel die übliche (K21 §12 Nr. 20)
+  if(lkGueltig(p))l.push(`nach dem Abstieg gekürzt, bis zum Wiederaufstieg (vorher ${fmt(p.lkAlt.sal)})`);
+  if(p.zv)l.push(`Zielvorgabe: Gehalt +${Math.round(p.zv.plus*100)} % nach ${p.zv.n} Pflichtspielen (noch ${Math.max(0,p.zv.n-(vereinsSpiele(p,S.my)-(p.zv.st||0)))})`);
+  return l.length?`<p class="dim">${l.join(' · ')}</p>`:'';}

@@ -55,7 +55,11 @@ function erwartungEinsatz(p){const k=kaderRolle(p);if(k==='pokal')return RKA.rol
 // der Einsatzzeit eingeht (p.ea) und was es sofort an Stimmung bringt oder kostet. p.bg merkt den Grund des letzten Spiels für die Anzeige.
 const BANK_GRUND={weg:'wechselt bald, erwartet nichts mehr',rotation:'Rotation, geschont (zählt nicht)',joker:'Joker mit Wirkung (zählt als erfüllt)',rivale:'sein Konkurrent spielt',unerfahren:'unerfahren, erwartet noch nichts',
   tw2:'Nummer 2 im Tor, erwartet keine Einsätze',pokal:'spielt im Pokal, Liga zählt nicht',aufbau:'Aufbau nach Verletzung (zählt nicht)',form:'Formkrise, er sieht die Bank ein',
-  tribuene:'nicht im Spieltagskader',frueh:'früh ausgewechselt',spaet:'erst in der Nachspielzeit eingewechselt',ww:'will weg, versteht die Bank',sperre:'erstes Spiel nach der Sperre (zählt nicht)',mentor:'betreut als Pate ein Talent, nimmt die Bank hin',bank:'Bank ohne besonderen Grund'};
+  tribuene:'nicht im Spieltagskader',frueh:'früh ausgewechselt',spaet:'erst in der Nachspielzeit eingewechselt',ww:'will weg, versteht die Bank',sperre:'erstes Spiel nach der Sperre (zählt nicht)',mentor:'betreut als Pate ein Talent, nimmt die Bank hin',bank:'Bank ohne besonderen Grund',
+  neu:'neuer Trainer, jeder bekommt seine Chance (zählt nicht)'};
+// Neuer Trainer (K14 §12, K14f): Nach deinem Vereinswechsel zählt in den ersten RKA.bank.neuerTrainer.spiele Pflichtspielen kein Bankplatz deiner Spieler (seit FM5). S.neubeginn = {t Verein, rest Pflichtspiele; alt: bis absoluter Tag}.
+const neubeginn=tid=>{const N=S.neubeginn;if(!N||N.t!==tid||tid!==S.my)return false;return N.rest!=null?N.rest>0:absTag(S.tag)<=N.bis;}; /* seit FM5 rest Pflichtspiele, bis (Tage) nur in Spielständen von davor */
+function neubeginnStart(tid){const N=RKA.bank.neuerTrainer;S.neubeginn={t:tid,rest:N.spiele};squad(tid).forEach(p=>{kabineInit(p);if(!stammA(p))stimmungAendern(p,N.hoffen);});}
 const feinPos=p=>p.fp||STD_POS[p.pos];
 const stammA=p=>KR_STUFE[p.krA]>=3; // stünde in der besten Elf ohne Ausfälle
 // Profi-Pflichtspiele über die Karriere. Startwert ohne Zufall aus Alter und Spielernummer (bis 18 Jahre: null)
@@ -78,16 +82,16 @@ function saisonEntschieden(t,tab){const E=RKA.bank.bedeutungslos,fx=S.fx&&S.fx[t
   for(const g of new Set([...(E.grenzen[t.lg]||[]),(t.id===S.my?S.target:t.expPos)||0])){if(!g||g>=tab.length)continue;if(i<g?tab[i].p-tab[g].p<=rest*3:tab[g-1].p-tab[i].p<=rest*3)return false;}return true;}
 // Vor dem Nachlauf der Spiele: wer verletzt oder gesperrt fehlte (danach sitzen die Sperren ab, und neue Verletzungen kommen dazu). 1 = nur gesperrt
 function einsatzVorher(list){list.forEach(r=>{const wb=wbVon(r);r.na=[0,1].map(s=>{const tid=s?r.a:r.h;if(tid>=1000||!S.teams[tid])return[];
-  return mitWettbewerb(wb,()=>squad(tid).filter(p=>!avail(p)).map(p=>[p.id,p.inj>0?0:1]));});});}
+  return mitWettbewerb(wb,()=>squad(tid).filter(p=>!avail(p)).map(p=>[p.id,p.inj>0?0:beiNationalteam(p)?2:1]));});});}
 // Nach den Noten (applyMatch): Einsatzzeit und Folgen je Spieler, dazu Startelf, Siege und neue Stammspieler für den Zusammenhalt
 function einsatzBuchen(list,d=S.tag){const tabs={},heute=absTag(d);
   list.forEach(r=>{const pokal=wbVon(r)==='pokal',ws=r.ws||[],tore=new Map();(r.ev||[]).forEach(e=>{if(e.t==='G')tore.set(e.p,(tore.get(e.p)||0)+1);});
     [0,1].forEach(s=>{const tid=s?r.a:r.h,t=S.teams[tid];if(tid>=1000||!t)return;const sq=squad(tid),xi=new Set(r.xi[s]||[]);
       const c={r,t,sq,xi,pokal,heute,tore,mein:tid===S.my,min:new Map(r.xpo[s].map(x=>[x[0],x[3]==null?90:x[3]])),kader:r.bk&&r.bk[s]?new Set([...xi,...r.bk[s]]):null,
         fehlt:new Map((r.na&&r.na[s])||[]),rein:new Map(ws.filter(w=>w[0]===s).map(w=>[w[3],w[1]])),raus:new Map(ws.filter(w=>w[0]===s).map(w=>[w[2],w[1]])),verl:new Set((r.inj||[]).map(x=>x.id)),
-        englisch:S.plan?englischeWoche(tid,d):false,rotAn:t.rotAn&&heute<=t.rotAn.bis?t.rotAn.f:0,egal:false};
+        englisch:S.plan?englischeWoche(tid,d):false,rotAn:t.rotAn&&heute<=t.rotAn.bis?t.rotAn.f:0,egal:false,geschont:new Set(((r.gs||[])[s])||[])}; /* geschont nach Saisonbelastung (K10f, Prüfung FU1) */
       if(r.lg&&S.res&&S.res[r.lg])c.egal=saisonEntschieden(t,tabs[r.lg]||(tabs[r.lg]=table(r.lg)));
-      sq.forEach(p=>bankFall(p,c));
+      sq.forEach(p=>bankFall(p,c));if(neubeginn(tid)&&S.neubeginn.rest!=null)S.neubeginn.rest--; /* Neubeginn zählt Pflichtspiele (Prüfung FM5) */
       // Wer wie oft in Folge im Tor stand (Torwart-Duell)
       const tw=(r.xi[s]||[]).map(id=>PIX.get(id)).find(p=>p&&p.pos==='TW');if(tw)t.twS=t.twS&&t.twS[0]===tw.id?[tw.id,t.twS[1]+1]:[tw.id,1];
       t.xiW=(r.xi[s]||[]).slice();if(winner(r)===tid&&r.hg!==r.ag||(r.pen&&winner(r)===tid))t.siegeW=(t.siegeW||0)+1;
@@ -96,7 +100,7 @@ function einsatzBuchen(list,d=S.tag){const tabs={},heute=absTag(d);
 // Ein Spieler in einem Pflichtspiel seines Vereins. c: Spiel, Startelf, Spieltagskader, Minuten, Wechsel, Ausfälle, englische Woche, angekündigte Rotation
 function bankFall(p,c){const B=RKA.bank,t=c.t,gespielt=c.min.has(p.id),m=c.min.get(p.id)||0;kabineInit(p);if(p.ea==null)p.ea=erwartungEinsatz(p);
   if(p.rue&&c.heute>p.rue)delete p.rue;
-  if(!gespielt&&c.fehlt.has(p.id)){if(c.fehlt.get(p.id))p.nsp=1;delete p.bg;return;} // verletzt oder gesperrt: zählt nicht
+  if(!gespielt&&c.fehlt.has(p.id)){if(c.fehlt.get(p.id)===1)p.nsp=1;delete p.bg;return;} // verletzt oder gesperrt: zählt nicht
   const e=erwartungEinsatz(p),unerf=unerfahren(p),etabliert=!unerf&&krStufe(p)>=2,diva=hatEig(p,'diva')?B.diva:1,rolle=kaderRolle(p),note=c.r.nt&&c.r.nt[p.id]!=null?c.r.nt[p.id]:null;
   let anteil=Math.min(1,m/90),tempo=rolle==='pokal'&&c.pokal?B.pokalTempo:RKA.einsatzTempo,zaehlt=true,grund='';
   if(gespielt){p.ppk=(p.ppk||0)+1;if(note!=null)p.n5=[...(p.n5||[]),note].slice(-5);delete p.nsp;
@@ -108,16 +112,18 @@ function bankFall(p,c){const B=RKA.bank,t=c.t,gespielt=c.min.has(p.id),m=c.min.g
     else{const ab=c.rein.get(p.id),stark=(c.tore.get(p.id)||0)>0||(note!=null&&note<=B.joker.note);p.bnk=(p.bnk||0)+1;
       if(m<B.joker.kurz)p.jk=[...(p.jk||[]),stark?1:0].slice(-B.joker.von);
       if(stark){grund='joker';stimmungAendern(p,B.joker.stimmung);anteil=Math.max(anteil,e);jokerAnspruch(p,c);}
-      else if(ab!=null&&ab>B.spaet.nach&&m<=B.spaet.minuten){grund='spaet';const v=unerf?B.spaet.unerfahren:etabliert?B.spaet.etabliert:0;if(v)stimmungAendern(p,v);}
+      else if(ab!=null&&ab>B.spaet.nach&&m<=B.spaet.minuten){grund='spaet';const v=unerf?B.spaet.unerfahren:etabliert?B.spaet.etabliert:0;if(v&&!(v<0&&neubeginn(t.id)))stimmungAendern(p,v);} /* FN8: im Neubeginn kein Abzug */
       if(!stark&&m<B.rivale.haltenAb&&p.rz&&platzRivale(p,c.xi))p.rz++;}
-    if(rolle==='pokal'&&!c.pokal&&anteil<p.ea)zaehlt=false;}
+    if(rolle==='pokal'&&!c.pokal&&anteil<p.ea)zaehlt=false;if(neubeginn(t.id)&&anteil<p.ea)zaehlt=false;} /* FM6: im Neubeginn auch kein Abzug für kurze Einsätze */
   else{p.bnk=(p.bnk||0)+1;const imKader=!c.kader||c.kader.has(p.id),riv=platzRivale(p,c.xi),entschuldigt=g=>{grund=g;zaehlt=false;};
-    if(p.ww>=3)entschuldigt('ww');
+    if(neubeginn(t.id))entschuldigt('neu'); /* neuer Trainer: keine Abwertung für niemanden (K14f) */
+    else if(p.ww>=3)entschuldigt('ww');
     else if(p.wech&&p.wech.nach!==p.team)entschuldigt('weg'); // hat woanders unterschrieben oder ist verkauft: erwartet nichts mehr (K14 §12, U10b)
     else if(p.nsp){entschuldigt('sperre');if(hatEig(p,'hitzkopf'))stimmungAendern(p,B.sperre.hitzkopf);}
     else if(p.rue&&!(diva>1&&riv))entschuldigt('aufbau');
     else if(rolle==='pokal'&&!c.pokal)entschuldigt('pokal');
     else if(istPate(p))entschuldigt('mentor');
+    else if(c.geschont&&c.geschont.has(p.id))entschuldigt('rotation'); /* vom Stab nach Saisonbelastung geschont (K10f, Prüfung FU1) */
     else if(ersatzTorwart(p))grund='tw2';
     else if(unerf){grund='unerfahren';if(imKader)stimmungAendern(p,B.unerfahren.kader);}
     else if(stammA(p)&&(c.rotAn>0||p.fit<B.frischeUnter||c.englisch)&&p.bnk<=(c.rotAn>0?B.rotationAngekuendigt:B.rotationReihe)){entschuldigt('rotation');if(c.rotAn>0)stimmungAendern(p,B.angekuendigt*c.rotAn);}
@@ -131,7 +137,7 @@ function bankFall(p,c){const B=RKA.bank,t=c.t,gespielt=c.min.has(p.id),m=c.min.g
       if(t.kap===p.id||hatEig(p,'fuehrungsspieler')||(p.age>=B.altstar.ab&&(p.ppk||0)>=B.altstar.spiele))freundeVon(p).forEach(q=>{if(q.team===p.team)stimmungAendern(q,B.fuehrer.freunde);});}
     delete p.nsp;}
   // Bedeutungslose Spiele: Reservisten und Talente erwarten Chancen
-  if(c.egal&&!stammA(p)&&krStufe(p)<=2&&!['ww','aufbau','sperre'].includes(grund))stimmungAendern(p,m>=B.bedeutungslos.minuten?B.bedeutungslos.plus:B.bedeutungslos.minus);
+  if(c.egal&&!neubeginn(t.id)&&!stammA(p)&&krStufe(p)<=2&&!['ww','aufbau','sperre'].includes(grund))stimmungAendern(p,m>=B.bedeutungslos.minuten?B.bedeutungslos.plus:B.bedeutungslos.minus);
   if(zaehlt&&anteil<p.ea)tempo*=vertragsDruck(p); // Vertragsjahr und teurer Neuzugang: Der Bankplatz wiegt schwerer (K14 §12, U10b)
   if(zaehlt)p.ea=p.ea*(1-tempo)+tempo*anteil;
   // Wer bisher nichts erwartet hat und es jetzt tut (zehntes Profispiel), beginnt bei seiner Erwartung und nicht im Minus
@@ -152,7 +158,7 @@ function torwartDuell(t,sq){const T=RKA.bank.torwart,tw=(sq||squad(t.id)).filter
   if(t.twS&&t.twS[1]>=T.klarNach)return null;if(t.id===S.my&&!autoB('kaderrollen')&&(tw[0].kr||tw[1].kr))return null;return[tw[0],tw[1]];}
 // ---------- Zielstimmung (K14 §5.1) ----------
 // Ruf-Gefälle (K14 §5.2): Ruf des Trainers bis K28 aus dem Ansehen des Vereins und den Trainerjahren, Ruf des Spielers aus der Stärke
-function trainerRuf(){const T=RKA.rufGefaelle.trainer;return Math.min(T[3],T[0]+T[1]*myT().rep+T[2]*(S.hist||[]).length);}
+function trainerRuf(){const T=RKA.rufGefaelle.trainer;return Math.min(T[3],T[0]+T[1]*myT().rep+T[2]*(ruf()-RV.ruf.start));} /* seit U12h dein Ruf als Trainer (K28 §5.4) statt der Trainerjahre */
 const rufGefaelle=p=>p.team===S.my&&p.str-trainerRuf()>=RKA.rufGefaelle.ab;
 // Index der Beziehungen je Spieler, neu aufgebaut, wenn sich die Liste ändert (BZV zählt Änderungen ohne neue Länge)
 let BZI=null,BZV=0;
@@ -170,9 +176,9 @@ function bausteine(p){const Z=RKA.ziel,t=S.teams[p.team]||{},B={},E=RKA.einsatz;
   const e=erwartungEinsatz(p),a=p.ea==null?e:p.ea;let x=(a-e)*E.skala;
   if(x<0){x*=E.ehrgeiz[0]+E.ehrgeiz[1]*(p.ch?p.ch.ehr:10);if(rufGefaelle(p))x*=RKA.rufGefaelle.einsatz;x*=erfolgFaktor(t);}
   B.einsatz=clamp(x,Z.einsatz[0],Z.einsatz[1])-rivalenAbzug(p);
-  B.erfolg=clamp(t.erf||0,Z.erfolg[0],Z.erfolg[1]);
+  B.erfolg=clamp((t.erf||0)+teampraemieStimmung(t),Z.erfolg[0],Z.erfolg[1]);
   B.leistung=clamp((p.form-RP.form.mitte)*RKA.leistung,Z.leistung[0],Z.leistung[1]);
-  const V=RKA.vertrag,q=p.sal/salaryFor(p.str);let v=q<V.unter?-V.minus*Math.min(1,(V.unter-q)/0.4):q>V.ueber?V.plus*Math.min(1,(q-V.ueber)/0.35):0;
+  const V=RKA.vertrag,q=gehaltVertrag(p)/salaryFor(p.str); /* Vertragsgehalt: die Kürzung der Ligaklausel hat er unterschrieben (Prüfung GJ2, js/vertraege.js) */let v=q<V.unter?-V.minus*Math.min(1,(V.unter-q)/0.4):q>V.ueber?V.plus*Math.min(1,(q-V.ueber)/0.35):0;
   if(p.ct<=1&&einschaetzung(p)>=3)v+=V.auslaufend;if(v<0&&hatEig(p,'soeldner'))v*=V.soeldner;B.vertrag=clamp(v,Math.max(Z.vertrag[0],V.max),Z.vertrag[1]);
   const Ro=RKA.rolle,R=krStufe(p),Sx=einschaetzung(p);let tr=p.tb||0;
   if(p.team===S.my&&p.kr&&!autoB('kaderrollen')){if(R<Sx)tr+=Ro.zuNiedrig*(Sx-R)*(hatEig(p,'diva')?Ro.diva:1);else if(R>Sx)tr+=Math.min(Ro.hoeherMax,Ro.hoeher*(R-Sx));} // nur eine Rolle, die du selbst vergeben hast
@@ -220,8 +226,11 @@ function beziehungenWoche(aktive,kader){const B=RKA.beziehungen;
 function kabineAbgang(p,tid){if(!p)return;freundeVon(p).filter(q=>q.team===tid).forEach(q=>{stimmungAendern(q,RKA.beziehungen.verkauf);if(tid===S.my)news(`${q.n} ist traurig über den Abschied seines Freundes ${p.n}.`,'bad');});
   S.bz=(S.bz||[]).filter(b=>b[0]!==p.id&&b[1]!==p.id);S.gw=(S.gw||[]).filter(g=>g.pid!==p.id);delete p.kr;delete p.zhNeu;}
 // Grüppchen: Freunde, die zusammenhängen (mindestens drei), mit schlechter Stimmung im Schnitt
-function grueppchen(tid,kader){const G=RKA.gruppe,ids=new Set((kader||squad(tid)).map(p=>p.id)),adj=new Map();
-  (S.bz||[]).forEach(([a,b,art])=>{if(art!=='F'||!ids.has(a)||!ids.has(b))return;[[a,b],[b,a]].forEach(([x,y])=>{if(!adj.has(x))adj.set(x,[]);adj.get(x).push(y);});});
+// Seit K14g (K14 §5.5, 25.11., popolupo, vorläufig, nur mit dem Schalter RP.integration.wirkung.an): auch Fremdsprachige mit gleicher Sprache, deren Deutsch
+// noch unter G.spracheBis liegt, hängen zusammen (Landsleute mit gemeinsamer Sprache). Ohne Schalter wie vorher, für alle Vereine gleich.
+function grueppchen(tid,kader){const G=RKA.gruppe,sq=kader||squad(tid),ids=new Set(sq.map(p=>p.id)),adj=new Map(),kante=(a,b)=>[[a,b],[b,a]].forEach(([x,y])=>{if(!adj.has(x))adj.set(x,[]);adj.get(x).push(y);});
+  (S.bz||[]).forEach(([a,b,art])=>{if(art!=='F'||!ids.has(a)||!ids.has(b))return;kante(a,b);});
+  if(RP.integration.wirkung.an){const spr=new Map();sq.forEach(p=>{const n=nation(p.nat);if(!n||n.sprache==='de'||deutschVon(p)>=G.spracheBis)return;if(spr.has(n.sprache))kante(spr.get(n.sprache),p.id);spr.set(n.sprache,p.id);});}
   const seen=new Set(),out=[];adj.forEach((_,id)=>{if(seen.has(id))return;const comp=[],stack=[id];seen.add(id);
     while(stack.length){const x=stack.pop();comp.push(x);(adj.get(x)||[]).forEach(y=>{if(!seen.has(y)){seen.add(y);stack.push(y);}});}
     if(comp.length>=G.min){const l=comp.map(i=>PIX.get(i)),m=l.reduce((s,p)=>s+stimmung(p),0)/l.length;if(m<G.unter)out.push(l);}});return out;}
@@ -286,6 +295,26 @@ function kabineSaison(){(S.bz||[]).forEach(b=>{if(b[2]==='F')b[3]=Math.min(3,b[3
 // Nach dem Saisonwechsel (neue Kader der Aufsteiger, neue Talente): Rollen sofort, Einsatzzeit nur für Spieler ohne Wert
 function kabineNachSaisonwechsel(){S.bz=(S.bz||[]).filter(b=>PIX.get(b[0])&&PIX.get(b[1]));S.vs=(S.vs||[]).filter(v=>PIX.get(v.pid));S.gw=(S.gw||[]).filter(g=>{const p=PIX.get(g.pid);return p&&p.team===S.my&&p.ww===2;}); // ausgelaufene Verträge: Gesprächswunsch erledigt
   S.teams.forEach(t=>{if(!aktiv(t))return;rollenBerechnen(t.id);kapitaenPruefen(t);squad(t.id).forEach(p=>{kabineInit(p);if(p.ea==null)p.ea=erwartungEinsatz(p);});});}
+// Teamprämie (K21 §3.2, K21b): S.tp = {s, tid, stufe}. Nur dein Verein, nur in der Saison, in der du sie gesetzt hast. Setzen bis zum ersten Ligaspiel, ab der A-Lizenz.
+// Ohne Setzen gilt „normal“ ohne jede Wirkung, also auch unter jeder Automatik und bei allen Computer-Vereinen (Gleichschritt in tests/lizenz.js).
+const tpStufe=()=>S.tp&&S.tp.s===S.season&&S.tp.tid===S.my?S.tp.stufe:'normal';
+const tpOffen=()=>S.phase==='play'&&!S.fired&&meineSpieltage()<1;
+const teampraemieStimmung=t=>t&&t.id===S.my&&S.phase==='play'&&tpStufe()==='hoch'?RKA.teampraemie.stimmung:0; // nur in der Saison (Prüfung EA7)
+function teampraemieSetzen(stufe){if(!RKA.teampraemie.stufen[stufe]||!tpOffen())return;if(!darf('praemien'))return;S.tp={s:S.season,tid:S.my,stufe};
+  news(`Teamprämie für diese Saison: ${RKA.teampraemie.stufen[stufe]}.`,'');save();render();}
+// Nach einem Ligaspiel deines Vereins (ablauf.js): bei „hoch“ und Sieg je Spieler im Kader die Zusatzprämie
+function teampraemieSpiel(m){if(!m||tpStufe()!=='hoch')return;const home=m.h===S.my,gf=home?m.hg:m.ag,ga=home?m.ag:m.hg;if(gf<=ga)return;
+  const T=RKA.teampraemie,x=squad(S.my).length*(T.jeSpieler[myT().lg]||T.jeSpieler[3]);if(x)money('Prämien',-x);} // „Prämien“ geht in die Finanzprognose ein (Prüfung EA6)
+// Aufstiegs- und Klassenerhaltsprämie (K21 §4, K21e): zum Saisonende (saison.js seasonEndLauf) mit Teamprämie „hoch“ beim Aufstieg (auf, auch über die Relegation)
+// oder beim Klassenerhalt (nicht ab), wenn das Saisonziel Klassenerhalt hieß. Kadergröße × Prämie der Liga dieser Saison. Gebucht als einmalige „Sonderprämien“, nicht in der Prognose (Prüfung EI1).
+// Vorläufig (EI2): Auf- und Abstieg nach Tabelle und Relegation, vor den Regeln für zweite Mannschaften (zweiteRegeln). Bleibt ein Abstiegsplatz wegen einer zweiten Mannschaft drin, gibt es keine Prämie.
+function teampraemieSaison(auf,ab){if(tpStufe()!=='hoch')return;const t=myT();if(!t||t.zweite>=0)return; /* zweite Mannschaften ohne Prämie (Prüfung EI2) */const T=RKA.teampraemie,kl=!auf&&!ab&&targetText(t.lg,S.target).startsWith('Klassenerhalt');if(!auf&&!kl)return;
+  const x=squad(S.my).length*((auf?T.aufstieg:T.klassenerhalt)[t.lg]||0);if(x){money('Sonderprämien',-x);news(`${auf?'Aufstiegsprämie':'Prämie für den Klassenerhalt'}: ${fmt(x)} für die Mannschaft.`,'');}}
+// Pokalprämie (K21 §4, K21d): mit Teamprämie „hoch“ je gewonnene Runde im DFB-Pokal teampraemie.pokal je Spieler (Liga deines Vereins). list: Spiele des Pokaltags. Einmalig gebucht („Sonderprämien“, EI1).
+function teampraemiePokal(list){if(tpStufe()!=='hoch')return;const m=(list||[]).find(r=>r&&(r.h===S.my||r.a===S.my));if(!m||winner(m)!==S.my)return;
+  const T=RKA.teampraemie,x=squad(S.my).length*(T.pokal[myT().lg]||T.pokal[3]);if(x){money('Sonderprämien',-x);news(`Pokalprämie: ${fmt(x)} für die Mannschaft.`,'');}}
+function teampraemieKarte(){const T=RKA.teampraemie,st=tpStufe(),je=T.jeSpieler[myT().lg]||T.jeSpieler[3];
+  return`<div class="card"><h3>Teamprämie</h3><p>${esc(T.stufen[st])}.${st==='hoch'?` Je Ligasieg ${fmt(je)} je Spieler, je gewonnene Pokalrunde ${fmt(T.pokal[myT().lg]||T.pokal[3])} je Spieler, die Stimmung im Baustein Erfolg +${T.stimmung}.`:''}</p>${tpOffen()?`<div class="row">${Object.entries(T.stufen).map(([k,l])=>`<button onclick="teampraemieSetzen('${k}')"${lzAus('praemien')}${k===st?' disabled':''}>${esc(l)}</button>`).join('')}</div><p class="dim">Festlegen bis zum ersten Ligaspiel. „Hoch“ kostet je Ligasieg ${fmt(je)} je Spieler im Kader.</p>${lzHinweis('praemien')}`:`<p class="dim">${S.tp&&S.tp.s===S.season&&S.tp.tid===S.my?'Für diese Saison festgelegt.':'Wählbar erst wieder vor dem ersten Ligaspiel der nächsten Saison.'}</p>`}</div>`;}
 // Urlaubslänge (K12a, K14 §5.1 Umfeld): vier Wochen +3, zwei Wochen −3 für Spieler mit hoher Saisonbelastung, wirkt acht Wochen
 function kabineUrlaub(t,wochen){const U=RKA.urlaub;squad(t.id).forEach(p=>{const v=wochen>=4?U.lang:wochen<=2&&(p.sb||0)>=RSO.belastung.ab?U.kurz:0;if(v){p.ub=v;p.ubW=U.wochen+wochen;}else{delete p.ub;delete p.ubW;}});}
 // Teamevent (K14 §6): Stimmung und Zusammenhalt, nutzt sich innerhalb von vier Wochen ab, kostet Geld
@@ -295,6 +324,6 @@ function teameventLauf(){const T=RKA.teamevent,t=myT(),{kosten,abn}=teameventMoe
   squad(S.my).forEach(p=>stimmungAendern(p,T.stimmung*abn));zusammenhaltAendern(t,T.zh*abn);t.tev=[...(t.tev||[]).filter(x=>x>absTag(S.tag)-T.wochen*7),absTag(S.tag)];
   news(`Teamevent: Die Mannschaft verbringt einen Tag zusammen (${fmt(kosten)}).${abn<1?' Die Spieler kennen das schon, es wirkt schwächer.':''}`,'good');return abn;}
 // Neuer Verein (Transfer, K14): Neuanfang beim Wechselwunsch, Einsatzzeit neu, alte Rolle und Gespräche vergessen. Zählt als neuer Stammspieler für den Zusammenhalt, sobald er in der Startelf steht.
-function neuAnfang(p,tid){kabineInit(p);S.gw=(S.gw||[]).filter(g=>g.pid!==p.id);p.ww=0;p.wws=0;p.wu=0;p.wv=0;p.st=Math.max(p.st,stimmungStart(p));['ea','tb','kr','gs','streit','trib','pate','prO','vz','krOk',...BANK_ZAEHLER].forEach(k=>delete p[k]);p.zhNeu=tid;}
+function neuAnfang(p,tid){kabineInit(p);S.gw=(S.gw||[]).filter(g=>g.pid!==p.id);p.ww=0;p.wws=0;p.wu=0;p.wv=0;p.st=Math.max(p.st,stimmungStart(p));['ea','tb','kr','gs','streit','trib','bankF','pate','prO','vz','krOk',...BANK_ZAEHLER].forEach(k=>delete p[k]);p.zhNeu=tid;} /* bankF: fest auf der Bank (K05e) */
 // Beim Aufbau der Welt: Rollen, Kapitän, Startstimmung und Einsatzzeit nach der erwarteten Rolle, damit die ersten Spiele keinen Sprung machen
 function kabineStart(){S.bz=S.bz||[];S.teams.forEach(t=>{t.kst={ww3:0};if(!aktiv(t))return;rollenBerechnen(t.id);kapitaenPruefen(t);t.zh=zusammenhalt(t);squad(t.id).forEach(p=>{kabineInit(p);p.ea=erwartungEinsatz(p);});});}

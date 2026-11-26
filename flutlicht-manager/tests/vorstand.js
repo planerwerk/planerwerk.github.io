@@ -5,7 +5,7 @@ const {neueWelt}=require('./sim');
 const probleme=[],pruef=(ok,text,wert)=>{console.log(`${ok?'✓':'✗'} ${text}${wert!=null?': '+wert:''}`);if(!ok)probleme.push(text+(wert!=null?' ('+wert+')':''));};
 const VEREIN=6,SEED=4711,nah=(a,b,e=0.01)=>Math.abs(a-b)<=e;
 function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREIN;S.mgr='Test';F.setTarget();F.sponsOffers();F.sponsorWaehlen(0);S.lineup=F.bestXI(VEREIN,W.ev('myT()').form);
-  const im=(k,fn)=>W.ev('mitStrom')(W.ev('strom')('test',k),fn);return{W,F,S,ev:W.ev,im,B:W.ev('RV')};}
+  const im=(k,fn)=>W.ev('mitStrom')(W.ev('strom')('test',k),fn);return{W,F,S,ev:W.ev,im,B:W.ev('RV')};} // W auch für Überschreibungen in den Tests zum Zielgespräch (Nr. 10 bis 13)
 
 // 1. Formel (K28 §5.1): 50 + Sport (5 je Platz gegen das Soll, −35 bis +25) + Serie (10 × (Punkte je Spiel − 1,3), −15 bis +10) + Finanzen und Umfeld, begrenzt auf 0 bis 100
 {const {F,B}=welt(),V=B.vertrauen,z=(pos,soll,last,extra)=>F.vertrauenZiel(V,{last},pos,soll,extra);
@@ -71,9 +71,150 @@ function welt(){const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S;S.my=VEREI
   S.trust=50;S.ziele={s:S.season,tid:me,l:[pk,fi]};S.cup={alive:[9999],hist:[[spiel]]};F.nebenzieleSaison();
   pruef(S.trust===50+N.saisonVerfehlt+N.saisonErfuellt,'Saisonende: je erfülltem Nebenziel +5, je verfehltem −5',`Vertrauen ${S.trust}`);}
 
+// U12o. Nebenziele Kader und Zuschauer (K28 §3.1): Kader gefährdet über dem Gehaltsrahmen, zum Saisonende erfüllt nur darin. Zuschauer nur nach einer Saison beim Verein
+//       in derselben Liga, Ziel zuschauerHalten des Vorjahresschnitts; gefährdet erst ab zuschauerAb Heimspielen unter dem Ziel.
+{const {S,F,ev,B}=welt(),N=B.nebenziele,t=ev('myT()'),st=(z,e)=>F.nebenzielStand(z,e),ka={k:'kader',min:0},gr=ev('gehaltsRahmen')(t),sq=ev('squad')(S.my),sal0=sq.map(p=>p.sal);
+  const setzeGehalt=f=>{sq.forEach((p,i)=>{p.sal=Math.round(sal0[i]*f);});},summe=()=>ev('gehaltsSumme')(t);
+  setzeGehalt(0.01);const k0=summe()<=gr?st(ka,false)==='offen'&&st(ka,true)==='erfuellt':false;setzeGehalt(1);let f=1;while(summe()<=gr*1.2&&f<50){f*=1.5;setzeGehalt(f);}const k1=st(ka,false)==='gefaehrdet'&&st(ka,true)==='verfehlt';setzeGehalt(1);
+  const vor=ev('zuschauerVorsaison'),mg=()=>ev('nebenzieleMoeglich')();S.hist=[];const ohne=vor(t)===0&&!mg().moegl.includes('zuschauer');
+  S.hist=[{s:S.season-1,tid:S.my,lg:t.lg,zus:10000,zusN:ev('zuschauerHeimSoll')(t)}];const mit=vor(t)===10000;S.hist[0].lg=t.lg===1?2:1;const andereLiga=vor(t)===0;S.hist[0].lg=t.lg;
+  S.hist[0].zusN=ev('zuschauerHeimSoll')(t)-1;const teil=ev('zuschauerHeimSoll')(t)>10&&vor(t)===0;S.hist[0].zusN=ev('zuschauerHeimSoll')(t); /* Prüfung FR1, FS3: Teilsaison mit zu wenig Heimspielen zählt nicht */
+  /* Prüfung FR2: direkt über nebenzieleMoeglich und nebenzielObjekt, nicht über die Auslosung */
+  const m=mg(),moeglich=m.moegl.includes('zuschauer')&&m.moegl.includes('kader')&&ev('nebenzielObjekt')('zuschauer',m).min===Math.round(10000*N.zuschauerHalten/100)*100;
+  const zu={k:'zuschauer',min:9500};S.att=[9000*(N.zuschauerAb-1),N.zuschauerAb-1];const z0=st(zu,false);S.att=[9000*N.zuschauerAb,N.zuschauerAb];const z1=st(zu,false),z2=st(zu,true);S.att=[9600*4,4];const z3=st(zu,true);
+  const nz=F.nebenzielName(zu),name=(nz.includes('9.500')||nz.includes('9,500'))&&F.nebenzielName(ka).startsWith('Kader');
+  pruef(k0&&k1&&ohne&&mit&&andereLiga&&teil&&moeglich&&z0==='offen'&&z1==='gefaehrdet'&&z2==='verfehlt'&&z3==='erfuellt'&&name,'Nebenziele Kader und Zuschauer: Gehaltsrahmen zum Saisonende, Zuschauer nach der Vorsaison',
+    `Kader im Rahmen ${k0}, darüber ${k1}, Vorsaison ohne/mit/andere Liga/Teilsaison ${ohne}/${mit}/${andereLiga}/${teil}, gesetzt ${moeglich}, Zuschauer ${[z0,z1,z2,z3].join(', ')}, Namen ${name}`);}
+
+// U12p. Nebenziel tauschen (K28 §5.2 „Nebenziele verhandeln“): nur im offenen Zielgespräch und einmal je Saison; die Zusage tauscht gegen ein anderes mögliches,
+//       die Ablehnung kostet Vertrauen tausch.abgelehnt. Die Chance ist für den Test fest (wie zgTiefChance in Nr. 11 und 12).
+{const {S,F,ev,B,W}=welt(),Z=B.zielgespraech.tausch,l=()=>ev('meineZiele()');S.phase='play';F.zielgespraechStart();S.ziele={s:S.season,tid:S.my,l:[{k:'finanzen',min:0}]};
+  const offen=ev('zgOffen')(),karte=F.zielgespraechKarte().includes('nebenzielTauschen(0)');W.ev('nebenzielTauschChance=function(){return 1;}');F.nebenzielTauschen(0);
+  const k1=l()[0].k,neu=k1!=='finanzen'&&S.zg.nt===1&&ev('nebenzieleMoeglich')().moegl.includes(k1);F.nebenzielTauschen(0);const einmal=l()[0].k===k1;
+  S.zg.nt=0;S.trust=50;W.ev('nebenzielTauschChance=function(){return 0;}');F.nebenzielTauschen(0);const ab=l()[0].k===k1&&S.trust===50+Z.abgelehnt&&S.zg.nt===1;
+  S.zg.nt=0;S.zg.fertig=1;F.nebenzielTauschen(0);const zu=S.zg.nt===0;
+  pruef(offen&&karte&&neu&&einmal&&ab&&zu,'Nebenziel tauschen: im offenen Zielgespräch einmal, Zusage tauscht, Ablehnung kostet Vertrauen',
+    `offen ${offen}, Karte ${karte}, getauscht ${neu} (${k1}), einmal ${einmal}, abgelehnt ${ab}, nach dem Gespräch ${zu}`);}
+
+// U12q. Nebenziele im Winter (K28 §5.9): Ein bei der Zwischenbilanz schon verfehltes Nebenziel (Pokal-Aus) rechnet der Vorstand ab (Vertrauen zwischenbilanz.nebenzielNeu)
+//       und ersetzt es durch ein anderes mögliches; ein offenes bleibt.
+{const {S,F,ev,B}=welt(),l=()=>ev('meineZiele()'),me=S.my;S.cup={alive:[9999],hist:[[[me,9999,0,1]]]};S.ziele={s:S.season,tid:me,l:[{k:'pokal',min:2},{k:'finanzen',min:0}]};S.fin={a:5};S.trust=50;
+  F.zwischenbilanz(S.target,10);const z=l(),ersetzt=z[0].k!=='pokal'&&z[0].k!=='finanzen'&&ev('nebenzieleMoeglich')().moegl.includes(z[0].k),bleibt=z[1].k==='finanzen';
+  const trust=S.trust===50+B.zwischenbilanz.nebenzielNeu,text=S.news.some(x=>String(x.t).includes('ist verfehlt'));
+  pruef(ersetzt&&bleibt&&trust&&text,'Nebenziele im Winter: verfehltes Nebenziel wird abgerechnet und ersetzt, offenes bleibt',`ersetzt ${ersetzt} (${z[0].k}), offenes bleibt ${bleibt}, Vertrauen ${S.trust}, Meldung ${text}`);}
+
 // 9. Rücktritt (K28 §5.3, U12b): sofort weg, Ruf −5 statt −8, Jobangebote; mit dem neuen Job ist der Rücktritt vergessen
 {const {S,F,ev,B}=welt();S.phase='play';S.ruf=30;F.ruecktritt();const weg=S.fired===1&&S.ruecktritt===1,r=ev('ruf()'),jobs=(S.jobs||[]).slice();
   if(jobs.length)F.takeJob(jobs[0]);
   pruef(weg&&r===30+B.ruf.ruecktritt&&jobs.length>0&&S.fired===0&&!S.ruecktritt&&S.my===jobs[0],'Rücktritt: sofort weg, Ruf −5, Jobangebote, beim neuen Verein ist alles zurückgesetzt',`Ruf ${r}, ${jobs.length} Angebote`);}
+
+// 10. Zielgespräch (K28 §5.2, U12e): mit dem Saisonziel offen, Hochpokern immer angenommen (Ziel besser, Transferbudget +10 % je Platz), nur eine Entscheidung je Saison,
+//     nach dem nächsten Ligaspiel zu, Karte im Büro nur solange offen
+{const {S,F,ev,B}=welt(),t=ev('myT()'),Z=B.zielgespraech;t.cash=60e6;const z0=S.target,b0=ev('transferBudget')(t),offen0=ev('zgOffen')(),karte0=F.zielgespraechKarte().length>0;
+  F.zielVerhandeln(-1);const z1=S.target,b1=ev('transferBudget')(t);F.zielVerhandeln(-1);const z2=S.target;
+  const w=welt();w.S.zg.sp=-1;const zu=!w.ev('zgOffen')()&&w.F.zielgespraechKarte()==='';
+  pruef(offen0&&karte0&&z1===Math.max(1,z0-1)&&(z0===1||Math.abs(b1-Math.round(b0*(1+Z.budgetHoch)))<=1)&&z2===z1&&S.zg.fertig===1&&zu,'Zielgespräch: Hochpokern, Budget, eine Entscheidung, Fenster',`Ziel ${z0} → ${z1} → ${z2}, Budget ${b0} → ${b1}, zu nach dem Ligaspiel ${zu}`);}
+
+// 11. Tiefstapeln mit Zusage: Ziel schlechter, Transferbudget −15 % je Platz, der Ruf rechnet „übertroffen“ weiter vom Vorschlag aus
+{const {S,F,ev,B,W}=welt(),t=ev('myT()'),Z=B.zielgespraech,me=S.my;W.ev('zgTiefChance=function(){return 1;}');t.cash=60e6;const z0=S.target,b0=ev('transferBudget')(t);
+  F.zielVerhandeln(1);const z1=S.target,b1=ev('transferBudget')(t);
+  const sm=o=>Object.assign({pos:8,target:S.target,lg:1,champ:-1,cup:-1,up:[],up3:[],down:[],down2:[],down3:[],rel:[-1,-1],rel2:[-1,-1],rw:-1,rw2:-1},o);
+  S.ruf=30;F.rufSaison(sm({pos:z0}));const r=ev('ruf()');
+  pruef(z1===z0+1&&S.zg.stufe===1&&Math.abs(b1-Math.round(b0*(1-Z.budgetTief)))<=1&&nah(r,30),'Zielgespräch: Tiefstapeln mit Zusage, Budget kleiner, Ziel genau erreicht bringt keinen Ruf (Vorschlag zählt)',`Ziel ${z0} → ${z1}, Budget ${b0} → ${b1}, Ruf ${r}`);}
+
+// DW5. Nach einem zugesagten Budgetgespräch (+20 %) nennt das Zielgespräch nur seinen eigenen Teil: beim Tiefstapeln um einen Platz „15 % weniger“, nicht den Gesamtfaktor
+{const {S,F,ev,B,W}=welt(),Z=B.zielgespraech;W.ev('zgTiefChance=function(){return 1;}');S.bg={s:S.season,tid:S.my,ok:1};const z0=S.target;F.zielVerhandeln(1);
+  const txt=(S.news.find(n=>n.t.startsWith('Zielgespräch'))||{t:''}).t,soll=`${Math.round(Z.budgetTief*100)} % weniger`;
+  pruef(S.target===z0+1&&txt.includes(soll)&&ev('bgFaktor')()>1,'Zielgespräch nach dem Budgetgespräch: Prozente nur aus dem Zielgespräch',txt.slice(0,160));}
+
+// 12. Tiefstapeln abgelehnt: Ziel bleibt, Vertrauen −3, Gespräch beendet. Zusage-Chance: steigt mit Vertrauen und Ruf, sinkt mit jedem weiteren Platz
+{const {S,F,ev,B,W}=welt(),Z=B.zielgespraech;const c1=F.zgTiefChance(1),c2=F.zgTiefChance(2);S.trust=90;const c3=F.zgTiefChance(1);
+  W.ev('zgTiefChance=function(){return 0;}');S.trust=60;const z0=S.target;F.zielVerhandeln(1);
+  pruef(S.target===z0&&nah(S.trust,60+Z.abgelehnt)&&S.zg.fertig===1&&S.zg.ab===1&&c2<c1&&c3>c1,'Zielgespräch: Tiefstapeln abgelehnt, Chance nach Vertrauen und Plätzen',`Chance ${c1.toFixed(2)} / ${c2.toFixed(2)} / bei Vertrauen 90 ${c3.toFixed(2)}, Vertrauen ${S.trust}`);}
+
+// 13. Hochgepokert und erreicht: Ruf-Zuschlag je Platz. Kauf über dem Transferbudget: Vertrauen je angefangene 10 % der Ablöse darüber
+{const {S,F,ev,B}=welt(),t=ev('myT()'),Z=B.zielgespraech;S.target=Math.max(3,S.target);S.zg.vorschlag=S.target;F.zielVerhandeln(-2);
+  const sm=o=>Object.assign({pos:8,target:S.target,lg:1,champ:-1,cup:-1,up:[],up3:[],down:[],down2:[],down3:[],rel:[-1,-1],rel2:[-1,-1],rw:-1,rw2:-1},o);
+  S.ruf=30;F.rufSaison(sm({pos:S.target}));const r=ev('ruf()');
+  const w=welt(),tt=w.ev('myT()');tt.cash=w.ev('erwarteteEinnahmen')(tt)*w.ev('RFP').budget.reserve+5e6;w.S.trust=50;const b=w.ev('transferBudget')(tt);w.F.zgUeberBudget(b+4e6);const v1=w.S.trust;w.S.trust=50;w.F.zgUeberBudget(b);
+  const gr=ev('zgZielGrenze'),grenzen=gr(2,1)===B.ziel.unterhalbMindestens&&gr(3,1)===B.ziel.unterhalbMindestens&&gr(1,0)===1; // CX3: 2. und 3. Liga nicht besser als Platz 2
+  pruef(grenzen&&nah(r,30+2*(B.ruf.jePlatzUeber+Z.rufHoch))&&nah(b,5e6,2)&&nah(v1,50+Z.ueberBudget*Math.ceil(4e6/(b+4e6)*10))&&w.S.trust===50,'Zielgespräch: Ruf-Zuschlag nach Hochpokern, Vertrauen bei Kauf über dem Budget',`Ruf ${r}, Budget ${b}, Vertrauen ${v1}`);}
+
+// 14. Zwischenbilanz im Winter (K28 §4 Nr. 3, U12f): klar besser → Vorstand hebt an (Vorschlag mit), klar schlechter → Antrag (zugesagt wie Tiefstapeln, abgelehnt Vertrauen −3),
+//     dazwischen bleibt alles, einmal je Saison
+{const B=welt().B.zwischenbilanz,sp=w=>w.ev('meineSpieltage')();
+  const a=welt();a.S.target=10;const v0=a.S.zg.vorschlag;a.F.zwischenbilanz(10-B.abstand,sp(a));const hoch=a.S.target===10-B.hoch&&a.S.zb.art==='hoch'&&a.S.zg.vorschlag===v0-B.hoch&&!a.ev('zbAntragOffen')();
+  const b=welt();b.S.target=5;b.F.zwischenbilanz(5+B.abstand,sp(b));const offen=b.ev('zbAntragOffen')()&&b.F.zwischenbilanzKarte().length>0;b.W.ev('zbChance=function(){return 1;}');b.F.zielSenkenAntrag();
+  const gesenkt=b.S.target===5+B.senken&&b.S.zg.stufe===B.senken&&Math.abs(b.ev('zgBudgetFaktor')()-(1-b.B.zielgespraech.budgetTief*B.senken))<1e-9&&!b.ev('zbAntragOffen')();
+  const c=welt();c.S.target=5;c.S.trust=60;c.F.zwischenbilanz(5+B.abstand,sp(c));c.W.ev('zbChance=function(){return 0;}');c.F.zielSenkenAntrag();const nein=c.S.target===5&&nah(c.S.trust,60+B.abgelehnt);
+  const d=welt();d.S.target=8;d.F.zwischenbilanz(9,sp(d));const fest=d.S.target===8&&d.S.zb.art==='fest';d.S.target=8;const ls=d.ev('meineLigaspiele')(),halb=Math.floor(ls.length/2);d.S.tag=ls[halb].tag+1;d.S.gespielt=-1; // nach der Hälfte (DD6), damit nur S.zb die zweite Bilanz verhindert
+  const ueber=d.ev('meineSpieltage')()>=halb;d.F.zwischenbilanzWoche();const einmal=ueber&&d.S.zb.pos===9;
+  pruef(hoch&&offen&&gesenkt&&nein&&fest&&einmal,'Zwischenbilanz: anheben, Antrag mit Zusage und Ablehnung, fest, einmal je Saison',`hoch ${hoch}, Antrag ${offen}, gesenkt ${gesenkt}, abgelehnt ${nein}, fest ${fest}, einmal ${einmal}`);}
+
+// 15. Trainervertrag (K28 §5.5, U12g, nur Statistik): Gehalt nach Liga, Ansehen und Ruf, Laufzeit nach der Geduld (ab dem Winter zählt die Saison nicht), Gehalt anteilig in der Station,
+//     Abfindung = Restgehalt × 0,5, Verlängerung über Vertrauen 55 um zwei Saisons mit neuem Gehalt, sonst eine zum alten, Ligaklausel zum Saisonwechsel
+{const {S,F,ev,B}=welt(),V=B.vertrag,t=ev('myT()'),r=x=>Math.max(V.runden,Math.round(x/V.runden)*V.runden),L=F.vertragLaufzeit(VEREIN);
+  const g=F.trainerGehalt(VEREIN),soll=r(V.basis*(V.liga[t.lg]||V.liga[3])*Math.exp(V.steigung*(t.rep-V.mitte)));S.ruf=B.ruf.start+10;const g10=F.trainerGehalt(VEREIN);S.ruf=B.ruf.start;
+  S.phase='play';S.tag=0;const v0=F.vertragNeu(VEREIN),bis0=v0.bis;S.tag=200;const bis1=F.vertragNeu(VEREIN).bis;S.tag=0;const v=F.vertragNeu(VEREIN),st=F.offeneStation();
+  S.tag=73;F.gehaltBuchen(73);const verd=st.verd;v.bis=S.season+1;const abf=r(v.geh*(1+(1-73/V.saisonTage))*V.abfindung);F.entlassen('Test');
+  const w1=welt();w1.S.trust=60;const a=w1.ev('trainerVertrag')();a.bis=w1.S.season;w1.S.hist.push({s:w1.S.season});w1.S.phase='end';w1.F.vertragSaisonende();const lang=a.bis,hg=w1.S.hist[w1.S.hist.length-1].geh;
+  const w2=welt();w2.S.trust=50;const b=w2.ev('trainerVertrag')();b.bis=w2.S.season;const gb=b.geh;w2.S.phase='end';w2.F.vertragSaisonende();
+  const bisB=b.bis,lgAlt=b.lg===1?2:1;b.lg=lgAlt;b.ab=200;w2.F.vertragNeueSaison();const klausel=b.geh===r(gb*((V.liga[w2.ev('myT()').lg]||V.liga[3])/V.liga[lgAlt]))&&b.ab===0;
+  pruef(g===soll&&Math.abs(g10-g*1.1)<=1.1*V.runden&&bis0===S.season+L-1&&bis1===S.season+L&&!!st&&st.geh===v.geh&&verd===Math.round(v.geh*73/V.saisonTage)&&st.abf===abf&&st.verd===verd&&S.fired===1
+    &&lang===w1.S.season+V.verlaengern&&hg===a.geh&&bisB===w2.S.season+V.bewaehrung&&klausel,
+    'Trainervertrag: Gehalt, Laufzeit, anteiliges Gehalt, Abfindung, Verlängerung, Bewährung, Ligaklausel',
+    `Gehalt ${g} (soll ${soll}, Ruf +10 ${g10}), Laufzeit ${L}: bis ${bis0} / ${bis1}, verdient ${verd}, Abfindung ${st&&st.abf} (soll ${abf}), verlängert bis ${lang}, Bewährung bis ${bisB}, Klausel ${klausel}`);}
+
+// 16. Ruf wirkt (K28 §5.4, U12h): Interesse der Spieler +0,2 je Punkt Ruf über dem Start, Ruf in der Kabine 50 + 0,3 × Ansehen + 0,5 je Punkt (höchstens 95),
+//     Glaubwürdigkeit beim neuen Verein 60 + 0,3 je Punkt (30 bis 90); beim Jobwechsel gesetzt
+{const {S,F,ev,B}=welt(),G=ev('RGS').glaubwuerdigkeit,T=ev('RKA').rufGefaelle.trainer,p=S.pl.find(x=>x.team>=0&&x.team<1000&&x.team!==VEREIN),r0=B.ruf.start;
+  S.ruf=r0;const i0=F.wechselInteresse(p),k0=F.trainerRuf(),g0=F.glaubNeu();S.ruf=r0+20;const i1=F.wechselInteresse(p),k1=F.trainerRuf(),g1=F.glaubNeu();
+  const rep=ev('myT()').rep,kSoll=Math.min(T[3],T[0]+T[1]*rep),k1Soll=Math.min(T[3],kSoll+T[2]*20);
+  const ziel=S.teams.find(x=>x.lg===2&&x.id!==VEREIN).id;S.fired=1;F.takeJob(ziel);const gJob=S.teams[ziel].glaub;
+  pruef(Math.abs(i1-i0-20*ev('RVT').interesse.ruf)<1e-9&&Math.abs(k0-kSoll)<1e-9&&Math.abs(k1-k1Soll)<1e-9&&g0===G.start&&g1===Math.round(G.start+20*G.jeRuf)&&gJob===g1&&S.my===ziel,
+    'Ruf wirkt: Interesse, Kabine, Glaubwürdigkeit beim neuen Verein',`Interesse +${(i1-i0).toFixed(2)}, Kabine ${k0} → ${k1}, Glaubwürdigkeit ${g0} → ${g1}, nach dem Wechsel ${gJob}`);}
+
+// 17. Präsidentenwahl (K28 §8, U12i): ohne Wechsel derselbe Präsident wie vorher, nach einem Wechsel meist andere Werte; Wahl alle 3 oder 4 Jahre; Chance 0,65 ± Auf-/Abstieg und
+//     Fanstimmung; abgewählt: neuer Präsident, dein Vertrauen rückt zur Hälfte Richtung 50; wiedergewählt: nichts ändert sich
+{const {S,F,ev,B}=welt(),W=B.praesident.wahl,t=ev('myT()'),alle=S.teams.filter(x=>ev('aktiv')(x)),p0=JSON.stringify(F.praesident(t));
+  const gleich=JSON.stringify(F.praesident(Object.assign({},t,{prw:0})))===p0,anders=alle.filter(x=>JSON.stringify(F.praesident(x))!==JSON.stringify(F.praesident(Object.assign({},x,{prw:1})))).length;
+  const takt=alle.every(x=>{let n=0;for(let s=S.season;s<S.season+12;s++)if(ev('wahlFaellig')(x,s))n++;return n===12/ev('wahlJahre')(x);});
+  t.fanst=50;const c0=F.wahlChance(t,null),cAuf=F.wahlChance(t,{up:[VEREIN]}),cAb=F.wahlChance(t,{down:[VEREIN]});t.fanst=80;const cFans=F.wahlChance(t,null);t.fanst=50; /* 80 statt 90: mit dem Gewicht 1,5 (U12m) läge 90 an der Obergrenze 0,95 */
+  while(!ev('wahlFaellig')(t,S.season))S.season++;const faellig=alle.filter(x=>ev('wahlFaellig')(x,S.season)).length;
+  Object.assign(W,{grenzen:[0,0]});S.trust=80;const n1=F.praesidentenWahlen(null),trust1=S.trust,prw1=t.prw;
+  Object.assign(W,{grenzen:[1,1]});const n2=F.praesidentenWahlen(null);
+  pruef(gleich&&anders>=alle.length*0.9&&takt&&Math.abs(c0-W.bleiben)<1e-9&&Math.abs(cAuf-c0-W.aufstieg)<1e-9&&Math.abs(cAb-c0-W.abstieg)<1e-9&&Math.abs(cFans-c0-30*W.fans*ev('wahlFansGewicht')(t))<1e-9 /* seit U12m mit dem Gewicht nach Mitgliedern je Platz */
+    &&n1===faellig&&prw1===1&&trust1===65&&n2===0&&t.prw===1&&S.trust===65,
+    'Präsidentenwahl: Werte, Takt, Chance, Abwahl mit Vertrauen zur Mitte, Wiederwahl ohne Folgen',
+    `andere Werte bei ${anders} von ${alle.length}, Takt ${takt}, Chance ${c0.toFixed(2)} / Aufstieg ${cAuf.toFixed(2)} / Abstieg ${cAb.toFixed(2)} / Fans 80 ${cFans.toFixed(2)}, abgewählt ${n1} von ${faellig}, Vertrauen ${trust1}, danach ${n2}`);}
+
+// 18. Vorstand senkt von sich aus (K28 §5.9, U12k): mindestens 6 Plätze hinter dem Ziel und ein geduldiger Präsident → Ziel um 1 schlechter, ohne Antrag und ohne Budgetabzug,
+//     der Vorschlag rückt mit; ungeduldig oder nur 4 Plätze dahinter → Antrag wie bisher
+{const B=welt().B,Z=B.zwischenbilanz,sp=w=>w.ev('meineSpieltage')(),geduld=(w,g)=>w.W.ev(`praesident=function(){return{geduld:${g},ehrgeiz:10,sparsam:10};}`);
+  const a=welt();geduld(a,B.ruf.geduldig);a.S.target=5;const v0=a.S.zg.vorschlag,b0=a.ev('zgBudgetFaktor')();a.F.zwischenbilanz(5+Z.vonSichAus,sp(a));
+  const senkt=a.S.target===5+Z.senken&&a.S.zb.art==='gesenkt'&&a.S.zg.vorschlag===v0+Z.senken&&!a.ev('zbAntragOffen')()&&a.ev('zgBudgetFaktor')()===b0;
+  const b=welt();geduld(b,B.ruf.ungeduldig);b.S.target=5;b.F.zwischenbilanz(5+Z.vonSichAus,sp(b));const ungeduldig=b.S.target===5&&b.S.zb.art==='antrag';
+  const c=welt();geduld(c,B.ruf.geduldig);c.S.target=5;c.F.zwischenbilanz(5+Z.abstand,sp(c));const knapp=c.S.target===5&&c.S.zb.art==='antrag';
+  pruef(senkt&&ungeduldig&&knapp,'Vorstand senkt von sich aus: geduldiger Präsident weit hinter dem Ziel, sonst Antrag',`gesenkt ${senkt}, ungeduldig Antrag ${ungeduldig}, knapp Antrag ${knapp}`);}
+
+// 19. Budgetgespräch (U12l): Zusage 0,4 bei Vertrauen 50, Startruf und Sparsamkeit 10, halb so viel bei Glaubwürdigkeit unter 40; zugesagt Transferbudget × 1,2 bis Saisonende,
+//     nur einmal je Saison; abgelehnt Vertrauen −3
+{const B=welt().B.budgetgespraech,setze=(w,s)=>w.W.ev(`praesident=function(){return{geduld:10,ehrgeiz:10,sparsam:${s}};}`);
+  const a=welt();setze(a,10);a.S.trust=50;a.S.ruf=a.B.ruf.start;a.ev('myT()').glaub=60;const c0=a.F.bgChance();a.ev('myT()').glaub=30;const c1=a.F.bgChance();a.ev('myT()').glaub=60;
+  a.W.ev('bgChance=function(){return 1;}');const f0=a.ev('zgBudgetFaktor')();a.F.budgetGespraech();const ja=a.S.bg&&a.S.bg.ok===1&&Math.abs(a.ev('zgBudgetFaktor')()-f0*(1+B.plus))<1e-9;
+  const t1=a.S.trust;a.W.ev('bgChance=function(){return 0;}');a.F.budgetGespraech();const einmal=a.S.bg.ok===1&&a.S.trust===t1;
+  const b=welt();b.S.trust=50;b.W.ev('bgChance=function(){return 0;}');b.F.budgetGespraech();const nein=b.S.bg&&b.S.bg.ok===0&&b.S.trust===50+B.abgelehnt&&b.ev('zgBudgetFaktor')()===1;
+  pruef(Math.abs(c0-B.basis)<1e-9&&Math.abs(c1-B.basis*B.glaubFaktor)<1e-9&&ja&&einmal&&nein,'Budgetgespräch: Chance, Zusage mit mehr Budget, einmal je Saison, Ablehnung kostet Vertrauen',
+    `Chance ${c0.toFixed(2)} / bei wenig Glaubwürdigkeit ${c1.toFixed(2)}, zugesagt ${ja}, einmal ${einmal}, abgelehnt ${nein}`);}
+
+// U12m. Mitglieder als Stimmen (K28 §5.12): Die Fanstimmung zählt bei der Präsidentenwahl ohne Mitglieder halb, bei einem Mitglied je Platz einfach,
+//       ab zwei je Platz anderthalbfach (höchstens). Wirkung: Unterschied der Chance zwischen Fanstimmung 70 und 50.
+{const {F,ev,B}=welt(),W=B.praesident.wahl,t=ev('myT()'),m0=t.mitglieder,d=m=>{t.mitglieder=m;t.fanst=70;const a=F.wahlChance(t,null);t.fanst=50;const b=F.wahlChance(t,null);return a-b;};
+  const ohne=d(0),eins=d(t.cap),viele=d(t.cap*5);t.mitglieder=m0;
+  /* Prüfung ES5, ET5: Während eines Tribünenbaus (bauTag zieht Plätze ab) bleiben Wahlgewicht und Vorkaufsrecht der Mitglieder gleich (kapOhneBau) */
+  t.mitglieder=Math.round(t.cap*0.8);const g0=ev('wahlFansGewicht')(t),k0=F.dkMitglieder(t),P=ev('RB').tribuene.plaetze,S=ev('S');S.constr={k:'cap',phase:'bau'};t.cap-=P;
+  const bau=Math.abs(ev('wahlFansGewicht')(t)-g0)<1e-9&&Math.abs(F.dkMitglieder(t)-k0)<1e-9;t.cap+=P;S.constr=null;t.mitglieder=m0;
+  pruef(Math.abs(ohne-20*W.fans*W.mitglieder[0])<1e-9&&Math.abs(eins-20*W.fans)<1e-9&&Math.abs(viele-20*W.fans*W.mitglieder[1])<1e-9&&bau,'Mitglieder als Stimmen: Gewicht der Fanstimmung 0,5 / 1 / 1,5 nach Mitgliedern je Platz, unverändert während eines Tribünenbaus',
+    `Fanstimmung +20 bringt ${ohne.toFixed(3)} / ${eins.toFixed(3)} / ${viele.toFixed(3)}, Bau ohne Einfluss ${bau}`);}
 
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

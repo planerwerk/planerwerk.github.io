@@ -66,7 +66,7 @@ Gespeichert in `S.stab` (alle Mitarbeiter der Welt mit Verein oder vereinslos), 
 | Presse | Pressesprecher | ab Welle 4 |
 | Jugend | Jugendleiter | ab Welle 3 |
 
-- **Vorschlag:** Der Mitarbeiter stellt eine Lösung vor, du bestätigst oder änderst. Kein Halt, er erscheint dort, wo du ohnehin hinschaust (Aufstellung, Wochenplan).
+- **Vorschlag:** Der Mitarbeiter stellt eine Lösung vor, du bestätigst oder änderst. Kein Halt, er erscheint dort, wo du ohnehin hinschaust (Aufstellung, Wochenplan). Gebaut seit K16h (Nr. 19).
 - **Automatik:** Er entscheidet. Du siehst im Wochenbericht, was er getan hat.
 
 ## 4. Abläufe
@@ -141,9 +141,55 @@ Bandbreite = Grundbreite × (1,5 − 0,05 × Qualität) × Schwierigkeitsfaktor 
 | Karte | Auslöser | Folge |
 |---|---|---|
 | Co-Trainer wird Cheftrainer (Entscheidung) | ehrgeiziger Co-Trainer, Angebot eines anderen Vereins | ziehen lassen (Ablöse für den Vertrag), halten (mehr Gehalt, Stimmung) |
-| Streit im Stab | Temperament hoch bei zwei Mitarbeitern | Wirkung beider −10 % für einen Monat, Gespräch (K15) |
+| Streit im Stab | Temperament hoch bei zwei Mitarbeitern | Qualität beider × 0,9 für einen Monat (gebaut, siehe K16f), Gespräch (K15) |
 | Arzt widerspricht | du willst fit spritzen, der vorsichtige Arzt rät ab | Hinweis mit Risiko, du entscheidest |
 | Ehemaliger Kapitän kehrt zurück | Karriereende eines verdienten Spielers | Angebot als Co-Trainer oder Jugendtrainer, Fans freuen sich (K27) |
+
+**Gebaut als K16e** (23.11.2026, popolupo, ohne Testlauf, Werte vorläufig): „Ehemaliger Kapitän kehrt zurück“ als Entscheidungskarte (Anlasskarte, Chance 0,5 je Woche).
+- **Auslöser:** Ein Ex-Spieler aus K32c ist vereinsloser Mitarbeiter, seit höchstens einer Saison. Er hat für deinen Verein die meisten Pflichtspiele gemacht, mindestens 60 (wie ein Publikumsliebling). In seiner Rolle hast du einen freien Platz. Die Rolle kommt aus K32c: Co-, Jugend- oder Standardtrainer, Torhüter werden Torwarttrainer.
+- **Wahl:**
+  - In den Stab holen: wie „Einstellen“, zwei Jahre, Gehalt nach deiner Liga. Nur wenn das klappt, kommt Fans +2.
+  - Alles Gute wünschen: Fans −1.
+  - Danach kommt für ihn keine Karte mehr (`gefragt`).
+- **Automatik:** wünscht alles Gute und stellt niemanden ein.
+- **Lernstufe (Prüfung EP1, berichtigt in EQ1):**
+  - Ist der Bereich `stab` noch gesperrt, stellt die Karte niemanden ein („Den Trainerstab führt noch der Verein“). Der Ex-Spieler bleibt dann ungefragt, die Karte kann nach ihrer Sperre wiederkommen.
+  - Ist der Bereich frei, aber in der Automatik, stellt sie ein und schaltet die Automatik aus, genau wie das Einstellen von Hand (`darf`). Nach dem Aufstieg in eine Lizenz steht jeder neu freie Bereich zunächst in der Automatik. Mit EP1 hatte die Karte in diesem Fall abgelehnt, und der Ex-Spieler war für immer weg.
+  - Das prüft die Wirkung, nicht der Auslöser, sonst bräche der Gleichschritt.
+  - Eingestellt wird über dieselbe Funktion wie von Hand (`stabAnstellen`, Vertrag `einstellenJahre`).
+- **Grenze (Prüfung EP6):** Die 60 Spiele sind die Grenze des Publikumslieblings (`fanstimmung.ident.lieblingSpiele`), keine eigene Zahl. Die Karte kommt bis `kapitaenSaisons` (1) Saison nach dem Karriereende.
+- **Noch nicht:** „Co-Trainer wird Cheftrainer“ (ähnlich der Abwerbung aus K16c). Seit K16g gebaut.
+
+**Gebaut als K16f** (23.11.2026, popolupo, ohne Testlauf, Werte vorläufig): „Streit im Stab“ als Entscheidungskarte (Anlasskarte, Chance 0,2 je Woche).
+- **Temperament:** 30 % der Mitarbeiter sind hitzig, fest aus ihrer Nummer (`stabHitzig`, ohne Zufall, wie das Spezialgebiet der Scouts).
+- **Auslöser:** Zwei hitzige Mitarbeiter deines Stabs, keiner gerade im Streit.
+- **Wahl:**
+  - Gespräch: mit 60 % ist es erledigt, sonst sind beide 14 Tage schwächer.
+  - Laufen lassen: beide 28 Tage schwächer.
+- **Schwächer** heißt: Qualität × 0,9 in allen Wirkungen des Stabs (`stabQ`, `x.streitBis`), seit Prüfung EY1 auch in den Einzeltrainingsplätzen der Co-Trainer (`stabPlaetze`). Das gilt nur für deinen Stab, seit EY3 auch im Code: Nach einem Jobwechsel oder einem Wechsel über K16c wirkt ein alter Streit beim anderen Verein nicht weiter.
+  - Die Wirkung ist kleiner als 10 %, weil die Formeln einen Sockel oder Schwellen haben. Ein Co-Trainer mit Qualität 15 wirkt mit 1,0525 statt 1,075, also etwa 2 % schwächer. Ein Videoanalyst mit Qualität 10 fällt unter die Schwelle und verliert seinen Bonus ganz. So gewollt (vorläufig): Der Streit soll spürbar, aber nicht teuer sein.
+- **Ohne Scouts** (Prüfung EY1): Scouts sind unterwegs und wirken einzeln über ihre Qualität, nicht über `stabQ`. Sie streiten in dieser Karte nicht mit.
+- **Sperre** (Prüfung EY2): Das Paar kommt sortiert aus dem Auslöser. Seit Prüfung EZ1 stehen beide Nummern im Schlüssel der Sperre. Die Sperre von 90 Tagen hängt so wirklich am Paar: Nach einem Streit A–B kann A–C trotzdem kommen.
+- **Jobwechsel** (Prüfung EZ4): Wer mit dir zum neuen Verein kommt, lässt den Streit beim alten Verein. Geht einer der beiden über K16c oder K16g, trägt der andere den Streit bis zum Ende allein. Das ist vorläufig so gewollt.
+- Die Automatik führt das Gespräch.
+
+**Gebaut als K16g** (23.11.2026, popolupo, ohne Testlauf, Werte vorläufig): „Co-Trainer wird Cheftrainer“ als Entscheidungskarte (Anlasskarte, Chance 0,3 je Woche).
+- **Auslöser:**
+  - Ein Computer-Verein hat vor höchstens 21 Tagen den Trainer gewechselt (Protokoll `S.trainerWechsel`, U11d2). Das ist der echte Anlass: Der Verein sucht gerade, und dein Co-Trainer ist ihm lieber als der Nachfolger aus dem Pool.
+  - Du hast mindestens zwei Co-Trainer (der Co-Trainer ist Pflicht, K16c/ED4).
+  - Einer davon hat mindestens Qualität 12 und ist ehrgeizig. Ehrgeiz ist wie das Temperament (K16f) fest aus seiner Nummer, 40 % der Mitarbeiter (`stabEhrgeizig`).
+  - Zufall nur bei der Wahl des Co-Trainers, falls zwei passen (Kartenstrom).
+- **Wahl:**
+  - **Ziehen lassen:** Er übernimmt den Verein als Cheftrainer im Trainerpool (K32 §3.3b, U18a), mit Ruf = Ansehen des Vereins − 5 und einem neuen Lieblingsstil (eigener Strom `trainerpool`). Der Verein spielt danach diesen Stil, wie nach jedem Trainerwechsel. Der Nachfolger aus dem Pool war nur wenige Tage im Amt und ist wieder frei. Du bekommst eine Ablöse von einem Jahresgehalt wie in K16c, höchstens das Konto des Vereins. Er verlässt den Stab ganz.
+  - **Mit deutlich mehr Gehalt halten:** Gehalt + 30 %. Gibt der Vorstand das nicht frei (Gehaltsrahmen), geht er doch.
+  - **Auf den Vertrag pochen:** Er bleibt, wirkt aber 60 Tage schwächer, so wie im Streit aus K16f (`streitBis`, Qualität × 0,9).
+  - Die Automatik hält ihn mit mehr Gehalt (wie K16c).
+- **Nach der Prüfung EZ:**
+  - Sitzt bei dem Verein schon dein früherer Co-Trainer, kommt für diesen Wechsel kein zweites Angebot (EZ2).
+  - Wechselst du selbst zu dem Verein, während die Karte offen ist, gilt das Angebot nicht mehr. Der Co-Trainer bleibt und kann mitkommen (EZ3). Seit Prüfung FA3 gilt das auch für „Mitarbeiter abgeworben“ (K16c).
+  - Der neue Cheftrainer behält sein Alter aus dem Stab (EZ5).
+- **Bewusst einfach (vorläufig):** Die Karte kommt nur für deinen Stab. Computer-Vereine werben keine Co-Trainer anderer Computer-Vereine als Cheftrainer ab. Ein Co-Trainer, der als Cheftrainer scheitert, kommt nicht als Mitarbeiter zurück, er bleibt im Trainerpool.
+- **Regelwerte:** `REGELN.karten.stab.chef` (`tage`, `qAb`, `ehrgeizProzent`, `rufAbschlag`). Das Protokoll der Trainerwechsel trägt jetzt den absoluten Tag (`a`), damit auch Wechsel im Sommer über den Saisonwechsel hinweg zählen. Ältere Einträge ohne `a` zählen nicht.
 
 ## 9. Wechselwirkungen
 
@@ -209,7 +255,7 @@ stab:{
 9. **Gehälter** werden wie die Spielergehälter je Ligaspiel gebucht. Ein Erstligist wie Freiburg zahlt so etwa 3 Mio. € pro Jahr, ein kleiner Drittligist mit nur einem Co-Trainer etwa 35.000 €. Spielwerte, Abgleich mit K23 und dem Stab-Budget aus K28.
 10. **Computer-Vereine** besetzen einen fehlenden Co-Trainer wöchentlich aus dem Pool nach und verlängern auslaufende Verträge zu 70 %.
 10a. **Mannschaftsarzt (U7b):** Qualität 10 entspricht der Spanne aus K10, ohne Arzt ist sie doppelt so breit, mit Qualität 15 oder mehr halb so breit. Die Untersuchung dauert 3 Tage ohne Arzt, 2 bei Qualität 10 und 1 bei Qualität 20.
-11. **Noch nicht gebaut:** Automatik mit Rauschen, Haltung und Spezialgebiet (5.1), Modus „Vorschlag“, Bänder für Vorhersagen außer der Qualität selbst, Abwerbung, Mitnehmen beim Vereinswechsel, Ex-Spieler als Mitarbeiter (K32), Ereignisse aus §8.
+11. **Noch nicht gebaut:** Automatik mit Rauschen, Haltung (außer beim Arzt, K16i) und Spezialgebiet (5.1), Bänder für Vorhersagen außer der Qualität selbst, Ereignisse aus §8: seit 23.11. alle gebaut (Ex-Kapitän K16e, Streit im Stab K16f, Co-Trainer wird Cheftrainer K16g, dazu die Abwerbung und „Arzt widerspricht“ (K16d, 22.11.2026, ohne Testlauf: Bei mehr als 5 Tagen in der angezeigten Spanne rät der Mannschaftsarzt vom Fitspritzen ab, erst ein zweiter Klick am selben Tag spritzt; der Knopf zeigt „Arzt rät ab“; mit der Haltung des Arztes seit K16i (25.11.2026, popolupo, ohne Testlauf, vorläufig): vorsichtig rät schon ab 3 Tagen ab, ausgewogen ab 6, risikofreudig erst ab 10; die Haltung steht im Trainerstab und ist fest aus seiner Nummer, ausgewogen doppelt so oft)). Abwerbung seit K16c (22.11.2026, ohne Testlauf) als Karte „Mitarbeiter abgeworben“: ein Mitarbeiter ab Qualität 14 (Pflichtrollen nur, wenn du mehr als einen hast), ein Verein mit mindestens 5 mehr Ansehen und freiem Platz; ziehen lassen gegen ein Jahresgehalt Ablöse oder mit 20 % mehr Gehalt halten (Voreinstellung). Ex-Spieler als Mitarbeiter gibt es seit K32c (22.11., K32 §3.3b). Mitnehmen beim Vereinswechsel seit K16b (22.11., popolupo, ohne Testlauf): im Fenster der Jobangebote bis zu zwei Mitarbeiter wählen, die mindestens 30 Wochen bei dir waren; beim neuen Verein Gehalt nach seiner Liga, ist die Rolle voll, geht dort der Schwächste. Ohne Wahl (auch beim Jobangebot per Karte) kommt niemand mit.
 
 
 
@@ -225,6 +271,7 @@ stab:{
 16. **Deckel gegen Ausnutzung:** Alle Boni für Verhandlungen zusammen (Sportdirektor, Berater-Beziehung, Klauseln) senken eine Forderung höchstens um 15 %. Gute Leute verlangen viel Gehalt, und sie altern.
 17. **Die Besten wollen zu den Besten:** Mitarbeiter wählen ihren Verein wie Spieler (K19): nach Ansehen, Gehalt, Erfolg und Infrastruktur. Größere Vereine werben gute Leute ab (die Abwerbung aus Nr. 11 kommt damit). Reiche Vereine haben so den besten Stab, ohne dass das Spiel nachhilft (K02 §5.3a).
 18. **Computer-Vereine** stellen nach Budget und Profil ein, mit denselben Regeln.
+19. **K16h Vorschlag des Co-Trainers (24.11.2026, popolupo, ohne Testlauf, vorläufig, §3.3):** Machst du Aufstellung oder Trainingsplan selbst, zeigt der Co-Trainer im Modus Vorschlag (Voreinstellung), was er anders machen würde. In der Aufstellung eine Karte „Vorschlag des Co-Trainers“: wen er bringen und wen er auf die Bank setzen würde (beste Elf wie seine Automatik), oder wie viele Plätze er anders verteilen würde, mit „Vorschlag übernehmen“. Im Trainingsplan bei einer festen Vorlage ein Satz, welche Vorlage er jetzt nähme. Seit Prüfung FG5 (vorläufig) übergibt der Knopf „Ihn planen lassen“ die Planung an ihn („Co-Trainer entscheidet“), weil seine Wahl vom Abstand zum Spiel abhängt und als feste Vorlage etwa die Vorbereitung in die Saison hineinziehen würde. Seit Prüfung FG4 lassen Vorschlag, „Beste Elf automatisch aufstellen“ und das Auffüllen von Lücken die Spieler aus, die du auf die Tribüne gesetzt hast (außer es fehlen sonst Spieler, dann füllen sie nur die Lücken). Seit Prüfung FI4 gilt das auch für „Grundordnung ändern“, den Saisonwechsel und die Formations-Automatik (`besteElfDu`). „Keine Vorschläge mehr“ stellt den Bereich auf „selbst“ (`S.einst.vorschlagAus`), ein Knopf zeigt sie wieder. Unter der Automatik gibt es keinen Vorschlag, dort entscheidet er ohnehin. Der Vorschlag ist genau (ohne Rauschen nach Qualität, das fehlt noch, Nr. 11), kein Halt, ohne Klick keine Wirkung.
 
 ## Quellen
 

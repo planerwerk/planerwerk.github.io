@@ -201,7 +201,7 @@ Das ist der Maßstab für die Verbindung zu K09.
   | Kampfansage | ＋ | +1 | 0 | +2 | −0,5 | 0 | Gedächtnis: Sieg im nächsten Spiel gegen den Gegner wird Kult (Chronik, Fans +2), Niederlage Häme (Glaubwürdigkeit −3, Fans −2) |
   | Kritik an der Mannschaft | − | Kämpfer +2, Diven und Nervenschwache −3, sonst −1 | 0 | 0 | +1 | +1 | |
   | Kritik an einem Spieler | − | 0 | −8 | 0 | 0 | +1 | |
-  | Kritik am Schiedsrichter | − | +1 | 0 | +3 | −1 | 0 | Verfahren mit 30 %: Geldstrafe 5.000 bis 50.000 € je nach Liga (§3.2) |
+  | Kritik am Schiedsrichter | − | +1 | 0 | +3 | −1 | 0 | Verfahren mit 30 %, Urteil des Kontrollausschusses nach 3 bis 7 Tagen (seit K09f): beim ersten Fall in zwölf Monaten mit 50 % nur eine Verwarnung, sonst Geldstrafe 5.000 bis 50.000 € je nach Liga, bei Wiederholung bis doppelt so viel (bis 100.000 €) und seit K09g ein Innenraumverbot für ein, ab dem dritten Fall zwei Spiele (K09 Nr. 14) |
   | Angriff auf die Medien | − | +1 | 0 | +1 | −1 | −4 | |
   | Provokation des Gegners | − | 0 | 0 | +2 | 0 | +1 | Beziehung zum Gegner −3 (K17) |
   | Floskel | ○ | 0 | 0 | 0 | 0 | −1 | |
@@ -238,7 +238,81 @@ Das ist der Maßstab für die Verbindung zu K09.
   - Bekanntes Interesse (deine Verhandlung oder „mehrere Vereine“): Die Ablöse für diesen Spieler steigt für 30 Tage um 10 % (wahr) oder 15 % (halb). Bei deinen Spielern bieten die Vereine entsprechend mehr. Die Gehaltsforderung bleibt vorerst gleich.
 - **Reaktion:** Ein Gerücht über deinen Verein bringt eine Pressekonferenz „Gerüchte“ (neuer Anlass). Wer dementiert (Rückendeckung) und den Spieler dann doch binnen vier Wochen abgibt, verliert Glaubwürdigkeit (Gedächtnis aus §5.4).
 - **Medien mit Treffsicherheit:** Boulevard 40, Fachblatt 75, Fernsehen 60, Portal 50, Lokalzeitung 65. Nach 30 Tagen wird geprüft: Wechsel- und Trainergerüchte am Ausgang (gewechselt, Trainer weg), die übrigen am Wahrheitsgehalt. Treffer +3, Fehler −3. Die Gerüchteküche im Büro zeigt die letzten Gerüchte mit dem Medium und wie oft es trifft.
-- **Noch nicht:** Medienpolitik (offen, zurückhaltend, abgeschottet), Exklusivinterview, Gerüchte über Computer-Vereine untereinander mit Wirkung auf deren Spieler, Gehaltsforderung bei bekanntem Interesse.
+- **Noch nicht:** Medienpolitik (offen, zurückhaltend, abgeschottet), Exklusivinterview, Gerüchte über Computer-Vereine untereinander mit Wirkung auf deren Spieler, Gehaltsforderung bei bekanntem Interesse. (Stand 25.11.2026: Medienpolitik seit K29b, Exklusivinterview seit K29c; die Gehaltsforderung bei bekanntem Interesse seit K29n: Solange das Interesse bekannt ist, fordert der Spieler beim Wechsel 5 % mehr Gehalt, `REGELN.geruechte.wirkung.gehalt`, vorläufig. Offen bleiben Gerüchte unter Computer-Vereinen mit Wirkung auf deren Spieler.)
+
+**Umsetzung K29b (22.11.2026, popolupo, ohne Testlauf): Medienpolitik und Wirkung des Medienklimas (§6, §5.4)**
+- **Medienpolitik** im Medien-Kasten des Büros, Bereich `presse` (C-Lizenz, in der Automatik „zurückhaltend“):
+  - offen: Medienklima je Woche +0,5 bis 70, Gerüchte über deinen Verein 1,25-mal so oft, Erfundenes 0,8-mal.
+  - zurückhaltend (Standard, auch in der Automatik): Gerüchte wie bisher, das Klima kehrt je Woche um 0,5 zur Mitte (50) zurück. Seit Prüfung DF1, sonst sank es in der Automatik (Co-Trainer bei jeder Pressekonferenz −2) immer weiter.
+  - abgeschottet: Medienklima je Woche −0,5 bis 30, Gerüchte über dich 0,6-mal so oft, Erfundenes 1,4-mal.
+- **Medienklima wirkt jetzt** (§5.4 „wirkt später auf Gerüchte“): Die Chance auf ein Gerücht über dich und der Anteil erfundener Gerüchte über dich mal 1 + 0,5 × (50 − Klima)/50, also 1,5 bei 0 und 0,5 bei 100. Gleich viele Würfe wie vorher, nur die Schwellen ändern sich.
+- **Noch nicht:** Wirkung des Klimas auf die Fragen der Pressekonferenz, Exklusivinterview (braucht Beziehungen zu einzelnen Medien).
+
+**Umsetzung K29c (22.11.2026, popolupo, ohne Testlauf): Exklusivinterview und Beziehung zu einzelnen Medien (§6)**
+- **Beziehung je Medium** (Tagesblitz, Ballwoche, Sportkanal Eins, Netztribüne, Lokalbote) von −30 bis +30, Start 0, Anzeige im Medien-Kasten.
+- **Exklusivinterview** höchstens alle 28 Tage (Bereich `presse`): das gewählte Medium +10, alle anderen −3, Medienklima +2. Ohne Zufall.
+- **Wirkung:** Ein Gerücht über deinen Verein trifft Stimmung, Fans und Vertrauen mal 1 − Beziehung/60 (0,5 bis 1,5). Gewogene Medien schreiben milder, verärgerte schärfer. Erfundene Gerüchte kommen weiter vom Boulevard oder vom Portal, wer dort Feinde hat, spürt es.
+- **Noch nicht:** Verblassen der Beziehungen über die Zeit, Wirkung auf die Fragen der Pressekonferenz (beides seit K29d).
+
+**Umsetzung K29d (22.11.2026, popolupo, ohne Testlauf): Medienklima und Beziehungen in der Pressekonferenz (§4.2, §5.4 „wirkt später auf Fragen“)**
+- **Wer fragt:** Jede Frage stellt ein Journalist, gewählt mit einem Wurf wie bisher, aber gewichtet nach dem Medienklima.
+  - Boulevard und Portal (die scharfen Medien) haben das Gewicht 1 + 0,5 × (50 − Klima)/50, die übrigen 1 − 0,5 × (50 − Klima)/50.
+  - Bei Klima 50 ist die Wahl dieselbe wie vorher. Bei 0 kommen etwa 60 % der Fragen von Boulevard und Portal, bei 100 etwa 14 % (sonst ein Drittel).
+- **Nachbohren:** Unter Klima 35 gibt es eine Frage mehr (drei oder vier statt zwei oder drei).
+- **Wie es ankommt:** Die Wirkung einer Antwort auf die Fans und den Vorstand läuft über das Medium, das gefragt hat.
+  - Negative Wirkung × (1 − Beziehung/60), positive × (1 + Beziehung/60), je zwischen 0,5 und 1,5. Wie bei den Gerüchten (K29c): Gewogene Medien schreiben milder, verärgerte schärfer.
+  - Mannschaft, Spieler und Medienklima bleiben wie bisher. Die Kabine liest keine Zeitung, das Klima ist die Summe aller Medien.
+  - Auch ein Ausraster läuft so (Bruch beim Vorstand, Kult bei den Fans, Prüfung DM1).
+  - Der Faktor je Frage steht vor den Antworten fest. Eine Antwort, die die Beziehung ändert, wirkt erst in der nächsten Pressekonferenz (DM2).
+- **Beziehung aus Antworten:** Jede Antwort ändert die Beziehung zum fragenden Medium um ihre Wirkung aufs Klima × 0,5. Ohne Abnutzung kostet ein Angriff auf die Medien beim Frager also 1 bis 3, eine Floskel bis 0,75. Antworten mit Klima +1 bringen bis 0,75: Rückendeckung, Humor, Kritik an Mannschaft oder Spieler, Provokation. Mit Abnutzung entsprechend weniger.
+- **Verblassen:** Montags rückt jede Beziehung um 0,5 Richtung 0. Ein Exklusivinterview (+10) ist nach 20 Wochen vergessen, wer alle vier Wochen eines gibt, hält das Medium oben.
+- **Anzeige:** Bei jeder Frage steht die Beziehung zum Medium des Fragers, im Medien-Kasten der Hinweis auf Klima und Frager.
+- **Zufall:** Der Wurf für den Journalisten bleibt im Strom `presse`, die zusätzliche Frage zieht dort zwei Würfe mehr. Der Grundstrom ist unberührt.
+- **Noch nicht:** Computer-Trainer mit Medienprofil und Provokationen vor Topspielen (§7, seit K29e), Maulkorb und Interviews der Spieler, Interview am Spielfeldrand (seit K29f), Pressekonferenz nach Urteilen des Sportgerichts (seit K29g). Maulkorb und Interviews der Spieler seit K29i.
+
+**Umsetzung K29e (22.11.2026, popolupo, ohne Testlauf): Medienprofil der Computer-Trainer und Sticheleien vor Topspielen (§7, Muster 8)**
+- **Medienprofil:** Jeder Computer-Trainer hat ein festes Profil aus seiner Nummer, ohne Zufall.
+  - Die Anteile: diplomatisch 40 %, Floskelkönig 25 %, Lautsprecher 20 %, Psychospieler 15 %.
+  - Anzeige in der Gegneranalyse neben dem Lieblingsstil („vor Mikrofonen …“).
+- **Stichelei:** Vor Derby, Spitzenspiel, Pokal ab dem Viertelfinale und Relegation stichelt der Trainer des Gegners.
+  - Lautsprecher mit 60 % Chance, Psychospieler mit 50 %, die anderen nie. Gewürfelt im Strom `presse`.
+  - Die Stichelei steht als Meldung im Posteingang und als erste Frage in der Pressekonferenz („{Trainer} hat über Ihre Mannschaft gesagt: …“).
+  - Eigene Texte, je Profil drei.
+- **Deine Antwort**, zusätzlich zur normalen Wirkung der Antwortart:
+
+  | Antwort | Wirkung |
+  |---|---|
+  | gelassen (Humor) | eigene Mannschaft +1 |
+  | kontern (Provokation) | eigene Mannschaft +1, die Spieler des Gegners +1 (Trotz) |
+  | ignorieren (Floskel) | beim Psychospieler eigene Mannschaft −1, beim Lautsprecher nichts |
+  | Co-Trainer geschickt oder nicht hingegangen | eigene Mannschaft −1 (Lautsprecher) oder −2 (Psychospieler) |
+
+- **Automatik:** In der Automatik (Bereich `presse`) bleibt die Stichelei ohne Wirkung, der Co-Trainer nimmt sie gelassen. So bleibt der Gleichschritt gleich, denn er vergleicht die Stimmung der Spieler.
+- **Noch nicht:** Aussagen der Computer-Trainer mit Folgen für sie selbst (Strafen, Ärger, Gerüchte), Sticheleien gegen andere Computer-Vereine (seit K29m, siehe unten), Profil bei eigenen Pressekonferenzen der Computer-Trainer.
+
+**Gebaut als K29m** (23.11.2026, popolupo, ohne Testlauf, Werte vorläufig): Sticheleien unter Computer-Trainern.
+- **Wann:** jeden Montag im Strom `presse`/`ki`. Betrachtet werden Derbys und Spitzenspiele deiner Liga ohne deinen Verein in den nächsten 7 Tagen. Ein Spitzenspiel ist es wie in K29e: ab dem 10. Spieltag, beide unter den ersten vier.
+- **Wer:** erst der Heimtrainer, dann der Gast. Lautsprecher sticheln mit 60 %, Psychospieler mit 50 %, die anderen nie (dieselben Chancen wie gegen dich). Höchstens eine Meldung je Woche, damit der Posteingang nicht vollläuft.
+- **Folge:**
+  - Eine Meldung mit einem eigenen Satz je Profil (`PRESSE.kiSticheleien`, seit Prüfung FB8: ohne „morgen“ und ohne „Wir fahren da hin“), gemünzt auf den anderen Verein.
+  - Die Beziehung der beiden Vereine sinkt um 2 (K17, mit dem Grund „Stichelei vor dem Spiel“). Sie verblasst wie jede andere.
+  - Keine Wirkung auf Spieler oder Ergebnis. Die Stimmung der Computer-Vereine bleibt unberührt, so verschiebt sich keine Kalibrierung.
+- **Nur deine Liga:** Aus den anderen Ligen hört man in der Zeitung zu wenig, und die Meldungen sollen dich betreffen.
+- **Gleichschritt:** Die Sticheleien hängen weder an der Lizenz noch an der Automatik und laufen in einem eigenen Strom. Sie hängen aber an deinem Verein (deine Liga, ohne deine Spiele): In 5a ist die eine Welt Verein 6 in der 1. Liga, die andere Verein 30 in der 2. Liga, die Sticheleien laufen dort also in verschiedenen Ligen. Das verglichene Bild (`bild`) bleibt trotzdem gleich: Es enthält nur Verein 6, die Sticheleien ändern nur Beziehungen anderer Vereine untereinander, und deren Schwellen liegen bei −50 (Prüfung FB7).
+- **Regelwerte:** `RPK.medienprofil.ki` (`tage`, `max`, `bez`).
+
+**Umsetzung K29f (22.11.2026, popolupo, ohne Testlauf): Interview am Spielfeldrand (§4.1, Muster 6)**
+- **Wann:** nach jedem deiner Pflichtspiele, bis zum nächsten Halt, an dem du im Büro bist. Nach dem Abpfiff geht es sofort weiter, darum gilt die Karte nicht nur am Spieltag (seit Prüfung DR1). Nicht, wenn gerade eine Pressekonferenz offen ist, und nicht in der Automatik (Bereich `presse`). Remis außerhalb der Liga bekommen eine eigene Frage, ein Elfmeterschießen zählt als Sieg oder Niederlage (DR3).
+- **Ablauf:** Im Büro steht eine Karte mit einer Frage je Ergebnis, zum Beispiel „Woran hat’s gelegen?“, und drei Antworten: Rückendeckung, Kritik an der Mannschaft, Floskel. Ohne Antwort passiert nichts, auch kein Halt.
+- **Wirkung:** die Werte der Antwortart aus der Pressekonferenz mal 0,5, ohne Streuung, Abnutzung und Deckel. Rückendeckung: Mannschaft +1, Medienklima +0,5. Kritik: alle −0,5, Vorstand +0,5, Klima +0,5. Floskel: Klima −0,5.
+- **Abschaltbar:** „Interviews ausschalten“ auf der Karte, im Medien-Kasten wieder einschalten.
+- **Zufall:** keiner, Frage und Antworttexte reihum nach dem Tag.
+
+**Umsetzung K29g (22.11.2026, popolupo, ohne Testlauf): Pressekonferenz nach dem Urteil (§4.1 „Ereignis“)**
+- **Wann:** Das Sportgericht sperrt einen deiner Spieler für mindestens 3 Spiele (angenommen, nach Einspruch oder automatisch) und die Sperre läuft noch (DR4). Die Pressekonferenz wird vorgemerkt und im Tageslauf nach den Anlässen vor einem Spiel geöffnet, sie verdrängt also kein Derby (DR2). Findet sie binnen 7 Tagen keinen freien Tag, verfällt sie. Es gelten die üblichen Grenzen: Budget, 4 Tage Abstand, 21 Tage Sperre je Anlass, Automatik schickt den Co-Trainer. Bei wenig Medienklima (unter 35) sind es bis zu vier Fragen.
+- **Fragen** (eigene Texte, fünf, zwei oder drei davon): gerecht oder nicht, hat er der Mannschaft geschadet, wie den Ausfall auffangen, schon mit ihm gesprochen, wird jetzt über Disziplin geredet.
+- **Kritik am Urteil** ist die Antwortart Schiedsrichterkritik: Fans +3, Mannschaft +1, Vorstand −1 und mit 30 % ein Verfahren des Kontrollausschusses (seit K09f: Urteil nach 3 bis 7 Tagen, beim ersten Mal womöglich nur eine Verwarnung, bei Wiederholung höhere Strafe, K09 Nr. 14). Seit K29h (Prüfung DR5) heißt sie dort „Kritik am Urteil“ und hat eigene Texte, eine eigene Schlagzeile und eine eigene Meldung zur Strafe.
+- **Rückendeckung** merkt sich die Presse wie sonst, wird er danach verkauft, kostet es Glaubwürdigkeit (§5.2).
 
 ## 6. Hebel des Spielers
 
@@ -262,6 +336,8 @@ Das ist der Maßstab für die Verbindung zu K09.
 - Ein Rivale greift deine Aussage von letzter Woche auf.
 - Ein Reporter-Versprecher wird zum Running Gag (Muster 7), reine Farbe.
 - Ein Moderator macht nach deinem Ausraster Werbung mit dem Spruch (Muster 2).
+
+**Gebaut als K29k (22.11.2026, popolupo, ohne Testlauf), Karte nach K30:** „Wer war das Leck?“ bei Medienklima unter 45 (Leck suchen: Zusammenhalt −2, Glaubwürdigkeit +2; ignorieren: Glaubwürdigkeit −1). Seit K29l (22.11.2026, popolupo, ohne Testlauf, Anlasskarten nach K30d): „Dein Spruch geht viral“ bis 7 Tage nach einem Eintrag deines Vereins in der Sprüche-Chronik (T-Shirt: Fanartikel +10 % für vier Wochen, Fans +1) und „Der Rivale antwortet“ bis 7 Tage vor dem Spiel gegen einen Gegner mit offener Kampfansage (nachlegen: Fans +2, Stimmung +1, Beziehung −5; zurückrudern: die Kampfansage ist erledigt, weder Kult noch Häme, Glaubwürdigkeit −1, Fans −1; schweigen). Es fehlen noch das Interview ohne Erlaubnis als Karte (als Ablauf seit K29i), der Running Gag und die Werbung mit dem Ausraster.
 
 ## 9. Wechselwirkungen
 
@@ -342,3 +418,14 @@ Das ist der Maßstab für die Verbindung zu K09.
 - Strafen: [Goal (Nagelsmann)](https://www.goal.com/de/meldungen/dfb-sportgericht-50-000-euro-geldstrafe-bayern-julian-nagelsmann-bundesliga/bltc0bcb48d1b8233a5), [echo24 (Walter)](https://www.echo24.de/sport/fussball/vfb-stuttgart-erzgebirge-aue-kritik-tim-walter-geldstrafe-akzeptiert-12935056.html), [web.de (Bellingham)](https://web.de/magazine/sport/fussball/bundesliga/kritik-zwayer-40000-euro-geldstrafe-jude-bellingham-36412336), [DFB (Baumgart)](https://www.dfb.de/news/ein-spiel-innenraumverbot-und-geldstrafe-fuer-union-trainer-baumgart)
 - International: [Bleacher Report zu Wenger und Ferguson](https://bleacherreport.com/articles/2302746-the-10-strangest-football-press-conferences-ever), [Sports Mole zu Klopp](https://www.sportsmole.co.uk/football/brighton-and-hove-albion/feature/a-look-at-famous-managerial-outbursts-following-jurgen-klopp-rant_424223.html), [TUTTOmercatoWEB zu Allegri](https://www.tuttomercatoweb.com/serie-a/i-te-ne-intendi-di-ippica-i-dal-gabbione-al-corto-muso-le-frasi-cult-di-allegri-fuori-dal-campo-1969311), [Il Post zu Spalletti](https://www.ilpost.it/2025/10/31/luciano-spalletti-frasi-risposte-aforismi/), [Sky Sport zu Mourinho](https://sport.sky.it/calcio/mourinho-frasi), [Sky Sport zu Trainer-Philosophen](https://sport.sky.it/calcio/2020/11/19/allenatori-frasi-giornata-della-filosofia), [Il Foglio: Pressekonferenz-Generator](https://www.ilfoglio.it/sport/2022/02/05/news/un-generatore-automatico-di-conferenze-stampa--147932), [Journal du Net: Floskeln der Nationaltrainer](https://www.journaldunet.com/martech/1553011-ce-que-les-cliches-des-selectionneurs-de-football-nous-apprennent-sur-la-communication-de-crise-et-le-leadership/), [ozap zu Galtier](https://www.ozap.com/actu/-vous-ne-parlez-jamais-football-la-replique-cinglante-du-coach-du-psg-christophe-galtier-contre-les-medias/622553), [DH: Pressekonferenzen in Belgien](https://www.dhnet.be/sports/football/division-1a/standard/2024/01/05/dans-les-coulisses-des-rencontres-35-les-cp-dapres-match-des-entraineurs-cest-quoi-mode-demploi-amendes-et-specificite-belge-WHR72XHTDVAZJCYD4OFUBBSUFI/)
 - Community-Kritik an FM-Pressekonferenzen: siehe `_recherche-genre.md`
+
+**Korrektur nach Prüfung DR (22.11.2026, popolupo, ohne Testlauf): Pressekonferenzen nach dem Spiel (seit U17a)**
+- **Fehler:** Kantersieg, Krise, Höhenflug und Tabellenführung öffnen ihre Pressekonferenz nach dem Spiel. Nach dem Abpfiff geht es sofort zum nächsten Tag weiter, und dort hat der Co-Trainer sie gleich übernommen. Du hast sie nie gesehen, und jede kostete 2 Punkte Medienklima.
+- **Jetzt:** Diese Anlässe finden am Tag nach dem Spiel statt. Dort hält „Tag beenden“ an (Halt „Pressekonferenz“), am Tag darauf übernimmt der Co-Trainer wie bei allen anderen.
+
+**Umsetzung K29i (22.11.2026, popolupo, ohne Testlauf): Interviews der Spieler und Maulkorb (§6)**
+- **Interviews:** Montags gibt mit 30 % einer deiner Spieler ein Interview (eigener Strom je Saison und Tag). Mitteilsame Spieler (Diva, Partylöwe, Hitzkopf) werden dreimal so oft gewählt.
+- **Fettnäpfchen:** Chance 30 %, +30 % bei Mitteilsamen, +20 % bei Stimmung unter 40, höchstens 90 %. Dann Medienklima −2, Zusammenhalt −1, Fans −1. Sonst Medienklima +1, Fans +1. Eigene Texte, Meldung im Posteingang.
+- **Maulkorb** im Medien-Kasten: keine Interviews, dafür verlieren Mitteilsame jede Woche 1 Punkt Stimmung.
+- **Automatik:** In der Automatik (Bereich `presse`) gibt es weder Interviews noch Maulkorb, der Gleichschritt bleibt gleich.
+- **Noch nicht:** Interviews der Spieler anderer Vereine. Spieler, die trotz Maulkorb reden, gibt es seit K29j (22.11.2026, ohne Testlauf): montags mit 15 % ein unzufriedener Mitteilsamer (Stimmung unter 40), Wirkung eines schlechten Interviews und Glaubwürdigkeit −2, eigener Strom, nicht unter der Automatik.

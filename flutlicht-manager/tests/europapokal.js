@@ -45,7 +45,7 @@ const WB=['cl','el','ecl'];
   pruef(ev('gelbe')(p).eu===3&&ev('gelbe')(p).liga===liga&&sp.eu.gelb===1&&sp.liga.gelb===0&&ev('wbVon')({eu:'cl'})==='eu','Sperren: dritte Gelbe im Europapokal sperrt nur dort',JSON.stringify(sp));}
 
 // 6. Eine Saison im Ablauf: alle Spiele gespielt, Runden vollständig, je Wettbewerb ein Sieger, Ligaspiele deutscher Teilnehmer mit drei Tagen Abstand zum Europapokal
-{let info=null;saisons({n:1,seed:SEED,verein:VEREIN,beiSaisonende:(S,F)=>{const E=S.eu;info={E:JSON.parse(JSON.stringify(E)),abstand:0,de:0,meinGeld:(E.geld&&E.geld[S.my])||0,meinFin:S.fin['Europapokal']||0};
+{let info=null;saisons({n:1,seed:SEED,verein:VEREIN,beiSaisonende:(S,F)=>{const E=S.eu;info={E:JSON.parse(JSON.stringify(E)),abstand:0,de:0,meinGeld:(E.geld&&E.geld[S.my])||0,meinFin:S.fin['Europapokal']||0,faktor:F.__W.ev('REU').geld.faktor};
     const P=S.plan.eu,tage=new Map(),add=(id,d)=>{if(id>=2000)return;if(!tage.has(id))tage.set(id,[]);tage.get(id).push(d);};
     [1,2,3].forEach(lg=>(S.fx[lg]||[]).forEach((md,k)=>md.forEach(([h,a],i)=>{const d=S.plan.zeit[lg][k][i][0];add(h,d);add(a,d);})));
     WB.forEach(wb=>{const W=E[wb],p=P[wb];(W.lp||[]).forEach(m=>{add(m[0],m[3]);add(m[1],m[3]);});
@@ -56,7 +56,7 @@ const WB=['cl','el','ecl'];
   pruef(WB.every(voll)&&WB.every(wb=>E.titel[wb]!=null),'Saison: Ligaphase und alle K.-o.-Runden gespielt, je Wettbewerb ein Sieger',WB.map(wb=>`${wb} ${E.titel[wb]}`).join(', '));
   pruef(info.abstand<=2,'Saison: deutsche Teilnehmer spielen höchstens zweimal mit weniger als drei Tagen Abstand',`${info.abstand} Fälle bei ${info.de} Vereinen`);
   // U19b: Prämien. Jeder deutsche Teilnehmer der Champions League hat mindestens das Startgeld, deine Buchung „Europapokal“ ist gleich deinen Prämien
-  const cl=E.cl.t.filter(id=>id<2000),min=Math.round(18.62e6*0.2/1000)*1000;
+  const cl=E.cl.t.filter(id=>id<2000),min=Math.round(18.62e6*info.faktor/1000)*1000;
   pruef(cl.every(id=>(E.geld[id]||0)>=min)&&info.meinGeld===info.meinFin,'Prämien: Startgeld für alle Deutschen in der Champions League, deine Buchung gleich S.eu.geld',`${cl.map(id=>E.geld[id]).join(', ')} · dein Verein ${info.meinGeld} / ${info.meinFin}`);}
 
 // 8. Geld und Ansehen einzeln (U19b): Startgeld mit Wertsäule nach Rang, Ansehen nach erreichter Runde und Wettbewerb
@@ -79,5 +79,11 @@ const WB=['cl','el','ecl'];
   const bay=cl.t.find(id=>id<2000&&S.teams[id].sh==='FCB'),inter=ev('euInteresse')(bay),alt=S.my;S.my=bay;const ziel=F.euZielMoeglich();S.my=alt;
   pruef(erst==='GER'&&ohne.cl.length===4&&mit.cl.length===5&&pos(mit.el)==='6+10'&&pos(mit.ecl)==='7'&&pos(ohne.ecl)==='6'&&eng>=6&&inter===6&&!!ziel&&ziel.min==='af',
     'U19c: Länderwertung, fünfter Platz, Kontingent plus eins, Interesse, Nebenziel',`erstes Land ${erst}, CL ${pos(ohne.cl)} / ${pos(mit.cl)}, EL ${pos(mit.el)}, ECL ${pos(ohne.ecl)} / ${pos(mit.ecl)}, England ${eng}, Interesse ${inter}, Ziel ${ziel&&ziel.min}`);}
+
+// 10. U19d1 Kaderliste der UEFA: automatische Meldung hält die Regeln, zur Frist haben alle deutschen Teilnehmer eine Liste, wer fehlt, ist im Europapokal gesperrt (nicht in der Liga)
+{const {F,S,ev}=welt(),cl=S.eu.cl,de=cl.t.filter(id=>id<2000),L=ev('REU').liste,frist=ev('euFristen')('cl').lp;F.euListeTag(frist);
+  const lis=S.eu.liste||{},bay=de[0],l=lis[bay]||[],st=ev('euListeStand')(l,bay),weg=ev('squad')(bay).find(p=>!l.includes(p.id)&&!ev('euListeB')(p));
+  pruef(de.every(id=>(lis[id]||[]).length>0)&&st.ok&&st.n<=L.max&&st.tw>=L.tw&&(!weg||(ev('gesperrt')(weg,'eu')&&!ev('gesperrt')(weg,'liga'))),'U19d1: Kaderliste zur Frist, Regeln eingehalten, Ungemeldete nur im Europapokal gesperrt',
+    `${de.length} Vereine, Bayern ${st.n} Spieler (${st.tw} Torhüter, ${st.lokal} lokal angerechnet), nicht gemeldet ${weg?weg.n:'niemand'}`);}
 
 console.log(probleme.length?`\n${probleme.length} Problem(e).`:'\nAlles in Ordnung.');process.exitCode=probleme.length?1:0;

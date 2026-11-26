@@ -201,5 +201,36 @@ const bankWelt=()=>{const w=welt(),{S,F,ev}=w;F.englischeWoche=()=>false;const s
   pruef(!fehler.length,'Saison: Jedes Ergebnis trägt Bank, Wechsel und Fehlende, alle Felder bleiben im Rahmen',fehler[0]||'');
   pruef(['rotation','joker','rivale','unerfahren','tw2','aufbau','bank'].every(k=>zahl[k]>0),'Saison: Rotation, Joker, Konkurrent, Unerfahrene, Nummer 2 im Tor, Aufbau und Bank kommen im Spiel vor',['rotation','joker','rivale','unerfahren','tw2','aufbau','form','tribuene','spaet','sperre','ww'].map(k=>`${k} ${zahl[k]||0}`).join(', '));}
 
+// 19. K14f Neuer Trainer (K14 §12): takeJob ruft neubeginnStart. Reservisten hoffen (+ hoffen), Stammspieler nicht. Solange zählt kein Bankplatz deiner Spieler
+//     (Grund „neu“, Einsatzzeit bleibt), danach wieder; ein anderer Verein hat keinen Neubeginn.
+{const {S,F,ev,sq,xi,rest,buch,ohne,t,B}=bankWelt(),N=B.neuerTrainer,st=ev('stammA'),abs=ev('absTag');
+  const ruft=/neubeginnStart\(id\)/.test(String(ev('takeJob'))),r=rest.find(q=>!st(q)),s=sq.find(q=>st(q));r.st=50;s.st=50;F.neubeginnStart(S.my);
+  const hoffen=r.st===50+N.hoffen&&s.st===50&&!!S.neubeginn&&S.neubeginn.t===S.my&&S.neubeginn.rest===N.spiele; /* seit FM5 Pflichtspiele statt Tage */
+  const p=sq.find(q=>xi.includes(q.id)&&q.pos==='MF'),ers=rest.find(q=>q.pos==='MF');p.fit=100;const ea0=p.ea;buch(ohne(p.id,ers.id),{bank:[p.id]});const neu=p.bg==='neu'&&p.ea===ea0&&S.neubeginn.rest===N.spiele-1;
+  const fremd=!ev('neubeginn')(S.teams.find(x=>x.id!==S.my).id);S.neubeginn.rest=0;buch(ohne(p.id,ers.id),{bank:[p.id]});const danach=p.bg!=='neu'&&p.ea<ea0;
+  const altStand=(S.neubeginn={t:S.my,bis:abs(S.tag)},ev('neubeginn')(S.my))&&(S.neubeginn.bis=abs(S.tag)-1,!ev('neubeginn')(S.my)); /* Spielstand von vor FM5 mit bis */
+  pruef(ruft&&hoffen&&neu&&fremd&&danach&&altStand,'Neuer Trainer: Reservisten hoffen, die ersten Pflichtspiele zählt kein Bankplatz, danach wieder, nur dein Verein',
+    `takeJob ${ruft}, Hoffnung ${hoffen} (${r.st}/${s.st}), Grund ${neu} („${p.bg}“, noch ${S.neubeginn&&S.neubeginn.rest}), fremder Verein ${fremd}, danach ${danach} (${pc(ea0)} → ${pc(p.ea)}), alter Stand ${altStand}`);}
+
+// Prüfung FO8 zu FN8: Im Neubeginn kostet eine Einwechslung in der Nachspielzeit einen Etablierten nichts, ein Unerfahrener freut sich weiter; danach wieder −1.
+{const {S,sq,xi,rest,buch,B}=bankWelt(),rot=rest.find(q=>q.krA==='rotation'&&q.pos!=='TW'),jung=rest.find(q=>q.krA==='talent'||q.krA==='ergaenzung'),a=sq.find(q=>q.id===xi[3]),b=sq.find(q=>q.id===xi[4]);
+  rot.ppk=100;jung.ppk=2;rot.st=50;jung.st=50;S.neubeginn={t:S.my,rest:3};buch(xi,{ein:[[rot.id,89,a.id],[jung.id,89,b.id]]});const neu=rot.st===50&&jung.st===50+B.spaet.unerfahren&&rot.bg==='spaet';
+  S.neubeginn=null;rot.st=50;buch(xi,{ein:[[rot.id,89,a.id]]});const danach=rot.st===50+B.spaet.etabliert;
+  pruef(neu&&danach,'Neuer Trainer: späte Einwechslung kostet im Neubeginn nichts, danach wieder',`im Neubeginn ${neu} (${rot.bg}), danach ${danach} (${rot.st})`);}
+
+// K14g. Sprachgrüppchen (K14 §5.5), nur mit dem Schalter der Integration: drei Spieler mit gleicher Fremdsprache und wenig Deutsch bilden ohne Freundschaft ein Grüppchen,
+//       wenn ihre Stimmung im Schnitt unter G.unter liegt. Ohne Schalter nicht, mit gutem Deutsch nicht, Deutschsprachige nie.
+{const {S,ev}=welt(),sq=ev('squad')(S.my),G=ev('RKA').gruppe,I=ev('RP').integration.wirkung,gr=ev('grueppchen');S.bz=[];
+  sq.forEach(p=>{p.nat='GER';delete p.de;p.st=60;});const l=sq.slice(0,3);l.forEach((p,i)=>{p.nat=['BRA','POR','BRA'][i];p.de=20;p.st=G.unter-10;});const d=sq[3];d.st=G.unter-10;
+  const hat=()=>gr(S.my).some(g=>l.every(p=>g.includes(p)));const ohne=!hat();I.an=true;const mit=hat()&&!gr(S.my).some(g=>g.includes(d));l[2].de=G.spracheBis;const gutDeutsch=!hat();I.an=false;
+  pruef(ohne&&mit&&gutDeutsch,'Sprachgrüppchen: Landsleute mit wenig Deutsch und schlechter Stimmung, nur mit Schalter',`ohne Schalter ${ohne}, mit ${mit}, mit gutem Deutsch ${gutDeutsch}`);}
+
+// Prüfung FU1 (K10f): Wer vom Stab nach Saisonbelastung geschont wurde (gs im Ergebnis), dessen Bankplatz zählt nicht, auch mit voller Frische (Grund „rotation“);
+//       ohne den Vermerk zählt derselbe Bankplatz wie bisher.
+{const {S,F,sq,xi,rest}=bankWelt(),p=sq.find(q=>xi.includes(q.id)&&q.pos==='MF'),ers=rest.find(q=>q.pos==='MF'),ohneP=xi.map(x=>x===p.id?ers.id:x);p.fit=100;const ea0=p.ea;
+  const r=spiel(S.my,ohneP,{bank:[p.id]});r.gs=[[p.id],[]];F.einsatzBuchen([r],S.tag);const geschont=p.bg==='rotation'&&p.ea===ea0;
+  F.einsatzBuchen([spiel(S.my,ohneP,{bank:[p.id]})],S.tag);const sonst=p.ea<ea0;
+  pruef(geschont&&sonst,'Rotation nach Saisonbelastung: der Geschonte verliert keine Einsatzzeit, ohne Vermerk zählt die Bank',`geschont ${geschont} (${p.bg}), ohne Vermerk ${sonst}`);}
+
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

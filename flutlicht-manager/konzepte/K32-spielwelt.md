@@ -51,7 +51,7 @@ Teile: **Auslandspool** in Welle 3 (vorgezogen, PLAN §2), der Rest in Welle 4. 
 - **Trainerwechsel** (U11d2, K31 §5.10): Der alte Trainer geht mit Ruf −5 in den Pool. Nachfolger ist der freie Trainer, dessen Ruf am besten zum Ansehen des Vereins passt (höchstens 10 darüber), ohne Zufall. Der Verein spielt dann seinen Lieblingsstil. Ist der Pool leer, kommt ein neuer Trainer.
 - **Dein Jobwechsel:** Der Trainer deines neuen Vereins geht in den Pool, dein alter Verein holt einen aus dem Pool.
 - **Saisonende:** Ruf der Trainer im Amt nach Platz gegen Erwartung (2 je Platz, ±6), Meister +10, Abstieg −6. Freie Trainer vergessen 5 % Richtung 40. Alle werden ein Jahr älter, freie Trainer ab 68 hören auf.
-- **Ehemalige Spieler werden Trainer** (§4.1 Nr. 3): Wer mit mindestens 150 Ligaspielen aufhört, wird mit 15 % Trainer im Pool. Ruf 25 + Ligaspiele / 20, mit Ehrung +10. Eigener Strom je Spieler. Mitarbeiter im Stab (K16) aus Ex-Spielern fehlen noch.
+- **Ehemalige Spieler werden Trainer** (§4.1 Nr. 3): Wer mit mindestens 150 Ligaspielen aufhört, wird mit 15 % Trainer im Pool. Ruf 25 + Ligaspiele / 20, mit Ehrung +10. Eigener Strom je Spieler. Seit K32c (22.11.2026, popolupo, ohne Testlauf) kommen Ex-Spieler auch in den Stab: ab 100 Ligaspielen mit 25 % als vereinslose Mitarbeiter, Torhüter als Torwarttrainer, sonst Co-, Jugend- oder Standardtrainer (5 : 3 : 2), Qualität 4 + Ligaspiele / 60 (+2 mit Ehrung) ± 2, eigener Strom je Spieler. Wer gerade Trainer im Pool geworden ist, kommt nicht dazu. Echte Namen sind hier erlaubt, weil Mitarbeiter nicht in Pressekonferenzen reden (vorläufig). Hat er für deinen Verein gespielt, kommt eine Meldung. Ohne Job bleibt ein Ex-Spieler fünf Saisons in der Liste und zählt beim Auffüllen der vereinslosen Mitarbeiter nicht mit (Prüfung DP5).
 - **Pool nachfüllen:** zum 1. Juli auf mindestens 12 freie Trainer.
 - **Anzeige:** Namen in Meldungen zum Trainerwechsel, beim „Trainer der Saison“ (K34) und im Vorbericht beim Gegner.
 
@@ -88,6 +88,16 @@ Chance je Saison = Grundwert(Alter) × Niveau × Verletzung × Professionalität
 - **Verletzung:** Kreuzbandriss in den letzten 12 Monaten ab 32 Jahren ×1,5.
 - **Professionalität:** Vorbildprofis ×0,8.
 - Ziel: Karriereende im Schnitt mit etwa 33 bis 34 (Studie: Profis hören im Schnitt mit 33 auf, K03 Quellen). Heute: `saison.karriereende` mit ab 34, 25 % je Jahr, spätestens 38.
+
+**Umsetzung (22.11.2026, popolupo, ohne Testlauf, `karriereChance` und `karriereEnde` in `js/saison.js`):**
+- Grundwert wie oben, zwischen den Stützstellen linear (33 Jahre: 17,5 %, 35: 37,5 %, 37: 70 %), ab 39 sicher. Torhüter rechnen zwei Jahre jünger.
+- **Niveau:** Der Ligaschnitt ist das Mittel der Kaderstärke (beste 14) aller Vereine der Liga, berechnet vor dem Altern. Vereinslose vergleichen sich mit der 3. Liga. Wer mehr als 10 darunter liegt, ×1,5. Sonst Stammspieler (Kaderrolle Schlüssel- oder Stammspieler) ×0,7. Beides zusammen gibt es nicht, „zu schwach“ geht vor.
+- **Verletzung:** laufender Kreuzbandriss oder einer im Verlauf der letzten 365 Tage (`p.vh`, K10), ab 32 Jahren.
+- **Professionalität:** Eigenschaft Vorbildprofi (K03).
+- **Zufall:** eigener Strom je Spieler und Saison (`karriereende`), so verschiebt die neue Formel keinen anderen Zufall des Saisonwechsels.
+- **Auslandspool:** dieselbe Chance ohne Niveau und ohne Rolle. Seine eigenen Regeln (zu schwach für den Verein, ab 31 aus dem Kern) bleiben.
+- **Schnitt nach der Formel** (ohne Faktoren, für Spieler, die 32 werden): Feldspieler etwa 34,8, Torhüter etwa 36,8 (Ziel §10: 33 bis 35 und 35 bis 37). Wer früher aus dem Profifußball fällt, zählt hier nicht mit, darum liegt der echte Schnitt im Spiel tiefer.
+- Folge gegenüber vorher: Mit 32 und 33 hören jetzt einige auf (vorher keiner), mit 35 und 36 weniger (vorher 50 und 75 %). Wie sich das auf die Stärke der Ligen über zehn Saisons auswirkt (§5.3), muss `tests/welt.js` zeigen.
 
 ### 5.2 Neue Spieler in der übrigen Welt
 
@@ -195,16 +205,17 @@ welt:{
 17. **Nationen-Tabelle:** 148 Nationen mit Rang der FIFA-Weltrangliste vom 7. Oktober 2026 (Abweichung von Nr. 3: nicht alle Länder der Welt, sondern alle, deren Rang abrufbar war, und alle, die im Spiel vorkommen). Indonesien und Philippinen sind geschätzt, Bolivien ist erschlossen. Weitere Nationen lassen sich anhängen.
 18. **Spielstand:** Poolspieler werden ohne Sperren, Karten und berechnete Eigenschaften gespeichert, Stärke und Form mit zwei Nachkommastellen. Der Pool braucht etwa 740 KB, der ganze Spielstand bleibt über sechs Saisons unter 3 MB.
 19. **Lernstufen (K36):** Der Auslandsmarkt ist als Information frei. Im Ausland beobachten und kaufen ab der B-Lizenz (`ausland`), Suchauftrag im Ausland mit dem Suchauftrag ab A. Angebote aus dem Ausland gehören zu den Transfers (C).
-20. **Noch nicht gebaut:** Computer-Vereine kaufen im Ausland, Auslandsvereine kaufen bei Computer-Vereinen (beides U11, K31), Integration, Deutschkenntnisse, Heimweh und Landsleute (K03 §5.5, K14), Länderspiele (K13), die Ereignisse aus §8, Karriereende nach 5.1, Trainerpool, Europapokal (K37).
+20. **Noch nicht gebaut:** Computer-Vereine kaufen im Ausland, Auslandsvereine kaufen bei Computer-Vereinen (beides U11, K31). Berichtigt am 25.11.2026: Integration, Deutschkenntnisse und Landsleute gibt es seit K03d, Heimweh seit K03e (K03 §5.5, §8), Länderspiele seit K13f (Schalter aus, im Menü einschaltbar). Seit 23.11.2026 berichtigt: Ereignisse aus §8 gibt es seit U18b als Karten, das Karriereende nach 5.1 seit K32 §5.1 (Karriereende nach Formel), den Trainerpool seit U18a, den Europapokal seit U19a bis U19e.
 
 **Vorläufig entschieden bei der Umsetzung (U18a, 20. November 2026):**
 
 21. **Erfundene Cheftrainer** für alle Computer-Vereine, keine echten (§3.3b).
 22. **Nachfolger ohne Zufall** nach dem Ruf, der zum Ansehen passt (§3.3b).
 23. **Ruf der Computer-Trainer** zum Saisonende nach Platz gegen Erwartung, Meister und Abstieg (§3.3b).
-24. **Ex-Spieler als Trainer** mit 15 % ab 150 Ligaspielen (§3.3b). Ex-Spieler im Stab kommen mit einem späteren Schritt.
+24. **Ex-Spieler als Trainer** mit 15 % ab 150 Ligaspielen (§3.3b). Ex-Spieler im Stab seit K32c (ab 100 Ligaspielen mit 25 %, §3.3b).
 25. **Pool mit mindestens 12 freien Trainern** (§3.3b).
 26. **Ereignisse aus §8 als Ereigniskarten** mit den Schwellen und Werten aus §8 (U18b), alle geschätzt. Das Karriereende nach §5.1 wartet auf einen Testlauf, weil es das Gleichgewicht der Welt verschiebt.
+27. **Karriereende nach §5.1 gebaut ohne Testlauf** (22.11., popolupo, der Nutzer wollte heute nicht auf Tests warten): Stützstellen linear verbunden, Ligaschnitt = Mittel der Kaderstärken, Vereinslose gegen die 3. Liga, „zu schwach“ vor „Stammspieler“, eigener Strom je Spieler. Der Auslandspool nutzt dieselbe Chance ohne Niveau (§5.1).
 
 **Noch zu recherchieren:** Abgänge der Bundesliga ins Ausland je Sommer, durchschnittliches Karriereende von Torhütern.
 

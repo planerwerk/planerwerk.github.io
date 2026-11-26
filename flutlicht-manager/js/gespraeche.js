@@ -22,6 +22,8 @@ const VERSPRECHEN_STAND={offen:'offen',gehalten:'gehalten',gebrochen:'gebrochen'
 const glaub=t=>{t=t||myT();if(t.glaub==null)t.glaub=RGS.glaubwuerdigkeit.start;return t.glaub;};
 const glaubFaktor=t=>{const G=RGS.glaubwuerdigkeit;return G.faktor[0]+glaub(t)/100*G.faktor[1];};
 function glaubAendern(v){const t=myT();t.glaub=clamp(glaub(t)+v,0,100);}
+// Start beim neuen Verein (saison.js takeJob, K28 §5.4, U12h): nach deinem Ruf als Trainer, in Grenzen
+function glaubNeu(){const G=RGS.glaubwuerdigkeit;return Math.round(clamp(G.start+G.jeRuf*(ruf()-RV.ruf.start),G.neuGrenzen[0],G.neuGrenzen[1]));}
 const offeneVersprechen=()=>(S.vs||[]).filter(v=>v.stand==='offen');
 // Woche: erholt sich bis 60, zu viele offene Versprechen kosten, unter 25 glaubt dir die Kabine nicht mehr (Vorstand wird aufmerksam)
 function glaubwuerdigkeitWoche(){const G=RGS.glaubwuerdigkeit,t=myT();if(!t)return;const g=glaub(t);
@@ -69,7 +71,7 @@ function gespraechFuehren(pid,thema,haltung){const p=PIX.get(pid);if(!p||p.team!
   return mitStrom(strom('gespraech',S.season,S.tag,pid,gespraecheDieseWoche()),()=>{kabineInit(p);const anlass=themaAnlass(p,thema),wunsch=(S.gw||[]).some(g=>g.pid===p.id)&&p.ww===2;
     let {w,streit}=anlass?{w:0,streit:0}:gespraechWirkung(p,thema,haltung);
     S.gz=[...(S.gz||[]).filter(x=>x>=wochenStart()),absTag(S.tag)];p.gs=[...(p.gs||[]).filter(([d])=>d>absTag(S.tag)-RGS.abnutzung.wochen*7),[absTag(S.tag),thema]];const gestritten=!anlass&&streit>0&&R()<streit;
-    if(gestritten){w=Math.min(w,0)+RGS.streit.stimmung;p.streit=absTag(S.tag);zusammenhaltAendern(myT(),RKA.zusammenhalt.streit);}
+    if(gestritten){w=Math.min(w,0)+RGS.streit.stimmung;p.streit=absTag(S.tag);p.streitT=thema;zusammenhaltAendern(myT(),RKA.zusammenhalt.streit);} /* streitT: Thema des Streits (K15e, Prüfung EO3) */
     stimmungAendern(p,w);if(w)trainerWirkung(p,w*RGS.wirkung.trainerAnteil);
     if(thema==='kritik'&&hatEig(p,'nervenschwach')&&!anlass)svAendern(p,RGS.reaktion.nervenschwach.sv);
     // Umgang nach einem prägenden Spiel (K08 §5.3), Druck nehmen baut Selbstvertrauen auf, ein Altstar nimmt seine Rolle an (K14 §12)

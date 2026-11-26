@@ -50,7 +50,7 @@ function poolSpieler(v,pos,talent,namen){const A=RW.ausland,base=avStaerke(v);
   p.sp=talent?A.praxis.talent:A.praxis.stamm;p.fit=100;poolSchlank(p);return p;}
 // Poolspieler ohne Buchführung der Ligen (Sperren, Karten, berechnete Eigenschaften): spart Platz im Spielstand, beim Wechsel nach Deutschland kommt sie zurück
 function poolSchlank(p){delete p.eig;delete p.sperre;delete p.kt;}
-const POOL_FELDER=['id','n','pos','age','str','pot','form','fit','ko','sv','sp','ent','sw','team','inj','g','pg','apps','ct','list','ask','seed','sal','ch','fp','fuss','mk','ls','wiv','vt','ekw','tf','nat','lf','fk','ue','uf','kar','kas','ehj']; // kar, kas, ehj: Karriere und Ehrung bleiben beim Wechsel ins Ausland (K34, T3.1)
+const POOL_FELDER=['id','n','pos','age','str','pot','form','fit','ko','sv','sp','ent','sw','team','inj','g','pg','apps','ct','list','ask','seed','sal','ch','fp','fuss','mk','ls','wiv','vt','ekw','tf','nat','lf','fk','ue','uf','kar','kas','ehj','lspN','lspZ']; // kar, kas, ehj: Karriere und Ehrung bleiben beim Wechsel ins Ausland (K34, T3.1)
 const istTalent=p=>p.age<=RW.ausland.talent.jungBis;
 // Plan eines Kerns: feste Plätze für Talente (bis 21 Jahre), die übrigen Plätze nach Positionen, damit jeder Kern alle Mannschaftsteile hat
 function kernPlan(v){const A=RW.ausland,soll=A.kern[v.stufe],talente=A.talente[v.stufe],platz={TW:0,AB:0,MF:0,ST:0};A.positionen.slice(0,soll-talente).forEach(x=>platz[x]++);return{soll,talente,platz};}
@@ -73,9 +73,9 @@ function auslandAufbau(){S.ausland={v:AUSLAND.map(([name,land,stufe,rep,fin],i)=
 function auslandWoche(){if(!S.ausland||imUrlaub())return;const A=RW.ausland,F=RP.form;
   S.ausland.pl.forEach(p=>{p.form=Math.round(clamp(p.form+(R()-0.5)*2*A.formZufall+(F.mitte-p.form)*F.ausgleich,F.min,F.max)*100)/100;entwickeln(p,7);p.str=Math.round(p.str*100)/100;});} // zwei Nachkommastellen reichen und halten den Spielstand klein
 // Saisonwechsel (K32 §4.1, eigener Strom): Alter, Karriereende, Abgänge aus dem Kern, Wechsel zu größeren Auslandsvereinen, neue Talente und Kernspieler
-function auslandSaison(){if(!S.ausland)return;const A=RW.ausland,K=RS.karriereende,V=S.ausland.v,weg=new Set();
+function auslandSaison(){if(!S.ausland)return;const A=RW.ausland,V=S.ausland.v,weg=new Set(); // Karriereende wie in den Ligen (K32 §5.1, saison.js karriereChance), ohne Niveau
   S.ausland.pl.forEach(p=>{p.age++;p.form=RS.neuForm;p.sv=0;delete p.eig;const v=avVon(p.team),base=avStaerke(v); // Eigenschaften (Alter, Persönlichkeit) werden bei Bedarf neu berechnet
-    if((p.age>=K.abAlter&&R()<(p.age-K.nullAlter)*K.jeJahr)||p.age>=K.spaetestens||(p.age>=A.rausAbAlter&&p.str<base-A.raus)||(p.age>=A.altRaus.ab&&R()<(p.age-A.altRaus.ab+1)*A.altRaus.jeJahr)){weg.add(p.id);return;}
+    const kc=karriereChance(p,null);if(kc>=1||(kc>0&&R()<kc)||(p.age>=A.rausAbAlter&&p.str<base-A.raus)||(p.age>=A.altRaus.ab&&R()<(p.age-A.altRaus.ab+1)*A.altRaus.jeJahr)){weg.add(p.id);return;}
     p.sp=istTalent(p)?A.praxis.talent:A.praxis.stamm;if(--p.ct<=0){p.ct=riA(RS.vertrag.jahre);p.sal=salaryFor(p.str);} // Spielpraxis nach Rolle, Vertrag verlängert mit neuem Gehalt
     if(p.str>base+A.aufstieg.ab&&R()<A.aufstieg.chance){const ziel=V.filter(x=>x.rep>v.rep&&avStaerke(x)>=p.str-A.aufstieg.fenster&&avStaerke(x)<=p.str+A.aufstieg.fenster);
       if(ziel.length){const z=pick(ziel);if((S.kenntnis||{})[p.id])news(`Wechsel im Ausland: ${p.n} geht von ${v.name} zu ${z.name}.`,'tr');p.team=z.id;}}});
@@ -87,7 +87,7 @@ function auslandSaison(){if(!S.ausland)return;const A=RW.ausland,K=RS.karriereen
 
 // ---------- Wechsel zwischen Pool und Ligen ----------
 // Ein Poolspieler kommt zu einem deutschen Verein: Er zieht in S.pl um und beginnt dort wie jeder Neuzugang.
-function ausDemAusland(p,tid){const i=S.ausland.pl.indexOf(p);if(i>=0)S.ausland.pl.splice(i,1);if(!S.pl.includes(p))S.pl.push(p);
+function ausDemAusland(p,tid){const i=S.ausland.pl.indexOf(p);if(i>=0)S.ausland.pl.splice(i,1);if(!S.pl.includes(p))S.pl.push(p);p.ausAb=absTag(S.tag); /* Ankunft aus dem Ausland, für die Eingewöhnung (K14b, Prüfung DT1) */
   p.team=tid;p.ent=S.tag;p.sw=Math.round(p.str);p.koVor=p.ko;p.sp=Math.min(p.sp,RW.ausland.praxis.stamm);
   if(!p.sperre)p.sperre={liga:{rot:0,gelb:0},pokal:{rot:0,gelb:0}};if(!p.kt)p.kt={liga:0,pokal:0};eigenschaftenNeu(p);}
 // Ein Spieler wechselt zu einem Auslandsverein: Er zieht in den Pool um, alles Vereinsbezogene fällt weg.

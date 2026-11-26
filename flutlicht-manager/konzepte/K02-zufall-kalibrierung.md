@@ -71,6 +71,14 @@ Heute zieht alles aus einem einzigen Strom (`S.zufall`). Das hat zwei Nachteile:
 - Beim Start einer Karriere, Standard „Normal“.
 - **Änderbar** zum Saisonwechsel, leichter jederzeit. Die Stufe steht in der Karriere-Statistik (K34), damit Rekorde vergleichbar bleiben.
 
+### 4.4 Neue Regeln ausprobieren (K02a, 24.11.2026, popolupo, ohne Testlauf, vorläufig)
+
+- Regeln, die fertig sind, aber die Kalibrierung aller Vereine verschieben würden, stehen hinter einem Schalter in `REGELN`, der aus ist, bis ein Testlauf sie vermessen hat (zurzeit TV-Gelder in Raten K23h, Notverkauf K31d, Wirkung der Integration K03d mit den Sprachgrüppchen K14g, Unsicherheit der Computer-Vereine K18i, Rotation nach Saisonbelastung K10f, Länderspiele K13f, Pokal-Rotation der Favoriten K13j).
+- Im Menü kannst du sie unter „Neue Regeln ausprobieren“ für deinen Spielstand einschalten. Sie gelten dann für alle Vereine, nur in diesem Spielstand, und lassen sich wieder ausschalten. Gespeichert in `S.einst.exp`, die Liste steht in `REGELN.experimente` (Schlüssel, Pfad zum Schalter, Name, Erklärung).
+- `experimenteAnwenden` setzt die Schalter nach dem Laden, beim neuen Spiel und beim Umschalten. Aus schaltet es nur, was es selbst eingeschaltet hat, damit Tests, die einen Schalter vor dem Aufbau der Welt setzen, unberührt bleiben.
+- Wird ein Schalter nach der Messung standardmäßig eingeschaltet, verschwindet er aus der Liste.
+- Seit Prüfung FN: Die Funktionen stehen in `js/fenster.js` (der Test-Simulator lädt `start.js` nicht, FN1). TV-Raten gelten nach dem Umschalten erst ab der nächsten Saison (`S.tvModus`, FN2), ausgeschaltete Länderspiele holen alle Abgestellten sofort zurück (FN5).
+
 ## 5. Regeln und Formeln
 
 ### 5.1 Grundsatz „Erwartung plus Zufall“
@@ -159,7 +167,13 @@ Schwierigkeit ändert nur **Bedingungen, Information und Hilfen**:
 | Klugheit der Computer-Vereine (K31) | gemütlich | normal | clever |
 
 - **Klugheit der Computer-Vereine** heißt: wie gut sie Kader planen, Taktik wählen und verhandeln. Sie bekommen nie bessere Spieler oder Würfel.
-- Werte und Würfel im Spiel selbst sind auf allen Stufen gleich. Ein Spielstand auf „Schwer“ simuliert dieselben Ergebnisse wie auf „Leicht“, wenn man dieselben Entscheidungen trifft.
+- Spielerwerte und Spielstärke sind auf allen Stufen gleich, und es wird gleich oft gewürfelt. Seit **K43** (26.11.2026, vorläufig) verschieben sich einige Grenzen, gegen die gewürfelt wird, dazu das Geld:
+  - Sponsorangebote ×1,2 auf Leicht, ×0,85 auf Schwer;
+  - Glück bei Ereigniskarten +15 oder −10 Punkte;
+  - böse Infokarten fallen auf Leicht weg und kommen auf Schwer ×1,5 so oft;
+  - auf Leicht keine Champions League (Europa League statt dessen);
+  - auf Leicht ein Gönner statt Insolvenz.
+- Ohne diese Regeln aus K43 simuliert ein Spielstand auf „Schwer“ dieselben Ergebnisse wie auf „Leicht“, wenn man dieselben Entscheidungen trifft (geprüft in tests/schwierigkeit.js).
 
 ## 6. Hebel des Spielers
 

@@ -73,9 +73,9 @@ function suchWoche(a,x,beob,xi){const C=RSC.suche,k=a.krit,gesehen=new Set(a.ges
   pool.slice(0,C.jeWoche).forEach(p=>{kenntnisPlus(p,x,C.anteil);beob.add(p.id);a.gesehen.push(p.id);});
   a.kand=a.gesehen.map(id=>PIX.get(id)).filter(p=>p&&p.team!==S.my).sort((p,q)=>staerkeSicht(q).mitte-staerkeSicht(p).mitte).slice(0,C.kandidaten[1]).map(p=>p.id);}
 // Woche (montags): Aufträge, Kosten, Berichte; Kenntnis verblasst ohne Beobachtung (2 je Monat)
-function scoutingWoche(){S.kenntnis=S.kenntnis||{};const beob=new Set();let xi=null;
+function scoutingWoche(){S.kenntnis=S.kenntnis||{};scoutDanebenWoche();const beob=new Set();let xi=null;
   (S.auftraege||[]).forEach(a=>{const x=scoutVon(a.scout);if(!x||x.team!==S.my){a.ende=1;return;}
-    if(a.art==='spieler'){const p=PIX.get(a.pid);if(!p||p.team===S.my){a.ende=1;return;}money('Scouting',-reiseKosten(istAusland(p)));kenntnisPlus(p,x,1);beob.add(p.id);if(--a.rest<=0){a.ende=1;bericht(p,x);}}
+    if(a.art==='spieler'){const p=PIX.get(a.pid);if(!p||p.team===S.my){a.ende=1;return;}money('Scouting',-reiseKosten(istAusland(p)));kenntnisPlus(p,x,1);beob.add(p.id);if(--a.rest<=0){a.ende=1;bericht(p,x);konkurrenzTisch(p);}}
     else{money('Scouting',-reiseKosten(a.krit.region==='ausland'));if(!xi&&a.krit.region!=='ausland'){xi=new Set();S.teams.forEach(t=>{if(aktiv(t))bestXI(t.id,t.form).forEach(id=>xi.add(id));});}suchWoche(a,x,beob,xi);}});
   S.auftraege=(S.auftraege||[]).filter(a=>!a.ende);
   for(const id in S.kenntnis){if(beob.has(+id))continue;const p=PIX.get(+id),e=S.kenntnis[id];if(!p||p.team===S.my){delete S.kenntnis[id];continue;}
@@ -85,3 +85,52 @@ function scoutingNachSpiel(list){const m=list.find(r=>r.h===S.my||r.a===S.my);if
 // Scouts beim Aufbau der Welt (eigener Zufallsstrom, damit der übrige Stab gleich bleibt): je Verein nach Ansehen, dazu vereinslose
 function scoutsAufbau(){const A=RST.start,Z=RSC.start;S.teams.forEach(t=>{if(!aktiv(t))return;const n=stufenWert(Z.scouts,t.rep);for(let i=0;i<n;i++)S.stab.push(stabNeu('scout',t.rep*A.qualitaetJeAnsehen+ri(A.streuung[0],A.streuung[1])-i,t.id,t.lg));});
   for(let i=0;i<Z.vereinslos;i++)S.stab.push(stabNeu('scout',riA(A.vereinslosQ),-1,2));stabGeaendert();}
+
+// ---------- Gegnerbeobachtung (K18 §8, K07 §5 „+2 % mit Gegneranalyse“, K18c) ----------
+// Ein Scout deines Stabs schaut den Gegner deines nächsten Pflichtspiels an (Reisekosten RSC.gegner.kosten). t.gb = {g Gegner, bis Tag des Spiels}.
+// Bis zu diesem Spiel verdoppelt sich der Bonus der Spielvorbereitung (taktik.js), wie mit einem Videoanalysten, beides zusammen nicht doppelt. Ohne Zufall.
+const gegnerBeobachtet=(t,g)=>!!(t&&t.gb&&t.gb.g===g&&S.tag<=t.gb.bis);
+function gbNaechstes(){const e=heuteMeinSpiel()?meinSpiel(S.tag):naechstesSpiel(S.tag+1);if(!e)return null;const g=pkGegner(e);return g==null||g>=1000?null:{g,d:e.tag};}
+// Warum die Beobachtung nichts brächte (Prüfung DW8), sonst '': Der Videoanalyst verdoppelt den Bonus schon, oder am Spieltag fehlt die Spielvorbereitung der letzten zwei Tage (taktik.js)
+function gbOhneWirkung(t,n){if(stabFaktor(S.my,'video')>1)return'Dein Videoanalyst hat den Gegner schon im Blick, die Spielvorbereitung wirkt doppelt.';
+  if(n.d===S.tag&&!vorbereitungWirkt(t))return`Ohne Spielvorbereitung in den letzten ${RTA.vorbereitungTage} Tagen bringt eine Beobachtung nichts mehr.`;return'';}
+function gegnerBeobachten(){if(!darf('beobachten'))return;const t=myT(),n=gbNaechstes();if(!n||gegnerBeobachtet(t,n.g)||gbOhneWirkung(t,n))return;
+  if(!stabVon(S.my,'scout').length){toast('Dafür brauchst du einen Scout im Trainerstab.');return;}
+  money('Scouting',-RSC.gegner.kosten);t.gb={g:n.g,bis:n.d};news(`Ein Scout beobachtet ${tn(n.g)} vor dem Spiel am ${datumKurz(n.d)}. Die Spielvorbereitung wirkt doppelt.`);save();render();
+  if(heuteMeinSpiel())showPre(meinSpiel(S.tag));} /* Fenster vor dem Spiel neu zeichnen, render() tut das nicht (DW8) */
+// Scoutbericht (K18 §5 Nr. 3, K18g): wahrscheinlicher Stil des Gegners (kiStilWahl gegen deinen eingestellten Stil, ohne Zufall), ob er auf deinen Lieblingsstil reagieren
+// könnte (nur wenn du den Stil selbst wählst, wie in kiStil), die drei Stärksten seiner wahrscheinlichen Elf und wer von seinen bericht.top Stärksten fehlt (verletzt oder
+// für den Wettbewerb deines nächsten Spiels gesperrt). Nur Anzeige, ändert nichts am Spiel. Text ohne HTML, der Aufrufer escapt.
+// Seit Prüfung FM4 mit den Sperren des Wettbewerbs deines nächsten Spiels (mitWettbewerb, wie im Spiel), FM9: auch Abgestellte bei Nationalmannschaften fehlen.
+function scoutBericht(o,home,tag,ro){const t=o!=null&&o>=0&&o<1000?S.teams[o]:null;if(!t)return'';const wb=naechsterWb();return mitLsTag(tag!=null?absTag(tag):null,()=>mitWettbewerb(wb,()=>{const mt=myT(),me=side(S.my,home,false,rotationKader(S.my,o,ro,tag)),op=side(o,!home,false,rotationKader(o,S.my,ro,tag)); /* FP10: ro {wb, runde} im Pokal, Rotation wie im Spiel */
+  me.stil=STILE.includes(mt.stil)?mt.stil:'ausgewogen';const stil=kiStilWahl(op,me),L=!autoB('stil')?stilLiebling():null,sn=k=>STIL_NAME[k]||k;
+  const gef=op.xp.slice().sort((a,b)=>b.p.str-a.p.str).slice(0,3).map(x=>`${x.p.n} (${x.pos})`),nat=p=>beiNationalteam(p,tag!=null?absTag(tag):undefined),grund=p=>p.inj>0?'verletzt':nat(p)?'Nationalmannschaft':'gesperrt'; /* FN6: am Spieltag */
+  const fehlt=squad(o).slice().sort((a,b)=>b.str-a.str).slice(0,RSC.gegner.bericht.top).filter(p=>p.inj>0||gesperrt(p,wb)||nat(p)).map(p=>`${p.n} (${grund(p)})`);
+  return scoutBerichtText(t,stil,L,gef,fehlt,sn);}));}
+const scoutBerichtText=(t,stil,L,gef,fehlt,sn)=>`Scoutbericht: ${t.name} spielt wohl ${sn(stil)} (${t.form}).${L&&L.gegen!==stil?` Der Trainer kennt deinen Lieblingsstil ${sn(L.lieb)} und könnte mit ${sn(L.gegen)} dagegenhalten.`:''}${gef.length?` Gefährlich: ${gef.join(', ')}.`:''} ${fehlt.length?`Es fehlen: ${fehlt.join(', ')}.`:'Von seinen Stammkräften fehlt keiner.'}`;
+// Seit Prüfung FM3 ohne den Bericht: Den zeigt der Vergleich (tauziehenNaechstes), der im Fenster vor dem Spiel schon steht, sonst stand er doppelt da
+function gegnerBeobachtenText(){const t=myT(),n=gbNaechstes();if(!n)return'';if(gegnerBeobachtet(t,n.g))return' <span class="dim">Ein Scout hat den Gegner beobachtet, die Spielvorbereitung wirkt doppelt.</span>';
+  const ohne=gbOhneWirkung(t,n);if(ohne)return` <span class="dim">${esc(ohne)}</span>`;
+  return` <button onclick="gegnerBeobachten()"${lzAus('beobachten')}>Gegner beobachten lassen (${fmt(RSC.gegner.kosten)})</button>`;}
+
+// ---------- Konkurrenz am Tisch (K18 §8, K18d) ----------
+// Nach dem Bericht eines Scouts über einen Spieler: mit RSC.konkurrenz.chance hat ein deutscher Verein mit Bedarf ihn ebenfalls beobachtet. Sein Verein weiß das und
+// verlangt von dir für tage Tage preis mehr (forderungDu). Fest aus Seed, Spieler und Tag (hash32), ohne Würfel aus den Strömen. p.kTisch = {bis, f, tid}.
+function konkurrenzTisch(p){if(!p||p.team<0)return null;const K=RSC.konkurrenz,heute=absTag(S.tag),h=hash32(S.seed+'/ktisch/'+p.id+'/'+heute);if(h%10000>=K.chance*10000)return null;
+  const l=S.teams.filter(b=>b.id!==S.my&&b.id!==p.team&&aktiv(b)&&hatBedarf(b,p));if(!l.length)return null;const b=l[Math.floor(h/10000)%l.length];
+  p.kTisch={bis:heute+K.tage,f:1+K.preis,tid:b.id,von:p.team};news(`Konkurrenz am Tisch: Auch ein Scout von ${b.name} hat ${p.n} beobachtet. Sein Verein weiß das und verlangt von dir ${Math.round(K.preis*100)} % mehr.`,'');return b;}
+const konkurrenzTischFaktor=p=>p&&p.kTisch&&p.kTisch.von===p.team&&absTag(S.tag)<=p.kTisch.bis?p.kTisch.f:1; // nur beim selben Verein (Prüfung EC2)
+
+// ---------- Scout liegt daneben (K18 §8, K18e) ----------
+// Beim Kauf (aktionen.js) merkt sich das Spiel die Mitte deiner Einschätzung und die wahre Stärke (p.kaufSicht). Ist der Spieler bei dir (montags, scoutingWoche) und lag
+// die Mitte mindestens RSC.daneben.ab über der wahren Stärke beim Kauf, kommt eine Meldung. Danach ist der Merker weg. Nur Anzeige.
+// Seit K18h merkt kaufSicht auch die Scouts deines Stabs, die ihn beobachtet haben (ids), für ihre Bilanz.
+function kaufSichtMerken(p){const s=staerkeSicht(p);if(!s||s.genau)return;const e=kenntnisEintrag(p),ids=(e&&e.s||[]).filter(id=>{const x=scoutVon(id);return x&&x.team===S.my&&x.r==='scout';});
+  p.kaufSicht={mitte:Math.round(s.mitte),str:Math.round(p.str),scout:e&&e.s&&e.s.length?1:0,ids};}
+function scoutDanebenWoche(){squad(S.my).forEach(p=>{const k=p.kaufSicht;if(!k)return;delete p.kaufSicht;const zuHoch=k.mitte-k.str>=RSC.daneben.ab,bil=scoutBilanz(k,zuHoch);
+  if(zuHoch)news(`${k.scout?'Scout lag daneben':'Einschätzung lag daneben'}: ${p.n} ist schwächer als gedacht${k.scout?'':' (ohne Scout nur ein grober Eindruck)'}. Beim Kauf sah es nach etwa ${k.mitte} aus, tatsächlich waren es ${k.str}.${bil.map(x=>` Bilanz von ${x.n}: ${x.bil.d} von ${x.bil.n} Einschätzungen zu hoch${scoutRuf(x)==='unzuverlässig'?', sein Ruf leidet':''}.`).join('')}`,'bad');});}
+// Ruf des Scouts (K18 §8, K18h, 25.11., popolupo, vorläufig): Jede Einschätzung beim Kauf zählt in die Bilanz der Scouts, die den Spieler beobachtet haben
+// und noch bei dir sind (x.bil {n Einschätzungen, d zu hoch}). Ab RSC.ruf.ab Einschätzungen ein Ruf: unzuverlässig ab dem Anteil RSC.ruf.schlecht zu hoch, treffsicher ohne. Nur Anzeige.
+function scoutBilanz(k,zuHoch){return(k.ids||[]).map(scoutVon).filter(x=>x&&x.team===S.my&&x.r==='scout').map(x=>{const b=x.bil=x.bil||{n:0,d:0};b.n++;if(zuHoch)b.d++;return x;});}
+const scoutRuf=x=>{const b=x&&x.bil;if(!b||b.n<RSC.ruf.ab)return'';return b.d/b.n>=RSC.ruf.schlecht?'unzuverlässig':b.d?'durchwachsen':'treffsicher';};
+const scoutBilanzText=x=>{const b=x&&x.bil;if(!b||!b.n)return'';const r=scoutRuf(x);return`${b.n} ${b.n===1?'Kauf':'Käufe'} eingeschätzt, ${b.d} zu hoch${r?`, ${r}`:''}`;};

@@ -76,6 +76,12 @@ const PRESSE={
       {t:'Was für ein Ergebnis. Ist Ihre Mannschaft so gut, oder war der Gegner so schwach?',o:['rueckendeckung','provokation','humor']},
       {t:'Gibt es trotzdem etwas zu kritisieren?',o:['rueckendeckung','kritikTeam','floskel']},
       {t:'Waren Sie zufrieden mit {spieler}?',o:['rueckendeckung','kritikSpieler','floskel'],sp:1}]},
+    urteil:{name:'Pressekonferenz nach dem Urteil',fragen:[ // K29g: Sperre eines deiner Spieler ab RPK.anlass.urteilAb Spielen. Kritik am Urteil wirkt wie Schiedsrichterkritik (Geldstrafe möglich)
+      {t:'Das Sportgericht sperrt {spieler}. Ist das Urteil gerecht?',o:['rueckendeckung','kritikSchiri','floskel'],sp:1},
+      {t:'Hat {spieler} der Mannschaft mit dieser Aktion geschadet?',o:['rueckendeckung','kritikSpieler','floskel'],sp:1},
+      {t:'Wie wollen Sie den Ausfall von {spieler} auffangen?',o:['rueckendeckung','humor','floskel'],sp:1},
+      {t:'Haben Sie mit {spieler} schon gesprochen?',o:['rueckendeckung','kritikSpieler','humor'],sp:1},
+      {t:'Wird im Verein jetzt über Disziplin geredet?',o:['ankuendigung','kritikTeam','floskel']}]},
     wechselwunsch:{name:'Pressekonferenz zum Wechselwunsch',fragen:[
       {t:'{spieler} will weg. Lassen Sie ihn gehen?',o:['rueckendeckung','kritikSpieler','floskel'],sp:1},
       {t:'Haben Sie mit {spieler} gesprochen?',o:['rueckendeckung','kritikSpieler','floskel'],sp:1},
@@ -114,6 +120,32 @@ const PRESSE={
     humor:{m:'tv',t:['Lacher bei {verein}: {trainer} in Plauderlaune','{trainer} nimmt es mit Humor']},
     ausraster:{m:'boulevard',t:['WUTREDE! {trainer} explodiert','Ausraster bei {verein}: {trainer} verlässt das Podium']},
     delegiert:{m:'fach',t:['Ohne den Chef: Co-Trainer spricht für {verein}','{trainer} schickt den Co-Trainer']}},
+  // Medienprofile der Computer-Trainer (K29 §7, K29e). Sticheleien vor Topspielen: Platzhalter {verein} dein Verein. Frage dazu: {gtrainer} Trainer des Gegners, {zitat} seine Stichelei.
+  // Antworten auf die Frage: gelassen (Humor), kontern (Provokation), ignorieren (Floskel).
+  profile:{diplomatisch:{name:'diplomatisch',text:'lobt jeden Gegner und sagt wenig'},floskel:{name:'Floskelkönig',text:'redet viel und sagt nichts'},
+    laut:{name:'Lautsprecher',text:'große Worte vor großen Spielen'},psycho:{name:'Psychospieler',text:'stichelt gezielt gegen deine Spieler'}},
+  sticheleien:{
+    laut:['Wir fahren da hin, um zu gewinnen. Alles andere interessiert uns nicht.','Bei allem Respekt: {verein} ist für uns kein Maßstab.','Die sollen erst einmal zeigen, dass sie mit uns mithalten können.'],
+    psycho:['Ich höre, bei {verein} ist die Stimmung nicht die beste. Das wird man morgen sehen.','Wenn {verein} früh hinten liegt, kippt das Spiel. Das wissen die auch.','Die Abwehr von {verein} wackelt, wenn man sie unter Druck setzt.']},
+  // Sticheleien unter Computer-Trainern (K29m, Prüfung FB8): ohne „morgen“ und ohne „hinfahren“, weil das Spiel bis zu 7 Tage entfernt ist und der Heimtrainer zuerst spricht
+  kiSticheleien:{
+    laut:['Gegen {verein} wollen wir gewinnen, alles andere interessiert uns nicht.','Bei allem Respekt: {verein} ist für uns kein Maßstab.','{verein} soll erst einmal zeigen, dass sie mit uns mithalten können.'],
+    psycho:['Ich höre, bei {verein} ist die Stimmung nicht die beste. Das wird man im Spiel sehen.','Wenn {verein} früh hinten liegt, kippt das Spiel. Das wissen die auch.','Die Abwehr von {verein} wackelt, wenn man sie unter Druck setzt.']},
+  // Computer-Trainer schimpfen über den Schiedsrichter (K09j): Platzhalter {schiri}, {spieler} (der Vom-Platz-Gestellte)
+  kiSchiriKritik:['Der Platzverweis gegen {spieler} war ein Witz. {schiri} hat das Spiel entschieden.','Ich sage nichts zum Schiedsrichter, sonst werde ich gesperrt. Aber jeder hat gesehen, was da passiert ist.',
+    '{schiri} war heute der beste Spieler des Gegners.','Mit zehn Mann gegen elf und den Schiedsrichter, das gewinnt man nicht.'],
+  stichelFrage:['{gtrainer} hat über Ihre Mannschaft gesagt: „{zitat}“ Was entgegnen Sie?','Ihr Kollege {gtrainer} meint: „{zitat}“ Ihre Antwort?'],
+  // Pressekonferenz nach dem Urteil (K29g, K29h): die Antwortart Schiedsrichterkritik heißt dort „Kritik am Urteil“, mit eigenen Texten und eigener Schlagzeile (Prüfung DR5)
+  urteil:{name:'Kritik am Urteil',antworten:['Dieses Urteil ist ein Witz. {spieler} hat den Ball gespielt, das sieht jeder.','Wir akzeptieren das, aber verstehen tun wir es nicht. Das ist viel zu hart.','Andere bekommen für dasselbe ein Spiel. Bei uns sind es gleich mehrere. Das muss man sich fragen.'],
+    schlagzeile:{m:'boulevard',t:['{trainer} schießt gegen das Sportgericht','Urteil gegen {spieler}: {trainer} tobt']}},
+  // Interviews deiner Spieler (K29 §6, K29i): Platzhalter {spieler}, {verein}
+  spielerInterview:{gut:['{spieler} lobt im Interview den Zusammenhalt bei {verein}.','{spieler} spricht im Fernsehen über seine Ziele mit {verein}. Die Fans hören es gern.','{spieler} gibt sich im Interview bescheiden und hungrig.'],
+    schlecht:['{spieler} plaudert im Interview über Ärger in der Kabine.','{spieler} sagt im Interview, er fühle sich bei {verein} nicht wertgeschätzt.','{spieler} lästert im Interview über die Taktik.']},
+  // Interview am Spielfeldrand (K29 §4.1, K29f): eine Frage je Ergebnis, Platzhalter {gegner}, {ergebnis} (aus deiner Sicht). Antworten: Rückendeckung, Kritik an der Mannschaft, Floskel.
+  spielfeldrand:{sieg:['{ergebnis} gegen {gegner}. Was war heute der Schlüssel?','Ein verdienter Sieg gegen {gegner}?','{ergebnis}. Wie fühlt sich das an?'],
+    remis:['{ergebnis} gegen {gegner}. Zufrieden mit dem Punkt?','Ein Punkt gegen {gegner}. Gewonnen oder verloren?'],
+    niederlage:['{ergebnis} gegen {gegner}. Woran hat es gelegen?','Woran hat’s gelegen?','Was fehlt Ihrer Mannschaft nach dem {ergebnis}?'],
+    offen:['{ergebnis} gegen {gegner}. Wie bewerten Sie das?','Unentschieden gegen {gegner}. Können Sie damit leben?']}, // Remis außerhalb der Liga (Hinspiel), seit Prüfung DR3
   // Gerüchteküche (K29 §4.3, §5.5, U17b). Platzhalter: {verein} betroffener Verein, {klub} zweiter Verein, {spieler}, {coach} Trainer des betroffenen Vereins.
   // m: Medien, die so etwas bringen (das erste ist am wahrscheinlichsten).
   geruechte:{
@@ -123,5 +155,6 @@ const PRESSE={
     interesse:{m:['boulevard','portal','tv'],t:['Mehrere Vereine wollen {spieler} von {verein}','Wettrennen um {spieler}: Gleich drei Klubs sind dran']},
     trainer:{m:['tv','boulevard','fach'],t:['{coach} wackelt bei {verein}','Bei {verein} wird es eng für {coach}']},
     aerger:{m:['boulevard','portal'],t:['Ärger zwischen {verein} und {klub}','Eiszeit: {verein} und {klub} reden nicht mehr miteinander']},
+    thema:{m:['boulevard','portal','lokal'],t:['{spieler} soll bei {klub} ein Thema sein','Bei {klub} fällt immer öfter der Name {spieler}']}, /* Klatsch (K17 §5.3, K17d) */
     absprung:{m:['boulevard','portal'],t:['{spieler} vor dem Absprung bei {verein}','Insider: {spieler} hat {verein} schon abgeschrieben']},
     trainerAus:{m:['boulevard','portal'],t:['{coach} vor dem Aus bei {verein}','Erste Kandidaten für die Nachfolge von {coach} gehandelt']}}};

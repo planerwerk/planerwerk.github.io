@@ -46,8 +46,9 @@ const f1=x=>x.toFixed(1),pc=x=>(x*100).toFixed(0)+' %';
 // 4. Über Saisons: Anteil der Trainingsverletzungen 40–55 %. Training wirkt: Mit dem Co-Trainer-Plan entwickeln sich die Spieler schneller und sind konditionell besser als mit „Schonen“,
 //    ohne deutlich mehr Ausfälle. Punkte schwanken über wenige Saisons zu stark (±7 je Saison), darum wird die Wirkung selbst geprüft:
 //    +1 Stärke der Startelf sind etwa +2,5 Punkte pro Saison (tests/akzeptanz.js). Dauerhaft hart kostet sichtbar mehr Trainingsverletzungen (gemessen an allen Vereinen).
+//    Ohne Europapokal (T8.3): Verein 6 (Freiburg) spielt sonst oft international, die englischen Wochen verschieben Kondition und Ausfälle unabhängig vom Training.
 {const X=6;const lauf=(vorlage,alle)=>{let spielV=0,trainV=0,eigeneT=0;const str=[],ko=[],aus=[];
-    saisons({n:N,seed:SEED,verein:X,beiSaisonstart:S=>{S.teams.forEach(t=>{if(alle||t.id===X)t.vorlage=vorlage;});},
+    saisons({n:N,seed:SEED,verein:X,vorher:(F,W)=>{W.ev('europaAnlegen=function(){S.eu=null;}');},beiSaisonstart:S=>{S.teams.forEach(t=>{if(alle||t.id===X)t.vorlage=vorlage;});},
       beiSpielen:(l,S)=>{l.forEach(r=>{spielV+=r.inj.length;});const r=l.find(x=>x.h===X||x.a===X);if(!r)return;const s=r.h===X?0:1,P=new Map(S.pl.map(p=>[p.id,p])),xi=r.xi[s].map(id=>P.get(id)).filter(Boolean);
         str.push(S.pl.filter(p=>p.team===X).reduce((a,p,_,q)=>a+(p.trf||1)/q.length,0));ko.push(xi.reduce((a,p)=>a+p.ko,0)/xi.length);aus.push(S.pl.filter(p=>p.team===X&&p.inj>0).length);},
       beiSaisonende:S=>{trainV+=S.pl.reduce((a,p)=>a+(p.tinj||0),0);eigeneT+=S.pl.filter(p=>p.team===X).reduce((a,p)=>a+(p.tinj||0),0);S.pl.forEach(p=>{p.tinj=0;});}});
@@ -61,4 +62,42 @@ const f1=x=>x.toFixed(1),pc=x=>(x*100).toFixed(0)+' %';
   // Ein einzelner Verein hat etwa 14 Trainingsverletzungen je Saison, das Rauschen ist größer als die Wirkung (+12 bis +17 %). Darum trainieren im Vergleichslauf alle Vereine hart.
   pruef(hart.alleT>auto.alleT*1.05,'Dauerhaft hart (Aufbau das ganze Jahr, alle Vereine) kostet mindestens 5 % mehr Trainingsverletzungen als der Co-Trainer-Plan',`${Math.round(hart.alleT)} gegen ${Math.round(auto.alleT)} pro Saison (+${((hart.alleT/auto.alleT-1)*100).toFixed(0)} %)`);}
 console.log(`\nin ${((Date.now()-t0)/1000).toFixed(1)} s`);
+// K07f. Eigene Vorlagen (K07 §6): nur mit gültigen Einheiten, höchstens RT.eigeneMax; die eingestellte Vorlage bestimmt die Einheiten nach Abstand zum Spiel.
+//       Ein anderer Verein findet sie nicht (plant nach vorlageAuto), Löschen stellt auf den Co-Trainer zurück.
+{const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S,ev=W.ev,RT=ev('RT');S.my=6;S.mgr='T';const t=ev('myT()'),d=S.tag,w={};
+  ev('EIGENE_SLOTS').forEach(([k])=>{w[k]=['technik','hoch'];});w.m1=['vorbereitung','leicht'];w.p1=['regeneration','leicht'];w.mitte1=['kondition','normal'];
+  const falsch=F.eigeneVorlageAus(Object.assign({},w,{p2:['quatsch','normal']}),'X'),k=F.eigeneVorlageSpeichernLauf(F.eigeneVorlageAus(w,'Meine Woche'));t.vorlage=k;
+  const p1=F.einheitFuer({ltag:d-1,lmin:90},t,{last:d-1,next:d+5},d),m1=F.einheitFuer(null,t,{last:d-5,next:d+1},d),mi=F.einheitFuer(null,t,{last:d-4,next:d+4},d);
+  const o=S.teams.find(x=>x.id!==S.my);o.vorlage=k;const fremd=ev('vorlageVon')(o,{last:d-4,next:d+4},d);
+  for(let i=1;i<RT.eigeneMax;i++)F.eigeneVorlageSpeichernLauf(F.eigeneVorlageAus(w,'Kopie '+i));const voll=F.eigeneVorlageSpeichernLauf(F.eigeneVorlageAus(w,'zu viel'));
+  F.eigeneVorlageLoeschenLauf(k);const weg=t.vorlage==='auto'&&!S.eigV[k];
+  pruef(typeof falsch==='string'&&k==='e1'&&p1.join()==='regeneration,leicht'&&m1.join()==='vorbereitung,leicht'&&mi.join()==='kondition,normal'&&fremd!==k&&typeof voll==='string'&&weg,
+    'Eigene Vorlagen: gültig gebaut, nach Abstand zum Spiel, nicht für andere Vereine, Höchstzahl, Löschen',`ungültig ${typeof falsch}, Kennung ${k}, Tag danach ${p1}, Tag davor ${m1}, Mitte ${mi}, anderer Verein ${fremd}, voll ${typeof voll}, gelöscht ${weg}`);}
+
+// K07g. Einsatz auf der neuen Position (K07 §3.3): zählt wie eine Trainingswoche zusätzlich, ab 45 Minuten, höchstens einmal in 7 Tagen; andere Position, kurzer Einsatz
+//       oder ohne Umschulung nichts. Ein Innenverteidiger schult auf Linksverteidiger um (wie im ersten Umschulungsfall).
+{const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S,ev=W.ev,U=ev('RT').umschulung,ein=ev('umschulungEinsatz');
+  const p=S.pl.find(x=>x.team>=0&&x.fp==='IV'&&!x.mk.vielseitig&&!(x.inj>0));p.age=22;p.ue={};p.uf=[];p.um='LV';p.wt=5;delete p.umE;
+  const w=()=>(p.ue&&p.ue.LV)||0,kurz=ein(p,'LV',U.einsatzMinuten-1),anders=ein(p,'IV',90),v0=w(),erst=ein(p,'LV',90),v1=w(),gleich=ein(p,'LV',90),v2=w();
+  S.tag+=U.einsatzTage;p.wt=5;const spaeter=ein(p,'LV',U.einsatzMinuten),v3=w();
+  /* Prüfung FB5: Der Einsatz zählt voll, auch ohne genug Training in der Woche (von vorn: derselbe Wert wie beim ersten Einsatz mit Training);
+     verletzt zählt er nicht und verbraucht die 7 Tage nicht, gesund geht es am selben Tag */
+  S.tag+=U.einsatzTage;p.ue={};p.wt=0;const wenig=ein(p,'LV',90),v4=w();
+  S.tag+=U.einsatzTage;p.inj=3;const e0=p.umE,verletzt=ein(p,'LV',90),sperreFrei=p.umE===e0;p.inj=0;const gesund=ein(p,'LV',90);
+  p.um=null;const ohne=ein(p,'LV',90);
+  pruef(!kurz&&!anders&&erst&&v1>v0&&!gleich&&v2===v1&&spaeter&&v3>v2&&wenig&&v4===v1&&!verletzt&&sperreFrei&&gesund&&!ohne,
+    'Umschulung: Einsatz auf der neuen Position zählt wie eine Trainingswoche, voll, einmal in 7 Tagen, nicht zu kurz, nicht auf anderer Position, verletzt nicht und ohne die Sperre zu verbrauchen',
+    `zu kurz ${kurz}, andere Position ${anders}, erster Einsatz ${erst} (${v0} → ${v1}), gleiche Woche ${gleich}, eine Woche später ${spaeter} (${v3}), ohne Training ${wenig} (${v4}, wie ${v1}), verletzt ${verletzt}, Sperre frei ${sperreFrei}, gesund ${gesund}, ohne Umschulung ${ohne}`);}
+
+// Prüfung FB6, FC2: Wer geht, schult nicht weiter um. vertragEnde (Verkauf, Auflösung) und verleihen löschen p.um und p.umE sofort; die Woche (wocheVerein) löscht sie
+// bei jedem, der nicht bei dir ist (Vertrag ausgelaufen, Leihe zurück, Jobwechsel), dein eigener Spieler schult weiter um.
+// verleihen prüft vorher Fenster, Bedarf und Gehaltsanteil; hier zählt nur, dass die Umschulung vor dem Wechsel endet (die Zeile steht vor kabineAbgang).
+{const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S,ev=W.ev;S.my=6;
+  const p=S.pl.find(x=>x.team>=0&&x.fp==='IV');p.um='LV';p.umE=5;ev('vertragEnde')(p);const ende=p.um==null&&!('umE' in p);
+  const leihe=/p\.um=null;delete p\.umE;[^]*kabineAbgang/.test(String(ev('verleihen')));
+  const q=S.pl.find(x=>x.team>=0&&x.team!==S.my&&x.fp==='IV'),m=S.pl.find(x=>x.team===S.my&&x.fp==='IV'&&!ev('umschulungGrund')(x,'LV'));
+  q.um='LV';q.umE=5;ev('wocheVerein')(q);const fremd=q.um==null&&!('umE' in q);let mein=false;if(m){m.um='LV';m.wt=5;ev('wocheVerein')(m);mein=m.um==='LV'||(m.uf||[]).includes('LV');}
+  pruef(ende&&leihe&&fremd&&mein,'Umschulung: Vertragsende und Verleihen beenden sie, die Woche bei jedem, der nicht bei dir ist; bei dir läuft sie weiter',
+    `Vertragsende ${ende}, Verleihen ${leihe}, anderer Verein ${fremd}, dein Spieler ${m?mein:'kein Innenverteidiger mit Ziel LV'}`);}
+
 console.log('\nPROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);

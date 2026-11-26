@@ -1,6 +1,6 @@
 # K37 – Europapokal
 
-Status: **Entwurf** (21. November 2026, popolupo), nach „weiter, entscheide du“. Grundlage sind die ersten Gedanken in PLAN §4 (10.11.). Vorläufige Entscheidungen stehen in Abschnitt 12. Umsetzung in U19 (Teilschritte in §4.6). **U19a bis U19c umgesetzt (21. November 2026, popolupo), noch ohne Testlauf.**
+Status: **Entwurf** (21. November 2026, popolupo), nach „weiter, entscheide du“. Grundlage sind die ersten Gedanken in PLAN §4 (10.11.). Vorläufige Entscheidungen stehen in Abschnitt 12. Umsetzung in U19 (Teilschritte in §4.6). **U19a bis U19c umgesetzt (21. November 2026, popolupo), in Lauf 5 getestet. U19d1 Kaderliste umgesetzt (22. November 2026), noch ohne Testlauf.**
 Hängt ab von: K01 (Kalender), K13 (Wettbewerbe), K23 (Finanzen), K32 (Auslandsvereine) · Wird gebraucht von: K02 §5.3a (Vorsprung der Großen), K07 und K12a (Belastung), K19 (Anziehung für Spieler), K28 (Ziele des Vorstands), K34 (Statistik).
 
 ## 1. Ziel und Spielgefühl
@@ -66,7 +66,7 @@ Hängt ab von: K01 (Kalender), K13 (Wettbewerbe), K23 (Finanzen), K32 (Auslandsv
 
 **Stand U19a (21.11.):** Teilnehmer, Termine, Auslosung der Ligaphase, Tabelle, K.-o.-Baum, Spiele, Verlegung der Ligaspiele, Sperren je Wettbewerb (UEFA: Gelbsperre nach der 3., 5., 7. und 9. Gelben), Karte im Reiter Pokal. Einnahmen bisher nur die Zuschauer deiner Heimspiele (wie im Pokal), Prämien folgen mit U19b.
 
-**Stand U19b (21.11.):** Startgeld und Wertsäule mit der Auslosung, Sieg- und Remisprämie je Spiel, Rangprämie nach der Ligaphase (nur Champions League recherchiert), Rundenprämien, Siegprämie, alles mal 0,2 und für alle deutschen Teilnehmer (dein Verein bucht „Europapokal“). Zuschauer nach dem Ansehen des Gegners. Ansehen und damit Fans zum Saisonwechsel (§5.4). Vorstand +1,5 je gewonnenem Duell, +10 beim Titel. Europapokaltore am Spieler getrennt (`eg`), Titel in der Vitrine. **Noch nicht:** Ziele des Vorstands mit Europapokal (K28 §5.7), Interesse der Spieler an Vereinen im Europapokal (K19), Europapokal in der Statistik der Saison (K34).
+**Stand U19b (21.11.):** Startgeld und Wertsäule mit der Auslosung, Sieg- und Remisprämie je Spiel, Rangprämie nach der Ligaphase (nur Champions League recherchiert), Rundenprämien, Siegprämie, alles mal 0,2 und für alle deutschen Teilnehmer (dein Verein bucht „Europapokal“). Zuschauer nach dem Ansehen des Gegners. Ansehen und damit Fans zum Saisonwechsel (§5.4). Vorstand +1,5 je gewonnenem Duell, +10 beim Titel. Europapokaltore am Spieler getrennt (`eg`), Titel in der Vitrine. **Inzwischen gebaut:** Nebenziel Europapokal des Vorstands (K28 §5.7), Interesse der Spieler an Vereinen im Europapokal (U19c), deutsche Torjäger im Europapokal in der Saisonstatistik (K34c, 22.11., popolupo, ohne Testlauf).
 
 **Stand U19c (21.11.):** Länderwertung je Saison (Sieg 2, Remis 1, geteilt durch die Zahl der Vereine des Landes, nur Länder im Pool und Deutschland). Die besten zwei Länder bekommen nächste Saison einen Platz mehr in der Champions League. Für Deutschland heißt das: Der Fünfte spielt Champions League, alle Plätze danach rücken um eins nach. Spieler wollen eher zu einem Verein im Europapokal (Interesse +6, +3, +1). Neues Nebenziel des Vorstands: K.-o.-Play-offs erreichen, in der Champions League ab Ansehen 85 das Achtelfinale.
 
@@ -101,7 +101,7 @@ Echte Beträge 2025/26 (Websuche 21.11.):
 | Sieger zusätzlich | 6,5 Mio. | 6 Mio. | 3 Mio. (eine Quelle 7 Mio. gesamt) |
 
 - **Wertsäule:** 35 % des Topfs gehen nach Zehnjahreswertung und Marktpool, in der Champions League im Schnitt etwa 24 Mio. je Verein (geschätzt: 35 % von 2,467 Mrd. durch 36). Im Spiel: Schnitt je Wettbewerb (Champions League 24 Mio., Europa League 5,5 Mio., Conference League 2,8 Mio., alle geschätzt), verteilt nach dem Rang des Ansehens unter den Teilnehmern: Rang r von 36 bekommt Schnitt × 2 × (37 − r) / 37.
-- **Spielgeld:** Die Geldwerte im Spiel sind heute kleiner als echt (TV-Gelder für Bayern im Spiel etwa 12 Mio. je Saison, echt rund 61 Mio. national). Bis K23c alle Geldwerte auf echte Größenordnungen bringt, gilt ein Faktor **0,2** auf alle Europapokal-Beträge. Mit K23c wird er 1.
+- **Spielgeld:** Die Geldwerte im Spiel sind heute kleiner als echt (TV-Gelder für Bayern im Spiel etwa 12 Mio. je Saison, echt rund 61 Mio. national). Bis K23c alle Geldwerte auf echte Größenordnungen bringt, gilt ein Faktor **0,2** auf alle Europapokal-Beträge. Mit K23c wird er 1. **Seit K23c (22.11.) ist er 1** (K23 §5.6b), die Beträge sind echt.
 - **Buchung:** „Europapokal“ in `S.fin`, beim Spiel (Sieg, Unentschieden) und beim Erreichen einer Runde. Startgeld und Wertsäule mit der Auslosung der Ligaphase. Zuschauereinnahmen wie bei einem Pokalspiel.
 - **Computer-Vereine** bekommen dasselbe Geld. Das ersetzt die Pauschale für die Europapokal-Plätze, die K23b bis dahin vorsieht.
 
@@ -112,7 +112,15 @@ Echte Beträge 2025/26 (Websuche 21.11.):
 ### 5.5 Belastung
 - Keine eigene Regel. Frische, Kondition, Verletzungen und Rotation laufen über K07, K10 und die Aufstellung der Computer-Trainer, die schon heute nach Frische auswählt (`bestXI`).
 
-### 5.6 Kaderliste der UEFA (Entwurf für U19d, 21.11.2026, noch nicht gebaut)
+### 5.6 Kaderliste der UEFA (Entwurf 21.11.2026, gebaut als U19d1 am 22.11.2026)
+
+**So gebaut (U19d1):**
+- Liste A je deutschem Teilnehmer in `S.eu.liste`. Beim ersten Melden beginnt deine Liste mit dem Vorschlag der automatischen Meldung (zwei Torhüter, dann die Stärksten nach den Regeln).
+- Zur Frist meldet jeder Verein ohne gültige Liste automatisch, dein Verein mit Automatik der Co-Trainer.
+- Zur Nachmeldung behalten Computer-Vereine ihre Liste und nehmen bis zu drei neue Spieler dazu.
+- Zwischen den Fristen ist deine Liste fest.
+- Im Europapokal sperrt `gesperrt` jeden, der weder auf Liste A noch auf Liste B steht. In der Qualifikation und vor der ersten Frist gibt es noch keine Liste, dann dürfen alle spielen.
+- Karte „Kaderliste“ im Reiter Kader.
 Echte Regel 2025/26 (UEFA-Reglement Art. 31, Websuche 21.11.):
 - **Liste A:** höchstens 25 Spieler, mindestens 2 Torhüter. 8 Plätze sind lokal Ausgebildeten vorbehalten, davon höchstens 4 verbandsausgebildet. Wer weniger lokal Ausgebildete hat, darf entsprechend weniger melden.
 - **Vereinsausgebildet:** drei Jahre im selben Verein zwischen 15 und 21. **Verbandsausgebildet:** drei Jahre bei Vereinen desselben Verbands in diesem Alter.
@@ -145,7 +153,13 @@ Im Spiel (vorläufig):
 - Auslandsvereine treffen keine Entscheidungen. Ihre Kernspieler spielen, wenn sie gesund sind.
 
 ## 8. Ereignisse
-Später als Karten (K30), noch nicht gebaut: Fanmarsch in der fremden Stadt, Pyrotechnik mit UEFA-Strafe (K09), Reisechaos, Wunder von … (Aufholjagd im Rückspiel als Meldung).
+Als Karten (K30), **gebaut als U19e am 22.11.2026, ohne Testlauf**. Katalog in `daten/karten.js`, Auslöser in `js/karten.js`, Zahlen in `REGELN.karten.europa`:
+- **Fanmarsch** (Entscheidung, klein): Dein nächstes Europapokal-Auswärtsspiel bei einem Auslandsverein liegt in den nächsten 7 Tagen (nicht das Finale, es ist neutral). Busse und Fahnen bezahlen (10.000 € in der 3. Liga, in der 1. Liga ×4) bringt Fans +3, sonst +1. Voreinstellung: die Fans organisieren selbst.
+- **Reisechaos** (Entscheidung, klein, gleicher Auslöser): Charterflug am Vortag (20.000 €, 1. Liga ×4) oder Linienflug mit 40 % Risiko auf Stimmung −2 für alle. Voreinstellung: Charterflug.
+- **Pyrotechnik** (Entscheidung, klein): Dein letztes Europapokalspiel liegt 1 bis 7 Tage zurück. Die UEFA-Strafe von 12.000 € (1. Liga ×4, also 48.000 €) zahlt der Verein immer, die Wahl betrifft die Haltung: Täter ermitteln (Vertrauen +2, Fans −2), schweigen (Vertrauen −2) oder Einspruch (30 % Senkung auf 4.000 €, sonst 16.000 € mit Verfahrenskosten). Echte UEFA-Strafen für deutsche Vereine lagen bei 25.000 bis 80.000 € (Websuche 22.11., Eintracht Frankfurt gegen Lazio 80.000 €, gegen Inter 50.000 €, gegen die AS Rom 25.000 €). Voreinstellung: schweigen. Der Zuschauerausschluss im Wiederholungsfall (K09) steht nur im Text, als Wirkung fehlt er.
+- **Ein Wunder** (Meldung): Im Hinspiel mit mindestens 2 Toren Rückstand, im Rückspiel 1 bis 7 Tage zuvor gedreht (nach Toren oder im Elfmeterschießen).
+- **Dosierung wie alle Karten** (K30 §5.4): häufig heißt 1 zu 120 je Woche, in der der Auslöser passt. Ein Verein mit acht bis zehn Europapokal-Wochen sieht die Pyrotechnik etwa alle zwölf bis fünfzehn Saisons, Fanmarsch und Reisechaos (nur in Wochen mit einem Auswärtsspiel im Ausland, etwa die Hälfte) etwa alle 25 bis 30 Saisons, das Wunder (nur in der Woche nach einer Aufholjagd) fast nie (Prüfung DX). Eine eigene, höhere Rate für Karten mit festem Anlass würde K30 §5.4 ändern (mit dir entschieden am 10.11.) und ist darum nicht gebaut, siehe §12 Nr. 21.
+- **Gleichschritt:** Die Karten würfeln im Strom `ereignisse` wie alle Karten, `kartenWoche` ist in `tests/lizenz.js` 5a abgeschaltet. Kein neuer Lizenz-Bereich, Entscheidungen im Bereich `ereignisse`.
 
 ## 9. Wechselwirkungen
 - **K23 Finanzen:** größte neue Einnahme der Großen. K23b misst erst die Konten ohne Europapokal, U19b setzt danach den Faktor (§5.3).
@@ -185,7 +199,7 @@ REGELN.europa = {
 3. Auslandsvereine nach Kontingent, Ansehen und Zufall, weil die Auslandsligen nicht gespielt werden (§5.1).
 4. Spiele mit deutscher Beteiligung in der vollen Engine, Ausland gegen Ausland als Kurzrechnung (§5.2).
 5. Auslandsspieler ohne Folgen aus dem Spiel (§5.2).
-6. Echte Beträge 2025/26 mal Faktor 0,2 bis K23c (§5.3).
+6. Echte Beträge 2025/26 mal Faktor 0,2 bis K23c (§5.3). Seit K23c Faktor 1.
 7. Wertsäule nach Rang des Ansehens unter den Teilnehmern (§5.3).
 8. Finale nach dem Saisonende rückt auf den letzten Spieltag vor (§4.4).
 9. Ein deutscher Titelverteidiger nimmt keinen Bundesliga-Platz weg (§5.1).
@@ -198,10 +212,16 @@ REGELN.europa = {
 16. Länderwertung nur aus der laufenden Saison (die echte Regel für den Zusatzplatz nutzt ebenfalls nur eine Saison), ohne Bonuspunkte und ohne halbe Punkte in der Qualifikation (U19c).
 17. Interesse der Spieler +6 (Champions League), +3 (Europa League), +1 (Conference League), verglichen mit dem bisherigen Verein (U19c).
 18. Nebenziel „Europapokal“: K.-o.-Play-offs, in der Champions League ab Ansehen 85 das Achtelfinale (U19c).
+19. Kaderliste mit Näherung für lokal Ausgebildete (eigene Jugend, sonst deutsche Nationalität), Bereich `aufstellung`, ohne Meldung meldet der Verein zur Frist (U19d1, §5.6).
+20. Stärke der Auslandsvereine 0,93 (T5.3, Konsistenzprüfung CJ2).
+21. **Europapokal-Karten in der normalen Dosierung** (U19e, §8, 22.11., popolupo): Sie sind damit selten. Vorschlag für später, nicht gebaut: ein Feld `chance` je Karte für Karten mit festem Anlass (Wahrscheinlichkeit je Woche, in der der Anlass besteht), bei gleich vielen Würfen je Woche. Das ändert K30 §5.4 und braucht deine Entscheidung. **Seit K30d (22.11., popolupo) vorläufig von mir entschieden und gebaut** (K30 §5.5 Nr. 3): Fanmarsch 0,15, Reisechaos 0,1, Pyrotechnik 0,1, Wunder 1 je Woche mit Anlass. Bitte bestätigen oder verwerfen.
+22. **UEFA-Strafe mal Ligafaktor** (U19e): Die Karten rechnen alle Beträge von der 3. Liga hoch (K23f). Im Europapokal spielen fast nur Vereine der 1. Liga, dort sind es 48.000 €, im Bereich der echten Strafen.
 
 **Noch zu recherchieren:** amtliche Rangprämie der Conference League (vorläufig aus Salary Sport geschätzt), genaue Halbfinal- und Siegprämien in Europa League und Conference League, die Zulassungsliste 2026/27 für die Länderkontingente, die Termine der Conference-League-Ligaphase 2026/27 (gefunden nur Spieltag 1 am 15.10. und Spieltag 6 am 17.12.). **Erledigt am 21.11.:** Rangprämie der Europa League, deutsche Starter 2026/27.
 
 ## Quellen
+
+UEFA-Strafen für Pyrotechnik (U19e, Websuche 22.11.2026, nur Zusammenfassungen gelesen): [sport1: Strafe nach dem Spiel bei Lazio](https://www.sport1.de/fussball/bundesliga/2019/01/uefa-bestraft-eintracht-frankfurt-mit-geldstrafe-und-zuschauerausschluss), [nau.ch: nur Geldstrafe nach Inter](https://www.nau.ch/sport/fussball/gluck-fur-eintracht-fans-uefa-verhangt-nur-geldstrafe-65500866), [sport1: Strafe nach Marseille 2022](https://www.sport1.de/news/fussball/champions-league/2022/09/nach-marseille-ausschreitungen-uefa-verkundet-strafe-fur-eintracht-frankfurt), [sport1: Bewährung verspielt, 2025](https://www.sport1.de/news/fussball/europa-league/2025/03/bewahrung-verspielt-frankfurt-droht-fan-arger)
 
 Alle abgerufen am 21.11.2026 (Websuche):
 - Prämien Champions League 2025/26: [beIN Sports](https://www.beinsports.com/en-us/soccer/uefa-champions-league/articles/uefa-confirms-prize-distribution-for-2025-26-champions-league-2025-08-27), [Football365](https://www.football365.com/news/champions-league-2025-26-prize-money-table-arsenal-liverpool), [beIN Sports, Viertelfinale](https://www.beinsports.com/en-us/soccer/uefa-champions-league/articles/the-fortune-that-the-teams-reaching-the-quarter-finals-of-the-champions-league-like-arsenal-have-pocketed-2026-03-19), UEFA-Rundschreiben 2026/48 ([KSI](https://www.ksi.is/api/download/media/e1wixrnh/20260713_circular_2026_48_en-1.pdf))
