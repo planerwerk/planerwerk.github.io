@@ -43,8 +43,11 @@ function tagBeenden(ohneErinnerung){if(LIVE){liveFrame();liveRender();return;}if
   if(!ohneErinnerung){const e=erinnerungen();if(e.length){zeigeErinnerungen(e);return;}}
   if(heuteMeinSpiel()){showPre(meinSpiel(S.tag));return;}
   weiterUI();}
-function weiterUI(){BUSY=true;let n=0;try{n=weiter();}catch(e){console.error(e);toast('Fehler: '+e.message);}finally{BUSY=false;}
-  closeOv();TAB='buero';render();window.scrollTo(0,0);if(S.phase==='end')showSummary();else if(S.fired)showFired();else if(n>1)toast(`${n} Tage weiter: ${datumMittel(S.tag)}`);}
+// Brief-Ton (K41, W5f3): nach „Weiter“ ein kurzer Ton, wenn eine neue Ereigniskarte oder ein neues Angebot für einen deiner Spieler wartet. Nur Klang.
+const briefStand=()=>({k:((S.karten&&S.karten.offen)||[]).length,o:(S.offers||[]).length});
+function weiterUI(){const vor=briefStand();BUSY=true;let n=0;try{n=weiter();}catch(e){console.error(e);toast('Fehler: '+e.message);}finally{BUSY=false;}
+  closeOv();TAB='buero';render();window.scrollTo(0,0);if(S.phase==='end')showSummary();else if(S.fired)showFired();else if(n>1)toast(`${n} Tage weiter: ${datumMittel(S.tag)}`);
+  const nach=briefStand();if(!S.fired&&S.phase!=='end'&&(nach.k>vor.k||nach.o>vor.o))klang('brief');}
 function zeigeErinnerungen(E){ov(`<h2>Sicher? Du kannst noch …</h2><div class="opts">${E.map(e=>`<div class="card"><p>${e.text}</p><div class="row between"><button onclick="closeOv();tab('${e.tab}')">${e.knopf}</button><label class="pick"><input type="checkbox" onchange="erinnerungAus('${e.art}',this.checked)"> nicht mehr erinnern</label></div></div>`).join('')}</div>
   <div class="row" style="margin-top:12px"><button class="go" id="trotzdem" onclick="closeOv();tagBeenden(1)">Trotzdem Tag beenden</button><button onclick="closeOv()">Abbrechen</button></div>`);}
 function erinnerungAus(art,aus){S.einst=S.einst||{aus:{}};S.einst.aus=S.einst.aus||{};if(aus)S.einst.aus[art]=1;else delete S.einst.aus[art];save();}

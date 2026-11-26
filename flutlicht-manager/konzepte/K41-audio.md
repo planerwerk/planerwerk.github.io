@@ -86,7 +86,9 @@ K39 (Sequenzen), K05 (Live-Spiel, Zuschauer), K35b (Einstellungen), K40 (Test oh
   - Klingt nach dem Abpfiff aus. Aus bei Stumm und verstecktem Tab.
   - Keine Dateien, keine Lizenzfrage. CC0-Aufnahmen (Gesang, echte Menge) bleiben eine spätere Möglichkeit.
 
-Offen: Brief-Ton bei neuer Nachricht, getrennte Regler für Stadion und Oberfläche (§6).
+✅ **W5f3 (26.11.):** Brief-Ton nach „Weiter“, wenn eine neue Ereigniskarte oder ein neues Angebot für einen deiner Spieler wartet (`briefStand` in `js/fenster.js`). Nicht bei jeder Nachricht, sonst klänge er jeden Tag.
+
+Offen: getrennte Regler für Stadion und Oberfläche (§6).
 
 **Für dich:** Willst du überhaupt Musik, oder reicht Stadionatmosphäre?
 
