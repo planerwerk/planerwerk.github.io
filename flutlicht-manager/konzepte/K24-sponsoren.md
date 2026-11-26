@@ -144,6 +144,15 @@ sponsoren:{
 3. **Traditionsvereine:** §6 nennt −6 statt −3 Fanstimmung. Ein Merkmal „Traditionsverein“ gibt es nicht. Vorschlag: aus Ansehen, Gründungsjahr und Mitgliedern ableiten oder als Liste in den Daten pflegen.
 4. **Name:** erfundener Sponsorname plus Wort (zum Beispiel „Falkner-Arena“), echte Stadionnamen nicht (Marken, siehe `konzepte/_luecken.md` L2).
 
+**Antworten dazu** (26.11. nachts, popolupo, vorläufig; K24d kann damit beginnen):
+1. **Eigentum:** Ein Feld je Verein lohnt erst mit Recherche für alle 56 Vereine. Bis dahin darf jeder Verein den Namen verkaufen und bekommt den vollen Erlös. Das Feld `stadionEigen` kommt später, wenn die Recherche da ist. Dann geht bei „Stadt“ ein Teil an die Stadt.
+2. **Geld:** einverstanden, geldneutral, 12 % aus dem Partneranteil (`RF.werbung.partner`).
+   - Computer-Vereine verkaufen den Namen automatisch. Damit bleibt das `finanzmodell` für sie unverändert, und die laufende Kalibrierung von K23 (Ligaklausel, Verwaltung) ist nicht berührt.
+   - Nur dein Verein verliert die 12 %, wenn du den Namen nicht verkaufst. Das ist der gewollte Tausch zwischen Tradition und Geld.
+   - Bitte den Anteil als eigenen Posten im Finanzbericht zeigen, damit die KURZ-Zeilen ihn trennen können.
+3. **Traditionsvereine:** keine neue Liste. Ableitung aus der vorhandenen Fankultur (K27d, `fankulturWirkung` 0 bis 1): Fanstimmung −3 − 3 × Fankultur, also −3 bei schwacher und −6 bei stärkster Fankultur. Die Fankultur enthält schon Mitglieder und Auslastung. Das Gründungsjahr (`gegr`) bleibt Anzeige.
+4. **Name:** einverstanden.
+
 ## Quellen
 
 - Hauptsponsoren-Erlöse (Schätzungen): [90min.de: So viel kassieren die Bundesligisten vom Hauptsponsor](https://www.90min.de/bayern-an-der-spitze-so-viel-kassieren-die-bundesligisten-von-ihrem-hauptsponsor), [leinetal24.de: Bundesliga-Vergleich Hauptsponsor](https://www.leinetal24.de/sport/fussball/bundesliga-vergleich-so-viel-kassiert-eintracht-frankfurt-vom-hauptsponsor-zr-94404426.html)
