@@ -13,6 +13,12 @@ Node.js 22, Playwright mit Chromium, für `tests/ui-zugang.js` axe-core 4.10.2 (
 
 ---
 
+## Lauf 13, 26.11.2026: `popolupo-k43e-vertrauenszonen` (2672476, enthält gh-korrekturen)
+
+Nur getestet und geloggt. **48 grün, 6 rot, alle Zahlen genau wie in Lauf 12** (wettbewerbe 72 Stunden 2× So Liga → Di Europapokal, welt 10 wie oben, jugend 1,98, kalibrierung Meisterpunkte 66/66/75/66, spielermodell 2. Liga 2,6, akzeptanz Abwehr +0,9, finanzmodell gleich). K43e und gh-korrekturen ändern an den Testergebnissen nichts.
+
+---
+
 ## Lauf 12, 26.11.2026: `popolupo-k43d-mitwachsend-erfolg` (0368e92, enthält t11-korrekturen)
 
 Nur getestet und geloggt. **48 grün, 6 rot.** Wieder grün: fuzz-karrieren, welt (2 Saisons), sommer, und alle übrigen bis auf:
