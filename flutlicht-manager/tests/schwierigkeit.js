@@ -39,9 +39,9 @@ const K43_NEUTRAL=st=>['leicht','schwer'].forEach(k=>Object.assign(st[k],{sponso
   pruef(Math.abs(qa('leicht')-St('leicht').sponsor)<0.03&&Math.abs(qa('schwer')-St('schwer').sponsor)<0.03,'K43: Angebote für den Ausrüster je Stufe',`Leicht ${a('leicht')}, Normal ${a('normal')}, Schwer ${a('schwer')}`);}
 // K43b. Böse Karten: Infokarte, die nur schlecht ausgeht (Blamage: Vertrauen und Fans runter), ja. Platzsturm (Fans rauf, Strafe) nein.
 //       Chance auf Schwer ×1,5, auf Normal und Leicht unverändert (auf Leicht fällt die Karte nach dem Wurf weg, der Würfel bleibt).
-{const ev=R.normal.W.ev,K=id=>ev('KARTEN').find(c=>c.id===id),nur=ev('karteNurSchlecht'),bl=K('blamage'),ps=K('platzsturm');
+{const ev=R.normal.W.ev,K=id=>ev('KARTEN').find(c=>c.id===id),nur=ev('karteNurSchlecht'),bl=K('blamage'),ps=K('platzsturm'),wu=K('wurf');
   const ch=k=>R[k].W.ev('kartenChance')(R[k].W.ev('KARTEN').find(c=>c.id==='blamage'));
-  pruef(!!bl&&!!ps&&nur(bl)===true&&nur(ps)===false,'K43: Blamage gilt als nur schlecht, Platzsturm nicht',`Blamage ${bl&&nur(bl)}, Platzsturm ${ps&&nur(ps)}`);
+  pruef(!!bl&&!!ps&&!!wu&&nur(bl)===true&&nur(wu)===true&&nur(ps)===false,'K43: Blamage und Wurfgeschosse gelten als nur schlecht, Platzsturm nicht',`Blamage ${bl&&nur(bl)}, Wurfgeschosse ${wu&&nur(wu)}, Platzsturm ${ps&&nur(ps)}`);
   pruef(Math.abs(ch('normal')-bl.chance)<1e-9&&Math.abs(ch('leicht')-bl.chance)<1e-9&&Math.abs(ch('schwer')-Math.min(1,bl.chance*St('schwer').kartenNegativ))<1e-9,
     'K43: Chance der Blamage je Stufe (Schwer häufiger)',`Leicht ${ch('leicht')}, Normal ${ch('normal')}, Schwer ${ch('schwer')}`);}
 // K43c. Champions League erst ab Normal: beim Saisonwechsel tauscht euOhneClAufLeicht, in der ersten Saison euOhneClStart (vor der Auslosung).

@@ -267,8 +267,9 @@ function kartenWoche(d){if(S.phase!=='play'||S.fired)return;const K=karten(),W=k
 // Karten mit fanarbeit:true (Zuschauer-Vergehen, K09h, K25 §5) werden bei laufender Fanarbeit seltener (fanarbeitVergehen, marketing.js). Der Würfel bleibt derselbe.
 const kartenChance=c=>Math.min(1,(c.chance!=null?c.chance:1/(RKT.seltenheit[c.stufe]*RKT.wochenJeSaison))*(c.fanarbeit?fanarbeitVergehen():1)*(stufe().kartenNegativ>0&&karteNurSchlecht(c)?stufe().kartenNegativ:1));
 // Schwierigkeit (K43, 26.11., vorläufig): Infokarte, die für dich nur schlecht ausgeht (jede Wirkung senkt einen dieser Werte oder ist ein Verfahren). Leicht: fällt weg, Schwer: häufiger.
-const KARTEN_WERTE=['stimmung','stimmungAlle','zusammenhalt','glaub','vertrauen','ruf','bezDu','geld','fans','zuschauer'];
-const karteNurSchlecht=c=>c.art==='info'&&Array.isArray(c.wirkung)&&c.wirkung.length>0&&c.wirkung.every(w=>w&&(w.art==='verfahren'||(KARTEN_WERTE.includes(w.art)&&(+w.wert||0)<0)));
+// verfahren und zuschauer (Zuschauer-Vergehen, wert ist die Grundlage des Zuschlags) sind immer schlecht, die übrigen Werte, wenn sie sinken.
+const KARTEN_WERTE=['stimmung','stimmungAlle','zusammenhalt','glaub','vertrauen','ruf','bezDu','geld','fans'],KARTEN_IMMER_SCHLECHT=['verfahren','zuschauer'];
+const karteNurSchlecht=c=>c.art==='info'&&Array.isArray(c.wirkung)&&c.wirkung.length>0&&c.wirkung.every(w=>w&&(KARTEN_IMMER_SCHLECHT.includes(w.art)||(KARTEN_WERTE.includes(w.art)&&(+w.wert||0)<0)));
 // Veränderung der Stärke seit dem jüngsten Monatseintrag dieser Saison, der mindestens RKT.entwicklung.tage alt ist (K03c); ohne Eintrag 0
 const kartenStaerkePlus=p=>{const T=RKT.entwicklung.tage,a=(p.mvl||[]).filter(e=>e[0]===S.season&&S.tag-e[1]>=T).pop();return a?Math.round(p.str)-a[2]:0;};
 // Merker deiner letzten Pflichtspiele für Karten (K05 §8, K05c, ablauf.js nach den Spielen). S.letzt = das letzte, S.letzte = die Spiele der letzten RKT.spiel.nachTage Tage

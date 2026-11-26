@@ -49,9 +49,9 @@ Status: **Entwurf, Teile gebaut** (26. November 2026, popolupo), nach deiner Vor
 
 ### 3.1 Böse Karten
 
-Eine Karte gilt als „nur schlecht“, wenn sie eine Infokarte ist (du entscheidest nichts) und jede ihrer Wirkungen etwas senkt: Stimmung, Zusammenhalt, Glaubwürdigkeit, Vertrauen, Ruf, Beziehung, Geld, Fans oder Zuschauer. Ein Verfahren vor dem Sportgericht zählt auch dazu.
+Eine Karte gilt als „nur schlecht“, wenn sie eine Infokarte ist (du entscheidest nichts) und jede ihrer Wirkungen etwas senkt: Stimmung, Zusammenhalt, Glaubwürdigkeit, Vertrauen, Ruf, Beziehung, Geld oder Fans. Ein Verfahren vor dem Sportgericht und ein Zuschauer-Vergehen zählen auch dazu.
 
-- Beispiel: „Blamage gegen Amateure“ ist nur schlecht.
+- Beispiele: „Blamage gegen Amateure“ und „Wurfgeschosse“ sind nur schlecht.
 - Gegenbeispiel: „Platzsturm“ zählt nicht. Die Fans feiern, die Strafe ist der Preis dafür.
 
 Auf Leicht wird trotzdem gewürfelt, die Karte fällt erst danach weg. So bleiben die Würfe im Kartenstrom gleich.
