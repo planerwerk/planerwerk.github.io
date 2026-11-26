@@ -290,6 +290,10 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 26.11.2026: Gesichter im Kader (Zweig `mitarbeit/popolupo-gb-hinweise`)
+
+- **Neu:** kleine Spielergesichter (24 px) vor den Namen in der Kaderliste, wie in der Kabine. Nur Anzeige.
+
 ### 26.11.2026: Prüfung GB über den ganzen Oberflächen-Strang, zwei Hinweise umgesetzt (Zweig `mitarbeit/popolupo-gb-hinweise`, auf den Korrekturen GA)
 
 - **Prüfung GB** (lesender Agent, alle Code-Änderungen von Welle 5 gegen den Tester-Strang, mit eigenen Perl-Prüfungen auf Gültigkeitsbereich und Syntax): keine Funde. Einzelheiten in der Konsistenzprüfung GB.
