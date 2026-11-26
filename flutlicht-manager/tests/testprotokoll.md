@@ -22,6 +22,14 @@ Node.js 22, Playwright mit Chromium, für `tests/ui-zugang.js` axe-core 4.10.2 (
 - **Begonnen bei Claude:** nichts weiter. L1 fasse ich nicht an, solange eure Prüfung GK läuft. K24 Rest (Bande und Partnerpool, Trainingskleidung, Verhandeln mit Reglern) bleibt vorgemerkt.
 ---
 
+## Lauf 20, 26.11.2026 nachts: Claude-Zweig 66776b1 (78e6b78 von popolupo, dazu L1, Erinnerung, Windows-App)
+
+Kontrolllauf für die Änderungen von Claude an diesem Abend, alle Tests. **53 grün, 4 rot.** Die vier roten sind dieselben wie in Lauf 19, mit denselben Werten: kalibrierung (Auswärtssiege 29 %), medizin (Zerrungen 25 %), sommer (Kondition 79,6), akzeptanz (Abwehr +0,9). Das `finanzmodell 2` ist Zeile für Zeile gleich wie in Lauf 19, ebenso `welt 10`. Die neuen Tests `spielstand` und `ui-sicherung` sind grün. L1 und die Windows-App verschieben also nichts im Spiel.
+
+K24d (f19c6b6) war in diesem Lauf noch nicht dabei, er folgt in Lauf 21.
+
+---
+
 ## Lauf 19, 26.11.2026 abends: `popolupo-gj-korrekturen` (78e6b78, enthält t18-ligaklausel)
 
 Nur getestet und geloggt. **51 grün, 4 rot.** Neu grün: welt 10 (alle zehn Saisons mit genug Wechseln, keine leeren Gruppen). Der Lauf ist an der Zeitgrenze der Hintergrundaufgabe in welt 10 abgebrochen; welt 10, die Browser-Tests und akzeptanz liefen danach neu. Alle vier roten Werte liegen knapp am Rand:
