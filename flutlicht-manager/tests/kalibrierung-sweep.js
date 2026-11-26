@@ -3,7 +3,7 @@
 // Variiert werden engine.angriff.exponent (wie stark der Stärkeunterschied die Chancen bestimmt) und engine.team.ueberragend.anteil (wie viel ein überragender
 // Spieler über dem Schnitt seines Bereichs zählt). Die Tests dürfen REGELN verstellen (tests/sim.js). Nur Ausgabe, keine Prüfung.
 // Aufruf: node tests/kalibrierung-sweep.js [Saisons=4] [Seed=5]. Nur Node.js. Dauer: etwa sechsmal tests/kalibrierung.js mit denselben Saisons.
-// ACHTUNG: Dieses Skript ist noch nie gelaufen (entstanden auf einem Rechner ohne Node.js).
+// Entstanden auf einem Rechner ohne Node.js. Lauf 16 zählte es als grün (also ohne Absturz), die Zahlen kamen aber nicht ins Protokoll.
 const {saisons}=require('./sim');
 const N=+(process.argv[2]||4),SEED=+(process.argv[3]||5),t0=Date.now();
 const EINST=[{name:'heute',ex:null,ue:null},{name:'Exponent 1,65',ex:1.65,ue:null},{name:'Exponent 1,75',ex:1.75,ue:null},
@@ -19,8 +19,9 @@ for(const E of EINST){const L={spiele:0,tore:0,heim:0,remis:0,elf:0},fav={n:0,s:
     beiSpielen:(list,S)=>list.forEach(r=>{if(r.cup||r.rel||r.h>=1000||r.a>=1000||S.teams[r.h].lg!==1)return;
       L.spiele++;L.tore+=r.hg+r.ag;if(r.hg>r.ag)L.heim++;else if(r.hg===r.ag)L.remis++;r.ev.forEach(e=>{if(e.art==='elfmeter')L.elf++;});
       if(stufen){const erg=r.hg>r.ag?'h':r.hg<r.ag?'a':'u',fb=(f,g)=>{if(stufen.top.has(f)&&stufen.unten.has(g)){fav.n++;if(erg!=='u'&&(erg==='h')===(f===r.h))fav.s++;}};fb(r.h,r.a);fb(r.a,r.h);}})});
-  const g=Math.max(1,L.spiele);
-  zeilen.push(`${E.name.padEnd(34)} Meister-Median ${String(med(meister)).padStart(3)} (${meister.join('/')}) · Favorit ${pc(fav.s/Math.max(1,fav.n))} · Heim ${pc(L.heim/g)} · Remis ${pc(L.remis/g)} · Tore ${f2(L.tore/g)} · Elfmeter ${f2(L.elf/g)}`);
+  const g=Math.max(1,L.spiele),mm=med(meister),fv=fav.s/Math.max(1,fav.n),ok=mm>=70&&mm<=85&&fv>=0.65&&fv<=0.75&&L.heim/g>=0.40&&L.heim/g<=0.46&&L.remis/g>=0.23&&L.remis/g<=0.27&&L.tore/g>=2.9&&L.tore/g<=3.3&&L.elf/g>=0.2&&L.elf/g<=0.3;
+  // ✓ nur, wenn alle sechs Kennzahlen im Ziel liegen. Seit Lauf 16 mit Zeichen, damit die Zeilen ins Testprotokoll kommen (Lauf 16 hat das Skript ohne Eintrag ausgeführt).
+  zeilen.push(`${ok?'✓':'✗'} ${E.name.padEnd(34)} Meister-Median ${String(med(meister)).padStart(3)} (${meister.join('/')}) · Favorit ${pc(fav.s/Math.max(1,fav.n))} · Heim ${pc(L.heim/g)} · Remis ${pc(L.remis/g)} · Tore ${f2(L.tore/g)} · Elfmeter ${f2(L.elf/g)}`);
   console.log(zeilen[zeilen.length-1]);}
 console.log(`\nZiele: Meister-Median 70–85 · Favorit (Top 3 gegen Letzte 3) 65–75 % · Heim 40–46 % · Remis 23–27 % · Tore 2,9–3,3 · Elfmeter 0,2–0,3`);
-console.log(`Dauer ${Math.round((Date.now()-t0)/1000)} s\n\nBitte alle Zeilen vollständig ins Testprotokoll übernehmen.`);
+console.log(`Dauer ${Math.round((Date.now()-t0)/1000)} s\n\nVergleich, kein Fehler im Spiel: ✗ heißt nur, dass diese Einstellung nicht alle Ziele trifft. Bitte alle sechs Zeilen wörtlich ins Testprotokoll übernehmen, auch die mit ✓.`);

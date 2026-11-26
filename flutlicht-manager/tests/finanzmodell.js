@@ -11,6 +11,9 @@ const N=Math.max(1,+(process.argv[2]||1)),SEED=4711,VEREIN=6;
 const konto=new Map(); // Verein → {ein, aus, alt, sp}
 const z=(id)=>{if(!konto.has(id))konto.set(id,{ein:0,aus:0,alt:0,sp:0,tv:0,spons:0,tor:0,gehalt:0,betrieb:0,verw:0,jugend:0});return konto.get(id);};
 const kurz=[]; // seit Lauf 12: eine kurze Zeile je Liga und Saison mit allen Posten, zum Übernehmen ins Testprotokoll
+// Seit Lauf 16: je Liga und Saison eine Prüfzeile gegen das Ziel aus K23 Nr. 25 (Saldo je Verein etwa +11 / 0 / −1 Mio, Spanne ±1,5), ab der zweiten Saison mit der
+// Veränderung jedes Postens gegenüber der Vorsaison. Lauf 16 zeigte Saison 1 im Ziel, Saison 2 in der 1. Liga darüber und in der 2. und 3. Liga darunter.
+const ZIEL={1:11e6,2:0,3:-1e6},SPANNE=1.5e6,pruefZeilen=[],vor={};
 let F0=null,ergebnis=[];
 saisons({n:N,seed:SEED,verein:VEREIN,
   beiSpielen:(list,S,o)=>{const W=F0.__W,ev=W.ev,RF=ev('RF'),RS=ev('RS'),Z=RF.zuschauer;
@@ -35,9 +38,17 @@ saisons({n:N,seed:SEED,verein:VEREIN,
       const sp=l.flatMap(x=>ev('squad')(x.t.id)),med=a=>{const s=a.slice().sort((p,q)=>p-q);return s.length?s[Math.floor(s.length/2)]:0;},sal=sp.map(p=>p.sal),wert=sp.map(p=>ev('value')(p));
       const band=[[0,60],[60,65],[65,70],[70,75],[75,80],[80,85],[85,99]].map(([a,b])=>{const q=sp.filter(p=>p.str>=a&&p.str<b);return q.length?`${a}–${b}: ${q.length} Spieler, Gehalt ${fmt(q.reduce((s,p)=>s+p.sal,0)/q.length)}, Wert ${fmt(q.reduce((s,p)=>s+ev('value')(p),0)/q.length)}`:null;}).filter(Boolean);
       ergebnis.push(`  Spieler: ${sp.length}, Gehalt Schnitt ${fmt(sal.reduce((a,b)=>a+b,0)/Math.max(1,sal.length))}, Median ${fmt(med(sal))}, Spitze ${fmt(Math.max(0,...sal))}; Marktwert Schnitt ${fmt(wert.reduce((a,b)=>a+b,0)/Math.max(1,wert.length))}, Median ${fmt(med(wert))}, Spitze ${fmt(Math.max(0,...wert))}`);
-      ergebnis.push('  nach Stärke: '+band.join(' | '));}
+      ergebnis.push('  nach Stärke: '+band.join(' | '));
+      {const m=f=>sum(x=>x.k[f]),jetzt={tv:m('tv'),spons:m('spons'),tor:m('tor'),gehalt:m('gehalt'),betrieb:m('betrieb'),verw:m('verw'),jugend:m('jugend'),saldo:sum(saldo),
+          kader:sp.length/l.length,sal:sal.reduce((a,b)=>a+b,0)/Math.max(1,sal.length),str:sp.reduce((a,p)=>a+p.str,0)/Math.max(1,sp.length)},v=vor[lg],ok=Math.abs(jetzt.saldo-ZIEL[lg])<=SPANNE;
+        const d=f=>{const x=(jetzt[f]-v[f])/1e6;return(x>=0?'+':'−')+Math.abs(x).toFixed(1);},mio2=x=>(x/1e6).toFixed(2);
+        pruefZeilen.push(`${ok?'✓':'✗'} Saldo ${lg}. Liga Saison ${S.season}: ${fmt(jetzt.saldo)} je Verein (Ziel ${fmt(ZIEL[lg])} ± 1.5)`+(v?
+          ` · gegenüber Vorsaison: TV ${d('tv')}, Werbung/Sonstiges ${d('spons')}, Spieltag ${d('tor')}, Gehalt+Stab ${d('gehalt')} (Kader ${v.kader.toFixed(1)} → ${jetzt.kader.toFixed(1)} Spieler, Ø Gehalt ${mio2(v.sal)} → ${mio2(jetzt.sal)} Mio, Ø Stärke ${v.str.toFixed(1)} → ${jetzt.str.toFixed(1)}), Betrieb ${d('betrieb')}, Verwaltung ${d('verw')}, Jugend ${d('jugend')}`:
+          ` · TV ${fmt(jetzt.tv)}, Werbung/Sonstiges ${fmt(jetzt.spons)}, Spieltag ${fmt(jetzt.tor)}, Gehalt+Stab ${fmt(jetzt.gehalt)} (Kader ${jetzt.kader.toFixed(1)} Spieler, Ø Gehalt ${mio2(jetzt.sal)} Mio, Ø Stärke ${jetzt.str.toFixed(1)}), Betrieb ${fmt(jetzt.betrieb)}, Verwaltung ${fmt(jetzt.verw)}`));
+        vor[lg]=jetzt;}}
     const t=ev('myT()'),lauf=Object.entries(S.fin).filter(([k])=>ev('RFP').laufend.includes(k)).reduce((a,[,v])=>a+v,0);
     ergebnis.push(`Dein Verein ${t.name}: laufender Saldo nach den echten Buchungen ${fmt(lauf)}, nach dem Modell ${fmt(z(t.id).ein-z(t.id).aus)}`);
     konto.clear();}});
 console.log(ergebnis.join('\n'));
 console.log('\nBitte diese KURZ-Zeilen vollständig ins Testprotokoll übernehmen (Durchschnitt je Verein und Saison):\n'+kurz.join('\n'));
+console.log('\nSaldo gegen das Ziel (K23 Nr. 25). Bitte die Zeilen mit ✓ und ✗ wörtlich ins Testprotokoll übernehmen, sie nennen die Ursache einer Abweichung:\n'+pruefZeilen.join('\n'));

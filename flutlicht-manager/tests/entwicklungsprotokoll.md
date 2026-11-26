@@ -290,6 +290,22 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 26.11.2026: Lauf 16 übernommen, Messskripte melden Prüfzeilen (Zweig `mitarbeit/popolupo-t16-messung`, auf t15-korrekturen)
+
+- **Lauf 16** (aabbce8): 50 grün. medizin und jugend wieder grün.
+  - Finanzen: Die erste Saison trifft das Ziel jetzt fast (+10,1 / +0,7 / −1,8 Mio. je Verein).
+  - Die zweite Saison weicht ab: 1. Liga +14,4, 2. Liga −1,8, 3. Liga −3,0. Warum, zeigen die Summen nicht.
+- **`tests/finanzmodell.js`:** Am Schluss steht jetzt je Liga und Saison eine Zeile mit ✓ oder ✗ gegen das Ziel aus K23 Nr. 25 (+11 / 0 / −1 Mio., Spanne ±1,5).
+  - Ab der zweiten Saison nennt die Zeile, wie sich jeder Posten gegenüber der Vorsaison verändert hat: TV, Werbung, Spieltag, Gehalt mit Kadergröße, Durchschnittsgehalt und Stärke, Betrieb, Verwaltung, Jugend.
+  - Damit steht die Ursache der Abweichung in der Zeile selbst. Die KURZ-Zeilen kamen nie ins Protokoll.
+- **`tests/kalibrierung-sweep.js`:** Lauf 16 hat es ausgeführt, aber ohne Eintrag. Jede Einstellung bekommt jetzt ✓ (alle sechs Kennzahlen im Ziel) oder ✗.
+  - Das ist ein Vergleich, kein Fehler im Spiel.
+- **Bitte testen (Lauf 17 auf diesem Zweig, enthält t15-korrekturen):** alle Tests. Bitte wörtlich ins Protokoll:
+  - die ✓/✗-Zeilen „Saldo …“ aus `node tests/finanzmodell.js 2`;
+  - alle sechs Zeilen aus `node tests/kalibrierung-sweep.js 4`;
+  - aus `node tests/welt.js 10` die Zeilen „Saisonende …“ (mit „Kleine Kader“) und „Wechsel mit Ablöse“ (mit Sommer, Winter und Vereinen im Minus).
+- **Offen:** Wechsel mit Ablöse (Lauf 16: 11 bis 14 in späten Saisons, im Zwei-Saisons-Lauf 12) und kleine Kader warten auf die Diagnose aus t15. 2. Liga im Spielermodell 2,2 (Grenze 2, schwankt um die Grenze, T1.3). Engine nach dem Vergleich.
+
 ### 26.11.2026: Lauf 15 aufgearbeitet (Zweig `mitarbeit/popolupo-t15-korrekturen`, auf t14-finanzen)
 
 - **Lauf 15** (6760284): 49 grün. wettbewerbe (72 Stunden) und spielermodell sind jetzt grün.
