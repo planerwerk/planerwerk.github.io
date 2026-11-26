@@ -11,7 +11,7 @@ function schmutz(o,pfad,aus,tiefe=0){if(aus.length>=5||tiefe>40)return;
   if(typeof o==='number'){if(!Number.isFinite(o))aus.push(`${pfad} = ${o}`);return;}
   if(typeof o==='function'){aus.push(`${pfad} ist eine Funktion`);return;}
   if(o===null||typeof o!=='object')return;
-  if(o instanceof Map||o instanceof Set||o instanceof Date){aus.push(`${pfad} ist ${o.constructor.name}`);return;}
+  {const art=Object.prototype.toString.call(o);if(['[object Map]','[object Set]','[object Date]'].includes(art)){aus.push(`${pfad} ist ${art.slice(8,-1)}`);return;}} // instanceof greift über die vm-Grenze nicht (Prüfung GK8)
   if(Array.isArray(o)){for(let i=0;i<o.length;i++){if(o[i]===undefined){aus.push(`${pfad}[${i}] = undefined`);continue;}schmutz(o[i],`${pfad}[${i}]`,aus,tiefe+1);}return;}
   for(const k of Object.keys(o))schmutz(o[k],`${pfad}.${k}`,aus,tiefe+1);}
 const groessen=[];let grenze=0,erinnert=0,W0=null;

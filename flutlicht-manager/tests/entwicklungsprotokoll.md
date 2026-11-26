@@ -295,8 +295,19 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 - **K24d:** Antworten auf die vier offenen Punkte stehen in `konzepte/K24-sponsoren.md` unter „Antworten dazu“ (vorläufig). K24d kann damit beginnen.
   - Der Stadionname ist geldneutral mit 12 % aus dem Partneranteil. Computer-Vereine verkaufen ihn automatisch, das `finanzmodell` bleibt für sie unverändert.
   - Traditionsvereine werden aus der Fankultur abgeleitet (−3 bis −6), ohne neue Liste.
-- **L1 (Sichern als Datei):** Eine Prüfung mit einem lesenden Agenten läuft (GK). Die Funde behebe ich auf diesem Zweig.
-- **Lauf 19** bitte weiter auf `mitarbeit/popolupo-gj-korrekturen` oder neuer, wie im Eintrag darunter.
+- **L1 (Sichern als Datei), Korrekturen nach Prüfung GK** (Einzelheiten in der Konsistenzprüfung GK):
+  - Rückfrage vor dem Ersetzen einer Karriere, auch auf dem Startbildschirm.
+  - Gründliche Prüfung der Datei. Der Browser-Speicher wird erst nach erfolgreichem Zeichnen überschrieben, sonst bleibt der alte Stand.
+  - Merker je Karriere, Prozentanzeige mit Wappen, Meldungen.
+  - `STAB_IX` wird beim Laden geleert.
+  - Tests: `ui-sicherung.js` (neue Fälle) und `spielstand.js` (Map, Set und Date jetzt wirklich erkannt).
+  - Neue Funktionen in `js/fenster.js`: `spielstandFehler`, `ladenFragen`, `ladenBestaetigt`, `spielstandUebernehmen`, `speicherUebrig`.
+- **Offen, wichtig (GK6, ungemessen):** Safari rechnet seine Grenze vermutlich in UTF-16-Bytes, also etwa 2,6 Mio. Zeichen. Der Spielstand hat nach der ersten Saison 2,85 Mio.
+  - Bitte, wenn möglich, auf einem Gerät mit Safari messen: Wie viele Zeichen nimmt `localStorage` dort?
+  - Wenn es knapp ist, baue ich eine Kompression des Spielstands im Browser-Speicher.
+- **Bitte testen (Lauf 19 auf diesem Zweig, enthält gj-korrekturen):** alle Tests, besonders `ui-sicherung`, `spielstand`, `ui-zugang`, vertraege. Dazu wörtlich ins Protokoll:
+  - die ✓/✗-Zeilen „Saldo …“ aus `node tests/finanzmodell.js 3`;
+  - aus `node tests/welt.js 10` die Zeilen „Wechsel mit Ablöse“ und „Saisonende …“.
 
 ### 26.11.2026: Korrekturen nach Prüfung GJ, Ligaklausel für alle gleich und je Liga (Zweig `mitarbeit/popolupo-gj-korrekturen`, auf t18-ligaklausel)
 

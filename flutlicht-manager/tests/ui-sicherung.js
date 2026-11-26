@@ -22,28 +22,44 @@ const FILE='file://'+path.resolve(__dirname,'..','index.html'),probleme=[],ok=t=
   if(/^flutlicht-[a-z0-9]+-\d{4}-\d{2}-\d{2}\.json$/.test(dl.suggestedFilename()))ok('Dateiname: '+dl.suggestedFilename());else fehl('Dateiname unerwartet: '+dl.suggestedFilename());
   if(inhalt===vorher)ok(`Datei enthält genau den Spielstand (${Math.round(inhalt.length/1024)} KB)`);else fehl('Datei weicht vom Spielstand ab');
 
-  // 3. Datei laden im Menü stellt den Stand wieder her
+  // 3. Datei laden im Menü: erst eine Rückfrage, weil eine Karriere läuft (Prüfung GK1). Abbrechen ändert nichts, „Laden und ersetzen“ stellt den Stand wieder her.
   await pg.evaluate(()=>{S.mgr='Verändert';S.tag+=3;save();});
+  const veraendert=await pg.evaluate(()=>JSON.stringify(S));
   await pg.evaluate(()=>closeOv());await menueTab();
   await pg.setInputFiles('#datei-laden',datei);await pg.waitForTimeout(500);
+  if(await pg.$('#laden-ja'))ok('Rückfrage vor dem Ersetzen einer laufenden Karriere');else fehl('Keine Rückfrage vor dem Ersetzen der laufenden Karriere');
+  await pg.click('#laden-nein');
+  if((await pg.evaluate(()=>JSON.stringify(S)))===veraendert)ok('Abbrechen lässt den laufenden Spielstand unverändert');else fehl('Abbrechen hat den Spielstand verändert');
+  await menueTab();await pg.setInputFiles('#datei-laden',datei);await pg.waitForTimeout(500);await pg.click('#laden-ja');await pg.waitForTimeout(200);
   // Beim Laden ergänzt das Spiel fehlende Felder (verhUmstellen, k23cUmstellen …), wie beim Text-Code. Maßstab ist deshalb das Laden desselben Inhalts als Text-Code.
   const nachher=await pg.evaluate(()=>JSON.stringify(S));
-  const perCode=await pg.evaluate(t=>{importSave(t);return JSON.stringify(S);},inhalt);
+  const perCode=await pg.evaluate(t=>{importSave(t);ladenBestaetigt();return JSON.stringify(S);},inhalt);
   if(nachher===perCode&&(await pg.evaluate(()=>S.mgr))==='Sicherung')ok('Datei laden im Menü ergibt denselben Stand wie der Text-Code (Name und Tag wieder wie gesichert)');else fehl('Datei laden im Menü ergibt einen anderen Stand als der Text-Code');
   const gespeichert=await pg.evaluate(()=>localStorage.getItem(REGELN.spielstand.schluessel));
   if(gespeichert===perCode)ok('Geladener Stand ist auch im Browser gespeichert');else fehl('Geladener Stand wurde nicht im Browser gespeichert');
 
-  // 4. Kaputte Datei ändert nichts
+  // 4. Kaputte Dateien ändern nichts, weder im Fenster noch im Browser-Speicher: Syntaxfehler und ein Stand mit leeren Listen (Prüfung GK2)
   const kaputt=path.join(tmp,'kaputt.json');fs.writeFileSync(kaputt,'{"v":1,"teams":[],"pl":[]');
-  await pg.evaluate(()=>menu());await pg.setInputFiles('#datei-laden',kaputt);await pg.waitForTimeout(300);
-  if((await pg.evaluate(()=>JSON.stringify(S)))===perCode)ok('Kaputte Datei ändert nichts');else fehl('Kaputte Datei hat den Spielstand verändert');
+  await pg.evaluate(()=>{menu();document.getElementById('toast').textContent='';});await pg.setInputFiles('#datei-laden',kaputt);await pg.waitForTimeout(300);
+  const meldung=await pg.evaluate(()=>document.getElementById('toast').textContent);
+  if((await pg.evaluate(()=>JSON.stringify(S)))===perCode&&/ungültig/.test(meldung))ok('Datei mit Syntaxfehler: gelesen, gemeldet, nichts geändert');else fehl('Datei mit Syntaxfehler: Spielstand verändert oder keine Meldung ('+meldung+')');
+  const leer=path.join(tmp,'leer.json');fs.writeFileSync(leer,JSON.stringify({v:await pg.evaluate(()=>REGELN.spielstand.version),teams:[],pl:[]}));
+  await pg.evaluate(()=>menu());await pg.setInputFiles('#datei-laden',leer);await pg.waitForTimeout(300);
+  const nachLeer=await pg.evaluate(()=>[JSON.stringify(S),localStorage.getItem(REGELN.spielstand.schluessel),!!document.getElementById('laden-ja')]);
+  if(nachLeer[0]===perCode&&nachLeer[1]===perCode&&!nachLeer[2])ok('Stand mit leeren Listen: abgelehnt, ohne Rückfrage, Fenster und Browser-Speicher unverändert');else fehl('Stand mit leeren Listen wurde angenommen oder hat etwas verändert');
 
-  // 5. Startbildschirm: Datei laden ohne Spielstand im Browser
+  // 5. Startbildschirm: Datei laden ohne Spielstand im Browser, ohne Rückfrage
   await pg.evaluate(()=>localStorage.clear());await pg.reload();await pg.waitForTimeout(200);
   if(await pg.$('button:text("Weiterspielen")'))fehl('Startbildschirm bietet „Weiterspielen“ ohne Spielstand an');
   await pg.click('summary:has-text("Spielstand laden")');
   await pg.setInputFiles('#datei-laden',datei);await pg.waitForTimeout(500);
   if((await pg.evaluate(()=>S&&JSON.stringify(S)))===perCode)ok('Datei laden auf dem Startbildschirm stellt den Spielstand wieder her');else fehl('Datei laden auf dem Startbildschirm hat nicht funktioniert');
+
+  // 6. Startbildschirm mit gespeicherter Karriere hinter „Weiterspielen“: erst die Rückfrage (Prüfung GK1, GK9)
+  await pg.reload();await pg.waitForTimeout(200);
+  await pg.click('summary:has-text("Spielstand laden")');await pg.setInputFiles('#datei-laden',datei);await pg.waitForTimeout(500);
+  const frage=!!(await pg.$('#laden-ja'));if(frage)await pg.click('#laden-ja');await pg.waitForTimeout(200);
+  if(frage&&(await pg.evaluate(()=>S&&JSON.stringify(S)))===perCode)ok('Startbildschirm mit gespeicherter Karriere: Rückfrage, dann geladen');else fehl('Startbildschirm mit gespeicherter Karriere: keine Rückfrage oder nicht geladen');
 
   seitenfehler.forEach(f=>fehl('Seitenfehler: '+f));
   await b.close();try{fs.rmSync(tmp,{recursive:true,force:true});}catch(e){}

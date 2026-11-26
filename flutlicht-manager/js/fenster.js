@@ -104,7 +104,9 @@ function showSummary(){const sm=S.summary;if(!sm)return;const L=ids=>ids.map(id=
 function showFired(){if(!S.jobs)mkJobs();entlassungSequenz();ov(`${S.ruecktritt?`<h2>Zurückgetreten</h2><p>Du hast ${esc(myT().name)} verlassen.`:`<h2>Entlassen!</h2><p>Der Vorstand von ${esc(myT().name)} hat dir das Vertrauen entzogen.`} Diese Vereine bieten dir einen Job an:</p>${mitnehmenText()}
   <div class="opts">${S.jobs.map(id=>{const t=S.teams[id];return`<button class="opt" onclick="takeJob(${id})"><b>${chip(id)}${esc(t.name)}</b><span>${t.lg}. Liga · Platz ${rank(t.lg,id)} · Kontostand ${fmt(t.cash)} · dein Gehalt etwa ${fmt(trainerGehalt(id))} je Saison</span></button>`;}).join('')}</div>
   <div class="row"><button onclick="confirmNew()">Stattdessen neues Spiel</button></div>`);} /* Trainerteam mitnehmen (K16 §5, K16b) über den Jobangeboten (Prüfung DU6) */
-function menu(){let j='',size='';try{j=JSON.stringify(S);size=Math.round(j.length/1024)+' KB'+(APP_SPEICHER()?', als Datei auf diesem Rechner':', etwa '+Math.round(100*j.length/REGELN.spielstand.browserGrenze)+' % des Browser-Speichers');}catch(e){}
+// Was außer dem Spielstand im Browser-Speicher dieser Seite liegt (eigene Wappen, Einstellungen), in Zeichen wie die Grenze (Prüfung GK6)
+function speicherUebrig(){let n=0;try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k==null||k===REGELN.spielstand.schluessel)continue;n+=k.length+(localStorage.getItem(k)||'').length;}}catch(e){}return n;}
+function menu(){let j='',size='';try{j=JSON.stringify(S);size=Math.round(j.length/1024)+' KB'+(APP_SPEICHER()?', als Datei auf diesem Rechner':', mit Wappen und Einstellungen etwa '+Math.round(100*(j.length+speicherUebrig())/REGELN.spielstand.browserGrenze)+' % des Browser-Speichers');}catch(e){}
   ov(`<div class="phead"><h2>Menü</h2><button class="x" onclick="closeOv()" aria-label="Schließen">✕</button></div>
   <p>${APP_SPEICHER()?'Der Spielstand wird nach jedem Spieltag automatisch als Datei auf diesem Rechner gespeichert. Mit „Als Datei sichern“ legst du eine Kopie an, zum Beispiel für einen anderen Rechner.':'Der Spielstand wird nach jedem Spieltag automatisch in diesem Browser gespeichert. Der Browser kann ihn aber verlieren, wenn sein Speicher voll ist oder Seitendaten gelöscht werden (Safari löscht sie nach sieben Tagen ohne Besuch). Sichere ihn deshalb ab und zu als Datei. Mit der Datei kannst du auch auf einem anderen Gerät weiterspielen.'}</p>
   <div class="card"><h3>Spielstand sichern (${size})</h3><div class="row" style="margin-bottom:8px"><button onclick="saveDatei()">Als Datei sichern</button><button onclick="dateiWaehlen()">Datei laden</button>${dateiFeld()}</div><p class="dim">Oder als Text-Code zum Kopieren:</p><textarea id="exp" readonly aria-label="Spielstand als Text zum Kopieren">${esc(j)}</textarea><div class="row" style="margin-top:8px"><button onclick="copyExp()">Code kopieren</button></div></div>
@@ -118,10 +120,30 @@ function menu(){let j='',size='';try{j=JSON.stringify(S);size=Math.round(j.lengt
   <p class="dim">Schwierigkeit: ${stufe().name}${S.mitw?' (mitwachsend: reagiert leicht auf deinen Erfolg)':''} · Startwert für den Zufall (Seed): ${S.seed} · Spielstand-Version ${S.v}</p>
   <div class="row"><button onclick="showLizenz()">Lizenz und Lernstufen</button><button onclick="confirmNew()">Neues Spiel beginnen</button></div>`);}
 function copyExp(){const ta=document.getElementById('exp');const done=()=>toast('Code kopiert.');try{navigator.clipboard.writeText(ta.value).then(done,()=>{ta.select();toast('Text ist markiert – bitte manuell kopieren.');});}catch(e){ta.select();toast('Text ist markiert – bitte manuell kopieren.');}}
+// Laden aus Datei oder Text-Code (L1, Prüfung GK): erst gründlich prüfen (GK2), bei einer laufenden oder im Browser gespeicherten Karriere nachfragen (GK1),
+// dann übernehmen. Der Browser-Speicher wird erst überschrieben, wenn sich der neue Stand zeichnen ließ. Sonst bleibt der alte Stand, im Fenster und im Browser.
+let LADE_KANDIDAT=null;
+function spielstandFehler(d){const V=REGELN.spielstand.version;if(!d||typeof d!=='object'||!Array.isArray(d.teams)||!Array.isArray(d.pl))return'Der Code ist ungültig.';
+  if(d.v!==V)return typeof d.v==='number'&&d.v>V?'Dieser Spielstand stammt aus einer neueren Version des Spiels. Lade die Seite neu, vielleicht gibt es ein Update.':'Dieser Spielstand stammt aus einer älteren Version und passt nicht mehr.'; // GK5
+  if(d.teams.length<20||d.pl.length<300||typeof d.my!=='number'||!Number.isInteger(d.season)||typeof d.tag!=='number'||!Array.isArray(d.news)||!d.teams.every(t=>t&&typeof t.name==='string'))
+    return'Die Datei enthält keinen vollständigen Spielstand.';
+  return'';}
+const saisonText=s=>`${s}/${String((s+1)%100).padStart(2,'0')}`;
 function importSave(txt){let d=null;try{d=JSON.parse(txt!=null?txt:document.getElementById('imp').value);}catch(e){}
-  if(!d||!d.teams||!d.pl){toast('Der Code ist ungültig.');return;}
-  if(d.v!==REGELN.spielstand.version){toast('Dieser Code stammt aus einer älteren Version (Wochenkalender) und passt nicht mehr.');return;}
-  if(LIVE){clearInterval(LIVE.timer);LIVE=null;atmoStop(true);}S=d;delete S.stabT;reindex();verhUmstellen();k23cUmstellen();mitgliederUmstellen();vertragUmstellen();experimenteAnwenden();save();closeOv();TAB='buero';render();toast('Spielstand geladen.');if(S.live)liveFortsetzen();}
+  const f=spielstandFehler(d);if(f){toast(f);return;}
+  if(S||hasSave()){LADE_KANDIDAT=d;ladenFragen(d);return;}
+  spielstandUebernehmen(d);}
+function ladenFragen(d){const t=d.teams[d.my],jetzt=S?myT():null,ab=()=>`LADE_KANDIDAT=null;closeOv()`;
+  ov(`<div class="phead"><h2>Spielstand ersetzen?</h2><button class="x" onclick="${ab()}" aria-label="Schließen">✕</button></div>
+  <p>Geladen wird: <b>${esc(d.mgr||'Trainer')}</b>${t?` bei ${esc(t.name)}`:''}, Saison ${saisonText(d.season)}.</p>
+  <p>Er ersetzt ${jetzt?`deinen laufenden Spielstand: <b>${esc(S.mgr||'Trainer')}</b> bei ${esc(jetzt.name)}, Saison ${saisonText(S.season)}`:'die Karriere, die in diesem Browser gespeichert ist'}. Das lässt sich nicht rückgängig machen.</p>
+  <div class="row">${S?'<button onclick="saveDatei()">Erst den aktuellen Stand als Datei sichern</button>':''}<button id="laden-ja" onclick="ladenBestaetigt()">Laden und ersetzen</button><button id="laden-nein" onclick="${ab()}">Abbrechen</button></div>`);}
+function ladenBestaetigt(){const d=LADE_KANDIDAT;LADE_KANDIDAT=null;if(d)spielstandUebernehmen(d);}
+function spielstandUebernehmen(d){const alt=S;
+  try{if(LIVE){clearInterval(LIVE.timer);LIVE=null;atmoStop(true);}S=d;delete S.stabT;STAB_IX=null; /* GK10: Stab-Index des alten Stands verwerfen */
+    reindex();verhUmstellen();k23cUmstellen();mitgliederUmstellen();vertragUmstellen();experimenteAnwenden();closeOv();TAB='buero';render();}
+  catch(e){S=alt;STAB_IX=null;try{if(S){reindex();render();if(S.live)liveFortsetzen();}else{PIX=new Map();renderStart();}}catch(e2){}toast('Die Datei ließ sich nicht laden. Der bisherige Spielstand bleibt.');return;}
+  save();toast('Spielstand geladen.');if(S.live)liveFortsetzen();}
 // Spielstand als Datei (Lücke L1 in konzepte/_luecken.md, 26.11.): Sicherung gegen vollen oder gelöschten Browserspeicher und zum Umziehen auf ein
 // anderes Gerät. Inhalt wie der Text-Code (JSON des Spielstands), geladen wird über importSave mit denselben Prüfungen. Der Text-Code bleibt als Ausweg.
 const dateiFeld=()=>`<input type="file" id="datei-laden" accept=".json,application/json" hidden aria-label="Spielstand-Datei wählen" onchange="ladeDatei(this.files[0]);this.value=''">`;
@@ -130,12 +152,14 @@ function saveDatei(){if(!S)return;let j;try{j=JSON.stringify(S);}catch(e){toast(
   let tag='';try{tag=datumVon(S.tag).toISOString().slice(0,10);}catch(e){tag=S.season+'-'+S.tag;}
   const name=`${REGELN.spielstand.dateiName}-${String((myT()||{}).sh||'spiel').toLowerCase()}-${tag}.json`;
   try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([j],{type:'application/json'}));a.download=name;document.body.appendChild(a);a.click();
-    setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},1000);sicherungMerken();toast('Spielstand gesichert: '+name);}catch(e){toast('Der Browser hat das Sichern als Datei abgelehnt. Nimm den Text-Code.');}}
-// Erinnerung zum Saisonende (L1): Wer in dieser oder der letzten Saison keine Datei gesichert hat, bekommt eine Nachricht. Gemerkt wird je Gerät im Browser
-// (REGELN.spielstand.sicherungSchluessel), nicht im Spielstand. Ohne Browser-Speicher (Simulation, Tests in Node) passiert nichts, der Spielstand bleibt gleich.
-function sicherungErinnern(){let z=null;try{if(typeof localStorage==='undefined'||APP_SPEICHER())return; /* in der Desktop-App liegt der Spielstand ohnehin als Datei */z=JSON.parse(localStorage.getItem(REGELN.spielstand.sicherungSchluessel)||'null');}catch(e){return;}
-  if(z&&z.s>=S.season)return;news('Saisonende: Sichere deinen Spielstand als Datei (Menü, „Als Datei sichern“). Der Browser kann ihn verlieren, Safari löscht Seitendaten nach sieben Tagen ohne Besuch.');}
-function sicherungMerken(){try{localStorage.setItem(REGELN.spielstand.sicherungSchluessel,JSON.stringify({s:S.season,tag:S.tag}));}catch(e){}}
+    /* Adresse erst nach einer Minute freigeben: Mobile Browser holen die Datei teils später ab (Prüfung GK3). Ob die Datei ankam, sieht das Spiel nicht, deshalb der Hinweis im Text. */
+    setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},60000);sicherungMerken();toast('Spielstand als Datei bereitgestellt: '+name+'. Prüfe, ob sie bei deinen Downloads liegt.');}catch(e){toast('Der Browser hat das Sichern als Datei abgelehnt. Nimm den Text-Code.');}}
+// Erinnerung zum Saisonende (L1): Wer in dieser Saison in dieser Karriere keine Datei gesichert hat, bekommt eine Nachricht. Gemerkt wird je Gerät im Browser
+// (REGELN.spielstand.sicherungSchluessel), nicht im Spielstand, mit Seed und Trainername, damit eine alte Karriere eine neue nicht stumm schaltet (Prüfung GK4).
+// Wirft der Browser-Speicher einen Fehler, kommt die Erinnerung erst recht (GK7). In der Simulation (Ersatz-Speicher, leer) kommt sie jede Saison, ohne Zufall.
+function sicherungErinnern(){if(APP_SPEICHER())return; /* in der Windows-App liegt der Spielstand ohnehin als Datei */let z=null;try{z=JSON.parse(localStorage.getItem(REGELN.spielstand.sicherungSchluessel)||'null');}catch(e){z=null;}
+  if(z&&z.s>=S.season&&z.seed===S.seed&&z.mgr===S.mgr)return;news('Saisonende: Sichere deinen Spielstand als Datei (Menü, „Als Datei sichern“). Der Browser kann ihn verlieren, Safari löscht Seitendaten nach sieben Tagen ohne Besuch.');}
+function sicherungMerken(){try{localStorage.setItem(REGELN.spielstand.sicherungSchluessel,JSON.stringify({s:S.season,tag:S.tag,seed:S.seed,mgr:S.mgr}));}catch(e){}}
 function ladeDatei(f){if(!f)return;const r=new FileReader();r.onerror=()=>toast('Die Datei ließ sich nicht lesen.');r.onload=()=>importSave(String(r.result||''));r.readAsText(f);}
 // ---------- Darstellung (K35b §13.3, W5b): Thema je Gerät im Browser, nicht im Spielstand ----------
 // dunkel = ohne Attribut (Standard), hell und system als data-thema am html-Element; die Farben dazu stehen in css/spiel.css. Ohne Zufall, ohne Wirkung aufs Spiel.
