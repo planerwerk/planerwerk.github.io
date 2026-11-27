@@ -290,6 +290,18 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 27.11.2026: Lauf 25 übernommen: Abwehrdruck, Geld der Computer-Vereine (Zweig `mitarbeit/popolupo-t25-geld`, auf t24-abwehr und `claude/compassionate-galileo-bsbua4` 874a4ee)
+
+- **Lauf 25:** 53 grün, 4 rot. GO und GL9 sind grün, ebenso `desktop` (11 ✓). Die Wechsel mit Ablöse sind in allen zehn Saisons im Ziel (18 bis 40).
+- **Engine (vorläufig):** `abwehr.jePunkt` 0,022 → 0,03. Aus dem Vergleich trifft nur diese Einstellung alle Ziele: Abwehr +1,1, Mittelfeld +1,5, Angriff +1,7 Punkte, Tore je Spiel 2,94 statt 2,93.
+  - Der Abwehrdruck verstärkt den Heimvorteil. Die Auswärtssiege lagen schon in Lauf 25 mit 30 % am unteren Rand. Fallen sie darunter, senke ich den Heimvorteil leicht.
+- **Geld der Computer-Vereine (echtes Problem):** Die neue Messung zeigt, dass die Budgets aller Vereine in zehn Saisons von 0,46 auf 7,6 Mrd. steigen. Genutzt wird davon 1 %.
+  - Die Ursache liegt im Code offen: Geld kommt von außen herein (Verkäufe ins Ausland, Europapokal, dazu der gewollte Überschuss der 1. Liga). Hinaus geht nichts, denn Computer-Vereine kaufen nicht im Ausland, und Gehälter richten sich nur nach der Stärke.
+  - Neu in `welt 10`: je Saison eine Zeile „Konten der Computer-Vereine …“ mit der Summe der Konten gegen die erwarteten Jahreseinnahmen (vorläufig höchstens das 1-Fache), dazu die Veränderung nach Quelle. Damit wähle ich die Gegenmaßnahme an der größten Quelle.
+- **T25.1 Langzeit-Spannung:** gewertet wird jetzt das Mittel der letzten fünf Saisons. Ein einzelner Saisonwert mit fünf Vereinen schwankte zu stark (Läufe 22 bis 25: 6,0 / 6,0 / 5,4 / 9,6), die Zeile nennt den Wert je Saison mit. Die 3. Liga zählt jetzt ab Platz 37, vorher wie die 2. Liga.
+- **Randwerte:** `spielermodell` 2. Liga Spanne 2,2 (Grenze 2), `kalibrierung` Auswärtssiege 30 %. Beide liegen knapp an der Grenze und schwanken von Lauf zu Lauf.
+- **Bitte testen (Lauf 26 auf diesem Zweig):** alle Tests, auch `tests/offline.js`. Wörtlich bitte die ✓/✗-Zeilen aus `kalibrierung` (Auswärtssiege) und `akzeptanz` (Sensitivität), aus `welt 10` alle zehn Zeilen „Konten der Computer-Vereine …“ und die Zeile „Langzeit-Spannung …“, aus `node tests/finanzmodell.js 2` die Zeilen „Saldo …“.
+
 ### 27.11.2026: Prüfung GO, Ligaklausel bei Verlängerung (Zweig `mitarbeit/popolupo-t24-abwehr`)
 
 - **Prüfung GO** (lesender Agent) der Verlängerung im Gehaltsrahmen und des Auffüllens nach dem Jobwechsel. Rechnung und Zufall sind in Ordnung, drei Funde sind behoben:

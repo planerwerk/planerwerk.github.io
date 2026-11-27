@@ -403,6 +403,7 @@ engine:{
 - **Entscheidung (vorläufig):** Die Engine bleibt unverändert. Die niedrigen Werte kamen vom Seed in `tests/kalibrierung.js` (vier Saisons schwanken dort zwischen 66 und 80).
 - Anteile aus kleinen Stichproben (Favorit, gleich stark, Pokal) zählen dort seit Lauf 17 erst dann als Problem, wenn sie auch mit zwei Standardfehlern Spielraum außerhalb des Ziels liegen.
 - Offen bleibt aus `tests/akzeptanz.js` die Sensitivität der Abwehr (ein Innenverteidiger +5 bringt +0,9 statt 1–3 Punkte), seit dem ersten Testlauf unverändert.
+  - **Nachtrag 27.11. (Lauf 25, vorläufig):** `tests/akzeptanz-sweep.js` hat vier Einstellungen verglichen. Nur der stärkere Abwehrdruck trifft alle Ziele: `abwehr.jePunkt` 0,022 → 0,03 ergibt Abwehr +1,1, Mittelfeld +1,5, Angriff +1,7 Punkte je Saison bei 2,94 statt 2,93 Toren je Spiel. Übernommen. Weil der Abwehrdruck den Heimvorteil verstärkt (siehe Nr. 3), ist der Anteil der Auswärtssiege in `tests/kalibrierung.js` zu beobachten (Lauf 25: 30 %, Ziel 30–36 %). Fällt er darunter, wird der Heimvorteil leicht gesenkt.
 
 **Abweichungen vom Entwurf:**
 1. **Remis spät:** Ohne Zusatz kamen nur 21 % Remis heraus, obwohl die Tore stimmten. Neu: Steht es nach der 75. Minute unentschieden, greifen beide Teams seltener an (×0,85, `verlauf.gleich`). Damit 23–24 %.

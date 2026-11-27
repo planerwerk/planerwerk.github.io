@@ -806,7 +806,9 @@ const REGELN={
       fern:{OM:3,SM:3,ZM:2.5,DM:1.5,LM:2,LA:2,HS:2,MS:1,IV:0.4,LV:0.6,LS:0.7},kopf:{MS:5,HS:2,LA:1,LM:1,OM:1,ZM:1,IV:1.5,DM:0.8,LV:0.4,LS:0.5},
       ecke:{IV:4,MS:4,DM:1.5,HS:1.5,ZM:1,OM:0.7,LA:0.7,LM:0.5,LV:0.4,LS:0.5},mitte:75,exponent:1.5},
     schuetze:{mitte:70,jePunkt:0.008,min:0.8,max:1.2},
-    abwehr:{versatz:3,jePunkt:0.022,min:0.78,max:1.22}, // Druck der Abwehr auf den Abschluss: 1 − jePunkt × (Abwehr − Angriff − versatz). Abwehrwerte liegen im Schnitt etwa 3 über den Angriffswerten.
+    abwehr:{versatz:3,jePunkt:0.03,min:0.78,max:1.22}, // Druck der Abwehr auf den Abschluss: 1 − jePunkt × (Abwehr − Angriff − versatz). Abwehrwerte liegen im Schnitt etwa 3 über den Angriffswerten.
+    // jePunkt 0,022 → 0,03 (27.11., Lauf 25, tests/akzeptanz-sweep.js): ein Innenverteidiger +5 brachte nur +0,9 Punkte je Saison (Ziel 1–3, seit Lauf 1 rot). Mit 0,03:
+    // Abwehr +1,1, Mittelfeld +1,5, Angriff +1,7, Tore je Spiel 2,94 statt 2,93. Die anderen beiden Einstellungen (Innenverteidiger mehr zur Abwehr Mitte, angriff.exponent 1,65) trafen das Ziel nicht.
     torwart:{mitte:70,jePunkt:0.011,min:0.80,max:1.20,patzer:0.02,unkonzentriert:4},
     // ort.elfmeter 0,009 statt 0,011 (26.11., vorläufig): Lauf 11 maß 0,33 Elfmeter je Spiel in der 1. Liga, Ziel 0,2–0,3 (tests/kalibrierung.js)
     fouls:{proMinute:0.12,ort:{flanke:0.20,direkt:0.035,elfmeter:0.009},hart:1.3,fair:0.7, // Häufigkeit der Fouls; Foulart, Karten und Sperren stehen unter disziplin (K09)
