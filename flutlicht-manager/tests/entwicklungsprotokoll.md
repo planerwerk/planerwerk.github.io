@@ -290,6 +290,17 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 27.11.2026: Läufe 23 und 24 übernommen, Vergleichsskript für die Abwehr (Zweig `mitarbeit/popolupo-t24-abwehr`, auf t22-korrekturen und `claude/compassionate-galileo-bsbua4` 1322c6e)
+
+- **Lauf 24** (gezielt):
+  - T22.1 ist erledigt, keine leeren Gruppen und keine Kader unter 15 mehr.
+  - Finanzen: 8 von 9 Zeilen im Ziel. Die 3. Liga ist mit dem Gehaltsrahmen stabil (−1,8 / −2,0 / −1,9), die 1. Liga erholt sich (+11,3 in der dritten Saison).
+  - Rest: 2. Liga 2028 −1,6, knapp außerhalb, nach einem Stärkesprung (+0,9). `welt 10`: 2034 13 Wechsel mit Ablöse, bei 28 Vereinslosen. Mehr Spieler gehen jetzt ablösefrei, das ist eine Folge des Gehaltsrahmens.
+- **Neu: `tests/akzeptanz-sweep.js`** für den letzten dauerhaft roten Wert (akzeptanz, Abwehr +0,9 seit Lauf 1).
+  - Vier Einstellungen nebeneinander: heute, `abwehr.jePunkt` 0,03, Innenverteidiger 0,95 zur Abwehr Mitte, `angriff.exponent` 1,65.
+  - Je Bereich Punkte für einen Spieler +5 und Tore je Spiel. Damit wähle ich die Einstellung.
+- **Bitte testen (Lauf 25 auf diesem Zweig):** alle Tests. Dazu `node tests/akzeptanz-sweep.js 100`, alle vier Zeilen wörtlich ins Protokoll.
+
 ### 27.11.2026: Läufe 21 und 22 aufgearbeitet (Zweig `mitarbeit/popolupo-t22-korrekturen`, auf t20-zusammen und `claude/compassionate-galileo-bsbua4` 4fae573)
 
 - **Läufe 21 und 22** übernommen, Lauf 22 mit 55 grün das beste Ergebnis bisher. T21.1, T21.2 und eure Anpassung von werbung Nr. 28 sind übernommen.
