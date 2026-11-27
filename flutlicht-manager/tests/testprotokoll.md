@@ -24,6 +24,40 @@ Node.js 22, Playwright mit Chromium, für `tests/ui-zugang.js` axe-core 4.10.2 (
 - **Begonnen bei Claude:** nichts weiter. K24 Rest (Bande und Partnerpool, Trainingskleidung, Verhandeln mit Reglern) bleibt vorgemerkt.
 ---
 
+## Lauf 24, 27.11.2026 nachts (gezielt): Claude-Zweig 38738db (enthält popolupo-t22-korrekturen c4fea1e)
+
+Wegen der Uhrzeit nur ein gezielter Lauf zu euren Änderungen (`js/computer.js`, `js/saison.js`, `daten/regeln.js`, `tests/sim.js`): vertraege, transfers, werbung, spielstand, welt, zweite, finanzen, schwierigkeit, code, regeln-fest, welt 10, finanzmodell 2. **Alle grün außer welt 10.** Der volle Lauf folgt beim nächsten Mal.
+
+- **T22.1 erledigt:** In welt 10 gibt es keine leeren Gruppen und keine Kader unter 15 mehr.
+- **welt 10, Rest:** 2034 nur 13 Wechsel mit Ablöse (mindestens 15; 28 Vereinslose, 10 Vereine im Minus). Das alte Randproblem der Ablöse-Wechsel in späten Saisons.
+- **finanzmodell 2:** 8 ✓, 1 ✗ (vorher 5 ✓, 4 ✗ in Lauf 22 und 23).
+
+```
+KURZ 2026 L1: ein 137.7 Mio = TV 49.8 Mio + Werbung/Sonstiges 63.5 Mio + Spieltag 24.4 Mio | aus 127.2 Mio = Gehalt+Stab 75.0 Mio + Betrieb 1.5 Mio + Verwaltung 49.3 Mio + Jugend 1.4 Mio | Saldo 10.5 Mio
+KURZ 2026 L2: ein 33.0 Mio = TV 12.4 Mio + Werbung/Sonstiges 10.9 Mio + Spieltag 9.7 Mio | aus 32.1 Mio = Gehalt+Stab 18.7 Mio + Betrieb 1.0 Mio + Verwaltung 11.0 Mio + Jugend 1.4 Mio | Saldo 0.9 Mio
+KURZ 2026 L3: ein 10.6 Mio = TV 1.3 Mio + Werbung/Sonstiges 4.8 Mio + Spieltag 4.5 Mio | aus 12.3 Mio = Gehalt+Stab 8.3 Mio + Betrieb 0.7 Mio + Verwaltung 1.8 Mio + Jugend 1.5 Mio | Saldo -1.8 Mio
+KURZ 2027 L1: ein 140.7 Mio = TV 49.8 Mio + Werbung/Sonstiges 64.3 Mio + Spieltag 26.6 Mio | aus 130.7 Mio = Gehalt+Stab 78.1 Mio + Betrieb 1.6 Mio + Verwaltung 49.6 Mio + Jugend 1.4 Mio | Saldo 10.0 Mio
+KURZ 2027 L2: ein 31.4 Mio = TV 12.4 Mio + Werbung/Sonstiges 10.0 Mio + Spieltag 8.9 Mio | aus 30.8 Mio = Gehalt+Stab 18.0 Mio + Betrieb 0.9 Mio + Verwaltung 10.6 Mio + Jugend 1.4 Mio | Saldo 0.6 Mio
+KURZ 2027 L3: ein 10.6 Mio = TV 1.3 Mio + Werbung/Sonstiges 4.7 Mio + Spieltag 4.6 Mio | aus 12.6 Mio = Gehalt+Stab 8.6 Mio + Betrieb 0.7 Mio + Verwaltung 1.8 Mio + Jugend 1.5 Mio | Saldo -2.0 Mio
+KURZ 2028 L1: ein 139.7 Mio = TV 49.8 Mio + Werbung/Sonstiges 64.0 Mio + Spieltag 25.9 Mio | aus 128.4 Mio = Gehalt+Stab 76.0 Mio + Betrieb 1.6 Mio + Verwaltung 49.5 Mio + Jugend 1.4 Mio | Saldo 11.3 Mio
+KURZ 2028 L2: ein 33.7 Mio = TV 12.4 Mio + Werbung/Sonstiges 10.8 Mio + Spieltag 10.5 Mio | aus 35.3 Mio = Gehalt+Stab 22.0 Mio + Betrieb 1.0 Mio + Verwaltung 10.9 Mio + Jugend 1.4 Mio | Saldo -1.6 Mio
+KURZ 2028 L3: ein 11.3 Mio = TV 1.3 Mio + Werbung/Sonstiges 4.9 Mio + Spieltag 5.0 Mio | aus 13.2 Mio = Gehalt+Stab 9.1 Mio + Betrieb 0.7 Mio + Verwaltung 1.9 Mio + Jugend 1.5 Mio | Saldo -1.9 Mio
+```
+
+```
+✓ Saldo 1. Liga Saison 2026: 10.5 Mio je Verein (Ziel 11.0 Mio ± 1.5) · TV 49.8 Mio, Werbung/Sonstiges 63.5 Mio, Spieltag 24.4 Mio, Gehalt+Stab 75.0 Mio (Kader 28.4 Spieler, Ø Gehalt 2.53 Mio, Ø Stärke 73.4), Betrieb 1.5 Mio, Verwaltung 49.3 Mio
+✓ Saldo 2. Liga Saison 2026: 0.9 Mio je Verein (Ziel 0.0 Mio ± 1.5) · TV 12.4 Mio, Werbung/Sonstiges 10.9 Mio, Spieltag 9.7 Mio, Gehalt+Stab 18.7 Mio (Kader 29.0 Spieler, Ø Gehalt 0.63 Mio, Ø Stärke 65.7), Betrieb 1.0 Mio, Verwaltung 11.0 Mio
+✓ Saldo 3. Liga Saison 2026: -1.8 Mio je Verein (Ziel -1.0 Mio ± 1.5) · TV 1.3 Mio, Werbung/Sonstiges 4.8 Mio, Spieltag 4.5 Mio, Gehalt+Stab 8.3 Mio (Kader 28.6 Spieler, Ø Gehalt 0.29 Mio, Ø Stärke 61.0), Betrieb 0.7 Mio, Verwaltung 1.8 Mio
+✓ Saldo 1. Liga Saison 2027: 10.0 Mio je Verein (Ziel 11.0 Mio ± 1.5) · gegenüber Vorsaison: TV +0.0, Werbung/Sonstiges +0.7, Spieltag +2.3, Gehalt+Stab +3.1 (Kader 28.4 → 28.1 Spieler, Ø Gehalt 2.53 → 2.72 Mio, Ø Stärke 73.4 → 74.3), Betrieb +0.2, Verwaltung +0.3, Jugend +0.0 · abgestiegen 0, aufgestiegen 2 (Saldo 23.2 Mio, Ø Gehalt 1.12 Mio), geblieben 16 (Saldo 8.3 Mio, Ø Gehalt 2.93 Mio)
+✓ Saldo 2. Liga Saison 2027: 0.6 Mio je Verein (Ziel 0.0 Mio ± 1.5) · gegenüber Vorsaison: TV −0.0, Werbung/Sonstiges −0.9, Spieltag −0.7, Gehalt+Stab −0.7 (Kader 29.0 → 28.8 Spieler, Ø Gehalt 0.63 → 0.62 Mio, Ø Stärke 65.7 → 66.1), Betrieb −0.1, Verwaltung −0.4, Jugend +0.0 · abgestiegen 2 (Saldo -3.7 Mio, Ø Gehalt 0.67 Mio), aufgestiegen 3 (Saldo 3.2 Mio, Ø Gehalt 0.39 Mio), geblieben 13 (Saldo 0.6 Mio, Ø Gehalt 0.67 Mio)
+✓ Saldo 3. Liga Saison 2027: -2.0 Mio je Verein (Ziel -1.0 Mio ± 1.5) · gegenüber Vorsaison: TV +0.0, Werbung/Sonstiges −0.1, Spieltag +0.1, Gehalt+Stab +0.3 (Kader 28.6 → 28.4 Spieler, Ø Gehalt 0.29 → 0.30 Mio, Ø Stärke 61.0 → 61.9), Betrieb −0.0, Verwaltung −0.0, Jugend +0.0 · abgestiegen 3 (Saldo -2.5 Mio, Ø Gehalt 0.39 Mio), aufgestiegen 4 (Saldo -2.8 Mio, Ø Gehalt 0.23 Mio), geblieben 13 (Saldo -1.6 Mio, Ø Gehalt 0.31 Mio)
+✓ Saldo 1. Liga Saison 2028: 11.3 Mio je Verein (Ziel 11.0 Mio ± 1.5) · gegenüber Vorsaison: TV +0.0, Werbung/Sonstiges −0.3, Spieltag −0.7, Gehalt+Stab −2.1 (Kader 28.1 → 27.1 Spieler, Ø Gehalt 2.72 → 2.76 Mio, Ø Stärke 74.3 → 74.3), Betrieb −0.1, Verwaltung −0.1, Jugend +0.0 · abgestiegen 0, aufgestiegen 2 (Saldo 14.7 Mio, Ø Gehalt 1.06 Mio), geblieben 16 (Saldo 10.9 Mio, Ø Gehalt 2.97 Mio)
+✗ Saldo 2. Liga Saison 2028: -1.6 Mio je Verein (Ziel 0.0 Mio ± 1.5) · gegenüber Vorsaison: TV +0.0, Werbung/Sonstiges +0.8, Spieltag +1.5, Gehalt+Stab +4.0 (Kader 28.8 → 29.1 Spieler, Ø Gehalt 0.62 → 0.78 Mio, Ø Stärke 66.1 → 67.0), Betrieb +0.1, Verwaltung +0.4, Jugend +0.0 · abgestiegen 2 (Saldo 0.4 Mio, Ø Gehalt 1.22 Mio), aufgestiegen 2 (Saldo 2.7 Mio, Ø Gehalt 0.50 Mio), geblieben 14 (Saldo -2.4 Mio, Ø Gehalt 0.75 Mio)
+✓ Saldo 3. Liga Saison 2028: -1.9 Mio je Verein (Ziel -1.0 Mio ± 1.5) · gegenüber Vorsaison: TV +0.0, Werbung/Sonstiges +0.2, Spieltag +0.5, Gehalt+Stab +0.5 (Kader 28.4 → 28.5 Spieler, Ø Gehalt 0.30 → 0.32 Mio, Ø Stärke 61.9 → 62.2), Betrieb +0.1, Verwaltung +0.1, Jugend +0.0 · abgestiegen 2 (Saldo 2.1 Mio, Ø Gehalt 0.37 Mio), aufgestiegen 4 (Saldo -2.9 Mio, Ø Gehalt 0.24 Mio), geblieben 14 (Saldo -2.2 Mio, Ø Gehalt 0.33 Mio)
+```
+
+---
+
 ## Lauf 23, 27.11.2026 nachts: Claude-Zweig 4fae573 (enthält popolupo-t20-zusammen 71d9702 mit den Korrekturen GM und GN)
 
 Alle Tests. **55 grün, 2 rot**, gleich wie Lauf 22. `welt 10` (T22.1, Werte wie in Lauf 22) und akzeptanz (Abwehr +0,9). Das `finanzmodell 2` ist Zeile für Zeile gleich wie in Lauf 22, die KURZ- und Saldo-Zeilen stehen dort.
