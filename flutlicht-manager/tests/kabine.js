@@ -80,7 +80,8 @@ const spiel=(tid,xi,o={})=>{const ein=o.ein||[],min=new Map(xi.map(id=>[id,90]))
   return{h:tid,a:1000,hg:o.hg==null?1:o.hg,ag:o.ag==null?1:o.ag,lg:o.lg,cup:o.cup,xi:[xi,[]],xpo:[[...min].map(([id,mi])=>[id,'ZM',0,Math.max(1,mi)]),[]],bk:[[...ein.map(e=>e[0]),...(o.bank||[])],[]],
     ws:ein.map(([id,mi,aus])=>[0,mi,aus,id]),ev:(o.tore||[]).map(q=>({t:'G',p:q})),inj:(o.verletzt||[]).map(id=>({id})),off:[],nt:o.noten||{},na:[(o.fehlt||[]).map(x=>Array.isArray(x)?x:[x,0]),[]]};};
 // Welt für die Fälle: keine englische Woche, kein Spieler mit störenden Eigenschaften, alle fit. typ(p,…) setzt die Eigenschaften eines Spielers fest.
-const bankWelt=()=>{const w=welt(),{S,F,ev}=w;F.englischeWoche=()=>false;const sq=ev('squad')(S.my),t=ev('myT()');sq.forEach(q=>{q.eig=[];q.fit=100;q.inj=0;q.ww=0;q.ch.ehr=10;});delete t.erw;
+// verein: dein Verein in dieser Welt (ohne Angabe 6, wie welt)
+const bankWelt=verein=>{const w=welt(verein),{S,F,ev}=w;F.englischeWoche=()=>false;const sq=ev('squad')(S.my),t=ev('myT()');sq.forEach(q=>{q.eig=[];q.fit=100;q.inj=0;q.ww=0;q.ch.ehr=10;});delete t.erw;
   F.rollenBerechnen(S.my);sq.forEach(q=>{q.ea=ev('erwartungEinsatz')(q);});const xi=ev('elfOhneAusfaelle')(t,sq),rest=sq.filter(q=>!xi.includes(q.id));
   return Object.assign(w,{sq,t,xi,rest,B:ev('RKA').bank,typ:(q,...e)=>{q.eig=e;return q;},buch:(x,o)=>F.einsatzBuchen([spiel(S.my,x,o)],S.tag),ohne:(id,ers)=>xi.map(x=>x===id?ers:x)});};
 
@@ -124,7 +125,10 @@ const bankWelt=()=>{const w=welt(),{S,F,ev}=w;F.englischeWoche=()=>false;const s
   pruef(mit.offen&&mit.klar&&!ohne.offen&&mit.nach4[0]<ohne.nach4[0]-2&&mit.nach4[1]<ohne.nach4[1]-2,'Torwart-Duell: Ein gleich starker Ersatztorwart kostet beide Stimmung, bis derselbe fünf Spiele in Folge im Tor steht',`nach vier Wochen ${mit.nach4.map(f1).join(' und ')} gegen ${ohne.nach4.map(f1).join(' und ')} ohne Duell`);}
 
 // 14. Konkurrent: Wer zehn Spiele hinter seinem Rivalen sitzt, erreicht den Gesprächswunsch. Kämpfer bleiben in den ersten drei Spielen stabil, Diven nicht.
-{const lauf=(eig,wochen,ehr=13)=>{const erg=[];for(let k=0;k<6;k++){const {S,F,ev,sq,xi,rest,buch,ohne,typ}=bankWelt();S.phase='play';
+// Seit Lauf 28 (T28.2): sechs verschiedene Vereine (4 bis 9) statt sechsmal derselben Welt. Vorher waren es drei Fälle, je sechsmal gezählt, und das Ergebnis hing am Seed.
+// Die Diva vergleicht sich mit dem Spieler ohne Eigenschaft (mindestens 3 weniger): Drei Spiele kosten sie je −2, die Trägheit holt davon einen Teil zurück,
+// die alte feste Grenze −6 traf genau den Abzug ohne die Trägheit und kippte mit dem Seed.
+{const lauf=(eig,wochen,ehr=13)=>{const erg=[];for(let k=0;k<6;k++){const {S,F,ev,sq,xi,rest,buch,ohne,typ}=bankWelt(4+k);S.phase='play';
     // je Position ein Paar: Der Stammspieler bekommt einen gleich starken Konkurrenten und sitzt
     ['AB','MF','ST'].forEach(g=>{const p=sq.find(q=>xi.includes(q.id)&&q.pos===g&&q.krA==='stamm'),r=rest.find(q=>q.pos===g);if(!p||!r)return;r.fp=p.fp;r.str=p.str;p.ch.ehr=ehr;typ(p,...eig);p.ppk=r.ppk=100;erg.push({p,r,S,F,ev,xi,buch,ohne});});
     const w=erg.filter(x=>x.S===S);F.rollenBerechnen(S.my);w.forEach(x=>{x.p.krA='stamm';x.p.krS=3;x.p.ea=ev('erwartungEinsatz')(x.p);x.p.st=x.st0=ev('zielStimmung')(x.p);x.max=0;});
@@ -133,7 +137,7 @@ const bankWelt=()=>{const w=welt(),{S,F,ev}=w;F.englischeWoche=()=>false;const s
   const zehn=lauf([],10),q=zehn.filter(x=>x.max>=2).length/zehn.length;
   pruef(zehn.length>=12&&q>=0.7,'Konkurrent: Wer zehn Spiele hinter seinem Rivalen sitzt, erreicht den Gesprächswunsch (mindestens 70 % der Fälle)',`${pc(q)} von ${zehn.length}, Zähler ${zehn[0].p.rz}`);
   const k=lauf(['kaempfer'],3),dv=lauf(['diva'],3),nm=lauf([],3),ds=l=>m(l.map(x=>x.p.st-x.st0));
-  pruef(ds(k)>=-1&&ds(dv)<=-6&&ds(dv)<ds(nm)-2&&k.every(x=>x.p.rz===3&&x.p.bg==='rivale'),'Konkurrent: Ein Kämpfer bleibt in den ersten drei Spielen stabil, eine Diva nicht',`Kämpfer ${f1(ds(k))}, ohne Eigenschaft ${f1(ds(nm))}, Diva ${f1(ds(dv))}`);
+  pruef(ds(k)>=-1&&ds(dv)<=ds(nm)-3&&k.every(x=>x.p.rz===3&&x.p.bg==='rivale'),'Konkurrent: Ein Kämpfer bleibt in den ersten drei Spielen stabil, eine Diva nicht',`Kämpfer ${f1(ds(k))}, ohne Eigenschaft ${f1(ds(nm))}, Diva ${f1(ds(dv))}`);
   const kl=k[0],lern=kl.ev('lernStimmung')(kl.p),p0=nm[0];pruef(lern>=1.1&&p0.ev('lernStimmung')(p0.p)<1.1,'Konkurrent: Der Kämpfer beißt sich rein und lernt in dieser Zeit 10 % schneller',`×${f2(lern)}`);
   // Er steht wieder in der Startelf: Der Zähler beginnt neu
   const x=zehn[0];x.buch(x.xi,{});pruef(x.p.rz===0&&x.p.bnk===0,'Konkurrent: Steht er wieder in der Startelf, beginnt der Zähler neu');}
@@ -152,7 +156,9 @@ const bankWelt=()=>{const w=welt(),{S,F,ev}=w;F.englischeWoche=()=>false;const s
   pruef(ew1===ew&&gw==='ww'&&flag===1&&h.ea===eh&&h.bg==='sperre'&&h.st===sh+B.sperre.hitzkopf&&!h.nsp,'Wechselwunsch und Sperre: Wer weg will, versteht die Bank. Das erste Spiel nach einer Sperre zählt nicht, Hitzköpfe sind trotzig (−1)');}
 
 // 16. Tribüne, frühe Auswechslung, Einwechslung in der Nachspielzeit, Führungsspieler auf der Bank
-{const {S,F,ev,sq,xi,rest,buch,ohne,typ,B}=bankWelt();const rot=rest.find(q=>q.krA==='rotation'&&q.pos!=='TW'),rot2=rest.find(q=>q.krA==='rotation'&&q!==rot&&q.pos!=='TW'),jung=rest.find(q=>q.krA==='talent'||q.krA==='ergaenzung');rot.ppk=rot2.ppk=100;jung.ppk=2;
+// Ohne Konkurrenten wie in Nr. 15 (Lauf 28, T28.2): Hatte der Spieler auf der Tribüne zufällig einen gleich starken in der Startelf, galt sein Platz als „rivale“
+// statt „tribuene“, und die Diva verlor zusätzlich −2 (mit Seed 6 und 7: −6 statt −4).
+{const {S,F,ev,sq,xi,rest,buch,ohne,typ,B}=bankWelt();F.platzRivale=()=>null;const rot=rest.find(q=>q.krA==='rotation'&&q.pos!=='TW'),rot2=rest.find(q=>q.krA==='rotation'&&q!==rot&&q.pos!=='TW'),jung=rest.find(q=>q.krA==='talent'||q.krA==='ergaenzung');rot.ppk=rot2.ppk=100;jung.ppk=2;
   const s1=rot.st,s2=rot2.st;buch(xi,{bank:[rot2.id]});const trib=rot.st-s1,bankSt=rot2.st-s2;typ(rot,'diva');const s3=rot.st;buch(xi,{bank:[rot2.id]});
   pruef(trib===B.tribuene&&bankSt===0&&rot.bg==='tribuene'&&rot.st-s3===B.tribuene*B.diva,'Tribüne: Wer zum Kader zählt (ab Rotation) und nicht im Spieltagskader steht, verliert −2 je Spiel, eine Diva −4. Auf der Bank nichts',`${f1(trib)} und ${f1(rot.st-s3)}`);
   // Tribüne von dir gesetzt: Die Bank lässt ihn aus

@@ -290,6 +290,29 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 27.11.2026: Lauf 28 übernommen: weniger Käufe der 1. Liga im Ausland, `kabine` unabhängig vom Seed (Zweig `mitarbeit/popolupo-t28-feinschliff`, auf t26-abschluss und `claude/compassionate-galileo-bsbua4` 166f29f)
+
+- **Lauf 28:** 56 grün, 3 rot (`kabine`, `spielermodell`, `akzeptanz` nur das Tempo der Maschine).
+- **T26.1 erledigt, Jahresabschluss bleibt wie er ist:**
+  - In `welt 10` liegt der Faktor in allen zehn Saisons unter 1: von 0,69 bis 0,97 (2030), danach fällt er auf 0,77 (Lauf 26: bis 3,42). Die Konten liegen zwischen 2,1 und 3,3 Mrd.
+  - Der Posten „Überschuss“ nimmt je Saison 0,8 bis 1,5 Mrd. weg.
+  - Wechsel mit Ablöse bleiben in allen Saisons im Ziel (15 bis 37). Die späten Saisons sind knapp, wie schon in Lauf 26. Dort fehlt es an gelisteten Spielern, nicht an Geld: Die Budgets zum Sommer liegen bei rund 0,9 Mrd.
+- **T26.3 erledigt:** `sommer` mit Kondition 80,1, im Ziel, aber am unteren Rand.
+- **Neu (vorläufig): Die 1. Liga kauft seltener im Ausland**, mit 35 statt 50 % je Suche (`RCV.ausland.chance`, K32 Nr. 20). Drei knappe Werte haben dieselbe Spur:
+  - `finanzmodell`, 1. Liga 2026: 9,2 statt 10,5 Mio. (Lauf 24, vor den Käufen im Ausland). Die Kader wuchsen von 28,4 auf 28,8 Spieler, Gehalt und Stab um 1,4 Mio.
+  - `kabine`: offizielle Wechselwünsche je Kader mit Seed 5, 6 und 7 1,05, 0,98 und 0,96, im Mittel 1,00 (Grenze 1, vor den Käufen im Ausland stets 0,75).
+  - `spielermodell`: Die Stärke der 1. Liga steigt um 1,6 (erlaubt 1,5), die der 2. Liga um 2,1 (erlaubt 2).
+  - Ursache: Wen ein Zugang aus dem Ausland ersetzt, der findet als Erstligist kaum einen Käufer, weil er nicht weit nach unten geht. Er bleibt und sitzt draußen. Das Geld bindet seit Lauf 26 der Jahresabschluss, die Käufe im Ausland müssen es nicht mehr tun. 2. und 3. Liga bleiben bei 30 und 15 %.
+- **T28.2 behoben (nur der Test):**
+  - `kabine` Nr. 14 baute sechsmal dieselbe Welt, also drei Fälle je sechsmal gezählt. Jetzt sind es sechs verschiedene Vereine (4 bis 9).
+  - Die Diva vergleicht sich jetzt mit dem Spieler ohne Eigenschaft (mindestens 3 weniger) statt mit der festen Grenze −6. Drei Spiele kosten sie je −2, die Trägheit holt einen Teil davon zurück, darum kippte −6 mit dem Seed.
+  - Nr. 16 läuft ohne Konkurrenten wie Nr. 15 (`platzRivale` aus). Mit Seed 6 und 7 hatte der Spieler auf der Tribüne zufällig einen gleich starken in der Startelf, darum −6 statt −4.
+- **Offen, nur beobachten:** `finanzmodell` 1. Liga 2028 schwankt stark (Lauf 26: 7,2, Lauf 28: 12,9 Mio.), ebenso die 2. Liga 2028 (−1,2 bzw. −3,7, dort mit drei teuren Absteigern). Vor einer Änderung erst den nächsten Lauf abwarten.
+- **Bitte testen (Lauf 29 auf diesem Zweig):** alle Tests.
+  - Wörtlich bitte aus `welt 10` alle zehn Zeilen „Konten der Computer-Vereine …“ (der Faktor 2030 war mit 0,97 knapp) und alle zehn Zeilen „mindestens 15 Wechsel mit Ablöse“.
+  - Dazu `node tests/kabine.js` mit Seed 5, 6 und 7: je die Zeile „Keine Dauerkrise“ und die Zeilen zu „Konkurrent“ und „Tribüne“.
+  - Dazu `spielermodell` (Zeilen „Gleichgewicht“), `sommer` (Kondition) und `node tests/finanzmodell.js 3` (Zeilen „Saldo …“).
+
 ### 27.11.2026: Lauf 26 übernommen: Jahresabschluss der Computer-Vereine (Zweig `mitarbeit/popolupo-t26-abschluss`, auf t25-geld und `claude/compassionate-galileo-bsbua4` 1e0c0e8)
 
 - **Lauf 26:** 54 grün, 5 rot. Lauf 27 (gezielt zur Zielplattform) alle grün.

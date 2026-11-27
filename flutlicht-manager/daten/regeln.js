@@ -457,7 +457,10 @@ const REGELN={
     // die Konten der Computer-Vereine wuchsen in zehn Saisons auf ein Vielfaches (Lauf 25).
     // vereine: so viele zufällige Auslandsvereine beobachtet er je Suche (große Vereine scouten das Ausland besser, K32 §7). Ohne die Grenze stünden rund 1.660 Poolspieler
     // gegen die Handvoll Gelisteter im Inland, fast jede Suche endete im Ausland (Prüfung GP). abschlag 2 statt 1 aus demselben Grund.
-    ausland:{an:true,chance:{1:0.5,2:0.3,3:0.15},vereine:{1:5,2:3,3:2},abschlag:2},
+    // 1. Liga 35 statt 50 % (Lauf 28, 27.11., vorläufig): Wen ein Kauf aus dem Ausland ersetzt, der findet als Erstligist kaum einen Käufer (er geht nicht weit nach unten),
+    // die Kader der 1. Liga wuchsen (2026 Ø 28,8 statt 28,4 Spieler, Saldo 9,2 statt 10,5 Mio.), mehr Spieler saßen draußen (Wechselwünsche Ø 1,00 bei Grenze 1).
+    // Das Geld bindet seit Lauf 26 der Jahresabschluss (finanzen.ueberschuss), die Käufe im Ausland müssen es nicht mehr allein tun.
+    ausland:{an:true,chance:{1:0.35,2:0.3,3:0.15},vereine:{1:5,2:3,3:2},abschlag:2},
     // Leihen unter Computer-Vereinen (K31 §5.9, U11d1). Leihbar: bis alterMax Jahre, Rang in leihRaenge (Ausbildungsverein: Profilwert, auch Talente), gesund, Verleiher behält mehr als
     // markt.verkaeufer.kaderMin. Geliehen wird für die Lücken in gruende: zuerst (vor dem Kauf) bei den Gründen in zuerst, sonst nur, wenn kein Kauf geht. Kontingent: leihe.kontingent.
     leihe:{alterMax:23,leihRaenge:['ueber'],gruende:['verletzt','offen'],zuerst:['verletzt']},
