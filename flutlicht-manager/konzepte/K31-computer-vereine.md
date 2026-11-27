@@ -53,6 +53,9 @@ Hängt ab von: K19 (Transfers), K21 (Verträge), K18 (Scouting), K28 (Vorstand),
 - Einnahmen je Saison aus Zuschauern, TV, Sponsor und Transfers, Ausgaben aus Gehältern, Betrieb und Ablösen. Heute: `fremdeEinnahmen` nach Ansehen.
 - Daraus legt ihr Vorstand ein **Transferbudget** und einen **Gehaltsrahmen** fest (wie K28 für dich, vereinfacht).
 - Über dem Gehaltsrahmen: erst verkaufen, dann kaufen.
+- **Jahresabschluss (27.11.2026, Lauf 26, vorläufig):** Am 1. Juli, nach dem Bauen, gibt der Vorstand 70 % dessen aus, was über einer Rücklage von 40 % der erwarteten Jahreseinnahmen liegt. Das Geld geht in Dinge außerhalb des Kaders: Schulden, Gelände, Nachwuchszentrum, andere Abteilungen. Es verlässt die Ligen (`kiUeberschuss`, `REGELN.computer.finanzen.ueberschuss`).
+  - Grund: Verkäufe ins Ausland (500 bis 1.100 Mio. je Saison), Europapokal und Pokal bringen Geld, das kein Bedarf ausgibt. Auch mit den Käufen im Ausland (K32 §7, 100 bis 230 Mio. je Saison) wuchsen die Konten in zehn Saisons von 0,46 auf 11,6 Mrd., das 3,4-Fache der Jahreseinnahmen.
+  - Gilt nicht für deinen Verein: dein Geld verwaltest du selbst. Test `welt` Nr. 4c, Messung in `welt 10` (Quelle „Überschuss“).
 
 ## 4. Abläufe
 

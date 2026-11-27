@@ -104,6 +104,12 @@ function kiInsolvenzPruefen(){if(S.phase!=='play')return;const I=RFP.insolvenz;
   S.teams.forEach(t=>{if(t.id===S.my||!aktiv(t))return;if(t.cash+tvHeute(t)>=-kreditRahmen(t)){if(t.fu)t.fu=0;return;}t.fu=(t.fu||0)+1;if(t.fu<I.monate||t.fins===S.season)return;
     const s=insolvenzSaison(t);t.fu=0;t.fins=s;const A=S.abzug||(S.abzug={}),a=A[s]||(A[s]={});a[t.id]=(a[t.id]||0)+I.punkte;t.cash=0; /* nach dem letzten Spieltag Abzug in der neuen Saison (ER1, ES1) */
     news(`Insolvenz: ${t.name} ist zahlungsunfähig. ${I.punkte} Punkte Abzug${s>S.season?' in der neuen Saison':''}, die Gläubiger verzichten auf die Schulden.`,'');});}
+// Jahresabschluss der Computer-Vereine (K31 §3.3, Lauf 26, vorläufig): Was nach dem Bauen im Sommer über der Rücklage liegt (ueberschuss.ruecklage × erwartete Jahreseinnahmen),
+// steckt der Vorstand zum Anteil ueberschuss.anteil in Dinge außerhalb des Kaders: Schulden, Gelände, Nachwuchszentrum, andere Abteilungen. Das Geld verlässt die Ligen.
+// Grund: Verkäufe ins Ausland, Europapokal und Pokal bringen Geld, das kein Bedarf ausgibt. Auch mit den Käufen im Ausland (K32 §7) wuchsen die Konten in zehn Saisons
+// auf das 3,4-Fache der Jahreseinnahmen (Lauf 26). Ohne Zufall, nicht für deinen Verein (dein Geld verwaltest du selbst).
+function kiUeberschuss(){const U=RCV.finanzen.ueberschuss;if(!U||!U.an)return;
+  S.teams.forEach(t=>{if(t.id===S.my||!aktiv(t))return;const r=Math.round(erwarteteEinnahmen(t)*U.ruecklage);if(t.cash>r)t.cash-=Math.round((t.cash-r)*U.anteil);});}
 
 // ---------- K23g (§5.4, §5.5c): Lizenzprüfung der Computer-Vereine ----------
 // Erwarteter Saldo je Ligaspiel nach dem Modell von kiFinanzenSpiel: halb zu Hause, Heimspiel zum Erwartungswert mit neutraler Form

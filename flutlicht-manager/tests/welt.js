@@ -101,6 +101,13 @@ const mitLeihProtokoll=(F,getS,C)=>{const log=[],orig=F.kiLeihe;
   pruef(!!q&&t.cash===cash0-preis&&q.team===t.id&&S.pl.includes(q)&&!S.ausland.pl.includes(q)&&S.ausland.pl.length===pool0-1&&q.abl===preis,'Kauf im Ausland: Die Ablöse verlässt die Ligen, der Spieler zieht in den Kader',q?`Konto ${cash0} → ${t.cash}, Pool ${pool0} → ${S.ausland.pl.length}`:'-');
   pruef(!!ohne&&ohne.p===p&&!gesperrt,'Kauf im Ausland: Wer diese Saison ins Ausland verkauft wurde, wird nicht gleich zurückgekauft (Gegenprobe ohne Sperre findet ihn)',`ohne Sperre ${ohne?ohne.p.n:'kein Kandidat'}, mit Sperre ${gesperrt?gesperrt.p.n:'kein Kandidat'}`);}}
 
+// 4c. Jahresabschluss (K31 §3.3, Lauf 26): Über der Rücklage gibt der Vorstand eines Computer-Vereins den Anteil außerhalb des Kaders aus, darunter bleibt das Konto,
+// dein Verein bleibt unberührt (finanzen.js kiUeberschuss, am 1. Juli nach dem Bauen)
+{const {S,F,ev,C}=welt(),U=C.finanzen.ueberschuss,ein=ev('erwarteteEinnahmen'),l=S.teams.filter(t=>t.lg<=3&&t.id!==S.my),reich=l[0],arm=l[1],mein=S.teams[S.my];
+  const r=Math.round(ein(reich)*U.ruecklage);reich.cash=r+10e6;arm.cash=Math.round(ein(arm)*U.ruecklage)-1e6;const arm0=arm.cash;mein.cash=5e9;F.kiUeberschuss();
+  pruef(!!U&&U.an&&reich.cash===r+10e6-Math.round(10e6*U.anteil)&&arm.cash===arm0&&mein.cash===5e9,'Jahresabschluss: Über der Rücklage gibt ein Computer-Verein den Anteil außerhalb des Kaders aus, darunter und bei dir bleibt das Konto',
+    `Rücklage ${r}, 10 Mio. darüber → Konto ${reich.cash}, unter der Rücklage ${arm0} → ${arm.cash}, dein Verein ${mein.cash}`);}
+
 // 5. Gleicher Seed, gleiche Wechsel (Sommerfenster bis Mitte September), anderer Verlauf nur durch andere Würfel
 {const lauf=()=>{const w=welt(),log=mitProtokoll(w.F,()=>w.W.S,w.C.talentBis);let n=0;while(w.W.S.tag<75&&n++<200)schritt(w);return log.map(e=>[e.tag,e.pid,e.von,e.nach,e.preis].join(':')).join(' ');};
   const a=lauf(),b=lauf();pruef(a===b&&a.length>0,'Gleicher Seed: dieselben Wechsel in derselben Reihenfolge',`${a?a.split(' ').length:0} Wechsel im Sommer`);}
@@ -212,7 +219,7 @@ const mitLeihProtokoll=(F,getS,C)=>{const log=[],orig=F.kiLeihe;
 {const R0=neueWelt().W,C=R0.ev('RCV'),RM=R0.ev('RM');let log=null,leihLog=null,S0=null,evL=null,juliMein=null;const ende=[],fuell=[],nochVerliehen=[],juli=new Map(),sommer=new Map(),budgets={},geld={},kassen=[],spannung=[];
   // Quellen der Geldflüsse (Diagnose seit 27.11., Lauf 25): Funktion → Name in der Ausgabe. Alles, was keine davon bucht, steht unter „Rest“ (dein Verein, Jobwechsel, Karten, Stab).
   const QUELLEN={kiFinanzenSpiel:'Liga',kiPokalSpiel:'Pokal',euZahlen:'Europapokal',supercupPraemie:'Supercup',eroeffnung:'Eröffnung',tvRatenTag:'TV-Raten',auslandAbwanderung:'Ausland',
-    kiWechsel:'Transfers',leiheEnde:'Leihen',kiBauen:'Bauen',kontrolleTag:'Strafen',kiInsolvenzPruefen:'Insolvenz'};
+    kiWechsel:'Transfers',leiheEnde:'Leihen',kiBauen:'Bauen',kontrolleTag:'Strafen',kiInsolvenzPruefen:'Insolvenz',kiUeberschuss:'Überschuss'}; // Überschuss: Jahresabschluss am 1. Juli (Lauf 26)
   const kasse=S=>S.teams.reduce((a,t)=>a+(t.id!==S.my&&Number.isFinite(t.cash)?t.cash:0),0); // alle Konten ohne deinen Verein, auch Regionalliga (dort ruht das Geld)
   const platzGesamt=t=>t.lg===1?t.lastPos:t.lg===2?18+t.lastPos:36+t.lastPos; // Platz über alle drei Ligen (vorher zählte die 3. Liga wie die 2.)
   // Diagnose kleiner Kader (Läufe 12 bis 15: am Saisonende ein Verein mit 12 bis 14 Spielern und einer leeren Gruppe, Ursache ohne Node.js nicht nachzustellen):

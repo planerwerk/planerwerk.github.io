@@ -290,6 +290,30 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 27.11.2026: Lauf 26 übernommen: Jahresabschluss der Computer-Vereine (Zweig `mitarbeit/popolupo-t26-abschluss`, auf t25-geld und `claude/compassionate-galileo-bsbua4` 1e0c0e8)
+
+- **Lauf 26:** 54 grün, 5 rot. Lauf 27 (gezielt zur Zielplattform) alle grün.
+  - Im Ziel:
+    - Abwehrdruck 0,03: Abwehr +1,1, zum ersten Mal seit Lauf 1 grün.
+    - Auswärtssiege 32 % bei Heimvorteil 1,025.
+    - Langzeit-Spannung Ø Platz 6,0.
+    - Wechsel mit Ablöse in allen zehn Saisons im Ziel (16 bis 37, dazu 5 bis 9 aus dem Ausland).
+- **Geld der Computer-Vereine (echtes Problem, weiter offen):** Die Käufe im Ausland reichen nicht.
+  - Je Saison gehen nur 100 bis 230 Mio. hinaus. Herein kommen 500 bis 1.100 Mio. aus Verkäufen ins Ausland, 270 bis 400 Mio. aus dem Europapokal und gut 100 Mio. aus dem Pokal.
+  - Die Konten stiegen in zehn Saisons von 2,1 auf 11,6 Mrd., Faktor 3,4.
+  - Ursache: Computer-Vereine kaufen nur nach Bedarf. Mehr Geld ändert ihr Verhalten nicht.
+  - **Neu (vorläufig): Jahresabschluss.** Am 1. Juli nach dem Bauen gibt der Vorstand 70 % dessen außerhalb des Kaders aus, was über einer Rücklage von 40 % der erwarteten Jahreseinnahmen liegt (`kiUeberschuss`, K31 §3.3). Das Geld verlässt die Ligen. Dein Verein ist ausgenommen.
+  - Grob erwartet: Faktor um 0,8 bis 1 statt 3,4.
+  - Test `welt` Nr. 4c; in `welt 10` steht der Posten als „Überschuss“.
+- **Offen, zu messen:**
+  - `kabine`: 1,05 offizielle Wechselwünsche je Kader (Grenze 1), vorher stets 0,75. Gemessen wird mit einem Seed über eine Saison.
+  - `sommer`: Kondition 78,9 (Ziel 80–88). Der Wert schwankt seit Lauf 11 zwischen 77,6 und 82,6.
+  - `finanzmodell` 1. Liga: 9,2 / 12,0 / 7,2 Mio. (Ziel 11 ± 1,5). 2028 stiegen Gehalt und Stärke (+7,9 Mio., Stärke 73,6 → 74,4). Möglicher Grund: Die Käufe im Ausland bringen starke Spieler mit vollem Gehalt in die 1. Liga.
+  - Zu allen drei erst weitere Seeds, dann entscheiden.
+- **Bitte testen (Lauf 28 auf diesem Zweig):** alle Tests.
+  - Wörtlich bitte aus `welt 10` alle zehn Zeilen „Konten der Computer-Vereine …“ und alle zehn Zeilen „mindestens 15 Wechsel mit Ablöse“.
+  - Dazu `node tests/kabine.js 6` und `node tests/kabine.js 7` (je die Zeile „Keine Dauerkrise“), `node tests/sommer.js` und `node tests/finanzmodell.js 3` (Zeilen „Saldo …“).
+
 ### 27.11.2026: Lauf 25 übernommen: Abwehrdruck, Geld der Computer-Vereine (Zweig `mitarbeit/popolupo-t25-geld`, auf t24-abwehr und `claude/compassionate-galileo-bsbua4` 874a4ee)
 
 - **Lauf 25:** 53 grün, 4 rot. GO und GL9 sind grün, ebenso `desktop` (11 ✓). Die Wechsel mit Ablöse sind in allen zehn Saisons im Ziel (18 bis 40).

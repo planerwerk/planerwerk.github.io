@@ -446,7 +446,10 @@ const REGELN={
     vertrag:{wichtig:['stamm','herausforderer','talent'],chanceWichtig:0.9,ergaenzung:0.5,ergaenzungBis:30,sonst:0.1,frueh:{von:'10-01',bis:'12-31',chance:0.15},
       altAb:30,chanceAlt:0.6,ohneErhoehung:0.5}, // altAb, chanceAlt (T1.3, vorläufig): Wichtige ab 30 werden nicht früh verlängert und beim Saisonwechsel nur mit 60 %, wie in der Wirklichkeit gehen ältere Stammspieler oft ablösefrei. Ohne das wuchs die Stärke der Ligen über die Saisons
     kauf:{jeFenster:[4,2],ansehenMinus:30,alterMax:32,jungBis:23,talentGewicht:0.3,altAb:29,altMalus:1,vereinslosBis:2}, // vereinslosBis: Vereinslose höchstens Grundstärke des Käufers + 2 (T1.3, vorläufig)
-    finanzen:{budgetAnteil:[0.5,0.25],reinvest:0.8},
+    // ueberschuss (Jahresabschluss, K31 §3.3, Lauf 26, vorläufig): Am 1. Juli nach dem Bauen gibt der Vorstand anteil dessen, was über ruecklage × erwartete Jahreseinnahmen liegt,
+    // außerhalb des Kaders aus (finanzen.js kiUeberschuss). Ohne das wuchsen die Konten der Computer-Vereine in zehn Saisons von 0,46 auf 11,6 Mrd., das 3,4-Fache ihrer Jahreseinnahmen.
+    // Gleichgewicht grob: Rücklage + Zufluss je Saison / anteil (Zufluss in Lauf 26 etwa 0,8 bis 1,5 Mrd. je Saison, fast alles aus Verkäufen ins Ausland und dem Europapokal).
+    finanzen:{budgetAnteil:[0.5,0.25],reinvest:0.8,ueberschuss:{an:true,ruecklage:0.4,anteil:0.7}},
     // Kauf im Ausland (K32 §7, 27.11.2026, vorläufig): Bei jeder Lücke sucht ein Computer-Verein mit der Chance je Liga auch im Auslandspool (sonst nur im Inland).
     // Preis wie für dich (auslandPreis: Marktwert × 0,8 bis 1,4 nach Finanzkraft des Auslandsvereins), dazu Budget und Vereinswert wie im Inland.
     // abschlag: so viele Punkte weniger in der Wahl, weil Eingewöhnung und Sprache unsicher sind (bei gleicher Stärke kauft er lieber im Inland).
