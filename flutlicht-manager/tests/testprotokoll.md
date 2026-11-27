@@ -30,6 +30,82 @@ Node.js 22, Playwright mit Chromium, für `tests/ui-zugang.js` axe-core 4.10.2 (
 - Das berührt euren Bereich K35b nur an dieser einen Zeile in `index.html`. Die Schriftnamen in `css/spiel.css` sind unverändert.
 ---
 
+## Lauf 25, 27.11.2026 vormittags: popolupo-t24-abwehr 46123d6 (Prüfung GO, GL9, Diagnose welt 10, akzeptanz-sweep)
+
+Alle Tests auf eurem neuesten Stand, in einer Kopie, am Zweig nichts geändert. Dazu `tests/desktop.js` (11 ✓, mit GL9 im Spiel) und `node tests/akzeptanz-sweep.js` (Standard 100 Durchgänge). **53 grün, 4 rot** (ohne desktop gezählt). L6 (Schriften, 118894d) ist in eurem Stand noch nicht enthalten, `tests/offline.js` lief deshalb nicht mit. Eure neuen Prüfungen sind grün: `spielstand` Nr. 6 zu GL9 (18 ✓), `vertraege` 4d zu GO (27 ✓).
+
+Rot:
+- **T25.1 welt 10, Langzeit-Spannung** (neu, für popolupo): Die fünf Vereine mit dem höchsten Ansehen stehen im Schnitt auf Platz 9,6, Ziel sind die besten acht. In Lauf 22 und 23 waren es 6,0, in Lauf 24 5,4. Dafür sind die Wechsel mit Ablöse jetzt in allen zehn Saisons grün (2034: 24, in Lauf 24 nur 13). 46123d6 misst nur, die Welt hat sich also durch einen früheren Commit geändert. Vermutlich war es GO (784881d, Verträge), geprüft habe ich das nicht.
+- **spielermodell, Gleichgewicht 2. Liga** (Randwert): 69.6 → 70.9 → 71.8 → 71.4 → 71.4 → 71.5, Spanne 2,2 bei höchstens 2. In Lauf 22 und 23: 69.6 → … → 71.5, Spanne 1,9.
+- **kalibrierung, Auswärtssiege** (Randwert): 30 %, knapp unter dem Ziel von 30 bis 36 %. Lauf 22 und 23: 32 %.
+- **akzeptanz:** Abwehr +0,9 (unverändert). Dazu erstmals das Tempo mit 4,29 ms bei höchstens 4 ms, allein wiederholt 4,33 ms. **Am Code liegt das nicht:** Teil 6 allein auf den Ständen der Läufe 22 bis 25 ergibt heute auf dieser Maschine überall 3,9 bis 5,5 ms. Für Lauf 22 stand damals 2,84 ms im Protokoll. Die Maschine ist langsamer geworden, das Tempo zählt in diesem Lauf nicht.
+
+**finanzmodell 2:** 8 ✓, 1 ✗ (2. Liga 2028 −1,6 Mio.). Die KURZ- und Saldo-Zeilen sind Zeile für Zeile gleich wie in Lauf 24, per Vergleich geprüft, dort stehen sie wörtlich.
+
+**akzeptanz-sweep** (alle vier Zeilen wörtlich):
+
+```
+Testteam 1. FC Nürnberg (2. Liga, Niveau 68.1, 4-4-2), 100 Durchgänge gegen die übrigen Teams je Messung
+✗ heute                    Abwehr +0.9 · Mittelfeld +1.4 · Angriff +1.6 · Basis 50.2 Punkte, 2.93 Tore je Spiel
+✓ abwehr.jePunkt 0,03      Abwehr +1.1 · Mittelfeld +1.5 · Angriff +1.7 · Basis 50.4 Punkte, 2.94 Tore je Spiel
+✗ IV Mitte 0,95 außen 0,05 Abwehr +0.9 · Mittelfeld +1.0 · Angriff +1.3 · Basis 50.4 Punkte, 2.90 Tore je Spiel
+✗ angriff.exponent 1,65    Abwehr +1.0 · Mittelfeld +1.4 · Angriff +1.6 · Basis 50.2 Punkte, 2.93 Tore je Spiel
+```
+
+**welt 10:** Die zehn Zeilen „mindestens 15 Wechsel mit Ablöse“ wörtlich:
+
+```
+✓ Saison 2026: mindestens 15 Wechsel mit Ablöse unter Computer-Vereinen (wie tests/transfers.js): 40 mit Ablöse (Sommer 34, Winter 6; Käufer aus Liga 1/2/3: 9/12/19), 16 Vereinslose, 10 Vereine im Minus zum Saisonende · Sommerbeginn: 55 von 55 Vereinen mit Budget, zusammen 461.3 Mio., 178 Spieler gelistet · Winterbeginn: 55 von 55 Vereinen mit Budget, zusammen 633.4 Mio., 156 Spieler gelistet
+✓ Saison 2027: mindestens 15 Wechsel mit Ablöse unter Computer-Vereinen (wie tests/transfers.js): 18 mit Ablöse (Sommer 17, Winter 1; Käufer aus Liga 1/2/3: 12/4/2), 27 Vereinslose, 11 Vereine im Minus zum Saisonende · Sommerbeginn: 49 von 55 Vereinen mit Budget, zusammen 1376.8 Mio., 147 Spieler gelistet · Winterbeginn: 49 von 55 Vereinen mit Budget, zusammen 1072.8 Mio., 153 Spieler gelistet
+✓ Saison 2028: mindestens 15 Wechsel mit Ablöse unter Computer-Vereinen (wie tests/transfers.js): 22 mit Ablöse (Sommer 19, Winter 3; Käufer aus Liga 1/2/3: 8/10/4), 23 Vereinslose, 10 Vereine im Minus zum Saisonende · Sommerbeginn: 47 von 55 Vereinen mit Budget, zusammen 2142.1 Mio., 148 Spieler gelistet · Winterbeginn: 49 von 56 Vereinen mit Budget, zusammen 1490.7 Mio., 143 Spieler gelistet
+✓ Saison 2029: mindestens 15 Wechsel mit Ablöse unter Computer-Vereinen (wie tests/transfers.js): 30 mit Ablöse (Sommer 28, Winter 2; Käufer aus Liga 1/2/3: 16/3/11), 24 Vereinslose, 12 Vereine im Minus zum Saisonende · Sommerbeginn: 46 von 55 Vereinen mit Budget, zusammen 3039.7 Mio., 105 Spieler gelistet · Winterbeginn: 46 von 55 Vereinen mit Budget, zusammen 1897.1 Mio., 112 Spieler gelistet
+✓ Saison 2030: mindestens 15 Wechsel mit Ablöse unter Computer-Vereinen (wie tests/transfers.js): 32 mit Ablöse (Sommer 30, Winter 2; Käufer aus Liga 1/2/3: 12/9/11), 26 Vereinslose, 12 Vereine im Minus zum Saisonende · Sommerbeginn: 46 von 55 Vereinen mit Budget, zusammen 4040.9 Mio., 86 Spieler gelistet · Winterbeginn: 47 von 55 Vereinen mit Budget, zusammen 2385.4 Mio., 88 Spieler gelistet
+✓ Saison 2031: mindestens 15 Wechsel mit Ablöse unter Computer-Vereinen (wie tests/transfers.js): 22 mit Ablöse (Sommer 22, Winter 0; Käufer aus Liga 1/2/3: 10/8/4), 25 Vereinslose, 14 Vereine im Minus zum Saisonende · Sommerbeginn: 42 von 55 Vereinen mit Budget, zusammen 4624.9 Mio., 67 Spieler gelistet · Winterbeginn: 46 von 55 Vereinen mit Budget, zusammen 2697.2 Mio., 67 Spieler gelistet
+✓ Saison 2032: mindestens 15 Wechsel mit Ablöse unter Computer-Vereinen (wie tests/transfers.js): 29 mit Ablöse (Sommer 26, Winter 3; Käufer aus Liga 1/2/3: 9/9/11), 19 Vereinslose, 13 Vereine im Minus zum Saisonende · Sommerbeginn: 43 von 55 Vereinen mit Budget, zusammen 5483.7 Mio., 82 Spieler gelistet · Winterbeginn: 44 von 55 Vereinen mit Budget, zusammen 3091.6 Mio., 85 Spieler gelistet
+✓ Saison 2033: mindestens 15 Wechsel mit Ablöse unter Computer-Vereinen (wie tests/transfers.js): 23 mit Ablöse (Sommer 22, Winter 1; Käufer aus Liga 1/2/3: 11/9/3), 29 Vereinslose, 13 Vereine im Minus zum Saisonende · Sommerbeginn: 41 von 55 Vereinen mit Budget, zusammen 6274.2 Mio., 79 Spieler gelistet · Winterbeginn: 42 von 55 Vereinen mit Budget, zusammen 3483.6 Mio., 74 Spieler gelistet
+✓ Saison 2034: mindestens 15 Wechsel mit Ablöse unter Computer-Vereinen (wie tests/transfers.js): 24 mit Ablöse (Sommer 23, Winter 1; Käufer aus Liga 1/2/3: 10/6/8), 32 Vereinslose, 12 Vereine im Minus zum Saisonende · Sommerbeginn: 42 von 55 Vereinen mit Budget, zusammen 6996.5 Mio., 77 Spieler gelistet · Winterbeginn: 45 von 55 Vereinen mit Budget, zusammen 3839.2 Mio., 86 Spieler gelistet
+✓ Saison 2035: mindestens 15 Wechsel mit Ablöse unter Computer-Vereinen (wie tests/transfers.js): 21 mit Ablöse (Sommer 19, Winter 2; Käufer aus Liga 1/2/3: 10/7/4), 27 Vereinslose, 10 Vereine im Minus zum Saisonende · Sommerbeginn: 45 von 55 Vereinen mit Budget, zusammen 7551.4 Mio., 69 Spieler gelistet · Winterbeginn: 44 von 55 Vereinen mit Budget, zusammen 4417.0 Mio., 76 Spieler gelistet
+```
+
+Die Zeilen „Saisonende …“ wörtlich:
+
+```
+✓ Saisonende 2026: Kader zwischen 15 und 36, keine Gruppe ganz leer, kein Konto länger unter dem Kreditrahmen, als die Regeln bis zur Insolvenz erlauben: Kader 24 bis 30, 0 leere Gruppen, 0 zu lange unter dem Kreditrahmen (10 im Minus, erlaubt)
+  Saisonende 2026: offene Planstellen je Verein: 0.5, Vereine mit mehr als 2 Spielern Überhang in einer Gruppe: 18 %
+  Saisonende 2026: Gebrauchte mit auslaufendem Vertrag (U11c, früh verlängert sollten es unter 20 % sein): 119 von 1291 (9 %)
+✓ Saisonende 2027: Kader zwischen 15 und 36, keine Gruppe ganz leer, kein Konto länger unter dem Kreditrahmen, als die Regeln bis zur Insolvenz erlauben: Kader 26 bis 30, 0 leere Gruppen, 0 zu lange unter dem Kreditrahmen (11 im Minus, erlaubt)
+  Saisonende 2027: offene Planstellen je Verein: 0.2, Vereine mit mehr als 2 Spielern Überhang in einer Gruppe: 11 %
+  Saisonende 2027: Gebrauchte mit auslaufendem Vertrag (U11c, früh verlängert sollten es unter 20 % sein): 150 von 1292 (12 %)
+✓ Saisonende 2028: Kader zwischen 15 und 36, keine Gruppe ganz leer, kein Konto länger unter dem Kreditrahmen, als die Regeln bis zur Insolvenz erlauben: Kader 24 bis 30, 0 leere Gruppen, 0 zu lange unter dem Kreditrahmen (10 im Minus, erlaubt)
+  Saisonende 2028: offene Planstellen je Verein: 0.1, Vereine mit mehr als 2 Spielern Überhang in einer Gruppe: 18 %
+  Saisonende 2028: Gebrauchte mit auslaufendem Vertrag (U11c, früh verlängert sollten es unter 20 % sein): 228 von 1279 (18 %)
+✓ Saisonende 2029: Kader zwischen 15 und 36, keine Gruppe ganz leer, kein Konto länger unter dem Kreditrahmen, als die Regeln bis zur Insolvenz erlauben: Kader 24 bis 30, 0 leere Gruppen, 0 zu lange unter dem Kreditrahmen (12 im Minus, erlaubt)
+  Saisonende 2029: offene Planstellen je Verein: 0.1, Vereine mit mehr als 2 Spielern Überhang in einer Gruppe: 2 %
+  Saisonende 2029: Gebrauchte mit auslaufendem Vertrag (U11c, früh verlängert sollten es unter 20 % sein): 284 von 1277 (22 %)
+✓ Saisonende 2030: Kader zwischen 15 und 36, keine Gruppe ganz leer, kein Konto länger unter dem Kreditrahmen, als die Regeln bis zur Insolvenz erlauben: Kader 25 bis 30, 0 leere Gruppen, 0 zu lange unter dem Kreditrahmen (12 im Minus, erlaubt)
+  Saisonende 2030: offene Planstellen je Verein: 0.1, Vereine mit mehr als 2 Spielern Überhang in einer Gruppe: 4 %
+  Saisonende 2030: Gebrauchte mit auslaufendem Vertrag (U11c, früh verlängert sollten es unter 20 % sein): 269 von 1293 (21 %)
+✓ Saisonende 2031: Kader zwischen 15 und 36, keine Gruppe ganz leer, kein Konto länger unter dem Kreditrahmen, als die Regeln bis zur Insolvenz erlauben: Kader 24 bis 30, 0 leere Gruppen, 0 zu lange unter dem Kreditrahmen (14 im Minus, erlaubt)
+  Saisonende 2031: offene Planstellen je Verein: 0.1, Vereine mit mehr als 2 Spielern Überhang in einer Gruppe: 4 %
+  Saisonende 2031: Gebrauchte mit auslaufendem Vertrag (U11c, früh verlängert sollten es unter 20 % sein): 273 von 1304 (21 %)
+✓ Saisonende 2032: Kader zwischen 15 und 36, keine Gruppe ganz leer, kein Konto länger unter dem Kreditrahmen, als die Regeln bis zur Insolvenz erlauben: Kader 25 bis 30, 0 leere Gruppen, 0 zu lange unter dem Kreditrahmen (13 im Minus, erlaubt)
+  Saisonende 2032: offene Planstellen je Verein: 0.1, Vereine mit mehr als 2 Spielern Überhang in einer Gruppe: 5 %
+  Saisonende 2032: Gebrauchte mit auslaufendem Vertrag (U11c, früh verlängert sollten es unter 20 % sein): 307 von 1293 (24 %)
+✓ Saisonende 2033: Kader zwischen 15 und 36, keine Gruppe ganz leer, kein Konto länger unter dem Kreditrahmen, als die Regeln bis zur Insolvenz erlauben: Kader 25 bis 30, 0 leere Gruppen, 0 zu lange unter dem Kreditrahmen (13 im Minus, erlaubt)
+  Saisonende 2033: offene Planstellen je Verein: 0.2, Vereine mit mehr als 2 Spielern Überhang in einer Gruppe: 4 %
+  Saisonende 2033: Gebrauchte mit auslaufendem Vertrag (U11c, früh verlängert sollten es unter 20 % sein): 266 von 1298 (20 %)
+✓ Saisonende 2034: Kader zwischen 15 und 36, keine Gruppe ganz leer, kein Konto länger unter dem Kreditrahmen, als die Regeln bis zur Insolvenz erlauben: Kader 25 bis 30, 0 leere Gruppen, 0 zu lange unter dem Kreditrahmen (12 im Minus, erlaubt)
+  Saisonende 2034: offene Planstellen je Verein: 0.1, Vereine mit mehr als 2 Spielern Überhang in einer Gruppe: 4 %
+  Saisonende 2034: Gebrauchte mit auslaufendem Vertrag (U11c, früh verlängert sollten es unter 20 % sein): 277 von 1315 (21 %)
+✓ Saisonende 2035: Kader zwischen 15 und 36, keine Gruppe ganz leer, kein Konto länger unter dem Kreditrahmen, als die Regeln bis zur Insolvenz erlauben: Kader 24 bis 30, 0 leere Gruppen, 0 zu lange unter dem Kreditrahmen (10 im Minus, erlaubt)
+  Saisonende 2035: offene Planstellen je Verein: 0.1, Vereine mit mehr als 2 Spielern Überhang in einer Gruppe: 4 %
+  Saisonende 2035: Gebrauchte mit auslaufendem Vertrag (U11c, früh verlängert sollten es unter 20 % sein): 296 von 1308 (23 %)
+```
+
+Nach den Saisonende-Zeilen gibt `welt 10` noch aus: „Budget genutzt im letzten Fenster (nur zur Ansicht): 1 %“. Außerdem „Saison 2035: Zugänge über den Markt je Verein: Sommer 0.8, Winter 0.1“, in K31 §10 stehen für alle Zugänge zusammen 3 bis 8 und 0 bis 3.
+
+---
+
 ## Lauf 24, 27.11.2026 nachts (gezielt): Claude-Zweig 38738db (enthält popolupo-t22-korrekturen c4fea1e)
 
 Wegen der Uhrzeit nur ein gezielter Lauf zu euren Änderungen (`js/computer.js`, `js/saison.js`, `daten/regeln.js`, `tests/sim.js`): vertraege, transfers, werbung, spielstand, welt, zweite, finanzen, schwierigkeit, code, regeln-fest, welt 10, finanzmodell 2. **Alle grün außer welt 10.** Der volle Lauf folgt beim nächsten Mal.
