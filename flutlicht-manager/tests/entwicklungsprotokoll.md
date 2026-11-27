@@ -290,6 +290,20 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 27.11.2026: Läufe 21 und 22 aufgearbeitet (Zweig `mitarbeit/popolupo-t22-korrekturen`, auf t20-zusammen und `claude/compassionate-galileo-bsbua4` 4fae573)
+
+- **Läufe 21 und 22** übernommen, Lauf 22 mit 55 grün das beste Ergebnis bisher. T21.1, T21.2 und eure Anpassung von werbung Nr. 28 sind übernommen.
+- **T22.1 (welt 10, leere Gruppen):** Die Diagnose zeigt die Ursache. Betroffen war immer der Verein, den der Simulator am 1. Juli selbst führte (Kader 10 bzw. 14) und mitten in der Saison verließ.
+  - `job()` in `tests/sim.js` bildete `takeJob` nach, ohne den alten Verein aufzufüllen. Das echte Spiel füllt ihn auf, aber nur nach Positionen, sodass eine Gruppe (Innenverteidiger) leer bleiben konnte.
+  - Neu ist `altenVereinAuffuellen` in `js/saison.js`: erst nach Positionen, dann jede Gruppe des Kaderplans (`planAuffuellen`). `takeJob` und `tests/sim.js` nutzen dieselbe Funktion.
+- **Finanzen über drei Saisons:**
+  - Die 2. Liga liegt stabil im Ziel.
+  - In der 3. Liga stiegen die Gehälter auch bei den Gebliebenen um rund 15 % je Saison, der Saldo fiel von −1,8 über −2,8 auf −4,2.
+  - Neu: Verlängerungen im Gehaltsrahmen des Vereins (`verlaengerGehalt`, `computer.vertrag.ohneErhoehung` 0,5, K23 Nr. 25). Über dem Rahmen gibt es nur das alte Gehalt, mit 50 % bleibt der Spieler, sonst geht er. Frühe Verlängerungen gibt es über dem Rahmen nicht. Test `vertraege` Nr. 4c.
+  - Die 1. Liga sinkt ebenfalls (+10,5 / +9,3 / +7,6), dort bindet der Rahmen nicht. Das bleibt offen bis zur nächsten Messung.
+- `testnamen.pl` meldet `ev('typeof …')` in `tests/transfers.js` als unbekannten Namen. Das ist ein Fehlalarm meines Prüfskripts, kein Fehler im Test.
+- **Bitte testen (Lauf 23 auf diesem Zweig):** alle Tests, besonders vertraege (4c), welt und welt 10, finanzen, lizenz. Dazu wörtlich ins Protokoll die ✓/✗-Zeilen „Saldo …“ aus `node tests/finanzmodell.js` und aus `welt 10` die Zeilen „Saisonende …“ und „Wechsel mit Ablöse“.
+
 ### 26.11.2026: Claude-Zweig zusammengeführt (Zweig `mitarbeit/popolupo-t20-zusammen`, t19-korrekturen plus `claude/compassionate-galileo-bsbua4` 201f8b5)
 
 - Wir haben GK beide mit der Windows-App zusammengeführt (Claude 6e0ab41, ich bbe9e8b). Dieser Zweig vereint beide Stände, ihr könnt ihn ohne Konflikte übernehmen.

@@ -440,8 +440,11 @@ const REGELN={
     // Verträge nach Rang (K31 §4 Nr. 4, §5.8, U11c). Gilt für Vereine, deren Verträge nicht du führst (Bereich vertraege). wichtig: Ränge, die der Verein halten will.
     // Saisonwechsel: Chance auf Verlängerung je Rang (schließt die Zusage des Spielers ein), Ergänzungsspieler nur unter ergaenzungBis Jahren mit der Chance ergaenzung.
     // frueh: in diesem Zeitraum (MM-TT) jede Woche diese Chance, den auslaufenden Vertrag eines wichtigen Spielers vorzeitig zu verlängern (vor den Vorverträgen ab 1. Januar).
+    // ohneErhoehung (Lauf 22, vorläufig): Lägen die Gehälter des Vereins mit der Erhöhung über seinem Gehaltsrahmen (K23d, rahmenErlaubt), verlängert er nur zum alten Gehalt,
+    // und der Spieler bleibt mit dieser Chance, sonst geht er ablösefrei. Vorher bekam jeder das volle Gehalt nach Stärke, und in der 3. Liga stiegen die Gehälter
+    // je Saison um rund 15 % (finanzmodell, drei Saisons: Saldo −1,8, −2,8, −4,2 Mio. je Verein). Frühe Verlängerungen gibt es über dem Rahmen nicht.
     vertrag:{wichtig:['stamm','herausforderer','talent'],chanceWichtig:0.9,ergaenzung:0.5,ergaenzungBis:30,sonst:0.1,frueh:{von:'10-01',bis:'12-31',chance:0.15},
-      altAb:30,chanceAlt:0.6}, // altAb, chanceAlt (T1.3, vorläufig): Wichtige ab 30 werden nicht früh verlängert und beim Saisonwechsel nur mit 60 %, wie in der Wirklichkeit gehen ältere Stammspieler oft ablösefrei. Ohne das wuchs die Stärke der Ligen über die Saisons
+      altAb:30,chanceAlt:0.6,ohneErhoehung:0.5}, // altAb, chanceAlt (T1.3, vorläufig): Wichtige ab 30 werden nicht früh verlängert und beim Saisonwechsel nur mit 60 %, wie in der Wirklichkeit gehen ältere Stammspieler oft ablösefrei. Ohne das wuchs die Stärke der Ligen über die Saisons
     kauf:{jeFenster:[4,2],ansehenMinus:30,alterMax:32,jungBis:23,talentGewicht:0.3,altAb:29,altMalus:1,vereinslosBis:2}, // vereinslosBis: Vereinslose höchstens Grundstärke des Käufers + 2 (T1.3, vorläufig)
     finanzen:{budgetAnteil:[0.5,0.25],reinvest:0.8},
     // Leihen unter Computer-Vereinen (K31 §5.9, U11d1). Leihbar: bis alterMax Jahre, Rang in leihRaenge (Ausbildungsverein: Profilwert, auch Talente), gesund, Verleiher behält mehr als

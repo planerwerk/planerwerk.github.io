@@ -51,6 +51,17 @@ const welt=(id=9)=>{const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S,ev=W.e
   pruef(c>0&&sq.length>0&&ab&&nichtDoppelt&&auf,'Ligaklausel: Nach einem Abstieg ohne ausgehandelte Klausel −30 %, ausgehandelt wie vereinbart, Neuzugang von heute nicht; kein zweites Mal; nach dem Wiederaufstieg wieder das alte Gehalt',
     `${k.name}: ${vor[0]} → ${r(vor[0]*(1-c))} → ${sq[0].sal}; dein Verein ${m0.join('/')} → ${mein.map(p=>p.sal).join('/')}, Abstieg ${ab}, nicht doppelt ${nichtDoppelt}, Aufstieg ${auf}`);}
 
+// 4c. Verlängerung im Gehaltsrahmen (K23d, Lauf 22, computer.js verlaengerGehalt): unter dem Rahmen das Gehalt nach Stärke; darüber nur das alte Gehalt
+// (der Spieler bleibt mit vertrag.ohneErhoehung) oder er geht; sinkt das Gehalt, gilt das neue immer
+{const {S,ev}=welt();const k=S.teams.find(x=>x.id!==S.my&&x.lg===3),sq=ev('squad')(k.id),p=sq[0],neu=ev('salaryFor')(p.str),vg=ev('verlaengerGehalt');
+  const setze=v=>sq.forEach(q=>{if(q!==p)q.sal=v;}),alt=Math.round(neu*0.5);p.sal=alt;
+  setze(1000);const unter=vg(p);
+  setze(5e7);const werte=new Set();for(let i=0;i<40;i++)werte.add(String(vg(p)));
+  p.sal=neu*2;const sinkt=vg(p);
+  pruef(unter===neu&&werte.size===2&&werte.has(String(alt))&&werte.has('null')&&sinkt===neu,
+    'Verlängerung im Gehaltsrahmen: darunter Gehalt nach Stärke, darüber nur das alte Gehalt oder Abgang, sinkendes Gehalt gilt immer',
+    `unter dem Rahmen ${unter} (Stärke ${neu}), darüber ${[...werte].join(' / ')}, sinkend ${sinkt}`);}
+
 // 5. Ligaklausel nach einem Abstieg, Ausstiegsklausel nur im Fenster
 {const {S,ev,t,F}=welt();const p=ev('squad')(S.my)[2],sal=p.sal;p.lk=0.3;t.lastLg=t.lg;t.lg=t.lg+1;ev('vertraegeSaison')();t.lg=t.lastLg;
   pruef(p.sal===Math.round(sal*0.7/1000)*1000,'Ligaklausel: Nach einem Abstieg sinkt das Gehalt um die vereinbarte Kürzung',`${sal} → ${p.sal}`);
