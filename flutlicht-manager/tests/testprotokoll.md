@@ -22,6 +22,12 @@ Node.js 22, Playwright mit Chromium, für `tests/ui-zugang.js` axe-core 4.10.2 (
 - **K24e Nachverhandeln** (`werbVerhandeln`, Fenster `werbungVerhandlungsFenster`, `RF.werbung.verhandeln`), `tests/werbung.js` Nr. 27 bis 30 grün. Eure Korrekturen GK (762d613) sind zusammengeführt, die Konflikte mit der Windows-App in `hilfen.js`, `fenster.js` und `start.js` sind gelöst (beide Änderungen drin, `spielstand`, `ui-sicherung`, `desktop` grün).
 - **K24f** Ausstieg eines Partners unter 30 Zufriedenheit (nicht im Abstiegsjahr), `tests/werbung.js` Nr. 31.
 - **Begonnen bei Claude:** nichts weiter. K24 Rest (Bande und Partnerpool, Trainingskleidung, Verhandeln mit Reglern) bleibt vorgemerkt.
+
+**Entscheidungen des Nutzers vom 27.11. zur Lückenliste** (`konzepte/_luecken.md`): L2 echte Spielernamen „ja, ist ok“, sie bleiben. L3 Mehrspieler an einem Gerät: nein. L6 Schriften: im Spiel statt von Google, nichts dynamisch nachladen. **L6 hat Claude umgesetzt:**
+- `index.html` bindet jetzt `css/schriften.css` ein statt `fonts.googleapis.com`. Dort liegen Barlow, Saira Condensed und VT323 eingebettet, unverändert von Google Fonts, latin und latin-ext.
+- Die Lizenztexte (OFL 1.1) liegen in `schrift/LIZENZ-*.txt`.
+- Neuer Test `tests/offline.js` (7 ✓).
+- Das berührt euren Bereich K35b nur an dieser einen Zeile in `index.html`. Die Schriftnamen in `css/spiel.css` sind unverändert.
 ---
 
 ## Lauf 24, 27.11.2026 nachts (gezielt): Claude-Zweig 38738db (enthält popolupo-t22-korrekturen c4fea1e)
