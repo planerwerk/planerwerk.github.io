@@ -111,6 +111,17 @@ function kiKandidat(t,n,rest,senk,kader,plan){const K=RCV.kauf,min=n.min-senk,al
       preis=p.nv===S.season?p.ask:kiPreis(p);if(preis>rest||preis>kiZahlt(p,t,n))continue;}
     const v=(n.grund==='talent'?p.pot:sicht+(p.age<=K.jungBis?(p.pot-p.str)*talentGewicht:0)-Math.max(0,p.age-K.altAb)*altMalus)+(R()-0.5)*2*RCV.schaetzFehler;
     if(v>bv){bv=v;best={p,preis,von:von?von.id:null};}}
+  // Kauf im Ausland (K32 §7, vorläufig): mit der Chance je Liga auch im Auslandspool, gleiche Regeln wie im Inland, Preis wie für dich (auslandPreis), Abschlag in der Wahl.
+  // Nicht zurückgekauft wird, wer in dieser Saison ins Ausland verkauft wurde (p.ausWeg). Das Geld verlässt die Ligen (kiWechsel).
+  const A=RCV.ausland;
+  if(A&&A.an&&S.ausland&&R()<((A.chance||{})[t.lg]||0))for(const p of S.ausland.pl){if(p.ausWeg===S.season||p.wech||p.leihe||p.age>alterMax)continue;
+    const av=avVon(p.team);if(!av||av.rep-t.rep>K.ansehenMinus)continue; // er geht nicht weit nach unten, wie im Inland
+    if(n.grund==='talent'){if(p.age>RCV.talentBis||p.pot<min)continue;}
+    const sicht=kiSichtStr(t,p);
+    if(n.grund!=='talent'&&(planGruppe(p)!==n.g||sicht<min||(n.statt&&sicht<=n.statt.str)))continue;
+    const preis=auslandPreis(p);if(preis>rest||preis>kiZahlt(p,t,n))continue;
+    const v=(n.grund==='talent'?p.pot:sicht+(p.age<=K.jungBis?(p.pot-p.str)*talentGewicht:0)-Math.max(0,p.age-K.altAb)*altMalus)-(A.abschlag||0)+(R()-0.5)*2*RCV.schaetzFehler;
+    if(v>bv){bv=v;best={p,preis,von:null,aus:av.id};}}
   return best;}
 // Sternejagd (§5.3, U11b): der stärkste bezahlbare Spieler eines kleineren Vereins, der nicht auf der Liste stehen muss. Er ist deutlich stärker als der Anspruch des Käufers
 // und bekäme dort einen Stammplatz. Sein Verein nimmt das außergewöhnliche Angebot an, auch wenn ihm danach eine Planstelle fehlt (die Ersatzsuche folgt aus dem Bedarf).
@@ -123,7 +134,11 @@ function kiStern(t,P,rest,kader){const J=RCV.sterneJagd;let best=null,bv=-Infini
     const v=sicht+(R()-0.5)*2*RCV.schaetzFehler;if(v>bv){bv=v;best={p,preis,von:von.id};}}
   return best;}
 // Der Wechsel selbst: Geld, Kabine, Vertrag. Vereinslose kommen ohne Ablöse und ohne Meldung (außer bei dir). art: 'stern' bei der Sternejagd (Auswertungen in tests/welt.js, Meldung „Konkurrent rüstet auf“ seit K31c).
-function kiWechsel(p,b,preis,art){const von=p.team>=0?S.teams[p.team]:null;
+function kiWechsel(p,b,preis,art){const av=istAusland(p)?avVon(p.team):null,von=!av&&p.team>=0?S.teams[p.team]:null;
+  // Kauf im Ausland (K32 §7): Die Ablöse geht ins Ausland, der Spieler zieht aus dem Pool in die Ligen (ausDemAusland, wie bei deinen Käufen dort)
+  if(av){const avId=av.id;if(b.id===S.my)money('Transfers',-preis);else b.cash-=preis;S.offers=S.offers.filter(o=>o.pid!==p.id);ausDemAusland(p,b.id);
+    news(`Wechsel perfekt: ${p.n} kommt für ${fmt(preis)} von ${av.name} aus dem Ausland zu ${b.name}.`,'tr');
+    p.list=0;p.ask=0;p.ct=riA(RM.neuerVertrag);p.sal=salaryFor(p.str);p.seit=absTag(S.tag);p.abl=preis;neuzugang(p,b.id);statTransfer(p,preis,avId,b.id);return;}
   if(von){if(b.id===S.my)money('Transfers',-preis);else b.cash-=preis;
     if(von.id===S.my){money('Transfers',preis);vertragEnde(p);}else von.cash+=preis;
     kabineAbgang(p,von.id);S.offers=S.offers.filter(o=>o.pid!==p.id);news(`Wechsel perfekt: ${p.n} geht für ${fmt(preis)} von ${von.name} zu ${b.name}.`,'tr');

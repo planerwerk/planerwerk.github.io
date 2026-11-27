@@ -447,6 +447,12 @@ const REGELN={
       altAb:30,chanceAlt:0.6,ohneErhoehung:0.5}, // altAb, chanceAlt (T1.3, vorläufig): Wichtige ab 30 werden nicht früh verlängert und beim Saisonwechsel nur mit 60 %, wie in der Wirklichkeit gehen ältere Stammspieler oft ablösefrei. Ohne das wuchs die Stärke der Ligen über die Saisons
     kauf:{jeFenster:[4,2],ansehenMinus:30,alterMax:32,jungBis:23,talentGewicht:0.3,altAb:29,altMalus:1,vereinslosBis:2}, // vereinslosBis: Vereinslose höchstens Grundstärke des Käufers + 2 (T1.3, vorläufig)
     finanzen:{budgetAnteil:[0.5,0.25],reinvest:0.8},
+    // Kauf im Ausland (K32 §7, 27.11.2026, vorläufig): Bei jeder Lücke sucht ein Computer-Verein mit der Chance je Liga auch im Auslandspool (sonst nur im Inland).
+    // Preis wie für dich (auslandPreis: Marktwert × 0,8 bis 1,4 nach Finanzkraft des Auslandsvereins), dazu Budget und Vereinswert wie im Inland.
+    // abschlag: so viele Punkte weniger in der Wahl, weil Eingewöhnung und Sprache unsicher sind (bei gleicher Stärke kauft er lieber im Inland).
+    // Wer in dieser Saison ins Ausland verkauft wurde (p.ausWeg), wird nicht gleich zurückgekauft. Grund: Geld floss nur herein (Abwanderung, Europapokal), nie hinaus,
+    // die Konten der Computer-Vereine wuchsen in zehn Saisons auf ein Vielfaches (Lauf 25).
+    ausland:{an:true,chance:{1:0.5,2:0.3,3:0.15},abschlag:1},
     // Leihen unter Computer-Vereinen (K31 §5.9, U11d1). Leihbar: bis alterMax Jahre, Rang in leihRaenge (Ausbildungsverein: Profilwert, auch Talente), gesund, Verleiher behält mehr als
     // markt.verkaeufer.kaderMin. Geliehen wird für die Lücken in gruende: zuerst (vor dem Kauf) bei den Gründen in zuerst, sonst nur, wenn kein Kauf geht. Kontingent: leihe.kontingent.
     leihe:{alterMax:23,leihRaenge:['ueber'],gruende:['verletzt','offen'],zuerst:['verletzt']},

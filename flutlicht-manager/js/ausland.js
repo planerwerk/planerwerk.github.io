@@ -110,7 +110,7 @@ function auslandAbwanderung(vereine){if(!S.ausland)return[];const A=RW.ausland.a
     for(const {p} of kand){if(k>=n)break;if((jeV.get(p.team)||0)>=A.jeVerein)continue;const preis=Math.round(vwAusland(p)*A.preis/RM.runden)*RM.runden,l=auslandKaeufer(p,preis).filter(x=>!belegt.has(x.id)&&avPlatzFuer(x,p));if(!l.length)continue;
       const v=l.reduce((b,x)=>Math.abs(avStaerke(x)-p.str)<Math.abs(avStaerke(b)-p.str)?x:b);belegt.add(v.id);jeV.set(p.team,(jeV.get(p.team)||0)+1);k++;out.push({p,von:p.team,preis,v});}}});
   out.forEach(({p,von,preis,v})=>{const t=S.teams[von];if(von===S.my){money('Transfers',preis);vertragEnde(p);}else t.cash+=preis;
-    kabineAbgang(p,von);S.offers=S.offers.filter(o=>o.pid!==p.id);insAusland(p,v.id);statTransfer(p,preis,von,v.id);
+    kabineAbgang(p,von);S.offers=S.offers.filter(o=>o.pid!==p.id);insAusland(p,v.id);p.ausWeg=S.season; /* in dieser Saison kauft ihn kein Computer-Verein zurück (K32 §7, computer.js kiKandidat) */statTransfer(p,preis,von,v.id);
     {const weg=new Set();kernKuerzen(v,avKader(v.id),weg);if(weg.size){S.ausland.pl=S.ausland.pl.filter(q=>!weg.has(q.id));weg.forEach(id=>PIX.delete(id));}} // Kern des Käufers auf Plan
     news(`Wechsel perfekt: ${p.n} geht für ${fmt(preis)} von ${t.name} zu ${v.name} (${gruppenName(avGruppe(v))}).`,'tr');if(von===S.my)stabMeldung(`Der Verein hat ${p.n} für ${fmt(preis)} an ${v.name} verkauft.`);});
   return out;}

@@ -17,7 +17,7 @@ const schritt=w=>{const S=w.W.S;if(S.sponsOffers)w.F.sponsorWaehlen(0);if(w.ev('
 // Protokoll aller Wechsel der Computer-Vereine: Der Zustand wird festgehalten, bevor der Wechsel geschieht. getS liefert den aktuellen Spielstand.
 const mitProtokoll=(F,getS,talentBis)=>{const log=[],orig=F.kiWechsel;
   F.kiWechsel=function(p,b,preis,art){const S=getS(),von=p.team>=0?S.teams[p.team]:null,g=F.planGruppe(p),bed=F.planBedarf(F.kaderplan(b));
-    const e={s:S.season,tag:S.tag,pid:p.id,nach:b.id,von:von?von.id:-1,preis,g,art:art||'',repDiff:von?b.rep-von.rep:0,lgNach:b.lg,offen:F.fensterEnde(S.tag)!=null,nr:F.fensterNr(S.tag),
+    const e={s:S.season,tag:S.tag,pid:p.id,nach:b.id,von:von?von.id:-1,preis,g,art:art||'',repDiff:von?b.rep-von.rep:0,lgNach:b.lg,aus:p.team>=2000 /* Kauf im Ausland (K32 §7), AV0 in js/ausland.js */,offen:F.fensterEnde(S.tag)!=null,nr:F.fensterNr(S.tag),
       bedarf:bed.some(n=>n.grund==='talent'?p.age<=talentBis:n.g===g),grundA:true,regelB:true,kaderVon:99,rest:b.tb?b.tb.b-b.tb.a:-1};
     if(von){const P=F.kaderplan(von);e.grundA=P.abgabe.has(p.id);e.regelB=P.gr[g].l.length>P.gr[g].soll;e.kaderVon=P.alle.length;}
     log.push(e);return orig(p,b,preis,art);};
@@ -81,6 +81,23 @@ const mitLeihProtokoll=(F,getS,C)=>{const log=[],orig=F.kiLeihe;
   pruef(mitTb.length>0&&!falsch.length&&!S.teams[S.my].tb,'Budget: die Hälfte des Kontos am Anfang des Sommerfensters (ehrgeizig 70 %, sparsam 35 %), Verkäufe erhöhen es, niemand gibt mehr aus. Dein Verein hat keins, solange du die Transfers führst',`${mitTb.length} Vereine mit Budget, ${falsch.length} falsch`);
   pruef(log.every(e=>e.offen&&e.kaderVon>ev('RM').verkaeufer.kaderMin&&e.preis<=e.rest&&(e.art==='stern'||(e.bedarf&&e.grundA&&e.regelB))),'Erste Fensterwoche: jeder Wechsel mit Bedarf, mit Grund, nach Regel B und im Budget',`${log.length} Wechsel, davon ${log.filter(e=>e.von<0).length} Vereinslose`);
   const je={};log.forEach(e=>{je[e.nach]=(je[e.nach]||0)+1;});pruef(Object.values(je).every(n=>n===1),'Eine Lücke, ein Kauf: je Verein höchstens ein Zugang in der Woche');}
+
+// 4b. Kauf im Ausland (K32 §7, 27.11.): Der Kandidat kommt aus dem Pool, wenn das Inland nichts bietet; der Wechsel nimmt die Ablöse aus den Ligen, der Spieler zieht in den Kader,
+// wer diese Saison ins Ausland verkauft wurde, wird nicht zurückgekauft. Chance je Liga hier auf 1 gesetzt, Transferlisten leer.
+{const w=welt(),{S,F,ev,C}=w,A=C.ausland,ch0=Object.assign({},A.chance);
+  const t=S.teams.filter(x=>x.lg===1&&x.id!==S.my).sort((a,b)=>b.rep-a.rep)[0],avVon=ev('avVon'),preisAus=ev('auslandPreis');
+  const p=S.ausland.pl.filter(q=>q.age<=28&&q.ct>=3&&!ev('istTalent')(q)&&avVon(q.team)&&avVon(q.team).fin<=40&&avVon(q.team).rep-t.rep<=C.kauf.ansehenMinus).sort((a,b)=>b.str-a.str)[0];
+  // p: ein Poolspieler, den der Verein sicher bezahlen darf (Vertrag ab 3 Jahren, Finanzkraft bis 40: Preis höchstens 1,04 × Marktwert, Vereinswert mindestens 1,08 ×)
+  if(!p)pruef(false,'Kauf im Ausland: kein passender Poolspieler für den Test (Alter bis 28, Vertrag ab 3 Jahren, Finanzkraft bis 40)');else{
+  const frei=S.pl.filter(q=>q.team===-1);frei.forEach(q=>{q.team=-3;});S.pl.forEach(q=>{q.list=0;});A.chance[1]=1; // Inland leer: keine Liste, Vereinslose kurz beiseite (kiKandidat überspringt team < −1)
+  const kader=new Map(S.teams.map(x=>[x.id,S.pl.filter(q=>q.team===x.id)])),plan=x=>F.kaderplan(x,kader.get(x.id)),n={g:ev('planGruppe')(p),min:Math.round(p.str)-3,grund:'offen',rang:'stamm'};
+  const c=F.kiKandidat(t,n,1e12,0,kader,plan);
+  p.ausWeg=S.season;const gesperrt=F.kiKandidat(t,Object.assign({},n,{min:Math.round(p.str)-0.5}),1e12,0,kader,plan);delete p.ausWeg;
+  Object.assign(A.chance,ch0);frei.forEach(q=>{q.team=-1;});
+  const q=c&&c.p,cash0=t.cash,pool0=S.ausland.pl.length,preis=q?preisAus(q):0;if(q)F.kiWechsel(q,t,preis);
+  pruef(!!c&&c.aus!=null&&c.von==null&&c.preis===preis&&ev('istAusland')({team:c.aus}),'Kauf im Ausland: Bietet das Inland nichts, findet ein Verein seinen Kandidaten im Auslandspool, zum Preis wie für dich',c?`${q.n} (${f1(q.str)}) für ${preis}`:'kein Kandidat');
+  pruef(!!q&&t.cash===cash0-preis&&q.team===t.id&&S.pl.includes(q)&&!S.ausland.pl.includes(q)&&S.ausland.pl.length===pool0-1&&q.abl===preis,'Kauf im Ausland: Die Ablöse verlässt die Ligen, der Spieler zieht in den Kader',q?`Konto ${cash0} → ${t.cash}, Pool ${pool0} → ${S.ausland.pl.length}`:'-');
+  pruef(!gesperrt||gesperrt.p!==p,'Kauf im Ausland: Wer diese Saison ins Ausland verkauft wurde, wird nicht gleich zurückgekauft',gesperrt?gesperrt.p.n:'kein Kandidat');}}
 
 // 5. Gleicher Seed, gleiche Wechsel (Sommerfenster bis Mitte September), anderer Verlauf nur durch andere Würfel
 {const lauf=()=>{const w=welt(),log=mitProtokoll(w.F,()=>w.W.S,w.C.talentBis);let n=0;while(w.W.S.tag<75&&n++<200)schritt(w);return log.map(e=>[e.tag,e.pid,e.von,e.nach,e.preis].join(':')).join(' ');};
@@ -254,7 +271,7 @@ const mitLeihProtokoll=(F,getS,C)=>{const log=[],orig=F.kiLeihe;
   const zuViel=Object.entries(jeFenster).filter(([k,n])=>n>C.kauf.jeFenster[+k.split(':')[1]]).length;pruef(zuViel===0,'Obergrenze: höchstens 4 Zugänge über den Markt im Sommer und 2 im Winter je Verein, Leihen eingerechnet',`${zuViel} darüber`);
   jahre.forEach(s=>{const l=log.filter(e=>e.s===s),bez=l.filter(e=>e.von>=0),so=l.filter(e=>e.nr===0),wi=l.filter(e=>e.nr===1),f=fuell.filter(x=>x.s===s),z=ende.find(x=>x.s===s)||{vereine:55};
     const bud=nr=>{const b=budgets[s+':'+nr];return b?`${b.pos} von ${b.n} Vereinen mit Budget, zusammen ${f1(b.sum/1e6)} Mio., ${b.gelistet} Spieler gelistet`:'kein Fenster';}; /* Diagnose, siehe beiSaisonstart */
-    pruef(bez.length>=15,`Saison ${s}: mindestens 15 Wechsel mit Ablöse unter Computer-Vereinen (wie tests/transfers.js)`,`${bez.length} mit Ablöse (Sommer ${bez.filter(e=>e.nr===0).length}, Winter ${bez.filter(e=>e.nr===1).length}; Käufer aus Liga 1/2/3: ${[1,2,3].map(g=>bez.filter(e=>e.lgNach===g).length).join('/')}), ${l.length-bez.length} Vereinslose, ${z.minus!=null?z.minus+' Vereine im Minus zum Saisonende':''} · Sommerbeginn: ${bud(0)} · Winterbeginn: ${bud(1)}`);
+    pruef(bez.length>=15,`Saison ${s}: mindestens 15 Wechsel mit Ablöse unter Computer-Vereinen (wie tests/transfers.js)`,`${bez.length} mit Ablöse (Sommer ${bez.filter(e=>e.nr===0).length}, Winter ${bez.filter(e=>e.nr===1).length}; Käufer aus Liga 1/2/3: ${[1,2,3].map(g=>bez.filter(e=>e.lgNach===g).length).join('/')}), ${l.filter(e=>e.aus).length} aus dem Ausland, ${l.length-bez.length-l.filter(e=>e.aus).length} Vereinslose, ${z.minus!=null?z.minus+' Vereine im Minus zum Saisonende':''} · Sommerbeginn: ${bud(0)} · Winterbeginn: ${bud(1)}`);
     info(`Saison ${s}: Zugänge über den Markt je Verein`,`Sommer ${f1(so.length/z.vereine)}, Winter ${f1(wi.length/z.vereine)} (K31 §10 nennt 3–8 und 0–3 für alle Zugänge zusammen)`);
     info(`Saison ${s}: am Ende des Sommerfensters aufgefüllt`,`${f.reduce((a,x)=>a+x.n,0)} Spieler bei ${f.filter(x=>x.n>0).length} Vereinen`);});
   // Konten der Computer-Vereine (seit 27.11., vorläufig): Startkonto etwa ein Fünftel der Jahreseinnahmen (K23), zusammen sollen sie nicht über die Jahreseinnahmen wachsen.
