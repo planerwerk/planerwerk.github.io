@@ -6,7 +6,7 @@ Stand 26. November 2026 (Claude), auf Wunsch: „in einem eigenen Container, Ins
 
 - **Eigenes Fenster** statt eines Browser-Tabs. Das Spiel selbst ist unverändert, es wird nach `spiel/` kopiert und mit Electron 45 (Chromium) angezeigt.
 - **Spielstand als Datei** in `%APPDATA%\Flutlicht Manager\spielstaende\`. Es gibt keine Größengrenze des Browsers (etwa 5 Mio. Zeichen) und kein Löschen nach sieben Tagen wie bei Safari (`konzepte/_luecken.md`, L1).
-  - Gespeichert wird erst vollständig in eine neue Datei (mit fsync auf die Platte). Dann wird die bisherige zu `.vorher` umbenannt und die neue an ihren Platz gelegt (Prüfung GL7).
+  - Gespeichert wird erst vollständig in eine neue Datei (mit fsync auf die Platte). Dann wird die bisherige zu `.vorher` umbenannt und die neue an ihren Platz gelegt (Prüfung GL7). Ein unveränderter Stand wird nicht noch einmal geschrieben, etwa beim Wechsel des Reiters (Prüfung GL9).
   - Unter Windows halten Virenscanner oder Indexdienst Dateien manchmal kurz fest. Dann versucht die App es bis zu fünfmal (GL8).
   - Eine auf das Fenster gezogene Datei öffnet die App nicht (GL10).
   - Ist die Datei kaputt, zum Beispiel nach einem Stromausfall beim Schreiben, lädt die App die vorige Fassung.

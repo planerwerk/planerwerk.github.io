@@ -3143,7 +3143,7 @@ Korrekturen auf `mitarbeit/popolupo-t19-korrekturen` (auf `claude/compassionate-
 | GL6 | **Niedrig:** Schwierigkeit und Werbewert wirken auf die 12 %. Entschieden: gewollt wie bei den anderen Flächen (K24 „Nach Prüfung GL“). | ✅ entschieden |
 | GL7 | **Mittel:** Speichern in der App war nicht sicher gegen Stromausfall (kein fsync, Kopie statt Umbenennen). Jetzt: fsync, dann umbenennen. Eine leere Hauptdatei wird nicht zur Sicherung. | ✅ behoben |
 | GL8 | **Mittel:** Unter Windows scheiterte das Umbenennen gelegentlich (EPERM, EBUSY). Jetzt bis zu fünf Versuche, der Fehlercode steht in der Konsole. | ✅ behoben |
-| GL9 | **Niedrig, ungemessen:** Synchrones Schreiben von 3–4 MB bei fast jeder Aktion. | offen (erst messen) |
+| GL9 | **Niedrig, ungemessen:** Synchrones Schreiben von 3–4 MB bei fast jeder Aktion. Jetzt schreibt die App einen unveränderten Stand nicht noch einmal (ein Textvergleich, `tests/spielstand.js` Nr. 6). Ob das Schreiben geänderter Stände auf langsamen Platten stört, ist weiter ungemessen. | ✅ teilweise |
 | GL10 | **Niedrig:** Eine auf das Fenster gezogene Datei ersetzte das Spiel. Jetzt darf nur das Spiel selbst geladen werden. | ✅ behoben |
 | GL11 | **Niedrig:** Der Workflow hatte keine `permissions`, und der Checkout behielt den Token. Jetzt `contents: read` und `persist-credentials: false`, dazu `schrift/**` in den Pfaden. | ✅ behoben |
 

@@ -47,4 +47,9 @@ pruef(erinnert===groessen.length,'Der Merker der letzten Sicherung steht nicht i
   // FLZ1 (älterer gepackter Stand, Wörterbuch fest) bleibt lesbar: von Hand gepackt „aaa“ = Codes 97, 256 → Zeichen aus den 32 Bit 0x0061 0x0100
   const flz1=(()=>{const v=(97<<16|256)>>>0,c1=((v>>>17)&0x7FFF)+32,c2=((v>>>2)&0x7FFF)+32,c3=(((v&3)<<13)&0x7FFF)+32;return'FLZ1:2:'+String.fromCharCode(c1,c2,c3);})();
   pruef(entpack(flz1)==='aaa','Älterer gepackter Stand (FLZ1) bleibt lesbar',JSON.stringify(entpack(flz1)));}
+// 6. Windows-App (Prüfung GL9): Ein unveränderter Stand wird nicht noch einmal als Datei geschrieben, ein geänderter sofort. Die Brücke ist hier nachgebaut (desktop/preload.js).
+{const ev=W0.ev,S=ev('S'),k=ev('REGELN').spielstand.schluessel,fenster=ev('window'),dateien={};let n=0;
+  fenster.flutlichtApp={lesen:x=>dateien[x]||null,schreiben:(x,v)=>{n++;dateien[x]=v;return true;},ort:()=>''};
+  ev('SPEICHER_FEHLER=false');S.mgr='App 1';ev('save()');ev('save()');const nach2=n;S.mgr='App 2';ev('save()');const nach3=n,gelesen=JSON.parse(ev('speicherLesen')(k)).mgr;delete fenster.flutlichtApp;
+  pruef(nach2===1&&nach3===2&&gelesen==='App 2','Windows-App: ein unveränderter Stand wird nicht noch einmal geschrieben, ein geänderter sofort',`${nach2} Schreibvorgang nach zweimal Speichern ohne Änderung, ${nach3} nach einer Änderung, gelesen ${gelesen}`);}
 console.log('PROBLEME ('+probleme.length+')\n'+(probleme.join('\n')||'keine'));process.exit(probleme.length?1:0);
