@@ -74,7 +74,7 @@ function vtPaket(p,F,ct,vereinslos){const el=id=>(document.getElementById(id)||{
   if(!o.zv&&p.zv&&p.team===S.my&&el('vt_zv')==null)o.zv={n:p.zv.n,plus:p.zv.plus}; /* FN3: Felder zu (VT_DETAIL) oder ohne Bereich: eine laufende Vorgabe bleibt */
   return o;}
 // Vertrag eintragen: Laufzeit, Gehalt, Prämien, Klauseln, Handgeld buchen
-function vtUnterschrift(p,o,neu){p.ct=o.ct;p.sal=o.sal;if(o.vp)p.vp=o.vp;else delete p.vp;if(o.ak)p.ak=o.ak;else delete p.ak;p.lk=o.lk||0; /* ausgehandelt, auch „keine“ (0): sonst gälte die übliche Klausel (K21 §12 Nr. 20) */zielvorgabeSetzen(p,o.zv,!neu);if(o.hg)money('Handgelder',-o.hg);if(neu)p.seit=absTag(S.tag);}
+function vtUnterschrift(p,o,neu){p.ct=o.ct;p.sal=o.sal;delete p.lkAlt; /* neuer Vertrag: kein Rücksprung auf das Gehalt vor dem Abstieg (Prüfung GO1) */if(o.vp)p.vp=o.vp;else delete p.vp;if(o.ak)p.ak=o.ak;else delete p.ak;p.lk=o.lk||0; /* ausgehandelt, auch „keine“ (0): sonst gälte die übliche Klausel (K21 §12 Nr. 20) */zielvorgabeSetzen(p,o.zv,!neu);if(o.hg)money('Handgelder',-o.hg);if(neu)p.seit=absTag(S.tag);}
 // Zielvorgabe (K21 §3.1, §8, K21f): p.zv = {n Pflichtspiele, plus Gehaltsaufschlag, st Pflichtspiele für deinen Verein bei der Unterschrift}. Gezählt ab der Unterschrift
 // (bei einem Wechsel zum Fenster ab der Ankunft, transfers.js wechselVollziehen). Montags (zielvorgabenWoche, ohne Zufall): erreicht, steigt das Gehalt, die Vorgabe ist erfüllt.
 function zielvorgabeSetzen(p,zv,verl){if(zv&&verl&&p.zv&&p.team===S.my)return; /* FL6, FN4: nur bei einer Verlängerung zählt eine laufende Vorgabe weiter */if(zv)p.zv={n:zv.n,plus:zv.plus,st:vereinsSpiele(p,S.my)};else delete p.zv;}
@@ -100,7 +100,8 @@ function praemienNachSpiel(list){const P=RVT.praemie;let summe=0;
 // Ohne sie trugen Absteiger die Gehälter der höheren Liga mit und drückten den Saldo der 2. und 3. Liga in der zweiten Saison um 1,5 bis 1,8 Mio. je Verein (Lauf 18).
 // Wer erst heute kam (vereinbarter Wechsel zum Sommer), unterschrieb schon für die neue Liga und wird nicht gekürzt (Prüfung GJ4).
 // Gehalt je Liga (Prüfung GJ2): p.lkAlt merkt Verein, Liga vor dem Abstieg, Gehalt vorher und gekürzt. Steigt der Verein in diese Liga zurück auf, gilt wieder das alte Gehalt.
-// Ein zweiter Abstieg kürzt nicht noch einmal. Ein neuer Vertrag (anderer Verein oder anderes Gehalt) macht den Merker ungültig. Die Stimmung misst das Vertragsgehalt (gehaltVertrag). Ohne Zufall.
+// Ein zweiter Abstieg kürzt nicht noch einmal. Ein neuer Vertrag (anderer Verein oder anderes Gehalt) macht den Merker ungültig; jede Verlängerung löscht ihn,
+// auch eine zum gekürzten Gehalt (Prüfung GO1: sonst sprang das Gehalt nach dem Wiederaufstieg ohne Gehaltsrahmen zurück). Die Stimmung misst das Vertragsgehalt (gehaltVertrag). Ohne Zufall.
 const ligaklauselVon=p=>p.lk!=null?p.lk:(RVT.ligaklausel.computer||0);
 const lkGueltig=p=>!!p.lkAlt&&p.team===p.lkAlt.t&&p.sal===p.lkAlt.neu;
 const gehaltVertrag=p=>lkGueltig(p)?p.lkAlt.sal:p.sal;

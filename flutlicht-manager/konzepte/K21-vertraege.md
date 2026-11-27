@@ -216,7 +216,7 @@ vertraege:{
 19. **Lizenz (K36):** Verlängern und Kaufen mit Gehalt, Laufzeit und Handgeld wie bisher (`vertraege` B, `transfers` C), Prämien und Klauseln im neuen Bereich `praemien` ab der A-Lizenz, ohne Automatik.
 20. **Übliche Ligaklausel** (26.11.2026, popolupo, vorläufig, nach Prüfung GJ für alle Vereine gleich): Verträge, die ein Verein selbst schließt, enthalten die übliche Ligaklausel von 30 % (`vertraege.ligaklausel.computer`, Mitte der Spanne aus Nr. 6). Das sind die Verträge der Computer-Vereine, die Verlängerungen der Automatik und der Kader beim Spielstart, auch deiner.
     - Was du selbst aushandelst, gilt wie vereinbart (`p.lk`, auch „keine“ als 0). Eine Verlängerung durch den Verein oder ein Wechsel ersetzt sie wieder durch die übliche.
-    - **Gehalt je Liga:** Nach einem Abstieg sinkt das Gehalt um die Klausel. Steigt der Verein in die alte Liga zurück auf, gilt wieder das alte Gehalt (`p.lkAlt`). Ein zweiter Abstieg kürzt nicht noch einmal.
+    - **Gehalt je Liga:** Nach einem Abstieg sinkt das Gehalt um die Klausel. Steigt der Verein in die alte Liga zurück auf, gilt wieder das alte Gehalt (`p.lkAlt`). Ein zweiter Abstieg kürzt nicht noch einmal. Ein neuer Vertrag, auch eine Verlängerung zum gekürzten Gehalt, beendet das: Dann gilt der neue Vertrag auch nach dem Wiederaufstieg (Prüfung GO1).
     - Wer am Tag des Saisonwechsels erst kommt (vereinbarter Wechsel zum Sommer), hat schon für die neue Liga unterschrieben und wird nicht gekürzt.
     - Die Stimmung (K14) und die Neid-Karte messen das Vertragsgehalt vor der Kürzung: Die Klausel hat der Spieler unterschrieben.
     - Die Spielerkarte zeigt „Ligaklausel −30 % (üblich)“ und während der Kürzung das alte Gehalt.

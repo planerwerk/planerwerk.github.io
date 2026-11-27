@@ -3182,3 +3182,18 @@ Bericht: `flutlicht-tools/pruefung-gn.md`. Korrekturen auf `mitarbeit/popolupo-t
 | GN1 | **Mittel, ungemessen:** Im gepackten Modus packt und prüft jedes `save()` den ganzen Stand, auf dem Handy grob eine Sekunde je Klick. Jetzt wird nach 1,5 s Ruhe gespeichert, sofort beim Verlassen der Seite. Unveränderte Stände werden nicht neu gepackt, nach einem Fehlschlag erst am nächsten Spieltag wieder. | ✅ behoben |
 | GN2 | **Test:** Zweites Speichern im gepackten Modus und „auch gepackt zu groß“ (alter Stand bleibt, Meldung kommt) fehlten. Jetzt in `tests/spielstand.js` Nr. 5, dazu das alte Format FLZ1. | ✅ behoben |
 | GN3 | **Niedrig, Risiko:** Das feste Wörterbuch lernte nur aus den ersten 200 bis 300 KB. Jetzt beginnt es neu, wenn es voll ist (FLZ2). | ✅ behoben |
+
+## GO. Prüfung von Gehaltsrahmen bei Verlängerungen und Auffüllen nach dem Jobwechsel ohne Laufzeit (27. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat b16a7bd und 87ac333 gelesen und von Hand nachgerechnet.
+- `verlaengerGehalt` rechnet richtig: Die Erhöhung geht gegen den Rahmen, ein sinkendes Gehalt gilt immer. Dein Verein ist nur in der Automatik betroffen, mit derselben Regel wie beim Kauf.
+- Der Zufall bleibt deterministisch, auch im Gleichschritt-Test `lizenz` Nr. 5a.
+- Die geänderten Tests und `tests/akzeptanz-sweep.js` sollten fehlerfrei laufen.
+
+Bericht: `flutlicht-tools/pruefung-go.md`. Korrekturen auf `mitarbeit/popolupo-t24-abwehr`.
+
+| # | Befund | Status |
+|---|---|---|
+| GO1 | **Mittel:** Verlängerte ein Verein nach dem Abstieg zum gekürzten Gehalt, blieb der Merker der Ligaklausel stehen. Nach dem Wiederaufstieg sprang das Gehalt ohne Gehaltsrahmen zurück, Stimmung und Gehaltsneid sahen bis dahin das alte Gehalt. Jetzt löscht jeder neue Vertrag den Merker (Verlängerung zum Saisonende, frühe Verlängerung, Unterschrift). Test `vertraege` Nr. 4d. | ✅ behoben |
+| GO2 | **Niedrig:** Die Einstellung „Innenverteidiger 0,95 zur Abwehr Mitte“ im Vergleichsskript senkt auch den Anteil an der Abwehr außen von 0,10 auf 0,05. Name, Kopf und README sagen das jetzt. | ✅ behoben |
+| GO3 | **Niedrig, Test:** `tests/welt.js` Nr. 7 zählte das Auffüllen des alten Vereins nach einem Jobwechsel als Auffüllen am Ende des Sommerfensters. Das verfälschte nur die Diagnose kleiner Kader. Jetzt zählt es nicht mehr mit. | ✅ behoben |

@@ -290,6 +290,14 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 27.11.2026: Prüfung GO, Ligaklausel bei Verlängerung (Zweig `mitarbeit/popolupo-t24-abwehr`)
+
+- **Prüfung GO** (lesender Agent) der Verlängerung im Gehaltsrahmen und des Auffüllens nach dem Jobwechsel. Rechnung und Zufall sind in Ordnung, drei Funde sind behoben:
+  - Ein neuer Vertrag löscht jetzt immer den Merker der Ligaklausel, auch eine Verlängerung zum gekürzten Gehalt. Vorher sprang das Gehalt nach dem Wiederaufstieg ohne Gehaltsrahmen zurück. Neuer Test `vertraege` Nr. 4d.
+  - `tests/akzeptanz-sweep.js`: Die dritte Einstellung heißt jetzt „IV Mitte 0,95 außen 0,05“, so wie sie misst.
+  - `tests/welt.js` Nr. 7: Das Auffüllen des alten Vereins nach einem Jobwechsel zählt in der Diagnose kleiner Kader nicht mehr als Auffüllen im Sommer.
+- **Bitte testen (Lauf 25 auf diesem Zweig, neuester Stand):** alle Tests, dazu `node tests/akzeptanz-sweep.js 100` mit allen vier Zeilen wörtlich. Aus `node tests/finanzmodell.js 2` die ✓/✗-Zeilen „Saldo …“, aus `welt 10` die Zeilen „Saisonende …“ und „Wechsel mit Ablöse“ wörtlich.
+
 ### 27.11.2026: Läufe 23 und 24 übernommen, Vergleichsskript für die Abwehr (Zweig `mitarbeit/popolupo-t24-abwehr`, auf t22-korrekturen und `claude/compassionate-galileo-bsbua4` 1322c6e)
 
 - **Lauf 24** (gezielt):

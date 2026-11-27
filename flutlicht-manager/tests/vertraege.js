@@ -62,6 +62,17 @@ const welt=(id=9)=>{const {W,F}=neueWelt();F.buildWorld(SEED);const S=W.S,ev=W.e
     'Verlängerung im Gehaltsrahmen: darunter Gehalt nach Stärke, darüber nur das alte Gehalt oder Abgang, sinkendes Gehalt gilt immer',
     `unter dem Rahmen ${unter} (Stärke ${neu}), darüber ${[...werte].join(' / ')}, sinkend ${sinkt}`);}
 
+// 4d. Neuer Vertrag nach der Kürzung (Prüfung GO1): Wer nach dem Abstieg zum gekürzten Gehalt neu unterschreibt, springt nach dem Wiederaufstieg nicht auf das alte Gehalt zurück.
+// Geprüft an der Unterschrift (vtUnterschrift); die Verlängerungen der Vereine (newSeasonLauf, kiVertraegeFrueh) löschen den Merker ebenso, das prüft der Quelltext.
+{const {S,ev}=welt();const me=S.teams[S.my],p=ev('squad')(S.my)[0],lg0=me.lg,s0=p.sal;delete p.lk;
+  me.lastLg=lg0;me.lg=lg0+1;ev('vertraegeSaison')();const gekuerzt=p.sal,vorher=!!p.lkAlt;
+  ev('vtUnterschrift')(p,{ct:2,sal:gekuerzt},false);const nachUnterschrift=ev('gehaltVertrag')(p);
+  me.lastLg=lg0+1;me.lg=lg0;ev('vertraegeSaison')();
+  const quelle=['newSeasonLauf','kiVertraegeFrueh'].every(f=>/p\.sal=[^;]+;delete p\.lk;delete p\.lkAlt;/.test(String(ev(f))));
+  pruef(vorher&&gekuerzt<s0&&nachUnterschrift===gekuerzt&&p.sal===gekuerzt&&!p.lkAlt&&quelle,
+    'Neuer Vertrag zum gekürzten Gehalt: kein Rücksprung nach dem Wiederaufstieg, Stimmung misst das neue Gehalt, Verlängerungen der Vereine löschen den Merker ebenso',
+    `${s0} → gekürzt ${gekuerzt} (Merker ${vorher}), nach der Unterschrift Vertragsgehalt ${nachUnterschrift}, nach dem Aufstieg ${p.sal}, Quelltext ${quelle}`);}
+
 // 5. Ligaklausel nach einem Abstieg, Ausstiegsklausel nur im Fenster
 {const {S,ev,t,F}=welt();const p=ev('squad')(S.my)[2],sal=p.sal;p.lk=0.3;t.lastLg=t.lg;t.lg=t.lg+1;ev('vertraegeSaison')();t.lg=t.lastLg;
   pruef(p.sal===Math.round(sal*0.7/1000)*1000,'Ligaklausel: Nach einem Abstieg sinkt das Gehalt um die vereinbarte Kürzung',`${sal} → ${p.sal}`);

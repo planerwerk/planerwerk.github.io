@@ -1,7 +1,7 @@
 // Vergleich für die Sensitivität der Engine (K04 §10, tests/akzeptanz.js Nr. 2): Ein Feldspieler +5 soll 1–3 Punkte je Saison bringen, kein Bereich mehr als das Doppelte
 // eines anderen. Seit dem ersten Testlauf liegt die Abwehr bei +0,8 bis +0,9 (rot), Mittelfeld und Angriff im Ziel. Statt blind zu drehen, misst dieses Skript
 // vier Einstellungen mit denselben Zufallsströmen nebeneinander (wie tests/kalibrierung-sweep.js für die Meisterpunkte):
-//   heute; abwehr.jePunkt 0,03 statt 0,022 (Druck der Abwehr auf den Abschluss); Innenverteidiger zählt mehr zur Abwehr Mitte (0,95 statt 0,85, ohne Kontrolle);
+//   heute; abwehr.jePunkt 0,03 statt 0,022 (Druck der Abwehr auf den Abschluss); Innenverteidiger zählt mehr zur Abwehr Mitte (0,95 statt 0,85, ohne Kontrolle, Abwehr außen 0,05 statt 0,10; Prüfung GO2);
 //   angriff.exponent 1,65 statt 1,55 (Stärkeunterschied wirkt stärker auf die Chancen, betrifft alle Bereiche).
 // Je Einstellung eine Zeile ✓ (alle drei Bereiche 1–3 und kein Bereich mehr als das Doppelte) oder ✗, dazu Tore pro Spiel der Basis. Vergleich, kein Fehler im Spiel.
 // Aufruf: node tests/akzeptanz-sweep.js [Durchgänge=100] [Seed=5]. Nur Node.js. Dauer etwa viermal Nr. 2 aus tests/akzeptanz.js. Entstanden ohne Node.js (27.11.), noch nie gelaufen.
@@ -26,7 +26,7 @@ const staerke=(p,wert)=>()=>{const alt=p.str;p.str=wert;return()=>{p.str=alt;};}
 const EINST=[
   {name:'heute',setze:()=>()=>{}},
   {name:'abwehr.jePunkt 0,03',setze:()=>{const a=RE.abwehr.jePunkt;RE.abwehr.jePunkt=0.03;return()=>{RE.abwehr.jePunkt=a;};}},
-  {name:'IV Abwehr Mitte 0,95',setze:()=>{const a=RE.anteile.IV.slice();RE.anteile.IV=[0,0,0,0.95,0.05];return()=>{RE.anteile.IV=a;};}},
+  {name:'IV Mitte 0,95 außen 0,05',setze:()=>{const a=RE.anteile.IV.slice();RE.anteile.IV=[0,0,0,0.95,0.05];return()=>{RE.anteile.IV=a;};}},
   {name:'angriff.exponent 1,65',setze:()=>{const a=RE.angriff.exponent;RE.angriff.exponent=1.65;return()=>{RE.angriff.exponent=a;};}}];
 const wahl={Abwehr:'IV',Mittelfeld:'ZM',Angriff:'MS'};
 console.log(`Testteam ${S.teams[X].name} (2. Liga, Niveau ${f1(niveau(X))}, 4-4-2), ${N} Durchgänge gegen die übrigen Teams je Messung`);
