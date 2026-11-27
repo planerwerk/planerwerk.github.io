@@ -17,7 +17,7 @@ const schritt=w=>{const S=w.W.S;if(S.sponsOffers)w.F.sponsorWaehlen(0);if(w.ev('
 // Protokoll aller Wechsel der Computer-Vereine: Der Zustand wird festgehalten, bevor der Wechsel geschieht. getS liefert den aktuellen Spielstand.
 const mitProtokoll=(F,getS,talentBis)=>{const log=[],orig=F.kiWechsel;
   F.kiWechsel=function(p,b,preis,art){const S=getS(),von=p.team>=0?S.teams[p.team]:null,g=F.planGruppe(p),bed=F.planBedarf(F.kaderplan(b));
-    const e={s:S.season,tag:S.tag,pid:p.id,nach:b.id,von:von?von.id:-1,preis,g,art:art||'',repDiff:von?b.rep-von.rep:0,offen:F.fensterEnde(S.tag)!=null,nr:F.fensterNr(S.tag),
+    const e={s:S.season,tag:S.tag,pid:p.id,nach:b.id,von:von?von.id:-1,preis,g,art:art||'',repDiff:von?b.rep-von.rep:0,lgNach:b.lg,offen:F.fensterEnde(S.tag)!=null,nr:F.fensterNr(S.tag),
       bedarf:bed.some(n=>n.grund==='talent'?p.age<=talentBis:n.g===g),grundA:true,regelB:true,kaderVon:99,rest:b.tb?b.tb.b-b.tb.a:-1};
     if(von){const P=F.kaderplan(von);e.grundA=P.abgabe.has(p.id);e.regelB=P.gr[g].l.length>P.gr[g].soll;e.kaderVon=P.alle.length;}
     log.push(e);return orig(p,b,preis,art);};
@@ -190,7 +190,7 @@ const mitLeihProtokoll=(F,getS,C)=>{const log=[],orig=F.kiLeihe;
   pruef(S.trainerWechsel.length===n0+1&&S.trainerWechsel[n0].t===z.id&&Math.abs(y.vor.v-(y0+(V.start-y0)*V.saisonZurueck))<0.11&&y.vor.ab===0,'Saisonwechsel: Ziel weit verfehlt und wenig Vertrauen, Wechsel im Sommer. Die anderen gehen halb zurück zum Start',`${S.trainerWechsel.length-n0} Wechsel im Sommer`);}
 
 // 7. Saisons im Ablauf: jeder Wechsel geprüft, Zahl der Wechsel, Obergrenze je Fenster, Kader und Konten am Saisonende
-{const R0=neueWelt().W,C=R0.ev('RCV'),RM=R0.ev('RM');let log=null,leihLog=null,S0=null,evL=null,juliMein=null;const ende=[],fuell=[],nochVerliehen=[],juli=new Map(),sommer=new Map();
+{const R0=neueWelt().W,C=R0.ev('RCV'),RM=R0.ev('RM');let log=null,leihLog=null,S0=null,evL=null,juliMein=null;const ende=[],fuell=[],nochVerliehen=[],juli=new Map(),sommer=new Map(),budgets={};
   // Diagnose kleiner Kader (Läufe 12 bis 15: am Saisonende ein Verein mit 12 bis 14 Spielern und einer leeren Gruppe, Ursache ohne Node.js nicht nachzustellen):
   // Kader am 1. Juli und nach dem Auffüllen am Ende des Sommerfensters merken, am Saisonende die Abgänge des Vereins einordnen.
   const merkeJuli=S=>{juli.clear();sommer.clear();juliMein=S.my;S.teams.forEach(t=>{if(t.lg<=3)juli.set(t.id,new Set(S.pl.filter(p=>p.team===t.id).map(p=>p.id)));});};
@@ -199,7 +199,12 @@ const mitLeihProtokoll=(F,getS,C)=>{const log=[],orig=F.kiLeihe;
     const zu=P.alle.filter(p=>!vor.has(p.id)).length,merk=[t.lzSperre!=null&&t.lzSperre>=S.season?'Transfersperre':'',t.fins>=S.season?'insolvent':'',t.id===juliMein?'am 1. Juli dein Verein':''].filter(Boolean);
     return `${t.name} (Liga ${t.lg}${merk.length?', '+merk.join(', '):''}): Kader ${P.alle.length}${leer.length?', leer: '+leer.join('/'):''}, am 1. Juli ${vor.size}, nach dem Auffüllen ${sommer.has(t.id)?sommer.get(t.id):'nicht aufgefüllt'}, ${zu} Zugänge, Abgänge: ${Object.entries(wohin).map(([k,n])=>n+' '+k).join(', ')||'keine'}`;};
   const lauf=saisons({n:N,seed:SEED,verein:6,vorher:(F,W)=>{evL=W.ev;},
-    beiSaisonstart:(S,F)=>{merkeJuli(S);if(log){nochVerliehen.push(S.pl.filter(p=>p.leihe).length);return;}S0=S;log=mitProtokoll(F,()=>S0,C.talentBis);leihLog=mitLeihProtokoll(F,()=>S0,C);const orig=F.planAuffuellen;let beimJob=false;F.planAuffuellen=function(t,P,l){const n=orig(t,P,l);if(!beimJob){fuell.push({s:S0.season,t:t.id,n});sommer.set(t.id,l.length);}return n;};
+    beiSaisonstart:(S,F)=>{merkeJuli(S);if(log){nochVerliehen.push(S.pl.filter(p=>p.leihe).length);return;}S0=S;log=mitProtokoll(F,()=>S0,C.talentBis);leihLog=mitLeihProtokoll(F,()=>S0,C);
+      /* Diagnose der Wechsel mit Ablöse (welt 10, späte Saisons 11 bis 14 statt 15): Budget der Computer-Vereine am Anfang jedes Fensters (kiMarkt legt es für alle fest)
+         und wie viele Spieler dann auf den Transferlisten stehen. Ohne Zufall, ändert nichts am Lauf. */
+      const origB=F.kiBudget;F.kiBudget=function(t,nr){const k=S0.season*10+nr,neu=!t.tb||t.tb.k!==k,r=origB(t,nr);
+        if(neu&&t.id!==S0.my&&t.lg<=3){const z=budgets[S0.season+':'+nr]||(budgets[S0.season+':'+nr]={n:0,pos:0,sum:0,gelistet:S0.pl.filter(p=>p.list&&p.team>=0&&p.team!==S0.my&&(S0.teams[p.team]||{}).lg<=3).length});z.n++;if(r.b>0)z.pos++;z.sum+=r.b;}return r;};
+      const orig=F.planAuffuellen;let beimJob=false;F.planAuffuellen=function(t,P,l){const n=orig(t,P,l);if(!beimJob){fuell.push({s:S0.season,t:t.id,n});sommer.set(t.id,l.length);}return n;};
       /* Prüfung GO3: das Auffüllen des alten Vereins nach einem Jobwechsel (saison.js altenVereinAuffuellen) zählt nicht als Auffüllen am Ende des Sommerfensters */
       const origAlt=F.altenVereinAuffuellen;if(origAlt)F.altenVereinAuffuellen=function(alt){beimJob=true;try{return origAlt(alt);}finally{beimJob=false;}};},
     beiSaisonende:(S,F)=>{const z={s:S.season,offen:0,leer:0,ueber2:0,vereine:0,kader:[],minus:0,ueberKredit:0,gebraucht:0,laufenAus:0,klein:[]};
@@ -233,7 +238,8 @@ const mitLeihProtokoll=(F,getS,C)=>{const log=[],orig=F.kiLeihe;
   const jeFenster={};[...log,...leihLog].forEach(e=>{const k=e.s+':'+e.nr+':'+e.nach;jeFenster[k]=(jeFenster[k]||0)+1;});
   const zuViel=Object.entries(jeFenster).filter(([k,n])=>n>C.kauf.jeFenster[+k.split(':')[1]]).length;pruef(zuViel===0,'Obergrenze: höchstens 4 Zugänge über den Markt im Sommer und 2 im Winter je Verein, Leihen eingerechnet',`${zuViel} darüber`);
   jahre.forEach(s=>{const l=log.filter(e=>e.s===s),bez=l.filter(e=>e.von>=0),so=l.filter(e=>e.nr===0),wi=l.filter(e=>e.nr===1),f=fuell.filter(x=>x.s===s),z=ende.find(x=>x.s===s)||{vereine:55};
-    pruef(bez.length>=15,`Saison ${s}: mindestens 15 Wechsel mit Ablöse unter Computer-Vereinen (wie tests/transfers.js)`,`${bez.length} mit Ablöse (Sommer ${bez.filter(e=>e.nr===0).length}, Winter ${bez.filter(e=>e.nr===1).length}), ${l.length-bez.length} Vereinslose, ${z.minus!=null?z.minus+' Vereine im Minus zum Saisonende':''}`);
+    const bud=nr=>{const b=budgets[s+':'+nr];return b?`${b.pos} von ${b.n} Vereinen mit Budget, zusammen ${f1(b.sum/1e6)} Mio., ${b.gelistet} Spieler gelistet`:'kein Fenster';}; /* Diagnose, siehe beiSaisonstart */
+    pruef(bez.length>=15,`Saison ${s}: mindestens 15 Wechsel mit Ablöse unter Computer-Vereinen (wie tests/transfers.js)`,`${bez.length} mit Ablöse (Sommer ${bez.filter(e=>e.nr===0).length}, Winter ${bez.filter(e=>e.nr===1).length}; Käufer aus Liga 1/2/3: ${[1,2,3].map(g=>bez.filter(e=>e.lgNach===g).length).join('/')}), ${l.length-bez.length} Vereinslose, ${z.minus!=null?z.minus+' Vereine im Minus zum Saisonende':''} · Sommerbeginn: ${bud(0)} · Winterbeginn: ${bud(1)}`);
     info(`Saison ${s}: Zugänge über den Markt je Verein`,`Sommer ${f1(so.length/z.vereine)}, Winter ${f1(wi.length/z.vereine)} (K31 §10 nennt 3–8 und 0–3 für alle Zugänge zusammen)`);
     info(`Saison ${s}: am Ende des Sommerfensters aufgefüllt`,`${f.reduce((a,x)=>a+x.n,0)} Spieler bei ${f.filter(x=>x.n>0).length} Vereinen`);});
   ende.forEach(z=>{const mn=Math.min(...z.kader),mx=Math.max(...z.kader);

@@ -297,7 +297,8 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
   - `tests/akzeptanz-sweep.js`: Die dritte Einstellung heißt jetzt „IV Mitte 0,95 außen 0,05“, so wie sie misst.
   - `tests/welt.js` Nr. 7: Das Auffüllen des alten Vereins nach einem Jobwechsel zählt in der Diagnose kleiner Kader nicht mehr als Auffüllen im Sommer.
 - **Windows-App (Prüfung GL9, offen seit GL):** Die App schreibt einen unveränderten Spielstand nicht noch einmal. Vorher ging bei fast jedem Klick, auch beim Wechsel des Reiters, die ganze Datei mit fsync auf die Platte. Neuer Test `spielstand` Nr. 6 mit nachgebauter Brücke. `tests/desktop.js` bitte einmal mitlaufen lassen, falls die App gebaut werden kann.
-- **Bitte testen (Lauf 25 auf diesem Zweig, neuester Stand):** alle Tests, dazu `node tests/akzeptanz-sweep.js 100` mit allen vier Zeilen wörtlich. Aus `node tests/finanzmodell.js 2` die ✓/✗-Zeilen „Saldo …“, aus `welt 10` die Zeilen „Saisonende …“ und „Wechsel mit Ablöse“ wörtlich.
+- **Wechsel mit Ablöse in späten Saisons (`welt 10`, seit Lauf 12 oft 11 bis 14 statt mindestens 15):** Die Zeile nennt jetzt auch die Käufer je Liga und für den Anfang jedes Fensters, wie viele Computer-Vereine ein Budget haben, wie viel zusammen und wie viele Spieler gelistet sind. Damit sehe ich, ob das Geld fehlt, das Angebot oder die Nachfrage. Nur Diagnose, der Lauf bleibt gleich.
+- **Bitte testen (Lauf 25 auf diesem Zweig, neuester Stand):** alle Tests, dazu `node tests/akzeptanz-sweep.js 100` mit allen vier Zeilen wörtlich. Aus `node tests/finanzmodell.js 2` die ✓/✗-Zeilen „Saldo …“, aus `welt 10` die Zeilen „Saisonende …“ und alle zehn Zeilen „mindestens 15 Wechsel mit Ablöse“ wörtlich, auch die grünen.
 
 ### 27.11.2026: Läufe 23 und 24 übernommen, Vergleichsskript für die Abwehr (Zweig `mitarbeit/popolupo-t24-abwehr`, auf t22-korrekturen und `claude/compassionate-galileo-bsbua4` 1322c6e)
 
