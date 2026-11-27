@@ -56,6 +56,8 @@ Viele naheliegende Kandidaten sind schon im Plan oder im Code:
 
 ### L2 Echte Spielernamen (vor einer Veröffentlichung klären)
 
+**Entschieden am 27.11. (Nutzer): „ja, ist ok“.** Die echten Namen bleiben im Spiel.
+
 `daten/spieler.js` enthält rund 1.100 echte Spieler mit echtem Namen nach der deutschen Wikipedia. Für Bilder ist die Frage geklärt (PLAN §4: keine Porträts, nur grobe Merkmale). Für Namen steht nichts im Plan.
 - Oliver Kahn hat 2003 und 2004 in Hamburg gegen EA gewonnen. EA hatte sich auf Rechte von FIFPro berufen, das Gericht ließ die Rechtekette nicht gelten.
 - Ein Urteil speziell zu Namen in Managerspielen habe ich bei der Suche nicht gefunden. Auch keine Stellungnahme der Spielergewerkschaft VdV.
@@ -68,7 +70,9 @@ Viele naheliegende Kandidaten sind schon im Plan oder im Code:
 
 Für Vereinsnamen gilt Ähnliches (Marken), Wappen erzeugt das Spiel ohnehin selbst (K39).
 
-### L3 Mehrspieler an einem Gerät (Entscheidung offen)
+### L3 Mehrspieler an einem Gerät
+
+**Entschieden am 27.11. (Nutzer): nein.** Kein Mehrspieler an einem Gerät.
 
 Mehrere Menschen mit je einem Verein abwechselnd am selben Rechner („Hotseat“) war bei Managern der 90er verbreitet. Im Plan kommt es nicht vor, weder als Ja noch als Nein. Folgen bei Ja:
 - Automatiken und Lernstufen je Mensch
@@ -85,7 +89,9 @@ Steht nur als „später denkbar“ in K02. Ausgliederung, Investor mit Geld geg
 
 Es gibt Presse und Gerüchte (K29), aber keine Fan-Stimmen im Netz. Möglich wäre eine kurze Liste von Fan-Beiträgen als Ansicht der Fanstimmung (K27), ohne neue Spielwirkung.
 
-### L6 Schriften von Google-Servern (vor einer Veröffentlichung, klein)
+### L6 Schriften von Google-Servern
+
+**Erledigt am 27.11.** (Entscheidung des Nutzers: „leg die ins Spiel, bitte nichts dynamisch ziehen“). Barlow, Saira Condensed und VT323 liegen unverändert von Google Fonts eingebettet in `css/schriften.css` (latin und latin-ext, 16 Schnitte, etwa 280 KB). Die Lizenz aller drei ist die SIL Open Font License 1.1 (geprüft an den OFL-Texten im Repository google/fonts), die Texte liegen in `schrift/LIZENZ-*.txt`. `index.html` lädt nichts mehr von außen. Test: `tests/offline.js` (keine fremden Adressen in HTML, CSS und Skripten, im Browser keine einzige Anfrage nach außen, alle Schriften geladen).
 
 `index.html` lädt Barlow, Saira Condensed und VT323 von `fonts.googleapis.com`. Dabei geht die IP-Adresse jedes Spielers an Google, im Browser wie in der Windows-App. Das LG München I hat am 20.01.2022 (3 O 17493/20) eine solche dynamische Einbindung ohne Einwilligung als Verstoß gegen die DSGVO gewertet und 100 € Schadensersatz zugesprochen. Das ist ein Urteil der ersten Instanz, andere Gerichte bindet es nicht.
 - **Vorschlag:** die drei Schriften als Dateien ins Spiel legen (`schrift/`, `@font-face` in `css/schrift.css`), so wie die eigene Anzeigeschrift. Dann läuft das Spiel auch offline mit allen Schriften.
