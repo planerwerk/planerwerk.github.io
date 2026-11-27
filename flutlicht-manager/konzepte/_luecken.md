@@ -20,7 +20,7 @@ Viele naheliegende Kandidaten sind schon im Plan oder im Code:
 ### L1 Spielstand-Sicherheit (wichtig, Vorschlag: bald)
 
 1. **Sichern nur als Text-Code.** Der Spielstand liegt im `localStorage` des Browsers. Im Menü gibt es einen Text-Code zum Kopieren und Einfügen, aber keine Datei. Bei über 3 Mio. Zeichen ist Kopieren und Einfügen mühsam, auf dem Handy kaum machbar.
-2. **Safari löscht nach 7 Tagen.** Safari entfernt seit Version 13.1 allen per Skript geschriebenen Speicher einer Seite, auch den `localStorage`, wenn die Seite an sieben Tagen mit Safari-Nutzung nicht bedient wurde (Intelligent Tracking Prevention). Ein Manager, der zwei Wochen liegen bleibt, wäre weg. Für installierte Web-Apps auf dem Home-Bildschirm sind die Berichte widersprüchlich. Eine offizielle WebKit-Seite zum heutigen Verhalten habe ich nicht gefunden.
+2. **Safari löscht nach 7 Tagen.** *(Entfällt seit 27.11.: Zielplattform ist die Windows-App mit Chromium, kein Safari, Entscheidung des Nutzers.)* Safari entfernt seit Version 13.1 allen per Skript geschriebenen Speicher einer Seite, auch den `localStorage`, wenn die Seite an sieben Tagen mit Safari-Nutzung nicht bedient wurde (Intelligent Tracking Prevention). Ein Manager, der zwei Wochen liegen bleibt, wäre weg. Für installierte Web-Apps auf dem Home-Bildschirm sind die Berichte widersprüchlich. Eine offizielle WebKit-Seite zum heutigen Verhalten habe ich nicht gefunden.
 3. **Größe gemessen:** Simulation mit 10 Saisons, `JSON.stringify(S)` je Saisonende:
 
    | Saison | 2026 | 2027 | 2028 | 2029 | 2030 | 2031 | 2032 | 2033 | 2034 | 2035 |
@@ -39,7 +39,7 @@ Viele naheliegende Kandidaten sind schon im Plan oder im Code:
   - Die Datei wird gründlich geprüft (Listen, Verein, Saison, Tag). Der Browser-Speicher wird erst überschrieben, wenn sich der neue Stand zeichnen ließ, sonst bleibt der alte.
   - Neuere Dateien bekommen eine eigene Meldung. Der Merker für die Erinnerung gilt je Karriere (Seed und Trainername).
   - Die Anzeige im Menü zählt Wappen und Einstellungen mit. Die Meldung bei vollem Speicher nennt die Datei.
-- **Offen, wichtig (Prüfung GK6, ungemessen):** Safari rechnet seine Grenze vermutlich in UTF-16-Bytes. Dann passen dort nur etwa 2,6 Mio. Zeichen, der Spielstand hat aber schon nach der ersten Saison 2,85 Mio.
+- **Entfällt (27.11., Entscheidung des Nutzers):** Zielplattform ist die Windows-App (Electron, also Chromium) unter Windows, kein Safari, kein Browserspiel mehr. Der gepackte Rückfall bleibt als Schutz für den Browser-Speicher. Früherer Stand (Prüfung GK6, ungemessen): Safari rechnet seine Grenze vermutlich in UTF-16-Bytes. Dann passen dort nur etwa 2,6 Mio. Zeichen, der Spielstand hat aber schon nach der ersten Saison 2,85 Mio.
   - Das automatische Speichern könnte auf iPhone, iPad und Mac mit Safari also schon in der ersten Saison scheitern.
   - Zu messen auf einem echten Gerät. Bekannte Messungen anderer nennen für Safari etwa 2,5 Mio. Zeichen.
   - **Gebaut am 26.11. nachts (popolupo, vorläufig): gepackt als Rückfall** (`js/hilfen.js`: `spielstandPacken`, `spielstandEntpacken`, `speicherSchreiben`).

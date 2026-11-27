@@ -3115,7 +3115,7 @@ Korrekturen auf `mitarbeit/popolupo-k24-antworten` (auf `claude/compassionate-ga
 | GK3 | **Mittel:** „gesichert“ kam, bevor feststand, dass eine Datei entstand. Die Adresse wurde nach 1 s freigegeben. Jetzt nach 60 s, und die Meldung sagt ehrlich, dass man im Download-Ordner nachsehen soll. | ✅ behoben (Gerätetest offen) |
 | GK4 | **Mittel:** Der Merker galt je Gerät statt je Karriere. Jetzt mit Seed und Trainername. | ✅ behoben |
 | GK5 | **Mittel, später:** Nach einem Versionssprung passen alte Dateien nicht mehr. Die Meldung für neuere Dateien ist jetzt richtig, die Umstellung für Dateien steht als offen in `_luecken.md`. | teilweise |
-| GK6 | **Mittel:** Die Prozentanzeige zählte nur den Spielstand. Jetzt mit Wappen und Einstellungen. Offen und ungemessen: Safari rechnet vermutlich in UTF-16-Bytes (etwa 2,6 Mio. Zeichen bei 2,85 Mio. nach einer Saison), siehe `_luecken.md`. | teilweise |
+| GK6 | **Mittel:** Die Prozentanzeige zählte nur den Spielstand. Jetzt mit Wappen und Einstellungen. Der Rest zu Safari entfällt: Zielplattform ist die Windows-App mit Chromium (Entscheidung des Nutzers, 27.11.), siehe `_luecken.md`. | ✅ |
 | GK7 | **Niedrig:** Die Meldung bei vollem Speicher nennt jetzt die Datei. Wirft der Browser-Speicher einen Fehler, kommt die Erinnerung trotzdem. | ✅ behoben |
 | GK8 | **Test:** `instanceof Map/Set/Date` griff über die vm-Grenze nie. Jetzt `Object.prototype.toString`. | ✅ behoben |
 | GK9 | **Test:** `tests/ui-sicherung.js` prüft jetzt Rückfrage und Abbrechen, einen Stand mit leeren Listen, die Meldung bei einer Datei mit Syntaxfehler und den Startbildschirm mit gespeicherter Karriere. | ✅ behoben |
