@@ -24,6 +24,14 @@ Node.js 22, Playwright mit Chromium, für `tests/ui-zugang.js` axe-core 4.10.2 (
 - **Begonnen bei Claude:** nichts weiter. K24 Rest (Bande und Partnerpool, Trainingskleidung, Verhandeln mit Reglern) bleibt vorgemerkt.
 ---
 
+## Lauf 23, 27.11.2026 nachts: Claude-Zweig 4fae573 (enthält popolupo-t20-zusammen 71d9702 mit den Korrekturen GM und GN)
+
+Alle Tests. **55 grün, 2 rot**, gleich wie Lauf 22. `welt 10` (T22.1, Werte wie in Lauf 22) und akzeptanz (Abwehr +0,9). Das `finanzmodell 2` ist Zeile für Zeile gleich wie in Lauf 22, die KURZ- und Saldo-Zeilen stehen dort.
+
+Zu GM2 (Spielraum 3–22 %): `tests/werbung.js` Nr. 28 schlug nach dem Zusammenführen fehl. Das letzte normale Angebot hatte über 20 % Spielraum, eine Absage ließ sich damit nicht mehr erzwingen. Claude hat den Test angepasst (4fae573): Übrig bleibt jetzt das Angebot mit dem kleinsten Spielraum. Am Spiel war nichts falsch.
+
+---
+
 ## Lauf 22, 27.11.2026 kurz nach Mitternacht: Claude-Zweig ad7d927 (enthält popolupo-t20-zusammen 2ef1b7f mit den Korrekturen GL, dazu K24e, K24f und die Testanpassungen T21.1, T21.2)
 
 Alle Tests. **55 grün, 2 rot**, das beste Ergebnis bisher. T21.1 und T21.2 sind grün. kalibrierung, medizin und sommer sind diesmal ebenfalls grün, ihre Randwerte schwanken von Lauf zu Lauf. Der App-Test `tests/desktop.js` war vor dem Lauf einzeln grün (11 ✓, mit den Änderungen aus GL). Rot:
