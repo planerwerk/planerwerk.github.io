@@ -13,7 +13,11 @@ const fremd=u=>/^(https?:)?\/\//i.test(String(u).trim());
 
 // 1
 {const h=lies('index.html'),refs=[...h.matchAll(/<(?:script|link|img|source|iframe|audio|video)\b[^>]*?\b(?:src|href)\s*=\s*["']([^"']+)["']/gi)].map(m=>m[1]);
-  const aussen=refs.filter(fremd);pruef(refs.length>0&&!aussen.length,`index.html: ${refs.length} eingebundene Dateien, alle aus dem Spielordner`,aussen.join(', ')||null);}
+  const aussen=refs.filter(fremd);pruef(refs.length>0&&!aussen.length,`index.html: ${refs.length} eingebundene Dateien, alle aus dem Spielordner`,aussen.join(', ')||null);
+  // auch die Musterseiten (muster/*.html, öffentlich mit auf der Website): muster/regler.html lud die Schriften noch von Google (27.11., popolupo)
+  const muster=fs.existsSync(path.join(ROOT,'muster'))?fs.readdirSync(path.join(ROOT,'muster')).filter(f=>/\.html$/.test(f)):[],mAussen=[];
+  muster.forEach(f=>{const t=lies('muster/'+f);for(const m of t.matchAll(/<(?:script|link|img|source|iframe|audio|video)\b[^>]*?\b(?:src|href)\s*=\s*["']([^"']+)["']/gi))if(fremd(m[1]))mAussen.push(`${f}: ${m[1].slice(0,60)}`);});
+  pruef(!mAussen.length,`Musterseiten (${muster.length}): nichts von außen eingebunden`,mAussen.join('; ')||null);}
 // 2
 {const aussen=[];for(const f of dateien('css')){const t=lies(f);for(const m of t.matchAll(/url\(\s*["']?([^"')]+)["']?\s*\)|@import\s+(?:url\()?\s*["']([^"']+)["']/gi)){const u=m[1]||m[2];if(fremd(u))aussen.push(`${f}: ${u.slice(0,60)}`);}}
   pruef(!aussen.length,'CSS: keine Adresse außerhalb des Spiels (url(), @import)',aussen.join('; ')||null);}
