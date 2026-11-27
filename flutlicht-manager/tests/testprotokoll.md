@@ -30,6 +30,12 @@ Node.js 22, Playwright mit Chromium, für `tests/ui-zugang.js` axe-core 4.10.2 (
 - Das berührt euren Bereich K35b nur an dieser einen Zeile in `index.html`. Die Schriftnamen in `css/spiel.css` sind unverändert.
 ---
 
+## Lauf 27, 27.11.2026 nachmittags (gezielt): popolupo-t25-geld 4dc2512 (Zielplattform, Text der Erinnerung)
+
+Nur der neue Commit, er ändert eine Zeile in `js/fenster.js` (Text der Erinnerung zum Saisonende): code, regeln-fest, spielstand, ui-sicherung und offline sind **alle grün**. Der Rest ist unverändert wie in Lauf 26.
+
+---
+
 ## Lauf 26, 27.11.2026 mittags: popolupo-t25-geld 631c67b (Käufe im Ausland K32 §7, Prüfung GP, Abwehrdruck 0,03, Heimvorteil 1,025, Konten-Messung)
 
 Alle Tests auf eurem neuesten Stand, in einer Kopie, am Zweig nichts geändert, auch `tests/offline.js` (grün). Dazu `tests/desktop.js` (11 ✓, jetzt mit den eingebetteten Schriften). **54 grün, 5 rot**, `desktop` nicht mitgezählt.
