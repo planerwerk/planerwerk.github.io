@@ -30,6 +30,149 @@ Node.js 22, Playwright mit Chromium, für `tests/ui-zugang.js` axe-core 4.10.2 (
 - Das berührt euren Bereich K35b nur an dieser einen Zeile in `index.html`. Die Schriftnamen in `css/spiel.css` sind unverändert.
 ---
 
+## Lauf 28, 27.11.2026 abends: popolupo-t26-abschluss e00b5c6 (Jahresabschluss K31 §3.3, Posten „Überschuss“)
+
+Alle Tests auf eurem neuesten Stand, in einer Kopie, am Zweig nichts geändert. Dazu wie gewünscht `kabine` mit Seed 6 und 7 und `tests/desktop.js` (11 ✓). **56 grün, 3 rot**, `desktop` und die beiden Zusatzläufe von `kabine` nicht mitgezählt.
+
+Erledigt:
+- **T26.1 Konten der Computer-Vereine:** `welt` und `welt 10` sind grün, eure neue Prüfung zum Jahresabschluss (`welt` 4c) auch.
+  - Der Faktor bleibt in allen zehn Saisons unter 1. Er steigt von 0,69 bis 0,97 in 2030 und fällt dann auf 0,77 in 2035. Die Konten liegen zwischen 2,1 und 3,3 Mrd. (Lauf 26: bis 11,6 Mrd.).
+  - Der Posten „Überschuss“ nimmt je Saison zwischen 782 und 1.504 Mio. weg. „Ausland“ bleibt ein großer Zufluss, +356 bis +1.107 Mio. je Saison.
+  - Knapp ist 2030 mit 0,97.
+  - Vereine im Minus zum Saisonende: 9 bis 18, in Lauf 26 waren es 8 bis 17.
+- **T26.3 sommer:** Kondition zum ersten Ligaspiel 80,1, grün, aber genau am unteren Rand (Ziel 80 bis 88).
+
+Rot sind `kabine`, `spielermodell` und `akzeptanz`. `finanzmodell` zählt nach seinem Rückgabewert als grün, seine ✗-Zeilen stehen trotzdem hier:
+- **T26.2 kabine, Wechselwünsche:** Mit Seed 5 (Standard) weiter 1,05 und höchstens 7 in einem Verein, rot. Mit Seed 6 sind es 0,98 (höchstens 5), mit Seed 7 0,96 (höchstens 7), beide grün. Das Mittel der drei Seeds ist 1,00, genau die Grenze. Ob Seed 5 nur Pech ist, kann ich aus drei Werten nicht sicher sagen.
+- **T26.4 finanzmodell 3:** wieder 6 ✓, 3 ✗, aber andere Zeilen als in Lauf 26:
+  - 1. Liga 2026: 9,2 Mio., unverändert rot.
+  - 1. Liga 2028: jetzt 12,9 Mio., zu hoch (Lauf 26: 7,2, zu niedrig).
+  - 2. Liga 2028: −3,7 Mio., rot (Lauf 26: −1,2, grün).
+  - 3. Liga 2028 ist jetzt grün (−2,3 Mio.).
+- **akzeptanz:** nur das Tempo mit 4,12 ms, die Sensitivität bleibt grün. Das Tempo liegt an der Maschine: `tempo.js` (nur Teil 6, je dreimal, zwei Durchgänge) misst heute für den Stand von Lauf 26 4,74 bis 5,38 ms und für diesen Stand 4,30 bis 5,68 ms. Ein Unterschied über das Rauschen hinaus ist nicht zu sehen.
+
+Neu:
+- **T28.1 spielermodell, Gleichgewicht** (Randwert): Die 1. Liga schwankt um 1,6 (erlaubt 1,5), die 2. Liga um 2,1 (erlaubt 2). In Lauf 26 waren es 1,4 und 2,0 (grün), in Lauf 25 war die 2. Liga mit 2,2 rot. Der Wert pendelt knapp um die Grenze. Ob der Jahresabschluss dazu beiträgt, habe ich nicht geprüft.
+- **T28.2 kabine, Nr. 14 und 16 nur mit Seed 5 grün** (Test, nicht Spiel): Mit Seed 6 und mit Seed 7 sind je drei Zeilen rot, siehe unten. Mit Seed 6 auf dem Stand von Lauf 26 (631c67b) kommt genau dasselbe heraus. Es liegt also nicht an diesem Stand, sondern daran, dass die Aufbauten dieser Fälle vom Seed abhängen. Soll `kabine` mit anderen Seeds aussagekräftig sein, müssten diese Fälle unabhängig vom Seed werden.
+
+**welt 10**, Konten der Computer-Vereine wörtlich:
+
+```
+✓ Saison 2026: Konten der Computer-Vereine zusammen höchstens so hoch wie ihre erwarteten Jahreseinnahmen (vorläufig, K23: Start etwa ein Fünftel): Konten 2.1 Mrd. (Ø 39.0 Mio. je Verein, reichster FC Bayern München 573.5 Mio., 9 im Minus), Jahreseinnahmen 3.1 Mrd., Faktor 0.69 · Veränderung aller Konten +1347.2 Mio.: Ausland +878.5, Europapokal +263.5, Liga +190.7, Pokal +105.0, Transfers -96.1, Eröffnung +5.6, Strafen +0.0, TV-Raten +0.0, Insolvenz +0.0, Leihen +0.0, Rest +0.0
+✓ Saison 2027: Konten der Computer-Vereine zusammen höchstens so hoch wie ihre erwarteten Jahreseinnahmen (vorläufig, K23: Start etwa ein Fünftel): Konten 2.8 Mrd. (Ø 50.8 Mio. je Verein, reichster VfB Stuttgart 461.4 Mio., 12 im Minus), Jahreseinnahmen 3.1 Mrd., Faktor 0.89 · Veränderung aller Konten +629.2 Mio.: Ausland +1024.1, Überschuss -781.6, Europapokal +359.0, Transfers -202.2, Liga +147.9, Pokal +110.4, Bauen -38.5, Eröffnung +5.2, Supercup +5.0, Strafen +0.0, TV-Raten +0.0, Insolvenz +0.0, Leihen +0.0, Rest +0.0
+✓ Saison 2028: Konten der Computer-Vereine zusammen höchstens so hoch wie ihre erwarteten Jahreseinnahmen (vorläufig, K23: Start etwa ein Fünftel): Konten 3.1 Mrd. (Ø 55.8 Mio. je Verein, reichster FC Bayern München 509.7 Mio., 10 im Minus), Jahreseinnahmen 3.3 Mrd., Faktor 0.94 · Veränderung aller Konten +249.8 Mio.: Überschuss -1170.7, Ausland +929.2, Europapokal +406.7, Liga +143.9, Bauen -122.8, Transfers -115.6, Pokal +109.8, Insolvenz +20.1, Eröffnung +5.7, Supercup +5.0, Strafen +0.0, TV-Raten +0.0, Leihen +0.0, Rest +38.5
+✓ Saison 2029: Konten der Computer-Vereine zusammen höchstens so hoch wie ihre erwarteten Jahreseinnahmen (vorläufig, K23: Start etwa ein Fünftel): Konten 3.1 Mrd. (Ø 56.7 Mio. je Verein, reichster FC Bayern München 740.7 Mio., 11 im Minus), Jahreseinnahmen 3.3 Mrd., Faktor 0.94 · Veränderung aller Konten +30.0 Mio.: Überschuss -1305.0, Ausland +950.5, Europapokal +388.8, Transfers -121.8, Bauen -109.7, Pokal +104.9, Liga +61.2, Eröffnung +5.4, Supercup +5.0, Strafen +0.0, TV-Raten +0.0, Insolvenz +0.0, Leihen +0.0, Rest +50.8
+✓ Saison 2030: Konten der Computer-Vereine zusammen höchstens so hoch wie ihre erwarteten Jahreseinnahmen (vorläufig, K23: Start etwa ein Fünftel): Konten 3.3 Mrd. (Ø 59.9 Mio. je Verein, reichster FC Bayern München 657.2 Mio., 10 im Minus), Jahreseinnahmen 3.4 Mrd., Faktor 0.97 · Veränderung aller Konten +192.2 Mio.: Überschuss -1311.0, Ausland +1107.1, Europapokal +398.8, Bauen -114.7, Pokal +105.3, Transfers -81.2, Insolvenz +39.8, Liga +30.8, Eröffnung +5.5, Supercup +5.0, Strafen +0.0, TV-Raten +0.0, Leihen +0.0, Rest +6.8
+✓ Saison 2031: Konten der Computer-Vereine zusammen höchstens so hoch wie ihre erwarteten Jahreseinnahmen (vorläufig, K23: Start etwa ein Fünftel): Konten 3.2 Mrd. (Ø 57.5 Mio. je Verein, reichster Bayer 04 Leverkusen 542.5 Mio., 16 im Minus), Jahreseinnahmen 3.4 Mrd., Faktor 0.93 · Veränderung aller Konten -145.7 Mio.: Überschuss -1504.2, Ausland +975.2, Europapokal +490.8, Transfers -157.3, Pokal +115.9, Bauen -97.4, Liga +15.1, Insolvenz +5.8, Eröffnung +5.3, Supercup +5.0, Strafen +0.0, TV-Raten +0.0, Leihen +0.0, Rest +0.0
+✓ Saison 2032: Konten der Computer-Vereine zusammen höchstens so hoch wie ihre erwarteten Jahreseinnahmen (vorläufig, K23: Start etwa ein Fünftel): Konten 2.8 Mrd. (Ø 51.4 Mio. je Verein, reichster FC Bayern München 403.4 Mio., 17 im Minus), Jahreseinnahmen 3.4 Mrd., Faktor 0.83 · Veränderung aller Konten -328.8 Mio.: Überschuss -1453.6, Ausland +829.6, Europapokal +334.4, Transfers -163.0, Pokal +109.1, Bauen -92.0, Liga +71.4, Insolvenz +17.0, Eröffnung +5.5, Supercup +5.0, Strafen +0.0, TV-Raten +0.0, Leihen +0.0, Rest +7.8
+✓ Saison 2033: Konten der Computer-Vereine zusammen höchstens so hoch wie ihre erwarteten Jahreseinnahmen (vorläufig, K23: Start etwa ein Fünftel): Konten 2.8 Mrd. (Ø 51.7 Mio. je Verein, reichster FC Bayern München 688.0 Mio., 18 im Minus), Jahreseinnahmen 3.4 Mrd., Faktor 0.83 · Veränderung aller Konten +35.1 Mio.: Überschuss -1188.9, Ausland +752.9, Europapokal +389.3, Transfers -212.7, Liga +194.9, Pokal +113.6, Bauen -70.8, Insolvenz +46.0, Eröffnung +5.8, Supercup +5.0, Strafen +0.0, TV-Raten +0.0, Leihen +0.0, Rest +0.0
+✓ Saison 2034: Konten der Computer-Vereine zusammen höchstens so hoch wie ihre erwarteten Jahreseinnahmen (vorläufig, K23: Start etwa ein Fünftel): Konten 2.9 Mrd. (Ø 51.8 Mio. je Verein, reichster FC Bayern München 613.2 Mio., 16 im Minus), Jahreseinnahmen 3.5 Mrd., Faktor 0.83 · Veränderung aller Konten -2.3 Mio.: Überschuss -1176.8, Ausland +706.4, Europapokal +378.3, Liga +232.7, Transfers -192.5, Pokal +113.1, Bauen -87.4, Insolvenz +21.0, Eröffnung +5.6, Supercup +5.0, Strafen +0.0, TV-Raten +0.0, Leihen +0.0, Rest -7.7
+✓ Saison 2035: Konten der Computer-Vereine zusammen höchstens so hoch wie ihre erwarteten Jahreseinnahmen (vorläufig, K23: Start etwa ein Fünftel): Konten 2.7 Mrd. (Ø 48.3 Mio. je Verein, reichster FC Bayern München 610.1 Mio., 15 im Minus), Jahreseinnahmen 3.5 Mrd., Faktor 0.77 · Veränderung aller Konten -203.4 Mio.: Überschuss -1173.8, Europapokal +357.2, Ausland +355.8, Liga +230.4, Pokal +105.2, Bauen -69.5, Transfers -40.1, Insolvenz +13.2, Eröffnung +5.4, Supercup +5.0, Strafen +0.0, TV-Raten +0.0, Rest +7.8
+```
+
+**welt 10**, Wechsel mit Ablöse wörtlich:
+
+```
+✓ Saison 2026: mindestens 15 Wechsel mit Ablöse unter Computer-Vereinen (wie tests/transfers.js): 37 mit Ablöse (Sommer 34, Winter 3; Käufer aus Liga 1/2/3: 9/11/17), 8 aus dem Ausland, 16 Vereinslose, 9 Vereine im Minus zum Saisonende · Sommerbeginn: 55 von 55 Vereinen mit Budget, zusammen 461.3 Mio., 178 Spieler gelistet · Winterbeginn: 55 von 55 Vereinen mit Budget, zusammen 602.4 Mio., 152 Spieler gelistet
+✓ Saison 2027: mindestens 15 Wechsel mit Ablöse unter Computer-Vereinen (wie tests/transfers.js): 24 mit Ablöse (Sommer 19, Winter 5; Käufer aus Liga 1/2/3: 9/11/4), 9 aus dem Ausland, 26 Vereinslose, 12 Vereine im Minus zum Saisonende · Sommerbeginn: 49 von 55 Vereinen mit Budget, zusammen 803.6 Mio., 149 Spieler gelistet · Winterbeginn: 47 von 55 Vereinen mit Budget, zusammen 759.0 Mio., 153 Spieler gelistet
+✓ Saison 2028: mindestens 15 Wechsel mit Ablöse unter Computer-Vereinen (wie tests/transfers.js): 26 mit Ablöse (Sommer 22, Winter 4; Käufer aus Liga 1/2/3: 9/6/11), 9 aus dem Ausland, 25 Vereinslose, 10 Vereine im Minus zum Saisonende · Sommerbeginn: 47 von 55 Vereinen mit Budget, zusammen 890.6 Mio., 132 Spieler gelistet · Winterbeginn: 47 von 56 Vereinen mit Budget, zusammen 852.5 Mio., 141 Spieler gelistet
+✓ Saison 2029: mindestens 15 Wechsel mit Ablöse unter Computer-Vereinen (wie tests/transfers.js): 24 mit Ablöse (Sommer 18, Winter 6; Käufer aus Liga 1/2/3: 12/7/5), 8 aus dem Ausland, 17 Vereinslose, 11 Vereine im Minus zum Saisonende · Sommerbeginn: 49 von 55 Vereinen mit Budget, zusammen 975.9 Mio., 117 Spieler gelistet · Winterbeginn: 50 von 55 Vereinen mit Budget, zusammen 874.9 Mio., 108 Spieler gelistet
+✓ Saison 2030: mindestens 15 Wechsel mit Ablöse unter Computer-Vereinen (wie tests/transfers.js): 20 mit Ablöse (Sommer 18, Winter 2; Käufer aus Liga 1/2/3: 5/5/10), 5 aus dem Ausland, 23 Vereinslose, 10 Vereine im Minus zum Saisonende · Sommerbeginn: 44 von 55 Vereinen mit Budget, zusammen 993.1 Mio., 71 Spieler gelistet · Winterbeginn: 47 von 55 Vereinen mit Budget, zusammen 923.5 Mio., 75 Spieler gelistet
+✓ Saison 2031: mindestens 15 Wechsel mit Ablöse unter Computer-Vereinen (wie tests/transfers.js): 15 mit Ablöse (Sommer 15, Winter 0; Käufer aus Liga 1/2/3: 7/6/2), 3 aus dem Ausland, 24 Vereinslose, 16 Vereine im Minus zum Saisonende · Sommerbeginn: 46 von 55 Vereinen mit Budget, zusammen 1039.6 Mio., 80 Spieler gelistet · Winterbeginn: 45 von 55 Vereinen mit Budget, zusammen 929.5 Mio., 88 Spieler gelistet
+✓ Saison 2032: mindestens 15 Wechsel mit Ablöse unter Computer-Vereinen (wie tests/transfers.js): 16 mit Ablöse (Sommer 15, Winter 1; Käufer aus Liga 1/2/3: 4/7/5), 5 aus dem Ausland, 21 Vereinslose, 17 Vereine im Minus zum Saisonende · Sommerbeginn: 39 von 55 Vereinen mit Budget, zusammen 975.0 Mio., 76 Spieler gelistet · Winterbeginn: 42 von 55 Vereinen mit Budget, zusammen 741.3 Mio., 73 Spieler gelistet
+✓ Saison 2033: mindestens 15 Wechsel mit Ablöse unter Computer-Vereinen (wie tests/transfers.js): 24 mit Ablöse (Sommer 20, Winter 4; Käufer aus Liga 1/2/3: 9/10/5), 7 aus dem Ausland, 28 Vereinslose, 18 Vereine im Minus zum Saisonende · Sommerbeginn: 36 von 55 Vereinen mit Budget, zusammen 910.0 Mio., 75 Spieler gelistet · Winterbeginn: 42 von 55 Vereinen mit Budget, zusammen 787.2 Mio., 73 Spieler gelistet
+✓ Saison 2034: mindestens 15 Wechsel mit Ablöse unter Computer-Vereinen (wie tests/transfers.js): 16 mit Ablöse (Sommer 14, Winter 2; Käufer aus Liga 1/2/3: 4/11/1), 6 aus dem Ausland, 23 Vereinslose, 16 Vereine im Minus zum Saisonende · Sommerbeginn: 37 von 55 Vereinen mit Budget, zusammen 928.8 Mio., 63 Spieler gelistet · Winterbeginn: 41 von 55 Vereinen mit Budget, zusammen 725.2 Mio., 72 Spieler gelistet
+✓ Saison 2035: mindestens 15 Wechsel mit Ablöse unter Computer-Vereinen (wie tests/transfers.js): 17 mit Ablöse (Sommer 16, Winter 1; Käufer aus Liga 1/2/3: 5/9/3), 3 aus dem Ausland, 18 Vereinslose, 15 Vereine im Minus zum Saisonende · Sommerbeginn: 40 von 55 Vereinen mit Budget, zusammen 979.4 Mio., 93 Spieler gelistet · Winterbeginn: 42 von 55 Vereinen mit Budget, zusammen 733.3 Mio., 92 Spieler gelistet
+```
+
+**welt 10**, Langzeit-Spannung wörtlich (Lauf 26: Ø 6,0):
+
+```
+✓ Langzeit-Spannung: Die fünf Vereine mit dem höchsten Ansehen stehen im Mittel der letzten fünf Saisons unter den besten acht (K31 §10): Ø Platz 6.6 (letzte Saison 6.4; je Saison 2026 6.0, 2027 5.0, 2028 5.6, 2029 7.4, 2030 6.6, 2031 7.6, 2032 7.0, 2033 5.6, 2034 6.6, 2035 6.4)
+```
+
+**kabine**, Wechselwünsche wörtlich (Seed 5, 6, 7):
+
+```
+✗ Keine Dauerkrise: im Schnitt höchstens ein offizieller Wechselwunsch je Kader und Saison (Computer-Vereine): 1.05 (höchstens 7 in einem Verein)
+✓ Keine Dauerkrise: im Schnitt höchstens ein offizieller Wechselwunsch je Kader und Saison (Computer-Vereine): 0.98 (höchstens 5 in einem Verein)
+✓ Keine Dauerkrise: im Schnitt höchstens ein offizieller Wechselwunsch je Kader und Saison (Computer-Vereine): 0.96 (höchstens 7 in einem Verein)
+```
+
+**kabine 6**, die roten Zeilen zu T28.2 wörtlich (Seed 7 gleich):
+
+```
+✗ Konkurrent: Wer zehn Spiele hinter seinem Rivalen sitzt, erreicht den Gesprächswunsch (mindestens 70 % der Fälle): 33 % von 18, Zähler 10
+✗ Konkurrent: Ein Kämpfer bleibt in den ersten drei Spielen stabil, eine Diva nicht: Kämpfer 3.7, ohne Eigenschaft -0.3, Diva -5.3
+✗ Tribüne: Wer zum Kader zählt (ab Rotation) und nicht im Spieltagskader steht, verliert −2 je Spiel, eine Diva −4. Auf der Bank nichts: -2.0 und -6.0
+```
+
+**sommer**, Kondition wörtlich:
+
+```
+✓ Kondition beim Auftakt nach 3 Wochen Urlaub und Laufplan: 65–75: 69.1
+✓ Kondition zum ersten Ligaspiel nach der Vorbereitung: 80–88: 80.1
+```
+
+**spielermodell**, Gleichgewicht wörtlich:
+
+```
+✗ Gleichgewicht 1. Liga: Schnitt der besten 14 schwankt höchstens 1.5: 77.3 → 78.2 → 78.2 → 78.5 → 78.9 → 78.2
+✗ Gleichgewicht 2. Liga: Schnitt der besten 14 schwankt höchstens 2: 69.5 → 70.1 → 71.6 → 71.6 → 71.2 → 71.6
+✓ Gleichgewicht 3. Liga: Schnitt der besten 14 schwankt höchstens 2.5: 65.6 → 66.1 → 66.9 → 67.1 → 67.1 → 67.0
+```
+
+**finanzmodell 3**, Saldo wörtlich:
+
+```
+✗ Saldo 1. Liga Saison 2026: 9.2 Mio je Verein (Ziel 11.0 Mio ± 1.5) · TV 49.8 Mio, Werbung/Sonstiges 63.5 Mio, Spieltag 24.4 Mio, Gehalt+Stab 76.4 Mio (Kader 28.8 Spieler, Ø Gehalt 2.56 Mio, Ø Stärke 73.5), Betrieb 1.5 Mio, Verwaltung 49.3 Mio
+✓ Saldo 2. Liga Saison 2026: 0.7 Mio je Verein (Ziel 0.0 Mio ± 1.5) · TV 12.4 Mio, Werbung/Sonstiges 10.9 Mio, Spieltag 9.6 Mio, Gehalt+Stab 18.9 Mio (Kader 29.3 Spieler, Ø Gehalt 0.63 Mio, Ø Stärke 65.8), Betrieb 1.0 Mio, Verwaltung 11.0 Mio
+✓ Saldo 3. Liga Saison 2026: -1.8 Mio je Verein (Ziel -1.0 Mio ± 1.5) · TV 1.3 Mio, Werbung/Sonstiges 4.8 Mio, Spieltag 4.4 Mio, Gehalt+Stab 8.3 Mio (Kader 28.4 Spieler, Ø Gehalt 0.29 Mio, Ø Stärke 61.1), Betrieb 0.7 Mio, Verwaltung 1.8 Mio
+✓ Saldo 1. Liga Saison 2027: 11.8 Mio je Verein (Ziel 11.0 Mio ± 1.5) · gegenüber Vorsaison: TV +0.0, Werbung/Sonstiges −3.9, Spieltag −0.5, Gehalt+Stab −5.4 (Kader 28.8 → 28.1 Spieler, Ø Gehalt 2.56 → 2.46 Mio, Ø Stärke 73.5 → 73.6), Betrieb −0.0, Verwaltung −1.7, Jugend +0.0 · abgestiegen 0, aufgestiegen 3 (Saldo 27.6 Mio, Ø Gehalt 0.90 Mio), geblieben 15 (Saldo 8.7 Mio, Ø Gehalt 2.77 Mio)
+✓ Saldo 2. Liga Saison 2027: -0.8 Mio je Verein (Ziel 0.0 Mio ± 1.5) · gegenüber Vorsaison: TV +0.0, Werbung/Sonstiges +2.1, Spieltag +1.9, Gehalt+Stab +4.4 (Kader 29.3 → 28.8 Spieler, Ø Gehalt 0.63 → 0.80 Mio, Ø Stärke 65.8 → 67.5), Betrieb +0.1, Verwaltung +1.0, Jugend +0.0 · abgestiegen 3 (Saldo -6.4 Mio, Ø Gehalt 1.54 Mio), aufgestiegen 3 (Saldo 5.7 Mio, Ø Gehalt 0.45 Mio), geblieben 12 (Saldo -1.0 Mio, Ø Gehalt 0.71 Mio)
+✓ Saldo 3. Liga Saison 2027: -2.2 Mio je Verein (Ziel -1.0 Mio ± 1.5) · gegenüber Vorsaison: TV +0.0, Werbung/Sonstiges −0.3, Spieltag −0.7, Gehalt+Stab −0.4 (Kader 28.4 → 28.2 Spieler, Ø Gehalt 0.29 → 0.27 Mio, Ø Stärke 61.1 → 61.2), Betrieb −0.1, Verwaltung −0.1, Jugend +0.0 · abgestiegen 3 (Saldo -1.8 Mio, Ø Gehalt 0.35 Mio), aufgestiegen 4 (Saldo -2.3 Mio, Ø Gehalt 0.23 Mio), geblieben 13 (Saldo -2.2 Mio, Ø Gehalt 0.27 Mio)
+✗ Saldo 1. Liga Saison 2028: 12.9 Mio je Verein (Ziel 11.0 Mio ± 1.5) · gegenüber Vorsaison: TV −0.0, Werbung/Sonstiges +3.6, Spieltag +3.7, Gehalt+Stab +4.5 (Kader 28.1 → 27.3 Spieler, Ø Gehalt 2.46 → 2.76 Mio, Ø Stärke 73.6 → 74.4), Betrieb +0.2, Verwaltung +1.6, Jugend +0.0 · abgestiegen 0, aufgestiegen 3 (Saldo 11.0 Mio, Ø Gehalt 2.51 Mio), geblieben 15 (Saldo 13.3 Mio, Ø Gehalt 2.80 Mio)
+✗ Saldo 2. Liga Saison 2028: -3.7 Mio je Verein (Ziel 0.0 Mio ± 1.5) · gegenüber Vorsaison: TV −0.0, Werbung/Sonstiges −2.4, Spieltag −1.8, Gehalt+Stab +0.1 (Kader 28.8 → 28.8 Spieler, Ø Gehalt 0.80 → 0.81 Mio, Ø Stärke 67.5 → 67.3), Betrieb −0.2, Verwaltung −1.1, Jugend +0.0 · abgestiegen 3 (Saldo -13.1 Mio, Ø Gehalt 1.29 Mio), aufgestiegen 2 (Saldo -0.9 Mio, Ø Gehalt 0.48 Mio), geblieben 13 (Saldo -2.0 Mio, Ø Gehalt 0.75 Mio)
+✓ Saldo 3. Liga Saison 2028: -2.3 Mio je Verein (Ziel -1.0 Mio ± 1.5) · gegenüber Vorsaison: TV +0.0, Werbung/Sonstiges +0.2, Spieltag +0.2, Gehalt+Stab +0.4 (Kader 28.2 → 28.1 Spieler, Ø Gehalt 0.27 → 0.30 Mio, Ø Stärke 61.2 → 62.1), Betrieb +0.0, Verwaltung +0.1, Jugend +0.0 · abgestiegen 2 (Saldo -2.7 Mio, Ø Gehalt 0.40 Mio), aufgestiegen 4 (Saldo -2.6 Mio, Ø Gehalt 0.26 Mio), geblieben 14 (Saldo -2.1 Mio, Ø Gehalt 0.29 Mio)
+```
+
+**finanzmodell 3**, KURZ wörtlich:
+
+```
+KURZ 2026 L1: ein 137.7 Mio = TV 49.8 Mio + Werbung/Sonstiges 63.5 Mio + Spieltag 24.4 Mio | aus 128.6 Mio = Gehalt+Stab 76.4 Mio + Betrieb 1.5 Mio + Verwaltung 49.3 Mio + Jugend 1.4 Mio | Saldo 9.2 Mio
+KURZ 2026 L2: ein 33.0 Mio = TV 12.4 Mio + Werbung/Sonstiges 10.9 Mio + Spieltag 9.6 Mio | aus 32.3 Mio = Gehalt+Stab 18.9 Mio + Betrieb 1.0 Mio + Verwaltung 11.0 Mio + Jugend 1.4 Mio | Saldo 0.7 Mio
+KURZ 2026 L3: ein 10.5 Mio = TV 1.3 Mio + Werbung/Sonstiges 4.8 Mio + Spieltag 4.4 Mio | aus 12.3 Mio = Gehalt+Stab 8.3 Mio + Betrieb 0.7 Mio + Verwaltung 1.8 Mio + Jugend 1.5 Mio | Saldo -1.8 Mio
+KURZ 2027 L1: ein 133.3 Mio = TV 49.8 Mio + Werbung/Sonstiges 59.6 Mio + Spieltag 23.9 Mio | aus 121.5 Mio = Gehalt+Stab 71.0 Mio + Betrieb 1.5 Mio + Verwaltung 47.6 Mio + Jugend 1.4 Mio | Saldo 11.8 Mio
+KURZ 2027 L2: ein 37.0 Mio = TV 12.4 Mio + Werbung/Sonstiges 13.0 Mio + Spieltag 11.5 Mio | aus 37.7 Mio = Gehalt+Stab 23.3 Mio + Betrieb 1.1 Mio + Verwaltung 12.0 Mio + Jugend 1.4 Mio | Saldo -0.8 Mio
+KURZ 2027 L3: ein 9.5 Mio = TV 1.3 Mio + Werbung/Sonstiges 4.5 Mio + Spieltag 3.7 Mio | aus 11.7 Mio = Gehalt+Stab 7.9 Mio + Betrieb 0.6 Mio + Verwaltung 1.8 Mio + Jugend 1.5 Mio | Saldo -2.2 Mio
+KURZ 2028 L1: ein 140.6 Mio = TV 49.8 Mio + Werbung/Sonstiges 63.2 Mio + Spieltag 27.6 Mio | aus 127.7 Mio = Gehalt+Stab 75.5 Mio + Betrieb 1.7 Mio + Verwaltung 49.2 Mio + Jugend 1.4 Mio | Saldo 12.9 Mio
+KURZ 2028 L2: ein 32.8 Mio = TV 12.4 Mio + Werbung/Sonstiges 10.7 Mio + Spieltag 9.7 Mio | aus 36.5 Mio = Gehalt+Stab 23.4 Mio + Betrieb 0.9 Mio + Verwaltung 10.9 Mio + Jugend 1.4 Mio | Saldo -3.7 Mio
+KURZ 2028 L3: ein 9.9 Mio = TV 1.3 Mio + Werbung/Sonstiges 4.7 Mio + Spieltag 3.9 Mio | aus 12.2 Mio = Gehalt+Stab 8.3 Mio + Betrieb 0.6 Mio + Verwaltung 1.8 Mio + Jugend 1.5 Mio | Saldo -2.3 Mio
+```
+
+**kalibrierung** (Auswärtssiege) wörtlich:
+
+```
+🟢 Auswärtssiege: 31 % (Ziel 0.3–0.36)
+```
+
+**akzeptanz** (Sensitivität) wörtlich:
+
+```
+✓ Sensitivität: ein Spieler (Abwehr) +5 bringt 1–3 Punkte pro Saison: +1.1
+✓ Sensitivität: ein Spieler (Mittelfeld) +5 bringt 1–3 Punkte pro Saison: +1.4
+✓ Sensitivität: ein Spieler (Angriff) +5 bringt 1–3 Punkte pro Saison: +1.6
+✓ Sensitivität: kein Bereich bringt mehr als das Doppelte eines anderen: Abwehr +1.1, Mittelfeld +1.4, Angriff +1.6
+```
+
+**transfers**, Zeile zu den Wechseln unter Computer-Vereinen wörtlich:
+
+```
+✓ Fenster: Wechsel unter Computer-Vereinen nur im Fenster, mindestens 15 je Saison (vorher etwa 29 über das ganze Jahr): 35 Wechsel, 0 außerhalb
+```
+
+---
+
 ## Lauf 27, 27.11.2026 nachmittags (gezielt): popolupo-t25-geld 4dc2512 (Zielplattform, Text der Erinnerung)
 
 Nur der neue Commit, er ändert eine Zeile in `js/fenster.js` (Text der Erinnerung zum Saisonende): code, regeln-fest, spielstand, ui-sicherung und offline sind **alle grün**. Der Rest ist unverändert wie in Lauf 26.
