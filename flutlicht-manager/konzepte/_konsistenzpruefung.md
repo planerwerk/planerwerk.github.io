@@ -3197,3 +3197,22 @@ Bericht: `flutlicht-tools/pruefung-go.md`. Korrekturen auf `mitarbeit/popolupo-t
 | GO1 | **Mittel:** Verlängerte ein Verein nach dem Abstieg zum gekürzten Gehalt, blieb der Merker der Ligaklausel stehen. Nach dem Wiederaufstieg sprang das Gehalt ohne Gehaltsrahmen zurück, Stimmung und Gehaltsneid sahen bis dahin das alte Gehalt. Jetzt löscht jeder neue Vertrag den Merker (Verlängerung zum Saisonende, frühe Verlängerung, Unterschrift). Test `vertraege` Nr. 4d. | ✅ behoben |
 | GO2 | **Niedrig:** Die Einstellung „Innenverteidiger 0,95 zur Abwehr Mitte“ im Vergleichsskript senkt auch den Anteil an der Abwehr außen von 0,10 auf 0,05. Name, Kopf und README sagen das jetzt. | ✅ behoben |
 | GO3 | **Niedrig, Test:** `tests/welt.js` Nr. 7 zählte das Auffüllen des alten Vereins nach einem Jobwechsel als Auffüllen am Ende des Sommerfensters. Das verfälschte nur die Diagnose kleiner Kader. Jetzt zählt es nicht mehr mit. | ✅ behoben |
+
+## GP. Prüfung von Abwehrdruck, Geldmessung und Kauf im Ausland ohne Laufzeit (27. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 26cfe3b und e0958f3 gelesen und von Hand nachgerechnet.
+- Der Kauf im Ausland bricht nichts. Ein Poolspieler hat danach alle Felder, die Kader, Kabine, Training, Aufstellung und Spielstand brauchen. Vereinbarte Wechsel sind geschützt.
+- Budget, Vereinswert, Gehaltsrahmen, Obergrenze je Fenster, Kadergröße und Transfersperre gelten auch im Ausland. Der Zufall bleibt deterministisch, `lizenz` Nr. 4 und 5a bleiben gleich.
+- Die Geldmessung in `welt` Nr. 7 ändert den Lauf nicht und zählt nichts doppelt.
+- Hinweis ohne Fehler: Bei einer Suche im Ausland stünden rund 1.660 Poolspieler gegen die Handvoll Gelisteter im Inland. Fast jede Suche endete dann im Ausland. Jetzt beobachtet ein Verein je Suche 5 / 3 / 2 zufällige Auslandsvereine (`RCV.ausland.vereine`), der Abschlag in der Wahl ist 2 statt 1.
+
+Bericht: `flutlicht-tools/pruefung-gp.md`. Korrekturen auf `mitarbeit/popolupo-t25-geld`.
+
+| # | Befund | Status |
+|---|---|---|
+| GP1 | **Mittel, Entscheidung:** Führt der Stab deine Transfers, kaufte er schon vor der B-Lizenz im Ausland, K36 sagte „nur im Inland“. Entschieden (vorläufig): Der Stab kauft wie die Computer-Vereine, die Lizenz gilt für dich. So bleiben beide Welten im Gleichschritt-Test gleich. K36 und K32 Nr. 19 angepasst. | ✅ entschieden |
+| GP2 | **Niedrig:** Die Sperre gegen den Rückkauf galt nur nach der Abwanderung. Jetzt setzt `insAusland` sie bei jedem Wechsel ins Ausland, auch wenn du verkaufst. | ✅ behoben |
+| GP3 | **Niedrig:** Die Abwanderung konnte einen Spieler verkaufen, der im selben Sommer aus dem Ausland kam. Jetzt wandert niemand ab, der vor weniger als 180 Tagen kam (`abwanderung.sperreTage`). | ✅ behoben |
+| GP4 | **Test:** Die Prüfung der Rückkaufsperre in `welt` Nr. 4b wäre auch ohne Sperre grün gewesen. Jetzt mit Gegenprobe: ohne Sperre ist der Spieler der Kandidat, mit Sperre keiner. | ✅ behoben |
+| GP5 | **Test:** `transfers` zählte als „Wechsel unter Computer-Vereinen“ jede Meldung „Wechsel perfekt“, also auch Abwanderung und Käufe im Ausland. Jetzt zählt nur ein Wechsel mit deutschem Verkäufer. | ✅ behoben |
+| GP6 | **Doku:** Der Nachtrag in K04 las sich, als lägen die Auswärtssiege im Ziel, Lauf 25 meldete sie aber rot. Dazu stand „noch nie gelaufen“ bei Skripten, die längst liefen. Berichtigt. Der Heimvorteil sinkt gleichzeitig von ×1,03 auf ×1,025 (vorläufig). | ✅ behoben |

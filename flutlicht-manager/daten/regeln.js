@@ -113,7 +113,7 @@ const REGELN={
       angebote:{anteil:0.3,niveau:5},  // Anteil der Angebote für deine Spieler, die aus dem Ausland kommen; der Spieler darf höchstens 5 unter der Grundstärke des Käufers liegen
       // Abwanderung (K32 §8 „Bundesliga verliert je Sommer Spieler an reiche Auslandsgruppen“, T1.3, vorläufig): im Sommerfenster je Liga so viele Käufe aus dem Ausland,
       // ab dieser Stärke, bis zu diesem Alter, höchstens jeVerein je Verein, Ablöse = Vereinswert fürs Ausland × preis. Sommer 2025: allein die vier teuersten Zugänge der Premier League kamen aus der Bundesliga.
-      abwanderung:{liga:{1:[6,12],2:[3,6],3:[2,5]},ab:{1:78,2:72,3:67},alterMax:29,jeVerein:2,preis:1.2},
+      abwanderung:{liga:{1:[6,12],2:[3,6],3:[2,5]},ab:{1:78,2:72,3:67},alterMax:29,jeVerein:2,preis:1.2,sperreTage:180}, // sperreTage: wer vor weniger Tagen aus dem Ausland kam, wandert nicht gleich wieder ab (Prüfung GP3)
       interesse:{fremd:-5,heimkehr:10},// Wechselbereitschaft zu dir: Spieler aus dem Ausland etwas geringer, Deutsche im Ausland höher (Rückkehr, K32 §8)
       namenVersuche:6,                 // so oft wird ein Name neu gewürfelt, wenn es ihn im Pool schon gibt
       // Vorlauf beim Aufbau der Welt: Der Pool durchläuft so viele Saisons in groben Schritten (Entwicklung, Karriereende, neue Talente), damit er im Gleichgewicht startet.
@@ -452,7 +452,9 @@ const REGELN={
     // abschlag: so viele Punkte weniger in der Wahl, weil Eingewöhnung und Sprache unsicher sind (bei gleicher Stärke kauft er lieber im Inland).
     // Wer in dieser Saison ins Ausland verkauft wurde (p.ausWeg), wird nicht gleich zurückgekauft. Grund: Geld floss nur herein (Abwanderung, Europapokal), nie hinaus,
     // die Konten der Computer-Vereine wuchsen in zehn Saisons auf ein Vielfaches (Lauf 25).
-    ausland:{an:true,chance:{1:0.5,2:0.3,3:0.15},abschlag:1},
+    // vereine: so viele zufällige Auslandsvereine beobachtet er je Suche (große Vereine scouten das Ausland besser, K32 §7). Ohne die Grenze stünden rund 1.660 Poolspieler
+    // gegen die Handvoll Gelisteter im Inland, fast jede Suche endete im Ausland (Prüfung GP). abschlag 2 statt 1 aus demselben Grund.
+    ausland:{an:true,chance:{1:0.5,2:0.3,3:0.15},vereine:{1:5,2:3,3:2},abschlag:2},
     // Leihen unter Computer-Vereinen (K31 §5.9, U11d1). Leihbar: bis alterMax Jahre, Rang in leihRaenge (Ausbildungsverein: Profilwert, auch Talente), gesund, Verleiher behält mehr als
     // markt.verkaeufer.kaderMin. Geliehen wird für die Lücken in gruende: zuerst (vor dem Kauf) bei den Gründen in zuerst, sonst nur, wenn kein Kauf geht. Kontingent: leihe.kontingent.
     leihe:{alterMax:23,leihRaenge:['ueber'],gruende:['verletzt','offen'],zuerst:['verletzt']},
@@ -827,7 +829,7 @@ const REGELN={
       freistoss:0.10,elfmeter:0.84,beidfuessig:1.03,reflexe:0.93,strafraum:0.85,elfmetertoeter:0.70,abschlussschwach:0.88,kopfballschwach:0.87,fliegenfaenger:1.15,langsam:1.08,abnehmend:[1,0.6,0.3]},
     ausrichtung:{SD:{A:0.90,D:1.08,T:0.90},D:{A:0.95,D:1.04,T:0.95},N:{A:1,D:1,T:1},O:{A:1.05,D:0.96,T:1.05},SO:{A:1.10,D:0.92,T:1.10}}, // K06 §5.5, T: wie oft angegriffen wird (mehr Spieler vorn)
     einsatz:{H:{A:1.02,D:1.02},F:{A:0.985,D:0.985}},
-    heim:{alle:1.03,amateure:1.05},
+    heim:{alle:1.025,amateure:1.05}, // alle 1,03 → 1,025 (27.11., vorläufig): Auswärtssiege in den Läufen 19 bis 25 bei 29 bis 32 % (Ziel 30–36 %), und der stärkere Abwehrdruck (abwehr.jePunkt 0,03) verstärkt den Heimvorteil
     eigenschaften:{kaempfer:1.03,fuehrungsspieler:1.01,nervenschwach:0.96,trainingsweltmeister:0.97,engAb:80,nervenschwachElfmeter:0.06}, // Wirkung im Spiel (K03 §3.3), eng: ab Minute 80 mit höchstens einem Tor Abstand
     amateure:{wirkungJeStaerke:1}, // Amateurklubs im Pokal: alle Teamwerte = ihre Stärke
     ermuedung:{proMinute:0.17,ko:[2.0,-0.0125],hart:1.15,schwelle:60,abfall:0.005},

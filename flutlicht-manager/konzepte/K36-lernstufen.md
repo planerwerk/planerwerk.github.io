@@ -102,7 +102,7 @@ Grundlage sind die Notizen in K10 §12 Nr. 14, K11 §12 Nr. 12, K13 §12 Nr. 13 
 | `lager` | Trainingslager buchen | 3 B-Lizenz | kein Lager (wie die Computer-Vereine heute) | K11 Nr. 12 |
 | `stab` | Mitarbeiter einstellen, verlängern, entlassen | 3 B-Lizenz | Verein besetzt fehlende Rollen und verlängert wie die Computer-Vereine (`stabSaison`) | PLAN §4, K16 |
 | `vertraege` | Verträge verlängern, Spieler freistellen | 3 B-Lizenz | Verein verlängert nach den Regeln der Computer-Vereine | PLAN §4, K21 |
-| `ausland` | Spieler im Ausland beobachten und kaufen (U9b) | 3 B-Lizenz | Verein kauft nur im Inland (wie die Computer-Vereine bis U11), der Auslandsmarkt ist als Information frei | K32 §6, K18 |
+| `ausland` | Spieler im Ausland beobachten und kaufen (U9b) | 3 B-Lizenz | Verein kauft wie die Computer-Vereine, seit 27.11.2026 also auch im Ausland (K32 §7, vorläufig, Prüfung GP1). Selbst beobachten und kaufen kannst du dort erst ab B. Der Auslandsmarkt ist als Information frei | K32 §6, K18 |
 | `jugend` | Stufe der Jugendarbeit (setzt seit U9c das Ziel für das Jugendniveau) | 3 B-Lizenz | Verein hält die übliche Stufe 2 wie die Computer-Vereine | K08, 12 Nr. 15 |
 | `jugendkader` | Aufrücken aus der Jugend und Verkauf aus der Jugend (U9c). Den Jugendkader ansehen ist immer frei | 3 B-Lizenz | Verein holt jeden Sommer die zwei Besten ab 17 in den Profikader | K08 §12 Nr. 9 |
 | `pate` | Einem Talent einen Mentor als Paten geben (U9c) | 4 A-Lizenz | kein Pate | K08 §5.2 |

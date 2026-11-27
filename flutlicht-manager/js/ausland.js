@@ -94,6 +94,7 @@ function ausDemAusland(p,tid){const i=S.ausland.pl.indexOf(p);if(i>=0)S.ausland.
 function insAusland(p,avId){if(typeof statZeileSchliessen==="function")statZeileSchliessen(p); /* laufende Statistikzeile vorher abschließen (T3.1) */const i=S.pl.indexOf(p);if(i>=0)S.pl.splice(i,1);if(!S.ausland.pl.includes(p))S.ausland.pl.push(p);
   for(const k in p)if(!POOL_FELDER.includes(k))delete p[k]; // Stimmung, Rollen, Belastung, Verletzungsakte und alles andere Vereinsbezogene
   p.team=avId;p.list=0;p.ask=0;p.inj=0;p.ls=null;p.g=0;p.pg=0;p.apps=0;p.sv=0;p.sp=RW.ausland.praxis.stamm;p.fit=100;p.ct=riA(RM.neuerVertrag);p.sal=salaryFor(p.str);
+  p.ausWeg=S.season; /* in dieser Saison kauft ihn kein Computer-Verein zurück (K32 §7, computer.js kiKandidat), gleich ob du ihn verkauft hast oder ein Computer-Verein (Prüfung GP2) */
   S.gw=(S.gw||[]).filter(g=>g.pid!==p.id);S.bz=(S.bz||[]).filter(b=>b[0]!==p.id&&b[1]!==p.id);(S.vs||[]).forEach(v=>{if(v.pid===p.id&&v.stand==='offen')v.stand='hinfaellig';});}
 // Auslandsvereine, die für einen deiner Spieler bieten könnten: Er passt sportlich (höchstens einige Punkte unter der Grundstärke) und das Budget reicht (K32 §3.1)
 function auslandKaeufer(p,preis){const A=RW.ausland;return(S.ausland?S.ausland.v:[]).filter(v=>p.str>=avStaerke(v)-A.angebote.niveau&&avBudget(v)>preis);}
@@ -106,11 +107,11 @@ function avPlatzFuer(v,p){const P=kernPlan(v),k=avKader(v.id);if(istTalent(p)){c
   const n=P.platz[p.pos]||0,l=k.filter(q=>!istTalent(q)&&q.pos===p.pos).sort((a,b)=>b.str-a.str);return n>0&&(l.length<n||p.str>l[n-1].str);}
 function auslandAbwanderung(vereine){if(!S.ausland)return[];const A=RW.ausland.abwanderung,out=[],belegt=new Set();
   mitStrom(strom('abwanderung',S.season),()=>{for(const lg of [1,2,3]){if(!A.liga[lg])continue;const ids=new Set(vereine.filter(t=>t.lg===lg).map(t=>t.id)),n=riA(A.liga[lg]),jeV=new Map();let k=0;
-    const kand=S.pl.filter(p=>ids.has(p.team)&&p.age<=A.alterMax&&p.str>=A.ab[lg]&&!p.wech&&!p.leihe&&!p.zwP).map(p=>({p,w:p.str+(R()-0.5)*2*RCV.schaetzFehler})).sort((a,b)=>b.w-a.w||a.p.id-b.p.id);
+    const kand=S.pl.filter(p=>ids.has(p.team)&&p.age<=A.alterMax&&p.str>=A.ab[lg]&&!p.wech&&!p.leihe&&!p.zwP&&!(p.ausAb!=null&&absTag(S.tag)-p.ausAb<(A.sperreTage||0))).map( /* gerade erst aus dem Ausland gekommen: nicht gleich zurück (Prüfung GP3) */p=>({p,w:p.str+(R()-0.5)*2*RCV.schaetzFehler})).sort((a,b)=>b.w-a.w||a.p.id-b.p.id);
     for(const {p} of kand){if(k>=n)break;if((jeV.get(p.team)||0)>=A.jeVerein)continue;const preis=Math.round(vwAusland(p)*A.preis/RM.runden)*RM.runden,l=auslandKaeufer(p,preis).filter(x=>!belegt.has(x.id)&&avPlatzFuer(x,p));if(!l.length)continue;
       const v=l.reduce((b,x)=>Math.abs(avStaerke(x)-p.str)<Math.abs(avStaerke(b)-p.str)?x:b);belegt.add(v.id);jeV.set(p.team,(jeV.get(p.team)||0)+1);k++;out.push({p,von:p.team,preis,v});}}});
   out.forEach(({p,von,preis,v})=>{const t=S.teams[von];if(von===S.my){money('Transfers',preis);vertragEnde(p);}else t.cash+=preis;
-    kabineAbgang(p,von);S.offers=S.offers.filter(o=>o.pid!==p.id);insAusland(p,v.id);p.ausWeg=S.season; /* in dieser Saison kauft ihn kein Computer-Verein zurück (K32 §7, computer.js kiKandidat) */statTransfer(p,preis,von,v.id);
+    kabineAbgang(p,von);S.offers=S.offers.filter(o=>o.pid!==p.id);insAusland(p,v.id);statTransfer(p,preis,von,v.id);
     {const weg=new Set();kernKuerzen(v,avKader(v.id),weg);if(weg.size){S.ausland.pl=S.ausland.pl.filter(q=>!weg.has(q.id));weg.forEach(id=>PIX.delete(id));}} // Kern des Käufers auf Plan
     news(`Wechsel perfekt: ${p.n} geht für ${fmt(preis)} von ${t.name} zu ${v.name} (${gruppenName(avGruppe(v))}).`,'tr');if(von===S.my)stabMeldung(`Der Verein hat ${p.n} für ${fmt(preis)} an ${v.name} verkauft.`);});
   return out;}

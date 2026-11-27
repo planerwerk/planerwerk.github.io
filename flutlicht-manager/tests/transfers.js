@@ -5,7 +5,9 @@ const {neueWelt}=require('./sim');
 const SEED=+(process.argv[2]||5),probleme=[],t0=Date.now();
 const pruef=(ok,text,wert)=>{console.log(`${ok?'✓':'✗'} ${text}${wert!=null?': '+wert:''}`);if(!ok)probleme.push(text+(wert!=null?' ('+wert+')':''));};
 const pc=x=>(x*100).toFixed(0)+' %',f2=x=>x.toFixed(2),m=l=>l.length?l.reduce((a,b)=>a+b,0)/l.length:0;
-const welt=(id=9)=>{const {W,F}=neueWelt();const zaehl=[];const orig=F.news;F.news=function(t,c){if(String(t).startsWith('Wechsel perfekt'))zaehl.push(W.S.tag);return orig(t,c);};
+// zaehl: Tage der Wechsel mit Ablöse unter Computer-Vereinen. Seit Prüfung GP5 am Wechsel selbst gezählt (Verkäufer ein deutscher Verein), nicht mehr an der Meldung
+// „Wechsel perfekt“: die trugen auch die Abwanderung ins Ausland (seit T1.3) und die Käufe im Ausland (K32 §7).
+const welt=(id=9)=>{const {W,F}=neueWelt();const zaehl=[];const orig=F.kiWechsel;F.kiWechsel=function(p,b,preis,art){if(p.team>=0&&p.team<1000&&W.S.teams[p.team])zaehl.push(W.S.tag);return orig(p,b,preis,art);};
   F.buildWorld(SEED);const S=W.S,ev=W.ev;S.my=id;S.mgr='Test';F.setTarget();F.sponsOffers();F.sponsorWaehlen(0);S.lineup=F.bestXI(id,ev('myT()').form);
   ev('RAW').konkurrenz.chance=0; // ohne Mitbieter (K20c), damit die Käufe der älteren Prüfungen gleich bleiben. Nr. K20c schaltet ihn ein.
   const im=(k,fn)=>ev('mitStrom')(ev('strom')('test',k),fn);return{W,F,S,ev,im,t:ev('myT()'),T:ev('RTR'),zaehl};};

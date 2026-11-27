@@ -4,7 +4,7 @@
 //   heute; abwehr.jePunkt 0,03 statt 0,022 (Druck der Abwehr auf den Abschluss); Innenverteidiger zählt mehr zur Abwehr Mitte (0,95 statt 0,85, ohne Kontrolle, Abwehr außen 0,05 statt 0,10; Prüfung GO2);
 //   angriff.exponent 1,65 statt 1,55 (Stärkeunterschied wirkt stärker auf die Chancen, betrifft alle Bereiche).
 // Je Einstellung eine Zeile ✓ (alle drei Bereiche 1–3 und kein Bereich mehr als das Doppelte) oder ✗, dazu Tore pro Spiel der Basis. Vergleich, kein Fehler im Spiel.
-// Aufruf: node tests/akzeptanz-sweep.js [Durchgänge=100] [Seed=5]. Nur Node.js. Dauer etwa viermal Nr. 2 aus tests/akzeptanz.js. Entstanden ohne Node.js (27.11.), noch nie gelaufen.
+// Aufruf: node tests/akzeptanz-sweep.js [Durchgänge=100] [Seed=5]. Nur Node.js. Dauer etwa viermal Nr. 2 aus tests/akzeptanz.js. Entstanden ohne Node.js (27.11.), lief erstmals in Lauf 25.
 // Seit dem 27.11. (Lauf 25) gilt abwehr.jePunkt 0,03 im Spiel. „heute“ und die zweite Zeile messen seitdem dasselbe.
 const {neueWelt}=require('./sim');
 const N=+(process.argv[2]||100),SEED=+(process.argv[3]||5),t0=Date.now();

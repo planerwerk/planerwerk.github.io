@@ -114,14 +114,16 @@ function kiKandidat(t,n,rest,senk,kader,plan){const K=RCV.kauf,min=n.min-senk,al
   // Kauf im Ausland (K32 §7, vorläufig): mit der Chance je Liga auch im Auslandspool, gleiche Regeln wie im Inland, Preis wie für dich (auslandPreis), Abschlag in der Wahl.
   // Nicht zurückgekauft wird, wer in dieser Saison ins Ausland verkauft wurde (p.ausWeg). Das Geld verlässt die Ligen (kiWechsel).
   const A=RCV.ausland;
-  if(A&&A.an&&S.ausland&&R()<((A.chance||{})[t.lg]||0))for(const p of S.ausland.pl){if(p.ausWeg===S.season||p.wech||p.leihe||p.age>alterMax)continue;
+  if(A&&A.an&&S.ausland&&R()<((A.chance||{})[t.lg]||0)){const V=S.ausland.v,k=(A.vereine||{})[t.lg]||V.length,blick=new Set(); // beobachtete Auslandsvereine (Prüfung GP)
+    if(k>=V.length)V.forEach(v=>blick.add(v.id));else for(let i=0;i<k*3&&blick.size<k;i++)blick.add(V[Math.floor(R()*V.length)].id);
+    for(const p of S.ausland.pl){if(!blick.has(p.team)||p.ausWeg===S.season||p.wech||p.leihe||p.age>alterMax)continue;
     const av=avVon(p.team);if(!av||av.rep-t.rep>K.ansehenMinus)continue; // er geht nicht weit nach unten, wie im Inland
     if(n.grund==='talent'){if(p.age>RCV.talentBis||p.pot<min)continue;}
     const sicht=kiSichtStr(t,p);
     if(n.grund!=='talent'&&(planGruppe(p)!==n.g||sicht<min||(n.statt&&sicht<=n.statt.str)))continue;
     const preis=auslandPreis(p);if(preis>rest||preis>kiZahlt(p,t,n))continue;
     const v=(n.grund==='talent'?p.pot:sicht+(p.age<=K.jungBis?(p.pot-p.str)*talentGewicht:0)-Math.max(0,p.age-K.altAb)*altMalus)-(A.abschlag||0)+(R()-0.5)*2*RCV.schaetzFehler;
-    if(v>bv){bv=v;best={p,preis,von:null,aus:av.id};}}
+    if(v>bv){bv=v;best={p,preis,von:null,aus:av.id};}}}
   return best;}
 // Sternejagd (§5.3, U11b): der stärkste bezahlbare Spieler eines kleineren Vereins, der nicht auf der Liste stehen muss. Er ist deutlich stärker als der Anspruch des Käufers
 // und bekäme dort einen Stammplatz. Sein Verein nimmt das außergewöhnliche Angebot an, auch wenn ihm danach eine Planstelle fehlt (die Ersatzsuche folgt aus dem Bedarf).

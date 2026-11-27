@@ -84,20 +84,22 @@ const mitLeihProtokoll=(F,getS,C)=>{const log=[],orig=F.kiLeihe;
 
 // 4b. Kauf im Ausland (K32 §7, 27.11.): Der Kandidat kommt aus dem Pool, wenn das Inland nichts bietet; der Wechsel nimmt die Ablöse aus den Ligen, der Spieler zieht in den Kader,
 // wer diese Saison ins Ausland verkauft wurde, wird nicht zurückgekauft. Chance je Liga hier auf 1 gesetzt, Transferlisten leer.
-{const w=welt(),{S,F,ev,C}=w,A=C.ausland,ch0=Object.assign({},A.chance);
+{const w=welt(),{S,F,ev,C}=w,A=C.ausland,ch0=Object.assign({},A.chance),ve0=Object.assign({},A.vereine);
   const t=S.teams.filter(x=>x.lg===1&&x.id!==S.my).sort((a,b)=>b.rep-a.rep)[0],avVon=ev('avVon'),preisAus=ev('auslandPreis');
   const p=S.ausland.pl.filter(q=>q.age<=28&&q.ct>=3&&!ev('istTalent')(q)&&avVon(q.team)&&avVon(q.team).fin<=40&&avVon(q.team).rep-t.rep<=C.kauf.ansehenMinus).sort((a,b)=>b.str-a.str)[0];
   // p: ein Poolspieler, den der Verein sicher bezahlen darf (Vertrag ab 3 Jahren, Finanzkraft bis 40: Preis höchstens 1,04 × Marktwert, Vereinswert mindestens 1,08 ×)
   if(!p)pruef(false,'Kauf im Ausland: kein passender Poolspieler für den Test (Alter bis 28, Vertrag ab 3 Jahren, Finanzkraft bis 40)');else{
-  const frei=S.pl.filter(q=>q.team===-1);frei.forEach(q=>{q.team=-3;});S.pl.forEach(q=>{q.list=0;});A.chance[1]=1; // Inland leer: keine Liste, Vereinslose kurz beiseite (kiKandidat überspringt team < −1)
+  const frei=S.pl.filter(q=>q.team===-1);frei.forEach(q=>{q.team=-3;});S.pl.forEach(q=>{q.list=0;});A.chance[1]=1;if(A.vereine)A.vereine[1]=1e6; // Inland leer: keine Liste, Vereinslose kurz beiseite (kiKandidat überspringt team < −1); alle Auslandsvereine im Blick
   const kader=new Map(S.teams.map(x=>[x.id,S.pl.filter(q=>q.team===x.id)])),plan=x=>F.kaderplan(x,kader.get(x.id)),n={g:ev('planGruppe')(p),min:Math.round(p.str)-3,grund:'offen',rang:'stamm'};
   const c=F.kiKandidat(t,n,1e12,0,kader,plan);
-  p.ausWeg=S.season;const gesperrt=F.kiKandidat(t,Object.assign({},n,{min:Math.round(p.str)-0.5}),1e12,0,kader,plan);delete p.ausWeg;
-  Object.assign(A.chance,ch0);frei.forEach(q=>{q.team=-1;});
+  // Gegenprobe (Prüfung GP4): alle anderen Poolspieler kurz gesperrt (wech), dann ist p ohne ausWeg der Kandidat und mit ausWeg keiner
+  const andere=S.ausland.pl.filter(q=>q!==p&&!q.wech);andere.forEach(q=>{q.wech=1;});const n2=Object.assign({},n,{min:Math.round(p.str)-3});
+  const ohne=F.kiKandidat(t,n2,1e12,0,kader,plan);p.ausWeg=S.season;const gesperrt=F.kiKandidat(t,n2,1e12,0,kader,plan);delete p.ausWeg;andere.forEach(q=>{delete q.wech;});
+  Object.assign(A.chance,ch0);if(A.vereine)Object.assign(A.vereine,ve0);frei.forEach(q=>{q.team=-1;});
   const q=c&&c.p,cash0=t.cash,pool0=S.ausland.pl.length,preis=q?preisAus(q):0;if(q)F.kiWechsel(q,t,preis);
   pruef(!!c&&c.aus!=null&&c.von==null&&c.preis===preis&&ev('istAusland')({team:c.aus}),'Kauf im Ausland: Bietet das Inland nichts, findet ein Verein seinen Kandidaten im Auslandspool, zum Preis wie für dich',c?`${q.n} (${f1(q.str)}) für ${preis}`:'kein Kandidat');
   pruef(!!q&&t.cash===cash0-preis&&q.team===t.id&&S.pl.includes(q)&&!S.ausland.pl.includes(q)&&S.ausland.pl.length===pool0-1&&q.abl===preis,'Kauf im Ausland: Die Ablöse verlässt die Ligen, der Spieler zieht in den Kader',q?`Konto ${cash0} → ${t.cash}, Pool ${pool0} → ${S.ausland.pl.length}`:'-');
-  pruef(!gesperrt||gesperrt.p!==p,'Kauf im Ausland: Wer diese Saison ins Ausland verkauft wurde, wird nicht gleich zurückgekauft',gesperrt?gesperrt.p.n:'kein Kandidat');}}
+  pruef(!!ohne&&ohne.p===p&&!gesperrt,'Kauf im Ausland: Wer diese Saison ins Ausland verkauft wurde, wird nicht gleich zurückgekauft (Gegenprobe ohne Sperre findet ihn)',`ohne Sperre ${ohne?ohne.p.n:'kein Kandidat'}, mit Sperre ${gesperrt?gesperrt.p.n:'kein Kandidat'}`);}}
 
 // 5. Gleicher Seed, gleiche Wechsel (Sommerfenster bis Mitte September), anderer Verlauf nur durch andere Würfel
 {const lauf=()=>{const w=welt(),log=mitProtokoll(w.F,()=>w.W.S,w.C.talentBis);let n=0;while(w.W.S.tag<75&&n++<200)schritt(w);return log.map(e=>[e.tag,e.pid,e.von,e.nach,e.preis].join(':')).join(' ');};
