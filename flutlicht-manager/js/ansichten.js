@@ -131,7 +131,7 @@ function gespraechswunschKarte(){const l=(S.gw||[]).map(g=>PIX.get(g.pid)).filte
 // Stimmung und Gespräch auf der Spielerkarte (K14, K15)
 // Bankzeit nach Grund (K14 §12): was gerade für oder gegen ihn läuft, in einem Satz
 function bankHinweis(p){const B=RKA.bank,l=[];
-  if(p.rz>0){l.push(`Sitzt seit ${p.rz} ${p.rz===1?'Spiel':'Spielen'} hinter einem Konkurrenten${rivalenAbzug(p)?`: Stimmung −${de(rivalenAbzug(p))}, bis er wieder in der Startelf steht`:', noch nimmt er es hin'}.`);}
+  if(p.rz>0){const ra=rivalenAbzug(p);l.push(`Sitzt seit ${p.rz} ${p.rz===1?'Spiel':'Spielen'} hinter einem Konkurrenten${ra?`: Stimmung −${de(ra,ra%1?1:0)}, bis er wieder in der Startelf steht`:', noch nimmt er es hin'}.`);} // GQ1: je 1,5 gibt halbe Schritte, also eine Nachkommastelle zeigen
   if(p.rue&&absTag(S.tag)<=p.rue)l.push('Aufbau nach der Verletzung: Er erwartet in dieser Zeit keine Einsätze.');
   if(formkrise(p))l.push('Formkrise (Notenschnitt der letzten Einsätze ab 4,0): Einen Bankplatz sieht er eher ein.');
   if(ersatzTorwart(p))l.push('Als Nummer 2 im Tor erwartet er keine Einsätze.');

@@ -290,6 +290,13 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 28.11.2026: Prüfung GQ (Zweig `mitarbeit/popolupo-gq-korrekturen`, auf t29-konten 839760f)
+
+Ein Prüf-Agent hat 631c67b..839760f nur gelesen: Jahresabschluss der Computer-Vereine, Zufall je Spieler, die neuen Werte aus Lauf 26 bis 29 und die Tests dazu. Einzelheiten in `konzepte/_konsistenzpruefung.md` §GQ.
+- GQ1 behoben: Die Spielerkarte zeigt den Abzug „hinter einem Konkurrenten“ jetzt mit einer Nachkommastelle (−1,5, −4,5), wenn er eine hat. Vorher stand dort auf ganze Zahlen gerundet −2 oder −5. Das Spiel selbst rechnete schon richtig.
+- Hinweis für Lauf 30: Mit dem Zufall je Spieler ziehen auch spätere Würfe aus den Strömen „Tag“ und „Training“ andere Zahlen. Werte zu einem festen Seed (etwa Seed 5 in `kabine`) können sich deshalb verschieben, ohne dass sich an den Regeln etwas geändert hat.
+- Für Lauf 30 gilt die Bitte unten unverändert, gern gleich auf diesem Zweig (nur die Anzeige ist neu).
+
 ### 28.11.2026: Lauf 29 übernommen: Konten, 2. Liga, Kabine, Zufall je Spieler (Zweig `mitarbeit/popolupo-t29-konten`, auf t28-feinschliff und `claude/compassionate-galileo-bsbua4` e55bd9c)
 
 - **Lauf 29:** 52 grün, 7 rot. Dazu der neue Plan „Zielplattform“ (f52632f) übernommen: Das Spiel läuft nur als Windows-App. Im Code ist nichts nur für das Handy gebaut, die Anpassung an schmale Fenster bis 360 px bleibt.

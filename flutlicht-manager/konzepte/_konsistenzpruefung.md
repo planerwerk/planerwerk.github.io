@@ -3216,3 +3216,18 @@ Bericht: `flutlicht-tools/pruefung-gp.md`. Korrekturen auf `mitarbeit/popolupo-t
 | GP4 | **Test:** Die Prüfung der Rückkaufsperre in `welt` Nr. 4b wäre auch ohne Sperre grün gewesen. Jetzt mit Gegenprobe: ohne Sperre ist der Spieler der Kandidat, mit Sperre keiner. | ✅ behoben |
 | GP5 | **Test:** `transfers` zählte als „Wechsel unter Computer-Vereinen“ jede Meldung „Wechsel perfekt“, also auch Abwanderung und Käufe im Ausland. Jetzt zählt nur ein Wechsel mit deutschem Verkäufer. | ✅ behoben |
 | GP6 | **Doku:** Der Nachtrag in K04 las sich, als lägen die Auswärtssiege im Ziel, Lauf 25 meldete sie aber rot. Dazu stand „noch nie gelaufen“ bei Skripten, die längst liefen. Berichtigt. Der Heimvorteil sinkt gleichzeitig von ×1,03 auf ×1,025 (vorläufig). | ✅ behoben |
+
+## GQ. Prüfung von Jahresabschluss, Zufall je Spieler und den Werten aus Lauf 26 bis 29 (28. November 2026, popolupo, Prüf-Agent nur lesend)
+
+Ein Agent hat 631c67b..839760f gelesen und von Hand nachgerechnet.
+- `kiUeberschuss` lässt deinen Verein aus und senkt kein Konto unter die Rücklage. Mit `an:false` ändert sich nichts. Die Abbuchung läuft nach Auf- und Abstieg und Fernsehgeld, aber vor dem ersten Sommerbudget, und `welt` Nr. 7 zählt sie nicht doppelt.
+- Zufall je Spieler und je Verein: `mitStrom` stellt den alten Strom auch bei einem Fehler wieder her, auch wenn Aufrufe ineinanderstecken. In den vier Stellen zieht nichts aus `Math.random`. Spieler-Nummern sind eindeutig und werden gespeichert. Der aktive Strom liegt nie im Spielstand, deshalb zieht ein Spiel nach dem Laden dieselben Zahlen wie ohne Laden.
+- Hinweis ohne Fehler: Spätere Ziehungen aus den Strömen „Tag“ und „Training“ bekommen jetzt andere Zahlen. Das schadet nichts, aber Werte zu einem festen Seed (etwa Seed 5 in `kabine`) verschieben sich in Lauf 30.
+- Die drei neuen Werte (`ausland.chance`, `kabine.ki.gelingt`, `bank.rivale.je`) werden genau dort gelesen, wo die Kommentare es sagen.
+- Tests: `kabine` 14 und 16, `zweite` Nr. 11 (`entlassen` abgeschaltet, `ruecktritt` geht nur über einen Knopf), `welt` und `spielstand` sind richtig.
+
+Bericht: `flutlicht-tools/pruefung-gq.md`. Korrektur auf `mitarbeit/popolupo-gq-korrekturen`.
+
+| # | Befund | Status |
+|---|---|---|
+| GQ1 | **Niedrig:** Mit `bank.rivale.je` 1,5 sinkt die Stimmung in halben Schritten. Die Spielerkarte rundete auf ganze Zahlen und zeigte im 4. Spiel „−2“ statt „−1,5“. Jetzt zeigt sie eine Nachkommastelle, wenn der Wert eine hat. | ✅ behoben |
