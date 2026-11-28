@@ -13,7 +13,7 @@ Hängt ab von: K04 (Spieldaten), K29 (Sprüche) · Wird gebraucht von: K28, K35a
 
 - **Community-Wünsche:** historische Daten, „Elf des Jahres“, Marktwert-Verlauf (Recherche 4b).
 - **Heute im Spiel:** Tore, Pokaltore, Einsätze, Gelbe Karten je Saison, Saisonhistorie `S.hist`. Bleibt die Grundlage.
-- **Bewusst anders:** Der Speicher im Browser ist begrenzt. Volle Details für die letzten Saisons, ältere verdichtet.
+- **Bewusst anders:** Der Speicher im Browser ist begrenzt. Volle Details für die letzten Saisons, ältere verdichtet. *(In der Windows-App gilt die Grenze seit 27.11. nicht mehr, PLAN §2. Verdichten bleibt sinnvoll gegen das Wachstum des Spielstands.)*
 
 ## 3. Begriffe und Daten
 

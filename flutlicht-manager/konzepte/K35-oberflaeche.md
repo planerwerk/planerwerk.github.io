@@ -18,7 +18,7 @@ Status: **Entwurf**. Hängt ab von: allen Konzepten, weil jedes Bildschirme brau
 ## 2. Vorbilder und Abgrenzung
 
 - **Aus dem Genre:** Büro als Zentrale, Kalenderblatt, Kontostand, Symbolleiste, Aufstellung per Ziehen und Ablegen (bei Anstoss-Fans beliebt).
-- **Lehre aus FM26:** keine Suche durch Untermenüs, eine Schnellansicht statt Seitenwechsel, Bedienung auf PC und Handy gleich gut.
+- **Lehre aus FM26:** keine Suche durch Untermenüs, eine Schnellansicht statt Seitenwechsel, Bedienung auf PC und Handy gleich gut. *(Seit 27.11. nur noch am PC, Zielplattform Windows-App, PLAN §2.)*
 - **Unser eigenes Element:** das **Regler-System**. Anzeigen sehen aus wie LED-Balken einer Anzeigetafel, Eingaben wie die Schieberegler eines Mischpults.
 
 ## 3. Das Regler-System
@@ -130,7 +130,7 @@ Der Gegner ist ebenfalls unscharf, solange er nicht analysiert wurde (K06).
 - **Zahl immer daneben.** Der Balken ist die Übersicht, die Zahl die Genauigkeit.
 - **Gleiche Skala für gleiche Werte** im ganzen Spiel, sonst trügt der Balken.
 - **Maximum sichtbar:** Jeder Regler zeigt sein Minimum und Maximum, und wo sinnvoll das erreichbare Maximum (Talent, Kapazität, Kreditrahmen).
-- **Auf dem Handy** sind Regler groß genug zum Ziehen. Mit Tasten lassen sie sich in Schritten verstellen (Pfeiltasten, Bild hoch/runter).
+- **Auf dem Handy** sind Regler groß genug zum Ziehen. Mit Tasten lassen sie sich in Schritten verstellen (Pfeiltasten, Bild hoch/runter). *(Handy entfällt seit 27.11., die Tasten bleiben, Zielplattform Windows-App, PLAN §2.)*
 - **Farben** folgen festen Bedeutungen: grün gut, gelb Achtung, rot kritisch, Akzentfarbe für „du“. Jede Bedeutung hat zusätzlich ein Symbol oder einen Text.
 - **Alles in `regeln.js` einstellbar:** Grenzen, Schrittweiten, Zonen.
 
@@ -229,7 +229,7 @@ Ereigniskarten (K30) erscheinen als eigene **Karte** mit Bild, Text und 1–3 Kn
 
 ## 10. Zielwerte und Tests
 
-- **Handy-Breite (390 px):** kein seitlicher Überlauf auf allen Bildschirmen (Test gibt es schon).
+- **Handy-Breite (390 px):** kein seitlicher Überlauf auf allen Bildschirmen (Test gibt es schon). *(Seit 27.11. als Schutz für das schmale Fenster der App, kein Handy mehr, Zielplattform Windows-App, PLAN §2.)*
 - **Klicks pro Woche:** Klicktest im Normalfall höchstens etwa 6 Klicks bis „Tag beenden“.
 - **Regler-Prüfung:** Jeder Regler zeigt Minimum, Maximum und Wert. Gleiche Werte haben im ganzen Spiel die gleiche Skala.
 - **Vorhersage-Ehrlichkeit:** Der echte Optimalwert liegt in mindestens 80 % der Fälle im angezeigten Band. Bei schwachem Stab ist das Band dafür breiter.

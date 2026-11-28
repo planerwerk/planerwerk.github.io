@@ -32,7 +32,7 @@ Teile: **Auslandspool** in Welle 3 (vorgezogen, PLAN §2), der Rest in Welle 4. 
 - Poolspieler entwickeln sich nach K03 mit angenommener Spielpraxis nach ihrer Rolle in der Gruppe. Form wandert zufällig um 10.
 - **Auslandsvereine kaufen und verkaufen** wie Computer-Vereine (K31), vereinfacht: Bedarf nach Abgängen aus dem Kern, Budget nach Finanzkraft. Reiche Vereine kaufen auch Stars aus der Bundesliga.
 - Gespeichert in `S.pl` mit `team` gleich der Kennung des Auslandsvereins, die Vereine in `daten/ausland.js` (neu): `[Name, Land, Stufe, Ansehen, Finanzkraft]`.
-- **Speicher:** etwa 2.000 zusätzliche Spieler. K33 prüft, ob der Spielstand im Browser-Speicher bleibt (Ziel unter 3 MB). Sonst wird der Kern auf 6 verkleinert.
+- **Speicher:** etwa 2.000 zusätzliche Spieler. K33 prüft, ob der Spielstand im Browser-Speicher bleibt (Ziel unter 3 MB). Sonst wird der Kern auf 6 verkleinert. *(Seit 27.11. Richtwert statt Grenze, die Windows-App speichert als Datei, PLAN §2.)*
 - **Europapokal** bleibt eine spätere Erweiterung (PLAN §2), wird mit den echten Auslandsvereinen aber möglich: Ihre Teamstärke reicht für simulierte Spiele.
 
 ### 3.2 Nationen
