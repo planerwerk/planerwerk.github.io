@@ -6,7 +6,7 @@ Hängt ab von: K35a (Bedienkonzept, Regler) · Wird gebraucht von: –
 ## 1. Ziel und Spielgefühl
 
 - **Ein eigener Retro-Look,** der an Stadionnächte erinnert: Flutlicht, Anzeigetafel, Mischpult. Kein Nachbau eines bestimmten Spiels.
-- **Lesbar vor schön:** Zahlen, Regler und Tabellen müssen auf einen Blick funktionieren, auch auf dem Handy.
+- **Lesbar vor schön:** Zahlen, Regler und Tabellen müssen auf einen Blick funktionieren, auch auf dem Handy. *(Seit 27.11.: auch im schmalen Fenster statt auf dem Handy, Zielplattform Windows-App, PLAN §2.)*
 - **Atmosphäre in kleinen Dosen:** Die Anzeigetafel beim Spiel, das Flutlicht beim Abendspiel, das Mischpult bei den Reglern.
 
 ## 2. Vorbilder und Abgrenzung
@@ -43,13 +43,13 @@ Hängt ab von: K35a (Bedienkonzept, Regler) · Wird gebraucht von: –
 ## 4. Abläufe
 
 - Look wird in Stufen eingeführt (U19 und folgende), Bildschirm für Bildschirm, ohne die Bedienung zu ändern.
-- Jede Stufe mit Screenshot-Test auf Handy- und Desktopbreite (Playwright, gibt es im Repo).
+- Jede Stufe mit Screenshot-Test auf Handy- und Desktopbreite (Playwright, gibt es im Repo). *(Seit 27.11.: schmales Fenster statt Handy, Zielplattform Windows-App, PLAN §2.)*
 
 ## 5. Regeln und Formeln
 
 - **Farbtokens** an einer Stelle (`css/spiel.css`, Variablen), damit Themen umschaltbar sind.
 - **Bewegung sparsam:** Klappziffern bei Toren, Flutlicht-Aufblenden beim Anpfiff. Abschaltbar, und aus, wenn das System „weniger Bewegung“ wünscht.
-- **Handy zuerst** für Büro, Live-Spiel und Aufstellung, Tabellen mit waagerechtem Scrollen nur innerhalb der Tabelle.
+- **Handy zuerst** für Büro, Live-Spiel und Aufstellung, Tabellen mit waagerechtem Scrollen nur innerhalb der Tabelle. *(Entfällt seit 27.11.: Maßstab ist das Fenster am PC. Waagerechtes Scrollen nur innerhalb der Tabelle bleibt, Zielplattform Windows-App, PLAN §2.)*
 
 ## 6. Hebel des Spielers
 
@@ -72,7 +72,7 @@ K05 (Anzeigetafel, Ticker), K29 (Zeitungslook), K35a (Regler, Bildschirme), K33 
 | Prüfung | Ziel |
 |---|---|
 | Kontrast | alle Texte mindestens WCAG AA in beiden Themen |
-| Handy | keine waagerechte Seitenverschiebung bei 360 px Breite |
+| Schmales Fenster (bis 27.11. „Handy“, PLAN §2) | keine waagerechte Seitenverschiebung bei 360 px Breite |
 | Tempo | Seitenwechsel ohne spürbare Verzögerung |
 | Offline | keine externen Schriften oder Bibliotheken |
 
@@ -90,7 +90,7 @@ Keine in `regeln.js`. Farben und Abstände als CSS-Variablen in `css/spiel.css`.
 
 - **Vertraut und intuitiv statt Retro.** Wer ein aktuelles Sportspiel oder eine Handy-App kennt, soll sich ohne Erklärung zurechtfinden. Retro-Anklänge (Anzeigetafel, Flutlicht) bleiben als Würze, nicht als Stil.
 - **Kacheln als Grundform.** Jede Ansicht besteht aus Kacheln: eine Kachel, ein Thema, eine Kennzahl, ein klarer nächster Schritt. Das wirkt freundlich und ordnet von selbst.
-- **Nicht wie Tableau oder Excel.** Tabellen bleiben, wo man vergleichen muss (Ligatabelle, Kaderliste, Finanzen), aber nie als Startseite und nie als einziger Inhalt einer Ansicht. Auf dem Handy werden lange Tabellen zu Listen aus kleinen Karten.
+- **Nicht wie Tableau oder Excel.** Tabellen bleiben, wo man vergleichen muss (Ligatabelle, Kaderliste, Finanzen), aber nie als Startseite und nie als einziger Inhalt einer Ansicht. Auf dem Handy werden lange Tabellen zu Listen aus kleinen Karten. *(Seit 27.11.: im schmalen Fenster statt auf dem Handy, Zielplattform Windows-App, PLAN §2.)*
 - **Dein Verein im Mittelpunkt.** Die Vereinsfarbe aus `daten/vereine.js` färbt Kopfband, Wappen und die eigene Tabellenzeile (nicht Knöpfe oder Status, §13.3), so fühlt sich jede Karriere anders an.
 
 ### 13.2 Kachel-System
@@ -103,7 +103,7 @@ Keine in `regeln.js`. Farben und Abstände als CSS-Variablen in `css/spiel.css`.
 
 - **Aufbau einer Kachel:** Titel klein oben, Kennzahl groß, darunter eine Zeile Erklärung oder Trend (Pfeil mit Wert), unten rechts höchstens eine Aktion („Aufstellen“, „Antworten“). Die ganze Kachel ist anklickbar und führt in die Ansicht.
 - **Zustand:** eine kleine Marke oben rechts in der Kachel mit Symbol und Wort (✓ gut, ! Achtung, ✕ kritisch, i Info), nie Farbe allein. Geändert beim Bau der Look-Studie (25.11.): kein farbiger Rand links, der wirkt schnell beliebig und trägt ohne Symbol nichts.
-- **Raster:** 4 Spalten ab 1.100 px, 2 Spalten ab 600 px, 1 Spalte darunter. Kacheln ordnen sich selbst an, große Kacheln werden auf dem Handy volle Breite.
+- **Raster:** 4 Spalten ab 1.100 px, 2 Spalten ab 600 px, 1 Spalte darunter. Kacheln ordnen sich selbst an, große Kacheln werden auf dem Handy volle Breite. *(Seit 27.11.: im schmalen Fenster statt auf dem Handy, Zielplattform Windows-App, PLAN §2.)*
 - **Startseite (Büro) als Kachelfläche:** Nächstes Spiel (groß), Posteingang (breit), Tabelle (breit), Konto, Vertrauen, Stimmung, Verletzte und Sperren, Training dieser Woche, Transfers, Termine (klein). Die heutige Reiterleiste bleibt als Navigation oben (Handy: unten), die Kacheln ersetzen die Textblöcke.
 - **Bewegung:** Kacheln heben sich beim Zeigen leicht an (Schatten), beim Antippen kurz gedrückt. Aus bei „weniger Bewegung“.
 
@@ -136,13 +136,13 @@ Keine in `regeln.js`. Farben und Abstände als CSS-Variablen in `css/spiel.css`.
 
 ### 13.5 Vertraute Bedienung (Abgleich mit heutigen Spielen und Apps)
 
-- Eine Hauptaktion je Ansicht, immer an derselben Stelle („Weiter“ oben rechts, auf dem Handy unten rechts als großer Knopf).
+- Eine Hauptaktion je Ansicht, immer an derselben Stelle („Weiter“ oben rechts, auf dem Handy unten rechts als großer Knopf). *(Der Knopf für das Handy entfällt seit 27.11., Zielplattform Windows-App, PLAN §2.)*
 - Zurück-Weg immer sichtbar, Breadcrumb in Unteransichten.
 - Kurze Rückmeldungen als Einblendung unten (Toast), Rückfragen nur bei Unumkehrbarem.
 - Hinweise beim Zeigen (Tooltip) und ein Fragezeichen an jeder Kennzahl, das erklärt, woher sie kommt.
 - Suche und Filter in langen Listen (Transfermarkt, Kader), Sortieren per Klick auf die Spalte.
 - Ziehen und Ablegen, wo es natürlich ist (Aufstellung seit K35c, später Training und Kaderrollen).
-- Tastatur: Leertaste „Weiter“, Zahlen für Reiter, Escape schließt Fenster. Auf dem Handy Wischen zwischen Reitern.
+- Tastatur: Leertaste „Weiter“, Zahlen für Reiter, Escape schließt Fenster. Auf dem Handy Wischen zwischen Reitern. *(Wischen entfällt seit 27.11., Zielplattform Windows-App, PLAN §2.)*
 - Speichern geschieht automatisch, ein kleines Zeichen zeigt es.
 
 ### 13.6 Umsetzung (Welle 5, Reihenfolge vorläufig)

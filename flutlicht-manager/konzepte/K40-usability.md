@@ -32,7 +32,7 @@ Neues Testskript `tests/ui-zugang.js`, läuft wie die anderen Browser-Tests einz
 - Jedes Element, das den Fokus bekommt, ist sichtbar (hat eine Größe) und ist kein `div` ohne Rolle.
 - Ein Fenster (Spielerkarte, Menü) bekommt beim Öffnen den Fokus, Escape schließt es.
 
-**Handy-Breite** prüfen die bestehenden Browser-Tests schon.
+**Handy-Breite** prüfen die bestehenden Browser-Tests schon. *(Seit 27.11. als schmales Fenster der App, Zielplattform Windows-App, PLAN §2.)*
 
 ### 5.2 Änderung am Spiel für UX1
 
@@ -56,7 +56,7 @@ Für die Runde nach Welle 5 (PLAN §4). Durchführen kann sie jede und jeder, oh
 
 - **Personen:** fünf je Runde, die das Spiel noch nicht kennen. Mindestens zwei, die selten Manager-Spiele spielen. Lieber zwei kleine Runden mit Verbesserungen dazwischen als eine große (§ PLAN 4: Fünfergruppen finden je nach Studie 55 bis 99 % der Probleme).
 - **Dauer:** 30 bis 45 Minuten je Person: 5 Minuten Einführung, 25 bis 30 Minuten Aufgaben, 5 Minuten Fragebogen, 5 Minuten Gespräch.
-- **Gerät:** ein Rechner mit aktuellem Browser, das Spiel frisch geladen (eigenes Browserprofil oder privates Fenster, damit kein alter Spielstand stört). Ton an. Wenn möglich eine Runde auch am Handy.
+- **Gerät:** ein Rechner mit aktuellem Browser, das Spiel frisch geladen (eigenes Browserprofil oder privates Fenster, damit kein alter Spielstand stört). Ton an. Wenn möglich eine Runde auch am Handy. *(Seit 27.11.: am Windows-Rechner mit der installierten App, ohne Runde am Handy, Zielplattform Windows-App, PLAN §2.)*
 - **Rollen:** eine Person leitet und schweigt, eine schreibt mit (oder Bildschirmaufnahme mit Einverständnis).
 
 ### 11.2 Einführung (zum Vorlesen)

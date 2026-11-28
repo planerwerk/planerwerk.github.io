@@ -12,7 +12,7 @@ Hängt ab von: K35b (Look, Abschnitt 13) · Wird gebraucht von: K41 (Audio zu de
 ## 2. Vorbilder und Abgrenzung
 
 - Heutige Sportspiele zeigen Ladebildschirme mit Bild und Tipp, kurze Einlauf- und Jubelszenen, Pokale beim Titel. Das übernehmen wir als Muster, in einfacher Form.
-- **Keine echten Videos.** Videodateien wären groß, schwer lizenzierbar und für ein Browserspiel unnötig. „Sequenzen“ sind bei uns animierte Szenen aus Standbildern, Ebenen und Effekten (Abschnitt 3.4).
+- **Keine echten Videos.** Videodateien wären groß, schwer lizenzierbar und für ein Browserspiel unnötig. *(Gilt seit 27.11. genauso für die Windows-App: Videos machten den Installer groß, PLAN §2.)* „Sequenzen“ sind bei uns animierte Szenen aus Standbildern, Ebenen und Effekten (Abschnitt 3.4).
 
 ## 3. Begriffe und Daten
 

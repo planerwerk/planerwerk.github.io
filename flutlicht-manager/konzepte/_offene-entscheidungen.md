@@ -927,3 +927,13 @@ Nach deiner Vorgabe vom 26.11. Im Einzelnen in `konzepte/K43-schwierigkeit.md`, 
 - Die Anpassung wirkt in beide Richtungen und nur leicht: Gehaltsforderungen ±6 %, Vorstand ±3 Punkte, Saisonziel ±1 Platz, mehr Abwerbeversuche nach Erfolg, mehr Glück bei Karten und ein Partner mit Geld in einer Durststrecke.
 - Grundlage ist Normal. Spielstärke, Würfel und Spielerwerte bleiben unberührt.
 - Die Stärke der Hebel wird erst nach Messung im Langlauf und einer Runde mit Menschen eingestellt.
+
+## Zielplattform (PLAN §2, 27.11.)
+
+Entschieden hast du: nur Windows-App in einem eigenen Container, kein Browserspiel mehr. Die Folgen habe ich vorläufig so festgelegt (PLAN §2, „Zielplattform: Folgen für die Konzepte“):
+
+1. **Bedienung am PC** mit Maus und Tastatur. „Handy zuerst“, Wischen zwischen Reitern und der große Knopf für das Handy entfallen (K35, K35b). Touch wird nicht gebaut.
+2. **Schmale Fenster bis 360 px bleiben möglich**, darum bleiben das Raster mit 1 bis 4 Spalten und die Prüfung „kein seitlicher Überlauf“.
+3. **Größenziele des Spielstands** (K32, K33, K34) sind Richtwerte, keine harte Grenze mehr.
+4. **Der Browser-Weg im Code** (`localStorage`, Text-Code, Anzeige des Browser-Speichers, gepackter Rückfall) bleibt für die Browser-Tests und wird nicht weiter ausgebaut.
+5. **Tests mit Menschen** (K40) am Windows-Rechner mit der installierten App.
