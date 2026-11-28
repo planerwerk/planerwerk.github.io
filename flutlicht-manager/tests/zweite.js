@@ -102,8 +102,9 @@ const saisonZweite=(w,y,ohneAuf)=>{const {F,S,ev,im}=w;S.phase='play';for(let k=
   pruef(nach.map(p=>p.id+':'+p.str).join()===vor&&W.S.zwL===L&&nach.every(p=>ev('PIX').get(p.id)===p),'Speichern und Laden: Kader, Liga und Werte der Zweiten bleiben, PIX kennt sie wieder');}
 
 // 11. Zwei Saisons im Ablauf (Gladbach): Platzierung je Saison, Kosten gebucht, Kader im Rahmen, die Ligen der Profis bleiben vollständig
+// Seit Lauf 29 (T29.5) ohne Entlassung: Der Simulator-Trainer wurde nach 2026 entlassen und übernahm Union Berlin, das keine Zweite hat. Der Test braucht zwei Saisons im selben Verein.
 {const fehler=[],erg=[];let kosten=0;
-  saisons({n:2,seed:SEED,verein:9,beiSaisonende:S=>{erg.push(S.zwErg&&S.zwErg.v===S.my?`${S.zwErg.name} Platz ${S.zwErg.platz}`:'–');kosten+=S.fin['Zweite Mannschaft']||0;
+  saisons({n:2,seed:SEED,verein:9,vorher:(F,W)=>W.ev('entlassen=()=>{}'),beiSaisonende:S=>{erg.push(S.zwErg&&S.zwErg.v===S.my?`${S.zwErg.name} Platz ${S.zwErg.platz}`:'–');kosten+=S.fin['Zweite Mannschaft']||0;
     const zw=S.zw||[];if(zw.length<15||zw.length>26)fehler.push('Kadergröße '+zw.length);if(zw.some(p=>p.team!==-4||p.age>23||p.age<17))fehler.push('Spieler außerhalb des Rahmens');
     if(S.pl.some(p=>p.team===-4))fehler.push('Spieler der Zweiten in S.pl');if(!S.summary||!S.summary.zw)fehler.push('keine Zeile in der Saisonbilanz');}});
   pruef(!fehler.length&&erg.length===2&&erg.every(x=>x!=='–')&&kosten<0,'Zwei Saisons: Die Zweite hat je Saison einen Platz, die Kosten sind gebucht, der Kader bleibt im Rahmen',fehler[0]||`${erg.join(', ')}, Kosten ${kosten} €`);}

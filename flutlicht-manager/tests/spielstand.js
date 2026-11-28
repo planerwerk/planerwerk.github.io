@@ -30,16 +30,16 @@ saisons({n:N,seed:11,verein:6,vorher:(F,W)=>{W0=W;},beiSaisonende:(S)=>{
 groessen.forEach(([s,l])=>pruef(l<0.85*grenze,`Saison ${s}: ${mio(l)} Mio. Zeichen, unter 85 % der Browser-Grenze (${mio(0.85*grenze)})`));
 for(let i=2;i<groessen.length;i++){const d=groessen[i][1]-groessen[i-1][1];pruef(d<=250000,`Saison ${groessen[i][0]}: Wachstum ${mio(d)} Mio. Zeichen, höchstens 0,25`);}
 pruef(erinnert===groessen.length,'Der Merker der letzten Sicherung steht nicht im Spielstand');
-// 5. Gepackt im Browser-Speicher (Safari-Grenze etwa 2,5 Mio. Zeichen, Prüfung GK6, js/hilfen.js): Packen und Entpacken ergeben genau denselben Text, auch in
+// 5. Gepackt im Browser-Speicher (knapper Speicher von etwa 2,5 Mio. Zeichen, Prüfung GK6, js/hilfen.js; seit 28.11. nur für die Browser-Tests, die Windows-App speichert als Datei, PLAN §2): Packen und Entpacken ergeben genau denselben Text, auch in
 // Grenzfällen; der Spielstand wird deutlich kleiner; lehnt der Speicher ungepackt ab, legt save() gepackt ab, ohne Fehlermeldung, und Lesen ergibt genau den Spielstand.
 {const ev=W0.ev,S=ev('S'),j=JSON.stringify(S),pack=ev('spielstandPacken'),entpack=ev('spielstandEntpacken'),t0=Date.now(),p=pack(j),t1=Date.now(),u=entpack(p),t2=Date.now();
   pruef(u===j,'Packen und Entpacken ergeben genau den Spielstand',`${mio(j.length)} → ${mio(p.length)} Mio. Zeichen (${Math.round(100*p.length/j.length)} %), Packen ${t1-t0} ms, Entpacken ${t2-t1} ms`);
-  pruef(p.length<0.5*j.length&&p.length<2.4e6,'Gepackt höchstens halb so groß und unter der Safari-Grenze',mio(p.length));
+  pruef(p.length<0.5*j.length&&p.length<2.4e6,'Gepackt höchstens halb so groß und unter 2,5 Mio. Zeichen (knapper Browser-Speicher)',mio(p.length));
   const proben=['','a','a'.repeat(100000),'äöüßÄÖÜ €—„“ 😀 %25 \\u0000 \n\t','{"x":[1,2,3],"y":"ab'.repeat(5000)+'"}',Array.from({length:70000},(_,i)=>String.fromCharCode(32+(i*7919)%9000)).join('')]; // die letzte füllt das Wörterbuch
   const falsch=proben.filter(s=>entpack(pack(s))!==s).length;pruef(!falsch,'Packen und Entpacken in Grenzfällen (leer, ein Zeichen, lange Wiederholung, Umlaute und Emoji, volles Wörterbuch)',`${falsch} von ${proben.length} falsch`);
   const L=ev('localStorage'),k=ev('REGELN').spielstand.schluessel,orig=L.setItem;L.setItem=(a,b)=>{if(String(b).length>2.5e6)throw new Error('QuotaExceededError');return orig(a,b);};
   ev('SPEICHER_FEHLER=false');ev('save()');const roh=L.getItem(k),fehler=ev('SPEICHER_FEHLER');
-  pruef(!fehler&&typeof roh==='string'&&roh.startsWith('FLZ2:')&&ev('speicherLesen')(k)===JSON.stringify(S),'Speicher zu klein (wie Safari): save() legt gepackt ab, ohne Fehlermeldung, Lesen ergibt genau den Spielstand',roh?mio(roh.length)+' Mio. Zeichen':'nichts gespeichert');
+  pruef(!fehler&&typeof roh==='string'&&roh.startsWith('FLZ2:')&&ev('speicherLesen')(k)===JSON.stringify(S),'Speicher zu klein (2,5 Mio. Zeichen): save() legt gepackt ab, ohne Fehlermeldung, Lesen ergibt genau den Spielstand',roh?mio(roh.length)+' Mio. Zeichen':'nichts gespeichert');
   // Prüfung GN2: zweites Speichern im gepackten Modus; dann ist auch gepackt zu groß: der alte Stand bleibt, die Meldung kommt (Simulation ohne Fenster: sofort, ohne Warten)
   S.mgr='Gepackt 2';ev('save()');const zweit=JSON.parse(ev('speicherLesen')(k)).mgr;
   L.setItem=(a,b)=>{if(String(b).length>1e5)throw new Error('QuotaExceededError');return orig(a,b);};S.mgr='Zu groß';ev('save()');const bleibt=JSON.parse(ev('speicherLesen')(k)).mgr,meldung=ev('SPEICHER_FEHLER');L.setItem=orig;

@@ -449,7 +449,9 @@ const REGELN={
     // ueberschuss (Jahresabschluss, K31 §3.3, Lauf 26, vorläufig): Am 1. Juli nach dem Bauen gibt der Vorstand anteil dessen, was über ruecklage × erwartete Jahreseinnahmen liegt,
     // außerhalb des Kaders aus (finanzen.js kiUeberschuss). Ohne das wuchsen die Konten der Computer-Vereine in zehn Saisons von 0,46 auf 11,6 Mrd., das 3,4-Fache ihrer Jahreseinnahmen.
     // Gleichgewicht grob: Rücklage + Zufluss je Saison / anteil (Zufluss in Lauf 26 etwa 0,8 bis 1,5 Mrd. je Saison, fast alles aus Verkäufen ins Ausland und dem Europapokal).
-    finanzen:{budgetAnteil:[0.5,0.25],reinvest:0.8,ueberschuss:{an:true,ruecklage:0.4,anteil:0.7}},
+    // Rücklage 0,3 statt 0,4 und anteil 0,8 statt 0,7 (Lauf 29, 28.11., vorläufig): Mit 0,4 und 0,7 lagen die Konten bei 3,4 Mrd., Faktor 1,04, 1,02 und 1,01 in drei Saisons
+    // (Zufluss vor dem Abschluss bis 1,7 Mrd.). Die Formel traf das genau: 0,4 × 3,3 + 1,45 / 0,7 = 3,4 Mrd. Neu etwa 0,3 × 3,4 + 1,6 / 0,8 = 3,0 Mrd., Faktor um 0,9.
+    finanzen:{budgetAnteil:[0.5,0.25],reinvest:0.8,ueberschuss:{an:true,ruecklage:0.3,anteil:0.8}},
     // Kauf im Ausland (K32 §7, 27.11.2026, vorläufig): Bei jeder Lücke sucht ein Computer-Verein mit der Chance je Liga auch im Auslandspool (sonst nur im Inland).
     // Preis wie für dich (auslandPreis: Marktwert × 0,8 bis 1,4 nach Finanzkraft des Auslandsvereins), dazu Budget und Vereinswert wie im Inland.
     // abschlag: so viele Punkte weniger in der Wahl, weil Eingewöhnung und Sprache unsicher sind (bei gleicher Stärke kauft er lieber im Inland).
@@ -460,7 +462,9 @@ const REGELN={
     // 1. Liga 35 statt 50 % (Lauf 28, 27.11., vorläufig): Wen ein Kauf aus dem Ausland ersetzt, der findet als Erstligist kaum einen Käufer (er geht nicht weit nach unten),
     // die Kader der 1. Liga wuchsen (2026 Ø 28,8 statt 28,4 Spieler, Saldo 9,2 statt 10,5 Mio.), mehr Spieler saßen draußen (Wechselwünsche Ø 1,00 bei Grenze 1).
     // Das Geld bindet seit Lauf 26 der Jahresabschluss (finanzen.ueberschuss), die Käufe im Ausland müssen es nicht mehr allein tun.
-    ausland:{an:true,chance:{1:0.35,2:0.3,3:0.15},vereine:{1:5,2:3,3:2},abschlag:2},
+    // 2. Liga 20 statt 30 % (Lauf 29, 28.11., vorläufig): Im Ausland braucht ein Spieler keinen Listenplatz, der Käufer nimmt den stärksten bezahlbaren. Die 2. Liga wurde
+    // so Saison für Saison stärker (Schnitt der besten 14: 69,6 → 71,8, Grenze 2). In der 1. Liga ging die Spanne nach dem Schritt auf 35 % von 1,6 auf 1,2 zurück.
+    ausland:{an:true,chance:{1:0.35,2:0.2,3:0.15},vereine:{1:5,2:3,3:2},abschlag:2},
     // Leihen unter Computer-Vereinen (K31 §5.9, U11d1). Leihbar: bis alterMax Jahre, Rang in leihRaenge (Ausbildungsverein: Profilwert, auch Talente), gesund, Verleiher behält mehr als
     // markt.verkaeufer.kaderMin. Geliehen wird für die Lücken in gruende: zuerst (vor dem Kauf) bei den Gründen in zuerst, sonst nur, wenn kein Kauf geht. Kontingent: leihe.kontingent.
     leihe:{alterMax:23,leihRaenge:['ueber'],gruende:['verletzt','offen'],zuerst:['verletzt']},
@@ -1001,7 +1005,10 @@ const REGELN={
     bank:{frischeUnter:85,englischTage:4,     // Rotation: Stammspieler mit Frische unter 85 % oder in einer englischen Woche (höchstens 4 Tage zum Spiel davor oder danach)
       rotationReihe:2,rotationAngekuendigt:3,angekuendigt:1, // höchstens zwei Spiele in Folge (angekündigt drei), angekündigt +1 Stimmung
       joker:{note:2.5,stimmung:3,kurz:60,starke:3,von:5},    // eingewechselt mit Tor oder Note bis 2,5: +3 und erfüllt. Ehrgeizige: drei starke Kurzeinsätze in fünf heben die Einschätzung
-      rivale:{staerke:3,schonfrist:3,je:1,max:10,sofort:-1,sv:-0.2,lernen:1.1,haltenAb:30}, // Konkurrent in der Startelf: nach drei Spielen −1, −2 … bis −10. Diven und Nervenschwache sofort, Kämpfer lernen ×1,1
+      // Konkurrent in der Startelf: nach drei Spielen −1,5, −3 … bis −10. Diven und Nervenschwache sofort, Kämpfer lernen ×1,1.
+      // je 1,5 statt 1 (Lauf 29, 28.11., vorläufig): Nach zehn Spielen hinter dem Rivalen erreichten in sechs Vereinen und drei Seeds nur etwa 62 % den Gesprächswunsch (50, 59, 76 %),
+      // K14 §12 Nr. 25 verlangt ihn. Mit 1,5 ist der Abzug zum zehnten Spiel −10 statt −7. Kämpfer bleiben in den ersten drei Spielen bei 0, Diven ohne Schonfrist verlieren etwas schneller.
+      rivale:{staerke:3,schonfrist:3,je:1.5,max:10,sofort:-1,sv:-0.2,lernen:1.1,haltenAb:30},
       unerfahren:{spiele:10,kader:1,einsatz:3,einsatzMin:10,debuet:5}, // unter 10 Profi-Pflichtspielen: keine Erwartung, Kader +1, Einsatz ab 10 Minuten +3, Debüt +5
       torwart:{duell:2,woche:-1,klarNach:5},                 // Nummer 2 höchstens 2 Punkte dahinter: beide −1 pro Woche, bis fünf Spiele in Folge derselbe im Tor steht
       aufbau:{abTagen:14,tage:21},                           // nach einer Verletzung ab 14 Tagen: drei Wochen ohne Erwartung
@@ -1037,7 +1044,10 @@ const REGELN={
     kapitaen:{fuehrungAb:14,wochen:52,bonus:[1,2],gewicht:2.5,fuehrer:2,absetzen:-10,absetzenFreunde:-3},
     teamevent:{stimmung:5,zh:5,kosten:{1:50000,2:25000,3:10000},wochen:4},
     urlaub:{lang:3,kurz:-3,wochen:8},
-    ki:{gelingt:0.55,stimmung:5}},      // Computer-Trainer: Gespräch bei Gesprächswunsch gelingt zu 55 % (K15 §7, Klugheit „normal“, bis K02 Klugheitsstufen hat)
+    // Computer-Trainer und dein Co-Trainer: Gespräch bei Gesprächswunsch gelingt zu 65 % (K15 §7, Klugheit „normal“, bis K02 Klugheitsstufen hat).
+    // 65 statt 55 % (Lauf 29, 28.11., vorläufig): Offizielle Wechselwünsche je Kader und Saison stiegen mit den Käufen im Ausland von etwa 0,75 auf 0,9 bis 1,07 (Seed 5 dreimal über 1, Grenze 1, K14 §10),
+    // und der härtere Konkurrent (bank.rivale.je) bringt mehr Spieler zum Gesprächswunsch. Ein misslungenes Gespräch führt nach fünf Wochen zum offiziellen Wunsch.
+    ki:{gelingt:0.65,stimmung:5}},
   // Jugend und Talententwicklung (K08 §11, U9c). Der Jugendkader gehört deinem Verein, Computer-Vereine bekommen ihre Aufrücker weiter über saison.nachwuchs.
   jugend:{
     // Jugendniveau (deine Vorgabe vom 13.11.): Die Ausgaben (Stufe 1–5) setzen das Ziel, das Niveau folgt langsam. Mit +6 je Saison dauert es von 0 bis zum Deckel etwa zwölf Saisons.

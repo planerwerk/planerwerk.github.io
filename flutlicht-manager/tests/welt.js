@@ -302,7 +302,7 @@ const mitLeihProtokoll=(F,getS,C)=>{const log=[],orig=F.kiLeihe;
     const fuenf=spannung.slice(-5).map(x=>x.v);
     pruef(m(fuenf)<=8,'Langzeit-Spannung: Die fünf Vereine mit dem höchsten Ansehen stehen im Mittel der letzten fünf Saisons unter den besten acht (K31 §10)',
       `Ø Platz ${f1(m(fuenf))} (letzte Saison ${f1(m(platz))}; je Saison ${spannung.map(x=>x.s+' '+f1(x.v)).join(', ')})`);
-    pruef(letzte.leer===0&&letzte.ueber2<=letzte.vereine*0.05,'Ausgewogene Kader: keine Gruppe unbesetzt, höchstens 5 % der Vereine mit mehr als 2 Spielern Überhang je Gruppe (K31 §10)',`${pc(letzte.ueber2/letzte.vereine)}`);
+    pruef(letzte.leer===0&&letzte.ueber2<=letzte.vereine*0.05,'Ausgewogene Kader: keine Gruppe unbesetzt, höchstens 5 % der Vereine mit mehr als 2 Spielern Überhang je Gruppe (K31 §10)',`${letzte.ueber2} von ${letzte.vereine} Vereinen, ${(100*letzte.ueber2/letzte.vereine).toFixed(1)} %, unbesetzte Gruppen ${letzte.leer}`); // Anzahl und eine Stelle seit Lauf 29 (T29.3: „5 %“ waren gerundet 3 von 55, also 5,5 %)
     pruef(!stars.length||oben/stars.length>=0.7,'Stars wandern nach oben: Spieler ab Stärke 85 zu mindestens 70 % bei Vereinen mit Ansehen über 75 (K31 §10)',`${oben} von ${stars.length}`);}
   else{info('Erst ab zehn Saisons gewertet (node tests/welt.js 10): Langzeit-Spannung',`fünf höchste Ansehen im Schnitt auf Platz ${f1(m(platz))}`);
     info('Erst ab zehn Saisons gewertet: Stars bei Vereinen mit Ansehen über 75',`${oben} von ${stars.length}`);}

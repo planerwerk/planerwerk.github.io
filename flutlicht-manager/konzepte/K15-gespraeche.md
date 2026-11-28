@@ -124,7 +124,7 @@ K05 regelt Ablauf und Zeitpunkt, K15 die Wirkung (Konsistenzprüfung D2). Ab Wel
 
 ## 7. Verhalten der Computer-Vereine
 
-- Vereinfacht: Bei einem Gesprächswunsch (Stufe 2) führt der Computer-Trainer ein Gespräch, das mit einer Wahrscheinlichkeit nach Klugheitsstufe (K02) gelingt (gemütlich 40 %, normal 55 %, clever 70 %). Gelingt es, sinkt die Stufe.
+- Vereinfacht: Bei einem Gesprächswunsch (Stufe 2) führt der Computer-Trainer ein Gespräch, das mit einer Wahrscheinlichkeit nach Klugheitsstufe (K02) gelingt (gemütlich 40 %, normal 65 %, clever 70 %; normal bis Lauf 29 55 %, K14 §12 Nr. 16). Gelingt es, sinkt die Stufe.
 - Versprechen der Computer-Trainer werden nur für den Wechselwunsch nachgebildet, nicht im Einzelnen.
 
 ## 8. Ereignisse
@@ -182,7 +182,7 @@ gespraeche:{
   reaktion:{ /* Tabelle aus 5.2 */ },
   mannschaft:{rueckendeckung:{sv:0.3,stimmung:3},weckruf:{note:1.2},ziel:{stimmung:2},endspiel:{wirkung:0.02,nervenschwach:-0.02},proWoche:1},
   halbzeit:{passend:1,unpassend:-2},
-  ki:{gelingt:{gemuetlich:0.40,normal:0.55,clever:0.70}}
+  ki:{gelingt:{gemuetlich:0.40,normal:0.65,clever:0.70}}
 }
 ```
 
