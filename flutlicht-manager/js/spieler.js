@@ -143,11 +143,12 @@ function merkmaleWoche(p){const L=RP.lernenSpiel,A=RP.lernen.altersverlust;
 // Er nimmt die jüngsten Spieler zuerst (sie lernen schneller) und wählt ein Merkmal, das zur Position passt.
 function lernAutomatik(p){const o=lernOptionen(p);if(!o.length)return false;const g=RP.startMerkmale.gewichte[p.pos]||{},w={};o.forEach(k=>w[k]=(g[k]||0.3));p.ls={k:waehleGewichtet(w),f:0};return true;}
 const lernPlaetze=tid=>stabPlaetze(tid);
-function lernplaetzeVergeben(){const nach=new Map();S.pl.forEach(p=>{if(p.team>=0){if(!nach.has(p.team))nach.set(p.team,[]);nach.get(p.team).push(p);}});
-  nach.forEach((sq,tid)=>{const n=lernPlaetze(tid),mit=sq.filter(p=>p.ls),um=sq.filter(p=>p.um&&!p.ls).length;
+// Je Verein ein eigener Strom (K02 §3.1, T29.4): Die Wahl des Lernziels eines Vereins verschiebt nicht mehr die Würfe der Vereine dahinter.
+function lernplaetzeVergeben(){const nach=new Map(),h=hash32(['lernplatz',S.season,S.tag].join('|'));S.pl.forEach(p=>{if(p.team>=0){if(!nach.has(p.team))nach.set(p.team,[]);nach.get(p.team).push(p);}});
+  nach.forEach((sq,tid)=>mitStrom(stromNr(h,tid),()=>{const n=lernPlaetze(tid),mit=sq.filter(p=>p.ls),um=sq.filter(p=>p.um&&!p.ls).length;
     if(mit.length>n)mit.sort((a,b)=>(b.ls.selbst?1:0)-(a.ls.selbst?1:0)||b.ls.f-a.ls.f).slice(n).forEach(p=>p.ls=null);
     if(tid===S.my&&!RP.lernen.automatik)return;let frei=n-Math.min(n,mit.length+um);if(frei<=0)return;
-    for(const p of sq.filter(p=>!p.ls&&p.inj<=0).sort((a,b)=>a.age-b.age||b.str-a.str)){if(frei<=0)break;if(lernAutomatik(p))frei--;}});}
+    for(const p of sq.filter(p=>!p.ls&&p.inj<=0).sort((a,b)=>a.age-b.age||b.str-a.str)){if(frei<=0)break;if(lernAutomatik(p))frei--;}}));}
 // Woche: Zeit im Verein, neue Spieler (Talentschätzung neu), Lernen
 function wocheVerein(p){if(p.team!==p.vt){p.vt=p.team;p.wiv=0;p.ekw=riA(RP.entdeckenWochen);p.tf=ri(-RP.talentSchaetzung.fehler,RP.talentSchaetzung.fehler);}else p.wiv=(p.wiv||0)+1;
   if(p.um&&p.team!==S.my){p.um=null;delete p.umE;} /* Prüfung FC2: umgeschult wird nur bei dir (ausgelaufen, Leihe zurück, Jobwechsel) */

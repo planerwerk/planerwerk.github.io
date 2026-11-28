@@ -65,8 +65,9 @@ function fehlAufklaeren(heute){squad(S.my).forEach(p=>{const v=p.vl;if(!(p.inj>0
 function medizinTag(d){const K=RMD.krankheit,heute=absTag(d),winter=K.winterMonate.includes(datumVon(d).getUTCMonth());
   S.pl.forEach(p=>{if(p.team<0)return;if(p.inj===0&&p.vl)medizinRueckkehr(p);});fehlAufklaeren(heute);
   if(S.phase!=='play')return;
+  const h=hash32(['krankheit',S.season,d].join('|')); // je Spieler ein eigener Strom (K02 §3.1, T29.4), wie das Training in ablauf.js
   S.pl.forEach(p=>{if(p.team<0||p.inj>0)return;const t=S.teams[p.team];if(!t||!aktiv(t)||sommerStatus(t)==='urlaub')return;
-    if(R()<K.proTag*(winter?K.winter:1)*krankFaktor(t,heute))verletzen(p,'krankheit');});}
+    mitStrom(stromNr(h,p.id),()=>{if(R()<K.proTag*(winter?K.winter:1)*krankFaktor(t,heute))verletzen(p,'krankheit');});});}
 // Ansteckung und Hygieneplan (t.hygBis, nur über die Karte „Grippewelle“, K10e): Solange der Plan läuft, gilt sein Faktor statt der Ansteckung, auch nach neuen Kranken (Prüfung EF2)
 const krankFaktor=(t,heute)=>{const K=RMD.krankheit;return(t.hygBis||0)>=heute?K.hygiene:(t.krankBis||0)>=heute?K.ansteckung:1;};
 

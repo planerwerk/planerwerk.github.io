@@ -290,6 +290,37 @@ Stand 22.11. Alles bis eb3efbe ist in Lauf 5 getestet und im Claude-Zweig. Neue 
 
 ## Changelog
 
+### 28.11.2026: Lauf 29 übernommen: Konten, 2. Liga, Kabine, Zufall je Spieler (Zweig `mitarbeit/popolupo-t29-konten`, auf t28-feinschliff und `claude/compassionate-galileo-bsbua4` e55bd9c)
+
+- **Lauf 29:** 52 grün, 7 rot. Dazu der neue Plan „Zielplattform“ (f52632f) übernommen: Das Spiel läuft nur als Windows-App. Im Code ist nichts nur für das Handy gebaut, die Anpassung an schmale Fenster bis 360 px bleibt.
+- **Erledigt:** `sommer` 81,7 (grün), `spielermodell` 1. Liga 1,2 (grün), Kämpfer, Diva und Tribüne mit Seed 5, 6 und 7 grün (T28.2 zum Teil).
+- **T29.1, Konten der Computer-Vereine (vorläufig):** Rücklage 0,3 statt 0,4, Anteil 0,8 statt 0,7 (`RCV.finanzen.ueberschuss`, K31 §3.3).
+  - Mit den alten Werten lag der Faktor 2028, 2029 und 2032 bei 1,04, 1,02 und 1,01. Der Zufluss vor dem Abschluss erreichte 1,7 Mrd. je Saison.
+  - Die Formel im Kommentar traf das genau: Rücklage + Zufluss / Anteil = 0,4 × 3,3 + 1,45 / 0,7 = 3,4 Mrd. Mit den neuen Werten etwa 0,3 × 3,4 + 1,6 / 0,8 = 3,0 Mrd., Faktor um 0,9.
+- **T28.1, 2. Liga wird stärker (vorläufig):** Die 2. Liga kauft mit 20 statt 30 % je Suche im Ausland (`RCV.ausland.chance`, K32 Nr. 20).
+  - Im Ausland braucht ein Spieler keinen Listenplatz, der Käufer nimmt den stärksten bezahlbaren. Schnitt der besten 14: 69,6 → 71,8.
+  - In der 1. Liga ging die Spanne nach dem Schritt auf 35 % von 1,6 auf 1,2 zurück.
+  - Weniger Käufe im Ausland lassen mehr Geld in den Ligen. Das fängt der stärkere Jahresabschluss auf. Wer im Inland kauft, statt im Ausland, hilft auch den Wechseln mit Ablöse (T29.2: 2033 nur 14 bei 11 Käufen im Ausland).
+- **T26.2, Dauerkrise (vorläufig):** Das Gespräch der Computer-Trainer (und deines Co-Trainers) gelingt zu 65 statt 55 % (`RKA.ki.gelingt`, K14 §12 Nr. 16, K15).
+  - Seed 5 lag dreimal über 1 (1,05, 1,05, 1,07), Seed 6 und 7 darunter, im Mittel der letzten sechs Messungen 0,93. Vor den Käufen im Ausland waren es stets 0,75.
+  - Ein misslungenes Gespräch führt nach fünf Wochen zum offiziellen Wunsch, darum wirkt die Erfolgsquote direkt.
+- **T28.2 Rest, Konkurrent (vorläufig):** Abzug je Spiel hinter dem Rivalen 1,5 statt 1 (`RKA.bank.rivale.je`, K14 §12 Nr. 25), zum zehnten Spiel −10 statt −7.
+  - Nach zehn Spielen erreichten mit sechs Vereinen und drei Seeds nur 50, 59 und 76 % den Gesprächswunsch, im Mittel etwa 62 % (verlangt 70 %).
+  - Kämpfer bleiben in den ersten drei Spielen bei 0. Diven haben keine Schonfrist und verlieren etwas schneller.
+  - Der härtere Konkurrent bringt mehr Spieler zum Gesprächswunsch. Das gleicht das bessere Gespräch (65 %) bei der Dauerkrise aus.
+- **T29.4, Gleichschritt (Fehler im Spiel, behoben):** Training am Tag, Krankheit und Entwicklung in der Woche würfeln jetzt je Spieler aus einem eigenen Strom, die Lernziele je Verein (`js/ablauf.js`, `js/medizin.js`, `js/spieler.js`, K02 §3.1).
+  - Vorher würfelten alle Spieler nacheinander aus einem Strom. Unterschied sich ein Verein (im Test Verein 30, der in der einen Welt dir gehört), verschoben sich die Würfe aller Spieler dahinter.
+  - Tag 138 liegt in der Länderspielpause. Dort bucht das Wochentraining die Entwicklung fast aller Spieler der 1. und 2. Liga, der Zufallsanteil (bis ±0,06) erklärt 76,40 gegen 76,45. Die Stimmung folgt über das Gehalt im Ziel.
+  - Folge: Die Würfe für Training, Krankheit und Entwicklung sind in jedem Seed neu verteilt. Im Mittel ändert sich nichts, einzelne Werte können sich zufällig verschieben.
+- **T29.5 behoben (nur der Test):** `zweite` Nr. 11 läuft ohne Entlassung. Der Simulator-Trainer wurde nach 2026 entlassen und übernahm Union Berlin, das keine Zweite hat.
+- **T29.3 (nur die Anzeige):** `welt` „Ausgewogene Kader“ zeigt jetzt Anzahl und eine Nachkommastelle. „5 %“ waren gerundet 3 von 55 Vereinen, also 5,5 %. Die Grenze bleibt (K31 §10). Weniger Käufe im Ausland sollten helfen.
+- **Zielplattform:** In `tests/spielstand.js` und `tests/README.md` heißt die Grenze jetzt „knapper Browser-Speicher (2,5 Mio. Zeichen)“ statt „Safari-Grenze“. Der gepackte Rückfall bleibt nur für die Browser-Tests (PLAN §2 Nr. 4).
+- **Nur beobachten:** `kalibrierung` Remis 23 % (Rand, Lauf 28 26 %). `finanzmodell` 3. Liga 2027 und 2028 −2,6 und −2,9 (Ziel −1 ± 1,5), 1. Liga 2026 9,0 und 2028 7,4. `akzeptanz` nur das Tempo der Maschine; die neuen Ströme je Spieler kosten etwas Rechenzeit (geschätzt, nicht gemessen). Bitte das Tempo mit `tempo.js` gegen den Stand von Lauf 29 vergleichen.
+- **Bitte testen (Lauf 30 auf diesem Zweig):** alle Tests.
+  - Wörtlich bitte aus `welt 10` alle zehn Zeilen „Konten der Computer-Vereine …“, alle zehn Zeilen „mindestens 15 Wechsel mit Ablöse“ und die Zeile „Ausgewogene Kader“.
+  - Dazu `node tests/kabine.js` mit Seed 5, 6 und 7: je die Zeile „Keine Dauerkrise“ und die Zeilen zu „Konkurrent“ und „Tribüne“.
+  - Dazu `spielermodell` (Zeilen „Gleichgewicht“), `lizenz` (Zeile „Gleichschritt“), `zweite` (Nr. 11), `node tests/finanzmodell.js 3` (Zeilen „Saldo …“) und `kalibrierung` (Remis, Auswärtssiege).
+
 ### 27.11.2026: Lauf 28 übernommen: weniger Käufe der 1. Liga im Ausland, `kabine` unabhängig vom Seed (Zweig `mitarbeit/popolupo-t28-feinschliff`, auf t26-abschluss und `claude/compassionate-galileo-bsbua4` 166f29f)
 
 - **Lauf 28:** 56 grün, 3 rot (`kabine`, `spielermodell`, `akzeptanz` nur das Tempo der Maschine).

@@ -41,7 +41,7 @@ Heute zieht alles aus einem einzigen Strom (`S.zufall`). Das hat zwei Nachteile:
 | Strom | Schlüssel | Wofür |
 |---|---|---|
 | **Spiel** | Seed, Saison, Wettbewerb, Spieltag, Heim, Gast | ein Pflichtspiel oder Testspiel |
-| **Tag** | Seed, Tag, Bereich | Entwicklung, Training, Markt, Vorstand, Ereigniskarten, Sportgericht, je Bereich getrennt |
+| **Tag** | Seed, Tag, Bereich | Entwicklung, Training, Markt, Vorstand, Ereigniskarten, Sportgericht, je Bereich getrennt. Seit 28.11.2026 (Lauf 29, T29.4) haben Training am Tag, Krankheit und Entwicklung in der Woche zusätzlich einen Strom je Spieler, die Lernziele einen je Verein. Vorher verschob ein Unterschied bei einem Verein die Würfe aller Spieler, die in der Liste danach kamen. Der Gleichschritt-Test (`tests/lizenz.js` Nr. 5a) wich deshalb nach 137 Tagen ab. |
 | **Welt** | Seed, Saison | Saisonwechsel: Nachwuchs, neue Spieler, Karriereenden, Spielplan |
 | **Start** | Seed | Welt bauen: Persönlichkeit, Merkmale, Talente |
 
